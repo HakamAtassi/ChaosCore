@@ -23,4 +23,9 @@ tests do not have any particular structure. ```UVM``` tests contain more rigorou
 
 ### Running ChaosCore
 
-- TODO: 
+#### Tests
+TODO
+#### Pre-Packaged Benchmarks
+TODO
+#### Custom C
+TODO
