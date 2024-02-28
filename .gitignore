@@ -13,4 +13,4 @@ sim_build/
 *.vvp
 *.vscode
 *.vcd
-
+*.fst
