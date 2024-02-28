@@ -2,7 +2,7 @@
 
 ### Docker
 
-You may have noticed the existance of a Dockerfile. This is because this entire reposity is designed to be packaged into a system that can be run in a containerized enviroment deployable on any system. See [Go to Section](Running-ChaosCore) for detailed information on running ChaosCore. 
+You may have noticed the existance of a Dockerfile. This is because this entire reposity is designed to be packaged into a system that can be run in a containerized enviroment deployable on any system. See [Running ChaosCore](Running-ChaosCore) for detailed information on running ChaosCore. 
 
 ### Directories
 
