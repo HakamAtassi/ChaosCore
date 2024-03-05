@@ -14,3 +14,10 @@ sim_build/
 *.vscode
 *.vcd
 *.fst
+
+
+
+# Junk/incomplete files
+
+pipelined_non_restoring.c
+
