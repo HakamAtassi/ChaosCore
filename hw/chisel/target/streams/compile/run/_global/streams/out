@@ -1,0 +1,24 @@
+[0m[[0m[31merror[0m] [0m[0mjava.lang.IndexOutOfBoundsException: 32 is out of bounds (min 0, max 31)[0m
+[0m[[0m[31merror[0m] [0m[0m	at ... ()[0m
+[0m[[0m[31merror[0m] [0m[0m	at non_restoring_divider.$anonfun$non_restoring_dividers$5(non_restoring_divider.scala:92)[0m
+[0m[[0m[31merror[0m] [0m[0m	at chisel3.Data.$anonfun$$colon$eq$1(Data.scala:704)[0m
+[0m[[0m[31merror[0m] [0m[0m	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.scala:18)[0m
+[0m[[0m[31merror[0m] [0m[0m	at chisel3.experimental.prefix$.apply(prefix.scala:33)[0m
+[0m[[0m[31merror[0m] [0m[0m	at chisel3.Data.$colon$eq(Data.scala:704)[0m
+[0m[[0m[31merror[0m] [0m[0m	at non_restoring_divider.$anonfun$non_restoring_dividers$1(non_restoring_divider.scala:92)[0m
+[0m[[0m[31merror[0m] [0m[0m	at scala.runtime.java8.JFunction1$mcVI$sp.apply(JFunction1$mcVI$sp.scala:18)[0m
+[0m[[0m[31merror[0m] [0m[0m	at scala.collection.Iterator$$anon$23.next(Iterator.scala:1035)[0m
+[0m[[0m[31merror[0m] [0m[0m	at scala.collection.immutable.List.prependedAll(List.scala:156)[0m
+[0m[[0m[31merror[0m] [0m[0m	at scala.collection.immutable.List$.from(List.scala:684)[0m
+[0m[[0m[31merror[0m] [0m[0m	at scala.collection.immutable.List$.from(List.scala:681)[0m
+[0m[[0m[31merror[0m] [0m[0m	at scala.collection.SeqFactory$Delegate.from(Factory.scala:306)[0m
+[0m[[0m[31merror[0m] [0m[0m	at scala.collection.immutable.Seq$.from(Seq.scala:42)[0m
+[0m[[0m[31merror[0m] [0m[0m	at scala.collection.immutable.Seq$.from(Seq.scala:39)[0m
+[0m[[0m[31merror[0m] [0m[0m	at scala.collection.IterableFactory.tabulate(Factory.scala:200)[0m
+[0m[[0m[31merror[0m] [0m[0m	at scala.collection.IterableFactory.tabulate$(Factory.scala:200)[0m
+[0m[[0m[31merror[0m] [0m[0m	at scala.collection.SeqFactory$Delegate.tabulate(Factory.scala:303)[0m
+[0m[[0m[31merror[0m] [0m[0m	at non_restoring_divider.<init>(non_restoring_divider.scala:89)[0m
+[0m[[0m[31merror[0m] [0m[0m	at Main$.$anonfun$non_restoring_divider$1(non_restoring_divider.scala:125)[0m
+[0m[[0m[31merror[0m] [0m[0m	at ... ()[0m
+[0m[[0m[31merror[0m] [0m[0m	at ... (Stack trace trimmed to user code only. Rerun with --full-stacktrace to see the full stack trace)[0m
+[0m[[0m[31merror[0m] [0m[0m(Compile / [31mrun[0m) java.lang.IndexOutOfBoundsException: 32 is out of bounds (min 0, max 31)[0m
