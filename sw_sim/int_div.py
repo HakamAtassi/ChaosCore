@@ -42,15 +42,12 @@ def intToBin(val):
     return result & 0xFFFF_FFFF
 
 def nonRestoringDiv(dividend, divisor):
-
     partialRemainder = 0
     initialValue = dividend
     quotient = 0b0
 
     for _ in range(32):
-
         partialRemainderMSB = getMSB(partialRemainder)
-
 
         if partialRemainderMSB == 0:     # positive
             partialRemainder, initialValue = shiftIn(partialRemainder, initialValue)
@@ -68,16 +65,12 @@ def nonRestoringDiv(dividend, divisor):
         else:                   # positive
             quotient <<= 1
             quotient |= 0b1
-
-
     
     partialRemainder = intToBin(partialRemainder)
     partialRemainderMSB = getMSB(partialRemainder)
 
     if(partialRemainderMSB): # negative
         partialRemainder = partialRemainder + divisor
-
-
 
     return quotient
 

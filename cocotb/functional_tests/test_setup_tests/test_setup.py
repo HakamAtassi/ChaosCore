@@ -13,9 +13,9 @@ async def generateClock(dut):
 async def reset(dut):
     dut.reset.value = 0
     await RisingEdge(dut.clock)
-    dut.clock.value = 1
+    dut.reset.value = 1
     await RisingEdge(dut.clock)
-    dut.clock.value = 0
+    dut.reset.value = 0
 
 
 @cocotb.test()
