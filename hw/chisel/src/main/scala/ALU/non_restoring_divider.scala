@@ -81,7 +81,8 @@ class non_restoring_divider extends Module{
 
 
   // Shift inputs
-  valid_reg         := Cat((io.dividend.valid && io.divisor.valid), valid_reg(31,1))  // Shift in valid
+  //valid_reg         := Cat((io.dividend.valid && io.divisor.valid), valid_reg(31,1))  // Shift in valid
+  valid_reg         := valid_reg<<1 | (io.dividend.valid && io.divisor.valid)  // Shift in valid
   divisor_regs(0)   := io.divisor.bits
 
   // Connect up non_restoring_computation modules
@@ -91,6 +92,7 @@ class non_restoring_divider extends Module{
     non_restoring_computation.io.divisor               := divisor_regs(i+1)
 
    partial_remainder_outputs(i) := non_restoring_computation.io.partial_remainder_out
+   dontTouch(partial_remainder_outputs(i))
   }
 
   // Stage 0 logic
@@ -98,22 +100,49 @@ class non_restoring_divider extends Module{
   dividend_regs(1)          := dividend_regs(0)(30,0)
   divisor_regs(1)           := divisor_regs(0)
   
+  for(i <- 1 to 32){
+    divisor_regs(i) := divisor_regs(i-1)
+    dontTouch(divisor_regs(i))
+  }
   
-  
-  // Stage 1 logic
-  
-  
-  // Stage 2-32 logic
 
+  dividend_regs(0) := io.dividend.bits
+  for(i <- 1 until 32) { 
+      //dividend_regs(i) := Cat(dividend_regs(i-1), 0.U(1.W)) 
+      dividend_regs(i) := dividend_regs(i-1)((31-i),0)
+      dontTouch(dividend_regs(i))
+  }
+
+
+  dontTouch(quotient_regs(0))
+  partial_remainder_regs(0) := Cat(0.U, dividend_regs(0)(31))
+  for(i <- 1 to 31){
+
+    partial_remainder_regs(i) := Cat(partial_remainder_outputs(i-1)(30,0), dividend_regs(i)(dividend_regs(i).getWidth-1))
+    //partial_remainder_regs(i) := Cat(partial_remainder_outputs(i-1)(30,0), 0.U)
+    quotient_regs(i) := quotient_regs(i-1) ## (~partial_remainder_outputs(i)(31))
+    dontTouch(quotient_regs(i))
+  }
+  partial_remainder_regs(32) := partial_remainder_outputs(31)
+  dontTouch(partial_remainder_regs(32))
+
+  io.remainder.bits := partial_remainder_regs(32)
+
+  // FIXME: missing remainder update if negative...
 
   // Stage 33 logic (output) 
-  io.quotient.valid   :=  valid_reg(32)
-  io.remainder.valid  :=  valid_reg(32)
+  io.quotient.valid   :=  valid_reg(valid_reg.getWidth-1)
+  io.remainder.valid  :=  valid_reg(valid_reg.getWidth-1)
 
-  io.quotient.bits   :=  0.U
-  io.remainder.bits  :=  0.U
+  io.quotient.bits   :=  quotient_regs(31)
+  io.remainder.bits  :=  partial_remainder_regs(32)
 
-
+  // Dont Touch //
+  dontTouch(dividend_regs(0))
+  dontTouch(dividend_regs(1))
+  dontTouch(dividend_regs(30))
+  dontTouch(dividend_regs(31))
+  
 }
 
 
