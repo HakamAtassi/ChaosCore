@@ -49,6 +49,8 @@ def nonRestoringDiv(dividend, divisor):
     for _ in range(32):
         partialRemainderMSB = getMSB(partialRemainder)
 
+        print(hex(partialRemainder))
+
         if partialRemainderMSB == 0:     # positive
             partialRemainder, initialValue = shiftIn(partialRemainder, initialValue)
             partialRemainder = partialRemainder - divisor
@@ -56,8 +58,10 @@ def nonRestoringDiv(dividend, divisor):
             partialRemainder, initialValue = shiftIn(partialRemainder, initialValue)
             partialRemainder = partialRemainder + divisor
 
+
         partialRemainder = intToBin(partialRemainder)
         partialRemainderMSB = getMSB(partialRemainder)
+        print(hex(partialRemainder))
 
         if(partialRemainderMSB): # negative
             quotient <<= 1
@@ -65,6 +69,8 @@ def nonRestoringDiv(dividend, divisor):
         else:                   # positive
             quotient <<= 1
             quotient |= 0b1
+
+        print(hex(partialRemainder))
     
     partialRemainder = intToBin(partialRemainder)
     partialRemainderMSB = getMSB(partialRemainder)
@@ -98,7 +104,10 @@ if __name__ == "__main__":
         op1 = random.randint(1,(2<<31)-1) // 2
         op2 = random.randint(1,(2<<31)-1) // 2
 
-        result = nonRestoringDiv(op1, op2)
-        assert result == (op1//op2), f"Operation not valid for {op1} / {op2}. expected {op1//op2} ({op1/op2}) got {result} at iter {i}"
+    op1 = 0
+    op2 = 0x7FFF_FFFF
+
+    result = nonRestoringDiv(op1, op2)
+    assert result == (op1//op2), f"Operation not valid for {op1} / {op2}. expected {op1//op2} ({op1/op2}) got {result} at iter {0}"
 
     print("nonRestoring Success!")

@@ -2,13 +2,12 @@
 module non_restoring_computation(
   input  [31:0] io_partial_remainder_in,
                 io_divisor,
+  input         io_sel,
   output [31:0] io_partial_remainder_out
 );
 
   assign io_partial_remainder_out =
-    io_partial_remainder_in[31]
-      ? io_partial_remainder_in + io_divisor
-      : io_partial_remainder_in - io_divisor;
+    io_sel ? io_partial_remainder_in + io_divisor : io_partial_remainder_in - io_divisor;
 endmodule
 
 module non_restoring_divider(
@@ -28,7 +27,7 @@ module non_restoring_divider(
   output [31:0] io_remainder_bits
 );
 
-  reg  [33:0] valid_reg;
+  reg  [32:0] valid_reg;
   reg  [31:0] divisor_regs_0;
   reg  [31:0] divisor_regs_1;
   reg  [31:0] divisor_regs_2;
@@ -61,7 +60,6 @@ module non_restoring_divider(
   reg  [31:0] divisor_regs_29;
   reg  [31:0] divisor_regs_30;
   reg  [31:0] divisor_regs_31;
-  reg  [31:0] divisor_regs_32;
   reg  [31:0] dividend_regs_0;
   reg  [30:0] dividend_regs_1;
   reg  [29:0] dividend_regs_2;
@@ -193,7 +191,7 @@ module non_restoring_divider(
   wire [31:0] partial_remainder_outputs_31;
   always @(posedge clock) begin
     if (reset) begin
-      valid_reg <= 34'h0;
+      valid_reg <= 33'h0;
       divisor_regs_0 <= 32'h0;
       divisor_regs_1 <= 32'h0;
       divisor_regs_2 <= 32'h0;
@@ -226,7 +224,6 @@ module non_restoring_divider(
       divisor_regs_29 <= 32'h0;
       divisor_regs_30 <= 32'h0;
       divisor_regs_31 <= 32'h0;
-      divisor_regs_32 <= 32'h0;
       dividend_regs_0 <= 32'h0;
       dividend_regs_1 <= 31'h0;
       dividend_regs_2 <= 30'h0;
@@ -326,7 +323,7 @@ module non_restoring_divider(
       partial_remainder_regs_32 <= 32'h0;
     end
     else begin
-      valid_reg <= {valid_reg[32:0], io_dividend_valid & io_divisor_valid};
+      valid_reg <= {valid_reg[31:0], io_dividend_valid & io_divisor_valid};
       divisor_regs_0 <= io_divisor_bits;
       divisor_regs_1 <= divisor_regs_0;
       divisor_regs_2 <= divisor_regs_1;
@@ -359,7 +356,6 @@ module non_restoring_divider(
       divisor_regs_29 <= divisor_regs_28;
       divisor_regs_30 <= divisor_regs_29;
       divisor_regs_31 <= divisor_regs_30;
-      divisor_regs_32 <= divisor_regs_31;
       dividend_regs_0 <= io_dividend_bits;
       dividend_regs_1 <= dividend_regs_0[30:0];
       dividend_regs_2 <= dividend_regs_1[29:0];
@@ -392,6 +388,7 @@ module non_restoring_divider(
       dividend_regs_29 <= dividend_regs_28[2:0];
       dividend_regs_30 <= dividend_regs_29[1:0];
       dividend_regs_31 <= dividend_regs_30[0];
+      quotient_regs_0 <= ~(partial_remainder_outputs_0[31]);
       quotient_regs_1 <= {quotient_regs_0, ~(partial_remainder_outputs_1[31])};
       quotient_regs_2 <= {quotient_regs_1, ~(partial_remainder_outputs_2[31])};
       quotient_regs_3 <= {quotient_regs_2, ~(partial_remainder_outputs_3[31])};
@@ -423,236 +420,238 @@ module non_restoring_divider(
       quotient_regs_29 <= {quotient_regs_28, ~(partial_remainder_outputs_29[31])};
       quotient_regs_30 <= {quotient_regs_29, ~(partial_remainder_outputs_30[31])};
       quotient_regs_31 <= {quotient_regs_30, ~(partial_remainder_outputs_31[31])};
-      partial_remainder_regs_0 <= {31'h0, dividend_regs_0[31]};
-      partial_remainder_regs_1 <=
-        {partial_remainder_outputs_0[30:0], dividend_regs_1[30]};
-      partial_remainder_regs_2 <=
-        {partial_remainder_outputs_1[30:0], dividend_regs_2[29]};
-      partial_remainder_regs_3 <=
-        {partial_remainder_outputs_2[30:0], dividend_regs_3[28]};
-      partial_remainder_regs_4 <=
-        {partial_remainder_outputs_3[30:0], dividend_regs_4[27]};
-      partial_remainder_regs_5 <=
-        {partial_remainder_outputs_4[30:0], dividend_regs_5[26]};
-      partial_remainder_regs_6 <=
-        {partial_remainder_outputs_5[30:0], dividend_regs_6[25]};
-      partial_remainder_regs_7 <=
-        {partial_remainder_outputs_6[30:0], dividend_regs_7[24]};
-      partial_remainder_regs_8 <=
-        {partial_remainder_outputs_7[30:0], dividend_regs_8[23]};
-      partial_remainder_regs_9 <=
-        {partial_remainder_outputs_8[30:0], dividend_regs_9[22]};
-      partial_remainder_regs_10 <=
-        {partial_remainder_outputs_9[30:0], dividend_regs_10[21]};
-      partial_remainder_regs_11 <=
-        {partial_remainder_outputs_10[30:0], dividend_regs_11[20]};
-      partial_remainder_regs_12 <=
-        {partial_remainder_outputs_11[30:0], dividend_regs_12[19]};
-      partial_remainder_regs_13 <=
-        {partial_remainder_outputs_12[30:0], dividend_regs_13[18]};
-      partial_remainder_regs_14 <=
-        {partial_remainder_outputs_13[30:0], dividend_regs_14[17]};
-      partial_remainder_regs_15 <=
-        {partial_remainder_outputs_14[30:0], dividend_regs_15[16]};
-      partial_remainder_regs_16 <=
-        {partial_remainder_outputs_15[30:0], dividend_regs_16[15]};
-      partial_remainder_regs_17 <=
-        {partial_remainder_outputs_16[30:0], dividend_regs_17[14]};
-      partial_remainder_regs_18 <=
-        {partial_remainder_outputs_17[30:0], dividend_regs_18[13]};
-      partial_remainder_regs_19 <=
-        {partial_remainder_outputs_18[30:0], dividend_regs_19[12]};
-      partial_remainder_regs_20 <=
-        {partial_remainder_outputs_19[30:0], dividend_regs_20[11]};
-      partial_remainder_regs_21 <=
-        {partial_remainder_outputs_20[30:0], dividend_regs_21[10]};
-      partial_remainder_regs_22 <=
-        {partial_remainder_outputs_21[30:0], dividend_regs_22[9]};
-      partial_remainder_regs_23 <=
-        {partial_remainder_outputs_22[30:0], dividend_regs_23[8]};
-      partial_remainder_regs_24 <=
-        {partial_remainder_outputs_23[30:0], dividend_regs_24[7]};
-      partial_remainder_regs_25 <=
-        {partial_remainder_outputs_24[30:0], dividend_regs_25[6]};
-      partial_remainder_regs_26 <=
-        {partial_remainder_outputs_25[30:0], dividend_regs_26[5]};
-      partial_remainder_regs_27 <=
-        {partial_remainder_outputs_26[30:0], dividend_regs_27[4]};
-      partial_remainder_regs_28 <=
-        {partial_remainder_outputs_27[30:0], dividend_regs_28[3]};
-      partial_remainder_regs_29 <=
-        {partial_remainder_outputs_28[30:0], dividend_regs_29[2]};
-      partial_remainder_regs_30 <=
-        {partial_remainder_outputs_29[30:0], dividend_regs_30[1]};
-      partial_remainder_regs_31 <= {partial_remainder_outputs_30[30:0], dividend_regs_31};
+      partial_remainder_regs_0 <= 32'h0;
+      partial_remainder_regs_1 <= partial_remainder_outputs_0;
+      partial_remainder_regs_2 <= partial_remainder_outputs_1;
+      partial_remainder_regs_3 <= partial_remainder_outputs_2;
+      partial_remainder_regs_4 <= partial_remainder_outputs_3;
+      partial_remainder_regs_5 <= partial_remainder_outputs_4;
+      partial_remainder_regs_6 <= partial_remainder_outputs_5;
+      partial_remainder_regs_7 <= partial_remainder_outputs_6;
+      partial_remainder_regs_8 <= partial_remainder_outputs_7;
+      partial_remainder_regs_9 <= partial_remainder_outputs_8;
+      partial_remainder_regs_10 <= partial_remainder_outputs_9;
+      partial_remainder_regs_11 <= partial_remainder_outputs_10;
+      partial_remainder_regs_12 <= partial_remainder_outputs_11;
+      partial_remainder_regs_13 <= partial_remainder_outputs_12;
+      partial_remainder_regs_14 <= partial_remainder_outputs_13;
+      partial_remainder_regs_15 <= partial_remainder_outputs_14;
+      partial_remainder_regs_16 <= partial_remainder_outputs_15;
+      partial_remainder_regs_17 <= partial_remainder_outputs_16;
+      partial_remainder_regs_18 <= partial_remainder_outputs_17;
+      partial_remainder_regs_19 <= partial_remainder_outputs_18;
+      partial_remainder_regs_20 <= partial_remainder_outputs_19;
+      partial_remainder_regs_21 <= partial_remainder_outputs_20;
+      partial_remainder_regs_22 <= partial_remainder_outputs_21;
+      partial_remainder_regs_23 <= partial_remainder_outputs_22;
+      partial_remainder_regs_24 <= partial_remainder_outputs_23;
+      partial_remainder_regs_25 <= partial_remainder_outputs_24;
+      partial_remainder_regs_26 <= partial_remainder_outputs_25;
+      partial_remainder_regs_27 <= partial_remainder_outputs_26;
+      partial_remainder_regs_28 <= partial_remainder_outputs_27;
+      partial_remainder_regs_29 <= partial_remainder_outputs_28;
+      partial_remainder_regs_30 <= partial_remainder_outputs_29;
+      partial_remainder_regs_31 <= partial_remainder_outputs_30;
       partial_remainder_regs_32 <= partial_remainder_outputs_31;
     end
   end // always @(posedge)
   non_restoring_computation non_restoring_dividers_non_restoring_computation (
-    .io_partial_remainder_in  (partial_remainder_regs_0),
-    .io_divisor               (divisor_regs_1),
+    .io_partial_remainder_in  ({partial_remainder_regs_0[30:0], dividend_regs_0[31]}),
+    .io_divisor               (divisor_regs_0),
+    .io_sel                   (partial_remainder_regs_0[31]),
     .io_partial_remainder_out (partial_remainder_outputs_0)
   );
   non_restoring_computation non_restoring_dividers_non_restoring_computation_1 (
-    .io_partial_remainder_in  (partial_remainder_regs_1),
-    .io_divisor               (divisor_regs_2),
+    .io_partial_remainder_in  ({partial_remainder_regs_1[30:0], dividend_regs_1[30]}),
+    .io_divisor               (divisor_regs_1),
+    .io_sel                   (partial_remainder_regs_1[31]),
     .io_partial_remainder_out (partial_remainder_outputs_1)
   );
   non_restoring_computation non_restoring_dividers_non_restoring_computation_2 (
-    .io_partial_remainder_in  (partial_remainder_regs_2),
-    .io_divisor               (divisor_regs_3),
+    .io_partial_remainder_in  ({partial_remainder_regs_2[30:0], dividend_regs_2[29]}),
+    .io_divisor               (divisor_regs_2),
+    .io_sel                   (partial_remainder_regs_2[31]),
     .io_partial_remainder_out (partial_remainder_outputs_2)
   );
   non_restoring_computation non_restoring_dividers_non_restoring_computation_3 (
-    .io_partial_remainder_in  (partial_remainder_regs_3),
-    .io_divisor               (divisor_regs_4),
+    .io_partial_remainder_in  ({partial_remainder_regs_3[30:0], dividend_regs_3[28]}),
+    .io_divisor               (divisor_regs_3),
+    .io_sel                   (partial_remainder_regs_3[31]),
     .io_partial_remainder_out (partial_remainder_outputs_3)
   );
   non_restoring_computation non_restoring_dividers_non_restoring_computation_4 (
-    .io_partial_remainder_in  (partial_remainder_regs_4),
-    .io_divisor               (divisor_regs_5),
+    .io_partial_remainder_in  ({partial_remainder_regs_4[30:0], dividend_regs_4[27]}),
+    .io_divisor               (divisor_regs_4),
+    .io_sel                   (partial_remainder_regs_4[31]),
     .io_partial_remainder_out (partial_remainder_outputs_4)
   );
   non_restoring_computation non_restoring_dividers_non_restoring_computation_5 (
-    .io_partial_remainder_in  (partial_remainder_regs_5),
-    .io_divisor               (divisor_regs_6),
+    .io_partial_remainder_in  ({partial_remainder_regs_5[30:0], dividend_regs_5[26]}),
+    .io_divisor               (divisor_regs_5),
+    .io_sel                   (partial_remainder_regs_5[31]),
     .io_partial_remainder_out (partial_remainder_outputs_5)
   );
   non_restoring_computation non_restoring_dividers_non_restoring_computation_6 (
-    .io_partial_remainder_in  (partial_remainder_regs_6),
-    .io_divisor               (divisor_regs_7),
+    .io_partial_remainder_in  ({partial_remainder_regs_6[30:0], dividend_regs_6[25]}),
+    .io_divisor               (divisor_regs_6),
+    .io_sel                   (partial_remainder_regs_6[31]),
     .io_partial_remainder_out (partial_remainder_outputs_6)
   );
   non_restoring_computation non_restoring_dividers_non_restoring_computation_7 (
-    .io_partial_remainder_in  (partial_remainder_regs_7),
-    .io_divisor               (divisor_regs_8),
+    .io_partial_remainder_in  ({partial_remainder_regs_7[30:0], dividend_regs_7[24]}),
+    .io_divisor               (divisor_regs_7),
+    .io_sel                   (partial_remainder_regs_7[31]),
     .io_partial_remainder_out (partial_remainder_outputs_7)
   );
   non_restoring_computation non_restoring_dividers_non_restoring_computation_8 (
-    .io_partial_remainder_in  (partial_remainder_regs_8),
-    .io_divisor               (divisor_regs_9),
+    .io_partial_remainder_in  ({partial_remainder_regs_8[30:0], dividend_regs_8[23]}),
+    .io_divisor               (divisor_regs_8),
+    .io_sel                   (partial_remainder_regs_8[31]),
     .io_partial_remainder_out (partial_remainder_outputs_8)
   );
   non_restoring_computation non_restoring_dividers_non_restoring_computation_9 (
-    .io_partial_remainder_in  (partial_remainder_regs_9),
-    .io_divisor               (divisor_regs_10),
+    .io_partial_remainder_in  ({partial_remainder_regs_9[30:0], dividend_regs_9[22]}),
+    .io_divisor               (divisor_regs_9),
+    .io_sel                   (partial_remainder_regs_9[31]),
     .io_partial_remainder_out (partial_remainder_outputs_9)
   );
   non_restoring_computation non_restoring_dividers_non_restoring_computation_10 (
-    .io_partial_remainder_in  (partial_remainder_regs_10),
-    .io_divisor               (divisor_regs_11),
+    .io_partial_remainder_in  ({partial_remainder_regs_10[30:0], dividend_regs_10[21]}),
+    .io_divisor               (divisor_regs_10),
+    .io_sel                   (partial_remainder_regs_10[31]),
     .io_partial_remainder_out (partial_remainder_outputs_10)
   );
   non_restoring_computation non_restoring_dividers_non_restoring_computation_11 (
-    .io_partial_remainder_in  (partial_remainder_regs_11),
-    .io_divisor               (divisor_regs_12),
+    .io_partial_remainder_in  ({partial_remainder_regs_11[30:0], dividend_regs_11[20]}),
+    .io_divisor               (divisor_regs_11),
+    .io_sel                   (partial_remainder_regs_11[31]),
     .io_partial_remainder_out (partial_remainder_outputs_11)
   );
   non_restoring_computation non_restoring_dividers_non_restoring_computation_12 (
-    .io_partial_remainder_in  (partial_remainder_regs_12),
-    .io_divisor               (divisor_regs_13),
+    .io_partial_remainder_in  ({partial_remainder_regs_12[30:0], dividend_regs_12[19]}),
+    .io_divisor               (divisor_regs_12),
+    .io_sel                   (partial_remainder_regs_12[31]),
     .io_partial_remainder_out (partial_remainder_outputs_12)
   );
   non_restoring_computation non_restoring_dividers_non_restoring_computation_13 (
-    .io_partial_remainder_in  (partial_remainder_regs_13),
-    .io_divisor               (divisor_regs_14),
+    .io_partial_remainder_in  ({partial_remainder_regs_13[30:0], dividend_regs_13[18]}),
+    .io_divisor               (divisor_regs_13),
+    .io_sel                   (partial_remainder_regs_13[31]),
     .io_partial_remainder_out (partial_remainder_outputs_13)
   );
   non_restoring_computation non_restoring_dividers_non_restoring_computation_14 (
-    .io_partial_remainder_in  (partial_remainder_regs_14),
-    .io_divisor               (divisor_regs_15),
+    .io_partial_remainder_in  ({partial_remainder_regs_14[30:0], dividend_regs_14[17]}),
+    .io_divisor               (divisor_regs_14),
+    .io_sel                   (partial_remainder_regs_14[31]),
     .io_partial_remainder_out (partial_remainder_outputs_14)
   );
   non_restoring_computation non_restoring_dividers_non_restoring_computation_15 (
-    .io_partial_remainder_in  (partial_remainder_regs_15),
-    .io_divisor               (divisor_regs_16),
+    .io_partial_remainder_in  ({partial_remainder_regs_15[30:0], dividend_regs_15[16]}),
+    .io_divisor               (divisor_regs_15),
+    .io_sel                   (partial_remainder_regs_15[31]),
     .io_partial_remainder_out (partial_remainder_outputs_15)
   );
   non_restoring_computation non_restoring_dividers_non_restoring_computation_16 (
-    .io_partial_remainder_in  (partial_remainder_regs_16),
-    .io_divisor               (divisor_regs_17),
+    .io_partial_remainder_in  ({partial_remainder_regs_16[30:0], dividend_regs_16[15]}),
+    .io_divisor               (divisor_regs_16),
+    .io_sel                   (partial_remainder_regs_16[31]),
     .io_partial_remainder_out (partial_remainder_outputs_16)
   );
   non_restoring_computation non_restoring_dividers_non_restoring_computation_17 (
-    .io_partial_remainder_in  (partial_remainder_regs_17),
-    .io_divisor               (divisor_regs_18),
+    .io_partial_remainder_in  ({partial_remainder_regs_17[30:0], dividend_regs_17[14]}),
+    .io_divisor               (divisor_regs_17),
+    .io_sel                   (partial_remainder_regs_17[31]),
     .io_partial_remainder_out (partial_remainder_outputs_17)
   );
   non_restoring_computation non_restoring_dividers_non_restoring_computation_18 (
-    .io_partial_remainder_in  (partial_remainder_regs_18),
-    .io_divisor               (divisor_regs_19),
+    .io_partial_remainder_in  ({partial_remainder_regs_18[30:0], dividend_regs_18[13]}),
+    .io_divisor               (divisor_regs_18),
+    .io_sel                   (partial_remainder_regs_18[31]),
     .io_partial_remainder_out (partial_remainder_outputs_18)
   );
   non_restoring_computation non_restoring_dividers_non_restoring_computation_19 (
-    .io_partial_remainder_in  (partial_remainder_regs_19),
-    .io_divisor               (divisor_regs_20),
+    .io_partial_remainder_in  ({partial_remainder_regs_19[30:0], dividend_regs_19[12]}),
+    .io_divisor               (divisor_regs_19),
+    .io_sel                   (partial_remainder_regs_19[31]),
     .io_partial_remainder_out (partial_remainder_outputs_19)
   );
   non_restoring_computation non_restoring_dividers_non_restoring_computation_20 (
-    .io_partial_remainder_in  (partial_remainder_regs_20),
-    .io_divisor               (divisor_regs_21),
+    .io_partial_remainder_in  ({partial_remainder_regs_20[30:0], dividend_regs_20[11]}),
+    .io_divisor               (divisor_regs_20),
+    .io_sel                   (partial_remainder_regs_20[31]),
     .io_partial_remainder_out (partial_remainder_outputs_20)
   );
   non_restoring_computation non_restoring_dividers_non_restoring_computation_21 (
-    .io_partial_remainder_in  (partial_remainder_regs_21),
-    .io_divisor               (divisor_regs_22),
+    .io_partial_remainder_in  ({partial_remainder_regs_21[30:0], dividend_regs_21[10]}),
+    .io_divisor               (divisor_regs_21),
+    .io_sel                   (partial_remainder_regs_21[31]),
     .io_partial_remainder_out (partial_remainder_outputs_21)
   );
   non_restoring_computation non_restoring_dividers_non_restoring_computation_22 (
-    .io_partial_remainder_in  (partial_remainder_regs_22),
-    .io_divisor               (divisor_regs_23),
+    .io_partial_remainder_in  ({partial_remainder_regs_22[30:0], dividend_regs_22[9]}),
+    .io_divisor               (divisor_regs_22),
+    .io_sel                   (partial_remainder_regs_22[31]),
     .io_partial_remainder_out (partial_remainder_outputs_22)
   );
   non_restoring_computation non_restoring_dividers_non_restoring_computation_23 (
-    .io_partial_remainder_in  (partial_remainder_regs_23),
-    .io_divisor               (divisor_regs_24),
+    .io_partial_remainder_in  ({partial_remainder_regs_23[30:0], dividend_regs_23[8]}),
+    .io_divisor               (divisor_regs_23),
+    .io_sel                   (partial_remainder_regs_23[31]),
     .io_partial_remainder_out (partial_remainder_outputs_23)
   );
   non_restoring_computation non_restoring_dividers_non_restoring_computation_24 (
-    .io_partial_remainder_in  (partial_remainder_regs_24),
-    .io_divisor               (divisor_regs_25),
+    .io_partial_remainder_in  ({partial_remainder_regs_24[30:0], dividend_regs_24[7]}),
+    .io_divisor               (divisor_regs_24),
+    .io_sel                   (partial_remainder_regs_24[31]),
     .io_partial_remainder_out (partial_remainder_outputs_24)
   );
   non_restoring_computation non_restoring_dividers_non_restoring_computation_25 (
-    .io_partial_remainder_in  (partial_remainder_regs_25),
-    .io_divisor               (divisor_regs_26),
+    .io_partial_remainder_in  ({partial_remainder_regs_25[30:0], dividend_regs_25[6]}),
+    .io_divisor               (divisor_regs_25),
+    .io_sel                   (partial_remainder_regs_25[31]),
     .io_partial_remainder_out (partial_remainder_outputs_25)
   );
   non_restoring_computation non_restoring_dividers_non_restoring_computation_26 (
-    .io_partial_remainder_in  (partial_remainder_regs_26),
-    .io_divisor               (divisor_regs_27),
+    .io_partial_remainder_in  ({partial_remainder_regs_26[30:0], dividend_regs_26[5]}),
+    .io_divisor               (divisor_regs_26),
+    .io_sel                   (partial_remainder_regs_26[31]),
     .io_partial_remainder_out (partial_remainder_outputs_26)
   );
   non_restoring_computation non_restoring_dividers_non_restoring_computation_27 (
-    .io_partial_remainder_in  (partial_remainder_regs_27),
-    .io_divisor               (divisor_regs_28),
+    .io_partial_remainder_in  ({partial_remainder_regs_27[30:0], dividend_regs_27[4]}),
+    .io_divisor               (divisor_regs_27),
+    .io_sel                   (partial_remainder_regs_27[31]),
     .io_partial_remainder_out (partial_remainder_outputs_27)
   );
   non_restoring_computation non_restoring_dividers_non_restoring_computation_28 (
-    .io_partial_remainder_in  (partial_remainder_regs_28),
-    .io_divisor               (divisor_regs_29),
+    .io_partial_remainder_in  ({partial_remainder_regs_28[30:0], dividend_regs_28[3]}),
+    .io_divisor               (divisor_regs_28),
+    .io_sel                   (partial_remainder_regs_28[31]),
     .io_partial_remainder_out (partial_remainder_outputs_28)
   );
   non_restoring_computation non_restoring_dividers_non_restoring_computation_29 (
-    .io_partial_remainder_in  (partial_remainder_regs_29),
-    .io_divisor               (divisor_regs_30),
+    .io_partial_remainder_in  ({partial_remainder_regs_29[30:0], dividend_regs_29[2]}),
+    .io_divisor               (divisor_regs_29),
+    .io_sel                   (partial_remainder_regs_29[31]),
     .io_partial_remainder_out (partial_remainder_outputs_29)
   );
   non_restoring_computation non_restoring_dividers_non_restoring_computation_30 (
-    .io_partial_remainder_in  (partial_remainder_regs_30),
-    .io_divisor               (divisor_regs_31),
+    .io_partial_remainder_in  ({partial_remainder_regs_30[30:0], dividend_regs_30[1]}),
+    .io_divisor               (divisor_regs_30),
+    .io_sel                   (partial_remainder_regs_30[31]),
     .io_partial_remainder_out (partial_remainder_outputs_30)
   );
   non_restoring_computation non_restoring_dividers_non_restoring_computation_31 (
-    .io_partial_remainder_in  (partial_remainder_regs_31),
-    .io_divisor               (divisor_regs_32),
+    .io_partial_remainder_in  ({partial_remainder_regs_31[30:0], dividend_regs_31}),
+    .io_divisor               (divisor_regs_31),
+    .io_sel                   (partial_remainder_regs_31[31]),
     .io_partial_remainder_out (partial_remainder_outputs_31)
   );
   assign io_dividend_ready = 1'h1;
   assign io_divisor_ready = 1'h1;
-  assign io_quotient_valid = valid_reg[33];
+  assign io_quotient_valid = valid_reg[32];
   assign io_quotient_bits = quotient_regs_31;
-  assign io_remainder_valid = valid_reg[33];
+  assign io_remainder_valid = valid_reg[32];
   assign io_remainder_bits = partial_remainder_regs_32;
 endmodule
 
