@@ -1,6 +1,6 @@
 <testsuites name="results">
   <testsuite name="all" package="all">
-    <property name="random_seed" value="1709653395" />
-    <testcase name="functionalTest0" classname="test_connections" file="/home/hakam/repos/ChaosCore/cocotb/functional_tests/non_restoring_divider_tests/test_connections.py" lineno="70" time="0.0058858394622802734" sim_time_ns="83.001" ratio_time="14101.811735083244" />
+    <property name="random_seed" value="1709683761" />
+    <testcase name="testDividerRandom" classname="test_connections" file="/home/hakam/repos/ChaosCore/cocotb/functional_tests/non_restoring_divider_tests/test_connections.py" lineno="130" time="6.723896741867065" sim_time_ns="9801.001" ratio_time="1457.637048316494" />
   </testsuite>
 </testsuites>

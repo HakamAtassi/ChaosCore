@@ -1,3 +1,4 @@
+import random
 import cocotb
 from cocotb.triggers import Timer
 from cocotb.triggers import RisingEdge, FallingEdge, Timer
@@ -16,6 +17,7 @@ async def reset(dut):
     dut.reset.value = 1
     await RisingEdge(dut.clock)
     dut.reset.value = 0
+    await RisingEdge(dut.clock)
 
 def getBit(signal, bit):
     signal=int(signal)
@@ -67,11 +69,10 @@ def nonRestoringDiv(divisor, expectedQuotient, partialRemainder, workingDividend
     return expectedQuotient, partialRemainder, workingDividend
 
 
-@cocotb.test()
-async def functionalTest0(dut):
+async def functionalTest0(dut, dividend, divisor):
 
-    dividend = 20
-    divisor = 4
+    #dividend = 20
+    #divisor = 1
 
     expectedPartialRemainder=0
     expectedQuotient=0
@@ -95,31 +96,30 @@ async def functionalTest0(dut):
     dut.io_dividend_valid.value = 0
     dut.io_divisor_valid.value = 0
 
-    # Test stage 0
-    await RisingEdge(dut.clock) # updated stage 1 regs
-
-    # Test stage 1
-    await FallingEdge(dut.clock)
 
     # Test stage 2-31
     prevExpectedQuotient=0
-    for stage in range(1, 33):
+    for stage in range(0, 32):
         await FallingEdge(dut.clock)
 
         prevExpectedQuotient = expectedQuotient
         expectedQuotient, expectedPartialRemainder, expectedWorkingDividend = nonRestoringDiv(divisor, expectedQuotient, expectedPartialRemainder, expectedWorkingDividend)
 
-        if stage >= 2:
-            quotientRegsStage=getattr(dut, f"quotient_regs_{stage-2}")
-            assert quotientRegsStage==prevExpectedQuotient, f"quotient Reg incorrect. Expected {int(prevExpectedQuotient)} Got {int(quotientRegsStage)}"
+        if stage >=1:
+            pass
+            quotientRegsStage=getattr(dut, f"quotient_regs_{stage-1}")
+            assert quotientRegsStage==prevExpectedQuotient, f"quotient Reg incorrect. Expected {int(expectedQuotient)} Got {int(quotientRegsStage)}"
+            #print(f"{hex(int(quotientRegsStage))}, {hex(int(prevExpectedQuotient))}")
 
-        partialRemainderStageOutputs=getattr(dut, f"partial_remainder_outputs_{stage-1}")
-
-        assert partialRemainderStageOutputs==expectedPartialRemainder, f"Partial Remainder Wire incorrect. Expected {int(expectedPartialRemainder)} Got {int(partialRemainderStageOutputs)}"
-
+        partialRemainderStageOutputs=getattr(dut, f"partial_remainder_outputs_{stage}")
+        #print(f"{stage}: {hex(int(partialRemainderStageOutputs))}, {hex(int(expectedPartialRemainder))}")
+        assert partialRemainderStageOutputs==expectedPartialRemainder, f"Partial Remainder Wire incorrect. Expected {hex(int(expectedPartialRemainder))} Got {hex(int(partialRemainderStageOutputs))} on Wire {stage}"
         
         await RisingEdge(dut.clock)
 
+    await FallingEdge(dut.clock)
+
+    print(f"{dividend}/{divisor}={int(dut.io_quotient_bits)}")
     
     assert int(dut.io_quotient_valid) == 1, "Divider output not valid"
     assert int(dut.io_quotient_bits) == (dividend // divisor), "Divisor output not correct"
@@ -127,5 +127,35 @@ async def functionalTest0(dut):
     await RisingEdge(dut.clock)
     await RisingEdge(dut.clock)
 
+@cocotb.test()
+async def testDividerRandom(dut):
+    random.seed(0x42)
 
-    
+    #Note: Divider does not handle */0 internally
+
+    await functionalTest0(dut, 0x8000_0000, 0x8000_0000)
+    await functionalTest0(dut, 0x0000_0000, 0x7FFF_FFFF)
+    await functionalTest0(dut, 0x0000_000F, 0x7FFF_FFFF)
+    await functionalTest0(dut, 0x0000_0000, 0x3FFF_FFFF)
+    await functionalTest0(dut, 0x0000_0000, 0x1FFF_FFFF)
+    await functionalTest0(dut, 0x0000_0000, 0x0FFF_FFFF)
+    await functionalTest0(dut, 0x0000_0001, 0x0FFF_FFFF)
+    await functionalTest0(dut, 0, 0x01)
+    await functionalTest0(dut, 0x0000_8000, 0x0000_8000)
+    await functionalTest0(dut, 0x0001_0000, 0x0001_0000)
+    await functionalTest0(dut, 0x0002_0000, 0x0002_0000)
+    await functionalTest0(dut, 0x0100_0000, 0x0100_0000)
+    await functionalTest0(dut, 0x1000_0000, 0x1000_0000)
+    await functionalTest0(dut, 0x0000_0010, 0x0000_0010)
+    await functionalTest0(dut, 0x0000_1000, 0x0000_1000)
+    await functionalTest0(dut, 0x0000_0010, 0x0000_0001)
+    await functionalTest0(dut, 0x0000_0042, 0x0000_0042)
+    await functionalTest0(dut, 0xfff0_0042, 0x2)
+    await functionalTest0(dut, 0xfff0_0042, 0x42)
+    await functionalTest0(dut, 931, 7)
+    await functionalTest0(dut, 15, 3)
+
+    for i in range(100):
+        divisor = random.randint(1,30)
+        dividend = random.randint(divisor,10000)
+        await functionalTest0(dut, dividend, divisor)

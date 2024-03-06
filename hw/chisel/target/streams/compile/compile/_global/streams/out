@@ -1,6 +1,4 @@
-[0m[[0m[31merror[0m] [0m[0m/home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/ALU/non_restoring_divider.scala:122:78: type mismatch;[0m
-[0m[[0m[31merror[0m] [0m[0m found   : Int(0)[0m
-[0m[[0m[31merror[0m] [0m[0m required: chisel3.UInt[0m
-[0m[[0m[31merror[0m] [0m[0m    partial_remainder_regs(i) := partial_remainder_outputs(i-1)(30,0) << 1 | 0[0m
-[0m[[0m[31merror[0m] [0m[0m                                                                             ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/ALU/non_restoring_divider.scala:46:35: not found: value sel[0m
+[0m[[0m[31merror[0m] [0m[0m  io.partial_remainder_out := Mux(sel, io.partial_remainder_in + io.divisor, io.partial_remainder_in - io.divisor)[0m
+[0m[[0m[31merror[0m] [0m[0m                                  ^[0m
 [0m[[0m[31merror[0m] [0m[0mone error found[0m
