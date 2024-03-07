@@ -1,0 +1,114 @@
+#include <cstdint>
+#include <iostream>
+#include <cmath>
+#include <cassert>
+
+using std::cout;
+
+uint32_t priority_encoder(uint32_t val){
+  for(int i=31;i>=0;i--){
+    if((val >> i) > 0) return i;
+  }
+  return 0xdeafbeef;
+}
+
+// Formula: X_{i+1} = x_i*(2-R*x_i)
+float newton_raphson(float dividend, float divisor){
+  float initial_guesses[33] = {
+    0.50000000000000000000, //0
+    0.25000000000000000000, //1
+    0.12500000000000000000, //2
+    0.06250000000000000000, //3
+    0.03125000000000000000, //4
+    0.01562500000000000000, //5
+    0.00781250000000000000, //6
+    0.00390625000000000000, //7
+    0.00195312500000000000, //8
+    0.00097656250000000000, //9
+    0.00048828125000000000, //10
+    0.00024414062500000000, //11
+    0.00012207031250000000, //12
+    0.00006103515625000000, //13
+    0.00003051757812500000, //14
+    0.00001525878906250000, //15
+    0.00000762939453125000, //16
+    0.00000381469726562500, //17
+    0.00000190734863281250, //18
+    0.00000095367431640625, //19
+    0.00000047683715820312, //20
+    0.00000023841857910156, //21
+    0.00000011920928955078, //22
+    0.00000005960464477539, //23
+    0.00000002980232238770, //24
+    0.00000001490116119385, //25
+    0.00000000745058059692, //26
+    0.00000000372529029846, //27
+    0.00000000186264514923, //28
+    0.00000000093132257462, //29
+    0.00000000046566128731, //30
+    0.00000000023283064365, //31
+    0.00000000011641532183 //32
+  };
+  float x_i=initial_guesses[priority_encoder(divisor)];
+
+  for(int iteration = 0; iteration < 6; iteration++){
+    x_i=x_i*(2-divisor*x_i);
+  }
+  return x_i*dividend;
+}
+
+
+// Formula: X_{i+1} = x_i*(2-R*x_i)
+uint32_t newton_raphson(uint32_t dividend, uint32_t divisor){
+
+  uint32_t x_i=dividend>>(priority_encoder(divisor)+1);
+
+  for(int iteration = 0; iteration < 6; iteration++){
+    x_i=x_i*(2-divisor*x_i);
+  }
+  return x_i;
+}
+
+bool compare_floats(float A, float B, float delta){
+  float got = A;
+  float expected = B;
+  if(std::fabs(A-B) < delta){
+    return true;
+  }
+  printf("got %f, expected %f\n", got, expected);
+  return false;
+}
+
+int main(){
+  srand(0x42);
+
+  cout<< "Running Newton-Raphson\n";
+  
+  float A=15;
+  float B=3;
+  float result=0;
+
+  ////////////////
+  // EDGE CASES // 
+  ////////////////
+
+  A=0;
+  B=1;
+  result = newton_raphson(A, B);
+  assert(compare_floats(result, A/B, 0.1));
+
+
+
+  for(int i=0;i<2000000;i++){
+    A=rand()%(1<<31);
+    B=rand()%(1<<31);
+    result = newton_raphson(A, B);
+    assert(compare_floats(result, A/B, 0.1));
+  }
+
+  uint32_t A_int = 15;
+  uint32_t B_int = 3;
+
+  printf("%0d\n",newton_raphson(A_int, B_int));
+
+}
