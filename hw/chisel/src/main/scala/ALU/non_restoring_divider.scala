@@ -57,6 +57,7 @@ class non_restoring_divider extends Module{
 
   // FIXME: Add stall signal if cant output result (backpressure)
   // FIXME: missing remainder update if negative...
+  // FIXME: remainder entirely not output
   // FIXME: forgot to follow my own naming conventions
 
   // Assign inputs as always ready
