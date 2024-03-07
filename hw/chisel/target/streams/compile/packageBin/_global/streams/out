@@ -2,6 +2,10 @@
 [0m[[0m[0mdebug[0m] [0m[0mInput file mappings:[0m
 [0m[[0m[0mdebug[0m] [0m[0m	Main.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/repos/ChaosCore/hw/chisel/target/scala-2.13/classes/Main.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	unpipelined_non_restoring_divider.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/repos/ChaosCore/hw/chisel/target/scala-2.13/classes/unpipelined_non_restoring_divider.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	unpipelined_non_restoring_divider$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/repos/ChaosCore/hw/chisel/target/scala-2.13/classes/unpipelined_non_restoring_divider$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	non_restoring_divider$$anon$2.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/repos/ChaosCore/hw/chisel/target/scala-2.13/classes/non_restoring_divider$$anon$2.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	Main$delayedInit$body.class[0m
@@ -10,8 +14,12 @@
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/repos/ChaosCore/hw/chisel/target/scala-2.13/classes/non_restoring_computation$$anon$1.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	non_restoring_divider.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/repos/ChaosCore/hw/chisel/target/scala-2.13/classes/non_restoring_divider.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	unpipelined_non_restoring_divider$$anon$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/repos/ChaosCore/hw/chisel/target/scala-2.13/classes/unpipelined_non_restoring_divider$$anon$1.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	non_restoring_computation.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/repos/ChaosCore/hw/chisel/target/scala-2.13/classes/non_restoring_computation.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	Main$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/repos/ChaosCore/hw/chisel/target/scala-2.13/classes/Main$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	unpipelined_non_restoring_divider$division_state$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/repos/ChaosCore/hw/chisel/target/scala-2.13/classes/unpipelined_non_restoring_divider$division_state$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0mDone packaging.[0m

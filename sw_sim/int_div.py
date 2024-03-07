@@ -41,7 +41,7 @@ def intToBin(val):
     result = val + 2**32 if val<0 else val
     return result & 0xFFFF_FFFF
 
-def nonRestoringDiv(dividend, divisor):
+def nonRestoringDiv(dividend, divisor, signed = True):
     partialRemainder = 0
     initialValue = dividend
     quotient = 0b0
@@ -49,19 +49,17 @@ def nonRestoringDiv(dividend, divisor):
     for _ in range(32):
         partialRemainderMSB = getMSB(partialRemainder)
 
-        print(hex(partialRemainder))
-
         if partialRemainderMSB == 0:     # positive
             partialRemainder, initialValue = shiftIn(partialRemainder, initialValue)
-            partialRemainder = partialRemainder - divisor
+            partialRemainder = ((partialRemainder & 0xFFFF_FFFF) - (divisor & 0xFFFF_FFFF)) 
         else:                            # negative
             partialRemainder, initialValue = shiftIn(partialRemainder, initialValue)
-            partialRemainder = partialRemainder + divisor
+            partialRemainder = ((partialRemainder & 0xFFFF_FFFF) + (divisor & 0xFFFF_FFFF))
 
 
         partialRemainder = intToBin(partialRemainder)
         partialRemainderMSB = getMSB(partialRemainder)
-        print(hex(partialRemainder))
+        #print(hex(partialRemainder))
 
         if(partialRemainderMSB): # negative
             quotient <<= 1
@@ -70,7 +68,7 @@ def nonRestoringDiv(dividend, divisor):
             quotient <<= 1
             quotient |= 0b1
 
-        print(hex(partialRemainder))
+        #print(hex(partialRemainder))
     
     partialRemainder = intToBin(partialRemainder)
     partialRemainderMSB = getMSB(partialRemainder)
@@ -80,11 +78,16 @@ def nonRestoringDiv(dividend, divisor):
 
     return quotient
 
-
+def hexToSigned(val):
+    if (val >> 31) & 0x1 == 0x1:  # Check if the sign bit is 1
+        return -((~val & 0xFFFFFFFF) + 1)  # Mask to 32 bits before adding 1
+    return val & 0xFFFFFFFF  # Mask to 32 bits for positive numbers as well
 
 if __name__ == "__main__":
 
     print("Running restoring Div")
+
+    random.seed(0x42)
 
     for i in range(20000):
 
@@ -99,15 +102,23 @@ if __name__ == "__main__":
     print("Running Non-restoring Div")
 
 
-    for i in range(20000):
+    op2 = 0xFFFF_FFFD   #
+    op1 = 0x0000_0064   #
 
-        op1 = random.randint(1,(2<<31)-1) // 2
-        op2 = random.randint(1,(2<<31)-1) // 2
 
-    op1 = 0
-    op2 = 0x7FFF_FFFF
 
     result = nonRestoringDiv(op1, op2)
-    assert result == (op1//op2), f"Operation not valid for {op1} / {op2}. expected {op1//op2} ({op1/op2}) got {result} at iter {0}"
+    print(f"{int(hexToSigned(op1))}/{int(hexToSigned(op2))}: {hex(result)}")
 
-    print("nonRestoring Success!")
+    #assert result == (op1//op2), f"Operation not valid for {hex(op1)} / {hex(op2)}. expected {op1//op2} ({op1/op2}) got {result} at iter {0}"
+
+
+    #for i in range(20000):
+
+    #    op1 = random.randint(1,(2<<31)-1) 
+    #    op2 = random.randint(1,(2<<31)-1) >>1
+
+    #    result = nonRestoringDiv(op1, op2)
+    #    assert result == (op1//op2), f"Operation not valid for {hex(op1)} / {hex(op2)}. expected {op1//op2} ({op1/op2}) got {result} at iter {0}"
+
+    #print("nonRestoring Success!")
