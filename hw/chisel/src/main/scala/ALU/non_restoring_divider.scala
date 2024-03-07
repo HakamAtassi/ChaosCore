@@ -42,7 +42,6 @@ class non_restoring_computation extends Module{
     val partial_remainder_out   = Output(UInt(32.W))
   })
 
-
   io.partial_remainder_out := Mux(io.sel, io.partial_remainder_in + io.divisor, io.partial_remainder_in - io.divisor)
 }
 
@@ -126,6 +125,7 @@ class non_restoring_divider extends Module{
   io.remainder.bits  :=  partial_remainder_regs(32)
 }
 
+/*
 object Main extends App{
   println("Building non_restoring_divider");
 
@@ -141,3 +141,4 @@ object Main extends App{
     fw.close()
   }
 }
+*/

@@ -1,4 +1,4 @@
-[0m[[0m[31merror[0m] [0m[0m/home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/ALU/non_restoring_divider.scala:46:35: not found: value sel[0m
-[0m[[0m[31merror[0m] [0m[0m  io.partial_remainder_out := Mux(sel, io.partial_remainder_in + io.divisor, io.partial_remainder_in - io.divisor)[0m
-[0m[[0m[31merror[0m] [0m[0m                                  ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/ALU/unpipelined_non_restoring_division.scala:125:9: '(' expected but identifier found.[0m
+[0m[[0m[31merror[0m] [0m[0m        io.quotient.bits := quotient[0m
+[0m[[0m[31merror[0m] [0m[0m        ^[0m
 [0m[[0m[31merror[0m] [0m[0mone error found[0m
