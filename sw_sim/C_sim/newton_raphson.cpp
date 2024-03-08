@@ -51,7 +51,7 @@ float newton_raphson(float dividend, float divisor){
   };
   float x_i=initial_guesses[priority_encoder(divisor)];
 
-  for(int iteration = 0; iteration < 6; iteration++){
+  for(int iteration = 0; iteration < 10; iteration++){
     x_i=x_i*(2-divisor*x_i);
   }
   return x_i*dividend;
@@ -111,25 +111,11 @@ uint32_t fixed_point_newton_raphson(uint32_t A, uint32_t B){
 
   uint32_t temp=0;
 
-  //printf("initial guess %x\n",x_i);
-
-  for(int iteration = 0; iteration < 20; iteration++){
-    //printf("%x*(2-%x*%x)\n",x_i,B,x_i);
-
-    //x_i=UINT32_Q32_multiply(x_i, (0u-UINT32_Q32_multiply(B,x_i)));
-    //x_i=(0u-UINT32_Q32_multiply(B,x_i));
-
-    //temp = (((uint64_t)B * ((uint64_t)x_i<<32))>>32);
+  for(int iteration = 0; iteration < 10; iteration++){
     temp = 0u-Q1_31_Q32_multiply(B, x_i); // multiply full int with Q.32 (pure fraction)
-    // Result from above is Q1.31
-    //printf("temp: %x\n", temp);
-    //printf("%1.29f\n", Q32_to_float(temp));
     temp = ((uint64_t)x_i)*((uint64_t)temp<<1)>>32;  // multiply x_i (Q.32) with temp (Q1.31)
-    //printf("temp %x, x_i: %0x\n", temp, x_i);
-    //printf("%1.29f\n", Q32_to_float(temp));
     x_i=temp;
   }
-  //printf("0x%x\n", x_i);
   return x_i;
 }
 
@@ -147,15 +133,15 @@ int main(){
   srand(0x42);
   cout<< "Running Newton-Raphson\n";
 
+  uint32_t A=2;
+  uint32_t B=1234560;
 
-  for(int i=0;i<100;i++){
-    uint32_t A=4;
-    uint32_t B=123456;
+  uint32_t result = fixed_point_newton_raphson(A,B);
+  float f_result = Q32_to_float(result)*A;
 
-    uint32_t result = fixed_point_newton_raphson(A,B);
-    float f_result = Q32_to_float(result)*A;
+  printf("Result: %1.29f\n",f_result);
 
-    printf("Result: %1.29f\n",f_result);
-  }
+  printf("Result: %1.29f\n",newton_raphson(A,B));
+
 
 }

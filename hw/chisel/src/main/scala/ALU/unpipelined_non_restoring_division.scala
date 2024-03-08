@@ -73,6 +73,8 @@ class unpipelined_non_restoring_divider extends Module{
   io.dividend.ready := 0.B
   io.divisor.ready := 0.B
   io.signed.ready := 0.B
+
+  
   io.quotient.valid := 0.B
   io.remainder.valid := 0.B
   io.quotient.bits := 0.U
@@ -81,6 +83,10 @@ class unpipelined_non_restoring_divider extends Module{
 
   switch (division_state){
     is(idle){
+
+      io.dividend.ready := 1.B
+      io.divisor.ready := 1.B
+      io.signed.ready := 1.B
       when(io.dividend.valid && io.divisor.valid && io.signed.valid){
         division_state := active
         io.dividend.ready := 0.B
@@ -95,6 +101,9 @@ class unpipelined_non_restoring_divider extends Module{
       when(io.signed.bits === 1.B){ // inputs are signed
         divisor_sign_bit := io.divisor.bits(31)
         dividend_sign_bit := io.dividend.bits(31)
+      }.otherwise{
+        divisor_sign_bit := 0.U
+        dividend_sign_bit := 0.U
       }
       dontTouch(dividend_sign_bit)
       dontTouch(divisor_sign_bit)

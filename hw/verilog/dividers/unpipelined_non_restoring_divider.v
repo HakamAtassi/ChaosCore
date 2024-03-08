@@ -28,14 +28,17 @@ module unpipelined_non_restoring_divider(
   reg  [4:0]  state_counter;
   reg  [1:0]  division_state;
   wire        _GEN = division_state == 2'h0;
-  wire        _GEN_0 = division_state == 2'h1;
-  wire        _GEN_1 = _GEN | _GEN_0 | division_state == 2'h2;
-  wire        io_divisor_ready_0 = ~_GEN_1 & (&division_state);
-  wire        _GEN_2 = _GEN_1 | ~(&division_state);
-  wire [32:0] _GEN_3 = {partial_remainder[31:0], dividend[31]};
-  wire [32:0] _GEN_4 = {1'h0, divisor};
-  wire [32:0] _partial_remainder_next_T = _GEN_3 + _GEN_4;
-  wire [32:0] _partial_remainder_next_T_2 = _GEN_3 - _GEN_4;
+  wire        _GEN_0 = io_dividend_valid & io_divisor_valid & io_signed_valid;
+  wire        _GEN_1 = division_state == 2'h1;
+  wire        _GEN_2 = _GEN_1 | division_state == 2'h2;
+  wire        io_divisor_ready_0 = _GEN ? ~_GEN_0 : ~_GEN_2 & (&division_state);
+  wire        _GEN_3 = _GEN | _GEN_2;
+  wire        _GEN_4 = _GEN_3 | ~(&division_state);
+  wire        io_quotient_valid_0 = ~_GEN_3 & (&division_state);
+  wire [32:0] _GEN_5 = {partial_remainder[31:0], dividend[31]};
+  wire [32:0] _GEN_6 = {1'h0, divisor};
+  wire [32:0] _partial_remainder_next_T = _GEN_5 + _GEN_6;
+  wire [32:0] _partial_remainder_next_T_2 = _GEN_5 - _GEN_6;
   always @(posedge clock) begin
     if (reset) begin
       quotient <= 32'h0;
@@ -48,13 +51,11 @@ module unpipelined_non_restoring_divider(
       division_state <= 2'h0;
     end
     else begin
-      automatic logic [3:0][1:0] _GEN_5 =
+      automatic logic [3:0][1:0] _GEN_7 =
         {{2'h0},
          {2'h3},
          {(&state_counter) ? 2'h3 : division_state},
-         {io_dividend_valid & io_divisor_valid & io_signed_valid
-            ? 2'h1
-            : division_state}};
+         {_GEN_0 ? 2'h1 : division_state}};
       if (_GEN) begin
         quotient <= 32'h0;
         partial_remainder <= 33'h0;
@@ -66,8 +67,10 @@ module unpipelined_non_restoring_divider(
           io_divisor_bits[31] & io_signed_bits
             ? ~io_divisor_bits + 32'h1
             : io_divisor_bits;
+        dividend_sign_bit <= io_signed_bits & io_dividend_bits[31];
+        divisor_sign_bit <= io_signed_bits & io_divisor_bits[31];
       end
-      else if (_GEN_0) begin
+      else if (_GEN_1) begin
         quotient <=
           {quotient[30:0],
            ~(partial_remainder[32]
@@ -79,24 +82,20 @@ module unpipelined_non_restoring_divider(
           partial_remainder <= _partial_remainder_next_T_2;
         dividend <= {dividend[30:0], 1'h0};
       end
-      if (_GEN & io_signed_bits) begin
-        dividend_sign_bit <= io_dividend_bits[31];
-        divisor_sign_bit <= io_divisor_bits[31];
-      end
-      if (_GEN | ~_GEN_0) begin
+      if (_GEN | ~_GEN_1) begin
       end
       else
         state_counter <= state_counter + 5'h1;
-      division_state <= _GEN_5[division_state];
+      division_state <= _GEN_7[division_state];
     end
   end // always @(posedge)
   assign io_dividend_ready = io_divisor_ready_0;
   assign io_divisor_ready = io_divisor_ready_0;
-  assign io_signed_ready = 1'h0;
-  assign io_quotient_valid = io_divisor_ready_0;
+  assign io_signed_ready = _GEN & ~_GEN_0;
+  assign io_quotient_valid = io_quotient_valid_0;
   assign io_quotient_bits =
-    _GEN_2 ? 32'h0 : dividend_sign_bit ^ divisor_sign_bit ? ~quotient + 32'h1 : quotient;
-  assign io_remainder_valid = io_divisor_ready_0;
-  assign io_remainder_bits = _GEN_2 ? 32'h0 : partial_remainder[31:0];
+    _GEN_4 ? 32'h0 : dividend_sign_bit ^ divisor_sign_bit ? ~quotient + 32'h1 : quotient;
+  assign io_remainder_valid = io_quotient_valid_0;
+  assign io_remainder_bits = _GEN_4 ? 32'h0 : partial_remainder[31:0];
 endmodule
 

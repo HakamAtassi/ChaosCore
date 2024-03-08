@@ -5,6 +5,12 @@
 [0m[[0m[31merror[0m] [0m[0mSTDOUT:[0m
 [0m[[0m[31merror[0m] [0m[0m[0m
 [0m[[0m[31merror[0m] [0m[0mSTDERR:[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/ALU/unpipelined_non_restoring_division.scala:42:7: error: sink "io_dividend_ready" not fully initialized in "unpipelined_non_restoring_divider"[0m
+[0m[[0m[31merror[0m] [0m[0mclass unpipelined_non_restoring_divider extends Module{[0m
+[0m[[0m[31merror[0m] [0m[0m      ^[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/ALU/unpipelined_non_restoring_division.scala:42:7: error: sink "io_divisor_ready" not fully initialized in "unpipelined_non_restoring_divider"[0m
+[0m[[0m[31merror[0m] [0m[0mclass unpipelined_non_restoring_divider extends Module{[0m
+[0m[[0m[31merror[0m] [0m[0m      ^[0m
 [0m[[0m[31merror[0m] [0m[0msrc/main/scala/ALU/unpipelined_non_restoring_division.scala:42:7: error: sink "io_signed_ready" not fully initialized in "unpipelined_non_restoring_divider"[0m
 [0m[[0m[31merror[0m] [0m[0mclass unpipelined_non_restoring_divider extends Module{[0m
 [0m[[0m[31merror[0m] [0m[0m      ^[0m
@@ -17,6 +23,12 @@
 [0m[[0m[31merror[0m] [0m[0mSTDOUT:[0m
 [0m[[0m[31merror[0m] [0m[0m[0m
 [0m[[0m[31merror[0m] [0m[0mSTDERR:[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/ALU/unpipelined_non_restoring_division.scala:42:7: error: sink "io_dividend_ready" not fully initialized in "unpipelined_non_restoring_divider"[0m
+[0m[[0m[31merror[0m] [0m[0mclass unpipelined_non_restoring_divider extends Module{[0m
+[0m[[0m[31merror[0m] [0m[0m      ^[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/ALU/unpipelined_non_restoring_division.scala:42:7: error: sink "io_divisor_ready" not fully initialized in "unpipelined_non_restoring_divider"[0m
+[0m[[0m[31merror[0m] [0m[0mclass unpipelined_non_restoring_divider extends Module{[0m
+[0m[[0m[31merror[0m] [0m[0m      ^[0m
 [0m[[0m[31merror[0m] [0m[0msrc/main/scala/ALU/unpipelined_non_restoring_division.scala:42:7: error: sink "io_signed_ready" not fully initialized in "unpipelined_non_restoring_divider"[0m
 [0m[[0m[31merror[0m] [0m[0mclass unpipelined_non_restoring_divider extends Module{[0m
 [0m[[0m[31merror[0m] [0m[0m      ^[0m
