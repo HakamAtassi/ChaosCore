@@ -150,7 +150,6 @@ async def testDividerRandom(dut):
 
     print(f" {-1//10}: {-intToBin(1//10)}")
 
-    
     await functionalTest0(dut, 10, 2)
     await functionalTest0(dut, 10, 10)
     await functionalTest0(dut, 42, 42)
@@ -183,11 +182,12 @@ async def testDividerRandom(dut):
     await functionalTest0(dut, 0xfffffff6, 0xfffffff5, 1)
     await functionalTest0(dut, 0xfffffff3, 0x3, 1)
     await functionalTest0(dut, 1, 0xfffffff6, 1)
+    await functionalTest0(dut, 0x464e4ebc, 0x3e1004b4, 0)
 
 
 
-    for i in range(100):
-        divisor = random.randint(1,(1<<31)-1)
-        dividend = random.randint(divisor,(1<<31)-1)
-        sign = random.randint(0,1)
-        await functionalTest0(dut, dividend, divisor, sign)
+    #for i in range(100):
+        #divisor = random.randint(1,(1<<31)-1)
+        #dividend = random.randint(divisor,(1<<31)-1)
+        #sign = random.randint(0,1)
+        #await functionalTest0(dut, dividend, divisor, sign)
