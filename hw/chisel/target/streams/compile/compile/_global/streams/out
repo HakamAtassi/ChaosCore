@@ -1,4 +1,4 @@
-[0m[[0m[31merror[0m] [0m[0m/home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/ALU/unpipelined_non_restoring_division.scala:125:9: '(' expected but identifier found.[0m
-[0m[[0m[31merror[0m] [0m[0m        io.quotient.bits := quotient[0m
-[0m[[0m[31merror[0m] [0m[0m        ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala:114:102: not found: value cache_line_dirty_in[0m
+[0m[[0m[31merror[0m] [0m[0m    for(way <- 0 until ways){modified_cache_dirty(way) := Mux((write && io.cache_mem_hit(way)), 1.U, cache_line_dirty_in(way))}[0m
+[0m[[0m[31merror[0m] [0m[0m                                                                                                     ^[0m
 [0m[[0m[31merror[0m] [0m[0mone error found[0m

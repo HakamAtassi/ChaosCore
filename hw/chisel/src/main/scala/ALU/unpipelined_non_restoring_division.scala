@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------------------
-* Filename: fixed_latency_non_restoring_divider.scala
+* Filename: unpipelined_non_restoring_divider.scala
 * Author: Hakam Atassi
 * Date: Mar 7 2024
 * Description: An integer division unit
@@ -129,8 +129,6 @@ class unpipelined_non_restoring_divider extends Module{
 
     is(done){
 
-        io.dividend.ready := 1.B
-        io.divisor.ready  := 1.B
 
         when((dividend_sign_bit ^ divisor_sign_bit) === 1.U){
           io.quotient.bits := (~quotient)+1.U
@@ -142,8 +140,6 @@ class unpipelined_non_restoring_divider extends Module{
 
         io.quotient.valid := 1.B
         io.remainder.valid := 1.B
-
-
 
         division_state := idle
     }
@@ -160,19 +156,3 @@ class unpipelined_non_restoring_divider extends Module{
 
 }
 
-
-object Main extends App{
-  println("Building unpipelined_latency_non_restoring_divider");
-
-  var unpipelined_non_restoring_divider = ChiselStage.emitSystemVerilog(gen=new unpipelined_non_restoring_divider, firtoolOpts=Array("-disable-all-randomization", "-strip-debug-info"))
-
-  var file = new File("../verilog/dividers/unpipelined_non_restoring_divider.v")
-
-  var fw = new FileWriter(file)
-
-  try {
-    fw.write(unpipelined_non_restoring_divider)
-  } finally {
-    fw.close()
-  }
-}

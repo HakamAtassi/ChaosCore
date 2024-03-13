@@ -1,6 +1,6 @@
 ---
 layout: default
-title: FLU
+title: FPU
 parent: Architecture
 nav_order: 5
 ---

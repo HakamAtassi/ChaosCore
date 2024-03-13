@@ -225,6 +225,8 @@ class Scoreboard(uvm_component):
                 passed = False
         assert passed
 
+#FIXME: scoreboard does not check if ready and valid are asserted, deasserted properly
+#FIXME: I think a pipelined version is not as expensive as I think (LUT vs reg count)
 
 #############
 ## MONITOR ##
