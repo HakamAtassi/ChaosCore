@@ -1,0 +1,35 @@
+//.side-bar {
+    //@include mq(lg) {
+      //width: calc((70% - #{$nav-width + $content-width}) / 2 + #{$nav-width});
+    //}
+  //}
+
+.side-bar {
+  z-index: 0;
+  display: flex;
+  flex-wrap: wrap;
+  background-color: #27262b;
+}
+@media (min-width: 50rem) {
+  .side-bar {
+    flex-flow: column nowrap;
+    position: fixed;
+    width: 15.5rem;
+    height: 100%;
+    border-right: 1px solid #44434d;
+    align-items: flex-end;
+  }
+}
+@media (min-width: 66.5rem) {
+  .side-bar {
+    width: calc((70% - 66.5rem) / 2 + 16.5rem);
+    min-width: 16.5rem;
+  }
+}
+
+
+@media (min-width: 66.5rem) {
+  .main {
+    margin-left: max(16.5rem, (70% - 66.5rem) / 2 + 16.5rem);
+  }
+}
