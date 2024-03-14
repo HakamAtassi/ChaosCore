@@ -6,20 +6,22 @@ import chisel3.util._
 import java.io.{File, FileWriter}
 import java.rmi.server.UID
 
-class ReadWriteSmem extends Module {
-  val width: Int = 32
+class ReadWriteSmem(depth:Int, width: Int) extends Module {
   val io = IO(new Bundle {
     val enable = Input(Bool())
     val write = Input(Bool())
-    val addr = Input(UInt(10.W))
+    val addr = Input(UInt(log2Ceil(depth).W))
     val dataIn = Input(UInt(width.W))
     val dataOut = Output(UInt(width.W))
   })
 
-  val mem = SyncReadMem(1024, UInt(width.W))
-  // Create one write port and one read port
-  mem.write(io.addr, io.dataIn)
-  io.dataOut := mem.read(io.addr, io.enable)
+  val mem = SyncReadMem(depth, UInt(width.W))
+  io.dataOut := DontCare
+  when(io.enable) {
+    val rdwrPort = mem(io.addr)
+    when (io.write) { rdwrPort := io.dataIn }
+      .otherwise    { io.dataOut := rdwrPort }
+  }
 }
 
 class TrueDualPortMemory(depth: Int, width: Int) extends Module {

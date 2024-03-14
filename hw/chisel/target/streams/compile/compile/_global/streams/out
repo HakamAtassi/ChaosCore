@@ -1,4 +1,4 @@
-[0m[[0m[31merror[0m] [0m[0m/home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala:114:102: not found: value cache_line_dirty_in[0m
-[0m[[0m[31merror[0m] [0m[0m    for(way <- 0 until ways){modified_cache_dirty(way) := Mux((write && io.cache_mem_hit(way)), 1.U, cache_line_dirty_in(way))}[0m
-[0m[[0m[31merror[0m] [0m[0m                                                                                                     ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala:112:113: not found: value cache_mem_hit[0m
+[0m[[0m[31merror[0m] [0m[0m    for(way <- 0 until ways){for(i <- 0 until 16){modified_words(way)(i) := Mux((write_oh(i).asBool && write && cache_mem_hit(way)),io.cpu_data, io.cache_line_data_in(way)((i+1)*32-1,(i*32)))}}[0m
+[0m[[0m[31merror[0m] [0m[0m                                                                                                                ^[0m
 [0m[[0m[31merror[0m] [0m[0mone error found[0m

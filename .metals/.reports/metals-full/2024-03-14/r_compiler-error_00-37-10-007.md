@@ -1,3 +1,21 @@
+file://<WORKSPACE>/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+### java.lang.IndexOutOfBoundsException: 0
+
+occurred in the presentation compiler.
+
+presentation compiler configuration:
+Scala version: 3.3.1
+Classpath:
+<HOME>/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala3-library_3/3.3.1/scala3-library_3-3.3.1.jar [exists ], <HOME>/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala-library/2.13.10/scala-library-2.13.10.jar [exists ]
+Options:
+
+
+
+action parameters:
+offset: 4650
+uri: file://<WORKSPACE>/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+text:
+```scala
 /* ------------------------------------------------------------------------------------
 * Filename: L1_Cache.scala
 * Author: Hakam Atassi
@@ -67,7 +85,6 @@ class RMW(ways:Int = 4, sets:Int = 64, blockSizeBytes:Int = 64) extends Module{
     val dout = Output(Vec(ways, UInt(width.W)))
   })
 
-    //FIXME: when all PLRU needs to be reset, all wr_en must be enabled and data must be passed accordingly
 
 
     // FIXME: this module only works for full word modification!
@@ -83,13 +100,6 @@ class RMW(ways:Int = 4, sets:Int = 64, blockSizeBytes:Int = 64) extends Module{
 
     val PLRU_next = Wire(Vec(ways, Bool())) 
     PLRU_next := Mux(PLRU_OR_HIT.reduce(_ & _), io.cache_mem_hit, PLRU_OR_HIT)  //TODO: rename this to modified_cache_PLRU
-    io.wr_en := Mux(PLRU_OR_HIT.reduce(_ & _), VecInit(Seq.fill(4)(true.B)), io.cache_mem_hit)
-
-
-    dontTouch(PLRU_next(0))
-    dontTouch(PLRU_next(1))
-    dontTouch(PLRU_next(2))
-    dontTouch(PLRU_next(3))
     
     //////////////////
     // UPDATE VALID //
@@ -112,16 +122,14 @@ class RMW(ways:Int = 4, sets:Int = 64, blockSizeBytes:Int = 64) extends Module{
     val byte_select          = Wire(UInt(4.W))
 
 
-    byte_select := io.cpu_addr(5, 2)  // the word in the cache line being modified  
+    byte_select := io.cpu_addr(5, 2) >> 2  // the word in the cache line being modified  
     write_oh := VecInit(Seq.tabulate(16){ i => (byte_select === i.U) })
     write := (io.cpu_cmd === CPU_CMD.write)
 
-    for(way <- 0 until ways){for(i <- 0 until 16){modified_words(way)(i) := Mux((write_oh(i).asBool && write && io.cache_mem_hit(way)),io.cpu_data, io.cache_line_data_in(way)((i+1)*32-1,(i*32)))}}
+    for(@@)
 
-    for(way <- 0 until ways){for(i <- 0 until 16){ dontTouch(modified_words(way)(i)) 
-      dontTouch(write_oh(i))
-    }}
 
+    for(way <- 0 until ways){for(i <- 0 until 16){modified_words(way)(i) := Mux((write_oh(i).asBool && write), io.cache_line_data_in(way)((i+1)*32-1,(i*32)), io.cpu_data)}}
     for(way <- 0 until ways){modified_cache_data(way) := Cat(Seq.tabulate(16)(i => modified_words(way)(i)).reverse)}
 
     for(way <- 0 until ways){modified_cache_dirty(way) := Mux((write && io.cache_mem_hit(way)), 1.U, io.cache_line_dirty_in(way))}
@@ -134,6 +142,7 @@ class RMW(ways:Int = 4, sets:Int = 64, blockSizeBytes:Int = 64) extends Module{
 
     // Pack vectors and set wr_en accordingly
     for(way <- 0 until ways){io.dout(way) := io.cache_line_valid_in(way).asUInt ## modified_cache_dirty(way).asUInt ## PLRU_next(way).asUInt ## io.cache_line_tag_in(way) ## modified_cache_data(way)}
+    io.wr_en := io.cache_mem_hit  // The cache way that is written to is the one that hit
 }
 
 class L1_cache_mem(ways:Int = 4, sets:Int = 64, blockSizeBytes:Int = 64) extends Module{
@@ -313,3 +322,25 @@ object Main extends App{
 
 }
 
+
+```
+
+
+
+#### Error stacktrace:
+
+```
+scala.collection.LinearSeqOps.apply(LinearSeq.scala:131)
+	scala.collection.LinearSeqOps.apply$(LinearSeq.scala:128)
+	scala.collection.immutable.List.apply(List.scala:79)
+	dotty.tools.dotc.util.Signatures$.countParams(Signatures.scala:501)
+	dotty.tools.dotc.util.Signatures$.applyCallInfo(Signatures.scala:186)
+	dotty.tools.dotc.util.Signatures$.computeSignatureHelp(Signatures.scala:94)
+	dotty.tools.dotc.util.Signatures$.signatureHelp(Signatures.scala:63)
+	scala.meta.internal.pc.MetalsSignatures$.signatures(MetalsSignatures.scala:17)
+	scala.meta.internal.pc.SignatureHelpProvider$.signatureHelp(SignatureHelpProvider.scala:51)
+	scala.meta.internal.pc.ScalaPresentationCompiler.signatureHelp$$anonfun$1(ScalaPresentationCompiler.scala:398)
+```
+#### Short summary: 
+
+java.lang.IndexOutOfBoundsException: 0
