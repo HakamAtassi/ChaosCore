@@ -1,3 +1,21 @@
+file://<WORKSPACE>/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+### java.lang.IndexOutOfBoundsException: 0
+
+occurred in the presentation compiler.
+
+presentation compiler configuration:
+Scala version: 3.3.1
+Classpath:
+<HOME>/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala3-library_3/3.3.1/scala3-library_3-3.3.1.jar [exists ], <HOME>/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala-library/2.13.10/scala-library-2.13.10.jar [exists ]
+Options:
+
+
+
+action parameters:
+offset: 10863
+uri: file://<WORKSPACE>/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+text:
+```scala
 /* ------------------------------------------------------------------------------------
 * Filename: L1_Cache.scala
 * Author: Hakam Atassi
@@ -28,6 +46,9 @@
 * ------------------------------------------------------------------------------------ 
 */
 
+
+
+
 import chisel3._
 import circt.stage.ChiselStage
 import chisel3.util._
@@ -48,7 +69,6 @@ class RMW(ways:Int = 4, sets:Int = 64, blockSizeBytes:Int = 64) extends Module{
   val PLRUBits  = 1
   val dataBits  = blockSizeBytes*8
   val tagBits = 32 - log2Ceil(sets) - log2Ceil(blockSizeBytes)
-  val width = (validBits + tagBits + dirtyBits + PLRUBits) + dataBits  // 512 for data, Tag + valid + dirty + PLRU for metadeta
 
   val io = IO(new Bundle{
     val cache_mem_hit = Input(Vec(ways, Bool()))  // Hit signals directly out of the ways
@@ -64,10 +84,9 @@ class RMW(ways:Int = 4, sets:Int = 64, blockSizeBytes:Int = 64) extends Module{
     val cache_line_data_in   = Input(Vec(ways, UInt(dataBits.W))) 
 
     val wr_en = Output(Vec(ways, Bool()))
-    val dout = Output(Vec(ways, UInt(width.W)))
+    val dout = Output(Vec(ways, UInt(dataBits.W)))
   })
 
-    //FIXME: when all PLRU needs to be reset, all wr_en must be enabled and data must be passed accordingly
 
 
     // FIXME: this module only works for full word modification!
@@ -83,13 +102,6 @@ class RMW(ways:Int = 4, sets:Int = 64, blockSizeBytes:Int = 64) extends Module{
 
     val PLRU_next = Wire(Vec(ways, Bool())) 
     PLRU_next := Mux(PLRU_OR_HIT.reduce(_ & _), io.cache_mem_hit, PLRU_OR_HIT)  //TODO: rename this to modified_cache_PLRU
-    io.wr_en := Mux(PLRU_OR_HIT.reduce(_ & _), VecInit(Seq.fill(4)(true.B)), io.cache_mem_hit)
-
-
-    dontTouch(PLRU_next(0))
-    dontTouch(PLRU_next(1))
-    dontTouch(PLRU_next(2))
-    dontTouch(PLRU_next(3))
     
     //////////////////
     // UPDATE VALID //
@@ -112,18 +124,11 @@ class RMW(ways:Int = 4, sets:Int = 64, blockSizeBytes:Int = 64) extends Module{
     val byte_select          = Wire(UInt(4.W))
 
 
-    byte_select := io.cpu_addr(5, 2)  // the word in the cache line being modified  
+    byte_select := io.cpu_addr(5, 2) >> 2  // the word in the cache line being modified  
     write_oh := VecInit(Seq.tabulate(16){ i => (byte_select === i.U) })
     write := (io.cpu_cmd === CPU_CMD.write)
-
-    for(way <- 0 until ways){for(i <- 0 until 16){modified_words(way)(i) := Mux((write_oh(i).asBool && write && io.cache_mem_hit(way)),io.cpu_data, io.cache_line_data_in(way)((i+1)*32-1,(i*32)))}}
-
-    for(way <- 0 until ways){for(i <- 0 until 16){ dontTouch(modified_words(way)(i)) 
-      dontTouch(write_oh(i))
-    }}
-
-    for(way <- 0 until ways){modified_cache_data(way) := Cat(Seq.tabulate(16)(i => modified_words(way)(i)).reverse)}
-
+    for(way <- 0 until ways){for(i <- 0 until 16){modified_words(way)(i) := Mux((write_oh(i).asBool && write), io.cache_line_data_in(way)((i+1)*32-1,(i*32)), io.cpu_data)}}
+    for(way <- 0 until ways) {modified_cache_data(way) := Cat(Seq.tabulate(16)(i => modified_words(way)(i)).reverse)}
     for(way <- 0 until ways){modified_cache_dirty(way) := Mux((write && io.cache_mem_hit(way)), 1.U, io.cache_line_dirty_in(way))}
 
 
@@ -134,21 +139,22 @@ class RMW(ways:Int = 4, sets:Int = 64, blockSizeBytes:Int = 64) extends Module{
 
     // Pack vectors and set wr_en accordingly
     for(way <- 0 until ways){io.dout(way) := io.cache_line_valid_in(way).asUInt ## modified_cache_dirty(way).asUInt ## PLRU_next(way).asUInt ## io.cache_line_tag_in(way) ## modified_cache_data(way)}
+    io.wr_en := io.cache_mem_hit  // The cache way that is written to is the one that hit
 }
 
 class L1_cache_mem(ways:Int = 4, sets:Int = 64, blockSizeBytes:Int = 64) extends Module{
     val io = IO(new Bundle{
         // Inputs from CPU (forwarded by controller)
         val cpu_addr    =     Input(UInt(32.W))
-        val cpu_data    =     Input(UInt(32.W))
+        val cpu_data     =     Input(UInt(32.W))
         val cpu_valid   =     Input(Bool())
-        val cpu_cmd     =     Input(CPU_CMD()) 
+        val cpu_cmd     =     Input(CPU_CMD()) // either read or write
 
         // Inputs from Controller
         // val controller_addr    =     Input(UInt(32.W))
         // val controller_din     =     Input(UInt(32.W))
         // val controller_valid   =     Input(Bool())
-        // val controller_cmd     =     Input(???)  
+        // val controller_cmd   =       Input(???)  // either allocate or idle (i think)
 
         // Outputs
         val cache_dout  =     Output(UInt(32.W))
@@ -173,10 +179,9 @@ class L1_cache_mem(ways:Int = 4, sets:Int = 64, blockSizeBytes:Int = 64) extends
     println("Buidling L1 Cache")
     println(s"Cache Config: Ways=${ways}, Sets=${sets}, Block Size=${blockSizeBytes}B")
     println(s"Tag size = ${tagBits}")
-    println(s"Line width = ${width}")
 
-    val memories: Seq[ReadWriteSmem] = Seq.tabulate(ways) { w =>
-        Module(new ReadWriteSmem(depth=depth, width=width))
+    val memories: Seq[TrueDualPortMemory] = Seq.tabulate(ways) { w =>
+        Module(new TrueDualPortMemory(depth=depth, width=width))
     }
 
     // Delay cache request to match mem latency (shift register(s))
@@ -190,35 +195,43 @@ class L1_cache_mem(ways:Int = 4, sets:Int = 64, blockSizeBytes:Int = 64) extends
     ////////////////////
 
     // Rename bmem output (cache line)
-    val cache_mem_dout        = Wire(Vec(ways, UInt(dataBits.W)))
-    val cpu_addr_tag_delayed  = Wire(UInt(tagBits.W))
-
-    cpu_addr_tag_delayed      := delayed_cpu_addr(31, (31-tagBits+1))
-    dontTouch(cpu_addr_tag_delayed)
+    val cache_mem_dout  = Wire(Vec(ways, UInt(dataBits.W)))
+    val cpu_addr_tag_delayed = Wire(UInt(tagBits.W))
+    cpu_addr_tag_delayed := delayed_cpu_addr(31, (31-tagBits))
 
     for(i <- 0 until ways){
-        memories(i).io.addr  := io.cpu_addr(11, 6) 
-        cache_mem_dout(i)    := memories(i).io.dataOut
+        // DP RAM TOP (MEM) SIDE
+        // FIXME: Temp
+        memories(i).io.addrA := 0.U
+        memories(i).io.writeDataA := 0.U
+        memories(i).io.writeEnableA := 0.U
+
+        // DP RAM BOTTOM (CPU) SIDE
+        //memories(i).io.writeEnableB := RMW.io.wr_en(i)
+        //memories(i).io.writeDataB   := RMW.io.dout(i)
+        //memories(i).io.writeEnableB := 0.U
+        //memories(i).io.writeDataB   := 0.U
+        memories(i).io.addrB        := io.cache_addr
+
+        cache_mem_dout(i)           := memories(i).io.readDataB
     }
 
     /////////////////
     // RENAME DOUT //
     /////////////////
 
-    // CACHE LINE STRUCTURE [VALID, DIRTY, PLRU, TAG, DATA] 
     val cache_mem_valid = Wire(Vec(ways, Bool()))
     val cache_mem_dirty = Wire(Vec(ways, Bool()))
     val cache_mem_PLRU  = Wire(Vec(ways, Bool()))
     val cache_mem_tag   = Wire(Vec(ways, UInt(tagBits.W)))
-    val cache_mem_data  = Wire(Vec(ways, UInt(dataBits.W)))
+    val cache_mem_data  = Wire(Vec(ways, UInt(tagBits.W)))
 
     for(i <- 0 until ways){
-      // Line width 535
-      cache_mem_valid(i)  :=  memories(i).io.dataOut(width-1) // 534
-      cache_mem_dirty(i)  :=  memories(i).io.dataOut(width-2) // 533
-      cache_mem_PLRU(i)   :=  memories(i).io.dataOut(width-3) // 532
-      cache_mem_tag(i)    :=  memories(i).io.dataOut((width-4),(width-4-tagBits+1)) // 531, 512
-      cache_mem_data(i)   :=  memories(i).io.dataOut((width-4-tagBits),(0))       // 511 , 0
+      cache_mem_valid(i)  :=  memories(i).io.readDataA(width-1)
+      cache_mem_dirty(i)  :=  memories(i).io.readDataA(width-2)
+      cache_mem_PLRU(i)   :=  memories(i).io.readDataA(width-3)
+      cache_mem_tag(i)    :=  memories(i).io.readDataA((width-4),(width-4-tagBits))
+      cache_mem_data(i)   :=  memories(i).io.readDataA((width-5-tagBits),(0))
     }
 
     ///////////////
@@ -233,12 +246,16 @@ class L1_cache_mem(ways:Int = 4, sets:Int = 64, blockSizeBytes:Int = 64) extends
     val cache_hit = Wire(Bool())
     cache_hit := cache_mem_hit.asUInt.orR  // assign cache hit
 
+    // TODO: valid
     // TODO: ready
     
     io.cache_valid := ShiftRegister(io.cpu_valid.asUInt, outputLatency, true.B).asBool // FIXME: not always true (ie, on stalls due to MSHR)
     io.cache_addr  := ShiftRegister(io.cpu_addr, outputLatency, true.B) // FIXME: not always true (ie, on stalls due to MSHR)
     io.cache_hit   := ShiftRegister(cache_hit, outputLatency-memLatency, true.B).asBool // FIXME: not always true (ie, on stalls due to MSHR)
 
+
+    //TODO: Do PLRU update on hits (need to build PLRU circuit)
+    
     //////////////////////////////
     // Instantiate PLRU circuit //
     //////////////////////////////
@@ -261,30 +278,25 @@ class L1_cache_mem(ways:Int = 4, sets:Int = 64, blockSizeBytes:Int = 64) extends
     RMW.io.cache_line_dirty_in := cache_mem_dirty
     RMW.io.cache_line_PLRU_in  := cache_mem_PLRU
     RMW.io.cache_line_tag_in   := cache_mem_tag
-    RMW.io.cache_line_data_in  := cache_mem_data
+    RMW.io.cache_line_data_in  := cache_mem_dirty
 
 
-    for (way <- 0 until ways){
-      memories(way).io.write := RMW.io.wr_en(way)
-      memories(way).io.dataIn   := RMW.io.dout(way)
-      memories(way).io.enable := 1.U
-    }
+    for (@@)
+    memories(i).io.writeEnableB := RMW.io.wr_en(i)
+    memories(i).io.writeDataB   := RMW.io.dout(i)
 
     //////////////////////////
     // CONNECT PLRU circuit //
     //////////////////////////
 
+
     // Assign dout
     val hit_cache_line_data = RegInit(UInt(dataBits.W),0.U)
     hit_cache_line_data := Mux1H(cache_mem_hit, cache_mem_data)   // Get hit cache line
 
-    dontTouch(cache_mem_data(0))
-    dontTouch(cache_mem_data(1))
-    dontTouch(cache_mem_data(2))
-    dontTouch(cache_mem_data(3))
 
     // seperate cache line data into words
-    val byte_select = ShiftRegister(io.cpu_addr(5, 2), 2, 1.B) // FIXME: this is really word select
+    val byte_select = ShiftRegister(io.cpu_addr(5, 2) >> 2, 2, 1.B)
     val words = VecInit((0 until 16).map(i => hit_cache_line_data(32*(i+1)-1, 32*i).asUInt)) // Seperate cache line into 32 bit words
     val dout = RegInit(UInt(32.W),0.U)
     val dout_cases = (0 until 16).map(i => (byte_select === i.U) -> words(i))
@@ -313,3 +325,25 @@ object Main extends App{
 
 }
 
+
+```
+
+
+
+#### Error stacktrace:
+
+```
+scala.collection.LinearSeqOps.apply(LinearSeq.scala:131)
+	scala.collection.LinearSeqOps.apply$(LinearSeq.scala:128)
+	scala.collection.immutable.List.apply(List.scala:79)
+	dotty.tools.dotc.util.Signatures$.countParams(Signatures.scala:501)
+	dotty.tools.dotc.util.Signatures$.applyCallInfo(Signatures.scala:186)
+	dotty.tools.dotc.util.Signatures$.computeSignatureHelp(Signatures.scala:94)
+	dotty.tools.dotc.util.Signatures$.signatureHelp(Signatures.scala:63)
+	scala.meta.internal.pc.MetalsSignatures$.signatures(MetalsSignatures.scala:17)
+	scala.meta.internal.pc.SignatureHelpProvider$.signatureHelp(SignatureHelpProvider.scala:51)
+	scala.meta.internal.pc.ScalaPresentationCompiler.signatureHelp$$anonfun$1(ScalaPresentationCompiler.scala:398)
+```
+#### Short summary: 
+
+java.lang.IndexOutOfBoundsException: 0

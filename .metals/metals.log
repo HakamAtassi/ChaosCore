@@ -4854,3 +4854,276 @@ scala.meta.tokenizers.TokenizeException: <input>:243: error: unclosed comment
 2024.03.13 06:07:35 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
 2024.03.13 06:07:58 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
 2024.03.13 06:08:07 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 18:10:27 INFO  Started: Metals version 1.2.2 in folders '/home/hakam/repos/ChaosCore' for client Visual Studio Code 1.87.1.
+18:10:27.616 [pool-1-thread-1] INFO org.flywaydb.core.internal.license.VersionPrinter -- Flyway Community Edition 9.22.3 by Redgate
+18:10:27.617 [pool-1-thread-1] INFO org.flywaydb.core.internal.license.VersionPrinter -- See release notes here: https://rd.gt/416ObMi
+18:10:27.617 [pool-1-thread-1] INFO org.flywaydb.core.internal.license.VersionPrinter -- 
+18:10:27.618 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Scanning for classpath resources at 'classpath:db/callback' ...
+18:10:27.618 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Determining location urls for classpath:db/callback using ClassLoader jdk.internal.loader.ClassLoaders$AppClassLoader@55054057 ...
+18:10:27.618 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Unable to resolve location classpath:db/callback.
+18:10:27.618 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Scanning for classpath resources at 'classpath:db/migration' ...
+18:10:27.618 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Determining location urls for classpath:db/migration using ClassLoader jdk.internal.loader.ClassLoaders$AppClassLoader@55054057 ...
+18:10:27.618 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Scanning URL: jar:file:/home/hakam/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scalameta/metals_2.13/1.2.2/metals_2.13-1.2.2.jar!/db/migration
+18:10:27.620 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Found resource: db/migration/
+18:10:27.620 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Found resource: db/migration/V1__Create_tables.sql
+18:10:27.620 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Found resource: db/migration/V2__Server_discovery.sql
+18:10:27.620 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Found resource: db/migration/V3__Jar_symbols.sql
+18:10:27.620 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Found resource: db/migration/V4__Fingerprints.sql
+18:10:27.620 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Scanning for classes at classpath:db/migration
+18:10:27.622 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/ (filename: )
+18:10:27.622 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.resource.ResourceNameValidator -- Validating V1__Create_tables.sql
+18:10:27.623 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.resource.ResourceNameValidator -- Validating V2__Server_discovery.sql
+18:10:27.623 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.resource.ResourceNameValidator -- Validating V3__Jar_symbols.sql
+18:10:27.623 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.resource.ResourceNameValidator -- Validating V4__Fingerprints.sql
+18:10:27.677 [pool-1-thread-1] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:h2:file:/home/hakam/repos/ChaosCore/.metals/metals (H2 2.2)
+18:10:27.677 [pool-1-thread-1] DEBUG org.flywaydb.core.FlywayExecutor -- Driver: H2 JDBC Driver 2.2.224 (2023-09-17)
+18:10:27.677 [pool-1-thread-1] DEBUG org.flywaydb.core.FlywayExecutor -- DDL Transactions Supported: false
+18:10:27.678 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.schemahistory.SchemaHistoryFactory -- Schemas: 
+18:10:27.678 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.schemahistory.SchemaHistoryFactory -- Default schema: null
+18:10:27.681 [pool-1-thread-1] WARN org.flywaydb.core.internal.database.base.Database -- Flyway upgrade recommended: H2 2.2.224 is newer than this version of Flyway and support has not been tested. The latest supported version of H2 is 2.2.220.
+18:10:27.682 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.callback.SqlScriptCallbackFactory -- Scanning for SQL callbacks ...
+18:10:27.682 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/ (filename: )
+18:10:27.686 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.command.DbValidate -- Validating migrations ...
+18:10:27.688 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/ (filename: )
+18:10:27.692 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V1__Create_tables.sql (filename: V1__Create_tables.sql)
+18:10:27.692 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V2__Server_discovery.sql (filename: V2__Server_discovery.sql)
+18:10:27.692 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V3__Jar_symbols.sql (filename: V3__Jar_symbols.sql)
+18:10:27.692 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V4__Fingerprints.sql (filename: V4__Fingerprints.sql)
+18:10:27.692 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/ (filename: )
+18:10:27.693 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V1__Create_tables.sql (filename: V1__Create_tables.sql)
+18:10:27.693 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V2__Server_discovery.sql (filename: V2__Server_discovery.sql)
+18:10:27.693 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V3__Jar_symbols.sql (filename: V3__Jar_symbols.sql)
+18:10:27.693 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V4__Fingerprints.sql (filename: V4__Fingerprints.sql)
+18:10:27.693 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/ (filename: )
+18:10:27.699 [pool-1-thread-1] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 4 migrations (execution time 00:00.012s)
+18:10:27.700 [pool-1-thread-1] DEBUG org.flywaydb.core.internal.command.DbSchemas -- Skipping creation of existing schema: "PUBLIC"
+18:10:27.703 [pool-1-thread-1] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "PUBLIC": 4
+18:10:27.706 [pool-1-thread-1] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "PUBLIC" is up to date. No migration necessary.
+18:10:27.916 [pool-1-thread-1] DEBUG org.flywaydb.core.FlywayExecutor -- Memory usage: 47 of 102M
+2024.03.13 18:10:28 WARN  no build tool detected in workspace '/home/hakam/repos/ChaosCore'. The most common cause for this problem is that the editor was opened in the wrong working directory, for example if you use sbt then the workspace directory should contain build.sbt. 
+2024.03.13 18:10:28 WARN  Build server is not auto-connectable.
+2024.03.13 18:10:30 INFO  no build target found for /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala. Using presentation compiler with project's scala-library version: 3.3.1
+2024.03.13 18:10:31 INFO  time: code lens generation in 2.84s
+2024.03.13 18:24:36 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 18:24:54 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 18:25:27 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 18:25:38 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 18:26:04 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 18:27:12 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 18:27:48 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 18:28:32 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 18:31:04 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 18:32:54 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 18:34:08 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 18:34:45 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 18:35:08 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 18:36:26 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 18:36:47 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+Mar 13, 2024 6:36:50 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 1997
+2024.03.13 18:43:27 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+Mar 13, 2024 6:43:58 PM scala.meta.internal.pc.CompilerAccess handleError
+SEVERE: A severe compiler error occurred, full details of the error can be found in the error report /home/hakam/repos/ChaosCore/.metals/.reports/metals-full/2024-03-13/r_compiler-error_18-43-58-868.md
+2024.03.13 18:45:53 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 18:46:37 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 18:48:50 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 18:49:08 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 18:49:51 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 18:50:43 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+Mar 13, 2024 6:51:43 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 2852
+2024.03.13 18:51:46 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 18:52:02 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 18:52:03 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 18:52:45 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 18:53:00 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 18:53:20 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 18:53:52 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 18:55:08 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 18:55:58 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 18:56:20 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 18:59:25 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+Mar 13, 2024 6:59:40 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 3538
+Mar 13, 2024 7:00:20 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 3641
+2024.03.13 19:00:42 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 19:01:51 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 19:01:55 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 19:02:31 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+Mar 13, 2024 7:03:21 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 3973
+2024.03.13 19:04:38 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 19:05:05 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 19:05:30 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 19:06:04 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+Mar 13, 2024 7:06:07 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 4360
+2024.03.13 19:06:16 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+Mar 13, 2024 7:06:28 PM scala.meta.internal.pc.CompilerAccess handleError
+SEVERE: A severe compiler error occurred, full details of the error can be found in the error report /home/hakam/repos/ChaosCore/.metals/.reports/metals-full/2024-03-13/r_compiler-error_19-06-28-780.md
+2024.03.13 19:06:45 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 19:07:08 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+Mar 13, 2024 7:07:46 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 4626
+2024.03.13 19:41:20 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 19:42:19 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 19:42:25 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 19:43:42 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 19:44:07 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 19:44:21 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 19:44:30 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+Mar 13, 2024 7:45:01 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 5282
+2024.03.13 19:45:03 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/memories/memories.scala
+2024.03.13 19:45:04 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/memories/memories.scala
+2024.03.13 19:45:27 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/memories/memories.scala
+2024.03.13 19:45:34 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/memories/memories.scala
+2024.03.13 19:46:03 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+Mar 13, 2024 7:46:15 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 5581
+Mar 13, 2024 7:54:46 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 5590
+2024.03.13 20:11:02 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 20:11:25 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 20:12:45 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 20:13:01 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 20:13:11 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 20:14:10 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 20:14:21 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+Mar 13, 2024 8:14:48 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 6059
+2024.03.13 20:15:53 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 20:15:56 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 20:17:44 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 20:18:06 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 20:18:27 ERROR Failed to tokenize input for semantic tokens for /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+scala.meta.tokenizers.TokenizeException: <input>:182: error: Invalid literal number
+        memories(i).io.addr  := io.(5,2cache_addr) >> 2
+                                      ^
+	at scala.meta.internal.tokenizers.Reporter.syntaxError(Reporter.scala:23)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError$(Reporter.scala:23)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.syntaxError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError(Reporter.scala:25)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError$(Reporter.scala:25)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.syntaxError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.LegacyScanner.checkNoLetter(LegacyScanner.scala:820)
+	at scala.meta.internal.tokenizers.LegacyScanner.restOfUncertainToken$1(LegacyScanner.scala:864)
+	at scala.meta.internal.tokenizers.LegacyScanner.getNumber(LegacyScanner.scala:872)
+	at scala.meta.internal.tokenizers.LegacyScanner.fetchToken(LegacyScanner.scala:335)
+	at scala.meta.internal.tokenizers.LegacyScanner.nextToken(LegacyScanner.scala:211)
+	at scala.meta.internal.tokenizers.LegacyScanner.foreach(LegacyScanner.scala:1011)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.uncachedTokenize(ScalametaTokenizer.scala:24)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.$anonfun$tokenize$1(ScalametaTokenizer.scala:17)
+	at scala.collection.concurrent.TrieMap.getOrElseUpdate(TrieMap.scala:962)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.tokenize(ScalametaTokenizer.scala:17)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer$$anon$2.apply(ScalametaTokenizer.scala:332)
+	at scala.meta.tokenizers.Api$XtensionTokenizeDialectInput.tokenize(Api.scala:25)
+	at scala.meta.tokenizers.Api$XtensionTokenizeInputLike.tokenize(Api.scala:14)
+	at scala.meta.internal.metals.SemanticTokensProvider$.getTokens(SemanticTokensProvider.scala:28)
+	at scala.meta.internal.metals.SemanticTokensProvider$.provide(SemanticTokensProvider.scala:89)
+	at scala.meta.internal.metals.Compilers.$anonfun$semanticTokens$3(Compilers.scala:541)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:467)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.lang.Thread.run(Thread.java:829)
+
+2024.03.13 20:18:59 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 20:23:00 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 20:25:26 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 20:27:17 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 20:28:13 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+Mar 13, 2024 8:28:30 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 6753
+Mar 13, 2024 8:35:12 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 6770
+Mar 13, 2024 8:35:26 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 6780
+2024.03.13 20:56:49 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 21:00:45 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 21:01:49 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 21:05:00 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 21:05:04 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 21:05:12 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 21:15:01 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 21:15:54 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 21:15:59 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+Mar 13, 2024 10:01:30 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 7642
+2024.03.13 22:03:07 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/memories/memories.scala
+2024.03.13 22:03:28 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/memories/memories.scala
+2024.03.13 22:04:11 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/memories/memories.scala
+2024.03.13 22:04:13 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/memories/memories.scala
+2024.03.13 23:12:18 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 23:14:03 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 23:17:10 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 23:17:47 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 23:18:45 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 23:18:45 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 23:18:45 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 23:18:51 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 23:19:25 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 23:19:45 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 23:19:53 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 23:21:22 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 23:21:40 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 23:21:51 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.13 23:38:44 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+Mar 13, 2024 11:38:52 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 8450
+2024.03.13 23:38:59 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+Mar 13, 2024 11:45:05 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 8534
+Mar 14, 2024 12:00:34 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 8542
+2024.03.14 00:04:53 WARN  Using indexes to guess the definition of delayed_cpu_addr
+2024.03.14 00:04:53 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.14 00:04:53 WARN  Using indexes to guess the definition of delayed_cpu_addr
+Mar 14, 2024 12:04:54 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 8582
+2024.03.14 00:07:06 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+Mar 14, 2024 12:07:32 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 8649
+2024.03.14 00:26:10 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+Mar 14, 2024 12:26:33 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 8735
+2024.03.14 00:29:03 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.14 00:29:22 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.14 00:29:25 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.14 00:29:38 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.14 00:36:22 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+Mar 14, 2024 12:37:10 AM scala.meta.internal.pc.CompilerAccess handleError
+SEVERE: A severe compiler error occurred, full details of the error can be found in the error report /home/hakam/repos/ChaosCore/.metals/.reports/metals-full/2024-03-14/r_compiler-error_00-37-10-007.md
+2024.03.14 00:37:55 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.14 00:39:57 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.14 00:45:04 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+Mar 14, 2024 1:24:15 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 9787
+Mar 14, 2024 1:24:37 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 9861
+2024.03.14 01:24:43 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.14 01:59:13 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.14 02:00:44 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.14 02:01:03 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.14 02:02:51 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.14 02:03:05 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.14 02:03:58 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.14 02:11:22 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.14 02:11:25 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.14 02:11:43 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.14 02:12:08 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.14 02:13:38 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.14 02:16:15 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.14 03:07:43 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.14 03:08:14 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.14 03:09:14 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.14 03:10:28 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.14 03:13:36 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.14 03:13:41 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.14 03:14:25 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.14 03:15:23 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+2024.03.14 03:17:46 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala
+Mar 14, 2024 3:17:49 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 11102
+Mar 14, 2024 3:32:58 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 11118
