@@ -36,7 +36,8 @@ import java.rmi.server.UID
 
 
 object CPU_CMD extends ChiselEnum{
-  val read, write = Value
+  val LB, LH, LW, LBU, LHU, SB, SH, SW = Value
+  //val read, write = Value
 }
 
 
@@ -274,14 +275,15 @@ class L1_cache_mem(ways:Int = 4, sets:Int = 64, blockSizeBytes:Int = 64) extends
     // CONNECT PLRU circuit //
     //////////////////////////
 
-    // Assign dout
-    val hit_cache_line_data = RegInit(UInt(dataBits.W),0.U)
-    hit_cache_line_data := Mux1H(cache_mem_hit, cache_mem_data)   // Get hit cache line
-
     dontTouch(cache_mem_data(0))
     dontTouch(cache_mem_data(1))
     dontTouch(cache_mem_data(2))
     dontTouch(cache_mem_data(3))
+
+    // Assign dout
+    val hit_cache_line_data = RegInit(UInt(dataBits.W),0.U)
+    hit_cache_line_data := Mux1H(cache_mem_hit, cache_mem_data)   // Get hit cache line
+
 
     // seperate cache line data into words
     val byte_select = ShiftRegister(io.cpu_addr(5, 2), 2, 1.B) // FIXME: this is really word select

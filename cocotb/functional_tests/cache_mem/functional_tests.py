@@ -287,14 +287,14 @@ async def test4(dut):
     memory[0].value = constructCacheline(1, 0, 0, 3, 0xDEAD0003)
 
     await RisingEdge(dut.clock)
-    printCache(dut)
+    #printCache(dut)
 
     line0 = getMemoryLine(dut, 0, 0)
     line1 = getMemoryLine(dut, 1, 0)
     line2 = getMemoryLine(dut, 2, 0)
     line3 = getMemoryLine(dut, 3, 0)
 
-    print(f"{hex(line0)}\n{hex(line1)}\n{hex(line2)}\n{hex(line3)}")
+    #print(f"{hex(line0)}\n{hex(line1)}\n{hex(line2)}\n{hex(line3)}")
 
 
     metadata0 = getMetadata(dut,0,0)
@@ -509,4 +509,116 @@ async def test4(dut):
     line2 = getMemoryLine(dut, 2, 0)
     line3 = getMemoryLine(dut, 3, 0)
 
-    print(f"{hex(line0)}\n{hex(line1)}\n{hex(line2)}\n{hex(line3)}")
+@cocotb.test()
+async def test5(dut):
+    # Test pipeline reads
+    random.seed(0x42)
+
+    await cocotb.start(generateClock(dut)) 
+    await reset(dut)
+
+    await RisingEdge(dut.clock)
+
+    # update 
+
+    memory=getattr(dut,f"memories_{0}.mem_ext.Memory")
+    memory[0].value = constructCacheline(1, 0, 0, 0, 0xDEAD0000)
+
+    memory=getattr(dut,f"memories_{1}.mem_ext.Memory")
+    memory[0].value = constructCacheline(1, 0, 0, 1, 0xDEAD0001)
+
+    memory=getattr(dut,f"memories_{2}.mem_ext.Memory")
+    memory[0].value = constructCacheline(1, 0, 0, 2, 0xDEAD0002)
+
+    memory=getattr(dut,f"memories_{3}.mem_ext.Memory")
+    memory[0].value = constructCacheline(1, 0, 0, 3, 0xDEAD0003)
+
+
+
+    await RisingEdge(dut.clock)
+    dut.io_cpu_addr.value = constructAddress(0, 0, 0)
+    dut.io_cpu_valid.value = 1
+    dut.io_cpu_data.value = 0
+    dut.io_cpu_cmd.value = 0
+    await RisingEdge(dut.clock)
+    dut.io_cpu_addr.value = constructAddress(1, 0, 0)
+    dut.io_cpu_valid.value = 1
+    dut.io_cpu_data.value = 0
+    dut.io_cpu_cmd.value = 0
+    await RisingEdge(dut.clock)
+    dut.io_cpu_addr.value = constructAddress(2, 0, 0)
+    dut.io_cpu_valid.value = 1
+    dut.io_cpu_data.value = 0
+    dut.io_cpu_cmd.value = 0
+    await RisingEdge(dut.clock)
+    dut.io_cpu_addr.value = constructAddress(3, 0, 0)
+    dut.io_cpu_valid.value = 1
+    dut.io_cpu_data.value = 0
+    dut.io_cpu_cmd.value = 0
+    ## output 0
+
+    await FallingEdge(dut.clock)
+    assert int(dut.io_cache_valid.value) == 1, "output not valid"
+    assert int(dut.io_cache_hit.value) == 1, "Access did not hit"
+    assert int(dut.io_cache_dout.value) == 0xDEAD0000, "Data incorrect"
+    await FallingEdge(dut.clock)
+    ## output 1
+    assert int(dut.io_cache_valid.value) == 1, "output not valid"
+    assert int(dut.io_cache_hit.value) == 1, "Access did not hit"
+    assert int(dut.io_cache_dout.value) == 0xDEAD0001, "Data incorrect"
+    await FallingEdge(dut.clock)
+    ## output 2
+    assert int(dut.io_cache_valid.value) == 1, "output not valid"
+    assert int(dut.io_cache_hit.value) == 1, "Access did not hit"
+    assert int(dut.io_cache_dout.value) == 0xDEAD0002, "Data incorrect"
+    await FallingEdge(dut.clock)
+    ## output 3
+    assert int(dut.io_cache_valid.value) == 1, "output not valid"
+    assert int(dut.io_cache_hit.value) == 1, "Access did not hit"
+    assert int(dut.io_cache_dout.value) == 0xDEAD0003, "Data incorrect"
+    await RisingEdge(dut.clock)
+
+
+
+    await RisingEdge(dut.clock)
+    dut.io_cpu_addr.value = constructAddress(0, 0, 0)
+    dut.io_cpu_valid.value = 1
+    dut.io_cpu_data.value = 0
+    dut.io_cpu_cmd.value = 0
+    await RisingEdge(dut.clock)
+    dut.io_cpu_addr.value = constructAddress(1, 0, 0)
+    dut.io_cpu_valid.value = 1
+    dut.io_cpu_data.value = 0
+    dut.io_cpu_cmd.value = 0
+    await RisingEdge(dut.clock)
+    dut.io_cpu_addr.value = constructAddress(2, 0, 0)
+    dut.io_cpu_valid.value = 1
+    dut.io_cpu_data.value = 0
+    dut.io_cpu_cmd.value = 0
+    await RisingEdge(dut.clock)
+    dut.io_cpu_addr.value = constructAddress(3, 0, 0)
+    dut.io_cpu_valid.value = 1
+    dut.io_cpu_data.value = 0
+    dut.io_cpu_cmd.value = 0
+    ## output 0
+
+    await FallingEdge(dut.clock)
+    assert int(dut.io_cache_valid.value) == 1, "output not valid"
+    assert int(dut.io_cache_hit.value) == 1, "Access did not hit"
+    assert int(dut.io_cache_dout.value) == 0xDEAD0000, "Data incorrect"
+    await FallingEdge(dut.clock)
+    ## output 1
+    assert int(dut.io_cache_valid.value) == 1, "output not valid"
+    assert int(dut.io_cache_hit.value) == 1, "Access did not hit"
+    assert int(dut.io_cache_dout.value) == 0xDEAD0001, "Data incorrect"
+    await FallingEdge(dut.clock)
+    ## output 2
+    assert int(dut.io_cache_valid.value) == 1, "output not valid"
+    assert int(dut.io_cache_hit.value) == 1, "Access did not hit"
+    assert int(dut.io_cache_dout.value) == 0xDEAD0002, "Data incorrect"
+    await FallingEdge(dut.clock)
+    ## output 3
+    assert int(dut.io_cache_valid.value) == 1, "output not valid"
+    assert int(dut.io_cache_hit.value) == 1, "Access did not hit"
+    assert int(dut.io_cache_dout.value) == 0xDEAD0003, "Data incorrect"
+    await RisingEdge(dut.clock)

@@ -1,4 +1,4 @@
-[0m[[0m[31merror[0m] [0m[0m/home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem.scala:112:113: not found: value cache_mem_hit[0m
-[0m[[0m[31merror[0m] [0m[0m    for(way <- 0 until ways){for(i <- 0 until 16){modified_words(way)(i) := Mux((write_oh(i).asBool && write && cache_mem_hit(way)),io.cpu_data, io.cache_line_data_in(way)((i+1)*32-1,(i*32)))}}[0m
-[0m[[0m[31merror[0m] [0m[0m                                                                                                                ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem_v2.scala:294:41: value CONTROLLER_CMD is not a member of chisel3.Bundle{val controller_addr: chisel3.UInt; val controller_data: chisel3.UInt; val controller_cache_line: chisel3.UInt; val controller_valid: chisel3.Bool; val controller_cmd: CONTROLLER_CMD.Type; val cache_dout: chisel3.UInt; val cache_addr: chisel3.UInt; val cache_valid: chisel3.Bool; val cache_hit: chisel3.Bool}[0m
+[0m[[0m[31merror[0m] [0m[0m    sel_output_mask := ShiftRegister(io.CONTROLLER_CMD,3)    [0m
+[0m[[0m[31merror[0m] [0m[0m                                        ^[0m
 [0m[[0m[31merror[0m] [0m[0mone error found[0m
