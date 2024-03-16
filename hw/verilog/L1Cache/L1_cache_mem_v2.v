@@ -159,6 +159,7 @@ module L1_cache_mem(
                  io_cache_hit
 );
 
+  wire        hit;
   wire [3:0]  hit_oh;
   wire [7:0]  _data_memory_31_io_data_out;
   wire [7:0]  _data_memory_30_io_data_out;
@@ -200,14 +201,17 @@ module L1_cache_mem(
   reg  [20:0] delayed_controller_set;
   wire [3:0]  plru_in =
     {4{(_PLRU_memory_io_data_out & hit_oh) != 4'hF}} & _PLRU_memory_io_data_out | hit_oh;
-  wire        hit_oh_vec_1 = delayed_controller_tag == _tag_memory_io_data_out[41:21];
-  wire        hit_oh_vec_2 = delayed_controller_tag == _tag_memory_io_data_out[62:42];
-  wire        hit_oh_vec_3 = delayed_controller_tag == _tag_memory_io_data_out[83:63];
-  assign hit_oh =
-    {delayed_controller_tag == _tag_memory_io_data_out[20:0],
-     hit_oh_vec_1,
-     hit_oh_vec_2,
-     hit_oh_vec_3};
+  reg         valid_delayed;
+  wire [20:0] tag_vector_out_0 = _tag_memory_io_data_out[20:0];
+  wire [20:0] tag_vector_out_1 = _tag_memory_io_data_out[41:21];
+  wire [20:0] tag_vector_out_2 = _tag_memory_io_data_out[62:42];
+  wire [20:0] tag_vector_out_3 = _tag_memory_io_data_out[83:63];
+  wire        hit_oh_vec_0 = delayed_controller_tag == tag_vector_out_0;
+  wire        hit_oh_vec_1 = delayed_controller_tag == tag_vector_out_1;
+  wire        hit_oh_vec_2 = delayed_controller_tag == tag_vector_out_2;
+  wire        hit_oh_vec_3 = delayed_controller_tag == tag_vector_out_3;
+  assign hit_oh = {hit_oh_vec_0, hit_oh_vec_1, hit_oh_vec_2, hit_oh_vec_3};
+  assign hit = (|hit_oh) & valid_delayed;
   wire [7:0]  cache_addr =
     {hit_oh_vec_3 ? 2'h0 : hit_oh_vec_2 ? 2'h1 : {1'h1, ~hit_oh_vec_1},
      io_controller_addr[10:5]};
@@ -240,6 +244,9 @@ module L1_cache_mem(
   reg  [2:0]  sel_output_mask;
   reg         io_cache_hit_r;
   reg         io_cache_hit_r_1;
+  reg         io_cache_valid_r;
+  reg         io_cache_valid_r_1;
+  reg         io_cache_valid_r_2;
   always @(posedge clock) begin
     if (reset) begin
       delayed_controller_tag <= 21'h0;
@@ -358,14 +365,18 @@ module L1_cache_mem(
       data_out_pre_mask <= _GEN_8[delayed_controller_byte_offset_2[4:2]];
     end
     delayed_controller_set <= io_controller_addr[31:11];
+    valid_delayed <= io_controller_valid;
     delayed_controller_byte_offset <= io_controller_addr[5:0];
     delayed_controller_cmd <= io_controller_cmd;
     delayed_controller_byte_offset_2 <= delayed_controller_byte_offset;
     sel_output_mask_r <= io_controller_cmd;
     sel_output_mask_r_1 <= sel_output_mask_r;
     sel_output_mask <= sel_output_mask_r_1;
-    io_cache_hit_r <= |hit_oh;
+    io_cache_hit_r <= hit;
     io_cache_hit_r_1 <= io_cache_hit_r;
+    io_cache_valid_r <= io_controller_valid;
+    io_cache_valid_r_1 <= io_cache_valid_r;
+    io_cache_valid_r_2 <= io_cache_valid_r_1;
   end // always @(posedge)
   SDPReadWriteSmem PLRU_memory (
     .clock       (clock),
@@ -373,7 +384,7 @@ module L1_cache_mem(
     .io_rd_addr  (io_controller_addr[10:5]),
     .io_data_out (_PLRU_memory_io_data_out),
     .io_wr_addr  (delayed_controller_set[5:0]),
-    .io_wr_en    (plru_wr_en & (|hit_oh)),
+    .io_wr_en    (plru_wr_en & hit),
     .io_data_in  (plru_in)
   );
   ReadWriteSmem tag_memory (
@@ -383,14 +394,12 @@ module L1_cache_mem(
     .io_data_in
       ({plru_in[3] & plru_in[2] & plru_in[1] & ~(plru_in[0])
           ? io_controller_addr[31:11]
-          : _tag_memory_io_data_out[83:63],
+          : tag_vector_out_3,
         plru_in[3] & plru_in[2] & ~(plru_in[1])
           ? io_controller_addr[31:11]
-          : _tag_memory_io_data_out[62:42],
-        plru_in[3] & ~(plru_in[2])
-          ? io_controller_addr[31:11]
-          : _tag_memory_io_data_out[41:21],
-        plru_in[3] ? _tag_memory_io_data_out[20:0] : io_controller_addr[31:11]}),
+          : tag_vector_out_2,
+        plru_in[3] & ~(plru_in[2]) ? io_controller_addr[31:11] : tag_vector_out_1,
+        plru_in[3] ? tag_vector_out_0 : io_controller_addr[31:11]}),
     .io_data_out (_tag_memory_io_data_out)
   );
   ReadWriteSmem_1 data_memory_0 (
@@ -720,7 +729,7 @@ module L1_cache_mem(
           ? {24'h0, data_out_pre_mask[7:0]}
           : sel_output_mask == 3'h0 ? {28'h0, data_out_pre_mask[3:0]} : 32'h0;
   assign io_cache_addr = 32'h0;
-  assign io_cache_valid = 1'h0;
+  assign io_cache_valid = io_cache_valid_r_2;
   assign io_cache_hit = io_cache_hit_r_1;
 endmodule
 

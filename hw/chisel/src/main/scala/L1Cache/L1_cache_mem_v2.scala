@@ -104,9 +104,9 @@ class L1_cache_mem(ways:Int = 4, sets:Int = 64, blockSizeBytes:Int = 64) extends
     val controller_byte_offset      = Wire(UInt(byteOffsetBits.W))
     val controller_half_word_offset = Wire(UInt(halfWordOffsetBits.W))
     val controller_word_offset      = Wire(UInt(wordOffsetBits.W))
-    val hit = Wire(Bool())
-    val delayed_controller_tag = RegInit(UInt(tagBits.W), 0.U)
-    val hit_oh = Wire(UInt(ways.W))
+    val hit                         = Wire(Bool())
+    val delayed_controller_tag      = RegInit(UInt(tagBits.W), 0.U)
+    val hit_oh                      = Wire(UInt(ways.W))
 
     // FIXME: check all of this
     controller_set              := io.controller_addr(dataBits+setBits-1,dataBits)
@@ -180,6 +180,7 @@ class L1_cache_mem(ways:Int = 4, sets:Int = 64, blockSizeBytes:Int = 64) extends
     val tag_vector_in = Wire(Vec(ways, UInt(tagBits.W)))
     val cache_hit_way = Wire(UInt(4.W))
     val cache_addr    = Wire(UInt((setBits+wayBits).W))
+    val valid_delayed = RegNext(io.controller_valid)
 
     //FIXME: cache will need to be stalled on allocate to allow read modify write of tag (to avoid dp memory)
 
@@ -207,9 +208,21 @@ class L1_cache_mem(ways:Int = 4, sets:Int = 64, blockSizeBytes:Int = 64) extends
       hit_oh_vec(way) := (delayed_controller_tag === tag_vector_out(way)).asUInt
     }
 
+    dontTouch(delayed_controller_tag)
+    dontTouch(hit_oh_vec(0))
+    dontTouch(hit_oh_vec(1))
+    dontTouch(hit_oh_vec(2))
+    dontTouch(hit_oh_vec(3))
+
+
+    dontTouch(tag_vector_out(0))
+    dontTouch(tag_vector_out(1))
+    dontTouch(tag_vector_out(2))
+    dontTouch(tag_vector_out(3))
+
     hit_oh := hit_oh_vec.reduce(_ ## _)
 
-    hit := hit_oh.orR
+    hit := hit_oh.orR & valid_delayed
 
     cache_hit_way := PriorityEncoder(hit_oh)
 
@@ -303,11 +316,11 @@ class L1_cache_mem(ways:Int = 4, sets:Int = 64, blockSizeBytes:Int = 64) extends
       io.cache_dout := data_out_pre_mask & 0x0000.U
     }
 
-    io.cache_hit := ShiftRegister(hit_oh.orR, 2)
+    io.cache_hit := ShiftRegister(hit, 2)
     /////////////////////////////
     //io.cache_dout := 0.U
     io.cache_addr := 0.U
-    io.cache_valid := 0.U
+    io.cache_valid := ShiftRegister(io.controller_valid, 3)
 
 
 }
