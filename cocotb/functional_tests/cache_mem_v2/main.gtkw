@@ -1,0 +1,143 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Thu Mar 14 01:47:36 2024
+[*]
+[dumpfile] "/home/hakam/repos/ChaosCore/cocotb/functional_tests/cache/dump.fst"
+[dumpfile_mtime] "Thu Mar 14 00:33:34 2024"
+[dumpfile_size] 342069
+[savefile] "/home/hakam/repos/ChaosCore/cocotb/functional_tests/cache/main.gtkw"
+[timestart] 18750
+[size] 1920 1043
+[pos] -1 -1
+*-13.000000 52950 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] .
+[treeopen] .L1_cache_mem.
+[treeopen] .L1_cache_mem.memories_0.
+[treeopen] .L1_cache_mem.memories_1.
+[treeopen] .L1_cache_mem.memories_2.
+[treeopen] .L1_cache_mem.memories_3.
+[sst_width] 527
+[signals_width] 508
+[sst_expanded] 1
+[sst_vpaned_height] 302
+@28
+L1_cache_mem.clock
+@29
+L1_cache_mem.reset
+@200
+-
+-inputs
+@28
+L1_cache_mem.io_cpu_addr[31:0]
+@22
+L1_cache_mem.io_cpu_data[31:0]
+@28
+L1_cache_mem.io_cpu_valid
+L1_cache_mem.io_cpu_cmd
+L1_cache_mem.reset
+@200
+-output
+@22
+io_cache_addr[31:0]
+io_cache_dout[31:0]
+@28
+io_cache_hit
+io_cache_valid
+@200
+-
+-way0
+@22
+L1_cache_mem.memories_0.io_addr[5:0]
+L1_cache_mem.memories_0.io_dataIn[534:0]
+L1_cache_mem.memories_0.io_dataOut[534:0]
+@28
+L1_cache_mem.memories_0.io_write
+@200
+-way1
+@22
+L1_cache_mem.memories_1.io_addr[5:0]
+L1_cache_mem.memories_1.io_dataIn[534:0]
+L1_cache_mem.memories_1.io_dataOut[534:0]
+@28
+L1_cache_mem.memories_1.io_write
+@200
+-way2
+@22
+L1_cache_mem.memories_2.io_addr[5:0]
+L1_cache_mem.memories_2.io_dataIn[534:0]
+L1_cache_mem.memories_2.io_dataOut[534:0]
+@28
+L1_cache_mem.memories_2.io_write
+@200
+-way3
+@22
+L1_cache_mem.memories_3.io_addr[5:0]
+L1_cache_mem.memories_3.io_dataIn[534:0]
+L1_cache_mem.memories_3.io_dataOut[534:0]
+@28
+L1_cache_mem.memories_3.io_write
+@200
+-
+@28
+L1_cache_mem.cache_mem_hit_0
+L1_cache_mem.cache_mem_hit_1
+L1_cache_mem.cache_mem_hit_2
+L1_cache_mem.cache_mem_hit_3
+@200
+-
+-RMW
+@22
+L1_cache_mem.RMW.io_cache_line_data_in_0[511:0]
+L1_cache_mem.RMW.io_cache_line_data_in_1[511:0]
+L1_cache_mem.RMW.io_cache_line_data_in_2[511:0]
+L1_cache_mem.RMW.io_cache_line_data_in_3[511:0]
+L1_cache_mem.RMW.io_cache_line_tag_in_0[19:0]
+L1_cache_mem.RMW.io_cache_line_tag_in_1[19:0]
+L1_cache_mem.RMW.io_cache_line_tag_in_2[19:0]
+L1_cache_mem.RMW.io_cache_line_tag_in_3[19:0]
+@28
+L1_cache_mem.RMW.io_cache_mem_hit_0
+L1_cache_mem.RMW.io_cache_mem_hit_1
+L1_cache_mem.RMW.io_cache_mem_hit_2
+L1_cache_mem.RMW.io_cache_mem_hit_3
+L1_cache_mem.RMW.io_wr_en_0
+L1_cache_mem.RMW.io_wr_en_1
+L1_cache_mem.RMW.io_wr_en_2
+L1_cache_mem.RMW.io_wr_en_3
+@22
+L1_cache_mem.RMW.io_dout_0[534:0]
+L1_cache_mem.RMW.io_dout_1[534:0]
+L1_cache_mem.RMW.io_dout_2[534:0]
+L1_cache_mem.RMW.io_dout_3[534:0]
+@200
+-PLRU
+@28
+L1_cache_mem.RMW.io_cache_line_PLRU_in_0
+L1_cache_mem.RMW.io_cache_line_PLRU_in_1
+L1_cache_mem.RMW.io_cache_line_PLRU_in_2
+L1_cache_mem.RMW.io_cache_line_PLRU_in_3
+L1_cache_mem.RMW.PLRU_next_0
+L1_cache_mem.RMW.PLRU_next_1
+L1_cache_mem.RMW.PLRU_next_2
+L1_cache_mem.RMW.PLRU_next_3
+@200
+-
+@28
+L1_cache_mem.RMW.write_oh_0
+L1_cache_mem.RMW.write_oh_1
+L1_cache_mem.RMW.write_oh_2
+L1_cache_mem.RMW.write_oh_3
+L1_cache_mem.RMW.write_oh_4
+L1_cache_mem.RMW.write_oh_5
+L1_cache_mem.RMW.write_oh_6
+L1_cache_mem.RMW.write_oh_7
+L1_cache_mem.RMW.write_oh_8
+L1_cache_mem.RMW.write_oh_9
+L1_cache_mem.RMW.write_oh_10
+L1_cache_mem.RMW.write_oh_11
+L1_cache_mem.RMW.write_oh_12
+L1_cache_mem.RMW.write_oh_13
+L1_cache_mem.RMW.write_oh_14
+L1_cache_mem.RMW.write_oh_15
+[pattern_trace] 1
+[pattern_trace] 0
