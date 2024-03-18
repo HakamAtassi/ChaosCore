@@ -1,3 +1,21 @@
+file://<WORKSPACE>/hw/chisel/src/main/scala/L1Cache/L1_cache_mem_v2.scala
+### java.lang.IndexOutOfBoundsException: 0
+
+occurred in the presentation compiler.
+
+presentation compiler configuration:
+Scala version: 3.3.1
+Classpath:
+<HOME>/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala3-library_3/3.3.1/scala3-library_3-3.3.1.jar [exists ], <HOME>/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala-library/2.13.10/scala-library-2.13.10.jar [exists ]
+Options:
+
+
+
+action parameters:
+offset: 15182
+uri: file://<WORKSPACE>/hw/chisel/src/main/scala/L1Cache/L1_cache_mem_v2.scala
+text:
+```scala
 /* ------------------------------------------------------------------------------------
 * Filename: L1_Cache.scala
 * Author: Hakam Atassi
@@ -90,7 +108,7 @@ class L1_cache_mem(ways:Int = 4, sets:Int = 64, blockSizeBytes:Int = 64) extends
         // Outputs
         val cache_dout                =     Output(UInt(32.W))
         val cache_addr                =     Output(UInt(32.W)) 
-        val cache_evict_line          =     Output(UInt(dataSizeBits.W)) 
+        val cache_evict_line          =     Output(UInt(32.W)) 
         val cache_valid               =     Output(Bool())
         val cache_hit                 =     Output(Bool())
     })
@@ -123,23 +141,20 @@ class L1_cache_mem(ways:Int = 4, sets:Int = 64, blockSizeBytes:Int = 64) extends
     // CMD DECODER //
     /////////////////
 
-    val tag_wr_en = RegInit(Bool(), 0.B)
+    val tag_wr_en = Wire(Bool())
     val plru_wr_en = RegInit(Bool(), 0.B)
     val allocate = RegInit(Bool(), 0.B)
-    val dirty_wr_en = RegInit(Bool(), 0.B)
 
     // tag only writes upon allocate. Delay since tag pos depends on the result of PLRU mem
-    tag_wr_en := (io.controller_cmd === CONTROLLER_CMD.ALLOCATE) && io.controller_valid
+    tag_wr_en := (io.controller_cmd === CONTROLLER_CMD.ALLOCATE)
 
     // plru updates only on reads/writes, not allocate, since the allocated way goes into the most significant 0 anyway
-    plru_wr_en := (io.controller_cmd =/= CONTROLLER_CMD.NOP && io.controller_cmd =/=CONTROLLER_CMD.ALLOCATE) && io.controller_valid
+    plru_wr_en := (io.controller_cmd =/= CONTROLLER_CMD.NOP && io.controller_cmd =/=CONTROLLER_CMD.NOP)
 
     // allocate signal set one cycle after request, since the eviction line must be read out first
-    allocate := (io.controller_cmd === CONTROLLER_CMD.ALLOCATE) & io.controller_valid
+    allocate := (io.controller_cmd === CONTROLLER_CMD.ALLOCATE)
 
-    dirty_wr_en := ((io.controller_cmd === CONTROLLER_CMD.SW) || (io.controller_cmd === CONTROLLER_CMD.SHW) || (io.controller_cmd === CONTROLLER_CMD.SB)  || (io.controller_cmd === CONTROLLER_CMD.ALLOCATE)) & io.controller_valid
 
-    dontTouch(dirty_wr_en)
 
     /////////////////
     // PLRU Memory //
@@ -150,8 +165,6 @@ class L1_cache_mem(ways:Int = 4, sets:Int = 64, blockSizeBytes:Int = 64) extends
     val plru_out = Wire(UInt(4.W))
     val plru_in  = Wire(UInt(4.W))
     val plru_oh  = Wire(UInt(ways.W))
-    val allocate_way = Wire(UInt(ways.W))
-
 
     // Enable
     PLRU_memory.io.enable := 1.B
@@ -175,22 +188,7 @@ class L1_cache_mem(ways:Int = 4, sets:Int = 64, blockSizeBytes:Int = 64) extends
       // Bit N is set if Bits (N-1),0 of plru_out are all set
 
     // FIXME: Only works for 4 ways    
-    // FIXME: this is reversed. do the opposite
-    plru_oh := Cat( ~plru_in(3) & plru_in(2) & plru_in(1) & plru_in(0), ~plru_in(2) & plru_in(1) & plru_in(0), ~plru_in(1) & plru_in(0), ~plru_in(0))
-
-
-    when(plru_out(0) === 0.U){
-      allocate_way := 0.U
-    }.elsewhen(plru_out(1) === 0.U){
-      allocate_way := 1.U
-    }.elsewhen(plru_out(2) === 0.U){
-      allocate_way := 2.U
-    }.otherwise{
-      allocate_way := 3.U
-    }
-
-      //allocate_way := PriorityEncoder(plru_in)
-      dontTouch(allocate_way)
+    plru_oh := Cat(~plru_in(3), plru_in(3) & ~plru_in(2), plru_in(3) & plru_in(2) & ~plru_in(1),  plru_in(3) & plru_in(2) & plru_in(1) & ~plru_in(0))
 
 
     ////////////////
@@ -212,10 +210,10 @@ class L1_cache_mem(ways:Int = 4, sets:Int = 64, blockSizeBytes:Int = 64) extends
     // update on allocate as needed
     for(way <- 0 until ways){tag_vector_out(way) := tag_memory.io.data_out((way+1)*tagBits-1,way*tagBits)}
     
-    tag_vector_in(0) := Mux(plru_oh(0), controller_tag, tag_vector_out(0))
-    tag_vector_in(1) := Mux(plru_oh(1), controller_tag, tag_vector_out(1))
-    tag_vector_in(2) := Mux(plru_oh(2), controller_tag, tag_vector_out(2))
-    tag_vector_in(3) := Mux(plru_oh(3), controller_tag, tag_vector_out(3))
+    tag_vector_in(0) := Mux(plru_oh(3), controller_tag, tag_vector_out(0))
+    tag_vector_in(1) := Mux(plru_oh(2), controller_tag, tag_vector_out(1))
+    tag_vector_in(2) := Mux(plru_oh(1), controller_tag, tag_vector_out(2))
+    tag_vector_in(3) := Mux(plru_oh(0), controller_tag, tag_vector_out(3))
 
     tag_memory.io.data_in := Cat(tag_vector_in(3), tag_vector_in(2), tag_vector_in(1), tag_vector_in(0))
 
@@ -245,31 +243,10 @@ class L1_cache_mem(ways:Int = 4, sets:Int = 64, blockSizeBytes:Int = 64) extends
 
     hit := hit_oh.orR & valid_delayed
 
-    dontTouch(plru_oh)
-
     cache_hit_way := PriorityEncoder(hit_oh)
     dontTouch(cache_hit_way)
 
-    cache_addr             := Mux(allocate, allocate_way ## RegNext(controller_set), cache_hit_way ## RegNext(controller_set))       // The address used to index the cache data memory
-
-    //////////////////
-    // Dirty Memory //
-    //////////////////
-
-    val dirty_memory = Module(new SDPReadWriteSmem(depth = sets, width = ways))
-    val dirty_out = Wire(UInt(ways.W))
-
-    dirty_memory.io.enable := 1.B
-    dirty_memory.io.rd_addr := controller_set
-    dirty_out := dirty_memory.io.data_out
-
-
-    dirty_memory.io.wr_addr     := RegNext(controller_set)
-    dirty_memory.io.wr_en       := RegNext(dirty_wr_en)
-    dirty_memory.io.data_in := Mux(RegNext(allocate), (~plru_oh & dirty_out), hit_oh | dirty_out)
-   
-    dontTouch(dirty_out)
-
+    cache_addr             := cache_hit_way ## RegNext(controller_set)       // The address used to index the cache data memory
 
     ///////////////////
     // Data Memories //
@@ -371,17 +348,15 @@ class L1_cache_mem(ways:Int = 4, sets:Int = 64, blockSizeBytes:Int = 64) extends
 
     val eviction_line = RegInit(VecInit(Seq.fill(blockSizeBytes)(0.U(8.W))))
 
-    for (byte <- 0 until blockSizeBytes){
-      eviction_line(byte) := data_memory(byte).io.data_out
-    }
+    for (@@)
 
-    io.cache_evict_line := eviction_line.reduce(_ ## _)
+
 
 
     /////////////////////////////
     //io.cache_dout := 0.U
     io.cache_addr := 0.U
-    //io.cache_evict_line := 0.U
+    io.cache_evict_line := 0.U
     io.cache_valid := ShiftRegister(io.controller_valid, 3)
 
 
@@ -408,3 +383,25 @@ object Main extends App{
 }
 
 
+
+```
+
+
+
+#### Error stacktrace:
+
+```
+scala.collection.LinearSeqOps.apply(LinearSeq.scala:131)
+	scala.collection.LinearSeqOps.apply$(LinearSeq.scala:128)
+	scala.collection.immutable.List.apply(List.scala:79)
+	dotty.tools.dotc.util.Signatures$.countParams(Signatures.scala:501)
+	dotty.tools.dotc.util.Signatures$.applyCallInfo(Signatures.scala:186)
+	dotty.tools.dotc.util.Signatures$.computeSignatureHelp(Signatures.scala:94)
+	dotty.tools.dotc.util.Signatures$.signatureHelp(Signatures.scala:63)
+	scala.meta.internal.pc.MetalsSignatures$.signatures(MetalsSignatures.scala:17)
+	scala.meta.internal.pc.SignatureHelpProvider$.signatureHelp(SignatureHelpProvider.scala:51)
+	scala.meta.internal.pc.ScalaPresentationCompiler.signatureHelp$$anonfun$1(ScalaPresentationCompiler.scala:398)
+```
+#### Short summary: 
+
+java.lang.IndexOutOfBoundsException: 0

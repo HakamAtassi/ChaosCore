@@ -62,27 +62,23 @@ module SDPReadWriteSmem(
 endmodule
 
 // VCS coverage exclude_file
-module mem_64x84(
-  input  [5:0]  RW0_addr,
-  input         RW0_en,
-                RW0_clk,
-                RW0_wmode,
-  input  [83:0] RW0_wdata,
-  output [83:0] RW0_rdata
+module ram_64x84(
+  input  [5:0]  R0_addr,
+  input         R0_en,
+                R0_clk,
+  output [83:0] R0_data,
+  input  [5:0]  W0_addr,
+  input         W0_en,
+                W0_clk,
+  input  [83:0] W0_data
 );
 
   reg [83:0] Memory[0:63];
-  reg [5:0]  _RW0_raddr_d0;
-  reg        _RW0_ren_d0;
-  reg        _RW0_rmode_d0;
-  always @(posedge RW0_clk) begin
-    _RW0_raddr_d0 <= RW0_addr;
-    _RW0_ren_d0 <= RW0_en;
-    _RW0_rmode_d0 <= RW0_wmode;
-    if (RW0_en & RW0_wmode & 1'h1)
-      Memory[RW0_addr] <= RW0_wdata;
+  always @(posedge W0_clk) begin
+    if (W0_en & 1'h1)
+      Memory[W0_addr] <= W0_data;
   end // always @(posedge)
-  assign RW0_rdata = _RW0_ren_d0 & ~_RW0_rmode_d0 ? Memory[_RW0_raddr_d0] : 84'bx;
+  assign R0_data = R0_en ? Memory[R0_addr] : 84'bx;
 endmodule
 
 module ReadWriteSmem(
@@ -93,38 +89,41 @@ module ReadWriteSmem(
   output [83:0] io_data_out
 );
 
-  mem_64x84 mem_ext (
-    .RW0_addr  (io_addr),
-    .RW0_en    (1'h1),
-    .RW0_clk   (clock),
-    .RW0_wmode (io_wr_en),
-    .RW0_wdata (io_data_in),
-    .RW0_rdata (io_data_out)
+  wire [83:0] _ram_ext_R0_data;
+  reg  [83:0] dataOut;
+  always @(posedge clock)
+    dataOut <= _ram_ext_R0_data;
+  ram_64x84 ram_ext (
+    .R0_addr (io_addr),
+    .R0_en   (1'h1),
+    .R0_clk  (clock),
+    .R0_data (_ram_ext_R0_data),
+    .W0_addr (io_addr),
+    .W0_en   (io_wr_en),
+    .W0_clk  (clock),
+    .W0_data (io_data_in)
   );
+  assign io_data_out = dataOut;
 endmodule
 
 // VCS coverage exclude_file
-module mem_256x8(
-  input  [7:0] RW0_addr,
-  input        RW0_en,
-               RW0_clk,
-               RW0_wmode,
-  input  [7:0] RW0_wdata,
-  output [7:0] RW0_rdata
+module ram_256x8(
+  input  [7:0] R0_addr,
+  input        R0_en,
+               R0_clk,
+  output [7:0] R0_data,
+  input  [7:0] W0_addr,
+  input        W0_en,
+               W0_clk,
+  input  [7:0] W0_data
 );
 
   reg [7:0] Memory[0:255];
-  reg [7:0] _RW0_raddr_d0;
-  reg       _RW0_ren_d0;
-  reg       _RW0_rmode_d0;
-  always @(posedge RW0_clk) begin
-    _RW0_raddr_d0 <= RW0_addr;
-    _RW0_ren_d0 <= RW0_en;
-    _RW0_rmode_d0 <= RW0_wmode;
-    if (RW0_en & RW0_wmode & 1'h1)
-      Memory[RW0_addr] <= RW0_wdata;
+  always @(posedge W0_clk) begin
+    if (W0_en & 1'h1)
+      Memory[W0_addr] <= W0_data;
   end // always @(posedge)
-  assign RW0_rdata = _RW0_ren_d0 & ~_RW0_rmode_d0 ? Memory[_RW0_raddr_d0] : 8'bx;
+  assign R0_data = R0_en ? Memory[R0_addr] : 8'bx;
 endmodule
 
 module ReadWriteSmem_1(
@@ -135,14 +134,21 @@ module ReadWriteSmem_1(
   output [7:0] io_data_out
 );
 
-  mem_256x8 mem_ext (
-    .RW0_addr  (io_addr),
-    .RW0_en    (1'h1),
-    .RW0_clk   (clock),
-    .RW0_wmode (io_wr_en),
-    .RW0_wdata (io_data_in),
-    .RW0_rdata (io_data_out)
+  wire [7:0] _ram_ext_R0_data;
+  reg  [7:0] dataOut;
+  always @(posedge clock)
+    dataOut <= _ram_ext_R0_data;
+  ram_256x8 ram_ext (
+    .R0_addr (io_addr),
+    .R0_en   (1'h1),
+    .R0_clk  (clock),
+    .R0_data (_ram_ext_R0_data),
+    .W0_addr (io_addr),
+    .W0_en   (io_wr_en),
+    .W0_clk  (clock),
+    .W0_data (io_data_in)
   );
+  assign io_data_out = dataOut;
 endmodule
 
 module L1_cache_mem(
@@ -155,113 +161,426 @@ module L1_cache_mem(
   input  [2:0]   io_controller_cmd,
   output [31:0]  io_cache_dout,
                  io_cache_addr,
+  output [255:0] io_cache_evict_line,
   output         io_cache_valid,
                  io_cache_hit
 );
 
-  wire        hit;
-  wire [3:0]  hit_oh;
-  wire [7:0]  _data_memory_31_io_data_out;
-  wire [7:0]  _data_memory_30_io_data_out;
-  wire [7:0]  _data_memory_29_io_data_out;
-  wire [7:0]  _data_memory_28_io_data_out;
-  wire [7:0]  _data_memory_27_io_data_out;
-  wire [7:0]  _data_memory_26_io_data_out;
-  wire [7:0]  _data_memory_25_io_data_out;
-  wire [7:0]  _data_memory_24_io_data_out;
-  wire [7:0]  _data_memory_23_io_data_out;
-  wire [7:0]  _data_memory_22_io_data_out;
-  wire [7:0]  _data_memory_21_io_data_out;
-  wire [7:0]  _data_memory_20_io_data_out;
-  wire [7:0]  _data_memory_19_io_data_out;
-  wire [7:0]  _data_memory_18_io_data_out;
-  wire [7:0]  _data_memory_17_io_data_out;
-  wire [7:0]  _data_memory_16_io_data_out;
-  wire [7:0]  _data_memory_15_io_data_out;
-  wire [7:0]  _data_memory_14_io_data_out;
-  wire [7:0]  _data_memory_13_io_data_out;
-  wire [7:0]  _data_memory_12_io_data_out;
-  wire [7:0]  _data_memory_11_io_data_out;
-  wire [7:0]  _data_memory_10_io_data_out;
-  wire [7:0]  _data_memory_9_io_data_out;
-  wire [7:0]  _data_memory_8_io_data_out;
-  wire [7:0]  _data_memory_7_io_data_out;
-  wire [7:0]  _data_memory_6_io_data_out;
-  wire [7:0]  _data_memory_5_io_data_out;
-  wire [7:0]  _data_memory_4_io_data_out;
-  wire [7:0]  _data_memory_3_io_data_out;
-  wire [7:0]  _data_memory_2_io_data_out;
-  wire [7:0]  _data_memory_1_io_data_out;
-  wire [7:0]  _data_memory_0_io_data_out;
-  wire [83:0] _tag_memory_io_data_out;
-  wire [3:0]  _PLRU_memory_io_data_out;
-  reg  [20:0] delayed_controller_tag;
-  reg         plru_wr_en;
-  reg         allocate;
-  reg  [20:0] delayed_controller_set;
-  wire [3:0]  plru_in =
-    {4{(_PLRU_memory_io_data_out & hit_oh) != 4'hF}} & _PLRU_memory_io_data_out | hit_oh;
-  reg         valid_delayed;
-  wire [20:0] tag_vector_out_0 = _tag_memory_io_data_out[20:0];
-  wire [20:0] tag_vector_out_1 = _tag_memory_io_data_out[41:21];
-  wire [20:0] tag_vector_out_2 = _tag_memory_io_data_out[62:42];
-  wire [20:0] tag_vector_out_3 = _tag_memory_io_data_out[83:63];
-  wire        hit_oh_vec_0 = delayed_controller_tag == tag_vector_out_0;
-  wire        hit_oh_vec_1 = delayed_controller_tag == tag_vector_out_1;
-  wire        hit_oh_vec_2 = delayed_controller_tag == tag_vector_out_2;
-  wire        hit_oh_vec_3 = delayed_controller_tag == tag_vector_out_3;
-  assign hit_oh = {hit_oh_vec_0, hit_oh_vec_1, hit_oh_vec_2, hit_oh_vec_3};
+  wire         hit;
+  wire [3:0]   hit_oh;
+  wire [7:0]   _data_memory_31_io_data_out;
+  wire [7:0]   _data_memory_30_io_data_out;
+  wire [7:0]   _data_memory_29_io_data_out;
+  wire [7:0]   _data_memory_28_io_data_out;
+  wire [7:0]   _data_memory_27_io_data_out;
+  wire [7:0]   _data_memory_26_io_data_out;
+  wire [7:0]   _data_memory_25_io_data_out;
+  wire [7:0]   _data_memory_24_io_data_out;
+  wire [7:0]   _data_memory_23_io_data_out;
+  wire [7:0]   _data_memory_22_io_data_out;
+  wire [7:0]   _data_memory_21_io_data_out;
+  wire [7:0]   _data_memory_20_io_data_out;
+  wire [7:0]   _data_memory_19_io_data_out;
+  wire [7:0]   _data_memory_18_io_data_out;
+  wire [7:0]   _data_memory_17_io_data_out;
+  wire [7:0]   _data_memory_16_io_data_out;
+  wire [7:0]   _data_memory_15_io_data_out;
+  wire [7:0]   _data_memory_14_io_data_out;
+  wire [7:0]   _data_memory_13_io_data_out;
+  wire [7:0]   _data_memory_12_io_data_out;
+  wire [7:0]   _data_memory_11_io_data_out;
+  wire [7:0]   _data_memory_10_io_data_out;
+  wire [7:0]   _data_memory_9_io_data_out;
+  wire [7:0]   _data_memory_8_io_data_out;
+  wire [7:0]   _data_memory_7_io_data_out;
+  wire [7:0]   _data_memory_6_io_data_out;
+  wire [7:0]   _data_memory_5_io_data_out;
+  wire [7:0]   _data_memory_4_io_data_out;
+  wire [7:0]   _data_memory_3_io_data_out;
+  wire [7:0]   _data_memory_2_io_data_out;
+  wire [7:0]   _data_memory_1_io_data_out;
+  wire [7:0]   _data_memory_0_io_data_out;
+  wire [83:0]  _tag_memory_io_data_out;
+  reg  [20:0]  delayed_controller_tag;
+  reg          tag_wr_en;
+  reg          plru_wr_en;
+  reg          allocate;
+  reg          dirty_wr_en;
+  reg  [5:0]   delayed_controller_set;
+  wire [3:0]   plru_out;
+  wire [3:0]   plru_in = {4{(hit_oh | plru_out) != 4'hF}} & plru_out | hit_oh;
+  wire [3:0]   plru_oh =
+    {~(plru_in[3]) & plru_in[2] & plru_in[1] & plru_in[0],
+     ~(plru_in[2]) & plru_in[1] & plru_in[0],
+     ~(plru_in[1]) & plru_in[0],
+     ~(plru_in[0])};
+  wire [3:0]   allocate_way =
+    plru_out[0] ? (plru_out[1] ? {3'h1, plru_out[2]} : 4'h1) : 4'h0;
+  reg          valid_delayed;
+  wire [20:0]  tag_vector_out_0 = _tag_memory_io_data_out[20:0];
+  wire [20:0]  tag_vector_out_1 = _tag_memory_io_data_out[41:21];
+  wire [20:0]  tag_vector_out_2 = _tag_memory_io_data_out[62:42];
+  wire [20:0]  tag_vector_out_3 = _tag_memory_io_data_out[83:63];
+  wire         hit_oh_vec_0 = delayed_controller_tag == tag_vector_out_0;
+  wire         hit_oh_vec_1 = delayed_controller_tag == tag_vector_out_1;
+  wire         hit_oh_vec_2 = delayed_controller_tag == tag_vector_out_2;
+  wire         hit_oh_vec_3 = delayed_controller_tag == tag_vector_out_3;
+  assign hit_oh = {hit_oh_vec_3, hit_oh_vec_2, hit_oh_vec_1, hit_oh_vec_0};
   assign hit = (|hit_oh) & valid_delayed;
-  wire [7:0]  cache_addr =
-    {hit_oh_vec_3 ? 2'h0 : hit_oh_vec_2 ? 2'h1 : {1'h1, ~hit_oh_vec_1},
-     io_controller_addr[10:5]};
-  reg  [5:0]  delayed_controller_byte_offset;
-  reg  [2:0]  delayed_controller_cmd;
-  wire        _data_memory_wr_en_31_T = delayed_controller_cmd == 3'h4;
-  wire        _data_memory_wr_en_3_T_9 = delayed_controller_byte_offset == 6'h0;
-  wire        _data_memory_wr_en_31_T_4 = delayed_controller_cmd == 3'h5;
-  wire        _data_memory_wr_en_31_T_8 = delayed_controller_cmd == 3'h6;
-  wire        _data_memory_wr_en_3_T_5 = delayed_controller_byte_offset == 6'h2;
-  wire        _data_memory_wr_en_7_T_9 = delayed_controller_byte_offset == 6'h4;
-  wire        _data_memory_wr_en_7_T_5 = delayed_controller_byte_offset == 6'h6;
-  wire        _data_memory_wr_en_11_T_9 = delayed_controller_byte_offset == 6'h8;
-  wire        _data_memory_wr_en_11_T_5 = delayed_controller_byte_offset == 6'hA;
-  wire        _data_memory_wr_en_15_T_9 = delayed_controller_byte_offset == 6'hC;
-  wire        _data_memory_wr_en_15_T_5 = delayed_controller_byte_offset == 6'hE;
-  wire        _data_memory_wr_en_19_T_9 = delayed_controller_byte_offset == 6'h10;
-  wire        _data_memory_wr_en_19_T_5 = delayed_controller_byte_offset == 6'h12;
-  wire        _data_memory_wr_en_23_T_9 = delayed_controller_byte_offset == 6'h14;
-  wire        _data_memory_wr_en_23_T_5 = delayed_controller_byte_offset == 6'h16;
-  wire        _data_memory_wr_en_27_T_9 = delayed_controller_byte_offset == 6'h18;
-  wire        _data_memory_wr_en_27_T_5 = delayed_controller_byte_offset == 6'h1A;
-  wire        _data_memory_wr_en_31_T_9 = delayed_controller_byte_offset == 6'h1C;
-  wire        _data_memory_wr_en_31_T_5 = delayed_controller_byte_offset == 6'h1E;
-  reg  [31:0] write_data;
-  reg  [5:0]  delayed_controller_byte_offset_2;
-  reg  [31:0] data_out_pre_mask;
-  reg  [2:0]  sel_output_mask_r;
-  reg  [2:0]  sel_output_mask_r_1;
-  reg  [2:0]  sel_output_mask;
-  reg         io_cache_hit_r;
-  reg         io_cache_hit_r_1;
-  reg         io_cache_valid_r;
-  reg         io_cache_valid_r_1;
-  reg         io_cache_valid_r_2;
+  wire [3:0]   cache_hit_way =
+    {2'h0, hit_oh_vec_0 ? 2'h0 : hit_oh_vec_1 ? 2'h1 : {1'h1, ~hit_oh_vec_2}};
+  reg  [5:0]   cache_addr_REG;
+  reg  [5:0]   cache_addr_REG_1;
+  wire [7:0]   _cache_addr_T_2 =
+    allocate
+      ? {allocate_way[1:0], cache_addr_REG}
+      : {cache_hit_way[1:0], cache_addr_REG_1};
+  reg  [5:0]   dirty_memory_io_wr_addr_REG;
+  reg          dirty_memory_io_wr_en_REG;
+  reg          dirty_memory_io_data_in_REG;
+  wire [3:0]   dirty_out;
+  reg  [4:0]   delayed_controller_byte_offset;
+  reg  [2:0]   delayed_controller_cmd;
+  reg  [31:0]  delayed_controller_data;
+  reg  [255:0] delayed_controller_cache_line;
+  wire         _data_memory_wr_en_0_T = delayed_controller_cmd == 3'h4;
+  wire         _data_memory_wr_en_28_T_9 = delayed_controller_byte_offset == 5'h0;
+  wire         _data_memory_wr_en_0_T_4 = delayed_controller_cmd == 3'h5;
+  wire         _data_memory_wr_en_0_T_8 = delayed_controller_cmd == 3'h6;
+  wire         data_memory_wr_en_31 =
+    valid_delayed
+    & (allocate | _data_memory_wr_en_0_T & _data_memory_wr_en_28_T_9
+       | _data_memory_wr_en_0_T_4 & _data_memory_wr_en_28_T_9 | _data_memory_wr_en_0_T_8
+       & _data_memory_wr_en_28_T_9);
+  wire         data_memory_wr_en_30 =
+    valid_delayed
+    & (allocate | _data_memory_wr_en_0_T & delayed_controller_byte_offset == 5'h1
+       | _data_memory_wr_en_0_T_4 & _data_memory_wr_en_28_T_9 | _data_memory_wr_en_0_T_8
+       & _data_memory_wr_en_28_T_9);
+  wire         _data_memory_wr_en_28_T_5 = delayed_controller_byte_offset == 5'h2;
+  wire         data_memory_wr_en_29 =
+    valid_delayed
+    & (allocate | _data_memory_wr_en_0_T & _data_memory_wr_en_28_T_5
+       | _data_memory_wr_en_0_T_4 & _data_memory_wr_en_28_T_5 | _data_memory_wr_en_0_T_8
+       & _data_memory_wr_en_28_T_9);
+  wire         data_memory_wr_en_28 =
+    valid_delayed
+    & (allocate | _data_memory_wr_en_0_T & delayed_controller_byte_offset == 5'h3
+       | _data_memory_wr_en_0_T_4 & _data_memory_wr_en_28_T_5 | _data_memory_wr_en_0_T_8
+       & _data_memory_wr_en_28_T_9);
+  wire         _data_memory_wr_en_24_T_9 = delayed_controller_byte_offset == 5'h4;
+  wire         data_memory_wr_en_27 =
+    valid_delayed
+    & (allocate | _data_memory_wr_en_0_T & _data_memory_wr_en_24_T_9
+       | _data_memory_wr_en_0_T_4 & _data_memory_wr_en_24_T_9 | _data_memory_wr_en_0_T_8
+       & _data_memory_wr_en_24_T_9);
+  wire         data_memory_wr_en_26 =
+    valid_delayed
+    & (allocate | _data_memory_wr_en_0_T & delayed_controller_byte_offset == 5'h5
+       | _data_memory_wr_en_0_T_4 & _data_memory_wr_en_24_T_9 | _data_memory_wr_en_0_T_8
+       & _data_memory_wr_en_24_T_9);
+  wire         _data_memory_wr_en_24_T_5 = delayed_controller_byte_offset == 5'h6;
+  wire         data_memory_wr_en_25 =
+    valid_delayed
+    & (allocate | _data_memory_wr_en_0_T & _data_memory_wr_en_24_T_5
+       | _data_memory_wr_en_0_T_4 & _data_memory_wr_en_24_T_5 | _data_memory_wr_en_0_T_8
+       & _data_memory_wr_en_24_T_9);
+  wire         data_memory_wr_en_24 =
+    valid_delayed
+    & (allocate | _data_memory_wr_en_0_T & delayed_controller_byte_offset == 5'h7
+       | _data_memory_wr_en_0_T_4 & _data_memory_wr_en_24_T_5 | _data_memory_wr_en_0_T_8
+       & _data_memory_wr_en_24_T_9);
+  wire         _data_memory_wr_en_20_T_9 = delayed_controller_byte_offset == 5'h8;
+  wire         data_memory_wr_en_23 =
+    valid_delayed
+    & (allocate | _data_memory_wr_en_0_T & _data_memory_wr_en_20_T_9
+       | _data_memory_wr_en_0_T_4 & _data_memory_wr_en_20_T_9 | _data_memory_wr_en_0_T_8
+       & _data_memory_wr_en_20_T_9);
+  wire         data_memory_wr_en_22 =
+    valid_delayed
+    & (allocate | _data_memory_wr_en_0_T & delayed_controller_byte_offset == 5'h9
+       | _data_memory_wr_en_0_T_4 & _data_memory_wr_en_20_T_9 | _data_memory_wr_en_0_T_8
+       & _data_memory_wr_en_20_T_9);
+  wire         _data_memory_wr_en_20_T_5 = delayed_controller_byte_offset == 5'hA;
+  wire         data_memory_wr_en_21 =
+    valid_delayed
+    & (allocate | _data_memory_wr_en_0_T & _data_memory_wr_en_20_T_5
+       | _data_memory_wr_en_0_T_4 & _data_memory_wr_en_20_T_5 | _data_memory_wr_en_0_T_8
+       & _data_memory_wr_en_20_T_9);
+  wire         data_memory_wr_en_20 =
+    valid_delayed
+    & (allocate | _data_memory_wr_en_0_T & delayed_controller_byte_offset == 5'hB
+       | _data_memory_wr_en_0_T_4 & _data_memory_wr_en_20_T_5 | _data_memory_wr_en_0_T_8
+       & _data_memory_wr_en_20_T_9);
+  wire         _data_memory_wr_en_16_T_9 = delayed_controller_byte_offset == 5'hC;
+  wire         data_memory_wr_en_19 =
+    valid_delayed
+    & (allocate | _data_memory_wr_en_0_T & _data_memory_wr_en_16_T_9
+       | _data_memory_wr_en_0_T_4 & _data_memory_wr_en_16_T_9 | _data_memory_wr_en_0_T_8
+       & _data_memory_wr_en_16_T_9);
+  wire         data_memory_wr_en_18 =
+    valid_delayed
+    & (allocate | _data_memory_wr_en_0_T & delayed_controller_byte_offset == 5'hD
+       | _data_memory_wr_en_0_T_4 & _data_memory_wr_en_16_T_9 | _data_memory_wr_en_0_T_8
+       & _data_memory_wr_en_16_T_9);
+  wire         _data_memory_wr_en_16_T_5 = delayed_controller_byte_offset == 5'hE;
+  wire         data_memory_wr_en_17 =
+    valid_delayed
+    & (allocate | _data_memory_wr_en_0_T & _data_memory_wr_en_16_T_5
+       | _data_memory_wr_en_0_T_4 & _data_memory_wr_en_16_T_5 | _data_memory_wr_en_0_T_8
+       & _data_memory_wr_en_16_T_9);
+  wire         data_memory_wr_en_16 =
+    valid_delayed
+    & (allocate | _data_memory_wr_en_0_T & delayed_controller_byte_offset == 5'hF
+       | _data_memory_wr_en_0_T_4 & _data_memory_wr_en_16_T_5 | _data_memory_wr_en_0_T_8
+       & _data_memory_wr_en_16_T_9);
+  wire         _data_memory_wr_en_12_T_9 = delayed_controller_byte_offset == 5'h10;
+  wire         data_memory_wr_en_15 =
+    valid_delayed
+    & (allocate | _data_memory_wr_en_0_T & _data_memory_wr_en_12_T_9
+       | _data_memory_wr_en_0_T_4 & _data_memory_wr_en_12_T_9 | _data_memory_wr_en_0_T_8
+       & _data_memory_wr_en_12_T_9);
+  wire         data_memory_wr_en_14 =
+    valid_delayed
+    & (allocate | _data_memory_wr_en_0_T & delayed_controller_byte_offset == 5'h11
+       | _data_memory_wr_en_0_T_4 & _data_memory_wr_en_12_T_9 | _data_memory_wr_en_0_T_8
+       & _data_memory_wr_en_12_T_9);
+  wire         _data_memory_wr_en_12_T_5 = delayed_controller_byte_offset == 5'h12;
+  wire         data_memory_wr_en_13 =
+    valid_delayed
+    & (allocate | _data_memory_wr_en_0_T & _data_memory_wr_en_12_T_5
+       | _data_memory_wr_en_0_T_4 & _data_memory_wr_en_12_T_5 | _data_memory_wr_en_0_T_8
+       & _data_memory_wr_en_12_T_9);
+  wire         data_memory_wr_en_12 =
+    valid_delayed
+    & (allocate | _data_memory_wr_en_0_T & delayed_controller_byte_offset == 5'h13
+       | _data_memory_wr_en_0_T_4 & _data_memory_wr_en_12_T_5 | _data_memory_wr_en_0_T_8
+       & _data_memory_wr_en_12_T_9);
+  wire         _data_memory_wr_en_8_T_9 = delayed_controller_byte_offset == 5'h14;
+  wire         data_memory_wr_en_11 =
+    valid_delayed
+    & (allocate | _data_memory_wr_en_0_T & _data_memory_wr_en_8_T_9
+       | _data_memory_wr_en_0_T_4 & _data_memory_wr_en_8_T_9 | _data_memory_wr_en_0_T_8
+       & _data_memory_wr_en_8_T_9);
+  wire         data_memory_wr_en_10 =
+    valid_delayed
+    & (allocate | _data_memory_wr_en_0_T & delayed_controller_byte_offset == 5'h15
+       | _data_memory_wr_en_0_T_4 & _data_memory_wr_en_8_T_9 | _data_memory_wr_en_0_T_8
+       & _data_memory_wr_en_8_T_9);
+  wire         _data_memory_wr_en_8_T_5 = delayed_controller_byte_offset == 5'h16;
+  wire         data_memory_wr_en_9 =
+    valid_delayed
+    & (allocate | _data_memory_wr_en_0_T & _data_memory_wr_en_8_T_5
+       | _data_memory_wr_en_0_T_4 & _data_memory_wr_en_8_T_5 | _data_memory_wr_en_0_T_8
+       & _data_memory_wr_en_8_T_9);
+  wire         data_memory_wr_en_8 =
+    valid_delayed
+    & (allocate | _data_memory_wr_en_0_T & delayed_controller_byte_offset == 5'h17
+       | _data_memory_wr_en_0_T_4 & _data_memory_wr_en_8_T_5 | _data_memory_wr_en_0_T_8
+       & _data_memory_wr_en_8_T_9);
+  wire         _data_memory_wr_en_4_T_9 = delayed_controller_byte_offset == 5'h18;
+  wire         data_memory_wr_en_7 =
+    valid_delayed
+    & (allocate | _data_memory_wr_en_0_T & _data_memory_wr_en_4_T_9
+       | _data_memory_wr_en_0_T_4 & _data_memory_wr_en_4_T_9 | _data_memory_wr_en_0_T_8
+       & _data_memory_wr_en_4_T_9);
+  wire         data_memory_wr_en_6 =
+    valid_delayed
+    & (allocate | _data_memory_wr_en_0_T & delayed_controller_byte_offset == 5'h19
+       | _data_memory_wr_en_0_T_4 & _data_memory_wr_en_4_T_9 | _data_memory_wr_en_0_T_8
+       & _data_memory_wr_en_4_T_9);
+  wire         _data_memory_wr_en_4_T_5 = delayed_controller_byte_offset == 5'h1A;
+  wire         data_memory_wr_en_5 =
+    valid_delayed
+    & (allocate | _data_memory_wr_en_0_T & _data_memory_wr_en_4_T_5
+       | _data_memory_wr_en_0_T_4 & _data_memory_wr_en_4_T_5 | _data_memory_wr_en_0_T_8
+       & _data_memory_wr_en_4_T_9);
+  wire         data_memory_wr_en_4 =
+    valid_delayed
+    & (allocate | _data_memory_wr_en_0_T & delayed_controller_byte_offset == 5'h1B
+       | _data_memory_wr_en_0_T_4 & _data_memory_wr_en_4_T_5 | _data_memory_wr_en_0_T_8
+       & _data_memory_wr_en_4_T_9);
+  wire         _data_memory_wr_en_0_T_9 = delayed_controller_byte_offset == 5'h1C;
+  wire         data_memory_wr_en_3 =
+    valid_delayed
+    & (allocate | _data_memory_wr_en_0_T & _data_memory_wr_en_0_T_9
+       | _data_memory_wr_en_0_T_4 & _data_memory_wr_en_0_T_9 | _data_memory_wr_en_0_T_8
+       & _data_memory_wr_en_0_T_9);
+  wire         data_memory_wr_en_2 =
+    valid_delayed
+    & (allocate | _data_memory_wr_en_0_T & delayed_controller_byte_offset == 5'h1D
+       | _data_memory_wr_en_0_T_4 & _data_memory_wr_en_0_T_9 | _data_memory_wr_en_0_T_8
+       & _data_memory_wr_en_0_T_9);
+  wire         _data_memory_wr_en_0_T_5 = delayed_controller_byte_offset == 5'h1E;
+  wire         data_memory_wr_en_1 =
+    valid_delayed
+    & (allocate | _data_memory_wr_en_0_T & _data_memory_wr_en_0_T_5
+       | _data_memory_wr_en_0_T_4 & _data_memory_wr_en_0_T_5 | _data_memory_wr_en_0_T_8
+       & _data_memory_wr_en_0_T_9);
+  wire         data_memory_wr_en_0 =
+    valid_delayed
+    & (allocate | _data_memory_wr_en_0_T & (&delayed_controller_byte_offset)
+       | _data_memory_wr_en_0_T_4 & _data_memory_wr_en_0_T_5 | _data_memory_wr_en_0_T_8
+       & _data_memory_wr_en_0_T_9);
+  wire [31:0]  data_memory_data_in_31 =
+    allocate ? delayed_controller_cache_line[31:0] : delayed_controller_data;
+  wire [31:0]  _GEN = {delayed_controller_data[23:0], 8'h0};
+  wire [31:0]  data_memory_data_in_30 =
+    allocate ? delayed_controller_cache_line[31:0] : _GEN;
+  wire [31:0]  _GEN_0 = {delayed_controller_data[15:0], 16'h0};
+  wire [31:0]  data_memory_data_in_29 =
+    allocate ? delayed_controller_cache_line[31:0] : _GEN_0;
+  wire [31:0]  _GEN_1 = {delayed_controller_data[7:0], 24'h0};
+  wire [31:0]  data_memory_data_in_28 =
+    allocate ? delayed_controller_cache_line[31:0] : _GEN_1;
+  wire [31:0]  data_memory_data_in_27 =
+    allocate ? delayed_controller_cache_line[31:0] : delayed_controller_data;
+  wire [31:0]  data_memory_data_in_26 =
+    allocate ? delayed_controller_cache_line[31:0] : _GEN;
+  wire [31:0]  data_memory_data_in_25 =
+    allocate ? delayed_controller_cache_line[31:0] : _GEN_0;
+  wire [31:0]  data_memory_data_in_24 =
+    allocate ? delayed_controller_cache_line[31:0] : _GEN_1;
+  wire [31:0]  data_memory_data_in_23 =
+    allocate ? delayed_controller_cache_line[31:0] : delayed_controller_data;
+  wire [31:0]  data_memory_data_in_22 =
+    allocate ? delayed_controller_cache_line[31:0] : _GEN;
+  wire [31:0]  data_memory_data_in_21 =
+    allocate ? delayed_controller_cache_line[31:0] : _GEN_0;
+  wire [31:0]  data_memory_data_in_20 =
+    allocate ? delayed_controller_cache_line[31:0] : _GEN_1;
+  wire [31:0]  data_memory_data_in_19 =
+    allocate ? delayed_controller_cache_line[31:0] : delayed_controller_data;
+  wire [31:0]  data_memory_data_in_18 =
+    allocate ? delayed_controller_cache_line[31:0] : _GEN;
+  wire [31:0]  data_memory_data_in_17 =
+    allocate ? delayed_controller_cache_line[31:0] : _GEN_0;
+  wire [31:0]  data_memory_data_in_16 =
+    allocate ? delayed_controller_cache_line[31:0] : _GEN_1;
+  wire [31:0]  data_memory_data_in_15 =
+    allocate ? delayed_controller_cache_line[31:0] : delayed_controller_data;
+  wire [31:0]  data_memory_data_in_14 =
+    allocate ? delayed_controller_cache_line[31:0] : _GEN;
+  wire [31:0]  data_memory_data_in_13 =
+    allocate ? delayed_controller_cache_line[31:0] : _GEN_0;
+  wire [31:0]  data_memory_data_in_12 =
+    allocate ? delayed_controller_cache_line[31:0] : _GEN_1;
+  wire [31:0]  data_memory_data_in_11 =
+    allocate ? delayed_controller_cache_line[31:0] : delayed_controller_data;
+  wire [31:0]  data_memory_data_in_10 =
+    allocate ? delayed_controller_cache_line[31:0] : _GEN;
+  wire [31:0]  data_memory_data_in_9 =
+    allocate ? delayed_controller_cache_line[31:0] : _GEN_0;
+  wire [31:0]  data_memory_data_in_8 =
+    allocate ? delayed_controller_cache_line[31:0] : _GEN_1;
+  wire [31:0]  data_memory_data_in_7 =
+    allocate ? delayed_controller_cache_line[31:0] : delayed_controller_data;
+  wire [31:0]  data_memory_data_in_6 =
+    allocate ? delayed_controller_cache_line[31:0] : _GEN;
+  wire [31:0]  data_memory_data_in_5 =
+    allocate ? delayed_controller_cache_line[31:0] : _GEN_0;
+  wire [31:0]  data_memory_data_in_4 =
+    allocate ? delayed_controller_cache_line[31:0] : _GEN_1;
+  wire [31:0]  data_memory_data_in_3 =
+    allocate ? delayed_controller_cache_line[31:0] : delayed_controller_data;
+  wire [31:0]  data_memory_data_in_2 =
+    allocate ? delayed_controller_cache_line[31:0] : _GEN;
+  wire [31:0]  data_memory_data_in_1 =
+    allocate ? delayed_controller_cache_line[31:0] : _GEN_0;
+  wire [31:0]  data_memory_data_in_0 =
+    allocate ? delayed_controller_cache_line[31:0] : _GEN_1;
+  reg  [31:0]  write_data;
+  reg  [4:0]   delayed_controller_byte_offset_2;
+  reg  [31:0]  data_out_pre_mask;
+  reg  [2:0]   sel_output_mask_r;
+  reg  [2:0]   sel_output_mask_r_1;
+  reg  [2:0]   sel_output_mask;
+  reg          io_cache_hit_r;
+  reg          io_cache_hit_r_1;
+  reg  [7:0]   eviction_line_0;
+  reg  [7:0]   eviction_line_1;
+  reg  [7:0]   eviction_line_2;
+  reg  [7:0]   eviction_line_3;
+  reg  [7:0]   eviction_line_4;
+  reg  [7:0]   eviction_line_5;
+  reg  [7:0]   eviction_line_6;
+  reg  [7:0]   eviction_line_7;
+  reg  [7:0]   eviction_line_8;
+  reg  [7:0]   eviction_line_9;
+  reg  [7:0]   eviction_line_10;
+  reg  [7:0]   eviction_line_11;
+  reg  [7:0]   eviction_line_12;
+  reg  [7:0]   eviction_line_13;
+  reg  [7:0]   eviction_line_14;
+  reg  [7:0]   eviction_line_15;
+  reg  [7:0]   eviction_line_16;
+  reg  [7:0]   eviction_line_17;
+  reg  [7:0]   eviction_line_18;
+  reg  [7:0]   eviction_line_19;
+  reg  [7:0]   eviction_line_20;
+  reg  [7:0]   eviction_line_21;
+  reg  [7:0]   eviction_line_22;
+  reg  [7:0]   eviction_line_23;
+  reg  [7:0]   eviction_line_24;
+  reg  [7:0]   eviction_line_25;
+  reg  [7:0]   eviction_line_26;
+  reg  [7:0]   eviction_line_27;
+  reg  [7:0]   eviction_line_28;
+  reg  [7:0]   eviction_line_29;
+  reg  [7:0]   eviction_line_30;
+  reg  [7:0]   eviction_line_31;
+  reg          io_cache_valid_r;
+  reg          io_cache_valid_r_1;
+  reg          io_cache_valid_r_2;
   always @(posedge clock) begin
     if (reset) begin
       delayed_controller_tag <= 21'h0;
+      tag_wr_en <= 1'h0;
       plru_wr_en <= 1'h0;
       allocate <= 1'h0;
+      dirty_wr_en <= 1'h0;
       write_data <= 32'h0;
       data_out_pre_mask <= 32'h0;
+      eviction_line_0 <= 8'h0;
+      eviction_line_1 <= 8'h0;
+      eviction_line_2 <= 8'h0;
+      eviction_line_3 <= 8'h0;
+      eviction_line_4 <= 8'h0;
+      eviction_line_5 <= 8'h0;
+      eviction_line_6 <= 8'h0;
+      eviction_line_7 <= 8'h0;
+      eviction_line_8 <= 8'h0;
+      eviction_line_9 <= 8'h0;
+      eviction_line_10 <= 8'h0;
+      eviction_line_11 <= 8'h0;
+      eviction_line_12 <= 8'h0;
+      eviction_line_13 <= 8'h0;
+      eviction_line_14 <= 8'h0;
+      eviction_line_15 <= 8'h0;
+      eviction_line_16 <= 8'h0;
+      eviction_line_17 <= 8'h0;
+      eviction_line_18 <= 8'h0;
+      eviction_line_19 <= 8'h0;
+      eviction_line_20 <= 8'h0;
+      eviction_line_21 <= 8'h0;
+      eviction_line_22 <= 8'h0;
+      eviction_line_23 <= 8'h0;
+      eviction_line_24 <= 8'h0;
+      eviction_line_25 <= 8'h0;
+      eviction_line_26 <= 8'h0;
+      eviction_line_27 <= 8'h0;
+      eviction_line_28 <= 8'h0;
+      eviction_line_29 <= 8'h0;
+      eviction_line_30 <= 8'h0;
+      eviction_line_31 <= 8'h0;
     end
     else begin
-      automatic logic [3:0][31:0] _GEN =
+      automatic logic [3:0][31:0] _GEN_2 =
         {{{io_controller_data[7:0], 24'h0}},
          {{io_controller_data[15:0], 16'h0}},
          {{io_controller_data[23:0], 8'h0}},
          {io_controller_data}};
-      automatic logic [3:0][31:0] _GEN_0 =
+      automatic logic [3:0][31:0] _GEN_3 =
         {{{24'h0, _data_memory_28_io_data_out}},
          {{16'h0, _data_memory_28_io_data_out, _data_memory_29_io_data_out}},
          {{8'h0,
@@ -272,7 +591,7 @@ module L1_cache_mem(
            _data_memory_29_io_data_out,
            _data_memory_30_io_data_out,
            _data_memory_31_io_data_out}}};
-      automatic logic [3:0][31:0] _GEN_1 =
+      automatic logic [3:0][31:0] _GEN_4 =
         {{{24'h0, _data_memory_24_io_data_out}},
          {{16'h0, _data_memory_24_io_data_out, _data_memory_25_io_data_out}},
          {{8'h0,
@@ -283,7 +602,7 @@ module L1_cache_mem(
            _data_memory_25_io_data_out,
            _data_memory_26_io_data_out,
            _data_memory_27_io_data_out}}};
-      automatic logic [3:0][31:0] _GEN_2 =
+      automatic logic [3:0][31:0] _GEN_5 =
         {{{24'h0, _data_memory_20_io_data_out}},
          {{16'h0, _data_memory_20_io_data_out, _data_memory_21_io_data_out}},
          {{8'h0,
@@ -294,7 +613,7 @@ module L1_cache_mem(
            _data_memory_21_io_data_out,
            _data_memory_22_io_data_out,
            _data_memory_23_io_data_out}}};
-      automatic logic [3:0][31:0] _GEN_3 =
+      automatic logic [3:0][31:0] _GEN_6 =
         {{{24'h0, _data_memory_16_io_data_out}},
          {{16'h0, _data_memory_16_io_data_out, _data_memory_17_io_data_out}},
          {{8'h0,
@@ -305,7 +624,7 @@ module L1_cache_mem(
            _data_memory_17_io_data_out,
            _data_memory_18_io_data_out,
            _data_memory_19_io_data_out}}};
-      automatic logic [3:0][31:0] _GEN_4 =
+      automatic logic [3:0][31:0] _GEN_7 =
         {{{24'h0, _data_memory_12_io_data_out}},
          {{16'h0, _data_memory_12_io_data_out, _data_memory_13_io_data_out}},
          {{8'h0,
@@ -316,7 +635,7 @@ module L1_cache_mem(
            _data_memory_13_io_data_out,
            _data_memory_14_io_data_out,
            _data_memory_15_io_data_out}}};
-      automatic logic [3:0][31:0] _GEN_5 =
+      automatic logic [3:0][31:0] _GEN_8 =
         {{{24'h0, _data_memory_8_io_data_out}},
          {{16'h0, _data_memory_8_io_data_out, _data_memory_9_io_data_out}},
          {{8'h0,
@@ -327,7 +646,7 @@ module L1_cache_mem(
            _data_memory_9_io_data_out,
            _data_memory_10_io_data_out,
            _data_memory_11_io_data_out}}};
-      automatic logic [3:0][31:0] _GEN_6 =
+      automatic logic [3:0][31:0] _GEN_9 =
         {{{24'h0, _data_memory_4_io_data_out}},
          {{16'h0, _data_memory_4_io_data_out, _data_memory_5_io_data_out}},
          {{8'h0,
@@ -338,7 +657,7 @@ module L1_cache_mem(
            _data_memory_5_io_data_out,
            _data_memory_6_io_data_out,
            _data_memory_7_io_data_out}}};
-      automatic logic [3:0][31:0] _GEN_7 =
+      automatic logic [3:0][31:0] _GEN_10 =
         {{{24'h0, _data_memory_0_io_data_out}},
          {{16'h0, _data_memory_0_io_data_out, _data_memory_1_io_data_out}},
          {{8'h0,
@@ -349,25 +668,69 @@ module L1_cache_mem(
            _data_memory_1_io_data_out,
            _data_memory_2_io_data_out,
            _data_memory_3_io_data_out}}};
-      automatic logic [7:0][31:0] _GEN_8 =
-        {{_GEN_0[delayed_controller_byte_offset_2[1:0]]},
-         {_GEN_1[delayed_controller_byte_offset_2[1:0]]},
-         {_GEN_2[delayed_controller_byte_offset_2[1:0]]},
-         {_GEN_3[delayed_controller_byte_offset_2[1:0]]},
-         {_GEN_4[delayed_controller_byte_offset_2[1:0]]},
-         {_GEN_5[delayed_controller_byte_offset_2[1:0]]},
+      automatic logic [7:0][31:0] _GEN_11 =
+        {{_GEN_10[delayed_controller_byte_offset_2[1:0]]},
+         {_GEN_9[delayed_controller_byte_offset_2[1:0]]},
+         {_GEN_8[delayed_controller_byte_offset_2[1:0]]},
+         {_GEN_7[delayed_controller_byte_offset_2[1:0]]},
          {_GEN_6[delayed_controller_byte_offset_2[1:0]]},
-         {_GEN_7[delayed_controller_byte_offset_2[1:0]]}};
+         {_GEN_5[delayed_controller_byte_offset_2[1:0]]},
+         {_GEN_4[delayed_controller_byte_offset_2[1:0]]},
+         {_GEN_3[delayed_controller_byte_offset_2[1:0]]}};
       delayed_controller_tag <= io_controller_addr[31:11];
-      plru_wr_en <= io_controller_cmd != 3'h3;
-      allocate <= &io_controller_cmd;
-      write_data <= _GEN[io_controller_addr[1:0]];
-      data_out_pre_mask <= _GEN_8[delayed_controller_byte_offset_2[4:2]];
+      tag_wr_en <= (&io_controller_cmd) & io_controller_valid;
+      plru_wr_en <=
+        io_controller_cmd != 3'h3 & io_controller_cmd != 3'h7 & io_controller_valid;
+      allocate <= (&io_controller_cmd) & io_controller_valid;
+      dirty_wr_en <=
+        (io_controller_cmd == 3'h6 | io_controller_cmd == 3'h5 | io_controller_cmd == 3'h4
+         | (&io_controller_cmd)) & io_controller_valid;
+      write_data <= _GEN_2[io_controller_addr[1:0]];
+      data_out_pre_mask <= _GEN_11[delayed_controller_byte_offset_2[4:2]];
+      eviction_line_0 <= _data_memory_0_io_data_out;
+      eviction_line_1 <= _data_memory_1_io_data_out;
+      eviction_line_2 <= _data_memory_2_io_data_out;
+      eviction_line_3 <= _data_memory_3_io_data_out;
+      eviction_line_4 <= _data_memory_4_io_data_out;
+      eviction_line_5 <= _data_memory_5_io_data_out;
+      eviction_line_6 <= _data_memory_6_io_data_out;
+      eviction_line_7 <= _data_memory_7_io_data_out;
+      eviction_line_8 <= _data_memory_8_io_data_out;
+      eviction_line_9 <= _data_memory_9_io_data_out;
+      eviction_line_10 <= _data_memory_10_io_data_out;
+      eviction_line_11 <= _data_memory_11_io_data_out;
+      eviction_line_12 <= _data_memory_12_io_data_out;
+      eviction_line_13 <= _data_memory_13_io_data_out;
+      eviction_line_14 <= _data_memory_14_io_data_out;
+      eviction_line_15 <= _data_memory_15_io_data_out;
+      eviction_line_16 <= _data_memory_16_io_data_out;
+      eviction_line_17 <= _data_memory_17_io_data_out;
+      eviction_line_18 <= _data_memory_18_io_data_out;
+      eviction_line_19 <= _data_memory_19_io_data_out;
+      eviction_line_20 <= _data_memory_20_io_data_out;
+      eviction_line_21 <= _data_memory_21_io_data_out;
+      eviction_line_22 <= _data_memory_22_io_data_out;
+      eviction_line_23 <= _data_memory_23_io_data_out;
+      eviction_line_24 <= _data_memory_24_io_data_out;
+      eviction_line_25 <= _data_memory_25_io_data_out;
+      eviction_line_26 <= _data_memory_26_io_data_out;
+      eviction_line_27 <= _data_memory_27_io_data_out;
+      eviction_line_28 <= _data_memory_28_io_data_out;
+      eviction_line_29 <= _data_memory_29_io_data_out;
+      eviction_line_30 <= _data_memory_30_io_data_out;
+      eviction_line_31 <= _data_memory_31_io_data_out;
     end
-    delayed_controller_set <= io_controller_addr[31:11];
+    delayed_controller_set <= io_controller_addr[10:5];
     valid_delayed <= io_controller_valid;
-    delayed_controller_byte_offset <= io_controller_addr[5:0];
+    cache_addr_REG <= io_controller_addr[10:5];
+    cache_addr_REG_1 <= io_controller_addr[10:5];
+    dirty_memory_io_wr_addr_REG <= io_controller_addr[10:5];
+    dirty_memory_io_wr_en_REG <= dirty_wr_en;
+    dirty_memory_io_data_in_REG <= allocate;
+    delayed_controller_byte_offset <= io_controller_addr[4:0];
     delayed_controller_cmd <= io_controller_cmd;
+    delayed_controller_data <= io_controller_data;
+    delayed_controller_cache_line <= io_controller_cache_line;
     delayed_controller_byte_offset_2 <= delayed_controller_byte_offset;
     sel_output_mask_r <= io_controller_cmd;
     sel_output_mask_r_1 <= sel_output_mask_r;
@@ -382,353 +745,295 @@ module L1_cache_mem(
     .clock       (clock),
     .reset       (reset),
     .io_rd_addr  (io_controller_addr[10:5]),
-    .io_data_out (_PLRU_memory_io_data_out),
-    .io_wr_addr  (delayed_controller_set[5:0]),
+    .io_data_out (plru_out),
+    .io_wr_addr  (delayed_controller_set),
     .io_wr_en    (plru_wr_en & hit),
     .io_data_in  (plru_in)
   );
   ReadWriteSmem tag_memory (
     .clock       (clock),
-    .io_wr_en    (&io_controller_cmd),
+    .io_wr_en    (tag_wr_en),
     .io_addr     (io_controller_addr[10:5]),
     .io_data_in
-      ({plru_in[3] & plru_in[2] & plru_in[1] & ~(plru_in[0])
-          ? io_controller_addr[31:11]
-          : tag_vector_out_3,
-        plru_in[3] & plru_in[2] & ~(plru_in[1])
-          ? io_controller_addr[31:11]
-          : tag_vector_out_2,
-        plru_in[3] & ~(plru_in[2]) ? io_controller_addr[31:11] : tag_vector_out_1,
-        plru_in[3] ? tag_vector_out_0 : io_controller_addr[31:11]}),
+      ({plru_oh[3] ? io_controller_addr[31:11] : tag_vector_out_3,
+        plru_oh[2] ? io_controller_addr[31:11] : tag_vector_out_2,
+        plru_oh[1] ? io_controller_addr[31:11] : tag_vector_out_1,
+        plru_oh[0] ? io_controller_addr[31:11] : tag_vector_out_0}),
     .io_data_out (_tag_memory_io_data_out)
+  );
+  SDPReadWriteSmem dirty_memory (
+    .clock       (clock),
+    .reset       (reset),
+    .io_rd_addr  (io_controller_addr[10:5]),
+    .io_data_out (dirty_out),
+    .io_wr_addr  (dirty_memory_io_wr_addr_REG),
+    .io_wr_en    (dirty_memory_io_wr_en_REG),
+    .io_data_in  (dirty_memory_io_data_in_REG ? ~plru_oh & dirty_out : hit_oh | dirty_out)
   );
   ReadWriteSmem_1 data_memory_0 (
     .clock       (clock),
-    .io_wr_en
-      (allocate | _data_memory_wr_en_31_T & _data_memory_wr_en_3_T_9
-       | _data_memory_wr_en_31_T_4 & _data_memory_wr_en_3_T_9 | _data_memory_wr_en_31_T_8
-       & _data_memory_wr_en_3_T_9),
-    .io_addr     (cache_addr),
-    .io_data_in  (write_data[7:0]),
+    .io_wr_en    (data_memory_wr_en_0),
+    .io_addr     (_cache_addr_T_2),
+    .io_data_in  (write_data[31:24]),
     .io_data_out (_data_memory_0_io_data_out)
   );
   ReadWriteSmem_1 data_memory_1 (
     .clock       (clock),
-    .io_wr_en
-      (allocate | _data_memory_wr_en_31_T & delayed_controller_byte_offset == 6'h1
-       | _data_memory_wr_en_31_T_4 & _data_memory_wr_en_3_T_9 | _data_memory_wr_en_31_T_8
-       & _data_memory_wr_en_3_T_9),
-    .io_addr     (cache_addr),
-    .io_data_in  (write_data[15:8]),
+    .io_wr_en    (data_memory_wr_en_1),
+    .io_addr     (_cache_addr_T_2),
+    .io_data_in  (write_data[23:16]),
     .io_data_out (_data_memory_1_io_data_out)
   );
   ReadWriteSmem_1 data_memory_2 (
     .clock       (clock),
-    .io_wr_en
-      (allocate | _data_memory_wr_en_31_T & _data_memory_wr_en_3_T_5
-       | _data_memory_wr_en_31_T_4 & _data_memory_wr_en_3_T_5 | _data_memory_wr_en_31_T_8
-       & _data_memory_wr_en_3_T_9),
-    .io_addr     (cache_addr),
-    .io_data_in  (write_data[23:16]),
+    .io_wr_en    (data_memory_wr_en_2),
+    .io_addr     (_cache_addr_T_2),
+    .io_data_in  (write_data[15:8]),
     .io_data_out (_data_memory_2_io_data_out)
   );
   ReadWriteSmem_1 data_memory_3 (
     .clock       (clock),
-    .io_wr_en
-      (allocate | _data_memory_wr_en_31_T & delayed_controller_byte_offset == 6'h3
-       | _data_memory_wr_en_31_T_4 & _data_memory_wr_en_3_T_5 | _data_memory_wr_en_31_T_8
-       & _data_memory_wr_en_3_T_9),
-    .io_addr     (cache_addr),
-    .io_data_in  (write_data[31:24]),
+    .io_wr_en    (data_memory_wr_en_3),
+    .io_addr     (_cache_addr_T_2),
+    .io_data_in  (write_data[7:0]),
     .io_data_out (_data_memory_3_io_data_out)
   );
   ReadWriteSmem_1 data_memory_4 (
     .clock       (clock),
-    .io_wr_en
-      (allocate | _data_memory_wr_en_31_T & _data_memory_wr_en_7_T_9
-       | _data_memory_wr_en_31_T_4 & _data_memory_wr_en_7_T_9 | _data_memory_wr_en_31_T_8
-       & _data_memory_wr_en_7_T_9),
-    .io_addr     (cache_addr),
-    .io_data_in  (write_data[7:0]),
+    .io_wr_en    (data_memory_wr_en_4),
+    .io_addr     (_cache_addr_T_2),
+    .io_data_in  (write_data[31:24]),
     .io_data_out (_data_memory_4_io_data_out)
   );
   ReadWriteSmem_1 data_memory_5 (
     .clock       (clock),
-    .io_wr_en
-      (allocate | _data_memory_wr_en_31_T & delayed_controller_byte_offset == 6'h5
-       | _data_memory_wr_en_31_T_4 & _data_memory_wr_en_7_T_9 | _data_memory_wr_en_31_T_8
-       & _data_memory_wr_en_7_T_9),
-    .io_addr     (cache_addr),
-    .io_data_in  (write_data[15:8]),
+    .io_wr_en    (data_memory_wr_en_5),
+    .io_addr     (_cache_addr_T_2),
+    .io_data_in  (write_data[23:16]),
     .io_data_out (_data_memory_5_io_data_out)
   );
   ReadWriteSmem_1 data_memory_6 (
     .clock       (clock),
-    .io_wr_en
-      (allocate | _data_memory_wr_en_31_T & _data_memory_wr_en_7_T_5
-       | _data_memory_wr_en_31_T_4 & _data_memory_wr_en_7_T_5 | _data_memory_wr_en_31_T_8
-       & _data_memory_wr_en_7_T_9),
-    .io_addr     (cache_addr),
-    .io_data_in  (write_data[23:16]),
+    .io_wr_en    (data_memory_wr_en_6),
+    .io_addr     (_cache_addr_T_2),
+    .io_data_in  (write_data[15:8]),
     .io_data_out (_data_memory_6_io_data_out)
   );
   ReadWriteSmem_1 data_memory_7 (
     .clock       (clock),
-    .io_wr_en
-      (allocate | _data_memory_wr_en_31_T & delayed_controller_byte_offset == 6'h7
-       | _data_memory_wr_en_31_T_4 & _data_memory_wr_en_7_T_5 | _data_memory_wr_en_31_T_8
-       & _data_memory_wr_en_7_T_9),
-    .io_addr     (cache_addr),
-    .io_data_in  (write_data[31:24]),
+    .io_wr_en    (data_memory_wr_en_7),
+    .io_addr     (_cache_addr_T_2),
+    .io_data_in  (write_data[7:0]),
     .io_data_out (_data_memory_7_io_data_out)
   );
   ReadWriteSmem_1 data_memory_8 (
     .clock       (clock),
-    .io_wr_en
-      (allocate | _data_memory_wr_en_31_T & _data_memory_wr_en_11_T_9
-       | _data_memory_wr_en_31_T_4 & _data_memory_wr_en_11_T_9 | _data_memory_wr_en_31_T_8
-       & _data_memory_wr_en_11_T_9),
-    .io_addr     (cache_addr),
-    .io_data_in  (write_data[7:0]),
+    .io_wr_en    (data_memory_wr_en_8),
+    .io_addr     (_cache_addr_T_2),
+    .io_data_in  (write_data[31:24]),
     .io_data_out (_data_memory_8_io_data_out)
   );
   ReadWriteSmem_1 data_memory_9 (
     .clock       (clock),
-    .io_wr_en
-      (allocate | _data_memory_wr_en_31_T & delayed_controller_byte_offset == 6'h9
-       | _data_memory_wr_en_31_T_4 & _data_memory_wr_en_11_T_9 | _data_memory_wr_en_31_T_8
-       & _data_memory_wr_en_11_T_9),
-    .io_addr     (cache_addr),
-    .io_data_in  (write_data[15:8]),
+    .io_wr_en    (data_memory_wr_en_9),
+    .io_addr     (_cache_addr_T_2),
+    .io_data_in  (write_data[23:16]),
     .io_data_out (_data_memory_9_io_data_out)
   );
   ReadWriteSmem_1 data_memory_10 (
     .clock       (clock),
-    .io_wr_en
-      (allocate | _data_memory_wr_en_31_T & _data_memory_wr_en_11_T_5
-       | _data_memory_wr_en_31_T_4 & _data_memory_wr_en_11_T_5 | _data_memory_wr_en_31_T_8
-       & _data_memory_wr_en_11_T_9),
-    .io_addr     (cache_addr),
-    .io_data_in  (write_data[23:16]),
+    .io_wr_en    (data_memory_wr_en_10),
+    .io_addr     (_cache_addr_T_2),
+    .io_data_in  (write_data[15:8]),
     .io_data_out (_data_memory_10_io_data_out)
   );
   ReadWriteSmem_1 data_memory_11 (
     .clock       (clock),
-    .io_wr_en
-      (allocate | _data_memory_wr_en_31_T & delayed_controller_byte_offset == 6'hB
-       | _data_memory_wr_en_31_T_4 & _data_memory_wr_en_11_T_5 | _data_memory_wr_en_31_T_8
-       & _data_memory_wr_en_11_T_9),
-    .io_addr     (cache_addr),
-    .io_data_in  (write_data[31:24]),
+    .io_wr_en    (data_memory_wr_en_11),
+    .io_addr     (_cache_addr_T_2),
+    .io_data_in  (write_data[7:0]),
     .io_data_out (_data_memory_11_io_data_out)
   );
   ReadWriteSmem_1 data_memory_12 (
     .clock       (clock),
-    .io_wr_en
-      (allocate | _data_memory_wr_en_31_T & _data_memory_wr_en_15_T_9
-       | _data_memory_wr_en_31_T_4 & _data_memory_wr_en_15_T_9 | _data_memory_wr_en_31_T_8
-       & _data_memory_wr_en_15_T_9),
-    .io_addr     (cache_addr),
-    .io_data_in  (write_data[7:0]),
+    .io_wr_en    (data_memory_wr_en_12),
+    .io_addr     (_cache_addr_T_2),
+    .io_data_in  (write_data[31:24]),
     .io_data_out (_data_memory_12_io_data_out)
   );
   ReadWriteSmem_1 data_memory_13 (
     .clock       (clock),
-    .io_wr_en
-      (allocate | _data_memory_wr_en_31_T & delayed_controller_byte_offset == 6'hD
-       | _data_memory_wr_en_31_T_4 & _data_memory_wr_en_15_T_9 | _data_memory_wr_en_31_T_8
-       & _data_memory_wr_en_15_T_9),
-    .io_addr     (cache_addr),
-    .io_data_in  (write_data[15:8]),
+    .io_wr_en    (data_memory_wr_en_13),
+    .io_addr     (_cache_addr_T_2),
+    .io_data_in  (write_data[23:16]),
     .io_data_out (_data_memory_13_io_data_out)
   );
   ReadWriteSmem_1 data_memory_14 (
     .clock       (clock),
-    .io_wr_en
-      (allocate | _data_memory_wr_en_31_T & _data_memory_wr_en_15_T_5
-       | _data_memory_wr_en_31_T_4 & _data_memory_wr_en_15_T_5 | _data_memory_wr_en_31_T_8
-       & _data_memory_wr_en_15_T_9),
-    .io_addr     (cache_addr),
-    .io_data_in  (write_data[23:16]),
+    .io_wr_en    (data_memory_wr_en_14),
+    .io_addr     (_cache_addr_T_2),
+    .io_data_in  (write_data[15:8]),
     .io_data_out (_data_memory_14_io_data_out)
   );
   ReadWriteSmem_1 data_memory_15 (
     .clock       (clock),
-    .io_wr_en
-      (allocate | _data_memory_wr_en_31_T & delayed_controller_byte_offset == 6'hF
-       | _data_memory_wr_en_31_T_4 & _data_memory_wr_en_15_T_5 | _data_memory_wr_en_31_T_8
-       & _data_memory_wr_en_15_T_9),
-    .io_addr     (cache_addr),
-    .io_data_in  (write_data[31:24]),
+    .io_wr_en    (data_memory_wr_en_15),
+    .io_addr     (_cache_addr_T_2),
+    .io_data_in  (write_data[7:0]),
     .io_data_out (_data_memory_15_io_data_out)
   );
   ReadWriteSmem_1 data_memory_16 (
     .clock       (clock),
-    .io_wr_en
-      (allocate | _data_memory_wr_en_31_T & _data_memory_wr_en_19_T_9
-       | _data_memory_wr_en_31_T_4 & _data_memory_wr_en_19_T_9 | _data_memory_wr_en_31_T_8
-       & _data_memory_wr_en_19_T_9),
-    .io_addr     (cache_addr),
-    .io_data_in  (write_data[7:0]),
+    .io_wr_en    (data_memory_wr_en_16),
+    .io_addr     (_cache_addr_T_2),
+    .io_data_in  (write_data[31:24]),
     .io_data_out (_data_memory_16_io_data_out)
   );
   ReadWriteSmem_1 data_memory_17 (
     .clock       (clock),
-    .io_wr_en
-      (allocate | _data_memory_wr_en_31_T & delayed_controller_byte_offset == 6'h11
-       | _data_memory_wr_en_31_T_4 & _data_memory_wr_en_19_T_9 | _data_memory_wr_en_31_T_8
-       & _data_memory_wr_en_19_T_9),
-    .io_addr     (cache_addr),
-    .io_data_in  (write_data[15:8]),
+    .io_wr_en    (data_memory_wr_en_17),
+    .io_addr     (_cache_addr_T_2),
+    .io_data_in  (write_data[23:16]),
     .io_data_out (_data_memory_17_io_data_out)
   );
   ReadWriteSmem_1 data_memory_18 (
     .clock       (clock),
-    .io_wr_en
-      (allocate | _data_memory_wr_en_31_T & _data_memory_wr_en_19_T_5
-       | _data_memory_wr_en_31_T_4 & _data_memory_wr_en_19_T_5 | _data_memory_wr_en_31_T_8
-       & _data_memory_wr_en_19_T_9),
-    .io_addr     (cache_addr),
-    .io_data_in  (write_data[23:16]),
+    .io_wr_en    (data_memory_wr_en_18),
+    .io_addr     (_cache_addr_T_2),
+    .io_data_in  (write_data[15:8]),
     .io_data_out (_data_memory_18_io_data_out)
   );
   ReadWriteSmem_1 data_memory_19 (
     .clock       (clock),
-    .io_wr_en
-      (allocate | _data_memory_wr_en_31_T & delayed_controller_byte_offset == 6'h13
-       | _data_memory_wr_en_31_T_4 & _data_memory_wr_en_19_T_5 | _data_memory_wr_en_31_T_8
-       & _data_memory_wr_en_19_T_9),
-    .io_addr     (cache_addr),
-    .io_data_in  (write_data[31:24]),
+    .io_wr_en    (data_memory_wr_en_19),
+    .io_addr     (_cache_addr_T_2),
+    .io_data_in  (write_data[7:0]),
     .io_data_out (_data_memory_19_io_data_out)
   );
   ReadWriteSmem_1 data_memory_20 (
     .clock       (clock),
-    .io_wr_en
-      (allocate | _data_memory_wr_en_31_T & _data_memory_wr_en_23_T_9
-       | _data_memory_wr_en_31_T_4 & _data_memory_wr_en_23_T_9 | _data_memory_wr_en_31_T_8
-       & _data_memory_wr_en_23_T_9),
-    .io_addr     (cache_addr),
-    .io_data_in  (write_data[7:0]),
+    .io_wr_en    (data_memory_wr_en_20),
+    .io_addr     (_cache_addr_T_2),
+    .io_data_in  (write_data[31:24]),
     .io_data_out (_data_memory_20_io_data_out)
   );
   ReadWriteSmem_1 data_memory_21 (
     .clock       (clock),
-    .io_wr_en
-      (allocate | _data_memory_wr_en_31_T & delayed_controller_byte_offset == 6'h15
-       | _data_memory_wr_en_31_T_4 & _data_memory_wr_en_23_T_9 | _data_memory_wr_en_31_T_8
-       & _data_memory_wr_en_23_T_9),
-    .io_addr     (cache_addr),
-    .io_data_in  (write_data[15:8]),
+    .io_wr_en    (data_memory_wr_en_21),
+    .io_addr     (_cache_addr_T_2),
+    .io_data_in  (write_data[23:16]),
     .io_data_out (_data_memory_21_io_data_out)
   );
   ReadWriteSmem_1 data_memory_22 (
     .clock       (clock),
-    .io_wr_en
-      (allocate | _data_memory_wr_en_31_T & _data_memory_wr_en_23_T_5
-       | _data_memory_wr_en_31_T_4 & _data_memory_wr_en_23_T_5 | _data_memory_wr_en_31_T_8
-       & _data_memory_wr_en_23_T_9),
-    .io_addr     (cache_addr),
-    .io_data_in  (write_data[23:16]),
+    .io_wr_en    (data_memory_wr_en_22),
+    .io_addr     (_cache_addr_T_2),
+    .io_data_in  (write_data[15:8]),
     .io_data_out (_data_memory_22_io_data_out)
   );
   ReadWriteSmem_1 data_memory_23 (
     .clock       (clock),
-    .io_wr_en
-      (allocate | _data_memory_wr_en_31_T & delayed_controller_byte_offset == 6'h17
-       | _data_memory_wr_en_31_T_4 & _data_memory_wr_en_23_T_5 | _data_memory_wr_en_31_T_8
-       & _data_memory_wr_en_23_T_9),
-    .io_addr     (cache_addr),
-    .io_data_in  (write_data[31:24]),
+    .io_wr_en    (data_memory_wr_en_23),
+    .io_addr     (_cache_addr_T_2),
+    .io_data_in  (write_data[7:0]),
     .io_data_out (_data_memory_23_io_data_out)
   );
   ReadWriteSmem_1 data_memory_24 (
     .clock       (clock),
-    .io_wr_en
-      (allocate | _data_memory_wr_en_31_T & _data_memory_wr_en_27_T_9
-       | _data_memory_wr_en_31_T_4 & _data_memory_wr_en_27_T_9 | _data_memory_wr_en_31_T_8
-       & _data_memory_wr_en_27_T_9),
-    .io_addr     (cache_addr),
-    .io_data_in  (write_data[7:0]),
+    .io_wr_en    (data_memory_wr_en_24),
+    .io_addr     (_cache_addr_T_2),
+    .io_data_in  (write_data[31:24]),
     .io_data_out (_data_memory_24_io_data_out)
   );
   ReadWriteSmem_1 data_memory_25 (
     .clock       (clock),
-    .io_wr_en
-      (allocate | _data_memory_wr_en_31_T & delayed_controller_byte_offset == 6'h19
-       | _data_memory_wr_en_31_T_4 & _data_memory_wr_en_27_T_9 | _data_memory_wr_en_31_T_8
-       & _data_memory_wr_en_27_T_9),
-    .io_addr     (cache_addr),
-    .io_data_in  (write_data[15:8]),
+    .io_wr_en    (data_memory_wr_en_25),
+    .io_addr     (_cache_addr_T_2),
+    .io_data_in  (write_data[23:16]),
     .io_data_out (_data_memory_25_io_data_out)
   );
   ReadWriteSmem_1 data_memory_26 (
     .clock       (clock),
-    .io_wr_en
-      (allocate | _data_memory_wr_en_31_T & _data_memory_wr_en_27_T_5
-       | _data_memory_wr_en_31_T_4 & _data_memory_wr_en_27_T_5 | _data_memory_wr_en_31_T_8
-       & _data_memory_wr_en_27_T_9),
-    .io_addr     (cache_addr),
-    .io_data_in  (write_data[23:16]),
+    .io_wr_en    (data_memory_wr_en_26),
+    .io_addr     (_cache_addr_T_2),
+    .io_data_in  (write_data[15:8]),
     .io_data_out (_data_memory_26_io_data_out)
   );
   ReadWriteSmem_1 data_memory_27 (
     .clock       (clock),
-    .io_wr_en
-      (allocate | _data_memory_wr_en_31_T & delayed_controller_byte_offset == 6'h1B
-       | _data_memory_wr_en_31_T_4 & _data_memory_wr_en_27_T_5 | _data_memory_wr_en_31_T_8
-       & _data_memory_wr_en_27_T_9),
-    .io_addr     (cache_addr),
-    .io_data_in  (write_data[31:24]),
+    .io_wr_en    (data_memory_wr_en_27),
+    .io_addr     (_cache_addr_T_2),
+    .io_data_in  (write_data[7:0]),
     .io_data_out (_data_memory_27_io_data_out)
   );
   ReadWriteSmem_1 data_memory_28 (
     .clock       (clock),
-    .io_wr_en
-      (allocate | _data_memory_wr_en_31_T & _data_memory_wr_en_31_T_9
-       | _data_memory_wr_en_31_T_4 & _data_memory_wr_en_31_T_9 | _data_memory_wr_en_31_T_8
-       & _data_memory_wr_en_31_T_9),
-    .io_addr     (cache_addr),
-    .io_data_in  (write_data[7:0]),
+    .io_wr_en    (data_memory_wr_en_28),
+    .io_addr     (_cache_addr_T_2),
+    .io_data_in  (write_data[31:24]),
     .io_data_out (_data_memory_28_io_data_out)
   );
   ReadWriteSmem_1 data_memory_29 (
     .clock       (clock),
-    .io_wr_en
-      (allocate | _data_memory_wr_en_31_T & delayed_controller_byte_offset == 6'h1D
-       | _data_memory_wr_en_31_T_4 & _data_memory_wr_en_31_T_9 | _data_memory_wr_en_31_T_8
-       & _data_memory_wr_en_31_T_9),
-    .io_addr     (cache_addr),
-    .io_data_in  (write_data[15:8]),
+    .io_wr_en    (data_memory_wr_en_29),
+    .io_addr     (_cache_addr_T_2),
+    .io_data_in  (write_data[23:16]),
     .io_data_out (_data_memory_29_io_data_out)
   );
   ReadWriteSmem_1 data_memory_30 (
     .clock       (clock),
-    .io_wr_en
-      (allocate | _data_memory_wr_en_31_T & _data_memory_wr_en_31_T_5
-       | _data_memory_wr_en_31_T_4 & _data_memory_wr_en_31_T_5 | _data_memory_wr_en_31_T_8
-       & _data_memory_wr_en_31_T_9),
-    .io_addr     (cache_addr),
-    .io_data_in  (write_data[23:16]),
+    .io_wr_en    (data_memory_wr_en_30),
+    .io_addr     (_cache_addr_T_2),
+    .io_data_in  (write_data[15:8]),
     .io_data_out (_data_memory_30_io_data_out)
   );
   ReadWriteSmem_1 data_memory_31 (
     .clock       (clock),
-    .io_wr_en
-      (allocate | _data_memory_wr_en_31_T & delayed_controller_byte_offset == 6'h1F
-       | _data_memory_wr_en_31_T_4 & _data_memory_wr_en_31_T_5 | _data_memory_wr_en_31_T_8
-       & _data_memory_wr_en_31_T_9),
-    .io_addr     (cache_addr),
-    .io_data_in  (write_data[31:24]),
+    .io_wr_en    (data_memory_wr_en_31),
+    .io_addr     (_cache_addr_T_2),
+    .io_data_in  (write_data[7:0]),
     .io_data_out (_data_memory_31_io_data_out)
   );
   assign io_cache_dout =
     sel_output_mask == 3'h2
-      ? {16'h0, data_out_pre_mask[15:0]}
+      ? data_out_pre_mask
       : sel_output_mask == 3'h1
-          ? {24'h0, data_out_pre_mask[7:0]}
-          : sel_output_mask == 3'h0 ? {28'h0, data_out_pre_mask[3:0]} : 32'h0;
+          ? data_out_pre_mask & 32'hFFFF
+          : sel_output_mask == 3'h0 ? data_out_pre_mask & 32'hFF : 32'h0;
   assign io_cache_addr = 32'h0;
+  assign io_cache_evict_line =
+    {eviction_line_0,
+     eviction_line_1,
+     eviction_line_2,
+     eviction_line_3,
+     eviction_line_4,
+     eviction_line_5,
+     eviction_line_6,
+     eviction_line_7,
+     eviction_line_8,
+     eviction_line_9,
+     eviction_line_10,
+     eviction_line_11,
+     eviction_line_12,
+     eviction_line_13,
+     eviction_line_14,
+     eviction_line_15,
+     eviction_line_16,
+     eviction_line_17,
+     eviction_line_18,
+     eviction_line_19,
+     eviction_line_20,
+     eviction_line_21,
+     eviction_line_22,
+     eviction_line_23,
+     eviction_line_24,
+     eviction_line_25,
+     eviction_line_26,
+     eviction_line_27,
+     eviction_line_28,
+     eviction_line_29,
+     eviction_line_30,
+     eviction_line_31};
   assign io_cache_valid = io_cache_valid_r_2;
   assign io_cache_hit = io_cache_hit_r_1;
 endmodule

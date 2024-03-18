@@ -12,8 +12,11 @@ VERILOG_DIR = ../../../hw/verilog
 #SIM_ARGS=-Wno-DECLFILENAME -Wno-UNUSED -Wno-UNDRIVEN -Wno-WIDTH -Wno-UNOPTFLAT 
 #SIM_ARGS=-Wno-fatal
 
+PLUSARGS=-j15
 
 EXTRA_ARGS += --trace-fst --trace-structs 
+
+#COMPILE_ARGS += -j15
 
 WAVES?=1
 GUI?=0
