@@ -1,4 +1,4 @@
-[0m[[0m[31merror[0m] [0m[0m/home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem_v2.scala:183:36: value valid is not a member of chisel3.Bundle{val controller_addr: chisel3.UInt; val controller_data: chisel3.UInt; val controller_cache_line: chisel3.UInt; val controller_valid: chisel3.Bool; val controller_cmd: CONTROLLER_CMD.Type; val cache_dout: chisel3.UInt; val cache_addr: chisel3.UInt; val cache_valid: chisel3.Bool; val cache_hit: chisel3.Bool}[0m
-[0m[[0m[31merror[0m] [0m[0m    val valid_delayed = RegNext(io.valid.asUInt)[0m
-[0m[[0m[31merror[0m] [0m[0m                                   ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem_v2.scala:141:38: value === is not a member of Unit[0m
+[0m[[0m[31merror[0m] [0m[0m    dirty_wr_en := io.controller_cmd === [0m
+[0m[[0m[31merror[0m] [0m[0m                                     ^[0m
 [0m[[0m[31merror[0m] [0m[0mone error found[0m
