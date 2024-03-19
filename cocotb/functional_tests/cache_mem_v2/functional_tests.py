@@ -403,8 +403,6 @@ async def test4(dut):
     await printTags(dut, lineSizeBytes=32, ways=4, sets=64)
     await printDirty(dut, lineSizeBytes=32, sets=64)
 
-# TODO: Dirty bits
-# TODO: output addr
 # TODO: UVM
 # Then ... 
 # TODO: MSHR stuff

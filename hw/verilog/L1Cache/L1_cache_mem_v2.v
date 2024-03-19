@@ -158,12 +158,14 @@ module L1_cache_mem(
                  io_controller_data,
   input  [255:0] io_controller_cache_line,
   input          io_controller_valid,
+  output         io_controller_ready,
   input  [2:0]   io_controller_cmd,
   output [31:0]  io_cache_dout,
                  io_cache_addr,
   output [255:0] io_cache_evict_line,
   output         io_cache_valid,
-                 io_cache_hit
+  input          io_cache_ready,
+  output         io_cache_hit
 );
 
   wire         hit;
@@ -529,6 +531,9 @@ module L1_cache_mem(
   reg  [7:0]   eviction_line_29;
   reg  [7:0]   eviction_line_30;
   reg  [7:0]   eviction_line_31;
+  reg  [31:0]  io_cache_addr_r;
+  reg  [31:0]  io_cache_addr_r_1;
+  reg  [31:0]  io_cache_addr_r_2;
   reg          io_cache_valid_r;
   reg          io_cache_valid_r_1;
   reg          io_cache_valid_r_2;
@@ -737,6 +742,9 @@ module L1_cache_mem(
     sel_output_mask <= sel_output_mask_r_1;
     io_cache_hit_r <= hit;
     io_cache_hit_r_1 <= io_cache_hit_r;
+    io_cache_addr_r <= io_controller_addr;
+    io_cache_addr_r_1 <= io_cache_addr_r;
+    io_cache_addr_r_2 <= io_cache_addr_r_1;
     io_cache_valid_r <= io_controller_valid;
     io_cache_valid_r_1 <= io_cache_valid_r;
     io_cache_valid_r_2 <= io_cache_valid_r_1;
@@ -994,13 +1002,14 @@ module L1_cache_mem(
     .io_data_in  (write_data[7:0]),
     .io_data_out (_data_memory_31_io_data_out)
   );
+  assign io_controller_ready = 1'h1;
   assign io_cache_dout =
     sel_output_mask == 3'h2
       ? data_out_pre_mask
       : sel_output_mask == 3'h1
           ? data_out_pre_mask & 32'hFFFF
           : sel_output_mask == 3'h0 ? data_out_pre_mask & 32'hFF : 32'h0;
-  assign io_cache_addr = 32'h0;
+  assign io_cache_addr = io_cache_addr_r_2;
   assign io_cache_evict_line =
     {eviction_line_0,
      eviction_line_1,

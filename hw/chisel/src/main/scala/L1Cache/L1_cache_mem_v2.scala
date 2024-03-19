@@ -79,6 +79,7 @@ class L1_cache_mem(ways:Int = 4, sets:Int = 64, blockSizeBytes:Int = 64) extends
         val controller_data           =     Input(UInt(32.W))
         val controller_cache_line     =     Input(UInt(dataSizeBits.W))
         val controller_valid          =     Input(Bool())
+        val controller_ready          =     Output(Bool())
         val controller_cmd            =     Input(CONTROLLER_CMD()) 
 
         // Inputs from Controller
@@ -92,8 +93,11 @@ class L1_cache_mem(ways:Int = 4, sets:Int = 64, blockSizeBytes:Int = 64) extends
         val cache_addr                =     Output(UInt(32.W)) 
         val cache_evict_line          =     Output(UInt(dataSizeBits.W)) 
         val cache_valid               =     Output(Bool())
+        val cache_ready               =     Input(Bool())
         val cache_hit                 =     Output(Bool())
     })
+
+    io.controller_ready := 1.B
 
 
     //////////////////
@@ -377,13 +381,8 @@ class L1_cache_mem(ways:Int = 4, sets:Int = 64, blockSizeBytes:Int = 64) extends
 
     io.cache_evict_line := eviction_line.reduce(_ ## _)
 
-
-    /////////////////////////////
-    //io.cache_dout := 0.U
-    io.cache_addr := 0.U
-    //io.cache_evict_line := 0.U
+    io.cache_addr := ShiftRegister(io.controller_addr, 3)
     io.cache_valid := ShiftRegister(io.controller_valid, 3)
-
 
 }
 

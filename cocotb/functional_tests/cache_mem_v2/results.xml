@@ -1,6 +1,10 @@
 <testsuites name="results">
   <testsuite name="all" package="all">
-    <property name="random_seed" value="1710732825" />
-    <testcase name="test4" classname="functional_tests" file="/home/hakam/repos/ChaosCore/cocotb/functional_tests/cache_mem_v2/functional_tests.py" lineno="345" time="0.227492094039917" sim_time_ns="53.001" ratio_time="232.97952495307445" />
+    <property name="random_seed" value="1710802667" />
+    <testcase name="test0" classname="functional_tests" file="/home/hakam/repos/ChaosCore/cocotb/functional_tests/cache_mem_v2/functional_tests.py" lineno="121" time="0.2222135066986084" sim_time_ns="751.001" ratio_time="3379.6370488792754" />
+    <testcase name="test1" classname="functional_tests" file="/home/hakam/repos/ChaosCore/cocotb/functional_tests/cache_mem_v2/functional_tests.py" lineno="190" time="0.11144256591796875" sim_time_ns="367.001" ratio_time="3293.1851216540013" />
+    <testcase name="test2" classname="functional_tests" file="/home/hakam/repos/ChaosCore/cocotb/functional_tests/cache_mem_v2/functional_tests.py" lineno="240" time="0.12198495864868164" sim_time_ns="367.001" ratio_time="3008.57584464137" />
+    <testcase name="test3" classname="functional_tests" file="/home/hakam/repos/ChaosCore/cocotb/functional_tests/cache_mem_v2/functional_tests.py" lineno="291" time="0.14631891250610352" sim_time_ns="239.00099999999998" ratio_time="1633.425207353358" />
+    <testcase name="test4" classname="functional_tests" file="/home/hakam/repos/ChaosCore/cocotb/functional_tests/cache_mem_v2/functional_tests.py" lineno="345" time="0.1547701358795166" sim_time_ns="53.001000000000204" ratio_time="342.44978657419875" />
   </testsuite>
 </testsuites>
