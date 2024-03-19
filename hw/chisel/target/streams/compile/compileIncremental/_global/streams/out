@@ -22,7 +22,7 @@
 [0m[[0m[0mdebug[0m] [0m[0mcompilation cycle 1[0m
 [0m[[0m[0minfo[0m] [0m[0mcompiling 1 Scala source to /home/hakam/repos/ChaosCore/hw/chisel/target/scala-2.13/classes ...[0m
 [0m[[0m[0mdebug[0m] [0m[0mReturning already retrieved and compiled bridge: /home/hakam/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala2-sbt-bridge/2.13.12/scala2-sbt-bridge-2.13.12.jar.[0m
-[0m[[0m[0mdebug[0m] [0m[0m[zinc] Running cached compiler 23145a74 for Scala compiler version 2.13.12[0m
+[0m[[0m[0mdebug[0m] [0m[0m[zinc] Running cached compiler ede95b2 for Scala compiler version 2.13.12[0m
 [0m[[0m[0mdebug[0m] [0m[0m[zinc] The Scala compiler is invoked with:[0m
 [0m[[0m[0mdebug[0m] [0m[0m	-language:reflectiveCalls[0m
 [0m[[0m[0mdebug[0m] [0m[0m	-deprecation[0m
@@ -40,5 +40,5 @@
 [0m[[0m[0mdebug[0m] [0m[0mFinal step, transitive dependencies:[0m
 [0m[[0m[0mdebug[0m] [0m[0m	Set()[0m
 [0m[[0m[0mdebug[0m] [0m[0mNo classes were invalidated.[0m
-[0m[[0m[0mdebug[0m] [0m[0mScala compilation took 3.557371468 s[0m
+[0m[[0m[0mdebug[0m] [0m[0mScala compilation took 3.30555652 s[0m
 [0m[[0m[0mdebug[0m] [0m[0mdone compiling[0m
