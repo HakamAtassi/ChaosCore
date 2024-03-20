@@ -36,6 +36,7 @@ class cacheMemInterface():
         self.addr = 0
         self.valid = 0
         self.evictionLine = 0
+        self.writeback = 0
 
     def setHit(self,hit):
         self.hit = hit
@@ -52,11 +53,15 @@ class cacheMemInterface():
     def setValid(self, valid):
         self.valid = valid
 
+    def setWriteback(self, writeback):
+        self.writeback = writeback
+
     def getHit(self):           return self.hit
     def getData(self):          return self.data
     def getAddr(self):          return self.addr
     def getValid(self):         return self.valid
     def getEvictionLine(self):  return self.evictionLine
+    def getWriteback(self):     return self.writeback
 
 class cacheMem():
     def __init__(self, sets=64, ways=4, cacheLineSizeBytes=32):
@@ -126,9 +131,14 @@ class cacheMem():
         valid = ((validLine >> way) & 0b1)
         return valid
 
+    def getDirty(self, set, way):
+        dirtyLine = self.dirtyMemory[set]
+        dirty = ((dirtyLine >> way) & 0b1)
+        return dirty
+
     def updateValid(self, set, way):
         mask = 1<<way
-        validLine = self.valid[set]
+        validLine = self.validMemory[set]
         validLine |= mask
         self.validMemory[set] = validLine
 
@@ -140,19 +150,16 @@ class cacheMem():
         tagArray = splitLine(tagLine, self.ways, 21) #FIXME: dont hardcode tagsize
         tag = self.addrToTag(addr)
         
-        print(tagArray)
-        print(tag)
-        print(set)
 
         byteOffset = addr & ((1<<self.byteOffsetBits)-1)
         
         response = cacheMemInterface()
 
         if(cmd in ["LHW", "SHW"]):
-            assert (addr & 0b1)==0b0, "Exception, LHW alignment invalid"
+            assert (addr & 0b1)==0b0, f"Exception, LHW alignment invalid. cmd HW, {bin(addr)}"
 
         if(cmd in ["LW", "SW"]):
-            assert (addr & 0b11)==0b0, "Exception, LW alignment invalid"
+            assert (addr & 0b11)==0b0, f"Exception, LW alignment invalid.  cmd W, {bin(addr)}"
 
         if (cmd not in cacheCommands):
             assert False, "CMD in requestCMD() not valid"
@@ -168,15 +175,14 @@ class cacheMem():
             ## Update PLRU
         valid = self.getValid(set, hitWay) # was that entry valid?
         if cmd in ["SW", "SHW", "SB"]:
+            bytes = cmdToBytes[cmd]
             if hit:
                 self.updatePLRU(set, hitWay)
-            bytes = cmdToBytes[cmd]
-            self.updateDirty(set, hitWay)
+                self.updateDirty(set, hitWay)
+                response.setData(self.write(set, hitWay, byteOffset, bytes, data))
             response.setAddr(addr)
             response.setHit(hit & valid)
             response.setValid(valid) # redundancy...
-
-            response.setData(self.write(set, hitWay, byteOffset, bytes, data))
             return response
         elif cmd in ["LW", "LHW", "LB"]:
             if hit:
@@ -193,12 +199,21 @@ class cacheMem():
             # Step 2: read old data (eviction line)
             # Step 3: write new line
             # Step 4: Clear dirty
+
             allocateWay = self.getAllocateWay(set)
+            dirty = self.getDirty(set, allocateWay) # was that entry valid?
+            valid = self.getValid(set, allocateWay) # was that entry valid?
+
             response.setEvictionLine(self.dataMemory[allocateWay*self.sets + set])
             response.setHit(0) # Sure about this?
             response.setAddr(addr)
-            response.setValid(valid)
+            response.setValid(valid) #FIXME: is this right?
+            response.setWriteback(valid & dirty) #FIXME: is this right?
             self.dataMemory[allocateWay*self.sets + set] = cacheLine
+
+            self.tagMemory[set] &= ~(((1<<self.tagSize)-1)<<(self.tagSize*allocateWay))
+            self.tagMemory[set] |= ((tag)<<(self.tagSize*allocateWay))
+
             self.clearDirty(set, allocateWay)
             self.updateValid(set, allocateWay)
             return response
@@ -351,7 +366,7 @@ class cacheMem():
 
     def randomizePLRU(self):     # init with fully random data
         for set in range(self.sets):
-            self.PLRUMemory[set] = random.randint(0x0, 0xF)
+            self.PLRUMemory[set] = random.randint(0x0, 0xE)
 
     def randomizeDirty(self):     # init with fully random data
         for set in range(self.sets):
