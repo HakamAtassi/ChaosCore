@@ -28,6 +28,35 @@ cmdToBytes={
     "SW":  4,
 }
 
+class cacheMemInterface():
+    # Reseponse packet class for the cache memory
+    def __init__(self):
+        self.hit = 0
+        self.data = 0
+        self.addr = 0
+        self.valid = 0
+        self.evictionLine = 0
+
+    def setHit(self,hit):
+        self.hit = hit
+
+    def setData(self, data):
+        self.data = data
+
+    def setAddr(self, addr):
+        self.addr = addr
+
+    def setEvictionLine(self, evictionLine):
+        self.evictionLine = evictionLine
+
+    def setValid(self, valid):
+        self.valid = valid
+
+    def getHit(self):           return self.hit
+    def getData(self):          return self.data
+    def getAddr(self):          return self.addr
+    def getValid(self):         return self.valid
+    def getEvictionLine(self):  return self.evictionLine
 
 class cacheMem():
     def __init__(self, sets=64, ways=4, cacheLineSizeBytes=32):
@@ -44,58 +73,138 @@ class cacheMem():
         print(f"sets: {self.sets}")
         print(f"ways: {self.ways}")
         print(f"Block size: {self.cacheLineSizeBytes}")
-        dmemSize = self.cacheLineSizeBytes*self.ways*self.sets*8
-        plruSize = self.ways*self.sets
-        dirtySize = self.ways*self.sets
-        tagsSize = self.tagSize*self.ways*self.sets
-        totalSize = tagsSize + dirtySize + plruSize + dmemSize
+        dmemSize  = self.cacheLineSizeBytes*self.ways*self.sets*8
+        plruSize  = self.ways*self.sets * 4
+        dirtySize = self.ways*self.sets * 4
+        validSize = self.ways*self.sets * 4
+        tagsSize  = self.tagSize*self.ways*self.sets
+        totalSize = tagsSize + dirtySize + plruSize + dmemSize + validSize
         print(f"Total Data size: {dmemSize/8}B")
         print(f"Total required memory (including metadata): {totalSize/8}B")
 
         ## DMEM
-        self.dataMemory=[0]*sets*ways
+        self.dataMemory  =  [0]*sets*ways
         ## Tags
-        self.tagMemory=[0]*sets
+        self.tagMemory   =  [0]*sets
         ## Dirty
-        self.dirtyMemory=[0]*sets
+        self.dirtyMemory =  [0]*sets
         ## PLRU
-        self.PLRUMemory=[0]*sets
+        self.PLRUMemory  =  [0]*sets
+        ## Valid
+        self.validMemory =  [0]*sets
 
+
+    def randomizeActiveState(self): # Intended to recreate a cache state after it has been active for some time
+        self.randomizeTagMem() # randomize tags
+        self.randomizeDMem()
+        self.randomizePLRU()
+        self.randomizeDirty()
+        self.randomizeValid()
+
+
+    def resetMemory(self, mem):
+        for i in range(len(mem)):
+            mem[i] = 0
+
+    def setMemory(self, mem):
+        for i in range(len(mem)):
+            mem[i] = 1
+    
     def addrToTag(self, addr):
         return (addr >> (self.byteOffsetBits + self.setBits)) & ((1<<self.tagSize)-1)
 
-    def requestCMD(self, addr, data ,cmd):
+    def getAllocateWay(self, set):
+        PLRU = self.PLRUMemory[set]
+        for i in range(self.ways):
+            if((PLRU & 0b1) == 0b0):
+                return i 
+            PLRU>>=1
+        assert False, "PLRU not updating correctly. Cannot get allocate way."
+
+    def getValid(self, set, way):
+        validLine = self.validMemory[set]
+        valid = ((validLine >> way) & 0b1)
+        return valid
+
+    def updateValid(self, set, way):
+        mask = 1<<way
+        validLine = self.valid[set]
+        validLine |= mask
+        self.validMemory[set] = validLine
+
+    def requestCMD(self, addr, data, cacheLine, cmd):
         """ Decodes the way (if any) and set, then passes control to read/write functions"""
         assert cmd in cacheCommands
-
-        tagLine = self.getTagLine(addr)
-        tagArray = splitLine(tagLine, self.ways, 21)
+        set = self.getSet(addr)
+        tagLine = self.getTagLine(set)
+        tagArray = splitLine(tagLine, self.ways, 21) #FIXME: dont hardcode tagsize
         tag = self.addrToTag(addr)
         
+        print(tagArray)
+        print(tag)
+        print(set)
+
         byteOffset = addr & ((1<<self.byteOffsetBits)-1)
         
-        bytes = cmdToBytes[cmd]
+        response = cacheMemInterface()
+
+        if(cmd in ["LHW", "SHW"]):
+            assert (addr & 0b1)==0b0, "Exception, LHW alignment invalid"
+
+        if(cmd in ["LW", "SW"]):
+            assert (addr & 0b11)==0b0, "Exception, LW alignment invalid"
+
+        if (cmd not in cacheCommands):
+            assert False, "CMD in requestCMD() not valid"
+
+
 
         # find hit way (if any)
+        hitWay = 0
+        hit=0
         if tag in tagArray:
-            hitWay = self.ways - 1 - tagArray.index(tag) # [3, 2, 1, 0] <= index and way are reversed
-            set = self.getSet(addr)
-            print(hitWay)
+            hitWay = tagArray.index(tag) # hit in tag
+            hit=1
             ## Update PLRU
-            self.updatePLRU(set, hitWay)
-            if cmd in ["SW", "SHW", "SB"]:
-                return (1, self.write(set, hitWay=hitWay, byteOffset=byteOffset, bytes=bytes, data=data))
-            elif cmd in ["LW", "LHW", "LB"]:
-                return (1, self.read(set, hitWay, byteOffset, bytes))
-            elif cmd in ["ALLOCATE"]:
-                pass
-            elif cmd in ["NOP"]:
-                pass
-            else:
-                assert False, "CMD in requestCMD() not valid"
+        valid = self.getValid(set, hitWay) # was that entry valid?
+        if cmd in ["SW", "SHW", "SB"]:
+            if hit:
+                self.updatePLRU(set, hitWay)
+            bytes = cmdToBytes[cmd]
+            self.updateDirty(set, hitWay)
+            response.setAddr(addr)
+            response.setHit(hit & valid)
+            response.setValid(valid) # redundancy...
 
-        else:
-            return (0, None)
+            response.setData(self.write(set, hitWay, byteOffset, bytes, data))
+            return response
+        elif cmd in ["LW", "LHW", "LB"]:
+            if hit:
+                self.updatePLRU(set, hitWay)
+                response.setValid(valid)
+            bytes = cmdToBytes[cmd]
+            response.setAddr(addr)
+            response.setHit(hit & valid)
+            response.setData(self.read(set, hitWay, byteOffset, bytes))
+            return response
+
+        if cmd in ["ALLOCATE"]:
+            # Step 1: get allocate way (PLRU)
+            # Step 2: read old data (eviction line)
+            # Step 3: write new line
+            # Step 4: Clear dirty
+            allocateWay = self.getAllocateWay(set)
+            response.setEvictionLine(self.dataMemory[allocateWay*self.sets + set])
+            response.setHit(0) # Sure about this?
+            response.setAddr(addr)
+            response.setValid(valid)
+            self.dataMemory[allocateWay*self.sets + set] = cacheLine
+            self.clearDirty(set, allocateWay)
+            self.updateValid(set, allocateWay)
+            return response
+        if cmd in ["NOP"]:
+            return (0, addr, None)
+        return -1
 
     def updatePLRU(self, set, way):
         PLRU = self.PLRUMemory[set]
@@ -104,18 +213,24 @@ class cacheMem():
         else:
             self.PLRUMemory[set] = PLRU | (1<<way)
 
+    def updateDirty(self, set, way):
+        Dirty = self.dirtyMemory[set]
+        self.dirtyMemory[set] = (1<<(way)) | Dirty
+
+    def clearDirty(self, set, way):
+        Dirty = self.dirtyMemory[set]
+        self.dirtyMemory[set] = (~(1<<(way))) & Dirty
+
     def getSet(self, addr):
         setMask = (1<<self.setBits)-1
         addr = addr >> self.byteOffsetBits
         addr = addr & setMask
         return addr
 
-
     def read(self, set, way, byteOffset, bytes):
         assert bytes in [1,2,4] # Read 1, 2, or 4 bytes from addr
         cacheAddr = way * self.sets + set
         cacheLine = self.getDmemLine(cacheAddr)
-
         result = 0
         if(bytes>=1): result |= (getByte(cacheLine, byteOffset + 0) << 0)
         if(bytes>=2): result |= (getByte(cacheLine, byteOffset + 1) << 8)
@@ -129,28 +244,29 @@ class cacheMem():
 
         cacheAddr = way * self.sets + set
         cacheLine = self.getDmemLine(cacheAddr)
-
+        
         if(bytes>=1): 
-            mask = ~(0xFF << (byteOffset+0))
+            mask = ~(0xFF << (byteOffset*8+0))
             cacheLine&=mask # set this part of the word to 0
-            cacheLine|=((data&0xFF)<<(byteOffset+00))
+            cacheLine|=((data&0xFF)<<(byteOffset*8+0))
             data = data>>8
         if(bytes>=2): 
-            mask = ~(0xFF << (byteOffset+8))
+            mask = ~(0xFF << (byteOffset*8+8))
             cacheLine&=mask
-            cacheLine|=((data&0xFF)<<(byteOffset+8))
+            cacheLine|=((data&0xFF)<<(byteOffset*8+8))
             data = data>>8
         if(bytes>=3): 
-            mask = ~(0xFF << (byteOffset+16))
+            mask = ~(0xFF << (byteOffset*8+16))
             cacheLine&=mask
-            cacheLine|=((data&0xFF)<<(byteOffset+16))
+            cacheLine|=((data&0xFF)<<(byteOffset*8+16))
             data = data>>8
         if(bytes>=4): 
-            mask = ~(0xFF << (byteOffset+24))
+            mask = ~(0xFF << (byteOffset*8+24))
             cacheLine&=mask
-            cacheLine|=((data&0xFF)<<(byteOffset+24))
+            cacheLine|=((data&0xFF)<<(byteOffset*8+24))
         
         self.setDmemLine(cacheAddr, cacheLine)
+        return None
 
     def evict(self, addr, cacheLine):
         pass
@@ -170,8 +286,7 @@ class cacheMem():
             for set in range(self.sets):
                 print(f"{way:02} {set:02}: ",end="")
                 for byte in range(self.cacheLineSizeBytes):
-                    print(f"{getByte(self.getDmemLine(way*self.sets + set), byte):0{2}x}",end=" ")
-
+                    print(f"{getByte(self.getDmemLine(way*self.sets + set), (self.cacheLineSizeBytes -1 - byte)):0{2}x}",end=" ")
                 print("")
 
     def getTagLine(self, line):
@@ -183,7 +298,7 @@ class cacheMem():
         for set in range(self.sets):
             print(f"{set:02}: ",end="")
             for way in range(self.ways):
-                print(f"{getTag(self.getTagLine(set), way, self.tagSize):0{tagPos}x}",end=" ")
+                print(f"{getTag(self.getTagLine(set), self.ways -1 - way, self.tagSize):0{tagPos}x}",end=" ")
             print("")
 
     def getDirtyLine(self, line):
@@ -195,7 +310,7 @@ class cacheMem():
         for set in range(self.sets):
             print(f"{set:02}: ",end="")
             for way in range(self.ways):
-                print(f"{getDirtyBit(self.getTagLine(set), way)}",end=" ")
+                print(f"{getDirtyBit(self.getDirtyLine(set), self.ways - 1 - way)}",end=" ")
             print("")
 
     def getPLRULine(self, line):
@@ -207,21 +322,26 @@ class cacheMem():
         for set in range(self.sets):
             print(f"{set:02}: ",end="")
             for way in range(self.ways):
-                print(f"{getPLRUBit(self.getPLRULine(set), way)}",end=" ")
+                print(f"{getPLRUBit(self.getPLRULine(set), self.ways - 1 - way)}",end=" ")
             print("")
 
     ####################
     ## INIT FUNCTIONS ##
     ####################
 
-    def initTagMem(self):
+    def randomizeTagMem(self):   # init with unique random set
+        tagMax = (1<<self.tagSize) -1
         for set in range(self.sets):
+            tagSet = []
             tagLine=0x0
-            for way in range(self.ways):
-                tagLine |= ((self.ways - 1 - way) <<(way*self.tagSize))
+            while(len(tagSet) < 4):
+                randomTag = random.randint(0x0, tagMax)
+                if randomTag not in tagSet:
+                    tagLine = tagLine | (randomTag <<((len(tagSet))*self.tagSize))
+                    tagSet.append(randomTag)
             self.tagMemory[set] = tagLine
-
-    def initDMem(self):
+        
+    def randomizeDMem(self):     # init with fully random data
         for way in range(self.ways):
             for set in range(self.sets):
                 cacheLine=0
@@ -229,21 +349,48 @@ class cacheMem():
                     cacheLine |= (random.randint(0x0,0xFF) << (byte*8))
                 self.dataMemory[way * self.sets + set] = cacheLine
 
+    def randomizePLRU(self):     # init with fully random data
+        for set in range(self.sets):
+            self.PLRUMemory[set] = random.randint(0x0, 0xF)
+
+    def randomizeDirty(self):     # init with fully random data
+        for set in range(self.sets):
+            self.dirtyMemory[set] = random.randint(0x0, 0xF)
+
+    def randomizeValid(self):     # init with fully random data
+        for set in range(self.sets):
+            self.validMemory[set] = random.randint(0x0, 0xF)
+
+# TODO: Confirm printing and "way" problems are fixed
+# TODO: Address fixmes, etc
 
 if __name__=="__main__":
     random.seed(0x42)
     _cacheMem = cacheMem()
 
-    _cacheMem.initTagMem()
-    _cacheMem.initDMem()
-
-    #_cacheMem.printTags()
-    #_cacheMem.printPLRU()
-    #_cacheMem.printDirty()
+    _cacheMem.randomizeDMem()
+    _cacheMem.randomizeTagMem()
 
     _cacheMem.printTags()
+
+    #_cacheMem.printDirty()
+    #_cacheMem.printTags()
     _cacheMem.printDmem()
+    #_cacheMem.printPLRU()
 
-    result=_cacheMem.requestCMD(addr=(0x0<<11), data=0x0, cmd="LW")
-    print(f"{hex(result[1])}")
+    #result=_cacheMem.requestCMD(addr=(0x0<<11)+(63<<5) + (0<<0), data=0x42, cacheLine=None, cmd="SW")
+    #result=_cacheMem.requestCMD(addr=(0x1<<11)+(63<<5) + (0<<0), data=0x42, cacheLine=None, cmd="SW")
+    #result=_cacheMem.requestCMD(addr=(0x2<<11)+(63<<5) + (0<<0), data=0x42, cacheLine=None, cmd="SW")
+    #result=_cacheMem.requestCMD(addr=(0x3<<11)+(63<<5) + (0<<0), data=0x42, cacheLine=None, cmd="SW")
+    #result=_cacheMem.requestCMD(addr=(0x0<<11)+(63<<5) + (0<<0), data=0x42, cacheLine=None, cmd="SW")
 
+    #_cacheMem.printPLRU()
+
+    #result=_cacheMem.requestCMD(addr=(0x7<<11)+(63<<5) + (0<<0), data=0x0, cacheLine=0x42, cmd="ALLOCATE") 
+    #result=_cacheMem.requestCMD(addr=(0x7<<11)+(63<<5) + (0<<0), data=0x0, cacheLine=0x42, cmd="ALLOCATE") #FIXME: how to handle allocate to way that already exists?
+
+    #_cacheMem.printPLRU() # wrong
+    #_cacheMem.printDirty()
+
+    #_cacheMem.printDmem()
+    print("Done")
