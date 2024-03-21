@@ -36,7 +36,9 @@ cacheCommands={
     "FW":  0b1000
 }
 
-
+###################
+## SEQUENCE ITEM ##
+###################
 
 class cacheSeqItem(uvm_sequence_item):
     def __init__(self, name, addr, data, cache_line, cmd, valid, ready,cacheLineSize=32):
@@ -50,20 +52,67 @@ class cacheSeqItem(uvm_sequence_item):
         self.cacheLineSize = cacheLineSize
 
     def randomize_operands(self):
-        self.A = random.randint(0, 255)
-        self.B = random.randint(0, 255)
         self.addr=random.randint(0,(1<<32)-1)
         self.data=random.randint(0,(1<<32)-1)
         self.cache_line=random.randint(0,(1<<(self.cacheLineSize)-1))
         self.valid=random.randint(0,1)
         self.ready=random.randint(0,1)
 
+    def generate_read_hit(self, set="random", way="random", byteOffset="random", cmd="random", data="random", cache_line="random"):
+        """Will pick a tag in a random or given set"""
+        tagOffset = (32 - cacheModel.tagSize)
+        setOffset = int(np.ceil(np.log2(cacheModel.cacheLineSizeBytes)))
+
+        if(cmd=="random"):
+            cmd=random.choice(["LW", "LHW", "LB"])
+        if(data=="random"):
+            data=random.randint(0,(1<<32)-1)
+        if(cache_line=="random"):
+            cache_line=random.randint(0,(1<<(cacheModel.cacheLineSizeBytes*8))-1)
+        assert cmd in ["LW", "LHW", "LB"]
+        if(set=="random"):
+            set=random.randint(0, cacheModel.sets - 1)
+        if(way=="random"):
+            way=random.randint(0, cacheModel.ways - 1)
+        if(byteOffset=="random"):
+            if(cmd=="LW"): byteOffset=random.randint(0,31) & (~(0b11))
+            elif(cmd=="LHW"): byteOffset=random.randint(0,31) & (~(0b01))
+            elif(cmd=="LB"): byteOffset=random.randint(0,31) & (~(0b00))
+            else: assert False, "CMD not valid"
+            
+        tagArr = splitLine(cacheModel.getTagLine(set),cacheModel.ways, cacheModel.tagSize)     # Get set
+        tag = tagArr[cacheModel.ways - 1 - way]  # Get Tag
+
+        addr = 0
+        addr = addr | (tag << (tagOffset))
+        addr = addr | (set<<setOffset)
+        addr = addr | byteOffset
+
+        # Set inputs #
+        self.addr=addr
+        self.data=data
+        self.cmd=cacheCommands[cmd]
+        self.cache_line=cache_line
+        self.valid=1
+        self.ready=1
+
+    def generate_miss(self, set="random", way="random"):
+        """Will generate a tag NOT in given set/way"""
+        pass
+
+    def generate_hit_or_miss(self, set="random", way="random", miss_probability=0.5):
+        """Will generate a hit or miss at given set/way with given probability"""
+        pass
+
+
     def randomize(self):
         self.randomize_operands()
         self.cmd=random.choice(list(cacheCommands.keys()))
         self.cmd=cacheCommands[self.cmd]
 
-
+###############
+## SEQUENCES ##
+###############
 
 class RandomSeq(uvm_sequence):
     async def body(self):
@@ -109,7 +158,7 @@ class RandomSeq(uvm_sequence):
 
         for _ in range(10):
             await self.start_item(cmd_tr)
-            cmd_tr.randomize()
+            cmd_tr.generate_read_hit()
             await self.finish_item(cmd_tr)
 
 class TestAllSeq(uvm_sequence): # test all sequences
@@ -138,9 +187,12 @@ class Driver(uvm_driver):
         while True:
             cmd = await self.seq_item_port.get_next_item()
             await self.bfm.send_op(cmd.addr, cmd.data, cmd.cache_line, cmd.cmd, cmd.valid, cmd.ready)
+            
             result = await self.bfm.get_result()
-            self.ap.write(result)
+            if result!=None:
+                self.ap.write(result)
             self.seq_item_port.item_done()
+            
 
 """
 class Coverage(uvm_subscriber):

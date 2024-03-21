@@ -1,9 +1,10 @@
 import cocotb
-from cocotb.triggers import FallingEdge
+from cocotb.triggers import FallingEdge, RisingEdge
 from cocotb.queue import QueueEmpty, Queue
 import enum
 import logging
 import sys
+
 
 from pyuvm import utility_classes
 
@@ -60,8 +61,12 @@ class cacheBFM(metaclass=utility_classes.Singleton):
         return cmd
 
     async def get_result(self):
-        result = await self.result_mon_queue.get()
-        return result
+        try:
+            result = self.result_mon_queue.get_nowait()
+            return result
+        except QueueEmpty:
+            return None
+
 
     async def reset(self):
         await FallingEdge(self.dut.clock)
@@ -84,10 +89,10 @@ class cacheBFM(metaclass=utility_classes.Singleton):
         self.dut.io_controller_valid.value = 0
         self.dut.io_cache_ready.value = 0
 
+        await RisingEdge(self.dut.clock)
         while True:
-            await FallingEdge(self.dut.clock)
-            valid = get_int(self.dut.io_controller_valid)
-            if valid == 0:
+            ready = get_int(self.dut.io_cache_ready)
+            if ready == 1:
                 try:
                     (addr, data, cache_line, cmd, valid, ready) = self.driver_queue.get_nowait()
                     self.dut.io_controller_addr.value = addr
@@ -95,7 +100,7 @@ class cacheBFM(metaclass=utility_classes.Singleton):
                     self.dut.io_controller_cache_line.value = cache_line
                     self.dut.io_controller_cmd.value = cmd
                     self.dut.io_controller_valid.value = 1
-                    await FallingEdge(self.dut.clock)
+                    await RisingEdge(self.dut.clock)
                     self.dut.io_controller_valid.value = 0
                 except QueueEmpty:
                     pass
@@ -103,16 +108,15 @@ class cacheBFM(metaclass=utility_classes.Singleton):
     async def cmd_mon_bfm(self):
         while True:
             await FallingEdge(self.dut.clock)
-            valid = get_int(self.dut.io_controller_valid)
+            valid = get_int(self.dut.io_cache_valid)
             if valid == 1:
                 cmd_tuple = (get_int(self.dut.io_controller_addr.value),
                              get_int(self.dut.io_controller_data.value),
                              get_int(self.dut.io_controller_cache_line.value),
                              get_int(self.dut.io_controller_cmd.value),
                              get_int(self.dut.io_controller_valid.value),
-                             get_int(self.dut.io_controller_ready.value),
-                             
-                             )
+                             get_int(self.dut.io_controller_ready.value))
+
                 self.cmd_mon_queue.put_nowait(cmd_tuple)
 
     async def result_mon_bfm(self):
