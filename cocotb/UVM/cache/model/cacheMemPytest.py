@@ -481,8 +481,6 @@ class TestCacheMem:
                 way = i
                 break
 
-        #logging.info(f"way {way}")
-
         # Get data #
         dataLine = cache.dataMemory[way*cache.sets + set]
         # Process #
@@ -507,7 +505,7 @@ class TestCacheMem:
         assert splitLine(cache.tagMemory[set], cache.ways, cache.tagSize)[cache.ways -1 -way]   == randomTagInSet, f"{hex(splitLine(tagLine, 4, cache.tagSize)[cache.ways-1-way])}, {hex(randomTagInSet)}"
         assert cache.validMemory[set] == (oldValid | (1<<way)), f"Expected {oldValid}, got {cache.validMemory[set]}"
         assert cache.dirtyMemory[set] == (oldDirty & (~(1<<way))), f"Expected {oldDirty & (~(1<<way))}, got {cache.dirtyMemory[set]}" 
-        assert cache.dataMemory[cache.sets*way + set] == allocateLine
+        assert actualData == allocateLine
 
     def testAllocateEvictAllSets(self, cache):
         for set in range(cache.sets):
