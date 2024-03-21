@@ -47,6 +47,8 @@ object CONTROLLER_CMD extends ChiselEnum {
   val SW   =  Value("b110".U)
 
   val ALLOCATE = Value("b111".U)
+
+  val FW = Value("b1000".U)
 }
 
 

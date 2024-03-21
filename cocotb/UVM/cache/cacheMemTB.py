@@ -4,12 +4,19 @@ import random
 import cocotb
 import pyuvm
 from cocotb.clock import Clock
-# All testbenches use tinyalu_utils, so store it in a central
-# place and add its path to the sys path so we can import it
 import sys
 from pathlib import Path
 sys.path.append(str(Path("..").resolve()))
-from cacheUtils import cacheBFM
+from cacheUtils import *
+
+sys.path.append('model')
+from model.utils import *
+from model.cacheMem import *
+sys.path.append('..')
+
+from cocotb.triggers import RisingEdge, FallingEdge
+
+cacheModel = cacheMem()
 
 # Sequence classes
 
@@ -28,6 +35,8 @@ cacheCommands={
     
     "FW":  0b1000
 }
+
+
 
 class cacheSeqItem(uvm_sequence_item):
     def __init__(self, name, addr, data, cache_line, cmd, valid, ready,cacheLineSize=32):
@@ -51,15 +60,57 @@ class cacheSeqItem(uvm_sequence_item):
 
     def randomize(self):
         self.randomize_operands()
-        self.cmd=random.choice(cacheCommands.items())[1]
+        self.cmd=random.choice(list(cacheCommands.keys()))
+        self.cmd=cacheCommands[self.cmd]
+
 
 
 class RandomSeq(uvm_sequence):
     async def body(self):
         cmd_tr = cacheSeqItem("cmd_tr", addr=None, data=None, cache_line=None, valid=None, ready=None, cmd=0)
-        await self.start_item(cmd_tr) # Error here but nothing prints to terminal besides program abort
-        cmd_tr.randomize_operands()
-        await self.finish_item(cmd_tr)
+        logging.info("Initializing memory to Random Active State...")
+
+        #####################
+        # Init cache memory ################################################################
+        # The model generates a random active cache state, which is then copied to the DUT #
+        ####################################################################################
+        cacheModel.randomizeActiveState()
+        logging.info("Ranomized cache model")
+
+        copyDataMemory(cocotb.top, cacheModel)
+        logging.info("Copied Data Memory")
+        copyTagMemory(cocotb.top, cacheModel)
+        logging.info("Copied Tag Memory")
+
+        copyDirtyMemory(cocotb.top, cacheModel)
+        logging.info("Copied Dirty Memory")
+        copyPLRUMemory(cocotb.top, cacheModel)
+        logging.info("Copied PLRU Memory")
+
+        logging.critical("DUT valid not implemented")
+        #copyValidMemory(cocotb.top, cacheModel) #FIXME: 
+        
+        await RisingEdge(cocotb.top.clock)
+
+        #printDmem(cocotb.top, lineSizeBytes=32, ways=4, sets=64)
+        #cacheModel.printDmem()
+
+        #printTags(cocotb.top, lineSizeBytes=32, ways=4, sets=64)
+        #cacheModel.printTags()
+
+        #printPLRU(cocotb.top, lineSizeBytes=32, ways=4, sets=64)
+        #cacheModel.printPLRU()
+
+        #printDirty(cocotb.top, lineSizeBytes=32, ways=4, sets=64)
+        #cacheModel.printDirty()
+
+        #printValid(cocotb.top, lineSizeBytes=32, ways=4, sets=64)
+        #cacheModel.printValid()
+
+        for _ in range(10):
+            await self.start_item(cmd_tr)
+            cmd_tr.randomize()
+            await self.finish_item(cmd_tr)
 
 class TestAllSeq(uvm_sequence): # test all sequences
     async def body(self):

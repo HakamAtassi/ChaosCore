@@ -159,7 +159,7 @@ module L1_cache_mem(
   input  [255:0] io_controller_cache_line,
   input          io_controller_valid,
   output         io_controller_ready,
-  input  [2:0]   io_controller_cmd,
+  input  [3:0]   io_controller_cmd,
   output [31:0]  io_cache_dout,
                  io_cache_addr,
   output [255:0] io_cache_evict_line,
@@ -242,13 +242,13 @@ module L1_cache_mem(
   reg          dirty_memory_io_data_in_REG;
   wire [3:0]   dirty_out;
   reg  [4:0]   delayed_controller_byte_offset;
-  reg  [2:0]   delayed_controller_cmd;
+  reg  [3:0]   delayed_controller_cmd;
   reg  [31:0]  delayed_controller_data;
   reg  [255:0] delayed_controller_cache_line;
-  wire         _data_memory_wr_en_0_T = delayed_controller_cmd == 3'h4;
+  wire         _data_memory_wr_en_0_T = delayed_controller_cmd == 4'h4;
   wire         _data_memory_wr_en_28_T_9 = delayed_controller_byte_offset == 5'h0;
-  wire         _data_memory_wr_en_0_T_4 = delayed_controller_cmd == 3'h5;
-  wire         _data_memory_wr_en_0_T_8 = delayed_controller_cmd == 3'h6;
+  wire         _data_memory_wr_en_0_T_4 = delayed_controller_cmd == 4'h5;
+  wire         _data_memory_wr_en_0_T_8 = delayed_controller_cmd == 4'h6;
   wire         data_memory_wr_en_31 =
     valid_delayed
     & (allocate | _data_memory_wr_en_0_T & _data_memory_wr_en_28_T_9
@@ -494,9 +494,9 @@ module L1_cache_mem(
   reg  [31:0]  write_data;
   reg  [4:0]   delayed_controller_byte_offset_2;
   reg  [31:0]  data_out_pre_mask;
-  reg  [2:0]   sel_output_mask_r;
-  reg  [2:0]   sel_output_mask_r_1;
-  reg  [2:0]   sel_output_mask;
+  reg  [3:0]   sel_output_mask_r;
+  reg  [3:0]   sel_output_mask_r_1;
+  reg  [3:0]   sel_output_mask;
   reg          io_cache_hit_r;
   reg          io_cache_hit_r_1;
   reg  [7:0]   eviction_line_0;
@@ -580,6 +580,7 @@ module L1_cache_mem(
       eviction_line_31 <= 8'h0;
     end
     else begin
+      automatic logic             _dirty_wr_en_T_5 = io_controller_cmd == 4'h7;
       automatic logic [3:0][31:0] _GEN_2 =
         {{{io_controller_data[7:0], 24'h0}},
          {{io_controller_data[15:0], 16'h0}},
@@ -683,13 +684,13 @@ module L1_cache_mem(
          {_GEN_4[delayed_controller_byte_offset_2[1:0]]},
          {_GEN_3[delayed_controller_byte_offset_2[1:0]]}};
       delayed_controller_tag <= io_controller_addr[31:11];
-      tag_wr_en <= (&io_controller_cmd) & io_controller_valid;
+      tag_wr_en <= _dirty_wr_en_T_5 & io_controller_valid;
       plru_wr_en <=
-        io_controller_cmd != 3'h3 & io_controller_cmd != 3'h7 & io_controller_valid;
-      allocate <= (&io_controller_cmd) & io_controller_valid;
+        io_controller_cmd != 4'h3 & io_controller_cmd != 4'h7 & io_controller_valid;
+      allocate <= _dirty_wr_en_T_5 & io_controller_valid;
       dirty_wr_en <=
-        (io_controller_cmd == 3'h6 | io_controller_cmd == 3'h5 | io_controller_cmd == 3'h4
-         | (&io_controller_cmd)) & io_controller_valid;
+        (io_controller_cmd == 4'h6 | io_controller_cmd == 4'h5 | io_controller_cmd == 4'h4
+         | _dirty_wr_en_T_5) & io_controller_valid;
       write_data <= _GEN_2[io_controller_addr[1:0]];
       data_out_pre_mask <= _GEN_11[delayed_controller_byte_offset_2[4:2]];
       eviction_line_0 <= _data_memory_0_io_data_out;
@@ -1004,11 +1005,11 @@ module L1_cache_mem(
   );
   assign io_controller_ready = 1'h1;
   assign io_cache_dout =
-    sel_output_mask == 3'h2
+    sel_output_mask == 4'h2
       ? data_out_pre_mask
-      : sel_output_mask == 3'h1
+      : sel_output_mask == 4'h1
           ? data_out_pre_mask & 32'hFFFF
-          : sel_output_mask == 3'h0 ? data_out_pre_mask & 32'hFF : 32'h0;
+          : sel_output_mask == 4'h0 ? data_out_pre_mask & 32'hFF : 32'h0;
   assign io_cache_addr = io_cache_addr_r_2;
   assign io_cache_evict_line =
     {eviction_line_0,

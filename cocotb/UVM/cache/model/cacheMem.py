@@ -296,49 +296,57 @@ class cacheMem():
         self.dataMemory[line]=data
 
     def printDmem(self):
-        print("Data Memory")
+        print("Model Data Memory")
+        #for way in range(self.ways):
+            #for set in range(self.sets):
+                #print(f"{way:02} {set:02}: ",end="")
+                #for byte in range(self.cacheLineSizeBytes):
+                    #print(f"{getByte(self.getDmemLine(way*self.sets + set), (self.cacheLineSizeBytes -1 - byte)):0{2}x}",end=" ")
+                #print("")
+
         for way in range(self.ways):
             for set in range(self.sets):
                 print(f"{way:02} {set:02}: ",end="")
-                for byte in range(self.cacheLineSizeBytes):
-                    print(f"{getByte(self.getDmemLine(way*self.sets + set), (self.cacheLineSizeBytes -1 - byte)):0{2}x}",end=" ")
-                print("")
+                line = self.getDmemLine(way*self.sets + set)
+                print(f"{line:064x}")
 
     def getTagLine(self, line):
         return self.tagMemory[line]
 
     def printTags(self):
-        print("Tag Memory")
+        print("Model Tag Memory")
         tagPos=int(np.ceil(self.tagSize/4))
         for set in range(self.sets):
             print(f"{set:02}: ",end="")
-            for way in range(self.ways):
-                print(f"{getTag(self.getTagLine(set), self.ways -1 - way, self.tagSize):0{tagPos}x}",end=" ")
-            print("")
+            #for way in range(self.ways):
+                #print(f"{getTag(self.getTagLine(set), self.ways -1 - way, self.tagSize):0{tagPos}x}",end=" ")
+
+            print(f"{hex(self.getTagLine(set))}")
 
     def getDirtyLine(self, line):
         return self.dirtyMemory[line]
 
     def printDirty(self):
-        print("Dirty Memory")
+        print("Model Dirty Memory")
         tagPos=int(np.ceil(self.tagSize/4))
         for set in range(self.sets):
             print(f"{set:02}: ",end="")
-            for way in range(self.ways):
-                print(f"{getDirtyBit(self.getDirtyLine(set), self.ways - 1 - way)}",end=" ")
-            print("")
+            #for way in range(self.ways):
+                #print(f"{getDirtyBit(self.getDirtyLine(set), self.ways - 1 - way)}",end=" ")
+            #print("")
+            print(f"{hex(self.getDirtyLine(set))}")
 
     def getPLRULine(self, line):
         return self.PLRUMemory[line]
 
     def printPLRU(self):
-        print("PLRU Memory")
+        print("Model PLRU Memory")
         tagPos=int(np.ceil(self.tagSize/4))
         for set in range(self.sets):
             print(f"{set:02}: ",end="")
-            for way in range(self.ways):
-                print(f"{getPLRUBit(self.getPLRULine(set), self.ways - 1 - way)}",end=" ")
-            print("")
+            #for way in range(self.ways):
+                #print(f"{getPLRUBit(self.getPLRULine(set), self.ways - 1 - way)}",end=" ")
+            print(f"{hex(self.getPLRULine(set))}")
 
     ####################
     ## INIT FUNCTIONS ##
