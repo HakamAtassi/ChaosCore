@@ -41,7 +41,7 @@ async def initDmem(dut,lineSizeBytes, ways, sets):
         for way in range(ways):
             for set in range(sets):
                 addr = way*sets + set
-                memoryByte = getattr(dut, f"data_memory_{i}").ram_ext.Memory[addr].value = random.randint(0x1,0xFF)
+                getattr(dut, f"data_memory_{i}").ram_ext.Memory[addr].value = random.randint(0x1,0xFF)
 
 
 

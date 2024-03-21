@@ -3,12 +3,19 @@ from cocotb.triggers import FallingEdge
 from cocotb.queue import QueueEmpty, Queue
 import enum
 import logging
+import sys
 
 from pyuvm import utility_classes
 
 logging.basicConfig(level=logging.NOTSET)
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
+
+
+sys.path.append('model')
+from model.utils import *
+from model.cacheMem import *
+sys.path.append('..')
 
 @enum.unique
 class Ops(enum.IntEnum):
@@ -88,6 +95,8 @@ class cacheBFM(metaclass=utility_classes.Singleton):
                     self.dut.io_controller_cache_line.value = cache_line
                     self.dut.io_controller_cmd.value = cmd
                     self.dut.io_controller_valid.value = 1
+                    await FallingEdge(self.dut.clock)
+                    self.dut.io_controller_valid.value = 0
                 except QueueEmpty:
                     pass
 
@@ -123,3 +132,99 @@ class cacheBFM(metaclass=utility_classes.Singleton):
         cocotb.start_soon(self.driver_bfm())
         cocotb.start_soon(self.cmd_mon_bfm())
         cocotb.start_soon(self.result_mon_bfm())
+
+
+def copyDataMemory(dut, model,blockSize=32, sets=64, ways=4):
+    # copies memory from model to dut
+
+    # init data memory
+    for i in range(blockSize):
+        for way in range(ways):
+            for set in range(sets):
+                addr = way*sets + set
+                getattr(dut, f"data_memory_{blockSize-1-i}").ram_ext.Memory[addr].value = getByte(model.dataMemory[addr], i)
+
+def copyTagMemory(dut, model,blockSize=32, sets=64, ways=4):
+    # copies memory from model to dut
+    # init data memory
+    for i in range(blockSize):
+        for way in range(ways):
+            for set in range(sets):
+                addr = way*sets + set
+                dut.tag_memory.ram_ext.Memory[set].value = model.tagMemory[set]
+                #getattr(dut, f"data_memory_{blockSize-1-i}").ram_ext.Memory[addr].value = getByte(model.dataMemory[addr], i)
+
+def copyDirtyMemory(dut, model,blockSize=32, sets=64, ways=4):
+    # copies memory from model to dut
+    # init data memory
+    for i in range(blockSize):
+        for way in range(ways):
+            for set in range(sets):
+                addr = way*sets + set
+                dut.dirty_memory.mem_ext.Memory[set].value = model.dirtyMemory[set]
+
+def copyPLRUMemory(dut, model,blockSize=32, sets=64, ways=4):
+    # copies memory from model to dut
+    # init data memory
+    for i in range(blockSize):
+        for way in range(ways):
+            for set in range(sets):
+                addr = way*sets + set
+                dut.PLRU_memory.mem_ext.Memory[set].value = model.PLRUMemory[set]
+
+def printDmem(dut,lineSizeBytes, ways, sets):
+    print("DUT DATA MEM")
+    #print(f"## ##: ", end="")
+    #for byte in range(lineSizeBytes):
+        #print(f"{lineSizeBytes-1-byte:0{2}} ", end="")
+    #print("<= byte")
+    #for way in range(ways):
+        #for set in range(sets):
+            #print(f"{way:02} {set:02}: ", end="")
+            #for i in range(lineSizeBytes):
+                #addr = way*sets + set
+                #memoryByte = int(getattr(dut, f"data_memory_{lineSizeBytes-1-i}").ram_ext.Memory[addr].value)
+                #print(f"{memoryByte:0{2}x} ",end="")
+            #print("")
+
+    for way in range(ways):
+        for set in range(sets):
+            print(f"{way:02} {set:02}: ", end="")
+            line = 0
+            for i in range(lineSizeBytes):
+                addr = way*sets + set
+                memoryByte = int(getattr(dut, f"data_memory_{i}").ram_ext.Memory[addr].value)
+                line =  ((line<<(8)) | (memoryByte))
+            print(f"{line:064x}")
+
+def printTags(dut,lineSizeBytes, ways, sets):
+    tagLine=0
+    tagSize = int(np.ceil(32 - np.log2(lineSizeBytes) - np.log2(sets)))
+    print("DUT TAG MEM")
+    for set in range(sets):
+        print(f"{set:02}: ",end="")
+        data = int(dut.tag_memory.ram_ext.Memory[set].value)
+        tag0 = data & 0x1F_FFFF
+        tag1 = (data>>21) & 0x1F_FFFF
+        tag2 = (data>>42) & 0x1F_FFFF
+        tag3 = (data>>63) & 0x1F_FFFF
+        #print(f"{set:02}: {hex(tag3)} {hex(tag2)} {hex(tag1)} {hex(tag0)}")
+        print(f"{hex(data)}")
+
+def printPLRU(dut,lineSizeBytes, ways, sets):
+    tagLine=0
+    tagSize = int(np.ceil(32 - np.log2(lineSizeBytes) - np.log2(sets)))
+    print("DUT PLRU MEM")
+    for set in range(sets):
+        print(f"{set:02}: ",end="")
+        data = int(dut.PLRU_memory.mem_ext.Memory[set].value)
+        print(f"{hex(data)}")
+
+def printDirty(dut,lineSizeBytes, ways, sets):
+    tagLine=0
+    tagSize = int(np.ceil(32 - np.log2(lineSizeBytes) - np.log2(sets)))
+    print("DUT Dirty MEM")
+    for set in range(sets):
+        print(f"{set:02}: ",end="")
+        data = int(dut.dirty_memory.mem_ext.Memory[set].value)
+        print(f"{hex(data)}")
