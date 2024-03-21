@@ -95,11 +95,12 @@ class L1_cache_mem(ways:Int = 4, sets:Int = 64, blockSizeBytes:Int = 64) extends
         val cache_addr                =     Output(UInt(32.W)) 
         val cache_evict_line          =     Output(UInt(dataSizeBits.W)) 
         val cache_valid               =     Output(Bool())
-        val cache_ready               =     Input(Bool())
+        val cache_ready               =     Output(Bool())
         val cache_hit                 =     Output(Bool())
     })
 
     io.controller_ready := 1.B
+    io.cache_ready := 1.B
 
 
     //////////////////

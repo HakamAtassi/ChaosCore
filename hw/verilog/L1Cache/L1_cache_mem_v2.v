@@ -164,8 +164,8 @@ module L1_cache_mem(
                  io_cache_addr,
   output [255:0] io_cache_evict_line,
   output         io_cache_valid,
-  input          io_cache_ready,
-  output         io_cache_hit
+                 io_cache_ready,
+                 io_cache_hit
 );
 
   wire         hit;
@@ -1045,6 +1045,7 @@ module L1_cache_mem(
      eviction_line_30,
      eviction_line_31};
   assign io_cache_valid = io_cache_valid_r_2;
+  assign io_cache_ready = 1'h1;
   assign io_cache_hit = io_cache_hit_r_1;
 endmodule
 

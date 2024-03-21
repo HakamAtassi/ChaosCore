@@ -6937,3 +6937,7 @@ Mar 21, 2024 7:26:37 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellat
 WARNING: Unmatched cancel notification for request id 152
 Mar 21, 2024 7:27:21 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
 WARNING: Unmatched cancel notification for request id 170
+2024.03.22 00:22:38 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem_v2.scala
+2024.03.22 00:22:45 WARN  no build target for: /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem_v2.scala
+Mar 22, 2024 12:35:08 AM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTrace
