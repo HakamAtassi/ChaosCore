@@ -149,7 +149,6 @@ class cacheMem():
         tagLine = self.getTagLine(set)
         tagArray = splitLine(tagLine, self.ways, 21) #FIXME: dont hardcode tagsize
         tag = self.addrToTag(addr)
-        
 
         byteOffset = addr & ((1<<self.byteOffsetBits)-1)
         
@@ -164,22 +163,23 @@ class cacheMem():
         if (cmd not in cacheCommands):
             assert False, "CMD in requestCMD() not valid"
 
-
-
         # find hit way (if any)
-        hitWay = 0
+        hitWay = self.ways - 1
         hit=0
         if tag in tagArray:
-            hitWay = tagArray.index(tag) # hit in tag
+            hitWay = self.ways - 1 - tagArray.index(tag) # hit in tag
             hit=1
             ## Update PLRU
         valid = self.getValid(set, hitWay) # was that entry valid?
         if cmd in ["SW", "SHW", "SB"]:
+            #print(set)
+            #print(hitWay)
+            #print(byteOffset)
             bytes = cmdToBytes[cmd]
             if hit:
                 self.updatePLRU(set, hitWay)
                 self.updateDirty(set, hitWay)
-                response.setData(self.write(set, hitWay, byteOffset, bytes, data))
+            response.setData(self.write(set, hitWay, byteOffset, bytes, data))
             response.setAddr(addr)
             response.setHit(hit & valid)
             response.setValid(valid) # redundancy...
@@ -187,7 +187,7 @@ class cacheMem():
         elif cmd in ["LW", "LHW", "LB"]:
             if hit:
                 self.updatePLRU(set, hitWay)
-                response.setValid(valid)
+            response.setValid(valid) # Validity of the data, not the output
             bytes = cmdToBytes[cmd]
             response.setAddr(addr)
             response.setHit(hit & valid)
@@ -318,10 +318,10 @@ class cacheMem():
         tagPos=int(np.ceil(self.tagSize/4))
         for set in range(self.sets):
             print(f"{set:02}: ",end="")
-            #for way in range(self.ways):
-                #print(f"{getTag(self.getTagLine(set), self.ways -1 - way, self.tagSize):0{tagPos}x}",end=" ")
-
-            print(f"{hex(self.getTagLine(set))}")
+            for way in range(self.ways):
+                print(f"{getTag(self.getTagLine(set), self.ways -1 - way, self.tagSize):0{tagPos}x}",end=" ")
+            print("")
+            #print(f"{hex(self.getTagLine(set))}")
 
     def getDirtyLine(self, line):
         return self.dirtyMemory[line]
@@ -382,7 +382,8 @@ class cacheMem():
 
     def randomizeValid(self):     # init with fully random data
         for set in range(self.sets):
-            self.validMemory[set] = random.randint(0x0, 0xF)
+            #self.validMemory[set] = random.randint(0x0, 0xF)
+            self.validMemory[set] = 0xF
 
 # TODO: Confirm printing and "way" problems are fixed
 # TODO: Address fixmes, etc
@@ -390,15 +391,27 @@ class cacheMem():
 if __name__=="__main__":
     random.seed(0x42)
     _cacheMem = cacheMem()
+    _cacheMem.randomizeActiveState()
 
-    _cacheMem.randomizeDMem()
-    _cacheMem.randomizeTagMem()
+    #_cacheMem.printTags()
+    _cacheMem.printDmem()
+    #_cacheMem.printValid()
 
-    _cacheMem.printTags()
+    
+    result=_cacheMem.requestCMD(addr=3206341344, data=0, cmd="SHW", cacheLine=None)
+
+    _cacheMem.printDmem()
+    #print(f"hit {result.hit}")
+    #print(f"data {hex(result.data)}")
+
+
+    #_cacheMem.randomizeDMem()
+    #_cacheMem.randomizeTagMem()
+    #_cacheMem.printTags()
 
     #_cacheMem.printDirty()
     #_cacheMem.printTags()
-    _cacheMem.printDmem()
+    #_cacheMem.printDmem()
     #_cacheMem.printPLRU()
 
     #result=_cacheMem.requestCMD(addr=(0x0<<11)+(63<<5) + (0<<0), data=0x42, cacheLine=None, cmd="SW")

@@ -61,11 +61,8 @@ class cacheBFM(metaclass=utility_classes.Singleton):
         return cmd
 
     async def get_result(self):
-        try:
-            result = self.result_mon_queue.get_nowait()
-            return result
-        except QueueEmpty:
-            return None
+        result = await self.result_mon_queue.get()
+        return result
 
 
     async def reset(self):
@@ -99,7 +96,7 @@ class cacheBFM(metaclass=utility_classes.Singleton):
                     self.dut.io_controller_data.value = data
                     self.dut.io_controller_cache_line.value = cache_line
                     self.dut.io_controller_cmd.value = cmd
-                    self.dut.io_controller_valid.value = 1
+                    self.dut.io_controller_valid.value = valid
                     await RisingEdge(self.dut.clock)
                     self.dut.io_controller_valid.value = 0
                 except QueueEmpty:
@@ -108,7 +105,7 @@ class cacheBFM(metaclass=utility_classes.Singleton):
     async def cmd_mon_bfm(self):
         while True:
             await FallingEdge(self.dut.clock)
-            valid = get_int(self.dut.io_cache_valid)
+            valid = get_int(self.dut.io_controller_valid)
             if valid == 1:
                 cmd_tuple = (get_int(self.dut.io_controller_addr.value),
                              get_int(self.dut.io_controller_data.value),
@@ -126,9 +123,10 @@ class cacheBFM(metaclass=utility_classes.Singleton):
             if valid == 1:
                 result_tuple = (get_int(self.dut.io_cache_addr.value),
                                 get_int(self.dut.io_cache_dout.value),
+                                get_int(self.dut.io_cache_hit.value),
                                 get_int(self.dut.io_cache_evict_line.value),
-                                get_int(self.dut.io_cache_evict_line.value),
-                                get_int(self.dut.io_cache_hit.value)
+                                #get_int(self.dut.io_cache_evict_line.value),
+                                get_int(self.dut.io_cache_valid.value)
                                 )
                 self.result_mon_queue.put_nowait(result_tuple)
 
@@ -175,6 +173,13 @@ def copyPLRUMemory(dut, model,blockSize=32, sets=64, ways=4):
             for set in range(sets):
                 addr = way*sets + set
                 dut.PLRU_memory.mem_ext.Memory[set].value = model.PLRUMemory[set]
+
+def getDmemLine(dut, line, lineSizeBytes=32):
+    dmemLine = 0
+    for i in range(lineSizeBytes):
+        memoryByte = int(getattr(dut, f"data_memory_{i}").ram_ext.Memory[line].value)
+        dmemLine =  ((dmemLine<<(8)) | (memoryByte))
+    return dmemLine
 
 def printDmem(dut,lineSizeBytes, ways, sets):
     print("DUT DATA MEM")
@@ -232,3 +237,15 @@ def printDirty(dut,lineSizeBytes, ways, sets):
         print(f"{set:02}: ",end="")
         data = int(dut.dirty_memory.mem_ext.Memory[set].value)
         print(f"{hex(data)}")
+
+
+def compareCacheState(dut, model):
+
+    for line in range(len(model.dataMemory)):
+        if(model.getDmemLine(line) != getDmemLine(dut, line, lineSizeBytes=32)):
+            print(f"{hex(model.getDmemLine(line))}")
+            print(f"{hex(getDmemLine(dut, line, lineSizeBytes=32))}")
+            print("False")
+            return False
+
+    return True

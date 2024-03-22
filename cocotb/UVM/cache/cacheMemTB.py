@@ -36,12 +36,29 @@ cacheCommands={
     "FW":  0b1000
 }
 
+binCommands={
+    0b0000 : "LB",
+    0b0001 : "LHW",
+    0b0010 : "LW",
+
+    0b0011 : "NOP",
+
+    0b0100 : "SB",
+    0b0101 : "SHW",
+    0b0110 : "SW",
+
+    0b0111 : "ALLOCATE",
+        
+    0b1000 : "FW"
+}
+
 ###################
 ## SEQUENCE ITEM ##
 ###################
 
 class cacheSeqItem(uvm_sequence_item):
     def __init__(self, name, addr, data, cache_line, cmd, valid, ready,cacheLineSize=32):
+        random.seed(0x42)
         super().__init__(name)
         self.addr=addr
         self.data=data
@@ -56,6 +73,13 @@ class cacheSeqItem(uvm_sequence_item):
         self.data=random.randint(0,(1<<32)-1)
         self.cache_line=random.randint(0,(1<<(self.cacheLineSize)-1))
         self.valid=random.randint(0,1)
+        self.ready=random.randint(0,1)
+
+    def generate_nop(self):
+        self.addr=random.randint(0,(1<<32)-1)
+        self.data=random.randint(0,(1<<32)-1)
+        self.cache_line=random.randint(0,(1<<(self.cacheLineSize)-1))
+        self.valid=0
         self.ready=random.randint(0,1)
 
     def generate_read_hit(self, set="random", way="random", byteOffset="random", cmd="random", data="random", cache_line="random"):
@@ -96,13 +120,128 @@ class cacheSeqItem(uvm_sequence_item):
         self.valid=1
         self.ready=1
 
-    def generate_miss(self, set="random", way="random"):
+    def generate_read_miss(self, set="random", way="random", byteOffset="random", cmd="random", data="random", cache_line="random"):
         """Will generate a tag NOT in given set/way"""
+        tagOffset = (32 - cacheModel.tagSize)
+        setOffset = int(np.ceil(np.log2(cacheModel.cacheLineSizeBytes)))
+
+        if(cmd=="random"):
+            cmd=random.choice(["LW", "LHW", "LB"])
+        if(data=="random"):
+            data=random.randint(0,(1<<32)-1)
+        if(cache_line=="random"):
+            cache_line=random.randint(0,(1<<(cacheModel.cacheLineSizeBytes*8))-1)
+        assert cmd in ["LW", "LHW", "LB"]
+        if(set=="random"):
+            set=random.randint(0, cacheModel.sets - 1)
+        if(way=="random"):
+            way=random.randint(0, cacheModel.ways - 1)
+        if(byteOffset=="random"):
+            if(cmd=="LW"): byteOffset=random.randint(0,31) & (~(0b11))
+            elif(cmd=="LHW"): byteOffset=random.randint(0,31) & (~(0b01))
+            elif(cmd=="LB"): byteOffset=random.randint(0,31) & (~(0b00))
+            else: assert False, "CMD not valid"
+            
+        tagArr = splitLine(cacheModel.getTagLine(set),cacheModel.ways, cacheModel.tagSize)     # Get set
+        tag = tagArr[cacheModel.ways - 1 - way]  # Get Tag
+
+        while (tag in tagArr):
+            tag = random.randint(0x0, ((1<<cacheModel.tagSize)-1))
+
+        addr = 0
+        addr = addr | (tag << (tagOffset))
+        addr = addr | (set<<setOffset)
+        addr = addr | byteOffset
+
+        # Set inputs #
+        self.addr=addr
+        self.data=data
+        self.cmd=cacheCommands[cmd]
+        self.cache_line=cache_line
+        self.valid=1
+        self.ready=1
+
+    def generate_write_hit(self, set="random", way="random", byteOffset="random", cmd="random", data="random", cache_line="random"):
+        """Will generate a tag in given set/way"""
+        tagOffset = (32 - cacheModel.tagSize)
+        setOffset = int(np.ceil(np.log2(cacheModel.cacheLineSizeBytes)))
+
+        if(cmd=="random"):
+            cmd=random.choice(["SW", "SHW", "SB"])
+        if(data=="random"):
+            data=random.randint(0,(1<<32)-1)
+        if(cache_line=="random"):
+            cache_line=random.randint(0,(1<<(cacheModel.cacheLineSizeBytes*8))-1)
+        assert cmd in ["SW", "SHW", "SB"]
+        if(set=="random"):
+            set=random.randint(0, cacheModel.sets - 1)
+        if(way=="random"):
+            way=random.randint(0, cacheModel.ways - 1)
+        if(byteOffset=="random"):
+            if(cmd=="SW"): byteOffset=random.randint(0,31) & (~(0b11))
+            elif(cmd=="SHW"): byteOffset=random.randint(0,31) & (~(0b01))
+            elif(cmd=="SB"): byteOffset=random.randint(0,31) & (~(0b00))
+            else: assert False, "CMD not valid"
+            
+        tagArr = splitLine(cacheModel.getTagLine(set),cacheModel.ways, cacheModel.tagSize)     # Get set
+        tag = tagArr[cacheModel.ways - 1 - way]  # Get Tag
+
+        addr = 0
+        addr = addr | (tag << (tagOffset))
+        addr = addr | (set<<setOffset)
+        addr = addr | byteOffset
+
+        # Set inputs #
+        self.addr=addr
+        self.data=data
+        self.cmd=cacheCommands[cmd]
+        self.cache_line=cache_line
+        self.valid=1
+        self.ready=1
+
         pass
 
-    def generate_hit_or_miss(self, set="random", way="random", miss_probability=0.5):
-        """Will generate a hit or miss at given set/way with given probability"""
-        pass
+    def generate_write_miss(self, set="random", way="random", byteOffset="random", cmd="random", data="random", cache_line="random"):
+        """Will generate a tag NOT in given set/way"""
+        tagOffset = (32 - cacheModel.tagSize)
+        setOffset = int(np.ceil(np.log2(cacheModel.cacheLineSizeBytes)))
+
+        if(cmd=="random"):
+            cmd=random.choice(["SW", "SHW", "SB"])
+        if(data=="random"):
+            data=random.randint(0,(1<<32)-1)
+        if(cache_line=="random"):
+            cache_line=random.randint(0,(1<<(cacheModel.cacheLineSizeBytes*8))-1)
+        assert cmd in ["SW", "SHW", "SB"]
+        if(set=="random"):
+            set=random.randint(0, cacheModel.sets - 1)
+        if(way=="random"):
+            way=random.randint(0, cacheModel.ways - 1)
+        if(byteOffset=="random"):
+            if(cmd=="SW"): byteOffset=random.randint(0,31) & (~(0b11))
+            elif(cmd=="SHW"): byteOffset=random.randint(0,31) & (~(0b01))
+            elif(cmd=="SB"): byteOffset=random.randint(0,31) & (~(0b00))
+            else: assert False, "CMD not valid"
+            
+        tagArr = splitLine(cacheModel.getTagLine(set),cacheModel.ways, cacheModel.tagSize)     # Get set
+        tag = tagArr[cacheModel.ways - 1 - way]  # Get Tag
+
+        while (tag in tagArr):
+            tag = random.randint(0x0, ((1<<cacheModel.tagSize)-1))
+
+        addr = 0
+        addr = addr | (tag << (tagOffset))
+        addr = addr | (set<<setOffset)
+        addr = addr | byteOffset
+
+        # Set inputs #
+        self.addr=addr
+        self.data=data
+        self.cmd=cacheCommands[cmd]
+        self.cache_line=cache_line
+        self.valid=1
+        self.ready=1
+
 
 
     def randomize(self):
@@ -114,7 +253,7 @@ class cacheSeqItem(uvm_sequence_item):
 ## SEQUENCES ##
 ###############
 
-class RandomSeq(uvm_sequence):
+class RandomReadHit(uvm_sequence):
     async def body(self):
         cmd_tr = cacheSeqItem("cmd_tr", addr=None, data=None, cache_line=None, valid=None, ready=None, cmd=0)
         logging.info("Initializing memory to Random Active State...")
@@ -156,16 +295,321 @@ class RandomSeq(uvm_sequence):
         #printValid(cocotb.top, lineSizeBytes=32, ways=4, sets=64)
         #cacheModel.printValid()
 
+        assert compareCacheState(cocotb.top, cacheModel), f"Cache States do not match"
+
+        for _ in range(1000):
+            await self.start_item(cmd_tr)
+            #funct=random.choice(cmd_tr.generate_read_hit(), cmd_tr.generate_read_miss())
+            cmd_tr.generate_read_hit()
+            #cmd_tr.generate_read_miss()
+            await self.finish_item(cmd_tr)
+
         for _ in range(10):
             await self.start_item(cmd_tr)
-            cmd_tr.generate_read_hit()
+            cmd_tr.generate_nop()
+            await self.finish_item(cmd_tr)
+
+class RandomReadMiss(uvm_sequence):
+    async def body(self):
+        cmd_tr = cacheSeqItem("cmd_tr", addr=None, data=None, cache_line=None, valid=None, ready=None, cmd=0)
+        logging.info("Initializing memory to Random Active State...")
+
+        #####################
+        # Init cache memory ################################################################
+        # The model generates a random active cache state, which is then copied to the DUT #
+        ####################################################################################
+        cacheModel.randomizeActiveState()
+        logging.info("Ranomized cache model")
+
+        copyDataMemory(cocotb.top, cacheModel)
+        logging.info("Copied Data Memory")
+        copyTagMemory(cocotb.top, cacheModel)
+        logging.info("Copied Tag Memory")
+
+        copyDirtyMemory(cocotb.top, cacheModel)
+        logging.info("Copied Dirty Memory")
+        copyPLRUMemory(cocotb.top, cacheModel)
+        logging.info("Copied PLRU Memory")
+
+        logging.critical("DUT valid not implemented")
+        #copyValidMemory(cocotb.top, cacheModel) #FIXME: 
+        
+        await RisingEdge(cocotb.top.clock)
+        assert compareCacheState(cocotb.top, cacheModel), f"Cache States do not match"
+        logging.info("Initial cache states match")
+
+
+        for _ in range(1000):
+            await self.start_item(cmd_tr)
+            cmd_tr.generate_read_miss()
+            await self.finish_item(cmd_tr)
+
+        for _ in range(10):
+            await self.start_item(cmd_tr)
+            cmd_tr.generate_nop()
+            await self.finish_item(cmd_tr)
+
+class RandomReadHitMiss(uvm_sequence):
+    async def body(self):
+        cmd_tr = cacheSeqItem("cmd_tr", addr=None, data=None, cache_line=None, valid=None, ready=None, cmd=0)
+        logging.info("Initializing memory to Random Active State...")
+
+        #####################
+        # Init cache memory ################################################################
+        # The model generates a random active cache state, which is then copied to the DUT #
+        ####################################################################################
+        cacheModel.randomizeActiveState()
+        logging.info("Ranomized cache model")
+
+        copyDataMemory(cocotb.top, cacheModel)
+        logging.info("Copied Data Memory")
+        copyTagMemory(cocotb.top, cacheModel)
+        logging.info("Copied Tag Memory")
+
+        copyDirtyMemory(cocotb.top, cacheModel)
+        logging.info("Copied Dirty Memory")
+        copyPLRUMemory(cocotb.top, cacheModel)
+        logging.info("Copied PLRU Memory")
+
+        logging.critical("DUT valid not implemented")
+        #copyValidMemory(cocotb.top, cacheModel) #FIXME: 
+        
+        await RisingEdge(cocotb.top.clock)
+        assert compareCacheState(cocotb.top, cacheModel), f"Cache States do not match"
+        logging.info("Initial cache states match")
+
+
+        for _ in range(1000):
+            await self.start_item(cmd_tr)
+            cmd_tr.generate_read_miss()
+            await self.finish_item(cmd_tr)
+
+        for _ in range(10):
+            await self.start_item(cmd_tr)
+            cmd_tr.generate_nop()
+            await self.finish_item(cmd_tr)
+
+class RandomWriteHit(uvm_sequence):
+    async def body(self):
+        cmd_tr = cacheSeqItem("cmd_tr", addr=None, data=None, cache_line=None, valid=None, ready=None, cmd=0)
+        logging.info("Initializing memory to Random Active State...")
+
+        #####################
+        # Init cache memory ################################################################
+        # The model generates a random active cache state, which is then copied to the DUT #
+        ####################################################################################
+        cacheModel.randomizeActiveState()
+        logging.info("Ranomized cache model")
+
+        copyDataMemory(cocotb.top, cacheModel)
+        logging.info("Copied Data Memory")
+        copyTagMemory(cocotb.top, cacheModel)
+        logging.info("Copied Tag Memory")
+
+        copyDirtyMemory(cocotb.top, cacheModel)
+        logging.info("Copied Dirty Memory")
+        copyPLRUMemory(cocotb.top, cacheModel)
+        logging.info("Copied PLRU Memory")
+
+        logging.critical("DUT valid not implemented")
+        #copyValidMemory(cocotb.top, cacheModel) #FIXME: 
+        
+        await RisingEdge(cocotb.top.clock)
+        assert compareCacheState(cocotb.top, cacheModel), f"Cache States do not match"
+        logging.info("Initial cache states match")
+
+
+        for _ in range(1000):
+            await self.start_item(cmd_tr)
+            cmd_tr.generate_write_hit()
+            await self.finish_item(cmd_tr)
+
+        for _ in range(10):
+            await self.start_item(cmd_tr)
+            cmd_tr.generate_nop()
+            await self.finish_item(cmd_tr)
+
+class RandomWriteMiss(uvm_sequence):
+    async def body(self):
+        cmd_tr = cacheSeqItem("cmd_tr", addr=None, data=None, cache_line=None, valid=None, ready=None, cmd=0)
+        logging.info("Initializing memory to Random Active State...")
+
+        #####################
+        # Init cache memory ################################################################
+        # The model generates a random active cache state, which is then copied to the DUT #
+        ####################################################################################
+        cacheModel.randomizeActiveState()
+        logging.info("Ranomized cache model")
+
+        copyDataMemory(cocotb.top, cacheModel)
+        logging.info("Copied Data Memory")
+        copyTagMemory(cocotb.top, cacheModel)
+        logging.info("Copied Tag Memory")
+
+        copyDirtyMemory(cocotb.top, cacheModel)
+        logging.info("Copied Dirty Memory")
+        copyPLRUMemory(cocotb.top, cacheModel)
+        logging.info("Copied PLRU Memory")
+
+        logging.critical("DUT valid not implemented")
+        #copyValidMemory(cocotb.top, cacheModel) #FIXME: 
+        
+        await RisingEdge(cocotb.top.clock)
+        assert compareCacheState(cocotb.top, cacheModel), f"Cache States do not match"
+        logging.info("Initial cache states match")
+
+
+        for _ in range(1000):
+            await self.start_item(cmd_tr)
+            cmd_tr.generate_write_miss()
+            await self.finish_item(cmd_tr)
+
+        for _ in range(10):
+            await self.start_item(cmd_tr)
+            cmd_tr.generate_nop()
+            await self.finish_item(cmd_tr)
+
+class RandomReadHitMiss(uvm_sequence):
+    async def body(self):
+        cmd_tr = cacheSeqItem("cmd_tr", addr=None, data=None, cache_line=None, valid=None, ready=None, cmd=0)
+        logging.info("Initializing memory to Random Active State...")
+
+        #####################
+        # Init cache memory ################################################################
+        # The model generates a random active cache state, which is then copied to the DUT #
+        ####################################################################################
+        cacheModel.randomizeActiveState()
+        logging.info("Ranomized cache model")
+
+        copyDataMemory(cocotb.top, cacheModel)
+        logging.info("Copied Data Memory")
+        copyTagMemory(cocotb.top, cacheModel)
+        logging.info("Copied Tag Memory")
+
+        copyDirtyMemory(cocotb.top, cacheModel)
+        logging.info("Copied Dirty Memory")
+        copyPLRUMemory(cocotb.top, cacheModel)
+        logging.info("Copied PLRU Memory")
+
+        logging.critical("DUT valid not implemented")
+        #copyValidMemory(cocotb.top, cacheModel) #FIXME: 
+        
+        await RisingEdge(cocotb.top.clock)
+        assert compareCacheState(cocotb.top, cacheModel), f"Cache States do not match"
+        logging.info("Initial cache states match")
+
+
+        for _ in range(1000):
+            await self.start_item(cmd_tr)
+            cmd_tr.generate_read_miss()
+            await self.finish_item(cmd_tr)
+
+        for _ in range(10):
+            await self.start_item(cmd_tr)
+            cmd_tr.generate_nop()
+            await self.finish_item(cmd_tr)
+
+class RandomReadHitMiss(uvm_sequence):
+    async def body(self):
+        cmd_tr = cacheSeqItem("cmd_tr", addr=None, data=None, cache_line=None, valid=None, ready=None, cmd=0)
+        logging.info("Initializing memory to Random Active State...")
+
+        #####################
+        # Init cache memory ################################################################
+        # The model generates a random active cache state, which is then copied to the DUT #
+        ####################################################################################
+        cacheModel.randomizeActiveState()
+        logging.info("Ranomized cache model")
+
+        copyDataMemory(cocotb.top, cacheModel)
+        logging.info("Copied Data Memory")
+        copyTagMemory(cocotb.top, cacheModel)
+        logging.info("Copied Tag Memory")
+
+        copyDirtyMemory(cocotb.top, cacheModel)
+        logging.info("Copied Dirty Memory")
+        copyPLRUMemory(cocotb.top, cacheModel)
+        logging.info("Copied PLRU Memory")
+
+        logging.critical("DUT valid not implemented")
+        #copyValidMemory(cocotb.top, cacheModel) #FIXME: 
+
+
+        await RisingEdge(cocotb.top.clock)
+        assert compareCacheState(cocotb.top, cacheModel), f"Cache States do not match"
+        logging.info("Initial cache states match")
+        
+
+        for _ in range(1000):
+            await self.start_item(cmd_tr)
+            funct=random.choice([cmd_tr.generate_read_hit, cmd_tr.generate_read_miss])
+            funct()
+            await self.finish_item(cmd_tr)
+
+        for _ in range(10):
+            await self.start_item(cmd_tr)
+            cmd_tr.generate_nop()
+            await self.finish_item(cmd_tr)
+
+class RandomReadWriteHitMiss(uvm_sequence):
+    async def body(self):
+        cmd_tr = cacheSeqItem("cmd_tr", addr=None, data=None, cache_line=None, valid=None, ready=None, cmd=0)
+        logging.info("Initializing memory to Random Active State...")
+
+        #####################
+        # Init cache memory ################################################################
+        # The model generates a random active cache state, which is then copied to the DUT #
+        ####################################################################################
+        cacheModel.randomizeActiveState()
+        logging.info("Ranomized cache model")
+
+        copyDataMemory(cocotb.top, cacheModel)
+        logging.info("Copied Data Memory")
+        copyTagMemory(cocotb.top, cacheModel)
+        logging.info("Copied Tag Memory")
+
+        copyDirtyMemory(cocotb.top, cacheModel)
+        logging.info("Copied Dirty Memory")
+        copyPLRUMemory(cocotb.top, cacheModel)
+        logging.info("Copied PLRU Memory")
+
+        logging.critical("DUT valid not implemented")
+        #copyValidMemory(cocotb.top, cacheModel) #FIXME: 
+
+
+        await RisingEdge(cocotb.top.clock)
+        assert compareCacheState(cocotb.top, cacheModel), f"Cache States do not match"
+        logging.info("Initial cache states match")
+        
+
+        for _ in range(1000):
+            await self.start_item(cmd_tr)
+            funct=random.choice([cmd_tr.generate_read_hit, cmd_tr.generate_read_miss, cmd_tr.generate_write_hit, cmd_tr.generate_write_miss])
+            funct()
+            await self.finish_item(cmd_tr)
+
+        for _ in range(10):
+            await self.start_item(cmd_tr)
+            cmd_tr.generate_nop()
             await self.finish_item(cmd_tr)
 
 class TestAllSeq(uvm_sequence): # test all sequences
     async def body(self):
         sequencer = ConfigDB().get(None, "", "SEQR") # get acess to default sequencer
-        random = RandomSeq("random")
-        await random.start(sequencer)
+        randomReadHit = RandomReadHit("randomReadHit")
+        randomReadMiss = RandomReadMiss("randomReadMiss")
+        randomReadHitMiss = RandomReadMiss("randomReadHitMiss")
+        randomWriteHit = RandomWriteHit("randomWriteHit")
+        randomWriteMiss = RandomWriteMiss("randomWriteMiss")
+        randomReadWriteHitMiss = RandomReadWriteHitMiss("randomReadWriteHitMiss")
+
+        #await randomReadHit.start(sequencer)
+        #await randomReadMiss.start(sequencer)
+        #await randomReadHitMiss.start(sequencer)
+        #await randomWriteHit.start(sequencer)
+        await randomWriteMiss.start(sequencer)
+        await randomReadWriteHitMiss.start(sequencer)
+
 
 ############
 ## DRIVER ##
@@ -184,41 +628,12 @@ class Driver(uvm_driver):
 
     async def run_phase(self):
         await self.launch_tb()
+        
         while True:
             cmd = await self.seq_item_port.get_next_item()
             await self.bfm.send_op(cmd.addr, cmd.data, cmd.cache_line, cmd.cmd, cmd.valid, cmd.ready)
-            
-            result = await self.bfm.get_result()
-            if result!=None:
-                self.ap.write(result)
             self.seq_item_port.item_done()
             
-
-"""
-class Coverage(uvm_subscriber):
-
-    def end_of_elaboration_phase(self):
-        self.cvg = set()
-
-    def write(self, cmd):
-        (_, _, op) = cmd
-        self.cvg.add(op)
-
-    def report_phase(self):
-        try:
-            disable_errors = ConfigDB().get(
-                self, "", "DISABLE_COVERAGE_ERRORS")
-        except UVMConfigItemNotFound:
-            disable_errors = False
-        if not disable_errors:
-            if len(set(Ops) - self.cvg) > 0:
-                self.logger.error(
-                    f"Functional coverage error. Missed: {set(Ops)-self.cvg}")
-                assert False
-            else:
-                self.logger.info("Covered all operations")
-                assert True
-"""
 
 class Scoreboard(uvm_component):
 
@@ -235,8 +650,6 @@ class Scoreboard(uvm_component):
         self.result_get_port.connect(self.result_fifo.get_export)
 
     def check_phase(self):
-        passed = True
-        """
         try:
             self.errors = ConfigDB().get(self, "", "CREATE_ERRORS")
         except UVMConfigItemNotFound:
@@ -247,19 +660,29 @@ class Scoreboard(uvm_component):
             if not cmd_success:
                 self.logger.critical(f"result {actual_result} had no command")
             else:
-                (A, B, op_numb) = cmd
-                op = Ops(op_numb)
-                predicted_result = alu_prediction(A, B, op, self.errors)
-                if predicted_result == actual_result:
-                    self.logger.info(f"PASSED: 0x{A:02x} {op.name} 0x{B:02x} ="
-                                     f" 0x{actual_result:04x}")
-                else:
-                    self.logger.error(f"FAILED: 0x{A:02x} {op.name} 0x{B:02x} "
-                                      f"= 0x{actual_result:04x} "
-                                      f"expected 0x{predicted_result:04x}")
-                    passed = False
-        """
-        assert passed
+
+                (addr, data, cache_line, cmd, valid, ready) = cmd
+                predicted_result = cacheModel.requestCMD(addr=addr, data=data, cacheLine=cache_line, cmd=binCommands[cmd])
+                
+                ## COMPARE RESPONSES ##
+                if(binCommands[cmd] in ["LW", "LHW", "LB"]):
+                    assert predicted_result.data == actual_result[1]
+                    assert predicted_result.addr == actual_result[0]
+                    assert predicted_result.hit == actual_result[2]
+                    assert predicted_result.valid == valid
+                
+                if(binCommands[cmd] in ["SW", "SHW", "SB"]):
+                    #assert predicted_result.data == actual_result[1] #FIXME: need to check data wr response channel when I add it
+                    assert predicted_result.addr == actual_result[0]
+                    assert predicted_result.hit == actual_result[2]
+                    assert predicted_result.valid == valid
+
+                #########################
+                ## COMPARE CACHE STATE ##
+                #########################
+
+                #assert compareCacheState(cocotb.top, cacheModel), f"Cache States do not match"
+                
 
 
 class Monitor(uvm_component):
@@ -275,8 +698,10 @@ class Monitor(uvm_component):
     async def run_phase(self):
         while True:
             datum = await self.get_method()
-            self.logger.debug(f"MONITORED {datum}")
+            #self.logger.info(f"MONITORED {datum}")
             self.ap.write(datum)
+
+
 
 
 class cacheEnv(uvm_env):
@@ -285,6 +710,7 @@ class cacheEnv(uvm_env):
         self.seqr = uvm_sequencer("seqr", self)
         self.driver = Driver.create("driver", self)
         self.cmd_mon = Monitor("cmd_mon", self, "get_cmd")
+        self.result_mon = Monitor("result_mon", self, "get_result")
         #self.coverage = Coverage("coverage", self)
         self.scoreboard = Scoreboard("scoreboard", self)
 
@@ -293,7 +719,7 @@ class cacheEnv(uvm_env):
         self.driver.seq_item_port.connect(self.seqr.seq_item_export)
         self.cmd_mon.ap.connect(self.scoreboard.cmd_export)
         #self.cmd_mon.ap.connect(self.coverage.analysis_export)
-        self.driver.ap.connect(self.scoreboard.result_export)
+        self.result_mon.ap.connect(self.scoreboard.result_export)
 
 
 @pyuvm.test()
