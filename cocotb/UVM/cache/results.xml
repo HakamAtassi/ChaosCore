@@ -1,6 +1,8 @@
 <testsuites name="results">
   <testsuite name="all" package="all">
-    <property name="random_seed" value="1711059453" />
-    <testcase name="cacheTest" classname="cacheMemTB" file="/home/hakam/.local/lib/python3.10/site-packages/pyuvm/extension_classes.py" lineno="299" time="0.26492929458618164" sim_time_ns="22001.0" ratio_time="83044.7989315997" />
+    <property name="random_seed" value="1711076552" />
+    <testcase name="cacheTest" classname="cacheMemTB" file="/home/hakam/.local/lib/python3.10/site-packages/pyuvm/extension_classes.py" lineno="725" time="1.0132873058319092" sim_time_ns="4042001.0" ratio_time="3988997.9640882956">
+      <failure message="Test failed with RANDOM_SEED=1711076552" />
+    </testcase>
   </testsuite>
 </testsuites>
