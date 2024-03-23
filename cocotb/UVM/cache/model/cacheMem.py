@@ -65,7 +65,6 @@ class cacheMemInterface():
 
 class cacheMem():
     def __init__(self, sets=64, ways=4, cacheLineSizeBytes=32):
-
         self.sets = sets
         self.ways = ways
         self.cacheLineSizeBytes = cacheLineSizeBytes
@@ -100,6 +99,7 @@ class cacheMem():
 
 
     def randomizeActiveState(self): # Intended to recreate a cache state after it has been active for some time
+        random.seed(0x42)
         self.randomizeTagMem() # randomize tags
         self.randomizeDMem()
         self.randomizePLRU()
@@ -163,6 +163,7 @@ class cacheMem():
         if (cmd not in cacheCommands):
             assert False, "CMD in requestCMD() not valid"
 
+
         # find hit way (if any)
         hitWay = self.ways - 1
         hit=0
@@ -172,9 +173,6 @@ class cacheMem():
             ## Update PLRU
         valid = self.getValid(set, hitWay) # was that entry valid?
         if cmd in ["SW", "SHW", "SB"]:
-            #print(set)
-            #print(hitWay)
-            #print(byteOffset)
             bytes = cmdToBytes[cmd]
             if hit:
                 self.updatePLRU(set, hitWay)
@@ -185,7 +183,7 @@ class cacheMem():
             response.setValid(valid) # redundancy...
             return response
         elif cmd in ["LW", "LHW", "LB"]:
-            if hit:
+            if hit & valid:
                 self.updatePLRU(set, hitWay)
             response.setValid(valid) # Validity of the data, not the output
             bytes = cmdToBytes[cmd]
@@ -382,8 +380,7 @@ class cacheMem():
 
     def randomizeValid(self):     # init with fully random data
         for set in range(self.sets):
-            #self.validMemory[set] = random.randint(0x0, 0xF)
-            self.validMemory[set] = 0xF
+            self.validMemory[set] = random.randint(0x0, 0xF)
 
 # TODO: Confirm printing and "way" problems are fixed
 # TODO: Address fixmes, etc
@@ -398,7 +395,7 @@ if __name__=="__main__":
     #_cacheMem.printValid()
 
     
-    result=_cacheMem.requestCMD(addr=3206341344, data=0, cmd="SHW", cacheLine=None)
+    result=_cacheMem.requestCMD(addr=3206341344, data=0xe44e065, cmd="SHW", cacheLine=None)
 
     _cacheMem.printDmem()
     #print(f"hit {result.hit}")
