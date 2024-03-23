@@ -5,8 +5,20 @@
 [0m[[0m[31merror[0m] [0m[0mSTDOUT:[0m
 [0m[[0m[31merror[0m] [0m[0m[0m
 [0m[[0m[31merror[0m] [0m[0mSTDERR:[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/L1Cache/L1_cache_mem_v2.scala:259:30: error: sink "" not fully initialized in "L1_cache_mem"[0m
-[0m[[0m[31merror[0m] [0m[0m    val dirty_memory = Module(new SDPReadWriteSmem(depth = sets, width = ways))[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/L1Cache/L1_cache_mem_v2.scala:208:30: error: sink "" not fully initialized in "L1_cache_mem"[0m
+[0m[[0m[31merror[0m] [0m[0m    val valid_memory = Module(new SDPReadWriteSmem(depth = sets, width = ways))[0m
+[0m[[0m[31merror[0m] [0m[0m                             ^[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/L1Cache/L1_cache_mem_v2.scala:208:30: error: sink "" not fully initialized in "L1_cache_mem"[0m
+[0m[[0m[31merror[0m] [0m[0m    val valid_memory = Module(new SDPReadWriteSmem(depth = sets, width = ways))[0m
+[0m[[0m[31merror[0m] [0m[0m                             ^[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/L1Cache/L1_cache_mem_v2.scala:208:30: error: sink "" not fully initialized in "L1_cache_mem"[0m
+[0m[[0m[31merror[0m] [0m[0m    val valid_memory = Module(new SDPReadWriteSmem(depth = sets, width = ways))[0m
+[0m[[0m[31merror[0m] [0m[0m                             ^[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/L1Cache/L1_cache_mem_v2.scala:208:30: error: sink "" not fully initialized in "L1_cache_mem"[0m
+[0m[[0m[31merror[0m] [0m[0m    val valid_memory = Module(new SDPReadWriteSmem(depth = sets, width = ways))[0m
+[0m[[0m[31merror[0m] [0m[0m                             ^[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/L1Cache/L1_cache_mem_v2.scala:208:30: error: sink "" not fully initialized in "L1_cache_mem"[0m
+[0m[[0m[31merror[0m] [0m[0m    val valid_memory = Module(new SDPReadWriteSmem(depth = sets, width = ways))[0m
 [0m[[0m[31merror[0m] [0m[0m                             ^[0m
 [0m[[0m[31merror[0m] [0m[0m[0m
 [0m[[0m[31merror[0m] [0m[0m------------------------------------------------------------------------------[0m
@@ -17,8 +29,20 @@
 [0m[[0m[31merror[0m] [0m[0mSTDOUT:[0m
 [0m[[0m[31merror[0m] [0m[0m[0m
 [0m[[0m[31merror[0m] [0m[0mSTDERR:[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/L1Cache/L1_cache_mem_v2.scala:259:30: error: sink "" not fully initialized in "L1_cache_mem"[0m
-[0m[[0m[31merror[0m] [0m[0m    val dirty_memory = Module(new SDPReadWriteSmem(depth = sets, width = ways))[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/L1Cache/L1_cache_mem_v2.scala:208:30: error: sink "" not fully initialized in "L1_cache_mem"[0m
+[0m[[0m[31merror[0m] [0m[0m    val valid_memory = Module(new SDPReadWriteSmem(depth = sets, width = ways))[0m
+[0m[[0m[31merror[0m] [0m[0m                             ^[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/L1Cache/L1_cache_mem_v2.scala:208:30: error: sink "" not fully initialized in "L1_cache_mem"[0m
+[0m[[0m[31merror[0m] [0m[0m    val valid_memory = Module(new SDPReadWriteSmem(depth = sets, width = ways))[0m
+[0m[[0m[31merror[0m] [0m[0m                             ^[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/L1Cache/L1_cache_mem_v2.scala:208:30: error: sink "" not fully initialized in "L1_cache_mem"[0m
+[0m[[0m[31merror[0m] [0m[0m    val valid_memory = Module(new SDPReadWriteSmem(depth = sets, width = ways))[0m
+[0m[[0m[31merror[0m] [0m[0m                             ^[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/L1Cache/L1_cache_mem_v2.scala:208:30: error: sink "" not fully initialized in "L1_cache_mem"[0m
+[0m[[0m[31merror[0m] [0m[0m    val valid_memory = Module(new SDPReadWriteSmem(depth = sets, width = ways))[0m
+[0m[[0m[31merror[0m] [0m[0m                             ^[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/L1Cache/L1_cache_mem_v2.scala:208:30: error: sink "" not fully initialized in "L1_cache_mem"[0m
+[0m[[0m[31merror[0m] [0m[0m    val valid_memory = Module(new SDPReadWriteSmem(depth = sets, width = ways))[0m
 [0m[[0m[31merror[0m] [0m[0m                             ^[0m
 [0m[[0m[31merror[0m] [0m[0m[0m
 [0m[[0m[31merror[0m] [0m[0m------------------------------------------------------------------------------[0m

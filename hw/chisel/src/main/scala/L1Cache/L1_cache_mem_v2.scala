@@ -91,8 +91,9 @@ class L1_cache_mem(ways:Int = 4, sets:Int = 64, blockSizeBytes:Int = 64) extends
         // val controller_cmd     =     Input(???)  
 
         // Outputs
-        val cache_dout                =     Output(UInt(32.W))
-        val cache_addr                =     Output(UInt(32.W)) 
+        val cache_dout                =     Output(UInt(32.W))  // Read data
+        val cache_data                =     Output(UInt(32.W))  // Read data
+        val cache_addr                =     Output(UInt(32.W))  // Request addr
         val cache_evict_line          =     Output(UInt(dataSizeBits.W)) 
         val cache_valid               =     Output(Bool())
         val cache_ready               =     Output(Bool())
@@ -102,6 +103,7 @@ class L1_cache_mem(ways:Int = 4, sets:Int = 64, blockSizeBytes:Int = 64) extends
     io.controller_ready := 1.B
     io.cache_ready := 1.B
 
+    io.cache_data := ShiftRegister(io.controller_data, 3)
 
     //////////////////
     // Global Wires //
@@ -133,7 +135,7 @@ class L1_cache_mem(ways:Int = 4, sets:Int = 64, blockSizeBytes:Int = 64) extends
     val tag_wr_en = RegInit(Bool(), 0.B)
     val plru_wr_en = RegInit(Bool(), 0.B)
     val allocate = RegInit(Bool(), 0.B)
-    val dirty_wr_en = RegInit(Bool(), 0.B)
+    val dirty_wr_en = Wire(Bool())
 
     // tag only writes upon allocate. Delay since tag pos depends on the result of PLRU mem
     tag_wr_en := (io.controller_cmd === CONTROLLER_CMD.ALLOCATE) && io.controller_valid
@@ -185,19 +187,41 @@ class L1_cache_mem(ways:Int = 4, sets:Int = 64, blockSizeBytes:Int = 64) extends
     // FIXME: this is reversed. do the opposite
     plru_oh := Cat( ~plru_in(3) & plru_in(2) & plru_in(1) & plru_in(0), ~plru_in(2) & plru_in(1) & plru_in(0), ~plru_in(1) & plru_in(0), ~plru_in(0))
 
+    val allocate_oh = Wire(UInt(ways.W))
 
-    when(plru_out(0) === 0.U){
+    when(plru_out(0) === 0.U){  // FIXME: update this for parameter ways
       allocate_way := 0.U
+      allocate_oh := 1.U
     }.elsewhen(plru_out(1) === 0.U){
       allocate_way := 1.U
+      allocate_oh := 2.U
     }.elsewhen(plru_out(2) === 0.U){
       allocate_way := 2.U
+      allocate_oh := 4.U
     }.otherwise{
       allocate_way := 3.U
+      allocate_oh := 8.U
     }
 
       //allocate_way := PriorityEncoder(plru_in)
       dontTouch(allocate_way)
+
+    //////////////////
+    // Valid Memory //
+    //////////////////
+    
+    val valid_memory = Module(new SDPReadWriteSmem(depth = sets, width = ways))
+    val valid_out = Wire(UInt(ways.W))
+
+    // read port
+    valid_memory.io.enable := 1.B
+    valid_memory.io.rd_addr := controller_set
+    valid_out := valid_memory.io.data_out
+
+    // write port
+    valid_memory.io.wr_en := allocate
+    valid_memory.io.wr_addr := delayed_controller_set
+    valid_memory.io.data_in := valid_out | allocate_oh
 
 
     ////////////////
@@ -206,7 +230,7 @@ class L1_cache_mem(ways:Int = 4, sets:Int = 64, blockSizeBytes:Int = 64) extends
     val tag_memory = Module(new ReadWriteSmem(depth=(sets), width= tagBits * ways))
     val tag_vector_out = Wire(Vec(ways, UInt(tagBits.W)))
     val tag_vector_in = Wire(Vec(ways, UInt(tagBits.W)))
-    val cache_hit_way = Wire(UInt(4.W))
+    val cache_hit_way = Wire(UInt(log2Ceil(ways).W))
     val cache_addr    = Wire(UInt((setBits+wayBits).W))
     val valid_delayed = RegNext(io.controller_valid)
 
@@ -233,7 +257,7 @@ class L1_cache_mem(ways:Int = 4, sets:Int = 64, blockSizeBytes:Int = 64) extends
     val hit_oh_vec = Wire(Vec(ways, UInt(1.W)))
 
     for (way <- 0 until ways) {
-      hit_oh_vec(way) := (delayed_controller_tag === tag_vector_out(way)).asUInt
+      hit_oh_vec(way) := (delayed_controller_tag === tag_vector_out(way)).asUInt & valid_out(way)
     }
 
     dontTouch(delayed_controller_tag)
@@ -250,7 +274,7 @@ class L1_cache_mem(ways:Int = 4, sets:Int = 64, blockSizeBytes:Int = 64) extends
 
     hit_oh := hit_oh_vec.reverse.reduce(_ ## _)
 
-    hit := hit_oh.orR & valid_delayed
+    hit := hit_oh.orR & valid_delayed & valid_out(cache_hit_way)
 
     dontTouch(plru_oh)
 
@@ -273,7 +297,7 @@ class L1_cache_mem(ways:Int = 4, sets:Int = 64, blockSizeBytes:Int = 64) extends
 
     dirty_memory.io.wr_addr     := RegNext(controller_set)
     dirty_memory.io.wr_en       := RegNext(dirty_wr_en)
-    dirty_memory.io.data_in := Mux(RegNext(allocate), (~plru_oh & dirty_out), hit_oh | dirty_out)
+    dirty_memory.io.data_in := Mux(allocate, (~plru_oh & dirty_out), hit_oh | dirty_out)
    
     dontTouch(dirty_out)
 
@@ -312,13 +336,16 @@ class L1_cache_mem(ways:Int = 4, sets:Int = 64, blockSizeBytes:Int = 64) extends
 
     val data_memory_data_in = Wire(Vec(blockSizeBytes, UInt(32.W)))
 
+    val write_data = RegInit(UInt(32.W), 0.U)
+    write_data := MuxLookup(io.controller_addr(1, 0), 0.U)(Seq(0.U -> (io.controller_data<<0), 1.U -> (io.controller_data<<8), 2.U -> (io.controller_data<<16), 3.U -> (io.controller_data<<24)))
+
     dontTouch(data_memory_data_in) //FIXME: wire never used
     for(word <- 0 until blockSizeBytes/4){
       // write data word from cpu or complete cache line from controller?
-      data_memory_data_in(blockSizeBytes - 1 - (word*4+0)) := Mux(allocate, delayed_controller_cache_line, delayed_controller_data<<0)
-      data_memory_data_in(blockSizeBytes - 1 - (word*4+1)) := Mux(allocate, delayed_controller_cache_line, delayed_controller_data<<8)
-      data_memory_data_in(blockSizeBytes - 1 - (word*4+2)) := Mux(allocate, delayed_controller_cache_line, delayed_controller_data<<16)
-      data_memory_data_in(blockSizeBytes - 1 - (word*4+3)) := Mux(allocate, delayed_controller_cache_line, delayed_controller_data<<24)
+      data_memory_data_in(blockSizeBytes - 1 - (word*4+0)) := Mux(allocate, delayed_controller_cache_line(word*32+7, word*32), write_data(7, 0))
+      data_memory_data_in(blockSizeBytes - 1 - (word*4+1)) := Mux(allocate, delayed_controller_cache_line(word*32+15, word*32+8),  write_data(15, 8))
+      data_memory_data_in(blockSizeBytes - 1 - (word*4+2)) := Mux(allocate, delayed_controller_cache_line(word*32+23, word*32+16), write_data(23, 16))
+      data_memory_data_in(blockSizeBytes - 1 - (word*4+3)) := Mux(allocate, delayed_controller_cache_line(word*32+31, word*32+24), write_data(31, 24))
     }
 
 
@@ -330,17 +357,6 @@ class L1_cache_mem(ways:Int = 4, sets:Int = 64, blockSizeBytes:Int = 64) extends
       data_memory(i).io.addr    := cache_addr
     }
 
-    // Data in logic
-    val write_data = RegInit(UInt(32.W), 0.U)
-    write_data := MuxLookup(io.controller_addr(1, 0), 0.U)(Seq(0.U -> (io.controller_data<<0), 1.U -> (io.controller_data<<8), 2.U -> (io.controller_data<<16), 3.U -> (io.controller_data<<24)))
-
-    for(word <- 0 until blockSizeBytes/4){
-      // Input write_data word to block rams in an aligned fashion (each 4 memories receive 1 byte of the word)
-      data_memory(word*4+3).io.data_in := write_data(7, 0)
-      data_memory(word*4+2).io.data_in := write_data(15, 8)
-      data_memory(word*4+1).io.data_in := write_data(23, 16)
-      data_memory(word*4+0).io.data_in := write_data(31, 24)
-    }
 
     // Data out
     val word_swizzle_level_0 = Wire(Vec(blockSizeBytes/4, UInt(32.W)))
@@ -390,7 +406,6 @@ class L1_cache_mem(ways:Int = 4, sets:Int = 64, blockSizeBytes:Int = 64) extends
 }
 
 
-
 object Main extends App{
 
     var L1_cache_mem = ChiselStage.emitSystemVerilog(gen=new L1_cache_mem(ways=4, sets=64, blockSizeBytes=32), firtoolOpts=Array("-disable-all-randomization", "-strip-debug-info"))
@@ -408,5 +423,3 @@ object Main extends App{
     }
 
 }
-
-

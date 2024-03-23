@@ -250,7 +250,7 @@ class TestCacheMem:
         oldData   = cache.dataMemory[set]
 
         # Get metadata #
-        way = tagArr.index(randomTagInSet)
+        way = cache.ways -1 - tagArr.index(randomTagInSet)
         validLine = cache.validMemory[set]
         PLRULine  = cache.PLRUMemory[set]
         # Get data #
@@ -262,7 +262,7 @@ class TestCacheMem:
         response=cache.requestCMD(addr=randomAddr, data=None, cacheLine=None, cmd=cmd[0])
         
         # Validate response packet #
-        assert response.getHit() == validBit
+        assert response.getHit() == validBit & 0b1
         #assert response.getData() == dataWord
         assert response.getValid() == validBit
         assert response.getAddr() == randomAddr
@@ -344,7 +344,7 @@ class TestCacheMem:
         oldData   = cache.dataMemory[set]
 
         # Get metadata #
-        way = tagArr.index(randomTagInSet)
+        way = cache.ways -1 - tagArr.index(randomTagInSet)
         validLine = cache.validMemory[set]
         PLRULine  = cache.PLRUMemory[set]
         # Get data #

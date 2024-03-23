@@ -174,6 +174,15 @@ def copyPLRUMemory(dut, model,blockSize=32, sets=64, ways=4):
                 addr = way*sets + set
                 dut.PLRU_memory.mem_ext.Memory[set].value = model.PLRUMemory[set]
 
+def copyValidMemory(dut, model,blockSize=32, sets=64, ways=4):
+    # copies memory from model to dut
+    # init data memory
+    for i in range(blockSize):
+        for way in range(ways):
+            for set in range(sets):
+                addr = way*sets + set
+                dut.valid_memory.mem_ext.Memory[set].value = model.validMemory[set]
+
 def getDmemLine(dut, line, lineSizeBytes=32):
     dmemLine = 0
     for i in range(lineSizeBytes):
@@ -238,14 +247,20 @@ def printDirty(dut,lineSizeBytes, ways, sets):
         data = int(dut.dirty_memory.mem_ext.Memory[set].value)
         print(f"{hex(data)}")
 
-
 def compareCacheState(dut, model):
 
     for line in range(len(model.dataMemory)):
         if(model.getDmemLine(line) != getDmemLine(dut, line, lineSizeBytes=32)):
-            print(f"{hex(model.getDmemLine(line))}")
-            print(f"{hex(getDmemLine(dut, line, lineSizeBytes=32))}")
+            print(f"Model: {hex(model.getDmemLine(line))}")
+            print(f"Dut:   {hex(getDmemLine(dut, line, lineSizeBytes=32))}")
             print("False")
             return False
 
     return True
+
+def generateReadHit(cacheModel, set):
+    tagArr = splitLine(cacheModel.tagMemory[set], 4, 21)
+    tag = random.choice(tagArr)
+    addr = (tag<<11) | (random.randint(0,63)<<5) | 0
+    print(hex(tag))
+    return addr
