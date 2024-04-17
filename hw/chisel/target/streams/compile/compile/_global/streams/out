@@ -1,4 +1,7 @@
-[0m[[0m[31merror[0m] [0m[0m/home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/L1Cache/L1_cache_mem_v2.scala:138:38: too many arguments (found 2, expected 1) for method apply: (source: => T)(implicit sourceInfo: chisel3.experimental.SourceInfo): T in trait WireFactory[0m
-[0m[[0m[31merror[0m] [0m[0m    val dirty_wr_en = Wire(Bool(), 0.B)[0m
-[0m[[0m[31merror[0m] [0m[0m                                     ^[0m
-[0m[[0m[31merror[0m] [0m[0mone error found[0m
+[0m[[0m[31merror[0m] [0m[0m/home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/Frontend/instruction_cache.scala:254:19: not found: value i[0m
+[0m[[0m[31merror[0m] [0m[0m    io.cache_data(i).bits := test0[0m
+[0m[[0m[31merror[0m] [0m[0m                  ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/Frontend/instruction_cache.scala:255:19: not found: value i[0m
+[0m[[0m[31merror[0m] [0m[0m    io.cache_data(i).bits := test1[0m
+[0m[[0m[31merror[0m] [0m[0m                  ^[0m
+[0m[[0m[31merror[0m] [0m[0mtwo errors found[0m

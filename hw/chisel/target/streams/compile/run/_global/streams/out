@@ -5,21 +5,30 @@
 [0m[[0m[31merror[0m] [0m[0mSTDOUT:[0m
 [0m[[0m[31merror[0m] [0m[0m[0m
 [0m[[0m[31merror[0m] [0m[0mSTDERR:[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/L1Cache/L1_cache_mem_v2.scala:208:30: error: sink "" not fully initialized in "L1_cache_mem"[0m
-[0m[[0m[31merror[0m] [0m[0m    val valid_memory = Module(new SDPReadWriteSmem(depth = sets, width = ways))[0m
-[0m[[0m[31merror[0m] [0m[0m                             ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/L1Cache/L1_cache_mem_v2.scala:208:30: error: sink "" not fully initialized in "L1_cache_mem"[0m
-[0m[[0m[31merror[0m] [0m[0m    val valid_memory = Module(new SDPReadWriteSmem(depth = sets, width = ways))[0m
-[0m[[0m[31merror[0m] [0m[0m                             ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/L1Cache/L1_cache_mem_v2.scala:208:30: error: sink "" not fully initialized in "L1_cache_mem"[0m
-[0m[[0m[31merror[0m] [0m[0m    val valid_memory = Module(new SDPReadWriteSmem(depth = sets, width = ways))[0m
-[0m[[0m[31merror[0m] [0m[0m                             ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/L1Cache/L1_cache_mem_v2.scala:208:30: error: sink "" not fully initialized in "L1_cache_mem"[0m
-[0m[[0m[31merror[0m] [0m[0m    val valid_memory = Module(new SDPReadWriteSmem(depth = sets, width = ways))[0m
-[0m[[0m[31merror[0m] [0m[0m                             ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/L1Cache/L1_cache_mem_v2.scala:208:30: error: sink "" not fully initialized in "L1_cache_mem"[0m
-[0m[[0m[31merror[0m] [0m[0m    val valid_memory = Module(new SDPReadWriteSmem(depth = sets, width = ways))[0m
-[0m[[0m[31merror[0m] [0m[0m                             ^[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/instruction_cache.scala:198:31: error: sink "instruction_vec_0" not fully initialized in "L1_instruction_memory"[0m
+[0m[[0m[31merror[0m] [0m[0m    val instruction_vec = Wire(Vec(instructionsPerLine, UInt(32.W)))   [0m
+[0m[[0m[31merror[0m] [0m[0m                              ^[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/instruction_cache.scala:198:31: error: sink "instruction_vec_1" not fully initialized in "L1_instruction_memory"[0m
+[0m[[0m[31merror[0m] [0m[0m    val instruction_vec = Wire(Vec(instructionsPerLine, UInt(32.W)))   [0m
+[0m[[0m[31merror[0m] [0m[0m                              ^[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/instruction_cache.scala:198:31: error: sink "instruction_vec_2" not fully initialized in "L1_instruction_memory"[0m
+[0m[[0m[31merror[0m] [0m[0m    val instruction_vec = Wire(Vec(instructionsPerLine, UInt(32.W)))   [0m
+[0m[[0m[31merror[0m] [0m[0m                              ^[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/instruction_cache.scala:198:31: error: sink "instruction_vec_3" not fully initialized in "L1_instruction_memory"[0m
+[0m[[0m[31merror[0m] [0m[0m    val instruction_vec = Wire(Vec(instructionsPerLine, UInt(32.W)))   [0m
+[0m[[0m[31merror[0m] [0m[0m                              ^[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/instruction_cache.scala:198:31: error: sink "instruction_vec_4" not fully initialized in "L1_instruction_memory"[0m
+[0m[[0m[31merror[0m] [0m[0m    val instruction_vec = Wire(Vec(instructionsPerLine, UInt(32.W)))   [0m
+[0m[[0m[31merror[0m] [0m[0m                              ^[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/instruction_cache.scala:198:31: error: sink "instruction_vec_5" not fully initialized in "L1_instruction_memory"[0m
+[0m[[0m[31merror[0m] [0m[0m    val instruction_vec = Wire(Vec(instructionsPerLine, UInt(32.W)))   [0m
+[0m[[0m[31merror[0m] [0m[0m                              ^[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/instruction_cache.scala:198:31: error: sink "instruction_vec_6" not fully initialized in "L1_instruction_memory"[0m
+[0m[[0m[31merror[0m] [0m[0m    val instruction_vec = Wire(Vec(instructionsPerLine, UInt(32.W)))   [0m
+[0m[[0m[31merror[0m] [0m[0m                              ^[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/instruction_cache.scala:198:31: error: sink "instruction_vec_7" not fully initialized in "L1_instruction_memory"[0m
+[0m[[0m[31merror[0m] [0m[0m    val instruction_vec = Wire(Vec(instructionsPerLine, UInt(32.W)))   [0m
+[0m[[0m[31merror[0m] [0m[0m                              ^[0m
 [0m[[0m[31merror[0m] [0m[0m[0m
 [0m[[0m[31merror[0m] [0m[0m------------------------------------------------------------------------------[0m
 [0m[[0m[31merror[0m] [0m[0m(Compile / [31mrun[0m) circt.stage.phases.Exceptions$FirtoolNonZeroExitCode: /home/hakam/.cache/llvm-firtool/1.62.0/bin/firtool returned a non-zero exit code. Note that this version of Chisel (6.0.0) was published against firtool version 1.62.0.[0m
@@ -29,20 +38,29 @@
 [0m[[0m[31merror[0m] [0m[0mSTDOUT:[0m
 [0m[[0m[31merror[0m] [0m[0m[0m
 [0m[[0m[31merror[0m] [0m[0mSTDERR:[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/L1Cache/L1_cache_mem_v2.scala:208:30: error: sink "" not fully initialized in "L1_cache_mem"[0m
-[0m[[0m[31merror[0m] [0m[0m    val valid_memory = Module(new SDPReadWriteSmem(depth = sets, width = ways))[0m
-[0m[[0m[31merror[0m] [0m[0m                             ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/L1Cache/L1_cache_mem_v2.scala:208:30: error: sink "" not fully initialized in "L1_cache_mem"[0m
-[0m[[0m[31merror[0m] [0m[0m    val valid_memory = Module(new SDPReadWriteSmem(depth = sets, width = ways))[0m
-[0m[[0m[31merror[0m] [0m[0m                             ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/L1Cache/L1_cache_mem_v2.scala:208:30: error: sink "" not fully initialized in "L1_cache_mem"[0m
-[0m[[0m[31merror[0m] [0m[0m    val valid_memory = Module(new SDPReadWriteSmem(depth = sets, width = ways))[0m
-[0m[[0m[31merror[0m] [0m[0m                             ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/L1Cache/L1_cache_mem_v2.scala:208:30: error: sink "" not fully initialized in "L1_cache_mem"[0m
-[0m[[0m[31merror[0m] [0m[0m    val valid_memory = Module(new SDPReadWriteSmem(depth = sets, width = ways))[0m
-[0m[[0m[31merror[0m] [0m[0m                             ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/L1Cache/L1_cache_mem_v2.scala:208:30: error: sink "" not fully initialized in "L1_cache_mem"[0m
-[0m[[0m[31merror[0m] [0m[0m    val valid_memory = Module(new SDPReadWriteSmem(depth = sets, width = ways))[0m
-[0m[[0m[31merror[0m] [0m[0m                             ^[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/instruction_cache.scala:198:31: error: sink "instruction_vec_0" not fully initialized in "L1_instruction_memory"[0m
+[0m[[0m[31merror[0m] [0m[0m    val instruction_vec = Wire(Vec(instructionsPerLine, UInt(32.W)))   [0m
+[0m[[0m[31merror[0m] [0m[0m                              ^[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/instruction_cache.scala:198:31: error: sink "instruction_vec_1" not fully initialized in "L1_instruction_memory"[0m
+[0m[[0m[31merror[0m] [0m[0m    val instruction_vec = Wire(Vec(instructionsPerLine, UInt(32.W)))   [0m
+[0m[[0m[31merror[0m] [0m[0m                              ^[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/instruction_cache.scala:198:31: error: sink "instruction_vec_2" not fully initialized in "L1_instruction_memory"[0m
+[0m[[0m[31merror[0m] [0m[0m    val instruction_vec = Wire(Vec(instructionsPerLine, UInt(32.W)))   [0m
+[0m[[0m[31merror[0m] [0m[0m                              ^[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/instruction_cache.scala:198:31: error: sink "instruction_vec_3" not fully initialized in "L1_instruction_memory"[0m
+[0m[[0m[31merror[0m] [0m[0m    val instruction_vec = Wire(Vec(instructionsPerLine, UInt(32.W)))   [0m
+[0m[[0m[31merror[0m] [0m[0m                              ^[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/instruction_cache.scala:198:31: error: sink "instruction_vec_4" not fully initialized in "L1_instruction_memory"[0m
+[0m[[0m[31merror[0m] [0m[0m    val instruction_vec = Wire(Vec(instructionsPerLine, UInt(32.W)))   [0m
+[0m[[0m[31merror[0m] [0m[0m                              ^[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/instruction_cache.scala:198:31: error: sink "instruction_vec_5" not fully initialized in "L1_instruction_memory"[0m
+[0m[[0m[31merror[0m] [0m[0m    val instruction_vec = Wire(Vec(instructionsPerLine, UInt(32.W)))   [0m
+[0m[[0m[31merror[0m] [0m[0m                              ^[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/instruction_cache.scala:198:31: error: sink "instruction_vec_6" not fully initialized in "L1_instruction_memory"[0m
+[0m[[0m[31merror[0m] [0m[0m    val instruction_vec = Wire(Vec(instructionsPerLine, UInt(32.W)))   [0m
+[0m[[0m[31merror[0m] [0m[0m                              ^[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/instruction_cache.scala:198:31: error: sink "instruction_vec_7" not fully initialized in "L1_instruction_memory"[0m
+[0m[[0m[31merror[0m] [0m[0m    val instruction_vec = Wire(Vec(instructionsPerLine, UInt(32.W)))   [0m
+[0m[[0m[31merror[0m] [0m[0m                              ^[0m
 [0m[[0m[31merror[0m] [0m[0m[0m
 [0m[[0m[31merror[0m] [0m[0m------------------------------------------------------------------------------[0m

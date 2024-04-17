@@ -23,3 +23,6 @@ Maybe include a triangle diagram thing
 
 ChaosCore is the first core generator designed with security configuration built in. It is also the first public core verified under the UVM?
 (UVM verification doesnt make verification any better though, really)
+
+
+"if you ever get the chance to work on an out of order processor, take that chance" - Onur Multu
