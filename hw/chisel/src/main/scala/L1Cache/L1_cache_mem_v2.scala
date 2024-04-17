@@ -53,7 +53,7 @@ object CONTROLLER_CMD extends ChiselEnum {
 
 
 
-
+//FIXME: this should be named L1_data_mem
 class L1_cache_mem(ways:Int = 4, sets:Int = 64, blockSizeBytes:Int = 64) extends Module{
     // CACHE LINE STRUCTURE [VALID, DIRTY, PLRU, TAG, DATA] 
     val depth = sets
@@ -70,11 +70,11 @@ class L1_cache_mem(ways:Int = 4, sets:Int = 64, blockSizeBytes:Int = 64) extends
 
 
     val tagBits = 32 - log2Ceil(sets) - log2Ceil(blockSizeBytes)
-    val width = (validBits + tagBits + dirtyBits + PLRUBits) + dataBits  // 512 for data, Tag + valid + dirty + PLRU for metadeta
+    //FIXME: why is dataBits below the log2 of data
     println("Buidling L1 Cache")
     println(s"Cache Config: Ways=${ways}, Sets=${sets}, Block Size=${blockSizeBytes}B")
     println(s"Tag size = ${tagBits}")
-    println(s"Line width = ${width}")
+    //println(s"Line width = ${width}") //FIXME: this was previously wrong
     val io = IO(new Bundle{
         // Inputs from CPU (forwarded by controller)
         val controller_addr           =     Input(UInt(32.W))
@@ -405,7 +405,7 @@ class L1_cache_mem(ways:Int = 4, sets:Int = 64, blockSizeBytes:Int = 64) extends
 
 }
 
-
+/*
 object Main extends App{
 
     var L1_cache_mem = ChiselStage.emitSystemVerilog(gen=new L1_cache_mem(ways=4, sets=64, blockSizeBytes=32), firtoolOpts=Array("-disable-all-randomization", "-strip-debug-info"))
@@ -423,3 +423,4 @@ object Main extends App{
     }
 
 }
+*/
