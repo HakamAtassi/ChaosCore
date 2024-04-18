@@ -14,7 +14,7 @@ sim_build/
 *.vscode
 *.vcd
 *.fst
-
+*.pyc
 
 
 # Junk/incomplete files
