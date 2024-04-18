@@ -1,66 +1,12 @@
-[0m[[0m[31merror[0m] [0m[0mcirct.stage.phases.Exceptions$FirtoolNonZeroExitCode: /home/hakam/.cache/llvm-firtool/1.62.0/bin/firtool returned a non-zero exit code. Note that this version of Chisel (6.0.0) was published against firtool version 1.62.0.[0m
-[0m[[0m[31merror[0m] [0m[0m------------------------------------------------------------------------------[0m
-[0m[[0m[31merror[0m] [0m[0mExitCode:[0m
-[0m[[0m[31merror[0m] [0m[0m1[0m
-[0m[[0m[31merror[0m] [0m[0mSTDOUT:[0m
-[0m[[0m[31merror[0m] [0m[0m[0m
-[0m[[0m[31merror[0m] [0m[0mSTDERR:[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/instruction_cache.scala:198:31: error: sink "instruction_vec_0" not fully initialized in "L1_instruction_memory"[0m
-[0m[[0m[31merror[0m] [0m[0m    val instruction_vec = Wire(Vec(instructionsPerLine, UInt(32.W)))   [0m
-[0m[[0m[31merror[0m] [0m[0m                              ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/instruction_cache.scala:198:31: error: sink "instruction_vec_1" not fully initialized in "L1_instruction_memory"[0m
-[0m[[0m[31merror[0m] [0m[0m    val instruction_vec = Wire(Vec(instructionsPerLine, UInt(32.W)))   [0m
-[0m[[0m[31merror[0m] [0m[0m                              ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/instruction_cache.scala:198:31: error: sink "instruction_vec_2" not fully initialized in "L1_instruction_memory"[0m
-[0m[[0m[31merror[0m] [0m[0m    val instruction_vec = Wire(Vec(instructionsPerLine, UInt(32.W)))   [0m
-[0m[[0m[31merror[0m] [0m[0m                              ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/instruction_cache.scala:198:31: error: sink "instruction_vec_3" not fully initialized in "L1_instruction_memory"[0m
-[0m[[0m[31merror[0m] [0m[0m    val instruction_vec = Wire(Vec(instructionsPerLine, UInt(32.W)))   [0m
-[0m[[0m[31merror[0m] [0m[0m                              ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/instruction_cache.scala:198:31: error: sink "instruction_vec_4" not fully initialized in "L1_instruction_memory"[0m
-[0m[[0m[31merror[0m] [0m[0m    val instruction_vec = Wire(Vec(instructionsPerLine, UInt(32.W)))   [0m
-[0m[[0m[31merror[0m] [0m[0m                              ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/instruction_cache.scala:198:31: error: sink "instruction_vec_5" not fully initialized in "L1_instruction_memory"[0m
-[0m[[0m[31merror[0m] [0m[0m    val instruction_vec = Wire(Vec(instructionsPerLine, UInt(32.W)))   [0m
-[0m[[0m[31merror[0m] [0m[0m                              ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/instruction_cache.scala:198:31: error: sink "instruction_vec_6" not fully initialized in "L1_instruction_memory"[0m
-[0m[[0m[31merror[0m] [0m[0m    val instruction_vec = Wire(Vec(instructionsPerLine, UInt(32.W)))   [0m
-[0m[[0m[31merror[0m] [0m[0m                              ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/instruction_cache.scala:198:31: error: sink "instruction_vec_7" not fully initialized in "L1_instruction_memory"[0m
-[0m[[0m[31merror[0m] [0m[0m    val instruction_vec = Wire(Vec(instructionsPerLine, UInt(32.W)))   [0m
-[0m[[0m[31merror[0m] [0m[0m                              ^[0m
-[0m[[0m[31merror[0m] [0m[0m[0m
-[0m[[0m[31merror[0m] [0m[0m------------------------------------------------------------------------------[0m
-[0m[[0m[31merror[0m] [0m[0m(Compile / [31mrun[0m) circt.stage.phases.Exceptions$FirtoolNonZeroExitCode: /home/hakam/.cache/llvm-firtool/1.62.0/bin/firtool returned a non-zero exit code. Note that this version of Chisel (6.0.0) was published against firtool version 1.62.0.[0m
-[0m[[0m[31merror[0m] [0m[0m------------------------------------------------------------------------------[0m
-[0m[[0m[31merror[0m] [0m[0mExitCode:[0m
-[0m[[0m[31merror[0m] [0m[0m1[0m
-[0m[[0m[31merror[0m] [0m[0mSTDOUT:[0m
-[0m[[0m[31merror[0m] [0m[0m[0m
-[0m[[0m[31merror[0m] [0m[0mSTDERR:[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/instruction_cache.scala:198:31: error: sink "instruction_vec_0" not fully initialized in "L1_instruction_memory"[0m
-[0m[[0m[31merror[0m] [0m[0m    val instruction_vec = Wire(Vec(instructionsPerLine, UInt(32.W)))   [0m
-[0m[[0m[31merror[0m] [0m[0m                              ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/instruction_cache.scala:198:31: error: sink "instruction_vec_1" not fully initialized in "L1_instruction_memory"[0m
-[0m[[0m[31merror[0m] [0m[0m    val instruction_vec = Wire(Vec(instructionsPerLine, UInt(32.W)))   [0m
-[0m[[0m[31merror[0m] [0m[0m                              ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/instruction_cache.scala:198:31: error: sink "instruction_vec_2" not fully initialized in "L1_instruction_memory"[0m
-[0m[[0m[31merror[0m] [0m[0m    val instruction_vec = Wire(Vec(instructionsPerLine, UInt(32.W)))   [0m
-[0m[[0m[31merror[0m] [0m[0m                              ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/instruction_cache.scala:198:31: error: sink "instruction_vec_3" not fully initialized in "L1_instruction_memory"[0m
-[0m[[0m[31merror[0m] [0m[0m    val instruction_vec = Wire(Vec(instructionsPerLine, UInt(32.W)))   [0m
-[0m[[0m[31merror[0m] [0m[0m                              ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/instruction_cache.scala:198:31: error: sink "instruction_vec_4" not fully initialized in "L1_instruction_memory"[0m
-[0m[[0m[31merror[0m] [0m[0m    val instruction_vec = Wire(Vec(instructionsPerLine, UInt(32.W)))   [0m
-[0m[[0m[31merror[0m] [0m[0m                              ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/instruction_cache.scala:198:31: error: sink "instruction_vec_5" not fully initialized in "L1_instruction_memory"[0m
-[0m[[0m[31merror[0m] [0m[0m    val instruction_vec = Wire(Vec(instructionsPerLine, UInt(32.W)))   [0m
-[0m[[0m[31merror[0m] [0m[0m                              ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/instruction_cache.scala:198:31: error: sink "instruction_vec_6" not fully initialized in "L1_instruction_memory"[0m
-[0m[[0m[31merror[0m] [0m[0m    val instruction_vec = Wire(Vec(instructionsPerLine, UInt(32.W)))   [0m
-[0m[[0m[31merror[0m] [0m[0m                              ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/instruction_cache.scala:198:31: error: sink "instruction_vec_7" not fully initialized in "L1_instruction_memory"[0m
-[0m[[0m[31merror[0m] [0m[0m    val instruction_vec = Wire(Vec(instructionsPerLine, UInt(32.W)))   [0m
-[0m[[0m[31merror[0m] [0m[0m                              ^[0m
-[0m[[0m[31merror[0m] [0m[0m[0m
-[0m[[0m[31merror[0m] [0m[0m------------------------------------------------------------------------------[0m
+[0m[[0m[31merror[0m] [0m[0mchisel3.package$ChiselException: Connection between sink (L1_instruction_cache.io.cache_addr.ready: IO[Bool]) and source (UInt<1>(0)) failed @: io.cache_addr.ready in L1_instruction_cache cannot be written from module L1_instruction_cache.[0m
+[0m[[0m[31merror[0m] [0m[0m	at ... ()[0m
+[0m[[0m[31merror[0m] [0m[0m	at L1_instruction_cache.$anonfun$new$4(instruction_cache.scala:112)[0m
+[0m[[0m[31merror[0m] [0m[0m	at chisel3.WhenContext.<init>(When.scala:129)[0m
+[0m[[0m[31merror[0m] [0m[0m	at chisel3.when$.apply(When.scala:37)[0m
+[0m[[0m[31merror[0m] [0m[0m	at chisel3.util.SwitchContext.is(Conditional.scala:37)[0m
+[0m[[0m[31merror[0m] [0m[0m	at chisel3.util.SwitchContext.is(Conditional.scala:44)[0m
+[0m[[0m[31merror[0m] [0m[0m	at L1_instruction_cache.<init>(instruction_cache.scala:107)[0m
+[0m[[0m[31merror[0m] [0m[0m	at Main$.$anonfun$L1_cache_mem$1(instruction_cache.scala:276)[0m
+[0m[[0m[31merror[0m] [0m[0m	at ... ()[0m
+[0m[[0m[31merror[0m] [0m[0m	at ... (Stack trace trimmed to user code only. Rerun with --full-stacktrace to see the full stack trace)[0m
+[0m[[0m[31merror[0m] [0m[0m(Compile / [31mrun[0m) chisel3.package$ChiselException: Connection between sink (L1_instruction_cache.io.cache_addr.ready: IO[Bool]) and source (UInt<1>(0)) failed @: io.cache_addr.ready in L1_instruction_cache cannot be written from module L1_instruction_cache.[0m

@@ -1,3 +1,21 @@
+file://<WORKSPACE>/hw/chisel/src/main/scala/Frontend/instruction_cache.scala
+### java.lang.IndexOutOfBoundsException: 0
+
+occurred in the presentation compiler.
+
+presentation compiler configuration:
+Scala version: 3.3.1
+Classpath:
+<WORKSPACE>/.scala-build/ChaosCore_bd2c96d2de/classes/main [exists ], <HOME>/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala3-library_3/3.3.1/scala3-library_3-3.3.1.jar [exists ], <HOME>/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala-library/2.13.10/scala-library-2.13.10.jar [exists ], <HOME>/.cache/coursier/v1/https/repo1.maven.org/maven2/com/sourcegraph/semanticdb-javac/0.7.4/semanticdb-javac-0.7.4.jar [exists ]
+Options:
+-Xsemanticdb -sourceroot <WORKSPACE> -release 17
+
+
+action parameters:
+offset: 6148
+uri: file://<WORKSPACE>/hw/chisel/src/main/scala/Frontend/instruction_cache.scala
+text:
+```scala
 /* ------------------------------------------------------------------------------------
 * Filename: L1_Cache.scala
 * Author: Hakam Atassi
@@ -100,33 +118,18 @@ class L1_instruction_cache(ways:Int=2, sets:Int = 64, blockSizeBytes:Int = 64) e
     val replay_valid  = RegInit(UInt(1.W), 0.U)
 
 
-    io.cache_addr.bits := 0.U
-    io.cache_addr.valid := 0.U
-    io.dram_data.ready := 0.U
-
     switch(cache_state){
         is(cacheState.Active){
             replay_addr := io.cpu_addr.bits
             replay_tag := io.cpu_addr.bits(31, 31-tagBits)
-
-            io.dram_data.ready := 0.U
             when(miss===1.B){ // Buffer current request, stall cache, go to wait state
                 cache_state := cacheState.Allocate
-                io.cache_addr.bits := replay_addr
-                io.dram_data.ready := 1.U
-                io.cache_addr.valid := 1.U
             }
         }
         is(cacheState.Allocate){    // Stall till DRAM response. On Response, allocate.
-
-            io.cache_addr.bits := 0.U
-            io.cache_addr.valid := 0.U
-            io.dram_data.ready := 1.U
-
             when(io.dram_data.valid===1.U){
                 cache_state := cacheState.Replay
                 replay_valid := 1.U
-                io.dram_data.ready := 0.U
             }
         }
         is(cacheState.Replay){ // Replay initial request. Go back to active.
@@ -165,16 +168,28 @@ class L1_instruction_cache(ways:Int=2, sets:Int = 64, blockSizeBytes:Int = 64) e
 
     LRU_next := Mux((LRU | hit_oh).andR, hit_oh, LRU | hit_oh)
 
+
     dontTouch(allocate_way)
     dontTouch(LRU)
 
     allocate_way := 0.U
 
-    for(i <- 0 until ways){
-        when(LRU(i) === 0.U){
-            allocate_way := (1.U<<i)
-        }
+    for(@@)
+
+    when(LRU(0) === 0.U){  // FIXME: update this for parameter "ways"
+      allocate_way := 1.U
+    }.elsewhen(LRU(1)===0.U){
+      allocate_way := 2.U
+    }.otherwise{
+      allocate_way := 0.U
     }
+
+    //allocate_way := chisel3.util.Mux1H(Seq(
+        //~LRU(1) -> 2.U,
+        //~LRU(0) -> 1.U,
+    //))
+    
+
 
     ///////////////////
     // DATA MEMORIES //
@@ -256,18 +271,32 @@ class L1_instruction_cache(ways:Int=2, sets:Int = 64, blockSizeBytes:Int = 64) e
     }
 
 
+
+
+
     // Large mux, likely critical path...
-    io.cpu_addr.ready := (cache_state === cacheState.Active) && !miss
 
     for(i <- 0 until fetchWidth){}
     io.cache_data(0).bits := instruction_vec((packet_index<<log2Ceil(fetchWidth))+0.U)
     io.cache_data(1).bits := instruction_vec((packet_index<<log2Ceil(fetchWidth))+1.U)
     
-    io.cache_data(0).valid := hit   // instruction 1/2
-    io.cache_data(1).valid := hit & (~delayed_current_addr(2))  // instruction 2/2
 
 
 
+    // TEMP
+
+    //io.cache_data(0).bits := 0.U
+    io.cache_data(0).valid := hit
+
+    //io.cache_data(1).bits := 0.U
+    io.cache_data(1).valid := hit & (~delayed_current_addr(2))
+
+    io.cache_addr.bits := 0.U
+    io.cache_addr.valid := 0.U
+
+
+    io.cpu_addr.ready := (cache_state === cacheState.Active) && !miss
+    io.dram_data.ready := 0.U
 
 }
 
@@ -290,3 +319,25 @@ object Main extends App{
 
 }
 
+
+```
+
+
+
+#### Error stacktrace:
+
+```
+scala.collection.LinearSeqOps.apply(LinearSeq.scala:131)
+	scala.collection.LinearSeqOps.apply$(LinearSeq.scala:128)
+	scala.collection.immutable.List.apply(List.scala:79)
+	dotty.tools.dotc.util.Signatures$.countParams(Signatures.scala:501)
+	dotty.tools.dotc.util.Signatures$.applyCallInfo(Signatures.scala:186)
+	dotty.tools.dotc.util.Signatures$.computeSignatureHelp(Signatures.scala:94)
+	dotty.tools.dotc.util.Signatures$.signatureHelp(Signatures.scala:63)
+	scala.meta.internal.pc.MetalsSignatures$.signatures(MetalsSignatures.scala:17)
+	scala.meta.internal.pc.SignatureHelpProvider$.signatureHelp(SignatureHelpProvider.scala:51)
+	scala.meta.internal.pc.ScalaPresentationCompiler.signatureHelp$$anonfun$1(ScalaPresentationCompiler.scala:414)
+```
+#### Short summary: 
+
+java.lang.IndexOutOfBoundsException: 0

@@ -1,8 +1,26 @@
+file://<WORKSPACE>/hw/chisel/src/main/scala/Frontend/instruction_cache.scala
+### java.lang.IndexOutOfBoundsException: 0
+
+occurred in the presentation compiler.
+
+presentation compiler configuration:
+Scala version: 3.3.1
+Classpath:
+<WORKSPACE>/.scala-build/ChaosCore_bd2c96d2de/classes/main [exists ], <HOME>/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala3-library_3/3.3.1/scala3-library_3-3.3.1.jar [exists ], <HOME>/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala-library/2.13.10/scala-library-2.13.10.jar [exists ], <HOME>/.cache/coursier/v1/https/repo1.maven.org/maven2/com/sourcegraph/semanticdb-javac/0.7.4/semanticdb-javac-0.7.4.jar [exists ]
+Options:
+-Xsemanticdb -sourceroot <WORKSPACE> -release 17
+
+
+action parameters:
+offset: 4718
+uri: file://<WORKSPACE>/hw/chisel/src/main/scala/Frontend/instruction_cache.scala
+text:
+```scala
 /* ------------------------------------------------------------------------------------
 * Filename: L1_Cache.scala
 * Author: Hakam Atassi
 * Date: Mar 12 2024
-* Description: A blocking single cycle latency instruction cache with no CPU write port (no self modifying functionality).
+* Description: A blocking single cycle latency instruction cache with no self CPU write port (no self modifying functionality).
 * License: MIT
 *
 * Copyright (c) 2024 by Hakam Atassi
@@ -34,11 +52,11 @@ import java.rmi.server.UID
 
 
 object cacheState extends ChiselEnum{
-    val Active, Allocate, Replay = Value
+    val Active, Miss, Replay, Allocate = Value
 }
 
 
-class L1_instruction_cache(ways:Int=2, sets:Int = 64, blockSizeBytes:Int = 64) extends Module{
+class L1_instruction_memory(ways:Int=2, sets:Int = 64, blockSizeBytes:Int = 64, fetchWidth:Int=2) extends Module{
 
     // CACHE LINE STRUCTURE [VALID, TAG, DATA] 
     // LRU goes in separate memory
@@ -48,18 +66,15 @@ class L1_instruction_cache(ways:Int=2, sets:Int = 64, blockSizeBytes:Int = 64) e
     val validBits           = 1                                 // number of valid bits
     val LRUBits             = 1                                 // number of LRU bits (per way)
     val dataSizeBits        = blockSizeBytes*8                  // number of raw data bits
-    val fetchWidth          = 2
 
     val instructionsPerLine = blockSizeBytes/4                  // number of instructions per cache line (no compressed instruction support)
     val fetchPacketsPerLine = instructionsPerLine/fetchWidth    // number of fetch packets per cache line
-
 
     //val wordOffsetBits      = log2Ceil(blockSizeBytes/4)      // number of bits needed to address each word in the cache line
     //val halfWordOffsetBits  = log2Ceil(blockSizeBytes/2)      // number of bits needed to address each half-word in the cache line
 
 
     val fetchPacketOffsetBits  = log2Ceil(fetchPacketsPerLine)  // number of fetch packets per cache line
-    println(s"Bits for fetchpacketoffsetbits ${fetchPacketOffsetBits}")
 
 
 
@@ -73,11 +88,14 @@ class L1_instruction_cache(ways:Int=2, sets:Int = 64, blockSizeBytes:Int = 64) e
 
     val io = IO(new Bundle{
         val cpu_addr           =     Flipped(Decoupled(UInt(32.W)))     // inputs from CPU
-        val dram_data          =     Flipped(Decoupled(UInt(dataSizeBits.W)))     // inputs from DRAM
+        val dram_data          =     Flipped(Decoupled(UInt(32.W)))     // inputs from DRAM
 
         // Outputs
-        val cache_data         =     Vec(fetchWidth, Decoupled(UInt(32.W)))
+        val cache_data         = Vec(fetchWidth, Decoupled(UInt(32.W)))
 
+
+
+                                                                        // FIXME: cache returns much more than 32 bits
         val cache_addr         =     Decoupled(UInt(32.W))              // outputs to DRAM
     })
 
@@ -93,51 +111,33 @@ class L1_instruction_cache(ways:Int=2, sets:Int = 64, blockSizeBytes:Int = 64) e
 
     val cache_state =  RegInit(cacheState(), cacheState.Active)   // Is this how you do it?
     val current_addr = Wire(UInt(32.W))
-    val current_data = Wire(UInt(wayDataWidth.W))
 
     val replay_addr = RegInit(UInt(32.W), 0.U)
-    val replay_tag  = RegInit(UInt(tagBits.W), 0.U)
-    val replay_valid  = RegInit(UInt(1.W), 0.U)
 
-
-    io.cache_addr.bits := 0.U
-    io.cache_addr.valid := 0.U
-    io.dram_data.ready := 0.U
+    // FIXME: control is super messed up due to FSM latency...
 
     switch(cache_state){
         is(cacheState.Active){
-            replay_addr := io.cpu_addr.bits
-            replay_tag := io.cpu_addr.bits(31, 31-tagBits)
 
-            io.dram_data.ready := 0.U
+            //TODO: buffer request
+            replay_addr := replay_addr
+
             when(miss===1.B){ // Buffer current request, stall cache, go to wait state
                 cache_state := cacheState.Allocate
-                io.cache_addr.bits := replay_addr
-                io.dram_data.ready := 1.U
-                io.cache_addr.valid := 1.U
             }
-        }
-        is(cacheState.Allocate){    // Stall till DRAM response. On Response, allocate.
 
-            io.cache_addr.bits := 0.U
-            io.cache_addr.valid := 0.U
-            io.dram_data.ready := 1.U
-
-            when(io.dram_data.valid===1.U){
-                cache_state := cacheState.Replay
-                replay_valid := 1.U
-                io.dram_data.ready := 0.U
-            }
         }
-        is(cacheState.Replay){ // Replay initial request. Go back to active.
+        is(cacheState.Allocate){    // Stall till DRAM response. On Response, @@
+            when(io.dram_data.valid===1.U){cache_state := cacheState.Miss}            
+            cache_state := cacheState.Replay
+        }
+        is(cacheState.Replay){ // Replay request
             cache_state := cacheState.Active
-            replay_valid := 0.U
         }
     }
 
     // Address arbitration
-    current_addr := Mux(cache_state=/=cacheState.Active, replay_addr, io.cpu_addr.bits)
-    current_data := Cat(1.U, replay_tag, io.dram_data.bits)
+    current_addr := Mux(cache_state===cacheState.Replay || cache_state===cacheState.Allocate , replay_addr, io.cpu_addr.bits)
 
 
     stall := (cache_state =/= cacheState.Active) || (miss)  // cache is stalled when the FSM is not in active or when a miss just occured 
@@ -162,19 +162,20 @@ class L1_instruction_cache(ways:Int=2, sets:Int = 64, blockSizeBytes:Int = 64) e
 
     LRU := LRU_memory.io.data_out
 
+    hit_oh :=0.U // FIXME: implement this
 
     LRU_next := Mux((LRU | hit_oh).andR, hit_oh, LRU | hit_oh)
 
-    dontTouch(allocate_way)
-    dontTouch(LRU)
 
-    allocate_way := 0.U
 
-    for(i <- 0 until ways){
-        when(LRU(i) === 0.U){
-            allocate_way := (1.U<<i)
-        }
+    when(LRU(0) === 0.U){  // FIXME: update this for parameter ways
+      allocate_way := 0.U
+    }.otherwise{
+      allocate_way := 2.U
     }
+
+    
+
 
     ///////////////////
     // DATA MEMORIES //
@@ -188,9 +189,7 @@ class L1_instruction_cache(ways:Int=2, sets:Int = 64, blockSizeBytes:Int = 64) e
     val hit_oh_vec = Wire(Vec(ways, UInt(1.W)))
     val hit        = Wire(Bool())
     val delayed_current_addr = RegNext(current_addr)
-
-    val delayed_current_address_tag = delayed_current_addr(31, 31-tagBits+1)
-    dontTouch(delayed_current_address_tag)
+    val delayed_current_address_tag = delayed_current_addr(31, 31-tagBits)
 
     for (way <- 0 until ways){
         data_memory(way).io.enable := 1.B
@@ -198,26 +197,20 @@ class L1_instruction_cache(ways:Int=2, sets:Int = 64, blockSizeBytes:Int = 64) e
         data_memory(way).io.addr := current_addr
         data_way(way) := data_memory(way).io.data_out
 
-        data_memory(way).io.wr_en := io.dram_data.valid & allocate_way(way)
-        data_memory(way).io.data_in := current_data
+        data_memory(way).io.wr_en := 1.U   // FIXME: connects to dram
+        data_memory(way).io.data_in := 0.U  //FIXME: connects to dram
     }
-
-    dontTouch(data_way)
 
     // Rename outputs for readability
     val memory_valid_vec = Wire(Vec(ways, UInt(1.W)))
     val memory_tags_vec  = Wire(Vec(ways, UInt(tagBits.W)))
     val memory_instr_vec = Wire(Vec(ways, UInt(dataSizeBits.W)))
 
-
     for (way <- 0 until ways){
-        memory_valid_vec(way)  := data_way(way)(wayDataWidth-1)
-        memory_instr_vec(way)  := data_way(way)(wayDataWidth-2-tagBits, 0)
-        memory_tags_vec(way)   := data_way(way)(wayDataWidth-2, wayDataWidth-tagBits - 1)
+        memory_valid_vec(way)  := data_way(way)(dataSizeBits-1)
+        memory_tags_vec(way)   := data_way(way)(dataSizeBits-2, dataSizeBits-2-tagBits)
+        memory_instr_vec(way)  := data_way(way)(dataSizeBits-2-tagBits, 0)
     }
-
-    dontTouch(memory_tags_vec)
-    dontTouch(memory_valid_vec)
 
     for (way <- 0 until ways) {
       hit_oh_vec(way) := (memory_tags_vec(way) === delayed_current_address_tag) && memory_valid_vec(way).asBool
@@ -226,8 +219,8 @@ class L1_instruction_cache(ways:Int=2, sets:Int = 64, blockSizeBytes:Int = 64) e
     hit_oh := hit_oh_vec.reverse.reduce(_ ## _)
 
 
-    hit := hit_oh.orR & (RegNext(io.cpu_addr.valid) | RegNext(replay_valid))
-    miss := (~hit_oh.orR) & (RegNext(io.cpu_addr.valid) | RegNext(replay_valid))
+    hit := hit_oh.orR & RegNext(io.cpu_addr.valid)
+    miss := (~hit_oh.orR) & RegNext(io.cpu_addr.valid)
 
 
 
@@ -237,7 +230,7 @@ class L1_instruction_cache(ways:Int=2, sets:Int = 64, blockSizeBytes:Int = 64) e
 
 
 
-    val hit_instruction_data = Wire(UInt(wayDataWidth.W)) 
+    val hit_instruction_data = Wire(UInt(wayDataWidth.W)) //TODO: not implemented
 
     val instruction_vec = Wire(Vec(instructionsPerLine, UInt(32.W)))   
 
@@ -256,25 +249,42 @@ class L1_instruction_cache(ways:Int=2, sets:Int = 64, blockSizeBytes:Int = 64) e
     }
 
 
+
+
+
     // Large mux, likely critical path...
-    io.cpu_addr.ready := (cache_state === cacheState.Active) && !miss
 
-    for(i <- 0 until fetchWidth){}
-    io.cache_data(0).bits := instruction_vec((packet_index<<log2Ceil(fetchWidth))+0.U)
-    io.cache_data(1).bits := instruction_vec((packet_index<<log2Ceil(fetchWidth))+1.U)
     
-    io.cache_data(0).valid := hit   // instruction 1/2
-    io.cache_data(1).valid := hit & (~delayed_current_addr(2))  // instruction 2/2
+
+    for(i <- 0 until fetchWidth){
+        io.cache_data(i).bits := instruction_vec((packet_index<<fetchWidth)+i.U)
+    }
+
+    //
+    
 
 
+    // TEMP
 
+    //io.cache_data(0).bits := 0.U
+    io.cache_data(0).valid := 0.U
+
+    //io.cache_data(1).bits := 0.U
+    io.cache_data(1).valid := 0.U
+
+    io.cache_addr.bits := 0.U
+    io.cache_addr.valid := 0.U
+
+
+    io.cpu_addr.ready := 0.U
+    io.dram_data.ready := 0.U
 
 }
 
 
 object Main extends App{
 
-    var L1_cache_mem = ChiselStage.emitSystemVerilog(gen=new L1_instruction_cache(ways=2, sets=64, blockSizeBytes=32), firtoolOpts=Array("-disable-all-randomization", "-strip-debug-info"))
+    var L1_cache_mem = ChiselStage.emitSystemVerilog(gen=new L1_instruction_memory(ways=2, sets=64, blockSizeBytes=32), firtoolOpts=Array("-disable-all-randomization", "-strip-debug-info"))
 
     println(L1_cache_mem)
 
@@ -290,3 +300,25 @@ object Main extends App{
 
 }
 
+
+```
+
+
+
+#### Error stacktrace:
+
+```
+scala.collection.LinearSeqOps.apply(LinearSeq.scala:131)
+	scala.collection.LinearSeqOps.apply$(LinearSeq.scala:128)
+	scala.collection.immutable.List.apply(List.scala:79)
+	dotty.tools.dotc.util.Signatures$.countParams(Signatures.scala:501)
+	dotty.tools.dotc.util.Signatures$.applyCallInfo(Signatures.scala:186)
+	dotty.tools.dotc.util.Signatures$.computeSignatureHelp(Signatures.scala:94)
+	dotty.tools.dotc.util.Signatures$.signatureHelp(Signatures.scala:63)
+	scala.meta.internal.pc.MetalsSignatures$.signatures(MetalsSignatures.scala:17)
+	scala.meta.internal.pc.SignatureHelpProvider$.signatureHelp(SignatureHelpProvider.scala:51)
+	scala.meta.internal.pc.ScalaPresentationCompiler.signatureHelp$$anonfun$1(ScalaPresentationCompiler.scala:414)
+```
+#### Short summary: 
+
+java.lang.IndexOutOfBoundsException: 0

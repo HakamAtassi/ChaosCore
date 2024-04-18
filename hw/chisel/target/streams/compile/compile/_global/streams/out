@@ -1,7 +1,9 @@
-[0m[[0m[31merror[0m] [0m[0m/home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/Frontend/instruction_cache.scala:254:19: not found: value i[0m
-[0m[[0m[31merror[0m] [0m[0m    io.cache_data(i).bits := test0[0m
-[0m[[0m[31merror[0m] [0m[0m                  ^[0m
-[0m[[0m[31merror[0m] [0m[0m/home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/Frontend/instruction_cache.scala:255:19: not found: value i[0m
-[0m[[0m[31merror[0m] [0m[0m    io.cache_data(i).bits := test1[0m
-[0m[[0m[31merror[0m] [0m[0m                  ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/Frontend/instruction_cache.scala:158:22: type mismatch;[0m
+[0m[[0m[31merror[0m] [0m[0m found   : Boolean[0m
+[0m[[0m[31merror[0m] [0m[0m required: chisel3.Bool[0m
+[0m[[0m[31merror[0m] [0m[0m    }.elsewhen(LRU(0)==0.U){[0m
+[0m[[0m[31merror[0m] [0m[0m                     ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/Frontend/instruction_cache.scala:161:5: not found: value otherwise[0m
+[0m[[0m[31merror[0m] [0m[0m    otherwise{[0m
+[0m[[0m[31merror[0m] [0m[0m    ^[0m
 [0m[[0m[31merror[0m] [0m[0mtwo errors found[0m
