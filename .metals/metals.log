@@ -8356,3 +8356,183 @@ WARNING: Unmatched cancel notification for request id 8728
 2024.04.18 16:26:27 INFO  time: compiled ChaosCore_bd2c96d2de in 50ms
 2024.04.18 16:28:23 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
 2024.04.18 16:28:23 INFO  time: compiled ChaosCore_bd2c96d2de in 68ms
+Apr 18, 2024 5:23:08 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 9032
+Apr 18, 2024 5:33:05 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 9054
+2024.04.18 17:36:22 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.18 17:36:22 INFO  time: compiled ChaosCore_bd2c96d2de in 95ms
+Apr 18, 2024 5:37:56 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 9248
+2024.04.18 17:38:15 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.18 17:38:15 INFO  time: compiled ChaosCore_bd2c96d2de in 77ms
+2024.04.18 18:20:36 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.18 18:20:36 INFO  time: compiled ChaosCore_bd2c96d2de in 71ms
+2024.04.18 18:20:41 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.18 18:20:41 INFO  time: compiled ChaosCore_bd2c96d2de in 56ms
+2024.04.18 18:24:49 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.18 18:24:49 INFO  time: compiled ChaosCore_bd2c96d2de in 71ms
+2024.04.18 18:30:32 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.18 18:30:32 INFO  time: compiled ChaosCore_bd2c96d2de in 73ms
+2024.04.18 18:30:39 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.18 18:30:39 INFO  time: compiled ChaosCore_bd2c96d2de in 46ms
+2024.04.18 18:32:34 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.18 18:32:34 INFO  time: compiled ChaosCore_bd2c96d2de in 69ms
+2024.04.18 18:33:20 WARN  Using indexes to guess the definition of current_data
+2024.04.18 18:34:10 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.18 18:34:10 INFO  time: compiled ChaosCore_bd2c96d2de in 68ms
+2024.04.18 19:02:33 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.18 19:02:33 INFO  time: compiled ChaosCore_bd2c96d2de in 72ms
+2024.04.18 19:03:02 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.18 19:03:02 INFO  time: compiled ChaosCore_bd2c96d2de in 62ms
+2024.04.18 19:09:35 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.18 19:09:35 INFO  time: compiled ChaosCore_bd2c96d2de in 68ms
+2024.04.18 19:09:37 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.18 19:09:37 INFO  time: compiled ChaosCore_bd2c96d2de in 76ms
+2024.04.18 19:50:51 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.18 19:50:51 INFO  time: compiled ChaosCore_bd2c96d2de in 71ms
+2024.04.18 19:52:05 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.18 19:52:05 INFO  time: compiled ChaosCore_bd2c96d2de in 67ms
+2024.04.18 19:52:16 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.18 19:52:16 INFO  time: compiled ChaosCore_bd2c96d2de in 48ms
+2024.04.18 19:52:19 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.18 19:52:19 INFO  time: compiled ChaosCore_bd2c96d2de in 52ms
+2024.04.18 19:53:13 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.18 19:53:13 INFO  time: compiled ChaosCore_bd2c96d2de in 74ms
+Apr 18, 2024 7:59:41 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 10544
+2024.04.18 19:59:46 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.18 19:59:46 INFO  time: compiled ChaosCore_bd2c96d2de in 66ms
+2024.04.18 20:02:22 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.18 20:02:22 INFO  time: compiled ChaosCore_bd2c96d2de in 69ms
+2024.04.18 20:03:03 WARN  Using indexes to guess the definition of setBits
+2024.04.18 20:03:06 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.18 20:03:06 INFO  time: compiled ChaosCore_bd2c96d2de in 73ms
+2024.04.18 20:03:29 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.18 20:03:29 INFO  time: compiled ChaosCore_bd2c96d2de in 54ms
+2024.04.18 20:03:36 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.18 20:03:36 INFO  time: compiled ChaosCore_bd2c96d2de in 53ms
+2024.04.18 20:03:48 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.18 20:03:48 INFO  time: compiled ChaosCore_bd2c96d2de in 45ms
+2024.04.18 20:04:45 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.18 20:04:45 INFO  time: compiled ChaosCore_bd2c96d2de in 70ms
+2024.04.18 20:05:21 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.18 20:05:21 WARN  Using indexes to guess the definition of byteOffsetBits
+2024.04.18 20:05:21 INFO  time: compiled ChaosCore_bd2c96d2de in 62ms
+2024.04.18 20:05:21 WARN  Using indexes to guess the definition of setBits
+Apr 18, 2024 8:05:21 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 11256
+2024.04.18 20:05:42 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.18 20:05:42 INFO  time: compiled ChaosCore_bd2c96d2de in 44ms
+2024.04.18 20:09:10 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.18 20:09:10 INFO  time: compiled ChaosCore_bd2c96d2de in 71ms
+Apr 18, 2024 8:10:33 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 11529
+2024.04.18 20:13:32 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.18 20:13:32 INFO  time: compiled ChaosCore_bd2c96d2de in 66ms
+2024.04.18 20:13:37 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.18 20:13:37 INFO  time: compiled ChaosCore_bd2c96d2de in 47ms
+2024.04.18 20:14:42 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.18 20:14:42 INFO  time: compiled ChaosCore_bd2c96d2de in 67ms
+2024.04.18 20:15:08 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.18 20:15:08 INFO  time: compiled ChaosCore_bd2c96d2de in 49ms
+2024.04.18 20:15:40 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.18 20:15:40 INFO  time: compiled ChaosCore_bd2c96d2de in 47ms
+2024.04.18 20:16:13 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.18 20:16:13 INFO  time: compiled ChaosCore_bd2c96d2de in 55ms
+2024.04.18 20:16:23 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.18 20:16:23 INFO  time: compiled ChaosCore_bd2c96d2de in 61ms
+2024.04.19 01:48:37 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.19 01:48:37 INFO  time: compiled ChaosCore_bd2c96d2de in 78ms
+2024.04.19 01:50:19 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.19 01:50:19 INFO  time: compiled ChaosCore_bd2c96d2de in 68ms
+2024.04.19 01:50:27 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.19 01:50:27 INFO  time: compiled ChaosCore_bd2c96d2de in 46ms
+2024.04.19 01:50:37 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.19 01:50:37 INFO  time: compiled ChaosCore_bd2c96d2de in 74ms
+2024.04.19 01:52:40 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.19 01:52:40 INFO  time: compiled ChaosCore_bd2c96d2de in 68ms
+2024.04.19 01:52:45 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.19 01:52:45 INFO  time: compiled ChaosCore_bd2c96d2de in 50ms
+2024.04.19 01:54:39 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.19 01:54:39 INFO  time: compiled ChaosCore_bd2c96d2de in 69ms
+2024.04.19 01:54:40 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.19 01:54:40 INFO  time: compiled ChaosCore_bd2c96d2de in 50ms
+2024.04.19 01:54:44 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.19 01:54:44 INFO  time: compiled ChaosCore_bd2c96d2de in 44ms
+2024.04.19 02:05:50 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.19 02:05:50 INFO  time: compiled ChaosCore_bd2c96d2de in 76ms
+2024.04.19 02:30:21 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.19 02:30:21 INFO  time: compiled ChaosCore_bd2c96d2de in 82ms
+2024.04.19 02:31:21 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.19 02:31:21 INFO  time: compiled ChaosCore_bd2c96d2de in 69ms
+2024.04.19 02:33:08 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.19 02:33:08 INFO  time: compiled ChaosCore_bd2c96d2de in 67ms
+2024.04.19 02:35:23 WARN  Using indexes to guess the definition of delayed_current_address_tag
+2024.04.19 02:35:23 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.19 02:35:23 INFO  time: compiled ChaosCore_bd2c96d2de in 72ms
+2024.04.19 02:35:45 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.19 02:35:45 INFO  time: compiled ChaosCore_bd2c96d2de in 56ms
+2024.04.19 02:36:00 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.19 02:36:00 INFO  time: compiled ChaosCore_bd2c96d2de in 65ms
+2024.04.19 02:36:25 WARN  Using indexes to guess the definition of current_set_addr
+2024.04.19 02:36:25 WARN  Using indexes to guess the definition of current_set_addr
+2024.04.19 02:36:26 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.19 02:36:26 INFO  time: compiled ChaosCore_bd2c96d2de in 45ms
+2024.04.19 02:36:30 WARN  Using indexes to guess the definition of current_set_addr
+2024.04.19 02:36:30 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.19 02:36:30 INFO  time: compiled ChaosCore_bd2c96d2de in 55ms
+2024.04.19 02:36:36 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.19 02:36:36 INFO  time: compiled ChaosCore_bd2c96d2de in 70ms
+Apr 19, 2024 2:49:37 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 13112
+2024.04.19 02:49:37 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.19 02:49:37 INFO  time: compiled ChaosCore_bd2c96d2de in 73ms
+2024.04.19 02:49:59 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.19 02:49:59 INFO  time: compiled ChaosCore_bd2c96d2de in 46ms
+2024.04.19 02:51:03 WARN  Using indexes to guess the definition of packet_index
+2024.04.19 02:51:26 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.19 02:51:26 INFO  time: compiled ChaosCore_bd2c96d2de in 67ms
+2024.04.19 02:51:38 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.19 02:51:38 INFO  time: compiled ChaosCore_bd2c96d2de in 49ms
+2024.04.19 02:51:39 WARN  Using indexes to guess the definition of fetchPacketOffsetBits
+2024.04.19 02:51:46 WARN  Using indexes to guess the definition of fetchWidth
+2024.04.19 02:51:46 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.19 02:51:46 INFO  time: compiled ChaosCore_bd2c96d2de in 48ms
+2024.04.19 02:54:19 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.19 02:54:19 INFO  time: compiled ChaosCore_bd2c96d2de in 68ms
+2024.04.19 02:54:29 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.19 02:54:29 INFO  time: compiled ChaosCore_bd2c96d2de in 45ms
+2024.04.19 02:54:46 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.19 02:54:46 INFO  time: compiled ChaosCore_bd2c96d2de in 44ms
+2024.04.19 02:54:51 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.19 02:54:51 INFO  time: compiled ChaosCore_bd2c96d2de in 47ms
+2024.04.19 02:54:53 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.19 02:54:53 INFO  time: compiled ChaosCore_bd2c96d2de in 45ms
+2024.04.19 02:54:56 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.19 02:54:56 INFO  time: compiled ChaosCore_bd2c96d2de in 55ms
+2024.04.19 02:55:04 WARN  Using indexes to guess the definition of fetchPacketOffsetBits
+2024.04.19 02:55:41 WARN  Using indexes to guess the definition of L1_instruction_cache
+2024.04.19 02:55:42 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.19 02:55:42 INFO  time: compiled ChaosCore_bd2c96d2de in 67ms
+Apr 19, 2024 3:03:22 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 13650
+Apr 19, 2024 3:05:34 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 13667
+Apr 19, 2024 3:10:15 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 13720
+2024.04.19 03:10:25 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.19 03:10:25 INFO  time: compiled ChaosCore_bd2c96d2de in 65ms
+2024.04.19 03:24:06 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.19 03:24:06 INFO  time: compiled ChaosCore_bd2c96d2de in 65ms
+2024.04.19 03:24:41 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.19 03:24:41 INFO  time: compiled ChaosCore_bd2c96d2de in 68ms
+2024.04.19 03:24:55 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.19 03:24:55 INFO  time: compiled ChaosCore_bd2c96d2de in 46ms
+2024.04.19 03:28:05 INFO  compiling chaoscore_bd2c96d2de (19 scala sources)
+2024.04.19 03:28:05 INFO  time: compiled ChaosCore_bd2c96d2de in 68ms
+2024.04.19 03:28:22 WARN  Could not find semantic tokens for: file:///home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/Frontend/decoder.scala
+2024.04.19 03:28:24 WARN  Could not find semantic tokens for: file:///home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/Frontend/2_wide_decoder.scala
+2024.04.19 03:28:24 WARN  Could not find semantic tokens for: file:///home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/uDecoder.scala
+2024.04.19 03:28:25 WARN  Could not find semantic tokens for: file:///home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/RAS.scala
+2024.04.19 03:28:26 WARN  Could not find semantic tokens for: file:///home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/hash_BTB.scala
