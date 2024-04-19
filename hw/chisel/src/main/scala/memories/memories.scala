@@ -118,7 +118,6 @@ class TrueDualPortMemory(depth: Int, width: Int) extends Module {
     val readDataB = Output(UInt(width.W))
   })
 
-  println(s"${name},\twidth: ${width}, depth: ${depth}")
 
   // Create the true dual-port memory
   val mem = SyncReadMem(depth, UInt(width.W))
