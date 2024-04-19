@@ -1,9 +1,9 @@
-
 /* ------------------------------------------------------------------------------------
-* Filename: associative_BTB.scala
+* Filename: PC_FSM.scala
 * Author: Hakam Atassi
 * Date: Apr 19 2024
-* Description: An N way set associative BTB for a 2-wide fetch unit. 
+* Description: An FSM responsible for incrementing and realigning the PC to fetch packets 
+* on non-branch (or non-taken branch) instructions 
 * License: MIT
 *
 * Copyright (c) 2024 by Hakam Atassi
@@ -27,3 +27,36 @@
 * SOFTWARE.
 * ------------------------------------------------------------------------------------ 
 */
+
+import chisel3._
+import circt.stage.ChiselStage
+import chisel3.util._
+import java.io.{File, FileWriter}
+import java.rmi.server.UID
+
+class PC_FSM extends Module{
+
+    val io = IO(new Bundle{
+
+        val increment      = Input(Bool())
+        val PC             = Input(UInt(32.W))
+        
+        val PC_next        = Output(UInt(32.W))
+    })
+
+
+    val PC_aligned = Wire(Bool())
+
+    PC_aligned := ~io.PC(2)   // Since 2 wide, lower 2 bits must be 0 (instructions are 32 bit aligned, thats a given), and 3rd bit must be 0 for aligned address
+
+    when(io.increment){
+        when(PC_aligned){
+            io.PC_next := io.PC + 8 // if PC is aligned, increment to next aligned address
+        }.otherwise{
+            io.PC_next := io.PC + 4 // if PC is not aligned, incrementing by 4 re-alignes it
+        }
+    }.elsewhen{
+        io.PC_next := io.PC
+    }
+
+}

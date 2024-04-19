@@ -1,9 +1,26 @@
+file://<WORKSPACE>/hw/chisel/src/main/scala/Frontend/BP/RAS.scala
+### java.lang.IndexOutOfBoundsException: 0
+
+occurred in the presentation compiler.
+
+presentation compiler configuration:
+Scala version: 3.3.1
+Classpath:
+<WORKSPACE>/.scala-build/ChaosCore_bd2c96d2de/classes/main [exists ], <HOME>/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala3-library_3/3.3.1/scala3-library_3-3.3.1.jar [exists ], <HOME>/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala-library/2.13.10/scala-library-2.13.10.jar [exists ], <HOME>/.cache/coursier/v1/https/repo1.maven.org/maven2/com/sourcegraph/semanticdb-javac/0.7.4/semanticdb-javac-0.7.4.jar [exists ]
+Options:
+-Xsemanticdb -sourceroot <WORKSPACE> -release 17
+
+
+action parameters:
+offset: 4033
+uri: file://<WORKSPACE>/hw/chisel/src/main/scala/Frontend/BP/RAS.scala
+text:
+```scala
 /* ------------------------------------------------------------------------------------
 * Filename: RAS.scala
 * Author: Hakam Atassi
 * Date: Apr 19 2024
-* Description: A checkpointed return address stack. STRONGLY inspired from 
-* "Recovery Requirements of Branch Prediction Storage Structures in the Presence of Mispredicted-Path Execution" by Stephan Jourdan and Yale Patt. 
+* Description: A checkpointed return address stack
 * License: MIT
 *
 * Copyright (c) 2024 by Hakam Atassi
@@ -89,7 +106,7 @@ class RAS(entires:Int = 128) extends Module{
 
     // Write port
     RAS_memory.io.wr_addr := NEXT
-    RAS_memory.io.wr_data := Cat(io.call_addr, TOS) // each RAS entry contains the address and a link to the next entry on the stack
+    RAS_memory.io.wr_data := io.call_addr
     RAS_memory.io.wr_en   := io.call & io.call_valid
 
     // assign next-on-stack
@@ -99,11 +116,40 @@ class RAS(entires:Int = 128) extends Module{
     when(io.revert_valid == 1.B){   // revert (misprediction)
         NEXT := io.revert_NEXT
         TOS  := io.revert_TOS
-    }.elsewhen(io.call_valid == 1.B){   // call (push to stack)
-        TOS := NEXT
-        NEXT := NEXT + 1.U
-    }.otherwise{ // ret (pop from stack)
-        TOS := NOS // move to next entry
+    }.elsewhen(io.call_valid == 1.B){   // call (@@)
+
+    }.otherwise{
+
+    }
+
+    // multiplex TOS
+    when(){
+
+    }.elsewhen(){
+
+    }.otherwise{
+
     }
 
 }
+```
+
+
+
+#### Error stacktrace:
+
+```
+scala.collection.LinearSeqOps.apply(LinearSeq.scala:131)
+	scala.collection.LinearSeqOps.apply$(LinearSeq.scala:128)
+	scala.collection.immutable.List.apply(List.scala:79)
+	dotty.tools.dotc.util.Signatures$.countParams(Signatures.scala:501)
+	dotty.tools.dotc.util.Signatures$.applyCallInfo(Signatures.scala:186)
+	dotty.tools.dotc.util.Signatures$.computeSignatureHelp(Signatures.scala:94)
+	dotty.tools.dotc.util.Signatures$.signatureHelp(Signatures.scala:63)
+	scala.meta.internal.pc.MetalsSignatures$.signatures(MetalsSignatures.scala:17)
+	scala.meta.internal.pc.SignatureHelpProvider$.signatureHelp(SignatureHelpProvider.scala:51)
+	scala.meta.internal.pc.ScalaPresentationCompiler.signatureHelp$$anonfun$1(ScalaPresentationCompiler.scala:414)
+```
+#### Short summary: 
+
+java.lang.IndexOutOfBoundsException: 0

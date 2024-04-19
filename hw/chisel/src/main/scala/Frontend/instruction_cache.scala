@@ -1,7 +1,7 @@
 /* ------------------------------------------------------------------------------------
-* Filename: L1_Cache.scala
+* Filename: instruction_cache.scala
 * Author: Hakam Atassi
-* Date: Mar 12 2024
+* Date: Apr 17 2024
 * Description: A blocking single cycle latency instruction cache with no CPU write port (no self modifying functionality).
 * License: MIT
 *
@@ -285,7 +285,7 @@ class L1_instruction_cache(ways:Int=2, sets:Int = 64, blockSizeBytes:Int = 64) e
 
 }
 
-
+/*
 object Main extends App{
 
     var L1_cache_mem = ChiselStage.emitSystemVerilog(gen=new L1_instruction_cache(ways=2, sets=64, blockSizeBytes=32), firtoolOpts=Array("-disable-all-randomization", "-strip-debug-info"))
@@ -304,3 +304,4 @@ object Main extends App{
 
 }
 
+*/
