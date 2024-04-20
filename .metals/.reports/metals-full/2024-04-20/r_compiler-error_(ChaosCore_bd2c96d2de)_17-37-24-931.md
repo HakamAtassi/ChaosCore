@@ -1,3 +1,21 @@
+file://<WORKSPACE>/hw/chisel/src/main/scala/Frontend/BP/uDecoder.scala
+### java.lang.IndexOutOfBoundsException: 0
+
+occurred in the presentation compiler.
+
+presentation compiler configuration:
+Scala version: 3.3.1
+Classpath:
+<WORKSPACE>/.scala-build/ChaosCore_bd2c96d2de/classes/main [exists ], <HOME>/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala3-library_3/3.3.1/scala3-library_3-3.3.1.jar [exists ], <HOME>/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala-library/2.13.10/scala-library-2.13.10.jar [exists ], <HOME>/.cache/coursier/v1/https/repo1.maven.org/maven2/com/sourcegraph/semanticdb-javac/0.7.4/semanticdb-javac-0.7.4.jar [exists ]
+Options:
+-Xsemanticdb -sourceroot <WORKSPACE> -release 17
+
+
+action parameters:
+offset: 9517
+uri: file://<WORKSPACE>/hw/chisel/src/main/scala/Frontend/BP/uDecoder.scala
+text:
+```scala
 /* ------------------------------------------------------------------------------------
 * Filename: uDecoder.scala
 * Author: Hakam Atassi
@@ -41,15 +59,11 @@ class branchDecoder extends Module{
         // input instruction 
         val instruction         = Input(UInt(32.W))
 
-        val imm                 = Output(UInt(32.W))    // immediate for address computation
+        val imm                 = Output(UInt(32.W)) // immediate for address computation
 
-        val is_branch           = Output(Bool())        // is the instruction a control flow instruction
+        val is_branch           = Output(Bool())   // is the instruction a control flow instruction
         val is_cond_branch      = Output(Bool())   
         val is_jump             = Output(Bool())
-
-        val is_JALR             = Output(Bool())
-        val is_JAL              = Output(Bool())
-        val is_BR               = Output(Bool())
 
         // for RAS control
         val is_call             = Output(Bool())
@@ -105,7 +119,7 @@ class branchDecoder extends Module{
 
 
 }
-/*
+
 class uDecoder extends Module{
     /* 
     
@@ -251,11 +265,12 @@ class uDecoder extends Module{
     // next_PC validation //
     ////////////////////////
 
-    // Are any of the instructions inducing a jump to a target address we can compute?
-    when(instruction_0_expected_PC != next_fetch_PC){
-        //redirect
-    }.elsewhen(instruction_1_expected_PC != next_fetch_PC){
-        //redirect
+    when(instruction_0_expected_PC != instruction_1_actual_PC){         // when the expected PC of instruction 0 does not match the actual PC of instruction 1, @@
+        //
+    }
+    
+    .elsewhen(instruction_1_expected_PC != next_fetch_PC){   // when the expected PC of instruction 1 does not match the actual PC of the next fetch packet
+
     }.otherwise{    // All is good...
 
     }
@@ -264,16 +279,10 @@ class uDecoder extends Module{
     // FSM //
     /////////
 
-    // FIXME: this is wrong
-    // Need to use T/NT, uncond, etc...
-    when(instruction_0_expected_PC != next_fetch_PC && instruction_0_is_branch){
-        //redirect
-        next_instruction_valid := 0.B
-    }.elsewhen(instruction_1_expected_PC != next_fetch_PC && instruction_1_is_branch){
-        //redirect
-        next_instruction_valid := 0.B
-    }.elsewhen(is_valid){    // All is good...
-        next_instruction_valid := next_instruction_valid
+    when(/*input instructions are valid*/){
+        next_instruction_valid := /* the wire checking if the next_PC makes sense*/
+    }.elsewhen{
+        next_instruction_valid := next_instruction_valid    // Do nothing (wait till inputs are valid)
     }
 
 
@@ -281,10 +290,32 @@ class uDecoder extends Module{
     // TODO
 
 
+    // perform redirect as needed
+    // TODO
+
     // control RAS as needed
     // TODO
 
 
 }
+```
 
-*/
+
+
+#### Error stacktrace:
+
+```
+scala.collection.LinearSeqOps.apply(LinearSeq.scala:131)
+	scala.collection.LinearSeqOps.apply$(LinearSeq.scala:128)
+	scala.collection.immutable.List.apply(List.scala:79)
+	dotty.tools.dotc.util.Signatures$.countParams(Signatures.scala:501)
+	dotty.tools.dotc.util.Signatures$.applyCallInfo(Signatures.scala:186)
+	dotty.tools.dotc.util.Signatures$.computeSignatureHelp(Signatures.scala:94)
+	dotty.tools.dotc.util.Signatures$.signatureHelp(Signatures.scala:63)
+	scala.meta.internal.pc.MetalsSignatures$.signatures(MetalsSignatures.scala:17)
+	scala.meta.internal.pc.SignatureHelpProvider$.signatureHelp(SignatureHelpProvider.scala:51)
+	scala.meta.internal.pc.ScalaPresentationCompiler.signatureHelp$$anonfun$1(ScalaPresentationCompiler.scala:414)
+```
+#### Short summary: 
+
+java.lang.IndexOutOfBoundsException: 0

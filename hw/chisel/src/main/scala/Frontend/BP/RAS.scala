@@ -49,6 +49,7 @@ class RAS(entires:Int = 128) extends Module{
         // inputs
         val call_addr  = Input(UInt(32.W))
         val call_valid = Input(Bool())
+        val ret_valid  = Input(Bool())
 
         val revert_NEXT     = Input(UInt(nextBits.W))
         val revert_TOS      = Input(UInt(tosBits.W))
@@ -102,7 +103,7 @@ class RAS(entires:Int = 128) extends Module{
     }.elsewhen(io.call_valid == 1.B){   // call (push to stack)
         TOS := NEXT
         NEXT := NEXT + 1.U
-    }.otherwise{ // ret (pop from stack)
+    }.elsewhen(io.ret_valid){ // ret (pop from stack)
         TOS := NOS // move to next entry
     }
 
