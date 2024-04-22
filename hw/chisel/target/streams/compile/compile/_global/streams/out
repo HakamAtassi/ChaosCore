@@ -1,6 +1,4 @@
-[0m[[0m[31merror[0m] [0m[0m/home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/hash_BTB.scala:115:64: type mismatch;[0m
-[0m[[0m[31merror[0m] [0m[0m found   : chisel3.UInt[0m
-[0m[[0m[31merror[0m] [0m[0m required: chisel3.Bool[0m
-[0m[[0m[31merror[0m] [0m[0m    io.BTB_valid := (RegNext(input_tag) === BTB_tag_output) && BTB_valid_output    // Hit signal[0m
-[0m[[0m[31merror[0m] [0m[0m                                                               ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/Frontend/instruction_cache.scala:288:8: Main is already defined as object Main[0m
+[0m[[0m[31merror[0m] [0m[0mobject Main extends App{[0m
+[0m[[0m[31merror[0m] [0m[0m       ^[0m
 [0m[[0m[31merror[0m] [0m[0mone error found[0m

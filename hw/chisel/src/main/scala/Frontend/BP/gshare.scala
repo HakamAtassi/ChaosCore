@@ -40,15 +40,17 @@ class PHT_memory(depth: Int, width: Int) extends Module {
   val io = IO(new Bundle {
     // read port 1 (predict)
     val addrA = Input(UInt(log2Ceil(depth).W))
+    val readDataA = Input(UInt(log2Ceil(depth).W))
 
     // read port 2 (commit)
     val addrB = Input(UInt(log2Ceil(depth).W))
+    val readDataB = Input(UInt(log2Ceil(depth).W))
 
     // write port 1 (commit)
     val addrC = Input(UInt(log2Ceil(depth).W))
-    val writeDataB = Input(UInt(width.W))
-    val writeEnableB = Input(Bool())
-    val readDataB = Output(UInt(width.W))
+    val writeDataC = Input(UInt(width.W))
+    val writeEnableC = Input(Bool())
+    val readDataC = Output(UInt(width.W))
   })
 
 
@@ -57,18 +59,18 @@ class PHT_memory(depth: Int, width: Int) extends Module {
 
 
   // Operations for Port A
-  io.readDataA := mem.read(io.addrA, io.writeEnableA)
+  io.readDataA := mem.read(io.addrA)
 
-  io.readDataB := mem.read(io.addrB, io.writeEnableB)
+  io.readDataB := mem.read(io.addrB)
 
 
   // Operations for Port C
-  when(io.writeEnableB) {
-    mem.write(io.addrB, io.writeDataB)
+  when(io.writeEnableC) {
+    mem.write(io.addrC, io.writeDataC)
   }
 }
 
-class ghsare(GHRBits:Int = 15) extends Module{
+class gshare(GHRBits:Int = 15) extends Module{
     // the ghsare must be addressable by the number of bits in the global history register
 
     val io = IO(new Bundle{
@@ -86,6 +88,7 @@ class ghsare(GHRBits:Int = 15) extends Module{
         val commit_GHR         = Input(UInt(GHRBits.W))
         val commit_PC          = Input(UInt(32.W))
         val commit_valid       = Input(Bool())
+        val commit_branch_direction       = Input(Bool())
         
     })
 
@@ -101,11 +104,11 @@ class ghsare(GHRBits:Int = 15) extends Module{
     val hashed_predict_addr = Wire(UInt(GHRBits.W))
     val hashed_commit_addr = Wire(UInt(GHRBits.W))
 
-    val PHT = PHT_memory(depth=(2<<GHRBits), width=2)
+    val PHT = Module(new PHT_memory(depth=(2<<GHRBits), width=2))
 
 
-    hashed_predict_addr := io.predict_PC(GHRBits-1, 0) ^ prediction_GHR
-    hashed_commit_addr  := io.commit_PC(GHRBits-1, 0) ^ commit_GHR
+    hashed_predict_addr := io.predict_PC(GHRBits-1, 0) ^ io.predict_GHR
+    hashed_commit_addr  := io.commit_PC(GHRBits-1, 0) ^ io.commit_GHR
 
 
     // Read and generate prediction
@@ -121,14 +124,14 @@ class ghsare(GHRBits:Int = 15) extends Module{
 
     // Write updated data
     PHT.io.addrC := RegNext(hashed_commit_addr)
-    PHT.io.writeDataA := commit_state_updated
-    PHT.io.writeEnableA := RegNext(io.commit_valid) 
+    PHT.io.writeDataC := commit_state_updated
+    PHT.io.writeEnableC := RegNext(io.commit_valid) 
 
     /////////
     // FSM // 
     /////////
 
-    when(RegNext(io.commit_branch_direction) == 1.U){
+    when(RegNext(io.commit_branch_direction) === 1.U){
         when(commit_state < 3.U){
             commit_state_updated := commit_state + 1.U
         }.otherwise{
@@ -138,7 +141,7 @@ class ghsare(GHRBits:Int = 15) extends Module{
         when(commit_state > 0.U){
             commit_state_updated := commit_state - 1.U
         }.otherwise{
-            commit_State_updated := commit_state
+            commit_state_updated := commit_state
         }
     }
 

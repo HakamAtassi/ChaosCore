@@ -51,11 +51,11 @@ class PC_FSM extends Module{
 
     when(io.increment){
         when(PC_aligned){
-            io.PC_next := io.PC + 8 // if PC is aligned, increment to next aligned address
+            io.PC_next := io.PC + 8.U // if PC is aligned, increment to next aligned address
         }.otherwise{
-            io.PC_next := io.PC + 4 // if PC is not aligned, incrementing by 4 re-alignes it
+            io.PC_next := io.PC + 4.U // if PC is not aligned, incrementing by 4 re-alignes it
         }
-    }.elsewhen{
+    }.otherwise{
         io.PC_next := io.PC
     }
 

@@ -285,7 +285,6 @@ class L1_instruction_cache(ways:Int=2, sets:Int = 64, blockSizeBytes:Int = 64) e
 
 }
 
-/*
 object Main extends App{
 
     var L1_cache_mem = ChiselStage.emitSystemVerilog(gen=new L1_instruction_cache(ways=2, sets=64, blockSizeBytes=32), firtoolOpts=Array("-disable-all-randomization", "-strip-debug-info"))
@@ -303,5 +302,3 @@ object Main extends App{
     }
 
 }
-
-*/
