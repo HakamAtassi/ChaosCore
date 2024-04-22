@@ -124,7 +124,7 @@ class hash_BTB(entries:Int = 4096) extends Module{
 }
 
 
-
+/*
 object Main extends App{
 
     var hash_BTB = ChiselStage.emitSystemVerilog(gen=new hash_BTB(entries=4096), firtoolOpts=Array("-disable-all-randomization", "-strip-debug-info"))
@@ -143,3 +143,4 @@ object Main extends App{
 
 }
 
+*/

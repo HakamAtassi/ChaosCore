@@ -35,6 +35,8 @@ import java.io.{File, FileWriter}
 import java.rmi.server.UID
 
 
+// Call Ret latency of this module needs to be fixed.
+/*
 class RAS(entires:Int = 128) extends Module{
 
     // FIXME: are these correct??
@@ -108,3 +110,4 @@ class RAS(entires:Int = 128) extends Module{
     }
 
 }
+*/

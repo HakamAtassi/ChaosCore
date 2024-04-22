@@ -1,3 +1,21 @@
+file://<WORKSPACE>/hw/chisel/src/main/scala/Frontend/next_pc_selector.scala
+### java.lang.IndexOutOfBoundsException: 0
+
+occurred in the presentation compiler.
+
+presentation compiler configuration:
+Scala version: 3.3.1
+Classpath:
+<WORKSPACE>/.scala-build/ChaosCore_bd2c96d2de/classes/main [exists ], <HOME>/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala3-library_3/3.3.1/scala3-library_3-3.3.1.jar [exists ], <HOME>/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala-library/2.13.10/scala-library-2.13.10.jar [exists ], <HOME>/.cache/coursier/v1/https/repo1.maven.org/maven2/com/sourcegraph/semanticdb-javac/0.7.4/semanticdb-javac-0.7.4.jar [exists ]
+Options:
+-Xsemanticdb -sourceroot <WORKSPACE> -release 17
+
+
+action parameters:
+offset: 3791
+uri: file://<WORKSPACE>/hw/chisel/src/main/scala/Frontend/next_pc_selector.scala
+text:
+```scala
 /* ------------------------------------------------------------------------------------
 * Filename: next_PC_selector.scala
 * Author: Hakam Atassi
@@ -46,7 +64,7 @@ class next_pc_selector extends Module{
         val redirect      = Input(Bool())   // redirect from uDecoder
 
         val BTB_hit       = Input(Bool())   // BTB hit from BTB
-        val BTB_T_NT      = Input(Bool())   // T_NT from PHT
+        val PHT_T_NT      = Input(Bool())   // T_NT from PHT
         val BTB_type      = Input(UInt(2.W))   // branch type from BTB
 
         // possible PCs
@@ -76,22 +94,44 @@ class next_pc_selector extends Module{
     // Will not be aware that the instruction is a RET until it is decoded 1 cycle later. When that happens, 
     // The uDecoder will request a redirect to the RAS address (which will be the RAS TOS)
 
-    val BTB_conditional = io.BTB_type(1)
+    val BTB_jump = io.BTB_type(1)
     val BTB_ret         = io.BTB_type(0)
 
     
-    when(exception){
-        PC := exception_PC
-    }.elsewhen(misprediction){
-        PC := misprediction_PC
-    }.elsewhen(redirect){
-        PC := redirect_PC
-    }.elsewhen((BTB_hit && BTB_conditional && BTB_T_NT) || (BTB_hit && BTB_jump)){   
-        PC := BTB_target
-    }.elsewhen(BTB_hit && BTB_ret){
-        PC := RAS_PC
+    when(io.exception){
+        io.PC := io.exception_PC
+    }.elsewhen(io.misprediction){
+        io.PC := io.misprediction_PC
+    }.elsewhen(io.redirect){
+        io.PC := io.redirect_PC
+    }.elsewhen((io.BTB_hit && io.PHT_T_NT) || (io.BTB_hit && BTB_jump)){   
+        // BTB only stores taken branches. So, if hit and taken, @@
+        io.PC := io.BTB_target
+    }.elsewhen(io.BTB_hit && BTB_ret){
+        io.PC := io.RAS_PC
     }.otherwise{
-        PC := incremented_PC
+        io.PC := io.incremented_PC
     }
         
 }
+```
+
+
+
+#### Error stacktrace:
+
+```
+scala.collection.LinearSeqOps.apply(LinearSeq.scala:131)
+	scala.collection.LinearSeqOps.apply$(LinearSeq.scala:128)
+	scala.collection.immutable.List.apply(List.scala:79)
+	dotty.tools.dotc.util.Signatures$.countParams(Signatures.scala:501)
+	dotty.tools.dotc.util.Signatures$.applyCallInfo(Signatures.scala:186)
+	dotty.tools.dotc.util.Signatures$.computeSignatureHelp(Signatures.scala:94)
+	dotty.tools.dotc.util.Signatures$.signatureHelp(Signatures.scala:63)
+	scala.meta.internal.pc.MetalsSignatures$.signatures(MetalsSignatures.scala:17)
+	scala.meta.internal.pc.SignatureHelpProvider$.signatureHelp(SignatureHelpProvider.scala:51)
+	scala.meta.internal.pc.ScalaPresentationCompiler.signatureHelp$$anonfun$1(ScalaPresentationCompiler.scala:414)
+```
+#### Short summary: 
+
+java.lang.IndexOutOfBoundsException: 0
