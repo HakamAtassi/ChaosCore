@@ -36,7 +36,6 @@ import java.rmi.server.UID
 
 
 // Call Ret latency of this module needs to be fixed.
-/*
 class RAS(entires:Int = 128) extends Module{
 
     // FIXME: are these correct??
@@ -98,7 +97,6 @@ class RAS(entires:Int = 128) extends Module{
     // assign next-on-stack
     NOS := RAS_memory.io.data_out(32+nosBits, 32)    
 
-
     when(io.revert_valid == 1.B){   // revert (misprediction)
         NEXT := io.revert_NEXT
         TOS  := io.revert_TOS
@@ -110,4 +108,3 @@ class RAS(entires:Int = 128) extends Module{
     }
 
 }
-*/

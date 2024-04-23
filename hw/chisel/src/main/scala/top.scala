@@ -1,8 +1,8 @@
 /* ------------------------------------------------------------------------------------
-* Filename: bundles.scala
+* Filename: top.scala
 * Author: Hakam Atassi
 * Date: Apr 23 2024
-* Description: useful data channels for use throughout the BP
+* Description: The ChaosCore Top level
 * License: MIT
 *
 * Copyright (c) 2024 by Hakam Atassi
@@ -34,30 +34,26 @@ import java.io.{File, FileWriter}
 import java.rmi.server.UID
 
 
-class fetch_packet(width:Int = 4) extends Bundle{
-    val fetch_PC        = UInt(32.W)
-    val instructions    = Vec(width, UInt(32.W))
-    val valid_bits      = Vec(width, Bool())
+// TODO: Add parameters file and use it to configure all the modules...
+
+
+object VerilogGenerator {
+
+    def generateVerilog(module: => RawModule, fileName: String): Unit = {
+        val elaboratedModule = ChiselStage.emitSystemVerilog(module, firtoolOpts = Array("-disable-all-randomization", "-strip-debug-info"))
+
+        val file = new File(fileName)
+        val fw = new FileWriter(file)
+
+        try {
+            fw.write(elaboratedModule)
+        } finally {
+            fw.close()
+        }
+    }
 }
 
-
-class BTB_resp(GHR_width:Int=16, width:Int=4) extends Bundle{  // Width agnostic
-    val hit     = Bool()
-    val idx     = UInt(width.W)
-    val T_NT    = Bool()
-    val RAS     = UInt(32.W)
-    val target  = UInt(32.W)
-    val GHR     = UInt(GHR_width.W)
-}
-
-class metadata extends Bundle{
-    val JAL             = Bool()
-    val JALR            = Bool()
-    val BR              = Bool()
-    val Call            = Bool()
-    val Ret             = Bool()
-    val Imm             = UInt(32.W)
-    val instruction_PC  = UInt(32.W)
-    val RAS             = UInt(32.W)
-    val BTB_target      = UInt(32.W)
+object Main extends App {
+    VerilogGenerator.generateVerilog(new L1_instruction_cache(fetchWidth=2, ways = 2, sets = 64, blockSizeBytes = 32), "../verilog/Frontend/instruction_cache.v")
+    VerilogGenerator.generateVerilog(new decode_validate(width=4), "../verilog/Frontend/BP/decode_validate.v")
 }
