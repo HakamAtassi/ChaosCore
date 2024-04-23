@@ -36,24 +36,17 @@ import java.rmi.server.UID
 class branch_decoder(index:Int=0) extends Module{
 
     val io = IO(new Bundle{
-        val fetch_PC          = Input(UInt(32.W))
+        val fetch_PC    = Input(UInt(32.W)) // PC of the fetch packet
 
         val instruction = Input(UInt(32.W))
         val valid       = Input(Bool())
         
-        //TODO:  Combine these into a channel
-        val BTB_hit     = Input(Bool()) 
-        val BTB_idx     = Input(Bool())
-        val BTB_T_NT    = Input(Bool())
-        val BTB_RAS     = Input(UInt(32.W))
-        val BTB_target  = Input(UInt(32.W))
-
-        val BTB_T_NT    = Input(Bool())
+        val BTB_resp    = Input(new BTB_resp())
 
         val T_NT        = Output(Bool())
 
         val metadata    = Output(new metadata())
-        val PC_pred     = Output(UInt(32.W))
+        val PC          = Output(UInt(32.W))        // PC of the actual instruction
 
     })
 
@@ -61,7 +54,7 @@ class branch_decoder(index:Int=0) extends Module{
     val opcode = io.instruction(6, 0)
     val RS1 = io.instruction(19, 15)
     val RD = io.instruction(11, 7)
-    val imm = Wire(SInt(32.W))
+    val imm = Wire(UInt(32.W))
 
     val JAL     = (opcode === "b1101111".U)     // Always taken if valid    
     val JALR    = (opcode === "b1100111".U)     // Only taken if Ret || BTB has target
@@ -74,6 +67,7 @@ class branch_decoder(index:Int=0) extends Module{
     val fetch_PC_adjusted = Wire(UInt(32.W))
 
     fetch_PC_adjusted := io.fetch_PC + (index*4).U
+    io.PC   := fetch_PC_adjusted
 
     // JALR and BR are sort of opposite instructions, because JALR is always taken but needs to get its address from a buffer somewhere.
     // BR has its address available in the instruction encoding, but depends on both PHT for T_NT prediction and BTB for dominant index. 
@@ -82,13 +76,13 @@ class branch_decoder(index:Int=0) extends Module{
 
     // Assign imm
     when (BR) {
-        imm := Cat(io.instruction(31), io.instruction(7), io.instruction(30, 25), io.instruction(11, 8)).asSInt
+        imm := Cat(io.instruction(31), io.instruction(7), io.instruction(30, 25), io.instruction(11, 8)).asSInt.asUInt
     }.elsewhen (JAL) {
-        imm := Cat(io.instruction(31), io.instruction(19, 12), io.instruction(20), io.instruction(30, 21)).asSInt
+        imm := Cat(io.instruction(31), io.instruction(19, 12), io.instruction(20), io.instruction(30, 21)).asSInt.asUInt
     }.elsewhen (JALR) {
-        imm := io.instruction(31, 20).asSInt
+        imm := io.instruction(31, 20).asSInt.asUInt
     }.otherwise {
-        imm := 0.S
+        imm := 0.U
     }
 
     
@@ -102,9 +96,9 @@ class branch_decoder(index:Int=0) extends Module{
     when (JAL) {
         io.T_NT := io.valid // JAL addr == PC+imm. dir is always 1. Therefore, taken if valid (everything available).
     }.elsewhen (JALR) {
-        io.T_NT := io.valid && (Ret || (io.BTB_hit && io.BTB_idx))  // Direction is always 1. Address is hit or miss. Only taken if addr is available.
+        io.T_NT := io.valid && (Ret || (io.BTB_resp.hit && io.BTB_resp.idx(index)))  // Direction is always 1. Address is hit or miss. Only taken if addr is available.
     }.elsewhen (BR) {
-        io.T_NT := io.valid && io.BTB_idx  // Address is PC + Imm. Only taken if PHT is 1. However,
+        io.T_NT := io.valid && io.BTB_resp.idx(index)  // Address is PC + Imm. Only taken if PHT is 1. However,
         // BR also depends on BTB idx since, unlike JAL and JALR, where priority can be easily arbitrated based on what comes first,
         // Branches may or may not be taken. Therefore, for the branch to be taken, it must also be the dominant one (where as with JAL, the first one is the dominant one).
     }.otherwise {
@@ -113,13 +107,16 @@ class branch_decoder(index:Int=0) extends Module{
 
 
     // Assign metadata
-    io.metadata.JAL             :=  // 
-    io.metadata.JALR            :=  //
-    io.metadata.BR              :=  //
-    io.metadata.Call            :=  //
-    io.metadata.Ret             :=  //
-    io.metadata.Imm             :=  //
-    io.metadata.instruction_PC  :=  //
-    io.metadata.RAS             :=  //
+    io.metadata.JAL             :=  JAL 
+    io.metadata.JALR            :=  JALR
+    io.metadata.BR              :=  BR
+    io.metadata.Call            :=  Call
+    io.metadata.Ret             :=  Ret
+    io.metadata.Imm             :=  imm
+    io.metadata.instruction_PC  :=  fetch_PC_adjusted
+    io.metadata.RAS             :=  io.BTB_resp.RAS
+    io.metadata.BTB_target      :=  io.BTB_resp.target
+
+
 
 }
