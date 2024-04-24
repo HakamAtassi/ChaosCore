@@ -46,7 +46,6 @@ class branch_decoder(index:Int=0) extends Module{
         val T_NT        = Output(Bool())
 
         val metadata    = Output(new metadata())
-        val PC          = Output(UInt(32.W))        // PC of the actual instruction
 
     })
 
@@ -65,9 +64,7 @@ class branch_decoder(index:Int=0) extends Module{
     val Ret = (JALR && RS1 === 1.U && imm === 0.U)               // JALR with RS1 = x1 & imm = 0
 
     val fetch_PC_adjusted = Wire(UInt(32.W))
-
     fetch_PC_adjusted := io.fetch_PC + (index*4).U
-    io.PC   := fetch_PC_adjusted
 
     // JALR and BR are sort of opposite instructions, because JALR is always taken but needs to get its address from a buffer somewhere.
     // BR has its address available in the instruction encoding, but depends on both PHT for T_NT prediction and BTB for dominant index. 
