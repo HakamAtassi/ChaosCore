@@ -95,10 +95,11 @@ class L1_instruction_cache(fetchWidth:Int=4, ways:Int=2, sets:Int = 64, blockSiz
     val io = IO(new Bundle{
         val cpu_addr           =     Flipped(Decoupled(UInt(32.W)))               // inputs from CPU
         val dram_data          =     Flipped(Decoupled(UInt(dataSizeBits.W)))     // inputs from DRAM
+        val kill               =     Input(UInt(1.W))                             // Kill in progress request(s) 
+                                                                                  // FIXME: this should be a bool
 
         // Outputs
         val cache_data         =     Output(new fetch_packet(width=fetchWidth))
-
 
         val cache_addr         =     Decoupled(UInt(32.W))                        // outputs to DRAM
     })
@@ -167,7 +168,7 @@ class L1_instruction_cache(fetchWidth:Int=4, ways:Int=2, sets:Int = 64, blockSiz
             replay_addr := io.cpu_addr.bits
             replay_tag := io.cpu_addr.bits(31, 31-tagBits+1)
             io.dram_data.ready := 0.U   // cache not ready for data from DRAM in active state
-            when(miss===1.B){           // Buffer current request, stall cache, go to wait state
+            when((miss===1.B) && (io.kill === 0.U)){           // Buffer current request, stall cache, go to wait state
                 // Request data from DRAM
                 cache_state := cacheState.Allocate
                 io.cache_addr.bits  := replay_addr
@@ -179,7 +180,9 @@ class L1_instruction_cache(fetchWidth:Int=4, ways:Int=2, sets:Int = 64, blockSiz
             io.cache_addr.bits  := 0.U      // Only Request once...
             io.cache_addr.valid := 0.U      // ...
             io.dram_data.ready  := 1.U      // Ready to accept DRAM data
-            when(io.dram_data.valid===1.U){ // Data received
+            when(io.kill === 1.U){
+                cache_state := cacheState.Active    // Ignore miss, go back to active.
+            }.elsewhen(io.dram_data.valid===1.U){ // Data received
                 replay_valid        := 1.U  // Perform replay of cache miss
                 io.dram_data.ready  := 0.U  // Data received; no longer ready
                 cache_state := cacheState.Replay    // Allow cycle for cache replay
@@ -250,7 +253,7 @@ class L1_instruction_cache(fetchWidth:Int=4, ways:Int=2, sets:Int = 64, blockSiz
     hit_oh := hit_oh_vec.reverse.reduce(_ ## _)
 
 
-    hit     := hit_oh.orR & (RegNext(io.cpu_addr.valid) | RegNext(replay_valid))
+    hit     := (hit_oh.orR & (RegNext(io.cpu_addr.valid) | RegNext(replay_valid)))
     miss    := (~hit_oh.orR) & (RegNext(io.cpu_addr.valid) | RegNext(replay_valid))
 
 
@@ -259,7 +262,7 @@ class L1_instruction_cache(fetchWidth:Int=4, ways:Int=2, sets:Int = 64, blockSiz
     // Fetch Packet Selecting & Output //
     /////////////////////////////////////
 
-    packet_index := RegNext(current_addr_fetch_packet)  // FIXME: can be unaligned. Add aligned version of it.
+    packet_index := RegNext(current_addr_fetch_packet)  
     aligned_packet_index := packet_index & ~(fetchWidth.U * 4.U -1.U)
 
     hit_instruction_data := 0.U         // Get instruction vector of the hit way (if any)
@@ -281,9 +284,28 @@ class L1_instruction_cache(fetchWidth:Int=4, ways:Int=2, sets:Int = 64, blockSiz
     validator.io.instruction_index := current_addr_instruction_offset
 
     for(i <- 0 until fetchWidth){
-         io.cache_data.valid_bits(i):= validator.io.instruction_output(fetchWidth-1-i)
+         io.cache_data.valid_bits(i):= validator.io.instruction_output(fetchWidth-1-i) && hit && (io.kill === 0.U)  // only valid if not hit
     }
 
     io.cache_data.fetch_PC := fetch_PC_buf
 
+    // Kill handling
+    // Kills essentially mean that a redirect or similar is taking place. Any in-progress computations/reads/writes/etc and invalidated after a kill
+    // However, transactions are defined by internal state and output.
+    // So, any input is still processed. If a module is connected to a fifo on its input, the fifo is responsible for invalidating its output during a kill.
+    // The cache is responsible for invalidating any in progress reads and invalidating current outputs.
+
+    // If output is valid but kill is requested: invalidate output
+    // If fetch in progress but kill is requested: kill in progress request, go back to active
+    // The above can happen at the same time in any combination...
+
+
+    // when kill is high, current input should not be high...
+    // This leaves 2 possible cases:
+    // Either previous input resulted in a high output, which is invalid if kill is high.
+    // Or a previous input resulted in the current state to be "allocate" or is about to go into allocate (miss)
+    
+
+    // So, output is invalid if kill is high
+    // Or revert state/do send to active on kill
 }

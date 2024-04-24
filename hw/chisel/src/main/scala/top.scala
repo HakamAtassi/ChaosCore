@@ -54,6 +54,6 @@ object VerilogGenerator {
 }
 
 object Main extends App {
-    VerilogGenerator.generateVerilog(new L1_instruction_cache(fetchWidth=2, ways = 2, sets = 64, blockSizeBytes = 32), "../verilog/Frontend/instruction_cache.v")
+    VerilogGenerator.generateVerilog(new L1_instruction_cache(fetchWidth=4, ways = 2, sets = 64, blockSizeBytes = 32), "../verilog/Frontend/instruction_cache.v")
     VerilogGenerator.generateVerilog(new decode_validate(width=4), "../verilog/Frontend/BP/decode_validate.v")
 }

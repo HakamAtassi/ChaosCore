@@ -35,10 +35,8 @@ import java.io.{File, FileWriter}
 import java.rmi.server.UID
 
 
-// Call Ret latency of this module needs to be fixed.
 class RAS(entires:Int = 128) extends Module{
 
-    // FIXME: are these correct??
     val nextBits = log2Ceil(entires)
     val tosBits  = log2Ceil(entires)
     val nosBits  = log2Ceil(entires)
@@ -48,9 +46,9 @@ class RAS(entires:Int = 128) extends Module{
     val io = IO(new Bundle{
 
         // inputs
-        val call_addr  = Input(UInt(32.W))
-        val call_valid = Input(Bool())
-        val ret_valid  = Input(Bool())
+        val wr_addr  = Input(UInt(32.W))    // Call
+        val wr_valid = Input(Bool())        // Call addr
+        val rd_valid = Input(Bool())        // Ret
 
         val revert_NEXT     = Input(UInt(nextBits.W))
         val revert_TOS      = Input(UInt(tosBits.W))
@@ -80,31 +78,49 @@ class RAS(entires:Int = 128) extends Module{
 
 
     val NEXT    = RegInit(UInt(nextBits.W), 0.U)
-    val TOS     = RegInit(UInt(nextBits.W), 0.U)
-    val NOS     = Wire(UInt(nextBits.W))
+    val TOS     = RegInit(UInt(tosBits.W), 0.U)
+    val NOS     = Wire(UInt(nosBits.W))
 
-    val RAS_memory = SDPReadWriteSmem(depth=entires, width=entryWidth)
+    val tos_wr      = Wire(Bool())
+    val tos_fwd     = Wire(UInt(tosBits.W))
+    val tos_mux_out = Wire(UInt(tosBits.W))
+
+    val RAS_memory = Module(new SDPReadWriteSmem(depth=entires, width=entryWidth))
+
+    // write to TOS
+    when(io.revert_valid === 1.B){   // revert (misprediction)
+        tos_mux_out  := io.revert_TOS
+    }.elsewhen(io.wr_valid === 1.B){   // call (push to stack)
+        tos_mux_out := NEXT
+    }.elsewhen(io.rd_valid){ // ret (pop from stack)
+        tos_mux_out := NOS // move to next entry
+    }.otherwise{
+        tos_mux_out := TOS
+    }
+    
+    // for TOS forwarding
+    tos_wr  := io.revert_valid || io.wr_valid || io.rd_valid
+    tos_fwd := tos_mux_out  // forward write
+    TOS := tos_mux_out  // 1 cycle delay
 
     // Read port
-    RAS_memory.io.rd_addr := TOS
-    io.ret_addr := data_out(31,0)
+    RAS_memory.io.rd_addr := Mux(tos_wr ,TOS, tos_fwd)  // when TOS is being updated, forward its value to the read port such that dout is ready next cycle
+    io.ret_addr := RAS_memory.io.data_out(31,0)
 
     // Write port
     RAS_memory.io.wr_addr := NEXT
-    RAS_memory.io.wr_data := Cat(io.call_addr, TOS) // each RAS entry contains the address and a link to the next entry on the stack
-    RAS_memory.io.wr_en   := io.call & io.call_valid
+    RAS_memory.io.data_in := Cat(io.wr_addr, TOS) // each RAS entry contains the address and a link to the next entry on the stack
+    RAS_memory.io.wr_en   := io.wr_valid
 
     // assign next-on-stack
     NOS := RAS_memory.io.data_out(32+nosBits, 32)    
 
-    when(io.revert_valid == 1.B){   // revert (misprediction)
+    when(io.revert_valid === 1.B){        // revert (misprediction)
         NEXT := io.revert_NEXT
-        TOS  := io.revert_TOS
-    }.elsewhen(io.call_valid == 1.B){   // call (push to stack)
-        TOS := NEXT
+    }.elsewhen(io.wr_valid === 1.B){   // call (push to stack)
         NEXT := NEXT + 1.U
-    }.elsewhen(io.ret_valid){ // ret (pop from stack)
-        TOS := NOS // move to next entry
-    }
+    }.otherwise{
+        NEXT := NEXT // move to next entry
+    }   // Reads do not affect NEXT by design
 
 }
