@@ -6,8 +6,27 @@ from utils import *
 #sys.path.append('models/genericLRU/')
 
 class genericCacheLine:
-    def __init__(self, byteSize):
-        self.cacheLine = bytearray(byteSize)
+    def __init__(self, blockSize, data=0x0):
+        self.cacheLine = bytearray(blockSize)
+        self.blockSize = blockSize
+        
+        # Initialize the cache line with the provided data
+        # Convert data to a bytearray
+        # Ensure that the size of the data is valid
+        if isinstance(data, int):
+            # Convert the integer to bytes (big-endian representation) with the length equal to blockSize
+            data_bytes = data.to_bytes(self.blockSize, byteorder='big', signed=False)
+        elif isinstance(data, (bytes, bytearray)):
+            data_bytes = data
+        else:
+            raise ValueError("Invalid data type. Data must be an int, bytes, or bytearray.")
+        
+        # Check if the length of the provided data is within blockSize
+        if len(data_bytes) > blockSize:
+            raise ValueError(f"Data length exceeds blockSize of {blockSize}")
+        
+        # Copy data to the cache line
+        self.cacheLine[:len(data_bytes)] = data_bytes
 
     def read(self, byteOffset, bytes, split=None):
         # read data from byteAddress up until byteAddress+size, not inclusive
@@ -29,11 +48,17 @@ class genericCacheLine:
     def write(self, byteOffset, bytes, data):
         # replace the data from byteAddress up until byteAddress+size with "data", not inclusive
         # Ensure the given parameters are valid
-        assert len(data) == bytes, "Data size must match the size parameter"
-        assert byteOffset+ bytes <= len(self.cacheLine), "Write out of bounds"
-
         # Replace the data in the cache line with the provided data
         self.cacheLine[byteOffset:byteOffset + bytes] = data
+
+    def print(self):
+        # print data in groups of 4 bytes
+        for word in range(self.blockSize//4):
+            for byte in range(4):
+                print(f"{self.cacheLine[word * 4 + byte]:02x}", end=" ")
+
+
+            
 
 
 class genericCacheWay():
@@ -81,16 +106,33 @@ class genericCacheWay():
             return (1, None)
         return (0, None)
 
+    def allocate(self, address, data):
+        set = getSet(address, sets=self.sets, blockSize=self.blockSize)
+        tag = getTag(address, sets=self.sets, blockSize=self.blockSize)
+
+        wayLine = self.way[set]
+
+        wayLine['data'] = data
+        wayLine['valid'] = 1
+        wayLine['tag'] = tag
+
+    def print(self):
+        for set in range(self.sets):
+            print(f"Set: {set:2} | ", end=" ")
+            self.way[set]["data"].print()
+            print("")
+
 
 class LRU():
     # a class for the LRU memory
     # on a hit (after read or write access), set the way bit to 1
     # if all bits are 1, reset and only set hit way to 1
     # Otherwise, do nothing
-    def __init__(self, sets, ways):
+    def __init__(self, sets, ways, blockSize):
         # Initialize LRU bit vectors for each set
         self.sets = sets
         self.ways = ways
+        self.blockSize = blockSize
         self.LRU = [[0b0] * ways for _ in range(sets)]
 
     def allLRUHigh(self, lru_entry):
@@ -98,7 +140,7 @@ class LRU():
         return all(bit == 0b1 for bit in lru_entry)
 
     def update(self, address, way):
-        setIndex = getSet(address)
+        setIndex = getSet(address, sets=self.sets, blockSize=self.blockSize)
         LRUEntry = self.LRU[setIndex]
         LRUEntry[way] = 0b1
 
@@ -109,7 +151,7 @@ class LRU():
             self.LRU[setIndex] = LRUEntry
 
     def getAllocateWay(self, address):
-        setIndex = getSet(address)
+        setIndex = getSet(address, sets=self.sets, blockSize=self.blockSize)
         for way in range(self.ways):
             if(self.LRU[setIndex][way]==0b0):
                 return way
@@ -121,7 +163,7 @@ class genericCache():
         self.ways = ways
         self.sets = sets
         self.blockSize = blockSize
-        self.evictionPolicy = evictionPolicy
+        self.evictionPolicy = evictionPolicy(sets, ways, blockSize)
 
     def updateState(self, address, hitWay):
         # update the of the cache ways as needed. 
@@ -148,7 +190,7 @@ class genericCache():
         hit, hitWay = self.search(address)  # find which way to request read from
         if(hit == 1):
             self.updateState(address, hitWay)
-            return self.cacheWays[hitWay].read(address, bytes)  # perform read to only hit way
+            return (1, self.cacheWays[hitWay].read(address, bytes))  # perform read to only hit way
         else:
             return (0, None)
 
@@ -157,8 +199,7 @@ class genericCache():
         # Pick allocate way
         # Write to way
         allocateWay = self.evictionPolicy.getAllocateWay(address)
-        setIndex = getSet(address)
-        self.cacheWays[allocateWay][setIndex] = data    # data should be of type generic cache line
+        self.cacheWays[allocateWay].allocate(address, data)
 
     def write(self, address, bytes, data):   # for a write from the cpu or similar
         # search cache for way
@@ -172,10 +213,17 @@ class genericCache():
             return self.cacheWays[hitWay].write(address, bytes, data)  # perform read to only hit way
         else:
             return (0, None)
+        
+    def printCache(self):
+        for way in range(self.ways):
+            print(f"\n\n=======\nWay {way} \n=======\n\n")
+            self.cacheWays[way].print()
 
 
 if __name__ == "__main__":
     print("Running genericLRU")
     cache = genericCache(sets=64, ways=2, blockSize=32, evictionPolicy=LRU)
-    print(cache.read(address=0x0, bytes=0x0))
-    
+    cacheLine=genericCacheLine(blockSize=32, data=bytearray.fromhex("deadbeef"))
+    cache.allocate(address=0x0, data=cacheLine)
+
+    cache.printCache()

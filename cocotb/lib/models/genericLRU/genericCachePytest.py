@@ -20,7 +20,7 @@ def test_cache_read(cache):
     cache.write(address, len(data_to_write), data_to_write)
     
     # Perform a read from the cache
-    hit, way_index, read_data = cache.read(address, 8)
+    hit, read_data = cache.read(address, 8)
     
     # Check that the read was a hit
     assert hit == True
