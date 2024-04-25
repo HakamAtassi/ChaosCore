@@ -41,7 +41,29 @@ object latchExpectedPC extends ChiselEnum{
 object validate_packet extends ChiselEnum{
     val packet_invalid, packet_valid = Value
 }
+class decoder_validator(fetchWidth: Int = 4) extends Module {
+  val io = IO(new Bundle {
+    val instruction_T_NT_mask = Input(UInt(fetchWidth.W))
+    val instruction_validity = Output(UInt(fetchWidth.W))
+  })
 
+  // Define LUTs for different fetchWidth sizes
+  val lut4 = VecInit(Seq(
+    "b0001".U(fetchWidth.W),
+    "b0011".U(fetchWidth.W),
+    "b0111".U(fetchWidth.W),
+    "b1111".U(fetchWidth.W)
+  ))
+
+  val lut2 = VecInit(Seq(
+    "b10".U(fetchWidth.W),   // Validity mask for pattern 01 -> 01
+    "b11".U(fetchWidth.W)  // Validity mask for pattern 10 -> 10
+  ))
+
+  val lut = if (fetchWidth == 4) lut4 else lut2
+
+  io.instruction_validity := lut(PriorityEncoder(io.instruction_T_NT_mask))
+}
 
 class decode_validate(width:Int = 4) extends Module{
 
@@ -153,13 +175,15 @@ class decode_validate(width:Int = 4) extends Module{
 
     // FSM 2
     // When a comparison takes place and the PCs match, output packet on the next cycle. 
-    val FSM2_state = RegInit(validate_packet(), validate_packet.packet_valid)
+    val FSM2_state = RegInit(validate_packet(), validate_packet.packet_invalid)
 
     val PC_mismatch = Wire(Bool())
     val PC_match = Wire(Bool())
 
     PC_match    := (PC_expected === io.fetch_packet.fetch_PC) && io.input_valid
     PC_mismatch := (PC_expected =/= io.fetch_packet.fetch_PC) && io.input_valid
+
+    dontTouch(PC_match)
 
     switch(FSM2_state){
         is(validate_packet.packet_invalid){
@@ -168,7 +192,7 @@ class decode_validate(width:Int = 4) extends Module{
             }
         }
         is(validate_packet.packet_valid){
-            when(PC_match){
+            when(PC_mismatch){
                 FSM2_state := validate_packet.packet_invalid
             }
         }
@@ -212,28 +236,45 @@ class decode_validate(width:Int = 4) extends Module{
 
     // validate instructions
 
-    // Set all valid bits to 0.
-    for(i <- 0 until width){
-        io.final_fetch_packet.valid_bits(i) := 0.B
-    }
-
     // "validator"
     // iterate and valid as you go along.
     val validate_flag = Wire(Bool())
     validate_flag := 1.B
+
+    val T_NT_mask = decoder_T_NT.asUInt
+
+
+    val decoder_validator = Module(new decoder_validator(fetchWidth=width))
+    decoder_validator.io.instruction_T_NT_mask := T_NT_mask
+
     for(i <- 0 until width){
-        when(validate_flag && io.fetch_packet.valid_bits(i) && packet_valid){  // instructions are valid if no previous taken branch, was valid on input, and the packet as a whole is valid
+        io.final_fetch_packet.instructions(i) := RegNext(io.fetch_packet.instructions(i))    // pass along actual instruction
+        io.final_fetch_packet.valid_bits(i) := RegNext(decoder_validator.io.instruction_validity(i)) && packet_valid
+    }
+
+
+
+
+
+    /*
+    for(i <- 0 until width){
+        when(validate_flag && RegNext(io.fetch_packet.valid_bits(i)) && packet_valid){  // instructions are valid if no previous taken branch, was valid on input, and the packet as a whole is valid
             io.final_fetch_packet.valid_bits(i) := 1.B  // validate on output
+        }.otherwise{
+            io.final_fetch_packet.valid_bits(i) := 0.B
         }
         when(decoder_T_NT(i) === 1.B){  // all instructions after taken branch are invalid
             validate_flag := 0.B    // branch occurred. All following branches invalid.
         }
 
-        io.final_fetch_packet.instructions(i) := io.fetch_packet.instructions(i)    // pass along actual instruction
+        io.final_fetch_packet.instructions(i) := RegNext(io.fetch_packet.instructions(i))    // pass along actual instruction
     }
+    */
+
+
+
+
     io.final_fetch_packet.fetch_PC := io.fetch_packet.fetch_PC  // Pass along fetch PC
-
-
     // RAS Control //
     io.call_valid := metadata_out.Call
     io.call_addr := metadata_out.instruction_PC // PC of the actual instruction, not fetch_PC

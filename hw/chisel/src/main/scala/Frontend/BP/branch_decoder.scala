@@ -73,11 +73,11 @@ class branch_decoder(index:Int=0) extends Module{
 
     // Assign imm
     when (BR) {
-        imm := Cat(io.instruction(31), io.instruction(7), io.instruction(30, 25), io.instruction(11, 8)).asSInt.asUInt
+        imm := Cat(io.instruction(31), io.instruction(7), io.instruction(30, 25), io.instruction(11, 8), 0.U(1.W)).asSInt.asUInt
     }.elsewhen (JAL) {
-        imm := Cat(io.instruction(31), io.instruction(19, 12), io.instruction(20), io.instruction(30, 21)).asSInt.asUInt
+        imm := Cat(io.instruction(31), io.instruction(19, 12), io.instruction(20), io.instruction(30, 21), 0.U(1.W)).asSInt.asUInt
     }.elsewhen (JALR) {
-        imm := io.instruction(31, 20).asSInt.asUInt
+        imm := (io.instruction(31, 20).asSInt).asSInt.asUInt
     }.otherwise {
         imm := 0.U
     }

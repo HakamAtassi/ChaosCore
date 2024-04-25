@@ -24,20 +24,22 @@ module branch_decoder(
   wire        JALR = io_instruction[6:0] == 7'h67;
   wire        BR = io_instruction[6:0] == 7'h63;
   wire        _Call_T_2 = io_instruction[11:7] == 5'h1;
-  wire        Ret = JALR & io_instruction[19:15] == 5'h1 & imm[19:0] == 20'h0;
+  wire        Ret = JALR & io_instruction[19:15] == 5'h1 & imm[20:0] == 21'h0;
   assign imm =
     BR
-      ? {20'h0,
+      ? {19'h0,
          io_instruction[31],
          io_instruction[7],
          io_instruction[30:25],
-         io_instruction[11:8]}
+         io_instruction[11:8],
+         1'h0}
       : JAL
-          ? {12'h0,
+          ? {11'h0,
              io_instruction[31],
              io_instruction[19:12],
              io_instruction[20],
-             io_instruction[30:21]}
+             io_instruction[30:21],
+             1'h0}
           : JALR ? {20'h0, io_instruction[31:20]} : 32'h0;
   assign io_T_NT =
     JAL
@@ -81,20 +83,22 @@ module branch_decoder_1(
   wire        JALR = io_instruction[6:0] == 7'h67;
   wire        BR = io_instruction[6:0] == 7'h63;
   wire        _Call_T_2 = io_instruction[11:7] == 5'h1;
-  wire        Ret = JALR & io_instruction[19:15] == 5'h1 & imm[19:0] == 20'h0;
+  wire        Ret = JALR & io_instruction[19:15] == 5'h1 & imm[20:0] == 21'h0;
   assign imm =
     BR
-      ? {20'h0,
+      ? {19'h0,
          io_instruction[31],
          io_instruction[7],
          io_instruction[30:25],
-         io_instruction[11:8]}
+         io_instruction[11:8],
+         1'h0}
       : JAL
-          ? {12'h0,
+          ? {11'h0,
              io_instruction[31],
              io_instruction[19:12],
              io_instruction[20],
-             io_instruction[30:21]}
+             io_instruction[30:21],
+             1'h0}
           : JALR ? {20'h0, io_instruction[31:20]} : 32'h0;
   assign io_T_NT =
     JAL
@@ -138,20 +142,22 @@ module branch_decoder_2(
   wire        JALR = io_instruction[6:0] == 7'h67;
   wire        BR = io_instruction[6:0] == 7'h63;
   wire        _Call_T_2 = io_instruction[11:7] == 5'h1;
-  wire        Ret = JALR & io_instruction[19:15] == 5'h1 & imm[19:0] == 20'h0;
+  wire        Ret = JALR & io_instruction[19:15] == 5'h1 & imm[20:0] == 21'h0;
   assign imm =
     BR
-      ? {20'h0,
+      ? {19'h0,
          io_instruction[31],
          io_instruction[7],
          io_instruction[30:25],
-         io_instruction[11:8]}
+         io_instruction[11:8],
+         1'h0}
       : JAL
-          ? {12'h0,
+          ? {11'h0,
              io_instruction[31],
              io_instruction[19:12],
              io_instruction[20],
-             io_instruction[30:21]}
+             io_instruction[30:21],
+             1'h0}
           : JALR ? {20'h0, io_instruction[31:20]} : 32'h0;
   assign io_T_NT =
     JAL
@@ -195,20 +201,22 @@ module branch_decoder_3(
   wire        JALR = io_instruction[6:0] == 7'h67;
   wire        BR = io_instruction[6:0] == 7'h63;
   wire        _Call_T_2 = io_instruction[11:7] == 5'h1;
-  wire        Ret = JALR & io_instruction[19:15] == 5'h1 & imm[19:0] == 20'h0;
+  wire        Ret = JALR & io_instruction[19:15] == 5'h1 & imm[20:0] == 21'h0;
   assign imm =
     BR
-      ? {20'h0,
+      ? {19'h0,
          io_instruction[31],
          io_instruction[7],
          io_instruction[30:25],
-         io_instruction[11:8]}
+         io_instruction[11:8],
+         1'h0}
       : JAL
-          ? {12'h0,
+          ? {11'h0,
              io_instruction[31],
              io_instruction[19:12],
              io_instruction[20],
-             io_instruction[30:21]}
+             io_instruction[30:21],
+             1'h0}
           : JALR ? {20'h0, io_instruction[31:20]} : 32'h0;
   assign io_T_NT =
     JAL
@@ -225,6 +233,18 @@ module branch_decoder_3(
   assign io_metadata_instruction_PC = io_fetch_PC + 32'hC;
   assign io_metadata_RAS = io_BTB_resp_RAS;
   assign io_metadata_BTB_target = io_BTB_resp_target;
+endmodule
+
+module decoder_validator(
+  input  [3:0] io_instruction_T_NT_mask,
+  output [3:0] io_instruction_validity
+);
+
+  wire [3:0][3:0] _GEN = '{4'hF, 4'h7, 4'h3, 4'h1};
+  assign io_instruction_validity =
+    _GEN[io_instruction_T_NT_mask[0]
+           ? 2'h0
+           : io_instruction_T_NT_mask[1] ? 2'h1 : {1'h1, ~(io_instruction_T_NT_mask[2])}];
 endmodule
 
 module decode_validate(
@@ -264,9 +284,9 @@ module decode_validate(
   output        io_ret_valid
 );
 
-  wire        validate_flag;
   wire [31:0] PC_next;
   wire [31:0] PC_expected;
+  wire [3:0]  _decoder_validator_io_instruction_validity;
   wire        _decoders_3_io_T_NT;
   wire        _decoders_3_io_metadata_JAL;
   wire        _decoders_3_io_metadata_JALR;
@@ -362,6 +382,7 @@ module decode_validate(
   reg  [31:0] PC_next_reg;
   reg         FSM1_state;
   reg         FSM2_state;
+  wire        PC_match = PC_expected == io_fetch_packet_fetch_PC & io_input_valid;
   wire        PC_mismatch = PC_expected != io_fetch_packet_fetch_PC & io_input_valid;
   assign PC_expected = FSM1_state ? PC_next_reg : PC_next;
   assign PC_next =
@@ -398,9 +419,14 @@ module decode_validate(
                          ? metadata_reg_2_Imm
                          : T_NT_reg_1 ? metadata_reg_1_Imm : metadata_reg_0_Imm)
               : io_fetch_packet_fetch_PC + 32'h10;
-  assign validate_flag =
-    ~(_decoders_3_io_T_NT | _decoders_2_io_T_NT | _decoders_1_io_T_NT)
-    & ~_decoders_0_io_T_NT;
+  reg  [31:0] io_final_fetch_packet_instructions_0_REG;
+  reg         io_final_fetch_packet_valid_bits_0_REG;
+  reg  [31:0] io_final_fetch_packet_instructions_1_REG;
+  reg         io_final_fetch_packet_valid_bits_1_REG;
+  reg  [31:0] io_final_fetch_packet_instructions_2_REG;
+  reg         io_final_fetch_packet_valid_bits_2_REG;
+  reg  [31:0] io_final_fetch_packet_instructions_3_REG;
+  reg         io_final_fetch_packet_valid_bits_3_REG;
   always @(posedge clock) begin
     metadata_reg_0_JAL <= _decoders_0_io_metadata_JAL;
     metadata_reg_0_JALR <= _decoders_0_io_metadata_JALR;
@@ -442,14 +468,24 @@ module decode_validate(
     T_NT_reg_2 <= _decoders_2_io_T_NT;
     T_NT_reg_3 <= _decoders_3_io_T_NT;
     GHR_reg <= io_BTB_resp_GHR;
+    io_final_fetch_packet_instructions_0_REG <= io_fetch_packet_instructions_0;
+    io_final_fetch_packet_valid_bits_0_REG <=
+      _decoder_validator_io_instruction_validity[0];
+    io_final_fetch_packet_instructions_1_REG <= io_fetch_packet_instructions_1;
+    io_final_fetch_packet_valid_bits_1_REG <=
+      _decoder_validator_io_instruction_validity[1];
+    io_final_fetch_packet_instructions_2_REG <= io_fetch_packet_instructions_2;
+    io_final_fetch_packet_valid_bits_2_REG <=
+      _decoder_validator_io_instruction_validity[2];
+    io_final_fetch_packet_instructions_3_REG <= io_fetch_packet_instructions_3;
+    io_final_fetch_packet_valid_bits_3_REG <=
+      _decoder_validator_io_instruction_validity[3];
     if (reset) begin
       PC_next_reg <= 32'h0;
       FSM1_state <= 1'h1;
-      FSM2_state <= 1'h1;
+      FSM2_state <= 1'h0;
     end
     else begin
-      automatic logic PC_match;
-      PC_match = PC_expected == io_fetch_packet_fetch_PC & io_input_valid;
       if (FSM1_state | io_input_valid) begin
       end
       else
@@ -459,7 +495,7 @@ module decode_validate(
       else
         FSM1_state <= ~io_input_valid | FSM1_state;
       if (FSM2_state)
-        FSM2_state <= ~(FSM2_state & PC_match) & FSM2_state;
+        FSM2_state <= ~(FSM2_state & PC_mismatch) & FSM2_state;
       else
         FSM2_state <= PC_match | FSM2_state;
     end
@@ -540,23 +576,31 @@ module decode_validate(
     .io_metadata_RAS            (_decoders_3_io_metadata_RAS),
     .io_metadata_BTB_target     (_decoders_3_io_metadata_BTB_target)
   );
+  decoder_validator decoder_validator (
+    .io_instruction_T_NT_mask
+      ({_decoders_3_io_T_NT,
+        _decoders_2_io_T_NT,
+        _decoders_1_io_T_NT,
+        _decoders_0_io_T_NT}),
+    .io_instruction_validity  (_decoder_validator_io_instruction_validity)
+  );
   assign io_kill = PC_mismatch;
   assign io_redirect = PC_mismatch;
   assign io_PC_redirect = PC_expected;
   assign io_GHR_redirect = GHR_reg;
   assign io_final_fetch_packet_fetch_PC = io_fetch_packet_fetch_PC;
-  assign io_final_fetch_packet_instructions_0 = io_fetch_packet_instructions_0;
-  assign io_final_fetch_packet_instructions_1 = io_fetch_packet_instructions_1;
-  assign io_final_fetch_packet_instructions_2 = io_fetch_packet_instructions_2;
-  assign io_final_fetch_packet_instructions_3 = io_fetch_packet_instructions_3;
+  assign io_final_fetch_packet_instructions_0 = io_final_fetch_packet_instructions_0_REG;
+  assign io_final_fetch_packet_instructions_1 = io_final_fetch_packet_instructions_1_REG;
+  assign io_final_fetch_packet_instructions_2 = io_final_fetch_packet_instructions_2_REG;
+  assign io_final_fetch_packet_instructions_3 = io_final_fetch_packet_instructions_3_REG;
   assign io_final_fetch_packet_valid_bits_0 =
-    validate_flag & io_fetch_packet_valid_bits_0 & FSM2_state;
+    io_final_fetch_packet_valid_bits_0_REG & FSM2_state;
   assign io_final_fetch_packet_valid_bits_1 =
-    validate_flag & io_fetch_packet_valid_bits_1 & FSM2_state;
+    io_final_fetch_packet_valid_bits_1_REG & FSM2_state;
   assign io_final_fetch_packet_valid_bits_2 =
-    validate_flag & io_fetch_packet_valid_bits_2 & FSM2_state;
+    io_final_fetch_packet_valid_bits_2_REG & FSM2_state;
   assign io_final_fetch_packet_valid_bits_3 =
-    validate_flag & io_fetch_packet_valid_bits_3 & FSM2_state;
+    io_final_fetch_packet_valid_bits_3_REG & FSM2_state;
   assign io_call_valid =
     T_NT_reg_3
       ? metadata_reg_3_Call
