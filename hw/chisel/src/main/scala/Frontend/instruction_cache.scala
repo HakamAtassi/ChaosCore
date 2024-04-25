@@ -80,6 +80,7 @@ class L1_instruction_cache(fetchWidth:Int=4, ways:Int=2, sets:Int = 64, blockSiz
     val instructionsPerLine         = blockSizeBytes/4                                                  // number of instructions per cache line (no compressed instruction support)
     val fetchPacketsPerLine         = instructionsPerLine/fetchWidth                                    // number of fetch packets per cache line
     val fetchPacketBits             = log2Ceil(fetchPacketsPerLine)                                     // number of bits needed to address fetch packet in cache line (fetches always packet aligned)
+    val instructionBits             = log2Ceil(instructionsPerLine)                                     // number of bits needed to address fetch packet in cache line (fetches always packet aligned)
     val instructionsPerPacketBits   = log2Ceil(fetchWidth)                                              // number of bits needed to address each instruction in a fetch packet
     val tagBits                     = 32 - setBits - fetchPacketBits - instructionsPerPacketBits - 2    // 32 - bits required to index set - bits required to index within line - 2 bits due to 4 byte aligned data
     val wayDataWidth                = (validBits + tagBits) + dataSizeBits                              // width of the data line
@@ -100,6 +101,7 @@ class L1_instruction_cache(fetchWidth:Int=4, ways:Int=2, sets:Int = 64, blockSiz
 
         // Outputs
         val cache_data         =     Output(new fetch_packet(width=fetchWidth))
+        val resp_valid         =     Output(Bool())
 
         val cache_addr         =     Decoupled(UInt(32.W))                        // outputs to DRAM
     })
@@ -119,9 +121,9 @@ class L1_instruction_cache(fetchWidth:Int=4, ways:Int=2, sets:Int = 64, blockSiz
     val hit             = Wire(Bool())
 
     val current_addr_tag                = Wire(UInt(tagBits.W))
-    val current_addr_set                = Wire(UInt(tagBits.W))
-    val current_addr_fetch_packet       = Wire(UInt(tagBits.W))
-    val current_addr_instruction_offset = Wire(UInt(tagBits.W))
+    val current_addr_set                = Wire(UInt(setBits.W))
+    val current_addr_fetch_packet       = Wire(UInt(fetchPacketBits.W))
+    val current_addr_instruction_offset = Wire(UInt(instructionBits.W))
 
     //
     val LRU_memory      = Module(new SDPReadWriteSmem(depth = sets, width = ways))
@@ -148,11 +150,17 @@ class L1_instruction_cache(fetchWidth:Int=4, ways:Int=2, sets:Int = 64, blockSiz
     val packet_index         = Wire(UInt(fetchPacketBits.W))
     val aligned_packet_index = Wire(UInt(fetchPacketBits.W))
 
+
+    dontTouch(current_addr_tag)
+    dontTouch(current_addr_set)
+    dontTouch(current_addr_instruction_offset)
+
     // Address assignments
+    // FIXME: There is a bug somewhere here I know it
     current_addr_tag                    := current_addr(31, 31-tagBits+1)
     current_addr_set                    := current_addr(31-tagBits, 31-tagBits-setBits+1)
     current_addr_fetch_packet           := current_addr(31-tagBits-setBits, 31-tagBits-setBits-fetchPacketBits+1)
-    current_addr_instruction_offset     := current_addr(31-tagBits-setBits-fetchPacketBits, 31-tagBits-setBits-fetchPacketBits-instructionsPerPacketBits+1) // The offset within the packet
+    current_addr_instruction_offset     := current_addr(2+instructionsPerLine, 2) // The offset within the packet
 
     /////////
     // FSM //
@@ -265,6 +273,7 @@ class L1_instruction_cache(fetchWidth:Int=4, ways:Int=2, sets:Int = 64, blockSiz
     packet_index := RegNext(current_addr_fetch_packet)  
     aligned_packet_index := packet_index & ~(fetchWidth.U * 4.U -1.U)
 
+
     hit_instruction_data := 0.U         // Get instruction vector of the hit way (if any)
     for (i <- 0 until ways){
         when(hit_oh(i)===1.B){
@@ -276,16 +285,18 @@ class L1_instruction_cache(fetchWidth:Int=4, ways:Int=2, sets:Int = 64, blockSiz
         instruction_vec(instructionsPerLine-1-instruction) := hit_instruction_data((instruction+1)*32-1, (instruction)*32)    
     }
 
+
     for(i <- 0 until fetchWidth){
-        io.cache_data.instructions(i):= instruction_vec(aligned_packet_index*fetchWidth.U + i.U)   
+        io.cache_data.instructions(i):= instruction_vec(packet_index*fetchWidth.U + i.U)   
     }
 
     val validator = Module(new instruction_validator(fetchWidth=fetchWidth))
     validator.io.instruction_index := current_addr_instruction_offset
 
     for(i <- 0 until fetchWidth){
-         io.cache_data.valid_bits(i):= validator.io.instruction_output(fetchWidth-1-i) && hit && (io.kill === 0.U)  // only valid if not hit
+        io.cache_data.valid_bits(i):= RegNext(validator.io.instruction_output(fetchWidth-1-i)) && hit && (io.kill === 0.U)  // only valid if not hit
     }
+    io.resp_valid   := hit && (io.kill === 0.U)
 
     io.cache_data.fetch_PC := fetch_PC_buf
 

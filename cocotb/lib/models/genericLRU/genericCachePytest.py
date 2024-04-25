@@ -1,72 +1,165 @@
 import pytest
+import logging
+from pathlib import Path
+import sys
+
+# Add the required paths for import
+sys.path.append(str(Path("../..").resolve()))
+
 from genericCache import *
 
-# Constants for testing
+# Define some global constants for the cache setup
 SETS = 64
 WAYS = 2
 BLOCK_SIZE = 32
 
-# Create a test cache
-@pytest.fixture
-def cache():
-    return genericCache(sets=SETS, ways=WAYS, blockSize=BLOCK_SIZE, evictionPolicy=LRU(sets=SETS, ways=WAYS))
+# Test for cache allocation
+def test_cache_allocation():
+    cache = genericCache(sets=SETS, ways=WAYS, blockSize=BLOCK_SIZE, evictionPolicy=LRU)
+    # Initialize data for cache line
+    data = bytearray.fromhex("deadbeef")
+    cache_line = genericCacheLine(blockSize=BLOCK_SIZE, data=data)
+    
+    # Generate an address
+    addr = generateAddr(tag=0x1, set=63, byteOffset=0, sets=SETS, blockSize=BLOCK_SIZE)
+    
+    # Allocate data to the cache
+    cache.allocate(address=addr, data=cache_line)
+    
+    # Verify the data is allocated to the cache
+    (hit, read_data), hit_way = cache.read(address=addr, bytes=4)
+    assert hit == 1
+    assert read_data == data
 
-# Test reading data from cache
-def test_cache_read(cache):
-    # Set up the cache with some known data
-    address = 0x100
-    data_to_write = bytearray(BLOCK_SIZE)
-    data_to_write[:8] = b'abcdefgh'
-    cache.write(address, len(data_to_write), data_to_write)
+# Test for cache read operation
+def test_cache_read():
+    cache = genericCache(sets=SETS, ways=WAYS, blockSize=BLOCK_SIZE, evictionPolicy=LRU)
+    # Initialize data for cache line
+    data = bytearray.fromhex("deadbeef" * (BLOCK_SIZE // 4))
+    cache_line = genericCacheLine(blockSize=BLOCK_SIZE, data=data)
     
-    # Perform a read from the cache
-    hit, read_data = cache.read(address, 8)
+    # Generate an address
+    addr = generateAddr(tag=0x1, set=0, byteOffset=0, sets=SETS, blockSize=BLOCK_SIZE)
     
-    # Check that the read was a hit
-    assert hit == True
+    # Allocate data to the cache
+    cache.allocate(address=addr, data=cache_line)
     
-    # Check that the data read matches the data written
-    assert read_data == b'abcdefgh'
+    # Verify the cache read operation
+    hit, read_data = cache.read(address=addr, bytes=4)
+    (hit, read_data), hit_way = cache.read(address=addr, bytes=4)
+    assert hit == 1
+    assert read_data == data[:4]
 
-# Test writing data to cache
-def test_cache_write(cache):
-    # Define address and data to write
-    address = 0x200
-    data_to_write = bytearray(BLOCK_SIZE)
-    data_to_write[:8] = b'12345678'
+# Test for cache write operation
+def test_cache_write():
+    cache = genericCache(sets=SETS, ways=WAYS, blockSize=BLOCK_SIZE, evictionPolicy=LRU)
+    # Initialize data for cache line
+    data = bytearray.fromhex("deadbeef" * (BLOCK_SIZE // 4))
+    cache_line = genericCacheLine(blockSize=BLOCK_SIZE, data=data)
     
-    # Perform a write to the cache
-    hit, way_index = cache.write(address, len(data_to_write), data_to_write)
+    # Generate an address
+    addr = generateAddr(tag=0x1, set=0, byteOffset=0, sets=SETS, blockSize=BLOCK_SIZE)
     
-    # Check that the write was successful
-    assert hit == True
+    # Allocate data to the cache
+    cache.allocate(address=addr, data=cache_line)
     
-    # Read back the data to verify the write
-    hit, way_index, read_data = cache.read(address, len(data_to_write))
+    # Write new data to the cache
+    new_data = b'\xab\xcd\xef\x00'
+    cache.write(address=addr, bytes=4, data=new_data)
     
-    # Check that the data read matches the data written
-    assert read_data == data_to_write
+    # Verify the write operation
+    (hit, read_data), hit_way = cache.read(address=addr, bytes=4)
+    assert hit == 1
+    assert read_data == new_data
 
-# Test LRU eviction policy
-def test_lru_eviction(cache):
-    # Write data to different addresses to fill up the cache
-    addresses = [0x100, 0x200]
-    data = [b'data1', b'data2']
-    
-    for i in range(2):
-        cache.write(addresses[i], len(data[i]), data[i])
-    
-    # Check the state of the LRU policy
-    assert cache.evictionPolicy.LRU[0][0] == 0b1
-    assert cache.evictionPolicy.LRU[0][1] == 0b0
-    
-    # Access the second address to change the LRU order
-    cache.read(0x200, len(data[1]))
-    
-    # Check the state of the LRU policy after access
-    assert cache.evictionPolicy.LRU[0][0] == 0b0
-    assert cache.evictionPolicy.LRU[0][1] == 0b1
 
-# Run tests using pytest command
+###################################
+def test_cache_allocation_all_sets():
+    cache = genericCache(sets=SETS, ways=WAYS, blockSize=BLOCK_SIZE, evictionPolicy=LRU)
+    for set in range(SETS):
+        # Generate random data with BLOCK_SIZE length
+        data = bytearray(random.getrandbits(8) for _ in range(BLOCK_SIZE))
+        cache_line = genericCacheLine(blockSize=BLOCK_SIZE, data=data)
+        addr = generateAddr(tag=0x1, set=set, byteOffset=0, sets=SETS, blockSize=BLOCK_SIZE)
+        cache.allocate(address=addr, data=cache_line)
+        wayLine = cache.getWaySet(way=0, set = set)
+        valid = wayLine['valid']
+        
+        # Read data from the cache
+        (hit, read_data), hit_way = cache.read(address=addr, bytes=4)
+        
+        assert hit == 1
+        assert valid == 1
+        assert read_data == data[0:4], f"Data mismatch at set {set}: expected {data}, got {read_data}"
+
+def test_hit_way():
+    # Instantiate the generic cache with the given parameters
+    cache = genericCache(sets=SETS, ways=WAYS, blockSize=BLOCK_SIZE, evictionPolicy=LRU)
+
+    for set in range(SETS):
+        # Allocate data to the first cache line at the chosen set
+        addrA = generateAddr(tag=0x42, set=set, byteOffset=0, sets=SETS, blockSize=BLOCK_SIZE)
+        dataA = bytearray(BLOCK_SIZE)
+        dataA[0] = 0x42  # Set a known value for the first byte
+        cache_line_A = genericCacheLine(blockSize=BLOCK_SIZE, data=dataA)
+        cache.allocate(address=addrA, data=cache_line_A)
+        (hit, read_data), hit_way = cache.read(address=addrA, bytes=4)
+
+        assert hit == 1, "Expected cache hit when reading allocated data."
+        assert read_data[0] == dataA[0], "Data mismatch: read data does not match allocated data."
+        assert hit_way == 0, f"Expected hit in way 0, but got way {hit_way}."
+
+        # Allocate new data to the same set, causing eviction or replacement
+        addrB = generateAddr(tag=0x7, set=set, byteOffset=0, sets=SETS, blockSize=BLOCK_SIZE)
+        dataB = bytearray(BLOCK_SIZE)
+        dataB[0] = 0x07  # Set a known value for the first byte
+        cache_line_B = genericCacheLine(blockSize=BLOCK_SIZE, data=dataB)
+        cache.allocate(address=addrB, data=cache_line_B)
+        (hit, read_data), hit_way = cache.read(address=addrB, bytes=4)
+
+        assert hit == 1, "Expected cache hit when reading allocated data."
+        assert read_data[0] == dataB[0], "Data mismatch: read data does not match allocated data."
+        assert hit_way == 1, f"Expected hit in way 1, but got way {hit_way}."
+
+        (hitA, read_dataA), hit_wayA = cache.read(address=addrA, bytes=4)
+        assert hitA == 1, "Expected cache hit when reading address A."
+        assert read_dataA[0] == dataA[0], "Data mismatch: read data does not match allocated data for address A."
+        assert hit_wayA == 0, "Expected hit in way 0 for address A."
+
+        (hitB, read_dataB), hit_wayB = cache.read(address=addrB, bytes=4)
+        assert hitB == 1, "Expected cache hit when reading address B."
+        assert read_dataB[0] == dataB[0], "Data mismatch: read data does not match allocated data for address B."
+        assert hit_wayB == 1, "Expected hit in way 1 for address B."
+        (hitB, read_dataB), hit_wayB = cache.read(address=addrB, bytes=4)
+        assert hitB == 1, "Expected cache hit when reading address B."
+        assert read_dataB[0] == dataB[0], "Data mismatch: read data does not match allocated data for address B."
+        assert hit_wayB == 1, "Expected hit in way 1 for address B."
+        (hitB, read_dataB), hit_wayB = cache.read(address=addrB, bytes=4)
+        assert hitB == 1, "Expected cache hit when reading address B."
+        assert read_dataB[0] == dataB[0], "Data mismatch: read data does not match allocated data for address B."
+        assert hit_wayB == 1, "Expected hit in way 1 for address B."
+
+
+def test_tag_corner_cases():
+   # tag can only be from 0 to  1<<21 for set size of 64 and blocksize of 32
+    for set in range(SETS):
+        for tag in range((1<<22)-100, (1<<22)):
+            cache = genericCache(sets=SETS, ways=WAYS, blockSize=BLOCK_SIZE, evictionPolicy=LRU)
+            # Generate random data with BLOCK_SIZE length
+            data = bytearray(random.getrandbits(8) for _ in range(BLOCK_SIZE))
+            cache_line = genericCacheLine(blockSize=BLOCK_SIZE, data=data)
+            addr = generateAddr(tag=tag, set=set, byteOffset=0, sets=SETS, blockSize=BLOCK_SIZE)
+            cache.allocate(address=addr, data=cache_line)
+            wayLine = cache.getWaySet(way=0, set = set)
+            valid = wayLine['valid']
+            
+            # Read data from the cache
+            (hit, read_data), hit_way = cache.read(address=addr, bytes=4)
+            
+            assert hit == 1
+            assert valid == 1
+            assert read_data == data[0:4], f"Data mismatch at set {set}: expected {data}, got {read_data}"
+
+# Run the tests
 if __name__ == "__main__":
     pytest.main()
