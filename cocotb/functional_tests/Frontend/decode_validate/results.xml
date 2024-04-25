@@ -1,0 +1,6 @@
+<testsuites name="results">
+  <testsuite name="all" package="all">
+    <property name="random_seed" value="1714055827" />
+    <testcase name="testNextPC3" classname="functional_tests" file="/home/hakam/repos/ChaosCore/cocotb/functional_tests/Frontend/decode_validate/functional_tests.py" lineno="314" time="0.002389192581176758" sim_time_ns="27.001" ratio_time="11301.307484682167" />
+  </testsuite>
+</testsuites>

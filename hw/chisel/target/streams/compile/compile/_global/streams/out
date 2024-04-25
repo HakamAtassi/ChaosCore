@@ -1,4 +1,7 @@
-[0m[[0m[31merror[0m] [0m[0m/home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/RAS.scala:100:12: not found: value tos_mux_out[0m
-[0m[[0m[31merror[0m] [0m[0m    TOS := tos_mux_out  // 1 cycle delay[0m
-[0m[[0m[31merror[0m] [0m[0m           ^[0m
-[0m[[0m[31merror[0m] [0m[0mone error found[0m
+[0m[[0m[31merror[0m] [0m[0m/home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala:60:5: ')' expected but string literal found.[0m
+[0m[[0m[31merror[0m] [0m[0m    "b11".U(fetchWidth.W),  // Validity mask for pattern 10 -> 10[0m
+[0m[[0m[31merror[0m] [0m[0m    ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala:61:4: ';' expected but ')' found.[0m
+[0m[[0m[31merror[0m] [0m[0m  ))[0m
+[0m[[0m[31merror[0m] [0m[0m   ^[0m
+[0m[[0m[31merror[0m] [0m[0mtwo errors found[0m

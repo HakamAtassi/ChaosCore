@@ -1,36 +1,29 @@
-[0m[[0m[31merror[0m] [0m[0mcirct.stage.phases.Exceptions$FirtoolNonZeroExitCode: /home/hakam/.cache/llvm-firtool/1.62.0/bin/firtool returned a non-zero exit code. Note that this version of Chisel (6.0.0) was published against firtool version 1.62.0.[0m
-[0m[[0m[31merror[0m] [0m[0m------------------------------------------------------------------------------[0m
-[0m[[0m[31merror[0m] [0m[0mExitCode:[0m
-[0m[[0m[31merror[0m] [0m[0m1[0m
-[0m[[0m[31merror[0m] [0m[0mSTDOUT:[0m
-[0m[[0m[31merror[0m] [0m[0m[0m
-[0m[[0m[31merror[0m] [0m[0mSTDERR:[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/BP/RAS.scala:84:27: error: sink "tos_wr" not fully initialized in "RAS"[0m
-[0m[[0m[31merror[0m] [0m[0m    val tos_wr      = Wire(Bool())[0m
-[0m[[0m[31merror[0m] [0m[0m                          ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/BP/RAS.scala:85:27: error: sink "tos_fwd" not fully initialized in "RAS"[0m
-[0m[[0m[31merror[0m] [0m[0m    val tos_fwd     = Wire(UInt(tosBits.W))[0m
-[0m[[0m[31merror[0m] [0m[0m                          ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/BP/RAS.scala:86:27: error: sink "tos_mux_out" not fully initialized in "RAS"[0m
-[0m[[0m[31merror[0m] [0m[0m    val tos_mux_out = Wire(UInt(tosBits.W))[0m
-[0m[[0m[31merror[0m] [0m[0m                          ^[0m
-[0m[[0m[31merror[0m] [0m[0m[0m
-[0m[[0m[31merror[0m] [0m[0m------------------------------------------------------------------------------[0m
-[0m[[0m[31merror[0m] [0m[0m(Compile / [31mrun[0m) circt.stage.phases.Exceptions$FirtoolNonZeroExitCode: /home/hakam/.cache/llvm-firtool/1.62.0/bin/firtool returned a non-zero exit code. Note that this version of Chisel (6.0.0) was published against firtool version 1.62.0.[0m
-[0m[[0m[31merror[0m] [0m[0m------------------------------------------------------------------------------[0m
-[0m[[0m[31merror[0m] [0m[0mExitCode:[0m
-[0m[[0m[31merror[0m] [0m[0m1[0m
-[0m[[0m[31merror[0m] [0m[0mSTDOUT:[0m
-[0m[[0m[31merror[0m] [0m[0m[0m
-[0m[[0m[31merror[0m] [0m[0mSTDERR:[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/BP/RAS.scala:84:27: error: sink "tos_wr" not fully initialized in "RAS"[0m
-[0m[[0m[31merror[0m] [0m[0m    val tos_wr      = Wire(Bool())[0m
-[0m[[0m[31merror[0m] [0m[0m                          ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/BP/RAS.scala:85:27: error: sink "tos_fwd" not fully initialized in "RAS"[0m
-[0m[[0m[31merror[0m] [0m[0m    val tos_fwd     = Wire(UInt(tosBits.W))[0m
-[0m[[0m[31merror[0m] [0m[0m                          ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/BP/RAS.scala:86:27: error: sink "tos_mux_out" not fully initialized in "RAS"[0m
-[0m[[0m[31merror[0m] [0m[0m    val tos_mux_out = Wire(UInt(tosBits.W))[0m
-[0m[[0m[31merror[0m] [0m[0m                          ^[0m
-[0m[[0m[31merror[0m] [0m[0m[0m
-[0m[[0m[31merror[0m] [0m[0m------------------------------------------------------------------------------[0m
+[0m[[0m[31merror[0m] [0m[0mchisel3.package$ChiselException: Connection between sink (branch_decoder.imm: Wire[UInt<32>]) and source (branch_decoder.imm_?: OpResult[SInt<13>]) failed @: Sink (UInt<32>) and Source (SInt<13>) have different types.[0m
+[0m[[0m[31merror[0m] [0m[0m	at ... ()[0m
+[0m[[0m[31merror[0m] [0m[0m	at branch_decoder.$anonfun$new$3(branch_decoder.scala:76)[0m
+[0m[[0m[31merror[0m] [0m[0m	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.scala:18)[0m
+[0m[[0m[31merror[0m] [0m[0m	at chisel3.WhenContext.<init>(When.scala:129)[0m
+[0m[[0m[31merror[0m] [0m[0m	at chisel3.when$.apply(When.scala:37)[0m
+[0m[[0m[31merror[0m] [0m[0m	at branch_decoder.<init>(branch_decoder.scala:75)[0m
+[0m[[0m[31merror[0m] [0m[0m	at decode_validate.$anonfun$decoders$3(decode_validate.scala:101)[0m
+[0m[[0m[31merror[0m] [0m[0m	at chisel3.Module$.evaluate(Module.scala:88)[0m
+[0m[[0m[31merror[0m] [0m[0m	at chisel3.Module$.do_apply(Module.scala:35)[0m
+[0m[[0m[31merror[0m] [0m[0m	at decode_validate.$anonfun$decoders$2(decode_validate.scala:101)[0m
+[0m[[0m[31merror[0m] [0m[0m	at decode_validate.$anonfun$decoders$2$adapted(decode_validate.scala:100)[0m
+[0m[[0m[31merror[0m] [0m[0m	at scala.collection.Iterator$$anon$23.next(Iterator.scala:1035)[0m
+[0m[[0m[31merror[0m] [0m[0m	at scala.collection.immutable.List.prependedAll(List.scala:153)[0m
+[0m[[0m[31merror[0m] [0m[0m	at scala.collection.immutable.List$.from(List.scala:684)[0m
+[0m[[0m[31merror[0m] [0m[0m	at scala.collection.immutable.List$.from(List.scala:681)[0m
+[0m[[0m[31merror[0m] [0m[0m	at scala.collection.SeqFactory$Delegate.from(Factory.scala:306)[0m
+[0m[[0m[31merror[0m] [0m[0m	at scala.collection.immutable.Seq$.from(Seq.scala:42)[0m
+[0m[[0m[31merror[0m] [0m[0m	at scala.collection.immutable.Seq$.from(Seq.scala:39)[0m
+[0m[[0m[31merror[0m] [0m[0m	at scala.collection.IterableFactory.tabulate(Factory.scala:200)[0m
+[0m[[0m[31merror[0m] [0m[0m	at scala.collection.IterableFactory.tabulate$(Factory.scala:200)[0m
+[0m[[0m[31merror[0m] [0m[0m	at scala.collection.SeqFactory$Delegate.tabulate(Factory.scala:303)[0m
+[0m[[0m[31merror[0m] [0m[0m	at decode_validate.$anonfun$decoders$1(decode_validate.scala:100)[0m
+[0m[[0m[31merror[0m] [0m[0m	at chisel3.internal.plugin.package$.autoNameRecursively(package.scala:33)[0m
+[0m[[0m[31merror[0m] [0m[0m	at decode_validate.<init>(decode_validate.scala:100)[0m
+[0m[[0m[31merror[0m] [0m[0m	at Main$.$anonfun$new$2(top.scala:58)[0m
+[0m[[0m[31merror[0m] [0m[0m	at ... ()[0m
+[0m[[0m[31merror[0m] [0m[0m	at ... (Stack trace trimmed to user code only. Rerun with --full-stacktrace to see the full stack trace)[0m
+[0m[[0m[31merror[0m] [0m[0m(Compile / [31mrun[0m) chisel3.package$ChiselException: Connection between sink (branch_decoder.imm: Wire[UInt<32>]) and source (branch_decoder.imm_?: OpResult[SInt<13>]) failed @: Sink (UInt<32>) and Source (SInt<13>) have different types.[0m

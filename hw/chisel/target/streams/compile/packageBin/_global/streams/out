@@ -1,5 +1,7 @@
 [0m[[0m[0mdebug[0m] [0m[0mPackaging /home/hakam/repos/ChaosCore/hw/chisel/target/scala-2.13/-name-_2.13-0.1.0.jar ...[0m
 [0m[[0m[0mdebug[0m] [0m[0mInput file mappings:[0m
+[0m[[0m[0mdebug[0m] [0m[0m	decode_validate$$anon$2.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/repos/ChaosCore/hw/chisel/target/scala-2.13/classes/decode_validate$$anon$2.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	gshare$$anon$2.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/repos/ChaosCore/hw/chisel/target/scala-2.13/classes/gshare$$anon$2.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	VerilogGenerator.class[0m
@@ -64,10 +66,12 @@
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/repos/ChaosCore/hw/chisel/target/scala-2.13/classes/branch_decoder$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	Main$delayedInit$body.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/repos/ChaosCore/hw/chisel/target/scala-2.13/classes/Main$delayedInit$body.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	decoder_validator$$anon$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/repos/ChaosCore/hw/chisel/target/scala-2.13/classes/decoder_validator$$anon$1.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	gshare.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/repos/ChaosCore/hw/chisel/target/scala-2.13/classes/gshare.class[0m
-[0m[[0m[0mdebug[0m] [0m[0m	decode_validate$$anon$1.class[0m
-[0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/repos/ChaosCore/hw/chisel/target/scala-2.13/classes/decode_validate$$anon$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	decoder_validator$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/repos/ChaosCore/hw/chisel/target/scala-2.13/classes/decoder_validator$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	L1_cache_mem.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/repos/ChaosCore/hw/chisel/target/scala-2.13/classes/L1_cache_mem.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	L1_cache_mem$.class[0m
@@ -114,6 +118,8 @@
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/repos/ChaosCore/hw/chisel/target/scala-2.13/classes/instruction_validator$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	Main$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/repos/ChaosCore/hw/chisel/target/scala-2.13/classes/Main$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	decoder_validator.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/repos/ChaosCore/hw/chisel/target/scala-2.13/classes/decoder_validator.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	validate_packet$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/repos/ChaosCore/hw/chisel/target/scala-2.13/classes/validate_packet$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	BTB_resp.class[0m
