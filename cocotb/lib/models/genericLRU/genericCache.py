@@ -57,10 +57,6 @@ class genericCacheLine:
             for byte in range(4):
                 print(f"{self.cacheLine[word * 4 + byte]:02x}", end=" ")
 
-
-            
-
-
 class genericCacheWay():
 
     def __init__(self, sets, blockSize):
@@ -86,7 +82,7 @@ class genericCacheWay():
 
     def read(self, address, bytes, split=None):
         set = getSet(address, sets=self.sets, blockSize=self.blockSize)
-        byteOffset = getByteOffset(address, sets=self.sets, blockSize=self.blockSize)
+        byteOffset = getByteOffset(address, blockSize=self.blockSize)
         wayLine = self.way[set]
         if(self.search(address) == 1):    # is a hit
             return (1, wayLine['data'].read(byteOffset, bytes, split))
@@ -96,7 +92,7 @@ class genericCacheWay():
     def write(self, address, bytes, data):
         set = getSet(address, sets=self.sets, blockSize=self.blockSize)
         tag = getTag(address, sets=self.sets, blockSize=self.blockSize)
-        byteOffset = getByteOffset(address, sets=self.sets, blockSize=self.blockSize)
+        byteOffset = getByteOffset(address, blockSize=self.blockSize)
 
         wayLine = self.way[set]
         match = (wayLine["tag"] == tag)
@@ -115,6 +111,7 @@ class genericCacheWay():
         wayLine['data'] = data
         wayLine['valid'] = 1
         wayLine['tag'] = tag
+
 
     def print(self):
         for set in range(self.sets):
@@ -144,7 +141,7 @@ class LRU():
         LRUEntry = self.LRU[setIndex]
         LRUEntry[way] = 0b1
 
-        if self.all_lru_high(LRUEntry):
+        if self.allLRUHigh(LRUEntry):
             self.LRU[setIndex] = [0b0] * self.ways
             self.LRU[setIndex][way] = 0b1
         else:
@@ -190,9 +187,9 @@ class genericCache():
         hit, hitWay = self.search(address)  # find which way to request read from
         if(hit == 1):
             self.updateState(address, hitWay)
-            return (1, self.cacheWays[hitWay].read(address, bytes))  # perform read to only hit way
+            return (self.cacheWays[hitWay].read(address, bytes), hitWay)  # perform read to only hit way
         else:
-            return (0, None)
+            return ((0, 0),  0)
 
     def allocate(self, address, data): # Write to cache from dram or similar
         # Read out all ways
@@ -200,6 +197,10 @@ class genericCache():
         # Write to way
         allocateWay = self.evictionPolicy.getAllocateWay(address)
         self.cacheWays[allocateWay].allocate(address, data)
+
+    def forceWrite(self, address, way, data):
+        self.cacheWays[way].allocate(address, data)
+
 
     def write(self, address, bytes, data):   # for a write from the cpu or similar
         # search cache for way
@@ -213,17 +214,35 @@ class genericCache():
             return self.cacheWays[hitWay].write(address, bytes, data)  # perform read to only hit way
         else:
             return (0, None)
+
+    def getWaySet(self, way, set):
+        return self.cacheWays[way].way[set]
         
-    def printCache(self):
+    def print(self):
         for way in range(self.ways):
             print(f"\n\n=======\nWay {way} \n=======\n\n")
             self.cacheWays[way].print()
 
+SETS = 64
+WAYS = 2
+BLOCK_SIZE = 32
 
 if __name__ == "__main__":
-    print("Running genericLRU")
-    cache = genericCache(sets=64, ways=2, blockSize=32, evictionPolicy=LRU)
-    cacheLine=genericCacheLine(blockSize=32, data=bytearray.fromhex("deadbeef"))
-    cache.allocate(address=0x0, data=cacheLine)
 
-    cache.printCache()
+    cache = genericCache(sets=SETS, ways=WAYS, blockSize=BLOCK_SIZE, evictionPolicy=LRU)
+    # Initialize data for cache line
+    data = bytearray.fromhex("deadbeef")
+    cache_line = genericCacheLine(blockSize=BLOCK_SIZE, data=data)
+    
+    # Generate an address
+    addr = generateAddr(tag=0x1, set=63, byteOffset=0, sets=SETS, blockSize=BLOCK_SIZE)
+    
+    # Allocate data to the cache
+    cache.allocate(address=addr, data=cache_line)
+    
+    # Verify the data is allocated to the cache
+    hit, read_data = cache.read(address=addr, bytes=4)
+    assert hit == 1
+    print(read_data)
+    print(data)
+    assert read_data == data

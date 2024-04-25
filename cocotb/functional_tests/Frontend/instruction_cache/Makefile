@@ -6,7 +6,7 @@ SIM ?= verilator
 
 TOPLEVEL_LANG ?= verilog
 
-VERILOG_DIR = ../../../hw/verilog
+VERILOG_DIR = ../../../../hw/verilog/Frontend
 
 
 SIM_ARGS=-Wno-DECLFILENAME -Wno-UNUSED -Wno-UNDRIVEN -Wno-WIDTH -Wno-UNOPTFLAT -Wno-WIDTHEXPAND
@@ -17,7 +17,7 @@ EXTRA_ARGS += --trace-fst --trace-structs
 WAVES?=1
 GUI?=0
 
-VERILOG_SOURCES += $(VERILOG_DIR)/Frontend/instruction_cache.v
+VERILOG_SOURCES += $(VERILOG_DIR)/instruction_cache.v
 # use VHDL_SOURCES for VHDL files
 
 # TOPLEVEL is the name of the toplevel module in your Verilog or VHDL file

@@ -1,4 +1,5 @@
-[0m[[0m[31merror[0m] [0m[0m/home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala:97:37: value GHR is not a member of object BTB_resp[0m
-[0m[[0m[31merror[0m] [0m[0m    val GHR_reg      = Reg(BTB_resp.GHR)[0m
-[0m[[0m[31merror[0m] [0m[0m                                    ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/Frontend/instruction_cache.scala:291:5: value validator is not a member of chisel3.Bundle{val instruction_index: chisel3.UInt; val instruction_output: chisel3.UInt}[0m
+[0m[[0m[31merror[0m] [0m[0mpossible cause: maybe a semicolon is missing before `value validator`?[0m
+[0m[[0m[31merror[0m] [0m[0m    validator.io.instruction_index := current_addr_instruction_offset[0m
+[0m[[0m[31merror[0m] [0m[0m    ^[0m
 [0m[[0m[31merror[0m] [0m[0mone error found[0m
