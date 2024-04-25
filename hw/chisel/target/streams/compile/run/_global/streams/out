@@ -1,14 +1,36 @@
-[0m[[0m[31merror[0m] [0m[0mchisel3.package$ExpectedChiselTypeException: reg type 'L1_instruction_cache.io_cache_data_valid_bits_0_?: OpResult[Bool]' must be a Chisel type, not hardware[0m
-[0m[[0m[31merror[0m] [0m[0m	at ... ()[0m
-[0m[[0m[31merror[0m] [0m[0m	at L1_instruction_cache.$anonfun$new$79(instruction_cache.scala:295)[0m
-[0m[[0m[31merror[0m] [0m[0m	at chisel3.Data.$anonfun$$colon$eq$1(Data.scala:704)[0m
-[0m[[0m[31merror[0m] [0m[0m	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.scala:18)[0m
-[0m[[0m[31merror[0m] [0m[0m	at chisel3.experimental.prefix$.apply(prefix.scala:33)[0m
-[0m[[0m[31merror[0m] [0m[0m	at chisel3.Data.$colon$eq(Data.scala:704)[0m
-[0m[[0m[31merror[0m] [0m[0m	at L1_instruction_cache.$anonfun$new$78(instruction_cache.scala:295)[0m
-[0m[[0m[31merror[0m] [0m[0m	at scala.collection.immutable.Range.foreach$mVc$sp(Range.scala:190)[0m
-[0m[[0m[31merror[0m] [0m[0m	at L1_instruction_cache.<init>(instruction_cache.scala:294)[0m
-[0m[[0m[31merror[0m] [0m[0m	at Main$.$anonfun$new$1(top.scala:57)[0m
-[0m[[0m[31merror[0m] [0m[0m	at ... ()[0m
-[0m[[0m[31merror[0m] [0m[0m	at ... (Stack trace trimmed to user code only. Rerun with --full-stacktrace to see the full stack trace)[0m
-[0m[[0m[31merror[0m] [0m[0m(Compile / [31mrun[0m) chisel3.package$ExpectedChiselTypeException: reg type 'L1_instruction_cache.io_cache_data_valid_bits_0_?: OpResult[Bool]' must be a Chisel type, not hardware[0m
+[0m[[0m[31merror[0m] [0m[0mcirct.stage.phases.Exceptions$FirtoolNonZeroExitCode: /home/hakam/.cache/llvm-firtool/1.62.0/bin/firtool returned a non-zero exit code. Note that this version of Chisel (6.0.0) was published against firtool version 1.62.0.[0m
+[0m[[0m[31merror[0m] [0m[0m------------------------------------------------------------------------------[0m
+[0m[[0m[31merror[0m] [0m[0mExitCode:[0m
+[0m[[0m[31merror[0m] [0m[0m1[0m
+[0m[[0m[31merror[0m] [0m[0mSTDOUT:[0m
+[0m[[0m[31merror[0m] [0m[0m[0m
+[0m[[0m[31merror[0m] [0m[0mSTDERR:[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/BP/RAS.scala:84:27: error: sink "tos_wr" not fully initialized in "RAS"[0m
+[0m[[0m[31merror[0m] [0m[0m    val tos_wr      = Wire(Bool())[0m
+[0m[[0m[31merror[0m] [0m[0m                          ^[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/BP/RAS.scala:85:27: error: sink "tos_fwd" not fully initialized in "RAS"[0m
+[0m[[0m[31merror[0m] [0m[0m    val tos_fwd     = Wire(UInt(tosBits.W))[0m
+[0m[[0m[31merror[0m] [0m[0m                          ^[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/BP/RAS.scala:86:27: error: sink "tos_mux_out" not fully initialized in "RAS"[0m
+[0m[[0m[31merror[0m] [0m[0m    val tos_mux_out = Wire(UInt(tosBits.W))[0m
+[0m[[0m[31merror[0m] [0m[0m                          ^[0m
+[0m[[0m[31merror[0m] [0m[0m[0m
+[0m[[0m[31merror[0m] [0m[0m------------------------------------------------------------------------------[0m
+[0m[[0m[31merror[0m] [0m[0m(Compile / [31mrun[0m) circt.stage.phases.Exceptions$FirtoolNonZeroExitCode: /home/hakam/.cache/llvm-firtool/1.62.0/bin/firtool returned a non-zero exit code. Note that this version of Chisel (6.0.0) was published against firtool version 1.62.0.[0m
+[0m[[0m[31merror[0m] [0m[0m------------------------------------------------------------------------------[0m
+[0m[[0m[31merror[0m] [0m[0mExitCode:[0m
+[0m[[0m[31merror[0m] [0m[0m1[0m
+[0m[[0m[31merror[0m] [0m[0mSTDOUT:[0m
+[0m[[0m[31merror[0m] [0m[0m[0m
+[0m[[0m[31merror[0m] [0m[0mSTDERR:[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/BP/RAS.scala:84:27: error: sink "tos_wr" not fully initialized in "RAS"[0m
+[0m[[0m[31merror[0m] [0m[0m    val tos_wr      = Wire(Bool())[0m
+[0m[[0m[31merror[0m] [0m[0m                          ^[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/BP/RAS.scala:85:27: error: sink "tos_fwd" not fully initialized in "RAS"[0m
+[0m[[0m[31merror[0m] [0m[0m    val tos_fwd     = Wire(UInt(tosBits.W))[0m
+[0m[[0m[31merror[0m] [0m[0m                          ^[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/BP/RAS.scala:86:27: error: sink "tos_mux_out" not fully initialized in "RAS"[0m
+[0m[[0m[31merror[0m] [0m[0m    val tos_mux_out = Wire(UInt(tosBits.W))[0m
+[0m[[0m[31merror[0m] [0m[0m                          ^[0m
+[0m[[0m[31merror[0m] [0m[0m[0m
+[0m[[0m[31merror[0m] [0m[0m------------------------------------------------------------------------------[0m

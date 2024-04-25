@@ -250,9 +250,7 @@ async def instructionCacheFuzz_hits_only(dut):
 
 @cocotb.test()
 async def instructionCacheFuzz_hits_only_random_offset(dut):
-
     random.seed(0x42)
-
     await cocotb.start(generateClock(dut)) 
 
     # initialize an instruction memory
@@ -314,14 +312,9 @@ async def instructionCacheFuzz_hits_only_random_offset(dut):
     while(transactionRequestQ):
         if(dut.io_cpu_addr_ready.value == 1):
             transaction = transactionRequestQ.pop(0)
-
-            #set = getSet(addr, sets=SETS, blockSize=BLOCKSIZE)
             requestDutTransaction(dut, transaction)
-
             modelOutputQ.append(requestModelTransaction(model, transaction))
-
         if(dut.io_resp_valid.value == 1):
-            #await FallingEdge(dut.clock)
             instructions=[0]*4
             validBits=0
             for i in range(FETCHWIDTH):
@@ -331,11 +324,51 @@ async def instructionCacheFuzz_hits_only_random_offset(dut):
             
 
         if(modelOutputQ and dutOutputQ):
-            # compare outputs
-            # dequeue
             dutOutput=dutOutputQ.pop(0)
             modelOutput = modelOutputQ.pop(0)
             assert dutOutput == modelOutput
 
         await RisingEdge(dut.clock)
         deassertRequestDutTransaction(dut)
+
+
+@cocotb.test()
+async def test0(dut):
+    random.seed(0x42)
+    await cocotb.start(generateClock(dut)) 
+
+    await reset(dut)
+    await RisingEdge(dut.clock)
+    await RisingEdge(dut.clock)
+    await RisingEdge(dut.clock)
+
+
+    dut.io_cpu_addr_valid.value = 1
+    dut.io_cpu_addr_bits.value = generateAddr(0xdead, set=0, byteOffset=0, sets=64, blockSize=32)
+    await RisingEdge(dut.clock)
+    dut.io_cpu_addr_valid.value = 0
+    await generateDramResp(dut, dramData=(0xdead)<<(30*8), dramLantecy="Random")
+    await RisingEdge(dut.clock)
+    await RisingEdge(dut.clock)
+    dut.io_cpu_addr_valid.value = 1
+    dut.io_cpu_addr_bits.value = generateAddr(0xdead, set=0, byteOffset=0, sets=64, blockSize=32)
+    await RisingEdge(dut.clock)
+    assert dut.io_cache_data_instructions_0.value == 0xdead0000
+    await RisingEdge(dut.clock)
+    dut.io_cpu_addr_valid.value = 1
+    dut.io_cpu_addr_bits.value = generateAddr(0xdead, set=0, byteOffset=16, sets=64, blockSize=32)
+    await RisingEdge(dut.clock)
+    await RisingEdge(dut.clock)
+    assert dut.io_cache_data_instructions_0.value == 0x00000000
+
+
+    dut.io_cpu_addr_bits.value = generateAddr(0xdead, set=0, byteOffset=4, sets=64, blockSize=32)
+    await RisingEdge(dut.clock)
+    await RisingEdge(dut.clock)
+    assert dut.io_cache_data_instructions_0.value == 0xdead0000
+
+    dut.io_cpu_addr_bits.value = generateAddr(0xdead, set=0, byteOffset=14, sets=64, blockSize=32)
+    await RisingEdge(dut.clock)
+    await RisingEdge(dut.clock)
+    assert dut.io_cache_data_instructions_0.value == 0xdead0000
+    assert dut.io_cache_data_valid_bits_0.value == 0

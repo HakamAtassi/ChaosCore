@@ -147,7 +147,6 @@ module L1_instruction_cache(
   wire [277:0]     _data_memory_1_io_data_out;
   wire [277:0]     _data_memory_0_io_data_out;
   wire [1:0]       _LRU_memory_io_data_out;
-  wire             aligned_packet_index = 1'h0;
   reg  [1:0]       cache_state;
   reg  [31:0]      replay_addr;
   reg  [20:0]      replay_tag;
@@ -155,7 +154,6 @@ module L1_instruction_cache(
   reg  [31:0]      fetch_PC_buf;
   wire [20:0]      current_addr_tag = current_addr[29:9];
   wire [5:0]       current_addr_set = current_addr[8:3];
-  wire             current_addr_fetch_packet = current_addr[2];
   wire [2:0]       current_addr_instruction_offset = current_addr[2:0];
   wire             _GEN = miss & ~io_kill;
   wire             _GEN_0 = cache_state == 2'h1;
@@ -180,7 +178,6 @@ module L1_instruction_cache(
   reg              miss_REG_1;
   assign miss = ~(|hit_oh) & (miss_REG | miss_REG_1);
   reg              packet_index_REG;
-  wire             packet_index = packet_index_REG;
   wire [255:0]     hit_instruction_data =
     hit_oh_vec_1
       ? _data_memory_1_io_data_out[255:0]
@@ -194,7 +191,7 @@ module L1_instruction_cache(
      {hit_instruction_data[191:160]},
      {hit_instruction_data[223:192]},
      {hit_instruction_data[255:224]}};
-  wire [2:0]       _GEN_2 = {packet_index, 2'h0};
+  wire [2:0]       _GEN_2 = {packet_index_REG, 2'h0};
   reg              io_cache_data_valid_bits_0_REG;
   reg              io_cache_data_valid_bits_1_REG;
   reg              io_cache_data_valid_bits_2_REG;
@@ -236,7 +233,7 @@ module L1_instruction_cache(
     hit_REG_1 <= replay_valid;
     miss_REG <= io_cpu_addr_valid;
     miss_REG_1 <= replay_valid;
-    packet_index_REG <= current_addr_fetch_packet;
+    packet_index_REG <= current_addr[2];
     io_cache_data_valid_bits_0_REG <= _validator_io_instruction_output[3];
     io_cache_data_valid_bits_1_REG <= _validator_io_instruction_output[2];
     io_cache_data_valid_bits_2_REG <= _validator_io_instruction_output[1];
@@ -274,7 +271,7 @@ module L1_instruction_cache(
   assign io_dram_data_ready =
     (|cache_state) ? _GEN_0 & (io_kill | ~io_dram_data_valid) : _GEN;
   assign io_cache_data_fetch_PC = fetch_PC_buf;
-  assign io_cache_data_instructions_0 = _GEN_1[{packet_index, 2'h0}];
+  assign io_cache_data_instructions_0 = _GEN_1[{packet_index_REG, 2'h0}];
   assign io_cache_data_instructions_1 = _GEN_1[_GEN_2 + 3'h1];
   assign io_cache_data_instructions_2 = _GEN_1[_GEN_2 + 3'h2];
   assign io_cache_data_instructions_3 = _GEN_1[_GEN_2 + 3'h3];

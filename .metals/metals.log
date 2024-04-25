@@ -16491,3 +16491,98 @@ WARNING: Unmatched cancel notification for request id 13414
 2024.04.25 05:57:09 INFO  time: compiled ChaosCore_bd2c96d2de in 82ms
 2024.04.25 05:57:11 INFO  compiling chaoscore_bd2c96d2de (25 scala sources)
 2024.04.25 05:57:11 INFO  time: compiled ChaosCore_bd2c96d2de in 54ms
+2024.04.25 07:27:32 INFO  Started: Metals version 1.3.0 in folders '/home/hakam/repos/ChaosCore' for client Visual Studio Code 1.88.1.
+SLF4J: Class path contains multiple SLF4J providers.
+SLF4J: Found provider [scribe.slf4j.ScribeServiceProvider@213336fc]
+SLF4J: Found provider [ch.qos.logback.classic.spi.LogbackServiceProvider@43f8cca5]
+SLF4J: See https://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+SLF4J: Actual provider is of type [scribe.slf4j.ScribeServiceProvider@213336fc]
+2024.04.25 07:27:36 WARN  Flyway upgrade recommended: H2 2.2.224 is newer than this version of Flyway and support has not been tested. The latest supported version of H2 is 2.2.220.
+2024.04.25 07:27:36 INFO  Attempting to connect to the build server...
+2024.04.25 07:27:36 INFO  Running BSP server List(/home/hakam/.local/share/coursier/bin/.scala-cli.aux, bsp, --json-options, /home/hakam/repos/ChaosCore/.scala-build/ide-options-v2.json, /home/hakam/repos/ChaosCore)
+2024.04.25 07:27:36 INFO  tracing is disabled for protocol BSP, to enable tracing of incoming and outgoing JSON messages create an empty file at /home/hakam/repos/ChaosCore/.metals/bsp.trace.json or /home/hakam/.cache/metals/bsp.trace.json
+Apr 25, 2024 7:27:37 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 1
+2024.04.25 07:27:37 INFO  BSP server: Starting compilation server
+2024.04.25 07:27:39 INFO  time: Connected to build server in 2.69s
+2024.04.25 07:27:39 INFO  Connected to Build server: scala-cli v1.1.2
+2024.04.25 07:27:39 INFO  compiling chaoscore_bd2c96d2de (25 scala sources)
+2024.04.25 07:27:41 INFO  compiling chaoscore_bd2c96d2de (25 scala sources)
+2024.04.25 07:27:45 INFO  no build target found for /home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/Frontend/instruction_cache.scala. Using presentation compiler with project's scala-library version: 3.3.3
+2024.04.25 07:27:47 INFO  time: indexed workspace in 1.21s
+2024.04.25 07:38:18 INFO  compiling chaoscore_bd2c96d2de (25 scala sources)
+2024.04.25 07:38:18 INFO  time: compiled ChaosCore_bd2c96d2de in 0.34s
+2024.04.25 07:38:18 INFO  compiling chaoscore_bd2c96d2de (25 scala sources)
+2024.04.25 07:38:18 INFO  time: compiled ChaosCore_bd2c96d2de in 0.37s
+Apr 25, 2024 7:57:39 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 83
+2024.04.25 07:57:39 INFO  compiling chaoscore_bd2c96d2de (25 scala sources)
+2024.04.25 07:57:39 INFO  time: compiled ChaosCore_bd2c96d2de in 0.23s
+Apr 25, 2024 7:57:50 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 100
+2024.04.25 07:58:26 INFO  compiling chaoscore_bd2c96d2de (25 scala sources)
+2024.04.25 07:58:26 INFO  time: compiled ChaosCore_bd2c96d2de in 0.22s
+2024.04.25 07:59:21 INFO  compiling chaoscore_bd2c96d2de (25 scala sources)
+2024.04.25 07:59:21 INFO  time: compiled ChaosCore_bd2c96d2de in 0.23s
+2024.04.25 08:00:05 INFO  compiling chaoscore_bd2c96d2de (25 scala sources)
+2024.04.25 08:00:05 INFO  time: compiled ChaosCore_bd2c96d2de in 0.17s
+Apr 25, 2024 8:01:14 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 410
+Apr 25, 2024 8:01:14 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 412
+2024.04.25 08:02:10 INFO  compiling chaoscore_bd2c96d2de (25 scala sources)
+2024.04.25 08:02:10 INFO  time: compiled ChaosCore_bd2c96d2de in 0.18s
+2024.04.25 08:02:18 INFO  compiling chaoscore_bd2c96d2de (25 scala sources)
+2024.04.25 08:02:18 INFO  time: compiled ChaosCore_bd2c96d2de in 0.21s
+2024.04.25 08:02:18 INFO  compiling chaoscore_bd2c96d2de (25 scala sources)
+2024.04.25 08:02:18 INFO  time: compiled ChaosCore_bd2c96d2de in 0.17s
+2024.04.25 08:02:26 INFO  compiling chaoscore_bd2c96d2de (25 scala sources)
+2024.04.25 08:02:26 INFO  time: compiled ChaosCore_bd2c96d2de in 0.12s
+Apr 25, 2024 8:04:06 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 636
+Apr 25, 2024 8:17:20 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 671
+2024.04.25 08:18:01 INFO  compiling chaoscore_bd2c96d2de (25 scala sources)
+2024.04.25 08:18:01 INFO  time: compiled ChaosCore_bd2c96d2de in 0.16s
+Apr 25, 2024 8:43:00 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 819
+2024.04.25 08:43:51 INFO  compiling chaoscore_bd2c96d2de (25 scala sources)
+2024.04.25 08:43:51 INFO  time: compiled ChaosCore_bd2c96d2de in 0.14s
+Apr 25, 2024 8:44:20 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 979
+2024.04.25 08:45:30 INFO  compiling chaoscore_bd2c96d2de (25 scala sources)
+2024.04.25 08:45:30 INFO  time: compiled ChaosCore_bd2c96d2de in 0.13s
+2024.04.25 08:45:38 INFO  compiling chaoscore_bd2c96d2de (25 scala sources)
+2024.04.25 08:45:38 INFO  time: compiled ChaosCore_bd2c96d2de in 98ms
+2024.04.25 08:45:46 INFO  compiling chaoscore_bd2c96d2de (25 scala sources)
+2024.04.25 08:45:46 INFO  time: compiled ChaosCore_bd2c96d2de in 96ms
+2024.04.25 08:46:13 INFO  compiling chaoscore_bd2c96d2de (25 scala sources)
+2024.04.25 08:46:13 INFO  time: compiled ChaosCore_bd2c96d2de in 0.11s
+2024.04.25 08:46:57 INFO  compiling chaoscore_bd2c96d2de (25 scala sources)
+2024.04.25 08:46:57 INFO  time: compiled ChaosCore_bd2c96d2de in 0.11s
+2024.04.25 08:47:21 INFO  compiling chaoscore_bd2c96d2de (25 scala sources)
+2024.04.25 08:47:21 INFO  time: compiled ChaosCore_bd2c96d2de in 0.1s
+2024.04.25 08:47:37 INFO  compiling chaoscore_bd2c96d2de (25 scala sources)
+2024.04.25 08:47:37 INFO  time: compiled ChaosCore_bd2c96d2de in 0.1s
+2024.04.25 08:50:55 INFO  compiling chaoscore_bd2c96d2de (25 scala sources)
+2024.04.25 08:50:55 INFO  time: compiled ChaosCore_bd2c96d2de in 0.13s
+Apr 25, 2024 8:53:23 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 1550
+Apr 25, 2024 8:53:51 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 1729
+2024.04.25 08:54:00 INFO  compiling chaoscore_bd2c96d2de (25 scala sources)
+2024.04.25 08:54:00 INFO  time: compiled ChaosCore_bd2c96d2de in 0.12s
+2024.04.25 08:54:07 INFO  compiling chaoscore_bd2c96d2de (25 scala sources)
+2024.04.25 08:54:07 INFO  time: compiled ChaosCore_bd2c96d2de in 88ms
+2024.04.25 08:54:11 INFO  compiling chaoscore_bd2c96d2de (25 scala sources)
+2024.04.25 08:54:11 INFO  time: compiled ChaosCore_bd2c96d2de in 81ms
+2024.04.25 08:54:11 INFO  compiling chaoscore_bd2c96d2de (25 scala sources)
+2024.04.25 08:54:11 INFO  time: compiled ChaosCore_bd2c96d2de in 87ms
+2024.04.25 08:54:18 WARN  Using indexes to guess the definition of TOS
+2024.04.25 08:54:18 INFO  compiling chaoscore_bd2c96d2de (25 scala sources)
+2024.04.25 08:54:18 INFO  time: compiled ChaosCore_bd2c96d2de in 0.13s
+2024.04.25 08:54:24 WARN  Using indexes to guess the definition of TOS
+2024.04.25 08:54:24 INFO  compiling chaoscore_bd2c96d2de (25 scala sources)
+2024.04.25 08:54:24 INFO  time: compiled ChaosCore_bd2c96d2de in 76ms
+2024.04.25 08:54:31 INFO  compiling chaoscore_bd2c96d2de (25 scala sources)
+2024.04.25 08:54:31 INFO  time: compiled ChaosCore_bd2c96d2de in 79ms

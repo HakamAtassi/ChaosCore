@@ -55,7 +55,7 @@ class RAS(entires:Int = 128) extends Module{
         val revert_valid    = Input(Bool())
 
         // output
-        val ret_addr = Output(UInt(32.W))             // Rer addr
+        val ret_addr = Output(UInt(32.W))             // Ret addr
         val NEXT     = Output(UInt(nextBits.W))       // To checkpoint
         val TOS      = Output(UInt(tosBits.W))        // ...
 
@@ -81,40 +81,47 @@ class RAS(entires:Int = 128) extends Module{
     val TOS     = RegInit(UInt(tosBits.W), 0.U)
     val NOS     = Wire(UInt(nosBits.W))
 
-    val tos_wr      = Wire(Bool())
-    val tos_fwd     = Wire(UInt(tosBits.W))
-    val tos_mux_out = Wire(UInt(tosBits.W))
-
     val RAS_memory = Module(new SDPReadWriteSmem(depth=entires, width=entryWidth))
 
     // write to TOS
     when(io.revert_valid === 1.B){   // revert (misprediction)
-        tos_mux_out  := io.revert_TOS
+        TOS := io.revert_TOS
     }.elsewhen(io.wr_valid === 1.B){   // call (push to stack)
-        tos_mux_out := NEXT
+        TOS := NEXT
     }.elsewhen(io.rd_valid){ // ret (pop from stack)
-        tos_mux_out := NOS // move to next entry
+        TOS := NOS
     }.otherwise{
-        tos_mux_out := TOS
+        TOS := TOS
     }
+
+
     
     // for TOS forwarding
-    tos_wr  := io.revert_valid || io.wr_valid || io.rd_valid
-    tos_fwd := tos_mux_out  // forward write
-    TOS := tos_mux_out  // 1 cycle delay
+    //TOS := tos_mux_out  // 1 cycle delay
+
+    RAS_memory.io.enable := 1.B
 
     // Read port
-    RAS_memory.io.rd_addr := Mux(tos_wr ,TOS, tos_fwd)  // when TOS is being updated, forward its value to the read port such that dout is ready next cycle
+    when(io.wr_valid){
+        RAS_memory.io.rd_addr := NEXT
+    }.elsewhen(io.rd_valid){
+        RAS_memory.io.rd_addr := NOS
+    }.otherwise{
+        RAS_memory.io.rd_addr := TOS
+    }
+    //RAS_memory.io.rd_addr := Mux(io.wr_valid, NEXT, TOS)
     io.ret_addr := RAS_memory.io.data_out(31,0)
 
     // Write port
     RAS_memory.io.wr_addr := NEXT
-    RAS_memory.io.data_in := Cat(io.wr_addr, TOS) // each RAS entry contains the address and a link to the next entry on the stack
+    RAS_memory.io.data_in := Cat(TOS, io.wr_addr) // each RAS entry contains the address and a link to the next entry on the stack
     RAS_memory.io.wr_en   := io.wr_valid
 
     // assign next-on-stack
-    NOS := RAS_memory.io.data_out(32+nosBits, 32)    
+    NOS := RAS_memory.io.data_out(31+nosBits, 32)    
 
+    io.NEXT := NEXT
+    io.TOS := TOS
     when(io.revert_valid === 1.B){        // revert (misprediction)
         NEXT := io.revert_NEXT
     }.elsewhen(io.wr_valid === 1.B){   // call (push to stack)
