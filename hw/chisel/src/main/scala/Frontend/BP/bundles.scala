@@ -40,7 +40,6 @@ class fetch_packet(width:Int = 4) extends Bundle{
     val valid_bits      = Vec(width, Bool())
 }
 
-
 class BTB_resp(GHR_width:Int=16, width:Int=4) extends Bundle{  // Width agnostic
     val hit     = Bool()
     val idx     = UInt(width.W)
@@ -60,4 +59,46 @@ class metadata extends Bundle{
     val instruction_PC  = UInt(32.W)
     val RAS             = UInt(32.W)
     val BTB_target      = UInt(32.W)
+}
+
+/////////////////
+// BP channels //
+/////////////////
+
+class commit(fetchWidth:Int=4, GHRWidth:Int=16) extends Bundle{
+    val PC      = UInt(32.W)
+    val GHR     = UInt(GHRWidth.W)
+    val T_NT    = Bool()
+    
+    val valid    = Bool()
+    val tag      = UInt()
+    val target   = UInt(32.W)
+    val brType  = UInt(typeBits.W)
+    val brMask   = UInt(brMaskBits.W)
+
+    val valid   = Bool()
+    // PC entires...
+}
+
+class mispredict(GHRWidth:Int=16, RASEntires:Int = 128) extends Bundle{
+    val PC = UInt(32.W) //
+    val GHR = UInt(GHRWidth.W)  // To reset GHR
+    val TOS = UInt(log2Ceil(RASEntires).W)  // To reset GHR
+    val NEXT = UInt(log2Ceil(RASEntires).W) // TO reset GHR
+}
+
+class RAS_update(GHRWidth:Int=16) extends Bundle{
+    val call_addr = UInt(32.W)
+    val call = Bool()
+    val ret = Bool()
+}
+
+class revert(GHRWidth:Int=16) extends Bundle{
+    val valid             = Bool()
+    val GHR                = Bool()
+}
+
+class prediction(fetchWidth:Int=4, GHRWidth:Int=16, RASEntires:Int=128) extends Bundle{
+    val stub             = Bool()
+    // TODO: 
 }
