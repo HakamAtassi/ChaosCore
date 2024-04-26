@@ -33,7 +33,7 @@ import chisel3.util._
 import java.io.{File, FileWriter}
 import java.rmi.server.UID
 
-
+// FIXME: not parameterized for fetchwidth...
 class hash_BTB(entries:Int = 4096) extends Module{
 
     
@@ -63,14 +63,25 @@ class hash_BTB(entries:Int = 4096) extends Module{
 
         //commit-input
         val commit_PC       = Input(UInt(32.W))
-        val commit_data     = Input(UInt(entryWidth.W))
-        val commit_valid    = Input(Bool())
 
+        val commit_target      = Input(UInt(32.W))
+        val commit_type        = Input(UInt(typeBits.W))
+        val commit_brMask      = Input(UInt(brMaskBits.W))
+
+        val commit_valid    = Input(Bool())
 
         //val fetch_packet_data = Decoupled(UInt(32.W))  // output
     })
 
 
+    val BTB_valid_output      = Wire(UInt(validBits.W))
+    val BTB_tag_output        = Wire(UInt(tagBits.W))
+    val BTB_target_output     = Wire(UInt(targetBits.W))
+    val BTB_type_output       = Wire(UInt(typeBits.W))
+    val BTB_brMask_output     = Wire(UInt(brMaskBits.W))
+
+    val input_tag = io.predict_PC(31, 31-tagBits+1)
+    val commit_tag = io.commit_PC(31, 31-tagBits+1)
 
     // memory // 
 
@@ -88,7 +99,7 @@ class hash_BTB(entries:Int = 4096) extends Module{
 
     BTB_memory.io.wr_addr := commit_BTB_address
     BTB_memory.io.wr_en   := io.commit_valid
-    BTB_memory.io.data_in := io.commit_data
+    BTB_memory.io.data_in := Cat(1.U, commit_tag, io.commit_target, io.commit_type, io.commit_brMask)
 
     prediction_BTB_output := BTB_memory.io.data_out
 
@@ -97,13 +108,6 @@ class hash_BTB(entries:Int = 4096) extends Module{
     // Hit logic and assignment logic // 
     ////////////////////////////////////
 
-    val BTB_valid_output      = Wire(UInt(validBits.W))
-    val BTB_tag_output        = Wire(UInt(tagBits.W))
-    val BTB_target_output     = Wire(UInt(targetBits.W))
-    val BTB_type_output       = Wire(UInt(typeBits.W))
-    val BTB_brMask_output     = Wire(UInt(brMaskBits.W))
-
-    val input_tag = io.predict_PC(31, 31-tagBits+1)
 
     BTB_valid_output    := prediction_BTB_output(entryWidth-1)
     BTB_tag_output      := prediction_BTB_output(entryWidth-1-validBits, entryWidth-1-validBits-tagBits+1)

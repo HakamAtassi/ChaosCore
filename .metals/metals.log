@@ -16794,3 +16794,20 @@ WARNING: Unmatched cancel notification for request id 8044
 2024.04.25 17:32:29 INFO  time: compiled ChaosCore_bd2c96d2de in 91ms
 2024.04.25 17:32:33 INFO  compiling chaoscore_bd2c96d2de (25 scala sources)
 2024.04.25 17:32:33 INFO  time: compiled ChaosCore_bd2c96d2de in 71ms
+2024.04.27 01:57:29 INFO  Started: Metals version 1.3.0 in folders '/home/hakam/ChaosCore' for client Visual Studio Code 1.88.1.[0m
+SLF4J: Class path contains multiple SLF4J providers.
+SLF4J: Found provider [scribe.slf4j.ScribeServiceProvider@7b6ec12b]
+SLF4J: Found provider [ch.qos.logback.classic.spi.LogbackServiceProvider@3b045819]
+SLF4J: See https://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+SLF4J: Actual provider is of type [scribe.slf4j.ScribeServiceProvider@7b6ec12b]
+2024.04.27 01:57:32 WARN  Flyway upgrade recommended: H2 2.2.224 is newer than this version of Flyway and support has not been tested. The latest supported version of H2 is 2.2.220.[0m
+2024.04.27 01:57:32 INFO  Attempting to connect to the build server...[0m
+2024.04.27 01:57:32 INFO  Running BSP server List(/home/hakam/.local/share/coursier/bin/.scala-cli.aux, bsp, --json-options, /home/hakam/repos/ChaosCore/.scala-build/ide-options-v2.json, /home/hakam/repos/ChaosCore)[0m
+2024.04.27 01:57:32 INFO  tracing is disabled for protocol BSP, to enable tracing of incoming and outgoing JSON messages create an empty file at /home/hakam/ChaosCore/.metals/bsp.trace.json or /home/hakam/.cache/metals/bsp.trace.json[0m
+2024.04.27 01:57:32 INFO  time: Connected to build server in 0.5s[0m
+2024.04.27 01:57:32 INFO  Connected to Build server: scala-cli v1.1.2[0m
+2024.04.27 01:57:33 INFO  compiling chaoscore_bd2c96d2de (23 scala sources)[0m
+2024.04.27 01:57:33 INFO  time: compiled ChaosCore_bd2c96d2de in 0.19s[0m
+2024.04.27 01:57:33 INFO  compiling chaoscore_bd2c96d2de (23 scala sources)[0m
+2024.04.27 01:57:33 INFO  time: compiled ChaosCore_bd2c96d2de in 89ms[0m
+2024.04.27 01:57:35 INFO  time: indexed workspace in 2.31s[0m
