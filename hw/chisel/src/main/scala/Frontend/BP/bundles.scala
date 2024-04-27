@@ -72,10 +72,10 @@ class commit(fetchWidth:Int=4, GHRWidth:Int=16, BTBEntries:Int=4096) extends Bun
     val GHR     = Input(UInt(GHRWidth.W))
     val T_NT    = Input(Bool())
     
-    val tag      =Input( UInt(getBTBTagBits(BTBEntries).W))
-    val target   =Input( UInt(32.W))
-    val br_type  =Input( UInt(2.W))
-    val br_mask  =Input( UInt(fetchWidth.W))
+    val tag      =Input(UInt(getBTBTagBits(BTBEntries).W))
+    val target   =Input(UInt(32.W))
+    val br_type  =Input(UInt(2.W))
+    val br_mask  =Input(UInt(fetchWidth.W))
 }
 
 class mispredict(GHRWidth:Int=16, RASEntries:Int = 128) extends Bundle{
@@ -114,9 +114,6 @@ class BTB_resp(fetchWidth:Int=4,GHRWidth:Int=16) extends Bundle{  // Width agnos
 }
 
 class prediction(fetchWidth:Int=4, GHRWidth:Int=16) extends Bundle{
-    val PC          =   Input(UInt(32.W))
-    val ready       =   Input(Bool())
-    val PC_valid    =   Input(Bool())   // FIXME: this is not assigned
 
     val hit         =   Output(Bool())  // FIXME: I dont think this is assigned in BTB since it was added after the fact
     val target      =   Output(UInt(32.W))
@@ -124,6 +121,5 @@ class prediction(fetchWidth:Int=4, GHRWidth:Int=16) extends Bundle{
     val br_mask     =   Output(UInt(fetchWidth.W))
     val GHR         =   Output(UInt(GHRWidth.W))
     val T_NT        =   Output(Bool())
-    val valid       =   Output(Bool())
 
 }

@@ -41,7 +41,7 @@ class branch_decoder(index:Int=0, fetchWidth:Int=4, GHRWidth:Int=16) extends Mod
         val instruction = Input(UInt(32.W))
         val valid       = Input(Bool())
         
-        val prediction  = Input(new prediction(fetchWidth=fetchWidth, GHRWidth=GHRWidth))
+        val prediction  = Flipped(Decoupled(new prediction(fetchWidth=fetchWidth, GHRWidth=GHRWidth)))
         val RAS_read    = Flipped(new RAS_read())
 
         val T_NT        = Output(Bool())
@@ -94,9 +94,9 @@ class branch_decoder(index:Int=0, fetchWidth:Int=4, GHRWidth:Int=16) extends Mod
     when (JAL) {
         io.T_NT := io.valid // JAL addr == PC+imm. dir is always 1. Therefore, taken if valid (everything available).
     }.elsewhen (JALR) {
-        io.T_NT := io.valid && (Ret || (io.prediction.hit && io.prediction.br_mask(index)))  // Direction is always 2. Address is hit or miss. Only taken if addr is available.
+        io.T_NT := io.valid && (Ret || (io.prediction.bits.hit && io.prediction.bits.br_mask(index)))  // Direction is always 2. Address is hit or miss. Only taken if addr is available.
     }.elsewhen (BR) {
-        io.T_NT := io.valid && io.prediction.br_mask(index)  // Address is PC + Imm. Only taken if PHT is 1. However,
+        io.T_NT := io.valid && io.prediction.bits.br_mask(index)  // Address is PC + Imm. Only taken if PHT is 1. However,
         // BR also depends on BTB idx since, unlike JAL and JALR, where priority can be easily arbitrated based on what comes first,
         // Branches may or may not be taken. Therefore, for the branch to be taken, it must also be the dominant one (where as with JAL, the first one is the dominant one).
     }.otherwise {
@@ -113,7 +113,9 @@ class branch_decoder(index:Int=0, fetchWidth:Int=4, GHRWidth:Int=16) extends Mod
     io.metadata.Imm             :=  imm
     io.metadata.instruction_PC  :=  fetch_PC_adjusted
     io.metadata.RAS             :=  io.RAS_read.ret_addr
-    io.metadata.BTB_target      :=  io.prediction.target
+    io.metadata.BTB_target      :=  io.prediction.bits.target
+
+    io.prediction.ready := 1.B
 
 
 
