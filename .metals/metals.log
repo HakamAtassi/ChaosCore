@@ -16811,3 +16811,1841 @@ SLF4J: Actual provider is of type [scribe.slf4j.ScribeServiceProvider@7b6ec12b]
 2024.04.27 01:57:33 INFO  compiling chaoscore_bd2c96d2de (23 scala sources)[0m
 2024.04.27 01:57:33 INFO  time: compiled ChaosCore_bd2c96d2de in 89ms[0m
 2024.04.27 01:57:35 INFO  time: indexed workspace in 2.31s[0m
+2024.04.27 01:58:35 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala[0m
+2024.04.27 01:58:43 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/associative_BTB.scala[0m
+Apr 27, 2024 1:59:15 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 87
+2024.04.27 01:59:28 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala[0m
+2024.04.27 02:01:40 INFO  Shut down connection with build server.[0m
+2024.04.27 12:50:42 INFO  Started: Metals version 1.3.0 in folders '/home/hakam/ChaosCore' for client Visual Studio Code 1.88.1.
+SLF4J: Class path contains multiple SLF4J providers.
+SLF4J: Found provider [scribe.slf4j.ScribeServiceProvider@662a83b7]
+SLF4J: Found provider [ch.qos.logback.classic.spi.LogbackServiceProvider@17571954]
+SLF4J: See https://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+SLF4J: Actual provider is of type [scribe.slf4j.ScribeServiceProvider@662a83b7]
+2024.04.27 12:50:42 WARN  Flyway upgrade recommended: H2 2.2.224 is newer than this version of Flyway and support has not been tested. The latest supported version of H2 is 2.2.220.
+2024.04.27 12:50:43 INFO  Attempting to connect to the build server...
+2024.04.27 12:50:43 INFO  Running BSP server List(/home/hakam/.local/share/coursier/bin/.scala-cli.aux, bsp, --json-options, /home/hakam/repos/ChaosCore/.scala-build/ide-options-v2.json, /home/hakam/repos/ChaosCore)
+2024.04.27 12:50:43 INFO  tracing is disabled for protocol BSP, to enable tracing of incoming and outgoing JSON messages create an empty file at /home/hakam/ChaosCore/.metals/bsp.trace.json or /home/hakam/.cache/metals/bsp.trace.json
+Apr 27, 2024 12:50:43 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 1
+Apr 27, 2024 12:50:43 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 2
+Apr 27, 2024 12:50:43 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 3
+2024.04.27 12:50:44 INFO  BSP server: Starting compilation server
+2024.04.27 12:50:45 INFO  time: Connected to build server in 2.7s
+2024.04.27 12:50:45 INFO  Connected to Build server: scala-cli v1.1.2
+2024.04.27 12:50:46 INFO  compiling chaoscore_bd2c96d2de (23 scala sources)
+2024.04.27 12:50:48 INFO  compiling chaoscore_bd2c96d2de (23 scala sources)
+2024.04.27 12:50:51 INFO  no build target found for /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala. Using presentation compiler with project's scala-library version: 3.3.3
+2024.04.27 12:50:52 INFO  time: indexed workspace in 1.12s
+2024.04.27 12:50:53 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 12:50:58 INFO  time: code lens generation in 5.74s
+2024.04.27 13:21:13 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 13:22:46 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 13:23:06 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 13:23:06 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 13:23:23 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+Apr 27, 2024 1:23:40 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 706
+2024.04.27 13:23:45 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 13:24:49 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 13:25:28 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 13:25:32 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+Apr 27, 2024 1:25:59 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 1143
+2024.04.27 13:26:00 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 13:26:05 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 13:26:24 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 13:27:05 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 13:27:20 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 13:28:18 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 13:28:27 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 13:30:48 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+Apr 27, 2024 1:30:54 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 1925
+2024.04.27 13:30:55 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 13:31:34 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 13:33:29 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 13:39:25 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 13:39:42 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 13:41:23 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 13:41:42 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 13:41:51 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 13:42:28 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 13:42:50 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 13:43:01 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/gshare.scala
+2024.04.27 13:43:09 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 13:44:12 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 13:44:20 WARN  Using indexes to guess the definition of Int
+2024.04.27 13:44:21 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/associative_BTB.scala
+2024.04.27 13:44:46 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/hash_BTB.scala
+2024.04.27 13:44:54 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 13:45:18 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 13:45:30 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+Apr 27, 2024 1:48:00 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 3494
+Apr 27, 2024 1:50:07 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 4252
+2024.04.27 13:50:47 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/associative_BTB.scala
+Apr 27, 2024 1:50:52 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 4355
+Apr 27, 2024 1:52:07 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 4449
+2024.04.27 13:52:34 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 13:52:37 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+Apr 27, 2024 1:52:38 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 4701
+2024.04.27 13:52:53 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 13:53:48 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 13:53:50 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 13:56:26 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 13:58:54 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 13:59:20 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 14:06:37 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+Apr 27, 2024 2:08:16 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 6376
+2024.04.27 14:09:18 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 14:10:02 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 14:10:11 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+Apr 27, 2024 2:10:13 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 6873
+2024.04.27 14:10:16 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 14:10:31 ERROR Failed to tokenize input for semantic tokens for /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+scala.meta.tokenizers.TokenizeException: <input>:107: error: Invalid literal number, followed by identifier character
+class prediction(fetchWidth:Int=4, GHRWidth:Int=16, BTBEntires=409RASEntires:Int=128) extends Bundle{
+                                                                  ^
+	at scala.meta.internal.tokenizers.Reporter.syntaxError(Reporter.scala:23)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError$(Reporter.scala:23)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.syntaxError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError(Reporter.scala:25)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError$(Reporter.scala:25)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.syntaxError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.LegacyScanner.checkNoLetter(LegacyScanner.scala:834)
+	at scala.meta.internal.tokenizers.LegacyScanner.setNumberInteger$1(LegacyScanner.scala:857)
+	at scala.meta.internal.tokenizers.LegacyScanner.getNumber(LegacyScanner.scala:875)
+	at scala.meta.internal.tokenizers.LegacyScanner.fetchToken(LegacyScanner.scala:342)
+	at scala.meta.internal.tokenizers.LegacyScanner.nextToken(LegacyScanner.scala:214)
+	at scala.meta.internal.tokenizers.LegacyScanner.foreach(LegacyScanner.scala:982)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.uncachedTokenize(ScalametaTokenizer.scala:23)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.$anonfun$tokenize$1(ScalametaTokenizer.scala:16)
+	at scala.collection.concurrent.TrieMap.getOrElseUpdate(TrieMap.scala:960)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.tokenize(ScalametaTokenizer.scala:16)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer$$anon$2.apply(ScalametaTokenizer.scala:331)
+	at scala.meta.tokenizers.Api$XtensionTokenizeDialectInput.tokenize(Api.scala:25)
+	at scala.meta.tokenizers.Api$XtensionTokenizeInputLike.tokenize(Api.scala:14)
+	at scala.meta.internal.metals.SemanticTokensProvider$.getTokens(SemanticTokensProvider.scala:28)
+	at scala.meta.internal.metals.SemanticTokensProvider$.provide(SemanticTokensProvider.scala:89)
+	at scala.meta.internal.metals.Compilers.$anonfun$semanticTokens$3(Compilers.scala:597)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:467)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.lang.Thread.run(Thread.java:833)
+
+2024.04.27 14:10:32 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 14:10:35 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 14:11:06 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+Apr 27, 2024 2:11:09 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 7219
+2024.04.27 14:11:12 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 14:11:20 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 14:11:26 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 14:11:34 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 14:11:40 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 14:11:44 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 14:11:48 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 14:13:11 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+Apr 27, 2024 2:13:23 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 7659
+2024.04.27 14:13:30 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 14:13:32 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 14:13:32 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 14:13:33 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 14:14:24 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 14:14:31 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 14:14:35 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 14:14:39 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 14:14:47 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 14:14:53 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 14:15:38 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 14:15:42 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 14:15:52 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 14:31:51 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 14:32:17 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 14:32:24 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 14:32:24 WARN  Using indexes to guess the definition of Int
+2024.04.27 14:32:38 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 14:32:39 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 14:33:30 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 14:33:40 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 14:34:06 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 14:34:15 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 14:34:51 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+Apr 27, 2024 2:36:16 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 8495
+2024.04.27 14:36:17 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 14:36:18 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 14:37:44 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 14:37:45 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 14:38:03 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 14:38:10 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 14:38:17 ERROR Failed to tokenize input for semantic tokens for /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+scala.meta.tokenizers.TokenizeException: <input>:73: error: unclosed character literal
+    gshare.io.commit_branch_direction   ;''= io.T_NT
+                                         ^
+	at scala.meta.internal.tokenizers.Reporter.syntaxError(Reporter.scala:23)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError$(Reporter.scala:23)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.syntaxError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError(Reporter.scala:25)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError$(Reporter.scala:25)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.syntaxError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.LegacyScanner.fetchSingleQuote$1(LegacyScanner.scala:414)
+	at scala.meta.internal.tokenizers.LegacyScanner.fetchToken(LegacyScanner.scala:419)
+	at scala.meta.internal.tokenizers.LegacyScanner.nextToken(LegacyScanner.scala:214)
+	at scala.meta.internal.tokenizers.LegacyScanner.foreach(LegacyScanner.scala:982)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.uncachedTokenize(ScalametaTokenizer.scala:23)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.$anonfun$tokenize$1(ScalametaTokenizer.scala:16)
+	at scala.collection.concurrent.TrieMap.getOrElseUpdate(TrieMap.scala:960)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.tokenize(ScalametaTokenizer.scala:16)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer$$anon$2.apply(ScalametaTokenizer.scala:331)
+	at scala.meta.tokenizers.Api$XtensionTokenizeDialectInput.tokenize(Api.scala:25)
+	at scala.meta.tokenizers.Api$XtensionTokenizeInputLike.tokenize(Api.scala:14)
+	at scala.meta.internal.metals.SemanticTokensProvider$.getTokens(SemanticTokensProvider.scala:28)
+	at scala.meta.internal.metals.SemanticTokensProvider$.provide(SemanticTokensProvider.scala:89)
+	at scala.meta.internal.metals.Compilers.$anonfun$semanticTokens$3(Compilers.scala:597)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:467)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.lang.Thread.run(Thread.java:833)
+
+Apr 27, 2024 2:38:17 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 8765
+2024.04.27 14:38:18 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 14:38:42 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 14:38:50 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+Apr 27, 2024 2:39:21 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 9038
+2024.04.27 14:39:22 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 14:39:32 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 14:39:39 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 14:40:05 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 14:40:08 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 14:40:27 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+Apr 27, 2024 2:40:39 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 9340
+2024.04.27 14:40:39 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 14:41:19 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 14:41:37 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+Apr 27, 2024 2:42:05 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 9476
+2024.04.27 14:42:32 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 14:42:54 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 14:42:54 WARN  Using indexes to guess the definition of T_NT
+Apr 27, 2024 2:43:04 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 9589
+2024.04.27 14:43:17 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+Apr 27, 2024 2:44:11 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 9713
+2024.04.27 14:44:46 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 14:44:51 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+Apr 27, 2024 2:44:57 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 10061
+2024.04.27 14:45:18 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 14:45:20 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 14:45:28 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 14:45:34 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 14:45:39 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 14:45:41 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+Apr 27, 2024 2:45:45 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 10261
+2024.04.27 14:46:03 WARN  Using indexes to guess the definition of io
+2024.04.27 14:46:03 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 14:46:13 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 14:46:40 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+Apr 27, 2024 2:46:49 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 10432
+2024.04.27 14:46:49 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/hash_BTB.scala
+2024.04.27 14:47:07 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/hash_BTB.scala
+2024.04.27 14:47:09 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/hash_BTB.scala
+Apr 27, 2024 2:47:38 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 10476
+2024.04.27 14:47:41 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/hash_BTB.scala
+2024.04.27 14:48:14 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/hash_BTB.scala
+Apr 27, 2024 2:48:26 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 10668
+2024.04.27 14:48:32 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/hash_BTB.scala
+Apr 27, 2024 2:48:50 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 10744
+Apr 27, 2024 2:48:52 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 10760
+2024.04.27 14:48:59 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/hash_BTB.scala
+2024.04.27 14:49:25 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/hash_BTB.scala
+Apr 27, 2024 2:49:28 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 10841
+2024.04.27 14:49:43 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/hash_BTB.scala
+2024.04.27 14:49:59 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/hash_BTB.scala
+2024.04.27 14:50:06 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/hash_BTB.scala
+Apr 27, 2024 2:50:24 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 11118
+Apr 27, 2024 2:50:25 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 11127
+2024.04.27 14:50:38 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 14:50:42 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 14:50:47 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+Apr 27, 2024 2:51:27 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 11244
+Apr 27, 2024 2:51:32 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 11254
+2024.04.27 14:51:41 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+Apr 27, 2024 2:51:47 PM scala.meta.internal.pc.CompilerAccess handleError
+SEVERE: A severe compiler error occurred, full details of the error can be found in the error report /home/hakam/ChaosCore/.metals/.reports/metals-full/2024-04-27/r_compiler-error_14-51-47-748.md
+2024.04.27 14:51:47 WARN  Using indexes to guess the definition of io
+2024.04.27 14:51:47 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 14:51:47 WARN  Using indexes to guess the definition of io
+2024.04.27 14:51:50 WARN  Using indexes to guess the definition of commit
+2024.04.27 14:51:50 WARN  Using indexes to guess the definition of commit
+2024.04.27 14:51:50 WARN  Using indexes to guess the definition of br_mask
+2024.04.27 14:51:50 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+Apr 27, 2024 2:52:11 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 11401
+2024.04.27 14:52:11 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/hash_BTB.scala
+2024.04.27 14:52:23 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 14:52:51 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/RAS.scala
+2024.04.27 14:53:42 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 14:53:58 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 14:54:04 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 14:55:58 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 14:56:41 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 14:56:44 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 14:56:53 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 14:57:03 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 14:57:03 WARN  Using indexes to guess the definition of RAS
+Apr 27, 2024 2:57:04 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 12190
+2024.04.27 14:57:14 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 14:57:16 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+Apr 27, 2024 3:09:52 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 12246
+2024.04.27 15:09:54 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 15:10:30 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 15:11:43 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 15:12:22 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 15:13:16 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 15:13:30 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 15:14:02 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 15:14:38 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:14:52 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:15:08 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 3:15:08 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 12664
+2024.04.27 15:15:08 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:15:09 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:15:15 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:15:16 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:15:16 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:15:17 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:15:18 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:15:19 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:15:20 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:15:21 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:15:21 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:15:22 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:15:23 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:15:24 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:15:24 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:15:25 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:15:26 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:15:27 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:15:28 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:15:28 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:15:29 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:15:29 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:15:30 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:15:30 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:15:30 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:15:32 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:15:32 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:15:32 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:15:34 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:16:09 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:16:09 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 3:17:04 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 13187
+2024.04.27 15:17:21 ERROR Failed to tokenize input for semantic tokens for /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+scala.meta.tokenizers.TokenizeException: <input>:31: error: unclosed character literal
+class Frontend(GHRWidth:Int=16, fetchWidth:Int=4, RASEntries') extends Module{
+                                                            ^
+	at scala.meta.internal.tokenizers.Reporter.syntaxError(Reporter.scala:23)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError$(Reporter.scala:23)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.syntaxError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError(Reporter.scala:25)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError$(Reporter.scala:25)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.syntaxError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.LegacyScanner.fetchSingleQuote$1(LegacyScanner.scala:414)
+	at scala.meta.internal.tokenizers.LegacyScanner.fetchToken(LegacyScanner.scala:419)
+	at scala.meta.internal.tokenizers.LegacyScanner.nextToken(LegacyScanner.scala:214)
+	at scala.meta.internal.tokenizers.LegacyScanner.foreach(LegacyScanner.scala:982)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.uncachedTokenize(ScalametaTokenizer.scala:23)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.$anonfun$tokenize$1(ScalametaTokenizer.scala:16)
+	at scala.collection.concurrent.TrieMap.getOrElseUpdate(TrieMap.scala:960)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.tokenize(ScalametaTokenizer.scala:16)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer$$anon$2.apply(ScalametaTokenizer.scala:331)
+	at scala.meta.tokenizers.Api$XtensionTokenizeDialectInput.tokenize(Api.scala:25)
+	at scala.meta.tokenizers.Api$XtensionTokenizeInputLike.tokenize(Api.scala:14)
+	at scala.meta.internal.metals.SemanticTokensProvider$.getTokens(SemanticTokensProvider.scala:28)
+	at scala.meta.internal.metals.SemanticTokensProvider$.provide(SemanticTokensProvider.scala:89)
+	at scala.meta.internal.metals.Compilers.$anonfun$semanticTokens$3(Compilers.scala:597)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:467)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.lang.Thread.run(Thread.java:833)
+
+2024.04.27 15:17:46 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:18:59 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:19:36 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:19:37 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:22:23 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:22:24 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:22:24 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:32:45 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 3:32:58 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 14873
+2024.04.27 15:33:03 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 3:33:07 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 14952
+2024.04.27 15:33:13 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:33:15 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:33:48 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:34:12 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:34:12 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:34:12 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 3:34:13 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 15270
+2024.04.27 15:34:16 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:34:38 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 3:34:43 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 15390
+2024.04.27 15:35:07 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:35:08 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:37:13 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:38:56 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:41:23 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:41:46 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:41:54 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:42:31 ERROR Failed to tokenize input for semantic tokens for /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+scala.meta.tokenizers.TokenizeException: <input>:71: error: unclosed string interpolation
+        val fetch_packet = Output(new fetch_packet")
+                                                   ^
+	at scala.meta.internal.tokenizers.Reporter.syntaxError(Reporter.scala:23)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError$(Reporter.scala:23)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.syntaxError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError(Reporter.scala:25)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError$(Reporter.scala:25)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.syntaxError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.LegacyScanner.getStringPart(LegacyScanner.scala:666)
+	at scala.meta.internal.tokenizers.LegacyScanner.fetchDoubleQuote$1(LegacyScanner.scala:364)
+	at scala.meta.internal.tokenizers.LegacyScanner.fetchToken(LegacyScanner.scala:383)
+	at scala.meta.internal.tokenizers.LegacyScanner.nextToken(LegacyScanner.scala:214)
+	at scala.meta.internal.tokenizers.LegacyScanner.foreach(LegacyScanner.scala:982)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.uncachedTokenize(ScalametaTokenizer.scala:23)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.$anonfun$tokenize$1(ScalametaTokenizer.scala:16)
+	at scala.collection.concurrent.TrieMap.getOrElseUpdate(TrieMap.scala:960)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.tokenize(ScalametaTokenizer.scala:16)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer$$anon$2.apply(ScalametaTokenizer.scala:331)
+	at scala.meta.tokenizers.Api$XtensionTokenizeDialectInput.tokenize(Api.scala:25)
+	at scala.meta.tokenizers.Api$XtensionTokenizeInputLike.tokenize(Api.scala:14)
+	at scala.meta.internal.metals.SemanticTokensProvider$.getTokens(SemanticTokensProvider.scala:28)
+	at scala.meta.internal.metals.SemanticTokensProvider$.provide(SemanticTokensProvider.scala:89)
+	at scala.meta.internal.metals.Compilers.$anonfun$semanticTokens$3(Compilers.scala:597)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:467)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.lang.Thread.run(Thread.java:833)
+
+2024.04.27 15:42:38 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 3:42:39 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 16517
+2024.04.27 15:43:59 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:44:17 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:45:36 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:45:44 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 3:46:05 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 17201
+2024.04.27 15:47:18 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:52:17 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:52:45 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:54:02 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 15:55:56 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 3:59:06 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 18292
+2024.04.27 15:59:59 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 16:00:01 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 16:00:05 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 16:00:26 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 16:01:44 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 4:02:00 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 19154
+Apr 27, 2024 4:02:02 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 19170
+2024.04.27 16:02:06 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 16:02:17 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 16:03:12 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 16:03:19 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 16:04:05 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 4:05:35 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 19941
+Apr 27, 2024 4:05:45 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 20006
+Apr 27, 2024 4:05:56 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 20062
+Apr 27, 2024 4:06:03 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 20085
+Apr 27, 2024 4:06:05 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 20101
+Apr 27, 2024 4:06:18 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 20193
+Apr 27, 2024 4:06:22 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 20231
+2024.04.27 16:06:24 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 4:06:29 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 20267
+2024.04.27 16:06:36 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 4:07:45 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 20766
+2024.04.27 16:07:52 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 16:08:24 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 16:08:25 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 16:08:40 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 16:08:44 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 16:08:46 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 16:08:59 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 16:09:11 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 16:09:28 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 16:09:35 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 16:09:52 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 16:13:20 ERROR Failed to tokenize input for semantic tokens for /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+scala.meta.tokenizers.TokenizeException: <input>:60: error: unclosed comment
+/*
+^
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError(Reporter.scala:27)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError$(Reporter.scala:26)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.incompleteInputError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError(Reporter.scala:29)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError$(Reporter.scala:29)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.incompleteInputError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.LegacyScanner.skipNestedComments(LegacyScanner.scala:55)
+	at scala.meta.internal.tokenizers.LegacyScanner.skipToCommentEnd(LegacyScanner.scala:74)
+	at scala.meta.internal.tokenizers.LegacyScanner.fetchToken(LegacyScanner.scala:316)
+	at scala.meta.internal.tokenizers.LegacyScanner.nextToken(LegacyScanner.scala:214)
+	at scala.meta.internal.tokenizers.LegacyScanner.foreach(LegacyScanner.scala:982)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.uncachedTokenize(ScalametaTokenizer.scala:23)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.$anonfun$tokenize$1(ScalametaTokenizer.scala:16)
+	at scala.collection.concurrent.TrieMap.getOrElseUpdate(TrieMap.scala:960)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.tokenize(ScalametaTokenizer.scala:16)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer$$anon$2.apply(ScalametaTokenizer.scala:331)
+	at scala.meta.tokenizers.Api$XtensionTokenizeDialectInput.tokenize(Api.scala:25)
+	at scala.meta.tokenizers.Api$XtensionTokenizeInputLike.tokenize(Api.scala:14)
+	at scala.meta.internal.metals.SemanticTokensProvider$.getTokens(SemanticTokensProvider.scala:28)
+	at scala.meta.internal.metals.SemanticTokensProvider$.provide(SemanticTokensProvider.scala:89)
+	at scala.meta.internal.metals.Compilers.$anonfun$semanticTokens$3(Compilers.scala:597)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:467)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.lang.Thread.run(Thread.java:833)
+
+2024.04.27 16:13:24 ERROR Failed to tokenize input for semantic tokens for /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+scala.meta.tokenizers.TokenizeException: <input>:60: error: unclosed comment
+/*
+^
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError(Reporter.scala:27)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError$(Reporter.scala:26)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.incompleteInputError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError(Reporter.scala:29)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError$(Reporter.scala:29)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.incompleteInputError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.LegacyScanner.skipNestedComments(LegacyScanner.scala:55)
+	at scala.meta.internal.tokenizers.LegacyScanner.skipToCommentEnd(LegacyScanner.scala:74)
+	at scala.meta.internal.tokenizers.LegacyScanner.fetchToken(LegacyScanner.scala:316)
+	at scala.meta.internal.tokenizers.LegacyScanner.nextToken(LegacyScanner.scala:214)
+	at scala.meta.internal.tokenizers.LegacyScanner.foreach(LegacyScanner.scala:982)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.uncachedTokenize(ScalametaTokenizer.scala:23)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.$anonfun$tokenize$1(ScalametaTokenizer.scala:16)
+	at scala.collection.concurrent.TrieMap.getOrElseUpdate(TrieMap.scala:960)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.tokenize(ScalametaTokenizer.scala:16)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer$$anon$2.apply(ScalametaTokenizer.scala:331)
+	at scala.meta.tokenizers.Api$XtensionTokenizeDialectInput.tokenize(Api.scala:25)
+	at scala.meta.tokenizers.Api$XtensionTokenizeInputLike.tokenize(Api.scala:14)
+	at scala.meta.internal.metals.SemanticTokensProvider$.getTokens(SemanticTokensProvider.scala:28)
+	at scala.meta.internal.metals.SemanticTokensProvider$.provide(SemanticTokensProvider.scala:89)
+	at scala.meta.internal.metals.Compilers.$anonfun$semanticTokens$3(Compilers.scala:597)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:467)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.lang.Thread.run(Thread.java:833)
+
+2024.04.27 16:13:24 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 4:13:58 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 21496
+Apr 27, 2024 4:14:18 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 21501
+2024.04.27 16:14:20 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 16:15:36 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 4:18:07 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 21598
+2024.04.27 16:18:14 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 16:18:31 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 16:18:50 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 16:19:04 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 16:19:27 ERROR Failed to tokenize input for semantic tokens for /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+scala.meta.tokenizers.TokenizeException: <input>:98: error: unclosed comment
+/*
+^
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError(Reporter.scala:27)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError$(Reporter.scala:26)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.incompleteInputError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError(Reporter.scala:29)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError$(Reporter.scala:29)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.incompleteInputError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.LegacyScanner.skipNestedComments(LegacyScanner.scala:55)
+	at scala.meta.internal.tokenizers.LegacyScanner.skipToCommentEnd(LegacyScanner.scala:74)
+	at scala.meta.internal.tokenizers.LegacyScanner.fetchToken(LegacyScanner.scala:316)
+	at scala.meta.internal.tokenizers.LegacyScanner.nextToken(LegacyScanner.scala:214)
+	at scala.meta.internal.tokenizers.LegacyScanner.foreach(LegacyScanner.scala:982)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.uncachedTokenize(ScalametaTokenizer.scala:23)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.$anonfun$tokenize$1(ScalametaTokenizer.scala:16)
+	at scala.collection.concurrent.TrieMap.getOrElseUpdate(TrieMap.scala:960)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.tokenize(ScalametaTokenizer.scala:16)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer$$anon$2.apply(ScalametaTokenizer.scala:331)
+	at scala.meta.tokenizers.Api$XtensionTokenizeDialectInput.tokenize(Api.scala:25)
+	at scala.meta.tokenizers.Api$XtensionTokenizeInputLike.tokenize(Api.scala:14)
+	at scala.meta.internal.metals.SemanticTokensProvider$.getTokens(SemanticTokensProvider.scala:28)
+	at scala.meta.internal.metals.SemanticTokensProvider$.provide(SemanticTokensProvider.scala:89)
+	at scala.meta.internal.metals.Compilers.$anonfun$semanticTokens$3(Compilers.scala:597)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:467)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.lang.Thread.run(Thread.java:833)
+
+2024.04.27 16:19:30 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 16:19:38 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 16:20:11 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 4:20:23 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 21914
+2024.04.27 16:20:28 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 16:20:48 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 16:23:10 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 4:23:13 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 22360
+2024.04.27 16:23:13 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 16:23:20 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 4:24:22 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 22620
+2024.04.27 16:24:28 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 16:24:33 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 16:25:58 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 16:28:38 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 16:28:48 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 16:32:19 ERROR Failed to tokenize input for semantic tokens for /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+scala.meta.tokenizers.TokenizeException: <input>:93: error: unclosed comment
+    PC_Q.io.clear       :=  0.B /*
+                                ^
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError(Reporter.scala:27)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError$(Reporter.scala:26)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.incompleteInputError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError(Reporter.scala:29)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError$(Reporter.scala:29)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.incompleteInputError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.LegacyScanner.skipNestedComments(LegacyScanner.scala:55)
+	at scala.meta.internal.tokenizers.LegacyScanner.skipToCommentEnd(LegacyScanner.scala:74)
+	at scala.meta.internal.tokenizers.LegacyScanner.fetchToken(LegacyScanner.scala:316)
+	at scala.meta.internal.tokenizers.LegacyScanner.nextToken(LegacyScanner.scala:214)
+	at scala.meta.internal.tokenizers.LegacyScanner.foreach(LegacyScanner.scala:982)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.uncachedTokenize(ScalametaTokenizer.scala:23)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.$anonfun$tokenize$1(ScalametaTokenizer.scala:16)
+	at scala.collection.concurrent.TrieMap.getOrElseUpdate(TrieMap.scala:960)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.tokenize(ScalametaTokenizer.scala:16)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer$$anon$2.apply(ScalametaTokenizer.scala:331)
+	at scala.meta.tokenizers.Api$XtensionTokenizeDialectInput.tokenize(Api.scala:25)
+	at scala.meta.tokenizers.Api$XtensionTokenizeInputLike.tokenize(Api.scala:14)
+	at scala.meta.internal.metals.SemanticTokensProvider$.getTokens(SemanticTokensProvider.scala:28)
+	at scala.meta.internal.metals.SemanticTokensProvider$.provide(SemanticTokensProvider.scala:89)
+	at scala.meta.internal.metals.Compilers.$anonfun$semanticTokens$3(Compilers.scala:597)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:467)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.lang.Thread.run(Thread.java:833)
+
+2024.04.27 16:32:19 ERROR Failed to tokenize input for semantic tokens for /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+scala.meta.tokenizers.TokenizeException: <input>:93: error: unclosed comment
+    PC_Q.io.clear       :=  0.B /* TODO
+                                ^
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError(Reporter.scala:27)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError$(Reporter.scala:26)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.incompleteInputError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError(Reporter.scala:29)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError$(Reporter.scala:29)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.incompleteInputError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.LegacyScanner.skipNestedComments(LegacyScanner.scala:55)
+	at scala.meta.internal.tokenizers.LegacyScanner.skipToCommentEnd(LegacyScanner.scala:74)
+	at scala.meta.internal.tokenizers.LegacyScanner.fetchToken(LegacyScanner.scala:316)
+	at scala.meta.internal.tokenizers.LegacyScanner.nextToken(LegacyScanner.scala:214)
+	at scala.meta.internal.tokenizers.LegacyScanner.foreach(LegacyScanner.scala:982)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.uncachedTokenize(ScalametaTokenizer.scala:23)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.$anonfun$tokenize$1(ScalametaTokenizer.scala:16)
+	at scala.collection.concurrent.TrieMap.getOrElseUpdate(TrieMap.scala:960)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.tokenize(ScalametaTokenizer.scala:16)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer$$anon$2.apply(ScalametaTokenizer.scala:331)
+	at scala.meta.tokenizers.Api$XtensionTokenizeDialectInput.tokenize(Api.scala:25)
+	at scala.meta.tokenizers.Api$XtensionTokenizeInputLike.tokenize(Api.scala:14)
+	at scala.meta.internal.metals.SemanticTokensProvider$.getTokens(SemanticTokensProvider.scala:28)
+	at scala.meta.internal.metals.SemanticTokensProvider$.provide(SemanticTokensProvider.scala:89)
+	at scala.meta.internal.metals.Compilers.$anonfun$semanticTokens$3(Compilers.scala:597)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:467)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.lang.Thread.run(Thread.java:833)
+
+2024.04.27 16:32:20 ERROR Failed to tokenize input for semantic tokens for /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+scala.meta.tokenizers.TokenizeException: <input>:93: error: unclosed comment
+    PC_Q.io.clear       :=  0.B /* TODO: 
+                                ^
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError(Reporter.scala:27)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError$(Reporter.scala:26)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.incompleteInputError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError(Reporter.scala:29)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError$(Reporter.scala:29)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.incompleteInputError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.LegacyScanner.skipNestedComments(LegacyScanner.scala:55)
+	at scala.meta.internal.tokenizers.LegacyScanner.skipToCommentEnd(LegacyScanner.scala:74)
+	at scala.meta.internal.tokenizers.LegacyScanner.fetchToken(LegacyScanner.scala:316)
+	at scala.meta.internal.tokenizers.LegacyScanner.nextToken(LegacyScanner.scala:214)
+	at scala.meta.internal.tokenizers.LegacyScanner.foreach(LegacyScanner.scala:982)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.uncachedTokenize(ScalametaTokenizer.scala:23)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.$anonfun$tokenize$1(ScalametaTokenizer.scala:16)
+	at scala.collection.concurrent.TrieMap.getOrElseUpdate(TrieMap.scala:960)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.tokenize(ScalametaTokenizer.scala:16)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer$$anon$2.apply(ScalametaTokenizer.scala:331)
+	at scala.meta.tokenizers.Api$XtensionTokenizeDialectInput.tokenize(Api.scala:25)
+	at scala.meta.tokenizers.Api$XtensionTokenizeInputLike.tokenize(Api.scala:14)
+	at scala.meta.internal.metals.SemanticTokensProvider$.getTokens(SemanticTokensProvider.scala:28)
+	at scala.meta.internal.metals.SemanticTokensProvider$.provide(SemanticTokensProvider.scala:89)
+	at scala.meta.internal.metals.Compilers.$anonfun$semanticTokens$3(Compilers.scala:597)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:467)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.lang.Thread.run(Thread.java:833)
+
+2024.04.27 16:32:20 ERROR Failed to tokenize input for semantic tokens for /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+scala.meta.tokenizers.TokenizeException: <input>:93: error: unclosed comment
+    PC_Q.io.clear       :=  0.B /* TODO: /
+                                ^
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError(Reporter.scala:27)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError$(Reporter.scala:26)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.incompleteInputError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError(Reporter.scala:29)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError$(Reporter.scala:29)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.incompleteInputError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.LegacyScanner.skipNestedComments(LegacyScanner.scala:55)
+	at scala.meta.internal.tokenizers.LegacyScanner.skipToCommentEnd(LegacyScanner.scala:74)
+	at scala.meta.internal.tokenizers.LegacyScanner.fetchToken(LegacyScanner.scala:316)
+	at scala.meta.internal.tokenizers.LegacyScanner.nextToken(LegacyScanner.scala:214)
+	at scala.meta.internal.tokenizers.LegacyScanner.foreach(LegacyScanner.scala:982)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.uncachedTokenize(ScalametaTokenizer.scala:23)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.$anonfun$tokenize$1(ScalametaTokenizer.scala:16)
+	at scala.collection.concurrent.TrieMap.getOrElseUpdate(TrieMap.scala:960)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.tokenize(ScalametaTokenizer.scala:16)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer$$anon$2.apply(ScalametaTokenizer.scala:331)
+	at scala.meta.tokenizers.Api$XtensionTokenizeDialectInput.tokenize(Api.scala:25)
+	at scala.meta.tokenizers.Api$XtensionTokenizeInputLike.tokenize(Api.scala:14)
+	at scala.meta.internal.metals.SemanticTokensProvider$.getTokens(SemanticTokensProvider.scala:28)
+	at scala.meta.internal.metals.SemanticTokensProvider$.provide(SemanticTokensProvider.scala:89)
+	at scala.meta.internal.metals.Compilers.$anonfun$semanticTokens$3(Compilers.scala:597)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:467)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.lang.Thread.run(Thread.java:833)
+
+2024.04.27 16:32:22 ERROR Failed to tokenize input for semantic tokens for /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+scala.meta.tokenizers.TokenizeException: <input>:93: error: unclosed comment
+    PC_Q.io.clear       :=  0.B /* TODO: 
+                                ^
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError(Reporter.scala:27)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError$(Reporter.scala:26)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.incompleteInputError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError(Reporter.scala:29)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError$(Reporter.scala:29)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.incompleteInputError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.LegacyScanner.skipNestedComments(LegacyScanner.scala:55)
+	at scala.meta.internal.tokenizers.LegacyScanner.skipToCommentEnd(LegacyScanner.scala:74)
+	at scala.meta.internal.tokenizers.LegacyScanner.fetchToken(LegacyScanner.scala:316)
+	at scala.meta.internal.tokenizers.LegacyScanner.nextToken(LegacyScanner.scala:214)
+	at scala.meta.internal.tokenizers.LegacyScanner.foreach(LegacyScanner.scala:982)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.uncachedTokenize(ScalametaTokenizer.scala:23)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.$anonfun$tokenize$1(ScalametaTokenizer.scala:16)
+	at scala.collection.concurrent.TrieMap.getOrElseUpdate(TrieMap.scala:960)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.tokenize(ScalametaTokenizer.scala:16)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer$$anon$2.apply(ScalametaTokenizer.scala:331)
+	at scala.meta.tokenizers.Api$XtensionTokenizeDialectInput.tokenize(Api.scala:25)
+	at scala.meta.tokenizers.Api$XtensionTokenizeInputLike.tokenize(Api.scala:14)
+	at scala.meta.internal.metals.SemanticTokensProvider$.getTokens(SemanticTokensProvider.scala:28)
+	at scala.meta.internal.metals.SemanticTokensProvider$.provide(SemanticTokensProvider.scala:89)
+	at scala.meta.internal.metals.Compilers.$anonfun$semanticTokens$3(Compilers.scala:597)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:467)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.lang.Thread.run(Thread.java:833)
+
+2024.04.27 16:32:24 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 4:33:29 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 23676
+Apr 27, 2024 4:33:37 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 23712
+Apr 27, 2024 4:34:23 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 23801
+2024.04.27 16:34:27 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 4:34:34 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 23825
+Apr 27, 2024 4:34:37 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 23838
+2024.04.27 16:34:41 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 4:34:55 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 23879
+2024.04.27 16:34:56 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 4:36:38 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 23959
+2024.04.27 16:36:53 WARN  Using indexes to guess the definition of fetch_packet
+2024.04.27 16:36:53 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 16:36:53 WARN  Using indexes to guess the definition of fetch_packet
+Apr 27, 2024 4:38:08 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 24317
+Apr 27, 2024 4:38:20 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 24336
+2024.04.27 16:38:30 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 16:38:45 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 16:40:07 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 16:40:13 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 16:40:34 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 17:22:15 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 17:22:32 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 5:22:43 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 25090
+2024.04.27 17:23:14 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 5:24:22 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 25248
+2024.04.27 17:24:28 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 17:24:43 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 17:24:45 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 5:25:45 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 25455
+2024.04.27 17:25:52 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 17:26:26 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 17:27:19 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 17:27:26 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 17:27:26 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 17:27:26 WARN  Using indexes to guess the definition of BP
+2024.04.27 17:27:26 WARN  Using indexes to guess the definition of Module
+2024.04.27 17:27:57 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 17:28:05 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 17:28:42 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 17:28:45 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 17:29:00 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 17:29:06 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 17:29:18 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 17:30:38 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 17:32:27 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 17:32:36 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 17:32:48 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 17:35:27 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 17:35:34 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 17:35:42 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 17:35:47 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 5:39:09 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 26623
+2024.04.27 17:39:18 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 5:39:31 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 26679
+Apr 27, 2024 5:39:55 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 26694
+Apr 27, 2024 5:41:13 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 26736
+2024.04.27 17:41:16 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 17:41:37 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 17:41:37 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 17:41:42 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 17:41:49 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 17:41:59 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 5:42:13 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 26882
+Apr 27, 2024 5:42:16 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 26892
+Apr 27, 2024 5:42:18 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 26902
+2024.04.27 17:42:23 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 5:42:25 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 26951
+Apr 27, 2024 5:42:30 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 26961
+Apr 27, 2024 5:42:58 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 26991
+Apr 27, 2024 5:43:06 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 27002
+Apr 27, 2024 5:43:07 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 27012
+Apr 27, 2024 5:43:15 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 27022
+2024.04.27 17:43:20 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 17:43:51 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 17:44:10 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 17:44:53 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 17:45:02 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 5:45:29 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 27416
+2024.04.27 17:45:41 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/top.scala
+2024.04.27 17:45:51 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/top.scala
+2024.04.27 17:47:17 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/gshare.scala
+2024.04.27 17:47:54 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/gshare.scala
+Apr 27, 2024 5:47:56 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 27642
+2024.04.27 17:48:14 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/gshare.scala
+2024.04.27 17:48:32 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/gshare.scala
+2024.04.27 17:48:52 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/gshare.scala
+Apr 27, 2024 5:49:12 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 27910
+2024.04.27 17:49:40 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 17:50:33 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 17:51:03 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 17:52:43 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 17:52:57 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 17:53:11 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+Apr 27, 2024 5:53:13 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 28230
+2024.04.27 17:55:05 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 17:55:40 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 17:57:10 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 18:04:51 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 18:04:53 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 18:05:40 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 6:07:19 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 28493
+2024.04.27 18:07:25 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 18:07:57 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 18:08:01 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 18:08:13 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 18:08:19 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 6:08:27 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 28653
+Apr 27, 2024 6:08:34 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 28716
+Apr 27, 2024 6:08:35 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 28726
+Apr 27, 2024 6:08:42 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 28790
+2024.04.27 18:09:16 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+Apr 27, 2024 6:09:18 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 29065
+2024.04.27 18:09:19 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 18:11:14 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 18:12:14 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 6:12:30 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 29229
+2024.04.27 18:12:41 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 18:12:54 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 6:12:56 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 29357
+2024.04.27 18:12:58 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 18:14:19 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 18:14:59 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 6:15:34 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 29545
+Apr 27, 2024 6:15:38 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 29559
+Apr 27, 2024 6:17:20 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 29609
+Apr 27, 2024 6:17:27 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 29620
+2024.04.27 18:17:50 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 6:18:57 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 29739
+2024.04.27 18:19:01 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 18:29:04 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 18:29:36 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 6:30:27 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 29868
+Apr 27, 2024 6:31:06 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 29901
+Apr 27, 2024 6:31:09 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 29911
+Apr 27, 2024 6:32:36 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 29956
+2024.04.27 18:32:53 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+Apr 27, 2024 6:32:58 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 30063
+2024.04.27 18:33:22 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 18:33:27 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+Apr 27, 2024 6:34:02 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 30171
+Apr 27, 2024 6:35:43 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 30219
+Apr 27, 2024 6:36:02 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 30294
+2024.04.27 18:36:03 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 18:36:36 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+Apr 27, 2024 6:36:55 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 30375
+2024.04.27 18:39:37 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 18:39:55 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 18:40:14 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 18:41:04 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 18:41:14 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 18:43:05 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 18:43:21 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+Apr 27, 2024 6:46:32 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 30685
+2024.04.27 18:46:35 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/top.scala
+2024.04.27 18:47:00 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/top.scala
+Apr 27, 2024 6:47:17 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 30768
+2024.04.27 18:47:55 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 18:48:14 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 18:48:33 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 18:48:36 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 18:48:56 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 18:49:06 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 18:49:10 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 18:49:33 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 18:49:41 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 18:54:48 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/gshare.scala
+2024.04.27 18:57:07 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+Apr 27, 2024 6:58:37 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 31567
+2024.04.27 18:59:19 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 18:59:28 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 18:59:36 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+Apr 27, 2024 6:59:44 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 31632
+2024.04.27 19:00:31 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 19:01:00 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/RAS.scala
+Apr 27, 2024 7:01:59 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 31858
+Apr 27, 2024 7:01:59 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 31863
+2024.04.27 19:02:00 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 19:02:03 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+Apr 27, 2024 7:04:35 PM scala.meta.internal.pc.CompilerAccess handleError
+SEVERE: A severe compiler error occurred, full details of the error can be found in the error report /home/hakam/ChaosCore/.metals/.reports/metals-full/2024-04-27/r_compiler-error_19-04-35-234.md
+2024.04.27 19:04:39 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 19:05:22 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 19:06:35 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 19:06:35 WARN  Using indexes to guess the definition of io
+2024.04.27 19:13:04 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/top.scala
+Apr 27, 2024 7:13:43 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 32360
+Apr 27, 2024 7:13:50 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 32369
+Apr 27, 2024 7:13:52 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 32378
+Apr 27, 2024 7:13:53 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 32387
+2024.04.27 19:24:29 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 19:24:40 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 19:24:42 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 19:24:45 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 19:24:48 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 19:24:51 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 19:25:19 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 19:26:04 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 19:26:33 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 19:27:03 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 19:27:09 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 19:27:29 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 19:27:42 ERROR Failed to tokenize input for semantic tokens for /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+scala.meta.tokenizers.TokenizeException: <input>:114: error: malformed integer number: Zero length BigInteger
+    instruction_cache.io.cpu_addr    :=   0x
+                                          ^
+	at scala.meta.internal.tokenizers.Reporter.syntaxError(Reporter.scala:23)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError$(Reporter.scala:23)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.syntaxError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError(Reporter.scala:25)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError$(Reporter.scala:25)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.syntaxError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.LegacyTokenData.integerVal(LegacyTokenData.scala:68)
+	at scala.meta.internal.tokenizers.LegacyTokenData.intVal(LegacyTokenData.scala:84)
+	at scala.meta.internal.tokenizers.LegacyTokenData.intVal$(LegacyTokenData.scala:84)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer$$anon$1.intVal(ScalametaTokenizer.scala:23)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.pushLegacyToken$1(ScalametaTokenizer.scala:43)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.emitToken$1(ScalametaTokenizer.scala:200)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.loop$1(ScalametaTokenizer.scala:205)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.uncachedTokenize(ScalametaTokenizer.scala:313)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.$anonfun$tokenize$1(ScalametaTokenizer.scala:16)
+	at scala.collection.concurrent.TrieMap.getOrElseUpdate(TrieMap.scala:960)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.tokenize(ScalametaTokenizer.scala:16)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer$$anon$2.apply(ScalametaTokenizer.scala:331)
+	at scala.meta.tokenizers.Api$XtensionTokenizeDialectInput.tokenize(Api.scala:25)
+	at scala.meta.tokenizers.Api$XtensionTokenizeInputLike.tokenize(Api.scala:14)
+	at scala.meta.internal.metals.SemanticTokensProvider$.getTokens(SemanticTokensProvider.scala:28)
+	at scala.meta.internal.metals.SemanticTokensProvider$.provide(SemanticTokensProvider.scala:89)
+	at scala.meta.internal.metals.Compilers.$anonfun$semanticTokens$3(Compilers.scala:597)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:467)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.lang.Thread.run(Thread.java:833)
+
+2024.04.27 19:27:43 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 19:27:54 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 19:27:56 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 7:28:24 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 33104
+2024.04.27 19:29:00 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 19:29:03 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 7:29:04 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 33414
+2024.04.27 19:29:06 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 7:29:26 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 33439
+Apr 27, 2024 7:29:37 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 33456
+Apr 27, 2024 7:29:45 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 33472
+2024.04.27 19:29:48 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 7:29:56 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 33497
+2024.04.27 19:30:01 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 19:30:18 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 19:30:24 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 19:30:35 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 19:31:45 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 19:31:54 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 7:32:36 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 34037
+2024.04.27 19:32:54 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 7:32:58 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 34088
+Apr 27, 2024 7:33:23 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 34108
+2024.04.27 19:33:30 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 19:33:33 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 19:33:43 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 7:33:53 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 34233
+2024.04.27 19:34:09 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 7:34:12 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 34342
+Apr 27, 2024 7:34:14 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 34351
+2024.04.27 19:35:12 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 7:35:13 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 34581
+2024.04.27 19:35:20 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/instruction_cache.scala
+Apr 27, 2024 7:35:29 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 34612
+2024.04.27 19:36:09 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 19:36:44 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 7:36:48 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 34810
+2024.04.27 19:36:57 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 19:37:06 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 19:37:36 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 19:37:38 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 19:37:45 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 19:37:56 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 19:38:20 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 19:38:26 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 19:38:59 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 19:39:02 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 19:39:05 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 19:39:59 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 19:40:05 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 7:40:30 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 35320
+2024.04.27 19:40:32 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 19:40:41 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 7:40:51 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 35409
+2024.04.27 19:41:11 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 19:41:21 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 7:41:36 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 35567
+2024.04.27 19:41:50 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 19:41:59 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 19:42:05 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 19:42:28 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 7:42:32 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 35708
+2024.04.27 19:42:32 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 7:42:52 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 35722
+2024.04.27 19:43:01 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 19:43:11 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 19:43:18 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 19:43:27 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 7:44:53 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 35996
+2024.04.27 19:46:49 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 19:47:00 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 19:47:08 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 19:47:11 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 19:47:51 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 19:48:16 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 19:48:24 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 19:49:50 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 19:50:15 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+error while checking new Flipped(
+  mispredict(GHRWidth = GHRWidth, RASEntries = RASEntries) _CURSOR null)
+error while checking val mispredict =
+  new Flipped(
+    mispredict(GHRWidth = GHRWidth, RASEntries = RASEntries) _CURSOR null)
+error while checking (private[this] val GHRWidth: Int = 16, private[this] val fetchWidth: Int = 4,
+  private[this] val RASEntries: Int = 128,
+  private[this] val BTBEntries: Int = 4096,
+  private[this] val L1_instructionCacheWays: Int = 2,
+  private[this] val L1_instructionCacheSets: Int = 64,
+  private[this] val L1_instructionCacheBlockSizeBytes: Int = 32) extends Module
+   {
+  val io =
+    IO(
+      new Bundle {
+        val misprediction_PC = Flipped(Decoupled(UInt(32.W)))
+        val exception_PC = Flipped(Decoupled(UInt(32.W)))
+      }
+    )
+  val instruction_cache =
+    Module(
+      new L1_instruction_cache(fetchWidth = fetchWidth,
+        ways = L1_instructionCacheWays, sets = L1_instructionCacheSets,
+        blockSizeBytes = L1_instructionCacheBlockSizeBytes)
+    )
+  val bp =
+    Module(
+      new BP(GHRWidth = GHRWidth, fetchWidth = fetchWidth,
+        RASEntries = RASEntries, BTBEntries = BTBEntries)
+    )
+  val instruction_Q =
+    Module(new Q(new fetch_packet(width = fetchWidth), depth = 16))
+  val PC_Q = Module(new Q(UInt(32.W)))
+  val BTB_Q =
+    Module(new Q(new BTB_resp(fetchWidth = fetchWidth, GHRWidth = GHRWidth)))
+  val prediction_PC = Wire(Decoupled(UInt(32.W)))
+  prediction_PC.bits := 0.U
+  prediction_PC.valid := 0.B
+  prediction_PC.ready := 0.B
+  PC_Q.io.wr_en := prediction_PC.valid
+  PC_Q.io.data_in := prediction_PC.bits
+  PC_Q.io.rd_en := instruction_cache.io.cpu_addr.ready
+  PC_Q.io.clear := 0.B
+  instruction_Q.io.wr_en := instruction_cache.io.resp_valid
+  instruction_Q.io.data_in := instruction_cache.io.cache_data
+  instruction_Q.io.rd_en := 0.B
+  instruction_Q.io.clear := 0.B
+  instruction_cache.io.cpu_addr.bits := 0.U
+  instruction_cache.io.cpu_addr.valid := 0.B
+  instruction_cache.io.dram_data.bits := 0.U
+  instruction_cache.io.dram_data.valid := 0.B
+  instruction_cache.io.cache_addr.ready := 0.B
+  instruction_cache.io.kill := 0.B
+  val commit = new Flipped(commit(fetchWidth = fetchWidth))
+  val mispredict =
+    new Flipped(
+      mispredict(GHRWidth = GHRWidth, RASEntries = RASEntries) _CURSOR null)
+}
+error while checking class Frontend(private[this] val GHRWidth: Int = 16,
+  private[this] val fetchWidth: Int = 4,
+  private[this] val RASEntries: Int = 128,
+  private[this] val BTBEntries: Int = 4096,
+  private[this] val L1_instructionCacheWays: Int = 2,
+  private[this] val L1_instructionCacheSets: Int = 64,
+  private[this] val L1_instructionCacheBlockSizeBytes: Int = 32) extends Module
+   {
+  val io =
+    IO(
+      new Bundle {
+        val misprediction_PC = Flipped(Decoupled(UInt(32.W)))
+        val exception_PC = Flipped(Decoupled(UInt(32.W)))
+      }
+    )
+  val instruction_cache =
+    Module(
+      new L1_instruction_cache(fetchWidth = fetchWidth,
+        ways = L1_instructionCacheWays, sets = L1_instructionCacheSets,
+        blockSizeBytes = L1_instructionCacheBlockSizeBytes)
+    )
+  val bp =
+    Module(
+      new BP(GHRWidth = GHRWidth, fetchWidth = fetchWidth,
+        RASEntries = RASEntries, BTBEntries = BTBEntries)
+    )
+  val instruction_Q =
+    Module(new Q(new fetch_packet(width = fetchWidth), depth = 16))
+  val PC_Q = Module(new Q(UInt(32.W)))
+  val BTB_Q =
+    Module(new Q(new BTB_resp(fetchWidth = fetchWidth, GHRWidth = GHRWidth)))
+  val prediction_PC = Wire(Decoupled(UInt(32.W)))
+  prediction_PC.bits := 0.U
+  prediction_PC.valid := 0.B
+  prediction_PC.ready := 0.B
+  PC_Q.io.wr_en := prediction_PC.valid
+  PC_Q.io.data_in := prediction_PC.bits
+  PC_Q.io.rd_en := instruction_cache.io.cpu_addr.ready
+  PC_Q.io.clear := 0.B
+  instruction_Q.io.wr_en := instruction_cache.io.resp_valid
+  instruction_Q.io.data_in := instruction_cache.io.cache_data
+  instruction_Q.io.rd_en := 0.B
+  instruction_Q.io.clear := 0.B
+  instruction_cache.io.cpu_addr.bits := 0.U
+  instruction_cache.io.cpu_addr.valid := 0.B
+  instruction_cache.io.dram_data.bits := 0.U
+  instruction_cache.io.dram_data.valid := 0.B
+  instruction_cache.io.cache_addr.ready := 0.B
+  instruction_cache.io.kill := 0.B
+  val commit = new Flipped(commit(fetchWidth = fetchWidth))
+  val mispredict =
+    new Flipped(
+      mispredict(GHRWidth = GHRWidth, RASEntries = RASEntries) _CURSOR null)
+}
+error while checking package <empty> {
+  import chisel3.*
+  import chisel3.util.*
+  class Q[T <: Data](private[this] val dataType: T,
+    private[this] val depth: Int = 16) extends Module {
+    val io =
+      IO(
+        new Bundle {
+          val data_in = Input(dataType)
+          val wr_en = Input(Bool())
+          val rd_en = Input(Bool())
+          val clear = Input(Bool())
+          val data_out = Output(dataType)
+          val full = Output(Bool())
+          val empty = Output(Bool())
+        }
+      )
+    val queue = Module(new Queue(dataType, depth))
+    queue.io.enq.valid := io.wr_en
+    queue.io.enq.bits := io.data_in
+    queue.io.deq.ready := io.rd_en
+    io.data_out := queue.io.deq.bits
+    io.full := queue.io.enq.ready && ! io.wr_en
+    io.empty := queue.io.deq.valid && ! io.rd_en
+    when(io.clear)(
+      {
+        queue.reset := true.B
+      }
+    ).otherwise(
+      {
+        queue.reset := false.B
+      }
+    )
+  }
+  class Frontend(private[this] val GHRWidth: Int = 16,
+    private[this] val fetchWidth: Int = 4,
+    private[this] val RASEntries: Int = 128,
+    private[this] val BTBEntries: Int = 4096,
+    private[this] val L1_instructionCacheWays: Int = 2,
+    private[this] val L1_instructionCacheSets: Int = 64,
+    private[this] val L1_instructionCacheBlockSizeBytes: Int = 32) extends
+    Module {
+    val io =
+      IO(
+        new Bundle {
+          val misprediction_PC = Flipped(Decoupled(UInt(32.W)))
+          val exception_PC = Flipped(Decoupled(UInt(32.W)))
+        }
+      )
+    val instruction_cache =
+      Module(
+        new L1_instruction_cache(fetchWidth = fetchWidth,
+          ways = L1_instructionCacheWays, sets = L1_instructionCacheSets,
+          blockSizeBytes = L1_instructionCacheBlockSizeBytes)
+      )
+    val bp =
+      Module(
+        new BP(GHRWidth = GHRWidth, fetchWidth = fetchWidth,
+          RASEntries = RASEntries, BTBEntries = BTBEntries)
+      )
+    val instruction_Q =
+      Module(new Q(new fetch_packet(width = fetchWidth), depth = 16))
+    val PC_Q = Module(new Q(UInt(32.W)))
+    val BTB_Q =
+      Module(new Q(new BTB_resp(fetchWidth = fetchWidth, GHRWidth = GHRWidth)))
+    val prediction_PC = Wire(Decoupled(UInt(32.W)))
+    prediction_PC.bits := 0.U
+    prediction_PC.valid := 0.B
+    prediction_PC.ready := 0.B
+    PC_Q.io.wr_en := prediction_PC.valid
+    PC_Q.io.data_in := prediction_PC.bits
+    PC_Q.io.rd_en := instruction_cache.io.cpu_addr.ready
+    PC_Q.io.clear := 0.B
+    instruction_Q.io.wr_en := instruction_cache.io.resp_valid
+    instruction_Q.io.data_in := instruction_cache.io.cache_data
+    instruction_Q.io.rd_en := 0.B
+    instruction_Q.io.clear := 0.B
+    instruction_cache.io.cpu_addr.bits := 0.U
+    instruction_cache.io.cpu_addr.valid := 0.B
+    instruction_cache.io.dram_data.bits := 0.U
+    instruction_cache.io.dram_data.valid := 0.B
+    instruction_cache.io.cache_addr.ready := 0.B
+    instruction_cache.io.kill := 0.B
+    val commit = new Flipped(commit(fetchWidth = fetchWidth))
+    val mispredict =
+      new Flipped(
+        mispredict(GHRWidth = GHRWidth, RASEntries = RASEntries) _CURSOR null)
+  }
+}
+Apr 27, 2024 7:58:16 PM scala.meta.internal.pc.CompilerAccess handleError
+SEVERE: A severe compiler error occurred, full details of the error can be found in the error report /home/hakam/ChaosCore/.metals/.reports/metals-full/2024-04-27/r_compiler-error_19-58-16-192.md
+2024.04.27 19:58:19 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 19:58:23 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 7:58:45 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 37544
+Apr 27, 2024 7:59:14 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 37616
+Apr 27, 2024 7:59:14 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 37617
+2024.04.27 19:59:14 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 20:00:48 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 20:01:01 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 20:02:43 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 8:02:45 PM scala.meta.internal.pc.CompilerAccess handleError
+SEVERE: A severe compiler error occurred, full details of the error can be found in the error report /home/hakam/ChaosCore/.metals/.reports/metals-full/2024-04-27/r_compiler-error_20-02-45-394.md
+2024.04.27 20:02:45 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 20:03:09 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 20:03:31 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 8:03:39 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 37955
+2024.04.27 20:03:51 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 20:03:59 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 20:04:15 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 20:04:22 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 20:04:24 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 20:04:40 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 20:04:57 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 20:05:08 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 20:05:47 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 20:06:06 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 20:06:50 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 20:06:59 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 20:07:44 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 20:07:48 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 20:07:51 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 20:09:08 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 20:09:10 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 20:11:45 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 20:11:50 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 20:11:54 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 20:12:54 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.27 20:13:04 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 20:13:25 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.27 20:13:37 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 8:13:41 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 39833
+2024.04.27 20:13:45 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 20:13:45 WARN  Using indexes to guess the definition of io
+2024.04.27 20:13:45 WARN  Using indexes to guess the definition of bp
+2024.04.27 20:13:45 WARN  Using indexes to guess the definition of bp
+2024.04.27 20:13:45 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 20:13:47 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 8:13:56 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 39899
+2024.04.27 20:14:48 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 20:15:26 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 8:17:09 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 40144
+2024.04.27 20:17:15 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 8:18:15 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 40416
+2024.04.27 20:19:08 WARN  Using indexes to guess the definition of instruction_Q
+2024.04.27 20:19:08 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 20:19:31 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 20:19:50 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 20:19:54 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 20:19:55 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 20:20:36 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 20:20:37 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 20:20:37 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 8:21:03 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 40941
+Apr 27, 2024 8:21:06 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 40950
+Apr 27, 2024 8:21:07 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 40959
+2024.04.27 20:22:50 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.27 20:23:49 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 20:24:38 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 20:24:41 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 20:24:56 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.27 20:25:03 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.27 20:25:40 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.27 20:25:51 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.27 20:26:03 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.27 20:26:22 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.27 20:26:40 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.27 20:27:32 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/top.scala
+2024.04.27 20:27:45 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/top.scala
+2024.04.27 20:28:10 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.27 20:28:25 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+Apr 27, 2024 8:28:28 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 42193
+2024.04.27 20:28:32 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.27 20:28:40 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.27 20:28:46 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.27 20:29:02 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.27 20:29:24 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+Apr 27, 2024 8:30:32 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 42528
+2024.04.27 20:30:36 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/top.scala
+Apr 27, 2024 8:30:37 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 42570
+2024.04.27 20:31:13 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 20:32:18 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 8:32:23 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 42693
+2024.04.27 20:34:01 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 8:34:08 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 42875
+Apr 27, 2024 8:34:09 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 42884
+Apr 27, 2024 8:34:30 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 42923
+2024.04.27 20:34:30 ERROR Failed to tokenize input for semantic tokens for /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+scala.meta.tokenizers.TokenizeException: <input>:113: error: Invalid literal number, followed by identifier character
+class prediction(fetchWidth:Int=4, GHRWidth:Int=16, BTBEntries:Int=4096ries:Int=128) extends Bundle{
+                                                                       ^
+	at scala.meta.internal.tokenizers.Reporter.syntaxError(Reporter.scala:23)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError$(Reporter.scala:23)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.syntaxError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError(Reporter.scala:25)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError$(Reporter.scala:25)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.syntaxError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.LegacyScanner.checkNoLetter(LegacyScanner.scala:834)
+	at scala.meta.internal.tokenizers.LegacyScanner.setNumberInteger$1(LegacyScanner.scala:857)
+	at scala.meta.internal.tokenizers.LegacyScanner.getNumber(LegacyScanner.scala:875)
+	at scala.meta.internal.tokenizers.LegacyScanner.fetchToken(LegacyScanner.scala:342)
+	at scala.meta.internal.tokenizers.LegacyScanner.nextToken(LegacyScanner.scala:214)
+	at scala.meta.internal.tokenizers.LegacyScanner.foreach(LegacyScanner.scala:982)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.uncachedTokenize(ScalametaTokenizer.scala:23)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.$anonfun$tokenize$1(ScalametaTokenizer.scala:16)
+	at scala.collection.concurrent.TrieMap.getOrElseUpdate(TrieMap.scala:960)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.tokenize(ScalametaTokenizer.scala:16)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer$$anon$2.apply(ScalametaTokenizer.scala:331)
+	at scala.meta.tokenizers.Api$XtensionTokenizeDialectInput.tokenize(Api.scala:25)
+	at scala.meta.tokenizers.Api$XtensionTokenizeInputLike.tokenize(Api.scala:14)
+	at scala.meta.internal.metals.SemanticTokensProvider$.getTokens(SemanticTokensProvider.scala:28)
+	at scala.meta.internal.metals.SemanticTokensProvider$.provide(SemanticTokensProvider.scala:89)
+	at scala.meta.internal.metals.Compilers.$anonfun$semanticTokens$3(Compilers.scala:597)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:467)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.lang.Thread.run(Thread.java:833)
+
+2024.04.27 20:34:48 ERROR Failed to tokenize input for semantic tokens for /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+scala.meta.tokenizers.TokenizeException: <input>:113: error: Non-zero integral values may not have a leading zero.
+class prediction(fetchWidth:Int=4, GHRWidth:Int=16, 096) extends Bundle{
+                                                    ^
+	at scala.meta.internal.tokenizers.Reporter.syntaxError(Reporter.scala:23)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError$(Reporter.scala:23)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.syntaxError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError(Reporter.scala:25)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError$(Reporter.scala:25)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.syntaxError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.LegacyScanner.setNumberInt$1(LegacyScanner.scala:847)
+	at scala.meta.internal.tokenizers.LegacyScanner.setNumberInteger$1(LegacyScanner.scala:858)
+	at scala.meta.internal.tokenizers.LegacyScanner.getNumber(LegacyScanner.scala:875)
+	at scala.meta.internal.tokenizers.LegacyScanner.fetchZero$1(LegacyScanner.scala:336)
+	at scala.meta.internal.tokenizers.LegacyScanner.fetchToken(LegacyScanner.scala:339)
+	at scala.meta.internal.tokenizers.LegacyScanner.nextToken(LegacyScanner.scala:214)
+	at scala.meta.internal.tokenizers.LegacyScanner.foreach(LegacyScanner.scala:982)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.uncachedTokenize(ScalametaTokenizer.scala:23)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.$anonfun$tokenize$1(ScalametaTokenizer.scala:16)
+	at scala.collection.concurrent.TrieMap.getOrElseUpdate(TrieMap.scala:960)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.tokenize(ScalametaTokenizer.scala:16)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer$$anon$2.apply(ScalametaTokenizer.scala:331)
+	at scala.meta.tokenizers.Api$XtensionTokenizeDialectInput.tokenize(Api.scala:25)
+	at scala.meta.tokenizers.Api$XtensionTokenizeInputLike.tokenize(Api.scala:14)
+	at scala.meta.internal.metals.SemanticTokensProvider$.getTokens(SemanticTokensProvider.scala:28)
+	at scala.meta.internal.metals.SemanticTokensProvider$.provide(SemanticTokensProvider.scala:89)
+	at scala.meta.internal.metals.Compilers.$anonfun$semanticTokens$3(Compilers.scala:597)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:467)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.lang.Thread.run(Thread.java:833)
+
+2024.04.27 20:34:51 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 20:35:09 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 20:35:10 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 20:35:24 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 20:35:43 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 20:36:03 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 20:37:36 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 20:37:36 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 20:37:38 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 20:37:48 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 8:38:47 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 43409
+2024.04.27 20:38:56 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+Apr 27, 2024 8:41:26 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 43495
+2024.04.27 20:46:10 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 20:46:31 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 20:46:34 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 20:46:35 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+Apr 27, 2024 8:46:43 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 43911
+2024.04.27 20:46:44 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 20:47:48 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.27 20:47:51 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.27 20:47:57 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.27 20:48:46 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+Apr 27, 2024 8:49:14 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 44338
+Apr 27, 2024 8:49:17 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 44351
+2024.04.27 20:49:22 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+Apr 27, 2024 8:49:50 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 44388
+2024.04.27 20:50:10 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.27 20:50:20 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.27 20:50:37 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 8:51:05 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 44575
+Apr 27, 2024 8:51:43 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 44587
+2024.04.27 20:52:12 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 20:53:01 WARN  Using indexes to guess the definition of fetch_packet
+2024.04.27 20:53:01 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.27 20:53:18 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.27 20:53:42 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 20:53:46 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.27 20:54:21 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.27 20:54:35 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.27 20:54:46 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.27 20:54:56 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.27 20:55:15 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.27 20:55:27 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.27 20:55:48 ERROR Failed to tokenize input for semantic tokens for /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+scala.meta.tokenizers.TokenizeException: <input>:108: error: unclosed comment
+/*
+^
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError(Reporter.scala:27)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError$(Reporter.scala:26)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.incompleteInputError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError(Reporter.scala:29)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError$(Reporter.scala:29)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.incompleteInputError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.LegacyScanner.skipNestedComments(LegacyScanner.scala:55)
+	at scala.meta.internal.tokenizers.LegacyScanner.skipToCommentEnd(LegacyScanner.scala:74)
+	at scala.meta.internal.tokenizers.LegacyScanner.fetchToken(LegacyScanner.scala:316)
+	at scala.meta.internal.tokenizers.LegacyScanner.nextToken(LegacyScanner.scala:214)
+	at scala.meta.internal.tokenizers.LegacyScanner.foreach(LegacyScanner.scala:982)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.uncachedTokenize(ScalametaTokenizer.scala:23)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.$anonfun$tokenize$1(ScalametaTokenizer.scala:16)
+	at scala.collection.concurrent.TrieMap.getOrElseUpdate(TrieMap.scala:960)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.tokenize(ScalametaTokenizer.scala:16)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer$$anon$2.apply(ScalametaTokenizer.scala:331)
+	at scala.meta.tokenizers.Api$XtensionTokenizeDialectInput.tokenize(Api.scala:25)
+	at scala.meta.tokenizers.Api$XtensionTokenizeInputLike.tokenize(Api.scala:14)
+	at scala.meta.internal.metals.SemanticTokensProvider$.getTokens(SemanticTokensProvider.scala:28)
+	at scala.meta.internal.metals.SemanticTokensProvider$.provide(SemanticTokensProvider.scala:89)
+	at scala.meta.internal.metals.Compilers.$anonfun$semanticTokens$3(Compilers.scala:597)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:467)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.lang.Thread.run(Thread.java:833)
+
+2024.04.27 20:55:52 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 20:56:25 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.27 20:56:25 WARN  Using indexes to guess the definition of fetch_packet
+2024.04.27 20:57:00 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+Apr 27, 2024 8:57:18 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 45595
+2024.04.27 20:57:44 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.27 20:57:50 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.27 20:57:50 WARN  Using indexes to guess the definition of prediction
+2024.04.27 20:57:50 WARN  Using indexes to guess the definition of io
+Apr 27, 2024 8:58:07 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 45707
+2024.04.27 20:58:15 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.27 20:58:36 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 8:59:17 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 45880
+Apr 27, 2024 8:59:18 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 45889
+Apr 27, 2024 8:59:20 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 45899
+2024.04.27 20:59:23 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 21:00:34 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 21:01:14 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/decoder.scala
+2024.04.27 21:01:33 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/branch_decoder.scala
+Apr 27, 2024 9:01:35 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 46146
+2024.04.27 21:02:34 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/branch_decoder.scala
+2024.04.27 21:02:44 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/branch_decoder.scala
+2024.04.27 21:03:02 WARN  Using indexes to guess the definition of io
+2024.04.27 21:03:59 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/branch_decoder.scala
+2024.04.27 21:04:04 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 21:04:09 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/branch_decoder.scala
+2024.04.27 21:04:15 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/branch_decoder.scala
+2024.04.27 21:04:26 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/branch_decoder.scala
+2024.04.27 21:04:39 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/branch_decoder.scala
+2024.04.27 21:04:50 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/branch_decoder.scala
+2024.04.27 21:05:09 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 21:05:14 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 21:05:14 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+Apr 27, 2024 9:05:30 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 47009
+2024.04.27 21:05:31 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.27 21:05:33 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.27 21:07:33 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.27 21:07:44 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.27 21:10:30 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 21:10:50 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 21:11:10 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+Apr 27, 2024 9:11:14 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 47425
+Apr 27, 2024 9:11:17 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 47434
+Apr 27, 2024 9:12:25 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 47560
+2024.04.27 21:12:55 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+Apr 27, 2024 9:12:58 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 47609
+2024.04.27 21:13:03 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.27 21:15:31 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+Apr 27, 2024 9:15:31 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 47779
+2024.04.27 21:15:31 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+Apr 27, 2024 9:15:57 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 47804
+2024.04.27 21:16:40 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+Apr 27, 2024 9:17:04 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 48020
+2024.04.27 21:17:10 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/branch_decoder.scala
+2024.04.27 21:17:20 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/branch_decoder.scala
+2024.04.27 21:17:36 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/branch_decoder.scala
+2024.04.27 21:17:41 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/branch_decoder.scala
+2024.04.27 21:17:46 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/branch_decoder.scala
+2024.04.27 21:17:53 WARN  Using indexes to guess the definition of RAS_read
+2024.04.27 21:17:53 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/branch_decoder.scala
+2024.04.27 21:17:56 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 21:18:01 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 21:18:09 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 21:18:31 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 21:18:35 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+Apr 27, 2024 9:18:53 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 48486
+2024.04.27 21:19:01 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 21:19:12 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+Apr 27, 2024 9:20:17 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 48634
+2024.04.27 21:20:27 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 21:20:36 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 21:21:22 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 21:21:37 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 21:21:50 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 21:22:09 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.27 21:22:26 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.27 21:22:48 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+Apr 27, 2024 9:22:56 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 49174
+2024.04.27 21:23:22 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 9:25:19 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 49387
+2024.04.27 21:25:57 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/hash_BTB.scala
+Apr 27, 2024 9:25:58 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 49610
+Apr 27, 2024 9:26:18 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 49753
+2024.04.27 21:26:20 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/hash_BTB.scala
+2024.04.27 21:26:20 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/hash_BTB.scala
+Apr 27, 2024 9:26:38 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 49845
+2024.04.27 21:26:44 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/hash_BTB.scala
+2024.04.27 21:27:36 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/hash_BTB.scala
+2024.04.27 21:29:55 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/hash_BTB.scala
+2024.04.27 21:30:09 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/hash_BTB.scala
+2024.04.27 21:30:18 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/hash_BTB.scala
+2024.04.27 21:30:22 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/hash_BTB.scala
+2024.04.27 21:30:37 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/hash_BTB.scala
+2024.04.27 21:30:42 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/hash_BTB.scala
+2024.04.27 21:31:06 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/hash_BTB.scala
+Apr 27, 2024 9:31:09 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 50236
+2024.04.27 21:31:13 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/hash_BTB.scala
+2024.04.27 21:31:59 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 21:32:13 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 21:32:52 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/top.scala
+2024.04.27 21:32:53 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/top.scala
+2024.04.27 21:35:47 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 21:37:07 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 21:38:06 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 21:38:23 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 21:38:48 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 21:39:41 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 21:41:10 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 21:41:12 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 21:41:15 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 21:41:29 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 9:42:18 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 51099
+2024.04.27 21:42:33 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 21:43:27 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 21:43:36 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 9:44:05 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 51496
+2024.04.27 21:44:08 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/top.scala
+2024.04.27 21:44:52 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 21:45:02 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 21:45:06 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 21:45:10 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 21:45:13 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 21:45:22 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 21:45:59 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 21:46:00 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 9:46:58 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 52306
+2024.04.27 21:47:13 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 21:47:28 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 21:47:48 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 9:48:41 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 52689
+2024.04.27 21:49:31 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 21:50:46 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 21:50:50 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 21:51:02 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 21:51:20 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 21:52:10 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 21:52:39 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 21:53:39 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 21:53:53 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 21:54:08 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 21:54:45 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 9:55:01 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 53863
+2024.04.27 21:55:15 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 21:55:28 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 21:55:44 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 21:56:36 WARN  Using indexes to guess the definition of commit
+2024.04.27 21:56:36 WARN  Using indexes to guess the definition of mispredict
+2024.04.27 21:56:36 WARN  Using indexes to guess the definition of mispredict
+2024.04.27 21:56:36 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 21:56:39 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 21:57:14 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 21:57:16 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 21:58:13 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 21:58:35 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 21:58:39 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.27 21:58:41 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 21:58:52 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.27 21:59:17 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+Apr 27, 2024 9:59:26 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 54278
+2024.04.27 21:59:28 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/top.scala
+Apr 27, 2024 9:59:29 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 54295
+2024.04.27 21:59:40 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 22:00:35 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 22:00:41 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 22:00:52 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 10:01:05 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 54503
+2024.04.27 22:01:07 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 22:01:39 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala

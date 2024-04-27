@@ -33,7 +33,7 @@ import chisel3.util._
 import java.io.{File, FileWriter}
 import java.rmi.server.UID
 
-class branch_decoder(index:Int=0) extends Module{
+class branch_decoder(index:Int=0, fetchWidth:Int=4, GHRWidth:Int=16) extends Module{
 
     val io = IO(new Bundle{
         val fetch_PC    = Input(UInt(32.W)) // PC of the fetch packet
@@ -41,7 +41,8 @@ class branch_decoder(index:Int=0) extends Module{
         val instruction = Input(UInt(32.W))
         val valid       = Input(Bool())
         
-        val BTB_resp    = Input(new BTB_resp())
+        val prediction  = Input(new prediction(fetchWidth=fetchWidth, GHRWidth=GHRWidth))
+        val RAS_read    = Flipped(new RAS_read())
 
         val T_NT        = Output(Bool())
 
@@ -93,9 +94,9 @@ class branch_decoder(index:Int=0) extends Module{
     when (JAL) {
         io.T_NT := io.valid // JAL addr == PC+imm. dir is always 1. Therefore, taken if valid (everything available).
     }.elsewhen (JALR) {
-        io.T_NT := io.valid && (Ret || (io.BTB_resp.hit && io.BTB_resp.idx(index)))  // Direction is always 1. Address is hit or miss. Only taken if addr is available.
+        io.T_NT := io.valid && (Ret || (io.prediction.hit && io.prediction.br_mask(index)))  // Direction is always 2. Address is hit or miss. Only taken if addr is available.
     }.elsewhen (BR) {
-        io.T_NT := io.valid && io.BTB_resp.idx(index)  // Address is PC + Imm. Only taken if PHT is 1. However,
+        io.T_NT := io.valid && io.prediction.br_mask(index)  // Address is PC + Imm. Only taken if PHT is 1. However,
         // BR also depends on BTB idx since, unlike JAL and JALR, where priority can be easily arbitrated based on what comes first,
         // Branches may or may not be taken. Therefore, for the branch to be taken, it must also be the dominant one (where as with JAL, the first one is the dominant one).
     }.otherwise {
@@ -111,8 +112,8 @@ class branch_decoder(index:Int=0) extends Module{
     io.metadata.Ret             :=  Ret
     io.metadata.Imm             :=  imm
     io.metadata.instruction_PC  :=  fetch_PC_adjusted
-    io.metadata.RAS             :=  io.BTB_resp.RAS
-    io.metadata.BTB_target      :=  io.BTB_resp.target
+    io.metadata.RAS             :=  io.RAS_read.ret_addr
+    io.metadata.BTB_target      :=  io.prediction.target
 
 
 
