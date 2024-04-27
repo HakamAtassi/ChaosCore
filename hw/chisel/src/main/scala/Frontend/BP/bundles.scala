@@ -34,20 +34,21 @@ import java.io.{File, FileWriter}
 import java.rmi.server.UID
 
 
+// Helper functions //
+object helperFunctions{
+    def getBTBTagBits(BTBSize:Int = 4096): Int = (32-log2Ceil(BTBSize))
+}
+
+import helperFunctions.getBTBTagBits
+
+
+// Channels //
 class fetch_packet(width:Int = 4) extends Bundle{
     val fetch_PC        = UInt(32.W)
     val instructions    = Vec(width, UInt(32.W))
     val valid_bits      = Vec(width, Bool())
 }
 
-class BTB_resp(GHR_width:Int=16, width:Int=4) extends Bundle{  // Width agnostic
-    val hit     = Bool()
-    val idx     = UInt(width.W)
-    val T_NT    = Bool()
-    val RAS     = UInt(32.W)
-    val target  = UInt(32.W)
-    val GHR     = UInt(GHR_width.W)
-}
 
 class metadata extends Bundle{
     val JAL             = Bool()
@@ -65,40 +66,64 @@ class metadata extends Bundle{
 // BP channels //
 /////////////////
 
-class commit(fetchWidth:Int=4, GHRWidth:Int=16) extends Bundle{
-    val PC      = UInt(32.W)
-    val GHR     = UInt(GHRWidth.W)
-    val T_NT    = Bool()
+class commit(fetchWidth:Int=4, GHRWidth:Int=16, BTBEntries:Int=4096) extends Bundle{
+    val valid   = Input(Bool())
+    val PC      = Input(UInt(32.W))
+    val GHR     = Input(UInt(GHRWidth.W))
+    val T_NT    = Input(Bool())
     
-    val valid    = Bool()
-    val tag      = UInt()
-    val target   = UInt(32.W)
-    val brType  = UInt(typeBits.W)
-    val brMask   = UInt(brMaskBits.W)
-
-    val valid   = Bool()
-    // PC entires...
+    val tag      =Input( UInt(getBTBTagBits(BTBEntries).W))
+    val target   =Input( UInt(32.W))
+    val br_type  =Input( UInt(2.W))
+    val br_mask  =Input( UInt(fetchWidth.W))
 }
 
-class mispredict(GHRWidth:Int=16, RASEntires:Int = 128) extends Bundle{
-    val PC = UInt(32.W) //
-    val GHR = UInt(GHRWidth.W)  // To reset GHR
-    val TOS = UInt(log2Ceil(RASEntires).W)  // To reset GHR
-    val NEXT = UInt(log2Ceil(RASEntires).W) // TO reset GHR
+class mispredict(GHRWidth:Int=16, RASEntries:Int = 128) extends Bundle{
+    val valid   = Input(Bool())
+    val PC      = Input(UInt(32.W)) //
+    val GHR     = Input(UInt(GHRWidth.W))  // To reset GHR
+    val TOS     = Input(UInt(log2Ceil(RASEntries).W))  // To reset GHR
+    val NEXT    = Input(UInt(log2Ceil(RASEntries).W)) // TO reset GHR
 }
 
-class RAS_update(GHRWidth:Int=16) extends Bundle{
-    val call_addr = UInt(32.W)
-    val call = Bool()
-    val ret = Bool()
+class RAS_update extends Bundle{    // Request call or ret
+    val call_addr = Input(UInt(32.W))
+    val call      = Input(Bool())
+    val ret       = Input(Bool())
+}
+
+class RAS_read(RASEntries:Int=128) extends Bundle{
+    val NEXT      = Output(UInt((log2Ceil(RASEntries).W)))
+    val TOS       = Output(UInt((log2Ceil(RASEntries).W)))
+    val ret_addr  = Output(UInt(32.W))
 }
 
 class revert(GHRWidth:Int=16) extends Bundle{
-    val valid             = Bool()
-    val GHR                = Bool()
+    val valid             = Input(Bool())
+    val GHR               = Input(UInt(GHRWidth.W))
+    val PC                = Input(UInt(32.W))
 }
 
-class prediction(fetchWidth:Int=4, GHRWidth:Int=16, RASEntires:Int=128) extends Bundle{
-    val stub             = Bool()
-    // TODO: 
+class BTB_resp(fetchWidth:Int=4,GHRWidth:Int=16) extends Bundle{  // Width agnostic
+    val hit     = Bool()
+    val idx     = UInt(fetchWidth.W)
+    val T_NT    = Bool()
+    val RAS     = UInt(32.W)
+    val target  = UInt(32.W)
+    val GHR     = UInt(GHRWidth.W)
+}
+
+class prediction(fetchWidth:Int=4, GHRWidth:Int=16) extends Bundle{
+    val PC          =   Input(UInt(32.W))
+    val ready       =   Input(Bool())
+    val PC_valid    =   Input(Bool())   // FIXME: this is not assigned
+
+    val hit         =   Output(Bool())  // FIXME: I dont think this is assigned in BTB since it was added after the fact
+    val target      =   Output(UInt(32.W))
+    val br_type     =   Output(UInt(2.W))
+    val br_mask     =   Output(UInt(fetchWidth.W))
+    val GHR         =   Output(UInt(GHRWidth.W))
+    val T_NT        =   Output(Bool())
+    val valid       =   Output(Bool())
+
 }

@@ -33,97 +33,129 @@ import chisel3.util._
 import java.io.{File, FileWriter}
 import java.rmi.server.UID
 
-class BP(GHRWidth:Int = 16, fetchWidth:Int = 4, RASEntires:Int=128, BTBEntires:Int = 4096) extends Module{
+class BP(GHRWidth:Int = 16, fetchWidth:Int = 4, RASEntries:Int=128, BTBEntries:Int = 4096) extends Module{
     val io = IO(new Bundle{
         // Predict Channel
-        val predict = Decoupled(Input(UInt(32.W)))
+        val predict     = Flipped(Decoupled(UInt(32.W)))
 
         // Commit Channel 
-        val commit = Input(new commit(fetchWidth=fetchWidth)) // common case. Update BTB, PHT
+        val commit      = new commit(fetchWidth=fetchWidth) // common case. Update BTB, PHT
 
         // Mispredict Channel 
-        val mispredict = Input(new commit(GHRWidth=GHRWidth, RASEntires:RASEntires))
+        val mispredict  = new mispredict(GHRWidth=GHRWidth, RASEntries=RASEntries)
 
         // Revert Channel
-        val RAS_update = Input(new RAS_update())
+        val RAS_update  = new RAS_update
+
+        // RAS Channel
+        val RAS_read    = new RAS_read(RASEntries=RASEntries)
 
         // GHR Channel
-        val revert = Input(new revert(GHRWidth=GHRWidth))
+        val revert      = new revert(GHRWidth=GHRWidth)
 
         // Prediction Channel (output)
-        val prediction = Output(new prediction(fetchWidth=fetchWidth, GHRWidth=GHRWidth, RASEntires:RASEntires))    // Output of predictions
+        val prediction  = new prediction(fetchWidth=fetchWidth, GHRWidth=GHRWidth)    // Output of predictions
     })
 
 
+    val GHR = RegInit(UInt(GHRWidth.W),0.U)
     /////////////////
-    // Init GHSARE //
+    // Init gshare //
     /////////////////
     val gshare = Module(new gshare(GHR_width=GHRWidth))
 
     // predict port
-    gshare.io.predict_GHR               = ???
-    ghsare.io.predict_PC                = 
-    ghsare.io.predict_valid             =
+    gshare.io.predict_GHR               := GHR
+    gshare.io.predict_PC                := io.predict.bits
+    gshare.io.predict_valid             := io.predict.valid
 
     // commit port
-    gshare.io.commit_GHR                = io.commit.GHR
-    gshare.io.commit_PC                 = io.commit.PC
-    gshare.io.commit_valid              = io.commit.valid
-    gshare.io.commit_branch_direction   = io.T_NT
-
-    // prediction output
-    gshare.io.commit_T_NT               = 
-    gshare.io.commit_valid
-
+    gshare.io.commit_GHR                := io.commit.GHR
+    gshare.io.commit_PC                 := io.commit.PC
+    gshare.io.commit_valid              := io.commit.valid
+    gshare.io.commit_branch_direction   := io.commit.T_NT
 
     //////////////
     // Init BTB //
     //////////////
-    val BTB = Module(new hash_BTB(entires=BTBEntires))
+    val BTB = Module(new hash_BTB(entries=BTBEntries))
     // Reminder: BTB only updates on taken branches...
 
     // predict port
-    BTB.io.predict_PC       =
-    BTB.io.predict_valid    =
+    BTB.io.predict_PC       := io.predict.bits
+    BTB.io.predict_valid    := io.predict.valid
 
     // FIXME: this updates blindly. Where is taken only commit handled?????
-    // commit port
-    BTB.io.commit_PC        = io.commit.PC
     // FIXME: commit_tag not done.
-    BTB.io.commit_data      = Cat(1.U, commit_tag, io.commit.target, io.commit.br_type, io.commit.brMask)
-    BTB.io.commit_valid     = io.commit.valid
+    // commit port
+    BTB.io.commit_PC        := io.commit.PC
+    
+    BTB.io.commit_tag              :=   io.commit.tag
+    BTB.io.commit_target           :=   io.commit.target
+    BTB.io.commit_br_type          :=   io.commit.br_type
+    BTB.io.commit_br_mask          :=   io.commit.br_mask
+    BTB.io.commit_valid            :=   io.commit.valid
 
-    // output port
-    BTB.io.BTB_valid
-    BTB.io.BTB_target
-    BTB.io.BTB_type
-    BTB.io.BTB_brMask
 
     ///////////////////////////////
     // Init Return-Address-Stack //
     ///////////////////////////////
-    val RAS = Module(new RAS(entires=RASEntires))
+    val RAS = Module(new RAS(entries=RASEntries))
 
-    // TODO: implement control...
-    // update port
-    RAS.io.wr_addr      = DontCare
-    RAS.io.wr_valid     = DontCare
-    RAS.io.rd_valid     =DontCare
+    RAS.io.revert_NEXT  := 0.U
+    RAS.io.revert_TOS   := 0.U
+    RAS.io.revert_valid := 0.U
 
-    // mispredict port
-    RAS.io.revert_NEXT  =DontCare
-    RAS.io.revert_TOS   =   DontCare
-    RAS.io.revert_valid =   DontCare
-
-    // output port
-    RAS.io.ret_addr     =DontCare
-    RAS.io.ret_NEXT     =DontCare
-    RAS.io.ret_TOS      =DontCare
+    RAS.io.wr_addr      := 0.U
+    RAS.io.wr_valid     := 0.U
+    RAS.io.rd_valid     := 0.U
 
 
+    when(io.mispredict.valid){  // if mispred, handle mispred...
+        // mispredict port
+        RAS.io.revert_NEXT  :=   io.mispredict.NEXT
+        RAS.io.revert_TOS   :=   io.mispredict.TOS
+        RAS.io.revert_valid :=   io.mispredict.valid
+    }.otherwise{
+        // update port
+        RAS.io.wr_addr      := io.RAS_update.call_addr
+        RAS.io.wr_valid     := io.RAS_update.call
+        RAS.io.rd_valid     := io.RAS_update.ret
+    }
 
-    // Assign prediction
+    /////////
+    // GHR //
+    /////////
+    
+    val is_cond_branch = 0.U
+        //BTB.io.valid   // FIXME: not implemented
 
-    // TODO: skid buffer for when not ready
+    when(io.mispredict.valid){
+        GHR := io.mispredict.GHR
+    }.elsewhen(io.revert.valid){
+        GHR := io.revert.GHR
+    }.otherwise{
+        GHR := (GHR<<1) | (is_cond_branch & gshare.io.T_NT.asUInt)
+    }
+
+
+    // Assign outputs
+
+    // RAS
+    io.RAS_read.ret_addr := RAS.io.ret_addr
+    io.RAS_read.NEXT     := RAS.io.NEXT
+    io.RAS_read.TOS      := RAS.io.TOS
+
+    // BTB
+    io.prediction.valid     := (BTB.io.BTB_valid && gshare.io.valid)
+    io.prediction.target    := BTB.io.BTB_target
+    io.prediction.br_type   := BTB.io.BTB_type
+    io.prediction.br_mask   := BTB.io.BTB_br_mask
+    io.prediction.hit       := BTB.io.BTB_hit
+    io.prediction.GHR       := GHR
+    io.prediction.T_NT      := gshare.io.T_NT
+
+    io.predict.ready        := io.prediction.ready     // if cant output prediction, cannot receive new prediction
+
 
 }

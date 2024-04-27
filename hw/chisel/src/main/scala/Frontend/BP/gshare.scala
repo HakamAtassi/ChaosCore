@@ -39,30 +39,24 @@ class PHT_memory(depth: Int, width: Int) extends Module {
     // 2 read 1 write memory
   val io = IO(new Bundle {
     // read port 1 (predict)
-    val addrA = Input(UInt(log2Ceil(depth).W))
-    val readDataA = Input(UInt(log2Ceil(depth).W))
+    val addrA           = Input(UInt(log2Ceil(depth).W))
+    val readDataA       = Output(UInt(log2Ceil(depth).W))
 
     // read port 2 (commit)
-    val addrB = Input(UInt(log2Ceil(depth).W))
-    val readDataB = Input(UInt(log2Ceil(depth).W))
+    val addrB           = Input(UInt(log2Ceil(depth).W))
+    val readDataB       = Output(UInt(log2Ceil(depth).W))
 
     // write port 1 (commit)
-    val addrC = Input(UInt(log2Ceil(depth).W))
-    val writeDataC = Input(UInt(width.W))
-    val writeEnableC = Input(Bool())
-    val readDataC = Output(UInt(width.W))
+    val addrC           = Input(UInt(log2Ceil(depth).W))
+    val writeDataC      = Input(UInt(width.W))
+    val writeEnableC    = Input(Bool())
   })
-
 
   // Create the true dual-port memory
   val mem = SyncReadMem(depth, UInt(width.W))
 
-
-  // Operations for Port A
   io.readDataA := mem.read(io.addrA)
-
   io.readDataB := mem.read(io.addrB)
-
 
   // Operations for Port C
   when(io.writeEnableC) {
@@ -70,7 +64,7 @@ class PHT_memory(depth: Int, width: Int) extends Module {
   }
 }
 
-class gshare(GHR_width:Int = 15) extends Module{
+class gshare(GHR_width:Int = 16) extends Module{
     // the ghsare must be addressable by the number of bits in the global history register
 
     val io = IO(new Bundle{

@@ -1,7 +1,10 @@
-[0m[[0m[31merror[0m] [0m[0m/home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala:60:5: ')' expected but string literal found.[0m
-[0m[[0m[31merror[0m] [0m[0m    "b11".U(fetchWidth.W),  // Validity mask for pattern 10 -> 10[0m
-[0m[[0m[31merror[0m] [0m[0m    ^[0m
-[0m[[0m[31merror[0m] [0m[0m/home/hakam/repos/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala:61:4: ';' expected but ')' found.[0m
-[0m[[0m[31merror[0m] [0m[0m  ))[0m
-[0m[[0m[31merror[0m] [0m[0m   ^[0m
-[0m[[0m[31merror[0m] [0m[0mtwo errors found[0m
+[0m[[0m[31merror[0m] [0m[0m/home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala:214:11: value RAS_revert is not a member of chisel3.Bundle{val predict: chisel3.util.DecoupledIO[chisel3.UInt]; val commit: commit; val mispredict: mispredict; val RAS_update: RAS_update; val RAS_read: RAS_read; val revert: revert; val prediction: prediction}[0m
+[0m[[0m[31merror[0m] [0m[0m    bp.io.RAS_revert.valid    :=    0.B[0m
+[0m[[0m[31merror[0m] [0m[0m          ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala:215:11: value RAS_revert is not a member of chisel3.Bundle{val predict: chisel3.util.DecoupledIO[chisel3.UInt]; val commit: commit; val mispredict: mispredict; val RAS_update: RAS_update; val RAS_read: RAS_read; val revert: revert; val prediction: prediction}[0m
+[0m[[0m[31merror[0m] [0m[0m    bp.io.RAS_revert.GHR    :=  0.U[0m
+[0m[[0m[31merror[0m] [0m[0m          ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala:216:11: value RAS_revert is not a member of chisel3.Bundle{val predict: chisel3.util.DecoupledIO[chisel3.UInt]; val commit: commit; val mispredict: mispredict; val RAS_update: RAS_update; val RAS_read: RAS_read; val revert: revert; val prediction: prediction}[0m
+[0m[[0m[31merror[0m] [0m[0m    bp.io.RAS_revert.PC    := 0.U [0m
+[0m[[0m[31merror[0m] [0m[0m          ^[0m
+[0m[[0m[31merror[0m] [0m[0mthree errors found[0m

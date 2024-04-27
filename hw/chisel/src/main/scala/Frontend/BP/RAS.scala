@@ -35,11 +35,11 @@ import java.io.{File, FileWriter}
 import java.rmi.server.UID
 
 
-class RAS(entires:Int = 128) extends Module{
+class RAS(entries:Int = 128) extends Module{
 
-    val nextBits = log2Ceil(entires)
-    val tosBits  = log2Ceil(entires)
-    val nosBits  = log2Ceil(entires)
+    val nextBits = log2Ceil(entries)
+    val tosBits  = log2Ceil(entries)
+    val nosBits  = log2Ceil(entries)
 
     val entryWidth  = nosBits + 32
 
@@ -72,7 +72,7 @@ class RAS(entires:Int = 128) extends Module{
         Then a Ret occurs. The Ret increments the TOS in typical stack fashion. NEXT, however, is not. This is to maintain the return address
         in case the earlier branch was found to be mispredicted.
         The final Call now writes to an entirely new stack entry. NEXT is once more incremented.
-        Note how rets do not entirely deallocate stack entires. Instead, it keeps the entires in the stack such that an earlier stack state can be reverted to
+        Note how rets do not entirely deallocate stack entries. Instead, it keeps the entries in the stack such that an earlier stack state can be reverted to
         quite easily by restoring the stack pointers. 
     */
 
@@ -81,7 +81,7 @@ class RAS(entires:Int = 128) extends Module{
     val TOS     = RegInit(UInt(tosBits.W), 0.U)
     val NOS     = Wire(UInt(nosBits.W))
 
-    val RAS_memory = Module(new SDPReadWriteSmem(depth=entires, width=entryWidth))
+    val RAS_memory = Module(new SDPReadWriteSmem(depth=entries, width=entryWidth))
 
     // write to TOS
     when(io.revert_valid === 1.B){   // revert (misprediction)
@@ -94,8 +94,6 @@ class RAS(entires:Int = 128) extends Module{
         TOS := TOS
     }
 
-
-    
     // for TOS forwarding
     //TOS := tos_mux_out  // 1 cycle delay
 

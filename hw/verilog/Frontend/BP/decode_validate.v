@@ -3,10 +3,10 @@ module branch_decoder(
   input  [31:0] io_fetch_PC,
                 io_instruction,
   input         io_valid,
-                io_BTB_resp_hit,
-  input  [3:0]  io_BTB_resp_idx,
-  input  [31:0] io_BTB_resp_RAS,
-                io_BTB_resp_target,
+                io_prediction_hit,
+  input  [31:0] io_prediction_target,
+  input  [3:0]  io_prediction_br_mask,
+  input  [31:0] io_RAS_read_ret_addr,
   output        io_T_NT,
                 io_metadata_JAL,
                 io_metadata_JALR,
@@ -45,8 +45,8 @@ module branch_decoder(
     JAL
       ? io_valid
       : JALR
-          ? io_valid & (Ret | io_BTB_resp_hit & io_BTB_resp_idx[0])
-          : BR & io_valid & io_BTB_resp_idx[0];
+          ? io_valid & (Ret | io_prediction_hit & io_prediction_br_mask[0])
+          : BR & io_valid & io_prediction_br_mask[0];
   assign io_metadata_JAL = JAL;
   assign io_metadata_JALR = JALR;
   assign io_metadata_BR = BR;
@@ -54,18 +54,18 @@ module branch_decoder(
   assign io_metadata_Ret = Ret;
   assign io_metadata_Imm = imm;
   assign io_metadata_instruction_PC = io_fetch_PC;
-  assign io_metadata_RAS = io_BTB_resp_RAS;
-  assign io_metadata_BTB_target = io_BTB_resp_target;
+  assign io_metadata_RAS = io_RAS_read_ret_addr;
+  assign io_metadata_BTB_target = io_prediction_target;
 endmodule
 
 module branch_decoder_1(
   input  [31:0] io_fetch_PC,
                 io_instruction,
   input         io_valid,
-                io_BTB_resp_hit,
-  input  [3:0]  io_BTB_resp_idx,
-  input  [31:0] io_BTB_resp_RAS,
-                io_BTB_resp_target,
+                io_prediction_hit,
+  input  [31:0] io_prediction_target,
+  input  [3:0]  io_prediction_br_mask,
+  input  [31:0] io_RAS_read_ret_addr,
   output        io_T_NT,
                 io_metadata_JAL,
                 io_metadata_JALR,
@@ -104,8 +104,8 @@ module branch_decoder_1(
     JAL
       ? io_valid
       : JALR
-          ? io_valid & (Ret | io_BTB_resp_hit & io_BTB_resp_idx[1])
-          : BR & io_valid & io_BTB_resp_idx[1];
+          ? io_valid & (Ret | io_prediction_hit & io_prediction_br_mask[1])
+          : BR & io_valid & io_prediction_br_mask[1];
   assign io_metadata_JAL = JAL;
   assign io_metadata_JALR = JALR;
   assign io_metadata_BR = BR;
@@ -113,18 +113,18 @@ module branch_decoder_1(
   assign io_metadata_Ret = Ret;
   assign io_metadata_Imm = imm;
   assign io_metadata_instruction_PC = io_fetch_PC + 32'h4;
-  assign io_metadata_RAS = io_BTB_resp_RAS;
-  assign io_metadata_BTB_target = io_BTB_resp_target;
+  assign io_metadata_RAS = io_RAS_read_ret_addr;
+  assign io_metadata_BTB_target = io_prediction_target;
 endmodule
 
 module branch_decoder_2(
   input  [31:0] io_fetch_PC,
                 io_instruction,
   input         io_valid,
-                io_BTB_resp_hit,
-  input  [3:0]  io_BTB_resp_idx,
-  input  [31:0] io_BTB_resp_RAS,
-                io_BTB_resp_target,
+                io_prediction_hit,
+  input  [31:0] io_prediction_target,
+  input  [3:0]  io_prediction_br_mask,
+  input  [31:0] io_RAS_read_ret_addr,
   output        io_T_NT,
                 io_metadata_JAL,
                 io_metadata_JALR,
@@ -163,8 +163,8 @@ module branch_decoder_2(
     JAL
       ? io_valid
       : JALR
-          ? io_valid & (Ret | io_BTB_resp_hit & io_BTB_resp_idx[2])
-          : BR & io_valid & io_BTB_resp_idx[2];
+          ? io_valid & (Ret | io_prediction_hit & io_prediction_br_mask[2])
+          : BR & io_valid & io_prediction_br_mask[2];
   assign io_metadata_JAL = JAL;
   assign io_metadata_JALR = JALR;
   assign io_metadata_BR = BR;
@@ -172,18 +172,18 @@ module branch_decoder_2(
   assign io_metadata_Ret = Ret;
   assign io_metadata_Imm = imm;
   assign io_metadata_instruction_PC = io_fetch_PC + 32'h8;
-  assign io_metadata_RAS = io_BTB_resp_RAS;
-  assign io_metadata_BTB_target = io_BTB_resp_target;
+  assign io_metadata_RAS = io_RAS_read_ret_addr;
+  assign io_metadata_BTB_target = io_prediction_target;
 endmodule
 
 module branch_decoder_3(
   input  [31:0] io_fetch_PC,
                 io_instruction,
   input         io_valid,
-                io_BTB_resp_hit,
-  input  [3:0]  io_BTB_resp_idx,
-  input  [31:0] io_BTB_resp_RAS,
-                io_BTB_resp_target,
+                io_prediction_hit,
+  input  [31:0] io_prediction_target,
+  input  [3:0]  io_prediction_br_mask,
+  input  [31:0] io_RAS_read_ret_addr,
   output        io_T_NT,
                 io_metadata_JAL,
                 io_metadata_JALR,
@@ -222,8 +222,8 @@ module branch_decoder_3(
     JAL
       ? io_valid
       : JALR
-          ? io_valid & (Ret | io_BTB_resp_hit & io_BTB_resp_idx[3])
-          : BR & io_valid & io_BTB_resp_idx[3];
+          ? io_valid & (Ret | io_prediction_hit & io_prediction_br_mask[3])
+          : BR & io_valid & io_prediction_br_mask[3];
   assign io_metadata_JAL = JAL;
   assign io_metadata_JALR = JALR;
   assign io_metadata_BR = BR;
@@ -231,8 +231,8 @@ module branch_decoder_3(
   assign io_metadata_Ret = Ret;
   assign io_metadata_Imm = imm;
   assign io_metadata_instruction_PC = io_fetch_PC + 32'hC;
-  assign io_metadata_RAS = io_BTB_resp_RAS;
-  assign io_metadata_BTB_target = io_BTB_resp_target;
+  assign io_metadata_RAS = io_RAS_read_ret_addr;
+  assign io_metadata_BTB_target = io_prediction_target;
 endmodule
 
 module decoder_validator(
@@ -250,12 +250,16 @@ endmodule
 module decode_validate(
   input         clock,
                 reset,
-                io_BTB_resp_hit,
-  input  [3:0]  io_BTB_resp_idx,
-  input         io_BTB_resp_T_NT,
-  input  [31:0] io_BTB_resp_RAS,
-                io_BTB_resp_target,
-  input  [15:0] io_BTB_resp_GHR,
+  input  [31:0] io_prediction_PC,
+  input         io_prediction_ready,
+                io_prediction_PC_valid,
+                io_prediction_hit,
+  input  [31:0] io_prediction_target,
+  input  [1:0]  io_prediction_br_type,
+  input  [3:0]  io_prediction_br_mask,
+  input  [15:0] io_prediction_GHR,
+  input         io_prediction_T_NT,
+                io_prediction_valid,
   input  [31:0] io_fetch_packet_fetch_PC,
                 io_fetch_packet_instructions_0,
                 io_fetch_packet_instructions_1,
@@ -265,12 +269,11 @@ module decode_validate(
                 io_fetch_packet_valid_bits_1,
                 io_fetch_packet_valid_bits_2,
                 io_fetch_packet_valid_bits_3,
-                io_input_valid,
   output        io_kill,
-                io_redirect,
-  output [31:0] io_PC_redirect,
-  output [15:0] io_GHR_redirect,
-  output [31:0] io_final_fetch_packet_fetch_PC,
+                io_revert_valid,
+  output [3:0]  io_revert_GHR,
+  output [31:0] io_revert_PC,
+                io_final_fetch_packet_fetch_PC,
                 io_final_fetch_packet_instructions_0,
                 io_final_fetch_packet_instructions_1,
                 io_final_fetch_packet_instructions_2,
@@ -279,9 +282,12 @@ module decode_validate(
                 io_final_fetch_packet_valid_bits_1,
                 io_final_fetch_packet_valid_bits_2,
                 io_final_fetch_packet_valid_bits_3,
-                io_call_valid,
-  output [31:0] io_call_addr,
-  output        io_ret_valid
+  output [31:0] io_RAS_update_call_addr,
+  output        io_RAS_update_call,
+                io_RAS_update_ret,
+  input  [6:0]  io_RAS_read_NEXT,
+                io_RAS_read_TOS,
+  input  [31:0] io_RAS_read_ret_addr
 );
 
   wire [31:0] PC_next;
@@ -382,8 +388,8 @@ module decode_validate(
   reg  [31:0] PC_next_reg;
   reg         FSM1_state;
   reg         FSM2_state;
-  wire        PC_match = PC_expected == io_fetch_packet_fetch_PC & io_input_valid;
-  wire        PC_mismatch = PC_expected != io_fetch_packet_fetch_PC & io_input_valid;
+  wire        PC_match = PC_expected == io_fetch_packet_fetch_PC & io_prediction_valid;
+  wire        PC_mismatch = PC_expected != io_fetch_packet_fetch_PC & io_prediction_valid;
   assign PC_expected = FSM1_state ? PC_next_reg : PC_next;
   assign PC_next =
     (T_NT_reg_3
@@ -467,7 +473,7 @@ module decode_validate(
     T_NT_reg_1 <= _decoders_1_io_T_NT;
     T_NT_reg_2 <= _decoders_2_io_T_NT;
     T_NT_reg_3 <= _decoders_3_io_T_NT;
-    GHR_reg <= io_BTB_resp_GHR;
+    GHR_reg <= io_prediction_GHR;
     io_final_fetch_packet_instructions_0_REG <= io_fetch_packet_instructions_0;
     io_final_fetch_packet_valid_bits_0_REG <=
       _decoder_validator_io_instruction_validity[0];
@@ -486,14 +492,14 @@ module decode_validate(
       FSM2_state <= 1'h0;
     end
     else begin
-      if (FSM1_state | io_input_valid) begin
+      if (FSM1_state | io_prediction_valid) begin
       end
       else
         PC_next_reg <= PC_next;
       if (FSM1_state)
-        FSM1_state <= ~(FSM1_state & io_input_valid) & FSM1_state;
+        FSM1_state <= ~(FSM1_state & io_prediction_valid) & FSM1_state;
       else
-        FSM1_state <= ~io_input_valid | FSM1_state;
+        FSM1_state <= ~io_prediction_valid | FSM1_state;
       if (FSM2_state)
         FSM2_state <= ~(FSM2_state & PC_mismatch) & FSM2_state;
       else
@@ -504,10 +510,10 @@ module decode_validate(
     .io_fetch_PC                (io_fetch_packet_fetch_PC),
     .io_instruction             (io_fetch_packet_instructions_0),
     .io_valid                   (io_fetch_packet_valid_bits_0),
-    .io_BTB_resp_hit            (io_BTB_resp_hit),
-    .io_BTB_resp_idx            (io_BTB_resp_idx),
-    .io_BTB_resp_RAS            (io_BTB_resp_RAS),
-    .io_BTB_resp_target         (io_BTB_resp_target),
+    .io_prediction_hit          (io_prediction_hit),
+    .io_prediction_target       (io_prediction_target),
+    .io_prediction_br_mask      (io_prediction_br_mask),
+    .io_RAS_read_ret_addr       (io_RAS_read_ret_addr),
     .io_T_NT                    (_decoders_0_io_T_NT),
     .io_metadata_JAL            (_decoders_0_io_metadata_JAL),
     .io_metadata_JALR           (_decoders_0_io_metadata_JALR),
@@ -523,10 +529,10 @@ module decode_validate(
     .io_fetch_PC                (io_fetch_packet_fetch_PC),
     .io_instruction             (io_fetch_packet_instructions_1),
     .io_valid                   (io_fetch_packet_valid_bits_1),
-    .io_BTB_resp_hit            (io_BTB_resp_hit),
-    .io_BTB_resp_idx            (io_BTB_resp_idx),
-    .io_BTB_resp_RAS            (io_BTB_resp_RAS),
-    .io_BTB_resp_target         (io_BTB_resp_target),
+    .io_prediction_hit          (io_prediction_hit),
+    .io_prediction_target       (io_prediction_target),
+    .io_prediction_br_mask      (io_prediction_br_mask),
+    .io_RAS_read_ret_addr       (io_RAS_read_ret_addr),
     .io_T_NT                    (_decoders_1_io_T_NT),
     .io_metadata_JAL            (_decoders_1_io_metadata_JAL),
     .io_metadata_JALR           (_decoders_1_io_metadata_JALR),
@@ -542,10 +548,10 @@ module decode_validate(
     .io_fetch_PC                (io_fetch_packet_fetch_PC),
     .io_instruction             (io_fetch_packet_instructions_2),
     .io_valid                   (io_fetch_packet_valid_bits_2),
-    .io_BTB_resp_hit            (io_BTB_resp_hit),
-    .io_BTB_resp_idx            (io_BTB_resp_idx),
-    .io_BTB_resp_RAS            (io_BTB_resp_RAS),
-    .io_BTB_resp_target         (io_BTB_resp_target),
+    .io_prediction_hit          (io_prediction_hit),
+    .io_prediction_target       (io_prediction_target),
+    .io_prediction_br_mask      (io_prediction_br_mask),
+    .io_RAS_read_ret_addr       (io_RAS_read_ret_addr),
     .io_T_NT                    (_decoders_2_io_T_NT),
     .io_metadata_JAL            (_decoders_2_io_metadata_JAL),
     .io_metadata_JALR           (_decoders_2_io_metadata_JALR),
@@ -561,10 +567,10 @@ module decode_validate(
     .io_fetch_PC                (io_fetch_packet_fetch_PC),
     .io_instruction             (io_fetch_packet_instructions_3),
     .io_valid                   (io_fetch_packet_valid_bits_3),
-    .io_BTB_resp_hit            (io_BTB_resp_hit),
-    .io_BTB_resp_idx            (io_BTB_resp_idx),
-    .io_BTB_resp_RAS            (io_BTB_resp_RAS),
-    .io_BTB_resp_target         (io_BTB_resp_target),
+    .io_prediction_hit          (io_prediction_hit),
+    .io_prediction_target       (io_prediction_target),
+    .io_prediction_br_mask      (io_prediction_br_mask),
+    .io_RAS_read_ret_addr       (io_RAS_read_ret_addr),
     .io_T_NT                    (_decoders_3_io_T_NT),
     .io_metadata_JAL            (_decoders_3_io_metadata_JAL),
     .io_metadata_JALR           (_decoders_3_io_metadata_JALR),
@@ -585,9 +591,9 @@ module decode_validate(
     .io_instruction_validity  (_decoder_validator_io_instruction_validity)
   );
   assign io_kill = PC_mismatch;
-  assign io_redirect = PC_mismatch;
-  assign io_PC_redirect = PC_expected;
-  assign io_GHR_redirect = GHR_reg;
+  assign io_revert_valid = PC_mismatch;
+  assign io_revert_GHR = GHR_reg[3:0];
+  assign io_revert_PC = PC_expected;
   assign io_final_fetch_packet_fetch_PC = io_fetch_packet_fetch_PC;
   assign io_final_fetch_packet_instructions_0 = io_final_fetch_packet_instructions_0_REG;
   assign io_final_fetch_packet_instructions_1 = io_final_fetch_packet_instructions_1_REG;
@@ -601,13 +607,13 @@ module decode_validate(
     io_final_fetch_packet_valid_bits_2_REG & FSM2_state;
   assign io_final_fetch_packet_valid_bits_3 =
     io_final_fetch_packet_valid_bits_3_REG & FSM2_state;
-  assign io_call_valid =
+  assign io_RAS_update_call_addr = metadata_out_instruction_PC;
+  assign io_RAS_update_call =
     T_NT_reg_3
       ? metadata_reg_3_Call
       : T_NT_reg_2
           ? metadata_reg_2_Call
           : T_NT_reg_1 ? metadata_reg_1_Call : metadata_reg_0_Call;
-  assign io_call_addr = metadata_out_instruction_PC;
-  assign io_ret_valid = use_RAS;
+  assign io_RAS_update_ret = use_RAS;
 endmodule
 

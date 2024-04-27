@@ -49,24 +49,27 @@ class hash_BTB(entries:Int = 4096) extends Module{
     val entryWidth = validBits + tagBits + targetBits + typeBits + brMaskBits
 
     val io = IO(new Bundle{
+        // FIXME: this should maybe be its own channel as well. 
 
         //prediction-input
-        val predict_PC       = Input(UInt(32.W))
-        val predict_valid    = Input(Bool())    // FIXME: This is not used anywhere???
+        val predict_PC          = Input(UInt(32.W))
+        val predict_valid       = Input(Bool())    // FIXME: This is not used anywhere???
 
         //prediction-output
         // ??
         val BTB_valid    = Output(Bool())
         val BTB_target   = Output(UInt(32.W))
         val BTB_type     = Output(UInt(typeBits.W))
-        val BTB_brMask   = Output(UInt(brMaskBits.W))
+        val BTB_br_mask  = Output(UInt(brMaskBits.W))
+        val BTB_hit      = Output(Bool())
 
         //commit-input
         val commit_PC       = Input(UInt(32.W))
 
+        val commit_tag        = Input(UInt((32-log2Ceil(entries)).W)) //FIXME: this should use the helper function in bundles.scala
         val commit_target      = Input(UInt(32.W))
-        val commit_type        = Input(UInt(typeBits.W))
-        val commit_brMask      = Input(UInt(brMaskBits.W))
+        val commit_br_type        = Input(UInt(typeBits.W))
+        val commit_br_mask      = Input(UInt(brMaskBits.W))
 
         val commit_valid    = Input(Bool())
 
@@ -78,10 +81,9 @@ class hash_BTB(entries:Int = 4096) extends Module{
     val BTB_tag_output        = Wire(UInt(tagBits.W))
     val BTB_target_output     = Wire(UInt(targetBits.W))
     val BTB_type_output       = Wire(UInt(typeBits.W))
-    val BTB_brMask_output     = Wire(UInt(brMaskBits.W))
+    val BTB_br_mask_output     = Wire(UInt(brMaskBits.W))
 
     val input_tag = io.predict_PC(31, 31-tagBits+1)
-    val commit_tag = io.commit_PC(31, 31-tagBits+1)
 
     // memory // 
 
@@ -99,7 +101,7 @@ class hash_BTB(entries:Int = 4096) extends Module{
 
     BTB_memory.io.wr_addr := commit_BTB_address
     BTB_memory.io.wr_en   := io.commit_valid
-    BTB_memory.io.data_in := Cat(1.U, commit_tag, io.commit_target, io.commit_type, io.commit_brMask)
+    BTB_memory.io.data_in := Cat(1.U, io.commit_tag, io.commit_target, io.commit_br_type, io.commit_br_mask)
 
     prediction_BTB_output := BTB_memory.io.data_out
 
@@ -113,38 +115,15 @@ class hash_BTB(entries:Int = 4096) extends Module{
     BTB_tag_output      := prediction_BTB_output(entryWidth-1-validBits, entryWidth-1-validBits-tagBits+1)
     BTB_target_output   := prediction_BTB_output(entryWidth-1-validBits-tagBits, entryWidth-1-validBits-tagBits-targetBits+1)
     BTB_type_output     := prediction_BTB_output(entryWidth-1-validBits-tagBits-targetBits, entryWidth-1-validBits-tagBits-targetBits-typeBits+1)
-    BTB_brMask_output   := prediction_BTB_output(entryWidth-1-validBits-tagBits-targetBits-typeBits, entryWidth-1-validBits-tagBits-targetBits-typeBits-brMaskBits+1)
-
-
+    BTB_br_mask_output   := prediction_BTB_output(entryWidth-1-validBits-tagBits-targetBits-typeBits, entryWidth-1-validBits-tagBits-targetBits-typeBits-brMaskBits+1)
 
 
 
     // OUTPUTS
-    io.BTB_valid := (RegNext(input_tag) === BTB_tag_output) && BTB_valid_output.asBool    // Hit signal
+    io.BTB_valid    := RegNext(io.predict_valid)    // Hit signal
+    io.BTB_hit      := (RegNext(input_tag) === BTB_tag_output)
     io.BTB_target   := BTB_target_output
     io.BTB_type     := BTB_type_output
-    io.BTB_brMask   := BTB_brMask_output
+    io.BTB_br_mask  := BTB_br_mask_output
 
 }
-
-
-/*
-object Main extends App{
-
-    var hash_BTB = ChiselStage.emitSystemVerilog(gen=new hash_BTB(entries=4096), firtoolOpts=Array("-disable-all-randomization", "-strip-debug-info"))
-
-    //println(L1_cache_mem)
-
-    var file = new File("../verilog/Frontend/BP/hash_BTB.v")
-
-    var fw = new FileWriter(file)
-
-    try {
-      fw.write(hash_BTB)
-    } finally {
-      fw.close()
-    }
-
-}
-
-*/

@@ -65,28 +65,27 @@ class decoder_validator(fetchWidth: Int = 4) extends Module {
   io.instruction_validity := lut(PriorityEncoder(io.instruction_T_NT_mask))
 }
 
-class decode_validate(width:Int = 4) extends Module{
+class decode_validate(fetchWidth:Int=4,GHRWidth:Int=16, RASEntries:Int=128) extends Module{
 
     val io = IO(new Bundle{
-        val BTB_resp     = Input(new BTB_resp())
-        val fetch_packet = Input(new fetch_packet())
-        val input_valid  = Input(Bool())
+        //val BTB_resp     = Input(new BTB_resp())/
+        val prediction   = Input(new prediction(fetchWidth=fetchWidth, GHRWidth=GHRWidth))
+        val fetch_packet = Input(new fetch_packet(width=fetchWidth))
 
         // kill incoming instructions
         val kill = Output(Bool())
 
         // Redirect frontend
-        val redirect    = Output(Bool())
-        val PC_redirect = Output(UInt(32.W))
-        val GHR_redirect = Output(new BTB_resp().GHR)
+        val revert      = Output(new revert(GHRWidth=fetchWidth))
 
         // Output validated instructions
         val final_fetch_packet = Output(new fetch_packet())
 
         // RAS control
-        val call_valid         = Output(Bool())
-        val call_addr          = Output(UInt(32.W))
-        val ret_valid          = Output(Bool())
+        // FIXME: change this to a RAS channel
+
+        val RAS_update         = Flipped(new RAS_update)
+        val RAS_read           = Flipped(new RAS_read(RASEntries=RASEntries))
 
     })
 
@@ -97,31 +96,32 @@ class decode_validate(width:Int = 4) extends Module{
     // Assign decoders register outputs
     // Assign decoders in first stage
 
-    val decoders: Seq[branch_decoder] = Seq.tabulate(width) { w =>
+    val decoders: Seq[branch_decoder] = Seq.tabulate(fetchWidth) { w =>
         Module(new branch_decoder(index=w))
     }
 
-    val decoder_metadata         = Wire(Vec(width, new metadata()))
-    val decoder_T_NT             = Wire(Vec(width, Bool()))
+    val decoder_metadata         = Wire(Vec(fetchWidth, new metadata()))
+    val decoder_T_NT             = Wire(Vec(fetchWidth, Bool()))
 
-    for(i <- 0 until width){
+    for(i <- 0 until fetchWidth){
         // Inputs
         decoders(i).io.fetch_PC        :=  io.fetch_packet.fetch_PC
         decoders(i).io.instruction     :=  io.fetch_packet.instructions(i)
         decoders(i).io.valid           :=  io.fetch_packet.valid_bits(i)
-        decoders(i).io.BTB_resp        :=  io.BTB_resp
+        decoders(i).io.prediction      :=  io.prediction
+        decoders(i).io.RAS_read        :=  io.RAS_read
         // Outputs
         decoder_metadata(i)            :=  decoders(i).io.metadata
         decoder_T_NT(i)                :=  decoders(i).io.T_NT
     }
 
-    val metadata_reg = Reg(Vec(width, new metadata()))
-    val T_NT_reg     = Reg(Vec(width, Bool()))
-    val GHR_reg      = Reg(new BTB_resp().GHR)
+    val metadata_reg = Reg(Vec(fetchWidth, new metadata()))
+    val T_NT_reg     = Reg(Vec(fetchWidth, Bool()))
+    val GHR_reg      = Reg(new prediction().GHR)    // FIXME: super unreadable
 
     T_NT_reg := decoder_T_NT
     metadata_reg := decoder_metadata
-    GHR_reg := io.BTB_resp.GHR
+    GHR_reg := io.prediction.GHR
 
     /////////////
     // STAGE 2 //
@@ -135,7 +135,7 @@ class decode_validate(width:Int = 4) extends Module{
     val metadata_out    = Wire(new metadata())
     // assign default value to metadata
     metadata_out := DontCare
-    for(i <- 0 until width){    // reverse this
+    for(i <- 0 until fetchWidth){    // reverse this
         when(T_NT_reg(i) === 1.B){
             metadata_out := metadata_reg(i)
         }
@@ -159,14 +159,14 @@ class decode_validate(width:Int = 4) extends Module{
 
     switch(FSM1_state){
         is(latchExpectedPC.wire_wire){
-            when(io.input_valid === 0.B){
+            when(io.prediction.valid === 0.B){
                 FSM1_state := latchExpectedPC.wire_reg
                 PC_next_reg := PC_next
             }
         }
         is(latchExpectedPC.wire_reg){
             // Start here
-            when(io.input_valid === 1.B){
+            when(io.prediction.valid === 1.B){
                 FSM1_state := latchExpectedPC.wire_wire
             }
         }
@@ -180,8 +180,8 @@ class decode_validate(width:Int = 4) extends Module{
     val PC_mismatch = Wire(Bool())
     val PC_match = Wire(Bool())
 
-    PC_match    := (PC_expected === io.fetch_packet.fetch_PC) && io.input_valid
-    PC_mismatch := (PC_expected =/= io.fetch_packet.fetch_PC) && io.input_valid
+    PC_match    := (PC_expected === io.fetch_packet.fetch_PC) && io.prediction.valid
+    PC_mismatch := (PC_expected =/= io.fetch_packet.fetch_PC) && io.prediction.valid
 
     dontTouch(PC_match)
 
@@ -200,9 +200,9 @@ class decode_validate(width:Int = 4) extends Module{
 
     packet_valid    := (FSM2_state === validate_packet.packet_valid)
     io.kill         := PC_mismatch
-    io.redirect     := PC_mismatch
-    io.GHR_redirect := GHR_reg
-    io.PC_redirect  := PC_expected
+    io.revert.valid := PC_mismatch
+    io.revert.GHR   := GHR_reg
+    io.revert.PC    := PC_expected
 
 
 
@@ -231,7 +231,7 @@ class decode_validate(width:Int = 4) extends Module{
     when(use_BTB){PC_next := metadata_out.BTB_target}
     .elsewhen(use_RAS){PC_next := metadata_out.RAS}
     .elsewhen(use_computed){PC_next := metadata_out.instruction_PC + metadata_out.Imm}
-    .otherwise{PC_next := io.fetch_packet.fetch_PC + (width*4).U}
+    .otherwise{PC_next := io.fetch_packet.fetch_PC + (fetchWidth*4).U}
 
 
     // validate instructions
@@ -244,10 +244,10 @@ class decode_validate(width:Int = 4) extends Module{
     val T_NT_mask = decoder_T_NT.asUInt
 
 
-    val decoder_validator = Module(new decoder_validator(fetchWidth=width))
+    val decoder_validator = Module(new decoder_validator(fetchWidth=fetchWidth))
     decoder_validator.io.instruction_T_NT_mask := T_NT_mask
 
-    for(i <- 0 until width){
+    for(i <- 0 until fetchWidth){
         io.final_fetch_packet.instructions(i) := RegNext(io.fetch_packet.instructions(i))    // pass along actual instruction
         io.final_fetch_packet.valid_bits(i) := RegNext(decoder_validator.io.instruction_validity(i)) && packet_valid
     }
@@ -276,9 +276,8 @@ class decode_validate(width:Int = 4) extends Module{
 
     io.final_fetch_packet.fetch_PC := io.fetch_packet.fetch_PC  // Pass along fetch PC
     // RAS Control //
-    io.call_valid := metadata_out.Call
-    io.call_addr := metadata_out.instruction_PC // PC of the actual instruction, not fetch_PC
-    io.ret_valid := metadata_out.Ret
-
+    io.RAS_update.call       := metadata_out.Call
+    io.RAS_update.ret        := metadata_out.Ret
+    io.RAS_update.call_addr  := metadata_out.instruction_PC // PC of the actual instruction, not fetch_PC
 
 }
