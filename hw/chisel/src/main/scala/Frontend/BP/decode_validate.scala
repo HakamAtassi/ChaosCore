@@ -69,7 +69,7 @@ class decode_validate(fetchWidth:Int=4,GHRWidth:Int=16, RASEntries:Int=128) exte
 
     val io = IO(new Bundle{
         //val BTB_resp     = Input(new BTB_resp())/
-        val prediction   = Input(new prediction(fetchWidth=fetchWidth, GHRWidth=GHRWidth))
+        val prediction   = Flipped(Decoupled(new prediction(fetchWidth=fetchWidth, GHRWidth=GHRWidth)))
         val fetch_packet = Input(new fetch_packet(width=fetchWidth))
 
         // kill incoming instructions
@@ -108,7 +108,8 @@ class decode_validate(fetchWidth:Int=4,GHRWidth:Int=16, RASEntries:Int=128) exte
         decoders(i).io.fetch_PC        :=  io.fetch_packet.fetch_PC
         decoders(i).io.instruction     :=  io.fetch_packet.instructions(i)
         decoders(i).io.valid           :=  io.fetch_packet.valid_bits(i)
-        decoders(i).io.prediction      :=  io.prediction
+        decoders(i).io.prediction.bits :=  io.prediction.bits
+        decoders(i).io.prediction.valid :=  io.prediction.valid
         decoders(i).io.RAS_read        :=  io.RAS_read
         // Outputs
         decoder_metadata(i)            :=  decoders(i).io.metadata
@@ -117,11 +118,11 @@ class decode_validate(fetchWidth:Int=4,GHRWidth:Int=16, RASEntries:Int=128) exte
 
     val metadata_reg = Reg(Vec(fetchWidth, new metadata()))
     val T_NT_reg     = Reg(Vec(fetchWidth, Bool()))
-    val GHR_reg      = Reg(new prediction().GHR)    // FIXME: super unreadable
+    val GHR_reg      = Reg(UInt(GHRWidth.W))
 
     T_NT_reg := decoder_T_NT
     metadata_reg := decoder_metadata
-    GHR_reg := io.prediction.GHR
+    GHR_reg := io.prediction.bits.GHR
 
     /////////////
     // STAGE 2 //
@@ -280,4 +281,5 @@ class decode_validate(fetchWidth:Int=4,GHRWidth:Int=16, RASEntries:Int=128) exte
     io.RAS_update.ret        := metadata_out.Ret
     io.RAS_update.call_addr  := metadata_out.instruction_PC // PC of the actual instruction, not fetch_PC
 
+    io.prediction.ready := 1.B
 }

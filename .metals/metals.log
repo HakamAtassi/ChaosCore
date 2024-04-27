@@ -18649,3 +18649,210 @@ Apr 27, 2024 10:01:05 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancella
 WARNING: Unmatched cancel notification for request id 54503
 2024.04.27 22:01:07 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
 2024.04.27 22:01:39 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 23:52:41 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 23:52:58 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 23:53:14 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 23:54:37 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 23:54:50 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 23:55:13 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 11:56:18 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 55102
+Apr 27, 2024 11:56:19 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 55112
+Apr 27, 2024 11:56:20 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 55121
+2024.04.27 23:56:46 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 23:57:06 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 23:57:17 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 23:57:26 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 11:58:13 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 55293
+2024.04.27 23:58:29 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 23:58:34 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.27 23:58:48 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 27, 2024 11:59:11 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 55453
+2024.04.28 00:00:30 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:00:38 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:00:44 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:02:43 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:02:54 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:03:16 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 12:03:16 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 55702
+Apr 28, 2024 12:03:23 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 55713
+Apr 28, 2024 12:03:44 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 55784
+2024.04.28 00:03:52 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:04:00 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:04:29 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:04:36 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 12:05:34 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 56188
+2024.04.28 00:05:38 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:05:41 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:05:59 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 12:06:15 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 56318
+2024.04.28 00:07:01 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:07:04 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 12:07:08 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 56640
+2024.04.28 00:07:51 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:07:54 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:07:58 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.28 00:08:23 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 12:09:13 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 57003
+2024.04.28 00:09:15 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 12:10:38 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 57289
+2024.04.28 00:10:39 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:11:10 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:11:16 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:12:14 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:12:18 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 12:13:18 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 57714
+2024.04.28 00:13:52 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.28 00:14:32 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.28 00:14:57 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+Apr 28, 2024 12:16:21 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 57880
+2024.04.28 00:16:26 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.28 00:17:13 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:17:32 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.28 00:17:33 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.28 00:17:55 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+Apr 28, 2024 12:17:57 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 58175
+2024.04.28 00:17:58 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 12:18:39 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 58293
+2024.04.28 00:18:54 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.28 00:19:31 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+Apr 28, 2024 12:21:20 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 58539
+2024.04.28 00:21:26 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.28 00:21:26 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.28 00:21:33 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+Apr 28, 2024 12:22:00 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 58636
+2024.04.28 00:22:15 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/branch_decoder.scala
+2024.04.28 00:22:42 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/branch_decoder.scala
+2024.04.28 00:22:51 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/branch_decoder.scala
+2024.04.28 00:23:29 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.28 00:23:52 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.28 00:24:00 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.28 00:24:16 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.28 00:24:31 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.28 00:24:33 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.28 00:24:37 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.28 00:24:40 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.28 00:24:52 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.28 00:25:17 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+Apr 28, 2024 12:25:31 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 59424
+2024.04.28 00:27:39 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/branch_decoder.scala
+2024.04.28 00:27:40 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/branch_decoder.scala
+Apr 28, 2024 12:27:55 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 59571
+2024.04.28 00:28:16 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+Apr 28, 2024 12:28:41 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 59671
+Apr 28, 2024 12:28:53 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 59691
+Apr 28, 2024 12:28:59 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 59706
+2024.04.28 00:29:10 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.28 00:29:52 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:34:20 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:34:24 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:34:26 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:34:32 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:36:07 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:36:10 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:36:19 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:36:26 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:36:54 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:37:00 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:37:20 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:37:25 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:37:33 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 12:37:55 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 60280
+2024.04.28 00:37:59 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:39:29 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:39:38 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 12:40:39 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 60540
+2024.04.28 00:40:41 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:41:01 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:42:46 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:42:50 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 12:42:59 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 60725
+2024.04.28 00:43:07 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:43:27 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:43:47 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:43:59 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:44:48 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:45:04 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:45:21 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 12:45:28 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 61358
+2024.04.28 00:45:32 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:45:46 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:45:53 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:46:08 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:46:30 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:47:10 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 12:47:22 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 61580
+2024.04.28 00:47:25 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:47:44 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 12:48:00 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 61643
+2024.04.28 00:48:00 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:48:27 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:48:31 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:53:06 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:53:20 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:54:21 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:54:25 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:56:48 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:57:25 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:57:57 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 00:58:01 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 01:00:25 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 1:00:46 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 62081
+2024.04.28 01:02:58 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 1:08:21 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 62532
+2024.04.28 01:09:27 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 01:09:58 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 01:10:16 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 01:11:36 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 1:12:44 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 63050
+Apr 28, 2024 1:12:45 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 63060
+Apr 28, 2024 1:12:57 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 63091
+2024.04.28 01:14:09 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 01:14:25 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 01:14:35 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 01:14:39 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 01:14:43 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 01:15:06 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 01:15:12 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 1:15:46 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 63487
+2024.04.28 01:15:47 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 01:15:48 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 01:18:22 INFO  Shutting down server
+2024.04.28 01:18:22 INFO  shutting down Metals
+2024.04.28 01:18:22 INFO  Shut down connection with build server.
+2024.04.28 01:18:22 INFO  Exiting server

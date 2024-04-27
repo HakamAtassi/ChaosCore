@@ -1,10 +1,4 @@
-[0m[[0m[31merror[0m] [0m[0m/home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala:214:11: value RAS_revert is not a member of chisel3.Bundle{val predict: chisel3.util.DecoupledIO[chisel3.UInt]; val commit: commit; val mispredict: mispredict; val RAS_update: RAS_update; val RAS_read: RAS_read; val revert: revert; val prediction: prediction}[0m
-[0m[[0m[31merror[0m] [0m[0m    bp.io.RAS_revert.valid    :=    0.B[0m
-[0m[[0m[31merror[0m] [0m[0m          ^[0m
-[0m[[0m[31merror[0m] [0m[0m/home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala:215:11: value RAS_revert is not a member of chisel3.Bundle{val predict: chisel3.util.DecoupledIO[chisel3.UInt]; val commit: commit; val mispredict: mispredict; val RAS_update: RAS_update; val RAS_read: RAS_read; val revert: revert; val prediction: prediction}[0m
-[0m[[0m[31merror[0m] [0m[0m    bp.io.RAS_revert.GHR    :=  0.U[0m
-[0m[[0m[31merror[0m] [0m[0m          ^[0m
-[0m[[0m[31merror[0m] [0m[0m/home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala:216:11: value RAS_revert is not a member of chisel3.Bundle{val predict: chisel3.util.DecoupledIO[chisel3.UInt]; val commit: commit; val mispredict: mispredict; val RAS_update: RAS_update; val RAS_read: RAS_read; val revert: revert; val prediction: prediction}[0m
-[0m[[0m[31merror[0m] [0m[0m    bp.io.RAS_revert.PC    := 0.U [0m
-[0m[[0m[31merror[0m] [0m[0m          ^[0m
-[0m[[0m[31merror[0m] [0m[0mthree errors found[0m
+[0m[[0m[31merror[0m] [0m[0m/home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala:193:51: value bits is not a member of prediction[0m
+[0m[[0m[31merror[0m] [0m[0m    predecoder.io.prediction := BTB_Q.io.data_out.bits[0m
+[0m[[0m[31merror[0m] [0m[0m                                                  ^[0m
+[0m[[0m[31merror[0m] [0m[0mone error found[0m

@@ -54,7 +54,7 @@ class BP(GHRWidth:Int = 16, fetchWidth:Int = 4, RASEntries:Int=128, BTBEntries:I
         val revert      = new revert(GHRWidth=GHRWidth)
 
         // Prediction Channel (output)
-        val prediction  = new prediction(fetchWidth=fetchWidth, GHRWidth=GHRWidth)    // Output of predictions
+        val prediction  = Decoupled(new prediction(fetchWidth=fetchWidth, GHRWidth=GHRWidth))    // Output of predictions
     })
 
 
@@ -147,15 +147,15 @@ class BP(GHRWidth:Int = 16, fetchWidth:Int = 4, RASEntries:Int=128, BTBEntries:I
     io.RAS_read.TOS      := RAS.io.TOS
 
     // BTB
-    io.prediction.valid     := (BTB.io.BTB_valid && gshare.io.valid)
-    io.prediction.target    := BTB.io.BTB_target
-    io.prediction.br_type   := BTB.io.BTB_type
-    io.prediction.br_mask   := BTB.io.BTB_br_mask
-    io.prediction.hit       := BTB.io.BTB_hit
-    io.prediction.GHR       := GHR
-    io.prediction.T_NT      := gshare.io.T_NT
+    io.prediction.bits.target    := BTB.io.BTB_target
+    io.prediction.bits.br_type   := BTB.io.BTB_type
+    io.prediction.bits.br_mask   := BTB.io.BTB_br_mask
+    io.prediction.bits.hit       := BTB.io.BTB_hit
+    io.prediction.bits.GHR       := GHR
+    io.prediction.bits.T_NT      := gshare.io.T_NT
 
     io.predict.ready        := io.prediction.ready     // if cant output prediction, cannot receive new prediction
+    io.prediction.valid     := (BTB.io.BTB_valid && gshare.io.valid)
 
 
 }

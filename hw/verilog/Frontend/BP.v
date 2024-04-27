@@ -357,16 +357,14 @@ module BP(
   input         io_revert_valid,
   input  [15:0] io_revert_GHR,
   input  [31:0] io_revert_PC,
-                io_prediction_PC,
   input         io_prediction_ready,
-                io_prediction_PC_valid,
-  output        io_prediction_hit,
-  output [31:0] io_prediction_target,
-  output [1:0]  io_prediction_br_type,
-  output [3:0]  io_prediction_br_mask,
-  output [15:0] io_prediction_GHR,
-  output        io_prediction_T_NT,
-                io_prediction_valid
+  output        io_prediction_valid,
+                io_prediction_bits_hit,
+  output [31:0] io_prediction_bits_target,
+  output [1:0]  io_prediction_bits_br_type,
+  output [3:0]  io_prediction_bits_br_mask,
+  output [15:0] io_prediction_bits_GHR,
+  output        io_prediction_bits_T_NT
 );
 
   wire        _BTB_io_BTB_valid;
@@ -388,7 +386,7 @@ module BP(
     .io_predict_GHR             (GHR),
     .io_predict_PC              (io_predict_bits),
     .io_predict_valid           (io_predict_valid),
-    .io_T_NT                    (io_prediction_T_NT),
+    .io_T_NT                    (io_prediction_bits_T_NT),
     .io_valid                   (_gshare_io_valid),
     .io_commit_GHR              (io_commit_GHR),
     .io_commit_PC               (io_commit_PC),
@@ -401,10 +399,10 @@ module BP(
     .io_predict_PC     (io_predict_bits),
     .io_predict_valid  (io_predict_valid),
     .io_BTB_valid      (_BTB_io_BTB_valid),
-    .io_BTB_target     (io_prediction_target),
-    .io_BTB_type       (io_prediction_br_type),
+    .io_BTB_target     (io_prediction_bits_target),
+    .io_BTB_type       (io_prediction_bits_br_type),
     .io_BTB_br_mask    (_BTB_io_BTB_br_mask),
-    .io_BTB_hit        (io_prediction_hit),
+    .io_BTB_hit        (io_prediction_bits_hit),
     .io_commit_PC      (io_commit_PC),
     .io_commit_tag     (io_commit_tag),
     .io_commit_target  (io_commit_target),
@@ -426,8 +424,8 @@ module BP(
     .io_TOS          (io_RAS_read_TOS)
   );
   assign io_predict_ready = io_prediction_ready;
-  assign io_prediction_br_mask = {2'h0, _BTB_io_BTB_br_mask};
-  assign io_prediction_GHR = GHR;
   assign io_prediction_valid = _BTB_io_BTB_valid & _gshare_io_valid;
+  assign io_prediction_bits_br_mask = {2'h0, _BTB_io_BTB_br_mask};
+  assign io_prediction_bits_GHR = GHR;
 endmodule
 

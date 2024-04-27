@@ -5,82 +5,28 @@
 [0m[[0m[31merror[0m] [0m[0mSTDOUT:[0m
 [0m[[0m[31merror[0m] [0m[0m[0m
 [0m[[0m[31merror[0m] [0m[0mSTDERR:[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:65:7: error: sink "io_misprediction_PC_ready" not fully initialized in "Frontend"[0m
-[0m[[0m[31merror[0m] [0m[0mclass Frontend(GHRWidth:Int=16, fetchWidth:Int=4, RASEntries:Int=128, BTBEntries:Int=4096, L1_instructionCacheWays:Int=2, [0m
-[0m[[0m[31merror[0m] [0m[0m      ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:65:7: error: sink "io_exception_PC_ready" not fully initialized in "Frontend"[0m
-[0m[[0m[31merror[0m] [0m[0mclass Frontend(GHRWidth:Int=16, fetchWidth:Int=4, RASEntries:Int=128, BTBEntries:Int=4096, L1_instructionCacheWays:Int=2, [0m
-[0m[[0m[31merror[0m] [0m[0m      ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:86:37: error: sink "" not fully initialized in "Frontend"[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:87:37: error: sink "" not fully initialized in "Frontend"[0m
 [0m[[0m[31merror[0m] [0m[0m    val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))[0m
 [0m[[0m[31merror[0m] [0m[0m                                    ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:86:37: error: sink "" not fully initialized in "Frontend"[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:87:37: error: sink "" not fully initialized in "Frontend"[0m
 [0m[[0m[31merror[0m] [0m[0m    val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))[0m
 [0m[[0m[31merror[0m] [0m[0m                                    ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:86:37: error: sink "" not fully initialized in "Frontend"[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:87:37: error: sink "" not fully initialized in "Frontend"[0m
 [0m[[0m[31merror[0m] [0m[0m    val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))[0m
 [0m[[0m[31merror[0m] [0m[0m                                    ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:86:37: error: sink "" not fully initialized in "Frontend"[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:87:37: error: sink "" not fully initialized in "Frontend"[0m
 [0m[[0m[31merror[0m] [0m[0m    val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))[0m
 [0m[[0m[31merror[0m] [0m[0m                                    ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:86:37: error: sink "" not fully initialized in "Frontend"[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:87:37: error: sink "" not fully initialized in "Frontend"[0m
 [0m[[0m[31merror[0m] [0m[0m    val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))[0m
 [0m[[0m[31merror[0m] [0m[0m                                    ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:86:37: error: sink "" not fully initialized in "Frontend"[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:87:37: error: sink "" not fully initialized in "Frontend"[0m
 [0m[[0m[31merror[0m] [0m[0m    val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))[0m
 [0m[[0m[31merror[0m] [0m[0m                                    ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:86:37: error: sink "" not fully initialized in "Frontend"[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:87:37: error: sink "" not fully initialized in "Frontend"[0m
 [0m[[0m[31merror[0m] [0m[0m    val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))[0m
 [0m[[0m[31merror[0m] [0m[0m                                    ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:86:37: error: sink "" not fully initialized in "Frontend"[0m
-[0m[[0m[31merror[0m] [0m[0m    val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))[0m
-[0m[[0m[31merror[0m] [0m[0m                                    ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:86:37: error: sink "" not fully initialized in "Frontend"[0m
-[0m[[0m[31merror[0m] [0m[0m    val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))[0m
-[0m[[0m[31merror[0m] [0m[0m                                    ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:86:37: error: sink "" not fully initialized in "Frontend"[0m
-[0m[[0m[31merror[0m] [0m[0m    val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))[0m
-[0m[[0m[31merror[0m] [0m[0m                                    ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:86:37: error: sink "" not fully initialized in "Frontend"[0m
-[0m[[0m[31merror[0m] [0m[0m    val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))[0m
-[0m[[0m[31merror[0m] [0m[0m                                    ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:86:37: error: sink "" not fully initialized in "Frontend"[0m
-[0m[[0m[31merror[0m] [0m[0m    val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))[0m
-[0m[[0m[31merror[0m] [0m[0m                                    ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:86:37: error: sink "" not fully initialized in "Frontend"[0m
-[0m[[0m[31merror[0m] [0m[0m    val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))[0m
-[0m[[0m[31merror[0m] [0m[0m                                    ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:86:37: error: sink "" not fully initialized in "Frontend"[0m
-[0m[[0m[31merror[0m] [0m[0m    val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))[0m
-[0m[[0m[31merror[0m] [0m[0m                                    ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:86:37: error: sink "" not fully initialized in "Frontend"[0m
-[0m[[0m[31merror[0m] [0m[0m    val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))[0m
-[0m[[0m[31merror[0m] [0m[0m                                    ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:86:37: error: sink "" not fully initialized in "Frontend"[0m
-[0m[[0m[31merror[0m] [0m[0m    val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))[0m
-[0m[[0m[31merror[0m] [0m[0m                                    ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:86:37: error: sink "" not fully initialized in "Frontend"[0m
-[0m[[0m[31merror[0m] [0m[0m    val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))[0m
-[0m[[0m[31merror[0m] [0m[0m                                    ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:86:37: error: sink "" not fully initialized in "Frontend"[0m
-[0m[[0m[31merror[0m] [0m[0m    val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))[0m
-[0m[[0m[31merror[0m] [0m[0m                                    ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:86:37: error: sink "" not fully initialized in "Frontend"[0m
-[0m[[0m[31merror[0m] [0m[0m    val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))[0m
-[0m[[0m[31merror[0m] [0m[0m                                    ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:86:37: error: sink "" not fully initialized in "Frontend"[0m
-[0m[[0m[31merror[0m] [0m[0m    val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))[0m
-[0m[[0m[31merror[0m] [0m[0m                                    ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:86:37: error: sink "" not fully initialized in "Frontend"[0m
-[0m[[0m[31merror[0m] [0m[0m    val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))[0m
-[0m[[0m[31merror[0m] [0m[0m                                    ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:86:37: error: sink "" not fully initialized in "Frontend"[0m
-[0m[[0m[31merror[0m] [0m[0m    val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))[0m
-[0m[[0m[31merror[0m] [0m[0m                                    ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:86:37: error: sink "" not fully initialized in "Frontend"[0m
-[0m[[0m[31merror[0m] [0m[0m    val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))[0m
-[0m[[0m[31merror[0m] [0m[0m                                    ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:86:37: error: sink "" not fully initialized in "Frontend"[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:87:37: error: sink "" not fully initialized in "Frontend"[0m
 [0m[[0m[31merror[0m] [0m[0m    val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))[0m
 [0m[[0m[31merror[0m] [0m[0m                                    ^[0m
 [0m[[0m[31merror[0m] [0m[0m[0m
@@ -92,82 +38,28 @@
 [0m[[0m[31merror[0m] [0m[0mSTDOUT:[0m
 [0m[[0m[31merror[0m] [0m[0m[0m
 [0m[[0m[31merror[0m] [0m[0mSTDERR:[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:65:7: error: sink "io_misprediction_PC_ready" not fully initialized in "Frontend"[0m
-[0m[[0m[31merror[0m] [0m[0mclass Frontend(GHRWidth:Int=16, fetchWidth:Int=4, RASEntries:Int=128, BTBEntries:Int=4096, L1_instructionCacheWays:Int=2, [0m
-[0m[[0m[31merror[0m] [0m[0m      ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:65:7: error: sink "io_exception_PC_ready" not fully initialized in "Frontend"[0m
-[0m[[0m[31merror[0m] [0m[0mclass Frontend(GHRWidth:Int=16, fetchWidth:Int=4, RASEntries:Int=128, BTBEntries:Int=4096, L1_instructionCacheWays:Int=2, [0m
-[0m[[0m[31merror[0m] [0m[0m      ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:86:37: error: sink "" not fully initialized in "Frontend"[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:87:37: error: sink "" not fully initialized in "Frontend"[0m
 [0m[[0m[31merror[0m] [0m[0m    val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))[0m
 [0m[[0m[31merror[0m] [0m[0m                                    ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:86:37: error: sink "" not fully initialized in "Frontend"[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:87:37: error: sink "" not fully initialized in "Frontend"[0m
 [0m[[0m[31merror[0m] [0m[0m    val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))[0m
 [0m[[0m[31merror[0m] [0m[0m                                    ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:86:37: error: sink "" not fully initialized in "Frontend"[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:87:37: error: sink "" not fully initialized in "Frontend"[0m
 [0m[[0m[31merror[0m] [0m[0m    val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))[0m
 [0m[[0m[31merror[0m] [0m[0m                                    ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:86:37: error: sink "" not fully initialized in "Frontend"[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:87:37: error: sink "" not fully initialized in "Frontend"[0m
 [0m[[0m[31merror[0m] [0m[0m    val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))[0m
 [0m[[0m[31merror[0m] [0m[0m                                    ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:86:37: error: sink "" not fully initialized in "Frontend"[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:87:37: error: sink "" not fully initialized in "Frontend"[0m
 [0m[[0m[31merror[0m] [0m[0m    val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))[0m
 [0m[[0m[31merror[0m] [0m[0m                                    ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:86:37: error: sink "" not fully initialized in "Frontend"[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:87:37: error: sink "" not fully initialized in "Frontend"[0m
 [0m[[0m[31merror[0m] [0m[0m    val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))[0m
 [0m[[0m[31merror[0m] [0m[0m                                    ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:86:37: error: sink "" not fully initialized in "Frontend"[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:87:37: error: sink "" not fully initialized in "Frontend"[0m
 [0m[[0m[31merror[0m] [0m[0m    val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))[0m
 [0m[[0m[31merror[0m] [0m[0m                                    ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:86:37: error: sink "" not fully initialized in "Frontend"[0m
-[0m[[0m[31merror[0m] [0m[0m    val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))[0m
-[0m[[0m[31merror[0m] [0m[0m                                    ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:86:37: error: sink "" not fully initialized in "Frontend"[0m
-[0m[[0m[31merror[0m] [0m[0m    val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))[0m
-[0m[[0m[31merror[0m] [0m[0m                                    ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:86:37: error: sink "" not fully initialized in "Frontend"[0m
-[0m[[0m[31merror[0m] [0m[0m    val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))[0m
-[0m[[0m[31merror[0m] [0m[0m                                    ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:86:37: error: sink "" not fully initialized in "Frontend"[0m
-[0m[[0m[31merror[0m] [0m[0m    val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))[0m
-[0m[[0m[31merror[0m] [0m[0m                                    ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:86:37: error: sink "" not fully initialized in "Frontend"[0m
-[0m[[0m[31merror[0m] [0m[0m    val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))[0m
-[0m[[0m[31merror[0m] [0m[0m                                    ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:86:37: error: sink "" not fully initialized in "Frontend"[0m
-[0m[[0m[31merror[0m] [0m[0m    val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))[0m
-[0m[[0m[31merror[0m] [0m[0m                                    ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:86:37: error: sink "" not fully initialized in "Frontend"[0m
-[0m[[0m[31merror[0m] [0m[0m    val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))[0m
-[0m[[0m[31merror[0m] [0m[0m                                    ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:86:37: error: sink "" not fully initialized in "Frontend"[0m
-[0m[[0m[31merror[0m] [0m[0m    val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))[0m
-[0m[[0m[31merror[0m] [0m[0m                                    ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:86:37: error: sink "" not fully initialized in "Frontend"[0m
-[0m[[0m[31merror[0m] [0m[0m    val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))[0m
-[0m[[0m[31merror[0m] [0m[0m                                    ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:86:37: error: sink "" not fully initialized in "Frontend"[0m
-[0m[[0m[31merror[0m] [0m[0m    val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))[0m
-[0m[[0m[31merror[0m] [0m[0m                                    ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:86:37: error: sink "" not fully initialized in "Frontend"[0m
-[0m[[0m[31merror[0m] [0m[0m    val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))[0m
-[0m[[0m[31merror[0m] [0m[0m                                    ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:86:37: error: sink "" not fully initialized in "Frontend"[0m
-[0m[[0m[31merror[0m] [0m[0m    val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))[0m
-[0m[[0m[31merror[0m] [0m[0m                                    ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:86:37: error: sink "" not fully initialized in "Frontend"[0m
-[0m[[0m[31merror[0m] [0m[0m    val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))[0m
-[0m[[0m[31merror[0m] [0m[0m                                    ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:86:37: error: sink "" not fully initialized in "Frontend"[0m
-[0m[[0m[31merror[0m] [0m[0m    val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))[0m
-[0m[[0m[31merror[0m] [0m[0m                                    ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:86:37: error: sink "" not fully initialized in "Frontend"[0m
-[0m[[0m[31merror[0m] [0m[0m    val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))[0m
-[0m[[0m[31merror[0m] [0m[0m                                    ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:86:37: error: sink "" not fully initialized in "Frontend"[0m
-[0m[[0m[31merror[0m] [0m[0m    val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))[0m
-[0m[[0m[31merror[0m] [0m[0m                                    ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:86:37: error: sink "" not fully initialized in "Frontend"[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:87:37: error: sink "" not fully initialized in "Frontend"[0m
 [0m[[0m[31merror[0m] [0m[0m    val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))[0m
 [0m[[0m[31merror[0m] [0m[0m                                    ^[0m
 [0m[[0m[31merror[0m] [0m[0m[0m
