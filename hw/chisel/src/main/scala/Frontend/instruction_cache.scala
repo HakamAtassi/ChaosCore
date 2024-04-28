@@ -100,7 +100,7 @@ class L1_instruction_cache(fetchWidth:Int=4, ways:Int=2, sets:Int = 64, blockSiz
                                                                                   // FIXME: this should be a bool
 
         // Outputs
-        val cache_data         =     new fetch_packet(width=fetchWidth)
+        val cache_data         =     new fetch_packet(fetchWidth=fetchWidth)
         val resp_valid         =     Output(Bool())
 
         val cache_addr         =     Decoupled(UInt(32.W))                        // outputs to DRAM

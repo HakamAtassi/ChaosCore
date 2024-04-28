@@ -1,4 +1,7 @@
-[0m[[0m[31merror[0m] [0m[0m/home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala:193:51: value bits is not a member of prediction[0m
-[0m[[0m[31merror[0m] [0m[0m    predecoder.io.prediction := BTB_Q.io.data_out.bits[0m
-[0m[[0m[31merror[0m] [0m[0m                                                  ^[0m
-[0m[[0m[31merror[0m] [0m[0mone error found[0m
+[0m[[0m[31merror[0m] [0m[0m/home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala:167:24: value bits is not a member of RAS_read[0m
+[0m[[0m[31merror[0m] [0m[0m    PC_gen.io.RAS_read.bits := bp.io.RAS_read.bits[0m
+[0m[[0m[31merror[0m] [0m[0m                       ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala:167:47: value bits is not a member of RAS_read[0m
+[0m[[0m[31merror[0m] [0m[0m    PC_gen.io.RAS_read.bits := bp.io.RAS_read.bits[0m
+[0m[[0m[31merror[0m] [0m[0m                                              ^[0m
+[0m[[0m[31merror[0m] [0m[0mtwo errors found[0m

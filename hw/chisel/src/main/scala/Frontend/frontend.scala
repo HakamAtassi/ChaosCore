@@ -61,23 +61,65 @@ class Q[T <: Data](dataType: T, depth: Int = 16) extends Module {
   }
 }
 
+class skidbuffer[T <: Data](datatype: T) extends Module{
+  val io = IO(new Bundle{
+    val in   = Flipped(Decoupled(datatype))
+    val out  = Decoupled(datatype)
+  })
+
+  object State extends ChiselEnum {
+    val passthrough, stall = Value
+  }
+
+  val buffer = Reg(datatype)
+  val state = RegInit(State.passthrough)
+
+  when(io.in.valid){
+    buffer  := io.in.bits
+  }
+
+  switch(state){
+    is(State.passthrough){
+      io.in.ready := 1.B
+      when(io.out.ready === 1.B){
+        io.out.bits   := io.in.bits // Pass data along
+        io.out.valid  := 1.B
+      }.otherwise{
+        state := State.stall
+      }
+    }
+    is(State.stall){
+      io.in.ready := 0.B
+      when(io.out.ready === 0.B){
+        io.out.bits   := buffer
+        io.out.valid  := 1.B
+      }.otherwise{
+        state := State.passthrough
+      }
+
+    }
+  }
+
+}
+
 
 class Frontend(GHRWidth:Int=16, fetchWidth:Int=4, RASEntries:Int=128, BTBEntries:Int=4096, L1_instructionCacheWays:Int=2, 
-               L1_instructionCacheSets:Int=64, L1_instructionCacheBlockSizeBytes:Int=32) extends Module{
+               L1_instructionCacheSets:Int=64, L1_instructionCacheBlockSizeBytes:Int=32, startPC:UInt="h80000000".U) extends Module{
+
+    val dataSizeBits                = L1_instructionCacheBlockSizeBytes*8
 
     val io = IO(new Bundle{
         // Inputs: A series of PCs and control signals
-        val misprediction_PC = Flipped(Decoupled(UInt(32.W)))   // Input
-        val exception_PC     = Flipped(Decoupled(UInt(32.W)))   // Input
+        val misprediction_PC  =   Flipped(Decoupled(UInt(32.W)))                              // Input
+        val exception_PC      =   Flipped(Decoupled(UInt(32.W)))                              // Input
         
-        val commit          =   new commit(fetchWidth=fetchWidth)                           // Input
-        val mispredict      =   new mispredict(GHRWidth=GHRWidth, RASEntries=RASEntries)    //
+        val commit            =   new commit(fetchWidth=fetchWidth)                           // Input
+        val mispredict        =   new mispredict(GHRWidth=GHRWidth, RASEntries=RASEntries)    // Input
 
-        // Outputs: Validated Fetch Packet + Prediction information
-        //val fetch_packet = Output(new fetch_packet(fetchWidth=fetchWidth))
-        //val fetch_packet = Flipped(Decoupled(32.W))   //TODO: needs to output prediction information as well 
-
-        // TODO: need to add dram access here
+        val cache_addr        =   Decoupled(UInt(32.W))                                       // outputs to DRAM
+        val dram_data         =   Flipped(Decoupled(UInt(dataSizeBits.W)))                    // inputs from DRAM
+        
+        val fetch_packet      =   Decoupled(new fetch_packet(fetchWidth=fetchWidth))             // Fetch packet result (To Decoders)
     })
 
     /////////////
@@ -85,133 +127,122 @@ class Frontend(GHRWidth:Int=16, fetchWidth:Int=4, RASEntries:Int=128, BTBEntries
     /////////////
     val instruction_cache   = Module(new L1_instruction_cache(fetchWidth=fetchWidth, ways=L1_instructionCacheWays, sets=L1_instructionCacheSets, blockSizeBytes=L1_instructionCacheBlockSizeBytes))
     val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))
-    val predecoder          = Module(new decode_validate(fetchWidth=fetchWidth, GHRWidth=16, RASEntries=128))
+    val predecoder          = Module(new decode_validate(fetchWidth=fetchWidth, GHRWidth=GHRWidth, RASEntries=RASEntries))
+    val PC_gen              = Module(new PC_arbit(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, startPC=startPC))
 
 
     ////////////
     // Queues //
     ////////////
-    val instruction_Q   =   Module(new Q(new fetch_packet(width=fetchWidth), depth = 16))               // Instantiate queue with fetch_packet data type
-    val PC_Q            =   Module(new Q(UInt(32.W)))                                                   // Queue of predicted PCs
-    val BTB_Q           =   Module(new Q(new prediction(fetchWidth=fetchWidth, GHRWidth=GHRWidth)))       // Queue of BTB responses
+    val instruction_Q   =   Module(new Q(new fetch_packet(fetchWidth=fetchWidth), depth = 16))              // Instantiate queue with fetch_packet data type
+    val PC_Q            =   Module(new Q(UInt(32.W)))                                                       // Queue of predicted PCs
+    val BTB_Q           =   Module(new Q(new prediction(fetchWidth=fetchWidth, GHRWidth=GHRWidth)))         // Queue of BTB responses
 
     ///////////
     // Wires //
     ///////////
     val predict_PC     =   Wire(Decoupled(UInt(32.W)))
 
-    
-    ////////////////////
-    // PC ARBITRATION //
-    ////////////////////
 
-    predict_PC.bits  := 0.U
-    predict_PC.valid := 0.B
-    predict_PC.ready := 0.B
+    ///////////////////
+    // PC GENERATION //
+    ///////////////////
 
+    predict_PC.bits  := PC_gen.io.PC_next.bits
+    predict_PC.valid := 1.B && predict_PC.ready /*FIXME: incomplete. Valid only high when the value itself is valid and is ready to be accepted. */
+    predict_PC.ready := (!PC_Q.io.full) && bp.io.predict.ready
 
-    //////////
-    // PC_Q //
-    //////////
+    PC_gen.io.mispredict  := io.mispredict
+    PC_gen.io.prediction.bits  := bp.io.prediction.bits
+    PC_gen.io.prediction.valid  := bp.io.prediction.valid
+    PC_gen.io.revert      := predecoder.io.revert
+    PC_gen.io.PC_next.ready := 1.B
+
+    PC_gen.io.RAS_read := bp.io.RAS_read
+
+    //////////////
+    // PC Queue //
+    //////////////
 
     PC_Q.io.wr_en       :=  predict_PC.valid         // Write to PC_Q whenever the PC is valid
     PC_Q.io.data_in     :=  predict_PC.bits
-    PC_Q.io.rd_en       :=  instruction_cache.io.cpu_addr.ready  // Read from PC_Q whenever I$ is ready
-
+    PC_Q.io.rd_en       :=  (!PC_Q.io.empty && instruction_cache.io.cpu_addr.ready)  // Read from PC_Q whenever I$ is ready
     PC_Q.io.clear       :=  0.B /* TODO: */
 
-    ///////////////////
-    // instruction_Q //
-    ///////////////////
-
-    // connect instruction queue
+    ///////////////////////
+    // INSTRUCTION QUEUE //
+    ///////////////////////
     instruction_Q.io.wr_en       :=  instruction_cache.io.resp_valid    // FIXME: resp_valid should really be apart of fetch_packet
     instruction_Q.io.data_in     :=  instruction_cache.io.cache_data
-    instruction_Q.io.rd_en       :=  (!BTB_Q.io.empty)
+    instruction_Q.io.rd_en       :=  (!BTB_Q.io.empty && !instruction_Q.io.empty && predecoder.io.fetch_packet.ready)
     instruction_Q.io.clear       :=  0.B
 
-    ///////////
-    // BTB_Q //
-    ///////////
+    ///////////////
+    // BTB QUEUE //
+    ///////////////
 
-    BTB_Q.io.wr_en               :=  bp.io.predict.valid
+    BTB_Q.io.wr_en               :=  bp.io.prediction.valid
     BTB_Q.io.data_in             :=  bp.io.prediction.bits
-    BTB_Q.io.rd_en               :=  (!instruction_Q.io.empty)
+    BTB_Q.io.rd_en               :=  (!instruction_Q.io.empty && !BTB_Q.io.empty && predecoder.io.prediction.ready)
     BTB_Q.io.clear               :=  0.B
+  
+    ///////////////////////
+    // INSTRUCTION CACHE //
+    ///////////////////////
 
-
-    ///////////////
-    // I$ Access //
-    ///////////////
-
-    // FIXME: update for actual addresses. 
-    instruction_cache.io.cpu_addr.bits     :=   0.U
-    instruction_cache.io.cpu_addr.valid    :=   0.B
+    // Attach PC_Q to instruction cache
+    instruction_cache.io.cpu_addr.bits     :=   PC_Q.io.data_out 
+    instruction_cache.io.cpu_addr.valid    :=   (!PC_Q.io.empty)
 
     // Dram resp
-    instruction_cache.io.dram_data.bits    :=   0.U
-    instruction_cache.io.dram_data.valid   :=   0.B
+    io.cache_addr.bits                          :=   instruction_cache.io.cache_addr.bits     //  TO DRAM 
+    io.cache_addr.valid                         :=   instruction_cache.io.cache_addr.valid    //  TO DRAM
+    instruction_cache.io.dram_data.valid        :=   io.dram_data.valid                       //  FROM DRAM
+    instruction_cache.io.dram_data.bits         :=   io.dram_data.bits                        //  FROM DRAM
 
-    // Dram req
-    instruction_cache.io.cache_addr.ready  :=  0.B
+    instruction_cache.io.cache_addr.ready       := io.cache_addr.ready                        // Is DRAM ready for request ?
+    io.dram_data.ready                          := instruction_cache.io.dram_data.ready       // Is Cache ready to accept DRAM response ?
 
     // kill 
     instruction_cache.io.kill              := 0.B
 
 
-    ////////////////////////////
-    // INIT INSTRUCTION CACHE //
-    ////////////////////////////
-    
-
-
-
-    ////////////////////////
-    // INIT BP STRUCTURES //
-    ////////////////////////
-
+    ////////
+    // BP //
+    ////////
 
     // BP inputs (external)
-    bp.io.commit        :=  io.commit
-    bp.io.mispredict    :=  io.mispredict
+    bp.io.commit            :=  io.commit
+    bp.io.mispredict        :=  io.mispredict
 
-    //// BP inputs (internal)
-    ////bp.io.predict.bits      :=  predict_PC.bits
-    ////bp.io.predict.valid     :=  predict_PC.valid
-
-    //bp.io.predict.bits := 0.B
-    //bp.io.predict.valid := 0.U
-    
+    // BP inputs (internal)
+    bp.io.predict.bits      :=  predict_PC.bits
+    bp.io.predict.valid     :=  predict_PC.valid
     bp.io.RAS_update        :=  predecoder.io.RAS_update
     bp.io.revert            :=  predecoder.io.revert
 
-    
-    /////////////////////
-    // INIT PREDECODER //
-    /////////////////////
+    bp.io.prediction.ready  := !BTB_Q.io.empty
 
-    predecoder.io.prediction.bits  := BTB_Q.io.data_out
-    predecoder.io.prediction.valid := !BTB_Q.io.empty
-    predecoder.io.fetch_packet := instruction_Q.io.data_out
-    predecoder.io.RAS_read      := bp.io.RAS_read
+    ////////////////
+    // PREDECODER //
+    ////////////////
+
+    predecoder.io.prediction.bits       := BTB_Q.io.data_out
+    predecoder.io.prediction.valid      := !BTB_Q.io.empty
+    predecoder.io.fetch_packet.bits     := instruction_Q.io.data_out /* FIXME: This should be decoupled...*/
+    predecoder.io.fetch_packet.valid    := !instruction_Q.io.empty
+    predecoder.io.RAS_read              := bp.io.RAS_read
 
 
-
-    ///////////////////////////////
-    // INIT PREDECODE STRUCTURES //
-    ///////////////////////////////
-
+    /////////////
+    // OUTPUTS //
+    /////////////
     
     io.misprediction_PC.ready := 1.U
     io.exception_PC.ready := 1.U
 
-
-
-    bp.io.predict.bits := predict_PC.bits
-    bp.io.predict.valid := predict_PC.valid
-
-
-    bp.io.prediction := DontCare
-
+    io.fetch_packet.bits := predecoder.io.final_fetch_packet.bits
+    io.fetch_packet.valid := predecoder.io.final_fetch_packet.valid
+    predecoder.io.final_fetch_packet.ready := io.fetch_packet.ready
 
 }

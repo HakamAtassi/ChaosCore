@@ -43,10 +43,10 @@ import helperFunctions.getBTBTagBits
 
 
 // Channels //
-class fetch_packet(width:Int = 4) extends Bundle{
+class fetch_packet(fetchWidth:Int = 4) extends Bundle{
     val fetch_PC        = UInt(32.W)
-    val instructions    = Vec(width, UInt(32.W))
-    val valid_bits      = Vec(width, Bool())
+    val instructions    = Vec(fetchWidth, UInt(32.W))
+    val valid_bits      = Vec(fetchWidth, Bool())
 }
 
 
@@ -104,22 +104,11 @@ class revert(GHRWidth:Int=16) extends Bundle{
     val PC                = Input(UInt(32.W))
 }
 
-class BTB_resp(fetchWidth:Int=4,GHRWidth:Int=16) extends Bundle{  // Width agnostic
-    val hit     = Bool()
-    val idx     = UInt(fetchWidth.W)
-    val T_NT    = Bool()
-    val RAS     = UInt(32.W)
-    val target  = UInt(32.W)
-    val GHR     = UInt(GHRWidth.W)
-}
-
 class prediction(fetchWidth:Int=4, GHRWidth:Int=16) extends Bundle{
-
     val hit         =   Output(Bool())  // FIXME: I dont think this is assigned in BTB since it was added after the fact
     val target      =   Output(UInt(32.W))
     val br_type     =   Output(UInt(2.W))
     val br_mask     =   Output(UInt(fetchWidth.W))
     val GHR         =   Output(UInt(GHRWidth.W))
     val T_NT        =   Output(Bool())
-
 }
