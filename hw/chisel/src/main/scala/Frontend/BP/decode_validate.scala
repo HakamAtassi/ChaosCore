@@ -68,9 +68,9 @@ class decoder_validator(fetchWidth: Int = 4) extends Module {
 class decode_validate(fetchWidth:Int=4,GHRWidth:Int=16, RASEntries:Int=128) extends Module{
 
     val io = IO(new Bundle{
-        //val BTB_resp     = Input(new BTB_resp())/
+        //val BTB_resp     = Input(new BTB_resp())
         val prediction   = Flipped(Decoupled(new prediction(fetchWidth=fetchWidth, GHRWidth=GHRWidth)))
-        val fetch_packet = Input(new fetch_packet(width=fetchWidth))
+        val fetch_packet = Flipped(Decoupled(new fetch_packet(fetchWidth=fetchWidth)))
 
         // kill incoming instructions
         val kill = Output(Bool())
@@ -79,7 +79,7 @@ class decode_validate(fetchWidth:Int=4,GHRWidth:Int=16, RASEntries:Int=128) exte
         val revert      = Output(new revert(GHRWidth=fetchWidth))
 
         // Output validated instructions
-        val final_fetch_packet = Output(new fetch_packet())
+        val final_fetch_packet = Decoupled(new fetch_packet())
 
         // RAS control
         // FIXME: change this to a RAS channel
@@ -103,11 +103,14 @@ class decode_validate(fetchWidth:Int=4,GHRWidth:Int=16, RASEntries:Int=128) exte
     val decoder_metadata         = Wire(Vec(fetchWidth, new metadata()))
     val decoder_T_NT             = Wire(Vec(fetchWidth, Bool()))
 
+    val inputs_valid             = Wire(Bool())
+    inputs_valid    := io.fetch_packet.valid && io.prediction.valid         // Are both inputs valid?
+
     for(i <- 0 until fetchWidth){
         // Inputs
-        decoders(i).io.fetch_PC        :=  io.fetch_packet.fetch_PC
-        decoders(i).io.instruction     :=  io.fetch_packet.instructions(i)
-        decoders(i).io.valid           :=  io.fetch_packet.valid_bits(i)
+        decoders(i).io.fetch_PC        :=  io.fetch_packet.bits.fetch_PC
+        decoders(i).io.instruction     :=  io.fetch_packet.bits.instructions(i)
+        decoders(i).io.valid           :=  io.fetch_packet.bits.valid_bits(i)
         decoders(i).io.prediction.bits :=  io.prediction.bits
         decoders(i).io.prediction.valid :=  io.prediction.valid
         decoders(i).io.RAS_read        :=  io.RAS_read
@@ -181,8 +184,8 @@ class decode_validate(fetchWidth:Int=4,GHRWidth:Int=16, RASEntries:Int=128) exte
     val PC_mismatch = Wire(Bool())
     val PC_match = Wire(Bool())
 
-    PC_match    := (PC_expected === io.fetch_packet.fetch_PC) && io.prediction.valid
-    PC_mismatch := (PC_expected =/= io.fetch_packet.fetch_PC) && io.prediction.valid
+    PC_match    := (PC_expected === io.fetch_packet.bits.fetch_PC) && inputs_valid
+    PC_mismatch := (PC_expected =/= io.fetch_packet.bits.fetch_PC) && inputs_valid
 
     dontTouch(PC_match)
 
@@ -232,7 +235,7 @@ class decode_validate(fetchWidth:Int=4,GHRWidth:Int=16, RASEntries:Int=128) exte
     when(use_BTB){PC_next := metadata_out.BTB_target}
     .elsewhen(use_RAS){PC_next := metadata_out.RAS}
     .elsewhen(use_computed){PC_next := metadata_out.instruction_PC + metadata_out.Imm}
-    .otherwise{PC_next := io.fetch_packet.fetch_PC + (fetchWidth*4).U}
+    .otherwise{PC_next := io.fetch_packet.bits.fetch_PC + (fetchWidth*4).U}
 
 
     // validate instructions
@@ -249,37 +252,19 @@ class decode_validate(fetchWidth:Int=4,GHRWidth:Int=16, RASEntries:Int=128) exte
     decoder_validator.io.instruction_T_NT_mask := T_NT_mask
 
     for(i <- 0 until fetchWidth){
-        io.final_fetch_packet.instructions(i) := RegNext(io.fetch_packet.instructions(i))    // pass along actual instruction
-        io.final_fetch_packet.valid_bits(i) := RegNext(decoder_validator.io.instruction_validity(i)) && packet_valid
+        io.final_fetch_packet.bits.instructions(i) := RegNext(io.fetch_packet.bits.instructions(i))    // pass along actual instruction
+        io.final_fetch_packet.bits.valid_bits(i) := RegNext(decoder_validator.io.instruction_validity(i)) && packet_valid
     }
 
 
-
-
-
-    /*
-    for(i <- 0 until width){
-        when(validate_flag && RegNext(io.fetch_packet.valid_bits(i)) && packet_valid){  // instructions are valid if no previous taken branch, was valid on input, and the packet as a whole is valid
-            io.final_fetch_packet.valid_bits(i) := 1.B  // validate on output
-        }.otherwise{
-            io.final_fetch_packet.valid_bits(i) := 0.B
-        }
-        when(decoder_T_NT(i) === 1.B){  // all instructions after taken branch are invalid
-            validate_flag := 0.B    // branch occurred. All following branches invalid.
-        }
-
-        io.final_fetch_packet.instructions(i) := RegNext(io.fetch_packet.instructions(i))    // pass along actual instruction
-    }
-    */
-
-
-
-
-    io.final_fetch_packet.fetch_PC := io.fetch_packet.fetch_PC  // Pass along fetch PC
+    io.final_fetch_packet.bits.fetch_PC := io.fetch_packet.bits.fetch_PC  // Pass along fetch PC
     // RAS Control //
     io.RAS_update.call       := metadata_out.Call
     io.RAS_update.ret        := metadata_out.Ret
     io.RAS_update.call_addr  := metadata_out.instruction_PC // PC of the actual instruction, not fetch_PC
 
-    io.prediction.ready := 1.B
+    // Do not accept inputs if outputs have nowhere to go. 
+    io.prediction.ready := io.final_fetch_packet.ready
+    io.fetch_packet.ready := io.final_fetch_packet.ready
+    io.final_fetch_packet.valid := RegNext(inputs_valid)
 }

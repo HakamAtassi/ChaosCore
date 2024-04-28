@@ -18856,3 +18856,1326 @@ WARNING: Unmatched cancel notification for request id 63487
 2024.04.28 01:18:22 INFO  shutting down Metals
 2024.04.28 01:18:22 INFO  Shut down connection with build server.
 2024.04.28 01:18:22 INFO  Exiting server
+2024.04.28 13:28:54 INFO  Started: Metals version 1.3.0 in folders '/home/hakam/ChaosCore' for client Visual Studio Code 1.88.1.
+SLF4J: Class path contains multiple SLF4J providers.
+SLF4J: Found provider [scribe.slf4j.ScribeServiceProvider@45ce0a5e]
+SLF4J: Found provider [ch.qos.logback.classic.spi.LogbackServiceProvider@4f4425a4]
+SLF4J: See https://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+SLF4J: Actual provider is of type [scribe.slf4j.ScribeServiceProvider@45ce0a5e]
+2024.04.28 13:28:54 WARN  Flyway upgrade recommended: H2 2.2.224 is newer than this version of Flyway and support has not been tested. The latest supported version of H2 is 2.2.220.
+2024.04.28 13:28:55 INFO  Attempting to connect to the build server...
+2024.04.28 13:28:55 INFO  Running BSP server List(/home/hakam/.local/share/coursier/bin/.scala-cli.aux, bsp, --json-options, /home/hakam/repos/ChaosCore/.scala-build/ide-options-v2.json, /home/hakam/repos/ChaosCore)
+2024.04.28 13:28:55 INFO  tracing is disabled for protocol BSP, to enable tracing of incoming and outgoing JSON messages create an empty file at /home/hakam/ChaosCore/.metals/bsp.trace.json or /home/hakam/.cache/metals/bsp.trace.json
+Apr 28, 2024 1:28:55 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 1
+2024.04.28 13:28:55 INFO  BSP server: Starting compilation server
+2024.04.28 13:28:57 INFO  time: Connected to build server in 2.54s
+2024.04.28 13:28:57 INFO  Connected to Build server: scala-cli v1.1.2
+2024.04.28 13:28:58 INFO  compiling chaoscore_bd2c96d2de (23 scala sources)
+2024.04.28 13:28:59 INFO  compiling chaoscore_bd2c96d2de (23 scala sources)
+2024.04.28 13:29:04 INFO  no build target found for /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala. Using presentation compiler with project's scala-library version: 3.3.3
+2024.04.28 13:29:05 INFO  time: indexed workspace in 1.05s
+2024.04.28 13:29:05 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala
+2024.04.28 13:29:11 INFO  time: code lens generation in 5.84s
+2024.04.28 13:29:11 INFO  time: code lens generation in 6.23s
+2024.04.28 13:33:10 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 13:33:22 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 13:33:39 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 13:33:39 WARN  Using indexes to guess the definition of Int
+2024.04.28 13:34:10 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+Apr 28, 2024 1:34:28 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 175
+Apr 28, 2024 1:35:19 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 301
+Apr 28, 2024 1:35:40 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 323
+2024.04.28 13:35:51 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 1:36:05 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 374
+Apr 28, 2024 1:36:12 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 383
+Apr 28, 2024 1:36:20 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 403
+Apr 28, 2024 1:36:21 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 413
+2024.04.28 13:36:35 ERROR Failed to tokenize input for semantic tokens for /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+scala.meta.tokenizers.TokenizeException: <input>:49: error: can't use unescaped LF in character literals
+    val valid_bits      = Vec(fetchWid'
+                                       ^
+	at scala.meta.internal.tokenizers.Reporter.syntaxError(Reporter.scala:23)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError$(Reporter.scala:23)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.syntaxError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError(Reporter.scala:25)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError$(Reporter.scala:25)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.syntaxError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.LegacyScanner.fetchSingleQuote$1(LegacyScanner.scala:390)
+	at scala.meta.internal.tokenizers.LegacyScanner.fetchToken(LegacyScanner.scala:419)
+	at scala.meta.internal.tokenizers.LegacyScanner.nextToken(LegacyScanner.scala:214)
+	at scala.meta.internal.tokenizers.LegacyScanner.foreach(LegacyScanner.scala:982)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.uncachedTokenize(ScalametaTokenizer.scala:23)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.$anonfun$tokenize$1(ScalametaTokenizer.scala:16)
+	at scala.collection.concurrent.TrieMap.getOrElseUpdate(TrieMap.scala:960)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.tokenize(ScalametaTokenizer.scala:16)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer$$anon$2.apply(ScalametaTokenizer.scala:331)
+	at scala.meta.tokenizers.Api$XtensionTokenizeDialectInput.tokenize(Api.scala:25)
+	at scala.meta.tokenizers.Api$XtensionTokenizeInputLike.tokenize(Api.scala:14)
+	at scala.meta.internal.metals.SemanticTokensProvider$.getTokens(SemanticTokensProvider.scala:28)
+	at scala.meta.internal.metals.SemanticTokensProvider$.provide(SemanticTokensProvider.scala:89)
+	at scala.meta.internal.metals.Compilers.$anonfun$semanticTokens$3(Compilers.scala:597)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:467)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.lang.Thread.run(Thread.java:833)
+
+2024.04.28 13:36:37 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.28 13:36:41 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+Apr 28, 2024 1:36:41 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 566
+2024.04.28 13:37:08 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 13:37:21 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 13:38:07 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.28 13:38:24 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/instruction_cache.scala
+Apr 28, 2024 1:38:37 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 795
+2024.04.28 13:40:23 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 13:40:23 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 1:40:55 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 892
+Apr 28, 2024 1:41:11 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 907
+Apr 28, 2024 1:41:13 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 916
+2024.04.28 13:42:28 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 13:42:33 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 13:42:47 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 13:42:53 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 13:43:00 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 13:43:08 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 13:44:10 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 1:44:15 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 1411
+Apr 28, 2024 1:45:21 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 1448
+Apr 28, 2024 1:45:49 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 1548
+2024.04.28 13:46:03 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 13:46:22 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 13:46:27 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 13:47:07 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 13:47:26 WARN  Using indexes to guess the definition of valid
+2024.04.28 13:47:26 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 13:47:26 WARN  Using indexes to guess the definition of io
+2024.04.28 13:47:37 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 13:47:40 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 13:47:43 WARN  Using indexes to guess the definition of instruction_cache
+2024.04.28 13:47:43 WARN  Using indexes to guess the definition of instruction_cache
+2024.04.28 13:47:43 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 13:48:39 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 1:48:49 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 2123
+2024.04.28 13:49:28 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 13:49:30 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 13:49:33 WARN  Using indexes to guess the definition of instruction_cache
+2024.04.28 13:49:33 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 1:50:28 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 2373
+2024.04.28 13:50:39 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 13:55:06 ERROR Failed to tokenize input for semantic tokens for /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+scala.meta.tokenizers.TokenizeException: <input>:152: error: unclosed comment
+    instruction_cache.io.cpu_addr.bits     :=   0.U /*io.PC_Q
+                                                    ^
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError(Reporter.scala:27)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError$(Reporter.scala:26)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.incompleteInputError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError(Reporter.scala:29)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError$(Reporter.scala:29)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.incompleteInputError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.LegacyScanner.skipNestedComments(LegacyScanner.scala:55)
+	at scala.meta.internal.tokenizers.LegacyScanner.skipToCommentEnd(LegacyScanner.scala:74)
+	at scala.meta.internal.tokenizers.LegacyScanner.fetchToken(LegacyScanner.scala:316)
+	at scala.meta.internal.tokenizers.LegacyScanner.nextToken(LegacyScanner.scala:214)
+	at scala.meta.internal.tokenizers.LegacyScanner.foreach(LegacyScanner.scala:982)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.uncachedTokenize(ScalametaTokenizer.scala:23)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.$anonfun$tokenize$1(ScalametaTokenizer.scala:16)
+	at scala.collection.concurrent.TrieMap.getOrElseUpdate(TrieMap.scala:960)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.tokenize(ScalametaTokenizer.scala:16)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer$$anon$2.apply(ScalametaTokenizer.scala:331)
+	at scala.meta.tokenizers.Api$XtensionTokenizeDialectInput.tokenize(Api.scala:25)
+	at scala.meta.tokenizers.Api$XtensionTokenizeInputLike.tokenize(Api.scala:14)
+	at scala.meta.internal.metals.SemanticTokensProvider$.getTokens(SemanticTokensProvider.scala:28)
+	at scala.meta.internal.metals.SemanticTokensProvider$.provide(SemanticTokensProvider.scala:89)
+	at scala.meta.internal.metals.Compilers.$anonfun$semanticTokens$3(Compilers.scala:597)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:467)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.lang.Thread.run(Thread.java:833)
+
+2024.04.28 13:55:07 ERROR Failed to tokenize input for semantic tokens for /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+scala.meta.tokenizers.TokenizeException: <input>:152: error: unclosed comment
+    instruction_cache.io.cpu_addr.bits     :=   0.U /*io.PC_Q *
+                                                    ^
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError(Reporter.scala:27)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError$(Reporter.scala:26)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.incompleteInputError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError(Reporter.scala:29)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError$(Reporter.scala:29)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.incompleteInputError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.LegacyScanner.skipNestedComments(LegacyScanner.scala:55)
+	at scala.meta.internal.tokenizers.LegacyScanner.skipToCommentEnd(LegacyScanner.scala:74)
+	at scala.meta.internal.tokenizers.LegacyScanner.fetchToken(LegacyScanner.scala:316)
+	at scala.meta.internal.tokenizers.LegacyScanner.nextToken(LegacyScanner.scala:214)
+	at scala.meta.internal.tokenizers.LegacyScanner.foreach(LegacyScanner.scala:982)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.uncachedTokenize(ScalametaTokenizer.scala:23)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.$anonfun$tokenize$1(ScalametaTokenizer.scala:16)
+	at scala.collection.concurrent.TrieMap.getOrElseUpdate(TrieMap.scala:960)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.tokenize(ScalametaTokenizer.scala:16)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer$$anon$2.apply(ScalametaTokenizer.scala:331)
+	at scala.meta.tokenizers.Api$XtensionTokenizeDialectInput.tokenize(Api.scala:25)
+	at scala.meta.tokenizers.Api$XtensionTokenizeInputLike.tokenize(Api.scala:14)
+	at scala.meta.internal.metals.SemanticTokensProvider$.getTokens(SemanticTokensProvider.scala:28)
+	at scala.meta.internal.metals.SemanticTokensProvider$.provide(SemanticTokensProvider.scala:89)
+	at scala.meta.internal.metals.Compilers.$anonfun$semanticTokens$3(Compilers.scala:597)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:467)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.lang.Thread.run(Thread.java:833)
+
+2024.04.28 13:55:14 ERROR Failed to tokenize input for semantic tokens for /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+scala.meta.tokenizers.TokenizeException: <input>:153: error: unclosed comment
+    instruction_cache.io.cpu_addr.valid    :=   0.B /*
+                                                    ^
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError(Reporter.scala:27)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError$(Reporter.scala:26)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.incompleteInputError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError(Reporter.scala:29)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError$(Reporter.scala:29)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.incompleteInputError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.LegacyScanner.skipNestedComments(LegacyScanner.scala:55)
+	at scala.meta.internal.tokenizers.LegacyScanner.skipToCommentEnd(LegacyScanner.scala:74)
+	at scala.meta.internal.tokenizers.LegacyScanner.fetchToken(LegacyScanner.scala:316)
+	at scala.meta.internal.tokenizers.LegacyScanner.nextToken(LegacyScanner.scala:214)
+	at scala.meta.internal.tokenizers.LegacyScanner.foreach(LegacyScanner.scala:982)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.uncachedTokenize(ScalametaTokenizer.scala:23)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.$anonfun$tokenize$1(ScalametaTokenizer.scala:16)
+	at scala.collection.concurrent.TrieMap.getOrElseUpdate(TrieMap.scala:960)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.tokenize(ScalametaTokenizer.scala:16)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer$$anon$2.apply(ScalametaTokenizer.scala:331)
+	at scala.meta.tokenizers.Api$XtensionTokenizeDialectInput.tokenize(Api.scala:25)
+	at scala.meta.tokenizers.Api$XtensionTokenizeInputLike.tokenize(Api.scala:14)
+	at scala.meta.internal.metals.SemanticTokensProvider$.getTokens(SemanticTokensProvider.scala:28)
+	at scala.meta.internal.metals.SemanticTokensProvider$.provide(SemanticTokensProvider.scala:89)
+	at scala.meta.internal.metals.Compilers.$anonfun$semanticTokens$3(Compilers.scala:597)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:467)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.lang.Thread.run(Thread.java:833)
+
+2024.04.28 13:55:15 ERROR Failed to tokenize input for semantic tokens for /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+scala.meta.tokenizers.TokenizeException: <input>:153: error: unclosed comment
+    instruction_cache.io.cpu_addr.valid    :=   0.B /* *
+                                                    ^
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError(Reporter.scala:27)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError$(Reporter.scala:26)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.incompleteInputError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError(Reporter.scala:29)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError$(Reporter.scala:29)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.incompleteInputError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.LegacyScanner.skipNestedComments(LegacyScanner.scala:55)
+	at scala.meta.internal.tokenizers.LegacyScanner.skipToCommentEnd(LegacyScanner.scala:74)
+	at scala.meta.internal.tokenizers.LegacyScanner.fetchToken(LegacyScanner.scala:316)
+	at scala.meta.internal.tokenizers.LegacyScanner.nextToken(LegacyScanner.scala:214)
+	at scala.meta.internal.tokenizers.LegacyScanner.foreach(LegacyScanner.scala:982)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.uncachedTokenize(ScalametaTokenizer.scala:23)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.$anonfun$tokenize$1(ScalametaTokenizer.scala:16)
+	at scala.collection.concurrent.TrieMap.getOrElseUpdate(TrieMap.scala:960)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.tokenize(ScalametaTokenizer.scala:16)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer$$anon$2.apply(ScalametaTokenizer.scala:331)
+	at scala.meta.tokenizers.Api$XtensionTokenizeDialectInput.tokenize(Api.scala:25)
+	at scala.meta.tokenizers.Api$XtensionTokenizeInputLike.tokenize(Api.scala:14)
+	at scala.meta.internal.metals.SemanticTokensProvider$.getTokens(SemanticTokensProvider.scala:28)
+	at scala.meta.internal.metals.SemanticTokensProvider$.provide(SemanticTokensProvider.scala:89)
+	at scala.meta.internal.metals.Compilers.$anonfun$semanticTokens$3(Compilers.scala:597)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:467)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.lang.Thread.run(Thread.java:833)
+
+2024.04.28 13:55:36 ERROR Failed to tokenize input for semantic tokens for /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+scala.meta.tokenizers.TokenizeException: <input>:154: error: unclosed comment
+    PC_Q.io.rd_en                          :=   0.B /*/
+                                                    ^
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError(Reporter.scala:27)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError$(Reporter.scala:26)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.incompleteInputError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError(Reporter.scala:29)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError$(Reporter.scala:29)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.incompleteInputError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.LegacyScanner.skipNestedComments(LegacyScanner.scala:55)
+	at scala.meta.internal.tokenizers.LegacyScanner.skipToCommentEnd(LegacyScanner.scala:74)
+	at scala.meta.internal.tokenizers.LegacyScanner.fetchToken(LegacyScanner.scala:316)
+	at scala.meta.internal.tokenizers.LegacyScanner.nextToken(LegacyScanner.scala:214)
+	at scala.meta.internal.tokenizers.LegacyScanner.foreach(LegacyScanner.scala:982)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.uncachedTokenize(ScalametaTokenizer.scala:23)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.$anonfun$tokenize$1(ScalametaTokenizer.scala:16)
+	at scala.collection.concurrent.TrieMap.getOrElseUpdate(TrieMap.scala:960)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.tokenize(ScalametaTokenizer.scala:16)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer$$anon$2.apply(ScalametaTokenizer.scala:331)
+	at scala.meta.tokenizers.Api$XtensionTokenizeDialectInput.tokenize(Api.scala:25)
+	at scala.meta.tokenizers.Api$XtensionTokenizeInputLike.tokenize(Api.scala:14)
+	at scala.meta.internal.metals.SemanticTokensProvider$.getTokens(SemanticTokensProvider.scala:28)
+	at scala.meta.internal.metals.SemanticTokensProvider$.provide(SemanticTokensProvider.scala:89)
+	at scala.meta.internal.metals.Compilers.$anonfun$semanticTokens$3(Compilers.scala:597)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:467)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.lang.Thread.run(Thread.java:833)
+
+2024.04.28 13:55:37 ERROR Failed to tokenize input for semantic tokens for /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+scala.meta.tokenizers.TokenizeException: <input>:154: error: unclosed comment
+    PC_Q.io.rd_en                          :=   0.B /**
+                                                    ^
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError(Reporter.scala:27)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError$(Reporter.scala:26)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.incompleteInputError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError(Reporter.scala:29)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError$(Reporter.scala:29)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.incompleteInputError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.LegacyScanner.skipNestedComments(LegacyScanner.scala:55)
+	at scala.meta.internal.tokenizers.LegacyScanner.skipToCommentEnd(LegacyScanner.scala:73)
+	at scala.meta.internal.tokenizers.LegacyScanner.fetchToken(LegacyScanner.scala:316)
+	at scala.meta.internal.tokenizers.LegacyScanner.nextToken(LegacyScanner.scala:214)
+	at scala.meta.internal.tokenizers.LegacyScanner.foreach(LegacyScanner.scala:982)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.uncachedTokenize(ScalametaTokenizer.scala:23)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.$anonfun$tokenize$1(ScalametaTokenizer.scala:16)
+	at scala.collection.concurrent.TrieMap.getOrElseUpdate(TrieMap.scala:960)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.tokenize(ScalametaTokenizer.scala:16)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer$$anon$2.apply(ScalametaTokenizer.scala:331)
+	at scala.meta.tokenizers.Api$XtensionTokenizeDialectInput.tokenize(Api.scala:25)
+	at scala.meta.tokenizers.Api$XtensionTokenizeInputLike.tokenize(Api.scala:14)
+	at scala.meta.internal.metals.SemanticTokensProvider$.getTokens(SemanticTokensProvider.scala:28)
+	at scala.meta.internal.metals.SemanticTokensProvider$.provide(SemanticTokensProvider.scala:89)
+	at scala.meta.internal.metals.Compilers.$anonfun$semanticTokens$3(Compilers.scala:597)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:467)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.lang.Thread.run(Thread.java:833)
+
+2024.04.28 13:55:39 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 13:56:07 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 13:56:59 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 13:58:09 WARN  Using indexes to guess the definition of instruction_cache
+2024.04.28 13:58:09 WARN  Using indexes to guess the definition of instruction_cache
+2024.04.28 13:58:10 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 13:58:12 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 1:59:40 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 3256
+2024.04.28 13:59:51 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 2:01:04 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 3362
+2024.04.28 14:04:43 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 2:05:08 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 3460
+2024.04.28 14:05:09 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 2:05:21 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 3473
+Apr 28, 2024 2:05:23 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 3485
+Apr 28, 2024 2:05:32 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 3515
+Apr 28, 2024 2:06:40 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 3569
+2024.04.28 14:06:54 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:06:55 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:09:04 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:09:26 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:09:39 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:10:06 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:10:16 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:10:41 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:10:57 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 2:12:14 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 4162
+Apr 28, 2024 2:12:26 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 4197
+2024.04.28 14:12:50 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:14:34 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:14:35 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 2:16:01 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 4456
+2024.04.28 14:16:07 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 2:16:33 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 4526
+2024.04.28 14:17:55 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:20:17 ERROR Failed to tokenize input for semantic tokens for /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+scala.meta.tokenizers.TokenizeException: <input>:128: error: unclosed comment
+    PC_Q.io.clear       :=  0.B /* TODO: 
+                                ^
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError(Reporter.scala:27)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError$(Reporter.scala:26)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.incompleteInputError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError(Reporter.scala:29)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError$(Reporter.scala:29)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.incompleteInputError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.LegacyScanner.skipNestedComments(LegacyScanner.scala:55)
+	at scala.meta.internal.tokenizers.LegacyScanner.skipToCommentEnd(LegacyScanner.scala:74)
+	at scala.meta.internal.tokenizers.LegacyScanner.fetchToken(LegacyScanner.scala:316)
+	at scala.meta.internal.tokenizers.LegacyScanner.nextToken(LegacyScanner.scala:214)
+	at scala.meta.internal.tokenizers.LegacyScanner.foreach(LegacyScanner.scala:982)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.uncachedTokenize(ScalametaTokenizer.scala:23)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.$anonfun$tokenize$1(ScalametaTokenizer.scala:16)
+	at scala.collection.concurrent.TrieMap.getOrElseUpdate(TrieMap.scala:960)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.tokenize(ScalametaTokenizer.scala:16)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer$$anon$2.apply(ScalametaTokenizer.scala:331)
+	at scala.meta.tokenizers.Api$XtensionTokenizeDialectInput.tokenize(Api.scala:25)
+	at scala.meta.tokenizers.Api$XtensionTokenizeInputLike.tokenize(Api.scala:14)
+	at scala.meta.internal.metals.SemanticTokensProvider$.getTokens(SemanticTokensProvider.scala:28)
+	at scala.meta.internal.metals.SemanticTokensProvider$.provide(SemanticTokensProvider.scala:89)
+	at scala.meta.internal.metals.Compilers.$anonfun$semanticTokens$3(Compilers.scala:597)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:467)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.lang.Thread.run(Thread.java:833)
+
+2024.04.28 14:20:18 ERROR Failed to tokenize input for semantic tokens for /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+scala.meta.tokenizers.TokenizeException: <input>:128: error: unclosed comment
+    PC_Q.io.clear       :=  0.B /* TODO: 
+                                ^
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError(Reporter.scala:27)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError$(Reporter.scala:26)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.incompleteInputError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError(Reporter.scala:29)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError$(Reporter.scala:29)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.incompleteInputError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.LegacyScanner.skipNestedComments(LegacyScanner.scala:55)
+	at scala.meta.internal.tokenizers.LegacyScanner.skipToCommentEnd(LegacyScanner.scala:74)
+	at scala.meta.internal.tokenizers.LegacyScanner.fetchToken(LegacyScanner.scala:316)
+	at scala.meta.internal.tokenizers.LegacyScanner.nextToken(LegacyScanner.scala:214)
+	at scala.meta.internal.tokenizers.LegacyScanner.foreach(LegacyScanner.scala:982)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.uncachedTokenize(ScalametaTokenizer.scala:23)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.$anonfun$tokenize$1(ScalametaTokenizer.scala:16)
+	at scala.collection.concurrent.TrieMap.getOrElseUpdate(TrieMap.scala:960)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.tokenize(ScalametaTokenizer.scala:16)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer$$anon$2.apply(ScalametaTokenizer.scala:331)
+	at scala.meta.tokenizers.Api$XtensionTokenizeDialectInput.tokenize(Api.scala:25)
+	at scala.meta.tokenizers.Api$XtensionTokenizeInputLike.tokenize(Api.scala:14)
+	at scala.meta.internal.metals.SemanticTokensProvider$.getTokens(SemanticTokensProvider.scala:28)
+	at scala.meta.internal.metals.SemanticTokensProvider$.provide(SemanticTokensProvider.scala:89)
+	at scala.meta.internal.metals.Compilers.$anonfun$semanticTokens$3(Compilers.scala:597)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:467)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.lang.Thread.run(Thread.java:833)
+
+2024.04.28 14:20:55 ERROR Failed to tokenize input for semantic tokens for /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+scala.meta.tokenizers.TokenizeException: <input>:134: error: can't use unescaped LF in character literals
+  '
+   ^
+	at scala.meta.internal.tokenizers.Reporter.syntaxError(Reporter.scala:23)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError$(Reporter.scala:23)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.syntaxError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError(Reporter.scala:25)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError$(Reporter.scala:25)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.syntaxError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.LegacyScanner.fetchSingleQuote$1(LegacyScanner.scala:390)
+	at scala.meta.internal.tokenizers.LegacyScanner.fetchToken(LegacyScanner.scala:419)
+	at scala.meta.internal.tokenizers.LegacyScanner.nextToken(LegacyScanner.scala:214)
+	at scala.meta.internal.tokenizers.LegacyScanner.foreach(LegacyScanner.scala:982)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.uncachedTokenize(ScalametaTokenizer.scala:23)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.$anonfun$tokenize$1(ScalametaTokenizer.scala:16)
+	at scala.collection.concurrent.TrieMap.getOrElseUpdate(TrieMap.scala:960)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.tokenize(ScalametaTokenizer.scala:16)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer$$anon$2.apply(ScalametaTokenizer.scala:331)
+	at scala.meta.tokenizers.Api$XtensionTokenizeDialectInput.tokenize(Api.scala:25)
+	at scala.meta.tokenizers.Api$XtensionTokenizeInputLike.tokenize(Api.scala:14)
+	at scala.meta.internal.metals.SemanticTokensProvider$.getTokens(SemanticTokensProvider.scala:28)
+	at scala.meta.internal.metals.SemanticTokensProvider$.provide(SemanticTokensProvider.scala:89)
+	at scala.meta.internal.metals.Compilers.$anonfun$semanticTokens$3(Compilers.scala:597)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:467)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.lang.Thread.run(Thread.java:833)
+
+2024.04.28 14:20:56 ERROR Failed to tokenize input for semantic tokens for /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+scala.meta.tokenizers.TokenizeException: <input>:134: error: unclosed character literal
+  ''
+  ^
+	at scala.meta.internal.tokenizers.Reporter.syntaxError(Reporter.scala:23)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError$(Reporter.scala:23)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.syntaxError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError(Reporter.scala:25)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError$(Reporter.scala:25)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.syntaxError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.LegacyScanner.fetchSingleQuote$1(LegacyScanner.scala:414)
+	at scala.meta.internal.tokenizers.LegacyScanner.fetchToken(LegacyScanner.scala:419)
+	at scala.meta.internal.tokenizers.LegacyScanner.nextToken(LegacyScanner.scala:214)
+	at scala.meta.internal.tokenizers.LegacyScanner.foreach(LegacyScanner.scala:982)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.uncachedTokenize(ScalametaTokenizer.scala:23)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.$anonfun$tokenize$1(ScalametaTokenizer.scala:16)
+	at scala.collection.concurrent.TrieMap.getOrElseUpdate(TrieMap.scala:960)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.tokenize(ScalametaTokenizer.scala:16)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer$$anon$2.apply(ScalametaTokenizer.scala:331)
+	at scala.meta.tokenizers.Api$XtensionTokenizeDialectInput.tokenize(Api.scala:25)
+	at scala.meta.tokenizers.Api$XtensionTokenizeInputLike.tokenize(Api.scala:14)
+	at scala.meta.internal.metals.SemanticTokensProvider$.getTokens(SemanticTokensProvider.scala:28)
+	at scala.meta.internal.metals.SemanticTokensProvider$.provide(SemanticTokensProvider.scala:89)
+	at scala.meta.internal.metals.Compilers.$anonfun$semanticTokens$3(Compilers.scala:597)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:467)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.lang.Thread.run(Thread.java:833)
+
+2024.04.28 14:20:57 ERROR Failed to tokenize input for semantic tokens for /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+scala.meta.tokenizers.TokenizeException: <input>:134: error: can't use unescaped LF in character literals
+  '
+   ^
+	at scala.meta.internal.tokenizers.Reporter.syntaxError(Reporter.scala:23)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError$(Reporter.scala:23)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.syntaxError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError(Reporter.scala:25)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError$(Reporter.scala:25)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.syntaxError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.LegacyScanner.fetchSingleQuote$1(LegacyScanner.scala:390)
+	at scala.meta.internal.tokenizers.LegacyScanner.fetchToken(LegacyScanner.scala:419)
+	at scala.meta.internal.tokenizers.LegacyScanner.nextToken(LegacyScanner.scala:214)
+	at scala.meta.internal.tokenizers.LegacyScanner.foreach(LegacyScanner.scala:982)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.uncachedTokenize(ScalametaTokenizer.scala:23)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.$anonfun$tokenize$1(ScalametaTokenizer.scala:16)
+	at scala.collection.concurrent.TrieMap.getOrElseUpdate(TrieMap.scala:960)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.tokenize(ScalametaTokenizer.scala:16)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer$$anon$2.apply(ScalametaTokenizer.scala:331)
+	at scala.meta.tokenizers.Api$XtensionTokenizeDialectInput.tokenize(Api.scala:25)
+	at scala.meta.tokenizers.Api$XtensionTokenizeInputLike.tokenize(Api.scala:14)
+	at scala.meta.internal.metals.SemanticTokensProvider$.getTokens(SemanticTokensProvider.scala:28)
+	at scala.meta.internal.metals.SemanticTokensProvider$.provide(SemanticTokensProvider.scala:89)
+	at scala.meta.internal.metals.Compilers.$anonfun$semanticTokens$3(Compilers.scala:597)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:467)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.lang.Thread.run(Thread.java:833)
+
+2024.04.28 14:21:05 WARN  Using indexes to guess the definition of instruction_cache
+2024.04.28 14:21:05 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:21:05 WARN  Using indexes to guess the definition of BTB_Q
+2024.04.28 14:21:07 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:22:27 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:22:30 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:24:01 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:24:26 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:24:31 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:25:04 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:25:27 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:28:11 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 2:28:34 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 5559
+2024.04.28 14:28:40 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 2:28:45 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 5613
+2024.04.28 14:28:45 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:28:47 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:28:47 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:28:48 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:29:47 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:29:53 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:31:06 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 2:32:04 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 5988
+2024.04.28 14:32:18 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:32:20 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:35:49 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:36:08 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:36:51 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:36:54 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:37:00 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 2:38:20 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 6550
+2024.04.28 14:38:21 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:38:28 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:38:57 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 2:40:28 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 6630
+Apr 28, 2024 2:40:28 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 6631
+2024.04.28 14:40:29 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:41:13 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 2:42:00 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 6670
+2024.04.28 14:42:56 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:43:06 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:43:12 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:50:15 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:50:18 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 2:51:50 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 6905
+2024.04.28 14:51:58 ERROR Failed to tokenize input for semantic tokens for /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+scala.meta.tokenizers.TokenizeException: <input>:187: error: unclosed comment
+    predecoder.io.fetch_packet     := instruction_Q.io.data_out /*/
+                                                                ^
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError(Reporter.scala:27)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError$(Reporter.scala:26)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.incompleteInputError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError(Reporter.scala:29)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError$(Reporter.scala:29)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.incompleteInputError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.LegacyScanner.skipNestedComments(LegacyScanner.scala:55)
+	at scala.meta.internal.tokenizers.LegacyScanner.skipToCommentEnd(LegacyScanner.scala:74)
+	at scala.meta.internal.tokenizers.LegacyScanner.fetchToken(LegacyScanner.scala:316)
+	at scala.meta.internal.tokenizers.LegacyScanner.nextToken(LegacyScanner.scala:214)
+	at scala.meta.internal.tokenizers.LegacyScanner.foreach(LegacyScanner.scala:982)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.uncachedTokenize(ScalametaTokenizer.scala:23)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.$anonfun$tokenize$1(ScalametaTokenizer.scala:16)
+	at scala.collection.concurrent.TrieMap.getOrElseUpdate(TrieMap.scala:960)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.tokenize(ScalametaTokenizer.scala:16)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer$$anon$2.apply(ScalametaTokenizer.scala:331)
+	at scala.meta.tokenizers.Api$XtensionTokenizeDialectInput.tokenize(Api.scala:25)
+	at scala.meta.tokenizers.Api$XtensionTokenizeInputLike.tokenize(Api.scala:14)
+	at scala.meta.internal.metals.SemanticTokensProvider$.getTokens(SemanticTokensProvider.scala:28)
+	at scala.meta.internal.metals.SemanticTokensProvider$.provide(SemanticTokensProvider.scala:89)
+	at scala.meta.internal.metals.Compilers.$anonfun$semanticTokens$3(Compilers.scala:597)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:467)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.lang.Thread.run(Thread.java:833)
+
+2024.04.28 14:51:59 ERROR Failed to tokenize input for semantic tokens for /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+scala.meta.tokenizers.TokenizeException: <input>:187: error: unclosed comment
+    predecoder.io.fetch_packet     := instruction_Q.io.data_out /**
+                                                                ^
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError(Reporter.scala:27)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError$(Reporter.scala:26)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.incompleteInputError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError(Reporter.scala:29)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError$(Reporter.scala:29)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.incompleteInputError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.LegacyScanner.skipNestedComments(LegacyScanner.scala:55)
+	at scala.meta.internal.tokenizers.LegacyScanner.skipToCommentEnd(LegacyScanner.scala:73)
+	at scala.meta.internal.tokenizers.LegacyScanner.fetchToken(LegacyScanner.scala:316)
+	at scala.meta.internal.tokenizers.LegacyScanner.nextToken(LegacyScanner.scala:214)
+	at scala.meta.internal.tokenizers.LegacyScanner.foreach(LegacyScanner.scala:982)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.uncachedTokenize(ScalametaTokenizer.scala:23)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.$anonfun$tokenize$1(ScalametaTokenizer.scala:16)
+	at scala.collection.concurrent.TrieMap.getOrElseUpdate(TrieMap.scala:960)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.tokenize(ScalametaTokenizer.scala:16)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer$$anon$2.apply(ScalametaTokenizer.scala:331)
+	at scala.meta.tokenizers.Api$XtensionTokenizeDialectInput.tokenize(Api.scala:25)
+	at scala.meta.tokenizers.Api$XtensionTokenizeInputLike.tokenize(Api.scala:14)
+	at scala.meta.internal.metals.SemanticTokensProvider$.getTokens(SemanticTokensProvider.scala:28)
+	at scala.meta.internal.metals.SemanticTokensProvider$.provide(SemanticTokensProvider.scala:89)
+	at scala.meta.internal.metals.Compilers.$anonfun$semanticTokens$3(Compilers.scala:597)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:467)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.lang.Thread.run(Thread.java:833)
+
+Apr 28, 2024 2:52:14 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 7023
+2024.04.28 14:52:54 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:52:58 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:53:37 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:53:45 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:54:16 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 2:55:19 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 7325
+2024.04.28 14:55:20 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:55:23 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:55:47 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:55:48 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:55:50 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:56:18 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:56:31 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:56:44 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:56:48 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:56:51 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:57:21 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:57:33 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:57:48 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:57:59 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 14:59:12 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/top.scala
+2024.04.28 15:04:54 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 15:06:57 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 3:27:03 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 8375
+2024.04.28 15:27:09 ERROR Failed to tokenize input for semantic tokens for /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+scala.meta.tokenizers.TokenizeException: <input>:102: error: malformed integer number: Zero length BigInteger
+    val predict_PC     =   RegInit(Decoupled(UInt(32.W), 0x))
+                                                         ^
+	at scala.meta.internal.tokenizers.Reporter.syntaxError(Reporter.scala:23)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError$(Reporter.scala:23)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.syntaxError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError(Reporter.scala:25)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError$(Reporter.scala:25)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.syntaxError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.LegacyTokenData.integerVal(LegacyTokenData.scala:68)
+	at scala.meta.internal.tokenizers.LegacyTokenData.intVal(LegacyTokenData.scala:84)
+	at scala.meta.internal.tokenizers.LegacyTokenData.intVal$(LegacyTokenData.scala:84)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer$$anon$1.intVal(ScalametaTokenizer.scala:23)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.pushLegacyToken$1(ScalametaTokenizer.scala:43)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.emitToken$1(ScalametaTokenizer.scala:200)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.loop$1(ScalametaTokenizer.scala:205)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.uncachedTokenize(ScalametaTokenizer.scala:313)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.$anonfun$tokenize$1(ScalametaTokenizer.scala:16)
+	at scala.collection.concurrent.TrieMap.getOrElseUpdate(TrieMap.scala:960)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.tokenize(ScalametaTokenizer.scala:16)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer$$anon$2.apply(ScalametaTokenizer.scala:331)
+	at scala.meta.tokenizers.Api$XtensionTokenizeDialectInput.tokenize(Api.scala:25)
+	at scala.meta.tokenizers.Api$XtensionTokenizeInputLike.tokenize(Api.scala:14)
+	at scala.meta.internal.metals.SemanticTokensProvider$.getTokens(SemanticTokensProvider.scala:28)
+	at scala.meta.internal.metals.SemanticTokensProvider$.provide(SemanticTokensProvider.scala:89)
+	at scala.meta.internal.metals.Compilers.$anonfun$semanticTokens$3(Compilers.scala:597)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:467)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.lang.Thread.run(Thread.java:833)
+
+2024.04.28 15:27:27 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 15:28:18 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 15:30:45 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 15:30:54 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 15:31:41 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 3:31:45 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 8715
+2024.04.28 15:34:08 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 15:34:16 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 15:34:18 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 3:37:44 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 9110
+2024.04.28 15:37:45 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 15:38:38 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 15:38:42 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 3:38:52 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 9189
+2024.04.28 15:38:55 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 15:42:42 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 15:42:59 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 15:43:19 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 15:45:09 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 15:49:46 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 15:51:01 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 15:52:06 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 15:53:16 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 15:53:18 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 15:54:03 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 15:56:16 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 15:56:37 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 15:58:15 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 3:59:40 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 11054
+2024.04.28 15:59:43 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 16:00:14 WARN  Using indexes to guess the definition of predict_PC
+2024.04.28 16:00:14 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 16:00:19 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 4:00:24 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 11248
+Apr 28, 2024 4:00:27 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 11261
+2024.04.28 16:00:28 ERROR Failed to tokenize input for semantic tokens for /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+scala.meta.tokenizers.TokenizeException: <input>:122: error: unclosed comment
+    predict_PC.valid := 1.B && predict_PC.ready /*
+                                                ^
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError(Reporter.scala:27)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError$(Reporter.scala:26)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.incompleteInputError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError(Reporter.scala:29)
+	at scala.meta.internal.tokenizers.Reporter.incompleteInputError$(Reporter.scala:29)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.incompleteInputError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.LegacyScanner.skipNestedComments(LegacyScanner.scala:55)
+	at scala.meta.internal.tokenizers.LegacyScanner.skipToCommentEnd(LegacyScanner.scala:74)
+	at scala.meta.internal.tokenizers.LegacyScanner.fetchToken(LegacyScanner.scala:316)
+	at scala.meta.internal.tokenizers.LegacyScanner.nextToken(LegacyScanner.scala:214)
+	at scala.meta.internal.tokenizers.LegacyScanner.foreach(LegacyScanner.scala:982)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.uncachedTokenize(ScalametaTokenizer.scala:23)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.$anonfun$tokenize$1(ScalametaTokenizer.scala:16)
+	at scala.collection.concurrent.TrieMap.getOrElseUpdate(TrieMap.scala:960)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.tokenize(ScalametaTokenizer.scala:16)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer$$anon$2.apply(ScalametaTokenizer.scala:331)
+	at scala.meta.tokenizers.Api$XtensionTokenizeDialectInput.tokenize(Api.scala:25)
+	at scala.meta.tokenizers.Api$XtensionTokenizeInputLike.tokenize(Api.scala:14)
+	at scala.meta.internal.metals.SemanticTokensProvider$.getTokens(SemanticTokensProvider.scala:28)
+	at scala.meta.internal.metals.SemanticTokensProvider$.provide(SemanticTokensProvider.scala:89)
+	at scala.meta.internal.metals.Compilers.$anonfun$semanticTokens$3(Compilers.scala:597)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:467)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.lang.Thread.run(Thread.java:833)
+
+2024.04.28 16:00:32 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 4:00:51 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 11418
+2024.04.28 16:00:53 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 16:06:07 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 16:06:28 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 16:08:39 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 16:14:49 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 16:16:18 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 16:18:30 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 4:18:45 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 11886
+2024.04.28 16:18:48 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 4:20:04 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 11954
+2024.04.28 16:20:05 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 16:20:12 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 16:20:18 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 16:20:22 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 16:22:55 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 16:23:10 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 16:23:39 WARN  Using indexes to guess the definition of RAS_read
+2024.04.28 16:23:39 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 16:23:51 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 16:24:03 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 4:24:16 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 12364
+2024.04.28 16:24:46 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 16:32:55 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 16:34:19 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.28 16:35:32 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 16:35:42 WARN  Using indexes to guess the definition of RAS_update
+2024.04.28 16:35:42 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 16:36:34 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.28 16:37:43 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+Apr 28, 2024 4:38:23 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 13206
+2024.04.28 16:38:57 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.28 16:39:11 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.28 16:39:48 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+Apr 28, 2024 4:40:04 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 13670
+Apr 28, 2024 4:40:12 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 13706
+2024.04.28 16:40:21 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.28 16:40:48 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.28 16:40:49 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.28 16:40:53 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.28 16:46:44 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 16:48:11 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 16:48:12 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 16:49:42 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.28 16:50:08 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.28 16:50:32 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.28 16:51:04 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 4:52:36 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 14595
+2024.04.28 16:52:49 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.28 16:52:58 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala
+2024.04.28 16:54:38 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 16:54:50 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 16:58:31 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 16:59:08 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 17:00:54 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 17:03:10 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 17:03:14 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 17:03:32 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 17:03:49 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 17:03:51 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 17:04:05 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 5:04:22 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 15542
+2024.04.28 17:04:30 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 5:04:43 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 15618
+2024.04.28 17:04:48 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 17:27:28 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 17:28:30 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:28:33 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:28:40 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:28:41 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:28:42 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:28:42 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:28:44 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:28:44 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:28:45 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:28:46 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:28:46 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:28:46 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:28:48 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:28:48 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:28:49 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:28:49 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:28:50 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:28:55 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:28:57 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:28:57 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:28:58 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:28:58 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:28:58 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:00 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:00 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:00 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:02 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:02 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:04 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:04 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:05 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:10 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:10 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:11 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:13 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:13 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:14 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:14 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:14 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:16 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:16 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:19 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:20 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:21 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:21 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:22 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:22 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:22 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:24 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:24 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:25 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:25 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:26 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:26 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:27 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:28 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:29 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:29 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:29 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:30 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:31 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:32 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:37 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:38 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:38 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:39 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:39 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:40 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:40 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:41 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:41 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:42 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:43 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:44 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:44 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:45 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:44 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:46 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:46 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:49 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:50 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:50 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:50 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:29:55 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:30:05 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:30:05 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:30:10 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:30:16 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:30:34 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:30:36 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:30:36 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:32:15 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+Apr 28, 2024 5:32:18 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 16602
+2024.04.28 17:33:54 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+Exception in thread "pool-4-thread-1" java.lang.InterruptedException
+	at scala.meta.internal.metals.FutureCancelToken.checkCanceled(FutureCancelToken.scala:29)
+	at scala.meta.internal.pc.CompilerAccess.onCompilerJobQueue$$anonfun$1(CompilerAccess.scala:243)
+	at scala.meta.internal.pc.CompilerJobQueue$Job.run(CompilerJobQueue.scala:152)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+2024.04.28 17:36:19 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:36:26 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:36:44 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:36:44 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:36:54 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.28 17:36:54 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:36:55 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+2024.04.28 17:36:55 WARN  Could not find semantic tokens for: file:///home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:37:05 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:38:08 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:38:18 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:38:25 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:39:06 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+Apr 28, 2024 5:39:08 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 17103
+2024.04.28 17:39:21 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+Apr 28, 2024 5:39:29 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 17159
+2024.04.28 17:39:48 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:39:53 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:40:02 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:40:15 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:40:37 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+Apr 28, 2024 5:40:55 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 17572
+2024.04.28 17:40:56 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:40:58 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:41:12 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:41:30 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+Apr 28, 2024 5:46:00 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 17758
+Apr 28, 2024 5:50:32 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 18405
+2024.04.28 17:51:01 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 17:51:05 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 18:59:18 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 19:18:17 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 19:18:35 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 19:44:13 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 7:45:08 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 20044
+2024.04.28 19:45:09 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 7:46:07 PM scala.meta.internal.pc.CompilerAccess handleError
+SEVERE: A severe compiler error occurred, full details of the error can be found in the error report /home/hakam/ChaosCore/.metals/.reports/metals-full/2024-04-28/r_compiler-error_19-46-07-461.md
+Apr 28, 2024 7:46:22 PM scala.meta.internal.pc.CompilerAccess handleError
+SEVERE: A severe compiler error occurred, full details of the error can be found in the error report /home/hakam/ChaosCore/.metals/.reports/metals-full/2024-04-28/r_compiler-error_19-46-22-131.md
+2024.04.28 19:47:55 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 7:48:43 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 20962
+2024.04.28 19:48:59 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 19:49:21 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 19:49:24 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 19:50:31 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 19:50:37 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 19:50:45 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 7:50:54 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 21284
+Apr 28, 2024 7:51:07 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 21412
+2024.04.28 19:51:14 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 19:51:18 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 7:52:23 PM scala.meta.internal.pc.CompilerAccess handleError
+SEVERE: A severe compiler error occurred, full details of the error can be found in the error report /home/hakam/ChaosCore/.metals/.reports/metals-full/2024-04-28/r_compiler-error_19-52-23-926.md
+2024.04.28 19:52:31 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 19:52:44 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 7:53:55 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 21718
+2024.04.28 19:53:56 WARN  Using indexes to guess the definition of stall
+2024.04.28 19:53:56 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 19:54:36 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 19:56:28 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 19:56:41 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 19:56:47 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 19:56:49 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 28, 2024 7:56:57 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 21938
+2024.04.28 19:57:05 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.28 20:07:09 WARN  Using indexes to guess the definition of Queue
+Apr 28, 2024 8:07:09 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 22047
+2024.04.28 21:19:01 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 21:19:38 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+Apr 28, 2024 9:19:42 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 22887
+2024.04.28 21:19:50 ERROR Failed to tokenize input for semantic tokens for /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+scala.meta.tokenizers.TokenizeException: <input>:36: error: malformed integer number: Zero length BigInteger
+class PC_arbit(GHRWidth:Int = 16, fetchWidth:Int = 4, RASEntries:Int=128, startPC:Int=0x) extends Module{
+                                                                                      ^
+	at scala.meta.internal.tokenizers.Reporter.syntaxError(Reporter.scala:23)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError$(Reporter.scala:23)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.syntaxError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError(Reporter.scala:25)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError$(Reporter.scala:25)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.syntaxError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.LegacyTokenData.integerVal(LegacyTokenData.scala:68)
+	at scala.meta.internal.tokenizers.LegacyTokenData.intVal(LegacyTokenData.scala:84)
+	at scala.meta.internal.tokenizers.LegacyTokenData.intVal$(LegacyTokenData.scala:84)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer$$anon$1.intVal(ScalametaTokenizer.scala:23)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.pushLegacyToken$1(ScalametaTokenizer.scala:43)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.emitToken$1(ScalametaTokenizer.scala:200)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.loop$1(ScalametaTokenizer.scala:205)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.uncachedTokenize(ScalametaTokenizer.scala:313)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.$anonfun$tokenize$1(ScalametaTokenizer.scala:16)
+	at scala.collection.concurrent.TrieMap.getOrElseUpdate(TrieMap.scala:960)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.tokenize(ScalametaTokenizer.scala:16)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer$$anon$2.apply(ScalametaTokenizer.scala:331)
+	at scala.meta.tokenizers.Api$XtensionTokenizeDialectInput.tokenize(Api.scala:25)
+	at scala.meta.tokenizers.Api$XtensionTokenizeInputLike.tokenize(Api.scala:14)
+	at scala.meta.internal.metals.SemanticTokensProvider$.getTokens(SemanticTokensProvider.scala:28)
+	at scala.meta.internal.metals.SemanticTokensProvider$.provide(SemanticTokensProvider.scala:89)
+	at scala.meta.internal.metals.Compilers.$anonfun$semanticTokens$3(Compilers.scala:597)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:467)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.lang.Thread.run(Thread.java:833)
+
+2024.04.28 21:19:51 ERROR Failed to tokenize input for semantic tokens for /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+scala.meta.tokenizers.TokenizeException: <input>:36: error: trailing number separator
+class PC_arbit(GHRWidth:Int = 16, fetchWidth:Int = 4, RASEntries:Int=128, startPC:Int=0x800_) extends Module{
+                                                                                           ^
+	at scala.meta.internal.tokenizers.Reporter.syntaxError(Reporter.scala:23)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError$(Reporter.scala:23)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.syntaxError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError(Reporter.scala:25)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError$(Reporter.scala:25)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.syntaxError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.LegacyScanner.readDigits(LegacyScanner.scala:775)
+	at scala.meta.internal.tokenizers.LegacyScanner.getNumber(LegacyScanner.scala:841)
+	at scala.meta.internal.tokenizers.LegacyScanner.fetchZero$1(LegacyScanner.scala:328)
+	at scala.meta.internal.tokenizers.LegacyScanner.fetchToken(LegacyScanner.scala:339)
+	at scala.meta.internal.tokenizers.LegacyScanner.nextToken(LegacyScanner.scala:214)
+	at scala.meta.internal.tokenizers.LegacyScanner.foreach(LegacyScanner.scala:982)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.uncachedTokenize(ScalametaTokenizer.scala:23)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.$anonfun$tokenize$1(ScalametaTokenizer.scala:16)
+	at scala.collection.concurrent.TrieMap.getOrElseUpdate(TrieMap.scala:960)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.tokenize(ScalametaTokenizer.scala:16)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer$$anon$2.apply(ScalametaTokenizer.scala:331)
+	at scala.meta.tokenizers.Api$XtensionTokenizeDialectInput.tokenize(Api.scala:25)
+	at scala.meta.tokenizers.Api$XtensionTokenizeInputLike.tokenize(Api.scala:14)
+	at scala.meta.internal.metals.SemanticTokensProvider$.getTokens(SemanticTokensProvider.scala:28)
+	at scala.meta.internal.metals.SemanticTokensProvider$.provide(SemanticTokensProvider.scala:89)
+	at scala.meta.internal.metals.Compilers.$anonfun$semanticTokens$3(Compilers.scala:597)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:467)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.lang.Thread.run(Thread.java:833)
+
+2024.04.28 21:19:52 ERROR Failed to tokenize input for semantic tokens for /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+scala.meta.tokenizers.TokenizeException: <input>:36: error: trailing number separator
+class PC_arbit(GHRWidth:Int = 16, fetchWidth:Int = 4, RASEntries:Int=128, startPC:Int=0x8000_) extends Module{
+                                                                                            ^
+	at scala.meta.internal.tokenizers.Reporter.syntaxError(Reporter.scala:23)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError$(Reporter.scala:23)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.syntaxError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError(Reporter.scala:25)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError$(Reporter.scala:25)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.syntaxError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.LegacyScanner.readDigits(LegacyScanner.scala:775)
+	at scala.meta.internal.tokenizers.LegacyScanner.getNumber(LegacyScanner.scala:841)
+	at scala.meta.internal.tokenizers.LegacyScanner.fetchZero$1(LegacyScanner.scala:328)
+	at scala.meta.internal.tokenizers.LegacyScanner.fetchToken(LegacyScanner.scala:339)
+	at scala.meta.internal.tokenizers.LegacyScanner.nextToken(LegacyScanner.scala:214)
+	at scala.meta.internal.tokenizers.LegacyScanner.foreach(LegacyScanner.scala:982)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.uncachedTokenize(ScalametaTokenizer.scala:23)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.$anonfun$tokenize$1(ScalametaTokenizer.scala:16)
+	at scala.collection.concurrent.TrieMap.getOrElseUpdate(TrieMap.scala:960)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.tokenize(ScalametaTokenizer.scala:16)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer$$anon$2.apply(ScalametaTokenizer.scala:331)
+	at scala.meta.tokenizers.Api$XtensionTokenizeDialectInput.tokenize(Api.scala:25)
+	at scala.meta.tokenizers.Api$XtensionTokenizeInputLike.tokenize(Api.scala:14)
+	at scala.meta.internal.metals.SemanticTokensProvider$.getTokens(SemanticTokensProvider.scala:28)
+	at scala.meta.internal.metals.SemanticTokensProvider$.provide(SemanticTokensProvider.scala:89)
+	at scala.meta.internal.metals.Compilers.$anonfun$semanticTokens$3(Compilers.scala:597)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:467)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.lang.Thread.run(Thread.java:833)
+
+2024.04.28 21:19:54 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 21:20:30 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 21:23:44 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+Apr 28, 2024 9:24:55 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 23720
+2024.04.28 21:25:27 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 21:26:50 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 21:26:52 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 21:27:08 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 21:27:20 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 21:27:31 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+Apr 28, 2024 9:28:21 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 24611
+2024.04.28 21:28:27 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 21:34:27 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+Apr 28, 2024 9:34:58 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 24778
+2024.04.28 21:34:58 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 21:36:17 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 21:36:20 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+Apr 28, 2024 9:36:27 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 25185
+2024.04.28 21:36:52 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 21:36:56 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 21:37:09 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 21:37:19 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 21:37:25 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 21:37:50 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 21:39:40 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 21:39:46 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+Apr 28, 2024 9:41:35 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 26413
+2024.04.28 21:41:35 WARN  Using indexes to guess the definition of mispredict
+2024.04.28 21:41:35 WARN  Using indexes to guess the definition of revert
+2024.04.28 21:41:35 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 21:42:41 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 21:42:41 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 21:42:41 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 21:42:41 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 21:42:42 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+Apr 28, 2024 9:43:44 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 26866
+Apr 28, 2024 9:43:52 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 26942
+2024.04.28 21:45:01 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+Apr 28, 2024 9:45:19 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 27211
+2024.04.28 21:45:48 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 21:46:29 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 21:46:29 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 22:03:58 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 22:04:42 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 22:04:56 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 22:05:26 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 22:05:54 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 22:06:15 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+Apr 28, 2024 10:06:36 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 28017
+2024.04.28 22:06:50 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 22:06:57 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 22:07:03 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 22:07:19 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 22:07:39 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 22:08:28 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+Apr 28, 2024 10:08:50 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 28432
+2024.04.28 22:08:50 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 22:08:56 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 22:09:11 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+Apr 28, 2024 10:09:38 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 28541
+Apr 28, 2024 10:09:57 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 28634
+2024.04.28 22:10:10 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 22:10:25 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.28 22:11:09 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+Apr 29, 2024 1:03:55 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 28854
+2024.04.29 01:05:09 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.29 01:05:30 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.29 01:05:49 ERROR Failed to tokenize input for semantic tokens for /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+scala.meta.tokenizers.TokenizeException: <input>:107: error: malformed integer number: Zero length BigInteger
+               L1_instructionCacheSets:Int=64, L1_instructionCacheBlockSizeBytes:Int=32, startPC:Int=0x) extends Module{
+                                                                                                     ^
+	at scala.meta.internal.tokenizers.Reporter.syntaxError(Reporter.scala:23)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError$(Reporter.scala:23)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.syntaxError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError(Reporter.scala:25)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError$(Reporter.scala:25)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.syntaxError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.LegacyTokenData.integerVal(LegacyTokenData.scala:68)
+	at scala.meta.internal.tokenizers.LegacyTokenData.intVal(LegacyTokenData.scala:84)
+	at scala.meta.internal.tokenizers.LegacyTokenData.intVal$(LegacyTokenData.scala:84)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer$$anon$1.intVal(ScalametaTokenizer.scala:23)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.pushLegacyToken$1(ScalametaTokenizer.scala:43)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.emitToken$1(ScalametaTokenizer.scala:200)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.loop$1(ScalametaTokenizer.scala:205)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.uncachedTokenize(ScalametaTokenizer.scala:313)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.$anonfun$tokenize$1(ScalametaTokenizer.scala:16)
+	at scala.collection.concurrent.TrieMap.getOrElseUpdate(TrieMap.scala:960)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.tokenize(ScalametaTokenizer.scala:16)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer$$anon$2.apply(ScalametaTokenizer.scala:331)
+	at scala.meta.tokenizers.Api$XtensionTokenizeDialectInput.tokenize(Api.scala:25)
+	at scala.meta.tokenizers.Api$XtensionTokenizeInputLike.tokenize(Api.scala:14)
+	at scala.meta.internal.metals.SemanticTokensProvider$.getTokens(SemanticTokensProvider.scala:28)
+	at scala.meta.internal.metals.SemanticTokensProvider$.provide(SemanticTokensProvider.scala:89)
+	at scala.meta.internal.metals.Compilers.$anonfun$semanticTokens$3(Compilers.scala:597)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:467)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.lang.Thread.run(Thread.java:833)
+
+2024.04.29 01:05:50 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+Apr 29, 2024 1:06:11 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 29518
+2024.04.29 01:06:29 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.29 01:06:46 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.29 01:07:16 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.29 01:08:04 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.29 01:08:21 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.29 01:09:43 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.29 01:09:47 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.29 01:09:47 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.29 01:09:52 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.29 01:10:28 ERROR Failed to tokenize input for semantic tokens for /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+scala.meta.tokenizers.TokenizeException: <input>:107: error: unclosed string literal
+               L1_instructionCacheSets:Int=64, L1_instructionCacheBlockSizeBytes:Int=32, startPC:UInt="0x8000_0000.U) extends Module{
+                                                                                                      ^
+	at scala.meta.internal.tokenizers.Reporter.syntaxError(Reporter.scala:23)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError$(Reporter.scala:23)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.syntaxError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError(Reporter.scala:25)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError$(Reporter.scala:25)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.syntaxError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.LegacyScanner.getStringLit(LegacyScanner.scala:560)
+	at scala.meta.internal.tokenizers.LegacyScanner.fetchDoubleQuote$1(LegacyScanner.scala:379)
+	at scala.meta.internal.tokenizers.LegacyScanner.fetchToken(LegacyScanner.scala:383)
+	at scala.meta.internal.tokenizers.LegacyScanner.nextToken(LegacyScanner.scala:214)
+	at scala.meta.internal.tokenizers.LegacyScanner.foreach(LegacyScanner.scala:982)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.uncachedTokenize(ScalametaTokenizer.scala:23)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.$anonfun$tokenize$1(ScalametaTokenizer.scala:16)
+	at scala.collection.concurrent.TrieMap.getOrElseUpdate(TrieMap.scala:960)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.tokenize(ScalametaTokenizer.scala:16)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer$$anon$2.apply(ScalametaTokenizer.scala:331)
+	at scala.meta.tokenizers.Api$XtensionTokenizeDialectInput.tokenize(Api.scala:25)
+	at scala.meta.tokenizers.Api$XtensionTokenizeInputLike.tokenize(Api.scala:14)
+	at scala.meta.internal.metals.SemanticTokensProvider$.getTokens(SemanticTokensProvider.scala:28)
+	at scala.meta.internal.metals.SemanticTokensProvider$.provide(SemanticTokensProvider.scala:89)
+	at scala.meta.internal.metals.Compilers.$anonfun$semanticTokens$3(Compilers.scala:597)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:467)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.lang.Thread.run(Thread.java:833)
+
+2024.04.29 01:10:42 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.29 01:10:42 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.29 01:10:42 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.29 01:10:42 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.29 01:10:47 ERROR Failed to tokenize input for semantic tokens for /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+scala.meta.tokenizers.TokenizeException: <input>:36: error: unclosed string literal
+class PC_arbit(GHRWidth:Int = 16, fetchWidth:Int = 4, RASEntries:Int=128, startPC:UInt="0x8000_0000.U) extends Module{
+                                                                                       ^
+	at scala.meta.internal.tokenizers.Reporter.syntaxError(Reporter.scala:23)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError$(Reporter.scala:23)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.syntaxError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError(Reporter.scala:25)
+	at scala.meta.internal.tokenizers.Reporter.syntaxError$(Reporter.scala:25)
+	at scala.meta.internal.tokenizers.Reporter$$anon$1.syntaxError(Reporter.scala:33)
+	at scala.meta.internal.tokenizers.LegacyScanner.getStringLit(LegacyScanner.scala:560)
+	at scala.meta.internal.tokenizers.LegacyScanner.fetchDoubleQuote$1(LegacyScanner.scala:379)
+	at scala.meta.internal.tokenizers.LegacyScanner.fetchToken(LegacyScanner.scala:383)
+	at scala.meta.internal.tokenizers.LegacyScanner.nextToken(LegacyScanner.scala:214)
+	at scala.meta.internal.tokenizers.LegacyScanner.foreach(LegacyScanner.scala:982)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.uncachedTokenize(ScalametaTokenizer.scala:23)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.$anonfun$tokenize$1(ScalametaTokenizer.scala:16)
+	at scala.collection.concurrent.TrieMap.getOrElseUpdate(TrieMap.scala:960)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer.tokenize(ScalametaTokenizer.scala:16)
+	at scala.meta.internal.tokenizers.ScalametaTokenizer$$anon$2.apply(ScalametaTokenizer.scala:331)
+	at scala.meta.tokenizers.Api$XtensionTokenizeDialectInput.tokenize(Api.scala:25)
+	at scala.meta.tokenizers.Api$XtensionTokenizeInputLike.tokenize(Api.scala:14)
+	at scala.meta.internal.metals.SemanticTokensProvider$.getTokens(SemanticTokensProvider.scala:28)
+	at scala.meta.internal.metals.SemanticTokensProvider$.provide(SemanticTokensProvider.scala:89)
+	at scala.meta.internal.metals.Compilers.$anonfun$semanticTokens$3(Compilers.scala:597)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:467)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.lang.Thread.run(Thread.java:833)
+
+2024.04.29 01:10:54 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+Apr 29, 2024 1:11:39 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 30073
+2024.04.29 01:16:17 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.29 01:17:27 WARN  Using indexes to guess the definition of fetch_packet
+2024.04.29 01:17:27 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.29 01:18:40 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.29 01:19:10 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.29 01:24:31 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+Apr 29, 2024 1:24:59 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 30796
+2024.04.29 01:25:38 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+Apr 29, 2024 1:27:33 AM scala.meta.internal.pc.CompilerAccess handleError
+SEVERE: A severe compiler error occurred, full details of the error can be found in the error report /home/hakam/ChaosCore/.metals/.reports/metals-full/2024-04-29/r_compiler-error_01-27-33-415.md
+2024.04.29 01:27:35 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+Apr 29, 2024 1:28:28 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 31040
+2024.04.29 01:29:02 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+2024.04.29 01:29:59 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.29 01:32:31 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.29 01:34:52 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.29 01:35:14 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.29 01:37:14 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.29 01:37:18 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.29 01:37:21 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.29 01:38:26 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.29 01:38:37 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.29 01:38:50 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.29 01:39:04 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.29 01:39:06 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.29 01:42:06 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.29 01:42:58 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.29 01:43:08 WARN  no build target for: /home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala
+2024.04.29 02:11:55 INFO  Shutting down server
+2024.04.29 02:11:55 INFO  shutting down Metals
+2024.04.29 02:11:55 INFO  Shut down connection with build server.
+2024.04.29 02:11:55 INFO  Exiting server
