@@ -1,14 +1,11 @@
 import random
 import sys
 from pathlib import Path
-sys.path.append(str(Path("../..").resolve()))
+import numpy as np
 from utils import *
-sys.path.append('models/instructionCache')
-#
-sys.path.append(str(Path("../genericLRU").resolve()))
-sys.path.append('models/instructionCache')
-from genericCache import *
-sys.path.append(str(Path("../instructionCache").resolve()))
+
+from genericLRU.genericCache import genericCache, LRU
+
 
 validator = [[0b11, 0b01], [0b1111, 0b0111, 0b0011, 0b0001]]
 
@@ -84,21 +81,3 @@ class instructionCache():
 
     def print(self):
         self.cache.print()
-
-SETS = 64
-WAYS = 2
-BLOCK_SIZE = 32
-
-if __name__=="__main__":
-    instructionCache0 = instructionCache(sets=64, ways=2, blockSize=32, fetchWidth=4)
-
-    addrA = generateAddr(tag=0x42, set=0, byteOffset=0, sets=SETS, blockSize=BLOCK_SIZE)
-    addrA = 0x8B074c90
-    addrA=0x2E928
-    dataA = bytearray.fromhex("deadbeef")
-    cache_line_A = genericCacheLine(blockSize=BLOCK_SIZE, data=dataA)
-    instructionCache0.allocate(address=addrA, data=cache_line_A)
-
-    test = instructionCache0.read(address=addrA)
-    print(test[0])
-    

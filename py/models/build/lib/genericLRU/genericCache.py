@@ -1,9 +1,7 @@
 import random
 import sys
 from pathlib import Path
-sys.path.append(str(Path("../..").resolve()))
-from utils import *
-#sys.path.append('models/genericLRU/')
+from ..utils import *
 
 class genericCacheLine:
     def __init__(self, blockSize, data=0x0):
@@ -223,26 +221,3 @@ class genericCache():
             print(f"\n\n=======\nWay {way} \n=======\n\n")
             self.cacheWays[way].print()
 
-SETS = 64
-WAYS = 2
-BLOCK_SIZE = 32
-
-if __name__ == "__main__":
-
-    cache = genericCache(sets=SETS, ways=WAYS, blockSize=BLOCK_SIZE, evictionPolicy=LRU)
-    # Initialize data for cache line
-    data = bytearray.fromhex("deadbeef")
-    cache_line = genericCacheLine(blockSize=BLOCK_SIZE, data=data)
-    
-    # Generate an address
-    addr = generateAddr(tag=0x1, set=63, byteOffset=0, sets=SETS, blockSize=BLOCK_SIZE)
-    
-    # Allocate data to the cache
-    cache.allocate(address=addr, data=cache_line)
-    
-    # Verify the data is allocated to the cache
-    hit, read_data = cache.read(address=addr, bytes=4)
-    assert hit == 1
-    print(read_data)
-    print(data)
-    assert read_data == data
