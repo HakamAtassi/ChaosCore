@@ -8,9 +8,7 @@ TOPLEVEL_LANG ?= verilog
 
 VERILOG_DIR = ../../../../hw/verilog/Frontend
 
-
-SIM_ARGS=-Wno-DECLFILENAME -Wno-UNUSED -Wno-UNDRIVEN -Wno-WIDTH -Wno-UNOPTFLAT -Wno-WIDTHEXPAND
-
+COMPILE_ARGS += -Wno-DECLFILENAME -Wno-UNUSED -Wno-UNDRIVEN -Wno-WIDTH -Wno-UNOPTFLAT -Wno-WIDTHEXPAND -j 4
 
 EXTRA_ARGS += --trace-fst --trace-structs
 
@@ -23,8 +21,7 @@ VERILOG_SOURCES += $(VERILOG_DIR)/instruction_cache.v
 # TOPLEVEL is the name of the toplevel module in your Verilog or VHDL file
 TOPLEVEL = L1_instruction_cache
 
-
-MODULE = functional_tests
+MODULE = instruction_cache_tests
 
 # include cocotb's make rules to take care of the simulator setup
 include $(shell cocotb-config --makefiles)/Makefile.sim

@@ -1,0 +1,6 @@
+<testsuites name="results">
+  <testsuite name="all" package="all">
+    <property name="random_seed" value="1714395875" />
+    <testcase name="instructionCacheFuzz_hits_only" classname="instruction_cache_tests" file="/home/hakam/ChaosCore/cocotb/functional_tests/Frontend/instruction_cache/instruction_cache_tests.py" lineno="37" time="0.0014159679412841797" sim_time_ns="11.001" ratio_time="7769.24369489813" />
+  </testsuite>
+</testsuites>
