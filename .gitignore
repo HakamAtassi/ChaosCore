@@ -21,3 +21,6 @@ sim_build/
 
 pipelined_non_restoring.c
 
+*.bsp
+*.metals
+*.scala-build
