@@ -1,7 +1,0 @@
-setup.py
-cocotb_utils/__init__.py
-cocotb_utils/cocotb_utils.py
-models.egg-info/PKG-INFO
-models.egg-info/SOURCES.txt
-models.egg-info/dependency_links.txt
-models.egg-info/top_level.txt
