@@ -1,6 +1,6 @@
-from instructionCache import instructionCache as ic
-
+from instructionCache import *
 
 if __name__ == "__main__":
     print("test")
-    cache = ic(sets=64, ways=2, blockSize=32, fetchWidth=4)
+    cache = instructionCache(sets=64, ways=2, blockSize=32, fetchWidth=4)
+    cache.print()

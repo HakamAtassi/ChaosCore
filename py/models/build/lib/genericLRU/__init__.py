@@ -1,1 +1,1 @@
-from .genericCache import genericCache
+from .genericLRU import genericCache, LRU

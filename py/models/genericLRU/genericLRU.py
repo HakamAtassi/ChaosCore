@@ -1,7 +1,7 @@
 import random
 import sys
 from pathlib import Path
-from utils import *
+from utils.utils import *
 
 class genericCacheLine:
     def __init__(self, blockSize, data=0x0):
