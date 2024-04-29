@@ -67,7 +67,6 @@ class metadata extends Bundle{
 /////////////////
 
 class commit(fetchWidth:Int=4, GHRWidth:Int=16, BTBEntries:Int=4096) extends Bundle{
-    val valid   = Input(Bool())
     val PC      = Input(UInt(32.W))
     val GHR     = Input(UInt(GHRWidth.W))
     val T_NT    = Input(Bool())
@@ -79,7 +78,6 @@ class commit(fetchWidth:Int=4, GHRWidth:Int=16, BTBEntries:Int=4096) extends Bun
 }
 
 class mispredict(GHRWidth:Int=16, RASEntries:Int = 128) extends Bundle{
-    val valid   = Input(Bool())
     val PC      = Input(UInt(32.W)) //
     val GHR     = Input(UInt(GHRWidth.W))  // To reset GHR
     val TOS     = Input(UInt(log2Ceil(RASEntries).W))  // To reset GHR
@@ -99,7 +97,6 @@ class RAS_read(RASEntries:Int=128) extends Bundle{
 }
 
 class revert(GHRWidth:Int=16) extends Bundle{
-    val valid             = Input(Bool())
     val GHR               = Input(UInt(GHRWidth.W))
     val PC                = Input(UInt(32.W))
 }

@@ -113,8 +113,8 @@ class Frontend(GHRWidth:Int=16, fetchWidth:Int=4, RASEntries:Int=128, BTBEntries
         val misprediction_PC  =   Flipped(Decoupled(UInt(32.W)))                              // Input
         val exception_PC      =   Flipped(Decoupled(UInt(32.W)))                              // Input
         
-        val commit            =   new commit(fetchWidth=fetchWidth)                           // Input
-        val mispredict        =   new mispredict(GHRWidth=GHRWidth, RASEntries=RASEntries)    // Input
+        val commit            =   Flipped(Decoupled(new commit(fetchWidth=fetchWidth)))                           // Input
+        val mispredict        =   Flipped(Decoupled(new mispredict(GHRWidth=GHRWidth, RASEntries=RASEntries)))    // Input
 
         val cache_addr        =   Decoupled(UInt(32.W))                                       // outputs to DRAM
         val dram_data         =   Flipped(Decoupled(UInt(dataSizeBits.W)))                    // inputs from DRAM
@@ -147,51 +147,54 @@ class Frontend(GHRWidth:Int=16, fetchWidth:Int=4, RASEntries:Int=128, BTBEntries
     ///////////////////
     // PC GENERATION //
     ///////////////////
+    predict_PC.bits  := PC_gen.io.PC_next.bits        // Good
+    predict_PC.valid := PC_gen.io.PC_next.valid       // Good
+    predict_PC.ready := (!PC_Q.io.full) && bp.io.predict.ready  // Good
 
-    predict_PC.bits  := PC_gen.io.PC_next.bits
-    predict_PC.valid := 1.B && predict_PC.ready /*FIXME: incomplete. Valid only high when the value itself is valid and is ready to be accepted. */
-    predict_PC.ready := (!PC_Q.io.full) && bp.io.predict.ready
+    PC_gen.io.mispredict.bits   := io.mispredict.bits
+    PC_gen.io.mispredict.valid  := io.mispredict.valid
 
-    PC_gen.io.mispredict  := io.mispredict
-    PC_gen.io.prediction.bits  := bp.io.prediction.bits
+    PC_gen.io.prediction.bits   := bp.io.prediction.bits
     PC_gen.io.prediction.valid  := bp.io.prediction.valid
-    PC_gen.io.revert      := predecoder.io.revert
-    PC_gen.io.PC_next.ready := 1.B
 
-    PC_gen.io.RAS_read := bp.io.RAS_read
+    PC_gen.io.revert.bits       := predecoder.io.revert.bits
+    PC_gen.io.revert.valid      := predecoder.io.revert.valid
+
+    PC_gen.io.RAS_read     := bp.io.RAS_read
+
+    PC_gen.io.PC_next.ready := 1.B
 
     //////////////
     // PC Queue //
     //////////////
-
     PC_Q.io.wr_en       :=  predict_PC.valid         // Write to PC_Q whenever the PC is valid
     PC_Q.io.data_in     :=  predict_PC.bits
-    PC_Q.io.rd_en       :=  (!PC_Q.io.empty && instruction_cache.io.cpu_addr.ready)  // Read from PC_Q whenever I$ is ready
+    PC_Q.io.rd_en       :=  (instruction_cache.io.cpu_addr.ready)  
     PC_Q.io.clear       :=  0.B /* TODO: */
 
     ///////////////////////
     // INSTRUCTION QUEUE //
     ///////////////////////
-    instruction_Q.io.wr_en       :=  instruction_cache.io.resp_valid    // FIXME: resp_valid should really be apart of fetch_packet
-    instruction_Q.io.data_in     :=  instruction_cache.io.cache_data
-    instruction_Q.io.rd_en       :=  (!BTB_Q.io.empty && !instruction_Q.io.empty && predecoder.io.fetch_packet.ready)
+    instruction_Q.io.wr_en       :=  instruction_cache.io.cache_data.valid    // Good
+    instruction_Q.io.data_in     :=  instruction_cache.io.cache_data.bits
+    instruction_Q.io.rd_en       :=  (!BTB_Q.io.empty && predecoder.io.fetch_packet.ready)
     instruction_Q.io.clear       :=  0.B
 
     ///////////////
     // BTB QUEUE //
     ///////////////
-
     BTB_Q.io.wr_en               :=  bp.io.prediction.valid
     BTB_Q.io.data_in             :=  bp.io.prediction.bits
-    BTB_Q.io.rd_en               :=  (!instruction_Q.io.empty && !BTB_Q.io.empty && predecoder.io.prediction.ready)
+    BTB_Q.io.rd_en               :=  (!instruction_Q.io.empty && predecoder.io.prediction.ready)
     BTB_Q.io.clear               :=  0.B
   
     ///////////////////////
     // INSTRUCTION CACHE //
     ///////////////////////
+    instruction_cache.io.cache_data.ready     :=   !instruction_Q.io.full
 
     // Attach PC_Q to instruction cache
-    instruction_cache.io.cpu_addr.bits     :=   PC_Q.io.data_out 
+    instruction_cache.io.cpu_addr.bits     :=   PC_Q.io.data_out
     instruction_cache.io.cpu_addr.valid    :=   (!PC_Q.io.empty)
 
     // Dram resp
@@ -206,33 +209,40 @@ class Frontend(GHRWidth:Int=16, fetchWidth:Int=4, RASEntries:Int=128, BTBEntries
     // kill 
     instruction_cache.io.kill              := 0.B
 
-
     ////////
     // BP //
     ////////
 
     // BP inputs (external)
-    bp.io.commit            :=  io.commit
-    bp.io.mispredict        :=  io.mispredict
+    bp.io.commit.bits       :=  io.commit.bits
+    bp.io.commit.valid      :=  io.commit.valid
+
+    bp.io.mispredict.bits   :=  io.mispredict.bits
+    bp.io.mispredict.valid  :=  io.mispredict.valid
 
     // BP inputs (internal)
     bp.io.predict.bits      :=  predict_PC.bits
     bp.io.predict.valid     :=  predict_PC.valid
-    bp.io.RAS_update        :=  predecoder.io.RAS_update
-    bp.io.revert            :=  predecoder.io.revert
 
+    bp.io.RAS_update        :=  predecoder.io.RAS_update
+
+    bp.io.revert.bits       :=  predecoder.io.revert.bits
+    bp.io.revert.valid      :=  predecoder.io.revert.valid
+
+    // Outputs
     bp.io.prediction.ready  := !BTB_Q.io.empty
+    predecoder.io.RAS_read := bp.io.RAS_read
 
     ////////////////
     // PREDECODER //
     ////////////////
+    predecoder.io.prediction.bits    :=   BTB_Q.io.data_out
+    predecoder.io.prediction.valid   :=   !BTB_Q.io.empty
 
-    predecoder.io.prediction.bits       := BTB_Q.io.data_out
-    predecoder.io.prediction.valid      := !BTB_Q.io.empty
-    predecoder.io.fetch_packet.bits     := instruction_Q.io.data_out /* FIXME: This should be decoupled...*/
-    predecoder.io.fetch_packet.valid    := !instruction_Q.io.empty
-    predecoder.io.RAS_read              := bp.io.RAS_read
+    predecoder.io.fetch_packet.bits  :=   instruction_Q.io.data_out 
+    predecoder.io.fetch_packet.valid :=   !instruction_Q.io.empty
 
+    predecoder.io.RAS_read           :=   bp.io.RAS_read
 
     /////////////
     // OUTPUTS //
@@ -240,6 +250,9 @@ class Frontend(GHRWidth:Int=16, fetchWidth:Int=4, RASEntries:Int=128, BTBEntries
     
     io.misprediction_PC.ready := 1.U
     io.exception_PC.ready := 1.U
+    io.commit.ready := 1.U
+    io.mispredict.ready := 1.U
+    predecoder.io.revert.ready := PC_gen.io.revert.ready && bp.io.revert.ready // FIXME: when is revert ready??
 
     io.fetch_packet.bits := predecoder.io.final_fetch_packet.bits
     io.fetch_packet.valid := predecoder.io.final_fetch_packet.valid

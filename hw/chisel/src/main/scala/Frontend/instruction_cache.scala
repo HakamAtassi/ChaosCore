@@ -67,6 +67,8 @@ class instruction_validator(fetchWidth: Int = 4) extends Module {
   io.instruction_output := lookupTable(io.instruction_index)
 }
 
+
+
 class L1_instruction_cache(fetchWidth:Int=4, ways:Int=2, sets:Int = 64, blockSizeBytes:Int = 64) extends Module{
 
 
@@ -100,8 +102,7 @@ class L1_instruction_cache(fetchWidth:Int=4, ways:Int=2, sets:Int = 64, blockSiz
                                                                                   // FIXME: this should be a bool
 
         // Outputs
-        val cache_data         =     new fetch_packet(fetchWidth=fetchWidth)
-        val resp_valid         =     Output(Bool())
+        val cache_data         =     Decoupled(new fetch_packet(fetchWidth=fetchWidth))
 
         val cache_addr         =     Decoupled(UInt(32.W))                        // outputs to DRAM
     })
@@ -206,7 +207,11 @@ class L1_instruction_cache(fetchWidth:Int=4, ways:Int=2, sets:Int = 64, blockSiz
     current_addr := Mux(cache_state=/=cacheState.Active, replay_addr, io.cpu_addr.bits) // During allocate and replay, current address is from buffered request. 
     current_data := Cat(1.U, replay_tag, io.dram_data.bits)                             // 1 Bit valid, N bit tag, N bit data
 
-    io.cpu_addr.ready := (cache_state === cacheState.Active) && !miss                   // Even in active, cache can be non-ready due to detected miss
+    // For a new input to be accepted:
+    // cache must be active
+    // cache must not have just received a miss
+    // output must be disposable 
+    io.cpu_addr.ready := (cache_state === cacheState.Active) && !miss && io.cache_data.ready                  // Even in active, cache can be non-ready due to detected miss
 
     ////////////////
     // LRU MEMORY //
@@ -287,18 +292,18 @@ class L1_instruction_cache(fetchWidth:Int=4, ways:Int=2, sets:Int = 64, blockSiz
 
 
     for(i <- 0 until fetchWidth){
-        io.cache_data.instructions(i):= instruction_vec(packet_index*fetchWidth.U + i.U)   
+        io.cache_data.bits.instructions(i):= instruction_vec(packet_index*fetchWidth.U + i.U)   
     }
 
     val validator = Module(new instruction_validator(fetchWidth=fetchWidth))
     validator.io.instruction_index := current_addr_instruction_offset
 
     for(i <- 0 until fetchWidth){
-        io.cache_data.valid_bits(i):= RegNext(validator.io.instruction_output(fetchWidth-1-i)) && hit && (io.kill === 0.U)  // only valid if not hit
+        io.cache_data.bits.valid_bits(i):= RegNext(validator.io.instruction_output(fetchWidth-1-i)) && hit && (io.kill === 0.U)  // only valid if not hit
     }
-    io.resp_valid   := hit && (io.kill === 0.U)
+    io.cache_data.valid   := hit && (io.kill === 0.U)
 
-    io.cache_data.fetch_PC := fetch_PC_buf
+    io.cache_data.bits.fetch_PC := fetch_PC_buf
 
     // Kill handling
     // Kills essentially mean that a redirect or similar is taking place. Any in-progress computations/reads/writes/etc and invalidated after a kill
