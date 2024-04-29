@@ -2,9 +2,9 @@ import random
 import sys
 from pathlib import Path
 import numpy as np
-from ..utils import *
+from utils.utils import *
 
-from genericLRU.genericCache import genericCache
+from genericLRU.genericCache import genericCache, LRU
 
 
 validator = [[0b11, 0b01], [0b1111, 0b0111, 0b0011, 0b0001]]

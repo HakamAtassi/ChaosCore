@@ -3,16 +3,9 @@ import numpy as np
 import cocotb
 from cocotb.triggers import Timer
 from cocotb.triggers import RisingEdge, FallingEdge, Timer
-
-import random
-import sys
 from pathlib import Path
-sys.path.append(str(Path("../../../lib/models/instructionCache/").resolve()))
-sys.path.append(str(Path("../../../lib/models/genericLRU/").resolve()))
-sys.path.append(str(Path("../../../lib/").resolve()))
-from utils import *
-from instructionCache import *
 
+from instructionCache import *
 
 SETS = 64
 WAYS = 2
