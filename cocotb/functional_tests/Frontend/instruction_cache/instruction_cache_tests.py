@@ -7,7 +7,7 @@ from cocotb.triggers import RisingEdge, FallingEdge, Timer
 from pathlib import Path
 
 from instructionCache import *  # import model
-from cocotb_utils import *
+from cocotb_utils import *      # import verif utils
 
 SETS = 64
 WAYS = 2

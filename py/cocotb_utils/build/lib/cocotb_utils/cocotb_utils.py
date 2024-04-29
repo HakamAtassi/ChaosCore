@@ -21,3 +21,7 @@ async def reset(dut):
     dut.reset.value = 0
     await RisingEdge(dut.clock)
 
+
+def test():
+    print("TEST FROM AIDS")
+
