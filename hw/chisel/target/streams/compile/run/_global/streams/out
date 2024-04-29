@@ -5,14 +5,8 @@
 [0m[[0m[31merror[0m] [0m[0mSTDOUT:[0m
 [0m[[0m[31merror[0m] [0m[0m[0m
 [0m[[0m[31merror[0m] [0m[0mSTDERR:[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:131:37: error: sink "" not fully initialized in "Frontend"[0m
-[0m[[0m[31merror[0m] [0m[0m    val PC_gen              = Module(new PC_arbit(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, startPC=startPC))[0m
-[0m[[0m[31merror[0m] [0m[0m                                    ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:131:37: error: sink "" not fully initialized in "Frontend"[0m
-[0m[[0m[31merror[0m] [0m[0m    val PC_gen              = Module(new PC_arbit(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, startPC=startPC))[0m
-[0m[[0m[31merror[0m] [0m[0m                                    ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:131:37: error: sink "" not fully initialized in "Frontend"[0m
-[0m[[0m[31merror[0m] [0m[0m    val PC_gen              = Module(new PC_arbit(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, startPC=startPC))[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:130:37: error: sink "" not fully initialized in "Frontend"[0m
+[0m[[0m[31merror[0m] [0m[0m    val predecoder          = Module(new decode_validate(fetchWidth=fetchWidth, GHRWidth=GHRWidth, RASEntries=RASEntries))[0m
 [0m[[0m[31merror[0m] [0m[0m                                    ^[0m
 [0m[[0m[31merror[0m] [0m[0m[0m
 [0m[[0m[31merror[0m] [0m[0m------------------------------------------------------------------------------[0m
@@ -23,14 +17,8 @@
 [0m[[0m[31merror[0m] [0m[0mSTDOUT:[0m
 [0m[[0m[31merror[0m] [0m[0m[0m
 [0m[[0m[31merror[0m] [0m[0mSTDERR:[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:131:37: error: sink "" not fully initialized in "Frontend"[0m
-[0m[[0m[31merror[0m] [0m[0m    val PC_gen              = Module(new PC_arbit(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, startPC=startPC))[0m
-[0m[[0m[31merror[0m] [0m[0m                                    ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:131:37: error: sink "" not fully initialized in "Frontend"[0m
-[0m[[0m[31merror[0m] [0m[0m    val PC_gen              = Module(new PC_arbit(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, startPC=startPC))[0m
-[0m[[0m[31merror[0m] [0m[0m                                    ^[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:131:37: error: sink "" not fully initialized in "Frontend"[0m
-[0m[[0m[31merror[0m] [0m[0m    val PC_gen              = Module(new PC_arbit(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, startPC=startPC))[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:130:37: error: sink "" not fully initialized in "Frontend"[0m
+[0m[[0m[31merror[0m] [0m[0m    val predecoder          = Module(new decode_validate(fetchWidth=fetchWidth, GHRWidth=GHRWidth, RASEntries=RASEntries))[0m
 [0m[[0m[31merror[0m] [0m[0m                                    ^[0m
 [0m[[0m[31merror[0m] [0m[0m[0m
 [0m[[0m[31merror[0m] [0m[0m------------------------------------------------------------------------------[0m

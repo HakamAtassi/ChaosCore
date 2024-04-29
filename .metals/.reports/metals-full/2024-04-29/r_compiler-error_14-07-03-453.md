@@ -1,3 +1,25 @@
+file://<WORKSPACE>/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+### dotty.tools.dotc.core.TypeError$$anon$1: Toplevel definition prediction is defined in
+  <WORKSPACE>/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+and also in
+  <WORKSPACE>/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+One of these files should be removed from the classpath.
+
+occurred in the presentation compiler.
+
+presentation compiler configuration:
+Scala version: 3.3.1
+Classpath:
+<HOME>/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala3-library_3/3.3.1/scala3-library_3-3.3.1.jar [exists ], <HOME>/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala-library/2.13.10/scala-library-2.13.10.jar [exists ]
+Options:
+
+
+
+action parameters:
+offset: 3743
+uri: file://<WORKSPACE>/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+text:
+```scala
 /* ------------------------------------------------------------------------------------
 * Filename: PC_arbit.scala
 * Author: Hakam Atassi
@@ -36,9 +58,9 @@ import java.rmi.server.UID
 class PC_arbit(GHRWidth:Int = 16, fetchWidth:Int = 4, RASEntries:Int=128, startPC:UInt="h80000000".U) extends Module{
 
     val io = IO(new Bundle{
-        val mispredict  = Flipped(Decoupled(new mispredict(GHRWidth=GHRWidth, RASEntries=RASEntries)))                       // external mispredict
+        val mispredict  = Decoupled(new mispredict(GHRWidth=GHRWidth, RASEntries=RASEntries))                       // external mispredict
         val prediction  = Flipped(Decoupled(new prediction(fetchWidth=fetchWidth, GHRWidth=GHRWidth)))    // BTB response
-        val revert      = Flipped(Decoupled(new revert(GHRWidth=GHRWidth)))                                                   // Pre-decoder revert request
+        val revert      = Decoupled(new revert(GHRWidth=GHRWidth))                                                   // Pre-decoder revert request
         val RAS_read    = Flipped(new RAS_read(RASEntries=RASEntries))
         // TODO: Exception:...                                                                            // exception
 
@@ -80,20 +102,37 @@ class PC_arbit(GHRWidth:Int = 16, fetchWidth:Int = 4, RASEntries:Int=128, startP
     }
     
     
-    // FIXME: is this accurate
-    io.mispredict.ready  := 1.B
-    io.prediction.ready  := 1.B
-    io.revert.ready      := 1.B
+    io.prediction.ready := 1.B  // FIXME: when is this actually ready
+    io.PC_next.valid    := 1.B
 
-    io.PC_next.valid     := 1.B
+    i@@mispredict  = 
+    iprediction  = 
+    irevert      = 
+    iRAS_read    =
 
         
-    when(sel_mispred)       {io.PC_next.bits := io.mispredict.bits.PC}
+    when(sel_mispred)       {io.PC_next.bits := io.mispredict.PC}
     //.elsewhen(sel_exception){io.PC_next.bits := io.exception.PC}
-    .elsewhen(sel_revert)   {io.PC_next.bits := io.revert.bits.PC}
+    .elsewhen(sel_revert)   {io.PC_next.bits := io.revert.PC}
     .elsewhen(sel_ret)      {io.PC_next.bits := io.RAS_read.ret_addr}
     .elsewhen(sel_target)   {io.PC_next.bits := io.prediction.bits.target}
     .elsewhen(sel_PC_4)     {io.PC_next.bits := PC}
     .otherwise              {io.PC_next.bits := 0.U}
 
 }
+```
+
+
+
+#### Error stacktrace:
+
+```
+
+```
+#### Short summary: 
+
+dotty.tools.dotc.core.TypeError$$anon$1: Toplevel definition prediction is defined in
+  <WORKSPACE>/hw/chisel/src/main/scala/Frontend/BP/PC_arbit.scala
+and also in
+  <WORKSPACE>/hw/chisel/src/main/scala/Frontend/BP/bundles.scala
+One of these files should be removed from the classpath.

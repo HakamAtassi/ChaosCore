@@ -69,23 +69,17 @@ class decode_validate(fetchWidth:Int=4,GHRWidth:Int=16, RASEntries:Int=128) exte
 
     val io = IO(new Bundle{
         //val BTB_resp     = Input(new BTB_resp())
-        val prediction   = Flipped(Decoupled(new prediction(fetchWidth=fetchWidth, GHRWidth=GHRWidth)))
-        val fetch_packet = Flipped(Decoupled(new fetch_packet(fetchWidth=fetchWidth)))
+        val prediction          = Flipped(Decoupled(new prediction(fetchWidth=fetchWidth, GHRWidth=GHRWidth)))
+        val fetch_packet        = Flipped(Decoupled(new fetch_packet(fetchWidth=fetchWidth)))
 
-        // kill incoming instructions
-        val kill = Output(Bool())
+        val kill                = Output(Bool())                                        // kill incoming instructions
 
-        // Redirect frontend
-        val revert      = Output(new revert(GHRWidth=fetchWidth))
+        val revert              = Decoupled(new revert(GHRWidth=GHRWidth))   // Redirect frontend // FIXME: should be output...
 
-        // Output validated instructions
-        val final_fetch_packet = Decoupled(new fetch_packet())
+        val final_fetch_packet  = Decoupled(new fetch_packet())                         // Output validated instructions
 
-        // RAS control
-        // FIXME: change this to a RAS channel
-
-        val RAS_update         = Flipped(new RAS_update)
-        val RAS_read           = Flipped(new RAS_read(RASEntries=RASEntries))
+        val RAS_update          = Flipped(new RAS_update)                               // RAS control
+        val RAS_read            = Flipped(new RAS_read(RASEntries=RASEntries))
 
     })
 
@@ -202,13 +196,11 @@ class decode_validate(fetchWidth:Int=4,GHRWidth:Int=16, RASEntries:Int=128) exte
         }
     }
 
-    packet_valid    := (FSM2_state === validate_packet.packet_valid)
-    io.kill         := PC_mismatch
-    io.revert.valid := PC_mismatch
-    io.revert.GHR   := GHR_reg
-    io.revert.PC    := PC_expected
-
-
+    packet_valid         := (FSM2_state === validate_packet.packet_valid)
+    io.kill              := PC_mismatch
+    io.revert.valid      := PC_mismatch
+    io.revert.bits.GHR   := GHR_reg
+    io.revert.bits.PC    := PC_expected
 
     ///////////////////////////////////
 
@@ -262,6 +254,7 @@ class decode_validate(fetchWidth:Int=4,GHRWidth:Int=16, RASEntries:Int=128) exte
     io.RAS_update.call       := metadata_out.Call
     io.RAS_update.ret        := metadata_out.Ret
     io.RAS_update.call_addr  := metadata_out.instruction_PC // PC of the actual instruction, not fetch_PC
+
 
     // Do not accept inputs if outputs have nowhere to go. 
     io.prediction.ready := io.final_fetch_packet.ready

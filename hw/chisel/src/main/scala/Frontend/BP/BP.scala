@@ -39,19 +39,19 @@ class BP(GHRWidth:Int = 16, fetchWidth:Int = 4, RASEntries:Int=128, BTBEntries:I
         val predict     = Flipped(Decoupled(UInt(32.W)))
 
         // Commit Channel 
-        val commit      = new commit(fetchWidth=fetchWidth) // common case. Update BTB, PHT
+        val commit      = Flipped(Decoupled(new commit(fetchWidth=fetchWidth))) // common case. Update BTB, PHT
 
         // Mispredict Channel 
-        val mispredict  = new mispredict(GHRWidth=GHRWidth, RASEntries=RASEntries)
+        val mispredict  = Flipped(Decoupled(new mispredict(GHRWidth=GHRWidth, RASEntries=RASEntries)))
 
         // Revert Channel
-        val RAS_update  = new RAS_update
+        val RAS_update  = new RAS_update    // input
 
         // RAS Channel
-        val RAS_read    = new RAS_read(RASEntries=RASEntries)
+        val RAS_read    = new RAS_read(RASEntries=RASEntries)   // output
 
         // GHR Channel
-        val revert      = new revert(GHRWidth=GHRWidth)
+        val revert      = Flipped(Decoupled(new revert(GHRWidth=GHRWidth)))
 
         // Prediction Channel (output)
         val prediction  = Decoupled(new prediction(fetchWidth=fetchWidth, GHRWidth=GHRWidth))    // Output of predictions
@@ -70,10 +70,11 @@ class BP(GHRWidth:Int = 16, fetchWidth:Int = 4, RASEntries:Int=128, BTBEntries:I
     gshare.io.predict_valid             := io.predict.valid
 
     // commit port
-    gshare.io.commit_GHR                := io.commit.GHR
-    gshare.io.commit_PC                 := io.commit.PC
+    gshare.io.commit_GHR                := io.commit.bits.GHR
+    gshare.io.commit_PC                 := io.commit.bits.PC
+    gshare.io.commit_branch_direction   := io.commit.bits.T_NT
+
     gshare.io.commit_valid              := io.commit.valid
-    gshare.io.commit_branch_direction   := io.commit.T_NT
 
     //////////////
     // Init BTB //
@@ -88,12 +89,14 @@ class BP(GHRWidth:Int = 16, fetchWidth:Int = 4, RASEntries:Int=128, BTBEntries:I
     // FIXME: this updates blindly. Where is taken only commit handled?????
     // FIXME: commit_tag not done.
     // commit port
-    BTB.io.commit_PC        := io.commit.PC
+    BTB.io.commit_PC               := io.commit.bits.PC
     
-    BTB.io.commit_tag              :=   io.commit.tag
-    BTB.io.commit_target           :=   io.commit.target
-    BTB.io.commit_br_type          :=   io.commit.br_type
-    BTB.io.commit_br_mask          :=   io.commit.br_mask
+    BTB.io.commit_tag              :=   io.commit.bits.tag
+    BTB.io.commit_target           :=   io.commit.bits.target
+    BTB.io.commit_br_type          :=   io.commit.bits.br_type
+    BTB.io.commit_br_mask          :=   io.commit.bits.br_mask
+    
+
     BTB.io.commit_valid            :=   io.commit.valid
 
 
@@ -113,8 +116,8 @@ class BP(GHRWidth:Int = 16, fetchWidth:Int = 4, RASEntries:Int=128, BTBEntries:I
 
     when(io.mispredict.valid){  // if mispred, handle mispred...
         // mispredict port
-        RAS.io.revert_NEXT  :=   io.mispredict.NEXT
-        RAS.io.revert_TOS   :=   io.mispredict.TOS
+        RAS.io.revert_NEXT  :=   io.mispredict.bits.NEXT
+        RAS.io.revert_TOS   :=   io.mispredict.bits.TOS
         RAS.io.revert_valid :=   io.mispredict.valid
     }.otherwise{
         // update port
@@ -131,9 +134,9 @@ class BP(GHRWidth:Int = 16, fetchWidth:Int = 4, RASEntries:Int=128, BTBEntries:I
         //BTB.io.valid   // FIXME: not implemented
 
     when(io.mispredict.valid){
-        GHR := io.mispredict.GHR
+        GHR := io.mispredict.bits.GHR
     }.elsewhen(io.revert.valid){
-        GHR := io.revert.GHR
+        GHR := io.revert.bits.GHR
     }.otherwise{
         GHR := (GHR<<1) | (is_cond_branch & gshare.io.T_NT.asUInt)
     }
@@ -157,5 +160,9 @@ class BP(GHRWidth:Int = 16, fetchWidth:Int = 4, RASEntries:Int=128, BTBEntries:I
     io.predict.ready        := io.prediction.ready     // if cant output prediction, cannot receive new prediction
     io.prediction.valid     := (BTB.io.BTB_valid && gshare.io.valid)
 
+
+    io.commit.ready := 1.B
+    io.mispredict.ready := 1.B
+    io.revert.ready := 1.B
 
 }
