@@ -2,7 +2,7 @@ import random
 import sys
 from pathlib import Path
 import numpy as np
-from utils.utils import *
+from model_utils.model_utils import *
 
 from genericLRU.genericCache import genericCache, LRU
 
