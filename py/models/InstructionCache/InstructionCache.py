@@ -4,12 +4,12 @@ from pathlib import Path
 import numpy as np
 from model_utils.model_utils import *
 
-from genericLRU import genericCache, LRU
+from GenericCache import GenericCache, LRU
 
 
 validator = [[0b11, 0b01], [0b1111, 0b0111, 0b0011, 0b0001]]
 
-class fetchPacketProcessor:
+class FetchPacketProcessor:
     # Takes in a byte array and constructs an actual fetch packet of validated instructions
     def __init__(self, fetchWidth):
         self.fetchWidth = fetchWidth
@@ -51,15 +51,15 @@ class fetchPacketProcessor:
         return (instructions, validBits)
 
 
-class instructionCache():
+class InstructionCache():
     def __init__(self, sets, ways, blockSize, fetchWidth):
-        self.cache = genericCache(sets=sets, ways=ways, blockSize=blockSize, evictionPolicy=LRU)
+        self.cache = GenericCache(sets=sets, ways=ways, blockSize=blockSize, evictionPolicy=LRU)
         self.sets = sets
         self.ways = ways
         self.blockSize = blockSize
         self.fetchWidth = fetchWidth
         self.addressMask = 0xFFFF_FFFF-(1 << int(np.log2(fetchWidth)+2))+1  # mask such that all memory accesses alias to the nearest fetch packet
-        self.fetchPacketProcessor = fetchPacketProcessor(fetchWidth=fetchWidth)
+        self.fetchPacketProcessor = FetchPacketProcessor(fetchWidth=fetchWidth)
 
     def allocate(self, address, data):
         self.cache.allocate(address,data)

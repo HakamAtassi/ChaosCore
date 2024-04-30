@@ -1,8 +1,10 @@
 setup.py
-genericLRU/__init__.py
-genericLRU/genericLRU.py
-instructionCache/__init__.py
-instructionCache/instructionCache.py
+GenericCache/GenericCache.py
+GenericCache/__init__.py
+InstructionCache/InstructionCache.py
+InstructionCache/__init__.py
+SimpleDRAM/SimpleDRAM.py
+SimpleDRAM/__init__.py
 model_utils/__init__.py
 model_utils/model_utils.py
 models.egg-info/PKG-INFO

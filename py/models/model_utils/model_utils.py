@@ -10,7 +10,6 @@ def getTag(address, sets, blockSize):
     tag = block_number // sets
     return tag
 
-
 def getByteOffset(address, blockSize):
     num_bits = int(np.log2(blockSize))
     mask = (1 << num_bits) - 1

@@ -3,7 +3,7 @@ import sys
 from pathlib import Path
 from model_utils import *
 
-class genericCacheLine:
+class GenericCacheLine:
     def __init__(self, blockSize, data=0x0):
         self.cacheLine = bytearray(blockSize)
         self.blockSize = blockSize
@@ -55,13 +55,13 @@ class genericCacheLine:
             for byte in range(4):
                 print(f"{self.cacheLine[word * 4 + byte]:02x}", end=" ")
 
-class genericCacheWay():
+class GenericCacheWay():
 
     def __init__(self, sets, blockSize):
         self.sets = sets
         self.blockSize = blockSize
 
-        self.way = [{"valid": 0, "tag": 0, "data": genericCacheLine(blockSize)} for _ in range(sets)]
+        self.way = [{"valid": 0, "tag": 0, "data": GenericCacheLine(blockSize)} for _ in range(sets)]
 
 
     def search(self, address):
@@ -152,9 +152,9 @@ class LRU():
                 return way
             return -1   # at least 1 way should be available
 
-class genericCache():    
+class GenericCache():    
     def __init__(self, sets, ways, blockSize, evictionPolicy):
-        self.cacheWays = [genericCacheWay(sets=sets, blockSize=blockSize) for _ in range (ways)]    # instantiate number of ways
+        self.cacheWays = [GenericCacheWay(sets=sets, blockSize=blockSize) for _ in range (ways)]    # instantiate number of ways
         self.ways = ways
         self.sets = sets
         self.blockSize = blockSize
