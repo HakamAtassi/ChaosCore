@@ -1,5 +1,6 @@
-[0m[[0m[31merror[0m] [0m[0m/home/hakam/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala:165:8: value mispred is not a member of chisel3.Bundle{val predict: chisel3.util.DecoupledIO[chisel3.UInt]; val commit: chisel3.util.DecoupledIO[commit]; val mispredict: chisel3.util.DecoupledIO[mispredict]; val RAS_update: RAS_update; val RAS_read: RAS_read; val revert: chisel3.util.DecoupledIO[revert]; val prediction: chisel3.util.DecoupledIO[prediction]}[0m
-[0m[[0m[31merror[0m] [0m[0mdid you mean mispredict?[0m
-[0m[[0m[31merror[0m] [0m[0m    io.mispred.ready := 1.B[0m
-[0m[[0m[31merror[0m] [0m[0m       ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/hakam/Repos/ChaosCore/hw/chisel/src/main/scala/Frontend/instruction_cache.scala:156:24: type mismatch;[0m
+[0m[[0m[31merror[0m] [0m[0m found   : Int(-33)[0m
+[0m[[0m[31merror[0m] [0m[0m required: chisel3.Data[0m
+[0m[[0m[31merror[0m] [0m[0m    dram_addr_mask  := ~(0x20)[0m
+[0m[[0m[31merror[0m] [0m[0m                       ^[0m
 [0m[[0m[31merror[0m] [0m[0mone error found[0m

@@ -56,3 +56,15 @@ def test_overwrite_read(dram):
     dram.write(0, 0x99, 1)
     dram.write(0, 0xdeadbeef, 4)
     assert dram.read(0, 4) == 0xdeadbeef  # Check if data read is the same as data written
+
+
+def test_randomize(dram):
+    dram0 = SimpleDRAM()
+    dram0.randomize()
+
+    dram1 = SimpleDRAM()
+    dram1.randomize()
+
+    for i in range(1024):
+        assert dram0.read(address=i, size=32) == dram1.read(address=i, size=32)
+

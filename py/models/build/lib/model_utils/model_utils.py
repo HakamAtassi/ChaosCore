@@ -21,3 +21,14 @@ def generateAddr(tag, set, byteOffset, sets, blockSize):
     numBlockBits = (blockSize - 1).bit_length()
     address = (tag << (numSetBits + numBlockBits)) | (set << numBlockBits) | byteOffset
     return address
+
+def align(address, bytes):
+    """Align address downwards to bytes"""
+    return address & ~(bytes - 1)
+
+def compare_cache_states(state0, state1):
+    for way in range(len(state0)):
+        for line in range(len(state0[way])):
+            if(state0[way][line] != state1[way][line]):
+                return False
+    return True
