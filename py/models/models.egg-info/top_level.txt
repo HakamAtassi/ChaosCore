@@ -1,3 +1,4 @@
-genericLRU
-instructionCache
+GenericCache
+InstructionCache
+SimpleDRAM
 model_utils
