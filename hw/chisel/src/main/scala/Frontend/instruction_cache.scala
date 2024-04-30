@@ -151,6 +151,13 @@ class L1_instruction_cache(fetchWidth:Int=4, ways:Int=2, sets:Int = 64, blockSiz
     val packet_index         = Wire(UInt(fetchPacketBits.W))
     val aligned_packet_index = Wire(UInt(fetchPacketBits.W))
 
+    val dram_addr_mask      = Wire(UInt(32.W))
+    val maskValue = ((1.U << 32.U) - (1.U << byteOffsetBits))
+
+    dram_addr_mask  := maskValue
+
+    dontTouch(dram_addr_mask)
+
 
     dontTouch(current_addr_tag)
     dontTouch(current_addr_set)
@@ -163,6 +170,7 @@ class L1_instruction_cache(fetchWidth:Int=4, ways:Int=2, sets:Int = 64, blockSiz
     current_addr_fetch_packet           := current_addr(31-tagBits-setBits, 31-tagBits-setBits-fetchPacketBits+1)
     current_addr_instruction_offset     := current_addr(2+instructionsPerLine, 2) // The offset within the packet
 
+
     /////////
     // FSM //
     /////////
@@ -174,13 +182,14 @@ class L1_instruction_cache(fetchWidth:Int=4, ways:Int=2, sets:Int = 64, blockSiz
     switch(cache_state){
         is(cacheState.Active){
             fetch_PC_buf := io.cpu_addr.bits
-            replay_addr := io.cpu_addr.bits
-            replay_tag := io.cpu_addr.bits(31, 31-tagBits+1)
+            replay_addr := RegNext(io.cpu_addr.bits)
+            replay_tag := RegNext(io.cpu_addr.bits(31, 31-tagBits+1))
             io.dram_data.ready := 0.U   // cache not ready for data from DRAM in active state
             when((miss===1.B) && (io.kill === 0.U)){           // Buffer current request, stall cache, go to wait state
                 // Request data from DRAM
                 cache_state := cacheState.Allocate
-                io.cache_addr.bits  := replay_addr
+                io.cache_addr.bits := replay_addr & dram_addr_mask
+
                 io.cache_addr.valid := 1.U
                 io.dram_data.ready  := 1.U
             }
@@ -211,7 +220,8 @@ class L1_instruction_cache(fetchWidth:Int=4, ways:Int=2, sets:Int = 64, blockSiz
     // cache must be active
     // cache must not have just received a miss
     // output must be disposable 
-    io.cpu_addr.ready := (cache_state === cacheState.Active) && !miss && io.cache_data.ready                  // Even in active, cache can be non-ready due to detected miss
+    io.cpu_addr.ready := (cache_state === cacheState.Active) && !miss 
+    //&& io.cache_data.ready                  // Even in active, cache can be non-ready due to detected miss
 
     ////////////////
     // LRU MEMORY //
@@ -324,4 +334,7 @@ class L1_instruction_cache(fetchWidth:Int=4, ways:Int=2, sets:Int = 64, blockSiz
 
     // So, output is invalid if kill is high
     // Or revert state/do send to active on kill
+
+
+    dontTouch(current_addr_fetch_packet)
 }

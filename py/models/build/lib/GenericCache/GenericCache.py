@@ -56,6 +56,8 @@ class GenericCacheLine:
         for word in range(self.blockSize//4):
             for byte in range(4):
                 print(f"{self.cacheLine[word * 4 + byte]:02x}", end=" ")
+    def asInt(self):
+        return int.from_bytes(self.cacheLine[0:self.blockSize], "big")
 
 class GenericCacheWay():
 
@@ -115,6 +117,13 @@ class GenericCacheWay():
             self.way[set]["data"].print()
             print("")
 
+    def get_state(self):
+        state = []
+        for set in range(self.sets):
+            state.append(self.way[set]["data"].asInt())
+        return state
+
+
 
 class LRU():
     # a class for the LRU memory
@@ -145,10 +154,12 @@ class LRU():
 
     def getAllocateWay(self, address):
         setIndex = getSet(address, sets=self.sets, blockSize=self.blockSize)
+        allocateWay=0
         for way in range(self.ways):
             if(self.LRU[setIndex][way]==0b0):
-                return way
-            return -1   # at least 1 way should be available
+                allocateWay = way
+
+        return allocateWay
 
 class GenericCache():    
     def __init__(self, sets, ways, blockSize, evictionPolicy):
@@ -219,3 +230,8 @@ class GenericCache():
             print(f"\n\n=======\nWay {way} \n=======\n\n")
             self.cacheWays[way].print()
 
+    def get_cache_state(self):
+        cache_state = []
+        for way in range(self.ways):
+            cache_state.append(self.cacheWays[way].get_state())
+        return cache_state

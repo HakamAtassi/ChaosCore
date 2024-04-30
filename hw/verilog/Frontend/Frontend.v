@@ -118,13 +118,11 @@ endmodule
 module L1_instruction_cache(
   input          clock,
                  reset,
-  output         io_cpu_addr_ready,
-  input          io_cpu_addr_valid,
+                 io_cpu_addr_valid,
   input  [31:0]  io_cpu_addr_bits,
   output         io_dram_data_ready,
   input          io_dram_data_valid,
   input  [255:0] io_dram_data_bits,
-  input          io_cache_data_ready,
   output         io_cache_data_valid,
   output [31:0]  io_cache_data_bits_fetch_PC,
                  io_cache_data_bits_instructions_0,
@@ -154,7 +152,8 @@ module L1_instruction_cache(
   wire [20:0]      current_addr_tag = current_addr[29:9];
   wire [5:0]       current_addr_set = current_addr[8:3];
   wire [2:0]       current_addr_instruction_offset = current_addr[2:0];
-  wire             _GEN = cache_state == 2'h1;
+  wire             _GEN = cache_state == 2'h0;
+  wire             _GEN_0 = cache_state == 2'h1;
   assign current_addr = (|cache_state) ? replay_addr[31:2] : io_cpu_addr_bits[31:2];
   wire [277:0]     current_data = {1'h1, replay_tag, io_dram_data_bits};
   reg  [5:0]       LRU_memory_io_wr_addr_REG;
@@ -180,7 +179,7 @@ module L1_instruction_cache(
     hit_oh_vec_1
       ? _data_memory_1_io_data_out[255:0]
       : hit_oh_vec_0 ? _data_memory_0_io_data_out[255:0] : 256'h0;
-  wire [7:0][31:0] _GEN_0 =
+  wire [7:0][31:0] _GEN_1 =
     {{hit_instruction_data[31:0]},
      {hit_instruction_data[63:32]},
      {hit_instruction_data[95:64]},
@@ -189,7 +188,7 @@ module L1_instruction_cache(
      {hit_instruction_data[191:160]},
      {hit_instruction_data[223:192]},
      {hit_instruction_data[255:224]}};
-  wire [2:0]       _GEN_1 = {packet_index_REG, 2'h0};
+  wire [2:0]       _GEN_2 = {packet_index_REG, 2'h0};
   reg              io_cache_data_bits_valid_bits_0_REG;
   reg              io_cache_data_bits_valid_bits_1_REG;
   reg              io_cache_data_bits_valid_bits_2_REG;
@@ -202,25 +201,22 @@ module L1_instruction_cache(
       replay_valid <= 1'h0;
       fetch_PC_buf <= 32'h0;
     end
-    else if (|cache_state) begin
-      if (_GEN) begin
-        if (io_dram_data_valid)
-          cache_state <= 2'h2;
-        replay_valid <= io_dram_data_valid | replay_valid;
-      end
-      else begin
-        automatic logic _GEN_2 = cache_state == 2'h2;
-        if (_GEN_2)
-          cache_state <= 2'h0;
-        replay_valid <= ~_GEN_2 & replay_valid;
-      end
-    end
     else begin
-      if (miss)
-        cache_state <= 2'h1;
-      replay_addr <= io_cpu_addr_bits;
-      replay_tag <= io_cpu_addr_bits[31:11];
-      fetch_PC_buf <= io_cpu_addr_bits;
+      automatic logic [3:0][1:0] _GEN_3 =
+        {{cache_state},
+         {2'h0},
+         {io_dram_data_valid ? 2'h2 : cache_state},
+         {miss ? 2'h1 : cache_state}};
+      cache_state <= _GEN_3[cache_state];
+      if (_GEN) begin
+        replay_addr <= io_cpu_addr_bits;
+        replay_tag <= io_cpu_addr_bits[31:11];
+        fetch_PC_buf <= io_cpu_addr_bits;
+      end
+      else if (_GEN_0)
+        replay_valid <= io_dram_data_valid | replay_valid;
+      else
+        replay_valid <= cache_state != 2'h2 & replay_valid;
     end
     LRU_memory_io_wr_addr_REG <= current_addr_set;
     hit_oh_vec_0_REG <= current_addr_tag;
@@ -263,20 +259,19 @@ module L1_instruction_cache(
     .io_instruction_index  (current_addr_instruction_offset[1:0]),
     .io_instruction_output (_validator_io_instruction_output)
   );
-  assign io_cpu_addr_ready = ~(|cache_state) & ~miss & io_cache_data_ready;
-  assign io_dram_data_ready = (|cache_state) ? _GEN & ~io_dram_data_valid : miss;
+  assign io_dram_data_ready = _GEN ? miss : _GEN_0 & ~io_dram_data_valid;
   assign io_cache_data_valid = hit;
   assign io_cache_data_bits_fetch_PC = fetch_PC_buf;
-  assign io_cache_data_bits_instructions_0 = _GEN_0[{packet_index_REG, 2'h0}];
-  assign io_cache_data_bits_instructions_1 = _GEN_0[_GEN_1 + 3'h1];
-  assign io_cache_data_bits_instructions_2 = _GEN_0[_GEN_1 + 3'h2];
-  assign io_cache_data_bits_instructions_3 = _GEN_0[_GEN_1 + 3'h3];
+  assign io_cache_data_bits_instructions_0 = _GEN_1[{packet_index_REG, 2'h0}];
+  assign io_cache_data_bits_instructions_1 = _GEN_1[_GEN_2 + 3'h1];
+  assign io_cache_data_bits_instructions_2 = _GEN_1[_GEN_2 + 3'h2];
+  assign io_cache_data_bits_instructions_3 = _GEN_1[_GEN_2 + 3'h3];
   assign io_cache_data_bits_valid_bits_0 = io_cache_data_bits_valid_bits_0_REG & hit;
   assign io_cache_data_bits_valid_bits_1 = io_cache_data_bits_valid_bits_1_REG & hit;
   assign io_cache_data_bits_valid_bits_2 = io_cache_data_bits_valid_bits_2_REG & hit;
   assign io_cache_data_bits_valid_bits_3 = io_cache_data_bits_valid_bits_3_REG & hit;
-  assign io_cache_addr_valid = ~(|cache_state) & miss;
-  assign io_cache_addr_bits = ~(|cache_state) & miss ? replay_addr : 32'h0;
+  assign io_cache_addr_valid = _GEN & miss;
+  assign io_cache_addr_bits = _GEN & miss ? replay_addr : 32'h0;
 endmodule
 
 // VCS coverage exclude_file
@@ -1360,8 +1355,7 @@ endmodule
 
 module Queue16_fetch_packet(
   input         clock,
-  output        io_enq_ready,
-  input         io_enq_valid,
+                io_enq_valid,
   input  [31:0] io_enq_bits_fetch_PC,
                 io_enq_bits_instructions_0,
                 io_enq_bits_instructions_1,
@@ -1384,14 +1378,15 @@ module Queue16_fetch_packet(
                 io_deq_bits_valid_bits_3
 );
 
+  wire         io_enq_ready;
   wire [163:0] _ram_ext_R0_data;
   reg  [3:0]   enq_ptr_value;
   reg  [3:0]   deq_ptr_value;
   reg          maybe_full;
   wire         ptr_match = enq_ptr_value == deq_ptr_value;
   wire         empty = ptr_match & ~maybe_full;
-  wire         full = ptr_match & maybe_full;
-  wire         do_enq = ~full & io_enq_valid;
+  wire         do_enq = io_enq_ready & io_enq_valid;
+  assign io_enq_ready = ~(ptr_match & maybe_full);
   always @(posedge clock) begin
     automatic logic do_deq = io_deq_ready & ~empty;
     if (do_enq)
@@ -1420,7 +1415,6 @@ module Queue16_fetch_packet(
         io_enq_bits_instructions_0,
         io_enq_bits_fetch_PC})
   );
-  assign io_enq_ready = ~full;
   assign io_deq_valid = ~empty;
   assign io_deq_bits_fetch_PC = _ram_ext_R0_data[31:0];
   assign io_deq_bits_instructions_0 = _ram_ext_R0_data[63:32];
@@ -1455,15 +1449,12 @@ module Q(
                 io_data_out_valid_bits_1,
                 io_data_out_valid_bits_2,
                 io_data_out_valid_bits_3,
-                io_full,
                 io_empty
 );
 
-  wire _queue_io_enq_ready;
   wire _queue_io_deq_valid;
   Queue16_fetch_packet queue (
     .clock                      (clock),
-    .io_enq_ready               (_queue_io_enq_ready),
     .io_enq_valid               (io_wr_en),
     .io_enq_bits_fetch_PC       (io_data_in_fetch_PC),
     .io_enq_bits_instructions_0 (io_data_in_instructions_0),
@@ -1486,7 +1477,6 @@ module Q(
     .io_deq_bits_valid_bits_2   (io_data_out_valid_bits_2),
     .io_deq_bits_valid_bits_3   (io_data_out_valid_bits_3)
   );
-  assign io_full = ~_queue_io_enq_ready;
   assign io_empty = ~_queue_io_deq_valid;
 endmodule
 
@@ -1513,7 +1503,6 @@ endmodule
 module Queue16_UInt32(
   input         clock,
   input  [31:0] io_enq_bits,
-  input         io_deq_ready,
   output        io_deq_valid,
   output [31:0] io_deq_bits
 );
@@ -1526,12 +1515,11 @@ module Queue16_UInt32(
   wire       empty = ptr_match & ~maybe_full;
   assign full = ptr_match & maybe_full;
   always @(posedge clock) begin
-    automatic logic do_deq = io_deq_ready & ~empty;
     if (~full)
       enq_ptr_value <= enq_ptr_value + 4'h1;
-    if (do_deq)
+    if (~empty)
       deq_ptr_value <= deq_ptr_value + 4'h1;
-    if (~(~full == do_deq))
+    if (~(~full == ~empty))
       maybe_full <= ~full;
   end // always @(posedge)
   ram_16x32 ram_ext (
@@ -1550,7 +1538,6 @@ endmodule
 module Q_1(
   input         clock,
   input  [31:0] io_data_in,
-  input         io_rd_en,
   output [31:0] io_data_out,
   output        io_empty
 );
@@ -1559,7 +1546,6 @@ module Q_1(
   Queue16_UInt32 queue (
     .clock        (clock),
     .io_enq_bits  (io_data_in),
-    .io_deq_ready (io_rd_en),
     .io_deq_valid (_queue_io_deq_valid),
     .io_deq_bits  (io_data_out)
   );
@@ -1730,7 +1716,6 @@ module Frontend(
   wire        _instruction_Q_io_data_out_valid_bits_1;
   wire        _instruction_Q_io_data_out_valid_bits_2;
   wire        _instruction_Q_io_data_out_valid_bits_3;
-  wire        _instruction_Q_io_full;
   wire        _instruction_Q_io_empty;
   wire [31:0] _PC_gen_io_PC_next_bits;
   wire        _predecoder_io_prediction_ready;
@@ -1748,7 +1733,6 @@ module Frontend(
   wire [3:0]  _bp_io_prediction_bits_br_mask;
   wire [15:0] _bp_io_prediction_bits_GHR;
   wire        _bp_io_prediction_bits_T_NT;
-  wire        _instruction_cache_io_cpu_addr_ready;
   wire        _instruction_cache_io_cache_data_valid;
   wire [31:0] _instruction_cache_io_cache_data_bits_fetch_PC;
   wire [31:0] _instruction_cache_io_cache_data_bits_instructions_0;
@@ -1762,13 +1746,11 @@ module Frontend(
   L1_instruction_cache instruction_cache (
     .clock                             (clock),
     .reset                             (reset),
-    .io_cpu_addr_ready                 (_instruction_cache_io_cpu_addr_ready),
     .io_cpu_addr_valid                 (~_PC_Q_io_empty),
     .io_cpu_addr_bits                  (_PC_Q_io_data_out),
     .io_dram_data_ready                (io_dram_data_ready),
     .io_dram_data_valid                (io_dram_data_valid),
     .io_dram_data_bits                 (io_dram_data_bits),
-    .io_cache_data_ready               (~_instruction_Q_io_full),
     .io_cache_data_valid               (_instruction_cache_io_cache_data_valid),
     .io_cache_data_bits_fetch_PC       (_instruction_cache_io_cache_data_bits_fetch_PC),
     .io_cache_data_bits_instructions_0
@@ -1897,13 +1879,11 @@ module Frontend(
     .io_data_out_valid_bits_1   (_instruction_Q_io_data_out_valid_bits_1),
     .io_data_out_valid_bits_2   (_instruction_Q_io_data_out_valid_bits_2),
     .io_data_out_valid_bits_3   (_instruction_Q_io_data_out_valid_bits_3),
-    .io_full                    (_instruction_Q_io_full),
     .io_empty                   (_instruction_Q_io_empty)
   );
   Q_1 PC_Q (
     .clock       (clock),
     .io_data_in  (_PC_gen_io_PC_next_bits),
-    .io_rd_en    (_instruction_cache_io_cpu_addr_ready),
     .io_data_out (_PC_Q_io_data_out),
     .io_empty    (_PC_Q_io_empty)
   );

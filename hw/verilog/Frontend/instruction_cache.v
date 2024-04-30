@@ -148,6 +148,7 @@ module L1_instruction_cache(
   wire [277:0]     _data_memory_1_io_data_out;
   wire [277:0]     _data_memory_0_io_data_out;
   wire [1:0]       _LRU_memory_io_data_out;
+  wire [31:0]      dram_addr_mask = 32'hFFFFFFE0;
   reg  [1:0]       cache_state;
   reg  [31:0]      replay_addr;
   reg  [20:0]      replay_tag;
@@ -155,7 +156,10 @@ module L1_instruction_cache(
   reg  [31:0]      fetch_PC_buf;
   wire [20:0]      current_addr_tag = current_addr[29:9];
   wire [5:0]       current_addr_set = current_addr[8:3];
+  wire             current_addr_fetch_packet = current_addr[2];
   wire [2:0]       current_addr_instruction_offset = current_addr[2:0];
+  reg  [31:0]      replay_addr_REG;
+  reg  [20:0]      replay_tag_REG;
   wire             _GEN = miss & ~io_kill;
   wire             _GEN_0 = cache_state == 2'h1;
   assign current_addr = (|cache_state) ? replay_addr[31:2] : io_cpu_addr_bits[31:2];
@@ -223,10 +227,12 @@ module L1_instruction_cache(
     else begin
       if (_GEN)
         cache_state <= 2'h1;
-      replay_addr <= io_cpu_addr_bits;
-      replay_tag <= io_cpu_addr_bits[31:11];
+      replay_addr <= replay_addr_REG;
+      replay_tag <= replay_tag_REG;
       fetch_PC_buf <= io_cpu_addr_bits;
     end
+    replay_addr_REG <= io_cpu_addr_bits;
+    replay_tag_REG <= io_cpu_addr_bits[31:11];
     LRU_memory_io_wr_addr_REG <= current_addr_set;
     hit_oh_vec_0_REG <= current_addr_tag;
     hit_oh_vec_1_REG <= current_addr_tag;
@@ -234,7 +240,7 @@ module L1_instruction_cache(
     hit_REG_1 <= replay_valid;
     miss_REG <= io_cpu_addr_valid;
     miss_REG_1 <= replay_valid;
-    packet_index_REG <= current_addr[2];
+    packet_index_REG <= current_addr_fetch_packet;
     io_cache_data_bits_valid_bits_0_REG <= _validator_io_instruction_output[3];
     io_cache_data_bits_valid_bits_1_REG <= _validator_io_instruction_output[2];
     io_cache_data_bits_valid_bits_2_REG <= _validator_io_instruction_output[1];
@@ -268,7 +274,7 @@ module L1_instruction_cache(
     .io_instruction_index  (current_addr_instruction_offset[1:0]),
     .io_instruction_output (_validator_io_instruction_output)
   );
-  assign io_cpu_addr_ready = ~(|cache_state) & ~miss & io_cache_data_ready;
+  assign io_cpu_addr_ready = ~(|cache_state) & ~miss;
   assign io_dram_data_ready =
     (|cache_state) ? _GEN_0 & (io_kill | ~io_dram_data_valid) : _GEN;
   assign io_cache_data_valid = hit & ~io_kill;
@@ -286,6 +292,7 @@ module L1_instruction_cache(
   assign io_cache_data_bits_valid_bits_3 =
     io_cache_data_bits_valid_bits_3_REG & hit & ~io_kill;
   assign io_cache_addr_valid = ~(|cache_state) & _GEN;
-  assign io_cache_addr_bits = ~(|cache_state) & _GEN ? replay_addr : 32'h0;
+  assign io_cache_addr_bits =
+    ~(|cache_state) & _GEN ? replay_addr & dram_addr_mask : 32'h0;
 endmodule
 

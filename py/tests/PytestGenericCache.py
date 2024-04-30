@@ -9,6 +9,11 @@ def cache():
     cache = GenericCache(sets=64, ways=2, blockSize=32, evictionPolicy=LRU)
     return cache
 
+def test_align(cache):
+    addr = 0x4
+    addr = align(address=addr, bytes=32)
+    assert addr == 0x0
+
 def test_get_set(cache):
     for set in range(64):
         addr = set<<int(np.log2(cache.blockSize))
@@ -106,4 +111,27 @@ def test_read_write(cache):
     assert read_data == 0x42
 
 
-    
+def test_allocate_read_hit(cache):
+
+    for set in range(cache.sets):
+        addr = generateAddr(tag=0, set=set, byteOffset=0, sets=cache.sets, blockSize=cache.blockSize)
+        data = 0xdeadbeef
+
+        cache.allocate(address = addr, data = data)
+
+        addr = generateAddr(tag=0, set=set, byteOffset=28, sets=cache.sets, blockSize=cache.blockSize)
+        resp = cache.read(address = addr, bytes = 4)[0]
+        assert resp[0] == 1
+        assert resp[1] == 0xdeadbeef
+
+def test_allocate_read_miss(cache):
+
+    for set in range(cache.sets):
+        addr = generateAddr(tag=0, set=set, byteOffset=0, sets=cache.sets, blockSize=cache.blockSize)
+        data = 0xdeadbeef
+
+        cache.allocate(address = addr, data = data)
+
+        addr = generateAddr(tag=123, set=set, byteOffset=28, sets=cache.sets, blockSize=cache.blockSize)
+        resp = cache.read(address = addr, bytes = 4)[0]
+        assert resp[0] == 0
