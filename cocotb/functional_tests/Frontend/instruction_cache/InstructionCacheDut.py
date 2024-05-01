@@ -37,10 +37,10 @@ class InstructionCacheDut:
                         hex(int(self.dut.io_cache_data_bits_instructions_2.value)),
                         hex(int(self.dut.io_cache_data_bits_instructions_3.value)))
 
-        valid = (hex(int(self.dut.io_cache_data_bits_valid_bits_0.value)),
-                 hex(int(self.dut.io_cache_data_bits_valid_bits_1.value)),
-                 hex(int(self.dut.io_cache_data_bits_valid_bits_2.value)),
-                 hex(int(self.dut.io_cache_data_bits_valid_bits_3.value)))
+        valid = ((int(self.dut.io_cache_data_bits_valid_bits_0.value)),
+                 (int(self.dut.io_cache_data_bits_valid_bits_1.value)),
+                 (int(self.dut.io_cache_data_bits_valid_bits_2.value)),
+                 (int(self.dut.io_cache_data_bits_valid_bits_3.value)))
 
         return (instructions, valid)
     
@@ -54,8 +54,8 @@ class InstructionCacheDut:
             for set in range(64):
                 cache_state[way].append(self.read_data_memory(way, set))
         return cache_state
-    ### UTILS ###
 
+    ### UTILS ###
     def read(self, address=0, valid=1):
         self.dut.io_cpu_addr_valid.value = valid
         self.dut.io_cpu_addr_bits.value = address
@@ -71,14 +71,14 @@ class InstructionCacheDut:
         if(dram_resp[1]==1):
             self.write_from_dram(dram_resp[0]) 
 
+    def kill(self, valid):
+        self.dut.io_kill.value = valid
 
+    def is_miss(self):
+        return self.dut.miss.value == 1
 
-
-    async def wait_dram_resp(self):
-        while(self.dram_latency):
-            await self.dram_cycle()
-            await RisingEdge(self.dut.clock)
-
+    def is_hit(self):
+        return self.dut.hit.value == 1
 
 """
 module L1_instruction_cache(

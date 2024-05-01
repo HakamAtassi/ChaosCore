@@ -179,10 +179,12 @@ module L1_instruction_cache(
   assign hit_oh = {hit_oh_vec_1, hit_oh_vec_0};
   reg              hit_REG;
   reg              hit_REG_1;
-  wire             hit = (|hit_oh) & (hit_REG | hit_REG_1);
+  reg              hit_REG_2;
+  wire             hit = (|hit_oh) & (hit_REG | hit_REG_1) & ~hit_REG_2;
   reg              miss_REG;
   reg              miss_REG_1;
-  assign miss = ~(|hit_oh) & (miss_REG | miss_REG_1);
+  reg              miss_REG_2;
+  assign miss = ~(|hit_oh) & (miss_REG | miss_REG_1) & ~miss_REG_2;
   reg              packet_index_REG;
   wire [255:0]     hit_instruction_data =
     hit_oh_vec_1
@@ -242,8 +244,10 @@ module L1_instruction_cache(
     hit_oh_vec_1_REG <= current_addr_tag;
     hit_REG <= io_cpu_addr_valid;
     hit_REG_1 <= replay_valid;
+    hit_REG_2 <= io_kill;
     miss_REG <= io_cpu_addr_valid;
     miss_REG_1 <= replay_valid;
+    miss_REG_2 <= io_kill;
     packet_index_REG <= current_addr_fetch_packet;
     io_cache_data_bits_valid_bits_0_REG <= _validator_io_instruction_output[3];
     io_cache_data_bits_valid_bits_1_REG <= _validator_io_instruction_output[2];
