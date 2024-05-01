@@ -179,16 +179,21 @@ class L1_instruction_cache(fetchWidth:Int=4, ways:Int=2, sets:Int = 64, blockSiz
     io.cache_addr.valid := 0.U
     io.dram_data.ready  := 0.U
 
+    when(io.cpu_addr.valid === 1.B){
+        replay_addr := io.cpu_addr.bits
+    }
+
+
     switch(cache_state){
         is(cacheState.Active){
             fetch_PC_buf := io.cpu_addr.bits
-            replay_addr := RegNext(io.cpu_addr.bits)
             replay_tag := RegNext(io.cpu_addr.bits(31, 31-tagBits+1))
             io.dram_data.ready := 0.U   // cache not ready for data from DRAM in active state
             when((miss===1.B) && (io.kill === 0.U)){           // Buffer current request, stall cache, go to wait state
                 // Request data from DRAM
                 cache_state := cacheState.Allocate
-                io.cache_addr.bits := replay_addr & dram_addr_mask
+                io.cache_addr.bits := RegNext(io.cpu_addr.bits) & dram_addr_mask
+                //replay_addr & dram_addr_mask
 
                 io.cache_addr.valid := 1.U
                 io.dram_data.ready  := 1.U
@@ -213,7 +218,7 @@ class L1_instruction_cache(fetchWidth:Int=4, ways:Int=2, sets:Int = 64, blockSiz
     }
 
     // Address arbitration
-    current_addr := Mux(cache_state=/=cacheState.Active, replay_addr, io.cpu_addr.bits) // During allocate and replay, current address is from buffered request. 
+    current_addr := Mux(cache_state=/=cacheState.Active || miss, replay_addr, io.cpu_addr.bits) // During allocate and replay, current address is from buffered request. 
     current_data := Cat(1.U, replay_tag, io.dram_data.bits)                             // 1 Bit valid, N bit tag, N bit data
 
     // For a new input to be accepted:

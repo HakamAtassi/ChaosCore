@@ -4,6 +4,8 @@ class SimpleDRAM:
     def __init__(self, sizeKB=16):
         random.seed(0x42)
         self.memory = bytearray(sizeKB*(1<<10))
+        self.response_pending = False
+        self.remaining_cycles = 0
 
     def read(self, address, size):
         if address + size > len(self.memory):
@@ -22,6 +24,22 @@ class SimpleDRAM:
     def randomize(self):
         random_data = bytearray(random.getrandbits(8) for _ in range(len(self.memory)))
         self.memory[:] = random_data
+    
+    def update(self, address, size ,valid):
+        if valid:
+            self.response_pending = True
+            self.pending_address = address
+            self.remaining_cycles = random.randint(1,100)
+        if(self.response_pending):
+            if(self.remaining_cycles == 0):
+                self.response_pending = False
+                return (self.read(self.pending_address, size), 1)
+            else:
+                self.remaining_cycles -= 1
+
+        return(0,0)
+
+
 
     def print(self):
         for i in range(len(self.memory)):
