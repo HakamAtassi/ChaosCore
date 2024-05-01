@@ -1,7 +1,6 @@
 <testsuites name="results">
   <testsuite name="all" package="all">
-    <property name="random_seed" value="1714525856" />
-    <testcase name="instruction_cache_fuzz" classname="instruction_cache_tests" file="/home/hakam/Repos/ChaosCore/cocotb/functional_tests/Frontend/instruction_cache/instruction_cache_tests.py" lineno="24" time="7.852957725524902" sim_time_ns="109033.001" ratio_time="13884.322927857362" />
-    <testcase name="instruction_cache_from_set" classname="instruction_cache_tests" file="/home/hakam/Repos/ChaosCore/cocotb/functional_tests/Frontend/instruction_cache/instruction_cache_tests.py" lineno="124" time="12.039793729782104" sim_time_ns="200011.001" ratio_time="16612.493991923213" />
+    <property name="random_seed" value="1714574111" />
+    <testcase name="instruction_cache_kill_hit_test" classname="instruction_cache_tests" file="/home/hakam/Repos/ChaosCore/cocotb/functional_tests/Frontend/instruction_cache/instruction_cache_tests.py" lineno="66" time="0.06881833076477051" sim_time_ns="232.001" ratio_time="3371.209348175094" />
   </testsuite>
 </testsuites>

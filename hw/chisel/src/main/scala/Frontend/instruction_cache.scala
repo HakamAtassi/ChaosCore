@@ -189,7 +189,7 @@ class L1_instruction_cache(fetchWidth:Int=4, ways:Int=2, sets:Int = 64, blockSiz
             fetch_PC_buf := io.cpu_addr.bits
             replay_tag := RegNext(io.cpu_addr.bits(31, 31-tagBits+1))
             io.dram_data.ready := 0.U   // cache not ready for data from DRAM in active state
-            when((miss===1.B) && (io.kill === 0.U)){           // Buffer current request, stall cache, go to wait state
+            when((miss===1.B && io.kill === 0.U)){           // Buffer current request, stall cache, go to wait state
                 // Request data from DRAM
                 cache_state := cacheState.Allocate
                 io.cache_addr.bits := RegNext(io.cpu_addr.bits) & dram_addr_mask
@@ -281,8 +281,8 @@ class L1_instruction_cache(fetchWidth:Int=4, ways:Int=2, sets:Int = 64, blockSiz
     hit_oh := hit_oh_vec.reverse.reduce(_ ## _)
 
 
-    hit     := (hit_oh.orR & (RegNext(io.cpu_addr.valid) | RegNext(replay_valid)))
-    miss    := (~hit_oh.orR) & (RegNext(io.cpu_addr.valid) | RegNext(replay_valid))
+    hit     := (hit_oh.orR & (RegNext(io.cpu_addr.valid) | RegNext(replay_valid))) & !RegNext(io.kill)
+    miss    := (~hit_oh.orR) & (RegNext(io.cpu_addr.valid) | RegNext(replay_valid)) & !RegNext(io.kill)
 
 
 
