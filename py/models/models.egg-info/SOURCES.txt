@@ -1,6 +1,8 @@
 setup.py
 GenericCache/GenericCache.py
 GenericCache/__init__.py
+Gshare/Gshare.py
+Gshare/__init__.py
 InstructionCache/InstructionCache.py
 InstructionCache/__init__.py
 SimpleDRAM/SimpleDRAM.py
