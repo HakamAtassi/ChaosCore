@@ -158,11 +158,12 @@ module L1_instruction_cache(
   wire [5:0]       current_addr_set = current_addr[8:3];
   wire             current_addr_fetch_packet = current_addr[2];
   wire [2:0]       current_addr_instruction_offset = current_addr[2:0];
-  reg  [31:0]      replay_addr_REG;
   reg  [20:0]      replay_tag_REG;
   wire             _GEN = miss & ~io_kill;
+  reg  [31:0]      io_cache_addr_bits_REG;
   wire             _GEN_0 = cache_state == 2'h1;
-  assign current_addr = (|cache_state) ? replay_addr[31:2] : io_cpu_addr_bits[31:2];
+  assign current_addr =
+    (|cache_state) | miss ? replay_addr[31:2] : io_cpu_addr_bits[31:2];
   wire [277:0]     current_data = {1'h1, replay_tag, io_dram_data_bits};
   reg  [5:0]       LRU_memory_io_wr_addr_REG;
   wire [1:0]       allocate_way =
@@ -209,30 +210,33 @@ module L1_instruction_cache(
       replay_valid <= 1'h0;
       fetch_PC_buf <= 32'h0;
     end
-    else if (|cache_state) begin
-      if (_GEN_0) begin
-        if (io_kill)
-          cache_state <= 2'h0;
-        else if (io_dram_data_valid)
-          cache_state <= 2'h2;
-        replay_valid <= ~io_kill & io_dram_data_valid | replay_valid;
+    else begin
+      if (|cache_state) begin
+        if (_GEN_0) begin
+          if (io_kill)
+            cache_state <= 2'h0;
+          else if (io_dram_data_valid)
+            cache_state <= 2'h2;
+          replay_valid <= ~io_kill & io_dram_data_valid | replay_valid;
+        end
+        else begin
+          automatic logic _GEN_3 = cache_state == 2'h2;
+          if (_GEN_3)
+            cache_state <= 2'h0;
+          replay_valid <= ~_GEN_3 & replay_valid;
+        end
       end
       else begin
-        automatic logic _GEN_3 = cache_state == 2'h2;
-        if (_GEN_3)
-          cache_state <= 2'h0;
-        replay_valid <= ~_GEN_3 & replay_valid;
+        if (_GEN)
+          cache_state <= 2'h1;
+        replay_tag <= replay_tag_REG;
+        fetch_PC_buf <= io_cpu_addr_bits;
       end
+      if (io_cpu_addr_valid)
+        replay_addr <= io_cpu_addr_bits;
     end
-    else begin
-      if (_GEN)
-        cache_state <= 2'h1;
-      replay_addr <= replay_addr_REG;
-      replay_tag <= replay_tag_REG;
-      fetch_PC_buf <= io_cpu_addr_bits;
-    end
-    replay_addr_REG <= io_cpu_addr_bits;
     replay_tag_REG <= io_cpu_addr_bits[31:11];
+    io_cache_addr_bits_REG <= io_cpu_addr_bits;
     LRU_memory_io_wr_addr_REG <= current_addr_set;
     hit_oh_vec_0_REG <= current_addr_tag;
     hit_oh_vec_1_REG <= current_addr_tag;
@@ -293,6 +297,6 @@ module L1_instruction_cache(
     io_cache_data_bits_valid_bits_3_REG & hit & ~io_kill;
   assign io_cache_addr_valid = ~(|cache_state) & _GEN;
   assign io_cache_addr_bits =
-    ~(|cache_state) & _GEN ? replay_addr & dram_addr_mask : 32'h0;
+    ~(|cache_state) & _GEN ? io_cache_addr_bits_REG & dram_addr_mask : 32'h0;
 endmodule
 

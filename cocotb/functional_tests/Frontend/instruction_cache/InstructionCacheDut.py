@@ -13,37 +13,24 @@ class InstructionCacheDut:
         self.dut = dut
         self.DRAM = DRAM
         self.dram_latency = 0   # a counter for randomizing dram latency.
+        self.outstanding_dram_address = None
 
     ### INTERFACE ###
 
     def clock(self):
         return self.dut.clock
-
-    def cpu_read_ready(self):
+    
+    def is_cache_input_ready(self):
         """is the cache ready for a read request from the cpu?"""
         ready = int(self.dut.io_cpu_addr_ready.value)
-        return ready == 1
-    
-    def dram_write_ready(self):
+        return ready
+
+    def is_cache_output_valid(self):
         """is the cache ready for a write request from the cpu?"""
-        ready = int(self.dut.io_dram_data_ready.value)
-        return ready == 1
-
-    def cpu_read_valid(self):
-        """is the cache's output valid"""
         valid = int(self.dut.io_cache_data_valid.value)
-        return valid == 1
-
-    def cpu_dram_ready(self):
-        valid = int(self.dut.io_dram_data_ready.value)
-        return valid == 1
-
-    def dram_resp(self, data, valid):
-        self.dut.io_dram_data_valid.value = valid
-        self.dut.io_dram_data_bits.value = data
-
-
-    def cpu_read_resp(self):
+        return valid
+    
+    def get_cache_data(self):
         """returns caches output as ((i0,i1,i2,i3),(v0,v1,v2,v3))"""
         instructions = (hex(int(self.dut.io_cache_data_bits_instructions_0.value)),
                         hex(int(self.dut.io_cache_data_bits_instructions_1.value)),
@@ -69,45 +56,28 @@ class InstructionCacheDut:
         return cache_state
     ### UTILS ###
 
-    async def dram_request_write(self, data):
-        """request a write from the dram"""
-        self.dut.io_dram_data_valid.value = 1
+    def read(self, address=0, valid=1):
+        self.dut.io_cpu_addr_valid.value = valid
+        self.dut.io_cpu_addr_bits.value = address
+
+    def write_from_dram(self, data, valid=1):
+        self.dut.io_dram_data_valid.value = valid
         self.dut.io_dram_data_bits.value = data
-        await RisingEdge(self.dut.clock)
-        self.dut.io_dram_data_valid.value = 0
-        self.dut.io_dram_data_bits.value = 0
+    
+    def update_dram(self):
+        # if a dram request is ever detected
+        dram_resp = self.DRAM.update(address=int(self.dut.io_cache_addr_bits.value), size=32, valid=self.dut.io_cache_addr_valid.value)
+
+        if(dram_resp[1]==1):
+            self.write_from_dram(dram_resp[0]) 
 
 
 
-    async def cpu_read(self, address, valid):
-        """request a read from the cpu"""
-
-        self.dut.io_cpu_addr_valid.value = valid     # set valid
-        self.dut.io_cpu_addr_bits.value = address    # pass address
-
-        #await RisingEdge(self.dut.clock)
-
-        #self.dut.io_cpu_addr_valid.value = 0
-        #self.dut.io_cpu_addr_bits.value = 0
-
-        #if(self.cpu_read_valid() == False):
-            ## Cache missed. Generate DRAM response
-            #self.dram_latency = random.randint(1,100)
-            #self.outstanding_dram_request = True
-            #self.outstanding_dram_address = address
 
     async def wait_dram_resp(self):
         while(self.dram_latency):
             await self.dram_cycle()
             await RisingEdge(self.dut.clock)
-
-    async def dram_cycle(self):
-        if(self.dram_latency == 0 and self.outstanding_dram_request == True):
-            dram_data = self.DRAM.read(address=align(self.outstanding_dram_address, bytes=32), size=32)    # Get dram line
-            await self.dram_request_write(dram_data) # write to cache
-            self.outstanding_dram_request = False
-        elif(self.dram_latency > 0 and self.outstanding_dram_request == True):
-            self.dram_latency-=1
 
 
 """
