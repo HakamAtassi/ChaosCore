@@ -98,12 +98,14 @@ class gshare(GHR_width:Int = 16) extends Module{
     val hashed_predict_addr = Wire(UInt(GHR_width.W))
     val hashed_commit_addr = Wire(UInt(GHR_width.W))
 
-    val PHT = Module(new PHT_memory(depth=(2<<GHR_width), width=2))
+    val PHT = Module(new PHT_memory(depth=(1<<GHR_width), width=2))
 
 
     hashed_predict_addr := io.predict_PC(GHR_width-1, 0) ^ io.predict_GHR
     hashed_commit_addr  := io.commit_PC(GHR_width-1, 0) ^ io.commit_GHR
 
+    dontTouch(hashed_predict_addr)
+    dontTouch(hashed_commit_addr)
 
     // Read and generate prediction
     PHT.io.addrA := hashed_predict_addr

@@ -1,0 +1,6 @@
+<testsuites name="results">
+  <testsuite name="all" package="all">
+    <property name="random_seed" value="1714588084" />
+    <testcase name="gshare_fuzzing" classname="gshare_tests" file="/home/hakam/Repos/ChaosCore/cocotb/functional_tests/Frontend/ghsare/gshare_tests.py" lineno="15" time="16.597386360168457" sim_time_ns="200018.001" ratio_time="12051.174604214604" />
+  </testsuite>
+</testsuites>
