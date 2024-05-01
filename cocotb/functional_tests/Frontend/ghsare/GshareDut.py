@@ -49,5 +49,5 @@ class GshareDut:
     def get_cache_state(self):
         PHT_state = []
         for i in range(1<<self.GHR_width):
-            PHT_state[i] = self.get_PHT_line(i)
+            PHT_state.append(int(self.get_PHT_line(i)))
         return PHT_state

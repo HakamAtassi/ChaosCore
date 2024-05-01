@@ -13,6 +13,9 @@ class PHT:
     def read_state(self, hashed_address):
         return self.PHT[hashed_address]
 
+    def get_state(self):
+        return self.PHT
+
     def predict(self, PC, GHR):
         hashed_address = self.get_hashed_address(PC, GHR)
         state = self.read_state(hashed_address) 

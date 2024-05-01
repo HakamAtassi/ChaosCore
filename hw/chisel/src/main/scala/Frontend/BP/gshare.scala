@@ -36,6 +36,7 @@ import java.rmi.server.UID
 
 class PHT_memory(depth: Int, width: Int) extends Module {
     // FIXME: Ensure this is write first ...
+    // FIXME: This memory is NOT write first (as per validation, predict first then commit...)
     // 2 read 1 write memory
   val io = IO(new Bundle {
     // read port 1 (predict)
