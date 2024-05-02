@@ -1,9 +1,5 @@
-[0m[[0m[31merror[0m] [0m[0m/home/hakam/Repos/ChaosCore/hw/chisel/src/main/scala/Frontend/instruction_cache.scala:284:84: value && is not a member of chisel3.UInt[0m
-[0m[[0m[31merror[0m] [0m[0mdid you mean &, +&, or -&? or perhaps do_&?[0m
-[0m[[0m[31merror[0m] [0m[0m    hit     := (hit_oh.orR & (RegNext(io.cpu_addr.valid) | RegNext(replay_valid))) && !RegNext(io.kill)[0m
-[0m[[0m[31merror[0m] [0m[0m                                                                                   ^[0m
-[0m[[0m[31merror[0m] [0m[0m/home/hakam/Repos/ChaosCore/hw/chisel/src/main/scala/Frontend/instruction_cache.scala:285:85: value && is not a member of chisel3.UInt[0m
-[0m[[0m[31merror[0m] [0m[0mdid you mean &, +&, or -&? or perhaps do_&?[0m
-[0m[[0m[31merror[0m] [0m[0m    miss    := (~hit_oh.orR) & (RegNext(io.cpu_addr.valid) | RegNext(replay_valid)) && !RegNext(io.kill)[0m
-[0m[[0m[31merror[0m] [0m[0m                                                                                    ^[0m
-[0m[[0m[31merror[0m] [0m[0mtwo errors found[0m
+[0m[[0m[31merror[0m] [0m[0m/home/hakam/Repos/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala:94:12: value commit_tag is not a member of chisel3.Bundle{val predict_PC: chisel3.UInt; val predict_valid: chisel3.Bool; val BTB_valid: chisel3.Bool; val BTB_target: chisel3.UInt; val BTB_type: chisel3.UInt; val BTB_br_mask: chisel3.UInt; val BTB_hit: chisel3.Bool; val commit_PC: chisel3.UInt; val commit_target: chisel3.UInt; val commit_br_type: chisel3.UInt; val commit_br_mask: chisel3.UInt; val commit_valid: chisel3.Bool}[0m
+[0m[[0m[31merror[0m] [0m[0mdid you mean commit_PC or commit_target?[0m
+[0m[[0m[31merror[0m] [0m[0m    BTB.io.commit_tag              :=   io.commit.bits.tag[0m
+[0m[[0m[31merror[0m] [0m[0m           ^[0m
+[0m[[0m[31merror[0m] [0m[0mone error found[0m

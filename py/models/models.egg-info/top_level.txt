@@ -1,5 +1,7 @@
 GenericCache
 Gshare
+HashBTB
 InstructionCache
+RAS
 SimpleDRAM
 model_utils

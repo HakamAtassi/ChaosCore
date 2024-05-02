@@ -33,11 +33,13 @@ import chisel3.util._
 import java.io.{File, FileWriter}
 import java.rmi.server.UID
 
-// FIXME: not parameterized for fetchwidth...
-class hash_BTB(entries:Int = 4096) extends Module{
+import helperFunctions._
 
+// FIXME: not parameterized for fetchwidth...
+class hash_BTB(entries:Int = 4096, fetchWidth:Int=4) extends Module{
+// FIXME: tag bits may be wrong here...
     
-    val BTBIndexBits = 32 - 2 - 1 - log2Ceil(entries)
+    val BTBIndexBits = getBTBTagBits(BTBSize=entries, fetchWidth=fetchWidth)
 
     val validBits = 1
     val tagBits = 32 - BTBIndexBits
@@ -66,7 +68,6 @@ class hash_BTB(entries:Int = 4096) extends Module{
         //commit-input
         val commit_PC       = Input(UInt(32.W))
 
-        val commit_tag        = Input(UInt((32-log2Ceil(entries)).W)) //FIXME: this should use the helper function in bundles.scala
         val commit_target      = Input(UInt(32.W))
         val commit_br_type        = Input(UInt(typeBits.W))
         val commit_br_mask      = Input(UInt(brMaskBits.W))
@@ -83,16 +84,19 @@ class hash_BTB(entries:Int = 4096) extends Module{
     val BTB_type_output       = Wire(UInt(typeBits.W))
     val BTB_br_mask_output     = Wire(UInt(brMaskBits.W))
 
-    val input_tag = io.predict_PC(31, 31-tagBits+1)
+    //val input_tag = io.predict_PC(31, 31-tagBits+1)
+    val input_tag = shiftDownByTagBits(io.predict_PC)
 
     // memory // 
 
     val BTB_memory = Module(new SDPReadWriteSmem(depth = entries, width = entryWidth))
 
-    val prediction_BTB_address = io.predict_PC(BTBIndexBits+3, 3)
+    val prediction_BTB_address = io.predict_PC(BTBIndexBits + log2Ceil(fetchWidth) + 2, log2Ceil(fetchWidth) + 2)
     val prediction_BTB_output = Wire(UInt(entryWidth.W))
 
-    val commit_BTB_address = io.commit_PC(BTBIndexBits+3, 3)
+    val commit_BTB_address = io.commit_PC(BTBIndexBits + log2Ceil(fetchWidth) + 2, log2Ceil(fetchWidth) + 2)
+
+    dontTouch(input_tag)
 
     // FIXME: update this
     BTB_memory.io.enable := 1.B
@@ -101,7 +105,7 @@ class hash_BTB(entries:Int = 4096) extends Module{
 
     BTB_memory.io.wr_addr := commit_BTB_address
     BTB_memory.io.wr_en   := io.commit_valid
-    BTB_memory.io.data_in := Cat(1.U, io.commit_tag, io.commit_target, io.commit_br_type, io.commit_br_mask)
+    BTB_memory.io.data_in := Cat(1.U, input_tag, io.commit_target, io.commit_br_type, io.commit_br_mask)
 
     prediction_BTB_output := BTB_memory.io.data_out
 
@@ -118,10 +122,11 @@ class hash_BTB(entries:Int = 4096) extends Module{
     BTB_br_mask_output   := prediction_BTB_output(entryWidth-1-validBits-tagBits-targetBits-typeBits, entryWidth-1-validBits-tagBits-targetBits-typeBits-brMaskBits+1)
 
 
+    dontTouch(BTB_tag_output)
 
     // OUTPUTS
     io.BTB_valid    := RegNext(io.predict_valid)    // Hit signal
-    io.BTB_hit      := (RegNext(input_tag) === BTB_tag_output)
+    io.BTB_hit      := (RegNext(input_tag) === BTB_tag_output) && RegNext(io.predict_valid)
     io.BTB_target   := BTB_target_output
     io.BTB_type     := BTB_type_output
     io.BTB_br_mask  := BTB_br_mask_output
