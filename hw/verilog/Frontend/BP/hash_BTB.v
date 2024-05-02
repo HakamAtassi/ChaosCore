@@ -64,34 +64,45 @@ endmodule
 module hash_BTB(
   input         clock,
                 reset,
-  input  [31:0] io_prediction_PC,
-  input         io_prediction_valid,
+  input  [31:0] io_predict_PC,
+  input         io_predict_valid,
   output        io_BTB_valid,
   output [31:0] io_BTB_target,
-  output [2:0]  io_BTB_type,
-  output [1:0]  io_BTB_brMask,
+  output [1:0]  io_BTB_type,
+                io_BTB_br_mask,
+  output        io_BTB_hit,
   input  [31:0] io_commit_PC,
-  input  [52:0] io_commit_data,
+                io_commit_target,
+  input  [1:0]  io_commit_br_type,
+                io_commit_br_mask,
   input         io_commit_valid
 );
 
   wire [52:0] _BTB_memory_io_data_out;
-  reg  [14:0] io_BTB_valid_REG;
-  always @(posedge clock)
-    io_BTB_valid_REG <= io_prediction_PC[31:17];
+  wire [15:0] input_tag = io_predict_PC[31:16];
+  wire [15:0] BTB_tag_output = _BTB_memory_io_data_out[51:36];
+  reg         io_BTB_valid_REG;
+  reg  [15:0] io_BTB_hit_REG;
+  reg         io_BTB_hit_REG_1;
+  always @(posedge clock) begin
+    io_BTB_valid_REG <= io_predict_valid;
+    io_BTB_hit_REG <= input_tag;
+    io_BTB_hit_REG_1 <= io_predict_valid;
+  end // always @(posedge)
   SDPReadWriteSmem BTB_memory (
     .clock       (clock),
     .reset       (reset),
-    .io_rd_addr  (io_prediction_PC[14:3]),
+    .io_rd_addr  (io_predict_PC[15:4]),
     .io_data_out (_BTB_memory_io_data_out),
-    .io_wr_addr  (io_commit_PC[14:3]),
+    .io_wr_addr  (io_commit_PC[15:4]),
     .io_wr_en    (io_commit_valid),
-    .io_data_in  (io_commit_data)
+    .io_data_in
+      ({1'h1, input_tag, io_commit_target, io_commit_br_type, io_commit_br_mask})
   );
-  assign io_BTB_valid =
-    io_BTB_valid_REG == _BTB_memory_io_data_out[51:37] & _BTB_memory_io_data_out[52];
-  assign io_BTB_target = _BTB_memory_io_data_out[36:5];
-  assign io_BTB_type = _BTB_memory_io_data_out[4:2];
-  assign io_BTB_brMask = _BTB_memory_io_data_out[1:0];
+  assign io_BTB_valid = io_BTB_valid_REG;
+  assign io_BTB_target = _BTB_memory_io_data_out[35:4];
+  assign io_BTB_type = _BTB_memory_io_data_out[3:2];
+  assign io_BTB_br_mask = _BTB_memory_io_data_out[1:0];
+  assign io_BTB_hit = io_BTB_hit_REG == BTB_tag_output & io_BTB_hit_REG_1;
 endmodule
 

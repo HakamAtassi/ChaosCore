@@ -91,7 +91,6 @@ class BP(GHRWidth:Int = 16, fetchWidth:Int = 4, RASEntries:Int=128, BTBEntries:I
     // commit port
     BTB.io.commit_PC               := io.commit.bits.PC
     
-    BTB.io.commit_tag              :=   io.commit.bits.tag
     BTB.io.commit_target           :=   io.commit.bits.target
     BTB.io.commit_br_type          :=   io.commit.bits.br_type
     BTB.io.commit_br_mask          :=   io.commit.bits.br_mask

@@ -1,0 +1,6 @@
+<testsuites name="results">
+  <testsuite name="all" package="all">
+    <property name="random_seed" value="1714678208" />
+    <testcase name="test_miss_hit_all_addresses" classname="hash_BTB_tests" file="/home/hakam/Repos/ChaosCore/cocotb/functional_tests/Frontend/hash_BTB/hash_BTB_tests.py" lineno="58" time="75.83053636550903" sim_time_ns="57356.001" ratio_time="756.3707676224212" />
+  </testsuite>
+</testsuites>

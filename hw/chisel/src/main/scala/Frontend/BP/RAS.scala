@@ -55,7 +55,7 @@ class RAS(entries:Int = 128) extends Module{
         val revert_valid    = Input(Bool())
 
         // output
-        val ret_addr = Output(UInt(32.W))             // Ret addr
+        val ret_addr  = Output(UInt(32.W))             // Ret addr
         val NEXT     = Output(UInt(nextBits.W))       // To checkpoint
         val TOS      = Output(UInt(tosBits.W))        // ...
 
@@ -104,6 +104,8 @@ class RAS(entries:Int = 128) extends Module{
         RAS_memory.io.rd_addr := NEXT
     }.elsewhen(io.rd_valid){
         RAS_memory.io.rd_addr := NOS
+    }.elsewhen(io.revert_valid){
+        RAS_memory.io.rd_addr := io.revert_TOS
     }.otherwise{
         RAS_memory.io.rd_addr := TOS
     }

@@ -99,7 +99,8 @@ module RAS(
   SDPReadWriteSmem RAS_memory (
     .clock       (clock),
     .reset       (reset),
-    .io_rd_addr  (io_wr_valid ? NEXT : io_rd_valid ? NOS : TOS),
+    .io_rd_addr
+      (io_wr_valid ? NEXT : io_rd_valid ? NOS : io_revert_valid ? io_revert_TOS : TOS),
     .io_data_out (_RAS_memory_io_data_out),
     .io_wr_addr  (NEXT),
     .io_wr_en    (io_wr_valid),

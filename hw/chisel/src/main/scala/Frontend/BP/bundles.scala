@@ -35,9 +35,16 @@ import java.rmi.server.UID
 
 
 // Helper functions //
-object helperFunctions{
-    def getBTBTagBits(BTBSize:Int = 4096): Int = (32-log2Ceil(BTBSize))
+object helperFunctions {
+  def getBTBTagBits(BTBSize: Int = 4096, fetchWidth:Int=4): Int = (32 - log2Ceil(BTBSize) - 2 - log2Ceil(fetchWidth))
+
+  // Function to shift UInt32 signal down by "getBTBTagBits"
+  def shiftDownByTagBits(input: UInt, BTBSize: Int = 4096, fetchWidth:Int=4): UInt = {
+    val shiftAmount = 32-getBTBTagBits(BTBSize, fetchWidth)
+    input >> shiftAmount
+  }
 }
+
 
 import helperFunctions.getBTBTagBits
 
