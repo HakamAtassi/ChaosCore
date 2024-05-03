@@ -31,3 +31,9 @@ class RAS:
 
     def tos(self):
         return self.addr_mem[self.TOS]
+
+    def get_outputs(self):
+        TOS = self.TOS
+        NEXT = self.NEXT
+        ret_addr = self.addr_mem[self.TOS]
+        return (TOS, NEXT, ret_addr)

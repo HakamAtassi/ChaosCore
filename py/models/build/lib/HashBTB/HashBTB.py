@@ -1,7 +1,7 @@
 import numpy as np
 
 class HashBTB:
-    def __init__(self, entries, fetchWidth=4):
+    def __init__(self, entries, fetch_width=4):
         self.entries        = entries
         self.tag_mem        = [0] * entries
         self.target_mem     = [0] * entries
@@ -11,7 +11,7 @@ class HashBTB:
 
         self.address_bits = int(np.log2(entries))
         self.address_mask = (1<<self.address_bits) - 1
-        self.fetch_width_bits = int(np.log2(fetchWidth))
+        self.fetch_width_bits = int(np.log2(fetch_width))
 
         self.tag_bits     = (32-2-self.fetch_width_bits-self.address_bits)
 
@@ -40,13 +40,13 @@ class HashBTB:
         return (hit, target, type, br_mask)
 
         
-    def commit(self, address, target, type, br_mask):
+    def commit(self, address, target, br_type, br_mask):
         masked_address = self.get_hashed_address(address)
         current_tag = self.address_to_tag(address)
 
         self.tag_mem[masked_address]        = current_tag
         self.target_mem[masked_address]     = target
-        self.type_mem[masked_address]       = type
+        self.type_mem[masked_address]       = br_type
         self.br_mask_mem[masked_address]    = br_mask
         self.valid_mem[masked_address]      = 1
 

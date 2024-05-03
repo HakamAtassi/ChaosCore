@@ -43,8 +43,8 @@ class GHR:
         self.mask = (1<<GHR_width) - 1
 
     def update(self, bit):
-        self.bht = (self.bht << 1) | bit
-        self.bht = self.bht & self.mask
+        self.GHR = (self.GHR << 1) | bit
+        self.GHR = self.GHR & self.mask
 
     def write(self, GHR):
         self.GHR = GHR

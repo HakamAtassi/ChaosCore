@@ -59,6 +59,6 @@ object Main extends App {
     VerilogGenerator.generateVerilog(new hash_BTB(entries = 4096), "../verilog/Frontend/BP/hash_BTB.v")
     //VerilogGenerator.generateVerilog(new decode_validate(fetchWidth=4), "../verilog/Frontend/BP/decode_validate.v")
     VerilogGenerator.generateVerilog(new RAS, "../verilog/Frontend/BP/RAS.v")
-    //VerilogGenerator.generateVerilog(new BP, "../verilog/Frontend/BP.v")
+    VerilogGenerator.generateVerilog(new BP, "../verilog/Frontend/BP.v")
     //VerilogGenerator.generateVerilog(new Frontend, "../verilog/Frontend/Frontend.v")
 }

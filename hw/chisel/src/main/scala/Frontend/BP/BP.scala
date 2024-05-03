@@ -42,7 +42,7 @@ class BP(GHRWidth:Int = 16, fetchWidth:Int = 4, RASEntries:Int=128, BTBEntries:I
         val commit      = Flipped(Decoupled(new commit(fetchWidth=fetchWidth))) // common case. Update BTB, PHT
 
         // Mispredict Channel 
-        val mispredict  = Flipped(Decoupled(new mispredict(GHRWidth=GHRWidth, RASEntries=RASEntries)))
+        //val mispredict  = Flipped(Decoupled(new mispredict(GHRWidth=GHRWidth, RASEntries=RASEntries)))
 
         // Revert Channel
         val RAS_update  = new RAS_update    // input
@@ -62,7 +62,7 @@ class BP(GHRWidth:Int = 16, fetchWidth:Int = 4, RASEntries:Int=128, BTBEntries:I
     /////////////////
     // Init gshare //
     /////////////////
-    val gshare = Module(new gshare(GHR_width=GHRWidth))
+    val gshare = Module(new gshare(GHR_width=GHRWidth)) // FIXME: should this be addressed by the PC or by the fetch packet aligned PC?
 
     // predict port
     gshare.io.predict_GHR               := GHR
@@ -73,7 +73,6 @@ class BP(GHRWidth:Int = 16, fetchWidth:Int = 4, RASEntries:Int=128, BTBEntries:I
     gshare.io.commit_GHR                := io.commit.bits.GHR
     gshare.io.commit_PC                 := io.commit.bits.PC
     gshare.io.commit_branch_direction   := io.commit.bits.T_NT
-
     gshare.io.commit_valid              := io.commit.valid
 
     //////////////
@@ -87,17 +86,12 @@ class BP(GHRWidth:Int = 16, fetchWidth:Int = 4, RASEntries:Int=128, BTBEntries:I
     BTB.io.predict_valid    := io.predict.valid
 
     // FIXME: this updates blindly. Where is taken only commit handled?????
-    // FIXME: commit_tag not done.
     // commit port
-    BTB.io.commit_PC               := io.commit.bits.PC
-    
+    BTB.io.commit_PC               :=   io.commit.bits.PC
     BTB.io.commit_target           :=   io.commit.bits.target
     BTB.io.commit_br_type          :=   io.commit.bits.br_type
     BTB.io.commit_br_mask          :=   io.commit.bits.br_mask
-    
-
     BTB.io.commit_valid            :=   io.commit.valid
-
 
     ///////////////////////////////
     // Init Return-Address-Stack //
@@ -112,31 +106,27 @@ class BP(GHRWidth:Int = 16, fetchWidth:Int = 4, RASEntries:Int=128, BTBEntries:I
     RAS.io.wr_valid     := 0.U
     RAS.io.rd_valid     := 0.U
 
+    // handle misprediction
+    RAS.io.revert_NEXT  :=   io.commit.bits.NEXT
+    RAS.io.revert_TOS   :=   io.commit.bits.TOS
+    RAS.io.revert_valid :=   io.commit.misprediction && io.commit.valid
 
-    when(io.mispredict.valid){  // if mispred, handle mispred...
-        // mispredict port
-        RAS.io.revert_NEXT  :=   io.mispredict.bits.NEXT
-        RAS.io.revert_TOS   :=   io.mispredict.bits.TOS
-        RAS.io.revert_valid :=   io.mispredict.valid
-    }.otherwise{
-        // update port
-        RAS.io.wr_addr      := io.RAS_update.call_addr
-        RAS.io.wr_valid     := io.RAS_update.call
-        RAS.io.rd_valid     := io.RAS_update.ret
-    }
+    // update port
+    RAS.io.wr_addr      := io.RAS_update.call_addr
+    RAS.io.wr_valid     := io.RAS_update.call && io.commit.valid
+    RAS.io.rd_valid     := io.RAS_update.ret && io.commit.valid
 
     /////////
     // GHR //
     /////////
     
-    val is_cond_branch = 0.U
-        //BTB.io.valid   // FIXME: not implemented
+    val is_cond_branch = (BTB.io.BTB_valid && BTB.io.BTB_hit && (BTB.io.BTB_type === 0.U))
 
-    when(io.mispredict.valid){
-        GHR := io.mispredict.bits.GHR
-    }.elsewhen(io.revert.valid){
+    when(io.commit.valid && io.commit.mispredict){          // mispredict
+        GHR := io.commit.bits.GHR
+    }.elsewhen(io.revert.valid){        // revert
         GHR := io.revert.bits.GHR
-    }.otherwise{
+    }.otherwise{                        // post-prediction (typical case)
         GHR := (GHR<<1) | (is_cond_branch & gshare.io.T_NT.asUInt)
     }
 
@@ -150,7 +140,7 @@ class BP(GHRWidth:Int = 16, fetchWidth:Int = 4, RASEntries:Int=128, BTBEntries:I
 
     // BTB
     io.prediction.bits.target    := BTB.io.BTB_target
-    io.prediction.bits.br_type   := BTB.io.BTB_type
+    io.prediction.bits.br_type   := BTB.io.BTB_typef
     io.prediction.bits.br_mask   := BTB.io.BTB_br_mask
     io.prediction.bits.hit       := BTB.io.BTB_hit
     io.prediction.bits.GHR       := GHR
@@ -161,7 +151,6 @@ class BP(GHRWidth:Int = 16, fetchWidth:Int = 4, RASEntries:Int=128, BTBEntries:I
 
 
     io.commit.ready := 1.B
-    io.mispredict.ready := 1.B
     io.revert.ready := 1.B
 
 }
