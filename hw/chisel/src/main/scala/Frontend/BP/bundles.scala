@@ -73,23 +73,30 @@ class metadata extends Bundle{
 // BP channels //
 /////////////////
 
-class commit(fetchWidth:Int=4, GHRWidth:Int=16, BTBEntries:Int=4096) extends Bundle{
+class commit(fetchWidth:Int=4, GHRWidth:Int=16, BTBEntries:Int=4096, RASEntries:Int = 128) extends Bundle{
     val PC      = Input(UInt(32.W))
     val GHR     = Input(UInt(GHRWidth.W))
     val T_NT    = Input(Bool())
     
-    val tag      =Input(UInt(getBTBTagBits(BTBEntries).W))
+    //val tag      =Input(UInt(getBTBTagBits(BTBEntries).W))
     val target   =Input(UInt(32.W))
     val br_type  =Input(UInt(2.W))
     val br_mask  =Input(UInt(fetchWidth.W))
+
+    val misprediction = Input(Bool())
+    val TOS     = Input(UInt(log2Ceil(RASEntries).W))  // To reset GHR
+    val NEXT    = Input(UInt(log2Ceil(RASEntries).W)) // TO reset GHR
+
 }
 
+/* deprecated
 class mispredict(GHRWidth:Int=16, RASEntries:Int = 128) extends Bundle{
     val PC      = Input(UInt(32.W)) //
     val GHR     = Input(UInt(GHRWidth.W))  // To reset GHR
     val TOS     = Input(UInt(log2Ceil(RASEntries).W))  // To reset GHR
     val NEXT    = Input(UInt(log2Ceil(RASEntries).W)) // TO reset GHR
 }
+*/
 
 class RAS_update extends Bundle{    // Request call or ret
     val call_addr = Input(UInt(32.W))

@@ -44,8 +44,8 @@ class hash_BTB(entries:Int = 4096, fetchWidth:Int=4) extends Module{
     val validBits = 1
     val tagBits = 32 - BTBIndexBits
     val targetBits = 32
-    val typeBits = 2    
-    val brMaskBits = 2
+    val typeBits = 2    // [ret jump]. If [0,0] => Cond branch
+    val brMaskBits = fetchWidth
 
 
     val entryWidth = validBits + tagBits + targetBits + typeBits + brMaskBits
@@ -55,7 +55,7 @@ class hash_BTB(entries:Int = 4096, fetchWidth:Int=4) extends Module{
 
         //prediction-input
         val predict_PC          = Input(UInt(32.W))
-        val predict_valid       = Input(Bool())    // FIXME: This is not used anywhere???
+        val predict_valid       = Input(Bool())
 
         //prediction-output
         // ??
