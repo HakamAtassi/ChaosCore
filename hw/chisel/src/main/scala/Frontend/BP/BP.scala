@@ -58,11 +58,113 @@ class BP(GHRWidth:Int = 16, fetchWidth:Int = 4, RASEntries:Int=128, BTBEntries:I
     })
 
 
-    val GHR = RegInit(UInt(GHRWidth.W),0.U)
+    // It is assumed that whether or not the BTB is updated is controller externally.
+    // That is, the BTB is only allocated with taken branches.
+    //===
+    // FIXME: there are 2 options here, either multiplex the GHR so that ongoing predictuions use the correct value
+    // or insert a frontend bubble
+
+    // On commits (misprediction) (predicted, actual)
+        // (T / NT) 
+            // GHR revert
+            // RAS revert
+            // PHT update
+            // BTB no change
+            // prediction no change (mispredict PC should be on input due to mux)
+            // reverts ignored
+        // (NT / T)
+            // GHR revert
+            // RAS revert
+            // PHT update
+            // BTB update
+            // prediction no change (mispredict PC should be on input due to mux)
+            // reverts ignored
+    // On reverts (pre-decoder)
+        // Commit as normal
+        // Predict as normal
+        // GHR revert
+    // On commits (no mispredict or revert)
+        // (NT / NT)
+            // PHT update
+            // BTB no change
+        // (T / T)
+            // PHT update
+            // BTB update
+
+    // predictions
+    //FIXME: what needs to be muxed here?
+        // valid as normal
+    // reverts
+        // invalid during mispredictions
+        // otherwise valid
+    // RAS updates
+        // only valid when no mispredict or revert
+
+
+    /////////////
+    // MODULES //
+    /////////////
+
+    val GHR_reg = RegInit(UInt(GHRWidth.W),0.U)
+    val gshare = Module(new gshare(GHR_width=GHRWidth)) // FIXME: should this be addressed by the PC or by the fetch packet aligned PC?
+    val BTB = Module(new hash_BTB(entries=BTBEntries))
+    val RAS = Module(new RAS(entries=RASEntries))
+
+    ///////////////
+    // GHR LOGIC //
+    ///////////////
+
+    val GHR = Wire(UInt(GHRWidth.W))
+    val GHR_update = Wire(Bool())
+    val misprediction = Wire(Bool())
+    val revert = Wire(Bool())
+
+    misprediction := io.commit.valid && io.commit.bits.misprediction
+    revert := io.revert.valid
+
+    // Update GHR whenever the BTB indates a branch
+    GHR_update := gshare.io.valid && BTB.io.BTB_valid && BTB.io.BTB_hit && (BTB.io.BTB_type === 0.U)
+
+    when(misprediction){   // During mispredic, use input GHR
+        GHR := io.commit.bits.GHR
+    }.elsewhen(revert){ // Same for revert
+        GHR := io.revert.bits.GHR
+    }.otherwise{        // Otherwise, GHR comes from the actual GHR reg
+        GHR := GHR_reg
+    }
+
+    when(misprediction || revert){ // during a mispredict or revert, load corrected GHR
+        GHR_reg := GHR
+    }.elsewhen(GHR_update){     // if prediction was detected in BTB, update GHR reg
+        GHR_reg := (GHR_reg << 1) | gshare.io.T_NT.asUInt
+    }.otherwise{                // Otherwise, do nothing
+        GHR_reg := GHR_reg
+    }
+
+    //////////////////
+    // Commit logic //
+    //////////////////
+
+    // PHT => updates on cond branches, correct or incorrect
+    // BTB => updates on truely taken branches
+    // GHR => updates speculatively. Reverts on reverts from predecoder or mispredictions
+    // RAS => updates speculatively. Reverts on mispredictions
+
+    val update_BTB = Wire(Bool())
+    val update_PHT = Wire(Bool())
+    val update_RAS = Wire(Bool())
+    val revert_RAS = Wire(Bool())
+    val revert_GHR = Wire(Bool())
+
+    update_BTB := io.commit.bits.T_NT && io.commit.valid                                    // Only update when the branch is found taken
+    update_PHT := (io.commit.bits.br_type === 0.U) && io.commit.valid                       // BTB only updates on conditional branches
+    update_RAS := !misprediction                                                            // RAS can only push/pop when not misprediction
+    revert_GHR := misprediction || (io.revert.valid)
+    revert_RAS := misprediction
+
     /////////////////
     // Init gshare //
     /////////////////
-    val gshare = Module(new gshare(GHR_width=GHRWidth)) // FIXME: should this be addressed by the PC or by the fetch packet aligned PC?
 
     // predict port
     gshare.io.predict_GHR               := GHR
@@ -73,63 +175,38 @@ class BP(GHRWidth:Int = 16, fetchWidth:Int = 4, RASEntries:Int=128, BTBEntries:I
     gshare.io.commit_GHR                := io.commit.bits.GHR
     gshare.io.commit_PC                 := io.commit.bits.PC
     gshare.io.commit_branch_direction   := io.commit.bits.T_NT
-    gshare.io.commit_valid              := io.commit.valid
+    gshare.io.commit_valid              := update_PHT
+
 
     //////////////
     // Init BTB //
     //////////////
-    val BTB = Module(new hash_BTB(entries=BTBEntries))
     // Reminder: BTB only updates on taken branches...
 
     // predict port
-    BTB.io.predict_PC       := io.predict.bits
-    BTB.io.predict_valid    := io.predict.valid
+    BTB.io.predict_PC               := io.predict.bits
+    BTB.io.predict_valid            := io.predict.valid
 
-    // FIXME: this updates blindly. Where is taken only commit handled?????
     // commit port
-    BTB.io.commit_PC               :=   io.commit.bits.PC
-    BTB.io.commit_target           :=   io.commit.bits.target
-    BTB.io.commit_br_type          :=   io.commit.bits.br_type
-    BTB.io.commit_br_mask          :=   io.commit.bits.br_mask
-    BTB.io.commit_valid            :=   io.commit.valid
+    BTB.io.commit_PC                :=   io.commit.bits.PC
+    BTB.io.commit_target            :=   io.commit.bits.target
+    BTB.io.commit_br_type           :=   io.commit.bits.br_type
+    BTB.io.commit_br_mask           :=   io.commit.bits.br_mask
+    BTB.io.commit_valid             :=   update_BTB
 
     ///////////////////////////////
     // Init Return-Address-Stack //
     ///////////////////////////////
-    val RAS = Module(new RAS(entries=RASEntries))
-
-    RAS.io.revert_NEXT  := 0.U
-    RAS.io.revert_TOS   := 0.U
-    RAS.io.revert_valid := 0.U
-
-    RAS.io.wr_addr      := 0.U
-    RAS.io.wr_valid     := 0.U
-    RAS.io.rd_valid     := 0.U
-
+    
     // handle misprediction
     RAS.io.revert_NEXT  :=   io.commit.bits.NEXT
     RAS.io.revert_TOS   :=   io.commit.bits.TOS
-    RAS.io.revert_valid :=   io.commit.misprediction && io.commit.valid
+    RAS.io.revert_valid :=   revert_RAS
 
     // update port
     RAS.io.wr_addr      := io.RAS_update.call_addr
-    RAS.io.wr_valid     := io.RAS_update.call && io.commit.valid
-    RAS.io.rd_valid     := io.RAS_update.ret && io.commit.valid
-
-    /////////
-    // GHR //
-    /////////
-    
-    val is_cond_branch = (BTB.io.BTB_valid && BTB.io.BTB_hit && (BTB.io.BTB_type === 0.U))
-
-    when(io.commit.valid && io.commit.mispredict){          // mispredict
-        GHR := io.commit.bits.GHR
-    }.elsewhen(io.revert.valid){        // revert
-        GHR := io.revert.bits.GHR
-    }.otherwise{                        // post-prediction (typical case)
-        GHR := (GHR<<1) | (is_cond_branch & gshare.io.T_NT.asUInt)
-    }
-
+    RAS.io.wr_valid     := io.RAS_update.call && update_RAS
+    RAS.io.rd_valid     := io.RAS_update.ret  && update_RAS
 
     // Assign outputs
 
@@ -140,7 +217,7 @@ class BP(GHRWidth:Int = 16, fetchWidth:Int = 4, RASEntries:Int=128, BTBEntries:I
 
     // BTB
     io.prediction.bits.target    := BTB.io.BTB_target
-    io.prediction.bits.br_type   := BTB.io.BTB_typef
+    io.prediction.bits.br_type   := BTB.io.BTB_type
     io.prediction.bits.br_mask   := BTB.io.BTB_br_mask
     io.prediction.bits.hit       := BTB.io.BTB_hit
     io.prediction.bits.GHR       := GHR

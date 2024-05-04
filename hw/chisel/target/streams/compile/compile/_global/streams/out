@@ -1,6 +1,33 @@
-[0m[[0m[31merror[0m] [0m[0m/home/hakam/Repos/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala:126:82: type mismatch;[0m
-[0m[[0m[31merror[0m] [0m[0m found   : Boolean[0m
-[0m[[0m[31merror[0m] [0m[0m required: chisel3.Bool[0m
-[0m[[0m[31merror[0m] [0m[0m    val is_cond_branch = (BTB.io.BTB_valid && BTB.io.BTB_hit && (BTB.io.BTB_type == 0.U))[0m
-[0m[[0m[31merror[0m] [0m[0m                                                                                 ^[0m
-[0m[[0m[31merror[0m] [0m[0mone error found[0m
+[0m[[0m[31merror[0m] [0m[0m/home/hakam/Repos/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala:117:57: not found: type mispredict[0m
+[0m[[0m[31merror[0m] [0m[0m        val mispredict        =   Flipped(Decoupled(new mispredict(GHRWidth=GHRWidth, RASEntries=RASEntries)))    // Input[0m
+[0m[[0m[31merror[0m] [0m[0m                                                        ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/hakam/Repos/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala:117:76: reassignment to val[0m
+[0m[[0m[31merror[0m] [0m[0m        val mispredict        =   Flipped(Decoupled(new mispredict(GHRWidth=GHRWidth, RASEntries=RASEntries)))    // Input[0m
+[0m[[0m[31merror[0m] [0m[0m                                                                           ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/hakam/Repos/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala:117:97: reassignment to val[0m
+[0m[[0m[31merror[0m] [0m[0m        val mispredict        =   Flipped(Decoupled(new mispredict(GHRWidth=GHRWidth, RASEntries=RASEntries)))    // Input[0m
+[0m[[0m[31merror[0m] [0m[0m                                                                                                ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/hakam/Repos/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala:131:42: not found: type PC_arbit[0m
+[0m[[0m[31merror[0m] [0m[0m    val PC_gen              = Module(new PC_arbit(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, startPC=startPC))[0m
+[0m[[0m[31merror[0m] [0m[0m                                         ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/hakam/Repos/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala:131:59: reassignment to val[0m
+[0m[[0m[31merror[0m] [0m[0m    val PC_gen              = Module(new PC_arbit(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, startPC=startPC))[0m
+[0m[[0m[31merror[0m] [0m[0m                                                          ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/hakam/Repos/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala:131:80: reassignment to val[0m
+[0m[[0m[31merror[0m] [0m[0m    val PC_gen              = Module(new PC_arbit(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, startPC=startPC))[0m
+[0m[[0m[31merror[0m] [0m[0m                                                                               ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/hakam/Repos/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala:131:103: reassignment to val[0m
+[0m[[0m[31merror[0m] [0m[0m    val PC_gen              = Module(new PC_arbit(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, startPC=startPC))[0m
+[0m[[0m[31merror[0m] [0m[0m                                                                                                      ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/hakam/Repos/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala:131:123: reassignment to val[0m
+[0m[[0m[31merror[0m] [0m[0m    val PC_gen              = Module(new PC_arbit(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, startPC=startPC))[0m
+[0m[[0m[31merror[0m] [0m[0m                                                                                                                          ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/hakam/Repos/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala:220:11: value mispredict is not a member of chisel3.Bundle{val predict: chisel3.util.DecoupledIO[chisel3.UInt]; val commit: chisel3.util.DecoupledIO[commit]; val RAS_update: RAS_update; val RAS_read: RAS_read; val revert: chisel3.util.DecoupledIO[revert]; val prediction: chisel3.util.DecoupledIO[prediction]}[0m
+[0m[[0m[31merror[0m] [0m[0mdid you mean predict?[0m
+[0m[[0m[31merror[0m] [0m[0m    bp.io.mispredict.bits   :=  io.mispredict.bits[0m
+[0m[[0m[31merror[0m] [0m[0m          ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/hakam/Repos/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala:221:11: value mispredict is not a member of chisel3.Bundle{val predict: chisel3.util.DecoupledIO[chisel3.UInt]; val commit: chisel3.util.DecoupledIO[commit]; val RAS_update: RAS_update; val RAS_read: RAS_read; val revert: chisel3.util.DecoupledIO[revert]; val prediction: chisel3.util.DecoupledIO[prediction]}[0m
+[0m[[0m[31merror[0m] [0m[0mdid you mean predict?[0m
+[0m[[0m[31merror[0m] [0m[0m    bp.io.mispredict.valid  :=  io.mispredict.valid[0m
+[0m[[0m[31merror[0m] [0m[0m          ^[0m
+[0m[[0m[31merror[0m] [0m[0m10 errors found[0m
