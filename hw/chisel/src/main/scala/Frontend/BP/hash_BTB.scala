@@ -69,8 +69,8 @@ class hash_BTB(entries:Int = 4096, fetchWidth:Int=4) extends Module{
         val commit_PC       = Input(UInt(32.W))
 
         val commit_target      = Input(UInt(32.W))
-        val commit_br_type        = Input(UInt(typeBits.W))
-        val commit_br_mask      = Input(UInt(brMaskBits.W))
+        val commit_br_type     = Input(UInt(typeBits.W))
+        val commit_br_mask     = Input(UInt(brMaskBits.W))
 
         val commit_valid    = Input(Bool())
 
@@ -84,8 +84,9 @@ class hash_BTB(entries:Int = 4096, fetchWidth:Int=4) extends Module{
     val BTB_type_output       = Wire(UInt(typeBits.W))
     val BTB_br_mask_output     = Wire(UInt(brMaskBits.W))
 
-    //val input_tag = io.predict_PC(31, 31-tagBits+1)
-    val input_tag = shiftDownByTagBits(io.predict_PC)
+    //val commit_input_tag = io.predict_PC(31, 31-tagBits+1)
+    val commit_input_tag = shiftDownByTagBits(io.commit_PC)
+    val predict_input_tag = shiftDownByTagBits(io.predict_PC)
 
     // memory // 
 
@@ -96,7 +97,7 @@ class hash_BTB(entries:Int = 4096, fetchWidth:Int=4) extends Module{
 
     val commit_BTB_address = io.commit_PC(BTBIndexBits + log2Ceil(fetchWidth) + 2, log2Ceil(fetchWidth) + 2)
 
-    dontTouch(input_tag)
+    dontTouch(commit_input_tag)
 
     // FIXME: update this
     BTB_memory.io.enable := 1.B
@@ -105,7 +106,7 @@ class hash_BTB(entries:Int = 4096, fetchWidth:Int=4) extends Module{
 
     BTB_memory.io.wr_addr := commit_BTB_address
     BTB_memory.io.wr_en   := io.commit_valid
-    BTB_memory.io.data_in := Cat(1.U, input_tag, io.commit_target, io.commit_br_type, io.commit_br_mask)
+    BTB_memory.io.data_in := Cat(1.U, commit_input_tag, io.commit_target, io.commit_br_type, io.commit_br_mask)
 
     prediction_BTB_output := BTB_memory.io.data_out
 
@@ -119,14 +120,14 @@ class hash_BTB(entries:Int = 4096, fetchWidth:Int=4) extends Module{
     BTB_tag_output      := prediction_BTB_output(entryWidth-1-validBits, entryWidth-1-validBits-tagBits+1)
     BTB_target_output   := prediction_BTB_output(entryWidth-1-validBits-tagBits, entryWidth-1-validBits-tagBits-targetBits+1)
     BTB_type_output     := prediction_BTB_output(entryWidth-1-validBits-tagBits-targetBits, entryWidth-1-validBits-tagBits-targetBits-typeBits+1)
-    BTB_br_mask_output   := prediction_BTB_output(entryWidth-1-validBits-tagBits-targetBits-typeBits, entryWidth-1-validBits-tagBits-targetBits-typeBits-brMaskBits+1)
+    BTB_br_mask_output  := prediction_BTB_output(entryWidth-1-validBits-tagBits-targetBits-typeBits, entryWidth-1-validBits-tagBits-targetBits-typeBits-brMaskBits+1)
 
 
     dontTouch(BTB_tag_output)
 
     // OUTPUTS
     io.BTB_valid    := RegNext(io.predict_valid)    // Hit signal
-    io.BTB_hit      := (RegNext(input_tag) === BTB_tag_output) && RegNext(io.predict_valid)
+    io.BTB_hit      := (RegNext(predict_input_tag) === BTB_tag_output) && RegNext(io.predict_valid)
     io.BTB_target   := BTB_target_output
     io.BTB_type     := BTB_type_output
     io.BTB_br_mask  := BTB_br_mask_output

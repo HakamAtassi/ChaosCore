@@ -29,11 +29,11 @@ class HashBTB:
         masked_address = self.get_hashed_address(address)
         current_tag = self.address_to_tag(address)
 
-        tag     = self.tag_mem[masked_address]
-        target  = self.target_mem[masked_address]
-        type    = self.type_mem[masked_address]
-        valid   = self.br_mask_mem[masked_address]
-        br_mask = self.valid_mem[masked_address]
+        tag     = int(self.tag_mem[masked_address])
+        target  = hex(self.target_mem[masked_address])
+        type    = int(self.type_mem[masked_address])
+        valid   = int(self.valid_mem[masked_address])
+        br_mask = int(self.br_mask_mem[masked_address])
 
         hit = ((current_tag == tag) and valid)
 

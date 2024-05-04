@@ -1,6 +1,8 @@
 setup.py
 BP/BP.py
 BP/__init__.py
+Frontend/Frontend.py
+Frontend/__init__.py
 GenericCache/GenericCache.py
 GenericCache/__init__.py
 Gshare/Gshare.py

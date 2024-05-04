@@ -79,14 +79,14 @@ module hash_BTB(
 );
 
   wire [54:0] _BTB_memory_io_data_out;
-  wire [15:0] input_tag = io_predict_PC[31:16];
+  wire [15:0] commit_input_tag = io_commit_PC[31:16];
   wire [15:0] BTB_tag_output = _BTB_memory_io_data_out[53:38];
   reg         io_BTB_valid_REG;
   reg  [15:0] io_BTB_hit_REG;
   reg         io_BTB_hit_REG_1;
   always @(posedge clock) begin
     io_BTB_valid_REG <= io_predict_valid;
-    io_BTB_hit_REG <= input_tag;
+    io_BTB_hit_REG <= io_predict_PC[31:16];
     io_BTB_hit_REG_1 <= io_predict_valid;
   end // always @(posedge)
   SDPReadWriteSmem BTB_memory (
@@ -97,7 +97,7 @@ module hash_BTB(
     .io_wr_addr  (io_commit_PC[15:4]),
     .io_wr_en    (io_commit_valid),
     .io_data_in
-      ({1'h1, input_tag, io_commit_target, io_commit_br_type, io_commit_br_mask})
+      ({1'h1, commit_input_tag, io_commit_target, io_commit_br_type, io_commit_br_mask})
   );
   assign io_BTB_valid = io_BTB_valid_REG;
   assign io_BTB_target = _BTB_memory_io_data_out[37:6];
