@@ -106,6 +106,8 @@ class BP(GHRWidth:Int = 16, fetchWidth:Int = 4, RASEntries:Int=128, BTBEntries:I
     /////////////
 
     val GHR_reg = RegInit(UInt(GHRWidth.W),0.U)
+    val GHR = Wire(UInt(GHRWidth.W))
+
     val gshare = Module(new gshare(GHR_width=GHRWidth)) // FIXME: should this be addressed by the PC or by the fetch packet aligned PC?
     val BTB = Module(new hash_BTB(entries=BTBEntries))
     val RAS = Module(new RAS(entries=RASEntries))
@@ -114,7 +116,6 @@ class BP(GHRWidth:Int = 16, fetchWidth:Int = 4, RASEntries:Int=128, BTBEntries:I
     // GHR LOGIC //
     ///////////////
 
-    val GHR = Wire(UInt(GHRWidth.W))
     val GHR_update = Wire(Bool())
     val misprediction = Wire(Bool())
     val revert = Wire(Bool())
@@ -125,22 +126,29 @@ class BP(GHRWidth:Int = 16, fetchWidth:Int = 4, RASEntries:Int=128, BTBEntries:I
     // Update GHR whenever the BTB indates a branch
     GHR_update := gshare.io.valid && BTB.io.BTB_valid && BTB.io.BTB_hit && (BTB.io.BTB_type === 0.U)
 
+    dontTouch(misprediction)
+    dontTouch(revert)
+    dontTouch(GHR_update)
+
+    val otherwise = Wire(Bool())
+    dontTouch(otherwise)
+
+    otherwise := 0.B
+
     when(misprediction){   // During mispredic, use input GHR
         GHR := io.commit.bits.GHR
     }.elsewhen(revert){ // Same for revert
         GHR := io.revert.bits.GHR
+        //GHR := 0x42.U
+    }.elsewhen(GHR_update){
+        GHR := (GHR_reg << 1) | gshare.io.T_NT.asUInt
+        //GHR := 0x42.U
     }.otherwise{        // Otherwise, GHR comes from the actual GHR reg
         GHR := GHR_reg
     }
 
-    when(misprediction || revert){ // during a mispredict or revert, load corrected GHR
-        GHR_reg := GHR
-    }.elsewhen(GHR_update){     // if prediction was detected in BTB, update GHR reg
-        GHR_reg := (GHR_reg << 1) | gshare.io.T_NT.asUInt
-    }.otherwise{                // Otherwise, do nothing
-        GHR_reg := GHR_reg
-    }
-
+    GHR_reg := GHR
+    io.prediction.bits.GHR := GHR_reg
     //////////////////
     // Commit logic //
     //////////////////
@@ -176,6 +184,8 @@ class BP(GHRWidth:Int = 16, fetchWidth:Int = 4, RASEntries:Int=128, BTBEntries:I
     gshare.io.commit_PC                 := io.commit.bits.PC
     gshare.io.commit_branch_direction   := io.commit.bits.T_NT
     gshare.io.commit_valid              := update_PHT
+
+    dontTouch(update_PHT)
 
 
     //////////////
@@ -220,10 +230,12 @@ class BP(GHRWidth:Int = 16, fetchWidth:Int = 4, RASEntries:Int=128, BTBEntries:I
     io.prediction.bits.br_type   := BTB.io.BTB_type
     io.prediction.bits.br_mask   := BTB.io.BTB_br_mask
     io.prediction.bits.hit       := BTB.io.BTB_hit
-    io.prediction.bits.GHR       := GHR
+    //io.prediction.bits.GHR       := GHR
     io.prediction.bits.T_NT      := gshare.io.T_NT
 
-    io.predict.ready        := io.prediction.ready     // if cant output prediction, cannot receive new prediction
+    // FIXME: stall on revert...
+    //io.predict.ready        := io.prediction.ready     // if cant output prediction, cannot receive new prediction
+    io.predict.ready        := io.prediction.ready && !(misprediction || revert)   // 1 cycle stall on mispredict or revert
     io.prediction.valid     := (BTB.io.BTB_valid && gshare.io.valid)
 
 

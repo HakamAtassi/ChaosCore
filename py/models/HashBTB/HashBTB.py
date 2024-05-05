@@ -35,7 +35,7 @@ class HashBTB:
         valid   = int(self.valid_mem[masked_address])
         br_mask = int(self.br_mask_mem[masked_address])
 
-        hit = ((current_tag == tag) and valid)
+        hit = int(((current_tag == tag) and valid))
 
         return (hit, target, type, br_mask)
 

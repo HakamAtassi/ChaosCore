@@ -34,6 +34,8 @@ class PHT:
 
         if(state > 3): state = 3
         elif(state < 0) : state = 0
+        
+        #print(f"PHT writing {state} at {hex(hashed_address)}, {hex(GHR)}^{hex(PC)}")
 
         self.write(hashed_address, state)
 
@@ -50,7 +52,7 @@ class GHR:
         self.GHR = GHR
 
     def read(self):
-        return self.GHR
+        return int(self.GHR)
 
 class Gshare:
     def __init__(self, GHR_width):

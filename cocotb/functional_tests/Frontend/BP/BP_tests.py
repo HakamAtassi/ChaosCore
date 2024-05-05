@@ -1,5 +1,6 @@
 import sys
 import random
+import cocotb.triggers
 import numpy as np
 import cocotb
 from cocotb.triggers import Timer
@@ -191,70 +192,91 @@ async def BP_fuzzing(dut):
     address_set = generate_address_set(100)
 
     request_queue = []
-    batch_size = 1000
+    batch_size = 10000
 
     for _ in range(batch_size):
-        commit = generate_random_commit_request(address_set)
-        revert = generate_random_revert_request(address_set)
-        predict = generate_random_predict_request(address_set)
-        RAS_update = generate_random_RAS_update(address_set)
+        commit_msg = commit(generate_random_commit_request(address_set))
+        revert_msg = revert(generate_random_revert_request(address_set))
+        predict_msg = predict(generate_random_predict_request(address_set))
+        RAS_update_msg = RAS_update(generate_random_RAS_update(address_set))
 
-        ## TODO: randomize...
 
-        request = (commit, revert, predict, RAS_update)
+        request = (commit_msg, revert_msg, predict_msg, RAS_update_msg)
         request_queue.append(request)
 
 
     dut_predictions = []
     dut_RAS_outputs = []
+    dut_PHT_states = []
 
     model_predictions = []
+    model_PHT_states = []
     model_RAS_outputs = []
 
-    dut.set_prediction_read(1)
+    dut.set_prediction_read(1)  # would normally be driven by !full of an output queue...
 
     while(request_queue):
-        await FallingEdge(dut.clock())
+        await RisingEdge(dut.clock())
+
+
+        # write phase
+        (commit_request, revert_request, predict_request, RAS_update_request) = request_queue.pop(0)
+
+        # place new inputs
+        dut.commit(commit_request)
+        dut.predict(predict_request)
+        dut.RAS_revert(revert_request)
+
+
+        await cocotb.triggers.ReadOnly()
+        # read phase
+
+
 
         # read new outputs
-        if(dut.is_prediction_valid()):  # read prediction output
+        if(dut.is_prediction_valid() == 1):  # read prediction output
             dut_predictions.append(dut.get_prediction())
+            #dut_PHT_states.append(dut.get_PHT_state())
 
         if(True):   # read RAS output
             dut_RAS_outputs.append(dut.get_RAS())
 
-        (commit_request, revert_request, predict_request, RAS_update) = request_queue.pop(0)
-
-        # place new inputs
-        if(dut.is_commit_ready()):
-            dut.commit(*commit_request)
-            if(commit_request[-1]):
-                model.commit(*commit_request[:-1])
-
-        if(dut.is_predict_ready()):
-            dut.predict(*predict_request)
-
-        if(predict_request[-1]):
-            model_predictions.append(model.predict(*predict_request[:-1]))
                 
-                
-        if(dut.is_revert_ready()):
-            pass
-            #dut.RAS_revert(*revert_request)
-
-        if(True):   # RAS update ready
-            pass
-            #dut.RAS_update(*RAS_update)
+        model_result = model.send_all_requests(commit_request, revert_request, predict_request, RAS_update_request)
+        if(model_result):
+            model_predictions.append(model_result)
+            #model_PHT_states.append(model.get_PHT_state())
 
         if(model_predictions and dut_predictions):
-            
-            #model_response = model_predictions.pop(0)
             model_BTB_resp, model_T_NT_resp, model_GHR_resp = model_predictions.pop(0)
             dut_BTB_resp, dut_T_NT_resp, dut_GHR_resp = dut_predictions.pop(0)
 
+            #await Timer(1, units="ns")
             #print(f"{model_BTB_resp} {dut_BTB_resp}")
-            assert model_BTB_resp == dut_BTB_resp, "BTB responses do not match"
-            assert model_T_NT_resp == dut_T_NT_resp, "T_NT responses do not match"
-            #assert model_GHR_resp.read() == dut_GHR_resp, "GHR responses do not match"
+            #print(f"{hex(model_GHR_resp)} {hex(dut_GHR_resp)}")
+            #print(hex(model_GHR_resp.read()))
+            #dut_PHT_state = dut_PHT_states.pop(0)
+            #model_PHT_state = model_PHT_states.pop(0)
 
-        await RisingEdge(dut.clock())
+            try:
+                assert model_BTB_resp == dut_BTB_resp, "BTB responses do not match"
+                assert model_T_NT_resp == dut_T_NT_resp, "T_NT responses do not match"
+                #assert dut_PHT_state == model_PHT_state, "PHT states diverge"
+                assert model_GHR_resp == dut_GHR_resp, "GHR responses do not match"
+            except:
+                await RisingEdge(dut.clock())
+                assert False
+
+
+    await RisingEdge(dut.clock())
+    await RisingEdge(dut.clock())
+    await RisingEdge(dut.clock())
+
+
+
+
+    A = dut.get_PHT_state()
+    B = model.get_PHT_state()
+
+
+    assert A == B
