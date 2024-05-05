@@ -1,0 +1,8 @@
+<testsuites name="results">
+  <testsuite name="all" package="all">
+    <property name="random_seed" value="1714948977" />
+    <testcase name="ParallelTest" classname="BPTB" file="/home/hakam/.local/lib/python3.10/site-packages/pyuvm/extension_classes.py" lineno="344" time="120.29578614234924" sim_time_ns="612566000.001" ratio_time="5092165.06782818">
+      <failure message="Test failed with RANDOM_SEED=1714948977" />
+    </testcase>
+  </testsuite>
+</testsuites>

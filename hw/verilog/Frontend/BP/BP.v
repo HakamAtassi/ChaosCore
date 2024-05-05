@@ -376,33 +376,37 @@ module BP(
   wire        _BTB_io_BTB_hit;
   wire        _gshare_io_T_NT;
   wire        _gshare_io_valid;
+  wire        revert = io_revert_valid;
+  wire        otherwise = 1'h0;
   reg  [15:0] GHR_reg;
   wire        misprediction = io_commit_valid & io_commit_bits_misprediction;
-  wire [15:0] GHR =
-    misprediction ? io_commit_bits_GHR : io_revert_valid ? io_revert_bits_GHR : GHR_reg;
+  wire        GHR_update =
+    _gshare_io_valid & _BTB_io_BTB_valid & _BTB_io_BTB_hit & _BTB_io_BTB_type == 2'h0;
+  wire [15:0] _GEN = {GHR_reg[14:0], _gshare_io_T_NT};
+  wire        update_PHT = io_commit_bits_br_type == 2'h0 & io_commit_valid;
   always @(posedge clock) begin
     if (reset)
       GHR_reg <= 16'h0;
-    else if (misprediction | io_revert_valid) begin
-      if (misprediction)
-        GHR_reg <= io_commit_bits_GHR;
-      else if (io_revert_valid)
-        GHR_reg <= io_revert_bits_GHR;
-    end
-    else if (_gshare_io_valid & _BTB_io_BTB_valid & _BTB_io_BTB_hit
-             & _BTB_io_BTB_type == 2'h0)
-      GHR_reg <= {GHR_reg[14:0], _gshare_io_T_NT};
+    else if (misprediction)
+      GHR_reg <= io_commit_bits_GHR;
+    else if (revert)
+      GHR_reg <= io_revert_bits_GHR;
+    else if (GHR_update)
+      GHR_reg <= _GEN;
   end // always @(posedge)
   gshare gshare (
     .clock                      (clock),
-    .io_predict_GHR             (GHR),
+    .io_predict_GHR
+      (misprediction
+         ? io_commit_bits_GHR
+         : revert ? io_revert_bits_GHR : GHR_update ? _GEN : GHR_reg),
     .io_predict_PC              (io_predict_bits),
     .io_predict_valid           (io_predict_valid),
     .io_T_NT                    (_gshare_io_T_NT),
     .io_valid                   (_gshare_io_valid),
     .io_commit_GHR              (io_commit_bits_GHR),
     .io_commit_PC               (io_commit_bits_PC),
-    .io_commit_valid            (io_commit_bits_br_type == 2'h0 & io_commit_valid),
+    .io_commit_valid            (update_PHT),
     .io_commit_branch_direction (io_commit_bits_T_NT)
   );
   hash_BTB BTB (
@@ -434,13 +438,13 @@ module BP(
     .io_NEXT         (io_RAS_read_NEXT),
     .io_TOS          (io_RAS_read_TOS)
   );
-  assign io_predict_ready = io_prediction_ready;
+  assign io_predict_ready = io_prediction_ready & ~(misprediction | revert);
   assign io_commit_ready = 1'h1;
   assign io_revert_ready = 1'h1;
   assign io_prediction_valid = _BTB_io_BTB_valid & _gshare_io_valid;
   assign io_prediction_bits_hit = _BTB_io_BTB_hit;
   assign io_prediction_bits_br_type = _BTB_io_BTB_type;
-  assign io_prediction_bits_GHR = GHR;
+  assign io_prediction_bits_GHR = GHR_reg;
   assign io_prediction_bits_T_NT = _gshare_io_T_NT;
 endmodule
 

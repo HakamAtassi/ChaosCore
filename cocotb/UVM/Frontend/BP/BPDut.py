@@ -1,5 +1,4 @@
-
-
+from BP import *
 
 class BPDut:
     def __init__(self, dut):
@@ -25,9 +24,16 @@ class BPDut:
     # Valid signals
     def is_prediction_valid(self):
         return int(self.dut.io_prediction_valid.value)
+
+    def is_predict_valid(self):
+        return int(self.dut.io_predict_valid.value)
     
     def set_prediction_read(self, ready):
         self.dut.io_prediction_ready.value = ready
+
+    def is_commit_valid(self):
+        return int(self.dut.io_commit_valid.value)
+
         
 
     # Read outputs
@@ -40,11 +46,12 @@ class BPDut:
     def get_prediction(self):
         hit = self.dut.io_prediction_bits_hit.value
         target = hex(self.dut.io_prediction_bits_target.value)
-        br_type = self.dut.io_prediction_bits_br_type.value
-        br_mask = self.dut.io_prediction_bits_br_mask.value
+        br_type = int(self.dut.io_prediction_bits_br_type.value)
+        br_mask = int(self.dut.io_prediction_bits_br_mask.value)
         GHR = int(self.dut.io_prediction_bits_GHR.value)
-        T_NT = self.dut.io_prediction_bits_T_NT.value
-        return ((hit, target, br_type, br_mask), T_NT, GHR)
+        T_NT = int(self.dut.io_prediction_bits_T_NT.value)
+        valid = self.dut.io_prediction_valid.value
+        return prediction((hit, target, br_type, br_mask, T_NT, GHR, valid))
 
     # Place inputs
     def predict(self, predict_msg):     # request prediction
@@ -65,13 +72,15 @@ class BPDut:
         self.dut.io_commit_bits_NEXT.value              = NEXT
         self.dut.io_commit_valid.value                  = valid
 
+
     def RAS_revert(self, revert_msg):
         (PC, GHR, valid) = revert_msg.get()
         self.dut.io_revert_valid.value      = valid
         self.dut.io_revert_bits_GHR.value   = GHR
         self.dut.io_revert_bits_PC.value    = PC
 
-    def RAS_update(self, call=0, ret=0, call_addr=0):
+    def RAS_update(self, RAS_update_msg):
+        (call, ret, call_addr) = RAS_update_msg.get()
         self.dut.io_RAS_update_call_addr.value    = call_addr
         self.dut.io_RAS_update_call.value         = call
         self.dut.io_RAS_update_ret.value          = ret
@@ -85,7 +94,39 @@ class BPDut:
             PHT_state.append(self.get_PHT_line(i))
         return PHT_state
 
+    ################
+    ## GET INPUTS ##
+    ################
 
+    def get_commit(self):
+        PC = self.dut.io_commit_bits_PC.value
+        GHR = self.dut.io_commit_bits_GHR.value
+        T_NT = self.dut.io_commit_bits_T_NT.value
+        target = self.dut.io_commit_bits_target.value
+        br_type = self.dut.io_commit_bits_br_type.value
+        br_mask = self.dut.io_commit_bits_br_mask.value
+        misprediction = self.dut.io_commit_bits_misprediction.value
+        TOS = self.dut.io_commit_bits_TOS.value
+        NEXT = self.dut.io_commit_bits_NEXT.value
+        valid = self.dut.io_commit_valid.value     
+        return commit((PC, GHR, T_NT, target, br_type, br_mask, misprediction, TOS, NEXT, valid))
+
+    def get_RAS_update(self):
+        call_addr = self.dut.io_RAS_update_call_addr.value
+        call = self.dut.io_RAS_update_call.value
+        ret = self.dut.io_RAS_update_ret.value
+        return RAS_update((call, ret, call_addr))
+
+    def get_predict(self):
+        valid = self.dut.io_predict_valid.value
+        addr = self.dut.io_predict_bits.value
+        return predict((addr, valid))
+
+    def get_revert(self):
+        valid = self.dut.io_revert_valid.value      
+        GHR = self.dut.io_revert_bits_GHR.value 
+        PC = self.dut.io_revert_bits_PC.value 
+        return revert((PC, GHR, valid))
 """    
 module BP(
   input         clock,
