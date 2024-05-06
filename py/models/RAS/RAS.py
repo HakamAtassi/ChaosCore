@@ -1,4 +1,3 @@
-# FIXME: TOS does not wrap around
 
 class RAS:
 

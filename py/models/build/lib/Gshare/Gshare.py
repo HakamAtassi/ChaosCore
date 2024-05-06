@@ -25,11 +25,11 @@ class PHT:
     def write(self, hashed_address, new_state):
         self.PHT[hashed_address] = new_state
 
-    def commit(self, PC, GHR, resolved_direction):
-        hashed_address = self.get_hashed_address(PC, GHR)
+    def commit(self, commit_msg):
+        hashed_address = self.get_hashed_address(commit_msg.address, commit_msg.GHR)
         state = self.read_state(hashed_address) 
 
-        if(resolved_direction): state = state+1
+        if(commit_msg.T_NT): state = state+1
         else: state = state-1
 
         if(state > 3): state = 3
@@ -38,6 +38,11 @@ class PHT:
         #print(f"PHT writing {state} at {hex(hashed_address)}, {hex(GHR)}^{hex(PC)}")
 
         self.write(hashed_address, state)
+
+
+    def set_all(self):
+        for i in range(len(self.PHT)):
+            self.PHT[i]=0b11
 
 class GHR:
     def __init__(self, GHR_width):

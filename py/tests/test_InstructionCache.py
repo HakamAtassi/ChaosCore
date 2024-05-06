@@ -52,7 +52,6 @@ def test_miss_with_dram(instructionCache):
     addr = generateAddr(tag=0, set=0, byteOffset=0, sets=instructionCache.sets, blockSize=instructionCache.blockSize)
     read_data=instructionCache.read(addr)
 
-    print(read_data)
 
     assert True # FIXME: not a real test
 
@@ -67,9 +66,5 @@ def test_miss_with_dram(instructionCache):
     instructionCache.allocate(address=0, data=0xdeadbeef)
     addr = generateAddr(tag=0, set=set, byteOffset=32-4-4-4-4, sets=instructionCache.sets, blockSize=instructionCache.blockSize)
     read_data=instructionCache.read(address=addr)
-    for way in (instructionCache.get_cache_state()):
-        for line in way:
-            print(hex(line))
-
 
     assert False 
