@@ -1,6 +1,8 @@
 setup.py
 BP/BP.py
 BP/__init__.py
+Channels/Channels.py
+Channels/__init__.py
 Frontend/Frontend.py
 Frontend/__init__.py
 GenericCache/GenericCache.py
@@ -9,8 +11,12 @@ Gshare/Gshare.py
 Gshare/__init__.py
 HashBTB/HashBTB.py
 HashBTB/__init__.py
+Instruction/Instruction.py
+Instruction/__init__.py
 InstructionCache/InstructionCache.py
 InstructionCache/__init__.py
+Predecoder/Predecoder.py
+Predecoder/__init__.py
 RAS/RAS.py
 RAS/__init__.py
 SimpleDRAM/SimpleDRAM.py

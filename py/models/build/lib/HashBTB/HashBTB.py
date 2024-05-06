@@ -1,4 +1,6 @@
 import numpy as np
+import Channels 
+from Channels import *
 
 class HashBTB:
     def __init__(self, entries, fetch_width=4):
@@ -30,24 +32,26 @@ class HashBTB:
         current_tag = self.address_to_tag(address)
 
         tag     = int(self.tag_mem[masked_address])
-        target  = hex(self.target_mem[masked_address])
+        target  = int(self.target_mem[masked_address])
         type    = int(self.type_mem[masked_address])
         valid   = int(self.valid_mem[masked_address])
         br_mask = int(self.br_mask_mem[masked_address])
 
+
         hit = int(((current_tag == tag) and valid))
 
-        return (hit, target, type, br_mask)
+
+        return BTB_resp(hit=hit, target=target, type=type, mask=br_mask, valid=valid)
 
         
-    def commit(self, address, target, br_type, br_mask):
-        masked_address = self.get_hashed_address(address)
-        current_tag = self.address_to_tag(address)
+    def commit(self, commit_msg):
+        masked_address = self.get_hashed_address(commit_msg.address)
+        current_tag = self.address_to_tag(commit_msg.address)
 
         self.tag_mem[masked_address]        = current_tag
-        self.target_mem[masked_address]     = target
-        self.type_mem[masked_address]       = br_type
-        self.br_mask_mem[masked_address]    = br_mask
+        self.target_mem[masked_address]     = commit_msg.target
+        self.type_mem[masked_address]       = commit_msg.br_type
+        self.br_mask_mem[masked_address]    = commit_msg.br_mask
         self.valid_mem[masked_address]      = 1
 
     def get_target_state(self):

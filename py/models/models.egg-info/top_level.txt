@@ -1,9 +1,12 @@
 BP
+Channels
 Frontend
 GenericCache
 Gshare
 HashBTB
+Instruction
 InstructionCache
+Predecoder
 RAS
 SimpleDRAM
 model_utils
