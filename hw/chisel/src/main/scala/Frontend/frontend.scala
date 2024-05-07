@@ -132,7 +132,7 @@ class Frontend(GHRWidth:Int=16, fetchWidth:Int=4, RASEntries:Int=128, BTBEntries
     val instruction_cache   = Module(new L1_instruction_cache(fetchWidth=fetchWidth, ways=L1_instructionCacheWays, sets=L1_instructionCacheSets, blockSizeBytes=L1_instructionCacheBlockSizeBytes))
     val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))
     val predecoder          = Module(new decode_validate(fetchWidth=fetchWidth, GHRWidth=GHRWidth, RASEntries=RASEntries))
-    //val PC_gen              = Module(new PC_arbit(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, startPC=startPC))
+    val PC_gen              = Module(new PC_arbit(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, startPC=startPC))
 
     ////////////
     // Queues //
@@ -225,6 +225,23 @@ class Frontend(GHRWidth:Int=16, fetchWidth:Int=4, RASEntries:Int=128, BTBEntries
     predecoder.io.fetch_packet.valid :=   !instruction_Q.io.empty
 
     predecoder.io.RAS_read           :=   bp.io.RAS_read
+    
+    //////////////
+    // PC ARBIT //
+    //////////////
+    PC_gen.io.commit.bits      := io.commit.bits
+    PC_gen.io.commit.valid     := io.commit.valid
+
+    PC_gen.io.prediction.bits  := bp.io.prediction.bits
+    PC_gen.io.prediction.valid := bp.io.prediction.valid
+    
+    PC_gen.io.RAS_read         := bp.io.RAS_read
+
+    PC_gen.io.revert.bits      := predecoder.io.revert.bits
+    PC_gen.io.revert.valid     := predecoder.io.revert.valid
+
+
+    // FIXME: PC_gen readies not connected
 
     /////////////
     // OUTPUTS //

@@ -1,4 +1,13 @@
-[0m[[0m[31merror[0m] [0m[0m/home/hakam/Repos/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala:151:24: value misprediction is not a member of chisel3.util.DecoupledIO[commit][0m
-[0m[[0m[31merror[0m] [0m[0m    clear := io.commit.misprediction || predecoder.io.revert.valid // && exception ... //FIXME: [0m
+[0m[[0m[31merror[0m] [0m[0m/home/hakam/Repos/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala:238:24: value bits is not a member of RAS_read[0m
+[0m[[0m[31merror[0m] [0m[0m    PC_gen.io.RAS_read.bits    := bp.io.RAS_read.bits[0m
 [0m[[0m[31merror[0m] [0m[0m                       ^[0m
-[0m[[0m[31merror[0m] [0m[0mone error found[0m
+[0m[[0m[31merror[0m] [0m[0m/home/hakam/Repos/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala:238:50: value bits is not a member of RAS_read[0m
+[0m[[0m[31merror[0m] [0m[0m    PC_gen.io.RAS_read.bits    := bp.io.RAS_read.bits[0m
+[0m[[0m[31merror[0m] [0m[0m                                                 ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/hakam/Repos/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala:239:24: value valid is not a member of RAS_read[0m
+[0m[[0m[31merror[0m] [0m[0m    PC_gen.io.RAS_read.valid   := bp.io.RAS_read.valid[0m
+[0m[[0m[31merror[0m] [0m[0m                       ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/hakam/Repos/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala:239:50: value valid is not a member of RAS_read[0m
+[0m[[0m[31merror[0m] [0m[0m    PC_gen.io.RAS_read.valid   := bp.io.RAS_read.valid[0m
+[0m[[0m[31merror[0m] [0m[0m                                                 ^[0m
+[0m[[0m[31merror[0m] [0m[0mfour errors found[0m

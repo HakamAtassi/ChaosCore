@@ -112,8 +112,12 @@
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/Repos/ChaosCore/hw/chisel/target/scala-2.13/classes/decode_validate$$anon$2.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	Q.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/Repos/ChaosCore/hw/chisel/target/scala-2.13/classes/Q.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	PC_arbit$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/Repos/ChaosCore/hw/chisel/target/scala-2.13/classes/PC_arbit$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	gshare$$anon$2.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/Repos/ChaosCore/hw/chisel/target/scala-2.13/classes/gshare$$anon$2.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	PC_arbit$$anon$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/Repos/ChaosCore/hw/chisel/target/scala-2.13/classes/PC_arbit$$anon$1.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	prediction$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/Repos/ChaosCore/hw/chisel/target/scala-2.13/classes/prediction$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	non_restoring_computation.class[0m
@@ -162,6 +166,8 @@
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/Repos/ChaosCore/hw/chisel/target/scala-2.13/classes/gshare.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	decoder_validator$$anon$1.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/Repos/ChaosCore/hw/chisel/target/scala-2.13/classes/decoder_validator$$anon$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	PC_arbit.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/Repos/ChaosCore/hw/chisel/target/scala-2.13/classes/PC_arbit.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	latchExpectedPC.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/Repos/ChaosCore/hw/chisel/target/scala-2.13/classes/latchExpectedPC.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	skidbuffer$State$.class[0m
