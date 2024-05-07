@@ -84,8 +84,9 @@ class commit(fetchWidth:Int=4, GHRWidth:Int=16, BTBEntries:Int=4096, RASEntries:
     val br_mask  =  Input(UInt(fetchWidth.W))
 
     val misprediction = Input(Bool())
-    val TOS     = Input(UInt(log2Ceil(RASEntries).W))  // To reset GHR
-    val NEXT    = Input(UInt(log2Ceil(RASEntries).W)) // TO reset GHR
+    val TOS           = Input(UInt(log2Ceil(RASEntries).W))  // To reset GHR
+    val NEXT          = Input(UInt(log2Ceil(RASEntries).W)) // TO reset GHR
+    val misprediction_PC = Input(UInt(32.W))
 
 }
 
