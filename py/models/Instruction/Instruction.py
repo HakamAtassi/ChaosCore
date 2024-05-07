@@ -18,12 +18,14 @@ class Instruction:
         self.valid       = 1
         self.PC          = PC
 
-        # helper fields
-        self.is_call     = self.get_call()
-        self.is_ret      = self.get_ret()
+        # TODO: add instruction type...
+
+    @staticmethod
+    def null():
+        return Instruction(0, 0)
 
     def get_opcode(self):
-        self.opcode = self.instruction & 0b1111111
+        return self.instruction & 0b1111111
     
     def get_rs1(self):
         return (self.instruction >> 15) & 0b11111
@@ -72,4 +74,4 @@ class Instruction:
             self.imm    = (imm20 << 20) | (imm19_12 << 12) | (imm11 << 11) | (imm10_1 << 1)
             if self.imm & 0x100000:
                 self.imm |= 0xFFF00000
-
+        return self.imm
