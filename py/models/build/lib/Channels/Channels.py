@@ -62,19 +62,19 @@ class RAS_update(Channel):
         return RAS_update(call=0, ret=0, call_addr=0)
 
 class Prediction(Channel):
-    def __init__(self, BTB_resp, PHT_resp, GHR, valid):
+    def __init__(self, BTB_resp, PHT_T_NT, GHR, valid):
         self.BTB_hit        = BTB_resp.hit
         self.BTB_target     = BTB_resp.target
         self.BTB_br_type    = BTB_resp.br_type
         self.BTB_br_mask    = BTB_resp.br_mask
-        self.T_NT           = PHT_resp
+        self.T_NT           = PHT_T_NT
         self.GHR            = GHR
         self.valid          = valid
 
     @staticmethod
     def null():
         # set all members to 0
-        return Prediction(BTB_resp=BTB_resp.null(), PHT_resp=0, GHR=0, valid=0)
+        return Prediction(BTB_resp=BTB_resp.null(), PHT_T_NT=0, GHR=0, valid=0)
 
 class BTB_resp(Channel):
     def __init__(self, hit, target, type, mask, valid):

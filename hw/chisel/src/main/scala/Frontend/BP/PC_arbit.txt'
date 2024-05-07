@@ -36,9 +36,9 @@ import java.rmi.server.UID
 class PC_arbit(GHRWidth:Int = 16, fetchWidth:Int = 4, RASEntries:Int=128, startPC:UInt="h80000000".U) extends Module{
 
     val io = IO(new Bundle{
-        val mispredict  = Flipped(Decoupled(new mispredict(GHRWidth=GHRWidth, RASEntries=RASEntries)))                       // external mispredict
-        val prediction  = Flipped(Decoupled(new prediction(fetchWidth=fetchWidth, GHRWidth=GHRWidth)))    // BTB response
-        val revert      = Flipped(Decoupled(new revert(GHRWidth=GHRWidth)))                                                   // Pre-decoder revert request
+        val commit      = Decoupled(new prediction(fetchWidth=fetchWidth, GHRWidth=GHRWidth))                                  // from BROB
+        val prediction  = Flipped(Decoupled(new prediction(fetchWidth=fetchWidth, GHRWidth=GHRWidth)))                         // BTB response
+        val revert      = Flipped(Decoupled(new revert(GHRWidth=GHRWidth)))                                                    // Pre-decoder revert request
         val RAS_read    = Flipped(new RAS_read(RASEntries=RASEntries))
         // TODO: Exception:...                                                                            // exception
 
@@ -62,14 +62,14 @@ class PC_arbit(GHRWidth:Int = 16, fetchWidth:Int = 4, RASEntries:Int=128, startP
     sel_mispred        := io.mispredict.valid 
     sel_revert         := io.revert.valid
 
-    sel_ret            := io.prediction.valid && io.prediction.bits.hit && (io.prediction.bits.br_type === 0.U)   // FIXME: br_type wrong
-    sel_target         := io.prediction.valid && io.prediction.bits.hit && (io.prediction.bits.br_type === 0.U)   // FIXME: br_type wrong
+    sel_ret            := io.prediction.valid && io.prediction.bits.hit && (io.prediction.bits.br_type === 0.U)
+    sel_target         := io.prediction.valid && io.prediction.bits.hit && (io.prediction.bits.br_type === 0.U)
 
     sel_PC_4           := 1.B   // if none of the above (default)
 
 
     // TODO: assign aligned increment
-    instruction_index := PC(log2Ceil(fetchWidth) + 2,2)
+    instruction_index       := PC(log2Ceil(fetchWidth) + 2,2)
     aligned_PC_increment    := (fetchWidth.U-instruction_index)<<2
 
 

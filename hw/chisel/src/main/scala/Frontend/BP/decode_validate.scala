@@ -68,19 +68,16 @@ class decoder_validator(fetchWidth: Int = 4) extends Module {
 class decode_validate(fetchWidth:Int=4,GHRWidth:Int=16, RASEntries:Int=128) extends Module{
 
     val io = IO(new Bundle{
-        //val BTB_resp     = Input(new BTB_resp())
+        // inputs
         val prediction          = Flipped(Decoupled(new prediction(fetchWidth=fetchWidth, GHRWidth=GHRWidth)))
         val fetch_packet        = Flipped(Decoupled(new fetch_packet(fetchWidth=fetchWidth)))
-
-        val kill                = Output(Bool())                                        // kill incoming instructions
-
-        val revert              = Decoupled(new revert(GHRWidth=GHRWidth))   // Redirect frontend // FIXME: should be output...
-
-        val final_fetch_packet  = Decoupled(new fetch_packet())                         // Output validated instructions
-
-        val RAS_update          = Flipped(new RAS_update)                               // RAS control
         val RAS_read            = Flipped(new RAS_read(RASEntries=RASEntries))
 
+        // outputs
+        val kill                = Output(Bool())                                        // kill incoming instructions
+        val revert              = Decoupled(new revert(GHRWidth=GHRWidth))   // Redirect frontend // FIXME: should be output...
+        val final_fetch_packet  = Decoupled(new fetch_packet())                         // Output validated instructions
+        val RAS_update          = Flipped(new RAS_update)                               // RAS control
     })
 
     /////////////
