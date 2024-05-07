@@ -22,34 +22,37 @@ class Predecoder:
 
         if(packet_valid):    # if packet valid
             self.expected_address = self.get_next_address(fetch_packet, RAS_read, prediction)
-            validated_fetch_packet = self.validate_fetch_packet(fetch_packet, prediction)
+            self.validate_fetch_packet(fetch_packet, prediction)
             RAS_update = self.get_RAS_update(fetch_packet)
-            return (validated_fetch_packet, RAS_update, Revert.null())
+            return (RAS_update, Revert.null())
         elif(not packet_valid):  # if packet not valid
             revert = Revert((self.next_address, prediction.GHR, 1))
-            return (fetch_packet.null(), RAS_update.null(), revert)
+            return (RAS_update.null(), revert)
 
         assert False, "Packet neither valid nor invalid"
 
     def get_next_address(self, fetch_packet, RAS_read, prediction):
         """get the next address based on fetch packet contents"""
         next_address = fetch_packet.PC + 16     # FIXME: is this always +16 or can it be less (is PC always aligned??)?
-        print("ASDF")
         for instruction in fetch_packet.instructions:
             if(instruction.valid):
+                if(is_ret(instruction)):
+                    next_address = RAS_read.ret_addr
+                    break
                 if(is_jal(instruction)):    # always taken if valid
                     next_address = instruction.PC + instruction.imm
                     break
-                if(is_ret(instruction)):
-                    next_address = RAS_read.address
+                if(is_jalr(instruction) and prediction.BTB_hit and (prediction.BTB_br_mask == (0b1000>>instruction.index))):
+                    next_address = prediction.BTB_target
                     break
-                if(is_jalr(instruction) and prediction.BTB_hit and (prediction.br_mask == (0b1000>>instruction.index))):
-                    next_address =prediction.target
+                if(is_jalr(instruction) and prediction.BTB_hit and (prediction.BTB_br_mask == (0b1000>>instruction.index)) and prediction.PHT_T_NT):
+                    next_address = prediction.BTB_target
                     break
-                if(is_jalr(instruction) and prediction.BTB_hit and (prediction.br_mask == (0b1000>>instruction.index)) and prediction.T_NT):
-                    next_address = prediction.target
+                if(is_branch(instruction)):
+                    next_address = prediction.BTB_target
                     break
         return next_address
+
     def validate_fetch_packet(self, fetch_packet, prediction):
         """validate/invalidate instructions based on fetch packet contents"""
         valid = 1
@@ -60,9 +63,9 @@ class Predecoder:
                     valid=0
                 if(is_ret(instruction)):
                     valid=0
-                if(is_jalr(instruction) and prediction.BTB_hit and (prediction.br_mask == (0b1000>>instruction.index))):
+                if(is_jalr(instruction) and prediction.BTB_hit and (prediction.BTB_br_mask == (0b1000>>instruction.index))):
                     valid=0
-                if(is_jalr(instruction) and prediction.BTB_hit and (prediction.br_mask == (0b1000>>instruction.index)) and prediction.T_NT):
+                if(is_jalr(instruction) and prediction.BTB_hit and (prediction.BTB_br_mask == (0b1000>>instruction.index)) and prediction.T_NT):
                     valid=0
 
     def get_RAS_update(self, fetch_packet):
@@ -70,7 +73,7 @@ class Predecoder:
         for instruction in fetch_packet.instructions:
             if(instruction.valid and is_call(instruction)):
                 call_addr = instruction.PC + 4
-                return RAS_update((1, 0, call_addr))    # push to RAS
+                return RAS_update(1, 0, call_addr)    # push to RAS
             if(instruction.valid and is_ret(instruction)):
-                return RAS_update((0, 1, 0x0))          # pop from RAS
+                return RAS_update(0, 1, 0x0)          # pop from RAS
         return RAS_update.null()

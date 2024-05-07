@@ -1,4 +1,4 @@
-[0m[[0m[31merror[0m] [0m[0m/home/hakam/Repos/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/BP.scala:238:57: not found: value mispredict[0m
-[0m[[0m[31merror[0m] [0m[0m    io.predict.ready        := io.prediction.ready && !(mispredict || revert)   // 1 cycle stall on mispredict or revert[0m
-[0m[[0m[31merror[0m] [0m[0m                                                        ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/hakam/Repos/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala:151:24: value misprediction is not a member of chisel3.util.DecoupledIO[commit][0m
+[0m[[0m[31merror[0m] [0m[0m    clear := io.commit.misprediction || predecoder.io.revert.valid // && exception ... //FIXME: [0m
+[0m[[0m[31merror[0m] [0m[0m                       ^[0m
 [0m[[0m[31merror[0m] [0m[0mone error found[0m

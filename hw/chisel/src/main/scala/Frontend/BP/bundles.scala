@@ -79,9 +79,9 @@ class commit(fetchWidth:Int=4, GHRWidth:Int=16, BTBEntries:Int=4096, RASEntries:
     val T_NT    = Input(Bool())
     
     //val tag      =Input(UInt(getBTBTagBits(BTBEntries).W))
-    val target   =Input(UInt(32.W))
-    val br_type  =Input(UInt(2.W))
-    val br_mask  =Input(UInt(fetchWidth.W))
+    val target   =  Input(UInt(32.W))
+    val br_type  =  Input(UInt(2.W))
+    val br_mask  =  Input(UInt(fetchWidth.W))
 
     val misprediction = Input(Bool())
     val TOS     = Input(UInt(log2Ceil(RASEntries).W))  // To reset GHR

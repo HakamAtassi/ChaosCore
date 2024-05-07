@@ -55,7 +55,7 @@ def validate(opcode=0, rs1=0, rs2=0, rd=0, funct3=0, funct7=0):
 
 def generate_J_type(opcode, rd, imm):
     validate(opcode=opcode, rd=rd)
-    assert imm < (1 << 20) and imm >= -(1 << 20), "imm exceeds max value"
+    assert imm < (((1 << 20)-1)<<1), "imm exceeds max value"
     imm         = imm & 0b111111111111
     imm_19_12   = (imm >> 12) & 0b1111
     imm_11      = (imm >> 11) & 1
@@ -74,12 +74,12 @@ def generate_J_type(opcode, rd, imm):
 
 def generate_B_type(opcode, rs1, rs2, imm, funct3):
     validate(opcode=opcode, rs1=rs1, rs2=rs2, funct3=funct3)
-    assert imm < (1 << 13) and imm >= -(1 << 13), "imm exceeds max value"
-    imm = imm & 0b1111111111111
-    imm11 = (imm >> 12) & 1
-    imm4_1 = (imm >> 1) & 0b1111
+    #assert imm < (1 << 13) and imm >= -(1 << 13), "imm exceeds max value"
+    imm     = imm & 0b1111111111111
+    imm11   = (imm >> 12) & 1
+    imm4_1  = (imm >> 1) & 0b1111
     imm10_5 = (imm >> 5) & 0b111111
-    imm12 = (imm >> 11) & 1
+    imm12   = (imm >> 11) & 1
 
     opcode      = format(opcode, '07b')
     imm12       = format(imm12, '01b')
@@ -90,7 +90,7 @@ def generate_B_type(opcode, rs1, rs2, imm, funct3):
     rs1         = format(rs1, '05b')
     rs2         = format(rs2, '05b')
 
-    instruction = imm12 + imm10_5 + rs2 + rs1 + funct3 + imm11 + imm4_1 + opcode
+    instruction = imm12 + imm10_5 + rs2 + rs1 + funct3 + imm4_1 + imm11 + opcode
     return int(instruction, 2)
 
 def generate_I_type(opcode, rs1, rd, imm):
@@ -157,20 +157,20 @@ def fuzz(instruction_type=random.choice(['J', 'B', 'I', 'U', 'S', 'R'])):
     if instruction_type == 'J':
         opcode = random.choice([0b1101111])
         rd = random.randint(0, 31)
-        imm = random.randint(-(1 << 20), (1 << 20) - 1)
+        imm = random.randint(0, (1 << 20) - 1)<<1
         return generate_J_type(opcode, rd, imm)
     elif instruction_type == 'B':
         opcode = random.choice([0b1100011])
         rs1 = random.randint(0, 31)
         rs2 = random.randint(0, 31)
-        imm = random.randint(-(1 << 13), (1 << 13) - 1)
+        imm = random.randint(0, (1 << 12) - 1)
         funct3 = random.randint(0, 7)
         return generate_B_type(opcode, rs1, rs2, imm, funct3)
     elif instruction_type == 'I':
         opcode = random.choice([0b0010011, 0b0000011, 0b1100111, 0b0010111, 0b0001111, 0b0011011])
         rs1 = random.randint(0, 31)
         rd = random.randint(0, 31)
-        imm = random.randint(-(1 << 12), (1 << 12) - 1)
+        imm = random.randint(0, (1 << 12) - 1)
         return generate_I_type(opcode, rs1, rd, imm)
     elif instruction_type == 'U':
         opcode = random.choice([0b0110111, 0b0010111])
@@ -228,4 +228,8 @@ def is_call(instruction):
 
 def is_ret(instruction):
     if(instruction.opcode == 0b1100111 and instruction.rd == 0 and instruction.rs1 == 1 and instruction.imm == 0): return True
+    else: return False
+
+def is_branch(instruction):
+    if(instruction.opcode == 0b1100011): return True
     else: return False
