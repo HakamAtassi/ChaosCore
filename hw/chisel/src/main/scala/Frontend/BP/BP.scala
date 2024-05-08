@@ -33,7 +33,7 @@ import chisel3.util._
 import java.io.{File, FileWriter}
 import java.rmi.server.UID
 
-class BP(GHRWidth:Int = 16, fetchWidth:Int = 4, RASEntries:Int=128, BTBEntries:Int = 4096) extends Module{
+class BP(GHRWidth:Int, fetchWidth:Int, RASEntries:Int, BTBEntries:Int) extends Module{
     val io = IO(new Bundle{
         // Predict Channel
         val predict     = Flipped(Decoupled(UInt(32.W)))
@@ -109,7 +109,7 @@ class BP(GHRWidth:Int = 16, fetchWidth:Int = 4, RASEntries:Int=128, BTBEntries:I
     val GHR = Wire(UInt(GHRWidth.W))
 
     val gshare = Module(new gshare(GHR_width=GHRWidth)) // FIXME: should this be addressed by the PC or by the fetch packet aligned PC?
-    val BTB = Module(new hash_BTB(entries=BTBEntries))
+    val BTB = Module(new hash_BTB(entries=BTBEntries, fetchWidth=fetchWidth))
     val RAS = Module(new RAS(entries=RASEntries))
 
     ///////////////

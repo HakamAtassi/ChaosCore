@@ -33,7 +33,7 @@ import chisel3.util._
 import java.io.{File, FileWriter}
 import java.rmi.server.UID
 
-class branch_decoder(index:Int=0, fetchWidth:Int=4, GHRWidth:Int=16) extends Module{
+class branch_decoder(index:Int, fetchWidth:Int, GHRWidth:Int) extends Module{
 
     val io = IO(new Bundle{
         val fetch_PC    = Input(UInt(32.W)) // PC of the fetch packet

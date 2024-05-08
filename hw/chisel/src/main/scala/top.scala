@@ -34,7 +34,6 @@ import java.io.{File, FileWriter}
 import java.rmi.server.UID
 
 
-// TODO: Add parameters file and use it to configure all the modules...
 
 
 object VerilogGenerator {
@@ -54,12 +53,24 @@ object VerilogGenerator {
 }
 
 object Main extends App {
-    VerilogGenerator.generateVerilog(new L1_instruction_cache(fetchWidth = 4, ways = 2, sets = 64, blockSizeBytes = 32), "../verilog/Frontend/instruction_cache.v")
-    VerilogGenerator.generateVerilog(new gshare(GHR_width = 16), "../verilog/Frontend/BP/gshare.v")
-    VerilogGenerator.generateVerilog(new hash_BTB(entries = 4096), "../verilog/Frontend/BP/hash_BTB.v")
+    import Parameters._
+
+    //VerilogGenerator.generateVerilog(new L1_instruction_cache(fetchWidth = 4, ways = 2, sets = 64, blockSizeBytes = 32), "../verilog/Frontend/instruction_cache.v")
+    //VerilogGenerator.generateVerilog(new gshare(GHR_width = 16), "../verilog/Frontend/BP/gshare.v")
+    //VerilogGenerator.generateVerilog(new hash_BTB(entries = 4096), "../verilog/Frontend/BP/hash_BTB.v")
     //VerilogGenerator.generateVerilog(new decode_validate(fetchWidth=4), "../verilog/Frontend/BP/decode_validate.v")
-    VerilogGenerator.generateVerilog(new RAS, "../verilog/Frontend/BP/RAS.v")
-    VerilogGenerator.generateVerilog(new BP, "../verilog/Frontend/BP/BP.v")
-    VerilogGenerator.generateVerilog(new PC_arbit, "../verilog/Frontend/BP/PC_arbit.v")
-    VerilogGenerator.generateVerilog(new Frontend, "../verilog/Frontend/Frontend.v")
+    //VerilogGenerator.generateVerilog(new RAS, "../verilog/Frontend/BP/RAS.v")
+    //VerilogGenerator.generateVerilog(new BP, "../verilog/Frontend/BP/BP.v")
+    //VerilogGenerator.generateVerilog(new PC_arbit, "../verilog/Frontend/BP/PC_arbit.v")
+    VerilogGenerator.generateVerilog(new Frontend(
+        GHRWidth = GHRWidth,
+        fetchWidth = fetchWidth,
+        RASEntries = RASEntries,
+        BTBEntries = BTBEntries,
+        L1_instructionCacheWays = L1_instructionCacheWays,
+        L1_instructionCacheSets = L1_instructionCacheSets,
+        L1_instructionCacheBlockSizeBytes = L1_instructionCacheBlockSizeBytes,
+        startPC = startPC
+    ), 
+    "../verilog/Frontend/Frontend.v")
 }

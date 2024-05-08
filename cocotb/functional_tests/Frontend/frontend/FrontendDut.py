@@ -1,5 +1,17 @@
 from Channels import *
+import cocotb
+from cocotb.triggers import RisingEdge, ReadOnly
 import random
+import sys
+import random
+import cocotb.triggers
+import numpy as np
+import cocotb
+from cocotb.triggers import Timer
+from cocotb.triggers import RisingEdge, FallingEdge, Timer, ReadOnly
+from pathlib import Path
+
+
 
 class FrontendDut:
     def __init__(self, dut, dram_model):
@@ -8,30 +20,33 @@ class FrontendDut:
         self.remaining_dram_latency=0
         self.dram_model = dram_model
 
+
+        # dram glue logic
+
+        self.dram_request_valid = 0
+        self.dram_request_address = 0x0
+
     def clock(self):
         return self.dut.clock
 
-    def is_waiting_for_dram(self):
-        return self.dut.io_dram_data_ready.value == 1
+    def init_dram(self, file):
+        # write binary file to cache. 
 
-    def generate_dram_response(self, valid):
-        self.dut.io_dram_data_valid.value = valid 
+        pass
 
-        self.dut.io_dram_data_bits.value  = self.dram_model.read(0, 32)
+    def write_from_dram(self, data, valid=1):
+        self.dut.io_dram_data_valid.value = valid
+        self.dut.io_dram_data_bits.value = data
 
-    def set_output_Q_ready(self):
-        self.dut.io_fetch_packet_ready.value = 1
+    async def cycle(self):
 
-    def update(self):
-        self.generate_dram_response(0)
-        if(self.is_waiting_for_dram() and self.outstanding_dram_request == True and self.remaining_dram_latency==0):
-            # TODO: generate dram response
-            self.outstanding_dram_request=False
-            self.generate_dram_response(1)
-            self.outstanding_dram_request = False
-        elif(self.is_waiting_for_dram() and self.outstanding_dram_request == True):
-            self.remaining_dram_latency-=1
-        elif(self.is_waiting_for_dram()):
-            self.outstanding_dram_request = True
-            self.remaining_dram_latency=random.randint(0,100)
-        
+        # drive signals
+        dram_data, dram_valid =  self.dram_model.update(self.dram_request_address, 32, self.dram_request_valid)
+        self.write_from_dram(dram_data, dram_valid)
+
+        # read signals
+        await ReadOnly()
+        self.dram_request_valid =  self.dut.io_cache_addr_valid.value 
+        self.dram_request_addr = self.dut.io_cache_addr_bits.value 
+
+        await RisingEdge(self.clock())

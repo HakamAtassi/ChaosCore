@@ -1248,7 +1248,7 @@ module decode_validate(
     io_final_fetch_packet_bits_fetch_PC_REG <= io_fetch_packet_bits_fetch_PC;
     io_final_fetch_packet_valid_REG <= inputs_valid;
     if (reset) begin
-      PC_next_reg <= 32'h80000000;
+      PC_next_reg <= 32'h0;
       FSM1_state <= 1'h1;
       FSM2_state <= 1'h0;
     end
@@ -1425,7 +1425,7 @@ module PC_arbit(
       : use_BTB ? io_prediction_bits_target : use_RAS ? io_RAS_read_ret_addr : PC;
   always @(posedge clock) begin
     if (reset) begin
-      PC <= 32'h80000000;
+      PC <= 32'h0;
       correction_address_reg <= 32'h0;
     end
     else begin

@@ -17,7 +17,7 @@ from FrontendDut import *
 
 
 @cocotb.test()
-async def instruction_cache_kill_miss_test(dut):
+async def test0(dut):
     random.seed(0x42)
 
     await cocotb.start(generateClock(dut)) 
@@ -25,28 +25,20 @@ async def instruction_cache_kill_miss_test(dut):
     model_dram = SimpleDRAM(sizeKB=1<<10)
     dut = FrontendDut(dut, model_dram)
 
+
+
     await RisingEdge(dut.clock())
     await RisingEdge(dut.clock())
     await RisingEdge(dut.clock())
     await RisingEdge(dut.clock())
     await reset(dut.dut)
 
-    #print(hex(fuzz(instruction_type='I')))
 
-    dut.set_output_Q_ready()
-
-    for i in range(0, (1<<20), 4):
-        model_dram.write(i, fuzz(instruction_type='I'), 4)
-    
-    for _ in range(200):
-
-        dut.update()
-
-
-        await RisingEdge(dut.clock())
-
-    model_dram.print()
-
-
+    #dut.dram_model.randomize()
+    dut.dram_model.write(0, fuzz("I"), 4)
+    dut.dram_model.print()
 
     
+
+    for _ in range(1000):
+        await dut.cycle()

@@ -36,7 +36,7 @@ import java.rmi.server.UID
 import helperFunctions._
 
 // FIXME: not parameterized for fetchwidth...
-class hash_BTB(entries:Int = 4096, fetchWidth:Int=4) extends Module{
+class hash_BTB(entries:Int, fetchWidth:Int) extends Module{
 // FIXME: tag bits may be wrong here...
     
     val BTBIndexBits = getBTBTagBits(BTBSize=entries, fetchWidth=fetchWidth)
@@ -51,7 +51,6 @@ class hash_BTB(entries:Int = 4096, fetchWidth:Int=4) extends Module{
     val entryWidth = validBits + tagBits + targetBits + typeBits + brMaskBits
 
     val io = IO(new Bundle{
-        // FIXME: this should maybe be its own channel as well. 
 
         //prediction-input
         val predict_PC          = Input(UInt(32.W))
@@ -84,7 +83,6 @@ class hash_BTB(entries:Int = 4096, fetchWidth:Int=4) extends Module{
     val BTB_type_output       = Wire(UInt(typeBits.W))
     val BTB_br_mask_output     = Wire(UInt(brMaskBits.W))
 
-    //val commit_input_tag = io.predict_PC(31, 31-tagBits+1)
     val commit_input_tag = shiftDownByTagBits(io.commit_PC)
     val predict_input_tag = shiftDownByTagBits(io.predict_PC)
 

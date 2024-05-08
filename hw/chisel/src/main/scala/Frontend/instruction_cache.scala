@@ -39,7 +39,7 @@ object cacheState extends ChiselEnum{
 
 
 // FIXME: this only works for width=2 or 4.
-class instruction_validator(fetchWidth: Int = 4) extends Module {
+class instruction_validator(fetchWidth: Int) extends Module {
   val io = IO(new Bundle {
     val instruction_index = Input(UInt(log2Ceil(fetchWidth).W))
     val instruction_output = Output(UInt(fetchWidth.W))
@@ -69,7 +69,7 @@ class instruction_validator(fetchWidth: Int = 4) extends Module {
 
 
 
-class L1_instruction_cache(fetchWidth:Int=4, ways:Int=2, sets:Int = 64, blockSizeBytes:Int = 64) extends Module{
+class L1_instruction_cache(fetchWidth:Int, ways:Int, sets:Int, blockSizeBytes:Int) extends Module{
 
 
     val depth                       = sets

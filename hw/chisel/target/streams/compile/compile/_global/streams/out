@@ -1,7 +1,5 @@
-[0m[[0m[31merror[0m] [0m[0m/home/hakam/Repos/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala:157:46: value fetch is not a member of chisel3.Bundle{val prediction: chisel3.util.DecoupledIO[prediction]; val fetch_packet: chisel3.util.DecoupledIO[fetch_packet]; val RAS_read: RAS_read; val kill: chisel3.Bool; val revert: chisel3.util.DecoupledIO[revert]; val final_fetch_packet: chisel3.util.DecoupledIO[fetch_packet]; val RAS_update: RAS_update}[0m
-[0m[[0m[31merror[0m] [0m[0m            when(!(io.prediction.valid && io.fetch)){[0m
-[0m[[0m[31merror[0m] [0m[0m                                             ^[0m
-[0m[[0m[31merror[0m] [0m[0m/home/hakam/Repos/ChaosCore/hw/chisel/src/main/scala/Frontend/BP/decode_validate.scala:164:45: value fetch is not a member of chisel3.Bundle{val prediction: chisel3.util.DecoupledIO[prediction]; val fetch_packet: chisel3.util.DecoupledIO[fetch_packet]; val RAS_read: RAS_read; val kill: chisel3.Bool; val revert: chisel3.util.DecoupledIO[revert]; val final_fetch_packet: chisel3.util.DecoupledIO[fetch_packet]; val RAS_update: RAS_update}[0m
-[0m[[0m[31merror[0m] [0m[0m            when((io.prediction.valid && io.fetch)){[0m
-[0m[[0m[31merror[0m] [0m[0m                                            ^[0m
-[0m[[0m[31merror[0m] [0m[0mtwo errors found[0m
+[0m[[0m[31merror[0m] [0m[0m/home/hakam/Repos/ChaosCore/hw/chisel/src/main/scala/Frontend/frontend.scala:129:38: not enough arguments for constructor decode_validate: (fetchWidth: Int, GHRWidth: Int, RASEntries: Int, startPC: chisel3.UInt): decode_validate.[0m
+[0m[[0m[31merror[0m] [0m[0mUnspecified value parameter startPC.[0m
+[0m[[0m[31merror[0m] [0m[0m    val predecoder          = Module(new decode_validate(fetchWidth=fetchWidth, GHRWidth=GHRWidth, RASEntries=RASEntries))[0m
+[0m[[0m[31merror[0m] [0m[0m                                     ^[0m
+[0m[[0m[31merror[0m] [0m[0mone error found[0m

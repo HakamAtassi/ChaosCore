@@ -100,7 +100,6 @@ class skidbuffer[T <: Data](datatype: T) extends Module{
 
 // TODO: handle mispredict
 // TODO: handle kills/reverts/clears
-// TODO: 
 
 class Frontend(GHRWidth:Int=16, fetchWidth:Int=4, RASEntries:Int=128, BTBEntries:Int=4096, L1_instructionCacheWays:Int=2, 
                L1_instructionCacheSets:Int=64, L1_instructionCacheBlockSizeBytes:Int=32, startPC:UInt="h80000000".U) extends Module{
@@ -127,7 +126,7 @@ class Frontend(GHRWidth:Int=16, fetchWidth:Int=4, RASEntries:Int=128, BTBEntries
     /////////////
     val instruction_cache   = Module(new L1_instruction_cache(fetchWidth=fetchWidth, ways=L1_instructionCacheWays, sets=L1_instructionCacheSets, blockSizeBytes=L1_instructionCacheBlockSizeBytes))
     val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))
-    val predecoder          = Module(new decode_validate(fetchWidth=fetchWidth, GHRWidth=GHRWidth, RASEntries=RASEntries))
+    val predecoder          = Module(new decode_validate(fetchWidth=fetchWidth, GHRWidth=GHRWidth, RASEntries=RASEntries, startPC=startPC))
     val PC_gen              = Module(new PC_arbit(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, startPC=startPC))
 
     ////////////
