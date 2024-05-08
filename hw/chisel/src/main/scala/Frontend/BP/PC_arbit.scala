@@ -33,7 +33,7 @@ import chisel3.util._
 import java.io.{File, FileWriter}
 import java.rmi.server.UID
 
-class PC_arbit(GHRWidth:Int = 16, fetchWidth:Int = 4, RASEntries:Int=128, startPC:UInt="h80000000".U) extends Module{
+class PC_arbit(GHRWidth:Int, fetchWidth:Int, RASEntries:Int, startPC:UInt) extends Module{
 
     val io = IO(new Bundle{
         val commit      = Flipped(Decoupled(new commit(fetchWidth=4, GHRWidth=16, BTBEntries=4096, RASEntries = 128)))                                  // from BROB
@@ -66,7 +66,7 @@ class PC_arbit(GHRWidth:Int = 16, fetchWidth:Int = 4, RASEntries:Int=128, startP
     val reversion                   = Wire(Bool())
     //val exception                   = Wire(Bool())
 
-    val instruction_index_within_packet = Wire(UInt(log2Ceil(fetchWidth).W))
+    val instruction_index_within_packet =   Wire(UInt(log2Ceil(fetchWidth).W))
     val PC_increment                    =   Wire(UInt((log2Ceil(fetchWidth)+3).W))
 
     ////////////
@@ -152,7 +152,6 @@ class PC_arbit(GHRWidth:Int = 16, fetchWidth:Int = 4, RASEntries:Int=128, startP
     /////////////////////////
 
     io.PC_next.valid := !(correct_stage_active)  
-    //&& (!reset.asBool) // FIXME: is this okay?
     //FIXME: ready does not do anything at the moment.
 
     io.prediction.ready := 1.B

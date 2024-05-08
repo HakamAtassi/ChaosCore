@@ -41,7 +41,7 @@ object latchExpectedPC extends ChiselEnum{
 object validate_packet extends ChiselEnum{
     val packet_invalid, packet_valid = Value
 }
-class decoder_validator(fetchWidth: Int = 4) extends Module {
+class decoder_validator(fetchWidth: Int) extends Module {
   val io = IO(new Bundle {
     val instruction_T_NT_mask = Input(UInt(fetchWidth.W))
     val instruction_validity = Output(UInt(fetchWidth.W))
@@ -65,7 +65,7 @@ class decoder_validator(fetchWidth: Int = 4) extends Module {
   io.instruction_validity := lut(PriorityEncoder(io.instruction_T_NT_mask))
 }
 
-class decode_validate(fetchWidth:Int=4,GHRWidth:Int=16, RASEntries:Int=128) extends Module{
+class decode_validate(fetchWidth:Int,GHRWidth:Int, RASEntries:Int, startPC:UInt) extends Module{
 
     val io = IO(new Bundle{
         // inputs
@@ -88,7 +88,7 @@ class decode_validate(fetchWidth:Int=4,GHRWidth:Int=16, RASEntries:Int=128) exte
     // Assign decoders in first stage
 
     val decoders: Seq[branch_decoder] = Seq.tabulate(fetchWidth) { w =>
-        Module(new branch_decoder(index=w))
+        Module(new branch_decoder(index=w, fetchWidth=fetchWidth, GHRWidth=GHRWidth))
     }
 
     val decoder_metadata         = Wire(Vec(fetchWidth, new metadata()))
@@ -140,9 +140,9 @@ class decode_validate(fetchWidth:Int=4,GHRWidth:Int=16, RASEntries:Int=128) exte
     // FSM //
     /////////
 
-    val PC_next     = Wire(UInt(32.W))
-    val PC_next_reg = RegInit(UInt(32.W), "h80000000".U)    // FIXME: start address should be a parameter...
-    val PC_expected = Wire(UInt(32.W))
+    val PC_next      = Wire(UInt(32.W))
+    val PC_next_reg  = RegInit(UInt(32.W), startPC)
+    val PC_expected  = Wire(UInt(32.W))
     val packet_valid = Wire(Bool())
 
     // FSM 1

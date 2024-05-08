@@ -1,6 +1,6 @@
 <testsuites name="results">
   <testsuite name="all" package="all">
-    <property name="random_seed" value="1715198724" />
-    <testcase name="instruction_cache_kill_miss_test" classname="frontend_tests" file="/home/hakam/Repos/ChaosCore/cocotb/functional_tests/Frontend/frontend/frontend_tests.py" lineno="19" time="3.1865994930267334" sim_time_ns="411.001" ratio_time="128.97792800739393" />
+    <property name="random_seed" value="1715208426" />
+    <testcase name="test0" classname="frontend_tests" file="/home/hakam/Repos/ChaosCore/cocotb/functional_tests/Frontend/frontend/frontend_tests.py" lineno="19" time="2.2276151180267334" sim_time_ns="2011.001" ratio_time="902.7596301202092" />
   </testsuite>
 </testsuites>

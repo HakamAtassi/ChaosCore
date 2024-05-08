@@ -54,7 +54,7 @@ object CONTROLLER_CMD extends ChiselEnum {
 
 
 //FIXME: this should be named L1_data_mem
-class L1_cache_mem(ways:Int = 4, sets:Int = 64, blockSizeBytes:Int = 64) extends Module{
+class L1_cache_mem(ways:Int, sets:Int, blockSizeBytes:Int) extends Module{
     // CACHE LINE STRUCTURE [VALID, DIRTY, PLRU, TAG, DATA] 
     val depth = sets
     val setBits = log2Ceil(sets)
