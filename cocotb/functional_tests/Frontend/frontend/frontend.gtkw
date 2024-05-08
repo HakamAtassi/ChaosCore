@@ -1,0 +1,129 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Wed May  8 16:23:30 2024
+[*]
+[dumpfile] "/home/hakam/Repos/ChaosCore/cocotb/functional_tests/Frontend/frontend/dump.fst"
+[dumpfile_mtime] "Wed May  8 16:15:13 2024"
+[dumpfile_size] 10006
+[savefile] "/home/hakam/Repos/ChaosCore/cocotb/functional_tests/Frontend/frontend/frontend.gtkw"
+[timestart] 56620
+[size] 1920 1043
+[pos] -1 -1
+*-13.000000 67000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] .
+[treeopen] .Frontend.
+[treeopen] .Frontend.PC_Q.
+[sst_width] 468
+[signals_width] 480
+[sst_expanded] 1
+[sst_vpaned_height] 298
+@28
+clock
+Frontend.PC_gen.reset
+@200
+-
+-PC_gen
+@28
+Frontend.PC_gen.io_prediction_bits_hit
+@22
+Frontend.PC_gen.io_prediction_bits_target[31:0]
+Frontend.PC_gen.io_revert_bits_PC[31:0]
+@28
+Frontend.PC_gen.io_revert_valid
+Frontend.PC_gen.use_BTB
+Frontend.PC_gen.use_RAS
+@200
+-
+@28
+Frontend.PC_gen.io_PC_next_valid
+@22
+Frontend.PC_gen.io_PC_next_bits[31:0]
+@200
+-
+-cache
+-BP
+@28
+Frontend.bp.io_prediction_bits_hit
+Frontend.bp.io_prediction_valid
+Frontend.bp.io_predict_valid
+@22
+Frontend.bp.io_predict_bits[31:0]
+@200
+-
+-I$
+@28
+Frontend.instruction_cache.io_cpu_addr_valid
+@22
+Frontend.instruction_cache.io_cpu_addr_bits[31:0]
+@28
+Frontend.instruction_cache.io_cpu_addr_ready
+@200
+-
+@28
+Frontend.instruction_cache.io_cache_addr_valid
+@22
+Frontend.instruction_cache.io_cache_addr_bits[31:0]
+@28
+Frontend.instruction_cache.cache_state[1:0]
+Frontend.instruction_cache.miss
+@29
+Frontend.instruction_cache.hit
+@200
+-
+@28
+Frontend.instruction_cache.io_dram_data_ready
+Frontend.instruction_cache.cache_state[1:0]
+@200
+-
+@28
+Frontend.instruction_cache.io_cache_addr_valid
+@22
+Frontend.instruction_cache.io_cache_addr_bits[31:0]
+@28
+Frontend.instruction_cache.io_dram_data_valid
+@22
+Frontend.instruction_cache.io_dram_data_bits[255:0]
+@200
+-
+@22
+Frontend.instruction_cache.io_cache_data_bits_instructions_0[31:0]
+Frontend.instruction_cache.io_cache_data_bits_instructions_1[31:0]
+Frontend.instruction_cache.io_cache_data_bits_instructions_2[31:0]
+Frontend.instruction_cache.io_cache_data_bits_instructions_3[31:0]
+@28
+Frontend.instruction_cache.io_cache_data_bits_valid_bits_0
+Frontend.instruction_cache.io_cache_data_bits_valid_bits_1
+Frontend.instruction_cache.io_cache_data_bits_valid_bits_2
+Frontend.instruction_cache.io_cache_data_bits_valid_bits_3
+Frontend.instruction_cache.io_cache_data_valid
+@200
+-
+-
+- BTB_Q
+@28
+Frontend.BTB_Q.io_wr_en
+@200
+-
+-I_Q
+@28
+Frontend.instruction_Q.io_wr_en
+@22
+Frontend.instruction_Q.io_data_in_fetch_PC[31:0]
+@200
+-
+-PC_Q
+@22
+Frontend.PC_Q.io_data_in[31:0]
+@28
+Frontend.PC_Q.io_wr_en
+Frontend.PC_Q.io_rd_en
+@200
+-
+@28
+Frontend.PC_Q.io_empty
+@22
+Frontend.PC_Q.io_data_out[31:0]
+@200
+-
+[pattern_trace] 1
+[pattern_trace] 0

@@ -45,8 +45,9 @@ class PC_arbit(GHRWidth:Int = 16, fetchWidth:Int = 4, RASEntries:Int=128, startP
         val PC_next     = Decoupled(UInt(32.W))
     })
 
-    val PC                 = RegInit(UInt(33.W), 0.U)
-    val correction_address = RegInit(UInt(32.W), 0.U)
+    val PC                 = RegInit(UInt(32.W), startPC.asUInt)
+    val correction_address = Wire(UInt(32.W))
+    val correction_address_reg = RegInit(UInt(32.W), 0.U)
 
     val use_BTB            = Wire(Bool())
     val use_RAS            = Wire(Bool())
@@ -66,18 +67,21 @@ class PC_arbit(GHRWidth:Int = 16, fetchWidth:Int = 4, RASEntries:Int=128, startP
     //val exception                   = Wire(Bool())
 
     val instruction_index_within_packet = Wire(UInt(log2Ceil(fetchWidth).W))
-    val PC_increment                    =   Wire(UInt((log2Ceil(fetchWidth)+2).W))
+    val PC_increment                    =   Wire(UInt((log2Ceil(fetchWidth)+3).W))
 
     ////////////
     // PC REG //
     ////////////
 
-    when(io.PC_next.valid){
-        PC := io.PC_next.bits
+    when(correct_stage_active){
+        PC := correction_address
+    }.elsewhen(io.PC_next.valid){
+        PC := io.PC_next.bits + PC_increment
     }.otherwise{
         PC := PC
     }
 
+    dontTouch(PC)
     //////////////////
     // Assign wires //
     //////////////////
@@ -103,9 +107,11 @@ class PC_arbit(GHRWidth:Int = 16, fetchWidth:Int = 4, RASEntries:Int=128, startP
     // Generate PC increment //
     ///////////////////////////
 
-    instruction_index_within_packet := (PC >> 2.U)
+    instruction_index_within_packet := (io.PC_next.bits >> 2.U)
     PC_increment    :=  (fetchWidth.U - instruction_index_within_packet) << 2.U
 
+    dontTouch(use_BTB)
+    dontTouch(use_RAS)
 
     //////////////////////
     // correction stage //
@@ -117,31 +123,36 @@ class PC_arbit(GHRWidth:Int = 16, fetchWidth:Int = 4, RASEntries:Int=128, startP
         //correction_address := io.commit.bits.PC
     //}
     .elsewhen(use_misprediction_PC){
-        
-    }
-    .otherwise{
         correction_address := io.commit.bits.misprediction_PC
     }
+    .otherwise{
+        correction_address := 0.U
+    }
 
+    correction_address_reg := correction_address
 
+    dontTouch(use_BTB)
+    dontTouch(use_RAS)
+    dontTouch(PC_increment)
 
     // output stage
     // FIXME: this priority needs to be swapped
     when(RegNext(correct_stage_active)){
-        io.PC_next.bits := correction_address
+        io.PC_next.bits := correction_address_reg
     }.elsewhen(use_BTB){
         io.PC_next.bits := io.prediction.bits.target
     }.elsewhen(use_RAS){
         io.PC_next.bits := io.RAS_read.ret_addr
     }.otherwise{    // use correction address
-        io.PC_next.bits := PC + PC_increment
+        io.PC_next.bits := PC
     }
 
     /////////////////////////
     // valid/ready control //
     /////////////////////////
 
-    io.PC_next.valid := !((correct_stage_active) || (RegNext(correct_stage_active)))
+    io.PC_next.valid := !(correct_stage_active)  
+    //&& (!reset.asBool) // FIXME: is this okay?
     //FIXME: ready does not do anything at the moment.
 
     io.prediction.ready := 1.B

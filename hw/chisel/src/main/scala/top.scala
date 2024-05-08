@@ -61,5 +61,5 @@ object Main extends App {
     VerilogGenerator.generateVerilog(new RAS, "../verilog/Frontend/BP/RAS.v")
     VerilogGenerator.generateVerilog(new BP, "../verilog/Frontend/BP/BP.v")
     VerilogGenerator.generateVerilog(new PC_arbit, "../verilog/Frontend/BP/PC_arbit.v")
-    //VerilogGenerator.generateVerilog(new Frontend, "../verilog/Frontend/Frontend.v")
+    VerilogGenerator.generateVerilog(new Frontend, "../verilog/Frontend/Frontend.v")
 }

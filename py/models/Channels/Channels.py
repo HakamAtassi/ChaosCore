@@ -21,7 +21,7 @@ class Channel:
         #print(self.get(), end=" ")
 
 class Commit(Channel):
-    def __init__(self, address, GHR, target, br_type, br_mask, T_NT, misprediction, TOS, NEXT, valid):
+    def __init__(self, address, GHR, target, br_type, br_mask, T_NT, misprediction, misprediction_PC, TOS, NEXT, valid):
         self.address        = address
         self.GHR            = GHR
         self.target         = target
@@ -29,9 +29,14 @@ class Commit(Channel):
         self.br_mask        = br_mask
         self.T_NT           = T_NT
         self.misprediction  = misprediction
+        self.misprediction_PC  = misprediction_PC
         self.TOS            = TOS
         self.NEXT           = NEXT
         self.valid          = valid
+
+    @staticmethod
+    def null():
+     return Commit(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 
 class Predict(Channel):
     def __init__(self, address, valid):

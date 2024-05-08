@@ -43,6 +43,6 @@ class SimpleDRAM:
 
     def print(self):
         for i in range(len(self.memory)):
-            print(self.memory[i])
+            print(f"{hex(i)} {hex(self.memory[i])}")
         print("")
         print("")

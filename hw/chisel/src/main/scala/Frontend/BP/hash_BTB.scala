@@ -127,7 +127,7 @@ class hash_BTB(entries:Int = 4096, fetchWidth:Int=4) extends Module{
 
     // OUTPUTS
     io.BTB_valid    := RegNext(io.predict_valid)    // Hit signal
-    io.BTB_hit      := (RegNext(predict_input_tag) === BTB_tag_output) && RegNext(io.predict_valid)
+    io.BTB_hit      := (RegNext(predict_input_tag) === BTB_tag_output) && BTB_valid_output.asBool
     io.BTB_target   := BTB_target_output
     io.BTB_type     := BTB_type_output
     io.BTB_br_mask  := BTB_br_mask_output

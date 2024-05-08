@@ -34,43 +34,45 @@ module PC_arbit(
   output [31:0] io_PC_next_bits
 );
 
+  wire [31:0] io_PC_next_bits_0;
   wire        misprediction;
-  reg  [32:0] PC;
-  reg  [31:0] correction_address;
+  reg  [31:0] PC;
+  reg  [31:0] correction_address_reg;
   wire        correct_stage_active = misprediction | io_revert_valid;
   assign misprediction = io_commit_valid & io_commit_bits_misprediction;
   wire        is_ret = io_prediction_bits_br_type == 2'h2;
+  wire        use_BTB =
+    io_prediction_valid & io_prediction_bits_hit & ~is_ret & ~correct_stage_active;
+  wire        use_RAS = is_ret & ~correct_stage_active;
+  wire [4:0]  PC_increment = {3'h4 - {1'h0, io_PC_next_bits_0[3:2]}, 2'h0};
   reg         REG;
-  wire [31:0] io_PC_next_bits_0 =
+  assign io_PC_next_bits_0 =
     REG
-      ? correction_address
-      : io_prediction_valid & io_prediction_bits_hit & ~is_ret & ~correct_stage_active
-          ? io_prediction_bits_target
-          : is_ret & ~correct_stage_active
-              ? io_RAS_read_ret_addr
-              : PC[31:0] + {28'h0, 2'h0 - PC[3:2], 2'h0};
-  reg         io_PC_next_valid_REG;
-  wire        _io_PC_next_valid_T = correct_stage_active | io_PC_next_valid_REG;
+      ? correction_address_reg
+      : use_BTB ? io_prediction_bits_target : use_RAS ? io_RAS_read_ret_addr : PC;
   always @(posedge clock) begin
     if (reset) begin
-      PC <= 33'h0;
-      correction_address <= 32'h0;
+      PC <= 32'h80000000;
+      correction_address_reg <= 32'h0;
     end
     else begin
-      if (~_io_PC_next_valid_T)
-        PC <= {1'h0, io_PC_next_bits_0};
-      if (io_revert_valid)
-        correction_address <= io_revert_bits_PC;
-      else if (~misprediction)
-        correction_address <= io_commit_bits_misprediction_PC;
+      automatic logic [31:0] correction_address;
+      correction_address =
+        io_revert_valid
+          ? io_revert_bits_PC
+          : misprediction ? io_commit_bits_misprediction_PC : 32'h0;
+      if (correct_stage_active)
+        PC <= correction_address;
+      else
+        PC <= io_PC_next_bits_0 + {27'h0, PC_increment};
+      correction_address_reg <= correction_address;
     end
     REG <= correct_stage_active;
-    io_PC_next_valid_REG <= correct_stage_active;
   end // always @(posedge)
   assign io_commit_ready = 1'h1;
   assign io_prediction_ready = 1'h1;
   assign io_revert_ready = 1'h1;
-  assign io_PC_next_valid = ~_io_PC_next_valid_T;
+  assign io_PC_next_valid = ~correct_stage_active;
   assign io_PC_next_bits = io_PC_next_bits_0;
 endmodule
 

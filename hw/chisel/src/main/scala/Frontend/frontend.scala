@@ -30,7 +30,7 @@
 import chisel3._
 import chisel3.util._
 
-class Q[T <: Data](dataType: T, depth: Int = 16) extends Module {
+class Q[T <: Data](dataType: T, depth: Int = 16) extends Module{
   val io = IO(new Bundle {
     val data_in    = Input(dataType)         // input data (bundle)
     val wr_en      = Input(Bool())           // write element
@@ -54,11 +54,7 @@ class Q[T <: Data](dataType: T, depth: Int = 16) extends Module {
   io.empty := !queue.io.deq.valid
 
   // Reset logic
-  when(io.clear) {
-    queue.reset := true.B
-  }.otherwise {
-    queue.reset := false.B
-  }
+  queue.reset := io.clear || reset.asBool
 }
 
 class skidbuffer[T <: Data](datatype: T) extends Module{
@@ -113,7 +109,7 @@ class Frontend(GHRWidth:Int=16, fetchWidth:Int=4, RASEntries:Int=128, BTBEntries
 
     val io = IO(new Bundle{
 
-        val PC                = Flipped(Decoupled(UInt(32.W)))
+        //val PC                = Flipped(Decoupled(UInt(32.W)))
 
         // Inputs: A series of PCs and control signals
         val misprediction_PC  =   Flipped(Decoupled(UInt(32.W)))                              // Input
@@ -151,11 +147,15 @@ class Frontend(GHRWidth:Int=16, fetchWidth:Int=4, RASEntries:Int=128, BTBEntries
     //////////////
     // PC Queue //
     //////////////
-    PC_Q.io.wr_en       :=  io.PC.valid         // Write to PC_Q whenever the PC is valid
-    PC_Q.io.data_in     :=  io.PC.bits
+    //PC_Q.io.wr_en       :=  io.PC.valid         // Write to PC_Q whenever the PC is valid
+    //PC_Q.io.data_in     :=  io.PC.bits
+    PC_Q.io.wr_en       :=  PC_gen.io.PC_next.valid
+    PC_Q.io.data_in     :=  PC_gen.io.PC_next.bits
     PC_Q.io.rd_en       :=  (instruction_cache.io.cpu_addr.ready)  
     PC_Q.io.clear       :=  clear
+    dontTouch(PC_Q.io.full)
 
+    dontTouch(instruction_cache.io.cache_addr.ready)
     ///////////////////////
     // INSTRUCTION QUEUE //
     ///////////////////////
@@ -176,6 +176,7 @@ class Frontend(GHRWidth:Int=16, fetchWidth:Int=4, RASEntries:Int=128, BTBEntries
     // INSTRUCTION CACHE //
     ///////////////////////
     instruction_cache.io.cache_data.ready     :=   !instruction_Q.io.full
+
 
     // Attach PC_Q to instruction cache
     instruction_cache.io.cpu_addr.bits     :=   PC_Q.io.data_out
@@ -202,8 +203,8 @@ class Frontend(GHRWidth:Int=16, fetchWidth:Int=4, RASEntries:Int=128, BTBEntries
     bp.io.commit.valid      :=  io.commit.valid
 
     // BP inputs (internal)
-    bp.io.predict.bits      :=  io.PC.bits
-    bp.io.predict.valid     :=  io.PC.valid
+    bp.io.predict.bits      :=  PC_gen.io.PC_next.bits
+    bp.io.predict.valid     :=  PC_gen.io.PC_next.valid
 
     bp.io.RAS_update        :=  predecoder.io.RAS_update
 
@@ -225,6 +226,8 @@ class Frontend(GHRWidth:Int=16, fetchWidth:Int=4, RASEntries:Int=128, BTBEntries
     predecoder.io.fetch_packet.valid :=   !instruction_Q.io.empty
 
     predecoder.io.RAS_read           :=   bp.io.RAS_read
+
+    predecoder.io.final_fetch_packet.ready := io.fetch_packet.ready
     
     //////////////
     // PC ARBIT //
@@ -234,8 +237,10 @@ class Frontend(GHRWidth:Int=16, fetchWidth:Int=4, RASEntries:Int=128, BTBEntries
 
     PC_gen.io.prediction.bits  := bp.io.prediction.bits
     PC_gen.io.prediction.valid := bp.io.prediction.valid
+    dontTouch(bp.io.prediction.valid)
     
     PC_gen.io.RAS_read         := bp.io.RAS_read
+    PC_gen.io.PC_next.ready         := 1.B  // FIXME: ??
 
     PC_gen.io.revert.bits      := predecoder.io.revert.bits
     PC_gen.io.revert.valid     := predecoder.io.revert.valid

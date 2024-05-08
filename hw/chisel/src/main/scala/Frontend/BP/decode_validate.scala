@@ -141,7 +141,7 @@ class decode_validate(fetchWidth:Int=4,GHRWidth:Int=16, RASEntries:Int=128) exte
     /////////
 
     val PC_next     = Wire(UInt(32.W))
-    val PC_next_reg = RegInit(UInt(32.W), 0.U)
+    val PC_next_reg = RegInit(UInt(32.W), "h80000000".U)    // FIXME: start address should be a parameter...
     val PC_expected = Wire(UInt(32.W))
     val packet_valid = Wire(Bool())
 
@@ -154,14 +154,14 @@ class decode_validate(fetchWidth:Int=4,GHRWidth:Int=16, RASEntries:Int=128) exte
 
     switch(FSM1_state){
         is(latchExpectedPC.wire_wire){
-            when(io.prediction.valid === 0.B){
+            when(!(io.prediction.valid && io.fetch_packet.valid)){
                 FSM1_state := latchExpectedPC.wire_reg
                 PC_next_reg := PC_next
             }
         }
         is(latchExpectedPC.wire_reg){
             // Start here
-            when(io.prediction.valid === 1.B){
+            when((io.prediction.valid && io.fetch_packet.valid)){
                 FSM1_state := latchExpectedPC.wire_wire
             }
         }
@@ -224,8 +224,15 @@ class decode_validate(fetchWidth:Int=4,GHRWidth:Int=16, RASEntries:Int=128) exte
     when(use_BTB){PC_next := metadata_out.BTB_target}
     .elsewhen(use_RAS){PC_next := metadata_out.RAS}
     .elsewhen(use_computed){PC_next := metadata_out.instruction_PC + metadata_out.Imm}
-    .otherwise{PC_next := io.fetch_packet.bits.fetch_PC + (fetchWidth*4).U}
+    .otherwise{PC_next := RegNext(io.fetch_packet.bits.fetch_PC + (fetchWidth*4).U)} // FIXME: should this always be +16?
 
+    dontTouch(use_BTB)
+    dontTouch(use_RAS)
+    dontTouch(use_computed)
+
+    val test = Wire(UInt(32.W))
+    test := RegNext(io.fetch_packet.bits.fetch_PC + (fetchWidth*4).U)
+    dontTouch(test)
 
     // validate instructions
 
@@ -242,11 +249,11 @@ class decode_validate(fetchWidth:Int=4,GHRWidth:Int=16, RASEntries:Int=128) exte
 
     for(i <- 0 until fetchWidth){
         io.final_fetch_packet.bits.instructions(i) := RegNext(io.fetch_packet.bits.instructions(i))    // pass along actual instruction
-        io.final_fetch_packet.bits.valid_bits(i) := RegNext(decoder_validator.io.instruction_validity(i)) && packet_valid
+        io.final_fetch_packet.bits.valid_bits(i)   := RegNext(decoder_validator.io.instruction_validity(i)) && packet_valid && RegNext(inputs_valid)
     }
 
 
-    io.final_fetch_packet.bits.fetch_PC := io.fetch_packet.bits.fetch_PC  // Pass along fetch PC
+    io.final_fetch_packet.bits.fetch_PC := RegNext(io.fetch_packet.bits.fetch_PC)  // Pass along fetch PC
     // RAS Control //
     io.RAS_update.call       := metadata_out.Call
     io.RAS_update.ret        := metadata_out.Ret
