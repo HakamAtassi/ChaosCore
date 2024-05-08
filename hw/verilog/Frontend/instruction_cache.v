@@ -154,6 +154,7 @@ module L1_instruction_cache(
   reg  [20:0]      replay_tag;
   reg              replay_valid;
   reg  [31:0]      fetch_PC_buf;
+  reg              packet_index;
   wire [20:0]      current_addr_tag = current_addr[29:9];
   wire [5:0]       current_addr_set = current_addr[8:3];
   wire             current_addr_fetch_packet = current_addr[2];
@@ -180,12 +181,13 @@ module L1_instruction_cache(
   reg              hit_REG;
   reg              hit_REG_1;
   reg              hit_REG_2;
-  wire             hit = (|hit_oh) & (hit_REG | hit_REG_1) & ~hit_REG_2;
+  reg              hit_REG_3;
+  wire             hit = (|hit_oh) & (hit_REG | hit_REG_1) & ~hit_REG_2 & ~hit_REG_3;
   reg              miss_REG;
   reg              miss_REG_1;
   reg              miss_REG_2;
-  assign miss = ~(|hit_oh) & (miss_REG | miss_REG_1) & ~miss_REG_2;
-  reg              packet_index_REG;
+  reg              miss_REG_3;
+  assign miss = ~(|hit_oh) & (miss_REG | miss_REG_1) & ~miss_REG_2 & ~miss_REG_3;
   wire [255:0]     hit_instruction_data =
     hit_oh_vec_1
       ? _data_memory_1_io_data_out[255:0]
@@ -199,7 +201,7 @@ module L1_instruction_cache(
      {hit_instruction_data[191:160]},
      {hit_instruction_data[223:192]},
      {hit_instruction_data[255:224]}};
-  wire [2:0]       _GEN_2 = {packet_index_REG, 2'h0};
+  wire [2:0]       _GEN_2 = {packet_index, 2'h0};
   reg              io_cache_data_bits_valid_bits_0_REG;
   reg              io_cache_data_bits_valid_bits_1_REG;
   reg              io_cache_data_bits_valid_bits_2_REG;
@@ -211,31 +213,35 @@ module L1_instruction_cache(
       replay_tag <= 21'h0;
       replay_valid <= 1'h0;
       fetch_PC_buf <= 32'h0;
+      packet_index <= 1'h0;
     end
     else begin
+      automatic logic _GEN_3;
+      _GEN_3 = cache_state == 2'h2;
       if (|cache_state) begin
         if (_GEN_0) begin
           if (io_kill)
             cache_state <= 2'h0;
           else if (io_dram_data_valid)
             cache_state <= 2'h2;
-          replay_valid <= ~io_kill & io_dram_data_valid | replay_valid;
         end
-        else begin
-          automatic logic _GEN_3 = cache_state == 2'h2;
-          if (_GEN_3)
-            cache_state <= 2'h0;
-          replay_valid <= ~_GEN_3 & replay_valid;
-        end
+        else if (_GEN_3)
+          cache_state <= 2'h0;
       end
       else begin
         if (_GEN)
           cache_state <= 2'h1;
         replay_tag <= replay_tag_REG;
-        fetch_PC_buf <= io_cpu_addr_bits;
       end
       if (io_cpu_addr_valid)
         replay_addr <= io_cpu_addr_bits;
+      replay_valid <=
+        (|cache_state)
+        & (_GEN_0 ? ~io_kill & io_dram_data_valid : ~_GEN_3 & replay_valid);
+      if (~(|cache_state) & ~miss) begin
+        fetch_PC_buf <= io_cpu_addr_bits;
+        packet_index <= current_addr_fetch_packet;
+      end
     end
     replay_tag_REG <= io_cpu_addr_bits[31:11];
     io_cache_addr_bits_REG <= io_cpu_addr_bits;
@@ -245,10 +251,11 @@ module L1_instruction_cache(
     hit_REG <= io_cpu_addr_valid;
     hit_REG_1 <= replay_valid;
     hit_REG_2 <= io_kill;
+    hit_REG_3 <= reset;
     miss_REG <= io_cpu_addr_valid;
     miss_REG_1 <= replay_valid;
     miss_REG_2 <= io_kill;
-    packet_index_REG <= current_addr_fetch_packet;
+    miss_REG_3 <= reset;
     io_cache_data_bits_valid_bits_0_REG <= _validator_io_instruction_output[3];
     io_cache_data_bits_valid_bits_1_REG <= _validator_io_instruction_output[2];
     io_cache_data_bits_valid_bits_2_REG <= _validator_io_instruction_output[1];
@@ -287,7 +294,7 @@ module L1_instruction_cache(
     (|cache_state) ? _GEN_0 & (io_kill | ~io_dram_data_valid) : _GEN;
   assign io_cache_data_valid = hit & ~io_kill;
   assign io_cache_data_bits_fetch_PC = fetch_PC_buf;
-  assign io_cache_data_bits_instructions_0 = _GEN_1[{packet_index_REG, 2'h0}];
+  assign io_cache_data_bits_instructions_0 = _GEN_1[{packet_index, 2'h0}];
   assign io_cache_data_bits_instructions_1 = _GEN_1[_GEN_2 + 3'h1];
   assign io_cache_data_bits_instructions_2 = _GEN_1[_GEN_2 + 3'h2];
   assign io_cache_data_bits_instructions_3 = _GEN_1[_GEN_2 + 3'h3];

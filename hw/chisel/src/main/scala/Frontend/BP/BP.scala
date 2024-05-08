@@ -238,7 +238,6 @@ class BP(GHRWidth:Int = 16, fetchWidth:Int = 4, RASEntries:Int=128, BTBEntries:I
     io.predict.ready        := io.prediction.ready && !(misprediction || revert)   // 1 cycle stall on mispredict or revert
     io.prediction.valid     := (BTB.io.BTB_valid && gshare.io.valid)
 
-
     io.commit.ready := 1.B
     io.revert.ready := 1.B
 

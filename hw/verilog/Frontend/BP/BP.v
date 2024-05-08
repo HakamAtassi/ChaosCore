@@ -199,11 +199,9 @@ module hash_BTB(
   wire [15:0] BTB_tag_output = _BTB_memory_io_data_out[53:38];
   reg         io_BTB_valid_REG;
   reg  [15:0] io_BTB_hit_REG;
-  reg         io_BTB_hit_REG_1;
   always @(posedge clock) begin
     io_BTB_valid_REG <= io_predict_valid;
     io_BTB_hit_REG <= io_predict_PC[31:16];
-    io_BTB_hit_REG_1 <= io_predict_valid;
   end // always @(posedge)
   SDPReadWriteSmem BTB_memory (
     .clock       (clock),
@@ -219,7 +217,7 @@ module hash_BTB(
   assign io_BTB_target = _BTB_memory_io_data_out[37:6];
   assign io_BTB_type = _BTB_memory_io_data_out[5:4];
   assign io_BTB_br_mask = _BTB_memory_io_data_out[3:0];
-  assign io_BTB_hit = io_BTB_hit_REG == BTB_tag_output & io_BTB_hit_REG_1;
+  assign io_BTB_hit = io_BTB_hit_REG == BTB_tag_output & _BTB_memory_io_data_out[54];
 endmodule
 
 // VCS coverage exclude_file

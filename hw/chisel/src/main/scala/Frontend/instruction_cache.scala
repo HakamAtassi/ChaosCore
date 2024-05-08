@@ -148,7 +148,7 @@ class L1_instruction_cache(fetchWidth:Int=4, ways:Int=2, sets:Int = 64, blockSiz
 
     val hit_instruction_data = Wire(UInt(wayDataWidth.W)) 
     val instruction_vec      = Wire(Vec(instructionsPerLine, UInt(32.W)))   
-    val packet_index         = Wire(UInt(fetchPacketBits.W))
+    val packet_index         = RegInit(UInt(fetchPacketBits.W), 0.U)
     val aligned_packet_index = Wire(UInt(fetchPacketBits.W))
 
     val dram_addr_mask      = Wire(UInt(32.W))
@@ -186,9 +186,9 @@ class L1_instruction_cache(fetchWidth:Int=4, ways:Int=2, sets:Int = 64, blockSiz
 
     switch(cache_state){
         is(cacheState.Active){
-            fetch_PC_buf := io.cpu_addr.bits
             replay_tag := RegNext(io.cpu_addr.bits(31, 31-tagBits+1))
             io.dram_data.ready := 0.U   // cache not ready for data from DRAM in active state
+            replay_valid        := 0.U
             when((miss===1.B && io.kill === 0.U)){           // Buffer current request, stall cache, go to wait state
                 // Request data from DRAM
                 cache_state := cacheState.Allocate
@@ -198,11 +198,20 @@ class L1_instruction_cache(fetchWidth:Int=4, ways:Int=2, sets:Int = 64, blockSiz
                 io.cache_addr.valid := 1.U
                 io.dram_data.ready  := 1.U
             }
+
+            when(!miss){
+                packet_index := current_addr_fetch_packet
+                fetch_PC_buf := io.cpu_addr.bits
+            }.otherwise{
+                packet_index := packet_index
+                fetch_PC_buf := fetch_PC_buf
+            }
         }
         is(cacheState.Allocate){            // Stall till DRAM response. On Response, allocate.
             io.cache_addr.bits  := 0.U      // Only Request once...
             io.cache_addr.valid := 0.U      // ...
             io.dram_data.ready  := 1.U      // Ready to accept DRAM data
+            replay_valid        := 0.U
             when(io.kill === 1.U){
                 cache_state := cacheState.Active    // Ignore miss, go back to active.
             }.elsewhen(io.dram_data.valid===1.U){ // Data received
@@ -281,8 +290,8 @@ class L1_instruction_cache(fetchWidth:Int=4, ways:Int=2, sets:Int = 64, blockSiz
     hit_oh := hit_oh_vec.reverse.reduce(_ ## _)
 
 
-    hit     := (hit_oh.orR & (RegNext(io.cpu_addr.valid) | RegNext(replay_valid))) & !RegNext(io.kill)
-    miss    := (~hit_oh.orR) & (RegNext(io.cpu_addr.valid) | RegNext(replay_valid)) & !RegNext(io.kill)
+    hit     := (hit_oh.orR & (RegNext(io.cpu_addr.valid) | RegNext(replay_valid))) & !RegNext(io.kill) & !RegNext(reset.asBool)
+    miss    := (~hit_oh.orR) & (RegNext(io.cpu_addr.valid) | RegNext(replay_valid)) & !RegNext(io.kill) & !RegNext(reset.asBool)
 
 
 
@@ -290,7 +299,7 @@ class L1_instruction_cache(fetchWidth:Int=4, ways:Int=2, sets:Int = 64, blockSiz
     // Fetch Packet Selecting & Output //
     /////////////////////////////////////
 
-    packet_index := RegNext(current_addr_fetch_packet)  
+    //packet_index := RegNext(current_addr_fetch_packet)  
     aligned_packet_index := packet_index & ~(fetchWidth.U * 4.U -1.U)
 
 
