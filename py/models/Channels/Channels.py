@@ -45,7 +45,7 @@ class Predict(Channel):
         self.valid   = valid
 
 class Revert(Channel):
-    def __init__(self,address, GHR, valid):
+    def __init__(self, address, GHR, valid):
         self.address = address
         self.GHR     = GHR
         self.valid   = valid

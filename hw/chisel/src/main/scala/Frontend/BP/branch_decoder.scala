@@ -54,7 +54,7 @@ class branch_decoder(index:Int, fetchWidth:Int, GHRWidth:Int) extends Module{
     val opcode = io.instruction(6, 0)
     val RS1 = io.instruction(19, 15)
     val RD = io.instruction(11, 7)
-    val imm = Wire(UInt(32.W))
+    val imm = Wire(SInt(32.W))
 
     val JAL     = (opcode === "b1101111".U)     // Always taken if valid    
     val JALR    = (opcode === "b1100111".U)     // Only taken if Ret || BTB has target
@@ -62,7 +62,7 @@ class branch_decoder(index:Int, fetchWidth:Int, GHRWidth:Int) extends Module{
 
     // Sub types
     val Call = (JAL && RD === 1.U) || (JALR && RD === 1.U)       // Either JAL or JALR with RD = x1
-    val Ret = (JALR && RS1 === 1.U && imm === 0.U)               // JALR with RS1 = x1 & imm = 0
+    val Ret = (JALR && RS1 === 1.U && imm === 0.S)               // JALR with RS1 = x1 & imm = 0
 
     val fetch_PC_adjusted = Wire(UInt(32.W))
     fetch_PC_adjusted := io.fetch_PC + (index*4).U
@@ -72,15 +72,30 @@ class branch_decoder(index:Int, fetchWidth:Int, GHRWidth:Int) extends Module{
     // Note that since 1 packet can have several branches, so simplify things, predictions depend on the BTB to inform BP of the dominant branch
     // if that is not available, default to NT. 
 
+
+
     // Assign imm
     when (BR) {
-        imm := Cat(io.instruction(31), io.instruction(7), io.instruction(30, 25), io.instruction(11, 8), 0.U(1.W)).asSInt.asUInt
+        val imm_12      = io.instruction(31)
+        val imm_10_5    = io.instruction(30, 25)
+        val imm_4_1     = io.instruction(11, 8)
+        val imm_11      = io.instruction(7)
+
+        imm := Cat(imm_12, imm_10_5, imm_4_1, imm_11, 0.U(1.W)).asSInt
     }.elsewhen (JAL) {
-        imm := Cat(io.instruction(31), io.instruction(19, 12), io.instruction(20), io.instruction(30, 21), 0.U(1.W)).asSInt.asUInt
+        val imm_20    = io.instruction(31)
+        val imm_19_12 = io.instruction(19, 12)
+        val imm_11    = io.instruction(20)
+        val imm_10_1  = io.instruction(30,21)
+
+        //imm := Cat(io.instruction(31), io.instruction(19, 12), io.instruction(20), io.instruction(30, 21), 0.U(1.W)).asSInt.asUInt
+        imm := (Cat(imm_20, imm_19_12, imm_11, imm_10_1, 0.U(1.W)).asSInt)
     }.elsewhen (JALR) {
-        imm := (io.instruction(31, 20).asSInt).asSInt.asUInt
+        val imm_11_0      = io.instruction(31, 20)
+        
+        imm := io.instruction.asSInt
     }.otherwise {
-        imm := 0.U
+        imm := 0.S
     }
 
     

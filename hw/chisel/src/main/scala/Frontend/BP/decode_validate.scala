@@ -220,19 +220,16 @@ class decode_validate(fetchWidth:Int,GHRWidth:Int, RASEntries:Int, startPC:UInt)
     use_RAS      := metadata_out.Ret
     use_computed := metadata_out.BR || metadata_out.JAL 
 
+    dontTouch(metadata_out.Imm)
 
     when(use_BTB){PC_next := metadata_out.BTB_target}
     .elsewhen(use_RAS){PC_next := metadata_out.RAS}
-    .elsewhen(use_computed){PC_next := metadata_out.instruction_PC + metadata_out.Imm}
+    .elsewhen(use_computed){PC_next := metadata_out.instruction_PC + metadata_out.Imm.asUInt}
     .otherwise{PC_next := RegNext(io.fetch_packet.bits.fetch_PC + (fetchWidth*4).U)} // FIXME: should this always be +16?
 
     dontTouch(use_BTB)
     dontTouch(use_RAS)
     dontTouch(use_computed)
-
-    val test = Wire(UInt(32.W))
-    test := RegNext(io.fetch_packet.bits.fetch_PC + (fetchWidth*4).U)
-    dontTouch(test)
 
     // validate instructions
 
@@ -261,7 +258,7 @@ class decode_validate(fetchWidth:Int,GHRWidth:Int, RASEntries:Int, startPC:UInt)
 
 
     // Do not accept inputs if outputs have nowhere to go. 
-    io.prediction.ready := io.final_fetch_packet.ready
-    io.fetch_packet.ready := io.final_fetch_packet.ready
-    io.final_fetch_packet.valid := RegNext(inputs_valid)
+    io.prediction.ready   := (io.final_fetch_packet.ready && !PC_mismatch)
+    io.fetch_packet.ready := (io.final_fetch_packet.ready && !PC_mismatch)
+    io.final_fetch_packet.valid := inputs_valid && PC_match
 }

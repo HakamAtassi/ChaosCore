@@ -29,3 +29,10 @@ class PCGenDut:
         self.dut.io_prediction_bits_br_mask.value   =   prediction.BTB_br_mask
         self.dut.io_prediction_bits_GHR.value       =   prediction.GHR
         self.dut.io_prediction_bits_T_NT.value      =   prediction.T_NT
+
+    def revert(self, reversion):
+
+
+        self.dut.io_revert_valid.value = reversion.valid
+        self.dut.io_revert_bits_GHR.value = reversion.GHR
+        self.dut.io_revert_bits_PC.value = reversion.address

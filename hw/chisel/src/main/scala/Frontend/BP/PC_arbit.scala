@@ -151,7 +151,7 @@ class PC_arbit(GHRWidth:Int, fetchWidth:Int, RASEntries:Int, startPC:UInt) exten
     // valid/ready control //
     /////////////////////////
 
-    io.PC_next.valid := !(correct_stage_active)  
+    io.PC_next.valid := !(correct_stage_active)  && io.PC_next.ready
     //FIXME: ready does not do anything at the moment.
 
     io.prediction.ready := 1.B
