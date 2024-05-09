@@ -50,7 +50,7 @@ class Q[T <: Data](dataType: T, depth: Int = 16) extends Module{
 
   // Connect outputs
   io.data_out := queue.io.deq.bits
-  io.full := !queue.io.enq.ready
+  io.full :=  !queue.io.enq.ready
   io.empty := !queue.io.deq.valid
 
   // Reset logic
@@ -239,7 +239,7 @@ class Frontend(GHRWidth:Int=16, fetchWidth:Int=4, RASEntries:Int=128, BTBEntries
     dontTouch(bp.io.prediction.valid)
     
     PC_gen.io.RAS_read         := bp.io.RAS_read
-    PC_gen.io.PC_next.ready         := 1.B  // FIXME: ??
+    PC_gen.io.PC_next.ready         := !PC_Q.io.full && bp.io.predict.ready
 
     PC_gen.io.revert.bits      := predecoder.io.revert.bits
     PC_gen.io.revert.valid     := predecoder.io.revert.valid

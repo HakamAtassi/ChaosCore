@@ -311,7 +311,7 @@ class L1_instruction_cache(fetchWidth:Int, ways:Int, sets:Int, blockSizeBytes:In
     }
 
     for(instruction <- 0 until instructionsPerLine){    // split hit line into its constituent instructions
-        instruction_vec(instructionsPerLine-1-instruction) := hit_instruction_data((instruction+1)*32-1, (instruction)*32)    
+        instruction_vec(instruction) := hit_instruction_data((instruction+1)*32-1, (instruction)*32)    
     }
 
 

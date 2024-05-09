@@ -1,9 +1,11 @@
 import sys
 import random
+import cocotb.triggers
 import numpy as np
 import cocotb
+from cocotb.handle import Force, Release
 from cocotb.triggers import Timer
-from cocotb.triggers import RisingEdge, FallingEdge, Timer
+from cocotb.triggers import RisingEdge, FallingEdge, Timer, ReadOnly
 from pathlib import Path
 
 from InstructionCache import *
@@ -11,50 +13,58 @@ from SimpleDRAM import *
 
 from cocotb_utils import *      # import verif utils
 from model_utils import *
-from PCGenDut import *
 from Channels import *
+from QDut import *
+
 
 @cocotb.test()
-async def instruction_cache_kill_miss_test(dut):
+async def test0(dut):
     random.seed(0x42)
 
     await cocotb.start(generateClock(dut)) 
 
-    await reset(dut)
-    dut = PCGenDut(dut)
+    dut = QDut(dut)
 
     await RisingEdge(dut.clock())
     await RisingEdge(dut.clock())
     await RisingEdge(dut.clock())
 
-    dut.dut.io_PC_next_ready.value = 1
+    dut.write_to_Q(0xdead0000, 1)
+    await RisingEdge(dut.clock())
+    dut.write_to_Q(0xdead0010, 1)
+    await RisingEdge(dut.clock())
+    dut.write_to_Q(0xdead0020, 1)
+    await RisingEdge(dut.clock())
+    dut.write_to_Q(0xdead0030, 1)
+    await RisingEdge(dut.clock())
+    dut.write_to_Q(0xdead0030, 0)
+
+    dut.read_from_Q(1)
+
 
     await RisingEdge(dut.clock())
-    await RisingEdge(dut.clock())
-    await RisingEdge(dut.clock())
+    dut.read_from_Q(0)
+
 
     await RisingEdge(dut.clock())
-    await RisingEdge(dut.clock())
-    await RisingEdge(dut.clock())
-    await RisingEdge(dut.clock())
-    await RisingEdge(dut.clock())
+    dut.read_from_Q(0)
 
-    revert_request = Revert(
-        0xdeadbeef, 
-        0,
-        1
-    )
 
-    dut.revert(revert_request)
+
+    await RisingEdge(dut.clock())
+    dut.clear_Q(1)
+
+    await RisingEdge(dut.clock())
+    dut.clear_Q(0)
     
+
+
+
+
+    await RisingEdge(dut.clock())
+    await RisingEdge(dut.clock())
+    await RisingEdge(dut.clock())
     await RisingEdge(dut.clock())
 
-    revert_request = Revert(
-        0xdeadbeef, 
-        0,
-        0
-    )
 
-    dut.revert(revert_request)
-    await RisingEdge(dut.clock())
-    await RisingEdge(dut.clock())
+

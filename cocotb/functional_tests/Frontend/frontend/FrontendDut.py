@@ -1,4 +1,5 @@
 from Channels import *
+from cocotb.handle import Force, Release
 import cocotb
 from cocotb.triggers import RisingEdge, ReadOnly
 import random
@@ -47,6 +48,17 @@ class FrontendDut:
         # read signals
         await ReadOnly()
         self.dram_request_valid =  self.dut.io_cache_addr_valid.value 
-        self.dram_request_addr = self.dut.io_cache_addr_bits.value 
+        self.dram_request_address = self.dut.io_cache_addr_bits.value 
 
         await RisingEdge(self.clock())
+
+
+    def get_PC_queue(self):
+        PC_Q = []
+        for entry in self.dut.PC_Q.queue.ram_ext.Memory:
+            PC_Q.append(hex(int(entry.value)))
+           
+        full =  self.dut.PC_Q.io_full.value
+        empty =  self.dut.PC_Q.io_empty.value
+
+        return PC_Q, full, empty
