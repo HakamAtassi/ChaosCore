@@ -1,7 +1,7 @@
 <testsuites name="results">
   <testsuite name="all" package="all">
-    <property name="random_seed" value="1715255610" />
-    <testcase name="test0" classname="frontend_tests" file="/home/hakam/Repos/ChaosCore/cocotb/functional_tests/Frontend/frontend/frontend_tests.py" lineno="20" time="0.11172008514404297" sim_time_ns="2011.001" ratio_time="18000.35327047214" />
-    <testcase name="test_PC_queue" classname="frontend_tests" file="/home/hakam/Repos/ChaosCore/cocotb/functional_tests/Frontend/frontend/frontend_tests.py" lineno="54" time="0.001382589340209961" sim_time_ns="11.000999999999976" ratio_time="7956.80950232797" />
+    <property name="random_seed" value="1715258638" />
+    <testcase name="test0" classname="frontend_tests" file="/home/hakam/Repos/ChaosCore/cocotb/functional_tests/Frontend/frontend/frontend_tests.py" lineno="20" time="0.11884856224060059" sim_time_ns="2011.001" ratio_time="16920.701118191646" />
+    <testcase name="test_PC_queue" classname="frontend_tests" file="/home/hakam/Repos/ChaosCore/cocotb/functional_tests/Frontend/frontend/frontend_tests.py" lineno="74" time="0.0015926361083984375" sim_time_ns="11.000999999999976" ratio_time="6907.41591377244" />
   </testsuite>
 </testsuites>
