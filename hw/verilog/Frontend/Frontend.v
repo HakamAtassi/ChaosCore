@@ -1008,7 +1008,6 @@ module decode_validate(
                 io_RAS_update_ret
 );
 
-  wire [31:0] PC_next;
   wire [31:0] PC_expected;
   wire [3:0]  _decoder_validator_io_instruction_validity;
   wire        _decoders_3_io_T_NT;
@@ -1111,11 +1110,7 @@ module decode_validate(
           ? metadata_reg_2_instruction_PC
           : T_NT_reg_1 ? metadata_reg_1_instruction_PC : metadata_reg_0_instruction_PC;
   reg  [31:0] PC_next_reg;
-  reg         FSM1_state;
-  reg         FSM2_state;
-  wire        PC_match = PC_expected == io_fetch_packet_bits_fetch_PC & inputs_valid;
   wire        PC_mismatch = PC_expected != io_fetch_packet_bits_fetch_PC & inputs_valid;
-  assign PC_expected = FSM1_state ? PC_next_reg : PC_next;
   wire        use_BTB =
     (T_NT_reg_3
        ? metadata_reg_3_JALR
@@ -1134,7 +1129,7 @@ module decode_validate(
              ? metadata_reg_2_JAL
              : T_NT_reg_1 ? metadata_reg_1_JAL : metadata_reg_0_JAL);
   reg  [31:0] PC_next_REG;
-  assign PC_next =
+  wire [31:0] PC_next =
     use_BTB
       ? (T_NT_reg_3
            ? metadata_reg_3_BTB_target
@@ -1148,6 +1143,9 @@ module decode_validate(
                    ? metadata_reg_2_RAS
                    : T_NT_reg_1 ? metadata_reg_1_RAS : metadata_reg_0_RAS)
           : use_computed ? metadata_out_instruction_PC + metadata_out_Imm : PC_next_REG;
+  reg         PC_next_reg_REG;
+  reg         PC_expected_REG;
+  assign PC_expected = PC_expected_REG ? PC_next : PC_next_reg;
   reg  [31:0] io_final_fetch_packet_bits_instructions_0_REG;
   reg         io_final_fetch_packet_bits_valid_bits_0_REG;
   reg         io_final_fetch_packet_bits_valid_bits_0_REG_1;
@@ -1160,8 +1158,8 @@ module decode_validate(
   reg  [31:0] io_final_fetch_packet_bits_instructions_3_REG;
   reg         io_final_fetch_packet_bits_valid_bits_3_REG;
   reg         io_final_fetch_packet_bits_valid_bits_3_REG_1;
-  reg  [31:0] io_final_fetch_packet_bits_fetch_PC_REG;
   always @(posedge clock) begin
+    automatic logic stage_1_valid = io_fetch_packet_valid & ~PC_mismatch;
     metadata_reg_0_JAL <= _decoders_0_io_metadata_JAL;
     metadata_reg_0_JALR <= _decoders_0_io_metadata_JALR;
     metadata_reg_0_BR <= _decoders_0_io_metadata_BR;
@@ -1203,6 +1201,8 @@ module decode_validate(
     T_NT_reg_3 <= _decoders_3_io_T_NT;
     GHR_reg <= io_prediction_bits_GHR;
     PC_next_REG <= io_fetch_packet_bits_fetch_PC + 32'h10;
+    PC_next_reg_REG <= stage_1_valid;
+    PC_expected_REG <= stage_1_valid;
     io_final_fetch_packet_bits_instructions_0_REG <= io_fetch_packet_bits_instructions_0;
     io_final_fetch_packet_bits_valid_bits_0_REG <=
       _decoder_validator_io_instruction_validity[0];
@@ -1219,28 +1219,10 @@ module decode_validate(
     io_final_fetch_packet_bits_valid_bits_3_REG <=
       _decoder_validator_io_instruction_validity[3];
     io_final_fetch_packet_bits_valid_bits_3_REG_1 <= inputs_valid;
-    io_final_fetch_packet_bits_fetch_PC_REG <= io_fetch_packet_bits_fetch_PC;
-    if (reset) begin
+    if (reset)
       PC_next_reg <= 32'h0;
-      FSM1_state <= 1'h1;
-      FSM2_state <= 1'h0;
-    end
-    else begin
-      automatic logic _GEN;
-      _GEN = io_prediction_valid & io_fetch_packet_valid;
-      if (FSM1_state | _GEN) begin
-      end
-      else
-        PC_next_reg <= PC_next;
-      if (FSM1_state)
-        FSM1_state <= ~(FSM1_state & _GEN) & FSM1_state;
-      else
-        FSM1_state <= ~_GEN | FSM1_state;
-      if (FSM2_state)
-        FSM2_state <= ~(FSM2_state & PC_mismatch) & FSM2_state;
-      else
-        FSM2_state <= PC_match | FSM2_state;
-    end
+    else if (PC_next_reg_REG)
+      PC_next_reg <= PC_next;
   end // always @(posedge)
   branch_decoder decoders_0 (
     .io_fetch_PC                (io_fetch_packet_bits_fetch_PC),
@@ -1331,8 +1313,9 @@ module decode_validate(
   assign io_revert_valid = PC_mismatch;
   assign io_revert_bits_GHR = GHR_reg;
   assign io_revert_bits_PC = PC_expected;
-  assign io_final_fetch_packet_valid = inputs_valid & PC_match;
-  assign io_final_fetch_packet_bits_fetch_PC = io_final_fetch_packet_bits_fetch_PC_REG;
+  assign io_final_fetch_packet_valid =
+    inputs_valid & PC_expected == io_fetch_packet_bits_fetch_PC;
+  assign io_final_fetch_packet_bits_fetch_PC = io_fetch_packet_bits_fetch_PC;
   assign io_final_fetch_packet_bits_instructions_0 =
     io_final_fetch_packet_bits_instructions_0_REG;
   assign io_final_fetch_packet_bits_instructions_1 =
@@ -1342,16 +1325,16 @@ module decode_validate(
   assign io_final_fetch_packet_bits_instructions_3 =
     io_final_fetch_packet_bits_instructions_3_REG;
   assign io_final_fetch_packet_bits_valid_bits_0 =
-    io_final_fetch_packet_bits_valid_bits_0_REG & FSM2_state
+    io_final_fetch_packet_bits_valid_bits_0_REG
     & io_final_fetch_packet_bits_valid_bits_0_REG_1;
   assign io_final_fetch_packet_bits_valid_bits_1 =
-    io_final_fetch_packet_bits_valid_bits_1_REG & FSM2_state
+    io_final_fetch_packet_bits_valid_bits_1_REG
     & io_final_fetch_packet_bits_valid_bits_1_REG_1;
   assign io_final_fetch_packet_bits_valid_bits_2 =
-    io_final_fetch_packet_bits_valid_bits_2_REG & FSM2_state
+    io_final_fetch_packet_bits_valid_bits_2_REG
     & io_final_fetch_packet_bits_valid_bits_2_REG_1;
   assign io_final_fetch_packet_bits_valid_bits_3 =
-    io_final_fetch_packet_bits_valid_bits_3_REG & FSM2_state
+    io_final_fetch_packet_bits_valid_bits_3_REG
     & io_final_fetch_packet_bits_valid_bits_3_REG_1;
   assign io_RAS_update_call_addr = metadata_out_instruction_PC;
   assign io_RAS_update_call =

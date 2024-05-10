@@ -2,6 +2,10 @@
 [0m[[0m[0mdebug[0m] [0m[0mInput file mappings:[0m
 [0m[[0m[0mdebug[0m] [0m[0m	RAS.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/Repos/ChaosCore/hw/chisel/target/scala-2.13/classes/RAS.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	decoder.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/Repos/ChaosCore/hw/chisel/target/scala-2.13/classes/decoder.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	decoder$$anon$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/Repos/ChaosCore/hw/chisel/target/scala-2.13/classes/decoder$$anon$1.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	BP.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/Repos/ChaosCore/hw/chisel/target/scala-2.13/classes/BP.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	cacheState$.class[0m
@@ -14,6 +18,8 @@
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/Repos/ChaosCore/hw/chisel/target/scala-2.13/classes/SDPReadWriteSmem$$anon$2.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	Parameters$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/Repos/ChaosCore/hw/chisel/target/scala-2.13/classes/Parameters$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	decoded_fetch_packet$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/Repos/ChaosCore/hw/chisel/target/scala-2.13/classes/decoded_fetch_packet$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	helperFunctions.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/Repos/ChaosCore/hw/chisel/target/scala-2.13/classes/helperFunctions.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	PHT_memory.class[0m
@@ -34,18 +40,24 @@
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/Repos/ChaosCore/hw/chisel/target/scala-2.13/classes/Q$$anon$1.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	validate_packet$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/Repos/ChaosCore/hw/chisel/target/scala-2.13/classes/validate_packet$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	fetch_packet_decoder.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/Repos/ChaosCore/hw/chisel/target/scala-2.13/classes/fetch_packet_decoder.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	decoder_validator.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/Repos/ChaosCore/hw/chisel/target/scala-2.13/classes/decoder_validator.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	gshare$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/Repos/ChaosCore/hw/chisel/target/scala-2.13/classes/gshare$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	BP$$anon$1.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/Repos/ChaosCore/hw/chisel/target/scala-2.13/classes/BP$$anon$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	fetch_packet_decoder$$anon$2.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/Repos/ChaosCore/hw/chisel/target/scala-2.13/classes/fetch_packet_decoder$$anon$2.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	branch_decoder.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/Repos/ChaosCore/hw/chisel/target/scala-2.13/classes/branch_decoder.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	non_restoring_divider$$anon$2.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/Repos/ChaosCore/hw/chisel/target/scala-2.13/classes/non_restoring_divider$$anon$2.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	Frontend$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/Repos/ChaosCore/hw/chisel/target/scala-2.13/classes/Frontend$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	decoded_fetch_packet.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/Repos/ChaosCore/hw/chisel/target/scala-2.13/classes/decoded_fetch_packet.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	RAS_read.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/Repos/ChaosCore/hw/chisel/target/scala-2.13/classes/RAS_read.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	L1_cache_mem.class[0m
@@ -108,6 +120,8 @@
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/Repos/ChaosCore/hw/chisel/target/scala-2.13/classes/prediction$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	non_restoring_computation.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/Repos/ChaosCore/hw/chisel/target/scala-2.13/classes/non_restoring_computation.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	decoded_instruction.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/Repos/ChaosCore/hw/chisel/target/scala-2.13/classes/decoded_instruction.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	revert$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/Repos/ChaosCore/hw/chisel/target/scala-2.13/classes/revert$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	unpipelined_non_restoring_divider$$anon$1.class[0m
@@ -152,6 +166,10 @@
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/Repos/ChaosCore/hw/chisel/target/scala-2.13/classes/PC_arbit.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	latchExpectedPC.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/Repos/ChaosCore/hw/chisel/target/scala-2.13/classes/latchExpectedPC.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	Uop.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/Repos/ChaosCore/hw/chisel/target/scala-2.13/classes/Uop.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	Uop$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/Repos/ChaosCore/hw/chisel/target/scala-2.13/classes/Uop$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	skidbuffer$State$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/Repos/ChaosCore/hw/chisel/target/scala-2.13/classes/skidbuffer$State$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	validate_packet.class[0m

@@ -143,34 +143,7 @@ class decode_validate(fetchWidth:Int,GHRWidth:Int, RASEntries:Int, startPC:UInt)
     val PC_next      = Wire(UInt(32.W))
     val PC_next_reg  = RegInit(UInt(32.W), startPC)
     val PC_expected  = Wire(UInt(32.W))
-    val packet_valid = Wire(Bool())
-
-    // FSM 1
-    // compare wires or wire and reg?
-    // When a cycle occurs and there is no input, latch the expected PC for later comparison
-
-    val FSM1_state = RegInit(latchExpectedPC(), latchExpectedPC.wire_reg)
-    
-
-    switch(FSM1_state){
-        is(latchExpectedPC.wire_wire){
-            when(!(io.prediction.valid && io.fetch_packet.valid)){
-                FSM1_state := latchExpectedPC.wire_reg
-                PC_next_reg := PC_next
-            }
-        }
-        is(latchExpectedPC.wire_reg){
-            // Start here
-            when((io.prediction.valid && io.fetch_packet.valid)){
-                FSM1_state := latchExpectedPC.wire_wire
-            }
-        }
-    }
-
-
-    // FSM 2
-    // When a comparison takes place and the PCs match, output packet on the next cycle. 
-    val FSM2_state = RegInit(validate_packet(), validate_packet.packet_invalid)
+    //val packet_valid = Wire(Bool())
 
     val PC_mismatch = Wire(Bool())
     val PC_match = Wire(Bool())
@@ -178,22 +151,8 @@ class decode_validate(fetchWidth:Int,GHRWidth:Int, RASEntries:Int, startPC:UInt)
     PC_match    := (PC_expected === io.fetch_packet.bits.fetch_PC) && inputs_valid
     PC_mismatch := (PC_expected =/= io.fetch_packet.bits.fetch_PC) && inputs_valid
 
-    dontTouch(PC_match)
 
-    switch(FSM2_state){
-        is(validate_packet.packet_invalid){
-            when(PC_match){
-                FSM2_state := validate_packet.packet_valid
-            }
-        }
-        is(validate_packet.packet_valid){
-            when(PC_mismatch){
-                FSM2_state := validate_packet.packet_invalid
-            }
-        }
-    }
 
-    packet_valid         := (FSM2_state === validate_packet.packet_valid)
     io.kill              := PC_mismatch
     io.revert.valid      := PC_mismatch
     io.revert.bits.GHR   := GHR_reg
@@ -213,8 +172,9 @@ class decode_validate(fetchWidth:Int,GHRWidth:Int, RASEntries:Int, startPC:UInt)
     val use_RAS      = Wire(Bool())
     val use_computed = Wire(Bool())
 
+    val stage_1_valid = Wire(Bool())
+    stage_1_valid := io.fetch_packet.valid && !PC_mismatch
         
-    PC_expected := Mux(FSM1_state === latchExpectedPC.wire_wire, PC_next, PC_next_reg)
 
     use_BTB      := metadata_out.JALR && !metadata_out.Ret
     use_RAS      := metadata_out.Ret
@@ -230,6 +190,11 @@ class decode_validate(fetchWidth:Int,GHRWidth:Int, RASEntries:Int, startPC:UInt)
     dontTouch(use_BTB)
     dontTouch(use_RAS)
     dontTouch(use_computed)
+    
+    PC_next_reg := Mux(RegNext(stage_1_valid), PC_next, PC_next_reg)
+    PC_expected := Mux(RegNext(stage_1_valid), PC_next, PC_next_reg)
+
+
 
     // validate instructions
 
@@ -246,11 +211,11 @@ class decode_validate(fetchWidth:Int,GHRWidth:Int, RASEntries:Int, startPC:UInt)
 
     for(i <- 0 until fetchWidth){
         io.final_fetch_packet.bits.instructions(i) := RegNext(io.fetch_packet.bits.instructions(i))    // pass along actual instruction
-        io.final_fetch_packet.bits.valid_bits(i)   := RegNext(decoder_validator.io.instruction_validity(i)) && packet_valid && RegNext(inputs_valid)
+        io.final_fetch_packet.bits.valid_bits(i)   := RegNext(decoder_validator.io.instruction_validity(i)) && RegNext(inputs_valid)
     }
 
 
-    io.final_fetch_packet.bits.fetch_PC := RegNext(io.fetch_packet.bits.fetch_PC)  // Pass along fetch PC
+    io.final_fetch_packet.bits.fetch_PC := io.fetch_packet.bits.fetch_PC  // Pass along fetch PC
     // RAS Control //
     io.RAS_update.call       := metadata_out.Call
     io.RAS_update.ret        := metadata_out.Ret

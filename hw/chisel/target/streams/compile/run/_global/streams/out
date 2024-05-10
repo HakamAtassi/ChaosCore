@@ -5,9 +5,9 @@
 [0m[[0m[31merror[0m] [0m[0mSTDOUT:[0m
 [0m[[0m[31merror[0m] [0m[0m[0m
 [0m[[0m[31merror[0m] [0m[0mSTDERR:[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:104:7: error: detected combinational cycle in a FIRRTL module, sample path: Frontend.{BTB_Q.io_empty <- BTB_Q.io_clear <- ... <- clear <- _clear_T <- ... <- predecoder.io_revert_valid <- predecoder.io_prediction_valid <- ... <- _predecoder_io_prediction_valid_T <- ... <- BTB_Q.io_empty}[0m
-[0m[[0m[31merror[0m] [0m[0mclass Frontend(GHRWidth:Int=16, fetchWidth:Int=4, RASEntries:Int=128, BTBEntries:Int=4096, L1_instructionCacheWays:Int=2, [0m
-[0m[[0m[31merror[0m] [0m[0m      ^[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/BP/decode_validate.scala:146:28: error: sink "packet_valid" not fully initialized in "decode_validate"[0m
+[0m[[0m[31merror[0m] [0m[0m    val packet_valid = Wire(Bool())[0m
+[0m[[0m[31merror[0m] [0m[0m                           ^[0m
 [0m[[0m[31merror[0m] [0m[0m[0m
 [0m[[0m[31merror[0m] [0m[0m------------------------------------------------------------------------------[0m
 [0m[[0m[31merror[0m] [0m[0m(Compile / [31mrun[0m) circt.stage.phases.Exceptions$FirtoolNonZeroExitCode: /home/hakam/.cache/llvm-firtool/1.62.0/bin/firtool returned a non-zero exit code. Note that this version of Chisel (6.0.0) was published against firtool version 1.62.0.[0m
@@ -17,8 +17,8 @@
 [0m[[0m[31merror[0m] [0m[0mSTDOUT:[0m
 [0m[[0m[31merror[0m] [0m[0m[0m
 [0m[[0m[31merror[0m] [0m[0mSTDERR:[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/frontend.scala:104:7: error: detected combinational cycle in a FIRRTL module, sample path: Frontend.{BTB_Q.io_empty <- BTB_Q.io_clear <- ... <- clear <- _clear_T <- ... <- predecoder.io_revert_valid <- predecoder.io_prediction_valid <- ... <- _predecoder_io_prediction_valid_T <- ... <- BTB_Q.io_empty}[0m
-[0m[[0m[31merror[0m] [0m[0mclass Frontend(GHRWidth:Int=16, fetchWidth:Int=4, RASEntries:Int=128, BTBEntries:Int=4096, L1_instructionCacheWays:Int=2, [0m
-[0m[[0m[31merror[0m] [0m[0m      ^[0m
+[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/BP/decode_validate.scala:146:28: error: sink "packet_valid" not fully initialized in "decode_validate"[0m
+[0m[[0m[31merror[0m] [0m[0m    val packet_valid = Wire(Bool())[0m
+[0m[[0m[31merror[0m] [0m[0m                           ^[0m
 [0m[[0m[31merror[0m] [0m[0m[0m
 [0m[[0m[31merror[0m] [0m[0m------------------------------------------------------------------------------[0m
