@@ -1,0 +1,208 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuite hostname="hakam-MS-7D46" name="freelist_spec" tests="1" errors="0" failures="1" skipped="0" time="1.695" timestamp="2024-05-15T18:47:18">
+          <properties>
+      <property name="java.specification.version" value="17"/><property name="sun.jnu.encoding" value="UTF-8"/><property name="sun.arch.data.model" value="64"/><property name="java.vendor.url" value="https://adoptium.net/"/><property name="sun.boot.library.path" value="/usr/lib/jvm/temurin-17-jdk-amd64/lib"/><property name="sun.java.command" value="/home/hakam/.cache/sbt/boot/sbt-launch/1.9.7/sbt-launch-1.9.7.jar test"/><property name="jdk.debug" value="release"/><property name="sun.stderr.encoding" value="UTF-8"/><property name="java.specification.vendor" value="Oracle Corporation"/><property name="java.version.date" value="2024-04-16"/><property name="java.home" value="/usr/lib/jvm/temurin-17-jdk-amd64"/><property name="file.separator" value="/"/><property name="java.vm.compressedOopsMode" value="32-bit"/><property name="line.separator" value="
+"/><property name="sun.stdout.encoding" value="UTF-8"/><property name="java.vm.specification.vendor" value="Oracle Corporation"/><property name="java.specification.name" value="Java Platform API Specification"/><property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/><property name="java.runtime.version" value="17.0.11+9"/><property name="user.name" value="hakam"/><property name="log4j.ignoreTCL" value="true"/><property name="file.encoding" value="UTF-8"/><property name="jnidispatch.path" value="/home/hakam/.cache/JNA/temp/jna13378458406681696603.tmp"/><property name="java.vendor.version" value="Temurin-17.0.11+9"/><property name="jna.loaded" value="true"/><property name="java.io.tmpdir" value="/tmp"/><property name="java.version" value="17.0.11"/><property name="java.vm.specification.name" value="Java Virtual Machine Specification"/><property name="native.encoding" value="UTF-8"/><property name="java.library.path" value="/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib"/><property name="java.vendor" value="Eclipse Adoptium"/><property name="scala.ext.dirs" value="/home/hakam/.sbt/1.0/java9-rt-ext-eclipse_adoptium_17_0_11"/><property name="sun.io.unicode.encoding" value="UnicodeLittle"/><property name="java.class.path" value="/home/hakam/.cache/sbt/boot/sbt-launch/1.9.7/sbt-launch-1.9.7.jar"/><property name="java.vm.vendor" value="Eclipse Adoptium"/><property name="jline.shutdownhook" value="false"/><property name="user.timezone" value="Asia/Riyadh"/><property name="java.vm.specification.version" value="17"/><property name="os.name" value="Linux"/><property name="sun.java.launcher" value="SUN_STANDARD"/><property name="user.country" value="US"/><property name="sun.cpu.endian" value="little"/><property name="user.home" value="/home/hakam"/><property name="user.language" value="en"/><property name="sbt.script" value="/usr/local/bin/sbt"/><property name="sbt.ipcsocket.tmpdir" value="/run/user/1000/.sbt3f78aefd/ipcsocket"/><property name="swoval.tmpdir" value="/run/user/1000/.sbt3f78aefd/swoval"/><property name="jline.esc.timeout" value="0"/><property name="path.separator" value=":"/><property name="os.version" value="6.5.0-35-generic"/><property name="jna.nosys" value="true"/><property name="java.runtime.name" value="OpenJDK Runtime Environment"/><property name="java.vm.name" value="OpenJDK 64-Bit Server VM"/><property name="jna.platform.library.path" value="/usr/lib/x86_64-linux-gnu:/lib/x86_64-linux-gnu:/usr/lib64:/lib64:/usr/lib:/lib:/lib/i386-linux-gnu:/usr/lib/x86_64-linux-gnu/libfakeroot"/><property name="java.vendor.url.bug" value="https://github.com/adoptium/adoptium-support/issues"/><property name="user.dir" value="/home/hakam/Repos/ChaosCore/hw/chisel"/><property name="os.arch" value="amd64"/><property name="java.vm.info" value="mixed mode, sharing"/><property name="java.vm.version" value="17.0.11+9"/><property name="java.class.version" value="61.0"/>
+    </properties>
+          <testcase classname="freelist_spec" name="Gcd should calculate proper greatest common denominator" time="1.695">
+                      <failure message="make: Entering directory '/tmp/chisel3.simulator.EphemeralSimulator/25220@hakam-MS-7D46/workdir-default'
+ls . | grep -v Makefile | grep -v execution-script.txt | xargs rm -rf
+\
+/usr/local/bin/verilator \
+	'--cc' \
+	'--exe' \
+	'--build' \
+	'-o' \
+	'../simulation' \
+	'--top-module' \
+	'svsimTestbench' \
+	'--Mdir' \
+	'verilated-sources' \
+	'-CFLAGS' \
+	'-std=c++11 -I/tmp/chisel3.simulator.EphemeralSimulator/25220@hakam-MS-7D46/workdir-default -DSVSIM_ENABLE_VERILATOR_SUPPORT' \
+	'../primary-sources/free_list.sv' 'c-dpi-bridge.cpp' '../generated-sources/testbench.sv' '../generated-sources/simulation-driver.cpp'
+make[1]: Entering directory '/tmp/chisel3.simulator.EphemeralSimulator/25220@hakam-MS-7D46/workdir-default/verilated-sources'
+ccache g++  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++11 -I/tmp/chisel3.simulator.EphemeralSimulator/25220@hakam-MS-7D46/workdir-default -DSVSIM_ENABLE_VERILATOR_SUPPORT   -Os -c -o c-dpi-bridge.o c-dpi-bridge.cpp
+ccache g++  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++11 -I/tmp/chisel3.simulator.EphemeralSimulator/25220@hakam-MS-7D46/workdir-default -DSVSIM_ENABLE_VERILATOR_SUPPORT   -Os -c -o simulation-driver.o simulation-driver.cpp
+In file included from /usr/local/share/verilator/include/verilated.h:42,
+                 from ./VsvsimTestbench.h:11,
+                 from simulation-driver.cpp:883:
+/usr/local/share/verilator/include/verilatedos.h:271:3: error: #error &quot;Verilator requires a C++14 or newer compiler&quot;
+  271 | # error &quot;Verilator requires a C++14 or newer compiler&quot;
+      |   ^~~~~
+In file included from ./VsvsimTestbench.h:11,
+                 from simulation-driver.cpp:883:
+/usr/local/share/verilator/include/verilated.h:76:22: error: ‘literals’ is not a namespace-name
+   76 | using namespace std::literals;  // &quot;&lt;std::string literal&gt;&quot;s; see SF.7 core guideline
+      |                      ^~~~~~~~
+In file included from /usr/local/share/verilator/include/verilated.h:979,
+                 from ./VsvsimTestbench.h:11,
+                 from simulation-driver.cpp:883:
+/usr/local/share/verilator/include/verilated_types.h: In function ‘std::string VL_TO_STRING(const VlEvent&amp;)’:
+/usr/local/share/verilator/include/verilated_types.h:266:12: error: unable to find string literal operator ‘operator&quot;&quot;s’ with ‘const char [11]’, ‘long unsigned int’ arguments
+  266 |     return &quot;triggered=&quot;s + (e.isTriggered() ? &quot;true&quot; : &quot;false&quot;);
+      |            ^~~~~~~~~~~~~
+/usr/local/share/verilator/include/verilated_types.h: In function ‘std::string VL_TO_STRING(const VlEventBase&amp;)’:
+/usr/local/share/verilator/include/verilated_types.h:277:12: error: unable to find string literal operator ‘operator&quot;&quot;s’ with ‘const char [11]’, ‘long unsigned int’ arguments
+  277 |     return &quot;triggered=&quot;s + (e.isTriggered() ? &quot;true&quot; : &quot;false&quot;);
+      |            ^~~~~~~~~~~~~
+/usr/local/share/verilator/include/verilated_types.h: In constructor ‘VlClassRef&lt;T_Class&gt;::VlClassRef(VlClassRef&lt;T_Class&gt;&amp;&amp;)’:
+/usr/local/share/verilator/include/verilated_types.h:1649:23: error: ‘exchange’ is not a member of ‘std’
+ 1649 |         : m_objp{std::exchange(moved.m_objp, nullptr)} {}
+      |                       ^~~~~~~~
+/usr/local/share/verilator/include/verilated_types.h: In constructor ‘VlClassRef&lt;T_Class&gt;::VlClassRef(VlClassRef&lt;T_OtherClass&gt;&amp;&amp;)’:
+/usr/local/share/verilator/include/verilated_types.h:1659:23: error: ‘exchange’ is not a member of ‘std’
+ 1659 |         : m_objp{std::exchange(moved.m_objp, nullptr)} {}
+      |                       ^~~~~~~~
+/usr/local/share/verilator/include/verilated_types.h: In member function ‘VlClassRef&lt;T_Class&gt;&amp; VlClassRef&lt;T_Class&gt;::operator=(VlClassRef&lt;T_Class&gt;&amp;&amp;)’:
+/usr/local/share/verilator/include/verilated_types.h:1674:23: error: ‘exchange’ is not a member of ‘std’
+ 1674 |         m_objp = std::exchange(moved.m_objp, nullptr);
+      |                       ^~~~~~~~
+/usr/local/share/verilator/include/verilated_types.h: In member function ‘VlClassRef&lt;T_Class&gt;&amp; VlClassRef&lt;T_Class&gt;::operator=(VlClassRef&lt;T_OtherClass&gt;&amp;&amp;)’:
+/usr/local/share/verilator/include/verilated_types.h:1689:23: error: ‘exchange’ is not a member of ‘std’
+ 1689 |         m_objp = std::exchange(moved.m_objp, nullptr);
+      |                       ^~~~~~~~
+make[1]: *** [VsvsimTestbench.mk:65: simulation-driver.o] Error 1
+make[1]: Leaving directory '/tmp/chisel3.simulator.EphemeralSimulator/25220@hakam-MS-7D46/workdir-default/verilated-sources'
+%Error: make -C verilated-sources -f VsvsimTestbench.mk -j 1 exited with 2
+%Error: Command Failed ulimit -s unlimited 2&gt;/dev/null; exec /usr/local/share/verilator/bin/verilator_bin --cc --exe --build -o ../simulation --top-module svsimTestbench --Mdir verilated-sources -CFLAGS -std=c++11\ -I/tmp/chisel3.simulator.EphemeralSimulator/25220\@hakam-MS-7D46/workdir-default\ -DSVSIM_ENABLE_VERILATOR_SUPPORT ../primary-sources/free_list.sv c-dpi-bridge.cpp ../generated-sources/testbench.sv ../generated-sources/simulation-driver.cpp
+make: *** [Makefile:12: simulation] Error 2
+make: Leaving directory '/tmp/chisel3.simulator.EphemeralSimulator/25220@hakam-MS-7D46/workdir-default'" type="java.lang.Exception">java.lang.Exception: make: Entering directory '/tmp/chisel3.simulator.EphemeralSimulator/25220@hakam-MS-7D46/workdir-default'
+ls . | grep -v Makefile | grep -v execution-script.txt | xargs rm -rf
+\
+/usr/local/bin/verilator \
+	'--cc' \
+	'--exe' \
+	'--build' \
+	'-o' \
+	'../simulation' \
+	'--top-module' \
+	'svsimTestbench' \
+	'--Mdir' \
+	'verilated-sources' \
+	'-CFLAGS' \
+	'-std=c++11 -I/tmp/chisel3.simulator.EphemeralSimulator/25220@hakam-MS-7D46/workdir-default -DSVSIM_ENABLE_VERILATOR_SUPPORT' \
+	'../primary-sources/free_list.sv' 'c-dpi-bridge.cpp' '../generated-sources/testbench.sv' '../generated-sources/simulation-driver.cpp'
+make[1]: Entering directory '/tmp/chisel3.simulator.EphemeralSimulator/25220@hakam-MS-7D46/workdir-default/verilated-sources'
+ccache g++  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++11 -I/tmp/chisel3.simulator.EphemeralSimulator/25220@hakam-MS-7D46/workdir-default -DSVSIM_ENABLE_VERILATOR_SUPPORT   -Os -c -o c-dpi-bridge.o c-dpi-bridge.cpp
+ccache g++  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++11 -I/tmp/chisel3.simulator.EphemeralSimulator/25220@hakam-MS-7D46/workdir-default -DSVSIM_ENABLE_VERILATOR_SUPPORT   -Os -c -o simulation-driver.o simulation-driver.cpp
+In file included from /usr/local/share/verilator/include/verilated.h:42,
+                 from ./VsvsimTestbench.h:11,
+                 from simulation-driver.cpp:883:
+/usr/local/share/verilator/include/verilatedos.h:271:3: error: #error &quot;Verilator requires a C++14 or newer compiler&quot;
+  271 | # error &quot;Verilator requires a C++14 or newer compiler&quot;
+      |   ^~~~~
+In file included from ./VsvsimTestbench.h:11,
+                 from simulation-driver.cpp:883:
+/usr/local/share/verilator/include/verilated.h:76:22: error: ‘literals’ is not a namespace-name
+   76 | using namespace std::literals;  // &quot;&lt;std::string literal&gt;&quot;s; see SF.7 core guideline
+      |                      ^~~~~~~~
+In file included from /usr/local/share/verilator/include/verilated.h:979,
+                 from ./VsvsimTestbench.h:11,
+                 from simulation-driver.cpp:883:
+/usr/local/share/verilator/include/verilated_types.h: In function ‘std::string VL_TO_STRING(const VlEvent&amp;)’:
+/usr/local/share/verilator/include/verilated_types.h:266:12: error: unable to find string literal operator ‘operator&quot;&quot;s’ with ‘const char [11]’, ‘long unsigned int’ arguments
+  266 |     return &quot;triggered=&quot;s + (e.isTriggered() ? &quot;true&quot; : &quot;false&quot;);
+      |            ^~~~~~~~~~~~~
+/usr/local/share/verilator/include/verilated_types.h: In function ‘std::string VL_TO_STRING(const VlEventBase&amp;)’:
+/usr/local/share/verilator/include/verilated_types.h:277:12: error: unable to find string literal operator ‘operator&quot;&quot;s’ with ‘const char [11]’, ‘long unsigned int’ arguments
+  277 |     return &quot;triggered=&quot;s + (e.isTriggered() ? &quot;true&quot; : &quot;false&quot;);
+      |            ^~~~~~~~~~~~~
+/usr/local/share/verilator/include/verilated_types.h: In constructor ‘VlClassRef&lt;T_Class&gt;::VlClassRef(VlClassRef&lt;T_Class&gt;&amp;&amp;)’:
+/usr/local/share/verilator/include/verilated_types.h:1649:23: error: ‘exchange’ is not a member of ‘std’
+ 1649 |         : m_objp{std::exchange(moved.m_objp, nullptr)} {}
+      |                       ^~~~~~~~
+/usr/local/share/verilator/include/verilated_types.h: In constructor ‘VlClassRef&lt;T_Class&gt;::VlClassRef(VlClassRef&lt;T_OtherClass&gt;&amp;&amp;)’:
+/usr/local/share/verilator/include/verilated_types.h:1659:23: error: ‘exchange’ is not a member of ‘std’
+ 1659 |         : m_objp{std::exchange(moved.m_objp, nullptr)} {}
+      |                       ^~~~~~~~
+/usr/local/share/verilator/include/verilated_types.h: In member function ‘VlClassRef&lt;T_Class&gt;&amp; VlClassRef&lt;T_Class&gt;::operator=(VlClassRef&lt;T_Class&gt;&amp;&amp;)’:
+/usr/local/share/verilator/include/verilated_types.h:1674:23: error: ‘exchange’ is not a member of ‘std’
+ 1674 |         m_objp = std::exchange(moved.m_objp, nullptr);
+      |                       ^~~~~~~~
+/usr/local/share/verilator/include/verilated_types.h: In member function ‘VlClassRef&lt;T_Class&gt;&amp; VlClassRef&lt;T_Class&gt;::operator=(VlClassRef&lt;T_OtherClass&gt;&amp;&amp;)’:
+/usr/local/share/verilator/include/verilated_types.h:1689:23: error: ‘exchange’ is not a member of ‘std’
+ 1689 |         m_objp = std::exchange(moved.m_objp, nullptr);
+      |                       ^~~~~~~~
+make[1]: *** [VsvsimTestbench.mk:65: simulation-driver.o] Error 1
+make[1]: Leaving directory '/tmp/chisel3.simulator.EphemeralSimulator/25220@hakam-MS-7D46/workdir-default/verilated-sources'
+%Error: make -C verilated-sources -f VsvsimTestbench.mk -j 1 exited with 2
+%Error: Command Failed ulimit -s unlimited 2&gt;/dev/null; exec /usr/local/share/verilator/bin/verilator_bin --cc --exe --build -o ../simulation --top-module svsimTestbench --Mdir verilated-sources -CFLAGS -std=c++11\ -I/tmp/chisel3.simulator.EphemeralSimulator/25220\@hakam-MS-7D46/workdir-default\ -DSVSIM_ENABLE_VERILATOR_SUPPORT ../primary-sources/free_list.sv c-dpi-bridge.cpp ../generated-sources/testbench.sv ../generated-sources/simulation-driver.cpp
+make: *** [Makefile:12: simulation] Error 2
+make: Leaving directory '/tmp/chisel3.simulator.EphemeralSimulator/25220@hakam-MS-7D46/workdir-default'
+	at svsim.Workspace.compile(Workspace.scala:390)
+	at chisel3.simulator.Simulator$WorkspaceCompiler.liftedTree1$1(Simulator.scala:60)
+	at chisel3.simulator.Simulator$WorkspaceCompiler.process(Simulator.scala:53)
+	at chisel3.simulator.SingleBackendSimulator.processBackends(Simulator.scala:139)
+	at chisel3.simulator.SingleBackendSimulator.processBackends$(Simulator.scala:138)
+	at chisel3.simulator.EphemeralSimulator$DefaultSimulator.processBackends(EphemeralSimulator.scala:27)
+	at chisel3.simulator.Simulator._simulate(Simulator.scala:116)
+	at chisel3.simulator.Simulator._simulate$(Simulator.scala:97)
+	at chisel3.simulator.EphemeralSimulator$DefaultSimulator._simulate(EphemeralSimulator.scala:27)
+	at chisel3.simulator.SingleBackendSimulator.simulate(Simulator.scala:146)
+	at chisel3.simulator.SingleBackendSimulator.simulate$(Simulator.scala:142)
+	at chisel3.simulator.EphemeralSimulator$DefaultSimulator.simulate(EphemeralSimulator.scala:27)
+	at chisel3.simulator.EphemeralSimulator$.simulate(EphemeralSimulator.scala:23)
+	at freelist_spec.$anonfun$new$1(free_list_spec.scala:14)
+	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.scala:18)
+	at org.scalatest.OutcomeOf.outcomeOf(OutcomeOf.scala:85)
+	at org.scalatest.OutcomeOf.outcomeOf$(OutcomeOf.scala:83)
+	at org.scalatest.OutcomeOf$.outcomeOf(OutcomeOf.scala:104)
+	at org.scalatest.Transformer.apply(Transformer.scala:22)
+	at org.scalatest.Transformer.apply(Transformer.scala:20)
+	at org.scalatest.freespec.AnyFreeSpecLike$$anon$1.apply(AnyFreeSpecLike.scala:437)
+	at org.scalatest.TestSuite.withFixture(TestSuite.scala:196)
+	at org.scalatest.TestSuite.withFixture$(TestSuite.scala:195)
+	at org.scalatest.freespec.AnyFreeSpec.withFixture(AnyFreeSpec.scala:1740)
+	at org.scalatest.freespec.AnyFreeSpecLike.invokeWithFixture$1(AnyFreeSpecLike.scala:435)
+	at org.scalatest.freespec.AnyFreeSpecLike.$anonfun$runTest$1(AnyFreeSpecLike.scala:447)
+	at org.scalatest.SuperEngine.runTestImpl(Engine.scala:306)
+	at org.scalatest.freespec.AnyFreeSpecLike.runTest(AnyFreeSpecLike.scala:447)
+	at org.scalatest.freespec.AnyFreeSpecLike.runTest$(AnyFreeSpecLike.scala:429)
+	at org.scalatest.freespec.AnyFreeSpec.runTest(AnyFreeSpec.scala:1740)
+	at org.scalatest.freespec.AnyFreeSpecLike.$anonfun$runTests$1(AnyFreeSpecLike.scala:506)
+	at org.scalatest.SuperEngine.$anonfun$runTestsInBranch$1(Engine.scala:413)
+	at scala.collection.immutable.List.foreach(List.scala:333)
+	at org.scalatest.SuperEngine.traverseSubNodes$1(Engine.scala:401)
+	at org.scalatest.SuperEngine.runTestsInBranch(Engine.scala:396)
+	at org.scalatest.SuperEngine.runTestsImpl(Engine.scala:475)
+	at org.scalatest.freespec.AnyFreeSpecLike.runTests(AnyFreeSpecLike.scala:506)
+	at org.scalatest.freespec.AnyFreeSpecLike.runTests$(AnyFreeSpecLike.scala:505)
+	at org.scalatest.freespec.AnyFreeSpec.runTests(AnyFreeSpec.scala:1740)
+	at org.scalatest.Suite.run(Suite.scala:1114)
+	at org.scalatest.Suite.run$(Suite.scala:1096)
+	at org.scalatest.freespec.AnyFreeSpec.org$scalatest$freespec$AnyFreeSpecLike$$super$run(AnyFreeSpec.scala:1740)
+	at org.scalatest.freespec.AnyFreeSpecLike.$anonfun$run$1(AnyFreeSpecLike.scala:550)
+	at org.scalatest.SuperEngine.runImpl(Engine.scala:535)
+	at org.scalatest.freespec.AnyFreeSpecLike.run(AnyFreeSpecLike.scala:550)
+	at org.scalatest.freespec.AnyFreeSpecLike.run$(AnyFreeSpecLike.scala:549)
+	at org.scalatest.freespec.AnyFreeSpec.run(AnyFreeSpec.scala:1740)
+	at org.scalatest.tools.Framework.org$scalatest$tools$Framework$$runSuite(Framework.scala:321)
+	at org.scalatest.tools.Framework$ScalaTestTask.execute(Framework.scala:517)
+	at sbt.TestRunner.runTest$1(TestFramework.scala:153)
+	at sbt.TestRunner.run(TestFramework.scala:168)
+	at sbt.TestFramework$$anon$3$$anonfun$$lessinit$greater$1.$anonfun$apply$1(TestFramework.scala:336)
+	at sbt.TestFramework$.sbt$TestFramework$$withContextLoader(TestFramework.scala:296)
+	at sbt.TestFramework$$anon$3$$anonfun$$lessinit$greater$1.apply(TestFramework.scala:336)
+	at sbt.TestFramework$$anon$3$$anonfun$$lessinit$greater$1.apply(TestFramework.scala:336)
+	at sbt.TestFunction.apply(TestFramework.scala:348)
+	at sbt.Tests$.$anonfun$toTask$1(Tests.scala:436)
+	at sbt.std.Transform$$anon$3.$anonfun$apply$2(Transform.scala:47)
+	at sbt.std.Transform$$anon$4.work(Transform.scala:69)
+	at sbt.Execute.$anonfun$submit$2(Execute.scala:283)
+	at sbt.internal.util.ErrorHandling$.wideConvert(ErrorHandling.scala:24)
+	at sbt.Execute.work(Execute.scala:292)
+	at sbt.Execute.$anonfun$submit$1(Execute.scala:283)
+	at sbt.ConcurrentRestrictions$$anon$4.$anonfun$submitValid$1(ConcurrentRestrictions.scala:265)
+	at sbt.CompletionService$$anon$2.call(CompletionService.scala:65)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+</failure>
+                    </testcase>
+          <system-out><![CDATA[]]></system-out>
+          <system-err><![CDATA[]]></system-err>
+        </testsuite>

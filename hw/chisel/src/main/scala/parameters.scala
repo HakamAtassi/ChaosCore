@@ -27,6 +27,9 @@
 * ------------------------------------------------------------------------------------ 
 */
 
+package ChaosCore
+
+
 import chisel3._
 import circt.stage.ChiselStage
 import chisel3.util._
@@ -42,4 +45,7 @@ object Parameters {
   val L1_instructionCacheSets: Int = 64
   val L1_instructionCacheBlockSizeBytes: Int = 32
   val startPC: UInt = "h00000000".U
+
+
+  val physicalRegCount: Int = 64
 }

@@ -36,6 +36,7 @@ import java.rmi.server.UID
 import helperFunctions._
 import Uop._
 
+/*
 class decoder extends Module{   // basic decoder and field extraction
     val io = IO(new Bundle{
         val instruction = Input(UInt(32.W))
@@ -90,3 +91,4 @@ class fetch_packet_decoder(fetchWidth:Int) extends Module{
 
 
 }
+*/
