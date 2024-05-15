@@ -27,6 +27,8 @@
 * ------------------------------------------------------------------------------------ 
 */
 
+package ChaosCore
+
 import chisel3._
 import circt.stage.ChiselStage
 import chisel3.util._
@@ -61,23 +63,36 @@ object Main extends App {
     //VerilogGenerator.generateVerilog(new decode_validate(fetchWidth=4), "../verilog/Frontend/BP/decode_validate.v")
     //VerilogGenerator.generateVerilog(new RAS, "../verilog/Frontend/BP/RAS.v")
     //VerilogGenerator.generateVerilog(new BP, "../verilog/Frontend/BP/BP.v")
-    VerilogGenerator.generateVerilog(new PC_arbit(
-        fetchWidth = fetchWidth,
-        GHRWidth = GHRWidth,
-        RASEntries = RASEntries,
-        startPC = startPC)
-    , 
-    "../verilog/Frontend/BP/PC_arbit.v")
+    //VerilogGenerator.generateVerilog(new PC_arbit(
+        //fetchWidth = fetchWidth,
+        //GHRWidth = GHRWidth,
+        //RASEntries = RASEntries,
+        //startPC = startPC)
+    //, 
+    //"../verilog/Frontend/BP/PC_arbit.v")
 
-    VerilogGenerator.generateVerilog(new Frontend(
-        GHRWidth = GHRWidth,
+    //VerilogGenerator.generateVerilog(new Frontend(
+        //GHRWidth = GHRWidth,
+        //fetchWidth = fetchWidth,
+        //RASEntries = RASEntries,
+        //BTBEntries = BTBEntries,
+        //L1_instructionCacheWays = L1_instructionCacheWays,
+        //L1_instructionCacheSets = L1_instructionCacheSets,
+        //L1_instructionCacheBlockSizeBytes = L1_instructionCacheBlockSizeBytes,
+        //startPC = startPC
+    //), 
+    //"../verilog/Frontend/Frontend.v")
+
+
+    VerilogGenerator.generateVerilog(new free_list(
         fetchWidth = fetchWidth,
-        RASEntries = RASEntries,
-        BTBEntries = BTBEntries,
-        L1_instructionCacheWays = L1_instructionCacheWays,
-        L1_instructionCacheSets = L1_instructionCacheSets,
-        L1_instructionCacheBlockSizeBytes = L1_instructionCacheBlockSizeBytes,
-        startPC = startPC
-    ), 
-    "../verilog/Frontend/Frontend.v")
+        physicalRegCount = physicalRegCount)
+    , 
+    "../verilog/Frontend/free_list.v")
+
+    VerilogGenerator.generateVerilog(new reorder_free_inputs(
+        fetchWidth = fetchWidth,
+        physicalRegCount = physicalRegCount)
+    , 
+    "../verilog/Frontend/free_list.v")
 }

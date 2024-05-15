@@ -1,24 +1,25 @@
-[0m[[0m[31merror[0m] [0m[0mcirct.stage.phases.Exceptions$FirtoolNonZeroExitCode: /home/hakam/.cache/llvm-firtool/1.62.0/bin/firtool returned a non-zero exit code. Note that this version of Chisel (6.0.0) was published against firtool version 1.62.0.[0m
-[0m[[0m[31merror[0m] [0m[0m------------------------------------------------------------------------------[0m
-[0m[[0m[31merror[0m] [0m[0mExitCode:[0m
-[0m[[0m[31merror[0m] [0m[0m1[0m
-[0m[[0m[31merror[0m] [0m[0mSTDOUT:[0m
-[0m[[0m[31merror[0m] [0m[0m[0m
-[0m[[0m[31merror[0m] [0m[0mSTDERR:[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/BP/decode_validate.scala:146:28: error: sink "packet_valid" not fully initialized in "decode_validate"[0m
-[0m[[0m[31merror[0m] [0m[0m    val packet_valid = Wire(Bool())[0m
-[0m[[0m[31merror[0m] [0m[0m                           ^[0m
-[0m[[0m[31merror[0m] [0m[0m[0m
-[0m[[0m[31merror[0m] [0m[0m------------------------------------------------------------------------------[0m
-[0m[[0m[31merror[0m] [0m[0m(Compile / [31mrun[0m) circt.stage.phases.Exceptions$FirtoolNonZeroExitCode: /home/hakam/.cache/llvm-firtool/1.62.0/bin/firtool returned a non-zero exit code. Note that this version of Chisel (6.0.0) was published against firtool version 1.62.0.[0m
-[0m[[0m[31merror[0m] [0m[0m------------------------------------------------------------------------------[0m
-[0m[[0m[31merror[0m] [0m[0mExitCode:[0m
-[0m[[0m[31merror[0m] [0m[0m1[0m
-[0m[[0m[31merror[0m] [0m[0mSTDOUT:[0m
-[0m[[0m[31merror[0m] [0m[0m[0m
-[0m[[0m[31merror[0m] [0m[0mSTDERR:[0m
-[0m[[0m[31merror[0m] [0m[0msrc/main/scala/Frontend/BP/decode_validate.scala:146:28: error: sink "packet_valid" not fully initialized in "decode_validate"[0m
-[0m[[0m[31merror[0m] [0m[0m    val packet_valid = Wire(Bool())[0m
-[0m[[0m[31merror[0m] [0m[0m                           ^[0m
-[0m[[0m[31merror[0m] [0m[0m[0m
-[0m[[0m[31merror[0m] [0m[0m------------------------------------------------------------------------------[0m
+[0m[[0m[31merror[0m] [0m[0mjava.lang.IndexOutOfBoundsException: 4 is out of bounds (min 0, max 3)[0m
+[0m[[0m[31merror[0m] [0m[0m	at ... ()[0m
+[0m[[0m[31merror[0m] [0m[0m	at ChaosCore.SelectFirstN$.$anonfun$apply$6(utils.scala:45)[0m
+[0m[[0m[31merror[0m] [0m[0m	at scala.collection.immutable.Range.foreach$mVc$sp(Range.scala:190)[0m
+[0m[[0m[31merror[0m] [0m[0m	at ChaosCore.SelectFirstN$.apply(utils.scala:44)[0m
+[0m[[0m[31merror[0m] [0m[0m	at ChaosCore.reorder_free_inputs.$anonfun$sels$2(free_list.scala:50)[0m
+[0m[[0m[31merror[0m] [0m[0m	at chisel3.experimental.prefix$.apply(prefix.scala:50)[0m
+[0m[[0m[31merror[0m] [0m[0m	at ChaosCore.reorder_free_inputs.$anonfun$sels$1(free_list.scala:50)[0m
+[0m[[0m[31merror[0m] [0m[0m	at chisel3.internal.plugin.package$.autoNameRecursively(package.scala:33)[0m
+[0m[[0m[31merror[0m] [0m[0m	at ChaosCore.reorder_free_inputs.<init>(free_list.scala:50)[0m
+[0m[[0m[31merror[0m] [0m[0m	at ChaosCore.Main$.$anonfun$new$2(top.scala:95)[0m
+[0m[[0m[31merror[0m] [0m[0m	at chisel3.Module$.evaluate(Module.scala:88)[0m
+[0m[[0m[31merror[0m] [0m[0m	at chisel3.Module$.do_apply(Module.scala:35)[0m
+[0m[[0m[31merror[0m] [0m[0m	at chisel3.stage.phases.Elaborate.$anonfun$transform$2(Elaborate.scala:48)[0m
+[0m[[0m[31merror[0m] [0m[0m	at chisel3.internal.Builder$.$anonfun$buildImpl$1(Builder.scala:1023)[0m
+[0m[[0m[31merror[0m] [0m[0m	at scala.util.DynamicVariable.withValue(DynamicVariable.scala:59)[0m
+[0m[[0m[31merror[0m] [0m[0m	at chisel3.internal.Builder$.buildImpl(Builder.scala:1017)[0m
+[0m[[0m[31merror[0m] [0m[0m	at chisel3.internal.Builder$.$anonfun$build$1(Builder.scala:1008)[0m
+[0m[[0m[31merror[0m] [0m[0m	at logger.Logger$.$anonfun$makeScope$4(Logger.scala:148)[0m
+[0m[[0m[31merror[0m] [0m[0m	at scala.util.DynamicVariable.withValue(DynamicVariable.scala:59)[0m
+[0m[[0m[31merror[0m] [0m[0m	at logger.Logger$.makeScope(Logger.scala:146)[0m
+[0m[[0m[31merror[0m] [0m[0m	at logger.Logger$.makeScope(Logger.scala:133)[0m
+[0m[[0m[31merror[0m] [0m[0m	at ... ()[0m
+[0m[[0m[31merror[0m] [0m[0m	at ... (Stack trace trimmed to user code only. Rerun with --full-stacktrace to see the full stack trace)[0m
+[0m[[0m[31merror[0m] [0m[0m(Compile / [31mrun[0m) java.lang.IndexOutOfBoundsException: 4 is out of bounds (min 0, max 3)[0m

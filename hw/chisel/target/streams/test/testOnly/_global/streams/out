@@ -1,0 +1,23 @@
+[0m[[0m[0mdebug[0m] [0m[0mRunning TaskDef(ChaosCore.test3, org.scalatest.tools.Framework$$anon$1@4d4209fb, false, [SuiteSelector])[0m
+[0m[[0m[0minfo[0m] [0m[0m[32mtest3:[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[31m- test input reorder words *** FAILED ***[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[31m  chisel3.simulator.PeekPokeAPI$FailedExpectationException: Failed Expectation: Observed value '5' != 7. Expectation failed: observed value 5 != 7[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[31m  at chisel3.simulator.PeekPokeAPI$testableData.$anonfun$expect$9(PeekPokeAPI.scala:135)[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[31m  at chisel3.simulator.PeekPokeAPI$testableData.$anonfun$expect$9$adapted(PeekPokeAPI.scala:133)[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[31m  at svsim.Simulation$Port$$anonfun$check$1.applyOrElse(Simulation.scala:426)[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[31m  at svsim.Simulation$Port$$anonfun$check$1.applyOrElse(Simulation.scala:424)[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[31m  at scala.runtime.AbstractPartialFunction.apply(AbstractPartialFunction.scala:35)[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[31m  at svsim.Simulation$Controller.$anonfun$completeInFlightCommands$1(Simulation.scala:195)[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[31m  at svsim.Simulation$Controller.$anonfun$completeInFlightCommands$1$adapted(Simulation.scala:192)[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[31m  at scala.collection.IterableOnceOps.foreach(IterableOnce.scala:576)[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[31m  at scala.collection.IterableOnceOps.foreach$(IterableOnce.scala:574)[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[31m  at scala.collection.AbstractIterable.foreach(Iterable.scala:933)[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[31m  ...[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[36mRun completed in 2 seconds, 556 milliseconds.[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[36mTotal number of tests run: 1[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[36mSuites: completed 1, aborted 0[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[36mTests: succeeded 0, failed 1, canceled 0, ignored 0, pending 0[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[31m*** 1 TEST FAILED ***[0m[0m
+[0m[[0m[31merror[0m] [0m[0mFailed tests:[0m
+[0m[[0m[31merror[0m] [0m[0m	ChaosCore.test3[0m
+[0m[[0m[31merror[0m] [0m[0m(Test / [31mtestOnly[0m) sbt.TestsFailedException: Tests unsuccessful[0m
