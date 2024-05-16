@@ -30,12 +30,12 @@
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/Repos/ChaosCore/hw/chisel/target/scala-2.13/classes/ChaosCore[0m
 [0m[[0m[0mdebug[0m] [0m[0m	ChaosCore/free_list.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/Repos/ChaosCore/hw/chisel/target/scala-2.13/classes/ChaosCore/free_list.class[0m
-[0m[[0m[0mdebug[0m] [0m[0m	ChaosCore/reorder_rename_outputs.class[0m
-[0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/Repos/ChaosCore/hw/chisel/target/scala-2.13/classes/ChaosCore/reorder_rename_outputs.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	ChaosCore/Parameters$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/Repos/ChaosCore/hw/chisel/target/scala-2.13/classes/ChaosCore/Parameters$.class[0m
-[0m[[0m[0mdebug[0m] [0m[0m	ChaosCore/free_list$$anon$2.class[0m
-[0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/Repos/ChaosCore/hw/chisel/target/scala-2.13/classes/ChaosCore/free_list$$anon$2.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	ChaosCore/reorder_renamed_outputs$$anon$2.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/Repos/ChaosCore/hw/chisel/target/scala-2.13/classes/ChaosCore/reorder_renamed_outputs$$anon$2.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	ChaosCore/reorder_renamed_outputs.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/Repos/ChaosCore/hw/chisel/target/scala-2.13/classes/ChaosCore/reorder_renamed_outputs.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	ChaosCore/SelectFirstN.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/Repos/ChaosCore/hw/chisel/target/scala-2.13/classes/ChaosCore/SelectFirstN.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	ChaosCore/VerilogGenerator.class[0m
@@ -56,6 +56,8 @@
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/Repos/ChaosCore/hw/chisel/target/scala-2.13/classes/ChaosCore/Main$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	ChaosCore/VerilogGenerator$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/Repos/ChaosCore/hw/chisel/target/scala-2.13/classes/ChaosCore/VerilogGenerator$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	ChaosCore/free_list$$anon$3.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/Repos/ChaosCore/hw/chisel/target/scala-2.13/classes/ChaosCore/free_list$$anon$3.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	instruction_validator$$anon$1.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/hakam/Repos/ChaosCore/hw/chisel/target/scala-2.13/classes/instruction_validator$$anon$1.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	hash_BTB$$anon$1.class[0m
