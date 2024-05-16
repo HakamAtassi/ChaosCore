@@ -1,7 +1,10 @@
-[0m[[0m[31merror[0m] [0m[0m/home/hakam/Repos/ChaosCore/hw/chisel/src/main/scala/Frontend/free_list.scala:128:44: reassignment to val[0m
-[0m[[0m[31merror[0m] [0m[0m    input_sorter.io.free_valid             = io.free_valid[0m
-[0m[[0m[31merror[0m] [0m[0m                                           ^[0m
-[0m[[0m[31merror[0m] [0m[0m/home/hakam/Repos/ChaosCore/hw/chisel/src/main/scala/Frontend/free_list.scala:129:44: reassignment to val[0m
-[0m[[0m[31merror[0m] [0m[0m    input_sorter.io.free_values            = io.free_values[0m
-[0m[[0m[31merror[0m] [0m[0m                                           ^[0m
-[0m[[0m[31merror[0m] [0m[0mtwo errors found[0m
+[0m[[0m[31merror[0m] [0m[0m/home/hakam/Repos/ChaosCore/hw/chisel/src/main/scala/top.scala:93:42: not found: type WAW_handler[0m
+[0m[[0m[31merror[0m] [0m[0m    VerilogGenerator.generateVerilog(new WAW_handler([0m
+[0m[[0m[31merror[0m] [0m[0m                                         ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/hakam/Repos/ChaosCore/hw/chisel/src/main/scala/top.scala:94:20: reassignment to val[0m
+[0m[[0m[31merror[0m] [0m[0m        fetchWidth = fetchWidth,[0m
+[0m[[0m[31merror[0m] [0m[0m                   ^[0m
+[0m[[0m[31merror[0m] [0m[0m/home/hakam/Repos/ChaosCore/hw/chisel/src/main/scala/top.scala:95:26: reassignment to val[0m
+[0m[[0m[31merror[0m] [0m[0m        physicalRegCount = physicalRegCount)[0m
+[0m[[0m[31merror[0m] [0m[0m                         ^[0m
+[0m[[0m[31merror[0m] [0m[0mthree errors found[0m

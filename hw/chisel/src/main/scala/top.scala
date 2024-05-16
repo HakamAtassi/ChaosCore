@@ -90,9 +90,10 @@ object Main extends App {
     , 
     "../verilog/Frontend/free_list.v")
 
-    VerilogGenerator.generateVerilog(new reorder_free_inputs(
+    VerilogGenerator.generateVerilog(new WAW_handler(
         fetchWidth = fetchWidth,
         physicalRegCount = physicalRegCount)
     , 
-    "../verilog/Frontend/free_list.v")
+    "../verilog/Frontend/WAW_handler.v")
+
 }

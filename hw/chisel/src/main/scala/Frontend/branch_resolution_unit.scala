@@ -1,8 +1,8 @@
 /* ------------------------------------------------------------------------------------
 * Filename: top.scala
 * Author: Hakam Atassi
-* Date: Apr 23 2024
-* Description: The ChaosCore Top level Config File
+* Date: May 16 2024
+* Description: A fetch target queue that stores active branch predictions and a unit that validates them upon commit
 * License: MIT
 *
 * Copyright (c) 2024 by Hakam Atassi
@@ -27,28 +27,11 @@
 * ------------------------------------------------------------------------------------ 
 */
 
-package ChaosCore
 
 
-import chisel3._
-import circt.stage.ChiselStage
-import chisel3.util._
-import java.io.{File, FileWriter}
-import java.rmi.server.UID
-
-object Parameters {
-  val GHRWidth: Int = 16
-  val fetchWidth: Int = 4
-  val RASEntries: Int = 128
-  val BTBEntries: Int = 4096
-  val L1_instructionCacheWays: Int = 2
-  val L1_instructionCacheSets: Int = 64
-  val L1_instructionCacheBlockSizeBytes: Int = 32
-  val startPC: UInt = "h00000000".U
+// FTQ
 
 
-  val architecturalRegCount: Int = 32  // RV32...
-  val physicalRegCount:      Int = 64
-  val RATCheckpointCount:    Int = 32  // How many checkpoints of the RAT is supported? (this should be a proportion of the ROB size)
 
-}
+// Branch Resolution Unit
+ 
