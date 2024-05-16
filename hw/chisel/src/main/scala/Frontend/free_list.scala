@@ -58,17 +58,30 @@ class reorder_free_inputs(fetchWidth:Int, physicalRegCount:Int) extends Module{
 }
 
 
-class reorder_renamed_outputs extends Module{
+class reorder_renamed_outputs(fetchWidth:Int, physicalRegCount:Int) extends Module{
 
     val io = IO(new Bundle{
         val renamed_valid          = Input(Vec(fetchWidth, Bool()))
         val renamed_values         = Input(Vec(fetchWidth, UInt(log2Ceil(physicalRegCount).W)))
 
-        val sorted_renamed_values     = Output(Vec(fetchWidth, UInt(log2Ceil(physicalRegCount).W)))
+        val renamed_values_sorted     = Output(Vec(fetchWidth, UInt(log2Ceil(physicalRegCount).W)))
     })
 
-    // TODO: 
-    // ???
+
+    val valid_bits = Reverse(Cat(io.renamed_valid))
+
+    val sels = Wire(Vec(fetchWidth, UInt(log2Ceil(fetchWidth).W)))
+
+    sels(0)  :=  0.U 
+
+    for (i <- 1 until fetchWidth){
+        sels(i) := PopCount(valid_bits(i-1, 0)) 
+    }
+
+    for (i <- 0 until fetchWidth){
+        io.renamed_values_sorted(i) := io.renamed_values(sels(i))
+    }
+    
 
 }
 
@@ -89,6 +102,7 @@ class free_list(fetchWidth:Int, physicalRegCount:Int) extends Module{
 
         val rename_valid    = Input(Vec(fetchWidth, Bool()))
         val renamed_values  = Output(Vec(fetchWidth, UInt(log2Ceil(physicalRegCount).W)))    // valid mask for RD (how many renamed regs do you need from free list)
+        val renamed_valid   = Output(Vec(fetchWidth, Bool()))
 
         val free_valid      = Input(Vec(fetchWidth, Bool()))
         val free_values     = Input(Vec(fetchWidth, UInt(log2Ceil(physicalRegCount).W)))    // valid mask for RD (how many renamed regs do you need from free list)
@@ -104,27 +118,68 @@ class free_list(fetchWidth:Int, physicalRegCount:Int) extends Module{
     val free_list_buffer = RegInit(VecInit((0 until physicalRegCount).map(_.U(log2Ceil(physicalRegCount).W))))
 
 
+    ///////////////////////
+    // Reorganize inputs //
+    ///////////////////////
+
+    // Gather inputs 
+    val input_sorter = Module(new reorder_free_inputs(fetchWidth=fetchWidth, physicalRegCount=physicalRegCount))
+
+    input_sorter.io.free_valid             := io.free_valid
+    input_sorter.io.free_values            := io.free_values
+
+    val free_valid_sorted = input_sorter.io.free_valid_sorted
+    val free_values_sorted = input_sorter.io.free_values_sorted
+
+    /////////////////////
+    // Actual Freelist //
+    /////////////////////
+
+    val renamed_values  = Wire(Vec(fetchWidth, UInt(log2Ceil(physicalRegCount).W)))    // valid mask for RD (how many renamed regs do you need from free list)
+
     // front pointer
     when(!io.empty){
         front_pointer := front_pointer + PopCount(io.rename_valid)
     }
 
     for(i <- 0 until fetchWidth){   // assign output values
-        io.renamed_values(i) := free_list_buffer(front_pointer(ptr_width-2, 0) + i.U)
+        renamed_values(i) := free_list_buffer(front_pointer(ptr_width-2, 0) + i.U)
     }
 
     // back pointer
-    back_pointer := back_pointer + PopCount(io.free_valid)
+    back_pointer := back_pointer + PopCount(free_valid_sorted)
 
     for(i <- 0 until fetchWidth){   // assign output values
-        when(io.free_valid(i) === 1.B){
-            free_list_buffer(back_pointer(ptr_width-2, 0) + i.U) := io.free_values(i)
+        when(free_valid_sorted(i) === 1.B){
+            free_list_buffer(back_pointer(ptr_width-2, 0) + i.U) := free_values_sorted(i)
         }
     }
 
+    ////////////////////////
+    // Reorganize Outputs //
+    ////////////////////////
+
+    // scatter outputs
+    val output_sorter = Module(new reorder_renamed_outputs(fetchWidth=fetchWidth, physicalRegCount= physicalRegCount))
+
+    output_sorter.io.renamed_valid          := io.rename_valid
+    output_sorter.io.renamed_values         := renamed_values
+
+    io.renamed_values := output_sorter.io.renamed_values_sorted
+
+    ////////////////
+    // Full/Empty //
+    ////////////////
 
     io.empty := ((front_pointer + 4.U)(ptr_width-2, 0)  ===  back_pointer(ptr_width-2, 0)) && ((front_pointer + 4.U)(ptr_width-1)  =/=  back_pointer(ptr_width-1))
     io.full  := (front_pointer)  ===  back_pointer
+
+
+    // Assign output valid bits
+
+    for(i <- 0 until fetchWidth){
+        io.renamed_valid(i) := io.rename_valid(i) && (!io.empty)
+    }
 
 }
 

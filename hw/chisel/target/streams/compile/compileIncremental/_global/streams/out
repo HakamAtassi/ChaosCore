@@ -1,6 +1,6 @@
 [0m[[0m[0mdebug[0m] [0m[0m[zinc] IncrementalCompile -----------[0m
 [0m[[0m[0mdebug[0m] [0m[0mIncrementalCompile.incrementalCompile[0m
-[0m[[0m[0mdebug[0m] [0m[0mprevious = Stamps for: 99 products, 31 sources, 2 libraries[0m
+[0m[[0m[0mdebug[0m] [0m[0mprevious = Stamps for: 100 products, 31 sources, 2 libraries[0m
 [0m[[0m[0mdebug[0m] [0m[0mcurrent source = Set(${BASE}/src/main/scala/Frontend/BP/PC_arbit.scala, ${BASE}/src/main/scala/parameters.scala, ${BASE}/src/main/scala/Frontend/instruction_cache.scala, ${BASE}/src/main/scala/FPU/floating_point_adder.scala, ${BASE}/src/main/scala/L1Cache/L1_cache_controller.scala, ${BASE}/src/main/scala/ALU/unpipelined_non_restoring_division.scala, ${BASE}/src/main/scala/Frontend/BP/decode_validate.scala, ${BASE}/src/main/scala/top.scala, ${BASE}/src/main/scala/Frontend/BOB.scala, ${BASE}/src/main/scala/L1Cache/L1_cache.scala, ${BASE}/src/main/scala/memories/memories.scala, ${BASE}/src/main/scala/Frontend/BP/bundles.scala, ${BASE}/src/main/scala/gcd/GCD.scala, ${BASE}/src/main/scala/ALU/non_restoring_divider.scala, ${BASE}/src/main/scala/Frontend/BP/branch_decoder.scala, ${BASE}/src/main/scala/FPU/floating_point_divider.scala, ${BASE}/src/main/scala/Frontend/frontend.scala, ${BASE}/src/main/scala/Frontend/free_list.scala, ${BASE}/src/main/scala/Frontend/decoder.scala, ${BASE}/src/main/scala/FPU/floating_point_multiplier.scala, ${BASE}/src/main/scala/Frontend/BP/Uop.scala, ${BASE}/src/main/scala/utils.scala, ${BASE}/src/main/scala/gcd/DecoupledGCD.scala, ${BASE}/src/main/scala/Frontend/rename.scala, ${BASE}/src/main/scala/Frontend/BP/BP.scala, ${BASE}/src/main/scala/Frontend/BP/hash_BTB.scala, ${BASE}/src/main/scala/Frontend/BP/RAS.scala, ${BASE}/src/main/scala/Frontend/BP/gshare.scala, ${BASE}/src/main/scala/L1Cache/L1_cache_mem_v2.scala, ${BASE}/src/main/scala/Frontend/BP/associative_BTB.scala)[0m
 [0m[[0m[0mdebug[0m] [0m[0m> initialChanges = InitialChanges(Changes(added = Set(), removed = Set(${BASE}/src/main/scala/Frontend/GCDSpec.scala), changed = Set(${BASE}/src/main/scala/Frontend/free_list.scala), unmodified = ...),Set(),Set(),API Changes: Set())[0m
 [0m[[0m[0mdebug[0m] [0m[0m[0m
@@ -11,18 +11,18 @@
 [0m[[0m[0mdebug[0m] [0m[0mInvalidated products: Set()[0m
 [0m[[0m[0mdebug[0m] [0m[0mExternal API changes: API Changes: Set()[0m
 [0m[[0m[0mdebug[0m] [0m[0mModified binary dependencies: Set()[0m
-[0m[[0m[0mdebug[0m] [0m[0mInitial directly invalidated classes: Set(ChaosCore.reorder_rename_outputs, ChaosCore.free_list, ChaosCore.reorder_free_inputs)[0m
+[0m[[0m[0mdebug[0m] [0m[0mInitial directly invalidated classes: Set(ChaosCore.reorder_renamed_outputs, ChaosCore.free_list, ChaosCore.reorder_free_inputs)[0m
 [0m[[0m[0mdebug[0m] [0m[0mSources indirectly invalidated by:[0m
 [0m[[0m[0mdebug[0m] [0m[0m	product: Set()[0m
 [0m[[0m[0mdebug[0m] [0m[0m	binary dep: Set()[0m
 [0m[[0m[0mdebug[0m] [0m[0m	external source: Set()[0m
-[0m[[0m[0mdebug[0m] [0m[0mAll initially invalidated classes: Set(ChaosCore.reorder_rename_outputs, ChaosCore.free_list, ChaosCore.reorder_free_inputs)[0m
+[0m[[0m[0mdebug[0m] [0m[0mAll initially invalidated classes: Set(ChaosCore.reorder_renamed_outputs, ChaosCore.free_list, ChaosCore.reorder_free_inputs)[0m
 [0m[[0m[0mdebug[0m] [0m[0mAll initially invalidated sources:Set(${BASE}/src/main/scala/Frontend/free_list.scala)[0m
-[0m[[0m[0mdebug[0m] [0m[0mInitial set of included nodes: ChaosCore.reorder_rename_outputs, ChaosCore.free_list, ChaosCore.reorder_free_inputs[0m
+[0m[[0m[0mdebug[0m] [0m[0mInitial set of included nodes: ChaosCore.reorder_renamed_outputs, ChaosCore.free_list, ChaosCore.reorder_free_inputs[0m
 [0m[[0m[0mdebug[0m] [0m[0mcompilation cycle 1[0m
 [0m[[0m[0minfo[0m] [0m[0mcompiling 1 Scala source to /home/hakam/Repos/ChaosCore/hw/chisel/target/scala-2.13/classes ...[0m
 [0m[[0m[0mdebug[0m] [0m[0mReturning already retrieved and compiled bridge: /home/hakam/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala2-sbt-bridge/2.13.12/scala2-sbt-bridge-2.13.12.jar.[0m
-[0m[[0m[0mdebug[0m] [0m[0m[zinc] Running cached compiler 2e05dc09 for Scala compiler version 2.13.12[0m
+[0m[[0m[0mdebug[0m] [0m[0m[zinc] Running cached compiler 55666d84 for Scala compiler version 2.13.12[0m
 [0m[[0m[0mdebug[0m] [0m[0m[zinc] The Scala compiler is invoked with:[0m
 [0m[[0m[0mdebug[0m] [0m[0m	-language:reflectiveCalls[0m
 [0m[[0m[0mdebug[0m] [0m[0m	-deprecation[0m
@@ -40,5 +40,5 @@
 [0m[[0m[0mdebug[0m] [0m[0mFinal step, transitive dependencies:[0m
 [0m[[0m[0mdebug[0m] [0m[0m	Set()[0m
 [0m[[0m[0mdebug[0m] [0m[0mNo classes were invalidated.[0m
-[0m[[0m[0mdebug[0m] [0m[0mScala compilation took 3.126354805 s[0m
+[0m[[0m[0mdebug[0m] [0m[0mScala compilation took 2.205093421 s[0m
 [0m[[0m[0mdebug[0m] [0m[0mdone compiling[0m
