@@ -4,61 +4,82 @@ FROM ubuntu:20.04
 ARG DEBIAN_FRONTEND=noninteractive
 
 # Install basic dependencies
-#RUN apt-get update -y && apt-get install -y \
-    #git \
-    #make \
-    #autoconf \
-    #g++ \
-    #flex \
-    #bison \
-    #perl \
-    #python3 \
-    #python3-pip \
-    #iverilog \
-    #help2man \
-    #apt-utils \
-    #ccache \
-    #numactl \
-    #vim \
-    #curl \
-    #gnupg \
-    #software-properties-common
+RUN apt-get update -y && apt-get install -y \
+    git \
+    make \
+    autoconf \
+    g++ \
+    flex \
+    bison \
+    perl \
+    python3 \
+    python3-pip \
+    iverilog \
+    help2man \
+    apt-utils \
+    ccache \
+    numactl \
+    vim \
+    curl \
+    gnupg \
+    software-properties-common
 
 # Install Verilator
-#RUN git clone https://github.com/verilator/verilator \
-    #&& unset VERILATOR_ROOT \
-    #&& cd verilator \
-    #&& git checkout v5.006 \
-    #&& autoconf \
-    #&& ./configure \
-    #&& make -j $(nproc) \
-    #&& make install \
-    #&& verilator --version  # This will fail the build if Verilator is not correctly installed
+RUN git clone https://github.com/verilator/verilator \
+    && unset VERILATOR_ROOT \
+    && cd verilator \
+    && git checkout v5.024 \
+    && autoconf \
+    && ./configure \
+    && make -j $(nproc) \
+    && make install \
+    && verilator --version  # This will fail the build if Verilator is not correctly installed
 
 # Install Python packages
-#RUN python3 -m pip install cocotb cocotb-test
+RUN python3 -m pip install cocotb cocotb-test numpy pytest pytest-sugar
 
 # Install Scala CLI
-#RUN curl -sSLf https://scala-cli.virtuslab.org/get | sh
+RUN curl -sSLf https://scala-cli.virtuslab.org/get | sh
 
 # Install SBT
-#RUN echo "deb https://repo.scala-sbt.org/scalasbt/debian all main" | tee /etc/apt/sources.list.d/sbt.list  \
-    #&& echo "deb https://repo.scala-sbt.org/scalasbt/debian /" | tee /etc/apt/sources.list.d/sbt_old.list  \
-    #&& curl -sL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x2EE0EA64E40A89B84B2DF73499E82A75642AC823" | apt-key add   \
-    #&& apt-get update  \
-    #&& apt-get install sbt
-# Install SBT
+RUN echo "deb https://repo.scala-sbt.org/scalasbt/debian all main" | tee /etc/apt/sources.list.d/sbt.list  \
+    && echo "deb https://repo.scala-sbt.org/scalasbt/debian /" | tee /etc/apt/sources.list.d/sbt_old.list  \
+    && curl -sL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x2EE0EA64E40A89B84B2DF73499E82A75642AC823" | apt-key add   \
+    && apt-get update  \
+    && apt-get install sbt
 
 
-# Install Chisel3 (via SBT project dependency)
+# Install dependencies and Java
+#RUN apt install -y wget gpg apt-transport-https
+#RUN wget -qO - https://packages.adoptium.net/artifactory/api/gpg/key/public | gpg --dearmor | tee /etc/apt/trusted.gpg.d/adoptium.gpg > /dev/null
+#RUN echo "deb https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" | tee /etc/apt/sources.list.d/adoptium.list
+#RUN apt update
+#RUN apt install temurin-17-jdk
 
-# Sample build.sbt file for a Chisel3 project
-#RUN curl -O -L https://github.com/chipsalliance/chisel/releases/latest/download/chisel-example.scala
+
+# Install chisel3
+RUN curl -O -L https://github.com/chipsalliance/chisel/releases/latest/download/chisel-example.scala
 
 # Update bashrc (if needed)
 # TODO: Add any custom bashrc updates
 
+
+#################################
+## INSTALL LOCAL PYTHON MODELS ##
+#################################
+
+
 WORKDIR /work
+
+COPY . /work
+
+# clean tests
+#RUN cd /work/cocotb/functional_tests/Frontend/rename && make clean
+
+RUN cd /work/py/cocotb_utils && pip3 install .
+RUN cd /work/py/models && pip3 install .
+
+#RUN cd /work/cocotb/functional_tests/Frontend/rename && pytest
 
 # Default command on container start
 CMD ["bash"]

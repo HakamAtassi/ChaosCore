@@ -1,22 +1,30 @@
 from cocotb_test.simulator import run
+import subprocess
 
 configs = {
     "simulator": "verilator",
     "verilog_sources": ["../../../../hw/verilog/Frontend/rename.v"], # sources
     "module": "rename_cocotb",        # name of cocotb test module
-    "defines": ["-j12"],
+    #"defines": ["-j12"],
     "compile_args": ["-Wno-DECLFILENAME", "-Wno-UNUSED", "-Wno-UNDRIVEN", "-Wno-WIDTH", "-Wno-UNOPTFLAT", "-Wno-WIDTHEXPAND"],
     "module": None,        # name of cocotb test module
     "toplevel": None,            # top level HDL
-    "testcase": None,
-    "waves": 1,
-    "extra_args": ["--trace-fst", "--trace-structs"]
+    "testcase": None
+    
+    # DO NOT ENABLE IN DOCKER! (it will likely fail due to what I believe is a memory limitation of some sort)
+    #"waves": 0,
+    #"extra_args": ["--trace-fst", "--trace-structs"]
 }
+
+
+result = subprocess.run(['make', 'clean'], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+print(result.stdout.decode())
+print(result.stderr.decode())
+
 
 ########################
 ## TEST Input Reorder ##
 ########################
-
 
 def test_startup():
     configs["module"]   = "reorder_free_inputs_cocotb"
@@ -115,6 +123,7 @@ def test_free_list_check_many_unordered_reads():
 ##############
 ## TEST RAT ##
 ##############
+
 
 def test_RAT_startup():
     configs["module"]   = "RAT_cocotb"
