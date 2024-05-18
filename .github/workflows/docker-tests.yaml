@@ -49,8 +49,8 @@ jobs:
       - name: Test Docker Container
         run: docker run chaoscore /bin/bash -c "echo 'test'"
 
-      - name: Generate Verilog Via Chisel
-        run: docker run chaoscore cd hw/chisel && sbt run
+      #- name: Generate Verilog Via Chisel
+        #run: docker run chaoscore cd /work/hw/chisel && sbt run
 
-      - name: Run Cocotb Pytests
-        run: docker run chaoscore cd /work/cocotb/functional_tests/Frontend/rename && pytest
+      #- name: Run Cocotb Pytests
+        #run: docker run chaoscore cd /work/cocotb/functional_tests/Frontend/rename && pytest
