@@ -22,7 +22,6 @@
       #- name: Run tests
         #run: |
           #docker run --rm -v $(pwd)/root/cocotb/frontend/rename:/work chaoscore pytest
-
 name: Run test suite
 
 on:
@@ -56,6 +55,9 @@ jobs:
 
       - name: List Docker images
         run: docker images
+
+      - name: Inspect built image
+        run: docker inspect chaoscore:latest
 
       - name: Run tests
         run: |
