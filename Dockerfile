@@ -42,24 +42,18 @@ RUN python3 -m pip install cocotb cocotb-test
 RUN curl -sSLf https://scala-cli.virtuslab.org/get | sh
 
 # Install SBT
-RUN echo "deb https://repo.scala-sbt.org/scalasbt/debian all main" | sudo tee /etc/apt/sources.list.d/sbt.list  \
-    && echo "deb https://repo.scala-sbt.org/scalasbt/debian /" | sudo tee /etc/apt/sources.list.d/sbt_old.list  \
-    && curl -sL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x2EE0EA64E40A89B84B2DF73499E82A75642AC823" | sudo apt-key add   \
-    && sudo apt-get update  \
-    && sudo apt-get install sbt
+RUN echo "deb https://repo.scala-sbt.org/scalasbt/debian all main" | tee /etc/apt/sources.list.d/sbt.list  \
+    && echo "deb https://repo.scala-sbt.org/scalasbt/debian /" | tee /etc/apt/sources.list.d/sbt_old.list  \
+    && curl -sL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x2EE0EA64E40A89B84B2DF73499E82A75642AC823" | apt-key add   \
+    && apt-get update  \
+    && apt-get install sbt
+# Install SBT
 
 
 # Install Chisel3 (via SBT project dependency)
-# Create a placeholder directory for Chisel projects
-RUN mkdir -p /work/chisel-project
-WORKDIR /work/chisel-project
-COPY build.sbt /work/chisel-project/build.sbt
 
 # Sample build.sbt file for a Chisel3 project
 RUN curl -O -L https://github.com/chipsalliance/chisel/releases/latest/download/chisel-example.scala
-
-# Pre-fetch sbt dependencies (optional, but speeds up subsequent builds)
-RUN sbt update
 
 # Update bashrc (if needed)
 # TODO: Add any custom bashrc updates
