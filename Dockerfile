@@ -25,15 +25,15 @@ RUN apt-get update -y && apt-get install -y \
     software-properties-common
 
 # Install Verilator
-RUN git clone https://github.com/verilator/verilator \
-    && unset VERILATOR_ROOT \
-    && cd verilator \
-    && git checkout v5.006 \
-    && autoconf \
-    && ./configure \
-    && make -j $(nproc) \
-    && make install \
-    && verilator --version  # This will fail the build if Verilator is not correctly installed
+#RUN git clone https://github.com/verilator/verilator \
+    #&& unset VERILATOR_ROOT \
+    #&& cd verilator \
+    #&& git checkout v5.006 \
+    #&& autoconf \
+    #&& ./configure \
+    #&& make -j $(nproc) \
+    #&& make install \
+    #&& verilator --version  # This will fail the build if Verilator is not correctly installed
 
 # Install Python packages
 RUN python3 -m pip install cocotb cocotb-test
