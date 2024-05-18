@@ -15,12 +15,17 @@ jobs:
           context: .
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          repository: chaoscore
 
       #- uses: actions/checkout@v1
       #- name: Build Docker Image
         #run: docker build -t ChaosCore .
 
       # Run tests using pytest inside Docker container
+
+
+      # Run tests using pytest inside Docker container
       - name: Run tests
         run: |
-          docker run --rm -v $(pwd)/root/cocotb/frontend/rename:/work ChaosCore pytest
+          docker run --rm -v $(pwd)/root/cocotb/frontend/rename:/work chaoscore pytest
+
