@@ -53,4 +53,5 @@ jobs:
         #run: docker run chaoscore cd /work/hw/chisel && sbt run
 
       - name: Run Cocotb Pytests
-        run: docker run chaoscore cd /work/cocotb/functional_tests/Frontend/rename && pytest
+        run: docker run chaoscore sh -c cd /work/cocotb/functional_tests/Frontend/rename && pytest
+
