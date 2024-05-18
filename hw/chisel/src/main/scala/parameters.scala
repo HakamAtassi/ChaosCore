@@ -52,6 +52,6 @@ object Parameters {
 
   val architecturalRegCount: Int = 32  // RV32...
   val physicalRegCount:      Int = 64
-  val RATCheckpointCount:    Int = 10  // How many checkpoints of the RAT is supported? (this should be a proportion of the ROB size)
+  val RATCheckpointCount:    Int = 16  // How many checkpoints of the RAT is supported? (this should be a proportion of the ROB size)
 
 }
