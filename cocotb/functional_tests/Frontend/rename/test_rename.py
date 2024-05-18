@@ -9,9 +9,11 @@ configs = {
     "compile_args": ["-Wno-DECLFILENAME", "-Wno-UNUSED", "-Wno-UNDRIVEN", "-Wno-WIDTH", "-Wno-UNOPTFLAT", "-Wno-WIDTHEXPAND"],
     "module": None,        # name of cocotb test module
     "toplevel": None,            # top level HDL
-    "testcase": None,
-    "waves": 1,
-    "extra_args": ["--trace-fst", "--trace-structs"]
+    "testcase": None
+    
+    # DO NOT ENABLE IN DOCKER! (it will likely fail due to what I believe is a memory limitation of some sort)
+    #"waves": 0,
+    #"extra_args": ["--trace-fst", "--trace-structs"]
 }
 
 
@@ -121,6 +123,7 @@ def test_free_list_check_many_unordered_reads():
 ##############
 ## TEST RAT ##
 ##############
+
 
 def test_RAT_startup():
     configs["module"]   = "RAT_cocotb"
