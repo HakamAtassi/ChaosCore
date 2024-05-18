@@ -1,31 +1,47 @@
+#name: Run test suite
+
+#on:
+  #push:
+
+#jobs:
+  #build:
+    #runs-on: ubuntu-latest
+
+    #steps:
+      #- uses: actions/checkout@v3
+      #- uses: docker/setup-buildx-action@v3
+      #- uses: docker/build-push-action@v5
+        #with:
+          #context: .
+          #cache-from: type=gha
+          #cache-to: type=gha,mode=max
+          ##repository: chaoscore
+          #tags: chaoscore:latest  # Set the image name and tag here
+
+      ## Run tests using pytest inside Docker container
+      #- name: Run tests
+        #run: |
+          #docker run --rm -v $(pwd)/root/cocotb/frontend/rename:/work chaoscore pytest
+
 name: Run test suite
 
 on:
   push:
+    branches:
+      - main
 
 jobs:
-  build:
+  build_and_test:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
-      - uses: docker/setup-buildx-action@v3
-      - uses: docker/build-push-action@v5
-        with:
-          context: .
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          #repository: chaoscore
-          tags: chaoscore:latest  # Set the image name and tag here
-      #- uses: actions/checkout@v1
-      #- name: Build Docker Image
-        #run: docker build -t ChaosCore .
-
-      # Run tests using pytest inside Docker container
-
-
-      # Run tests using pytest inside Docker container
-      - name: Run tests
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Build Docker Image and Run Tests
         run: |
+          docker build -t chaoscore .
           docker run --rm -v $(pwd)/root/cocotb/frontend/rename:/work chaoscore pytest
-
