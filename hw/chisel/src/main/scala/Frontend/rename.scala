@@ -35,7 +35,7 @@ import chisel3.util._
 
 // the architecture of the RAT and RAT checkpointing is inspired by sargantana.
 
-class WAW_handler(fetchWidth:Int, physicalRegCount:Int) extends Module{
+class WAW_handler(fetchWidth:Int, physicalRegCount:Int, architecturalRegCount:Int) extends Module{
     // sometimes, multiple instructions within a single fetch packet will 
     // have the same RD. During rename, this RD will result in two different mappins between
     // arch. reg and physical reg from the free list. 
@@ -73,9 +73,47 @@ class WAW_handler(fetchWidth:Int, physicalRegCount:Int) extends Module{
 
 }
 
+class RAT_memory(fetchWidth:Int, physicalRegCount:Int, architecturalRegCount:Int, RATCheckpointCount:Int) extends Module{
+
+    val RATCheckpointBits    = log2Ceil(RATCheckpointCount)
+    val physicalRegBits      = log2Ceil(physicalRegCount)
+    val architecturalRegBits = log2Ceil(architecturalRegCount)
+
+    val io = IO(new Bundle{
+        // read inputs
+        val instruction_RD    =   Input(Vec(fetchWidth, UInt(architecturalRegBits.W)))
+        val instruction_RS1   =   Input(Vec(fetchWidth, UInt(architecturalRegBits.W)))
+        val instruction_RS2   =   Input(Vec(fetchWidth, UInt(architecturalRegBits.W)))
+
+        // write ports (post WAW handling)
+        val free_list_wr_en  =   Input(Vec(fetchWidth, Bool()))
+        val free_list_RD     =   Input(Vec(fetchWidth, UInt(physicalRegBits.W)))
+
+        // renamed outputs
+        val RAT_RD    =   Output(Vec(fetchWidth, UInt(physicalRegBits.W)))
+        val RAT_RS1   =   Output(Vec(fetchWidth, UInt(physicalRegBits.W)))
+        val RAT_RS2   =   Output(Vec(fetchWidth, UInt(physicalRegBits.W)))
+
+    })
+
+    val regs = RegInit(VecInit(Seq.fill(architecturalRegCount)(0.U(physicalRegBits.W))))
+
+    for (i <- 0 until fetchWidth){
+        io.RAT_RD(i)  := RegNext(regs(io.instruction_RD(i)))
+        io.RAT_RS1(i) := RegNext(regs(io.instruction_RS1(i)))
+        io.RAT_RS2(i) := RegNext(regs(io.instruction_RS2(i)))
+    }
+
+    for (i <- 0 until fetchWidth){
+        when(io.free_list_wr_en(i)){
+            regs(io.instruction_RD(i)) := io.free_list_RD(i)
+        }
+    }
+
+}
 
 
-class RAT(fetchWidth:Int, physicalRegCount:Int, architecturalRegCount ,RATCheckpointCount:Int) extends Module{
+class RAT(fetchWidth:Int, physicalRegCount:Int, architecturalRegCount:Int, RATCheckpointCount:Int) extends Module{
     val RATCheckpointBits    = log2Ceil(RATCheckpointCount)
     val physicalRegBits      = log2Ceil(physicalRegCount)
     val architecturalRegBits = log2Ceil(architecturalRegCount)
@@ -89,7 +127,6 @@ class RAT(fetchWidth:Int, physicalRegCount:Int, architecturalRegCount ,RATCheckp
 
         // write ports (post WAW handling)
         val free_list_wr_en  =   Input(Vec(fetchWidth, Bool()))
-        val instruction_RD   =   Input(Vec(fetchWidth, UInt(architecturalRegBits.W)))
         val free_list_RD     =   Input(Vec(fetchWidth, UInt(physicalRegBits.W)))
 
         // checkpoint (create/restore)
@@ -112,14 +149,14 @@ class RAT(fetchWidth:Int, physicalRegCount:Int, architecturalRegCount ,RATCheckp
     val active_RAT            = RegInit(UInt(RATCheckpointBits.W), 0.U)
     val available_checkpoints = RegInit(UInt(RATCheckpointBits.W), RATCheckpointCount.U)
 
-
-    // FIXME: what should RAT memories be initialized to?
-    val RAT_memories   = RegInit(Vec(Seq.fill(architecturalRegCount)(Vec(Seq.fill(fetchWidth)(0.U(physicalRegBits.W))))))
+    val RAT_memories = RegInit(VecInit.tabulate(RATCheckpointCount, architecturalRegCount){ (x, y) => 0.U(physicalRegBits.W) })
+    
 
     // outputs of ALL RAT checkpoints
-    val all_RD_outs   = RegInit(Vec(Seq.fill(RATCheckpointCount)(Vec(Seq.fill(fetchWidth)(0.U(physicalRegBits.W))))))
-    val all_RS1_outs  = RegInit(Vec(Seq.fill(RATCheckpointCount)(Vec(Seq.fill(fetchWidth)(0.U(physicalRegBits.W))))))
-    val all_RS2_outs  = RegInit(Vec(Seq.fill(RATCheckpointCount)(Vec(Seq.fill(fetchWidth)(0.U(physicalRegBits.W))))))
+
+    val all_RD_outs  = RegInit(VecInit.tabulate(RATCheckpointCount, fetchWidth){ (x, y) => 0.U(physicalRegBits.W) })
+    val all_RS1_outs = RegInit(VecInit.tabulate(RATCheckpointCount, fetchWidth){ (x, y) => 0.U(physicalRegBits.W) })
+    val all_RS2_outs = RegInit(VecInit.tabulate(RATCheckpointCount, fetchWidth){ (x, y) => 0.U(physicalRegBits.W) })
 
     // Read logic
 
@@ -133,39 +170,92 @@ class RAT(fetchWidth:Int, physicalRegCount:Int, architecturalRegCount ,RATCheckp
     }
 
     // select the correct data based on checkpoint value
-    for(i <- 0 until RATCheckpointCount){
-        io.RAT_RD(i)  := all_RD_outs(active_RAT)
-        io.RAT_RS1(i) := all_RS1_outs(active_RAT)
-        io.RAT_RS2(i) := all_RS2_outs(active_RAT)
+    for(i <- 0 until fetchWidth){
+        io.RAT_RD(i)  := all_RD_outs(active_RAT)(i)
+        io.RAT_RS1(i) := all_RS1_outs(active_RAT)(i)
+        io.RAT_RS2(i) := all_RS2_outs(active_RAT)(i)
     }
 
 
-    // Write logic
+    // muxed rename data
+    val wr_data_in = Wire(Vec(architecturalRegCount, UInt(physicalRegBits.W)))
+    val is_being_written_vec = Wire(Vec(architecturalRegCount, Bool()))
 
-    // During normal operation, only modify the active RAT
-    for(i <- 0 until fetchWidth){
-        when(io.free_list_wr_en(i)){
-            RAT_memories(active_RAT)(io.instruction_RD(i))  := io.free_list_RD(i)
+
+    val reg_data_in  = VecInit.tabulate(RATCheckpointCount, architecturalRegCount){ (x, y) => 0.U(physicalRegBits.W) }
+    val reg_wr_en    =VecInit.tabulate(RATCheckpointCount, architecturalRegCount){ (x, y) => 0.B }
+
+
+    // is row being written by current input
+    for (i <- 0 until architecturalRegCount){
+        var is_being_written = 0.B
+        for(j <- 0 until fetchWidth){
+            is_being_written = is_being_written || (io.instruction_RD(j) === i.U)
+        }
+        is_being_written_vec(i) := is_being_written
+    }
+
+    // mux data from inputs
+    for (i <- 0 until architecturalRegCount){
+        for(j <- 0 until fetchWidth){
+            wr_data_in(i) := 0.U
+            when(io.instruction_RD(j) === i.U){
+                wr_data_in(i) := io.free_list_RD(j)
+            }
         }
     }
+
+
+    // init first row of reg_data_in (since no prev checkpoint)
+
+    for (j <- 0 until architecturalRegCount){
+        reg_data_in(0)(j) := wr_data_in(j)
+    }
+
+    // mux data from input or checkpoint
+    for(i <- 1 until RATCheckpointCount){
+        for (j <- 0 until architecturalRegCount){
+            when(io.create_checkpoint){
+                reg_data_in(i)(j) := RAT_memories(i-1)(j)
+            }.otherwise{
+                reg_data_in(i)(j) := wr_data_in(i)
+            }
+        }
+    }
+
+    for(i <- 0 until RATCheckpointCount){
+        for (j <- 0 until architecturalRegCount){
+            // if the row in the active ret is being written, or if checkpoint being created, perform write. 
+            reg_wr_en(i)(j) := (((active_RAT === i.U) && is_being_written_vec(j)) || (((active_RAT + 1.U) === i.U) && io.create_checkpoint))
+        }
+    }
+
+    // Assign inputs to each reg
+    for(i <- 0 until RATCheckpointCount){
+        for (j <- 0 until architecturalRegCount){
+            when(reg_wr_en(i)(j)){
+                RAT_memories(i)(j) := reg_data_in(i)(j)
+            }
+        }
+    }
+
+
 
 
     io.active_checkpoint_value := active_RAT
 
+    
     // create checkpoint logic
     when(io.create_checkpoint){
         // copy active RAT to next RAT
-        for(i <- 0 until architecturalRegCount){
-            RAT_memories(active_RAT + 1.U)(i) := RAT_memories(active_RAT)(i)
-        }
-        active_checkpoint_value := active_checkpoint_value + 1.U    // points to the active checkpoint
+        active_RAT := active_RAT + 1.U    // points to the active checkpoint
         available_checkpoints := available_checkpoints - 1.U
     }
 
     // restore checkpoint logic
     when(io.restore_checkpoint){
         // checkpoint restore is nothing more than decrementing the pointer
-        active_checkpoint_value := io.restore_checkpoint_value      // go back to a valid RAT
+        active_RAT := io.restore_checkpoint_value      // go back to a valid RAT
     }
 
     // free checkpoint logic
@@ -180,7 +270,7 @@ class RAT(fetchWidth:Int, physicalRegCount:Int, architecturalRegCount ,RATCheckp
 }
 
 
-class rename(fetchWidth:Int, physicalRegCount:Int) extends Module{
+class rename(fetchWidth:Int, physicalRegCount:Int, architecturalRegCount:Int, RATCheckpointCount:Int) extends Module{
     // Takes in N input instructions
     // Reads the renamed versions of RS1, RS2, and RD (old)
     // performs a rename to RD using the free list
@@ -188,8 +278,9 @@ class rename(fetchWidth:Int, physicalRegCount:Int) extends Module{
 
     // Also provides checkpointing capability.
 
-    val physicalRegBits = log2Ceil(physicalRegCount)
+    val physicalRegBits      = log2Ceil(physicalRegCount)
     val architecturalRegBits = log2Ceil(architecturalRegCount)
+    val RATCheckpointBits    = log2Ceil(RATCheckpointCount)
 
     val io = IO(new Bundle{
         // Instrution input (rename)
@@ -203,14 +294,14 @@ class rename(fetchWidth:Int, physicalRegCount:Int) extends Module{
         val instruction_RS2_valid     =   Input(Vec(fetchWidth, Bool()))
 
         // Freelist output
-        val RD_in                     =   Input(Vec(fetchWidth, UInt(architecturalRegBits.W)))
-        val instruction_RD_valid      =   Input(Vec(fetchwidth, Bool()))
+        //val RD_in                     =   Input(Vec(fetchWidth, UInt(architecturalRegBits.W)))
+        //val instruction_RD_valid      =   Input(Vec(fetchwidth, Bool()))
 
-        val RS1_in                    =   Input(Vec(fetchWidth, UInt(architecturalRegBits.W)))
-        val instruction_RS1_valid     =   Input(Vec(fetchWidth, Bool()))
+        //val RS1_in                    =   Input(Vec(fetchWidth, UInt(architecturalRegBits.W)))
+        //val instruction_RS1_valid     =   Input(Vec(fetchWidth, Bool()))
 
-        val RS2_in                    =   Input(Vec(fetchWidth, UInt(architecturalRegBits.W)))
-        val instruction_RS2_valid     =   Input(Vec(fetchWidth, Bool()))
+        //val RS2_in                    =   Input(Vec(fetchWidth, UInt(architecturalRegBits.W)))
+        //val instruction_RS2_valid     =   Input(Vec(fetchWidth, Bool()))
 
         // RAT output
         val free_list_RD              =   Output(Vec(fetchWidth, UInt(physicalRegBits.W))) // From free list 
@@ -247,6 +338,11 @@ class rename(fetchWidth:Int, physicalRegCount:Int) extends Module{
     // and the following cycle, the second instruction would just read from the now updated RAT. 
     // In superscalar, where multiple renames are done every cycle, the renamed value must be forwarded, since the RAT will not represent the earlier rename requets. 
 
+    // RAT outputs
+    val RAT_RD_values  = Wire(Vec(fetchWidth, UInt(physicalRegBits.W))) // RAT RD outputs
+    val RAT_RS1_values = Wire(Vec(fetchWidth, UInt(physicalRegBits.W))) // RAT RS1 outputs
+    val RAT_RS2_values = Wire(Vec(fetchWidth, UInt(physicalRegBits.W))) // RAT RS2 outputs
+
 
     ///////////////
     // Free List //
@@ -256,31 +352,24 @@ class rename(fetchWidth:Int, physicalRegCount:Int) extends Module{
     // the input just takes in the rd_valid array as normal. the output sorting is handled via the reorder_renamed_outputs module
     // When freeing up old renamed registers at commit, the RDs need to be sorted, which is handled by the reorder_free_inputs module
 
-    val free_list_input_sorter  = Module(new reorder_free_inputs(fetchWidth=fetchWidth physicalRegCount=physicalRegCount))
     val free_list               = Module(new free_list(fetchWidth=fetchWidth, physicalRegCount=physicalRegCount))
-    val free_list_output_sorter = Module(new reorder_renamed_outputs(fetchWidth=fetchWidth, physicalRegCount=physicalRegCount))
 
-    // "swizzle" outputs
     free_list.io.rename_valid                   :=  io.instruction_RD_valid
-    free_list_output_sorter.io.renamed_values   :=  free_list.io.renamed_values
-    free_list_output_sorter.io.renamed_valid    :=  io.instruction_RD_valid
 
-    // "swizzle" inputs
-    free_list_input_sorter.io.free_valid        :=  io.commit_RD
-    free_list_input_sorter.io.free_values       :=  io.commit_RD_valid
-    free_list.io.free_valid                     :=  free_list_input_sorter.io.free_valid_sorted
-    free_list.io.free_values                    :=  free_list_input_sorter.io.free_values_sorted
+    free_list.io.free_valid                     :=  io.commit_RD_valid
+    free_list.io.free_values                    :=  io.commit_RD
+
 
     ///////////////////////
     // RAT + WAW Handler //
     ///////////////////////
 
-    val WAW_handler = Module(new WAW_handler(fetchWidth=fetchWidth, physicalRegCount=physicalRegCount))
+    val WAW_handler     = Module(new WAW_handler(fetchWidth=fetchWidth, physicalRegCount=physicalRegCount, architecturalRegCount=architecturalRegCount))
     val RAT             = Module(new RAT(fetchWidth=fetchWidth, physicalRegCount=physicalRegCount, architecturalRegCount=architecturalRegCount, RATCheckpointCount))
 
     WAW_handler.io.decoder_RD_valid_bits    :=  io.instruction_RD_valid
     WAW_handler.io.decoder_RD_values        :=  io.instruction_RD
-    WAW_handler.io.free_list_RD_values      :=  free_list_output_sorter.io.renamed_values_sorted
+    WAW_handler.io.free_list_RD_values      :=  free_list.io.renamed_values
 
     // Assign write ports
     RAT.io.free_list_wr_en                  :=  WAW_handler.io.RAT_wr_en
@@ -301,17 +390,15 @@ class rename(fetchWidth:Int, physicalRegCount:Int) extends Module{
       
     RAT.io.free_checkpoint           :=  io.free_checkpoint
 
-
+    // RAT outputs
+    RAT_RD_values   := RAT.io.RAT_RD
+    RAT_RS1_values  := RAT.io.RAT_RS1
+    RAT_RS2_values  := RAT.io.RAT_RS2
 
 
     ///////////////////////////////
     // Forwarding logic + Output //
     ///////////////////////////////
-
-    // RAT outputs
-    val RAT_RD_values  = Wire(Vec(fetchWidth, UInt(physicalRegBits.W))) // RAT RD outputs
-    val RAT_RS1_values = Wire(Vec(fetchWidth, UInt(physicalRegBits.W))) // RAT RS1 outputs
-    val RAT_RS2_values = Wire(Vec(fetchWidth, UInt(physicalRegBits.W))) // RAT RS2 outputs
 
     // superscalar forwarding logic
     for(i <- 0 until fetchWidth){
@@ -336,10 +423,10 @@ class rename(fetchWidth:Int, physicalRegCount:Int) extends Module{
     io.active_checkpoint_value         := RAT.io.active_checkpoint_value
     io.checkpoints_full                := RAT.io.checkpoints_full
 
-    io.free_list_RD              =   free_list_output_sorter.io.renamed_values_sorted
-    io.renamed_RD                =   RAT.io.RAT_RD
-    io.renamed_RS1               =   RAT.io.RAT_RS1
-    io.renamed_RS2               =   RAT.io.RAT_RS2
+    io.free_list_RD              :=   free_list.io.renamed_values
+    io.renamed_RD                :=   RAT.io.RAT_RD
+    io.renamed_RS1               :=   RAT.io.RAT_RS1
+    io.renamed_RS2               :=   RAT.io.RAT_RS2
 
 
 }
