@@ -3074,30 +3074,35 @@ module RAT(
       _GEN_184 = _GEN_157 == 4'hD & io_create_checkpoint;
       _GEN_186 = _GEN_157 == 4'hE & io_create_checkpoint;
       _GEN_187 = (&_GEN_157) & io_create_checkpoint;
-      if (io_restore_checkpoint)
-        active_RAT <= io_restore_checkpoint_value;
+
+      if (io_restore_checkpoint) active_RAT <= io_restore_checkpoint_value;
       else if (io_create_checkpoint)
         active_RAT <= active_RAT + 4'h1;
+
       if (io_free_checkpoint)
         available_checkpoints <= available_checkpoints + 4'h1;
       else if (io_create_checkpoint)
         available_checkpoints <= available_checkpoints - 4'h1;
+
       if (_GEN_156 & is_being_written_vec_0)
         RAT_memories_0_0 <= wr_data_in_0;
       else if (_GEN_158)
         RAT_memories_0_0 <= RAT_memories_4_0;
+
       if (_GEN_156 & is_being_written_vec_1)
         RAT_memories_0_1 <= wr_data_in_1;
       else if (_GEN_158)
         RAT_memories_0_1 <= RAT_memories_4_1;
-      if (_GEN_156 & is_being_written_vec_2)
-        RAT_memories_0_2 <= wr_data_in_2;
-      else if (_GEN_158)
-        RAT_memories_0_2 <= RAT_memories_4_2;
-      if (_GEN_156 & is_being_written_vec_3)
-        RAT_memories_0_3 <= wr_data_in_3;
-      else if (_GEN_158)
-        RAT_memories_0_3 <= RAT_memories_4_3;
+
+
+      if (_GEN_156 & is_being_written_vec_2) RAT_memories_0_2 <= wr_data_in_2;
+      else if (_GEN_158) RAT_memories_0_2 <= RAT_memories_4_2;
+
+      if (_GEN_156 & is_being_written_vec_3) RAT_memories_0_3 <= wr_data_in_3;
+      else if (_GEN_158) RAT_memories_0_3 <= RAT_memories_4_3;
+
+
+
       if (_GEN_156 & is_being_written_vec_4)
         RAT_memories_0_4 <= wr_data_in_4;
       else if (_GEN_158)
