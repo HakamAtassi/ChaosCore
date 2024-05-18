@@ -1,4 +1,5 @@
 from cocotb_test.simulator import run
+import subprocess
 
 configs = {
     "simulator": "verilator",
@@ -13,10 +14,15 @@ configs = {
     "extra_args": ["--trace-fst", "--trace-structs"]
 }
 
+
+result = subprocess.run(['make', 'clean'], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+print(result.stdout.decode())
+print(result.stderr.decode())
+
+
 ########################
 ## TEST Input Reorder ##
 ########################
-
 
 def test_startup():
     configs["module"]   = "reorder_free_inputs_cocotb"

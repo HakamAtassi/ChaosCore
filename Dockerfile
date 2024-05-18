@@ -73,7 +73,7 @@ WORKDIR /work
 COPY . /work
 
 # clean tests
-RUN cd /work/cocotb/functional_tests/Frontend/rename && make clean
+#RUN cd /work/cocotb/functional_tests/Frontend/rename && make clean
 
 RUN cd /work/py/cocotb_utils && pip3 install .
 RUN cd /work/py/models && pip3 install .
