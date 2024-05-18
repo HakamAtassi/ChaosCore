@@ -42,4 +42,6 @@ jobs:
         run: docker build -t chaoscore .
 
       - name: Run echo command inside Docker container
-        run: docker run -it --hostname ChaosCore chaoscore /bin/bash -c "echo 'test'"
+        #run: docker run -it --hostname ChaosCore chaoscore /bin/bash -c "echo 'test'"
+
+        run: docker run chaoscore /bin/bash -c "echo 'test'"
