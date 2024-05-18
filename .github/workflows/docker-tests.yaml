@@ -15,8 +15,8 @@ jobs:
           context: .
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          repository: chaoscore
-
+          #repository: chaoscore
+          tags: chaoscore:latest  # Set the image name and tag here
       #- uses: actions/checkout@v1
       #- name: Build Docker Image
         #run: docker build -t ChaosCore .
