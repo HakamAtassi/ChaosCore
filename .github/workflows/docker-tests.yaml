@@ -55,6 +55,9 @@ jobs:
           cache-to: type=local,dest=/tmp/.buildx-cache
           tags: chaoscore:latest
 
+      - name: List Docker images
+        run: docker images
+
       - name: Run tests
         run: |
-          docker run --rm -v $(pwd)/root/cocotb/frontend/rename:/work chaoscore pytest
+          docker run --rm -v $(pwd)/root/cocotb/frontend/rename:/work chaoscore:latest pytest
