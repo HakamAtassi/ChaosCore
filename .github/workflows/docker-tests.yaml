@@ -48,7 +48,7 @@ jobs:
           context: .
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          tags: chaoscore:latest  # Set the image name and tag here
+          tags: chaoscore
 
       # Run a simple Hello World command inside Docker container
       - name: Run Hello World
