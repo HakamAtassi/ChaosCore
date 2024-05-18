@@ -118,6 +118,7 @@ class RAT(fetchWidth:Int, physicalRegCount:Int, architecturalRegCount:Int, RATCh
     val physicalRegBits      = log2Ceil(physicalRegCount)
     val architecturalRegBits = log2Ceil(architecturalRegCount)
 
+    assert(RATCheckpointCount%2 == 0, "Rat checkpoint count must be multiple of 2")
 
     val io = IO(new Bundle{
         // input read ports
@@ -147,64 +148,50 @@ class RAT(fetchWidth:Int, physicalRegCount:Int, architecturalRegCount:Int, RATCh
     })
 
     val active_RAT            = RegInit(UInt(RATCheckpointBits.W), 0.U)
-    val available_checkpoints = RegInit(UInt(RATCheckpointBits.W), RATCheckpointCount.U)
+    val available_checkpoints = RegInit(UInt(RATCheckpointBits.W), RATCheckpointCount.U - 1.U)
 
     val RAT_memories = RegInit(VecInit.tabulate(RATCheckpointCount, architecturalRegCount){ (x, y) => 0.U(physicalRegBits.W) })
     
 
     // outputs of ALL RAT checkpoints
 
-    val all_RD_outs  = RegInit(VecInit.tabulate(RATCheckpointCount, fetchWidth){ (x, y) => 0.U(physicalRegBits.W) })
-    val all_RS1_outs = RegInit(VecInit.tabulate(RATCheckpointCount, fetchWidth){ (x, y) => 0.U(physicalRegBits.W) })
-    val all_RS2_outs = RegInit(VecInit.tabulate(RATCheckpointCount, fetchWidth){ (x, y) => 0.U(physicalRegBits.W) })
-
     // Read logic
 
     // read from all checkpoints and place in reg
-    for(i <- 0 until RATCheckpointCount){
-        for(j <- 0 until fetchWidth){
-            all_RD_outs(i)(j)  := RAT_memories(i)(io.instruction_RD(j))
-            all_RS1_outs(i)(j) := RAT_memories(i)(io.instruction_RS1(j))
-            all_RS2_outs(i)(j) := RAT_memories(i)(io.instruction_RS2(j))
-        }
-    }
-
-    // select the correct data based on checkpoint value
     for(i <- 0 until fetchWidth){
-        io.RAT_RD(i)  := all_RD_outs(active_RAT)(i)
-        io.RAT_RS1(i) := all_RS1_outs(active_RAT)(i)
-        io.RAT_RS2(i) := all_RS2_outs(active_RAT)(i)
+        io.RAT_RD(i)  := RegNext(RAT_memories(active_RAT)(io.instruction_RD(i)))
+        io.RAT_RS1(i) := RegNext(RAT_memories(active_RAT)(io.instruction_RS1(i)))
+        io.RAT_RS2(i) := RegNext(RAT_memories(active_RAT)(io.instruction_RS2(i)))
     }
-
 
     // muxed rename data
     val wr_data_in = Wire(Vec(architecturalRegCount, UInt(physicalRegBits.W)))
     val is_being_written_vec = Wire(Vec(architecturalRegCount, Bool()))
 
-
     val reg_data_in  = VecInit.tabulate(RATCheckpointCount, architecturalRegCount){ (x, y) => 0.U(physicalRegBits.W) }
-    val reg_wr_en    =VecInit.tabulate(RATCheckpointCount, architecturalRegCount){ (x, y) => 0.B }
-
+    val reg_wr_en    = VecInit.tabulate(RATCheckpointCount, architecturalRegCount){ (x, y) => 0.B }
 
     // is row being written by current input
     for (i <- 0 until architecturalRegCount){
         var is_being_written = 0.B
         for(j <- 0 until fetchWidth){
-            is_being_written = is_being_written || (io.instruction_RD(j) === i.U)
+            is_being_written = is_being_written || ((io.instruction_RD(j) === i.U) && io.free_list_wr_en(j))
         }
         is_being_written_vec(i) := is_being_written
     }
 
     // mux data from inputs
     for (i <- 0 until architecturalRegCount){
+        wr_data_in(i) := 0.U
         for(j <- 0 until fetchWidth){
-            wr_data_in(i) := 0.U
             when(io.instruction_RD(j) === i.U){
                 wr_data_in(i) := io.free_list_RD(j)
             }
         }
     }
 
+    dontTouch(is_being_written_vec)
+    dontTouch(wr_data_in)
 
     // init first row of reg_data_in (since no prev checkpoint)
 
@@ -213,33 +200,24 @@ class RAT(fetchWidth:Int, physicalRegCount:Int, architecturalRegCount:Int, RATCh
     }
 
     // mux data from input or checkpoint
+
+    for (j <- 0 until architecturalRegCount){
+        when((active_RAT === 0.U) && is_being_written_vec(j)){
+            RAT_memories(0)(j) :=  wr_data_in(j)
+        }.elsewhen((((active_RAT + 1.U) === 0.U) && io.create_checkpoint)){
+            RAT_memories(0)(j) := RAT_memories(RATCheckpointBits)(j)
+        }
+    }
+
     for(i <- 1 until RATCheckpointCount){
         for (j <- 0 until architecturalRegCount){
-            when(io.create_checkpoint){
-                reg_data_in(i)(j) := RAT_memories(i-1)(j)
-            }.otherwise{
-                reg_data_in(i)(j) := wr_data_in(i)
+            when((active_RAT === i.U) && is_being_written_vec(j)){
+                RAT_memories(i)(j) :=  wr_data_in(i)
+            }.elsewhen((((active_RAT + 1.U) === i.U) && io.create_checkpoint)){
+                RAT_memories(i)(j) := RAT_memories(i-1)(j)
             }
         }
     }
-
-    for(i <- 0 until RATCheckpointCount){
-        for (j <- 0 until architecturalRegCount){
-            // if the row in the active ret is being written, or if checkpoint being created, perform write. 
-            reg_wr_en(i)(j) := (((active_RAT === i.U) && is_being_written_vec(j)) || (((active_RAT + 1.U) === i.U) && io.create_checkpoint))
-        }
-    }
-
-    // Assign inputs to each reg
-    for(i <- 0 until RATCheckpointCount){
-        for (j <- 0 until architecturalRegCount){
-            when(reg_wr_en(i)(j)){
-                RAT_memories(i)(j) := reg_data_in(i)(j)
-            }
-        }
-    }
-
-
 
 
     io.active_checkpoint_value := active_RAT

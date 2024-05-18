@@ -1,6 +1,0 @@
-<testsuites name="results">
-  <testsuite name="all" package="all">
-    <property name="random_seed" value="1714653431" />
-    <testcase name="call_ret_fuzzing" classname="RAS_tests" file="/home/hakam/Repos/ChaosCore/cocotb/functional_tests/Frontend/RAS/RAS_tests.py" lineno="198" time="1.120103120803833" sim_time_ns="20013.001" ratio_time="17867.105830075565" />
-  </testsuite>
-</testsuites>
