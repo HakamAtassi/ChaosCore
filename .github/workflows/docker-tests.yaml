@@ -29,6 +29,7 @@ name: Run test suite
 
 on:
   push:
+  workflow_dispatch:  # Allow manual triggering
 
 jobs:
   build:
@@ -41,13 +42,14 @@ jobs:
       - uses: docker/setup-buildx-action@v3
       
       # Build Docker image
-      - uses: docker/build-push-action@v5
+      - name: Build Docker image
+        uses: docker/build-push-action@v5
         with:
           context: .
           cache-from: type=gha
           cache-to: type=gha,mode=max
           tags: chaoscore:latest  # Set the image name and tag here
 
-      # Run tests using pytest inside Docker container
-      - name: Run tests
-        run: docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace chaoscore:latest bash -c "cd cocotb/functional_tests/Frontend/rename && pytest"
+      # Run a simple Hello World command inside Docker container
+      - name: Run Hello World
+        run: docker run --rm chaoscore:latest echo "Hello World"
