@@ -1,43 +1,11 @@
-name: Run Cocotb Tests
+name: Run test suite
+on: push
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-
-jobs:
-  test:
+jobs: 
+  build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
-
-    - name: Cache Docker layers
-      uses: actions/cache@v2
-      with:
-        path: /tmp/.buildx-cache
-        key: ${{ runner.os }}-buildx-${{ github.sha }}
-        restore-keys: |
-          ${{ runner.os }}-buildx-
-
-    - name: Build Docker image
-      run: |
-        docker build \
-          --cache-from=type=local,src=/tmp/.buildx-cache \
-          --cache-to=type=local,dest=/tmp/.buildx-cache-new \
-          -t my-docker-image .
-
-    - name: Move new cache to old cache location
-      run: |
-        rm -rf /tmp/.buildx-cache
-        mv /tmp/.buildx-cache-new /tmp/.buildx-cache
-
-    - name: Run tests
-      run: docker run --rm -v ${{ github.workspace }}:/work my-docker-image bash -c "cd /work/cocotb/functional_tests && make clean && pytest"
+      - uses: actions/checkout@v1
+      - name: Build & Run Tests
+      run: docker build -t ChaosCore .
