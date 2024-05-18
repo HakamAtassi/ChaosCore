@@ -92,8 +92,33 @@ object Main extends App {
 
     VerilogGenerator.generateVerilog(new WAW_handler(
         fetchWidth = fetchWidth,
-        physicalRegCount = physicalRegCount)
+        physicalRegCount = physicalRegCount, 
+        architecturalRegCount = architecturalRegCount
+        
+        )
     , 
     "../verilog/Frontend/WAW_handler.v")
+
+
+    VerilogGenerator.generateVerilog(new rename(
+        RATCheckpointCount = RATCheckpointCount,
+        fetchWidth = fetchWidth,
+        physicalRegCount = physicalRegCount, 
+        architecturalRegCount = architecturalRegCount
+        
+        )
+    , 
+    "../verilog/Frontend/rename.v")
+
+
+    VerilogGenerator.generateVerilog(new RAT(
+        RATCheckpointCount = RATCheckpointCount,
+        fetchWidth = fetchWidth,
+        physicalRegCount = physicalRegCount, 
+        architecturalRegCount = architecturalRegCount
+        
+        )
+    , 
+    "../verilog/Frontend/RAT.v")
 
 }

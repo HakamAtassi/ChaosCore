@@ -47,8 +47,11 @@ object Parameters {
   val startPC: UInt = "h00000000".U
 
 
+  val ROBEntires: Int = 64    // FIXME: 128 causes area scaling problems in the RAT
+
+
   val architecturalRegCount: Int = 32  // RV32...
   val physicalRegCount:      Int = 64
-  val RATCheckpointCount:    Int = 32  // How many checkpoints of the RAT is supported? (this should be a proportion of the ROB size)
+  val RATCheckpointCount:    Int = 10  // How many checkpoints of the RAT is supported? (this should be a proportion of the ROB size)
 
 }
