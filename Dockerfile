@@ -34,6 +34,7 @@ RUN git clone https://github.com/verilator/verilator \
 
 # Install Python packages
 RUN python3 -m pip install cocotb
+RUN python3 -m pip install cocotb-test
 
 # Install Scala
 

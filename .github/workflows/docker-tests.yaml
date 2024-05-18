@@ -1,0 +1,23 @@
+name: Run Cocotb Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Build Docker image
+      run: docker build -t verilator-env .
+
+    - name: Run tests
+      run: docker run --rm -v ${{ github.workspace }}:/work verilator-env bash -c "cd /work/cocotb/functional_tests/Frontend/rename && make clean && pytest"
