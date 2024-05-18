@@ -4,25 +4,25 @@ FROM ubuntu:20.04
 ARG DEBIAN_FRONTEND=noninteractive
 
 # Install basic dependencies
-RUN apt-get update -y && apt-get install -y \
-    git \
-    make \
-    autoconf \
-    g++ \
-    flex \
-    bison \
-    perl \
-    python3 \
-    python3-pip \
-    iverilog \
-    help2man \
-    apt-utils \
-    ccache \
-    numactl \
-    vim \
-    curl \
-    gnupg \
-    software-properties-common
+#RUN apt-get update -y && apt-get install -y \
+    #git \
+    #make \
+    #autoconf \
+    #g++ \
+    #flex \
+    #bison \
+    #perl \
+    #python3 \
+    #python3-pip \
+    #iverilog \
+    #help2man \
+    #apt-utils \
+    #ccache \
+    #numactl \
+    #vim \
+    #curl \
+    #gnupg \
+    #software-properties-common
 
 # Install Verilator
 #RUN git clone https://github.com/verilator/verilator \
@@ -36,10 +36,10 @@ RUN apt-get update -y && apt-get install -y \
     #&& verilator --version  # This will fail the build if Verilator is not correctly installed
 
 # Install Python packages
-RUN python3 -m pip install cocotb cocotb-test
+#RUN python3 -m pip install cocotb cocotb-test
 
 # Install Scala CLI
-RUN curl -sSLf https://scala-cli.virtuslab.org/get | sh
+#RUN curl -sSLf https://scala-cli.virtuslab.org/get | sh
 
 # Install SBT
 RUN echo "deb https://repo.scala-sbt.org/scalasbt/debian all main" | tee /etc/apt/sources.list.d/sbt.list  \
@@ -53,7 +53,7 @@ RUN echo "deb https://repo.scala-sbt.org/scalasbt/debian all main" | tee /etc/ap
 # Install Chisel3 (via SBT project dependency)
 
 # Sample build.sbt file for a Chisel3 project
-RUN curl -O -L https://github.com/chipsalliance/chisel/releases/latest/download/chisel-example.scala
+#RUN curl -O -L https://github.com/chipsalliance/chisel/releases/latest/download/chisel-example.scala
 
 # Update bashrc (if needed)
 # TODO: Add any custom bashrc updates
