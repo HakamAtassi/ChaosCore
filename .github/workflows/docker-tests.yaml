@@ -23,7 +23,6 @@
         #run: |
           #docker run --rm -v $(pwd)/root/cocotb/frontend/rename:/work chaoscore pytest
 
-
 name: Run test suite
 
 on:
