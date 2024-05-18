@@ -4,25 +4,25 @@ FROM ubuntu:20.04
 ARG DEBIAN_FRONTEND=noninteractive
 
 # Install basic dependencies
-#RUN apt-get update -y && apt-get install -y \
-    #git \
-    #make \
-    #autoconf \
-    #g++ \
-    #flex \
-    #bison \
-    #perl \
-    #python3 \
-    #python3-pip \
-    #iverilog \
-    #help2man \
-    #apt-utils \
-    #ccache \
-    #numactl \
-    #vim \
-    #curl \
-    #gnupg \
-    #software-properties-common
+RUN apt-get update -y && apt-get install -y \
+    git \
+    make \
+    autoconf \
+    g++ \
+    flex \
+    bison \
+    perl \
+    python3 \
+    python3-pip \
+    iverilog \
+    help2man \
+    apt-utils \
+    ccache \
+    numactl \
+    vim \
+    curl \
+    gnupg \
+    software-properties-common
 
 # Install Verilator
 #RUN git clone https://github.com/verilator/verilator \
