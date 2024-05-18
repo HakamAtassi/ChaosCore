@@ -5,7 +5,7 @@ configs = {
     "simulator": "verilator",
     "verilog_sources": ["../../../../hw/verilog/Frontend/rename.v"], # sources
     "module": "rename_cocotb",        # name of cocotb test module
-    "defines": ["-j12"],
+    #"defines": ["-j12"],
     "compile_args": ["-Wno-DECLFILENAME", "-Wno-UNUSED", "-Wno-UNDRIVEN", "-Wno-WIDTH", "-Wno-UNOPTFLAT", "-Wno-WIDTHEXPAND"],
     "module": None,        # name of cocotb test module
     "toplevel": None,            # top level HDL

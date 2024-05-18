@@ -36,8 +36,7 @@ RUN git clone https://github.com/verilator/verilator \
     && verilator --version  # This will fail the build if Verilator is not correctly installed
 
 # Install Python packages
-RUN python3 -m pip install cocotb cocotb-test numpy pytest 
-#pytest-sugar
+RUN python3 -m pip install cocotb cocotb-test numpy pytest pytest-sugar
 
 # Install Scala CLI
 RUN curl -sSLf https://scala-cli.virtuslab.org/get | sh
@@ -80,7 +79,7 @@ COPY . /work
 RUN cd /work/py/cocotb_utils && pip3 install .
 RUN cd /work/py/models && pip3 install .
 
-RUN cd /work/cocotb/functional_tests/Frontend/rename && pytest
+#RUN cd /work/cocotb/functional_tests/Frontend/rename && pytest
 
 # Default command on container start
 CMD ["bash"]
