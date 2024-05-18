@@ -1,3 +1,3 @@
 sudo docker build -t chaoscore .
-clear
+#clear
 sudo docker run -it --hostname ChaosCore chaoscore
