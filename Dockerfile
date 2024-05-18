@@ -36,7 +36,7 @@ RUN git clone https://github.com/verilator/verilator \
     && verilator --version  # This will fail the build if Verilator is not correctly installed
 
 # Install Python packages
-RUN python3 -m pip install cocotb cocotb-test numpy
+RUN python3 -m pip install cocotb cocotb-test numpy pytest pytest-sugar
 
 # Install Scala CLI
 RUN curl -sSLf https://scala-cli.virtuslab.org/get | sh
