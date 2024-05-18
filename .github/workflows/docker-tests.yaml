@@ -1,24 +1,3 @@
-
-#name: CI
-
-#on:
-  #push:
-  #pull_request:
-
-#jobs:
-  #build:
-    #runs-on: ubuntu-latest
-
-    #steps:
-      #- name: Checkout repository
-        #uses: actions/checkout@v3
-
-      #- name: Build Docker image
-        #run: docker build -t chaoscore .
-
-      #- name: Run echo command inside Docker container
-
-        #run: docker run chaoscore /bin/bash -c "echo 'test'"
 name: CI
 
 on:
@@ -60,5 +39,18 @@ jobs:
           rm -rf /tmp/.buildx-cache
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
 
-      - name: Run echo command inside Docker container
+
+
+      #########################
+      ## Build Verilog Files ##
+      #########################
+
+
+      - name: Test Docker Container
         run: docker run chaoscore /bin/bash -c "echo 'test'"
+
+      - name: Generate Verilog Via Chisel
+        run: docker run chaoscore cd hw/chisel && sbt run
+
+      - name: Run Cocotb Pytests
+        run: docker run chaoscore cd /work/cocotb/functional_tests/Frontend/rename && pytest

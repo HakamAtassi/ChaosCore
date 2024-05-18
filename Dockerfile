@@ -28,7 +28,7 @@ RUN apt-get update -y && apt-get install -y \
 RUN git clone https://github.com/verilator/verilator \
     && unset VERILATOR_ROOT \
     && cd verilator \
-    && git checkout v5.006 \
+    && git checkout v5.024 \
     && autoconf \
     && ./configure \
     && make -j $(nproc) \
@@ -36,7 +36,7 @@ RUN git clone https://github.com/verilator/verilator \
     && verilator --version  # This will fail the build if Verilator is not correctly installed
 
 # Install Python packages
-RUN python3 -m pip install cocotb cocotb-test
+RUN python3 -m pip install cocotb cocotb-test numpy
 
 # Install Scala CLI
 RUN curl -sSLf https://scala-cli.virtuslab.org/get | sh
@@ -48,15 +48,35 @@ RUN echo "deb https://repo.scala-sbt.org/scalasbt/debian all main" | tee /etc/ap
     && apt-get update  \
     && apt-get install sbt
 
-# Install Chisel3 (via SBT project dependency)
 
-# Sample build.sbt file for a Chisel3 project
+# Install dependencies and Java
+RUN apt-get update && apt-get install -y wget gpg apt-transport-https
+RUN wget -qO - https://packages.adoptium.net/artifactory/api/gpg/key/public | gpg --dearmor | tee /etc/apt/trusted.gpg.d/adoptium.gpg > /dev/null
+RUN echo "deb https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" | tee /etc/apt/sources.list.d/adoptium.list
+RUN apt-get update && apt-get install -y temurin-17-jdk
+
+
+# Install chisel3
 RUN curl -O -L https://github.com/chipsalliance/chisel/releases/latest/download/chisel-example.scala
 
 # Update bashrc (if needed)
 # TODO: Add any custom bashrc updates
 
+
+#################################
+## INSTALL LOCAL PYTHON MODELS ##
+#################################
+
+
 WORKDIR /work
+
+COPY . /work
+
+# clean tests
+RUN cd /work/cocotb/functional_tests/Frontend/rename && make clean
+
+RUN cd /work/py/cocotb_utils && pip3 install .
+RUN cd /work/py/models && pip3 install .
 
 # Default command on container start
 CMD ["bash"]
