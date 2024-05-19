@@ -1,22 +1,10 @@
-[0m[[0m[0mdebug[0m] [0m[0mRunning TaskDef(ChaosCore.test2, org.scalatest.tools.Framework$$anon$1@673f3683, false, [SuiteSelector])[0m
-[0m[[0m[0mdebug[0m] [0m[0mRunning TaskDef(gcd.GCDSpec, org.scalatest.tools.Framework$$anon$1@673f3683, false, [SuiteSelector])[0m
-[0m[[0m[0mdebug[0m] [0m[0mRunning TaskDef(ChaosCore.test1, org.scalatest.tools.Framework$$anon$1@673f3683, false, [SuiteSelector])[0m
-[0m[[0m[0mdebug[0m] [0m[0mRunning TaskDef(ChaosCore.test0, org.scalatest.tools.Framework$$anon$1@673f3683, false, [SuiteSelector])[0m
-[0m[[0m[0minfo[0m] [0m[0m[32mtest2:[0m[0m
-[0m[[0m[0minfo[0m] [0m[0m[32m- elements after half read should update correspondingly[0m[0m
+[0m[[0m[0mdebug[0m] [0m[0mRunning TaskDef(gcd.GCDSpec, org.scalatest.tools.Framework$$anon$1@6de52aaa, false, [SuiteSelector])[0m
 [0m[[0m[0minfo[0m] [0m[0m[32mGCDSpec:[0m[0m
 [0m[[0m[0minfo[0m] [0m[0m[32m- Gcd should calculate proper greatest common denominator[0m[0m
-[0m[[0m[0minfo[0m] [0m[0m[32mtest1:[0m[0m
-[0m[[0m[0minfo[0m] [0m[0m[32m- First 4 elements after read should be 4,5,6,7[0m[0m
-[0m[[0m[0minfo[0m] [0m[0m[32mtest0:[0m[0m
-[0m[[0m[0minfo[0m] [0m[0m[32m- First 4 elements read out of free list should be 0,1,2,3[0m[0m
-[0m[[0m[0minfo[0m] [0m[0m[36mRun completed in 4 seconds, 555 milliseconds.[0m[0m
-[0m[[0m[0minfo[0m] [0m[0m[36mTotal number of tests run: 4[0m[0m
-[0m[[0m[0minfo[0m] [0m[0m[36mSuites: completed 4, aborted 0[0m[0m
-[0m[[0m[0minfo[0m] [0m[0m[36mTests: succeeded 4, failed 0, canceled 0, ignored 0, pending 0[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[36mRun completed in 1 second, 478 milliseconds.[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[36mTotal number of tests run: 1[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[36mSuites: completed 1, aborted 0[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[36mTests: succeeded 1, failed 0, canceled 0, ignored 0, pending 0[0m[0m
 [0m[[0m[0minfo[0m] [0m[0m[32mAll tests passed.[0m[0m
 [0m[[0m[0mdebug[0m] [0m[0mPassed tests:[0m
-[0m[[0m[0mdebug[0m] [0m[0m	ChaosCore.test0[0m
-[0m[[0m[0mdebug[0m] [0m[0m	ChaosCore.test2[0m
 [0m[[0m[0mdebug[0m] [0m[0m	gcd.GCDSpec[0m
-[0m[[0m[0mdebug[0m] [0m[0m	ChaosCore.test1[0m

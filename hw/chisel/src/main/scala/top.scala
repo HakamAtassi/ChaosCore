@@ -121,4 +121,7 @@ object Main extends App {
     , 
     "../verilog/Frontend/RAT.v")
 
+    VerilogGenerator.generateVerilog(new comp
+    , 
+    "../verilog/Frontend/test.v")
 }

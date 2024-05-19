@@ -5,13 +5,13 @@ configs = {
     "simulator": "verilator",
     "verilog_sources": ["../../../../hw/verilog/Frontend/rename.v"], # sources
     "module": "rename_cocotb",        # name of cocotb test module
-    #"defines": ["-j12"],
     "compile_args": ["-Wno-DECLFILENAME", "-Wno-UNUSED", "-Wno-UNDRIVEN", "-Wno-WIDTH", "-Wno-UNOPTFLAT", "-Wno-WIDTHEXPAND"],
     "module": None,        # name of cocotb test module
     "toplevel": None,            # top level HDL
     "testcase": None
     
     # DO NOT ENABLE IN DOCKER! (it will likely fail due to what I believe is a memory limitation of some sort)
+    #"defines": ["-j12"],
     #"waves": 0,
     #"extra_args": ["--trace-fst", "--trace-structs"]
 }
