@@ -45,14 +45,16 @@ jobs:
       ## Build Verilog Files ##
       #########################
 
-
       - name: Test Docker Container
         run: docker run chaoscore /bin/bash -c "echo 'test'"
+
+      - name: Test Docker Container
+        run: docker run chaoscore /bin/bash -c "cd /work/hw/chisel/sbt clean && sbt run && sbt test"
 
       #- name: Generate Verilog Via Chisel
         #run: docker run chaoscore cd /work/hw/chisel && sbt run
 
       - name: Run Cocotb Pytests
-        run: docker run chaoscore sh -c "echo "PlaceHolder""
+        run: docker run chaoscore sh -c "echo 'PlaceHolder'"
         #run: docker run chaoscore sh -c "cd /work/cocotb/functional_tests/Frontend/rename && pytest"
 
