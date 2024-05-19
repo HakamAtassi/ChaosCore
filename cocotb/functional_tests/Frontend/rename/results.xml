@@ -1,0 +1,11 @@
+<testsuites name="results">
+  <testsuite name="all" package="all">
+    <property name="random_seed" value="1716151332" />
+    <testcase name="RAT_startup" classname="RAT_cocotb" file="/home/hakam/Repos/ChaosCore/cocotb/functional_tests/Frontend/rename/RAT_cocotb.py" lineno="13" time="0.0008237361907958984" sim_time_ns="1.001" ratio_time="1215.194878147612" />
+    <testcase name="RAT_write_read" classname="RAT_cocotb" file="/home/hakam/Repos/ChaosCore/cocotb/functional_tests/Frontend/rename/RAT_cocotb.py" lineno="18" time="0.001440286636352539" sim_time_ns="21.000999999999998" ratio_time="14581.12536070187" />
+    <testcase name="RAT_write_read_checkpoint_read" classname="RAT_cocotb" file="/home/hakam/Repos/ChaosCore/cocotb/functional_tests/Frontend/rename/RAT_cocotb.py" lineno="50" time="0.0010020732879638672" sim_time_ns="25.001" ratio_time="24949.27297263859" />
+    <testcase name="RAT_write_read_many_checkpoints_read" classname="RAT_cocotb" file="/home/hakam/Repos/ChaosCore/cocotb/functional_tests/Frontend/rename/RAT_cocotb.py" lineno="97" time="0.0014123916625976562" sim_time_ns="43.001000000000005" ratio_time="30445.520983119517" />
+    <testcase name="RAT_write_read_15_checkpoints_read" classname="RAT_cocotb" file="/home/hakam/Repos/ChaosCore/cocotb/functional_tests/Frontend/rename/RAT_cocotb.py" lineno="146" time="0.001744985580444336" sim_time_ns="53.00099999999999" ratio_time="30373.316888099464" />
+    <testcase name="RAT_write_read_15_checkpoints_read_free" classname="RAT_cocotb" file="/home/hakam/Repos/ChaosCore/cocotb/functional_tests/Frontend/rename/RAT_cocotb.py" lineno="199" time="0.002739429473876953" sim_time_ns="89.001" ratio_time="32488.88166266319" />
+  </testsuite>
+</testsuites>
