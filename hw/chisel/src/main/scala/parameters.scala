@@ -37,6 +37,11 @@ import java.io.{File, FileWriter}
 import java.rmi.server.UID
 
 object Parameters {
+
+  val coreConfig: String = "RV32I"  // core extension (IMAF, etc...)
+
+
+
   val GHRWidth: Int = 16
   val fetchWidth: Int = 4
   val RASEntries: Int = 128
@@ -53,5 +58,10 @@ object Parameters {
   val architecturalRegCount: Int = 32  // RV32...
   val physicalRegCount:      Int = 64
   val RATCheckpointCount:    Int = 16  // How many checkpoints of the RAT is supported? (this should be a proportion of the ROB size)
+
+
+
+  val RSEntries: Int = 20 // How many entires per reservation station (these are very expensive)
+
 
 }

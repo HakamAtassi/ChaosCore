@@ -64,6 +64,8 @@ RUN curl -O -L https://github.com/chipsalliance/chisel/releases/latest/download/
 ## INSTALL LOCAL PYTHON MODELS ##
 #################################
 
+# STOP PYC generation
+ENV PYTHONDONTWRITEBYTECODE 1   
 
 WORKDIR /work
 
@@ -75,7 +77,7 @@ COPY . /work
 RUN cd /work/py/cocotb_utils && pip3 install .
 RUN cd /work/py/models && pip3 install .
 
-RUN cd /work/cocotb/functional_tests/Frontend/rename && pytest
+RUN cd /work/cocotb/ && pytest
 
 # Default command on container start
 CMD ["bash"]

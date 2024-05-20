@@ -26,6 +26,7 @@
 * SOFTWARE.
 * ------------------------------------------------------------------------------------ 
 */
+package ChaosCore
 
 import chisel3._
 import circt.stage.ChiselStage
@@ -35,6 +36,7 @@ import java.rmi.server.UID
 
 
 import helperFunctions.getBTBTagBits
+import generatePortIDVec._
 
 
 
@@ -201,19 +203,111 @@ class decoded_instruction extends Bundle{
 }
 
 /////////////////////
+// DECODER BUNDLES //
+/////////////////////
+
+class portID(coreConfig:String) extends Bundle { // this is subject to change
+    val portCount = getPortCount(coreConfig)
+    val portCountBits = log2Ceil(portCount)
+
+    // portID:0 => schedule to port 0 or port 1 [Arith/branch/INT2FP(optional)]
+    // portID:1 => schedule to port 0 [CSR]
+    // portID:2 => schedule to port 3 [load]
+    // portID:3 => schedule to port 4 [store]
+
+    // portID:4 => schedule to port 2 [div] (optional)
+
+    val value = UInt(portCountBits.W)
+}
+
+class Operation(coreConfig:String) extends ChiselEnum{
+    val placeholder = Value
+}
+
+class UOp(coreConfig:String) extends Bundle{
+    // uOps inform the logic about what port(s) an instruction uses,
+    // As well as which operation is performed in the corresponding functional unit. 
+    val portID    = new portID(coreConfig)
+    val operation = new Operation(coreConfig)
+}
+
+/////////////////////
 // BACKEND BUNDLES //
 /////////////////////
+
 
 class ROB_entry extends Bundle{
     // ??
 }
 
-class BOB_entry extends Bundle{
-    // ??
-}
-
+// FIXME: this should be input/output
 class decoded_fetch_packet(fetchWidth:Int = 4) extends Bundle{
     val decoded_instructions    = Vec(fetchWidth, new decoded_instruction())
     val fetch_PC                = UInt(32.W)
     val valid_bits              = Vec(fetchWidth, Bool())
+}
+
+class RF_port(coreConfig:String, physicalRegCount: Int) extends Bundle{
+    val physicalRegBits = log2Ceil(physicalRegCount)
+
+    val RD           =   ValidIO(UInt(physicalRegBits.W))
+
+    val RS1_ready    =   Bool()
+    val RS1          =   ValidIO(UInt(physicalRegBits.W))
+
+    val RS2_ready    =   Bool()
+    val RS2_is_imm   =   Bool()
+    val RS2          =   ValidIO(UInt(32.W))
+
+    val uOp          =   new UOp(coreConfig=coreConfig)
+}
+
+class RS_entry(coreConfig:String, physicalRegCount: Int) extends Bundle{
+    val physicalRegBits = log2Ceil(physicalRegCount)
+
+    val valid        =   Bool()  // Is whole RS entry valid
+
+    val RF_data      = new RF_port(coreConfig=coreConfig, physicalRegCount=physicalRegCount)
+}
+
+
+
+////////////////////////////
+// EXECUTION ENGINE PORTS //
+////////////////////////////
+
+class FU_input(coreConfig:String, physicalRegCount:Int) extends Bundle{
+    val physicalRegBits = log2Ceil(physicalRegCount)
+
+    val RS1_data    =   UInt(32.W)
+    val RS2_data    =   UInt(32.W)  // either read or imm
+
+    val RD          =   UInt(physicalRegBits.W)
+
+    val uOp         =   new UOp(coreConfig)
+}
+
+class FU_output(physicalRegCount:Int) extends Bundle{
+    val RD      =   UInt(physicalRegCount.W)
+    val data    =   UInt(32.W)
+}
+
+// all ports to all FUs are wrapped in an "execution engine" module
+
+class execution_engine_inputs(coreConfig:String, physicalRegCount:Int) extends Bundle{
+    // contains all FU port channels
+    // as well as an ID associated with each channel, indicating the FU type for routing purposes.
+
+    val portCount     = getPortCount(coreConfig)
+    val portCountBits = log2Ceil(portCount)
+
+    //  [ALU,Branch,INT2FP,CSR],    [ALU,Branch,INT2FP]    [AGU+Store]    [AGU+Load]     [IDIV](optional)
+    //  [portID=0],                 [portID=1],            [portID=2],    [portID=3],    [portID=4](optional)
+
+    val FU_ports        = Vec(portCount, Flipped(Decoupled(new FU_input(coreConfig=coreConfig, physicalRegCount=physicalRegCount))))
+    val FU_IDs          = generatePortIDVec(coreConfig)
+}
+
+class execute_ports() extends Bundle{   // all port definitions to the execution engine
+    // all ports stored within an N wide vector.
 }
