@@ -27,6 +27,8 @@
 * ------------------------------------------------------------------------------------ 
 */
 
+package ChaosCore
+
 import chisel3._
 import circt.stage.ChiselStage
 import chisel3.util._
