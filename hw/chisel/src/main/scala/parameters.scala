@@ -62,6 +62,7 @@ object Parameters {
 
 
   val RSEntries: Int = 20 // How many entires per reservation station (these are very expensive)
+  val dispatchWidth:Int = 4 // Up to many entires are sent to the reservation station + execution engine from the instruction queue at a time?
 
 
 }
