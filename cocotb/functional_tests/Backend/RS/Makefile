@@ -21,7 +21,7 @@ VERILOG_SOURCES += $(VERILOG_DIR)/RS.v
 # TOPLEVEL is the name of the toplevel module in your Verilog or VHDL file
 TOPLEVEL = RS
 
-MODULE = RS_tests
+MODULE = RS_cocotb
 
 # include cocotb's make rules to take care of the simulator setup
 include $(shell cocotb-config --makefiles)/Makefile.sim

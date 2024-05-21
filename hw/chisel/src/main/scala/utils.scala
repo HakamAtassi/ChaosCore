@@ -53,6 +53,21 @@ object SelectFirstN
   }
 }
 
+object Thermometor
+{
+  // 0 => 0b0
+  // 1 => 0b1
+  // 2 => 0b11
+  // 3 => 0b111
+  // 4 => 0b1111
+  // etc...
+  def apply(in: UInt, max:Int)={
+      Mux1H(Seq.tabulate(max+1)(i => (in === i.U) -> ((1.U << i ) - 1.U)))
+  }
+}
+
+
+
 object getPortCount
 {
 

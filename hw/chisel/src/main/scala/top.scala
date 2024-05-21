@@ -125,6 +125,7 @@ object Main extends App {
 
 
     VerilogGenerator.generateVerilog(new RS(
+        dispatchWidth=dispatchWidth,
         RSEntries=RSEntries,
         physicalRegCount=physicalRegCount,
         coreConfig=coreConfig
