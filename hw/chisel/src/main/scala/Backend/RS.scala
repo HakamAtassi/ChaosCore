@@ -150,22 +150,33 @@ class RS(dispatchWidth:Int, RSEntries: Int, physicalRegCount:Int, coreConfig:Str
     var port1_busy = 0.B
     val port1_busy_wire = Wire(Bool())
 
+    var port2_busy = 0.B
+    val port2_busy_wire = Wire(Bool())
+
+    var port3_busy = 0.B
+    val port3_busy_wire = Wire(Bool())
+
+    var port4_busy = 0.B
+    val port4_busy_wire = Wire(Bool())
+
     dontTouch(port1_busy_wire)
+    dontTouch(port0_busy_wire)
 
 
     for(i <- 0 until RSEntries){
         var current_instruction = reservation_station(i)
-
-        // does this instruction have a corresponding port available?
-
-        when((current_instruction.RF_data.uOp.portID.value === 0.U)  && !port0_busy && io.RF_inputs(0).ready && schedulable_instructions(i)){
+        when((current_instruction.RF_data.uOp.portID.value === 0.U) && !port0_busy && io.RF_inputs(0).ready && schedulable_instructions(i)){
             // assign valid and RS data
             io.RF_inputs(0).bits <> current_instruction.RF_data
             io.RF_inputs(0).valid := 1.B
             reservation_station(i.U).valid := 0.B
             reservation_station(i.U) <> 0.U.asTypeOf(new RS_entry(coreConfig=coreConfig, physicalRegCount=physicalRegCount))
         }
+        port0_busy = port0_busy || ((current_instruction.RF_data.uOp.portID.value === 0.U) && schedulable_instructions(i))
+    }
 
+    for(i <- 0 until RSEntries){
+        var current_instruction = reservation_station(i)
         when((current_instruction.RF_data.uOp.portID.value === 1.U) && !port1_busy && io.RF_inputs(1).ready &&  schedulable_instructions(i)){
             // assign valid and RS data
             // when an instruction is decoded to say that it can use port 1, it will first try to use port 1, and if that doesnt work, will use port 0
@@ -174,7 +185,7 @@ class RS(dispatchWidth:Int, RSEntries: Int, physicalRegCount:Int, coreConfig:Str
 
             reservation_station(i.U).valid := 0.B
             reservation_station(i.U) <> 0.U.asTypeOf(new RS_entry(coreConfig=coreConfig, physicalRegCount=physicalRegCount))
-        }.elsewhen((current_instruction.RF_data.uOp.portID.value === 1.U) && schedulable_instructions(i) && io.RF_inputs(0).ready){    // port 1 busy, try port 0
+        }.elsewhen((current_instruction.RF_data.uOp.portID.value === 1.U)  && !port0_busy && schedulable_instructions(i) && io.RF_inputs(0).ready){    // port 1 busy, try port 0
             io.RF_inputs(0).bits <> current_instruction.RF_data
             io.RF_inputs(0).valid := 1.B
 
@@ -182,7 +193,13 @@ class RS(dispatchWidth:Int, RSEntries: Int, physicalRegCount:Int, coreConfig:Str
             reservation_station(i.U) <> 0.U.asTypeOf(new RS_entry(coreConfig=coreConfig, physicalRegCount=physicalRegCount))
         }
 
-        when((current_instruction.RF_data.uOp.portID.value === 2.U) && schedulable_instructions(i) && io.RF_inputs(2).ready){
+        port0_busy = port0_busy || ((current_instruction.RF_data.uOp.portID.value === 0.U) && schedulable_instructions(i))
+        port1_busy = port1_busy || ((current_instruction.RF_data.uOp.portID.value === 1.U) && schedulable_instructions(i))
+    }
+
+    for(i <- 0 until RSEntries){
+        var current_instruction = reservation_station(i)
+        when((current_instruction.RF_data.uOp.portID.value === 2.U) && !port2_busy && schedulable_instructions(i) && io.RF_inputs(2).ready){
             // assign valid and RS data
             io.RF_inputs(2).bits <> current_instruction.RF_data
             io.RF_inputs(2).valid := 1.B
@@ -190,8 +207,12 @@ class RS(dispatchWidth:Int, RSEntries: Int, physicalRegCount:Int, coreConfig:Str
             reservation_station(i.U).valid := 0.B
             reservation_station(i.U) <> 0.U.asTypeOf(new RS_entry(coreConfig=coreConfig, physicalRegCount=physicalRegCount))
         }
-
-        when((current_instruction.RF_data.uOp.portID.value === 3.U) && schedulable_instructions(i) && io.RF_inputs(3).ready){
+        port2_busy = port2_busy || ((current_instruction.RF_data.uOp.portID.value === 2.U) && schedulable_instructions(i))
+    }
+    
+    for(i <- 0 until RSEntries){
+        var current_instruction = reservation_station(i)
+        when((current_instruction.RF_data.uOp.portID.value === 3.U) && !port3_busy && schedulable_instructions(i) && io.RF_inputs(3).ready){
             // assign valid and RS data
             io.RF_inputs(3).bits <> current_instruction.RF_data
             io.RF_inputs(3).valid := 1.B
@@ -199,10 +220,14 @@ class RS(dispatchWidth:Int, RSEntries: Int, physicalRegCount:Int, coreConfig:Str
             reservation_station(i.U).valid := 0.B
             reservation_station(i.U) <> 0.U.asTypeOf(new RS_entry(coreConfig=coreConfig, physicalRegCount=physicalRegCount))
         }
+        port3_busy = port3_busy || ((current_instruction.RF_data.uOp.portID.value === 3.U) && schedulable_instructions(i))
+    }
 
+    for(i <- 0 until RSEntries){
         // optional
+        var current_instruction = reservation_station(i)
         if(coreConfig.contains("M")){
-            when((current_instruction.RF_data.uOp.portID.value === 4.U) && schedulable_instructions(i) && io.RF_inputs(4).ready){
+            when((current_instruction.RF_data.uOp.portID.value === 4.U) && !port4_busy && schedulable_instructions(i) && io.RF_inputs(4).ready){
                 // assign valid and RS data
                 io.RF_inputs(4).bits <> current_instruction.RF_data
                 io.RF_inputs(4).valid := 1.B
@@ -210,12 +235,13 @@ class RS(dispatchWidth:Int, RSEntries: Int, physicalRegCount:Int, coreConfig:Str
                 reservation_station(i.U).valid := 0.B
                 reservation_station(i.U) <> 0.U.asTypeOf(new RS_entry(coreConfig=coreConfig, physicalRegCount=physicalRegCount))
             }
+            port4_busy = port4_busy || ((current_instruction.RF_data.uOp.portID.value === 4.U) && schedulable_instructions(i))
         }
-
-        port1_busy = port1_busy || (current_instruction.RF_data.uOp.portID.value === 1.U)
-        port0_busy = port0_busy || (current_instruction.RF_data.uOp.portID.value === 0.U)
     }
 
+    port4_busy_wire := port4_busy
+    port3_busy_wire := port3_busy
+    port2_busy_wire := port2_busy
     port1_busy_wire := port1_busy
     port0_busy_wire := port0_busy
 
@@ -244,13 +270,3 @@ class RS(dispatchWidth:Int, RSEntries: Int, physicalRegCount:Int, coreConfig:Str
         io.RS_input(i).ready := themometor_value(dispatchWidth-1,0)(i)
     }
 }
-
-
-
-
-    //schedulable_ports(0) := scheduled_instruction.RF_data.uOp.portID.value === 0.U || scheduled_instruction.RF_data.uOp.portID.value === 1.U // (is CSR or is in [ALU, Branch, INT2FP, MUL])
-    //schedulable_ports(1) := scheduled_instruction.RF_data.uOp.portID.value === 1.U                                                     // (is in [ALU, Branch, INT2FP, MUL])
-    //schedulable_ports(2) := scheduled_instruction.RF_data.uOp.portID.value === 2.U                                                     // Store
-    //schedulable_ports(3) := scheduled_instruction.RF_data.uOp.portID.value === 3.U                                                     // Load
-
-    //if(coreConfig.contains("M")) schedulable_ports(4) := scheduled_instruction.RF_data.uOp.portID.value === 4.U // IDIV (optional)
