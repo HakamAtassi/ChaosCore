@@ -93,7 +93,6 @@ def test_dispatch_uOp1_uOp1():
     configs["testcase"] = "dispatch_uOp1_uOp1"
     run(**configs)
 
-
 def test_uOp0_uOp1_uOp2_uOp3():
     configs["module"] = "RS_cocotb"
     configs["toplevel"] = "RS"
