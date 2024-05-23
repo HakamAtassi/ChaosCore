@@ -27,6 +27,8 @@
 * ------------------------------------------------------------------------------------ 
 */
 
+package ChaosCore
+
 import chisel3._
 import circt.stage.ChiselStage
 import chisel3.util._
@@ -34,9 +36,7 @@ import java.io.{File, FileWriter}
 import java.rmi.server.UID
 
 import helperFunctions._
-import Uop._
 
-/*
 class decoder extends Module{   // basic decoder and field extraction
     val io = IO(new Bundle{
         val instruction = Input(UInt(32.W))
@@ -46,27 +46,38 @@ class decoder extends Module{   // basic decoder and field extraction
 
     val opcode      = io.instruction(6, 0)
 
-    val rs1         = io.instruction(19, 15)
-    val rs2         = io.instruction(24, 20)
-    val rd          = io.instruction(11, 7)
+    val RS1         = io.instruction(19, 15)
+    val RS2         = io.instruction(24, 20)
+    val RD          = io.instruction(11, 7)
 
     val funct3      = io.instruction(14, 12)
     val funct7      = io.instruction(31, 25)
 
-    val imm = getImm(io.instruction)
+    val imm         = getImm(io.instruction)
 
     // Assignment 
 
-    decoded_instruction.opcode :=  opcode 
-    decoded_instruction.rs1    :=  rs1
-    decoded_instruction.rs2    :=  rs2
-    decoded_instruction.rd     :=  rd
-    decoded_instruction.funct3 :=  funct3
-    decoded_instruction.funct7 :=  funct7
-    decoded_instruction.imm    :=  imm
+
+    RD.bits              =   RD
+
+    RS1.bits             =   RS1
+
+    RS2.bits             =   RS2.bits
+    imm.bits             =   imm
+
+    uOp                  =   new UOp()
+
+
+    // decode opcodes and stuff
+    when(opcode){
+
+    }
+
+
     
 }
 
+/*
 class fetch_packet_decoder(fetchWidth:Int) extends Module{
     val io = IO(new Bundle{
         val fetch_packet         =   Decoupled(new fetch_packet(fetchWidth=fetchWidth))          // Fetch packet result (To Decoders)
@@ -90,5 +101,4 @@ class fetch_packet_decoder(fetchWidth:Int) extends Module{
     }
 
 
-}
-*/
+}*/

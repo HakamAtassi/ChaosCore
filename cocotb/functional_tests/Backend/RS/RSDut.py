@@ -33,21 +33,21 @@ class RSDut:
             getattr(self.dut, f'io_RS_input_{i}_bits_uOp_portID_value').value = uOp[i]
 
     def broadcast(self, RD=[0,0,0,0], data=[0,0,0,0], valid=[0,0,0,0]):
-        self.dut.io_FU_broadcast_0_valid.value = valid[0]
-        self.dut.io_FU_broadcast_0_bits_RD.value = RD[0]
-        self.dut.io_FU_broadcast_0_bits_data.value = data[0]
+        self.dut.io_FU_broadcast_0_RD_valid.value = valid[0]
+        self.dut.io_FU_broadcast_0_RD_bits.value = RD[0]
+        self.dut.io_FU_broadcast_0_data.value = data[0]
 
-        self.dut.io_FU_broadcast_1_valid.value = valid[1]
-        self.dut.io_FU_broadcast_1_bits_RD.value = RD[1]
-        self.dut.io_FU_broadcast_1_bits_data.value = data[1]
+        self.dut.io_FU_broadcast_1_RD_valid.value = valid[1]
+        self.dut.io_FU_broadcast_1_RD_bits.value = RD[1]
+        self.dut.io_FU_broadcast_1_data.value = data[1]
 
-        self.dut.io_FU_broadcast_2_valid.value = valid[2]
-        self.dut.io_FU_broadcast_2_bits_RD.value = RD[2]
-        self.dut.io_FU_broadcast_2_bits_data.value = data[2]
+        self.dut.io_FU_broadcast_2_RD_valid.value = valid[2]
+        self.dut.io_FU_broadcast_2_RD_bits.value = RD[2]
+        self.dut.io_FU_broadcast_2_data.value = data[2]
 
-        self.dut.io_FU_broadcast_3_valid.value = valid[3]
-        self.dut.io_FU_broadcast_3_bits_RD.value = RD[3]
-        self.dut.io_FU_broadcast_3_bits_data.value = data[3]
+        self.dut.io_FU_broadcast_3_RD_valid.value = valid[3]
+        self.dut.io_FU_broadcast_3_RD_bits.value = RD[3]
+        self.dut.io_FU_broadcast_3_data.value = data[3]
 
     def get_ready(self):
         ready = [0,0,0,0]
@@ -109,16 +109,16 @@ class RSDut:
         for i in range(20):
             entry = {
                 'valid': int(getattr(self.dut, f'reservation_station_{i}_valid').value),
-                'RD_valid': int(getattr(self.dut, f'reservation_station_{i}_RF_data_RD_valid').value),
-                'rd_bits': int(getattr(self.dut, f'reservation_station_{i}_RF_data_RD_bits').value),
-                'RS1_ready': int(getattr(self.dut, f'reservation_station_{i}_RF_data_RS1_ready').value),
-                'RS1_valid': int(getattr(self.dut, f'reservation_station_{i}_RF_data_RS1_valid').value),
-                'RS1_bits': int(getattr(self.dut, f'reservation_station_{i}_RF_data_RS1_bits').value),
-                'RS2_ready': int(getattr(self.dut, f'reservation_station_{i}_RF_data_RS2_ready').value),
-                'RS2_is_imm': int(getattr(self.dut, f'reservation_station_{i}_RF_data_RS2_is_imm').value),
-                'RS2_valid': int(getattr(self.dut, f'reservation_station_{i}_RF_data_RS2_valid').value),
-                'RS2_bits': int(getattr(self.dut, f'reservation_station_{i}_RF_data_RS2_bits').value),
-                'uop_portID_value': int(getattr(self.dut, f'reservation_station_{i}_RF_data_uOp_portID_value').value),
+                'RD_valid': int(getattr(self.dut, f'reservation_station_{i}_RD_valid').value),
+                'RD_bits': int(getattr(self.dut, f'reservation_station_{i}_RD_bits').value),
+                'RS1_ready': int(getattr(self.dut, f'reservation_station_{i}_RS1_ready').value),
+                'RS1_valid': int(getattr(self.dut, f'reservation_station_{i}_RS1_valid').value),
+                'RS1_bits': int(getattr(self.dut, f'reservation_station_{i}_RS1_bits').value),
+                'RS2_ready': int(getattr(self.dut, f'reservation_station_{i}_RS2_ready').value),
+                'RS2_is_imm': int(getattr(self.dut, f'reservation_station_{i}_RS2_is_imm').value),
+                'RS2_valid': int(getattr(self.dut, f'reservation_station_{i}_RS2_valid').value),
+                'RS2_bits': int(getattr(self.dut, f'reservation_station_{i}_RS2_bits').value),
+                'uop_portID_value': int(getattr(self.dut, f'reservation_station_{i}_uOp_portID_value').value),
             }
             rs_entries.append(entry)
         return rs_entries
@@ -131,7 +131,7 @@ class RSDut:
         rs_entries = self.get_RS()
         for i, entry in enumerate(rs_entries):
             print("| {:<2} | {:<2} | {:<8} | {:<8} | {:<10} | {:<10} | {:<10} | {:<10} | {:<10} | {:<10} | {:<18} | {:<16} |".format(
-                i, entry['valid'], entry['RD_valid'], entry['rd_bits'], entry['RS1_valid'], entry['RS1_ready'], entry['RS1_bits'],
+                i, entry['valid'], entry['RD_valid'], entry['RD_bits'], entry['RS1_valid'], entry['RS1_ready'], entry['RS1_bits'],
                 entry['RS2_valid'], entry['RS2_ready'], entry['RS2_is_imm'], entry['RS2_bits'], entry['uop_portID_value']
             ))
         print(f"Outputs")
