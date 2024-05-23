@@ -78,7 +78,7 @@ class RS(dispatchWidth:Int, RSEntries: Int, physicalRegCount:Int, coreConfig:Str
     ///////////////////////
 
     // FIXME: these needs to be fixed.
-    // 1) there can be N FUs placing the data on the CDB
+    // 1) there can be N FUs placing the data on the CDB    (Done)
     // 2) the ready can also be "bypassed" such that it can issue that same cycle rather than writing 1 cycle then reading the ready bits from the reg another
     
     for(i <- 0 until RSEntries){
