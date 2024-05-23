@@ -126,6 +126,7 @@ object Main extends App {
 
     VerilogGenerator.generateVerilog(new RS(
         dispatchWidth=dispatchWidth,
+        fetchWidth=fetchWidth,
         RSEntries=RSEntries,
         physicalRegCount=physicalRegCount,
         coreConfig=coreConfig
@@ -133,11 +134,11 @@ object Main extends App {
     , 
     "../verilog/Backend/RS.v")
 
-    VerilogGenerator.generateVerilog(new RF(
-        coreConfig:String, 
-        physicalRegCount:Int
-        )
-    , 
-    "../verilog/Backend/RF.v")
+    //VerilogGenerator.generateVerilog(new RF(
+        //coreConfig:String, 
+        //physicalRegCount:Int
+        //)
+    //, 
+    //"../verilog/Backend/RF.v")
 
 }

@@ -56,12 +56,13 @@ object Parameters {
 
 
   val architecturalRegCount: Int = 32  // RV32...
-  val physicalRegCount:      Int = 64
   val RATCheckpointCount:    Int = 16  // How many checkpoints of the RAT is supported? (this should be a proportion of the ROB size)
 
+  val physicalRegCount:      Int = 64   // CHANGING THIS IS CURRENTLY NOT SUPPORTED!!!!
 
 
-  val RSEntries: Int = 15 // How many entires per reservation station (these are very expensive)
+
+  val RSEntries: Int = 20 // How many entires per reservation station (these are very expensive)
   val dispatchWidth:Int = 4 // Up to many entires are sent to the reservation station + execution engine from the instruction queue at a time?
 
 

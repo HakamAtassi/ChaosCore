@@ -3,7 +3,7 @@
 // Component : MultiportRamComponent
 
 
-module MultiportRamComponent (
+module nReadmWrite (
       input  [5:0] raddr_0,
       input  [5:0] raddr_1,
       input  [5:0] raddr_2,
@@ -32,7 +32,7 @@ module MultiportRamComponent (
       input  [31:0] wdata_1,
       input  [31:0] wdata_2,
       input  [31:0] wdata_3,
-      input   clk,
+      input   clock,
       input   reset);
   reg [31:0] _zz_72_;
   reg [31:0] _zz_73_;
@@ -299,217 +299,217 @@ module MultiportRamComponent (
   assign _zz_164_ = 1'b1;
   assign _zz_165_ = 1'b1;
   assign _zz_166_ = wdata_3;
-  always @ (posedge clk) begin
+  always @ (posedge clock) begin
     if(_zz_131_) begin
       _zz_72_ <= rams_0[raddr_0];
     end
   end
 
-  always @ (posedge clk) begin
+  always @ (posedge clock) begin
     if(_zz_132_) begin
       _zz_73_ <= rams_0[raddr_1];
     end
   end
 
-  always @ (posedge clk) begin
+  always @ (posedge clock) begin
     if(_zz_133_) begin
       _zz_74_ <= rams_0[raddr_2];
     end
   end
 
-  always @ (posedge clk) begin
+  always @ (posedge clock) begin
     if(_zz_134_) begin
       _zz_75_ <= rams_0[raddr_3];
     end
   end
 
-  always @ (posedge clk) begin
+  always @ (posedge clock) begin
     if(_zz_135_) begin
       _zz_76_ <= rams_0[raddr_4];
     end
   end
 
-  always @ (posedge clk) begin
+  always @ (posedge clock) begin
     if(_zz_136_) begin
       _zz_77_ <= rams_0[raddr_5];
     end
   end
 
-  always @ (posedge clk) begin
+  always @ (posedge clock) begin
     if(_zz_137_) begin
       _zz_78_ <= rams_0[raddr_6];
     end
   end
 
-  always @ (posedge clk) begin
+  always @ (posedge clock) begin
     if(_zz_138_) begin
       _zz_79_ <= rams_0[raddr_7];
     end
   end
 
-  always @ (posedge clk) begin
+  always @ (posedge clock) begin
     if(wen_0) begin
       rams_0[waddr_0] <= _zz_139_;
     end
   end
 
-  always @ (posedge clk) begin
+  always @ (posedge clock) begin
     if(_zz_140_) begin
       _zz_80_ <= rams_1[raddr_0];
     end
   end
 
-  always @ (posedge clk) begin
+  always @ (posedge clock) begin
     if(_zz_141_) begin
       _zz_81_ <= rams_1[raddr_1];
     end
   end
 
-  always @ (posedge clk) begin
+  always @ (posedge clock) begin
     if(_zz_142_) begin
       _zz_82_ <= rams_1[raddr_2];
     end
   end
 
-  always @ (posedge clk) begin
+  always @ (posedge clock) begin
     if(_zz_143_) begin
       _zz_83_ <= rams_1[raddr_3];
     end
   end
 
-  always @ (posedge clk) begin
+  always @ (posedge clock) begin
     if(_zz_144_) begin
       _zz_84_ <= rams_1[raddr_4];
     end
   end
 
-  always @ (posedge clk) begin
+  always @ (posedge clock) begin
     if(_zz_145_) begin
       _zz_85_ <= rams_1[raddr_5];
     end
   end
 
-  always @ (posedge clk) begin
+  always @ (posedge clock) begin
     if(_zz_146_) begin
       _zz_86_ <= rams_1[raddr_6];
     end
   end
 
-  always @ (posedge clk) begin
+  always @ (posedge clock) begin
     if(_zz_147_) begin
       _zz_87_ <= rams_1[raddr_7];
     end
   end
 
-  always @ (posedge clk) begin
+  always @ (posedge clock) begin
     if(wen_1) begin
       rams_1[waddr_1] <= _zz_148_;
     end
   end
 
-  always @ (posedge clk) begin
+  always @ (posedge clock) begin
     if(_zz_149_) begin
       _zz_88_ <= rams_2[raddr_0];
     end
   end
 
-  always @ (posedge clk) begin
+  always @ (posedge clock) begin
     if(_zz_150_) begin
       _zz_89_ <= rams_2[raddr_1];
     end
   end
 
-  always @ (posedge clk) begin
+  always @ (posedge clock) begin
     if(_zz_151_) begin
       _zz_90_ <= rams_2[raddr_2];
     end
   end
 
-  always @ (posedge clk) begin
+  always @ (posedge clock) begin
     if(_zz_152_) begin
       _zz_91_ <= rams_2[raddr_3];
     end
   end
 
-  always @ (posedge clk) begin
+  always @ (posedge clock) begin
     if(_zz_153_) begin
       _zz_92_ <= rams_2[raddr_4];
     end
   end
 
-  always @ (posedge clk) begin
+  always @ (posedge clock) begin
     if(_zz_154_) begin
       _zz_93_ <= rams_2[raddr_5];
     end
   end
 
-  always @ (posedge clk) begin
+  always @ (posedge clock) begin
     if(_zz_155_) begin
       _zz_94_ <= rams_2[raddr_6];
     end
   end
 
-  always @ (posedge clk) begin
+  always @ (posedge clock) begin
     if(_zz_156_) begin
       _zz_95_ <= rams_2[raddr_7];
     end
   end
 
-  always @ (posedge clk) begin
+  always @ (posedge clock) begin
     if(wen_2) begin
       rams_2[waddr_2] <= _zz_157_;
     end
   end
 
-  always @ (posedge clk) begin
+  always @ (posedge clock) begin
     if(_zz_158_) begin
       _zz_96_ <= rams_3[raddr_0];
     end
   end
 
-  always @ (posedge clk) begin
+  always @ (posedge clock) begin
     if(_zz_159_) begin
       _zz_97_ <= rams_3[raddr_1];
     end
   end
 
-  always @ (posedge clk) begin
+  always @ (posedge clock) begin
     if(_zz_160_) begin
       _zz_98_ <= rams_3[raddr_2];
     end
   end
 
-  always @ (posedge clk) begin
+  always @ (posedge clock) begin
     if(_zz_161_) begin
       _zz_99_ <= rams_3[raddr_3];
     end
   end
 
-  always @ (posedge clk) begin
+  always @ (posedge clock) begin
     if(_zz_162_) begin
       _zz_100_ <= rams_3[raddr_4];
     end
   end
 
-  always @ (posedge clk) begin
+  always @ (posedge clock) begin
     if(_zz_163_) begin
       _zz_101_ <= rams_3[raddr_5];
     end
   end
 
-  always @ (posedge clk) begin
+  always @ (posedge clock) begin
     if(_zz_164_) begin
       _zz_102_ <= rams_3[raddr_6];
     end
   end
 
-  always @ (posedge clk) begin
+  always @ (posedge clock) begin
     if(_zz_165_) begin
       _zz_103_ <= rams_3[raddr_7];
     end
   end
 
-  always @ (posedge clk) begin
+  always @ (posedge clock) begin
     if(wen_3) begin
       rams_3[waddr_3] <= _zz_166_;
     end
@@ -2282,7 +2282,7 @@ module MultiportRamComponent (
   assign _zz_69_ = _zz_129_;
   assign _zz_70_ = ({63'd0,(1'b1)} <<< waddr_3);
   assign _zz_71_ = _zz_130_;
-  always @ (posedge clk) begin
+  always @ (posedge clock) begin
     banks_0 <= lvr_0;
     banks_1 <= lvr_1;
     banks_2 <= lvr_2;

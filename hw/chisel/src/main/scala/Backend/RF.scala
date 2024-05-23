@@ -35,42 +35,50 @@ import circt.stage.ChiselStage
 import chisel3.util._
 import getPortCount._
 
+import chisel3.experimental._ // To enable experimental features
 
-// N read/write memory...
-
-class NReadWriteSmem(depth: Int, width: Int, readPorts:Int, writePorts:Int) extends Module {
+// Define the BlackBox module
+class NReadWriteSmem extends BlackBox with HasBlackBoxResource {
   val io = IO(new Bundle {
 
-    // Read
-    val rd_addr  = Vec(readPorts, Input(UInt(log2Ceil(depth).W)))
-    val data_out = Vec(readPorts, Output(UInt(width.W)))
-    
-    // Write
-    val wr_addr = Vec(writePorts, Input(UInt(log2Ceil(depth).W)))
-    val wr_en   = Vec(writePorts, Input(Bool()))
-    val data_in = Vec(writePorts, Input(UInt(width.W)))
+    val clock = Input(Clock())
+    val reset = Input(Bool())
+
+    val raddr_0 = Input(UInt(6.W))
+    val raddr_1 = Input(UInt(6.W))
+    val raddr_2 = Input(UInt(6.W))
+    val raddr_3 = Input(UInt(6.W))
+    val raddr_4 = Input(UInt(6.W))
+    val raddr_5 = Input(UInt(6.W))
+    val raddr_6 = Input(UInt(6.W))
+    val raddr_7 = Input(UInt(6.W))
+    val rdata_0 = Output(UInt(32.W))
+    val rdata_1 = Output(UInt(32.W))
+    val rdata_2 = Output(UInt(32.W))
+    val rdata_3 = Output(UInt(32.W))
+    val rdata_4 = Output(UInt(32.W))
+    val rdata_5 = Output(UInt(32.W))
+    val rdata_6 = Output(UInt(32.W))
+    val rdata_7 = Output(UInt(32.W))
+    val waddr_0 = Input(UInt(6.W))
+    val waddr_1 = Input(UInt(6.W))
+    val waddr_2 = Input(UInt(6.W))
+    val waddr_3 = Input(UInt(6.W))
+    val wen_0 = Input(Bool())
+    val wen_1 = Input(Bool())
+    val wen_2 = Input(Bool())
+    val wen_3 = Input(Bool())
+    val wdata_0 = Input(UInt(32.W))
+    val wdata_1 = Input(UInt(32.W))
+    val wdata_2 = Input(UInt(32.W))
+    val wdata_3 = Input(UInt(32.W))
   })
 
-    val mem = RegInit(VecInit(Seq.fill(depth)(0.U(32.W))))
-
-  
-  io.data_out := DontCare
-
-  //////////////////
-  // READ & WRITE //
-  //////////////////
-
-    for(i <- 0 until writePorts){
-        when(io.wr_en(i)) {
-            mem(io.wr_addr(i)) := io.data_in(i)
-        }
-    }
-
-    for(i <- 0 until readPorts){
-        io.data_out(i) := RegNext(mem(io.rd_addr(i)))
-    }
+  // Reference the external Verilog file
+  addResource("/nReadmWrite.v")
 }
 
+/*
 class RF(coreConfig:String, physicalRegCount:Int) extends Module{
     val portCount     = getPortCount(coreConfig)
     val portCountBits = log2Ceil(portCount)
@@ -166,3 +174,4 @@ class RF(coreConfig:String, physicalRegCount:Int) extends Module{
     }
 
 }
+*/
