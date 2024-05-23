@@ -133,4 +133,11 @@ object Main extends App {
     , 
     "../verilog/Backend/RS.v")
 
+    VerilogGenerator.generateVerilog(new RF(
+        coreConfig:String, 
+        physicalRegCount:Int
+        )
+    , 
+    "../verilog/Backend/RF.v")
+
 }
