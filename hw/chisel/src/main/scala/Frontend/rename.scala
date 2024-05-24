@@ -35,7 +35,8 @@ import chisel3.util._
 
 // the architecture of the RAT and RAT checkpointing is inspired by sargantana.
 
-class WAW_handler(fetchWidth:Int, physicalRegCount:Int, architecturalRegCount:Int) extends Module{
+class WAW_handler(parameters:Parameters) extends Module{
+    import parameters._
     // sometimes, multiple instructions within a single fetch packet will 
     // have the same RD. During rename, this RD will result in two different mappins between
     // arch. reg and physical reg from the free list. 
@@ -113,7 +114,8 @@ class RAT_memory(fetchWidth:Int, physicalRegCount:Int, architecturalRegCount:Int
 }
 
 
-class RAT(fetchWidth:Int, physicalRegCount:Int, architecturalRegCount:Int, RATCheckpointCount:Int) extends Module{
+class RAT(parameters:Parameters) extends Module{
+    import parameters._
     val RATCheckpointBits    = log2Ceil(RATCheckpointCount)
     val physicalRegBits      = log2Ceil(physicalRegCount)
     val architecturalRegBits = log2Ceil(architecturalRegCount)
@@ -248,7 +250,8 @@ class RAT(fetchWidth:Int, physicalRegCount:Int, architecturalRegCount:Int, RATCh
 }
 
 
-class rename(fetchWidth:Int, physicalRegCount:Int, architecturalRegCount:Int, RATCheckpointCount:Int) extends Module{
+class rename(parameters:Parameters) extends Module{
+    import parameters._
     // Takes in N input instructions
     // Reads the renamed versions of RS1, RS2, and RD (old)
     // performs a rename to RD using the free list
@@ -330,7 +333,7 @@ class rename(fetchWidth:Int, physicalRegCount:Int, architecturalRegCount:Int, RA
     // the input just takes in the rd_valid array as normal. the output sorting is handled via the reorder_renamed_outputs module
     // When freeing up old renamed registers at commit, the RDs need to be sorted, which is handled by the reorder_free_inputs module
 
-    val free_list               = Module(new free_list(fetchWidth=fetchWidth, physicalRegCount=physicalRegCount))
+    val free_list               = Module(new free_list(parameters))
 
     free_list.io.rename_valid                   :=  io.instruction_RD_valid
 
@@ -342,8 +345,8 @@ class rename(fetchWidth:Int, physicalRegCount:Int, architecturalRegCount:Int, RA
     // RAT + WAW Handler //
     ///////////////////////
 
-    val WAW_handler     = Module(new WAW_handler(fetchWidth=fetchWidth, physicalRegCount=physicalRegCount, architecturalRegCount=architecturalRegCount))
-    val RAT             = Module(new RAT(fetchWidth=fetchWidth, physicalRegCount=physicalRegCount, architecturalRegCount=architecturalRegCount, RATCheckpointCount))
+    val WAW_handler     = Module(new WAW_handler(parameters:Parameters))
+    val RAT             = Module(new RAT(parameters:Parameters))
 
     WAW_handler.io.decoder_RD_valid_bits    :=  io.instruction_RD_valid
     WAW_handler.io.decoder_RD_values        :=  io.instruction_RD

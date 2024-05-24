@@ -67,7 +67,7 @@ object helperFunctions {
     //}
 
 
-    def getImm(instruction:UInt): SInt = {
+    def getImm(instruction:UInt): UInt = {
 
         val opcode = instruction(6,0)
 
@@ -78,8 +78,8 @@ object helperFunctions {
         val U      = (opcode === "b0110011".U)
         val I      = (opcode === "b0010011".U) || (opcode === "b0000011".U) || (opcode === "b1100111".U)
 
-        val imm = Wire(SInt(32.W))
-        imm := 0.asSInt
+        val imm = Wire(UInt(32.W))
+        imm := 0.U
 
         when(B) {
             val imm_12      = instruction(31)
@@ -87,29 +87,29 @@ object helperFunctions {
             val imm_4_1     = instruction(11, 8)
             val imm_11      = instruction(7)
 
-            imm := Cat(imm_12, imm_10_5, imm_4_1, imm_11, 0.U(1.W)).asSInt
+            imm := Cat(imm_12, imm_10_5, imm_4_1, imm_11, 0.U(1.W)).asSInt.asUInt
         }.elsewhen (J) {
             val imm_20    = instruction(31)
             val imm_19_12 = instruction(19, 12)
             val imm_11    = instruction(20)
             val imm_10_1  = instruction(30,21)
 
-            imm := Cat(imm_20, imm_19_12, imm_11, imm_10_1, 0.U(1.W)).asSInt
+            imm := Cat(imm_20, imm_19_12, imm_11, imm_10_1, 0.U(1.W)).asSInt.asUInt
         }.elsewhen (I) {
             val imm_11_0      = instruction(31, 20)
 
-            imm := instruction.asSInt
+            imm := instruction.asSInt.asUInt
         }.elsewhen(S){
             val imm_11_5      = instruction(31, 25)
             val imm_4_0       = instruction(11, 7)
 
-            imm := Cat(imm_11_5, imm_4_0).asSInt
+            imm := Cat(imm_11_5, imm_4_0).asSInt.asUInt
         }.elsewhen(U){
             val imm_31_12       = instruction(31, 12) << 12
 
-            imm := Cat(imm_31_12).asSInt
+            imm := Cat(imm_31_12).asSInt.asUInt
         }.otherwise{
-            imm := 0.asSInt
+            imm := 0.asSInt.asUInt
         }
         imm
     }
@@ -186,78 +186,106 @@ class prediction(fetchWidth:Int=4, GHRWidth:Int=16) extends Bundle{
     val T_NT        =   Output(Bool())
 }
 
+class Instruction(fetchWidth:Int, ROBEntires:Int) extends Bundle{
+    val instruction     =   UInt(32.W)
+    val packet_index    =   UInt(log2Ceil(fetchWidth*4).W)    // contains the remainder of the PC. ex: 0, 4, 8, 12, 0, ... for fetchWidth of 4
+    val ROB_index       =   UInt(log2Ceil(ROBEntires).W)
+}
 
-// TODO: 
+class decoded_instruction(coreConfig:String, fetchWidth:Int, ROBEntires:Int, physicalRegCount:Int) extends Bundle{
+    // Parameters
+    val portCount       =   4
+    val physicalRegBits =   log2Ceil(physicalRegCount)    // FIXME!!
+    //
+    val RD              =   UInt(physicalRegBits.W)
+    val RS1             =   UInt(physicalRegBits.W)
+    val RS2             =   UInt(physicalRegBits.W)
+    val IMM             =   UInt(32.W)
+    val FUNCT3          =   UInt(3.W)
 
-object instruction_type extends ChiselEnum {
-    val R,
-        I,
-        S,
-        B,
-        U,
-        J = Value
-} 
+    val packet_index    =   UInt(log2Ceil(fetchWidth*4).W)    // contains the remainder of the PC. ex: 0, 4, 8, 12, 0, ... for fetchWidth of 4
+    val ROB_index       =   UInt(log2Ceil(ROBEntires).W)
 
-class decoded_instruction extends Bundle{
-    val RD              =   ValidIO(UInt(physicalRegBits.W))
+    // uOp info
+    val instructionType =   InstructionType()
 
-    val RS1             =   ValidIO(UInt(physicalRegBits.W))
+    val portID          =   UInt(log2Ceil(portCount).W)  // Decoder assings port ID
 
-    val RS2             =   ValidIO(UInt(32.W))
-    val imm             =   ValidIO(UInt(32.W))
+    val SUBTRACT        =   Bool()
+    val MULTIPLY        =   Bool()
+    // ADD atomic instructions
+}
 
-    val uOp             =   new UOp()
+// decoded instruction after it goes through register read
+class read_decoded_instruction(coreConfig:String, fetchWidth:Int, ROBEntires:Int, physicalRegCount:Int) extends Bundle{
+    // Parameters
+    val portCount       =   4
+    val physicalRegBits =   log2Ceil(physicalRegCount)
+
+    val RD              =   UInt(physicalRegBits.W)
+    val RS1             =   UInt(physicalRegBits.W)
+    val RS2             =   UInt(physicalRegBits.W)
+    val IMM             =   UInt(32.W)
+    val FUNCT3          =   UInt(3.W)
+    val packet_index    =   UInt(log2Ceil(fetchWidth*4).W)    // contains the remainder of the PC. ex: 0, 4, 8, 12, 0, ... for fetchWidth of 4
+    val instructionType =   InstructionType()
+
+    val SUBTRACT        =   Bool()
+    val MULTIPLY        =   Bool()
+    
+    // read data from register read 
+    val RS1_data        =   UInt(32.W)
+    val RS2_data        =   UInt(32.W)
+    val PC              =   UInt(32.W)
+
 }
 
 /////////////////////
 // DECODER BUNDLES //
 /////////////////////
 
-class portID(coreConfig:String) extends Bundle { // this is subject to change
-    val portCount = getPortCount(coreConfig)
-    val portCountBits = log2Ceil(portCount)
 
-    // portID:0 => schedule to port 0 or port 1 [Arith/branch/INT2FP(optional)]
-    // portID:1 => schedule to port 0 [CSR]
-    // portID:2 => schedule to port 3 [load]
-    // portID:3 => schedule to port 4 [store]
+object InstructionType extends ChiselEnum {
+    // Based on table 24.1 on RV spec
 
-    // portID:4 => schedule to port 2 [div] (optional)
+        // ROW 0
+        //              {inst[6:5], inst[4:2]}
+        val LOAD        = Value("b00000".U)
+        val LOAD_FP     = Value("b00001".U)
+        val CUSTOM_0    = Value("b00010".U)
+        val MISC_MEM    = Value("b00011".U)
+        val OP_IMM      = Value("b00100".U)   // RV32 I type
+        val AUIPC       = Value("b00101".U)
+        val OP_IMM_32   = Value("b00110".U)
 
-    val value = UInt(portCountBits.W)
+        // ROW 1
+        val STORE       = Value("b01000".U)
+        val STORE_FP    = Value("b01001".U)
+        val CUSTOM_1    = Value("b01010".U)
+        val AMO         = Value("b01011".U)
+        val OP          = Value("b01100".U)   // RV32 R type
+        val LUI         = Value("b01101".U)
+        val OP_32       = Value("b01110".U)   // RV64 R type
+
+        // ROW 2
+        val MADD        = Value("b10000".U)
+        val MSUB        = Value("b10001".U)
+        val NMSUB       = Value("b10010".U)
+        val NMADD       = Value("b10011".U)
+        val OP_FP       = Value("b10100".U)
+        // RESERVED
+        val CUSTOM_2    = Value("b10110".U)
+
+        // ROW 3
+        val BRANCH      = Value("b11000".U)
+        val JALR        = Value("b11001".U)
+        // RESERVED
+        val JAL         = Value("b11011".U)
+        val SYSTEM      = Value("b11100".U)
+        // RESERVED
+        val CUSTOM_3    = Value("b11110".U)
 }
 
-object Operation extends ChiselEnum{
-    val ADD, 
-        SUB, 
-        SLT,
-        XOR,
-        OR, 
-        AND,
-        SLL,
-        SRL,
-        SRA,
-
-        BEQ, 
-        BNE, 
-        BLT, 
-        BGE, 
-        IMUL, 
-
-        JAL, 
-        JALR,
-
-        IDIV = Value
-}
-
-class UOp(coreConfig:String) extends Bundle{
-    // uOps inform the logic about what port(s) an instruction uses,
-    // As well as which operation is performed in the corresponding functional unit. 
-    val portID    = new portID(coreConfig)
-    val operation = Operation()
-
-    val is_imm       = Bool()
-}
 
 /////////////////////
 // BACKEND BUNDLES //
@@ -269,32 +297,25 @@ class ROB_entry extends Bundle{
 }
 
 // FIXME: this should be input/output
-class decoded_fetch_packet(fetchWidth:Int = 4) extends Bundle{
-    val decoded_instructions    = Vec(fetchWidth, new decoded_instruction())
-    val fetch_PC                = UInt(32.W)
-    val valid_bits              = Vec(fetchWidth, Bool())
-}
+//class decoded_fetch_packet(fetchWidth:Int = 4) extends Bundle{
+    //val decoded_instructions    = Vec(fetchWidth, new decoded_instruction())
+    //val fetch_PC                = UInt(32.W)
+    //val valid_bits              = Vec(fetchWidth, Bool())
+//}
 
-class RS_entry(coreConfig:String, fetchWidth:Int, physicalRegCount: Int) extends Bundle{
+// FIXME:  This is messed up 
+class RS_entry(coreConfig:String, fetchWidth:Int, physicalRegCount: Int, ROBEntires:Int) extends Bundle{
     val physicalRegBits = log2Ceil(physicalRegCount)
 
-    val RD              =   ValidIO(UInt(physicalRegBits.W))
+    val decoded_instruction = new decoded_instruction(coreConfig=coreConfig, fetchWidth=fetchWidth, ROBEntires=ROBEntires, physicalRegCount:Int)
 
     val RS1_ready       =   Bool()
-    val RS1             =   ValidIO(UInt(physicalRegBits.W))
-
     val RS2_ready       =   Bool()
-    val RS2             =   ValidIO(UInt(32.W))
-
-    val imm             =   UInt(32.W)
 
     // TODO: Add ROB entry (to read PC from PC file)
 
-    val packet_index =  UInt(log2Ceil(fetchWidth*4).W)    // contains the remainder of the PC. ex: 0, 4, 8, 12, 0, ... for fetchWidth of 4
-
     val valid        =  Bool()  // Is whole RS entry valid
 
-    val uOp          =   new UOp(coreConfig=coreConfig)
 }
 
 
@@ -315,7 +336,6 @@ class FU_input(coreConfig:String, ROBEntires:Int, physicalRegCount:Int) extends 
 
     val RD          =   ValidIO(UInt(physicalRegBits.W))
 
-    val uOp         =   new UOp(coreConfig)
 }
 
 class FU_output(physicalRegCount:Int) extends Bundle{

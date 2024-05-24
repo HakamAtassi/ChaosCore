@@ -34,13 +34,13 @@ import circt.stage.ChiselStage
 
 import chisel3.util._
 
-import Operation._
-
-class FU(coreConfig:String, ROBEntires:Int, physicalRegCount:Int, ALU:Bool, Branch:Bool, CSR:Bool, IMUL:Bool ,IDIV:Bool) extends Module{
+/*
+class FU(parameters:Parameters) extends Module{
+    import parameters._
 
     val io = IO(new Bundle{
         // Input
-        val FU_input      =   Flipped(Decoupled(new FU_input(coreConfig=coreConfig, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount)))
+        val FU_input      =   Flipped(Decoupled(new read_decoded_instruction(coreConfig=coreConfig, fetchWidth=fetchWidth, ROBEntires=ROBEntires)))
         val RS_entry      =   new FU_input(coreConfig=coreConfig, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount)
         
         // Output
@@ -49,13 +49,18 @@ class FU(coreConfig:String, ROBEntires:Int, physicalRegCount:Int, ALU:Bool, Bran
 
     // misaligned fetch exception ??
 
-    val RS1_data    =   io.FU_input.bits.RS1_data
-    val RS2_data    =   io.FU_input.bits.RS2_data
-    val RD          =   io.FU_input.bits.RD
-    val uOp         =   io.FU_input.bits.uOp
-    val imm         =   io.FU_input.bits.imm
-    val is_imm      =   io.FU_input.bits.uOp.is_imm
-    val PC          =   io.FU_input.bits.PC
+    // Operand data
+    val RS1_data    =   io.FU_input.RS1_data
+    val RS2_data    =   io.FU_input.RS2_data
+    val imm         =   io.FU_input.IMM
+    val PC          =   io.FU_input.PC + io.FU_input.packet_index
+
+    // Dest reg
+    val RD          =   io.FU_input.RD
+
+    //////////////////////////
+    //////////////////////////
+    //////////////////////////
 
     val taken_address     = RegInit(UInt(32.W), 0.U)
     val not_taken_address = RegInit(UInt(32.W), 0.U)
@@ -90,36 +95,9 @@ class FU(coreConfig:String, ROBEntires:Int, physicalRegCount:Int, ALU:Bool, Bran
     sra_result := (RS1_data.asSInt >> operand2(4,0)).asUInt // Arithmetic right shift
 
 
-    when(uOp.operation === BEQ){comp_result := RS1_data === RS2_data}
-    when(uOp.operation === BNE){comp_result := RS1_data =/= RS2_data}
-    when(uOp.operation === BLT){comp_result := RS1_data > RS2_data}
-    when(uOp.operation === BGE){comp_result := RS1_data <= RS2_data}
 
 
-    when(uOp.operation === ADD){arithmetic_result := add_result}
-    when(uOp.operation === SUB){arithmetic_result := sub_result}
-    when(uOp.operation === SLT){arithmetic_result := slt_result}
-    when(uOp.operation === XOR){arithmetic_result := xor_result}
-    when(uOp.operation === OR) {arithmetic_result := or_result}
-    when(uOp.operation === AND){arithmetic_result := and_result}
-    when(uOp.operation === SLL){arithmetic_result := sll_result}
-    when(uOp.operation === SRL){arithmetic_result := srl_result}
-    when(uOp.operation === SRA){arithmetic_result := sra_result}
-
-    // Assign outputs
-
-    io.FU_output.branch_address := RegNext(PC + imm)
-
-    io.FU_output.branch_taken   := comp_result
-    when(uOp.operation === JAL || uOp.operation === JALR){
-        io.FU_output.branch_taken   := 1.B
-        io.FU_output.branch_address := RegNext(RS1_data + imm)
-    }
-
-    io.FU_output.RD.valid       := RegNext(RD.valid)
-    io.FU_output.RD             := RegNext(RD)
-    io.FU_output.RD.bits        := arithmetic_result
-
-
+    io.FU_output := DontCare
 
 }
+*/

@@ -83,55 +83,26 @@ object Main extends App {
     //), 
     //"../verilog/Frontend/Frontend.v")
 
+    val parameters = Parameters()
 
-    VerilogGenerator.generateVerilog(new free_list(
-        fetchWidth = fetchWidth,
-        physicalRegCount = physicalRegCount)
-    , 
+    VerilogGenerator.generateVerilog(new free_list(parameters), 
     "../verilog/Frontend/free_list.v")
 
 
 
-    VerilogGenerator.generateVerilog(new WAW_handler(
-        fetchWidth = fetchWidth,
-        physicalRegCount = physicalRegCount, 
-        architecturalRegCount = architecturalRegCount
-        
-        )
-    , 
+    VerilogGenerator.generateVerilog(new WAW_handler(parameters), 
     "../verilog/Frontend/WAW_handler.v")
 
 
-    VerilogGenerator.generateVerilog(new rename(
-        RATCheckpointCount = RATCheckpointCount,
-        fetchWidth = fetchWidth,
-        physicalRegCount = physicalRegCount, 
-        architecturalRegCount = architecturalRegCount
-        
-        )
-    , 
+    VerilogGenerator.generateVerilog(new rename(parameters), 
     "../verilog/Frontend/rename.v")
 
 
-    VerilogGenerator.generateVerilog(new RAT(
-        RATCheckpointCount = RATCheckpointCount,
-        fetchWidth = fetchWidth,
-        physicalRegCount = physicalRegCount, 
-        architecturalRegCount = architecturalRegCount
-        
-        )
-    , 
+    VerilogGenerator.generateVerilog(new RAT(parameters), 
     "../verilog/Frontend/RAT.v")
 
 
-    VerilogGenerator.generateVerilog(new RS(
-        dispatchWidth=dispatchWidth,
-        fetchWidth=fetchWidth,
-        RSEntries=RSEntries,
-        physicalRegCount=physicalRegCount,
-        coreConfig=coreConfig
-        )
-    , 
+    VerilogGenerator.generateVerilog(new RS(parameters), 
     "../verilog/Backend/RS.v")
 
     //VerilogGenerator.generateVerilog(new RF(
@@ -140,5 +111,8 @@ object Main extends App {
         //)
     //, 
     //"../verilog/Backend/RF.v")
+
+    VerilogGenerator.generateVerilog(new decoder(parameters), 
+    "../verilog/Frontend/decoder.v")
 
 }

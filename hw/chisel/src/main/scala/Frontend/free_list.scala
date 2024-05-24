@@ -37,7 +37,8 @@ import java.rmi.server.UID
 
 import SelectFirstN._
 
-class reorder_free_inputs(fetchWidth:Int, physicalRegCount:Int) extends Module{
+class reorder_free_inputs(parameters:Parameters) extends Module{
+    import parameters._
 
     val io = IO(new Bundle{
         val free_valid             = Input(Vec(fetchWidth, Bool()))
@@ -58,8 +59,8 @@ class reorder_free_inputs(fetchWidth:Int, physicalRegCount:Int) extends Module{
 }
 
 
-class reorder_renamed_outputs(fetchWidth:Int, physicalRegCount:Int) extends Module{
-
+class reorder_renamed_outputs(parameters:Parameters) extends Module{
+    import parameters._
     val io = IO(new Bundle{
         val renamed_valid          = Input(Vec(fetchWidth, Bool()))
         val renamed_values         = Input(Vec(fetchWidth, UInt(log2Ceil(physicalRegCount).W)))
@@ -86,7 +87,8 @@ class reorder_renamed_outputs(fetchWidth:Int, physicalRegCount:Int) extends Modu
 }
 
  
-class free_list(fetchWidth:Int, physicalRegCount:Int) extends Module{
+class free_list(parameters:Parameters) extends Module{
+    import parameters._
     val ptr_width = log2Ceil(physicalRegCount) + 1
 
     // important:
@@ -123,7 +125,7 @@ class free_list(fetchWidth:Int, physicalRegCount:Int) extends Module{
     ///////////////////////
 
     // Gather inputs 
-    val input_sorter = Module(new reorder_free_inputs(fetchWidth=fetchWidth, physicalRegCount=physicalRegCount))
+    val input_sorter = Module(new reorder_free_inputs(parameters))
 
     input_sorter.io.free_valid             := io.free_valid
     input_sorter.io.free_values            := io.free_values
@@ -160,7 +162,7 @@ class free_list(fetchWidth:Int, physicalRegCount:Int) extends Module{
     ////////////////////////
 
     // scatter outputs
-    val output_sorter = Module(new reorder_renamed_outputs(fetchWidth=fetchWidth, physicalRegCount= physicalRegCount))
+    val output_sorter = Module(new reorder_renamed_outputs(parameters))
 
     output_sorter.io.renamed_valid          := io.rename_valid
     output_sorter.io.renamed_values         := renamed_values
