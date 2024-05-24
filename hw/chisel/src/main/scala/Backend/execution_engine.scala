@@ -1,8 +1,8 @@
 /* ------------------------------------------------------------------------------------
-* Filename: top.scala
+* Filename: execution_engine.scala
 * Author: Hakam Atassi
 * Date: Apr 23 2024
-* Description: The ChaosCore Top level Config File
+* Description: The wrapper containing all the FUs.
 * License: MIT
 *
 * Copyright (c) 2024 by Hakam Atassi
@@ -26,45 +26,3 @@
 * SOFTWARE.
 * ------------------------------------------------------------------------------------ 
 */
-
-package ChaosCore
-
-
-import chisel3._
-import circt.stage.ChiselStage
-import chisel3.util._
-import java.io.{File, FileWriter}
-import java.rmi.server.UID
-
-
-case class Parameters(
-
-  coreConfig: String = "RV32I",  // core extension (IMAF, etc...)
-
-
-
-  GHRWidth: Int = 16,
-  fetchWidth: Int = 4,
-  RASEntries: Int = 128,
-  BTBEntries: Int = 4096,
-  L1_instructionCacheWays: Int = 2,
-  L1_instructionCacheSets: Int = 64,
-  L1_instructionCacheBlockSizeBytes: Int = 32,
-  startPC: UInt = "h00000000".U,
-
-
-  ROBEntires: Int = 64,    // FIXME: 128 causes area scaling problems in the RAT
-
-
-  architecturalRegCount: Int = 32,  // RV32...
-  RATCheckpointCount:    Int = 16,  // How many checkpoints of the RAT is supported? (this should be a proportion of the ROB size)
-
-  physicalRegCount:      Int = 64,   // CHANGING THIS IS CURRENTLY NOT SUPPORTED!!!!
-
-
-
-  RSEntries: Int = 20, // How many entires per reservation station (these are very expensive)
-  dispatchWidth:Int = 4, // Up to many entires are sent to the reservation station + execution engine from the instruction queue at a time?
-
-
-)

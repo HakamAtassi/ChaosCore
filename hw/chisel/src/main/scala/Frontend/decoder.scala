@@ -37,44 +37,100 @@ import java.rmi.server.UID
 
 import helperFunctions._
 
-class decoder extends Module{   // basic decoder and field extraction
-    val io = IO(new Bundle{
-        val instruction = Input(UInt(32.W))
 
-        val decoded_instruction = Output(new decoded_instruction())
+class decoder(parameters:Parameters) extends Module{   // basic decoder and field extraction
+    import parameters._
+    val io = IO(new Bundle{
+        val instruction         = Input(new Instruction(fetchWidth=fetchWidth, ROBEntires=ROBEntires))
+
+        val decoded_instruction = Output(new decoded_instruction(coreConfig=coreConfig, fetchWidth=fetchWidth, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount))
     })
 
-    val opcode      = io.instruction(6, 0)
-
-    val RS1         = io.instruction(19, 15)
-    val RS2         = io.instruction(24, 20)
-    val RD          = io.instruction(11, 7)
-
-    val funct3      = io.instruction(14, 12)
-    val funct7      = io.instruction(31, 25)
-
-    val imm         = getImm(io.instruction)
-
-    // Assignment 
+    import InstructionType._
 
 
-    RD.bits              =   RD
+    val instruction = io.instruction.instruction
 
-    RS1.bits             =   RS1
+    // Direct instruction fields
+    val opcode      = instruction(6, 0)
+    val RS1         = instruction(19, 15)
+    val RS2         = instruction(24, 20)
+    val RD          = instruction(11, 7)
+    val IMM         = getImm(instruction)
 
-    RS2.bits             =   RS2.bits
-    imm.bits             =   imm
-
-    uOp                  =   new UOp()
+    val FUNCT3      = instruction(14, 12)
+    val FUNCT7      = instruction(31, 25)
 
 
-    // decode opcodes and stuff
-    when(opcode){
+    val instructionType = InstructionType(opcode(6,2))
 
+    val MULTIPLY    = (instructionType === InstructionType.OP && FUNCT7(0))
+    val SUBTRACT    = (instructionType === InstructionType.OP && FUNCT7(2))
+
+
+    // Assign output
+
+    io.decoded_instruction.RD               := RD
+    io.decoded_instruction.RS1              := RS1
+    io.decoded_instruction.RS2              := RS2
+    io.decoded_instruction.IMM              := IMM
+    io.decoded_instruction.FUNCT3           := FUNCT3
+    io.decoded_instruction.MULTIPLY         := MULTIPLY // Multiply or Divide
+    io.decoded_instruction.SUBTRACT         := SUBTRACT // subtract or arithmetic shift...
+
+    io.decoded_instruction.packet_index     := io.instruction.packet_index 
+
+    io.decoded_instruction.instructionType  := instructionType
+
+    io.decoded_instruction.ROB_index        := io.instruction.ROB_index
+
+
+
+    // PORT ASSIGNMENT //
+
+    val needs_divider   =   (instructionType === OP) && 
+                            ( FUNCT3 === 0x4.U  ||
+                              FUNCT3 === 0x5.U  ||
+                              FUNCT3 === 0x6.U  ||
+                              FUNCT3 === 0x7.U) && FUNCT7(0)
+
+    val needs_branch_unit   =   (instructionType === BRANCH) || 
+                                (instructionType === JAL)    ||
+                                (instructionType === JALR)
+
+    val needs_ALU           =       ((instructionType === OP) && (FUNCT7(2) || (FUNCT7 === 0x00.U))) ||
+                                    (instructionType === OP_IMM)
+
+
+    val needs_memory        =       (instructionType === STORE) ||(instructionType === LOAD)
+
+
+    // TODO: ECALL / EBREAK
+
+
+    val ALU_port    =   RegInit(UInt(2.W), 0.U)
+
+    
+    when(needs_ALU){
+        io.decoded_instruction.portID := ALU_port
+
+        when(ALU_port === 2.U){
+            ALU_port := 0.U
+        }.otherwise{
+            ALU_port := ALU_port + 1.U
+        }
+
+    }.elsewhen(needs_divider){
+        io.decoded_instruction.portID := 1.U
+    }.elsewhen(needs_branch_unit){
+        io.decoded_instruction.portID := 0.U
+    }.elsewhen(needs_memory){
+        io.decoded_instruction.portID := 3.U
+    }.otherwise{
+        io.decoded_instruction.portID := 0.U
     }
 
 
-    
 }
 
 /*

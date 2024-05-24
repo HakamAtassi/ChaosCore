@@ -41,23 +41,25 @@ import Thermometor._
 // And is able to schedule N items at a time as well, based on port availability. 
 
 // FIXME: scale this up to fetchWidth/dispatchWidth or similar 
-class RS(dispatchWidth:Int, fetchWidth:Int, RSEntries: Int, physicalRegCount:Int, coreConfig:String) extends Module{
+class RS(parameters:Parameters) extends Module{
+    import parameters._
 
     val portCount = getPortCount(coreConfig)
     val portCountBits = log2Ceil(portCount)
 
     val io = IO(new Bundle{
         // from allocate
-        val RS_input       =   Vec(dispatchWidth, Flipped(Decoupled(new RS_entry(coreConfig=coreConfig, fetchWidth:Int, physicalRegCount=physicalRegCount))))
+        val decoded_instructions       =   Vec(dispatchWidth, Flipped(Decoupled(new decoded_instruction(coreConfig=coreConfig, fetchWidth:Int, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount))))
+        val ready_bits                 =   Vec(fetchWidth, Input(Bool()))
         // from FU (notify)
         val FU_broadcast   =   Vec(portCount, Flipped(new FU_output(physicalRegCount)))
 
         // To FU
-        val RF_inputs      =   Vec(portCount, Decoupled(new RS_entry(coreConfig=coreConfig, fetchWidth:Int, physicalRegCount=physicalRegCount)))
+        val RF_inputs      =   Vec(portCount, Decoupled(new decoded_instruction(coreConfig=coreConfig, fetchWidth:Int, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount)))
     })
 
     // Allocate RS regs
-    val reservation_station = RegInit(VecInit(Seq.fill(RSEntries)(0.U.asTypeOf(new RS_entry(coreConfig=coreConfig, fetchWidth:Int, physicalRegCount=physicalRegCount)))))
+    val reservation_station = RegInit(VecInit(Seq.fill(RSEntries)(0.U.asTypeOf(new RS_entry(coreConfig=coreConfig, fetchWidth:Int, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount)))))
  
     // Reg allocate POS for new input
     val validVec = reservation_station.map(_.valid)
@@ -67,10 +69,10 @@ class RS(dispatchWidth:Int, fetchWidth:Int, RSEntries: Int, physicalRegCount:Int
 
     // Allocate new RS entry
     for(i <- 0 until dispatchWidth){
-        when(io.RS_input(i).valid){
+        when(io.decoded_instructions(i).valid){
             val allocateIndexBinary = OHToUInt(allocate_index(i))
-            reservation_station(allocateIndexBinary) <> io.RS_input(i).bits
-            reservation_station(allocateIndexBinary).valid   := io.RS_input(i).valid
+            reservation_station(allocateIndexBinary).decoded_instruction <> io.decoded_instructions(i).bits
+            reservation_station(allocateIndexBinary).valid   := io.decoded_instructions(i).valid
         }
     }
 
@@ -90,10 +92,10 @@ class RS(dispatchWidth:Int, fetchWidth:Int, RSEntries: Int, physicalRegCount:Int
         var _RS2_match = false.B
 
         for (FU <- 0 until portCount) {
-            _RS1_match = _RS1_match || ((io.FU_broadcast(FU).RD.bits === reservation_station(i).RS1.bits) && io.FU_broadcast(FU).RD.valid)
+            _RS1_match = _RS1_match || ((io.FU_broadcast(FU).RD.bits === reservation_station(i).decoded_instruction.RS1) && io.FU_broadcast(FU).RD.valid)
         }
         for (FU <- 0 until portCount) {
-            _RS2_match = _RS2_match || ((io.FU_broadcast(FU).RD.bits === reservation_station(i).RS2.bits) && io.FU_broadcast(FU).RD.valid)
+            _RS2_match = _RS2_match || ((io.FU_broadcast(FU).RD.bits === reservation_station(i).decoded_instruction.RS2) && io.FU_broadcast(FU).RD.valid)
         }
 
         RS1_match(i) := _RS1_match
@@ -141,7 +143,7 @@ class RS(dispatchWidth:Int, fetchWidth:Int, RSEntries: Int, physicalRegCount:Int
 
     for (i <- 0 until portCount){
         io.RF_inputs(i).valid := 0.B
-        io.RF_inputs(i).bits := 0.U.asTypeOf(new RS_entry(coreConfig=coreConfig, fetchWidth:Int, physicalRegCount=physicalRegCount))
+        io.RF_inputs(i).bits := 0.U.asTypeOf(new decoded_instruction(coreConfig=coreConfig, fetchWidth:Int, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount))
     }
 
     // Assign port 0
@@ -175,7 +177,7 @@ class RS(dispatchWidth:Int, fetchWidth:Int, RSEntries: Int, physicalRegCount:Int
 
     for(i <- 0 until RSEntries){
         val current_instruction = reservation_station(i)
-        when((current_instruction.uOp.portID.value === 0.U) && schedulable_instructions(i)){
+        when((current_instruction.decoded_instruction.portID === 0.U) && schedulable_instructions(i)){
             port0_RS_index := i.U
             port0_valid := 1.B
         }
@@ -183,7 +185,7 @@ class RS(dispatchWidth:Int, fetchWidth:Int, RSEntries: Int, physicalRegCount:Int
 
     for(i <- 0 until RSEntries){
         val current_instruction = reservation_station(i)
-        when((current_instruction.uOp.portID.value === 1.U) && schedulable_instructions(i)){
+        when((current_instruction.decoded_instruction.portID === 1.U) && schedulable_instructions(i)){
             port1_RS_index := i.U
             port1_valid := 1.B
         }
@@ -191,7 +193,7 @@ class RS(dispatchWidth:Int, fetchWidth:Int, RSEntries: Int, physicalRegCount:Int
 
     for(i <- 0 until RSEntries){
         val current_instruction = reservation_station(i)
-        when((current_instruction.uOp.portID.value === 2.U) && schedulable_instructions(i)){
+        when((current_instruction.decoded_instruction.portID === 2.U) && schedulable_instructions(i)){
             port2_RS_index := i.U
             port2_valid := 1.B
         }
@@ -199,7 +201,7 @@ class RS(dispatchWidth:Int, fetchWidth:Int, RSEntries: Int, physicalRegCount:Int
 
     for(i <- 0 until RSEntries){
         val current_instruction = reservation_station(i)
-        when((current_instruction.uOp.portID.value === 3.U) && schedulable_instructions(i)){
+        when((current_instruction.decoded_instruction.portID === 3.U) && schedulable_instructions(i)){
             port3_RS_index := i.U
             port3_valid := 1.B
         }
@@ -208,7 +210,7 @@ class RS(dispatchWidth:Int, fetchWidth:Int, RSEntries: Int, physicalRegCount:Int
     if(coreConfig.contains("M")){
         for(i <- 0 until RSEntries){
             val current_instruction = reservation_station(i)
-            when((current_instruction.uOp.portID.value === 4.U) && schedulable_instructions(i)){
+            when((current_instruction.decoded_instruction.portID === 4.U) && schedulable_instructions(i)){
                 port4_RS_index := i.U
                 port4_valid := 1.B
             }
@@ -220,57 +222,57 @@ class RS(dispatchWidth:Int, fetchWidth:Int, RSEntries: Int, physicalRegCount:Int
 
     when(schedulable_instructions(port0_RS_index) && port0_valid){
         reservation_station(port0_RS_index).valid := 0.B
-        reservation_station(port0_RS_index) <> 0.U.asTypeOf(new RS_entry(coreConfig=coreConfig, fetchWidth:Int,  physicalRegCount=physicalRegCount))
+        reservation_station(port0_RS_index) <> 0.U.asTypeOf(new RS_entry(coreConfig=coreConfig, fetchWidth:Int, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount))
     }
 
     when(schedulable_instructions(port1_RS_index) && port1_valid){
         reservation_station(port1_RS_index).valid := 0.B
-        reservation_station(port1_RS_index) <> 0.U.asTypeOf(new RS_entry(coreConfig=coreConfig, fetchWidth:Int,  physicalRegCount=physicalRegCount))
+        reservation_station(port1_RS_index) <> 0.U.asTypeOf(new RS_entry(coreConfig=coreConfig, fetchWidth:Int, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount))
     }
 
     when(schedulable_instructions(port2_RS_index) && port2_valid){
         reservation_station(port2_RS_index).valid := 0.B
-        reservation_station(port2_RS_index) <> 0.U.asTypeOf(new RS_entry(coreConfig=coreConfig, fetchWidth:Int,physicalRegCount=physicalRegCount))
+        reservation_station(port2_RS_index) <> 0.U.asTypeOf(new RS_entry(coreConfig=coreConfig, fetchWidth:Int, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount))
     }
 
     when(schedulable_instructions(port3_RS_index) && port3_valid){
         reservation_station(port3_RS_index).valid := 0.B
-        reservation_station(port3_RS_index) <> 0.U.asTypeOf(new RS_entry(coreConfig=coreConfig, fetchWidth:Int, physicalRegCount=physicalRegCount))
+        reservation_station(port3_RS_index) <> 0.U.asTypeOf(new RS_entry(coreConfig=coreConfig, fetchWidth:Int, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount))
     }
 
 
     if(coreConfig.contains("M")){
         when(schedulable_instructions(port4_RS_index) && port4_valid){
             reservation_station(port4_RS_index).valid := 0.B
-            reservation_station(port4_RS_index) <> 0.U.asTypeOf(new RS_entry(coreConfig=coreConfig, fetchWidth:Int, physicalRegCount=physicalRegCount))
+            reservation_station(port4_RS_index) <> 0.U.asTypeOf(new RS_entry(coreConfig=coreConfig, fetchWidth:Int, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount))
         }
     }
 
     // Write selected instructions to ports
     
     when(port0_valid){
-        io.RF_inputs(0).bits <> reservation_station(port0_RS_index)
+        io.RF_inputs(0).bits <> reservation_station(port0_RS_index).decoded_instruction
         io.RF_inputs(0).valid := schedulable_instructions(port0_RS_index)
     }
 
     when(port1_valid){
-        io.RF_inputs(1).bits <> reservation_station(port1_RS_index)
+        io.RF_inputs(1).bits <> reservation_station(port1_RS_index).decoded_instruction
         io.RF_inputs(1).valid := schedulable_instructions(port1_RS_index)
     }
 
     when(port2_valid){
-        io.RF_inputs(2).bits <> reservation_station(port2_RS_index)
+        io.RF_inputs(2).bits <> reservation_station(port2_RS_index).decoded_instruction
         io.RF_inputs(2).valid := schedulable_instructions(port2_RS_index)
     }
 
     when(port3_valid){
-        io.RF_inputs(3).bits <> reservation_station(port3_RS_index)
+        io.RF_inputs(3).bits <> reservation_station(port3_RS_index).decoded_instruction
         io.RF_inputs(3).valid := schedulable_instructions(port3_RS_index)
     }
 
     if(coreConfig.contains("M")){
         when(port4_valid){
-            io.RF_inputs(4).bits <> reservation_station(port4_RS_index)
+            io.RF_inputs(4).bits <> reservation_station(port4_RS_index).decoded_instruction
             io.RF_inputs(4).valid := schedulable_instructions(port4_RS_index)
         }
     }
@@ -298,6 +300,6 @@ class RS(dispatchWidth:Int, fetchWidth:Int, RSEntries: Int, physicalRegCount:Int
     // N-1  |   1111
     val themometor_value = Thermometor(in=availalbe_RS_entries, max=RSEntries)
     for (i <- 0 until dispatchWidth){
-        io.RS_input(i).ready := themometor_value(dispatchWidth-1,0)(i)
+        io.decoded_instructions(i).ready := themometor_value(dispatchWidth-1,0)(i)
     }
 }
