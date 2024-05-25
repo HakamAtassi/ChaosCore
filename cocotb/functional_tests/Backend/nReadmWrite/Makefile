@@ -6,7 +6,7 @@ SIM ?= verilator
 
 TOPLEVEL_LANG ?= verilog
 
-VERILOG_DIR = ../../../../hw/verilog/memories
+VERILOG_DIR = ../../../../hw/chisel/src/main/resources
 
 COMPILE_ARGS += -Wno-DECLFILENAME -Wno-UNUSED -Wno-UNDRIVEN -Wno-WIDTH -Wno-UNOPTFLAT -Wno-WIDTHEXPAND -j 4
 
