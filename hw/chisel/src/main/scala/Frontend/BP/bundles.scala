@@ -192,16 +192,22 @@ class Instruction(fetchWidth:Int, ROBEntires:Int) extends Bundle{
     val ROB_index       =   UInt(log2Ceil(ROBEntires).W)
 }
 
+object RS_types extends ChiselEnum{
+    val INT, MEM, FP = Value
+}
+
 class decoded_instruction(coreConfig:String, fetchWidth:Int, ROBEntires:Int, physicalRegCount:Int) extends Bundle{
     // Parameters
     val portCount       =   4
     val physicalRegBits =   log2Ceil(physicalRegCount)    // FIXME!!
     //
+
     val RD              =   UInt(physicalRegBits.W)
     val RS1             =   UInt(physicalRegBits.W)
     val RS2             =   UInt(physicalRegBits.W)
     val IMM             =   UInt(32.W)
     val FUNCT3          =   UInt(3.W)
+
 
     val packet_index    =   UInt(log2Ceil(fetchWidth*4).W)    // contains the remainder of the PC. ex: 0, 4, 8, 12, 0, ... for fetchWidth of 4
     val ROB_index       =   UInt(log2Ceil(ROBEntires).W)
@@ -210,9 +216,15 @@ class decoded_instruction(coreConfig:String, fetchWidth:Int, ROBEntires:Int, phy
     val instructionType =   InstructionType()
 
     val portID          =   UInt(log2Ceil(portCount).W)  // Decoder assings port ID
+    
+    val RS_type         =   RS_types()
+
+    val needs_ALU           =  Bool()
+    val needs_branch_unit   =  Bool()
 
     val SUBTRACT        =   Bool()
     val MULTIPLY        =   Bool()
+    val IMMEDIATE       =   Bool()
     // ADD atomic instructions
 }
 
@@ -232,6 +244,10 @@ class read_decoded_instruction(coreConfig:String, fetchWidth:Int, ROBEntires:Int
 
     val SUBTRACT        =   Bool()
     val MULTIPLY        =   Bool()
+    val IMMEDIATE       =   Bool()
+
+    val needs_ALU           =  Bool()
+    val needs_branch_unit   =  Bool()
     
     // read data from register read 
     val RS1_data        =   UInt(32.W)
@@ -296,13 +312,6 @@ class ROB_entry extends Bundle{
     // ??
 }
 
-// FIXME: this should be input/output
-//class decoded_fetch_packet(fetchWidth:Int = 4) extends Bundle{
-    //val decoded_instructions    = Vec(fetchWidth, new decoded_instruction())
-    //val fetch_PC                = UInt(32.W)
-    //val valid_bits              = Vec(fetchWidth, Bool())
-//}
-
 // FIXME:  This is messed up 
 class RS_entry(coreConfig:String, fetchWidth:Int, physicalRegCount: Int, ROBEntires:Int) extends Bundle{
     val physicalRegBits = log2Ceil(physicalRegCount)
@@ -315,10 +324,21 @@ class RS_entry(coreConfig:String, fetchWidth:Int, physicalRegCount: Int, ROBEnti
     // TODO: Add ROB entry (to read PC from PC file)
 
     val valid        =  Bool()  // Is whole RS entry valid
-
 }
 
+object InstructionReady{
+    val RS1_bits    =   Bool()
+    val RS2_bits    =   Bool()
+}
 
+class BackendPacket(parameters:Parameters) extends Bundle{
+    import parameters._
+
+    // FIXME: invalid instructions ???
+    val decoded_instruction   =   new decoded_instruction(coreConfig=coreConfig, fetchWidth:Int, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount)
+    val ROB_entry             =   UInt(log2Ceil(ROBEntires).W)
+    val ready_bits            =   InstructionReady
+}
 
 ////////////////////////////
 // EXECUTION ENGINE PORTS //
