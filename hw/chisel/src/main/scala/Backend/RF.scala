@@ -38,7 +38,7 @@ import getPortCount._
 import chisel3.experimental._ 
 
 // Define the BlackBox module
-class NReadWriteSmem extends BlackBox with HasBlackBoxResource {
+class Read8Write4Smem extends BlackBox with HasBlackBoxResource {
   val io = IO(new Bundle {
 
     val clock = Input(Clock())

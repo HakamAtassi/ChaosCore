@@ -66,27 +66,8 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
 
     val MULTIPLY    = (instructionType === InstructionType.OP && FUNCT7(0))
     val SUBTRACT    = (instructionType === InstructionType.OP && FUNCT7(2))
+    val IMMEDIATE   = (instructionType === InstructionType.OP_IMM)
 
-
-    // Assign output
-
-    io.decoded_instruction.RD               := RD
-    io.decoded_instruction.RS1              := RS1
-    io.decoded_instruction.RS2              := RS2
-    io.decoded_instruction.IMM              := IMM
-    io.decoded_instruction.FUNCT3           := FUNCT3
-    io.decoded_instruction.MULTIPLY         := MULTIPLY // Multiply or Divide
-    io.decoded_instruction.SUBTRACT         := SUBTRACT // subtract or arithmetic shift...
-
-    io.decoded_instruction.packet_index     := io.instruction.packet_index 
-
-    io.decoded_instruction.instructionType  := instructionType
-
-    io.decoded_instruction.ROB_index        := io.instruction.ROB_index
-
-
-
-    // PORT ASSIGNMENT //
 
     val needs_divider   =   (instructionType === OP) && 
                             ( FUNCT3 === 0x4.U  ||
@@ -103,6 +84,26 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
 
 
     val needs_memory        =       (instructionType === STORE) ||(instructionType === LOAD)
+
+    // Assign output
+
+    io.decoded_instruction.RD               := RD
+    io.decoded_instruction.RS1              := RS1
+    io.decoded_instruction.RS2              := RS2
+    io.decoded_instruction.IMM              := IMM
+    io.decoded_instruction.FUNCT3           := FUNCT3
+    io.decoded_instruction.MULTIPLY         := MULTIPLY // Multiply or Divide
+    io.decoded_instruction.SUBTRACT         := SUBTRACT // subtract or arithmetic shift...
+    io.decoded_instruction.IMMEDIATE        := IMMEDIATE // subtract or arithmetic shift...
+
+    io.decoded_instruction.packet_index     := io.instruction.packet_index 
+
+    io.decoded_instruction.instructionType  := instructionType
+
+    io.decoded_instruction.ROB_index        := io.instruction.ROB_index
+
+    io.decoded_instruction.needs_ALU                := needs_ALU
+    io.decoded_instruction.needs_branch_unit        := needs_branch_unit
 
 
     // TODO: ECALL / EBREAK
@@ -128,6 +129,23 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
         io.decoded_instruction.portID := 3.U
     }.otherwise{
         io.decoded_instruction.portID := 0.U
+    }
+
+
+    // Assign a reservation station
+
+    val is_INT  =   (instructionType === OP) || (instructionType === OP_IMM)  || 
+                    (instructionType === BRANCH) || (instructionType === JAL) ||
+                    (instructionType === JALR)
+
+    val is_MEM   =   (instructionType === LOAD) || (instructionType === STORE)
+
+    when(is_INT){
+        io.decoded_instruction.RS_type  :=   RS_types.INT
+    }.elsewhen(is_MEM){
+        io.decoded_instruction.RS_type  :=   RS_types.MEM
+    }.otherwise{    // is_FP
+        io.decoded_instruction.RS_type  :=   RS_types.FP
     }
 
 

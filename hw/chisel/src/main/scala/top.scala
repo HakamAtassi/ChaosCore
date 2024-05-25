@@ -115,4 +115,7 @@ object Main extends App {
     VerilogGenerator.generateVerilog(new decoder(parameters), 
     "../verilog/Frontend/decoder.v")
 
+    VerilogGenerator.generateVerilog(new FU(parameters, true, true), 
+    "../verilog/Backend/FU.v")
+
 }
