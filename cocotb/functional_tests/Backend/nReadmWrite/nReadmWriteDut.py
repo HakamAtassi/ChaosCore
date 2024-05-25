@@ -14,7 +14,8 @@ class nReadmWrite:
 
     def write(self, addr_in = [0,0,0,0], data_in=[0x0,0x0,0x0,0x0], wr_en=[0,0,0,0]):
         for i in range(4):
-            getattr(self.dut,f"wdata_{i}").value = addr_in[i]
+            print(f"DUT; ")
+            getattr(self.dut,f"wdata_{i}").value = data_in[i]
             getattr(self.dut,f"wen_{i}").value   = wr_en[i]
             getattr(self.dut,f"waddr_{i}").value = addr_in[i]
 

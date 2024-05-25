@@ -4,7 +4,7 @@ import os
 import subprocess
 
 current_file_dir = os.path.dirname(os.path.abspath(__file__))
-verilog_file_path = os.path.join(current_file_dir, "../../../../hw/verilog/memories/nReadmWrite.v")
+verilog_file_path = os.path.join(current_file_dir, "../../../../hw/chisel/src/main/resources/nReadmWrite.v")
 
 configs = {
     "simulator": "verilator",
@@ -17,8 +17,8 @@ configs = {
     "testcase": None,
     
     # ONLY ENABLE DURING DEBUG
-    #"waves": 1,
-    #"extra_args": ["--trace-fst", "--trace-structs"]
+    "waves": 1,
+    "extra_args": ["--trace-fst", "--trace-structs"]
 }
 
 # Make first...
@@ -52,4 +52,10 @@ def test_simple_writes_4_wide_8_wide():
     configs["module"] = "nReadmWrite_cocotb"
     configs["toplevel"] = "nReadmWrite"
     configs["testcase"] = "simple_writes_4_wide_8_wide"
+    run(**configs)
+
+def test_fuzz_writes_4_wide_8_wide():
+    configs["module"] = "nReadmWrite_cocotb"
+    configs["toplevel"] = "nReadmWrite"
+    configs["testcase"] = "fuzz_writes_4_wide_8_wide"
     run(**configs)
