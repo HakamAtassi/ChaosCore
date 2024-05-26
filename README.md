@@ -24,7 +24,7 @@ tests do not have any particular structure. ```UVM``` tests contain more rigorou
 # Requirements 
 1) Verilator 5.024
 2) Cocotb
-3) pytest + pytest-html + pytest-sugar
+3) pytest + pytest-html + pytest-sugar (optional)
 
 
 # Strong Suggestions
