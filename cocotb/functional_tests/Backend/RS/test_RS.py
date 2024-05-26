@@ -63,13 +63,13 @@ def test_single_broadcast_bad():
 # TEST DISPATCH ##
 ##################
 
-def test_single_dispatch_uOp0():
+def test_dispatch_uOp0():
     configs["module"] = "RS_cocotb"
     configs["toplevel"] = "RS"
     configs["testcase"] = "dispatch_uOp0"
     run(**configs)
 
-def test_single_dispatch_uOp1():
+def test_dispatch_uOp1():
     configs["module"] = "RS_cocotb"
     configs["toplevel"] = "RS"
     configs["testcase"] = "dispatch_uOp1"

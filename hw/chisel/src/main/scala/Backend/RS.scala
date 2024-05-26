@@ -72,6 +72,7 @@ class RS(parameters:Parameters) extends Module{
         when(io.backendPacket(i).valid){
             val allocateIndexBinary = OHToUInt(allocate_index(i))
             reservation_station(allocateIndexBinary).decoded_instruction <> io.backendPacket(i).bits.decoded_instruction
+            reservation_station(allocateIndexBinary).ready_bits:= io.backendPacket(i).bits.ready_bits
             reservation_station(allocateIndexBinary).valid   := 1.B
         }
     }
@@ -106,8 +107,14 @@ class RS(parameters:Parameters) extends Module{
 
 
     for(i <- 0 until RSEntries){
-        when(!reservation_station(i).RS2_ready && reservation_station(i).valid){
-            reservation_station(i).RS2_ready := RS2_match(i)
+        when(!reservation_station(i).ready_bits.RS2_ready && reservation_station(i).valid){
+            reservation_station(i).ready_bits.RS2_ready := RS2_match(i)
+        }
+    }
+
+    for(i <- 0 until RSEntries){
+        when(!reservation_station(i).ready_bits.RS1_ready && reservation_station(i).valid){
+            reservation_station(i).ready_bits.RS1_ready := RS1_match(i)
         }
     }
 
@@ -128,8 +135,8 @@ class RS(parameters:Parameters) extends Module{
     val schedulable_instructions = Wire(Vec(RSEntries, Bool()))    // what instructions have both inputs ready?
     for(i <- 0 until RSEntries){
 
-        schedulable_instructions(i) :=  (reservation_station(i).RS1_ready || RS1_match(i)) && 
-                                        (reservation_station(i).RS2_ready || RS2_match(i)) && 
+        schedulable_instructions(i) :=  (reservation_station(i).ready_bits.RS1_ready || RS1_match(i)) && 
+                                        (reservation_station(i).ready_bits.RS2_ready || RS2_match(i)) && 
                                         reservation_station(i).valid
     }
 

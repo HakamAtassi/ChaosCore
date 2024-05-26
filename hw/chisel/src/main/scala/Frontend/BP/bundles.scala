@@ -202,6 +202,7 @@ class decoded_instruction(coreConfig:String, fetchWidth:Int, ROBEntires:Int, phy
     val physicalRegBits =   log2Ceil(physicalRegCount)    // FIXME!!
     //
 
+    val RD_valid        =   Bool()
     val RD              =   UInt(physicalRegBits.W)
     val RS1             =   UInt(physicalRegBits.W)
     val RS2             =   UInt(physicalRegBits.W)
@@ -234,6 +235,7 @@ class read_decoded_instruction(coreConfig:String, fetchWidth:Int, ROBEntires:Int
     val portCount       =   4
     val physicalRegBits =   log2Ceil(physicalRegCount)
 
+    val RD_valid        =   Bool()
     val RD              =   UInt(physicalRegBits.W)
     val RS1             =   UInt(physicalRegBits.W)
     val RS2             =   UInt(physicalRegBits.W)
@@ -312,32 +314,31 @@ class ROB_entry extends Bundle{
     // ??
 }
 
+class InstructionReady extends Bundle{
+    val RS1_ready    =   Bool()
+    val RS2_ready    =   Bool()
+}
+
 // FIXME:  This is messed up 
 class RS_entry(coreConfig:String, fetchWidth:Int, physicalRegCount: Int, ROBEntires:Int) extends Bundle{
     val physicalRegBits = log2Ceil(physicalRegCount)
 
     val decoded_instruction = new decoded_instruction(coreConfig=coreConfig, fetchWidth=fetchWidth, ROBEntires=ROBEntires, physicalRegCount:Int)
 
-    val RS1_ready       =   Bool()
-    val RS2_ready       =   Bool()
+    val ready_bits          =   new InstructionReady()
 
     // TODO: Add ROB entry (to read PC from PC file)
 
     val valid        =  Bool()  // Is whole RS entry valid
 }
 
-object InstructionReady{
-    val RS1_bits    =   Bool()
-    val RS2_bits    =   Bool()
-}
 
 class BackendPacket(parameters:Parameters) extends Bundle{
     import parameters._
 
     // FIXME: invalid instructions ???
     val decoded_instruction   =   new decoded_instruction(coreConfig=coreConfig, fetchWidth:Int, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount)
-    val ROB_entry             =   UInt(log2Ceil(ROBEntires).W)
-    val ready_bits            =   InstructionReady
+    val ready_bits            =   new InstructionReady()
 }
 
 ////////////////////////////

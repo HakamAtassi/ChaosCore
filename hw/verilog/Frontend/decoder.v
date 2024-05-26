@@ -5,6 +5,7 @@ module decoder(
   input  [31:0] io_instruction_instruction,
   input  [3:0]  io_instruction_packet_index,
   input  [5:0]  io_instruction_ROB_index,
+  output        io_decoded_instruction_RD_valid,
   output [5:0]  io_decoded_instruction_RD,
                 io_decoded_instruction_RS1,
                 io_decoded_instruction_RS2,
@@ -45,6 +46,7 @@ module decoder(
         ALU_port <= ALU_port + 2'h1;
     end
   end // always @(posedge)
+  assign io_decoded_instruction_RD_valid = 1'h0;
   assign io_decoded_instruction_RD = {1'h0, io_instruction_instruction[11:7]};
   assign io_decoded_instruction_RS1 = {1'h0, io_instruction_instruction[19:15]};
   assign io_decoded_instruction_RS2 = {1'h0, io_instruction_instruction[24:20]};

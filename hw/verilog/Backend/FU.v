@@ -120,6 +120,7 @@ module FU(
                 reset,
   output        io_FU_input_ready,
   input         io_FU_input_valid,
+                io_FU_input_bits_RD_valid,
   input  [5:0]  io_FU_input_bits_RD,
                 io_FU_input_bits_RS1,
                 io_FU_input_bits_RS2,
