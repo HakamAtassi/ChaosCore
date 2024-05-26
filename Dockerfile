@@ -50,11 +50,7 @@ RUN echo "deb https://repo.scala-sbt.org/scalasbt/debian all main" | tee /etc/ap
 
 
 # Install dependencies and Java
-#RUN apt install -y wget gpg apt-transport-https
-#RUN wget -qO - https://packages.adoptium.net/artifactory/api/gpg/key/public | gpg --dearmor | tee /etc/apt/trusted.gpg.d/adoptium.gpg > /dev/null
-#RUN echo "deb https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" | tee /etc/apt/sources.list.d/adoptium.list
-#RUN apt update
-#RUN apt install temurin-17-jdk
+RUN apt install openjdk-17-jdk -y
 
 
 # Install chisel3
@@ -68,6 +64,8 @@ RUN curl -O -L https://github.com/chipsalliance/chisel/releases/latest/download/
 ## INSTALL LOCAL PYTHON MODELS ##
 #################################
 
+# STOP PYC generation
+ENV PYTHONDONTWRITEBYTECODE 1   
 
 WORKDIR /work
 
@@ -79,7 +77,7 @@ COPY . /work
 RUN cd /work/py/cocotb_utils && pip3 install .
 RUN cd /work/py/models && pip3 install .
 
-#RUN cd /work/cocotb/functional_tests/Frontend/rename && pytest
+RUN cd /work/cocotb/ && pytest
 
 # Default command on container start
 CMD ["bash"]

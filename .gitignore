@@ -1,5 +1,3 @@
-### AL ###
-#Template for AL projects for Dynamics 365 Business Central
 #launch.json folder
 .vscode/
 .alcache/
@@ -7,6 +5,7 @@
 .snapshots/
 
 __pycache__/
+.pytest_cache/
 
 # verilator files
 sim_build/
@@ -24,3 +23,12 @@ pipelined_non_restoring.c
 *.bsp
 *.metals
 *.scala-build
+
+
+assets/
+
+
+target/
+project/
+
+free_list.anno.json
