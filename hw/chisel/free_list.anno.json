@@ -1,0 +1,6 @@
+[
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~free_list|reorder_free_inputs>sels"
+  }
+]

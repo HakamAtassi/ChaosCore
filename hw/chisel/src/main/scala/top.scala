@@ -61,7 +61,7 @@ object Main extends App {
     //VerilogGenerator.generateVerilog(new gshare(GHR_width = 16), "../verilog/Frontend/BP/gshare.v")
     //VerilogGenerator.generateVerilog(new hash_BTB(entries = 4096), "../verilog/Frontend/BP/hash_BTB.v")
     //VerilogGenerator.generateVerilog(new decode_validate(fetchWidth=4), "../verilog/Frontend/BP/decode_validate.v")
-    //VerilogGenerator.generateVerilog(new RAS, "../verilog/Frontend/BP/RAS.v")
+    VerilogGenerator.generateVerilog(new RAS, "../verilog/Frontend/BP/RAS.v")
     //VerilogGenerator.generateVerilog(new BP, "../verilog/Frontend/BP/BP.v")
     //VerilogGenerator.generateVerilog(new PC_arbit(
         //fetchWidth = fetchWidth,
@@ -83,42 +83,45 @@ object Main extends App {
     //), 
     //"../verilog/Frontend/Frontend.v")
 
+    val parameters = Parameters()
 
-    VerilogGenerator.generateVerilog(new free_list(
-        fetchWidth = fetchWidth,
-        physicalRegCount = physicalRegCount)
-    , 
+    VerilogGenerator.generateVerilog(new free_list(parameters), 
     "../verilog/Frontend/free_list.v")
 
-    VerilogGenerator.generateVerilog(new WAW_handler(
-        fetchWidth = fetchWidth,
-        physicalRegCount = physicalRegCount, 
-        architecturalRegCount = architecturalRegCount
-        
-        )
-    , 
+
+
+    VerilogGenerator.generateVerilog(new WAW_handler(parameters), 
     "../verilog/Frontend/WAW_handler.v")
 
 
-    VerilogGenerator.generateVerilog(new rename(
-        RATCheckpointCount = RATCheckpointCount,
-        fetchWidth = fetchWidth,
-        physicalRegCount = physicalRegCount, 
-        architecturalRegCount = architecturalRegCount
-        
-        )
-    , 
+    VerilogGenerator.generateVerilog(new rename(parameters), 
     "../verilog/Frontend/rename.v")
 
 
-    VerilogGenerator.generateVerilog(new RAT(
-        RATCheckpointCount = RATCheckpointCount,
-        fetchWidth = fetchWidth,
-        physicalRegCount = physicalRegCount, 
-        architecturalRegCount = architecturalRegCount
-        
-        )
-    , 
+    VerilogGenerator.generateVerilog(new RAT(parameters), 
     "../verilog/Frontend/RAT.v")
+
+
+    VerilogGenerator.generateVerilog(new RS(parameters), 
+    "../verilog/Backend/RS.v")
+
+    VerilogGenerator.generateVerilog(new MEMRS(parameters), 
+    "../verilog/Backend/MEMRS.v")
+
+    //VerilogGenerator.generateVerilog(new RF(
+        //coreConfig:String, 
+        //physicalRegCount:Int
+        //)
+    //, 
+    //"../verilog/Backend/RF.v")
+
+    VerilogGenerator.generateVerilog(new decoder(parameters), 
+    "../verilog/Frontend/decoder.v")
+
+    VerilogGenerator.generateVerilog(new FU(parameters, true, true), 
+    "../verilog/Backend/FU.v")
+
+    VerilogGenerator.generateVerilog(new backend(parameters), 
+    "../verilog/Backend/backend.v")
 
 }

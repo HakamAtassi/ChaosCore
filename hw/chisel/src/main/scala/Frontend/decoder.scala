@@ -27,6 +27,8 @@
 * ------------------------------------------------------------------------------------ 
 */
 
+package ChaosCore
+
 import chisel3._
 import circt.stage.ChiselStage
 import chisel3.util._
@@ -34,39 +36,126 @@ import java.io.{File, FileWriter}
 import java.rmi.server.UID
 
 import helperFunctions._
-import Uop._
 
-/*
-class decoder extends Module{   // basic decoder and field extraction
+
+class decoder(parameters:Parameters) extends Module{   // basic decoder and field extraction
+    import parameters._
     val io = IO(new Bundle{
-        val instruction = Input(UInt(32.W))
+        val instruction         = Input(new Instruction(fetchWidth=fetchWidth, ROBEntires=ROBEntires))
 
-        val decoded_instruction = Output(new decoded_instruction())
+        val decoded_instruction = Output(new decoded_instruction(coreConfig=coreConfig, fetchWidth=fetchWidth, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount))
     })
 
-    val opcode      = io.instruction(6, 0)
+    import InstructionType._
 
-    val rs1         = io.instruction(19, 15)
-    val rs2         = io.instruction(24, 20)
-    val rd          = io.instruction(11, 7)
 
-    val funct3      = io.instruction(14, 12)
-    val funct7      = io.instruction(31, 25)
+    val instruction = io.instruction.instruction
 
-    val imm = getImm(io.instruction)
+    // Direct instruction fields
+    val opcode      = instruction(6, 0)
+    val RS1         = instruction(19, 15)
+    val RS2         = instruction(24, 20)
+    val RD          = instruction(11, 7)
+    val IMM         = getImm(instruction)
 
-    // Assignment 
+    val FUNCT3      = instruction(14, 12)
+    val FUNCT7      = instruction(31, 25)
 
-    decoded_instruction.opcode :=  opcode 
-    decoded_instruction.rs1    :=  rs1
-    decoded_instruction.rs2    :=  rs2
-    decoded_instruction.rd     :=  rd
-    decoded_instruction.funct3 :=  funct3
-    decoded_instruction.funct7 :=  funct7
-    decoded_instruction.imm    :=  imm
+
+    val instructionType = InstructionType(opcode(6,2))
+
+    val MULTIPLY    = (instructionType === InstructionType.OP && FUNCT7(0))
+    val SUBTRACT    = (instructionType === InstructionType.OP && FUNCT7(2))
+    val IMMEDIATE   = (instructionType === InstructionType.OP_IMM)
+
+
+    val needs_divider   =   (instructionType === OP) && 
+                            ( FUNCT3 === 0x4.U  ||
+                              FUNCT3 === 0x5.U  ||
+                              FUNCT3 === 0x6.U  ||
+                              FUNCT3 === 0x7.U) && FUNCT7(0)
+
+    val needs_branch_unit   =   (instructionType === BRANCH) || 
+                                (instructionType === JAL)    ||
+                                (instructionType === JALR)
+
+    val needs_ALU           =       ((instructionType === OP) && (FUNCT7(2) || (FUNCT7 === 0x00.U))) ||
+                                    (instructionType === OP_IMM)
+
+
+    val IS_LOAD        =       (instructionType === LOAD)
+    val IS_STORE       =       (instructionType === STORE)
+
+    val needs_memory        =       (instructionType === STORE) ||(instructionType === LOAD)
+
+    // Assign output
+
+    io.decoded_instruction.RD_valid         := 0.B  // FIXME: 
+    io.decoded_instruction.RD               := RD
+    io.decoded_instruction.RS1              := RS1
+    io.decoded_instruction.RS2              := RS2
+    io.decoded_instruction.IMM              := IMM
+    io.decoded_instruction.FUNCT3           := FUNCT3
+    io.decoded_instruction.MULTIPLY         := MULTIPLY // Multiply or Divide
+    io.decoded_instruction.SUBTRACT         := SUBTRACT // subtract or arithmetic shift...
+    io.decoded_instruction.IMMEDIATE        := IMMEDIATE // subtract or arithmetic shift...
+
+    io.decoded_instruction.IS_LOAD         := IS_LOAD   // subtract or arithmetic shift...
+    io.decoded_instruction.IS_STORE        := IS_STORE  // subtract or arithmetic shift...
+
+    io.decoded_instruction.packet_index     := io.instruction.packet_index 
+    io.decoded_instruction.instructionType  := instructionType
+    io.decoded_instruction.ROB_index        := io.instruction.ROB_index
+    io.decoded_instruction.needs_ALU                := needs_ALU
+    io.decoded_instruction.needs_branch_unit        := needs_branch_unit
+
+
+    // TODO: ECALL / EBREAK
+
+
+    val ALU_port    =   RegInit(UInt(2.W), 0.U)
+
     
+    when(needs_ALU){
+        io.decoded_instruction.portID := ALU_port
+
+        when(ALU_port === 2.U){
+            ALU_port := 0.U
+        }.otherwise{
+            ALU_port := ALU_port + 1.U
+        }
+
+    }.elsewhen(needs_divider){
+        io.decoded_instruction.portID := 1.U
+    }.elsewhen(needs_branch_unit){
+        io.decoded_instruction.portID := 0.U
+    }.elsewhen(needs_memory){
+        io.decoded_instruction.portID := 3.U
+    }.otherwise{
+        io.decoded_instruction.portID := 0.U
+    }
+
+
+    // Assign a reservation station
+
+    val is_INT  =   (instructionType === OP) || (instructionType === OP_IMM)  || 
+                    (instructionType === BRANCH) || (instructionType === JAL) ||
+                    (instructionType === JALR)
+
+    val is_MEM   =   (instructionType === LOAD) || (instructionType === STORE)
+
+    when(is_INT){
+        io.decoded_instruction.RS_type  :=   RS_types.INT
+    }.elsewhen(is_MEM){
+        io.decoded_instruction.RS_type  :=   RS_types.MEM
+    }.otherwise{    // is_FP
+        io.decoded_instruction.RS_type  :=   RS_types.FP
+    }
+
+
 }
 
+/*
 class fetch_packet_decoder(fetchWidth:Int) extends Module{
     val io = IO(new Bundle{
         val fetch_packet         =   Decoupled(new fetch_packet(fetchWidth=fetchWidth))          // Fetch packet result (To Decoders)
@@ -90,5 +179,4 @@ class fetch_packet_decoder(fetchWidth:Int) extends Module{
     }
 
 
-}
-*/
+}*/
