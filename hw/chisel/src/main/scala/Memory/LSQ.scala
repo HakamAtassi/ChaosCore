@@ -1,8 +1,8 @@
 /* ------------------------------------------------------------------------------------
-* Filename: Uop.scala
+* Filename: LSQ.scala
 * Author: Hakam Atassi
-* Date: Apr 23 2024
-* Description: An enum of all the possible Uops exiting the decoder(s)
+* Date: May 23 2024
+* Description: A very naive Load/Store queue that executes memory operations serially.
 * License: MIT
 *
 * Copyright (c) 2024 by Hakam Atassi
@@ -27,84 +27,12 @@
 * ------------------------------------------------------------------------------------ 
 */
 
+
 package ChaosCore
 
 import chisel3._
-import circt.stage.ChiselStage
 import chisel3.util._
-import java.io.{File, FileWriter}
-import java.rmi.server.UID
 
 
-//object instructionType extends ChiselEnum {
-    //val R,
-        //I,
-        //S,
-        //B, 
-        //U,
-        //J = Value
-//} 
 
-
-//object Uop extends ChiselEnum {
-    //val LUI,
-        //AUIPC,
-        //JAL,
-        //JALR,
-        //BEQ,
-        //BNE,
-        //BLT,
-        //BGE,
-        //BLTU,
-        //BGEU,
-        //LB,
-        //LH,
-        //LW,
-        //LBU,
-        //LHU,
-        //SB,
-        //SH,
-        //SW,
-        //ADDI,
-        //SLTI,
-        //SLTIU,
-        //XORI,
-        //ORI,
-        //ANDI,
-        //SLLI,
-        //SRLI,
-        //SRAI,
-        //ADD,
-        //SUB,
-        //SLL,
-        //SLT,
-        //SLTU,
-        //XOR,
-        //SRL,
-        //SRA,
-        //OR,
-        //AND,
-        //FENCE,
-        //ECALL,
-        //EBREAK = Value
-
-//} 
-
-
-object Uop extends ChiselEnum {
-    val 
-        LUI,
-        AUIPC,
-        JAL,
-        JALR,
-        BRANCH,
-        LOAD,
-        STORE,
-        IMM_ARITH,
-        REG_ARITH,
-        FENCE,
-        ECALL,
-        EBREAK = Value
-
-} 
-
+//class LSQ(parameters:Parameters) extends Module{}

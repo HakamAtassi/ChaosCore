@@ -83,6 +83,9 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
                                     (instructionType === OP_IMM)
 
 
+    val IS_LOAD        =       (instructionType === LOAD)
+    val IS_STORE       =       (instructionType === STORE)
+
     val needs_memory        =       (instructionType === STORE) ||(instructionType === LOAD)
 
     // Assign output
@@ -97,12 +100,12 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
     io.decoded_instruction.SUBTRACT         := SUBTRACT // subtract or arithmetic shift...
     io.decoded_instruction.IMMEDIATE        := IMMEDIATE // subtract or arithmetic shift...
 
+    io.decoded_instruction.IS_LOAD         := IS_LOAD   // subtract or arithmetic shift...
+    io.decoded_instruction.IS_STORE        := IS_STORE  // subtract or arithmetic shift...
+
     io.decoded_instruction.packet_index     := io.instruction.packet_index 
-
     io.decoded_instruction.instructionType  := instructionType
-
     io.decoded_instruction.ROB_index        := io.instruction.ROB_index
-
     io.decoded_instruction.needs_ALU                := needs_ALU
     io.decoded_instruction.needs_branch_unit        := needs_branch_unit
 

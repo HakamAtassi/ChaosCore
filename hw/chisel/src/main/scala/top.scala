@@ -105,6 +105,9 @@ object Main extends App {
     VerilogGenerator.generateVerilog(new RS(parameters), 
     "../verilog/Backend/RS.v")
 
+    VerilogGenerator.generateVerilog(new MEMRS(parameters), 
+    "../verilog/Backend/MEMRS.v")
+
     //VerilogGenerator.generateVerilog(new RF(
         //coreConfig:String, 
         //physicalRegCount:Int
@@ -117,5 +120,8 @@ object Main extends App {
 
     VerilogGenerator.generateVerilog(new FU(parameters, true, true), 
     "../verilog/Backend/FU.v")
+
+    VerilogGenerator.generateVerilog(new backend(parameters), 
+    "../verilog/Backend/backend.v")
 
 }

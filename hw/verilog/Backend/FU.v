@@ -2,13 +2,13 @@
 module ALU(
   input         clock,
                 reset,
-  input  [5:0]  io_FU_input_bits_RD,
-  input  [31:0] io_FU_input_bits_IMM,
-  input  [2:0]  io_FU_input_bits_FUNCT3,
-  input  [4:0]  io_FU_input_bits_instructionType,
-  input         io_FU_input_bits_SUBTRACT,
-                io_FU_input_bits_MULTIPLY,
-                io_FU_input_bits_IMMEDIATE,
+  input  [5:0]  io_FU_input_bits_decoded_instruction_RD,
+  input  [31:0] io_FU_input_bits_decoded_instruction_IMM,
+  input  [2:0]  io_FU_input_bits_decoded_instruction_FUNCT3,
+  input  [4:0]  io_FU_input_bits_decoded_instruction_instructionType,
+  input         io_FU_input_bits_decoded_instruction_SUBTRACT,
+                io_FU_input_bits_decoded_instruction_MULTIPLY,
+                io_FU_input_bits_decoded_instruction_IMMEDIATE,
   input  [31:0] io_FU_input_bits_RS1_data,
                 io_FU_input_bits_RS2_data,
   output [63:0] io_FU_output_RD_bits,
@@ -25,9 +25,9 @@ module ALU(
   reg  [31:0] sll_result;
   reg  [31:0] srl_result;
   reg  [31:0] sra_result;
-  wire        _REMU_T = io_FU_input_bits_instructionType == 5'hC;
-  wire        _MUL_T_1 = io_FU_input_bits_FUNCT3 == 3'h0;
-  wire        _DIVU_T_1 = io_FU_input_bits_FUNCT3 == 3'h5;
+  wire        _REMU_T = io_FU_input_bits_decoded_instruction_instructionType == 5'hC;
+  wire        _MUL_T_1 = io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h0;
+  wire        _DIVU_T_1 = io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h5;
   always @(posedge clock) begin
     if (reset) begin
       add_result <= 32'h0;
@@ -43,7 +43,9 @@ module ALU(
     end
     else begin
       automatic logic [31:0] operand2 =
-        io_FU_input_bits_IMMEDIATE ? io_FU_input_bits_IMM : io_FU_input_bits_RS2_data;
+        io_FU_input_bits_decoded_instruction_IMMEDIATE
+          ? io_FU_input_bits_decoded_instruction_IMM
+          : io_FU_input_bits_RS2_data;
       automatic logic [31:0] _GEN = {27'h0, operand2[4:0]};
       automatic logic [62:0] _sll_result_T_1 =
         {31'h0, io_FU_input_bits_RS1_data} << operand2[4:0];
@@ -59,39 +61,48 @@ module ALU(
       sra_result <= $signed($signed(io_FU_input_bits_RS1_data) >>> _GEN);
     end
   end // always @(posedge)
-  assign io_FU_output_RD_bits = {58'h0, io_FU_input_bits_RD};
+  assign io_FU_output_RD_bits = {58'h0, io_FU_input_bits_decoded_instruction_RD};
   assign io_FU_output_data =
-    _REMU_T & _MUL_T_1 & ~io_FU_input_bits_MULTIPLY & io_FU_input_bits_SUBTRACT
+    _REMU_T & _MUL_T_1 & ~io_FU_input_bits_decoded_instruction_MULTIPLY
+    & io_FU_input_bits_decoded_instruction_SUBTRACT
       ? add_result
-      : _REMU_T & _MUL_T_1 & ~io_FU_input_bits_MULTIPLY & io_FU_input_bits_SUBTRACT
+      : _REMU_T & _MUL_T_1 & ~io_FU_input_bits_decoded_instruction_MULTIPLY
+        & io_FU_input_bits_decoded_instruction_SUBTRACT
           ? sub_result
-          : _REMU_T & io_FU_input_bits_FUNCT3 == 3'h4 & ~io_FU_input_bits_MULTIPLY
+          : _REMU_T & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h4
+            & ~io_FU_input_bits_decoded_instruction_MULTIPLY
               ? xor_result
-              : _REMU_T & io_FU_input_bits_FUNCT3 == 3'h6 & ~io_FU_input_bits_MULTIPLY
+              : _REMU_T & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h6
+                & ~io_FU_input_bits_decoded_instruction_MULTIPLY
                   ? or_result
-                  : _REMU_T & (&io_FU_input_bits_FUNCT3) & ~io_FU_input_bits_MULTIPLY
+                  : _REMU_T & (&io_FU_input_bits_decoded_instruction_FUNCT3)
+                    & ~io_FU_input_bits_decoded_instruction_MULTIPLY
                       ? and_result
-                      : _REMU_T & io_FU_input_bits_FUNCT3 == 3'h1
-                        & ~io_FU_input_bits_MULTIPLY
+                      : _REMU_T & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h1
+                        & ~io_FU_input_bits_decoded_instruction_MULTIPLY
                           ? sll_result
-                          : _REMU_T & _DIVU_T_1 & ~io_FU_input_bits_MULTIPLY
+                          : _REMU_T & _DIVU_T_1
+                            & ~io_FU_input_bits_decoded_instruction_MULTIPLY
                               ? srl_result
-                              : _REMU_T & _DIVU_T_1 & ~io_FU_input_bits_MULTIPLY
+                              : _REMU_T & _DIVU_T_1
+                                & ~io_FU_input_bits_decoded_instruction_MULTIPLY
                                   ? sra_result
-                                  : _REMU_T & io_FU_input_bits_FUNCT3 == 3'h2
-                                    & ~io_FU_input_bits_MULTIPLY
+                                  : _REMU_T
+                                    & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h2
+                                    & ~io_FU_input_bits_decoded_instruction_MULTIPLY
                                       ? slt_result
-                                      : _REMU_T & io_FU_input_bits_FUNCT3 == 3'h3
-                                        & ~io_FU_input_bits_MULTIPLY
+                                      : _REMU_T
+                                        & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h3
+                                        & ~io_FU_input_bits_decoded_instruction_MULTIPLY
                                           ? sltu_result
                                           : 32'h0;
 endmodule
 
 module branch_unit(
-  input  [5:0]  io_FU_input_bits_RD,
-  input  [31:0] io_FU_input_bits_IMM,
-  input  [3:0]  io_FU_input_bits_packet_index,
-  input  [4:0]  io_FU_input_bits_instructionType,
+  input  [5:0]  io_FU_input_bits_decoded_instruction_RD,
+  input  [31:0] io_FU_input_bits_decoded_instruction_IMM,
+  input  [3:0]  io_FU_input_bits_decoded_instruction_packet_index,
+  input  [4:0]  io_FU_input_bits_decoded_instruction_instructionType,
   input  [31:0] io_FU_input_bits_RS1_data,
                 io_FU_input_bits_RS2_data,
                 io_FU_input_bits_PC,
@@ -101,17 +112,18 @@ module branch_unit(
   output [31:0] io_FU_output_branch_address
 );
 
-  wire [31:0] _PC_T = io_FU_input_bits_PC + {28'h0, io_FU_input_bits_packet_index};
-  assign io_FU_output_RD_bits = {58'h0, io_FU_input_bits_RD};
+  wire [31:0] _PC_T =
+    io_FU_input_bits_PC + {28'h0, io_FU_input_bits_decoded_instruction_packet_index};
+  assign io_FU_output_RD_bits = {58'h0, io_FU_input_bits_decoded_instruction_RD};
   assign io_FU_output_data = _PC_T + 32'h4;
   assign io_FU_output_branch_taken = 1'h1;
   assign io_FU_output_branch_address =
-    io_FU_input_bits_instructionType == 5'h18
-      ? _PC_T + io_FU_input_bits_IMM
-      : io_FU_input_bits_instructionType == 5'h1B
-          ? _PC_T + io_FU_input_bits_IMM
-          : io_FU_input_bits_instructionType == 5'h19
-              ? io_FU_input_bits_RS1_data + io_FU_input_bits_IMM
+    io_FU_input_bits_decoded_instruction_instructionType == 5'h18
+      ? _PC_T + io_FU_input_bits_decoded_instruction_IMM
+      : io_FU_input_bits_decoded_instruction_instructionType == 5'h1B
+          ? _PC_T + io_FU_input_bits_decoded_instruction_IMM
+          : io_FU_input_bits_decoded_instruction_instructionType == 5'h19
+              ? io_FU_input_bits_RS1_data + io_FU_input_bits_decoded_instruction_IMM
               : 32'h0;
 endmodule
 
@@ -120,19 +132,24 @@ module FU(
                 reset,
   output        io_FU_input_ready,
   input         io_FU_input_valid,
-                io_FU_input_bits_RD_valid,
-  input  [5:0]  io_FU_input_bits_RD,
-                io_FU_input_bits_RS1,
-                io_FU_input_bits_RS2,
-  input  [31:0] io_FU_input_bits_IMM,
-  input  [2:0]  io_FU_input_bits_FUNCT3,
-  input  [3:0]  io_FU_input_bits_packet_index,
-  input  [4:0]  io_FU_input_bits_instructionType,
-  input         io_FU_input_bits_SUBTRACT,
-                io_FU_input_bits_MULTIPLY,
-                io_FU_input_bits_IMMEDIATE,
-                io_FU_input_bits_needs_ALU,
-                io_FU_input_bits_needs_branch_unit,
+                io_FU_input_bits_decoded_instruction_RD_valid,
+  input  [5:0]  io_FU_input_bits_decoded_instruction_RD,
+                io_FU_input_bits_decoded_instruction_RS1,
+                io_FU_input_bits_decoded_instruction_RS2,
+  input  [31:0] io_FU_input_bits_decoded_instruction_IMM,
+  input  [2:0]  io_FU_input_bits_decoded_instruction_FUNCT3,
+  input  [3:0]  io_FU_input_bits_decoded_instruction_packet_index,
+  input  [5:0]  io_FU_input_bits_decoded_instruction_ROB_index,
+  input  [4:0]  io_FU_input_bits_decoded_instruction_instructionType,
+  input  [1:0]  io_FU_input_bits_decoded_instruction_portID,
+                io_FU_input_bits_decoded_instruction_RS_type,
+  input         io_FU_input_bits_decoded_instruction_needs_ALU,
+                io_FU_input_bits_decoded_instruction_needs_branch_unit,
+                io_FU_input_bits_decoded_instruction_SUBTRACT,
+                io_FU_input_bits_decoded_instruction_MULTIPLY,
+                io_FU_input_bits_decoded_instruction_IMMEDIATE,
+                io_FU_input_bits_decoded_instruction_IS_LOAD,
+                io_FU_input_bits_decoded_instruction_IS_STORE,
   input  [31:0] io_FU_input_bits_RS1_data,
                 io_FU_input_bits_RS2_data,
                 io_FU_input_bits_PC,
@@ -149,34 +166,49 @@ module FU(
   wire [31:0] _branch_unit_io_FU_output_branch_address;
   wire [63:0] _ALU_io_FU_output_RD_bits;
   wire [31:0] _ALU_io_FU_output_data;
-  wire        is_ALU = io_FU_input_bits_needs_ALU & io_FU_input_valid;
+  wire        is_ALU = io_FU_input_bits_decoded_instruction_needs_ALU & io_FU_input_valid;
   ALU ALU (
-    .clock                            (clock),
-    .reset                            (reset),
-    .io_FU_input_bits_RD              (io_FU_input_bits_RD),
-    .io_FU_input_bits_IMM             (io_FU_input_bits_IMM),
-    .io_FU_input_bits_FUNCT3          (io_FU_input_bits_FUNCT3),
-    .io_FU_input_bits_instructionType (io_FU_input_bits_instructionType),
-    .io_FU_input_bits_SUBTRACT        (io_FU_input_bits_SUBTRACT),
-    .io_FU_input_bits_MULTIPLY        (io_FU_input_bits_MULTIPLY),
-    .io_FU_input_bits_IMMEDIATE       (io_FU_input_bits_IMMEDIATE),
-    .io_FU_input_bits_RS1_data        (io_FU_input_bits_RS1_data),
-    .io_FU_input_bits_RS2_data        (io_FU_input_bits_RS2_data),
-    .io_FU_output_RD_bits             (_ALU_io_FU_output_RD_bits),
-    .io_FU_output_data                (_ALU_io_FU_output_data)
+    .clock                                                (clock),
+    .reset                                                (reset),
+    .io_FU_input_bits_decoded_instruction_RD
+      (io_FU_input_bits_decoded_instruction_RD),
+    .io_FU_input_bits_decoded_instruction_IMM
+      (io_FU_input_bits_decoded_instruction_IMM),
+    .io_FU_input_bits_decoded_instruction_FUNCT3
+      (io_FU_input_bits_decoded_instruction_FUNCT3),
+    .io_FU_input_bits_decoded_instruction_instructionType
+      (io_FU_input_bits_decoded_instruction_instructionType),
+    .io_FU_input_bits_decoded_instruction_SUBTRACT
+      (io_FU_input_bits_decoded_instruction_SUBTRACT),
+    .io_FU_input_bits_decoded_instruction_MULTIPLY
+      (io_FU_input_bits_decoded_instruction_MULTIPLY),
+    .io_FU_input_bits_decoded_instruction_IMMEDIATE
+      (io_FU_input_bits_decoded_instruction_IMMEDIATE),
+    .io_FU_input_bits_RS1_data                            (io_FU_input_bits_RS1_data),
+    .io_FU_input_bits_RS2_data                            (io_FU_input_bits_RS2_data),
+    .io_FU_output_RD_bits                                 (_ALU_io_FU_output_RD_bits),
+    .io_FU_output_data                                    (_ALU_io_FU_output_data)
   );
   branch_unit branch_unit (
-    .io_FU_input_bits_RD              (io_FU_input_bits_RD),
-    .io_FU_input_bits_IMM             (io_FU_input_bits_IMM),
-    .io_FU_input_bits_packet_index    (io_FU_input_bits_packet_index),
-    .io_FU_input_bits_instructionType (io_FU_input_bits_instructionType),
-    .io_FU_input_bits_RS1_data        (io_FU_input_bits_RS1_data),
-    .io_FU_input_bits_RS2_data        (io_FU_input_bits_RS2_data),
-    .io_FU_input_bits_PC              (io_FU_input_bits_PC),
-    .io_FU_output_RD_bits             (_branch_unit_io_FU_output_RD_bits),
-    .io_FU_output_data                (_branch_unit_io_FU_output_data),
-    .io_FU_output_branch_taken        (_branch_unit_io_FU_output_branch_taken),
-    .io_FU_output_branch_address      (_branch_unit_io_FU_output_branch_address)
+    .io_FU_input_bits_decoded_instruction_RD
+      (io_FU_input_bits_decoded_instruction_RD),
+    .io_FU_input_bits_decoded_instruction_IMM
+      (io_FU_input_bits_decoded_instruction_IMM),
+    .io_FU_input_bits_decoded_instruction_packet_index
+      (io_FU_input_bits_decoded_instruction_packet_index),
+    .io_FU_input_bits_decoded_instruction_instructionType
+      (io_FU_input_bits_decoded_instruction_instructionType),
+    .io_FU_input_bits_RS1_data                            (io_FU_input_bits_RS1_data),
+    .io_FU_input_bits_RS2_data                            (io_FU_input_bits_RS2_data),
+    .io_FU_input_bits_PC                                  (io_FU_input_bits_PC),
+    .io_FU_output_RD_bits
+      (_branch_unit_io_FU_output_RD_bits),
+    .io_FU_output_data
+      (_branch_unit_io_FU_output_data),
+    .io_FU_output_branch_taken
+      (_branch_unit_io_FU_output_branch_taken),
+    .io_FU_output_branch_address
+      (_branch_unit_io_FU_output_branch_address)
   );
   assign io_FU_input_ready = 1'h0;
   assign io_FU_output_RD_valid = 1'h0;
