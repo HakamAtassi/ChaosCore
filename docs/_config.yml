@@ -1,14 +1,18 @@
 title: Just the Docs Template
-description: A starter template for a Jeykll site using the Just the Docs theme!
+description: A starter template for a Jekyll site using the Just the Docs theme!
 theme: just-the-docs
 
-url: https://just-the-docs.github.io
+# Set the base URL to match your repository name
+baseurl: "/ChaosCoredocs" # The subpath of your site, e.g., /repository-name
+url: "https://hakatassi.github.io" # The base hostname & protocol for your site
 
+# Auxiliary links for your site
 aux_links:
   Template Repository: https://github.com/just-the-docs/just-the-docs-template
 
 color_scheme: dark
 
+# Include necessary folders
 include:
   - _pages
   - naming
@@ -16,4 +20,3 @@ include:
   - verification
   - extensions
   - building
-

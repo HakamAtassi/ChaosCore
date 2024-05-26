@@ -295,13 +295,10 @@ async def dispatch_uOp1(dut):
     dut.write_RS(RD_valid  =[1,0,0,0], 
                 RD         =[4,0,0,0], 
                 RS1_ready  =[1,0,0,0],  
-                RS1_valid  =[1,0,0,0], 
-                RS1_bits   =[4,0,0,0], 
+                RS1        =[4,0,0,0], 
                 RS2_ready  =[1,0,0,0], 
-                RS2_is_imm =[0,0,0,0], 
-                RS2_valid  =[1,0,0,0], 
-                RS2_bits   =[5,0,0,0], 
-                uOp        =[1,0,0,0], 
+                RS2        =[5,0,0,0], 
+                portID     =[1,0,0,0], 
                 valid      =[1,0,0,0])
 
     await RisingEdge(dut.clock())
@@ -319,20 +316,15 @@ async def dispatch_uOp1(dut):
 
 
     assert ports[1]["valid"] == 1
-    assert ports[1]["RD_valid"] == 1
 
-    assert ports[1]["RS1_valid"] == 1
-    assert ports[1]["RS1_valid"] == 1
 
-    assert ports[1]["RS2_valid"] == 1
-    assert ports[1]["RS2_valid"] == 1
 
 
     await RisingEdge(dut.clock())
     await ReadOnly()
     RS = dut.get_RS()
-    dut.print_RS()
-    dut.print_outputs()
+    #dut.print_RS()
+    #dut.print_outputs()
     assert RS[0]["valid"] == 0
 
 @cocotb.test()
@@ -350,13 +342,10 @@ async def dispatch_uOp0_uOp1(dut):
     dut.write_RS(RD_valid  =[1,1,0,0], 
                 RD         =[4,14,0,0], 
                 RS1_ready  =[1,1,0,0],  
-                RS1_valid  =[1,1,0,0], 
-                RS1_bits   =[4,14,0,0], 
+                RS1        =[4,14,0,0], 
                 RS2_ready  =[1,1,0,0], 
-                RS2_is_imm =[0,0,0,0], 
-                RS2_valid  =[1,1,0,0], 
-                RS2_bits   =[5,15,0,0], 
-                uOp        =[1,0,0,0], 
+                RS2        =[5,15,0,0], 
+                portID     =[1,0,0,0], 
                 valid      =[1,1,0,0])
 
     await RisingEdge(dut.clock())
@@ -371,19 +360,13 @@ async def dispatch_uOp0_uOp1(dut):
     assert RS[0]["RS2_ready"] == 1
 
     assert ports[0]["valid"]     == 1
-    assert ports[0]["RD_valid"]  == 1
-    assert ports[0]["RS1_valid"] == 1
-    assert ports[0]["RS1_bits"]  == 14
-    assert ports[0]["RS2_valid"] == 1
-    assert ports[0]["RS2_bits"]  == 15
+    assert ports[0]["RS1"]  == 14
+    assert ports[0]["RS2"]  == 15
 
 
     assert ports[1]["valid"]     == 1
-    assert ports[1]["RD_valid"]  == 1
-    assert ports[1]["RS1_valid"] == 1
-    assert ports[1]["RS1_bits"]  == 4
-    assert ports[1]["RS2_valid"] == 1
-    assert ports[1]["RS2_bits"]  == 5
+    assert ports[1]["RS1"]  == 4
+    assert ports[1]["RS2"]  == 5
 
 
 
@@ -407,13 +390,10 @@ async def dispatch_uOp0_uOp0(dut):
     dut.write_RS(RD_valid  =[1,1,0,0], 
                 RD         =[4,14,0,0], 
                 RS1_ready  =[1,1,0,0],  
-                RS1_valid  =[1,1,0,0], 
-                RS1_bits   =[4,14,0,0], 
+                RS1   =[4,14,0,0], 
                 RS2_ready  =[1,1,0,0], 
-                RS2_is_imm =[0,0,0,0], 
-                RS2_valid  =[1,1,0,0], 
-                RS2_bits   =[5,15,0,0], 
-                uOp        =[0,0,0,0], 
+                RS2   =[5,15,0,0], 
+                portID        =[0,0,0,0], 
                 valid      =[1,1,0,0])
 
     await RisingEdge(dut.clock())
@@ -434,17 +414,13 @@ async def dispatch_uOp0_uOp0(dut):
     assert RS[1]["RS2_ready"] == 1
 
     assert ports[0]["valid"]     == 1
-    assert ports[0]["RD_valid"]  == 1
-    assert ports[0]["RS1_valid"] == 1
-    assert ports[0]["RS1_bits"]  == 14
-    assert ports[0]["RS2_valid"] == 1
-    assert ports[0]["RS2_bits"]  == 15
+    assert ports[0]["RS1"]  == 14
+    assert ports[0]["RS2"]  == 15
 
 
     await RisingEdge(dut.clock())
     await ReadOnly()
     RS = dut.get_RS()
-    dut.print_RS()
     assert RS[0]["valid"] == 1
     assert RS[1]["valid"] == 0
 
@@ -464,13 +440,10 @@ async def dispatch_uOp1_uOp1(dut):
     dut.write_RS(RD_valid  =[1,1,0,0], 
                 RD         =[4,14,0,0], 
                 RS1_ready  =[1,1,0,0],  
-                RS1_valid  =[1,1,0,0], 
-                RS1_bits   =[4,14,0,0], 
+                RS1   =[4,14,0,0], 
                 RS2_ready  =[1,1,0,0], 
-                RS2_is_imm =[0,0,0,0], 
-                RS2_valid  =[1,1,0,0], 
-                RS2_bits   =[5,15,0,0], 
-                uOp        =[1,1,0,0], 
+                RS2   =[5,15,0,0], 
+                portID     =[1,1,0,0], 
                 valid      =[1,1,0,0])
 
     await RisingEdge(dut.clock())
@@ -489,25 +462,21 @@ async def dispatch_uOp1_uOp1(dut):
     assert RS[1]["RS1_ready"] == 1
     assert RS[1]["RS2_ready"] == 1
 
-    dut.print_RS()
-    dut.print_outputs()
 
     assert ports[1]["valid"]     == 1
     assert ports[1]["RD_valid"]  == 1
-    assert ports[1]["RS1_valid"] == 1
-    assert ports[1]["RS1_bits"]  == 14
-    assert ports[1]["RS2_valid"] == 1
-    assert ports[1]["RS2_bits"]  == 15
+    assert ports[1]["RS1"]  == 14
+    assert ports[1]["RS2"]  == 15
 
 
     await RisingEdge(dut.clock())
     await ReadOnly()
 
     RS = dut.get_RS()
-    dut.print_RS()
-    dut.print_outputs()
+    #dut.print_RS()
+    #dut.print_outputs()
     assert RS[0]["valid"] == 1
-    assert RS[0]["RD_bits"] == 4
+    assert RS[0]["RD"] == 4
     assert RS[1]["valid"] == 0
 
 @cocotb.test()
@@ -525,13 +494,10 @@ async def dispatch_uOp0_uOp1_uOp2_uOp3(dut):
     dut.write_RS(RD_valid  =[1,1,1,1], 
                 RD         =[4,14,24,34], 
                 RS1_ready  =[1,1,1,1],  
-                RS1_valid  =[1,1,1,1], 
-                RS1_bits   =[4,14,24,34], 
+                RS1   =[4,14,24,34], 
                 RS2_ready  =[1,1,1,1], 
-                RS2_is_imm =[0,0,0,0], 
-                RS2_valid  =[1,1,1,1], 
-                RS2_bits   =[5,15,25,35], 
-                uOp        =[0,1,2,3], 
+                RS2   =[5,15,25,35], 
+                portID        =[0,1,2,3], 
                 valid      =[1,1,1,1])
 
     await RisingEdge(dut.clock())
@@ -540,9 +506,6 @@ async def dispatch_uOp0_uOp1_uOp2_uOp3(dut):
     RS = dut.get_RS()
     ports = dut.get_ports()
 
-
-    dut.print_RS()
-    dut.print_outputs()
 
 
     assert RS[0]["valid"] == 1
@@ -564,31 +527,23 @@ async def dispatch_uOp0_uOp1_uOp2_uOp3(dut):
 
     assert ports[0]["valid"]     == 1
     assert ports[0]["RD_valid"]  == 1
-    assert ports[0]["RS1_valid"] == 1
-    assert ports[0]["RS1_bits"]  == 4
-    assert ports[0]["RS2_valid"] == 1
-    assert ports[0]["RS2_bits"]  == 5
+    assert ports[0]["RS1"]  == 4
+    assert ports[0]["RS2"]  == 5
 
     assert ports[1]["valid"]     == 1
     assert ports[1]["RD_valid"]  == 1
-    assert ports[1]["RS1_valid"] == 1
-    assert ports[1]["RS1_bits"]  == 14
-    assert ports[1]["RS2_valid"] == 1
-    assert ports[1]["RS2_bits"]  == 15
+    assert ports[1]["RS1"]  == 14
+    assert ports[1]["RS2"]  == 15
 
     assert ports[2]["valid"]     == 1
     assert ports[2]["RD_valid"]  == 1
-    assert ports[2]["RS1_valid"] == 1
-    assert ports[2]["RS1_bits"]  == 24
-    assert ports[2]["RS2_valid"] == 1
-    assert ports[2]["RS2_bits"]  == 25
+    assert ports[2]["RS1"]  == 24
+    assert ports[2]["RS2"]  == 25
 
     assert ports[3]["valid"]     == 1
     assert ports[3]["RD_valid"]  == 1
-    assert ports[3]["RS1_valid"] == 1
-    assert ports[3]["RS1_bits"]  == 34
-    assert ports[3]["RS2_valid"] == 1
-    assert ports[3]["RS2_bits"]  == 35
+    assert ports[3]["RS1"]  == 34
+    assert ports[3]["RS2"]  == 35
 
     await RisingEdge(dut.clock())
     await ReadOnly()
