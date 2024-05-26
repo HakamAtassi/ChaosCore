@@ -51,7 +51,7 @@ class backend(parameters:Parameters) extends Module{
     val io = IO(new Bundle{
         // inputs
         val backendPacket       =   Vec(dispatchWidth, Flipped(Decoupled(new BackendPacket(parameters))))
-        val dram_resp           =   Input(new dram_resp())
+        val dram_resp           =   Flipped(Decoupled(Input(new dram_resp())))
 
         // outputs (to memory system)
         // to memory
@@ -76,7 +76,7 @@ class backend(parameters:Parameters) extends Module{
     INT_RS.io.RF_inputs := DontCare
 
     for (i <- 0 until dispatchWidth){
-        INT_RS.io.backendPacket(i).valid := io.backendPacket(i).bits.decoded_instruction.RS_type === RS_types.INT   // does this entry correspond to RS
+        INT_RS.io.backendPacket(i).valid := (io.backendPacket(i).bits.decoded_instruction.RS_type === RS_types.INT) && io.backendPacket(i).valid   // does this entry correspond to RS
         io.backendPacket(i).ready        := INT_RS.io.backendPacket(i).ready    // propogate ready
 
         INT_RS.io.backendPacket(i).bits := io.backendPacket(i).bits  // pass data along
@@ -85,7 +85,7 @@ class backend(parameters:Parameters) extends Module{
     MEM_RS.io.RF_inputs := DontCare
 
     for (i <- 0 until dispatchWidth){
-        MEM_RS.io.backendPacket(i).valid :=   io.backendPacket(i).bits.decoded_instruction.RS_type === RS_types.MEM  // does this entry correspond to RS
+        MEM_RS.io.backendPacket(i).valid :=   (io.backendPacket(i).bits.decoded_instruction.RS_type === RS_types.MEM)  && io.backendPacket(i).valid // does this entry correspond to RS
         io.backendPacket(i).ready        := MEM_RS.io.backendPacket(i).ready    // propogate ready
 
         MEM_RS.io.backendPacket(i).bits := io.backendPacket(i).bits  // pass data along
@@ -107,8 +107,8 @@ class backend(parameters:Parameters) extends Module{
     INT_PRF.io.raddr_3  :=    INT_RS.io.RF_inputs(1).bits.RS2
     INT_PRF.io.raddr_4  :=    INT_RS.io.RF_inputs(2).bits.RS1
     INT_PRF.io.raddr_5  :=    INT_RS.io.RF_inputs(2).bits.RS2
-    INT_PRF.io.raddr_6  :=    0.U   // LSU
-    INT_PRF.io.raddr_7  :=    0.U   // LSU
+    INT_PRF.io.raddr_6  :=    MEM_RS.io.RF_inputs.bits.RS2
+    INT_PRF.io.raddr_7  :=    MEM_RS.io.RF_inputs.bits.RS2
 
 
 
@@ -186,18 +186,17 @@ class backend(parameters:Parameters) extends Module{
     INT_PRF.io.waddr_0  :=    FU0.io.FU_output.RD.bits
     INT_PRF.io.waddr_1  :=    FU1.io.FU_output.RD.bits
     INT_PRF.io.waddr_2  :=    FU2.io.FU_output.RD.bits
-    INT_PRF.io.waddr_3  :=    0.U
+    INT_PRF.io.waddr_3  :=    FU3.io.FU_output.RD.bits
 
     INT_PRF.io.wen_0    :=    FU0.io.FU_output.RD.valid
     INT_PRF.io.wen_1    :=    FU1.io.FU_output.RD.valid
     INT_PRF.io.wen_2    :=    FU2.io.FU_output.RD.valid
-    INT_PRF.io.wen_3    :=    0.U
+    INT_PRF.io.wen_3    :=    FU3.io.FU_output.RD.valid
 
     INT_PRF.io.wdata_0  :=    FU0.io.FU_output.data
     INT_PRF.io.wdata_1  :=    FU1.io.FU_output.data
     INT_PRF.io.wdata_2  :=    FU2.io.FU_output.data
-    INT_PRF.io.wdata_3  :=    0.U
-
+    INT_PRF.io.wdata_3  :=    FU3.io.FU_output.data
 
     ////////////////////////
     // FU TO RS BROADCAST //
@@ -226,6 +225,10 @@ class backend(parameters:Parameters) extends Module{
     //val DRAM_rq_addr    = 
 
     io.dram_request := DontCare
-    
+    io.dram_resp := DontCare
 
+    
+    io.dram_request.bits := FU3.io.dram_request.bits
+    FU3.io.dram_resp.bits := io.dram_resp.bits
+    
 }
