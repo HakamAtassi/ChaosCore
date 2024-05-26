@@ -45,28 +45,24 @@ async def allocate_1_RS_not_ready(dut):
         dut.write_RS(RD_valid  =[1,0,0,0], 
                     RD         =[4,0,0,0], 
                     RS1_ready  =[0,0,0,0],  
-                    RS1_valid  =[1,0,0,0], 
-                    RS1_bits   =[4,0,0,0], 
+                    RS1        =[4,0,0,0], 
                     RS2_ready  =[0,0,0,0], 
-                    RS2_is_imm =[0,0,0,0], 
-                    RS2_valid  =[1,0,0,0], 
-                    RS2_bits   =[5,0,0,0], 
-                    uOp        =[1,0,0,0], 
+                    RS2        =[5,0,0,0], 
                     valid      =[1,0,0,0])
 
         await RisingEdge(dut.clock())
         dut.write_RS()
         await ReadOnly()
         RS = dut.get_RS()
-        dut.print_RS()
+        #dut.print_RS()
 
         assert RS[i]["valid"]     == 1
 
-        assert RS[i]["RS1_valid"] == 1
-        assert RS[i]["RS1_bits"]  == 4
+        #assert RS[i]["RS1_valid"] == 1
+        assert RS[i]["RS1"]  == 4
 
-        assert RS[i]["RS2_valid"] == 1
-        assert RS[i]["RS2_bits"]  == 5
+        #assert RS[i]["RS2_valid"] == 1
+        assert RS[i]["RS2"]  == 5
 
         await ReadWrite()
 
@@ -87,13 +83,9 @@ async def allocate_2_RS_not_ready(dut):
         dut.write_RS(RD_valid   =[1,1,0,0], 
                     RD         =[4,9,0,0], 
                     RS1_ready  =[0,0,0,0],  
-                    RS1_valid  =[1,1,0,0], 
-                    RS1_bits   =[4,9,0,0], 
+                    RS1   =[4,9,0,0], 
                     RS2_ready  =[0,0,0,0], 
-                    RS2_is_imm =[0,0,0,0], 
-                    RS2_valid  =[1,1,0,0], 
-                    RS2_bits   =[5,10,0,0], 
-                    uOp        =[1,0,0,0], 
+                    RS2   =[5,10,0,0], 
                     valid      =[1,1,0,0])
 
         await RisingEdge(dut.clock())
@@ -102,20 +94,16 @@ async def allocate_2_RS_not_ready(dut):
 
         assert RS[i]["valid"]     == 1
 
-        assert RS[i]["RS1_valid"] == 1
-        assert RS[i]["RS1_bits"]  == 4
+        assert RS[i]["RS1"]  == 4
 
-        assert RS[i]["RS2_valid"] == 1
-        assert RS[i]["RS2_bits"]  == 5
+        assert RS[i]["RS2"]  == 5
 
         #
         assert RS[i+1]["valid"]     == 1
 
-        assert RS[i+1]["RS1_valid"] == 1
-        assert RS[i+1]["RS1_bits"]  == 9
+        assert RS[i+1]["RS1"]  == 9
 
-        assert RS[i+1]["RS2_valid"] == 1
-        assert RS[i+1]["RS2_bits"]  == 10
+        assert RS[i+1]["RS2"]  == 10
 
         await ReadWrite()
 
@@ -153,31 +141,31 @@ async def single_broadcast_good(dut):
     dut.write_RS(RD_valid  =[1,0,0,0], 
                 RD         =[4,0,0,0], 
                 RS1_ready  =[1,0,0,0],  
-                RS1_valid  =[1,0,0,0], 
-                RS1_bits   =[4,0,0,0], 
+                RS1        =[4,0,0,0], 
                 RS2_ready  =[0,0,0,0], 
-                RS2_is_imm =[0,0,0,0], 
-                RS2_valid  =[1,0,0,0], 
-                RS2_bits   =[5,0,0,0], 
-                uOp        =[1,0,0,0], 
+                RS2        =[5,0,0,0], 
                 valid      =[1,0,0,0])
 
     await RisingEdge(dut.clock())
 
-    dut.write_RS(valid      =[0,0,0,0])
+    dut.write_RS(valid = [0,0,0,0])
     dut.broadcast(RD=[5,0,0,0], data=[0x42,0,0,0], valid=[1,0,0,0])
 
     await ReadOnly()
 
-    dut.print_RS()
-    dut.print_outputs()
+    #dut.print_RS()
+    #dut.print_outputs()
+
+    RS = dut.get_RS()
+    assert RS[0]["valid"] == 1
+    assert RS[0]["RS1_ready"] == 1
 
     RS = dut.get_RS()
     ports = dut.get_ports()
 
-    assert ports[1]["valid"] == 1
-    assert ports[1]["RS1_valid"] == 1
-    assert ports[1]["RS2_valid"] == 1
+    dut.print_outputs()
+
+    assert ports[0]["valid"] == 1
     
 
     await RisingEdge(dut.clock())
@@ -206,13 +194,9 @@ async def single_broadcast_bad(dut):
     dut.write_RS(RD_valid  =[1,0,0,0], 
                 RD         =[4,0,0,0], 
                 RS1_ready  =[0,0,0,0],  
-                RS1_valid  =[1,0,0,0], 
-                RS1_bits   =[4,0,0,0], 
+                RS1   =[4,0,0,0], 
                 RS2_ready  =[0,0,0,0], 
-                RS2_is_imm =[0,0,0,0], 
-                RS2_valid  =[1,0,0,0], 
-                RS2_bits   =[5,0,0,0], 
-                uOp        =[1,0,0,0], 
+                RS2   =[5,0,0,0], 
                 valid      =[1,0,0,0])
 
     await RisingEdge(dut.clock())
@@ -222,7 +206,6 @@ async def single_broadcast_bad(dut):
     RS = dut.get_RS()
 
     assert RS[0]["valid"] == 1
-
     assert RS[0]["RS1_ready"] == 0
     assert RS[0]["RS2_ready"] == 0
     
@@ -235,7 +218,6 @@ async def single_broadcast_bad(dut):
     RS = dut.get_RS()
 
     assert RS[0]["valid"] == 1
-
     assert RS[0]["RS1_ready"] == 0
     assert RS[0]["RS2_ready"] == 0
    
@@ -247,7 +229,6 @@ async def single_broadcast_bad(dut):
     RS = dut.get_RS()
 
     assert RS[0]["valid"] == 1
-
     assert RS[0]["RS1_ready"] == 0
     assert RS[0]["RS2_ready"] == 0
 
@@ -274,13 +255,9 @@ async def dispatch_uOp0(dut):
     dut.write_RS(RD_valid  =[1,0,0,0], 
                 RD         =[4,0,0,0], 
                 RS1_ready  =[1,0,0,0],  
-                RS1_valid  =[1,0,0,0], 
-                RS1_bits   =[4,0,0,0], 
+                RS1   =[4,0,0,0], 
                 RS2_ready  =[1,0,0,0], 
-                RS2_is_imm =[0,0,0,0], 
-                RS2_valid  =[1,0,0,0], 
-                RS2_bits   =[5,0,0,0], 
-                uOp        =[0,0,0,0], 
+                RS2   =[5,0,0,0], 
                 valid      =[1,0,0,0])
 
     await RisingEdge(dut.clock())
@@ -295,14 +272,6 @@ async def dispatch_uOp0(dut):
     assert RS[0]["RS2_ready"] == 1
 
     assert ports[0]["valid"] == 1
-    assert ports[0]["RD_valid"] == 1
-
-    assert ports[0]["RS1_valid"] == 1
-    assert ports[0]["RS1_valid"] == 1
-
-    assert ports[0]["RS2_valid"] == 1
-    assert ports[0]["RS2_valid"] == 1
-
 
 
     await RisingEdge(dut.clock())

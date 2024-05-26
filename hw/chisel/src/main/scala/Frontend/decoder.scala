@@ -87,6 +87,7 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
 
     // Assign output
 
+    io.decoded_instruction.RD_valid         := 0.B  // FIXME: 
     io.decoded_instruction.RD               := RD
     io.decoded_instruction.RS1              := RS1
     io.decoded_instruction.RS2              := RS2
