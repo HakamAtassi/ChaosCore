@@ -226,36 +226,21 @@ class decoded_instruction(coreConfig:String, fetchWidth:Int, ROBEntires:Int, phy
     val SUBTRACT        =   Bool()
     val MULTIPLY        =   Bool()
     val IMMEDIATE       =   Bool()
+
+    val IS_LOAD       =   Bool()
+    val IS_STORE      =   Bool()
     // ADD atomic instructions
 }
 
 // decoded instruction after it goes through register read
 class read_decoded_instruction(coreConfig:String, fetchWidth:Int, ROBEntires:Int, physicalRegCount:Int) extends Bundle{
     // Parameters
-    val portCount       =   4
-    val physicalRegBits =   log2Ceil(physicalRegCount)
+    val decoded_instruction = new decoded_instruction(coreConfig=coreConfig, fetchWidth=fetchWidth, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount)
 
-    val RD_valid        =   Bool()
-    val RD              =   UInt(physicalRegBits.W)
-    val RS1             =   UInt(physicalRegBits.W)
-    val RS2             =   UInt(physicalRegBits.W)
-    val IMM             =   UInt(32.W)
-    val FUNCT3          =   UInt(3.W)
-    val packet_index    =   UInt(log2Ceil(fetchWidth*4).W)    // contains the remainder of the PC. ex: 0, 4, 8, 12, 0, ... for fetchWidth of 4
-    val instructionType =   InstructionType()
-
-    val SUBTRACT        =   Bool()
-    val MULTIPLY        =   Bool()
-    val IMMEDIATE       =   Bool()
-
-    val needs_ALU           =  Bool()
-    val needs_branch_unit   =  Bool()
-    
     // read data from register read 
     val RS1_data        =   UInt(32.W)
     val RS2_data        =   UInt(32.W)
     val PC              =   UInt(32.W)
-
 }
 
 /////////////////////
@@ -341,30 +326,26 @@ class BackendPacket(parameters:Parameters) extends Bundle{
     val ready_bits            =   new InstructionReady()
 }
 
+class MemoryRequestPacket(parameters:Parameters) extends Bundle{
+    import parameters._
+    val memoryAddress = UInt(32.W)
+
+}
+
 ////////////////////////////
 // EXECUTION ENGINE PORTS //
 ////////////////////////////
 
-class FU_input(coreConfig:String, ROBEntires:Int, physicalRegCount:Int) extends Bundle{
-    val physicalRegBits = log2Ceil(physicalRegCount)
-
-    val RS1_data    =   UInt(32.W)
-    val RS2_data    =   UInt(32.W)
-
-    val imm         =   UInt(32.W)
-
-    val PC          =   UInt(32.W)
-
-    val RD          =   ValidIO(UInt(physicalRegBits.W))
-
-}
 
 class FU_output(physicalRegCount:Int) extends Bundle{
+    // Arithmetic/Load
     val RD      =   ValidIO(UInt(physicalRegCount.W))
     val data    =   UInt(32.W)
 
+    // Branch
     val branch_taken      =   Bool()
     val branch_address    =   UInt(32.W)
+
 }
 
 
@@ -375,20 +356,24 @@ class PC_file(fetchWidth:Int){
 
 // all ports to all FUs are wrapped in an "execution engine" module
 
-class execution_engine_inputs(coreConfig:String, ROBEntires:Int, physicalRegCount:Int) extends Bundle{
-    // contains all FU port channels
-    // as well as an ID associated with each channel, indicating the FU type for routing purposes.
-
-    val portCount     = getPortCount(coreConfig)
-    val portCountBits = log2Ceil(portCount)
-
-    //  [ALU,Branch,INT2FP,CSR],    [ALU,Branch,INT2FP]    [AGU+Store]    [AGU+Load]     [IDIV](optional)
-    //  [portID=0],                 [portID=1],            [portID=2],    [portID=3],    [portID=4](optional)
-
-    val FU_ports        = Vec(portCount, Flipped(Decoupled(new FU_input(coreConfig=coreConfig, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount))))
-    val FU_IDs          = generatePortIDVec(coreConfig)
-}
 
 class execute_ports() extends Bundle{   // all port definitions to the execution engine
     // all ports stored within an N wide vector.
 }
+
+
+
+//////////
+// DRAM //
+//////////
+
+class dram_request extends Bundle{
+    val addr    = UInt(32.W)
+    val wr_data = UInt(32.W)
+    val wr_en   = Bool()
+}
+
+class dram_resp extends Bundle{
+    val data = UInt(32.W)
+}
+

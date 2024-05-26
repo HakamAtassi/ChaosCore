@@ -1,7 +1,3 @@
-// Generator : SpinalHDL v1.3.8    git head : 57d97088b91271a094cebad32ed86479199955df
-// Date      : 23/05/2024, 10:20:01
-// Component : MultiportRamComponent
-
 
 module nReadmWrite (
       input  [5:0] raddr_0,

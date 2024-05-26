@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------------------
-* Filename: RF.scala
+* Filename: FU.scala
 * Author: Hakam Atassi
 * Date: May 23 2024
 * Description: The "merged" register files. 
@@ -51,20 +51,20 @@ class ALU(parameters:Parameters) extends Module{    // FIXME: I think this can b
     // Operand data
     val RS1_data    =   io.FU_input.bits.RS1_data
     val RS2_data    =   io.FU_input.bits.RS2_data
-    val imm         =   io.FU_input.bits.IMM
-    val PC          =   io.FU_input.bits.PC + io.FU_input.bits.packet_index
+    val imm         =   io.FU_input.bits.decoded_instruction.IMM
+    val PC          =   io.FU_input.bits.PC + io.FU_input.bits.decoded_instruction.packet_index
 
     // Dest reg
-    val RD                  =   io.FU_input.bits.RD
+    val RD                  =   io.FU_input.bits.decoded_instruction.RD
 
     // Op select
 
-    val instructionType     =   io.FU_input.bits.instructionType
+    val instructionType     =   io.FU_input.bits.decoded_instruction.instructionType
 
-    val FUNCT3              =   io.FU_input.bits.FUNCT3
-    val IMMEDIATE           =   io.FU_input.bits.IMMEDIATE
-    val SUBTRACT            =   io.FU_input.bits.SUBTRACT
-    val MULTIPLY            =   io.FU_input.bits.MULTIPLY
+    val FUNCT3              =   io.FU_input.bits.decoded_instruction.FUNCT3
+    val IMMEDIATE           =   io.FU_input.bits.decoded_instruction.IMMEDIATE
+    val SUBTRACT            =   io.FU_input.bits.decoded_instruction.SUBTRACT
+    val MULTIPLY            =   io.FU_input.bits.decoded_instruction.MULTIPLY
 
     //////////////////////////
     //////////////////////////
@@ -200,7 +200,7 @@ class ALU(parameters:Parameters) extends Module{    // FIXME: I think this can b
     io.FU_input.ready := DontCare
     io.FU_output := DontCare
 
-    io.FU_output.RD.bits    :=   io.FU_input.bits.RD
+    io.FU_output.RD.bits    :=   io.FU_input.bits.decoded_instruction.RD
     io.FU_output.data       :=   arithmetic_result
 
 }
@@ -222,20 +222,20 @@ class branch_unit(parameters:Parameters) extends Module{
     // Operand data
     val RS1_data    =   io.FU_input.bits.RS1_data
     val RS2_data    =   io.FU_input.bits.RS2_data
-    val IMM         =   io.FU_input.bits.IMM
-    val PC          =   io.FU_input.bits.PC + io.FU_input.bits.packet_index
+    val IMM         =   io.FU_input.bits.decoded_instruction.IMM
+    val PC          =   io.FU_input.bits.PC + io.FU_input.bits.decoded_instruction.packet_index
 
     // Dest reg
-    val RD                  =   io.FU_input.bits.RD
+    val RD                  =   io.FU_input.bits.decoded_instruction.RD
 
     // Op select
 
-    val instructionType     =   io.FU_input.bits.instructionType
+    val instructionType     =   io.FU_input.bits.decoded_instruction.instructionType
 
-    val FUNCT3              =   io.FU_input.bits.FUNCT3
-    val IMMEDIATE           =   io.FU_input.bits.IMMEDIATE
-    val SUBTRACT            =   io.FU_input.bits.SUBTRACT
-    val MULTIPLY            =   io.FU_input.bits.MULTIPLY
+    val FUNCT3              =   io.FU_input.bits.decoded_instruction.FUNCT3
+    val IMMEDIATE           =   io.FU_input.bits.decoded_instruction.IMMEDIATE
+    val SUBTRACT            =   io.FU_input.bits.decoded_instruction.SUBTRACT
+    val MULTIPLY            =   io.FU_input.bits.decoded_instruction.MULTIPLY
 
     //
     val IS_BRANCH   =   instructionType === BRANCH
@@ -320,8 +320,8 @@ class FU(parameters:Parameters,
     // FIXME: Add Mul/Div + bypassing
     // Also make sure to inner modules dont write to CDB at the same time
 
-    val is_ALU  = io.FU_input.bits.needs_ALU && io.FU_input.valid
-    val is_CTRL = io.FU_input.bits.needs_branch_unit && io.FU_input.valid
+    val is_ALU  = io.FU_input.bits.decoded_instruction.needs_ALU && io.FU_input.valid
+    val is_CTRL = io.FU_input.bits.decoded_instruction.needs_branch_unit && io.FU_input.valid
 
 
 
@@ -352,6 +352,119 @@ class FU(parameters:Parameters,
     }
 
 
+
+
+}
+
+
+// MEM FU
+class MEMFU(parameters:Parameters) extends Module{
+    import parameters._
+    import InstructionType._
+    val io = IO(new Bundle{
+        // Input
+        val FU_input      =   Flipped(Decoupled(new read_decoded_instruction(coreConfig=coreConfig, fetchWidth=fetchWidth, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount)))
+        val dram_resp     =   Flipped(Decoupled(new dram_resp()))
+
+        // Output
+        val FU_output     =   Output(new FU_output(physicalRegCount))      // To RF
+        val dram_request  =   Decoupled(new dram_request())                // To DRAM
+    })
+
+
+    val IS_LOAD  = io.FU_input.bits.decoded_instruction.IS_LOAD  && io.FU_input.valid
+    val IS_STORE = io.FU_input.bits.decoded_instruction.IS_STORE && io.FU_input.valid
+
+    // Operand data
+    val RS1_data    =   io.FU_input.bits.RS1_data
+    val RS2_data    =   io.FU_input.bits.RS2_data
+    val IMM         =   io.FU_input.bits.decoded_instruction.IMM
+    val PC          =   io.FU_input.bits.PC + io.FU_input.bits.decoded_instruction.packet_index
+
+    // Dest reg
+    val RD                  =   io.FU_input.bits.decoded_instruction.RD
+
+    // Op select
+
+    val instructionType     =   io.FU_input.bits.decoded_instruction.instructionType
+
+    val FUNCT3              =   io.FU_input.bits.decoded_instruction.FUNCT3
+    val IMMEDIATE           =   io.FU_input.bits.decoded_instruction.IMMEDIATE
+    val SUBTRACT            =   io.FU_input.bits.decoded_instruction.SUBTRACT
+    val MULTIPLY            =   io.FU_input.bits.decoded_instruction.MULTIPLY
+
+
+    val SB                  =   IS_STORE && FUNCT3 === "b000".U
+    val SH                  =   IS_STORE && FUNCT3 === "b001".U
+    val SW                  =   IS_STORE && FUNCT3 === "b010".U
+
+    val LB                  =   IS_LOAD && FUNCT3 === "b000".U
+    val LH                  =   IS_LOAD && FUNCT3 === "b001".U
+    val LW                  =   IS_LOAD && FUNCT3 === "b010".U
+    val LBU                 =   IS_LOAD && FUNCT3 === "b100".U
+    val LHU                 =   IS_LOAD && FUNCT3 === "b101".U
+
+
+    /////////////////////
+    // COMPUTE ADDRESS //
+    /////////////////////
+
+    val addr = RS1_data + IMM
+
+    ///////////////////////
+    // FORMAT WRITE DATA //
+    ///////////////////////
+
+    val wr_data = Wire(UInt(32.W))
+
+    wr_data := 0.U
+    when(SW){wr_data := RS2_data & 0xFF.U}
+    when(SH){wr_data := RS2_data & 0xFFFF.U}
+    when(SB){wr_data := RS2_data.asUInt & "hFFFF_FFFF".U(32.W)}
+
+
+    ///////////////////
+    // DRAM REQUESTS //
+    ///////////////////
+
+    // For loads, Send request to memory. 1 Cycle later, write back to PRF (place output).
+
+
+    // For store, just send store request to memory.
+
+
+    io.dram_request.valid           := IS_LOAD || IS_STORE
+    io.dram_request.bits.wr_en      := IS_STORE
+    io.dram_request.bits.wr_data    := wr_data
+    io.dram_request.bits.addr       := addr
+
+
+    //////////////////////
+    // FORMAT READ DATA //
+    //////////////////////
+
+    val rd_data = Wire(UInt(32.W))
+
+    rd_data := 0.U
+    when(RegNext(LB)) {rd_data := (io.dram_resp.bits.data & 0xFF.U).asSInt.asUInt}
+    when(RegNext(LH)) {rd_data := (io.dram_resp.bits.data & 0xFFFF.U).asSInt.asUInt}
+    when(RegNext(LW)) {rd_data := (io.dram_resp.bits.data & "hFFFF_FFFF".U).asSInt.asUInt}
+    when(RegNext(LBU)){rd_data := (io.dram_resp.bits.data & 0xFF.U).asUInt}
+    when(RegNext(LHU)){rd_data := (io.dram_resp.bits.data & 0xFFFF.U).asUInt}
+
+    ////////////////////////
+    // ASSIGN PRF OUTPUTS //
+    ////////////////////////
+
+    io.FU_output := DontCare
+    io.FU_output.data := rd_data
+    io.FU_output.RD.bits   := RegNext(RD)
+    io.FU_output.RD.valid  := RegNext(IS_LOAD)
+
+
+
+    io.FU_input.ready := 1.B
+    io.dram_resp.ready := 1.B
 
 
 }
