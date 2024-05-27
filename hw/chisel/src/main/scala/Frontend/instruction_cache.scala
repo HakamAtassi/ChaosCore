@@ -71,8 +71,13 @@ class instruction_validator(fetchWidth: Int) extends Module {
 
 
 
-class L1_instruction_cache(fetchWidth:Int, ways:Int, sets:Int, blockSizeBytes:Int) extends Module{
+class L1_instruction_cache(parameters:Parameters) extends Module{
+    import parameters._
 
+
+    val ways = L1_instructionCacheWays
+    val sets = L1_instructionCacheWays
+    val blockSizeBytes = L1_instructionCacheBlockSizeBytes
 
     val depth                       = sets
     val byteOffsetBits              = log2Ceil(blockSizeBytes)                                          // Bits needed to each byte in a cache line
@@ -104,7 +109,7 @@ class L1_instruction_cache(fetchWidth:Int, ways:Int, sets:Int, blockSizeBytes:In
                                                                                   // FIXME: this should be a bool
 
         // Outputs
-        val cache_data         =     Decoupled(new fetch_packet(fetchWidth=fetchWidth))
+        val cache_data         =     Decoupled(new fetch_packet(parameters))
 
         val cache_addr         =     Decoupled(UInt(32.W))                        // outputs to DRAM
     })
@@ -318,7 +323,7 @@ class L1_instruction_cache(fetchWidth:Int, ways:Int, sets:Int, blockSizeBytes:In
 
 
     for(i <- 0 until fetchWidth){
-        io.cache_data.bits.instructions(i):= instruction_vec(packet_index*fetchWidth.U + i.U)   
+        io.cache_data.bits.instructions(i).instruction:= instruction_vec(packet_index*fetchWidth.U + i.U)   
     }
 
     val validator = Module(new instruction_validator(fetchWidth=fetchWidth))

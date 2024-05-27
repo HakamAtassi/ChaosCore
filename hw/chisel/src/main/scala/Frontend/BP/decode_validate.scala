@@ -67,18 +67,19 @@ class decoder_validator(fetchWidth: Int) extends Module {
   io.instruction_validity := lut(PriorityEncoder(io.instruction_T_NT_mask))
 }
 
-class decode_validate(fetchWidth:Int,GHRWidth:Int, RASEntries:Int, startPC:UInt) extends Module{
+class decode_validate(parameters:Parameters) extends Module{
+    import parameters._
 
     val io = IO(new Bundle{
         // inputs
         val prediction          = Flipped(Decoupled(new prediction(fetchWidth=fetchWidth, GHRWidth=GHRWidth)))
-        val fetch_packet        = Flipped(Decoupled(new fetch_packet(fetchWidth=fetchWidth)))
+        val fetch_packet        = Flipped(Decoupled(new fetch_packet(parameters)))
         val RAS_read            = Flipped(new RAS_read(RASEntries=RASEntries))
 
         // outputs
         val kill                = Output(Bool())                                        // kill incoming instructions
         val revert              = Decoupled(new revert(GHRWidth=GHRWidth))   // Redirect frontend // FIXME: should be output...
-        val final_fetch_packet  = Decoupled(new fetch_packet())                         // Output validated instructions
+        val final_fetch_packet  = Decoupled(new fetch_packet(parameters))                         // Output validated instructions
         val RAS_update          = Flipped(new RAS_update)                               // RAS control
     })
 
@@ -102,7 +103,7 @@ class decode_validate(fetchWidth:Int,GHRWidth:Int, RASEntries:Int, startPC:UInt)
     for(i <- 0 until fetchWidth){
         // Inputs
         decoders(i).io.fetch_PC        :=  io.fetch_packet.bits.fetch_PC
-        decoders(i).io.instruction     :=  io.fetch_packet.bits.instructions(i)
+        decoders(i).io.instruction     :=  io.fetch_packet.bits.instructions(i).instruction
         decoders(i).io.valid           :=  io.fetch_packet.bits.valid_bits(i)
         decoders(i).io.prediction.bits :=  io.prediction.bits
         decoders(i).io.prediction.valid :=  io.prediction.valid

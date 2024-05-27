@@ -46,18 +46,22 @@ import chisel3.util._
 
 class backend(parameters:Parameters) extends Module{
     import parameters._
-    val portCount = getPortCount(coreConfig)
+    val portCount = getPortCount(parameters)
 
     val io = IO(new Bundle{
         // inputs
-        val backendPacket       =   Vec(dispatchWidth, Flipped(Decoupled(new BackendPacket(parameters))))
-        val dram_resp           =   Flipped(Decoupled(Input(new dram_resp())))
+        val backendPacket       =   Vec(dispatchWidth, Flipped(ValidIO(new BackendPacket(parameters))))
+        val DRAM_resp           =   Flipped(Decoupled(Input(new DRAM_resp())))
 
-        // outputs (to memory system)
-        // to memory
-        // to branch FTQ
-        //val memoryRequestPacket =   Flipped(Decoupled(new MemoryRequestPacket(parameters)))
-        val dram_request         =   Decoupled(new dram_request())
+        // outputs (ready bits)
+        val MEMRS_ready          =   Output(Vec(dispatchWidth, Bool()))
+        val INTRS_ready          =   Output(Vec(dispatchWidth, Bool()))
+
+        // outputs (DRAM)
+        val DRAM_request         =   Decoupled(new DRAM_request())
+
+        // outputs (ROB)
+        val FU_outputs           =   Vec(portCount, ValidIO(new FU_output(parameters)))
 
     })
 
@@ -70,26 +74,25 @@ class backend(parameters:Parameters) extends Module{
     val INT_RS   =  Module(new RS(parameters))
     val MEM_RS   =  Module(new MEMRS(parameters))
     //val FP_RS  =  ???
-     
 
     // Assign Reservation Stations
-    INT_RS.io.RF_inputs := DontCare
 
     for (i <- 0 until dispatchWidth){
         INT_RS.io.backendPacket(i).valid := (io.backendPacket(i).bits.decoded_instruction.RS_type === RS_types.INT) && io.backendPacket(i).valid   // does this entry correspond to RS
-        io.backendPacket(i).ready        := INT_RS.io.backendPacket(i).ready    // propogate ready
-
-        INT_RS.io.backendPacket(i).bits := io.backendPacket(i).bits  // pass data along
+        INT_RS.io.backendPacket(i).bits  := io.backendPacket(i).bits  // pass data along
     }
-
-    MEM_RS.io.RF_inputs := DontCare
 
     for (i <- 0 until dispatchWidth){
-        MEM_RS.io.backendPacket(i).valid :=   (io.backendPacket(i).bits.decoded_instruction.RS_type === RS_types.MEM)  && io.backendPacket(i).valid // does this entry correspond to RS
-        io.backendPacket(i).ready        := MEM_RS.io.backendPacket(i).ready    // propogate ready
-
-        MEM_RS.io.backendPacket(i).bits := io.backendPacket(i).bits  // pass data along
+        MEM_RS.io.backendPacket(i).valid := (io.backendPacket(i).bits.decoded_instruction.RS_type === RS_types.MEM)  && io.backendPacket(i).valid // does this entry correspond to RS
+        MEM_RS.io.backendPacket(i).bits  := io.backendPacket(i).bits  // pass data along
     }
+
+    // Assign ready bits
+    for (i <- 0 until dispatchWidth){
+        io.MEMRS_ready(i)        := INT_RS.io.backendPacket(i).ready
+        io.INTRS_ready(i)        := MEM_RS.io.backendPacket(i).ready
+    }
+
 
 
     ///////////////////////////
@@ -99,20 +102,17 @@ class backend(parameters:Parameters) extends Module{
     val INT_PRF = Module(new nReadmWrite); INT_PRF.io.clock := clock; INT_PRF.io.reset := reset;
 
 
+    // FIXME: portcount should consist of ALU port count + MEM ports. now it only counts the number of ALU ports
     val read_decoded_instructions   =   Wire(Vec(portCount, new read_decoded_instruction(coreConfig:String, fetchWidth:Int, ROBEntires:Int, physicalRegCount:Int)))
 
-    INT_PRF.io.raddr_0  :=    INT_RS.io.RF_inputs(0).bits.RS1
-    INT_PRF.io.raddr_1  :=    INT_RS.io.RF_inputs(0).bits.RS2
-    INT_PRF.io.raddr_2  :=    INT_RS.io.RF_inputs(1).bits.RS1
-    INT_PRF.io.raddr_3  :=    INT_RS.io.RF_inputs(1).bits.RS2
-    INT_PRF.io.raddr_4  :=    INT_RS.io.RF_inputs(2).bits.RS1
-    INT_PRF.io.raddr_5  :=    INT_RS.io.RF_inputs(2).bits.RS2
-    INT_PRF.io.raddr_6  :=    MEM_RS.io.RF_inputs.bits.RS2
-    INT_PRF.io.raddr_7  :=    MEM_RS.io.RF_inputs.bits.RS2
-
-
-
-
+    INT_PRF.io.raddr_0  :=    INT_RS.io.RF_inputs(0).bits.RS1   // INT RS PORT 0
+    INT_PRF.io.raddr_1  :=    INT_RS.io.RF_inputs(0).bits.RS2   // INT RS PORT 0
+    INT_PRF.io.raddr_2  :=    INT_RS.io.RF_inputs(1).bits.RS1   // INT RS PORT 1
+    INT_PRF.io.raddr_3  :=    INT_RS.io.RF_inputs(1).bits.RS2   // INT RS PORT 1
+    INT_PRF.io.raddr_4  :=    INT_RS.io.RF_inputs(2).bits.RS1   // INT RS PORT 2
+    INT_PRF.io.raddr_5  :=    INT_RS.io.RF_inputs(2).bits.RS2   // INT RS PORT 2
+    INT_PRF.io.raddr_6  :=    MEM_RS.io.RF_inputs.bits.RS1   // MEM RS PORT 0
+    INT_PRF.io.raddr_7  :=    MEM_RS.io.RF_inputs.bits.RS2   // MEM RS PORT 0
 
 
     // update read out data
@@ -137,7 +137,7 @@ class backend(parameters:Parameters) extends Module{
     read_decoded_instructions(0).decoded_instruction <> RegNext(INT_RS.io.RF_inputs(0).bits)
     read_decoded_instructions(1).decoded_instruction <> RegNext(INT_RS.io.RF_inputs(1).bits)
     read_decoded_instructions(2).decoded_instruction <> RegNext(INT_RS.io.RF_inputs(2).bits)
-    read_decoded_instructions(3).decoded_instruction <> RegNext(INT_RS.io.RF_inputs(3).bits)
+    read_decoded_instructions(3).decoded_instruction <> RegNext(MEM_RS.io.RF_inputs.bits)
 
     ////////////////////
     // PC REG FILE ?? //
@@ -155,26 +155,26 @@ class backend(parameters:Parameters) extends Module{
 
 
     // Connect FUs
-    FU0.io.FU_input.bits <> read_decoded_instructions(0)
-    FU0.io.FU_input.valid := RegNext(INT_RS.io.RF_inputs(0).valid)
-    // ???                := FU1.io.FU_input.ready
+    FU0.io.FU_input.bits            <> read_decoded_instructions(0)
+    FU0.io.FU_input.valid           := RegNext(INT_RS.io.RF_inputs(0).valid)
 
-    FU1.io.FU_input.bits <> read_decoded_instructions(1)
-    FU1.io.FU_input.valid := RegNext(INT_RS.io.RF_inputs(1).valid)
-    // ???                := FU1.io.FU_input.ready
+    FU1.io.FU_input.bits            <> read_decoded_instructions(1)
+    FU1.io.FU_input.valid           := RegNext(INT_RS.io.RF_inputs(1).valid)
 
-    FU2.io.FU_input.bits <> read_decoded_instructions(2)
-    FU2.io.FU_input.valid := RegNext(INT_RS.io.RF_inputs(2).valid)
-    // ???                := FU1.io.FU_input.ready
+    FU2.io.FU_input.bits            <> read_decoded_instructions(2)
+    FU2.io.FU_input.valid           := RegNext(INT_RS.io.RF_inputs(2).valid)
 
-    FU3.io.FU_input.bits <> read_decoded_instructions(3)
-    FU3.io.FU_input.valid := RegNext(INT_RS.io.RF_inputs(3).valid)
-    // ???                := FU1.io.FU_input.ready
+    FU3.io.FU_input.bits            <> read_decoded_instructions(3)
+    FU3.io.FU_input.valid           := RegNext(MEM_RS.io.RF_inputs.valid)
 
 
-
-
-
+    // INT RS ready assignemnt
+    INT_RS.io.RF_inputs(0).ready := FU0.io.FU_input.ready
+    INT_RS.io.RF_inputs(1).ready := FU1.io.FU_input.ready
+    INT_RS.io.RF_inputs(2).ready := FU2.io.FU_input.ready
+    
+    // MEM RS ready assignemnt
+    MEM_RS.io.RF_inputs.ready       := FU3.io.FU_input.ready
 
 
     ////////////////////////////
@@ -183,20 +183,20 @@ class backend(parameters:Parameters) extends Module{
 
 
     // Write to INT PRF
-    INT_PRF.io.waddr_0  :=    FU0.io.FU_output.RD.bits
-    INT_PRF.io.waddr_1  :=    FU1.io.FU_output.RD.bits
-    INT_PRF.io.waddr_2  :=    FU2.io.FU_output.RD.bits
-    INT_PRF.io.waddr_3  :=    FU3.io.FU_output.RD.bits
+    INT_PRF.io.waddr_0  :=    FU0.io.FU_output.bits.RD
+    INT_PRF.io.waddr_1  :=    FU1.io.FU_output.bits.RD
+    INT_PRF.io.waddr_2  :=    FU2.io.FU_output.bits.RD
+    INT_PRF.io.waddr_3  :=    FU3.io.FU_output.bits.RD
 
-    INT_PRF.io.wen_0    :=    FU0.io.FU_output.RD.valid
-    INT_PRF.io.wen_1    :=    FU1.io.FU_output.RD.valid
-    INT_PRF.io.wen_2    :=    FU2.io.FU_output.RD.valid
-    INT_PRF.io.wen_3    :=    FU3.io.FU_output.RD.valid
+    INT_PRF.io.wen_0    :=    FU0.io.FU_output.valid && FU0.io.FU_output.bits.RD_valid
+    INT_PRF.io.wen_1    :=    FU1.io.FU_output.valid && FU1.io.FU_output.bits.RD_valid
+    INT_PRF.io.wen_2    :=    FU2.io.FU_output.valid && FU2.io.FU_output.bits.RD_valid
+    INT_PRF.io.wen_3    :=    FU3.io.FU_output.valid && FU3.io.FU_output.bits.RD_valid
 
-    INT_PRF.io.wdata_0  :=    FU0.io.FU_output.data
-    INT_PRF.io.wdata_1  :=    FU1.io.FU_output.data
-    INT_PRF.io.wdata_2  :=    FU2.io.FU_output.data
-    INT_PRF.io.wdata_3  :=    FU3.io.FU_output.data
+    INT_PRF.io.wdata_0  :=    FU0.io.FU_output.bits.RD_data
+    INT_PRF.io.wdata_1  :=    FU1.io.FU_output.bits.RD_data
+    INT_PRF.io.wdata_2  :=    FU2.io.FU_output.bits.RD_data
+    INT_PRF.io.wdata_3  :=    FU3.io.FU_output.bits.RD_data
 
     ////////////////////////
     // FU TO RS BROADCAST //
@@ -213,22 +213,25 @@ class backend(parameters:Parameters) extends Module{
     MEM_RS.io.FU_broadcast(2) <> FU2.io.FU_output
     MEM_RS.io.FU_broadcast(3) <> FU3.io.FU_output
 
+    //////////////////////
+    // FU TO ROB UPDATE //
+    //////////////////////
+
+    io.FU_outputs(0) <> FU0.io.FU_output
+    io.FU_outputs(1) <> FU1.io.FU_output
+    io.FU_outputs(2) <> FU2.io.FU_output
+    io.FU_outputs(3) <> FU3.io.FU_output
+
     ///////////////////
     // MEM_RS TO MEM //
     ///////////////////
-
-    FU3.io.dram_request := DontCare
-    FU3.io.dram_resp    := DontCare
-
-    //val is_DRAM_request = 
-    //val is_DRAM_wr_en   = 
-    //val DRAM_rq_addr    = 
-
-    io.dram_request := DontCare
-    io.dram_resp := DontCare
-
     
-    io.dram_request.bits := FU3.io.dram_request.bits
-    FU3.io.dram_resp.bits := io.dram_resp.bits
+    io.DRAM_request.bits        := FU3.io.DRAM_request.bits
+    io.DRAM_request.valid       := FU3.io.DRAM_request.valid
+    FU3.io.DRAM_request.ready   := io.DRAM_request.ready
+
+    FU3.io.DRAM_resp.bits   := io.DRAM_resp.bits
+    FU3.io.DRAM_resp.valid  := io.DRAM_resp.valid
+    io.DRAM_resp.ready      := FU3.io.DRAM_resp.ready
     
 }
