@@ -149,7 +149,7 @@ async def single_broadcast_good(dut):
     await RisingEdge(dut.clock())
 
     dut.write_RS(valid = [0,0,0,0])
-    dut.broadcast(RD=[5,0,0,0], data=[0x42,0,0,0], valid=[1,0,0,0])
+    dut.broadcast(RD=[5,0,0,0], valid=[1,0,0,0], RD_valid=[1,0,0,0])
 
     await ReadOnly()
 
@@ -210,7 +210,7 @@ async def single_broadcast_bad(dut):
     assert RS[0]["RS2_ready"] == 0
     
     await ReadWrite()
-    dut.broadcast(RD=[1,0,0,0], data=[0x42,0,0,0], valid=[1,0,0,0])
+    dut.broadcast(RD=[1,0,0,0], valid=[1,0,0,0], RD_valid=[1,0,0,0])
 
     await RisingEdge(dut.clock())
     await ReadOnly()
@@ -222,7 +222,7 @@ async def single_broadcast_bad(dut):
     assert RS[0]["RS2_ready"] == 0
    
     await ReadWrite()
-    dut.broadcast(RD=[7,0,0,0], data=[0x42,0,0,0], valid=[1,0,0,0])
+    dut.broadcast(RD=[7,0,0,0], valid=[1,0,0,0], RD_valid=[1,0,0,0])
 
     await ReadOnly()
 
@@ -540,10 +540,6 @@ async def dispatch_uOp0_uOp1_uOp2_uOp3(dut):
     assert ports[2]["RS1"]  == 24
     assert ports[2]["RS2"]  == 25
 
-    assert ports[3]["valid"]     == 1
-    assert ports[3]["RD_valid"]  == 1
-    assert ports[3]["RS1"]  == 34
-    assert ports[3]["RS2"]  == 35
 
     await RisingEdge(dut.clock())
     await ReadOnly()

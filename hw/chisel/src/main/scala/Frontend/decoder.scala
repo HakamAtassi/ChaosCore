@@ -62,18 +62,19 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
     val FUNCT7      = instruction(31, 25)
 
 
-    val instructionType = InstructionType(opcode(6,2))
+    val (instructionType, valid) = InstructionType.safe(opcode(6, 2))
+    assert(valid, "Enum state must be valid, got %d!", opcode(6,2))
 
     val MULTIPLY    = (instructionType === InstructionType.OP && FUNCT7(0))
     val SUBTRACT    = (instructionType === InstructionType.OP && FUNCT7(2))
     val IMMEDIATE   = (instructionType === InstructionType.OP_IMM)
 
 
-    val needs_divider   =   (instructionType === OP) && 
-                            ( FUNCT3 === 0x4.U  ||
-                              FUNCT3 === 0x5.U  ||
-                              FUNCT3 === 0x6.U  ||
-                              FUNCT3 === 0x7.U) && FUNCT7(0)
+    val needs_divider       =   (instructionType === OP) && 
+                                ( FUNCT3 === 0x4.U  ||
+                                FUNCT3 === 0x5.U  ||
+                                FUNCT3 === 0x6.U  ||
+                                FUNCT3 === 0x7.U) && FUNCT7(0)
 
     val needs_branch_unit   =   (instructionType === BRANCH) || 
                                 (instructionType === JAL)    ||
@@ -83,31 +84,39 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
                                     (instructionType === OP_IMM)
 
 
-    val IS_LOAD        =       (instructionType === LOAD)
-    val IS_STORE       =       (instructionType === STORE)
+    val IS_LOAD             =       (instructionType === LOAD)
+    val IS_STORE            =       (instructionType === STORE)
 
     val needs_memory        =       (instructionType === STORE) ||(instructionType === LOAD)
 
     // Assign output
 
-    io.decoded_instruction.RD_valid         := 0.B  // FIXME: 
-    io.decoded_instruction.RD               := RD
-    io.decoded_instruction.RS1              := RS1
-    io.decoded_instruction.RS2              := RS2
-    io.decoded_instruction.IMM              := IMM
-    io.decoded_instruction.FUNCT3           := FUNCT3
-    io.decoded_instruction.MULTIPLY         := MULTIPLY // Multiply or Divide
-    io.decoded_instruction.SUBTRACT         := SUBTRACT // subtract or arithmetic shift...
-    io.decoded_instruction.IMMEDIATE        := IMMEDIATE // subtract or arithmetic shift...
+    io.decoded_instruction.RD_valid := (instructionType === OP || 
+                                    instructionType === OP_IMM || 
+                                    instructionType === LOAD || 
+                                    instructionType === JAL || 
+                                    instructionType === JALR || 
+                                    instructionType === LUI || 
+                                    instructionType === AUIPC || 
+                                    instructionType === SYSTEM)
 
-    io.decoded_instruction.IS_LOAD         := IS_LOAD   // subtract or arithmetic shift...
-    io.decoded_instruction.IS_STORE        := IS_STORE  // subtract or arithmetic shift...
+    io.decoded_instruction.RD                   := RD
+    io.decoded_instruction.RS1                  := RS1
+    io.decoded_instruction.RS2                  := RS2
+    io.decoded_instruction.IMM                  := IMM
+    io.decoded_instruction.FUNCT3               := FUNCT3
+    io.decoded_instruction.MULTIPLY             := MULTIPLY // Multiply or Divide
+    io.decoded_instruction.SUBTRACT             := SUBTRACT // subtract or arithmetic shift...
+    io.decoded_instruction.IMMEDIATE            := IMMEDIATE // subtract or arithmetic shift...
 
-    io.decoded_instruction.packet_index     := io.instruction.packet_index 
-    io.decoded_instruction.instructionType  := instructionType
-    io.decoded_instruction.ROB_index        := io.instruction.ROB_index
-    io.decoded_instruction.needs_ALU                := needs_ALU
-    io.decoded_instruction.needs_branch_unit        := needs_branch_unit
+    io.decoded_instruction.IS_LOAD              := IS_LOAD   // subtract or arithmetic shift...
+    io.decoded_instruction.IS_STORE             := IS_STORE  // subtract or arithmetic shift...
+
+    io.decoded_instruction.packet_index         := io.instruction.packet_index 
+    io.decoded_instruction.instructionType      := instructionType
+    io.decoded_instruction.ROB_index            := io.instruction.ROB_index
+    io.decoded_instruction.needs_ALU            := needs_ALU
+    io.decoded_instruction.needs_branch_unit    := needs_branch_unit
 
 
     // TODO: ECALL / EBREAK
@@ -115,7 +124,6 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
 
     val ALU_port    =   RegInit(UInt(2.W), 0.U)
 
-    
     when(needs_ALU){
         io.decoded_instruction.portID := ALU_port
 
@@ -155,28 +163,29 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
 
 }
 
-/*
-class fetch_packet_decoder(fetchWidth:Int) extends Module{
+
+// FIXME: valid bits of packets from frontend is lost somewhere and is not propogated
+class fetch_packet_decoder(parameters:Parameters) extends Module{
+    import parameters._
     val io = IO(new Bundle{
-        val fetch_packet         =   Decoupled(new fetch_packet(fetchWidth=fetchWidth))          // Fetch packet result (To Decoders)
-        val decoded_fetch_packet =   Decoupled(new decoded_fetch_packet(fetchWidth=fetchWidth))
+        val fetch_packet         =  Flipped(Decoupled(new fetch_packet(parameters)))          // Fetch packet result (To Decoders)
+        val decoded_fetch_packet =  Decoupled(Vec(fetchWidth, new decoded_instruction(coreConfig=coreConfig, fetchWidth=fetchWidth, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount)))
     })
 
     val decoders: Seq[decoder] = Seq.tabulate(fetchWidth) { w =>
-        Module(new decoder(fetchWidth=fetchWidth))
+        Module(new decoder(parameters))
     }
 
-    for(i <- until fetchWidth){
-        decoder(i).io.instruction := io.fetch_packet.instructions(i)
+    for(i <- 0 until fetchWidth){   // pass inputs to decoder
+        decoders(i).io.instruction := io.fetch_packet.bits.instructions(i)
     }
 
-    // Register outputs //
-    io.decoded_fetch_packet.fetch_PC                := RegNext(io.fetch_packet.fetch_PC)
-    io.decoded_fetch_packet.valid_bits              := RegNext(io.fetch_packet.valid_bits)
-
-    for(i <- until fetchWidth){
-        io.decoded_fetch_packet.decoded_instructions(i)    := RegNext(decoder(i).io.decoded_instruction)
+    //// Register outputs //
+    for(i <- 0 until fetchWidth){   // pass inputs to decoder
+        io.decoded_fetch_packet.bits(i) := RegNext(decoders(i).io.decoded_instruction)
     }
 
-
-}*/
+    io.fetch_packet.ready := DontCare
+    
+    io.decoded_fetch_packet.valid := RegNext(io.fetch_packet.valid)
+}

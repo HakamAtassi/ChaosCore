@@ -47,9 +47,6 @@ case class Parameters(
   fetchWidth: Int = 4,
   RASEntries: Int = 128,
   BTBEntries: Int = 4096,
-  L1_instructionCacheWays: Int = 2,
-  L1_instructionCacheSets: Int = 64,
-  L1_instructionCacheBlockSizeBytes: Int = 32,
   startPC: UInt = "h00000000".U,
 
 
@@ -66,5 +63,18 @@ case class Parameters(
   RSEntries: Int = 20, // How many entires per reservation station (these are very expensive)
   dispatchWidth:Int = 4, // Up to many entires are sent to the reservation station + execution engine from the instruction queue at a time?
 
+
+  // Instruction Cache params
+  L1_instructionCacheWays: Int = 2,
+  L1_instructionCacheSets: Int = 64,
+  L1_instructionCacheBlockSizeBytes: Int = 32,
+
+
+
+  // Execution params
+
+  ALUportCount:Int = 3,
+  MEMportCount:Int = 1,
+  FPUportCount:Int = 0,  // not used if not "F"
 
 )

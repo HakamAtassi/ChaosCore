@@ -79,22 +79,21 @@ class RSDut:
             getattr(self.dut, f'io_backendPacket_{i}_bits_ready_bits_RS2_ready').value = RS2_ready[i]
 
 
-    def broadcast(self, RD=[0,0,0,0], data=[0,0,0,0], valid=[0,0,0,0]):
-        self.dut.io_FU_broadcast_0_RD_valid.value = valid[0]
-        self.dut.io_FU_broadcast_0_RD_bits.value = RD[0]
-        self.dut.io_FU_broadcast_0_data.value = data[0]
+    def broadcast(self, RD=[0,0,0,0], RD_valid=[0,0,0,0], valid=[0,0,0,0]):
+        self.dut.io_FU_broadcast_0_bits_RD.value = RD[0]
+        self.dut.io_FU_broadcast_0_valid.value = valid[0]
+        self.dut.io_FU_broadcast_0_bits_RD_valid.value = RD_valid[0]
 
-        self.dut.io_FU_broadcast_1_RD_valid.value = valid[1]
-        self.dut.io_FU_broadcast_1_RD_bits.value = RD[1]
-        self.dut.io_FU_broadcast_1_data.value = data[1]
+        self.dut.io_FU_broadcast_1_bits_RD.value = RD[1]
+        self.dut.io_FU_broadcast_1_valid.value = valid[1]
+        self.dut.io_FU_broadcast_1_bits_RD_valid.value = RD_valid[0]
 
-        self.dut.io_FU_broadcast_2_RD_valid.value = valid[2]
-        self.dut.io_FU_broadcast_2_RD_bits.value = RD[2]
-        self.dut.io_FU_broadcast_2_data.value = data[2]
+        self.dut.io_FU_broadcast_2_bits_RD.value = RD[2]
+        self.dut.io_FU_broadcast_2_valid.value = valid[2]
+        self.dut.io_FU_broadcast_2_bits_RD_valid.value = RD_valid[0]
 
-        self.dut.io_FU_broadcast_3_RD_valid.value = valid[3]
-        self.dut.io_FU_broadcast_3_RD_bits.value = RD[3]
-        self.dut.io_FU_broadcast_3_data.value = data[3]
+
+
 
 
     def get_ready(self):
@@ -111,11 +110,10 @@ class RSDut:
         self.dut.io_RF_inputs_0_ready.value = ready[0]
         self.dut.io_RF_inputs_1_ready.value = ready[1]
         self.dut.io_RF_inputs_2_ready.value = ready[2]
-        self.dut.io_RF_inputs_3_ready.value = ready[3]
 
     def get_ports(self):
         ports = []
-        for i in range(4):
+        for i in range(3):
             port = {
                 'valid':                int(getattr(self.dut, f'io_RF_inputs_{i}_valid').value),
                 'RD_valid':             int(getattr(self.dut, f'io_RF_inputs_{i}_bits_RD_valid').value),
@@ -144,7 +142,7 @@ class RSDut:
         
         ports = self.get_ports()
 
-        for i in range(4):
+        for i in range(3):
             valid    = ports[i]['valid']
             RD_valid = ports[0]['RD_valid']
             RS1 = ports[i]['RS1']

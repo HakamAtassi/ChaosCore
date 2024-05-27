@@ -36,7 +36,6 @@ import java.rmi.server.UID
 
 
 import helperFunctions.getBTBTagBits
-import generatePortIDVec._
 
 
 
@@ -117,15 +116,13 @@ object helperFunctions {
 
 }
 
-
-
 // Channels //
-class fetch_packet(fetchWidth:Int = 4) extends Bundle{
+class fetch_packet(parameters:Parameters) extends Bundle{
+    import parameters._
     val fetch_PC        = UInt(32.W)
     val valid_bits      = Vec(fetchWidth, Bool())
-    val instructions    = Vec(fetchWidth, UInt(32.W))
+    val instructions    = Vec(fetchWidth, new Instruction(fetchWidth=fetchWidth, ROBEntires=ROBEntires))
 }
-
 
 class metadata extends Bundle{
     val JAL             = Bool()
@@ -326,25 +323,25 @@ class BackendPacket(parameters:Parameters) extends Bundle{
     val ready_bits            =   new InstructionReady()
 }
 
-class MemoryRequestPacket(parameters:Parameters) extends Bundle{
-    import parameters._
-    val memoryAddress = UInt(32.W)
-
-}
 
 ////////////////////////////
 // EXECUTION ENGINE PORTS //
 ////////////////////////////
 
 
-class FU_output(physicalRegCount:Int) extends Bundle{
+class FU_output(parameters:Parameters) extends Bundle{
+    import parameters._
     // Arithmetic/Load
-    val RD      =   ValidIO(UInt(physicalRegCount.W))
-    val data    =   UInt(32.W)
+    val RD          =   UInt(physicalRegCount.W)
+    val RD_data     =   UInt(32.W)
+    val RD_valid    =   Bool()
 
     // Branch
     val branch_taken      =   Bool()
-    val branch_address    =   UInt(32.W)
+    val expected_address  =   UInt(32.W)
+    val branch_valid      =   Bool()
+
+    val ROB_index         =   UInt(log2Ceil(ROBEntires).W)
 
 }
 
@@ -361,19 +358,17 @@ class execute_ports() extends Bundle{   // all port definitions to the execution
     // all ports stored within an N wide vector.
 }
 
-
-
 //////////
 // DRAM //
 //////////
 
-class dram_request extends Bundle{
+class DRAM_request extends Bundle{
     val addr    = UInt(32.W)
     val wr_data = UInt(32.W)
     val wr_en   = Bool()
 }
 
-class dram_resp extends Bundle{
+class DRAM_resp extends Bundle{
     val data = UInt(32.W)
 }
 

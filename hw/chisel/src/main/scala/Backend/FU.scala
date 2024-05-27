@@ -43,7 +43,7 @@ class ALU(parameters:Parameters) extends Module{    // FIXME: I think this can b
         val FU_input      =   Flipped(Decoupled(new read_decoded_instruction(coreConfig=coreConfig, fetchWidth=fetchWidth, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount)))
         
         // Output
-        val FU_output     =   new FU_output(physicalRegCount)
+        val FU_output     =   ValidIO(new FU_output(parameters))
     })
 
     // misaligned fetch exception ??
@@ -70,8 +70,8 @@ class ALU(parameters:Parameters) extends Module{    // FIXME: I think this can b
     //////////////////////////
     //////////////////////////
 
-    //val taken_address     = RegInit(UInt(32.W), 0.U)
-    //val not_taken_address = RegInit(UInt(32.W), 0.U)
+    //val expected_address     = RegInit(UInt(32.W), 0.U)
+    //val not_expected_address = RegInit(UInt(32.W), 0.U)
 
     //val comp_result = RegInit(Bool(), 0.B)
     //val target_addr = Wire(UInt(32.W))
@@ -115,7 +115,7 @@ class ALU(parameters:Parameters) extends Module{    // FIXME: I think this can b
     xor_result  := RS1_data ^ operand2
     sll_result  := RS1_data << operand2(4,0) // Logical left shift
     srl_result  := RS1_data >> operand2(4,0) // Logical right shift
-    sra_result  := (RS1_data.asSInt >> operand2(4,0)).asUInt // Arithmetic right shift
+    sra_result  := (RS1_data >> operand2(4,0)).asSInt.asUInt // Arithmetic right shift
 
     // perform multiply operations
     //val multiply_temp = Wire(UInt(64.W))
@@ -194,14 +194,21 @@ class ALU(parameters:Parameters) extends Module{    // FIXME: I think this can b
     */
 
 
-    // TODO: ready stuff
+    // ALU pipelined; always ready
+    io.FU_input.ready       :=   1.B    
 
+    // Not a branch unit (all FUs share the same output channel)
+    io.FU_output.bits.branch_taken      := DontCare
+    io.FU_output.bits.expected_address  := DontCare
+    io.FU_output.bits.branch_valid      := 0.B
 
-    io.FU_input.ready := DontCare
-    io.FU_output := DontCare
+    // Actual Outputs
+    io.FU_output.bits.RD         :=   RegNext(io.FU_input.bits.decoded_instruction.RD)
+    io.FU_output.bits.RD_valid   :=   RegNext(io.FU_input.bits.decoded_instruction.RD_valid)
+    io.FU_output.bits.RD_data    :=   arithmetic_result
 
-    io.FU_output.RD.bits    :=   io.FU_input.bits.decoded_instruction.RD
-    io.FU_output.data       :=   arithmetic_result
+    io.FU_output.bits.ROB_index  :=   RegNext(io.FU_input.bits.decoded_instruction.ROB_index)
+    io.FU_output.valid           :=   RegNext(io.FU_input.valid)
 
 }
 
@@ -215,7 +222,7 @@ class branch_unit(parameters:Parameters) extends Module{
         val FU_input      =   Flipped(Decoupled(new read_decoded_instruction(coreConfig=coreConfig, fetchWidth=fetchWidth, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount)))
         
         // Output
-        val FU_output     =   new FU_output(physicalRegCount)
+        val FU_output     =   ValidIO(new FU_output(parameters))
     })
 
 
@@ -249,112 +256,57 @@ class branch_unit(parameters:Parameters) extends Module{
     val JAL         =   instructionType === InstructionType.JAL
     val JALR        =   instructionType === InstructionType.JALR 
 
-
     //
     val EQ      = Wire(Bool())
     val NE      = Wire(Bool())
-    val BT      = Wire(Bool())
+    val LT      = Wire(Bool())
     val GE      = Wire(Bool())
     val LTU     = Wire(Bool())
     val GEU     = Wire(Bool())
     
-    EQ         :=  RS1_data.asSInt === RS2_data.asSInt
-    NE         :=  RS1_data.asSInt =/= RS2_data.asSInt
-    BT         :=  RS1_data.asSInt   < RS2_data.asSInt
-    GE         :=  RS1_data.asSInt  >= RS2_data.asSInt
-    LTU        :=  RS1_data.asUInt   < RS2_data.asUInt
-    GEU        :=  RS1_data.asUInt  >= RS2_data.asUInt
+    EQ         :=  (RS1_data.asSInt === RS2_data.asSInt) && BEQ
+    NE         :=  (RS1_data.asSInt =/= RS2_data.asSInt) && BNE
+    LT         :=  (RS1_data.asSInt   < RS2_data.asSInt) && BLT
+    GE         :=  (RS1_data.asSInt  >= RS2_data.asSInt) && BGE
+    LTU        :=  (RS1_data.asUInt   < RS2_data.asUInt) && BLTU
+    GEU        :=  (RS1_data.asUInt  >= RS2_data.asUInt) && BGEU
 
 
     val branch_taken  = Wire(Bool())
-    val taken_address = Wire(UInt(32.W))
+    val expected_address = Wire(UInt(32.W))
 
     io.FU_input.ready := DontCare
     io.FU_output := DontCare
 
     branch_taken := 0.B
+    expected_address := PC + 4.U
 
-    when(EQ)        {branch_taken := 1.B}
-    .elsewhen(NE)   {branch_taken := 1.B}
-    .elsewhen(BT)   {branch_taken := 1.B}
-    .elsewhen(GE)   {branch_taken := 1.B}
-    .elsewhen(LTU)  {branch_taken := 1.B}
-    .elsewhen(GEU)  {branch_taken := 1.B}
-    .elsewhen(JAL)  {branch_taken := 1.B}
-    .elsewhen(JALR) {branch_taken := 1.B}
+    when(EQ)        {branch_taken := 1.B; expected_address := PC + IMM}
+    .elsewhen(NE)   {branch_taken := 1.B; expected_address := PC + IMM}
+    .elsewhen(LT)   {branch_taken := 1.B; expected_address := PC + IMM}
+    .elsewhen(GE)   {branch_taken := 1.B; expected_address := PC + IMM}
+    .elsewhen(LTU)  {branch_taken := 1.B; expected_address := PC + IMM}
+    .elsewhen(GEU)  {branch_taken := 1.B; expected_address := PC + IMM}
+    .elsewhen(JAL)  {branch_taken := 1.B; expected_address := PC + IMM}
+    .elsewhen(JALR) {branch_taken := 1.B; expected_address := RS1_data + IMM}
 
-    taken_address := 0.U
-    when(IS_BRANCH){taken_address := PC + IMM}
-    .elsewhen(JAL) {taken_address := PC + IMM}
-    .elsewhen(JALR){taken_address := RS1_data + IMM}
+    // ALU pipelined; always ready
+    io.FU_input.ready       :=   1.B
 
+    // Not a branch unit (all FUs share the same output channel)
+    io.FU_output.bits.branch_taken          := RegNext(branch_taken)
+    io.FU_output.bits.expected_address      := RegNext(expected_address)
 
-    io.FU_output.RD.bits    :=   RD
-    io.FU_output.data       :=   PC + 4.U
+    // Actual Outputs
+    io.FU_output.bits.RD            :=      RegNext(io.FU_input.bits.decoded_instruction.RD)
+    io.FU_output.bits.RD_valid      :=      RegNext(io.FU_input.bits.decoded_instruction.RD_valid)
+    io.FU_output.bits.RD_data       :=      RegNext(PC + 4.U)
 
-    io.FU_output.branch_address :=  taken_address
-    io.FU_output.branch_taken   :=  branch_taken
-
-
-}
-
-
-
-// Top Level FU
-class FU(parameters:Parameters,
-         has_ALU:Boolean,
-         has_branch_unit: Boolean 
-         //MUL:Bool    
-) extends Module{
-    import parameters._
-    import InstructionType._
-    val io = IO(new Bundle{
-        // Input
-        val FU_input      =   Flipped(Decoupled(new read_decoded_instruction(coreConfig=coreConfig, fetchWidth=fetchWidth, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount)))
-        
-        // Output
-        val FU_output     =   new FU_output(physicalRegCount)
-    })
-
-    // All functional have a latency of 1 cycle (for now)
-    // FIXME: Add Mul/Div + bypassing
-    // Also make sure to inner modules dont write to CDB at the same time
-
-    val is_ALU  = io.FU_input.bits.decoded_instruction.needs_ALU && io.FU_input.valid
-    val is_CTRL = io.FU_input.bits.decoded_instruction.needs_branch_unit && io.FU_input.valid
-
-
-
-    val ALU = if (has_ALU) Some(Module(new ALU(parameters))) else None
-    val branch_unit = if (has_branch_unit) Some(Module(new branch_unit(parameters))) else None
-
-    ALU.foreach { alu =>
-        alu.io.FU_input <> io.FU_input
-    }
-
-    branch_unit.foreach { bu =>
-        bu.io.FU_input <> io.FU_input
-    }
-
-    io.FU_output := DontCare
-
-    if(branch_unit.isDefined){
-        when(is_CTRL) {
-            io.FU_output := branch_unit.get.io.FU_output
-        }
-    }
-
-
-    if(ALU.isDefined){
-        when(is_ALU) {
-            io.FU_output := ALU.get.io.FU_output
-        }
-    }
-
-
-
+    io.FU_output.bits.ROB_index     :=      RegNext(io.FU_input.bits.decoded_instruction.ROB_index)
+    io.FU_output.valid              :=      RegNext(io.FU_input.valid)
 
 }
+
 
 
 // MEM FU
@@ -364,11 +316,11 @@ class MEMFU(parameters:Parameters) extends Module{
     val io = IO(new Bundle{
         // Input
         val FU_input      =   Flipped(Decoupled(new read_decoded_instruction(coreConfig=coreConfig, fetchWidth=fetchWidth, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount)))
-        val dram_resp     =   Flipped(Decoupled(new dram_resp()))
+        val DRAM_resp     =   Flipped(Decoupled(new DRAM_resp()))
 
         // Output
-        val FU_output     =   Output(new FU_output(physicalRegCount))      // To RF
-        val dram_request  =   Decoupled(new dram_request())                // To DRAM
+        val FU_output     =   ValidIO(new FU_output(parameters))      // To RF
+        val DRAM_request  =   Decoupled(new DRAM_request())           // To DRAM
     })
 
 
@@ -394,15 +346,15 @@ class MEMFU(parameters:Parameters) extends Module{
     val MULTIPLY            =   io.FU_input.bits.decoded_instruction.MULTIPLY
 
 
-    val SB                  =   IS_STORE && FUNCT3 === "b000".U
-    val SH                  =   IS_STORE && FUNCT3 === "b001".U
-    val SW                  =   IS_STORE && FUNCT3 === "b010".U
+    val SB                  =   IS_STORE && FUNCT3 === "b000".U && io.FU_input.valid
+    val SH                  =   IS_STORE && FUNCT3 === "b001".U && io.FU_input.valid
+    val SW                  =   IS_STORE && FUNCT3 === "b010".U && io.FU_input.valid
 
-    val LB                  =   IS_LOAD && FUNCT3 === "b000".U
-    val LH                  =   IS_LOAD && FUNCT3 === "b001".U
-    val LW                  =   IS_LOAD && FUNCT3 === "b010".U
-    val LBU                 =   IS_LOAD && FUNCT3 === "b100".U
-    val LHU                 =   IS_LOAD && FUNCT3 === "b101".U
+    val LB                  =   IS_LOAD && FUNCT3 === "b000".U  && io.FU_input.valid
+    val LH                  =   IS_LOAD && FUNCT3 === "b001".U  && io.FU_input.valid
+    val LW                  =   IS_LOAD && FUNCT3 === "b010".U  && io.FU_input.valid
+    val LBU                 =   IS_LOAD && FUNCT3 === "b100".U  && io.FU_input.valid
+    val LHU                 =   IS_LOAD && FUNCT3 === "b101".U  && io.FU_input.valid
 
 
     /////////////////////
@@ -433,10 +385,10 @@ class MEMFU(parameters:Parameters) extends Module{
     // For store, just send store request to memory.
 
 
-    io.dram_request.valid           := IS_LOAD || IS_STORE
-    io.dram_request.bits.wr_en      := IS_STORE
-    io.dram_request.bits.wr_data    := wr_data
-    io.dram_request.bits.addr       := addr
+    io.DRAM_request.valid           := IS_LOAD || IS_STORE
+    io.DRAM_request.bits.wr_en      := IS_STORE
+    io.DRAM_request.bits.wr_data    := wr_data
+    io.DRAM_request.bits.addr       := addr
 
 
     //////////////////////
@@ -446,25 +398,85 @@ class MEMFU(parameters:Parameters) extends Module{
     val rd_data = Wire(UInt(32.W))
 
     rd_data := 0.U
-    when(RegNext(LB)) {rd_data := (io.dram_resp.bits.data & 0xFF.U).asSInt.asUInt}
-    when(RegNext(LH)) {rd_data := (io.dram_resp.bits.data & 0xFFFF.U).asSInt.asUInt}
-    when(RegNext(LW)) {rd_data := (io.dram_resp.bits.data & "hFFFF_FFFF".U).asSInt.asUInt}
-    when(RegNext(LBU)){rd_data := (io.dram_resp.bits.data & 0xFF.U).asUInt}
-    when(RegNext(LHU)){rd_data := (io.dram_resp.bits.data & 0xFFFF.U).asUInt}
+    // this can be parallelized, I'm pretty sure (byte enable with paralell muxes...)
+    when(RegNext(LB)) {rd_data := (io.DRAM_resp.bits.data & 0xFF.U).asSInt.asUInt}
+    when(RegNext(LH)) {rd_data := (io.DRAM_resp.bits.data & 0xFFFF.U).asSInt.asUInt}
+    when(RegNext(LW)) {rd_data := (io.DRAM_resp.bits.data & "hFFFF_FFFF".U).asSInt.asUInt}
+    when(RegNext(LBU)){rd_data := (io.DRAM_resp.bits.data & 0xFF.U).asUInt}
+    when(RegNext(LHU)){rd_data := (io.DRAM_resp.bits.data & 0xFFFF.U).asUInt}
 
     ////////////////////////
     // ASSIGN PRF OUTPUTS //
     ////////////////////////
 
+    // Not a branch unit (all FUs share the same output channel)
+    io.FU_output.bits.branch_taken      := DontCare
+    io.FU_output.bits.expected_address  := DontCare
+    io.FU_output.bits.branch_valid      := 0.B
+
+
+    io.FU_output.bits.RD_data   := rd_data
+    io.FU_output.bits.RD        := RegNext(RD)
+    io.FU_output.bits.RD_valid  := RegNext(IS_LOAD)
+
+    io.FU_input.ready  := 1.B
+    io.DRAM_resp.ready := 1.B
+
+    io.FU_output.bits.ROB_index  :=   RegNext(io.FU_input.bits.decoded_instruction.ROB_index)
+    io.FU_output.valid           :=   RegNext(io.FU_input.valid)
+
+
+}
+
+
+// Top Level FU
+class FU(parameters:Parameters,
+         has_ALU:Boolean,
+         has_branch_unit: Boolean 
+         //MUL:Bool    
+) extends Module{
+    import parameters._
+    import InstructionType._
+    val io = IO(new Bundle{
+        // Input
+        val FU_input      =   Flipped(Decoupled(new read_decoded_instruction(coreConfig=coreConfig, fetchWidth=fetchWidth, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount)))
+        
+        // Output
+        val FU_output     =   ValidIO(new FU_output(parameters))
+    })
+
+    // All functional have a latency of 1 cycle (for now)
+    // FIXME: Add Mul/Div + bypassing
+    // Also make sure to inner modules dont write to CDB at the same time
+
+    val is_ALU  = io.FU_input.bits.decoded_instruction.needs_ALU && io.FU_input.valid
+    val is_CTRL = io.FU_input.bits.decoded_instruction.needs_branch_unit && io.FU_input.valid
+
+
+
+    val ALU = if (has_ALU) Some(Module(new ALU(parameters))) else None
+    val branch_unit = if (has_branch_unit) Some(Module(new branch_unit(parameters))) else None
+
+    ALU.foreach { alu =>
+        alu.io.FU_input <> io.FU_input
+    }
+
+    branch_unit.foreach { bu =>
+        bu.io.FU_input <> io.FU_input
+    }
+
     io.FU_output := DontCare
-    io.FU_output.data := rd_data
-    io.FU_output.RD.bits   := RegNext(RD)
-    io.FU_output.RD.valid  := RegNext(IS_LOAD)
 
+    if(branch_unit.isDefined){
+        when(is_CTRL) {
+            io.FU_output := branch_unit.get.io.FU_output    //FIXME: Get??
+        }
+    }
 
-
-    io.FU_input.ready := 1.B
-    io.dram_resp.ready := 1.B
-
+    if(ALU.isDefined){
+        when(is_ALU) {
+            io.FU_output := ALU.get.io.FU_output
+        }
+    }
 
 }

@@ -42,7 +42,7 @@ import Thermometor._
 
 class MEMRS(parameters:Parameters) extends Module{
     import parameters._
-    val portCount = getPortCount(coreConfig)
+    val portCount = getPortCount(parameters)
     val portCountBits = log2Ceil(portCount)
 
     val pointerSize = log2Ceil(RSEntries)+1
@@ -52,7 +52,7 @@ class MEMRS(parameters:Parameters) extends Module{
         val backendPacket  =   Vec(dispatchWidth, Flipped(Decoupled(new BackendPacket(parameters))))
 
         // from Mem
-        val FU_broadcast   =   Vec(portCount, Flipped(new FU_output(physicalRegCount)))
+        val FU_broadcast   =   Vec(portCount, Flipped(ValidIO(new FU_output(parameters))))
 
         // To FU
         val RF_inputs      =   Decoupled(new decoded_instruction(coreConfig=coreConfig, fetchWidth:Int, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount))
@@ -61,26 +61,31 @@ class MEMRS(parameters:Parameters) extends Module{
     
     val reservation_station = RegInit(VecInit(Seq.fill(RSEntries)(0.U.asTypeOf(new RS_entry(coreConfig=coreConfig, fetchWidth:Int, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount)))))
 
+    // queue pointers
+    val front_pointer = RegInit(UInt((log2Ceil(RSEntries)+1).W), 0.U)
+    val back_pointer  = RegInit(UInt((log2Ceil(RSEntries)+1).W), 0.U)
 
+    val front_index     =   front_pointer(log2Ceil(RSEntries)-1, 0)
+    val back_index      =   back_pointer(log2Ceil(RSEntries)-1, 0)
 
     //////////////
     // ALLOCATE //
     //////////////
     // write up to dispatchWidth entries into the queue (in order).
     
-    val validVec = reservation_station.map(_.valid)
-    val validUInt = Cat(validVec.reverse)
-    val allocate_index = SelectFirstN(~validUInt, dispatchWidth)
-    
     // Allocate new RS entry
+    var j = 0
     for(i <- 0 until dispatchWidth){
         when(io.backendPacket(i).valid){
-            val allocateIndexBinary = OHToUInt(allocate_index(i))
-            reservation_station(allocateIndexBinary).decoded_instruction <> io.backendPacket(i).bits.decoded_instruction
-            reservation_station(allocateIndexBinary).ready_bits:= io.backendPacket(i).bits.ready_bits
-            reservation_station(allocateIndexBinary).valid   := 1.B
+            reservation_station(front_index + j.U).decoded_instruction <> io.backendPacket(i).bits.decoded_instruction
+            reservation_station(front_index + j.U).ready_bits         := io.backendPacket(i).bits.ready_bits
+            reservation_station(front_index + j.U).valid              := 1.B
+            j = j + 1
+            
         }
     }
+    front_pointer := front_pointer + j.U    // if this doesnt work just replace with popcount
+
 
     ////////////
     // UPDATE //
@@ -95,10 +100,10 @@ class MEMRS(parameters:Parameters) extends Module{
         var _RS2_match = false.B
 
         for (FU <- 0 until portCount) {
-            _RS1_match = _RS1_match || ((io.FU_broadcast(FU).RD.bits === reservation_station(i).decoded_instruction.RS1) && io.FU_broadcast(FU).RD.valid)
+            _RS1_match = _RS1_match || ((io.FU_broadcast(FU).bits.RD === reservation_station(i).decoded_instruction.RS1) && io.FU_broadcast(FU).valid && io.FU_broadcast(FU).bits.RD_valid)
         }
         for (FU <- 0 until portCount) {
-            _RS2_match = _RS2_match || ((io.FU_broadcast(FU).RD.bits === reservation_station(i).decoded_instruction.RS2) && io.FU_broadcast(FU).RD.valid)
+            _RS2_match = _RS2_match || ((io.FU_broadcast(FU).bits.RD === reservation_station(i).decoded_instruction.RS2)  && io.FU_broadcast(FU).valid && io.FU_broadcast(FU).bits.RD_valid)
         }
 
         RS1_match(i) := _RS1_match
@@ -123,31 +128,22 @@ class MEMRS(parameters:Parameters) extends Module{
     /////////////////
     // if oldest RS entry is ready to send to MEM and MEM is not busy, send MEM request.
 
-    //val scheduled_mem_operation 
 
-    val schedulable_instructions = Wire(Vec(RSEntries, Bool()))    // what instructions have both inputs ready?
-    for(i <- 0 until RSEntries){
+    val load_valid_ready  =         reservation_station(back_index).valid && (reservation_station(back_index).ready_bits.RS1_ready || RS1_match(back_index))
 
-        val load_valid_ready  =         reservation_station(i).valid && (reservation_station(i).ready_bits.RS1_ready || RS1_match(i))
+    val store_valid_ready =         (reservation_station(back_index).ready_bits.RS1_ready || RS1_match(back_index)) && 
+                                    (reservation_station(back_index).ready_bits.RS2_ready || RS2_match(back_index)) && 
+                                    reservation_station(back_index).valid
 
-        val store_valid_ready =         (reservation_station(i).ready_bits.RS1_ready || RS1_match(i)) && 
-                                        (reservation_station(i).ready_bits.RS2_ready || RS2_match(i)) && 
-                                        reservation_station(i).valid
-
-        schedulable_instructions(i) :=  load_valid_ready || store_valid_ready
+    when(load_valid_ready || store_valid_ready){
+        // free scheduled instruction
+        reservation_station(back_index).valid := 0.B
+        reservation_station(back_index) <> 0.U.asTypeOf(new RS_entry(coreConfig=coreConfig, fetchWidth:Int, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount))
+        front_pointer := front_pointer + 1.U
     }
-    
 
-
-
-    val scheduled_index = PriorityEncoder(schedulable_instructions)
-
-    // free scheduled instruction
-    reservation_station(scheduled_index).valid := 0.B
-    reservation_station(scheduled_index) <> 0.U.asTypeOf(new RS_entry(coreConfig=coreConfig, fetchWidth:Int, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount))
-
-    io.RF_inputs.bits <> reservation_station(scheduled_index).decoded_instruction
-    io.RF_inputs.valid := schedulable_instructions.asUInt.orR
+    io.RF_inputs.bits <> reservation_station(front_index).decoded_instruction
+    io.RF_inputs.valid := reservation_station(front_index).valid
 
 
     // assign ready bits

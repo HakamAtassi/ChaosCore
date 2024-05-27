@@ -103,8 +103,8 @@ class skidbuffer[T <: Data](datatype: T) extends Module{
 // TODO: handle mispredict
 // TODO: handle kills/reverts/clears
 
-class Frontend(GHRWidth:Int=16, fetchWidth:Int=4, RASEntries:Int=128, BTBEntries:Int=4096, L1_instructionCacheWays:Int=2, 
-               L1_instructionCacheSets:Int=64, L1_instructionCacheBlockSizeBytes:Int=32, startPC:UInt="h80000000".U) extends Module{
+class Frontend(parameters:Parameters) extends Module{
+  import parameters._
 
     val dataSizeBits                = L1_instructionCacheBlockSizeBytes*8
 
@@ -120,21 +120,24 @@ class Frontend(GHRWidth:Int=16, fetchWidth:Int=4, RASEntries:Int=128, BTBEntries
         
         // outputs
         val cache_addr        =   Decoupled(UInt(32.W))                                       // outputs to DRAM
-        val fetch_packet      =   Decoupled(new fetch_packet(fetchWidth=fetchWidth))          // Fetch packet result (To Decoders)
+        val fetch_packet      =   Decoupled(new fetch_packet(parameters))                     // Fetch packet result (To Decoders)
+        
+        //val backendPacket  =   Vec(dispatchWidth, Flipped(Decoupled(new BackendPacket(parameters))))
+
     })
 
     /////////////
     // Modules //
     /////////////
-    val instruction_cache   = Module(new L1_instruction_cache(fetchWidth=fetchWidth, ways=L1_instructionCacheWays, sets=L1_instructionCacheSets, blockSizeBytes=L1_instructionCacheBlockSizeBytes))
+    val instruction_cache   = Module(new L1_instruction_cache(parameters))
     val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))
-    val predecoder          = Module(new decode_validate(fetchWidth=fetchWidth, GHRWidth=GHRWidth, RASEntries=RASEntries, startPC=startPC))
+    val predecoder          = Module(new decode_validate(parameters))
     val PC_gen              = Module(new PC_arbit(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, startPC=startPC))
 
     ////////////
     // Queues //
     ////////////
-    val instruction_Q   =   Module(new Q(new fetch_packet(fetchWidth=fetchWidth), depth = 16))              // Instantiate queue with fetch_packet data type
+    val instruction_Q   =   Module(new Q(new fetch_packet(parameters), depth = 16))              // Instantiate queue with fetch_packet data type
     val PC_Q            =   Module(new Q(UInt(32.W)))                                                       // Queue of predicted PCs
     val BTB_Q           =   Module(new Q(new prediction(fetchWidth=fetchWidth, GHRWidth=GHRWidth)))         // Queue of BTB responses
 
@@ -154,9 +157,7 @@ class Frontend(GHRWidth:Int=16, fetchWidth:Int=4, RASEntries:Int=128, BTBEntries
     PC_Q.io.data_in     :=  PC_gen.io.PC_next.bits
     PC_Q.io.rd_en       :=  (instruction_cache.io.cpu_addr.ready)  
     PC_Q.io.clear       :=  clear
-    dontTouch(PC_Q.io.full)
 
-    dontTouch(instruction_cache.io.cache_addr.ready)
     ///////////////////////
     // INSTRUCTION QUEUE //
     ///////////////////////
@@ -241,13 +242,28 @@ class Frontend(GHRWidth:Int=16, fetchWidth:Int=4, RASEntries:Int=128, BTBEntries
     dontTouch(bp.io.prediction.valid)
     
     PC_gen.io.RAS_read         := bp.io.RAS_read
-    PC_gen.io.PC_next.ready         := !PC_Q.io.full && bp.io.predict.ready
+    PC_gen.io.PC_next.ready    := !PC_Q.io.full && bp.io.predict.ready
 
     PC_gen.io.revert.bits      := predecoder.io.revert.bits
     PC_gen.io.revert.valid     := predecoder.io.revert.valid
 
 
     // FIXME: PC_gen readies not connected
+
+
+    ////////////
+    // DECODE //
+    ////////////
+
+    val fetch_packet_decoder  = Module(new fetch_packet_decoder(parameters))
+
+
+
+    ////////////
+    // RENAME //
+    ////////////
+
+
 
     /////////////
     // OUTPUTS //

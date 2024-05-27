@@ -57,6 +57,7 @@ object VerilogGenerator {
 object Main extends App {
     import Parameters._
 
+    val parameters = Parameters()
     //VerilogGenerator.generateVerilog(new L1_instruction_cache(fetchWidth = 4, ways = 2, sets = 64, blockSizeBytes = 32), "../verilog/Frontend/instruction_cache.v")
     //VerilogGenerator.generateVerilog(new gshare(GHR_width = 16), "../verilog/Frontend/BP/gshare.v")
     //VerilogGenerator.generateVerilog(new hash_BTB(entries = 4096), "../verilog/Frontend/BP/hash_BTB.v")
@@ -71,19 +72,9 @@ object Main extends App {
     //, 
     //"../verilog/Frontend/BP/PC_arbit.v")
 
-    //VerilogGenerator.generateVerilog(new Frontend(
-        //GHRWidth = GHRWidth,
-        //fetchWidth = fetchWidth,
-        //RASEntries = RASEntries,
-        //BTBEntries = BTBEntries,
-        //L1_instructionCacheWays = L1_instructionCacheWays,
-        //L1_instructionCacheSets = L1_instructionCacheSets,
-        //L1_instructionCacheBlockSizeBytes = L1_instructionCacheBlockSizeBytes,
-        //startPC = startPC
-    //), 
-    //"../verilog/Frontend/Frontend.v")
+    //VerilogGenerator.generateVerilog(new Frontend(parameters), "../verilog/Frontend/Frontend.v")
 
-    val parameters = Parameters()
+    VerilogGenerator.generateVerilog(new fetch_packet_decoder(parameters), "../verilog/Frontend/decoders.v")
 
     VerilogGenerator.generateVerilog(new free_list(parameters), 
     "../verilog/Frontend/free_list.v")
