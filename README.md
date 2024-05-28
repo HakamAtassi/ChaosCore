@@ -37,7 +37,7 @@ tests do not have any particular structure. ```UVM``` tests contain more rigorou
 1) Before making any updates to the core, Core Mark MUST be run. Resulting freq and area must be documented.
 2) Each Major iteration MUST be placed in its own branch for cross referencing,
 
-
+0) A bunch of performance counters (mispreds, hits, misses, etc...)
 1) A non naive LSQ/memory subsystem
 2) A 2+ at a time commit ROB
 3) A banked cache

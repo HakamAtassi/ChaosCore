@@ -57,6 +57,7 @@ class backend(parameters:Parameters) extends Module{
         val MEMRS_ready          =   Output(Vec(dispatchWidth, Bool()))
         val INTRS_ready          =   Output(Vec(dispatchWidth, Bool()))
 
+
         // outputs (DRAM)
         val DRAM_request         =   Decoupled(new DRAM_request())
 

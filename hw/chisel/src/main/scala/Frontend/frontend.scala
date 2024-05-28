@@ -37,102 +37,110 @@ import chisel3.util._
 class frontend(parameters:Parameters) extends Module{
     import parameters._
 
-    val dataSizeBits                = L1_instructionCacheBlockSizeBytes*8
+    val dataSizeBits         = L1_instructionCacheBlockSizeBytes*8
+    val physicalRegBits      = log2Ceil(physicalRegCount)
+    val architecturalRegBits = log2Ceil(architecturalRegCount)
+    val RATCheckpointBits    = log2Ceil(RATCheckpointCount)
 
     val io = IO(new Bundle{
 
-        val misprediction_PC  =   Flipped(Decoupled(UInt(32.W)))                              // Input
-        val exception_PC      =   Flipped(Decoupled(UInt(32.W)))                              // Input
-        val dram_data         =   Flipped(Decoupled(UInt(dataSizeBits.W)))                    // inputs from DRAM
-        val commit            =   Flipped(Decoupled(new commit(fetchWidth=fetchWidth)))       // Input
+        val misprediction_PC                =   Flipped(Decoupled(UInt(32.W)))                              // Input
+        val exception_PC                    =   Flipped(Decoupled(UInt(32.W)))                              // Input
+        val commit                          =   Flipped(Decoupled(new commit(fetchWidth=fetchWidth)))       // Input
+
+        // From DRAM
+        val DRAM_resp                       =   Flipped(Decoupled(Input(new DRAM_resp())))
         
-        // outputs
-        val cache_addr        =   Decoupled(UInt(32.W))                                       // outputs to DRAM
+        // To DRAM
+        val DRAM_request                    =   Decoupled(new DRAM_request())
 
-        val renamed_decoded_fetch_packet =  Decoupled(Vec(fetchWidth, new decoded_instruction(coreConfig=coreConfig, fetchWidth=fetchWidth, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount)))
+        // To backend
+        val renamed_decoded_fetch_packet    =   Decoupled(Vec(fetchWidth, new decoded_instruction(coreConfig=coreConfig, fetchWidth=fetchWidth, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount)))
 
+        //// Instruction input (commit)
+        val commit_RD                 =   Input(Vec(fetchWidth, UInt(physicalRegBits.W))) // From RAT
+        val commit_RD_valid           =   Input(Vec(fetchWidth, Bool())) // From RAT
 
+        //// checkpoint (create/restore)
+        val create_checkpoint         = Input(Bool())
+        val active_checkpoint_value   = Output(UInt(RATCheckpointBits.W))   // What checkpoint is currently being used
 
-        // outputs to DRAM
+        val restore_checkpoint        = Input(Bool())                       // Restore to previous valid RAT
+        val restore_checkpoint_value  = Input(UInt(RATCheckpointBits.W))    // ...
+        
+        val free_checkpoint           = Input(Bool())                       // Normal branch commit. Just dealloc. checkpoint
 
-        // inputs from DRAM
-
-        // outputs to cache
-
+        val checkpoints_full          = Output(Bool())                      // No more checkpoints available
     })
 
-    io.renamed_decoded_fetch_packet.bits := DontCare
-    io.renamed_decoded_fetch_packet.valid := DontCare
 
-    io.misprediction_PC.ready  := DontCare
-    io.exception_PC.ready      := DontCare
-    io.dram_data.ready         := DontCare
-    io.commit.ready            := DontCare
+    io.misprediction_PC.ready  := 1.B
+    io.exception_PC.ready      := 1.B
+    io.commit.ready            := 1.B
 
-    io.cache_addr := DontCare
-    io.cache_addr.valid := DontCare
 
     //////////////
     // Pipeline //////////////////////////////////////////////////////
     // Instruction fetch => Decoders => Renamer => Backend/Allocate //
     //////////////////////////////////////////////////////////////////
 
+    val instruction_fetch = Module(new instruction_fetch(parameters))
+    val decoders = Module(new fetch_packet_decoder(parameters)) // N wide decode
+    val renamer = Module(new renamer(parameters))
+
     ///////////////////////
     // INSTRUCTION FETCH //
     ///////////////////////
 
 
-    val instruction_fetch = Module(new instruction_fetch(parameters))
-
     instruction_fetch.io.misprediction_PC.bits  :=   io.misprediction_PC.bits
     instruction_fetch.io.exception_PC.bits      :=   io.exception_PC.bits
-    instruction_fetch.io.dram_data.bits         :=   io.dram_data.bits
+    instruction_fetch.io.DRAM_resp.bits         :=   io.DRAM_resp.bits
     instruction_fetch.io.commit.bits            :=   io.commit.bits
 
     instruction_fetch.io.misprediction_PC.valid  :=   io.misprediction_PC.valid
     instruction_fetch.io.exception_PC.valid      :=   io.exception_PC.valid
-    instruction_fetch.io.dram_data.valid         :=   io.dram_data.valid
+    instruction_fetch.io.DRAM_resp.valid         :=   io.DRAM_resp.valid
+
     instruction_fetch.io.commit.valid            :=   io.commit.valid
 
-    instruction_fetch.io.cache_addr.ready := DontCare
-    instruction_fetch.io.fetch_packet.ready := DontCare
+    io.DRAM_resp.ready := instruction_fetch.io.DRAM_resp.ready
+    instruction_fetch.io.DRAM_request.ready         :=   io.DRAM_request.ready
+
+    io.DRAM_request.bits    := instruction_fetch.io.DRAM_request.bits
+    io.DRAM_request.valid   := instruction_fetch.io.DRAM_request.valid
+
+    instruction_fetch.io.fetch_packet.ready := decoders.io.fetch_packet.ready
 
     //////////////
     // DECODERS //
     //////////////
 
-    val decoders = Module(new fetch_packet_decoder(parameters)) // N wide decode
 
     decoders.io.fetch_packet.bits := instruction_fetch.io.fetch_packet.bits
 
-    decoders.io.fetch_packet.valid := DontCare
+    decoders.io.fetch_packet.valid := instruction_fetch.io.fetch_packet.valid
 
-    decoders.io.decoded_fetch_packet.ready:= DontCare
+    decoders.io.decoded_fetch_packet.ready:= 1.B
 
 
     ////////////
     // RENAME //
     ////////////
 
-    val renamer = Module(new renamer(parameters))
-
     renamer.io.decoded_fetch_packet.bits := decoders.io.decoded_fetch_packet.bits
     renamer.io.decoded_fetch_packet.valid := decoders.io.decoded_fetch_packet.valid
-    renamer.io.renamed_decoded_fetch_packet.ready := DontCare
+    renamer.io.renamed_decoded_fetch_packet.ready := 1.B
 
-    renamer.io.commit_RD                 :=     DontCare
-    renamer.io.commit_RD_valid           :=     DontCare
-    renamer.io.create_checkpoint         :=     DontCare
-    renamer.io.restore_checkpoint        :=     DontCare
-    renamer.io.restore_checkpoint_value  :=     DontCare
-    renamer.io.free_checkpoint           :=     DontCare
+    renamer.io.commit_RD                 :=     io.commit_RD
+    renamer.io.commit_RD_valid           :=     io.commit_RD_valid
+    renamer.io.create_checkpoint         :=     io.create_checkpoint
+    renamer.io.restore_checkpoint        :=     io.restore_checkpoint
+    renamer.io.restore_checkpoint_value  :=     io.restore_checkpoint_value
+    renamer.io.free_checkpoint           :=     io.free_checkpoint
 
-    //active_checkpoint_value   = Output(UInt(RATCheckpointBits.W))   // What checkpoint is currently being used
-    //checkpoints_full          = Output(Bool())                      // No more checkpoints available
-
-
-
-
+    io.checkpoints_full                  :=     renamer.io.checkpoints_full
+    io.active_checkpoint_value           :=     renamer.io.active_checkpoint_value
     ////////////
     // OUTPUT //
     ////////////

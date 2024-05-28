@@ -264,10 +264,8 @@ class renamer(parameters:Parameters) extends Module{
     val RATCheckpointBits    = log2Ceil(RATCheckpointCount)
 
     val io = IO(new Bundle{
-        // Instrution input (rename)
-
         // Instruction input (renamed)
-        val decoded_fetch_packet =  Flipped(Decoupled(Vec(fetchWidth, new decoded_instruction(coreConfig=coreConfig, fetchWidth=fetchWidth, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount))))
+        val decoded_fetch_packet         =  Flipped(Decoupled(Vec(fetchWidth, new decoded_instruction(coreConfig=coreConfig, fetchWidth=fetchWidth, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount))))
 
         // Instruction output (renamed)
         val renamed_decoded_fetch_packet =  Decoupled(Vec(fetchWidth, new decoded_instruction(coreConfig=coreConfig, fetchWidth=fetchWidth, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount)))
@@ -335,7 +333,6 @@ class renamer(parameters:Parameters) extends Module{
     val free_list   =   Module(new free_list(parameters))
 
     free_list.io.rename_valid                   :=  instruction_RD_valid
-
     free_list.io.free_valid                     :=  io.commit_RD_valid
     free_list.io.free_values                    :=  io.commit_RD
 
@@ -404,9 +401,11 @@ class renamer(parameters:Parameters) extends Module{
     io.checkpoints_full                := RAT.io.checkpoints_full
 
 
-    io.renamed_decoded_fetch_packet.bits    :=  DontCare
-    io.renamed_decoded_fetch_packet.valid    :=  DontCare
+    io.renamed_decoded_fetch_packet.bits    :=  io.decoded_fetch_packet.bits
+    io.renamed_decoded_fetch_packet.valid    :=  io.decoded_fetch_packet.valid
     io.decoded_fetch_packet.ready := DontCare
+
+
     for(i <- 0 until fetchWidth){
         io.renamed_decoded_fetch_packet.bits(i).RD      := free_list.io.renamed_values(i)
         io.renamed_decoded_fetch_packet.bits(i).RDold   := RAT.io.RAT_RD(i)
