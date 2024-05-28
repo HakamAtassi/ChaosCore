@@ -85,8 +85,8 @@ object Main extends App {
     "../verilog/Frontend/WAW_handler.v")
 
 
-    VerilogGenerator.generateVerilog(new rename(parameters), 
-    "../verilog/Frontend/rename.v")
+    //VerilogGenerator.generateVerilog(new rename(parameters), 
+    //"../verilog/Frontend/rename.v")
 
 
     VerilogGenerator.generateVerilog(new RAT(parameters), 
@@ -115,4 +115,6 @@ object Main extends App {
     VerilogGenerator.generateVerilog(new backend(parameters), 
     "../verilog/Backend/backend.v")
 
+    VerilogGenerator.generateVerilog(new frontend(parameters), 
+    "../verilog/Frontend/frontend.v")
 }

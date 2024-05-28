@@ -100,9 +100,13 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
                                     instructionType === AUIPC || 
                                     instructionType === SYSTEM)
 
+    io.decoded_instruction.RDold                := 0.U
+    io.decoded_instruction.RDold_valid          := 0.U
     io.decoded_instruction.RD                   := RD
     io.decoded_instruction.RS1                  := RS1
+    io.decoded_instruction.RS1_valid            := 1.B
     io.decoded_instruction.RS2                  := RS2
+    io.decoded_instruction.RS2_valid            := 1.B
     io.decoded_instruction.IMM                  := IMM
     io.decoded_instruction.FUNCT3               := FUNCT3
     io.decoded_instruction.MULTIPLY             := MULTIPLY // Multiply or Divide

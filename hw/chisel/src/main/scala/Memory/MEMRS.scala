@@ -40,6 +40,8 @@ import Thermometor._
 // Expected operation: writes incoming memory operations from allocate stage.
 // Sends instruction to MEM when its both the front of the queue and has its operands ready
 
+// FIXME: MEMRS is full of issues
+// one in particular is the lack of wrap around for the points since RSEntires is not always a multiple of 2
 class MEMRS(parameters:Parameters) extends Module{
     import parameters._
     val portCount = getPortCount(parameters)

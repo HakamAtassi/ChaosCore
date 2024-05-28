@@ -25,10 +25,14 @@ module decoder(
   input  [31:0] io_instruction_instruction,
   input  [3:0]  io_instruction_packet_index,
   input  [5:0]  io_instruction_ROB_index,
-  output        io_decoded_instruction_RD_valid,
+  output [5:0]  io_decoded_instruction_RDold,
+  output        io_decoded_instruction_RDold_valid,
   output [5:0]  io_decoded_instruction_RD,
-                io_decoded_instruction_RS1,
-                io_decoded_instruction_RS2,
+  output        io_decoded_instruction_RD_valid,
+  output [5:0]  io_decoded_instruction_RS1,
+  output        io_decoded_instruction_RS1_valid,
+  output [5:0]  io_decoded_instruction_RS2,
+  output        io_decoded_instruction_RS2_valid,
   output [31:0] io_decoded_instruction_IMM,
   output [2:0]  io_decoded_instruction_FUNCT3,
   output [3:0]  io_decoded_instruction_packet_index,
@@ -103,13 +107,17 @@ module decoder(
         ALU_port <= ALU_port + 2'h1;
     end
   end // always @(posedge)
+  assign io_decoded_instruction_RDold = 6'h0;
+  assign io_decoded_instruction_RDold_valid = 1'h0;
+  assign io_decoded_instruction_RD = {1'h0, io_instruction_instruction[11:7]};
   assign io_decoded_instruction_RD_valid =
     _is_INT_T | IMMEDIATE | IS_LOAD | _is_INT_T_5 | _is_INT_T_7
     | _io_decoded_instruction_RD_valid_T_9 | _io_decoded_instruction_RD_valid_T_11
     | _io_decoded_instruction_RD_valid_T_13;
-  assign io_decoded_instruction_RD = {1'h0, io_instruction_instruction[11:7]};
   assign io_decoded_instruction_RS1 = {1'h0, io_instruction_instruction[19:15]};
+  assign io_decoded_instruction_RS1_valid = 1'h1;
   assign io_decoded_instruction_RS2 = {1'h0, io_instruction_instruction[24:20]};
+  assign io_decoded_instruction_RS2_valid = 1'h1;
   assign io_decoded_instruction_IMM =
     io_instruction_instruction[6:0] == 7'h63
       ? {19'h0, io_instruction_instruction[31:25], io_instruction_instruction[11:7], 1'h0}

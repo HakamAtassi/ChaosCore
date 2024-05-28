@@ -110,7 +110,6 @@ class L1_instruction_cache(parameters:Parameters) extends Module{
 
         // Outputs
         val cache_data         =     Decoupled(new fetch_packet(parameters))
-
         val cache_addr         =     Decoupled(UInt(32.W))                        // outputs to DRAM
     })
 
@@ -162,13 +161,6 @@ class L1_instruction_cache(parameters:Parameters) extends Module{
     val maskValue = ((1.U << 32.U) - (1.U << byteOffsetBits))
 
     dram_addr_mask  := maskValue
-
-    dontTouch(dram_addr_mask)
-
-
-    dontTouch(current_addr_tag)
-    dontTouch(current_addr_set)
-    dontTouch(current_addr_instruction_offset)
 
     // Address assignments
     // FIXME: There is a bug somewhere here I know it
@@ -336,6 +328,10 @@ class L1_instruction_cache(parameters:Parameters) extends Module{
 
     io.cache_data.bits.fetch_PC := fetch_PC_buf
 
+    // FIXME: 
+    io.cache_data.bits.instructions := DontCare
+    io.cache_data.bits.instructions := DontCare
+
     // Kill handling
     // Kills essentially mean that a redirect or similar is taking place. Any in-progress computations/reads/writes/etc and invalidated after a kill
     // However, transactions are defined by internal state and output.
@@ -357,5 +353,4 @@ class L1_instruction_cache(parameters:Parameters) extends Module{
     // Or revert state/do send to active on kill
 
 
-    dontTouch(current_addr_fetch_packet)
 }
