@@ -356,13 +356,6 @@ class PC_file(fetchWidth:Int){
     val index = UInt(fetchWidth.W)
 }
 
-// all ports to all FUs are wrapped in an "execution engine" module
-
-
-class execute_ports() extends Bundle{   // all port definitions to the execution engine
-    // all ports stored within an N wide vector.
-}
-
 //////////
 // DRAM //
 //////////
@@ -374,6 +367,6 @@ class DRAM_request extends Bundle{
 }
 
 class DRAM_resp extends Bundle{
-    val data = UInt(32.W)
+    val data = UInt(256.W)  // Must be same size as cache line
 }
 

@@ -39,11 +39,37 @@ import Thermometor._
 object cacheState extends ChiselEnum{
     val Active, Allocate, Replay = Value
 }
+class instruction_validator(fetchWidth: Int) extends Module {
+  val io = IO(new Bundle {
+    val instruction_index = Input(UInt(log2Ceil(fetchWidth).W))
+    val instruction_output = Output(UInt(fetchWidth.W))
+  })
 
+  val lookupTable = fetchWidth match {
+    case 2 =>
+      // Define the lookup table for fetchWidth = 2
+      VecInit(
+        "b11".U(fetchWidth.W), // 0 -> 11
+        "b01".U(fetchWidth.W)  // 1 -> 01
+      )
+    case 4 =>
+      // Define the lookup table for fetchWidth = 4
+      VecInit(
+        "b1111".U(fetchWidth.W), // 00 -> 1111
+        "b0111".U(fetchWidth.W), // 01 -> 0111
+        "b0011".U(fetchWidth.W), // 10 -> 0011
+        "b0001".U(fetchWidth.W)  // 11 -> 0001
+      )
+    case _ =>
+      VecInit(Seq.fill(fetchWidth)(0.U(fetchWidth.W)))
+  }
+
+  io.instruction_output := lookupTable(io.instruction_index)
+}
 
 // TODO: need a module that converts L1 miss to a proper DRAM request. 
 
-class L1_instruction_cache(parameters:Parameters) extends Module{
+class instruction_cache(parameters:Parameters) extends Module{
     import parameters._
 
 
@@ -178,9 +204,13 @@ class L1_instruction_cache(parameters:Parameters) extends Module{
             }
         }
         is(cacheState.Allocate){            // Stall till DRAM response. On Response, allocate.
-            io.DRAM_request.bits.addr   := 0.U      // Only Request once...
-            io.DRAM_request.valid       := 0.U      // ...
             io.DRAM_resp.ready          := 1.U      // Ready to accept DRAM data
+            io.DRAM_request.valid       := 1.U      // ...
+            io.DRAM_request.bits.addr   := RegNext(io.DRAM_request.bits.addr)      // Only Request once...
+            when(io.DRAM_request.ready){
+                io.DRAM_request.bits.addr   := 0.U      // Only Request once...
+                io.DRAM_request.valid       := 0.U      // ...
+            }
 
             replay_valid        := 0.U
             when(io.kill === 1.U){
@@ -207,6 +237,8 @@ class L1_instruction_cache(parameters:Parameters) extends Module{
     // output must be disposable 
     io.cpu_addr.ready := (cache_state === cacheState.Active) && !miss 
     //&& io.cache_data.ready                  // Even in active, cache can be non-ready due to detected miss
+
+
 
     ////////////////
     // LRU MEMORY //
@@ -252,6 +284,8 @@ class L1_instruction_cache(parameters:Parameters) extends Module{
         memory_instr_vec(way)  := data_way(way)(wayDataWidth-1-validBits-tagBits, 0)
     }
 
+    dontTouch(memory_tags_vec)
+
     for (way <- 0 until ways) {
       hit_oh_vec(way) := (memory_tags_vec(way) === RegNext(current_addr_tag)) && memory_valid_vec(way).asBool
     }
@@ -283,24 +317,35 @@ class L1_instruction_cache(parameters:Parameters) extends Module{
         instruction_vec(instruction) := hit_instruction_data((instruction+1)*32-1, (instruction)*32)    
     }
 
+    io.cache_data.bits.instructions := DontCare
 
     for(i <- 0 until fetchWidth){
         io.cache_data.bits.instructions(i).instruction:= instruction_vec(packet_index*fetchWidth.U + i.U)   
     }
 
+    dontTouch(current_addr_instruction_offset)
 
-    val validator = Thermometor(in=current_addr_instruction_offset, max=fetchWidth)
 
+
+
+    val validator = Module(new instruction_validator(fetchWidth=fetchWidth))
+    validator.io.instruction_index := current_addr_instruction_offset
 
     for(i <- 0 until fetchWidth){
-        io.cache_data.bits.valid_bits(i):= RegNext(validator(fetchWidth-1-i)) && hit && (io.kill === 0.U)  // only valid if not hit
+        io.cache_data.bits.valid_bits(i):= RegNext(validator.io.instruction_output(fetchWidth-1-i)) && hit && (io.kill === 0.U)  // only valid if not hit
     }
+
+
+
     io.cache_data.valid   := hit && (io.kill === 0.U)
 
     io.cache_data.bits.fetch_PC := fetch_PC_buf
 
     // FIXME: 
-    io.cache_data.bits.instructions := DontCare
+    
+    validator.io.instruction_index := current_addr_instruction_offset
+
+
 
     // Kill handling
     // Kills essentially mean that a redirect or similar is taking place. Any in-progress computations/reads/writes/etc and invalidated after a kill

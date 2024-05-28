@@ -1,8 +1,0 @@
-<testsuites name="results">
-  <testsuite name="all" package="all">
-    <property name="random_seed" value="1714869347" />
-    <testcase name="BP_fuzzing" classname="BP_tests" file="/home/hakam/Repos/ChaosCore/cocotb/functional_tests/Frontend/BP/BP_tests.py" lineno="176" time="0.10225391387939453" sim_time_ns="89.001" ratio_time="870.3921113960885">
-      <failure message="Test failed with RANDOM_SEED=1714869347" />
-    </testcase>
-  </testsuite>
-</testsuites>
