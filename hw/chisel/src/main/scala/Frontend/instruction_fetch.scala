@@ -128,7 +128,7 @@ class instruction_fetch(parameters:Parameters) extends Module{
     /////////////
     // Modules //
     /////////////
-    val instruction_cache   = Module(new L1_instruction_cache(parameters))
+    val instruction_cache   = Module(new instruction_cache(parameters))
     val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))
     val predecoder          = Module(new decode_validate(parameters))
     val PC_gen              = Module(new PC_arbit(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, startPC=startPC))

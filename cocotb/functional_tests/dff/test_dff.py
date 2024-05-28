@@ -12,13 +12,14 @@ configs = {
     "module": "RAS_cocotb",        # name of cocotb test module
     "compile_args": ["-Wno-DECLFILENAME", "-Wno-UNUSED", "-Wno-UNDRIVEN", "-Wno-WIDTH", "-Wno-UNOPTFLAT", "-Wno-WIDTHEXPAND"],
     "defines": ["-j12"],
-    "module": None,        # name of cocotb test module
-    "toplevel": None,            # top level HDL
+    "module": None,             # name of cocotb test module
+    "toplevel": None,           # top level HDL
     "testcase": None
     
     # ONLY ENABLE DURING DEBUG
-    #"waves": 0,
-    #"extra_args": ["--trace-fst", "--trace-structs"]
+    #"waves": 1,    # Add waves (1/2)
+    #"extra_args": ["--trace-fst", "--trace-structs"]   # Add waves (2/2)
+    # Waves are in sim_build/dump.fst
 }
 
 # Make first...
@@ -26,11 +27,12 @@ result = subprocess.run(['make', 'clean'], cwd=current_file_dir, check=True, std
 
 # Print the results
 print(result.stdout.decode())
-print(result.stderr.decode())
 
 
-def test_dff():
-    configs["module"] = "dff_cocotb"
-    configs["toplevel"] = "dff"
-    configs["testcase"] = "test_dff_simple"
+def test_reset():
+    configs["module"] = "dff_cocotb"    # Cocotb file
+    configs["toplevel"] = "dff"         # Verilog top leve module
+    configs["testcase"] = "reset"       # Name of your cocotb function
     run(**configs)
+
+# Add rest of the tests here...

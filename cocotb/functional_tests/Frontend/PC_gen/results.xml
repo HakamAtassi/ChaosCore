@@ -1,6 +1,0 @@
-<testsuites name="results">
-  <testsuite name="all" package="all">
-    <property name="random_seed" value="1715251578" />
-    <testcase name="instruction_cache_kill_miss_test" classname="PC_gen_tests" file="/home/hakam/Repos/ChaosCore/cocotb/functional_tests/Frontend/PC_gen/PC_gen_tests.py" lineno="17" time="0.001993894577026367" sim_time_ns="31.001" ratio_time="15547.963446610069" />
-  </testsuite>
-</testsuites>

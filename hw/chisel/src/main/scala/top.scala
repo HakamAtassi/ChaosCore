@@ -58,7 +58,7 @@ object Main extends App {
     import Parameters._
 
     val parameters = Parameters()
-    //VerilogGenerator.generateVerilog(new L1_instruction_cache(fetchWidth = 4, ways = 2, sets = 64, blockSizeBytes = 32), "../verilog/Frontend/instruction_cache.v")
+    VerilogGenerator.generateVerilog(new instruction_cache(parameters), "../verilog/Frontend/instruction_cache.v")
     //VerilogGenerator.generateVerilog(new gshare(GHR_width = 16), "../verilog/Frontend/BP/gshare.v")
     //VerilogGenerator.generateVerilog(new hash_BTB(entries = 4096), "../verilog/Frontend/BP/hash_BTB.v")
     //VerilogGenerator.generateVerilog(new decode_validate(fetchWidth=4), "../verilog/Frontend/BP/decode_validate.v")

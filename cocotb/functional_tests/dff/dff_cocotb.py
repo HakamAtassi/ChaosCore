@@ -3,20 +3,18 @@ import random
 import numpy as np
 from cocotb.clock import Clock
 import cocotb
-from cocotb.triggers import Timer
 from cocotb.triggers import RisingEdge, FallingEdge, Timer
 from pathlib import Path
 
 from cocotb_utils import *
-
+from dff_dut import *
 
 @cocotb.test()
-async def test_dff_simple(dut):
-    """ Test that d propagates to q """
+async def reset(dut):
 
     await cocotb.start(generateClock(dut)) 
 
-    await FallingEdge(dut.clock)
-    await FallingEdge(dut.clock)
-    await FallingEdge(dut.clock)
-    await FallingEdge(dut.clock)
+    dut = dff_dut(dut)  # wrap dut with helper class
+    await dut.reset()   # reset module
+
+    await RisingEdge(dut.clock())
