@@ -708,7 +708,7 @@ module fetch_packet_decoder(
     .io_decoded_instruction_IS_STORE
       (_decoders_3_io_decoded_instruction_IS_STORE)
   );
-  assign io_fetch_packet_ready = 1'h0;
+  assign io_fetch_packet_ready = 1'h1;
   assign io_decoded_fetch_packet_valid = io_decoded_fetch_packet_valid_REG;
   assign io_decoded_fetch_packet_bits_0_RDold = 6'h0;
   assign io_decoded_fetch_packet_bits_0_RDold_valid = 1'h0;

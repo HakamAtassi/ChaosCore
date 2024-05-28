@@ -20,20 +20,20 @@
 `endif // not def STOP_COND_
 
 // VCS coverage exclude_file
-module mem_2x2(
-  input        R0_addr,
-               R0_en,
+module mem_64x2(
+  input  [5:0] R0_addr,
+  input        R0_en,
                R0_clk,
   output [1:0] R0_data,
-  input        W0_addr,
-               W0_en,
+  input  [5:0] W0_addr,
+  input        W0_en,
                W0_clk,
   input  [1:0] W0_data
 );
 
-  reg [1:0] Memory[0:1];
+  reg [1:0] Memory[0:63];
   reg       _R0_en_d0;
-  reg       _R0_addr_d0;
+  reg [5:0] _R0_addr_d0;
   always @(posedge R0_clk) begin
     _R0_en_d0 <= R0_en;
     _R0_addr_d0 <= R0_addr;
@@ -48,10 +48,10 @@ endmodule
 module SDPReadWriteSmem(
   input        clock,
                reset,
-               io_rd_addr,
+  input  [5:0] io_rd_addr,
   output [1:0] io_data_out,
-  input        io_wr_addr,
-               io_wr_en,
+  input  [5:0] io_wr_addr,
+  input        io_wr_en,
   input  [1:0] io_data_in
 );
 
@@ -68,7 +68,7 @@ module SDPReadWriteSmem(
       din_buff <= io_data_in;
     end
   end // always @(posedge)
-  mem_2x2 mem_ext (
+  mem_64x2 mem_ext (
     .R0_addr (io_rd_addr),
     .R0_en   (1'h1),
     .R0_clk  (clock),
@@ -82,38 +82,38 @@ module SDPReadWriteSmem(
 endmodule
 
 // VCS coverage exclude_file
-module ram_2x283(
-  input          R0_addr,
-                 R0_en,
+module ram_64x278(
+  input  [5:0]   R0_addr,
+  input          R0_en,
                  R0_clk,
-  output [282:0] R0_data,
-  input          W0_addr,
-                 W0_en,
+  output [277:0] R0_data,
+  input  [5:0]   W0_addr,
+  input          W0_en,
                  W0_clk,
-  input  [282:0] W0_data
+  input  [277:0] W0_data
 );
 
-  reg [282:0] Memory[0:1];
+  reg [277:0] Memory[0:63];
   always @(posedge W0_clk) begin
     if (W0_en & 1'h1)
       Memory[W0_addr] <= W0_data;
   end // always @(posedge)
-  assign R0_data = R0_en ? Memory[R0_addr] : 283'bx;
+  assign R0_data = R0_en ? Memory[R0_addr] : 278'bx;
 endmodule
 
 module ReadWriteSmem(
   input          clock,
                  io_wr_en,
-                 io_addr,
-  input  [282:0] io_data_in,
-  output [282:0] io_data_out
+  input  [5:0]   io_addr,
+  input  [277:0] io_data_in,
+  output [277:0] io_data_out
 );
 
-  wire [282:0] _ram_ext_R0_data;
-  reg  [282:0] dataOut;
+  wire [277:0] _ram_ext_R0_data;
+  reg  [277:0] dataOut;
   always @(posedge clock)
     dataOut <= _ram_ext_R0_data;
-  ram_2x283 ram_ext (
+  ram_64x278 ram_ext (
     .R0_addr (io_addr),
     .R0_en   (1'h1),
     .R0_clk  (clock),
@@ -126,58 +126,52 @@ module ReadWriteSmem(
   assign io_data_out = dataOut;
 endmodule
 
-module instruction_validator(
-  input  [1:0] io_instruction_index,
-  output [3:0] io_instruction_output
-);
-
-  wire [3:0][3:0] _GEN = '{4'h1, 4'h3, 4'h7, 4'hF};
-  assign io_instruction_output = _GEN[io_instruction_index];
-endmodule
-
 module L1_instruction_cache(
-  input          clock,
-                 reset,
-  output         io_cpu_addr_ready,
-  input          io_cpu_addr_valid,
-  input  [31:0]  io_cpu_addr_bits,
-  input          io_dram_data_valid,
-  input  [255:0] io_dram_data_bits,
-  input          io_kill,
-  output         io_cache_data_valid,
-  output [31:0]  io_cache_data_bits_fetch_PC,
-  output         io_cache_data_bits_valid_bits_0,
-                 io_cache_data_bits_valid_bits_1,
-                 io_cache_data_bits_valid_bits_2,
-                 io_cache_data_bits_valid_bits_3
+  input         clock,
+                reset,
+  output        io_cpu_addr_ready,
+  input         io_cpu_addr_valid,
+  input  [31:0] io_cpu_addr_bits,
+  input         io_kill,
+                io_DRAM_resp_valid,
+  input  [31:0] io_DRAM_resp_bits_data,
+  output        io_cache_data_valid,
+  output [31:0] io_cache_data_bits_fetch_PC,
+  output        io_cache_data_bits_valid_bits_0,
+                io_cache_data_bits_valid_bits_1,
+                io_cache_data_bits_valid_bits_2,
+                io_cache_data_bits_valid_bits_3,
+                io_DRAM_request_valid,
+  output [31:0] io_DRAM_request_bits_addr
 );
 
   wire         miss;
   wire [1:0]   hit_oh;
   wire [29:0]  current_addr;
-  wire [3:0]   _validator_io_instruction_output;
-  wire [282:0] _data_memory_1_io_data_out;
-  wire [282:0] _data_memory_0_io_data_out;
+  wire [277:0] _data_memory_1_io_data_out;
+  wire [277:0] _data_memory_0_io_data_out;
   wire [1:0]   _LRU_memory_io_data_out;
   reg  [1:0]   cache_state;
   reg  [31:0]  replay_addr;
-  reg  [25:0]  replay_tag;
+  reg  [20:0]  replay_tag;
   reg          replay_valid;
   reg  [31:0]  fetch_PC_buf;
-  reg  [25:0]  replay_tag_REG;
+  reg  [20:0]  replay_tag_REG;
+  wire         _GEN = miss & ~io_kill;
+  reg  [31:0]  io_DRAM_request_bits_addr_REG;
   assign current_addr =
     (|cache_state) | miss ? replay_addr[31:2] : io_cpu_addr_bits[31:2];
-  wire [282:0] current_data = {1'h1, replay_tag, io_dram_data_bits};
-  reg          LRU_memory_io_wr_addr_REG;
+  wire [277:0] current_data = {225'h1, replay_tag, io_DRAM_resp_bits_data};
+  reg  [5:0]   LRU_memory_io_wr_addr_REG;
   wire [1:0]   allocate_way =
     _LRU_memory_io_data_out[1] ? {1'h0, ~(_LRU_memory_io_data_out[0])} : 2'h2;
-  reg  [25:0]  hit_oh_vec_0_REG;
-  reg  [25:0]  hit_oh_vec_1_REG;
+  reg  [20:0]  hit_oh_vec_0_REG;
+  reg  [20:0]  hit_oh_vec_1_REG;
   assign hit_oh =
-    {_data_memory_1_io_data_out[281:256] == hit_oh_vec_1_REG
-       & _data_memory_1_io_data_out[282],
-     _data_memory_0_io_data_out[281:256] == hit_oh_vec_0_REG
-       & _data_memory_0_io_data_out[282]};
+    {_data_memory_1_io_data_out[276:256] == hit_oh_vec_1_REG
+       & _data_memory_1_io_data_out[277],
+     _data_memory_0_io_data_out[276:256] == hit_oh_vec_0_REG
+       & _data_memory_0_io_data_out[277]};
   reg          hit_REG;
   reg          hit_REG_1;
   reg          hit_REG_2;
@@ -193,46 +187,52 @@ module L1_instruction_cache(
   reg          io_cache_data_bits_valid_bits_2_REG;
   reg          io_cache_data_bits_valid_bits_3_REG;
   always @(posedge clock) begin
+    automatic logic [3:0] validator =
+      {1'h0,
+       {2'h0, current_addr[2:0] == 3'h1} | (current_addr[2:0] == 3'h2 ? 3'h3 : 3'h0)}
+      | (current_addr[2:0] == 3'h3 ? 4'h7 : 4'h0) | {4{current_addr[2:0] == 3'h4}};
     if (reset) begin
       cache_state <= 2'h0;
       replay_addr <= 32'h0;
-      replay_tag <= 26'h0;
+      replay_tag <= 21'h0;
       replay_valid <= 1'h0;
       fetch_PC_buf <= 32'h0;
     end
     else begin
-      automatic logic _GEN;
       automatic logic _GEN_0;
-      _GEN = cache_state == 2'h1;
-      _GEN_0 = cache_state == 2'h2;
+      automatic logic _GEN_1;
+      _GEN_0 = cache_state == 2'h1;
+      _GEN_1 = cache_state == 2'h2;
       if (|cache_state) begin
-        if (_GEN) begin
+        if (_GEN_0) begin
           if (io_kill)
             cache_state <= 2'h0;
-          else if (io_dram_data_valid)
+          else if (io_DRAM_resp_valid)
             cache_state <= 2'h2;
         end
-        else if (_GEN_0)
+        else if (_GEN_1)
           cache_state <= 2'h0;
       end
       else begin
-        if (miss & ~io_kill)
+        if (_GEN)
           cache_state <= 2'h1;
         replay_tag <= replay_tag_REG;
       end
       if (io_cpu_addr_valid)
         replay_addr <= io_cpu_addr_bits;
       replay_valid <=
-        (|cache_state) & (_GEN ? ~io_kill & io_dram_data_valid : ~_GEN_0 & replay_valid);
+        (|cache_state)
+        & (_GEN_0 ? ~io_kill & io_DRAM_resp_valid : ~_GEN_1 & replay_valid);
       if ((|cache_state) | miss) begin
       end
       else
         fetch_PC_buf <= io_cpu_addr_bits;
     end
-    replay_tag_REG <= io_cpu_addr_bits[31:6];
-    LRU_memory_io_wr_addr_REG <= current_addr[3];
-    hit_oh_vec_0_REG <= current_addr[29:4];
-    hit_oh_vec_1_REG <= current_addr[29:4];
+    replay_tag_REG <= io_cpu_addr_bits[31:11];
+    io_DRAM_request_bits_addr_REG <= io_cpu_addr_bits;
+    LRU_memory_io_wr_addr_REG <= current_addr[8:3];
+    hit_oh_vec_0_REG <= current_addr[29:9];
+    hit_oh_vec_1_REG <= current_addr[29:9];
     hit_REG <= io_cpu_addr_valid;
     hit_REG_1 <= replay_valid;
     hit_REG_2 <= io_kill;
@@ -241,15 +241,15 @@ module L1_instruction_cache(
     miss_REG_1 <= replay_valid;
     miss_REG_2 <= io_kill;
     miss_REG_3 <= reset;
-    io_cache_data_bits_valid_bits_0_REG <= _validator_io_instruction_output[3];
-    io_cache_data_bits_valid_bits_1_REG <= _validator_io_instruction_output[2];
-    io_cache_data_bits_valid_bits_2_REG <= _validator_io_instruction_output[1];
-    io_cache_data_bits_valid_bits_3_REG <= _validator_io_instruction_output[0];
+    io_cache_data_bits_valid_bits_0_REG <= validator[3];
+    io_cache_data_bits_valid_bits_1_REG <= validator[2];
+    io_cache_data_bits_valid_bits_2_REG <= validator[1];
+    io_cache_data_bits_valid_bits_3_REG <= validator[0];
   end // always @(posedge)
   SDPReadWriteSmem LRU_memory (
     .clock       (clock),
     .reset       (reset),
-    .io_rd_addr  (current_addr[3]),
+    .io_rd_addr  (current_addr[8:3]),
     .io_data_out (_LRU_memory_io_data_out),
     .io_wr_addr  (LRU_memory_io_wr_addr_REG),
     .io_wr_en    (hit),
@@ -258,21 +258,17 @@ module L1_instruction_cache(
   );
   ReadWriteSmem data_memory_0 (
     .clock       (clock),
-    .io_wr_en    (io_dram_data_valid & allocate_way[0]),
-    .io_addr     (current_addr[3]),
+    .io_wr_en    (io_DRAM_resp_valid & allocate_way[0]),
+    .io_addr     (current_addr[8:3]),
     .io_data_in  (current_data),
     .io_data_out (_data_memory_0_io_data_out)
   );
   ReadWriteSmem data_memory_1 (
     .clock       (clock),
-    .io_wr_en    (io_dram_data_valid & allocate_way[1]),
-    .io_addr     (current_addr[3]),
+    .io_wr_en    (io_DRAM_resp_valid & allocate_way[1]),
+    .io_addr     (current_addr[8:3]),
     .io_data_in  (current_data),
     .io_data_out (_data_memory_1_io_data_out)
-  );
-  instruction_validator validator (
-    .io_instruction_index  (current_addr[1:0]),
-    .io_instruction_output (_validator_io_instruction_output)
   );
   assign io_cpu_addr_ready = ~(|cache_state) & ~miss;
   assign io_cache_data_valid = hit & ~io_kill;
@@ -285,6 +281,9 @@ module L1_instruction_cache(
     io_cache_data_bits_valid_bits_2_REG & hit & ~io_kill;
   assign io_cache_data_bits_valid_bits_3 =
     io_cache_data_bits_valid_bits_3_REG & hit & ~io_kill;
+  assign io_DRAM_request_valid = ~(|cache_state) & _GEN;
+  assign io_DRAM_request_bits_addr =
+    ~(|cache_state) & _GEN ? io_DRAM_request_bits_addr_REG & 32'hFFFFFFE0 : 32'h0;
 endmodule
 
 // VCS coverage exclude_file
@@ -925,29 +924,48 @@ endmodule
 module decode_validate(
   input         clock,
                 reset,
-                io_prediction_valid,
+  output        io_prediction_ready,
+  input         io_prediction_valid,
                 io_prediction_bits_hit,
   input  [31:0] io_prediction_bits_target,
   input  [3:0]  io_prediction_bits_br_mask,
   input  [15:0] io_prediction_bits_GHR,
+  output        io_fetch_packet_ready,
   input         io_fetch_packet_valid,
   input  [31:0] io_fetch_packet_bits_fetch_PC,
   input         io_fetch_packet_bits_valid_bits_1,
                 io_fetch_packet_bits_valid_bits_2,
                 io_fetch_packet_bits_valid_bits_3,
   input  [31:0] io_fetch_packet_bits_instructions_0_instruction,
-                io_fetch_packet_bits_instructions_1_instruction,
-                io_fetch_packet_bits_instructions_2_instruction,
-                io_fetch_packet_bits_instructions_3_instruction,
-                io_RAS_read_ret_addr,
+  input  [3:0]  io_fetch_packet_bits_instructions_0_packet_index,
+  input  [5:0]  io_fetch_packet_bits_instructions_0_ROB_index,
+  input  [31:0] io_fetch_packet_bits_instructions_1_instruction,
+  input  [3:0]  io_fetch_packet_bits_instructions_1_packet_index,
+  input  [5:0]  io_fetch_packet_bits_instructions_1_ROB_index,
+  input  [31:0] io_fetch_packet_bits_instructions_2_instruction,
+  input  [3:0]  io_fetch_packet_bits_instructions_2_packet_index,
+  input  [5:0]  io_fetch_packet_bits_instructions_2_ROB_index,
+  input  [31:0] io_fetch_packet_bits_instructions_3_instruction,
+  input  [3:0]  io_fetch_packet_bits_instructions_3_packet_index,
+  input  [5:0]  io_fetch_packet_bits_instructions_3_ROB_index,
+  input  [31:0] io_RAS_read_ret_addr,
   output        io_revert_valid,
   output [15:0] io_revert_bits_GHR,
   output [31:0] io_revert_bits_PC,
-                io_final_fetch_packet_bits_instructions_0_instruction,
-                io_final_fetch_packet_bits_instructions_1_instruction,
-                io_final_fetch_packet_bits_instructions_2_instruction,
-                io_final_fetch_packet_bits_instructions_3_instruction,
-                io_RAS_update_call_addr,
+  output        io_final_fetch_packet_valid,
+  output [31:0] io_final_fetch_packet_bits_instructions_0_instruction,
+  output [3:0]  io_final_fetch_packet_bits_instructions_0_packet_index,
+  output [5:0]  io_final_fetch_packet_bits_instructions_0_ROB_index,
+  output [31:0] io_final_fetch_packet_bits_instructions_1_instruction,
+  output [3:0]  io_final_fetch_packet_bits_instructions_1_packet_index,
+  output [5:0]  io_final_fetch_packet_bits_instructions_1_ROB_index,
+  output [31:0] io_final_fetch_packet_bits_instructions_2_instruction,
+  output [3:0]  io_final_fetch_packet_bits_instructions_2_packet_index,
+  output [5:0]  io_final_fetch_packet_bits_instructions_2_ROB_index,
+  output [31:0] io_final_fetch_packet_bits_instructions_3_instruction,
+  output [3:0]  io_final_fetch_packet_bits_instructions_3_packet_index,
+  output [5:0]  io_final_fetch_packet_bits_instructions_3_ROB_index,
+  output [31:0] io_RAS_update_call_addr,
   output        io_RAS_update_call,
                 io_RAS_update_ret
 );
@@ -992,6 +1010,7 @@ module decode_validate(
   wire [31:0] _decoders_0_io_metadata_instruction_PC;
   wire [31:0] _decoders_0_io_metadata_RAS;
   wire [31:0] _decoders_0_io_metadata_BTB_target;
+  wire        inputs_valid = io_fetch_packet_valid & io_prediction_valid;
   reg         metadata_reg_0_JAL;
   reg         metadata_reg_0_JALR;
   reg         metadata_reg_0_BR;
@@ -1051,9 +1070,7 @@ module decode_validate(
           ? metadata_reg_2_instruction_PC
           : T_NT_reg_1 ? metadata_reg_1_instruction_PC : metadata_reg_0_instruction_PC;
   reg  [31:0] PC_next_reg;
-  wire        PC_mismatch =
-    PC_expected != io_fetch_packet_bits_fetch_PC & io_fetch_packet_valid
-    & io_prediction_valid;
+  wire        PC_mismatch = PC_expected != io_fetch_packet_bits_fetch_PC & inputs_valid;
   wire        use_BTB =
     (T_NT_reg_3
        ? metadata_reg_3_JALR
@@ -1090,9 +1107,17 @@ module decode_validate(
   reg         PC_expected_REG;
   assign PC_expected = PC_expected_REG ? PC_next : PC_next_reg;
   reg  [31:0] io_final_fetch_packet_bits_instructions_0_REG_instruction;
+  reg  [3:0]  io_final_fetch_packet_bits_instructions_0_REG_packet_index;
+  reg  [5:0]  io_final_fetch_packet_bits_instructions_0_REG_ROB_index;
   reg  [31:0] io_final_fetch_packet_bits_instructions_1_REG_instruction;
+  reg  [3:0]  io_final_fetch_packet_bits_instructions_1_REG_packet_index;
+  reg  [5:0]  io_final_fetch_packet_bits_instructions_1_REG_ROB_index;
   reg  [31:0] io_final_fetch_packet_bits_instructions_2_REG_instruction;
+  reg  [3:0]  io_final_fetch_packet_bits_instructions_2_REG_packet_index;
+  reg  [5:0]  io_final_fetch_packet_bits_instructions_2_REG_ROB_index;
   reg  [31:0] io_final_fetch_packet_bits_instructions_3_REG_instruction;
+  reg  [3:0]  io_final_fetch_packet_bits_instructions_3_REG_packet_index;
+  reg  [5:0]  io_final_fetch_packet_bits_instructions_3_REG_ROB_index;
   always @(posedge clock) begin
     automatic logic stage_1_valid = io_fetch_packet_valid & ~PC_mismatch;
     metadata_reg_0_JAL <= _decoders_0_io_metadata_JAL;
@@ -1140,12 +1165,28 @@ module decode_validate(
     PC_expected_REG <= stage_1_valid;
     io_final_fetch_packet_bits_instructions_0_REG_instruction <=
       io_fetch_packet_bits_instructions_0_instruction;
+    io_final_fetch_packet_bits_instructions_0_REG_packet_index <=
+      io_fetch_packet_bits_instructions_0_packet_index;
+    io_final_fetch_packet_bits_instructions_0_REG_ROB_index <=
+      io_fetch_packet_bits_instructions_0_ROB_index;
     io_final_fetch_packet_bits_instructions_1_REG_instruction <=
       io_fetch_packet_bits_instructions_1_instruction;
+    io_final_fetch_packet_bits_instructions_1_REG_packet_index <=
+      io_fetch_packet_bits_instructions_1_packet_index;
+    io_final_fetch_packet_bits_instructions_1_REG_ROB_index <=
+      io_fetch_packet_bits_instructions_1_ROB_index;
     io_final_fetch_packet_bits_instructions_2_REG_instruction <=
       io_fetch_packet_bits_instructions_2_instruction;
+    io_final_fetch_packet_bits_instructions_2_REG_packet_index <=
+      io_fetch_packet_bits_instructions_2_packet_index;
+    io_final_fetch_packet_bits_instructions_2_REG_ROB_index <=
+      io_fetch_packet_bits_instructions_2_ROB_index;
     io_final_fetch_packet_bits_instructions_3_REG_instruction <=
       io_fetch_packet_bits_instructions_3_instruction;
+    io_final_fetch_packet_bits_instructions_3_REG_packet_index <=
+      io_fetch_packet_bits_instructions_3_packet_index;
+    io_final_fetch_packet_bits_instructions_3_REG_ROB_index <=
+      io_fetch_packet_bits_instructions_3_ROB_index;
     if (reset)
       PC_next_reg <= 32'h0;
     else if (PC_next_reg_REG)
@@ -1223,17 +1264,37 @@ module decode_validate(
     .io_metadata_RAS            (_decoders_3_io_metadata_RAS),
     .io_metadata_BTB_target     (_decoders_3_io_metadata_BTB_target)
   );
+  assign io_prediction_ready = ~PC_mismatch;
+  assign io_fetch_packet_ready = ~PC_mismatch;
   assign io_revert_valid = PC_mismatch;
   assign io_revert_bits_GHR = GHR_reg;
   assign io_revert_bits_PC = PC_expected;
+  assign io_final_fetch_packet_valid =
+    inputs_valid & PC_expected == io_fetch_packet_bits_fetch_PC;
   assign io_final_fetch_packet_bits_instructions_0_instruction =
     io_final_fetch_packet_bits_instructions_0_REG_instruction;
+  assign io_final_fetch_packet_bits_instructions_0_packet_index =
+    io_final_fetch_packet_bits_instructions_0_REG_packet_index;
+  assign io_final_fetch_packet_bits_instructions_0_ROB_index =
+    io_final_fetch_packet_bits_instructions_0_REG_ROB_index;
   assign io_final_fetch_packet_bits_instructions_1_instruction =
     io_final_fetch_packet_bits_instructions_1_REG_instruction;
+  assign io_final_fetch_packet_bits_instructions_1_packet_index =
+    io_final_fetch_packet_bits_instructions_1_REG_packet_index;
+  assign io_final_fetch_packet_bits_instructions_1_ROB_index =
+    io_final_fetch_packet_bits_instructions_1_REG_ROB_index;
   assign io_final_fetch_packet_bits_instructions_2_instruction =
     io_final_fetch_packet_bits_instructions_2_REG_instruction;
+  assign io_final_fetch_packet_bits_instructions_2_packet_index =
+    io_final_fetch_packet_bits_instructions_2_REG_packet_index;
+  assign io_final_fetch_packet_bits_instructions_2_ROB_index =
+    io_final_fetch_packet_bits_instructions_2_REG_ROB_index;
   assign io_final_fetch_packet_bits_instructions_3_instruction =
     io_final_fetch_packet_bits_instructions_3_REG_instruction;
+  assign io_final_fetch_packet_bits_instructions_3_packet_index =
+    io_final_fetch_packet_bits_instructions_3_REG_packet_index;
+  assign io_final_fetch_packet_bits_instructions_3_ROB_index =
+    io_final_fetch_packet_bits_instructions_3_REG_ROB_index;
   assign io_RAS_update_call_addr = metadata_out_instruction_PC;
   assign io_RAS_update_call =
     T_NT_reg_3
@@ -1303,23 +1364,23 @@ module PC_arbit(
 endmodule
 
 // VCS coverage exclude_file
-module ram_16x163(
+module ram_16x203(
   input  [3:0]   R0_addr,
   input          R0_en,
                  R0_clk,
-  output [162:0] R0_data,
+  output [202:0] R0_data,
   input  [3:0]   W0_addr,
   input          W0_en,
                  W0_clk,
-  input  [162:0] W0_data
+  input  [202:0] W0_data
 );
 
-  reg [162:0] Memory[0:15];
+  reg [202:0] Memory[0:15];
   always @(posedge W0_clk) begin
     if (W0_en & 1'h1)
       Memory[W0_addr] <= W0_data;
   end // always @(posedge)
-  assign R0_data = R0_en ? Memory[R0_addr] : 163'bx;
+  assign R0_data = R0_en ? Memory[R0_addr] : 203'bx;
 endmodule
 
 module Queue16_fetch_packet(
@@ -1331,36 +1392,53 @@ module Queue16_fetch_packet(
                 io_enq_bits_valid_bits_1,
                 io_enq_bits_valid_bits_2,
                 io_enq_bits_valid_bits_3,
+                io_deq_ready,
   output        io_deq_valid,
   output [31:0] io_deq_bits_fetch_PC,
   output        io_deq_bits_valid_bits_1,
                 io_deq_bits_valid_bits_2,
                 io_deq_bits_valid_bits_3,
   output [31:0] io_deq_bits_instructions_0_instruction,
-                io_deq_bits_instructions_1_instruction,
-                io_deq_bits_instructions_2_instruction,
-                io_deq_bits_instructions_3_instruction
+  output [3:0]  io_deq_bits_instructions_0_packet_index,
+  output [5:0]  io_deq_bits_instructions_0_ROB_index,
+  output [31:0] io_deq_bits_instructions_1_instruction,
+  output [3:0]  io_deq_bits_instructions_1_packet_index,
+  output [5:0]  io_deq_bits_instructions_1_ROB_index,
+  output [31:0] io_deq_bits_instructions_2_instruction,
+  output [3:0]  io_deq_bits_instructions_2_packet_index,
+  output [5:0]  io_deq_bits_instructions_2_ROB_index,
+  output [31:0] io_deq_bits_instructions_3_instruction,
+  output [3:0]  io_deq_bits_instructions_3_packet_index,
+  output [5:0]  io_deq_bits_instructions_3_ROB_index
 );
 
   wire         io_enq_ready;
-  wire [162:0] _ram_ext_R0_data;
+  wire [202:0] _ram_ext_R0_data;
   reg  [3:0]   enq_ptr_value;
+  reg  [3:0]   deq_ptr_value;
   reg          maybe_full;
-  wire         ptr_match = enq_ptr_value == 4'h0;
+  wire         ptr_match = enq_ptr_value == deq_ptr_value;
+  wire         empty = ptr_match & ~maybe_full;
   wire         do_enq = io_enq_ready & io_enq_valid;
   assign io_enq_ready = ~(ptr_match & maybe_full);
   always @(posedge clock) begin
     if (reset) begin
       enq_ptr_value <= 4'h0;
+      deq_ptr_value <= 4'h0;
       maybe_full <= 1'h0;
     end
-    else if (do_enq) begin
-      enq_ptr_value <= enq_ptr_value + 4'h1;
-      maybe_full <= do_enq;
+    else begin
+      automatic logic do_deq = io_deq_ready & ~empty;
+      if (do_enq)
+        enq_ptr_value <= enq_ptr_value + 4'h1;
+      if (do_deq)
+        deq_ptr_value <= deq_ptr_value + 4'h1;
+      if (~(do_enq == do_deq))
+        maybe_full <= do_enq;
     end
   end // always @(posedge)
-  ram_16x163 ram_ext (
-    .R0_addr (4'h0),
+  ram_16x203 ram_ext (
+    .R0_addr (deq_ptr_value),
     .R0_en   (1'h1),
     .R0_clk  (clock),
     .R0_data (_ram_ext_R0_data),
@@ -1368,21 +1446,29 @@ module Queue16_fetch_packet(
     .W0_en   (do_enq),
     .W0_clk  (clock),
     .W0_data
-      ({128'h0,
+      ({168'h0,
         io_enq_bits_valid_bits_3,
         io_enq_bits_valid_bits_2,
         io_enq_bits_valid_bits_1,
         io_enq_bits_fetch_PC})
   );
-  assign io_deq_valid = ~(ptr_match & ~maybe_full);
+  assign io_deq_valid = ~empty;
   assign io_deq_bits_fetch_PC = _ram_ext_R0_data[31:0];
   assign io_deq_bits_valid_bits_1 = _ram_ext_R0_data[32];
   assign io_deq_bits_valid_bits_2 = _ram_ext_R0_data[33];
   assign io_deq_bits_valid_bits_3 = _ram_ext_R0_data[34];
   assign io_deq_bits_instructions_0_instruction = _ram_ext_R0_data[66:35];
-  assign io_deq_bits_instructions_1_instruction = _ram_ext_R0_data[98:67];
-  assign io_deq_bits_instructions_2_instruction = _ram_ext_R0_data[130:99];
-  assign io_deq_bits_instructions_3_instruction = _ram_ext_R0_data[162:131];
+  assign io_deq_bits_instructions_0_packet_index = _ram_ext_R0_data[70:67];
+  assign io_deq_bits_instructions_0_ROB_index = _ram_ext_R0_data[76:71];
+  assign io_deq_bits_instructions_1_instruction = _ram_ext_R0_data[108:77];
+  assign io_deq_bits_instructions_1_packet_index = _ram_ext_R0_data[112:109];
+  assign io_deq_bits_instructions_1_ROB_index = _ram_ext_R0_data[118:113];
+  assign io_deq_bits_instructions_2_instruction = _ram_ext_R0_data[150:119];
+  assign io_deq_bits_instructions_2_packet_index = _ram_ext_R0_data[154:151];
+  assign io_deq_bits_instructions_2_ROB_index = _ram_ext_R0_data[160:155];
+  assign io_deq_bits_instructions_3_instruction = _ram_ext_R0_data[192:161];
+  assign io_deq_bits_instructions_3_packet_index = _ram_ext_R0_data[196:193];
+  assign io_deq_bits_instructions_3_ROB_index = _ram_ext_R0_data[202:197];
 endmodule
 
 module Q(
@@ -1394,37 +1480,55 @@ module Q(
                 io_data_in_valid_bits_2,
                 io_data_in_valid_bits_3,
                 io_wr_en,
+                io_rd_en,
                 io_clear,
   output [31:0] io_data_out_fetch_PC,
   output        io_data_out_valid_bits_1,
                 io_data_out_valid_bits_2,
                 io_data_out_valid_bits_3,
   output [31:0] io_data_out_instructions_0_instruction,
-                io_data_out_instructions_1_instruction,
-                io_data_out_instructions_2_instruction,
-                io_data_out_instructions_3_instruction,
+  output [3:0]  io_data_out_instructions_0_packet_index,
+  output [5:0]  io_data_out_instructions_0_ROB_index,
+  output [31:0] io_data_out_instructions_1_instruction,
+  output [3:0]  io_data_out_instructions_1_packet_index,
+  output [5:0]  io_data_out_instructions_1_ROB_index,
+  output [31:0] io_data_out_instructions_2_instruction,
+  output [3:0]  io_data_out_instructions_2_packet_index,
+  output [5:0]  io_data_out_instructions_2_ROB_index,
+  output [31:0] io_data_out_instructions_3_instruction,
+  output [3:0]  io_data_out_instructions_3_packet_index,
+  output [5:0]  io_data_out_instructions_3_ROB_index,
   output        io_empty
 );
 
   wire _queue_io_deq_valid;
   Queue16_fetch_packet queue (
-    .clock                                  (clock),
-    .reset                                  (io_clear | reset),
-    .io_enq_valid                           (io_wr_en),
-    .io_enq_bits_fetch_PC                   (io_data_in_fetch_PC),
-    .io_enq_bits_valid_bits_0               (io_data_in_valid_bits_0),
-    .io_enq_bits_valid_bits_1               (io_data_in_valid_bits_1),
-    .io_enq_bits_valid_bits_2               (io_data_in_valid_bits_2),
-    .io_enq_bits_valid_bits_3               (io_data_in_valid_bits_3),
-    .io_deq_valid                           (_queue_io_deq_valid),
-    .io_deq_bits_fetch_PC                   (io_data_out_fetch_PC),
-    .io_deq_bits_valid_bits_1               (io_data_out_valid_bits_1),
-    .io_deq_bits_valid_bits_2               (io_data_out_valid_bits_2),
-    .io_deq_bits_valid_bits_3               (io_data_out_valid_bits_3),
-    .io_deq_bits_instructions_0_instruction (io_data_out_instructions_0_instruction),
-    .io_deq_bits_instructions_1_instruction (io_data_out_instructions_1_instruction),
-    .io_deq_bits_instructions_2_instruction (io_data_out_instructions_2_instruction),
-    .io_deq_bits_instructions_3_instruction (io_data_out_instructions_3_instruction)
+    .clock                                   (clock),
+    .reset                                   (io_clear | reset),
+    .io_enq_valid                            (io_wr_en),
+    .io_enq_bits_fetch_PC                    (io_data_in_fetch_PC),
+    .io_enq_bits_valid_bits_0                (io_data_in_valid_bits_0),
+    .io_enq_bits_valid_bits_1                (io_data_in_valid_bits_1),
+    .io_enq_bits_valid_bits_2                (io_data_in_valid_bits_2),
+    .io_enq_bits_valid_bits_3                (io_data_in_valid_bits_3),
+    .io_deq_ready                            (io_rd_en),
+    .io_deq_valid                            (_queue_io_deq_valid),
+    .io_deq_bits_fetch_PC                    (io_data_out_fetch_PC),
+    .io_deq_bits_valid_bits_1                (io_data_out_valid_bits_1),
+    .io_deq_bits_valid_bits_2                (io_data_out_valid_bits_2),
+    .io_deq_bits_valid_bits_3                (io_data_out_valid_bits_3),
+    .io_deq_bits_instructions_0_instruction  (io_data_out_instructions_0_instruction),
+    .io_deq_bits_instructions_0_packet_index (io_data_out_instructions_0_packet_index),
+    .io_deq_bits_instructions_0_ROB_index    (io_data_out_instructions_0_ROB_index),
+    .io_deq_bits_instructions_1_instruction  (io_data_out_instructions_1_instruction),
+    .io_deq_bits_instructions_1_packet_index (io_data_out_instructions_1_packet_index),
+    .io_deq_bits_instructions_1_ROB_index    (io_data_out_instructions_1_ROB_index),
+    .io_deq_bits_instructions_2_instruction  (io_data_out_instructions_2_instruction),
+    .io_deq_bits_instructions_2_packet_index (io_data_out_instructions_2_packet_index),
+    .io_deq_bits_instructions_2_ROB_index    (io_data_out_instructions_2_ROB_index),
+    .io_deq_bits_instructions_3_instruction  (io_data_out_instructions_3_instruction),
+    .io_deq_bits_instructions_3_packet_index (io_data_out_instructions_3_packet_index),
+    .io_deq_bits_instructions_3_ROB_index    (io_data_out_instructions_3_ROB_index)
   );
   assign io_empty = ~_queue_io_deq_valid;
 endmodule
@@ -1556,6 +1660,7 @@ module Queue16_prediction(
   input  [3:0]  io_enq_bits_br_mask,
   input  [15:0] io_enq_bits_GHR,
   input         io_enq_bits_T_NT,
+                io_deq_ready,
   output        io_deq_valid,
                 io_deq_bits_hit,
   output [31:0] io_deq_bits_target,
@@ -1565,22 +1670,30 @@ module Queue16_prediction(
 
   wire [52:0] _ram_ext_R0_data;
   reg  [3:0]  enq_ptr_value;
+  reg  [3:0]  deq_ptr_value;
   reg         maybe_full;
-  wire        ptr_match = enq_ptr_value == 4'h0;
+  wire        ptr_match = enq_ptr_value == deq_ptr_value;
+  wire        empty = ptr_match & ~maybe_full;
   wire        full = ptr_match & maybe_full;
   wire        do_enq = ~full & io_enq_valid;
   always @(posedge clock) begin
     if (reset) begin
       enq_ptr_value <= 4'h0;
+      deq_ptr_value <= 4'h0;
       maybe_full <= 1'h0;
     end
-    else if (do_enq) begin
-      enq_ptr_value <= enq_ptr_value + 4'h1;
-      maybe_full <= do_enq;
+    else begin
+      automatic logic do_deq = io_deq_ready & ~empty;
+      if (do_enq)
+        enq_ptr_value <= enq_ptr_value + 4'h1;
+      if (do_deq)
+        deq_ptr_value <= deq_ptr_value + 4'h1;
+      if (~(do_enq == do_deq))
+        maybe_full <= do_enq;
     end
   end // always @(posedge)
   ram_16x53 ram_ext (
-    .R0_addr (4'h0),
+    .R0_addr (deq_ptr_value),
     .R0_en   (1'h1),
     .R0_clk  (clock),
     .R0_data (_ram_ext_R0_data),
@@ -1590,7 +1703,7 @@ module Queue16_prediction(
     .W0_data ({io_enq_bits_GHR, io_enq_bits_br_mask, io_enq_bits_target, io_enq_bits_hit})
   );
   assign io_enq_ready = ~full;
-  assign io_deq_valid = ~(ptr_match & ~maybe_full);
+  assign io_deq_valid = ~empty;
   assign io_deq_bits_hit = _ram_ext_R0_data[0];
   assign io_deq_bits_target = _ram_ext_R0_data[32:1];
   assign io_deq_bits_br_mask = _ram_ext_R0_data[36:33];
@@ -1607,6 +1720,7 @@ module Q_2(
   input  [15:0] io_data_in_GHR,
   input         io_data_in_T_NT,
                 io_wr_en,
+                io_rd_en,
                 io_clear,
   output        io_data_out_hit,
   output [31:0] io_data_out_target,
@@ -1629,6 +1743,7 @@ module Q_2(
     .io_enq_bits_br_mask (io_data_in_br_mask),
     .io_enq_bits_GHR     (io_data_in_GHR),
     .io_enq_bits_T_NT    (io_data_in_T_NT),
+    .io_deq_ready        (io_rd_en),
     .io_deq_valid        (_queue_io_deq_valid),
     .io_deq_bits_hit     (io_data_out_hit),
     .io_deq_bits_target  (io_data_out_target),
@@ -1640,25 +1755,38 @@ module Q_2(
 endmodule
 
 module instruction_fetch(
-  input          clock,
-                 reset,
-                 io_dram_data_valid,
-  input  [255:0] io_dram_data_bits,
-  input          io_commit_valid,
-  input  [31:0]  io_commit_bits_PC,
-  input  [15:0]  io_commit_bits_GHR,
-  input          io_commit_bits_T_NT,
-  input  [31:0]  io_commit_bits_target,
-  input  [1:0]   io_commit_bits_br_type,
-  input  [3:0]   io_commit_bits_br_mask,
-  input          io_commit_bits_misprediction,
-  input  [6:0]   io_commit_bits_TOS,
-                 io_commit_bits_NEXT,
-  input  [31:0]  io_commit_bits_misprediction_PC,
-  output [31:0]  io_fetch_packet_bits_instructions_0_instruction,
-                 io_fetch_packet_bits_instructions_1_instruction,
-                 io_fetch_packet_bits_instructions_2_instruction,
-                 io_fetch_packet_bits_instructions_3_instruction
+  input         clock,
+                reset,
+                io_commit_valid,
+  input  [31:0] io_commit_bits_PC,
+  input  [15:0] io_commit_bits_GHR,
+  input         io_commit_bits_T_NT,
+  input  [31:0] io_commit_bits_target,
+  input  [1:0]  io_commit_bits_br_type,
+  input  [3:0]  io_commit_bits_br_mask,
+  input         io_commit_bits_misprediction,
+  input  [6:0]  io_commit_bits_TOS,
+                io_commit_bits_NEXT,
+  input  [31:0] io_commit_bits_misprediction_PC,
+  input         io_DRAM_request_ready,
+  output        io_DRAM_request_valid,
+  output [31:0] io_DRAM_request_bits_addr,
+  output        io_DRAM_resp_ready,
+  input         io_DRAM_resp_valid,
+  input  [31:0] io_DRAM_resp_bits_data,
+  output        io_fetch_packet_valid,
+  output [31:0] io_fetch_packet_bits_instructions_0_instruction,
+  output [3:0]  io_fetch_packet_bits_instructions_0_packet_index,
+  output [5:0]  io_fetch_packet_bits_instructions_0_ROB_index,
+  output [31:0] io_fetch_packet_bits_instructions_1_instruction,
+  output [3:0]  io_fetch_packet_bits_instructions_1_packet_index,
+  output [5:0]  io_fetch_packet_bits_instructions_1_ROB_index,
+  output [31:0] io_fetch_packet_bits_instructions_2_instruction,
+  output [3:0]  io_fetch_packet_bits_instructions_2_packet_index,
+  output [5:0]  io_fetch_packet_bits_instructions_2_ROB_index,
+  output [31:0] io_fetch_packet_bits_instructions_3_instruction,
+  output [3:0]  io_fetch_packet_bits_instructions_3_packet_index,
+  output [5:0]  io_fetch_packet_bits_instructions_3_ROB_index
 );
 
   wire        _BTB_Q_io_data_out_hit;
@@ -1675,12 +1803,22 @@ module instruction_fetch(
   wire        _instruction_Q_io_data_out_valid_bits_2;
   wire        _instruction_Q_io_data_out_valid_bits_3;
   wire [31:0] _instruction_Q_io_data_out_instructions_0_instruction;
+  wire [3:0]  _instruction_Q_io_data_out_instructions_0_packet_index;
+  wire [5:0]  _instruction_Q_io_data_out_instructions_0_ROB_index;
   wire [31:0] _instruction_Q_io_data_out_instructions_1_instruction;
+  wire [3:0]  _instruction_Q_io_data_out_instructions_1_packet_index;
+  wire [5:0]  _instruction_Q_io_data_out_instructions_1_ROB_index;
   wire [31:0] _instruction_Q_io_data_out_instructions_2_instruction;
+  wire [3:0]  _instruction_Q_io_data_out_instructions_2_packet_index;
+  wire [5:0]  _instruction_Q_io_data_out_instructions_2_ROB_index;
   wire [31:0] _instruction_Q_io_data_out_instructions_3_instruction;
+  wire [3:0]  _instruction_Q_io_data_out_instructions_3_packet_index;
+  wire [5:0]  _instruction_Q_io_data_out_instructions_3_ROB_index;
   wire        _instruction_Q_io_empty;
   wire        _PC_gen_io_PC_next_valid;
   wire [31:0] _PC_gen_io_PC_next_bits;
+  wire        _predecoder_io_prediction_ready;
+  wire        _predecoder_io_fetch_packet_ready;
   wire        _predecoder_io_revert_valid;
   wire [15:0] _predecoder_io_revert_bits_GHR;
   wire [31:0] _predecoder_io_revert_bits_PC;
@@ -1710,15 +1848,17 @@ module instruction_fetch(
     .io_cpu_addr_ready               (_instruction_cache_io_cpu_addr_ready),
     .io_cpu_addr_valid               (~_PC_Q_io_empty),
     .io_cpu_addr_bits                (_PC_Q_io_data_out),
-    .io_dram_data_valid              (io_dram_data_valid),
-    .io_dram_data_bits               (io_dram_data_bits),
     .io_kill                         (clear),
+    .io_DRAM_resp_valid              (io_DRAM_resp_valid),
+    .io_DRAM_resp_bits_data          (io_DRAM_resp_bits_data),
     .io_cache_data_valid             (_instruction_cache_io_cache_data_valid),
     .io_cache_data_bits_fetch_PC     (_instruction_cache_io_cache_data_bits_fetch_PC),
     .io_cache_data_bits_valid_bits_0 (_instruction_cache_io_cache_data_bits_valid_bits_0),
     .io_cache_data_bits_valid_bits_1 (_instruction_cache_io_cache_data_bits_valid_bits_1),
     .io_cache_data_bits_valid_bits_2 (_instruction_cache_io_cache_data_bits_valid_bits_2),
-    .io_cache_data_bits_valid_bits_3 (_instruction_cache_io_cache_data_bits_valid_bits_3)
+    .io_cache_data_bits_valid_bits_3 (_instruction_cache_io_cache_data_bits_valid_bits_3),
+    .io_DRAM_request_valid           (io_DRAM_request_valid),
+    .io_DRAM_request_bits_addr       (io_DRAM_request_bits_addr)
   );
   BP bp (
     .clock                        (clock),
@@ -1752,14 +1892,18 @@ module instruction_fetch(
     .io_prediction_bits_T_NT      (_bp_io_prediction_bits_T_NT)
   );
   decode_validate predecoder (
-    .clock                                                 (clock),
-    .reset                                                 (reset),
-    .io_prediction_valid                                   (~_BTB_Q_io_empty),
-    .io_prediction_bits_hit                                (_BTB_Q_io_data_out_hit),
-    .io_prediction_bits_target                             (_BTB_Q_io_data_out_target),
-    .io_prediction_bits_br_mask                            (_BTB_Q_io_data_out_br_mask),
-    .io_prediction_bits_GHR                                (_BTB_Q_io_data_out_GHR),
-    .io_fetch_packet_valid                                 (~_instruction_Q_io_empty),
+    .clock                                                  (clock),
+    .reset                                                  (reset),
+    .io_prediction_ready
+      (_predecoder_io_prediction_ready),
+    .io_prediction_valid                                    (~_BTB_Q_io_empty),
+    .io_prediction_bits_hit                                 (_BTB_Q_io_data_out_hit),
+    .io_prediction_bits_target                              (_BTB_Q_io_data_out_target),
+    .io_prediction_bits_br_mask                             (_BTB_Q_io_data_out_br_mask),
+    .io_prediction_bits_GHR                                 (_BTB_Q_io_data_out_GHR),
+    .io_fetch_packet_ready
+      (_predecoder_io_fetch_packet_ready),
+    .io_fetch_packet_valid                                  (~_instruction_Q_io_empty),
     .io_fetch_packet_bits_fetch_PC
       (_instruction_Q_io_data_out_fetch_PC),
     .io_fetch_packet_bits_valid_bits_1
@@ -1770,31 +1914,65 @@ module instruction_fetch(
       (_instruction_Q_io_data_out_valid_bits_3),
     .io_fetch_packet_bits_instructions_0_instruction
       (_instruction_Q_io_data_out_instructions_0_instruction),
+    .io_fetch_packet_bits_instructions_0_packet_index
+      (_instruction_Q_io_data_out_instructions_0_packet_index),
+    .io_fetch_packet_bits_instructions_0_ROB_index
+      (_instruction_Q_io_data_out_instructions_0_ROB_index),
     .io_fetch_packet_bits_instructions_1_instruction
       (_instruction_Q_io_data_out_instructions_1_instruction),
+    .io_fetch_packet_bits_instructions_1_packet_index
+      (_instruction_Q_io_data_out_instructions_1_packet_index),
+    .io_fetch_packet_bits_instructions_1_ROB_index
+      (_instruction_Q_io_data_out_instructions_1_ROB_index),
     .io_fetch_packet_bits_instructions_2_instruction
       (_instruction_Q_io_data_out_instructions_2_instruction),
+    .io_fetch_packet_bits_instructions_2_packet_index
+      (_instruction_Q_io_data_out_instructions_2_packet_index),
+    .io_fetch_packet_bits_instructions_2_ROB_index
+      (_instruction_Q_io_data_out_instructions_2_ROB_index),
     .io_fetch_packet_bits_instructions_3_instruction
       (_instruction_Q_io_data_out_instructions_3_instruction),
-    .io_RAS_read_ret_addr                                  (_bp_io_RAS_read_ret_addr),
-    .io_revert_valid                                       (_predecoder_io_revert_valid),
+    .io_fetch_packet_bits_instructions_3_packet_index
+      (_instruction_Q_io_data_out_instructions_3_packet_index),
+    .io_fetch_packet_bits_instructions_3_ROB_index
+      (_instruction_Q_io_data_out_instructions_3_ROB_index),
+    .io_RAS_read_ret_addr                                   (_bp_io_RAS_read_ret_addr),
+    .io_revert_valid                                        (_predecoder_io_revert_valid),
     .io_revert_bits_GHR
       (_predecoder_io_revert_bits_GHR),
     .io_revert_bits_PC
       (_predecoder_io_revert_bits_PC),
+    .io_final_fetch_packet_valid                            (io_fetch_packet_valid),
     .io_final_fetch_packet_bits_instructions_0_instruction
       (io_fetch_packet_bits_instructions_0_instruction),
+    .io_final_fetch_packet_bits_instructions_0_packet_index
+      (io_fetch_packet_bits_instructions_0_packet_index),
+    .io_final_fetch_packet_bits_instructions_0_ROB_index
+      (io_fetch_packet_bits_instructions_0_ROB_index),
     .io_final_fetch_packet_bits_instructions_1_instruction
       (io_fetch_packet_bits_instructions_1_instruction),
+    .io_final_fetch_packet_bits_instructions_1_packet_index
+      (io_fetch_packet_bits_instructions_1_packet_index),
+    .io_final_fetch_packet_bits_instructions_1_ROB_index
+      (io_fetch_packet_bits_instructions_1_ROB_index),
     .io_final_fetch_packet_bits_instructions_2_instruction
       (io_fetch_packet_bits_instructions_2_instruction),
+    .io_final_fetch_packet_bits_instructions_2_packet_index
+      (io_fetch_packet_bits_instructions_2_packet_index),
+    .io_final_fetch_packet_bits_instructions_2_ROB_index
+      (io_fetch_packet_bits_instructions_2_ROB_index),
     .io_final_fetch_packet_bits_instructions_3_instruction
       (io_fetch_packet_bits_instructions_3_instruction),
+    .io_final_fetch_packet_bits_instructions_3_packet_index
+      (io_fetch_packet_bits_instructions_3_packet_index),
+    .io_final_fetch_packet_bits_instructions_3_ROB_index
+      (io_fetch_packet_bits_instructions_3_ROB_index),
     .io_RAS_update_call_addr
       (_predecoder_io_RAS_update_call_addr),
     .io_RAS_update_call
       (_predecoder_io_RAS_update_call),
-    .io_RAS_update_ret                                     (_predecoder_io_RAS_update_ret)
+    .io_RAS_update_ret
+      (_predecoder_io_RAS_update_ret)
   );
   PC_arbit PC_gen (
     .clock                           (clock),
@@ -1814,8 +1992,8 @@ module instruction_fetch(
     .io_PC_next_bits                 (_PC_gen_io_PC_next_bits)
   );
   Q instruction_Q (
-    .clock                                  (clock),
-    .reset                                  (reset),
+    .clock                                   (clock),
+    .reset                                   (reset),
     .io_data_in_fetch_PC
       (_instruction_cache_io_cache_data_bits_fetch_PC),
     .io_data_in_valid_bits_0
@@ -1826,21 +2004,39 @@ module instruction_fetch(
       (_instruction_cache_io_cache_data_bits_valid_bits_2),
     .io_data_in_valid_bits_3
       (_instruction_cache_io_cache_data_bits_valid_bits_3),
-    .io_wr_en                               (_instruction_cache_io_cache_data_valid),
-    .io_clear                               (clear),
-    .io_data_out_fetch_PC                   (_instruction_Q_io_data_out_fetch_PC),
-    .io_data_out_valid_bits_1               (_instruction_Q_io_data_out_valid_bits_1),
-    .io_data_out_valid_bits_2               (_instruction_Q_io_data_out_valid_bits_2),
-    .io_data_out_valid_bits_3               (_instruction_Q_io_data_out_valid_bits_3),
+    .io_wr_en                                (_instruction_cache_io_cache_data_valid),
+    .io_rd_en
+      (~_BTB_Q_io_empty & _predecoder_io_fetch_packet_ready),
+    .io_clear                                (clear),
+    .io_data_out_fetch_PC                    (_instruction_Q_io_data_out_fetch_PC),
+    .io_data_out_valid_bits_1                (_instruction_Q_io_data_out_valid_bits_1),
+    .io_data_out_valid_bits_2                (_instruction_Q_io_data_out_valid_bits_2),
+    .io_data_out_valid_bits_3                (_instruction_Q_io_data_out_valid_bits_3),
     .io_data_out_instructions_0_instruction
       (_instruction_Q_io_data_out_instructions_0_instruction),
+    .io_data_out_instructions_0_packet_index
+      (_instruction_Q_io_data_out_instructions_0_packet_index),
+    .io_data_out_instructions_0_ROB_index
+      (_instruction_Q_io_data_out_instructions_0_ROB_index),
     .io_data_out_instructions_1_instruction
       (_instruction_Q_io_data_out_instructions_1_instruction),
+    .io_data_out_instructions_1_packet_index
+      (_instruction_Q_io_data_out_instructions_1_packet_index),
+    .io_data_out_instructions_1_ROB_index
+      (_instruction_Q_io_data_out_instructions_1_ROB_index),
     .io_data_out_instructions_2_instruction
       (_instruction_Q_io_data_out_instructions_2_instruction),
+    .io_data_out_instructions_2_packet_index
+      (_instruction_Q_io_data_out_instructions_2_packet_index),
+    .io_data_out_instructions_2_ROB_index
+      (_instruction_Q_io_data_out_instructions_2_ROB_index),
     .io_data_out_instructions_3_instruction
       (_instruction_Q_io_data_out_instructions_3_instruction),
-    .io_empty                               (_instruction_Q_io_empty)
+    .io_data_out_instructions_3_packet_index
+      (_instruction_Q_io_data_out_instructions_3_packet_index),
+    .io_data_out_instructions_3_ROB_index
+      (_instruction_Q_io_data_out_instructions_3_ROB_index),
+    .io_empty                                (_instruction_Q_io_empty)
   );
   Q_1 PC_Q (
     .clock       (clock),
@@ -1863,6 +2059,7 @@ module instruction_fetch(
     .io_data_in_GHR      (_bp_io_prediction_bits_GHR),
     .io_data_in_T_NT     (_bp_io_prediction_bits_T_NT),
     .io_wr_en            (_bp_io_prediction_valid),
+    .io_rd_en            (~_instruction_Q_io_empty & _predecoder_io_prediction_ready),
     .io_clear            (clear),
     .io_data_out_hit     (_BTB_Q_io_data_out_hit),
     .io_data_out_target  (_BTB_Q_io_data_out_target),
@@ -1871,26 +2068,48 @@ module instruction_fetch(
     .io_full             (_BTB_Q_io_full),
     .io_empty            (_BTB_Q_io_empty)
   );
+  assign io_DRAM_resp_ready = io_DRAM_request_ready;
 endmodule
 
 module decoder(
   input         clock,
                 reset,
   input  [31:0] io_instruction_instruction,
+  input  [3:0]  io_instruction_packet_index,
+  input  [5:0]  io_instruction_ROB_index,
   output [5:0]  io_decoded_instruction_RD,
   output        io_decoded_instruction_RD_valid,
   output [5:0]  io_decoded_instruction_RS1,
-                io_decoded_instruction_RS2
+                io_decoded_instruction_RS2,
+  output [31:0] io_decoded_instruction_IMM,
+  output [2:0]  io_decoded_instruction_FUNCT3,
+  output [3:0]  io_decoded_instruction_packet_index,
+  output [5:0]  io_decoded_instruction_ROB_index,
+  output [4:0]  io_decoded_instruction_instructionType,
+  output [1:0]  io_decoded_instruction_portID,
+                io_decoded_instruction_RS_type,
+  output        io_decoded_instruction_needs_ALU,
+                io_decoded_instruction_needs_branch_unit,
+                io_decoded_instruction_SUBTRACT,
+                io_decoded_instruction_MULTIPLY,
+                io_decoded_instruction_IMMEDIATE,
+                io_decoded_instruction_IS_LOAD,
+                io_decoded_instruction_IS_STORE
 );
 
-  wire IS_LOAD = io_instruction_instruction[6:2] == 5'h0;
-  wire IMMEDIATE = io_instruction_instruction[6:2] == 5'h4;
-  wire _io_decoded_instruction_RD_valid_T_11 = io_instruction_instruction[6:2] == 5'h5;
-  wire _is_INT_T = io_instruction_instruction[6:2] == 5'hC;
-  wire _io_decoded_instruction_RD_valid_T_9 = io_instruction_instruction[6:2] == 5'hD;
-  wire _is_INT_T_7 = io_instruction_instruction[6:2] == 5'h19;
-  wire _is_INT_T_5 = io_instruction_instruction[6:2] == 5'h1B;
-  wire _io_decoded_instruction_RD_valid_T_13 = io_instruction_instruction[6:2] == 5'h1C;
+  wire       IS_LOAD = io_instruction_instruction[6:2] == 5'h0;
+  wire       IMMEDIATE = io_instruction_instruction[6:2] == 5'h4;
+  wire       _io_decoded_instruction_RD_valid_T_11 =
+    io_instruction_instruction[6:2] == 5'h5;
+  wire       IS_STORE = io_instruction_instruction[6:2] == 5'h8;
+  wire       _is_INT_T = io_instruction_instruction[6:2] == 5'hC;
+  wire       _io_decoded_instruction_RD_valid_T_9 =
+    io_instruction_instruction[6:2] == 5'hD;
+  wire       _is_INT_T_3 = io_instruction_instruction[6:2] == 5'h18;
+  wire       _is_INT_T_7 = io_instruction_instruction[6:2] == 5'h19;
+  wire       _is_INT_T_5 = io_instruction_instruction[6:2] == 5'h1B;
+  wire       _io_decoded_instruction_RD_valid_T_13 =
+    io_instruction_instruction[6:2] == 5'h1C;
   `ifndef SYNTHESIS
     always @(posedge clock) begin
       if (~reset
@@ -1898,8 +2117,7 @@ module decoder(
               | io_instruction_instruction[6:2] == 5'h2
               | io_instruction_instruction[6:2] == 5'h3 | IMMEDIATE
               | _io_decoded_instruction_RD_valid_T_11
-              | io_instruction_instruction[6:2] == 5'h6
-              | io_instruction_instruction[6:2] == 5'h8
+              | io_instruction_instruction[6:2] == 5'h6 | IS_STORE
               | io_instruction_instruction[6:2] == 5'h9
               | io_instruction_instruction[6:2] == 5'hA
               | io_instruction_instruction[6:2] == 5'hB | _is_INT_T
@@ -1910,9 +2128,8 @@ module decoder(
               | io_instruction_instruction[6:2] == 5'h12
               | io_instruction_instruction[6:2] == 5'h13
               | io_instruction_instruction[6:2] == 5'h14
-              | io_instruction_instruction[6:2] == 5'h16
-              | io_instruction_instruction[6:2] == 5'h18 | _is_INT_T_7 | _is_INT_T_5
-              | _io_decoded_instruction_RD_valid_T_13
+              | io_instruction_instruction[6:2] == 5'h16 | _is_INT_T_3 | _is_INT_T_7
+              | _is_INT_T_5 | _io_decoded_instruction_RD_valid_T_13
               | io_instruction_instruction[6:2] == 5'h1E)) begin
         if (`ASSERT_VERBOSE_COND_)
           $error("Assertion failed: Enum state must be valid, got %d!\n    at decoder.scala:66 assert(valid, \"Enum state must be valid, got %%%%d!\", opcode(6,2))\n",
@@ -1922,6 +2139,22 @@ module decoder(
       end
     end // always @(posedge)
   `endif // not def SYNTHESIS
+  wire       needs_branch_unit = _is_INT_T_3 | _is_INT_T_5 | _is_INT_T_7;
+  wire       needs_ALU =
+    _is_INT_T
+    & (io_instruction_instruction[27] | io_instruction_instruction[31:25] == 7'h0)
+    | IMMEDIATE;
+  reg  [1:0] ALU_port;
+  always @(posedge clock) begin
+    if (reset)
+      ALU_port <= 2'h0;
+    else if (needs_ALU) begin
+      if (ALU_port == 2'h2)
+        ALU_port <= 2'h0;
+      else
+        ALU_port <= ALU_port + 2'h1;
+    end
+  end // always @(posedge)
   assign io_decoded_instruction_RD = {1'h0, io_instruction_instruction[11:7]};
   assign io_decoded_instruction_RD_valid =
     _is_INT_T | IMMEDIATE | IS_LOAD | _is_INT_T_5 | _is_INT_T_7
@@ -1929,150 +2162,788 @@ module decoder(
     | _io_decoded_instruction_RD_valid_T_13;
   assign io_decoded_instruction_RS1 = {1'h0, io_instruction_instruction[19:15]};
   assign io_decoded_instruction_RS2 = {1'h0, io_instruction_instruction[24:20]};
+  assign io_decoded_instruction_IMM =
+    io_instruction_instruction[6:0] == 7'h63
+      ? {19'h0, io_instruction_instruction[31:25], io_instruction_instruction[11:7], 1'h0}
+      : io_instruction_instruction[6:0] == 7'h6F
+          ? {11'h0,
+             io_instruction_instruction[31],
+             io_instruction_instruction[19:12],
+             io_instruction_instruction[20],
+             io_instruction_instruction[30:21],
+             1'h0}
+          : io_instruction_instruction[6:0] == 7'h13
+            | io_instruction_instruction[6:0] == 7'h3
+            | io_instruction_instruction[6:0] == 7'h67
+              ? io_instruction_instruction
+              : io_instruction_instruction[6:0] == 7'h23
+                  ? {20'h0,
+                     io_instruction_instruction[31:25],
+                     io_instruction_instruction[11:7]}
+                  : io_instruction_instruction[6:0] == 7'h33
+                      ? {io_instruction_instruction[31:12], 12'h0}
+                      : 32'h0;
+  assign io_decoded_instruction_FUNCT3 = io_instruction_instruction[14:12];
+  assign io_decoded_instruction_packet_index = io_instruction_packet_index;
+  assign io_decoded_instruction_ROB_index = io_instruction_ROB_index;
+  assign io_decoded_instruction_instructionType = io_instruction_instruction[6:2];
+  assign io_decoded_instruction_portID =
+    needs_ALU
+      ? ALU_port
+      : _is_INT_T
+        & (io_instruction_instruction[14:12] == 3'h4
+           | io_instruction_instruction[14:12] == 3'h5
+           | io_instruction_instruction[14:12] == 3'h6
+           | (&(io_instruction_instruction[14:12]))) & io_instruction_instruction[25]
+          ? 2'h1
+          : needs_branch_unit ? 2'h0 : {2{IS_STORE | IS_LOAD}};
+  assign io_decoded_instruction_RS_type =
+    _is_INT_T | IMMEDIATE | _is_INT_T_3 | _is_INT_T_5 | _is_INT_T_7
+      ? 2'h0
+      : IS_LOAD | IS_STORE ? 2'h1 : 2'h2;
+  assign io_decoded_instruction_needs_ALU = needs_ALU;
+  assign io_decoded_instruction_needs_branch_unit = needs_branch_unit;
+  assign io_decoded_instruction_SUBTRACT = _is_INT_T & io_instruction_instruction[27];
+  assign io_decoded_instruction_MULTIPLY = _is_INT_T & io_instruction_instruction[25];
+  assign io_decoded_instruction_IMMEDIATE = IMMEDIATE;
+  assign io_decoded_instruction_IS_LOAD = IS_LOAD;
+  assign io_decoded_instruction_IS_STORE = IS_STORE;
 endmodule
 
 module fetch_packet_decoder(
   input         clock,
                 reset,
+                io_fetch_packet_valid,
   input  [31:0] io_fetch_packet_bits_instructions_0_instruction,
-                io_fetch_packet_bits_instructions_1_instruction,
-                io_fetch_packet_bits_instructions_2_instruction,
-                io_fetch_packet_bits_instructions_3_instruction,
+  input  [3:0]  io_fetch_packet_bits_instructions_0_packet_index,
+  input  [5:0]  io_fetch_packet_bits_instructions_0_ROB_index,
+  input  [31:0] io_fetch_packet_bits_instructions_1_instruction,
+  input  [3:0]  io_fetch_packet_bits_instructions_1_packet_index,
+  input  [5:0]  io_fetch_packet_bits_instructions_1_ROB_index,
+  input  [31:0] io_fetch_packet_bits_instructions_2_instruction,
+  input  [3:0]  io_fetch_packet_bits_instructions_2_packet_index,
+  input  [5:0]  io_fetch_packet_bits_instructions_2_ROB_index,
+  input  [31:0] io_fetch_packet_bits_instructions_3_instruction,
+  input  [3:0]  io_fetch_packet_bits_instructions_3_packet_index,
+  input  [5:0]  io_fetch_packet_bits_instructions_3_ROB_index,
+  output        io_decoded_fetch_packet_valid,
   output [5:0]  io_decoded_fetch_packet_bits_0_RD,
   output        io_decoded_fetch_packet_bits_0_RD_valid,
   output [5:0]  io_decoded_fetch_packet_bits_0_RS1,
                 io_decoded_fetch_packet_bits_0_RS2,
-                io_decoded_fetch_packet_bits_1_RD,
+  output [31:0] io_decoded_fetch_packet_bits_0_IMM,
+  output [2:0]  io_decoded_fetch_packet_bits_0_FUNCT3,
+  output [3:0]  io_decoded_fetch_packet_bits_0_packet_index,
+  output [5:0]  io_decoded_fetch_packet_bits_0_ROB_index,
+  output [4:0]  io_decoded_fetch_packet_bits_0_instructionType,
+  output [1:0]  io_decoded_fetch_packet_bits_0_portID,
+                io_decoded_fetch_packet_bits_0_RS_type,
+  output        io_decoded_fetch_packet_bits_0_needs_ALU,
+                io_decoded_fetch_packet_bits_0_needs_branch_unit,
+                io_decoded_fetch_packet_bits_0_SUBTRACT,
+                io_decoded_fetch_packet_bits_0_MULTIPLY,
+                io_decoded_fetch_packet_bits_0_IMMEDIATE,
+                io_decoded_fetch_packet_bits_0_IS_LOAD,
+                io_decoded_fetch_packet_bits_0_IS_STORE,
+  output [5:0]  io_decoded_fetch_packet_bits_1_RD,
   output        io_decoded_fetch_packet_bits_1_RD_valid,
   output [5:0]  io_decoded_fetch_packet_bits_1_RS1,
                 io_decoded_fetch_packet_bits_1_RS2,
-                io_decoded_fetch_packet_bits_2_RD,
+  output [31:0] io_decoded_fetch_packet_bits_1_IMM,
+  output [2:0]  io_decoded_fetch_packet_bits_1_FUNCT3,
+  output [3:0]  io_decoded_fetch_packet_bits_1_packet_index,
+  output [5:0]  io_decoded_fetch_packet_bits_1_ROB_index,
+  output [4:0]  io_decoded_fetch_packet_bits_1_instructionType,
+  output [1:0]  io_decoded_fetch_packet_bits_1_portID,
+                io_decoded_fetch_packet_bits_1_RS_type,
+  output        io_decoded_fetch_packet_bits_1_needs_ALU,
+                io_decoded_fetch_packet_bits_1_needs_branch_unit,
+                io_decoded_fetch_packet_bits_1_SUBTRACT,
+                io_decoded_fetch_packet_bits_1_MULTIPLY,
+                io_decoded_fetch_packet_bits_1_IMMEDIATE,
+                io_decoded_fetch_packet_bits_1_IS_LOAD,
+                io_decoded_fetch_packet_bits_1_IS_STORE,
+  output [5:0]  io_decoded_fetch_packet_bits_2_RD,
   output        io_decoded_fetch_packet_bits_2_RD_valid,
   output [5:0]  io_decoded_fetch_packet_bits_2_RS1,
                 io_decoded_fetch_packet_bits_2_RS2,
-                io_decoded_fetch_packet_bits_3_RD,
+  output [31:0] io_decoded_fetch_packet_bits_2_IMM,
+  output [2:0]  io_decoded_fetch_packet_bits_2_FUNCT3,
+  output [3:0]  io_decoded_fetch_packet_bits_2_packet_index,
+  output [5:0]  io_decoded_fetch_packet_bits_2_ROB_index,
+  output [4:0]  io_decoded_fetch_packet_bits_2_instructionType,
+  output [1:0]  io_decoded_fetch_packet_bits_2_portID,
+                io_decoded_fetch_packet_bits_2_RS_type,
+  output        io_decoded_fetch_packet_bits_2_needs_ALU,
+                io_decoded_fetch_packet_bits_2_needs_branch_unit,
+                io_decoded_fetch_packet_bits_2_SUBTRACT,
+                io_decoded_fetch_packet_bits_2_MULTIPLY,
+                io_decoded_fetch_packet_bits_2_IMMEDIATE,
+                io_decoded_fetch_packet_bits_2_IS_LOAD,
+                io_decoded_fetch_packet_bits_2_IS_STORE,
+  output [5:0]  io_decoded_fetch_packet_bits_3_RD,
   output        io_decoded_fetch_packet_bits_3_RD_valid,
   output [5:0]  io_decoded_fetch_packet_bits_3_RS1,
-                io_decoded_fetch_packet_bits_3_RS2
+                io_decoded_fetch_packet_bits_3_RS2,
+  output [31:0] io_decoded_fetch_packet_bits_3_IMM,
+  output [2:0]  io_decoded_fetch_packet_bits_3_FUNCT3,
+  output [3:0]  io_decoded_fetch_packet_bits_3_packet_index,
+  output [5:0]  io_decoded_fetch_packet_bits_3_ROB_index,
+  output [4:0]  io_decoded_fetch_packet_bits_3_instructionType,
+  output [1:0]  io_decoded_fetch_packet_bits_3_portID,
+                io_decoded_fetch_packet_bits_3_RS_type,
+  output        io_decoded_fetch_packet_bits_3_needs_ALU,
+                io_decoded_fetch_packet_bits_3_needs_branch_unit,
+                io_decoded_fetch_packet_bits_3_SUBTRACT,
+                io_decoded_fetch_packet_bits_3_MULTIPLY,
+                io_decoded_fetch_packet_bits_3_IMMEDIATE,
+                io_decoded_fetch_packet_bits_3_IS_LOAD,
+                io_decoded_fetch_packet_bits_3_IS_STORE
 );
 
-  wire [5:0] _decoders_3_io_decoded_instruction_RD;
-  wire       _decoders_3_io_decoded_instruction_RD_valid;
-  wire [5:0] _decoders_3_io_decoded_instruction_RS1;
-  wire [5:0] _decoders_3_io_decoded_instruction_RS2;
-  wire [5:0] _decoders_2_io_decoded_instruction_RD;
-  wire       _decoders_2_io_decoded_instruction_RD_valid;
-  wire [5:0] _decoders_2_io_decoded_instruction_RS1;
-  wire [5:0] _decoders_2_io_decoded_instruction_RS2;
-  wire [5:0] _decoders_1_io_decoded_instruction_RD;
-  wire       _decoders_1_io_decoded_instruction_RD_valid;
-  wire [5:0] _decoders_1_io_decoded_instruction_RS1;
-  wire [5:0] _decoders_1_io_decoded_instruction_RS2;
-  wire [5:0] _decoders_0_io_decoded_instruction_RD;
-  wire       _decoders_0_io_decoded_instruction_RD_valid;
-  wire [5:0] _decoders_0_io_decoded_instruction_RS1;
-  wire [5:0] _decoders_0_io_decoded_instruction_RS2;
-  reg  [5:0] io_decoded_fetch_packet_bits_0_REG_RD;
-  reg        io_decoded_fetch_packet_bits_0_REG_RD_valid;
-  reg  [5:0] io_decoded_fetch_packet_bits_0_REG_RS1;
-  reg  [5:0] io_decoded_fetch_packet_bits_0_REG_RS2;
-  reg  [5:0] io_decoded_fetch_packet_bits_1_REG_RD;
-  reg        io_decoded_fetch_packet_bits_1_REG_RD_valid;
-  reg  [5:0] io_decoded_fetch_packet_bits_1_REG_RS1;
-  reg  [5:0] io_decoded_fetch_packet_bits_1_REG_RS2;
-  reg  [5:0] io_decoded_fetch_packet_bits_2_REG_RD;
-  reg        io_decoded_fetch_packet_bits_2_REG_RD_valid;
-  reg  [5:0] io_decoded_fetch_packet_bits_2_REG_RS1;
-  reg  [5:0] io_decoded_fetch_packet_bits_2_REG_RS2;
-  reg  [5:0] io_decoded_fetch_packet_bits_3_REG_RD;
-  reg        io_decoded_fetch_packet_bits_3_REG_RD_valid;
-  reg  [5:0] io_decoded_fetch_packet_bits_3_REG_RS1;
-  reg  [5:0] io_decoded_fetch_packet_bits_3_REG_RS2;
+  wire [5:0]  _decoders_3_io_decoded_instruction_RD;
+  wire        _decoders_3_io_decoded_instruction_RD_valid;
+  wire [5:0]  _decoders_3_io_decoded_instruction_RS1;
+  wire [5:0]  _decoders_3_io_decoded_instruction_RS2;
+  wire [31:0] _decoders_3_io_decoded_instruction_IMM;
+  wire [2:0]  _decoders_3_io_decoded_instruction_FUNCT3;
+  wire [3:0]  _decoders_3_io_decoded_instruction_packet_index;
+  wire [5:0]  _decoders_3_io_decoded_instruction_ROB_index;
+  wire [4:0]  _decoders_3_io_decoded_instruction_instructionType;
+  wire [1:0]  _decoders_3_io_decoded_instruction_portID;
+  wire [1:0]  _decoders_3_io_decoded_instruction_RS_type;
+  wire        _decoders_3_io_decoded_instruction_needs_ALU;
+  wire        _decoders_3_io_decoded_instruction_needs_branch_unit;
+  wire        _decoders_3_io_decoded_instruction_SUBTRACT;
+  wire        _decoders_3_io_decoded_instruction_MULTIPLY;
+  wire        _decoders_3_io_decoded_instruction_IMMEDIATE;
+  wire        _decoders_3_io_decoded_instruction_IS_LOAD;
+  wire        _decoders_3_io_decoded_instruction_IS_STORE;
+  wire [5:0]  _decoders_2_io_decoded_instruction_RD;
+  wire        _decoders_2_io_decoded_instruction_RD_valid;
+  wire [5:0]  _decoders_2_io_decoded_instruction_RS1;
+  wire [5:0]  _decoders_2_io_decoded_instruction_RS2;
+  wire [31:0] _decoders_2_io_decoded_instruction_IMM;
+  wire [2:0]  _decoders_2_io_decoded_instruction_FUNCT3;
+  wire [3:0]  _decoders_2_io_decoded_instruction_packet_index;
+  wire [5:0]  _decoders_2_io_decoded_instruction_ROB_index;
+  wire [4:0]  _decoders_2_io_decoded_instruction_instructionType;
+  wire [1:0]  _decoders_2_io_decoded_instruction_portID;
+  wire [1:0]  _decoders_2_io_decoded_instruction_RS_type;
+  wire        _decoders_2_io_decoded_instruction_needs_ALU;
+  wire        _decoders_2_io_decoded_instruction_needs_branch_unit;
+  wire        _decoders_2_io_decoded_instruction_SUBTRACT;
+  wire        _decoders_2_io_decoded_instruction_MULTIPLY;
+  wire        _decoders_2_io_decoded_instruction_IMMEDIATE;
+  wire        _decoders_2_io_decoded_instruction_IS_LOAD;
+  wire        _decoders_2_io_decoded_instruction_IS_STORE;
+  wire [5:0]  _decoders_1_io_decoded_instruction_RD;
+  wire        _decoders_1_io_decoded_instruction_RD_valid;
+  wire [5:0]  _decoders_1_io_decoded_instruction_RS1;
+  wire [5:0]  _decoders_1_io_decoded_instruction_RS2;
+  wire [31:0] _decoders_1_io_decoded_instruction_IMM;
+  wire [2:0]  _decoders_1_io_decoded_instruction_FUNCT3;
+  wire [3:0]  _decoders_1_io_decoded_instruction_packet_index;
+  wire [5:0]  _decoders_1_io_decoded_instruction_ROB_index;
+  wire [4:0]  _decoders_1_io_decoded_instruction_instructionType;
+  wire [1:0]  _decoders_1_io_decoded_instruction_portID;
+  wire [1:0]  _decoders_1_io_decoded_instruction_RS_type;
+  wire        _decoders_1_io_decoded_instruction_needs_ALU;
+  wire        _decoders_1_io_decoded_instruction_needs_branch_unit;
+  wire        _decoders_1_io_decoded_instruction_SUBTRACT;
+  wire        _decoders_1_io_decoded_instruction_MULTIPLY;
+  wire        _decoders_1_io_decoded_instruction_IMMEDIATE;
+  wire        _decoders_1_io_decoded_instruction_IS_LOAD;
+  wire        _decoders_1_io_decoded_instruction_IS_STORE;
+  wire [5:0]  _decoders_0_io_decoded_instruction_RD;
+  wire        _decoders_0_io_decoded_instruction_RD_valid;
+  wire [5:0]  _decoders_0_io_decoded_instruction_RS1;
+  wire [5:0]  _decoders_0_io_decoded_instruction_RS2;
+  wire [31:0] _decoders_0_io_decoded_instruction_IMM;
+  wire [2:0]  _decoders_0_io_decoded_instruction_FUNCT3;
+  wire [3:0]  _decoders_0_io_decoded_instruction_packet_index;
+  wire [5:0]  _decoders_0_io_decoded_instruction_ROB_index;
+  wire [4:0]  _decoders_0_io_decoded_instruction_instructionType;
+  wire [1:0]  _decoders_0_io_decoded_instruction_portID;
+  wire [1:0]  _decoders_0_io_decoded_instruction_RS_type;
+  wire        _decoders_0_io_decoded_instruction_needs_ALU;
+  wire        _decoders_0_io_decoded_instruction_needs_branch_unit;
+  wire        _decoders_0_io_decoded_instruction_SUBTRACT;
+  wire        _decoders_0_io_decoded_instruction_MULTIPLY;
+  wire        _decoders_0_io_decoded_instruction_IMMEDIATE;
+  wire        _decoders_0_io_decoded_instruction_IS_LOAD;
+  wire        _decoders_0_io_decoded_instruction_IS_STORE;
+  reg  [5:0]  io_decoded_fetch_packet_bits_0_REG_RD;
+  reg         io_decoded_fetch_packet_bits_0_REG_RD_valid;
+  reg  [5:0]  io_decoded_fetch_packet_bits_0_REG_RS1;
+  reg  [5:0]  io_decoded_fetch_packet_bits_0_REG_RS2;
+  reg  [31:0] io_decoded_fetch_packet_bits_0_REG_IMM;
+  reg  [2:0]  io_decoded_fetch_packet_bits_0_REG_FUNCT3;
+  reg  [3:0]  io_decoded_fetch_packet_bits_0_REG_packet_index;
+  reg  [5:0]  io_decoded_fetch_packet_bits_0_REG_ROB_index;
+  reg  [4:0]  io_decoded_fetch_packet_bits_0_REG_instructionType;
+  reg  [1:0]  io_decoded_fetch_packet_bits_0_REG_portID;
+  reg  [1:0]  io_decoded_fetch_packet_bits_0_REG_RS_type;
+  reg         io_decoded_fetch_packet_bits_0_REG_needs_ALU;
+  reg         io_decoded_fetch_packet_bits_0_REG_needs_branch_unit;
+  reg         io_decoded_fetch_packet_bits_0_REG_SUBTRACT;
+  reg         io_decoded_fetch_packet_bits_0_REG_MULTIPLY;
+  reg         io_decoded_fetch_packet_bits_0_REG_IMMEDIATE;
+  reg         io_decoded_fetch_packet_bits_0_REG_IS_LOAD;
+  reg         io_decoded_fetch_packet_bits_0_REG_IS_STORE;
+  reg  [5:0]  io_decoded_fetch_packet_bits_1_REG_RD;
+  reg         io_decoded_fetch_packet_bits_1_REG_RD_valid;
+  reg  [5:0]  io_decoded_fetch_packet_bits_1_REG_RS1;
+  reg  [5:0]  io_decoded_fetch_packet_bits_1_REG_RS2;
+  reg  [31:0] io_decoded_fetch_packet_bits_1_REG_IMM;
+  reg  [2:0]  io_decoded_fetch_packet_bits_1_REG_FUNCT3;
+  reg  [3:0]  io_decoded_fetch_packet_bits_1_REG_packet_index;
+  reg  [5:0]  io_decoded_fetch_packet_bits_1_REG_ROB_index;
+  reg  [4:0]  io_decoded_fetch_packet_bits_1_REG_instructionType;
+  reg  [1:0]  io_decoded_fetch_packet_bits_1_REG_portID;
+  reg  [1:0]  io_decoded_fetch_packet_bits_1_REG_RS_type;
+  reg         io_decoded_fetch_packet_bits_1_REG_needs_ALU;
+  reg         io_decoded_fetch_packet_bits_1_REG_needs_branch_unit;
+  reg         io_decoded_fetch_packet_bits_1_REG_SUBTRACT;
+  reg         io_decoded_fetch_packet_bits_1_REG_MULTIPLY;
+  reg         io_decoded_fetch_packet_bits_1_REG_IMMEDIATE;
+  reg         io_decoded_fetch_packet_bits_1_REG_IS_LOAD;
+  reg         io_decoded_fetch_packet_bits_1_REG_IS_STORE;
+  reg  [5:0]  io_decoded_fetch_packet_bits_2_REG_RD;
+  reg         io_decoded_fetch_packet_bits_2_REG_RD_valid;
+  reg  [5:0]  io_decoded_fetch_packet_bits_2_REG_RS1;
+  reg  [5:0]  io_decoded_fetch_packet_bits_2_REG_RS2;
+  reg  [31:0] io_decoded_fetch_packet_bits_2_REG_IMM;
+  reg  [2:0]  io_decoded_fetch_packet_bits_2_REG_FUNCT3;
+  reg  [3:0]  io_decoded_fetch_packet_bits_2_REG_packet_index;
+  reg  [5:0]  io_decoded_fetch_packet_bits_2_REG_ROB_index;
+  reg  [4:0]  io_decoded_fetch_packet_bits_2_REG_instructionType;
+  reg  [1:0]  io_decoded_fetch_packet_bits_2_REG_portID;
+  reg  [1:0]  io_decoded_fetch_packet_bits_2_REG_RS_type;
+  reg         io_decoded_fetch_packet_bits_2_REG_needs_ALU;
+  reg         io_decoded_fetch_packet_bits_2_REG_needs_branch_unit;
+  reg         io_decoded_fetch_packet_bits_2_REG_SUBTRACT;
+  reg         io_decoded_fetch_packet_bits_2_REG_MULTIPLY;
+  reg         io_decoded_fetch_packet_bits_2_REG_IMMEDIATE;
+  reg         io_decoded_fetch_packet_bits_2_REG_IS_LOAD;
+  reg         io_decoded_fetch_packet_bits_2_REG_IS_STORE;
+  reg  [5:0]  io_decoded_fetch_packet_bits_3_REG_RD;
+  reg         io_decoded_fetch_packet_bits_3_REG_RD_valid;
+  reg  [5:0]  io_decoded_fetch_packet_bits_3_REG_RS1;
+  reg  [5:0]  io_decoded_fetch_packet_bits_3_REG_RS2;
+  reg  [31:0] io_decoded_fetch_packet_bits_3_REG_IMM;
+  reg  [2:0]  io_decoded_fetch_packet_bits_3_REG_FUNCT3;
+  reg  [3:0]  io_decoded_fetch_packet_bits_3_REG_packet_index;
+  reg  [5:0]  io_decoded_fetch_packet_bits_3_REG_ROB_index;
+  reg  [4:0]  io_decoded_fetch_packet_bits_3_REG_instructionType;
+  reg  [1:0]  io_decoded_fetch_packet_bits_3_REG_portID;
+  reg  [1:0]  io_decoded_fetch_packet_bits_3_REG_RS_type;
+  reg         io_decoded_fetch_packet_bits_3_REG_needs_ALU;
+  reg         io_decoded_fetch_packet_bits_3_REG_needs_branch_unit;
+  reg         io_decoded_fetch_packet_bits_3_REG_SUBTRACT;
+  reg         io_decoded_fetch_packet_bits_3_REG_MULTIPLY;
+  reg         io_decoded_fetch_packet_bits_3_REG_IMMEDIATE;
+  reg         io_decoded_fetch_packet_bits_3_REG_IS_LOAD;
+  reg         io_decoded_fetch_packet_bits_3_REG_IS_STORE;
+  reg         io_decoded_fetch_packet_valid_REG;
   always @(posedge clock) begin
     io_decoded_fetch_packet_bits_0_REG_RD <= _decoders_0_io_decoded_instruction_RD;
     io_decoded_fetch_packet_bits_0_REG_RD_valid <=
       _decoders_0_io_decoded_instruction_RD_valid;
     io_decoded_fetch_packet_bits_0_REG_RS1 <= _decoders_0_io_decoded_instruction_RS1;
     io_decoded_fetch_packet_bits_0_REG_RS2 <= _decoders_0_io_decoded_instruction_RS2;
+    io_decoded_fetch_packet_bits_0_REG_IMM <= _decoders_0_io_decoded_instruction_IMM;
+    io_decoded_fetch_packet_bits_0_REG_FUNCT3 <=
+      _decoders_0_io_decoded_instruction_FUNCT3;
+    io_decoded_fetch_packet_bits_0_REG_packet_index <=
+      _decoders_0_io_decoded_instruction_packet_index;
+    io_decoded_fetch_packet_bits_0_REG_ROB_index <=
+      _decoders_0_io_decoded_instruction_ROB_index;
+    io_decoded_fetch_packet_bits_0_REG_instructionType <=
+      _decoders_0_io_decoded_instruction_instructionType;
+    io_decoded_fetch_packet_bits_0_REG_portID <=
+      _decoders_0_io_decoded_instruction_portID;
+    io_decoded_fetch_packet_bits_0_REG_RS_type <=
+      _decoders_0_io_decoded_instruction_RS_type;
+    io_decoded_fetch_packet_bits_0_REG_needs_ALU <=
+      _decoders_0_io_decoded_instruction_needs_ALU;
+    io_decoded_fetch_packet_bits_0_REG_needs_branch_unit <=
+      _decoders_0_io_decoded_instruction_needs_branch_unit;
+    io_decoded_fetch_packet_bits_0_REG_SUBTRACT <=
+      _decoders_0_io_decoded_instruction_SUBTRACT;
+    io_decoded_fetch_packet_bits_0_REG_MULTIPLY <=
+      _decoders_0_io_decoded_instruction_MULTIPLY;
+    io_decoded_fetch_packet_bits_0_REG_IMMEDIATE <=
+      _decoders_0_io_decoded_instruction_IMMEDIATE;
+    io_decoded_fetch_packet_bits_0_REG_IS_LOAD <=
+      _decoders_0_io_decoded_instruction_IS_LOAD;
+    io_decoded_fetch_packet_bits_0_REG_IS_STORE <=
+      _decoders_0_io_decoded_instruction_IS_STORE;
     io_decoded_fetch_packet_bits_1_REG_RD <= _decoders_1_io_decoded_instruction_RD;
     io_decoded_fetch_packet_bits_1_REG_RD_valid <=
       _decoders_1_io_decoded_instruction_RD_valid;
     io_decoded_fetch_packet_bits_1_REG_RS1 <= _decoders_1_io_decoded_instruction_RS1;
     io_decoded_fetch_packet_bits_1_REG_RS2 <= _decoders_1_io_decoded_instruction_RS2;
+    io_decoded_fetch_packet_bits_1_REG_IMM <= _decoders_1_io_decoded_instruction_IMM;
+    io_decoded_fetch_packet_bits_1_REG_FUNCT3 <=
+      _decoders_1_io_decoded_instruction_FUNCT3;
+    io_decoded_fetch_packet_bits_1_REG_packet_index <=
+      _decoders_1_io_decoded_instruction_packet_index;
+    io_decoded_fetch_packet_bits_1_REG_ROB_index <=
+      _decoders_1_io_decoded_instruction_ROB_index;
+    io_decoded_fetch_packet_bits_1_REG_instructionType <=
+      _decoders_1_io_decoded_instruction_instructionType;
+    io_decoded_fetch_packet_bits_1_REG_portID <=
+      _decoders_1_io_decoded_instruction_portID;
+    io_decoded_fetch_packet_bits_1_REG_RS_type <=
+      _decoders_1_io_decoded_instruction_RS_type;
+    io_decoded_fetch_packet_bits_1_REG_needs_ALU <=
+      _decoders_1_io_decoded_instruction_needs_ALU;
+    io_decoded_fetch_packet_bits_1_REG_needs_branch_unit <=
+      _decoders_1_io_decoded_instruction_needs_branch_unit;
+    io_decoded_fetch_packet_bits_1_REG_SUBTRACT <=
+      _decoders_1_io_decoded_instruction_SUBTRACT;
+    io_decoded_fetch_packet_bits_1_REG_MULTIPLY <=
+      _decoders_1_io_decoded_instruction_MULTIPLY;
+    io_decoded_fetch_packet_bits_1_REG_IMMEDIATE <=
+      _decoders_1_io_decoded_instruction_IMMEDIATE;
+    io_decoded_fetch_packet_bits_1_REG_IS_LOAD <=
+      _decoders_1_io_decoded_instruction_IS_LOAD;
+    io_decoded_fetch_packet_bits_1_REG_IS_STORE <=
+      _decoders_1_io_decoded_instruction_IS_STORE;
     io_decoded_fetch_packet_bits_2_REG_RD <= _decoders_2_io_decoded_instruction_RD;
     io_decoded_fetch_packet_bits_2_REG_RD_valid <=
       _decoders_2_io_decoded_instruction_RD_valid;
     io_decoded_fetch_packet_bits_2_REG_RS1 <= _decoders_2_io_decoded_instruction_RS1;
     io_decoded_fetch_packet_bits_2_REG_RS2 <= _decoders_2_io_decoded_instruction_RS2;
+    io_decoded_fetch_packet_bits_2_REG_IMM <= _decoders_2_io_decoded_instruction_IMM;
+    io_decoded_fetch_packet_bits_2_REG_FUNCT3 <=
+      _decoders_2_io_decoded_instruction_FUNCT3;
+    io_decoded_fetch_packet_bits_2_REG_packet_index <=
+      _decoders_2_io_decoded_instruction_packet_index;
+    io_decoded_fetch_packet_bits_2_REG_ROB_index <=
+      _decoders_2_io_decoded_instruction_ROB_index;
+    io_decoded_fetch_packet_bits_2_REG_instructionType <=
+      _decoders_2_io_decoded_instruction_instructionType;
+    io_decoded_fetch_packet_bits_2_REG_portID <=
+      _decoders_2_io_decoded_instruction_portID;
+    io_decoded_fetch_packet_bits_2_REG_RS_type <=
+      _decoders_2_io_decoded_instruction_RS_type;
+    io_decoded_fetch_packet_bits_2_REG_needs_ALU <=
+      _decoders_2_io_decoded_instruction_needs_ALU;
+    io_decoded_fetch_packet_bits_2_REG_needs_branch_unit <=
+      _decoders_2_io_decoded_instruction_needs_branch_unit;
+    io_decoded_fetch_packet_bits_2_REG_SUBTRACT <=
+      _decoders_2_io_decoded_instruction_SUBTRACT;
+    io_decoded_fetch_packet_bits_2_REG_MULTIPLY <=
+      _decoders_2_io_decoded_instruction_MULTIPLY;
+    io_decoded_fetch_packet_bits_2_REG_IMMEDIATE <=
+      _decoders_2_io_decoded_instruction_IMMEDIATE;
+    io_decoded_fetch_packet_bits_2_REG_IS_LOAD <=
+      _decoders_2_io_decoded_instruction_IS_LOAD;
+    io_decoded_fetch_packet_bits_2_REG_IS_STORE <=
+      _decoders_2_io_decoded_instruction_IS_STORE;
     io_decoded_fetch_packet_bits_3_REG_RD <= _decoders_3_io_decoded_instruction_RD;
     io_decoded_fetch_packet_bits_3_REG_RD_valid <=
       _decoders_3_io_decoded_instruction_RD_valid;
     io_decoded_fetch_packet_bits_3_REG_RS1 <= _decoders_3_io_decoded_instruction_RS1;
     io_decoded_fetch_packet_bits_3_REG_RS2 <= _decoders_3_io_decoded_instruction_RS2;
+    io_decoded_fetch_packet_bits_3_REG_IMM <= _decoders_3_io_decoded_instruction_IMM;
+    io_decoded_fetch_packet_bits_3_REG_FUNCT3 <=
+      _decoders_3_io_decoded_instruction_FUNCT3;
+    io_decoded_fetch_packet_bits_3_REG_packet_index <=
+      _decoders_3_io_decoded_instruction_packet_index;
+    io_decoded_fetch_packet_bits_3_REG_ROB_index <=
+      _decoders_3_io_decoded_instruction_ROB_index;
+    io_decoded_fetch_packet_bits_3_REG_instructionType <=
+      _decoders_3_io_decoded_instruction_instructionType;
+    io_decoded_fetch_packet_bits_3_REG_portID <=
+      _decoders_3_io_decoded_instruction_portID;
+    io_decoded_fetch_packet_bits_3_REG_RS_type <=
+      _decoders_3_io_decoded_instruction_RS_type;
+    io_decoded_fetch_packet_bits_3_REG_needs_ALU <=
+      _decoders_3_io_decoded_instruction_needs_ALU;
+    io_decoded_fetch_packet_bits_3_REG_needs_branch_unit <=
+      _decoders_3_io_decoded_instruction_needs_branch_unit;
+    io_decoded_fetch_packet_bits_3_REG_SUBTRACT <=
+      _decoders_3_io_decoded_instruction_SUBTRACT;
+    io_decoded_fetch_packet_bits_3_REG_MULTIPLY <=
+      _decoders_3_io_decoded_instruction_MULTIPLY;
+    io_decoded_fetch_packet_bits_3_REG_IMMEDIATE <=
+      _decoders_3_io_decoded_instruction_IMMEDIATE;
+    io_decoded_fetch_packet_bits_3_REG_IS_LOAD <=
+      _decoders_3_io_decoded_instruction_IS_LOAD;
+    io_decoded_fetch_packet_bits_3_REG_IS_STORE <=
+      _decoders_3_io_decoded_instruction_IS_STORE;
+    io_decoded_fetch_packet_valid_REG <= io_fetch_packet_valid;
   end // always @(posedge)
   decoder decoders_0 (
-    .clock                           (clock),
-    .reset                           (reset),
-    .io_instruction_instruction      (io_fetch_packet_bits_instructions_0_instruction),
-    .io_decoded_instruction_RD       (_decoders_0_io_decoded_instruction_RD),
-    .io_decoded_instruction_RD_valid (_decoders_0_io_decoded_instruction_RD_valid),
-    .io_decoded_instruction_RS1      (_decoders_0_io_decoded_instruction_RS1),
-    .io_decoded_instruction_RS2      (_decoders_0_io_decoded_instruction_RS2)
+    .clock                                    (clock),
+    .reset                                    (reset),
+    .io_instruction_instruction
+      (io_fetch_packet_bits_instructions_0_instruction),
+    .io_instruction_packet_index
+      (io_fetch_packet_bits_instructions_0_packet_index),
+    .io_instruction_ROB_index
+      (io_fetch_packet_bits_instructions_0_ROB_index),
+    .io_decoded_instruction_RD                (_decoders_0_io_decoded_instruction_RD),
+    .io_decoded_instruction_RD_valid
+      (_decoders_0_io_decoded_instruction_RD_valid),
+    .io_decoded_instruction_RS1               (_decoders_0_io_decoded_instruction_RS1),
+    .io_decoded_instruction_RS2               (_decoders_0_io_decoded_instruction_RS2),
+    .io_decoded_instruction_IMM               (_decoders_0_io_decoded_instruction_IMM),
+    .io_decoded_instruction_FUNCT3            (_decoders_0_io_decoded_instruction_FUNCT3),
+    .io_decoded_instruction_packet_index
+      (_decoders_0_io_decoded_instruction_packet_index),
+    .io_decoded_instruction_ROB_index
+      (_decoders_0_io_decoded_instruction_ROB_index),
+    .io_decoded_instruction_instructionType
+      (_decoders_0_io_decoded_instruction_instructionType),
+    .io_decoded_instruction_portID            (_decoders_0_io_decoded_instruction_portID),
+    .io_decoded_instruction_RS_type
+      (_decoders_0_io_decoded_instruction_RS_type),
+    .io_decoded_instruction_needs_ALU
+      (_decoders_0_io_decoded_instruction_needs_ALU),
+    .io_decoded_instruction_needs_branch_unit
+      (_decoders_0_io_decoded_instruction_needs_branch_unit),
+    .io_decoded_instruction_SUBTRACT
+      (_decoders_0_io_decoded_instruction_SUBTRACT),
+    .io_decoded_instruction_MULTIPLY
+      (_decoders_0_io_decoded_instruction_MULTIPLY),
+    .io_decoded_instruction_IMMEDIATE
+      (_decoders_0_io_decoded_instruction_IMMEDIATE),
+    .io_decoded_instruction_IS_LOAD
+      (_decoders_0_io_decoded_instruction_IS_LOAD),
+    .io_decoded_instruction_IS_STORE
+      (_decoders_0_io_decoded_instruction_IS_STORE)
   );
   decoder decoders_1 (
-    .clock                           (clock),
-    .reset                           (reset),
-    .io_instruction_instruction      (io_fetch_packet_bits_instructions_1_instruction),
-    .io_decoded_instruction_RD       (_decoders_1_io_decoded_instruction_RD),
-    .io_decoded_instruction_RD_valid (_decoders_1_io_decoded_instruction_RD_valid),
-    .io_decoded_instruction_RS1      (_decoders_1_io_decoded_instruction_RS1),
-    .io_decoded_instruction_RS2      (_decoders_1_io_decoded_instruction_RS2)
+    .clock                                    (clock),
+    .reset                                    (reset),
+    .io_instruction_instruction
+      (io_fetch_packet_bits_instructions_1_instruction),
+    .io_instruction_packet_index
+      (io_fetch_packet_bits_instructions_1_packet_index),
+    .io_instruction_ROB_index
+      (io_fetch_packet_bits_instructions_1_ROB_index),
+    .io_decoded_instruction_RD                (_decoders_1_io_decoded_instruction_RD),
+    .io_decoded_instruction_RD_valid
+      (_decoders_1_io_decoded_instruction_RD_valid),
+    .io_decoded_instruction_RS1               (_decoders_1_io_decoded_instruction_RS1),
+    .io_decoded_instruction_RS2               (_decoders_1_io_decoded_instruction_RS2),
+    .io_decoded_instruction_IMM               (_decoders_1_io_decoded_instruction_IMM),
+    .io_decoded_instruction_FUNCT3            (_decoders_1_io_decoded_instruction_FUNCT3),
+    .io_decoded_instruction_packet_index
+      (_decoders_1_io_decoded_instruction_packet_index),
+    .io_decoded_instruction_ROB_index
+      (_decoders_1_io_decoded_instruction_ROB_index),
+    .io_decoded_instruction_instructionType
+      (_decoders_1_io_decoded_instruction_instructionType),
+    .io_decoded_instruction_portID            (_decoders_1_io_decoded_instruction_portID),
+    .io_decoded_instruction_RS_type
+      (_decoders_1_io_decoded_instruction_RS_type),
+    .io_decoded_instruction_needs_ALU
+      (_decoders_1_io_decoded_instruction_needs_ALU),
+    .io_decoded_instruction_needs_branch_unit
+      (_decoders_1_io_decoded_instruction_needs_branch_unit),
+    .io_decoded_instruction_SUBTRACT
+      (_decoders_1_io_decoded_instruction_SUBTRACT),
+    .io_decoded_instruction_MULTIPLY
+      (_decoders_1_io_decoded_instruction_MULTIPLY),
+    .io_decoded_instruction_IMMEDIATE
+      (_decoders_1_io_decoded_instruction_IMMEDIATE),
+    .io_decoded_instruction_IS_LOAD
+      (_decoders_1_io_decoded_instruction_IS_LOAD),
+    .io_decoded_instruction_IS_STORE
+      (_decoders_1_io_decoded_instruction_IS_STORE)
   );
   decoder decoders_2 (
-    .clock                           (clock),
-    .reset                           (reset),
-    .io_instruction_instruction      (io_fetch_packet_bits_instructions_2_instruction),
-    .io_decoded_instruction_RD       (_decoders_2_io_decoded_instruction_RD),
-    .io_decoded_instruction_RD_valid (_decoders_2_io_decoded_instruction_RD_valid),
-    .io_decoded_instruction_RS1      (_decoders_2_io_decoded_instruction_RS1),
-    .io_decoded_instruction_RS2      (_decoders_2_io_decoded_instruction_RS2)
+    .clock                                    (clock),
+    .reset                                    (reset),
+    .io_instruction_instruction
+      (io_fetch_packet_bits_instructions_2_instruction),
+    .io_instruction_packet_index
+      (io_fetch_packet_bits_instructions_2_packet_index),
+    .io_instruction_ROB_index
+      (io_fetch_packet_bits_instructions_2_ROB_index),
+    .io_decoded_instruction_RD                (_decoders_2_io_decoded_instruction_RD),
+    .io_decoded_instruction_RD_valid
+      (_decoders_2_io_decoded_instruction_RD_valid),
+    .io_decoded_instruction_RS1               (_decoders_2_io_decoded_instruction_RS1),
+    .io_decoded_instruction_RS2               (_decoders_2_io_decoded_instruction_RS2),
+    .io_decoded_instruction_IMM               (_decoders_2_io_decoded_instruction_IMM),
+    .io_decoded_instruction_FUNCT3            (_decoders_2_io_decoded_instruction_FUNCT3),
+    .io_decoded_instruction_packet_index
+      (_decoders_2_io_decoded_instruction_packet_index),
+    .io_decoded_instruction_ROB_index
+      (_decoders_2_io_decoded_instruction_ROB_index),
+    .io_decoded_instruction_instructionType
+      (_decoders_2_io_decoded_instruction_instructionType),
+    .io_decoded_instruction_portID            (_decoders_2_io_decoded_instruction_portID),
+    .io_decoded_instruction_RS_type
+      (_decoders_2_io_decoded_instruction_RS_type),
+    .io_decoded_instruction_needs_ALU
+      (_decoders_2_io_decoded_instruction_needs_ALU),
+    .io_decoded_instruction_needs_branch_unit
+      (_decoders_2_io_decoded_instruction_needs_branch_unit),
+    .io_decoded_instruction_SUBTRACT
+      (_decoders_2_io_decoded_instruction_SUBTRACT),
+    .io_decoded_instruction_MULTIPLY
+      (_decoders_2_io_decoded_instruction_MULTIPLY),
+    .io_decoded_instruction_IMMEDIATE
+      (_decoders_2_io_decoded_instruction_IMMEDIATE),
+    .io_decoded_instruction_IS_LOAD
+      (_decoders_2_io_decoded_instruction_IS_LOAD),
+    .io_decoded_instruction_IS_STORE
+      (_decoders_2_io_decoded_instruction_IS_STORE)
   );
   decoder decoders_3 (
-    .clock                           (clock),
-    .reset                           (reset),
-    .io_instruction_instruction      (io_fetch_packet_bits_instructions_3_instruction),
-    .io_decoded_instruction_RD       (_decoders_3_io_decoded_instruction_RD),
-    .io_decoded_instruction_RD_valid (_decoders_3_io_decoded_instruction_RD_valid),
-    .io_decoded_instruction_RS1      (_decoders_3_io_decoded_instruction_RS1),
-    .io_decoded_instruction_RS2      (_decoders_3_io_decoded_instruction_RS2)
+    .clock                                    (clock),
+    .reset                                    (reset),
+    .io_instruction_instruction
+      (io_fetch_packet_bits_instructions_3_instruction),
+    .io_instruction_packet_index
+      (io_fetch_packet_bits_instructions_3_packet_index),
+    .io_instruction_ROB_index
+      (io_fetch_packet_bits_instructions_3_ROB_index),
+    .io_decoded_instruction_RD                (_decoders_3_io_decoded_instruction_RD),
+    .io_decoded_instruction_RD_valid
+      (_decoders_3_io_decoded_instruction_RD_valid),
+    .io_decoded_instruction_RS1               (_decoders_3_io_decoded_instruction_RS1),
+    .io_decoded_instruction_RS2               (_decoders_3_io_decoded_instruction_RS2),
+    .io_decoded_instruction_IMM               (_decoders_3_io_decoded_instruction_IMM),
+    .io_decoded_instruction_FUNCT3            (_decoders_3_io_decoded_instruction_FUNCT3),
+    .io_decoded_instruction_packet_index
+      (_decoders_3_io_decoded_instruction_packet_index),
+    .io_decoded_instruction_ROB_index
+      (_decoders_3_io_decoded_instruction_ROB_index),
+    .io_decoded_instruction_instructionType
+      (_decoders_3_io_decoded_instruction_instructionType),
+    .io_decoded_instruction_portID            (_decoders_3_io_decoded_instruction_portID),
+    .io_decoded_instruction_RS_type
+      (_decoders_3_io_decoded_instruction_RS_type),
+    .io_decoded_instruction_needs_ALU
+      (_decoders_3_io_decoded_instruction_needs_ALU),
+    .io_decoded_instruction_needs_branch_unit
+      (_decoders_3_io_decoded_instruction_needs_branch_unit),
+    .io_decoded_instruction_SUBTRACT
+      (_decoders_3_io_decoded_instruction_SUBTRACT),
+    .io_decoded_instruction_MULTIPLY
+      (_decoders_3_io_decoded_instruction_MULTIPLY),
+    .io_decoded_instruction_IMMEDIATE
+      (_decoders_3_io_decoded_instruction_IMMEDIATE),
+    .io_decoded_instruction_IS_LOAD
+      (_decoders_3_io_decoded_instruction_IS_LOAD),
+    .io_decoded_instruction_IS_STORE
+      (_decoders_3_io_decoded_instruction_IS_STORE)
   );
+  assign io_decoded_fetch_packet_valid = io_decoded_fetch_packet_valid_REG;
   assign io_decoded_fetch_packet_bits_0_RD = io_decoded_fetch_packet_bits_0_REG_RD;
   assign io_decoded_fetch_packet_bits_0_RD_valid =
     io_decoded_fetch_packet_bits_0_REG_RD_valid;
   assign io_decoded_fetch_packet_bits_0_RS1 = io_decoded_fetch_packet_bits_0_REG_RS1;
   assign io_decoded_fetch_packet_bits_0_RS2 = io_decoded_fetch_packet_bits_0_REG_RS2;
+  assign io_decoded_fetch_packet_bits_0_IMM = io_decoded_fetch_packet_bits_0_REG_IMM;
+  assign io_decoded_fetch_packet_bits_0_FUNCT3 =
+    io_decoded_fetch_packet_bits_0_REG_FUNCT3;
+  assign io_decoded_fetch_packet_bits_0_packet_index =
+    io_decoded_fetch_packet_bits_0_REG_packet_index;
+  assign io_decoded_fetch_packet_bits_0_ROB_index =
+    io_decoded_fetch_packet_bits_0_REG_ROB_index;
+  assign io_decoded_fetch_packet_bits_0_instructionType =
+    io_decoded_fetch_packet_bits_0_REG_instructionType;
+  assign io_decoded_fetch_packet_bits_0_portID =
+    io_decoded_fetch_packet_bits_0_REG_portID;
+  assign io_decoded_fetch_packet_bits_0_RS_type =
+    io_decoded_fetch_packet_bits_0_REG_RS_type;
+  assign io_decoded_fetch_packet_bits_0_needs_ALU =
+    io_decoded_fetch_packet_bits_0_REG_needs_ALU;
+  assign io_decoded_fetch_packet_bits_0_needs_branch_unit =
+    io_decoded_fetch_packet_bits_0_REG_needs_branch_unit;
+  assign io_decoded_fetch_packet_bits_0_SUBTRACT =
+    io_decoded_fetch_packet_bits_0_REG_SUBTRACT;
+  assign io_decoded_fetch_packet_bits_0_MULTIPLY =
+    io_decoded_fetch_packet_bits_0_REG_MULTIPLY;
+  assign io_decoded_fetch_packet_bits_0_IMMEDIATE =
+    io_decoded_fetch_packet_bits_0_REG_IMMEDIATE;
+  assign io_decoded_fetch_packet_bits_0_IS_LOAD =
+    io_decoded_fetch_packet_bits_0_REG_IS_LOAD;
+  assign io_decoded_fetch_packet_bits_0_IS_STORE =
+    io_decoded_fetch_packet_bits_0_REG_IS_STORE;
   assign io_decoded_fetch_packet_bits_1_RD = io_decoded_fetch_packet_bits_1_REG_RD;
   assign io_decoded_fetch_packet_bits_1_RD_valid =
     io_decoded_fetch_packet_bits_1_REG_RD_valid;
   assign io_decoded_fetch_packet_bits_1_RS1 = io_decoded_fetch_packet_bits_1_REG_RS1;
   assign io_decoded_fetch_packet_bits_1_RS2 = io_decoded_fetch_packet_bits_1_REG_RS2;
+  assign io_decoded_fetch_packet_bits_1_IMM = io_decoded_fetch_packet_bits_1_REG_IMM;
+  assign io_decoded_fetch_packet_bits_1_FUNCT3 =
+    io_decoded_fetch_packet_bits_1_REG_FUNCT3;
+  assign io_decoded_fetch_packet_bits_1_packet_index =
+    io_decoded_fetch_packet_bits_1_REG_packet_index;
+  assign io_decoded_fetch_packet_bits_1_ROB_index =
+    io_decoded_fetch_packet_bits_1_REG_ROB_index;
+  assign io_decoded_fetch_packet_bits_1_instructionType =
+    io_decoded_fetch_packet_bits_1_REG_instructionType;
+  assign io_decoded_fetch_packet_bits_1_portID =
+    io_decoded_fetch_packet_bits_1_REG_portID;
+  assign io_decoded_fetch_packet_bits_1_RS_type =
+    io_decoded_fetch_packet_bits_1_REG_RS_type;
+  assign io_decoded_fetch_packet_bits_1_needs_ALU =
+    io_decoded_fetch_packet_bits_1_REG_needs_ALU;
+  assign io_decoded_fetch_packet_bits_1_needs_branch_unit =
+    io_decoded_fetch_packet_bits_1_REG_needs_branch_unit;
+  assign io_decoded_fetch_packet_bits_1_SUBTRACT =
+    io_decoded_fetch_packet_bits_1_REG_SUBTRACT;
+  assign io_decoded_fetch_packet_bits_1_MULTIPLY =
+    io_decoded_fetch_packet_bits_1_REG_MULTIPLY;
+  assign io_decoded_fetch_packet_bits_1_IMMEDIATE =
+    io_decoded_fetch_packet_bits_1_REG_IMMEDIATE;
+  assign io_decoded_fetch_packet_bits_1_IS_LOAD =
+    io_decoded_fetch_packet_bits_1_REG_IS_LOAD;
+  assign io_decoded_fetch_packet_bits_1_IS_STORE =
+    io_decoded_fetch_packet_bits_1_REG_IS_STORE;
   assign io_decoded_fetch_packet_bits_2_RD = io_decoded_fetch_packet_bits_2_REG_RD;
   assign io_decoded_fetch_packet_bits_2_RD_valid =
     io_decoded_fetch_packet_bits_2_REG_RD_valid;
   assign io_decoded_fetch_packet_bits_2_RS1 = io_decoded_fetch_packet_bits_2_REG_RS1;
   assign io_decoded_fetch_packet_bits_2_RS2 = io_decoded_fetch_packet_bits_2_REG_RS2;
+  assign io_decoded_fetch_packet_bits_2_IMM = io_decoded_fetch_packet_bits_2_REG_IMM;
+  assign io_decoded_fetch_packet_bits_2_FUNCT3 =
+    io_decoded_fetch_packet_bits_2_REG_FUNCT3;
+  assign io_decoded_fetch_packet_bits_2_packet_index =
+    io_decoded_fetch_packet_bits_2_REG_packet_index;
+  assign io_decoded_fetch_packet_bits_2_ROB_index =
+    io_decoded_fetch_packet_bits_2_REG_ROB_index;
+  assign io_decoded_fetch_packet_bits_2_instructionType =
+    io_decoded_fetch_packet_bits_2_REG_instructionType;
+  assign io_decoded_fetch_packet_bits_2_portID =
+    io_decoded_fetch_packet_bits_2_REG_portID;
+  assign io_decoded_fetch_packet_bits_2_RS_type =
+    io_decoded_fetch_packet_bits_2_REG_RS_type;
+  assign io_decoded_fetch_packet_bits_2_needs_ALU =
+    io_decoded_fetch_packet_bits_2_REG_needs_ALU;
+  assign io_decoded_fetch_packet_bits_2_needs_branch_unit =
+    io_decoded_fetch_packet_bits_2_REG_needs_branch_unit;
+  assign io_decoded_fetch_packet_bits_2_SUBTRACT =
+    io_decoded_fetch_packet_bits_2_REG_SUBTRACT;
+  assign io_decoded_fetch_packet_bits_2_MULTIPLY =
+    io_decoded_fetch_packet_bits_2_REG_MULTIPLY;
+  assign io_decoded_fetch_packet_bits_2_IMMEDIATE =
+    io_decoded_fetch_packet_bits_2_REG_IMMEDIATE;
+  assign io_decoded_fetch_packet_bits_2_IS_LOAD =
+    io_decoded_fetch_packet_bits_2_REG_IS_LOAD;
+  assign io_decoded_fetch_packet_bits_2_IS_STORE =
+    io_decoded_fetch_packet_bits_2_REG_IS_STORE;
   assign io_decoded_fetch_packet_bits_3_RD = io_decoded_fetch_packet_bits_3_REG_RD;
   assign io_decoded_fetch_packet_bits_3_RD_valid =
     io_decoded_fetch_packet_bits_3_REG_RD_valid;
   assign io_decoded_fetch_packet_bits_3_RS1 = io_decoded_fetch_packet_bits_3_REG_RS1;
   assign io_decoded_fetch_packet_bits_3_RS2 = io_decoded_fetch_packet_bits_3_REG_RS2;
+  assign io_decoded_fetch_packet_bits_3_IMM = io_decoded_fetch_packet_bits_3_REG_IMM;
+  assign io_decoded_fetch_packet_bits_3_FUNCT3 =
+    io_decoded_fetch_packet_bits_3_REG_FUNCT3;
+  assign io_decoded_fetch_packet_bits_3_packet_index =
+    io_decoded_fetch_packet_bits_3_REG_packet_index;
+  assign io_decoded_fetch_packet_bits_3_ROB_index =
+    io_decoded_fetch_packet_bits_3_REG_ROB_index;
+  assign io_decoded_fetch_packet_bits_3_instructionType =
+    io_decoded_fetch_packet_bits_3_REG_instructionType;
+  assign io_decoded_fetch_packet_bits_3_portID =
+    io_decoded_fetch_packet_bits_3_REG_portID;
+  assign io_decoded_fetch_packet_bits_3_RS_type =
+    io_decoded_fetch_packet_bits_3_REG_RS_type;
+  assign io_decoded_fetch_packet_bits_3_needs_ALU =
+    io_decoded_fetch_packet_bits_3_REG_needs_ALU;
+  assign io_decoded_fetch_packet_bits_3_needs_branch_unit =
+    io_decoded_fetch_packet_bits_3_REG_needs_branch_unit;
+  assign io_decoded_fetch_packet_bits_3_SUBTRACT =
+    io_decoded_fetch_packet_bits_3_REG_SUBTRACT;
+  assign io_decoded_fetch_packet_bits_3_MULTIPLY =
+    io_decoded_fetch_packet_bits_3_REG_MULTIPLY;
+  assign io_decoded_fetch_packet_bits_3_IMMEDIATE =
+    io_decoded_fetch_packet_bits_3_REG_IMMEDIATE;
+  assign io_decoded_fetch_packet_bits_3_IS_LOAD =
+    io_decoded_fetch_packet_bits_3_REG_IS_LOAD;
+  assign io_decoded_fetch_packet_bits_3_IS_STORE =
+    io_decoded_fetch_packet_bits_3_REG_IS_STORE;
 endmodule
 
-module reorder_free_inputs();
-  wire [3:0] sels_0 = 4'h0;
-  wire [3:0] sels_1 = 4'h0;
-  wire [3:0] sels_2 = 4'h0;
-  wire [3:0] sels_3 = 4'h0;
+module reorder_free_inputs(
+  input        io_free_valid_0,
+               io_free_valid_1,
+               io_free_valid_2,
+               io_free_valid_3,
+  input  [5:0] io_free_values_0,
+               io_free_values_1,
+               io_free_values_2,
+               io_free_values_3,
+  output       io_free_valid_sorted_0,
+               io_free_valid_sorted_1,
+               io_free_valid_sorted_2,
+               io_free_valid_sorted_3,
+  output [5:0] io_free_values_sorted_0,
+               io_free_values_sorted_1,
+               io_free_values_sorted_2,
+               io_free_values_sorted_3
+);
+
+  wire [3:0] sels_0 =
+    io_free_valid_0
+      ? 4'h1
+      : io_free_valid_1 ? 4'h2 : io_free_valid_2 ? 4'h4 : {io_free_valid_3, 3'h0};
+  wire [3:0] _sels_T_10 = ~sels_0;
+  wire [3:0] sels_1 =
+    io_free_valid_0 & _sels_T_10[0]
+      ? 4'h1
+      : io_free_valid_1 & _sels_T_10[1]
+          ? 4'h2
+          : io_free_valid_2 & _sels_T_10[2]
+              ? 4'h4
+              : {io_free_valid_3 & _sels_T_10[3], 3'h0};
+  wire [3:0] _sels_T_12 = ~sels_1;
+  wire       _GEN = io_free_valid_0 & _sels_T_10[0];
+  wire       _GEN_0 = io_free_valid_1 & _sels_T_10[1];
+  wire       _GEN_1 = io_free_valid_2 & _sels_T_10[2];
+  wire       _GEN_2 = io_free_valid_3 & _sels_T_10[3];
+  wire [3:0] sels_2 =
+    _GEN & _sels_T_12[0]
+      ? 4'h1
+      : _GEN_0 & _sels_T_12[1]
+          ? 4'h2
+          : _GEN_1 & _sels_T_12[2] ? 4'h4 : {_GEN_2 & _sels_T_12[3], 3'h0};
+  wire [3:0] _sels_T_14 = ~sels_2;
+  wire [3:0] sels_3 =
+    _GEN & _sels_T_12[0] & _sels_T_14[0]
+      ? 4'h1
+      : _GEN_0 & _sels_T_12[1] & _sels_T_14[1]
+          ? 4'h2
+          : _GEN_1 & _sels_T_12[2] & _sels_T_14[2]
+              ? 4'h4
+              : {_GEN_2 & _sels_T_12[3] & _sels_T_14[3], 3'h0};
+  assign io_free_valid_sorted_0 =
+    sels_0[0] & io_free_valid_0 | sels_0[1] & io_free_valid_1 | sels_0[2]
+    & io_free_valid_2 | sels_0[3] & io_free_valid_3;
+  assign io_free_valid_sorted_1 =
+    sels_1[0] & io_free_valid_0 | sels_1[1] & io_free_valid_1 | sels_1[2]
+    & io_free_valid_2 | sels_1[3] & io_free_valid_3;
+  assign io_free_valid_sorted_2 =
+    sels_2[0] & io_free_valid_0 | sels_2[1] & io_free_valid_1 | sels_2[2]
+    & io_free_valid_2 | sels_2[3] & io_free_valid_3;
+  assign io_free_valid_sorted_3 =
+    sels_3[0] & io_free_valid_0 | sels_3[1] & io_free_valid_1 | sels_3[2]
+    & io_free_valid_2 | sels_3[3] & io_free_valid_3;
+  assign io_free_values_sorted_0 =
+    (sels_0[0] ? io_free_values_0 : 6'h0) | (sels_0[1] ? io_free_values_1 : 6'h0)
+    | (sels_0[2] ? io_free_values_2 : 6'h0) | (sels_0[3] ? io_free_values_3 : 6'h0);
+  assign io_free_values_sorted_1 =
+    (sels_1[0] ? io_free_values_0 : 6'h0) | (sels_1[1] ? io_free_values_1 : 6'h0)
+    | (sels_1[2] ? io_free_values_2 : 6'h0) | (sels_1[3] ? io_free_values_3 : 6'h0);
+  assign io_free_values_sorted_2 =
+    (sels_2[0] ? io_free_values_0 : 6'h0) | (sels_2[1] ? io_free_values_1 : 6'h0)
+    | (sels_2[2] ? io_free_values_2 : 6'h0) | (sels_2[3] ? io_free_values_3 : 6'h0);
+  assign io_free_values_sorted_3 =
+    (sels_3[0] ? io_free_values_0 : 6'h0) | (sels_3[1] ? io_free_values_1 : 6'h0)
+    | (sels_3[2] ? io_free_values_2 : 6'h0) | (sels_3[3] ? io_free_values_3 : 6'h0);
 endmodule
 
 module reorder_renamed_outputs(
@@ -2113,89 +2984,780 @@ module free_list(
   output [5:0] io_renamed_values_0,
                io_renamed_values_1,
                io_renamed_values_2,
-               io_renamed_values_3
+               io_renamed_values_3,
+  input        io_free_valid_0,
+               io_free_valid_1,
+               io_free_valid_2,
+               io_free_valid_3,
+  input  [5:0] io_free_values_0,
+               io_free_values_1,
+               io_free_values_2,
+               io_free_values_3
 );
 
-  wire [63:0][5:0] _GEN =
-    '{6'h3F,
-      6'h3E,
-      6'h3D,
-      6'h3C,
-      6'h3B,
-      6'h3A,
-      6'h39,
-      6'h38,
-      6'h37,
-      6'h36,
-      6'h35,
-      6'h34,
-      6'h33,
-      6'h32,
-      6'h31,
-      6'h30,
-      6'h2F,
-      6'h2E,
-      6'h2D,
-      6'h2C,
-      6'h2B,
-      6'h2A,
-      6'h29,
-      6'h28,
-      6'h27,
-      6'h26,
-      6'h25,
-      6'h24,
-      6'h23,
-      6'h22,
-      6'h21,
-      6'h20,
-      6'h1F,
-      6'h1E,
-      6'h1D,
-      6'h1C,
-      6'h1B,
-      6'h1A,
-      6'h19,
-      6'h18,
-      6'h17,
-      6'h16,
-      6'h15,
-      6'h14,
-      6'h13,
-      6'h12,
-      6'h11,
-      6'h10,
-      6'hF,
-      6'hE,
-      6'hD,
-      6'hC,
-      6'hB,
-      6'hA,
-      6'h9,
-      6'h8,
-      6'h7,
-      6'h6,
-      6'h5,
-      6'h4,
-      6'h3,
-      6'h2,
-      6'h1,
-      6'h0};
+  wire             _input_sorter_io_free_valid_sorted_0;
+  wire             _input_sorter_io_free_valid_sorted_1;
+  wire             _input_sorter_io_free_valid_sorted_2;
+  wire             _input_sorter_io_free_valid_sorted_3;
+  wire [5:0]       _input_sorter_io_free_values_sorted_0;
+  wire [5:0]       _input_sorter_io_free_values_sorted_1;
+  wire [5:0]       _input_sorter_io_free_values_sorted_2;
+  wire [5:0]       _input_sorter_io_free_values_sorted_3;
   reg  [6:0]       front_pointer;
+  reg  [6:0]       back_pointer;
+  reg  [5:0]       free_list_buffer_0;
+  reg  [5:0]       free_list_buffer_1;
+  reg  [5:0]       free_list_buffer_2;
+  reg  [5:0]       free_list_buffer_3;
+  reg  [5:0]       free_list_buffer_4;
+  reg  [5:0]       free_list_buffer_5;
+  reg  [5:0]       free_list_buffer_6;
+  reg  [5:0]       free_list_buffer_7;
+  reg  [5:0]       free_list_buffer_8;
+  reg  [5:0]       free_list_buffer_9;
+  reg  [5:0]       free_list_buffer_10;
+  reg  [5:0]       free_list_buffer_11;
+  reg  [5:0]       free_list_buffer_12;
+  reg  [5:0]       free_list_buffer_13;
+  reg  [5:0]       free_list_buffer_14;
+  reg  [5:0]       free_list_buffer_15;
+  reg  [5:0]       free_list_buffer_16;
+  reg  [5:0]       free_list_buffer_17;
+  reg  [5:0]       free_list_buffer_18;
+  reg  [5:0]       free_list_buffer_19;
+  reg  [5:0]       free_list_buffer_20;
+  reg  [5:0]       free_list_buffer_21;
+  reg  [5:0]       free_list_buffer_22;
+  reg  [5:0]       free_list_buffer_23;
+  reg  [5:0]       free_list_buffer_24;
+  reg  [5:0]       free_list_buffer_25;
+  reg  [5:0]       free_list_buffer_26;
+  reg  [5:0]       free_list_buffer_27;
+  reg  [5:0]       free_list_buffer_28;
+  reg  [5:0]       free_list_buffer_29;
+  reg  [5:0]       free_list_buffer_30;
+  reg  [5:0]       free_list_buffer_31;
+  reg  [5:0]       free_list_buffer_32;
+  reg  [5:0]       free_list_buffer_33;
+  reg  [5:0]       free_list_buffer_34;
+  reg  [5:0]       free_list_buffer_35;
+  reg  [5:0]       free_list_buffer_36;
+  reg  [5:0]       free_list_buffer_37;
+  reg  [5:0]       free_list_buffer_38;
+  reg  [5:0]       free_list_buffer_39;
+  reg  [5:0]       free_list_buffer_40;
+  reg  [5:0]       free_list_buffer_41;
+  reg  [5:0]       free_list_buffer_42;
+  reg  [5:0]       free_list_buffer_43;
+  reg  [5:0]       free_list_buffer_44;
+  reg  [5:0]       free_list_buffer_45;
+  reg  [5:0]       free_list_buffer_46;
+  reg  [5:0]       free_list_buffer_47;
+  reg  [5:0]       free_list_buffer_48;
+  reg  [5:0]       free_list_buffer_49;
+  reg  [5:0]       free_list_buffer_50;
+  reg  [5:0]       free_list_buffer_51;
+  reg  [5:0]       free_list_buffer_52;
+  reg  [5:0]       free_list_buffer_53;
+  reg  [5:0]       free_list_buffer_54;
+  reg  [5:0]       free_list_buffer_55;
+  reg  [5:0]       free_list_buffer_56;
+  reg  [5:0]       free_list_buffer_57;
+  reg  [5:0]       free_list_buffer_58;
+  reg  [5:0]       free_list_buffer_59;
+  reg  [5:0]       free_list_buffer_60;
+  reg  [5:0]       free_list_buffer_61;
+  reg  [5:0]       free_list_buffer_62;
+  reg  [5:0]       free_list_buffer_63;
+  wire [63:0][5:0] _GEN =
+    {{free_list_buffer_63},
+     {free_list_buffer_62},
+     {free_list_buffer_61},
+     {free_list_buffer_60},
+     {free_list_buffer_59},
+     {free_list_buffer_58},
+     {free_list_buffer_57},
+     {free_list_buffer_56},
+     {free_list_buffer_55},
+     {free_list_buffer_54},
+     {free_list_buffer_53},
+     {free_list_buffer_52},
+     {free_list_buffer_51},
+     {free_list_buffer_50},
+     {free_list_buffer_49},
+     {free_list_buffer_48},
+     {free_list_buffer_47},
+     {free_list_buffer_46},
+     {free_list_buffer_45},
+     {free_list_buffer_44},
+     {free_list_buffer_43},
+     {free_list_buffer_42},
+     {free_list_buffer_41},
+     {free_list_buffer_40},
+     {free_list_buffer_39},
+     {free_list_buffer_38},
+     {free_list_buffer_37},
+     {free_list_buffer_36},
+     {free_list_buffer_35},
+     {free_list_buffer_34},
+     {free_list_buffer_33},
+     {free_list_buffer_32},
+     {free_list_buffer_31},
+     {free_list_buffer_30},
+     {free_list_buffer_29},
+     {free_list_buffer_28},
+     {free_list_buffer_27},
+     {free_list_buffer_26},
+     {free_list_buffer_25},
+     {free_list_buffer_24},
+     {free_list_buffer_23},
+     {free_list_buffer_22},
+     {free_list_buffer_21},
+     {free_list_buffer_20},
+     {free_list_buffer_19},
+     {free_list_buffer_18},
+     {free_list_buffer_17},
+     {free_list_buffer_16},
+     {free_list_buffer_15},
+     {free_list_buffer_14},
+     {free_list_buffer_13},
+     {free_list_buffer_12},
+     {free_list_buffer_11},
+     {free_list_buffer_10},
+     {free_list_buffer_9},
+     {free_list_buffer_8},
+     {free_list_buffer_7},
+     {free_list_buffer_6},
+     {free_list_buffer_5},
+     {free_list_buffer_4},
+     {free_list_buffer_3},
+     {free_list_buffer_2},
+     {free_list_buffer_1},
+     {free_list_buffer_0}};
   always @(posedge clock) begin
-    if (reset)
+    if (reset) begin
       front_pointer <= 7'h0;
+      back_pointer <= 7'h0;
+      free_list_buffer_0 <= 6'h0;
+      free_list_buffer_1 <= 6'h1;
+      free_list_buffer_2 <= 6'h2;
+      free_list_buffer_3 <= 6'h3;
+      free_list_buffer_4 <= 6'h4;
+      free_list_buffer_5 <= 6'h5;
+      free_list_buffer_6 <= 6'h6;
+      free_list_buffer_7 <= 6'h7;
+      free_list_buffer_8 <= 6'h8;
+      free_list_buffer_9 <= 6'h9;
+      free_list_buffer_10 <= 6'hA;
+      free_list_buffer_11 <= 6'hB;
+      free_list_buffer_12 <= 6'hC;
+      free_list_buffer_13 <= 6'hD;
+      free_list_buffer_14 <= 6'hE;
+      free_list_buffer_15 <= 6'hF;
+      free_list_buffer_16 <= 6'h10;
+      free_list_buffer_17 <= 6'h11;
+      free_list_buffer_18 <= 6'h12;
+      free_list_buffer_19 <= 6'h13;
+      free_list_buffer_20 <= 6'h14;
+      free_list_buffer_21 <= 6'h15;
+      free_list_buffer_22 <= 6'h16;
+      free_list_buffer_23 <= 6'h17;
+      free_list_buffer_24 <= 6'h18;
+      free_list_buffer_25 <= 6'h19;
+      free_list_buffer_26 <= 6'h1A;
+      free_list_buffer_27 <= 6'h1B;
+      free_list_buffer_28 <= 6'h1C;
+      free_list_buffer_29 <= 6'h1D;
+      free_list_buffer_30 <= 6'h1E;
+      free_list_buffer_31 <= 6'h1F;
+      free_list_buffer_32 <= 6'h20;
+      free_list_buffer_33 <= 6'h21;
+      free_list_buffer_34 <= 6'h22;
+      free_list_buffer_35 <= 6'h23;
+      free_list_buffer_36 <= 6'h24;
+      free_list_buffer_37 <= 6'h25;
+      free_list_buffer_38 <= 6'h26;
+      free_list_buffer_39 <= 6'h27;
+      free_list_buffer_40 <= 6'h28;
+      free_list_buffer_41 <= 6'h29;
+      free_list_buffer_42 <= 6'h2A;
+      free_list_buffer_43 <= 6'h2B;
+      free_list_buffer_44 <= 6'h2C;
+      free_list_buffer_45 <= 6'h2D;
+      free_list_buffer_46 <= 6'h2E;
+      free_list_buffer_47 <= 6'h2F;
+      free_list_buffer_48 <= 6'h30;
+      free_list_buffer_49 <= 6'h31;
+      free_list_buffer_50 <= 6'h32;
+      free_list_buffer_51 <= 6'h33;
+      free_list_buffer_52 <= 6'h34;
+      free_list_buffer_53 <= 6'h35;
+      free_list_buffer_54 <= 6'h36;
+      free_list_buffer_55 <= 6'h37;
+      free_list_buffer_56 <= 6'h38;
+      free_list_buffer_57 <= 6'h39;
+      free_list_buffer_58 <= 6'h3A;
+      free_list_buffer_59 <= 6'h3B;
+      free_list_buffer_60 <= 6'h3C;
+      free_list_buffer_61 <= 6'h3D;
+      free_list_buffer_62 <= 6'h3E;
+      free_list_buffer_63 <= 6'h3F;
+    end
     else begin
+      automatic logic [5:0] _GEN_0;
+      automatic logic [5:0] _GEN_1;
+      automatic logic [5:0] _GEN_2 = back_pointer[5:0] + 6'h3;
       automatic logic [6:0] _io_empty_T_5 = front_pointer + 7'h4;
-      if (~(_io_empty_T_5[5:0] == 6'h0 & _io_empty_T_5[6]))
+      _GEN_0 = back_pointer[5:0] + 6'h1;
+      _GEN_1 = back_pointer[5:0] + 6'h2;
+      if (~(_io_empty_T_5[5:0] == back_pointer[5:0]
+            & _io_empty_T_5[6] != back_pointer[6]))
         front_pointer <=
           front_pointer
           + {4'h0,
              {1'h0, {1'h0, io_rename_valid_0} + {1'h0, io_rename_valid_1}}
                + {1'h0, {1'h0, io_rename_valid_2} + {1'h0, io_rename_valid_3}}};
+      back_pointer <=
+        back_pointer
+        + {4'h0,
+           {1'h0,
+            {1'h0, _input_sorter_io_free_valid_sorted_0}
+              + {1'h0, _input_sorter_io_free_valid_sorted_1}}
+             + {1'h0,
+                {1'h0, _input_sorter_io_free_valid_sorted_2}
+                  + {1'h0, _input_sorter_io_free_valid_sorted_3}}};
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h0)
+        free_list_buffer_0 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h0)
+        free_list_buffer_0 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h0)
+        free_list_buffer_0 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h0)
+        free_list_buffer_0 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h1)
+        free_list_buffer_1 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h1)
+        free_list_buffer_1 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h1)
+        free_list_buffer_1 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h1)
+        free_list_buffer_1 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h2)
+        free_list_buffer_2 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h2)
+        free_list_buffer_2 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h2)
+        free_list_buffer_2 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h2)
+        free_list_buffer_2 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h3)
+        free_list_buffer_3 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h3)
+        free_list_buffer_3 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h3)
+        free_list_buffer_3 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h3)
+        free_list_buffer_3 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h4)
+        free_list_buffer_4 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h4)
+        free_list_buffer_4 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h4)
+        free_list_buffer_4 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h4)
+        free_list_buffer_4 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h5)
+        free_list_buffer_5 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h5)
+        free_list_buffer_5 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h5)
+        free_list_buffer_5 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h5)
+        free_list_buffer_5 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h6)
+        free_list_buffer_6 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h6)
+        free_list_buffer_6 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h6)
+        free_list_buffer_6 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h6)
+        free_list_buffer_6 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h7)
+        free_list_buffer_7 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h7)
+        free_list_buffer_7 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h7)
+        free_list_buffer_7 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h7)
+        free_list_buffer_7 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h8)
+        free_list_buffer_8 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h8)
+        free_list_buffer_8 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h8)
+        free_list_buffer_8 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h8)
+        free_list_buffer_8 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h9)
+        free_list_buffer_9 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h9)
+        free_list_buffer_9 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h9)
+        free_list_buffer_9 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h9)
+        free_list_buffer_9 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'hA)
+        free_list_buffer_10 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'hA)
+        free_list_buffer_10 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'hA)
+        free_list_buffer_10 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'hA)
+        free_list_buffer_10 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'hB)
+        free_list_buffer_11 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'hB)
+        free_list_buffer_11 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'hB)
+        free_list_buffer_11 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'hB)
+        free_list_buffer_11 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'hC)
+        free_list_buffer_12 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'hC)
+        free_list_buffer_12 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'hC)
+        free_list_buffer_12 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'hC)
+        free_list_buffer_12 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'hD)
+        free_list_buffer_13 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'hD)
+        free_list_buffer_13 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'hD)
+        free_list_buffer_13 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'hD)
+        free_list_buffer_13 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'hE)
+        free_list_buffer_14 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'hE)
+        free_list_buffer_14 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'hE)
+        free_list_buffer_14 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'hE)
+        free_list_buffer_14 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'hF)
+        free_list_buffer_15 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'hF)
+        free_list_buffer_15 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'hF)
+        free_list_buffer_15 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'hF)
+        free_list_buffer_15 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h10)
+        free_list_buffer_16 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h10)
+        free_list_buffer_16 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h10)
+        free_list_buffer_16 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h10)
+        free_list_buffer_16 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h11)
+        free_list_buffer_17 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h11)
+        free_list_buffer_17 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h11)
+        free_list_buffer_17 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h11)
+        free_list_buffer_17 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h12)
+        free_list_buffer_18 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h12)
+        free_list_buffer_18 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h12)
+        free_list_buffer_18 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h12)
+        free_list_buffer_18 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h13)
+        free_list_buffer_19 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h13)
+        free_list_buffer_19 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h13)
+        free_list_buffer_19 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h13)
+        free_list_buffer_19 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h14)
+        free_list_buffer_20 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h14)
+        free_list_buffer_20 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h14)
+        free_list_buffer_20 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h14)
+        free_list_buffer_20 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h15)
+        free_list_buffer_21 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h15)
+        free_list_buffer_21 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h15)
+        free_list_buffer_21 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h15)
+        free_list_buffer_21 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h16)
+        free_list_buffer_22 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h16)
+        free_list_buffer_22 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h16)
+        free_list_buffer_22 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h16)
+        free_list_buffer_22 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h17)
+        free_list_buffer_23 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h17)
+        free_list_buffer_23 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h17)
+        free_list_buffer_23 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h17)
+        free_list_buffer_23 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h18)
+        free_list_buffer_24 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h18)
+        free_list_buffer_24 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h18)
+        free_list_buffer_24 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h18)
+        free_list_buffer_24 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h19)
+        free_list_buffer_25 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h19)
+        free_list_buffer_25 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h19)
+        free_list_buffer_25 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h19)
+        free_list_buffer_25 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h1A)
+        free_list_buffer_26 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h1A)
+        free_list_buffer_26 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h1A)
+        free_list_buffer_26 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h1A)
+        free_list_buffer_26 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h1B)
+        free_list_buffer_27 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h1B)
+        free_list_buffer_27 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h1B)
+        free_list_buffer_27 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h1B)
+        free_list_buffer_27 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h1C)
+        free_list_buffer_28 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h1C)
+        free_list_buffer_28 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h1C)
+        free_list_buffer_28 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h1C)
+        free_list_buffer_28 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h1D)
+        free_list_buffer_29 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h1D)
+        free_list_buffer_29 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h1D)
+        free_list_buffer_29 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h1D)
+        free_list_buffer_29 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h1E)
+        free_list_buffer_30 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h1E)
+        free_list_buffer_30 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h1E)
+        free_list_buffer_30 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h1E)
+        free_list_buffer_30 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h1F)
+        free_list_buffer_31 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h1F)
+        free_list_buffer_31 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h1F)
+        free_list_buffer_31 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h1F)
+        free_list_buffer_31 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h20)
+        free_list_buffer_32 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h20)
+        free_list_buffer_32 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h20)
+        free_list_buffer_32 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h20)
+        free_list_buffer_32 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h21)
+        free_list_buffer_33 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h21)
+        free_list_buffer_33 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h21)
+        free_list_buffer_33 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h21)
+        free_list_buffer_33 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h22)
+        free_list_buffer_34 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h22)
+        free_list_buffer_34 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h22)
+        free_list_buffer_34 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h22)
+        free_list_buffer_34 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h23)
+        free_list_buffer_35 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h23)
+        free_list_buffer_35 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h23)
+        free_list_buffer_35 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h23)
+        free_list_buffer_35 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h24)
+        free_list_buffer_36 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h24)
+        free_list_buffer_36 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h24)
+        free_list_buffer_36 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h24)
+        free_list_buffer_36 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h25)
+        free_list_buffer_37 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h25)
+        free_list_buffer_37 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h25)
+        free_list_buffer_37 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h25)
+        free_list_buffer_37 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h26)
+        free_list_buffer_38 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h26)
+        free_list_buffer_38 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h26)
+        free_list_buffer_38 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h26)
+        free_list_buffer_38 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h27)
+        free_list_buffer_39 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h27)
+        free_list_buffer_39 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h27)
+        free_list_buffer_39 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h27)
+        free_list_buffer_39 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h28)
+        free_list_buffer_40 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h28)
+        free_list_buffer_40 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h28)
+        free_list_buffer_40 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h28)
+        free_list_buffer_40 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h29)
+        free_list_buffer_41 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h29)
+        free_list_buffer_41 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h29)
+        free_list_buffer_41 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h29)
+        free_list_buffer_41 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h2A)
+        free_list_buffer_42 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h2A)
+        free_list_buffer_42 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h2A)
+        free_list_buffer_42 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h2A)
+        free_list_buffer_42 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h2B)
+        free_list_buffer_43 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h2B)
+        free_list_buffer_43 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h2B)
+        free_list_buffer_43 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h2B)
+        free_list_buffer_43 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h2C)
+        free_list_buffer_44 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h2C)
+        free_list_buffer_44 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h2C)
+        free_list_buffer_44 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h2C)
+        free_list_buffer_44 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h2D)
+        free_list_buffer_45 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h2D)
+        free_list_buffer_45 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h2D)
+        free_list_buffer_45 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h2D)
+        free_list_buffer_45 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h2E)
+        free_list_buffer_46 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h2E)
+        free_list_buffer_46 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h2E)
+        free_list_buffer_46 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h2E)
+        free_list_buffer_46 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h2F)
+        free_list_buffer_47 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h2F)
+        free_list_buffer_47 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h2F)
+        free_list_buffer_47 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h2F)
+        free_list_buffer_47 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h30)
+        free_list_buffer_48 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h30)
+        free_list_buffer_48 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h30)
+        free_list_buffer_48 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h30)
+        free_list_buffer_48 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h31)
+        free_list_buffer_49 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h31)
+        free_list_buffer_49 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h31)
+        free_list_buffer_49 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h31)
+        free_list_buffer_49 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h32)
+        free_list_buffer_50 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h32)
+        free_list_buffer_50 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h32)
+        free_list_buffer_50 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h32)
+        free_list_buffer_50 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h33)
+        free_list_buffer_51 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h33)
+        free_list_buffer_51 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h33)
+        free_list_buffer_51 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h33)
+        free_list_buffer_51 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h34)
+        free_list_buffer_52 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h34)
+        free_list_buffer_52 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h34)
+        free_list_buffer_52 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h34)
+        free_list_buffer_52 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h35)
+        free_list_buffer_53 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h35)
+        free_list_buffer_53 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h35)
+        free_list_buffer_53 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h35)
+        free_list_buffer_53 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h36)
+        free_list_buffer_54 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h36)
+        free_list_buffer_54 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h36)
+        free_list_buffer_54 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h36)
+        free_list_buffer_54 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h37)
+        free_list_buffer_55 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h37)
+        free_list_buffer_55 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h37)
+        free_list_buffer_55 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h37)
+        free_list_buffer_55 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h38)
+        free_list_buffer_56 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h38)
+        free_list_buffer_56 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h38)
+        free_list_buffer_56 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h38)
+        free_list_buffer_56 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h39)
+        free_list_buffer_57 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h39)
+        free_list_buffer_57 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h39)
+        free_list_buffer_57 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h39)
+        free_list_buffer_57 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h3A)
+        free_list_buffer_58 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h3A)
+        free_list_buffer_58 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h3A)
+        free_list_buffer_58 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h3A)
+        free_list_buffer_58 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h3B)
+        free_list_buffer_59 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h3B)
+        free_list_buffer_59 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h3B)
+        free_list_buffer_59 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h3B)
+        free_list_buffer_59 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h3C)
+        free_list_buffer_60 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h3C)
+        free_list_buffer_60 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h3C)
+        free_list_buffer_60 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h3C)
+        free_list_buffer_60 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h3D)
+        free_list_buffer_61 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h3D)
+        free_list_buffer_61 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h3D)
+        free_list_buffer_61 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h3D)
+        free_list_buffer_61 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h3E)
+        free_list_buffer_62 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h3E)
+        free_list_buffer_62 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h3E)
+        free_list_buffer_62 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h3E)
+        free_list_buffer_62 <= _input_sorter_io_free_values_sorted_0;
+      if (_input_sorter_io_free_valid_sorted_3 & (&_GEN_2))
+        free_list_buffer_63 <= _input_sorter_io_free_values_sorted_3;
+      else if (_input_sorter_io_free_valid_sorted_2 & (&_GEN_1))
+        free_list_buffer_63 <= _input_sorter_io_free_values_sorted_2;
+      else if (_input_sorter_io_free_valid_sorted_1 & (&_GEN_0))
+        free_list_buffer_63 <= _input_sorter_io_free_values_sorted_1;
+      else if (_input_sorter_io_free_valid_sorted_0 & (&(back_pointer[5:0])))
+        free_list_buffer_63 <= _input_sorter_io_free_values_sorted_0;
     end
   end // always @(posedge)
-  reorder_free_inputs input_sorter ();
+  reorder_free_inputs input_sorter (
+    .io_free_valid_0         (io_free_valid_0),
+    .io_free_valid_1         (io_free_valid_1),
+    .io_free_valid_2         (io_free_valid_2),
+    .io_free_valid_3         (io_free_valid_3),
+    .io_free_values_0        (io_free_values_0),
+    .io_free_values_1        (io_free_values_1),
+    .io_free_values_2        (io_free_values_2),
+    .io_free_values_3        (io_free_values_3),
+    .io_free_valid_sorted_0  (_input_sorter_io_free_valid_sorted_0),
+    .io_free_valid_sorted_1  (_input_sorter_io_free_valid_sorted_1),
+    .io_free_valid_sorted_2  (_input_sorter_io_free_valid_sorted_2),
+    .io_free_valid_sorted_3  (_input_sorter_io_free_valid_sorted_3),
+    .io_free_values_sorted_0 (_input_sorter_io_free_values_sorted_0),
+    .io_free_values_sorted_1 (_input_sorter_io_free_values_sorted_1),
+    .io_free_values_sorted_2 (_input_sorter_io_free_values_sorted_2),
+    .io_free_values_sorted_3 (_input_sorter_io_free_values_sorted_3)
+  );
   reorder_renamed_outputs output_sorter (
     .io_renamed_valid_0         (io_rename_valid_0),
     .io_renamed_valid_1         (io_rename_valid_1),
@@ -2277,6 +3839,12 @@ module RAT(
                io_free_list_RD_1,
                io_free_list_RD_2,
                io_free_list_RD_3,
+  input        io_create_checkpoint,
+  output [3:0] io_active_checkpoint_value,
+  input        io_restore_checkpoint,
+  input  [3:0] io_restore_checkpoint_value,
+  input        io_free_checkpoint,
+  output       io_checkpoints_full,
   output [5:0] io_RAT_RD_0,
                io_RAT_RD_1,
                io_RAT_RD_2,
@@ -2291,6 +3859,8 @@ module RAT(
                io_RAT_RS2_3
 );
 
+  reg  [3:0] active_RAT;
+  reg  [3:0] available_checkpoints;
   reg  [5:0] RAT_memories_0_0;
   reg  [5:0] RAT_memories_0_1;
   reg  [5:0] RAT_memories_0_2;
@@ -2323,6 +3893,486 @@ module RAT(
   reg  [5:0] RAT_memories_0_29;
   reg  [5:0] RAT_memories_0_30;
   reg  [5:0] RAT_memories_0_31;
+  reg  [5:0] RAT_memories_1_0;
+  reg  [5:0] RAT_memories_1_1;
+  reg  [5:0] RAT_memories_1_2;
+  reg  [5:0] RAT_memories_1_3;
+  reg  [5:0] RAT_memories_1_4;
+  reg  [5:0] RAT_memories_1_5;
+  reg  [5:0] RAT_memories_1_6;
+  reg  [5:0] RAT_memories_1_7;
+  reg  [5:0] RAT_memories_1_8;
+  reg  [5:0] RAT_memories_1_9;
+  reg  [5:0] RAT_memories_1_10;
+  reg  [5:0] RAT_memories_1_11;
+  reg  [5:0] RAT_memories_1_12;
+  reg  [5:0] RAT_memories_1_13;
+  reg  [5:0] RAT_memories_1_14;
+  reg  [5:0] RAT_memories_1_15;
+  reg  [5:0] RAT_memories_1_16;
+  reg  [5:0] RAT_memories_1_17;
+  reg  [5:0] RAT_memories_1_18;
+  reg  [5:0] RAT_memories_1_19;
+  reg  [5:0] RAT_memories_1_20;
+  reg  [5:0] RAT_memories_1_21;
+  reg  [5:0] RAT_memories_1_22;
+  reg  [5:0] RAT_memories_1_23;
+  reg  [5:0] RAT_memories_1_24;
+  reg  [5:0] RAT_memories_1_25;
+  reg  [5:0] RAT_memories_1_26;
+  reg  [5:0] RAT_memories_1_27;
+  reg  [5:0] RAT_memories_1_28;
+  reg  [5:0] RAT_memories_1_29;
+  reg  [5:0] RAT_memories_1_30;
+  reg  [5:0] RAT_memories_1_31;
+  reg  [5:0] RAT_memories_2_0;
+  reg  [5:0] RAT_memories_2_1;
+  reg  [5:0] RAT_memories_2_2;
+  reg  [5:0] RAT_memories_2_3;
+  reg  [5:0] RAT_memories_2_4;
+  reg  [5:0] RAT_memories_2_5;
+  reg  [5:0] RAT_memories_2_6;
+  reg  [5:0] RAT_memories_2_7;
+  reg  [5:0] RAT_memories_2_8;
+  reg  [5:0] RAT_memories_2_9;
+  reg  [5:0] RAT_memories_2_10;
+  reg  [5:0] RAT_memories_2_11;
+  reg  [5:0] RAT_memories_2_12;
+  reg  [5:0] RAT_memories_2_13;
+  reg  [5:0] RAT_memories_2_14;
+  reg  [5:0] RAT_memories_2_15;
+  reg  [5:0] RAT_memories_2_16;
+  reg  [5:0] RAT_memories_2_17;
+  reg  [5:0] RAT_memories_2_18;
+  reg  [5:0] RAT_memories_2_19;
+  reg  [5:0] RAT_memories_2_20;
+  reg  [5:0] RAT_memories_2_21;
+  reg  [5:0] RAT_memories_2_22;
+  reg  [5:0] RAT_memories_2_23;
+  reg  [5:0] RAT_memories_2_24;
+  reg  [5:0] RAT_memories_2_25;
+  reg  [5:0] RAT_memories_2_26;
+  reg  [5:0] RAT_memories_2_27;
+  reg  [5:0] RAT_memories_2_28;
+  reg  [5:0] RAT_memories_2_29;
+  reg  [5:0] RAT_memories_2_30;
+  reg  [5:0] RAT_memories_2_31;
+  reg  [5:0] RAT_memories_3_0;
+  reg  [5:0] RAT_memories_3_1;
+  reg  [5:0] RAT_memories_3_2;
+  reg  [5:0] RAT_memories_3_3;
+  reg  [5:0] RAT_memories_3_4;
+  reg  [5:0] RAT_memories_3_5;
+  reg  [5:0] RAT_memories_3_6;
+  reg  [5:0] RAT_memories_3_7;
+  reg  [5:0] RAT_memories_3_8;
+  reg  [5:0] RAT_memories_3_9;
+  reg  [5:0] RAT_memories_3_10;
+  reg  [5:0] RAT_memories_3_11;
+  reg  [5:0] RAT_memories_3_12;
+  reg  [5:0] RAT_memories_3_13;
+  reg  [5:0] RAT_memories_3_14;
+  reg  [5:0] RAT_memories_3_15;
+  reg  [5:0] RAT_memories_3_16;
+  reg  [5:0] RAT_memories_3_17;
+  reg  [5:0] RAT_memories_3_18;
+  reg  [5:0] RAT_memories_3_19;
+  reg  [5:0] RAT_memories_3_20;
+  reg  [5:0] RAT_memories_3_21;
+  reg  [5:0] RAT_memories_3_22;
+  reg  [5:0] RAT_memories_3_23;
+  reg  [5:0] RAT_memories_3_24;
+  reg  [5:0] RAT_memories_3_25;
+  reg  [5:0] RAT_memories_3_26;
+  reg  [5:0] RAT_memories_3_27;
+  reg  [5:0] RAT_memories_3_28;
+  reg  [5:0] RAT_memories_3_29;
+  reg  [5:0] RAT_memories_3_30;
+  reg  [5:0] RAT_memories_3_31;
+  reg  [5:0] RAT_memories_4_0;
+  reg  [5:0] RAT_memories_4_1;
+  reg  [5:0] RAT_memories_4_2;
+  reg  [5:0] RAT_memories_4_3;
+  reg  [5:0] RAT_memories_4_4;
+  reg  [5:0] RAT_memories_4_5;
+  reg  [5:0] RAT_memories_4_6;
+  reg  [5:0] RAT_memories_4_7;
+  reg  [5:0] RAT_memories_4_8;
+  reg  [5:0] RAT_memories_4_9;
+  reg  [5:0] RAT_memories_4_10;
+  reg  [5:0] RAT_memories_4_11;
+  reg  [5:0] RAT_memories_4_12;
+  reg  [5:0] RAT_memories_4_13;
+  reg  [5:0] RAT_memories_4_14;
+  reg  [5:0] RAT_memories_4_15;
+  reg  [5:0] RAT_memories_4_16;
+  reg  [5:0] RAT_memories_4_17;
+  reg  [5:0] RAT_memories_4_18;
+  reg  [5:0] RAT_memories_4_19;
+  reg  [5:0] RAT_memories_4_20;
+  reg  [5:0] RAT_memories_4_21;
+  reg  [5:0] RAT_memories_4_22;
+  reg  [5:0] RAT_memories_4_23;
+  reg  [5:0] RAT_memories_4_24;
+  reg  [5:0] RAT_memories_4_25;
+  reg  [5:0] RAT_memories_4_26;
+  reg  [5:0] RAT_memories_4_27;
+  reg  [5:0] RAT_memories_4_28;
+  reg  [5:0] RAT_memories_4_29;
+  reg  [5:0] RAT_memories_4_30;
+  reg  [5:0] RAT_memories_4_31;
+  reg  [5:0] RAT_memories_5_0;
+  reg  [5:0] RAT_memories_5_1;
+  reg  [5:0] RAT_memories_5_2;
+  reg  [5:0] RAT_memories_5_3;
+  reg  [5:0] RAT_memories_5_4;
+  reg  [5:0] RAT_memories_5_5;
+  reg  [5:0] RAT_memories_5_6;
+  reg  [5:0] RAT_memories_5_7;
+  reg  [5:0] RAT_memories_5_8;
+  reg  [5:0] RAT_memories_5_9;
+  reg  [5:0] RAT_memories_5_10;
+  reg  [5:0] RAT_memories_5_11;
+  reg  [5:0] RAT_memories_5_12;
+  reg  [5:0] RAT_memories_5_13;
+  reg  [5:0] RAT_memories_5_14;
+  reg  [5:0] RAT_memories_5_15;
+  reg  [5:0] RAT_memories_5_16;
+  reg  [5:0] RAT_memories_5_17;
+  reg  [5:0] RAT_memories_5_18;
+  reg  [5:0] RAT_memories_5_19;
+  reg  [5:0] RAT_memories_5_20;
+  reg  [5:0] RAT_memories_5_21;
+  reg  [5:0] RAT_memories_5_22;
+  reg  [5:0] RAT_memories_5_23;
+  reg  [5:0] RAT_memories_5_24;
+  reg  [5:0] RAT_memories_5_25;
+  reg  [5:0] RAT_memories_5_26;
+  reg  [5:0] RAT_memories_5_27;
+  reg  [5:0] RAT_memories_5_28;
+  reg  [5:0] RAT_memories_5_29;
+  reg  [5:0] RAT_memories_5_30;
+  reg  [5:0] RAT_memories_5_31;
+  reg  [5:0] RAT_memories_6_0;
+  reg  [5:0] RAT_memories_6_1;
+  reg  [5:0] RAT_memories_6_2;
+  reg  [5:0] RAT_memories_6_3;
+  reg  [5:0] RAT_memories_6_4;
+  reg  [5:0] RAT_memories_6_5;
+  reg  [5:0] RAT_memories_6_6;
+  reg  [5:0] RAT_memories_6_7;
+  reg  [5:0] RAT_memories_6_8;
+  reg  [5:0] RAT_memories_6_9;
+  reg  [5:0] RAT_memories_6_10;
+  reg  [5:0] RAT_memories_6_11;
+  reg  [5:0] RAT_memories_6_12;
+  reg  [5:0] RAT_memories_6_13;
+  reg  [5:0] RAT_memories_6_14;
+  reg  [5:0] RAT_memories_6_15;
+  reg  [5:0] RAT_memories_6_16;
+  reg  [5:0] RAT_memories_6_17;
+  reg  [5:0] RAT_memories_6_18;
+  reg  [5:0] RAT_memories_6_19;
+  reg  [5:0] RAT_memories_6_20;
+  reg  [5:0] RAT_memories_6_21;
+  reg  [5:0] RAT_memories_6_22;
+  reg  [5:0] RAT_memories_6_23;
+  reg  [5:0] RAT_memories_6_24;
+  reg  [5:0] RAT_memories_6_25;
+  reg  [5:0] RAT_memories_6_26;
+  reg  [5:0] RAT_memories_6_27;
+  reg  [5:0] RAT_memories_6_28;
+  reg  [5:0] RAT_memories_6_29;
+  reg  [5:0] RAT_memories_6_30;
+  reg  [5:0] RAT_memories_6_31;
+  reg  [5:0] RAT_memories_7_0;
+  reg  [5:0] RAT_memories_7_1;
+  reg  [5:0] RAT_memories_7_2;
+  reg  [5:0] RAT_memories_7_3;
+  reg  [5:0] RAT_memories_7_4;
+  reg  [5:0] RAT_memories_7_5;
+  reg  [5:0] RAT_memories_7_6;
+  reg  [5:0] RAT_memories_7_7;
+  reg  [5:0] RAT_memories_7_8;
+  reg  [5:0] RAT_memories_7_9;
+  reg  [5:0] RAT_memories_7_10;
+  reg  [5:0] RAT_memories_7_11;
+  reg  [5:0] RAT_memories_7_12;
+  reg  [5:0] RAT_memories_7_13;
+  reg  [5:0] RAT_memories_7_14;
+  reg  [5:0] RAT_memories_7_15;
+  reg  [5:0] RAT_memories_7_16;
+  reg  [5:0] RAT_memories_7_17;
+  reg  [5:0] RAT_memories_7_18;
+  reg  [5:0] RAT_memories_7_19;
+  reg  [5:0] RAT_memories_7_20;
+  reg  [5:0] RAT_memories_7_21;
+  reg  [5:0] RAT_memories_7_22;
+  reg  [5:0] RAT_memories_7_23;
+  reg  [5:0] RAT_memories_7_24;
+  reg  [5:0] RAT_memories_7_25;
+  reg  [5:0] RAT_memories_7_26;
+  reg  [5:0] RAT_memories_7_27;
+  reg  [5:0] RAT_memories_7_28;
+  reg  [5:0] RAT_memories_7_29;
+  reg  [5:0] RAT_memories_7_30;
+  reg  [5:0] RAT_memories_7_31;
+  reg  [5:0] RAT_memories_8_0;
+  reg  [5:0] RAT_memories_8_1;
+  reg  [5:0] RAT_memories_8_2;
+  reg  [5:0] RAT_memories_8_3;
+  reg  [5:0] RAT_memories_8_4;
+  reg  [5:0] RAT_memories_8_5;
+  reg  [5:0] RAT_memories_8_6;
+  reg  [5:0] RAT_memories_8_7;
+  reg  [5:0] RAT_memories_8_8;
+  reg  [5:0] RAT_memories_8_9;
+  reg  [5:0] RAT_memories_8_10;
+  reg  [5:0] RAT_memories_8_11;
+  reg  [5:0] RAT_memories_8_12;
+  reg  [5:0] RAT_memories_8_13;
+  reg  [5:0] RAT_memories_8_14;
+  reg  [5:0] RAT_memories_8_15;
+  reg  [5:0] RAT_memories_8_16;
+  reg  [5:0] RAT_memories_8_17;
+  reg  [5:0] RAT_memories_8_18;
+  reg  [5:0] RAT_memories_8_19;
+  reg  [5:0] RAT_memories_8_20;
+  reg  [5:0] RAT_memories_8_21;
+  reg  [5:0] RAT_memories_8_22;
+  reg  [5:0] RAT_memories_8_23;
+  reg  [5:0] RAT_memories_8_24;
+  reg  [5:0] RAT_memories_8_25;
+  reg  [5:0] RAT_memories_8_26;
+  reg  [5:0] RAT_memories_8_27;
+  reg  [5:0] RAT_memories_8_28;
+  reg  [5:0] RAT_memories_8_29;
+  reg  [5:0] RAT_memories_8_30;
+  reg  [5:0] RAT_memories_8_31;
+  reg  [5:0] RAT_memories_9_0;
+  reg  [5:0] RAT_memories_9_1;
+  reg  [5:0] RAT_memories_9_2;
+  reg  [5:0] RAT_memories_9_3;
+  reg  [5:0] RAT_memories_9_4;
+  reg  [5:0] RAT_memories_9_5;
+  reg  [5:0] RAT_memories_9_6;
+  reg  [5:0] RAT_memories_9_7;
+  reg  [5:0] RAT_memories_9_8;
+  reg  [5:0] RAT_memories_9_9;
+  reg  [5:0] RAT_memories_9_10;
+  reg  [5:0] RAT_memories_9_11;
+  reg  [5:0] RAT_memories_9_12;
+  reg  [5:0] RAT_memories_9_13;
+  reg  [5:0] RAT_memories_9_14;
+  reg  [5:0] RAT_memories_9_15;
+  reg  [5:0] RAT_memories_9_16;
+  reg  [5:0] RAT_memories_9_17;
+  reg  [5:0] RAT_memories_9_18;
+  reg  [5:0] RAT_memories_9_19;
+  reg  [5:0] RAT_memories_9_20;
+  reg  [5:0] RAT_memories_9_21;
+  reg  [5:0] RAT_memories_9_22;
+  reg  [5:0] RAT_memories_9_23;
+  reg  [5:0] RAT_memories_9_24;
+  reg  [5:0] RAT_memories_9_25;
+  reg  [5:0] RAT_memories_9_26;
+  reg  [5:0] RAT_memories_9_27;
+  reg  [5:0] RAT_memories_9_28;
+  reg  [5:0] RAT_memories_9_29;
+  reg  [5:0] RAT_memories_9_30;
+  reg  [5:0] RAT_memories_9_31;
+  reg  [5:0] RAT_memories_10_0;
+  reg  [5:0] RAT_memories_10_1;
+  reg  [5:0] RAT_memories_10_2;
+  reg  [5:0] RAT_memories_10_3;
+  reg  [5:0] RAT_memories_10_4;
+  reg  [5:0] RAT_memories_10_5;
+  reg  [5:0] RAT_memories_10_6;
+  reg  [5:0] RAT_memories_10_7;
+  reg  [5:0] RAT_memories_10_8;
+  reg  [5:0] RAT_memories_10_9;
+  reg  [5:0] RAT_memories_10_10;
+  reg  [5:0] RAT_memories_10_11;
+  reg  [5:0] RAT_memories_10_12;
+  reg  [5:0] RAT_memories_10_13;
+  reg  [5:0] RAT_memories_10_14;
+  reg  [5:0] RAT_memories_10_15;
+  reg  [5:0] RAT_memories_10_16;
+  reg  [5:0] RAT_memories_10_17;
+  reg  [5:0] RAT_memories_10_18;
+  reg  [5:0] RAT_memories_10_19;
+  reg  [5:0] RAT_memories_10_20;
+  reg  [5:0] RAT_memories_10_21;
+  reg  [5:0] RAT_memories_10_22;
+  reg  [5:0] RAT_memories_10_23;
+  reg  [5:0] RAT_memories_10_24;
+  reg  [5:0] RAT_memories_10_25;
+  reg  [5:0] RAT_memories_10_26;
+  reg  [5:0] RAT_memories_10_27;
+  reg  [5:0] RAT_memories_10_28;
+  reg  [5:0] RAT_memories_10_29;
+  reg  [5:0] RAT_memories_10_30;
+  reg  [5:0] RAT_memories_10_31;
+  reg  [5:0] RAT_memories_11_0;
+  reg  [5:0] RAT_memories_11_1;
+  reg  [5:0] RAT_memories_11_2;
+  reg  [5:0] RAT_memories_11_3;
+  reg  [5:0] RAT_memories_11_4;
+  reg  [5:0] RAT_memories_11_5;
+  reg  [5:0] RAT_memories_11_6;
+  reg  [5:0] RAT_memories_11_7;
+  reg  [5:0] RAT_memories_11_8;
+  reg  [5:0] RAT_memories_11_9;
+  reg  [5:0] RAT_memories_11_10;
+  reg  [5:0] RAT_memories_11_11;
+  reg  [5:0] RAT_memories_11_12;
+  reg  [5:0] RAT_memories_11_13;
+  reg  [5:0] RAT_memories_11_14;
+  reg  [5:0] RAT_memories_11_15;
+  reg  [5:0] RAT_memories_11_16;
+  reg  [5:0] RAT_memories_11_17;
+  reg  [5:0] RAT_memories_11_18;
+  reg  [5:0] RAT_memories_11_19;
+  reg  [5:0] RAT_memories_11_20;
+  reg  [5:0] RAT_memories_11_21;
+  reg  [5:0] RAT_memories_11_22;
+  reg  [5:0] RAT_memories_11_23;
+  reg  [5:0] RAT_memories_11_24;
+  reg  [5:0] RAT_memories_11_25;
+  reg  [5:0] RAT_memories_11_26;
+  reg  [5:0] RAT_memories_11_27;
+  reg  [5:0] RAT_memories_11_28;
+  reg  [5:0] RAT_memories_11_29;
+  reg  [5:0] RAT_memories_11_30;
+  reg  [5:0] RAT_memories_11_31;
+  reg  [5:0] RAT_memories_12_0;
+  reg  [5:0] RAT_memories_12_1;
+  reg  [5:0] RAT_memories_12_2;
+  reg  [5:0] RAT_memories_12_3;
+  reg  [5:0] RAT_memories_12_4;
+  reg  [5:0] RAT_memories_12_5;
+  reg  [5:0] RAT_memories_12_6;
+  reg  [5:0] RAT_memories_12_7;
+  reg  [5:0] RAT_memories_12_8;
+  reg  [5:0] RAT_memories_12_9;
+  reg  [5:0] RAT_memories_12_10;
+  reg  [5:0] RAT_memories_12_11;
+  reg  [5:0] RAT_memories_12_12;
+  reg  [5:0] RAT_memories_12_13;
+  reg  [5:0] RAT_memories_12_14;
+  reg  [5:0] RAT_memories_12_15;
+  reg  [5:0] RAT_memories_12_16;
+  reg  [5:0] RAT_memories_12_17;
+  reg  [5:0] RAT_memories_12_18;
+  reg  [5:0] RAT_memories_12_19;
+  reg  [5:0] RAT_memories_12_20;
+  reg  [5:0] RAT_memories_12_21;
+  reg  [5:0] RAT_memories_12_22;
+  reg  [5:0] RAT_memories_12_23;
+  reg  [5:0] RAT_memories_12_24;
+  reg  [5:0] RAT_memories_12_25;
+  reg  [5:0] RAT_memories_12_26;
+  reg  [5:0] RAT_memories_12_27;
+  reg  [5:0] RAT_memories_12_28;
+  reg  [5:0] RAT_memories_12_29;
+  reg  [5:0] RAT_memories_12_30;
+  reg  [5:0] RAT_memories_12_31;
+  reg  [5:0] RAT_memories_13_0;
+  reg  [5:0] RAT_memories_13_1;
+  reg  [5:0] RAT_memories_13_2;
+  reg  [5:0] RAT_memories_13_3;
+  reg  [5:0] RAT_memories_13_4;
+  reg  [5:0] RAT_memories_13_5;
+  reg  [5:0] RAT_memories_13_6;
+  reg  [5:0] RAT_memories_13_7;
+  reg  [5:0] RAT_memories_13_8;
+  reg  [5:0] RAT_memories_13_9;
+  reg  [5:0] RAT_memories_13_10;
+  reg  [5:0] RAT_memories_13_11;
+  reg  [5:0] RAT_memories_13_12;
+  reg  [5:0] RAT_memories_13_13;
+  reg  [5:0] RAT_memories_13_14;
+  reg  [5:0] RAT_memories_13_15;
+  reg  [5:0] RAT_memories_13_16;
+  reg  [5:0] RAT_memories_13_17;
+  reg  [5:0] RAT_memories_13_18;
+  reg  [5:0] RAT_memories_13_19;
+  reg  [5:0] RAT_memories_13_20;
+  reg  [5:0] RAT_memories_13_21;
+  reg  [5:0] RAT_memories_13_22;
+  reg  [5:0] RAT_memories_13_23;
+  reg  [5:0] RAT_memories_13_24;
+  reg  [5:0] RAT_memories_13_25;
+  reg  [5:0] RAT_memories_13_26;
+  reg  [5:0] RAT_memories_13_27;
+  reg  [5:0] RAT_memories_13_28;
+  reg  [5:0] RAT_memories_13_29;
+  reg  [5:0] RAT_memories_13_30;
+  reg  [5:0] RAT_memories_13_31;
+  reg  [5:0] RAT_memories_14_0;
+  reg  [5:0] RAT_memories_14_1;
+  reg  [5:0] RAT_memories_14_2;
+  reg  [5:0] RAT_memories_14_3;
+  reg  [5:0] RAT_memories_14_4;
+  reg  [5:0] RAT_memories_14_5;
+  reg  [5:0] RAT_memories_14_6;
+  reg  [5:0] RAT_memories_14_7;
+  reg  [5:0] RAT_memories_14_8;
+  reg  [5:0] RAT_memories_14_9;
+  reg  [5:0] RAT_memories_14_10;
+  reg  [5:0] RAT_memories_14_11;
+  reg  [5:0] RAT_memories_14_12;
+  reg  [5:0] RAT_memories_14_13;
+  reg  [5:0] RAT_memories_14_14;
+  reg  [5:0] RAT_memories_14_15;
+  reg  [5:0] RAT_memories_14_16;
+  reg  [5:0] RAT_memories_14_17;
+  reg  [5:0] RAT_memories_14_18;
+  reg  [5:0] RAT_memories_14_19;
+  reg  [5:0] RAT_memories_14_20;
+  reg  [5:0] RAT_memories_14_21;
+  reg  [5:0] RAT_memories_14_22;
+  reg  [5:0] RAT_memories_14_23;
+  reg  [5:0] RAT_memories_14_24;
+  reg  [5:0] RAT_memories_14_25;
+  reg  [5:0] RAT_memories_14_26;
+  reg  [5:0] RAT_memories_14_27;
+  reg  [5:0] RAT_memories_14_28;
+  reg  [5:0] RAT_memories_14_29;
+  reg  [5:0] RAT_memories_14_30;
+  reg  [5:0] RAT_memories_14_31;
+  reg  [5:0] RAT_memories_15_0;
+  reg  [5:0] RAT_memories_15_1;
+  reg  [5:0] RAT_memories_15_2;
+  reg  [5:0] RAT_memories_15_3;
+  reg  [5:0] RAT_memories_15_4;
+  reg  [5:0] RAT_memories_15_5;
+  reg  [5:0] RAT_memories_15_6;
+  reg  [5:0] RAT_memories_15_7;
+  reg  [5:0] RAT_memories_15_8;
+  reg  [5:0] RAT_memories_15_9;
+  reg  [5:0] RAT_memories_15_10;
+  reg  [5:0] RAT_memories_15_11;
+  reg  [5:0] RAT_memories_15_12;
+  reg  [5:0] RAT_memories_15_13;
+  reg  [5:0] RAT_memories_15_14;
+  reg  [5:0] RAT_memories_15_15;
+  reg  [5:0] RAT_memories_15_16;
+  reg  [5:0] RAT_memories_15_17;
+  reg  [5:0] RAT_memories_15_18;
+  reg  [5:0] RAT_memories_15_19;
+  reg  [5:0] RAT_memories_15_20;
+  reg  [5:0] RAT_memories_15_21;
+  reg  [5:0] RAT_memories_15_22;
+  reg  [5:0] RAT_memories_15_23;
+  reg  [5:0] RAT_memories_15_24;
+  reg  [5:0] RAT_memories_15_25;
+  reg  [5:0] RAT_memories_15_26;
+  reg  [5:0] RAT_memories_15_27;
+  reg  [5:0] RAT_memories_15_28;
+  reg  [5:0] RAT_memories_15_29;
+  reg  [5:0] RAT_memories_15_30;
+  reg  [5:0] RAT_memories_15_31;
   reg  [5:0] io_RAT_RD_0_REG;
   reg  [5:0] io_RAT_RS1_0_REG;
   reg  [5:0] io_RAT_RS2_0_REG;
@@ -2751,40 +4801,586 @@ module RAT(
               ? io_free_list_RD_1
               : (&io_instruction_RD_0) ? io_free_list_RD_0 : 6'h0;
   always @(posedge clock) begin
-    automatic logic [31:0][5:0] _GEN_123 =
-      {{RAT_memories_0_31},
-       {RAT_memories_0_30},
-       {RAT_memories_0_29},
-       {RAT_memories_0_28},
-       {RAT_memories_0_27},
-       {RAT_memories_0_26},
-       {RAT_memories_0_25},
-       {RAT_memories_0_24},
-       {RAT_memories_0_23},
-       {RAT_memories_0_22},
-       {RAT_memories_0_21},
-       {RAT_memories_0_20},
-       {RAT_memories_0_19},
-       {RAT_memories_0_18},
-       {RAT_memories_0_17},
-       {RAT_memories_0_16},
-       {RAT_memories_0_15},
-       {RAT_memories_0_14},
-       {RAT_memories_0_13},
-       {RAT_memories_0_12},
-       {RAT_memories_0_11},
-       {RAT_memories_0_10},
-       {RAT_memories_0_9},
-       {RAT_memories_0_8},
-       {RAT_memories_0_7},
-       {RAT_memories_0_6},
-       {RAT_memories_0_5},
-       {RAT_memories_0_4},
-       {RAT_memories_0_3},
-       {RAT_memories_0_2},
-       {RAT_memories_0_1},
+    automatic logic [15:0][5:0] _GEN_123 =
+      {{RAT_memories_15_31},
+       {RAT_memories_14_31},
+       {RAT_memories_13_31},
+       {RAT_memories_12_31},
+       {RAT_memories_11_31},
+       {RAT_memories_10_31},
+       {RAT_memories_9_31},
+       {RAT_memories_8_31},
+       {RAT_memories_7_31},
+       {RAT_memories_6_31},
+       {RAT_memories_5_31},
+       {RAT_memories_4_31},
+       {RAT_memories_3_31},
+       {RAT_memories_2_31},
+       {RAT_memories_1_31},
+       {RAT_memories_0_31}};
+    automatic logic [15:0][5:0] _GEN_124 =
+      {{RAT_memories_15_30},
+       {RAT_memories_14_30},
+       {RAT_memories_13_30},
+       {RAT_memories_12_30},
+       {RAT_memories_11_30},
+       {RAT_memories_10_30},
+       {RAT_memories_9_30},
+       {RAT_memories_8_30},
+       {RAT_memories_7_30},
+       {RAT_memories_6_30},
+       {RAT_memories_5_30},
+       {RAT_memories_4_30},
+       {RAT_memories_3_30},
+       {RAT_memories_2_30},
+       {RAT_memories_1_30},
+       {RAT_memories_0_30}};
+    automatic logic [15:0][5:0] _GEN_125 =
+      {{RAT_memories_15_29},
+       {RAT_memories_14_29},
+       {RAT_memories_13_29},
+       {RAT_memories_12_29},
+       {RAT_memories_11_29},
+       {RAT_memories_10_29},
+       {RAT_memories_9_29},
+       {RAT_memories_8_29},
+       {RAT_memories_7_29},
+       {RAT_memories_6_29},
+       {RAT_memories_5_29},
+       {RAT_memories_4_29},
+       {RAT_memories_3_29},
+       {RAT_memories_2_29},
+       {RAT_memories_1_29},
+       {RAT_memories_0_29}};
+    automatic logic [15:0][5:0] _GEN_126 =
+      {{RAT_memories_15_28},
+       {RAT_memories_14_28},
+       {RAT_memories_13_28},
+       {RAT_memories_12_28},
+       {RAT_memories_11_28},
+       {RAT_memories_10_28},
+       {RAT_memories_9_28},
+       {RAT_memories_8_28},
+       {RAT_memories_7_28},
+       {RAT_memories_6_28},
+       {RAT_memories_5_28},
+       {RAT_memories_4_28},
+       {RAT_memories_3_28},
+       {RAT_memories_2_28},
+       {RAT_memories_1_28},
+       {RAT_memories_0_28}};
+    automatic logic [15:0][5:0] _GEN_127 =
+      {{RAT_memories_15_27},
+       {RAT_memories_14_27},
+       {RAT_memories_13_27},
+       {RAT_memories_12_27},
+       {RAT_memories_11_27},
+       {RAT_memories_10_27},
+       {RAT_memories_9_27},
+       {RAT_memories_8_27},
+       {RAT_memories_7_27},
+       {RAT_memories_6_27},
+       {RAT_memories_5_27},
+       {RAT_memories_4_27},
+       {RAT_memories_3_27},
+       {RAT_memories_2_27},
+       {RAT_memories_1_27},
+       {RAT_memories_0_27}};
+    automatic logic [15:0][5:0] _GEN_128 =
+      {{RAT_memories_15_26},
+       {RAT_memories_14_26},
+       {RAT_memories_13_26},
+       {RAT_memories_12_26},
+       {RAT_memories_11_26},
+       {RAT_memories_10_26},
+       {RAT_memories_9_26},
+       {RAT_memories_8_26},
+       {RAT_memories_7_26},
+       {RAT_memories_6_26},
+       {RAT_memories_5_26},
+       {RAT_memories_4_26},
+       {RAT_memories_3_26},
+       {RAT_memories_2_26},
+       {RAT_memories_1_26},
+       {RAT_memories_0_26}};
+    automatic logic [15:0][5:0] _GEN_129 =
+      {{RAT_memories_15_25},
+       {RAT_memories_14_25},
+       {RAT_memories_13_25},
+       {RAT_memories_12_25},
+       {RAT_memories_11_25},
+       {RAT_memories_10_25},
+       {RAT_memories_9_25},
+       {RAT_memories_8_25},
+       {RAT_memories_7_25},
+       {RAT_memories_6_25},
+       {RAT_memories_5_25},
+       {RAT_memories_4_25},
+       {RAT_memories_3_25},
+       {RAT_memories_2_25},
+       {RAT_memories_1_25},
+       {RAT_memories_0_25}};
+    automatic logic [15:0][5:0] _GEN_130 =
+      {{RAT_memories_15_24},
+       {RAT_memories_14_24},
+       {RAT_memories_13_24},
+       {RAT_memories_12_24},
+       {RAT_memories_11_24},
+       {RAT_memories_10_24},
+       {RAT_memories_9_24},
+       {RAT_memories_8_24},
+       {RAT_memories_7_24},
+       {RAT_memories_6_24},
+       {RAT_memories_5_24},
+       {RAT_memories_4_24},
+       {RAT_memories_3_24},
+       {RAT_memories_2_24},
+       {RAT_memories_1_24},
+       {RAT_memories_0_24}};
+    automatic logic [15:0][5:0] _GEN_131 =
+      {{RAT_memories_15_23},
+       {RAT_memories_14_23},
+       {RAT_memories_13_23},
+       {RAT_memories_12_23},
+       {RAT_memories_11_23},
+       {RAT_memories_10_23},
+       {RAT_memories_9_23},
+       {RAT_memories_8_23},
+       {RAT_memories_7_23},
+       {RAT_memories_6_23},
+       {RAT_memories_5_23},
+       {RAT_memories_4_23},
+       {RAT_memories_3_23},
+       {RAT_memories_2_23},
+       {RAT_memories_1_23},
+       {RAT_memories_0_23}};
+    automatic logic [15:0][5:0] _GEN_132 =
+      {{RAT_memories_15_22},
+       {RAT_memories_14_22},
+       {RAT_memories_13_22},
+       {RAT_memories_12_22},
+       {RAT_memories_11_22},
+       {RAT_memories_10_22},
+       {RAT_memories_9_22},
+       {RAT_memories_8_22},
+       {RAT_memories_7_22},
+       {RAT_memories_6_22},
+       {RAT_memories_5_22},
+       {RAT_memories_4_22},
+       {RAT_memories_3_22},
+       {RAT_memories_2_22},
+       {RAT_memories_1_22},
+       {RAT_memories_0_22}};
+    automatic logic [15:0][5:0] _GEN_133 =
+      {{RAT_memories_15_21},
+       {RAT_memories_14_21},
+       {RAT_memories_13_21},
+       {RAT_memories_12_21},
+       {RAT_memories_11_21},
+       {RAT_memories_10_21},
+       {RAT_memories_9_21},
+       {RAT_memories_8_21},
+       {RAT_memories_7_21},
+       {RAT_memories_6_21},
+       {RAT_memories_5_21},
+       {RAT_memories_4_21},
+       {RAT_memories_3_21},
+       {RAT_memories_2_21},
+       {RAT_memories_1_21},
+       {RAT_memories_0_21}};
+    automatic logic [15:0][5:0] _GEN_134 =
+      {{RAT_memories_15_20},
+       {RAT_memories_14_20},
+       {RAT_memories_13_20},
+       {RAT_memories_12_20},
+       {RAT_memories_11_20},
+       {RAT_memories_10_20},
+       {RAT_memories_9_20},
+       {RAT_memories_8_20},
+       {RAT_memories_7_20},
+       {RAT_memories_6_20},
+       {RAT_memories_5_20},
+       {RAT_memories_4_20},
+       {RAT_memories_3_20},
+       {RAT_memories_2_20},
+       {RAT_memories_1_20},
+       {RAT_memories_0_20}};
+    automatic logic [15:0][5:0] _GEN_135 =
+      {{RAT_memories_15_19},
+       {RAT_memories_14_19},
+       {RAT_memories_13_19},
+       {RAT_memories_12_19},
+       {RAT_memories_11_19},
+       {RAT_memories_10_19},
+       {RAT_memories_9_19},
+       {RAT_memories_8_19},
+       {RAT_memories_7_19},
+       {RAT_memories_6_19},
+       {RAT_memories_5_19},
+       {RAT_memories_4_19},
+       {RAT_memories_3_19},
+       {RAT_memories_2_19},
+       {RAT_memories_1_19},
+       {RAT_memories_0_19}};
+    automatic logic [15:0][5:0] _GEN_136 =
+      {{RAT_memories_15_18},
+       {RAT_memories_14_18},
+       {RAT_memories_13_18},
+       {RAT_memories_12_18},
+       {RAT_memories_11_18},
+       {RAT_memories_10_18},
+       {RAT_memories_9_18},
+       {RAT_memories_8_18},
+       {RAT_memories_7_18},
+       {RAT_memories_6_18},
+       {RAT_memories_5_18},
+       {RAT_memories_4_18},
+       {RAT_memories_3_18},
+       {RAT_memories_2_18},
+       {RAT_memories_1_18},
+       {RAT_memories_0_18}};
+    automatic logic [15:0][5:0] _GEN_137 =
+      {{RAT_memories_15_17},
+       {RAT_memories_14_17},
+       {RAT_memories_13_17},
+       {RAT_memories_12_17},
+       {RAT_memories_11_17},
+       {RAT_memories_10_17},
+       {RAT_memories_9_17},
+       {RAT_memories_8_17},
+       {RAT_memories_7_17},
+       {RAT_memories_6_17},
+       {RAT_memories_5_17},
+       {RAT_memories_4_17},
+       {RAT_memories_3_17},
+       {RAT_memories_2_17},
+       {RAT_memories_1_17},
+       {RAT_memories_0_17}};
+    automatic logic [15:0][5:0] _GEN_138 =
+      {{RAT_memories_15_16},
+       {RAT_memories_14_16},
+       {RAT_memories_13_16},
+       {RAT_memories_12_16},
+       {RAT_memories_11_16},
+       {RAT_memories_10_16},
+       {RAT_memories_9_16},
+       {RAT_memories_8_16},
+       {RAT_memories_7_16},
+       {RAT_memories_6_16},
+       {RAT_memories_5_16},
+       {RAT_memories_4_16},
+       {RAT_memories_3_16},
+       {RAT_memories_2_16},
+       {RAT_memories_1_16},
+       {RAT_memories_0_16}};
+    automatic logic [15:0][5:0] _GEN_139 =
+      {{RAT_memories_15_15},
+       {RAT_memories_14_15},
+       {RAT_memories_13_15},
+       {RAT_memories_12_15},
+       {RAT_memories_11_15},
+       {RAT_memories_10_15},
+       {RAT_memories_9_15},
+       {RAT_memories_8_15},
+       {RAT_memories_7_15},
+       {RAT_memories_6_15},
+       {RAT_memories_5_15},
+       {RAT_memories_4_15},
+       {RAT_memories_3_15},
+       {RAT_memories_2_15},
+       {RAT_memories_1_15},
+       {RAT_memories_0_15}};
+    automatic logic [15:0][5:0] _GEN_140 =
+      {{RAT_memories_15_14},
+       {RAT_memories_14_14},
+       {RAT_memories_13_14},
+       {RAT_memories_12_14},
+       {RAT_memories_11_14},
+       {RAT_memories_10_14},
+       {RAT_memories_9_14},
+       {RAT_memories_8_14},
+       {RAT_memories_7_14},
+       {RAT_memories_6_14},
+       {RAT_memories_5_14},
+       {RAT_memories_4_14},
+       {RAT_memories_3_14},
+       {RAT_memories_2_14},
+       {RAT_memories_1_14},
+       {RAT_memories_0_14}};
+    automatic logic [15:0][5:0] _GEN_141 =
+      {{RAT_memories_15_13},
+       {RAT_memories_14_13},
+       {RAT_memories_13_13},
+       {RAT_memories_12_13},
+       {RAT_memories_11_13},
+       {RAT_memories_10_13},
+       {RAT_memories_9_13},
+       {RAT_memories_8_13},
+       {RAT_memories_7_13},
+       {RAT_memories_6_13},
+       {RAT_memories_5_13},
+       {RAT_memories_4_13},
+       {RAT_memories_3_13},
+       {RAT_memories_2_13},
+       {RAT_memories_1_13},
+       {RAT_memories_0_13}};
+    automatic logic [15:0][5:0] _GEN_142 =
+      {{RAT_memories_15_12},
+       {RAT_memories_14_12},
+       {RAT_memories_13_12},
+       {RAT_memories_12_12},
+       {RAT_memories_11_12},
+       {RAT_memories_10_12},
+       {RAT_memories_9_12},
+       {RAT_memories_8_12},
+       {RAT_memories_7_12},
+       {RAT_memories_6_12},
+       {RAT_memories_5_12},
+       {RAT_memories_4_12},
+       {RAT_memories_3_12},
+       {RAT_memories_2_12},
+       {RAT_memories_1_12},
+       {RAT_memories_0_12}};
+    automatic logic [15:0][5:0] _GEN_143 =
+      {{RAT_memories_15_11},
+       {RAT_memories_14_11},
+       {RAT_memories_13_11},
+       {RAT_memories_12_11},
+       {RAT_memories_11_11},
+       {RAT_memories_10_11},
+       {RAT_memories_9_11},
+       {RAT_memories_8_11},
+       {RAT_memories_7_11},
+       {RAT_memories_6_11},
+       {RAT_memories_5_11},
+       {RAT_memories_4_11},
+       {RAT_memories_3_11},
+       {RAT_memories_2_11},
+       {RAT_memories_1_11},
+       {RAT_memories_0_11}};
+    automatic logic [15:0][5:0] _GEN_144 =
+      {{RAT_memories_15_10},
+       {RAT_memories_14_10},
+       {RAT_memories_13_10},
+       {RAT_memories_12_10},
+       {RAT_memories_11_10},
+       {RAT_memories_10_10},
+       {RAT_memories_9_10},
+       {RAT_memories_8_10},
+       {RAT_memories_7_10},
+       {RAT_memories_6_10},
+       {RAT_memories_5_10},
+       {RAT_memories_4_10},
+       {RAT_memories_3_10},
+       {RAT_memories_2_10},
+       {RAT_memories_1_10},
+       {RAT_memories_0_10}};
+    automatic logic [15:0][5:0] _GEN_145 =
+      {{RAT_memories_15_9},
+       {RAT_memories_14_9},
+       {RAT_memories_13_9},
+       {RAT_memories_12_9},
+       {RAT_memories_11_9},
+       {RAT_memories_10_9},
+       {RAT_memories_9_9},
+       {RAT_memories_8_9},
+       {RAT_memories_7_9},
+       {RAT_memories_6_9},
+       {RAT_memories_5_9},
+       {RAT_memories_4_9},
+       {RAT_memories_3_9},
+       {RAT_memories_2_9},
+       {RAT_memories_1_9},
+       {RAT_memories_0_9}};
+    automatic logic [15:0][5:0] _GEN_146 =
+      {{RAT_memories_15_8},
+       {RAT_memories_14_8},
+       {RAT_memories_13_8},
+       {RAT_memories_12_8},
+       {RAT_memories_11_8},
+       {RAT_memories_10_8},
+       {RAT_memories_9_8},
+       {RAT_memories_8_8},
+       {RAT_memories_7_8},
+       {RAT_memories_6_8},
+       {RAT_memories_5_8},
+       {RAT_memories_4_8},
+       {RAT_memories_3_8},
+       {RAT_memories_2_8},
+       {RAT_memories_1_8},
+       {RAT_memories_0_8}};
+    automatic logic [15:0][5:0] _GEN_147 =
+      {{RAT_memories_15_7},
+       {RAT_memories_14_7},
+       {RAT_memories_13_7},
+       {RAT_memories_12_7},
+       {RAT_memories_11_7},
+       {RAT_memories_10_7},
+       {RAT_memories_9_7},
+       {RAT_memories_8_7},
+       {RAT_memories_7_7},
+       {RAT_memories_6_7},
+       {RAT_memories_5_7},
+       {RAT_memories_4_7},
+       {RAT_memories_3_7},
+       {RAT_memories_2_7},
+       {RAT_memories_1_7},
+       {RAT_memories_0_7}};
+    automatic logic [15:0][5:0] _GEN_148 =
+      {{RAT_memories_15_6},
+       {RAT_memories_14_6},
+       {RAT_memories_13_6},
+       {RAT_memories_12_6},
+       {RAT_memories_11_6},
+       {RAT_memories_10_6},
+       {RAT_memories_9_6},
+       {RAT_memories_8_6},
+       {RAT_memories_7_6},
+       {RAT_memories_6_6},
+       {RAT_memories_5_6},
+       {RAT_memories_4_6},
+       {RAT_memories_3_6},
+       {RAT_memories_2_6},
+       {RAT_memories_1_6},
+       {RAT_memories_0_6}};
+    automatic logic [15:0][5:0] _GEN_149 =
+      {{RAT_memories_15_5},
+       {RAT_memories_14_5},
+       {RAT_memories_13_5},
+       {RAT_memories_12_5},
+       {RAT_memories_11_5},
+       {RAT_memories_10_5},
+       {RAT_memories_9_5},
+       {RAT_memories_8_5},
+       {RAT_memories_7_5},
+       {RAT_memories_6_5},
+       {RAT_memories_5_5},
+       {RAT_memories_4_5},
+       {RAT_memories_3_5},
+       {RAT_memories_2_5},
+       {RAT_memories_1_5},
+       {RAT_memories_0_5}};
+    automatic logic [15:0][5:0] _GEN_150 =
+      {{RAT_memories_15_4},
+       {RAT_memories_14_4},
+       {RAT_memories_13_4},
+       {RAT_memories_12_4},
+       {RAT_memories_11_4},
+       {RAT_memories_10_4},
+       {RAT_memories_9_4},
+       {RAT_memories_8_4},
+       {RAT_memories_7_4},
+       {RAT_memories_6_4},
+       {RAT_memories_5_4},
+       {RAT_memories_4_4},
+       {RAT_memories_3_4},
+       {RAT_memories_2_4},
+       {RAT_memories_1_4},
+       {RAT_memories_0_4}};
+    automatic logic [15:0][5:0] _GEN_151 =
+      {{RAT_memories_15_3},
+       {RAT_memories_14_3},
+       {RAT_memories_13_3},
+       {RAT_memories_12_3},
+       {RAT_memories_11_3},
+       {RAT_memories_10_3},
+       {RAT_memories_9_3},
+       {RAT_memories_8_3},
+       {RAT_memories_7_3},
+       {RAT_memories_6_3},
+       {RAT_memories_5_3},
+       {RAT_memories_4_3},
+       {RAT_memories_3_3},
+       {RAT_memories_2_3},
+       {RAT_memories_1_3},
+       {RAT_memories_0_3}};
+    automatic logic [15:0][5:0] _GEN_152 =
+      {{RAT_memories_15_2},
+       {RAT_memories_14_2},
+       {RAT_memories_13_2},
+       {RAT_memories_12_2},
+       {RAT_memories_11_2},
+       {RAT_memories_10_2},
+       {RAT_memories_9_2},
+       {RAT_memories_8_2},
+       {RAT_memories_7_2},
+       {RAT_memories_6_2},
+       {RAT_memories_5_2},
+       {RAT_memories_4_2},
+       {RAT_memories_3_2},
+       {RAT_memories_2_2},
+       {RAT_memories_1_2},
+       {RAT_memories_0_2}};
+    automatic logic [15:0][5:0] _GEN_153 =
+      {{RAT_memories_15_1},
+       {RAT_memories_14_1},
+       {RAT_memories_13_1},
+       {RAT_memories_12_1},
+       {RAT_memories_11_1},
+       {RAT_memories_10_1},
+       {RAT_memories_9_1},
+       {RAT_memories_8_1},
+       {RAT_memories_7_1},
+       {RAT_memories_6_1},
+       {RAT_memories_5_1},
+       {RAT_memories_4_1},
+       {RAT_memories_3_1},
+       {RAT_memories_2_1},
+       {RAT_memories_1_1},
+       {RAT_memories_0_1}};
+    automatic logic [15:0][5:0] _GEN_154 =
+      {{RAT_memories_15_0},
+       {RAT_memories_14_0},
+       {RAT_memories_13_0},
+       {RAT_memories_12_0},
+       {RAT_memories_11_0},
+       {RAT_memories_10_0},
+       {RAT_memories_9_0},
+       {RAT_memories_8_0},
+       {RAT_memories_7_0},
+       {RAT_memories_6_0},
+       {RAT_memories_5_0},
+       {RAT_memories_4_0},
+       {RAT_memories_3_0},
+       {RAT_memories_2_0},
+       {RAT_memories_1_0},
        {RAT_memories_0_0}};
+    automatic logic [31:0][5:0] _GEN_155 =
+      {{_GEN_123[active_RAT]},
+       {_GEN_124[active_RAT]},
+       {_GEN_125[active_RAT]},
+       {_GEN_126[active_RAT]},
+       {_GEN_127[active_RAT]},
+       {_GEN_128[active_RAT]},
+       {_GEN_129[active_RAT]},
+       {_GEN_130[active_RAT]},
+       {_GEN_131[active_RAT]},
+       {_GEN_132[active_RAT]},
+       {_GEN_133[active_RAT]},
+       {_GEN_134[active_RAT]},
+       {_GEN_135[active_RAT]},
+       {_GEN_136[active_RAT]},
+       {_GEN_137[active_RAT]},
+       {_GEN_138[active_RAT]},
+       {_GEN_139[active_RAT]},
+       {_GEN_140[active_RAT]},
+       {_GEN_141[active_RAT]},
+       {_GEN_142[active_RAT]},
+       {_GEN_143[active_RAT]},
+       {_GEN_144[active_RAT]},
+       {_GEN_145[active_RAT]},
+       {_GEN_146[active_RAT]},
+       {_GEN_147[active_RAT]},
+       {_GEN_148[active_RAT]},
+       {_GEN_149[active_RAT]},
+       {_GEN_150[active_RAT]},
+       {_GEN_151[active_RAT]},
+       {_GEN_152[active_RAT]},
+       {_GEN_153[active_RAT]},
+       {_GEN_154[active_RAT]}};
     if (reset) begin
+      active_RAT <= 4'h0;
+      available_checkpoints <= 4'hF;
       RAT_memories_0_0 <= 6'h0;
       RAT_memories_0_1 <= 6'h0;
       RAT_memories_0_2 <= 6'h0;
@@ -2817,86 +5413,2608 @@ module RAT(
       RAT_memories_0_29 <= 6'h0;
       RAT_memories_0_30 <= 6'h0;
       RAT_memories_0_31 <= 6'h0;
+      RAT_memories_1_0 <= 6'h0;
+      RAT_memories_1_1 <= 6'h0;
+      RAT_memories_1_2 <= 6'h0;
+      RAT_memories_1_3 <= 6'h0;
+      RAT_memories_1_4 <= 6'h0;
+      RAT_memories_1_5 <= 6'h0;
+      RAT_memories_1_6 <= 6'h0;
+      RAT_memories_1_7 <= 6'h0;
+      RAT_memories_1_8 <= 6'h0;
+      RAT_memories_1_9 <= 6'h0;
+      RAT_memories_1_10 <= 6'h0;
+      RAT_memories_1_11 <= 6'h0;
+      RAT_memories_1_12 <= 6'h0;
+      RAT_memories_1_13 <= 6'h0;
+      RAT_memories_1_14 <= 6'h0;
+      RAT_memories_1_15 <= 6'h0;
+      RAT_memories_1_16 <= 6'h0;
+      RAT_memories_1_17 <= 6'h0;
+      RAT_memories_1_18 <= 6'h0;
+      RAT_memories_1_19 <= 6'h0;
+      RAT_memories_1_20 <= 6'h0;
+      RAT_memories_1_21 <= 6'h0;
+      RAT_memories_1_22 <= 6'h0;
+      RAT_memories_1_23 <= 6'h0;
+      RAT_memories_1_24 <= 6'h0;
+      RAT_memories_1_25 <= 6'h0;
+      RAT_memories_1_26 <= 6'h0;
+      RAT_memories_1_27 <= 6'h0;
+      RAT_memories_1_28 <= 6'h0;
+      RAT_memories_1_29 <= 6'h0;
+      RAT_memories_1_30 <= 6'h0;
+      RAT_memories_1_31 <= 6'h0;
+      RAT_memories_2_0 <= 6'h0;
+      RAT_memories_2_1 <= 6'h0;
+      RAT_memories_2_2 <= 6'h0;
+      RAT_memories_2_3 <= 6'h0;
+      RAT_memories_2_4 <= 6'h0;
+      RAT_memories_2_5 <= 6'h0;
+      RAT_memories_2_6 <= 6'h0;
+      RAT_memories_2_7 <= 6'h0;
+      RAT_memories_2_8 <= 6'h0;
+      RAT_memories_2_9 <= 6'h0;
+      RAT_memories_2_10 <= 6'h0;
+      RAT_memories_2_11 <= 6'h0;
+      RAT_memories_2_12 <= 6'h0;
+      RAT_memories_2_13 <= 6'h0;
+      RAT_memories_2_14 <= 6'h0;
+      RAT_memories_2_15 <= 6'h0;
+      RAT_memories_2_16 <= 6'h0;
+      RAT_memories_2_17 <= 6'h0;
+      RAT_memories_2_18 <= 6'h0;
+      RAT_memories_2_19 <= 6'h0;
+      RAT_memories_2_20 <= 6'h0;
+      RAT_memories_2_21 <= 6'h0;
+      RAT_memories_2_22 <= 6'h0;
+      RAT_memories_2_23 <= 6'h0;
+      RAT_memories_2_24 <= 6'h0;
+      RAT_memories_2_25 <= 6'h0;
+      RAT_memories_2_26 <= 6'h0;
+      RAT_memories_2_27 <= 6'h0;
+      RAT_memories_2_28 <= 6'h0;
+      RAT_memories_2_29 <= 6'h0;
+      RAT_memories_2_30 <= 6'h0;
+      RAT_memories_2_31 <= 6'h0;
+      RAT_memories_3_0 <= 6'h0;
+      RAT_memories_3_1 <= 6'h0;
+      RAT_memories_3_2 <= 6'h0;
+      RAT_memories_3_3 <= 6'h0;
+      RAT_memories_3_4 <= 6'h0;
+      RAT_memories_3_5 <= 6'h0;
+      RAT_memories_3_6 <= 6'h0;
+      RAT_memories_3_7 <= 6'h0;
+      RAT_memories_3_8 <= 6'h0;
+      RAT_memories_3_9 <= 6'h0;
+      RAT_memories_3_10 <= 6'h0;
+      RAT_memories_3_11 <= 6'h0;
+      RAT_memories_3_12 <= 6'h0;
+      RAT_memories_3_13 <= 6'h0;
+      RAT_memories_3_14 <= 6'h0;
+      RAT_memories_3_15 <= 6'h0;
+      RAT_memories_3_16 <= 6'h0;
+      RAT_memories_3_17 <= 6'h0;
+      RAT_memories_3_18 <= 6'h0;
+      RAT_memories_3_19 <= 6'h0;
+      RAT_memories_3_20 <= 6'h0;
+      RAT_memories_3_21 <= 6'h0;
+      RAT_memories_3_22 <= 6'h0;
+      RAT_memories_3_23 <= 6'h0;
+      RAT_memories_3_24 <= 6'h0;
+      RAT_memories_3_25 <= 6'h0;
+      RAT_memories_3_26 <= 6'h0;
+      RAT_memories_3_27 <= 6'h0;
+      RAT_memories_3_28 <= 6'h0;
+      RAT_memories_3_29 <= 6'h0;
+      RAT_memories_3_30 <= 6'h0;
+      RAT_memories_3_31 <= 6'h0;
+      RAT_memories_4_0 <= 6'h0;
+      RAT_memories_4_1 <= 6'h0;
+      RAT_memories_4_2 <= 6'h0;
+      RAT_memories_4_3 <= 6'h0;
+      RAT_memories_4_4 <= 6'h0;
+      RAT_memories_4_5 <= 6'h0;
+      RAT_memories_4_6 <= 6'h0;
+      RAT_memories_4_7 <= 6'h0;
+      RAT_memories_4_8 <= 6'h0;
+      RAT_memories_4_9 <= 6'h0;
+      RAT_memories_4_10 <= 6'h0;
+      RAT_memories_4_11 <= 6'h0;
+      RAT_memories_4_12 <= 6'h0;
+      RAT_memories_4_13 <= 6'h0;
+      RAT_memories_4_14 <= 6'h0;
+      RAT_memories_4_15 <= 6'h0;
+      RAT_memories_4_16 <= 6'h0;
+      RAT_memories_4_17 <= 6'h0;
+      RAT_memories_4_18 <= 6'h0;
+      RAT_memories_4_19 <= 6'h0;
+      RAT_memories_4_20 <= 6'h0;
+      RAT_memories_4_21 <= 6'h0;
+      RAT_memories_4_22 <= 6'h0;
+      RAT_memories_4_23 <= 6'h0;
+      RAT_memories_4_24 <= 6'h0;
+      RAT_memories_4_25 <= 6'h0;
+      RAT_memories_4_26 <= 6'h0;
+      RAT_memories_4_27 <= 6'h0;
+      RAT_memories_4_28 <= 6'h0;
+      RAT_memories_4_29 <= 6'h0;
+      RAT_memories_4_30 <= 6'h0;
+      RAT_memories_4_31 <= 6'h0;
+      RAT_memories_5_0 <= 6'h0;
+      RAT_memories_5_1 <= 6'h0;
+      RAT_memories_5_2 <= 6'h0;
+      RAT_memories_5_3 <= 6'h0;
+      RAT_memories_5_4 <= 6'h0;
+      RAT_memories_5_5 <= 6'h0;
+      RAT_memories_5_6 <= 6'h0;
+      RAT_memories_5_7 <= 6'h0;
+      RAT_memories_5_8 <= 6'h0;
+      RAT_memories_5_9 <= 6'h0;
+      RAT_memories_5_10 <= 6'h0;
+      RAT_memories_5_11 <= 6'h0;
+      RAT_memories_5_12 <= 6'h0;
+      RAT_memories_5_13 <= 6'h0;
+      RAT_memories_5_14 <= 6'h0;
+      RAT_memories_5_15 <= 6'h0;
+      RAT_memories_5_16 <= 6'h0;
+      RAT_memories_5_17 <= 6'h0;
+      RAT_memories_5_18 <= 6'h0;
+      RAT_memories_5_19 <= 6'h0;
+      RAT_memories_5_20 <= 6'h0;
+      RAT_memories_5_21 <= 6'h0;
+      RAT_memories_5_22 <= 6'h0;
+      RAT_memories_5_23 <= 6'h0;
+      RAT_memories_5_24 <= 6'h0;
+      RAT_memories_5_25 <= 6'h0;
+      RAT_memories_5_26 <= 6'h0;
+      RAT_memories_5_27 <= 6'h0;
+      RAT_memories_5_28 <= 6'h0;
+      RAT_memories_5_29 <= 6'h0;
+      RAT_memories_5_30 <= 6'h0;
+      RAT_memories_5_31 <= 6'h0;
+      RAT_memories_6_0 <= 6'h0;
+      RAT_memories_6_1 <= 6'h0;
+      RAT_memories_6_2 <= 6'h0;
+      RAT_memories_6_3 <= 6'h0;
+      RAT_memories_6_4 <= 6'h0;
+      RAT_memories_6_5 <= 6'h0;
+      RAT_memories_6_6 <= 6'h0;
+      RAT_memories_6_7 <= 6'h0;
+      RAT_memories_6_8 <= 6'h0;
+      RAT_memories_6_9 <= 6'h0;
+      RAT_memories_6_10 <= 6'h0;
+      RAT_memories_6_11 <= 6'h0;
+      RAT_memories_6_12 <= 6'h0;
+      RAT_memories_6_13 <= 6'h0;
+      RAT_memories_6_14 <= 6'h0;
+      RAT_memories_6_15 <= 6'h0;
+      RAT_memories_6_16 <= 6'h0;
+      RAT_memories_6_17 <= 6'h0;
+      RAT_memories_6_18 <= 6'h0;
+      RAT_memories_6_19 <= 6'h0;
+      RAT_memories_6_20 <= 6'h0;
+      RAT_memories_6_21 <= 6'h0;
+      RAT_memories_6_22 <= 6'h0;
+      RAT_memories_6_23 <= 6'h0;
+      RAT_memories_6_24 <= 6'h0;
+      RAT_memories_6_25 <= 6'h0;
+      RAT_memories_6_26 <= 6'h0;
+      RAT_memories_6_27 <= 6'h0;
+      RAT_memories_6_28 <= 6'h0;
+      RAT_memories_6_29 <= 6'h0;
+      RAT_memories_6_30 <= 6'h0;
+      RAT_memories_6_31 <= 6'h0;
+      RAT_memories_7_0 <= 6'h0;
+      RAT_memories_7_1 <= 6'h0;
+      RAT_memories_7_2 <= 6'h0;
+      RAT_memories_7_3 <= 6'h0;
+      RAT_memories_7_4 <= 6'h0;
+      RAT_memories_7_5 <= 6'h0;
+      RAT_memories_7_6 <= 6'h0;
+      RAT_memories_7_7 <= 6'h0;
+      RAT_memories_7_8 <= 6'h0;
+      RAT_memories_7_9 <= 6'h0;
+      RAT_memories_7_10 <= 6'h0;
+      RAT_memories_7_11 <= 6'h0;
+      RAT_memories_7_12 <= 6'h0;
+      RAT_memories_7_13 <= 6'h0;
+      RAT_memories_7_14 <= 6'h0;
+      RAT_memories_7_15 <= 6'h0;
+      RAT_memories_7_16 <= 6'h0;
+      RAT_memories_7_17 <= 6'h0;
+      RAT_memories_7_18 <= 6'h0;
+      RAT_memories_7_19 <= 6'h0;
+      RAT_memories_7_20 <= 6'h0;
+      RAT_memories_7_21 <= 6'h0;
+      RAT_memories_7_22 <= 6'h0;
+      RAT_memories_7_23 <= 6'h0;
+      RAT_memories_7_24 <= 6'h0;
+      RAT_memories_7_25 <= 6'h0;
+      RAT_memories_7_26 <= 6'h0;
+      RAT_memories_7_27 <= 6'h0;
+      RAT_memories_7_28 <= 6'h0;
+      RAT_memories_7_29 <= 6'h0;
+      RAT_memories_7_30 <= 6'h0;
+      RAT_memories_7_31 <= 6'h0;
+      RAT_memories_8_0 <= 6'h0;
+      RAT_memories_8_1 <= 6'h0;
+      RAT_memories_8_2 <= 6'h0;
+      RAT_memories_8_3 <= 6'h0;
+      RAT_memories_8_4 <= 6'h0;
+      RAT_memories_8_5 <= 6'h0;
+      RAT_memories_8_6 <= 6'h0;
+      RAT_memories_8_7 <= 6'h0;
+      RAT_memories_8_8 <= 6'h0;
+      RAT_memories_8_9 <= 6'h0;
+      RAT_memories_8_10 <= 6'h0;
+      RAT_memories_8_11 <= 6'h0;
+      RAT_memories_8_12 <= 6'h0;
+      RAT_memories_8_13 <= 6'h0;
+      RAT_memories_8_14 <= 6'h0;
+      RAT_memories_8_15 <= 6'h0;
+      RAT_memories_8_16 <= 6'h0;
+      RAT_memories_8_17 <= 6'h0;
+      RAT_memories_8_18 <= 6'h0;
+      RAT_memories_8_19 <= 6'h0;
+      RAT_memories_8_20 <= 6'h0;
+      RAT_memories_8_21 <= 6'h0;
+      RAT_memories_8_22 <= 6'h0;
+      RAT_memories_8_23 <= 6'h0;
+      RAT_memories_8_24 <= 6'h0;
+      RAT_memories_8_25 <= 6'h0;
+      RAT_memories_8_26 <= 6'h0;
+      RAT_memories_8_27 <= 6'h0;
+      RAT_memories_8_28 <= 6'h0;
+      RAT_memories_8_29 <= 6'h0;
+      RAT_memories_8_30 <= 6'h0;
+      RAT_memories_8_31 <= 6'h0;
+      RAT_memories_9_0 <= 6'h0;
+      RAT_memories_9_1 <= 6'h0;
+      RAT_memories_9_2 <= 6'h0;
+      RAT_memories_9_3 <= 6'h0;
+      RAT_memories_9_4 <= 6'h0;
+      RAT_memories_9_5 <= 6'h0;
+      RAT_memories_9_6 <= 6'h0;
+      RAT_memories_9_7 <= 6'h0;
+      RAT_memories_9_8 <= 6'h0;
+      RAT_memories_9_9 <= 6'h0;
+      RAT_memories_9_10 <= 6'h0;
+      RAT_memories_9_11 <= 6'h0;
+      RAT_memories_9_12 <= 6'h0;
+      RAT_memories_9_13 <= 6'h0;
+      RAT_memories_9_14 <= 6'h0;
+      RAT_memories_9_15 <= 6'h0;
+      RAT_memories_9_16 <= 6'h0;
+      RAT_memories_9_17 <= 6'h0;
+      RAT_memories_9_18 <= 6'h0;
+      RAT_memories_9_19 <= 6'h0;
+      RAT_memories_9_20 <= 6'h0;
+      RAT_memories_9_21 <= 6'h0;
+      RAT_memories_9_22 <= 6'h0;
+      RAT_memories_9_23 <= 6'h0;
+      RAT_memories_9_24 <= 6'h0;
+      RAT_memories_9_25 <= 6'h0;
+      RAT_memories_9_26 <= 6'h0;
+      RAT_memories_9_27 <= 6'h0;
+      RAT_memories_9_28 <= 6'h0;
+      RAT_memories_9_29 <= 6'h0;
+      RAT_memories_9_30 <= 6'h0;
+      RAT_memories_9_31 <= 6'h0;
+      RAT_memories_10_0 <= 6'h0;
+      RAT_memories_10_1 <= 6'h0;
+      RAT_memories_10_2 <= 6'h0;
+      RAT_memories_10_3 <= 6'h0;
+      RAT_memories_10_4 <= 6'h0;
+      RAT_memories_10_5 <= 6'h0;
+      RAT_memories_10_6 <= 6'h0;
+      RAT_memories_10_7 <= 6'h0;
+      RAT_memories_10_8 <= 6'h0;
+      RAT_memories_10_9 <= 6'h0;
+      RAT_memories_10_10 <= 6'h0;
+      RAT_memories_10_11 <= 6'h0;
+      RAT_memories_10_12 <= 6'h0;
+      RAT_memories_10_13 <= 6'h0;
+      RAT_memories_10_14 <= 6'h0;
+      RAT_memories_10_15 <= 6'h0;
+      RAT_memories_10_16 <= 6'h0;
+      RAT_memories_10_17 <= 6'h0;
+      RAT_memories_10_18 <= 6'h0;
+      RAT_memories_10_19 <= 6'h0;
+      RAT_memories_10_20 <= 6'h0;
+      RAT_memories_10_21 <= 6'h0;
+      RAT_memories_10_22 <= 6'h0;
+      RAT_memories_10_23 <= 6'h0;
+      RAT_memories_10_24 <= 6'h0;
+      RAT_memories_10_25 <= 6'h0;
+      RAT_memories_10_26 <= 6'h0;
+      RAT_memories_10_27 <= 6'h0;
+      RAT_memories_10_28 <= 6'h0;
+      RAT_memories_10_29 <= 6'h0;
+      RAT_memories_10_30 <= 6'h0;
+      RAT_memories_10_31 <= 6'h0;
+      RAT_memories_11_0 <= 6'h0;
+      RAT_memories_11_1 <= 6'h0;
+      RAT_memories_11_2 <= 6'h0;
+      RAT_memories_11_3 <= 6'h0;
+      RAT_memories_11_4 <= 6'h0;
+      RAT_memories_11_5 <= 6'h0;
+      RAT_memories_11_6 <= 6'h0;
+      RAT_memories_11_7 <= 6'h0;
+      RAT_memories_11_8 <= 6'h0;
+      RAT_memories_11_9 <= 6'h0;
+      RAT_memories_11_10 <= 6'h0;
+      RAT_memories_11_11 <= 6'h0;
+      RAT_memories_11_12 <= 6'h0;
+      RAT_memories_11_13 <= 6'h0;
+      RAT_memories_11_14 <= 6'h0;
+      RAT_memories_11_15 <= 6'h0;
+      RAT_memories_11_16 <= 6'h0;
+      RAT_memories_11_17 <= 6'h0;
+      RAT_memories_11_18 <= 6'h0;
+      RAT_memories_11_19 <= 6'h0;
+      RAT_memories_11_20 <= 6'h0;
+      RAT_memories_11_21 <= 6'h0;
+      RAT_memories_11_22 <= 6'h0;
+      RAT_memories_11_23 <= 6'h0;
+      RAT_memories_11_24 <= 6'h0;
+      RAT_memories_11_25 <= 6'h0;
+      RAT_memories_11_26 <= 6'h0;
+      RAT_memories_11_27 <= 6'h0;
+      RAT_memories_11_28 <= 6'h0;
+      RAT_memories_11_29 <= 6'h0;
+      RAT_memories_11_30 <= 6'h0;
+      RAT_memories_11_31 <= 6'h0;
+      RAT_memories_12_0 <= 6'h0;
+      RAT_memories_12_1 <= 6'h0;
+      RAT_memories_12_2 <= 6'h0;
+      RAT_memories_12_3 <= 6'h0;
+      RAT_memories_12_4 <= 6'h0;
+      RAT_memories_12_5 <= 6'h0;
+      RAT_memories_12_6 <= 6'h0;
+      RAT_memories_12_7 <= 6'h0;
+      RAT_memories_12_8 <= 6'h0;
+      RAT_memories_12_9 <= 6'h0;
+      RAT_memories_12_10 <= 6'h0;
+      RAT_memories_12_11 <= 6'h0;
+      RAT_memories_12_12 <= 6'h0;
+      RAT_memories_12_13 <= 6'h0;
+      RAT_memories_12_14 <= 6'h0;
+      RAT_memories_12_15 <= 6'h0;
+      RAT_memories_12_16 <= 6'h0;
+      RAT_memories_12_17 <= 6'h0;
+      RAT_memories_12_18 <= 6'h0;
+      RAT_memories_12_19 <= 6'h0;
+      RAT_memories_12_20 <= 6'h0;
+      RAT_memories_12_21 <= 6'h0;
+      RAT_memories_12_22 <= 6'h0;
+      RAT_memories_12_23 <= 6'h0;
+      RAT_memories_12_24 <= 6'h0;
+      RAT_memories_12_25 <= 6'h0;
+      RAT_memories_12_26 <= 6'h0;
+      RAT_memories_12_27 <= 6'h0;
+      RAT_memories_12_28 <= 6'h0;
+      RAT_memories_12_29 <= 6'h0;
+      RAT_memories_12_30 <= 6'h0;
+      RAT_memories_12_31 <= 6'h0;
+      RAT_memories_13_0 <= 6'h0;
+      RAT_memories_13_1 <= 6'h0;
+      RAT_memories_13_2 <= 6'h0;
+      RAT_memories_13_3 <= 6'h0;
+      RAT_memories_13_4 <= 6'h0;
+      RAT_memories_13_5 <= 6'h0;
+      RAT_memories_13_6 <= 6'h0;
+      RAT_memories_13_7 <= 6'h0;
+      RAT_memories_13_8 <= 6'h0;
+      RAT_memories_13_9 <= 6'h0;
+      RAT_memories_13_10 <= 6'h0;
+      RAT_memories_13_11 <= 6'h0;
+      RAT_memories_13_12 <= 6'h0;
+      RAT_memories_13_13 <= 6'h0;
+      RAT_memories_13_14 <= 6'h0;
+      RAT_memories_13_15 <= 6'h0;
+      RAT_memories_13_16 <= 6'h0;
+      RAT_memories_13_17 <= 6'h0;
+      RAT_memories_13_18 <= 6'h0;
+      RAT_memories_13_19 <= 6'h0;
+      RAT_memories_13_20 <= 6'h0;
+      RAT_memories_13_21 <= 6'h0;
+      RAT_memories_13_22 <= 6'h0;
+      RAT_memories_13_23 <= 6'h0;
+      RAT_memories_13_24 <= 6'h0;
+      RAT_memories_13_25 <= 6'h0;
+      RAT_memories_13_26 <= 6'h0;
+      RAT_memories_13_27 <= 6'h0;
+      RAT_memories_13_28 <= 6'h0;
+      RAT_memories_13_29 <= 6'h0;
+      RAT_memories_13_30 <= 6'h0;
+      RAT_memories_13_31 <= 6'h0;
+      RAT_memories_14_0 <= 6'h0;
+      RAT_memories_14_1 <= 6'h0;
+      RAT_memories_14_2 <= 6'h0;
+      RAT_memories_14_3 <= 6'h0;
+      RAT_memories_14_4 <= 6'h0;
+      RAT_memories_14_5 <= 6'h0;
+      RAT_memories_14_6 <= 6'h0;
+      RAT_memories_14_7 <= 6'h0;
+      RAT_memories_14_8 <= 6'h0;
+      RAT_memories_14_9 <= 6'h0;
+      RAT_memories_14_10 <= 6'h0;
+      RAT_memories_14_11 <= 6'h0;
+      RAT_memories_14_12 <= 6'h0;
+      RAT_memories_14_13 <= 6'h0;
+      RAT_memories_14_14 <= 6'h0;
+      RAT_memories_14_15 <= 6'h0;
+      RAT_memories_14_16 <= 6'h0;
+      RAT_memories_14_17 <= 6'h0;
+      RAT_memories_14_18 <= 6'h0;
+      RAT_memories_14_19 <= 6'h0;
+      RAT_memories_14_20 <= 6'h0;
+      RAT_memories_14_21 <= 6'h0;
+      RAT_memories_14_22 <= 6'h0;
+      RAT_memories_14_23 <= 6'h0;
+      RAT_memories_14_24 <= 6'h0;
+      RAT_memories_14_25 <= 6'h0;
+      RAT_memories_14_26 <= 6'h0;
+      RAT_memories_14_27 <= 6'h0;
+      RAT_memories_14_28 <= 6'h0;
+      RAT_memories_14_29 <= 6'h0;
+      RAT_memories_14_30 <= 6'h0;
+      RAT_memories_14_31 <= 6'h0;
+      RAT_memories_15_0 <= 6'h0;
+      RAT_memories_15_1 <= 6'h0;
+      RAT_memories_15_2 <= 6'h0;
+      RAT_memories_15_3 <= 6'h0;
+      RAT_memories_15_4 <= 6'h0;
+      RAT_memories_15_5 <= 6'h0;
+      RAT_memories_15_6 <= 6'h0;
+      RAT_memories_15_7 <= 6'h0;
+      RAT_memories_15_8 <= 6'h0;
+      RAT_memories_15_9 <= 6'h0;
+      RAT_memories_15_10 <= 6'h0;
+      RAT_memories_15_11 <= 6'h0;
+      RAT_memories_15_12 <= 6'h0;
+      RAT_memories_15_13 <= 6'h0;
+      RAT_memories_15_14 <= 6'h0;
+      RAT_memories_15_15 <= 6'h0;
+      RAT_memories_15_16 <= 6'h0;
+      RAT_memories_15_17 <= 6'h0;
+      RAT_memories_15_18 <= 6'h0;
+      RAT_memories_15_19 <= 6'h0;
+      RAT_memories_15_20 <= 6'h0;
+      RAT_memories_15_21 <= 6'h0;
+      RAT_memories_15_22 <= 6'h0;
+      RAT_memories_15_23 <= 6'h0;
+      RAT_memories_15_24 <= 6'h0;
+      RAT_memories_15_25 <= 6'h0;
+      RAT_memories_15_26 <= 6'h0;
+      RAT_memories_15_27 <= 6'h0;
+      RAT_memories_15_28 <= 6'h0;
+      RAT_memories_15_29 <= 6'h0;
+      RAT_memories_15_30 <= 6'h0;
+      RAT_memories_15_31 <= 6'h0;
     end
     else begin
-      if (is_being_written_vec_0)
+      automatic logic       _GEN_156 = active_RAT == 4'h0;
+      automatic logic [3:0] _GEN_157 = active_RAT + 4'h1;
+      automatic logic       _GEN_158;
+      automatic logic       _GEN_159 = active_RAT == 4'h1;
+      automatic logic       _GEN_160;
+      automatic logic       _GEN_161 = active_RAT == 4'h2;
+      automatic logic       _GEN_162;
+      automatic logic       _GEN_163 = active_RAT == 4'h3;
+      automatic logic       _GEN_164;
+      automatic logic       _GEN_165 = active_RAT == 4'h4;
+      automatic logic       _GEN_166;
+      automatic logic       _GEN_167 = active_RAT == 4'h5;
+      automatic logic       _GEN_168;
+      automatic logic       _GEN_169 = active_RAT == 4'h6;
+      automatic logic       _GEN_170;
+      automatic logic       _GEN_171 = active_RAT == 4'h7;
+      automatic logic       _GEN_172;
+      automatic logic       _GEN_173 = active_RAT == 4'h8;
+      automatic logic       _GEN_174;
+      automatic logic       _GEN_175 = active_RAT == 4'h9;
+      automatic logic       _GEN_176;
+      automatic logic       _GEN_177 = active_RAT == 4'hA;
+      automatic logic       _GEN_178;
+      automatic logic       _GEN_179 = active_RAT == 4'hB;
+      automatic logic       _GEN_180;
+      automatic logic       _GEN_181 = active_RAT == 4'hC;
+      automatic logic       _GEN_182;
+      automatic logic       _GEN_183 = active_RAT == 4'hD;
+      automatic logic       _GEN_184;
+      automatic logic       _GEN_185 = active_RAT == 4'hE;
+      automatic logic       _GEN_186;
+      automatic logic       _GEN_187;
+      _GEN_158 = _GEN_157 == 4'h0 & io_create_checkpoint;
+      _GEN_160 = _GEN_157 == 4'h1 & io_create_checkpoint;
+      _GEN_162 = _GEN_157 == 4'h2 & io_create_checkpoint;
+      _GEN_164 = _GEN_157 == 4'h3 & io_create_checkpoint;
+      _GEN_166 = _GEN_157 == 4'h4 & io_create_checkpoint;
+      _GEN_168 = _GEN_157 == 4'h5 & io_create_checkpoint;
+      _GEN_170 = _GEN_157 == 4'h6 & io_create_checkpoint;
+      _GEN_172 = _GEN_157 == 4'h7 & io_create_checkpoint;
+      _GEN_174 = _GEN_157 == 4'h8 & io_create_checkpoint;
+      _GEN_176 = _GEN_157 == 4'h9 & io_create_checkpoint;
+      _GEN_178 = _GEN_157 == 4'hA & io_create_checkpoint;
+      _GEN_180 = _GEN_157 == 4'hB & io_create_checkpoint;
+      _GEN_182 = _GEN_157 == 4'hC & io_create_checkpoint;
+      _GEN_184 = _GEN_157 == 4'hD & io_create_checkpoint;
+      _GEN_186 = _GEN_157 == 4'hE & io_create_checkpoint;
+      _GEN_187 = (&_GEN_157) & io_create_checkpoint;
+      if (io_restore_checkpoint)
+        active_RAT <= io_restore_checkpoint_value;
+      else if (io_create_checkpoint)
+        active_RAT <= active_RAT + 4'h1;
+      if (io_free_checkpoint)
+        available_checkpoints <= available_checkpoints + 4'h1;
+      else if (io_create_checkpoint)
+        available_checkpoints <= available_checkpoints - 4'h1;
+      if (_GEN_156 & is_being_written_vec_0)
         RAT_memories_0_0 <= wr_data_in_0;
-      if (is_being_written_vec_1)
+      else if (_GEN_158)
+        RAT_memories_0_0 <= RAT_memories_4_0;
+      if (_GEN_156 & is_being_written_vec_1)
         RAT_memories_0_1 <= wr_data_in_1;
-      if (is_being_written_vec_2)
+      else if (_GEN_158)
+        RAT_memories_0_1 <= RAT_memories_4_1;
+      if (_GEN_156 & is_being_written_vec_2)
         RAT_memories_0_2 <= wr_data_in_2;
-      if (is_being_written_vec_3)
+      else if (_GEN_158)
+        RAT_memories_0_2 <= RAT_memories_4_2;
+      if (_GEN_156 & is_being_written_vec_3)
         RAT_memories_0_3 <= wr_data_in_3;
-      if (is_being_written_vec_4)
+      else if (_GEN_158)
+        RAT_memories_0_3 <= RAT_memories_4_3;
+      if (_GEN_156 & is_being_written_vec_4)
         RAT_memories_0_4 <= wr_data_in_4;
-      if (is_being_written_vec_5)
+      else if (_GEN_158)
+        RAT_memories_0_4 <= RAT_memories_4_4;
+      if (_GEN_156 & is_being_written_vec_5)
         RAT_memories_0_5 <= wr_data_in_5;
-      if (is_being_written_vec_6)
+      else if (_GEN_158)
+        RAT_memories_0_5 <= RAT_memories_4_5;
+      if (_GEN_156 & is_being_written_vec_6)
         RAT_memories_0_6 <= wr_data_in_6;
-      if (is_being_written_vec_7)
+      else if (_GEN_158)
+        RAT_memories_0_6 <= RAT_memories_4_6;
+      if (_GEN_156 & is_being_written_vec_7)
         RAT_memories_0_7 <= wr_data_in_7;
-      if (is_being_written_vec_8)
+      else if (_GEN_158)
+        RAT_memories_0_7 <= RAT_memories_4_7;
+      if (_GEN_156 & is_being_written_vec_8)
         RAT_memories_0_8 <= wr_data_in_8;
-      if (is_being_written_vec_9)
+      else if (_GEN_158)
+        RAT_memories_0_8 <= RAT_memories_4_8;
+      if (_GEN_156 & is_being_written_vec_9)
         RAT_memories_0_9 <= wr_data_in_9;
-      if (is_being_written_vec_10)
+      else if (_GEN_158)
+        RAT_memories_0_9 <= RAT_memories_4_9;
+      if (_GEN_156 & is_being_written_vec_10)
         RAT_memories_0_10 <= wr_data_in_10;
-      if (is_being_written_vec_11)
+      else if (_GEN_158)
+        RAT_memories_0_10 <= RAT_memories_4_10;
+      if (_GEN_156 & is_being_written_vec_11)
         RAT_memories_0_11 <= wr_data_in_11;
-      if (is_being_written_vec_12)
+      else if (_GEN_158)
+        RAT_memories_0_11 <= RAT_memories_4_11;
+      if (_GEN_156 & is_being_written_vec_12)
         RAT_memories_0_12 <= wr_data_in_12;
-      if (is_being_written_vec_13)
+      else if (_GEN_158)
+        RAT_memories_0_12 <= RAT_memories_4_12;
+      if (_GEN_156 & is_being_written_vec_13)
         RAT_memories_0_13 <= wr_data_in_13;
-      if (is_being_written_vec_14)
+      else if (_GEN_158)
+        RAT_memories_0_13 <= RAT_memories_4_13;
+      if (_GEN_156 & is_being_written_vec_14)
         RAT_memories_0_14 <= wr_data_in_14;
-      if (is_being_written_vec_15)
+      else if (_GEN_158)
+        RAT_memories_0_14 <= RAT_memories_4_14;
+      if (_GEN_156 & is_being_written_vec_15)
         RAT_memories_0_15 <= wr_data_in_15;
-      if (is_being_written_vec_16)
+      else if (_GEN_158)
+        RAT_memories_0_15 <= RAT_memories_4_15;
+      if (_GEN_156 & is_being_written_vec_16)
         RAT_memories_0_16 <= wr_data_in_16;
-      if (is_being_written_vec_17)
+      else if (_GEN_158)
+        RAT_memories_0_16 <= RAT_memories_4_16;
+      if (_GEN_156 & is_being_written_vec_17)
         RAT_memories_0_17 <= wr_data_in_17;
-      if (is_being_written_vec_18)
+      else if (_GEN_158)
+        RAT_memories_0_17 <= RAT_memories_4_17;
+      if (_GEN_156 & is_being_written_vec_18)
         RAT_memories_0_18 <= wr_data_in_18;
-      if (is_being_written_vec_19)
+      else if (_GEN_158)
+        RAT_memories_0_18 <= RAT_memories_4_18;
+      if (_GEN_156 & is_being_written_vec_19)
         RAT_memories_0_19 <= wr_data_in_19;
-      if (is_being_written_vec_20)
+      else if (_GEN_158)
+        RAT_memories_0_19 <= RAT_memories_4_19;
+      if (_GEN_156 & is_being_written_vec_20)
         RAT_memories_0_20 <= wr_data_in_20;
-      if (is_being_written_vec_21)
+      else if (_GEN_158)
+        RAT_memories_0_20 <= RAT_memories_4_20;
+      if (_GEN_156 & is_being_written_vec_21)
         RAT_memories_0_21 <= wr_data_in_21;
-      if (is_being_written_vec_22)
+      else if (_GEN_158)
+        RAT_memories_0_21 <= RAT_memories_4_21;
+      if (_GEN_156 & is_being_written_vec_22)
         RAT_memories_0_22 <= wr_data_in_22;
-      if (is_being_written_vec_23)
+      else if (_GEN_158)
+        RAT_memories_0_22 <= RAT_memories_4_22;
+      if (_GEN_156 & is_being_written_vec_23)
         RAT_memories_0_23 <= wr_data_in_23;
-      if (is_being_written_vec_24)
+      else if (_GEN_158)
+        RAT_memories_0_23 <= RAT_memories_4_23;
+      if (_GEN_156 & is_being_written_vec_24)
         RAT_memories_0_24 <= wr_data_in_24;
-      if (is_being_written_vec_25)
+      else if (_GEN_158)
+        RAT_memories_0_24 <= RAT_memories_4_24;
+      if (_GEN_156 & is_being_written_vec_25)
         RAT_memories_0_25 <= wr_data_in_25;
-      if (is_being_written_vec_26)
+      else if (_GEN_158)
+        RAT_memories_0_25 <= RAT_memories_4_25;
+      if (_GEN_156 & is_being_written_vec_26)
         RAT_memories_0_26 <= wr_data_in_26;
-      if (is_being_written_vec_27)
+      else if (_GEN_158)
+        RAT_memories_0_26 <= RAT_memories_4_26;
+      if (_GEN_156 & is_being_written_vec_27)
         RAT_memories_0_27 <= wr_data_in_27;
-      if (is_being_written_vec_28)
+      else if (_GEN_158)
+        RAT_memories_0_27 <= RAT_memories_4_27;
+      if (_GEN_156 & is_being_written_vec_28)
         RAT_memories_0_28 <= wr_data_in_28;
-      if (is_being_written_vec_29)
+      else if (_GEN_158)
+        RAT_memories_0_28 <= RAT_memories_4_28;
+      if (_GEN_156 & is_being_written_vec_29)
         RAT_memories_0_29 <= wr_data_in_29;
-      if (is_being_written_vec_30)
+      else if (_GEN_158)
+        RAT_memories_0_29 <= RAT_memories_4_29;
+      if (_GEN_156 & is_being_written_vec_30)
         RAT_memories_0_30 <= wr_data_in_30;
-      if (is_being_written_vec_31)
+      else if (_GEN_158)
+        RAT_memories_0_30 <= RAT_memories_4_30;
+      if (_GEN_156 & is_being_written_vec_31)
         RAT_memories_0_31 <= wr_data_in_31;
+      else if (_GEN_158)
+        RAT_memories_0_31 <= RAT_memories_4_31;
+      if (_GEN_159 & is_being_written_vec_0)
+        RAT_memories_1_0 <= wr_data_in_1;
+      else if (_GEN_160)
+        RAT_memories_1_0 <= RAT_memories_0_0;
+      if (_GEN_159 & is_being_written_vec_1)
+        RAT_memories_1_1 <= wr_data_in_1;
+      else if (_GEN_160)
+        RAT_memories_1_1 <= RAT_memories_0_1;
+      if (_GEN_159 & is_being_written_vec_2)
+        RAT_memories_1_2 <= wr_data_in_1;
+      else if (_GEN_160)
+        RAT_memories_1_2 <= RAT_memories_0_2;
+      if (_GEN_159 & is_being_written_vec_3)
+        RAT_memories_1_3 <= wr_data_in_1;
+      else if (_GEN_160)
+        RAT_memories_1_3 <= RAT_memories_0_3;
+      if (_GEN_159 & is_being_written_vec_4)
+        RAT_memories_1_4 <= wr_data_in_1;
+      else if (_GEN_160)
+        RAT_memories_1_4 <= RAT_memories_0_4;
+      if (_GEN_159 & is_being_written_vec_5)
+        RAT_memories_1_5 <= wr_data_in_1;
+      else if (_GEN_160)
+        RAT_memories_1_5 <= RAT_memories_0_5;
+      if (_GEN_159 & is_being_written_vec_6)
+        RAT_memories_1_6 <= wr_data_in_1;
+      else if (_GEN_160)
+        RAT_memories_1_6 <= RAT_memories_0_6;
+      if (_GEN_159 & is_being_written_vec_7)
+        RAT_memories_1_7 <= wr_data_in_1;
+      else if (_GEN_160)
+        RAT_memories_1_7 <= RAT_memories_0_7;
+      if (_GEN_159 & is_being_written_vec_8)
+        RAT_memories_1_8 <= wr_data_in_1;
+      else if (_GEN_160)
+        RAT_memories_1_8 <= RAT_memories_0_8;
+      if (_GEN_159 & is_being_written_vec_9)
+        RAT_memories_1_9 <= wr_data_in_1;
+      else if (_GEN_160)
+        RAT_memories_1_9 <= RAT_memories_0_9;
+      if (_GEN_159 & is_being_written_vec_10)
+        RAT_memories_1_10 <= wr_data_in_1;
+      else if (_GEN_160)
+        RAT_memories_1_10 <= RAT_memories_0_10;
+      if (_GEN_159 & is_being_written_vec_11)
+        RAT_memories_1_11 <= wr_data_in_1;
+      else if (_GEN_160)
+        RAT_memories_1_11 <= RAT_memories_0_11;
+      if (_GEN_159 & is_being_written_vec_12)
+        RAT_memories_1_12 <= wr_data_in_1;
+      else if (_GEN_160)
+        RAT_memories_1_12 <= RAT_memories_0_12;
+      if (_GEN_159 & is_being_written_vec_13)
+        RAT_memories_1_13 <= wr_data_in_1;
+      else if (_GEN_160)
+        RAT_memories_1_13 <= RAT_memories_0_13;
+      if (_GEN_159 & is_being_written_vec_14)
+        RAT_memories_1_14 <= wr_data_in_1;
+      else if (_GEN_160)
+        RAT_memories_1_14 <= RAT_memories_0_14;
+      if (_GEN_159 & is_being_written_vec_15)
+        RAT_memories_1_15 <= wr_data_in_1;
+      else if (_GEN_160)
+        RAT_memories_1_15 <= RAT_memories_0_15;
+      if (_GEN_159 & is_being_written_vec_16)
+        RAT_memories_1_16 <= wr_data_in_1;
+      else if (_GEN_160)
+        RAT_memories_1_16 <= RAT_memories_0_16;
+      if (_GEN_159 & is_being_written_vec_17)
+        RAT_memories_1_17 <= wr_data_in_1;
+      else if (_GEN_160)
+        RAT_memories_1_17 <= RAT_memories_0_17;
+      if (_GEN_159 & is_being_written_vec_18)
+        RAT_memories_1_18 <= wr_data_in_1;
+      else if (_GEN_160)
+        RAT_memories_1_18 <= RAT_memories_0_18;
+      if (_GEN_159 & is_being_written_vec_19)
+        RAT_memories_1_19 <= wr_data_in_1;
+      else if (_GEN_160)
+        RAT_memories_1_19 <= RAT_memories_0_19;
+      if (_GEN_159 & is_being_written_vec_20)
+        RAT_memories_1_20 <= wr_data_in_1;
+      else if (_GEN_160)
+        RAT_memories_1_20 <= RAT_memories_0_20;
+      if (_GEN_159 & is_being_written_vec_21)
+        RAT_memories_1_21 <= wr_data_in_1;
+      else if (_GEN_160)
+        RAT_memories_1_21 <= RAT_memories_0_21;
+      if (_GEN_159 & is_being_written_vec_22)
+        RAT_memories_1_22 <= wr_data_in_1;
+      else if (_GEN_160)
+        RAT_memories_1_22 <= RAT_memories_0_22;
+      if (_GEN_159 & is_being_written_vec_23)
+        RAT_memories_1_23 <= wr_data_in_1;
+      else if (_GEN_160)
+        RAT_memories_1_23 <= RAT_memories_0_23;
+      if (_GEN_159 & is_being_written_vec_24)
+        RAT_memories_1_24 <= wr_data_in_1;
+      else if (_GEN_160)
+        RAT_memories_1_24 <= RAT_memories_0_24;
+      if (_GEN_159 & is_being_written_vec_25)
+        RAT_memories_1_25 <= wr_data_in_1;
+      else if (_GEN_160)
+        RAT_memories_1_25 <= RAT_memories_0_25;
+      if (_GEN_159 & is_being_written_vec_26)
+        RAT_memories_1_26 <= wr_data_in_1;
+      else if (_GEN_160)
+        RAT_memories_1_26 <= RAT_memories_0_26;
+      if (_GEN_159 & is_being_written_vec_27)
+        RAT_memories_1_27 <= wr_data_in_1;
+      else if (_GEN_160)
+        RAT_memories_1_27 <= RAT_memories_0_27;
+      if (_GEN_159 & is_being_written_vec_28)
+        RAT_memories_1_28 <= wr_data_in_1;
+      else if (_GEN_160)
+        RAT_memories_1_28 <= RAT_memories_0_28;
+      if (_GEN_159 & is_being_written_vec_29)
+        RAT_memories_1_29 <= wr_data_in_1;
+      else if (_GEN_160)
+        RAT_memories_1_29 <= RAT_memories_0_29;
+      if (_GEN_159 & is_being_written_vec_30)
+        RAT_memories_1_30 <= wr_data_in_1;
+      else if (_GEN_160)
+        RAT_memories_1_30 <= RAT_memories_0_30;
+      if (_GEN_159 & is_being_written_vec_31)
+        RAT_memories_1_31 <= wr_data_in_1;
+      else if (_GEN_160)
+        RAT_memories_1_31 <= RAT_memories_0_31;
+      if (_GEN_161 & is_being_written_vec_0)
+        RAT_memories_2_0 <= wr_data_in_2;
+      else if (_GEN_162)
+        RAT_memories_2_0 <= RAT_memories_1_0;
+      if (_GEN_161 & is_being_written_vec_1)
+        RAT_memories_2_1 <= wr_data_in_2;
+      else if (_GEN_162)
+        RAT_memories_2_1 <= RAT_memories_1_1;
+      if (_GEN_161 & is_being_written_vec_2)
+        RAT_memories_2_2 <= wr_data_in_2;
+      else if (_GEN_162)
+        RAT_memories_2_2 <= RAT_memories_1_2;
+      if (_GEN_161 & is_being_written_vec_3)
+        RAT_memories_2_3 <= wr_data_in_2;
+      else if (_GEN_162)
+        RAT_memories_2_3 <= RAT_memories_1_3;
+      if (_GEN_161 & is_being_written_vec_4)
+        RAT_memories_2_4 <= wr_data_in_2;
+      else if (_GEN_162)
+        RAT_memories_2_4 <= RAT_memories_1_4;
+      if (_GEN_161 & is_being_written_vec_5)
+        RAT_memories_2_5 <= wr_data_in_2;
+      else if (_GEN_162)
+        RAT_memories_2_5 <= RAT_memories_1_5;
+      if (_GEN_161 & is_being_written_vec_6)
+        RAT_memories_2_6 <= wr_data_in_2;
+      else if (_GEN_162)
+        RAT_memories_2_6 <= RAT_memories_1_6;
+      if (_GEN_161 & is_being_written_vec_7)
+        RAT_memories_2_7 <= wr_data_in_2;
+      else if (_GEN_162)
+        RAT_memories_2_7 <= RAT_memories_1_7;
+      if (_GEN_161 & is_being_written_vec_8)
+        RAT_memories_2_8 <= wr_data_in_2;
+      else if (_GEN_162)
+        RAT_memories_2_8 <= RAT_memories_1_8;
+      if (_GEN_161 & is_being_written_vec_9)
+        RAT_memories_2_9 <= wr_data_in_2;
+      else if (_GEN_162)
+        RAT_memories_2_9 <= RAT_memories_1_9;
+      if (_GEN_161 & is_being_written_vec_10)
+        RAT_memories_2_10 <= wr_data_in_2;
+      else if (_GEN_162)
+        RAT_memories_2_10 <= RAT_memories_1_10;
+      if (_GEN_161 & is_being_written_vec_11)
+        RAT_memories_2_11 <= wr_data_in_2;
+      else if (_GEN_162)
+        RAT_memories_2_11 <= RAT_memories_1_11;
+      if (_GEN_161 & is_being_written_vec_12)
+        RAT_memories_2_12 <= wr_data_in_2;
+      else if (_GEN_162)
+        RAT_memories_2_12 <= RAT_memories_1_12;
+      if (_GEN_161 & is_being_written_vec_13)
+        RAT_memories_2_13 <= wr_data_in_2;
+      else if (_GEN_162)
+        RAT_memories_2_13 <= RAT_memories_1_13;
+      if (_GEN_161 & is_being_written_vec_14)
+        RAT_memories_2_14 <= wr_data_in_2;
+      else if (_GEN_162)
+        RAT_memories_2_14 <= RAT_memories_1_14;
+      if (_GEN_161 & is_being_written_vec_15)
+        RAT_memories_2_15 <= wr_data_in_2;
+      else if (_GEN_162)
+        RAT_memories_2_15 <= RAT_memories_1_15;
+      if (_GEN_161 & is_being_written_vec_16)
+        RAT_memories_2_16 <= wr_data_in_2;
+      else if (_GEN_162)
+        RAT_memories_2_16 <= RAT_memories_1_16;
+      if (_GEN_161 & is_being_written_vec_17)
+        RAT_memories_2_17 <= wr_data_in_2;
+      else if (_GEN_162)
+        RAT_memories_2_17 <= RAT_memories_1_17;
+      if (_GEN_161 & is_being_written_vec_18)
+        RAT_memories_2_18 <= wr_data_in_2;
+      else if (_GEN_162)
+        RAT_memories_2_18 <= RAT_memories_1_18;
+      if (_GEN_161 & is_being_written_vec_19)
+        RAT_memories_2_19 <= wr_data_in_2;
+      else if (_GEN_162)
+        RAT_memories_2_19 <= RAT_memories_1_19;
+      if (_GEN_161 & is_being_written_vec_20)
+        RAT_memories_2_20 <= wr_data_in_2;
+      else if (_GEN_162)
+        RAT_memories_2_20 <= RAT_memories_1_20;
+      if (_GEN_161 & is_being_written_vec_21)
+        RAT_memories_2_21 <= wr_data_in_2;
+      else if (_GEN_162)
+        RAT_memories_2_21 <= RAT_memories_1_21;
+      if (_GEN_161 & is_being_written_vec_22)
+        RAT_memories_2_22 <= wr_data_in_2;
+      else if (_GEN_162)
+        RAT_memories_2_22 <= RAT_memories_1_22;
+      if (_GEN_161 & is_being_written_vec_23)
+        RAT_memories_2_23 <= wr_data_in_2;
+      else if (_GEN_162)
+        RAT_memories_2_23 <= RAT_memories_1_23;
+      if (_GEN_161 & is_being_written_vec_24)
+        RAT_memories_2_24 <= wr_data_in_2;
+      else if (_GEN_162)
+        RAT_memories_2_24 <= RAT_memories_1_24;
+      if (_GEN_161 & is_being_written_vec_25)
+        RAT_memories_2_25 <= wr_data_in_2;
+      else if (_GEN_162)
+        RAT_memories_2_25 <= RAT_memories_1_25;
+      if (_GEN_161 & is_being_written_vec_26)
+        RAT_memories_2_26 <= wr_data_in_2;
+      else if (_GEN_162)
+        RAT_memories_2_26 <= RAT_memories_1_26;
+      if (_GEN_161 & is_being_written_vec_27)
+        RAT_memories_2_27 <= wr_data_in_2;
+      else if (_GEN_162)
+        RAT_memories_2_27 <= RAT_memories_1_27;
+      if (_GEN_161 & is_being_written_vec_28)
+        RAT_memories_2_28 <= wr_data_in_2;
+      else if (_GEN_162)
+        RAT_memories_2_28 <= RAT_memories_1_28;
+      if (_GEN_161 & is_being_written_vec_29)
+        RAT_memories_2_29 <= wr_data_in_2;
+      else if (_GEN_162)
+        RAT_memories_2_29 <= RAT_memories_1_29;
+      if (_GEN_161 & is_being_written_vec_30)
+        RAT_memories_2_30 <= wr_data_in_2;
+      else if (_GEN_162)
+        RAT_memories_2_30 <= RAT_memories_1_30;
+      if (_GEN_161 & is_being_written_vec_31)
+        RAT_memories_2_31 <= wr_data_in_2;
+      else if (_GEN_162)
+        RAT_memories_2_31 <= RAT_memories_1_31;
+      if (_GEN_163 & is_being_written_vec_0)
+        RAT_memories_3_0 <= wr_data_in_3;
+      else if (_GEN_164)
+        RAT_memories_3_0 <= RAT_memories_2_0;
+      if (_GEN_163 & is_being_written_vec_1)
+        RAT_memories_3_1 <= wr_data_in_3;
+      else if (_GEN_164)
+        RAT_memories_3_1 <= RAT_memories_2_1;
+      if (_GEN_163 & is_being_written_vec_2)
+        RAT_memories_3_2 <= wr_data_in_3;
+      else if (_GEN_164)
+        RAT_memories_3_2 <= RAT_memories_2_2;
+      if (_GEN_163 & is_being_written_vec_3)
+        RAT_memories_3_3 <= wr_data_in_3;
+      else if (_GEN_164)
+        RAT_memories_3_3 <= RAT_memories_2_3;
+      if (_GEN_163 & is_being_written_vec_4)
+        RAT_memories_3_4 <= wr_data_in_3;
+      else if (_GEN_164)
+        RAT_memories_3_4 <= RAT_memories_2_4;
+      if (_GEN_163 & is_being_written_vec_5)
+        RAT_memories_3_5 <= wr_data_in_3;
+      else if (_GEN_164)
+        RAT_memories_3_5 <= RAT_memories_2_5;
+      if (_GEN_163 & is_being_written_vec_6)
+        RAT_memories_3_6 <= wr_data_in_3;
+      else if (_GEN_164)
+        RAT_memories_3_6 <= RAT_memories_2_6;
+      if (_GEN_163 & is_being_written_vec_7)
+        RAT_memories_3_7 <= wr_data_in_3;
+      else if (_GEN_164)
+        RAT_memories_3_7 <= RAT_memories_2_7;
+      if (_GEN_163 & is_being_written_vec_8)
+        RAT_memories_3_8 <= wr_data_in_3;
+      else if (_GEN_164)
+        RAT_memories_3_8 <= RAT_memories_2_8;
+      if (_GEN_163 & is_being_written_vec_9)
+        RAT_memories_3_9 <= wr_data_in_3;
+      else if (_GEN_164)
+        RAT_memories_3_9 <= RAT_memories_2_9;
+      if (_GEN_163 & is_being_written_vec_10)
+        RAT_memories_3_10 <= wr_data_in_3;
+      else if (_GEN_164)
+        RAT_memories_3_10 <= RAT_memories_2_10;
+      if (_GEN_163 & is_being_written_vec_11)
+        RAT_memories_3_11 <= wr_data_in_3;
+      else if (_GEN_164)
+        RAT_memories_3_11 <= RAT_memories_2_11;
+      if (_GEN_163 & is_being_written_vec_12)
+        RAT_memories_3_12 <= wr_data_in_3;
+      else if (_GEN_164)
+        RAT_memories_3_12 <= RAT_memories_2_12;
+      if (_GEN_163 & is_being_written_vec_13)
+        RAT_memories_3_13 <= wr_data_in_3;
+      else if (_GEN_164)
+        RAT_memories_3_13 <= RAT_memories_2_13;
+      if (_GEN_163 & is_being_written_vec_14)
+        RAT_memories_3_14 <= wr_data_in_3;
+      else if (_GEN_164)
+        RAT_memories_3_14 <= RAT_memories_2_14;
+      if (_GEN_163 & is_being_written_vec_15)
+        RAT_memories_3_15 <= wr_data_in_3;
+      else if (_GEN_164)
+        RAT_memories_3_15 <= RAT_memories_2_15;
+      if (_GEN_163 & is_being_written_vec_16)
+        RAT_memories_3_16 <= wr_data_in_3;
+      else if (_GEN_164)
+        RAT_memories_3_16 <= RAT_memories_2_16;
+      if (_GEN_163 & is_being_written_vec_17)
+        RAT_memories_3_17 <= wr_data_in_3;
+      else if (_GEN_164)
+        RAT_memories_3_17 <= RAT_memories_2_17;
+      if (_GEN_163 & is_being_written_vec_18)
+        RAT_memories_3_18 <= wr_data_in_3;
+      else if (_GEN_164)
+        RAT_memories_3_18 <= RAT_memories_2_18;
+      if (_GEN_163 & is_being_written_vec_19)
+        RAT_memories_3_19 <= wr_data_in_3;
+      else if (_GEN_164)
+        RAT_memories_3_19 <= RAT_memories_2_19;
+      if (_GEN_163 & is_being_written_vec_20)
+        RAT_memories_3_20 <= wr_data_in_3;
+      else if (_GEN_164)
+        RAT_memories_3_20 <= RAT_memories_2_20;
+      if (_GEN_163 & is_being_written_vec_21)
+        RAT_memories_3_21 <= wr_data_in_3;
+      else if (_GEN_164)
+        RAT_memories_3_21 <= RAT_memories_2_21;
+      if (_GEN_163 & is_being_written_vec_22)
+        RAT_memories_3_22 <= wr_data_in_3;
+      else if (_GEN_164)
+        RAT_memories_3_22 <= RAT_memories_2_22;
+      if (_GEN_163 & is_being_written_vec_23)
+        RAT_memories_3_23 <= wr_data_in_3;
+      else if (_GEN_164)
+        RAT_memories_3_23 <= RAT_memories_2_23;
+      if (_GEN_163 & is_being_written_vec_24)
+        RAT_memories_3_24 <= wr_data_in_3;
+      else if (_GEN_164)
+        RAT_memories_3_24 <= RAT_memories_2_24;
+      if (_GEN_163 & is_being_written_vec_25)
+        RAT_memories_3_25 <= wr_data_in_3;
+      else if (_GEN_164)
+        RAT_memories_3_25 <= RAT_memories_2_25;
+      if (_GEN_163 & is_being_written_vec_26)
+        RAT_memories_3_26 <= wr_data_in_3;
+      else if (_GEN_164)
+        RAT_memories_3_26 <= RAT_memories_2_26;
+      if (_GEN_163 & is_being_written_vec_27)
+        RAT_memories_3_27 <= wr_data_in_3;
+      else if (_GEN_164)
+        RAT_memories_3_27 <= RAT_memories_2_27;
+      if (_GEN_163 & is_being_written_vec_28)
+        RAT_memories_3_28 <= wr_data_in_3;
+      else if (_GEN_164)
+        RAT_memories_3_28 <= RAT_memories_2_28;
+      if (_GEN_163 & is_being_written_vec_29)
+        RAT_memories_3_29 <= wr_data_in_3;
+      else if (_GEN_164)
+        RAT_memories_3_29 <= RAT_memories_2_29;
+      if (_GEN_163 & is_being_written_vec_30)
+        RAT_memories_3_30 <= wr_data_in_3;
+      else if (_GEN_164)
+        RAT_memories_3_30 <= RAT_memories_2_30;
+      if (_GEN_163 & is_being_written_vec_31)
+        RAT_memories_3_31 <= wr_data_in_3;
+      else if (_GEN_164)
+        RAT_memories_3_31 <= RAT_memories_2_31;
+      if (_GEN_165 & is_being_written_vec_0)
+        RAT_memories_4_0 <= wr_data_in_4;
+      else if (_GEN_166)
+        RAT_memories_4_0 <= RAT_memories_3_0;
+      if (_GEN_165 & is_being_written_vec_1)
+        RAT_memories_4_1 <= wr_data_in_4;
+      else if (_GEN_166)
+        RAT_memories_4_1 <= RAT_memories_3_1;
+      if (_GEN_165 & is_being_written_vec_2)
+        RAT_memories_4_2 <= wr_data_in_4;
+      else if (_GEN_166)
+        RAT_memories_4_2 <= RAT_memories_3_2;
+      if (_GEN_165 & is_being_written_vec_3)
+        RAT_memories_4_3 <= wr_data_in_4;
+      else if (_GEN_166)
+        RAT_memories_4_3 <= RAT_memories_3_3;
+      if (_GEN_165 & is_being_written_vec_4)
+        RAT_memories_4_4 <= wr_data_in_4;
+      else if (_GEN_166)
+        RAT_memories_4_4 <= RAT_memories_3_4;
+      if (_GEN_165 & is_being_written_vec_5)
+        RAT_memories_4_5 <= wr_data_in_4;
+      else if (_GEN_166)
+        RAT_memories_4_5 <= RAT_memories_3_5;
+      if (_GEN_165 & is_being_written_vec_6)
+        RAT_memories_4_6 <= wr_data_in_4;
+      else if (_GEN_166)
+        RAT_memories_4_6 <= RAT_memories_3_6;
+      if (_GEN_165 & is_being_written_vec_7)
+        RAT_memories_4_7 <= wr_data_in_4;
+      else if (_GEN_166)
+        RAT_memories_4_7 <= RAT_memories_3_7;
+      if (_GEN_165 & is_being_written_vec_8)
+        RAT_memories_4_8 <= wr_data_in_4;
+      else if (_GEN_166)
+        RAT_memories_4_8 <= RAT_memories_3_8;
+      if (_GEN_165 & is_being_written_vec_9)
+        RAT_memories_4_9 <= wr_data_in_4;
+      else if (_GEN_166)
+        RAT_memories_4_9 <= RAT_memories_3_9;
+      if (_GEN_165 & is_being_written_vec_10)
+        RAT_memories_4_10 <= wr_data_in_4;
+      else if (_GEN_166)
+        RAT_memories_4_10 <= RAT_memories_3_10;
+      if (_GEN_165 & is_being_written_vec_11)
+        RAT_memories_4_11 <= wr_data_in_4;
+      else if (_GEN_166)
+        RAT_memories_4_11 <= RAT_memories_3_11;
+      if (_GEN_165 & is_being_written_vec_12)
+        RAT_memories_4_12 <= wr_data_in_4;
+      else if (_GEN_166)
+        RAT_memories_4_12 <= RAT_memories_3_12;
+      if (_GEN_165 & is_being_written_vec_13)
+        RAT_memories_4_13 <= wr_data_in_4;
+      else if (_GEN_166)
+        RAT_memories_4_13 <= RAT_memories_3_13;
+      if (_GEN_165 & is_being_written_vec_14)
+        RAT_memories_4_14 <= wr_data_in_4;
+      else if (_GEN_166)
+        RAT_memories_4_14 <= RAT_memories_3_14;
+      if (_GEN_165 & is_being_written_vec_15)
+        RAT_memories_4_15 <= wr_data_in_4;
+      else if (_GEN_166)
+        RAT_memories_4_15 <= RAT_memories_3_15;
+      if (_GEN_165 & is_being_written_vec_16)
+        RAT_memories_4_16 <= wr_data_in_4;
+      else if (_GEN_166)
+        RAT_memories_4_16 <= RAT_memories_3_16;
+      if (_GEN_165 & is_being_written_vec_17)
+        RAT_memories_4_17 <= wr_data_in_4;
+      else if (_GEN_166)
+        RAT_memories_4_17 <= RAT_memories_3_17;
+      if (_GEN_165 & is_being_written_vec_18)
+        RAT_memories_4_18 <= wr_data_in_4;
+      else if (_GEN_166)
+        RAT_memories_4_18 <= RAT_memories_3_18;
+      if (_GEN_165 & is_being_written_vec_19)
+        RAT_memories_4_19 <= wr_data_in_4;
+      else if (_GEN_166)
+        RAT_memories_4_19 <= RAT_memories_3_19;
+      if (_GEN_165 & is_being_written_vec_20)
+        RAT_memories_4_20 <= wr_data_in_4;
+      else if (_GEN_166)
+        RAT_memories_4_20 <= RAT_memories_3_20;
+      if (_GEN_165 & is_being_written_vec_21)
+        RAT_memories_4_21 <= wr_data_in_4;
+      else if (_GEN_166)
+        RAT_memories_4_21 <= RAT_memories_3_21;
+      if (_GEN_165 & is_being_written_vec_22)
+        RAT_memories_4_22 <= wr_data_in_4;
+      else if (_GEN_166)
+        RAT_memories_4_22 <= RAT_memories_3_22;
+      if (_GEN_165 & is_being_written_vec_23)
+        RAT_memories_4_23 <= wr_data_in_4;
+      else if (_GEN_166)
+        RAT_memories_4_23 <= RAT_memories_3_23;
+      if (_GEN_165 & is_being_written_vec_24)
+        RAT_memories_4_24 <= wr_data_in_4;
+      else if (_GEN_166)
+        RAT_memories_4_24 <= RAT_memories_3_24;
+      if (_GEN_165 & is_being_written_vec_25)
+        RAT_memories_4_25 <= wr_data_in_4;
+      else if (_GEN_166)
+        RAT_memories_4_25 <= RAT_memories_3_25;
+      if (_GEN_165 & is_being_written_vec_26)
+        RAT_memories_4_26 <= wr_data_in_4;
+      else if (_GEN_166)
+        RAT_memories_4_26 <= RAT_memories_3_26;
+      if (_GEN_165 & is_being_written_vec_27)
+        RAT_memories_4_27 <= wr_data_in_4;
+      else if (_GEN_166)
+        RAT_memories_4_27 <= RAT_memories_3_27;
+      if (_GEN_165 & is_being_written_vec_28)
+        RAT_memories_4_28 <= wr_data_in_4;
+      else if (_GEN_166)
+        RAT_memories_4_28 <= RAT_memories_3_28;
+      if (_GEN_165 & is_being_written_vec_29)
+        RAT_memories_4_29 <= wr_data_in_4;
+      else if (_GEN_166)
+        RAT_memories_4_29 <= RAT_memories_3_29;
+      if (_GEN_165 & is_being_written_vec_30)
+        RAT_memories_4_30 <= wr_data_in_4;
+      else if (_GEN_166)
+        RAT_memories_4_30 <= RAT_memories_3_30;
+      if (_GEN_165 & is_being_written_vec_31)
+        RAT_memories_4_31 <= wr_data_in_4;
+      else if (_GEN_166)
+        RAT_memories_4_31 <= RAT_memories_3_31;
+      if (_GEN_167 & is_being_written_vec_0)
+        RAT_memories_5_0 <= wr_data_in_5;
+      else if (_GEN_168)
+        RAT_memories_5_0 <= RAT_memories_4_0;
+      if (_GEN_167 & is_being_written_vec_1)
+        RAT_memories_5_1 <= wr_data_in_5;
+      else if (_GEN_168)
+        RAT_memories_5_1 <= RAT_memories_4_1;
+      if (_GEN_167 & is_being_written_vec_2)
+        RAT_memories_5_2 <= wr_data_in_5;
+      else if (_GEN_168)
+        RAT_memories_5_2 <= RAT_memories_4_2;
+      if (_GEN_167 & is_being_written_vec_3)
+        RAT_memories_5_3 <= wr_data_in_5;
+      else if (_GEN_168)
+        RAT_memories_5_3 <= RAT_memories_4_3;
+      if (_GEN_167 & is_being_written_vec_4)
+        RAT_memories_5_4 <= wr_data_in_5;
+      else if (_GEN_168)
+        RAT_memories_5_4 <= RAT_memories_4_4;
+      if (_GEN_167 & is_being_written_vec_5)
+        RAT_memories_5_5 <= wr_data_in_5;
+      else if (_GEN_168)
+        RAT_memories_5_5 <= RAT_memories_4_5;
+      if (_GEN_167 & is_being_written_vec_6)
+        RAT_memories_5_6 <= wr_data_in_5;
+      else if (_GEN_168)
+        RAT_memories_5_6 <= RAT_memories_4_6;
+      if (_GEN_167 & is_being_written_vec_7)
+        RAT_memories_5_7 <= wr_data_in_5;
+      else if (_GEN_168)
+        RAT_memories_5_7 <= RAT_memories_4_7;
+      if (_GEN_167 & is_being_written_vec_8)
+        RAT_memories_5_8 <= wr_data_in_5;
+      else if (_GEN_168)
+        RAT_memories_5_8 <= RAT_memories_4_8;
+      if (_GEN_167 & is_being_written_vec_9)
+        RAT_memories_5_9 <= wr_data_in_5;
+      else if (_GEN_168)
+        RAT_memories_5_9 <= RAT_memories_4_9;
+      if (_GEN_167 & is_being_written_vec_10)
+        RAT_memories_5_10 <= wr_data_in_5;
+      else if (_GEN_168)
+        RAT_memories_5_10 <= RAT_memories_4_10;
+      if (_GEN_167 & is_being_written_vec_11)
+        RAT_memories_5_11 <= wr_data_in_5;
+      else if (_GEN_168)
+        RAT_memories_5_11 <= RAT_memories_4_11;
+      if (_GEN_167 & is_being_written_vec_12)
+        RAT_memories_5_12 <= wr_data_in_5;
+      else if (_GEN_168)
+        RAT_memories_5_12 <= RAT_memories_4_12;
+      if (_GEN_167 & is_being_written_vec_13)
+        RAT_memories_5_13 <= wr_data_in_5;
+      else if (_GEN_168)
+        RAT_memories_5_13 <= RAT_memories_4_13;
+      if (_GEN_167 & is_being_written_vec_14)
+        RAT_memories_5_14 <= wr_data_in_5;
+      else if (_GEN_168)
+        RAT_memories_5_14 <= RAT_memories_4_14;
+      if (_GEN_167 & is_being_written_vec_15)
+        RAT_memories_5_15 <= wr_data_in_5;
+      else if (_GEN_168)
+        RAT_memories_5_15 <= RAT_memories_4_15;
+      if (_GEN_167 & is_being_written_vec_16)
+        RAT_memories_5_16 <= wr_data_in_5;
+      else if (_GEN_168)
+        RAT_memories_5_16 <= RAT_memories_4_16;
+      if (_GEN_167 & is_being_written_vec_17)
+        RAT_memories_5_17 <= wr_data_in_5;
+      else if (_GEN_168)
+        RAT_memories_5_17 <= RAT_memories_4_17;
+      if (_GEN_167 & is_being_written_vec_18)
+        RAT_memories_5_18 <= wr_data_in_5;
+      else if (_GEN_168)
+        RAT_memories_5_18 <= RAT_memories_4_18;
+      if (_GEN_167 & is_being_written_vec_19)
+        RAT_memories_5_19 <= wr_data_in_5;
+      else if (_GEN_168)
+        RAT_memories_5_19 <= RAT_memories_4_19;
+      if (_GEN_167 & is_being_written_vec_20)
+        RAT_memories_5_20 <= wr_data_in_5;
+      else if (_GEN_168)
+        RAT_memories_5_20 <= RAT_memories_4_20;
+      if (_GEN_167 & is_being_written_vec_21)
+        RAT_memories_5_21 <= wr_data_in_5;
+      else if (_GEN_168)
+        RAT_memories_5_21 <= RAT_memories_4_21;
+      if (_GEN_167 & is_being_written_vec_22)
+        RAT_memories_5_22 <= wr_data_in_5;
+      else if (_GEN_168)
+        RAT_memories_5_22 <= RAT_memories_4_22;
+      if (_GEN_167 & is_being_written_vec_23)
+        RAT_memories_5_23 <= wr_data_in_5;
+      else if (_GEN_168)
+        RAT_memories_5_23 <= RAT_memories_4_23;
+      if (_GEN_167 & is_being_written_vec_24)
+        RAT_memories_5_24 <= wr_data_in_5;
+      else if (_GEN_168)
+        RAT_memories_5_24 <= RAT_memories_4_24;
+      if (_GEN_167 & is_being_written_vec_25)
+        RAT_memories_5_25 <= wr_data_in_5;
+      else if (_GEN_168)
+        RAT_memories_5_25 <= RAT_memories_4_25;
+      if (_GEN_167 & is_being_written_vec_26)
+        RAT_memories_5_26 <= wr_data_in_5;
+      else if (_GEN_168)
+        RAT_memories_5_26 <= RAT_memories_4_26;
+      if (_GEN_167 & is_being_written_vec_27)
+        RAT_memories_5_27 <= wr_data_in_5;
+      else if (_GEN_168)
+        RAT_memories_5_27 <= RAT_memories_4_27;
+      if (_GEN_167 & is_being_written_vec_28)
+        RAT_memories_5_28 <= wr_data_in_5;
+      else if (_GEN_168)
+        RAT_memories_5_28 <= RAT_memories_4_28;
+      if (_GEN_167 & is_being_written_vec_29)
+        RAT_memories_5_29 <= wr_data_in_5;
+      else if (_GEN_168)
+        RAT_memories_5_29 <= RAT_memories_4_29;
+      if (_GEN_167 & is_being_written_vec_30)
+        RAT_memories_5_30 <= wr_data_in_5;
+      else if (_GEN_168)
+        RAT_memories_5_30 <= RAT_memories_4_30;
+      if (_GEN_167 & is_being_written_vec_31)
+        RAT_memories_5_31 <= wr_data_in_5;
+      else if (_GEN_168)
+        RAT_memories_5_31 <= RAT_memories_4_31;
+      if (_GEN_169 & is_being_written_vec_0)
+        RAT_memories_6_0 <= wr_data_in_6;
+      else if (_GEN_170)
+        RAT_memories_6_0 <= RAT_memories_5_0;
+      if (_GEN_169 & is_being_written_vec_1)
+        RAT_memories_6_1 <= wr_data_in_6;
+      else if (_GEN_170)
+        RAT_memories_6_1 <= RAT_memories_5_1;
+      if (_GEN_169 & is_being_written_vec_2)
+        RAT_memories_6_2 <= wr_data_in_6;
+      else if (_GEN_170)
+        RAT_memories_6_2 <= RAT_memories_5_2;
+      if (_GEN_169 & is_being_written_vec_3)
+        RAT_memories_6_3 <= wr_data_in_6;
+      else if (_GEN_170)
+        RAT_memories_6_3 <= RAT_memories_5_3;
+      if (_GEN_169 & is_being_written_vec_4)
+        RAT_memories_6_4 <= wr_data_in_6;
+      else if (_GEN_170)
+        RAT_memories_6_4 <= RAT_memories_5_4;
+      if (_GEN_169 & is_being_written_vec_5)
+        RAT_memories_6_5 <= wr_data_in_6;
+      else if (_GEN_170)
+        RAT_memories_6_5 <= RAT_memories_5_5;
+      if (_GEN_169 & is_being_written_vec_6)
+        RAT_memories_6_6 <= wr_data_in_6;
+      else if (_GEN_170)
+        RAT_memories_6_6 <= RAT_memories_5_6;
+      if (_GEN_169 & is_being_written_vec_7)
+        RAT_memories_6_7 <= wr_data_in_6;
+      else if (_GEN_170)
+        RAT_memories_6_7 <= RAT_memories_5_7;
+      if (_GEN_169 & is_being_written_vec_8)
+        RAT_memories_6_8 <= wr_data_in_6;
+      else if (_GEN_170)
+        RAT_memories_6_8 <= RAT_memories_5_8;
+      if (_GEN_169 & is_being_written_vec_9)
+        RAT_memories_6_9 <= wr_data_in_6;
+      else if (_GEN_170)
+        RAT_memories_6_9 <= RAT_memories_5_9;
+      if (_GEN_169 & is_being_written_vec_10)
+        RAT_memories_6_10 <= wr_data_in_6;
+      else if (_GEN_170)
+        RAT_memories_6_10 <= RAT_memories_5_10;
+      if (_GEN_169 & is_being_written_vec_11)
+        RAT_memories_6_11 <= wr_data_in_6;
+      else if (_GEN_170)
+        RAT_memories_6_11 <= RAT_memories_5_11;
+      if (_GEN_169 & is_being_written_vec_12)
+        RAT_memories_6_12 <= wr_data_in_6;
+      else if (_GEN_170)
+        RAT_memories_6_12 <= RAT_memories_5_12;
+      if (_GEN_169 & is_being_written_vec_13)
+        RAT_memories_6_13 <= wr_data_in_6;
+      else if (_GEN_170)
+        RAT_memories_6_13 <= RAT_memories_5_13;
+      if (_GEN_169 & is_being_written_vec_14)
+        RAT_memories_6_14 <= wr_data_in_6;
+      else if (_GEN_170)
+        RAT_memories_6_14 <= RAT_memories_5_14;
+      if (_GEN_169 & is_being_written_vec_15)
+        RAT_memories_6_15 <= wr_data_in_6;
+      else if (_GEN_170)
+        RAT_memories_6_15 <= RAT_memories_5_15;
+      if (_GEN_169 & is_being_written_vec_16)
+        RAT_memories_6_16 <= wr_data_in_6;
+      else if (_GEN_170)
+        RAT_memories_6_16 <= RAT_memories_5_16;
+      if (_GEN_169 & is_being_written_vec_17)
+        RAT_memories_6_17 <= wr_data_in_6;
+      else if (_GEN_170)
+        RAT_memories_6_17 <= RAT_memories_5_17;
+      if (_GEN_169 & is_being_written_vec_18)
+        RAT_memories_6_18 <= wr_data_in_6;
+      else if (_GEN_170)
+        RAT_memories_6_18 <= RAT_memories_5_18;
+      if (_GEN_169 & is_being_written_vec_19)
+        RAT_memories_6_19 <= wr_data_in_6;
+      else if (_GEN_170)
+        RAT_memories_6_19 <= RAT_memories_5_19;
+      if (_GEN_169 & is_being_written_vec_20)
+        RAT_memories_6_20 <= wr_data_in_6;
+      else if (_GEN_170)
+        RAT_memories_6_20 <= RAT_memories_5_20;
+      if (_GEN_169 & is_being_written_vec_21)
+        RAT_memories_6_21 <= wr_data_in_6;
+      else if (_GEN_170)
+        RAT_memories_6_21 <= RAT_memories_5_21;
+      if (_GEN_169 & is_being_written_vec_22)
+        RAT_memories_6_22 <= wr_data_in_6;
+      else if (_GEN_170)
+        RAT_memories_6_22 <= RAT_memories_5_22;
+      if (_GEN_169 & is_being_written_vec_23)
+        RAT_memories_6_23 <= wr_data_in_6;
+      else if (_GEN_170)
+        RAT_memories_6_23 <= RAT_memories_5_23;
+      if (_GEN_169 & is_being_written_vec_24)
+        RAT_memories_6_24 <= wr_data_in_6;
+      else if (_GEN_170)
+        RAT_memories_6_24 <= RAT_memories_5_24;
+      if (_GEN_169 & is_being_written_vec_25)
+        RAT_memories_6_25 <= wr_data_in_6;
+      else if (_GEN_170)
+        RAT_memories_6_25 <= RAT_memories_5_25;
+      if (_GEN_169 & is_being_written_vec_26)
+        RAT_memories_6_26 <= wr_data_in_6;
+      else if (_GEN_170)
+        RAT_memories_6_26 <= RAT_memories_5_26;
+      if (_GEN_169 & is_being_written_vec_27)
+        RAT_memories_6_27 <= wr_data_in_6;
+      else if (_GEN_170)
+        RAT_memories_6_27 <= RAT_memories_5_27;
+      if (_GEN_169 & is_being_written_vec_28)
+        RAT_memories_6_28 <= wr_data_in_6;
+      else if (_GEN_170)
+        RAT_memories_6_28 <= RAT_memories_5_28;
+      if (_GEN_169 & is_being_written_vec_29)
+        RAT_memories_6_29 <= wr_data_in_6;
+      else if (_GEN_170)
+        RAT_memories_6_29 <= RAT_memories_5_29;
+      if (_GEN_169 & is_being_written_vec_30)
+        RAT_memories_6_30 <= wr_data_in_6;
+      else if (_GEN_170)
+        RAT_memories_6_30 <= RAT_memories_5_30;
+      if (_GEN_169 & is_being_written_vec_31)
+        RAT_memories_6_31 <= wr_data_in_6;
+      else if (_GEN_170)
+        RAT_memories_6_31 <= RAT_memories_5_31;
+      if (_GEN_171 & is_being_written_vec_0)
+        RAT_memories_7_0 <= wr_data_in_7;
+      else if (_GEN_172)
+        RAT_memories_7_0 <= RAT_memories_6_0;
+      if (_GEN_171 & is_being_written_vec_1)
+        RAT_memories_7_1 <= wr_data_in_7;
+      else if (_GEN_172)
+        RAT_memories_7_1 <= RAT_memories_6_1;
+      if (_GEN_171 & is_being_written_vec_2)
+        RAT_memories_7_2 <= wr_data_in_7;
+      else if (_GEN_172)
+        RAT_memories_7_2 <= RAT_memories_6_2;
+      if (_GEN_171 & is_being_written_vec_3)
+        RAT_memories_7_3 <= wr_data_in_7;
+      else if (_GEN_172)
+        RAT_memories_7_3 <= RAT_memories_6_3;
+      if (_GEN_171 & is_being_written_vec_4)
+        RAT_memories_7_4 <= wr_data_in_7;
+      else if (_GEN_172)
+        RAT_memories_7_4 <= RAT_memories_6_4;
+      if (_GEN_171 & is_being_written_vec_5)
+        RAT_memories_7_5 <= wr_data_in_7;
+      else if (_GEN_172)
+        RAT_memories_7_5 <= RAT_memories_6_5;
+      if (_GEN_171 & is_being_written_vec_6)
+        RAT_memories_7_6 <= wr_data_in_7;
+      else if (_GEN_172)
+        RAT_memories_7_6 <= RAT_memories_6_6;
+      if (_GEN_171 & is_being_written_vec_7)
+        RAT_memories_7_7 <= wr_data_in_7;
+      else if (_GEN_172)
+        RAT_memories_7_7 <= RAT_memories_6_7;
+      if (_GEN_171 & is_being_written_vec_8)
+        RAT_memories_7_8 <= wr_data_in_7;
+      else if (_GEN_172)
+        RAT_memories_7_8 <= RAT_memories_6_8;
+      if (_GEN_171 & is_being_written_vec_9)
+        RAT_memories_7_9 <= wr_data_in_7;
+      else if (_GEN_172)
+        RAT_memories_7_9 <= RAT_memories_6_9;
+      if (_GEN_171 & is_being_written_vec_10)
+        RAT_memories_7_10 <= wr_data_in_7;
+      else if (_GEN_172)
+        RAT_memories_7_10 <= RAT_memories_6_10;
+      if (_GEN_171 & is_being_written_vec_11)
+        RAT_memories_7_11 <= wr_data_in_7;
+      else if (_GEN_172)
+        RAT_memories_7_11 <= RAT_memories_6_11;
+      if (_GEN_171 & is_being_written_vec_12)
+        RAT_memories_7_12 <= wr_data_in_7;
+      else if (_GEN_172)
+        RAT_memories_7_12 <= RAT_memories_6_12;
+      if (_GEN_171 & is_being_written_vec_13)
+        RAT_memories_7_13 <= wr_data_in_7;
+      else if (_GEN_172)
+        RAT_memories_7_13 <= RAT_memories_6_13;
+      if (_GEN_171 & is_being_written_vec_14)
+        RAT_memories_7_14 <= wr_data_in_7;
+      else if (_GEN_172)
+        RAT_memories_7_14 <= RAT_memories_6_14;
+      if (_GEN_171 & is_being_written_vec_15)
+        RAT_memories_7_15 <= wr_data_in_7;
+      else if (_GEN_172)
+        RAT_memories_7_15 <= RAT_memories_6_15;
+      if (_GEN_171 & is_being_written_vec_16)
+        RAT_memories_7_16 <= wr_data_in_7;
+      else if (_GEN_172)
+        RAT_memories_7_16 <= RAT_memories_6_16;
+      if (_GEN_171 & is_being_written_vec_17)
+        RAT_memories_7_17 <= wr_data_in_7;
+      else if (_GEN_172)
+        RAT_memories_7_17 <= RAT_memories_6_17;
+      if (_GEN_171 & is_being_written_vec_18)
+        RAT_memories_7_18 <= wr_data_in_7;
+      else if (_GEN_172)
+        RAT_memories_7_18 <= RAT_memories_6_18;
+      if (_GEN_171 & is_being_written_vec_19)
+        RAT_memories_7_19 <= wr_data_in_7;
+      else if (_GEN_172)
+        RAT_memories_7_19 <= RAT_memories_6_19;
+      if (_GEN_171 & is_being_written_vec_20)
+        RAT_memories_7_20 <= wr_data_in_7;
+      else if (_GEN_172)
+        RAT_memories_7_20 <= RAT_memories_6_20;
+      if (_GEN_171 & is_being_written_vec_21)
+        RAT_memories_7_21 <= wr_data_in_7;
+      else if (_GEN_172)
+        RAT_memories_7_21 <= RAT_memories_6_21;
+      if (_GEN_171 & is_being_written_vec_22)
+        RAT_memories_7_22 <= wr_data_in_7;
+      else if (_GEN_172)
+        RAT_memories_7_22 <= RAT_memories_6_22;
+      if (_GEN_171 & is_being_written_vec_23)
+        RAT_memories_7_23 <= wr_data_in_7;
+      else if (_GEN_172)
+        RAT_memories_7_23 <= RAT_memories_6_23;
+      if (_GEN_171 & is_being_written_vec_24)
+        RAT_memories_7_24 <= wr_data_in_7;
+      else if (_GEN_172)
+        RAT_memories_7_24 <= RAT_memories_6_24;
+      if (_GEN_171 & is_being_written_vec_25)
+        RAT_memories_7_25 <= wr_data_in_7;
+      else if (_GEN_172)
+        RAT_memories_7_25 <= RAT_memories_6_25;
+      if (_GEN_171 & is_being_written_vec_26)
+        RAT_memories_7_26 <= wr_data_in_7;
+      else if (_GEN_172)
+        RAT_memories_7_26 <= RAT_memories_6_26;
+      if (_GEN_171 & is_being_written_vec_27)
+        RAT_memories_7_27 <= wr_data_in_7;
+      else if (_GEN_172)
+        RAT_memories_7_27 <= RAT_memories_6_27;
+      if (_GEN_171 & is_being_written_vec_28)
+        RAT_memories_7_28 <= wr_data_in_7;
+      else if (_GEN_172)
+        RAT_memories_7_28 <= RAT_memories_6_28;
+      if (_GEN_171 & is_being_written_vec_29)
+        RAT_memories_7_29 <= wr_data_in_7;
+      else if (_GEN_172)
+        RAT_memories_7_29 <= RAT_memories_6_29;
+      if (_GEN_171 & is_being_written_vec_30)
+        RAT_memories_7_30 <= wr_data_in_7;
+      else if (_GEN_172)
+        RAT_memories_7_30 <= RAT_memories_6_30;
+      if (_GEN_171 & is_being_written_vec_31)
+        RAT_memories_7_31 <= wr_data_in_7;
+      else if (_GEN_172)
+        RAT_memories_7_31 <= RAT_memories_6_31;
+      if (_GEN_173 & is_being_written_vec_0)
+        RAT_memories_8_0 <= wr_data_in_8;
+      else if (_GEN_174)
+        RAT_memories_8_0 <= RAT_memories_7_0;
+      if (_GEN_173 & is_being_written_vec_1)
+        RAT_memories_8_1 <= wr_data_in_8;
+      else if (_GEN_174)
+        RAT_memories_8_1 <= RAT_memories_7_1;
+      if (_GEN_173 & is_being_written_vec_2)
+        RAT_memories_8_2 <= wr_data_in_8;
+      else if (_GEN_174)
+        RAT_memories_8_2 <= RAT_memories_7_2;
+      if (_GEN_173 & is_being_written_vec_3)
+        RAT_memories_8_3 <= wr_data_in_8;
+      else if (_GEN_174)
+        RAT_memories_8_3 <= RAT_memories_7_3;
+      if (_GEN_173 & is_being_written_vec_4)
+        RAT_memories_8_4 <= wr_data_in_8;
+      else if (_GEN_174)
+        RAT_memories_8_4 <= RAT_memories_7_4;
+      if (_GEN_173 & is_being_written_vec_5)
+        RAT_memories_8_5 <= wr_data_in_8;
+      else if (_GEN_174)
+        RAT_memories_8_5 <= RAT_memories_7_5;
+      if (_GEN_173 & is_being_written_vec_6)
+        RAT_memories_8_6 <= wr_data_in_8;
+      else if (_GEN_174)
+        RAT_memories_8_6 <= RAT_memories_7_6;
+      if (_GEN_173 & is_being_written_vec_7)
+        RAT_memories_8_7 <= wr_data_in_8;
+      else if (_GEN_174)
+        RAT_memories_8_7 <= RAT_memories_7_7;
+      if (_GEN_173 & is_being_written_vec_8)
+        RAT_memories_8_8 <= wr_data_in_8;
+      else if (_GEN_174)
+        RAT_memories_8_8 <= RAT_memories_7_8;
+      if (_GEN_173 & is_being_written_vec_9)
+        RAT_memories_8_9 <= wr_data_in_8;
+      else if (_GEN_174)
+        RAT_memories_8_9 <= RAT_memories_7_9;
+      if (_GEN_173 & is_being_written_vec_10)
+        RAT_memories_8_10 <= wr_data_in_8;
+      else if (_GEN_174)
+        RAT_memories_8_10 <= RAT_memories_7_10;
+      if (_GEN_173 & is_being_written_vec_11)
+        RAT_memories_8_11 <= wr_data_in_8;
+      else if (_GEN_174)
+        RAT_memories_8_11 <= RAT_memories_7_11;
+      if (_GEN_173 & is_being_written_vec_12)
+        RAT_memories_8_12 <= wr_data_in_8;
+      else if (_GEN_174)
+        RAT_memories_8_12 <= RAT_memories_7_12;
+      if (_GEN_173 & is_being_written_vec_13)
+        RAT_memories_8_13 <= wr_data_in_8;
+      else if (_GEN_174)
+        RAT_memories_8_13 <= RAT_memories_7_13;
+      if (_GEN_173 & is_being_written_vec_14)
+        RAT_memories_8_14 <= wr_data_in_8;
+      else if (_GEN_174)
+        RAT_memories_8_14 <= RAT_memories_7_14;
+      if (_GEN_173 & is_being_written_vec_15)
+        RAT_memories_8_15 <= wr_data_in_8;
+      else if (_GEN_174)
+        RAT_memories_8_15 <= RAT_memories_7_15;
+      if (_GEN_173 & is_being_written_vec_16)
+        RAT_memories_8_16 <= wr_data_in_8;
+      else if (_GEN_174)
+        RAT_memories_8_16 <= RAT_memories_7_16;
+      if (_GEN_173 & is_being_written_vec_17)
+        RAT_memories_8_17 <= wr_data_in_8;
+      else if (_GEN_174)
+        RAT_memories_8_17 <= RAT_memories_7_17;
+      if (_GEN_173 & is_being_written_vec_18)
+        RAT_memories_8_18 <= wr_data_in_8;
+      else if (_GEN_174)
+        RAT_memories_8_18 <= RAT_memories_7_18;
+      if (_GEN_173 & is_being_written_vec_19)
+        RAT_memories_8_19 <= wr_data_in_8;
+      else if (_GEN_174)
+        RAT_memories_8_19 <= RAT_memories_7_19;
+      if (_GEN_173 & is_being_written_vec_20)
+        RAT_memories_8_20 <= wr_data_in_8;
+      else if (_GEN_174)
+        RAT_memories_8_20 <= RAT_memories_7_20;
+      if (_GEN_173 & is_being_written_vec_21)
+        RAT_memories_8_21 <= wr_data_in_8;
+      else if (_GEN_174)
+        RAT_memories_8_21 <= RAT_memories_7_21;
+      if (_GEN_173 & is_being_written_vec_22)
+        RAT_memories_8_22 <= wr_data_in_8;
+      else if (_GEN_174)
+        RAT_memories_8_22 <= RAT_memories_7_22;
+      if (_GEN_173 & is_being_written_vec_23)
+        RAT_memories_8_23 <= wr_data_in_8;
+      else if (_GEN_174)
+        RAT_memories_8_23 <= RAT_memories_7_23;
+      if (_GEN_173 & is_being_written_vec_24)
+        RAT_memories_8_24 <= wr_data_in_8;
+      else if (_GEN_174)
+        RAT_memories_8_24 <= RAT_memories_7_24;
+      if (_GEN_173 & is_being_written_vec_25)
+        RAT_memories_8_25 <= wr_data_in_8;
+      else if (_GEN_174)
+        RAT_memories_8_25 <= RAT_memories_7_25;
+      if (_GEN_173 & is_being_written_vec_26)
+        RAT_memories_8_26 <= wr_data_in_8;
+      else if (_GEN_174)
+        RAT_memories_8_26 <= RAT_memories_7_26;
+      if (_GEN_173 & is_being_written_vec_27)
+        RAT_memories_8_27 <= wr_data_in_8;
+      else if (_GEN_174)
+        RAT_memories_8_27 <= RAT_memories_7_27;
+      if (_GEN_173 & is_being_written_vec_28)
+        RAT_memories_8_28 <= wr_data_in_8;
+      else if (_GEN_174)
+        RAT_memories_8_28 <= RAT_memories_7_28;
+      if (_GEN_173 & is_being_written_vec_29)
+        RAT_memories_8_29 <= wr_data_in_8;
+      else if (_GEN_174)
+        RAT_memories_8_29 <= RAT_memories_7_29;
+      if (_GEN_173 & is_being_written_vec_30)
+        RAT_memories_8_30 <= wr_data_in_8;
+      else if (_GEN_174)
+        RAT_memories_8_30 <= RAT_memories_7_30;
+      if (_GEN_173 & is_being_written_vec_31)
+        RAT_memories_8_31 <= wr_data_in_8;
+      else if (_GEN_174)
+        RAT_memories_8_31 <= RAT_memories_7_31;
+      if (_GEN_175 & is_being_written_vec_0)
+        RAT_memories_9_0 <= wr_data_in_9;
+      else if (_GEN_176)
+        RAT_memories_9_0 <= RAT_memories_8_0;
+      if (_GEN_175 & is_being_written_vec_1)
+        RAT_memories_9_1 <= wr_data_in_9;
+      else if (_GEN_176)
+        RAT_memories_9_1 <= RAT_memories_8_1;
+      if (_GEN_175 & is_being_written_vec_2)
+        RAT_memories_9_2 <= wr_data_in_9;
+      else if (_GEN_176)
+        RAT_memories_9_2 <= RAT_memories_8_2;
+      if (_GEN_175 & is_being_written_vec_3)
+        RAT_memories_9_3 <= wr_data_in_9;
+      else if (_GEN_176)
+        RAT_memories_9_3 <= RAT_memories_8_3;
+      if (_GEN_175 & is_being_written_vec_4)
+        RAT_memories_9_4 <= wr_data_in_9;
+      else if (_GEN_176)
+        RAT_memories_9_4 <= RAT_memories_8_4;
+      if (_GEN_175 & is_being_written_vec_5)
+        RAT_memories_9_5 <= wr_data_in_9;
+      else if (_GEN_176)
+        RAT_memories_9_5 <= RAT_memories_8_5;
+      if (_GEN_175 & is_being_written_vec_6)
+        RAT_memories_9_6 <= wr_data_in_9;
+      else if (_GEN_176)
+        RAT_memories_9_6 <= RAT_memories_8_6;
+      if (_GEN_175 & is_being_written_vec_7)
+        RAT_memories_9_7 <= wr_data_in_9;
+      else if (_GEN_176)
+        RAT_memories_9_7 <= RAT_memories_8_7;
+      if (_GEN_175 & is_being_written_vec_8)
+        RAT_memories_9_8 <= wr_data_in_9;
+      else if (_GEN_176)
+        RAT_memories_9_8 <= RAT_memories_8_8;
+      if (_GEN_175 & is_being_written_vec_9)
+        RAT_memories_9_9 <= wr_data_in_9;
+      else if (_GEN_176)
+        RAT_memories_9_9 <= RAT_memories_8_9;
+      if (_GEN_175 & is_being_written_vec_10)
+        RAT_memories_9_10 <= wr_data_in_9;
+      else if (_GEN_176)
+        RAT_memories_9_10 <= RAT_memories_8_10;
+      if (_GEN_175 & is_being_written_vec_11)
+        RAT_memories_9_11 <= wr_data_in_9;
+      else if (_GEN_176)
+        RAT_memories_9_11 <= RAT_memories_8_11;
+      if (_GEN_175 & is_being_written_vec_12)
+        RAT_memories_9_12 <= wr_data_in_9;
+      else if (_GEN_176)
+        RAT_memories_9_12 <= RAT_memories_8_12;
+      if (_GEN_175 & is_being_written_vec_13)
+        RAT_memories_9_13 <= wr_data_in_9;
+      else if (_GEN_176)
+        RAT_memories_9_13 <= RAT_memories_8_13;
+      if (_GEN_175 & is_being_written_vec_14)
+        RAT_memories_9_14 <= wr_data_in_9;
+      else if (_GEN_176)
+        RAT_memories_9_14 <= RAT_memories_8_14;
+      if (_GEN_175 & is_being_written_vec_15)
+        RAT_memories_9_15 <= wr_data_in_9;
+      else if (_GEN_176)
+        RAT_memories_9_15 <= RAT_memories_8_15;
+      if (_GEN_175 & is_being_written_vec_16)
+        RAT_memories_9_16 <= wr_data_in_9;
+      else if (_GEN_176)
+        RAT_memories_9_16 <= RAT_memories_8_16;
+      if (_GEN_175 & is_being_written_vec_17)
+        RAT_memories_9_17 <= wr_data_in_9;
+      else if (_GEN_176)
+        RAT_memories_9_17 <= RAT_memories_8_17;
+      if (_GEN_175 & is_being_written_vec_18)
+        RAT_memories_9_18 <= wr_data_in_9;
+      else if (_GEN_176)
+        RAT_memories_9_18 <= RAT_memories_8_18;
+      if (_GEN_175 & is_being_written_vec_19)
+        RAT_memories_9_19 <= wr_data_in_9;
+      else if (_GEN_176)
+        RAT_memories_9_19 <= RAT_memories_8_19;
+      if (_GEN_175 & is_being_written_vec_20)
+        RAT_memories_9_20 <= wr_data_in_9;
+      else if (_GEN_176)
+        RAT_memories_9_20 <= RAT_memories_8_20;
+      if (_GEN_175 & is_being_written_vec_21)
+        RAT_memories_9_21 <= wr_data_in_9;
+      else if (_GEN_176)
+        RAT_memories_9_21 <= RAT_memories_8_21;
+      if (_GEN_175 & is_being_written_vec_22)
+        RAT_memories_9_22 <= wr_data_in_9;
+      else if (_GEN_176)
+        RAT_memories_9_22 <= RAT_memories_8_22;
+      if (_GEN_175 & is_being_written_vec_23)
+        RAT_memories_9_23 <= wr_data_in_9;
+      else if (_GEN_176)
+        RAT_memories_9_23 <= RAT_memories_8_23;
+      if (_GEN_175 & is_being_written_vec_24)
+        RAT_memories_9_24 <= wr_data_in_9;
+      else if (_GEN_176)
+        RAT_memories_9_24 <= RAT_memories_8_24;
+      if (_GEN_175 & is_being_written_vec_25)
+        RAT_memories_9_25 <= wr_data_in_9;
+      else if (_GEN_176)
+        RAT_memories_9_25 <= RAT_memories_8_25;
+      if (_GEN_175 & is_being_written_vec_26)
+        RAT_memories_9_26 <= wr_data_in_9;
+      else if (_GEN_176)
+        RAT_memories_9_26 <= RAT_memories_8_26;
+      if (_GEN_175 & is_being_written_vec_27)
+        RAT_memories_9_27 <= wr_data_in_9;
+      else if (_GEN_176)
+        RAT_memories_9_27 <= RAT_memories_8_27;
+      if (_GEN_175 & is_being_written_vec_28)
+        RAT_memories_9_28 <= wr_data_in_9;
+      else if (_GEN_176)
+        RAT_memories_9_28 <= RAT_memories_8_28;
+      if (_GEN_175 & is_being_written_vec_29)
+        RAT_memories_9_29 <= wr_data_in_9;
+      else if (_GEN_176)
+        RAT_memories_9_29 <= RAT_memories_8_29;
+      if (_GEN_175 & is_being_written_vec_30)
+        RAT_memories_9_30 <= wr_data_in_9;
+      else if (_GEN_176)
+        RAT_memories_9_30 <= RAT_memories_8_30;
+      if (_GEN_175 & is_being_written_vec_31)
+        RAT_memories_9_31 <= wr_data_in_9;
+      else if (_GEN_176)
+        RAT_memories_9_31 <= RAT_memories_8_31;
+      if (_GEN_177 & is_being_written_vec_0)
+        RAT_memories_10_0 <= wr_data_in_10;
+      else if (_GEN_178)
+        RAT_memories_10_0 <= RAT_memories_9_0;
+      if (_GEN_177 & is_being_written_vec_1)
+        RAT_memories_10_1 <= wr_data_in_10;
+      else if (_GEN_178)
+        RAT_memories_10_1 <= RAT_memories_9_1;
+      if (_GEN_177 & is_being_written_vec_2)
+        RAT_memories_10_2 <= wr_data_in_10;
+      else if (_GEN_178)
+        RAT_memories_10_2 <= RAT_memories_9_2;
+      if (_GEN_177 & is_being_written_vec_3)
+        RAT_memories_10_3 <= wr_data_in_10;
+      else if (_GEN_178)
+        RAT_memories_10_3 <= RAT_memories_9_3;
+      if (_GEN_177 & is_being_written_vec_4)
+        RAT_memories_10_4 <= wr_data_in_10;
+      else if (_GEN_178)
+        RAT_memories_10_4 <= RAT_memories_9_4;
+      if (_GEN_177 & is_being_written_vec_5)
+        RAT_memories_10_5 <= wr_data_in_10;
+      else if (_GEN_178)
+        RAT_memories_10_5 <= RAT_memories_9_5;
+      if (_GEN_177 & is_being_written_vec_6)
+        RAT_memories_10_6 <= wr_data_in_10;
+      else if (_GEN_178)
+        RAT_memories_10_6 <= RAT_memories_9_6;
+      if (_GEN_177 & is_being_written_vec_7)
+        RAT_memories_10_7 <= wr_data_in_10;
+      else if (_GEN_178)
+        RAT_memories_10_7 <= RAT_memories_9_7;
+      if (_GEN_177 & is_being_written_vec_8)
+        RAT_memories_10_8 <= wr_data_in_10;
+      else if (_GEN_178)
+        RAT_memories_10_8 <= RAT_memories_9_8;
+      if (_GEN_177 & is_being_written_vec_9)
+        RAT_memories_10_9 <= wr_data_in_10;
+      else if (_GEN_178)
+        RAT_memories_10_9 <= RAT_memories_9_9;
+      if (_GEN_177 & is_being_written_vec_10)
+        RAT_memories_10_10 <= wr_data_in_10;
+      else if (_GEN_178)
+        RAT_memories_10_10 <= RAT_memories_9_10;
+      if (_GEN_177 & is_being_written_vec_11)
+        RAT_memories_10_11 <= wr_data_in_10;
+      else if (_GEN_178)
+        RAT_memories_10_11 <= RAT_memories_9_11;
+      if (_GEN_177 & is_being_written_vec_12)
+        RAT_memories_10_12 <= wr_data_in_10;
+      else if (_GEN_178)
+        RAT_memories_10_12 <= RAT_memories_9_12;
+      if (_GEN_177 & is_being_written_vec_13)
+        RAT_memories_10_13 <= wr_data_in_10;
+      else if (_GEN_178)
+        RAT_memories_10_13 <= RAT_memories_9_13;
+      if (_GEN_177 & is_being_written_vec_14)
+        RAT_memories_10_14 <= wr_data_in_10;
+      else if (_GEN_178)
+        RAT_memories_10_14 <= RAT_memories_9_14;
+      if (_GEN_177 & is_being_written_vec_15)
+        RAT_memories_10_15 <= wr_data_in_10;
+      else if (_GEN_178)
+        RAT_memories_10_15 <= RAT_memories_9_15;
+      if (_GEN_177 & is_being_written_vec_16)
+        RAT_memories_10_16 <= wr_data_in_10;
+      else if (_GEN_178)
+        RAT_memories_10_16 <= RAT_memories_9_16;
+      if (_GEN_177 & is_being_written_vec_17)
+        RAT_memories_10_17 <= wr_data_in_10;
+      else if (_GEN_178)
+        RAT_memories_10_17 <= RAT_memories_9_17;
+      if (_GEN_177 & is_being_written_vec_18)
+        RAT_memories_10_18 <= wr_data_in_10;
+      else if (_GEN_178)
+        RAT_memories_10_18 <= RAT_memories_9_18;
+      if (_GEN_177 & is_being_written_vec_19)
+        RAT_memories_10_19 <= wr_data_in_10;
+      else if (_GEN_178)
+        RAT_memories_10_19 <= RAT_memories_9_19;
+      if (_GEN_177 & is_being_written_vec_20)
+        RAT_memories_10_20 <= wr_data_in_10;
+      else if (_GEN_178)
+        RAT_memories_10_20 <= RAT_memories_9_20;
+      if (_GEN_177 & is_being_written_vec_21)
+        RAT_memories_10_21 <= wr_data_in_10;
+      else if (_GEN_178)
+        RAT_memories_10_21 <= RAT_memories_9_21;
+      if (_GEN_177 & is_being_written_vec_22)
+        RAT_memories_10_22 <= wr_data_in_10;
+      else if (_GEN_178)
+        RAT_memories_10_22 <= RAT_memories_9_22;
+      if (_GEN_177 & is_being_written_vec_23)
+        RAT_memories_10_23 <= wr_data_in_10;
+      else if (_GEN_178)
+        RAT_memories_10_23 <= RAT_memories_9_23;
+      if (_GEN_177 & is_being_written_vec_24)
+        RAT_memories_10_24 <= wr_data_in_10;
+      else if (_GEN_178)
+        RAT_memories_10_24 <= RAT_memories_9_24;
+      if (_GEN_177 & is_being_written_vec_25)
+        RAT_memories_10_25 <= wr_data_in_10;
+      else if (_GEN_178)
+        RAT_memories_10_25 <= RAT_memories_9_25;
+      if (_GEN_177 & is_being_written_vec_26)
+        RAT_memories_10_26 <= wr_data_in_10;
+      else if (_GEN_178)
+        RAT_memories_10_26 <= RAT_memories_9_26;
+      if (_GEN_177 & is_being_written_vec_27)
+        RAT_memories_10_27 <= wr_data_in_10;
+      else if (_GEN_178)
+        RAT_memories_10_27 <= RAT_memories_9_27;
+      if (_GEN_177 & is_being_written_vec_28)
+        RAT_memories_10_28 <= wr_data_in_10;
+      else if (_GEN_178)
+        RAT_memories_10_28 <= RAT_memories_9_28;
+      if (_GEN_177 & is_being_written_vec_29)
+        RAT_memories_10_29 <= wr_data_in_10;
+      else if (_GEN_178)
+        RAT_memories_10_29 <= RAT_memories_9_29;
+      if (_GEN_177 & is_being_written_vec_30)
+        RAT_memories_10_30 <= wr_data_in_10;
+      else if (_GEN_178)
+        RAT_memories_10_30 <= RAT_memories_9_30;
+      if (_GEN_177 & is_being_written_vec_31)
+        RAT_memories_10_31 <= wr_data_in_10;
+      else if (_GEN_178)
+        RAT_memories_10_31 <= RAT_memories_9_31;
+      if (_GEN_179 & is_being_written_vec_0)
+        RAT_memories_11_0 <= wr_data_in_11;
+      else if (_GEN_180)
+        RAT_memories_11_0 <= RAT_memories_10_0;
+      if (_GEN_179 & is_being_written_vec_1)
+        RAT_memories_11_1 <= wr_data_in_11;
+      else if (_GEN_180)
+        RAT_memories_11_1 <= RAT_memories_10_1;
+      if (_GEN_179 & is_being_written_vec_2)
+        RAT_memories_11_2 <= wr_data_in_11;
+      else if (_GEN_180)
+        RAT_memories_11_2 <= RAT_memories_10_2;
+      if (_GEN_179 & is_being_written_vec_3)
+        RAT_memories_11_3 <= wr_data_in_11;
+      else if (_GEN_180)
+        RAT_memories_11_3 <= RAT_memories_10_3;
+      if (_GEN_179 & is_being_written_vec_4)
+        RAT_memories_11_4 <= wr_data_in_11;
+      else if (_GEN_180)
+        RAT_memories_11_4 <= RAT_memories_10_4;
+      if (_GEN_179 & is_being_written_vec_5)
+        RAT_memories_11_5 <= wr_data_in_11;
+      else if (_GEN_180)
+        RAT_memories_11_5 <= RAT_memories_10_5;
+      if (_GEN_179 & is_being_written_vec_6)
+        RAT_memories_11_6 <= wr_data_in_11;
+      else if (_GEN_180)
+        RAT_memories_11_6 <= RAT_memories_10_6;
+      if (_GEN_179 & is_being_written_vec_7)
+        RAT_memories_11_7 <= wr_data_in_11;
+      else if (_GEN_180)
+        RAT_memories_11_7 <= RAT_memories_10_7;
+      if (_GEN_179 & is_being_written_vec_8)
+        RAT_memories_11_8 <= wr_data_in_11;
+      else if (_GEN_180)
+        RAT_memories_11_8 <= RAT_memories_10_8;
+      if (_GEN_179 & is_being_written_vec_9)
+        RAT_memories_11_9 <= wr_data_in_11;
+      else if (_GEN_180)
+        RAT_memories_11_9 <= RAT_memories_10_9;
+      if (_GEN_179 & is_being_written_vec_10)
+        RAT_memories_11_10 <= wr_data_in_11;
+      else if (_GEN_180)
+        RAT_memories_11_10 <= RAT_memories_10_10;
+      if (_GEN_179 & is_being_written_vec_11)
+        RAT_memories_11_11 <= wr_data_in_11;
+      else if (_GEN_180)
+        RAT_memories_11_11 <= RAT_memories_10_11;
+      if (_GEN_179 & is_being_written_vec_12)
+        RAT_memories_11_12 <= wr_data_in_11;
+      else if (_GEN_180)
+        RAT_memories_11_12 <= RAT_memories_10_12;
+      if (_GEN_179 & is_being_written_vec_13)
+        RAT_memories_11_13 <= wr_data_in_11;
+      else if (_GEN_180)
+        RAT_memories_11_13 <= RAT_memories_10_13;
+      if (_GEN_179 & is_being_written_vec_14)
+        RAT_memories_11_14 <= wr_data_in_11;
+      else if (_GEN_180)
+        RAT_memories_11_14 <= RAT_memories_10_14;
+      if (_GEN_179 & is_being_written_vec_15)
+        RAT_memories_11_15 <= wr_data_in_11;
+      else if (_GEN_180)
+        RAT_memories_11_15 <= RAT_memories_10_15;
+      if (_GEN_179 & is_being_written_vec_16)
+        RAT_memories_11_16 <= wr_data_in_11;
+      else if (_GEN_180)
+        RAT_memories_11_16 <= RAT_memories_10_16;
+      if (_GEN_179 & is_being_written_vec_17)
+        RAT_memories_11_17 <= wr_data_in_11;
+      else if (_GEN_180)
+        RAT_memories_11_17 <= RAT_memories_10_17;
+      if (_GEN_179 & is_being_written_vec_18)
+        RAT_memories_11_18 <= wr_data_in_11;
+      else if (_GEN_180)
+        RAT_memories_11_18 <= RAT_memories_10_18;
+      if (_GEN_179 & is_being_written_vec_19)
+        RAT_memories_11_19 <= wr_data_in_11;
+      else if (_GEN_180)
+        RAT_memories_11_19 <= RAT_memories_10_19;
+      if (_GEN_179 & is_being_written_vec_20)
+        RAT_memories_11_20 <= wr_data_in_11;
+      else if (_GEN_180)
+        RAT_memories_11_20 <= RAT_memories_10_20;
+      if (_GEN_179 & is_being_written_vec_21)
+        RAT_memories_11_21 <= wr_data_in_11;
+      else if (_GEN_180)
+        RAT_memories_11_21 <= RAT_memories_10_21;
+      if (_GEN_179 & is_being_written_vec_22)
+        RAT_memories_11_22 <= wr_data_in_11;
+      else if (_GEN_180)
+        RAT_memories_11_22 <= RAT_memories_10_22;
+      if (_GEN_179 & is_being_written_vec_23)
+        RAT_memories_11_23 <= wr_data_in_11;
+      else if (_GEN_180)
+        RAT_memories_11_23 <= RAT_memories_10_23;
+      if (_GEN_179 & is_being_written_vec_24)
+        RAT_memories_11_24 <= wr_data_in_11;
+      else if (_GEN_180)
+        RAT_memories_11_24 <= RAT_memories_10_24;
+      if (_GEN_179 & is_being_written_vec_25)
+        RAT_memories_11_25 <= wr_data_in_11;
+      else if (_GEN_180)
+        RAT_memories_11_25 <= RAT_memories_10_25;
+      if (_GEN_179 & is_being_written_vec_26)
+        RAT_memories_11_26 <= wr_data_in_11;
+      else if (_GEN_180)
+        RAT_memories_11_26 <= RAT_memories_10_26;
+      if (_GEN_179 & is_being_written_vec_27)
+        RAT_memories_11_27 <= wr_data_in_11;
+      else if (_GEN_180)
+        RAT_memories_11_27 <= RAT_memories_10_27;
+      if (_GEN_179 & is_being_written_vec_28)
+        RAT_memories_11_28 <= wr_data_in_11;
+      else if (_GEN_180)
+        RAT_memories_11_28 <= RAT_memories_10_28;
+      if (_GEN_179 & is_being_written_vec_29)
+        RAT_memories_11_29 <= wr_data_in_11;
+      else if (_GEN_180)
+        RAT_memories_11_29 <= RAT_memories_10_29;
+      if (_GEN_179 & is_being_written_vec_30)
+        RAT_memories_11_30 <= wr_data_in_11;
+      else if (_GEN_180)
+        RAT_memories_11_30 <= RAT_memories_10_30;
+      if (_GEN_179 & is_being_written_vec_31)
+        RAT_memories_11_31 <= wr_data_in_11;
+      else if (_GEN_180)
+        RAT_memories_11_31 <= RAT_memories_10_31;
+      if (_GEN_181 & is_being_written_vec_0)
+        RAT_memories_12_0 <= wr_data_in_12;
+      else if (_GEN_182)
+        RAT_memories_12_0 <= RAT_memories_11_0;
+      if (_GEN_181 & is_being_written_vec_1)
+        RAT_memories_12_1 <= wr_data_in_12;
+      else if (_GEN_182)
+        RAT_memories_12_1 <= RAT_memories_11_1;
+      if (_GEN_181 & is_being_written_vec_2)
+        RAT_memories_12_2 <= wr_data_in_12;
+      else if (_GEN_182)
+        RAT_memories_12_2 <= RAT_memories_11_2;
+      if (_GEN_181 & is_being_written_vec_3)
+        RAT_memories_12_3 <= wr_data_in_12;
+      else if (_GEN_182)
+        RAT_memories_12_3 <= RAT_memories_11_3;
+      if (_GEN_181 & is_being_written_vec_4)
+        RAT_memories_12_4 <= wr_data_in_12;
+      else if (_GEN_182)
+        RAT_memories_12_4 <= RAT_memories_11_4;
+      if (_GEN_181 & is_being_written_vec_5)
+        RAT_memories_12_5 <= wr_data_in_12;
+      else if (_GEN_182)
+        RAT_memories_12_5 <= RAT_memories_11_5;
+      if (_GEN_181 & is_being_written_vec_6)
+        RAT_memories_12_6 <= wr_data_in_12;
+      else if (_GEN_182)
+        RAT_memories_12_6 <= RAT_memories_11_6;
+      if (_GEN_181 & is_being_written_vec_7)
+        RAT_memories_12_7 <= wr_data_in_12;
+      else if (_GEN_182)
+        RAT_memories_12_7 <= RAT_memories_11_7;
+      if (_GEN_181 & is_being_written_vec_8)
+        RAT_memories_12_8 <= wr_data_in_12;
+      else if (_GEN_182)
+        RAT_memories_12_8 <= RAT_memories_11_8;
+      if (_GEN_181 & is_being_written_vec_9)
+        RAT_memories_12_9 <= wr_data_in_12;
+      else if (_GEN_182)
+        RAT_memories_12_9 <= RAT_memories_11_9;
+      if (_GEN_181 & is_being_written_vec_10)
+        RAT_memories_12_10 <= wr_data_in_12;
+      else if (_GEN_182)
+        RAT_memories_12_10 <= RAT_memories_11_10;
+      if (_GEN_181 & is_being_written_vec_11)
+        RAT_memories_12_11 <= wr_data_in_12;
+      else if (_GEN_182)
+        RAT_memories_12_11 <= RAT_memories_11_11;
+      if (_GEN_181 & is_being_written_vec_12)
+        RAT_memories_12_12 <= wr_data_in_12;
+      else if (_GEN_182)
+        RAT_memories_12_12 <= RAT_memories_11_12;
+      if (_GEN_181 & is_being_written_vec_13)
+        RAT_memories_12_13 <= wr_data_in_12;
+      else if (_GEN_182)
+        RAT_memories_12_13 <= RAT_memories_11_13;
+      if (_GEN_181 & is_being_written_vec_14)
+        RAT_memories_12_14 <= wr_data_in_12;
+      else if (_GEN_182)
+        RAT_memories_12_14 <= RAT_memories_11_14;
+      if (_GEN_181 & is_being_written_vec_15)
+        RAT_memories_12_15 <= wr_data_in_12;
+      else if (_GEN_182)
+        RAT_memories_12_15 <= RAT_memories_11_15;
+      if (_GEN_181 & is_being_written_vec_16)
+        RAT_memories_12_16 <= wr_data_in_12;
+      else if (_GEN_182)
+        RAT_memories_12_16 <= RAT_memories_11_16;
+      if (_GEN_181 & is_being_written_vec_17)
+        RAT_memories_12_17 <= wr_data_in_12;
+      else if (_GEN_182)
+        RAT_memories_12_17 <= RAT_memories_11_17;
+      if (_GEN_181 & is_being_written_vec_18)
+        RAT_memories_12_18 <= wr_data_in_12;
+      else if (_GEN_182)
+        RAT_memories_12_18 <= RAT_memories_11_18;
+      if (_GEN_181 & is_being_written_vec_19)
+        RAT_memories_12_19 <= wr_data_in_12;
+      else if (_GEN_182)
+        RAT_memories_12_19 <= RAT_memories_11_19;
+      if (_GEN_181 & is_being_written_vec_20)
+        RAT_memories_12_20 <= wr_data_in_12;
+      else if (_GEN_182)
+        RAT_memories_12_20 <= RAT_memories_11_20;
+      if (_GEN_181 & is_being_written_vec_21)
+        RAT_memories_12_21 <= wr_data_in_12;
+      else if (_GEN_182)
+        RAT_memories_12_21 <= RAT_memories_11_21;
+      if (_GEN_181 & is_being_written_vec_22)
+        RAT_memories_12_22 <= wr_data_in_12;
+      else if (_GEN_182)
+        RAT_memories_12_22 <= RAT_memories_11_22;
+      if (_GEN_181 & is_being_written_vec_23)
+        RAT_memories_12_23 <= wr_data_in_12;
+      else if (_GEN_182)
+        RAT_memories_12_23 <= RAT_memories_11_23;
+      if (_GEN_181 & is_being_written_vec_24)
+        RAT_memories_12_24 <= wr_data_in_12;
+      else if (_GEN_182)
+        RAT_memories_12_24 <= RAT_memories_11_24;
+      if (_GEN_181 & is_being_written_vec_25)
+        RAT_memories_12_25 <= wr_data_in_12;
+      else if (_GEN_182)
+        RAT_memories_12_25 <= RAT_memories_11_25;
+      if (_GEN_181 & is_being_written_vec_26)
+        RAT_memories_12_26 <= wr_data_in_12;
+      else if (_GEN_182)
+        RAT_memories_12_26 <= RAT_memories_11_26;
+      if (_GEN_181 & is_being_written_vec_27)
+        RAT_memories_12_27 <= wr_data_in_12;
+      else if (_GEN_182)
+        RAT_memories_12_27 <= RAT_memories_11_27;
+      if (_GEN_181 & is_being_written_vec_28)
+        RAT_memories_12_28 <= wr_data_in_12;
+      else if (_GEN_182)
+        RAT_memories_12_28 <= RAT_memories_11_28;
+      if (_GEN_181 & is_being_written_vec_29)
+        RAT_memories_12_29 <= wr_data_in_12;
+      else if (_GEN_182)
+        RAT_memories_12_29 <= RAT_memories_11_29;
+      if (_GEN_181 & is_being_written_vec_30)
+        RAT_memories_12_30 <= wr_data_in_12;
+      else if (_GEN_182)
+        RAT_memories_12_30 <= RAT_memories_11_30;
+      if (_GEN_181 & is_being_written_vec_31)
+        RAT_memories_12_31 <= wr_data_in_12;
+      else if (_GEN_182)
+        RAT_memories_12_31 <= RAT_memories_11_31;
+      if (_GEN_183 & is_being_written_vec_0)
+        RAT_memories_13_0 <= wr_data_in_13;
+      else if (_GEN_184)
+        RAT_memories_13_0 <= RAT_memories_12_0;
+      if (_GEN_183 & is_being_written_vec_1)
+        RAT_memories_13_1 <= wr_data_in_13;
+      else if (_GEN_184)
+        RAT_memories_13_1 <= RAT_memories_12_1;
+      if (_GEN_183 & is_being_written_vec_2)
+        RAT_memories_13_2 <= wr_data_in_13;
+      else if (_GEN_184)
+        RAT_memories_13_2 <= RAT_memories_12_2;
+      if (_GEN_183 & is_being_written_vec_3)
+        RAT_memories_13_3 <= wr_data_in_13;
+      else if (_GEN_184)
+        RAT_memories_13_3 <= RAT_memories_12_3;
+      if (_GEN_183 & is_being_written_vec_4)
+        RAT_memories_13_4 <= wr_data_in_13;
+      else if (_GEN_184)
+        RAT_memories_13_4 <= RAT_memories_12_4;
+      if (_GEN_183 & is_being_written_vec_5)
+        RAT_memories_13_5 <= wr_data_in_13;
+      else if (_GEN_184)
+        RAT_memories_13_5 <= RAT_memories_12_5;
+      if (_GEN_183 & is_being_written_vec_6)
+        RAT_memories_13_6 <= wr_data_in_13;
+      else if (_GEN_184)
+        RAT_memories_13_6 <= RAT_memories_12_6;
+      if (_GEN_183 & is_being_written_vec_7)
+        RAT_memories_13_7 <= wr_data_in_13;
+      else if (_GEN_184)
+        RAT_memories_13_7 <= RAT_memories_12_7;
+      if (_GEN_183 & is_being_written_vec_8)
+        RAT_memories_13_8 <= wr_data_in_13;
+      else if (_GEN_184)
+        RAT_memories_13_8 <= RAT_memories_12_8;
+      if (_GEN_183 & is_being_written_vec_9)
+        RAT_memories_13_9 <= wr_data_in_13;
+      else if (_GEN_184)
+        RAT_memories_13_9 <= RAT_memories_12_9;
+      if (_GEN_183 & is_being_written_vec_10)
+        RAT_memories_13_10 <= wr_data_in_13;
+      else if (_GEN_184)
+        RAT_memories_13_10 <= RAT_memories_12_10;
+      if (_GEN_183 & is_being_written_vec_11)
+        RAT_memories_13_11 <= wr_data_in_13;
+      else if (_GEN_184)
+        RAT_memories_13_11 <= RAT_memories_12_11;
+      if (_GEN_183 & is_being_written_vec_12)
+        RAT_memories_13_12 <= wr_data_in_13;
+      else if (_GEN_184)
+        RAT_memories_13_12 <= RAT_memories_12_12;
+      if (_GEN_183 & is_being_written_vec_13)
+        RAT_memories_13_13 <= wr_data_in_13;
+      else if (_GEN_184)
+        RAT_memories_13_13 <= RAT_memories_12_13;
+      if (_GEN_183 & is_being_written_vec_14)
+        RAT_memories_13_14 <= wr_data_in_13;
+      else if (_GEN_184)
+        RAT_memories_13_14 <= RAT_memories_12_14;
+      if (_GEN_183 & is_being_written_vec_15)
+        RAT_memories_13_15 <= wr_data_in_13;
+      else if (_GEN_184)
+        RAT_memories_13_15 <= RAT_memories_12_15;
+      if (_GEN_183 & is_being_written_vec_16)
+        RAT_memories_13_16 <= wr_data_in_13;
+      else if (_GEN_184)
+        RAT_memories_13_16 <= RAT_memories_12_16;
+      if (_GEN_183 & is_being_written_vec_17)
+        RAT_memories_13_17 <= wr_data_in_13;
+      else if (_GEN_184)
+        RAT_memories_13_17 <= RAT_memories_12_17;
+      if (_GEN_183 & is_being_written_vec_18)
+        RAT_memories_13_18 <= wr_data_in_13;
+      else if (_GEN_184)
+        RAT_memories_13_18 <= RAT_memories_12_18;
+      if (_GEN_183 & is_being_written_vec_19)
+        RAT_memories_13_19 <= wr_data_in_13;
+      else if (_GEN_184)
+        RAT_memories_13_19 <= RAT_memories_12_19;
+      if (_GEN_183 & is_being_written_vec_20)
+        RAT_memories_13_20 <= wr_data_in_13;
+      else if (_GEN_184)
+        RAT_memories_13_20 <= RAT_memories_12_20;
+      if (_GEN_183 & is_being_written_vec_21)
+        RAT_memories_13_21 <= wr_data_in_13;
+      else if (_GEN_184)
+        RAT_memories_13_21 <= RAT_memories_12_21;
+      if (_GEN_183 & is_being_written_vec_22)
+        RAT_memories_13_22 <= wr_data_in_13;
+      else if (_GEN_184)
+        RAT_memories_13_22 <= RAT_memories_12_22;
+      if (_GEN_183 & is_being_written_vec_23)
+        RAT_memories_13_23 <= wr_data_in_13;
+      else if (_GEN_184)
+        RAT_memories_13_23 <= RAT_memories_12_23;
+      if (_GEN_183 & is_being_written_vec_24)
+        RAT_memories_13_24 <= wr_data_in_13;
+      else if (_GEN_184)
+        RAT_memories_13_24 <= RAT_memories_12_24;
+      if (_GEN_183 & is_being_written_vec_25)
+        RAT_memories_13_25 <= wr_data_in_13;
+      else if (_GEN_184)
+        RAT_memories_13_25 <= RAT_memories_12_25;
+      if (_GEN_183 & is_being_written_vec_26)
+        RAT_memories_13_26 <= wr_data_in_13;
+      else if (_GEN_184)
+        RAT_memories_13_26 <= RAT_memories_12_26;
+      if (_GEN_183 & is_being_written_vec_27)
+        RAT_memories_13_27 <= wr_data_in_13;
+      else if (_GEN_184)
+        RAT_memories_13_27 <= RAT_memories_12_27;
+      if (_GEN_183 & is_being_written_vec_28)
+        RAT_memories_13_28 <= wr_data_in_13;
+      else if (_GEN_184)
+        RAT_memories_13_28 <= RAT_memories_12_28;
+      if (_GEN_183 & is_being_written_vec_29)
+        RAT_memories_13_29 <= wr_data_in_13;
+      else if (_GEN_184)
+        RAT_memories_13_29 <= RAT_memories_12_29;
+      if (_GEN_183 & is_being_written_vec_30)
+        RAT_memories_13_30 <= wr_data_in_13;
+      else if (_GEN_184)
+        RAT_memories_13_30 <= RAT_memories_12_30;
+      if (_GEN_183 & is_being_written_vec_31)
+        RAT_memories_13_31 <= wr_data_in_13;
+      else if (_GEN_184)
+        RAT_memories_13_31 <= RAT_memories_12_31;
+      if (_GEN_185 & is_being_written_vec_0)
+        RAT_memories_14_0 <= wr_data_in_14;
+      else if (_GEN_186)
+        RAT_memories_14_0 <= RAT_memories_13_0;
+      if (_GEN_185 & is_being_written_vec_1)
+        RAT_memories_14_1 <= wr_data_in_14;
+      else if (_GEN_186)
+        RAT_memories_14_1 <= RAT_memories_13_1;
+      if (_GEN_185 & is_being_written_vec_2)
+        RAT_memories_14_2 <= wr_data_in_14;
+      else if (_GEN_186)
+        RAT_memories_14_2 <= RAT_memories_13_2;
+      if (_GEN_185 & is_being_written_vec_3)
+        RAT_memories_14_3 <= wr_data_in_14;
+      else if (_GEN_186)
+        RAT_memories_14_3 <= RAT_memories_13_3;
+      if (_GEN_185 & is_being_written_vec_4)
+        RAT_memories_14_4 <= wr_data_in_14;
+      else if (_GEN_186)
+        RAT_memories_14_4 <= RAT_memories_13_4;
+      if (_GEN_185 & is_being_written_vec_5)
+        RAT_memories_14_5 <= wr_data_in_14;
+      else if (_GEN_186)
+        RAT_memories_14_5 <= RAT_memories_13_5;
+      if (_GEN_185 & is_being_written_vec_6)
+        RAT_memories_14_6 <= wr_data_in_14;
+      else if (_GEN_186)
+        RAT_memories_14_6 <= RAT_memories_13_6;
+      if (_GEN_185 & is_being_written_vec_7)
+        RAT_memories_14_7 <= wr_data_in_14;
+      else if (_GEN_186)
+        RAT_memories_14_7 <= RAT_memories_13_7;
+      if (_GEN_185 & is_being_written_vec_8)
+        RAT_memories_14_8 <= wr_data_in_14;
+      else if (_GEN_186)
+        RAT_memories_14_8 <= RAT_memories_13_8;
+      if (_GEN_185 & is_being_written_vec_9)
+        RAT_memories_14_9 <= wr_data_in_14;
+      else if (_GEN_186)
+        RAT_memories_14_9 <= RAT_memories_13_9;
+      if (_GEN_185 & is_being_written_vec_10)
+        RAT_memories_14_10 <= wr_data_in_14;
+      else if (_GEN_186)
+        RAT_memories_14_10 <= RAT_memories_13_10;
+      if (_GEN_185 & is_being_written_vec_11)
+        RAT_memories_14_11 <= wr_data_in_14;
+      else if (_GEN_186)
+        RAT_memories_14_11 <= RAT_memories_13_11;
+      if (_GEN_185 & is_being_written_vec_12)
+        RAT_memories_14_12 <= wr_data_in_14;
+      else if (_GEN_186)
+        RAT_memories_14_12 <= RAT_memories_13_12;
+      if (_GEN_185 & is_being_written_vec_13)
+        RAT_memories_14_13 <= wr_data_in_14;
+      else if (_GEN_186)
+        RAT_memories_14_13 <= RAT_memories_13_13;
+      if (_GEN_185 & is_being_written_vec_14)
+        RAT_memories_14_14 <= wr_data_in_14;
+      else if (_GEN_186)
+        RAT_memories_14_14 <= RAT_memories_13_14;
+      if (_GEN_185 & is_being_written_vec_15)
+        RAT_memories_14_15 <= wr_data_in_14;
+      else if (_GEN_186)
+        RAT_memories_14_15 <= RAT_memories_13_15;
+      if (_GEN_185 & is_being_written_vec_16)
+        RAT_memories_14_16 <= wr_data_in_14;
+      else if (_GEN_186)
+        RAT_memories_14_16 <= RAT_memories_13_16;
+      if (_GEN_185 & is_being_written_vec_17)
+        RAT_memories_14_17 <= wr_data_in_14;
+      else if (_GEN_186)
+        RAT_memories_14_17 <= RAT_memories_13_17;
+      if (_GEN_185 & is_being_written_vec_18)
+        RAT_memories_14_18 <= wr_data_in_14;
+      else if (_GEN_186)
+        RAT_memories_14_18 <= RAT_memories_13_18;
+      if (_GEN_185 & is_being_written_vec_19)
+        RAT_memories_14_19 <= wr_data_in_14;
+      else if (_GEN_186)
+        RAT_memories_14_19 <= RAT_memories_13_19;
+      if (_GEN_185 & is_being_written_vec_20)
+        RAT_memories_14_20 <= wr_data_in_14;
+      else if (_GEN_186)
+        RAT_memories_14_20 <= RAT_memories_13_20;
+      if (_GEN_185 & is_being_written_vec_21)
+        RAT_memories_14_21 <= wr_data_in_14;
+      else if (_GEN_186)
+        RAT_memories_14_21 <= RAT_memories_13_21;
+      if (_GEN_185 & is_being_written_vec_22)
+        RAT_memories_14_22 <= wr_data_in_14;
+      else if (_GEN_186)
+        RAT_memories_14_22 <= RAT_memories_13_22;
+      if (_GEN_185 & is_being_written_vec_23)
+        RAT_memories_14_23 <= wr_data_in_14;
+      else if (_GEN_186)
+        RAT_memories_14_23 <= RAT_memories_13_23;
+      if (_GEN_185 & is_being_written_vec_24)
+        RAT_memories_14_24 <= wr_data_in_14;
+      else if (_GEN_186)
+        RAT_memories_14_24 <= RAT_memories_13_24;
+      if (_GEN_185 & is_being_written_vec_25)
+        RAT_memories_14_25 <= wr_data_in_14;
+      else if (_GEN_186)
+        RAT_memories_14_25 <= RAT_memories_13_25;
+      if (_GEN_185 & is_being_written_vec_26)
+        RAT_memories_14_26 <= wr_data_in_14;
+      else if (_GEN_186)
+        RAT_memories_14_26 <= RAT_memories_13_26;
+      if (_GEN_185 & is_being_written_vec_27)
+        RAT_memories_14_27 <= wr_data_in_14;
+      else if (_GEN_186)
+        RAT_memories_14_27 <= RAT_memories_13_27;
+      if (_GEN_185 & is_being_written_vec_28)
+        RAT_memories_14_28 <= wr_data_in_14;
+      else if (_GEN_186)
+        RAT_memories_14_28 <= RAT_memories_13_28;
+      if (_GEN_185 & is_being_written_vec_29)
+        RAT_memories_14_29 <= wr_data_in_14;
+      else if (_GEN_186)
+        RAT_memories_14_29 <= RAT_memories_13_29;
+      if (_GEN_185 & is_being_written_vec_30)
+        RAT_memories_14_30 <= wr_data_in_14;
+      else if (_GEN_186)
+        RAT_memories_14_30 <= RAT_memories_13_30;
+      if (_GEN_185 & is_being_written_vec_31)
+        RAT_memories_14_31 <= wr_data_in_14;
+      else if (_GEN_186)
+        RAT_memories_14_31 <= RAT_memories_13_31;
+      if ((&active_RAT) & is_being_written_vec_0)
+        RAT_memories_15_0 <= wr_data_in_15;
+      else if (_GEN_187)
+        RAT_memories_15_0 <= RAT_memories_14_0;
+      if ((&active_RAT) & is_being_written_vec_1)
+        RAT_memories_15_1 <= wr_data_in_15;
+      else if (_GEN_187)
+        RAT_memories_15_1 <= RAT_memories_14_1;
+      if ((&active_RAT) & is_being_written_vec_2)
+        RAT_memories_15_2 <= wr_data_in_15;
+      else if (_GEN_187)
+        RAT_memories_15_2 <= RAT_memories_14_2;
+      if ((&active_RAT) & is_being_written_vec_3)
+        RAT_memories_15_3 <= wr_data_in_15;
+      else if (_GEN_187)
+        RAT_memories_15_3 <= RAT_memories_14_3;
+      if ((&active_RAT) & is_being_written_vec_4)
+        RAT_memories_15_4 <= wr_data_in_15;
+      else if (_GEN_187)
+        RAT_memories_15_4 <= RAT_memories_14_4;
+      if ((&active_RAT) & is_being_written_vec_5)
+        RAT_memories_15_5 <= wr_data_in_15;
+      else if (_GEN_187)
+        RAT_memories_15_5 <= RAT_memories_14_5;
+      if ((&active_RAT) & is_being_written_vec_6)
+        RAT_memories_15_6 <= wr_data_in_15;
+      else if (_GEN_187)
+        RAT_memories_15_6 <= RAT_memories_14_6;
+      if ((&active_RAT) & is_being_written_vec_7)
+        RAT_memories_15_7 <= wr_data_in_15;
+      else if (_GEN_187)
+        RAT_memories_15_7 <= RAT_memories_14_7;
+      if ((&active_RAT) & is_being_written_vec_8)
+        RAT_memories_15_8 <= wr_data_in_15;
+      else if (_GEN_187)
+        RAT_memories_15_8 <= RAT_memories_14_8;
+      if ((&active_RAT) & is_being_written_vec_9)
+        RAT_memories_15_9 <= wr_data_in_15;
+      else if (_GEN_187)
+        RAT_memories_15_9 <= RAT_memories_14_9;
+      if ((&active_RAT) & is_being_written_vec_10)
+        RAT_memories_15_10 <= wr_data_in_15;
+      else if (_GEN_187)
+        RAT_memories_15_10 <= RAT_memories_14_10;
+      if ((&active_RAT) & is_being_written_vec_11)
+        RAT_memories_15_11 <= wr_data_in_15;
+      else if (_GEN_187)
+        RAT_memories_15_11 <= RAT_memories_14_11;
+      if ((&active_RAT) & is_being_written_vec_12)
+        RAT_memories_15_12 <= wr_data_in_15;
+      else if (_GEN_187)
+        RAT_memories_15_12 <= RAT_memories_14_12;
+      if ((&active_RAT) & is_being_written_vec_13)
+        RAT_memories_15_13 <= wr_data_in_15;
+      else if (_GEN_187)
+        RAT_memories_15_13 <= RAT_memories_14_13;
+      if ((&active_RAT) & is_being_written_vec_14)
+        RAT_memories_15_14 <= wr_data_in_15;
+      else if (_GEN_187)
+        RAT_memories_15_14 <= RAT_memories_14_14;
+      if ((&active_RAT) & is_being_written_vec_15)
+        RAT_memories_15_15 <= wr_data_in_15;
+      else if (_GEN_187)
+        RAT_memories_15_15 <= RAT_memories_14_15;
+      if ((&active_RAT) & is_being_written_vec_16)
+        RAT_memories_15_16 <= wr_data_in_15;
+      else if (_GEN_187)
+        RAT_memories_15_16 <= RAT_memories_14_16;
+      if ((&active_RAT) & is_being_written_vec_17)
+        RAT_memories_15_17 <= wr_data_in_15;
+      else if (_GEN_187)
+        RAT_memories_15_17 <= RAT_memories_14_17;
+      if ((&active_RAT) & is_being_written_vec_18)
+        RAT_memories_15_18 <= wr_data_in_15;
+      else if (_GEN_187)
+        RAT_memories_15_18 <= RAT_memories_14_18;
+      if ((&active_RAT) & is_being_written_vec_19)
+        RAT_memories_15_19 <= wr_data_in_15;
+      else if (_GEN_187)
+        RAT_memories_15_19 <= RAT_memories_14_19;
+      if ((&active_RAT) & is_being_written_vec_20)
+        RAT_memories_15_20 <= wr_data_in_15;
+      else if (_GEN_187)
+        RAT_memories_15_20 <= RAT_memories_14_20;
+      if ((&active_RAT) & is_being_written_vec_21)
+        RAT_memories_15_21 <= wr_data_in_15;
+      else if (_GEN_187)
+        RAT_memories_15_21 <= RAT_memories_14_21;
+      if ((&active_RAT) & is_being_written_vec_22)
+        RAT_memories_15_22 <= wr_data_in_15;
+      else if (_GEN_187)
+        RAT_memories_15_22 <= RAT_memories_14_22;
+      if ((&active_RAT) & is_being_written_vec_23)
+        RAT_memories_15_23 <= wr_data_in_15;
+      else if (_GEN_187)
+        RAT_memories_15_23 <= RAT_memories_14_23;
+      if ((&active_RAT) & is_being_written_vec_24)
+        RAT_memories_15_24 <= wr_data_in_15;
+      else if (_GEN_187)
+        RAT_memories_15_24 <= RAT_memories_14_24;
+      if ((&active_RAT) & is_being_written_vec_25)
+        RAT_memories_15_25 <= wr_data_in_15;
+      else if (_GEN_187)
+        RAT_memories_15_25 <= RAT_memories_14_25;
+      if ((&active_RAT) & is_being_written_vec_26)
+        RAT_memories_15_26 <= wr_data_in_15;
+      else if (_GEN_187)
+        RAT_memories_15_26 <= RAT_memories_14_26;
+      if ((&active_RAT) & is_being_written_vec_27)
+        RAT_memories_15_27 <= wr_data_in_15;
+      else if (_GEN_187)
+        RAT_memories_15_27 <= RAT_memories_14_27;
+      if ((&active_RAT) & is_being_written_vec_28)
+        RAT_memories_15_28 <= wr_data_in_15;
+      else if (_GEN_187)
+        RAT_memories_15_28 <= RAT_memories_14_28;
+      if ((&active_RAT) & is_being_written_vec_29)
+        RAT_memories_15_29 <= wr_data_in_15;
+      else if (_GEN_187)
+        RAT_memories_15_29 <= RAT_memories_14_29;
+      if ((&active_RAT) & is_being_written_vec_30)
+        RAT_memories_15_30 <= wr_data_in_15;
+      else if (_GEN_187)
+        RAT_memories_15_30 <= RAT_memories_14_30;
+      if ((&active_RAT) & is_being_written_vec_31)
+        RAT_memories_15_31 <= wr_data_in_15;
+      else if (_GEN_187)
+        RAT_memories_15_31 <= RAT_memories_14_31;
     end
-    io_RAT_RD_0_REG <= _GEN_123[io_instruction_RD_0];
-    io_RAT_RS1_0_REG <= _GEN_123[io_instruction_RS1_0];
-    io_RAT_RS2_0_REG <= _GEN_123[io_instruction_RS2_0];
-    io_RAT_RD_1_REG <= _GEN_123[io_instruction_RD_1];
-    io_RAT_RS1_1_REG <= _GEN_123[io_instruction_RS1_1];
-    io_RAT_RS2_1_REG <= _GEN_123[io_instruction_RS2_1];
-    io_RAT_RD_2_REG <= _GEN_123[io_instruction_RD_2];
-    io_RAT_RS1_2_REG <= _GEN_123[io_instruction_RS1_2];
-    io_RAT_RS2_2_REG <= _GEN_123[io_instruction_RS2_2];
-    io_RAT_RD_3_REG <= _GEN_123[io_instruction_RD_3];
-    io_RAT_RS1_3_REG <= _GEN_123[io_instruction_RS1_3];
-    io_RAT_RS2_3_REG <= _GEN_123[io_instruction_RS2_3];
+    io_RAT_RD_0_REG <= _GEN_155[io_instruction_RD_0];
+    io_RAT_RS1_0_REG <= _GEN_155[io_instruction_RS1_0];
+    io_RAT_RS2_0_REG <= _GEN_155[io_instruction_RS2_0];
+    io_RAT_RD_1_REG <= _GEN_155[io_instruction_RD_1];
+    io_RAT_RS1_1_REG <= _GEN_155[io_instruction_RS1_1];
+    io_RAT_RS2_1_REG <= _GEN_155[io_instruction_RS2_1];
+    io_RAT_RD_2_REG <= _GEN_155[io_instruction_RD_2];
+    io_RAT_RS1_2_REG <= _GEN_155[io_instruction_RS1_2];
+    io_RAT_RS2_2_REG <= _GEN_155[io_instruction_RS2_2];
+    io_RAT_RD_3_REG <= _GEN_155[io_instruction_RD_3];
+    io_RAT_RS1_3_REG <= _GEN_155[io_instruction_RS1_3];
+    io_RAT_RS2_3_REG <= _GEN_155[io_instruction_RS2_3];
   end // always @(posedge)
+  assign io_active_checkpoint_value = active_RAT;
+  assign io_checkpoints_full = available_checkpoints == 4'h0;
   assign io_RAT_RD_0 = io_RAT_RD_0_REG;
   assign io_RAT_RD_1 = io_RAT_RD_1_REG;
   assign io_RAT_RD_2 = io_RAT_RD_2_REG;
@@ -2912,40 +8030,172 @@ module RAT(
 endmodule
 
 module renamer(
-  input        clock,
-               reset,
-  input  [5:0] io_decoded_fetch_packet_bits_0_RD,
-  input        io_decoded_fetch_packet_bits_0_RD_valid,
-  input  [5:0] io_decoded_fetch_packet_bits_0_RS1,
-               io_decoded_fetch_packet_bits_0_RS2,
-               io_decoded_fetch_packet_bits_1_RD,
-  input        io_decoded_fetch_packet_bits_1_RD_valid,
-  input  [5:0] io_decoded_fetch_packet_bits_1_RS1,
-               io_decoded_fetch_packet_bits_1_RS2,
-               io_decoded_fetch_packet_bits_2_RD,
-  input        io_decoded_fetch_packet_bits_2_RD_valid,
-  input  [5:0] io_decoded_fetch_packet_bits_2_RS1,
-               io_decoded_fetch_packet_bits_2_RS2,
-               io_decoded_fetch_packet_bits_3_RD,
-  input        io_decoded_fetch_packet_bits_3_RD_valid,
-  input  [5:0] io_decoded_fetch_packet_bits_3_RS1,
-               io_decoded_fetch_packet_bits_3_RS2,
-  output [5:0] io_renamed_decoded_fetch_packet_bits_0_RDold,
-               io_renamed_decoded_fetch_packet_bits_0_RD,
-               io_renamed_decoded_fetch_packet_bits_0_RS1,
-               io_renamed_decoded_fetch_packet_bits_0_RS2,
-               io_renamed_decoded_fetch_packet_bits_1_RDold,
-               io_renamed_decoded_fetch_packet_bits_1_RD,
-               io_renamed_decoded_fetch_packet_bits_1_RS1,
-               io_renamed_decoded_fetch_packet_bits_1_RS2,
-               io_renamed_decoded_fetch_packet_bits_2_RDold,
-               io_renamed_decoded_fetch_packet_bits_2_RD,
-               io_renamed_decoded_fetch_packet_bits_2_RS1,
-               io_renamed_decoded_fetch_packet_bits_2_RS2,
-               io_renamed_decoded_fetch_packet_bits_3_RDold,
-               io_renamed_decoded_fetch_packet_bits_3_RD,
-               io_renamed_decoded_fetch_packet_bits_3_RS1,
-               io_renamed_decoded_fetch_packet_bits_3_RS2
+  input         clock,
+                reset,
+                io_decoded_fetch_packet_valid,
+  input  [5:0]  io_decoded_fetch_packet_bits_0_RD,
+  input         io_decoded_fetch_packet_bits_0_RD_valid,
+  input  [5:0]  io_decoded_fetch_packet_bits_0_RS1,
+                io_decoded_fetch_packet_bits_0_RS2,
+  input  [31:0] io_decoded_fetch_packet_bits_0_IMM,
+  input  [2:0]  io_decoded_fetch_packet_bits_0_FUNCT3,
+  input  [3:0]  io_decoded_fetch_packet_bits_0_packet_index,
+  input  [5:0]  io_decoded_fetch_packet_bits_0_ROB_index,
+  input  [4:0]  io_decoded_fetch_packet_bits_0_instructionType,
+  input  [1:0]  io_decoded_fetch_packet_bits_0_portID,
+                io_decoded_fetch_packet_bits_0_RS_type,
+  input         io_decoded_fetch_packet_bits_0_needs_ALU,
+                io_decoded_fetch_packet_bits_0_needs_branch_unit,
+                io_decoded_fetch_packet_bits_0_SUBTRACT,
+                io_decoded_fetch_packet_bits_0_MULTIPLY,
+                io_decoded_fetch_packet_bits_0_IMMEDIATE,
+                io_decoded_fetch_packet_bits_0_IS_LOAD,
+                io_decoded_fetch_packet_bits_0_IS_STORE,
+  input  [5:0]  io_decoded_fetch_packet_bits_1_RD,
+  input         io_decoded_fetch_packet_bits_1_RD_valid,
+  input  [5:0]  io_decoded_fetch_packet_bits_1_RS1,
+                io_decoded_fetch_packet_bits_1_RS2,
+  input  [31:0] io_decoded_fetch_packet_bits_1_IMM,
+  input  [2:0]  io_decoded_fetch_packet_bits_1_FUNCT3,
+  input  [3:0]  io_decoded_fetch_packet_bits_1_packet_index,
+  input  [5:0]  io_decoded_fetch_packet_bits_1_ROB_index,
+  input  [4:0]  io_decoded_fetch_packet_bits_1_instructionType,
+  input  [1:0]  io_decoded_fetch_packet_bits_1_portID,
+                io_decoded_fetch_packet_bits_1_RS_type,
+  input         io_decoded_fetch_packet_bits_1_needs_ALU,
+                io_decoded_fetch_packet_bits_1_needs_branch_unit,
+                io_decoded_fetch_packet_bits_1_SUBTRACT,
+                io_decoded_fetch_packet_bits_1_MULTIPLY,
+                io_decoded_fetch_packet_bits_1_IMMEDIATE,
+                io_decoded_fetch_packet_bits_1_IS_LOAD,
+                io_decoded_fetch_packet_bits_1_IS_STORE,
+  input  [5:0]  io_decoded_fetch_packet_bits_2_RD,
+  input         io_decoded_fetch_packet_bits_2_RD_valid,
+  input  [5:0]  io_decoded_fetch_packet_bits_2_RS1,
+                io_decoded_fetch_packet_bits_2_RS2,
+  input  [31:0] io_decoded_fetch_packet_bits_2_IMM,
+  input  [2:0]  io_decoded_fetch_packet_bits_2_FUNCT3,
+  input  [3:0]  io_decoded_fetch_packet_bits_2_packet_index,
+  input  [5:0]  io_decoded_fetch_packet_bits_2_ROB_index,
+  input  [4:0]  io_decoded_fetch_packet_bits_2_instructionType,
+  input  [1:0]  io_decoded_fetch_packet_bits_2_portID,
+                io_decoded_fetch_packet_bits_2_RS_type,
+  input         io_decoded_fetch_packet_bits_2_needs_ALU,
+                io_decoded_fetch_packet_bits_2_needs_branch_unit,
+                io_decoded_fetch_packet_bits_2_SUBTRACT,
+                io_decoded_fetch_packet_bits_2_MULTIPLY,
+                io_decoded_fetch_packet_bits_2_IMMEDIATE,
+                io_decoded_fetch_packet_bits_2_IS_LOAD,
+                io_decoded_fetch_packet_bits_2_IS_STORE,
+  input  [5:0]  io_decoded_fetch_packet_bits_3_RD,
+  input         io_decoded_fetch_packet_bits_3_RD_valid,
+  input  [5:0]  io_decoded_fetch_packet_bits_3_RS1,
+                io_decoded_fetch_packet_bits_3_RS2,
+  input  [31:0] io_decoded_fetch_packet_bits_3_IMM,
+  input  [2:0]  io_decoded_fetch_packet_bits_3_FUNCT3,
+  input  [3:0]  io_decoded_fetch_packet_bits_3_packet_index,
+  input  [5:0]  io_decoded_fetch_packet_bits_3_ROB_index,
+  input  [4:0]  io_decoded_fetch_packet_bits_3_instructionType,
+  input  [1:0]  io_decoded_fetch_packet_bits_3_portID,
+                io_decoded_fetch_packet_bits_3_RS_type,
+  input         io_decoded_fetch_packet_bits_3_needs_ALU,
+                io_decoded_fetch_packet_bits_3_needs_branch_unit,
+                io_decoded_fetch_packet_bits_3_SUBTRACT,
+                io_decoded_fetch_packet_bits_3_MULTIPLY,
+                io_decoded_fetch_packet_bits_3_IMMEDIATE,
+                io_decoded_fetch_packet_bits_3_IS_LOAD,
+                io_decoded_fetch_packet_bits_3_IS_STORE,
+  output        io_renamed_decoded_fetch_packet_valid,
+  output [5:0]  io_renamed_decoded_fetch_packet_bits_0_RDold,
+                io_renamed_decoded_fetch_packet_bits_0_RD,
+  output        io_renamed_decoded_fetch_packet_bits_0_RD_valid,
+  output [5:0]  io_renamed_decoded_fetch_packet_bits_0_RS1,
+                io_renamed_decoded_fetch_packet_bits_0_RS2,
+  output [31:0] io_renamed_decoded_fetch_packet_bits_0_IMM,
+  output [2:0]  io_renamed_decoded_fetch_packet_bits_0_FUNCT3,
+  output [3:0]  io_renamed_decoded_fetch_packet_bits_0_packet_index,
+  output [5:0]  io_renamed_decoded_fetch_packet_bits_0_ROB_index,
+  output [4:0]  io_renamed_decoded_fetch_packet_bits_0_instructionType,
+  output [1:0]  io_renamed_decoded_fetch_packet_bits_0_portID,
+                io_renamed_decoded_fetch_packet_bits_0_RS_type,
+  output        io_renamed_decoded_fetch_packet_bits_0_needs_ALU,
+                io_renamed_decoded_fetch_packet_bits_0_needs_branch_unit,
+                io_renamed_decoded_fetch_packet_bits_0_SUBTRACT,
+                io_renamed_decoded_fetch_packet_bits_0_MULTIPLY,
+                io_renamed_decoded_fetch_packet_bits_0_IMMEDIATE,
+                io_renamed_decoded_fetch_packet_bits_0_IS_LOAD,
+                io_renamed_decoded_fetch_packet_bits_0_IS_STORE,
+  output [5:0]  io_renamed_decoded_fetch_packet_bits_1_RDold,
+                io_renamed_decoded_fetch_packet_bits_1_RD,
+  output        io_renamed_decoded_fetch_packet_bits_1_RD_valid,
+  output [5:0]  io_renamed_decoded_fetch_packet_bits_1_RS1,
+                io_renamed_decoded_fetch_packet_bits_1_RS2,
+  output [31:0] io_renamed_decoded_fetch_packet_bits_1_IMM,
+  output [2:0]  io_renamed_decoded_fetch_packet_bits_1_FUNCT3,
+  output [3:0]  io_renamed_decoded_fetch_packet_bits_1_packet_index,
+  output [5:0]  io_renamed_decoded_fetch_packet_bits_1_ROB_index,
+  output [4:0]  io_renamed_decoded_fetch_packet_bits_1_instructionType,
+  output [1:0]  io_renamed_decoded_fetch_packet_bits_1_portID,
+                io_renamed_decoded_fetch_packet_bits_1_RS_type,
+  output        io_renamed_decoded_fetch_packet_bits_1_needs_ALU,
+                io_renamed_decoded_fetch_packet_bits_1_needs_branch_unit,
+                io_renamed_decoded_fetch_packet_bits_1_SUBTRACT,
+                io_renamed_decoded_fetch_packet_bits_1_MULTIPLY,
+                io_renamed_decoded_fetch_packet_bits_1_IMMEDIATE,
+                io_renamed_decoded_fetch_packet_bits_1_IS_LOAD,
+                io_renamed_decoded_fetch_packet_bits_1_IS_STORE,
+  output [5:0]  io_renamed_decoded_fetch_packet_bits_2_RDold,
+                io_renamed_decoded_fetch_packet_bits_2_RD,
+  output        io_renamed_decoded_fetch_packet_bits_2_RD_valid,
+  output [5:0]  io_renamed_decoded_fetch_packet_bits_2_RS1,
+                io_renamed_decoded_fetch_packet_bits_2_RS2,
+  output [31:0] io_renamed_decoded_fetch_packet_bits_2_IMM,
+  output [2:0]  io_renamed_decoded_fetch_packet_bits_2_FUNCT3,
+  output [3:0]  io_renamed_decoded_fetch_packet_bits_2_packet_index,
+  output [5:0]  io_renamed_decoded_fetch_packet_bits_2_ROB_index,
+  output [4:0]  io_renamed_decoded_fetch_packet_bits_2_instructionType,
+  output [1:0]  io_renamed_decoded_fetch_packet_bits_2_portID,
+                io_renamed_decoded_fetch_packet_bits_2_RS_type,
+  output        io_renamed_decoded_fetch_packet_bits_2_needs_ALU,
+                io_renamed_decoded_fetch_packet_bits_2_needs_branch_unit,
+                io_renamed_decoded_fetch_packet_bits_2_SUBTRACT,
+                io_renamed_decoded_fetch_packet_bits_2_MULTIPLY,
+                io_renamed_decoded_fetch_packet_bits_2_IMMEDIATE,
+                io_renamed_decoded_fetch_packet_bits_2_IS_LOAD,
+                io_renamed_decoded_fetch_packet_bits_2_IS_STORE,
+  output [5:0]  io_renamed_decoded_fetch_packet_bits_3_RDold,
+                io_renamed_decoded_fetch_packet_bits_3_RD,
+  output        io_renamed_decoded_fetch_packet_bits_3_RD_valid,
+  output [5:0]  io_renamed_decoded_fetch_packet_bits_3_RS1,
+                io_renamed_decoded_fetch_packet_bits_3_RS2,
+  output [31:0] io_renamed_decoded_fetch_packet_bits_3_IMM,
+  output [2:0]  io_renamed_decoded_fetch_packet_bits_3_FUNCT3,
+  output [3:0]  io_renamed_decoded_fetch_packet_bits_3_packet_index,
+  output [5:0]  io_renamed_decoded_fetch_packet_bits_3_ROB_index,
+  output [4:0]  io_renamed_decoded_fetch_packet_bits_3_instructionType,
+  output [1:0]  io_renamed_decoded_fetch_packet_bits_3_portID,
+                io_renamed_decoded_fetch_packet_bits_3_RS_type,
+  output        io_renamed_decoded_fetch_packet_bits_3_needs_ALU,
+                io_renamed_decoded_fetch_packet_bits_3_needs_branch_unit,
+                io_renamed_decoded_fetch_packet_bits_3_SUBTRACT,
+                io_renamed_decoded_fetch_packet_bits_3_MULTIPLY,
+                io_renamed_decoded_fetch_packet_bits_3_IMMEDIATE,
+                io_renamed_decoded_fetch_packet_bits_3_IS_LOAD,
+                io_renamed_decoded_fetch_packet_bits_3_IS_STORE,
+  input  [5:0]  io_commit_RD_0,
+                io_commit_RD_1,
+                io_commit_RD_2,
+                io_commit_RD_3,
+  input         io_commit_RD_valid_0,
+                io_commit_RD_valid_1,
+                io_commit_RD_valid_2,
+                io_commit_RD_valid_3,
+                io_create_checkpoint,
+  output [3:0]  io_active_checkpoint_value,
+  input         io_restore_checkpoint,
+  input  [3:0]  io_restore_checkpoint_value,
+  input         io_free_checkpoint,
+  output        io_checkpoints_full
 );
 
   wire       _WAW_handler_io_RAT_wr_en_0;
@@ -2970,7 +8220,15 @@ module renamer(
     .io_renamed_values_0 (_free_list_io_renamed_values_0),
     .io_renamed_values_1 (_free_list_io_renamed_values_1),
     .io_renamed_values_2 (_free_list_io_renamed_values_2),
-    .io_renamed_values_3 (_free_list_io_renamed_values_3)
+    .io_renamed_values_3 (_free_list_io_renamed_values_3),
+    .io_free_valid_0     (io_commit_RD_valid_0),
+    .io_free_valid_1     (io_commit_RD_valid_1),
+    .io_free_valid_2     (io_commit_RD_valid_2),
+    .io_free_valid_3     (io_commit_RD_valid_3),
+    .io_free_values_0    (io_commit_RD_0),
+    .io_free_values_1    (io_commit_RD_1),
+    .io_free_values_2    (io_commit_RD_2),
+    .io_free_values_3    (io_commit_RD_3)
   );
   WAW_handler WAW_handler (
     .io_decoder_RD_valid_bits_0 (io_decoded_fetch_packet_bits_0_RD_valid),
@@ -2995,258 +8253,469 @@ module renamer(
     .io_FL_RD_values_3          (_WAW_handler_io_FL_RD_values_3)
   );
   RAT RAT (
-    .clock                (clock),
-    .reset                (reset),
-    .io_instruction_RD_0  (io_decoded_fetch_packet_bits_0_RD[4:0]),
-    .io_instruction_RD_1  (io_decoded_fetch_packet_bits_1_RD[4:0]),
-    .io_instruction_RD_2  (io_decoded_fetch_packet_bits_2_RD[4:0]),
-    .io_instruction_RD_3  (io_decoded_fetch_packet_bits_3_RD[4:0]),
-    .io_instruction_RS1_0 (io_decoded_fetch_packet_bits_0_RS1[4:0]),
-    .io_instruction_RS1_1 (io_decoded_fetch_packet_bits_1_RS1[4:0]),
-    .io_instruction_RS1_2 (io_decoded_fetch_packet_bits_2_RS1[4:0]),
-    .io_instruction_RS1_3 (io_decoded_fetch_packet_bits_3_RS1[4:0]),
-    .io_instruction_RS2_0 (io_decoded_fetch_packet_bits_0_RS2[4:0]),
-    .io_instruction_RS2_1 (io_decoded_fetch_packet_bits_1_RS2[4:0]),
-    .io_instruction_RS2_2 (io_decoded_fetch_packet_bits_2_RS2[4:0]),
-    .io_instruction_RS2_3 (io_decoded_fetch_packet_bits_3_RS2[4:0]),
-    .io_free_list_wr_en_0 (_WAW_handler_io_RAT_wr_en_0),
-    .io_free_list_wr_en_1 (_WAW_handler_io_RAT_wr_en_1),
-    .io_free_list_wr_en_2 (_WAW_handler_io_RAT_wr_en_2),
-    .io_free_list_wr_en_3 (_WAW_handler_io_RAT_wr_en_3),
-    .io_free_list_RD_0    (_WAW_handler_io_FL_RD_values_0),
-    .io_free_list_RD_1    (_WAW_handler_io_FL_RD_values_1),
-    .io_free_list_RD_2    (_WAW_handler_io_FL_RD_values_2),
-    .io_free_list_RD_3    (_WAW_handler_io_FL_RD_values_3),
-    .io_RAT_RD_0          (io_renamed_decoded_fetch_packet_bits_0_RDold),
-    .io_RAT_RD_1          (io_renamed_decoded_fetch_packet_bits_1_RDold),
-    .io_RAT_RD_2          (io_renamed_decoded_fetch_packet_bits_2_RDold),
-    .io_RAT_RD_3          (io_renamed_decoded_fetch_packet_bits_3_RDold),
-    .io_RAT_RS1_0         (io_renamed_decoded_fetch_packet_bits_0_RS1),
-    .io_RAT_RS1_1         (io_renamed_decoded_fetch_packet_bits_1_RS1),
-    .io_RAT_RS1_2         (io_renamed_decoded_fetch_packet_bits_2_RS1),
-    .io_RAT_RS1_3         (io_renamed_decoded_fetch_packet_bits_3_RS1),
-    .io_RAT_RS2_0         (io_renamed_decoded_fetch_packet_bits_0_RS2),
-    .io_RAT_RS2_1         (io_renamed_decoded_fetch_packet_bits_1_RS2),
-    .io_RAT_RS2_2         (io_renamed_decoded_fetch_packet_bits_2_RS2),
-    .io_RAT_RS2_3         (io_renamed_decoded_fetch_packet_bits_3_RS2)
+    .clock                       (clock),
+    .reset                       (reset),
+    .io_instruction_RD_0         (io_decoded_fetch_packet_bits_0_RD[4:0]),
+    .io_instruction_RD_1         (io_decoded_fetch_packet_bits_1_RD[4:0]),
+    .io_instruction_RD_2         (io_decoded_fetch_packet_bits_2_RD[4:0]),
+    .io_instruction_RD_3         (io_decoded_fetch_packet_bits_3_RD[4:0]),
+    .io_instruction_RS1_0        (io_decoded_fetch_packet_bits_0_RS1[4:0]),
+    .io_instruction_RS1_1        (io_decoded_fetch_packet_bits_1_RS1[4:0]),
+    .io_instruction_RS1_2        (io_decoded_fetch_packet_bits_2_RS1[4:0]),
+    .io_instruction_RS1_3        (io_decoded_fetch_packet_bits_3_RS1[4:0]),
+    .io_instruction_RS2_0        (io_decoded_fetch_packet_bits_0_RS2[4:0]),
+    .io_instruction_RS2_1        (io_decoded_fetch_packet_bits_1_RS2[4:0]),
+    .io_instruction_RS2_2        (io_decoded_fetch_packet_bits_2_RS2[4:0]),
+    .io_instruction_RS2_3        (io_decoded_fetch_packet_bits_3_RS2[4:0]),
+    .io_free_list_wr_en_0        (_WAW_handler_io_RAT_wr_en_0),
+    .io_free_list_wr_en_1        (_WAW_handler_io_RAT_wr_en_1),
+    .io_free_list_wr_en_2        (_WAW_handler_io_RAT_wr_en_2),
+    .io_free_list_wr_en_3        (_WAW_handler_io_RAT_wr_en_3),
+    .io_free_list_RD_0           (_WAW_handler_io_FL_RD_values_0),
+    .io_free_list_RD_1           (_WAW_handler_io_FL_RD_values_1),
+    .io_free_list_RD_2           (_WAW_handler_io_FL_RD_values_2),
+    .io_free_list_RD_3           (_WAW_handler_io_FL_RD_values_3),
+    .io_create_checkpoint        (io_create_checkpoint),
+    .io_active_checkpoint_value  (io_active_checkpoint_value),
+    .io_restore_checkpoint       (io_restore_checkpoint),
+    .io_restore_checkpoint_value (io_restore_checkpoint_value),
+    .io_free_checkpoint          (io_free_checkpoint),
+    .io_checkpoints_full         (io_checkpoints_full),
+    .io_RAT_RD_0                 (io_renamed_decoded_fetch_packet_bits_0_RDold),
+    .io_RAT_RD_1                 (io_renamed_decoded_fetch_packet_bits_1_RDold),
+    .io_RAT_RD_2                 (io_renamed_decoded_fetch_packet_bits_2_RDold),
+    .io_RAT_RD_3                 (io_renamed_decoded_fetch_packet_bits_3_RDold),
+    .io_RAT_RS1_0                (io_renamed_decoded_fetch_packet_bits_0_RS1),
+    .io_RAT_RS1_1                (io_renamed_decoded_fetch_packet_bits_1_RS1),
+    .io_RAT_RS1_2                (io_renamed_decoded_fetch_packet_bits_2_RS1),
+    .io_RAT_RS1_3                (io_renamed_decoded_fetch_packet_bits_3_RS1),
+    .io_RAT_RS2_0                (io_renamed_decoded_fetch_packet_bits_0_RS2),
+    .io_RAT_RS2_1                (io_renamed_decoded_fetch_packet_bits_1_RS2),
+    .io_RAT_RS2_2                (io_renamed_decoded_fetch_packet_bits_2_RS2),
+    .io_RAT_RS2_3                (io_renamed_decoded_fetch_packet_bits_3_RS2)
   );
+  assign io_renamed_decoded_fetch_packet_valid = io_decoded_fetch_packet_valid;
   assign io_renamed_decoded_fetch_packet_bits_0_RD = _free_list_io_renamed_values_0;
+  assign io_renamed_decoded_fetch_packet_bits_0_RD_valid =
+    io_decoded_fetch_packet_bits_0_RD_valid;
+  assign io_renamed_decoded_fetch_packet_bits_0_IMM = io_decoded_fetch_packet_bits_0_IMM;
+  assign io_renamed_decoded_fetch_packet_bits_0_FUNCT3 =
+    io_decoded_fetch_packet_bits_0_FUNCT3;
+  assign io_renamed_decoded_fetch_packet_bits_0_packet_index =
+    io_decoded_fetch_packet_bits_0_packet_index;
+  assign io_renamed_decoded_fetch_packet_bits_0_ROB_index =
+    io_decoded_fetch_packet_bits_0_ROB_index;
+  assign io_renamed_decoded_fetch_packet_bits_0_instructionType =
+    io_decoded_fetch_packet_bits_0_instructionType;
+  assign io_renamed_decoded_fetch_packet_bits_0_portID =
+    io_decoded_fetch_packet_bits_0_portID;
+  assign io_renamed_decoded_fetch_packet_bits_0_RS_type =
+    io_decoded_fetch_packet_bits_0_RS_type;
+  assign io_renamed_decoded_fetch_packet_bits_0_needs_ALU =
+    io_decoded_fetch_packet_bits_0_needs_ALU;
+  assign io_renamed_decoded_fetch_packet_bits_0_needs_branch_unit =
+    io_decoded_fetch_packet_bits_0_needs_branch_unit;
+  assign io_renamed_decoded_fetch_packet_bits_0_SUBTRACT =
+    io_decoded_fetch_packet_bits_0_SUBTRACT;
+  assign io_renamed_decoded_fetch_packet_bits_0_MULTIPLY =
+    io_decoded_fetch_packet_bits_0_MULTIPLY;
+  assign io_renamed_decoded_fetch_packet_bits_0_IMMEDIATE =
+    io_decoded_fetch_packet_bits_0_IMMEDIATE;
+  assign io_renamed_decoded_fetch_packet_bits_0_IS_LOAD =
+    io_decoded_fetch_packet_bits_0_IS_LOAD;
+  assign io_renamed_decoded_fetch_packet_bits_0_IS_STORE =
+    io_decoded_fetch_packet_bits_0_IS_STORE;
   assign io_renamed_decoded_fetch_packet_bits_1_RD = _free_list_io_renamed_values_1;
+  assign io_renamed_decoded_fetch_packet_bits_1_RD_valid =
+    io_decoded_fetch_packet_bits_1_RD_valid;
+  assign io_renamed_decoded_fetch_packet_bits_1_IMM = io_decoded_fetch_packet_bits_1_IMM;
+  assign io_renamed_decoded_fetch_packet_bits_1_FUNCT3 =
+    io_decoded_fetch_packet_bits_1_FUNCT3;
+  assign io_renamed_decoded_fetch_packet_bits_1_packet_index =
+    io_decoded_fetch_packet_bits_1_packet_index;
+  assign io_renamed_decoded_fetch_packet_bits_1_ROB_index =
+    io_decoded_fetch_packet_bits_1_ROB_index;
+  assign io_renamed_decoded_fetch_packet_bits_1_instructionType =
+    io_decoded_fetch_packet_bits_1_instructionType;
+  assign io_renamed_decoded_fetch_packet_bits_1_portID =
+    io_decoded_fetch_packet_bits_1_portID;
+  assign io_renamed_decoded_fetch_packet_bits_1_RS_type =
+    io_decoded_fetch_packet_bits_1_RS_type;
+  assign io_renamed_decoded_fetch_packet_bits_1_needs_ALU =
+    io_decoded_fetch_packet_bits_1_needs_ALU;
+  assign io_renamed_decoded_fetch_packet_bits_1_needs_branch_unit =
+    io_decoded_fetch_packet_bits_1_needs_branch_unit;
+  assign io_renamed_decoded_fetch_packet_bits_1_SUBTRACT =
+    io_decoded_fetch_packet_bits_1_SUBTRACT;
+  assign io_renamed_decoded_fetch_packet_bits_1_MULTIPLY =
+    io_decoded_fetch_packet_bits_1_MULTIPLY;
+  assign io_renamed_decoded_fetch_packet_bits_1_IMMEDIATE =
+    io_decoded_fetch_packet_bits_1_IMMEDIATE;
+  assign io_renamed_decoded_fetch_packet_bits_1_IS_LOAD =
+    io_decoded_fetch_packet_bits_1_IS_LOAD;
+  assign io_renamed_decoded_fetch_packet_bits_1_IS_STORE =
+    io_decoded_fetch_packet_bits_1_IS_STORE;
   assign io_renamed_decoded_fetch_packet_bits_2_RD = _free_list_io_renamed_values_2;
+  assign io_renamed_decoded_fetch_packet_bits_2_RD_valid =
+    io_decoded_fetch_packet_bits_2_RD_valid;
+  assign io_renamed_decoded_fetch_packet_bits_2_IMM = io_decoded_fetch_packet_bits_2_IMM;
+  assign io_renamed_decoded_fetch_packet_bits_2_FUNCT3 =
+    io_decoded_fetch_packet_bits_2_FUNCT3;
+  assign io_renamed_decoded_fetch_packet_bits_2_packet_index =
+    io_decoded_fetch_packet_bits_2_packet_index;
+  assign io_renamed_decoded_fetch_packet_bits_2_ROB_index =
+    io_decoded_fetch_packet_bits_2_ROB_index;
+  assign io_renamed_decoded_fetch_packet_bits_2_instructionType =
+    io_decoded_fetch_packet_bits_2_instructionType;
+  assign io_renamed_decoded_fetch_packet_bits_2_portID =
+    io_decoded_fetch_packet_bits_2_portID;
+  assign io_renamed_decoded_fetch_packet_bits_2_RS_type =
+    io_decoded_fetch_packet_bits_2_RS_type;
+  assign io_renamed_decoded_fetch_packet_bits_2_needs_ALU =
+    io_decoded_fetch_packet_bits_2_needs_ALU;
+  assign io_renamed_decoded_fetch_packet_bits_2_needs_branch_unit =
+    io_decoded_fetch_packet_bits_2_needs_branch_unit;
+  assign io_renamed_decoded_fetch_packet_bits_2_SUBTRACT =
+    io_decoded_fetch_packet_bits_2_SUBTRACT;
+  assign io_renamed_decoded_fetch_packet_bits_2_MULTIPLY =
+    io_decoded_fetch_packet_bits_2_MULTIPLY;
+  assign io_renamed_decoded_fetch_packet_bits_2_IMMEDIATE =
+    io_decoded_fetch_packet_bits_2_IMMEDIATE;
+  assign io_renamed_decoded_fetch_packet_bits_2_IS_LOAD =
+    io_decoded_fetch_packet_bits_2_IS_LOAD;
+  assign io_renamed_decoded_fetch_packet_bits_2_IS_STORE =
+    io_decoded_fetch_packet_bits_2_IS_STORE;
   assign io_renamed_decoded_fetch_packet_bits_3_RD = _free_list_io_renamed_values_3;
+  assign io_renamed_decoded_fetch_packet_bits_3_RD_valid =
+    io_decoded_fetch_packet_bits_3_RD_valid;
+  assign io_renamed_decoded_fetch_packet_bits_3_IMM = io_decoded_fetch_packet_bits_3_IMM;
+  assign io_renamed_decoded_fetch_packet_bits_3_FUNCT3 =
+    io_decoded_fetch_packet_bits_3_FUNCT3;
+  assign io_renamed_decoded_fetch_packet_bits_3_packet_index =
+    io_decoded_fetch_packet_bits_3_packet_index;
+  assign io_renamed_decoded_fetch_packet_bits_3_ROB_index =
+    io_decoded_fetch_packet_bits_3_ROB_index;
+  assign io_renamed_decoded_fetch_packet_bits_3_instructionType =
+    io_decoded_fetch_packet_bits_3_instructionType;
+  assign io_renamed_decoded_fetch_packet_bits_3_portID =
+    io_decoded_fetch_packet_bits_3_portID;
+  assign io_renamed_decoded_fetch_packet_bits_3_RS_type =
+    io_decoded_fetch_packet_bits_3_RS_type;
+  assign io_renamed_decoded_fetch_packet_bits_3_needs_ALU =
+    io_decoded_fetch_packet_bits_3_needs_ALU;
+  assign io_renamed_decoded_fetch_packet_bits_3_needs_branch_unit =
+    io_decoded_fetch_packet_bits_3_needs_branch_unit;
+  assign io_renamed_decoded_fetch_packet_bits_3_SUBTRACT =
+    io_decoded_fetch_packet_bits_3_SUBTRACT;
+  assign io_renamed_decoded_fetch_packet_bits_3_MULTIPLY =
+    io_decoded_fetch_packet_bits_3_MULTIPLY;
+  assign io_renamed_decoded_fetch_packet_bits_3_IMMEDIATE =
+    io_decoded_fetch_packet_bits_3_IMMEDIATE;
+  assign io_renamed_decoded_fetch_packet_bits_3_IS_LOAD =
+    io_decoded_fetch_packet_bits_3_IS_LOAD;
+  assign io_renamed_decoded_fetch_packet_bits_3_IS_STORE =
+    io_decoded_fetch_packet_bits_3_IS_STORE;
 endmodule
 
 module frontend(
-  input          clock,
-                 reset,
-  output         io_misprediction_PC_ready,
-  input          io_misprediction_PC_valid,
-  input  [31:0]  io_misprediction_PC_bits,
-  output         io_exception_PC_ready,
-  input          io_exception_PC_valid,
-  input  [31:0]  io_exception_PC_bits,
-  output         io_dram_data_ready,
-  input          io_dram_data_valid,
-  input  [255:0] io_dram_data_bits,
-  output         io_commit_ready,
-  input          io_commit_valid,
-  input  [31:0]  io_commit_bits_PC,
-  input  [15:0]  io_commit_bits_GHR,
-  input          io_commit_bits_T_NT,
-  input  [31:0]  io_commit_bits_target,
-  input  [1:0]   io_commit_bits_br_type,
-  input  [3:0]   io_commit_bits_br_mask,
-  input          io_commit_bits_misprediction,
-  input  [6:0]   io_commit_bits_TOS,
-                 io_commit_bits_NEXT,
-  input  [31:0]  io_commit_bits_misprediction_PC,
-  input          io_cache_addr_ready,
-  output         io_cache_addr_valid,
-  output [31:0]  io_cache_addr_bits,
-  input          io_renamed_decoded_fetch_packet_ready,
-  output         io_renamed_decoded_fetch_packet_valid,
-  output [5:0]   io_renamed_decoded_fetch_packet_bits_0_RDold,
-  output         io_renamed_decoded_fetch_packet_bits_0_RDold_valid,
-  output [5:0]   io_renamed_decoded_fetch_packet_bits_0_RD,
-  output         io_renamed_decoded_fetch_packet_bits_0_RD_valid,
-  output [5:0]   io_renamed_decoded_fetch_packet_bits_0_RS1,
-  output         io_renamed_decoded_fetch_packet_bits_0_RS1_valid,
-  output [5:0]   io_renamed_decoded_fetch_packet_bits_0_RS2,
-  output         io_renamed_decoded_fetch_packet_bits_0_RS2_valid,
-  output [31:0]  io_renamed_decoded_fetch_packet_bits_0_IMM,
-  output [2:0]   io_renamed_decoded_fetch_packet_bits_0_FUNCT3,
-  output [3:0]   io_renamed_decoded_fetch_packet_bits_0_packet_index,
-  output [5:0]   io_renamed_decoded_fetch_packet_bits_0_ROB_index,
-  output [4:0]   io_renamed_decoded_fetch_packet_bits_0_instructionType,
-  output [1:0]   io_renamed_decoded_fetch_packet_bits_0_portID,
-                 io_renamed_decoded_fetch_packet_bits_0_RS_type,
-  output         io_renamed_decoded_fetch_packet_bits_0_needs_ALU,
-                 io_renamed_decoded_fetch_packet_bits_0_needs_branch_unit,
-                 io_renamed_decoded_fetch_packet_bits_0_SUBTRACT,
-                 io_renamed_decoded_fetch_packet_bits_0_MULTIPLY,
-                 io_renamed_decoded_fetch_packet_bits_0_IMMEDIATE,
-                 io_renamed_decoded_fetch_packet_bits_0_IS_LOAD,
-                 io_renamed_decoded_fetch_packet_bits_0_IS_STORE,
-  output [5:0]   io_renamed_decoded_fetch_packet_bits_1_RDold,
-  output         io_renamed_decoded_fetch_packet_bits_1_RDold_valid,
-  output [5:0]   io_renamed_decoded_fetch_packet_bits_1_RD,
-  output         io_renamed_decoded_fetch_packet_bits_1_RD_valid,
-  output [5:0]   io_renamed_decoded_fetch_packet_bits_1_RS1,
-  output         io_renamed_decoded_fetch_packet_bits_1_RS1_valid,
-  output [5:0]   io_renamed_decoded_fetch_packet_bits_1_RS2,
-  output         io_renamed_decoded_fetch_packet_bits_1_RS2_valid,
-  output [31:0]  io_renamed_decoded_fetch_packet_bits_1_IMM,
-  output [2:0]   io_renamed_decoded_fetch_packet_bits_1_FUNCT3,
-  output [3:0]   io_renamed_decoded_fetch_packet_bits_1_packet_index,
-  output [5:0]   io_renamed_decoded_fetch_packet_bits_1_ROB_index,
-  output [4:0]   io_renamed_decoded_fetch_packet_bits_1_instructionType,
-  output [1:0]   io_renamed_decoded_fetch_packet_bits_1_portID,
-                 io_renamed_decoded_fetch_packet_bits_1_RS_type,
-  output         io_renamed_decoded_fetch_packet_bits_1_needs_ALU,
-                 io_renamed_decoded_fetch_packet_bits_1_needs_branch_unit,
-                 io_renamed_decoded_fetch_packet_bits_1_SUBTRACT,
-                 io_renamed_decoded_fetch_packet_bits_1_MULTIPLY,
-                 io_renamed_decoded_fetch_packet_bits_1_IMMEDIATE,
-                 io_renamed_decoded_fetch_packet_bits_1_IS_LOAD,
-                 io_renamed_decoded_fetch_packet_bits_1_IS_STORE,
-  output [5:0]   io_renamed_decoded_fetch_packet_bits_2_RDold,
-  output         io_renamed_decoded_fetch_packet_bits_2_RDold_valid,
-  output [5:0]   io_renamed_decoded_fetch_packet_bits_2_RD,
-  output         io_renamed_decoded_fetch_packet_bits_2_RD_valid,
-  output [5:0]   io_renamed_decoded_fetch_packet_bits_2_RS1,
-  output         io_renamed_decoded_fetch_packet_bits_2_RS1_valid,
-  output [5:0]   io_renamed_decoded_fetch_packet_bits_2_RS2,
-  output         io_renamed_decoded_fetch_packet_bits_2_RS2_valid,
-  output [31:0]  io_renamed_decoded_fetch_packet_bits_2_IMM,
-  output [2:0]   io_renamed_decoded_fetch_packet_bits_2_FUNCT3,
-  output [3:0]   io_renamed_decoded_fetch_packet_bits_2_packet_index,
-  output [5:0]   io_renamed_decoded_fetch_packet_bits_2_ROB_index,
-  output [4:0]   io_renamed_decoded_fetch_packet_bits_2_instructionType,
-  output [1:0]   io_renamed_decoded_fetch_packet_bits_2_portID,
-                 io_renamed_decoded_fetch_packet_bits_2_RS_type,
-  output         io_renamed_decoded_fetch_packet_bits_2_needs_ALU,
-                 io_renamed_decoded_fetch_packet_bits_2_needs_branch_unit,
-                 io_renamed_decoded_fetch_packet_bits_2_SUBTRACT,
-                 io_renamed_decoded_fetch_packet_bits_2_MULTIPLY,
-                 io_renamed_decoded_fetch_packet_bits_2_IMMEDIATE,
-                 io_renamed_decoded_fetch_packet_bits_2_IS_LOAD,
-                 io_renamed_decoded_fetch_packet_bits_2_IS_STORE,
-  output [5:0]   io_renamed_decoded_fetch_packet_bits_3_RDold,
-  output         io_renamed_decoded_fetch_packet_bits_3_RDold_valid,
-  output [5:0]   io_renamed_decoded_fetch_packet_bits_3_RD,
-  output         io_renamed_decoded_fetch_packet_bits_3_RD_valid,
-  output [5:0]   io_renamed_decoded_fetch_packet_bits_3_RS1,
-  output         io_renamed_decoded_fetch_packet_bits_3_RS1_valid,
-  output [5:0]   io_renamed_decoded_fetch_packet_bits_3_RS2,
-  output         io_renamed_decoded_fetch_packet_bits_3_RS2_valid,
-  output [31:0]  io_renamed_decoded_fetch_packet_bits_3_IMM,
-  output [2:0]   io_renamed_decoded_fetch_packet_bits_3_FUNCT3,
-  output [3:0]   io_renamed_decoded_fetch_packet_bits_3_packet_index,
-  output [5:0]   io_renamed_decoded_fetch_packet_bits_3_ROB_index,
-  output [4:0]   io_renamed_decoded_fetch_packet_bits_3_instructionType,
-  output [1:0]   io_renamed_decoded_fetch_packet_bits_3_portID,
-                 io_renamed_decoded_fetch_packet_bits_3_RS_type,
-  output         io_renamed_decoded_fetch_packet_bits_3_needs_ALU,
-                 io_renamed_decoded_fetch_packet_bits_3_needs_branch_unit,
-                 io_renamed_decoded_fetch_packet_bits_3_SUBTRACT,
-                 io_renamed_decoded_fetch_packet_bits_3_MULTIPLY,
-                 io_renamed_decoded_fetch_packet_bits_3_IMMEDIATE,
-                 io_renamed_decoded_fetch_packet_bits_3_IS_LOAD,
-                 io_renamed_decoded_fetch_packet_bits_3_IS_STORE
+  input         clock,
+                reset,
+  output        io_misprediction_PC_ready,
+  input         io_misprediction_PC_valid,
+  input  [31:0] io_misprediction_PC_bits,
+  output        io_exception_PC_ready,
+  input         io_exception_PC_valid,
+  input  [31:0] io_exception_PC_bits,
+  output        io_commit_ready,
+  input         io_commit_valid,
+  input  [31:0] io_commit_bits_PC,
+  input  [15:0] io_commit_bits_GHR,
+  input         io_commit_bits_T_NT,
+  input  [31:0] io_commit_bits_target,
+  input  [1:0]  io_commit_bits_br_type,
+  input  [3:0]  io_commit_bits_br_mask,
+  input         io_commit_bits_misprediction,
+  input  [6:0]  io_commit_bits_TOS,
+                io_commit_bits_NEXT,
+  input  [31:0] io_commit_bits_misprediction_PC,
+  output        io_DRAM_resp_ready,
+  input         io_DRAM_resp_valid,
+  input  [31:0] io_DRAM_resp_bits_data,
+  input         io_DRAM_request_ready,
+  output        io_DRAM_request_valid,
+  output [31:0] io_DRAM_request_bits_addr,
+                io_DRAM_request_bits_wr_data,
+  output        io_DRAM_request_bits_wr_en,
+  input         io_renamed_decoded_fetch_packet_ready,
+  output        io_renamed_decoded_fetch_packet_valid,
+  output [5:0]  io_renamed_decoded_fetch_packet_bits_0_RDold,
+  output        io_renamed_decoded_fetch_packet_bits_0_RDold_valid,
+  output [5:0]  io_renamed_decoded_fetch_packet_bits_0_RD,
+  output        io_renamed_decoded_fetch_packet_bits_0_RD_valid,
+  output [5:0]  io_renamed_decoded_fetch_packet_bits_0_RS1,
+  output        io_renamed_decoded_fetch_packet_bits_0_RS1_valid,
+  output [5:0]  io_renamed_decoded_fetch_packet_bits_0_RS2,
+  output        io_renamed_decoded_fetch_packet_bits_0_RS2_valid,
+  output [31:0] io_renamed_decoded_fetch_packet_bits_0_IMM,
+  output [2:0]  io_renamed_decoded_fetch_packet_bits_0_FUNCT3,
+  output [3:0]  io_renamed_decoded_fetch_packet_bits_0_packet_index,
+  output [5:0]  io_renamed_decoded_fetch_packet_bits_0_ROB_index,
+  output [4:0]  io_renamed_decoded_fetch_packet_bits_0_instructionType,
+  output [1:0]  io_renamed_decoded_fetch_packet_bits_0_portID,
+                io_renamed_decoded_fetch_packet_bits_0_RS_type,
+  output        io_renamed_decoded_fetch_packet_bits_0_needs_ALU,
+                io_renamed_decoded_fetch_packet_bits_0_needs_branch_unit,
+                io_renamed_decoded_fetch_packet_bits_0_SUBTRACT,
+                io_renamed_decoded_fetch_packet_bits_0_MULTIPLY,
+                io_renamed_decoded_fetch_packet_bits_0_IMMEDIATE,
+                io_renamed_decoded_fetch_packet_bits_0_IS_LOAD,
+                io_renamed_decoded_fetch_packet_bits_0_IS_STORE,
+  output [5:0]  io_renamed_decoded_fetch_packet_bits_1_RDold,
+  output        io_renamed_decoded_fetch_packet_bits_1_RDold_valid,
+  output [5:0]  io_renamed_decoded_fetch_packet_bits_1_RD,
+  output        io_renamed_decoded_fetch_packet_bits_1_RD_valid,
+  output [5:0]  io_renamed_decoded_fetch_packet_bits_1_RS1,
+  output        io_renamed_decoded_fetch_packet_bits_1_RS1_valid,
+  output [5:0]  io_renamed_decoded_fetch_packet_bits_1_RS2,
+  output        io_renamed_decoded_fetch_packet_bits_1_RS2_valid,
+  output [31:0] io_renamed_decoded_fetch_packet_bits_1_IMM,
+  output [2:0]  io_renamed_decoded_fetch_packet_bits_1_FUNCT3,
+  output [3:0]  io_renamed_decoded_fetch_packet_bits_1_packet_index,
+  output [5:0]  io_renamed_decoded_fetch_packet_bits_1_ROB_index,
+  output [4:0]  io_renamed_decoded_fetch_packet_bits_1_instructionType,
+  output [1:0]  io_renamed_decoded_fetch_packet_bits_1_portID,
+                io_renamed_decoded_fetch_packet_bits_1_RS_type,
+  output        io_renamed_decoded_fetch_packet_bits_1_needs_ALU,
+                io_renamed_decoded_fetch_packet_bits_1_needs_branch_unit,
+                io_renamed_decoded_fetch_packet_bits_1_SUBTRACT,
+                io_renamed_decoded_fetch_packet_bits_1_MULTIPLY,
+                io_renamed_decoded_fetch_packet_bits_1_IMMEDIATE,
+                io_renamed_decoded_fetch_packet_bits_1_IS_LOAD,
+                io_renamed_decoded_fetch_packet_bits_1_IS_STORE,
+  output [5:0]  io_renamed_decoded_fetch_packet_bits_2_RDold,
+  output        io_renamed_decoded_fetch_packet_bits_2_RDold_valid,
+  output [5:0]  io_renamed_decoded_fetch_packet_bits_2_RD,
+  output        io_renamed_decoded_fetch_packet_bits_2_RD_valid,
+  output [5:0]  io_renamed_decoded_fetch_packet_bits_2_RS1,
+  output        io_renamed_decoded_fetch_packet_bits_2_RS1_valid,
+  output [5:0]  io_renamed_decoded_fetch_packet_bits_2_RS2,
+  output        io_renamed_decoded_fetch_packet_bits_2_RS2_valid,
+  output [31:0] io_renamed_decoded_fetch_packet_bits_2_IMM,
+  output [2:0]  io_renamed_decoded_fetch_packet_bits_2_FUNCT3,
+  output [3:0]  io_renamed_decoded_fetch_packet_bits_2_packet_index,
+  output [5:0]  io_renamed_decoded_fetch_packet_bits_2_ROB_index,
+  output [4:0]  io_renamed_decoded_fetch_packet_bits_2_instructionType,
+  output [1:0]  io_renamed_decoded_fetch_packet_bits_2_portID,
+                io_renamed_decoded_fetch_packet_bits_2_RS_type,
+  output        io_renamed_decoded_fetch_packet_bits_2_needs_ALU,
+                io_renamed_decoded_fetch_packet_bits_2_needs_branch_unit,
+                io_renamed_decoded_fetch_packet_bits_2_SUBTRACT,
+                io_renamed_decoded_fetch_packet_bits_2_MULTIPLY,
+                io_renamed_decoded_fetch_packet_bits_2_IMMEDIATE,
+                io_renamed_decoded_fetch_packet_bits_2_IS_LOAD,
+                io_renamed_decoded_fetch_packet_bits_2_IS_STORE,
+  output [5:0]  io_renamed_decoded_fetch_packet_bits_3_RDold,
+  output        io_renamed_decoded_fetch_packet_bits_3_RDold_valid,
+  output [5:0]  io_renamed_decoded_fetch_packet_bits_3_RD,
+  output        io_renamed_decoded_fetch_packet_bits_3_RD_valid,
+  output [5:0]  io_renamed_decoded_fetch_packet_bits_3_RS1,
+  output        io_renamed_decoded_fetch_packet_bits_3_RS1_valid,
+  output [5:0]  io_renamed_decoded_fetch_packet_bits_3_RS2,
+  output        io_renamed_decoded_fetch_packet_bits_3_RS2_valid,
+  output [31:0] io_renamed_decoded_fetch_packet_bits_3_IMM,
+  output [2:0]  io_renamed_decoded_fetch_packet_bits_3_FUNCT3,
+  output [3:0]  io_renamed_decoded_fetch_packet_bits_3_packet_index,
+  output [5:0]  io_renamed_decoded_fetch_packet_bits_3_ROB_index,
+  output [4:0]  io_renamed_decoded_fetch_packet_bits_3_instructionType,
+  output [1:0]  io_renamed_decoded_fetch_packet_bits_3_portID,
+                io_renamed_decoded_fetch_packet_bits_3_RS_type,
+  output        io_renamed_decoded_fetch_packet_bits_3_needs_ALU,
+                io_renamed_decoded_fetch_packet_bits_3_needs_branch_unit,
+                io_renamed_decoded_fetch_packet_bits_3_SUBTRACT,
+                io_renamed_decoded_fetch_packet_bits_3_MULTIPLY,
+                io_renamed_decoded_fetch_packet_bits_3_IMMEDIATE,
+                io_renamed_decoded_fetch_packet_bits_3_IS_LOAD,
+                io_renamed_decoded_fetch_packet_bits_3_IS_STORE,
+  input  [5:0]  io_commit_RD_0,
+                io_commit_RD_1,
+                io_commit_RD_2,
+                io_commit_RD_3,
+  input         io_commit_RD_valid_0,
+                io_commit_RD_valid_1,
+                io_commit_RD_valid_2,
+                io_commit_RD_valid_3,
+                io_create_checkpoint,
+  output [3:0]  io_active_checkpoint_value,
+  input         io_restore_checkpoint,
+  input  [3:0]  io_restore_checkpoint_value,
+  input         io_free_checkpoint,
+  output        io_checkpoints_full
 );
 
+  wire        _decoders_io_decoded_fetch_packet_valid;
   wire [5:0]  _decoders_io_decoded_fetch_packet_bits_0_RD;
   wire        _decoders_io_decoded_fetch_packet_bits_0_RD_valid;
   wire [5:0]  _decoders_io_decoded_fetch_packet_bits_0_RS1;
   wire [5:0]  _decoders_io_decoded_fetch_packet_bits_0_RS2;
+  wire [31:0] _decoders_io_decoded_fetch_packet_bits_0_IMM;
+  wire [2:0]  _decoders_io_decoded_fetch_packet_bits_0_FUNCT3;
+  wire [3:0]  _decoders_io_decoded_fetch_packet_bits_0_packet_index;
+  wire [5:0]  _decoders_io_decoded_fetch_packet_bits_0_ROB_index;
+  wire [4:0]  _decoders_io_decoded_fetch_packet_bits_0_instructionType;
+  wire [1:0]  _decoders_io_decoded_fetch_packet_bits_0_portID;
+  wire [1:0]  _decoders_io_decoded_fetch_packet_bits_0_RS_type;
+  wire        _decoders_io_decoded_fetch_packet_bits_0_needs_ALU;
+  wire        _decoders_io_decoded_fetch_packet_bits_0_needs_branch_unit;
+  wire        _decoders_io_decoded_fetch_packet_bits_0_SUBTRACT;
+  wire        _decoders_io_decoded_fetch_packet_bits_0_MULTIPLY;
+  wire        _decoders_io_decoded_fetch_packet_bits_0_IMMEDIATE;
+  wire        _decoders_io_decoded_fetch_packet_bits_0_IS_LOAD;
+  wire        _decoders_io_decoded_fetch_packet_bits_0_IS_STORE;
   wire [5:0]  _decoders_io_decoded_fetch_packet_bits_1_RD;
   wire        _decoders_io_decoded_fetch_packet_bits_1_RD_valid;
   wire [5:0]  _decoders_io_decoded_fetch_packet_bits_1_RS1;
   wire [5:0]  _decoders_io_decoded_fetch_packet_bits_1_RS2;
+  wire [31:0] _decoders_io_decoded_fetch_packet_bits_1_IMM;
+  wire [2:0]  _decoders_io_decoded_fetch_packet_bits_1_FUNCT3;
+  wire [3:0]  _decoders_io_decoded_fetch_packet_bits_1_packet_index;
+  wire [5:0]  _decoders_io_decoded_fetch_packet_bits_1_ROB_index;
+  wire [4:0]  _decoders_io_decoded_fetch_packet_bits_1_instructionType;
+  wire [1:0]  _decoders_io_decoded_fetch_packet_bits_1_portID;
+  wire [1:0]  _decoders_io_decoded_fetch_packet_bits_1_RS_type;
+  wire        _decoders_io_decoded_fetch_packet_bits_1_needs_ALU;
+  wire        _decoders_io_decoded_fetch_packet_bits_1_needs_branch_unit;
+  wire        _decoders_io_decoded_fetch_packet_bits_1_SUBTRACT;
+  wire        _decoders_io_decoded_fetch_packet_bits_1_MULTIPLY;
+  wire        _decoders_io_decoded_fetch_packet_bits_1_IMMEDIATE;
+  wire        _decoders_io_decoded_fetch_packet_bits_1_IS_LOAD;
+  wire        _decoders_io_decoded_fetch_packet_bits_1_IS_STORE;
   wire [5:0]  _decoders_io_decoded_fetch_packet_bits_2_RD;
   wire        _decoders_io_decoded_fetch_packet_bits_2_RD_valid;
   wire [5:0]  _decoders_io_decoded_fetch_packet_bits_2_RS1;
   wire [5:0]  _decoders_io_decoded_fetch_packet_bits_2_RS2;
+  wire [31:0] _decoders_io_decoded_fetch_packet_bits_2_IMM;
+  wire [2:0]  _decoders_io_decoded_fetch_packet_bits_2_FUNCT3;
+  wire [3:0]  _decoders_io_decoded_fetch_packet_bits_2_packet_index;
+  wire [5:0]  _decoders_io_decoded_fetch_packet_bits_2_ROB_index;
+  wire [4:0]  _decoders_io_decoded_fetch_packet_bits_2_instructionType;
+  wire [1:0]  _decoders_io_decoded_fetch_packet_bits_2_portID;
+  wire [1:0]  _decoders_io_decoded_fetch_packet_bits_2_RS_type;
+  wire        _decoders_io_decoded_fetch_packet_bits_2_needs_ALU;
+  wire        _decoders_io_decoded_fetch_packet_bits_2_needs_branch_unit;
+  wire        _decoders_io_decoded_fetch_packet_bits_2_SUBTRACT;
+  wire        _decoders_io_decoded_fetch_packet_bits_2_MULTIPLY;
+  wire        _decoders_io_decoded_fetch_packet_bits_2_IMMEDIATE;
+  wire        _decoders_io_decoded_fetch_packet_bits_2_IS_LOAD;
+  wire        _decoders_io_decoded_fetch_packet_bits_2_IS_STORE;
   wire [5:0]  _decoders_io_decoded_fetch_packet_bits_3_RD;
   wire        _decoders_io_decoded_fetch_packet_bits_3_RD_valid;
   wire [5:0]  _decoders_io_decoded_fetch_packet_bits_3_RS1;
   wire [5:0]  _decoders_io_decoded_fetch_packet_bits_3_RS2;
+  wire [31:0] _decoders_io_decoded_fetch_packet_bits_3_IMM;
+  wire [2:0]  _decoders_io_decoded_fetch_packet_bits_3_FUNCT3;
+  wire [3:0]  _decoders_io_decoded_fetch_packet_bits_3_packet_index;
+  wire [5:0]  _decoders_io_decoded_fetch_packet_bits_3_ROB_index;
+  wire [4:0]  _decoders_io_decoded_fetch_packet_bits_3_instructionType;
+  wire [1:0]  _decoders_io_decoded_fetch_packet_bits_3_portID;
+  wire [1:0]  _decoders_io_decoded_fetch_packet_bits_3_RS_type;
+  wire        _decoders_io_decoded_fetch_packet_bits_3_needs_ALU;
+  wire        _decoders_io_decoded_fetch_packet_bits_3_needs_branch_unit;
+  wire        _decoders_io_decoded_fetch_packet_bits_3_SUBTRACT;
+  wire        _decoders_io_decoded_fetch_packet_bits_3_MULTIPLY;
+  wire        _decoders_io_decoded_fetch_packet_bits_3_IMMEDIATE;
+  wire        _decoders_io_decoded_fetch_packet_bits_3_IS_LOAD;
+  wire        _decoders_io_decoded_fetch_packet_bits_3_IS_STORE;
+  wire        _instruction_fetch_io_fetch_packet_valid;
   wire [31:0] _instruction_fetch_io_fetch_packet_bits_instructions_0_instruction;
+  wire [3:0]  _instruction_fetch_io_fetch_packet_bits_instructions_0_packet_index;
+  wire [5:0]  _instruction_fetch_io_fetch_packet_bits_instructions_0_ROB_index;
   wire [31:0] _instruction_fetch_io_fetch_packet_bits_instructions_1_instruction;
+  wire [3:0]  _instruction_fetch_io_fetch_packet_bits_instructions_1_packet_index;
+  wire [5:0]  _instruction_fetch_io_fetch_packet_bits_instructions_1_ROB_index;
   wire [31:0] _instruction_fetch_io_fetch_packet_bits_instructions_2_instruction;
+  wire [3:0]  _instruction_fetch_io_fetch_packet_bits_instructions_2_packet_index;
+  wire [5:0]  _instruction_fetch_io_fetch_packet_bits_instructions_2_ROB_index;
   wire [31:0] _instruction_fetch_io_fetch_packet_bits_instructions_3_instruction;
+  wire [3:0]  _instruction_fetch_io_fetch_packet_bits_instructions_3_packet_index;
+  wire [5:0]  _instruction_fetch_io_fetch_packet_bits_instructions_3_ROB_index;
   instruction_fetch instruction_fetch (
-    .clock                                           (clock),
-    .reset                                           (reset),
-    .io_dram_data_valid                              (io_dram_data_valid),
-    .io_dram_data_bits                               (io_dram_data_bits),
-    .io_commit_valid                                 (io_commit_valid),
-    .io_commit_bits_PC                               (io_commit_bits_PC),
-    .io_commit_bits_GHR                              (io_commit_bits_GHR),
-    .io_commit_bits_T_NT                             (io_commit_bits_T_NT),
-    .io_commit_bits_target                           (io_commit_bits_target),
-    .io_commit_bits_br_type                          (io_commit_bits_br_type),
-    .io_commit_bits_br_mask                          (io_commit_bits_br_mask),
-    .io_commit_bits_misprediction                    (io_commit_bits_misprediction),
-    .io_commit_bits_TOS                              (io_commit_bits_TOS),
-    .io_commit_bits_NEXT                             (io_commit_bits_NEXT),
-    .io_commit_bits_misprediction_PC                 (io_commit_bits_misprediction_PC),
+    .clock                                            (clock),
+    .reset                                            (reset),
+    .io_commit_valid                                  (io_commit_valid),
+    .io_commit_bits_PC                                (io_commit_bits_PC),
+    .io_commit_bits_GHR                               (io_commit_bits_GHR),
+    .io_commit_bits_T_NT                              (io_commit_bits_T_NT),
+    .io_commit_bits_target                            (io_commit_bits_target),
+    .io_commit_bits_br_type                           (io_commit_bits_br_type),
+    .io_commit_bits_br_mask                           (io_commit_bits_br_mask),
+    .io_commit_bits_misprediction                     (io_commit_bits_misprediction),
+    .io_commit_bits_TOS                               (io_commit_bits_TOS),
+    .io_commit_bits_NEXT                              (io_commit_bits_NEXT),
+    .io_commit_bits_misprediction_PC                  (io_commit_bits_misprediction_PC),
+    .io_DRAM_request_ready                            (io_DRAM_request_ready),
+    .io_DRAM_request_valid                            (io_DRAM_request_valid),
+    .io_DRAM_request_bits_addr                        (io_DRAM_request_bits_addr),
+    .io_DRAM_resp_ready                               (io_DRAM_resp_ready),
+    .io_DRAM_resp_valid                               (io_DRAM_resp_valid),
+    .io_DRAM_resp_bits_data                           (io_DRAM_resp_bits_data),
+    .io_fetch_packet_valid
+      (_instruction_fetch_io_fetch_packet_valid),
     .io_fetch_packet_bits_instructions_0_instruction
       (_instruction_fetch_io_fetch_packet_bits_instructions_0_instruction),
+    .io_fetch_packet_bits_instructions_0_packet_index
+      (_instruction_fetch_io_fetch_packet_bits_instructions_0_packet_index),
+    .io_fetch_packet_bits_instructions_0_ROB_index
+      (_instruction_fetch_io_fetch_packet_bits_instructions_0_ROB_index),
     .io_fetch_packet_bits_instructions_1_instruction
       (_instruction_fetch_io_fetch_packet_bits_instructions_1_instruction),
+    .io_fetch_packet_bits_instructions_1_packet_index
+      (_instruction_fetch_io_fetch_packet_bits_instructions_1_packet_index),
+    .io_fetch_packet_bits_instructions_1_ROB_index
+      (_instruction_fetch_io_fetch_packet_bits_instructions_1_ROB_index),
     .io_fetch_packet_bits_instructions_2_instruction
       (_instruction_fetch_io_fetch_packet_bits_instructions_2_instruction),
-    .io_fetch_packet_bits_instructions_3_instruction
-      (_instruction_fetch_io_fetch_packet_bits_instructions_3_instruction)
-  );
-  fetch_packet_decoder decoders (
-    .clock                                           (clock),
-    .reset                                           (reset),
-    .io_fetch_packet_bits_instructions_0_instruction
-      (_instruction_fetch_io_fetch_packet_bits_instructions_0_instruction),
-    .io_fetch_packet_bits_instructions_1_instruction
-      (_instruction_fetch_io_fetch_packet_bits_instructions_1_instruction),
-    .io_fetch_packet_bits_instructions_2_instruction
-      (_instruction_fetch_io_fetch_packet_bits_instructions_2_instruction),
+    .io_fetch_packet_bits_instructions_2_packet_index
+      (_instruction_fetch_io_fetch_packet_bits_instructions_2_packet_index),
+    .io_fetch_packet_bits_instructions_2_ROB_index
+      (_instruction_fetch_io_fetch_packet_bits_instructions_2_ROB_index),
     .io_fetch_packet_bits_instructions_3_instruction
       (_instruction_fetch_io_fetch_packet_bits_instructions_3_instruction),
-    .io_decoded_fetch_packet_bits_0_RD
-      (_decoders_io_decoded_fetch_packet_bits_0_RD),
-    .io_decoded_fetch_packet_bits_0_RD_valid
-      (_decoders_io_decoded_fetch_packet_bits_0_RD_valid),
-    .io_decoded_fetch_packet_bits_0_RS1
-      (_decoders_io_decoded_fetch_packet_bits_0_RS1),
-    .io_decoded_fetch_packet_bits_0_RS2
-      (_decoders_io_decoded_fetch_packet_bits_0_RS2),
-    .io_decoded_fetch_packet_bits_1_RD
-      (_decoders_io_decoded_fetch_packet_bits_1_RD),
-    .io_decoded_fetch_packet_bits_1_RD_valid
-      (_decoders_io_decoded_fetch_packet_bits_1_RD_valid),
-    .io_decoded_fetch_packet_bits_1_RS1
-      (_decoders_io_decoded_fetch_packet_bits_1_RS1),
-    .io_decoded_fetch_packet_bits_1_RS2
-      (_decoders_io_decoded_fetch_packet_bits_1_RS2),
-    .io_decoded_fetch_packet_bits_2_RD
-      (_decoders_io_decoded_fetch_packet_bits_2_RD),
-    .io_decoded_fetch_packet_bits_2_RD_valid
-      (_decoders_io_decoded_fetch_packet_bits_2_RD_valid),
-    .io_decoded_fetch_packet_bits_2_RS1
-      (_decoders_io_decoded_fetch_packet_bits_2_RS1),
-    .io_decoded_fetch_packet_bits_2_RS2
-      (_decoders_io_decoded_fetch_packet_bits_2_RS2),
-    .io_decoded_fetch_packet_bits_3_RD
-      (_decoders_io_decoded_fetch_packet_bits_3_RD),
-    .io_decoded_fetch_packet_bits_3_RD_valid
-      (_decoders_io_decoded_fetch_packet_bits_3_RD_valid),
-    .io_decoded_fetch_packet_bits_3_RS1
-      (_decoders_io_decoded_fetch_packet_bits_3_RS1),
-    .io_decoded_fetch_packet_bits_3_RS2
-      (_decoders_io_decoded_fetch_packet_bits_3_RS2)
+    .io_fetch_packet_bits_instructions_3_packet_index
+      (_instruction_fetch_io_fetch_packet_bits_instructions_3_packet_index),
+    .io_fetch_packet_bits_instructions_3_ROB_index
+      (_instruction_fetch_io_fetch_packet_bits_instructions_3_ROB_index)
   );
-  renamer renamer (
-    .clock                                        (clock),
-    .reset                                        (reset),
+  fetch_packet_decoder decoders (
+    .clock                                            (clock),
+    .reset                                            (reset),
+    .io_fetch_packet_valid
+      (_instruction_fetch_io_fetch_packet_valid),
+    .io_fetch_packet_bits_instructions_0_instruction
+      (_instruction_fetch_io_fetch_packet_bits_instructions_0_instruction),
+    .io_fetch_packet_bits_instructions_0_packet_index
+      (_instruction_fetch_io_fetch_packet_bits_instructions_0_packet_index),
+    .io_fetch_packet_bits_instructions_0_ROB_index
+      (_instruction_fetch_io_fetch_packet_bits_instructions_0_ROB_index),
+    .io_fetch_packet_bits_instructions_1_instruction
+      (_instruction_fetch_io_fetch_packet_bits_instructions_1_instruction),
+    .io_fetch_packet_bits_instructions_1_packet_index
+      (_instruction_fetch_io_fetch_packet_bits_instructions_1_packet_index),
+    .io_fetch_packet_bits_instructions_1_ROB_index
+      (_instruction_fetch_io_fetch_packet_bits_instructions_1_ROB_index),
+    .io_fetch_packet_bits_instructions_2_instruction
+      (_instruction_fetch_io_fetch_packet_bits_instructions_2_instruction),
+    .io_fetch_packet_bits_instructions_2_packet_index
+      (_instruction_fetch_io_fetch_packet_bits_instructions_2_packet_index),
+    .io_fetch_packet_bits_instructions_2_ROB_index
+      (_instruction_fetch_io_fetch_packet_bits_instructions_2_ROB_index),
+    .io_fetch_packet_bits_instructions_3_instruction
+      (_instruction_fetch_io_fetch_packet_bits_instructions_3_instruction),
+    .io_fetch_packet_bits_instructions_3_packet_index
+      (_instruction_fetch_io_fetch_packet_bits_instructions_3_packet_index),
+    .io_fetch_packet_bits_instructions_3_ROB_index
+      (_instruction_fetch_io_fetch_packet_bits_instructions_3_ROB_index),
+    .io_decoded_fetch_packet_valid
+      (_decoders_io_decoded_fetch_packet_valid),
     .io_decoded_fetch_packet_bits_0_RD
       (_decoders_io_decoded_fetch_packet_bits_0_RD),
     .io_decoded_fetch_packet_bits_0_RD_valid
@@ -3255,6 +8724,34 @@ module frontend(
       (_decoders_io_decoded_fetch_packet_bits_0_RS1),
     .io_decoded_fetch_packet_bits_0_RS2
       (_decoders_io_decoded_fetch_packet_bits_0_RS2),
+    .io_decoded_fetch_packet_bits_0_IMM
+      (_decoders_io_decoded_fetch_packet_bits_0_IMM),
+    .io_decoded_fetch_packet_bits_0_FUNCT3
+      (_decoders_io_decoded_fetch_packet_bits_0_FUNCT3),
+    .io_decoded_fetch_packet_bits_0_packet_index
+      (_decoders_io_decoded_fetch_packet_bits_0_packet_index),
+    .io_decoded_fetch_packet_bits_0_ROB_index
+      (_decoders_io_decoded_fetch_packet_bits_0_ROB_index),
+    .io_decoded_fetch_packet_bits_0_instructionType
+      (_decoders_io_decoded_fetch_packet_bits_0_instructionType),
+    .io_decoded_fetch_packet_bits_0_portID
+      (_decoders_io_decoded_fetch_packet_bits_0_portID),
+    .io_decoded_fetch_packet_bits_0_RS_type
+      (_decoders_io_decoded_fetch_packet_bits_0_RS_type),
+    .io_decoded_fetch_packet_bits_0_needs_ALU
+      (_decoders_io_decoded_fetch_packet_bits_0_needs_ALU),
+    .io_decoded_fetch_packet_bits_0_needs_branch_unit
+      (_decoders_io_decoded_fetch_packet_bits_0_needs_branch_unit),
+    .io_decoded_fetch_packet_bits_0_SUBTRACT
+      (_decoders_io_decoded_fetch_packet_bits_0_SUBTRACT),
+    .io_decoded_fetch_packet_bits_0_MULTIPLY
+      (_decoders_io_decoded_fetch_packet_bits_0_MULTIPLY),
+    .io_decoded_fetch_packet_bits_0_IMMEDIATE
+      (_decoders_io_decoded_fetch_packet_bits_0_IMMEDIATE),
+    .io_decoded_fetch_packet_bits_0_IS_LOAD
+      (_decoders_io_decoded_fetch_packet_bits_0_IS_LOAD),
+    .io_decoded_fetch_packet_bits_0_IS_STORE
+      (_decoders_io_decoded_fetch_packet_bits_0_IS_STORE),
     .io_decoded_fetch_packet_bits_1_RD
       (_decoders_io_decoded_fetch_packet_bits_1_RD),
     .io_decoded_fetch_packet_bits_1_RD_valid
@@ -3263,6 +8760,34 @@ module frontend(
       (_decoders_io_decoded_fetch_packet_bits_1_RS1),
     .io_decoded_fetch_packet_bits_1_RS2
       (_decoders_io_decoded_fetch_packet_bits_1_RS2),
+    .io_decoded_fetch_packet_bits_1_IMM
+      (_decoders_io_decoded_fetch_packet_bits_1_IMM),
+    .io_decoded_fetch_packet_bits_1_FUNCT3
+      (_decoders_io_decoded_fetch_packet_bits_1_FUNCT3),
+    .io_decoded_fetch_packet_bits_1_packet_index
+      (_decoders_io_decoded_fetch_packet_bits_1_packet_index),
+    .io_decoded_fetch_packet_bits_1_ROB_index
+      (_decoders_io_decoded_fetch_packet_bits_1_ROB_index),
+    .io_decoded_fetch_packet_bits_1_instructionType
+      (_decoders_io_decoded_fetch_packet_bits_1_instructionType),
+    .io_decoded_fetch_packet_bits_1_portID
+      (_decoders_io_decoded_fetch_packet_bits_1_portID),
+    .io_decoded_fetch_packet_bits_1_RS_type
+      (_decoders_io_decoded_fetch_packet_bits_1_RS_type),
+    .io_decoded_fetch_packet_bits_1_needs_ALU
+      (_decoders_io_decoded_fetch_packet_bits_1_needs_ALU),
+    .io_decoded_fetch_packet_bits_1_needs_branch_unit
+      (_decoders_io_decoded_fetch_packet_bits_1_needs_branch_unit),
+    .io_decoded_fetch_packet_bits_1_SUBTRACT
+      (_decoders_io_decoded_fetch_packet_bits_1_SUBTRACT),
+    .io_decoded_fetch_packet_bits_1_MULTIPLY
+      (_decoders_io_decoded_fetch_packet_bits_1_MULTIPLY),
+    .io_decoded_fetch_packet_bits_1_IMMEDIATE
+      (_decoders_io_decoded_fetch_packet_bits_1_IMMEDIATE),
+    .io_decoded_fetch_packet_bits_1_IS_LOAD
+      (_decoders_io_decoded_fetch_packet_bits_1_IS_LOAD),
+    .io_decoded_fetch_packet_bits_1_IS_STORE
+      (_decoders_io_decoded_fetch_packet_bits_1_IS_STORE),
     .io_decoded_fetch_packet_bits_2_RD
       (_decoders_io_decoded_fetch_packet_bits_2_RD),
     .io_decoded_fetch_packet_bits_2_RD_valid
@@ -3271,6 +8796,34 @@ module frontend(
       (_decoders_io_decoded_fetch_packet_bits_2_RS1),
     .io_decoded_fetch_packet_bits_2_RS2
       (_decoders_io_decoded_fetch_packet_bits_2_RS2),
+    .io_decoded_fetch_packet_bits_2_IMM
+      (_decoders_io_decoded_fetch_packet_bits_2_IMM),
+    .io_decoded_fetch_packet_bits_2_FUNCT3
+      (_decoders_io_decoded_fetch_packet_bits_2_FUNCT3),
+    .io_decoded_fetch_packet_bits_2_packet_index
+      (_decoders_io_decoded_fetch_packet_bits_2_packet_index),
+    .io_decoded_fetch_packet_bits_2_ROB_index
+      (_decoders_io_decoded_fetch_packet_bits_2_ROB_index),
+    .io_decoded_fetch_packet_bits_2_instructionType
+      (_decoders_io_decoded_fetch_packet_bits_2_instructionType),
+    .io_decoded_fetch_packet_bits_2_portID
+      (_decoders_io_decoded_fetch_packet_bits_2_portID),
+    .io_decoded_fetch_packet_bits_2_RS_type
+      (_decoders_io_decoded_fetch_packet_bits_2_RS_type),
+    .io_decoded_fetch_packet_bits_2_needs_ALU
+      (_decoders_io_decoded_fetch_packet_bits_2_needs_ALU),
+    .io_decoded_fetch_packet_bits_2_needs_branch_unit
+      (_decoders_io_decoded_fetch_packet_bits_2_needs_branch_unit),
+    .io_decoded_fetch_packet_bits_2_SUBTRACT
+      (_decoders_io_decoded_fetch_packet_bits_2_SUBTRACT),
+    .io_decoded_fetch_packet_bits_2_MULTIPLY
+      (_decoders_io_decoded_fetch_packet_bits_2_MULTIPLY),
+    .io_decoded_fetch_packet_bits_2_IMMEDIATE
+      (_decoders_io_decoded_fetch_packet_bits_2_IMMEDIATE),
+    .io_decoded_fetch_packet_bits_2_IS_LOAD
+      (_decoders_io_decoded_fetch_packet_bits_2_IS_LOAD),
+    .io_decoded_fetch_packet_bits_2_IS_STORE
+      (_decoders_io_decoded_fetch_packet_bits_2_IS_STORE),
     .io_decoded_fetch_packet_bits_3_RD
       (_decoders_io_decoded_fetch_packet_bits_3_RD),
     .io_decoded_fetch_packet_bits_3_RD_valid
@@ -3279,117 +8832,371 @@ module frontend(
       (_decoders_io_decoded_fetch_packet_bits_3_RS1),
     .io_decoded_fetch_packet_bits_3_RS2
       (_decoders_io_decoded_fetch_packet_bits_3_RS2),
+    .io_decoded_fetch_packet_bits_3_IMM
+      (_decoders_io_decoded_fetch_packet_bits_3_IMM),
+    .io_decoded_fetch_packet_bits_3_FUNCT3
+      (_decoders_io_decoded_fetch_packet_bits_3_FUNCT3),
+    .io_decoded_fetch_packet_bits_3_packet_index
+      (_decoders_io_decoded_fetch_packet_bits_3_packet_index),
+    .io_decoded_fetch_packet_bits_3_ROB_index
+      (_decoders_io_decoded_fetch_packet_bits_3_ROB_index),
+    .io_decoded_fetch_packet_bits_3_instructionType
+      (_decoders_io_decoded_fetch_packet_bits_3_instructionType),
+    .io_decoded_fetch_packet_bits_3_portID
+      (_decoders_io_decoded_fetch_packet_bits_3_portID),
+    .io_decoded_fetch_packet_bits_3_RS_type
+      (_decoders_io_decoded_fetch_packet_bits_3_RS_type),
+    .io_decoded_fetch_packet_bits_3_needs_ALU
+      (_decoders_io_decoded_fetch_packet_bits_3_needs_ALU),
+    .io_decoded_fetch_packet_bits_3_needs_branch_unit
+      (_decoders_io_decoded_fetch_packet_bits_3_needs_branch_unit),
+    .io_decoded_fetch_packet_bits_3_SUBTRACT
+      (_decoders_io_decoded_fetch_packet_bits_3_SUBTRACT),
+    .io_decoded_fetch_packet_bits_3_MULTIPLY
+      (_decoders_io_decoded_fetch_packet_bits_3_MULTIPLY),
+    .io_decoded_fetch_packet_bits_3_IMMEDIATE
+      (_decoders_io_decoded_fetch_packet_bits_3_IMMEDIATE),
+    .io_decoded_fetch_packet_bits_3_IS_LOAD
+      (_decoders_io_decoded_fetch_packet_bits_3_IS_LOAD),
+    .io_decoded_fetch_packet_bits_3_IS_STORE
+      (_decoders_io_decoded_fetch_packet_bits_3_IS_STORE)
+  );
+  renamer renamer (
+    .clock                                                    (clock),
+    .reset                                                    (reset),
+    .io_decoded_fetch_packet_valid
+      (_decoders_io_decoded_fetch_packet_valid),
+    .io_decoded_fetch_packet_bits_0_RD
+      (_decoders_io_decoded_fetch_packet_bits_0_RD),
+    .io_decoded_fetch_packet_bits_0_RD_valid
+      (_decoders_io_decoded_fetch_packet_bits_0_RD_valid),
+    .io_decoded_fetch_packet_bits_0_RS1
+      (_decoders_io_decoded_fetch_packet_bits_0_RS1),
+    .io_decoded_fetch_packet_bits_0_RS2
+      (_decoders_io_decoded_fetch_packet_bits_0_RS2),
+    .io_decoded_fetch_packet_bits_0_IMM
+      (_decoders_io_decoded_fetch_packet_bits_0_IMM),
+    .io_decoded_fetch_packet_bits_0_FUNCT3
+      (_decoders_io_decoded_fetch_packet_bits_0_FUNCT3),
+    .io_decoded_fetch_packet_bits_0_packet_index
+      (_decoders_io_decoded_fetch_packet_bits_0_packet_index),
+    .io_decoded_fetch_packet_bits_0_ROB_index
+      (_decoders_io_decoded_fetch_packet_bits_0_ROB_index),
+    .io_decoded_fetch_packet_bits_0_instructionType
+      (_decoders_io_decoded_fetch_packet_bits_0_instructionType),
+    .io_decoded_fetch_packet_bits_0_portID
+      (_decoders_io_decoded_fetch_packet_bits_0_portID),
+    .io_decoded_fetch_packet_bits_0_RS_type
+      (_decoders_io_decoded_fetch_packet_bits_0_RS_type),
+    .io_decoded_fetch_packet_bits_0_needs_ALU
+      (_decoders_io_decoded_fetch_packet_bits_0_needs_ALU),
+    .io_decoded_fetch_packet_bits_0_needs_branch_unit
+      (_decoders_io_decoded_fetch_packet_bits_0_needs_branch_unit),
+    .io_decoded_fetch_packet_bits_0_SUBTRACT
+      (_decoders_io_decoded_fetch_packet_bits_0_SUBTRACT),
+    .io_decoded_fetch_packet_bits_0_MULTIPLY
+      (_decoders_io_decoded_fetch_packet_bits_0_MULTIPLY),
+    .io_decoded_fetch_packet_bits_0_IMMEDIATE
+      (_decoders_io_decoded_fetch_packet_bits_0_IMMEDIATE),
+    .io_decoded_fetch_packet_bits_0_IS_LOAD
+      (_decoders_io_decoded_fetch_packet_bits_0_IS_LOAD),
+    .io_decoded_fetch_packet_bits_0_IS_STORE
+      (_decoders_io_decoded_fetch_packet_bits_0_IS_STORE),
+    .io_decoded_fetch_packet_bits_1_RD
+      (_decoders_io_decoded_fetch_packet_bits_1_RD),
+    .io_decoded_fetch_packet_bits_1_RD_valid
+      (_decoders_io_decoded_fetch_packet_bits_1_RD_valid),
+    .io_decoded_fetch_packet_bits_1_RS1
+      (_decoders_io_decoded_fetch_packet_bits_1_RS1),
+    .io_decoded_fetch_packet_bits_1_RS2
+      (_decoders_io_decoded_fetch_packet_bits_1_RS2),
+    .io_decoded_fetch_packet_bits_1_IMM
+      (_decoders_io_decoded_fetch_packet_bits_1_IMM),
+    .io_decoded_fetch_packet_bits_1_FUNCT3
+      (_decoders_io_decoded_fetch_packet_bits_1_FUNCT3),
+    .io_decoded_fetch_packet_bits_1_packet_index
+      (_decoders_io_decoded_fetch_packet_bits_1_packet_index),
+    .io_decoded_fetch_packet_bits_1_ROB_index
+      (_decoders_io_decoded_fetch_packet_bits_1_ROB_index),
+    .io_decoded_fetch_packet_bits_1_instructionType
+      (_decoders_io_decoded_fetch_packet_bits_1_instructionType),
+    .io_decoded_fetch_packet_bits_1_portID
+      (_decoders_io_decoded_fetch_packet_bits_1_portID),
+    .io_decoded_fetch_packet_bits_1_RS_type
+      (_decoders_io_decoded_fetch_packet_bits_1_RS_type),
+    .io_decoded_fetch_packet_bits_1_needs_ALU
+      (_decoders_io_decoded_fetch_packet_bits_1_needs_ALU),
+    .io_decoded_fetch_packet_bits_1_needs_branch_unit
+      (_decoders_io_decoded_fetch_packet_bits_1_needs_branch_unit),
+    .io_decoded_fetch_packet_bits_1_SUBTRACT
+      (_decoders_io_decoded_fetch_packet_bits_1_SUBTRACT),
+    .io_decoded_fetch_packet_bits_1_MULTIPLY
+      (_decoders_io_decoded_fetch_packet_bits_1_MULTIPLY),
+    .io_decoded_fetch_packet_bits_1_IMMEDIATE
+      (_decoders_io_decoded_fetch_packet_bits_1_IMMEDIATE),
+    .io_decoded_fetch_packet_bits_1_IS_LOAD
+      (_decoders_io_decoded_fetch_packet_bits_1_IS_LOAD),
+    .io_decoded_fetch_packet_bits_1_IS_STORE
+      (_decoders_io_decoded_fetch_packet_bits_1_IS_STORE),
+    .io_decoded_fetch_packet_bits_2_RD
+      (_decoders_io_decoded_fetch_packet_bits_2_RD),
+    .io_decoded_fetch_packet_bits_2_RD_valid
+      (_decoders_io_decoded_fetch_packet_bits_2_RD_valid),
+    .io_decoded_fetch_packet_bits_2_RS1
+      (_decoders_io_decoded_fetch_packet_bits_2_RS1),
+    .io_decoded_fetch_packet_bits_2_RS2
+      (_decoders_io_decoded_fetch_packet_bits_2_RS2),
+    .io_decoded_fetch_packet_bits_2_IMM
+      (_decoders_io_decoded_fetch_packet_bits_2_IMM),
+    .io_decoded_fetch_packet_bits_2_FUNCT3
+      (_decoders_io_decoded_fetch_packet_bits_2_FUNCT3),
+    .io_decoded_fetch_packet_bits_2_packet_index
+      (_decoders_io_decoded_fetch_packet_bits_2_packet_index),
+    .io_decoded_fetch_packet_bits_2_ROB_index
+      (_decoders_io_decoded_fetch_packet_bits_2_ROB_index),
+    .io_decoded_fetch_packet_bits_2_instructionType
+      (_decoders_io_decoded_fetch_packet_bits_2_instructionType),
+    .io_decoded_fetch_packet_bits_2_portID
+      (_decoders_io_decoded_fetch_packet_bits_2_portID),
+    .io_decoded_fetch_packet_bits_2_RS_type
+      (_decoders_io_decoded_fetch_packet_bits_2_RS_type),
+    .io_decoded_fetch_packet_bits_2_needs_ALU
+      (_decoders_io_decoded_fetch_packet_bits_2_needs_ALU),
+    .io_decoded_fetch_packet_bits_2_needs_branch_unit
+      (_decoders_io_decoded_fetch_packet_bits_2_needs_branch_unit),
+    .io_decoded_fetch_packet_bits_2_SUBTRACT
+      (_decoders_io_decoded_fetch_packet_bits_2_SUBTRACT),
+    .io_decoded_fetch_packet_bits_2_MULTIPLY
+      (_decoders_io_decoded_fetch_packet_bits_2_MULTIPLY),
+    .io_decoded_fetch_packet_bits_2_IMMEDIATE
+      (_decoders_io_decoded_fetch_packet_bits_2_IMMEDIATE),
+    .io_decoded_fetch_packet_bits_2_IS_LOAD
+      (_decoders_io_decoded_fetch_packet_bits_2_IS_LOAD),
+    .io_decoded_fetch_packet_bits_2_IS_STORE
+      (_decoders_io_decoded_fetch_packet_bits_2_IS_STORE),
+    .io_decoded_fetch_packet_bits_3_RD
+      (_decoders_io_decoded_fetch_packet_bits_3_RD),
+    .io_decoded_fetch_packet_bits_3_RD_valid
+      (_decoders_io_decoded_fetch_packet_bits_3_RD_valid),
+    .io_decoded_fetch_packet_bits_3_RS1
+      (_decoders_io_decoded_fetch_packet_bits_3_RS1),
+    .io_decoded_fetch_packet_bits_3_RS2
+      (_decoders_io_decoded_fetch_packet_bits_3_RS2),
+    .io_decoded_fetch_packet_bits_3_IMM
+      (_decoders_io_decoded_fetch_packet_bits_3_IMM),
+    .io_decoded_fetch_packet_bits_3_FUNCT3
+      (_decoders_io_decoded_fetch_packet_bits_3_FUNCT3),
+    .io_decoded_fetch_packet_bits_3_packet_index
+      (_decoders_io_decoded_fetch_packet_bits_3_packet_index),
+    .io_decoded_fetch_packet_bits_3_ROB_index
+      (_decoders_io_decoded_fetch_packet_bits_3_ROB_index),
+    .io_decoded_fetch_packet_bits_3_instructionType
+      (_decoders_io_decoded_fetch_packet_bits_3_instructionType),
+    .io_decoded_fetch_packet_bits_3_portID
+      (_decoders_io_decoded_fetch_packet_bits_3_portID),
+    .io_decoded_fetch_packet_bits_3_RS_type
+      (_decoders_io_decoded_fetch_packet_bits_3_RS_type),
+    .io_decoded_fetch_packet_bits_3_needs_ALU
+      (_decoders_io_decoded_fetch_packet_bits_3_needs_ALU),
+    .io_decoded_fetch_packet_bits_3_needs_branch_unit
+      (_decoders_io_decoded_fetch_packet_bits_3_needs_branch_unit),
+    .io_decoded_fetch_packet_bits_3_SUBTRACT
+      (_decoders_io_decoded_fetch_packet_bits_3_SUBTRACT),
+    .io_decoded_fetch_packet_bits_3_MULTIPLY
+      (_decoders_io_decoded_fetch_packet_bits_3_MULTIPLY),
+    .io_decoded_fetch_packet_bits_3_IMMEDIATE
+      (_decoders_io_decoded_fetch_packet_bits_3_IMMEDIATE),
+    .io_decoded_fetch_packet_bits_3_IS_LOAD
+      (_decoders_io_decoded_fetch_packet_bits_3_IS_LOAD),
+    .io_decoded_fetch_packet_bits_3_IS_STORE
+      (_decoders_io_decoded_fetch_packet_bits_3_IS_STORE),
+    .io_renamed_decoded_fetch_packet_valid
+      (io_renamed_decoded_fetch_packet_valid),
     .io_renamed_decoded_fetch_packet_bits_0_RDold
       (io_renamed_decoded_fetch_packet_bits_0_RDold),
     .io_renamed_decoded_fetch_packet_bits_0_RD
       (io_renamed_decoded_fetch_packet_bits_0_RD),
+    .io_renamed_decoded_fetch_packet_bits_0_RD_valid
+      (io_renamed_decoded_fetch_packet_bits_0_RD_valid),
     .io_renamed_decoded_fetch_packet_bits_0_RS1
       (io_renamed_decoded_fetch_packet_bits_0_RS1),
     .io_renamed_decoded_fetch_packet_bits_0_RS2
       (io_renamed_decoded_fetch_packet_bits_0_RS2),
+    .io_renamed_decoded_fetch_packet_bits_0_IMM
+      (io_renamed_decoded_fetch_packet_bits_0_IMM),
+    .io_renamed_decoded_fetch_packet_bits_0_FUNCT3
+      (io_renamed_decoded_fetch_packet_bits_0_FUNCT3),
+    .io_renamed_decoded_fetch_packet_bits_0_packet_index
+      (io_renamed_decoded_fetch_packet_bits_0_packet_index),
+    .io_renamed_decoded_fetch_packet_bits_0_ROB_index
+      (io_renamed_decoded_fetch_packet_bits_0_ROB_index),
+    .io_renamed_decoded_fetch_packet_bits_0_instructionType
+      (io_renamed_decoded_fetch_packet_bits_0_instructionType),
+    .io_renamed_decoded_fetch_packet_bits_0_portID
+      (io_renamed_decoded_fetch_packet_bits_0_portID),
+    .io_renamed_decoded_fetch_packet_bits_0_RS_type
+      (io_renamed_decoded_fetch_packet_bits_0_RS_type),
+    .io_renamed_decoded_fetch_packet_bits_0_needs_ALU
+      (io_renamed_decoded_fetch_packet_bits_0_needs_ALU),
+    .io_renamed_decoded_fetch_packet_bits_0_needs_branch_unit
+      (io_renamed_decoded_fetch_packet_bits_0_needs_branch_unit),
+    .io_renamed_decoded_fetch_packet_bits_0_SUBTRACT
+      (io_renamed_decoded_fetch_packet_bits_0_SUBTRACT),
+    .io_renamed_decoded_fetch_packet_bits_0_MULTIPLY
+      (io_renamed_decoded_fetch_packet_bits_0_MULTIPLY),
+    .io_renamed_decoded_fetch_packet_bits_0_IMMEDIATE
+      (io_renamed_decoded_fetch_packet_bits_0_IMMEDIATE),
+    .io_renamed_decoded_fetch_packet_bits_0_IS_LOAD
+      (io_renamed_decoded_fetch_packet_bits_0_IS_LOAD),
+    .io_renamed_decoded_fetch_packet_bits_0_IS_STORE
+      (io_renamed_decoded_fetch_packet_bits_0_IS_STORE),
     .io_renamed_decoded_fetch_packet_bits_1_RDold
       (io_renamed_decoded_fetch_packet_bits_1_RDold),
     .io_renamed_decoded_fetch_packet_bits_1_RD
       (io_renamed_decoded_fetch_packet_bits_1_RD),
+    .io_renamed_decoded_fetch_packet_bits_1_RD_valid
+      (io_renamed_decoded_fetch_packet_bits_1_RD_valid),
     .io_renamed_decoded_fetch_packet_bits_1_RS1
       (io_renamed_decoded_fetch_packet_bits_1_RS1),
     .io_renamed_decoded_fetch_packet_bits_1_RS2
       (io_renamed_decoded_fetch_packet_bits_1_RS2),
+    .io_renamed_decoded_fetch_packet_bits_1_IMM
+      (io_renamed_decoded_fetch_packet_bits_1_IMM),
+    .io_renamed_decoded_fetch_packet_bits_1_FUNCT3
+      (io_renamed_decoded_fetch_packet_bits_1_FUNCT3),
+    .io_renamed_decoded_fetch_packet_bits_1_packet_index
+      (io_renamed_decoded_fetch_packet_bits_1_packet_index),
+    .io_renamed_decoded_fetch_packet_bits_1_ROB_index
+      (io_renamed_decoded_fetch_packet_bits_1_ROB_index),
+    .io_renamed_decoded_fetch_packet_bits_1_instructionType
+      (io_renamed_decoded_fetch_packet_bits_1_instructionType),
+    .io_renamed_decoded_fetch_packet_bits_1_portID
+      (io_renamed_decoded_fetch_packet_bits_1_portID),
+    .io_renamed_decoded_fetch_packet_bits_1_RS_type
+      (io_renamed_decoded_fetch_packet_bits_1_RS_type),
+    .io_renamed_decoded_fetch_packet_bits_1_needs_ALU
+      (io_renamed_decoded_fetch_packet_bits_1_needs_ALU),
+    .io_renamed_decoded_fetch_packet_bits_1_needs_branch_unit
+      (io_renamed_decoded_fetch_packet_bits_1_needs_branch_unit),
+    .io_renamed_decoded_fetch_packet_bits_1_SUBTRACT
+      (io_renamed_decoded_fetch_packet_bits_1_SUBTRACT),
+    .io_renamed_decoded_fetch_packet_bits_1_MULTIPLY
+      (io_renamed_decoded_fetch_packet_bits_1_MULTIPLY),
+    .io_renamed_decoded_fetch_packet_bits_1_IMMEDIATE
+      (io_renamed_decoded_fetch_packet_bits_1_IMMEDIATE),
+    .io_renamed_decoded_fetch_packet_bits_1_IS_LOAD
+      (io_renamed_decoded_fetch_packet_bits_1_IS_LOAD),
+    .io_renamed_decoded_fetch_packet_bits_1_IS_STORE
+      (io_renamed_decoded_fetch_packet_bits_1_IS_STORE),
     .io_renamed_decoded_fetch_packet_bits_2_RDold
       (io_renamed_decoded_fetch_packet_bits_2_RDold),
     .io_renamed_decoded_fetch_packet_bits_2_RD
       (io_renamed_decoded_fetch_packet_bits_2_RD),
+    .io_renamed_decoded_fetch_packet_bits_2_RD_valid
+      (io_renamed_decoded_fetch_packet_bits_2_RD_valid),
     .io_renamed_decoded_fetch_packet_bits_2_RS1
       (io_renamed_decoded_fetch_packet_bits_2_RS1),
     .io_renamed_decoded_fetch_packet_bits_2_RS2
       (io_renamed_decoded_fetch_packet_bits_2_RS2),
+    .io_renamed_decoded_fetch_packet_bits_2_IMM
+      (io_renamed_decoded_fetch_packet_bits_2_IMM),
+    .io_renamed_decoded_fetch_packet_bits_2_FUNCT3
+      (io_renamed_decoded_fetch_packet_bits_2_FUNCT3),
+    .io_renamed_decoded_fetch_packet_bits_2_packet_index
+      (io_renamed_decoded_fetch_packet_bits_2_packet_index),
+    .io_renamed_decoded_fetch_packet_bits_2_ROB_index
+      (io_renamed_decoded_fetch_packet_bits_2_ROB_index),
+    .io_renamed_decoded_fetch_packet_bits_2_instructionType
+      (io_renamed_decoded_fetch_packet_bits_2_instructionType),
+    .io_renamed_decoded_fetch_packet_bits_2_portID
+      (io_renamed_decoded_fetch_packet_bits_2_portID),
+    .io_renamed_decoded_fetch_packet_bits_2_RS_type
+      (io_renamed_decoded_fetch_packet_bits_2_RS_type),
+    .io_renamed_decoded_fetch_packet_bits_2_needs_ALU
+      (io_renamed_decoded_fetch_packet_bits_2_needs_ALU),
+    .io_renamed_decoded_fetch_packet_bits_2_needs_branch_unit
+      (io_renamed_decoded_fetch_packet_bits_2_needs_branch_unit),
+    .io_renamed_decoded_fetch_packet_bits_2_SUBTRACT
+      (io_renamed_decoded_fetch_packet_bits_2_SUBTRACT),
+    .io_renamed_decoded_fetch_packet_bits_2_MULTIPLY
+      (io_renamed_decoded_fetch_packet_bits_2_MULTIPLY),
+    .io_renamed_decoded_fetch_packet_bits_2_IMMEDIATE
+      (io_renamed_decoded_fetch_packet_bits_2_IMMEDIATE),
+    .io_renamed_decoded_fetch_packet_bits_2_IS_LOAD
+      (io_renamed_decoded_fetch_packet_bits_2_IS_LOAD),
+    .io_renamed_decoded_fetch_packet_bits_2_IS_STORE
+      (io_renamed_decoded_fetch_packet_bits_2_IS_STORE),
     .io_renamed_decoded_fetch_packet_bits_3_RDold
       (io_renamed_decoded_fetch_packet_bits_3_RDold),
     .io_renamed_decoded_fetch_packet_bits_3_RD
       (io_renamed_decoded_fetch_packet_bits_3_RD),
+    .io_renamed_decoded_fetch_packet_bits_3_RD_valid
+      (io_renamed_decoded_fetch_packet_bits_3_RD_valid),
     .io_renamed_decoded_fetch_packet_bits_3_RS1
       (io_renamed_decoded_fetch_packet_bits_3_RS1),
     .io_renamed_decoded_fetch_packet_bits_3_RS2
-      (io_renamed_decoded_fetch_packet_bits_3_RS2)
+      (io_renamed_decoded_fetch_packet_bits_3_RS2),
+    .io_renamed_decoded_fetch_packet_bits_3_IMM
+      (io_renamed_decoded_fetch_packet_bits_3_IMM),
+    .io_renamed_decoded_fetch_packet_bits_3_FUNCT3
+      (io_renamed_decoded_fetch_packet_bits_3_FUNCT3),
+    .io_renamed_decoded_fetch_packet_bits_3_packet_index
+      (io_renamed_decoded_fetch_packet_bits_3_packet_index),
+    .io_renamed_decoded_fetch_packet_bits_3_ROB_index
+      (io_renamed_decoded_fetch_packet_bits_3_ROB_index),
+    .io_renamed_decoded_fetch_packet_bits_3_instructionType
+      (io_renamed_decoded_fetch_packet_bits_3_instructionType),
+    .io_renamed_decoded_fetch_packet_bits_3_portID
+      (io_renamed_decoded_fetch_packet_bits_3_portID),
+    .io_renamed_decoded_fetch_packet_bits_3_RS_type
+      (io_renamed_decoded_fetch_packet_bits_3_RS_type),
+    .io_renamed_decoded_fetch_packet_bits_3_needs_ALU
+      (io_renamed_decoded_fetch_packet_bits_3_needs_ALU),
+    .io_renamed_decoded_fetch_packet_bits_3_needs_branch_unit
+      (io_renamed_decoded_fetch_packet_bits_3_needs_branch_unit),
+    .io_renamed_decoded_fetch_packet_bits_3_SUBTRACT
+      (io_renamed_decoded_fetch_packet_bits_3_SUBTRACT),
+    .io_renamed_decoded_fetch_packet_bits_3_MULTIPLY
+      (io_renamed_decoded_fetch_packet_bits_3_MULTIPLY),
+    .io_renamed_decoded_fetch_packet_bits_3_IMMEDIATE
+      (io_renamed_decoded_fetch_packet_bits_3_IMMEDIATE),
+    .io_renamed_decoded_fetch_packet_bits_3_IS_LOAD
+      (io_renamed_decoded_fetch_packet_bits_3_IS_LOAD),
+    .io_renamed_decoded_fetch_packet_bits_3_IS_STORE
+      (io_renamed_decoded_fetch_packet_bits_3_IS_STORE),
+    .io_commit_RD_0                                           (io_commit_RD_0),
+    .io_commit_RD_1                                           (io_commit_RD_1),
+    .io_commit_RD_2                                           (io_commit_RD_2),
+    .io_commit_RD_3                                           (io_commit_RD_3),
+    .io_commit_RD_valid_0                                     (io_commit_RD_valid_0),
+    .io_commit_RD_valid_1                                     (io_commit_RD_valid_1),
+    .io_commit_RD_valid_2                                     (io_commit_RD_valid_2),
+    .io_commit_RD_valid_3                                     (io_commit_RD_valid_3),
+    .io_create_checkpoint                                     (io_create_checkpoint),
+    .io_active_checkpoint_value
+      (io_active_checkpoint_value),
+    .io_restore_checkpoint                                    (io_restore_checkpoint),
+    .io_restore_checkpoint_value
+      (io_restore_checkpoint_value),
+    .io_free_checkpoint                                       (io_free_checkpoint),
+    .io_checkpoints_full                                      (io_checkpoints_full)
   );
-  assign io_misprediction_PC_ready = 1'h0;
-  assign io_exception_PC_ready = 1'h0;
-  assign io_dram_data_ready = 1'h0;
-  assign io_commit_ready = 1'h0;
-  assign io_cache_addr_valid = 1'h0;
-  assign io_cache_addr_bits = 32'h0;
-  assign io_renamed_decoded_fetch_packet_valid = 1'h0;
+  assign io_misprediction_PC_ready = 1'h1;
+  assign io_exception_PC_ready = 1'h1;
+  assign io_commit_ready = 1'h1;
+  assign io_DRAM_request_bits_wr_data = 32'h0;
+  assign io_DRAM_request_bits_wr_en = 1'h0;
   assign io_renamed_decoded_fetch_packet_bits_0_RDold_valid = 1'h0;
-  assign io_renamed_decoded_fetch_packet_bits_0_RD_valid = 1'h0;
-  assign io_renamed_decoded_fetch_packet_bits_0_RS1_valid = 1'h0;
-  assign io_renamed_decoded_fetch_packet_bits_0_RS2_valid = 1'h0;
-  assign io_renamed_decoded_fetch_packet_bits_0_IMM = 32'h0;
-  assign io_renamed_decoded_fetch_packet_bits_0_FUNCT3 = 3'h0;
-  assign io_renamed_decoded_fetch_packet_bits_0_packet_index = 4'h0;
-  assign io_renamed_decoded_fetch_packet_bits_0_ROB_index = 6'h0;
-  assign io_renamed_decoded_fetch_packet_bits_0_instructionType = 5'h0;
-  assign io_renamed_decoded_fetch_packet_bits_0_portID = 2'h0;
-  assign io_renamed_decoded_fetch_packet_bits_0_RS_type = 2'h0;
-  assign io_renamed_decoded_fetch_packet_bits_0_needs_ALU = 1'h0;
-  assign io_renamed_decoded_fetch_packet_bits_0_needs_branch_unit = 1'h0;
-  assign io_renamed_decoded_fetch_packet_bits_0_SUBTRACT = 1'h0;
-  assign io_renamed_decoded_fetch_packet_bits_0_MULTIPLY = 1'h0;
-  assign io_renamed_decoded_fetch_packet_bits_0_IMMEDIATE = 1'h0;
-  assign io_renamed_decoded_fetch_packet_bits_0_IS_LOAD = 1'h0;
-  assign io_renamed_decoded_fetch_packet_bits_0_IS_STORE = 1'h0;
+  assign io_renamed_decoded_fetch_packet_bits_0_RS1_valid = 1'h1;
+  assign io_renamed_decoded_fetch_packet_bits_0_RS2_valid = 1'h1;
   assign io_renamed_decoded_fetch_packet_bits_1_RDold_valid = 1'h0;
-  assign io_renamed_decoded_fetch_packet_bits_1_RD_valid = 1'h0;
-  assign io_renamed_decoded_fetch_packet_bits_1_RS1_valid = 1'h0;
-  assign io_renamed_decoded_fetch_packet_bits_1_RS2_valid = 1'h0;
-  assign io_renamed_decoded_fetch_packet_bits_1_IMM = 32'h0;
-  assign io_renamed_decoded_fetch_packet_bits_1_FUNCT3 = 3'h0;
-  assign io_renamed_decoded_fetch_packet_bits_1_packet_index = 4'h0;
-  assign io_renamed_decoded_fetch_packet_bits_1_ROB_index = 6'h0;
-  assign io_renamed_decoded_fetch_packet_bits_1_instructionType = 5'h0;
-  assign io_renamed_decoded_fetch_packet_bits_1_portID = 2'h0;
-  assign io_renamed_decoded_fetch_packet_bits_1_RS_type = 2'h0;
-  assign io_renamed_decoded_fetch_packet_bits_1_needs_ALU = 1'h0;
-  assign io_renamed_decoded_fetch_packet_bits_1_needs_branch_unit = 1'h0;
-  assign io_renamed_decoded_fetch_packet_bits_1_SUBTRACT = 1'h0;
-  assign io_renamed_decoded_fetch_packet_bits_1_MULTIPLY = 1'h0;
-  assign io_renamed_decoded_fetch_packet_bits_1_IMMEDIATE = 1'h0;
-  assign io_renamed_decoded_fetch_packet_bits_1_IS_LOAD = 1'h0;
-  assign io_renamed_decoded_fetch_packet_bits_1_IS_STORE = 1'h0;
+  assign io_renamed_decoded_fetch_packet_bits_1_RS1_valid = 1'h1;
+  assign io_renamed_decoded_fetch_packet_bits_1_RS2_valid = 1'h1;
   assign io_renamed_decoded_fetch_packet_bits_2_RDold_valid = 1'h0;
-  assign io_renamed_decoded_fetch_packet_bits_2_RD_valid = 1'h0;
-  assign io_renamed_decoded_fetch_packet_bits_2_RS1_valid = 1'h0;
-  assign io_renamed_decoded_fetch_packet_bits_2_RS2_valid = 1'h0;
-  assign io_renamed_decoded_fetch_packet_bits_2_IMM = 32'h0;
-  assign io_renamed_decoded_fetch_packet_bits_2_FUNCT3 = 3'h0;
-  assign io_renamed_decoded_fetch_packet_bits_2_packet_index = 4'h0;
-  assign io_renamed_decoded_fetch_packet_bits_2_ROB_index = 6'h0;
-  assign io_renamed_decoded_fetch_packet_bits_2_instructionType = 5'h0;
-  assign io_renamed_decoded_fetch_packet_bits_2_portID = 2'h0;
-  assign io_renamed_decoded_fetch_packet_bits_2_RS_type = 2'h0;
-  assign io_renamed_decoded_fetch_packet_bits_2_needs_ALU = 1'h0;
-  assign io_renamed_decoded_fetch_packet_bits_2_needs_branch_unit = 1'h0;
-  assign io_renamed_decoded_fetch_packet_bits_2_SUBTRACT = 1'h0;
-  assign io_renamed_decoded_fetch_packet_bits_2_MULTIPLY = 1'h0;
-  assign io_renamed_decoded_fetch_packet_bits_2_IMMEDIATE = 1'h0;
-  assign io_renamed_decoded_fetch_packet_bits_2_IS_LOAD = 1'h0;
-  assign io_renamed_decoded_fetch_packet_bits_2_IS_STORE = 1'h0;
+  assign io_renamed_decoded_fetch_packet_bits_2_RS1_valid = 1'h1;
+  assign io_renamed_decoded_fetch_packet_bits_2_RS2_valid = 1'h1;
   assign io_renamed_decoded_fetch_packet_bits_3_RDold_valid = 1'h0;
-  assign io_renamed_decoded_fetch_packet_bits_3_RD_valid = 1'h0;
-  assign io_renamed_decoded_fetch_packet_bits_3_RS1_valid = 1'h0;
-  assign io_renamed_decoded_fetch_packet_bits_3_RS2_valid = 1'h0;
-  assign io_renamed_decoded_fetch_packet_bits_3_IMM = 32'h0;
-  assign io_renamed_decoded_fetch_packet_bits_3_FUNCT3 = 3'h0;
-  assign io_renamed_decoded_fetch_packet_bits_3_packet_index = 4'h0;
-  assign io_renamed_decoded_fetch_packet_bits_3_ROB_index = 6'h0;
-  assign io_renamed_decoded_fetch_packet_bits_3_instructionType = 5'h0;
-  assign io_renamed_decoded_fetch_packet_bits_3_portID = 2'h0;
-  assign io_renamed_decoded_fetch_packet_bits_3_RS_type = 2'h0;
-  assign io_renamed_decoded_fetch_packet_bits_3_needs_ALU = 1'h0;
-  assign io_renamed_decoded_fetch_packet_bits_3_needs_branch_unit = 1'h0;
-  assign io_renamed_decoded_fetch_packet_bits_3_SUBTRACT = 1'h0;
-  assign io_renamed_decoded_fetch_packet_bits_3_MULTIPLY = 1'h0;
-  assign io_renamed_decoded_fetch_packet_bits_3_IMMEDIATE = 1'h0;
-  assign io_renamed_decoded_fetch_packet_bits_3_IS_LOAD = 1'h0;
-  assign io_renamed_decoded_fetch_packet_bits_3_IS_STORE = 1'h0;
+  assign io_renamed_decoded_fetch_packet_bits_3_RS1_valid = 1'h1;
+  assign io_renamed_decoded_fetch_packet_bits_3_RS2_valid = 1'h1;
 endmodule
 

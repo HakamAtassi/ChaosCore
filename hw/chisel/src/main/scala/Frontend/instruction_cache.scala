@@ -34,49 +34,22 @@ import chisel3.util._
 import java.io.{File, FileWriter}
 import java.rmi.server.UID
 
+import Thermometor._
 
 object cacheState extends ChiselEnum{
     val Active, Allocate, Replay = Value
 }
 
 
-// FIXME: this only works for width=2 or 4.
-class instruction_validator(fetchWidth: Int) extends Module {
-  val io = IO(new Bundle {
-    val instruction_index = Input(UInt(log2Ceil(fetchWidth).W))
-    val instruction_output = Output(UInt(fetchWidth.W))
-  })
-
-  val lookupTable = fetchWidth match {
-    case 2 =>
-      // Define the lookup table for fetchWidth = 2
-      VecInit(
-        "b11".U(fetchWidth.W), // 0 -> 11
-        "b01".U(fetchWidth.W)  // 1 -> 01
-      )
-    case 4 =>
-      // Define the lookup table for fetchWidth = 4
-      VecInit(
-        "b1111".U(fetchWidth.W), // 00 -> 1111
-        "b0111".U(fetchWidth.W), // 01 -> 0111
-        "b0011".U(fetchWidth.W), // 10 -> 0011
-        "b0001".U(fetchWidth.W)  // 11 -> 0001
-      )
-    case _ =>
-      VecInit(Seq.fill(fetchWidth)(0.U(fetchWidth.W)))
-  }
-
-  io.instruction_output := lookupTable(io.instruction_index)
-}
-
-
+// TODO: need a module that converts L1 miss to a proper DRAM request. 
 
 class L1_instruction_cache(parameters:Parameters) extends Module{
     import parameters._
 
 
     val ways = L1_instructionCacheWays
-    val sets = L1_instructionCacheWays
+    val sets = L1_instructionCacheSets
+
     val blockSizeBytes = L1_instructionCacheBlockSizeBytes
 
     val depth                       = sets
@@ -92,8 +65,9 @@ class L1_instruction_cache(parameters:Parameters) extends Module{
     val instructionBits             = log2Ceil(instructionsPerLine)                                     // number of bits needed to address fetch packet in cache line (fetches always packet aligned)
     val instructionsPerPacketBits   = log2Ceil(fetchWidth)                                              // number of bits needed to address each instruction in a fetch packet
     val tagBits                     = 32 - setBits - fetchPacketBits - instructionsPerPacketBits - 2    // 32 - bits required to index set - bits required to index within line - 2 bits due to 4 byte aligned data
-    val wayDataWidth                = (validBits + tagBits) + dataSizeBits                              // width of the data line
-    val consumedKB                  = (64*ways*wayDataWidth + sets*LRUBits)/8/1024 
+    val wayDataWidth                = validBits + tagBits + dataSizeBits                              // width of the data line
+
+    val consumedKB                  = (sets*ways*wayDataWidth + sets*LRUBits)/8.0/1024.0 
 
 
 
@@ -103,14 +77,15 @@ class L1_instruction_cache(parameters:Parameters) extends Module{
 
 
     val io = IO(new Bundle{
-        val cpu_addr           =     Flipped(Decoupled(UInt(32.W)))               // inputs from CPU
-        val dram_data          =     Flipped(Decoupled(UInt(dataSizeBits.W)))     // inputs from DRAM
-        val kill               =     Input(UInt(1.W))                             // Kill in progress request(s) 
+        // Inputs
+        val cpu_addr            =     Flipped(Decoupled(UInt(32.W)))              // inputs from CPU
+        val kill                =     Input(UInt(1.W))                            // Kill in progress request(s) 
                                                                                   // FIXME: this should be a bool
+        val DRAM_resp           =     Flipped(Decoupled(Input(new DRAM_resp())))  // FROM DRAM
 
         // Outputs
-        val cache_data         =     Decoupled(new fetch_packet(parameters))
-        val cache_addr         =     Decoupled(UInt(32.W))                        // outputs to DRAM
+        val cache_data          =     Decoupled(new fetch_packet(parameters))     // TO CPU
+        val DRAM_request        =     Decoupled(new DRAM_request())               // TO DRAM
     })
 
 
@@ -123,6 +98,9 @@ class L1_instruction_cache(parameters:Parameters) extends Module{
     val replay_addr     = RegInit(UInt(32.W), 0.U)
     val replay_tag      = RegInit(UInt(tagBits.W), 0.U)
     val replay_valid    = RegInit(UInt(1.W), 0.U)
+
+
+
     val fetch_PC_buf    = RegInit(UInt(32.W), 0.U)
 
     val hit             = Wire(Bool())
@@ -157,10 +135,7 @@ class L1_instruction_cache(parameters:Parameters) extends Module{
     val packet_index         = RegInit(UInt(fetchPacketBits.W), 0.U)
     val aligned_packet_index = Wire(UInt(fetchPacketBits.W))
 
-    val dram_addr_mask      = Wire(UInt(32.W))
-    val maskValue = ((1.U << 32.U) - (1.U << byteOffsetBits))
-
-    dram_addr_mask  := maskValue
+    val dram_addr_mask = ((1.U << 32.U) - (1.U << byteOffsetBits))
 
     // Address assignments
     // FIXME: There is a bug somewhere here I know it
@@ -174,30 +149,26 @@ class L1_instruction_cache(parameters:Parameters) extends Module{
     // FSM //
     /////////
     
-    io.cache_addr.bits  := 0.U
-    io.cache_addr.valid := 0.U
-    io.dram_data.ready  := 0.U
+    io.DRAM_resp.ready           := 0.U
+    io.DRAM_request.valid        := 0.U
+    io.DRAM_request.bits.addr    := 0.U
+    io.DRAM_request.bits.wr_data := 0.U
+    io.DRAM_request.bits.wr_en   := 0.B
 
-    when(io.cpu_addr.valid === 1.B){
-        replay_addr := io.cpu_addr.bits
-    }
-
+    when(io.cpu_addr.valid === 1.B){replay_addr := io.cpu_addr.bits}
 
     switch(cache_state){
         is(cacheState.Active){
             replay_tag := RegNext(io.cpu_addr.bits(31, 31-tagBits+1))
-            io.dram_data.ready := 0.U   // cache not ready for data from DRAM in active state
+            io.DRAM_resp.ready  := 0.U   // cache not ready for data from DRAM in active state
             replay_valid        := 0.U
             when((miss===1.B && io.kill === 0.U)){           // Buffer current request, stall cache, go to wait state
                 // Request data from DRAM
                 cache_state := cacheState.Allocate
-                io.cache_addr.bits := RegNext(io.cpu_addr.bits) & dram_addr_mask
-                //replay_addr & dram_addr_mask
-
-                io.cache_addr.valid := 1.U
-                io.dram_data.ready  := 1.U
+                io.DRAM_request.bits.addr   := RegNext(io.cpu_addr.bits) & dram_addr_mask
+                io.DRAM_request.valid       := 1.U
+                io.DRAM_resp.ready          := 1.U
             }
-
             when(!miss){
                 packet_index := current_addr_fetch_packet
                 fetch_PC_buf := io.cpu_addr.bits
@@ -207,15 +178,16 @@ class L1_instruction_cache(parameters:Parameters) extends Module{
             }
         }
         is(cacheState.Allocate){            // Stall till DRAM response. On Response, allocate.
-            io.cache_addr.bits  := 0.U      // Only Request once...
-            io.cache_addr.valid := 0.U      // ...
-            io.dram_data.ready  := 1.U      // Ready to accept DRAM data
+            io.DRAM_request.bits.addr   := 0.U      // Only Request once...
+            io.DRAM_request.valid       := 0.U      // ...
+            io.DRAM_resp.ready          := 1.U      // Ready to accept DRAM data
+
             replay_valid        := 0.U
             when(io.kill === 1.U){
                 cache_state := cacheState.Active    // Ignore miss, go back to active.
-            }.elsewhen(io.dram_data.valid===1.U){ // Data received
+            }.elsewhen(io.DRAM_resp.valid===1.U){ // Data received
                 replay_valid        := 1.U  // Perform replay of cache miss
-                io.dram_data.ready  := 0.U  // Data received; no longer ready
+                io.DRAM_resp.ready  := 0.U  // Data received; no longer ready
                 cache_state := cacheState.Replay    // Allow cycle for cache replay
             }
         }
@@ -227,7 +199,7 @@ class L1_instruction_cache(parameters:Parameters) extends Module{
 
     // Address arbitration
     current_addr := Mux(cache_state=/=cacheState.Active || miss, replay_addr, io.cpu_addr.bits) // During allocate and replay, current address is from buffered request. 
-    current_data := Cat(1.U, replay_tag, io.dram_data.bits)                             // 1 Bit valid, N bit tag, N bit data
+    current_data := Cat(1.U, replay_tag, io.DRAM_resp.bits.data)                             // 1 Bit valid, N bit tag, N bit data
 
     // For a new input to be accepted:
     // cache must be active
@@ -240,10 +212,8 @@ class L1_instruction_cache(parameters:Parameters) extends Module{
     // LRU MEMORY //
     ////////////////
 
-    LRU_memory.io.enable := 1.B
-
+    LRU_memory.io.enable  := 1.B
     LRU_memory.io.rd_addr := current_addr_set
-
     LRU_memory.io.wr_addr := RegNext(current_addr_set)
     LRU_memory.io.wr_en   := hit
     LRU_memory.io.data_in := LRU_next
@@ -264,12 +234,12 @@ class L1_instruction_cache(parameters:Parameters) extends Module{
     ///////////////////
 
     for (way <- 0 until ways){
-        data_memory(way).io.enable := 1.B
+        data_memory(way).io.enable  := 1.B
 
         data_memory(way).io.addr    := current_addr_set
         data_way(way)               := data_memory(way).io.data_out
 
-        data_memory(way).io.wr_en   := io.dram_data.valid & allocate_way(way)
+        data_memory(way).io.wr_en   := io.DRAM_resp.valid & allocate_way(way)
         data_memory(way).io.data_in := current_data
     }
 
@@ -318,18 +288,18 @@ class L1_instruction_cache(parameters:Parameters) extends Module{
         io.cache_data.bits.instructions(i).instruction:= instruction_vec(packet_index*fetchWidth.U + i.U)   
     }
 
-    val validator = Module(new instruction_validator(fetchWidth=fetchWidth))
-    validator.io.instruction_index := current_addr_instruction_offset
+
+    val validator = Thermometor(in=current_addr_instruction_offset, max=fetchWidth)
+
 
     for(i <- 0 until fetchWidth){
-        io.cache_data.bits.valid_bits(i):= RegNext(validator.io.instruction_output(fetchWidth-1-i)) && hit && (io.kill === 0.U)  // only valid if not hit
+        io.cache_data.bits.valid_bits(i):= RegNext(validator(fetchWidth-1-i)) && hit && (io.kill === 0.U)  // only valid if not hit
     }
     io.cache_data.valid   := hit && (io.kill === 0.U)
 
     io.cache_data.bits.fetch_PC := fetch_PC_buf
 
     // FIXME: 
-    io.cache_data.bits.instructions := DontCare
     io.cache_data.bits.instructions := DontCare
 
     // Kill handling

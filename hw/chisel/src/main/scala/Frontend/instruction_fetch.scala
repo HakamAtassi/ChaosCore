@@ -109,19 +109,19 @@ class instruction_fetch(parameters:Parameters) extends Module{
     val dataSizeBits                = L1_instructionCacheBlockSizeBytes*8
 
     val io = IO(new Bundle{
-
-        //val PC                = Flipped(Decoupled(UInt(32.W)))
-
         // Inputs: A series of PCs and control signals
         val misprediction_PC  =   Flipped(Decoupled(UInt(32.W)))                              // Input
         val exception_PC      =   Flipped(Decoupled(UInt(32.W)))                              // Input
-        val dram_data         =   Flipped(Decoupled(UInt(dataSizeBits.W)))                    // inputs from DRAM
         val commit            =   Flipped(Decoupled(new commit(fetchWidth=fetchWidth)))       // Input
         
-        // outputs
-        val cache_addr        =   Decoupled(UInt(32.W))                                       // outputs to DRAM
+        // To DRAM
+        val DRAM_request      =   Decoupled(new DRAM_request())
+
+        // From DRAM
+        val DRAM_resp         =   Flipped(Decoupled(new DRAM_resp()))
+
+        // Output
         val fetch_packet      =   Decoupled(new fetch_packet(parameters))                     // Fetch packet result (To Decoders)
-        
 
     })
 
@@ -178,19 +178,21 @@ class instruction_fetch(parameters:Parameters) extends Module{
     ///////////////////////
     instruction_cache.io.cache_data.ready     :=   !instruction_Q.io.full
 
-
     // Attach PC_Q to instruction cache
     instruction_cache.io.cpu_addr.bits     :=   PC_Q.io.data_out
     instruction_cache.io.cpu_addr.valid    :=   (!PC_Q.io.empty)
 
     // Dram resp
-    io.cache_addr.bits                          :=   instruction_cache.io.cache_addr.bits     //  TO DRAM 
-    io.cache_addr.valid                         :=   instruction_cache.io.cache_addr.valid    //  TO DRAM
-    instruction_cache.io.dram_data.valid        :=   io.dram_data.valid                       //  FROM DRAM
-    instruction_cache.io.dram_data.bits         :=   io.dram_data.bits                        //  FROM DRAM
+    io.DRAM_request.bits                          :=   instruction_cache.io.DRAM_request.bits     //  TO DRAM 
+    io.DRAM_request.valid                         :=   instruction_cache.io.DRAM_request.valid    //  TO DRAM
 
-    instruction_cache.io.cache_addr.ready       := io.cache_addr.ready                        // Is DRAM ready for request ?
-    io.dram_data.ready                          := instruction_cache.io.dram_data.ready       // Is Cache ready to accept DRAM response ?
+
+    instruction_cache.io.DRAM_resp.valid        :=   io.DRAM_resp.valid                       //  FROM DRAM
+    instruction_cache.io.DRAM_resp.bits         :=   io.DRAM_resp.bits                        //  FROM DRAM
+
+    instruction_cache.io.DRAM_request.ready     := io.DRAM_request.ready                        // Is DRAM ready for request ?
+    io.DRAM_resp.ready                          := instruction_cache.io.DRAM_request.ready      // Is Cache ready to accept DRAM response ?
+
 
     // kill 
     instruction_cache.io.kill                   := clear

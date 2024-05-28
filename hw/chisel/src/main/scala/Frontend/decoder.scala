@@ -189,7 +189,7 @@ class fetch_packet_decoder(parameters:Parameters) extends Module{
         io.decoded_fetch_packet.bits(i) := RegNext(decoders(i).io.decoded_instruction)
     }
 
-    io.fetch_packet.ready := DontCare
+    io.fetch_packet.ready := 1.B
     
     io.decoded_fetch_packet.valid := RegNext(io.fetch_packet.valid)
 }
