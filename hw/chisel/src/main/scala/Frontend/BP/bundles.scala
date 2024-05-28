@@ -199,10 +199,15 @@ class decoded_instruction(coreConfig:String, fetchWidth:Int, ROBEntires:Int, phy
     val physicalRegBits =   log2Ceil(physicalRegCount)    // FIXME!!
     //
 
+    val RDold              =   UInt(physicalRegBits.W) // Actual dest
+    val RDold_valid        =   Bool()
+
+    val RD              =   UInt(physicalRegBits.W) // Actual dest
     val RD_valid        =   Bool()
-    val RD              =   UInt(physicalRegBits.W)
     val RS1             =   UInt(physicalRegBits.W)
+    val RS1_valid       =   Bool()
     val RS2             =   UInt(physicalRegBits.W)
+    val RS2_valid       =   Bool()
     val IMM             =   UInt(32.W)
     val FUNCT3          =   UInt(3.W)
 

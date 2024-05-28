@@ -3,8 +3,8 @@ module ALU(
   input         clock,
                 reset,
                 io_FU_input_valid,
-                io_FU_input_bits_decoded_instruction_RD_valid,
   input  [5:0]  io_FU_input_bits_decoded_instruction_RD,
+  input         io_FU_input_bits_decoded_instruction_RD_valid,
   input  [31:0] io_FU_input_bits_decoded_instruction_IMM,
   input  [2:0]  io_FU_input_bits_decoded_instruction_FUNCT3,
   input  [5:0]  io_FU_input_bits_decoded_instruction_ROB_index,
@@ -118,8 +118,8 @@ endmodule
 module branch_unit(
   input         clock,
                 io_FU_input_valid,
-                io_FU_input_bits_decoded_instruction_RD_valid,
   input  [5:0]  io_FU_input_bits_decoded_instruction_RD,
+  input         io_FU_input_bits_decoded_instruction_RD_valid,
   input  [31:0] io_FU_input_bits_decoded_instruction_IMM,
   input  [2:0]  io_FU_input_bits_decoded_instruction_FUNCT3,
   input  [3:0]  io_FU_input_bits_decoded_instruction_packet_index,
@@ -212,10 +212,14 @@ module FU(
                 reset,
   output        io_FU_input_ready,
   input         io_FU_input_valid,
-                io_FU_input_bits_decoded_instruction_RD_valid,
+  input  [5:0]  io_FU_input_bits_decoded_instruction_RDold,
+  input         io_FU_input_bits_decoded_instruction_RDold_valid,
   input  [5:0]  io_FU_input_bits_decoded_instruction_RD,
-                io_FU_input_bits_decoded_instruction_RS1,
-                io_FU_input_bits_decoded_instruction_RS2,
+  input         io_FU_input_bits_decoded_instruction_RD_valid,
+  input  [5:0]  io_FU_input_bits_decoded_instruction_RS1,
+  input         io_FU_input_bits_decoded_instruction_RS1_valid,
+  input  [5:0]  io_FU_input_bits_decoded_instruction_RS2,
+  input         io_FU_input_bits_decoded_instruction_RS2_valid,
   input  [31:0] io_FU_input_bits_decoded_instruction_IMM,
   input  [2:0]  io_FU_input_bits_decoded_instruction_FUNCT3,
   input  [3:0]  io_FU_input_bits_decoded_instruction_packet_index,
@@ -260,10 +264,10 @@ module FU(
     .clock                                                (clock),
     .reset                                                (reset),
     .io_FU_input_valid                                    (io_FU_input_valid),
-    .io_FU_input_bits_decoded_instruction_RD_valid
-      (io_FU_input_bits_decoded_instruction_RD_valid),
     .io_FU_input_bits_decoded_instruction_RD
       (io_FU_input_bits_decoded_instruction_RD),
+    .io_FU_input_bits_decoded_instruction_RD_valid
+      (io_FU_input_bits_decoded_instruction_RD_valid),
     .io_FU_input_bits_decoded_instruction_IMM
       (io_FU_input_bits_decoded_instruction_IMM),
     .io_FU_input_bits_decoded_instruction_FUNCT3
@@ -292,10 +296,10 @@ module FU(
   branch_unit branch_unit (
     .clock                                                (clock),
     .io_FU_input_valid                                    (io_FU_input_valid),
-    .io_FU_input_bits_decoded_instruction_RD_valid
-      (io_FU_input_bits_decoded_instruction_RD_valid),
     .io_FU_input_bits_decoded_instruction_RD
       (io_FU_input_bits_decoded_instruction_RD),
+    .io_FU_input_bits_decoded_instruction_RD_valid
+      (io_FU_input_bits_decoded_instruction_RD_valid),
     .io_FU_input_bits_decoded_instruction_IMM
       (io_FU_input_bits_decoded_instruction_IMM),
     .io_FU_input_bits_decoded_instruction_FUNCT3
