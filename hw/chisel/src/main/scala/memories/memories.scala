@@ -129,11 +129,11 @@ class TrueDualPortMemory(depth: Int, width: Int) extends Module {
   when(io.writeEnableA) {
     mem.write(io.addrA, io.writeDataA)
   }
-  io.readDataA := mem.read(io.addrA, io.writeEnableA)
+  io.readDataA := mem.read(io.addrA, io.writeEnableA) // FIXME: write enable???
 
   // Operations for Port B
   when(io.writeEnableB) {
     mem.write(io.addrB, io.writeDataB)
   }
-  io.readDataB := mem.read(io.addrB, io.writeEnableB)
+  io.readDataB := mem.read(io.addrB, io.writeEnableB) // FIXME: write enable???
 }

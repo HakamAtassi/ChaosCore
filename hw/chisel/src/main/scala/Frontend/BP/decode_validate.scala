@@ -78,9 +78,11 @@ class decode_validate(parameters:Parameters) extends Module{
 
         // outputs
         val kill                = Output(Bool())                                        // kill incoming instructions
-        val revert              = Decoupled(new revert(parameters))   // Redirect frontend // FIXME: should be output...
-        val final_fetch_packet  = Decoupled(new fetch_packet(parameters))                         // Output validated instructions
+        val revert              = Decoupled(new revert(parameters))                     // Redirect frontend // FIXME: should be output...
+        val final_fetch_packet  = Decoupled(new fetch_packet(parameters))               // Output validated instructions
         val RAS_update          = Flipped(new RAS_update)                               // RAS control
+
+        val FTQ                 = Decoupled(new FTQ_entry(parameters))
     })
 
     /////////////
@@ -132,7 +134,7 @@ class decode_validate(parameters:Parameters) extends Module{
     
     val metadata_out    = Wire(new metadata())
     // assign default value to metadata
-    metadata_out := DontCare
+    metadata_out := DontCare    // FIXME: Dontcare here is wrong as it can cause mux issues
     for(i <- 0 until fetchWidth){    // reverse this
         when(T_NT_reg(i) === 1.B){
             metadata_out := metadata_reg(i)
@@ -218,6 +220,26 @@ class decode_validate(parameters:Parameters) extends Module{
     io.RAS_update.call       := metadata_out.Call
     io.RAS_update.ret        := metadata_out.Ret
     io.RAS_update.call_addr  := metadata_out.instruction_PC // PC of the actual instruction, not fetch_PC
+
+
+
+    // FTQ //
+
+    val is_branch   =   DontCare
+
+    io.FTQ.bits.valid                        :=  is_branch
+    io.FTQ.valid                             := 1.B
+
+    // Branch validation data
+    io.FTQ.bits.fetch_packet_PC              :=  PC_expected
+
+    io.FTQ.bits.is_misprediction             :=  0.U
+    io.FTQ.bits.predicted_expected_PC        :=  RegNext(io.fetch_packet.bits.fetch_PC)
+
+    // State revision data
+    io.FTQ.bits.GHR                          :=  GHR_reg
+    io.FTQ.bits.NEXT                         :=  RegNext(io.RAS_read.NEXT)
+    io.FTQ.bits.TOS                          :=  RegNext(io.RAS_read.TOS)
 
 
     // Do not accept inputs if outputs have nowhere to go. 

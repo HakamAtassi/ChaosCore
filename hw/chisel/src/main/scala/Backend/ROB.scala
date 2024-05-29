@@ -35,21 +35,169 @@ import chisel3._
 import chisel3.util._
 
 
+class ROB_mem[T <: Data](dataType: T, depth: Int) extends Module {
+  val io = IO(new Bundle {
+    // Port A
+    val addrA = Input(UInt(log2Ceil(depth).W))
+    val writeDataA = Input(dataType)
+    val writeEnableA = Input(Bool())
+    val readDataA = Output(dataType)
+
+    // Port B
+    val addrB = Input(UInt(log2Ceil(depth).W))
+    val writeDataB = Input(dataType)
+    val writeEnableB = Input(Bool())
+    val readDataB = Output(dataType)
+
+    // Port C   (read only)
+    val addrC = Input(UInt(log2Ceil(depth).W))
+    val readDataC = Output(dataType)
+  })
+
+  // Create the true dual-port memory
+  val mem = SyncReadMem(depth, dataType)
+
+  // Operations for Port A
+  when(io.writeEnableA) {
+    mem.write(io.addrA, io.writeDataA)
+  }
+  io.readDataA := mem.read(io.addrA, 1.B)
+
+  // Operations for Port B
+  when(io.writeEnableB) {
+    mem.write(io.addrB, io.writeDataB)
+  }
+  io.readDataB := mem.read(io.addrB, 1.B)
+
+  io.readDataC := mem.read(io.addrC, 1.B)
+
+}
+
+// The PC segment of the ROB
+// Is accessed during the register read phase
+//class PC_file(parameters:Parameters) extends Module{}
+
 class ROB(parameters:Parameters) extends Module{
+    import parameters._
+    val portCount = getPortCount(parameters)
 
     val io = IO(new Bundle{
         // From Allocate
         // dispatch width write ports for allocation
+        val ROB_allocate  =   Decoupled(Vec(portCount, new ROB_entry(parameters)))
 
         // FROM FUs
-        // number of write ports equal to the number of FU ports
+        // number of write ports equal to the number of FU ports + allocate port
+        val FU_outputs    =   Vec(portCount, ValidIO(new FU_output(parameters)))
 
         // To Commit
         // number of read ports equal to commit width 
+        val commit        =   ValidIO(new ROB_commit(parameters))
     })
 
 
+    // ROB is generally a 2 write 1 read memory.
+    // 1 write from allocate
+    // 1 write from FUs
+    // 1 read to commit
 
+    // Allocate port writes metadata, instruction type, PC, etc...
+    // FUs simply mark as valid. 
+
+    ////////////////////////////
+    // INSTANTIATE ROB BANKS  //
+    ////////////////////////////
+
+    val ROB_entry_banks: Seq[ROB_mem[ROB_entry]] = Seq.tabulate(portCount) { w =>
+        Module(new ROB_mem(new ROB_entry(parameters), depth=ROBEntires))
+    }
+
+
+    ////////////////////////////
+    // INSTANTIATE BUSY BANKS //
+    ////////////////////////////
+
+    // Busy bit banks are kept seperate 
+    // Since the FUs should write to the ENTIRE ROB_entry.
+    // Keeping busy bits seperate is easier than using some sort of mask...
+
+    val ROB_busy_banks: Seq[ROB_mem[UInt]] = Seq.tabulate(portCount) { w =>
+        Module(new ROB_mem(UInt(1.W), depth=ROBEntires))
+    }
+
+
+    //////////////
+    // POINTERS //
+    //////////////
+
+    val pointer_width   =   log2Ceil(ROBEntires) + 1
+    val front_pointer   =   RegInit(UInt(pointer_width.W), 0.U)
+    val back_pointer    =   RegInit(UInt(pointer_width.W), 0.U)
+
+    val front_index     =   front_pointer(pointer_width-2, 0)
+    val back_index      =   back_pointer(pointer_width-2, 0)
+
+
+    /////////////////////////
+    // WRITE FROM ALLOCATE //
+    /////////////////////////
+
+    for(bank <- 0 until portCount){ // write new allocate data
+        ROB_entry_banks(bank).io.addrA         := back_index
+        ROB_entry_banks(bank).io.writeDataA    := io.ROB_allocate.bits(bank)
+        ROB_entry_banks(bank).io.writeEnableA  := io.ROB_allocate.valid
+
+        ROB_busy_banks(bank).io.addrA         := back_index
+        ROB_busy_banks(bank).io.writeDataA    := 0.B
+        ROB_busy_banks(bank).io.writeEnableA  := io.ROB_allocate.valid
+    }
+    
+    back_pointer := back_pointer + io.ROB_allocate.valid
+
+    ////////////////////
+    // WRITE FROM FUs //
+    ////////////////////
+
+    // Each input needs to be matched with its corresponding bank to set busy bit.
+    // This is because instructions from any ROB bank can be scheduled to any FU port (ex ALU scheduling entirely depends on availability.)
+
+    for(bank <- 0 until portCount){
+        ROB_busy_banks(bank).io.addrB         := 0.B
+        ROB_busy_banks(bank).io.writeDataB    := 0.B
+        ROB_busy_banks(bank).io.writeEnableB  := 0.B
+        for(FU <- 0 until portCount){
+            // port B for FU access
+            when(bank.U === io.FU_outputs(FU).bits.fetch_packet_index){
+                ROB_busy_banks(bank).io.addrB         := io.FU_outputs(FU).bits.ROB_index
+                ROB_busy_banks(bank).io.writeDataB    := 1.B
+                ROB_busy_banks(bank).io.writeEnableB  := 1.B
+
+            }
+        }
+    }
+
+
+    ////////////
+    // COMMIT //
+    ////////////
+
+    var is_commit_ready = 0.B   //???
+    for (bank <- 0 until portCount){    // if all busy banks have their bit set
+        ROB_busy_banks(bank).io.addrC          := front_index
+        ROB_entry_banks(bank).io.addrC         := front_index
+        is_commit_ready = 0.B
+    }
+
+    io.commit.valid := is_commit_ready
+    io.commit.bits := DontCare
+
+    /////////////////
+    // VALID/READY //
+    /////////////////
+
+
+    val full = (front_index === back_index) && (front_pointer =/= back_pointer)
+    io.ROB_allocate.ready := !full
 
 
 }

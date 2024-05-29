@@ -231,6 +231,10 @@ class instruction_fetch(parameters:Parameters) extends Module{
     predecoder.io.RAS_read           :=   bp.io.RAS_read
 
     predecoder.io.final_fetch_packet.ready := io.fetch_packet.ready
+
+
+    // FIXME: connect the rest of the FTQ up
+    predecoder.io.FTQ.ready := 1.B
     
     //////////////
     // PC ARBIT //

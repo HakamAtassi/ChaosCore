@@ -350,6 +350,12 @@ class ROB_entry(parameters:Parameters) extends Bundle{
 
 }
 
+
+class ROB_commit(parameters:Parameters) extends Bundle{
+    val placeholder = Bool()
+}
+
+
 class InstructionReady extends Bundle{
     val RS1_ready    =   Bool()
     val RS2_ready    =   Bool()
@@ -399,7 +405,13 @@ class FU_output(parameters:Parameters) extends Bundle{
     // Address of actual branch instruction?
 
     val ROB_index         =   UInt(log2Ceil(ROBEntires).W)
+    
+    val fetch_packet_index = UInt(log2Ceil(fetchWidth).W)
 
+    // FIXME: this should just store fetch_packet PC and 
+    // fetch packet index
+    
+    // needs ROB bank
 }
 
 

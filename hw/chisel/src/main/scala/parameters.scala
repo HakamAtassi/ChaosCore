@@ -39,11 +39,18 @@ import java.rmi.server.UID
 
 case class Parameters(
 
+
   coreConfig: String = "RV32I",  // core extension (IMAF, etc...)
+
+  fetchWidth: Int = 4,   // up to how many instructions does the core fetch each cycle
+  dispatchWidth:Int = 4, // Up to how many entires are sent to the reservation station + execution engine from the instruction queue at a time?
+  
+
+  commitWidth:Int = 1,   // Up to how many entires are freed from the ROB each cycle (cant be larger than the number of ports)
+
 
 
   GHRWidth: Int = 16,
-  fetchWidth: Int = 4,
   RASEntries: Int = 128,
   BTBEntries: Int = 4096,
   startPC: UInt = "h00000000".U,
@@ -60,7 +67,6 @@ case class Parameters(
 
 
   RSEntries: Int = 20, // How many entires per reservation station (these are very expensive)
-  dispatchWidth:Int = 4, // Up to many entires are sent to the reservation station + execution engine from the instruction queue at a time?
 
 
   // Instruction Cache params
