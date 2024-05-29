@@ -37,11 +37,12 @@ import java.io.{File, FileWriter}
 import java.rmi.server.UID
 
 
-class RAS(entries:Int = 128) extends Module{
+class RAS(parameters:Parameters) extends Module{
+    import parameters._
 
-    val nextBits = log2Ceil(entries)
-    val tosBits  = log2Ceil(entries)
-    val nosBits  = log2Ceil(entries)
+    val nextBits = log2Ceil(RASEntries)
+    val tosBits  = log2Ceil(RASEntries)
+    val nosBits  = log2Ceil(RASEntries)
 
     val entryWidth  = nosBits + 32
 
@@ -83,7 +84,7 @@ class RAS(entries:Int = 128) extends Module{
     val TOS     = RegInit(UInt(tosBits.W), 0.U)
     val NOS     = Wire(UInt(nosBits.W))
 
-    val RAS_memory = Module(new SDPReadWriteSmem(depth=entries, width=entryWidth))
+    val RAS_memory = Module(new SDPReadWriteSmem(depth=RASEntries, width=entryWidth))
 
     // write to TOS
     when(io.revert_valid === 1.B){   // revert (misprediction)

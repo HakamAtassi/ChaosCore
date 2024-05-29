@@ -42,949 +42,534 @@ module RAT(
                io_RAT_RS2_3
 );
 
-  reg  [3:0] active_RAT;
-  reg  [3:0] available_checkpoints;
-  reg  [5:0] RAT_memories_0_0;
-  reg  [5:0] RAT_memories_0_1;
-  reg  [5:0] RAT_memories_0_2;
-  reg  [5:0] RAT_memories_0_3;
-  reg  [5:0] RAT_memories_0_4;
-  reg  [5:0] RAT_memories_0_5;
-  reg  [5:0] RAT_memories_0_6;
-  reg  [5:0] RAT_memories_0_7;
-  reg  [5:0] RAT_memories_0_8;
-  reg  [5:0] RAT_memories_0_9;
-  reg  [5:0] RAT_memories_0_10;
-  reg  [5:0] RAT_memories_0_11;
-  reg  [5:0] RAT_memories_0_12;
-  reg  [5:0] RAT_memories_0_13;
-  reg  [5:0] RAT_memories_0_14;
-  reg  [5:0] RAT_memories_0_15;
-  reg  [5:0] RAT_memories_0_16;
-  reg  [5:0] RAT_memories_0_17;
-  reg  [5:0] RAT_memories_0_18;
-  reg  [5:0] RAT_memories_0_19;
-  reg  [5:0] RAT_memories_0_20;
-  reg  [5:0] RAT_memories_0_21;
-  reg  [5:0] RAT_memories_0_22;
-  reg  [5:0] RAT_memories_0_23;
-  reg  [5:0] RAT_memories_0_24;
-  reg  [5:0] RAT_memories_0_25;
-  reg  [5:0] RAT_memories_0_26;
-  reg  [5:0] RAT_memories_0_27;
-  reg  [5:0] RAT_memories_0_28;
-  reg  [5:0] RAT_memories_0_29;
-  reg  [5:0] RAT_memories_0_30;
-  reg  [5:0] RAT_memories_0_31;
-  reg  [5:0] RAT_memories_1_0;
-  reg  [5:0] RAT_memories_1_1;
-  reg  [5:0] RAT_memories_1_2;
-  reg  [5:0] RAT_memories_1_3;
-  reg  [5:0] RAT_memories_1_4;
-  reg  [5:0] RAT_memories_1_5;
-  reg  [5:0] RAT_memories_1_6;
-  reg  [5:0] RAT_memories_1_7;
-  reg  [5:0] RAT_memories_1_8;
-  reg  [5:0] RAT_memories_1_9;
-  reg  [5:0] RAT_memories_1_10;
-  reg  [5:0] RAT_memories_1_11;
-  reg  [5:0] RAT_memories_1_12;
-  reg  [5:0] RAT_memories_1_13;
-  reg  [5:0] RAT_memories_1_14;
-  reg  [5:0] RAT_memories_1_15;
-  reg  [5:0] RAT_memories_1_16;
-  reg  [5:0] RAT_memories_1_17;
-  reg  [5:0] RAT_memories_1_18;
-  reg  [5:0] RAT_memories_1_19;
-  reg  [5:0] RAT_memories_1_20;
-  reg  [5:0] RAT_memories_1_21;
-  reg  [5:0] RAT_memories_1_22;
-  reg  [5:0] RAT_memories_1_23;
-  reg  [5:0] RAT_memories_1_24;
-  reg  [5:0] RAT_memories_1_25;
-  reg  [5:0] RAT_memories_1_26;
-  reg  [5:0] RAT_memories_1_27;
-  reg  [5:0] RAT_memories_1_28;
-  reg  [5:0] RAT_memories_1_29;
-  reg  [5:0] RAT_memories_1_30;
-  reg  [5:0] RAT_memories_1_31;
-  reg  [5:0] RAT_memories_2_0;
-  reg  [5:0] RAT_memories_2_1;
-  reg  [5:0] RAT_memories_2_2;
-  reg  [5:0] RAT_memories_2_3;
-  reg  [5:0] RAT_memories_2_4;
-  reg  [5:0] RAT_memories_2_5;
-  reg  [5:0] RAT_memories_2_6;
-  reg  [5:0] RAT_memories_2_7;
-  reg  [5:0] RAT_memories_2_8;
-  reg  [5:0] RAT_memories_2_9;
-  reg  [5:0] RAT_memories_2_10;
-  reg  [5:0] RAT_memories_2_11;
-  reg  [5:0] RAT_memories_2_12;
-  reg  [5:0] RAT_memories_2_13;
-  reg  [5:0] RAT_memories_2_14;
-  reg  [5:0] RAT_memories_2_15;
-  reg  [5:0] RAT_memories_2_16;
-  reg  [5:0] RAT_memories_2_17;
-  reg  [5:0] RAT_memories_2_18;
-  reg  [5:0] RAT_memories_2_19;
-  reg  [5:0] RAT_memories_2_20;
-  reg  [5:0] RAT_memories_2_21;
-  reg  [5:0] RAT_memories_2_22;
-  reg  [5:0] RAT_memories_2_23;
-  reg  [5:0] RAT_memories_2_24;
-  reg  [5:0] RAT_memories_2_25;
-  reg  [5:0] RAT_memories_2_26;
-  reg  [5:0] RAT_memories_2_27;
-  reg  [5:0] RAT_memories_2_28;
-  reg  [5:0] RAT_memories_2_29;
-  reg  [5:0] RAT_memories_2_30;
-  reg  [5:0] RAT_memories_2_31;
-  reg  [5:0] RAT_memories_3_0;
-  reg  [5:0] RAT_memories_3_1;
-  reg  [5:0] RAT_memories_3_2;
-  reg  [5:0] RAT_memories_3_3;
-  reg  [5:0] RAT_memories_3_4;
-  reg  [5:0] RAT_memories_3_5;
-  reg  [5:0] RAT_memories_3_6;
-  reg  [5:0] RAT_memories_3_7;
-  reg  [5:0] RAT_memories_3_8;
-  reg  [5:0] RAT_memories_3_9;
-  reg  [5:0] RAT_memories_3_10;
-  reg  [5:0] RAT_memories_3_11;
-  reg  [5:0] RAT_memories_3_12;
-  reg  [5:0] RAT_memories_3_13;
-  reg  [5:0] RAT_memories_3_14;
-  reg  [5:0] RAT_memories_3_15;
-  reg  [5:0] RAT_memories_3_16;
-  reg  [5:0] RAT_memories_3_17;
-  reg  [5:0] RAT_memories_3_18;
-  reg  [5:0] RAT_memories_3_19;
-  reg  [5:0] RAT_memories_3_20;
-  reg  [5:0] RAT_memories_3_21;
-  reg  [5:0] RAT_memories_3_22;
-  reg  [5:0] RAT_memories_3_23;
-  reg  [5:0] RAT_memories_3_24;
-  reg  [5:0] RAT_memories_3_25;
-  reg  [5:0] RAT_memories_3_26;
-  reg  [5:0] RAT_memories_3_27;
-  reg  [5:0] RAT_memories_3_28;
-  reg  [5:0] RAT_memories_3_29;
-  reg  [5:0] RAT_memories_3_30;
-  reg  [5:0] RAT_memories_3_31;
-  reg  [5:0] RAT_memories_4_0;
-  reg  [5:0] RAT_memories_4_1;
-  reg  [5:0] RAT_memories_4_2;
-  reg  [5:0] RAT_memories_4_3;
-  reg  [5:0] RAT_memories_4_4;
-  reg  [5:0] RAT_memories_4_5;
-  reg  [5:0] RAT_memories_4_6;
-  reg  [5:0] RAT_memories_4_7;
-  reg  [5:0] RAT_memories_4_8;
-  reg  [5:0] RAT_memories_4_9;
-  reg  [5:0] RAT_memories_4_10;
-  reg  [5:0] RAT_memories_4_11;
-  reg  [5:0] RAT_memories_4_12;
-  reg  [5:0] RAT_memories_4_13;
-  reg  [5:0] RAT_memories_4_14;
-  reg  [5:0] RAT_memories_4_15;
-  reg  [5:0] RAT_memories_4_16;
-  reg  [5:0] RAT_memories_4_17;
-  reg  [5:0] RAT_memories_4_18;
-  reg  [5:0] RAT_memories_4_19;
-  reg  [5:0] RAT_memories_4_20;
-  reg  [5:0] RAT_memories_4_21;
-  reg  [5:0] RAT_memories_4_22;
-  reg  [5:0] RAT_memories_4_23;
-  reg  [5:0] RAT_memories_4_24;
-  reg  [5:0] RAT_memories_4_25;
-  reg  [5:0] RAT_memories_4_26;
-  reg  [5:0] RAT_memories_4_27;
-  reg  [5:0] RAT_memories_4_28;
-  reg  [5:0] RAT_memories_4_29;
-  reg  [5:0] RAT_memories_4_30;
-  reg  [5:0] RAT_memories_4_31;
-  reg  [5:0] RAT_memories_5_0;
-  reg  [5:0] RAT_memories_5_1;
-  reg  [5:0] RAT_memories_5_2;
-  reg  [5:0] RAT_memories_5_3;
-  reg  [5:0] RAT_memories_5_4;
-  reg  [5:0] RAT_memories_5_5;
-  reg  [5:0] RAT_memories_5_6;
-  reg  [5:0] RAT_memories_5_7;
-  reg  [5:0] RAT_memories_5_8;
-  reg  [5:0] RAT_memories_5_9;
-  reg  [5:0] RAT_memories_5_10;
-  reg  [5:0] RAT_memories_5_11;
-  reg  [5:0] RAT_memories_5_12;
-  reg  [5:0] RAT_memories_5_13;
-  reg  [5:0] RAT_memories_5_14;
-  reg  [5:0] RAT_memories_5_15;
-  reg  [5:0] RAT_memories_5_16;
-  reg  [5:0] RAT_memories_5_17;
-  reg  [5:0] RAT_memories_5_18;
-  reg  [5:0] RAT_memories_5_19;
-  reg  [5:0] RAT_memories_5_20;
-  reg  [5:0] RAT_memories_5_21;
-  reg  [5:0] RAT_memories_5_22;
-  reg  [5:0] RAT_memories_5_23;
-  reg  [5:0] RAT_memories_5_24;
-  reg  [5:0] RAT_memories_5_25;
-  reg  [5:0] RAT_memories_5_26;
-  reg  [5:0] RAT_memories_5_27;
-  reg  [5:0] RAT_memories_5_28;
-  reg  [5:0] RAT_memories_5_29;
-  reg  [5:0] RAT_memories_5_30;
-  reg  [5:0] RAT_memories_5_31;
-  reg  [5:0] RAT_memories_6_0;
-  reg  [5:0] RAT_memories_6_1;
-  reg  [5:0] RAT_memories_6_2;
-  reg  [5:0] RAT_memories_6_3;
-  reg  [5:0] RAT_memories_6_4;
-  reg  [5:0] RAT_memories_6_5;
-  reg  [5:0] RAT_memories_6_6;
-  reg  [5:0] RAT_memories_6_7;
-  reg  [5:0] RAT_memories_6_8;
-  reg  [5:0] RAT_memories_6_9;
-  reg  [5:0] RAT_memories_6_10;
-  reg  [5:0] RAT_memories_6_11;
-  reg  [5:0] RAT_memories_6_12;
-  reg  [5:0] RAT_memories_6_13;
-  reg  [5:0] RAT_memories_6_14;
-  reg  [5:0] RAT_memories_6_15;
-  reg  [5:0] RAT_memories_6_16;
-  reg  [5:0] RAT_memories_6_17;
-  reg  [5:0] RAT_memories_6_18;
-  reg  [5:0] RAT_memories_6_19;
-  reg  [5:0] RAT_memories_6_20;
-  reg  [5:0] RAT_memories_6_21;
-  reg  [5:0] RAT_memories_6_22;
-  reg  [5:0] RAT_memories_6_23;
-  reg  [5:0] RAT_memories_6_24;
-  reg  [5:0] RAT_memories_6_25;
-  reg  [5:0] RAT_memories_6_26;
-  reg  [5:0] RAT_memories_6_27;
-  reg  [5:0] RAT_memories_6_28;
-  reg  [5:0] RAT_memories_6_29;
-  reg  [5:0] RAT_memories_6_30;
-  reg  [5:0] RAT_memories_6_31;
-  reg  [5:0] RAT_memories_7_0;
-  reg  [5:0] RAT_memories_7_1;
-  reg  [5:0] RAT_memories_7_2;
-  reg  [5:0] RAT_memories_7_3;
-  reg  [5:0] RAT_memories_7_4;
-  reg  [5:0] RAT_memories_7_5;
-  reg  [5:0] RAT_memories_7_6;
-  reg  [5:0] RAT_memories_7_7;
-  reg  [5:0] RAT_memories_7_8;
-  reg  [5:0] RAT_memories_7_9;
-  reg  [5:0] RAT_memories_7_10;
-  reg  [5:0] RAT_memories_7_11;
-  reg  [5:0] RAT_memories_7_12;
-  reg  [5:0] RAT_memories_7_13;
-  reg  [5:0] RAT_memories_7_14;
-  reg  [5:0] RAT_memories_7_15;
-  reg  [5:0] RAT_memories_7_16;
-  reg  [5:0] RAT_memories_7_17;
-  reg  [5:0] RAT_memories_7_18;
-  reg  [5:0] RAT_memories_7_19;
-  reg  [5:0] RAT_memories_7_20;
-  reg  [5:0] RAT_memories_7_21;
-  reg  [5:0] RAT_memories_7_22;
-  reg  [5:0] RAT_memories_7_23;
-  reg  [5:0] RAT_memories_7_24;
-  reg  [5:0] RAT_memories_7_25;
-  reg  [5:0] RAT_memories_7_26;
-  reg  [5:0] RAT_memories_7_27;
-  reg  [5:0] RAT_memories_7_28;
-  reg  [5:0] RAT_memories_7_29;
-  reg  [5:0] RAT_memories_7_30;
-  reg  [5:0] RAT_memories_7_31;
-  reg  [5:0] RAT_memories_8_0;
-  reg  [5:0] RAT_memories_8_1;
-  reg  [5:0] RAT_memories_8_2;
-  reg  [5:0] RAT_memories_8_3;
-  reg  [5:0] RAT_memories_8_4;
-  reg  [5:0] RAT_memories_8_5;
-  reg  [5:0] RAT_memories_8_6;
-  reg  [5:0] RAT_memories_8_7;
-  reg  [5:0] RAT_memories_8_8;
-  reg  [5:0] RAT_memories_8_9;
-  reg  [5:0] RAT_memories_8_10;
-  reg  [5:0] RAT_memories_8_11;
-  reg  [5:0] RAT_memories_8_12;
-  reg  [5:0] RAT_memories_8_13;
-  reg  [5:0] RAT_memories_8_14;
-  reg  [5:0] RAT_memories_8_15;
-  reg  [5:0] RAT_memories_8_16;
-  reg  [5:0] RAT_memories_8_17;
-  reg  [5:0] RAT_memories_8_18;
-  reg  [5:0] RAT_memories_8_19;
-  reg  [5:0] RAT_memories_8_20;
-  reg  [5:0] RAT_memories_8_21;
-  reg  [5:0] RAT_memories_8_22;
-  reg  [5:0] RAT_memories_8_23;
-  reg  [5:0] RAT_memories_8_24;
-  reg  [5:0] RAT_memories_8_25;
-  reg  [5:0] RAT_memories_8_26;
-  reg  [5:0] RAT_memories_8_27;
-  reg  [5:0] RAT_memories_8_28;
-  reg  [5:0] RAT_memories_8_29;
-  reg  [5:0] RAT_memories_8_30;
-  reg  [5:0] RAT_memories_8_31;
-  reg  [5:0] RAT_memories_9_0;
-  reg  [5:0] RAT_memories_9_1;
-  reg  [5:0] RAT_memories_9_2;
-  reg  [5:0] RAT_memories_9_3;
-  reg  [5:0] RAT_memories_9_4;
-  reg  [5:0] RAT_memories_9_5;
-  reg  [5:0] RAT_memories_9_6;
-  reg  [5:0] RAT_memories_9_7;
-  reg  [5:0] RAT_memories_9_8;
-  reg  [5:0] RAT_memories_9_9;
-  reg  [5:0] RAT_memories_9_10;
-  reg  [5:0] RAT_memories_9_11;
-  reg  [5:0] RAT_memories_9_12;
-  reg  [5:0] RAT_memories_9_13;
-  reg  [5:0] RAT_memories_9_14;
-  reg  [5:0] RAT_memories_9_15;
-  reg  [5:0] RAT_memories_9_16;
-  reg  [5:0] RAT_memories_9_17;
-  reg  [5:0] RAT_memories_9_18;
-  reg  [5:0] RAT_memories_9_19;
-  reg  [5:0] RAT_memories_9_20;
-  reg  [5:0] RAT_memories_9_21;
-  reg  [5:0] RAT_memories_9_22;
-  reg  [5:0] RAT_memories_9_23;
-  reg  [5:0] RAT_memories_9_24;
-  reg  [5:0] RAT_memories_9_25;
-  reg  [5:0] RAT_memories_9_26;
-  reg  [5:0] RAT_memories_9_27;
-  reg  [5:0] RAT_memories_9_28;
-  reg  [5:0] RAT_memories_9_29;
-  reg  [5:0] RAT_memories_9_30;
-  reg  [5:0] RAT_memories_9_31;
-  reg  [5:0] RAT_memories_10_0;
-  reg  [5:0] RAT_memories_10_1;
-  reg  [5:0] RAT_memories_10_2;
-  reg  [5:0] RAT_memories_10_3;
-  reg  [5:0] RAT_memories_10_4;
-  reg  [5:0] RAT_memories_10_5;
-  reg  [5:0] RAT_memories_10_6;
-  reg  [5:0] RAT_memories_10_7;
-  reg  [5:0] RAT_memories_10_8;
-  reg  [5:0] RAT_memories_10_9;
-  reg  [5:0] RAT_memories_10_10;
-  reg  [5:0] RAT_memories_10_11;
-  reg  [5:0] RAT_memories_10_12;
-  reg  [5:0] RAT_memories_10_13;
-  reg  [5:0] RAT_memories_10_14;
-  reg  [5:0] RAT_memories_10_15;
-  reg  [5:0] RAT_memories_10_16;
-  reg  [5:0] RAT_memories_10_17;
-  reg  [5:0] RAT_memories_10_18;
-  reg  [5:0] RAT_memories_10_19;
-  reg  [5:0] RAT_memories_10_20;
-  reg  [5:0] RAT_memories_10_21;
-  reg  [5:0] RAT_memories_10_22;
-  reg  [5:0] RAT_memories_10_23;
-  reg  [5:0] RAT_memories_10_24;
-  reg  [5:0] RAT_memories_10_25;
-  reg  [5:0] RAT_memories_10_26;
-  reg  [5:0] RAT_memories_10_27;
-  reg  [5:0] RAT_memories_10_28;
-  reg  [5:0] RAT_memories_10_29;
-  reg  [5:0] RAT_memories_10_30;
-  reg  [5:0] RAT_memories_10_31;
-  reg  [5:0] RAT_memories_11_0;
-  reg  [5:0] RAT_memories_11_1;
-  reg  [5:0] RAT_memories_11_2;
-  reg  [5:0] RAT_memories_11_3;
-  reg  [5:0] RAT_memories_11_4;
-  reg  [5:0] RAT_memories_11_5;
-  reg  [5:0] RAT_memories_11_6;
-  reg  [5:0] RAT_memories_11_7;
-  reg  [5:0] RAT_memories_11_8;
-  reg  [5:0] RAT_memories_11_9;
-  reg  [5:0] RAT_memories_11_10;
-  reg  [5:0] RAT_memories_11_11;
-  reg  [5:0] RAT_memories_11_12;
-  reg  [5:0] RAT_memories_11_13;
-  reg  [5:0] RAT_memories_11_14;
-  reg  [5:0] RAT_memories_11_15;
-  reg  [5:0] RAT_memories_11_16;
-  reg  [5:0] RAT_memories_11_17;
-  reg  [5:0] RAT_memories_11_18;
-  reg  [5:0] RAT_memories_11_19;
-  reg  [5:0] RAT_memories_11_20;
-  reg  [5:0] RAT_memories_11_21;
-  reg  [5:0] RAT_memories_11_22;
-  reg  [5:0] RAT_memories_11_23;
-  reg  [5:0] RAT_memories_11_24;
-  reg  [5:0] RAT_memories_11_25;
-  reg  [5:0] RAT_memories_11_26;
-  reg  [5:0] RAT_memories_11_27;
-  reg  [5:0] RAT_memories_11_28;
-  reg  [5:0] RAT_memories_11_29;
-  reg  [5:0] RAT_memories_11_30;
-  reg  [5:0] RAT_memories_11_31;
-  reg  [5:0] RAT_memories_12_0;
-  reg  [5:0] RAT_memories_12_1;
-  reg  [5:0] RAT_memories_12_2;
-  reg  [5:0] RAT_memories_12_3;
-  reg  [5:0] RAT_memories_12_4;
-  reg  [5:0] RAT_memories_12_5;
-  reg  [5:0] RAT_memories_12_6;
-  reg  [5:0] RAT_memories_12_7;
-  reg  [5:0] RAT_memories_12_8;
-  reg  [5:0] RAT_memories_12_9;
-  reg  [5:0] RAT_memories_12_10;
-  reg  [5:0] RAT_memories_12_11;
-  reg  [5:0] RAT_memories_12_12;
-  reg  [5:0] RAT_memories_12_13;
-  reg  [5:0] RAT_memories_12_14;
-  reg  [5:0] RAT_memories_12_15;
-  reg  [5:0] RAT_memories_12_16;
-  reg  [5:0] RAT_memories_12_17;
-  reg  [5:0] RAT_memories_12_18;
-  reg  [5:0] RAT_memories_12_19;
-  reg  [5:0] RAT_memories_12_20;
-  reg  [5:0] RAT_memories_12_21;
-  reg  [5:0] RAT_memories_12_22;
-  reg  [5:0] RAT_memories_12_23;
-  reg  [5:0] RAT_memories_12_24;
-  reg  [5:0] RAT_memories_12_25;
-  reg  [5:0] RAT_memories_12_26;
-  reg  [5:0] RAT_memories_12_27;
-  reg  [5:0] RAT_memories_12_28;
-  reg  [5:0] RAT_memories_12_29;
-  reg  [5:0] RAT_memories_12_30;
-  reg  [5:0] RAT_memories_12_31;
-  reg  [5:0] RAT_memories_13_0;
-  reg  [5:0] RAT_memories_13_1;
-  reg  [5:0] RAT_memories_13_2;
-  reg  [5:0] RAT_memories_13_3;
-  reg  [5:0] RAT_memories_13_4;
-  reg  [5:0] RAT_memories_13_5;
-  reg  [5:0] RAT_memories_13_6;
-  reg  [5:0] RAT_memories_13_7;
-  reg  [5:0] RAT_memories_13_8;
-  reg  [5:0] RAT_memories_13_9;
-  reg  [5:0] RAT_memories_13_10;
-  reg  [5:0] RAT_memories_13_11;
-  reg  [5:0] RAT_memories_13_12;
-  reg  [5:0] RAT_memories_13_13;
-  reg  [5:0] RAT_memories_13_14;
-  reg  [5:0] RAT_memories_13_15;
-  reg  [5:0] RAT_memories_13_16;
-  reg  [5:0] RAT_memories_13_17;
-  reg  [5:0] RAT_memories_13_18;
-  reg  [5:0] RAT_memories_13_19;
-  reg  [5:0] RAT_memories_13_20;
-  reg  [5:0] RAT_memories_13_21;
-  reg  [5:0] RAT_memories_13_22;
-  reg  [5:0] RAT_memories_13_23;
-  reg  [5:0] RAT_memories_13_24;
-  reg  [5:0] RAT_memories_13_25;
-  reg  [5:0] RAT_memories_13_26;
-  reg  [5:0] RAT_memories_13_27;
-  reg  [5:0] RAT_memories_13_28;
-  reg  [5:0] RAT_memories_13_29;
-  reg  [5:0] RAT_memories_13_30;
-  reg  [5:0] RAT_memories_13_31;
-  reg  [5:0] RAT_memories_14_0;
-  reg  [5:0] RAT_memories_14_1;
-  reg  [5:0] RAT_memories_14_2;
-  reg  [5:0] RAT_memories_14_3;
-  reg  [5:0] RAT_memories_14_4;
-  reg  [5:0] RAT_memories_14_5;
-  reg  [5:0] RAT_memories_14_6;
-  reg  [5:0] RAT_memories_14_7;
-  reg  [5:0] RAT_memories_14_8;
-  reg  [5:0] RAT_memories_14_9;
-  reg  [5:0] RAT_memories_14_10;
-  reg  [5:0] RAT_memories_14_11;
-  reg  [5:0] RAT_memories_14_12;
-  reg  [5:0] RAT_memories_14_13;
-  reg  [5:0] RAT_memories_14_14;
-  reg  [5:0] RAT_memories_14_15;
-  reg  [5:0] RAT_memories_14_16;
-  reg  [5:0] RAT_memories_14_17;
-  reg  [5:0] RAT_memories_14_18;
-  reg  [5:0] RAT_memories_14_19;
-  reg  [5:0] RAT_memories_14_20;
-  reg  [5:0] RAT_memories_14_21;
-  reg  [5:0] RAT_memories_14_22;
-  reg  [5:0] RAT_memories_14_23;
-  reg  [5:0] RAT_memories_14_24;
-  reg  [5:0] RAT_memories_14_25;
-  reg  [5:0] RAT_memories_14_26;
-  reg  [5:0] RAT_memories_14_27;
-  reg  [5:0] RAT_memories_14_28;
-  reg  [5:0] RAT_memories_14_29;
-  reg  [5:0] RAT_memories_14_30;
-  reg  [5:0] RAT_memories_14_31;
-  reg  [5:0] RAT_memories_15_0;
-  reg  [5:0] RAT_memories_15_1;
-  reg  [5:0] RAT_memories_15_2;
-  reg  [5:0] RAT_memories_15_3;
-  reg  [5:0] RAT_memories_15_4;
-  reg  [5:0] RAT_memories_15_5;
-  reg  [5:0] RAT_memories_15_6;
-  reg  [5:0] RAT_memories_15_7;
-  reg  [5:0] RAT_memories_15_8;
-  reg  [5:0] RAT_memories_15_9;
-  reg  [5:0] RAT_memories_15_10;
-  reg  [5:0] RAT_memories_15_11;
-  reg  [5:0] RAT_memories_15_12;
-  reg  [5:0] RAT_memories_15_13;
-  reg  [5:0] RAT_memories_15_14;
-  reg  [5:0] RAT_memories_15_15;
-  reg  [5:0] RAT_memories_15_16;
-  reg  [5:0] RAT_memories_15_17;
-  reg  [5:0] RAT_memories_15_18;
-  reg  [5:0] RAT_memories_15_19;
-  reg  [5:0] RAT_memories_15_20;
-  reg  [5:0] RAT_memories_15_21;
-  reg  [5:0] RAT_memories_15_22;
-  reg  [5:0] RAT_memories_15_23;
-  reg  [5:0] RAT_memories_15_24;
-  reg  [5:0] RAT_memories_15_25;
-  reg  [5:0] RAT_memories_15_26;
-  reg  [5:0] RAT_memories_15_27;
-  reg  [5:0] RAT_memories_15_28;
-  reg  [5:0] RAT_memories_15_29;
-  reg  [5:0] RAT_memories_15_30;
-  reg  [5:0] RAT_memories_15_31;
-  reg  [5:0] io_RAT_RD_0_REG;
-  reg  [5:0] io_RAT_RS1_0_REG;
-  reg  [5:0] io_RAT_RS2_0_REG;
-  reg  [5:0] io_RAT_RD_1_REG;
-  reg  [5:0] io_RAT_RS1_1_REG;
-  reg  [5:0] io_RAT_RS2_1_REG;
-  reg  [5:0] io_RAT_RD_2_REG;
-  reg  [5:0] io_RAT_RS1_2_REG;
-  reg  [5:0] io_RAT_RS2_2_REG;
-  reg  [5:0] io_RAT_RD_3_REG;
-  reg  [5:0] io_RAT_RS1_3_REG;
-  reg  [5:0] io_RAT_RS2_3_REG;
-  wire       _GEN = io_instruction_RD_0 == 5'h0;
-  wire       _GEN_0 = io_instruction_RD_1 == 5'h0;
-  wire       _GEN_1 = io_instruction_RD_2 == 5'h0;
-  wire       _GEN_2 = io_instruction_RD_3 == 5'h0;
-  wire       is_being_written_vec_0 =
-    _GEN & io_free_list_wr_en_0 | _GEN_0 & io_free_list_wr_en_1 | _GEN_1
-    & io_free_list_wr_en_2 | _GEN_2 & io_free_list_wr_en_3;
-  wire       _GEN_3 = io_instruction_RD_0 == 5'h1;
-  wire       _GEN_4 = io_instruction_RD_1 == 5'h1;
-  wire       _GEN_5 = io_instruction_RD_2 == 5'h1;
-  wire       _GEN_6 = io_instruction_RD_3 == 5'h1;
-  wire       is_being_written_vec_1 =
-    _GEN_3 & io_free_list_wr_en_0 | _GEN_4 & io_free_list_wr_en_1 | _GEN_5
-    & io_free_list_wr_en_2 | _GEN_6 & io_free_list_wr_en_3;
-  wire       _GEN_7 = io_instruction_RD_0 == 5'h2;
-  wire       _GEN_8 = io_instruction_RD_1 == 5'h2;
-  wire       _GEN_9 = io_instruction_RD_2 == 5'h2;
-  wire       _GEN_10 = io_instruction_RD_3 == 5'h2;
-  wire       is_being_written_vec_2 =
-    _GEN_7 & io_free_list_wr_en_0 | _GEN_8 & io_free_list_wr_en_1 | _GEN_9
-    & io_free_list_wr_en_2 | _GEN_10 & io_free_list_wr_en_3;
-  wire       _GEN_11 = io_instruction_RD_0 == 5'h3;
-  wire       _GEN_12 = io_instruction_RD_1 == 5'h3;
-  wire       _GEN_13 = io_instruction_RD_2 == 5'h3;
-  wire       _GEN_14 = io_instruction_RD_3 == 5'h3;
-  wire       is_being_written_vec_3 =
-    _GEN_11 & io_free_list_wr_en_0 | _GEN_12 & io_free_list_wr_en_1 | _GEN_13
-    & io_free_list_wr_en_2 | _GEN_14 & io_free_list_wr_en_3;
-  wire       _GEN_15 = io_instruction_RD_0 == 5'h4;
-  wire       _GEN_16 = io_instruction_RD_1 == 5'h4;
-  wire       _GEN_17 = io_instruction_RD_2 == 5'h4;
-  wire       _GEN_18 = io_instruction_RD_3 == 5'h4;
-  wire       is_being_written_vec_4 =
-    _GEN_15 & io_free_list_wr_en_0 | _GEN_16 & io_free_list_wr_en_1 | _GEN_17
-    & io_free_list_wr_en_2 | _GEN_18 & io_free_list_wr_en_3;
-  wire       _GEN_19 = io_instruction_RD_0 == 5'h5;
-  wire       _GEN_20 = io_instruction_RD_1 == 5'h5;
-  wire       _GEN_21 = io_instruction_RD_2 == 5'h5;
-  wire       _GEN_22 = io_instruction_RD_3 == 5'h5;
-  wire       is_being_written_vec_5 =
-    _GEN_19 & io_free_list_wr_en_0 | _GEN_20 & io_free_list_wr_en_1 | _GEN_21
-    & io_free_list_wr_en_2 | _GEN_22 & io_free_list_wr_en_3;
-  wire       _GEN_23 = io_instruction_RD_0 == 5'h6;
-  wire       _GEN_24 = io_instruction_RD_1 == 5'h6;
-  wire       _GEN_25 = io_instruction_RD_2 == 5'h6;
-  wire       _GEN_26 = io_instruction_RD_3 == 5'h6;
-  wire       is_being_written_vec_6 =
-    _GEN_23 & io_free_list_wr_en_0 | _GEN_24 & io_free_list_wr_en_1 | _GEN_25
-    & io_free_list_wr_en_2 | _GEN_26 & io_free_list_wr_en_3;
-  wire       _GEN_27 = io_instruction_RD_0 == 5'h7;
-  wire       _GEN_28 = io_instruction_RD_1 == 5'h7;
-  wire       _GEN_29 = io_instruction_RD_2 == 5'h7;
-  wire       _GEN_30 = io_instruction_RD_3 == 5'h7;
-  wire       is_being_written_vec_7 =
-    _GEN_27 & io_free_list_wr_en_0 | _GEN_28 & io_free_list_wr_en_1 | _GEN_29
-    & io_free_list_wr_en_2 | _GEN_30 & io_free_list_wr_en_3;
-  wire       _GEN_31 = io_instruction_RD_0 == 5'h8;
-  wire       _GEN_32 = io_instruction_RD_1 == 5'h8;
-  wire       _GEN_33 = io_instruction_RD_2 == 5'h8;
-  wire       _GEN_34 = io_instruction_RD_3 == 5'h8;
-  wire       is_being_written_vec_8 =
-    _GEN_31 & io_free_list_wr_en_0 | _GEN_32 & io_free_list_wr_en_1 | _GEN_33
-    & io_free_list_wr_en_2 | _GEN_34 & io_free_list_wr_en_3;
-  wire       _GEN_35 = io_instruction_RD_0 == 5'h9;
-  wire       _GEN_36 = io_instruction_RD_1 == 5'h9;
-  wire       _GEN_37 = io_instruction_RD_2 == 5'h9;
-  wire       _GEN_38 = io_instruction_RD_3 == 5'h9;
-  wire       is_being_written_vec_9 =
-    _GEN_35 & io_free_list_wr_en_0 | _GEN_36 & io_free_list_wr_en_1 | _GEN_37
-    & io_free_list_wr_en_2 | _GEN_38 & io_free_list_wr_en_3;
-  wire       _GEN_39 = io_instruction_RD_0 == 5'hA;
-  wire       _GEN_40 = io_instruction_RD_1 == 5'hA;
-  wire       _GEN_41 = io_instruction_RD_2 == 5'hA;
-  wire       _GEN_42 = io_instruction_RD_3 == 5'hA;
-  wire       is_being_written_vec_10 =
-    _GEN_39 & io_free_list_wr_en_0 | _GEN_40 & io_free_list_wr_en_1 | _GEN_41
-    & io_free_list_wr_en_2 | _GEN_42 & io_free_list_wr_en_3;
-  wire       _GEN_43 = io_instruction_RD_0 == 5'hB;
-  wire       _GEN_44 = io_instruction_RD_1 == 5'hB;
-  wire       _GEN_45 = io_instruction_RD_2 == 5'hB;
-  wire       _GEN_46 = io_instruction_RD_3 == 5'hB;
-  wire       is_being_written_vec_11 =
-    _GEN_43 & io_free_list_wr_en_0 | _GEN_44 & io_free_list_wr_en_1 | _GEN_45
-    & io_free_list_wr_en_2 | _GEN_46 & io_free_list_wr_en_3;
-  wire       _GEN_47 = io_instruction_RD_0 == 5'hC;
-  wire       _GEN_48 = io_instruction_RD_1 == 5'hC;
-  wire       _GEN_49 = io_instruction_RD_2 == 5'hC;
-  wire       _GEN_50 = io_instruction_RD_3 == 5'hC;
-  wire       is_being_written_vec_12 =
-    _GEN_47 & io_free_list_wr_en_0 | _GEN_48 & io_free_list_wr_en_1 | _GEN_49
-    & io_free_list_wr_en_2 | _GEN_50 & io_free_list_wr_en_3;
-  wire       _GEN_51 = io_instruction_RD_0 == 5'hD;
-  wire       _GEN_52 = io_instruction_RD_1 == 5'hD;
-  wire       _GEN_53 = io_instruction_RD_2 == 5'hD;
-  wire       _GEN_54 = io_instruction_RD_3 == 5'hD;
-  wire       is_being_written_vec_13 =
-    _GEN_51 & io_free_list_wr_en_0 | _GEN_52 & io_free_list_wr_en_1 | _GEN_53
-    & io_free_list_wr_en_2 | _GEN_54 & io_free_list_wr_en_3;
-  wire       _GEN_55 = io_instruction_RD_0 == 5'hE;
-  wire       _GEN_56 = io_instruction_RD_1 == 5'hE;
-  wire       _GEN_57 = io_instruction_RD_2 == 5'hE;
-  wire       _GEN_58 = io_instruction_RD_3 == 5'hE;
-  wire       is_being_written_vec_14 =
-    _GEN_55 & io_free_list_wr_en_0 | _GEN_56 & io_free_list_wr_en_1 | _GEN_57
-    & io_free_list_wr_en_2 | _GEN_58 & io_free_list_wr_en_3;
-  wire       _GEN_59 = io_instruction_RD_0 == 5'hF;
-  wire       _GEN_60 = io_instruction_RD_1 == 5'hF;
-  wire       _GEN_61 = io_instruction_RD_2 == 5'hF;
-  wire       _GEN_62 = io_instruction_RD_3 == 5'hF;
-  wire       is_being_written_vec_15 =
-    _GEN_59 & io_free_list_wr_en_0 | _GEN_60 & io_free_list_wr_en_1 | _GEN_61
-    & io_free_list_wr_en_2 | _GEN_62 & io_free_list_wr_en_3;
-  wire       _GEN_63 = io_instruction_RD_0 == 5'h10;
-  wire       _GEN_64 = io_instruction_RD_1 == 5'h10;
-  wire       _GEN_65 = io_instruction_RD_2 == 5'h10;
-  wire       _GEN_66 = io_instruction_RD_3 == 5'h10;
-  wire       is_being_written_vec_16 =
-    _GEN_63 & io_free_list_wr_en_0 | _GEN_64 & io_free_list_wr_en_1 | _GEN_65
-    & io_free_list_wr_en_2 | _GEN_66 & io_free_list_wr_en_3;
-  wire       _GEN_67 = io_instruction_RD_0 == 5'h11;
-  wire       _GEN_68 = io_instruction_RD_1 == 5'h11;
-  wire       _GEN_69 = io_instruction_RD_2 == 5'h11;
-  wire       _GEN_70 = io_instruction_RD_3 == 5'h11;
-  wire       is_being_written_vec_17 =
-    _GEN_67 & io_free_list_wr_en_0 | _GEN_68 & io_free_list_wr_en_1 | _GEN_69
-    & io_free_list_wr_en_2 | _GEN_70 & io_free_list_wr_en_3;
-  wire       _GEN_71 = io_instruction_RD_0 == 5'h12;
-  wire       _GEN_72 = io_instruction_RD_1 == 5'h12;
-  wire       _GEN_73 = io_instruction_RD_2 == 5'h12;
-  wire       _GEN_74 = io_instruction_RD_3 == 5'h12;
-  wire       is_being_written_vec_18 =
-    _GEN_71 & io_free_list_wr_en_0 | _GEN_72 & io_free_list_wr_en_1 | _GEN_73
-    & io_free_list_wr_en_2 | _GEN_74 & io_free_list_wr_en_3;
-  wire       _GEN_75 = io_instruction_RD_0 == 5'h13;
-  wire       _GEN_76 = io_instruction_RD_1 == 5'h13;
-  wire       _GEN_77 = io_instruction_RD_2 == 5'h13;
-  wire       _GEN_78 = io_instruction_RD_3 == 5'h13;
-  wire       is_being_written_vec_19 =
-    _GEN_75 & io_free_list_wr_en_0 | _GEN_76 & io_free_list_wr_en_1 | _GEN_77
-    & io_free_list_wr_en_2 | _GEN_78 & io_free_list_wr_en_3;
-  wire       _GEN_79 = io_instruction_RD_0 == 5'h14;
-  wire       _GEN_80 = io_instruction_RD_1 == 5'h14;
-  wire       _GEN_81 = io_instruction_RD_2 == 5'h14;
-  wire       _GEN_82 = io_instruction_RD_3 == 5'h14;
-  wire       is_being_written_vec_20 =
-    _GEN_79 & io_free_list_wr_en_0 | _GEN_80 & io_free_list_wr_en_1 | _GEN_81
-    & io_free_list_wr_en_2 | _GEN_82 & io_free_list_wr_en_3;
-  wire       _GEN_83 = io_instruction_RD_0 == 5'h15;
-  wire       _GEN_84 = io_instruction_RD_1 == 5'h15;
-  wire       _GEN_85 = io_instruction_RD_2 == 5'h15;
-  wire       _GEN_86 = io_instruction_RD_3 == 5'h15;
-  wire       is_being_written_vec_21 =
-    _GEN_83 & io_free_list_wr_en_0 | _GEN_84 & io_free_list_wr_en_1 | _GEN_85
-    & io_free_list_wr_en_2 | _GEN_86 & io_free_list_wr_en_3;
-  wire       _GEN_87 = io_instruction_RD_0 == 5'h16;
-  wire       _GEN_88 = io_instruction_RD_1 == 5'h16;
-  wire       _GEN_89 = io_instruction_RD_2 == 5'h16;
-  wire       _GEN_90 = io_instruction_RD_3 == 5'h16;
-  wire       is_being_written_vec_22 =
-    _GEN_87 & io_free_list_wr_en_0 | _GEN_88 & io_free_list_wr_en_1 | _GEN_89
-    & io_free_list_wr_en_2 | _GEN_90 & io_free_list_wr_en_3;
-  wire       _GEN_91 = io_instruction_RD_0 == 5'h17;
-  wire       _GEN_92 = io_instruction_RD_1 == 5'h17;
-  wire       _GEN_93 = io_instruction_RD_2 == 5'h17;
-  wire       _GEN_94 = io_instruction_RD_3 == 5'h17;
-  wire       is_being_written_vec_23 =
-    _GEN_91 & io_free_list_wr_en_0 | _GEN_92 & io_free_list_wr_en_1 | _GEN_93
-    & io_free_list_wr_en_2 | _GEN_94 & io_free_list_wr_en_3;
-  wire       _GEN_95 = io_instruction_RD_0 == 5'h18;
-  wire       _GEN_96 = io_instruction_RD_1 == 5'h18;
-  wire       _GEN_97 = io_instruction_RD_2 == 5'h18;
-  wire       _GEN_98 = io_instruction_RD_3 == 5'h18;
-  wire       is_being_written_vec_24 =
-    _GEN_95 & io_free_list_wr_en_0 | _GEN_96 & io_free_list_wr_en_1 | _GEN_97
-    & io_free_list_wr_en_2 | _GEN_98 & io_free_list_wr_en_3;
-  wire       _GEN_99 = io_instruction_RD_0 == 5'h19;
-  wire       _GEN_100 = io_instruction_RD_1 == 5'h19;
-  wire       _GEN_101 = io_instruction_RD_2 == 5'h19;
-  wire       _GEN_102 = io_instruction_RD_3 == 5'h19;
-  wire       is_being_written_vec_25 =
-    _GEN_99 & io_free_list_wr_en_0 | _GEN_100 & io_free_list_wr_en_1 | _GEN_101
-    & io_free_list_wr_en_2 | _GEN_102 & io_free_list_wr_en_3;
-  wire       _GEN_103 = io_instruction_RD_0 == 5'h1A;
-  wire       _GEN_104 = io_instruction_RD_1 == 5'h1A;
-  wire       _GEN_105 = io_instruction_RD_2 == 5'h1A;
-  wire       _GEN_106 = io_instruction_RD_3 == 5'h1A;
-  wire       is_being_written_vec_26 =
-    _GEN_103 & io_free_list_wr_en_0 | _GEN_104 & io_free_list_wr_en_1 | _GEN_105
-    & io_free_list_wr_en_2 | _GEN_106 & io_free_list_wr_en_3;
-  wire       _GEN_107 = io_instruction_RD_0 == 5'h1B;
-  wire       _GEN_108 = io_instruction_RD_1 == 5'h1B;
-  wire       _GEN_109 = io_instruction_RD_2 == 5'h1B;
-  wire       _GEN_110 = io_instruction_RD_3 == 5'h1B;
-  wire       is_being_written_vec_27 =
-    _GEN_107 & io_free_list_wr_en_0 | _GEN_108 & io_free_list_wr_en_1 | _GEN_109
-    & io_free_list_wr_en_2 | _GEN_110 & io_free_list_wr_en_3;
-  wire       _GEN_111 = io_instruction_RD_0 == 5'h1C;
-  wire       _GEN_112 = io_instruction_RD_1 == 5'h1C;
-  wire       _GEN_113 = io_instruction_RD_2 == 5'h1C;
-  wire       _GEN_114 = io_instruction_RD_3 == 5'h1C;
-  wire       is_being_written_vec_28 =
-    _GEN_111 & io_free_list_wr_en_0 | _GEN_112 & io_free_list_wr_en_1 | _GEN_113
-    & io_free_list_wr_en_2 | _GEN_114 & io_free_list_wr_en_3;
-  wire       _GEN_115 = io_instruction_RD_0 == 5'h1D;
-  wire       _GEN_116 = io_instruction_RD_1 == 5'h1D;
-  wire       _GEN_117 = io_instruction_RD_2 == 5'h1D;
-  wire       _GEN_118 = io_instruction_RD_3 == 5'h1D;
-  wire       is_being_written_vec_29 =
-    _GEN_115 & io_free_list_wr_en_0 | _GEN_116 & io_free_list_wr_en_1 | _GEN_117
-    & io_free_list_wr_en_2 | _GEN_118 & io_free_list_wr_en_3;
-  wire       _GEN_119 = io_instruction_RD_0 == 5'h1E;
-  wire       _GEN_120 = io_instruction_RD_1 == 5'h1E;
-  wire       _GEN_121 = io_instruction_RD_2 == 5'h1E;
-  wire       _GEN_122 = io_instruction_RD_3 == 5'h1E;
-  wire       is_being_written_vec_30 =
-    _GEN_119 & io_free_list_wr_en_0 | _GEN_120 & io_free_list_wr_en_1 | _GEN_121
-    & io_free_list_wr_en_2 | _GEN_122 & io_free_list_wr_en_3;
-  wire       is_being_written_vec_31 =
-    (&io_instruction_RD_0) & io_free_list_wr_en_0 | (&io_instruction_RD_1)
-    & io_free_list_wr_en_1 | (&io_instruction_RD_2) & io_free_list_wr_en_2
-    | (&io_instruction_RD_3) & io_free_list_wr_en_3;
-  wire [5:0] wr_data_in_0 =
-    _GEN_2
-      ? io_free_list_RD_3
-      : _GEN_1
-          ? io_free_list_RD_2
-          : _GEN_0 ? io_free_list_RD_1 : _GEN ? io_free_list_RD_0 : 6'h0;
-  wire [5:0] wr_data_in_1 =
-    _GEN_6
-      ? io_free_list_RD_3
-      : _GEN_5
-          ? io_free_list_RD_2
-          : _GEN_4 ? io_free_list_RD_1 : _GEN_3 ? io_free_list_RD_0 : 6'h0;
-  wire [5:0] wr_data_in_2 =
-    _GEN_10
-      ? io_free_list_RD_3
-      : _GEN_9
-          ? io_free_list_RD_2
-          : _GEN_8 ? io_free_list_RD_1 : _GEN_7 ? io_free_list_RD_0 : 6'h0;
-  wire [5:0] wr_data_in_3 =
-    _GEN_14
-      ? io_free_list_RD_3
-      : _GEN_13
-          ? io_free_list_RD_2
-          : _GEN_12 ? io_free_list_RD_1 : _GEN_11 ? io_free_list_RD_0 : 6'h0;
-  wire [5:0] wr_data_in_4 =
-    _GEN_18
-      ? io_free_list_RD_3
-      : _GEN_17
-          ? io_free_list_RD_2
-          : _GEN_16 ? io_free_list_RD_1 : _GEN_15 ? io_free_list_RD_0 : 6'h0;
-  wire [5:0] wr_data_in_5 =
-    _GEN_22
-      ? io_free_list_RD_3
-      : _GEN_21
-          ? io_free_list_RD_2
-          : _GEN_20 ? io_free_list_RD_1 : _GEN_19 ? io_free_list_RD_0 : 6'h0;
-  wire [5:0] wr_data_in_6 =
-    _GEN_26
-      ? io_free_list_RD_3
-      : _GEN_25
-          ? io_free_list_RD_2
-          : _GEN_24 ? io_free_list_RD_1 : _GEN_23 ? io_free_list_RD_0 : 6'h0;
-  wire [5:0] wr_data_in_7 =
-    _GEN_30
-      ? io_free_list_RD_3
-      : _GEN_29
-          ? io_free_list_RD_2
-          : _GEN_28 ? io_free_list_RD_1 : _GEN_27 ? io_free_list_RD_0 : 6'h0;
-  wire [5:0] wr_data_in_8 =
-    _GEN_34
-      ? io_free_list_RD_3
-      : _GEN_33
-          ? io_free_list_RD_2
-          : _GEN_32 ? io_free_list_RD_1 : _GEN_31 ? io_free_list_RD_0 : 6'h0;
-  wire [5:0] wr_data_in_9 =
-    _GEN_38
-      ? io_free_list_RD_3
-      : _GEN_37
-          ? io_free_list_RD_2
-          : _GEN_36 ? io_free_list_RD_1 : _GEN_35 ? io_free_list_RD_0 : 6'h0;
-  wire [5:0] wr_data_in_10 =
-    _GEN_42
-      ? io_free_list_RD_3
-      : _GEN_41
-          ? io_free_list_RD_2
-          : _GEN_40 ? io_free_list_RD_1 : _GEN_39 ? io_free_list_RD_0 : 6'h0;
-  wire [5:0] wr_data_in_11 =
-    _GEN_46
-      ? io_free_list_RD_3
-      : _GEN_45
-          ? io_free_list_RD_2
-          : _GEN_44 ? io_free_list_RD_1 : _GEN_43 ? io_free_list_RD_0 : 6'h0;
-  wire [5:0] wr_data_in_12 =
-    _GEN_50
-      ? io_free_list_RD_3
-      : _GEN_49
-          ? io_free_list_RD_2
-          : _GEN_48 ? io_free_list_RD_1 : _GEN_47 ? io_free_list_RD_0 : 6'h0;
-  wire [5:0] wr_data_in_13 =
-    _GEN_54
-      ? io_free_list_RD_3
-      : _GEN_53
-          ? io_free_list_RD_2
-          : _GEN_52 ? io_free_list_RD_1 : _GEN_51 ? io_free_list_RD_0 : 6'h0;
-  wire [5:0] wr_data_in_14 =
-    _GEN_58
-      ? io_free_list_RD_3
-      : _GEN_57
-          ? io_free_list_RD_2
-          : _GEN_56 ? io_free_list_RD_1 : _GEN_55 ? io_free_list_RD_0 : 6'h0;
-  wire [5:0] wr_data_in_15 =
-    _GEN_62
-      ? io_free_list_RD_3
-      : _GEN_61
-          ? io_free_list_RD_2
-          : _GEN_60 ? io_free_list_RD_1 : _GEN_59 ? io_free_list_RD_0 : 6'h0;
-  wire [5:0] wr_data_in_16 =
-    _GEN_66
-      ? io_free_list_RD_3
-      : _GEN_65
-          ? io_free_list_RD_2
-          : _GEN_64 ? io_free_list_RD_1 : _GEN_63 ? io_free_list_RD_0 : 6'h0;
-  wire [5:0] wr_data_in_17 =
-    _GEN_70
-      ? io_free_list_RD_3
-      : _GEN_69
-          ? io_free_list_RD_2
-          : _GEN_68 ? io_free_list_RD_1 : _GEN_67 ? io_free_list_RD_0 : 6'h0;
-  wire [5:0] wr_data_in_18 =
-    _GEN_74
-      ? io_free_list_RD_3
-      : _GEN_73
-          ? io_free_list_RD_2
-          : _GEN_72 ? io_free_list_RD_1 : _GEN_71 ? io_free_list_RD_0 : 6'h0;
-  wire [5:0] wr_data_in_19 =
-    _GEN_78
-      ? io_free_list_RD_3
-      : _GEN_77
-          ? io_free_list_RD_2
-          : _GEN_76 ? io_free_list_RD_1 : _GEN_75 ? io_free_list_RD_0 : 6'h0;
-  wire [5:0] wr_data_in_20 =
-    _GEN_82
-      ? io_free_list_RD_3
-      : _GEN_81
-          ? io_free_list_RD_2
-          : _GEN_80 ? io_free_list_RD_1 : _GEN_79 ? io_free_list_RD_0 : 6'h0;
-  wire [5:0] wr_data_in_21 =
-    _GEN_86
-      ? io_free_list_RD_3
-      : _GEN_85
-          ? io_free_list_RD_2
-          : _GEN_84 ? io_free_list_RD_1 : _GEN_83 ? io_free_list_RD_0 : 6'h0;
-  wire [5:0] wr_data_in_22 =
-    _GEN_90
-      ? io_free_list_RD_3
-      : _GEN_89
-          ? io_free_list_RD_2
-          : _GEN_88 ? io_free_list_RD_1 : _GEN_87 ? io_free_list_RD_0 : 6'h0;
-  wire [5:0] wr_data_in_23 =
-    _GEN_94
-      ? io_free_list_RD_3
-      : _GEN_93
-          ? io_free_list_RD_2
-          : _GEN_92 ? io_free_list_RD_1 : _GEN_91 ? io_free_list_RD_0 : 6'h0;
-  wire [5:0] wr_data_in_24 =
-    _GEN_98
-      ? io_free_list_RD_3
-      : _GEN_97
-          ? io_free_list_RD_2
-          : _GEN_96 ? io_free_list_RD_1 : _GEN_95 ? io_free_list_RD_0 : 6'h0;
-  wire [5:0] wr_data_in_25 =
-    _GEN_102
-      ? io_free_list_RD_3
-      : _GEN_101
-          ? io_free_list_RD_2
-          : _GEN_100 ? io_free_list_RD_1 : _GEN_99 ? io_free_list_RD_0 : 6'h0;
-  wire [5:0] wr_data_in_26 =
-    _GEN_106
-      ? io_free_list_RD_3
-      : _GEN_105
-          ? io_free_list_RD_2
-          : _GEN_104 ? io_free_list_RD_1 : _GEN_103 ? io_free_list_RD_0 : 6'h0;
-  wire [5:0] wr_data_in_27 =
-    _GEN_110
-      ? io_free_list_RD_3
-      : _GEN_109
-          ? io_free_list_RD_2
-          : _GEN_108 ? io_free_list_RD_1 : _GEN_107 ? io_free_list_RD_0 : 6'h0;
-  wire [5:0] wr_data_in_28 =
-    _GEN_114
-      ? io_free_list_RD_3
-      : _GEN_113
-          ? io_free_list_RD_2
-          : _GEN_112 ? io_free_list_RD_1 : _GEN_111 ? io_free_list_RD_0 : 6'h0;
-  wire [5:0] wr_data_in_29 =
-    _GEN_118
-      ? io_free_list_RD_3
-      : _GEN_117
-          ? io_free_list_RD_2
-          : _GEN_116 ? io_free_list_RD_1 : _GEN_115 ? io_free_list_RD_0 : 6'h0;
-  wire [5:0] wr_data_in_30 =
-    _GEN_122
-      ? io_free_list_RD_3
-      : _GEN_121
-          ? io_free_list_RD_2
-          : _GEN_120 ? io_free_list_RD_1 : _GEN_119 ? io_free_list_RD_0 : 6'h0;
-  wire [5:0] wr_data_in_31 =
-    (&io_instruction_RD_3)
-      ? io_free_list_RD_3
-      : (&io_instruction_RD_2)
-          ? io_free_list_RD_2
-          : (&io_instruction_RD_1)
-              ? io_free_list_RD_1
-              : (&io_instruction_RD_0) ? io_free_list_RD_0 : 6'h0;
+  reg [3:0] active_RAT;
+  reg [3:0] available_checkpoints;
+  reg [5:0] RAT_memories_0_0;
+  reg [5:0] RAT_memories_0_1;
+  reg [5:0] RAT_memories_0_2;
+  reg [5:0] RAT_memories_0_3;
+  reg [5:0] RAT_memories_0_4;
+  reg [5:0] RAT_memories_0_5;
+  reg [5:0] RAT_memories_0_6;
+  reg [5:0] RAT_memories_0_7;
+  reg [5:0] RAT_memories_0_8;
+  reg [5:0] RAT_memories_0_9;
+  reg [5:0] RAT_memories_0_10;
+  reg [5:0] RAT_memories_0_11;
+  reg [5:0] RAT_memories_0_12;
+  reg [5:0] RAT_memories_0_13;
+  reg [5:0] RAT_memories_0_14;
+  reg [5:0] RAT_memories_0_15;
+  reg [5:0] RAT_memories_0_16;
+  reg [5:0] RAT_memories_0_17;
+  reg [5:0] RAT_memories_0_18;
+  reg [5:0] RAT_memories_0_19;
+  reg [5:0] RAT_memories_0_20;
+  reg [5:0] RAT_memories_0_21;
+  reg [5:0] RAT_memories_0_22;
+  reg [5:0] RAT_memories_0_23;
+  reg [5:0] RAT_memories_0_24;
+  reg [5:0] RAT_memories_0_25;
+  reg [5:0] RAT_memories_0_26;
+  reg [5:0] RAT_memories_0_27;
+  reg [5:0] RAT_memories_0_28;
+  reg [5:0] RAT_memories_0_29;
+  reg [5:0] RAT_memories_0_30;
+  reg [5:0] RAT_memories_0_31;
+  reg [5:0] RAT_memories_1_0;
+  reg [5:0] RAT_memories_1_1;
+  reg [5:0] RAT_memories_1_2;
+  reg [5:0] RAT_memories_1_3;
+  reg [5:0] RAT_memories_1_4;
+  reg [5:0] RAT_memories_1_5;
+  reg [5:0] RAT_memories_1_6;
+  reg [5:0] RAT_memories_1_7;
+  reg [5:0] RAT_memories_1_8;
+  reg [5:0] RAT_memories_1_9;
+  reg [5:0] RAT_memories_1_10;
+  reg [5:0] RAT_memories_1_11;
+  reg [5:0] RAT_memories_1_12;
+  reg [5:0] RAT_memories_1_13;
+  reg [5:0] RAT_memories_1_14;
+  reg [5:0] RAT_memories_1_15;
+  reg [5:0] RAT_memories_1_16;
+  reg [5:0] RAT_memories_1_17;
+  reg [5:0] RAT_memories_1_18;
+  reg [5:0] RAT_memories_1_19;
+  reg [5:0] RAT_memories_1_20;
+  reg [5:0] RAT_memories_1_21;
+  reg [5:0] RAT_memories_1_22;
+  reg [5:0] RAT_memories_1_23;
+  reg [5:0] RAT_memories_1_24;
+  reg [5:0] RAT_memories_1_25;
+  reg [5:0] RAT_memories_1_26;
+  reg [5:0] RAT_memories_1_27;
+  reg [5:0] RAT_memories_1_28;
+  reg [5:0] RAT_memories_1_29;
+  reg [5:0] RAT_memories_1_30;
+  reg [5:0] RAT_memories_1_31;
+  reg [5:0] RAT_memories_2_0;
+  reg [5:0] RAT_memories_2_1;
+  reg [5:0] RAT_memories_2_2;
+  reg [5:0] RAT_memories_2_3;
+  reg [5:0] RAT_memories_2_4;
+  reg [5:0] RAT_memories_2_5;
+  reg [5:0] RAT_memories_2_6;
+  reg [5:0] RAT_memories_2_7;
+  reg [5:0] RAT_memories_2_8;
+  reg [5:0] RAT_memories_2_9;
+  reg [5:0] RAT_memories_2_10;
+  reg [5:0] RAT_memories_2_11;
+  reg [5:0] RAT_memories_2_12;
+  reg [5:0] RAT_memories_2_13;
+  reg [5:0] RAT_memories_2_14;
+  reg [5:0] RAT_memories_2_15;
+  reg [5:0] RAT_memories_2_16;
+  reg [5:0] RAT_memories_2_17;
+  reg [5:0] RAT_memories_2_18;
+  reg [5:0] RAT_memories_2_19;
+  reg [5:0] RAT_memories_2_20;
+  reg [5:0] RAT_memories_2_21;
+  reg [5:0] RAT_memories_2_22;
+  reg [5:0] RAT_memories_2_23;
+  reg [5:0] RAT_memories_2_24;
+  reg [5:0] RAT_memories_2_25;
+  reg [5:0] RAT_memories_2_26;
+  reg [5:0] RAT_memories_2_27;
+  reg [5:0] RAT_memories_2_28;
+  reg [5:0] RAT_memories_2_29;
+  reg [5:0] RAT_memories_2_30;
+  reg [5:0] RAT_memories_2_31;
+  reg [5:0] RAT_memories_3_0;
+  reg [5:0] RAT_memories_3_1;
+  reg [5:0] RAT_memories_3_2;
+  reg [5:0] RAT_memories_3_3;
+  reg [5:0] RAT_memories_3_4;
+  reg [5:0] RAT_memories_3_5;
+  reg [5:0] RAT_memories_3_6;
+  reg [5:0] RAT_memories_3_7;
+  reg [5:0] RAT_memories_3_8;
+  reg [5:0] RAT_memories_3_9;
+  reg [5:0] RAT_memories_3_10;
+  reg [5:0] RAT_memories_3_11;
+  reg [5:0] RAT_memories_3_12;
+  reg [5:0] RAT_memories_3_13;
+  reg [5:0] RAT_memories_3_14;
+  reg [5:0] RAT_memories_3_15;
+  reg [5:0] RAT_memories_3_16;
+  reg [5:0] RAT_memories_3_17;
+  reg [5:0] RAT_memories_3_18;
+  reg [5:0] RAT_memories_3_19;
+  reg [5:0] RAT_memories_3_20;
+  reg [5:0] RAT_memories_3_21;
+  reg [5:0] RAT_memories_3_22;
+  reg [5:0] RAT_memories_3_23;
+  reg [5:0] RAT_memories_3_24;
+  reg [5:0] RAT_memories_3_25;
+  reg [5:0] RAT_memories_3_26;
+  reg [5:0] RAT_memories_3_27;
+  reg [5:0] RAT_memories_3_28;
+  reg [5:0] RAT_memories_3_29;
+  reg [5:0] RAT_memories_3_30;
+  reg [5:0] RAT_memories_3_31;
+  reg [5:0] RAT_memories_4_0;
+  reg [5:0] RAT_memories_4_1;
+  reg [5:0] RAT_memories_4_2;
+  reg [5:0] RAT_memories_4_3;
+  reg [5:0] RAT_memories_4_4;
+  reg [5:0] RAT_memories_4_5;
+  reg [5:0] RAT_memories_4_6;
+  reg [5:0] RAT_memories_4_7;
+  reg [5:0] RAT_memories_4_8;
+  reg [5:0] RAT_memories_4_9;
+  reg [5:0] RAT_memories_4_10;
+  reg [5:0] RAT_memories_4_11;
+  reg [5:0] RAT_memories_4_12;
+  reg [5:0] RAT_memories_4_13;
+  reg [5:0] RAT_memories_4_14;
+  reg [5:0] RAT_memories_4_15;
+  reg [5:0] RAT_memories_4_16;
+  reg [5:0] RAT_memories_4_17;
+  reg [5:0] RAT_memories_4_18;
+  reg [5:0] RAT_memories_4_19;
+  reg [5:0] RAT_memories_4_20;
+  reg [5:0] RAT_memories_4_21;
+  reg [5:0] RAT_memories_4_22;
+  reg [5:0] RAT_memories_4_23;
+  reg [5:0] RAT_memories_4_24;
+  reg [5:0] RAT_memories_4_25;
+  reg [5:0] RAT_memories_4_26;
+  reg [5:0] RAT_memories_4_27;
+  reg [5:0] RAT_memories_4_28;
+  reg [5:0] RAT_memories_4_29;
+  reg [5:0] RAT_memories_4_30;
+  reg [5:0] RAT_memories_4_31;
+  reg [5:0] RAT_memories_5_0;
+  reg [5:0] RAT_memories_5_1;
+  reg [5:0] RAT_memories_5_2;
+  reg [5:0] RAT_memories_5_3;
+  reg [5:0] RAT_memories_5_4;
+  reg [5:0] RAT_memories_5_5;
+  reg [5:0] RAT_memories_5_6;
+  reg [5:0] RAT_memories_5_7;
+  reg [5:0] RAT_memories_5_8;
+  reg [5:0] RAT_memories_5_9;
+  reg [5:0] RAT_memories_5_10;
+  reg [5:0] RAT_memories_5_11;
+  reg [5:0] RAT_memories_5_12;
+  reg [5:0] RAT_memories_5_13;
+  reg [5:0] RAT_memories_5_14;
+  reg [5:0] RAT_memories_5_15;
+  reg [5:0] RAT_memories_5_16;
+  reg [5:0] RAT_memories_5_17;
+  reg [5:0] RAT_memories_5_18;
+  reg [5:0] RAT_memories_5_19;
+  reg [5:0] RAT_memories_5_20;
+  reg [5:0] RAT_memories_5_21;
+  reg [5:0] RAT_memories_5_22;
+  reg [5:0] RAT_memories_5_23;
+  reg [5:0] RAT_memories_5_24;
+  reg [5:0] RAT_memories_5_25;
+  reg [5:0] RAT_memories_5_26;
+  reg [5:0] RAT_memories_5_27;
+  reg [5:0] RAT_memories_5_28;
+  reg [5:0] RAT_memories_5_29;
+  reg [5:0] RAT_memories_5_30;
+  reg [5:0] RAT_memories_5_31;
+  reg [5:0] RAT_memories_6_0;
+  reg [5:0] RAT_memories_6_1;
+  reg [5:0] RAT_memories_6_2;
+  reg [5:0] RAT_memories_6_3;
+  reg [5:0] RAT_memories_6_4;
+  reg [5:0] RAT_memories_6_5;
+  reg [5:0] RAT_memories_6_6;
+  reg [5:0] RAT_memories_6_7;
+  reg [5:0] RAT_memories_6_8;
+  reg [5:0] RAT_memories_6_9;
+  reg [5:0] RAT_memories_6_10;
+  reg [5:0] RAT_memories_6_11;
+  reg [5:0] RAT_memories_6_12;
+  reg [5:0] RAT_memories_6_13;
+  reg [5:0] RAT_memories_6_14;
+  reg [5:0] RAT_memories_6_15;
+  reg [5:0] RAT_memories_6_16;
+  reg [5:0] RAT_memories_6_17;
+  reg [5:0] RAT_memories_6_18;
+  reg [5:0] RAT_memories_6_19;
+  reg [5:0] RAT_memories_6_20;
+  reg [5:0] RAT_memories_6_21;
+  reg [5:0] RAT_memories_6_22;
+  reg [5:0] RAT_memories_6_23;
+  reg [5:0] RAT_memories_6_24;
+  reg [5:0] RAT_memories_6_25;
+  reg [5:0] RAT_memories_6_26;
+  reg [5:0] RAT_memories_6_27;
+  reg [5:0] RAT_memories_6_28;
+  reg [5:0] RAT_memories_6_29;
+  reg [5:0] RAT_memories_6_30;
+  reg [5:0] RAT_memories_6_31;
+  reg [5:0] RAT_memories_7_0;
+  reg [5:0] RAT_memories_7_1;
+  reg [5:0] RAT_memories_7_2;
+  reg [5:0] RAT_memories_7_3;
+  reg [5:0] RAT_memories_7_4;
+  reg [5:0] RAT_memories_7_5;
+  reg [5:0] RAT_memories_7_6;
+  reg [5:0] RAT_memories_7_7;
+  reg [5:0] RAT_memories_7_8;
+  reg [5:0] RAT_memories_7_9;
+  reg [5:0] RAT_memories_7_10;
+  reg [5:0] RAT_memories_7_11;
+  reg [5:0] RAT_memories_7_12;
+  reg [5:0] RAT_memories_7_13;
+  reg [5:0] RAT_memories_7_14;
+  reg [5:0] RAT_memories_7_15;
+  reg [5:0] RAT_memories_7_16;
+  reg [5:0] RAT_memories_7_17;
+  reg [5:0] RAT_memories_7_18;
+  reg [5:0] RAT_memories_7_19;
+  reg [5:0] RAT_memories_7_20;
+  reg [5:0] RAT_memories_7_21;
+  reg [5:0] RAT_memories_7_22;
+  reg [5:0] RAT_memories_7_23;
+  reg [5:0] RAT_memories_7_24;
+  reg [5:0] RAT_memories_7_25;
+  reg [5:0] RAT_memories_7_26;
+  reg [5:0] RAT_memories_7_27;
+  reg [5:0] RAT_memories_7_28;
+  reg [5:0] RAT_memories_7_29;
+  reg [5:0] RAT_memories_7_30;
+  reg [5:0] RAT_memories_7_31;
+  reg [5:0] RAT_memories_8_0;
+  reg [5:0] RAT_memories_8_1;
+  reg [5:0] RAT_memories_8_2;
+  reg [5:0] RAT_memories_8_3;
+  reg [5:0] RAT_memories_8_4;
+  reg [5:0] RAT_memories_8_5;
+  reg [5:0] RAT_memories_8_6;
+  reg [5:0] RAT_memories_8_7;
+  reg [5:0] RAT_memories_8_8;
+  reg [5:0] RAT_memories_8_9;
+  reg [5:0] RAT_memories_8_10;
+  reg [5:0] RAT_memories_8_11;
+  reg [5:0] RAT_memories_8_12;
+  reg [5:0] RAT_memories_8_13;
+  reg [5:0] RAT_memories_8_14;
+  reg [5:0] RAT_memories_8_15;
+  reg [5:0] RAT_memories_8_16;
+  reg [5:0] RAT_memories_8_17;
+  reg [5:0] RAT_memories_8_18;
+  reg [5:0] RAT_memories_8_19;
+  reg [5:0] RAT_memories_8_20;
+  reg [5:0] RAT_memories_8_21;
+  reg [5:0] RAT_memories_8_22;
+  reg [5:0] RAT_memories_8_23;
+  reg [5:0] RAT_memories_8_24;
+  reg [5:0] RAT_memories_8_25;
+  reg [5:0] RAT_memories_8_26;
+  reg [5:0] RAT_memories_8_27;
+  reg [5:0] RAT_memories_8_28;
+  reg [5:0] RAT_memories_8_29;
+  reg [5:0] RAT_memories_8_30;
+  reg [5:0] RAT_memories_8_31;
+  reg [5:0] RAT_memories_9_0;
+  reg [5:0] RAT_memories_9_1;
+  reg [5:0] RAT_memories_9_2;
+  reg [5:0] RAT_memories_9_3;
+  reg [5:0] RAT_memories_9_4;
+  reg [5:0] RAT_memories_9_5;
+  reg [5:0] RAT_memories_9_6;
+  reg [5:0] RAT_memories_9_7;
+  reg [5:0] RAT_memories_9_8;
+  reg [5:0] RAT_memories_9_9;
+  reg [5:0] RAT_memories_9_10;
+  reg [5:0] RAT_memories_9_11;
+  reg [5:0] RAT_memories_9_12;
+  reg [5:0] RAT_memories_9_13;
+  reg [5:0] RAT_memories_9_14;
+  reg [5:0] RAT_memories_9_15;
+  reg [5:0] RAT_memories_9_16;
+  reg [5:0] RAT_memories_9_17;
+  reg [5:0] RAT_memories_9_18;
+  reg [5:0] RAT_memories_9_19;
+  reg [5:0] RAT_memories_9_20;
+  reg [5:0] RAT_memories_9_21;
+  reg [5:0] RAT_memories_9_22;
+  reg [5:0] RAT_memories_9_23;
+  reg [5:0] RAT_memories_9_24;
+  reg [5:0] RAT_memories_9_25;
+  reg [5:0] RAT_memories_9_26;
+  reg [5:0] RAT_memories_9_27;
+  reg [5:0] RAT_memories_9_28;
+  reg [5:0] RAT_memories_9_29;
+  reg [5:0] RAT_memories_9_30;
+  reg [5:0] RAT_memories_9_31;
+  reg [5:0] RAT_memories_10_0;
+  reg [5:0] RAT_memories_10_1;
+  reg [5:0] RAT_memories_10_2;
+  reg [5:0] RAT_memories_10_3;
+  reg [5:0] RAT_memories_10_4;
+  reg [5:0] RAT_memories_10_5;
+  reg [5:0] RAT_memories_10_6;
+  reg [5:0] RAT_memories_10_7;
+  reg [5:0] RAT_memories_10_8;
+  reg [5:0] RAT_memories_10_9;
+  reg [5:0] RAT_memories_10_10;
+  reg [5:0] RAT_memories_10_11;
+  reg [5:0] RAT_memories_10_12;
+  reg [5:0] RAT_memories_10_13;
+  reg [5:0] RAT_memories_10_14;
+  reg [5:0] RAT_memories_10_15;
+  reg [5:0] RAT_memories_10_16;
+  reg [5:0] RAT_memories_10_17;
+  reg [5:0] RAT_memories_10_18;
+  reg [5:0] RAT_memories_10_19;
+  reg [5:0] RAT_memories_10_20;
+  reg [5:0] RAT_memories_10_21;
+  reg [5:0] RAT_memories_10_22;
+  reg [5:0] RAT_memories_10_23;
+  reg [5:0] RAT_memories_10_24;
+  reg [5:0] RAT_memories_10_25;
+  reg [5:0] RAT_memories_10_26;
+  reg [5:0] RAT_memories_10_27;
+  reg [5:0] RAT_memories_10_28;
+  reg [5:0] RAT_memories_10_29;
+  reg [5:0] RAT_memories_10_30;
+  reg [5:0] RAT_memories_10_31;
+  reg [5:0] RAT_memories_11_0;
+  reg [5:0] RAT_memories_11_1;
+  reg [5:0] RAT_memories_11_2;
+  reg [5:0] RAT_memories_11_3;
+  reg [5:0] RAT_memories_11_4;
+  reg [5:0] RAT_memories_11_5;
+  reg [5:0] RAT_memories_11_6;
+  reg [5:0] RAT_memories_11_7;
+  reg [5:0] RAT_memories_11_8;
+  reg [5:0] RAT_memories_11_9;
+  reg [5:0] RAT_memories_11_10;
+  reg [5:0] RAT_memories_11_11;
+  reg [5:0] RAT_memories_11_12;
+  reg [5:0] RAT_memories_11_13;
+  reg [5:0] RAT_memories_11_14;
+  reg [5:0] RAT_memories_11_15;
+  reg [5:0] RAT_memories_11_16;
+  reg [5:0] RAT_memories_11_17;
+  reg [5:0] RAT_memories_11_18;
+  reg [5:0] RAT_memories_11_19;
+  reg [5:0] RAT_memories_11_20;
+  reg [5:0] RAT_memories_11_21;
+  reg [5:0] RAT_memories_11_22;
+  reg [5:0] RAT_memories_11_23;
+  reg [5:0] RAT_memories_11_24;
+  reg [5:0] RAT_memories_11_25;
+  reg [5:0] RAT_memories_11_26;
+  reg [5:0] RAT_memories_11_27;
+  reg [5:0] RAT_memories_11_28;
+  reg [5:0] RAT_memories_11_29;
+  reg [5:0] RAT_memories_11_30;
+  reg [5:0] RAT_memories_11_31;
+  reg [5:0] RAT_memories_12_0;
+  reg [5:0] RAT_memories_12_1;
+  reg [5:0] RAT_memories_12_2;
+  reg [5:0] RAT_memories_12_3;
+  reg [5:0] RAT_memories_12_4;
+  reg [5:0] RAT_memories_12_5;
+  reg [5:0] RAT_memories_12_6;
+  reg [5:0] RAT_memories_12_7;
+  reg [5:0] RAT_memories_12_8;
+  reg [5:0] RAT_memories_12_9;
+  reg [5:0] RAT_memories_12_10;
+  reg [5:0] RAT_memories_12_11;
+  reg [5:0] RAT_memories_12_12;
+  reg [5:0] RAT_memories_12_13;
+  reg [5:0] RAT_memories_12_14;
+  reg [5:0] RAT_memories_12_15;
+  reg [5:0] RAT_memories_12_16;
+  reg [5:0] RAT_memories_12_17;
+  reg [5:0] RAT_memories_12_18;
+  reg [5:0] RAT_memories_12_19;
+  reg [5:0] RAT_memories_12_20;
+  reg [5:0] RAT_memories_12_21;
+  reg [5:0] RAT_memories_12_22;
+  reg [5:0] RAT_memories_12_23;
+  reg [5:0] RAT_memories_12_24;
+  reg [5:0] RAT_memories_12_25;
+  reg [5:0] RAT_memories_12_26;
+  reg [5:0] RAT_memories_12_27;
+  reg [5:0] RAT_memories_12_28;
+  reg [5:0] RAT_memories_12_29;
+  reg [5:0] RAT_memories_12_30;
+  reg [5:0] RAT_memories_12_31;
+  reg [5:0] RAT_memories_13_0;
+  reg [5:0] RAT_memories_13_1;
+  reg [5:0] RAT_memories_13_2;
+  reg [5:0] RAT_memories_13_3;
+  reg [5:0] RAT_memories_13_4;
+  reg [5:0] RAT_memories_13_5;
+  reg [5:0] RAT_memories_13_6;
+  reg [5:0] RAT_memories_13_7;
+  reg [5:0] RAT_memories_13_8;
+  reg [5:0] RAT_memories_13_9;
+  reg [5:0] RAT_memories_13_10;
+  reg [5:0] RAT_memories_13_11;
+  reg [5:0] RAT_memories_13_12;
+  reg [5:0] RAT_memories_13_13;
+  reg [5:0] RAT_memories_13_14;
+  reg [5:0] RAT_memories_13_15;
+  reg [5:0] RAT_memories_13_16;
+  reg [5:0] RAT_memories_13_17;
+  reg [5:0] RAT_memories_13_18;
+  reg [5:0] RAT_memories_13_19;
+  reg [5:0] RAT_memories_13_20;
+  reg [5:0] RAT_memories_13_21;
+  reg [5:0] RAT_memories_13_22;
+  reg [5:0] RAT_memories_13_23;
+  reg [5:0] RAT_memories_13_24;
+  reg [5:0] RAT_memories_13_25;
+  reg [5:0] RAT_memories_13_26;
+  reg [5:0] RAT_memories_13_27;
+  reg [5:0] RAT_memories_13_28;
+  reg [5:0] RAT_memories_13_29;
+  reg [5:0] RAT_memories_13_30;
+  reg [5:0] RAT_memories_13_31;
+  reg [5:0] RAT_memories_14_0;
+  reg [5:0] RAT_memories_14_1;
+  reg [5:0] RAT_memories_14_2;
+  reg [5:0] RAT_memories_14_3;
+  reg [5:0] RAT_memories_14_4;
+  reg [5:0] RAT_memories_14_5;
+  reg [5:0] RAT_memories_14_6;
+  reg [5:0] RAT_memories_14_7;
+  reg [5:0] RAT_memories_14_8;
+  reg [5:0] RAT_memories_14_9;
+  reg [5:0] RAT_memories_14_10;
+  reg [5:0] RAT_memories_14_11;
+  reg [5:0] RAT_memories_14_12;
+  reg [5:0] RAT_memories_14_13;
+  reg [5:0] RAT_memories_14_14;
+  reg [5:0] RAT_memories_14_15;
+  reg [5:0] RAT_memories_14_16;
+  reg [5:0] RAT_memories_14_17;
+  reg [5:0] RAT_memories_14_18;
+  reg [5:0] RAT_memories_14_19;
+  reg [5:0] RAT_memories_14_20;
+  reg [5:0] RAT_memories_14_21;
+  reg [5:0] RAT_memories_14_22;
+  reg [5:0] RAT_memories_14_23;
+  reg [5:0] RAT_memories_14_24;
+  reg [5:0] RAT_memories_14_25;
+  reg [5:0] RAT_memories_14_26;
+  reg [5:0] RAT_memories_14_27;
+  reg [5:0] RAT_memories_14_28;
+  reg [5:0] RAT_memories_14_29;
+  reg [5:0] RAT_memories_14_30;
+  reg [5:0] RAT_memories_14_31;
+  reg [5:0] RAT_memories_15_0;
+  reg [5:0] RAT_memories_15_1;
+  reg [5:0] RAT_memories_15_2;
+  reg [5:0] RAT_memories_15_3;
+  reg [5:0] RAT_memories_15_4;
+  reg [5:0] RAT_memories_15_5;
+  reg [5:0] RAT_memories_15_6;
+  reg [5:0] RAT_memories_15_7;
+  reg [5:0] RAT_memories_15_8;
+  reg [5:0] RAT_memories_15_9;
+  reg [5:0] RAT_memories_15_10;
+  reg [5:0] RAT_memories_15_11;
+  reg [5:0] RAT_memories_15_12;
+  reg [5:0] RAT_memories_15_13;
+  reg [5:0] RAT_memories_15_14;
+  reg [5:0] RAT_memories_15_15;
+  reg [5:0] RAT_memories_15_16;
+  reg [5:0] RAT_memories_15_17;
+  reg [5:0] RAT_memories_15_18;
+  reg [5:0] RAT_memories_15_19;
+  reg [5:0] RAT_memories_15_20;
+  reg [5:0] RAT_memories_15_21;
+  reg [5:0] RAT_memories_15_22;
+  reg [5:0] RAT_memories_15_23;
+  reg [5:0] RAT_memories_15_24;
+  reg [5:0] RAT_memories_15_25;
+  reg [5:0] RAT_memories_15_26;
+  reg [5:0] RAT_memories_15_27;
+  reg [5:0] RAT_memories_15_28;
+  reg [5:0] RAT_memories_15_29;
+  reg [5:0] RAT_memories_15_30;
+  reg [5:0] RAT_memories_15_31;
+  reg [5:0] io_RAT_RD_0_REG;
+  reg [5:0] io_RAT_RS1_0_REG;
+  reg [5:0] io_RAT_RS2_0_REG;
+  reg [5:0] io_RAT_RD_1_REG;
+  reg [5:0] io_RAT_RS1_1_REG;
+  reg [5:0] io_RAT_RS2_1_REG;
+  reg [5:0] io_RAT_RD_2_REG;
+  reg [5:0] io_RAT_RS1_2_REG;
+  reg [5:0] io_RAT_RS2_2_REG;
+  reg [5:0] io_RAT_RD_3_REG;
+  reg [5:0] io_RAT_RS1_3_REG;
+  reg [5:0] io_RAT_RS2_3_REG;
   always @(posedge clock) begin
-    automatic logic [15:0][5:0] _GEN_123 =
+    automatic logic [15:0][5:0] _GEN =
       {{RAT_memories_15_31},
        {RAT_memories_14_31},
        {RAT_memories_13_31},
@@ -1001,7 +586,7 @@ module RAT(
        {RAT_memories_2_31},
        {RAT_memories_1_31},
        {RAT_memories_0_31}};
-    automatic logic [15:0][5:0] _GEN_124 =
+    automatic logic [15:0][5:0] _GEN_0 =
       {{RAT_memories_15_30},
        {RAT_memories_14_30},
        {RAT_memories_13_30},
@@ -1018,7 +603,7 @@ module RAT(
        {RAT_memories_2_30},
        {RAT_memories_1_30},
        {RAT_memories_0_30}};
-    automatic logic [15:0][5:0] _GEN_125 =
+    automatic logic [15:0][5:0] _GEN_1 =
       {{RAT_memories_15_29},
        {RAT_memories_14_29},
        {RAT_memories_13_29},
@@ -1035,7 +620,7 @@ module RAT(
        {RAT_memories_2_29},
        {RAT_memories_1_29},
        {RAT_memories_0_29}};
-    automatic logic [15:0][5:0] _GEN_126 =
+    automatic logic [15:0][5:0] _GEN_2 =
       {{RAT_memories_15_28},
        {RAT_memories_14_28},
        {RAT_memories_13_28},
@@ -1052,7 +637,7 @@ module RAT(
        {RAT_memories_2_28},
        {RAT_memories_1_28},
        {RAT_memories_0_28}};
-    automatic logic [15:0][5:0] _GEN_127 =
+    automatic logic [15:0][5:0] _GEN_3 =
       {{RAT_memories_15_27},
        {RAT_memories_14_27},
        {RAT_memories_13_27},
@@ -1069,7 +654,7 @@ module RAT(
        {RAT_memories_2_27},
        {RAT_memories_1_27},
        {RAT_memories_0_27}};
-    automatic logic [15:0][5:0] _GEN_128 =
+    automatic logic [15:0][5:0] _GEN_4 =
       {{RAT_memories_15_26},
        {RAT_memories_14_26},
        {RAT_memories_13_26},
@@ -1086,7 +671,7 @@ module RAT(
        {RAT_memories_2_26},
        {RAT_memories_1_26},
        {RAT_memories_0_26}};
-    automatic logic [15:0][5:0] _GEN_129 =
+    automatic logic [15:0][5:0] _GEN_5 =
       {{RAT_memories_15_25},
        {RAT_memories_14_25},
        {RAT_memories_13_25},
@@ -1103,7 +688,7 @@ module RAT(
        {RAT_memories_2_25},
        {RAT_memories_1_25},
        {RAT_memories_0_25}};
-    automatic logic [15:0][5:0] _GEN_130 =
+    automatic logic [15:0][5:0] _GEN_6 =
       {{RAT_memories_15_24},
        {RAT_memories_14_24},
        {RAT_memories_13_24},
@@ -1120,7 +705,7 @@ module RAT(
        {RAT_memories_2_24},
        {RAT_memories_1_24},
        {RAT_memories_0_24}};
-    automatic logic [15:0][5:0] _GEN_131 =
+    automatic logic [15:0][5:0] _GEN_7 =
       {{RAT_memories_15_23},
        {RAT_memories_14_23},
        {RAT_memories_13_23},
@@ -1137,7 +722,7 @@ module RAT(
        {RAT_memories_2_23},
        {RAT_memories_1_23},
        {RAT_memories_0_23}};
-    automatic logic [15:0][5:0] _GEN_132 =
+    automatic logic [15:0][5:0] _GEN_8 =
       {{RAT_memories_15_22},
        {RAT_memories_14_22},
        {RAT_memories_13_22},
@@ -1154,7 +739,7 @@ module RAT(
        {RAT_memories_2_22},
        {RAT_memories_1_22},
        {RAT_memories_0_22}};
-    automatic logic [15:0][5:0] _GEN_133 =
+    automatic logic [15:0][5:0] _GEN_9 =
       {{RAT_memories_15_21},
        {RAT_memories_14_21},
        {RAT_memories_13_21},
@@ -1171,7 +756,7 @@ module RAT(
        {RAT_memories_2_21},
        {RAT_memories_1_21},
        {RAT_memories_0_21}};
-    automatic logic [15:0][5:0] _GEN_134 =
+    automatic logic [15:0][5:0] _GEN_10 =
       {{RAT_memories_15_20},
        {RAT_memories_14_20},
        {RAT_memories_13_20},
@@ -1188,7 +773,7 @@ module RAT(
        {RAT_memories_2_20},
        {RAT_memories_1_20},
        {RAT_memories_0_20}};
-    automatic logic [15:0][5:0] _GEN_135 =
+    automatic logic [15:0][5:0] _GEN_11 =
       {{RAT_memories_15_19},
        {RAT_memories_14_19},
        {RAT_memories_13_19},
@@ -1205,7 +790,7 @@ module RAT(
        {RAT_memories_2_19},
        {RAT_memories_1_19},
        {RAT_memories_0_19}};
-    automatic logic [15:0][5:0] _GEN_136 =
+    automatic logic [15:0][5:0] _GEN_12 =
       {{RAT_memories_15_18},
        {RAT_memories_14_18},
        {RAT_memories_13_18},
@@ -1222,7 +807,7 @@ module RAT(
        {RAT_memories_2_18},
        {RAT_memories_1_18},
        {RAT_memories_0_18}};
-    automatic logic [15:0][5:0] _GEN_137 =
+    automatic logic [15:0][5:0] _GEN_13 =
       {{RAT_memories_15_17},
        {RAT_memories_14_17},
        {RAT_memories_13_17},
@@ -1239,7 +824,7 @@ module RAT(
        {RAT_memories_2_17},
        {RAT_memories_1_17},
        {RAT_memories_0_17}};
-    automatic logic [15:0][5:0] _GEN_138 =
+    automatic logic [15:0][5:0] _GEN_14 =
       {{RAT_memories_15_16},
        {RAT_memories_14_16},
        {RAT_memories_13_16},
@@ -1256,7 +841,7 @@ module RAT(
        {RAT_memories_2_16},
        {RAT_memories_1_16},
        {RAT_memories_0_16}};
-    automatic logic [15:0][5:0] _GEN_139 =
+    automatic logic [15:0][5:0] _GEN_15 =
       {{RAT_memories_15_15},
        {RAT_memories_14_15},
        {RAT_memories_13_15},
@@ -1273,7 +858,7 @@ module RAT(
        {RAT_memories_2_15},
        {RAT_memories_1_15},
        {RAT_memories_0_15}};
-    automatic logic [15:0][5:0] _GEN_140 =
+    automatic logic [15:0][5:0] _GEN_16 =
       {{RAT_memories_15_14},
        {RAT_memories_14_14},
        {RAT_memories_13_14},
@@ -1290,7 +875,7 @@ module RAT(
        {RAT_memories_2_14},
        {RAT_memories_1_14},
        {RAT_memories_0_14}};
-    automatic logic [15:0][5:0] _GEN_141 =
+    automatic logic [15:0][5:0] _GEN_17 =
       {{RAT_memories_15_13},
        {RAT_memories_14_13},
        {RAT_memories_13_13},
@@ -1307,7 +892,7 @@ module RAT(
        {RAT_memories_2_13},
        {RAT_memories_1_13},
        {RAT_memories_0_13}};
-    automatic logic [15:0][5:0] _GEN_142 =
+    automatic logic [15:0][5:0] _GEN_18 =
       {{RAT_memories_15_12},
        {RAT_memories_14_12},
        {RAT_memories_13_12},
@@ -1324,7 +909,7 @@ module RAT(
        {RAT_memories_2_12},
        {RAT_memories_1_12},
        {RAT_memories_0_12}};
-    automatic logic [15:0][5:0] _GEN_143 =
+    automatic logic [15:0][5:0] _GEN_19 =
       {{RAT_memories_15_11},
        {RAT_memories_14_11},
        {RAT_memories_13_11},
@@ -1341,7 +926,7 @@ module RAT(
        {RAT_memories_2_11},
        {RAT_memories_1_11},
        {RAT_memories_0_11}};
-    automatic logic [15:0][5:0] _GEN_144 =
+    automatic logic [15:0][5:0] _GEN_20 =
       {{RAT_memories_15_10},
        {RAT_memories_14_10},
        {RAT_memories_13_10},
@@ -1358,7 +943,7 @@ module RAT(
        {RAT_memories_2_10},
        {RAT_memories_1_10},
        {RAT_memories_0_10}};
-    automatic logic [15:0][5:0] _GEN_145 =
+    automatic logic [15:0][5:0] _GEN_21 =
       {{RAT_memories_15_9},
        {RAT_memories_14_9},
        {RAT_memories_13_9},
@@ -1375,7 +960,7 @@ module RAT(
        {RAT_memories_2_9},
        {RAT_memories_1_9},
        {RAT_memories_0_9}};
-    automatic logic [15:0][5:0] _GEN_146 =
+    automatic logic [15:0][5:0] _GEN_22 =
       {{RAT_memories_15_8},
        {RAT_memories_14_8},
        {RAT_memories_13_8},
@@ -1392,7 +977,7 @@ module RAT(
        {RAT_memories_2_8},
        {RAT_memories_1_8},
        {RAT_memories_0_8}};
-    automatic logic [15:0][5:0] _GEN_147 =
+    automatic logic [15:0][5:0] _GEN_23 =
       {{RAT_memories_15_7},
        {RAT_memories_14_7},
        {RAT_memories_13_7},
@@ -1409,7 +994,7 @@ module RAT(
        {RAT_memories_2_7},
        {RAT_memories_1_7},
        {RAT_memories_0_7}};
-    automatic logic [15:0][5:0] _GEN_148 =
+    automatic logic [15:0][5:0] _GEN_24 =
       {{RAT_memories_15_6},
        {RAT_memories_14_6},
        {RAT_memories_13_6},
@@ -1426,7 +1011,7 @@ module RAT(
        {RAT_memories_2_6},
        {RAT_memories_1_6},
        {RAT_memories_0_6}};
-    automatic logic [15:0][5:0] _GEN_149 =
+    automatic logic [15:0][5:0] _GEN_25 =
       {{RAT_memories_15_5},
        {RAT_memories_14_5},
        {RAT_memories_13_5},
@@ -1443,7 +1028,7 @@ module RAT(
        {RAT_memories_2_5},
        {RAT_memories_1_5},
        {RAT_memories_0_5}};
-    automatic logic [15:0][5:0] _GEN_150 =
+    automatic logic [15:0][5:0] _GEN_26 =
       {{RAT_memories_15_4},
        {RAT_memories_14_4},
        {RAT_memories_13_4},
@@ -1460,7 +1045,7 @@ module RAT(
        {RAT_memories_2_4},
        {RAT_memories_1_4},
        {RAT_memories_0_4}};
-    automatic logic [15:0][5:0] _GEN_151 =
+    automatic logic [15:0][5:0] _GEN_27 =
       {{RAT_memories_15_3},
        {RAT_memories_14_3},
        {RAT_memories_13_3},
@@ -1477,7 +1062,7 @@ module RAT(
        {RAT_memories_2_3},
        {RAT_memories_1_3},
        {RAT_memories_0_3}};
-    automatic logic [15:0][5:0] _GEN_152 =
+    automatic logic [15:0][5:0] _GEN_28 =
       {{RAT_memories_15_2},
        {RAT_memories_14_2},
        {RAT_memories_13_2},
@@ -1494,7 +1079,7 @@ module RAT(
        {RAT_memories_2_2},
        {RAT_memories_1_2},
        {RAT_memories_0_2}};
-    automatic logic [15:0][5:0] _GEN_153 =
+    automatic logic [15:0][5:0] _GEN_29 =
       {{RAT_memories_15_1},
        {RAT_memories_14_1},
        {RAT_memories_13_1},
@@ -1511,7 +1096,7 @@ module RAT(
        {RAT_memories_2_1},
        {RAT_memories_1_1},
        {RAT_memories_0_1}};
-    automatic logic [15:0][5:0] _GEN_154 =
+    automatic logic [15:0][5:0] _GEN_30 =
       {{RAT_memories_15_0},
        {RAT_memories_14_0},
        {RAT_memories_13_0},
@@ -1528,39 +1113,39 @@ module RAT(
        {RAT_memories_2_0},
        {RAT_memories_1_0},
        {RAT_memories_0_0}};
-    automatic logic [31:0][5:0] _GEN_155 =
-      {{_GEN_123[active_RAT]},
-       {_GEN_124[active_RAT]},
-       {_GEN_125[active_RAT]},
-       {_GEN_126[active_RAT]},
-       {_GEN_127[active_RAT]},
-       {_GEN_128[active_RAT]},
-       {_GEN_129[active_RAT]},
-       {_GEN_130[active_RAT]},
-       {_GEN_131[active_RAT]},
-       {_GEN_132[active_RAT]},
-       {_GEN_133[active_RAT]},
-       {_GEN_134[active_RAT]},
-       {_GEN_135[active_RAT]},
-       {_GEN_136[active_RAT]},
-       {_GEN_137[active_RAT]},
-       {_GEN_138[active_RAT]},
-       {_GEN_139[active_RAT]},
-       {_GEN_140[active_RAT]},
-       {_GEN_141[active_RAT]},
-       {_GEN_142[active_RAT]},
-       {_GEN_143[active_RAT]},
-       {_GEN_144[active_RAT]},
-       {_GEN_145[active_RAT]},
-       {_GEN_146[active_RAT]},
-       {_GEN_147[active_RAT]},
-       {_GEN_148[active_RAT]},
-       {_GEN_149[active_RAT]},
-       {_GEN_150[active_RAT]},
-       {_GEN_151[active_RAT]},
-       {_GEN_152[active_RAT]},
-       {_GEN_153[active_RAT]},
-       {_GEN_154[active_RAT]}};
+    automatic logic [31:0][5:0] _GEN_31 =
+      {{_GEN[active_RAT]},
+       {_GEN_0[active_RAT]},
+       {_GEN_1[active_RAT]},
+       {_GEN_2[active_RAT]},
+       {_GEN_3[active_RAT]},
+       {_GEN_4[active_RAT]},
+       {_GEN_5[active_RAT]},
+       {_GEN_6[active_RAT]},
+       {_GEN_7[active_RAT]},
+       {_GEN_8[active_RAT]},
+       {_GEN_9[active_RAT]},
+       {_GEN_10[active_RAT]},
+       {_GEN_11[active_RAT]},
+       {_GEN_12[active_RAT]},
+       {_GEN_13[active_RAT]},
+       {_GEN_14[active_RAT]},
+       {_GEN_15[active_RAT]},
+       {_GEN_16[active_RAT]},
+       {_GEN_17[active_RAT]},
+       {_GEN_18[active_RAT]},
+       {_GEN_19[active_RAT]},
+       {_GEN_20[active_RAT]},
+       {_GEN_21[active_RAT]},
+       {_GEN_22[active_RAT]},
+       {_GEN_23[active_RAT]},
+       {_GEN_24[active_RAT]},
+       {_GEN_25[active_RAT]},
+       {_GEN_26[active_RAT]},
+       {_GEN_27[active_RAT]},
+       {_GEN_28[active_RAT]},
+       {_GEN_29[active_RAT]},
+       {_GEN_30[active_RAT]}};
     if (reset) begin
       active_RAT <= 4'h0;
       available_checkpoints <= 4'hF;
@@ -2078,6 +1663,210 @@ module RAT(
       RAT_memories_15_31 <= 6'h0;
     end
     else begin
+      automatic logic       _GEN_32;
+      automatic logic       _GEN_33;
+      automatic logic       _GEN_34;
+      automatic logic       _GEN_35;
+      automatic logic       is_being_written_vec_0;
+      automatic logic       _GEN_36 = io_instruction_RD_0 == 5'h1;
+      automatic logic       _GEN_37 = io_instruction_RD_1 == 5'h1;
+      automatic logic       _GEN_38 = io_instruction_RD_2 == 5'h1;
+      automatic logic       _GEN_39 = io_instruction_RD_3 == 5'h1;
+      automatic logic       is_being_written_vec_1 =
+        _GEN_36 & io_free_list_wr_en_0 | _GEN_37 & io_free_list_wr_en_1 | _GEN_38
+        & io_free_list_wr_en_2 | _GEN_39 & io_free_list_wr_en_3;
+      automatic logic       _GEN_40 = io_instruction_RD_0 == 5'h2;
+      automatic logic       _GEN_41 = io_instruction_RD_1 == 5'h2;
+      automatic logic       _GEN_42 = io_instruction_RD_2 == 5'h2;
+      automatic logic       _GEN_43 = io_instruction_RD_3 == 5'h2;
+      automatic logic       is_being_written_vec_2 =
+        _GEN_40 & io_free_list_wr_en_0 | _GEN_41 & io_free_list_wr_en_1 | _GEN_42
+        & io_free_list_wr_en_2 | _GEN_43 & io_free_list_wr_en_3;
+      automatic logic       _GEN_44 = io_instruction_RD_0 == 5'h3;
+      automatic logic       _GEN_45 = io_instruction_RD_1 == 5'h3;
+      automatic logic       _GEN_46 = io_instruction_RD_2 == 5'h3;
+      automatic logic       _GEN_47 = io_instruction_RD_3 == 5'h3;
+      automatic logic       is_being_written_vec_3 =
+        _GEN_44 & io_free_list_wr_en_0 | _GEN_45 & io_free_list_wr_en_1 | _GEN_46
+        & io_free_list_wr_en_2 | _GEN_47 & io_free_list_wr_en_3;
+      automatic logic       _GEN_48 = io_instruction_RD_0 == 5'h4;
+      automatic logic       _GEN_49 = io_instruction_RD_1 == 5'h4;
+      automatic logic       _GEN_50 = io_instruction_RD_2 == 5'h4;
+      automatic logic       _GEN_51 = io_instruction_RD_3 == 5'h4;
+      automatic logic       is_being_written_vec_4 =
+        _GEN_48 & io_free_list_wr_en_0 | _GEN_49 & io_free_list_wr_en_1 | _GEN_50
+        & io_free_list_wr_en_2 | _GEN_51 & io_free_list_wr_en_3;
+      automatic logic       _GEN_52 = io_instruction_RD_0 == 5'h5;
+      automatic logic       _GEN_53 = io_instruction_RD_1 == 5'h5;
+      automatic logic       _GEN_54 = io_instruction_RD_2 == 5'h5;
+      automatic logic       _GEN_55 = io_instruction_RD_3 == 5'h5;
+      automatic logic       is_being_written_vec_5 =
+        _GEN_52 & io_free_list_wr_en_0 | _GEN_53 & io_free_list_wr_en_1 | _GEN_54
+        & io_free_list_wr_en_2 | _GEN_55 & io_free_list_wr_en_3;
+      automatic logic       _GEN_56 = io_instruction_RD_0 == 5'h6;
+      automatic logic       _GEN_57 = io_instruction_RD_1 == 5'h6;
+      automatic logic       _GEN_58 = io_instruction_RD_2 == 5'h6;
+      automatic logic       _GEN_59 = io_instruction_RD_3 == 5'h6;
+      automatic logic       is_being_written_vec_6 =
+        _GEN_56 & io_free_list_wr_en_0 | _GEN_57 & io_free_list_wr_en_1 | _GEN_58
+        & io_free_list_wr_en_2 | _GEN_59 & io_free_list_wr_en_3;
+      automatic logic       _GEN_60 = io_instruction_RD_0 == 5'h7;
+      automatic logic       _GEN_61 = io_instruction_RD_1 == 5'h7;
+      automatic logic       _GEN_62 = io_instruction_RD_2 == 5'h7;
+      automatic logic       _GEN_63 = io_instruction_RD_3 == 5'h7;
+      automatic logic       is_being_written_vec_7 =
+        _GEN_60 & io_free_list_wr_en_0 | _GEN_61 & io_free_list_wr_en_1 | _GEN_62
+        & io_free_list_wr_en_2 | _GEN_63 & io_free_list_wr_en_3;
+      automatic logic       _GEN_64 = io_instruction_RD_0 == 5'h8;
+      automatic logic       _GEN_65 = io_instruction_RD_1 == 5'h8;
+      automatic logic       _GEN_66 = io_instruction_RD_2 == 5'h8;
+      automatic logic       _GEN_67 = io_instruction_RD_3 == 5'h8;
+      automatic logic       is_being_written_vec_8 =
+        _GEN_64 & io_free_list_wr_en_0 | _GEN_65 & io_free_list_wr_en_1 | _GEN_66
+        & io_free_list_wr_en_2 | _GEN_67 & io_free_list_wr_en_3;
+      automatic logic       _GEN_68 = io_instruction_RD_0 == 5'h9;
+      automatic logic       _GEN_69 = io_instruction_RD_1 == 5'h9;
+      automatic logic       _GEN_70 = io_instruction_RD_2 == 5'h9;
+      automatic logic       _GEN_71 = io_instruction_RD_3 == 5'h9;
+      automatic logic       is_being_written_vec_9 =
+        _GEN_68 & io_free_list_wr_en_0 | _GEN_69 & io_free_list_wr_en_1 | _GEN_70
+        & io_free_list_wr_en_2 | _GEN_71 & io_free_list_wr_en_3;
+      automatic logic       _GEN_72 = io_instruction_RD_0 == 5'hA;
+      automatic logic       _GEN_73 = io_instruction_RD_1 == 5'hA;
+      automatic logic       _GEN_74 = io_instruction_RD_2 == 5'hA;
+      automatic logic       _GEN_75 = io_instruction_RD_3 == 5'hA;
+      automatic logic       is_being_written_vec_10 =
+        _GEN_72 & io_free_list_wr_en_0 | _GEN_73 & io_free_list_wr_en_1 | _GEN_74
+        & io_free_list_wr_en_2 | _GEN_75 & io_free_list_wr_en_3;
+      automatic logic       _GEN_76 = io_instruction_RD_0 == 5'hB;
+      automatic logic       _GEN_77 = io_instruction_RD_1 == 5'hB;
+      automatic logic       _GEN_78 = io_instruction_RD_2 == 5'hB;
+      automatic logic       _GEN_79 = io_instruction_RD_3 == 5'hB;
+      automatic logic       is_being_written_vec_11 =
+        _GEN_76 & io_free_list_wr_en_0 | _GEN_77 & io_free_list_wr_en_1 | _GEN_78
+        & io_free_list_wr_en_2 | _GEN_79 & io_free_list_wr_en_3;
+      automatic logic       _GEN_80 = io_instruction_RD_0 == 5'hC;
+      automatic logic       _GEN_81 = io_instruction_RD_1 == 5'hC;
+      automatic logic       _GEN_82 = io_instruction_RD_2 == 5'hC;
+      automatic logic       _GEN_83 = io_instruction_RD_3 == 5'hC;
+      automatic logic       is_being_written_vec_12 =
+        _GEN_80 & io_free_list_wr_en_0 | _GEN_81 & io_free_list_wr_en_1 | _GEN_82
+        & io_free_list_wr_en_2 | _GEN_83 & io_free_list_wr_en_3;
+      automatic logic       _GEN_84 = io_instruction_RD_0 == 5'hD;
+      automatic logic       _GEN_85 = io_instruction_RD_1 == 5'hD;
+      automatic logic       _GEN_86 = io_instruction_RD_2 == 5'hD;
+      automatic logic       _GEN_87 = io_instruction_RD_3 == 5'hD;
+      automatic logic       is_being_written_vec_13 =
+        _GEN_84 & io_free_list_wr_en_0 | _GEN_85 & io_free_list_wr_en_1 | _GEN_86
+        & io_free_list_wr_en_2 | _GEN_87 & io_free_list_wr_en_3;
+      automatic logic       _GEN_88 = io_instruction_RD_0 == 5'hE;
+      automatic logic       _GEN_89 = io_instruction_RD_1 == 5'hE;
+      automatic logic       _GEN_90 = io_instruction_RD_2 == 5'hE;
+      automatic logic       _GEN_91 = io_instruction_RD_3 == 5'hE;
+      automatic logic       is_being_written_vec_14 =
+        _GEN_88 & io_free_list_wr_en_0 | _GEN_89 & io_free_list_wr_en_1 | _GEN_90
+        & io_free_list_wr_en_2 | _GEN_91 & io_free_list_wr_en_3;
+      automatic logic       _GEN_92 = io_instruction_RD_0 == 5'hF;
+      automatic logic       _GEN_93 = io_instruction_RD_1 == 5'hF;
+      automatic logic       _GEN_94 = io_instruction_RD_2 == 5'hF;
+      automatic logic       _GEN_95 = io_instruction_RD_3 == 5'hF;
+      automatic logic       is_being_written_vec_15 =
+        _GEN_92 & io_free_list_wr_en_0 | _GEN_93 & io_free_list_wr_en_1 | _GEN_94
+        & io_free_list_wr_en_2 | _GEN_95 & io_free_list_wr_en_3;
+      automatic logic       _GEN_96;
+      automatic logic       _GEN_97;
+      automatic logic       _GEN_98;
+      automatic logic       _GEN_99;
+      automatic logic       is_being_written_vec_16;
+      automatic logic       _GEN_100;
+      automatic logic       _GEN_101;
+      automatic logic       _GEN_102;
+      automatic logic       _GEN_103;
+      automatic logic       is_being_written_vec_17;
+      automatic logic       _GEN_104;
+      automatic logic       _GEN_105;
+      automatic logic       _GEN_106;
+      automatic logic       _GEN_107;
+      automatic logic       is_being_written_vec_18;
+      automatic logic       _GEN_108;
+      automatic logic       _GEN_109;
+      automatic logic       _GEN_110;
+      automatic logic       _GEN_111;
+      automatic logic       is_being_written_vec_19;
+      automatic logic       _GEN_112;
+      automatic logic       _GEN_113;
+      automatic logic       _GEN_114;
+      automatic logic       _GEN_115;
+      automatic logic       is_being_written_vec_20;
+      automatic logic       _GEN_116;
+      automatic logic       _GEN_117;
+      automatic logic       _GEN_118;
+      automatic logic       _GEN_119;
+      automatic logic       is_being_written_vec_21;
+      automatic logic       _GEN_120;
+      automatic logic       _GEN_121;
+      automatic logic       _GEN_122;
+      automatic logic       _GEN_123;
+      automatic logic       is_being_written_vec_22;
+      automatic logic       _GEN_124;
+      automatic logic       _GEN_125;
+      automatic logic       _GEN_126;
+      automatic logic       _GEN_127;
+      automatic logic       is_being_written_vec_23;
+      automatic logic       _GEN_128;
+      automatic logic       _GEN_129;
+      automatic logic       _GEN_130;
+      automatic logic       _GEN_131;
+      automatic logic       is_being_written_vec_24;
+      automatic logic       _GEN_132;
+      automatic logic       _GEN_133;
+      automatic logic       _GEN_134;
+      automatic logic       _GEN_135;
+      automatic logic       is_being_written_vec_25;
+      automatic logic       _GEN_136;
+      automatic logic       _GEN_137;
+      automatic logic       _GEN_138;
+      automatic logic       _GEN_139;
+      automatic logic       is_being_written_vec_26;
+      automatic logic       _GEN_140;
+      automatic logic       _GEN_141;
+      automatic logic       _GEN_142;
+      automatic logic       _GEN_143;
+      automatic logic       is_being_written_vec_27;
+      automatic logic       _GEN_144;
+      automatic logic       _GEN_145;
+      automatic logic       _GEN_146;
+      automatic logic       _GEN_147;
+      automatic logic       is_being_written_vec_28;
+      automatic logic       _GEN_148;
+      automatic logic       _GEN_149;
+      automatic logic       _GEN_150;
+      automatic logic       _GEN_151;
+      automatic logic       is_being_written_vec_29;
+      automatic logic       _GEN_152;
+      automatic logic       _GEN_153;
+      automatic logic       _GEN_154;
+      automatic logic       _GEN_155;
+      automatic logic       is_being_written_vec_30;
+      automatic logic       is_being_written_vec_31 =
+        (&io_instruction_RD_0) & io_free_list_wr_en_0 | (&io_instruction_RD_1)
+        & io_free_list_wr_en_1 | (&io_instruction_RD_2) & io_free_list_wr_en_2
+        | (&io_instruction_RD_3) & io_free_list_wr_en_3;
+      automatic logic [5:0] wr_data_in_1;
+      automatic logic [5:0] wr_data_in_2;
+      automatic logic [5:0] wr_data_in_3;
+      automatic logic [5:0] wr_data_in_4;
+      automatic logic [5:0] wr_data_in_5;
+      automatic logic [5:0] wr_data_in_6;
+      automatic logic [5:0] wr_data_in_7;
+      automatic logic [5:0] wr_data_in_8;
+      automatic logic [5:0] wr_data_in_9;
+      automatic logic [5:0] wr_data_in_10;
+      automatic logic [5:0] wr_data_in_11;
+      automatic logic [5:0] wr_data_in_12;
+      automatic logic [5:0] wr_data_in_13;
+      automatic logic [5:0] wr_data_in_14;
+      automatic logic [5:0] wr_data_in_15;
       automatic logic       _GEN_156 = active_RAT == 4'h0;
       automatic logic [3:0] _GEN_157 = active_RAT + 4'h1;
       automatic logic       _GEN_158;
@@ -2110,6 +1899,208 @@ module RAT(
       automatic logic       _GEN_185 = active_RAT == 4'hE;
       automatic logic       _GEN_186;
       automatic logic       _GEN_187;
+      _GEN_32 = io_instruction_RD_0 == 5'h0;
+      _GEN_33 = io_instruction_RD_1 == 5'h0;
+      _GEN_34 = io_instruction_RD_2 == 5'h0;
+      _GEN_35 = io_instruction_RD_3 == 5'h0;
+      is_being_written_vec_0 =
+        _GEN_32 & io_free_list_wr_en_0 | _GEN_33 & io_free_list_wr_en_1 | _GEN_34
+        & io_free_list_wr_en_2 | _GEN_35 & io_free_list_wr_en_3;
+      _GEN_96 = io_instruction_RD_0 == 5'h10;
+      _GEN_97 = io_instruction_RD_1 == 5'h10;
+      _GEN_98 = io_instruction_RD_2 == 5'h10;
+      _GEN_99 = io_instruction_RD_3 == 5'h10;
+      is_being_written_vec_16 =
+        _GEN_96 & io_free_list_wr_en_0 | _GEN_97 & io_free_list_wr_en_1 | _GEN_98
+        & io_free_list_wr_en_2 | _GEN_99 & io_free_list_wr_en_3;
+      _GEN_100 = io_instruction_RD_0 == 5'h11;
+      _GEN_101 = io_instruction_RD_1 == 5'h11;
+      _GEN_102 = io_instruction_RD_2 == 5'h11;
+      _GEN_103 = io_instruction_RD_3 == 5'h11;
+      is_being_written_vec_17 =
+        _GEN_100 & io_free_list_wr_en_0 | _GEN_101 & io_free_list_wr_en_1 | _GEN_102
+        & io_free_list_wr_en_2 | _GEN_103 & io_free_list_wr_en_3;
+      _GEN_104 = io_instruction_RD_0 == 5'h12;
+      _GEN_105 = io_instruction_RD_1 == 5'h12;
+      _GEN_106 = io_instruction_RD_2 == 5'h12;
+      _GEN_107 = io_instruction_RD_3 == 5'h12;
+      is_being_written_vec_18 =
+        _GEN_104 & io_free_list_wr_en_0 | _GEN_105 & io_free_list_wr_en_1 | _GEN_106
+        & io_free_list_wr_en_2 | _GEN_107 & io_free_list_wr_en_3;
+      _GEN_108 = io_instruction_RD_0 == 5'h13;
+      _GEN_109 = io_instruction_RD_1 == 5'h13;
+      _GEN_110 = io_instruction_RD_2 == 5'h13;
+      _GEN_111 = io_instruction_RD_3 == 5'h13;
+      is_being_written_vec_19 =
+        _GEN_108 & io_free_list_wr_en_0 | _GEN_109 & io_free_list_wr_en_1 | _GEN_110
+        & io_free_list_wr_en_2 | _GEN_111 & io_free_list_wr_en_3;
+      _GEN_112 = io_instruction_RD_0 == 5'h14;
+      _GEN_113 = io_instruction_RD_1 == 5'h14;
+      _GEN_114 = io_instruction_RD_2 == 5'h14;
+      _GEN_115 = io_instruction_RD_3 == 5'h14;
+      is_being_written_vec_20 =
+        _GEN_112 & io_free_list_wr_en_0 | _GEN_113 & io_free_list_wr_en_1 | _GEN_114
+        & io_free_list_wr_en_2 | _GEN_115 & io_free_list_wr_en_3;
+      _GEN_116 = io_instruction_RD_0 == 5'h15;
+      _GEN_117 = io_instruction_RD_1 == 5'h15;
+      _GEN_118 = io_instruction_RD_2 == 5'h15;
+      _GEN_119 = io_instruction_RD_3 == 5'h15;
+      is_being_written_vec_21 =
+        _GEN_116 & io_free_list_wr_en_0 | _GEN_117 & io_free_list_wr_en_1 | _GEN_118
+        & io_free_list_wr_en_2 | _GEN_119 & io_free_list_wr_en_3;
+      _GEN_120 = io_instruction_RD_0 == 5'h16;
+      _GEN_121 = io_instruction_RD_1 == 5'h16;
+      _GEN_122 = io_instruction_RD_2 == 5'h16;
+      _GEN_123 = io_instruction_RD_3 == 5'h16;
+      is_being_written_vec_22 =
+        _GEN_120 & io_free_list_wr_en_0 | _GEN_121 & io_free_list_wr_en_1 | _GEN_122
+        & io_free_list_wr_en_2 | _GEN_123 & io_free_list_wr_en_3;
+      _GEN_124 = io_instruction_RD_0 == 5'h17;
+      _GEN_125 = io_instruction_RD_1 == 5'h17;
+      _GEN_126 = io_instruction_RD_2 == 5'h17;
+      _GEN_127 = io_instruction_RD_3 == 5'h17;
+      is_being_written_vec_23 =
+        _GEN_124 & io_free_list_wr_en_0 | _GEN_125 & io_free_list_wr_en_1 | _GEN_126
+        & io_free_list_wr_en_2 | _GEN_127 & io_free_list_wr_en_3;
+      _GEN_128 = io_instruction_RD_0 == 5'h18;
+      _GEN_129 = io_instruction_RD_1 == 5'h18;
+      _GEN_130 = io_instruction_RD_2 == 5'h18;
+      _GEN_131 = io_instruction_RD_3 == 5'h18;
+      is_being_written_vec_24 =
+        _GEN_128 & io_free_list_wr_en_0 | _GEN_129 & io_free_list_wr_en_1 | _GEN_130
+        & io_free_list_wr_en_2 | _GEN_131 & io_free_list_wr_en_3;
+      _GEN_132 = io_instruction_RD_0 == 5'h19;
+      _GEN_133 = io_instruction_RD_1 == 5'h19;
+      _GEN_134 = io_instruction_RD_2 == 5'h19;
+      _GEN_135 = io_instruction_RD_3 == 5'h19;
+      is_being_written_vec_25 =
+        _GEN_132 & io_free_list_wr_en_0 | _GEN_133 & io_free_list_wr_en_1 | _GEN_134
+        & io_free_list_wr_en_2 | _GEN_135 & io_free_list_wr_en_3;
+      _GEN_136 = io_instruction_RD_0 == 5'h1A;
+      _GEN_137 = io_instruction_RD_1 == 5'h1A;
+      _GEN_138 = io_instruction_RD_2 == 5'h1A;
+      _GEN_139 = io_instruction_RD_3 == 5'h1A;
+      is_being_written_vec_26 =
+        _GEN_136 & io_free_list_wr_en_0 | _GEN_137 & io_free_list_wr_en_1 | _GEN_138
+        & io_free_list_wr_en_2 | _GEN_139 & io_free_list_wr_en_3;
+      _GEN_140 = io_instruction_RD_0 == 5'h1B;
+      _GEN_141 = io_instruction_RD_1 == 5'h1B;
+      _GEN_142 = io_instruction_RD_2 == 5'h1B;
+      _GEN_143 = io_instruction_RD_3 == 5'h1B;
+      is_being_written_vec_27 =
+        _GEN_140 & io_free_list_wr_en_0 | _GEN_141 & io_free_list_wr_en_1 | _GEN_142
+        & io_free_list_wr_en_2 | _GEN_143 & io_free_list_wr_en_3;
+      _GEN_144 = io_instruction_RD_0 == 5'h1C;
+      _GEN_145 = io_instruction_RD_1 == 5'h1C;
+      _GEN_146 = io_instruction_RD_2 == 5'h1C;
+      _GEN_147 = io_instruction_RD_3 == 5'h1C;
+      is_being_written_vec_28 =
+        _GEN_144 & io_free_list_wr_en_0 | _GEN_145 & io_free_list_wr_en_1 | _GEN_146
+        & io_free_list_wr_en_2 | _GEN_147 & io_free_list_wr_en_3;
+      _GEN_148 = io_instruction_RD_0 == 5'h1D;
+      _GEN_149 = io_instruction_RD_1 == 5'h1D;
+      _GEN_150 = io_instruction_RD_2 == 5'h1D;
+      _GEN_151 = io_instruction_RD_3 == 5'h1D;
+      is_being_written_vec_29 =
+        _GEN_148 & io_free_list_wr_en_0 | _GEN_149 & io_free_list_wr_en_1 | _GEN_150
+        & io_free_list_wr_en_2 | _GEN_151 & io_free_list_wr_en_3;
+      _GEN_152 = io_instruction_RD_0 == 5'h1E;
+      _GEN_153 = io_instruction_RD_1 == 5'h1E;
+      _GEN_154 = io_instruction_RD_2 == 5'h1E;
+      _GEN_155 = io_instruction_RD_3 == 5'h1E;
+      is_being_written_vec_30 =
+        _GEN_152 & io_free_list_wr_en_0 | _GEN_153 & io_free_list_wr_en_1 | _GEN_154
+        & io_free_list_wr_en_2 | _GEN_155 & io_free_list_wr_en_3;
+      wr_data_in_1 =
+        _GEN_39
+          ? io_free_list_RD_3
+          : _GEN_38
+              ? io_free_list_RD_2
+              : _GEN_37 ? io_free_list_RD_1 : _GEN_36 ? io_free_list_RD_0 : 6'h0;
+      wr_data_in_2 =
+        _GEN_43
+          ? io_free_list_RD_3
+          : _GEN_42
+              ? io_free_list_RD_2
+              : _GEN_41 ? io_free_list_RD_1 : _GEN_40 ? io_free_list_RD_0 : 6'h0;
+      wr_data_in_3 =
+        _GEN_47
+          ? io_free_list_RD_3
+          : _GEN_46
+              ? io_free_list_RD_2
+              : _GEN_45 ? io_free_list_RD_1 : _GEN_44 ? io_free_list_RD_0 : 6'h0;
+      wr_data_in_4 =
+        _GEN_51
+          ? io_free_list_RD_3
+          : _GEN_50
+              ? io_free_list_RD_2
+              : _GEN_49 ? io_free_list_RD_1 : _GEN_48 ? io_free_list_RD_0 : 6'h0;
+      wr_data_in_5 =
+        _GEN_55
+          ? io_free_list_RD_3
+          : _GEN_54
+              ? io_free_list_RD_2
+              : _GEN_53 ? io_free_list_RD_1 : _GEN_52 ? io_free_list_RD_0 : 6'h0;
+      wr_data_in_6 =
+        _GEN_59
+          ? io_free_list_RD_3
+          : _GEN_58
+              ? io_free_list_RD_2
+              : _GEN_57 ? io_free_list_RD_1 : _GEN_56 ? io_free_list_RD_0 : 6'h0;
+      wr_data_in_7 =
+        _GEN_63
+          ? io_free_list_RD_3
+          : _GEN_62
+              ? io_free_list_RD_2
+              : _GEN_61 ? io_free_list_RD_1 : _GEN_60 ? io_free_list_RD_0 : 6'h0;
+      wr_data_in_8 =
+        _GEN_67
+          ? io_free_list_RD_3
+          : _GEN_66
+              ? io_free_list_RD_2
+              : _GEN_65 ? io_free_list_RD_1 : _GEN_64 ? io_free_list_RD_0 : 6'h0;
+      wr_data_in_9 =
+        _GEN_71
+          ? io_free_list_RD_3
+          : _GEN_70
+              ? io_free_list_RD_2
+              : _GEN_69 ? io_free_list_RD_1 : _GEN_68 ? io_free_list_RD_0 : 6'h0;
+      wr_data_in_10 =
+        _GEN_75
+          ? io_free_list_RD_3
+          : _GEN_74
+              ? io_free_list_RD_2
+              : _GEN_73 ? io_free_list_RD_1 : _GEN_72 ? io_free_list_RD_0 : 6'h0;
+      wr_data_in_11 =
+        _GEN_79
+          ? io_free_list_RD_3
+          : _GEN_78
+              ? io_free_list_RD_2
+              : _GEN_77 ? io_free_list_RD_1 : _GEN_76 ? io_free_list_RD_0 : 6'h0;
+      wr_data_in_12 =
+        _GEN_83
+          ? io_free_list_RD_3
+          : _GEN_82
+              ? io_free_list_RD_2
+              : _GEN_81 ? io_free_list_RD_1 : _GEN_80 ? io_free_list_RD_0 : 6'h0;
+      wr_data_in_13 =
+        _GEN_87
+          ? io_free_list_RD_3
+          : _GEN_86
+              ? io_free_list_RD_2
+              : _GEN_85 ? io_free_list_RD_1 : _GEN_84 ? io_free_list_RD_0 : 6'h0;
+      wr_data_in_14 =
+        _GEN_91
+          ? io_free_list_RD_3
+          : _GEN_90
+              ? io_free_list_RD_2
+              : _GEN_89 ? io_free_list_RD_1 : _GEN_88 ? io_free_list_RD_0 : 6'h0;
+      wr_data_in_15 =
+        _GEN_95
+          ? io_free_list_RD_3
+          : _GEN_94
+              ? io_free_list_RD_2
+              : _GEN_93 ? io_free_list_RD_1 : _GEN_92 ? io_free_list_RD_0 : 6'h0;
       _GEN_158 = _GEN_157 == 4'h0 & io_create_checkpoint;
       _GEN_160 = _GEN_157 == 4'h1 & io_create_checkpoint;
       _GEN_162 = _GEN_157 == 4'h2 & io_create_checkpoint;
@@ -2135,7 +2126,12 @@ module RAT(
       else if (io_create_checkpoint)
         available_checkpoints <= available_checkpoints - 4'h1;
       if (_GEN_156 & is_being_written_vec_0)
-        RAT_memories_0_0 <= wr_data_in_0;
+        RAT_memories_0_0 <=
+          _GEN_35
+            ? io_free_list_RD_3
+            : _GEN_34
+                ? io_free_list_RD_2
+                : _GEN_33 ? io_free_list_RD_1 : _GEN_32 ? io_free_list_RD_0 : 6'h0;
       else if (_GEN_158)
         RAT_memories_0_0 <= RAT_memories_4_0;
       if (_GEN_156 & is_being_written_vec_1)
@@ -2199,67 +2195,149 @@ module RAT(
       else if (_GEN_158)
         RAT_memories_0_15 <= RAT_memories_4_15;
       if (_GEN_156 & is_being_written_vec_16)
-        RAT_memories_0_16 <= wr_data_in_16;
+        RAT_memories_0_16 <=
+          _GEN_99
+            ? io_free_list_RD_3
+            : _GEN_98
+                ? io_free_list_RD_2
+                : _GEN_97 ? io_free_list_RD_1 : _GEN_96 ? io_free_list_RD_0 : 6'h0;
       else if (_GEN_158)
         RAT_memories_0_16 <= RAT_memories_4_16;
       if (_GEN_156 & is_being_written_vec_17)
-        RAT_memories_0_17 <= wr_data_in_17;
+        RAT_memories_0_17 <=
+          _GEN_103
+            ? io_free_list_RD_3
+            : _GEN_102
+                ? io_free_list_RD_2
+                : _GEN_101 ? io_free_list_RD_1 : _GEN_100 ? io_free_list_RD_0 : 6'h0;
       else if (_GEN_158)
         RAT_memories_0_17 <= RAT_memories_4_17;
       if (_GEN_156 & is_being_written_vec_18)
-        RAT_memories_0_18 <= wr_data_in_18;
+        RAT_memories_0_18 <=
+          _GEN_107
+            ? io_free_list_RD_3
+            : _GEN_106
+                ? io_free_list_RD_2
+                : _GEN_105 ? io_free_list_RD_1 : _GEN_104 ? io_free_list_RD_0 : 6'h0;
       else if (_GEN_158)
         RAT_memories_0_18 <= RAT_memories_4_18;
       if (_GEN_156 & is_being_written_vec_19)
-        RAT_memories_0_19 <= wr_data_in_19;
+        RAT_memories_0_19 <=
+          _GEN_111
+            ? io_free_list_RD_3
+            : _GEN_110
+                ? io_free_list_RD_2
+                : _GEN_109 ? io_free_list_RD_1 : _GEN_108 ? io_free_list_RD_0 : 6'h0;
       else if (_GEN_158)
         RAT_memories_0_19 <= RAT_memories_4_19;
       if (_GEN_156 & is_being_written_vec_20)
-        RAT_memories_0_20 <= wr_data_in_20;
+        RAT_memories_0_20 <=
+          _GEN_115
+            ? io_free_list_RD_3
+            : _GEN_114
+                ? io_free_list_RD_2
+                : _GEN_113 ? io_free_list_RD_1 : _GEN_112 ? io_free_list_RD_0 : 6'h0;
       else if (_GEN_158)
         RAT_memories_0_20 <= RAT_memories_4_20;
       if (_GEN_156 & is_being_written_vec_21)
-        RAT_memories_0_21 <= wr_data_in_21;
+        RAT_memories_0_21 <=
+          _GEN_119
+            ? io_free_list_RD_3
+            : _GEN_118
+                ? io_free_list_RD_2
+                : _GEN_117 ? io_free_list_RD_1 : _GEN_116 ? io_free_list_RD_0 : 6'h0;
       else if (_GEN_158)
         RAT_memories_0_21 <= RAT_memories_4_21;
       if (_GEN_156 & is_being_written_vec_22)
-        RAT_memories_0_22 <= wr_data_in_22;
+        RAT_memories_0_22 <=
+          _GEN_123
+            ? io_free_list_RD_3
+            : _GEN_122
+                ? io_free_list_RD_2
+                : _GEN_121 ? io_free_list_RD_1 : _GEN_120 ? io_free_list_RD_0 : 6'h0;
       else if (_GEN_158)
         RAT_memories_0_22 <= RAT_memories_4_22;
       if (_GEN_156 & is_being_written_vec_23)
-        RAT_memories_0_23 <= wr_data_in_23;
+        RAT_memories_0_23 <=
+          _GEN_127
+            ? io_free_list_RD_3
+            : _GEN_126
+                ? io_free_list_RD_2
+                : _GEN_125 ? io_free_list_RD_1 : _GEN_124 ? io_free_list_RD_0 : 6'h0;
       else if (_GEN_158)
         RAT_memories_0_23 <= RAT_memories_4_23;
       if (_GEN_156 & is_being_written_vec_24)
-        RAT_memories_0_24 <= wr_data_in_24;
+        RAT_memories_0_24 <=
+          _GEN_131
+            ? io_free_list_RD_3
+            : _GEN_130
+                ? io_free_list_RD_2
+                : _GEN_129 ? io_free_list_RD_1 : _GEN_128 ? io_free_list_RD_0 : 6'h0;
       else if (_GEN_158)
         RAT_memories_0_24 <= RAT_memories_4_24;
       if (_GEN_156 & is_being_written_vec_25)
-        RAT_memories_0_25 <= wr_data_in_25;
+        RAT_memories_0_25 <=
+          _GEN_135
+            ? io_free_list_RD_3
+            : _GEN_134
+                ? io_free_list_RD_2
+                : _GEN_133 ? io_free_list_RD_1 : _GEN_132 ? io_free_list_RD_0 : 6'h0;
       else if (_GEN_158)
         RAT_memories_0_25 <= RAT_memories_4_25;
       if (_GEN_156 & is_being_written_vec_26)
-        RAT_memories_0_26 <= wr_data_in_26;
+        RAT_memories_0_26 <=
+          _GEN_139
+            ? io_free_list_RD_3
+            : _GEN_138
+                ? io_free_list_RD_2
+                : _GEN_137 ? io_free_list_RD_1 : _GEN_136 ? io_free_list_RD_0 : 6'h0;
       else if (_GEN_158)
         RAT_memories_0_26 <= RAT_memories_4_26;
       if (_GEN_156 & is_being_written_vec_27)
-        RAT_memories_0_27 <= wr_data_in_27;
+        RAT_memories_0_27 <=
+          _GEN_143
+            ? io_free_list_RD_3
+            : _GEN_142
+                ? io_free_list_RD_2
+                : _GEN_141 ? io_free_list_RD_1 : _GEN_140 ? io_free_list_RD_0 : 6'h0;
       else if (_GEN_158)
         RAT_memories_0_27 <= RAT_memories_4_27;
       if (_GEN_156 & is_being_written_vec_28)
-        RAT_memories_0_28 <= wr_data_in_28;
+        RAT_memories_0_28 <=
+          _GEN_147
+            ? io_free_list_RD_3
+            : _GEN_146
+                ? io_free_list_RD_2
+                : _GEN_145 ? io_free_list_RD_1 : _GEN_144 ? io_free_list_RD_0 : 6'h0;
       else if (_GEN_158)
         RAT_memories_0_28 <= RAT_memories_4_28;
       if (_GEN_156 & is_being_written_vec_29)
-        RAT_memories_0_29 <= wr_data_in_29;
+        RAT_memories_0_29 <=
+          _GEN_151
+            ? io_free_list_RD_3
+            : _GEN_150
+                ? io_free_list_RD_2
+                : _GEN_149 ? io_free_list_RD_1 : _GEN_148 ? io_free_list_RD_0 : 6'h0;
       else if (_GEN_158)
         RAT_memories_0_29 <= RAT_memories_4_29;
       if (_GEN_156 & is_being_written_vec_30)
-        RAT_memories_0_30 <= wr_data_in_30;
+        RAT_memories_0_30 <=
+          _GEN_155
+            ? io_free_list_RD_3
+            : _GEN_154
+                ? io_free_list_RD_2
+                : _GEN_153 ? io_free_list_RD_1 : _GEN_152 ? io_free_list_RD_0 : 6'h0;
       else if (_GEN_158)
         RAT_memories_0_30 <= RAT_memories_4_30;
       if (_GEN_156 & is_being_written_vec_31)
-        RAT_memories_0_31 <= wr_data_in_31;
+        RAT_memories_0_31 <=
+          (&io_instruction_RD_3)
+            ? io_free_list_RD_3
+            : (&io_instruction_RD_2)
+                ? io_free_list_RD_2
+                : (&io_instruction_RD_1)
+                    ? io_free_list_RD_1
+                    : (&io_instruction_RD_0) ? io_free_list_RD_0 : 6'h0;
       else if (_GEN_158)
         RAT_memories_0_31 <= RAT_memories_4_31;
       if (_GEN_159 & is_being_written_vec_0)
@@ -4183,18 +4261,18 @@ module RAT(
       else if (_GEN_187)
         RAT_memories_15_31 <= RAT_memories_14_31;
     end
-    io_RAT_RD_0_REG <= _GEN_155[io_instruction_RD_0];
-    io_RAT_RS1_0_REG <= _GEN_155[io_instruction_RS1_0];
-    io_RAT_RS2_0_REG <= _GEN_155[io_instruction_RS2_0];
-    io_RAT_RD_1_REG <= _GEN_155[io_instruction_RD_1];
-    io_RAT_RS1_1_REG <= _GEN_155[io_instruction_RS1_1];
-    io_RAT_RS2_1_REG <= _GEN_155[io_instruction_RS2_1];
-    io_RAT_RD_2_REG <= _GEN_155[io_instruction_RD_2];
-    io_RAT_RS1_2_REG <= _GEN_155[io_instruction_RS1_2];
-    io_RAT_RS2_2_REG <= _GEN_155[io_instruction_RS2_2];
-    io_RAT_RD_3_REG <= _GEN_155[io_instruction_RD_3];
-    io_RAT_RS1_3_REG <= _GEN_155[io_instruction_RS1_3];
-    io_RAT_RS2_3_REG <= _GEN_155[io_instruction_RS2_3];
+    io_RAT_RD_0_REG <= _GEN_31[io_instruction_RD_0];
+    io_RAT_RS1_0_REG <= _GEN_31[io_instruction_RS1_0];
+    io_RAT_RS2_0_REG <= _GEN_31[io_instruction_RS2_0];
+    io_RAT_RD_1_REG <= _GEN_31[io_instruction_RD_1];
+    io_RAT_RS1_1_REG <= _GEN_31[io_instruction_RS1_1];
+    io_RAT_RS2_1_REG <= _GEN_31[io_instruction_RS2_1];
+    io_RAT_RD_2_REG <= _GEN_31[io_instruction_RD_2];
+    io_RAT_RS1_2_REG <= _GEN_31[io_instruction_RS1_2];
+    io_RAT_RS2_2_REG <= _GEN_31[io_instruction_RS2_2];
+    io_RAT_RD_3_REG <= _GEN_31[io_instruction_RD_3];
+    io_RAT_RS1_3_REG <= _GEN_31[io_instruction_RS1_3];
+    io_RAT_RS2_3_REG <= _GEN_31[io_instruction_RS2_3];
   end // always @(posedge)
   assign io_active_checkpoint_value = active_RAT;
   assign io_checkpoints_full = available_checkpoints == 4'h0;

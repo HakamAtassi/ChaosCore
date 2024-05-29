@@ -112,7 +112,7 @@ class instruction_fetch(parameters:Parameters) extends Module{
         // Inputs: A series of PCs and control signals
         val misprediction_PC  =   Flipped(Decoupled(UInt(32.W)))                              // Input
         val exception_PC      =   Flipped(Decoupled(UInt(32.W)))                              // Input
-        val commit            =   Flipped(Decoupled(new commit(fetchWidth=fetchWidth)))       // Input
+        val commit            =   Flipped(Decoupled(new commit(parameters)))       // Input
         
         // To DRAM
         val DRAM_request      =   Decoupled(new DRAM_request())
@@ -129,16 +129,16 @@ class instruction_fetch(parameters:Parameters) extends Module{
     // Modules //
     /////////////
     val instruction_cache   = Module(new instruction_cache(parameters))
-    val bp                  = Module(new BP(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, BTBEntries=BTBEntries))
+    val bp                  = Module(new BP(parameters))
     val predecoder          = Module(new decode_validate(parameters))
-    val PC_gen              = Module(new PC_arbit(GHRWidth=GHRWidth, fetchWidth=fetchWidth, RASEntries=RASEntries, startPC=startPC))
+    val PC_gen              = Module(new PC_arbit(parameters))
 
     ////////////
     // Queues //
     ////////////
     val instruction_Q   =   Module(new Q(new fetch_packet(parameters), depth = 16))              // Instantiate queue with fetch_packet data type
     val PC_Q            =   Module(new Q(UInt(32.W)))                                                       // Queue of predicted PCs
-    val BTB_Q           =   Module(new Q(new prediction(fetchWidth=fetchWidth, GHRWidth=GHRWidth)))         // Queue of BTB responses
+    val BTB_Q           =   Module(new Q(new prediction(parameters)))         // Queue of BTB responses
 
     ///////////
     // Wires //

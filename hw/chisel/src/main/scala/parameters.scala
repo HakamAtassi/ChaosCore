@@ -42,13 +42,12 @@ case class Parameters(
   coreConfig: String = "RV32I",  // core extension (IMAF, etc...)
 
 
-
   GHRWidth: Int = 16,
   fetchWidth: Int = 4,
   RASEntries: Int = 128,
   BTBEntries: Int = 4096,
   startPC: UInt = "h00000000".U,
-
+  FTQEntries:Int  = 16,
 
   ROBEntires: Int = 64,    // FIXME: 128 causes area scaling problems in the RAT
 
@@ -72,7 +71,6 @@ case class Parameters(
 
 
   // Execution params
-
   ALUportCount:Int = 3,
   MEMportCount:Int = 1,
   FPUportCount:Int = 0,  // not used if not "F"

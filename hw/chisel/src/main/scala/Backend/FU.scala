@@ -40,7 +40,7 @@ class ALU(parameters:Parameters) extends Module{    // FIXME: I think this can b
 
     val io = IO(new Bundle{
         // Input
-        val FU_input      =   Flipped(Decoupled(new read_decoded_instruction(coreConfig=coreConfig, fetchWidth=fetchWidth, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount)))
+        val FU_input      =   Flipped(Decoupled(new read_decoded_instruction(parameters)))
         
         // Output
         val FU_output     =   ValidIO(new FU_output(parameters))
@@ -70,8 +70,8 @@ class ALU(parameters:Parameters) extends Module{    // FIXME: I think this can b
     //////////////////////////
     //////////////////////////
 
-    //val expected_address     = RegInit(UInt(32.W), 0.U)
-    //val not_expected_address = RegInit(UInt(32.W), 0.U)
+    //val target_address     = RegInit(UInt(32.W), 0.U)
+    //val not_target_address = RegInit(UInt(32.W), 0.U)
 
     //val comp_result = RegInit(Bool(), 0.B)
     //val target_addr = Wire(UInt(32.W))
@@ -198,8 +198,10 @@ class ALU(parameters:Parameters) extends Module{    // FIXME: I think this can b
     io.FU_input.ready       :=   1.B    
 
     // Not a branch unit (all FUs share the same output channel)
+    // FIXME: signals unassigned
     io.FU_output.bits.branch_taken      := DontCare
-    io.FU_output.bits.expected_address  := DontCare
+    io.FU_output.bits.target_address  := DontCare
+    io.FU_output.bits.instruction_PC  := DontCare
     io.FU_output.bits.branch_valid      := 0.B
 
     // Actual Outputs
@@ -219,7 +221,7 @@ class branch_unit(parameters:Parameters) extends Module{
 
     val io = IO(new Bundle{
         // Input
-        val FU_input      =   Flipped(Decoupled(new read_decoded_instruction(coreConfig=coreConfig, fetchWidth=fetchWidth, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount)))
+        val FU_input      =   Flipped(Decoupled(new read_decoded_instruction(parameters)))
         
         // Output
         val FU_output     =   ValidIO(new FU_output(parameters))
@@ -273,29 +275,29 @@ class branch_unit(parameters:Parameters) extends Module{
 
 
     val branch_taken  = Wire(Bool())
-    val expected_address = Wire(UInt(32.W))
+    val target_address = Wire(UInt(32.W))
 
     io.FU_input.ready := DontCare
     io.FU_output := DontCare
 
     branch_taken := 0.B
-    expected_address := PC + 4.U
+    target_address := PC + 4.U
 
-    when(EQ)        {branch_taken := 1.B; expected_address := PC + IMM}
-    .elsewhen(NE)   {branch_taken := 1.B; expected_address := PC + IMM}
-    .elsewhen(LT)   {branch_taken := 1.B; expected_address := PC + IMM}
-    .elsewhen(GE)   {branch_taken := 1.B; expected_address := PC + IMM}
-    .elsewhen(LTU)  {branch_taken := 1.B; expected_address := PC + IMM}
-    .elsewhen(GEU)  {branch_taken := 1.B; expected_address := PC + IMM}
-    .elsewhen(JAL)  {branch_taken := 1.B; expected_address := PC + IMM}
-    .elsewhen(JALR) {branch_taken := 1.B; expected_address := RS1_data + IMM}
+    when(EQ)        {branch_taken := 1.B; target_address := PC + IMM}
+    .elsewhen(NE)   {branch_taken := 1.B; target_address := PC + IMM}
+    .elsewhen(LT)   {branch_taken := 1.B; target_address := PC + IMM}
+    .elsewhen(GE)   {branch_taken := 1.B; target_address := PC + IMM}
+    .elsewhen(LTU)  {branch_taken := 1.B; target_address := PC + IMM}
+    .elsewhen(GEU)  {branch_taken := 1.B; target_address := PC + IMM}
+    .elsewhen(JAL)  {branch_taken := 1.B; target_address := PC + IMM}
+    .elsewhen(JALR) {branch_taken := 1.B; target_address := RS1_data + IMM}
 
     // ALU pipelined; always ready
     io.FU_input.ready       :=   1.B
 
     // Not a branch unit (all FUs share the same output channel)
     io.FU_output.bits.branch_taken          := RegNext(branch_taken)
-    io.FU_output.bits.expected_address      := RegNext(expected_address)
+    io.FU_output.bits.target_address      := RegNext(target_address)
 
     // Actual Outputs
     io.FU_output.bits.RD            :=      RegNext(io.FU_input.bits.decoded_instruction.RD)
@@ -315,7 +317,7 @@ class MEMFU(parameters:Parameters) extends Module{
     import InstructionType._
     val io = IO(new Bundle{
         // Input
-        val FU_input      =   Flipped(Decoupled(new read_decoded_instruction(coreConfig=coreConfig, fetchWidth=fetchWidth, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount)))
+        val FU_input      =   Flipped(Decoupled(new read_decoded_instruction(parameters)))
         val DRAM_resp     =   Flipped(Decoupled(new DRAM_resp()))
 
         // Output
@@ -411,7 +413,8 @@ class MEMFU(parameters:Parameters) extends Module{
 
     // Not a branch unit (all FUs share the same output channel)
     io.FU_output.bits.branch_taken      := DontCare
-    io.FU_output.bits.expected_address  := DontCare
+    io.FU_output.bits.target_address  := DontCare
+    io.FU_output.bits.instruction_PC  := DontCare
     io.FU_output.bits.branch_valid      := 0.B
 
 
@@ -439,7 +442,7 @@ class FU(parameters:Parameters,
     import InstructionType._
     val io = IO(new Bundle{
         // Input
-        val FU_input      =   Flipped(Decoupled(new read_decoded_instruction(coreConfig=coreConfig, fetchWidth=fetchWidth, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount)))
+        val FU_input      =   Flipped(Decoupled(new read_decoded_instruction(parameters)))
         
         // Output
         val FU_output     =   ValidIO(new FU_output(parameters))

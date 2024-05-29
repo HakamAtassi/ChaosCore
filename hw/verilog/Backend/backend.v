@@ -10473,12 +10473,12 @@ module branch_unit(
   output [31:0] io_FU_output_bits_RD_data,
   output        io_FU_output_bits_RD_valid,
                 io_FU_output_bits_branch_taken,
-  output [31:0] io_FU_output_bits_expected_address,
+  output [31:0] io_FU_output_bits_target_address,
   output [5:0]  io_FU_output_bits_ROB_index
 );
 
   reg        io_FU_output_bits_branch_taken_REG;
-  reg [31:0] io_FU_output_bits_expected_address_REG;
+  reg [31:0] io_FU_output_bits_target_address_REG;
   reg [5:0]  io_FU_output_bits_RD_REG;
   reg        io_FU_output_bits_RD_valid_REG;
   reg [31:0] io_FU_output_bits_RD_data_REG;
@@ -10513,7 +10513,7 @@ module branch_unit(
       {28'h0, io_FU_input_bits_decoded_instruction_packet_index};
     automatic logic [31:0] _io_FU_output_bits_RD_data_T = _GEN + 32'h4;
     io_FU_output_bits_branch_taken_REG <= EQ | NE | LT | GE | LTU | GEU | JAL | JALR;
-    io_FU_output_bits_expected_address_REG <=
+    io_FU_output_bits_target_address_REG <=
       EQ
         ? _GEN + io_FU_input_bits_decoded_instruction_IMM
         : NE
@@ -10543,7 +10543,7 @@ module branch_unit(
   assign io_FU_output_bits_RD_data = io_FU_output_bits_RD_data_REG;
   assign io_FU_output_bits_RD_valid = io_FU_output_bits_RD_valid_REG;
   assign io_FU_output_bits_branch_taken = io_FU_output_bits_branch_taken_REG;
-  assign io_FU_output_bits_expected_address = io_FU_output_bits_expected_address_REG;
+  assign io_FU_output_bits_target_address = io_FU_output_bits_target_address_REG;
   assign io_FU_output_bits_ROB_index = io_FU_output_bits_ROB_index_REG;
 endmodule
 
@@ -10569,7 +10569,7 @@ module FU(
   output [31:0] io_FU_output_bits_RD_data,
   output        io_FU_output_bits_RD_valid,
                 io_FU_output_bits_branch_taken,
-  output [31:0] io_FU_output_bits_expected_address,
+  output [31:0] io_FU_output_bits_target_address,
   output [5:0]  io_FU_output_bits_ROB_index
 );
 
@@ -10578,7 +10578,7 @@ module FU(
   wire [31:0] _branch_unit_io_FU_output_bits_RD_data;
   wire        _branch_unit_io_FU_output_bits_RD_valid;
   wire        _branch_unit_io_FU_output_bits_branch_taken;
-  wire [31:0] _branch_unit_io_FU_output_bits_expected_address;
+  wire [31:0] _branch_unit_io_FU_output_bits_target_address;
   wire [5:0]  _branch_unit_io_FU_output_bits_ROB_index;
   wire        _ALU_io_FU_output_valid;
   wire [63:0] _ALU_io_FU_output_bits_RD;
@@ -10648,8 +10648,8 @@ module FU(
       (_branch_unit_io_FU_output_bits_RD_valid),
     .io_FU_output_bits_branch_taken
       (_branch_unit_io_FU_output_bits_branch_taken),
-    .io_FU_output_bits_expected_address
-      (_branch_unit_io_FU_output_bits_expected_address),
+    .io_FU_output_bits_target_address
+      (_branch_unit_io_FU_output_bits_target_address),
     .io_FU_output_bits_ROB_index
       (_branch_unit_io_FU_output_bits_ROB_index)
   );
@@ -10663,8 +10663,8 @@ module FU(
     is_ALU ? _ALU_io_FU_output_bits_RD_valid : _branch_unit_io_FU_output_bits_RD_valid;
   assign io_FU_output_bits_branch_taken =
     ~is_ALU & _branch_unit_io_FU_output_bits_branch_taken;
-  assign io_FU_output_bits_expected_address =
-    is_ALU ? 32'h0 : _branch_unit_io_FU_output_bits_expected_address;
+  assign io_FU_output_bits_target_address =
+    is_ALU ? 32'h0 : _branch_unit_io_FU_output_bits_target_address;
   assign io_FU_output_bits_ROB_index =
     is_ALU ? _ALU_io_FU_output_bits_ROB_index : _branch_unit_io_FU_output_bits_ROB_index;
 endmodule
@@ -10804,8 +10804,6 @@ module backend(
   input          clock,
                  reset,
                  io_backendPacket_0_valid,
-  input  [5:0]   io_backendPacket_0_bits_decoded_instruction_RDold,
-  input          io_backendPacket_0_bits_decoded_instruction_RDold_valid,
   input  [5:0]   io_backendPacket_0_bits_decoded_instruction_RD,
   input          io_backendPacket_0_bits_decoded_instruction_RD_valid,
   input  [5:0]   io_backendPacket_0_bits_decoded_instruction_RS1,
@@ -10821,6 +10819,7 @@ module backend(
                  io_backendPacket_0_bits_decoded_instruction_RS_type,
   input          io_backendPacket_0_bits_decoded_instruction_needs_ALU,
                  io_backendPacket_0_bits_decoded_instruction_needs_branch_unit,
+                 io_backendPacket_0_bits_decoded_instruction_needs_CSRs,
                  io_backendPacket_0_bits_decoded_instruction_SUBTRACT,
                  io_backendPacket_0_bits_decoded_instruction_MULTIPLY,
                  io_backendPacket_0_bits_decoded_instruction_IMMEDIATE,
@@ -10829,8 +10828,6 @@ module backend(
                  io_backendPacket_0_bits_ready_bits_RS1_ready,
                  io_backendPacket_0_bits_ready_bits_RS2_ready,
                  io_backendPacket_1_valid,
-  input  [5:0]   io_backendPacket_1_bits_decoded_instruction_RDold,
-  input          io_backendPacket_1_bits_decoded_instruction_RDold_valid,
   input  [5:0]   io_backendPacket_1_bits_decoded_instruction_RD,
   input          io_backendPacket_1_bits_decoded_instruction_RD_valid,
   input  [5:0]   io_backendPacket_1_bits_decoded_instruction_RS1,
@@ -10846,6 +10843,7 @@ module backend(
                  io_backendPacket_1_bits_decoded_instruction_RS_type,
   input          io_backendPacket_1_bits_decoded_instruction_needs_ALU,
                  io_backendPacket_1_bits_decoded_instruction_needs_branch_unit,
+                 io_backendPacket_1_bits_decoded_instruction_needs_CSRs,
                  io_backendPacket_1_bits_decoded_instruction_SUBTRACT,
                  io_backendPacket_1_bits_decoded_instruction_MULTIPLY,
                  io_backendPacket_1_bits_decoded_instruction_IMMEDIATE,
@@ -10854,8 +10852,6 @@ module backend(
                  io_backendPacket_1_bits_ready_bits_RS1_ready,
                  io_backendPacket_1_bits_ready_bits_RS2_ready,
                  io_backendPacket_2_valid,
-  input  [5:0]   io_backendPacket_2_bits_decoded_instruction_RDold,
-  input          io_backendPacket_2_bits_decoded_instruction_RDold_valid,
   input  [5:0]   io_backendPacket_2_bits_decoded_instruction_RD,
   input          io_backendPacket_2_bits_decoded_instruction_RD_valid,
   input  [5:0]   io_backendPacket_2_bits_decoded_instruction_RS1,
@@ -10871,6 +10867,7 @@ module backend(
                  io_backendPacket_2_bits_decoded_instruction_RS_type,
   input          io_backendPacket_2_bits_decoded_instruction_needs_ALU,
                  io_backendPacket_2_bits_decoded_instruction_needs_branch_unit,
+                 io_backendPacket_2_bits_decoded_instruction_needs_CSRs,
                  io_backendPacket_2_bits_decoded_instruction_SUBTRACT,
                  io_backendPacket_2_bits_decoded_instruction_MULTIPLY,
                  io_backendPacket_2_bits_decoded_instruction_IMMEDIATE,
@@ -10879,8 +10876,6 @@ module backend(
                  io_backendPacket_2_bits_ready_bits_RS1_ready,
                  io_backendPacket_2_bits_ready_bits_RS2_ready,
                  io_backendPacket_3_valid,
-  input  [5:0]   io_backendPacket_3_bits_decoded_instruction_RDold,
-  input          io_backendPacket_3_bits_decoded_instruction_RDold_valid,
   input  [5:0]   io_backendPacket_3_bits_decoded_instruction_RD,
   input          io_backendPacket_3_bits_decoded_instruction_RD_valid,
   input  [5:0]   io_backendPacket_3_bits_decoded_instruction_RS1,
@@ -10896,6 +10891,7 @@ module backend(
                  io_backendPacket_3_bits_decoded_instruction_RS_type,
   input          io_backendPacket_3_bits_decoded_instruction_needs_ALU,
                  io_backendPacket_3_bits_decoded_instruction_needs_branch_unit,
+                 io_backendPacket_3_bits_decoded_instruction_needs_CSRs,
                  io_backendPacket_3_bits_decoded_instruction_SUBTRACT,
                  io_backendPacket_3_bits_decoded_instruction_MULTIPLY,
                  io_backendPacket_3_bits_decoded_instruction_IMMEDIATE,
@@ -10923,32 +10919,36 @@ module backend(
   output [63:0]  io_FU_outputs_0_bits_RD,
   output [31:0]  io_FU_outputs_0_bits_RD_data,
   output         io_FU_outputs_0_bits_RD_valid,
-                 io_FU_outputs_0_bits_branch_taken,
-  output [31:0]  io_FU_outputs_0_bits_expected_address,
+  output [31:0]  io_FU_outputs_0_bits_instruction_PC,
+  output         io_FU_outputs_0_bits_branch_taken,
+  output [31:0]  io_FU_outputs_0_bits_target_address,
   output         io_FU_outputs_0_bits_branch_valid,
   output [5:0]   io_FU_outputs_0_bits_ROB_index,
   output         io_FU_outputs_1_valid,
   output [63:0]  io_FU_outputs_1_bits_RD,
   output [31:0]  io_FU_outputs_1_bits_RD_data,
   output         io_FU_outputs_1_bits_RD_valid,
-                 io_FU_outputs_1_bits_branch_taken,
-  output [31:0]  io_FU_outputs_1_bits_expected_address,
+  output [31:0]  io_FU_outputs_1_bits_instruction_PC,
+  output         io_FU_outputs_1_bits_branch_taken,
+  output [31:0]  io_FU_outputs_1_bits_target_address,
   output         io_FU_outputs_1_bits_branch_valid,
   output [5:0]   io_FU_outputs_1_bits_ROB_index,
   output         io_FU_outputs_2_valid,
   output [63:0]  io_FU_outputs_2_bits_RD,
   output [31:0]  io_FU_outputs_2_bits_RD_data,
   output         io_FU_outputs_2_bits_RD_valid,
-                 io_FU_outputs_2_bits_branch_taken,
-  output [31:0]  io_FU_outputs_2_bits_expected_address,
+  output [31:0]  io_FU_outputs_2_bits_instruction_PC,
+  output         io_FU_outputs_2_bits_branch_taken,
+  output [31:0]  io_FU_outputs_2_bits_target_address,
   output         io_FU_outputs_2_bits_branch_valid,
   output [5:0]   io_FU_outputs_2_bits_ROB_index,
   output         io_FU_outputs_3_valid,
   output [63:0]  io_FU_outputs_3_bits_RD,
   output [31:0]  io_FU_outputs_3_bits_RD_data,
   output         io_FU_outputs_3_bits_RD_valid,
-                 io_FU_outputs_3_bits_branch_taken,
-  output [31:0]  io_FU_outputs_3_bits_expected_address,
+  output [31:0]  io_FU_outputs_3_bits_instruction_PC,
+  output         io_FU_outputs_3_bits_branch_taken,
+  output [31:0]  io_FU_outputs_3_bits_target_address,
   output         io_FU_outputs_3_bits_branch_valid,
   output [5:0]   io_FU_outputs_3_bits_ROB_index
 );
@@ -11587,8 +11587,8 @@ module backend(
       (_FU0_io_FU_output_bits_RD_valid),
     .io_FU_output_bits_branch_taken
       (io_FU_outputs_0_bits_branch_taken),
-    .io_FU_output_bits_expected_address
-      (io_FU_outputs_0_bits_expected_address),
+    .io_FU_output_bits_target_address
+      (io_FU_outputs_0_bits_target_address),
     .io_FU_output_bits_ROB_index                          (io_FU_outputs_0_bits_ROB_index)
   );
   FU_1 FU1 (
@@ -11688,27 +11688,31 @@ module backend(
   assign io_FU_outputs_0_bits_RD = _FU0_io_FU_output_bits_RD;
   assign io_FU_outputs_0_bits_RD_data = _FU0_io_FU_output_bits_RD_data;
   assign io_FU_outputs_0_bits_RD_valid = _FU0_io_FU_output_bits_RD_valid;
+  assign io_FU_outputs_0_bits_instruction_PC = 32'h0;
   assign io_FU_outputs_0_bits_branch_valid = 1'h0;
   assign io_FU_outputs_1_valid = _FU1_io_FU_output_valid;
   assign io_FU_outputs_1_bits_RD = _FU1_io_FU_output_bits_RD;
   assign io_FU_outputs_1_bits_RD_data = _FU1_io_FU_output_bits_RD_data;
   assign io_FU_outputs_1_bits_RD_valid = _FU1_io_FU_output_bits_RD_valid;
+  assign io_FU_outputs_1_bits_instruction_PC = 32'h0;
   assign io_FU_outputs_1_bits_branch_taken = 1'h0;
-  assign io_FU_outputs_1_bits_expected_address = 32'h0;
+  assign io_FU_outputs_1_bits_target_address = 32'h0;
   assign io_FU_outputs_1_bits_branch_valid = 1'h0;
   assign io_FU_outputs_2_valid = _FU2_io_FU_output_valid;
   assign io_FU_outputs_2_bits_RD = _FU2_io_FU_output_bits_RD;
   assign io_FU_outputs_2_bits_RD_data = _FU2_io_FU_output_bits_RD_data;
   assign io_FU_outputs_2_bits_RD_valid = _FU2_io_FU_output_bits_RD_valid;
+  assign io_FU_outputs_2_bits_instruction_PC = 32'h0;
   assign io_FU_outputs_2_bits_branch_taken = 1'h0;
-  assign io_FU_outputs_2_bits_expected_address = 32'h0;
+  assign io_FU_outputs_2_bits_target_address = 32'h0;
   assign io_FU_outputs_2_bits_branch_valid = 1'h0;
   assign io_FU_outputs_3_valid = _FU3_io_FU_output_valid;
   assign io_FU_outputs_3_bits_RD = _FU3_io_FU_output_bits_RD;
   assign io_FU_outputs_3_bits_RD_data = _FU3_io_FU_output_bits_RD_data;
   assign io_FU_outputs_3_bits_RD_valid = _FU3_io_FU_output_bits_RD_valid;
+  assign io_FU_outputs_3_bits_instruction_PC = 32'h0;
   assign io_FU_outputs_3_bits_branch_taken = 1'h0;
-  assign io_FU_outputs_3_bits_expected_address = 32'h0;
+  assign io_FU_outputs_3_bits_target_address = 32'h0;
   assign io_FU_outputs_3_bits_branch_valid = 1'h0;
 endmodule
 
@@ -14785,3 +14789,5 @@ module nReadmWrite (
 endmodule
 
 // ----- 8< ----- FILE "firrtl_black_box_resource_files.f" ----- 8< -----
+
+nReadmWrite.v

@@ -67,13 +67,14 @@ class PHT_memory(depth: Int, width: Int) extends Module {
   }
 }
 
-class gshare(GHR_width:Int = 16) extends Module{
+class gshare(parameters:Parameters) extends Module{
+    import parameters._
     // the ghsare must be addressable by the number of bits in the global history register
 
     val io = IO(new Bundle{
 
         // prediction port
-        val predict_GHR     = Input(UInt(GHR_width.W))
+        val predict_GHR     = Input(UInt(GHRWidth.W))
         val predict_PC      = Input(UInt(32.W))
         val predict_valid   = Input(Bool())
 
@@ -82,7 +83,7 @@ class gshare(GHR_width:Int = 16) extends Module{
         val valid = Output(Bool())
 
         // commit port
-        val commit_GHR         = Input(UInt(GHR_width.W))
+        val commit_GHR         = Input(UInt(GHRWidth.W))
         val commit_PC          = Input(UInt(32.W))
         val commit_valid       = Input(Bool())
         val commit_branch_direction       = Input(Bool())
@@ -98,14 +99,14 @@ class gshare(GHR_width:Int = 16) extends Module{
     val commit_state     = Wire(UInt(2.W))
     val commit_state_updated     = Wire(UInt(2.W))
 
-    val hashed_predict_addr = Wire(UInt(GHR_width.W))
-    val hashed_commit_addr = Wire(UInt(GHR_width.W))
+    val hashed_predict_addr = Wire(UInt(GHRWidth.W))
+    val hashed_commit_addr = Wire(UInt(GHRWidth.W))
 
-    val PHT = Module(new PHT_memory(depth=(1<<GHR_width), width=2))
+    val PHT = Module(new PHT_memory(depth=(1<<GHRWidth), width=2))
 
 
-    hashed_predict_addr := io.predict_PC(GHR_width-1, 0) ^ io.predict_GHR
-    hashed_commit_addr  := io.commit_PC(GHR_width-1, 0) ^ io.commit_GHR
+    hashed_predict_addr := io.predict_PC(GHRWidth-1, 0) ^ io.predict_GHR
+    hashed_commit_addr  := io.commit_PC(GHRWidth-1, 0) ^ io.commit_GHR
 
     dontTouch(hashed_predict_addr)
     dontTouch(hashed_commit_addr)

@@ -55,11 +55,11 @@ class RS(parameters:Parameters) extends Module{
         val FU_broadcast   =   Vec(portCount, Flipped(ValidIO(new FU_output(parameters))))
 
         // To FU
-        val RF_inputs      =   Vec(ALUportCount, Decoupled(new decoded_instruction(coreConfig=coreConfig, fetchWidth:Int, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount)))
+        val RF_inputs      =   Vec(ALUportCount, Decoupled(new decoded_instruction(parameters)))
     })
 
     // Allocate RS regs
-    val reservation_station = RegInit(VecInit(Seq.fill(RSEntries)(0.U.asTypeOf(new RS_entry(coreConfig=coreConfig, fetchWidth:Int, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount)))))
+    val reservation_station = RegInit(VecInit(Seq.fill(RSEntries)(0.U.asTypeOf(new RS_entry(parameters)))))
  
     // Reg allocate POS for new input
     val validVec = reservation_station.map(_.valid)
@@ -150,7 +150,7 @@ class RS(parameters:Parameters) extends Module{
 
     for (i <- 0 until ALUportCount){
         io.RF_inputs(i).valid := 0.B
-        io.RF_inputs(i).bits := 0.U.asTypeOf(new decoded_instruction(coreConfig=coreConfig, fetchWidth:Int, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount))
+        io.RF_inputs(i).bits := 0.U.asTypeOf(new decoded_instruction(parameters))
     }
 
     // Assign port 0
@@ -216,24 +216,24 @@ class RS(parameters:Parameters) extends Module{
 
     when(schedulable_instructions(port0_RS_index) && port0_valid){
         reservation_station(port0_RS_index).valid := 0.B
-        reservation_station(port0_RS_index) <> 0.U.asTypeOf(new RS_entry(coreConfig=coreConfig, fetchWidth:Int, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount))
+        reservation_station(port0_RS_index) <> 0.U.asTypeOf(new RS_entry(parameters))
     }
 
     when(schedulable_instructions(port1_RS_index) && port1_valid){
         reservation_station(port1_RS_index).valid := 0.B
-        reservation_station(port1_RS_index) <> 0.U.asTypeOf(new RS_entry(coreConfig=coreConfig, fetchWidth:Int, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount))
+        reservation_station(port1_RS_index) <> 0.U.asTypeOf(new RS_entry(parameters))
     }
 
     when(schedulable_instructions(port2_RS_index) && port2_valid){
         reservation_station(port2_RS_index).valid := 0.B
-        reservation_station(port2_RS_index) <> 0.U.asTypeOf(new RS_entry(coreConfig=coreConfig, fetchWidth:Int, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount))
+        reservation_station(port2_RS_index) <> 0.U.asTypeOf(new RS_entry(parameters))
     }
 
 
     if(coreConfig.contains("M")){
         when(schedulable_instructions(port3_RS_index) && port3_valid){
             reservation_station(port3_RS_index).valid := 0.B
-            reservation_station(port3_RS_index) <> 0.U.asTypeOf(new RS_entry(coreConfig=coreConfig, fetchWidth:Int, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount))
+            reservation_station(port3_RS_index) <> 0.U.asTypeOf(new RS_entry(parameters))
         }
     }
 

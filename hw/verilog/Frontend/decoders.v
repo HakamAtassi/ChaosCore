@@ -45,19 +45,16 @@ module decoder(
                 io_decoded_instruction_IS_STORE
 );
 
-  wire       IS_LOAD = io_instruction_instruction[6:2] == 5'h0;
-  wire       IMMEDIATE = io_instruction_instruction[6:2] == 5'h4;
-  wire       _io_decoded_instruction_RD_valid_T_11 =
-    io_instruction_instruction[6:2] == 5'h5;
-  wire       IS_STORE = io_instruction_instruction[6:2] == 5'h8;
-  wire       _is_INT_T = io_instruction_instruction[6:2] == 5'hC;
-  wire       _io_decoded_instruction_RD_valid_T_9 =
-    io_instruction_instruction[6:2] == 5'hD;
-  wire       _is_INT_T_3 = io_instruction_instruction[6:2] == 5'h18;
-  wire       _is_INT_T_7 = io_instruction_instruction[6:2] == 5'h19;
-  wire       _is_INT_T_5 = io_instruction_instruction[6:2] == 5'h1B;
-  wire       _io_decoded_instruction_RD_valid_T_13 =
-    io_instruction_instruction[6:2] == 5'h1C;
+  wire IS_LOAD = io_instruction_instruction[6:2] == 5'h0;
+  wire IMMEDIATE = io_instruction_instruction[6:2] == 5'h4;
+  wire _io_decoded_instruction_RD_valid_T_11 = io_instruction_instruction[6:2] == 5'h5;
+  wire IS_STORE = io_instruction_instruction[6:2] == 5'h8;
+  wire _is_INT_T = io_instruction_instruction[6:2] == 5'hC;
+  wire _io_decoded_instruction_RD_valid_T_9 = io_instruction_instruction[6:2] == 5'hD;
+  wire _is_INT_T_3 = io_instruction_instruction[6:2] == 5'h18;
+  wire _is_INT_T_7 = io_instruction_instruction[6:2] == 5'h19;
+  wire _is_INT_T_5 = io_instruction_instruction[6:2] == 5'h1B;
+  wire _io_decoded_instruction_RD_valid_T_13 = io_instruction_instruction[6:2] == 5'h1C;
   `ifndef SYNTHESIS
     always @(posedge clock) begin
       if (~reset
@@ -87,22 +84,11 @@ module decoder(
       end
     end // always @(posedge)
   `endif // not def SYNTHESIS
-  wire       needs_branch_unit = _is_INT_T_3 | _is_INT_T_5 | _is_INT_T_7;
-  wire       needs_ALU =
+  wire needs_branch_unit = _is_INT_T_3 | _is_INT_T_5 | _is_INT_T_7;
+  wire needs_ALU =
     _is_INT_T
     & (io_instruction_instruction[27] | io_instruction_instruction[31:25] == 7'h0)
     | IMMEDIATE;
-  reg  [1:0] ALU_port;
-  always @(posedge clock) begin
-    if (reset)
-      ALU_port <= 2'h0;
-    else if (needs_ALU) begin
-      if (ALU_port == 2'h2)
-        ALU_port <= 2'h0;
-      else
-        ALU_port <= ALU_port + 2'h1;
-    end
-  end // always @(posedge)
   assign io_decoded_instruction_RD = {1'h0, io_instruction_instruction[11:7]};
   assign io_decoded_instruction_RD_valid =
     _is_INT_T | IMMEDIATE | IS_LOAD | _is_INT_T_5 | _is_INT_T_7
@@ -136,15 +122,15 @@ module decoder(
   assign io_decoded_instruction_ROB_index = io_instruction_ROB_index;
   assign io_decoded_instruction_instructionType = io_instruction_instruction[6:2];
   assign io_decoded_instruction_portID =
-    needs_ALU
-      ? ALU_port
+    needs_ALU | needs_branch_unit
+      ? 2'h0
       : _is_INT_T
         & (io_instruction_instruction[14:12] == 3'h4
            | io_instruction_instruction[14:12] == 3'h5
            | io_instruction_instruction[14:12] == 3'h6
            | (&(io_instruction_instruction[14:12]))) & io_instruction_instruction[25]
           ? 2'h1
-          : needs_branch_unit ? 2'h0 : {2{IS_STORE | IS_LOAD}};
+          : {2{IS_STORE | IS_LOAD}};
   assign io_decoded_instruction_RS_type =
     _is_INT_T | IMMEDIATE | _is_INT_T_3 | _is_INT_T_5 | _is_INT_T_7
       ? 2'h0
@@ -182,8 +168,6 @@ module fetch_packet_decoder(
   input  [5:0]  io_fetch_packet_bits_instructions_3_ROB_index,
   input         io_decoded_fetch_packet_ready,
   output        io_decoded_fetch_packet_valid,
-  output [5:0]  io_decoded_fetch_packet_bits_0_RDold,
-  output        io_decoded_fetch_packet_bits_0_RDold_valid,
   output [5:0]  io_decoded_fetch_packet_bits_0_RD,
   output        io_decoded_fetch_packet_bits_0_RD_valid,
   output [5:0]  io_decoded_fetch_packet_bits_0_RS1,
@@ -199,13 +183,12 @@ module fetch_packet_decoder(
                 io_decoded_fetch_packet_bits_0_RS_type,
   output        io_decoded_fetch_packet_bits_0_needs_ALU,
                 io_decoded_fetch_packet_bits_0_needs_branch_unit,
+                io_decoded_fetch_packet_bits_0_needs_CSRs,
                 io_decoded_fetch_packet_bits_0_SUBTRACT,
                 io_decoded_fetch_packet_bits_0_MULTIPLY,
                 io_decoded_fetch_packet_bits_0_IMMEDIATE,
                 io_decoded_fetch_packet_bits_0_IS_LOAD,
                 io_decoded_fetch_packet_bits_0_IS_STORE,
-  output [5:0]  io_decoded_fetch_packet_bits_1_RDold,
-  output        io_decoded_fetch_packet_bits_1_RDold_valid,
   output [5:0]  io_decoded_fetch_packet_bits_1_RD,
   output        io_decoded_fetch_packet_bits_1_RD_valid,
   output [5:0]  io_decoded_fetch_packet_bits_1_RS1,
@@ -221,13 +204,12 @@ module fetch_packet_decoder(
                 io_decoded_fetch_packet_bits_1_RS_type,
   output        io_decoded_fetch_packet_bits_1_needs_ALU,
                 io_decoded_fetch_packet_bits_1_needs_branch_unit,
+                io_decoded_fetch_packet_bits_1_needs_CSRs,
                 io_decoded_fetch_packet_bits_1_SUBTRACT,
                 io_decoded_fetch_packet_bits_1_MULTIPLY,
                 io_decoded_fetch_packet_bits_1_IMMEDIATE,
                 io_decoded_fetch_packet_bits_1_IS_LOAD,
                 io_decoded_fetch_packet_bits_1_IS_STORE,
-  output [5:0]  io_decoded_fetch_packet_bits_2_RDold,
-  output        io_decoded_fetch_packet_bits_2_RDold_valid,
   output [5:0]  io_decoded_fetch_packet_bits_2_RD,
   output        io_decoded_fetch_packet_bits_2_RD_valid,
   output [5:0]  io_decoded_fetch_packet_bits_2_RS1,
@@ -243,13 +225,12 @@ module fetch_packet_decoder(
                 io_decoded_fetch_packet_bits_2_RS_type,
   output        io_decoded_fetch_packet_bits_2_needs_ALU,
                 io_decoded_fetch_packet_bits_2_needs_branch_unit,
+                io_decoded_fetch_packet_bits_2_needs_CSRs,
                 io_decoded_fetch_packet_bits_2_SUBTRACT,
                 io_decoded_fetch_packet_bits_2_MULTIPLY,
                 io_decoded_fetch_packet_bits_2_IMMEDIATE,
                 io_decoded_fetch_packet_bits_2_IS_LOAD,
                 io_decoded_fetch_packet_bits_2_IS_STORE,
-  output [5:0]  io_decoded_fetch_packet_bits_3_RDold,
-  output        io_decoded_fetch_packet_bits_3_RDold_valid,
   output [5:0]  io_decoded_fetch_packet_bits_3_RD,
   output        io_decoded_fetch_packet_bits_3_RD_valid,
   output [5:0]  io_decoded_fetch_packet_bits_3_RS1,
@@ -265,6 +246,7 @@ module fetch_packet_decoder(
                 io_decoded_fetch_packet_bits_3_RS_type,
   output        io_decoded_fetch_packet_bits_3_needs_ALU,
                 io_decoded_fetch_packet_bits_3_needs_branch_unit,
+                io_decoded_fetch_packet_bits_3_needs_CSRs,
                 io_decoded_fetch_packet_bits_3_SUBTRACT,
                 io_decoded_fetch_packet_bits_3_MULTIPLY,
                 io_decoded_fetch_packet_bits_3_IMMEDIATE,
@@ -710,8 +692,6 @@ module fetch_packet_decoder(
   );
   assign io_fetch_packet_ready = 1'h1;
   assign io_decoded_fetch_packet_valid = io_decoded_fetch_packet_valid_REG;
-  assign io_decoded_fetch_packet_bits_0_RDold = 6'h0;
-  assign io_decoded_fetch_packet_bits_0_RDold_valid = 1'h0;
   assign io_decoded_fetch_packet_bits_0_RD = io_decoded_fetch_packet_bits_0_REG_RD;
   assign io_decoded_fetch_packet_bits_0_RD_valid =
     io_decoded_fetch_packet_bits_0_REG_RD_valid;
@@ -736,6 +716,7 @@ module fetch_packet_decoder(
     io_decoded_fetch_packet_bits_0_REG_needs_ALU;
   assign io_decoded_fetch_packet_bits_0_needs_branch_unit =
     io_decoded_fetch_packet_bits_0_REG_needs_branch_unit;
+  assign io_decoded_fetch_packet_bits_0_needs_CSRs = 1'h0;
   assign io_decoded_fetch_packet_bits_0_SUBTRACT =
     io_decoded_fetch_packet_bits_0_REG_SUBTRACT;
   assign io_decoded_fetch_packet_bits_0_MULTIPLY =
@@ -746,8 +727,6 @@ module fetch_packet_decoder(
     io_decoded_fetch_packet_bits_0_REG_IS_LOAD;
   assign io_decoded_fetch_packet_bits_0_IS_STORE =
     io_decoded_fetch_packet_bits_0_REG_IS_STORE;
-  assign io_decoded_fetch_packet_bits_1_RDold = 6'h0;
-  assign io_decoded_fetch_packet_bits_1_RDold_valid = 1'h0;
   assign io_decoded_fetch_packet_bits_1_RD = io_decoded_fetch_packet_bits_1_REG_RD;
   assign io_decoded_fetch_packet_bits_1_RD_valid =
     io_decoded_fetch_packet_bits_1_REG_RD_valid;
@@ -772,6 +751,7 @@ module fetch_packet_decoder(
     io_decoded_fetch_packet_bits_1_REG_needs_ALU;
   assign io_decoded_fetch_packet_bits_1_needs_branch_unit =
     io_decoded_fetch_packet_bits_1_REG_needs_branch_unit;
+  assign io_decoded_fetch_packet_bits_1_needs_CSRs = 1'h0;
   assign io_decoded_fetch_packet_bits_1_SUBTRACT =
     io_decoded_fetch_packet_bits_1_REG_SUBTRACT;
   assign io_decoded_fetch_packet_bits_1_MULTIPLY =
@@ -782,8 +762,6 @@ module fetch_packet_decoder(
     io_decoded_fetch_packet_bits_1_REG_IS_LOAD;
   assign io_decoded_fetch_packet_bits_1_IS_STORE =
     io_decoded_fetch_packet_bits_1_REG_IS_STORE;
-  assign io_decoded_fetch_packet_bits_2_RDold = 6'h0;
-  assign io_decoded_fetch_packet_bits_2_RDold_valid = 1'h0;
   assign io_decoded_fetch_packet_bits_2_RD = io_decoded_fetch_packet_bits_2_REG_RD;
   assign io_decoded_fetch_packet_bits_2_RD_valid =
     io_decoded_fetch_packet_bits_2_REG_RD_valid;
@@ -808,6 +786,7 @@ module fetch_packet_decoder(
     io_decoded_fetch_packet_bits_2_REG_needs_ALU;
   assign io_decoded_fetch_packet_bits_2_needs_branch_unit =
     io_decoded_fetch_packet_bits_2_REG_needs_branch_unit;
+  assign io_decoded_fetch_packet_bits_2_needs_CSRs = 1'h0;
   assign io_decoded_fetch_packet_bits_2_SUBTRACT =
     io_decoded_fetch_packet_bits_2_REG_SUBTRACT;
   assign io_decoded_fetch_packet_bits_2_MULTIPLY =
@@ -818,8 +797,6 @@ module fetch_packet_decoder(
     io_decoded_fetch_packet_bits_2_REG_IS_LOAD;
   assign io_decoded_fetch_packet_bits_2_IS_STORE =
     io_decoded_fetch_packet_bits_2_REG_IS_STORE;
-  assign io_decoded_fetch_packet_bits_3_RDold = 6'h0;
-  assign io_decoded_fetch_packet_bits_3_RDold_valid = 1'h0;
   assign io_decoded_fetch_packet_bits_3_RD = io_decoded_fetch_packet_bits_3_REG_RD;
   assign io_decoded_fetch_packet_bits_3_RD_valid =
     io_decoded_fetch_packet_bits_3_REG_RD_valid;
@@ -844,6 +821,7 @@ module fetch_packet_decoder(
     io_decoded_fetch_packet_bits_3_REG_needs_ALU;
   assign io_decoded_fetch_packet_bits_3_needs_branch_unit =
     io_decoded_fetch_packet_bits_3_REG_needs_branch_unit;
+  assign io_decoded_fetch_packet_bits_3_needs_CSRs = 1'h0;
   assign io_decoded_fetch_packet_bits_3_SUBTRACT =
     io_decoded_fetch_packet_bits_3_REG_SUBTRACT;
   assign io_decoded_fetch_packet_bits_3_MULTIPLY =

@@ -121,7 +121,7 @@ class fetch_packet(parameters:Parameters) extends Bundle{
     import parameters._
     val fetch_PC        = UInt(32.W)
     val valid_bits      = Vec(fetchWidth, Bool())
-    val instructions    = Vec(fetchWidth, new Instruction(fetchWidth=fetchWidth, ROBEntires=ROBEntires))
+    val instructions    = Vec(fetchWidth, new Instruction(parameters))
 }
 
 class metadata extends Bundle{
@@ -140,7 +140,8 @@ class metadata extends Bundle{
 // BP channels //
 /////////////////
 
-class commit(fetchWidth:Int=4, GHRWidth:Int=16, BTBEntries:Int=4096, RASEntries:Int = 128) extends Bundle{
+class commit(parameters:Parameters) extends Bundle{
+    import parameters._
     val PC      = Input(UInt(32.W))
     val GHR     = Input(UInt(GHRWidth.W))
     val T_NT    = Input(Bool())
@@ -163,18 +164,21 @@ class RAS_update extends Bundle{    // Request call or ret
     val ret       = Input(Bool())
 }
 
-class RAS_read(RASEntries:Int=128) extends Bundle{
+class RAS_read(parameters:Parameters) extends Bundle{
+    import parameters._
     val NEXT      = Output(UInt((log2Ceil(RASEntries).W)))
     val TOS       = Output(UInt((log2Ceil(RASEntries).W)))
     val ret_addr  = Output(UInt(32.W))
 }
 
-class revert(GHRWidth:Int=16) extends Bundle{
+class revert(parameters:Parameters) extends Bundle{
+    import parameters._
     val GHR               = Input(UInt(GHRWidth.W))
     val PC                = Input(UInt(32.W))
 }
 
-class prediction(fetchWidth:Int=4, GHRWidth:Int=16) extends Bundle{
+class prediction(parameters:Parameters) extends Bundle{
+    import parameters._
     val hit         =   Output(Bool())  // FIXME: I dont think this is assigned in BTB since it was added after the fact
     val target      =   Output(UInt(32.W))
     val br_type     =   Output(UInt(2.W))
@@ -183,7 +187,8 @@ class prediction(fetchWidth:Int=4, GHRWidth:Int=16) extends Bundle{
     val T_NT        =   Output(Bool())
 }
 
-class Instruction(fetchWidth:Int, ROBEntires:Int) extends Bundle{
+class Instruction(parameters:Parameters) extends Bundle{
+    import parameters._
     val instruction     =   UInt(32.W)
     val packet_index    =   UInt(log2Ceil(fetchWidth*4).W)    // contains the remainder of the PC. ex: 0, 4, 8, 12, 0, ... for fetchWidth of 4
     val ROB_index       =   UInt(log2Ceil(ROBEntires).W)
@@ -193,14 +198,16 @@ object RS_types extends ChiselEnum{
     val INT, MEM, FP = Value
 }
 
-class decoded_instruction(coreConfig:String, fetchWidth:Int, ROBEntires:Int, physicalRegCount:Int) extends Bundle{
+class decoded_instruction(parameters:Parameters) extends Bundle{
     // Parameters
+    import parameters._
     val portCount       =   4
     val physicalRegBits =   log2Ceil(physicalRegCount)    // FIXME!!
+
     //
 
-    val RDold              =   UInt(physicalRegBits.W) // Actual dest
-    val RDold_valid        =   Bool()
+    //val RDold              =   UInt(physicalRegBits.W) // Actual dest
+    //val RDold_valid        =   Bool()
 
     val RD              =   UInt(physicalRegBits.W) // Actual dest
     val RD_valid        =   Bool()
@@ -224,6 +231,7 @@ class decoded_instruction(coreConfig:String, fetchWidth:Int, ROBEntires:Int, phy
 
     val needs_ALU           =  Bool()
     val needs_branch_unit   =  Bool()
+    val needs_CSRs          =  Bool()
 
     val SUBTRACT        =   Bool()
     val MULTIPLY        =   Bool()
@@ -235,9 +243,10 @@ class decoded_instruction(coreConfig:String, fetchWidth:Int, ROBEntires:Int, phy
 }
 
 // decoded instruction after it goes through register read
-class read_decoded_instruction(coreConfig:String, fetchWidth:Int, ROBEntires:Int, physicalRegCount:Int) extends Bundle{
+class read_decoded_instruction(parameters:Parameters) extends Bundle{
+    import parameters._
     // Parameters
-    val decoded_instruction = new decoded_instruction(coreConfig=coreConfig, fetchWidth=fetchWidth, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount)
+    val decoded_instruction = new decoded_instruction(parameters)
 
     // read data from register read 
     val RS1_data        =   UInt(32.W)
@@ -292,13 +301,53 @@ object InstructionType extends ChiselEnum {
 }
 
 
+
+class misprediction(parameters:Parameters) extends Bundle{
+    import parameters._
+    val valid = Bool()
+
+    val is_misprediction = Bool()
+    val expected_PC      = UInt(32.W)   // Buffed from backend
+
+    // State revision data
+    val GHR     = UInt(GHRWidth.W)
+    val NEXT    = UInt(log2Ceil(RASEntries).W)
+    val TOS     = UInt(log2Ceil(RASEntries).W)
+}
+
+
+class FTQ_entry(parameters:Parameters) extends Bundle{
+    import parameters._
+
+    val valid = Bool()
+
+    // Branch validation data
+    val fetch_packet_PC = UInt(32.W)    // fetch packet pc of the base instruction
+
+    val is_misprediction = Bool()   // If set, predicted_expected_PC represents expected PC. Otherwise, it represents predicted PC
+    val predicted_expected_PC      = UInt(32.W)   
+
+    // State revision data
+    val GHR     = UInt(GHRWidth.W)
+    val NEXT    = UInt(log2Ceil(RASEntries).W)
+    val TOS     = UInt(log2Ceil(RASEntries).W)
+
+}
+
 /////////////////////
 // BACKEND BUNDLES //
 /////////////////////
 
+// PC stored seperately
+class ROB_entry(parameters:Parameters) extends Bundle{
+    val valid = Bool()
+    // valid
+    // busy
+    // exception
+    // uOp metdata (to know what to do about exceptions, Loads, Stores, etc...)
+    val is_branch = Bool()
+    // RAT checkpoint
 
-class ROB_entry extends Bundle{
-    // ??
 }
 
 class InstructionReady extends Bundle{
@@ -307,10 +356,11 @@ class InstructionReady extends Bundle{
 }
 
 // FIXME:  This is messed up 
-class RS_entry(coreConfig:String, fetchWidth:Int, physicalRegCount: Int, ROBEntires:Int) extends Bundle{
+class RS_entry(parameters:Parameters) extends Bundle{
+    import parameters._
     val physicalRegBits = log2Ceil(physicalRegCount)
 
-    val decoded_instruction = new decoded_instruction(coreConfig=coreConfig, fetchWidth=fetchWidth, ROBEntires=ROBEntires, physicalRegCount:Int)
+    val decoded_instruction = new decoded_instruction(parameters)
 
     val ready_bits          =   new InstructionReady()
 
@@ -324,7 +374,7 @@ class BackendPacket(parameters:Parameters) extends Bundle{
     import parameters._
 
     // FIXME: invalid instructions ???
-    val decoded_instruction   =   new decoded_instruction(coreConfig=coreConfig, fetchWidth:Int, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount)
+    val decoded_instruction   =   new decoded_instruction(parameters)
     val ready_bits            =   new InstructionReady()
 }
 
@@ -342,9 +392,11 @@ class FU_output(parameters:Parameters) extends Bundle{
     val RD_valid    =   Bool()
 
     // Branch
+    val instruction_PC    =   UInt(32.W)
     val branch_taken      =   Bool()
-    val expected_address  =   UInt(32.W)
+    val target_address    =   UInt(32.W)
     val branch_valid      =   Bool()
+    // Address of actual branch instruction?
 
     val ROB_index         =   UInt(log2Ceil(ROBEntires).W)
 

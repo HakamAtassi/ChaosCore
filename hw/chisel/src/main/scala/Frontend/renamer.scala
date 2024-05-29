@@ -192,8 +192,6 @@ class RAT(parameters:Parameters) extends Module{
         }
     }
 
-    dontTouch(is_being_written_vec)
-    dontTouch(wr_data_in)
 
     // init first row of reg_data_in (since no prev checkpoint)
 
@@ -263,19 +261,20 @@ class renamer(parameters:Parameters) extends Module{
     val architecturalRegBits = log2Ceil(architecturalRegCount)
     val RATCheckpointBits    = log2Ceil(RATCheckpointCount)
 
+    val portCount = getPortCount(parameters)
+
     val io = IO(new Bundle{
         // Instruction input (renamed)
-        val decoded_fetch_packet         =  Flipped(Decoupled(Vec(fetchWidth, new decoded_instruction(coreConfig=coreConfig, fetchWidth=fetchWidth, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount))))
+        val decoded_fetch_packet         =  Flipped(Decoupled(Vec(fetchWidth, new decoded_instruction(parameters))))
 
         // Instruction output (renamed)
-        val renamed_decoded_fetch_packet =  Decoupled(Vec(fetchWidth, new decoded_instruction(coreConfig=coreConfig, fetchWidth=fetchWidth, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount)))
+        val renamed_decoded_fetch_packet =  Decoupled(Vec(fetchWidth, new decoded_instruction(parameters)))
 
 
         ///////////////
 
         //// Instruction input (commit)
-        val commit_RD                 =   Input(Vec(fetchWidth, UInt(physicalRegBits.W))) // From RAT
-        val commit_RD_valid           =   Input(Vec(fetchWidth, Bool())) // From RAT
+        val FU_outputs                  =   Input(Vec(portCount, new FU_output(parameters)))  
 
         //// checkpoint (create/restore)
         val create_checkpoint         = Input(Bool())
@@ -333,8 +332,9 @@ class renamer(parameters:Parameters) extends Module{
     val free_list   =   Module(new free_list(parameters))
 
     free_list.io.rename_valid                   :=  instruction_RD_valid
-    free_list.io.free_valid                     :=  io.commit_RD_valid
-    free_list.io.free_values                    :=  io.commit_RD
+
+    free_list.io.free_valid                     :=  io.FU_outputs.map(_.RD_valid)
+    free_list.io.free_values                    :=  io.FU_outputs.map(_.RD)
 
 
     ///////////////////////
@@ -408,7 +408,7 @@ class renamer(parameters:Parameters) extends Module{
 
     for(i <- 0 until fetchWidth){
         io.renamed_decoded_fetch_packet.bits(i).RD      := free_list.io.renamed_values(i)
-        io.renamed_decoded_fetch_packet.bits(i).RDold   := RAT.io.RAT_RD(i)
+        //io.renamed_decoded_fetch_packet.bits(i).RDold   := RAT.io.RAT_RD(i)
         io.renamed_decoded_fetch_packet.bits(i).RS1     := RAT.io.RAT_RS1(i)
         io.renamed_decoded_fetch_packet.bits(i).RS2     := RAT.io.RAT_RS2(i)
     }

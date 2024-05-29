@@ -35,13 +35,14 @@ import chisel3.util._
 import java.io.{File, FileWriter}
 import java.rmi.server.UID
 
-class BP(GHRWidth:Int, fetchWidth:Int, RASEntries:Int, BTBEntries:Int) extends Module{
+class BP(parameters:Parameters) extends Module{
+    import parameters._
     val io = IO(new Bundle{
         // Predict Channel
         val predict     = Flipped(Decoupled(UInt(32.W)))
 
         // Commit Channel 
-        val commit      = Flipped(Decoupled(new commit(fetchWidth=fetchWidth))) // common case. Update BTB, PHT
+        val commit      = Flipped(Decoupled(new commit(parameters))) // common case. Update BTB, PHT
 
         // Mispredict Channel 
         //val mispredict  = Flipped(Decoupled(new mispredict(GHRWidth=GHRWidth, RASEntries=RASEntries)))
@@ -50,13 +51,13 @@ class BP(GHRWidth:Int, fetchWidth:Int, RASEntries:Int, BTBEntries:Int) extends M
         val RAS_update  = new RAS_update    // input
 
         // RAS Channel
-        val RAS_read    = new RAS_read(RASEntries=RASEntries)   // output
+        val RAS_read    = new RAS_read(parameters)   // output
 
         // GHR Channel
-        val revert      = Flipped(Decoupled(new revert(GHRWidth=GHRWidth)))
+        val revert      = Flipped(Decoupled(new revert(parameters)))
 
         // Prediction Channel (output)
-        val prediction  = Decoupled(new prediction(fetchWidth=fetchWidth, GHRWidth=GHRWidth))    // Output of predictions
+        val prediction  = Decoupled(new prediction(parameters))    // Output of predictions
     })
 
 
@@ -110,9 +111,9 @@ class BP(GHRWidth:Int, fetchWidth:Int, RASEntries:Int, BTBEntries:Int) extends M
     val GHR_reg = RegInit(UInt(GHRWidth.W),0.U)
     val GHR = Wire(UInt(GHRWidth.W))
 
-    val gshare = Module(new gshare(GHR_width=GHRWidth)) // FIXME: should this be addressed by the PC or by the fetch packet aligned PC?
-    val BTB = Module(new hash_BTB(entries=BTBEntries, fetchWidth=fetchWidth))
-    val RAS = Module(new RAS(entries=RASEntries))
+    val gshare = Module(new gshare(parameters)) // FIXME: should this be addressed by the PC or by the fetch packet aligned PC?
+    val BTB = Module(new hash_BTB(parameters))
+    val RAS = Module(new RAS(parameters))
 
     ///////////////
     // GHR LOGIC //
@@ -187,7 +188,6 @@ class BP(GHRWidth:Int, fetchWidth:Int, RASEntries:Int, BTBEntries:Int) extends M
     gshare.io.commit_branch_direction   := io.commit.bits.T_NT
     gshare.io.commit_valid              := update_PHT
 
-    dontTouch(update_PHT)
 
 
     //////////////

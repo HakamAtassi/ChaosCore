@@ -461,6 +461,97 @@ async def write_read_read(dut):
 
 
 # Test Kill 
+@cocotb.test()
+async def read_miss_kill(dut):
+    """Request read, check for miss, kill, check kill was successfull."""
+    await cocotb.start(generateClock(dut)) 
+
+    dut = instruction_cache_dut(dut, sets=64, ways=2)  # wrap dut with helper class
+    await dut.reset()   # reset module
+    await RisingEdge(dut.clock())
+
+    dut.set_dram_ready(1)
+    dut.set_cache_ready(1)
+    await RisingEdge(dut.clock())
+
+    dut.write_cache_CPU(addr=0x0, valid=1)
+    await RisingEdge(dut.clock())
+    dut.write_cache_CPU()
+    await ReadOnly()
+    outputs = dut.get_output()
+    
+    assert outputs["DRAM_request_valid"] == 1       # Cache requesting from DRAM
+    assert outputs["Ready"] == 0       # Cache requesting from DRAM
+
+    # Perform Kill
+
+    await RisingEdge(dut.clock())
+    dut.kill_cache(1)
+    await RisingEdge(dut.clock())                   
+    dut.kill_cache(0)
+    await ReadOnly()
+    outputs = dut.get_output()
+    assert outputs["DRAM_request_valid"] == 0       # Cache requesting from DRAM
+    assert outputs["Ready"] == 1       # Cache requesting from DRAM
+
+@cocotb.test()
+async def read_hit_kill(dut):
+    """Request read, check for miss, kill, check kill was successfull."""
+    await cocotb.start(generateClock(dut)) 
+
+    dut = instruction_cache_dut(dut, sets=64, ways=2)  # wrap dut with helper class
+    await dut.reset()   # reset module
+    await RisingEdge(dut.clock())
+
+    dut.set_dram_ready(1)
+    dut.set_cache_ready(1)
+    await RisingEdge(dut.clock())
+
+    dut.write_cache_CPU(addr=0x0, valid=1)
+    await RisingEdge(dut.clock())
+    dut.write_cache_CPU()
+    await ReadOnly()
+    outputs = dut.get_output()
+    
+    assert outputs["DRAM_request_valid"] == 1       # Cache requesting from DRAM
+    assert outputs["Ready"] == 0       # Cache requesting from DRAM
+
+    await RisingEdge(dut.clock())
+
+    # allocate from DRAM
+    dut.write_cache_DRAM(data=0x42, valid=1)
+    await RisingEdge(dut.clock())
+    dut.write_cache_DRAM(data=0x42, valid=0)
+    await RisingEdge(dut.clock())
+    await RisingEdge(dut.clock())
+
+    # test read (no kill)
+    dut.write_cache_CPU(addr=0x0, valid=1)
+    await RisingEdge(dut.clock())
+    dut.write_cache_CPU()
+    await ReadOnly()
+
+    outputs = dut.get_output()
+    assert dut.get_output()["instruction_valid"][0] == 1
+    assert dut.get_output()["instruction"][0] == 0x42
+
+    await RisingEdge(dut.clock())
 
 
-# Test Conflicts/size/eviction
+    ## Perform Kill
+
+    dut.write_cache_CPU(addr=0x0, valid=1)
+    dut.kill_cache(1)
+    await RisingEdge(dut.clock())
+    dut.kill_cache(0)
+    dut.write_cache_CPU()
+    await ReadOnly()
+
+    outputs = dut.get_output()
+    assert dut.get_output()["instruction_valid"][0] == 0    # valid and kill cancel out
+    #assert dut.get_output()["instruction"][0] == 0x42
+
+    assert outputs["DRAM_request_valid"] == 0       # Cache requesting from DRAM
+    assert outputs["Ready"] == 1       # Cache requesting from DRAM
+
+## Test Conflicts/size/eviction

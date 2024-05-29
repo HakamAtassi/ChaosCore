@@ -47,6 +47,8 @@ class instruction_cache_dut:
 
         outputs["valid"] = self.dut.io_cache_data_valid.value
 
+        outputs["Ready"] = self.dut.io_cpu_addr_ready.value
+
         outputs["fetch_PC"] = self.dut.io_cache_data_bits_fetch_PC.value
 
         outputs["instruction_valid"] = [0]*4

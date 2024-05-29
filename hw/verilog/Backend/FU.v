@@ -133,12 +133,12 @@ module branch_unit(
   output [31:0] io_FU_output_bits_RD_data,
   output        io_FU_output_bits_RD_valid,
                 io_FU_output_bits_branch_taken,
-  output [31:0] io_FU_output_bits_expected_address,
+  output [31:0] io_FU_output_bits_target_address,
   output [5:0]  io_FU_output_bits_ROB_index
 );
 
   reg        io_FU_output_bits_branch_taken_REG;
-  reg [31:0] io_FU_output_bits_expected_address_REG;
+  reg [31:0] io_FU_output_bits_target_address_REG;
   reg [5:0]  io_FU_output_bits_RD_REG;
   reg        io_FU_output_bits_RD_valid_REG;
   reg [31:0] io_FU_output_bits_RD_data_REG;
@@ -173,7 +173,7 @@ module branch_unit(
       & (&io_FU_input_bits_decoded_instruction_FUNCT3);
     automatic logic [31:0] _io_FU_output_bits_RD_data_T = _PC_T + 32'h4;
     io_FU_output_bits_branch_taken_REG <= EQ | NE | LT | GE | LTU | GEU | JAL | JALR;
-    io_FU_output_bits_expected_address_REG <=
+    io_FU_output_bits_target_address_REG <=
       EQ
         ? _PC_T + io_FU_input_bits_decoded_instruction_IMM
         : NE
@@ -203,7 +203,7 @@ module branch_unit(
   assign io_FU_output_bits_RD_data = io_FU_output_bits_RD_data_REG;
   assign io_FU_output_bits_RD_valid = io_FU_output_bits_RD_valid_REG;
   assign io_FU_output_bits_branch_taken = io_FU_output_bits_branch_taken_REG;
-  assign io_FU_output_bits_expected_address = io_FU_output_bits_expected_address_REG;
+  assign io_FU_output_bits_target_address = io_FU_output_bits_target_address_REG;
   assign io_FU_output_bits_ROB_index = io_FU_output_bits_ROB_index_REG;
 endmodule
 
@@ -212,8 +212,6 @@ module FU(
                 reset,
   output        io_FU_input_ready,
   input         io_FU_input_valid,
-  input  [5:0]  io_FU_input_bits_decoded_instruction_RDold,
-  input         io_FU_input_bits_decoded_instruction_RDold_valid,
   input  [5:0]  io_FU_input_bits_decoded_instruction_RD,
   input         io_FU_input_bits_decoded_instruction_RD_valid,
   input  [5:0]  io_FU_input_bits_decoded_instruction_RS1,
@@ -229,6 +227,7 @@ module FU(
                 io_FU_input_bits_decoded_instruction_RS_type,
   input         io_FU_input_bits_decoded_instruction_needs_ALU,
                 io_FU_input_bits_decoded_instruction_needs_branch_unit,
+                io_FU_input_bits_decoded_instruction_needs_CSRs,
                 io_FU_input_bits_decoded_instruction_SUBTRACT,
                 io_FU_input_bits_decoded_instruction_MULTIPLY,
                 io_FU_input_bits_decoded_instruction_IMMEDIATE,
@@ -241,8 +240,9 @@ module FU(
   output [63:0] io_FU_output_bits_RD,
   output [31:0] io_FU_output_bits_RD_data,
   output        io_FU_output_bits_RD_valid,
-                io_FU_output_bits_branch_taken,
-  output [31:0] io_FU_output_bits_expected_address,
+  output [31:0] io_FU_output_bits_instruction_PC,
+  output        io_FU_output_bits_branch_taken,
+  output [31:0] io_FU_output_bits_target_address,
   output        io_FU_output_bits_branch_valid,
   output [5:0]  io_FU_output_bits_ROB_index
 );
@@ -252,7 +252,7 @@ module FU(
   wire [31:0] _branch_unit_io_FU_output_bits_RD_data;
   wire        _branch_unit_io_FU_output_bits_RD_valid;
   wire        _branch_unit_io_FU_output_bits_branch_taken;
-  wire [31:0] _branch_unit_io_FU_output_bits_expected_address;
+  wire [31:0] _branch_unit_io_FU_output_bits_target_address;
   wire [5:0]  _branch_unit_io_FU_output_bits_ROB_index;
   wire        _ALU_io_FU_output_valid;
   wire [63:0] _ALU_io_FU_output_bits_RD;
@@ -323,8 +323,8 @@ module FU(
       (_branch_unit_io_FU_output_bits_RD_valid),
     .io_FU_output_bits_branch_taken
       (_branch_unit_io_FU_output_bits_branch_taken),
-    .io_FU_output_bits_expected_address
-      (_branch_unit_io_FU_output_bits_expected_address),
+    .io_FU_output_bits_target_address
+      (_branch_unit_io_FU_output_bits_target_address),
     .io_FU_output_bits_ROB_index
       (_branch_unit_io_FU_output_bits_ROB_index)
   );
@@ -337,10 +337,11 @@ module FU(
     is_ALU ? _ALU_io_FU_output_bits_RD_data : _branch_unit_io_FU_output_bits_RD_data;
   assign io_FU_output_bits_RD_valid =
     is_ALU ? _ALU_io_FU_output_bits_RD_valid : _branch_unit_io_FU_output_bits_RD_valid;
+  assign io_FU_output_bits_instruction_PC = 32'h0;
   assign io_FU_output_bits_branch_taken =
     ~is_ALU & _branch_unit_io_FU_output_bits_branch_taken;
-  assign io_FU_output_bits_expected_address =
-    is_ALU ? 32'h0 : _branch_unit_io_FU_output_bits_expected_address;
+  assign io_FU_output_bits_target_address =
+    is_ALU ? 32'h0 : _branch_unit_io_FU_output_bits_target_address;
   assign io_FU_output_bits_branch_valid = 1'h0;
   assign io_FU_output_bits_ROB_index =
     is_ALU ? _ALU_io_FU_output_bits_ROB_index : _branch_unit_io_FU_output_bits_ROB_index;

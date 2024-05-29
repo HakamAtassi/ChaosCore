@@ -41,9 +41,9 @@ import helperFunctions._
 class decoder(parameters:Parameters) extends Module{   // basic decoder and field extraction
     import parameters._
     val io = IO(new Bundle{
-        val instruction         = Input(new Instruction(fetchWidth=fetchWidth, ROBEntires=ROBEntires))
+        val instruction         = Input(new Instruction(parameters))
 
-        val decoded_instruction = Output(new decoded_instruction(coreConfig=coreConfig, fetchWidth=fetchWidth, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount))
+        val decoded_instruction = Output(new decoded_instruction(parameters))
     })
 
     import InstructionType._
@@ -80,6 +80,9 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
                                 (instructionType === JAL)    ||
                                 (instructionType === JALR)
 
+    val needs_CSRs         =   0.B
+
+
     val needs_ALU           =       ((instructionType === OP) && (FUNCT7(2) || (FUNCT7 === 0x00.U))) ||
                                     (instructionType === OP_IMM)
 
@@ -100,8 +103,8 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
                                     instructionType === AUIPC || 
                                     instructionType === SYSTEM)
 
-    io.decoded_instruction.RDold                := 0.U
-    io.decoded_instruction.RDold_valid          := 0.U
+    //io.decoded_instruction.RDold                := 0.U
+    //io.decoded_instruction.RDold_valid          := 0.U
     io.decoded_instruction.RD                   := RD
     io.decoded_instruction.RS1                  := RS1
     io.decoded_instruction.RS1_valid            := 1.B
@@ -121,26 +124,28 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
     io.decoded_instruction.ROB_index            := io.instruction.ROB_index
     io.decoded_instruction.needs_ALU            := needs_ALU
     io.decoded_instruction.needs_branch_unit    := needs_branch_unit
+    io.decoded_instruction.needs_CSRs           := needs_CSRs
 
 
     // TODO: ECALL / EBREAK
 
+    // There is currently only 1 branch unit, 1 div unit, and 1 CSR unit. 
+    // ALU instructions can be scheduled to any of the ALU ports. 
+    // The port it is scheduled to is random. 
 
-    val ALU_port    =   RegInit(UInt(2.W), 0.U)
+    val next_ALU_port = RegInit(VecInit(0.U, 1.U, 2.U))
 
     when(needs_ALU){
-        io.decoded_instruction.portID := ALU_port
-
-        when(ALU_port === 2.U){
-            ALU_port := 0.U
-        }.otherwise{
-            ALU_port := ALU_port + 1.U
+        io.decoded_instruction.portID := next_ALU_port(0)   // schedule to "random"  
+        for (i <- 3 - 1 until 0 by -1) {
+            next_ALU_port(i) := next_ALU_port(i - 1)
         }
-
-    }.elsewhen(needs_divider){
-        io.decoded_instruction.portID := 1.U
     }.elsewhen(needs_branch_unit){
         io.decoded_instruction.portID := 0.U
+    }.elsewhen(needs_CSRs){
+        io.decoded_instruction.portID := 0.U
+    }.elsewhen(needs_divider){
+        io.decoded_instruction.portID := 1.U
     }.elsewhen(needs_memory){
         io.decoded_instruction.portID := 3.U
     }.otherwise{
@@ -173,7 +178,7 @@ class fetch_packet_decoder(parameters:Parameters) extends Module{
     import parameters._
     val io = IO(new Bundle{
         val fetch_packet         =  Flipped(Decoupled(new fetch_packet(parameters)))          // Fetch packet result (To Decoders)
-        val decoded_fetch_packet =  Decoupled(Vec(fetchWidth, new decoded_instruction(coreConfig=coreConfig, fetchWidth=fetchWidth, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount)))
+        val decoded_fetch_packet =  Decoupled(Vec(fetchWidth, new decoded_instruction(parameters)))
     })
 
     val decoders: Seq[decoder] = Seq.tabulate(fetchWidth) { w =>

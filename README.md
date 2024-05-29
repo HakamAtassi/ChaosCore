@@ -48,8 +48,9 @@ tests do not have any particular structure. ```UVM``` tests contain more rigorou
 6) Resolving mispredictions out of order (use of a BOB instead of a FTQ)
 7) Execution Bypass Network(s)
 8) Potentially too many queues in RS
-9) cache fetches across lines
-10) SIMD? 
+9) Cache fetches across lines
+10) Clear ROB and pipeline as soon as branch is resolved instead of waiting for FTQ+commit.
+11) SIMD? 
 
 # General TODOs
 

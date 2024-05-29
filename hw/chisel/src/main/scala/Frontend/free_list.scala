@@ -90,6 +90,7 @@ class reorder_renamed_outputs(parameters:Parameters) extends Module{
 class free_list(parameters:Parameters) extends Module{
     import parameters._
     val ptr_width = log2Ceil(physicalRegCount) + 1
+    val portCount = getPortCount(parameters)
 
     // important:
     // This module assumes that the free and read requests are "ordered"
@@ -106,8 +107,9 @@ class free_list(parameters:Parameters) extends Module{
         val renamed_values  = Output(Vec(fetchWidth, UInt(log2Ceil(physicalRegCount).W)))    // valid mask for RD (how many renamed regs do you need from free list)
         val renamed_valid   = Output(Vec(fetchWidth, Bool()))
 
-        val free_valid      = Input(Vec(fetchWidth, Bool()))
-        val free_values     = Input(Vec(fetchWidth, UInt(log2Ceil(physicalRegCount).W)))    // valid mask for RD (how many renamed regs do you need from free list)
+        // The number of values you need to free at at a time is equal to the number of functional unit ports. 
+        val free_valid      = Input(Vec(portCount, Bool()))
+        val free_values     = Input(Vec(portCount, UInt(log2Ceil(physicalRegCount).W)))
 
         val empty           = Output(Bool())
         val full            = Output(Bool())
