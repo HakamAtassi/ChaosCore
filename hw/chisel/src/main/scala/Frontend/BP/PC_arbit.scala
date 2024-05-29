@@ -36,13 +36,14 @@ import chisel3.util._
 import java.io.{File, FileWriter}
 import java.rmi.server.UID
 
-class PC_arbit(GHRWidth:Int, fetchWidth:Int, RASEntries:Int, startPC:UInt) extends Module{
+class PC_arbit(parameters:Parameters) extends Module{
+    import parameters._
 
     val io = IO(new Bundle{
-        val commit      = Flipped(Decoupled(new commit(fetchWidth=4, GHRWidth=16, BTBEntries=4096, RASEntries = 128)))                                  // from BROB
-        val prediction  = Flipped(Decoupled(new prediction(fetchWidth=fetchWidth, GHRWidth=GHRWidth)))                         // BTB response
-        val revert      = Flipped(Decoupled(new revert(GHRWidth=GHRWidth)))                                                    // Pre-decoder revert request
-        val RAS_read    = Flipped(new RAS_read(RASEntries=RASEntries))
+        val commit      = Flipped(Decoupled(new commit(parameters)))                                  // from BROB
+        val prediction  = Flipped(Decoupled(new prediction(parameters)))                         // BTB response
+        val revert      = Flipped(Decoupled(new revert(parameters)))                                                    // Pre-decoder revert request
+        val RAS_read    = Flipped(new RAS_read(parameters))
         // TODO: Exception:...                                                                            // exception
 
         val PC_next     = Decoupled(UInt(32.W))

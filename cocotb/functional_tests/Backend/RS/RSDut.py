@@ -1,25 +1,4 @@
 
-
-#io_backendPacket_0_valid
-#io_backendPacket_0_bits_decoded_instruction_RD
-#io_backendPacket_0_bits_decoded_instruction_RS1
-#io_backendPacket_0_bits_decoded_instruction_RS2
-#io_backendPacket_0_bits_decoded_instruction_IMM
-#io_backendPacket_0_bits_decoded_instruction_FUNCT3
-#io_backendPacket_0_bits_decoded_instruction_packet_index
-#io_backendPacket_0_bits_decoded_instruction_ROB_index
-#io_backendPacket_0_bits_decoded_instruction_instructionType
-#io_backendPacket_0_bits_decoded_instruction_portID
-#io_backendPacket_0_bits_decoded_instruction_RS_type
-#io_backendPacket_0_bits_decoded_instruction_needs_ALU
-#io_backendPacket_0_bits_decoded_instruction_needs_branch_unit
-#io_backendPacket_0_bits_decoded_instruction_SUBTRACT
-#io_backendPacket_0_bits_decoded_instruction_MULTIPLY
-#io_backendPacket_0_bits_decoded_instruction_IMMEDIATE
-#io_backendPacket_0_bits_ROB_entry
-#io_backendPacket_0_bits_ready_bits_RS1_bits
-#io_backendPacket_0_bits_ready_bits_RS2_bits
-
 class RSDut:
     def __init__(self, dut):
         self.dut = dut
@@ -92,10 +71,6 @@ class RSDut:
         self.dut.io_FU_broadcast_2_valid.value = valid[2]
         self.dut.io_FU_broadcast_2_bits_RD_valid.value = RD_valid[0]
 
-
-
-
-
     def get_ready(self):
         ready = [0,0,0,0]
         ready[0] = self.dut.io_RS_input_0_ready.value
@@ -136,33 +111,6 @@ class RSDut:
             ports.append(port)
         return ports
 
-    def print_outputs(self):
-        print("Port Information:")
-        print(f"| {'Port':<6} | {'valid':<6} | {'RD_valid':<10} | {'RD_bits':<10} | {'RS1_ready':<10} | {'RS1_valid':<10} | {'RS1_bits':<10} | {'RS2_ready':<10} | {'RS2_is_imm':<10} | {'RS2_valid':<10} | {'RS2_bits':<12} | {'uOp_portID_value':<15}")
-        
-        ports = self.get_ports()
-
-        for i in range(3):
-            valid    = ports[i]['valid']
-            RD_valid = ports[0]['RD_valid']
-            RS1 = ports[i]['RS1']
-            RS2 = ports[i]['RS2']
-            portID = ports[i]['portID']
-            #RD_valid = int(getattr(self.dut, f'io_RF_inputs_{i}_bits_RD_valid').value)
-            #RD_bits = int(getattr(self.dut, f'io_RF_inputs_{i}_bits_RD_bits').value)
-            #RS1_ready = int(getattr(self.dut, f'io_RF_inputs_{i}_bits_RS1_ready').value)
-            #RS1_valid = int(getattr(self.dut, f'io_RF_inputs_{i}_bits_RS1_valid').value)
-            #RS1_bits = int(getattr(self.dut, f'io_RF_inputs_{i}_bits_RS1_bits').value)
-            #RS2_ready = int(getattr(self.dut, f'io_RF_inputs_{i}_bits_RS2_ready').value)
-            #RS2_is_imm = int(getattr(self.dut, f'io_RF_inputs_{i}_bits_RS2_is_imm').value)
-            #RS2_valid = int(getattr(self.dut, f'io_RF_inputs_{i}_bits_RS2_valid').value)
-            #RS2_bits = int(getattr(self.dut, f'io_RF_inputs_{i}_bits_RS2_bits').value)
-            #uOp_portID_value = int(getattr(self.dut, f'io_RF_inputs_{i}_bits_uOp_portID_value').value)
-
-            # Print all port info in 1 line
-            print(f"| {valid} | {RD_valid}  |  {RS1}  |  {RS2} |  {portID}  |")
-            #print(f"| {i:<6} | {valid:<6} | {RD_valid:<10} | {RD_bits:<10} | {RS1_ready:<10} | {RS1_valid:<10} | {RS1_bits:<10} | {RS2_ready:<10} | {RS2_is_imm:<10} | {RS2_valid:<10} | {RS2_bits:<12} | {uOp_portID_value:<15}")
-
     def get_RS(self):
         rs_entries = []
         for i in range(20):
@@ -188,18 +136,3 @@ class RSDut:
             }
             rs_entries.append(entry)
         return rs_entries
-
-    def print_RS(self):
-        header = "| {:<2} | {:<2} | {:<8} | {:<8} | {:<10} | {:<10} | {:<10} | {:<10} | {:<10} | {:<10} | {:<18} | {:<16} |".format(
-            "i", "V", "RD valid", "RD", "RS1 valid", "RS1 ready", "RS1 value", "RS2 valid", "RS2 ready", "RS2 is imm", "RS2 value", "uOp portID value"
-        )
-        print(header)
-        rs_entries = self.get_RS()
-        for i, entry in enumerate(rs_entries):
-            print("| {:<2} | {:<2} | {:<8} | {:<8} | {:<10} | {:<10} | {:<10} | {:<10} | {:<10} | {:<10} | {:<18} | {:<16} |".format(
-                i, entry['valid'], entry['RD_valid'], entry['RD_bits'], entry['RS1_valid'], entry['RS1_ready'], entry['RS1_bits'],
-                entry['RS2_valid'], entry['RS2_ready'], entry['RS2_is_imm'], entry['RS2_bits'], entry['uop_portID_value']
-            ))
-        print(f"Outputs")
-        ready = self.get_ready()
-        print(f"Ready {ready}")

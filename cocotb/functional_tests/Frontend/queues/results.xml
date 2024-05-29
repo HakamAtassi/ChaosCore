@@ -1,6 +1,0 @@
-<testsuites name="results">
-  <testsuite name="all" package="all">
-    <property name="random_seed" value="1715253208" />
-    <testcase name="test0" classname="frontend_tests" file="/home/hakam/Repos/ChaosCore/cocotb/functional_tests/Frontend/queues/frontend_tests.py" lineno="20" time="0.0019145011901855469" sim_time_ns="29.001" ratio_time="15148.071021668742" />
-  </testsuite>
-</testsuites>

@@ -4,8 +4,6 @@ module RS(
                 reset,
   output        io_backendPacket_0_ready,
   input         io_backendPacket_0_valid,
-  input  [5:0]  io_backendPacket_0_bits_decoded_instruction_RDold,
-  input         io_backendPacket_0_bits_decoded_instruction_RDold_valid,
   input  [5:0]  io_backendPacket_0_bits_decoded_instruction_RD,
   input         io_backendPacket_0_bits_decoded_instruction_RD_valid,
   input  [5:0]  io_backendPacket_0_bits_decoded_instruction_RS1,
@@ -21,6 +19,7 @@ module RS(
                 io_backendPacket_0_bits_decoded_instruction_RS_type,
   input         io_backendPacket_0_bits_decoded_instruction_needs_ALU,
                 io_backendPacket_0_bits_decoded_instruction_needs_branch_unit,
+                io_backendPacket_0_bits_decoded_instruction_needs_CSRs,
                 io_backendPacket_0_bits_decoded_instruction_SUBTRACT,
                 io_backendPacket_0_bits_decoded_instruction_MULTIPLY,
                 io_backendPacket_0_bits_decoded_instruction_IMMEDIATE,
@@ -30,8 +29,6 @@ module RS(
                 io_backendPacket_0_bits_ready_bits_RS2_ready,
   output        io_backendPacket_1_ready,
   input         io_backendPacket_1_valid,
-  input  [5:0]  io_backendPacket_1_bits_decoded_instruction_RDold,
-  input         io_backendPacket_1_bits_decoded_instruction_RDold_valid,
   input  [5:0]  io_backendPacket_1_bits_decoded_instruction_RD,
   input         io_backendPacket_1_bits_decoded_instruction_RD_valid,
   input  [5:0]  io_backendPacket_1_bits_decoded_instruction_RS1,
@@ -47,6 +44,7 @@ module RS(
                 io_backendPacket_1_bits_decoded_instruction_RS_type,
   input         io_backendPacket_1_bits_decoded_instruction_needs_ALU,
                 io_backendPacket_1_bits_decoded_instruction_needs_branch_unit,
+                io_backendPacket_1_bits_decoded_instruction_needs_CSRs,
                 io_backendPacket_1_bits_decoded_instruction_SUBTRACT,
                 io_backendPacket_1_bits_decoded_instruction_MULTIPLY,
                 io_backendPacket_1_bits_decoded_instruction_IMMEDIATE,
@@ -56,8 +54,6 @@ module RS(
                 io_backendPacket_1_bits_ready_bits_RS2_ready,
   output        io_backendPacket_2_ready,
   input         io_backendPacket_2_valid,
-  input  [5:0]  io_backendPacket_2_bits_decoded_instruction_RDold,
-  input         io_backendPacket_2_bits_decoded_instruction_RDold_valid,
   input  [5:0]  io_backendPacket_2_bits_decoded_instruction_RD,
   input         io_backendPacket_2_bits_decoded_instruction_RD_valid,
   input  [5:0]  io_backendPacket_2_bits_decoded_instruction_RS1,
@@ -73,6 +69,7 @@ module RS(
                 io_backendPacket_2_bits_decoded_instruction_RS_type,
   input         io_backendPacket_2_bits_decoded_instruction_needs_ALU,
                 io_backendPacket_2_bits_decoded_instruction_needs_branch_unit,
+                io_backendPacket_2_bits_decoded_instruction_needs_CSRs,
                 io_backendPacket_2_bits_decoded_instruction_SUBTRACT,
                 io_backendPacket_2_bits_decoded_instruction_MULTIPLY,
                 io_backendPacket_2_bits_decoded_instruction_IMMEDIATE,
@@ -82,8 +79,6 @@ module RS(
                 io_backendPacket_2_bits_ready_bits_RS2_ready,
   output        io_backendPacket_3_ready,
   input         io_backendPacket_3_valid,
-  input  [5:0]  io_backendPacket_3_bits_decoded_instruction_RDold,
-  input         io_backendPacket_3_bits_decoded_instruction_RDold_valid,
   input  [5:0]  io_backendPacket_3_bits_decoded_instruction_RD,
   input         io_backendPacket_3_bits_decoded_instruction_RD_valid,
   input  [5:0]  io_backendPacket_3_bits_decoded_instruction_RS1,
@@ -99,6 +94,7 @@ module RS(
                 io_backendPacket_3_bits_decoded_instruction_RS_type,
   input         io_backendPacket_3_bits_decoded_instruction_needs_ALU,
                 io_backendPacket_3_bits_decoded_instruction_needs_branch_unit,
+                io_backendPacket_3_bits_decoded_instruction_needs_CSRs,
                 io_backendPacket_3_bits_decoded_instruction_SUBTRACT,
                 io_backendPacket_3_bits_decoded_instruction_MULTIPLY,
                 io_backendPacket_3_bits_decoded_instruction_IMMEDIATE,
@@ -110,38 +106,40 @@ module RS(
   input  [63:0] io_FU_broadcast_0_bits_RD,
   input  [31:0] io_FU_broadcast_0_bits_RD_data,
   input         io_FU_broadcast_0_bits_RD_valid,
-                io_FU_broadcast_0_bits_branch_taken,
-  input  [31:0] io_FU_broadcast_0_bits_expected_address,
+  input  [31:0] io_FU_broadcast_0_bits_instruction_PC,
+  input         io_FU_broadcast_0_bits_branch_taken,
+  input  [31:0] io_FU_broadcast_0_bits_target_address,
   input         io_FU_broadcast_0_bits_branch_valid,
   input  [5:0]  io_FU_broadcast_0_bits_ROB_index,
   input         io_FU_broadcast_1_valid,
   input  [63:0] io_FU_broadcast_1_bits_RD,
   input  [31:0] io_FU_broadcast_1_bits_RD_data,
   input         io_FU_broadcast_1_bits_RD_valid,
-                io_FU_broadcast_1_bits_branch_taken,
-  input  [31:0] io_FU_broadcast_1_bits_expected_address,
+  input  [31:0] io_FU_broadcast_1_bits_instruction_PC,
+  input         io_FU_broadcast_1_bits_branch_taken,
+  input  [31:0] io_FU_broadcast_1_bits_target_address,
   input         io_FU_broadcast_1_bits_branch_valid,
   input  [5:0]  io_FU_broadcast_1_bits_ROB_index,
   input         io_FU_broadcast_2_valid,
   input  [63:0] io_FU_broadcast_2_bits_RD,
   input  [31:0] io_FU_broadcast_2_bits_RD_data,
   input         io_FU_broadcast_2_bits_RD_valid,
-                io_FU_broadcast_2_bits_branch_taken,
-  input  [31:0] io_FU_broadcast_2_bits_expected_address,
+  input  [31:0] io_FU_broadcast_2_bits_instruction_PC,
+  input         io_FU_broadcast_2_bits_branch_taken,
+  input  [31:0] io_FU_broadcast_2_bits_target_address,
   input         io_FU_broadcast_2_bits_branch_valid,
   input  [5:0]  io_FU_broadcast_2_bits_ROB_index,
   input         io_FU_broadcast_3_valid,
   input  [63:0] io_FU_broadcast_3_bits_RD,
   input  [31:0] io_FU_broadcast_3_bits_RD_data,
   input         io_FU_broadcast_3_bits_RD_valid,
-                io_FU_broadcast_3_bits_branch_taken,
-  input  [31:0] io_FU_broadcast_3_bits_expected_address,
+  input  [31:0] io_FU_broadcast_3_bits_instruction_PC,
+  input         io_FU_broadcast_3_bits_branch_taken,
+  input  [31:0] io_FU_broadcast_3_bits_target_address,
   input         io_FU_broadcast_3_bits_branch_valid,
   input  [5:0]  io_FU_broadcast_3_bits_ROB_index,
   input         io_RF_inputs_0_ready,
   output        io_RF_inputs_0_valid,
-  output [5:0]  io_RF_inputs_0_bits_RDold,
-  output        io_RF_inputs_0_bits_RDold_valid,
   output [5:0]  io_RF_inputs_0_bits_RD,
   output        io_RF_inputs_0_bits_RD_valid,
   output [5:0]  io_RF_inputs_0_bits_RS1,
@@ -157,6 +155,7 @@ module RS(
                 io_RF_inputs_0_bits_RS_type,
   output        io_RF_inputs_0_bits_needs_ALU,
                 io_RF_inputs_0_bits_needs_branch_unit,
+                io_RF_inputs_0_bits_needs_CSRs,
                 io_RF_inputs_0_bits_SUBTRACT,
                 io_RF_inputs_0_bits_MULTIPLY,
                 io_RF_inputs_0_bits_IMMEDIATE,
@@ -164,8 +163,6 @@ module RS(
                 io_RF_inputs_0_bits_IS_STORE,
   input         io_RF_inputs_1_ready,
   output        io_RF_inputs_1_valid,
-  output [5:0]  io_RF_inputs_1_bits_RDold,
-  output        io_RF_inputs_1_bits_RDold_valid,
   output [5:0]  io_RF_inputs_1_bits_RD,
   output        io_RF_inputs_1_bits_RD_valid,
   output [5:0]  io_RF_inputs_1_bits_RS1,
@@ -181,6 +178,7 @@ module RS(
                 io_RF_inputs_1_bits_RS_type,
   output        io_RF_inputs_1_bits_needs_ALU,
                 io_RF_inputs_1_bits_needs_branch_unit,
+                io_RF_inputs_1_bits_needs_CSRs,
                 io_RF_inputs_1_bits_SUBTRACT,
                 io_RF_inputs_1_bits_MULTIPLY,
                 io_RF_inputs_1_bits_IMMEDIATE,
@@ -188,8 +186,6 @@ module RS(
                 io_RF_inputs_1_bits_IS_STORE,
   input         io_RF_inputs_2_ready,
   output        io_RF_inputs_2_valid,
-  output [5:0]  io_RF_inputs_2_bits_RDold,
-  output        io_RF_inputs_2_bits_RDold_valid,
   output [5:0]  io_RF_inputs_2_bits_RD,
   output        io_RF_inputs_2_bits_RD_valid,
   output [5:0]  io_RF_inputs_2_bits_RS1,
@@ -205,6 +201,7 @@ module RS(
                 io_RF_inputs_2_bits_RS_type,
   output        io_RF_inputs_2_bits_needs_ALU,
                 io_RF_inputs_2_bits_needs_branch_unit,
+                io_RF_inputs_2_bits_needs_CSRs,
                 io_RF_inputs_2_bits_SUBTRACT,
                 io_RF_inputs_2_bits_MULTIPLY,
                 io_RF_inputs_2_bits_IMMEDIATE,
@@ -212,8 +209,6 @@ module RS(
                 io_RF_inputs_2_bits_IS_STORE
 );
 
-  reg  [5:0]        reservation_station_0_decoded_instruction_RDold;
-  reg               reservation_station_0_decoded_instruction_RDold_valid;
   reg  [5:0]        reservation_station_0_decoded_instruction_RD;
   reg               reservation_station_0_decoded_instruction_RD_valid;
   reg  [5:0]        reservation_station_0_decoded_instruction_RS1;
@@ -229,6 +224,7 @@ module RS(
   reg  [1:0]        reservation_station_0_decoded_instruction_RS_type;
   reg               reservation_station_0_decoded_instruction_needs_ALU;
   reg               reservation_station_0_decoded_instruction_needs_branch_unit;
+  reg               reservation_station_0_decoded_instruction_needs_CSRs;
   reg               reservation_station_0_decoded_instruction_SUBTRACT;
   reg               reservation_station_0_decoded_instruction_MULTIPLY;
   reg               reservation_station_0_decoded_instruction_IMMEDIATE;
@@ -237,8 +233,6 @@ module RS(
   reg               reservation_station_0_ready_bits_RS1_ready;
   reg               reservation_station_0_ready_bits_RS2_ready;
   reg               reservation_station_0_valid;
-  reg  [5:0]        reservation_station_1_decoded_instruction_RDold;
-  reg               reservation_station_1_decoded_instruction_RDold_valid;
   reg  [5:0]        reservation_station_1_decoded_instruction_RD;
   reg               reservation_station_1_decoded_instruction_RD_valid;
   reg  [5:0]        reservation_station_1_decoded_instruction_RS1;
@@ -254,6 +248,7 @@ module RS(
   reg  [1:0]        reservation_station_1_decoded_instruction_RS_type;
   reg               reservation_station_1_decoded_instruction_needs_ALU;
   reg               reservation_station_1_decoded_instruction_needs_branch_unit;
+  reg               reservation_station_1_decoded_instruction_needs_CSRs;
   reg               reservation_station_1_decoded_instruction_SUBTRACT;
   reg               reservation_station_1_decoded_instruction_MULTIPLY;
   reg               reservation_station_1_decoded_instruction_IMMEDIATE;
@@ -262,8 +257,6 @@ module RS(
   reg               reservation_station_1_ready_bits_RS1_ready;
   reg               reservation_station_1_ready_bits_RS2_ready;
   reg               reservation_station_1_valid;
-  reg  [5:0]        reservation_station_2_decoded_instruction_RDold;
-  reg               reservation_station_2_decoded_instruction_RDold_valid;
   reg  [5:0]        reservation_station_2_decoded_instruction_RD;
   reg               reservation_station_2_decoded_instruction_RD_valid;
   reg  [5:0]        reservation_station_2_decoded_instruction_RS1;
@@ -279,6 +272,7 @@ module RS(
   reg  [1:0]        reservation_station_2_decoded_instruction_RS_type;
   reg               reservation_station_2_decoded_instruction_needs_ALU;
   reg               reservation_station_2_decoded_instruction_needs_branch_unit;
+  reg               reservation_station_2_decoded_instruction_needs_CSRs;
   reg               reservation_station_2_decoded_instruction_SUBTRACT;
   reg               reservation_station_2_decoded_instruction_MULTIPLY;
   reg               reservation_station_2_decoded_instruction_IMMEDIATE;
@@ -287,8 +281,6 @@ module RS(
   reg               reservation_station_2_ready_bits_RS1_ready;
   reg               reservation_station_2_ready_bits_RS2_ready;
   reg               reservation_station_2_valid;
-  reg  [5:0]        reservation_station_3_decoded_instruction_RDold;
-  reg               reservation_station_3_decoded_instruction_RDold_valid;
   reg  [5:0]        reservation_station_3_decoded_instruction_RD;
   reg               reservation_station_3_decoded_instruction_RD_valid;
   reg  [5:0]        reservation_station_3_decoded_instruction_RS1;
@@ -304,6 +296,7 @@ module RS(
   reg  [1:0]        reservation_station_3_decoded_instruction_RS_type;
   reg               reservation_station_3_decoded_instruction_needs_ALU;
   reg               reservation_station_3_decoded_instruction_needs_branch_unit;
+  reg               reservation_station_3_decoded_instruction_needs_CSRs;
   reg               reservation_station_3_decoded_instruction_SUBTRACT;
   reg               reservation_station_3_decoded_instruction_MULTIPLY;
   reg               reservation_station_3_decoded_instruction_IMMEDIATE;
@@ -312,8 +305,6 @@ module RS(
   reg               reservation_station_3_ready_bits_RS1_ready;
   reg               reservation_station_3_ready_bits_RS2_ready;
   reg               reservation_station_3_valid;
-  reg  [5:0]        reservation_station_4_decoded_instruction_RDold;
-  reg               reservation_station_4_decoded_instruction_RDold_valid;
   reg  [5:0]        reservation_station_4_decoded_instruction_RD;
   reg               reservation_station_4_decoded_instruction_RD_valid;
   reg  [5:0]        reservation_station_4_decoded_instruction_RS1;
@@ -329,6 +320,7 @@ module RS(
   reg  [1:0]        reservation_station_4_decoded_instruction_RS_type;
   reg               reservation_station_4_decoded_instruction_needs_ALU;
   reg               reservation_station_4_decoded_instruction_needs_branch_unit;
+  reg               reservation_station_4_decoded_instruction_needs_CSRs;
   reg               reservation_station_4_decoded_instruction_SUBTRACT;
   reg               reservation_station_4_decoded_instruction_MULTIPLY;
   reg               reservation_station_4_decoded_instruction_IMMEDIATE;
@@ -337,8 +329,6 @@ module RS(
   reg               reservation_station_4_ready_bits_RS1_ready;
   reg               reservation_station_4_ready_bits_RS2_ready;
   reg               reservation_station_4_valid;
-  reg  [5:0]        reservation_station_5_decoded_instruction_RDold;
-  reg               reservation_station_5_decoded_instruction_RDold_valid;
   reg  [5:0]        reservation_station_5_decoded_instruction_RD;
   reg               reservation_station_5_decoded_instruction_RD_valid;
   reg  [5:0]        reservation_station_5_decoded_instruction_RS1;
@@ -354,6 +344,7 @@ module RS(
   reg  [1:0]        reservation_station_5_decoded_instruction_RS_type;
   reg               reservation_station_5_decoded_instruction_needs_ALU;
   reg               reservation_station_5_decoded_instruction_needs_branch_unit;
+  reg               reservation_station_5_decoded_instruction_needs_CSRs;
   reg               reservation_station_5_decoded_instruction_SUBTRACT;
   reg               reservation_station_5_decoded_instruction_MULTIPLY;
   reg               reservation_station_5_decoded_instruction_IMMEDIATE;
@@ -362,8 +353,6 @@ module RS(
   reg               reservation_station_5_ready_bits_RS1_ready;
   reg               reservation_station_5_ready_bits_RS2_ready;
   reg               reservation_station_5_valid;
-  reg  [5:0]        reservation_station_6_decoded_instruction_RDold;
-  reg               reservation_station_6_decoded_instruction_RDold_valid;
   reg  [5:0]        reservation_station_6_decoded_instruction_RD;
   reg               reservation_station_6_decoded_instruction_RD_valid;
   reg  [5:0]        reservation_station_6_decoded_instruction_RS1;
@@ -379,6 +368,7 @@ module RS(
   reg  [1:0]        reservation_station_6_decoded_instruction_RS_type;
   reg               reservation_station_6_decoded_instruction_needs_ALU;
   reg               reservation_station_6_decoded_instruction_needs_branch_unit;
+  reg               reservation_station_6_decoded_instruction_needs_CSRs;
   reg               reservation_station_6_decoded_instruction_SUBTRACT;
   reg               reservation_station_6_decoded_instruction_MULTIPLY;
   reg               reservation_station_6_decoded_instruction_IMMEDIATE;
@@ -387,8 +377,6 @@ module RS(
   reg               reservation_station_6_ready_bits_RS1_ready;
   reg               reservation_station_6_ready_bits_RS2_ready;
   reg               reservation_station_6_valid;
-  reg  [5:0]        reservation_station_7_decoded_instruction_RDold;
-  reg               reservation_station_7_decoded_instruction_RDold_valid;
   reg  [5:0]        reservation_station_7_decoded_instruction_RD;
   reg               reservation_station_7_decoded_instruction_RD_valid;
   reg  [5:0]        reservation_station_7_decoded_instruction_RS1;
@@ -404,6 +392,7 @@ module RS(
   reg  [1:0]        reservation_station_7_decoded_instruction_RS_type;
   reg               reservation_station_7_decoded_instruction_needs_ALU;
   reg               reservation_station_7_decoded_instruction_needs_branch_unit;
+  reg               reservation_station_7_decoded_instruction_needs_CSRs;
   reg               reservation_station_7_decoded_instruction_SUBTRACT;
   reg               reservation_station_7_decoded_instruction_MULTIPLY;
   reg               reservation_station_7_decoded_instruction_IMMEDIATE;
@@ -412,8 +401,6 @@ module RS(
   reg               reservation_station_7_ready_bits_RS1_ready;
   reg               reservation_station_7_ready_bits_RS2_ready;
   reg               reservation_station_7_valid;
-  reg  [5:0]        reservation_station_8_decoded_instruction_RDold;
-  reg               reservation_station_8_decoded_instruction_RDold_valid;
   reg  [5:0]        reservation_station_8_decoded_instruction_RD;
   reg               reservation_station_8_decoded_instruction_RD_valid;
   reg  [5:0]        reservation_station_8_decoded_instruction_RS1;
@@ -429,6 +416,7 @@ module RS(
   reg  [1:0]        reservation_station_8_decoded_instruction_RS_type;
   reg               reservation_station_8_decoded_instruction_needs_ALU;
   reg               reservation_station_8_decoded_instruction_needs_branch_unit;
+  reg               reservation_station_8_decoded_instruction_needs_CSRs;
   reg               reservation_station_8_decoded_instruction_SUBTRACT;
   reg               reservation_station_8_decoded_instruction_MULTIPLY;
   reg               reservation_station_8_decoded_instruction_IMMEDIATE;
@@ -437,8 +425,6 @@ module RS(
   reg               reservation_station_8_ready_bits_RS1_ready;
   reg               reservation_station_8_ready_bits_RS2_ready;
   reg               reservation_station_8_valid;
-  reg  [5:0]        reservation_station_9_decoded_instruction_RDold;
-  reg               reservation_station_9_decoded_instruction_RDold_valid;
   reg  [5:0]        reservation_station_9_decoded_instruction_RD;
   reg               reservation_station_9_decoded_instruction_RD_valid;
   reg  [5:0]        reservation_station_9_decoded_instruction_RS1;
@@ -454,6 +440,7 @@ module RS(
   reg  [1:0]        reservation_station_9_decoded_instruction_RS_type;
   reg               reservation_station_9_decoded_instruction_needs_ALU;
   reg               reservation_station_9_decoded_instruction_needs_branch_unit;
+  reg               reservation_station_9_decoded_instruction_needs_CSRs;
   reg               reservation_station_9_decoded_instruction_SUBTRACT;
   reg               reservation_station_9_decoded_instruction_MULTIPLY;
   reg               reservation_station_9_decoded_instruction_IMMEDIATE;
@@ -462,8 +449,6 @@ module RS(
   reg               reservation_station_9_ready_bits_RS1_ready;
   reg               reservation_station_9_ready_bits_RS2_ready;
   reg               reservation_station_9_valid;
-  reg  [5:0]        reservation_station_10_decoded_instruction_RDold;
-  reg               reservation_station_10_decoded_instruction_RDold_valid;
   reg  [5:0]        reservation_station_10_decoded_instruction_RD;
   reg               reservation_station_10_decoded_instruction_RD_valid;
   reg  [5:0]        reservation_station_10_decoded_instruction_RS1;
@@ -479,6 +464,7 @@ module RS(
   reg  [1:0]        reservation_station_10_decoded_instruction_RS_type;
   reg               reservation_station_10_decoded_instruction_needs_ALU;
   reg               reservation_station_10_decoded_instruction_needs_branch_unit;
+  reg               reservation_station_10_decoded_instruction_needs_CSRs;
   reg               reservation_station_10_decoded_instruction_SUBTRACT;
   reg               reservation_station_10_decoded_instruction_MULTIPLY;
   reg               reservation_station_10_decoded_instruction_IMMEDIATE;
@@ -487,8 +473,6 @@ module RS(
   reg               reservation_station_10_ready_bits_RS1_ready;
   reg               reservation_station_10_ready_bits_RS2_ready;
   reg               reservation_station_10_valid;
-  reg  [5:0]        reservation_station_11_decoded_instruction_RDold;
-  reg               reservation_station_11_decoded_instruction_RDold_valid;
   reg  [5:0]        reservation_station_11_decoded_instruction_RD;
   reg               reservation_station_11_decoded_instruction_RD_valid;
   reg  [5:0]        reservation_station_11_decoded_instruction_RS1;
@@ -504,6 +488,7 @@ module RS(
   reg  [1:0]        reservation_station_11_decoded_instruction_RS_type;
   reg               reservation_station_11_decoded_instruction_needs_ALU;
   reg               reservation_station_11_decoded_instruction_needs_branch_unit;
+  reg               reservation_station_11_decoded_instruction_needs_CSRs;
   reg               reservation_station_11_decoded_instruction_SUBTRACT;
   reg               reservation_station_11_decoded_instruction_MULTIPLY;
   reg               reservation_station_11_decoded_instruction_IMMEDIATE;
@@ -512,8 +497,6 @@ module RS(
   reg               reservation_station_11_ready_bits_RS1_ready;
   reg               reservation_station_11_ready_bits_RS2_ready;
   reg               reservation_station_11_valid;
-  reg  [5:0]        reservation_station_12_decoded_instruction_RDold;
-  reg               reservation_station_12_decoded_instruction_RDold_valid;
   reg  [5:0]        reservation_station_12_decoded_instruction_RD;
   reg               reservation_station_12_decoded_instruction_RD_valid;
   reg  [5:0]        reservation_station_12_decoded_instruction_RS1;
@@ -529,6 +512,7 @@ module RS(
   reg  [1:0]        reservation_station_12_decoded_instruction_RS_type;
   reg               reservation_station_12_decoded_instruction_needs_ALU;
   reg               reservation_station_12_decoded_instruction_needs_branch_unit;
+  reg               reservation_station_12_decoded_instruction_needs_CSRs;
   reg               reservation_station_12_decoded_instruction_SUBTRACT;
   reg               reservation_station_12_decoded_instruction_MULTIPLY;
   reg               reservation_station_12_decoded_instruction_IMMEDIATE;
@@ -537,8 +521,6 @@ module RS(
   reg               reservation_station_12_ready_bits_RS1_ready;
   reg               reservation_station_12_ready_bits_RS2_ready;
   reg               reservation_station_12_valid;
-  reg  [5:0]        reservation_station_13_decoded_instruction_RDold;
-  reg               reservation_station_13_decoded_instruction_RDold_valid;
   reg  [5:0]        reservation_station_13_decoded_instruction_RD;
   reg               reservation_station_13_decoded_instruction_RD_valid;
   reg  [5:0]        reservation_station_13_decoded_instruction_RS1;
@@ -554,6 +536,7 @@ module RS(
   reg  [1:0]        reservation_station_13_decoded_instruction_RS_type;
   reg               reservation_station_13_decoded_instruction_needs_ALU;
   reg               reservation_station_13_decoded_instruction_needs_branch_unit;
+  reg               reservation_station_13_decoded_instruction_needs_CSRs;
   reg               reservation_station_13_decoded_instruction_SUBTRACT;
   reg               reservation_station_13_decoded_instruction_MULTIPLY;
   reg               reservation_station_13_decoded_instruction_IMMEDIATE;
@@ -562,8 +545,6 @@ module RS(
   reg               reservation_station_13_ready_bits_RS1_ready;
   reg               reservation_station_13_ready_bits_RS2_ready;
   reg               reservation_station_13_valid;
-  reg  [5:0]        reservation_station_14_decoded_instruction_RDold;
-  reg               reservation_station_14_decoded_instruction_RDold_valid;
   reg  [5:0]        reservation_station_14_decoded_instruction_RD;
   reg               reservation_station_14_decoded_instruction_RD_valid;
   reg  [5:0]        reservation_station_14_decoded_instruction_RS1;
@@ -579,6 +560,7 @@ module RS(
   reg  [1:0]        reservation_station_14_decoded_instruction_RS_type;
   reg               reservation_station_14_decoded_instruction_needs_ALU;
   reg               reservation_station_14_decoded_instruction_needs_branch_unit;
+  reg               reservation_station_14_decoded_instruction_needs_CSRs;
   reg               reservation_station_14_decoded_instruction_SUBTRACT;
   reg               reservation_station_14_decoded_instruction_MULTIPLY;
   reg               reservation_station_14_decoded_instruction_IMMEDIATE;
@@ -587,8 +569,6 @@ module RS(
   reg               reservation_station_14_ready_bits_RS1_ready;
   reg               reservation_station_14_ready_bits_RS2_ready;
   reg               reservation_station_14_valid;
-  reg  [5:0]        reservation_station_15_decoded_instruction_RDold;
-  reg               reservation_station_15_decoded_instruction_RDold_valid;
   reg  [5:0]        reservation_station_15_decoded_instruction_RD;
   reg               reservation_station_15_decoded_instruction_RD_valid;
   reg  [5:0]        reservation_station_15_decoded_instruction_RS1;
@@ -604,6 +584,7 @@ module RS(
   reg  [1:0]        reservation_station_15_decoded_instruction_RS_type;
   reg               reservation_station_15_decoded_instruction_needs_ALU;
   reg               reservation_station_15_decoded_instruction_needs_branch_unit;
+  reg               reservation_station_15_decoded_instruction_needs_CSRs;
   reg               reservation_station_15_decoded_instruction_SUBTRACT;
   reg               reservation_station_15_decoded_instruction_MULTIPLY;
   reg               reservation_station_15_decoded_instruction_IMMEDIATE;
@@ -612,8 +593,6 @@ module RS(
   reg               reservation_station_15_ready_bits_RS1_ready;
   reg               reservation_station_15_ready_bits_RS2_ready;
   reg               reservation_station_15_valid;
-  reg  [5:0]        reservation_station_16_decoded_instruction_RDold;
-  reg               reservation_station_16_decoded_instruction_RDold_valid;
   reg  [5:0]        reservation_station_16_decoded_instruction_RD;
   reg               reservation_station_16_decoded_instruction_RD_valid;
   reg  [5:0]        reservation_station_16_decoded_instruction_RS1;
@@ -629,6 +608,7 @@ module RS(
   reg  [1:0]        reservation_station_16_decoded_instruction_RS_type;
   reg               reservation_station_16_decoded_instruction_needs_ALU;
   reg               reservation_station_16_decoded_instruction_needs_branch_unit;
+  reg               reservation_station_16_decoded_instruction_needs_CSRs;
   reg               reservation_station_16_decoded_instruction_SUBTRACT;
   reg               reservation_station_16_decoded_instruction_MULTIPLY;
   reg               reservation_station_16_decoded_instruction_IMMEDIATE;
@@ -637,8 +617,6 @@ module RS(
   reg               reservation_station_16_ready_bits_RS1_ready;
   reg               reservation_station_16_ready_bits_RS2_ready;
   reg               reservation_station_16_valid;
-  reg  [5:0]        reservation_station_17_decoded_instruction_RDold;
-  reg               reservation_station_17_decoded_instruction_RDold_valid;
   reg  [5:0]        reservation_station_17_decoded_instruction_RD;
   reg               reservation_station_17_decoded_instruction_RD_valid;
   reg  [5:0]        reservation_station_17_decoded_instruction_RS1;
@@ -654,6 +632,7 @@ module RS(
   reg  [1:0]        reservation_station_17_decoded_instruction_RS_type;
   reg               reservation_station_17_decoded_instruction_needs_ALU;
   reg               reservation_station_17_decoded_instruction_needs_branch_unit;
+  reg               reservation_station_17_decoded_instruction_needs_CSRs;
   reg               reservation_station_17_decoded_instruction_SUBTRACT;
   reg               reservation_station_17_decoded_instruction_MULTIPLY;
   reg               reservation_station_17_decoded_instruction_IMMEDIATE;
@@ -662,8 +641,6 @@ module RS(
   reg               reservation_station_17_ready_bits_RS1_ready;
   reg               reservation_station_17_ready_bits_RS2_ready;
   reg               reservation_station_17_valid;
-  reg  [5:0]        reservation_station_18_decoded_instruction_RDold;
-  reg               reservation_station_18_decoded_instruction_RDold_valid;
   reg  [5:0]        reservation_station_18_decoded_instruction_RD;
   reg               reservation_station_18_decoded_instruction_RD_valid;
   reg  [5:0]        reservation_station_18_decoded_instruction_RS1;
@@ -679,6 +656,7 @@ module RS(
   reg  [1:0]        reservation_station_18_decoded_instruction_RS_type;
   reg               reservation_station_18_decoded_instruction_needs_ALU;
   reg               reservation_station_18_decoded_instruction_needs_branch_unit;
+  reg               reservation_station_18_decoded_instruction_needs_CSRs;
   reg               reservation_station_18_decoded_instruction_SUBTRACT;
   reg               reservation_station_18_decoded_instruction_MULTIPLY;
   reg               reservation_station_18_decoded_instruction_IMMEDIATE;
@@ -687,8 +665,6 @@ module RS(
   reg               reservation_station_18_ready_bits_RS1_ready;
   reg               reservation_station_18_ready_bits_RS2_ready;
   reg               reservation_station_18_valid;
-  reg  [5:0]        reservation_station_19_decoded_instruction_RDold;
-  reg               reservation_station_19_decoded_instruction_RDold_valid;
   reg  [5:0]        reservation_station_19_decoded_instruction_RD;
   reg               reservation_station_19_decoded_instruction_RD_valid;
   reg  [5:0]        reservation_station_19_decoded_instruction_RS1;
@@ -704,6 +680,7 @@ module RS(
   reg  [1:0]        reservation_station_19_decoded_instruction_RS_type;
   reg               reservation_station_19_decoded_instruction_needs_ALU;
   reg               reservation_station_19_decoded_instruction_needs_branch_unit;
+  reg               reservation_station_19_decoded_instruction_needs_CSRs;
   reg               reservation_station_19_decoded_instruction_SUBTRACT;
   reg               reservation_station_19_decoded_instruction_MULTIPLY;
   reg               reservation_station_19_decoded_instruction_IMMEDIATE;
@@ -1667,72 +1644,6 @@ module RS(
      {schedulable_instructions_1},
      {schedulable_instructions_0}};
   wire [31:0][5:0]  _GEN_117 =
-    {{reservation_station_0_decoded_instruction_RDold},
-     {reservation_station_0_decoded_instruction_RDold},
-     {reservation_station_0_decoded_instruction_RDold},
-     {reservation_station_0_decoded_instruction_RDold},
-     {reservation_station_0_decoded_instruction_RDold},
-     {reservation_station_0_decoded_instruction_RDold},
-     {reservation_station_0_decoded_instruction_RDold},
-     {reservation_station_0_decoded_instruction_RDold},
-     {reservation_station_0_decoded_instruction_RDold},
-     {reservation_station_0_decoded_instruction_RDold},
-     {reservation_station_0_decoded_instruction_RDold},
-     {reservation_station_0_decoded_instruction_RDold},
-     {reservation_station_19_decoded_instruction_RDold},
-     {reservation_station_18_decoded_instruction_RDold},
-     {reservation_station_17_decoded_instruction_RDold},
-     {reservation_station_16_decoded_instruction_RDold},
-     {reservation_station_15_decoded_instruction_RDold},
-     {reservation_station_14_decoded_instruction_RDold},
-     {reservation_station_13_decoded_instruction_RDold},
-     {reservation_station_12_decoded_instruction_RDold},
-     {reservation_station_11_decoded_instruction_RDold},
-     {reservation_station_10_decoded_instruction_RDold},
-     {reservation_station_9_decoded_instruction_RDold},
-     {reservation_station_8_decoded_instruction_RDold},
-     {reservation_station_7_decoded_instruction_RDold},
-     {reservation_station_6_decoded_instruction_RDold},
-     {reservation_station_5_decoded_instruction_RDold},
-     {reservation_station_4_decoded_instruction_RDold},
-     {reservation_station_3_decoded_instruction_RDold},
-     {reservation_station_2_decoded_instruction_RDold},
-     {reservation_station_1_decoded_instruction_RDold},
-     {reservation_station_0_decoded_instruction_RDold}};
-  wire [31:0]       _GEN_118 =
-    {{reservation_station_0_decoded_instruction_RDold_valid},
-     {reservation_station_0_decoded_instruction_RDold_valid},
-     {reservation_station_0_decoded_instruction_RDold_valid},
-     {reservation_station_0_decoded_instruction_RDold_valid},
-     {reservation_station_0_decoded_instruction_RDold_valid},
-     {reservation_station_0_decoded_instruction_RDold_valid},
-     {reservation_station_0_decoded_instruction_RDold_valid},
-     {reservation_station_0_decoded_instruction_RDold_valid},
-     {reservation_station_0_decoded_instruction_RDold_valid},
-     {reservation_station_0_decoded_instruction_RDold_valid},
-     {reservation_station_0_decoded_instruction_RDold_valid},
-     {reservation_station_0_decoded_instruction_RDold_valid},
-     {reservation_station_19_decoded_instruction_RDold_valid},
-     {reservation_station_18_decoded_instruction_RDold_valid},
-     {reservation_station_17_decoded_instruction_RDold_valid},
-     {reservation_station_16_decoded_instruction_RDold_valid},
-     {reservation_station_15_decoded_instruction_RDold_valid},
-     {reservation_station_14_decoded_instruction_RDold_valid},
-     {reservation_station_13_decoded_instruction_RDold_valid},
-     {reservation_station_12_decoded_instruction_RDold_valid},
-     {reservation_station_11_decoded_instruction_RDold_valid},
-     {reservation_station_10_decoded_instruction_RDold_valid},
-     {reservation_station_9_decoded_instruction_RDold_valid},
-     {reservation_station_8_decoded_instruction_RDold_valid},
-     {reservation_station_7_decoded_instruction_RDold_valid},
-     {reservation_station_6_decoded_instruction_RDold_valid},
-     {reservation_station_5_decoded_instruction_RDold_valid},
-     {reservation_station_4_decoded_instruction_RDold_valid},
-     {reservation_station_3_decoded_instruction_RDold_valid},
-     {reservation_station_2_decoded_instruction_RDold_valid},
-     {reservation_station_1_decoded_instruction_RDold_valid},
-     {reservation_station_0_decoded_instruction_RDold_valid}};
-  wire [31:0][5:0]  _GEN_119 =
     {{reservation_station_0_decoded_instruction_RD},
      {reservation_station_0_decoded_instruction_RD},
      {reservation_station_0_decoded_instruction_RD},
@@ -1765,7 +1676,7 @@ module RS(
      {reservation_station_2_decoded_instruction_RD},
      {reservation_station_1_decoded_instruction_RD},
      {reservation_station_0_decoded_instruction_RD}};
-  wire [31:0]       _GEN_120 =
+  wire [31:0]       _GEN_118 =
     {{reservation_station_0_decoded_instruction_RD_valid},
      {reservation_station_0_decoded_instruction_RD_valid},
      {reservation_station_0_decoded_instruction_RD_valid},
@@ -1798,7 +1709,7 @@ module RS(
      {reservation_station_2_decoded_instruction_RD_valid},
      {reservation_station_1_decoded_instruction_RD_valid},
      {reservation_station_0_decoded_instruction_RD_valid}};
-  wire [31:0][5:0]  _GEN_121 =
+  wire [31:0][5:0]  _GEN_119 =
     {{reservation_station_0_decoded_instruction_RS1},
      {reservation_station_0_decoded_instruction_RS1},
      {reservation_station_0_decoded_instruction_RS1},
@@ -1831,7 +1742,7 @@ module RS(
      {reservation_station_2_decoded_instruction_RS1},
      {reservation_station_1_decoded_instruction_RS1},
      {reservation_station_0_decoded_instruction_RS1}};
-  wire [31:0]       _GEN_122 =
+  wire [31:0]       _GEN_120 =
     {{reservation_station_0_decoded_instruction_RS1_valid},
      {reservation_station_0_decoded_instruction_RS1_valid},
      {reservation_station_0_decoded_instruction_RS1_valid},
@@ -1864,7 +1775,7 @@ module RS(
      {reservation_station_2_decoded_instruction_RS1_valid},
      {reservation_station_1_decoded_instruction_RS1_valid},
      {reservation_station_0_decoded_instruction_RS1_valid}};
-  wire [31:0][5:0]  _GEN_123 =
+  wire [31:0][5:0]  _GEN_121 =
     {{reservation_station_0_decoded_instruction_RS2},
      {reservation_station_0_decoded_instruction_RS2},
      {reservation_station_0_decoded_instruction_RS2},
@@ -1897,7 +1808,7 @@ module RS(
      {reservation_station_2_decoded_instruction_RS2},
      {reservation_station_1_decoded_instruction_RS2},
      {reservation_station_0_decoded_instruction_RS2}};
-  wire [31:0]       _GEN_124 =
+  wire [31:0]       _GEN_122 =
     {{reservation_station_0_decoded_instruction_RS2_valid},
      {reservation_station_0_decoded_instruction_RS2_valid},
      {reservation_station_0_decoded_instruction_RS2_valid},
@@ -1930,7 +1841,7 @@ module RS(
      {reservation_station_2_decoded_instruction_RS2_valid},
      {reservation_station_1_decoded_instruction_RS2_valid},
      {reservation_station_0_decoded_instruction_RS2_valid}};
-  wire [31:0][31:0] _GEN_125 =
+  wire [31:0][31:0] _GEN_123 =
     {{reservation_station_0_decoded_instruction_IMM},
      {reservation_station_0_decoded_instruction_IMM},
      {reservation_station_0_decoded_instruction_IMM},
@@ -1963,7 +1874,7 @@ module RS(
      {reservation_station_2_decoded_instruction_IMM},
      {reservation_station_1_decoded_instruction_IMM},
      {reservation_station_0_decoded_instruction_IMM}};
-  wire [31:0][2:0]  _GEN_126 =
+  wire [31:0][2:0]  _GEN_124 =
     {{reservation_station_0_decoded_instruction_FUNCT3},
      {reservation_station_0_decoded_instruction_FUNCT3},
      {reservation_station_0_decoded_instruction_FUNCT3},
@@ -1996,7 +1907,7 @@ module RS(
      {reservation_station_2_decoded_instruction_FUNCT3},
      {reservation_station_1_decoded_instruction_FUNCT3},
      {reservation_station_0_decoded_instruction_FUNCT3}};
-  wire [31:0][3:0]  _GEN_127 =
+  wire [31:0][3:0]  _GEN_125 =
     {{reservation_station_0_decoded_instruction_packet_index},
      {reservation_station_0_decoded_instruction_packet_index},
      {reservation_station_0_decoded_instruction_packet_index},
@@ -2029,7 +1940,7 @@ module RS(
      {reservation_station_2_decoded_instruction_packet_index},
      {reservation_station_1_decoded_instruction_packet_index},
      {reservation_station_0_decoded_instruction_packet_index}};
-  wire [31:0][5:0]  _GEN_128 =
+  wire [31:0][5:0]  _GEN_126 =
     {{reservation_station_0_decoded_instruction_ROB_index},
      {reservation_station_0_decoded_instruction_ROB_index},
      {reservation_station_0_decoded_instruction_ROB_index},
@@ -2062,7 +1973,7 @@ module RS(
      {reservation_station_2_decoded_instruction_ROB_index},
      {reservation_station_1_decoded_instruction_ROB_index},
      {reservation_station_0_decoded_instruction_ROB_index}};
-  wire [31:0][4:0]  _GEN_129 =
+  wire [31:0][4:0]  _GEN_127 =
     {{reservation_station_0_decoded_instruction_instructionType},
      {reservation_station_0_decoded_instruction_instructionType},
      {reservation_station_0_decoded_instruction_instructionType},
@@ -2095,7 +2006,7 @@ module RS(
      {reservation_station_2_decoded_instruction_instructionType},
      {reservation_station_1_decoded_instruction_instructionType},
      {reservation_station_0_decoded_instruction_instructionType}};
-  wire [31:0][1:0]  _GEN_130 =
+  wire [31:0][1:0]  _GEN_128 =
     {{reservation_station_0_decoded_instruction_portID},
      {reservation_station_0_decoded_instruction_portID},
      {reservation_station_0_decoded_instruction_portID},
@@ -2128,7 +2039,7 @@ module RS(
      {reservation_station_2_decoded_instruction_portID},
      {reservation_station_1_decoded_instruction_portID},
      {reservation_station_0_decoded_instruction_portID}};
-  wire [31:0][1:0]  _GEN_131 =
+  wire [31:0][1:0]  _GEN_129 =
     {{reservation_station_0_decoded_instruction_RS_type},
      {reservation_station_0_decoded_instruction_RS_type},
      {reservation_station_0_decoded_instruction_RS_type},
@@ -2161,7 +2072,7 @@ module RS(
      {reservation_station_2_decoded_instruction_RS_type},
      {reservation_station_1_decoded_instruction_RS_type},
      {reservation_station_0_decoded_instruction_RS_type}};
-  wire [31:0]       _GEN_132 =
+  wire [31:0]       _GEN_130 =
     {{reservation_station_0_decoded_instruction_needs_ALU},
      {reservation_station_0_decoded_instruction_needs_ALU},
      {reservation_station_0_decoded_instruction_needs_ALU},
@@ -2194,7 +2105,7 @@ module RS(
      {reservation_station_2_decoded_instruction_needs_ALU},
      {reservation_station_1_decoded_instruction_needs_ALU},
      {reservation_station_0_decoded_instruction_needs_ALU}};
-  wire [31:0]       _GEN_133 =
+  wire [31:0]       _GEN_131 =
     {{reservation_station_0_decoded_instruction_needs_branch_unit},
      {reservation_station_0_decoded_instruction_needs_branch_unit},
      {reservation_station_0_decoded_instruction_needs_branch_unit},
@@ -2227,7 +2138,40 @@ module RS(
      {reservation_station_2_decoded_instruction_needs_branch_unit},
      {reservation_station_1_decoded_instruction_needs_branch_unit},
      {reservation_station_0_decoded_instruction_needs_branch_unit}};
-  wire [31:0]       _GEN_134 =
+  wire [31:0]       _GEN_132 =
+    {{reservation_station_0_decoded_instruction_needs_CSRs},
+     {reservation_station_0_decoded_instruction_needs_CSRs},
+     {reservation_station_0_decoded_instruction_needs_CSRs},
+     {reservation_station_0_decoded_instruction_needs_CSRs},
+     {reservation_station_0_decoded_instruction_needs_CSRs},
+     {reservation_station_0_decoded_instruction_needs_CSRs},
+     {reservation_station_0_decoded_instruction_needs_CSRs},
+     {reservation_station_0_decoded_instruction_needs_CSRs},
+     {reservation_station_0_decoded_instruction_needs_CSRs},
+     {reservation_station_0_decoded_instruction_needs_CSRs},
+     {reservation_station_0_decoded_instruction_needs_CSRs},
+     {reservation_station_0_decoded_instruction_needs_CSRs},
+     {reservation_station_19_decoded_instruction_needs_CSRs},
+     {reservation_station_18_decoded_instruction_needs_CSRs},
+     {reservation_station_17_decoded_instruction_needs_CSRs},
+     {reservation_station_16_decoded_instruction_needs_CSRs},
+     {reservation_station_15_decoded_instruction_needs_CSRs},
+     {reservation_station_14_decoded_instruction_needs_CSRs},
+     {reservation_station_13_decoded_instruction_needs_CSRs},
+     {reservation_station_12_decoded_instruction_needs_CSRs},
+     {reservation_station_11_decoded_instruction_needs_CSRs},
+     {reservation_station_10_decoded_instruction_needs_CSRs},
+     {reservation_station_9_decoded_instruction_needs_CSRs},
+     {reservation_station_8_decoded_instruction_needs_CSRs},
+     {reservation_station_7_decoded_instruction_needs_CSRs},
+     {reservation_station_6_decoded_instruction_needs_CSRs},
+     {reservation_station_5_decoded_instruction_needs_CSRs},
+     {reservation_station_4_decoded_instruction_needs_CSRs},
+     {reservation_station_3_decoded_instruction_needs_CSRs},
+     {reservation_station_2_decoded_instruction_needs_CSRs},
+     {reservation_station_1_decoded_instruction_needs_CSRs},
+     {reservation_station_0_decoded_instruction_needs_CSRs}};
+  wire [31:0]       _GEN_133 =
     {{reservation_station_0_decoded_instruction_SUBTRACT},
      {reservation_station_0_decoded_instruction_SUBTRACT},
      {reservation_station_0_decoded_instruction_SUBTRACT},
@@ -2260,7 +2204,7 @@ module RS(
      {reservation_station_2_decoded_instruction_SUBTRACT},
      {reservation_station_1_decoded_instruction_SUBTRACT},
      {reservation_station_0_decoded_instruction_SUBTRACT}};
-  wire [31:0]       _GEN_135 =
+  wire [31:0]       _GEN_134 =
     {{reservation_station_0_decoded_instruction_MULTIPLY},
      {reservation_station_0_decoded_instruction_MULTIPLY},
      {reservation_station_0_decoded_instruction_MULTIPLY},
@@ -2293,7 +2237,7 @@ module RS(
      {reservation_station_2_decoded_instruction_MULTIPLY},
      {reservation_station_1_decoded_instruction_MULTIPLY},
      {reservation_station_0_decoded_instruction_MULTIPLY}};
-  wire [31:0]       _GEN_136 =
+  wire [31:0]       _GEN_135 =
     {{reservation_station_0_decoded_instruction_IMMEDIATE},
      {reservation_station_0_decoded_instruction_IMMEDIATE},
      {reservation_station_0_decoded_instruction_IMMEDIATE},
@@ -2326,7 +2270,7 @@ module RS(
      {reservation_station_2_decoded_instruction_IMMEDIATE},
      {reservation_station_1_decoded_instruction_IMMEDIATE},
      {reservation_station_0_decoded_instruction_IMMEDIATE}};
-  wire [31:0]       _GEN_137 =
+  wire [31:0]       _GEN_136 =
     {{reservation_station_0_decoded_instruction_IS_LOAD},
      {reservation_station_0_decoded_instruction_IS_LOAD},
      {reservation_station_0_decoded_instruction_IS_LOAD},
@@ -2359,7 +2303,7 @@ module RS(
      {reservation_station_2_decoded_instruction_IS_LOAD},
      {reservation_station_1_decoded_instruction_IS_LOAD},
      {reservation_station_0_decoded_instruction_IS_LOAD}};
-  wire [31:0]       _GEN_138 =
+  wire [31:0]       _GEN_137 =
     {{reservation_station_0_decoded_instruction_IS_STORE},
      {reservation_station_0_decoded_instruction_IS_STORE},
      {reservation_station_0_decoded_instruction_IS_STORE},
@@ -2455,8 +2399,6 @@ module RS(
     | {4{availalbe_RS_entries == 5'h13}} | {4{availalbe_RS_entries == 5'h14}};
   always @(posedge clock) begin
     if (reset) begin
-      reservation_station_0_decoded_instruction_RDold <= 6'h0;
-      reservation_station_0_decoded_instruction_RDold_valid <= 1'h0;
       reservation_station_0_decoded_instruction_RD <= 6'h0;
       reservation_station_0_decoded_instruction_RD_valid <= 1'h0;
       reservation_station_0_decoded_instruction_RS1 <= 6'h0;
@@ -2472,6 +2414,7 @@ module RS(
       reservation_station_0_decoded_instruction_RS_type <= 2'h0;
       reservation_station_0_decoded_instruction_needs_ALU <= 1'h0;
       reservation_station_0_decoded_instruction_needs_branch_unit <= 1'h0;
+      reservation_station_0_decoded_instruction_needs_CSRs <= 1'h0;
       reservation_station_0_decoded_instruction_SUBTRACT <= 1'h0;
       reservation_station_0_decoded_instruction_MULTIPLY <= 1'h0;
       reservation_station_0_decoded_instruction_IMMEDIATE <= 1'h0;
@@ -2480,8 +2423,6 @@ module RS(
       reservation_station_0_ready_bits_RS1_ready <= 1'h0;
       reservation_station_0_ready_bits_RS2_ready <= 1'h0;
       reservation_station_0_valid <= 1'h0;
-      reservation_station_1_decoded_instruction_RDold <= 6'h0;
-      reservation_station_1_decoded_instruction_RDold_valid <= 1'h0;
       reservation_station_1_decoded_instruction_RD <= 6'h0;
       reservation_station_1_decoded_instruction_RD_valid <= 1'h0;
       reservation_station_1_decoded_instruction_RS1 <= 6'h0;
@@ -2497,6 +2438,7 @@ module RS(
       reservation_station_1_decoded_instruction_RS_type <= 2'h0;
       reservation_station_1_decoded_instruction_needs_ALU <= 1'h0;
       reservation_station_1_decoded_instruction_needs_branch_unit <= 1'h0;
+      reservation_station_1_decoded_instruction_needs_CSRs <= 1'h0;
       reservation_station_1_decoded_instruction_SUBTRACT <= 1'h0;
       reservation_station_1_decoded_instruction_MULTIPLY <= 1'h0;
       reservation_station_1_decoded_instruction_IMMEDIATE <= 1'h0;
@@ -2505,8 +2447,6 @@ module RS(
       reservation_station_1_ready_bits_RS1_ready <= 1'h0;
       reservation_station_1_ready_bits_RS2_ready <= 1'h0;
       reservation_station_1_valid <= 1'h0;
-      reservation_station_2_decoded_instruction_RDold <= 6'h0;
-      reservation_station_2_decoded_instruction_RDold_valid <= 1'h0;
       reservation_station_2_decoded_instruction_RD <= 6'h0;
       reservation_station_2_decoded_instruction_RD_valid <= 1'h0;
       reservation_station_2_decoded_instruction_RS1 <= 6'h0;
@@ -2522,6 +2462,7 @@ module RS(
       reservation_station_2_decoded_instruction_RS_type <= 2'h0;
       reservation_station_2_decoded_instruction_needs_ALU <= 1'h0;
       reservation_station_2_decoded_instruction_needs_branch_unit <= 1'h0;
+      reservation_station_2_decoded_instruction_needs_CSRs <= 1'h0;
       reservation_station_2_decoded_instruction_SUBTRACT <= 1'h0;
       reservation_station_2_decoded_instruction_MULTIPLY <= 1'h0;
       reservation_station_2_decoded_instruction_IMMEDIATE <= 1'h0;
@@ -2530,8 +2471,6 @@ module RS(
       reservation_station_2_ready_bits_RS1_ready <= 1'h0;
       reservation_station_2_ready_bits_RS2_ready <= 1'h0;
       reservation_station_2_valid <= 1'h0;
-      reservation_station_3_decoded_instruction_RDold <= 6'h0;
-      reservation_station_3_decoded_instruction_RDold_valid <= 1'h0;
       reservation_station_3_decoded_instruction_RD <= 6'h0;
       reservation_station_3_decoded_instruction_RD_valid <= 1'h0;
       reservation_station_3_decoded_instruction_RS1 <= 6'h0;
@@ -2547,6 +2486,7 @@ module RS(
       reservation_station_3_decoded_instruction_RS_type <= 2'h0;
       reservation_station_3_decoded_instruction_needs_ALU <= 1'h0;
       reservation_station_3_decoded_instruction_needs_branch_unit <= 1'h0;
+      reservation_station_3_decoded_instruction_needs_CSRs <= 1'h0;
       reservation_station_3_decoded_instruction_SUBTRACT <= 1'h0;
       reservation_station_3_decoded_instruction_MULTIPLY <= 1'h0;
       reservation_station_3_decoded_instruction_IMMEDIATE <= 1'h0;
@@ -2555,8 +2495,6 @@ module RS(
       reservation_station_3_ready_bits_RS1_ready <= 1'h0;
       reservation_station_3_ready_bits_RS2_ready <= 1'h0;
       reservation_station_3_valid <= 1'h0;
-      reservation_station_4_decoded_instruction_RDold <= 6'h0;
-      reservation_station_4_decoded_instruction_RDold_valid <= 1'h0;
       reservation_station_4_decoded_instruction_RD <= 6'h0;
       reservation_station_4_decoded_instruction_RD_valid <= 1'h0;
       reservation_station_4_decoded_instruction_RS1 <= 6'h0;
@@ -2572,6 +2510,7 @@ module RS(
       reservation_station_4_decoded_instruction_RS_type <= 2'h0;
       reservation_station_4_decoded_instruction_needs_ALU <= 1'h0;
       reservation_station_4_decoded_instruction_needs_branch_unit <= 1'h0;
+      reservation_station_4_decoded_instruction_needs_CSRs <= 1'h0;
       reservation_station_4_decoded_instruction_SUBTRACT <= 1'h0;
       reservation_station_4_decoded_instruction_MULTIPLY <= 1'h0;
       reservation_station_4_decoded_instruction_IMMEDIATE <= 1'h0;
@@ -2580,8 +2519,6 @@ module RS(
       reservation_station_4_ready_bits_RS1_ready <= 1'h0;
       reservation_station_4_ready_bits_RS2_ready <= 1'h0;
       reservation_station_4_valid <= 1'h0;
-      reservation_station_5_decoded_instruction_RDold <= 6'h0;
-      reservation_station_5_decoded_instruction_RDold_valid <= 1'h0;
       reservation_station_5_decoded_instruction_RD <= 6'h0;
       reservation_station_5_decoded_instruction_RD_valid <= 1'h0;
       reservation_station_5_decoded_instruction_RS1 <= 6'h0;
@@ -2597,6 +2534,7 @@ module RS(
       reservation_station_5_decoded_instruction_RS_type <= 2'h0;
       reservation_station_5_decoded_instruction_needs_ALU <= 1'h0;
       reservation_station_5_decoded_instruction_needs_branch_unit <= 1'h0;
+      reservation_station_5_decoded_instruction_needs_CSRs <= 1'h0;
       reservation_station_5_decoded_instruction_SUBTRACT <= 1'h0;
       reservation_station_5_decoded_instruction_MULTIPLY <= 1'h0;
       reservation_station_5_decoded_instruction_IMMEDIATE <= 1'h0;
@@ -2605,8 +2543,6 @@ module RS(
       reservation_station_5_ready_bits_RS1_ready <= 1'h0;
       reservation_station_5_ready_bits_RS2_ready <= 1'h0;
       reservation_station_5_valid <= 1'h0;
-      reservation_station_6_decoded_instruction_RDold <= 6'h0;
-      reservation_station_6_decoded_instruction_RDold_valid <= 1'h0;
       reservation_station_6_decoded_instruction_RD <= 6'h0;
       reservation_station_6_decoded_instruction_RD_valid <= 1'h0;
       reservation_station_6_decoded_instruction_RS1 <= 6'h0;
@@ -2622,6 +2558,7 @@ module RS(
       reservation_station_6_decoded_instruction_RS_type <= 2'h0;
       reservation_station_6_decoded_instruction_needs_ALU <= 1'h0;
       reservation_station_6_decoded_instruction_needs_branch_unit <= 1'h0;
+      reservation_station_6_decoded_instruction_needs_CSRs <= 1'h0;
       reservation_station_6_decoded_instruction_SUBTRACT <= 1'h0;
       reservation_station_6_decoded_instruction_MULTIPLY <= 1'h0;
       reservation_station_6_decoded_instruction_IMMEDIATE <= 1'h0;
@@ -2630,8 +2567,6 @@ module RS(
       reservation_station_6_ready_bits_RS1_ready <= 1'h0;
       reservation_station_6_ready_bits_RS2_ready <= 1'h0;
       reservation_station_6_valid <= 1'h0;
-      reservation_station_7_decoded_instruction_RDold <= 6'h0;
-      reservation_station_7_decoded_instruction_RDold_valid <= 1'h0;
       reservation_station_7_decoded_instruction_RD <= 6'h0;
       reservation_station_7_decoded_instruction_RD_valid <= 1'h0;
       reservation_station_7_decoded_instruction_RS1 <= 6'h0;
@@ -2647,6 +2582,7 @@ module RS(
       reservation_station_7_decoded_instruction_RS_type <= 2'h0;
       reservation_station_7_decoded_instruction_needs_ALU <= 1'h0;
       reservation_station_7_decoded_instruction_needs_branch_unit <= 1'h0;
+      reservation_station_7_decoded_instruction_needs_CSRs <= 1'h0;
       reservation_station_7_decoded_instruction_SUBTRACT <= 1'h0;
       reservation_station_7_decoded_instruction_MULTIPLY <= 1'h0;
       reservation_station_7_decoded_instruction_IMMEDIATE <= 1'h0;
@@ -2655,8 +2591,6 @@ module RS(
       reservation_station_7_ready_bits_RS1_ready <= 1'h0;
       reservation_station_7_ready_bits_RS2_ready <= 1'h0;
       reservation_station_7_valid <= 1'h0;
-      reservation_station_8_decoded_instruction_RDold <= 6'h0;
-      reservation_station_8_decoded_instruction_RDold_valid <= 1'h0;
       reservation_station_8_decoded_instruction_RD <= 6'h0;
       reservation_station_8_decoded_instruction_RD_valid <= 1'h0;
       reservation_station_8_decoded_instruction_RS1 <= 6'h0;
@@ -2672,6 +2606,7 @@ module RS(
       reservation_station_8_decoded_instruction_RS_type <= 2'h0;
       reservation_station_8_decoded_instruction_needs_ALU <= 1'h0;
       reservation_station_8_decoded_instruction_needs_branch_unit <= 1'h0;
+      reservation_station_8_decoded_instruction_needs_CSRs <= 1'h0;
       reservation_station_8_decoded_instruction_SUBTRACT <= 1'h0;
       reservation_station_8_decoded_instruction_MULTIPLY <= 1'h0;
       reservation_station_8_decoded_instruction_IMMEDIATE <= 1'h0;
@@ -2680,8 +2615,6 @@ module RS(
       reservation_station_8_ready_bits_RS1_ready <= 1'h0;
       reservation_station_8_ready_bits_RS2_ready <= 1'h0;
       reservation_station_8_valid <= 1'h0;
-      reservation_station_9_decoded_instruction_RDold <= 6'h0;
-      reservation_station_9_decoded_instruction_RDold_valid <= 1'h0;
       reservation_station_9_decoded_instruction_RD <= 6'h0;
       reservation_station_9_decoded_instruction_RD_valid <= 1'h0;
       reservation_station_9_decoded_instruction_RS1 <= 6'h0;
@@ -2697,6 +2630,7 @@ module RS(
       reservation_station_9_decoded_instruction_RS_type <= 2'h0;
       reservation_station_9_decoded_instruction_needs_ALU <= 1'h0;
       reservation_station_9_decoded_instruction_needs_branch_unit <= 1'h0;
+      reservation_station_9_decoded_instruction_needs_CSRs <= 1'h0;
       reservation_station_9_decoded_instruction_SUBTRACT <= 1'h0;
       reservation_station_9_decoded_instruction_MULTIPLY <= 1'h0;
       reservation_station_9_decoded_instruction_IMMEDIATE <= 1'h0;
@@ -2705,8 +2639,6 @@ module RS(
       reservation_station_9_ready_bits_RS1_ready <= 1'h0;
       reservation_station_9_ready_bits_RS2_ready <= 1'h0;
       reservation_station_9_valid <= 1'h0;
-      reservation_station_10_decoded_instruction_RDold <= 6'h0;
-      reservation_station_10_decoded_instruction_RDold_valid <= 1'h0;
       reservation_station_10_decoded_instruction_RD <= 6'h0;
       reservation_station_10_decoded_instruction_RD_valid <= 1'h0;
       reservation_station_10_decoded_instruction_RS1 <= 6'h0;
@@ -2722,6 +2654,7 @@ module RS(
       reservation_station_10_decoded_instruction_RS_type <= 2'h0;
       reservation_station_10_decoded_instruction_needs_ALU <= 1'h0;
       reservation_station_10_decoded_instruction_needs_branch_unit <= 1'h0;
+      reservation_station_10_decoded_instruction_needs_CSRs <= 1'h0;
       reservation_station_10_decoded_instruction_SUBTRACT <= 1'h0;
       reservation_station_10_decoded_instruction_MULTIPLY <= 1'h0;
       reservation_station_10_decoded_instruction_IMMEDIATE <= 1'h0;
@@ -2730,8 +2663,6 @@ module RS(
       reservation_station_10_ready_bits_RS1_ready <= 1'h0;
       reservation_station_10_ready_bits_RS2_ready <= 1'h0;
       reservation_station_10_valid <= 1'h0;
-      reservation_station_11_decoded_instruction_RDold <= 6'h0;
-      reservation_station_11_decoded_instruction_RDold_valid <= 1'h0;
       reservation_station_11_decoded_instruction_RD <= 6'h0;
       reservation_station_11_decoded_instruction_RD_valid <= 1'h0;
       reservation_station_11_decoded_instruction_RS1 <= 6'h0;
@@ -2747,6 +2678,7 @@ module RS(
       reservation_station_11_decoded_instruction_RS_type <= 2'h0;
       reservation_station_11_decoded_instruction_needs_ALU <= 1'h0;
       reservation_station_11_decoded_instruction_needs_branch_unit <= 1'h0;
+      reservation_station_11_decoded_instruction_needs_CSRs <= 1'h0;
       reservation_station_11_decoded_instruction_SUBTRACT <= 1'h0;
       reservation_station_11_decoded_instruction_MULTIPLY <= 1'h0;
       reservation_station_11_decoded_instruction_IMMEDIATE <= 1'h0;
@@ -2755,8 +2687,6 @@ module RS(
       reservation_station_11_ready_bits_RS1_ready <= 1'h0;
       reservation_station_11_ready_bits_RS2_ready <= 1'h0;
       reservation_station_11_valid <= 1'h0;
-      reservation_station_12_decoded_instruction_RDold <= 6'h0;
-      reservation_station_12_decoded_instruction_RDold_valid <= 1'h0;
       reservation_station_12_decoded_instruction_RD <= 6'h0;
       reservation_station_12_decoded_instruction_RD_valid <= 1'h0;
       reservation_station_12_decoded_instruction_RS1 <= 6'h0;
@@ -2772,6 +2702,7 @@ module RS(
       reservation_station_12_decoded_instruction_RS_type <= 2'h0;
       reservation_station_12_decoded_instruction_needs_ALU <= 1'h0;
       reservation_station_12_decoded_instruction_needs_branch_unit <= 1'h0;
+      reservation_station_12_decoded_instruction_needs_CSRs <= 1'h0;
       reservation_station_12_decoded_instruction_SUBTRACT <= 1'h0;
       reservation_station_12_decoded_instruction_MULTIPLY <= 1'h0;
       reservation_station_12_decoded_instruction_IMMEDIATE <= 1'h0;
@@ -2780,8 +2711,6 @@ module RS(
       reservation_station_12_ready_bits_RS1_ready <= 1'h0;
       reservation_station_12_ready_bits_RS2_ready <= 1'h0;
       reservation_station_12_valid <= 1'h0;
-      reservation_station_13_decoded_instruction_RDold <= 6'h0;
-      reservation_station_13_decoded_instruction_RDold_valid <= 1'h0;
       reservation_station_13_decoded_instruction_RD <= 6'h0;
       reservation_station_13_decoded_instruction_RD_valid <= 1'h0;
       reservation_station_13_decoded_instruction_RS1 <= 6'h0;
@@ -2797,6 +2726,7 @@ module RS(
       reservation_station_13_decoded_instruction_RS_type <= 2'h0;
       reservation_station_13_decoded_instruction_needs_ALU <= 1'h0;
       reservation_station_13_decoded_instruction_needs_branch_unit <= 1'h0;
+      reservation_station_13_decoded_instruction_needs_CSRs <= 1'h0;
       reservation_station_13_decoded_instruction_SUBTRACT <= 1'h0;
       reservation_station_13_decoded_instruction_MULTIPLY <= 1'h0;
       reservation_station_13_decoded_instruction_IMMEDIATE <= 1'h0;
@@ -2805,8 +2735,6 @@ module RS(
       reservation_station_13_ready_bits_RS1_ready <= 1'h0;
       reservation_station_13_ready_bits_RS2_ready <= 1'h0;
       reservation_station_13_valid <= 1'h0;
-      reservation_station_14_decoded_instruction_RDold <= 6'h0;
-      reservation_station_14_decoded_instruction_RDold_valid <= 1'h0;
       reservation_station_14_decoded_instruction_RD <= 6'h0;
       reservation_station_14_decoded_instruction_RD_valid <= 1'h0;
       reservation_station_14_decoded_instruction_RS1 <= 6'h0;
@@ -2822,6 +2750,7 @@ module RS(
       reservation_station_14_decoded_instruction_RS_type <= 2'h0;
       reservation_station_14_decoded_instruction_needs_ALU <= 1'h0;
       reservation_station_14_decoded_instruction_needs_branch_unit <= 1'h0;
+      reservation_station_14_decoded_instruction_needs_CSRs <= 1'h0;
       reservation_station_14_decoded_instruction_SUBTRACT <= 1'h0;
       reservation_station_14_decoded_instruction_MULTIPLY <= 1'h0;
       reservation_station_14_decoded_instruction_IMMEDIATE <= 1'h0;
@@ -2830,8 +2759,6 @@ module RS(
       reservation_station_14_ready_bits_RS1_ready <= 1'h0;
       reservation_station_14_ready_bits_RS2_ready <= 1'h0;
       reservation_station_14_valid <= 1'h0;
-      reservation_station_15_decoded_instruction_RDold <= 6'h0;
-      reservation_station_15_decoded_instruction_RDold_valid <= 1'h0;
       reservation_station_15_decoded_instruction_RD <= 6'h0;
       reservation_station_15_decoded_instruction_RD_valid <= 1'h0;
       reservation_station_15_decoded_instruction_RS1 <= 6'h0;
@@ -2847,6 +2774,7 @@ module RS(
       reservation_station_15_decoded_instruction_RS_type <= 2'h0;
       reservation_station_15_decoded_instruction_needs_ALU <= 1'h0;
       reservation_station_15_decoded_instruction_needs_branch_unit <= 1'h0;
+      reservation_station_15_decoded_instruction_needs_CSRs <= 1'h0;
       reservation_station_15_decoded_instruction_SUBTRACT <= 1'h0;
       reservation_station_15_decoded_instruction_MULTIPLY <= 1'h0;
       reservation_station_15_decoded_instruction_IMMEDIATE <= 1'h0;
@@ -2855,8 +2783,6 @@ module RS(
       reservation_station_15_ready_bits_RS1_ready <= 1'h0;
       reservation_station_15_ready_bits_RS2_ready <= 1'h0;
       reservation_station_15_valid <= 1'h0;
-      reservation_station_16_decoded_instruction_RDold <= 6'h0;
-      reservation_station_16_decoded_instruction_RDold_valid <= 1'h0;
       reservation_station_16_decoded_instruction_RD <= 6'h0;
       reservation_station_16_decoded_instruction_RD_valid <= 1'h0;
       reservation_station_16_decoded_instruction_RS1 <= 6'h0;
@@ -2872,6 +2798,7 @@ module RS(
       reservation_station_16_decoded_instruction_RS_type <= 2'h0;
       reservation_station_16_decoded_instruction_needs_ALU <= 1'h0;
       reservation_station_16_decoded_instruction_needs_branch_unit <= 1'h0;
+      reservation_station_16_decoded_instruction_needs_CSRs <= 1'h0;
       reservation_station_16_decoded_instruction_SUBTRACT <= 1'h0;
       reservation_station_16_decoded_instruction_MULTIPLY <= 1'h0;
       reservation_station_16_decoded_instruction_IMMEDIATE <= 1'h0;
@@ -2880,8 +2807,6 @@ module RS(
       reservation_station_16_ready_bits_RS1_ready <= 1'h0;
       reservation_station_16_ready_bits_RS2_ready <= 1'h0;
       reservation_station_16_valid <= 1'h0;
-      reservation_station_17_decoded_instruction_RDold <= 6'h0;
-      reservation_station_17_decoded_instruction_RDold_valid <= 1'h0;
       reservation_station_17_decoded_instruction_RD <= 6'h0;
       reservation_station_17_decoded_instruction_RD_valid <= 1'h0;
       reservation_station_17_decoded_instruction_RS1 <= 6'h0;
@@ -2897,6 +2822,7 @@ module RS(
       reservation_station_17_decoded_instruction_RS_type <= 2'h0;
       reservation_station_17_decoded_instruction_needs_ALU <= 1'h0;
       reservation_station_17_decoded_instruction_needs_branch_unit <= 1'h0;
+      reservation_station_17_decoded_instruction_needs_CSRs <= 1'h0;
       reservation_station_17_decoded_instruction_SUBTRACT <= 1'h0;
       reservation_station_17_decoded_instruction_MULTIPLY <= 1'h0;
       reservation_station_17_decoded_instruction_IMMEDIATE <= 1'h0;
@@ -2905,8 +2831,6 @@ module RS(
       reservation_station_17_ready_bits_RS1_ready <= 1'h0;
       reservation_station_17_ready_bits_RS2_ready <= 1'h0;
       reservation_station_17_valid <= 1'h0;
-      reservation_station_18_decoded_instruction_RDold <= 6'h0;
-      reservation_station_18_decoded_instruction_RDold_valid <= 1'h0;
       reservation_station_18_decoded_instruction_RD <= 6'h0;
       reservation_station_18_decoded_instruction_RD_valid <= 1'h0;
       reservation_station_18_decoded_instruction_RS1 <= 6'h0;
@@ -2922,6 +2846,7 @@ module RS(
       reservation_station_18_decoded_instruction_RS_type <= 2'h0;
       reservation_station_18_decoded_instruction_needs_ALU <= 1'h0;
       reservation_station_18_decoded_instruction_needs_branch_unit <= 1'h0;
+      reservation_station_18_decoded_instruction_needs_CSRs <= 1'h0;
       reservation_station_18_decoded_instruction_SUBTRACT <= 1'h0;
       reservation_station_18_decoded_instruction_MULTIPLY <= 1'h0;
       reservation_station_18_decoded_instruction_IMMEDIATE <= 1'h0;
@@ -2930,8 +2855,6 @@ module RS(
       reservation_station_18_ready_bits_RS1_ready <= 1'h0;
       reservation_station_18_ready_bits_RS2_ready <= 1'h0;
       reservation_station_18_valid <= 1'h0;
-      reservation_station_19_decoded_instruction_RDold <= 6'h0;
-      reservation_station_19_decoded_instruction_RDold_valid <= 1'h0;
       reservation_station_19_decoded_instruction_RD <= 6'h0;
       reservation_station_19_decoded_instruction_RD_valid <= 1'h0;
       reservation_station_19_decoded_instruction_RS1 <= 6'h0;
@@ -2947,6 +2870,7 @@ module RS(
       reservation_station_19_decoded_instruction_RS_type <= 2'h0;
       reservation_station_19_decoded_instruction_needs_ALU <= 1'h0;
       reservation_station_19_decoded_instruction_needs_branch_unit <= 1'h0;
+      reservation_station_19_decoded_instruction_needs_CSRs <= 1'h0;
       reservation_station_19_decoded_instruction_SUBTRACT <= 1'h0;
       reservation_station_19_decoded_instruction_MULTIPLY <= 1'h0;
       reservation_station_19_decoded_instruction_IMMEDIATE <= 1'h0;
@@ -2969,6 +2893,7 @@ module RS(
          |(_allocateIndexBinary_T_3[6:3]),
          |(_allocateIndexBinary_T_5[2:1]),
          _allocateIndexBinary_T_5[2] | _allocateIndexBinary_T_5[0]};
+      automatic logic        _GEN_138;
       automatic logic        _GEN_139;
       automatic logic        _GEN_140;
       automatic logic        _GEN_141;
@@ -2988,7 +2913,6 @@ module RS(
       automatic logic        _GEN_155;
       automatic logic        _GEN_156;
       automatic logic        _GEN_157;
-      automatic logic        _GEN_158;
       automatic logic [14:0] _allocateIndexBinary_T_13 =
         {12'h0, allocate_index_1[19:17]} | allocate_index_1[15:1];
       automatic logic [6:0]  _allocateIndexBinary_T_15 =
@@ -3001,45 +2925,46 @@ module RS(
          |(_allocateIndexBinary_T_15[6:3]),
          |(_allocateIndexBinary_T_17[2:1]),
          _allocateIndexBinary_T_17[2] | _allocateIndexBinary_T_17[0]};
-      automatic logic        _GEN_159 = allocateIndexBinary_1 == 5'h0;
-      automatic logic        _GEN_160;
-      automatic logic        _GEN_161 = allocateIndexBinary_1 == 5'h1;
-      automatic logic        _GEN_162;
-      automatic logic        _GEN_163 = allocateIndexBinary_1 == 5'h2;
-      automatic logic        _GEN_164;
-      automatic logic        _GEN_165 = allocateIndexBinary_1 == 5'h3;
-      automatic logic        _GEN_166;
-      automatic logic        _GEN_167 = allocateIndexBinary_1 == 5'h4;
-      automatic logic        _GEN_168;
-      automatic logic        _GEN_169 = allocateIndexBinary_1 == 5'h5;
-      automatic logic        _GEN_170;
-      automatic logic        _GEN_171 = allocateIndexBinary_1 == 5'h6;
-      automatic logic        _GEN_172;
-      automatic logic        _GEN_173 = allocateIndexBinary_1 == 5'h7;
-      automatic logic        _GEN_174;
-      automatic logic        _GEN_175 = allocateIndexBinary_1 == 5'h8;
-      automatic logic        _GEN_176;
-      automatic logic        _GEN_177 = allocateIndexBinary_1 == 5'h9;
-      automatic logic        _GEN_178;
-      automatic logic        _GEN_179 = allocateIndexBinary_1 == 5'hA;
-      automatic logic        _GEN_180;
-      automatic logic        _GEN_181 = allocateIndexBinary_1 == 5'hB;
-      automatic logic        _GEN_182;
-      automatic logic        _GEN_183 = allocateIndexBinary_1 == 5'hC;
-      automatic logic        _GEN_184;
-      automatic logic        _GEN_185 = allocateIndexBinary_1 == 5'hD;
-      automatic logic        _GEN_186;
-      automatic logic        _GEN_187 = allocateIndexBinary_1 == 5'hE;
-      automatic logic        _GEN_188;
-      automatic logic        _GEN_189 = allocateIndexBinary_1 == 5'hF;
-      automatic logic        _GEN_190;
-      automatic logic        _GEN_191 = allocateIndexBinary_1 == 5'h10;
-      automatic logic        _GEN_192;
-      automatic logic        _GEN_193 = allocateIndexBinary_1 == 5'h11;
-      automatic logic        _GEN_194;
-      automatic logic        _GEN_195 = allocateIndexBinary_1 == 5'h12;
-      automatic logic        _GEN_196;
-      automatic logic        _GEN_197 = allocateIndexBinary_1 == 5'h13;
+      automatic logic        _GEN_158 = allocateIndexBinary_1 == 5'h0;
+      automatic logic        _GEN_159;
+      automatic logic        _GEN_160 = allocateIndexBinary_1 == 5'h1;
+      automatic logic        _GEN_161;
+      automatic logic        _GEN_162 = allocateIndexBinary_1 == 5'h2;
+      automatic logic        _GEN_163;
+      automatic logic        _GEN_164 = allocateIndexBinary_1 == 5'h3;
+      automatic logic        _GEN_165;
+      automatic logic        _GEN_166 = allocateIndexBinary_1 == 5'h4;
+      automatic logic        _GEN_167;
+      automatic logic        _GEN_168 = allocateIndexBinary_1 == 5'h5;
+      automatic logic        _GEN_169;
+      automatic logic        _GEN_170 = allocateIndexBinary_1 == 5'h6;
+      automatic logic        _GEN_171;
+      automatic logic        _GEN_172 = allocateIndexBinary_1 == 5'h7;
+      automatic logic        _GEN_173;
+      automatic logic        _GEN_174 = allocateIndexBinary_1 == 5'h8;
+      automatic logic        _GEN_175;
+      automatic logic        _GEN_176 = allocateIndexBinary_1 == 5'h9;
+      automatic logic        _GEN_177;
+      automatic logic        _GEN_178 = allocateIndexBinary_1 == 5'hA;
+      automatic logic        _GEN_179;
+      automatic logic        _GEN_180 = allocateIndexBinary_1 == 5'hB;
+      automatic logic        _GEN_181;
+      automatic logic        _GEN_182 = allocateIndexBinary_1 == 5'hC;
+      automatic logic        _GEN_183;
+      automatic logic        _GEN_184 = allocateIndexBinary_1 == 5'hD;
+      automatic logic        _GEN_185;
+      automatic logic        _GEN_186 = allocateIndexBinary_1 == 5'hE;
+      automatic logic        _GEN_187;
+      automatic logic        _GEN_188 = allocateIndexBinary_1 == 5'hF;
+      automatic logic        _GEN_189;
+      automatic logic        _GEN_190 = allocateIndexBinary_1 == 5'h10;
+      automatic logic        _GEN_191;
+      automatic logic        _GEN_192 = allocateIndexBinary_1 == 5'h11;
+      automatic logic        _GEN_193;
+      automatic logic        _GEN_194 = allocateIndexBinary_1 == 5'h12;
+      automatic logic        _GEN_195;
+      automatic logic        _GEN_196 = allocateIndexBinary_1 == 5'h13;
+      automatic logic        _GEN_197;
       automatic logic        _GEN_198;
       automatic logic        _GEN_199;
       automatic logic        _GEN_200;
@@ -3060,7 +2985,6 @@ module RS(
       automatic logic        _GEN_215;
       automatic logic        _GEN_216;
       automatic logic        _GEN_217;
-      automatic logic        _GEN_218;
       automatic logic [14:0] _allocateIndexBinary_T_25 =
         {12'h0, allocate_index_2[19:17]} | allocate_index_2[15:1];
       automatic logic [6:0]  _allocateIndexBinary_T_27 =
@@ -3073,6 +2997,7 @@ module RS(
          |(_allocateIndexBinary_T_27[6:3]),
          |(_allocateIndexBinary_T_29[2:1]),
          _allocateIndexBinary_T_29[2] | _allocateIndexBinary_T_29[0]};
+      automatic logic        _GEN_218;
       automatic logic        _GEN_219;
       automatic logic        _GEN_220;
       automatic logic        _GEN_221;
@@ -3092,7 +3017,6 @@ module RS(
       automatic logic        _GEN_235;
       automatic logic        _GEN_236;
       automatic logic        _GEN_237;
-      automatic logic        _GEN_238;
       automatic logic [14:0] _allocateIndexBinary_T_37 =
         {12'h0, allocate_index_3[19:17]} | allocate_index_3[15:1];
       automatic logic [6:0]  _allocateIndexBinary_T_39 =
@@ -3105,7 +3029,8 @@ module RS(
          |(_allocateIndexBinary_T_39[6:3]),
          |(_allocateIndexBinary_T_41[2:1]),
          _allocateIndexBinary_T_41[2] | _allocateIndexBinary_T_41[0]};
-      automatic logic        _GEN_239 = allocateIndexBinary_3 == 5'h0;
+      automatic logic        _GEN_238 = allocateIndexBinary_3 == 5'h0;
+      automatic logic        _GEN_239;
       automatic logic        _GEN_240;
       automatic logic        _GEN_241;
       automatic logic        _GEN_242;
@@ -3117,8 +3042,8 @@ module RS(
       automatic logic        _GEN_248;
       automatic logic        _GEN_249;
       automatic logic        _GEN_250;
-      automatic logic        _GEN_251;
-      automatic logic        _GEN_252 = allocateIndexBinary_3 == 5'h1;
+      automatic logic        _GEN_251 = allocateIndexBinary_3 == 5'h1;
+      automatic logic        _GEN_252;
       automatic logic        _GEN_253;
       automatic logic        _GEN_254;
       automatic logic        _GEN_255;
@@ -3130,8 +3055,8 @@ module RS(
       automatic logic        _GEN_261;
       automatic logic        _GEN_262;
       automatic logic        _GEN_263;
-      automatic logic        _GEN_264;
-      automatic logic        _GEN_265 = allocateIndexBinary_3 == 5'h2;
+      automatic logic        _GEN_264 = allocateIndexBinary_3 == 5'h2;
+      automatic logic        _GEN_265;
       automatic logic        _GEN_266;
       automatic logic        _GEN_267;
       automatic logic        _GEN_268;
@@ -3143,8 +3068,8 @@ module RS(
       automatic logic        _GEN_274;
       automatic logic        _GEN_275;
       automatic logic        _GEN_276;
-      automatic logic        _GEN_277;
-      automatic logic        _GEN_278 = allocateIndexBinary_3 == 5'h3;
+      automatic logic        _GEN_277 = allocateIndexBinary_3 == 5'h3;
+      automatic logic        _GEN_278;
       automatic logic        _GEN_279;
       automatic logic        _GEN_280;
       automatic logic        _GEN_281;
@@ -3156,8 +3081,8 @@ module RS(
       automatic logic        _GEN_287;
       automatic logic        _GEN_288;
       automatic logic        _GEN_289;
-      automatic logic        _GEN_290;
-      automatic logic        _GEN_291 = allocateIndexBinary_3 == 5'h4;
+      automatic logic        _GEN_290 = allocateIndexBinary_3 == 5'h4;
+      automatic logic        _GEN_291;
       automatic logic        _GEN_292;
       automatic logic        _GEN_293;
       automatic logic        _GEN_294;
@@ -3169,8 +3094,8 @@ module RS(
       automatic logic        _GEN_300;
       automatic logic        _GEN_301;
       automatic logic        _GEN_302;
-      automatic logic        _GEN_303;
-      automatic logic        _GEN_304 = allocateIndexBinary_3 == 5'h5;
+      automatic logic        _GEN_303 = allocateIndexBinary_3 == 5'h5;
+      automatic logic        _GEN_304;
       automatic logic        _GEN_305;
       automatic logic        _GEN_306;
       automatic logic        _GEN_307;
@@ -3182,8 +3107,8 @@ module RS(
       automatic logic        _GEN_313;
       automatic logic        _GEN_314;
       automatic logic        _GEN_315;
-      automatic logic        _GEN_316;
-      automatic logic        _GEN_317 = allocateIndexBinary_3 == 5'h6;
+      automatic logic        _GEN_316 = allocateIndexBinary_3 == 5'h6;
+      automatic logic        _GEN_317;
       automatic logic        _GEN_318;
       automatic logic        _GEN_319;
       automatic logic        _GEN_320;
@@ -3195,8 +3120,8 @@ module RS(
       automatic logic        _GEN_326;
       automatic logic        _GEN_327;
       automatic logic        _GEN_328;
-      automatic logic        _GEN_329;
-      automatic logic        _GEN_330 = allocateIndexBinary_3 == 5'h7;
+      automatic logic        _GEN_329 = allocateIndexBinary_3 == 5'h7;
+      automatic logic        _GEN_330;
       automatic logic        _GEN_331;
       automatic logic        _GEN_332;
       automatic logic        _GEN_333;
@@ -3208,8 +3133,8 @@ module RS(
       automatic logic        _GEN_339;
       automatic logic        _GEN_340;
       automatic logic        _GEN_341;
-      automatic logic        _GEN_342;
-      automatic logic        _GEN_343 = allocateIndexBinary_3 == 5'h8;
+      automatic logic        _GEN_342 = allocateIndexBinary_3 == 5'h8;
+      automatic logic        _GEN_343;
       automatic logic        _GEN_344;
       automatic logic        _GEN_345;
       automatic logic        _GEN_346;
@@ -3221,8 +3146,8 @@ module RS(
       automatic logic        _GEN_352;
       automatic logic        _GEN_353;
       automatic logic        _GEN_354;
-      automatic logic        _GEN_355;
-      automatic logic        _GEN_356 = allocateIndexBinary_3 == 5'h9;
+      automatic logic        _GEN_355 = allocateIndexBinary_3 == 5'h9;
+      automatic logic        _GEN_356;
       automatic logic        _GEN_357;
       automatic logic        _GEN_358;
       automatic logic        _GEN_359;
@@ -3234,8 +3159,8 @@ module RS(
       automatic logic        _GEN_365;
       automatic logic        _GEN_366;
       automatic logic        _GEN_367;
-      automatic logic        _GEN_368;
-      automatic logic        _GEN_369 = allocateIndexBinary_3 == 5'hA;
+      automatic logic        _GEN_368 = allocateIndexBinary_3 == 5'hA;
+      automatic logic        _GEN_369;
       automatic logic        _GEN_370;
       automatic logic        _GEN_371;
       automatic logic        _GEN_372;
@@ -3247,8 +3172,8 @@ module RS(
       automatic logic        _GEN_378;
       automatic logic        _GEN_379;
       automatic logic        _GEN_380;
-      automatic logic        _GEN_381;
-      automatic logic        _GEN_382 = allocateIndexBinary_3 == 5'hB;
+      automatic logic        _GEN_381 = allocateIndexBinary_3 == 5'hB;
+      automatic logic        _GEN_382;
       automatic logic        _GEN_383;
       automatic logic        _GEN_384;
       automatic logic        _GEN_385;
@@ -3260,8 +3185,8 @@ module RS(
       automatic logic        _GEN_391;
       automatic logic        _GEN_392;
       automatic logic        _GEN_393;
-      automatic logic        _GEN_394;
-      automatic logic        _GEN_395 = allocateIndexBinary_3 == 5'hC;
+      automatic logic        _GEN_394 = allocateIndexBinary_3 == 5'hC;
+      automatic logic        _GEN_395;
       automatic logic        _GEN_396;
       automatic logic        _GEN_397;
       automatic logic        _GEN_398;
@@ -3273,8 +3198,8 @@ module RS(
       automatic logic        _GEN_404;
       automatic logic        _GEN_405;
       automatic logic        _GEN_406;
-      automatic logic        _GEN_407;
-      automatic logic        _GEN_408 = allocateIndexBinary_3 == 5'hD;
+      automatic logic        _GEN_407 = allocateIndexBinary_3 == 5'hD;
+      automatic logic        _GEN_408;
       automatic logic        _GEN_409;
       automatic logic        _GEN_410;
       automatic logic        _GEN_411;
@@ -3286,8 +3211,8 @@ module RS(
       automatic logic        _GEN_417;
       automatic logic        _GEN_418;
       automatic logic        _GEN_419;
-      automatic logic        _GEN_420;
-      automatic logic        _GEN_421 = allocateIndexBinary_3 == 5'hE;
+      automatic logic        _GEN_420 = allocateIndexBinary_3 == 5'hE;
+      automatic logic        _GEN_421;
       automatic logic        _GEN_422;
       automatic logic        _GEN_423;
       automatic logic        _GEN_424;
@@ -3299,8 +3224,8 @@ module RS(
       automatic logic        _GEN_430;
       automatic logic        _GEN_431;
       automatic logic        _GEN_432;
-      automatic logic        _GEN_433;
-      automatic logic        _GEN_434 = allocateIndexBinary_3 == 5'hF;
+      automatic logic        _GEN_433 = allocateIndexBinary_3 == 5'hF;
+      automatic logic        _GEN_434;
       automatic logic        _GEN_435;
       automatic logic        _GEN_436;
       automatic logic        _GEN_437;
@@ -3312,8 +3237,8 @@ module RS(
       automatic logic        _GEN_443;
       automatic logic        _GEN_444;
       automatic logic        _GEN_445;
-      automatic logic        _GEN_446;
-      automatic logic        _GEN_447 = allocateIndexBinary_3 == 5'h10;
+      automatic logic        _GEN_446 = allocateIndexBinary_3 == 5'h10;
+      automatic logic        _GEN_447;
       automatic logic        _GEN_448;
       automatic logic        _GEN_449;
       automatic logic        _GEN_450;
@@ -3325,8 +3250,8 @@ module RS(
       automatic logic        _GEN_456;
       automatic logic        _GEN_457;
       automatic logic        _GEN_458;
-      automatic logic        _GEN_459;
-      automatic logic        _GEN_460 = allocateIndexBinary_3 == 5'h11;
+      automatic logic        _GEN_459 = allocateIndexBinary_3 == 5'h11;
+      automatic logic        _GEN_460;
       automatic logic        _GEN_461;
       automatic logic        _GEN_462;
       automatic logic        _GEN_463;
@@ -3338,8 +3263,8 @@ module RS(
       automatic logic        _GEN_469;
       automatic logic        _GEN_470;
       automatic logic        _GEN_471;
-      automatic logic        _GEN_472;
-      automatic logic        _GEN_473 = allocateIndexBinary_3 == 5'h12;
+      automatic logic        _GEN_472 = allocateIndexBinary_3 == 5'h12;
+      automatic logic        _GEN_473;
       automatic logic        _GEN_474;
       automatic logic        _GEN_475;
       automatic logic        _GEN_476;
@@ -3351,8 +3276,8 @@ module RS(
       automatic logic        _GEN_482;
       automatic logic        _GEN_483;
       automatic logic        _GEN_484;
-      automatic logic        _GEN_485;
-      automatic logic        _GEN_486 = allocateIndexBinary_3 == 5'h13;
+      automatic logic        _GEN_485 = allocateIndexBinary_3 == 5'h13;
+      automatic logic        _GEN_486;
       automatic logic        _GEN_487;
       automatic logic        _GEN_488;
       automatic logic        _GEN_489;
@@ -3424,49 +3349,49 @@ module RS(
       automatic logic        _GEN_555;
       automatic logic        _GEN_556;
       automatic logic        _GEN_557;
-      automatic logic        _GEN_558;
-      automatic logic        _GEN_559 = _GEN_116[port0_RS_index] & port0_valid;
-      automatic logic        _GEN_560 = _GEN_559 & port0_RS_index == 5'h0;
-      automatic logic        _GEN_561 = _GEN_559 & port0_RS_index == 5'h1;
-      automatic logic        _GEN_562 = _GEN_559 & port0_RS_index == 5'h2;
-      automatic logic        _GEN_563 = _GEN_559 & port0_RS_index == 5'h3;
-      automatic logic        _GEN_564 = _GEN_559 & port0_RS_index == 5'h4;
-      automatic logic        _GEN_565 = _GEN_559 & port0_RS_index == 5'h5;
-      automatic logic        _GEN_566 = _GEN_559 & port0_RS_index == 5'h6;
-      automatic logic        _GEN_567 = _GEN_559 & port0_RS_index == 5'h7;
-      automatic logic        _GEN_568 = _GEN_559 & port0_RS_index == 5'h8;
-      automatic logic        _GEN_569 = _GEN_559 & port0_RS_index == 5'h9;
-      automatic logic        _GEN_570 = _GEN_559 & port0_RS_index == 5'hA;
-      automatic logic        _GEN_571 = _GEN_559 & port0_RS_index == 5'hB;
-      automatic logic        _GEN_572 = _GEN_559 & port0_RS_index == 5'hC;
-      automatic logic        _GEN_573 = _GEN_559 & port0_RS_index == 5'hD;
-      automatic logic        _GEN_574 = _GEN_559 & port0_RS_index == 5'hE;
-      automatic logic        _GEN_575 = _GEN_559 & port0_RS_index == 5'hF;
-      automatic logic        _GEN_576 = _GEN_559 & port0_RS_index == 5'h10;
-      automatic logic        _GEN_577 = _GEN_559 & port0_RS_index == 5'h11;
-      automatic logic        _GEN_578 = _GEN_559 & port0_RS_index == 5'h12;
-      automatic logic        _GEN_579 = _GEN_559 & port0_RS_index == 5'h13;
-      automatic logic        _GEN_580 = _GEN_116[port1_RS_index] & port1_valid;
-      automatic logic        _GEN_581 = port1_RS_index == 5'h0;
-      automatic logic        _GEN_582 = port1_RS_index == 5'h1;
-      automatic logic        _GEN_583 = port1_RS_index == 5'h2;
-      automatic logic        _GEN_584 = port1_RS_index == 5'h3;
-      automatic logic        _GEN_585 = port1_RS_index == 5'h4;
-      automatic logic        _GEN_586 = port1_RS_index == 5'h5;
-      automatic logic        _GEN_587 = port1_RS_index == 5'h6;
-      automatic logic        _GEN_588 = port1_RS_index == 5'h7;
-      automatic logic        _GEN_589 = port1_RS_index == 5'h8;
-      automatic logic        _GEN_590 = port1_RS_index == 5'h9;
-      automatic logic        _GEN_591 = port1_RS_index == 5'hA;
-      automatic logic        _GEN_592 = port1_RS_index == 5'hB;
-      automatic logic        _GEN_593 = port1_RS_index == 5'hC;
-      automatic logic        _GEN_594 = port1_RS_index == 5'hD;
-      automatic logic        _GEN_595 = port1_RS_index == 5'hE;
-      automatic logic        _GEN_596 = port1_RS_index == 5'hF;
-      automatic logic        _GEN_597 = port1_RS_index == 5'h10;
-      automatic logic        _GEN_598 = port1_RS_index == 5'h11;
-      automatic logic        _GEN_599 = port1_RS_index == 5'h12;
-      automatic logic        _GEN_600 = port1_RS_index == 5'h13;
+      automatic logic        _GEN_558 = _GEN_116[port0_RS_index] & port0_valid;
+      automatic logic        _GEN_559 = _GEN_558 & port0_RS_index == 5'h0;
+      automatic logic        _GEN_560 = _GEN_558 & port0_RS_index == 5'h1;
+      automatic logic        _GEN_561 = _GEN_558 & port0_RS_index == 5'h2;
+      automatic logic        _GEN_562 = _GEN_558 & port0_RS_index == 5'h3;
+      automatic logic        _GEN_563 = _GEN_558 & port0_RS_index == 5'h4;
+      automatic logic        _GEN_564 = _GEN_558 & port0_RS_index == 5'h5;
+      automatic logic        _GEN_565 = _GEN_558 & port0_RS_index == 5'h6;
+      automatic logic        _GEN_566 = _GEN_558 & port0_RS_index == 5'h7;
+      automatic logic        _GEN_567 = _GEN_558 & port0_RS_index == 5'h8;
+      automatic logic        _GEN_568 = _GEN_558 & port0_RS_index == 5'h9;
+      automatic logic        _GEN_569 = _GEN_558 & port0_RS_index == 5'hA;
+      automatic logic        _GEN_570 = _GEN_558 & port0_RS_index == 5'hB;
+      automatic logic        _GEN_571 = _GEN_558 & port0_RS_index == 5'hC;
+      automatic logic        _GEN_572 = _GEN_558 & port0_RS_index == 5'hD;
+      automatic logic        _GEN_573 = _GEN_558 & port0_RS_index == 5'hE;
+      automatic logic        _GEN_574 = _GEN_558 & port0_RS_index == 5'hF;
+      automatic logic        _GEN_575 = _GEN_558 & port0_RS_index == 5'h10;
+      automatic logic        _GEN_576 = _GEN_558 & port0_RS_index == 5'h11;
+      automatic logic        _GEN_577 = _GEN_558 & port0_RS_index == 5'h12;
+      automatic logic        _GEN_578 = _GEN_558 & port0_RS_index == 5'h13;
+      automatic logic        _GEN_579 = _GEN_116[port1_RS_index] & port1_valid;
+      automatic logic        _GEN_580 = port1_RS_index == 5'h0;
+      automatic logic        _GEN_581 = port1_RS_index == 5'h1;
+      automatic logic        _GEN_582 = port1_RS_index == 5'h2;
+      automatic logic        _GEN_583 = port1_RS_index == 5'h3;
+      automatic logic        _GEN_584 = port1_RS_index == 5'h4;
+      automatic logic        _GEN_585 = port1_RS_index == 5'h5;
+      automatic logic        _GEN_586 = port1_RS_index == 5'h6;
+      automatic logic        _GEN_587 = port1_RS_index == 5'h7;
+      automatic logic        _GEN_588 = port1_RS_index == 5'h8;
+      automatic logic        _GEN_589 = port1_RS_index == 5'h9;
+      automatic logic        _GEN_590 = port1_RS_index == 5'hA;
+      automatic logic        _GEN_591 = port1_RS_index == 5'hB;
+      automatic logic        _GEN_592 = port1_RS_index == 5'hC;
+      automatic logic        _GEN_593 = port1_RS_index == 5'hD;
+      automatic logic        _GEN_594 = port1_RS_index == 5'hE;
+      automatic logic        _GEN_595 = port1_RS_index == 5'hF;
+      automatic logic        _GEN_596 = port1_RS_index == 5'h10;
+      automatic logic        _GEN_597 = port1_RS_index == 5'h11;
+      automatic logic        _GEN_598 = port1_RS_index == 5'h12;
+      automatic logic        _GEN_599 = port1_RS_index == 5'h13;
+      automatic logic        _GEN_600 = _GEN_580 | _GEN_559;
       automatic logic        _GEN_601 = _GEN_581 | _GEN_560;
       automatic logic        _GEN_602 = _GEN_582 | _GEN_561;
       automatic logic        _GEN_603 = _GEN_583 | _GEN_562;
@@ -3486,2993 +3411,2976 @@ module RS(
       automatic logic        _GEN_617 = _GEN_597 | _GEN_576;
       automatic logic        _GEN_618 = _GEN_598 | _GEN_577;
       automatic logic        _GEN_619 = _GEN_599 | _GEN_578;
-      automatic logic        _GEN_620 = _GEN_600 | _GEN_579;
-      automatic logic        _GEN_621 = _GEN_116[port2_RS_index] & port2_valid;
-      automatic logic        _GEN_622 = _GEN_621 & port2_RS_index == 5'h0;
-      automatic logic        _GEN_623 = _GEN_622 | _GEN_580 & _GEN_581 | _GEN_560;
-      automatic logic        _GEN_624 = _GEN_621 & port2_RS_index == 5'h1;
-      automatic logic        _GEN_625 = _GEN_624 | _GEN_580 & _GEN_582 | _GEN_561;
-      automatic logic        _GEN_626 = _GEN_621 & port2_RS_index == 5'h2;
-      automatic logic        _GEN_627 = _GEN_626 | _GEN_580 & _GEN_583 | _GEN_562;
-      automatic logic        _GEN_628 = _GEN_621 & port2_RS_index == 5'h3;
-      automatic logic        _GEN_629 = _GEN_628 | _GEN_580 & _GEN_584 | _GEN_563;
-      automatic logic        _GEN_630 = _GEN_621 & port2_RS_index == 5'h4;
-      automatic logic        _GEN_631 = _GEN_630 | _GEN_580 & _GEN_585 | _GEN_564;
-      automatic logic        _GEN_632 = _GEN_621 & port2_RS_index == 5'h5;
-      automatic logic        _GEN_633 = _GEN_632 | _GEN_580 & _GEN_586 | _GEN_565;
-      automatic logic        _GEN_634 = _GEN_621 & port2_RS_index == 5'h6;
-      automatic logic        _GEN_635 = _GEN_634 | _GEN_580 & _GEN_587 | _GEN_566;
-      automatic logic        _GEN_636 = _GEN_621 & port2_RS_index == 5'h7;
-      automatic logic        _GEN_637 = _GEN_636 | _GEN_580 & _GEN_588 | _GEN_567;
-      automatic logic        _GEN_638 = _GEN_621 & port2_RS_index == 5'h8;
-      automatic logic        _GEN_639 = _GEN_638 | _GEN_580 & _GEN_589 | _GEN_568;
-      automatic logic        _GEN_640 = _GEN_621 & port2_RS_index == 5'h9;
-      automatic logic        _GEN_641 = _GEN_640 | _GEN_580 & _GEN_590 | _GEN_569;
-      automatic logic        _GEN_642 = _GEN_621 & port2_RS_index == 5'hA;
-      automatic logic        _GEN_643 = _GEN_642 | _GEN_580 & _GEN_591 | _GEN_570;
-      automatic logic        _GEN_644 = _GEN_621 & port2_RS_index == 5'hB;
-      automatic logic        _GEN_645 = _GEN_644 | _GEN_580 & _GEN_592 | _GEN_571;
-      automatic logic        _GEN_646 = _GEN_621 & port2_RS_index == 5'hC;
-      automatic logic        _GEN_647 = _GEN_646 | _GEN_580 & _GEN_593 | _GEN_572;
-      automatic logic        _GEN_648 = _GEN_621 & port2_RS_index == 5'hD;
-      automatic logic        _GEN_649 = _GEN_648 | _GEN_580 & _GEN_594 | _GEN_573;
-      automatic logic        _GEN_650 = _GEN_621 & port2_RS_index == 5'hE;
-      automatic logic        _GEN_651 = _GEN_650 | _GEN_580 & _GEN_595 | _GEN_574;
-      automatic logic        _GEN_652 = _GEN_621 & port2_RS_index == 5'hF;
-      automatic logic        _GEN_653 = _GEN_652 | _GEN_580 & _GEN_596 | _GEN_575;
-      automatic logic        _GEN_654 = _GEN_621 & port2_RS_index == 5'h10;
-      automatic logic        _GEN_655 = _GEN_654 | _GEN_580 & _GEN_597 | _GEN_576;
-      automatic logic        _GEN_656 = _GEN_621 & port2_RS_index == 5'h11;
-      automatic logic        _GEN_657 = _GEN_656 | _GEN_580 & _GEN_598 | _GEN_577;
-      automatic logic        _GEN_658 = _GEN_621 & port2_RS_index == 5'h12;
-      automatic logic        _GEN_659 = _GEN_658 | _GEN_580 & _GEN_599 | _GEN_578;
-      automatic logic        _GEN_660 = _GEN_621 & port2_RS_index == 5'h13;
-      automatic logic        _GEN_661 = _GEN_660 | _GEN_580 & _GEN_600 | _GEN_579;
-      _GEN_139 = io_backendPacket_0_valid & allocateIndexBinary == 5'h0;
-      _GEN_140 = io_backendPacket_0_valid & allocateIndexBinary == 5'h1;
-      _GEN_141 = io_backendPacket_0_valid & allocateIndexBinary == 5'h2;
-      _GEN_142 = io_backendPacket_0_valid & allocateIndexBinary == 5'h3;
-      _GEN_143 = io_backendPacket_0_valid & allocateIndexBinary == 5'h4;
-      _GEN_144 = io_backendPacket_0_valid & allocateIndexBinary == 5'h5;
-      _GEN_145 = io_backendPacket_0_valid & allocateIndexBinary == 5'h6;
-      _GEN_146 = io_backendPacket_0_valid & allocateIndexBinary == 5'h7;
-      _GEN_147 = io_backendPacket_0_valid & allocateIndexBinary == 5'h8;
-      _GEN_148 = io_backendPacket_0_valid & allocateIndexBinary == 5'h9;
-      _GEN_149 = io_backendPacket_0_valid & allocateIndexBinary == 5'hA;
-      _GEN_150 = io_backendPacket_0_valid & allocateIndexBinary == 5'hB;
-      _GEN_151 = io_backendPacket_0_valid & allocateIndexBinary == 5'hC;
-      _GEN_152 = io_backendPacket_0_valid & allocateIndexBinary == 5'hD;
-      _GEN_153 = io_backendPacket_0_valid & allocateIndexBinary == 5'hE;
-      _GEN_154 = io_backendPacket_0_valid & allocateIndexBinary == 5'hF;
-      _GEN_155 = io_backendPacket_0_valid & allocateIndexBinary == 5'h10;
-      _GEN_156 = io_backendPacket_0_valid & allocateIndexBinary == 5'h11;
-      _GEN_157 = io_backendPacket_0_valid & allocateIndexBinary == 5'h12;
-      _GEN_158 = io_backendPacket_0_valid & allocateIndexBinary == 5'h13;
-      _GEN_160 = io_backendPacket_1_valid & _GEN_159;
-      _GEN_162 = io_backendPacket_1_valid & _GEN_161;
-      _GEN_164 = io_backendPacket_1_valid & _GEN_163;
-      _GEN_166 = io_backendPacket_1_valid & _GEN_165;
-      _GEN_168 = io_backendPacket_1_valid & _GEN_167;
-      _GEN_170 = io_backendPacket_1_valid & _GEN_169;
-      _GEN_172 = io_backendPacket_1_valid & _GEN_171;
-      _GEN_174 = io_backendPacket_1_valid & _GEN_173;
-      _GEN_176 = io_backendPacket_1_valid & _GEN_175;
-      _GEN_178 = io_backendPacket_1_valid & _GEN_177;
-      _GEN_180 = io_backendPacket_1_valid & _GEN_179;
-      _GEN_182 = io_backendPacket_1_valid & _GEN_181;
-      _GEN_184 = io_backendPacket_1_valid & _GEN_183;
-      _GEN_186 = io_backendPacket_1_valid & _GEN_185;
-      _GEN_188 = io_backendPacket_1_valid & _GEN_187;
-      _GEN_190 = io_backendPacket_1_valid & _GEN_189;
-      _GEN_192 = io_backendPacket_1_valid & _GEN_191;
-      _GEN_194 = io_backendPacket_1_valid & _GEN_193;
-      _GEN_196 = io_backendPacket_1_valid & _GEN_195;
-      _GEN_198 = io_backendPacket_1_valid & _GEN_197;
+      automatic logic        _GEN_620 = _GEN_116[port2_RS_index] & port2_valid;
+      automatic logic        _GEN_621 = _GEN_620 & port2_RS_index == 5'h0;
+      automatic logic        _GEN_622 = _GEN_621 | _GEN_579 & _GEN_580 | _GEN_559;
+      automatic logic        _GEN_623 = _GEN_620 & port2_RS_index == 5'h1;
+      automatic logic        _GEN_624 = _GEN_623 | _GEN_579 & _GEN_581 | _GEN_560;
+      automatic logic        _GEN_625 = _GEN_620 & port2_RS_index == 5'h2;
+      automatic logic        _GEN_626 = _GEN_625 | _GEN_579 & _GEN_582 | _GEN_561;
+      automatic logic        _GEN_627 = _GEN_620 & port2_RS_index == 5'h3;
+      automatic logic        _GEN_628 = _GEN_627 | _GEN_579 & _GEN_583 | _GEN_562;
+      automatic logic        _GEN_629 = _GEN_620 & port2_RS_index == 5'h4;
+      automatic logic        _GEN_630 = _GEN_629 | _GEN_579 & _GEN_584 | _GEN_563;
+      automatic logic        _GEN_631 = _GEN_620 & port2_RS_index == 5'h5;
+      automatic logic        _GEN_632 = _GEN_631 | _GEN_579 & _GEN_585 | _GEN_564;
+      automatic logic        _GEN_633 = _GEN_620 & port2_RS_index == 5'h6;
+      automatic logic        _GEN_634 = _GEN_633 | _GEN_579 & _GEN_586 | _GEN_565;
+      automatic logic        _GEN_635 = _GEN_620 & port2_RS_index == 5'h7;
+      automatic logic        _GEN_636 = _GEN_635 | _GEN_579 & _GEN_587 | _GEN_566;
+      automatic logic        _GEN_637 = _GEN_620 & port2_RS_index == 5'h8;
+      automatic logic        _GEN_638 = _GEN_637 | _GEN_579 & _GEN_588 | _GEN_567;
+      automatic logic        _GEN_639 = _GEN_620 & port2_RS_index == 5'h9;
+      automatic logic        _GEN_640 = _GEN_639 | _GEN_579 & _GEN_589 | _GEN_568;
+      automatic logic        _GEN_641 = _GEN_620 & port2_RS_index == 5'hA;
+      automatic logic        _GEN_642 = _GEN_641 | _GEN_579 & _GEN_590 | _GEN_569;
+      automatic logic        _GEN_643 = _GEN_620 & port2_RS_index == 5'hB;
+      automatic logic        _GEN_644 = _GEN_643 | _GEN_579 & _GEN_591 | _GEN_570;
+      automatic logic        _GEN_645 = _GEN_620 & port2_RS_index == 5'hC;
+      automatic logic        _GEN_646 = _GEN_645 | _GEN_579 & _GEN_592 | _GEN_571;
+      automatic logic        _GEN_647 = _GEN_620 & port2_RS_index == 5'hD;
+      automatic logic        _GEN_648 = _GEN_647 | _GEN_579 & _GEN_593 | _GEN_572;
+      automatic logic        _GEN_649 = _GEN_620 & port2_RS_index == 5'hE;
+      automatic logic        _GEN_650 = _GEN_649 | _GEN_579 & _GEN_594 | _GEN_573;
+      automatic logic        _GEN_651 = _GEN_620 & port2_RS_index == 5'hF;
+      automatic logic        _GEN_652 = _GEN_651 | _GEN_579 & _GEN_595 | _GEN_574;
+      automatic logic        _GEN_653 = _GEN_620 & port2_RS_index == 5'h10;
+      automatic logic        _GEN_654 = _GEN_653 | _GEN_579 & _GEN_596 | _GEN_575;
+      automatic logic        _GEN_655 = _GEN_620 & port2_RS_index == 5'h11;
+      automatic logic        _GEN_656 = _GEN_655 | _GEN_579 & _GEN_597 | _GEN_576;
+      automatic logic        _GEN_657 = _GEN_620 & port2_RS_index == 5'h12;
+      automatic logic        _GEN_658 = _GEN_657 | _GEN_579 & _GEN_598 | _GEN_577;
+      automatic logic        _GEN_659 = _GEN_620 & port2_RS_index == 5'h13;
+      automatic logic        _GEN_660 = _GEN_659 | _GEN_579 & _GEN_599 | _GEN_578;
+      _GEN_138 = io_backendPacket_0_valid & allocateIndexBinary == 5'h0;
+      _GEN_139 = io_backendPacket_0_valid & allocateIndexBinary == 5'h1;
+      _GEN_140 = io_backendPacket_0_valid & allocateIndexBinary == 5'h2;
+      _GEN_141 = io_backendPacket_0_valid & allocateIndexBinary == 5'h3;
+      _GEN_142 = io_backendPacket_0_valid & allocateIndexBinary == 5'h4;
+      _GEN_143 = io_backendPacket_0_valid & allocateIndexBinary == 5'h5;
+      _GEN_144 = io_backendPacket_0_valid & allocateIndexBinary == 5'h6;
+      _GEN_145 = io_backendPacket_0_valid & allocateIndexBinary == 5'h7;
+      _GEN_146 = io_backendPacket_0_valid & allocateIndexBinary == 5'h8;
+      _GEN_147 = io_backendPacket_0_valid & allocateIndexBinary == 5'h9;
+      _GEN_148 = io_backendPacket_0_valid & allocateIndexBinary == 5'hA;
+      _GEN_149 = io_backendPacket_0_valid & allocateIndexBinary == 5'hB;
+      _GEN_150 = io_backendPacket_0_valid & allocateIndexBinary == 5'hC;
+      _GEN_151 = io_backendPacket_0_valid & allocateIndexBinary == 5'hD;
+      _GEN_152 = io_backendPacket_0_valid & allocateIndexBinary == 5'hE;
+      _GEN_153 = io_backendPacket_0_valid & allocateIndexBinary == 5'hF;
+      _GEN_154 = io_backendPacket_0_valid & allocateIndexBinary == 5'h10;
+      _GEN_155 = io_backendPacket_0_valid & allocateIndexBinary == 5'h11;
+      _GEN_156 = io_backendPacket_0_valid & allocateIndexBinary == 5'h12;
+      _GEN_157 = io_backendPacket_0_valid & allocateIndexBinary == 5'h13;
+      _GEN_159 = io_backendPacket_1_valid & _GEN_158;
+      _GEN_161 = io_backendPacket_1_valid & _GEN_160;
+      _GEN_163 = io_backendPacket_1_valid & _GEN_162;
+      _GEN_165 = io_backendPacket_1_valid & _GEN_164;
+      _GEN_167 = io_backendPacket_1_valid & _GEN_166;
+      _GEN_169 = io_backendPacket_1_valid & _GEN_168;
+      _GEN_171 = io_backendPacket_1_valid & _GEN_170;
+      _GEN_173 = io_backendPacket_1_valid & _GEN_172;
+      _GEN_175 = io_backendPacket_1_valid & _GEN_174;
+      _GEN_177 = io_backendPacket_1_valid & _GEN_176;
+      _GEN_179 = io_backendPacket_1_valid & _GEN_178;
+      _GEN_181 = io_backendPacket_1_valid & _GEN_180;
+      _GEN_183 = io_backendPacket_1_valid & _GEN_182;
+      _GEN_185 = io_backendPacket_1_valid & _GEN_184;
+      _GEN_187 = io_backendPacket_1_valid & _GEN_186;
+      _GEN_189 = io_backendPacket_1_valid & _GEN_188;
+      _GEN_191 = io_backendPacket_1_valid & _GEN_190;
+      _GEN_193 = io_backendPacket_1_valid & _GEN_192;
+      _GEN_195 = io_backendPacket_1_valid & _GEN_194;
+      _GEN_197 = io_backendPacket_1_valid & _GEN_196;
+      _GEN_198 =
+        io_backendPacket_1_valid
+          ? _GEN_158 | _GEN_138 | reservation_station_0_valid
+          : _GEN_138 | reservation_station_0_valid;
       _GEN_199 =
         io_backendPacket_1_valid
-          ? _GEN_159 | _GEN_139 | reservation_station_0_valid
-          : _GEN_139 | reservation_station_0_valid;
+          ? _GEN_160 | _GEN_139 | reservation_station_1_valid
+          : _GEN_139 | reservation_station_1_valid;
       _GEN_200 =
         io_backendPacket_1_valid
-          ? _GEN_161 | _GEN_140 | reservation_station_1_valid
-          : _GEN_140 | reservation_station_1_valid;
+          ? _GEN_162 | _GEN_140 | reservation_station_2_valid
+          : _GEN_140 | reservation_station_2_valid;
       _GEN_201 =
         io_backendPacket_1_valid
-          ? _GEN_163 | _GEN_141 | reservation_station_2_valid
-          : _GEN_141 | reservation_station_2_valid;
+          ? _GEN_164 | _GEN_141 | reservation_station_3_valid
+          : _GEN_141 | reservation_station_3_valid;
       _GEN_202 =
         io_backendPacket_1_valid
-          ? _GEN_165 | _GEN_142 | reservation_station_3_valid
-          : _GEN_142 | reservation_station_3_valid;
+          ? _GEN_166 | _GEN_142 | reservation_station_4_valid
+          : _GEN_142 | reservation_station_4_valid;
       _GEN_203 =
         io_backendPacket_1_valid
-          ? _GEN_167 | _GEN_143 | reservation_station_4_valid
-          : _GEN_143 | reservation_station_4_valid;
+          ? _GEN_168 | _GEN_143 | reservation_station_5_valid
+          : _GEN_143 | reservation_station_5_valid;
       _GEN_204 =
         io_backendPacket_1_valid
-          ? _GEN_169 | _GEN_144 | reservation_station_5_valid
-          : _GEN_144 | reservation_station_5_valid;
+          ? _GEN_170 | _GEN_144 | reservation_station_6_valid
+          : _GEN_144 | reservation_station_6_valid;
       _GEN_205 =
         io_backendPacket_1_valid
-          ? _GEN_171 | _GEN_145 | reservation_station_6_valid
-          : _GEN_145 | reservation_station_6_valid;
+          ? _GEN_172 | _GEN_145 | reservation_station_7_valid
+          : _GEN_145 | reservation_station_7_valid;
       _GEN_206 =
         io_backendPacket_1_valid
-          ? _GEN_173 | _GEN_146 | reservation_station_7_valid
-          : _GEN_146 | reservation_station_7_valid;
+          ? _GEN_174 | _GEN_146 | reservation_station_8_valid
+          : _GEN_146 | reservation_station_8_valid;
       _GEN_207 =
         io_backendPacket_1_valid
-          ? _GEN_175 | _GEN_147 | reservation_station_8_valid
-          : _GEN_147 | reservation_station_8_valid;
+          ? _GEN_176 | _GEN_147 | reservation_station_9_valid
+          : _GEN_147 | reservation_station_9_valid;
       _GEN_208 =
         io_backendPacket_1_valid
-          ? _GEN_177 | _GEN_148 | reservation_station_9_valid
-          : _GEN_148 | reservation_station_9_valid;
+          ? _GEN_178 | _GEN_148 | reservation_station_10_valid
+          : _GEN_148 | reservation_station_10_valid;
       _GEN_209 =
         io_backendPacket_1_valid
-          ? _GEN_179 | _GEN_149 | reservation_station_10_valid
-          : _GEN_149 | reservation_station_10_valid;
+          ? _GEN_180 | _GEN_149 | reservation_station_11_valid
+          : _GEN_149 | reservation_station_11_valid;
       _GEN_210 =
         io_backendPacket_1_valid
-          ? _GEN_181 | _GEN_150 | reservation_station_11_valid
-          : _GEN_150 | reservation_station_11_valid;
+          ? _GEN_182 | _GEN_150 | reservation_station_12_valid
+          : _GEN_150 | reservation_station_12_valid;
       _GEN_211 =
         io_backendPacket_1_valid
-          ? _GEN_183 | _GEN_151 | reservation_station_12_valid
-          : _GEN_151 | reservation_station_12_valid;
+          ? _GEN_184 | _GEN_151 | reservation_station_13_valid
+          : _GEN_151 | reservation_station_13_valid;
       _GEN_212 =
         io_backendPacket_1_valid
-          ? _GEN_185 | _GEN_152 | reservation_station_13_valid
-          : _GEN_152 | reservation_station_13_valid;
+          ? _GEN_186 | _GEN_152 | reservation_station_14_valid
+          : _GEN_152 | reservation_station_14_valid;
       _GEN_213 =
         io_backendPacket_1_valid
-          ? _GEN_187 | _GEN_153 | reservation_station_14_valid
-          : _GEN_153 | reservation_station_14_valid;
+          ? _GEN_188 | _GEN_153 | reservation_station_15_valid
+          : _GEN_153 | reservation_station_15_valid;
       _GEN_214 =
         io_backendPacket_1_valid
-          ? _GEN_189 | _GEN_154 | reservation_station_15_valid
-          : _GEN_154 | reservation_station_15_valid;
+          ? _GEN_190 | _GEN_154 | reservation_station_16_valid
+          : _GEN_154 | reservation_station_16_valid;
       _GEN_215 =
         io_backendPacket_1_valid
-          ? _GEN_191 | _GEN_155 | reservation_station_16_valid
-          : _GEN_155 | reservation_station_16_valid;
+          ? _GEN_192 | _GEN_155 | reservation_station_17_valid
+          : _GEN_155 | reservation_station_17_valid;
       _GEN_216 =
         io_backendPacket_1_valid
-          ? _GEN_193 | _GEN_156 | reservation_station_17_valid
-          : _GEN_156 | reservation_station_17_valid;
+          ? _GEN_194 | _GEN_156 | reservation_station_18_valid
+          : _GEN_156 | reservation_station_18_valid;
       _GEN_217 =
         io_backendPacket_1_valid
-          ? _GEN_195 | _GEN_157 | reservation_station_18_valid
-          : _GEN_157 | reservation_station_18_valid;
-      _GEN_218 =
-        io_backendPacket_1_valid
-          ? _GEN_197 | _GEN_158 | reservation_station_19_valid
-          : _GEN_158 | reservation_station_19_valid;
-      _GEN_219 = io_backendPacket_2_valid & allocateIndexBinary_2 == 5'h0;
-      _GEN_220 = io_backendPacket_2_valid & allocateIndexBinary_2 == 5'h1;
-      _GEN_221 = io_backendPacket_2_valid & allocateIndexBinary_2 == 5'h2;
-      _GEN_222 = io_backendPacket_2_valid & allocateIndexBinary_2 == 5'h3;
-      _GEN_223 = io_backendPacket_2_valid & allocateIndexBinary_2 == 5'h4;
-      _GEN_224 = io_backendPacket_2_valid & allocateIndexBinary_2 == 5'h5;
-      _GEN_225 = io_backendPacket_2_valid & allocateIndexBinary_2 == 5'h6;
-      _GEN_226 = io_backendPacket_2_valid & allocateIndexBinary_2 == 5'h7;
-      _GEN_227 = io_backendPacket_2_valid & allocateIndexBinary_2 == 5'h8;
-      _GEN_228 = io_backendPacket_2_valid & allocateIndexBinary_2 == 5'h9;
-      _GEN_229 = io_backendPacket_2_valid & allocateIndexBinary_2 == 5'hA;
-      _GEN_230 = io_backendPacket_2_valid & allocateIndexBinary_2 == 5'hB;
-      _GEN_231 = io_backendPacket_2_valid & allocateIndexBinary_2 == 5'hC;
-      _GEN_232 = io_backendPacket_2_valid & allocateIndexBinary_2 == 5'hD;
-      _GEN_233 = io_backendPacket_2_valid & allocateIndexBinary_2 == 5'hE;
-      _GEN_234 = io_backendPacket_2_valid & allocateIndexBinary_2 == 5'hF;
-      _GEN_235 = io_backendPacket_2_valid & allocateIndexBinary_2 == 5'h10;
-      _GEN_236 = io_backendPacket_2_valid & allocateIndexBinary_2 == 5'h11;
-      _GEN_237 = io_backendPacket_2_valid & allocateIndexBinary_2 == 5'h12;
-      _GEN_238 = io_backendPacket_2_valid & allocateIndexBinary_2 == 5'h13;
-      _GEN_240 = io_backendPacket_3_valid & _GEN_239;
-      _GEN_241 =
-        _GEN_240
-          ? io_backendPacket_3_bits_decoded_instruction_RDold_valid
-          : _GEN_219
-              ? io_backendPacket_2_bits_decoded_instruction_RDold_valid
-              : _GEN_160
-                  ? io_backendPacket_1_bits_decoded_instruction_RDold_valid
-                  : _GEN_139
-                      ? io_backendPacket_0_bits_decoded_instruction_RDold_valid
-                      : reservation_station_0_decoded_instruction_RDold_valid;
-      _GEN_242 =
-        _GEN_240
+          ? _GEN_196 | _GEN_157 | reservation_station_19_valid
+          : _GEN_157 | reservation_station_19_valid;
+      _GEN_218 = io_backendPacket_2_valid & allocateIndexBinary_2 == 5'h0;
+      _GEN_219 = io_backendPacket_2_valid & allocateIndexBinary_2 == 5'h1;
+      _GEN_220 = io_backendPacket_2_valid & allocateIndexBinary_2 == 5'h2;
+      _GEN_221 = io_backendPacket_2_valid & allocateIndexBinary_2 == 5'h3;
+      _GEN_222 = io_backendPacket_2_valid & allocateIndexBinary_2 == 5'h4;
+      _GEN_223 = io_backendPacket_2_valid & allocateIndexBinary_2 == 5'h5;
+      _GEN_224 = io_backendPacket_2_valid & allocateIndexBinary_2 == 5'h6;
+      _GEN_225 = io_backendPacket_2_valid & allocateIndexBinary_2 == 5'h7;
+      _GEN_226 = io_backendPacket_2_valid & allocateIndexBinary_2 == 5'h8;
+      _GEN_227 = io_backendPacket_2_valid & allocateIndexBinary_2 == 5'h9;
+      _GEN_228 = io_backendPacket_2_valid & allocateIndexBinary_2 == 5'hA;
+      _GEN_229 = io_backendPacket_2_valid & allocateIndexBinary_2 == 5'hB;
+      _GEN_230 = io_backendPacket_2_valid & allocateIndexBinary_2 == 5'hC;
+      _GEN_231 = io_backendPacket_2_valid & allocateIndexBinary_2 == 5'hD;
+      _GEN_232 = io_backendPacket_2_valid & allocateIndexBinary_2 == 5'hE;
+      _GEN_233 = io_backendPacket_2_valid & allocateIndexBinary_2 == 5'hF;
+      _GEN_234 = io_backendPacket_2_valid & allocateIndexBinary_2 == 5'h10;
+      _GEN_235 = io_backendPacket_2_valid & allocateIndexBinary_2 == 5'h11;
+      _GEN_236 = io_backendPacket_2_valid & allocateIndexBinary_2 == 5'h12;
+      _GEN_237 = io_backendPacket_2_valid & allocateIndexBinary_2 == 5'h13;
+      _GEN_239 = io_backendPacket_3_valid & _GEN_238;
+      _GEN_240 =
+        _GEN_239
           ? io_backendPacket_3_bits_decoded_instruction_RD_valid
-          : _GEN_219
+          : _GEN_218
               ? io_backendPacket_2_bits_decoded_instruction_RD_valid
-              : _GEN_160
+              : _GEN_159
                   ? io_backendPacket_1_bits_decoded_instruction_RD_valid
-                  : _GEN_139
+                  : _GEN_138
                       ? io_backendPacket_0_bits_decoded_instruction_RD_valid
                       : reservation_station_0_decoded_instruction_RD_valid;
-      _GEN_243 =
-        _GEN_240
+      _GEN_241 =
+        _GEN_239
           ? io_backendPacket_3_bits_decoded_instruction_RS1_valid
-          : _GEN_219
+          : _GEN_218
               ? io_backendPacket_2_bits_decoded_instruction_RS1_valid
-              : _GEN_160
+              : _GEN_159
                   ? io_backendPacket_1_bits_decoded_instruction_RS1_valid
-                  : _GEN_139
+                  : _GEN_138
                       ? io_backendPacket_0_bits_decoded_instruction_RS1_valid
                       : reservation_station_0_decoded_instruction_RS1_valid;
-      _GEN_244 =
-        _GEN_240
+      _GEN_242 =
+        _GEN_239
           ? io_backendPacket_3_bits_decoded_instruction_RS2_valid
-          : _GEN_219
+          : _GEN_218
               ? io_backendPacket_2_bits_decoded_instruction_RS2_valid
-              : _GEN_160
+              : _GEN_159
                   ? io_backendPacket_1_bits_decoded_instruction_RS2_valid
-                  : _GEN_139
+                  : _GEN_138
                       ? io_backendPacket_0_bits_decoded_instruction_RS2_valid
                       : reservation_station_0_decoded_instruction_RS2_valid;
-      _GEN_245 =
-        _GEN_240
+      _GEN_243 =
+        _GEN_239
           ? io_backendPacket_3_bits_decoded_instruction_needs_ALU
-          : _GEN_219
+          : _GEN_218
               ? io_backendPacket_2_bits_decoded_instruction_needs_ALU
-              : _GEN_160
+              : _GEN_159
                   ? io_backendPacket_1_bits_decoded_instruction_needs_ALU
-                  : _GEN_139
+                  : _GEN_138
                       ? io_backendPacket_0_bits_decoded_instruction_needs_ALU
                       : reservation_station_0_decoded_instruction_needs_ALU;
-      _GEN_246 =
-        _GEN_240
+      _GEN_244 =
+        _GEN_239
           ? io_backendPacket_3_bits_decoded_instruction_needs_branch_unit
-          : _GEN_219
+          : _GEN_218
               ? io_backendPacket_2_bits_decoded_instruction_needs_branch_unit
-              : _GEN_160
+              : _GEN_159
                   ? io_backendPacket_1_bits_decoded_instruction_needs_branch_unit
-                  : _GEN_139
+                  : _GEN_138
                       ? io_backendPacket_0_bits_decoded_instruction_needs_branch_unit
                       : reservation_station_0_decoded_instruction_needs_branch_unit;
-      _GEN_247 =
-        _GEN_240
+      _GEN_245 =
+        _GEN_239
+          ? io_backendPacket_3_bits_decoded_instruction_needs_CSRs
+          : _GEN_218
+              ? io_backendPacket_2_bits_decoded_instruction_needs_CSRs
+              : _GEN_159
+                  ? io_backendPacket_1_bits_decoded_instruction_needs_CSRs
+                  : _GEN_138
+                      ? io_backendPacket_0_bits_decoded_instruction_needs_CSRs
+                      : reservation_station_0_decoded_instruction_needs_CSRs;
+      _GEN_246 =
+        _GEN_239
           ? io_backendPacket_3_bits_decoded_instruction_SUBTRACT
-          : _GEN_219
+          : _GEN_218
               ? io_backendPacket_2_bits_decoded_instruction_SUBTRACT
-              : _GEN_160
+              : _GEN_159
                   ? io_backendPacket_1_bits_decoded_instruction_SUBTRACT
-                  : _GEN_139
+                  : _GEN_138
                       ? io_backendPacket_0_bits_decoded_instruction_SUBTRACT
                       : reservation_station_0_decoded_instruction_SUBTRACT;
-      _GEN_248 =
-        _GEN_240
+      _GEN_247 =
+        _GEN_239
           ? io_backendPacket_3_bits_decoded_instruction_MULTIPLY
-          : _GEN_219
+          : _GEN_218
               ? io_backendPacket_2_bits_decoded_instruction_MULTIPLY
-              : _GEN_160
+              : _GEN_159
                   ? io_backendPacket_1_bits_decoded_instruction_MULTIPLY
-                  : _GEN_139
+                  : _GEN_138
                       ? io_backendPacket_0_bits_decoded_instruction_MULTIPLY
                       : reservation_station_0_decoded_instruction_MULTIPLY;
-      _GEN_249 =
-        _GEN_240
+      _GEN_248 =
+        _GEN_239
           ? io_backendPacket_3_bits_decoded_instruction_IMMEDIATE
-          : _GEN_219
+          : _GEN_218
               ? io_backendPacket_2_bits_decoded_instruction_IMMEDIATE
-              : _GEN_160
+              : _GEN_159
                   ? io_backendPacket_1_bits_decoded_instruction_IMMEDIATE
-                  : _GEN_139
+                  : _GEN_138
                       ? io_backendPacket_0_bits_decoded_instruction_IMMEDIATE
                       : reservation_station_0_decoded_instruction_IMMEDIATE;
-      _GEN_250 =
-        _GEN_240
+      _GEN_249 =
+        _GEN_239
           ? io_backendPacket_3_bits_decoded_instruction_IS_LOAD
-          : _GEN_219
+          : _GEN_218
               ? io_backendPacket_2_bits_decoded_instruction_IS_LOAD
-              : _GEN_160
+              : _GEN_159
                   ? io_backendPacket_1_bits_decoded_instruction_IS_LOAD
-                  : _GEN_139
+                  : _GEN_138
                       ? io_backendPacket_0_bits_decoded_instruction_IS_LOAD
                       : reservation_station_0_decoded_instruction_IS_LOAD;
-      _GEN_251 =
-        _GEN_240
+      _GEN_250 =
+        _GEN_239
+          ? io_backendPacket_3_bits_decoded_instruction_IS_STORE
+          : _GEN_218
+              ? io_backendPacket_2_bits_decoded_instruction_IS_STORE
+              : _GEN_159
+                  ? io_backendPacket_1_bits_decoded_instruction_IS_STORE
+                  : _GEN_138
+                      ? io_backendPacket_0_bits_decoded_instruction_IS_STORE
+                      : reservation_station_0_decoded_instruction_IS_STORE;
+      _GEN_252 = io_backendPacket_3_valid & _GEN_251;
+      _GEN_253 =
+        _GEN_252
+          ? io_backendPacket_3_bits_decoded_instruction_RD_valid
+          : _GEN_219
+              ? io_backendPacket_2_bits_decoded_instruction_RD_valid
+              : _GEN_161
+                  ? io_backendPacket_1_bits_decoded_instruction_RD_valid
+                  : _GEN_139
+                      ? io_backendPacket_0_bits_decoded_instruction_RD_valid
+                      : reservation_station_1_decoded_instruction_RD_valid;
+      _GEN_254 =
+        _GEN_252
+          ? io_backendPacket_3_bits_decoded_instruction_RS1_valid
+          : _GEN_219
+              ? io_backendPacket_2_bits_decoded_instruction_RS1_valid
+              : _GEN_161
+                  ? io_backendPacket_1_bits_decoded_instruction_RS1_valid
+                  : _GEN_139
+                      ? io_backendPacket_0_bits_decoded_instruction_RS1_valid
+                      : reservation_station_1_decoded_instruction_RS1_valid;
+      _GEN_255 =
+        _GEN_252
+          ? io_backendPacket_3_bits_decoded_instruction_RS2_valid
+          : _GEN_219
+              ? io_backendPacket_2_bits_decoded_instruction_RS2_valid
+              : _GEN_161
+                  ? io_backendPacket_1_bits_decoded_instruction_RS2_valid
+                  : _GEN_139
+                      ? io_backendPacket_0_bits_decoded_instruction_RS2_valid
+                      : reservation_station_1_decoded_instruction_RS2_valid;
+      _GEN_256 =
+        _GEN_252
+          ? io_backendPacket_3_bits_decoded_instruction_needs_ALU
+          : _GEN_219
+              ? io_backendPacket_2_bits_decoded_instruction_needs_ALU
+              : _GEN_161
+                  ? io_backendPacket_1_bits_decoded_instruction_needs_ALU
+                  : _GEN_139
+                      ? io_backendPacket_0_bits_decoded_instruction_needs_ALU
+                      : reservation_station_1_decoded_instruction_needs_ALU;
+      _GEN_257 =
+        _GEN_252
+          ? io_backendPacket_3_bits_decoded_instruction_needs_branch_unit
+          : _GEN_219
+              ? io_backendPacket_2_bits_decoded_instruction_needs_branch_unit
+              : _GEN_161
+                  ? io_backendPacket_1_bits_decoded_instruction_needs_branch_unit
+                  : _GEN_139
+                      ? io_backendPacket_0_bits_decoded_instruction_needs_branch_unit
+                      : reservation_station_1_decoded_instruction_needs_branch_unit;
+      _GEN_258 =
+        _GEN_252
+          ? io_backendPacket_3_bits_decoded_instruction_needs_CSRs
+          : _GEN_219
+              ? io_backendPacket_2_bits_decoded_instruction_needs_CSRs
+              : _GEN_161
+                  ? io_backendPacket_1_bits_decoded_instruction_needs_CSRs
+                  : _GEN_139
+                      ? io_backendPacket_0_bits_decoded_instruction_needs_CSRs
+                      : reservation_station_1_decoded_instruction_needs_CSRs;
+      _GEN_259 =
+        _GEN_252
+          ? io_backendPacket_3_bits_decoded_instruction_SUBTRACT
+          : _GEN_219
+              ? io_backendPacket_2_bits_decoded_instruction_SUBTRACT
+              : _GEN_161
+                  ? io_backendPacket_1_bits_decoded_instruction_SUBTRACT
+                  : _GEN_139
+                      ? io_backendPacket_0_bits_decoded_instruction_SUBTRACT
+                      : reservation_station_1_decoded_instruction_SUBTRACT;
+      _GEN_260 =
+        _GEN_252
+          ? io_backendPacket_3_bits_decoded_instruction_MULTIPLY
+          : _GEN_219
+              ? io_backendPacket_2_bits_decoded_instruction_MULTIPLY
+              : _GEN_161
+                  ? io_backendPacket_1_bits_decoded_instruction_MULTIPLY
+                  : _GEN_139
+                      ? io_backendPacket_0_bits_decoded_instruction_MULTIPLY
+                      : reservation_station_1_decoded_instruction_MULTIPLY;
+      _GEN_261 =
+        _GEN_252
+          ? io_backendPacket_3_bits_decoded_instruction_IMMEDIATE
+          : _GEN_219
+              ? io_backendPacket_2_bits_decoded_instruction_IMMEDIATE
+              : _GEN_161
+                  ? io_backendPacket_1_bits_decoded_instruction_IMMEDIATE
+                  : _GEN_139
+                      ? io_backendPacket_0_bits_decoded_instruction_IMMEDIATE
+                      : reservation_station_1_decoded_instruction_IMMEDIATE;
+      _GEN_262 =
+        _GEN_252
+          ? io_backendPacket_3_bits_decoded_instruction_IS_LOAD
+          : _GEN_219
+              ? io_backendPacket_2_bits_decoded_instruction_IS_LOAD
+              : _GEN_161
+                  ? io_backendPacket_1_bits_decoded_instruction_IS_LOAD
+                  : _GEN_139
+                      ? io_backendPacket_0_bits_decoded_instruction_IS_LOAD
+                      : reservation_station_1_decoded_instruction_IS_LOAD;
+      _GEN_263 =
+        _GEN_252
           ? io_backendPacket_3_bits_decoded_instruction_IS_STORE
           : _GEN_219
               ? io_backendPacket_2_bits_decoded_instruction_IS_STORE
-              : _GEN_160
+              : _GEN_161
                   ? io_backendPacket_1_bits_decoded_instruction_IS_STORE
                   : _GEN_139
                       ? io_backendPacket_0_bits_decoded_instruction_IS_STORE
-                      : reservation_station_0_decoded_instruction_IS_STORE;
-      _GEN_253 = io_backendPacket_3_valid & _GEN_252;
-      _GEN_254 =
-        _GEN_253
-          ? io_backendPacket_3_bits_decoded_instruction_RDold_valid
-          : _GEN_220
-              ? io_backendPacket_2_bits_decoded_instruction_RDold_valid
-              : _GEN_162
-                  ? io_backendPacket_1_bits_decoded_instruction_RDold_valid
-                  : _GEN_140
-                      ? io_backendPacket_0_bits_decoded_instruction_RDold_valid
-                      : reservation_station_1_decoded_instruction_RDold_valid;
-      _GEN_255 =
-        _GEN_253
-          ? io_backendPacket_3_bits_decoded_instruction_RD_valid
-          : _GEN_220
-              ? io_backendPacket_2_bits_decoded_instruction_RD_valid
-              : _GEN_162
-                  ? io_backendPacket_1_bits_decoded_instruction_RD_valid
-                  : _GEN_140
-                      ? io_backendPacket_0_bits_decoded_instruction_RD_valid
-                      : reservation_station_1_decoded_instruction_RD_valid;
-      _GEN_256 =
-        _GEN_253
-          ? io_backendPacket_3_bits_decoded_instruction_RS1_valid
-          : _GEN_220
-              ? io_backendPacket_2_bits_decoded_instruction_RS1_valid
-              : _GEN_162
-                  ? io_backendPacket_1_bits_decoded_instruction_RS1_valid
-                  : _GEN_140
-                      ? io_backendPacket_0_bits_decoded_instruction_RS1_valid
-                      : reservation_station_1_decoded_instruction_RS1_valid;
-      _GEN_257 =
-        _GEN_253
-          ? io_backendPacket_3_bits_decoded_instruction_RS2_valid
-          : _GEN_220
-              ? io_backendPacket_2_bits_decoded_instruction_RS2_valid
-              : _GEN_162
-                  ? io_backendPacket_1_bits_decoded_instruction_RS2_valid
-                  : _GEN_140
-                      ? io_backendPacket_0_bits_decoded_instruction_RS2_valid
-                      : reservation_station_1_decoded_instruction_RS2_valid;
-      _GEN_258 =
-        _GEN_253
-          ? io_backendPacket_3_bits_decoded_instruction_needs_ALU
-          : _GEN_220
-              ? io_backendPacket_2_bits_decoded_instruction_needs_ALU
-              : _GEN_162
-                  ? io_backendPacket_1_bits_decoded_instruction_needs_ALU
-                  : _GEN_140
-                      ? io_backendPacket_0_bits_decoded_instruction_needs_ALU
-                      : reservation_station_1_decoded_instruction_needs_ALU;
-      _GEN_259 =
-        _GEN_253
-          ? io_backendPacket_3_bits_decoded_instruction_needs_branch_unit
-          : _GEN_220
-              ? io_backendPacket_2_bits_decoded_instruction_needs_branch_unit
-              : _GEN_162
-                  ? io_backendPacket_1_bits_decoded_instruction_needs_branch_unit
-                  : _GEN_140
-                      ? io_backendPacket_0_bits_decoded_instruction_needs_branch_unit
-                      : reservation_station_1_decoded_instruction_needs_branch_unit;
-      _GEN_260 =
-        _GEN_253
-          ? io_backendPacket_3_bits_decoded_instruction_SUBTRACT
-          : _GEN_220
-              ? io_backendPacket_2_bits_decoded_instruction_SUBTRACT
-              : _GEN_162
-                  ? io_backendPacket_1_bits_decoded_instruction_SUBTRACT
-                  : _GEN_140
-                      ? io_backendPacket_0_bits_decoded_instruction_SUBTRACT
-                      : reservation_station_1_decoded_instruction_SUBTRACT;
-      _GEN_261 =
-        _GEN_253
-          ? io_backendPacket_3_bits_decoded_instruction_MULTIPLY
-          : _GEN_220
-              ? io_backendPacket_2_bits_decoded_instruction_MULTIPLY
-              : _GEN_162
-                  ? io_backendPacket_1_bits_decoded_instruction_MULTIPLY
-                  : _GEN_140
-                      ? io_backendPacket_0_bits_decoded_instruction_MULTIPLY
-                      : reservation_station_1_decoded_instruction_MULTIPLY;
-      _GEN_262 =
-        _GEN_253
-          ? io_backendPacket_3_bits_decoded_instruction_IMMEDIATE
-          : _GEN_220
-              ? io_backendPacket_2_bits_decoded_instruction_IMMEDIATE
-              : _GEN_162
-                  ? io_backendPacket_1_bits_decoded_instruction_IMMEDIATE
-                  : _GEN_140
-                      ? io_backendPacket_0_bits_decoded_instruction_IMMEDIATE
-                      : reservation_station_1_decoded_instruction_IMMEDIATE;
-      _GEN_263 =
-        _GEN_253
-          ? io_backendPacket_3_bits_decoded_instruction_IS_LOAD
-          : _GEN_220
-              ? io_backendPacket_2_bits_decoded_instruction_IS_LOAD
-              : _GEN_162
-                  ? io_backendPacket_1_bits_decoded_instruction_IS_LOAD
-                  : _GEN_140
-                      ? io_backendPacket_0_bits_decoded_instruction_IS_LOAD
-                      : reservation_station_1_decoded_instruction_IS_LOAD;
-      _GEN_264 =
-        _GEN_253
-          ? io_backendPacket_3_bits_decoded_instruction_IS_STORE
-          : _GEN_220
-              ? io_backendPacket_2_bits_decoded_instruction_IS_STORE
-              : _GEN_162
-                  ? io_backendPacket_1_bits_decoded_instruction_IS_STORE
-                  : _GEN_140
-                      ? io_backendPacket_0_bits_decoded_instruction_IS_STORE
                       : reservation_station_1_decoded_instruction_IS_STORE;
-      _GEN_266 = io_backendPacket_3_valid & _GEN_265;
-      _GEN_267 =
-        _GEN_266
-          ? io_backendPacket_3_bits_decoded_instruction_RDold_valid
-          : _GEN_221
-              ? io_backendPacket_2_bits_decoded_instruction_RDold_valid
-              : _GEN_164
-                  ? io_backendPacket_1_bits_decoded_instruction_RDold_valid
-                  : _GEN_141
-                      ? io_backendPacket_0_bits_decoded_instruction_RDold_valid
-                      : reservation_station_2_decoded_instruction_RDold_valid;
-      _GEN_268 =
-        _GEN_266
+      _GEN_265 = io_backendPacket_3_valid & _GEN_264;
+      _GEN_266 =
+        _GEN_265
           ? io_backendPacket_3_bits_decoded_instruction_RD_valid
-          : _GEN_221
+          : _GEN_220
               ? io_backendPacket_2_bits_decoded_instruction_RD_valid
-              : _GEN_164
+              : _GEN_163
                   ? io_backendPacket_1_bits_decoded_instruction_RD_valid
-                  : _GEN_141
+                  : _GEN_140
                       ? io_backendPacket_0_bits_decoded_instruction_RD_valid
                       : reservation_station_2_decoded_instruction_RD_valid;
-      _GEN_269 =
-        _GEN_266
+      _GEN_267 =
+        _GEN_265
           ? io_backendPacket_3_bits_decoded_instruction_RS1_valid
-          : _GEN_221
+          : _GEN_220
               ? io_backendPacket_2_bits_decoded_instruction_RS1_valid
-              : _GEN_164
+              : _GEN_163
                   ? io_backendPacket_1_bits_decoded_instruction_RS1_valid
-                  : _GEN_141
+                  : _GEN_140
                       ? io_backendPacket_0_bits_decoded_instruction_RS1_valid
                       : reservation_station_2_decoded_instruction_RS1_valid;
-      _GEN_270 =
-        _GEN_266
+      _GEN_268 =
+        _GEN_265
           ? io_backendPacket_3_bits_decoded_instruction_RS2_valid
-          : _GEN_221
+          : _GEN_220
               ? io_backendPacket_2_bits_decoded_instruction_RS2_valid
-              : _GEN_164
+              : _GEN_163
                   ? io_backendPacket_1_bits_decoded_instruction_RS2_valid
-                  : _GEN_141
+                  : _GEN_140
                       ? io_backendPacket_0_bits_decoded_instruction_RS2_valid
                       : reservation_station_2_decoded_instruction_RS2_valid;
-      _GEN_271 =
-        _GEN_266
+      _GEN_269 =
+        _GEN_265
           ? io_backendPacket_3_bits_decoded_instruction_needs_ALU
-          : _GEN_221
+          : _GEN_220
               ? io_backendPacket_2_bits_decoded_instruction_needs_ALU
-              : _GEN_164
+              : _GEN_163
                   ? io_backendPacket_1_bits_decoded_instruction_needs_ALU
-                  : _GEN_141
+                  : _GEN_140
                       ? io_backendPacket_0_bits_decoded_instruction_needs_ALU
                       : reservation_station_2_decoded_instruction_needs_ALU;
-      _GEN_272 =
-        _GEN_266
+      _GEN_270 =
+        _GEN_265
           ? io_backendPacket_3_bits_decoded_instruction_needs_branch_unit
-          : _GEN_221
+          : _GEN_220
               ? io_backendPacket_2_bits_decoded_instruction_needs_branch_unit
-              : _GEN_164
+              : _GEN_163
                   ? io_backendPacket_1_bits_decoded_instruction_needs_branch_unit
-                  : _GEN_141
+                  : _GEN_140
                       ? io_backendPacket_0_bits_decoded_instruction_needs_branch_unit
                       : reservation_station_2_decoded_instruction_needs_branch_unit;
-      _GEN_273 =
-        _GEN_266
+      _GEN_271 =
+        _GEN_265
+          ? io_backendPacket_3_bits_decoded_instruction_needs_CSRs
+          : _GEN_220
+              ? io_backendPacket_2_bits_decoded_instruction_needs_CSRs
+              : _GEN_163
+                  ? io_backendPacket_1_bits_decoded_instruction_needs_CSRs
+                  : _GEN_140
+                      ? io_backendPacket_0_bits_decoded_instruction_needs_CSRs
+                      : reservation_station_2_decoded_instruction_needs_CSRs;
+      _GEN_272 =
+        _GEN_265
           ? io_backendPacket_3_bits_decoded_instruction_SUBTRACT
-          : _GEN_221
+          : _GEN_220
               ? io_backendPacket_2_bits_decoded_instruction_SUBTRACT
-              : _GEN_164
+              : _GEN_163
                   ? io_backendPacket_1_bits_decoded_instruction_SUBTRACT
-                  : _GEN_141
+                  : _GEN_140
                       ? io_backendPacket_0_bits_decoded_instruction_SUBTRACT
                       : reservation_station_2_decoded_instruction_SUBTRACT;
-      _GEN_274 =
-        _GEN_266
+      _GEN_273 =
+        _GEN_265
           ? io_backendPacket_3_bits_decoded_instruction_MULTIPLY
-          : _GEN_221
+          : _GEN_220
               ? io_backendPacket_2_bits_decoded_instruction_MULTIPLY
-              : _GEN_164
+              : _GEN_163
                   ? io_backendPacket_1_bits_decoded_instruction_MULTIPLY
-                  : _GEN_141
+                  : _GEN_140
                       ? io_backendPacket_0_bits_decoded_instruction_MULTIPLY
                       : reservation_station_2_decoded_instruction_MULTIPLY;
-      _GEN_275 =
-        _GEN_266
+      _GEN_274 =
+        _GEN_265
           ? io_backendPacket_3_bits_decoded_instruction_IMMEDIATE
-          : _GEN_221
+          : _GEN_220
               ? io_backendPacket_2_bits_decoded_instruction_IMMEDIATE
-              : _GEN_164
+              : _GEN_163
                   ? io_backendPacket_1_bits_decoded_instruction_IMMEDIATE
-                  : _GEN_141
+                  : _GEN_140
                       ? io_backendPacket_0_bits_decoded_instruction_IMMEDIATE
                       : reservation_station_2_decoded_instruction_IMMEDIATE;
-      _GEN_276 =
-        _GEN_266
+      _GEN_275 =
+        _GEN_265
           ? io_backendPacket_3_bits_decoded_instruction_IS_LOAD
-          : _GEN_221
+          : _GEN_220
               ? io_backendPacket_2_bits_decoded_instruction_IS_LOAD
-              : _GEN_164
+              : _GEN_163
                   ? io_backendPacket_1_bits_decoded_instruction_IS_LOAD
-                  : _GEN_141
+                  : _GEN_140
                       ? io_backendPacket_0_bits_decoded_instruction_IS_LOAD
                       : reservation_station_2_decoded_instruction_IS_LOAD;
-      _GEN_277 =
-        _GEN_266
+      _GEN_276 =
+        _GEN_265
+          ? io_backendPacket_3_bits_decoded_instruction_IS_STORE
+          : _GEN_220
+              ? io_backendPacket_2_bits_decoded_instruction_IS_STORE
+              : _GEN_163
+                  ? io_backendPacket_1_bits_decoded_instruction_IS_STORE
+                  : _GEN_140
+                      ? io_backendPacket_0_bits_decoded_instruction_IS_STORE
+                      : reservation_station_2_decoded_instruction_IS_STORE;
+      _GEN_278 = io_backendPacket_3_valid & _GEN_277;
+      _GEN_279 =
+        _GEN_278
+          ? io_backendPacket_3_bits_decoded_instruction_RD_valid
+          : _GEN_221
+              ? io_backendPacket_2_bits_decoded_instruction_RD_valid
+              : _GEN_165
+                  ? io_backendPacket_1_bits_decoded_instruction_RD_valid
+                  : _GEN_141
+                      ? io_backendPacket_0_bits_decoded_instruction_RD_valid
+                      : reservation_station_3_decoded_instruction_RD_valid;
+      _GEN_280 =
+        _GEN_278
+          ? io_backendPacket_3_bits_decoded_instruction_RS1_valid
+          : _GEN_221
+              ? io_backendPacket_2_bits_decoded_instruction_RS1_valid
+              : _GEN_165
+                  ? io_backendPacket_1_bits_decoded_instruction_RS1_valid
+                  : _GEN_141
+                      ? io_backendPacket_0_bits_decoded_instruction_RS1_valid
+                      : reservation_station_3_decoded_instruction_RS1_valid;
+      _GEN_281 =
+        _GEN_278
+          ? io_backendPacket_3_bits_decoded_instruction_RS2_valid
+          : _GEN_221
+              ? io_backendPacket_2_bits_decoded_instruction_RS2_valid
+              : _GEN_165
+                  ? io_backendPacket_1_bits_decoded_instruction_RS2_valid
+                  : _GEN_141
+                      ? io_backendPacket_0_bits_decoded_instruction_RS2_valid
+                      : reservation_station_3_decoded_instruction_RS2_valid;
+      _GEN_282 =
+        _GEN_278
+          ? io_backendPacket_3_bits_decoded_instruction_needs_ALU
+          : _GEN_221
+              ? io_backendPacket_2_bits_decoded_instruction_needs_ALU
+              : _GEN_165
+                  ? io_backendPacket_1_bits_decoded_instruction_needs_ALU
+                  : _GEN_141
+                      ? io_backendPacket_0_bits_decoded_instruction_needs_ALU
+                      : reservation_station_3_decoded_instruction_needs_ALU;
+      _GEN_283 =
+        _GEN_278
+          ? io_backendPacket_3_bits_decoded_instruction_needs_branch_unit
+          : _GEN_221
+              ? io_backendPacket_2_bits_decoded_instruction_needs_branch_unit
+              : _GEN_165
+                  ? io_backendPacket_1_bits_decoded_instruction_needs_branch_unit
+                  : _GEN_141
+                      ? io_backendPacket_0_bits_decoded_instruction_needs_branch_unit
+                      : reservation_station_3_decoded_instruction_needs_branch_unit;
+      _GEN_284 =
+        _GEN_278
+          ? io_backendPacket_3_bits_decoded_instruction_needs_CSRs
+          : _GEN_221
+              ? io_backendPacket_2_bits_decoded_instruction_needs_CSRs
+              : _GEN_165
+                  ? io_backendPacket_1_bits_decoded_instruction_needs_CSRs
+                  : _GEN_141
+                      ? io_backendPacket_0_bits_decoded_instruction_needs_CSRs
+                      : reservation_station_3_decoded_instruction_needs_CSRs;
+      _GEN_285 =
+        _GEN_278
+          ? io_backendPacket_3_bits_decoded_instruction_SUBTRACT
+          : _GEN_221
+              ? io_backendPacket_2_bits_decoded_instruction_SUBTRACT
+              : _GEN_165
+                  ? io_backendPacket_1_bits_decoded_instruction_SUBTRACT
+                  : _GEN_141
+                      ? io_backendPacket_0_bits_decoded_instruction_SUBTRACT
+                      : reservation_station_3_decoded_instruction_SUBTRACT;
+      _GEN_286 =
+        _GEN_278
+          ? io_backendPacket_3_bits_decoded_instruction_MULTIPLY
+          : _GEN_221
+              ? io_backendPacket_2_bits_decoded_instruction_MULTIPLY
+              : _GEN_165
+                  ? io_backendPacket_1_bits_decoded_instruction_MULTIPLY
+                  : _GEN_141
+                      ? io_backendPacket_0_bits_decoded_instruction_MULTIPLY
+                      : reservation_station_3_decoded_instruction_MULTIPLY;
+      _GEN_287 =
+        _GEN_278
+          ? io_backendPacket_3_bits_decoded_instruction_IMMEDIATE
+          : _GEN_221
+              ? io_backendPacket_2_bits_decoded_instruction_IMMEDIATE
+              : _GEN_165
+                  ? io_backendPacket_1_bits_decoded_instruction_IMMEDIATE
+                  : _GEN_141
+                      ? io_backendPacket_0_bits_decoded_instruction_IMMEDIATE
+                      : reservation_station_3_decoded_instruction_IMMEDIATE;
+      _GEN_288 =
+        _GEN_278
+          ? io_backendPacket_3_bits_decoded_instruction_IS_LOAD
+          : _GEN_221
+              ? io_backendPacket_2_bits_decoded_instruction_IS_LOAD
+              : _GEN_165
+                  ? io_backendPacket_1_bits_decoded_instruction_IS_LOAD
+                  : _GEN_141
+                      ? io_backendPacket_0_bits_decoded_instruction_IS_LOAD
+                      : reservation_station_3_decoded_instruction_IS_LOAD;
+      _GEN_289 =
+        _GEN_278
           ? io_backendPacket_3_bits_decoded_instruction_IS_STORE
           : _GEN_221
               ? io_backendPacket_2_bits_decoded_instruction_IS_STORE
-              : _GEN_164
+              : _GEN_165
                   ? io_backendPacket_1_bits_decoded_instruction_IS_STORE
                   : _GEN_141
                       ? io_backendPacket_0_bits_decoded_instruction_IS_STORE
-                      : reservation_station_2_decoded_instruction_IS_STORE;
-      _GEN_279 = io_backendPacket_3_valid & _GEN_278;
-      _GEN_280 =
-        _GEN_279
-          ? io_backendPacket_3_bits_decoded_instruction_RDold_valid
-          : _GEN_222
-              ? io_backendPacket_2_bits_decoded_instruction_RDold_valid
-              : _GEN_166
-                  ? io_backendPacket_1_bits_decoded_instruction_RDold_valid
-                  : _GEN_142
-                      ? io_backendPacket_0_bits_decoded_instruction_RDold_valid
-                      : reservation_station_3_decoded_instruction_RDold_valid;
-      _GEN_281 =
-        _GEN_279
-          ? io_backendPacket_3_bits_decoded_instruction_RD_valid
-          : _GEN_222
-              ? io_backendPacket_2_bits_decoded_instruction_RD_valid
-              : _GEN_166
-                  ? io_backendPacket_1_bits_decoded_instruction_RD_valid
-                  : _GEN_142
-                      ? io_backendPacket_0_bits_decoded_instruction_RD_valid
-                      : reservation_station_3_decoded_instruction_RD_valid;
-      _GEN_282 =
-        _GEN_279
-          ? io_backendPacket_3_bits_decoded_instruction_RS1_valid
-          : _GEN_222
-              ? io_backendPacket_2_bits_decoded_instruction_RS1_valid
-              : _GEN_166
-                  ? io_backendPacket_1_bits_decoded_instruction_RS1_valid
-                  : _GEN_142
-                      ? io_backendPacket_0_bits_decoded_instruction_RS1_valid
-                      : reservation_station_3_decoded_instruction_RS1_valid;
-      _GEN_283 =
-        _GEN_279
-          ? io_backendPacket_3_bits_decoded_instruction_RS2_valid
-          : _GEN_222
-              ? io_backendPacket_2_bits_decoded_instruction_RS2_valid
-              : _GEN_166
-                  ? io_backendPacket_1_bits_decoded_instruction_RS2_valid
-                  : _GEN_142
-                      ? io_backendPacket_0_bits_decoded_instruction_RS2_valid
-                      : reservation_station_3_decoded_instruction_RS2_valid;
-      _GEN_284 =
-        _GEN_279
-          ? io_backendPacket_3_bits_decoded_instruction_needs_ALU
-          : _GEN_222
-              ? io_backendPacket_2_bits_decoded_instruction_needs_ALU
-              : _GEN_166
-                  ? io_backendPacket_1_bits_decoded_instruction_needs_ALU
-                  : _GEN_142
-                      ? io_backendPacket_0_bits_decoded_instruction_needs_ALU
-                      : reservation_station_3_decoded_instruction_needs_ALU;
-      _GEN_285 =
-        _GEN_279
-          ? io_backendPacket_3_bits_decoded_instruction_needs_branch_unit
-          : _GEN_222
-              ? io_backendPacket_2_bits_decoded_instruction_needs_branch_unit
-              : _GEN_166
-                  ? io_backendPacket_1_bits_decoded_instruction_needs_branch_unit
-                  : _GEN_142
-                      ? io_backendPacket_0_bits_decoded_instruction_needs_branch_unit
-                      : reservation_station_3_decoded_instruction_needs_branch_unit;
-      _GEN_286 =
-        _GEN_279
-          ? io_backendPacket_3_bits_decoded_instruction_SUBTRACT
-          : _GEN_222
-              ? io_backendPacket_2_bits_decoded_instruction_SUBTRACT
-              : _GEN_166
-                  ? io_backendPacket_1_bits_decoded_instruction_SUBTRACT
-                  : _GEN_142
-                      ? io_backendPacket_0_bits_decoded_instruction_SUBTRACT
-                      : reservation_station_3_decoded_instruction_SUBTRACT;
-      _GEN_287 =
-        _GEN_279
-          ? io_backendPacket_3_bits_decoded_instruction_MULTIPLY
-          : _GEN_222
-              ? io_backendPacket_2_bits_decoded_instruction_MULTIPLY
-              : _GEN_166
-                  ? io_backendPacket_1_bits_decoded_instruction_MULTIPLY
-                  : _GEN_142
-                      ? io_backendPacket_0_bits_decoded_instruction_MULTIPLY
-                      : reservation_station_3_decoded_instruction_MULTIPLY;
-      _GEN_288 =
-        _GEN_279
-          ? io_backendPacket_3_bits_decoded_instruction_IMMEDIATE
-          : _GEN_222
-              ? io_backendPacket_2_bits_decoded_instruction_IMMEDIATE
-              : _GEN_166
-                  ? io_backendPacket_1_bits_decoded_instruction_IMMEDIATE
-                  : _GEN_142
-                      ? io_backendPacket_0_bits_decoded_instruction_IMMEDIATE
-                      : reservation_station_3_decoded_instruction_IMMEDIATE;
-      _GEN_289 =
-        _GEN_279
-          ? io_backendPacket_3_bits_decoded_instruction_IS_LOAD
-          : _GEN_222
-              ? io_backendPacket_2_bits_decoded_instruction_IS_LOAD
-              : _GEN_166
-                  ? io_backendPacket_1_bits_decoded_instruction_IS_LOAD
-                  : _GEN_142
-                      ? io_backendPacket_0_bits_decoded_instruction_IS_LOAD
-                      : reservation_station_3_decoded_instruction_IS_LOAD;
-      _GEN_290 =
-        _GEN_279
-          ? io_backendPacket_3_bits_decoded_instruction_IS_STORE
-          : _GEN_222
-              ? io_backendPacket_2_bits_decoded_instruction_IS_STORE
-              : _GEN_166
-                  ? io_backendPacket_1_bits_decoded_instruction_IS_STORE
-                  : _GEN_142
-                      ? io_backendPacket_0_bits_decoded_instruction_IS_STORE
                       : reservation_station_3_decoded_instruction_IS_STORE;
-      _GEN_292 = io_backendPacket_3_valid & _GEN_291;
-      _GEN_293 =
-        _GEN_292
-          ? io_backendPacket_3_bits_decoded_instruction_RDold_valid
-          : _GEN_223
-              ? io_backendPacket_2_bits_decoded_instruction_RDold_valid
-              : _GEN_168
-                  ? io_backendPacket_1_bits_decoded_instruction_RDold_valid
-                  : _GEN_143
-                      ? io_backendPacket_0_bits_decoded_instruction_RDold_valid
-                      : reservation_station_4_decoded_instruction_RDold_valid;
-      _GEN_294 =
-        _GEN_292
+      _GEN_291 = io_backendPacket_3_valid & _GEN_290;
+      _GEN_292 =
+        _GEN_291
           ? io_backendPacket_3_bits_decoded_instruction_RD_valid
-          : _GEN_223
+          : _GEN_222
               ? io_backendPacket_2_bits_decoded_instruction_RD_valid
-              : _GEN_168
+              : _GEN_167
                   ? io_backendPacket_1_bits_decoded_instruction_RD_valid
-                  : _GEN_143
+                  : _GEN_142
                       ? io_backendPacket_0_bits_decoded_instruction_RD_valid
                       : reservation_station_4_decoded_instruction_RD_valid;
-      _GEN_295 =
-        _GEN_292
+      _GEN_293 =
+        _GEN_291
           ? io_backendPacket_3_bits_decoded_instruction_RS1_valid
-          : _GEN_223
+          : _GEN_222
               ? io_backendPacket_2_bits_decoded_instruction_RS1_valid
-              : _GEN_168
+              : _GEN_167
                   ? io_backendPacket_1_bits_decoded_instruction_RS1_valid
-                  : _GEN_143
+                  : _GEN_142
                       ? io_backendPacket_0_bits_decoded_instruction_RS1_valid
                       : reservation_station_4_decoded_instruction_RS1_valid;
-      _GEN_296 =
-        _GEN_292
+      _GEN_294 =
+        _GEN_291
           ? io_backendPacket_3_bits_decoded_instruction_RS2_valid
-          : _GEN_223
+          : _GEN_222
               ? io_backendPacket_2_bits_decoded_instruction_RS2_valid
-              : _GEN_168
+              : _GEN_167
                   ? io_backendPacket_1_bits_decoded_instruction_RS2_valid
-                  : _GEN_143
+                  : _GEN_142
                       ? io_backendPacket_0_bits_decoded_instruction_RS2_valid
                       : reservation_station_4_decoded_instruction_RS2_valid;
-      _GEN_297 =
-        _GEN_292
+      _GEN_295 =
+        _GEN_291
           ? io_backendPacket_3_bits_decoded_instruction_needs_ALU
-          : _GEN_223
+          : _GEN_222
               ? io_backendPacket_2_bits_decoded_instruction_needs_ALU
-              : _GEN_168
+              : _GEN_167
                   ? io_backendPacket_1_bits_decoded_instruction_needs_ALU
-                  : _GEN_143
+                  : _GEN_142
                       ? io_backendPacket_0_bits_decoded_instruction_needs_ALU
                       : reservation_station_4_decoded_instruction_needs_ALU;
-      _GEN_298 =
-        _GEN_292
+      _GEN_296 =
+        _GEN_291
           ? io_backendPacket_3_bits_decoded_instruction_needs_branch_unit
-          : _GEN_223
+          : _GEN_222
               ? io_backendPacket_2_bits_decoded_instruction_needs_branch_unit
-              : _GEN_168
+              : _GEN_167
                   ? io_backendPacket_1_bits_decoded_instruction_needs_branch_unit
-                  : _GEN_143
+                  : _GEN_142
                       ? io_backendPacket_0_bits_decoded_instruction_needs_branch_unit
                       : reservation_station_4_decoded_instruction_needs_branch_unit;
-      _GEN_299 =
-        _GEN_292
+      _GEN_297 =
+        _GEN_291
+          ? io_backendPacket_3_bits_decoded_instruction_needs_CSRs
+          : _GEN_222
+              ? io_backendPacket_2_bits_decoded_instruction_needs_CSRs
+              : _GEN_167
+                  ? io_backendPacket_1_bits_decoded_instruction_needs_CSRs
+                  : _GEN_142
+                      ? io_backendPacket_0_bits_decoded_instruction_needs_CSRs
+                      : reservation_station_4_decoded_instruction_needs_CSRs;
+      _GEN_298 =
+        _GEN_291
           ? io_backendPacket_3_bits_decoded_instruction_SUBTRACT
-          : _GEN_223
+          : _GEN_222
               ? io_backendPacket_2_bits_decoded_instruction_SUBTRACT
-              : _GEN_168
+              : _GEN_167
                   ? io_backendPacket_1_bits_decoded_instruction_SUBTRACT
-                  : _GEN_143
+                  : _GEN_142
                       ? io_backendPacket_0_bits_decoded_instruction_SUBTRACT
                       : reservation_station_4_decoded_instruction_SUBTRACT;
-      _GEN_300 =
-        _GEN_292
+      _GEN_299 =
+        _GEN_291
           ? io_backendPacket_3_bits_decoded_instruction_MULTIPLY
-          : _GEN_223
+          : _GEN_222
               ? io_backendPacket_2_bits_decoded_instruction_MULTIPLY
-              : _GEN_168
+              : _GEN_167
                   ? io_backendPacket_1_bits_decoded_instruction_MULTIPLY
-                  : _GEN_143
+                  : _GEN_142
                       ? io_backendPacket_0_bits_decoded_instruction_MULTIPLY
                       : reservation_station_4_decoded_instruction_MULTIPLY;
-      _GEN_301 =
-        _GEN_292
+      _GEN_300 =
+        _GEN_291
           ? io_backendPacket_3_bits_decoded_instruction_IMMEDIATE
-          : _GEN_223
+          : _GEN_222
               ? io_backendPacket_2_bits_decoded_instruction_IMMEDIATE
-              : _GEN_168
+              : _GEN_167
                   ? io_backendPacket_1_bits_decoded_instruction_IMMEDIATE
-                  : _GEN_143
+                  : _GEN_142
                       ? io_backendPacket_0_bits_decoded_instruction_IMMEDIATE
                       : reservation_station_4_decoded_instruction_IMMEDIATE;
-      _GEN_302 =
-        _GEN_292
+      _GEN_301 =
+        _GEN_291
           ? io_backendPacket_3_bits_decoded_instruction_IS_LOAD
-          : _GEN_223
+          : _GEN_222
               ? io_backendPacket_2_bits_decoded_instruction_IS_LOAD
-              : _GEN_168
+              : _GEN_167
                   ? io_backendPacket_1_bits_decoded_instruction_IS_LOAD
-                  : _GEN_143
+                  : _GEN_142
                       ? io_backendPacket_0_bits_decoded_instruction_IS_LOAD
                       : reservation_station_4_decoded_instruction_IS_LOAD;
-      _GEN_303 =
-        _GEN_292
+      _GEN_302 =
+        _GEN_291
+          ? io_backendPacket_3_bits_decoded_instruction_IS_STORE
+          : _GEN_222
+              ? io_backendPacket_2_bits_decoded_instruction_IS_STORE
+              : _GEN_167
+                  ? io_backendPacket_1_bits_decoded_instruction_IS_STORE
+                  : _GEN_142
+                      ? io_backendPacket_0_bits_decoded_instruction_IS_STORE
+                      : reservation_station_4_decoded_instruction_IS_STORE;
+      _GEN_304 = io_backendPacket_3_valid & _GEN_303;
+      _GEN_305 =
+        _GEN_304
+          ? io_backendPacket_3_bits_decoded_instruction_RD_valid
+          : _GEN_223
+              ? io_backendPacket_2_bits_decoded_instruction_RD_valid
+              : _GEN_169
+                  ? io_backendPacket_1_bits_decoded_instruction_RD_valid
+                  : _GEN_143
+                      ? io_backendPacket_0_bits_decoded_instruction_RD_valid
+                      : reservation_station_5_decoded_instruction_RD_valid;
+      _GEN_306 =
+        _GEN_304
+          ? io_backendPacket_3_bits_decoded_instruction_RS1_valid
+          : _GEN_223
+              ? io_backendPacket_2_bits_decoded_instruction_RS1_valid
+              : _GEN_169
+                  ? io_backendPacket_1_bits_decoded_instruction_RS1_valid
+                  : _GEN_143
+                      ? io_backendPacket_0_bits_decoded_instruction_RS1_valid
+                      : reservation_station_5_decoded_instruction_RS1_valid;
+      _GEN_307 =
+        _GEN_304
+          ? io_backendPacket_3_bits_decoded_instruction_RS2_valid
+          : _GEN_223
+              ? io_backendPacket_2_bits_decoded_instruction_RS2_valid
+              : _GEN_169
+                  ? io_backendPacket_1_bits_decoded_instruction_RS2_valid
+                  : _GEN_143
+                      ? io_backendPacket_0_bits_decoded_instruction_RS2_valid
+                      : reservation_station_5_decoded_instruction_RS2_valid;
+      _GEN_308 =
+        _GEN_304
+          ? io_backendPacket_3_bits_decoded_instruction_needs_ALU
+          : _GEN_223
+              ? io_backendPacket_2_bits_decoded_instruction_needs_ALU
+              : _GEN_169
+                  ? io_backendPacket_1_bits_decoded_instruction_needs_ALU
+                  : _GEN_143
+                      ? io_backendPacket_0_bits_decoded_instruction_needs_ALU
+                      : reservation_station_5_decoded_instruction_needs_ALU;
+      _GEN_309 =
+        _GEN_304
+          ? io_backendPacket_3_bits_decoded_instruction_needs_branch_unit
+          : _GEN_223
+              ? io_backendPacket_2_bits_decoded_instruction_needs_branch_unit
+              : _GEN_169
+                  ? io_backendPacket_1_bits_decoded_instruction_needs_branch_unit
+                  : _GEN_143
+                      ? io_backendPacket_0_bits_decoded_instruction_needs_branch_unit
+                      : reservation_station_5_decoded_instruction_needs_branch_unit;
+      _GEN_310 =
+        _GEN_304
+          ? io_backendPacket_3_bits_decoded_instruction_needs_CSRs
+          : _GEN_223
+              ? io_backendPacket_2_bits_decoded_instruction_needs_CSRs
+              : _GEN_169
+                  ? io_backendPacket_1_bits_decoded_instruction_needs_CSRs
+                  : _GEN_143
+                      ? io_backendPacket_0_bits_decoded_instruction_needs_CSRs
+                      : reservation_station_5_decoded_instruction_needs_CSRs;
+      _GEN_311 =
+        _GEN_304
+          ? io_backendPacket_3_bits_decoded_instruction_SUBTRACT
+          : _GEN_223
+              ? io_backendPacket_2_bits_decoded_instruction_SUBTRACT
+              : _GEN_169
+                  ? io_backendPacket_1_bits_decoded_instruction_SUBTRACT
+                  : _GEN_143
+                      ? io_backendPacket_0_bits_decoded_instruction_SUBTRACT
+                      : reservation_station_5_decoded_instruction_SUBTRACT;
+      _GEN_312 =
+        _GEN_304
+          ? io_backendPacket_3_bits_decoded_instruction_MULTIPLY
+          : _GEN_223
+              ? io_backendPacket_2_bits_decoded_instruction_MULTIPLY
+              : _GEN_169
+                  ? io_backendPacket_1_bits_decoded_instruction_MULTIPLY
+                  : _GEN_143
+                      ? io_backendPacket_0_bits_decoded_instruction_MULTIPLY
+                      : reservation_station_5_decoded_instruction_MULTIPLY;
+      _GEN_313 =
+        _GEN_304
+          ? io_backendPacket_3_bits_decoded_instruction_IMMEDIATE
+          : _GEN_223
+              ? io_backendPacket_2_bits_decoded_instruction_IMMEDIATE
+              : _GEN_169
+                  ? io_backendPacket_1_bits_decoded_instruction_IMMEDIATE
+                  : _GEN_143
+                      ? io_backendPacket_0_bits_decoded_instruction_IMMEDIATE
+                      : reservation_station_5_decoded_instruction_IMMEDIATE;
+      _GEN_314 =
+        _GEN_304
+          ? io_backendPacket_3_bits_decoded_instruction_IS_LOAD
+          : _GEN_223
+              ? io_backendPacket_2_bits_decoded_instruction_IS_LOAD
+              : _GEN_169
+                  ? io_backendPacket_1_bits_decoded_instruction_IS_LOAD
+                  : _GEN_143
+                      ? io_backendPacket_0_bits_decoded_instruction_IS_LOAD
+                      : reservation_station_5_decoded_instruction_IS_LOAD;
+      _GEN_315 =
+        _GEN_304
           ? io_backendPacket_3_bits_decoded_instruction_IS_STORE
           : _GEN_223
               ? io_backendPacket_2_bits_decoded_instruction_IS_STORE
-              : _GEN_168
+              : _GEN_169
                   ? io_backendPacket_1_bits_decoded_instruction_IS_STORE
                   : _GEN_143
                       ? io_backendPacket_0_bits_decoded_instruction_IS_STORE
-                      : reservation_station_4_decoded_instruction_IS_STORE;
-      _GEN_305 = io_backendPacket_3_valid & _GEN_304;
-      _GEN_306 =
-        _GEN_305
-          ? io_backendPacket_3_bits_decoded_instruction_RDold_valid
-          : _GEN_224
-              ? io_backendPacket_2_bits_decoded_instruction_RDold_valid
-              : _GEN_170
-                  ? io_backendPacket_1_bits_decoded_instruction_RDold_valid
-                  : _GEN_144
-                      ? io_backendPacket_0_bits_decoded_instruction_RDold_valid
-                      : reservation_station_5_decoded_instruction_RDold_valid;
-      _GEN_307 =
-        _GEN_305
-          ? io_backendPacket_3_bits_decoded_instruction_RD_valid
-          : _GEN_224
-              ? io_backendPacket_2_bits_decoded_instruction_RD_valid
-              : _GEN_170
-                  ? io_backendPacket_1_bits_decoded_instruction_RD_valid
-                  : _GEN_144
-                      ? io_backendPacket_0_bits_decoded_instruction_RD_valid
-                      : reservation_station_5_decoded_instruction_RD_valid;
-      _GEN_308 =
-        _GEN_305
-          ? io_backendPacket_3_bits_decoded_instruction_RS1_valid
-          : _GEN_224
-              ? io_backendPacket_2_bits_decoded_instruction_RS1_valid
-              : _GEN_170
-                  ? io_backendPacket_1_bits_decoded_instruction_RS1_valid
-                  : _GEN_144
-                      ? io_backendPacket_0_bits_decoded_instruction_RS1_valid
-                      : reservation_station_5_decoded_instruction_RS1_valid;
-      _GEN_309 =
-        _GEN_305
-          ? io_backendPacket_3_bits_decoded_instruction_RS2_valid
-          : _GEN_224
-              ? io_backendPacket_2_bits_decoded_instruction_RS2_valid
-              : _GEN_170
-                  ? io_backendPacket_1_bits_decoded_instruction_RS2_valid
-                  : _GEN_144
-                      ? io_backendPacket_0_bits_decoded_instruction_RS2_valid
-                      : reservation_station_5_decoded_instruction_RS2_valid;
-      _GEN_310 =
-        _GEN_305
-          ? io_backendPacket_3_bits_decoded_instruction_needs_ALU
-          : _GEN_224
-              ? io_backendPacket_2_bits_decoded_instruction_needs_ALU
-              : _GEN_170
-                  ? io_backendPacket_1_bits_decoded_instruction_needs_ALU
-                  : _GEN_144
-                      ? io_backendPacket_0_bits_decoded_instruction_needs_ALU
-                      : reservation_station_5_decoded_instruction_needs_ALU;
-      _GEN_311 =
-        _GEN_305
-          ? io_backendPacket_3_bits_decoded_instruction_needs_branch_unit
-          : _GEN_224
-              ? io_backendPacket_2_bits_decoded_instruction_needs_branch_unit
-              : _GEN_170
-                  ? io_backendPacket_1_bits_decoded_instruction_needs_branch_unit
-                  : _GEN_144
-                      ? io_backendPacket_0_bits_decoded_instruction_needs_branch_unit
-                      : reservation_station_5_decoded_instruction_needs_branch_unit;
-      _GEN_312 =
-        _GEN_305
-          ? io_backendPacket_3_bits_decoded_instruction_SUBTRACT
-          : _GEN_224
-              ? io_backendPacket_2_bits_decoded_instruction_SUBTRACT
-              : _GEN_170
-                  ? io_backendPacket_1_bits_decoded_instruction_SUBTRACT
-                  : _GEN_144
-                      ? io_backendPacket_0_bits_decoded_instruction_SUBTRACT
-                      : reservation_station_5_decoded_instruction_SUBTRACT;
-      _GEN_313 =
-        _GEN_305
-          ? io_backendPacket_3_bits_decoded_instruction_MULTIPLY
-          : _GEN_224
-              ? io_backendPacket_2_bits_decoded_instruction_MULTIPLY
-              : _GEN_170
-                  ? io_backendPacket_1_bits_decoded_instruction_MULTIPLY
-                  : _GEN_144
-                      ? io_backendPacket_0_bits_decoded_instruction_MULTIPLY
-                      : reservation_station_5_decoded_instruction_MULTIPLY;
-      _GEN_314 =
-        _GEN_305
-          ? io_backendPacket_3_bits_decoded_instruction_IMMEDIATE
-          : _GEN_224
-              ? io_backendPacket_2_bits_decoded_instruction_IMMEDIATE
-              : _GEN_170
-                  ? io_backendPacket_1_bits_decoded_instruction_IMMEDIATE
-                  : _GEN_144
-                      ? io_backendPacket_0_bits_decoded_instruction_IMMEDIATE
-                      : reservation_station_5_decoded_instruction_IMMEDIATE;
-      _GEN_315 =
-        _GEN_305
-          ? io_backendPacket_3_bits_decoded_instruction_IS_LOAD
-          : _GEN_224
-              ? io_backendPacket_2_bits_decoded_instruction_IS_LOAD
-              : _GEN_170
-                  ? io_backendPacket_1_bits_decoded_instruction_IS_LOAD
-                  : _GEN_144
-                      ? io_backendPacket_0_bits_decoded_instruction_IS_LOAD
-                      : reservation_station_5_decoded_instruction_IS_LOAD;
-      _GEN_316 =
-        _GEN_305
-          ? io_backendPacket_3_bits_decoded_instruction_IS_STORE
-          : _GEN_224
-              ? io_backendPacket_2_bits_decoded_instruction_IS_STORE
-              : _GEN_170
-                  ? io_backendPacket_1_bits_decoded_instruction_IS_STORE
-                  : _GEN_144
-                      ? io_backendPacket_0_bits_decoded_instruction_IS_STORE
                       : reservation_station_5_decoded_instruction_IS_STORE;
-      _GEN_318 = io_backendPacket_3_valid & _GEN_317;
-      _GEN_319 =
-        _GEN_318
-          ? io_backendPacket_3_bits_decoded_instruction_RDold_valid
-          : _GEN_225
-              ? io_backendPacket_2_bits_decoded_instruction_RDold_valid
-              : _GEN_172
-                  ? io_backendPacket_1_bits_decoded_instruction_RDold_valid
-                  : _GEN_145
-                      ? io_backendPacket_0_bits_decoded_instruction_RDold_valid
-                      : reservation_station_6_decoded_instruction_RDold_valid;
-      _GEN_320 =
-        _GEN_318
+      _GEN_317 = io_backendPacket_3_valid & _GEN_316;
+      _GEN_318 =
+        _GEN_317
           ? io_backendPacket_3_bits_decoded_instruction_RD_valid
-          : _GEN_225
+          : _GEN_224
               ? io_backendPacket_2_bits_decoded_instruction_RD_valid
-              : _GEN_172
+              : _GEN_171
                   ? io_backendPacket_1_bits_decoded_instruction_RD_valid
-                  : _GEN_145
+                  : _GEN_144
                       ? io_backendPacket_0_bits_decoded_instruction_RD_valid
                       : reservation_station_6_decoded_instruction_RD_valid;
-      _GEN_321 =
-        _GEN_318
+      _GEN_319 =
+        _GEN_317
           ? io_backendPacket_3_bits_decoded_instruction_RS1_valid
-          : _GEN_225
+          : _GEN_224
               ? io_backendPacket_2_bits_decoded_instruction_RS1_valid
-              : _GEN_172
+              : _GEN_171
                   ? io_backendPacket_1_bits_decoded_instruction_RS1_valid
-                  : _GEN_145
+                  : _GEN_144
                       ? io_backendPacket_0_bits_decoded_instruction_RS1_valid
                       : reservation_station_6_decoded_instruction_RS1_valid;
-      _GEN_322 =
-        _GEN_318
+      _GEN_320 =
+        _GEN_317
           ? io_backendPacket_3_bits_decoded_instruction_RS2_valid
-          : _GEN_225
+          : _GEN_224
               ? io_backendPacket_2_bits_decoded_instruction_RS2_valid
-              : _GEN_172
+              : _GEN_171
                   ? io_backendPacket_1_bits_decoded_instruction_RS2_valid
-                  : _GEN_145
+                  : _GEN_144
                       ? io_backendPacket_0_bits_decoded_instruction_RS2_valid
                       : reservation_station_6_decoded_instruction_RS2_valid;
-      _GEN_323 =
-        _GEN_318
+      _GEN_321 =
+        _GEN_317
           ? io_backendPacket_3_bits_decoded_instruction_needs_ALU
-          : _GEN_225
+          : _GEN_224
               ? io_backendPacket_2_bits_decoded_instruction_needs_ALU
-              : _GEN_172
+              : _GEN_171
                   ? io_backendPacket_1_bits_decoded_instruction_needs_ALU
-                  : _GEN_145
+                  : _GEN_144
                       ? io_backendPacket_0_bits_decoded_instruction_needs_ALU
                       : reservation_station_6_decoded_instruction_needs_ALU;
-      _GEN_324 =
-        _GEN_318
+      _GEN_322 =
+        _GEN_317
           ? io_backendPacket_3_bits_decoded_instruction_needs_branch_unit
-          : _GEN_225
+          : _GEN_224
               ? io_backendPacket_2_bits_decoded_instruction_needs_branch_unit
-              : _GEN_172
+              : _GEN_171
                   ? io_backendPacket_1_bits_decoded_instruction_needs_branch_unit
-                  : _GEN_145
+                  : _GEN_144
                       ? io_backendPacket_0_bits_decoded_instruction_needs_branch_unit
                       : reservation_station_6_decoded_instruction_needs_branch_unit;
-      _GEN_325 =
-        _GEN_318
+      _GEN_323 =
+        _GEN_317
+          ? io_backendPacket_3_bits_decoded_instruction_needs_CSRs
+          : _GEN_224
+              ? io_backendPacket_2_bits_decoded_instruction_needs_CSRs
+              : _GEN_171
+                  ? io_backendPacket_1_bits_decoded_instruction_needs_CSRs
+                  : _GEN_144
+                      ? io_backendPacket_0_bits_decoded_instruction_needs_CSRs
+                      : reservation_station_6_decoded_instruction_needs_CSRs;
+      _GEN_324 =
+        _GEN_317
           ? io_backendPacket_3_bits_decoded_instruction_SUBTRACT
-          : _GEN_225
+          : _GEN_224
               ? io_backendPacket_2_bits_decoded_instruction_SUBTRACT
-              : _GEN_172
+              : _GEN_171
                   ? io_backendPacket_1_bits_decoded_instruction_SUBTRACT
-                  : _GEN_145
+                  : _GEN_144
                       ? io_backendPacket_0_bits_decoded_instruction_SUBTRACT
                       : reservation_station_6_decoded_instruction_SUBTRACT;
-      _GEN_326 =
-        _GEN_318
+      _GEN_325 =
+        _GEN_317
           ? io_backendPacket_3_bits_decoded_instruction_MULTIPLY
-          : _GEN_225
+          : _GEN_224
               ? io_backendPacket_2_bits_decoded_instruction_MULTIPLY
-              : _GEN_172
+              : _GEN_171
                   ? io_backendPacket_1_bits_decoded_instruction_MULTIPLY
-                  : _GEN_145
+                  : _GEN_144
                       ? io_backendPacket_0_bits_decoded_instruction_MULTIPLY
                       : reservation_station_6_decoded_instruction_MULTIPLY;
-      _GEN_327 =
-        _GEN_318
+      _GEN_326 =
+        _GEN_317
           ? io_backendPacket_3_bits_decoded_instruction_IMMEDIATE
-          : _GEN_225
+          : _GEN_224
               ? io_backendPacket_2_bits_decoded_instruction_IMMEDIATE
-              : _GEN_172
+              : _GEN_171
                   ? io_backendPacket_1_bits_decoded_instruction_IMMEDIATE
-                  : _GEN_145
+                  : _GEN_144
                       ? io_backendPacket_0_bits_decoded_instruction_IMMEDIATE
                       : reservation_station_6_decoded_instruction_IMMEDIATE;
-      _GEN_328 =
-        _GEN_318
+      _GEN_327 =
+        _GEN_317
           ? io_backendPacket_3_bits_decoded_instruction_IS_LOAD
-          : _GEN_225
+          : _GEN_224
               ? io_backendPacket_2_bits_decoded_instruction_IS_LOAD
-              : _GEN_172
+              : _GEN_171
                   ? io_backendPacket_1_bits_decoded_instruction_IS_LOAD
-                  : _GEN_145
+                  : _GEN_144
                       ? io_backendPacket_0_bits_decoded_instruction_IS_LOAD
                       : reservation_station_6_decoded_instruction_IS_LOAD;
-      _GEN_329 =
-        _GEN_318
+      _GEN_328 =
+        _GEN_317
+          ? io_backendPacket_3_bits_decoded_instruction_IS_STORE
+          : _GEN_224
+              ? io_backendPacket_2_bits_decoded_instruction_IS_STORE
+              : _GEN_171
+                  ? io_backendPacket_1_bits_decoded_instruction_IS_STORE
+                  : _GEN_144
+                      ? io_backendPacket_0_bits_decoded_instruction_IS_STORE
+                      : reservation_station_6_decoded_instruction_IS_STORE;
+      _GEN_330 = io_backendPacket_3_valid & _GEN_329;
+      _GEN_331 =
+        _GEN_330
+          ? io_backendPacket_3_bits_decoded_instruction_RD_valid
+          : _GEN_225
+              ? io_backendPacket_2_bits_decoded_instruction_RD_valid
+              : _GEN_173
+                  ? io_backendPacket_1_bits_decoded_instruction_RD_valid
+                  : _GEN_145
+                      ? io_backendPacket_0_bits_decoded_instruction_RD_valid
+                      : reservation_station_7_decoded_instruction_RD_valid;
+      _GEN_332 =
+        _GEN_330
+          ? io_backendPacket_3_bits_decoded_instruction_RS1_valid
+          : _GEN_225
+              ? io_backendPacket_2_bits_decoded_instruction_RS1_valid
+              : _GEN_173
+                  ? io_backendPacket_1_bits_decoded_instruction_RS1_valid
+                  : _GEN_145
+                      ? io_backendPacket_0_bits_decoded_instruction_RS1_valid
+                      : reservation_station_7_decoded_instruction_RS1_valid;
+      _GEN_333 =
+        _GEN_330
+          ? io_backendPacket_3_bits_decoded_instruction_RS2_valid
+          : _GEN_225
+              ? io_backendPacket_2_bits_decoded_instruction_RS2_valid
+              : _GEN_173
+                  ? io_backendPacket_1_bits_decoded_instruction_RS2_valid
+                  : _GEN_145
+                      ? io_backendPacket_0_bits_decoded_instruction_RS2_valid
+                      : reservation_station_7_decoded_instruction_RS2_valid;
+      _GEN_334 =
+        _GEN_330
+          ? io_backendPacket_3_bits_decoded_instruction_needs_ALU
+          : _GEN_225
+              ? io_backendPacket_2_bits_decoded_instruction_needs_ALU
+              : _GEN_173
+                  ? io_backendPacket_1_bits_decoded_instruction_needs_ALU
+                  : _GEN_145
+                      ? io_backendPacket_0_bits_decoded_instruction_needs_ALU
+                      : reservation_station_7_decoded_instruction_needs_ALU;
+      _GEN_335 =
+        _GEN_330
+          ? io_backendPacket_3_bits_decoded_instruction_needs_branch_unit
+          : _GEN_225
+              ? io_backendPacket_2_bits_decoded_instruction_needs_branch_unit
+              : _GEN_173
+                  ? io_backendPacket_1_bits_decoded_instruction_needs_branch_unit
+                  : _GEN_145
+                      ? io_backendPacket_0_bits_decoded_instruction_needs_branch_unit
+                      : reservation_station_7_decoded_instruction_needs_branch_unit;
+      _GEN_336 =
+        _GEN_330
+          ? io_backendPacket_3_bits_decoded_instruction_needs_CSRs
+          : _GEN_225
+              ? io_backendPacket_2_bits_decoded_instruction_needs_CSRs
+              : _GEN_173
+                  ? io_backendPacket_1_bits_decoded_instruction_needs_CSRs
+                  : _GEN_145
+                      ? io_backendPacket_0_bits_decoded_instruction_needs_CSRs
+                      : reservation_station_7_decoded_instruction_needs_CSRs;
+      _GEN_337 =
+        _GEN_330
+          ? io_backendPacket_3_bits_decoded_instruction_SUBTRACT
+          : _GEN_225
+              ? io_backendPacket_2_bits_decoded_instruction_SUBTRACT
+              : _GEN_173
+                  ? io_backendPacket_1_bits_decoded_instruction_SUBTRACT
+                  : _GEN_145
+                      ? io_backendPacket_0_bits_decoded_instruction_SUBTRACT
+                      : reservation_station_7_decoded_instruction_SUBTRACT;
+      _GEN_338 =
+        _GEN_330
+          ? io_backendPacket_3_bits_decoded_instruction_MULTIPLY
+          : _GEN_225
+              ? io_backendPacket_2_bits_decoded_instruction_MULTIPLY
+              : _GEN_173
+                  ? io_backendPacket_1_bits_decoded_instruction_MULTIPLY
+                  : _GEN_145
+                      ? io_backendPacket_0_bits_decoded_instruction_MULTIPLY
+                      : reservation_station_7_decoded_instruction_MULTIPLY;
+      _GEN_339 =
+        _GEN_330
+          ? io_backendPacket_3_bits_decoded_instruction_IMMEDIATE
+          : _GEN_225
+              ? io_backendPacket_2_bits_decoded_instruction_IMMEDIATE
+              : _GEN_173
+                  ? io_backendPacket_1_bits_decoded_instruction_IMMEDIATE
+                  : _GEN_145
+                      ? io_backendPacket_0_bits_decoded_instruction_IMMEDIATE
+                      : reservation_station_7_decoded_instruction_IMMEDIATE;
+      _GEN_340 =
+        _GEN_330
+          ? io_backendPacket_3_bits_decoded_instruction_IS_LOAD
+          : _GEN_225
+              ? io_backendPacket_2_bits_decoded_instruction_IS_LOAD
+              : _GEN_173
+                  ? io_backendPacket_1_bits_decoded_instruction_IS_LOAD
+                  : _GEN_145
+                      ? io_backendPacket_0_bits_decoded_instruction_IS_LOAD
+                      : reservation_station_7_decoded_instruction_IS_LOAD;
+      _GEN_341 =
+        _GEN_330
           ? io_backendPacket_3_bits_decoded_instruction_IS_STORE
           : _GEN_225
               ? io_backendPacket_2_bits_decoded_instruction_IS_STORE
-              : _GEN_172
+              : _GEN_173
                   ? io_backendPacket_1_bits_decoded_instruction_IS_STORE
                   : _GEN_145
                       ? io_backendPacket_0_bits_decoded_instruction_IS_STORE
-                      : reservation_station_6_decoded_instruction_IS_STORE;
-      _GEN_331 = io_backendPacket_3_valid & _GEN_330;
-      _GEN_332 =
-        _GEN_331
-          ? io_backendPacket_3_bits_decoded_instruction_RDold_valid
-          : _GEN_226
-              ? io_backendPacket_2_bits_decoded_instruction_RDold_valid
-              : _GEN_174
-                  ? io_backendPacket_1_bits_decoded_instruction_RDold_valid
-                  : _GEN_146
-                      ? io_backendPacket_0_bits_decoded_instruction_RDold_valid
-                      : reservation_station_7_decoded_instruction_RDold_valid;
-      _GEN_333 =
-        _GEN_331
-          ? io_backendPacket_3_bits_decoded_instruction_RD_valid
-          : _GEN_226
-              ? io_backendPacket_2_bits_decoded_instruction_RD_valid
-              : _GEN_174
-                  ? io_backendPacket_1_bits_decoded_instruction_RD_valid
-                  : _GEN_146
-                      ? io_backendPacket_0_bits_decoded_instruction_RD_valid
-                      : reservation_station_7_decoded_instruction_RD_valid;
-      _GEN_334 =
-        _GEN_331
-          ? io_backendPacket_3_bits_decoded_instruction_RS1_valid
-          : _GEN_226
-              ? io_backendPacket_2_bits_decoded_instruction_RS1_valid
-              : _GEN_174
-                  ? io_backendPacket_1_bits_decoded_instruction_RS1_valid
-                  : _GEN_146
-                      ? io_backendPacket_0_bits_decoded_instruction_RS1_valid
-                      : reservation_station_7_decoded_instruction_RS1_valid;
-      _GEN_335 =
-        _GEN_331
-          ? io_backendPacket_3_bits_decoded_instruction_RS2_valid
-          : _GEN_226
-              ? io_backendPacket_2_bits_decoded_instruction_RS2_valid
-              : _GEN_174
-                  ? io_backendPacket_1_bits_decoded_instruction_RS2_valid
-                  : _GEN_146
-                      ? io_backendPacket_0_bits_decoded_instruction_RS2_valid
-                      : reservation_station_7_decoded_instruction_RS2_valid;
-      _GEN_336 =
-        _GEN_331
-          ? io_backendPacket_3_bits_decoded_instruction_needs_ALU
-          : _GEN_226
-              ? io_backendPacket_2_bits_decoded_instruction_needs_ALU
-              : _GEN_174
-                  ? io_backendPacket_1_bits_decoded_instruction_needs_ALU
-                  : _GEN_146
-                      ? io_backendPacket_0_bits_decoded_instruction_needs_ALU
-                      : reservation_station_7_decoded_instruction_needs_ALU;
-      _GEN_337 =
-        _GEN_331
-          ? io_backendPacket_3_bits_decoded_instruction_needs_branch_unit
-          : _GEN_226
-              ? io_backendPacket_2_bits_decoded_instruction_needs_branch_unit
-              : _GEN_174
-                  ? io_backendPacket_1_bits_decoded_instruction_needs_branch_unit
-                  : _GEN_146
-                      ? io_backendPacket_0_bits_decoded_instruction_needs_branch_unit
-                      : reservation_station_7_decoded_instruction_needs_branch_unit;
-      _GEN_338 =
-        _GEN_331
-          ? io_backendPacket_3_bits_decoded_instruction_SUBTRACT
-          : _GEN_226
-              ? io_backendPacket_2_bits_decoded_instruction_SUBTRACT
-              : _GEN_174
-                  ? io_backendPacket_1_bits_decoded_instruction_SUBTRACT
-                  : _GEN_146
-                      ? io_backendPacket_0_bits_decoded_instruction_SUBTRACT
-                      : reservation_station_7_decoded_instruction_SUBTRACT;
-      _GEN_339 =
-        _GEN_331
-          ? io_backendPacket_3_bits_decoded_instruction_MULTIPLY
-          : _GEN_226
-              ? io_backendPacket_2_bits_decoded_instruction_MULTIPLY
-              : _GEN_174
-                  ? io_backendPacket_1_bits_decoded_instruction_MULTIPLY
-                  : _GEN_146
-                      ? io_backendPacket_0_bits_decoded_instruction_MULTIPLY
-                      : reservation_station_7_decoded_instruction_MULTIPLY;
-      _GEN_340 =
-        _GEN_331
-          ? io_backendPacket_3_bits_decoded_instruction_IMMEDIATE
-          : _GEN_226
-              ? io_backendPacket_2_bits_decoded_instruction_IMMEDIATE
-              : _GEN_174
-                  ? io_backendPacket_1_bits_decoded_instruction_IMMEDIATE
-                  : _GEN_146
-                      ? io_backendPacket_0_bits_decoded_instruction_IMMEDIATE
-                      : reservation_station_7_decoded_instruction_IMMEDIATE;
-      _GEN_341 =
-        _GEN_331
-          ? io_backendPacket_3_bits_decoded_instruction_IS_LOAD
-          : _GEN_226
-              ? io_backendPacket_2_bits_decoded_instruction_IS_LOAD
-              : _GEN_174
-                  ? io_backendPacket_1_bits_decoded_instruction_IS_LOAD
-                  : _GEN_146
-                      ? io_backendPacket_0_bits_decoded_instruction_IS_LOAD
-                      : reservation_station_7_decoded_instruction_IS_LOAD;
-      _GEN_342 =
-        _GEN_331
-          ? io_backendPacket_3_bits_decoded_instruction_IS_STORE
-          : _GEN_226
-              ? io_backendPacket_2_bits_decoded_instruction_IS_STORE
-              : _GEN_174
-                  ? io_backendPacket_1_bits_decoded_instruction_IS_STORE
-                  : _GEN_146
-                      ? io_backendPacket_0_bits_decoded_instruction_IS_STORE
                       : reservation_station_7_decoded_instruction_IS_STORE;
-      _GEN_344 = io_backendPacket_3_valid & _GEN_343;
-      _GEN_345 =
-        _GEN_344
-          ? io_backendPacket_3_bits_decoded_instruction_RDold_valid
-          : _GEN_227
-              ? io_backendPacket_2_bits_decoded_instruction_RDold_valid
-              : _GEN_176
-                  ? io_backendPacket_1_bits_decoded_instruction_RDold_valid
-                  : _GEN_147
-                      ? io_backendPacket_0_bits_decoded_instruction_RDold_valid
-                      : reservation_station_8_decoded_instruction_RDold_valid;
-      _GEN_346 =
-        _GEN_344
+      _GEN_343 = io_backendPacket_3_valid & _GEN_342;
+      _GEN_344 =
+        _GEN_343
           ? io_backendPacket_3_bits_decoded_instruction_RD_valid
-          : _GEN_227
+          : _GEN_226
               ? io_backendPacket_2_bits_decoded_instruction_RD_valid
-              : _GEN_176
+              : _GEN_175
                   ? io_backendPacket_1_bits_decoded_instruction_RD_valid
-                  : _GEN_147
+                  : _GEN_146
                       ? io_backendPacket_0_bits_decoded_instruction_RD_valid
                       : reservation_station_8_decoded_instruction_RD_valid;
-      _GEN_347 =
-        _GEN_344
+      _GEN_345 =
+        _GEN_343
           ? io_backendPacket_3_bits_decoded_instruction_RS1_valid
-          : _GEN_227
+          : _GEN_226
               ? io_backendPacket_2_bits_decoded_instruction_RS1_valid
-              : _GEN_176
+              : _GEN_175
                   ? io_backendPacket_1_bits_decoded_instruction_RS1_valid
-                  : _GEN_147
+                  : _GEN_146
                       ? io_backendPacket_0_bits_decoded_instruction_RS1_valid
                       : reservation_station_8_decoded_instruction_RS1_valid;
-      _GEN_348 =
-        _GEN_344
+      _GEN_346 =
+        _GEN_343
           ? io_backendPacket_3_bits_decoded_instruction_RS2_valid
-          : _GEN_227
+          : _GEN_226
               ? io_backendPacket_2_bits_decoded_instruction_RS2_valid
-              : _GEN_176
+              : _GEN_175
                   ? io_backendPacket_1_bits_decoded_instruction_RS2_valid
-                  : _GEN_147
+                  : _GEN_146
                       ? io_backendPacket_0_bits_decoded_instruction_RS2_valid
                       : reservation_station_8_decoded_instruction_RS2_valid;
-      _GEN_349 =
-        _GEN_344
+      _GEN_347 =
+        _GEN_343
           ? io_backendPacket_3_bits_decoded_instruction_needs_ALU
-          : _GEN_227
+          : _GEN_226
               ? io_backendPacket_2_bits_decoded_instruction_needs_ALU
-              : _GEN_176
+              : _GEN_175
                   ? io_backendPacket_1_bits_decoded_instruction_needs_ALU
-                  : _GEN_147
+                  : _GEN_146
                       ? io_backendPacket_0_bits_decoded_instruction_needs_ALU
                       : reservation_station_8_decoded_instruction_needs_ALU;
-      _GEN_350 =
-        _GEN_344
+      _GEN_348 =
+        _GEN_343
           ? io_backendPacket_3_bits_decoded_instruction_needs_branch_unit
-          : _GEN_227
+          : _GEN_226
               ? io_backendPacket_2_bits_decoded_instruction_needs_branch_unit
-              : _GEN_176
+              : _GEN_175
                   ? io_backendPacket_1_bits_decoded_instruction_needs_branch_unit
-                  : _GEN_147
+                  : _GEN_146
                       ? io_backendPacket_0_bits_decoded_instruction_needs_branch_unit
                       : reservation_station_8_decoded_instruction_needs_branch_unit;
-      _GEN_351 =
-        _GEN_344
+      _GEN_349 =
+        _GEN_343
+          ? io_backendPacket_3_bits_decoded_instruction_needs_CSRs
+          : _GEN_226
+              ? io_backendPacket_2_bits_decoded_instruction_needs_CSRs
+              : _GEN_175
+                  ? io_backendPacket_1_bits_decoded_instruction_needs_CSRs
+                  : _GEN_146
+                      ? io_backendPacket_0_bits_decoded_instruction_needs_CSRs
+                      : reservation_station_8_decoded_instruction_needs_CSRs;
+      _GEN_350 =
+        _GEN_343
           ? io_backendPacket_3_bits_decoded_instruction_SUBTRACT
-          : _GEN_227
+          : _GEN_226
               ? io_backendPacket_2_bits_decoded_instruction_SUBTRACT
-              : _GEN_176
+              : _GEN_175
                   ? io_backendPacket_1_bits_decoded_instruction_SUBTRACT
-                  : _GEN_147
+                  : _GEN_146
                       ? io_backendPacket_0_bits_decoded_instruction_SUBTRACT
                       : reservation_station_8_decoded_instruction_SUBTRACT;
-      _GEN_352 =
-        _GEN_344
+      _GEN_351 =
+        _GEN_343
           ? io_backendPacket_3_bits_decoded_instruction_MULTIPLY
-          : _GEN_227
+          : _GEN_226
               ? io_backendPacket_2_bits_decoded_instruction_MULTIPLY
-              : _GEN_176
+              : _GEN_175
                   ? io_backendPacket_1_bits_decoded_instruction_MULTIPLY
-                  : _GEN_147
+                  : _GEN_146
                       ? io_backendPacket_0_bits_decoded_instruction_MULTIPLY
                       : reservation_station_8_decoded_instruction_MULTIPLY;
-      _GEN_353 =
-        _GEN_344
+      _GEN_352 =
+        _GEN_343
           ? io_backendPacket_3_bits_decoded_instruction_IMMEDIATE
-          : _GEN_227
+          : _GEN_226
               ? io_backendPacket_2_bits_decoded_instruction_IMMEDIATE
-              : _GEN_176
+              : _GEN_175
                   ? io_backendPacket_1_bits_decoded_instruction_IMMEDIATE
-                  : _GEN_147
+                  : _GEN_146
                       ? io_backendPacket_0_bits_decoded_instruction_IMMEDIATE
                       : reservation_station_8_decoded_instruction_IMMEDIATE;
-      _GEN_354 =
-        _GEN_344
+      _GEN_353 =
+        _GEN_343
           ? io_backendPacket_3_bits_decoded_instruction_IS_LOAD
-          : _GEN_227
+          : _GEN_226
               ? io_backendPacket_2_bits_decoded_instruction_IS_LOAD
-              : _GEN_176
+              : _GEN_175
                   ? io_backendPacket_1_bits_decoded_instruction_IS_LOAD
-                  : _GEN_147
+                  : _GEN_146
                       ? io_backendPacket_0_bits_decoded_instruction_IS_LOAD
                       : reservation_station_8_decoded_instruction_IS_LOAD;
-      _GEN_355 =
-        _GEN_344
+      _GEN_354 =
+        _GEN_343
+          ? io_backendPacket_3_bits_decoded_instruction_IS_STORE
+          : _GEN_226
+              ? io_backendPacket_2_bits_decoded_instruction_IS_STORE
+              : _GEN_175
+                  ? io_backendPacket_1_bits_decoded_instruction_IS_STORE
+                  : _GEN_146
+                      ? io_backendPacket_0_bits_decoded_instruction_IS_STORE
+                      : reservation_station_8_decoded_instruction_IS_STORE;
+      _GEN_356 = io_backendPacket_3_valid & _GEN_355;
+      _GEN_357 =
+        _GEN_356
+          ? io_backendPacket_3_bits_decoded_instruction_RD_valid
+          : _GEN_227
+              ? io_backendPacket_2_bits_decoded_instruction_RD_valid
+              : _GEN_177
+                  ? io_backendPacket_1_bits_decoded_instruction_RD_valid
+                  : _GEN_147
+                      ? io_backendPacket_0_bits_decoded_instruction_RD_valid
+                      : reservation_station_9_decoded_instruction_RD_valid;
+      _GEN_358 =
+        _GEN_356
+          ? io_backendPacket_3_bits_decoded_instruction_RS1_valid
+          : _GEN_227
+              ? io_backendPacket_2_bits_decoded_instruction_RS1_valid
+              : _GEN_177
+                  ? io_backendPacket_1_bits_decoded_instruction_RS1_valid
+                  : _GEN_147
+                      ? io_backendPacket_0_bits_decoded_instruction_RS1_valid
+                      : reservation_station_9_decoded_instruction_RS1_valid;
+      _GEN_359 =
+        _GEN_356
+          ? io_backendPacket_3_bits_decoded_instruction_RS2_valid
+          : _GEN_227
+              ? io_backendPacket_2_bits_decoded_instruction_RS2_valid
+              : _GEN_177
+                  ? io_backendPacket_1_bits_decoded_instruction_RS2_valid
+                  : _GEN_147
+                      ? io_backendPacket_0_bits_decoded_instruction_RS2_valid
+                      : reservation_station_9_decoded_instruction_RS2_valid;
+      _GEN_360 =
+        _GEN_356
+          ? io_backendPacket_3_bits_decoded_instruction_needs_ALU
+          : _GEN_227
+              ? io_backendPacket_2_bits_decoded_instruction_needs_ALU
+              : _GEN_177
+                  ? io_backendPacket_1_bits_decoded_instruction_needs_ALU
+                  : _GEN_147
+                      ? io_backendPacket_0_bits_decoded_instruction_needs_ALU
+                      : reservation_station_9_decoded_instruction_needs_ALU;
+      _GEN_361 =
+        _GEN_356
+          ? io_backendPacket_3_bits_decoded_instruction_needs_branch_unit
+          : _GEN_227
+              ? io_backendPacket_2_bits_decoded_instruction_needs_branch_unit
+              : _GEN_177
+                  ? io_backendPacket_1_bits_decoded_instruction_needs_branch_unit
+                  : _GEN_147
+                      ? io_backendPacket_0_bits_decoded_instruction_needs_branch_unit
+                      : reservation_station_9_decoded_instruction_needs_branch_unit;
+      _GEN_362 =
+        _GEN_356
+          ? io_backendPacket_3_bits_decoded_instruction_needs_CSRs
+          : _GEN_227
+              ? io_backendPacket_2_bits_decoded_instruction_needs_CSRs
+              : _GEN_177
+                  ? io_backendPacket_1_bits_decoded_instruction_needs_CSRs
+                  : _GEN_147
+                      ? io_backendPacket_0_bits_decoded_instruction_needs_CSRs
+                      : reservation_station_9_decoded_instruction_needs_CSRs;
+      _GEN_363 =
+        _GEN_356
+          ? io_backendPacket_3_bits_decoded_instruction_SUBTRACT
+          : _GEN_227
+              ? io_backendPacket_2_bits_decoded_instruction_SUBTRACT
+              : _GEN_177
+                  ? io_backendPacket_1_bits_decoded_instruction_SUBTRACT
+                  : _GEN_147
+                      ? io_backendPacket_0_bits_decoded_instruction_SUBTRACT
+                      : reservation_station_9_decoded_instruction_SUBTRACT;
+      _GEN_364 =
+        _GEN_356
+          ? io_backendPacket_3_bits_decoded_instruction_MULTIPLY
+          : _GEN_227
+              ? io_backendPacket_2_bits_decoded_instruction_MULTIPLY
+              : _GEN_177
+                  ? io_backendPacket_1_bits_decoded_instruction_MULTIPLY
+                  : _GEN_147
+                      ? io_backendPacket_0_bits_decoded_instruction_MULTIPLY
+                      : reservation_station_9_decoded_instruction_MULTIPLY;
+      _GEN_365 =
+        _GEN_356
+          ? io_backendPacket_3_bits_decoded_instruction_IMMEDIATE
+          : _GEN_227
+              ? io_backendPacket_2_bits_decoded_instruction_IMMEDIATE
+              : _GEN_177
+                  ? io_backendPacket_1_bits_decoded_instruction_IMMEDIATE
+                  : _GEN_147
+                      ? io_backendPacket_0_bits_decoded_instruction_IMMEDIATE
+                      : reservation_station_9_decoded_instruction_IMMEDIATE;
+      _GEN_366 =
+        _GEN_356
+          ? io_backendPacket_3_bits_decoded_instruction_IS_LOAD
+          : _GEN_227
+              ? io_backendPacket_2_bits_decoded_instruction_IS_LOAD
+              : _GEN_177
+                  ? io_backendPacket_1_bits_decoded_instruction_IS_LOAD
+                  : _GEN_147
+                      ? io_backendPacket_0_bits_decoded_instruction_IS_LOAD
+                      : reservation_station_9_decoded_instruction_IS_LOAD;
+      _GEN_367 =
+        _GEN_356
           ? io_backendPacket_3_bits_decoded_instruction_IS_STORE
           : _GEN_227
               ? io_backendPacket_2_bits_decoded_instruction_IS_STORE
-              : _GEN_176
+              : _GEN_177
                   ? io_backendPacket_1_bits_decoded_instruction_IS_STORE
                   : _GEN_147
                       ? io_backendPacket_0_bits_decoded_instruction_IS_STORE
-                      : reservation_station_8_decoded_instruction_IS_STORE;
-      _GEN_357 = io_backendPacket_3_valid & _GEN_356;
-      _GEN_358 =
-        _GEN_357
-          ? io_backendPacket_3_bits_decoded_instruction_RDold_valid
-          : _GEN_228
-              ? io_backendPacket_2_bits_decoded_instruction_RDold_valid
-              : _GEN_178
-                  ? io_backendPacket_1_bits_decoded_instruction_RDold_valid
-                  : _GEN_148
-                      ? io_backendPacket_0_bits_decoded_instruction_RDold_valid
-                      : reservation_station_9_decoded_instruction_RDold_valid;
-      _GEN_359 =
-        _GEN_357
-          ? io_backendPacket_3_bits_decoded_instruction_RD_valid
-          : _GEN_228
-              ? io_backendPacket_2_bits_decoded_instruction_RD_valid
-              : _GEN_178
-                  ? io_backendPacket_1_bits_decoded_instruction_RD_valid
-                  : _GEN_148
-                      ? io_backendPacket_0_bits_decoded_instruction_RD_valid
-                      : reservation_station_9_decoded_instruction_RD_valid;
-      _GEN_360 =
-        _GEN_357
-          ? io_backendPacket_3_bits_decoded_instruction_RS1_valid
-          : _GEN_228
-              ? io_backendPacket_2_bits_decoded_instruction_RS1_valid
-              : _GEN_178
-                  ? io_backendPacket_1_bits_decoded_instruction_RS1_valid
-                  : _GEN_148
-                      ? io_backendPacket_0_bits_decoded_instruction_RS1_valid
-                      : reservation_station_9_decoded_instruction_RS1_valid;
-      _GEN_361 =
-        _GEN_357
-          ? io_backendPacket_3_bits_decoded_instruction_RS2_valid
-          : _GEN_228
-              ? io_backendPacket_2_bits_decoded_instruction_RS2_valid
-              : _GEN_178
-                  ? io_backendPacket_1_bits_decoded_instruction_RS2_valid
-                  : _GEN_148
-                      ? io_backendPacket_0_bits_decoded_instruction_RS2_valid
-                      : reservation_station_9_decoded_instruction_RS2_valid;
-      _GEN_362 =
-        _GEN_357
-          ? io_backendPacket_3_bits_decoded_instruction_needs_ALU
-          : _GEN_228
-              ? io_backendPacket_2_bits_decoded_instruction_needs_ALU
-              : _GEN_178
-                  ? io_backendPacket_1_bits_decoded_instruction_needs_ALU
-                  : _GEN_148
-                      ? io_backendPacket_0_bits_decoded_instruction_needs_ALU
-                      : reservation_station_9_decoded_instruction_needs_ALU;
-      _GEN_363 =
-        _GEN_357
-          ? io_backendPacket_3_bits_decoded_instruction_needs_branch_unit
-          : _GEN_228
-              ? io_backendPacket_2_bits_decoded_instruction_needs_branch_unit
-              : _GEN_178
-                  ? io_backendPacket_1_bits_decoded_instruction_needs_branch_unit
-                  : _GEN_148
-                      ? io_backendPacket_0_bits_decoded_instruction_needs_branch_unit
-                      : reservation_station_9_decoded_instruction_needs_branch_unit;
-      _GEN_364 =
-        _GEN_357
-          ? io_backendPacket_3_bits_decoded_instruction_SUBTRACT
-          : _GEN_228
-              ? io_backendPacket_2_bits_decoded_instruction_SUBTRACT
-              : _GEN_178
-                  ? io_backendPacket_1_bits_decoded_instruction_SUBTRACT
-                  : _GEN_148
-                      ? io_backendPacket_0_bits_decoded_instruction_SUBTRACT
-                      : reservation_station_9_decoded_instruction_SUBTRACT;
-      _GEN_365 =
-        _GEN_357
-          ? io_backendPacket_3_bits_decoded_instruction_MULTIPLY
-          : _GEN_228
-              ? io_backendPacket_2_bits_decoded_instruction_MULTIPLY
-              : _GEN_178
-                  ? io_backendPacket_1_bits_decoded_instruction_MULTIPLY
-                  : _GEN_148
-                      ? io_backendPacket_0_bits_decoded_instruction_MULTIPLY
-                      : reservation_station_9_decoded_instruction_MULTIPLY;
-      _GEN_366 =
-        _GEN_357
-          ? io_backendPacket_3_bits_decoded_instruction_IMMEDIATE
-          : _GEN_228
-              ? io_backendPacket_2_bits_decoded_instruction_IMMEDIATE
-              : _GEN_178
-                  ? io_backendPacket_1_bits_decoded_instruction_IMMEDIATE
-                  : _GEN_148
-                      ? io_backendPacket_0_bits_decoded_instruction_IMMEDIATE
-                      : reservation_station_9_decoded_instruction_IMMEDIATE;
-      _GEN_367 =
-        _GEN_357
-          ? io_backendPacket_3_bits_decoded_instruction_IS_LOAD
-          : _GEN_228
-              ? io_backendPacket_2_bits_decoded_instruction_IS_LOAD
-              : _GEN_178
-                  ? io_backendPacket_1_bits_decoded_instruction_IS_LOAD
-                  : _GEN_148
-                      ? io_backendPacket_0_bits_decoded_instruction_IS_LOAD
-                      : reservation_station_9_decoded_instruction_IS_LOAD;
-      _GEN_368 =
-        _GEN_357
-          ? io_backendPacket_3_bits_decoded_instruction_IS_STORE
-          : _GEN_228
-              ? io_backendPacket_2_bits_decoded_instruction_IS_STORE
-              : _GEN_178
-                  ? io_backendPacket_1_bits_decoded_instruction_IS_STORE
-                  : _GEN_148
-                      ? io_backendPacket_0_bits_decoded_instruction_IS_STORE
                       : reservation_station_9_decoded_instruction_IS_STORE;
-      _GEN_370 = io_backendPacket_3_valid & _GEN_369;
-      _GEN_371 =
-        _GEN_370
-          ? io_backendPacket_3_bits_decoded_instruction_RDold_valid
-          : _GEN_229
-              ? io_backendPacket_2_bits_decoded_instruction_RDold_valid
-              : _GEN_180
-                  ? io_backendPacket_1_bits_decoded_instruction_RDold_valid
-                  : _GEN_149
-                      ? io_backendPacket_0_bits_decoded_instruction_RDold_valid
-                      : reservation_station_10_decoded_instruction_RDold_valid;
-      _GEN_372 =
-        _GEN_370
+      _GEN_369 = io_backendPacket_3_valid & _GEN_368;
+      _GEN_370 =
+        _GEN_369
           ? io_backendPacket_3_bits_decoded_instruction_RD_valid
-          : _GEN_229
+          : _GEN_228
               ? io_backendPacket_2_bits_decoded_instruction_RD_valid
-              : _GEN_180
+              : _GEN_179
                   ? io_backendPacket_1_bits_decoded_instruction_RD_valid
-                  : _GEN_149
+                  : _GEN_148
                       ? io_backendPacket_0_bits_decoded_instruction_RD_valid
                       : reservation_station_10_decoded_instruction_RD_valid;
-      _GEN_373 =
-        _GEN_370
+      _GEN_371 =
+        _GEN_369
           ? io_backendPacket_3_bits_decoded_instruction_RS1_valid
-          : _GEN_229
+          : _GEN_228
               ? io_backendPacket_2_bits_decoded_instruction_RS1_valid
-              : _GEN_180
+              : _GEN_179
                   ? io_backendPacket_1_bits_decoded_instruction_RS1_valid
-                  : _GEN_149
+                  : _GEN_148
                       ? io_backendPacket_0_bits_decoded_instruction_RS1_valid
                       : reservation_station_10_decoded_instruction_RS1_valid;
-      _GEN_374 =
-        _GEN_370
+      _GEN_372 =
+        _GEN_369
           ? io_backendPacket_3_bits_decoded_instruction_RS2_valid
-          : _GEN_229
+          : _GEN_228
               ? io_backendPacket_2_bits_decoded_instruction_RS2_valid
-              : _GEN_180
+              : _GEN_179
                   ? io_backendPacket_1_bits_decoded_instruction_RS2_valid
-                  : _GEN_149
+                  : _GEN_148
                       ? io_backendPacket_0_bits_decoded_instruction_RS2_valid
                       : reservation_station_10_decoded_instruction_RS2_valid;
-      _GEN_375 =
-        _GEN_370
+      _GEN_373 =
+        _GEN_369
           ? io_backendPacket_3_bits_decoded_instruction_needs_ALU
-          : _GEN_229
+          : _GEN_228
               ? io_backendPacket_2_bits_decoded_instruction_needs_ALU
-              : _GEN_180
+              : _GEN_179
                   ? io_backendPacket_1_bits_decoded_instruction_needs_ALU
-                  : _GEN_149
+                  : _GEN_148
                       ? io_backendPacket_0_bits_decoded_instruction_needs_ALU
                       : reservation_station_10_decoded_instruction_needs_ALU;
-      _GEN_376 =
-        _GEN_370
+      _GEN_374 =
+        _GEN_369
           ? io_backendPacket_3_bits_decoded_instruction_needs_branch_unit
-          : _GEN_229
+          : _GEN_228
               ? io_backendPacket_2_bits_decoded_instruction_needs_branch_unit
-              : _GEN_180
+              : _GEN_179
                   ? io_backendPacket_1_bits_decoded_instruction_needs_branch_unit
-                  : _GEN_149
+                  : _GEN_148
                       ? io_backendPacket_0_bits_decoded_instruction_needs_branch_unit
                       : reservation_station_10_decoded_instruction_needs_branch_unit;
-      _GEN_377 =
-        _GEN_370
+      _GEN_375 =
+        _GEN_369
+          ? io_backendPacket_3_bits_decoded_instruction_needs_CSRs
+          : _GEN_228
+              ? io_backendPacket_2_bits_decoded_instruction_needs_CSRs
+              : _GEN_179
+                  ? io_backendPacket_1_bits_decoded_instruction_needs_CSRs
+                  : _GEN_148
+                      ? io_backendPacket_0_bits_decoded_instruction_needs_CSRs
+                      : reservation_station_10_decoded_instruction_needs_CSRs;
+      _GEN_376 =
+        _GEN_369
           ? io_backendPacket_3_bits_decoded_instruction_SUBTRACT
-          : _GEN_229
+          : _GEN_228
               ? io_backendPacket_2_bits_decoded_instruction_SUBTRACT
-              : _GEN_180
+              : _GEN_179
                   ? io_backendPacket_1_bits_decoded_instruction_SUBTRACT
-                  : _GEN_149
+                  : _GEN_148
                       ? io_backendPacket_0_bits_decoded_instruction_SUBTRACT
                       : reservation_station_10_decoded_instruction_SUBTRACT;
-      _GEN_378 =
-        _GEN_370
+      _GEN_377 =
+        _GEN_369
           ? io_backendPacket_3_bits_decoded_instruction_MULTIPLY
-          : _GEN_229
+          : _GEN_228
               ? io_backendPacket_2_bits_decoded_instruction_MULTIPLY
-              : _GEN_180
+              : _GEN_179
                   ? io_backendPacket_1_bits_decoded_instruction_MULTIPLY
-                  : _GEN_149
+                  : _GEN_148
                       ? io_backendPacket_0_bits_decoded_instruction_MULTIPLY
                       : reservation_station_10_decoded_instruction_MULTIPLY;
-      _GEN_379 =
-        _GEN_370
+      _GEN_378 =
+        _GEN_369
           ? io_backendPacket_3_bits_decoded_instruction_IMMEDIATE
-          : _GEN_229
+          : _GEN_228
               ? io_backendPacket_2_bits_decoded_instruction_IMMEDIATE
-              : _GEN_180
+              : _GEN_179
                   ? io_backendPacket_1_bits_decoded_instruction_IMMEDIATE
-                  : _GEN_149
+                  : _GEN_148
                       ? io_backendPacket_0_bits_decoded_instruction_IMMEDIATE
                       : reservation_station_10_decoded_instruction_IMMEDIATE;
-      _GEN_380 =
-        _GEN_370
+      _GEN_379 =
+        _GEN_369
           ? io_backendPacket_3_bits_decoded_instruction_IS_LOAD
-          : _GEN_229
+          : _GEN_228
               ? io_backendPacket_2_bits_decoded_instruction_IS_LOAD
-              : _GEN_180
+              : _GEN_179
                   ? io_backendPacket_1_bits_decoded_instruction_IS_LOAD
-                  : _GEN_149
+                  : _GEN_148
                       ? io_backendPacket_0_bits_decoded_instruction_IS_LOAD
                       : reservation_station_10_decoded_instruction_IS_LOAD;
-      _GEN_381 =
-        _GEN_370
+      _GEN_380 =
+        _GEN_369
+          ? io_backendPacket_3_bits_decoded_instruction_IS_STORE
+          : _GEN_228
+              ? io_backendPacket_2_bits_decoded_instruction_IS_STORE
+              : _GEN_179
+                  ? io_backendPacket_1_bits_decoded_instruction_IS_STORE
+                  : _GEN_148
+                      ? io_backendPacket_0_bits_decoded_instruction_IS_STORE
+                      : reservation_station_10_decoded_instruction_IS_STORE;
+      _GEN_382 = io_backendPacket_3_valid & _GEN_381;
+      _GEN_383 =
+        _GEN_382
+          ? io_backendPacket_3_bits_decoded_instruction_RD_valid
+          : _GEN_229
+              ? io_backendPacket_2_bits_decoded_instruction_RD_valid
+              : _GEN_181
+                  ? io_backendPacket_1_bits_decoded_instruction_RD_valid
+                  : _GEN_149
+                      ? io_backendPacket_0_bits_decoded_instruction_RD_valid
+                      : reservation_station_11_decoded_instruction_RD_valid;
+      _GEN_384 =
+        _GEN_382
+          ? io_backendPacket_3_bits_decoded_instruction_RS1_valid
+          : _GEN_229
+              ? io_backendPacket_2_bits_decoded_instruction_RS1_valid
+              : _GEN_181
+                  ? io_backendPacket_1_bits_decoded_instruction_RS1_valid
+                  : _GEN_149
+                      ? io_backendPacket_0_bits_decoded_instruction_RS1_valid
+                      : reservation_station_11_decoded_instruction_RS1_valid;
+      _GEN_385 =
+        _GEN_382
+          ? io_backendPacket_3_bits_decoded_instruction_RS2_valid
+          : _GEN_229
+              ? io_backendPacket_2_bits_decoded_instruction_RS2_valid
+              : _GEN_181
+                  ? io_backendPacket_1_bits_decoded_instruction_RS2_valid
+                  : _GEN_149
+                      ? io_backendPacket_0_bits_decoded_instruction_RS2_valid
+                      : reservation_station_11_decoded_instruction_RS2_valid;
+      _GEN_386 =
+        _GEN_382
+          ? io_backendPacket_3_bits_decoded_instruction_needs_ALU
+          : _GEN_229
+              ? io_backendPacket_2_bits_decoded_instruction_needs_ALU
+              : _GEN_181
+                  ? io_backendPacket_1_bits_decoded_instruction_needs_ALU
+                  : _GEN_149
+                      ? io_backendPacket_0_bits_decoded_instruction_needs_ALU
+                      : reservation_station_11_decoded_instruction_needs_ALU;
+      _GEN_387 =
+        _GEN_382
+          ? io_backendPacket_3_bits_decoded_instruction_needs_branch_unit
+          : _GEN_229
+              ? io_backendPacket_2_bits_decoded_instruction_needs_branch_unit
+              : _GEN_181
+                  ? io_backendPacket_1_bits_decoded_instruction_needs_branch_unit
+                  : _GEN_149
+                      ? io_backendPacket_0_bits_decoded_instruction_needs_branch_unit
+                      : reservation_station_11_decoded_instruction_needs_branch_unit;
+      _GEN_388 =
+        _GEN_382
+          ? io_backendPacket_3_bits_decoded_instruction_needs_CSRs
+          : _GEN_229
+              ? io_backendPacket_2_bits_decoded_instruction_needs_CSRs
+              : _GEN_181
+                  ? io_backendPacket_1_bits_decoded_instruction_needs_CSRs
+                  : _GEN_149
+                      ? io_backendPacket_0_bits_decoded_instruction_needs_CSRs
+                      : reservation_station_11_decoded_instruction_needs_CSRs;
+      _GEN_389 =
+        _GEN_382
+          ? io_backendPacket_3_bits_decoded_instruction_SUBTRACT
+          : _GEN_229
+              ? io_backendPacket_2_bits_decoded_instruction_SUBTRACT
+              : _GEN_181
+                  ? io_backendPacket_1_bits_decoded_instruction_SUBTRACT
+                  : _GEN_149
+                      ? io_backendPacket_0_bits_decoded_instruction_SUBTRACT
+                      : reservation_station_11_decoded_instruction_SUBTRACT;
+      _GEN_390 =
+        _GEN_382
+          ? io_backendPacket_3_bits_decoded_instruction_MULTIPLY
+          : _GEN_229
+              ? io_backendPacket_2_bits_decoded_instruction_MULTIPLY
+              : _GEN_181
+                  ? io_backendPacket_1_bits_decoded_instruction_MULTIPLY
+                  : _GEN_149
+                      ? io_backendPacket_0_bits_decoded_instruction_MULTIPLY
+                      : reservation_station_11_decoded_instruction_MULTIPLY;
+      _GEN_391 =
+        _GEN_382
+          ? io_backendPacket_3_bits_decoded_instruction_IMMEDIATE
+          : _GEN_229
+              ? io_backendPacket_2_bits_decoded_instruction_IMMEDIATE
+              : _GEN_181
+                  ? io_backendPacket_1_bits_decoded_instruction_IMMEDIATE
+                  : _GEN_149
+                      ? io_backendPacket_0_bits_decoded_instruction_IMMEDIATE
+                      : reservation_station_11_decoded_instruction_IMMEDIATE;
+      _GEN_392 =
+        _GEN_382
+          ? io_backendPacket_3_bits_decoded_instruction_IS_LOAD
+          : _GEN_229
+              ? io_backendPacket_2_bits_decoded_instruction_IS_LOAD
+              : _GEN_181
+                  ? io_backendPacket_1_bits_decoded_instruction_IS_LOAD
+                  : _GEN_149
+                      ? io_backendPacket_0_bits_decoded_instruction_IS_LOAD
+                      : reservation_station_11_decoded_instruction_IS_LOAD;
+      _GEN_393 =
+        _GEN_382
           ? io_backendPacket_3_bits_decoded_instruction_IS_STORE
           : _GEN_229
               ? io_backendPacket_2_bits_decoded_instruction_IS_STORE
-              : _GEN_180
+              : _GEN_181
                   ? io_backendPacket_1_bits_decoded_instruction_IS_STORE
                   : _GEN_149
                       ? io_backendPacket_0_bits_decoded_instruction_IS_STORE
-                      : reservation_station_10_decoded_instruction_IS_STORE;
-      _GEN_383 = io_backendPacket_3_valid & _GEN_382;
-      _GEN_384 =
-        _GEN_383
-          ? io_backendPacket_3_bits_decoded_instruction_RDold_valid
-          : _GEN_230
-              ? io_backendPacket_2_bits_decoded_instruction_RDold_valid
-              : _GEN_182
-                  ? io_backendPacket_1_bits_decoded_instruction_RDold_valid
-                  : _GEN_150
-                      ? io_backendPacket_0_bits_decoded_instruction_RDold_valid
-                      : reservation_station_11_decoded_instruction_RDold_valid;
-      _GEN_385 =
-        _GEN_383
-          ? io_backendPacket_3_bits_decoded_instruction_RD_valid
-          : _GEN_230
-              ? io_backendPacket_2_bits_decoded_instruction_RD_valid
-              : _GEN_182
-                  ? io_backendPacket_1_bits_decoded_instruction_RD_valid
-                  : _GEN_150
-                      ? io_backendPacket_0_bits_decoded_instruction_RD_valid
-                      : reservation_station_11_decoded_instruction_RD_valid;
-      _GEN_386 =
-        _GEN_383
-          ? io_backendPacket_3_bits_decoded_instruction_RS1_valid
-          : _GEN_230
-              ? io_backendPacket_2_bits_decoded_instruction_RS1_valid
-              : _GEN_182
-                  ? io_backendPacket_1_bits_decoded_instruction_RS1_valid
-                  : _GEN_150
-                      ? io_backendPacket_0_bits_decoded_instruction_RS1_valid
-                      : reservation_station_11_decoded_instruction_RS1_valid;
-      _GEN_387 =
-        _GEN_383
-          ? io_backendPacket_3_bits_decoded_instruction_RS2_valid
-          : _GEN_230
-              ? io_backendPacket_2_bits_decoded_instruction_RS2_valid
-              : _GEN_182
-                  ? io_backendPacket_1_bits_decoded_instruction_RS2_valid
-                  : _GEN_150
-                      ? io_backendPacket_0_bits_decoded_instruction_RS2_valid
-                      : reservation_station_11_decoded_instruction_RS2_valid;
-      _GEN_388 =
-        _GEN_383
-          ? io_backendPacket_3_bits_decoded_instruction_needs_ALU
-          : _GEN_230
-              ? io_backendPacket_2_bits_decoded_instruction_needs_ALU
-              : _GEN_182
-                  ? io_backendPacket_1_bits_decoded_instruction_needs_ALU
-                  : _GEN_150
-                      ? io_backendPacket_0_bits_decoded_instruction_needs_ALU
-                      : reservation_station_11_decoded_instruction_needs_ALU;
-      _GEN_389 =
-        _GEN_383
-          ? io_backendPacket_3_bits_decoded_instruction_needs_branch_unit
-          : _GEN_230
-              ? io_backendPacket_2_bits_decoded_instruction_needs_branch_unit
-              : _GEN_182
-                  ? io_backendPacket_1_bits_decoded_instruction_needs_branch_unit
-                  : _GEN_150
-                      ? io_backendPacket_0_bits_decoded_instruction_needs_branch_unit
-                      : reservation_station_11_decoded_instruction_needs_branch_unit;
-      _GEN_390 =
-        _GEN_383
-          ? io_backendPacket_3_bits_decoded_instruction_SUBTRACT
-          : _GEN_230
-              ? io_backendPacket_2_bits_decoded_instruction_SUBTRACT
-              : _GEN_182
-                  ? io_backendPacket_1_bits_decoded_instruction_SUBTRACT
-                  : _GEN_150
-                      ? io_backendPacket_0_bits_decoded_instruction_SUBTRACT
-                      : reservation_station_11_decoded_instruction_SUBTRACT;
-      _GEN_391 =
-        _GEN_383
-          ? io_backendPacket_3_bits_decoded_instruction_MULTIPLY
-          : _GEN_230
-              ? io_backendPacket_2_bits_decoded_instruction_MULTIPLY
-              : _GEN_182
-                  ? io_backendPacket_1_bits_decoded_instruction_MULTIPLY
-                  : _GEN_150
-                      ? io_backendPacket_0_bits_decoded_instruction_MULTIPLY
-                      : reservation_station_11_decoded_instruction_MULTIPLY;
-      _GEN_392 =
-        _GEN_383
-          ? io_backendPacket_3_bits_decoded_instruction_IMMEDIATE
-          : _GEN_230
-              ? io_backendPacket_2_bits_decoded_instruction_IMMEDIATE
-              : _GEN_182
-                  ? io_backendPacket_1_bits_decoded_instruction_IMMEDIATE
-                  : _GEN_150
-                      ? io_backendPacket_0_bits_decoded_instruction_IMMEDIATE
-                      : reservation_station_11_decoded_instruction_IMMEDIATE;
-      _GEN_393 =
-        _GEN_383
-          ? io_backendPacket_3_bits_decoded_instruction_IS_LOAD
-          : _GEN_230
-              ? io_backendPacket_2_bits_decoded_instruction_IS_LOAD
-              : _GEN_182
-                  ? io_backendPacket_1_bits_decoded_instruction_IS_LOAD
-                  : _GEN_150
-                      ? io_backendPacket_0_bits_decoded_instruction_IS_LOAD
-                      : reservation_station_11_decoded_instruction_IS_LOAD;
-      _GEN_394 =
-        _GEN_383
-          ? io_backendPacket_3_bits_decoded_instruction_IS_STORE
-          : _GEN_230
-              ? io_backendPacket_2_bits_decoded_instruction_IS_STORE
-              : _GEN_182
-                  ? io_backendPacket_1_bits_decoded_instruction_IS_STORE
-                  : _GEN_150
-                      ? io_backendPacket_0_bits_decoded_instruction_IS_STORE
                       : reservation_station_11_decoded_instruction_IS_STORE;
-      _GEN_396 = io_backendPacket_3_valid & _GEN_395;
-      _GEN_397 =
-        _GEN_396
-          ? io_backendPacket_3_bits_decoded_instruction_RDold_valid
-          : _GEN_231
-              ? io_backendPacket_2_bits_decoded_instruction_RDold_valid
-              : _GEN_184
-                  ? io_backendPacket_1_bits_decoded_instruction_RDold_valid
-                  : _GEN_151
-                      ? io_backendPacket_0_bits_decoded_instruction_RDold_valid
-                      : reservation_station_12_decoded_instruction_RDold_valid;
-      _GEN_398 =
-        _GEN_396
+      _GEN_395 = io_backendPacket_3_valid & _GEN_394;
+      _GEN_396 =
+        _GEN_395
           ? io_backendPacket_3_bits_decoded_instruction_RD_valid
-          : _GEN_231
+          : _GEN_230
               ? io_backendPacket_2_bits_decoded_instruction_RD_valid
-              : _GEN_184
+              : _GEN_183
                   ? io_backendPacket_1_bits_decoded_instruction_RD_valid
-                  : _GEN_151
+                  : _GEN_150
                       ? io_backendPacket_0_bits_decoded_instruction_RD_valid
                       : reservation_station_12_decoded_instruction_RD_valid;
-      _GEN_399 =
-        _GEN_396
+      _GEN_397 =
+        _GEN_395
           ? io_backendPacket_3_bits_decoded_instruction_RS1_valid
-          : _GEN_231
+          : _GEN_230
               ? io_backendPacket_2_bits_decoded_instruction_RS1_valid
-              : _GEN_184
+              : _GEN_183
                   ? io_backendPacket_1_bits_decoded_instruction_RS1_valid
-                  : _GEN_151
+                  : _GEN_150
                       ? io_backendPacket_0_bits_decoded_instruction_RS1_valid
                       : reservation_station_12_decoded_instruction_RS1_valid;
-      _GEN_400 =
-        _GEN_396
+      _GEN_398 =
+        _GEN_395
           ? io_backendPacket_3_bits_decoded_instruction_RS2_valid
-          : _GEN_231
+          : _GEN_230
               ? io_backendPacket_2_bits_decoded_instruction_RS2_valid
-              : _GEN_184
+              : _GEN_183
                   ? io_backendPacket_1_bits_decoded_instruction_RS2_valid
-                  : _GEN_151
+                  : _GEN_150
                       ? io_backendPacket_0_bits_decoded_instruction_RS2_valid
                       : reservation_station_12_decoded_instruction_RS2_valid;
-      _GEN_401 =
-        _GEN_396
+      _GEN_399 =
+        _GEN_395
           ? io_backendPacket_3_bits_decoded_instruction_needs_ALU
-          : _GEN_231
+          : _GEN_230
               ? io_backendPacket_2_bits_decoded_instruction_needs_ALU
-              : _GEN_184
+              : _GEN_183
                   ? io_backendPacket_1_bits_decoded_instruction_needs_ALU
-                  : _GEN_151
+                  : _GEN_150
                       ? io_backendPacket_0_bits_decoded_instruction_needs_ALU
                       : reservation_station_12_decoded_instruction_needs_ALU;
-      _GEN_402 =
-        _GEN_396
+      _GEN_400 =
+        _GEN_395
           ? io_backendPacket_3_bits_decoded_instruction_needs_branch_unit
-          : _GEN_231
+          : _GEN_230
               ? io_backendPacket_2_bits_decoded_instruction_needs_branch_unit
-              : _GEN_184
+              : _GEN_183
                   ? io_backendPacket_1_bits_decoded_instruction_needs_branch_unit
-                  : _GEN_151
+                  : _GEN_150
                       ? io_backendPacket_0_bits_decoded_instruction_needs_branch_unit
                       : reservation_station_12_decoded_instruction_needs_branch_unit;
-      _GEN_403 =
-        _GEN_396
+      _GEN_401 =
+        _GEN_395
+          ? io_backendPacket_3_bits_decoded_instruction_needs_CSRs
+          : _GEN_230
+              ? io_backendPacket_2_bits_decoded_instruction_needs_CSRs
+              : _GEN_183
+                  ? io_backendPacket_1_bits_decoded_instruction_needs_CSRs
+                  : _GEN_150
+                      ? io_backendPacket_0_bits_decoded_instruction_needs_CSRs
+                      : reservation_station_12_decoded_instruction_needs_CSRs;
+      _GEN_402 =
+        _GEN_395
           ? io_backendPacket_3_bits_decoded_instruction_SUBTRACT
-          : _GEN_231
+          : _GEN_230
               ? io_backendPacket_2_bits_decoded_instruction_SUBTRACT
-              : _GEN_184
+              : _GEN_183
                   ? io_backendPacket_1_bits_decoded_instruction_SUBTRACT
-                  : _GEN_151
+                  : _GEN_150
                       ? io_backendPacket_0_bits_decoded_instruction_SUBTRACT
                       : reservation_station_12_decoded_instruction_SUBTRACT;
-      _GEN_404 =
-        _GEN_396
+      _GEN_403 =
+        _GEN_395
           ? io_backendPacket_3_bits_decoded_instruction_MULTIPLY
-          : _GEN_231
+          : _GEN_230
               ? io_backendPacket_2_bits_decoded_instruction_MULTIPLY
-              : _GEN_184
+              : _GEN_183
                   ? io_backendPacket_1_bits_decoded_instruction_MULTIPLY
-                  : _GEN_151
+                  : _GEN_150
                       ? io_backendPacket_0_bits_decoded_instruction_MULTIPLY
                       : reservation_station_12_decoded_instruction_MULTIPLY;
-      _GEN_405 =
-        _GEN_396
+      _GEN_404 =
+        _GEN_395
           ? io_backendPacket_3_bits_decoded_instruction_IMMEDIATE
-          : _GEN_231
+          : _GEN_230
               ? io_backendPacket_2_bits_decoded_instruction_IMMEDIATE
-              : _GEN_184
+              : _GEN_183
                   ? io_backendPacket_1_bits_decoded_instruction_IMMEDIATE
-                  : _GEN_151
+                  : _GEN_150
                       ? io_backendPacket_0_bits_decoded_instruction_IMMEDIATE
                       : reservation_station_12_decoded_instruction_IMMEDIATE;
-      _GEN_406 =
-        _GEN_396
+      _GEN_405 =
+        _GEN_395
           ? io_backendPacket_3_bits_decoded_instruction_IS_LOAD
-          : _GEN_231
+          : _GEN_230
               ? io_backendPacket_2_bits_decoded_instruction_IS_LOAD
-              : _GEN_184
+              : _GEN_183
                   ? io_backendPacket_1_bits_decoded_instruction_IS_LOAD
-                  : _GEN_151
+                  : _GEN_150
                       ? io_backendPacket_0_bits_decoded_instruction_IS_LOAD
                       : reservation_station_12_decoded_instruction_IS_LOAD;
-      _GEN_407 =
-        _GEN_396
+      _GEN_406 =
+        _GEN_395
+          ? io_backendPacket_3_bits_decoded_instruction_IS_STORE
+          : _GEN_230
+              ? io_backendPacket_2_bits_decoded_instruction_IS_STORE
+              : _GEN_183
+                  ? io_backendPacket_1_bits_decoded_instruction_IS_STORE
+                  : _GEN_150
+                      ? io_backendPacket_0_bits_decoded_instruction_IS_STORE
+                      : reservation_station_12_decoded_instruction_IS_STORE;
+      _GEN_408 = io_backendPacket_3_valid & _GEN_407;
+      _GEN_409 =
+        _GEN_408
+          ? io_backendPacket_3_bits_decoded_instruction_RD_valid
+          : _GEN_231
+              ? io_backendPacket_2_bits_decoded_instruction_RD_valid
+              : _GEN_185
+                  ? io_backendPacket_1_bits_decoded_instruction_RD_valid
+                  : _GEN_151
+                      ? io_backendPacket_0_bits_decoded_instruction_RD_valid
+                      : reservation_station_13_decoded_instruction_RD_valid;
+      _GEN_410 =
+        _GEN_408
+          ? io_backendPacket_3_bits_decoded_instruction_RS1_valid
+          : _GEN_231
+              ? io_backendPacket_2_bits_decoded_instruction_RS1_valid
+              : _GEN_185
+                  ? io_backendPacket_1_bits_decoded_instruction_RS1_valid
+                  : _GEN_151
+                      ? io_backendPacket_0_bits_decoded_instruction_RS1_valid
+                      : reservation_station_13_decoded_instruction_RS1_valid;
+      _GEN_411 =
+        _GEN_408
+          ? io_backendPacket_3_bits_decoded_instruction_RS2_valid
+          : _GEN_231
+              ? io_backendPacket_2_bits_decoded_instruction_RS2_valid
+              : _GEN_185
+                  ? io_backendPacket_1_bits_decoded_instruction_RS2_valid
+                  : _GEN_151
+                      ? io_backendPacket_0_bits_decoded_instruction_RS2_valid
+                      : reservation_station_13_decoded_instruction_RS2_valid;
+      _GEN_412 =
+        _GEN_408
+          ? io_backendPacket_3_bits_decoded_instruction_needs_ALU
+          : _GEN_231
+              ? io_backendPacket_2_bits_decoded_instruction_needs_ALU
+              : _GEN_185
+                  ? io_backendPacket_1_bits_decoded_instruction_needs_ALU
+                  : _GEN_151
+                      ? io_backendPacket_0_bits_decoded_instruction_needs_ALU
+                      : reservation_station_13_decoded_instruction_needs_ALU;
+      _GEN_413 =
+        _GEN_408
+          ? io_backendPacket_3_bits_decoded_instruction_needs_branch_unit
+          : _GEN_231
+              ? io_backendPacket_2_bits_decoded_instruction_needs_branch_unit
+              : _GEN_185
+                  ? io_backendPacket_1_bits_decoded_instruction_needs_branch_unit
+                  : _GEN_151
+                      ? io_backendPacket_0_bits_decoded_instruction_needs_branch_unit
+                      : reservation_station_13_decoded_instruction_needs_branch_unit;
+      _GEN_414 =
+        _GEN_408
+          ? io_backendPacket_3_bits_decoded_instruction_needs_CSRs
+          : _GEN_231
+              ? io_backendPacket_2_bits_decoded_instruction_needs_CSRs
+              : _GEN_185
+                  ? io_backendPacket_1_bits_decoded_instruction_needs_CSRs
+                  : _GEN_151
+                      ? io_backendPacket_0_bits_decoded_instruction_needs_CSRs
+                      : reservation_station_13_decoded_instruction_needs_CSRs;
+      _GEN_415 =
+        _GEN_408
+          ? io_backendPacket_3_bits_decoded_instruction_SUBTRACT
+          : _GEN_231
+              ? io_backendPacket_2_bits_decoded_instruction_SUBTRACT
+              : _GEN_185
+                  ? io_backendPacket_1_bits_decoded_instruction_SUBTRACT
+                  : _GEN_151
+                      ? io_backendPacket_0_bits_decoded_instruction_SUBTRACT
+                      : reservation_station_13_decoded_instruction_SUBTRACT;
+      _GEN_416 =
+        _GEN_408
+          ? io_backendPacket_3_bits_decoded_instruction_MULTIPLY
+          : _GEN_231
+              ? io_backendPacket_2_bits_decoded_instruction_MULTIPLY
+              : _GEN_185
+                  ? io_backendPacket_1_bits_decoded_instruction_MULTIPLY
+                  : _GEN_151
+                      ? io_backendPacket_0_bits_decoded_instruction_MULTIPLY
+                      : reservation_station_13_decoded_instruction_MULTIPLY;
+      _GEN_417 =
+        _GEN_408
+          ? io_backendPacket_3_bits_decoded_instruction_IMMEDIATE
+          : _GEN_231
+              ? io_backendPacket_2_bits_decoded_instruction_IMMEDIATE
+              : _GEN_185
+                  ? io_backendPacket_1_bits_decoded_instruction_IMMEDIATE
+                  : _GEN_151
+                      ? io_backendPacket_0_bits_decoded_instruction_IMMEDIATE
+                      : reservation_station_13_decoded_instruction_IMMEDIATE;
+      _GEN_418 =
+        _GEN_408
+          ? io_backendPacket_3_bits_decoded_instruction_IS_LOAD
+          : _GEN_231
+              ? io_backendPacket_2_bits_decoded_instruction_IS_LOAD
+              : _GEN_185
+                  ? io_backendPacket_1_bits_decoded_instruction_IS_LOAD
+                  : _GEN_151
+                      ? io_backendPacket_0_bits_decoded_instruction_IS_LOAD
+                      : reservation_station_13_decoded_instruction_IS_LOAD;
+      _GEN_419 =
+        _GEN_408
           ? io_backendPacket_3_bits_decoded_instruction_IS_STORE
           : _GEN_231
               ? io_backendPacket_2_bits_decoded_instruction_IS_STORE
-              : _GEN_184
+              : _GEN_185
                   ? io_backendPacket_1_bits_decoded_instruction_IS_STORE
                   : _GEN_151
                       ? io_backendPacket_0_bits_decoded_instruction_IS_STORE
-                      : reservation_station_12_decoded_instruction_IS_STORE;
-      _GEN_409 = io_backendPacket_3_valid & _GEN_408;
-      _GEN_410 =
-        _GEN_409
-          ? io_backendPacket_3_bits_decoded_instruction_RDold_valid
-          : _GEN_232
-              ? io_backendPacket_2_bits_decoded_instruction_RDold_valid
-              : _GEN_186
-                  ? io_backendPacket_1_bits_decoded_instruction_RDold_valid
-                  : _GEN_152
-                      ? io_backendPacket_0_bits_decoded_instruction_RDold_valid
-                      : reservation_station_13_decoded_instruction_RDold_valid;
-      _GEN_411 =
-        _GEN_409
-          ? io_backendPacket_3_bits_decoded_instruction_RD_valid
-          : _GEN_232
-              ? io_backendPacket_2_bits_decoded_instruction_RD_valid
-              : _GEN_186
-                  ? io_backendPacket_1_bits_decoded_instruction_RD_valid
-                  : _GEN_152
-                      ? io_backendPacket_0_bits_decoded_instruction_RD_valid
-                      : reservation_station_13_decoded_instruction_RD_valid;
-      _GEN_412 =
-        _GEN_409
-          ? io_backendPacket_3_bits_decoded_instruction_RS1_valid
-          : _GEN_232
-              ? io_backendPacket_2_bits_decoded_instruction_RS1_valid
-              : _GEN_186
-                  ? io_backendPacket_1_bits_decoded_instruction_RS1_valid
-                  : _GEN_152
-                      ? io_backendPacket_0_bits_decoded_instruction_RS1_valid
-                      : reservation_station_13_decoded_instruction_RS1_valid;
-      _GEN_413 =
-        _GEN_409
-          ? io_backendPacket_3_bits_decoded_instruction_RS2_valid
-          : _GEN_232
-              ? io_backendPacket_2_bits_decoded_instruction_RS2_valid
-              : _GEN_186
-                  ? io_backendPacket_1_bits_decoded_instruction_RS2_valid
-                  : _GEN_152
-                      ? io_backendPacket_0_bits_decoded_instruction_RS2_valid
-                      : reservation_station_13_decoded_instruction_RS2_valid;
-      _GEN_414 =
-        _GEN_409
-          ? io_backendPacket_3_bits_decoded_instruction_needs_ALU
-          : _GEN_232
-              ? io_backendPacket_2_bits_decoded_instruction_needs_ALU
-              : _GEN_186
-                  ? io_backendPacket_1_bits_decoded_instruction_needs_ALU
-                  : _GEN_152
-                      ? io_backendPacket_0_bits_decoded_instruction_needs_ALU
-                      : reservation_station_13_decoded_instruction_needs_ALU;
-      _GEN_415 =
-        _GEN_409
-          ? io_backendPacket_3_bits_decoded_instruction_needs_branch_unit
-          : _GEN_232
-              ? io_backendPacket_2_bits_decoded_instruction_needs_branch_unit
-              : _GEN_186
-                  ? io_backendPacket_1_bits_decoded_instruction_needs_branch_unit
-                  : _GEN_152
-                      ? io_backendPacket_0_bits_decoded_instruction_needs_branch_unit
-                      : reservation_station_13_decoded_instruction_needs_branch_unit;
-      _GEN_416 =
-        _GEN_409
-          ? io_backendPacket_3_bits_decoded_instruction_SUBTRACT
-          : _GEN_232
-              ? io_backendPacket_2_bits_decoded_instruction_SUBTRACT
-              : _GEN_186
-                  ? io_backendPacket_1_bits_decoded_instruction_SUBTRACT
-                  : _GEN_152
-                      ? io_backendPacket_0_bits_decoded_instruction_SUBTRACT
-                      : reservation_station_13_decoded_instruction_SUBTRACT;
-      _GEN_417 =
-        _GEN_409
-          ? io_backendPacket_3_bits_decoded_instruction_MULTIPLY
-          : _GEN_232
-              ? io_backendPacket_2_bits_decoded_instruction_MULTIPLY
-              : _GEN_186
-                  ? io_backendPacket_1_bits_decoded_instruction_MULTIPLY
-                  : _GEN_152
-                      ? io_backendPacket_0_bits_decoded_instruction_MULTIPLY
-                      : reservation_station_13_decoded_instruction_MULTIPLY;
-      _GEN_418 =
-        _GEN_409
-          ? io_backendPacket_3_bits_decoded_instruction_IMMEDIATE
-          : _GEN_232
-              ? io_backendPacket_2_bits_decoded_instruction_IMMEDIATE
-              : _GEN_186
-                  ? io_backendPacket_1_bits_decoded_instruction_IMMEDIATE
-                  : _GEN_152
-                      ? io_backendPacket_0_bits_decoded_instruction_IMMEDIATE
-                      : reservation_station_13_decoded_instruction_IMMEDIATE;
-      _GEN_419 =
-        _GEN_409
-          ? io_backendPacket_3_bits_decoded_instruction_IS_LOAD
-          : _GEN_232
-              ? io_backendPacket_2_bits_decoded_instruction_IS_LOAD
-              : _GEN_186
-                  ? io_backendPacket_1_bits_decoded_instruction_IS_LOAD
-                  : _GEN_152
-                      ? io_backendPacket_0_bits_decoded_instruction_IS_LOAD
-                      : reservation_station_13_decoded_instruction_IS_LOAD;
-      _GEN_420 =
-        _GEN_409
-          ? io_backendPacket_3_bits_decoded_instruction_IS_STORE
-          : _GEN_232
-              ? io_backendPacket_2_bits_decoded_instruction_IS_STORE
-              : _GEN_186
-                  ? io_backendPacket_1_bits_decoded_instruction_IS_STORE
-                  : _GEN_152
-                      ? io_backendPacket_0_bits_decoded_instruction_IS_STORE
                       : reservation_station_13_decoded_instruction_IS_STORE;
-      _GEN_422 = io_backendPacket_3_valid & _GEN_421;
-      _GEN_423 =
-        _GEN_422
-          ? io_backendPacket_3_bits_decoded_instruction_RDold_valid
-          : _GEN_233
-              ? io_backendPacket_2_bits_decoded_instruction_RDold_valid
-              : _GEN_188
-                  ? io_backendPacket_1_bits_decoded_instruction_RDold_valid
-                  : _GEN_153
-                      ? io_backendPacket_0_bits_decoded_instruction_RDold_valid
-                      : reservation_station_14_decoded_instruction_RDold_valid;
-      _GEN_424 =
-        _GEN_422
+      _GEN_421 = io_backendPacket_3_valid & _GEN_420;
+      _GEN_422 =
+        _GEN_421
           ? io_backendPacket_3_bits_decoded_instruction_RD_valid
-          : _GEN_233
+          : _GEN_232
               ? io_backendPacket_2_bits_decoded_instruction_RD_valid
-              : _GEN_188
+              : _GEN_187
                   ? io_backendPacket_1_bits_decoded_instruction_RD_valid
-                  : _GEN_153
+                  : _GEN_152
                       ? io_backendPacket_0_bits_decoded_instruction_RD_valid
                       : reservation_station_14_decoded_instruction_RD_valid;
-      _GEN_425 =
-        _GEN_422
+      _GEN_423 =
+        _GEN_421
           ? io_backendPacket_3_bits_decoded_instruction_RS1_valid
-          : _GEN_233
+          : _GEN_232
               ? io_backendPacket_2_bits_decoded_instruction_RS1_valid
-              : _GEN_188
+              : _GEN_187
                   ? io_backendPacket_1_bits_decoded_instruction_RS1_valid
-                  : _GEN_153
+                  : _GEN_152
                       ? io_backendPacket_0_bits_decoded_instruction_RS1_valid
                       : reservation_station_14_decoded_instruction_RS1_valid;
-      _GEN_426 =
-        _GEN_422
+      _GEN_424 =
+        _GEN_421
           ? io_backendPacket_3_bits_decoded_instruction_RS2_valid
-          : _GEN_233
+          : _GEN_232
               ? io_backendPacket_2_bits_decoded_instruction_RS2_valid
-              : _GEN_188
+              : _GEN_187
                   ? io_backendPacket_1_bits_decoded_instruction_RS2_valid
-                  : _GEN_153
+                  : _GEN_152
                       ? io_backendPacket_0_bits_decoded_instruction_RS2_valid
                       : reservation_station_14_decoded_instruction_RS2_valid;
-      _GEN_427 =
-        _GEN_422
+      _GEN_425 =
+        _GEN_421
           ? io_backendPacket_3_bits_decoded_instruction_needs_ALU
-          : _GEN_233
+          : _GEN_232
               ? io_backendPacket_2_bits_decoded_instruction_needs_ALU
-              : _GEN_188
+              : _GEN_187
                   ? io_backendPacket_1_bits_decoded_instruction_needs_ALU
-                  : _GEN_153
+                  : _GEN_152
                       ? io_backendPacket_0_bits_decoded_instruction_needs_ALU
                       : reservation_station_14_decoded_instruction_needs_ALU;
-      _GEN_428 =
-        _GEN_422
+      _GEN_426 =
+        _GEN_421
           ? io_backendPacket_3_bits_decoded_instruction_needs_branch_unit
-          : _GEN_233
+          : _GEN_232
               ? io_backendPacket_2_bits_decoded_instruction_needs_branch_unit
-              : _GEN_188
+              : _GEN_187
                   ? io_backendPacket_1_bits_decoded_instruction_needs_branch_unit
-                  : _GEN_153
+                  : _GEN_152
                       ? io_backendPacket_0_bits_decoded_instruction_needs_branch_unit
                       : reservation_station_14_decoded_instruction_needs_branch_unit;
-      _GEN_429 =
-        _GEN_422
+      _GEN_427 =
+        _GEN_421
+          ? io_backendPacket_3_bits_decoded_instruction_needs_CSRs
+          : _GEN_232
+              ? io_backendPacket_2_bits_decoded_instruction_needs_CSRs
+              : _GEN_187
+                  ? io_backendPacket_1_bits_decoded_instruction_needs_CSRs
+                  : _GEN_152
+                      ? io_backendPacket_0_bits_decoded_instruction_needs_CSRs
+                      : reservation_station_14_decoded_instruction_needs_CSRs;
+      _GEN_428 =
+        _GEN_421
           ? io_backendPacket_3_bits_decoded_instruction_SUBTRACT
-          : _GEN_233
+          : _GEN_232
               ? io_backendPacket_2_bits_decoded_instruction_SUBTRACT
-              : _GEN_188
+              : _GEN_187
                   ? io_backendPacket_1_bits_decoded_instruction_SUBTRACT
-                  : _GEN_153
+                  : _GEN_152
                       ? io_backendPacket_0_bits_decoded_instruction_SUBTRACT
                       : reservation_station_14_decoded_instruction_SUBTRACT;
-      _GEN_430 =
-        _GEN_422
+      _GEN_429 =
+        _GEN_421
           ? io_backendPacket_3_bits_decoded_instruction_MULTIPLY
-          : _GEN_233
+          : _GEN_232
               ? io_backendPacket_2_bits_decoded_instruction_MULTIPLY
-              : _GEN_188
+              : _GEN_187
                   ? io_backendPacket_1_bits_decoded_instruction_MULTIPLY
-                  : _GEN_153
+                  : _GEN_152
                       ? io_backendPacket_0_bits_decoded_instruction_MULTIPLY
                       : reservation_station_14_decoded_instruction_MULTIPLY;
-      _GEN_431 =
-        _GEN_422
+      _GEN_430 =
+        _GEN_421
           ? io_backendPacket_3_bits_decoded_instruction_IMMEDIATE
-          : _GEN_233
+          : _GEN_232
               ? io_backendPacket_2_bits_decoded_instruction_IMMEDIATE
-              : _GEN_188
+              : _GEN_187
                   ? io_backendPacket_1_bits_decoded_instruction_IMMEDIATE
-                  : _GEN_153
+                  : _GEN_152
                       ? io_backendPacket_0_bits_decoded_instruction_IMMEDIATE
                       : reservation_station_14_decoded_instruction_IMMEDIATE;
-      _GEN_432 =
-        _GEN_422
+      _GEN_431 =
+        _GEN_421
           ? io_backendPacket_3_bits_decoded_instruction_IS_LOAD
-          : _GEN_233
+          : _GEN_232
               ? io_backendPacket_2_bits_decoded_instruction_IS_LOAD
-              : _GEN_188
+              : _GEN_187
                   ? io_backendPacket_1_bits_decoded_instruction_IS_LOAD
-                  : _GEN_153
+                  : _GEN_152
                       ? io_backendPacket_0_bits_decoded_instruction_IS_LOAD
                       : reservation_station_14_decoded_instruction_IS_LOAD;
-      _GEN_433 =
-        _GEN_422
+      _GEN_432 =
+        _GEN_421
+          ? io_backendPacket_3_bits_decoded_instruction_IS_STORE
+          : _GEN_232
+              ? io_backendPacket_2_bits_decoded_instruction_IS_STORE
+              : _GEN_187
+                  ? io_backendPacket_1_bits_decoded_instruction_IS_STORE
+                  : _GEN_152
+                      ? io_backendPacket_0_bits_decoded_instruction_IS_STORE
+                      : reservation_station_14_decoded_instruction_IS_STORE;
+      _GEN_434 = io_backendPacket_3_valid & _GEN_433;
+      _GEN_435 =
+        _GEN_434
+          ? io_backendPacket_3_bits_decoded_instruction_RD_valid
+          : _GEN_233
+              ? io_backendPacket_2_bits_decoded_instruction_RD_valid
+              : _GEN_189
+                  ? io_backendPacket_1_bits_decoded_instruction_RD_valid
+                  : _GEN_153
+                      ? io_backendPacket_0_bits_decoded_instruction_RD_valid
+                      : reservation_station_15_decoded_instruction_RD_valid;
+      _GEN_436 =
+        _GEN_434
+          ? io_backendPacket_3_bits_decoded_instruction_RS1_valid
+          : _GEN_233
+              ? io_backendPacket_2_bits_decoded_instruction_RS1_valid
+              : _GEN_189
+                  ? io_backendPacket_1_bits_decoded_instruction_RS1_valid
+                  : _GEN_153
+                      ? io_backendPacket_0_bits_decoded_instruction_RS1_valid
+                      : reservation_station_15_decoded_instruction_RS1_valid;
+      _GEN_437 =
+        _GEN_434
+          ? io_backendPacket_3_bits_decoded_instruction_RS2_valid
+          : _GEN_233
+              ? io_backendPacket_2_bits_decoded_instruction_RS2_valid
+              : _GEN_189
+                  ? io_backendPacket_1_bits_decoded_instruction_RS2_valid
+                  : _GEN_153
+                      ? io_backendPacket_0_bits_decoded_instruction_RS2_valid
+                      : reservation_station_15_decoded_instruction_RS2_valid;
+      _GEN_438 =
+        _GEN_434
+          ? io_backendPacket_3_bits_decoded_instruction_needs_ALU
+          : _GEN_233
+              ? io_backendPacket_2_bits_decoded_instruction_needs_ALU
+              : _GEN_189
+                  ? io_backendPacket_1_bits_decoded_instruction_needs_ALU
+                  : _GEN_153
+                      ? io_backendPacket_0_bits_decoded_instruction_needs_ALU
+                      : reservation_station_15_decoded_instruction_needs_ALU;
+      _GEN_439 =
+        _GEN_434
+          ? io_backendPacket_3_bits_decoded_instruction_needs_branch_unit
+          : _GEN_233
+              ? io_backendPacket_2_bits_decoded_instruction_needs_branch_unit
+              : _GEN_189
+                  ? io_backendPacket_1_bits_decoded_instruction_needs_branch_unit
+                  : _GEN_153
+                      ? io_backendPacket_0_bits_decoded_instruction_needs_branch_unit
+                      : reservation_station_15_decoded_instruction_needs_branch_unit;
+      _GEN_440 =
+        _GEN_434
+          ? io_backendPacket_3_bits_decoded_instruction_needs_CSRs
+          : _GEN_233
+              ? io_backendPacket_2_bits_decoded_instruction_needs_CSRs
+              : _GEN_189
+                  ? io_backendPacket_1_bits_decoded_instruction_needs_CSRs
+                  : _GEN_153
+                      ? io_backendPacket_0_bits_decoded_instruction_needs_CSRs
+                      : reservation_station_15_decoded_instruction_needs_CSRs;
+      _GEN_441 =
+        _GEN_434
+          ? io_backendPacket_3_bits_decoded_instruction_SUBTRACT
+          : _GEN_233
+              ? io_backendPacket_2_bits_decoded_instruction_SUBTRACT
+              : _GEN_189
+                  ? io_backendPacket_1_bits_decoded_instruction_SUBTRACT
+                  : _GEN_153
+                      ? io_backendPacket_0_bits_decoded_instruction_SUBTRACT
+                      : reservation_station_15_decoded_instruction_SUBTRACT;
+      _GEN_442 =
+        _GEN_434
+          ? io_backendPacket_3_bits_decoded_instruction_MULTIPLY
+          : _GEN_233
+              ? io_backendPacket_2_bits_decoded_instruction_MULTIPLY
+              : _GEN_189
+                  ? io_backendPacket_1_bits_decoded_instruction_MULTIPLY
+                  : _GEN_153
+                      ? io_backendPacket_0_bits_decoded_instruction_MULTIPLY
+                      : reservation_station_15_decoded_instruction_MULTIPLY;
+      _GEN_443 =
+        _GEN_434
+          ? io_backendPacket_3_bits_decoded_instruction_IMMEDIATE
+          : _GEN_233
+              ? io_backendPacket_2_bits_decoded_instruction_IMMEDIATE
+              : _GEN_189
+                  ? io_backendPacket_1_bits_decoded_instruction_IMMEDIATE
+                  : _GEN_153
+                      ? io_backendPacket_0_bits_decoded_instruction_IMMEDIATE
+                      : reservation_station_15_decoded_instruction_IMMEDIATE;
+      _GEN_444 =
+        _GEN_434
+          ? io_backendPacket_3_bits_decoded_instruction_IS_LOAD
+          : _GEN_233
+              ? io_backendPacket_2_bits_decoded_instruction_IS_LOAD
+              : _GEN_189
+                  ? io_backendPacket_1_bits_decoded_instruction_IS_LOAD
+                  : _GEN_153
+                      ? io_backendPacket_0_bits_decoded_instruction_IS_LOAD
+                      : reservation_station_15_decoded_instruction_IS_LOAD;
+      _GEN_445 =
+        _GEN_434
           ? io_backendPacket_3_bits_decoded_instruction_IS_STORE
           : _GEN_233
               ? io_backendPacket_2_bits_decoded_instruction_IS_STORE
-              : _GEN_188
+              : _GEN_189
                   ? io_backendPacket_1_bits_decoded_instruction_IS_STORE
                   : _GEN_153
                       ? io_backendPacket_0_bits_decoded_instruction_IS_STORE
-                      : reservation_station_14_decoded_instruction_IS_STORE;
-      _GEN_435 = io_backendPacket_3_valid & _GEN_434;
-      _GEN_436 =
-        _GEN_435
-          ? io_backendPacket_3_bits_decoded_instruction_RDold_valid
-          : _GEN_234
-              ? io_backendPacket_2_bits_decoded_instruction_RDold_valid
-              : _GEN_190
-                  ? io_backendPacket_1_bits_decoded_instruction_RDold_valid
-                  : _GEN_154
-                      ? io_backendPacket_0_bits_decoded_instruction_RDold_valid
-                      : reservation_station_15_decoded_instruction_RDold_valid;
-      _GEN_437 =
-        _GEN_435
-          ? io_backendPacket_3_bits_decoded_instruction_RD_valid
-          : _GEN_234
-              ? io_backendPacket_2_bits_decoded_instruction_RD_valid
-              : _GEN_190
-                  ? io_backendPacket_1_bits_decoded_instruction_RD_valid
-                  : _GEN_154
-                      ? io_backendPacket_0_bits_decoded_instruction_RD_valid
-                      : reservation_station_15_decoded_instruction_RD_valid;
-      _GEN_438 =
-        _GEN_435
-          ? io_backendPacket_3_bits_decoded_instruction_RS1_valid
-          : _GEN_234
-              ? io_backendPacket_2_bits_decoded_instruction_RS1_valid
-              : _GEN_190
-                  ? io_backendPacket_1_bits_decoded_instruction_RS1_valid
-                  : _GEN_154
-                      ? io_backendPacket_0_bits_decoded_instruction_RS1_valid
-                      : reservation_station_15_decoded_instruction_RS1_valid;
-      _GEN_439 =
-        _GEN_435
-          ? io_backendPacket_3_bits_decoded_instruction_RS2_valid
-          : _GEN_234
-              ? io_backendPacket_2_bits_decoded_instruction_RS2_valid
-              : _GEN_190
-                  ? io_backendPacket_1_bits_decoded_instruction_RS2_valid
-                  : _GEN_154
-                      ? io_backendPacket_0_bits_decoded_instruction_RS2_valid
-                      : reservation_station_15_decoded_instruction_RS2_valid;
-      _GEN_440 =
-        _GEN_435
-          ? io_backendPacket_3_bits_decoded_instruction_needs_ALU
-          : _GEN_234
-              ? io_backendPacket_2_bits_decoded_instruction_needs_ALU
-              : _GEN_190
-                  ? io_backendPacket_1_bits_decoded_instruction_needs_ALU
-                  : _GEN_154
-                      ? io_backendPacket_0_bits_decoded_instruction_needs_ALU
-                      : reservation_station_15_decoded_instruction_needs_ALU;
-      _GEN_441 =
-        _GEN_435
-          ? io_backendPacket_3_bits_decoded_instruction_needs_branch_unit
-          : _GEN_234
-              ? io_backendPacket_2_bits_decoded_instruction_needs_branch_unit
-              : _GEN_190
-                  ? io_backendPacket_1_bits_decoded_instruction_needs_branch_unit
-                  : _GEN_154
-                      ? io_backendPacket_0_bits_decoded_instruction_needs_branch_unit
-                      : reservation_station_15_decoded_instruction_needs_branch_unit;
-      _GEN_442 =
-        _GEN_435
-          ? io_backendPacket_3_bits_decoded_instruction_SUBTRACT
-          : _GEN_234
-              ? io_backendPacket_2_bits_decoded_instruction_SUBTRACT
-              : _GEN_190
-                  ? io_backendPacket_1_bits_decoded_instruction_SUBTRACT
-                  : _GEN_154
-                      ? io_backendPacket_0_bits_decoded_instruction_SUBTRACT
-                      : reservation_station_15_decoded_instruction_SUBTRACT;
-      _GEN_443 =
-        _GEN_435
-          ? io_backendPacket_3_bits_decoded_instruction_MULTIPLY
-          : _GEN_234
-              ? io_backendPacket_2_bits_decoded_instruction_MULTIPLY
-              : _GEN_190
-                  ? io_backendPacket_1_bits_decoded_instruction_MULTIPLY
-                  : _GEN_154
-                      ? io_backendPacket_0_bits_decoded_instruction_MULTIPLY
-                      : reservation_station_15_decoded_instruction_MULTIPLY;
-      _GEN_444 =
-        _GEN_435
-          ? io_backendPacket_3_bits_decoded_instruction_IMMEDIATE
-          : _GEN_234
-              ? io_backendPacket_2_bits_decoded_instruction_IMMEDIATE
-              : _GEN_190
-                  ? io_backendPacket_1_bits_decoded_instruction_IMMEDIATE
-                  : _GEN_154
-                      ? io_backendPacket_0_bits_decoded_instruction_IMMEDIATE
-                      : reservation_station_15_decoded_instruction_IMMEDIATE;
-      _GEN_445 =
-        _GEN_435
-          ? io_backendPacket_3_bits_decoded_instruction_IS_LOAD
-          : _GEN_234
-              ? io_backendPacket_2_bits_decoded_instruction_IS_LOAD
-              : _GEN_190
-                  ? io_backendPacket_1_bits_decoded_instruction_IS_LOAD
-                  : _GEN_154
-                      ? io_backendPacket_0_bits_decoded_instruction_IS_LOAD
-                      : reservation_station_15_decoded_instruction_IS_LOAD;
-      _GEN_446 =
-        _GEN_435
-          ? io_backendPacket_3_bits_decoded_instruction_IS_STORE
-          : _GEN_234
-              ? io_backendPacket_2_bits_decoded_instruction_IS_STORE
-              : _GEN_190
-                  ? io_backendPacket_1_bits_decoded_instruction_IS_STORE
-                  : _GEN_154
-                      ? io_backendPacket_0_bits_decoded_instruction_IS_STORE
                       : reservation_station_15_decoded_instruction_IS_STORE;
-      _GEN_448 = io_backendPacket_3_valid & _GEN_447;
-      _GEN_449 =
-        _GEN_448
-          ? io_backendPacket_3_bits_decoded_instruction_RDold_valid
-          : _GEN_235
-              ? io_backendPacket_2_bits_decoded_instruction_RDold_valid
-              : _GEN_192
-                  ? io_backendPacket_1_bits_decoded_instruction_RDold_valid
-                  : _GEN_155
-                      ? io_backendPacket_0_bits_decoded_instruction_RDold_valid
-                      : reservation_station_16_decoded_instruction_RDold_valid;
-      _GEN_450 =
-        _GEN_448
+      _GEN_447 = io_backendPacket_3_valid & _GEN_446;
+      _GEN_448 =
+        _GEN_447
           ? io_backendPacket_3_bits_decoded_instruction_RD_valid
-          : _GEN_235
+          : _GEN_234
               ? io_backendPacket_2_bits_decoded_instruction_RD_valid
-              : _GEN_192
+              : _GEN_191
                   ? io_backendPacket_1_bits_decoded_instruction_RD_valid
-                  : _GEN_155
+                  : _GEN_154
                       ? io_backendPacket_0_bits_decoded_instruction_RD_valid
                       : reservation_station_16_decoded_instruction_RD_valid;
-      _GEN_451 =
-        _GEN_448
+      _GEN_449 =
+        _GEN_447
           ? io_backendPacket_3_bits_decoded_instruction_RS1_valid
-          : _GEN_235
+          : _GEN_234
               ? io_backendPacket_2_bits_decoded_instruction_RS1_valid
-              : _GEN_192
+              : _GEN_191
                   ? io_backendPacket_1_bits_decoded_instruction_RS1_valid
-                  : _GEN_155
+                  : _GEN_154
                       ? io_backendPacket_0_bits_decoded_instruction_RS1_valid
                       : reservation_station_16_decoded_instruction_RS1_valid;
-      _GEN_452 =
-        _GEN_448
+      _GEN_450 =
+        _GEN_447
           ? io_backendPacket_3_bits_decoded_instruction_RS2_valid
-          : _GEN_235
+          : _GEN_234
               ? io_backendPacket_2_bits_decoded_instruction_RS2_valid
-              : _GEN_192
+              : _GEN_191
                   ? io_backendPacket_1_bits_decoded_instruction_RS2_valid
-                  : _GEN_155
+                  : _GEN_154
                       ? io_backendPacket_0_bits_decoded_instruction_RS2_valid
                       : reservation_station_16_decoded_instruction_RS2_valid;
-      _GEN_453 =
-        _GEN_448
+      _GEN_451 =
+        _GEN_447
           ? io_backendPacket_3_bits_decoded_instruction_needs_ALU
-          : _GEN_235
+          : _GEN_234
               ? io_backendPacket_2_bits_decoded_instruction_needs_ALU
-              : _GEN_192
+              : _GEN_191
                   ? io_backendPacket_1_bits_decoded_instruction_needs_ALU
-                  : _GEN_155
+                  : _GEN_154
                       ? io_backendPacket_0_bits_decoded_instruction_needs_ALU
                       : reservation_station_16_decoded_instruction_needs_ALU;
-      _GEN_454 =
-        _GEN_448
+      _GEN_452 =
+        _GEN_447
           ? io_backendPacket_3_bits_decoded_instruction_needs_branch_unit
-          : _GEN_235
+          : _GEN_234
               ? io_backendPacket_2_bits_decoded_instruction_needs_branch_unit
-              : _GEN_192
+              : _GEN_191
                   ? io_backendPacket_1_bits_decoded_instruction_needs_branch_unit
-                  : _GEN_155
+                  : _GEN_154
                       ? io_backendPacket_0_bits_decoded_instruction_needs_branch_unit
                       : reservation_station_16_decoded_instruction_needs_branch_unit;
-      _GEN_455 =
-        _GEN_448
+      _GEN_453 =
+        _GEN_447
+          ? io_backendPacket_3_bits_decoded_instruction_needs_CSRs
+          : _GEN_234
+              ? io_backendPacket_2_bits_decoded_instruction_needs_CSRs
+              : _GEN_191
+                  ? io_backendPacket_1_bits_decoded_instruction_needs_CSRs
+                  : _GEN_154
+                      ? io_backendPacket_0_bits_decoded_instruction_needs_CSRs
+                      : reservation_station_16_decoded_instruction_needs_CSRs;
+      _GEN_454 =
+        _GEN_447
           ? io_backendPacket_3_bits_decoded_instruction_SUBTRACT
-          : _GEN_235
+          : _GEN_234
               ? io_backendPacket_2_bits_decoded_instruction_SUBTRACT
-              : _GEN_192
+              : _GEN_191
                   ? io_backendPacket_1_bits_decoded_instruction_SUBTRACT
-                  : _GEN_155
+                  : _GEN_154
                       ? io_backendPacket_0_bits_decoded_instruction_SUBTRACT
                       : reservation_station_16_decoded_instruction_SUBTRACT;
-      _GEN_456 =
-        _GEN_448
+      _GEN_455 =
+        _GEN_447
           ? io_backendPacket_3_bits_decoded_instruction_MULTIPLY
-          : _GEN_235
+          : _GEN_234
               ? io_backendPacket_2_bits_decoded_instruction_MULTIPLY
-              : _GEN_192
+              : _GEN_191
                   ? io_backendPacket_1_bits_decoded_instruction_MULTIPLY
-                  : _GEN_155
+                  : _GEN_154
                       ? io_backendPacket_0_bits_decoded_instruction_MULTIPLY
                       : reservation_station_16_decoded_instruction_MULTIPLY;
-      _GEN_457 =
-        _GEN_448
+      _GEN_456 =
+        _GEN_447
           ? io_backendPacket_3_bits_decoded_instruction_IMMEDIATE
-          : _GEN_235
+          : _GEN_234
               ? io_backendPacket_2_bits_decoded_instruction_IMMEDIATE
-              : _GEN_192
+              : _GEN_191
                   ? io_backendPacket_1_bits_decoded_instruction_IMMEDIATE
-                  : _GEN_155
+                  : _GEN_154
                       ? io_backendPacket_0_bits_decoded_instruction_IMMEDIATE
                       : reservation_station_16_decoded_instruction_IMMEDIATE;
-      _GEN_458 =
-        _GEN_448
+      _GEN_457 =
+        _GEN_447
           ? io_backendPacket_3_bits_decoded_instruction_IS_LOAD
-          : _GEN_235
+          : _GEN_234
               ? io_backendPacket_2_bits_decoded_instruction_IS_LOAD
-              : _GEN_192
+              : _GEN_191
                   ? io_backendPacket_1_bits_decoded_instruction_IS_LOAD
-                  : _GEN_155
+                  : _GEN_154
                       ? io_backendPacket_0_bits_decoded_instruction_IS_LOAD
                       : reservation_station_16_decoded_instruction_IS_LOAD;
-      _GEN_459 =
-        _GEN_448
+      _GEN_458 =
+        _GEN_447
+          ? io_backendPacket_3_bits_decoded_instruction_IS_STORE
+          : _GEN_234
+              ? io_backendPacket_2_bits_decoded_instruction_IS_STORE
+              : _GEN_191
+                  ? io_backendPacket_1_bits_decoded_instruction_IS_STORE
+                  : _GEN_154
+                      ? io_backendPacket_0_bits_decoded_instruction_IS_STORE
+                      : reservation_station_16_decoded_instruction_IS_STORE;
+      _GEN_460 = io_backendPacket_3_valid & _GEN_459;
+      _GEN_461 =
+        _GEN_460
+          ? io_backendPacket_3_bits_decoded_instruction_RD_valid
+          : _GEN_235
+              ? io_backendPacket_2_bits_decoded_instruction_RD_valid
+              : _GEN_193
+                  ? io_backendPacket_1_bits_decoded_instruction_RD_valid
+                  : _GEN_155
+                      ? io_backendPacket_0_bits_decoded_instruction_RD_valid
+                      : reservation_station_17_decoded_instruction_RD_valid;
+      _GEN_462 =
+        _GEN_460
+          ? io_backendPacket_3_bits_decoded_instruction_RS1_valid
+          : _GEN_235
+              ? io_backendPacket_2_bits_decoded_instruction_RS1_valid
+              : _GEN_193
+                  ? io_backendPacket_1_bits_decoded_instruction_RS1_valid
+                  : _GEN_155
+                      ? io_backendPacket_0_bits_decoded_instruction_RS1_valid
+                      : reservation_station_17_decoded_instruction_RS1_valid;
+      _GEN_463 =
+        _GEN_460
+          ? io_backendPacket_3_bits_decoded_instruction_RS2_valid
+          : _GEN_235
+              ? io_backendPacket_2_bits_decoded_instruction_RS2_valid
+              : _GEN_193
+                  ? io_backendPacket_1_bits_decoded_instruction_RS2_valid
+                  : _GEN_155
+                      ? io_backendPacket_0_bits_decoded_instruction_RS2_valid
+                      : reservation_station_17_decoded_instruction_RS2_valid;
+      _GEN_464 =
+        _GEN_460
+          ? io_backendPacket_3_bits_decoded_instruction_needs_ALU
+          : _GEN_235
+              ? io_backendPacket_2_bits_decoded_instruction_needs_ALU
+              : _GEN_193
+                  ? io_backendPacket_1_bits_decoded_instruction_needs_ALU
+                  : _GEN_155
+                      ? io_backendPacket_0_bits_decoded_instruction_needs_ALU
+                      : reservation_station_17_decoded_instruction_needs_ALU;
+      _GEN_465 =
+        _GEN_460
+          ? io_backendPacket_3_bits_decoded_instruction_needs_branch_unit
+          : _GEN_235
+              ? io_backendPacket_2_bits_decoded_instruction_needs_branch_unit
+              : _GEN_193
+                  ? io_backendPacket_1_bits_decoded_instruction_needs_branch_unit
+                  : _GEN_155
+                      ? io_backendPacket_0_bits_decoded_instruction_needs_branch_unit
+                      : reservation_station_17_decoded_instruction_needs_branch_unit;
+      _GEN_466 =
+        _GEN_460
+          ? io_backendPacket_3_bits_decoded_instruction_needs_CSRs
+          : _GEN_235
+              ? io_backendPacket_2_bits_decoded_instruction_needs_CSRs
+              : _GEN_193
+                  ? io_backendPacket_1_bits_decoded_instruction_needs_CSRs
+                  : _GEN_155
+                      ? io_backendPacket_0_bits_decoded_instruction_needs_CSRs
+                      : reservation_station_17_decoded_instruction_needs_CSRs;
+      _GEN_467 =
+        _GEN_460
+          ? io_backendPacket_3_bits_decoded_instruction_SUBTRACT
+          : _GEN_235
+              ? io_backendPacket_2_bits_decoded_instruction_SUBTRACT
+              : _GEN_193
+                  ? io_backendPacket_1_bits_decoded_instruction_SUBTRACT
+                  : _GEN_155
+                      ? io_backendPacket_0_bits_decoded_instruction_SUBTRACT
+                      : reservation_station_17_decoded_instruction_SUBTRACT;
+      _GEN_468 =
+        _GEN_460
+          ? io_backendPacket_3_bits_decoded_instruction_MULTIPLY
+          : _GEN_235
+              ? io_backendPacket_2_bits_decoded_instruction_MULTIPLY
+              : _GEN_193
+                  ? io_backendPacket_1_bits_decoded_instruction_MULTIPLY
+                  : _GEN_155
+                      ? io_backendPacket_0_bits_decoded_instruction_MULTIPLY
+                      : reservation_station_17_decoded_instruction_MULTIPLY;
+      _GEN_469 =
+        _GEN_460
+          ? io_backendPacket_3_bits_decoded_instruction_IMMEDIATE
+          : _GEN_235
+              ? io_backendPacket_2_bits_decoded_instruction_IMMEDIATE
+              : _GEN_193
+                  ? io_backendPacket_1_bits_decoded_instruction_IMMEDIATE
+                  : _GEN_155
+                      ? io_backendPacket_0_bits_decoded_instruction_IMMEDIATE
+                      : reservation_station_17_decoded_instruction_IMMEDIATE;
+      _GEN_470 =
+        _GEN_460
+          ? io_backendPacket_3_bits_decoded_instruction_IS_LOAD
+          : _GEN_235
+              ? io_backendPacket_2_bits_decoded_instruction_IS_LOAD
+              : _GEN_193
+                  ? io_backendPacket_1_bits_decoded_instruction_IS_LOAD
+                  : _GEN_155
+                      ? io_backendPacket_0_bits_decoded_instruction_IS_LOAD
+                      : reservation_station_17_decoded_instruction_IS_LOAD;
+      _GEN_471 =
+        _GEN_460
           ? io_backendPacket_3_bits_decoded_instruction_IS_STORE
           : _GEN_235
               ? io_backendPacket_2_bits_decoded_instruction_IS_STORE
-              : _GEN_192
+              : _GEN_193
                   ? io_backendPacket_1_bits_decoded_instruction_IS_STORE
                   : _GEN_155
                       ? io_backendPacket_0_bits_decoded_instruction_IS_STORE
-                      : reservation_station_16_decoded_instruction_IS_STORE;
-      _GEN_461 = io_backendPacket_3_valid & _GEN_460;
-      _GEN_462 =
-        _GEN_461
-          ? io_backendPacket_3_bits_decoded_instruction_RDold_valid
-          : _GEN_236
-              ? io_backendPacket_2_bits_decoded_instruction_RDold_valid
-              : _GEN_194
-                  ? io_backendPacket_1_bits_decoded_instruction_RDold_valid
-                  : _GEN_156
-                      ? io_backendPacket_0_bits_decoded_instruction_RDold_valid
-                      : reservation_station_17_decoded_instruction_RDold_valid;
-      _GEN_463 =
-        _GEN_461
-          ? io_backendPacket_3_bits_decoded_instruction_RD_valid
-          : _GEN_236
-              ? io_backendPacket_2_bits_decoded_instruction_RD_valid
-              : _GEN_194
-                  ? io_backendPacket_1_bits_decoded_instruction_RD_valid
-                  : _GEN_156
-                      ? io_backendPacket_0_bits_decoded_instruction_RD_valid
-                      : reservation_station_17_decoded_instruction_RD_valid;
-      _GEN_464 =
-        _GEN_461
-          ? io_backendPacket_3_bits_decoded_instruction_RS1_valid
-          : _GEN_236
-              ? io_backendPacket_2_bits_decoded_instruction_RS1_valid
-              : _GEN_194
-                  ? io_backendPacket_1_bits_decoded_instruction_RS1_valid
-                  : _GEN_156
-                      ? io_backendPacket_0_bits_decoded_instruction_RS1_valid
-                      : reservation_station_17_decoded_instruction_RS1_valid;
-      _GEN_465 =
-        _GEN_461
-          ? io_backendPacket_3_bits_decoded_instruction_RS2_valid
-          : _GEN_236
-              ? io_backendPacket_2_bits_decoded_instruction_RS2_valid
-              : _GEN_194
-                  ? io_backendPacket_1_bits_decoded_instruction_RS2_valid
-                  : _GEN_156
-                      ? io_backendPacket_0_bits_decoded_instruction_RS2_valid
-                      : reservation_station_17_decoded_instruction_RS2_valid;
-      _GEN_466 =
-        _GEN_461
-          ? io_backendPacket_3_bits_decoded_instruction_needs_ALU
-          : _GEN_236
-              ? io_backendPacket_2_bits_decoded_instruction_needs_ALU
-              : _GEN_194
-                  ? io_backendPacket_1_bits_decoded_instruction_needs_ALU
-                  : _GEN_156
-                      ? io_backendPacket_0_bits_decoded_instruction_needs_ALU
-                      : reservation_station_17_decoded_instruction_needs_ALU;
-      _GEN_467 =
-        _GEN_461
-          ? io_backendPacket_3_bits_decoded_instruction_needs_branch_unit
-          : _GEN_236
-              ? io_backendPacket_2_bits_decoded_instruction_needs_branch_unit
-              : _GEN_194
-                  ? io_backendPacket_1_bits_decoded_instruction_needs_branch_unit
-                  : _GEN_156
-                      ? io_backendPacket_0_bits_decoded_instruction_needs_branch_unit
-                      : reservation_station_17_decoded_instruction_needs_branch_unit;
-      _GEN_468 =
-        _GEN_461
-          ? io_backendPacket_3_bits_decoded_instruction_SUBTRACT
-          : _GEN_236
-              ? io_backendPacket_2_bits_decoded_instruction_SUBTRACT
-              : _GEN_194
-                  ? io_backendPacket_1_bits_decoded_instruction_SUBTRACT
-                  : _GEN_156
-                      ? io_backendPacket_0_bits_decoded_instruction_SUBTRACT
-                      : reservation_station_17_decoded_instruction_SUBTRACT;
-      _GEN_469 =
-        _GEN_461
-          ? io_backendPacket_3_bits_decoded_instruction_MULTIPLY
-          : _GEN_236
-              ? io_backendPacket_2_bits_decoded_instruction_MULTIPLY
-              : _GEN_194
-                  ? io_backendPacket_1_bits_decoded_instruction_MULTIPLY
-                  : _GEN_156
-                      ? io_backendPacket_0_bits_decoded_instruction_MULTIPLY
-                      : reservation_station_17_decoded_instruction_MULTIPLY;
-      _GEN_470 =
-        _GEN_461
-          ? io_backendPacket_3_bits_decoded_instruction_IMMEDIATE
-          : _GEN_236
-              ? io_backendPacket_2_bits_decoded_instruction_IMMEDIATE
-              : _GEN_194
-                  ? io_backendPacket_1_bits_decoded_instruction_IMMEDIATE
-                  : _GEN_156
-                      ? io_backendPacket_0_bits_decoded_instruction_IMMEDIATE
-                      : reservation_station_17_decoded_instruction_IMMEDIATE;
-      _GEN_471 =
-        _GEN_461
-          ? io_backendPacket_3_bits_decoded_instruction_IS_LOAD
-          : _GEN_236
-              ? io_backendPacket_2_bits_decoded_instruction_IS_LOAD
-              : _GEN_194
-                  ? io_backendPacket_1_bits_decoded_instruction_IS_LOAD
-                  : _GEN_156
-                      ? io_backendPacket_0_bits_decoded_instruction_IS_LOAD
-                      : reservation_station_17_decoded_instruction_IS_LOAD;
-      _GEN_472 =
-        _GEN_461
-          ? io_backendPacket_3_bits_decoded_instruction_IS_STORE
-          : _GEN_236
-              ? io_backendPacket_2_bits_decoded_instruction_IS_STORE
-              : _GEN_194
-                  ? io_backendPacket_1_bits_decoded_instruction_IS_STORE
-                  : _GEN_156
-                      ? io_backendPacket_0_bits_decoded_instruction_IS_STORE
                       : reservation_station_17_decoded_instruction_IS_STORE;
-      _GEN_474 = io_backendPacket_3_valid & _GEN_473;
-      _GEN_475 =
-        _GEN_474
-          ? io_backendPacket_3_bits_decoded_instruction_RDold_valid
-          : _GEN_237
-              ? io_backendPacket_2_bits_decoded_instruction_RDold_valid
-              : _GEN_196
-                  ? io_backendPacket_1_bits_decoded_instruction_RDold_valid
-                  : _GEN_157
-                      ? io_backendPacket_0_bits_decoded_instruction_RDold_valid
-                      : reservation_station_18_decoded_instruction_RDold_valid;
-      _GEN_476 =
-        _GEN_474
+      _GEN_473 = io_backendPacket_3_valid & _GEN_472;
+      _GEN_474 =
+        _GEN_473
           ? io_backendPacket_3_bits_decoded_instruction_RD_valid
-          : _GEN_237
+          : _GEN_236
               ? io_backendPacket_2_bits_decoded_instruction_RD_valid
-              : _GEN_196
+              : _GEN_195
                   ? io_backendPacket_1_bits_decoded_instruction_RD_valid
-                  : _GEN_157
+                  : _GEN_156
                       ? io_backendPacket_0_bits_decoded_instruction_RD_valid
                       : reservation_station_18_decoded_instruction_RD_valid;
-      _GEN_477 =
-        _GEN_474
+      _GEN_475 =
+        _GEN_473
           ? io_backendPacket_3_bits_decoded_instruction_RS1_valid
-          : _GEN_237
+          : _GEN_236
               ? io_backendPacket_2_bits_decoded_instruction_RS1_valid
-              : _GEN_196
+              : _GEN_195
                   ? io_backendPacket_1_bits_decoded_instruction_RS1_valid
-                  : _GEN_157
+                  : _GEN_156
                       ? io_backendPacket_0_bits_decoded_instruction_RS1_valid
                       : reservation_station_18_decoded_instruction_RS1_valid;
-      _GEN_478 =
-        _GEN_474
+      _GEN_476 =
+        _GEN_473
           ? io_backendPacket_3_bits_decoded_instruction_RS2_valid
-          : _GEN_237
+          : _GEN_236
               ? io_backendPacket_2_bits_decoded_instruction_RS2_valid
-              : _GEN_196
+              : _GEN_195
                   ? io_backendPacket_1_bits_decoded_instruction_RS2_valid
-                  : _GEN_157
+                  : _GEN_156
                       ? io_backendPacket_0_bits_decoded_instruction_RS2_valid
                       : reservation_station_18_decoded_instruction_RS2_valid;
-      _GEN_479 =
-        _GEN_474
+      _GEN_477 =
+        _GEN_473
           ? io_backendPacket_3_bits_decoded_instruction_needs_ALU
-          : _GEN_237
+          : _GEN_236
               ? io_backendPacket_2_bits_decoded_instruction_needs_ALU
-              : _GEN_196
+              : _GEN_195
                   ? io_backendPacket_1_bits_decoded_instruction_needs_ALU
-                  : _GEN_157
+                  : _GEN_156
                       ? io_backendPacket_0_bits_decoded_instruction_needs_ALU
                       : reservation_station_18_decoded_instruction_needs_ALU;
-      _GEN_480 =
-        _GEN_474
+      _GEN_478 =
+        _GEN_473
           ? io_backendPacket_3_bits_decoded_instruction_needs_branch_unit
-          : _GEN_237
+          : _GEN_236
               ? io_backendPacket_2_bits_decoded_instruction_needs_branch_unit
-              : _GEN_196
+              : _GEN_195
                   ? io_backendPacket_1_bits_decoded_instruction_needs_branch_unit
-                  : _GEN_157
+                  : _GEN_156
                       ? io_backendPacket_0_bits_decoded_instruction_needs_branch_unit
                       : reservation_station_18_decoded_instruction_needs_branch_unit;
-      _GEN_481 =
-        _GEN_474
+      _GEN_479 =
+        _GEN_473
+          ? io_backendPacket_3_bits_decoded_instruction_needs_CSRs
+          : _GEN_236
+              ? io_backendPacket_2_bits_decoded_instruction_needs_CSRs
+              : _GEN_195
+                  ? io_backendPacket_1_bits_decoded_instruction_needs_CSRs
+                  : _GEN_156
+                      ? io_backendPacket_0_bits_decoded_instruction_needs_CSRs
+                      : reservation_station_18_decoded_instruction_needs_CSRs;
+      _GEN_480 =
+        _GEN_473
           ? io_backendPacket_3_bits_decoded_instruction_SUBTRACT
-          : _GEN_237
+          : _GEN_236
               ? io_backendPacket_2_bits_decoded_instruction_SUBTRACT
-              : _GEN_196
+              : _GEN_195
                   ? io_backendPacket_1_bits_decoded_instruction_SUBTRACT
-                  : _GEN_157
+                  : _GEN_156
                       ? io_backendPacket_0_bits_decoded_instruction_SUBTRACT
                       : reservation_station_18_decoded_instruction_SUBTRACT;
-      _GEN_482 =
-        _GEN_474
+      _GEN_481 =
+        _GEN_473
           ? io_backendPacket_3_bits_decoded_instruction_MULTIPLY
-          : _GEN_237
+          : _GEN_236
               ? io_backendPacket_2_bits_decoded_instruction_MULTIPLY
-              : _GEN_196
+              : _GEN_195
                   ? io_backendPacket_1_bits_decoded_instruction_MULTIPLY
-                  : _GEN_157
+                  : _GEN_156
                       ? io_backendPacket_0_bits_decoded_instruction_MULTIPLY
                       : reservation_station_18_decoded_instruction_MULTIPLY;
-      _GEN_483 =
-        _GEN_474
+      _GEN_482 =
+        _GEN_473
           ? io_backendPacket_3_bits_decoded_instruction_IMMEDIATE
-          : _GEN_237
+          : _GEN_236
               ? io_backendPacket_2_bits_decoded_instruction_IMMEDIATE
-              : _GEN_196
+              : _GEN_195
                   ? io_backendPacket_1_bits_decoded_instruction_IMMEDIATE
-                  : _GEN_157
+                  : _GEN_156
                       ? io_backendPacket_0_bits_decoded_instruction_IMMEDIATE
                       : reservation_station_18_decoded_instruction_IMMEDIATE;
-      _GEN_484 =
-        _GEN_474
+      _GEN_483 =
+        _GEN_473
           ? io_backendPacket_3_bits_decoded_instruction_IS_LOAD
-          : _GEN_237
+          : _GEN_236
               ? io_backendPacket_2_bits_decoded_instruction_IS_LOAD
-              : _GEN_196
+              : _GEN_195
                   ? io_backendPacket_1_bits_decoded_instruction_IS_LOAD
-                  : _GEN_157
+                  : _GEN_156
                       ? io_backendPacket_0_bits_decoded_instruction_IS_LOAD
                       : reservation_station_18_decoded_instruction_IS_LOAD;
-      _GEN_485 =
-        _GEN_474
+      _GEN_484 =
+        _GEN_473
+          ? io_backendPacket_3_bits_decoded_instruction_IS_STORE
+          : _GEN_236
+              ? io_backendPacket_2_bits_decoded_instruction_IS_STORE
+              : _GEN_195
+                  ? io_backendPacket_1_bits_decoded_instruction_IS_STORE
+                  : _GEN_156
+                      ? io_backendPacket_0_bits_decoded_instruction_IS_STORE
+                      : reservation_station_18_decoded_instruction_IS_STORE;
+      _GEN_486 = io_backendPacket_3_valid & _GEN_485;
+      _GEN_487 =
+        _GEN_486
+          ? io_backendPacket_3_bits_decoded_instruction_RD_valid
+          : _GEN_237
+              ? io_backendPacket_2_bits_decoded_instruction_RD_valid
+              : _GEN_197
+                  ? io_backendPacket_1_bits_decoded_instruction_RD_valid
+                  : _GEN_157
+                      ? io_backendPacket_0_bits_decoded_instruction_RD_valid
+                      : reservation_station_19_decoded_instruction_RD_valid;
+      _GEN_488 =
+        _GEN_486
+          ? io_backendPacket_3_bits_decoded_instruction_RS1_valid
+          : _GEN_237
+              ? io_backendPacket_2_bits_decoded_instruction_RS1_valid
+              : _GEN_197
+                  ? io_backendPacket_1_bits_decoded_instruction_RS1_valid
+                  : _GEN_157
+                      ? io_backendPacket_0_bits_decoded_instruction_RS1_valid
+                      : reservation_station_19_decoded_instruction_RS1_valid;
+      _GEN_489 =
+        _GEN_486
+          ? io_backendPacket_3_bits_decoded_instruction_RS2_valid
+          : _GEN_237
+              ? io_backendPacket_2_bits_decoded_instruction_RS2_valid
+              : _GEN_197
+                  ? io_backendPacket_1_bits_decoded_instruction_RS2_valid
+                  : _GEN_157
+                      ? io_backendPacket_0_bits_decoded_instruction_RS2_valid
+                      : reservation_station_19_decoded_instruction_RS2_valid;
+      _GEN_490 =
+        _GEN_486
+          ? io_backendPacket_3_bits_decoded_instruction_needs_ALU
+          : _GEN_237
+              ? io_backendPacket_2_bits_decoded_instruction_needs_ALU
+              : _GEN_197
+                  ? io_backendPacket_1_bits_decoded_instruction_needs_ALU
+                  : _GEN_157
+                      ? io_backendPacket_0_bits_decoded_instruction_needs_ALU
+                      : reservation_station_19_decoded_instruction_needs_ALU;
+      _GEN_491 =
+        _GEN_486
+          ? io_backendPacket_3_bits_decoded_instruction_needs_branch_unit
+          : _GEN_237
+              ? io_backendPacket_2_bits_decoded_instruction_needs_branch_unit
+              : _GEN_197
+                  ? io_backendPacket_1_bits_decoded_instruction_needs_branch_unit
+                  : _GEN_157
+                      ? io_backendPacket_0_bits_decoded_instruction_needs_branch_unit
+                      : reservation_station_19_decoded_instruction_needs_branch_unit;
+      _GEN_492 =
+        _GEN_486
+          ? io_backendPacket_3_bits_decoded_instruction_needs_CSRs
+          : _GEN_237
+              ? io_backendPacket_2_bits_decoded_instruction_needs_CSRs
+              : _GEN_197
+                  ? io_backendPacket_1_bits_decoded_instruction_needs_CSRs
+                  : _GEN_157
+                      ? io_backendPacket_0_bits_decoded_instruction_needs_CSRs
+                      : reservation_station_19_decoded_instruction_needs_CSRs;
+      _GEN_493 =
+        _GEN_486
+          ? io_backendPacket_3_bits_decoded_instruction_SUBTRACT
+          : _GEN_237
+              ? io_backendPacket_2_bits_decoded_instruction_SUBTRACT
+              : _GEN_197
+                  ? io_backendPacket_1_bits_decoded_instruction_SUBTRACT
+                  : _GEN_157
+                      ? io_backendPacket_0_bits_decoded_instruction_SUBTRACT
+                      : reservation_station_19_decoded_instruction_SUBTRACT;
+      _GEN_494 =
+        _GEN_486
+          ? io_backendPacket_3_bits_decoded_instruction_MULTIPLY
+          : _GEN_237
+              ? io_backendPacket_2_bits_decoded_instruction_MULTIPLY
+              : _GEN_197
+                  ? io_backendPacket_1_bits_decoded_instruction_MULTIPLY
+                  : _GEN_157
+                      ? io_backendPacket_0_bits_decoded_instruction_MULTIPLY
+                      : reservation_station_19_decoded_instruction_MULTIPLY;
+      _GEN_495 =
+        _GEN_486
+          ? io_backendPacket_3_bits_decoded_instruction_IMMEDIATE
+          : _GEN_237
+              ? io_backendPacket_2_bits_decoded_instruction_IMMEDIATE
+              : _GEN_197
+                  ? io_backendPacket_1_bits_decoded_instruction_IMMEDIATE
+                  : _GEN_157
+                      ? io_backendPacket_0_bits_decoded_instruction_IMMEDIATE
+                      : reservation_station_19_decoded_instruction_IMMEDIATE;
+      _GEN_496 =
+        _GEN_486
+          ? io_backendPacket_3_bits_decoded_instruction_IS_LOAD
+          : _GEN_237
+              ? io_backendPacket_2_bits_decoded_instruction_IS_LOAD
+              : _GEN_197
+                  ? io_backendPacket_1_bits_decoded_instruction_IS_LOAD
+                  : _GEN_157
+                      ? io_backendPacket_0_bits_decoded_instruction_IS_LOAD
+                      : reservation_station_19_decoded_instruction_IS_LOAD;
+      _GEN_497 =
+        _GEN_486
           ? io_backendPacket_3_bits_decoded_instruction_IS_STORE
           : _GEN_237
               ? io_backendPacket_2_bits_decoded_instruction_IS_STORE
-              : _GEN_196
+              : _GEN_197
                   ? io_backendPacket_1_bits_decoded_instruction_IS_STORE
                   : _GEN_157
                       ? io_backendPacket_0_bits_decoded_instruction_IS_STORE
-                      : reservation_station_18_decoded_instruction_IS_STORE;
-      _GEN_487 = io_backendPacket_3_valid & _GEN_486;
-      _GEN_488 =
-        _GEN_487
-          ? io_backendPacket_3_bits_decoded_instruction_RDold_valid
-          : _GEN_238
-              ? io_backendPacket_2_bits_decoded_instruction_RDold_valid
-              : _GEN_198
-                  ? io_backendPacket_1_bits_decoded_instruction_RDold_valid
-                  : _GEN_158
-                      ? io_backendPacket_0_bits_decoded_instruction_RDold_valid
-                      : reservation_station_19_decoded_instruction_RDold_valid;
-      _GEN_489 =
-        _GEN_487
-          ? io_backendPacket_3_bits_decoded_instruction_RD_valid
-          : _GEN_238
-              ? io_backendPacket_2_bits_decoded_instruction_RD_valid
-              : _GEN_198
-                  ? io_backendPacket_1_bits_decoded_instruction_RD_valid
-                  : _GEN_158
-                      ? io_backendPacket_0_bits_decoded_instruction_RD_valid
-                      : reservation_station_19_decoded_instruction_RD_valid;
-      _GEN_490 =
-        _GEN_487
-          ? io_backendPacket_3_bits_decoded_instruction_RS1_valid
-          : _GEN_238
-              ? io_backendPacket_2_bits_decoded_instruction_RS1_valid
-              : _GEN_198
-                  ? io_backendPacket_1_bits_decoded_instruction_RS1_valid
-                  : _GEN_158
-                      ? io_backendPacket_0_bits_decoded_instruction_RS1_valid
-                      : reservation_station_19_decoded_instruction_RS1_valid;
-      _GEN_491 =
-        _GEN_487
-          ? io_backendPacket_3_bits_decoded_instruction_RS2_valid
-          : _GEN_238
-              ? io_backendPacket_2_bits_decoded_instruction_RS2_valid
-              : _GEN_198
-                  ? io_backendPacket_1_bits_decoded_instruction_RS2_valid
-                  : _GEN_158
-                      ? io_backendPacket_0_bits_decoded_instruction_RS2_valid
-                      : reservation_station_19_decoded_instruction_RS2_valid;
-      _GEN_492 =
-        _GEN_487
-          ? io_backendPacket_3_bits_decoded_instruction_needs_ALU
-          : _GEN_238
-              ? io_backendPacket_2_bits_decoded_instruction_needs_ALU
-              : _GEN_198
-                  ? io_backendPacket_1_bits_decoded_instruction_needs_ALU
-                  : _GEN_158
-                      ? io_backendPacket_0_bits_decoded_instruction_needs_ALU
-                      : reservation_station_19_decoded_instruction_needs_ALU;
-      _GEN_493 =
-        _GEN_487
-          ? io_backendPacket_3_bits_decoded_instruction_needs_branch_unit
-          : _GEN_238
-              ? io_backendPacket_2_bits_decoded_instruction_needs_branch_unit
-              : _GEN_198
-                  ? io_backendPacket_1_bits_decoded_instruction_needs_branch_unit
-                  : _GEN_158
-                      ? io_backendPacket_0_bits_decoded_instruction_needs_branch_unit
-                      : reservation_station_19_decoded_instruction_needs_branch_unit;
-      _GEN_494 =
-        _GEN_487
-          ? io_backendPacket_3_bits_decoded_instruction_SUBTRACT
-          : _GEN_238
-              ? io_backendPacket_2_bits_decoded_instruction_SUBTRACT
-              : _GEN_198
-                  ? io_backendPacket_1_bits_decoded_instruction_SUBTRACT
-                  : _GEN_158
-                      ? io_backendPacket_0_bits_decoded_instruction_SUBTRACT
-                      : reservation_station_19_decoded_instruction_SUBTRACT;
-      _GEN_495 =
-        _GEN_487
-          ? io_backendPacket_3_bits_decoded_instruction_MULTIPLY
-          : _GEN_238
-              ? io_backendPacket_2_bits_decoded_instruction_MULTIPLY
-              : _GEN_198
-                  ? io_backendPacket_1_bits_decoded_instruction_MULTIPLY
-                  : _GEN_158
-                      ? io_backendPacket_0_bits_decoded_instruction_MULTIPLY
-                      : reservation_station_19_decoded_instruction_MULTIPLY;
-      _GEN_496 =
-        _GEN_487
-          ? io_backendPacket_3_bits_decoded_instruction_IMMEDIATE
-          : _GEN_238
-              ? io_backendPacket_2_bits_decoded_instruction_IMMEDIATE
-              : _GEN_198
-                  ? io_backendPacket_1_bits_decoded_instruction_IMMEDIATE
-                  : _GEN_158
-                      ? io_backendPacket_0_bits_decoded_instruction_IMMEDIATE
-                      : reservation_station_19_decoded_instruction_IMMEDIATE;
-      _GEN_497 =
-        _GEN_487
-          ? io_backendPacket_3_bits_decoded_instruction_IS_LOAD
-          : _GEN_238
-              ? io_backendPacket_2_bits_decoded_instruction_IS_LOAD
-              : _GEN_198
-                  ? io_backendPacket_1_bits_decoded_instruction_IS_LOAD
-                  : _GEN_158
-                      ? io_backendPacket_0_bits_decoded_instruction_IS_LOAD
-                      : reservation_station_19_decoded_instruction_IS_LOAD;
-      _GEN_498 =
-        _GEN_487
-          ? io_backendPacket_3_bits_decoded_instruction_IS_STORE
-          : _GEN_238
-              ? io_backendPacket_2_bits_decoded_instruction_IS_STORE
-              : _GEN_198
-                  ? io_backendPacket_1_bits_decoded_instruction_IS_STORE
-                  : _GEN_158
-                      ? io_backendPacket_0_bits_decoded_instruction_IS_STORE
                       : reservation_station_19_decoded_instruction_IS_STORE;
+      _GEN_498 =
+        io_backendPacket_3_valid ? _GEN_238 | _GEN_218 | _GEN_198 : _GEN_218 | _GEN_198;
       _GEN_499 =
-        io_backendPacket_3_valid ? _GEN_239 | _GEN_219 | _GEN_199 : _GEN_219 | _GEN_199;
+        io_backendPacket_3_valid ? _GEN_251 | _GEN_219 | _GEN_199 : _GEN_219 | _GEN_199;
       _GEN_500 =
-        io_backendPacket_3_valid ? _GEN_252 | _GEN_220 | _GEN_200 : _GEN_220 | _GEN_200;
+        io_backendPacket_3_valid ? _GEN_264 | _GEN_220 | _GEN_200 : _GEN_220 | _GEN_200;
       _GEN_501 =
-        io_backendPacket_3_valid ? _GEN_265 | _GEN_221 | _GEN_201 : _GEN_221 | _GEN_201;
+        io_backendPacket_3_valid ? _GEN_277 | _GEN_221 | _GEN_201 : _GEN_221 | _GEN_201;
       _GEN_502 =
-        io_backendPacket_3_valid ? _GEN_278 | _GEN_222 | _GEN_202 : _GEN_222 | _GEN_202;
+        io_backendPacket_3_valid ? _GEN_290 | _GEN_222 | _GEN_202 : _GEN_222 | _GEN_202;
       _GEN_503 =
-        io_backendPacket_3_valid ? _GEN_291 | _GEN_223 | _GEN_203 : _GEN_223 | _GEN_203;
+        io_backendPacket_3_valid ? _GEN_303 | _GEN_223 | _GEN_203 : _GEN_223 | _GEN_203;
       _GEN_504 =
-        io_backendPacket_3_valid ? _GEN_304 | _GEN_224 | _GEN_204 : _GEN_224 | _GEN_204;
+        io_backendPacket_3_valid ? _GEN_316 | _GEN_224 | _GEN_204 : _GEN_224 | _GEN_204;
       _GEN_505 =
-        io_backendPacket_3_valid ? _GEN_317 | _GEN_225 | _GEN_205 : _GEN_225 | _GEN_205;
+        io_backendPacket_3_valid ? _GEN_329 | _GEN_225 | _GEN_205 : _GEN_225 | _GEN_205;
       _GEN_506 =
-        io_backendPacket_3_valid ? _GEN_330 | _GEN_226 | _GEN_206 : _GEN_226 | _GEN_206;
+        io_backendPacket_3_valid ? _GEN_342 | _GEN_226 | _GEN_206 : _GEN_226 | _GEN_206;
       _GEN_507 =
-        io_backendPacket_3_valid ? _GEN_343 | _GEN_227 | _GEN_207 : _GEN_227 | _GEN_207;
+        io_backendPacket_3_valid ? _GEN_355 | _GEN_227 | _GEN_207 : _GEN_227 | _GEN_207;
       _GEN_508 =
-        io_backendPacket_3_valid ? _GEN_356 | _GEN_228 | _GEN_208 : _GEN_228 | _GEN_208;
+        io_backendPacket_3_valid ? _GEN_368 | _GEN_228 | _GEN_208 : _GEN_228 | _GEN_208;
       _GEN_509 =
-        io_backendPacket_3_valid ? _GEN_369 | _GEN_229 | _GEN_209 : _GEN_229 | _GEN_209;
+        io_backendPacket_3_valid ? _GEN_381 | _GEN_229 | _GEN_209 : _GEN_229 | _GEN_209;
       _GEN_510 =
-        io_backendPacket_3_valid ? _GEN_382 | _GEN_230 | _GEN_210 : _GEN_230 | _GEN_210;
+        io_backendPacket_3_valid ? _GEN_394 | _GEN_230 | _GEN_210 : _GEN_230 | _GEN_210;
       _GEN_511 =
-        io_backendPacket_3_valid ? _GEN_395 | _GEN_231 | _GEN_211 : _GEN_231 | _GEN_211;
+        io_backendPacket_3_valid ? _GEN_407 | _GEN_231 | _GEN_211 : _GEN_231 | _GEN_211;
       _GEN_512 =
-        io_backendPacket_3_valid ? _GEN_408 | _GEN_232 | _GEN_212 : _GEN_232 | _GEN_212;
+        io_backendPacket_3_valid ? _GEN_420 | _GEN_232 | _GEN_212 : _GEN_232 | _GEN_212;
       _GEN_513 =
-        io_backendPacket_3_valid ? _GEN_421 | _GEN_233 | _GEN_213 : _GEN_233 | _GEN_213;
+        io_backendPacket_3_valid ? _GEN_433 | _GEN_233 | _GEN_213 : _GEN_233 | _GEN_213;
       _GEN_514 =
-        io_backendPacket_3_valid ? _GEN_434 | _GEN_234 | _GEN_214 : _GEN_234 | _GEN_214;
+        io_backendPacket_3_valid ? _GEN_446 | _GEN_234 | _GEN_214 : _GEN_234 | _GEN_214;
       _GEN_515 =
-        io_backendPacket_3_valid ? _GEN_447 | _GEN_235 | _GEN_215 : _GEN_235 | _GEN_215;
+        io_backendPacket_3_valid ? _GEN_459 | _GEN_235 | _GEN_215 : _GEN_235 | _GEN_215;
       _GEN_516 =
-        io_backendPacket_3_valid ? _GEN_460 | _GEN_236 | _GEN_216 : _GEN_236 | _GEN_216;
+        io_backendPacket_3_valid ? _GEN_472 | _GEN_236 | _GEN_216 : _GEN_236 | _GEN_216;
       _GEN_517 =
-        io_backendPacket_3_valid ? _GEN_473 | _GEN_237 | _GEN_217 : _GEN_237 | _GEN_217;
+        io_backendPacket_3_valid ? _GEN_485 | _GEN_237 | _GEN_217 : _GEN_237 | _GEN_217;
       _GEN_518 =
-        io_backendPacket_3_valid ? _GEN_486 | _GEN_238 | _GEN_218 : _GEN_238 | _GEN_218;
-      _GEN_519 =
         ~reservation_station_0_ready_bits_RS2_ready & reservation_station_0_valid
           ? RS2_match_0
-          : _GEN_240
+          : _GEN_239
               ? io_backendPacket_3_bits_ready_bits_RS2_ready
-              : _GEN_219
+              : _GEN_218
                   ? io_backendPacket_2_bits_ready_bits_RS2_ready
-                  : _GEN_160
+                  : _GEN_159
                       ? io_backendPacket_1_bits_ready_bits_RS2_ready
-                      : _GEN_139
+                      : _GEN_138
                           ? io_backendPacket_0_bits_ready_bits_RS2_ready
                           : reservation_station_0_ready_bits_RS2_ready;
-      _GEN_520 =
+      _GEN_519 =
         ~reservation_station_1_ready_bits_RS2_ready & reservation_station_1_valid
           ? RS2_match_1
-          : _GEN_253
+          : _GEN_252
+              ? io_backendPacket_3_bits_ready_bits_RS2_ready
+              : _GEN_219
+                  ? io_backendPacket_2_bits_ready_bits_RS2_ready
+                  : _GEN_161
+                      ? io_backendPacket_1_bits_ready_bits_RS2_ready
+                      : _GEN_139
+                          ? io_backendPacket_0_bits_ready_bits_RS2_ready
+                          : reservation_station_1_ready_bits_RS2_ready;
+      _GEN_520 =
+        ~reservation_station_2_ready_bits_RS2_ready & reservation_station_2_valid
+          ? RS2_match_2
+          : _GEN_265
               ? io_backendPacket_3_bits_ready_bits_RS2_ready
               : _GEN_220
                   ? io_backendPacket_2_bits_ready_bits_RS2_ready
-                  : _GEN_162
+                  : _GEN_163
                       ? io_backendPacket_1_bits_ready_bits_RS2_ready
                       : _GEN_140
                           ? io_backendPacket_0_bits_ready_bits_RS2_ready
-                          : reservation_station_1_ready_bits_RS2_ready;
+                          : reservation_station_2_ready_bits_RS2_ready;
       _GEN_521 =
-        ~reservation_station_2_ready_bits_RS2_ready & reservation_station_2_valid
-          ? RS2_match_2
-          : _GEN_266
+        ~reservation_station_3_ready_bits_RS2_ready & reservation_station_3_valid
+          ? RS2_match_3
+          : _GEN_278
               ? io_backendPacket_3_bits_ready_bits_RS2_ready
               : _GEN_221
                   ? io_backendPacket_2_bits_ready_bits_RS2_ready
-                  : _GEN_164
+                  : _GEN_165
                       ? io_backendPacket_1_bits_ready_bits_RS2_ready
                       : _GEN_141
                           ? io_backendPacket_0_bits_ready_bits_RS2_ready
-                          : reservation_station_2_ready_bits_RS2_ready;
+                          : reservation_station_3_ready_bits_RS2_ready;
       _GEN_522 =
-        ~reservation_station_3_ready_bits_RS2_ready & reservation_station_3_valid
-          ? RS2_match_3
-          : _GEN_279
+        ~reservation_station_4_ready_bits_RS2_ready & reservation_station_4_valid
+          ? RS2_match_4
+          : _GEN_291
               ? io_backendPacket_3_bits_ready_bits_RS2_ready
               : _GEN_222
                   ? io_backendPacket_2_bits_ready_bits_RS2_ready
-                  : _GEN_166
+                  : _GEN_167
                       ? io_backendPacket_1_bits_ready_bits_RS2_ready
                       : _GEN_142
                           ? io_backendPacket_0_bits_ready_bits_RS2_ready
-                          : reservation_station_3_ready_bits_RS2_ready;
+                          : reservation_station_4_ready_bits_RS2_ready;
       _GEN_523 =
-        ~reservation_station_4_ready_bits_RS2_ready & reservation_station_4_valid
-          ? RS2_match_4
-          : _GEN_292
+        ~reservation_station_5_ready_bits_RS2_ready & reservation_station_5_valid
+          ? RS2_match_5
+          : _GEN_304
               ? io_backendPacket_3_bits_ready_bits_RS2_ready
               : _GEN_223
                   ? io_backendPacket_2_bits_ready_bits_RS2_ready
-                  : _GEN_168
+                  : _GEN_169
                       ? io_backendPacket_1_bits_ready_bits_RS2_ready
                       : _GEN_143
                           ? io_backendPacket_0_bits_ready_bits_RS2_ready
-                          : reservation_station_4_ready_bits_RS2_ready;
+                          : reservation_station_5_ready_bits_RS2_ready;
       _GEN_524 =
-        ~reservation_station_5_ready_bits_RS2_ready & reservation_station_5_valid
-          ? RS2_match_5
-          : _GEN_305
+        ~reservation_station_6_ready_bits_RS2_ready & reservation_station_6_valid
+          ? RS2_match_6
+          : _GEN_317
               ? io_backendPacket_3_bits_ready_bits_RS2_ready
               : _GEN_224
                   ? io_backendPacket_2_bits_ready_bits_RS2_ready
-                  : _GEN_170
+                  : _GEN_171
                       ? io_backendPacket_1_bits_ready_bits_RS2_ready
                       : _GEN_144
                           ? io_backendPacket_0_bits_ready_bits_RS2_ready
-                          : reservation_station_5_ready_bits_RS2_ready;
+                          : reservation_station_6_ready_bits_RS2_ready;
       _GEN_525 =
-        ~reservation_station_6_ready_bits_RS2_ready & reservation_station_6_valid
-          ? RS2_match_6
-          : _GEN_318
+        ~reservation_station_7_ready_bits_RS2_ready & reservation_station_7_valid
+          ? RS2_match_7
+          : _GEN_330
               ? io_backendPacket_3_bits_ready_bits_RS2_ready
               : _GEN_225
                   ? io_backendPacket_2_bits_ready_bits_RS2_ready
-                  : _GEN_172
+                  : _GEN_173
                       ? io_backendPacket_1_bits_ready_bits_RS2_ready
                       : _GEN_145
                           ? io_backendPacket_0_bits_ready_bits_RS2_ready
-                          : reservation_station_6_ready_bits_RS2_ready;
+                          : reservation_station_7_ready_bits_RS2_ready;
       _GEN_526 =
-        ~reservation_station_7_ready_bits_RS2_ready & reservation_station_7_valid
-          ? RS2_match_7
-          : _GEN_331
+        ~reservation_station_8_ready_bits_RS2_ready & reservation_station_8_valid
+          ? RS2_match_8
+          : _GEN_343
               ? io_backendPacket_3_bits_ready_bits_RS2_ready
               : _GEN_226
                   ? io_backendPacket_2_bits_ready_bits_RS2_ready
-                  : _GEN_174
+                  : _GEN_175
                       ? io_backendPacket_1_bits_ready_bits_RS2_ready
                       : _GEN_146
                           ? io_backendPacket_0_bits_ready_bits_RS2_ready
-                          : reservation_station_7_ready_bits_RS2_ready;
+                          : reservation_station_8_ready_bits_RS2_ready;
       _GEN_527 =
-        ~reservation_station_8_ready_bits_RS2_ready & reservation_station_8_valid
-          ? RS2_match_8
-          : _GEN_344
+        ~reservation_station_9_ready_bits_RS2_ready & reservation_station_9_valid
+          ? RS2_match_9
+          : _GEN_356
               ? io_backendPacket_3_bits_ready_bits_RS2_ready
               : _GEN_227
                   ? io_backendPacket_2_bits_ready_bits_RS2_ready
-                  : _GEN_176
+                  : _GEN_177
                       ? io_backendPacket_1_bits_ready_bits_RS2_ready
                       : _GEN_147
                           ? io_backendPacket_0_bits_ready_bits_RS2_ready
-                          : reservation_station_8_ready_bits_RS2_ready;
+                          : reservation_station_9_ready_bits_RS2_ready;
       _GEN_528 =
-        ~reservation_station_9_ready_bits_RS2_ready & reservation_station_9_valid
-          ? RS2_match_9
-          : _GEN_357
+        ~reservation_station_10_ready_bits_RS2_ready & reservation_station_10_valid
+          ? RS2_match_10
+          : _GEN_369
               ? io_backendPacket_3_bits_ready_bits_RS2_ready
               : _GEN_228
                   ? io_backendPacket_2_bits_ready_bits_RS2_ready
-                  : _GEN_178
+                  : _GEN_179
                       ? io_backendPacket_1_bits_ready_bits_RS2_ready
                       : _GEN_148
                           ? io_backendPacket_0_bits_ready_bits_RS2_ready
-                          : reservation_station_9_ready_bits_RS2_ready;
+                          : reservation_station_10_ready_bits_RS2_ready;
       _GEN_529 =
-        ~reservation_station_10_ready_bits_RS2_ready & reservation_station_10_valid
-          ? RS2_match_10
-          : _GEN_370
+        ~reservation_station_11_ready_bits_RS2_ready & reservation_station_11_valid
+          ? RS2_match_11
+          : _GEN_382
               ? io_backendPacket_3_bits_ready_bits_RS2_ready
               : _GEN_229
                   ? io_backendPacket_2_bits_ready_bits_RS2_ready
-                  : _GEN_180
+                  : _GEN_181
                       ? io_backendPacket_1_bits_ready_bits_RS2_ready
                       : _GEN_149
                           ? io_backendPacket_0_bits_ready_bits_RS2_ready
-                          : reservation_station_10_ready_bits_RS2_ready;
+                          : reservation_station_11_ready_bits_RS2_ready;
       _GEN_530 =
-        ~reservation_station_11_ready_bits_RS2_ready & reservation_station_11_valid
-          ? RS2_match_11
-          : _GEN_383
+        ~reservation_station_12_ready_bits_RS2_ready & reservation_station_12_valid
+          ? RS2_match_12
+          : _GEN_395
               ? io_backendPacket_3_bits_ready_bits_RS2_ready
               : _GEN_230
                   ? io_backendPacket_2_bits_ready_bits_RS2_ready
-                  : _GEN_182
+                  : _GEN_183
                       ? io_backendPacket_1_bits_ready_bits_RS2_ready
                       : _GEN_150
                           ? io_backendPacket_0_bits_ready_bits_RS2_ready
-                          : reservation_station_11_ready_bits_RS2_ready;
+                          : reservation_station_12_ready_bits_RS2_ready;
       _GEN_531 =
-        ~reservation_station_12_ready_bits_RS2_ready & reservation_station_12_valid
-          ? RS2_match_12
-          : _GEN_396
+        ~reservation_station_13_ready_bits_RS2_ready & reservation_station_13_valid
+          ? RS2_match_13
+          : _GEN_408
               ? io_backendPacket_3_bits_ready_bits_RS2_ready
               : _GEN_231
                   ? io_backendPacket_2_bits_ready_bits_RS2_ready
-                  : _GEN_184
+                  : _GEN_185
                       ? io_backendPacket_1_bits_ready_bits_RS2_ready
                       : _GEN_151
                           ? io_backendPacket_0_bits_ready_bits_RS2_ready
-                          : reservation_station_12_ready_bits_RS2_ready;
+                          : reservation_station_13_ready_bits_RS2_ready;
       _GEN_532 =
-        ~reservation_station_13_ready_bits_RS2_ready & reservation_station_13_valid
-          ? RS2_match_13
-          : _GEN_409
+        ~reservation_station_14_ready_bits_RS2_ready & reservation_station_14_valid
+          ? RS2_match_14
+          : _GEN_421
               ? io_backendPacket_3_bits_ready_bits_RS2_ready
               : _GEN_232
                   ? io_backendPacket_2_bits_ready_bits_RS2_ready
-                  : _GEN_186
+                  : _GEN_187
                       ? io_backendPacket_1_bits_ready_bits_RS2_ready
                       : _GEN_152
                           ? io_backendPacket_0_bits_ready_bits_RS2_ready
-                          : reservation_station_13_ready_bits_RS2_ready;
+                          : reservation_station_14_ready_bits_RS2_ready;
       _GEN_533 =
-        ~reservation_station_14_ready_bits_RS2_ready & reservation_station_14_valid
-          ? RS2_match_14
-          : _GEN_422
+        ~reservation_station_15_ready_bits_RS2_ready & reservation_station_15_valid
+          ? RS2_match_15
+          : _GEN_434
               ? io_backendPacket_3_bits_ready_bits_RS2_ready
               : _GEN_233
                   ? io_backendPacket_2_bits_ready_bits_RS2_ready
-                  : _GEN_188
+                  : _GEN_189
                       ? io_backendPacket_1_bits_ready_bits_RS2_ready
                       : _GEN_153
                           ? io_backendPacket_0_bits_ready_bits_RS2_ready
-                          : reservation_station_14_ready_bits_RS2_ready;
+                          : reservation_station_15_ready_bits_RS2_ready;
       _GEN_534 =
-        ~reservation_station_15_ready_bits_RS2_ready & reservation_station_15_valid
-          ? RS2_match_15
-          : _GEN_435
+        ~reservation_station_16_ready_bits_RS2_ready & reservation_station_16_valid
+          ? RS2_match_16
+          : _GEN_447
               ? io_backendPacket_3_bits_ready_bits_RS2_ready
               : _GEN_234
                   ? io_backendPacket_2_bits_ready_bits_RS2_ready
-                  : _GEN_190
+                  : _GEN_191
                       ? io_backendPacket_1_bits_ready_bits_RS2_ready
                       : _GEN_154
                           ? io_backendPacket_0_bits_ready_bits_RS2_ready
-                          : reservation_station_15_ready_bits_RS2_ready;
+                          : reservation_station_16_ready_bits_RS2_ready;
       _GEN_535 =
-        ~reservation_station_16_ready_bits_RS2_ready & reservation_station_16_valid
-          ? RS2_match_16
-          : _GEN_448
+        ~reservation_station_17_ready_bits_RS2_ready & reservation_station_17_valid
+          ? RS2_match_17
+          : _GEN_460
               ? io_backendPacket_3_bits_ready_bits_RS2_ready
               : _GEN_235
                   ? io_backendPacket_2_bits_ready_bits_RS2_ready
-                  : _GEN_192
+                  : _GEN_193
                       ? io_backendPacket_1_bits_ready_bits_RS2_ready
                       : _GEN_155
                           ? io_backendPacket_0_bits_ready_bits_RS2_ready
-                          : reservation_station_16_ready_bits_RS2_ready;
+                          : reservation_station_17_ready_bits_RS2_ready;
       _GEN_536 =
-        ~reservation_station_17_ready_bits_RS2_ready & reservation_station_17_valid
-          ? RS2_match_17
-          : _GEN_461
+        ~reservation_station_18_ready_bits_RS2_ready & reservation_station_18_valid
+          ? RS2_match_18
+          : _GEN_473
               ? io_backendPacket_3_bits_ready_bits_RS2_ready
               : _GEN_236
                   ? io_backendPacket_2_bits_ready_bits_RS2_ready
-                  : _GEN_194
+                  : _GEN_195
                       ? io_backendPacket_1_bits_ready_bits_RS2_ready
                       : _GEN_156
                           ? io_backendPacket_0_bits_ready_bits_RS2_ready
-                          : reservation_station_17_ready_bits_RS2_ready;
+                          : reservation_station_18_ready_bits_RS2_ready;
       _GEN_537 =
-        ~reservation_station_18_ready_bits_RS2_ready & reservation_station_18_valid
-          ? RS2_match_18
-          : _GEN_474
+        ~reservation_station_19_ready_bits_RS2_ready & reservation_station_19_valid
+          ? RS2_match_19
+          : _GEN_486
               ? io_backendPacket_3_bits_ready_bits_RS2_ready
               : _GEN_237
                   ? io_backendPacket_2_bits_ready_bits_RS2_ready
-                  : _GEN_196
+                  : _GEN_197
                       ? io_backendPacket_1_bits_ready_bits_RS2_ready
                       : _GEN_157
                           ? io_backendPacket_0_bits_ready_bits_RS2_ready
-                          : reservation_station_18_ready_bits_RS2_ready;
-      _GEN_538 =
-        ~reservation_station_19_ready_bits_RS2_ready & reservation_station_19_valid
-          ? RS2_match_19
-          : _GEN_487
-              ? io_backendPacket_3_bits_ready_bits_RS2_ready
-              : _GEN_238
-                  ? io_backendPacket_2_bits_ready_bits_RS2_ready
-                  : _GEN_198
-                      ? io_backendPacket_1_bits_ready_bits_RS2_ready
-                      : _GEN_158
-                          ? io_backendPacket_0_bits_ready_bits_RS2_ready
                           : reservation_station_19_ready_bits_RS2_ready;
-      _GEN_539 =
+      _GEN_538 =
         ~reservation_station_0_ready_bits_RS1_ready & reservation_station_0_valid
           ? RS1_match_0
-          : _GEN_240
+          : _GEN_239
+              ? io_backendPacket_3_bits_ready_bits_RS1_ready
+              : _GEN_218
+                  ? io_backendPacket_2_bits_ready_bits_RS1_ready
+                  : _GEN_159
+                      ? io_backendPacket_1_bits_ready_bits_RS1_ready
+                      : _GEN_138
+                          ? io_backendPacket_0_bits_ready_bits_RS1_ready
+                          : reservation_station_0_ready_bits_RS1_ready;
+      _GEN_539 =
+        ~reservation_station_1_ready_bits_RS1_ready & reservation_station_1_valid
+          ? RS1_match_1
+          : _GEN_252
               ? io_backendPacket_3_bits_ready_bits_RS1_ready
               : _GEN_219
                   ? io_backendPacket_2_bits_ready_bits_RS1_ready
-                  : _GEN_160
+                  : _GEN_161
                       ? io_backendPacket_1_bits_ready_bits_RS1_ready
                       : _GEN_139
                           ? io_backendPacket_0_bits_ready_bits_RS1_ready
-                          : reservation_station_0_ready_bits_RS1_ready;
+                          : reservation_station_1_ready_bits_RS1_ready;
       _GEN_540 =
-        ~reservation_station_1_ready_bits_RS1_ready & reservation_station_1_valid
-          ? RS1_match_1
-          : _GEN_253
+        ~reservation_station_2_ready_bits_RS1_ready & reservation_station_2_valid
+          ? RS1_match_2
+          : _GEN_265
               ? io_backendPacket_3_bits_ready_bits_RS1_ready
               : _GEN_220
                   ? io_backendPacket_2_bits_ready_bits_RS1_ready
-                  : _GEN_162
+                  : _GEN_163
                       ? io_backendPacket_1_bits_ready_bits_RS1_ready
                       : _GEN_140
                           ? io_backendPacket_0_bits_ready_bits_RS1_ready
-                          : reservation_station_1_ready_bits_RS1_ready;
+                          : reservation_station_2_ready_bits_RS1_ready;
       _GEN_541 =
-        ~reservation_station_2_ready_bits_RS1_ready & reservation_station_2_valid
-          ? RS1_match_2
-          : _GEN_266
+        ~reservation_station_3_ready_bits_RS1_ready & reservation_station_3_valid
+          ? RS1_match_3
+          : _GEN_278
               ? io_backendPacket_3_bits_ready_bits_RS1_ready
               : _GEN_221
                   ? io_backendPacket_2_bits_ready_bits_RS1_ready
-                  : _GEN_164
+                  : _GEN_165
                       ? io_backendPacket_1_bits_ready_bits_RS1_ready
                       : _GEN_141
                           ? io_backendPacket_0_bits_ready_bits_RS1_ready
-                          : reservation_station_2_ready_bits_RS1_ready;
+                          : reservation_station_3_ready_bits_RS1_ready;
       _GEN_542 =
-        ~reservation_station_3_ready_bits_RS1_ready & reservation_station_3_valid
-          ? RS1_match_3
-          : _GEN_279
+        ~reservation_station_4_ready_bits_RS1_ready & reservation_station_4_valid
+          ? RS1_match_4
+          : _GEN_291
               ? io_backendPacket_3_bits_ready_bits_RS1_ready
               : _GEN_222
                   ? io_backendPacket_2_bits_ready_bits_RS1_ready
-                  : _GEN_166
+                  : _GEN_167
                       ? io_backendPacket_1_bits_ready_bits_RS1_ready
                       : _GEN_142
                           ? io_backendPacket_0_bits_ready_bits_RS1_ready
-                          : reservation_station_3_ready_bits_RS1_ready;
+                          : reservation_station_4_ready_bits_RS1_ready;
       _GEN_543 =
-        ~reservation_station_4_ready_bits_RS1_ready & reservation_station_4_valid
-          ? RS1_match_4
-          : _GEN_292
+        ~reservation_station_5_ready_bits_RS1_ready & reservation_station_5_valid
+          ? RS1_match_5
+          : _GEN_304
               ? io_backendPacket_3_bits_ready_bits_RS1_ready
               : _GEN_223
                   ? io_backendPacket_2_bits_ready_bits_RS1_ready
-                  : _GEN_168
+                  : _GEN_169
                       ? io_backendPacket_1_bits_ready_bits_RS1_ready
                       : _GEN_143
                           ? io_backendPacket_0_bits_ready_bits_RS1_ready
-                          : reservation_station_4_ready_bits_RS1_ready;
+                          : reservation_station_5_ready_bits_RS1_ready;
       _GEN_544 =
-        ~reservation_station_5_ready_bits_RS1_ready & reservation_station_5_valid
-          ? RS1_match_5
-          : _GEN_305
+        ~reservation_station_6_ready_bits_RS1_ready & reservation_station_6_valid
+          ? RS1_match_6
+          : _GEN_317
               ? io_backendPacket_3_bits_ready_bits_RS1_ready
               : _GEN_224
                   ? io_backendPacket_2_bits_ready_bits_RS1_ready
-                  : _GEN_170
+                  : _GEN_171
                       ? io_backendPacket_1_bits_ready_bits_RS1_ready
                       : _GEN_144
                           ? io_backendPacket_0_bits_ready_bits_RS1_ready
-                          : reservation_station_5_ready_bits_RS1_ready;
+                          : reservation_station_6_ready_bits_RS1_ready;
       _GEN_545 =
-        ~reservation_station_6_ready_bits_RS1_ready & reservation_station_6_valid
-          ? RS1_match_6
-          : _GEN_318
+        ~reservation_station_7_ready_bits_RS1_ready & reservation_station_7_valid
+          ? RS1_match_7
+          : _GEN_330
               ? io_backendPacket_3_bits_ready_bits_RS1_ready
               : _GEN_225
                   ? io_backendPacket_2_bits_ready_bits_RS1_ready
-                  : _GEN_172
+                  : _GEN_173
                       ? io_backendPacket_1_bits_ready_bits_RS1_ready
                       : _GEN_145
                           ? io_backendPacket_0_bits_ready_bits_RS1_ready
-                          : reservation_station_6_ready_bits_RS1_ready;
+                          : reservation_station_7_ready_bits_RS1_ready;
       _GEN_546 =
-        ~reservation_station_7_ready_bits_RS1_ready & reservation_station_7_valid
-          ? RS1_match_7
-          : _GEN_331
+        ~reservation_station_8_ready_bits_RS1_ready & reservation_station_8_valid
+          ? RS1_match_8
+          : _GEN_343
               ? io_backendPacket_3_bits_ready_bits_RS1_ready
               : _GEN_226
                   ? io_backendPacket_2_bits_ready_bits_RS1_ready
-                  : _GEN_174
+                  : _GEN_175
                       ? io_backendPacket_1_bits_ready_bits_RS1_ready
                       : _GEN_146
                           ? io_backendPacket_0_bits_ready_bits_RS1_ready
-                          : reservation_station_7_ready_bits_RS1_ready;
+                          : reservation_station_8_ready_bits_RS1_ready;
       _GEN_547 =
-        ~reservation_station_8_ready_bits_RS1_ready & reservation_station_8_valid
-          ? RS1_match_8
-          : _GEN_344
+        ~reservation_station_9_ready_bits_RS1_ready & reservation_station_9_valid
+          ? RS1_match_9
+          : _GEN_356
               ? io_backendPacket_3_bits_ready_bits_RS1_ready
               : _GEN_227
                   ? io_backendPacket_2_bits_ready_bits_RS1_ready
-                  : _GEN_176
+                  : _GEN_177
                       ? io_backendPacket_1_bits_ready_bits_RS1_ready
                       : _GEN_147
                           ? io_backendPacket_0_bits_ready_bits_RS1_ready
-                          : reservation_station_8_ready_bits_RS1_ready;
+                          : reservation_station_9_ready_bits_RS1_ready;
       _GEN_548 =
-        ~reservation_station_9_ready_bits_RS1_ready & reservation_station_9_valid
-          ? RS1_match_9
-          : _GEN_357
+        ~reservation_station_10_ready_bits_RS1_ready & reservation_station_10_valid
+          ? RS1_match_10
+          : _GEN_369
               ? io_backendPacket_3_bits_ready_bits_RS1_ready
               : _GEN_228
                   ? io_backendPacket_2_bits_ready_bits_RS1_ready
-                  : _GEN_178
+                  : _GEN_179
                       ? io_backendPacket_1_bits_ready_bits_RS1_ready
                       : _GEN_148
                           ? io_backendPacket_0_bits_ready_bits_RS1_ready
-                          : reservation_station_9_ready_bits_RS1_ready;
+                          : reservation_station_10_ready_bits_RS1_ready;
       _GEN_549 =
-        ~reservation_station_10_ready_bits_RS1_ready & reservation_station_10_valid
-          ? RS1_match_10
-          : _GEN_370
+        ~reservation_station_11_ready_bits_RS1_ready & reservation_station_11_valid
+          ? RS1_match_11
+          : _GEN_382
               ? io_backendPacket_3_bits_ready_bits_RS1_ready
               : _GEN_229
                   ? io_backendPacket_2_bits_ready_bits_RS1_ready
-                  : _GEN_180
+                  : _GEN_181
                       ? io_backendPacket_1_bits_ready_bits_RS1_ready
                       : _GEN_149
                           ? io_backendPacket_0_bits_ready_bits_RS1_ready
-                          : reservation_station_10_ready_bits_RS1_ready;
+                          : reservation_station_11_ready_bits_RS1_ready;
       _GEN_550 =
-        ~reservation_station_11_ready_bits_RS1_ready & reservation_station_11_valid
-          ? RS1_match_11
-          : _GEN_383
+        ~reservation_station_12_ready_bits_RS1_ready & reservation_station_12_valid
+          ? RS1_match_12
+          : _GEN_395
               ? io_backendPacket_3_bits_ready_bits_RS1_ready
               : _GEN_230
                   ? io_backendPacket_2_bits_ready_bits_RS1_ready
-                  : _GEN_182
+                  : _GEN_183
                       ? io_backendPacket_1_bits_ready_bits_RS1_ready
                       : _GEN_150
                           ? io_backendPacket_0_bits_ready_bits_RS1_ready
-                          : reservation_station_11_ready_bits_RS1_ready;
+                          : reservation_station_12_ready_bits_RS1_ready;
       _GEN_551 =
-        ~reservation_station_12_ready_bits_RS1_ready & reservation_station_12_valid
-          ? RS1_match_12
-          : _GEN_396
+        ~reservation_station_13_ready_bits_RS1_ready & reservation_station_13_valid
+          ? RS1_match_13
+          : _GEN_408
               ? io_backendPacket_3_bits_ready_bits_RS1_ready
               : _GEN_231
                   ? io_backendPacket_2_bits_ready_bits_RS1_ready
-                  : _GEN_184
+                  : _GEN_185
                       ? io_backendPacket_1_bits_ready_bits_RS1_ready
                       : _GEN_151
                           ? io_backendPacket_0_bits_ready_bits_RS1_ready
-                          : reservation_station_12_ready_bits_RS1_ready;
+                          : reservation_station_13_ready_bits_RS1_ready;
       _GEN_552 =
-        ~reservation_station_13_ready_bits_RS1_ready & reservation_station_13_valid
-          ? RS1_match_13
-          : _GEN_409
+        ~reservation_station_14_ready_bits_RS1_ready & reservation_station_14_valid
+          ? RS1_match_14
+          : _GEN_421
               ? io_backendPacket_3_bits_ready_bits_RS1_ready
               : _GEN_232
                   ? io_backendPacket_2_bits_ready_bits_RS1_ready
-                  : _GEN_186
+                  : _GEN_187
                       ? io_backendPacket_1_bits_ready_bits_RS1_ready
                       : _GEN_152
                           ? io_backendPacket_0_bits_ready_bits_RS1_ready
-                          : reservation_station_13_ready_bits_RS1_ready;
+                          : reservation_station_14_ready_bits_RS1_ready;
       _GEN_553 =
-        ~reservation_station_14_ready_bits_RS1_ready & reservation_station_14_valid
-          ? RS1_match_14
-          : _GEN_422
+        ~reservation_station_15_ready_bits_RS1_ready & reservation_station_15_valid
+          ? RS1_match_15
+          : _GEN_434
               ? io_backendPacket_3_bits_ready_bits_RS1_ready
               : _GEN_233
                   ? io_backendPacket_2_bits_ready_bits_RS1_ready
-                  : _GEN_188
+                  : _GEN_189
                       ? io_backendPacket_1_bits_ready_bits_RS1_ready
                       : _GEN_153
                           ? io_backendPacket_0_bits_ready_bits_RS1_ready
-                          : reservation_station_14_ready_bits_RS1_ready;
+                          : reservation_station_15_ready_bits_RS1_ready;
       _GEN_554 =
-        ~reservation_station_15_ready_bits_RS1_ready & reservation_station_15_valid
-          ? RS1_match_15
-          : _GEN_435
+        ~reservation_station_16_ready_bits_RS1_ready & reservation_station_16_valid
+          ? RS1_match_16
+          : _GEN_447
               ? io_backendPacket_3_bits_ready_bits_RS1_ready
               : _GEN_234
                   ? io_backendPacket_2_bits_ready_bits_RS1_ready
-                  : _GEN_190
+                  : _GEN_191
                       ? io_backendPacket_1_bits_ready_bits_RS1_ready
                       : _GEN_154
                           ? io_backendPacket_0_bits_ready_bits_RS1_ready
-                          : reservation_station_15_ready_bits_RS1_ready;
+                          : reservation_station_16_ready_bits_RS1_ready;
       _GEN_555 =
-        ~reservation_station_16_ready_bits_RS1_ready & reservation_station_16_valid
-          ? RS1_match_16
-          : _GEN_448
+        ~reservation_station_17_ready_bits_RS1_ready & reservation_station_17_valid
+          ? RS1_match_17
+          : _GEN_460
               ? io_backendPacket_3_bits_ready_bits_RS1_ready
               : _GEN_235
                   ? io_backendPacket_2_bits_ready_bits_RS1_ready
-                  : _GEN_192
+                  : _GEN_193
                       ? io_backendPacket_1_bits_ready_bits_RS1_ready
                       : _GEN_155
                           ? io_backendPacket_0_bits_ready_bits_RS1_ready
-                          : reservation_station_16_ready_bits_RS1_ready;
+                          : reservation_station_17_ready_bits_RS1_ready;
       _GEN_556 =
-        ~reservation_station_17_ready_bits_RS1_ready & reservation_station_17_valid
-          ? RS1_match_17
-          : _GEN_461
+        ~reservation_station_18_ready_bits_RS1_ready & reservation_station_18_valid
+          ? RS1_match_18
+          : _GEN_473
               ? io_backendPacket_3_bits_ready_bits_RS1_ready
               : _GEN_236
                   ? io_backendPacket_2_bits_ready_bits_RS1_ready
-                  : _GEN_194
+                  : _GEN_195
                       ? io_backendPacket_1_bits_ready_bits_RS1_ready
                       : _GEN_156
                           ? io_backendPacket_0_bits_ready_bits_RS1_ready
-                          : reservation_station_17_ready_bits_RS1_ready;
+                          : reservation_station_18_ready_bits_RS1_ready;
       _GEN_557 =
-        ~reservation_station_18_ready_bits_RS1_ready & reservation_station_18_valid
-          ? RS1_match_18
-          : _GEN_474
+        ~reservation_station_19_ready_bits_RS1_ready & reservation_station_19_valid
+          ? RS1_match_19
+          : _GEN_486
               ? io_backendPacket_3_bits_ready_bits_RS1_ready
               : _GEN_237
                   ? io_backendPacket_2_bits_ready_bits_RS1_ready
-                  : _GEN_196
+                  : _GEN_197
                       ? io_backendPacket_1_bits_ready_bits_RS1_ready
                       : _GEN_157
                           ? io_backendPacket_0_bits_ready_bits_RS1_ready
-                          : reservation_station_18_ready_bits_RS1_ready;
-      _GEN_558 =
-        ~reservation_station_19_ready_bits_RS1_ready & reservation_station_19_valid
-          ? RS1_match_19
-          : _GEN_487
-              ? io_backendPacket_3_bits_ready_bits_RS1_ready
-              : _GEN_238
-                  ? io_backendPacket_2_bits_ready_bits_RS1_ready
-                  : _GEN_198
-                      ? io_backendPacket_1_bits_ready_bits_RS1_ready
-                      : _GEN_158
-                          ? io_backendPacket_0_bits_ready_bits_RS1_ready
                           : reservation_station_19_ready_bits_RS1_ready;
-      if (_GEN_623)
-        reservation_station_0_decoded_instruction_RDold <= 6'h0;
-      else if (_GEN_240)
-        reservation_station_0_decoded_instruction_RDold <=
-          io_backendPacket_3_bits_decoded_instruction_RDold;
-      else if (_GEN_219)
-        reservation_station_0_decoded_instruction_RDold <=
-          io_backendPacket_2_bits_decoded_instruction_RDold;
-      else if (_GEN_160)
-        reservation_station_0_decoded_instruction_RDold <=
-          io_backendPacket_1_bits_decoded_instruction_RDold;
-      else if (_GEN_139)
-        reservation_station_0_decoded_instruction_RDold <=
-          io_backendPacket_0_bits_decoded_instruction_RDold;
-      reservation_station_0_decoded_instruction_RDold_valid <=
-        ~_GEN_622 & (_GEN_580 ? ~_GEN_601 & _GEN_241 : ~_GEN_560 & _GEN_241);
-      if (_GEN_623)
+      if (_GEN_622)
         reservation_station_0_decoded_instruction_RD <= 6'h0;
-      else if (_GEN_240)
+      else if (_GEN_239)
         reservation_station_0_decoded_instruction_RD <=
           io_backendPacket_3_bits_decoded_instruction_RD;
-      else if (_GEN_219)
+      else if (_GEN_218)
         reservation_station_0_decoded_instruction_RD <=
           io_backendPacket_2_bits_decoded_instruction_RD;
-      else if (_GEN_160)
+      else if (_GEN_159)
         reservation_station_0_decoded_instruction_RD <=
           io_backendPacket_1_bits_decoded_instruction_RD;
-      else if (_GEN_139)
+      else if (_GEN_138)
         reservation_station_0_decoded_instruction_RD <=
           io_backendPacket_0_bits_decoded_instruction_RD;
       reservation_station_0_decoded_instruction_RD_valid <=
-        ~_GEN_622 & (_GEN_580 ? ~_GEN_601 & _GEN_242 : ~_GEN_560 & _GEN_242);
-      if (_GEN_623)
+        ~_GEN_621 & (_GEN_579 ? ~_GEN_600 & _GEN_240 : ~_GEN_559 & _GEN_240);
+      if (_GEN_622)
         reservation_station_0_decoded_instruction_RS1 <= 6'h0;
-      else if (_GEN_240)
+      else if (_GEN_239)
         reservation_station_0_decoded_instruction_RS1 <=
           io_backendPacket_3_bits_decoded_instruction_RS1;
-      else if (_GEN_219)
+      else if (_GEN_218)
         reservation_station_0_decoded_instruction_RS1 <=
           io_backendPacket_2_bits_decoded_instruction_RS1;
-      else if (_GEN_160)
+      else if (_GEN_159)
         reservation_station_0_decoded_instruction_RS1 <=
           io_backendPacket_1_bits_decoded_instruction_RS1;
-      else if (_GEN_139)
+      else if (_GEN_138)
         reservation_station_0_decoded_instruction_RS1 <=
           io_backendPacket_0_bits_decoded_instruction_RS1;
       reservation_station_0_decoded_instruction_RS1_valid <=
-        ~_GEN_622 & (_GEN_580 ? ~_GEN_601 & _GEN_243 : ~_GEN_560 & _GEN_243);
-      if (_GEN_623)
+        ~_GEN_621 & (_GEN_579 ? ~_GEN_600 & _GEN_241 : ~_GEN_559 & _GEN_241);
+      if (_GEN_622)
         reservation_station_0_decoded_instruction_RS2 <= 6'h0;
-      else if (_GEN_240)
+      else if (_GEN_239)
         reservation_station_0_decoded_instruction_RS2 <=
           io_backendPacket_3_bits_decoded_instruction_RS2;
-      else if (_GEN_219)
+      else if (_GEN_218)
         reservation_station_0_decoded_instruction_RS2 <=
           io_backendPacket_2_bits_decoded_instruction_RS2;
-      else if (_GEN_160)
+      else if (_GEN_159)
         reservation_station_0_decoded_instruction_RS2 <=
           io_backendPacket_1_bits_decoded_instruction_RS2;
-      else if (_GEN_139)
+      else if (_GEN_138)
         reservation_station_0_decoded_instruction_RS2 <=
           io_backendPacket_0_bits_decoded_instruction_RS2;
       reservation_station_0_decoded_instruction_RS2_valid <=
-        ~_GEN_622 & (_GEN_580 ? ~_GEN_601 & _GEN_244 : ~_GEN_560 & _GEN_244);
-      if (_GEN_623) begin
+        ~_GEN_621 & (_GEN_579 ? ~_GEN_600 & _GEN_242 : ~_GEN_559 & _GEN_242);
+      if (_GEN_622) begin
         reservation_station_0_decoded_instruction_IMM <= 32'h0;
         reservation_station_0_decoded_instruction_FUNCT3 <= 3'h0;
         reservation_station_0_decoded_instruction_packet_index <= 4'h0;
@@ -6481,7 +6389,7 @@ module RS(
         reservation_station_0_decoded_instruction_portID <= 2'h0;
         reservation_station_0_decoded_instruction_RS_type <= 2'h0;
       end
-      else if (_GEN_240) begin
+      else if (_GEN_239) begin
         reservation_station_0_decoded_instruction_IMM <=
           io_backendPacket_3_bits_decoded_instruction_IMM;
         reservation_station_0_decoded_instruction_FUNCT3 <=
@@ -6497,7 +6405,7 @@ module RS(
         reservation_station_0_decoded_instruction_RS_type <=
           io_backendPacket_3_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_219) begin
+      else if (_GEN_218) begin
         reservation_station_0_decoded_instruction_IMM <=
           io_backendPacket_2_bits_decoded_instruction_IMM;
         reservation_station_0_decoded_instruction_FUNCT3 <=
@@ -6513,7 +6421,7 @@ module RS(
         reservation_station_0_decoded_instruction_RS_type <=
           io_backendPacket_2_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_160) begin
+      else if (_GEN_159) begin
         reservation_station_0_decoded_instruction_IMM <=
           io_backendPacket_1_bits_decoded_instruction_IMM;
         reservation_station_0_decoded_instruction_FUNCT3 <=
@@ -6529,7 +6437,7 @@ module RS(
         reservation_station_0_decoded_instruction_RS_type <=
           io_backendPacket_1_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_139) begin
+      else if (_GEN_138) begin
         reservation_station_0_decoded_instruction_IMM <=
           io_backendPacket_0_bits_decoded_instruction_IMM;
         reservation_station_0_decoded_instruction_FUNCT3 <=
@@ -6546,90 +6454,76 @@ module RS(
           io_backendPacket_0_bits_decoded_instruction_RS_type;
       end
       reservation_station_0_decoded_instruction_needs_ALU <=
-        ~_GEN_622 & (_GEN_580 ? ~_GEN_601 & _GEN_245 : ~_GEN_560 & _GEN_245);
+        ~_GEN_621 & (_GEN_579 ? ~_GEN_600 & _GEN_243 : ~_GEN_559 & _GEN_243);
       reservation_station_0_decoded_instruction_needs_branch_unit <=
-        ~_GEN_622 & (_GEN_580 ? ~_GEN_601 & _GEN_246 : ~_GEN_560 & _GEN_246);
+        ~_GEN_621 & (_GEN_579 ? ~_GEN_600 & _GEN_244 : ~_GEN_559 & _GEN_244);
+      reservation_station_0_decoded_instruction_needs_CSRs <=
+        ~_GEN_621 & (_GEN_579 ? ~_GEN_600 & _GEN_245 : ~_GEN_559 & _GEN_245);
       reservation_station_0_decoded_instruction_SUBTRACT <=
-        ~_GEN_622 & (_GEN_580 ? ~_GEN_601 & _GEN_247 : ~_GEN_560 & _GEN_247);
+        ~_GEN_621 & (_GEN_579 ? ~_GEN_600 & _GEN_246 : ~_GEN_559 & _GEN_246);
       reservation_station_0_decoded_instruction_MULTIPLY <=
-        ~_GEN_622 & (_GEN_580 ? ~_GEN_601 & _GEN_248 : ~_GEN_560 & _GEN_248);
+        ~_GEN_621 & (_GEN_579 ? ~_GEN_600 & _GEN_247 : ~_GEN_559 & _GEN_247);
       reservation_station_0_decoded_instruction_IMMEDIATE <=
-        ~_GEN_622 & (_GEN_580 ? ~_GEN_601 & _GEN_249 : ~_GEN_560 & _GEN_249);
+        ~_GEN_621 & (_GEN_579 ? ~_GEN_600 & _GEN_248 : ~_GEN_559 & _GEN_248);
       reservation_station_0_decoded_instruction_IS_LOAD <=
-        ~_GEN_622 & (_GEN_580 ? ~_GEN_601 & _GEN_250 : ~_GEN_560 & _GEN_250);
+        ~_GEN_621 & (_GEN_579 ? ~_GEN_600 & _GEN_249 : ~_GEN_559 & _GEN_249);
       reservation_station_0_decoded_instruction_IS_STORE <=
-        ~_GEN_622 & (_GEN_580 ? ~_GEN_601 & _GEN_251 : ~_GEN_560 & _GEN_251);
+        ~_GEN_621 & (_GEN_579 ? ~_GEN_600 & _GEN_250 : ~_GEN_559 & _GEN_250);
       reservation_station_0_ready_bits_RS1_ready <=
-        ~_GEN_622 & (_GEN_580 ? ~_GEN_601 & _GEN_539 : ~_GEN_560 & _GEN_539);
+        ~_GEN_621 & (_GEN_579 ? ~_GEN_600 & _GEN_538 : ~_GEN_559 & _GEN_538);
       reservation_station_0_ready_bits_RS2_ready <=
-        ~_GEN_622 & (_GEN_580 ? ~_GEN_601 & _GEN_519 : ~_GEN_560 & _GEN_519);
+        ~_GEN_621 & (_GEN_579 ? ~_GEN_600 & _GEN_518 : ~_GEN_559 & _GEN_518);
       reservation_station_0_valid <=
-        ~_GEN_622 & (_GEN_580 ? ~(_GEN_581 | _GEN_560) & _GEN_499 : ~_GEN_560 & _GEN_499);
-      if (_GEN_625)
-        reservation_station_1_decoded_instruction_RDold <= 6'h0;
-      else if (_GEN_253)
-        reservation_station_1_decoded_instruction_RDold <=
-          io_backendPacket_3_bits_decoded_instruction_RDold;
-      else if (_GEN_220)
-        reservation_station_1_decoded_instruction_RDold <=
-          io_backendPacket_2_bits_decoded_instruction_RDold;
-      else if (_GEN_162)
-        reservation_station_1_decoded_instruction_RDold <=
-          io_backendPacket_1_bits_decoded_instruction_RDold;
-      else if (_GEN_140)
-        reservation_station_1_decoded_instruction_RDold <=
-          io_backendPacket_0_bits_decoded_instruction_RDold;
-      reservation_station_1_decoded_instruction_RDold_valid <=
-        ~_GEN_624 & (_GEN_580 ? ~_GEN_602 & _GEN_254 : ~_GEN_561 & _GEN_254);
-      if (_GEN_625)
+        ~_GEN_621 & (_GEN_579 ? ~(_GEN_580 | _GEN_559) & _GEN_498 : ~_GEN_559 & _GEN_498);
+      if (_GEN_624)
         reservation_station_1_decoded_instruction_RD <= 6'h0;
-      else if (_GEN_253)
+      else if (_GEN_252)
         reservation_station_1_decoded_instruction_RD <=
           io_backendPacket_3_bits_decoded_instruction_RD;
-      else if (_GEN_220)
+      else if (_GEN_219)
         reservation_station_1_decoded_instruction_RD <=
           io_backendPacket_2_bits_decoded_instruction_RD;
-      else if (_GEN_162)
+      else if (_GEN_161)
         reservation_station_1_decoded_instruction_RD <=
           io_backendPacket_1_bits_decoded_instruction_RD;
-      else if (_GEN_140)
+      else if (_GEN_139)
         reservation_station_1_decoded_instruction_RD <=
           io_backendPacket_0_bits_decoded_instruction_RD;
       reservation_station_1_decoded_instruction_RD_valid <=
-        ~_GEN_624 & (_GEN_580 ? ~_GEN_602 & _GEN_255 : ~_GEN_561 & _GEN_255);
-      if (_GEN_625)
+        ~_GEN_623 & (_GEN_579 ? ~_GEN_601 & _GEN_253 : ~_GEN_560 & _GEN_253);
+      if (_GEN_624)
         reservation_station_1_decoded_instruction_RS1 <= 6'h0;
-      else if (_GEN_253)
+      else if (_GEN_252)
         reservation_station_1_decoded_instruction_RS1 <=
           io_backendPacket_3_bits_decoded_instruction_RS1;
-      else if (_GEN_220)
+      else if (_GEN_219)
         reservation_station_1_decoded_instruction_RS1 <=
           io_backendPacket_2_bits_decoded_instruction_RS1;
-      else if (_GEN_162)
+      else if (_GEN_161)
         reservation_station_1_decoded_instruction_RS1 <=
           io_backendPacket_1_bits_decoded_instruction_RS1;
-      else if (_GEN_140)
+      else if (_GEN_139)
         reservation_station_1_decoded_instruction_RS1 <=
           io_backendPacket_0_bits_decoded_instruction_RS1;
       reservation_station_1_decoded_instruction_RS1_valid <=
-        ~_GEN_624 & (_GEN_580 ? ~_GEN_602 & _GEN_256 : ~_GEN_561 & _GEN_256);
-      if (_GEN_625)
+        ~_GEN_623 & (_GEN_579 ? ~_GEN_601 & _GEN_254 : ~_GEN_560 & _GEN_254);
+      if (_GEN_624)
         reservation_station_1_decoded_instruction_RS2 <= 6'h0;
-      else if (_GEN_253)
+      else if (_GEN_252)
         reservation_station_1_decoded_instruction_RS2 <=
           io_backendPacket_3_bits_decoded_instruction_RS2;
-      else if (_GEN_220)
+      else if (_GEN_219)
         reservation_station_1_decoded_instruction_RS2 <=
           io_backendPacket_2_bits_decoded_instruction_RS2;
-      else if (_GEN_162)
+      else if (_GEN_161)
         reservation_station_1_decoded_instruction_RS2 <=
           io_backendPacket_1_bits_decoded_instruction_RS2;
-      else if (_GEN_140)
+      else if (_GEN_139)
         reservation_station_1_decoded_instruction_RS2 <=
           io_backendPacket_0_bits_decoded_instruction_RS2;
       reservation_station_1_decoded_instruction_RS2_valid <=
-        ~_GEN_624 & (_GEN_580 ? ~_GEN_602 & _GEN_257 : ~_GEN_561 & _GEN_257);
-      if (_GEN_625) begin
+        ~_GEN_623 & (_GEN_579 ? ~_GEN_601 & _GEN_255 : ~_GEN_560 & _GEN_255);
+      if (_GEN_624) begin
         reservation_station_1_decoded_instruction_IMM <= 32'h0;
         reservation_station_1_decoded_instruction_FUNCT3 <= 3'h0;
         reservation_station_1_decoded_instruction_packet_index <= 4'h0;
@@ -6638,7 +6532,7 @@ module RS(
         reservation_station_1_decoded_instruction_portID <= 2'h0;
         reservation_station_1_decoded_instruction_RS_type <= 2'h0;
       end
-      else if (_GEN_253) begin
+      else if (_GEN_252) begin
         reservation_station_1_decoded_instruction_IMM <=
           io_backendPacket_3_bits_decoded_instruction_IMM;
         reservation_station_1_decoded_instruction_FUNCT3 <=
@@ -6654,7 +6548,7 @@ module RS(
         reservation_station_1_decoded_instruction_RS_type <=
           io_backendPacket_3_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_220) begin
+      else if (_GEN_219) begin
         reservation_station_1_decoded_instruction_IMM <=
           io_backendPacket_2_bits_decoded_instruction_IMM;
         reservation_station_1_decoded_instruction_FUNCT3 <=
@@ -6670,7 +6564,7 @@ module RS(
         reservation_station_1_decoded_instruction_RS_type <=
           io_backendPacket_2_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_162) begin
+      else if (_GEN_161) begin
         reservation_station_1_decoded_instruction_IMM <=
           io_backendPacket_1_bits_decoded_instruction_IMM;
         reservation_station_1_decoded_instruction_FUNCT3 <=
@@ -6686,7 +6580,7 @@ module RS(
         reservation_station_1_decoded_instruction_RS_type <=
           io_backendPacket_1_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_140) begin
+      else if (_GEN_139) begin
         reservation_station_1_decoded_instruction_IMM <=
           io_backendPacket_0_bits_decoded_instruction_IMM;
         reservation_station_1_decoded_instruction_FUNCT3 <=
@@ -6703,90 +6597,76 @@ module RS(
           io_backendPacket_0_bits_decoded_instruction_RS_type;
       end
       reservation_station_1_decoded_instruction_needs_ALU <=
-        ~_GEN_624 & (_GEN_580 ? ~_GEN_602 & _GEN_258 : ~_GEN_561 & _GEN_258);
+        ~_GEN_623 & (_GEN_579 ? ~_GEN_601 & _GEN_256 : ~_GEN_560 & _GEN_256);
       reservation_station_1_decoded_instruction_needs_branch_unit <=
-        ~_GEN_624 & (_GEN_580 ? ~_GEN_602 & _GEN_259 : ~_GEN_561 & _GEN_259);
+        ~_GEN_623 & (_GEN_579 ? ~_GEN_601 & _GEN_257 : ~_GEN_560 & _GEN_257);
+      reservation_station_1_decoded_instruction_needs_CSRs <=
+        ~_GEN_623 & (_GEN_579 ? ~_GEN_601 & _GEN_258 : ~_GEN_560 & _GEN_258);
       reservation_station_1_decoded_instruction_SUBTRACT <=
-        ~_GEN_624 & (_GEN_580 ? ~_GEN_602 & _GEN_260 : ~_GEN_561 & _GEN_260);
+        ~_GEN_623 & (_GEN_579 ? ~_GEN_601 & _GEN_259 : ~_GEN_560 & _GEN_259);
       reservation_station_1_decoded_instruction_MULTIPLY <=
-        ~_GEN_624 & (_GEN_580 ? ~_GEN_602 & _GEN_261 : ~_GEN_561 & _GEN_261);
+        ~_GEN_623 & (_GEN_579 ? ~_GEN_601 & _GEN_260 : ~_GEN_560 & _GEN_260);
       reservation_station_1_decoded_instruction_IMMEDIATE <=
-        ~_GEN_624 & (_GEN_580 ? ~_GEN_602 & _GEN_262 : ~_GEN_561 & _GEN_262);
+        ~_GEN_623 & (_GEN_579 ? ~_GEN_601 & _GEN_261 : ~_GEN_560 & _GEN_261);
       reservation_station_1_decoded_instruction_IS_LOAD <=
-        ~_GEN_624 & (_GEN_580 ? ~_GEN_602 & _GEN_263 : ~_GEN_561 & _GEN_263);
+        ~_GEN_623 & (_GEN_579 ? ~_GEN_601 & _GEN_262 : ~_GEN_560 & _GEN_262);
       reservation_station_1_decoded_instruction_IS_STORE <=
-        ~_GEN_624 & (_GEN_580 ? ~_GEN_602 & _GEN_264 : ~_GEN_561 & _GEN_264);
+        ~_GEN_623 & (_GEN_579 ? ~_GEN_601 & _GEN_263 : ~_GEN_560 & _GEN_263);
       reservation_station_1_ready_bits_RS1_ready <=
-        ~_GEN_624 & (_GEN_580 ? ~_GEN_602 & _GEN_540 : ~_GEN_561 & _GEN_540);
+        ~_GEN_623 & (_GEN_579 ? ~_GEN_601 & _GEN_539 : ~_GEN_560 & _GEN_539);
       reservation_station_1_ready_bits_RS2_ready <=
-        ~_GEN_624 & (_GEN_580 ? ~_GEN_602 & _GEN_520 : ~_GEN_561 & _GEN_520);
+        ~_GEN_623 & (_GEN_579 ? ~_GEN_601 & _GEN_519 : ~_GEN_560 & _GEN_519);
       reservation_station_1_valid <=
-        ~_GEN_624 & (_GEN_580 ? ~(_GEN_582 | _GEN_561) & _GEN_500 : ~_GEN_561 & _GEN_500);
-      if (_GEN_627)
-        reservation_station_2_decoded_instruction_RDold <= 6'h0;
-      else if (_GEN_266)
-        reservation_station_2_decoded_instruction_RDold <=
-          io_backendPacket_3_bits_decoded_instruction_RDold;
-      else if (_GEN_221)
-        reservation_station_2_decoded_instruction_RDold <=
-          io_backendPacket_2_bits_decoded_instruction_RDold;
-      else if (_GEN_164)
-        reservation_station_2_decoded_instruction_RDold <=
-          io_backendPacket_1_bits_decoded_instruction_RDold;
-      else if (_GEN_141)
-        reservation_station_2_decoded_instruction_RDold <=
-          io_backendPacket_0_bits_decoded_instruction_RDold;
-      reservation_station_2_decoded_instruction_RDold_valid <=
-        ~_GEN_626 & (_GEN_580 ? ~_GEN_603 & _GEN_267 : ~_GEN_562 & _GEN_267);
-      if (_GEN_627)
+        ~_GEN_623 & (_GEN_579 ? ~(_GEN_581 | _GEN_560) & _GEN_499 : ~_GEN_560 & _GEN_499);
+      if (_GEN_626)
         reservation_station_2_decoded_instruction_RD <= 6'h0;
-      else if (_GEN_266)
+      else if (_GEN_265)
         reservation_station_2_decoded_instruction_RD <=
           io_backendPacket_3_bits_decoded_instruction_RD;
-      else if (_GEN_221)
+      else if (_GEN_220)
         reservation_station_2_decoded_instruction_RD <=
           io_backendPacket_2_bits_decoded_instruction_RD;
-      else if (_GEN_164)
+      else if (_GEN_163)
         reservation_station_2_decoded_instruction_RD <=
           io_backendPacket_1_bits_decoded_instruction_RD;
-      else if (_GEN_141)
+      else if (_GEN_140)
         reservation_station_2_decoded_instruction_RD <=
           io_backendPacket_0_bits_decoded_instruction_RD;
       reservation_station_2_decoded_instruction_RD_valid <=
-        ~_GEN_626 & (_GEN_580 ? ~_GEN_603 & _GEN_268 : ~_GEN_562 & _GEN_268);
-      if (_GEN_627)
+        ~_GEN_625 & (_GEN_579 ? ~_GEN_602 & _GEN_266 : ~_GEN_561 & _GEN_266);
+      if (_GEN_626)
         reservation_station_2_decoded_instruction_RS1 <= 6'h0;
-      else if (_GEN_266)
+      else if (_GEN_265)
         reservation_station_2_decoded_instruction_RS1 <=
           io_backendPacket_3_bits_decoded_instruction_RS1;
-      else if (_GEN_221)
+      else if (_GEN_220)
         reservation_station_2_decoded_instruction_RS1 <=
           io_backendPacket_2_bits_decoded_instruction_RS1;
-      else if (_GEN_164)
+      else if (_GEN_163)
         reservation_station_2_decoded_instruction_RS1 <=
           io_backendPacket_1_bits_decoded_instruction_RS1;
-      else if (_GEN_141)
+      else if (_GEN_140)
         reservation_station_2_decoded_instruction_RS1 <=
           io_backendPacket_0_bits_decoded_instruction_RS1;
       reservation_station_2_decoded_instruction_RS1_valid <=
-        ~_GEN_626 & (_GEN_580 ? ~_GEN_603 & _GEN_269 : ~_GEN_562 & _GEN_269);
-      if (_GEN_627)
+        ~_GEN_625 & (_GEN_579 ? ~_GEN_602 & _GEN_267 : ~_GEN_561 & _GEN_267);
+      if (_GEN_626)
         reservation_station_2_decoded_instruction_RS2 <= 6'h0;
-      else if (_GEN_266)
+      else if (_GEN_265)
         reservation_station_2_decoded_instruction_RS2 <=
           io_backendPacket_3_bits_decoded_instruction_RS2;
-      else if (_GEN_221)
+      else if (_GEN_220)
         reservation_station_2_decoded_instruction_RS2 <=
           io_backendPacket_2_bits_decoded_instruction_RS2;
-      else if (_GEN_164)
+      else if (_GEN_163)
         reservation_station_2_decoded_instruction_RS2 <=
           io_backendPacket_1_bits_decoded_instruction_RS2;
-      else if (_GEN_141)
+      else if (_GEN_140)
         reservation_station_2_decoded_instruction_RS2 <=
           io_backendPacket_0_bits_decoded_instruction_RS2;
       reservation_station_2_decoded_instruction_RS2_valid <=
-        ~_GEN_626 & (_GEN_580 ? ~_GEN_603 & _GEN_270 : ~_GEN_562 & _GEN_270);
-      if (_GEN_627) begin
+        ~_GEN_625 & (_GEN_579 ? ~_GEN_602 & _GEN_268 : ~_GEN_561 & _GEN_268);
+      if (_GEN_626) begin
         reservation_station_2_decoded_instruction_IMM <= 32'h0;
         reservation_station_2_decoded_instruction_FUNCT3 <= 3'h0;
         reservation_station_2_decoded_instruction_packet_index <= 4'h0;
@@ -6795,7 +6675,7 @@ module RS(
         reservation_station_2_decoded_instruction_portID <= 2'h0;
         reservation_station_2_decoded_instruction_RS_type <= 2'h0;
       end
-      else if (_GEN_266) begin
+      else if (_GEN_265) begin
         reservation_station_2_decoded_instruction_IMM <=
           io_backendPacket_3_bits_decoded_instruction_IMM;
         reservation_station_2_decoded_instruction_FUNCT3 <=
@@ -6811,7 +6691,7 @@ module RS(
         reservation_station_2_decoded_instruction_RS_type <=
           io_backendPacket_3_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_221) begin
+      else if (_GEN_220) begin
         reservation_station_2_decoded_instruction_IMM <=
           io_backendPacket_2_bits_decoded_instruction_IMM;
         reservation_station_2_decoded_instruction_FUNCT3 <=
@@ -6827,7 +6707,7 @@ module RS(
         reservation_station_2_decoded_instruction_RS_type <=
           io_backendPacket_2_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_164) begin
+      else if (_GEN_163) begin
         reservation_station_2_decoded_instruction_IMM <=
           io_backendPacket_1_bits_decoded_instruction_IMM;
         reservation_station_2_decoded_instruction_FUNCT3 <=
@@ -6843,7 +6723,7 @@ module RS(
         reservation_station_2_decoded_instruction_RS_type <=
           io_backendPacket_1_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_141) begin
+      else if (_GEN_140) begin
         reservation_station_2_decoded_instruction_IMM <=
           io_backendPacket_0_bits_decoded_instruction_IMM;
         reservation_station_2_decoded_instruction_FUNCT3 <=
@@ -6860,90 +6740,76 @@ module RS(
           io_backendPacket_0_bits_decoded_instruction_RS_type;
       end
       reservation_station_2_decoded_instruction_needs_ALU <=
-        ~_GEN_626 & (_GEN_580 ? ~_GEN_603 & _GEN_271 : ~_GEN_562 & _GEN_271);
+        ~_GEN_625 & (_GEN_579 ? ~_GEN_602 & _GEN_269 : ~_GEN_561 & _GEN_269);
       reservation_station_2_decoded_instruction_needs_branch_unit <=
-        ~_GEN_626 & (_GEN_580 ? ~_GEN_603 & _GEN_272 : ~_GEN_562 & _GEN_272);
+        ~_GEN_625 & (_GEN_579 ? ~_GEN_602 & _GEN_270 : ~_GEN_561 & _GEN_270);
+      reservation_station_2_decoded_instruction_needs_CSRs <=
+        ~_GEN_625 & (_GEN_579 ? ~_GEN_602 & _GEN_271 : ~_GEN_561 & _GEN_271);
       reservation_station_2_decoded_instruction_SUBTRACT <=
-        ~_GEN_626 & (_GEN_580 ? ~_GEN_603 & _GEN_273 : ~_GEN_562 & _GEN_273);
+        ~_GEN_625 & (_GEN_579 ? ~_GEN_602 & _GEN_272 : ~_GEN_561 & _GEN_272);
       reservation_station_2_decoded_instruction_MULTIPLY <=
-        ~_GEN_626 & (_GEN_580 ? ~_GEN_603 & _GEN_274 : ~_GEN_562 & _GEN_274);
+        ~_GEN_625 & (_GEN_579 ? ~_GEN_602 & _GEN_273 : ~_GEN_561 & _GEN_273);
       reservation_station_2_decoded_instruction_IMMEDIATE <=
-        ~_GEN_626 & (_GEN_580 ? ~_GEN_603 & _GEN_275 : ~_GEN_562 & _GEN_275);
+        ~_GEN_625 & (_GEN_579 ? ~_GEN_602 & _GEN_274 : ~_GEN_561 & _GEN_274);
       reservation_station_2_decoded_instruction_IS_LOAD <=
-        ~_GEN_626 & (_GEN_580 ? ~_GEN_603 & _GEN_276 : ~_GEN_562 & _GEN_276);
+        ~_GEN_625 & (_GEN_579 ? ~_GEN_602 & _GEN_275 : ~_GEN_561 & _GEN_275);
       reservation_station_2_decoded_instruction_IS_STORE <=
-        ~_GEN_626 & (_GEN_580 ? ~_GEN_603 & _GEN_277 : ~_GEN_562 & _GEN_277);
+        ~_GEN_625 & (_GEN_579 ? ~_GEN_602 & _GEN_276 : ~_GEN_561 & _GEN_276);
       reservation_station_2_ready_bits_RS1_ready <=
-        ~_GEN_626 & (_GEN_580 ? ~_GEN_603 & _GEN_541 : ~_GEN_562 & _GEN_541);
+        ~_GEN_625 & (_GEN_579 ? ~_GEN_602 & _GEN_540 : ~_GEN_561 & _GEN_540);
       reservation_station_2_ready_bits_RS2_ready <=
-        ~_GEN_626 & (_GEN_580 ? ~_GEN_603 & _GEN_521 : ~_GEN_562 & _GEN_521);
+        ~_GEN_625 & (_GEN_579 ? ~_GEN_602 & _GEN_520 : ~_GEN_561 & _GEN_520);
       reservation_station_2_valid <=
-        ~_GEN_626 & (_GEN_580 ? ~(_GEN_583 | _GEN_562) & _GEN_501 : ~_GEN_562 & _GEN_501);
-      if (_GEN_629)
-        reservation_station_3_decoded_instruction_RDold <= 6'h0;
-      else if (_GEN_279)
-        reservation_station_3_decoded_instruction_RDold <=
-          io_backendPacket_3_bits_decoded_instruction_RDold;
-      else if (_GEN_222)
-        reservation_station_3_decoded_instruction_RDold <=
-          io_backendPacket_2_bits_decoded_instruction_RDold;
-      else if (_GEN_166)
-        reservation_station_3_decoded_instruction_RDold <=
-          io_backendPacket_1_bits_decoded_instruction_RDold;
-      else if (_GEN_142)
-        reservation_station_3_decoded_instruction_RDold <=
-          io_backendPacket_0_bits_decoded_instruction_RDold;
-      reservation_station_3_decoded_instruction_RDold_valid <=
-        ~_GEN_628 & (_GEN_580 ? ~_GEN_604 & _GEN_280 : ~_GEN_563 & _GEN_280);
-      if (_GEN_629)
+        ~_GEN_625 & (_GEN_579 ? ~(_GEN_582 | _GEN_561) & _GEN_500 : ~_GEN_561 & _GEN_500);
+      if (_GEN_628)
         reservation_station_3_decoded_instruction_RD <= 6'h0;
-      else if (_GEN_279)
+      else if (_GEN_278)
         reservation_station_3_decoded_instruction_RD <=
           io_backendPacket_3_bits_decoded_instruction_RD;
-      else if (_GEN_222)
+      else if (_GEN_221)
         reservation_station_3_decoded_instruction_RD <=
           io_backendPacket_2_bits_decoded_instruction_RD;
-      else if (_GEN_166)
+      else if (_GEN_165)
         reservation_station_3_decoded_instruction_RD <=
           io_backendPacket_1_bits_decoded_instruction_RD;
-      else if (_GEN_142)
+      else if (_GEN_141)
         reservation_station_3_decoded_instruction_RD <=
           io_backendPacket_0_bits_decoded_instruction_RD;
       reservation_station_3_decoded_instruction_RD_valid <=
-        ~_GEN_628 & (_GEN_580 ? ~_GEN_604 & _GEN_281 : ~_GEN_563 & _GEN_281);
-      if (_GEN_629)
+        ~_GEN_627 & (_GEN_579 ? ~_GEN_603 & _GEN_279 : ~_GEN_562 & _GEN_279);
+      if (_GEN_628)
         reservation_station_3_decoded_instruction_RS1 <= 6'h0;
-      else if (_GEN_279)
+      else if (_GEN_278)
         reservation_station_3_decoded_instruction_RS1 <=
           io_backendPacket_3_bits_decoded_instruction_RS1;
-      else if (_GEN_222)
+      else if (_GEN_221)
         reservation_station_3_decoded_instruction_RS1 <=
           io_backendPacket_2_bits_decoded_instruction_RS1;
-      else if (_GEN_166)
+      else if (_GEN_165)
         reservation_station_3_decoded_instruction_RS1 <=
           io_backendPacket_1_bits_decoded_instruction_RS1;
-      else if (_GEN_142)
+      else if (_GEN_141)
         reservation_station_3_decoded_instruction_RS1 <=
           io_backendPacket_0_bits_decoded_instruction_RS1;
       reservation_station_3_decoded_instruction_RS1_valid <=
-        ~_GEN_628 & (_GEN_580 ? ~_GEN_604 & _GEN_282 : ~_GEN_563 & _GEN_282);
-      if (_GEN_629)
+        ~_GEN_627 & (_GEN_579 ? ~_GEN_603 & _GEN_280 : ~_GEN_562 & _GEN_280);
+      if (_GEN_628)
         reservation_station_3_decoded_instruction_RS2 <= 6'h0;
-      else if (_GEN_279)
+      else if (_GEN_278)
         reservation_station_3_decoded_instruction_RS2 <=
           io_backendPacket_3_bits_decoded_instruction_RS2;
-      else if (_GEN_222)
+      else if (_GEN_221)
         reservation_station_3_decoded_instruction_RS2 <=
           io_backendPacket_2_bits_decoded_instruction_RS2;
-      else if (_GEN_166)
+      else if (_GEN_165)
         reservation_station_3_decoded_instruction_RS2 <=
           io_backendPacket_1_bits_decoded_instruction_RS2;
-      else if (_GEN_142)
+      else if (_GEN_141)
         reservation_station_3_decoded_instruction_RS2 <=
           io_backendPacket_0_bits_decoded_instruction_RS2;
       reservation_station_3_decoded_instruction_RS2_valid <=
-        ~_GEN_628 & (_GEN_580 ? ~_GEN_604 & _GEN_283 : ~_GEN_563 & _GEN_283);
-      if (_GEN_629) begin
+        ~_GEN_627 & (_GEN_579 ? ~_GEN_603 & _GEN_281 : ~_GEN_562 & _GEN_281);
+      if (_GEN_628) begin
         reservation_station_3_decoded_instruction_IMM <= 32'h0;
         reservation_station_3_decoded_instruction_FUNCT3 <= 3'h0;
         reservation_station_3_decoded_instruction_packet_index <= 4'h0;
@@ -6952,7 +6818,7 @@ module RS(
         reservation_station_3_decoded_instruction_portID <= 2'h0;
         reservation_station_3_decoded_instruction_RS_type <= 2'h0;
       end
-      else if (_GEN_279) begin
+      else if (_GEN_278) begin
         reservation_station_3_decoded_instruction_IMM <=
           io_backendPacket_3_bits_decoded_instruction_IMM;
         reservation_station_3_decoded_instruction_FUNCT3 <=
@@ -6968,7 +6834,7 @@ module RS(
         reservation_station_3_decoded_instruction_RS_type <=
           io_backendPacket_3_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_222) begin
+      else if (_GEN_221) begin
         reservation_station_3_decoded_instruction_IMM <=
           io_backendPacket_2_bits_decoded_instruction_IMM;
         reservation_station_3_decoded_instruction_FUNCT3 <=
@@ -6984,7 +6850,7 @@ module RS(
         reservation_station_3_decoded_instruction_RS_type <=
           io_backendPacket_2_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_166) begin
+      else if (_GEN_165) begin
         reservation_station_3_decoded_instruction_IMM <=
           io_backendPacket_1_bits_decoded_instruction_IMM;
         reservation_station_3_decoded_instruction_FUNCT3 <=
@@ -7000,7 +6866,7 @@ module RS(
         reservation_station_3_decoded_instruction_RS_type <=
           io_backendPacket_1_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_142) begin
+      else if (_GEN_141) begin
         reservation_station_3_decoded_instruction_IMM <=
           io_backendPacket_0_bits_decoded_instruction_IMM;
         reservation_station_3_decoded_instruction_FUNCT3 <=
@@ -7017,90 +6883,76 @@ module RS(
           io_backendPacket_0_bits_decoded_instruction_RS_type;
       end
       reservation_station_3_decoded_instruction_needs_ALU <=
-        ~_GEN_628 & (_GEN_580 ? ~_GEN_604 & _GEN_284 : ~_GEN_563 & _GEN_284);
+        ~_GEN_627 & (_GEN_579 ? ~_GEN_603 & _GEN_282 : ~_GEN_562 & _GEN_282);
       reservation_station_3_decoded_instruction_needs_branch_unit <=
-        ~_GEN_628 & (_GEN_580 ? ~_GEN_604 & _GEN_285 : ~_GEN_563 & _GEN_285);
+        ~_GEN_627 & (_GEN_579 ? ~_GEN_603 & _GEN_283 : ~_GEN_562 & _GEN_283);
+      reservation_station_3_decoded_instruction_needs_CSRs <=
+        ~_GEN_627 & (_GEN_579 ? ~_GEN_603 & _GEN_284 : ~_GEN_562 & _GEN_284);
       reservation_station_3_decoded_instruction_SUBTRACT <=
-        ~_GEN_628 & (_GEN_580 ? ~_GEN_604 & _GEN_286 : ~_GEN_563 & _GEN_286);
+        ~_GEN_627 & (_GEN_579 ? ~_GEN_603 & _GEN_285 : ~_GEN_562 & _GEN_285);
       reservation_station_3_decoded_instruction_MULTIPLY <=
-        ~_GEN_628 & (_GEN_580 ? ~_GEN_604 & _GEN_287 : ~_GEN_563 & _GEN_287);
+        ~_GEN_627 & (_GEN_579 ? ~_GEN_603 & _GEN_286 : ~_GEN_562 & _GEN_286);
       reservation_station_3_decoded_instruction_IMMEDIATE <=
-        ~_GEN_628 & (_GEN_580 ? ~_GEN_604 & _GEN_288 : ~_GEN_563 & _GEN_288);
+        ~_GEN_627 & (_GEN_579 ? ~_GEN_603 & _GEN_287 : ~_GEN_562 & _GEN_287);
       reservation_station_3_decoded_instruction_IS_LOAD <=
-        ~_GEN_628 & (_GEN_580 ? ~_GEN_604 & _GEN_289 : ~_GEN_563 & _GEN_289);
+        ~_GEN_627 & (_GEN_579 ? ~_GEN_603 & _GEN_288 : ~_GEN_562 & _GEN_288);
       reservation_station_3_decoded_instruction_IS_STORE <=
-        ~_GEN_628 & (_GEN_580 ? ~_GEN_604 & _GEN_290 : ~_GEN_563 & _GEN_290);
+        ~_GEN_627 & (_GEN_579 ? ~_GEN_603 & _GEN_289 : ~_GEN_562 & _GEN_289);
       reservation_station_3_ready_bits_RS1_ready <=
-        ~_GEN_628 & (_GEN_580 ? ~_GEN_604 & _GEN_542 : ~_GEN_563 & _GEN_542);
+        ~_GEN_627 & (_GEN_579 ? ~_GEN_603 & _GEN_541 : ~_GEN_562 & _GEN_541);
       reservation_station_3_ready_bits_RS2_ready <=
-        ~_GEN_628 & (_GEN_580 ? ~_GEN_604 & _GEN_522 : ~_GEN_563 & _GEN_522);
+        ~_GEN_627 & (_GEN_579 ? ~_GEN_603 & _GEN_521 : ~_GEN_562 & _GEN_521);
       reservation_station_3_valid <=
-        ~_GEN_628 & (_GEN_580 ? ~(_GEN_584 | _GEN_563) & _GEN_502 : ~_GEN_563 & _GEN_502);
-      if (_GEN_631)
-        reservation_station_4_decoded_instruction_RDold <= 6'h0;
-      else if (_GEN_292)
-        reservation_station_4_decoded_instruction_RDold <=
-          io_backendPacket_3_bits_decoded_instruction_RDold;
-      else if (_GEN_223)
-        reservation_station_4_decoded_instruction_RDold <=
-          io_backendPacket_2_bits_decoded_instruction_RDold;
-      else if (_GEN_168)
-        reservation_station_4_decoded_instruction_RDold <=
-          io_backendPacket_1_bits_decoded_instruction_RDold;
-      else if (_GEN_143)
-        reservation_station_4_decoded_instruction_RDold <=
-          io_backendPacket_0_bits_decoded_instruction_RDold;
-      reservation_station_4_decoded_instruction_RDold_valid <=
-        ~_GEN_630 & (_GEN_580 ? ~_GEN_605 & _GEN_293 : ~_GEN_564 & _GEN_293);
-      if (_GEN_631)
+        ~_GEN_627 & (_GEN_579 ? ~(_GEN_583 | _GEN_562) & _GEN_501 : ~_GEN_562 & _GEN_501);
+      if (_GEN_630)
         reservation_station_4_decoded_instruction_RD <= 6'h0;
-      else if (_GEN_292)
+      else if (_GEN_291)
         reservation_station_4_decoded_instruction_RD <=
           io_backendPacket_3_bits_decoded_instruction_RD;
-      else if (_GEN_223)
+      else if (_GEN_222)
         reservation_station_4_decoded_instruction_RD <=
           io_backendPacket_2_bits_decoded_instruction_RD;
-      else if (_GEN_168)
+      else if (_GEN_167)
         reservation_station_4_decoded_instruction_RD <=
           io_backendPacket_1_bits_decoded_instruction_RD;
-      else if (_GEN_143)
+      else if (_GEN_142)
         reservation_station_4_decoded_instruction_RD <=
           io_backendPacket_0_bits_decoded_instruction_RD;
       reservation_station_4_decoded_instruction_RD_valid <=
-        ~_GEN_630 & (_GEN_580 ? ~_GEN_605 & _GEN_294 : ~_GEN_564 & _GEN_294);
-      if (_GEN_631)
+        ~_GEN_629 & (_GEN_579 ? ~_GEN_604 & _GEN_292 : ~_GEN_563 & _GEN_292);
+      if (_GEN_630)
         reservation_station_4_decoded_instruction_RS1 <= 6'h0;
-      else if (_GEN_292)
+      else if (_GEN_291)
         reservation_station_4_decoded_instruction_RS1 <=
           io_backendPacket_3_bits_decoded_instruction_RS1;
-      else if (_GEN_223)
+      else if (_GEN_222)
         reservation_station_4_decoded_instruction_RS1 <=
           io_backendPacket_2_bits_decoded_instruction_RS1;
-      else if (_GEN_168)
+      else if (_GEN_167)
         reservation_station_4_decoded_instruction_RS1 <=
           io_backendPacket_1_bits_decoded_instruction_RS1;
-      else if (_GEN_143)
+      else if (_GEN_142)
         reservation_station_4_decoded_instruction_RS1 <=
           io_backendPacket_0_bits_decoded_instruction_RS1;
       reservation_station_4_decoded_instruction_RS1_valid <=
-        ~_GEN_630 & (_GEN_580 ? ~_GEN_605 & _GEN_295 : ~_GEN_564 & _GEN_295);
-      if (_GEN_631)
+        ~_GEN_629 & (_GEN_579 ? ~_GEN_604 & _GEN_293 : ~_GEN_563 & _GEN_293);
+      if (_GEN_630)
         reservation_station_4_decoded_instruction_RS2 <= 6'h0;
-      else if (_GEN_292)
+      else if (_GEN_291)
         reservation_station_4_decoded_instruction_RS2 <=
           io_backendPacket_3_bits_decoded_instruction_RS2;
-      else if (_GEN_223)
+      else if (_GEN_222)
         reservation_station_4_decoded_instruction_RS2 <=
           io_backendPacket_2_bits_decoded_instruction_RS2;
-      else if (_GEN_168)
+      else if (_GEN_167)
         reservation_station_4_decoded_instruction_RS2 <=
           io_backendPacket_1_bits_decoded_instruction_RS2;
-      else if (_GEN_143)
+      else if (_GEN_142)
         reservation_station_4_decoded_instruction_RS2 <=
           io_backendPacket_0_bits_decoded_instruction_RS2;
       reservation_station_4_decoded_instruction_RS2_valid <=
-        ~_GEN_630 & (_GEN_580 ? ~_GEN_605 & _GEN_296 : ~_GEN_564 & _GEN_296);
-      if (_GEN_631) begin
+        ~_GEN_629 & (_GEN_579 ? ~_GEN_604 & _GEN_294 : ~_GEN_563 & _GEN_294);
+      if (_GEN_630) begin
         reservation_station_4_decoded_instruction_IMM <= 32'h0;
         reservation_station_4_decoded_instruction_FUNCT3 <= 3'h0;
         reservation_station_4_decoded_instruction_packet_index <= 4'h0;
@@ -7109,7 +6961,7 @@ module RS(
         reservation_station_4_decoded_instruction_portID <= 2'h0;
         reservation_station_4_decoded_instruction_RS_type <= 2'h0;
       end
-      else if (_GEN_292) begin
+      else if (_GEN_291) begin
         reservation_station_4_decoded_instruction_IMM <=
           io_backendPacket_3_bits_decoded_instruction_IMM;
         reservation_station_4_decoded_instruction_FUNCT3 <=
@@ -7125,7 +6977,7 @@ module RS(
         reservation_station_4_decoded_instruction_RS_type <=
           io_backendPacket_3_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_223) begin
+      else if (_GEN_222) begin
         reservation_station_4_decoded_instruction_IMM <=
           io_backendPacket_2_bits_decoded_instruction_IMM;
         reservation_station_4_decoded_instruction_FUNCT3 <=
@@ -7141,7 +6993,7 @@ module RS(
         reservation_station_4_decoded_instruction_RS_type <=
           io_backendPacket_2_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_168) begin
+      else if (_GEN_167) begin
         reservation_station_4_decoded_instruction_IMM <=
           io_backendPacket_1_bits_decoded_instruction_IMM;
         reservation_station_4_decoded_instruction_FUNCT3 <=
@@ -7157,7 +7009,7 @@ module RS(
         reservation_station_4_decoded_instruction_RS_type <=
           io_backendPacket_1_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_143) begin
+      else if (_GEN_142) begin
         reservation_station_4_decoded_instruction_IMM <=
           io_backendPacket_0_bits_decoded_instruction_IMM;
         reservation_station_4_decoded_instruction_FUNCT3 <=
@@ -7174,90 +7026,76 @@ module RS(
           io_backendPacket_0_bits_decoded_instruction_RS_type;
       end
       reservation_station_4_decoded_instruction_needs_ALU <=
-        ~_GEN_630 & (_GEN_580 ? ~_GEN_605 & _GEN_297 : ~_GEN_564 & _GEN_297);
+        ~_GEN_629 & (_GEN_579 ? ~_GEN_604 & _GEN_295 : ~_GEN_563 & _GEN_295);
       reservation_station_4_decoded_instruction_needs_branch_unit <=
-        ~_GEN_630 & (_GEN_580 ? ~_GEN_605 & _GEN_298 : ~_GEN_564 & _GEN_298);
+        ~_GEN_629 & (_GEN_579 ? ~_GEN_604 & _GEN_296 : ~_GEN_563 & _GEN_296);
+      reservation_station_4_decoded_instruction_needs_CSRs <=
+        ~_GEN_629 & (_GEN_579 ? ~_GEN_604 & _GEN_297 : ~_GEN_563 & _GEN_297);
       reservation_station_4_decoded_instruction_SUBTRACT <=
-        ~_GEN_630 & (_GEN_580 ? ~_GEN_605 & _GEN_299 : ~_GEN_564 & _GEN_299);
+        ~_GEN_629 & (_GEN_579 ? ~_GEN_604 & _GEN_298 : ~_GEN_563 & _GEN_298);
       reservation_station_4_decoded_instruction_MULTIPLY <=
-        ~_GEN_630 & (_GEN_580 ? ~_GEN_605 & _GEN_300 : ~_GEN_564 & _GEN_300);
+        ~_GEN_629 & (_GEN_579 ? ~_GEN_604 & _GEN_299 : ~_GEN_563 & _GEN_299);
       reservation_station_4_decoded_instruction_IMMEDIATE <=
-        ~_GEN_630 & (_GEN_580 ? ~_GEN_605 & _GEN_301 : ~_GEN_564 & _GEN_301);
+        ~_GEN_629 & (_GEN_579 ? ~_GEN_604 & _GEN_300 : ~_GEN_563 & _GEN_300);
       reservation_station_4_decoded_instruction_IS_LOAD <=
-        ~_GEN_630 & (_GEN_580 ? ~_GEN_605 & _GEN_302 : ~_GEN_564 & _GEN_302);
+        ~_GEN_629 & (_GEN_579 ? ~_GEN_604 & _GEN_301 : ~_GEN_563 & _GEN_301);
       reservation_station_4_decoded_instruction_IS_STORE <=
-        ~_GEN_630 & (_GEN_580 ? ~_GEN_605 & _GEN_303 : ~_GEN_564 & _GEN_303);
+        ~_GEN_629 & (_GEN_579 ? ~_GEN_604 & _GEN_302 : ~_GEN_563 & _GEN_302);
       reservation_station_4_ready_bits_RS1_ready <=
-        ~_GEN_630 & (_GEN_580 ? ~_GEN_605 & _GEN_543 : ~_GEN_564 & _GEN_543);
+        ~_GEN_629 & (_GEN_579 ? ~_GEN_604 & _GEN_542 : ~_GEN_563 & _GEN_542);
       reservation_station_4_ready_bits_RS2_ready <=
-        ~_GEN_630 & (_GEN_580 ? ~_GEN_605 & _GEN_523 : ~_GEN_564 & _GEN_523);
+        ~_GEN_629 & (_GEN_579 ? ~_GEN_604 & _GEN_522 : ~_GEN_563 & _GEN_522);
       reservation_station_4_valid <=
-        ~_GEN_630 & (_GEN_580 ? ~(_GEN_585 | _GEN_564) & _GEN_503 : ~_GEN_564 & _GEN_503);
-      if (_GEN_633)
-        reservation_station_5_decoded_instruction_RDold <= 6'h0;
-      else if (_GEN_305)
-        reservation_station_5_decoded_instruction_RDold <=
-          io_backendPacket_3_bits_decoded_instruction_RDold;
-      else if (_GEN_224)
-        reservation_station_5_decoded_instruction_RDold <=
-          io_backendPacket_2_bits_decoded_instruction_RDold;
-      else if (_GEN_170)
-        reservation_station_5_decoded_instruction_RDold <=
-          io_backendPacket_1_bits_decoded_instruction_RDold;
-      else if (_GEN_144)
-        reservation_station_5_decoded_instruction_RDold <=
-          io_backendPacket_0_bits_decoded_instruction_RDold;
-      reservation_station_5_decoded_instruction_RDold_valid <=
-        ~_GEN_632 & (_GEN_580 ? ~_GEN_606 & _GEN_306 : ~_GEN_565 & _GEN_306);
-      if (_GEN_633)
+        ~_GEN_629 & (_GEN_579 ? ~(_GEN_584 | _GEN_563) & _GEN_502 : ~_GEN_563 & _GEN_502);
+      if (_GEN_632)
         reservation_station_5_decoded_instruction_RD <= 6'h0;
-      else if (_GEN_305)
+      else if (_GEN_304)
         reservation_station_5_decoded_instruction_RD <=
           io_backendPacket_3_bits_decoded_instruction_RD;
-      else if (_GEN_224)
+      else if (_GEN_223)
         reservation_station_5_decoded_instruction_RD <=
           io_backendPacket_2_bits_decoded_instruction_RD;
-      else if (_GEN_170)
+      else if (_GEN_169)
         reservation_station_5_decoded_instruction_RD <=
           io_backendPacket_1_bits_decoded_instruction_RD;
-      else if (_GEN_144)
+      else if (_GEN_143)
         reservation_station_5_decoded_instruction_RD <=
           io_backendPacket_0_bits_decoded_instruction_RD;
       reservation_station_5_decoded_instruction_RD_valid <=
-        ~_GEN_632 & (_GEN_580 ? ~_GEN_606 & _GEN_307 : ~_GEN_565 & _GEN_307);
-      if (_GEN_633)
+        ~_GEN_631 & (_GEN_579 ? ~_GEN_605 & _GEN_305 : ~_GEN_564 & _GEN_305);
+      if (_GEN_632)
         reservation_station_5_decoded_instruction_RS1 <= 6'h0;
-      else if (_GEN_305)
+      else if (_GEN_304)
         reservation_station_5_decoded_instruction_RS1 <=
           io_backendPacket_3_bits_decoded_instruction_RS1;
-      else if (_GEN_224)
+      else if (_GEN_223)
         reservation_station_5_decoded_instruction_RS1 <=
           io_backendPacket_2_bits_decoded_instruction_RS1;
-      else if (_GEN_170)
+      else if (_GEN_169)
         reservation_station_5_decoded_instruction_RS1 <=
           io_backendPacket_1_bits_decoded_instruction_RS1;
-      else if (_GEN_144)
+      else if (_GEN_143)
         reservation_station_5_decoded_instruction_RS1 <=
           io_backendPacket_0_bits_decoded_instruction_RS1;
       reservation_station_5_decoded_instruction_RS1_valid <=
-        ~_GEN_632 & (_GEN_580 ? ~_GEN_606 & _GEN_308 : ~_GEN_565 & _GEN_308);
-      if (_GEN_633)
+        ~_GEN_631 & (_GEN_579 ? ~_GEN_605 & _GEN_306 : ~_GEN_564 & _GEN_306);
+      if (_GEN_632)
         reservation_station_5_decoded_instruction_RS2 <= 6'h0;
-      else if (_GEN_305)
+      else if (_GEN_304)
         reservation_station_5_decoded_instruction_RS2 <=
           io_backendPacket_3_bits_decoded_instruction_RS2;
-      else if (_GEN_224)
+      else if (_GEN_223)
         reservation_station_5_decoded_instruction_RS2 <=
           io_backendPacket_2_bits_decoded_instruction_RS2;
-      else if (_GEN_170)
+      else if (_GEN_169)
         reservation_station_5_decoded_instruction_RS2 <=
           io_backendPacket_1_bits_decoded_instruction_RS2;
-      else if (_GEN_144)
+      else if (_GEN_143)
         reservation_station_5_decoded_instruction_RS2 <=
           io_backendPacket_0_bits_decoded_instruction_RS2;
       reservation_station_5_decoded_instruction_RS2_valid <=
-        ~_GEN_632 & (_GEN_580 ? ~_GEN_606 & _GEN_309 : ~_GEN_565 & _GEN_309);
-      if (_GEN_633) begin
+        ~_GEN_631 & (_GEN_579 ? ~_GEN_605 & _GEN_307 : ~_GEN_564 & _GEN_307);
+      if (_GEN_632) begin
         reservation_station_5_decoded_instruction_IMM <= 32'h0;
         reservation_station_5_decoded_instruction_FUNCT3 <= 3'h0;
         reservation_station_5_decoded_instruction_packet_index <= 4'h0;
@@ -7266,7 +7104,7 @@ module RS(
         reservation_station_5_decoded_instruction_portID <= 2'h0;
         reservation_station_5_decoded_instruction_RS_type <= 2'h0;
       end
-      else if (_GEN_305) begin
+      else if (_GEN_304) begin
         reservation_station_5_decoded_instruction_IMM <=
           io_backendPacket_3_bits_decoded_instruction_IMM;
         reservation_station_5_decoded_instruction_FUNCT3 <=
@@ -7282,7 +7120,7 @@ module RS(
         reservation_station_5_decoded_instruction_RS_type <=
           io_backendPacket_3_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_224) begin
+      else if (_GEN_223) begin
         reservation_station_5_decoded_instruction_IMM <=
           io_backendPacket_2_bits_decoded_instruction_IMM;
         reservation_station_5_decoded_instruction_FUNCT3 <=
@@ -7298,7 +7136,7 @@ module RS(
         reservation_station_5_decoded_instruction_RS_type <=
           io_backendPacket_2_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_170) begin
+      else if (_GEN_169) begin
         reservation_station_5_decoded_instruction_IMM <=
           io_backendPacket_1_bits_decoded_instruction_IMM;
         reservation_station_5_decoded_instruction_FUNCT3 <=
@@ -7314,7 +7152,7 @@ module RS(
         reservation_station_5_decoded_instruction_RS_type <=
           io_backendPacket_1_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_144) begin
+      else if (_GEN_143) begin
         reservation_station_5_decoded_instruction_IMM <=
           io_backendPacket_0_bits_decoded_instruction_IMM;
         reservation_station_5_decoded_instruction_FUNCT3 <=
@@ -7331,90 +7169,76 @@ module RS(
           io_backendPacket_0_bits_decoded_instruction_RS_type;
       end
       reservation_station_5_decoded_instruction_needs_ALU <=
-        ~_GEN_632 & (_GEN_580 ? ~_GEN_606 & _GEN_310 : ~_GEN_565 & _GEN_310);
+        ~_GEN_631 & (_GEN_579 ? ~_GEN_605 & _GEN_308 : ~_GEN_564 & _GEN_308);
       reservation_station_5_decoded_instruction_needs_branch_unit <=
-        ~_GEN_632 & (_GEN_580 ? ~_GEN_606 & _GEN_311 : ~_GEN_565 & _GEN_311);
+        ~_GEN_631 & (_GEN_579 ? ~_GEN_605 & _GEN_309 : ~_GEN_564 & _GEN_309);
+      reservation_station_5_decoded_instruction_needs_CSRs <=
+        ~_GEN_631 & (_GEN_579 ? ~_GEN_605 & _GEN_310 : ~_GEN_564 & _GEN_310);
       reservation_station_5_decoded_instruction_SUBTRACT <=
-        ~_GEN_632 & (_GEN_580 ? ~_GEN_606 & _GEN_312 : ~_GEN_565 & _GEN_312);
+        ~_GEN_631 & (_GEN_579 ? ~_GEN_605 & _GEN_311 : ~_GEN_564 & _GEN_311);
       reservation_station_5_decoded_instruction_MULTIPLY <=
-        ~_GEN_632 & (_GEN_580 ? ~_GEN_606 & _GEN_313 : ~_GEN_565 & _GEN_313);
+        ~_GEN_631 & (_GEN_579 ? ~_GEN_605 & _GEN_312 : ~_GEN_564 & _GEN_312);
       reservation_station_5_decoded_instruction_IMMEDIATE <=
-        ~_GEN_632 & (_GEN_580 ? ~_GEN_606 & _GEN_314 : ~_GEN_565 & _GEN_314);
+        ~_GEN_631 & (_GEN_579 ? ~_GEN_605 & _GEN_313 : ~_GEN_564 & _GEN_313);
       reservation_station_5_decoded_instruction_IS_LOAD <=
-        ~_GEN_632 & (_GEN_580 ? ~_GEN_606 & _GEN_315 : ~_GEN_565 & _GEN_315);
+        ~_GEN_631 & (_GEN_579 ? ~_GEN_605 & _GEN_314 : ~_GEN_564 & _GEN_314);
       reservation_station_5_decoded_instruction_IS_STORE <=
-        ~_GEN_632 & (_GEN_580 ? ~_GEN_606 & _GEN_316 : ~_GEN_565 & _GEN_316);
+        ~_GEN_631 & (_GEN_579 ? ~_GEN_605 & _GEN_315 : ~_GEN_564 & _GEN_315);
       reservation_station_5_ready_bits_RS1_ready <=
-        ~_GEN_632 & (_GEN_580 ? ~_GEN_606 & _GEN_544 : ~_GEN_565 & _GEN_544);
+        ~_GEN_631 & (_GEN_579 ? ~_GEN_605 & _GEN_543 : ~_GEN_564 & _GEN_543);
       reservation_station_5_ready_bits_RS2_ready <=
-        ~_GEN_632 & (_GEN_580 ? ~_GEN_606 & _GEN_524 : ~_GEN_565 & _GEN_524);
+        ~_GEN_631 & (_GEN_579 ? ~_GEN_605 & _GEN_523 : ~_GEN_564 & _GEN_523);
       reservation_station_5_valid <=
-        ~_GEN_632 & (_GEN_580 ? ~(_GEN_586 | _GEN_565) & _GEN_504 : ~_GEN_565 & _GEN_504);
-      if (_GEN_635)
-        reservation_station_6_decoded_instruction_RDold <= 6'h0;
-      else if (_GEN_318)
-        reservation_station_6_decoded_instruction_RDold <=
-          io_backendPacket_3_bits_decoded_instruction_RDold;
-      else if (_GEN_225)
-        reservation_station_6_decoded_instruction_RDold <=
-          io_backendPacket_2_bits_decoded_instruction_RDold;
-      else if (_GEN_172)
-        reservation_station_6_decoded_instruction_RDold <=
-          io_backendPacket_1_bits_decoded_instruction_RDold;
-      else if (_GEN_145)
-        reservation_station_6_decoded_instruction_RDold <=
-          io_backendPacket_0_bits_decoded_instruction_RDold;
-      reservation_station_6_decoded_instruction_RDold_valid <=
-        ~_GEN_634 & (_GEN_580 ? ~_GEN_607 & _GEN_319 : ~_GEN_566 & _GEN_319);
-      if (_GEN_635)
+        ~_GEN_631 & (_GEN_579 ? ~(_GEN_585 | _GEN_564) & _GEN_503 : ~_GEN_564 & _GEN_503);
+      if (_GEN_634)
         reservation_station_6_decoded_instruction_RD <= 6'h0;
-      else if (_GEN_318)
+      else if (_GEN_317)
         reservation_station_6_decoded_instruction_RD <=
           io_backendPacket_3_bits_decoded_instruction_RD;
-      else if (_GEN_225)
+      else if (_GEN_224)
         reservation_station_6_decoded_instruction_RD <=
           io_backendPacket_2_bits_decoded_instruction_RD;
-      else if (_GEN_172)
+      else if (_GEN_171)
         reservation_station_6_decoded_instruction_RD <=
           io_backendPacket_1_bits_decoded_instruction_RD;
-      else if (_GEN_145)
+      else if (_GEN_144)
         reservation_station_6_decoded_instruction_RD <=
           io_backendPacket_0_bits_decoded_instruction_RD;
       reservation_station_6_decoded_instruction_RD_valid <=
-        ~_GEN_634 & (_GEN_580 ? ~_GEN_607 & _GEN_320 : ~_GEN_566 & _GEN_320);
-      if (_GEN_635)
+        ~_GEN_633 & (_GEN_579 ? ~_GEN_606 & _GEN_318 : ~_GEN_565 & _GEN_318);
+      if (_GEN_634)
         reservation_station_6_decoded_instruction_RS1 <= 6'h0;
-      else if (_GEN_318)
+      else if (_GEN_317)
         reservation_station_6_decoded_instruction_RS1 <=
           io_backendPacket_3_bits_decoded_instruction_RS1;
-      else if (_GEN_225)
+      else if (_GEN_224)
         reservation_station_6_decoded_instruction_RS1 <=
           io_backendPacket_2_bits_decoded_instruction_RS1;
-      else if (_GEN_172)
+      else if (_GEN_171)
         reservation_station_6_decoded_instruction_RS1 <=
           io_backendPacket_1_bits_decoded_instruction_RS1;
-      else if (_GEN_145)
+      else if (_GEN_144)
         reservation_station_6_decoded_instruction_RS1 <=
           io_backendPacket_0_bits_decoded_instruction_RS1;
       reservation_station_6_decoded_instruction_RS1_valid <=
-        ~_GEN_634 & (_GEN_580 ? ~_GEN_607 & _GEN_321 : ~_GEN_566 & _GEN_321);
-      if (_GEN_635)
+        ~_GEN_633 & (_GEN_579 ? ~_GEN_606 & _GEN_319 : ~_GEN_565 & _GEN_319);
+      if (_GEN_634)
         reservation_station_6_decoded_instruction_RS2 <= 6'h0;
-      else if (_GEN_318)
+      else if (_GEN_317)
         reservation_station_6_decoded_instruction_RS2 <=
           io_backendPacket_3_bits_decoded_instruction_RS2;
-      else if (_GEN_225)
+      else if (_GEN_224)
         reservation_station_6_decoded_instruction_RS2 <=
           io_backendPacket_2_bits_decoded_instruction_RS2;
-      else if (_GEN_172)
+      else if (_GEN_171)
         reservation_station_6_decoded_instruction_RS2 <=
           io_backendPacket_1_bits_decoded_instruction_RS2;
-      else if (_GEN_145)
+      else if (_GEN_144)
         reservation_station_6_decoded_instruction_RS2 <=
           io_backendPacket_0_bits_decoded_instruction_RS2;
       reservation_station_6_decoded_instruction_RS2_valid <=
-        ~_GEN_634 & (_GEN_580 ? ~_GEN_607 & _GEN_322 : ~_GEN_566 & _GEN_322);
-      if (_GEN_635) begin
+        ~_GEN_633 & (_GEN_579 ? ~_GEN_606 & _GEN_320 : ~_GEN_565 & _GEN_320);
+      if (_GEN_634) begin
         reservation_station_6_decoded_instruction_IMM <= 32'h0;
         reservation_station_6_decoded_instruction_FUNCT3 <= 3'h0;
         reservation_station_6_decoded_instruction_packet_index <= 4'h0;
@@ -7423,7 +7247,7 @@ module RS(
         reservation_station_6_decoded_instruction_portID <= 2'h0;
         reservation_station_6_decoded_instruction_RS_type <= 2'h0;
       end
-      else if (_GEN_318) begin
+      else if (_GEN_317) begin
         reservation_station_6_decoded_instruction_IMM <=
           io_backendPacket_3_bits_decoded_instruction_IMM;
         reservation_station_6_decoded_instruction_FUNCT3 <=
@@ -7439,7 +7263,7 @@ module RS(
         reservation_station_6_decoded_instruction_RS_type <=
           io_backendPacket_3_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_225) begin
+      else if (_GEN_224) begin
         reservation_station_6_decoded_instruction_IMM <=
           io_backendPacket_2_bits_decoded_instruction_IMM;
         reservation_station_6_decoded_instruction_FUNCT3 <=
@@ -7455,7 +7279,7 @@ module RS(
         reservation_station_6_decoded_instruction_RS_type <=
           io_backendPacket_2_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_172) begin
+      else if (_GEN_171) begin
         reservation_station_6_decoded_instruction_IMM <=
           io_backendPacket_1_bits_decoded_instruction_IMM;
         reservation_station_6_decoded_instruction_FUNCT3 <=
@@ -7471,7 +7295,7 @@ module RS(
         reservation_station_6_decoded_instruction_RS_type <=
           io_backendPacket_1_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_145) begin
+      else if (_GEN_144) begin
         reservation_station_6_decoded_instruction_IMM <=
           io_backendPacket_0_bits_decoded_instruction_IMM;
         reservation_station_6_decoded_instruction_FUNCT3 <=
@@ -7488,90 +7312,76 @@ module RS(
           io_backendPacket_0_bits_decoded_instruction_RS_type;
       end
       reservation_station_6_decoded_instruction_needs_ALU <=
-        ~_GEN_634 & (_GEN_580 ? ~_GEN_607 & _GEN_323 : ~_GEN_566 & _GEN_323);
+        ~_GEN_633 & (_GEN_579 ? ~_GEN_606 & _GEN_321 : ~_GEN_565 & _GEN_321);
       reservation_station_6_decoded_instruction_needs_branch_unit <=
-        ~_GEN_634 & (_GEN_580 ? ~_GEN_607 & _GEN_324 : ~_GEN_566 & _GEN_324);
+        ~_GEN_633 & (_GEN_579 ? ~_GEN_606 & _GEN_322 : ~_GEN_565 & _GEN_322);
+      reservation_station_6_decoded_instruction_needs_CSRs <=
+        ~_GEN_633 & (_GEN_579 ? ~_GEN_606 & _GEN_323 : ~_GEN_565 & _GEN_323);
       reservation_station_6_decoded_instruction_SUBTRACT <=
-        ~_GEN_634 & (_GEN_580 ? ~_GEN_607 & _GEN_325 : ~_GEN_566 & _GEN_325);
+        ~_GEN_633 & (_GEN_579 ? ~_GEN_606 & _GEN_324 : ~_GEN_565 & _GEN_324);
       reservation_station_6_decoded_instruction_MULTIPLY <=
-        ~_GEN_634 & (_GEN_580 ? ~_GEN_607 & _GEN_326 : ~_GEN_566 & _GEN_326);
+        ~_GEN_633 & (_GEN_579 ? ~_GEN_606 & _GEN_325 : ~_GEN_565 & _GEN_325);
       reservation_station_6_decoded_instruction_IMMEDIATE <=
-        ~_GEN_634 & (_GEN_580 ? ~_GEN_607 & _GEN_327 : ~_GEN_566 & _GEN_327);
+        ~_GEN_633 & (_GEN_579 ? ~_GEN_606 & _GEN_326 : ~_GEN_565 & _GEN_326);
       reservation_station_6_decoded_instruction_IS_LOAD <=
-        ~_GEN_634 & (_GEN_580 ? ~_GEN_607 & _GEN_328 : ~_GEN_566 & _GEN_328);
+        ~_GEN_633 & (_GEN_579 ? ~_GEN_606 & _GEN_327 : ~_GEN_565 & _GEN_327);
       reservation_station_6_decoded_instruction_IS_STORE <=
-        ~_GEN_634 & (_GEN_580 ? ~_GEN_607 & _GEN_329 : ~_GEN_566 & _GEN_329);
+        ~_GEN_633 & (_GEN_579 ? ~_GEN_606 & _GEN_328 : ~_GEN_565 & _GEN_328);
       reservation_station_6_ready_bits_RS1_ready <=
-        ~_GEN_634 & (_GEN_580 ? ~_GEN_607 & _GEN_545 : ~_GEN_566 & _GEN_545);
+        ~_GEN_633 & (_GEN_579 ? ~_GEN_606 & _GEN_544 : ~_GEN_565 & _GEN_544);
       reservation_station_6_ready_bits_RS2_ready <=
-        ~_GEN_634 & (_GEN_580 ? ~_GEN_607 & _GEN_525 : ~_GEN_566 & _GEN_525);
+        ~_GEN_633 & (_GEN_579 ? ~_GEN_606 & _GEN_524 : ~_GEN_565 & _GEN_524);
       reservation_station_6_valid <=
-        ~_GEN_634 & (_GEN_580 ? ~(_GEN_587 | _GEN_566) & _GEN_505 : ~_GEN_566 & _GEN_505);
-      if (_GEN_637)
-        reservation_station_7_decoded_instruction_RDold <= 6'h0;
-      else if (_GEN_331)
-        reservation_station_7_decoded_instruction_RDold <=
-          io_backendPacket_3_bits_decoded_instruction_RDold;
-      else if (_GEN_226)
-        reservation_station_7_decoded_instruction_RDold <=
-          io_backendPacket_2_bits_decoded_instruction_RDold;
-      else if (_GEN_174)
-        reservation_station_7_decoded_instruction_RDold <=
-          io_backendPacket_1_bits_decoded_instruction_RDold;
-      else if (_GEN_146)
-        reservation_station_7_decoded_instruction_RDold <=
-          io_backendPacket_0_bits_decoded_instruction_RDold;
-      reservation_station_7_decoded_instruction_RDold_valid <=
-        ~_GEN_636 & (_GEN_580 ? ~_GEN_608 & _GEN_332 : ~_GEN_567 & _GEN_332);
-      if (_GEN_637)
+        ~_GEN_633 & (_GEN_579 ? ~(_GEN_586 | _GEN_565) & _GEN_504 : ~_GEN_565 & _GEN_504);
+      if (_GEN_636)
         reservation_station_7_decoded_instruction_RD <= 6'h0;
-      else if (_GEN_331)
+      else if (_GEN_330)
         reservation_station_7_decoded_instruction_RD <=
           io_backendPacket_3_bits_decoded_instruction_RD;
-      else if (_GEN_226)
+      else if (_GEN_225)
         reservation_station_7_decoded_instruction_RD <=
           io_backendPacket_2_bits_decoded_instruction_RD;
-      else if (_GEN_174)
+      else if (_GEN_173)
         reservation_station_7_decoded_instruction_RD <=
           io_backendPacket_1_bits_decoded_instruction_RD;
-      else if (_GEN_146)
+      else if (_GEN_145)
         reservation_station_7_decoded_instruction_RD <=
           io_backendPacket_0_bits_decoded_instruction_RD;
       reservation_station_7_decoded_instruction_RD_valid <=
-        ~_GEN_636 & (_GEN_580 ? ~_GEN_608 & _GEN_333 : ~_GEN_567 & _GEN_333);
-      if (_GEN_637)
+        ~_GEN_635 & (_GEN_579 ? ~_GEN_607 & _GEN_331 : ~_GEN_566 & _GEN_331);
+      if (_GEN_636)
         reservation_station_7_decoded_instruction_RS1 <= 6'h0;
-      else if (_GEN_331)
+      else if (_GEN_330)
         reservation_station_7_decoded_instruction_RS1 <=
           io_backendPacket_3_bits_decoded_instruction_RS1;
-      else if (_GEN_226)
+      else if (_GEN_225)
         reservation_station_7_decoded_instruction_RS1 <=
           io_backendPacket_2_bits_decoded_instruction_RS1;
-      else if (_GEN_174)
+      else if (_GEN_173)
         reservation_station_7_decoded_instruction_RS1 <=
           io_backendPacket_1_bits_decoded_instruction_RS1;
-      else if (_GEN_146)
+      else if (_GEN_145)
         reservation_station_7_decoded_instruction_RS1 <=
           io_backendPacket_0_bits_decoded_instruction_RS1;
       reservation_station_7_decoded_instruction_RS1_valid <=
-        ~_GEN_636 & (_GEN_580 ? ~_GEN_608 & _GEN_334 : ~_GEN_567 & _GEN_334);
-      if (_GEN_637)
+        ~_GEN_635 & (_GEN_579 ? ~_GEN_607 & _GEN_332 : ~_GEN_566 & _GEN_332);
+      if (_GEN_636)
         reservation_station_7_decoded_instruction_RS2 <= 6'h0;
-      else if (_GEN_331)
+      else if (_GEN_330)
         reservation_station_7_decoded_instruction_RS2 <=
           io_backendPacket_3_bits_decoded_instruction_RS2;
-      else if (_GEN_226)
+      else if (_GEN_225)
         reservation_station_7_decoded_instruction_RS2 <=
           io_backendPacket_2_bits_decoded_instruction_RS2;
-      else if (_GEN_174)
+      else if (_GEN_173)
         reservation_station_7_decoded_instruction_RS2 <=
           io_backendPacket_1_bits_decoded_instruction_RS2;
-      else if (_GEN_146)
+      else if (_GEN_145)
         reservation_station_7_decoded_instruction_RS2 <=
           io_backendPacket_0_bits_decoded_instruction_RS2;
       reservation_station_7_decoded_instruction_RS2_valid <=
-        ~_GEN_636 & (_GEN_580 ? ~_GEN_608 & _GEN_335 : ~_GEN_567 & _GEN_335);
-      if (_GEN_637) begin
+        ~_GEN_635 & (_GEN_579 ? ~_GEN_607 & _GEN_333 : ~_GEN_566 & _GEN_333);
+      if (_GEN_636) begin
         reservation_station_7_decoded_instruction_IMM <= 32'h0;
         reservation_station_7_decoded_instruction_FUNCT3 <= 3'h0;
         reservation_station_7_decoded_instruction_packet_index <= 4'h0;
@@ -7580,7 +7390,7 @@ module RS(
         reservation_station_7_decoded_instruction_portID <= 2'h0;
         reservation_station_7_decoded_instruction_RS_type <= 2'h0;
       end
-      else if (_GEN_331) begin
+      else if (_GEN_330) begin
         reservation_station_7_decoded_instruction_IMM <=
           io_backendPacket_3_bits_decoded_instruction_IMM;
         reservation_station_7_decoded_instruction_FUNCT3 <=
@@ -7596,7 +7406,7 @@ module RS(
         reservation_station_7_decoded_instruction_RS_type <=
           io_backendPacket_3_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_226) begin
+      else if (_GEN_225) begin
         reservation_station_7_decoded_instruction_IMM <=
           io_backendPacket_2_bits_decoded_instruction_IMM;
         reservation_station_7_decoded_instruction_FUNCT3 <=
@@ -7612,7 +7422,7 @@ module RS(
         reservation_station_7_decoded_instruction_RS_type <=
           io_backendPacket_2_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_174) begin
+      else if (_GEN_173) begin
         reservation_station_7_decoded_instruction_IMM <=
           io_backendPacket_1_bits_decoded_instruction_IMM;
         reservation_station_7_decoded_instruction_FUNCT3 <=
@@ -7628,7 +7438,7 @@ module RS(
         reservation_station_7_decoded_instruction_RS_type <=
           io_backendPacket_1_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_146) begin
+      else if (_GEN_145) begin
         reservation_station_7_decoded_instruction_IMM <=
           io_backendPacket_0_bits_decoded_instruction_IMM;
         reservation_station_7_decoded_instruction_FUNCT3 <=
@@ -7645,90 +7455,76 @@ module RS(
           io_backendPacket_0_bits_decoded_instruction_RS_type;
       end
       reservation_station_7_decoded_instruction_needs_ALU <=
-        ~_GEN_636 & (_GEN_580 ? ~_GEN_608 & _GEN_336 : ~_GEN_567 & _GEN_336);
+        ~_GEN_635 & (_GEN_579 ? ~_GEN_607 & _GEN_334 : ~_GEN_566 & _GEN_334);
       reservation_station_7_decoded_instruction_needs_branch_unit <=
-        ~_GEN_636 & (_GEN_580 ? ~_GEN_608 & _GEN_337 : ~_GEN_567 & _GEN_337);
+        ~_GEN_635 & (_GEN_579 ? ~_GEN_607 & _GEN_335 : ~_GEN_566 & _GEN_335);
+      reservation_station_7_decoded_instruction_needs_CSRs <=
+        ~_GEN_635 & (_GEN_579 ? ~_GEN_607 & _GEN_336 : ~_GEN_566 & _GEN_336);
       reservation_station_7_decoded_instruction_SUBTRACT <=
-        ~_GEN_636 & (_GEN_580 ? ~_GEN_608 & _GEN_338 : ~_GEN_567 & _GEN_338);
+        ~_GEN_635 & (_GEN_579 ? ~_GEN_607 & _GEN_337 : ~_GEN_566 & _GEN_337);
       reservation_station_7_decoded_instruction_MULTIPLY <=
-        ~_GEN_636 & (_GEN_580 ? ~_GEN_608 & _GEN_339 : ~_GEN_567 & _GEN_339);
+        ~_GEN_635 & (_GEN_579 ? ~_GEN_607 & _GEN_338 : ~_GEN_566 & _GEN_338);
       reservation_station_7_decoded_instruction_IMMEDIATE <=
-        ~_GEN_636 & (_GEN_580 ? ~_GEN_608 & _GEN_340 : ~_GEN_567 & _GEN_340);
+        ~_GEN_635 & (_GEN_579 ? ~_GEN_607 & _GEN_339 : ~_GEN_566 & _GEN_339);
       reservation_station_7_decoded_instruction_IS_LOAD <=
-        ~_GEN_636 & (_GEN_580 ? ~_GEN_608 & _GEN_341 : ~_GEN_567 & _GEN_341);
+        ~_GEN_635 & (_GEN_579 ? ~_GEN_607 & _GEN_340 : ~_GEN_566 & _GEN_340);
       reservation_station_7_decoded_instruction_IS_STORE <=
-        ~_GEN_636 & (_GEN_580 ? ~_GEN_608 & _GEN_342 : ~_GEN_567 & _GEN_342);
+        ~_GEN_635 & (_GEN_579 ? ~_GEN_607 & _GEN_341 : ~_GEN_566 & _GEN_341);
       reservation_station_7_ready_bits_RS1_ready <=
-        ~_GEN_636 & (_GEN_580 ? ~_GEN_608 & _GEN_546 : ~_GEN_567 & _GEN_546);
+        ~_GEN_635 & (_GEN_579 ? ~_GEN_607 & _GEN_545 : ~_GEN_566 & _GEN_545);
       reservation_station_7_ready_bits_RS2_ready <=
-        ~_GEN_636 & (_GEN_580 ? ~_GEN_608 & _GEN_526 : ~_GEN_567 & _GEN_526);
+        ~_GEN_635 & (_GEN_579 ? ~_GEN_607 & _GEN_525 : ~_GEN_566 & _GEN_525);
       reservation_station_7_valid <=
-        ~_GEN_636 & (_GEN_580 ? ~(_GEN_588 | _GEN_567) & _GEN_506 : ~_GEN_567 & _GEN_506);
-      if (_GEN_639)
-        reservation_station_8_decoded_instruction_RDold <= 6'h0;
-      else if (_GEN_344)
-        reservation_station_8_decoded_instruction_RDold <=
-          io_backendPacket_3_bits_decoded_instruction_RDold;
-      else if (_GEN_227)
-        reservation_station_8_decoded_instruction_RDold <=
-          io_backendPacket_2_bits_decoded_instruction_RDold;
-      else if (_GEN_176)
-        reservation_station_8_decoded_instruction_RDold <=
-          io_backendPacket_1_bits_decoded_instruction_RDold;
-      else if (_GEN_147)
-        reservation_station_8_decoded_instruction_RDold <=
-          io_backendPacket_0_bits_decoded_instruction_RDold;
-      reservation_station_8_decoded_instruction_RDold_valid <=
-        ~_GEN_638 & (_GEN_580 ? ~_GEN_609 & _GEN_345 : ~_GEN_568 & _GEN_345);
-      if (_GEN_639)
+        ~_GEN_635 & (_GEN_579 ? ~(_GEN_587 | _GEN_566) & _GEN_505 : ~_GEN_566 & _GEN_505);
+      if (_GEN_638)
         reservation_station_8_decoded_instruction_RD <= 6'h0;
-      else if (_GEN_344)
+      else if (_GEN_343)
         reservation_station_8_decoded_instruction_RD <=
           io_backendPacket_3_bits_decoded_instruction_RD;
-      else if (_GEN_227)
+      else if (_GEN_226)
         reservation_station_8_decoded_instruction_RD <=
           io_backendPacket_2_bits_decoded_instruction_RD;
-      else if (_GEN_176)
+      else if (_GEN_175)
         reservation_station_8_decoded_instruction_RD <=
           io_backendPacket_1_bits_decoded_instruction_RD;
-      else if (_GEN_147)
+      else if (_GEN_146)
         reservation_station_8_decoded_instruction_RD <=
           io_backendPacket_0_bits_decoded_instruction_RD;
       reservation_station_8_decoded_instruction_RD_valid <=
-        ~_GEN_638 & (_GEN_580 ? ~_GEN_609 & _GEN_346 : ~_GEN_568 & _GEN_346);
-      if (_GEN_639)
+        ~_GEN_637 & (_GEN_579 ? ~_GEN_608 & _GEN_344 : ~_GEN_567 & _GEN_344);
+      if (_GEN_638)
         reservation_station_8_decoded_instruction_RS1 <= 6'h0;
-      else if (_GEN_344)
+      else if (_GEN_343)
         reservation_station_8_decoded_instruction_RS1 <=
           io_backendPacket_3_bits_decoded_instruction_RS1;
-      else if (_GEN_227)
+      else if (_GEN_226)
         reservation_station_8_decoded_instruction_RS1 <=
           io_backendPacket_2_bits_decoded_instruction_RS1;
-      else if (_GEN_176)
+      else if (_GEN_175)
         reservation_station_8_decoded_instruction_RS1 <=
           io_backendPacket_1_bits_decoded_instruction_RS1;
-      else if (_GEN_147)
+      else if (_GEN_146)
         reservation_station_8_decoded_instruction_RS1 <=
           io_backendPacket_0_bits_decoded_instruction_RS1;
       reservation_station_8_decoded_instruction_RS1_valid <=
-        ~_GEN_638 & (_GEN_580 ? ~_GEN_609 & _GEN_347 : ~_GEN_568 & _GEN_347);
-      if (_GEN_639)
+        ~_GEN_637 & (_GEN_579 ? ~_GEN_608 & _GEN_345 : ~_GEN_567 & _GEN_345);
+      if (_GEN_638)
         reservation_station_8_decoded_instruction_RS2 <= 6'h0;
-      else if (_GEN_344)
+      else if (_GEN_343)
         reservation_station_8_decoded_instruction_RS2 <=
           io_backendPacket_3_bits_decoded_instruction_RS2;
-      else if (_GEN_227)
+      else if (_GEN_226)
         reservation_station_8_decoded_instruction_RS2 <=
           io_backendPacket_2_bits_decoded_instruction_RS2;
-      else if (_GEN_176)
+      else if (_GEN_175)
         reservation_station_8_decoded_instruction_RS2 <=
           io_backendPacket_1_bits_decoded_instruction_RS2;
-      else if (_GEN_147)
+      else if (_GEN_146)
         reservation_station_8_decoded_instruction_RS2 <=
           io_backendPacket_0_bits_decoded_instruction_RS2;
       reservation_station_8_decoded_instruction_RS2_valid <=
-        ~_GEN_638 & (_GEN_580 ? ~_GEN_609 & _GEN_348 : ~_GEN_568 & _GEN_348);
-      if (_GEN_639) begin
+        ~_GEN_637 & (_GEN_579 ? ~_GEN_608 & _GEN_346 : ~_GEN_567 & _GEN_346);
+      if (_GEN_638) begin
         reservation_station_8_decoded_instruction_IMM <= 32'h0;
         reservation_station_8_decoded_instruction_FUNCT3 <= 3'h0;
         reservation_station_8_decoded_instruction_packet_index <= 4'h0;
@@ -7737,7 +7533,7 @@ module RS(
         reservation_station_8_decoded_instruction_portID <= 2'h0;
         reservation_station_8_decoded_instruction_RS_type <= 2'h0;
       end
-      else if (_GEN_344) begin
+      else if (_GEN_343) begin
         reservation_station_8_decoded_instruction_IMM <=
           io_backendPacket_3_bits_decoded_instruction_IMM;
         reservation_station_8_decoded_instruction_FUNCT3 <=
@@ -7753,7 +7549,7 @@ module RS(
         reservation_station_8_decoded_instruction_RS_type <=
           io_backendPacket_3_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_227) begin
+      else if (_GEN_226) begin
         reservation_station_8_decoded_instruction_IMM <=
           io_backendPacket_2_bits_decoded_instruction_IMM;
         reservation_station_8_decoded_instruction_FUNCT3 <=
@@ -7769,7 +7565,7 @@ module RS(
         reservation_station_8_decoded_instruction_RS_type <=
           io_backendPacket_2_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_176) begin
+      else if (_GEN_175) begin
         reservation_station_8_decoded_instruction_IMM <=
           io_backendPacket_1_bits_decoded_instruction_IMM;
         reservation_station_8_decoded_instruction_FUNCT3 <=
@@ -7785,7 +7581,7 @@ module RS(
         reservation_station_8_decoded_instruction_RS_type <=
           io_backendPacket_1_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_147) begin
+      else if (_GEN_146) begin
         reservation_station_8_decoded_instruction_IMM <=
           io_backendPacket_0_bits_decoded_instruction_IMM;
         reservation_station_8_decoded_instruction_FUNCT3 <=
@@ -7802,90 +7598,76 @@ module RS(
           io_backendPacket_0_bits_decoded_instruction_RS_type;
       end
       reservation_station_8_decoded_instruction_needs_ALU <=
-        ~_GEN_638 & (_GEN_580 ? ~_GEN_609 & _GEN_349 : ~_GEN_568 & _GEN_349);
+        ~_GEN_637 & (_GEN_579 ? ~_GEN_608 & _GEN_347 : ~_GEN_567 & _GEN_347);
       reservation_station_8_decoded_instruction_needs_branch_unit <=
-        ~_GEN_638 & (_GEN_580 ? ~_GEN_609 & _GEN_350 : ~_GEN_568 & _GEN_350);
+        ~_GEN_637 & (_GEN_579 ? ~_GEN_608 & _GEN_348 : ~_GEN_567 & _GEN_348);
+      reservation_station_8_decoded_instruction_needs_CSRs <=
+        ~_GEN_637 & (_GEN_579 ? ~_GEN_608 & _GEN_349 : ~_GEN_567 & _GEN_349);
       reservation_station_8_decoded_instruction_SUBTRACT <=
-        ~_GEN_638 & (_GEN_580 ? ~_GEN_609 & _GEN_351 : ~_GEN_568 & _GEN_351);
+        ~_GEN_637 & (_GEN_579 ? ~_GEN_608 & _GEN_350 : ~_GEN_567 & _GEN_350);
       reservation_station_8_decoded_instruction_MULTIPLY <=
-        ~_GEN_638 & (_GEN_580 ? ~_GEN_609 & _GEN_352 : ~_GEN_568 & _GEN_352);
+        ~_GEN_637 & (_GEN_579 ? ~_GEN_608 & _GEN_351 : ~_GEN_567 & _GEN_351);
       reservation_station_8_decoded_instruction_IMMEDIATE <=
-        ~_GEN_638 & (_GEN_580 ? ~_GEN_609 & _GEN_353 : ~_GEN_568 & _GEN_353);
+        ~_GEN_637 & (_GEN_579 ? ~_GEN_608 & _GEN_352 : ~_GEN_567 & _GEN_352);
       reservation_station_8_decoded_instruction_IS_LOAD <=
-        ~_GEN_638 & (_GEN_580 ? ~_GEN_609 & _GEN_354 : ~_GEN_568 & _GEN_354);
+        ~_GEN_637 & (_GEN_579 ? ~_GEN_608 & _GEN_353 : ~_GEN_567 & _GEN_353);
       reservation_station_8_decoded_instruction_IS_STORE <=
-        ~_GEN_638 & (_GEN_580 ? ~_GEN_609 & _GEN_355 : ~_GEN_568 & _GEN_355);
+        ~_GEN_637 & (_GEN_579 ? ~_GEN_608 & _GEN_354 : ~_GEN_567 & _GEN_354);
       reservation_station_8_ready_bits_RS1_ready <=
-        ~_GEN_638 & (_GEN_580 ? ~_GEN_609 & _GEN_547 : ~_GEN_568 & _GEN_547);
+        ~_GEN_637 & (_GEN_579 ? ~_GEN_608 & _GEN_546 : ~_GEN_567 & _GEN_546);
       reservation_station_8_ready_bits_RS2_ready <=
-        ~_GEN_638 & (_GEN_580 ? ~_GEN_609 & _GEN_527 : ~_GEN_568 & _GEN_527);
+        ~_GEN_637 & (_GEN_579 ? ~_GEN_608 & _GEN_526 : ~_GEN_567 & _GEN_526);
       reservation_station_8_valid <=
-        ~_GEN_638 & (_GEN_580 ? ~(_GEN_589 | _GEN_568) & _GEN_507 : ~_GEN_568 & _GEN_507);
-      if (_GEN_641)
-        reservation_station_9_decoded_instruction_RDold <= 6'h0;
-      else if (_GEN_357)
-        reservation_station_9_decoded_instruction_RDold <=
-          io_backendPacket_3_bits_decoded_instruction_RDold;
-      else if (_GEN_228)
-        reservation_station_9_decoded_instruction_RDold <=
-          io_backendPacket_2_bits_decoded_instruction_RDold;
-      else if (_GEN_178)
-        reservation_station_9_decoded_instruction_RDold <=
-          io_backendPacket_1_bits_decoded_instruction_RDold;
-      else if (_GEN_148)
-        reservation_station_9_decoded_instruction_RDold <=
-          io_backendPacket_0_bits_decoded_instruction_RDold;
-      reservation_station_9_decoded_instruction_RDold_valid <=
-        ~_GEN_640 & (_GEN_580 ? ~_GEN_610 & _GEN_358 : ~_GEN_569 & _GEN_358);
-      if (_GEN_641)
+        ~_GEN_637 & (_GEN_579 ? ~(_GEN_588 | _GEN_567) & _GEN_506 : ~_GEN_567 & _GEN_506);
+      if (_GEN_640)
         reservation_station_9_decoded_instruction_RD <= 6'h0;
-      else if (_GEN_357)
+      else if (_GEN_356)
         reservation_station_9_decoded_instruction_RD <=
           io_backendPacket_3_bits_decoded_instruction_RD;
-      else if (_GEN_228)
+      else if (_GEN_227)
         reservation_station_9_decoded_instruction_RD <=
           io_backendPacket_2_bits_decoded_instruction_RD;
-      else if (_GEN_178)
+      else if (_GEN_177)
         reservation_station_9_decoded_instruction_RD <=
           io_backendPacket_1_bits_decoded_instruction_RD;
-      else if (_GEN_148)
+      else if (_GEN_147)
         reservation_station_9_decoded_instruction_RD <=
           io_backendPacket_0_bits_decoded_instruction_RD;
       reservation_station_9_decoded_instruction_RD_valid <=
-        ~_GEN_640 & (_GEN_580 ? ~_GEN_610 & _GEN_359 : ~_GEN_569 & _GEN_359);
-      if (_GEN_641)
+        ~_GEN_639 & (_GEN_579 ? ~_GEN_609 & _GEN_357 : ~_GEN_568 & _GEN_357);
+      if (_GEN_640)
         reservation_station_9_decoded_instruction_RS1 <= 6'h0;
-      else if (_GEN_357)
+      else if (_GEN_356)
         reservation_station_9_decoded_instruction_RS1 <=
           io_backendPacket_3_bits_decoded_instruction_RS1;
-      else if (_GEN_228)
+      else if (_GEN_227)
         reservation_station_9_decoded_instruction_RS1 <=
           io_backendPacket_2_bits_decoded_instruction_RS1;
-      else if (_GEN_178)
+      else if (_GEN_177)
         reservation_station_9_decoded_instruction_RS1 <=
           io_backendPacket_1_bits_decoded_instruction_RS1;
-      else if (_GEN_148)
+      else if (_GEN_147)
         reservation_station_9_decoded_instruction_RS1 <=
           io_backendPacket_0_bits_decoded_instruction_RS1;
       reservation_station_9_decoded_instruction_RS1_valid <=
-        ~_GEN_640 & (_GEN_580 ? ~_GEN_610 & _GEN_360 : ~_GEN_569 & _GEN_360);
-      if (_GEN_641)
+        ~_GEN_639 & (_GEN_579 ? ~_GEN_609 & _GEN_358 : ~_GEN_568 & _GEN_358);
+      if (_GEN_640)
         reservation_station_9_decoded_instruction_RS2 <= 6'h0;
-      else if (_GEN_357)
+      else if (_GEN_356)
         reservation_station_9_decoded_instruction_RS2 <=
           io_backendPacket_3_bits_decoded_instruction_RS2;
-      else if (_GEN_228)
+      else if (_GEN_227)
         reservation_station_9_decoded_instruction_RS2 <=
           io_backendPacket_2_bits_decoded_instruction_RS2;
-      else if (_GEN_178)
+      else if (_GEN_177)
         reservation_station_9_decoded_instruction_RS2 <=
           io_backendPacket_1_bits_decoded_instruction_RS2;
-      else if (_GEN_148)
+      else if (_GEN_147)
         reservation_station_9_decoded_instruction_RS2 <=
           io_backendPacket_0_bits_decoded_instruction_RS2;
       reservation_station_9_decoded_instruction_RS2_valid <=
-        ~_GEN_640 & (_GEN_580 ? ~_GEN_610 & _GEN_361 : ~_GEN_569 & _GEN_361);
-      if (_GEN_641) begin
+        ~_GEN_639 & (_GEN_579 ? ~_GEN_609 & _GEN_359 : ~_GEN_568 & _GEN_359);
+      if (_GEN_640) begin
         reservation_station_9_decoded_instruction_IMM <= 32'h0;
         reservation_station_9_decoded_instruction_FUNCT3 <= 3'h0;
         reservation_station_9_decoded_instruction_packet_index <= 4'h0;
@@ -7894,7 +7676,7 @@ module RS(
         reservation_station_9_decoded_instruction_portID <= 2'h0;
         reservation_station_9_decoded_instruction_RS_type <= 2'h0;
       end
-      else if (_GEN_357) begin
+      else if (_GEN_356) begin
         reservation_station_9_decoded_instruction_IMM <=
           io_backendPacket_3_bits_decoded_instruction_IMM;
         reservation_station_9_decoded_instruction_FUNCT3 <=
@@ -7910,7 +7692,7 @@ module RS(
         reservation_station_9_decoded_instruction_RS_type <=
           io_backendPacket_3_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_228) begin
+      else if (_GEN_227) begin
         reservation_station_9_decoded_instruction_IMM <=
           io_backendPacket_2_bits_decoded_instruction_IMM;
         reservation_station_9_decoded_instruction_FUNCT3 <=
@@ -7926,7 +7708,7 @@ module RS(
         reservation_station_9_decoded_instruction_RS_type <=
           io_backendPacket_2_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_178) begin
+      else if (_GEN_177) begin
         reservation_station_9_decoded_instruction_IMM <=
           io_backendPacket_1_bits_decoded_instruction_IMM;
         reservation_station_9_decoded_instruction_FUNCT3 <=
@@ -7942,7 +7724,7 @@ module RS(
         reservation_station_9_decoded_instruction_RS_type <=
           io_backendPacket_1_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_148) begin
+      else if (_GEN_147) begin
         reservation_station_9_decoded_instruction_IMM <=
           io_backendPacket_0_bits_decoded_instruction_IMM;
         reservation_station_9_decoded_instruction_FUNCT3 <=
@@ -7959,90 +7741,76 @@ module RS(
           io_backendPacket_0_bits_decoded_instruction_RS_type;
       end
       reservation_station_9_decoded_instruction_needs_ALU <=
-        ~_GEN_640 & (_GEN_580 ? ~_GEN_610 & _GEN_362 : ~_GEN_569 & _GEN_362);
+        ~_GEN_639 & (_GEN_579 ? ~_GEN_609 & _GEN_360 : ~_GEN_568 & _GEN_360);
       reservation_station_9_decoded_instruction_needs_branch_unit <=
-        ~_GEN_640 & (_GEN_580 ? ~_GEN_610 & _GEN_363 : ~_GEN_569 & _GEN_363);
+        ~_GEN_639 & (_GEN_579 ? ~_GEN_609 & _GEN_361 : ~_GEN_568 & _GEN_361);
+      reservation_station_9_decoded_instruction_needs_CSRs <=
+        ~_GEN_639 & (_GEN_579 ? ~_GEN_609 & _GEN_362 : ~_GEN_568 & _GEN_362);
       reservation_station_9_decoded_instruction_SUBTRACT <=
-        ~_GEN_640 & (_GEN_580 ? ~_GEN_610 & _GEN_364 : ~_GEN_569 & _GEN_364);
+        ~_GEN_639 & (_GEN_579 ? ~_GEN_609 & _GEN_363 : ~_GEN_568 & _GEN_363);
       reservation_station_9_decoded_instruction_MULTIPLY <=
-        ~_GEN_640 & (_GEN_580 ? ~_GEN_610 & _GEN_365 : ~_GEN_569 & _GEN_365);
+        ~_GEN_639 & (_GEN_579 ? ~_GEN_609 & _GEN_364 : ~_GEN_568 & _GEN_364);
       reservation_station_9_decoded_instruction_IMMEDIATE <=
-        ~_GEN_640 & (_GEN_580 ? ~_GEN_610 & _GEN_366 : ~_GEN_569 & _GEN_366);
+        ~_GEN_639 & (_GEN_579 ? ~_GEN_609 & _GEN_365 : ~_GEN_568 & _GEN_365);
       reservation_station_9_decoded_instruction_IS_LOAD <=
-        ~_GEN_640 & (_GEN_580 ? ~_GEN_610 & _GEN_367 : ~_GEN_569 & _GEN_367);
+        ~_GEN_639 & (_GEN_579 ? ~_GEN_609 & _GEN_366 : ~_GEN_568 & _GEN_366);
       reservation_station_9_decoded_instruction_IS_STORE <=
-        ~_GEN_640 & (_GEN_580 ? ~_GEN_610 & _GEN_368 : ~_GEN_569 & _GEN_368);
+        ~_GEN_639 & (_GEN_579 ? ~_GEN_609 & _GEN_367 : ~_GEN_568 & _GEN_367);
       reservation_station_9_ready_bits_RS1_ready <=
-        ~_GEN_640 & (_GEN_580 ? ~_GEN_610 & _GEN_548 : ~_GEN_569 & _GEN_548);
+        ~_GEN_639 & (_GEN_579 ? ~_GEN_609 & _GEN_547 : ~_GEN_568 & _GEN_547);
       reservation_station_9_ready_bits_RS2_ready <=
-        ~_GEN_640 & (_GEN_580 ? ~_GEN_610 & _GEN_528 : ~_GEN_569 & _GEN_528);
+        ~_GEN_639 & (_GEN_579 ? ~_GEN_609 & _GEN_527 : ~_GEN_568 & _GEN_527);
       reservation_station_9_valid <=
-        ~_GEN_640 & (_GEN_580 ? ~(_GEN_590 | _GEN_569) & _GEN_508 : ~_GEN_569 & _GEN_508);
-      if (_GEN_643)
-        reservation_station_10_decoded_instruction_RDold <= 6'h0;
-      else if (_GEN_370)
-        reservation_station_10_decoded_instruction_RDold <=
-          io_backendPacket_3_bits_decoded_instruction_RDold;
-      else if (_GEN_229)
-        reservation_station_10_decoded_instruction_RDold <=
-          io_backendPacket_2_bits_decoded_instruction_RDold;
-      else if (_GEN_180)
-        reservation_station_10_decoded_instruction_RDold <=
-          io_backendPacket_1_bits_decoded_instruction_RDold;
-      else if (_GEN_149)
-        reservation_station_10_decoded_instruction_RDold <=
-          io_backendPacket_0_bits_decoded_instruction_RDold;
-      reservation_station_10_decoded_instruction_RDold_valid <=
-        ~_GEN_642 & (_GEN_580 ? ~_GEN_611 & _GEN_371 : ~_GEN_570 & _GEN_371);
-      if (_GEN_643)
+        ~_GEN_639 & (_GEN_579 ? ~(_GEN_589 | _GEN_568) & _GEN_507 : ~_GEN_568 & _GEN_507);
+      if (_GEN_642)
         reservation_station_10_decoded_instruction_RD <= 6'h0;
-      else if (_GEN_370)
+      else if (_GEN_369)
         reservation_station_10_decoded_instruction_RD <=
           io_backendPacket_3_bits_decoded_instruction_RD;
-      else if (_GEN_229)
+      else if (_GEN_228)
         reservation_station_10_decoded_instruction_RD <=
           io_backendPacket_2_bits_decoded_instruction_RD;
-      else if (_GEN_180)
+      else if (_GEN_179)
         reservation_station_10_decoded_instruction_RD <=
           io_backendPacket_1_bits_decoded_instruction_RD;
-      else if (_GEN_149)
+      else if (_GEN_148)
         reservation_station_10_decoded_instruction_RD <=
           io_backendPacket_0_bits_decoded_instruction_RD;
       reservation_station_10_decoded_instruction_RD_valid <=
-        ~_GEN_642 & (_GEN_580 ? ~_GEN_611 & _GEN_372 : ~_GEN_570 & _GEN_372);
-      if (_GEN_643)
+        ~_GEN_641 & (_GEN_579 ? ~_GEN_610 & _GEN_370 : ~_GEN_569 & _GEN_370);
+      if (_GEN_642)
         reservation_station_10_decoded_instruction_RS1 <= 6'h0;
-      else if (_GEN_370)
+      else if (_GEN_369)
         reservation_station_10_decoded_instruction_RS1 <=
           io_backendPacket_3_bits_decoded_instruction_RS1;
-      else if (_GEN_229)
+      else if (_GEN_228)
         reservation_station_10_decoded_instruction_RS1 <=
           io_backendPacket_2_bits_decoded_instruction_RS1;
-      else if (_GEN_180)
+      else if (_GEN_179)
         reservation_station_10_decoded_instruction_RS1 <=
           io_backendPacket_1_bits_decoded_instruction_RS1;
-      else if (_GEN_149)
+      else if (_GEN_148)
         reservation_station_10_decoded_instruction_RS1 <=
           io_backendPacket_0_bits_decoded_instruction_RS1;
       reservation_station_10_decoded_instruction_RS1_valid <=
-        ~_GEN_642 & (_GEN_580 ? ~_GEN_611 & _GEN_373 : ~_GEN_570 & _GEN_373);
-      if (_GEN_643)
+        ~_GEN_641 & (_GEN_579 ? ~_GEN_610 & _GEN_371 : ~_GEN_569 & _GEN_371);
+      if (_GEN_642)
         reservation_station_10_decoded_instruction_RS2 <= 6'h0;
-      else if (_GEN_370)
+      else if (_GEN_369)
         reservation_station_10_decoded_instruction_RS2 <=
           io_backendPacket_3_bits_decoded_instruction_RS2;
-      else if (_GEN_229)
+      else if (_GEN_228)
         reservation_station_10_decoded_instruction_RS2 <=
           io_backendPacket_2_bits_decoded_instruction_RS2;
-      else if (_GEN_180)
+      else if (_GEN_179)
         reservation_station_10_decoded_instruction_RS2 <=
           io_backendPacket_1_bits_decoded_instruction_RS2;
-      else if (_GEN_149)
+      else if (_GEN_148)
         reservation_station_10_decoded_instruction_RS2 <=
           io_backendPacket_0_bits_decoded_instruction_RS2;
       reservation_station_10_decoded_instruction_RS2_valid <=
-        ~_GEN_642 & (_GEN_580 ? ~_GEN_611 & _GEN_374 : ~_GEN_570 & _GEN_374);
-      if (_GEN_643) begin
+        ~_GEN_641 & (_GEN_579 ? ~_GEN_610 & _GEN_372 : ~_GEN_569 & _GEN_372);
+      if (_GEN_642) begin
         reservation_station_10_decoded_instruction_IMM <= 32'h0;
         reservation_station_10_decoded_instruction_FUNCT3 <= 3'h0;
         reservation_station_10_decoded_instruction_packet_index <= 4'h0;
@@ -8051,7 +7819,7 @@ module RS(
         reservation_station_10_decoded_instruction_portID <= 2'h0;
         reservation_station_10_decoded_instruction_RS_type <= 2'h0;
       end
-      else if (_GEN_370) begin
+      else if (_GEN_369) begin
         reservation_station_10_decoded_instruction_IMM <=
           io_backendPacket_3_bits_decoded_instruction_IMM;
         reservation_station_10_decoded_instruction_FUNCT3 <=
@@ -8067,7 +7835,7 @@ module RS(
         reservation_station_10_decoded_instruction_RS_type <=
           io_backendPacket_3_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_229) begin
+      else if (_GEN_228) begin
         reservation_station_10_decoded_instruction_IMM <=
           io_backendPacket_2_bits_decoded_instruction_IMM;
         reservation_station_10_decoded_instruction_FUNCT3 <=
@@ -8083,7 +7851,7 @@ module RS(
         reservation_station_10_decoded_instruction_RS_type <=
           io_backendPacket_2_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_180) begin
+      else if (_GEN_179) begin
         reservation_station_10_decoded_instruction_IMM <=
           io_backendPacket_1_bits_decoded_instruction_IMM;
         reservation_station_10_decoded_instruction_FUNCT3 <=
@@ -8099,7 +7867,7 @@ module RS(
         reservation_station_10_decoded_instruction_RS_type <=
           io_backendPacket_1_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_149) begin
+      else if (_GEN_148) begin
         reservation_station_10_decoded_instruction_IMM <=
           io_backendPacket_0_bits_decoded_instruction_IMM;
         reservation_station_10_decoded_instruction_FUNCT3 <=
@@ -8116,90 +7884,76 @@ module RS(
           io_backendPacket_0_bits_decoded_instruction_RS_type;
       end
       reservation_station_10_decoded_instruction_needs_ALU <=
-        ~_GEN_642 & (_GEN_580 ? ~_GEN_611 & _GEN_375 : ~_GEN_570 & _GEN_375);
+        ~_GEN_641 & (_GEN_579 ? ~_GEN_610 & _GEN_373 : ~_GEN_569 & _GEN_373);
       reservation_station_10_decoded_instruction_needs_branch_unit <=
-        ~_GEN_642 & (_GEN_580 ? ~_GEN_611 & _GEN_376 : ~_GEN_570 & _GEN_376);
+        ~_GEN_641 & (_GEN_579 ? ~_GEN_610 & _GEN_374 : ~_GEN_569 & _GEN_374);
+      reservation_station_10_decoded_instruction_needs_CSRs <=
+        ~_GEN_641 & (_GEN_579 ? ~_GEN_610 & _GEN_375 : ~_GEN_569 & _GEN_375);
       reservation_station_10_decoded_instruction_SUBTRACT <=
-        ~_GEN_642 & (_GEN_580 ? ~_GEN_611 & _GEN_377 : ~_GEN_570 & _GEN_377);
+        ~_GEN_641 & (_GEN_579 ? ~_GEN_610 & _GEN_376 : ~_GEN_569 & _GEN_376);
       reservation_station_10_decoded_instruction_MULTIPLY <=
-        ~_GEN_642 & (_GEN_580 ? ~_GEN_611 & _GEN_378 : ~_GEN_570 & _GEN_378);
+        ~_GEN_641 & (_GEN_579 ? ~_GEN_610 & _GEN_377 : ~_GEN_569 & _GEN_377);
       reservation_station_10_decoded_instruction_IMMEDIATE <=
-        ~_GEN_642 & (_GEN_580 ? ~_GEN_611 & _GEN_379 : ~_GEN_570 & _GEN_379);
+        ~_GEN_641 & (_GEN_579 ? ~_GEN_610 & _GEN_378 : ~_GEN_569 & _GEN_378);
       reservation_station_10_decoded_instruction_IS_LOAD <=
-        ~_GEN_642 & (_GEN_580 ? ~_GEN_611 & _GEN_380 : ~_GEN_570 & _GEN_380);
+        ~_GEN_641 & (_GEN_579 ? ~_GEN_610 & _GEN_379 : ~_GEN_569 & _GEN_379);
       reservation_station_10_decoded_instruction_IS_STORE <=
-        ~_GEN_642 & (_GEN_580 ? ~_GEN_611 & _GEN_381 : ~_GEN_570 & _GEN_381);
+        ~_GEN_641 & (_GEN_579 ? ~_GEN_610 & _GEN_380 : ~_GEN_569 & _GEN_380);
       reservation_station_10_ready_bits_RS1_ready <=
-        ~_GEN_642 & (_GEN_580 ? ~_GEN_611 & _GEN_549 : ~_GEN_570 & _GEN_549);
+        ~_GEN_641 & (_GEN_579 ? ~_GEN_610 & _GEN_548 : ~_GEN_569 & _GEN_548);
       reservation_station_10_ready_bits_RS2_ready <=
-        ~_GEN_642 & (_GEN_580 ? ~_GEN_611 & _GEN_529 : ~_GEN_570 & _GEN_529);
+        ~_GEN_641 & (_GEN_579 ? ~_GEN_610 & _GEN_528 : ~_GEN_569 & _GEN_528);
       reservation_station_10_valid <=
-        ~_GEN_642 & (_GEN_580 ? ~(_GEN_591 | _GEN_570) & _GEN_509 : ~_GEN_570 & _GEN_509);
-      if (_GEN_645)
-        reservation_station_11_decoded_instruction_RDold <= 6'h0;
-      else if (_GEN_383)
-        reservation_station_11_decoded_instruction_RDold <=
-          io_backendPacket_3_bits_decoded_instruction_RDold;
-      else if (_GEN_230)
-        reservation_station_11_decoded_instruction_RDold <=
-          io_backendPacket_2_bits_decoded_instruction_RDold;
-      else if (_GEN_182)
-        reservation_station_11_decoded_instruction_RDold <=
-          io_backendPacket_1_bits_decoded_instruction_RDold;
-      else if (_GEN_150)
-        reservation_station_11_decoded_instruction_RDold <=
-          io_backendPacket_0_bits_decoded_instruction_RDold;
-      reservation_station_11_decoded_instruction_RDold_valid <=
-        ~_GEN_644 & (_GEN_580 ? ~_GEN_612 & _GEN_384 : ~_GEN_571 & _GEN_384);
-      if (_GEN_645)
+        ~_GEN_641 & (_GEN_579 ? ~(_GEN_590 | _GEN_569) & _GEN_508 : ~_GEN_569 & _GEN_508);
+      if (_GEN_644)
         reservation_station_11_decoded_instruction_RD <= 6'h0;
-      else if (_GEN_383)
+      else if (_GEN_382)
         reservation_station_11_decoded_instruction_RD <=
           io_backendPacket_3_bits_decoded_instruction_RD;
-      else if (_GEN_230)
+      else if (_GEN_229)
         reservation_station_11_decoded_instruction_RD <=
           io_backendPacket_2_bits_decoded_instruction_RD;
-      else if (_GEN_182)
+      else if (_GEN_181)
         reservation_station_11_decoded_instruction_RD <=
           io_backendPacket_1_bits_decoded_instruction_RD;
-      else if (_GEN_150)
+      else if (_GEN_149)
         reservation_station_11_decoded_instruction_RD <=
           io_backendPacket_0_bits_decoded_instruction_RD;
       reservation_station_11_decoded_instruction_RD_valid <=
-        ~_GEN_644 & (_GEN_580 ? ~_GEN_612 & _GEN_385 : ~_GEN_571 & _GEN_385);
-      if (_GEN_645)
+        ~_GEN_643 & (_GEN_579 ? ~_GEN_611 & _GEN_383 : ~_GEN_570 & _GEN_383);
+      if (_GEN_644)
         reservation_station_11_decoded_instruction_RS1 <= 6'h0;
-      else if (_GEN_383)
+      else if (_GEN_382)
         reservation_station_11_decoded_instruction_RS1 <=
           io_backendPacket_3_bits_decoded_instruction_RS1;
-      else if (_GEN_230)
+      else if (_GEN_229)
         reservation_station_11_decoded_instruction_RS1 <=
           io_backendPacket_2_bits_decoded_instruction_RS1;
-      else if (_GEN_182)
+      else if (_GEN_181)
         reservation_station_11_decoded_instruction_RS1 <=
           io_backendPacket_1_bits_decoded_instruction_RS1;
-      else if (_GEN_150)
+      else if (_GEN_149)
         reservation_station_11_decoded_instruction_RS1 <=
           io_backendPacket_0_bits_decoded_instruction_RS1;
       reservation_station_11_decoded_instruction_RS1_valid <=
-        ~_GEN_644 & (_GEN_580 ? ~_GEN_612 & _GEN_386 : ~_GEN_571 & _GEN_386);
-      if (_GEN_645)
+        ~_GEN_643 & (_GEN_579 ? ~_GEN_611 & _GEN_384 : ~_GEN_570 & _GEN_384);
+      if (_GEN_644)
         reservation_station_11_decoded_instruction_RS2 <= 6'h0;
-      else if (_GEN_383)
+      else if (_GEN_382)
         reservation_station_11_decoded_instruction_RS2 <=
           io_backendPacket_3_bits_decoded_instruction_RS2;
-      else if (_GEN_230)
+      else if (_GEN_229)
         reservation_station_11_decoded_instruction_RS2 <=
           io_backendPacket_2_bits_decoded_instruction_RS2;
-      else if (_GEN_182)
+      else if (_GEN_181)
         reservation_station_11_decoded_instruction_RS2 <=
           io_backendPacket_1_bits_decoded_instruction_RS2;
-      else if (_GEN_150)
+      else if (_GEN_149)
         reservation_station_11_decoded_instruction_RS2 <=
           io_backendPacket_0_bits_decoded_instruction_RS2;
       reservation_station_11_decoded_instruction_RS2_valid <=
-        ~_GEN_644 & (_GEN_580 ? ~_GEN_612 & _GEN_387 : ~_GEN_571 & _GEN_387);
-      if (_GEN_645) begin
+        ~_GEN_643 & (_GEN_579 ? ~_GEN_611 & _GEN_385 : ~_GEN_570 & _GEN_385);
+      if (_GEN_644) begin
         reservation_station_11_decoded_instruction_IMM <= 32'h0;
         reservation_station_11_decoded_instruction_FUNCT3 <= 3'h0;
         reservation_station_11_decoded_instruction_packet_index <= 4'h0;
@@ -8208,7 +7962,7 @@ module RS(
         reservation_station_11_decoded_instruction_portID <= 2'h0;
         reservation_station_11_decoded_instruction_RS_type <= 2'h0;
       end
-      else if (_GEN_383) begin
+      else if (_GEN_382) begin
         reservation_station_11_decoded_instruction_IMM <=
           io_backendPacket_3_bits_decoded_instruction_IMM;
         reservation_station_11_decoded_instruction_FUNCT3 <=
@@ -8224,7 +7978,7 @@ module RS(
         reservation_station_11_decoded_instruction_RS_type <=
           io_backendPacket_3_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_230) begin
+      else if (_GEN_229) begin
         reservation_station_11_decoded_instruction_IMM <=
           io_backendPacket_2_bits_decoded_instruction_IMM;
         reservation_station_11_decoded_instruction_FUNCT3 <=
@@ -8240,7 +7994,7 @@ module RS(
         reservation_station_11_decoded_instruction_RS_type <=
           io_backendPacket_2_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_182) begin
+      else if (_GEN_181) begin
         reservation_station_11_decoded_instruction_IMM <=
           io_backendPacket_1_bits_decoded_instruction_IMM;
         reservation_station_11_decoded_instruction_FUNCT3 <=
@@ -8256,7 +8010,7 @@ module RS(
         reservation_station_11_decoded_instruction_RS_type <=
           io_backendPacket_1_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_150) begin
+      else if (_GEN_149) begin
         reservation_station_11_decoded_instruction_IMM <=
           io_backendPacket_0_bits_decoded_instruction_IMM;
         reservation_station_11_decoded_instruction_FUNCT3 <=
@@ -8273,90 +8027,76 @@ module RS(
           io_backendPacket_0_bits_decoded_instruction_RS_type;
       end
       reservation_station_11_decoded_instruction_needs_ALU <=
-        ~_GEN_644 & (_GEN_580 ? ~_GEN_612 & _GEN_388 : ~_GEN_571 & _GEN_388);
+        ~_GEN_643 & (_GEN_579 ? ~_GEN_611 & _GEN_386 : ~_GEN_570 & _GEN_386);
       reservation_station_11_decoded_instruction_needs_branch_unit <=
-        ~_GEN_644 & (_GEN_580 ? ~_GEN_612 & _GEN_389 : ~_GEN_571 & _GEN_389);
+        ~_GEN_643 & (_GEN_579 ? ~_GEN_611 & _GEN_387 : ~_GEN_570 & _GEN_387);
+      reservation_station_11_decoded_instruction_needs_CSRs <=
+        ~_GEN_643 & (_GEN_579 ? ~_GEN_611 & _GEN_388 : ~_GEN_570 & _GEN_388);
       reservation_station_11_decoded_instruction_SUBTRACT <=
-        ~_GEN_644 & (_GEN_580 ? ~_GEN_612 & _GEN_390 : ~_GEN_571 & _GEN_390);
+        ~_GEN_643 & (_GEN_579 ? ~_GEN_611 & _GEN_389 : ~_GEN_570 & _GEN_389);
       reservation_station_11_decoded_instruction_MULTIPLY <=
-        ~_GEN_644 & (_GEN_580 ? ~_GEN_612 & _GEN_391 : ~_GEN_571 & _GEN_391);
+        ~_GEN_643 & (_GEN_579 ? ~_GEN_611 & _GEN_390 : ~_GEN_570 & _GEN_390);
       reservation_station_11_decoded_instruction_IMMEDIATE <=
-        ~_GEN_644 & (_GEN_580 ? ~_GEN_612 & _GEN_392 : ~_GEN_571 & _GEN_392);
+        ~_GEN_643 & (_GEN_579 ? ~_GEN_611 & _GEN_391 : ~_GEN_570 & _GEN_391);
       reservation_station_11_decoded_instruction_IS_LOAD <=
-        ~_GEN_644 & (_GEN_580 ? ~_GEN_612 & _GEN_393 : ~_GEN_571 & _GEN_393);
+        ~_GEN_643 & (_GEN_579 ? ~_GEN_611 & _GEN_392 : ~_GEN_570 & _GEN_392);
       reservation_station_11_decoded_instruction_IS_STORE <=
-        ~_GEN_644 & (_GEN_580 ? ~_GEN_612 & _GEN_394 : ~_GEN_571 & _GEN_394);
+        ~_GEN_643 & (_GEN_579 ? ~_GEN_611 & _GEN_393 : ~_GEN_570 & _GEN_393);
       reservation_station_11_ready_bits_RS1_ready <=
-        ~_GEN_644 & (_GEN_580 ? ~_GEN_612 & _GEN_550 : ~_GEN_571 & _GEN_550);
+        ~_GEN_643 & (_GEN_579 ? ~_GEN_611 & _GEN_549 : ~_GEN_570 & _GEN_549);
       reservation_station_11_ready_bits_RS2_ready <=
-        ~_GEN_644 & (_GEN_580 ? ~_GEN_612 & _GEN_530 : ~_GEN_571 & _GEN_530);
+        ~_GEN_643 & (_GEN_579 ? ~_GEN_611 & _GEN_529 : ~_GEN_570 & _GEN_529);
       reservation_station_11_valid <=
-        ~_GEN_644 & (_GEN_580 ? ~(_GEN_592 | _GEN_571) & _GEN_510 : ~_GEN_571 & _GEN_510);
-      if (_GEN_647)
-        reservation_station_12_decoded_instruction_RDold <= 6'h0;
-      else if (_GEN_396)
-        reservation_station_12_decoded_instruction_RDold <=
-          io_backendPacket_3_bits_decoded_instruction_RDold;
-      else if (_GEN_231)
-        reservation_station_12_decoded_instruction_RDold <=
-          io_backendPacket_2_bits_decoded_instruction_RDold;
-      else if (_GEN_184)
-        reservation_station_12_decoded_instruction_RDold <=
-          io_backendPacket_1_bits_decoded_instruction_RDold;
-      else if (_GEN_151)
-        reservation_station_12_decoded_instruction_RDold <=
-          io_backendPacket_0_bits_decoded_instruction_RDold;
-      reservation_station_12_decoded_instruction_RDold_valid <=
-        ~_GEN_646 & (_GEN_580 ? ~_GEN_613 & _GEN_397 : ~_GEN_572 & _GEN_397);
-      if (_GEN_647)
+        ~_GEN_643 & (_GEN_579 ? ~(_GEN_591 | _GEN_570) & _GEN_509 : ~_GEN_570 & _GEN_509);
+      if (_GEN_646)
         reservation_station_12_decoded_instruction_RD <= 6'h0;
-      else if (_GEN_396)
+      else if (_GEN_395)
         reservation_station_12_decoded_instruction_RD <=
           io_backendPacket_3_bits_decoded_instruction_RD;
-      else if (_GEN_231)
+      else if (_GEN_230)
         reservation_station_12_decoded_instruction_RD <=
           io_backendPacket_2_bits_decoded_instruction_RD;
-      else if (_GEN_184)
+      else if (_GEN_183)
         reservation_station_12_decoded_instruction_RD <=
           io_backendPacket_1_bits_decoded_instruction_RD;
-      else if (_GEN_151)
+      else if (_GEN_150)
         reservation_station_12_decoded_instruction_RD <=
           io_backendPacket_0_bits_decoded_instruction_RD;
       reservation_station_12_decoded_instruction_RD_valid <=
-        ~_GEN_646 & (_GEN_580 ? ~_GEN_613 & _GEN_398 : ~_GEN_572 & _GEN_398);
-      if (_GEN_647)
+        ~_GEN_645 & (_GEN_579 ? ~_GEN_612 & _GEN_396 : ~_GEN_571 & _GEN_396);
+      if (_GEN_646)
         reservation_station_12_decoded_instruction_RS1 <= 6'h0;
-      else if (_GEN_396)
+      else if (_GEN_395)
         reservation_station_12_decoded_instruction_RS1 <=
           io_backendPacket_3_bits_decoded_instruction_RS1;
-      else if (_GEN_231)
+      else if (_GEN_230)
         reservation_station_12_decoded_instruction_RS1 <=
           io_backendPacket_2_bits_decoded_instruction_RS1;
-      else if (_GEN_184)
+      else if (_GEN_183)
         reservation_station_12_decoded_instruction_RS1 <=
           io_backendPacket_1_bits_decoded_instruction_RS1;
-      else if (_GEN_151)
+      else if (_GEN_150)
         reservation_station_12_decoded_instruction_RS1 <=
           io_backendPacket_0_bits_decoded_instruction_RS1;
       reservation_station_12_decoded_instruction_RS1_valid <=
-        ~_GEN_646 & (_GEN_580 ? ~_GEN_613 & _GEN_399 : ~_GEN_572 & _GEN_399);
-      if (_GEN_647)
+        ~_GEN_645 & (_GEN_579 ? ~_GEN_612 & _GEN_397 : ~_GEN_571 & _GEN_397);
+      if (_GEN_646)
         reservation_station_12_decoded_instruction_RS2 <= 6'h0;
-      else if (_GEN_396)
+      else if (_GEN_395)
         reservation_station_12_decoded_instruction_RS2 <=
           io_backendPacket_3_bits_decoded_instruction_RS2;
-      else if (_GEN_231)
+      else if (_GEN_230)
         reservation_station_12_decoded_instruction_RS2 <=
           io_backendPacket_2_bits_decoded_instruction_RS2;
-      else if (_GEN_184)
+      else if (_GEN_183)
         reservation_station_12_decoded_instruction_RS2 <=
           io_backendPacket_1_bits_decoded_instruction_RS2;
-      else if (_GEN_151)
+      else if (_GEN_150)
         reservation_station_12_decoded_instruction_RS2 <=
           io_backendPacket_0_bits_decoded_instruction_RS2;
       reservation_station_12_decoded_instruction_RS2_valid <=
-        ~_GEN_646 & (_GEN_580 ? ~_GEN_613 & _GEN_400 : ~_GEN_572 & _GEN_400);
-      if (_GEN_647) begin
+        ~_GEN_645 & (_GEN_579 ? ~_GEN_612 & _GEN_398 : ~_GEN_571 & _GEN_398);
+      if (_GEN_646) begin
         reservation_station_12_decoded_instruction_IMM <= 32'h0;
         reservation_station_12_decoded_instruction_FUNCT3 <= 3'h0;
         reservation_station_12_decoded_instruction_packet_index <= 4'h0;
@@ -8365,7 +8105,7 @@ module RS(
         reservation_station_12_decoded_instruction_portID <= 2'h0;
         reservation_station_12_decoded_instruction_RS_type <= 2'h0;
       end
-      else if (_GEN_396) begin
+      else if (_GEN_395) begin
         reservation_station_12_decoded_instruction_IMM <=
           io_backendPacket_3_bits_decoded_instruction_IMM;
         reservation_station_12_decoded_instruction_FUNCT3 <=
@@ -8381,7 +8121,7 @@ module RS(
         reservation_station_12_decoded_instruction_RS_type <=
           io_backendPacket_3_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_231) begin
+      else if (_GEN_230) begin
         reservation_station_12_decoded_instruction_IMM <=
           io_backendPacket_2_bits_decoded_instruction_IMM;
         reservation_station_12_decoded_instruction_FUNCT3 <=
@@ -8397,7 +8137,7 @@ module RS(
         reservation_station_12_decoded_instruction_RS_type <=
           io_backendPacket_2_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_184) begin
+      else if (_GEN_183) begin
         reservation_station_12_decoded_instruction_IMM <=
           io_backendPacket_1_bits_decoded_instruction_IMM;
         reservation_station_12_decoded_instruction_FUNCT3 <=
@@ -8413,7 +8153,7 @@ module RS(
         reservation_station_12_decoded_instruction_RS_type <=
           io_backendPacket_1_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_151) begin
+      else if (_GEN_150) begin
         reservation_station_12_decoded_instruction_IMM <=
           io_backendPacket_0_bits_decoded_instruction_IMM;
         reservation_station_12_decoded_instruction_FUNCT3 <=
@@ -8430,90 +8170,76 @@ module RS(
           io_backendPacket_0_bits_decoded_instruction_RS_type;
       end
       reservation_station_12_decoded_instruction_needs_ALU <=
-        ~_GEN_646 & (_GEN_580 ? ~_GEN_613 & _GEN_401 : ~_GEN_572 & _GEN_401);
+        ~_GEN_645 & (_GEN_579 ? ~_GEN_612 & _GEN_399 : ~_GEN_571 & _GEN_399);
       reservation_station_12_decoded_instruction_needs_branch_unit <=
-        ~_GEN_646 & (_GEN_580 ? ~_GEN_613 & _GEN_402 : ~_GEN_572 & _GEN_402);
+        ~_GEN_645 & (_GEN_579 ? ~_GEN_612 & _GEN_400 : ~_GEN_571 & _GEN_400);
+      reservation_station_12_decoded_instruction_needs_CSRs <=
+        ~_GEN_645 & (_GEN_579 ? ~_GEN_612 & _GEN_401 : ~_GEN_571 & _GEN_401);
       reservation_station_12_decoded_instruction_SUBTRACT <=
-        ~_GEN_646 & (_GEN_580 ? ~_GEN_613 & _GEN_403 : ~_GEN_572 & _GEN_403);
+        ~_GEN_645 & (_GEN_579 ? ~_GEN_612 & _GEN_402 : ~_GEN_571 & _GEN_402);
       reservation_station_12_decoded_instruction_MULTIPLY <=
-        ~_GEN_646 & (_GEN_580 ? ~_GEN_613 & _GEN_404 : ~_GEN_572 & _GEN_404);
+        ~_GEN_645 & (_GEN_579 ? ~_GEN_612 & _GEN_403 : ~_GEN_571 & _GEN_403);
       reservation_station_12_decoded_instruction_IMMEDIATE <=
-        ~_GEN_646 & (_GEN_580 ? ~_GEN_613 & _GEN_405 : ~_GEN_572 & _GEN_405);
+        ~_GEN_645 & (_GEN_579 ? ~_GEN_612 & _GEN_404 : ~_GEN_571 & _GEN_404);
       reservation_station_12_decoded_instruction_IS_LOAD <=
-        ~_GEN_646 & (_GEN_580 ? ~_GEN_613 & _GEN_406 : ~_GEN_572 & _GEN_406);
+        ~_GEN_645 & (_GEN_579 ? ~_GEN_612 & _GEN_405 : ~_GEN_571 & _GEN_405);
       reservation_station_12_decoded_instruction_IS_STORE <=
-        ~_GEN_646 & (_GEN_580 ? ~_GEN_613 & _GEN_407 : ~_GEN_572 & _GEN_407);
+        ~_GEN_645 & (_GEN_579 ? ~_GEN_612 & _GEN_406 : ~_GEN_571 & _GEN_406);
       reservation_station_12_ready_bits_RS1_ready <=
-        ~_GEN_646 & (_GEN_580 ? ~_GEN_613 & _GEN_551 : ~_GEN_572 & _GEN_551);
+        ~_GEN_645 & (_GEN_579 ? ~_GEN_612 & _GEN_550 : ~_GEN_571 & _GEN_550);
       reservation_station_12_ready_bits_RS2_ready <=
-        ~_GEN_646 & (_GEN_580 ? ~_GEN_613 & _GEN_531 : ~_GEN_572 & _GEN_531);
+        ~_GEN_645 & (_GEN_579 ? ~_GEN_612 & _GEN_530 : ~_GEN_571 & _GEN_530);
       reservation_station_12_valid <=
-        ~_GEN_646 & (_GEN_580 ? ~(_GEN_593 | _GEN_572) & _GEN_511 : ~_GEN_572 & _GEN_511);
-      if (_GEN_649)
-        reservation_station_13_decoded_instruction_RDold <= 6'h0;
-      else if (_GEN_409)
-        reservation_station_13_decoded_instruction_RDold <=
-          io_backendPacket_3_bits_decoded_instruction_RDold;
-      else if (_GEN_232)
-        reservation_station_13_decoded_instruction_RDold <=
-          io_backendPacket_2_bits_decoded_instruction_RDold;
-      else if (_GEN_186)
-        reservation_station_13_decoded_instruction_RDold <=
-          io_backendPacket_1_bits_decoded_instruction_RDold;
-      else if (_GEN_152)
-        reservation_station_13_decoded_instruction_RDold <=
-          io_backendPacket_0_bits_decoded_instruction_RDold;
-      reservation_station_13_decoded_instruction_RDold_valid <=
-        ~_GEN_648 & (_GEN_580 ? ~_GEN_614 & _GEN_410 : ~_GEN_573 & _GEN_410);
-      if (_GEN_649)
+        ~_GEN_645 & (_GEN_579 ? ~(_GEN_592 | _GEN_571) & _GEN_510 : ~_GEN_571 & _GEN_510);
+      if (_GEN_648)
         reservation_station_13_decoded_instruction_RD <= 6'h0;
-      else if (_GEN_409)
+      else if (_GEN_408)
         reservation_station_13_decoded_instruction_RD <=
           io_backendPacket_3_bits_decoded_instruction_RD;
-      else if (_GEN_232)
+      else if (_GEN_231)
         reservation_station_13_decoded_instruction_RD <=
           io_backendPacket_2_bits_decoded_instruction_RD;
-      else if (_GEN_186)
+      else if (_GEN_185)
         reservation_station_13_decoded_instruction_RD <=
           io_backendPacket_1_bits_decoded_instruction_RD;
-      else if (_GEN_152)
+      else if (_GEN_151)
         reservation_station_13_decoded_instruction_RD <=
           io_backendPacket_0_bits_decoded_instruction_RD;
       reservation_station_13_decoded_instruction_RD_valid <=
-        ~_GEN_648 & (_GEN_580 ? ~_GEN_614 & _GEN_411 : ~_GEN_573 & _GEN_411);
-      if (_GEN_649)
+        ~_GEN_647 & (_GEN_579 ? ~_GEN_613 & _GEN_409 : ~_GEN_572 & _GEN_409);
+      if (_GEN_648)
         reservation_station_13_decoded_instruction_RS1 <= 6'h0;
-      else if (_GEN_409)
+      else if (_GEN_408)
         reservation_station_13_decoded_instruction_RS1 <=
           io_backendPacket_3_bits_decoded_instruction_RS1;
-      else if (_GEN_232)
+      else if (_GEN_231)
         reservation_station_13_decoded_instruction_RS1 <=
           io_backendPacket_2_bits_decoded_instruction_RS1;
-      else if (_GEN_186)
+      else if (_GEN_185)
         reservation_station_13_decoded_instruction_RS1 <=
           io_backendPacket_1_bits_decoded_instruction_RS1;
-      else if (_GEN_152)
+      else if (_GEN_151)
         reservation_station_13_decoded_instruction_RS1 <=
           io_backendPacket_0_bits_decoded_instruction_RS1;
       reservation_station_13_decoded_instruction_RS1_valid <=
-        ~_GEN_648 & (_GEN_580 ? ~_GEN_614 & _GEN_412 : ~_GEN_573 & _GEN_412);
-      if (_GEN_649)
+        ~_GEN_647 & (_GEN_579 ? ~_GEN_613 & _GEN_410 : ~_GEN_572 & _GEN_410);
+      if (_GEN_648)
         reservation_station_13_decoded_instruction_RS2 <= 6'h0;
-      else if (_GEN_409)
+      else if (_GEN_408)
         reservation_station_13_decoded_instruction_RS2 <=
           io_backendPacket_3_bits_decoded_instruction_RS2;
-      else if (_GEN_232)
+      else if (_GEN_231)
         reservation_station_13_decoded_instruction_RS2 <=
           io_backendPacket_2_bits_decoded_instruction_RS2;
-      else if (_GEN_186)
+      else if (_GEN_185)
         reservation_station_13_decoded_instruction_RS2 <=
           io_backendPacket_1_bits_decoded_instruction_RS2;
-      else if (_GEN_152)
+      else if (_GEN_151)
         reservation_station_13_decoded_instruction_RS2 <=
           io_backendPacket_0_bits_decoded_instruction_RS2;
       reservation_station_13_decoded_instruction_RS2_valid <=
-        ~_GEN_648 & (_GEN_580 ? ~_GEN_614 & _GEN_413 : ~_GEN_573 & _GEN_413);
-      if (_GEN_649) begin
+        ~_GEN_647 & (_GEN_579 ? ~_GEN_613 & _GEN_411 : ~_GEN_572 & _GEN_411);
+      if (_GEN_648) begin
         reservation_station_13_decoded_instruction_IMM <= 32'h0;
         reservation_station_13_decoded_instruction_FUNCT3 <= 3'h0;
         reservation_station_13_decoded_instruction_packet_index <= 4'h0;
@@ -8522,7 +8248,7 @@ module RS(
         reservation_station_13_decoded_instruction_portID <= 2'h0;
         reservation_station_13_decoded_instruction_RS_type <= 2'h0;
       end
-      else if (_GEN_409) begin
+      else if (_GEN_408) begin
         reservation_station_13_decoded_instruction_IMM <=
           io_backendPacket_3_bits_decoded_instruction_IMM;
         reservation_station_13_decoded_instruction_FUNCT3 <=
@@ -8538,7 +8264,7 @@ module RS(
         reservation_station_13_decoded_instruction_RS_type <=
           io_backendPacket_3_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_232) begin
+      else if (_GEN_231) begin
         reservation_station_13_decoded_instruction_IMM <=
           io_backendPacket_2_bits_decoded_instruction_IMM;
         reservation_station_13_decoded_instruction_FUNCT3 <=
@@ -8554,7 +8280,7 @@ module RS(
         reservation_station_13_decoded_instruction_RS_type <=
           io_backendPacket_2_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_186) begin
+      else if (_GEN_185) begin
         reservation_station_13_decoded_instruction_IMM <=
           io_backendPacket_1_bits_decoded_instruction_IMM;
         reservation_station_13_decoded_instruction_FUNCT3 <=
@@ -8570,7 +8296,7 @@ module RS(
         reservation_station_13_decoded_instruction_RS_type <=
           io_backendPacket_1_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_152) begin
+      else if (_GEN_151) begin
         reservation_station_13_decoded_instruction_IMM <=
           io_backendPacket_0_bits_decoded_instruction_IMM;
         reservation_station_13_decoded_instruction_FUNCT3 <=
@@ -8587,90 +8313,76 @@ module RS(
           io_backendPacket_0_bits_decoded_instruction_RS_type;
       end
       reservation_station_13_decoded_instruction_needs_ALU <=
-        ~_GEN_648 & (_GEN_580 ? ~_GEN_614 & _GEN_414 : ~_GEN_573 & _GEN_414);
+        ~_GEN_647 & (_GEN_579 ? ~_GEN_613 & _GEN_412 : ~_GEN_572 & _GEN_412);
       reservation_station_13_decoded_instruction_needs_branch_unit <=
-        ~_GEN_648 & (_GEN_580 ? ~_GEN_614 & _GEN_415 : ~_GEN_573 & _GEN_415);
+        ~_GEN_647 & (_GEN_579 ? ~_GEN_613 & _GEN_413 : ~_GEN_572 & _GEN_413);
+      reservation_station_13_decoded_instruction_needs_CSRs <=
+        ~_GEN_647 & (_GEN_579 ? ~_GEN_613 & _GEN_414 : ~_GEN_572 & _GEN_414);
       reservation_station_13_decoded_instruction_SUBTRACT <=
-        ~_GEN_648 & (_GEN_580 ? ~_GEN_614 & _GEN_416 : ~_GEN_573 & _GEN_416);
+        ~_GEN_647 & (_GEN_579 ? ~_GEN_613 & _GEN_415 : ~_GEN_572 & _GEN_415);
       reservation_station_13_decoded_instruction_MULTIPLY <=
-        ~_GEN_648 & (_GEN_580 ? ~_GEN_614 & _GEN_417 : ~_GEN_573 & _GEN_417);
+        ~_GEN_647 & (_GEN_579 ? ~_GEN_613 & _GEN_416 : ~_GEN_572 & _GEN_416);
       reservation_station_13_decoded_instruction_IMMEDIATE <=
-        ~_GEN_648 & (_GEN_580 ? ~_GEN_614 & _GEN_418 : ~_GEN_573 & _GEN_418);
+        ~_GEN_647 & (_GEN_579 ? ~_GEN_613 & _GEN_417 : ~_GEN_572 & _GEN_417);
       reservation_station_13_decoded_instruction_IS_LOAD <=
-        ~_GEN_648 & (_GEN_580 ? ~_GEN_614 & _GEN_419 : ~_GEN_573 & _GEN_419);
+        ~_GEN_647 & (_GEN_579 ? ~_GEN_613 & _GEN_418 : ~_GEN_572 & _GEN_418);
       reservation_station_13_decoded_instruction_IS_STORE <=
-        ~_GEN_648 & (_GEN_580 ? ~_GEN_614 & _GEN_420 : ~_GEN_573 & _GEN_420);
+        ~_GEN_647 & (_GEN_579 ? ~_GEN_613 & _GEN_419 : ~_GEN_572 & _GEN_419);
       reservation_station_13_ready_bits_RS1_ready <=
-        ~_GEN_648 & (_GEN_580 ? ~_GEN_614 & _GEN_552 : ~_GEN_573 & _GEN_552);
+        ~_GEN_647 & (_GEN_579 ? ~_GEN_613 & _GEN_551 : ~_GEN_572 & _GEN_551);
       reservation_station_13_ready_bits_RS2_ready <=
-        ~_GEN_648 & (_GEN_580 ? ~_GEN_614 & _GEN_532 : ~_GEN_573 & _GEN_532);
+        ~_GEN_647 & (_GEN_579 ? ~_GEN_613 & _GEN_531 : ~_GEN_572 & _GEN_531);
       reservation_station_13_valid <=
-        ~_GEN_648 & (_GEN_580 ? ~(_GEN_594 | _GEN_573) & _GEN_512 : ~_GEN_573 & _GEN_512);
-      if (_GEN_651)
-        reservation_station_14_decoded_instruction_RDold <= 6'h0;
-      else if (_GEN_422)
-        reservation_station_14_decoded_instruction_RDold <=
-          io_backendPacket_3_bits_decoded_instruction_RDold;
-      else if (_GEN_233)
-        reservation_station_14_decoded_instruction_RDold <=
-          io_backendPacket_2_bits_decoded_instruction_RDold;
-      else if (_GEN_188)
-        reservation_station_14_decoded_instruction_RDold <=
-          io_backendPacket_1_bits_decoded_instruction_RDold;
-      else if (_GEN_153)
-        reservation_station_14_decoded_instruction_RDold <=
-          io_backendPacket_0_bits_decoded_instruction_RDold;
-      reservation_station_14_decoded_instruction_RDold_valid <=
-        ~_GEN_650 & (_GEN_580 ? ~_GEN_615 & _GEN_423 : ~_GEN_574 & _GEN_423);
-      if (_GEN_651)
+        ~_GEN_647 & (_GEN_579 ? ~(_GEN_593 | _GEN_572) & _GEN_511 : ~_GEN_572 & _GEN_511);
+      if (_GEN_650)
         reservation_station_14_decoded_instruction_RD <= 6'h0;
-      else if (_GEN_422)
+      else if (_GEN_421)
         reservation_station_14_decoded_instruction_RD <=
           io_backendPacket_3_bits_decoded_instruction_RD;
-      else if (_GEN_233)
+      else if (_GEN_232)
         reservation_station_14_decoded_instruction_RD <=
           io_backendPacket_2_bits_decoded_instruction_RD;
-      else if (_GEN_188)
+      else if (_GEN_187)
         reservation_station_14_decoded_instruction_RD <=
           io_backendPacket_1_bits_decoded_instruction_RD;
-      else if (_GEN_153)
+      else if (_GEN_152)
         reservation_station_14_decoded_instruction_RD <=
           io_backendPacket_0_bits_decoded_instruction_RD;
       reservation_station_14_decoded_instruction_RD_valid <=
-        ~_GEN_650 & (_GEN_580 ? ~_GEN_615 & _GEN_424 : ~_GEN_574 & _GEN_424);
-      if (_GEN_651)
+        ~_GEN_649 & (_GEN_579 ? ~_GEN_614 & _GEN_422 : ~_GEN_573 & _GEN_422);
+      if (_GEN_650)
         reservation_station_14_decoded_instruction_RS1 <= 6'h0;
-      else if (_GEN_422)
+      else if (_GEN_421)
         reservation_station_14_decoded_instruction_RS1 <=
           io_backendPacket_3_bits_decoded_instruction_RS1;
-      else if (_GEN_233)
+      else if (_GEN_232)
         reservation_station_14_decoded_instruction_RS1 <=
           io_backendPacket_2_bits_decoded_instruction_RS1;
-      else if (_GEN_188)
+      else if (_GEN_187)
         reservation_station_14_decoded_instruction_RS1 <=
           io_backendPacket_1_bits_decoded_instruction_RS1;
-      else if (_GEN_153)
+      else if (_GEN_152)
         reservation_station_14_decoded_instruction_RS1 <=
           io_backendPacket_0_bits_decoded_instruction_RS1;
       reservation_station_14_decoded_instruction_RS1_valid <=
-        ~_GEN_650 & (_GEN_580 ? ~_GEN_615 & _GEN_425 : ~_GEN_574 & _GEN_425);
-      if (_GEN_651)
+        ~_GEN_649 & (_GEN_579 ? ~_GEN_614 & _GEN_423 : ~_GEN_573 & _GEN_423);
+      if (_GEN_650)
         reservation_station_14_decoded_instruction_RS2 <= 6'h0;
-      else if (_GEN_422)
+      else if (_GEN_421)
         reservation_station_14_decoded_instruction_RS2 <=
           io_backendPacket_3_bits_decoded_instruction_RS2;
-      else if (_GEN_233)
+      else if (_GEN_232)
         reservation_station_14_decoded_instruction_RS2 <=
           io_backendPacket_2_bits_decoded_instruction_RS2;
-      else if (_GEN_188)
+      else if (_GEN_187)
         reservation_station_14_decoded_instruction_RS2 <=
           io_backendPacket_1_bits_decoded_instruction_RS2;
-      else if (_GEN_153)
+      else if (_GEN_152)
         reservation_station_14_decoded_instruction_RS2 <=
           io_backendPacket_0_bits_decoded_instruction_RS2;
       reservation_station_14_decoded_instruction_RS2_valid <=
-        ~_GEN_650 & (_GEN_580 ? ~_GEN_615 & _GEN_426 : ~_GEN_574 & _GEN_426);
-      if (_GEN_651) begin
+        ~_GEN_649 & (_GEN_579 ? ~_GEN_614 & _GEN_424 : ~_GEN_573 & _GEN_424);
+      if (_GEN_650) begin
         reservation_station_14_decoded_instruction_IMM <= 32'h0;
         reservation_station_14_decoded_instruction_FUNCT3 <= 3'h0;
         reservation_station_14_decoded_instruction_packet_index <= 4'h0;
@@ -8679,7 +8391,7 @@ module RS(
         reservation_station_14_decoded_instruction_portID <= 2'h0;
         reservation_station_14_decoded_instruction_RS_type <= 2'h0;
       end
-      else if (_GEN_422) begin
+      else if (_GEN_421) begin
         reservation_station_14_decoded_instruction_IMM <=
           io_backendPacket_3_bits_decoded_instruction_IMM;
         reservation_station_14_decoded_instruction_FUNCT3 <=
@@ -8695,7 +8407,7 @@ module RS(
         reservation_station_14_decoded_instruction_RS_type <=
           io_backendPacket_3_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_233) begin
+      else if (_GEN_232) begin
         reservation_station_14_decoded_instruction_IMM <=
           io_backendPacket_2_bits_decoded_instruction_IMM;
         reservation_station_14_decoded_instruction_FUNCT3 <=
@@ -8711,7 +8423,7 @@ module RS(
         reservation_station_14_decoded_instruction_RS_type <=
           io_backendPacket_2_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_188) begin
+      else if (_GEN_187) begin
         reservation_station_14_decoded_instruction_IMM <=
           io_backendPacket_1_bits_decoded_instruction_IMM;
         reservation_station_14_decoded_instruction_FUNCT3 <=
@@ -8727,7 +8439,7 @@ module RS(
         reservation_station_14_decoded_instruction_RS_type <=
           io_backendPacket_1_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_153) begin
+      else if (_GEN_152) begin
         reservation_station_14_decoded_instruction_IMM <=
           io_backendPacket_0_bits_decoded_instruction_IMM;
         reservation_station_14_decoded_instruction_FUNCT3 <=
@@ -8744,90 +8456,76 @@ module RS(
           io_backendPacket_0_bits_decoded_instruction_RS_type;
       end
       reservation_station_14_decoded_instruction_needs_ALU <=
-        ~_GEN_650 & (_GEN_580 ? ~_GEN_615 & _GEN_427 : ~_GEN_574 & _GEN_427);
+        ~_GEN_649 & (_GEN_579 ? ~_GEN_614 & _GEN_425 : ~_GEN_573 & _GEN_425);
       reservation_station_14_decoded_instruction_needs_branch_unit <=
-        ~_GEN_650 & (_GEN_580 ? ~_GEN_615 & _GEN_428 : ~_GEN_574 & _GEN_428);
+        ~_GEN_649 & (_GEN_579 ? ~_GEN_614 & _GEN_426 : ~_GEN_573 & _GEN_426);
+      reservation_station_14_decoded_instruction_needs_CSRs <=
+        ~_GEN_649 & (_GEN_579 ? ~_GEN_614 & _GEN_427 : ~_GEN_573 & _GEN_427);
       reservation_station_14_decoded_instruction_SUBTRACT <=
-        ~_GEN_650 & (_GEN_580 ? ~_GEN_615 & _GEN_429 : ~_GEN_574 & _GEN_429);
+        ~_GEN_649 & (_GEN_579 ? ~_GEN_614 & _GEN_428 : ~_GEN_573 & _GEN_428);
       reservation_station_14_decoded_instruction_MULTIPLY <=
-        ~_GEN_650 & (_GEN_580 ? ~_GEN_615 & _GEN_430 : ~_GEN_574 & _GEN_430);
+        ~_GEN_649 & (_GEN_579 ? ~_GEN_614 & _GEN_429 : ~_GEN_573 & _GEN_429);
       reservation_station_14_decoded_instruction_IMMEDIATE <=
-        ~_GEN_650 & (_GEN_580 ? ~_GEN_615 & _GEN_431 : ~_GEN_574 & _GEN_431);
+        ~_GEN_649 & (_GEN_579 ? ~_GEN_614 & _GEN_430 : ~_GEN_573 & _GEN_430);
       reservation_station_14_decoded_instruction_IS_LOAD <=
-        ~_GEN_650 & (_GEN_580 ? ~_GEN_615 & _GEN_432 : ~_GEN_574 & _GEN_432);
+        ~_GEN_649 & (_GEN_579 ? ~_GEN_614 & _GEN_431 : ~_GEN_573 & _GEN_431);
       reservation_station_14_decoded_instruction_IS_STORE <=
-        ~_GEN_650 & (_GEN_580 ? ~_GEN_615 & _GEN_433 : ~_GEN_574 & _GEN_433);
+        ~_GEN_649 & (_GEN_579 ? ~_GEN_614 & _GEN_432 : ~_GEN_573 & _GEN_432);
       reservation_station_14_ready_bits_RS1_ready <=
-        ~_GEN_650 & (_GEN_580 ? ~_GEN_615 & _GEN_553 : ~_GEN_574 & _GEN_553);
+        ~_GEN_649 & (_GEN_579 ? ~_GEN_614 & _GEN_552 : ~_GEN_573 & _GEN_552);
       reservation_station_14_ready_bits_RS2_ready <=
-        ~_GEN_650 & (_GEN_580 ? ~_GEN_615 & _GEN_533 : ~_GEN_574 & _GEN_533);
+        ~_GEN_649 & (_GEN_579 ? ~_GEN_614 & _GEN_532 : ~_GEN_573 & _GEN_532);
       reservation_station_14_valid <=
-        ~_GEN_650 & (_GEN_580 ? ~(_GEN_595 | _GEN_574) & _GEN_513 : ~_GEN_574 & _GEN_513);
-      if (_GEN_653)
-        reservation_station_15_decoded_instruction_RDold <= 6'h0;
-      else if (_GEN_435)
-        reservation_station_15_decoded_instruction_RDold <=
-          io_backendPacket_3_bits_decoded_instruction_RDold;
-      else if (_GEN_234)
-        reservation_station_15_decoded_instruction_RDold <=
-          io_backendPacket_2_bits_decoded_instruction_RDold;
-      else if (_GEN_190)
-        reservation_station_15_decoded_instruction_RDold <=
-          io_backendPacket_1_bits_decoded_instruction_RDold;
-      else if (_GEN_154)
-        reservation_station_15_decoded_instruction_RDold <=
-          io_backendPacket_0_bits_decoded_instruction_RDold;
-      reservation_station_15_decoded_instruction_RDold_valid <=
-        ~_GEN_652 & (_GEN_580 ? ~_GEN_616 & _GEN_436 : ~_GEN_575 & _GEN_436);
-      if (_GEN_653)
+        ~_GEN_649 & (_GEN_579 ? ~(_GEN_594 | _GEN_573) & _GEN_512 : ~_GEN_573 & _GEN_512);
+      if (_GEN_652)
         reservation_station_15_decoded_instruction_RD <= 6'h0;
-      else if (_GEN_435)
+      else if (_GEN_434)
         reservation_station_15_decoded_instruction_RD <=
           io_backendPacket_3_bits_decoded_instruction_RD;
-      else if (_GEN_234)
+      else if (_GEN_233)
         reservation_station_15_decoded_instruction_RD <=
           io_backendPacket_2_bits_decoded_instruction_RD;
-      else if (_GEN_190)
+      else if (_GEN_189)
         reservation_station_15_decoded_instruction_RD <=
           io_backendPacket_1_bits_decoded_instruction_RD;
-      else if (_GEN_154)
+      else if (_GEN_153)
         reservation_station_15_decoded_instruction_RD <=
           io_backendPacket_0_bits_decoded_instruction_RD;
       reservation_station_15_decoded_instruction_RD_valid <=
-        ~_GEN_652 & (_GEN_580 ? ~_GEN_616 & _GEN_437 : ~_GEN_575 & _GEN_437);
-      if (_GEN_653)
+        ~_GEN_651 & (_GEN_579 ? ~_GEN_615 & _GEN_435 : ~_GEN_574 & _GEN_435);
+      if (_GEN_652)
         reservation_station_15_decoded_instruction_RS1 <= 6'h0;
-      else if (_GEN_435)
+      else if (_GEN_434)
         reservation_station_15_decoded_instruction_RS1 <=
           io_backendPacket_3_bits_decoded_instruction_RS1;
-      else if (_GEN_234)
+      else if (_GEN_233)
         reservation_station_15_decoded_instruction_RS1 <=
           io_backendPacket_2_bits_decoded_instruction_RS1;
-      else if (_GEN_190)
+      else if (_GEN_189)
         reservation_station_15_decoded_instruction_RS1 <=
           io_backendPacket_1_bits_decoded_instruction_RS1;
-      else if (_GEN_154)
+      else if (_GEN_153)
         reservation_station_15_decoded_instruction_RS1 <=
           io_backendPacket_0_bits_decoded_instruction_RS1;
       reservation_station_15_decoded_instruction_RS1_valid <=
-        ~_GEN_652 & (_GEN_580 ? ~_GEN_616 & _GEN_438 : ~_GEN_575 & _GEN_438);
-      if (_GEN_653)
+        ~_GEN_651 & (_GEN_579 ? ~_GEN_615 & _GEN_436 : ~_GEN_574 & _GEN_436);
+      if (_GEN_652)
         reservation_station_15_decoded_instruction_RS2 <= 6'h0;
-      else if (_GEN_435)
+      else if (_GEN_434)
         reservation_station_15_decoded_instruction_RS2 <=
           io_backendPacket_3_bits_decoded_instruction_RS2;
-      else if (_GEN_234)
+      else if (_GEN_233)
         reservation_station_15_decoded_instruction_RS2 <=
           io_backendPacket_2_bits_decoded_instruction_RS2;
-      else if (_GEN_190)
+      else if (_GEN_189)
         reservation_station_15_decoded_instruction_RS2 <=
           io_backendPacket_1_bits_decoded_instruction_RS2;
-      else if (_GEN_154)
+      else if (_GEN_153)
         reservation_station_15_decoded_instruction_RS2 <=
           io_backendPacket_0_bits_decoded_instruction_RS2;
       reservation_station_15_decoded_instruction_RS2_valid <=
-        ~_GEN_652 & (_GEN_580 ? ~_GEN_616 & _GEN_439 : ~_GEN_575 & _GEN_439);
-      if (_GEN_653) begin
+        ~_GEN_651 & (_GEN_579 ? ~_GEN_615 & _GEN_437 : ~_GEN_574 & _GEN_437);
+      if (_GEN_652) begin
         reservation_station_15_decoded_instruction_IMM <= 32'h0;
         reservation_station_15_decoded_instruction_FUNCT3 <= 3'h0;
         reservation_station_15_decoded_instruction_packet_index <= 4'h0;
@@ -8836,7 +8534,7 @@ module RS(
         reservation_station_15_decoded_instruction_portID <= 2'h0;
         reservation_station_15_decoded_instruction_RS_type <= 2'h0;
       end
-      else if (_GEN_435) begin
+      else if (_GEN_434) begin
         reservation_station_15_decoded_instruction_IMM <=
           io_backendPacket_3_bits_decoded_instruction_IMM;
         reservation_station_15_decoded_instruction_FUNCT3 <=
@@ -8852,7 +8550,7 @@ module RS(
         reservation_station_15_decoded_instruction_RS_type <=
           io_backendPacket_3_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_234) begin
+      else if (_GEN_233) begin
         reservation_station_15_decoded_instruction_IMM <=
           io_backendPacket_2_bits_decoded_instruction_IMM;
         reservation_station_15_decoded_instruction_FUNCT3 <=
@@ -8868,7 +8566,7 @@ module RS(
         reservation_station_15_decoded_instruction_RS_type <=
           io_backendPacket_2_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_190) begin
+      else if (_GEN_189) begin
         reservation_station_15_decoded_instruction_IMM <=
           io_backendPacket_1_bits_decoded_instruction_IMM;
         reservation_station_15_decoded_instruction_FUNCT3 <=
@@ -8884,7 +8582,7 @@ module RS(
         reservation_station_15_decoded_instruction_RS_type <=
           io_backendPacket_1_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_154) begin
+      else if (_GEN_153) begin
         reservation_station_15_decoded_instruction_IMM <=
           io_backendPacket_0_bits_decoded_instruction_IMM;
         reservation_station_15_decoded_instruction_FUNCT3 <=
@@ -8901,90 +8599,76 @@ module RS(
           io_backendPacket_0_bits_decoded_instruction_RS_type;
       end
       reservation_station_15_decoded_instruction_needs_ALU <=
-        ~_GEN_652 & (_GEN_580 ? ~_GEN_616 & _GEN_440 : ~_GEN_575 & _GEN_440);
+        ~_GEN_651 & (_GEN_579 ? ~_GEN_615 & _GEN_438 : ~_GEN_574 & _GEN_438);
       reservation_station_15_decoded_instruction_needs_branch_unit <=
-        ~_GEN_652 & (_GEN_580 ? ~_GEN_616 & _GEN_441 : ~_GEN_575 & _GEN_441);
+        ~_GEN_651 & (_GEN_579 ? ~_GEN_615 & _GEN_439 : ~_GEN_574 & _GEN_439);
+      reservation_station_15_decoded_instruction_needs_CSRs <=
+        ~_GEN_651 & (_GEN_579 ? ~_GEN_615 & _GEN_440 : ~_GEN_574 & _GEN_440);
       reservation_station_15_decoded_instruction_SUBTRACT <=
-        ~_GEN_652 & (_GEN_580 ? ~_GEN_616 & _GEN_442 : ~_GEN_575 & _GEN_442);
+        ~_GEN_651 & (_GEN_579 ? ~_GEN_615 & _GEN_441 : ~_GEN_574 & _GEN_441);
       reservation_station_15_decoded_instruction_MULTIPLY <=
-        ~_GEN_652 & (_GEN_580 ? ~_GEN_616 & _GEN_443 : ~_GEN_575 & _GEN_443);
+        ~_GEN_651 & (_GEN_579 ? ~_GEN_615 & _GEN_442 : ~_GEN_574 & _GEN_442);
       reservation_station_15_decoded_instruction_IMMEDIATE <=
-        ~_GEN_652 & (_GEN_580 ? ~_GEN_616 & _GEN_444 : ~_GEN_575 & _GEN_444);
+        ~_GEN_651 & (_GEN_579 ? ~_GEN_615 & _GEN_443 : ~_GEN_574 & _GEN_443);
       reservation_station_15_decoded_instruction_IS_LOAD <=
-        ~_GEN_652 & (_GEN_580 ? ~_GEN_616 & _GEN_445 : ~_GEN_575 & _GEN_445);
+        ~_GEN_651 & (_GEN_579 ? ~_GEN_615 & _GEN_444 : ~_GEN_574 & _GEN_444);
       reservation_station_15_decoded_instruction_IS_STORE <=
-        ~_GEN_652 & (_GEN_580 ? ~_GEN_616 & _GEN_446 : ~_GEN_575 & _GEN_446);
+        ~_GEN_651 & (_GEN_579 ? ~_GEN_615 & _GEN_445 : ~_GEN_574 & _GEN_445);
       reservation_station_15_ready_bits_RS1_ready <=
-        ~_GEN_652 & (_GEN_580 ? ~_GEN_616 & _GEN_554 : ~_GEN_575 & _GEN_554);
+        ~_GEN_651 & (_GEN_579 ? ~_GEN_615 & _GEN_553 : ~_GEN_574 & _GEN_553);
       reservation_station_15_ready_bits_RS2_ready <=
-        ~_GEN_652 & (_GEN_580 ? ~_GEN_616 & _GEN_534 : ~_GEN_575 & _GEN_534);
+        ~_GEN_651 & (_GEN_579 ? ~_GEN_615 & _GEN_533 : ~_GEN_574 & _GEN_533);
       reservation_station_15_valid <=
-        ~_GEN_652 & (_GEN_580 ? ~(_GEN_596 | _GEN_575) & _GEN_514 : ~_GEN_575 & _GEN_514);
-      if (_GEN_655)
-        reservation_station_16_decoded_instruction_RDold <= 6'h0;
-      else if (_GEN_448)
-        reservation_station_16_decoded_instruction_RDold <=
-          io_backendPacket_3_bits_decoded_instruction_RDold;
-      else if (_GEN_235)
-        reservation_station_16_decoded_instruction_RDold <=
-          io_backendPacket_2_bits_decoded_instruction_RDold;
-      else if (_GEN_192)
-        reservation_station_16_decoded_instruction_RDold <=
-          io_backendPacket_1_bits_decoded_instruction_RDold;
-      else if (_GEN_155)
-        reservation_station_16_decoded_instruction_RDold <=
-          io_backendPacket_0_bits_decoded_instruction_RDold;
-      reservation_station_16_decoded_instruction_RDold_valid <=
-        ~_GEN_654 & (_GEN_580 ? ~_GEN_617 & _GEN_449 : ~_GEN_576 & _GEN_449);
-      if (_GEN_655)
+        ~_GEN_651 & (_GEN_579 ? ~(_GEN_595 | _GEN_574) & _GEN_513 : ~_GEN_574 & _GEN_513);
+      if (_GEN_654)
         reservation_station_16_decoded_instruction_RD <= 6'h0;
-      else if (_GEN_448)
+      else if (_GEN_447)
         reservation_station_16_decoded_instruction_RD <=
           io_backendPacket_3_bits_decoded_instruction_RD;
-      else if (_GEN_235)
+      else if (_GEN_234)
         reservation_station_16_decoded_instruction_RD <=
           io_backendPacket_2_bits_decoded_instruction_RD;
-      else if (_GEN_192)
+      else if (_GEN_191)
         reservation_station_16_decoded_instruction_RD <=
           io_backendPacket_1_bits_decoded_instruction_RD;
-      else if (_GEN_155)
+      else if (_GEN_154)
         reservation_station_16_decoded_instruction_RD <=
           io_backendPacket_0_bits_decoded_instruction_RD;
       reservation_station_16_decoded_instruction_RD_valid <=
-        ~_GEN_654 & (_GEN_580 ? ~_GEN_617 & _GEN_450 : ~_GEN_576 & _GEN_450);
-      if (_GEN_655)
+        ~_GEN_653 & (_GEN_579 ? ~_GEN_616 & _GEN_448 : ~_GEN_575 & _GEN_448);
+      if (_GEN_654)
         reservation_station_16_decoded_instruction_RS1 <= 6'h0;
-      else if (_GEN_448)
+      else if (_GEN_447)
         reservation_station_16_decoded_instruction_RS1 <=
           io_backendPacket_3_bits_decoded_instruction_RS1;
-      else if (_GEN_235)
+      else if (_GEN_234)
         reservation_station_16_decoded_instruction_RS1 <=
           io_backendPacket_2_bits_decoded_instruction_RS1;
-      else if (_GEN_192)
+      else if (_GEN_191)
         reservation_station_16_decoded_instruction_RS1 <=
           io_backendPacket_1_bits_decoded_instruction_RS1;
-      else if (_GEN_155)
+      else if (_GEN_154)
         reservation_station_16_decoded_instruction_RS1 <=
           io_backendPacket_0_bits_decoded_instruction_RS1;
       reservation_station_16_decoded_instruction_RS1_valid <=
-        ~_GEN_654 & (_GEN_580 ? ~_GEN_617 & _GEN_451 : ~_GEN_576 & _GEN_451);
-      if (_GEN_655)
+        ~_GEN_653 & (_GEN_579 ? ~_GEN_616 & _GEN_449 : ~_GEN_575 & _GEN_449);
+      if (_GEN_654)
         reservation_station_16_decoded_instruction_RS2 <= 6'h0;
-      else if (_GEN_448)
+      else if (_GEN_447)
         reservation_station_16_decoded_instruction_RS2 <=
           io_backendPacket_3_bits_decoded_instruction_RS2;
-      else if (_GEN_235)
+      else if (_GEN_234)
         reservation_station_16_decoded_instruction_RS2 <=
           io_backendPacket_2_bits_decoded_instruction_RS2;
-      else if (_GEN_192)
+      else if (_GEN_191)
         reservation_station_16_decoded_instruction_RS2 <=
           io_backendPacket_1_bits_decoded_instruction_RS2;
-      else if (_GEN_155)
+      else if (_GEN_154)
         reservation_station_16_decoded_instruction_RS2 <=
           io_backendPacket_0_bits_decoded_instruction_RS2;
       reservation_station_16_decoded_instruction_RS2_valid <=
-        ~_GEN_654 & (_GEN_580 ? ~_GEN_617 & _GEN_452 : ~_GEN_576 & _GEN_452);
-      if (_GEN_655) begin
+        ~_GEN_653 & (_GEN_579 ? ~_GEN_616 & _GEN_450 : ~_GEN_575 & _GEN_450);
+      if (_GEN_654) begin
         reservation_station_16_decoded_instruction_IMM <= 32'h0;
         reservation_station_16_decoded_instruction_FUNCT3 <= 3'h0;
         reservation_station_16_decoded_instruction_packet_index <= 4'h0;
@@ -8993,7 +8677,7 @@ module RS(
         reservation_station_16_decoded_instruction_portID <= 2'h0;
         reservation_station_16_decoded_instruction_RS_type <= 2'h0;
       end
-      else if (_GEN_448) begin
+      else if (_GEN_447) begin
         reservation_station_16_decoded_instruction_IMM <=
           io_backendPacket_3_bits_decoded_instruction_IMM;
         reservation_station_16_decoded_instruction_FUNCT3 <=
@@ -9009,7 +8693,7 @@ module RS(
         reservation_station_16_decoded_instruction_RS_type <=
           io_backendPacket_3_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_235) begin
+      else if (_GEN_234) begin
         reservation_station_16_decoded_instruction_IMM <=
           io_backendPacket_2_bits_decoded_instruction_IMM;
         reservation_station_16_decoded_instruction_FUNCT3 <=
@@ -9025,7 +8709,7 @@ module RS(
         reservation_station_16_decoded_instruction_RS_type <=
           io_backendPacket_2_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_192) begin
+      else if (_GEN_191) begin
         reservation_station_16_decoded_instruction_IMM <=
           io_backendPacket_1_bits_decoded_instruction_IMM;
         reservation_station_16_decoded_instruction_FUNCT3 <=
@@ -9041,7 +8725,7 @@ module RS(
         reservation_station_16_decoded_instruction_RS_type <=
           io_backendPacket_1_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_155) begin
+      else if (_GEN_154) begin
         reservation_station_16_decoded_instruction_IMM <=
           io_backendPacket_0_bits_decoded_instruction_IMM;
         reservation_station_16_decoded_instruction_FUNCT3 <=
@@ -9058,90 +8742,76 @@ module RS(
           io_backendPacket_0_bits_decoded_instruction_RS_type;
       end
       reservation_station_16_decoded_instruction_needs_ALU <=
-        ~_GEN_654 & (_GEN_580 ? ~_GEN_617 & _GEN_453 : ~_GEN_576 & _GEN_453);
+        ~_GEN_653 & (_GEN_579 ? ~_GEN_616 & _GEN_451 : ~_GEN_575 & _GEN_451);
       reservation_station_16_decoded_instruction_needs_branch_unit <=
-        ~_GEN_654 & (_GEN_580 ? ~_GEN_617 & _GEN_454 : ~_GEN_576 & _GEN_454);
+        ~_GEN_653 & (_GEN_579 ? ~_GEN_616 & _GEN_452 : ~_GEN_575 & _GEN_452);
+      reservation_station_16_decoded_instruction_needs_CSRs <=
+        ~_GEN_653 & (_GEN_579 ? ~_GEN_616 & _GEN_453 : ~_GEN_575 & _GEN_453);
       reservation_station_16_decoded_instruction_SUBTRACT <=
-        ~_GEN_654 & (_GEN_580 ? ~_GEN_617 & _GEN_455 : ~_GEN_576 & _GEN_455);
+        ~_GEN_653 & (_GEN_579 ? ~_GEN_616 & _GEN_454 : ~_GEN_575 & _GEN_454);
       reservation_station_16_decoded_instruction_MULTIPLY <=
-        ~_GEN_654 & (_GEN_580 ? ~_GEN_617 & _GEN_456 : ~_GEN_576 & _GEN_456);
+        ~_GEN_653 & (_GEN_579 ? ~_GEN_616 & _GEN_455 : ~_GEN_575 & _GEN_455);
       reservation_station_16_decoded_instruction_IMMEDIATE <=
-        ~_GEN_654 & (_GEN_580 ? ~_GEN_617 & _GEN_457 : ~_GEN_576 & _GEN_457);
+        ~_GEN_653 & (_GEN_579 ? ~_GEN_616 & _GEN_456 : ~_GEN_575 & _GEN_456);
       reservation_station_16_decoded_instruction_IS_LOAD <=
-        ~_GEN_654 & (_GEN_580 ? ~_GEN_617 & _GEN_458 : ~_GEN_576 & _GEN_458);
+        ~_GEN_653 & (_GEN_579 ? ~_GEN_616 & _GEN_457 : ~_GEN_575 & _GEN_457);
       reservation_station_16_decoded_instruction_IS_STORE <=
-        ~_GEN_654 & (_GEN_580 ? ~_GEN_617 & _GEN_459 : ~_GEN_576 & _GEN_459);
+        ~_GEN_653 & (_GEN_579 ? ~_GEN_616 & _GEN_458 : ~_GEN_575 & _GEN_458);
       reservation_station_16_ready_bits_RS1_ready <=
-        ~_GEN_654 & (_GEN_580 ? ~_GEN_617 & _GEN_555 : ~_GEN_576 & _GEN_555);
+        ~_GEN_653 & (_GEN_579 ? ~_GEN_616 & _GEN_554 : ~_GEN_575 & _GEN_554);
       reservation_station_16_ready_bits_RS2_ready <=
-        ~_GEN_654 & (_GEN_580 ? ~_GEN_617 & _GEN_535 : ~_GEN_576 & _GEN_535);
+        ~_GEN_653 & (_GEN_579 ? ~_GEN_616 & _GEN_534 : ~_GEN_575 & _GEN_534);
       reservation_station_16_valid <=
-        ~_GEN_654 & (_GEN_580 ? ~(_GEN_597 | _GEN_576) & _GEN_515 : ~_GEN_576 & _GEN_515);
-      if (_GEN_657)
-        reservation_station_17_decoded_instruction_RDold <= 6'h0;
-      else if (_GEN_461)
-        reservation_station_17_decoded_instruction_RDold <=
-          io_backendPacket_3_bits_decoded_instruction_RDold;
-      else if (_GEN_236)
-        reservation_station_17_decoded_instruction_RDold <=
-          io_backendPacket_2_bits_decoded_instruction_RDold;
-      else if (_GEN_194)
-        reservation_station_17_decoded_instruction_RDold <=
-          io_backendPacket_1_bits_decoded_instruction_RDold;
-      else if (_GEN_156)
-        reservation_station_17_decoded_instruction_RDold <=
-          io_backendPacket_0_bits_decoded_instruction_RDold;
-      reservation_station_17_decoded_instruction_RDold_valid <=
-        ~_GEN_656 & (_GEN_580 ? ~_GEN_618 & _GEN_462 : ~_GEN_577 & _GEN_462);
-      if (_GEN_657)
+        ~_GEN_653 & (_GEN_579 ? ~(_GEN_596 | _GEN_575) & _GEN_514 : ~_GEN_575 & _GEN_514);
+      if (_GEN_656)
         reservation_station_17_decoded_instruction_RD <= 6'h0;
-      else if (_GEN_461)
+      else if (_GEN_460)
         reservation_station_17_decoded_instruction_RD <=
           io_backendPacket_3_bits_decoded_instruction_RD;
-      else if (_GEN_236)
+      else if (_GEN_235)
         reservation_station_17_decoded_instruction_RD <=
           io_backendPacket_2_bits_decoded_instruction_RD;
-      else if (_GEN_194)
+      else if (_GEN_193)
         reservation_station_17_decoded_instruction_RD <=
           io_backendPacket_1_bits_decoded_instruction_RD;
-      else if (_GEN_156)
+      else if (_GEN_155)
         reservation_station_17_decoded_instruction_RD <=
           io_backendPacket_0_bits_decoded_instruction_RD;
       reservation_station_17_decoded_instruction_RD_valid <=
-        ~_GEN_656 & (_GEN_580 ? ~_GEN_618 & _GEN_463 : ~_GEN_577 & _GEN_463);
-      if (_GEN_657)
+        ~_GEN_655 & (_GEN_579 ? ~_GEN_617 & _GEN_461 : ~_GEN_576 & _GEN_461);
+      if (_GEN_656)
         reservation_station_17_decoded_instruction_RS1 <= 6'h0;
-      else if (_GEN_461)
+      else if (_GEN_460)
         reservation_station_17_decoded_instruction_RS1 <=
           io_backendPacket_3_bits_decoded_instruction_RS1;
-      else if (_GEN_236)
+      else if (_GEN_235)
         reservation_station_17_decoded_instruction_RS1 <=
           io_backendPacket_2_bits_decoded_instruction_RS1;
-      else if (_GEN_194)
+      else if (_GEN_193)
         reservation_station_17_decoded_instruction_RS1 <=
           io_backendPacket_1_bits_decoded_instruction_RS1;
-      else if (_GEN_156)
+      else if (_GEN_155)
         reservation_station_17_decoded_instruction_RS1 <=
           io_backendPacket_0_bits_decoded_instruction_RS1;
       reservation_station_17_decoded_instruction_RS1_valid <=
-        ~_GEN_656 & (_GEN_580 ? ~_GEN_618 & _GEN_464 : ~_GEN_577 & _GEN_464);
-      if (_GEN_657)
+        ~_GEN_655 & (_GEN_579 ? ~_GEN_617 & _GEN_462 : ~_GEN_576 & _GEN_462);
+      if (_GEN_656)
         reservation_station_17_decoded_instruction_RS2 <= 6'h0;
-      else if (_GEN_461)
+      else if (_GEN_460)
         reservation_station_17_decoded_instruction_RS2 <=
           io_backendPacket_3_bits_decoded_instruction_RS2;
-      else if (_GEN_236)
+      else if (_GEN_235)
         reservation_station_17_decoded_instruction_RS2 <=
           io_backendPacket_2_bits_decoded_instruction_RS2;
-      else if (_GEN_194)
+      else if (_GEN_193)
         reservation_station_17_decoded_instruction_RS2 <=
           io_backendPacket_1_bits_decoded_instruction_RS2;
-      else if (_GEN_156)
+      else if (_GEN_155)
         reservation_station_17_decoded_instruction_RS2 <=
           io_backendPacket_0_bits_decoded_instruction_RS2;
       reservation_station_17_decoded_instruction_RS2_valid <=
-        ~_GEN_656 & (_GEN_580 ? ~_GEN_618 & _GEN_465 : ~_GEN_577 & _GEN_465);
-      if (_GEN_657) begin
+        ~_GEN_655 & (_GEN_579 ? ~_GEN_617 & _GEN_463 : ~_GEN_576 & _GEN_463);
+      if (_GEN_656) begin
         reservation_station_17_decoded_instruction_IMM <= 32'h0;
         reservation_station_17_decoded_instruction_FUNCT3 <= 3'h0;
         reservation_station_17_decoded_instruction_packet_index <= 4'h0;
@@ -9150,7 +8820,7 @@ module RS(
         reservation_station_17_decoded_instruction_portID <= 2'h0;
         reservation_station_17_decoded_instruction_RS_type <= 2'h0;
       end
-      else if (_GEN_461) begin
+      else if (_GEN_460) begin
         reservation_station_17_decoded_instruction_IMM <=
           io_backendPacket_3_bits_decoded_instruction_IMM;
         reservation_station_17_decoded_instruction_FUNCT3 <=
@@ -9166,7 +8836,7 @@ module RS(
         reservation_station_17_decoded_instruction_RS_type <=
           io_backendPacket_3_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_236) begin
+      else if (_GEN_235) begin
         reservation_station_17_decoded_instruction_IMM <=
           io_backendPacket_2_bits_decoded_instruction_IMM;
         reservation_station_17_decoded_instruction_FUNCT3 <=
@@ -9182,7 +8852,7 @@ module RS(
         reservation_station_17_decoded_instruction_RS_type <=
           io_backendPacket_2_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_194) begin
+      else if (_GEN_193) begin
         reservation_station_17_decoded_instruction_IMM <=
           io_backendPacket_1_bits_decoded_instruction_IMM;
         reservation_station_17_decoded_instruction_FUNCT3 <=
@@ -9198,7 +8868,7 @@ module RS(
         reservation_station_17_decoded_instruction_RS_type <=
           io_backendPacket_1_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_156) begin
+      else if (_GEN_155) begin
         reservation_station_17_decoded_instruction_IMM <=
           io_backendPacket_0_bits_decoded_instruction_IMM;
         reservation_station_17_decoded_instruction_FUNCT3 <=
@@ -9215,90 +8885,76 @@ module RS(
           io_backendPacket_0_bits_decoded_instruction_RS_type;
       end
       reservation_station_17_decoded_instruction_needs_ALU <=
-        ~_GEN_656 & (_GEN_580 ? ~_GEN_618 & _GEN_466 : ~_GEN_577 & _GEN_466);
+        ~_GEN_655 & (_GEN_579 ? ~_GEN_617 & _GEN_464 : ~_GEN_576 & _GEN_464);
       reservation_station_17_decoded_instruction_needs_branch_unit <=
-        ~_GEN_656 & (_GEN_580 ? ~_GEN_618 & _GEN_467 : ~_GEN_577 & _GEN_467);
+        ~_GEN_655 & (_GEN_579 ? ~_GEN_617 & _GEN_465 : ~_GEN_576 & _GEN_465);
+      reservation_station_17_decoded_instruction_needs_CSRs <=
+        ~_GEN_655 & (_GEN_579 ? ~_GEN_617 & _GEN_466 : ~_GEN_576 & _GEN_466);
       reservation_station_17_decoded_instruction_SUBTRACT <=
-        ~_GEN_656 & (_GEN_580 ? ~_GEN_618 & _GEN_468 : ~_GEN_577 & _GEN_468);
+        ~_GEN_655 & (_GEN_579 ? ~_GEN_617 & _GEN_467 : ~_GEN_576 & _GEN_467);
       reservation_station_17_decoded_instruction_MULTIPLY <=
-        ~_GEN_656 & (_GEN_580 ? ~_GEN_618 & _GEN_469 : ~_GEN_577 & _GEN_469);
+        ~_GEN_655 & (_GEN_579 ? ~_GEN_617 & _GEN_468 : ~_GEN_576 & _GEN_468);
       reservation_station_17_decoded_instruction_IMMEDIATE <=
-        ~_GEN_656 & (_GEN_580 ? ~_GEN_618 & _GEN_470 : ~_GEN_577 & _GEN_470);
+        ~_GEN_655 & (_GEN_579 ? ~_GEN_617 & _GEN_469 : ~_GEN_576 & _GEN_469);
       reservation_station_17_decoded_instruction_IS_LOAD <=
-        ~_GEN_656 & (_GEN_580 ? ~_GEN_618 & _GEN_471 : ~_GEN_577 & _GEN_471);
+        ~_GEN_655 & (_GEN_579 ? ~_GEN_617 & _GEN_470 : ~_GEN_576 & _GEN_470);
       reservation_station_17_decoded_instruction_IS_STORE <=
-        ~_GEN_656 & (_GEN_580 ? ~_GEN_618 & _GEN_472 : ~_GEN_577 & _GEN_472);
+        ~_GEN_655 & (_GEN_579 ? ~_GEN_617 & _GEN_471 : ~_GEN_576 & _GEN_471);
       reservation_station_17_ready_bits_RS1_ready <=
-        ~_GEN_656 & (_GEN_580 ? ~_GEN_618 & _GEN_556 : ~_GEN_577 & _GEN_556);
+        ~_GEN_655 & (_GEN_579 ? ~_GEN_617 & _GEN_555 : ~_GEN_576 & _GEN_555);
       reservation_station_17_ready_bits_RS2_ready <=
-        ~_GEN_656 & (_GEN_580 ? ~_GEN_618 & _GEN_536 : ~_GEN_577 & _GEN_536);
+        ~_GEN_655 & (_GEN_579 ? ~_GEN_617 & _GEN_535 : ~_GEN_576 & _GEN_535);
       reservation_station_17_valid <=
-        ~_GEN_656 & (_GEN_580 ? ~(_GEN_598 | _GEN_577) & _GEN_516 : ~_GEN_577 & _GEN_516);
-      if (_GEN_659)
-        reservation_station_18_decoded_instruction_RDold <= 6'h0;
-      else if (_GEN_474)
-        reservation_station_18_decoded_instruction_RDold <=
-          io_backendPacket_3_bits_decoded_instruction_RDold;
-      else if (_GEN_237)
-        reservation_station_18_decoded_instruction_RDold <=
-          io_backendPacket_2_bits_decoded_instruction_RDold;
-      else if (_GEN_196)
-        reservation_station_18_decoded_instruction_RDold <=
-          io_backendPacket_1_bits_decoded_instruction_RDold;
-      else if (_GEN_157)
-        reservation_station_18_decoded_instruction_RDold <=
-          io_backendPacket_0_bits_decoded_instruction_RDold;
-      reservation_station_18_decoded_instruction_RDold_valid <=
-        ~_GEN_658 & (_GEN_580 ? ~_GEN_619 & _GEN_475 : ~_GEN_578 & _GEN_475);
-      if (_GEN_659)
+        ~_GEN_655 & (_GEN_579 ? ~(_GEN_597 | _GEN_576) & _GEN_515 : ~_GEN_576 & _GEN_515);
+      if (_GEN_658)
         reservation_station_18_decoded_instruction_RD <= 6'h0;
-      else if (_GEN_474)
+      else if (_GEN_473)
         reservation_station_18_decoded_instruction_RD <=
           io_backendPacket_3_bits_decoded_instruction_RD;
-      else if (_GEN_237)
+      else if (_GEN_236)
         reservation_station_18_decoded_instruction_RD <=
           io_backendPacket_2_bits_decoded_instruction_RD;
-      else if (_GEN_196)
+      else if (_GEN_195)
         reservation_station_18_decoded_instruction_RD <=
           io_backendPacket_1_bits_decoded_instruction_RD;
-      else if (_GEN_157)
+      else if (_GEN_156)
         reservation_station_18_decoded_instruction_RD <=
           io_backendPacket_0_bits_decoded_instruction_RD;
       reservation_station_18_decoded_instruction_RD_valid <=
-        ~_GEN_658 & (_GEN_580 ? ~_GEN_619 & _GEN_476 : ~_GEN_578 & _GEN_476);
-      if (_GEN_659)
+        ~_GEN_657 & (_GEN_579 ? ~_GEN_618 & _GEN_474 : ~_GEN_577 & _GEN_474);
+      if (_GEN_658)
         reservation_station_18_decoded_instruction_RS1 <= 6'h0;
-      else if (_GEN_474)
+      else if (_GEN_473)
         reservation_station_18_decoded_instruction_RS1 <=
           io_backendPacket_3_bits_decoded_instruction_RS1;
-      else if (_GEN_237)
+      else if (_GEN_236)
         reservation_station_18_decoded_instruction_RS1 <=
           io_backendPacket_2_bits_decoded_instruction_RS1;
-      else if (_GEN_196)
+      else if (_GEN_195)
         reservation_station_18_decoded_instruction_RS1 <=
           io_backendPacket_1_bits_decoded_instruction_RS1;
-      else if (_GEN_157)
+      else if (_GEN_156)
         reservation_station_18_decoded_instruction_RS1 <=
           io_backendPacket_0_bits_decoded_instruction_RS1;
       reservation_station_18_decoded_instruction_RS1_valid <=
-        ~_GEN_658 & (_GEN_580 ? ~_GEN_619 & _GEN_477 : ~_GEN_578 & _GEN_477);
-      if (_GEN_659)
+        ~_GEN_657 & (_GEN_579 ? ~_GEN_618 & _GEN_475 : ~_GEN_577 & _GEN_475);
+      if (_GEN_658)
         reservation_station_18_decoded_instruction_RS2 <= 6'h0;
-      else if (_GEN_474)
+      else if (_GEN_473)
         reservation_station_18_decoded_instruction_RS2 <=
           io_backendPacket_3_bits_decoded_instruction_RS2;
-      else if (_GEN_237)
+      else if (_GEN_236)
         reservation_station_18_decoded_instruction_RS2 <=
           io_backendPacket_2_bits_decoded_instruction_RS2;
-      else if (_GEN_196)
+      else if (_GEN_195)
         reservation_station_18_decoded_instruction_RS2 <=
           io_backendPacket_1_bits_decoded_instruction_RS2;
-      else if (_GEN_157)
+      else if (_GEN_156)
         reservation_station_18_decoded_instruction_RS2 <=
           io_backendPacket_0_bits_decoded_instruction_RS2;
       reservation_station_18_decoded_instruction_RS2_valid <=
-        ~_GEN_658 & (_GEN_580 ? ~_GEN_619 & _GEN_478 : ~_GEN_578 & _GEN_478);
-      if (_GEN_659) begin
+        ~_GEN_657 & (_GEN_579 ? ~_GEN_618 & _GEN_476 : ~_GEN_577 & _GEN_476);
+      if (_GEN_658) begin
         reservation_station_18_decoded_instruction_IMM <= 32'h0;
         reservation_station_18_decoded_instruction_FUNCT3 <= 3'h0;
         reservation_station_18_decoded_instruction_packet_index <= 4'h0;
@@ -9307,7 +8963,7 @@ module RS(
         reservation_station_18_decoded_instruction_portID <= 2'h0;
         reservation_station_18_decoded_instruction_RS_type <= 2'h0;
       end
-      else if (_GEN_474) begin
+      else if (_GEN_473) begin
         reservation_station_18_decoded_instruction_IMM <=
           io_backendPacket_3_bits_decoded_instruction_IMM;
         reservation_station_18_decoded_instruction_FUNCT3 <=
@@ -9323,7 +8979,7 @@ module RS(
         reservation_station_18_decoded_instruction_RS_type <=
           io_backendPacket_3_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_237) begin
+      else if (_GEN_236) begin
         reservation_station_18_decoded_instruction_IMM <=
           io_backendPacket_2_bits_decoded_instruction_IMM;
         reservation_station_18_decoded_instruction_FUNCT3 <=
@@ -9339,7 +8995,7 @@ module RS(
         reservation_station_18_decoded_instruction_RS_type <=
           io_backendPacket_2_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_196) begin
+      else if (_GEN_195) begin
         reservation_station_18_decoded_instruction_IMM <=
           io_backendPacket_1_bits_decoded_instruction_IMM;
         reservation_station_18_decoded_instruction_FUNCT3 <=
@@ -9355,7 +9011,7 @@ module RS(
         reservation_station_18_decoded_instruction_RS_type <=
           io_backendPacket_1_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_157) begin
+      else if (_GEN_156) begin
         reservation_station_18_decoded_instruction_IMM <=
           io_backendPacket_0_bits_decoded_instruction_IMM;
         reservation_station_18_decoded_instruction_FUNCT3 <=
@@ -9372,90 +9028,76 @@ module RS(
           io_backendPacket_0_bits_decoded_instruction_RS_type;
       end
       reservation_station_18_decoded_instruction_needs_ALU <=
-        ~_GEN_658 & (_GEN_580 ? ~_GEN_619 & _GEN_479 : ~_GEN_578 & _GEN_479);
+        ~_GEN_657 & (_GEN_579 ? ~_GEN_618 & _GEN_477 : ~_GEN_577 & _GEN_477);
       reservation_station_18_decoded_instruction_needs_branch_unit <=
-        ~_GEN_658 & (_GEN_580 ? ~_GEN_619 & _GEN_480 : ~_GEN_578 & _GEN_480);
+        ~_GEN_657 & (_GEN_579 ? ~_GEN_618 & _GEN_478 : ~_GEN_577 & _GEN_478);
+      reservation_station_18_decoded_instruction_needs_CSRs <=
+        ~_GEN_657 & (_GEN_579 ? ~_GEN_618 & _GEN_479 : ~_GEN_577 & _GEN_479);
       reservation_station_18_decoded_instruction_SUBTRACT <=
-        ~_GEN_658 & (_GEN_580 ? ~_GEN_619 & _GEN_481 : ~_GEN_578 & _GEN_481);
+        ~_GEN_657 & (_GEN_579 ? ~_GEN_618 & _GEN_480 : ~_GEN_577 & _GEN_480);
       reservation_station_18_decoded_instruction_MULTIPLY <=
-        ~_GEN_658 & (_GEN_580 ? ~_GEN_619 & _GEN_482 : ~_GEN_578 & _GEN_482);
+        ~_GEN_657 & (_GEN_579 ? ~_GEN_618 & _GEN_481 : ~_GEN_577 & _GEN_481);
       reservation_station_18_decoded_instruction_IMMEDIATE <=
-        ~_GEN_658 & (_GEN_580 ? ~_GEN_619 & _GEN_483 : ~_GEN_578 & _GEN_483);
+        ~_GEN_657 & (_GEN_579 ? ~_GEN_618 & _GEN_482 : ~_GEN_577 & _GEN_482);
       reservation_station_18_decoded_instruction_IS_LOAD <=
-        ~_GEN_658 & (_GEN_580 ? ~_GEN_619 & _GEN_484 : ~_GEN_578 & _GEN_484);
+        ~_GEN_657 & (_GEN_579 ? ~_GEN_618 & _GEN_483 : ~_GEN_577 & _GEN_483);
       reservation_station_18_decoded_instruction_IS_STORE <=
-        ~_GEN_658 & (_GEN_580 ? ~_GEN_619 & _GEN_485 : ~_GEN_578 & _GEN_485);
+        ~_GEN_657 & (_GEN_579 ? ~_GEN_618 & _GEN_484 : ~_GEN_577 & _GEN_484);
       reservation_station_18_ready_bits_RS1_ready <=
-        ~_GEN_658 & (_GEN_580 ? ~_GEN_619 & _GEN_557 : ~_GEN_578 & _GEN_557);
+        ~_GEN_657 & (_GEN_579 ? ~_GEN_618 & _GEN_556 : ~_GEN_577 & _GEN_556);
       reservation_station_18_ready_bits_RS2_ready <=
-        ~_GEN_658 & (_GEN_580 ? ~_GEN_619 & _GEN_537 : ~_GEN_578 & _GEN_537);
+        ~_GEN_657 & (_GEN_579 ? ~_GEN_618 & _GEN_536 : ~_GEN_577 & _GEN_536);
       reservation_station_18_valid <=
-        ~_GEN_658 & (_GEN_580 ? ~(_GEN_599 | _GEN_578) & _GEN_517 : ~_GEN_578 & _GEN_517);
-      if (_GEN_661)
-        reservation_station_19_decoded_instruction_RDold <= 6'h0;
-      else if (_GEN_487)
-        reservation_station_19_decoded_instruction_RDold <=
-          io_backendPacket_3_bits_decoded_instruction_RDold;
-      else if (_GEN_238)
-        reservation_station_19_decoded_instruction_RDold <=
-          io_backendPacket_2_bits_decoded_instruction_RDold;
-      else if (_GEN_198)
-        reservation_station_19_decoded_instruction_RDold <=
-          io_backendPacket_1_bits_decoded_instruction_RDold;
-      else if (_GEN_158)
-        reservation_station_19_decoded_instruction_RDold <=
-          io_backendPacket_0_bits_decoded_instruction_RDold;
-      reservation_station_19_decoded_instruction_RDold_valid <=
-        ~_GEN_660 & (_GEN_580 ? ~_GEN_620 & _GEN_488 : ~_GEN_579 & _GEN_488);
-      if (_GEN_661)
+        ~_GEN_657 & (_GEN_579 ? ~(_GEN_598 | _GEN_577) & _GEN_516 : ~_GEN_577 & _GEN_516);
+      if (_GEN_660)
         reservation_station_19_decoded_instruction_RD <= 6'h0;
-      else if (_GEN_487)
+      else if (_GEN_486)
         reservation_station_19_decoded_instruction_RD <=
           io_backendPacket_3_bits_decoded_instruction_RD;
-      else if (_GEN_238)
+      else if (_GEN_237)
         reservation_station_19_decoded_instruction_RD <=
           io_backendPacket_2_bits_decoded_instruction_RD;
-      else if (_GEN_198)
+      else if (_GEN_197)
         reservation_station_19_decoded_instruction_RD <=
           io_backendPacket_1_bits_decoded_instruction_RD;
-      else if (_GEN_158)
+      else if (_GEN_157)
         reservation_station_19_decoded_instruction_RD <=
           io_backendPacket_0_bits_decoded_instruction_RD;
       reservation_station_19_decoded_instruction_RD_valid <=
-        ~_GEN_660 & (_GEN_580 ? ~_GEN_620 & _GEN_489 : ~_GEN_579 & _GEN_489);
-      if (_GEN_661)
+        ~_GEN_659 & (_GEN_579 ? ~_GEN_619 & _GEN_487 : ~_GEN_578 & _GEN_487);
+      if (_GEN_660)
         reservation_station_19_decoded_instruction_RS1 <= 6'h0;
-      else if (_GEN_487)
+      else if (_GEN_486)
         reservation_station_19_decoded_instruction_RS1 <=
           io_backendPacket_3_bits_decoded_instruction_RS1;
-      else if (_GEN_238)
+      else if (_GEN_237)
         reservation_station_19_decoded_instruction_RS1 <=
           io_backendPacket_2_bits_decoded_instruction_RS1;
-      else if (_GEN_198)
+      else if (_GEN_197)
         reservation_station_19_decoded_instruction_RS1 <=
           io_backendPacket_1_bits_decoded_instruction_RS1;
-      else if (_GEN_158)
+      else if (_GEN_157)
         reservation_station_19_decoded_instruction_RS1 <=
           io_backendPacket_0_bits_decoded_instruction_RS1;
       reservation_station_19_decoded_instruction_RS1_valid <=
-        ~_GEN_660 & (_GEN_580 ? ~_GEN_620 & _GEN_490 : ~_GEN_579 & _GEN_490);
-      if (_GEN_661)
+        ~_GEN_659 & (_GEN_579 ? ~_GEN_619 & _GEN_488 : ~_GEN_578 & _GEN_488);
+      if (_GEN_660)
         reservation_station_19_decoded_instruction_RS2 <= 6'h0;
-      else if (_GEN_487)
+      else if (_GEN_486)
         reservation_station_19_decoded_instruction_RS2 <=
           io_backendPacket_3_bits_decoded_instruction_RS2;
-      else if (_GEN_238)
+      else if (_GEN_237)
         reservation_station_19_decoded_instruction_RS2 <=
           io_backendPacket_2_bits_decoded_instruction_RS2;
-      else if (_GEN_198)
+      else if (_GEN_197)
         reservation_station_19_decoded_instruction_RS2 <=
           io_backendPacket_1_bits_decoded_instruction_RS2;
-      else if (_GEN_158)
+      else if (_GEN_157)
         reservation_station_19_decoded_instruction_RS2 <=
           io_backendPacket_0_bits_decoded_instruction_RS2;
       reservation_station_19_decoded_instruction_RS2_valid <=
-        ~_GEN_660 & (_GEN_580 ? ~_GEN_620 & _GEN_491 : ~_GEN_579 & _GEN_491);
-      if (_GEN_661) begin
+        ~_GEN_659 & (_GEN_579 ? ~_GEN_619 & _GEN_489 : ~_GEN_578 & _GEN_489);
+      if (_GEN_660) begin
         reservation_station_19_decoded_instruction_IMM <= 32'h0;
         reservation_station_19_decoded_instruction_FUNCT3 <= 3'h0;
         reservation_station_19_decoded_instruction_packet_index <= 4'h0;
@@ -9464,7 +9106,7 @@ module RS(
         reservation_station_19_decoded_instruction_portID <= 2'h0;
         reservation_station_19_decoded_instruction_RS_type <= 2'h0;
       end
-      else if (_GEN_487) begin
+      else if (_GEN_486) begin
         reservation_station_19_decoded_instruction_IMM <=
           io_backendPacket_3_bits_decoded_instruction_IMM;
         reservation_station_19_decoded_instruction_FUNCT3 <=
@@ -9480,7 +9122,7 @@ module RS(
         reservation_station_19_decoded_instruction_RS_type <=
           io_backendPacket_3_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_238) begin
+      else if (_GEN_237) begin
         reservation_station_19_decoded_instruction_IMM <=
           io_backendPacket_2_bits_decoded_instruction_IMM;
         reservation_station_19_decoded_instruction_FUNCT3 <=
@@ -9496,7 +9138,7 @@ module RS(
         reservation_station_19_decoded_instruction_RS_type <=
           io_backendPacket_2_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_198) begin
+      else if (_GEN_197) begin
         reservation_station_19_decoded_instruction_IMM <=
           io_backendPacket_1_bits_decoded_instruction_IMM;
         reservation_station_19_decoded_instruction_FUNCT3 <=
@@ -9512,7 +9154,7 @@ module RS(
         reservation_station_19_decoded_instruction_RS_type <=
           io_backendPacket_1_bits_decoded_instruction_RS_type;
       end
-      else if (_GEN_158) begin
+      else if (_GEN_157) begin
         reservation_station_19_decoded_instruction_IMM <=
           io_backendPacket_0_bits_decoded_instruction_IMM;
         reservation_station_19_decoded_instruction_FUNCT3 <=
@@ -9529,25 +9171,27 @@ module RS(
           io_backendPacket_0_bits_decoded_instruction_RS_type;
       end
       reservation_station_19_decoded_instruction_needs_ALU <=
-        ~_GEN_660 & (_GEN_580 ? ~_GEN_620 & _GEN_492 : ~_GEN_579 & _GEN_492);
+        ~_GEN_659 & (_GEN_579 ? ~_GEN_619 & _GEN_490 : ~_GEN_578 & _GEN_490);
       reservation_station_19_decoded_instruction_needs_branch_unit <=
-        ~_GEN_660 & (_GEN_580 ? ~_GEN_620 & _GEN_493 : ~_GEN_579 & _GEN_493);
+        ~_GEN_659 & (_GEN_579 ? ~_GEN_619 & _GEN_491 : ~_GEN_578 & _GEN_491);
+      reservation_station_19_decoded_instruction_needs_CSRs <=
+        ~_GEN_659 & (_GEN_579 ? ~_GEN_619 & _GEN_492 : ~_GEN_578 & _GEN_492);
       reservation_station_19_decoded_instruction_SUBTRACT <=
-        ~_GEN_660 & (_GEN_580 ? ~_GEN_620 & _GEN_494 : ~_GEN_579 & _GEN_494);
+        ~_GEN_659 & (_GEN_579 ? ~_GEN_619 & _GEN_493 : ~_GEN_578 & _GEN_493);
       reservation_station_19_decoded_instruction_MULTIPLY <=
-        ~_GEN_660 & (_GEN_580 ? ~_GEN_620 & _GEN_495 : ~_GEN_579 & _GEN_495);
+        ~_GEN_659 & (_GEN_579 ? ~_GEN_619 & _GEN_494 : ~_GEN_578 & _GEN_494);
       reservation_station_19_decoded_instruction_IMMEDIATE <=
-        ~_GEN_660 & (_GEN_580 ? ~_GEN_620 & _GEN_496 : ~_GEN_579 & _GEN_496);
+        ~_GEN_659 & (_GEN_579 ? ~_GEN_619 & _GEN_495 : ~_GEN_578 & _GEN_495);
       reservation_station_19_decoded_instruction_IS_LOAD <=
-        ~_GEN_660 & (_GEN_580 ? ~_GEN_620 & _GEN_497 : ~_GEN_579 & _GEN_497);
+        ~_GEN_659 & (_GEN_579 ? ~_GEN_619 & _GEN_496 : ~_GEN_578 & _GEN_496);
       reservation_station_19_decoded_instruction_IS_STORE <=
-        ~_GEN_660 & (_GEN_580 ? ~_GEN_620 & _GEN_498 : ~_GEN_579 & _GEN_498);
+        ~_GEN_659 & (_GEN_579 ? ~_GEN_619 & _GEN_497 : ~_GEN_578 & _GEN_497);
       reservation_station_19_ready_bits_RS1_ready <=
-        ~_GEN_660 & (_GEN_580 ? ~_GEN_620 & _GEN_558 : ~_GEN_579 & _GEN_558);
+        ~_GEN_659 & (_GEN_579 ? ~_GEN_619 & _GEN_557 : ~_GEN_578 & _GEN_557);
       reservation_station_19_ready_bits_RS2_ready <=
-        ~_GEN_660 & (_GEN_580 ? ~_GEN_620 & _GEN_538 : ~_GEN_579 & _GEN_538);
+        ~_GEN_659 & (_GEN_579 ? ~_GEN_619 & _GEN_537 : ~_GEN_578 & _GEN_537);
       reservation_station_19_valid <=
-        ~_GEN_660 & (_GEN_580 ? ~(_GEN_600 | _GEN_579) & _GEN_518 : ~_GEN_579 & _GEN_518);
+        ~_GEN_659 & (_GEN_579 ? ~(_GEN_599 | _GEN_578) & _GEN_517 : ~_GEN_578 & _GEN_517);
     end
   end // always @(posedge)
   assign io_backendPacket_0_ready = themometor_value[0];
@@ -9555,76 +9199,73 @@ module RS(
   assign io_backendPacket_2_ready = themometor_value[2];
   assign io_backendPacket_3_ready = themometor_value[3];
   assign io_RF_inputs_0_valid = port0_valid & _GEN_116[port0_RS_index];
-  assign io_RF_inputs_0_bits_RDold = port0_valid ? _GEN_117[port0_RS_index] : 6'h0;
-  assign io_RF_inputs_0_bits_RDold_valid = port0_valid & _GEN_118[port0_RS_index];
-  assign io_RF_inputs_0_bits_RD = port0_valid ? _GEN_119[port0_RS_index] : 6'h0;
-  assign io_RF_inputs_0_bits_RD_valid = port0_valid & _GEN_120[port0_RS_index];
-  assign io_RF_inputs_0_bits_RS1 = port0_valid ? _GEN_121[port0_RS_index] : 6'h0;
-  assign io_RF_inputs_0_bits_RS1_valid = port0_valid & _GEN_122[port0_RS_index];
-  assign io_RF_inputs_0_bits_RS2 = port0_valid ? _GEN_123[port0_RS_index] : 6'h0;
-  assign io_RF_inputs_0_bits_RS2_valid = port0_valid & _GEN_124[port0_RS_index];
-  assign io_RF_inputs_0_bits_IMM = port0_valid ? _GEN_125[port0_RS_index] : 32'h0;
-  assign io_RF_inputs_0_bits_FUNCT3 = port0_valid ? _GEN_126[port0_RS_index] : 3'h0;
-  assign io_RF_inputs_0_bits_packet_index = port0_valid ? _GEN_127[port0_RS_index] : 4'h0;
-  assign io_RF_inputs_0_bits_ROB_index = port0_valid ? _GEN_128[port0_RS_index] : 6'h0;
+  assign io_RF_inputs_0_bits_RD = port0_valid ? _GEN_117[port0_RS_index] : 6'h0;
+  assign io_RF_inputs_0_bits_RD_valid = port0_valid & _GEN_118[port0_RS_index];
+  assign io_RF_inputs_0_bits_RS1 = port0_valid ? _GEN_119[port0_RS_index] : 6'h0;
+  assign io_RF_inputs_0_bits_RS1_valid = port0_valid & _GEN_120[port0_RS_index];
+  assign io_RF_inputs_0_bits_RS2 = port0_valid ? _GEN_121[port0_RS_index] : 6'h0;
+  assign io_RF_inputs_0_bits_RS2_valid = port0_valid & _GEN_122[port0_RS_index];
+  assign io_RF_inputs_0_bits_IMM = port0_valid ? _GEN_123[port0_RS_index] : 32'h0;
+  assign io_RF_inputs_0_bits_FUNCT3 = port0_valid ? _GEN_124[port0_RS_index] : 3'h0;
+  assign io_RF_inputs_0_bits_packet_index = port0_valid ? _GEN_125[port0_RS_index] : 4'h0;
+  assign io_RF_inputs_0_bits_ROB_index = port0_valid ? _GEN_126[port0_RS_index] : 6'h0;
   assign io_RF_inputs_0_bits_instructionType =
-    port0_valid ? _GEN_129[port0_RS_index] : 5'h0;
-  assign io_RF_inputs_0_bits_portID = port0_valid ? _GEN_130[port0_RS_index] : 2'h0;
-  assign io_RF_inputs_0_bits_RS_type = port0_valid ? _GEN_131[port0_RS_index] : 2'h0;
-  assign io_RF_inputs_0_bits_needs_ALU = port0_valid & _GEN_132[port0_RS_index];
-  assign io_RF_inputs_0_bits_needs_branch_unit = port0_valid & _GEN_133[port0_RS_index];
-  assign io_RF_inputs_0_bits_SUBTRACT = port0_valid & _GEN_134[port0_RS_index];
-  assign io_RF_inputs_0_bits_MULTIPLY = port0_valid & _GEN_135[port0_RS_index];
-  assign io_RF_inputs_0_bits_IMMEDIATE = port0_valid & _GEN_136[port0_RS_index];
-  assign io_RF_inputs_0_bits_IS_LOAD = port0_valid & _GEN_137[port0_RS_index];
-  assign io_RF_inputs_0_bits_IS_STORE = port0_valid & _GEN_138[port0_RS_index];
+    port0_valid ? _GEN_127[port0_RS_index] : 5'h0;
+  assign io_RF_inputs_0_bits_portID = port0_valid ? _GEN_128[port0_RS_index] : 2'h0;
+  assign io_RF_inputs_0_bits_RS_type = port0_valid ? _GEN_129[port0_RS_index] : 2'h0;
+  assign io_RF_inputs_0_bits_needs_ALU = port0_valid & _GEN_130[port0_RS_index];
+  assign io_RF_inputs_0_bits_needs_branch_unit = port0_valid & _GEN_131[port0_RS_index];
+  assign io_RF_inputs_0_bits_needs_CSRs = port0_valid & _GEN_132[port0_RS_index];
+  assign io_RF_inputs_0_bits_SUBTRACT = port0_valid & _GEN_133[port0_RS_index];
+  assign io_RF_inputs_0_bits_MULTIPLY = port0_valid & _GEN_134[port0_RS_index];
+  assign io_RF_inputs_0_bits_IMMEDIATE = port0_valid & _GEN_135[port0_RS_index];
+  assign io_RF_inputs_0_bits_IS_LOAD = port0_valid & _GEN_136[port0_RS_index];
+  assign io_RF_inputs_0_bits_IS_STORE = port0_valid & _GEN_137[port0_RS_index];
   assign io_RF_inputs_1_valid = port1_valid & _GEN_116[port1_RS_index];
-  assign io_RF_inputs_1_bits_RDold = port1_valid ? _GEN_117[port1_RS_index] : 6'h0;
-  assign io_RF_inputs_1_bits_RDold_valid = port1_valid & _GEN_118[port1_RS_index];
-  assign io_RF_inputs_1_bits_RD = port1_valid ? _GEN_119[port1_RS_index] : 6'h0;
-  assign io_RF_inputs_1_bits_RD_valid = port1_valid & _GEN_120[port1_RS_index];
-  assign io_RF_inputs_1_bits_RS1 = port1_valid ? _GEN_121[port1_RS_index] : 6'h0;
-  assign io_RF_inputs_1_bits_RS1_valid = port1_valid & _GEN_122[port1_RS_index];
-  assign io_RF_inputs_1_bits_RS2 = port1_valid ? _GEN_123[port1_RS_index] : 6'h0;
-  assign io_RF_inputs_1_bits_RS2_valid = port1_valid & _GEN_124[port1_RS_index];
-  assign io_RF_inputs_1_bits_IMM = port1_valid ? _GEN_125[port1_RS_index] : 32'h0;
-  assign io_RF_inputs_1_bits_FUNCT3 = port1_valid ? _GEN_126[port1_RS_index] : 3'h0;
-  assign io_RF_inputs_1_bits_packet_index = port1_valid ? _GEN_127[port1_RS_index] : 4'h0;
-  assign io_RF_inputs_1_bits_ROB_index = port1_valid ? _GEN_128[port1_RS_index] : 6'h0;
+  assign io_RF_inputs_1_bits_RD = port1_valid ? _GEN_117[port1_RS_index] : 6'h0;
+  assign io_RF_inputs_1_bits_RD_valid = port1_valid & _GEN_118[port1_RS_index];
+  assign io_RF_inputs_1_bits_RS1 = port1_valid ? _GEN_119[port1_RS_index] : 6'h0;
+  assign io_RF_inputs_1_bits_RS1_valid = port1_valid & _GEN_120[port1_RS_index];
+  assign io_RF_inputs_1_bits_RS2 = port1_valid ? _GEN_121[port1_RS_index] : 6'h0;
+  assign io_RF_inputs_1_bits_RS2_valid = port1_valid & _GEN_122[port1_RS_index];
+  assign io_RF_inputs_1_bits_IMM = port1_valid ? _GEN_123[port1_RS_index] : 32'h0;
+  assign io_RF_inputs_1_bits_FUNCT3 = port1_valid ? _GEN_124[port1_RS_index] : 3'h0;
+  assign io_RF_inputs_1_bits_packet_index = port1_valid ? _GEN_125[port1_RS_index] : 4'h0;
+  assign io_RF_inputs_1_bits_ROB_index = port1_valid ? _GEN_126[port1_RS_index] : 6'h0;
   assign io_RF_inputs_1_bits_instructionType =
-    port1_valid ? _GEN_129[port1_RS_index] : 5'h0;
-  assign io_RF_inputs_1_bits_portID = port1_valid ? _GEN_130[port1_RS_index] : 2'h0;
-  assign io_RF_inputs_1_bits_RS_type = port1_valid ? _GEN_131[port1_RS_index] : 2'h0;
-  assign io_RF_inputs_1_bits_needs_ALU = port1_valid & _GEN_132[port1_RS_index];
-  assign io_RF_inputs_1_bits_needs_branch_unit = port1_valid & _GEN_133[port1_RS_index];
-  assign io_RF_inputs_1_bits_SUBTRACT = port1_valid & _GEN_134[port1_RS_index];
-  assign io_RF_inputs_1_bits_MULTIPLY = port1_valid & _GEN_135[port1_RS_index];
-  assign io_RF_inputs_1_bits_IMMEDIATE = port1_valid & _GEN_136[port1_RS_index];
-  assign io_RF_inputs_1_bits_IS_LOAD = port1_valid & _GEN_137[port1_RS_index];
-  assign io_RF_inputs_1_bits_IS_STORE = port1_valid & _GEN_138[port1_RS_index];
+    port1_valid ? _GEN_127[port1_RS_index] : 5'h0;
+  assign io_RF_inputs_1_bits_portID = port1_valid ? _GEN_128[port1_RS_index] : 2'h0;
+  assign io_RF_inputs_1_bits_RS_type = port1_valid ? _GEN_129[port1_RS_index] : 2'h0;
+  assign io_RF_inputs_1_bits_needs_ALU = port1_valid & _GEN_130[port1_RS_index];
+  assign io_RF_inputs_1_bits_needs_branch_unit = port1_valid & _GEN_131[port1_RS_index];
+  assign io_RF_inputs_1_bits_needs_CSRs = port1_valid & _GEN_132[port1_RS_index];
+  assign io_RF_inputs_1_bits_SUBTRACT = port1_valid & _GEN_133[port1_RS_index];
+  assign io_RF_inputs_1_bits_MULTIPLY = port1_valid & _GEN_134[port1_RS_index];
+  assign io_RF_inputs_1_bits_IMMEDIATE = port1_valid & _GEN_135[port1_RS_index];
+  assign io_RF_inputs_1_bits_IS_LOAD = port1_valid & _GEN_136[port1_RS_index];
+  assign io_RF_inputs_1_bits_IS_STORE = port1_valid & _GEN_137[port1_RS_index];
   assign io_RF_inputs_2_valid = port2_valid & _GEN_116[port2_RS_index];
-  assign io_RF_inputs_2_bits_RDold = port2_valid ? _GEN_117[port2_RS_index] : 6'h0;
-  assign io_RF_inputs_2_bits_RDold_valid = port2_valid & _GEN_118[port2_RS_index];
-  assign io_RF_inputs_2_bits_RD = port2_valid ? _GEN_119[port2_RS_index] : 6'h0;
-  assign io_RF_inputs_2_bits_RD_valid = port2_valid & _GEN_120[port2_RS_index];
-  assign io_RF_inputs_2_bits_RS1 = port2_valid ? _GEN_121[port2_RS_index] : 6'h0;
-  assign io_RF_inputs_2_bits_RS1_valid = port2_valid & _GEN_122[port2_RS_index];
-  assign io_RF_inputs_2_bits_RS2 = port2_valid ? _GEN_123[port2_RS_index] : 6'h0;
-  assign io_RF_inputs_2_bits_RS2_valid = port2_valid & _GEN_124[port2_RS_index];
-  assign io_RF_inputs_2_bits_IMM = port2_valid ? _GEN_125[port2_RS_index] : 32'h0;
-  assign io_RF_inputs_2_bits_FUNCT3 = port2_valid ? _GEN_126[port2_RS_index] : 3'h0;
-  assign io_RF_inputs_2_bits_packet_index = port2_valid ? _GEN_127[port2_RS_index] : 4'h0;
-  assign io_RF_inputs_2_bits_ROB_index = port2_valid ? _GEN_128[port2_RS_index] : 6'h0;
+  assign io_RF_inputs_2_bits_RD = port2_valid ? _GEN_117[port2_RS_index] : 6'h0;
+  assign io_RF_inputs_2_bits_RD_valid = port2_valid & _GEN_118[port2_RS_index];
+  assign io_RF_inputs_2_bits_RS1 = port2_valid ? _GEN_119[port2_RS_index] : 6'h0;
+  assign io_RF_inputs_2_bits_RS1_valid = port2_valid & _GEN_120[port2_RS_index];
+  assign io_RF_inputs_2_bits_RS2 = port2_valid ? _GEN_121[port2_RS_index] : 6'h0;
+  assign io_RF_inputs_2_bits_RS2_valid = port2_valid & _GEN_122[port2_RS_index];
+  assign io_RF_inputs_2_bits_IMM = port2_valid ? _GEN_123[port2_RS_index] : 32'h0;
+  assign io_RF_inputs_2_bits_FUNCT3 = port2_valid ? _GEN_124[port2_RS_index] : 3'h0;
+  assign io_RF_inputs_2_bits_packet_index = port2_valid ? _GEN_125[port2_RS_index] : 4'h0;
+  assign io_RF_inputs_2_bits_ROB_index = port2_valid ? _GEN_126[port2_RS_index] : 6'h0;
   assign io_RF_inputs_2_bits_instructionType =
-    port2_valid ? _GEN_129[port2_RS_index] : 5'h0;
-  assign io_RF_inputs_2_bits_portID = port2_valid ? _GEN_130[port2_RS_index] : 2'h0;
-  assign io_RF_inputs_2_bits_RS_type = port2_valid ? _GEN_131[port2_RS_index] : 2'h0;
-  assign io_RF_inputs_2_bits_needs_ALU = port2_valid & _GEN_132[port2_RS_index];
-  assign io_RF_inputs_2_bits_needs_branch_unit = port2_valid & _GEN_133[port2_RS_index];
-  assign io_RF_inputs_2_bits_SUBTRACT = port2_valid & _GEN_134[port2_RS_index];
-  assign io_RF_inputs_2_bits_MULTIPLY = port2_valid & _GEN_135[port2_RS_index];
-  assign io_RF_inputs_2_bits_IMMEDIATE = port2_valid & _GEN_136[port2_RS_index];
-  assign io_RF_inputs_2_bits_IS_LOAD = port2_valid & _GEN_137[port2_RS_index];
-  assign io_RF_inputs_2_bits_IS_STORE = port2_valid & _GEN_138[port2_RS_index];
+    port2_valid ? _GEN_127[port2_RS_index] : 5'h0;
+  assign io_RF_inputs_2_bits_portID = port2_valid ? _GEN_128[port2_RS_index] : 2'h0;
+  assign io_RF_inputs_2_bits_RS_type = port2_valid ? _GEN_129[port2_RS_index] : 2'h0;
+  assign io_RF_inputs_2_bits_needs_ALU = port2_valid & _GEN_130[port2_RS_index];
+  assign io_RF_inputs_2_bits_needs_branch_unit = port2_valid & _GEN_131[port2_RS_index];
+  assign io_RF_inputs_2_bits_needs_CSRs = port2_valid & _GEN_132[port2_RS_index];
+  assign io_RF_inputs_2_bits_SUBTRACT = port2_valid & _GEN_133[port2_RS_index];
+  assign io_RF_inputs_2_bits_MULTIPLY = port2_valid & _GEN_134[port2_RS_index];
+  assign io_RF_inputs_2_bits_IMMEDIATE = port2_valid & _GEN_135[port2_RS_index];
+  assign io_RF_inputs_2_bits_IS_LOAD = port2_valid & _GEN_136[port2_RS_index];
+  assign io_RF_inputs_2_bits_IS_STORE = port2_valid & _GEN_137[port2_RS_index];
 endmodule
 

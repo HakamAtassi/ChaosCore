@@ -70,3 +70,17 @@ def test_write_read_read():
     configs["toplevel"] = "instruction_cache"         # Verilog top leve module
     configs["testcase"] = "write_read_read"       # Name of your cocotb function
     run(**configs)
+
+
+def test_read_miss_kill():
+    configs["module"] = "instruction_cache_cocotb"    # Cocotb file
+    configs["toplevel"] = "instruction_cache"         # Verilog top leve module
+    configs["testcase"] = "read_miss_kill"       # Name of your cocotb function
+    run(**configs)
+
+
+def test_read_hit_kill():
+    configs["module"] = "instruction_cache_cocotb"    # Cocotb file
+    configs["toplevel"] = "instruction_cache"         # Verilog top leve module
+    configs["testcase"] = "read_hit_kill"       # Name of your cocotb function
+    run(**configs)

@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------------------
-* Filename: ROB.scala
+* Filename: LVT.scala
 * Author: Hakam Atassi
 * Date: May 23 2024
 * Description: 
@@ -28,29 +28,4 @@
 */
 
 
-
-package ChaosCore
-
-import chisel3._
-import chisel3.util._
-
-
-class ROB(parameters:Parameters) extends Module{
-
-    val io = IO(new Bundle{
-        // From Allocate
-        // dispatch width write ports for allocation
-
-        // FROM FUs
-        // number of write ports equal to the number of FU ports
-
-        // To Commit
-        // number of read ports equal to commit width 
-    })
-
-
-
-
-
-}
 

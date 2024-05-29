@@ -38,10 +38,11 @@ import java.rmi.server.UID
 import helperFunctions._
 
 // FIXME: not parameterized for fetchwidth...
-class hash_BTB(entries:Int, fetchWidth:Int) extends Module{
+class hash_BTB(parameters:Parameters) extends Module{
 // FIXME: tag bits may be wrong here...
+    import parameters._
     
-    val BTBIndexBits = getBTBTagBits(BTBSize=entries, fetchWidth=fetchWidth)
+    val BTBIndexBits = getBTBTagBits(BTBSize=BTBEntries, fetchWidth=fetchWidth)
 
     val validBits = 1
     val tagBits = 32 - BTBIndexBits
@@ -90,7 +91,7 @@ class hash_BTB(entries:Int, fetchWidth:Int) extends Module{
 
     // memory // 
 
-    val BTB_memory = Module(new SDPReadWriteSmem(depth = entries, width = entryWidth))
+    val BTB_memory = Module(new SDPReadWriteSmem(depth = BTBEntries, width = entryWidth))
 
     val prediction_BTB_address = io.predict_PC(BTBIndexBits + log2Ceil(fetchWidth) + 2, log2Ceil(fetchWidth) + 2)
     val prediction_BTB_output = Wire(UInt(entryWidth.W))

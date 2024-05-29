@@ -59,18 +59,6 @@ object Main extends App {
 
     val parameters = Parameters()
     VerilogGenerator.generateVerilog(new instruction_cache(parameters), "../verilog/Frontend/instruction_cache.v")
-    //VerilogGenerator.generateVerilog(new gshare(GHR_width = 16), "../verilog/Frontend/BP/gshare.v")
-    //VerilogGenerator.generateVerilog(new hash_BTB(entries = 4096), "../verilog/Frontend/BP/hash_BTB.v")
-    //VerilogGenerator.generateVerilog(new decode_validate(fetchWidth=4), "../verilog/Frontend/BP/decode_validate.v")
-    VerilogGenerator.generateVerilog(new RAS, "../verilog/Frontend/BP/RAS.v")
-    //VerilogGenerator.generateVerilog(new BP, "../verilog/Frontend/BP/BP.v")
-    //VerilogGenerator.generateVerilog(new PC_arbit(
-        //fetchWidth = fetchWidth,
-        //GHRWidth = GHRWidth,
-        //RASEntries = RASEntries,
-        //startPC = startPC)
-    //, 
-    //"../verilog/Frontend/BP/PC_arbit.v")
 
     //VerilogGenerator.generateVerilog(new Frontend(parameters), "../verilog/Frontend/Frontend.v")
 
@@ -117,4 +105,7 @@ object Main extends App {
 
     VerilogGenerator.generateVerilog(new frontend(parameters), 
     "../verilog/Frontend/frontend.v")
+
+    VerilogGenerator.generateVerilog(new FTQ(parameters), 
+    "../verilog/Frontend/FTQ.v")
 }

@@ -42,11 +42,19 @@ class frontend(parameters:Parameters) extends Module{
     val architecturalRegBits = log2Ceil(architecturalRegCount)
     val RATCheckpointBits    = log2Ceil(RATCheckpointCount)
 
+    val portCount = getPortCount(parameters)
+
+    
+
     val io = IO(new Bundle{
 
         val misprediction_PC                =   Flipped(Decoupled(UInt(32.W)))                              // Input
         val exception_PC                    =   Flipped(Decoupled(UInt(32.W)))                              // Input
-        val commit                          =   Flipped(Decoupled(new commit(fetchWidth=fetchWidth)))       // Input
+        val commit                          =   Flipped(Decoupled(new commit(parameters)))       // Input
+
+
+        // To FTQ
+
 
         // From DRAM
         val DRAM_resp                       =   Flipped(Decoupled(Input(new DRAM_resp())))
@@ -55,21 +63,17 @@ class frontend(parameters:Parameters) extends Module{
         val DRAM_request                    =   Decoupled(new DRAM_request())
 
         // To backend
-        val renamed_decoded_fetch_packet    =   Decoupled(Vec(fetchWidth, new decoded_instruction(coreConfig=coreConfig, fetchWidth=fetchWidth, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount)))
+        val renamed_decoded_fetch_packet    =   Decoupled(Vec(fetchWidth, new decoded_instruction(parameters)))
 
         //// Instruction input (commit)
-        val commit_RD                 =   Input(Vec(fetchWidth, UInt(physicalRegBits.W))) // From RAT
-        val commit_RD_valid           =   Input(Vec(fetchWidth, Bool())) // From RAT
+        val FU_outputs                  =   Input(Vec(portCount, new FU_output(parameters)))    // To free free_list regs & to update FTQ
 
         //// checkpoint (create/restore)
         val create_checkpoint         = Input(Bool())
         val active_checkpoint_value   = Output(UInt(RATCheckpointBits.W))   // What checkpoint is currently being used
-
         val restore_checkpoint        = Input(Bool())                       // Restore to previous valid RAT
         val restore_checkpoint_value  = Input(UInt(RATCheckpointBits.W))    // ...
-        
         val free_checkpoint           = Input(Bool())                       // Normal branch commit. Just dealloc. checkpoint
-
         val checkpoints_full          = Output(Bool())                      // No more checkpoints available
     })
 
@@ -132,8 +136,10 @@ class frontend(parameters:Parameters) extends Module{
     renamer.io.decoded_fetch_packet.valid := decoders.io.decoded_fetch_packet.valid
     renamer.io.renamed_decoded_fetch_packet.ready := 1.B
 
-    renamer.io.commit_RD                 :=     io.commit_RD
-    renamer.io.commit_RD_valid           :=     io.commit_RD_valid
+
+    renamer.io.FU_outputs           :=     io.FU_outputs
+
+
     renamer.io.create_checkpoint         :=     io.create_checkpoint
     renamer.io.restore_checkpoint        :=     io.restore_checkpoint
     renamer.io.restore_checkpoint_value  :=     io.restore_checkpoint_value

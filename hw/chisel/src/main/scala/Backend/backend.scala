@@ -104,7 +104,7 @@ class backend(parameters:Parameters) extends Module{
 
 
     // FIXME: portcount should consist of ALU port count + MEM ports. now it only counts the number of ALU ports
-    val read_decoded_instructions   =   Wire(Vec(portCount, new read_decoded_instruction(coreConfig:String, fetchWidth:Int, ROBEntires:Int, physicalRegCount:Int)))
+    val read_decoded_instructions   =   Wire(Vec(portCount, new read_decoded_instruction(parameters)))
 
     INT_PRF.io.raddr_0  :=    INT_RS.io.RF_inputs(0).bits.RS1   // INT RS PORT 0
     INT_PRF.io.raddr_1  :=    INT_RS.io.RF_inputs(0).bits.RS2   // INT RS PORT 0

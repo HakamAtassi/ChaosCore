@@ -57,11 +57,11 @@ class MEMRS(parameters:Parameters) extends Module{
         val FU_broadcast   =   Vec(portCount, Flipped(ValidIO(new FU_output(parameters))))
 
         // To FU
-        val RF_inputs      =   Decoupled(new decoded_instruction(coreConfig=coreConfig, fetchWidth:Int, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount))
+        val RF_inputs      =   Decoupled(new decoded_instruction(parameters))
     })
 
     
-    val reservation_station = RegInit(VecInit(Seq.fill(RSEntries)(0.U.asTypeOf(new RS_entry(coreConfig=coreConfig, fetchWidth:Int, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount)))))
+    val reservation_station = RegInit(VecInit(Seq.fill(RSEntries)(0.U.asTypeOf(new RS_entry(parameters)))))
 
     // queue pointers
     val front_pointer = RegInit(UInt((log2Ceil(RSEntries)+1).W), 0.U)
@@ -140,7 +140,7 @@ class MEMRS(parameters:Parameters) extends Module{
     when(load_valid_ready || store_valid_ready){
         // free scheduled instruction
         reservation_station(back_index).valid := 0.B
-        reservation_station(back_index) <> 0.U.asTypeOf(new RS_entry(coreConfig=coreConfig, fetchWidth:Int, ROBEntires=ROBEntires, physicalRegCount=physicalRegCount))
+        reservation_station(back_index) <> 0.U.asTypeOf(new RS_entry(parameters))
         front_pointer := front_pointer + 1.U
     }
 

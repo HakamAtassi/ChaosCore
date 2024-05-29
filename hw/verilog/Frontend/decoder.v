@@ -25,8 +25,6 @@ module decoder(
   input  [31:0] io_instruction_instruction,
   input  [3:0]  io_instruction_packet_index,
   input  [5:0]  io_instruction_ROB_index,
-  output [5:0]  io_decoded_instruction_RDold,
-  output        io_decoded_instruction_RDold_valid,
   output [5:0]  io_decoded_instruction_RD,
   output        io_decoded_instruction_RD_valid,
   output [5:0]  io_decoded_instruction_RS1,
@@ -42,6 +40,7 @@ module decoder(
                 io_decoded_instruction_RS_type,
   output        io_decoded_instruction_needs_ALU,
                 io_decoded_instruction_needs_branch_unit,
+                io_decoded_instruction_needs_CSRs,
                 io_decoded_instruction_SUBTRACT,
                 io_decoded_instruction_MULTIPLY,
                 io_decoded_instruction_IMMEDIATE,
@@ -49,19 +48,16 @@ module decoder(
                 io_decoded_instruction_IS_STORE
 );
 
-  wire       IS_LOAD = io_instruction_instruction[6:2] == 5'h0;
-  wire       IMMEDIATE = io_instruction_instruction[6:2] == 5'h4;
-  wire       _io_decoded_instruction_RD_valid_T_11 =
-    io_instruction_instruction[6:2] == 5'h5;
-  wire       IS_STORE = io_instruction_instruction[6:2] == 5'h8;
-  wire       _is_INT_T = io_instruction_instruction[6:2] == 5'hC;
-  wire       _io_decoded_instruction_RD_valid_T_9 =
-    io_instruction_instruction[6:2] == 5'hD;
-  wire       _is_INT_T_3 = io_instruction_instruction[6:2] == 5'h18;
-  wire       _is_INT_T_7 = io_instruction_instruction[6:2] == 5'h19;
-  wire       _is_INT_T_5 = io_instruction_instruction[6:2] == 5'h1B;
-  wire       _io_decoded_instruction_RD_valid_T_13 =
-    io_instruction_instruction[6:2] == 5'h1C;
+  wire IS_LOAD = io_instruction_instruction[6:2] == 5'h0;
+  wire IMMEDIATE = io_instruction_instruction[6:2] == 5'h4;
+  wire _io_decoded_instruction_RD_valid_T_11 = io_instruction_instruction[6:2] == 5'h5;
+  wire IS_STORE = io_instruction_instruction[6:2] == 5'h8;
+  wire _is_INT_T = io_instruction_instruction[6:2] == 5'hC;
+  wire _io_decoded_instruction_RD_valid_T_9 = io_instruction_instruction[6:2] == 5'hD;
+  wire _is_INT_T_3 = io_instruction_instruction[6:2] == 5'h18;
+  wire _is_INT_T_7 = io_instruction_instruction[6:2] == 5'h19;
+  wire _is_INT_T_5 = io_instruction_instruction[6:2] == 5'h1B;
+  wire _io_decoded_instruction_RD_valid_T_13 = io_instruction_instruction[6:2] == 5'h1C;
   `ifndef SYNTHESIS
     always @(posedge clock) begin
       if (~reset
@@ -91,24 +87,11 @@ module decoder(
       end
     end // always @(posedge)
   `endif // not def SYNTHESIS
-  wire       needs_branch_unit = _is_INT_T_3 | _is_INT_T_5 | _is_INT_T_7;
-  wire       needs_ALU =
+  wire needs_branch_unit = _is_INT_T_3 | _is_INT_T_5 | _is_INT_T_7;
+  wire needs_ALU =
     _is_INT_T
     & (io_instruction_instruction[27] | io_instruction_instruction[31:25] == 7'h0)
     | IMMEDIATE;
-  reg  [1:0] ALU_port;
-  always @(posedge clock) begin
-    if (reset)
-      ALU_port <= 2'h0;
-    else if (needs_ALU) begin
-      if (ALU_port == 2'h2)
-        ALU_port <= 2'h0;
-      else
-        ALU_port <= ALU_port + 2'h1;
-    end
-  end // always @(posedge)
-  assign io_decoded_instruction_RDold = 6'h0;
-  assign io_decoded_instruction_RDold_valid = 1'h0;
   assign io_decoded_instruction_RD = {1'h0, io_instruction_instruction[11:7]};
   assign io_decoded_instruction_RD_valid =
     _is_INT_T | IMMEDIATE | IS_LOAD | _is_INT_T_5 | _is_INT_T_7
@@ -144,21 +127,22 @@ module decoder(
   assign io_decoded_instruction_ROB_index = io_instruction_ROB_index;
   assign io_decoded_instruction_instructionType = io_instruction_instruction[6:2];
   assign io_decoded_instruction_portID =
-    needs_ALU
-      ? ALU_port
+    needs_ALU | needs_branch_unit
+      ? 2'h0
       : _is_INT_T
         & (io_instruction_instruction[14:12] == 3'h4
            | io_instruction_instruction[14:12] == 3'h5
            | io_instruction_instruction[14:12] == 3'h6
            | (&(io_instruction_instruction[14:12]))) & io_instruction_instruction[25]
           ? 2'h1
-          : needs_branch_unit ? 2'h0 : {2{IS_STORE | IS_LOAD}};
+          : {2{IS_STORE | IS_LOAD}};
   assign io_decoded_instruction_RS_type =
     _is_INT_T | IMMEDIATE | _is_INT_T_3 | _is_INT_T_5 | _is_INT_T_7
       ? 2'h0
       : IS_LOAD | IS_STORE ? 2'h1 : 2'h2;
   assign io_decoded_instruction_needs_ALU = needs_ALU;
   assign io_decoded_instruction_needs_branch_unit = needs_branch_unit;
+  assign io_decoded_instruction_needs_CSRs = 1'h0;
   assign io_decoded_instruction_SUBTRACT = _is_INT_T & io_instruction_instruction[27];
   assign io_decoded_instruction_MULTIPLY = _is_INT_T & io_instruction_instruction[25];
   assign io_decoded_instruction_IMMEDIATE = IMMEDIATE;

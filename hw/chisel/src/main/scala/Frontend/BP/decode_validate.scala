@@ -72,13 +72,13 @@ class decode_validate(parameters:Parameters) extends Module{
 
     val io = IO(new Bundle{
         // inputs
-        val prediction          = Flipped(Decoupled(new prediction(fetchWidth=fetchWidth, GHRWidth=GHRWidth)))
+        val prediction          = Flipped(Decoupled(new prediction(parameters)))
         val fetch_packet        = Flipped(Decoupled(new fetch_packet(parameters)))
-        val RAS_read            = Flipped(new RAS_read(RASEntries=RASEntries))
+        val RAS_read            = Flipped(new RAS_read(parameters))
 
         // outputs
         val kill                = Output(Bool())                                        // kill incoming instructions
-        val revert              = Decoupled(new revert(GHRWidth=GHRWidth))   // Redirect frontend // FIXME: should be output...
+        val revert              = Decoupled(new revert(parameters))   // Redirect frontend // FIXME: should be output...
         val final_fetch_packet  = Decoupled(new fetch_packet(parameters))                         // Output validated instructions
         val RAS_update          = Flipped(new RAS_update)                               // RAS control
     })
@@ -91,7 +91,7 @@ class decode_validate(parameters:Parameters) extends Module{
     // Assign decoders in first stage
 
     val decoders: Seq[branch_decoder] = Seq.tabulate(fetchWidth) { w =>
-        Module(new branch_decoder(index=w, fetchWidth=fetchWidth, GHRWidth=GHRWidth))
+        Module(new branch_decoder(index=w, parameters))
     }
 
     val decoder_metadata         = Wire(Vec(fetchWidth, new metadata()))
@@ -183,17 +183,12 @@ class decode_validate(parameters:Parameters) extends Module{
     use_RAS      := metadata_out.Ret
     use_computed := metadata_out.BR || metadata_out.JAL 
 
-    dontTouch(metadata_out.Imm)
 
     when(use_BTB){PC_next := metadata_out.BTB_target}
     .elsewhen(use_RAS){PC_next := metadata_out.RAS}
     .elsewhen(use_computed){PC_next := metadata_out.instruction_PC + metadata_out.Imm.asUInt}
     .otherwise{PC_next := RegNext(io.fetch_packet.bits.fetch_PC + (fetchWidth*4).U)} // FIXME: should this always be +16?
 
-    dontTouch(use_BTB)
-    dontTouch(use_RAS)
-    dontTouch(use_computed)
-    
     PC_next_reg := Mux(RegNext(stage_1_valid), PC_next, PC_next_reg)
     PC_expected := Mux(RegNext(stage_1_valid), PC_next, PC_next_reg)
 
