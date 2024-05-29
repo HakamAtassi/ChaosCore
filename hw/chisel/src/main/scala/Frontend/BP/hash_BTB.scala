@@ -98,7 +98,6 @@ class hash_BTB(parameters:Parameters) extends Module{
 
     val commit_BTB_address = io.commit_PC(BTBIndexBits + log2Ceil(fetchWidth) + 2, log2Ceil(fetchWidth) + 2)
 
-    dontTouch(commit_input_tag)
 
     // FIXME: update this
     BTB_memory.io.enable := 1.B
@@ -123,8 +122,6 @@ class hash_BTB(parameters:Parameters) extends Module{
     BTB_type_output     := prediction_BTB_output(entryWidth-1-validBits-tagBits-targetBits, entryWidth-1-validBits-tagBits-targetBits-typeBits+1)
     BTB_br_mask_output  := prediction_BTB_output(entryWidth-1-validBits-tagBits-targetBits-typeBits, entryWidth-1-validBits-tagBits-targetBits-typeBits-brMaskBits+1)
 
-
-    dontTouch(BTB_tag_output)
 
     // OUTPUTS
     io.BTB_valid    := RegNext(io.predict_valid)    // Hit signal

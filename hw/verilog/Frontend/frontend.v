@@ -1102,12 +1102,6 @@ module decode_validate(
       : T_NT_reg_2
           ? metadata_reg_2_Ret
           : T_NT_reg_1 ? metadata_reg_1_Ret : metadata_reg_0_Ret;
-  wire [31:0] metadata_out_Imm =
-    T_NT_reg_3
-      ? metadata_reg_3_Imm
-      : T_NT_reg_2
-          ? metadata_reg_2_Imm
-          : T_NT_reg_1 ? metadata_reg_1_Imm : metadata_reg_0_Imm;
   wire [31:0] metadata_out_instruction_PC =
     T_NT_reg_3
       ? metadata_reg_3_instruction_PC
@@ -1116,26 +1110,13 @@ module decode_validate(
           : T_NT_reg_1 ? metadata_reg_1_instruction_PC : metadata_reg_0_instruction_PC;
   reg  [31:0] PC_next_reg;
   wire        PC_mismatch = PC_expected != io_fetch_packet_bits_fetch_PC & inputs_valid;
-  wire        use_BTB =
+  reg  [31:0] PC_next_REG;
+  wire [31:0] PC_next =
     (T_NT_reg_3
        ? metadata_reg_3_JALR
        : T_NT_reg_2
            ? metadata_reg_2_JALR
-           : T_NT_reg_1 ? metadata_reg_1_JALR : metadata_reg_0_JALR) & ~use_RAS;
-  wire        use_computed =
-    (T_NT_reg_3
-       ? metadata_reg_3_BR
-       : T_NT_reg_2
-           ? metadata_reg_2_BR
-           : T_NT_reg_1 ? metadata_reg_1_BR : metadata_reg_0_BR)
-    | (T_NT_reg_3
-         ? metadata_reg_3_JAL
-         : T_NT_reg_2
-             ? metadata_reg_2_JAL
-             : T_NT_reg_1 ? metadata_reg_1_JAL : metadata_reg_0_JAL);
-  reg  [31:0] PC_next_REG;
-  wire [31:0] PC_next =
-    use_BTB
+           : T_NT_reg_1 ? metadata_reg_1_JALR : metadata_reg_0_JALR) & ~use_RAS
       ? (T_NT_reg_3
            ? metadata_reg_3_BTB_target
            : T_NT_reg_2
@@ -1147,7 +1128,23 @@ module decode_validate(
                : T_NT_reg_2
                    ? metadata_reg_2_RAS
                    : T_NT_reg_1 ? metadata_reg_1_RAS : metadata_reg_0_RAS)
-          : use_computed ? metadata_out_instruction_PC + metadata_out_Imm : PC_next_REG;
+          : (T_NT_reg_3
+               ? metadata_reg_3_BR
+               : T_NT_reg_2
+                   ? metadata_reg_2_BR
+                   : T_NT_reg_1 ? metadata_reg_1_BR : metadata_reg_0_BR)
+            | (T_NT_reg_3
+                 ? metadata_reg_3_JAL
+                 : T_NT_reg_2
+                     ? metadata_reg_2_JAL
+                     : T_NT_reg_1 ? metadata_reg_1_JAL : metadata_reg_0_JAL)
+              ? metadata_out_instruction_PC
+                + (T_NT_reg_3
+                     ? metadata_reg_3_Imm
+                     : T_NT_reg_2
+                         ? metadata_reg_2_Imm
+                         : T_NT_reg_1 ? metadata_reg_1_Imm : metadata_reg_0_Imm)
+              : PC_next_REG;
   reg         PC_next_reg_REG;
   reg         PC_expected_REG;
   assign PC_expected = PC_expected_REG ? PC_next : PC_next_reg;
