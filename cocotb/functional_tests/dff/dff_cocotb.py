@@ -3,7 +3,7 @@ import random
 import numpy as np
 from cocotb.clock import Clock
 import cocotb
-from cocotb.triggers import RisingEdge, FallingEdge, Timer
+from cocotb.triggers import RisingEdge, FallingEdge, ReadOnly, ReadWrite, Timer
 from pathlib import Path
 
 from cocotb_utils import *

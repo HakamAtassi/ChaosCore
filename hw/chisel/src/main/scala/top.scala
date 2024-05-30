@@ -108,4 +108,9 @@ object Main extends App {
 
     VerilogGenerator.generateVerilog(new FTQ(parameters), 
     "../verilog/Frontend/FTQ.v")
+
+    VerilogGenerator.generateVerilog(new ROB(parameters), 
+    "../verilog/Backend/ROB.v")
+
 }
+

@@ -244,7 +244,8 @@ module FU(
   output        io_FU_output_bits_branch_taken,
   output [31:0] io_FU_output_bits_target_address,
   output        io_FU_output_bits_branch_valid,
-  output [5:0]  io_FU_output_bits_ROB_index
+  output [5:0]  io_FU_output_bits_ROB_index,
+  output [1:0]  io_FU_output_bits_fetch_packet_index
 );
 
   wire        _branch_unit_io_FU_output_valid;
@@ -345,5 +346,6 @@ module FU(
   assign io_FU_output_bits_branch_valid = 1'h0;
   assign io_FU_output_bits_ROB_index =
     is_ALU ? _ALU_io_FU_output_bits_ROB_index : _branch_unit_io_FU_output_bits_ROB_index;
+  assign io_FU_output_bits_fetch_packet_index = 2'h0;
 endmodule
 

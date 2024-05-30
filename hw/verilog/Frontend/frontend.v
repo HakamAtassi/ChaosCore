@@ -528,8 +528,6 @@ module hash_BTB(
 );
 
   wire [54:0] _BTB_memory_io_data_out;
-  wire [15:0] commit_input_tag = io_commit_PC[31:16];
-  wire [15:0] BTB_tag_output = _BTB_memory_io_data_out[53:38];
   reg         io_BTB_valid_REG;
   reg  [15:0] io_BTB_hit_REG;
   always @(posedge clock) begin
@@ -544,13 +542,18 @@ module hash_BTB(
     .io_wr_addr  (io_commit_PC[15:4]),
     .io_wr_en    (io_commit_valid),
     .io_data_in
-      ({1'h1, commit_input_tag, io_commit_target, io_commit_br_type, io_commit_br_mask})
+      ({1'h1,
+        io_commit_PC[31:16],
+        io_commit_target,
+        io_commit_br_type,
+        io_commit_br_mask})
   );
   assign io_BTB_valid = io_BTB_valid_REG;
   assign io_BTB_target = _BTB_memory_io_data_out[37:6];
   assign io_BTB_type = _BTB_memory_io_data_out[5:4];
   assign io_BTB_br_mask = _BTB_memory_io_data_out[3:0];
-  assign io_BTB_hit = io_BTB_hit_REG == BTB_tag_output & _BTB_memory_io_data_out[54];
+  assign io_BTB_hit =
+    io_BTB_hit_REG == _BTB_memory_io_data_out[53:38] & _BTB_memory_io_data_out[54];
 endmodule
 
 // VCS coverage exclude_file
@@ -8668,6 +8671,7 @@ module frontend(
   input  [31:0]  io_FU_outputs_0_target_address,
   input          io_FU_outputs_0_branch_valid,
   input  [5:0]   io_FU_outputs_0_ROB_index,
+  input  [1:0]   io_FU_outputs_0_fetch_packet_index,
   input  [63:0]  io_FU_outputs_1_RD,
   input  [31:0]  io_FU_outputs_1_RD_data,
   input          io_FU_outputs_1_RD_valid,
@@ -8676,6 +8680,7 @@ module frontend(
   input  [31:0]  io_FU_outputs_1_target_address,
   input          io_FU_outputs_1_branch_valid,
   input  [5:0]   io_FU_outputs_1_ROB_index,
+  input  [1:0]   io_FU_outputs_1_fetch_packet_index,
   input  [63:0]  io_FU_outputs_2_RD,
   input  [31:0]  io_FU_outputs_2_RD_data,
   input          io_FU_outputs_2_RD_valid,
@@ -8684,6 +8689,7 @@ module frontend(
   input  [31:0]  io_FU_outputs_2_target_address,
   input          io_FU_outputs_2_branch_valid,
   input  [5:0]   io_FU_outputs_2_ROB_index,
+  input  [1:0]   io_FU_outputs_2_fetch_packet_index,
   input  [63:0]  io_FU_outputs_3_RD,
   input  [31:0]  io_FU_outputs_3_RD_data,
   input          io_FU_outputs_3_RD_valid,
@@ -8692,6 +8698,7 @@ module frontend(
   input  [31:0]  io_FU_outputs_3_target_address,
   input          io_FU_outputs_3_branch_valid,
   input  [5:0]   io_FU_outputs_3_ROB_index,
+  input  [1:0]   io_FU_outputs_3_fetch_packet_index,
   input          io_create_checkpoint,
   output [3:0]   io_active_checkpoint_value,
   input          io_restore_checkpoint,

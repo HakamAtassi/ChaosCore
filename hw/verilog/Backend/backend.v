@@ -10924,6 +10924,7 @@ module backend(
   output [31:0]  io_FU_outputs_0_bits_target_address,
   output         io_FU_outputs_0_bits_branch_valid,
   output [5:0]   io_FU_outputs_0_bits_ROB_index,
+  output [1:0]   io_FU_outputs_0_bits_fetch_packet_index,
   output         io_FU_outputs_1_valid,
   output [63:0]  io_FU_outputs_1_bits_RD,
   output [31:0]  io_FU_outputs_1_bits_RD_data,
@@ -10933,6 +10934,7 @@ module backend(
   output [31:0]  io_FU_outputs_1_bits_target_address,
   output         io_FU_outputs_1_bits_branch_valid,
   output [5:0]   io_FU_outputs_1_bits_ROB_index,
+  output [1:0]   io_FU_outputs_1_bits_fetch_packet_index,
   output         io_FU_outputs_2_valid,
   output [63:0]  io_FU_outputs_2_bits_RD,
   output [31:0]  io_FU_outputs_2_bits_RD_data,
@@ -10942,6 +10944,7 @@ module backend(
   output [31:0]  io_FU_outputs_2_bits_target_address,
   output         io_FU_outputs_2_bits_branch_valid,
   output [5:0]   io_FU_outputs_2_bits_ROB_index,
+  output [1:0]   io_FU_outputs_2_bits_fetch_packet_index,
   output         io_FU_outputs_3_valid,
   output [63:0]  io_FU_outputs_3_bits_RD,
   output [31:0]  io_FU_outputs_3_bits_RD_data,
@@ -10950,7 +10953,8 @@ module backend(
   output         io_FU_outputs_3_bits_branch_taken,
   output [31:0]  io_FU_outputs_3_bits_target_address,
   output         io_FU_outputs_3_bits_branch_valid,
-  output [5:0]   io_FU_outputs_3_bits_ROB_index
+  output [5:0]   io_FU_outputs_3_bits_ROB_index,
+  output [1:0]   io_FU_outputs_3_bits_fetch_packet_index
 );
 
   wire        _FU3_io_FU_output_valid;
@@ -11690,6 +11694,7 @@ module backend(
   assign io_FU_outputs_0_bits_RD_valid = _FU0_io_FU_output_bits_RD_valid;
   assign io_FU_outputs_0_bits_instruction_PC = 32'h0;
   assign io_FU_outputs_0_bits_branch_valid = 1'h0;
+  assign io_FU_outputs_0_bits_fetch_packet_index = 2'h0;
   assign io_FU_outputs_1_valid = _FU1_io_FU_output_valid;
   assign io_FU_outputs_1_bits_RD = _FU1_io_FU_output_bits_RD;
   assign io_FU_outputs_1_bits_RD_data = _FU1_io_FU_output_bits_RD_data;
@@ -11698,6 +11703,7 @@ module backend(
   assign io_FU_outputs_1_bits_branch_taken = 1'h0;
   assign io_FU_outputs_1_bits_target_address = 32'h0;
   assign io_FU_outputs_1_bits_branch_valid = 1'h0;
+  assign io_FU_outputs_1_bits_fetch_packet_index = 2'h0;
   assign io_FU_outputs_2_valid = _FU2_io_FU_output_valid;
   assign io_FU_outputs_2_bits_RD = _FU2_io_FU_output_bits_RD;
   assign io_FU_outputs_2_bits_RD_data = _FU2_io_FU_output_bits_RD_data;
@@ -11706,6 +11712,7 @@ module backend(
   assign io_FU_outputs_2_bits_branch_taken = 1'h0;
   assign io_FU_outputs_2_bits_target_address = 32'h0;
   assign io_FU_outputs_2_bits_branch_valid = 1'h0;
+  assign io_FU_outputs_2_bits_fetch_packet_index = 2'h0;
   assign io_FU_outputs_3_valid = _FU3_io_FU_output_valid;
   assign io_FU_outputs_3_bits_RD = _FU3_io_FU_output_bits_RD;
   assign io_FU_outputs_3_bits_RD_data = _FU3_io_FU_output_bits_RD_data;
@@ -11714,6 +11721,7 @@ module backend(
   assign io_FU_outputs_3_bits_branch_taken = 1'h0;
   assign io_FU_outputs_3_bits_target_address = 32'h0;
   assign io_FU_outputs_3_bits_branch_valid = 1'h0;
+  assign io_FU_outputs_3_bits_fetch_packet_index = 2'h0;
 endmodule
 
 

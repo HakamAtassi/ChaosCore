@@ -10,10 +10,11 @@ module FTQ(
   input  [31:0] io_FU_output_target_address,
   input         io_FU_output_branch_valid,
   input  [5:0]  io_FU_output_ROB_index,
+  input  [1:0]  io_FU_output_fetch_packet_index,
   output        io_branch_prediction_ready,
   input         io_branch_prediction_valid,
                 io_branch_prediction_bits_valid,
-  input  [31:0] io_branch_prediction_bits_fetch_packet_PC,
+  input  [31:0] io_branch_prediction_bits_instruction_PC,
   input         io_branch_prediction_bits_is_misprediction,
   input  [31:0] io_branch_prediction_bits_predicted_expected_PC,
   input  [15:0] io_branch_prediction_bits_GHR,
@@ -32,112 +33,112 @@ module FTQ(
   reg  [4:0]        front_pointer;
   reg  [4:0]        back_pointer;
   reg               FTQ_0_valid;
-  reg  [31:0]       FTQ_0_fetch_packet_PC;
+  reg  [31:0]       FTQ_0_instruction_PC;
   reg               FTQ_0_is_misprediction;
   reg  [31:0]       FTQ_0_predicted_expected_PC;
   reg  [15:0]       FTQ_0_GHR;
   reg  [6:0]        FTQ_0_NEXT;
   reg  [6:0]        FTQ_0_TOS;
   reg               FTQ_1_valid;
-  reg  [31:0]       FTQ_1_fetch_packet_PC;
+  reg  [31:0]       FTQ_1_instruction_PC;
   reg               FTQ_1_is_misprediction;
   reg  [31:0]       FTQ_1_predicted_expected_PC;
   reg  [15:0]       FTQ_1_GHR;
   reg  [6:0]        FTQ_1_NEXT;
   reg  [6:0]        FTQ_1_TOS;
   reg               FTQ_2_valid;
-  reg  [31:0]       FTQ_2_fetch_packet_PC;
+  reg  [31:0]       FTQ_2_instruction_PC;
   reg               FTQ_2_is_misprediction;
   reg  [31:0]       FTQ_2_predicted_expected_PC;
   reg  [15:0]       FTQ_2_GHR;
   reg  [6:0]        FTQ_2_NEXT;
   reg  [6:0]        FTQ_2_TOS;
   reg               FTQ_3_valid;
-  reg  [31:0]       FTQ_3_fetch_packet_PC;
+  reg  [31:0]       FTQ_3_instruction_PC;
   reg               FTQ_3_is_misprediction;
   reg  [31:0]       FTQ_3_predicted_expected_PC;
   reg  [15:0]       FTQ_3_GHR;
   reg  [6:0]        FTQ_3_NEXT;
   reg  [6:0]        FTQ_3_TOS;
   reg               FTQ_4_valid;
-  reg  [31:0]       FTQ_4_fetch_packet_PC;
+  reg  [31:0]       FTQ_4_instruction_PC;
   reg               FTQ_4_is_misprediction;
   reg  [31:0]       FTQ_4_predicted_expected_PC;
   reg  [15:0]       FTQ_4_GHR;
   reg  [6:0]        FTQ_4_NEXT;
   reg  [6:0]        FTQ_4_TOS;
   reg               FTQ_5_valid;
-  reg  [31:0]       FTQ_5_fetch_packet_PC;
+  reg  [31:0]       FTQ_5_instruction_PC;
   reg               FTQ_5_is_misprediction;
   reg  [31:0]       FTQ_5_predicted_expected_PC;
   reg  [15:0]       FTQ_5_GHR;
   reg  [6:0]        FTQ_5_NEXT;
   reg  [6:0]        FTQ_5_TOS;
   reg               FTQ_6_valid;
-  reg  [31:0]       FTQ_6_fetch_packet_PC;
+  reg  [31:0]       FTQ_6_instruction_PC;
   reg               FTQ_6_is_misprediction;
   reg  [31:0]       FTQ_6_predicted_expected_PC;
   reg  [15:0]       FTQ_6_GHR;
   reg  [6:0]        FTQ_6_NEXT;
   reg  [6:0]        FTQ_6_TOS;
   reg               FTQ_7_valid;
-  reg  [31:0]       FTQ_7_fetch_packet_PC;
+  reg  [31:0]       FTQ_7_instruction_PC;
   reg               FTQ_7_is_misprediction;
   reg  [31:0]       FTQ_7_predicted_expected_PC;
   reg  [15:0]       FTQ_7_GHR;
   reg  [6:0]        FTQ_7_NEXT;
   reg  [6:0]        FTQ_7_TOS;
   reg               FTQ_8_valid;
-  reg  [31:0]       FTQ_8_fetch_packet_PC;
+  reg  [31:0]       FTQ_8_instruction_PC;
   reg               FTQ_8_is_misprediction;
   reg  [31:0]       FTQ_8_predicted_expected_PC;
   reg  [15:0]       FTQ_8_GHR;
   reg  [6:0]        FTQ_8_NEXT;
   reg  [6:0]        FTQ_8_TOS;
   reg               FTQ_9_valid;
-  reg  [31:0]       FTQ_9_fetch_packet_PC;
+  reg  [31:0]       FTQ_9_instruction_PC;
   reg               FTQ_9_is_misprediction;
   reg  [31:0]       FTQ_9_predicted_expected_PC;
   reg  [15:0]       FTQ_9_GHR;
   reg  [6:0]        FTQ_9_NEXT;
   reg  [6:0]        FTQ_9_TOS;
   reg               FTQ_10_valid;
-  reg  [31:0]       FTQ_10_fetch_packet_PC;
+  reg  [31:0]       FTQ_10_instruction_PC;
   reg               FTQ_10_is_misprediction;
   reg  [31:0]       FTQ_10_predicted_expected_PC;
   reg  [15:0]       FTQ_10_GHR;
   reg  [6:0]        FTQ_10_NEXT;
   reg  [6:0]        FTQ_10_TOS;
   reg               FTQ_11_valid;
-  reg  [31:0]       FTQ_11_fetch_packet_PC;
+  reg  [31:0]       FTQ_11_instruction_PC;
   reg               FTQ_11_is_misprediction;
   reg  [31:0]       FTQ_11_predicted_expected_PC;
   reg  [15:0]       FTQ_11_GHR;
   reg  [6:0]        FTQ_11_NEXT;
   reg  [6:0]        FTQ_11_TOS;
   reg               FTQ_12_valid;
-  reg  [31:0]       FTQ_12_fetch_packet_PC;
+  reg  [31:0]       FTQ_12_instruction_PC;
   reg               FTQ_12_is_misprediction;
   reg  [31:0]       FTQ_12_predicted_expected_PC;
   reg  [15:0]       FTQ_12_GHR;
   reg  [6:0]        FTQ_12_NEXT;
   reg  [6:0]        FTQ_12_TOS;
   reg               FTQ_13_valid;
-  reg  [31:0]       FTQ_13_fetch_packet_PC;
+  reg  [31:0]       FTQ_13_instruction_PC;
   reg               FTQ_13_is_misprediction;
   reg  [31:0]       FTQ_13_predicted_expected_PC;
   reg  [15:0]       FTQ_13_GHR;
   reg  [6:0]        FTQ_13_NEXT;
   reg  [6:0]        FTQ_13_TOS;
   reg               FTQ_14_valid;
-  reg  [31:0]       FTQ_14_fetch_packet_PC;
+  reg  [31:0]       FTQ_14_instruction_PC;
   reg               FTQ_14_is_misprediction;
   reg  [31:0]       FTQ_14_predicted_expected_PC;
   reg  [15:0]       FTQ_14_GHR;
   reg  [6:0]        FTQ_14_NEXT;
   reg  [6:0]        FTQ_14_TOS;
   reg               FTQ_15_valid;
-  reg  [31:0]       FTQ_15_fetch_packet_PC;
+  reg  [31:0]       FTQ_15_instruction_PC;
   reg               FTQ_15_is_misprediction;
   reg  [31:0]       FTQ_15_predicted_expected_PC;
   reg  [15:0]       FTQ_15_GHR;
@@ -235,112 +236,112 @@ module FTQ(
       front_pointer <= 5'h0;
       back_pointer <= 5'h0;
       FTQ_0_valid <= 1'h0;
-      FTQ_0_fetch_packet_PC <= 32'h0;
+      FTQ_0_instruction_PC <= 32'h0;
       FTQ_0_is_misprediction <= 1'h0;
       FTQ_0_predicted_expected_PC <= 32'h0;
       FTQ_0_GHR <= 16'h0;
       FTQ_0_NEXT <= 7'h0;
       FTQ_0_TOS <= 7'h0;
       FTQ_1_valid <= 1'h0;
-      FTQ_1_fetch_packet_PC <= 32'h0;
+      FTQ_1_instruction_PC <= 32'h0;
       FTQ_1_is_misprediction <= 1'h0;
       FTQ_1_predicted_expected_PC <= 32'h0;
       FTQ_1_GHR <= 16'h0;
       FTQ_1_NEXT <= 7'h0;
       FTQ_1_TOS <= 7'h0;
       FTQ_2_valid <= 1'h0;
-      FTQ_2_fetch_packet_PC <= 32'h0;
+      FTQ_2_instruction_PC <= 32'h0;
       FTQ_2_is_misprediction <= 1'h0;
       FTQ_2_predicted_expected_PC <= 32'h0;
       FTQ_2_GHR <= 16'h0;
       FTQ_2_NEXT <= 7'h0;
       FTQ_2_TOS <= 7'h0;
       FTQ_3_valid <= 1'h0;
-      FTQ_3_fetch_packet_PC <= 32'h0;
+      FTQ_3_instruction_PC <= 32'h0;
       FTQ_3_is_misprediction <= 1'h0;
       FTQ_3_predicted_expected_PC <= 32'h0;
       FTQ_3_GHR <= 16'h0;
       FTQ_3_NEXT <= 7'h0;
       FTQ_3_TOS <= 7'h0;
       FTQ_4_valid <= 1'h0;
-      FTQ_4_fetch_packet_PC <= 32'h0;
+      FTQ_4_instruction_PC <= 32'h0;
       FTQ_4_is_misprediction <= 1'h0;
       FTQ_4_predicted_expected_PC <= 32'h0;
       FTQ_4_GHR <= 16'h0;
       FTQ_4_NEXT <= 7'h0;
       FTQ_4_TOS <= 7'h0;
       FTQ_5_valid <= 1'h0;
-      FTQ_5_fetch_packet_PC <= 32'h0;
+      FTQ_5_instruction_PC <= 32'h0;
       FTQ_5_is_misprediction <= 1'h0;
       FTQ_5_predicted_expected_PC <= 32'h0;
       FTQ_5_GHR <= 16'h0;
       FTQ_5_NEXT <= 7'h0;
       FTQ_5_TOS <= 7'h0;
       FTQ_6_valid <= 1'h0;
-      FTQ_6_fetch_packet_PC <= 32'h0;
+      FTQ_6_instruction_PC <= 32'h0;
       FTQ_6_is_misprediction <= 1'h0;
       FTQ_6_predicted_expected_PC <= 32'h0;
       FTQ_6_GHR <= 16'h0;
       FTQ_6_NEXT <= 7'h0;
       FTQ_6_TOS <= 7'h0;
       FTQ_7_valid <= 1'h0;
-      FTQ_7_fetch_packet_PC <= 32'h0;
+      FTQ_7_instruction_PC <= 32'h0;
       FTQ_7_is_misprediction <= 1'h0;
       FTQ_7_predicted_expected_PC <= 32'h0;
       FTQ_7_GHR <= 16'h0;
       FTQ_7_NEXT <= 7'h0;
       FTQ_7_TOS <= 7'h0;
       FTQ_8_valid <= 1'h0;
-      FTQ_8_fetch_packet_PC <= 32'h0;
+      FTQ_8_instruction_PC <= 32'h0;
       FTQ_8_is_misprediction <= 1'h0;
       FTQ_8_predicted_expected_PC <= 32'h0;
       FTQ_8_GHR <= 16'h0;
       FTQ_8_NEXT <= 7'h0;
       FTQ_8_TOS <= 7'h0;
       FTQ_9_valid <= 1'h0;
-      FTQ_9_fetch_packet_PC <= 32'h0;
+      FTQ_9_instruction_PC <= 32'h0;
       FTQ_9_is_misprediction <= 1'h0;
       FTQ_9_predicted_expected_PC <= 32'h0;
       FTQ_9_GHR <= 16'h0;
       FTQ_9_NEXT <= 7'h0;
       FTQ_9_TOS <= 7'h0;
       FTQ_10_valid <= 1'h0;
-      FTQ_10_fetch_packet_PC <= 32'h0;
+      FTQ_10_instruction_PC <= 32'h0;
       FTQ_10_is_misprediction <= 1'h0;
       FTQ_10_predicted_expected_PC <= 32'h0;
       FTQ_10_GHR <= 16'h0;
       FTQ_10_NEXT <= 7'h0;
       FTQ_10_TOS <= 7'h0;
       FTQ_11_valid <= 1'h0;
-      FTQ_11_fetch_packet_PC <= 32'h0;
+      FTQ_11_instruction_PC <= 32'h0;
       FTQ_11_is_misprediction <= 1'h0;
       FTQ_11_predicted_expected_PC <= 32'h0;
       FTQ_11_GHR <= 16'h0;
       FTQ_11_NEXT <= 7'h0;
       FTQ_11_TOS <= 7'h0;
       FTQ_12_valid <= 1'h0;
-      FTQ_12_fetch_packet_PC <= 32'h0;
+      FTQ_12_instruction_PC <= 32'h0;
       FTQ_12_is_misprediction <= 1'h0;
       FTQ_12_predicted_expected_PC <= 32'h0;
       FTQ_12_GHR <= 16'h0;
       FTQ_12_NEXT <= 7'h0;
       FTQ_12_TOS <= 7'h0;
       FTQ_13_valid <= 1'h0;
-      FTQ_13_fetch_packet_PC <= 32'h0;
+      FTQ_13_instruction_PC <= 32'h0;
       FTQ_13_is_misprediction <= 1'h0;
       FTQ_13_predicted_expected_PC <= 32'h0;
       FTQ_13_GHR <= 16'h0;
       FTQ_13_NEXT <= 7'h0;
       FTQ_13_TOS <= 7'h0;
       FTQ_14_valid <= 1'h0;
-      FTQ_14_fetch_packet_PC <= 32'h0;
+      FTQ_14_instruction_PC <= 32'h0;
       FTQ_14_is_misprediction <= 1'h0;
       FTQ_14_predicted_expected_PC <= 32'h0;
       FTQ_14_GHR <= 16'h0;
       FTQ_14_NEXT <= 7'h0;
       FTQ_14_TOS <= 7'h0;
       FTQ_15_valid <= 1'h0;
-      FTQ_15_fetch_packet_PC <= 32'h0;
+      FTQ_15_instruction_PC <= 32'h0;
       FTQ_15_is_misprediction <= 1'h0;
       FTQ_15_predicted_expected_PC <= 32'h0;
       FTQ_15_GHR <= 16'h0;
@@ -364,6 +365,23 @@ module FTQ(
       automatic logic _GEN_18;
       automatic logic _GEN_19;
       automatic logic _GEN_20;
+      automatic logic _GEN_21 = _GEN_0 & commit_is_branch;
+      automatic logic _GEN_22;
+      automatic logic _GEN_23;
+      automatic logic _GEN_24;
+      automatic logic _GEN_25;
+      automatic logic _GEN_26;
+      automatic logic _GEN_27;
+      automatic logic _GEN_28;
+      automatic logic _GEN_29;
+      automatic logic _GEN_30;
+      automatic logic _GEN_31;
+      automatic logic _GEN_32;
+      automatic logic _GEN_33;
+      automatic logic _GEN_34;
+      automatic logic _GEN_35;
+      automatic logic _GEN_36;
+      automatic logic _GEN_37;
       _GEN_5 = io_branch_prediction_valid & back_pointer[3:0] == 4'h0;
       _GEN_6 = io_branch_prediction_valid & back_pointer[3:0] == 4'h1;
       _GEN_7 = io_branch_prediction_valid & back_pointer[3:0] == 4'h2;
@@ -380,265 +398,495 @@ module FTQ(
       _GEN_18 = io_branch_prediction_valid & back_pointer[3:0] == 4'hD;
       _GEN_19 = io_branch_prediction_valid & back_pointer[3:0] == 4'hE;
       _GEN_20 = io_branch_prediction_valid & (&(back_pointer[3:0]));
-      if (_GEN_0 & commit_is_branch)
+      _GEN_22 = _GEN_21 & front_pointer[3:0] == 4'h0;
+      _GEN_23 = _GEN_21 & front_pointer[3:0] == 4'h1;
+      _GEN_24 = _GEN_21 & front_pointer[3:0] == 4'h2;
+      _GEN_25 = _GEN_21 & front_pointer[3:0] == 4'h3;
+      _GEN_26 = _GEN_21 & front_pointer[3:0] == 4'h4;
+      _GEN_27 = _GEN_21 & front_pointer[3:0] == 4'h5;
+      _GEN_28 = _GEN_21 & front_pointer[3:0] == 4'h6;
+      _GEN_29 = _GEN_21 & front_pointer[3:0] == 4'h7;
+      _GEN_30 = _GEN_21 & front_pointer[3:0] == 4'h8;
+      _GEN_31 = _GEN_21 & front_pointer[3:0] == 4'h9;
+      _GEN_32 = _GEN_21 & front_pointer[3:0] == 4'hA;
+      _GEN_33 = _GEN_21 & front_pointer[3:0] == 4'hB;
+      _GEN_34 = _GEN_21 & front_pointer[3:0] == 4'hC;
+      _GEN_35 = _GEN_21 & front_pointer[3:0] == 4'hD;
+      _GEN_36 = _GEN_21 & front_pointer[3:0] == 4'hE;
+      _GEN_37 = _GEN_21 & (&(front_pointer[3:0]));
+      if (_GEN_21)
         front_pointer <= front_pointer + 5'h1;
       if (io_branch_prediction_valid)
         back_pointer <= back_pointer + 5'h1;
-      if (_GEN_5) begin
-        FTQ_0_valid <= io_branch_prediction_bits_valid;
-        FTQ_0_fetch_packet_PC <= io_branch_prediction_bits_fetch_packet_PC;
+      FTQ_0_valid <= ~_GEN_22 & (_GEN_5 ? io_branch_prediction_bits_valid : FTQ_0_valid);
+      if (_GEN_22) begin
+        FTQ_0_instruction_PC <= 32'h0;
+        FTQ_0_GHR <= 16'h0;
+        FTQ_0_NEXT <= 7'h0;
+        FTQ_0_TOS <= 7'h0;
+      end
+      else if (_GEN_5) begin
+        FTQ_0_instruction_PC <= io_branch_prediction_bits_instruction_PC;
         FTQ_0_GHR <= io_branch_prediction_bits_GHR;
         FTQ_0_NEXT <= io_branch_prediction_bits_NEXT;
         FTQ_0_TOS <= io_branch_prediction_bits_TOS;
       end
-      if (FTQ_0_fetch_packet_PC == io_FU_output_instruction_PC) begin
+      if (FTQ_0_instruction_PC == io_FU_output_instruction_PC & FTQ_0_valid) begin
         FTQ_0_is_misprediction <=
           FTQ_0_predicted_expected_PC != io_FU_output_target_address;
         FTQ_0_predicted_expected_PC <= io_FU_output_target_address;
       end
-      else if (_GEN_5) begin
-        FTQ_0_is_misprediction <= io_branch_prediction_bits_is_misprediction;
-        FTQ_0_predicted_expected_PC <= io_branch_prediction_bits_predicted_expected_PC;
+      else begin
+        FTQ_0_is_misprediction <=
+          ~_GEN_22
+          & (_GEN_5
+               ? io_branch_prediction_bits_is_misprediction
+               : FTQ_0_is_misprediction);
+        if (_GEN_22)
+          FTQ_0_predicted_expected_PC <= 32'h0;
+        else if (_GEN_5)
+          FTQ_0_predicted_expected_PC <= io_branch_prediction_bits_predicted_expected_PC;
       end
-      if (_GEN_6) begin
-        FTQ_1_valid <= io_branch_prediction_bits_valid;
-        FTQ_1_fetch_packet_PC <= io_branch_prediction_bits_fetch_packet_PC;
+      FTQ_1_valid <= ~_GEN_23 & (_GEN_6 ? io_branch_prediction_bits_valid : FTQ_1_valid);
+      if (_GEN_23) begin
+        FTQ_1_instruction_PC <= 32'h0;
+        FTQ_1_GHR <= 16'h0;
+        FTQ_1_NEXT <= 7'h0;
+        FTQ_1_TOS <= 7'h0;
+      end
+      else if (_GEN_6) begin
+        FTQ_1_instruction_PC <= io_branch_prediction_bits_instruction_PC;
         FTQ_1_GHR <= io_branch_prediction_bits_GHR;
         FTQ_1_NEXT <= io_branch_prediction_bits_NEXT;
         FTQ_1_TOS <= io_branch_prediction_bits_TOS;
       end
-      if (FTQ_1_fetch_packet_PC == io_FU_output_instruction_PC) begin
+      if (FTQ_1_instruction_PC == io_FU_output_instruction_PC & FTQ_1_valid) begin
         FTQ_1_is_misprediction <=
           FTQ_1_predicted_expected_PC != io_FU_output_target_address;
         FTQ_1_predicted_expected_PC <= io_FU_output_target_address;
       end
-      else if (_GEN_6) begin
-        FTQ_1_is_misprediction <= io_branch_prediction_bits_is_misprediction;
-        FTQ_1_predicted_expected_PC <= io_branch_prediction_bits_predicted_expected_PC;
+      else begin
+        FTQ_1_is_misprediction <=
+          ~_GEN_23
+          & (_GEN_6
+               ? io_branch_prediction_bits_is_misprediction
+               : FTQ_1_is_misprediction);
+        if (_GEN_23)
+          FTQ_1_predicted_expected_PC <= 32'h0;
+        else if (_GEN_6)
+          FTQ_1_predicted_expected_PC <= io_branch_prediction_bits_predicted_expected_PC;
       end
-      if (_GEN_7) begin
-        FTQ_2_valid <= io_branch_prediction_bits_valid;
-        FTQ_2_fetch_packet_PC <= io_branch_prediction_bits_fetch_packet_PC;
+      FTQ_2_valid <= ~_GEN_24 & (_GEN_7 ? io_branch_prediction_bits_valid : FTQ_2_valid);
+      if (_GEN_24) begin
+        FTQ_2_instruction_PC <= 32'h0;
+        FTQ_2_GHR <= 16'h0;
+        FTQ_2_NEXT <= 7'h0;
+        FTQ_2_TOS <= 7'h0;
+      end
+      else if (_GEN_7) begin
+        FTQ_2_instruction_PC <= io_branch_prediction_bits_instruction_PC;
         FTQ_2_GHR <= io_branch_prediction_bits_GHR;
         FTQ_2_NEXT <= io_branch_prediction_bits_NEXT;
         FTQ_2_TOS <= io_branch_prediction_bits_TOS;
       end
-      if (FTQ_2_fetch_packet_PC == io_FU_output_instruction_PC) begin
+      if (FTQ_2_instruction_PC == io_FU_output_instruction_PC & FTQ_2_valid) begin
         FTQ_2_is_misprediction <=
           FTQ_2_predicted_expected_PC != io_FU_output_target_address;
         FTQ_2_predicted_expected_PC <= io_FU_output_target_address;
       end
-      else if (_GEN_7) begin
-        FTQ_2_is_misprediction <= io_branch_prediction_bits_is_misprediction;
-        FTQ_2_predicted_expected_PC <= io_branch_prediction_bits_predicted_expected_PC;
+      else begin
+        FTQ_2_is_misprediction <=
+          ~_GEN_24
+          & (_GEN_7
+               ? io_branch_prediction_bits_is_misprediction
+               : FTQ_2_is_misprediction);
+        if (_GEN_24)
+          FTQ_2_predicted_expected_PC <= 32'h0;
+        else if (_GEN_7)
+          FTQ_2_predicted_expected_PC <= io_branch_prediction_bits_predicted_expected_PC;
       end
-      if (_GEN_8) begin
-        FTQ_3_valid <= io_branch_prediction_bits_valid;
-        FTQ_3_fetch_packet_PC <= io_branch_prediction_bits_fetch_packet_PC;
+      FTQ_3_valid <= ~_GEN_25 & (_GEN_8 ? io_branch_prediction_bits_valid : FTQ_3_valid);
+      if (_GEN_25) begin
+        FTQ_3_instruction_PC <= 32'h0;
+        FTQ_3_GHR <= 16'h0;
+        FTQ_3_NEXT <= 7'h0;
+        FTQ_3_TOS <= 7'h0;
+      end
+      else if (_GEN_8) begin
+        FTQ_3_instruction_PC <= io_branch_prediction_bits_instruction_PC;
         FTQ_3_GHR <= io_branch_prediction_bits_GHR;
         FTQ_3_NEXT <= io_branch_prediction_bits_NEXT;
         FTQ_3_TOS <= io_branch_prediction_bits_TOS;
       end
-      if (FTQ_3_fetch_packet_PC == io_FU_output_instruction_PC) begin
+      if (FTQ_3_instruction_PC == io_FU_output_instruction_PC & FTQ_3_valid) begin
         FTQ_3_is_misprediction <=
           FTQ_3_predicted_expected_PC != io_FU_output_target_address;
         FTQ_3_predicted_expected_PC <= io_FU_output_target_address;
       end
-      else if (_GEN_8) begin
-        FTQ_3_is_misprediction <= io_branch_prediction_bits_is_misprediction;
-        FTQ_3_predicted_expected_PC <= io_branch_prediction_bits_predicted_expected_PC;
+      else begin
+        FTQ_3_is_misprediction <=
+          ~_GEN_25
+          & (_GEN_8
+               ? io_branch_prediction_bits_is_misprediction
+               : FTQ_3_is_misprediction);
+        if (_GEN_25)
+          FTQ_3_predicted_expected_PC <= 32'h0;
+        else if (_GEN_8)
+          FTQ_3_predicted_expected_PC <= io_branch_prediction_bits_predicted_expected_PC;
       end
-      if (_GEN_9) begin
-        FTQ_4_valid <= io_branch_prediction_bits_valid;
-        FTQ_4_fetch_packet_PC <= io_branch_prediction_bits_fetch_packet_PC;
+      FTQ_4_valid <= ~_GEN_26 & (_GEN_9 ? io_branch_prediction_bits_valid : FTQ_4_valid);
+      if (_GEN_26) begin
+        FTQ_4_instruction_PC <= 32'h0;
+        FTQ_4_GHR <= 16'h0;
+        FTQ_4_NEXT <= 7'h0;
+        FTQ_4_TOS <= 7'h0;
+      end
+      else if (_GEN_9) begin
+        FTQ_4_instruction_PC <= io_branch_prediction_bits_instruction_PC;
         FTQ_4_GHR <= io_branch_prediction_bits_GHR;
         FTQ_4_NEXT <= io_branch_prediction_bits_NEXT;
         FTQ_4_TOS <= io_branch_prediction_bits_TOS;
       end
-      if (FTQ_4_fetch_packet_PC == io_FU_output_instruction_PC) begin
+      if (FTQ_4_instruction_PC == io_FU_output_instruction_PC & FTQ_4_valid) begin
         FTQ_4_is_misprediction <=
           FTQ_4_predicted_expected_PC != io_FU_output_target_address;
         FTQ_4_predicted_expected_PC <= io_FU_output_target_address;
       end
-      else if (_GEN_9) begin
-        FTQ_4_is_misprediction <= io_branch_prediction_bits_is_misprediction;
-        FTQ_4_predicted_expected_PC <= io_branch_prediction_bits_predicted_expected_PC;
+      else begin
+        FTQ_4_is_misprediction <=
+          ~_GEN_26
+          & (_GEN_9
+               ? io_branch_prediction_bits_is_misprediction
+               : FTQ_4_is_misprediction);
+        if (_GEN_26)
+          FTQ_4_predicted_expected_PC <= 32'h0;
+        else if (_GEN_9)
+          FTQ_4_predicted_expected_PC <= io_branch_prediction_bits_predicted_expected_PC;
       end
-      if (_GEN_10) begin
-        FTQ_5_valid <= io_branch_prediction_bits_valid;
-        FTQ_5_fetch_packet_PC <= io_branch_prediction_bits_fetch_packet_PC;
+      FTQ_5_valid <= ~_GEN_27 & (_GEN_10 ? io_branch_prediction_bits_valid : FTQ_5_valid);
+      if (_GEN_27) begin
+        FTQ_5_instruction_PC <= 32'h0;
+        FTQ_5_GHR <= 16'h0;
+        FTQ_5_NEXT <= 7'h0;
+        FTQ_5_TOS <= 7'h0;
+      end
+      else if (_GEN_10) begin
+        FTQ_5_instruction_PC <= io_branch_prediction_bits_instruction_PC;
         FTQ_5_GHR <= io_branch_prediction_bits_GHR;
         FTQ_5_NEXT <= io_branch_prediction_bits_NEXT;
         FTQ_5_TOS <= io_branch_prediction_bits_TOS;
       end
-      if (FTQ_5_fetch_packet_PC == io_FU_output_instruction_PC) begin
+      if (FTQ_5_instruction_PC == io_FU_output_instruction_PC & FTQ_5_valid) begin
         FTQ_5_is_misprediction <=
           FTQ_5_predicted_expected_PC != io_FU_output_target_address;
         FTQ_5_predicted_expected_PC <= io_FU_output_target_address;
       end
-      else if (_GEN_10) begin
-        FTQ_5_is_misprediction <= io_branch_prediction_bits_is_misprediction;
-        FTQ_5_predicted_expected_PC <= io_branch_prediction_bits_predicted_expected_PC;
+      else begin
+        FTQ_5_is_misprediction <=
+          ~_GEN_27
+          & (_GEN_10
+               ? io_branch_prediction_bits_is_misprediction
+               : FTQ_5_is_misprediction);
+        if (_GEN_27)
+          FTQ_5_predicted_expected_PC <= 32'h0;
+        else if (_GEN_10)
+          FTQ_5_predicted_expected_PC <= io_branch_prediction_bits_predicted_expected_PC;
       end
-      if (_GEN_11) begin
-        FTQ_6_valid <= io_branch_prediction_bits_valid;
-        FTQ_6_fetch_packet_PC <= io_branch_prediction_bits_fetch_packet_PC;
+      FTQ_6_valid <= ~_GEN_28 & (_GEN_11 ? io_branch_prediction_bits_valid : FTQ_6_valid);
+      if (_GEN_28) begin
+        FTQ_6_instruction_PC <= 32'h0;
+        FTQ_6_GHR <= 16'h0;
+        FTQ_6_NEXT <= 7'h0;
+        FTQ_6_TOS <= 7'h0;
+      end
+      else if (_GEN_11) begin
+        FTQ_6_instruction_PC <= io_branch_prediction_bits_instruction_PC;
         FTQ_6_GHR <= io_branch_prediction_bits_GHR;
         FTQ_6_NEXT <= io_branch_prediction_bits_NEXT;
         FTQ_6_TOS <= io_branch_prediction_bits_TOS;
       end
-      if (FTQ_6_fetch_packet_PC == io_FU_output_instruction_PC) begin
+      if (FTQ_6_instruction_PC == io_FU_output_instruction_PC & FTQ_6_valid) begin
         FTQ_6_is_misprediction <=
           FTQ_6_predicted_expected_PC != io_FU_output_target_address;
         FTQ_6_predicted_expected_PC <= io_FU_output_target_address;
       end
-      else if (_GEN_11) begin
-        FTQ_6_is_misprediction <= io_branch_prediction_bits_is_misprediction;
-        FTQ_6_predicted_expected_PC <= io_branch_prediction_bits_predicted_expected_PC;
+      else begin
+        FTQ_6_is_misprediction <=
+          ~_GEN_28
+          & (_GEN_11
+               ? io_branch_prediction_bits_is_misprediction
+               : FTQ_6_is_misprediction);
+        if (_GEN_28)
+          FTQ_6_predicted_expected_PC <= 32'h0;
+        else if (_GEN_11)
+          FTQ_6_predicted_expected_PC <= io_branch_prediction_bits_predicted_expected_PC;
       end
-      if (_GEN_12) begin
-        FTQ_7_valid <= io_branch_prediction_bits_valid;
-        FTQ_7_fetch_packet_PC <= io_branch_prediction_bits_fetch_packet_PC;
+      FTQ_7_valid <= ~_GEN_29 & (_GEN_12 ? io_branch_prediction_bits_valid : FTQ_7_valid);
+      if (_GEN_29) begin
+        FTQ_7_instruction_PC <= 32'h0;
+        FTQ_7_GHR <= 16'h0;
+        FTQ_7_NEXT <= 7'h0;
+        FTQ_7_TOS <= 7'h0;
+      end
+      else if (_GEN_12) begin
+        FTQ_7_instruction_PC <= io_branch_prediction_bits_instruction_PC;
         FTQ_7_GHR <= io_branch_prediction_bits_GHR;
         FTQ_7_NEXT <= io_branch_prediction_bits_NEXT;
         FTQ_7_TOS <= io_branch_prediction_bits_TOS;
       end
-      if (FTQ_7_fetch_packet_PC == io_FU_output_instruction_PC) begin
+      if (FTQ_7_instruction_PC == io_FU_output_instruction_PC & FTQ_7_valid) begin
         FTQ_7_is_misprediction <=
           FTQ_7_predicted_expected_PC != io_FU_output_target_address;
         FTQ_7_predicted_expected_PC <= io_FU_output_target_address;
       end
-      else if (_GEN_12) begin
-        FTQ_7_is_misprediction <= io_branch_prediction_bits_is_misprediction;
-        FTQ_7_predicted_expected_PC <= io_branch_prediction_bits_predicted_expected_PC;
+      else begin
+        FTQ_7_is_misprediction <=
+          ~_GEN_29
+          & (_GEN_12
+               ? io_branch_prediction_bits_is_misprediction
+               : FTQ_7_is_misprediction);
+        if (_GEN_29)
+          FTQ_7_predicted_expected_PC <= 32'h0;
+        else if (_GEN_12)
+          FTQ_7_predicted_expected_PC <= io_branch_prediction_bits_predicted_expected_PC;
       end
-      if (_GEN_13) begin
-        FTQ_8_valid <= io_branch_prediction_bits_valid;
-        FTQ_8_fetch_packet_PC <= io_branch_prediction_bits_fetch_packet_PC;
+      FTQ_8_valid <= ~_GEN_30 & (_GEN_13 ? io_branch_prediction_bits_valid : FTQ_8_valid);
+      if (_GEN_30) begin
+        FTQ_8_instruction_PC <= 32'h0;
+        FTQ_8_GHR <= 16'h0;
+        FTQ_8_NEXT <= 7'h0;
+        FTQ_8_TOS <= 7'h0;
+      end
+      else if (_GEN_13) begin
+        FTQ_8_instruction_PC <= io_branch_prediction_bits_instruction_PC;
         FTQ_8_GHR <= io_branch_prediction_bits_GHR;
         FTQ_8_NEXT <= io_branch_prediction_bits_NEXT;
         FTQ_8_TOS <= io_branch_prediction_bits_TOS;
       end
-      if (FTQ_8_fetch_packet_PC == io_FU_output_instruction_PC) begin
+      if (FTQ_8_instruction_PC == io_FU_output_instruction_PC & FTQ_8_valid) begin
         FTQ_8_is_misprediction <=
           FTQ_8_predicted_expected_PC != io_FU_output_target_address;
         FTQ_8_predicted_expected_PC <= io_FU_output_target_address;
       end
-      else if (_GEN_13) begin
-        FTQ_8_is_misprediction <= io_branch_prediction_bits_is_misprediction;
-        FTQ_8_predicted_expected_PC <= io_branch_prediction_bits_predicted_expected_PC;
+      else begin
+        FTQ_8_is_misprediction <=
+          ~_GEN_30
+          & (_GEN_13
+               ? io_branch_prediction_bits_is_misprediction
+               : FTQ_8_is_misprediction);
+        if (_GEN_30)
+          FTQ_8_predicted_expected_PC <= 32'h0;
+        else if (_GEN_13)
+          FTQ_8_predicted_expected_PC <= io_branch_prediction_bits_predicted_expected_PC;
       end
-      if (_GEN_14) begin
-        FTQ_9_valid <= io_branch_prediction_bits_valid;
-        FTQ_9_fetch_packet_PC <= io_branch_prediction_bits_fetch_packet_PC;
+      FTQ_9_valid <= ~_GEN_31 & (_GEN_14 ? io_branch_prediction_bits_valid : FTQ_9_valid);
+      if (_GEN_31) begin
+        FTQ_9_instruction_PC <= 32'h0;
+        FTQ_9_GHR <= 16'h0;
+        FTQ_9_NEXT <= 7'h0;
+        FTQ_9_TOS <= 7'h0;
+      end
+      else if (_GEN_14) begin
+        FTQ_9_instruction_PC <= io_branch_prediction_bits_instruction_PC;
         FTQ_9_GHR <= io_branch_prediction_bits_GHR;
         FTQ_9_NEXT <= io_branch_prediction_bits_NEXT;
         FTQ_9_TOS <= io_branch_prediction_bits_TOS;
       end
-      if (FTQ_9_fetch_packet_PC == io_FU_output_instruction_PC) begin
+      if (FTQ_9_instruction_PC == io_FU_output_instruction_PC & FTQ_9_valid) begin
         FTQ_9_is_misprediction <=
           FTQ_9_predicted_expected_PC != io_FU_output_target_address;
         FTQ_9_predicted_expected_PC <= io_FU_output_target_address;
       end
-      else if (_GEN_14) begin
-        FTQ_9_is_misprediction <= io_branch_prediction_bits_is_misprediction;
-        FTQ_9_predicted_expected_PC <= io_branch_prediction_bits_predicted_expected_PC;
+      else begin
+        FTQ_9_is_misprediction <=
+          ~_GEN_31
+          & (_GEN_14
+               ? io_branch_prediction_bits_is_misprediction
+               : FTQ_9_is_misprediction);
+        if (_GEN_31)
+          FTQ_9_predicted_expected_PC <= 32'h0;
+        else if (_GEN_14)
+          FTQ_9_predicted_expected_PC <= io_branch_prediction_bits_predicted_expected_PC;
       end
-      if (_GEN_15) begin
-        FTQ_10_valid <= io_branch_prediction_bits_valid;
-        FTQ_10_fetch_packet_PC <= io_branch_prediction_bits_fetch_packet_PC;
+      FTQ_10_valid <=
+        ~_GEN_32 & (_GEN_15 ? io_branch_prediction_bits_valid : FTQ_10_valid);
+      if (_GEN_32) begin
+        FTQ_10_instruction_PC <= 32'h0;
+        FTQ_10_GHR <= 16'h0;
+        FTQ_10_NEXT <= 7'h0;
+        FTQ_10_TOS <= 7'h0;
+      end
+      else if (_GEN_15) begin
+        FTQ_10_instruction_PC <= io_branch_prediction_bits_instruction_PC;
         FTQ_10_GHR <= io_branch_prediction_bits_GHR;
         FTQ_10_NEXT <= io_branch_prediction_bits_NEXT;
         FTQ_10_TOS <= io_branch_prediction_bits_TOS;
       end
-      if (FTQ_10_fetch_packet_PC == io_FU_output_instruction_PC) begin
+      if (FTQ_10_instruction_PC == io_FU_output_instruction_PC & FTQ_10_valid) begin
         FTQ_10_is_misprediction <=
           FTQ_10_predicted_expected_PC != io_FU_output_target_address;
         FTQ_10_predicted_expected_PC <= io_FU_output_target_address;
       end
-      else if (_GEN_15) begin
-        FTQ_10_is_misprediction <= io_branch_prediction_bits_is_misprediction;
-        FTQ_10_predicted_expected_PC <= io_branch_prediction_bits_predicted_expected_PC;
+      else begin
+        FTQ_10_is_misprediction <=
+          ~_GEN_32
+          & (_GEN_15
+               ? io_branch_prediction_bits_is_misprediction
+               : FTQ_10_is_misprediction);
+        if (_GEN_32)
+          FTQ_10_predicted_expected_PC <= 32'h0;
+        else if (_GEN_15)
+          FTQ_10_predicted_expected_PC <= io_branch_prediction_bits_predicted_expected_PC;
       end
-      if (_GEN_16) begin
-        FTQ_11_valid <= io_branch_prediction_bits_valid;
-        FTQ_11_fetch_packet_PC <= io_branch_prediction_bits_fetch_packet_PC;
+      FTQ_11_valid <=
+        ~_GEN_33 & (_GEN_16 ? io_branch_prediction_bits_valid : FTQ_11_valid);
+      if (_GEN_33) begin
+        FTQ_11_instruction_PC <= 32'h0;
+        FTQ_11_GHR <= 16'h0;
+        FTQ_11_NEXT <= 7'h0;
+        FTQ_11_TOS <= 7'h0;
+      end
+      else if (_GEN_16) begin
+        FTQ_11_instruction_PC <= io_branch_prediction_bits_instruction_PC;
         FTQ_11_GHR <= io_branch_prediction_bits_GHR;
         FTQ_11_NEXT <= io_branch_prediction_bits_NEXT;
         FTQ_11_TOS <= io_branch_prediction_bits_TOS;
       end
-      if (FTQ_11_fetch_packet_PC == io_FU_output_instruction_PC) begin
+      if (FTQ_11_instruction_PC == io_FU_output_instruction_PC & FTQ_11_valid) begin
         FTQ_11_is_misprediction <=
           FTQ_11_predicted_expected_PC != io_FU_output_target_address;
         FTQ_11_predicted_expected_PC <= io_FU_output_target_address;
       end
-      else if (_GEN_16) begin
-        FTQ_11_is_misprediction <= io_branch_prediction_bits_is_misprediction;
-        FTQ_11_predicted_expected_PC <= io_branch_prediction_bits_predicted_expected_PC;
+      else begin
+        FTQ_11_is_misprediction <=
+          ~_GEN_33
+          & (_GEN_16
+               ? io_branch_prediction_bits_is_misprediction
+               : FTQ_11_is_misprediction);
+        if (_GEN_33)
+          FTQ_11_predicted_expected_PC <= 32'h0;
+        else if (_GEN_16)
+          FTQ_11_predicted_expected_PC <= io_branch_prediction_bits_predicted_expected_PC;
       end
-      if (_GEN_17) begin
-        FTQ_12_valid <= io_branch_prediction_bits_valid;
-        FTQ_12_fetch_packet_PC <= io_branch_prediction_bits_fetch_packet_PC;
+      FTQ_12_valid <=
+        ~_GEN_34 & (_GEN_17 ? io_branch_prediction_bits_valid : FTQ_12_valid);
+      if (_GEN_34) begin
+        FTQ_12_instruction_PC <= 32'h0;
+        FTQ_12_GHR <= 16'h0;
+        FTQ_12_NEXT <= 7'h0;
+        FTQ_12_TOS <= 7'h0;
+      end
+      else if (_GEN_17) begin
+        FTQ_12_instruction_PC <= io_branch_prediction_bits_instruction_PC;
         FTQ_12_GHR <= io_branch_prediction_bits_GHR;
         FTQ_12_NEXT <= io_branch_prediction_bits_NEXT;
         FTQ_12_TOS <= io_branch_prediction_bits_TOS;
       end
-      if (FTQ_12_fetch_packet_PC == io_FU_output_instruction_PC) begin
+      if (FTQ_12_instruction_PC == io_FU_output_instruction_PC & FTQ_12_valid) begin
         FTQ_12_is_misprediction <=
           FTQ_12_predicted_expected_PC != io_FU_output_target_address;
         FTQ_12_predicted_expected_PC <= io_FU_output_target_address;
       end
-      else if (_GEN_17) begin
-        FTQ_12_is_misprediction <= io_branch_prediction_bits_is_misprediction;
-        FTQ_12_predicted_expected_PC <= io_branch_prediction_bits_predicted_expected_PC;
+      else begin
+        FTQ_12_is_misprediction <=
+          ~_GEN_34
+          & (_GEN_17
+               ? io_branch_prediction_bits_is_misprediction
+               : FTQ_12_is_misprediction);
+        if (_GEN_34)
+          FTQ_12_predicted_expected_PC <= 32'h0;
+        else if (_GEN_17)
+          FTQ_12_predicted_expected_PC <= io_branch_prediction_bits_predicted_expected_PC;
       end
-      if (_GEN_18) begin
-        FTQ_13_valid <= io_branch_prediction_bits_valid;
-        FTQ_13_fetch_packet_PC <= io_branch_prediction_bits_fetch_packet_PC;
+      FTQ_13_valid <=
+        ~_GEN_35 & (_GEN_18 ? io_branch_prediction_bits_valid : FTQ_13_valid);
+      if (_GEN_35) begin
+        FTQ_13_instruction_PC <= 32'h0;
+        FTQ_13_GHR <= 16'h0;
+        FTQ_13_NEXT <= 7'h0;
+        FTQ_13_TOS <= 7'h0;
+      end
+      else if (_GEN_18) begin
+        FTQ_13_instruction_PC <= io_branch_prediction_bits_instruction_PC;
         FTQ_13_GHR <= io_branch_prediction_bits_GHR;
         FTQ_13_NEXT <= io_branch_prediction_bits_NEXT;
         FTQ_13_TOS <= io_branch_prediction_bits_TOS;
       end
-      if (FTQ_13_fetch_packet_PC == io_FU_output_instruction_PC) begin
+      if (FTQ_13_instruction_PC == io_FU_output_instruction_PC & FTQ_13_valid) begin
         FTQ_13_is_misprediction <=
           FTQ_13_predicted_expected_PC != io_FU_output_target_address;
         FTQ_13_predicted_expected_PC <= io_FU_output_target_address;
       end
-      else if (_GEN_18) begin
-        FTQ_13_is_misprediction <= io_branch_prediction_bits_is_misprediction;
-        FTQ_13_predicted_expected_PC <= io_branch_prediction_bits_predicted_expected_PC;
+      else begin
+        FTQ_13_is_misprediction <=
+          ~_GEN_35
+          & (_GEN_18
+               ? io_branch_prediction_bits_is_misprediction
+               : FTQ_13_is_misprediction);
+        if (_GEN_35)
+          FTQ_13_predicted_expected_PC <= 32'h0;
+        else if (_GEN_18)
+          FTQ_13_predicted_expected_PC <= io_branch_prediction_bits_predicted_expected_PC;
       end
-      if (_GEN_19) begin
-        FTQ_14_valid <= io_branch_prediction_bits_valid;
-        FTQ_14_fetch_packet_PC <= io_branch_prediction_bits_fetch_packet_PC;
+      FTQ_14_valid <=
+        ~_GEN_36 & (_GEN_19 ? io_branch_prediction_bits_valid : FTQ_14_valid);
+      if (_GEN_36) begin
+        FTQ_14_instruction_PC <= 32'h0;
+        FTQ_14_GHR <= 16'h0;
+        FTQ_14_NEXT <= 7'h0;
+        FTQ_14_TOS <= 7'h0;
+      end
+      else if (_GEN_19) begin
+        FTQ_14_instruction_PC <= io_branch_prediction_bits_instruction_PC;
         FTQ_14_GHR <= io_branch_prediction_bits_GHR;
         FTQ_14_NEXT <= io_branch_prediction_bits_NEXT;
         FTQ_14_TOS <= io_branch_prediction_bits_TOS;
       end
-      if (FTQ_14_fetch_packet_PC == io_FU_output_instruction_PC) begin
+      if (FTQ_14_instruction_PC == io_FU_output_instruction_PC & FTQ_14_valid) begin
         FTQ_14_is_misprediction <=
           FTQ_14_predicted_expected_PC != io_FU_output_target_address;
         FTQ_14_predicted_expected_PC <= io_FU_output_target_address;
       end
-      else if (_GEN_19) begin
-        FTQ_14_is_misprediction <= io_branch_prediction_bits_is_misprediction;
-        FTQ_14_predicted_expected_PC <= io_branch_prediction_bits_predicted_expected_PC;
+      else begin
+        FTQ_14_is_misprediction <=
+          ~_GEN_36
+          & (_GEN_19
+               ? io_branch_prediction_bits_is_misprediction
+               : FTQ_14_is_misprediction);
+        if (_GEN_36)
+          FTQ_14_predicted_expected_PC <= 32'h0;
+        else if (_GEN_19)
+          FTQ_14_predicted_expected_PC <= io_branch_prediction_bits_predicted_expected_PC;
       end
-      if (_GEN_20) begin
-        FTQ_15_valid <= io_branch_prediction_bits_valid;
-        FTQ_15_fetch_packet_PC <= io_branch_prediction_bits_fetch_packet_PC;
+      FTQ_15_valid <=
+        ~_GEN_37 & (_GEN_20 ? io_branch_prediction_bits_valid : FTQ_15_valid);
+      if (_GEN_37) begin
+        FTQ_15_instruction_PC <= 32'h0;
+        FTQ_15_GHR <= 16'h0;
+        FTQ_15_NEXT <= 7'h0;
+        FTQ_15_TOS <= 7'h0;
+      end
+      else if (_GEN_20) begin
+        FTQ_15_instruction_PC <= io_branch_prediction_bits_instruction_PC;
         FTQ_15_GHR <= io_branch_prediction_bits_GHR;
         FTQ_15_NEXT <= io_branch_prediction_bits_NEXT;
         FTQ_15_TOS <= io_branch_prediction_bits_TOS;
       end
-      if (FTQ_15_fetch_packet_PC == io_FU_output_instruction_PC) begin
+      if (FTQ_15_instruction_PC == io_FU_output_instruction_PC & FTQ_15_valid) begin
         FTQ_15_is_misprediction <=
           FTQ_15_predicted_expected_PC != io_FU_output_target_address;
         FTQ_15_predicted_expected_PC <= io_FU_output_target_address;
       end
-      else if (_GEN_20) begin
-        FTQ_15_is_misprediction <= io_branch_prediction_bits_is_misprediction;
-        FTQ_15_predicted_expected_PC <= io_branch_prediction_bits_predicted_expected_PC;
+      else begin
+        FTQ_15_is_misprediction <=
+          ~_GEN_37
+          & (_GEN_20
+               ? io_branch_prediction_bits_is_misprediction
+               : FTQ_15_is_misprediction);
+        if (_GEN_37)
+          FTQ_15_predicted_expected_PC <= 32'h0;
+        else if (_GEN_20)
+          FTQ_15_predicted_expected_PC <= io_branch_prediction_bits_predicted_expected_PC;
       end
     end
   end // always @(posedge)

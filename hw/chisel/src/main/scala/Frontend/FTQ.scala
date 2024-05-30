@@ -91,7 +91,7 @@ class FTQ(parameters:Parameters) extends Module{
     /////////////////////
     
     when(io.branch_prediction.valid){
-        FTQ(back_pointer)   := io.branch_prediction.bits
+        FTQ(back_index)   := io.branch_prediction.bits
         back_pointer        := back_pointer + 1.U
     }
 
@@ -104,8 +104,6 @@ class FTQ(parameters:Parameters) extends Module{
     val front_element_valid = FTQ(front_index).valid
     val commit_is_branch    = io.commit.is_branch && io.commit.valid
     
-    io.misprediction.valid := 0.B
-
     io.misprediction.valid              := commit_is_branch
     io.misprediction.is_misprediction   := commit_is_branch && FTQ(front_index).valid && FTQ(front_index).is_misprediction
 
@@ -118,6 +116,7 @@ class FTQ(parameters:Parameters) extends Module{
 
     when(front_element_valid && commit_is_branch){ // when front element is valid and commiting instruction is a branch, dequeue
         front_pointer := front_pointer + 1.B    // dequeue element
+        FTQ(front_index) := 0.U.asTypeOf(new FTQ_entry(parameters))
     }
 
     //////////////////////
@@ -128,10 +127,10 @@ class FTQ(parameters:Parameters) extends Module{
     // likely 1 instruction every cycle-ish
 
     for(i <- 0 until FTQEntries){
-        val instruction_PC_match = FTQ(i).fetch_packet_PC === io.FU_output.instruction_PC
+        val instruction_PC_match = (FTQ(i).instruction_PC === io.FU_output.instruction_PC) && FTQ(i).valid
         when(instruction_PC_match){
             FTQ(i).is_misprediction := FTQ(i).predicted_expected_PC =/= io.FU_output.target_address
-            FTQ(i).predicted_expected_PC := io.FU_output.target_address    // FIXME: to optimize area, you can use one entry to store predicted address and overwrite it in case of mispred by simply setting is_mispred
+            FTQ(i).predicted_expected_PC := io.FU_output.target_address
         }
         
     }
