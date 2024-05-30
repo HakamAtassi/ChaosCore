@@ -231,7 +231,7 @@ class decode_validate(parameters:Parameters) extends Module{
     io.FTQ.valid                             := 1.B
 
     // Branch validation data
-    io.FTQ.bits.fetch_packet_PC              :=  PC_expected
+    io.FTQ.bits.instruction_PC              :=  PC_expected
 
     io.FTQ.bits.is_misprediction             :=  0.U
     io.FTQ.bits.predicted_expected_PC        :=  RegNext(io.fetch_packet.bits.fetch_PC)

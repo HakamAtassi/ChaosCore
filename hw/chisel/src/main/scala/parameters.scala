@@ -46,8 +46,7 @@ case class Parameters(
   dispatchWidth:Int = 4, // Up to how many entires are sent to the reservation station + execution engine from the instruction queue at a time?
   
 
-  commitWidth:Int = 1,   // Up to how many entires are freed from the ROB each cycle (cant be larger than the number of ports)
-
+  commitWidth:Int = 4,   // Up to how many entires are freed from the ROB each cycle (cant be larger than the number of ports)
 
 
   GHRWidth: Int = 16,

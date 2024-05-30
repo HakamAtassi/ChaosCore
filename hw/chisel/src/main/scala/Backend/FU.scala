@@ -34,7 +34,7 @@ import circt.stage.ChiselStage
 
 import chisel3.util._
 
-class ALU(parameters:Parameters) extends Module{    // FIXME: I think this can be only 1 stage
+class ALU(parameters:Parameters) extends Module{
     import parameters._
     import InstructionType._
 
@@ -49,10 +49,10 @@ class ALU(parameters:Parameters) extends Module{    // FIXME: I think this can b
     // misaligned fetch exception ??
 
     // Operand data
-    val RS1_data    =   io.FU_input.bits.RS1_data
-    val RS2_data    =   io.FU_input.bits.RS2_data
-    val imm         =   io.FU_input.bits.decoded_instruction.IMM
-    val PC          =   io.FU_input.bits.PC + io.FU_input.bits.decoded_instruction.packet_index
+    val RS1_data                =   io.FU_input.bits.RS1_data
+    val RS2_data                =   io.FU_input.bits.RS2_data
+    val imm                     =   io.FU_input.bits.decoded_instruction.IMM
+    val instruction_PC          =   io.FU_input.bits.PC + io.FU_input.bits.decoded_instruction.packet_index
 
     // Dest reg
     val RD                  =   io.FU_input.bits.decoded_instruction.RD
@@ -202,6 +202,7 @@ class ALU(parameters:Parameters) extends Module{    // FIXME: I think this can b
     io.FU_output.bits.branch_taken      := DontCare
     io.FU_output.bits.target_address  := DontCare
     io.FU_output.bits.instruction_PC  := DontCare
+    io.FU_output.bits.fetch_packet_index := DontCare
     io.FU_output.bits.branch_valid      := 0.B
 
     // Actual Outputs
@@ -415,6 +416,7 @@ class MEMFU(parameters:Parameters) extends Module{
     io.FU_output.bits.branch_taken      := DontCare
     io.FU_output.bits.target_address  := DontCare
     io.FU_output.bits.instruction_PC  := DontCare
+    io.FU_output.bits.fetch_packet_index := DontCare
     io.FU_output.bits.branch_valid      := 0.B
 
 

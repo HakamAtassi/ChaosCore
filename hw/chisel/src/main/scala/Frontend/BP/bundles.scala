@@ -322,7 +322,7 @@ class FTQ_entry(parameters:Parameters) extends Bundle{
     val valid = Bool()
 
     // Branch validation data
-    val fetch_packet_PC = UInt(32.W)    // fetch packet pc of the base instruction
+    val instruction_PC = UInt(32.W)    // fetch packet pc of the base instruction
 
     val is_misprediction = Bool()   // If set, predicted_expected_PC represents expected PC. Otherwise, it represents predicted PC
     val predicted_expected_PC      = UInt(32.W)   
