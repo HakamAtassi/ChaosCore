@@ -5,7 +5,7 @@ from cocotb.triggers import RisingEdge, FallingEdge, Timer
 # Add helper functions as needed
 
 
-class dff_dut:
+class MEMRS_dut:
     def __init__(self, dut):    # modify as needed (parameters, etc...)
         self.dut = dut
 

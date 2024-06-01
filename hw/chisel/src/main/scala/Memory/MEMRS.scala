@@ -38,7 +38,7 @@ import getPortCount._
 import Thermometor._
 
 // Expected operation: writes incoming memory operations from allocate stage.
-// Sends instruction to MEM when its both the front of the queue and has its operands ready
+// Sends instruction to MEM when its both the front of the queue and has its operands MEMRS_ready
 
 // FIXME: MEMRS is full of issues
 // one in particular is the lack of wrap around for the points since RSEntires is not always a multiple of 2
@@ -50,14 +50,19 @@ class MEMRS(parameters:Parameters) extends Module{
     val pointerSize = log2Ceil(RSEntries)+1
 
     val io = IO(new Bundle{
-        // from allocate
-        val backendPacket  =   Vec(dispatchWidth, Flipped(Decoupled(new BackendPacket(parameters))))
+        // ALLOCATE //
+        val backend_packet          =      Input(Vec(dispatchWidth, new backend_packet(parameters)))
+        val MEMRS_ready             =      Output(Vec(dispatchWidth, Bool()))
+        val MEMRS_sources_ready     =      Input(Vec(dispatchWidth, new sources_ready()))
 
-        // from Mem
-        val FU_broadcast   =   Vec(portCount, Flipped(ValidIO(new FU_output(parameters))))
+        // UPDATE //
+        val FU_outputs       =      Vec(portCount, Flipped(ValidIO(new FU_output(parameters))))
 
-        // To FU
-        val RF_inputs      =   Decoupled(new decoded_instruction(parameters))
+        // REDIRECTS // 
+        val misprediction    =      Input(new misprediction(parameters))
+
+        // REG READ (then execute) //
+        val RF_inputs        =      Vec(portCount, Decoupled(new decoded_instruction(parameters)))
     })
 
     
@@ -78,9 +83,9 @@ class MEMRS(parameters:Parameters) extends Module{
     // Allocate new RS entry
     var j = 0
     for(i <- 0 until dispatchWidth){
-        when(io.backendPacket(i).valid){
-            reservation_station(front_index + j.U).decoded_instruction <> io.backendPacket(i).bits.decoded_instruction
-            reservation_station(front_index + j.U).ready_bits         := io.backendPacket(i).bits.ready_bits
+        when(io.backend_packet(i).valid){
+            reservation_station(front_index + j.U).decoded_instruction <> io.backend_packet(i).decoded_instruction
+            reservation_station(front_index + j.U).ready_bits         := io.backend_packet(i).ready_bits
             reservation_station(front_index + j.U).valid              := 1.B
             j = j + 1
             
@@ -92,7 +97,7 @@ class MEMRS(parameters:Parameters) extends Module{
     ////////////
     // UPDATE //
     ////////////
-    // mark RS1/RS2 as ready based on CDB.
+    // mark RS1/RS2 as MEMRS_ready based on CDB.
 
     val RS1_match = Wire(Vec(RSEntries, Bool()))
     val RS2_match = Wire(Vec(RSEntries, Bool()))
@@ -102,10 +107,10 @@ class MEMRS(parameters:Parameters) extends Module{
         var _RS2_match = false.B
 
         for (FU <- 0 until portCount) {
-            _RS1_match = _RS1_match || ((io.FU_broadcast(FU).bits.RD === reservation_station(i).decoded_instruction.RS1) && io.FU_broadcast(FU).valid && io.FU_broadcast(FU).bits.RD_valid)
+            _RS1_match = _RS1_match || ((io.FU_outputs(FU).bits.RD === reservation_station(i).decoded_instruction.RS1) && io.FU_outputs(FU).valid && io.FU_outputs(FU).bits.RD_valid)
         }
         for (FU <- 0 until portCount) {
-            _RS2_match = _RS2_match || ((io.FU_broadcast(FU).bits.RD === reservation_station(i).decoded_instruction.RS2)  && io.FU_broadcast(FU).valid && io.FU_broadcast(FU).bits.RD_valid)
+            _RS2_match = _RS2_match || ((io.FU_outputs(FU).bits.RD === reservation_station(i).decoded_instruction.RS2)  && io.FU_outputs(FU).valid && io.FU_outputs(FU).bits.RD_valid)
         }
 
         RS1_match(i) := _RS1_match
@@ -128,7 +133,7 @@ class MEMRS(parameters:Parameters) extends Module{
     /////////////////
     // MEM REQUEST //
     /////////////////
-    // if oldest RS entry is ready to send to MEM and MEM is not busy, send MEM request.
+    // if oldest RS entry is MEMRS_ready to send to MEM and MEM is not busy, send MEM request.
 
 
     val load_valid_ready  =         reservation_station(back_index).valid && (reservation_station(back_index).ready_bits.RS1_ready || RS1_match(back_index))
@@ -144,15 +149,25 @@ class MEMRS(parameters:Parameters) extends Module{
         front_pointer := front_pointer + 1.U
     }
 
-    io.RF_inputs.bits <> reservation_station(front_index).decoded_instruction
-    io.RF_inputs.valid := reservation_station(front_index).valid
+    io.RF_inputs(0).bits    := 0.U.asTypeOf(new decoded_instruction(parameters))
+    io.RF_inputs(0).valid   := 0.B
+
+    io.RF_inputs(1).bits    := 0.U.asTypeOf(new decoded_instruction(parameters))
+    io.RF_inputs(1).valid   := 0.B
+
+    io.RF_inputs(2).bits    := 0.U.asTypeOf(new decoded_instruction(parameters))
+    io.RF_inputs(2).valid   := 0.B
+
+    // FIXME: RF_inputs port should be a parameter
+    io.RF_inputs(3).bits   <> reservation_station(front_index).decoded_instruction
+    io.RF_inputs(3).valid  := reservation_station(front_index).valid
 
 
-    // assign ready bits
+    // assign MEMRS_ready bits
     val availalbe_RS_entries =   PopCount(~Cat(reservation_station.map(_.valid)))
     val themometor_value = Thermometor(in=availalbe_RS_entries, max=RSEntries)
     for (i <- 0 until dispatchWidth){
-        io.backendPacket(i).ready := themometor_value(dispatchWidth-1,0)(i)
+        io.MEMRS_ready(i) := themometor_value(dispatchWidth-1,0)(i)
     }
 
 

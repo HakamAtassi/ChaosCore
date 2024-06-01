@@ -7,14 +7,14 @@ from cocotb.triggers import RisingEdge, FallingEdge, Timer
 from pathlib import Path
 
 from cocotb_utils import *
-from dff_dut import *
+from MEMRS_dut import *
 
 @cocotb.test()
 async def reset(dut):
 
     await cocotb.start(generateClock(dut)) 
 
-    dut = dff_dut(dut)  # wrap dut with helper class
+    dut = MEMRS_dut(dut)  # wrap dut with helper class
     await dut.reset()   # reset module
 
     await RisingEdge(dut.clock())

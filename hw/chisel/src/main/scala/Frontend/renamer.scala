@@ -274,7 +274,9 @@ class renamer(parameters:Parameters) extends Module{
         ///////////////
 
         //// Instruction input (commit)
-        val FU_outputs                  =   Input(Vec(portCount, new FU_output(parameters)))  
+        //val FU_outputs                  =   Input(Vec(portCount, new FU_output(parameters)))  
+
+        val FU_outputs                =   Vec(portCount, Flipped(ValidIO(new FU_output(parameters))))
 
         //// checkpoint (create/restore)
         val create_checkpoint         = Input(Bool())
@@ -333,8 +335,8 @@ class renamer(parameters:Parameters) extends Module{
 
     free_list.io.rename_valid                   :=  instruction_RD_valid
 
-    free_list.io.free_valid                     :=  io.FU_outputs.map(_.RD_valid)
-    free_list.io.free_values                    :=  io.FU_outputs.map(_.RD)
+    free_list.io.free_valid                     :=  io.FU_outputs.map(_.bits).map(_.RD_valid)
+    free_list.io.free_values                    :=  io.FU_outputs.map(_.bits).map(_.RD)
 
 
     ///////////////////////

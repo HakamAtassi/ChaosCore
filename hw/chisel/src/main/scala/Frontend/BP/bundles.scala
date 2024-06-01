@@ -331,6 +331,7 @@ class FTQ_entry(parameters:Parameters) extends Bundle{
     val GHR     = UInt(GHRWidth.W)
     val NEXT    = UInt(log2Ceil(RASEntries).W)
     val TOS     = UInt(log2Ceil(RASEntries).W)
+    // RAT index ...
 
 }
 
@@ -356,7 +357,7 @@ class ROB_commit(parameters:Parameters) extends Bundle{
 }
 
 
-class InstructionReady extends Bundle{
+class sources_ready extends Bundle{
     val RS1_ready    =   Bool()
     val RS2_ready    =   Bool()
 }
@@ -368,20 +369,22 @@ class RS_entry(parameters:Parameters) extends Bundle{
 
     val decoded_instruction = new decoded_instruction(parameters)
 
-    val ready_bits          =   new InstructionReady()
+    val ready_bits          =   new sources_ready()
 
     // TODO: Add ROB entry (to read PC from PC file)
 
     val valid        =  Bool()  // Is whole RS entry valid
 }
 
-
-class BackendPacket(parameters:Parameters) extends Bundle{
+//FIXME: backend packet should really
+// internally account for its width...
+class backend_packet(parameters:Parameters) extends Bundle{
     import parameters._
 
     // FIXME: invalid instructions ???
+    val valid                 =   Bool()
     val decoded_instruction   =   new decoded_instruction(parameters)
-    val ready_bits            =   new InstructionReady()
+    val ready_bits            =   new sources_ready()
 }
 
 
@@ -424,13 +427,13 @@ class PC_file(fetchWidth:Int){
 // DRAM //
 //////////
 
-class DRAM_request extends Bundle{
+class DRAM_request(parameters:Parameters) extends Bundle{
     val addr    = UInt(32.W)
     val wr_data = UInt(32.W)
     val wr_en   = Bool()
 }
 
-class DRAM_resp extends Bundle{
+class DRAM_resp(parameters:Parameters) extends Bundle{
     val data = UInt(256.W)  // Must be same size as cache line
 }
 

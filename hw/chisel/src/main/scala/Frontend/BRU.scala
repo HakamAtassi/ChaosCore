@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------------------
-* Filename: top.scala
+* Filename: BRU.scala
 * Author: Hakam Atassi
 * Date: May 16 2024
 * Description: A fetch target queue that stores active branch predictions and a unit that validates them upon commit
@@ -27,11 +27,31 @@
 * ------------------------------------------------------------------------------------ 
 */
 
+package ChaosCore
+
+import chisel3._
+import circt.stage.ChiselStage
+import chisel3.util._
+
+// "branch resolution unit"
+class BRU(parameters:Parameters) extends Module{
+    import parameters._
+    val portCount = getPortCount(parameters)
+
+    val io = IO(new Bundle{
+        // FTQ //
+        val FTQ           =   Flipped(Decoupled(new FTQ_entry(parameters)))    // push made predictions to FTQ
+
+        // COMMIT //
+        val ROB_commit    =   Input(Vec(commitWidth, new ROB_entry(parameters)))
+
+        // Output 
+        val misprediction =   Output(new misprediction(parameters))
+    })
+
+    io.FTQ.ready := DontCare
+    io.misprediction := DontCare
+
+}
 
 
-// FTQ
-
-
-
-// Branch Resolution Unit
- 

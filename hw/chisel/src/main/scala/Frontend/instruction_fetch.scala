@@ -115,10 +115,10 @@ class instruction_fetch(parameters:Parameters) extends Module{
         val commit            =   Flipped(Decoupled(new commit(parameters)))       // Input
         
         // To DRAM
-        val DRAM_request      =   Decoupled(new DRAM_request())
+        val DRAM_request      =   Decoupled(new DRAM_request(parameters))
 
         // From DRAM
-        val DRAM_resp         =   Flipped(Decoupled(new DRAM_resp()))
+        val DRAM_resp         =   Flipped(Decoupled(new DRAM_resp(parameters)))
 
         // Output
         val fetch_packet      =   Decoupled(new fetch_packet(parameters))                     // Fetch packet result (To Decoders)
