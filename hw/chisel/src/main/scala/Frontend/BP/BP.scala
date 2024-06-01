@@ -42,16 +42,18 @@ class BP(parameters:Parameters) extends Module{
         val predict     = Flipped(Decoupled(UInt(32.W)))
 
         // Commit Channel 
-        val commit      = Flipped(Decoupled(new commit(parameters))) // common case. Update BTB, PHT
+        val commit                          =   Input(Vec(commitWidth, new commit(parameters)))
+
+        // common case. Update BTB, PHT
 
         // Mispredict Channel 
         //val mispredict  = Flipped(Decoupled(new mispredict(GHRWidth=GHRWidth, RASEntries=RASEntries)))
 
         // Revert Channel
-        val RAS_update  = new RAS_update    // input
+        val RAS_update  = Input(new RAS_update)
 
         // RAS Channel
-        val RAS_read    = new RAS_read(parameters)   // output
+        val RAS_read    = Output(new RAS_read(parameters))
 
         // GHR Channel
         val revert      = Flipped(Decoupled(new revert(parameters)))
@@ -120,26 +122,38 @@ class BP(parameters:Parameters) extends Module{
     ///////////////
 
     val GHR_update = Wire(Bool())
-    val misprediction = Wire(Bool())
+    val misprediction = Wire(Bool());                   misprediction := 0.U
+    val misprediction_GHR = Wire(UInt(GHRWidth.W));     misprediction_GHR := 0.U
+
+    val misprediction_TOS   = Wire(UInt(log2Ceil(RASEntries).W));   misprediction_TOS := 0.U
+    val misprediction_NEXT  = Wire(UInt(log2Ceil(RASEntries).W));   misprediction_NEXT := 0.U
+
     val revert = Wire(Bool())
 
-    misprediction := io.commit.valid && io.commit.bits.misprediction
+
+    for(i <- commitWidth-1 until 0 by -1){
+        when(io.commit(i).is_misprediction){
+            misprediction       := 1.B
+            misprediction_GHR   := io.commit(i).GHR
+
+            misprediction_TOS   :=  io.commit(i).TOS
+            misprediction_NEXT  :=  io.commit(i).NEXT
+        }
+    }
+
+
     revert := io.revert.valid
 
     // Update GHR whenever the BTB indates a branch
     GHR_update := gshare.io.valid && BTB.io.BTB_valid && BTB.io.BTB_hit && (BTB.io.BTB_type === 0.U)
 
-    dontTouch(misprediction)
-    dontTouch(revert)
-    dontTouch(GHR_update)
 
     val otherwise = Wire(Bool())
-    dontTouch(otherwise)
 
     otherwise := 0.B
 
     when(misprediction){   // During mispredic, use input GHR
-        GHR := io.commit.bits.GHR
+        GHR := misprediction_GHR
     }.elsewhen(revert){ // Same for revert
         GHR := io.revert.bits.GHR
         //GHR := 0x42.U
@@ -167,9 +181,17 @@ class BP(parameters:Parameters) extends Module{
     val revert_RAS = Wire(Bool())
     val revert_GHR = Wire(Bool())
 
-    update_BTB := io.commit.bits.T_NT && io.commit.valid                                    // Only update when the branch is found taken
-    update_PHT := (io.commit.bits.br_type === 0.U) && io.commit.valid                       // BTB only updates on conditional branches
-    update_RAS := !misprediction                                                            // RAS can only push/pop when not misprediction
+
+
+    update_BTB := io.commit.map(c => c.T_NT && c.valid).reduce(_ || _)
+    update_PHT := io.commit.map(c => c.is_BR && c.valid).reduce(_ || _)
+    update_RAS := !misprediction
+
+
+
+    //update_BTB := io.commit.bits.T_NT && io.commit.valid                                    // Only update when the branch is found taken
+    //update_PHT := io.commit.bits.is_BR && io.commit.valid                                 // BTB only updates on conditional branches
+    //update_RAS := !misprediction                                                            // RAS can only push/pop when not misprediction
     revert_GHR := misprediction || (io.revert.valid)
     revert_RAS := misprediction
 
@@ -182,10 +204,20 @@ class BP(parameters:Parameters) extends Module{
     gshare.io.predict_PC                := io.predict.bits
     gshare.io.predict_valid             := io.predict.valid
 
+    gshare.io.commit_GHR                := 0.U
+    gshare.io.commit_PC                 := 0.U
+    gshare.io.commit_branch_direction   := 0.U
+
     // commit port
-    gshare.io.commit_GHR                := io.commit.bits.GHR
-    gshare.io.commit_PC                 := io.commit.bits.PC
-    gshare.io.commit_branch_direction   := io.commit.bits.T_NT
+
+    for(i <- 0 until commitWidth){
+        when(io.commit(i).is_BR && io.commit(i).valid){
+            gshare.io.commit_GHR                := io.commit(i).GHR
+            gshare.io.commit_PC                 := io.commit(i).instruction_PC
+            gshare.io.commit_branch_direction   := io.commit(i).T_NT
+        }
+    }
+
     gshare.io.commit_valid              := update_PHT
 
 
@@ -199,11 +231,25 @@ class BP(parameters:Parameters) extends Module{
     BTB.io.predict_PC               := io.predict.bits
     BTB.io.predict_valid            := io.predict.valid
 
+    BTB.io.commit_PC                :=   0.U
+    BTB.io.commit_target            :=   0.U
+
     // commit port
-    BTB.io.commit_PC                :=   io.commit.bits.PC
-    BTB.io.commit_target            :=   io.commit.bits.target
-    BTB.io.commit_br_type           :=   io.commit.bits.br_type
-    BTB.io.commit_br_mask           :=   io.commit.bits.br_mask
+
+    //BTB.io.commit_PC                :=   io.commit.bits.instruction_PC
+    //BTB.io.commit_target            :=   io.commit.bits.expected_PC
+    
+    for(i <- 0 until commitWidth){
+        when(io.commit(i).is_BR && io.commit(i).valid){
+            BTB.io.commit_PC                :=   io.commit(i).instruction_PC
+            BTB.io.commit_target            :=   io.commit(i).expected_PC
+        }
+    }
+
+    BTB.io.commit_br_type           :=   DontCare // FIXME: what branch type to place in BTB? this should come from FTQ/ROB
+    //io.commit.bits.br_type
+    BTB.io.commit_br_mask           :=   DontCare //FIXME: this does nothing right now
+    //io.commit.bits.br_mask
     BTB.io.commit_valid             :=   update_BTB
 
     ///////////////////////////////
@@ -211,8 +257,8 @@ class BP(parameters:Parameters) extends Module{
     ///////////////////////////////
     
     // handle misprediction
-    RAS.io.revert_NEXT  :=   io.commit.bits.NEXT
-    RAS.io.revert_TOS   :=   io.commit.bits.TOS
+    RAS.io.revert_NEXT  :=   misprediction_NEXT
+    RAS.io.revert_TOS   :=   misprediction_TOS
     RAS.io.revert_valid :=   revert_RAS
 
     // update port
@@ -240,7 +286,7 @@ class BP(parameters:Parameters) extends Module{
     io.predict.ready        := io.prediction.ready && !(misprediction || revert)   // 1 cycle stall on mispredict or revert
     io.prediction.valid     := (BTB.io.BTB_valid && gshare.io.valid)
 
-    io.commit.ready := 1.B
+
     io.revert.ready := 1.B
 
 }

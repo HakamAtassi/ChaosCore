@@ -44,19 +44,17 @@ class frontend(parameters:Parameters) extends Module{
 
     val portCount = getPortCount(parameters)
 
-    
-
     val io = IO(new Bundle{
 
         // DRAM CHANNELS //
         val DRAM_resp                       =   Flipped(Decoupled(Input(new DRAM_resp(parameters))))  // FROM DRAM
         val DRAM_request                    =   Decoupled(new DRAM_request(parameters))               // TO DRAM
 
-        // REDIRECTS // 
-        val misprediction                   =   Input(new misprediction(parameters))
+        // COMMIT // 
+        val commit                          =   Input(Vec(commitWidth, new commit(parameters)))
         
-        // FTQ //
-        val prediction                      =   Decoupled(new FTQ_entry(parameters))    // push made predictions to FTQ
+        // PREDICTIONS //
+        val predictions                     =   Vec(fetchWidth, Decoupled(new FTQ_entry(parameters)))
 
         // INSTRUCTION OUT //
         val renamed_decoded_fetch_packet    =   Decoupled(Vec(fetchWidth, new decoded_instruction(parameters)))
@@ -102,69 +100,51 @@ class frontend(parameters:Parameters) extends Module{
     val decoders            = Module(new fetch_packet_decoder(parameters)) // N wide decode
     val renamer             = Module(new renamer(parameters))
 
+
     ///////////////////////
     // INSTRUCTION FETCH //
     ///////////////////////
 
+    val misprediction_commit = findMispredictionCommit(io.commit, parameters)
 
-    instruction_fetch.io.misprediction_PC.bits  :=   io.misprediction.expected_PC
-    //io.misprediction_PC.bits
-    instruction_fetch.io.exception_PC.bits      :=   DontCare //io.exception_PC.bits
-    instruction_fetch.io.DRAM_resp.bits         :=   io.DRAM_resp.bits
-    instruction_fetch.io.commit.bits            :=   DontCare //io.commit.bits
+    //instruction_fetch.io.misprediction_PC.bits      :=   misprediction_commit.expected_PC //:=   io.commit.expected_PC
+    //instruction_fetch.io.exception_PC.bits          :=   DontCare //io.exception_PC.bits
+    //instruction_fetch.io.misprediction_PC.valid     :=   misprediction_commit.valid //io.commit.valid
+    //instruction_fetch.io.exception_PC.valid         :=   DontCare //io.exception_PC.valid
 
-    instruction_fetch.io.misprediction_PC.valid  :=  io.misprediction.valid
-    //io.misprediction_PC.valid
-    instruction_fetch.io.exception_PC.valid      :=   DontCare //io.exception_PC.valid
-    instruction_fetch.io.DRAM_resp.valid         :=   io.DRAM_resp.valid
+    instruction_fetch.io.commit               <>   io.commit //io.commit.bits
 
-    instruction_fetch.io.commit.valid            :=   DontCare
     //commit.valid
 
-    io.DRAM_resp.ready := instruction_fetch.io.DRAM_resp.ready
-    instruction_fetch.io.DRAM_request.ready         :=   io.DRAM_request.ready
-
-    io.DRAM_request.bits    := instruction_fetch.io.DRAM_request.bits
-    io.DRAM_request.valid   := instruction_fetch.io.DRAM_request.valid
-
-    instruction_fetch.io.fetch_packet.ready := decoders.io.fetch_packet.ready
+    instruction_fetch.io.DRAM_resp            <>   io.DRAM_resp
+    instruction_fetch.io.DRAM_request         <>   io.DRAM_request
 
     ///////////////
     // FTQ INPUT //
     ///////////////
 
-
-    io.prediction := DontCare
-
+    instruction_fetch.io.predictions <> io.predictions
 
     //////////////
     // DECODERS //
     //////////////
 
-
-    decoders.io.fetch_packet.bits := instruction_fetch.io.fetch_packet.bits
-
-    decoders.io.fetch_packet.valid := instruction_fetch.io.fetch_packet.valid
-
-    decoders.io.decoded_fetch_packet.ready:= 1.B
+    decoders.io.fetch_packet <> instruction_fetch.io.fetch_packet
 
 
     ////////////
     // RENAME //
     ////////////
 
-    renamer.io.decoded_fetch_packet.bits := decoders.io.decoded_fetch_packet.bits
-    renamer.io.decoded_fetch_packet.valid := decoders.io.decoded_fetch_packet.valid
-    renamer.io.renamed_decoded_fetch_packet.ready := 1.B
+    renamer.io.decoded_fetch_packet <> decoders.io.decoded_fetch_packet
 
 
-    renamer.io.FU_outputs           :=     io.FU_outputs
+    renamer.io.FU_outputs           <>     io.FU_outputs
 
-
-    renamer.io.create_checkpoint         :=     DontCare //io.create_checkpoint
-    renamer.io.restore_checkpoint        :=     DontCare //io.restore_checkpoint
-    renamer.io.restore_checkpoint_value  :=     DontCare //io.restore_checkpoint_value
-    renamer.io.free_checkpoint           :=     DontCare //io.free_checkpoint
+    renamer.io.create_checkpoint         :=     1.B //DontCare //io.create_checkpoint
+    renamer.io.restore_checkpoint        :=     1.B //DontCare //io.restore_checkpoint
+    renamer.io.restore_checkpoint_value  :=     1.B //DontCare //io.restore_checkpoint_value
+    renamer.io.free_checkpoint           :=     1.B //DontCare //io.free_checkpoint
 
     //io.checkpoints_full                  :=     renamer.io.checkpoints_full
     //io.active_checkpoint_value           :=     renamer.io.active_checkpoint_value
@@ -172,7 +152,6 @@ class frontend(parameters:Parameters) extends Module{
     // OUTPUT //
     ////////////
 
-    io.renamed_decoded_fetch_packet.bits := renamer.io.renamed_decoded_fetch_packet.bits
-    io.renamed_decoded_fetch_packet.valid := renamer.io.renamed_decoded_fetch_packet.valid
+    io.renamed_decoded_fetch_packet <> renamer.io.renamed_decoded_fetch_packet
 
 }

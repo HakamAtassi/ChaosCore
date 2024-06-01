@@ -92,20 +92,20 @@ class ChaosCore(parameters:Parameters) extends Module{
     backend.io.MEMRS_ready      <>  allocator.io.MEMRS_ready
     backend.io.INTRS_ready      <>  allocator.io.INTRS_ready
 
-    backend.io.MEMRS_sources_ready      <>  allocator.io.MEMRS_sources_ready
-    backend.io.INTRS_sources_ready      <>  allocator.io.INTRS_sources_ready
+    //backend.io.MEMRS_sources_ready      <>  allocator.io.MEMRS_sources_ready
+    //backend.io.INTRS_sources_ready      <>  allocator.io.INTRS_sources_ready
 
     ////////////////////
     // BACKEND <> BRU //
     ////////////////////
 
-    backend.io.misprediction <> BRU.io.misprediction
+    backend.io.commit <> BRU.io.commit
 
     /////////////////////
     // FRONTEND <> FTQ //
     /////////////////////
 
-    frontend.io.prediction <> FTQ.io.prediction   //buffer made predictions
+    frontend.io.predictions <> FTQ.io.predictions   //buffer made predictions
 
     //////////////////////
     // FRONTEND <> DRAM //
@@ -118,13 +118,13 @@ class ChaosCore(parameters:Parameters) extends Module{
     // FRONTEND <> ALLOCATOR //
     ///////////////////////////
     
-    frontend.io.renamed_decoded_fetch_packet <> allocator.io.renamed_decoded_fetch_packet // this name sucks
+    frontend.io.renamed_decoded_fetch_packet <> allocator.io.renamed_decoded_fetch_packet //FIXME: this name sucks
 
     /////////////////////
     // FRONTEND <> BRU //
     /////////////////////
 
-    frontend.io.misprediction <> BRU.io.misprediction
+    frontend.io.commit <> BRU.io.commit
 
     /////////////////////////
     // FRONTEND <> BACKEND //
@@ -151,16 +151,23 @@ class ChaosCore(parameters:Parameters) extends Module{
     FTQ.io.FU_outputs <> backend.io.FU_outputs
 
     ////////////////
+    // FTQ <> BRU //
+    ////////////////
+
+    FTQ.io.commit    <>  BRU.io.commit
+
+    ////////////////
     // ROB <> FTQ //
     ////////////////
 
-    ROB.io.ROB_commit <> FTQ.io.ROB_commit
+    ROB.io.commit <> BRU.io.commit
+    FTQ.io.commit <> BRU.io.commit
 
     ////////////////
     // ROB <> BRU //
     ////////////////
 
-    ROB.io.ROB_commit <>  BRU.io.ROB_commit
+    ROB.io.ROB <>  BRU.io.ROB
 
 
     ////////////////
@@ -168,5 +175,6 @@ class ChaosCore(parameters:Parameters) extends Module{
     ////////////////
 
     BRU.io.FTQ <> FTQ.io.FTQ
+
 
 }

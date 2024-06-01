@@ -40,17 +40,19 @@ class BRU(parameters:Parameters) extends Module{
 
     val io = IO(new Bundle{
         // FTQ //
-        val FTQ           =   Flipped(Decoupled(new FTQ_entry(parameters)))    // push made predictions to FTQ
+        val FTQ           =   Input(Vec(commitWidth, new FTQ_entry(parameters)))
 
         // COMMIT //
-        val ROB_commit    =   Input(Vec(commitWidth, new ROB_entry(parameters)))
+        val ROB         =   Input(Vec(commitWidth, new ROB_entry(parameters)))
 
         // Output 
-        val misprediction =   Output(new misprediction(parameters))
+
+        val commit      =    Output(Vec(commitWidth, new commit(parameters)))
     })
 
-    io.FTQ.ready := DontCare
-    io.misprediction := DontCare
+    io.FTQ := DontCare
+    //io.misprediction := DontCare
+    io.commit := DontCare
 
 }
 

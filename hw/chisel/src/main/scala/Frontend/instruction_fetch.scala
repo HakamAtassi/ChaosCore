@@ -110,9 +110,11 @@ class instruction_fetch(parameters:Parameters) extends Module{
 
     val io = IO(new Bundle{
         // Inputs: A series of PCs and control signals
-        val misprediction_PC  =   Flipped(Decoupled(UInt(32.W)))                              // Input
-        val exception_PC      =   Flipped(Decoupled(UInt(32.W)))                              // Input
-        val commit            =   Flipped(Decoupled(new commit(parameters)))       // Input
+        //val misprediction_PC  =   Flipped(Decoupled(UInt(32.W)))                              // Input
+        //val exception_PC      =   Flipped(Decoupled(UInt(32.W)))                              // Input
+
+        
+        val commit            =   Input(Vec(commitWidth, new commit(parameters)))
         
         // To DRAM
         val DRAM_request      =   Decoupled(new DRAM_request(parameters))
@@ -122,6 +124,8 @@ class instruction_fetch(parameters:Parameters) extends Module{
 
         // Output
         val fetch_packet      =   Decoupled(new fetch_packet(parameters))                     // Fetch packet result (To Decoders)
+
+        val predictions       =   Vec(fetchWidth, Decoupled(new FTQ_entry(parameters)))
 
     })
 
@@ -145,7 +149,8 @@ class instruction_fetch(parameters:Parameters) extends Module{
     ///////////
     //val predict_PC     =   Wire(Decoupled(UInt(32.W)))
     val clear            =   Wire(Bool())
-    clear := io.commit.bits.misprediction || predecoder.io.revert.valid // && exception ... //FIXME: 
+    clear :=  DontCare
+    //io.commit.bits.misprediction || predecoder.io.revert.valid // && exception ... //FIXME: 
 
     //////////////
     // PC Queue //
@@ -183,12 +188,8 @@ class instruction_fetch(parameters:Parameters) extends Module{
     instruction_cache.io.cpu_addr.valid    :=   (!PC_Q.io.empty)
 
     // Dram resp
-    io.DRAM_request.bits                          :=   instruction_cache.io.DRAM_request.bits     //  TO DRAM 
-    io.DRAM_request.valid                         :=   instruction_cache.io.DRAM_request.valid    //  TO DRAM
-
-
-    instruction_cache.io.DRAM_resp.valid        :=   io.DRAM_resp.valid                       //  FROM DRAM
-    instruction_cache.io.DRAM_resp.bits         :=   io.DRAM_resp.bits                        //  FROM DRAM
+    io.DRAM_request                         <>   instruction_cache.io.DRAM_request    //  TO DRAM
+    instruction_cache.io.DRAM_resp          <>   io.DRAM_resp                        //  FROM DRAM
 
     instruction_cache.io.DRAM_request.ready     := io.DRAM_request.ready                        // Is DRAM ready for request ?
     io.DRAM_resp.ready                          := instruction_cache.io.DRAM_request.ready      // Is Cache ready to accept DRAM response ?
@@ -202,22 +203,16 @@ class instruction_fetch(parameters:Parameters) extends Module{
     ////////
 
     // BP inputs (external)
-    bp.io.commit.bits       :=  io.commit.bits
-    bp.io.commit.valid      :=  io.commit.valid
+    bp.io.commit            <>  io.commit
 
     // BP inputs (internal)
-    bp.io.predict.bits      :=  PC_gen.io.PC_next.bits
-    bp.io.predict.valid     :=  PC_gen.io.PC_next.valid
-
-    bp.io.RAS_update        :=  predecoder.io.RAS_update
-
-    bp.io.revert.bits       :=  predecoder.io.revert.bits
-    bp.io.revert.valid      :=  predecoder.io.revert.valid
-
+    bp.io.predict           <>  PC_gen.io.PC_next
+    bp.io.RAS_update        <>  predecoder.io.RAS_update
+    bp.io.revert            <>  predecoder.io.revert
     bp.io.prediction.ready  := !BTB_Q.io.full
 
     // Outputs
-    predecoder.io.RAS_read  := bp.io.RAS_read
+    predecoder.io.RAS_read  <> bp.io.RAS_read
 
     ////////////////
     // PREDECODER //
@@ -234,22 +229,19 @@ class instruction_fetch(parameters:Parameters) extends Module{
 
 
     // FIXME: connect the rest of the FTQ up
-    predecoder.io.FTQ.ready := 1.B
+    predecoder.io.predictions <> io.predictions
     
     //////////////
     // PC ARBIT //
     //////////////
-    PC_gen.io.commit.bits      := io.commit.bits
-    PC_gen.io.commit.valid     := io.commit.valid
+    PC_gen.io.commit        <>  io.commit
 
-    PC_gen.io.prediction.bits  := bp.io.prediction.bits
-    PC_gen.io.prediction.valid := bp.io.prediction.valid
+    PC_gen.io.prediction    <> bp.io.prediction
     
     PC_gen.io.RAS_read         := bp.io.RAS_read
     PC_gen.io.PC_next.ready    := !PC_Q.io.full && bp.io.predict.ready
 
-    PC_gen.io.revert.bits      := predecoder.io.revert.bits
-    PC_gen.io.revert.valid     := predecoder.io.revert.valid
+    PC_gen.io.revert      <> predecoder.io.revert
 
 
     // FIXME: PC_gen readies not connected
@@ -259,15 +251,13 @@ class instruction_fetch(parameters:Parameters) extends Module{
     // OUTPUTS //
     /////////////
     
-    io.misprediction_PC.ready  := 1.U
-    io.exception_PC.ready      := 1.U
-    io.commit.ready            := 1.U
+    //io.misprediction_PC.ready  := 1.U
+    //io.exception_PC.ready      := 1.U
+    //io.commit.ready            := 1.U
     //io.mispredict.ready        := 1.U
     predecoder.io.revert.ready := 1.U
     //PC_gen.io.revert.ready && bp.io.revert.ready // FIXME: when is revert ready??
 
-    io.fetch_packet.bits := predecoder.io.final_fetch_packet.bits
-    io.fetch_packet.valid := predecoder.io.final_fetch_packet.valid
-    predecoder.io.final_fetch_packet.ready := io.fetch_packet.ready
+    io.fetch_packet <> predecoder.io.final_fetch_packet
 
 }

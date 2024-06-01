@@ -67,7 +67,6 @@ object Thermometor
 }
 
 
-
 object getPortCount
 {
   // Returns total number of ports across all reservations stations
@@ -87,5 +86,19 @@ object getPortCount
     portCount
   }
 
+}
 
+object findMispredictionCommit {
+  def apply(commits: Seq[commit], parameters:Parameters): commit = {
+    import parameters._
+    var mispredictionCommit = new commit(parameters) // Assuming `parameters` is available in scope
+
+    for (i <- commitWidth - 1 to 0 by -1) {
+      when(commits(i).is_misprediction) {
+        mispredictionCommit = commits(i)
+      }
+    }
+
+    mispredictionCommit
+  }
 }

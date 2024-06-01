@@ -55,15 +55,13 @@ class backend(parameters:Parameters) extends Module{
         val DRAM_request            =   Decoupled(new DRAM_request(parameters))               // TO DRAM
 
         // REDIRECTS // 
-        val misprediction           =   Input(new misprediction(parameters))
+        val commit      =    Input(Vec(commitWidth, new commit(parameters)))
 
         // ALLOCATE //
         val backend_packet          =   Input(Vec(dispatchWidth, new backend_packet(parameters)))
 
-
-        val INTRS_sources_ready     =      Input(Vec(dispatchWidth, new sources_ready()))
-        val MEMRS_sources_ready     =      Input(Vec(dispatchWidth, new sources_ready()))
-
+        //val INTRS_sources_ready     =   Input(Vec(dispatchWidth, new sources_ready()))
+        //val MEMRS_sources_ready     =   Input(Vec(dispatchWidth, new sources_ready()))
 
         val MEMRS_ready             =   Output(Vec(dispatchWidth, Bool()))
         val INTRS_ready             =   Output(Vec(dispatchWidth, Bool()))
@@ -84,7 +82,7 @@ class backend(parameters:Parameters) extends Module{
 
     // Assign Reservation Stations
 
-    INT_RS.io.misprediction <> io.misprediction
+    INT_RS.io.commit <> io.commit
 
     for (i <- 0 until dispatchWidth){
         INT_RS.io.backend_packet(i)          := io.backend_packet(i)  // pass data along
@@ -92,7 +90,7 @@ class backend(parameters:Parameters) extends Module{
     }
 
 
-    INT_RS.io.misprediction <> io.misprediction
+    INT_RS.io.commit <> io.commit
 
     for (i <- 0 until dispatchWidth){
         MEM_RS.io.backend_packet(i)          := io.backend_packet(i)  // pass data along
@@ -241,11 +239,8 @@ class backend(parameters:Parameters) extends Module{
     io.FU_outputs(3) <> FU3.io.FU_output
 
 
-    INT_RS.io.misprediction := io.misprediction
-    MEM_RS.io.misprediction := io.misprediction
-
-    INT_RS.io.INTRS_sources_ready   :=  io.INTRS_sources_ready
-    MEM_RS.io.MEMRS_sources_ready   :=  io.MEMRS_sources_ready
+    INT_RS.io.commit := io.commit
+    MEM_RS.io.commit := io.commit
 
     ///////////////////
     // MEM_RS TO MEM //

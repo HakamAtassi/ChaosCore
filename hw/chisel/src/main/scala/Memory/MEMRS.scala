@@ -53,16 +53,15 @@ class MEMRS(parameters:Parameters) extends Module{
         // ALLOCATE //
         val backend_packet          =      Input(Vec(dispatchWidth, new backend_packet(parameters)))
         val MEMRS_ready             =      Output(Vec(dispatchWidth, Bool()))
-        val MEMRS_sources_ready     =      Input(Vec(dispatchWidth, new sources_ready()))
 
         // UPDATE //
-        val FU_outputs       =      Vec(portCount, Flipped(ValidIO(new FU_output(parameters))))
+        val FU_outputs              =      Vec(portCount, Flipped(ValidIO(new FU_output(parameters))))
 
         // REDIRECTS // 
-        val misprediction    =      Input(new misprediction(parameters))
+        val commit           =   Input(Vec(commitWidth, new commit(parameters)))
 
         // REG READ (then execute) //
-        val RF_inputs        =      Vec(portCount, Decoupled(new decoded_instruction(parameters)))
+        val RF_inputs               =      Vec(portCount, Decoupled(new decoded_instruction(parameters)))
     })
 
     
@@ -91,7 +90,7 @@ class MEMRS(parameters:Parameters) extends Module{
             
         }
     }
-    front_pointer := front_pointer + j.U    // if this doesnt work just replace with popcount
+    front_pointer := front_pointer + j.U
 
 
     ////////////

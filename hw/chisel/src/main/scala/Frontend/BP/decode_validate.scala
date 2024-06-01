@@ -80,9 +80,10 @@ class decode_validate(parameters:Parameters) extends Module{
         val kill                = Output(Bool())                                        // kill incoming instructions
         val revert              = Decoupled(new revert(parameters))                     // Redirect frontend // FIXME: should be output...
         val final_fetch_packet  = Decoupled(new fetch_packet(parameters))               // Output validated instructions
-        val RAS_update          = Flipped(new RAS_update)                               // RAS control
+        val RAS_update          = Output(new RAS_update)                               // RAS control
 
-        val FTQ                 = Decoupled(new FTQ_entry(parameters))
+        // TO FTQ //
+        val predictions         =   Vec(fetchWidth, Decoupled(new FTQ_entry(parameters)))
     })
 
     /////////////
@@ -222,24 +223,28 @@ class decode_validate(parameters:Parameters) extends Module{
     io.RAS_update.call_addr  := metadata_out.instruction_PC // PC of the actual instruction, not fetch_PC
 
 
-
+    /////////
     // FTQ //
+    /////////
 
-    val is_branch   =   DontCare
 
-    io.FTQ.bits.valid                        :=  is_branch
-    io.FTQ.valid                             := 1.B
+    // Send predictions to FTQ
+    for(i <- 0 until fetchWidth){
+        val is_branch = metadata_reg(i).JAL ||  metadata_reg(i).JALR ||  metadata_reg(i).BR
 
-    // Branch validation data
-    io.FTQ.bits.instruction_PC              :=  PC_expected
+        io.predictions(i).valid                              := io.final_fetch_packet.bits.valid_bits(i) && is_branch
 
-    io.FTQ.bits.is_misprediction             :=  0.U
-    io.FTQ.bits.predicted_expected_PC        :=  RegNext(io.fetch_packet.bits.fetch_PC)
+        io.predictions(i).bits.valid                         := DontCare
 
-    // State revision data
-    io.FTQ.bits.GHR                          :=  GHR_reg
-    io.FTQ.bits.NEXT                         :=  RegNext(io.RAS_read.NEXT)
-    io.FTQ.bits.TOS                          :=  RegNext(io.RAS_read.TOS)
+        io.predictions(i).bits.instruction_PC                := io.fetch_packet.bits.fetch_PC + (i.U << 2)
+
+        io.predictions(i).bits.is_misprediction              := 0.B
+        io.predictions(i).bits.predicted_expected_PC         := 0.U  //FIXME: need to store expected addresses for each instruction for FTQ to work at all
+
+        io.predictions(i).bits.GHR                           := GHR_reg
+        io.predictions(i).bits.NEXT                          := RegNext(io.RAS_read.NEXT)
+        io.predictions(i).bits.TOS                           := RegNext(io.RAS_read.TOS)
+    }
 
 
     // Do not accept inputs if outputs have nowhere to go. 
