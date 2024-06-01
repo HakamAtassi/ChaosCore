@@ -319,11 +319,7 @@ async def allocate_many_FU_broadcast(dut):
     # broadcast entire first row
     #
 
-
-
     await RisingEdge(dut.clock())
-
-
 
     await RisingEdge(dut.clock())
 
@@ -341,6 +337,431 @@ async def allocate_many_FU_broadcast(dut):
 
     dut.print_ROB()
     dut.print_busy()
+
+    assert dut.get_back_pointer() == 64
+    assert dut.get_front_pointer() == 1
+
+@cocotb.test()
+async def allocate_many_FU_broadcast_non_first_row(dut):
+
+    await cocotb.start(generateClock(dut)) 
+
+    dut = ROB_dut(dut)  # wrap dut with helper class
+    await dut.reset()   # reset module
+
+    await RisingEdge(dut.clock())
+
+    allocate_inputs = generateNullAllocate()
+
+
+    for _ in range(64):
+        allocate_inputs["valid"] = 1
+        allocate_inputs["instruction_valid"] = [1,1,1,1]
+        allocate_inputs["is_branch"]         = [1,1,1,1]
+
+        dut.send_allocate(allocate_inputs)
+
+        await RisingEdge(dut.clock())
+
+    dut.send_allocate()
+    await RisingEdge(dut.clock())
+    await RisingEdge(dut.clock())
+    await RisingEdge(dut.clock())
+
+    assert dut.get_back_pointer() == 64
+    assert dut.get_front_pointer() == 0
+
+    #
+    # broadcast entire first row
+    #
+
+    await RisingEdge(dut.clock())
+
+    await RisingEdge(dut.clock())
+
+    FU_inputs = generateNullFUInput()
+    FU_inputs["valid"]                  =   [1,1,1,1]
+    FU_inputs["branch_valid"]           =   [0,0,0,0]
+    FU_inputs["ROB_index"]              =   [1,1,1,1]
+    FU_inputs["fetch_packet_index"]     =   [0,1,2,3]
+
+    dut.send_FU(FU_inputs)
+
+    await RisingEdge(dut.clock())
+    await ReadOnly()
+
+
+    dut.print_ROB()
+    dut.print_busy()
+
+    assert dut.get_ROB_busy_row(1) == [1,1,1,1]
+
+    assert dut.get_back_pointer() == 64
+    assert dut.get_front_pointer() == 0
+
+
+@cocotb.test()
+async def back_to_back_commits(dut):
+
+    await cocotb.start(generateClock(dut)) 
+
+    dut = ROB_dut(dut)  # wrap dut with helper class
+    await dut.reset()   # reset module
+
+    await RisingEdge(dut.clock())
+
+    allocate_inputs = generateNullAllocate()
+
+
+    for _ in range(64):
+        allocate_inputs["valid"] = 1
+        allocate_inputs["instruction_valid"] = [1,1,1,1]
+        allocate_inputs["is_branch"]         = [1,1,1,1]
+
+        dut.send_allocate(allocate_inputs)
+
+        await RisingEdge(dut.clock())
+
+    dut.send_allocate()
+    await RisingEdge(dut.clock())
+    await RisingEdge(dut.clock())
+    await RisingEdge(dut.clock())
+
+    assert dut.get_back_pointer() == 64
+    assert dut.get_front_pointer() == 0
+
+    #
+    # broadcast entire first row
+    #
+
+    await RisingEdge(dut.clock())
+
+    await RisingEdge(dut.clock())
+
+    ## broadcast to second row ##
+    FU_inputs = generateNullFUInput()
+    FU_inputs["valid"]                  =   [1,1,1,1]
+    FU_inputs["branch_valid"]           =   [0,0,0,0]
+    FU_inputs["ROB_index"]              =   [1,1,1,1]
+    FU_inputs["fetch_packet_index"]     =   [0,1,2,3]
+
+    dut.send_FU(FU_inputs)
+
+    await RisingEdge(dut.clock())
+
+    FU_inputs = generateNullFUInput()
+    FU_inputs["valid"]                  =   [1,1,1,1]
+    FU_inputs["branch_valid"]           =   [0,0,0,0]
+    FU_inputs["ROB_index"]              =   [0,0,0,0]
+    FU_inputs["fetch_packet_index"]     =   [0,1,2,3]
+
+    dut.send_FU(FU_inputs)
+
+    await RisingEdge(dut.clock())
+    await ReadOnly()
+
+    dut.print_ROB()
+    dut.print_busy()
+
+    #assert dut.get_ROB_busy_row(1) == [1,1,1,1]
+
+    assert dut.get_back_pointer() == 64
+    assert dut.get_front_pointer() == 1
+
+    await RisingEdge(dut.clock())
+    await ReadOnly()
+
+    assert dut.get_back_pointer() == 64
+    assert dut.get_front_pointer() == 2
+
+
+
+@cocotb.test()
+async def pointer_movement(dut):
+
+    await cocotb.start(generateClock(dut)) 
+
+    dut = ROB_dut(dut)  # wrap dut with helper class
+    await dut.reset()   # reset module
+
+    await RisingEdge(dut.clock())
+
+    allocate_inputs = generateNullAllocate()
+
+
+    for _ in range(64):
+        allocate_inputs["valid"] = 1
+        allocate_inputs["instruction_valid"] = [1,1,1,1]
+        allocate_inputs["is_branch"]         = [1,1,1,1]
+
+        dut.send_allocate(allocate_inputs)
+
+        await RisingEdge(dut.clock())
+
+    dut.send_allocate()
+    await RisingEdge(dut.clock())
+    await RisingEdge(dut.clock())
+    await RisingEdge(dut.clock())
+
+    assert dut.get_back_pointer() == 64
+    assert dut.get_front_pointer() == 0
+
+    #
+    # broadcast entire first row
+    #
+
+    await RisingEdge(dut.clock())
+
+    await RisingEdge(dut.clock())
+
+    ## broadcast to second row ##
+    FU_inputs = generateNullFUInput()
+    FU_inputs["valid"]                  =   [1,0,0,0]
+    FU_inputs["branch_valid"]           =   [0,0,0,0]
+    FU_inputs["ROB_index"]              =   [0,0,0,0]
+    FU_inputs["fetch_packet_index"]     =   [0,1,2,3]
+
+    dut.send_FU(FU_inputs)
+
+    await RisingEdge(dut.clock())
+
+    await ReadOnly()
+
+    assert dut.get_back_pointer() == 64
+    assert dut.get_front_pointer() == 0
+
+    await RisingEdge(dut.clock())
+
+    ## broadcast to second row ##
+    FU_inputs = generateNullFUInput()
+    FU_inputs["valid"]                  =   [1,0,0,0]
+    FU_inputs["branch_valid"]           =   [0,0,0,0]
+    FU_inputs["ROB_index"]              =   [0,0,0,0]
+    FU_inputs["fetch_packet_index"]     =   [1,0,0,0]
+
+    dut.send_FU(FU_inputs)
+
+    await RisingEdge(dut.clock())
+
+    await ReadOnly()
+
+    assert dut.get_back_pointer() == 64
+    assert dut.get_front_pointer() == 0
+
+    await RisingEdge(dut.clock())
+
+    ## broadcast to second row ##
+    FU_inputs = generateNullFUInput()
+    FU_inputs["valid"]                  =   [1,0,0,0]
+    FU_inputs["branch_valid"]           =   [0,0,0,0]
+    FU_inputs["ROB_index"]              =   [0,0,0,0]
+    FU_inputs["fetch_packet_index"]     =   [2,0,0,0]
+
+    dut.send_FU(FU_inputs)
+
+    await RisingEdge(dut.clock())
+
+    await ReadOnly()
+
+    assert dut.get_back_pointer() == 64
+    assert dut.get_front_pointer() == 0
+
+    await RisingEdge(dut.clock())
+
+    ## broadcast to second row ##
+    FU_inputs = generateNullFUInput()
+    FU_inputs["valid"]                  =   [1,0,0,0]
+    FU_inputs["branch_valid"]           =   [0,0,0,0]
+    FU_inputs["ROB_index"]              =   [0,0,0,0]
+    FU_inputs["fetch_packet_index"]     =   [3,0,0,0]
+
+    dut.send_FU(FU_inputs)
+
+    await RisingEdge(dut.clock())
+
+    await ReadOnly()
+
+    assert dut.get_back_pointer() == 64
+    assert dut.get_front_pointer() == 1
+
+
+@cocotb.test()
+async def pointer_movement_no_order(dut):
+
+    await cocotb.start(generateClock(dut)) 
+
+    dut = ROB_dut(dut)  # wrap dut with helper class
+    await dut.reset()   # reset module
+
+    await RisingEdge(dut.clock())
+
+    allocate_inputs = generateNullAllocate()
+
+
+    for _ in range(64):
+        allocate_inputs["valid"] = 1
+        allocate_inputs["instruction_valid"] = [1,1,1,1]
+        allocate_inputs["is_branch"]         = [1,1,1,1]
+
+        dut.send_allocate(allocate_inputs)
+
+        await RisingEdge(dut.clock())
+
+    dut.send_allocate()
+    await RisingEdge(dut.clock())
+    await RisingEdge(dut.clock())
+    await RisingEdge(dut.clock())
+
+    assert dut.get_back_pointer() == 64
+    assert dut.get_front_pointer() == 0
+
+    #
+    # broadcast entire first row
+    #
+
+    await RisingEdge(dut.clock())
+
+    await RisingEdge(dut.clock())
+
+    ## broadcast to second row ##
+    FU_inputs = generateNullFUInput()
+    FU_inputs["valid"]                  =   [1,0,0,0]
+    FU_inputs["branch_valid"]           =   [0,0,0,0]
+    FU_inputs["ROB_index"]              =   [0,0,0,0]
+    FU_inputs["fetch_packet_index"]     =   [0,1,2,3]
+
+    dut.send_FU(FU_inputs)
+
+    await RisingEdge(dut.clock())
+
+    await ReadOnly()
+
+    assert dut.get_back_pointer() == 64
+    assert dut.get_front_pointer() == 0
+
+    await RisingEdge(dut.clock())
+
+    ## broadcast to second row ##
+    FU_inputs = generateNullFUInput()
+    FU_inputs["valid"]                  =   [1,0,0,0]
+    FU_inputs["branch_valid"]           =   [0,0,0,0]
+    FU_inputs["ROB_index"]              =   [0,0,0,0]
+    FU_inputs["fetch_packet_index"]     =   [3,0,0,0]
+
+    dut.send_FU(FU_inputs)
+
+    await RisingEdge(dut.clock())
+
+    await ReadOnly()
+
+    assert dut.get_back_pointer() == 64
+    assert dut.get_front_pointer() == 0
+
+    await RisingEdge(dut.clock())
+
+    ## broadcast to second row ##
+    FU_inputs = generateNullFUInput()
+    FU_inputs["valid"]                  =   [1,0,0,0]
+    FU_inputs["branch_valid"]           =   [0,0,0,0]
+    FU_inputs["ROB_index"]              =   [0,0,0,0]
+    FU_inputs["fetch_packet_index"]     =   [1,0,0,0]
+
+    dut.send_FU(FU_inputs)
+
+    await RisingEdge(dut.clock())
+
+    await ReadOnly()
+
+    assert dut.get_back_pointer() == 64
+    assert dut.get_front_pointer() == 0
+
+    await RisingEdge(dut.clock())
+
+    ## broadcast to second row ##
+    FU_inputs = generateNullFUInput()
+    FU_inputs["valid"]                  =   [1,0,0,0]
+    FU_inputs["branch_valid"]           =   [0,0,0,0]
+    FU_inputs["ROB_index"]              =   [0,0,0,0]
+    FU_inputs["fetch_packet_index"]     =   [2,0,0,0]
+
+    dut.send_FU(FU_inputs)
+
+    await RisingEdge(dut.clock())
+
+    await ReadOnly()
+
+    assert dut.get_back_pointer() == 64
+    assert dut.get_front_pointer() == 1
+
+
+@cocotb.test()
+async def pointer_movement_no_order_2_at_a_time(dut):
+
+    await cocotb.start(generateClock(dut)) 
+
+    dut = ROB_dut(dut)  # wrap dut with helper class
+    await dut.reset()   # reset module
+
+    await RisingEdge(dut.clock())
+
+    allocate_inputs = generateNullAllocate()
+
+
+    for _ in range(64):
+        allocate_inputs["valid"] = 1
+        allocate_inputs["instruction_valid"] = [1,1,1,1]
+        allocate_inputs["is_branch"]         = [1,1,1,1]
+
+        dut.send_allocate(allocate_inputs)
+
+        await RisingEdge(dut.clock())
+
+    dut.send_allocate()
+    await RisingEdge(dut.clock())
+    await RisingEdge(dut.clock())
+    await RisingEdge(dut.clock())
+
+    assert dut.get_back_pointer() == 64
+    assert dut.get_front_pointer() == 0
+
+    #
+    # broadcast entire first row
+    #
+
+    await RisingEdge(dut.clock())
+
+    await RisingEdge(dut.clock())
+
+    ## broadcast to second row ##
+    FU_inputs = generateNullFUInput()
+    FU_inputs["valid"]                  =   [1,1,0,0]
+    FU_inputs["branch_valid"]           =   [0,0,0,0]
+    FU_inputs["ROB_index"]              =   [0,0,0,0]
+    FU_inputs["fetch_packet_index"]     =   [0,2,2,3]
+
+    dut.send_FU(FU_inputs)
+
+    await RisingEdge(dut.clock())
+
+    await ReadOnly()
+
+    assert dut.get_back_pointer() == 64
+    assert dut.get_front_pointer() == 0
+
+    await RisingEdge(dut.clock())
+
+    ## broadcast to second row ##
+    FU_inputs = generateNullFUInput()
+    FU_inputs["valid"]                  =   [1,1,0,0]
+    FU_inputs["branch_valid"]           =   [0,0,0,0]
+    FU_inputs["ROB_index"]              =   [0,0,0,0]
+    FU_inputs["fetch_packet_index"]     =   [1,3,0,0]
+
+    dut.send_FU(FU_inputs)
+
+    await RisingEdge(dut.clock())
+
+    await ReadOnly()
 
     assert dut.get_back_pointer() == 64
     assert dut.get_front_pointer() == 1

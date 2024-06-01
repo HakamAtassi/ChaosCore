@@ -193,17 +193,16 @@ class ALU(parameters:Parameters) extends Module{
     }
     */
 
-
     // ALU pipelined; always ready
     io.FU_input.ready       :=   1.B    
 
     // Not a branch unit (all FUs share the same output channel)
-    // FIXME: signals unassigned
-    io.FU_output.bits.branch_taken      := DontCare
-    io.FU_output.bits.target_address  := DontCare
-    io.FU_output.bits.instruction_PC  := DontCare
-    io.FU_output.bits.fetch_packet_index := DontCare
-    io.FU_output.bits.branch_valid      := 0.B
+    io.FU_output.bits.branch_taken          := DontCare
+    io.FU_output.bits.target_address        := DontCare
+    io.FU_output.bits.branch_valid          := 0.B
+
+    io.FU_output.bits.instruction_PC        := RegNext(io.FU_input.bits.PC + (io.FU_input.bits.decoded_instruction.packet_index)<<2.U)
+    io.FU_output.bits.fetch_packet_index    := RegNext(io.FU_input.bits.decoded_instruction.packet_index)
 
     // Actual Outputs
     io.FU_output.bits.RD         :=   RegNext(io.FU_input.bits.decoded_instruction.RD)
@@ -279,7 +278,7 @@ class branch_unit(parameters:Parameters) extends Module{
     val target_address = Wire(UInt(32.W))
 
     io.FU_input.ready := DontCare
-    io.FU_output := DontCare
+    io.FU_output := DontCare    // FIXME: ???
 
     branch_taken := 0.B
     target_address := PC + 4.U
@@ -293,20 +292,25 @@ class branch_unit(parameters:Parameters) extends Module{
     .elsewhen(JAL)  {branch_taken := 1.B; target_address := PC + IMM}
     .elsewhen(JALR) {branch_taken := 1.B; target_address := RS1_data + IMM}
 
+
+    // PC of branch instruction and packet index (to access ROB bank)
+    io.FU_output.bits.instruction_PC        :=  RegNext(io.FU_input.bits.PC + (io.FU_input.bits.decoded_instruction.packet_index)<<2.U)
+    io.FU_output.bits.fetch_packet_index    :=  RegNext(io.FU_input.bits.decoded_instruction.packet_index)
+
     // ALU pipelined; always ready
     io.FU_input.ready       :=   1.B
 
     // Not a branch unit (all FUs share the same output channel)
-    io.FU_output.bits.branch_taken          := RegNext(branch_taken)
-    io.FU_output.bits.target_address      := RegNext(target_address)
+    io.FU_output.bits.branch_taken      :=      RegNext(branch_taken)
+    io.FU_output.bits.target_address    :=      RegNext(target_address)
 
     // Actual Outputs
-    io.FU_output.bits.RD            :=      RegNext(io.FU_input.bits.decoded_instruction.RD)
-    io.FU_output.bits.RD_valid      :=      RegNext(io.FU_input.bits.decoded_instruction.RD_valid)
-    io.FU_output.bits.RD_data       :=      RegNext(PC + 4.U)
+    io.FU_output.bits.RD                :=      RegNext(io.FU_input.bits.decoded_instruction.RD)
+    io.FU_output.bits.RD_valid          :=      RegNext(io.FU_input.bits.decoded_instruction.RD_valid)
+    io.FU_output.bits.RD_data           :=      RegNext(PC + 4.U)
 
-    io.FU_output.bits.ROB_index     :=      RegNext(io.FU_input.bits.decoded_instruction.ROB_index)
-    io.FU_output.valid              :=      RegNext(io.FU_input.valid)
+    io.FU_output.bits.ROB_index         :=      RegNext(io.FU_input.bits.decoded_instruction.ROB_index)
+    io.FU_output.valid                  :=      RegNext(io.FU_input.valid)
 
 }
 
@@ -319,11 +323,11 @@ class MEMFU(parameters:Parameters) extends Module{
     val io = IO(new Bundle{
         // Input
         val FU_input      =   Flipped(Decoupled(new read_decoded_instruction(parameters)))
-        val DRAM_resp     =   Flipped(Decoupled(new DRAM_resp()))
+        val DRAM_resp     =   Flipped(Decoupled(new DRAM_resp(parameters)))
 
         // Output
         val FU_output     =   ValidIO(new FU_output(parameters))      // To RF
-        val DRAM_request  =   Decoupled(new DRAM_request())           // To DRAM
+        val DRAM_request  =   Decoupled(new DRAM_request(parameters))           // To DRAM
     })
 
 
@@ -413,12 +417,12 @@ class MEMFU(parameters:Parameters) extends Module{
     ////////////////////////
 
     // Not a branch unit (all FUs share the same output channel)
-    io.FU_output.bits.branch_taken      := DontCare
-    io.FU_output.bits.target_address  := DontCare
-    io.FU_output.bits.instruction_PC  := DontCare
-    io.FU_output.bits.fetch_packet_index := DontCare
-    io.FU_output.bits.branch_valid      := 0.B
+    io.FU_output.bits.branch_taken              := DontCare
+    io.FU_output.bits.target_address            := DontCare
+    io.FU_output.bits.branch_valid              := 0.B
 
+    io.FU_output.bits.instruction_PC        :=  RegNext(io.FU_input.bits.PC + (io.FU_input.bits.decoded_instruction.packet_index)<<2.U)
+    io.FU_output.bits.fetch_packet_index    :=  RegNext(io.FU_input.bits.decoded_instruction.packet_index)
 
     io.FU_output.bits.RD_data   := rd_data
     io.FU_output.bits.RD        := RegNext(RD)

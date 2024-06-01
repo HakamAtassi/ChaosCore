@@ -58,34 +58,34 @@ object Main extends App {
     import Parameters._
 
     val parameters = Parameters()
-    VerilogGenerator.generateVerilog(new instruction_cache(parameters), "../verilog/Frontend/instruction_cache.v")
+    //VerilogGenerator.generateVerilog(new instruction_cache(parameters), "../verilog/Frontend/instruction_cache.v")
 
     //VerilogGenerator.generateVerilog(new Frontend(parameters), "../verilog/Frontend/Frontend.v")
 
-    VerilogGenerator.generateVerilog(new fetch_packet_decoder(parameters), "../verilog/Frontend/decoders.v")
+    //VerilogGenerator.generateVerilog(new fetch_packet_decoder(parameters), "../verilog/Frontend/decoders.v")
 
-    VerilogGenerator.generateVerilog(new free_list(parameters), 
-    "../verilog/Frontend/free_list.v")
+    //VerilogGenerator.generateVerilog(new free_list(parameters), 
+    //"../verilog/Frontend/free_list.v")
 
 
 
-    VerilogGenerator.generateVerilog(new WAW_handler(parameters), 
-    "../verilog/Frontend/WAW_handler.v")
+    //VerilogGenerator.generateVerilog(new WAW_handler(parameters), 
+    //"../verilog/Frontend/WAW_handler.v")
 
 
     //VerilogGenerator.generateVerilog(new rename(parameters), 
     //"../verilog/Frontend/rename.v")
 
 
-    VerilogGenerator.generateVerilog(new RAT(parameters), 
-    "../verilog/Frontend/RAT.v")
+    //VerilogGenerator.generateVerilog(new RAT(parameters), 
+    //"../verilog/Frontend/RAT.v")
 
 
-    VerilogGenerator.generateVerilog(new RS(parameters), 
-    "../verilog/Backend/RS.v")
+    //VerilogGenerator.generateVerilog(new RS(parameters), 
+    //"../verilog/Backend/RS.v")
 
-    VerilogGenerator.generateVerilog(new MEMRS(parameters), 
-    "../verilog/Backend/MEMRS.v")
+    //VerilogGenerator.generateVerilog(new MEMRS(parameters), 
+    //"../verilog/Backend/MEMRS.v")
 
     //VerilogGenerator.generateVerilog(new RF(
         //coreConfig:String, 
@@ -94,23 +94,29 @@ object Main extends App {
     //, 
     //"../verilog/Backend/RF.v")
 
-    VerilogGenerator.generateVerilog(new decoder(parameters), 
-    "../verilog/Frontend/decoder.v")
+    //VerilogGenerator.generateVerilog(new decoder(parameters), 
+    //"../verilog/Frontend/decoder.v")
 
-    VerilogGenerator.generateVerilog(new FU(parameters, true, true), 
-    "../verilog/Backend/FU.v")
+    //VerilogGenerator.generateVerilog(new FU(parameters, true, true), 
+    //"../verilog/Backend/FU.v")
 
-    VerilogGenerator.generateVerilog(new backend(parameters), 
-    "../verilog/Backend/backend.v")
+    //VerilogGenerator.generateVerilog(new backend(parameters), 
+    //"../verilog/Backend/backend.v")
 
-    VerilogGenerator.generateVerilog(new frontend(parameters), 
-    "../verilog/Frontend/frontend.v")
+    //VerilogGenerator.generateVerilog(new frontend(parameters), 
+    //"../verilog/Frontend/frontend.v")
 
-    VerilogGenerator.generateVerilog(new FTQ(parameters), 
-    "../verilog/Frontend/FTQ.v")
+    //VerilogGenerator.generateVerilog(new FTQ(parameters), 
+    //"../verilog/Frontend/FTQ.v")
 
-    VerilogGenerator.generateVerilog(new ROB(parameters), 
-    "../verilog/Backend/ROB.v")
+    //VerilogGenerator.generateVerilog(new ROB(parameters), 
+    //"../verilog/Backend/ROB.v")
+
+
+    VerilogGenerator.generateVerilog(new ChaosCore(parameters), 
+    "../verilog/Core/ChaosCore.v")
+
+    //ChiselStage.emitSystemVerilogFile(new backend(parameters), Array("--split-verilog"))
 
 }
 

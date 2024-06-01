@@ -88,7 +88,7 @@ class ROB_dut:
     def get_ROB_busy_row(self, row):
         mem=[]
         for i in range(4):
-            mem.append((getattr(self.dut, f"ROB_busy_banks_{i}.mem_ext.Memory").value >> row) & 0b1)
+            mem.append((getattr(self.dut, f"ROB_busy_banks_{i}.mem_ext.Memory").value[row]) & 0b1)
         return mem
 
     def get_ROB_busy_banks(self):

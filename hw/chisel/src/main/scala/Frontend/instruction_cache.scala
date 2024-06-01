@@ -107,11 +107,11 @@ class instruction_cache(parameters:Parameters) extends Module{
         val cpu_addr            =     Flipped(Decoupled(UInt(32.W)))              // inputs from CPU
         val kill                =     Input(UInt(1.W))                            // Kill in progress request(s) 
                                                                                   // FIXME: this should be a bool
-        val DRAM_resp           =     Flipped(Decoupled(Input(new DRAM_resp())))  // FROM DRAM
+        val DRAM_resp           =     Flipped(Decoupled(Input(new DRAM_resp(parameters))))  // FROM DRAM
 
         // Outputs
         val cache_data          =     Decoupled(new fetch_packet(parameters))     // TO CPU
-        val DRAM_request        =     Decoupled(new DRAM_request())               // TO DRAM
+        val DRAM_request        =     Decoupled(new DRAM_request(parameters))               // TO DRAM
     })
 
 

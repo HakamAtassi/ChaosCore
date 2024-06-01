@@ -86,3 +86,34 @@ def test_allocate_many_FU_broadcast():
     configs["toplevel"] = "ROB"         # Verilog top leve module
     configs["testcase"] = "allocate_many_FU_broadcast"       # Name of your cocotb function
     run(**configs)
+
+
+def test_allocate_many_FU_broadcast_non_first_row():
+    configs["module"] = "ROB_cocotb"    # Cocotb file
+    configs["toplevel"] = "ROB"         # Verilog top leve module
+    configs["testcase"] = "allocate_many_FU_broadcast_non_first_row"       # Name of your cocotb function
+    run(**configs)
+
+def test_back_to_back_commits():
+    configs["module"] = "ROB_cocotb"    # Cocotb file
+    configs["toplevel"] = "ROB"         # Verilog top leve module
+    configs["testcase"] = "back_to_back_commits"       # Name of your cocotb function
+    run(**configs)
+
+def test_pointer_movement():
+    configs["module"] = "ROB_cocotb"    # Cocotb file
+    configs["toplevel"] = "ROB"         # Verilog top leve module
+    configs["testcase"] = "pointer_movement"       # Name of your cocotb function
+    run(**configs)
+
+def test_pointer_movement_no_order():
+    configs["module"] = "ROB_cocotb"    # Cocotb file
+    configs["toplevel"] = "ROB"         # Verilog top leve module
+    configs["testcase"] = "pointer_movement_no_order"       # Name of your cocotb function
+    run(**configs)
+
+def test_pointer_movement_no_order_2_at_a_time():
+    configs["module"] = "ROB_cocotb"    # Cocotb file
+    configs["toplevel"] = "ROB"         # Verilog top leve module
+    configs["testcase"] = "pointer_movement_no_order_2_at_a_time"       # Name of your cocotb function
+    run(**configs)

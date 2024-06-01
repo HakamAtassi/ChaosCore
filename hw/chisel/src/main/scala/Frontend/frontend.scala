@@ -48,65 +48,78 @@ class frontend(parameters:Parameters) extends Module{
 
     val io = IO(new Bundle{
 
-        val misprediction_PC                =   Flipped(Decoupled(UInt(32.W)))                              // Input
-        val exception_PC                    =   Flipped(Decoupled(UInt(32.W)))                              // Input
-        val commit                          =   Flipped(Decoupled(new commit(parameters)))       // Input
+        // DRAM CHANNELS //
+        val DRAM_resp                       =   Flipped(Decoupled(Input(new DRAM_resp(parameters))))  // FROM DRAM
+        val DRAM_request                    =   Decoupled(new DRAM_request(parameters))               // TO DRAM
 
-
-        // To FTQ
-
-
-        // From DRAM
-        val DRAM_resp                       =   Flipped(Decoupled(Input(new DRAM_resp())))
+        // REDIRECTS // 
+        val misprediction                   =   Input(new misprediction(parameters))
         
-        // To DRAM
-        val DRAM_request                    =   Decoupled(new DRAM_request())
+        // FTQ //
+        val prediction                      =   Decoupled(new FTQ_entry(parameters))    // push made predictions to FTQ
 
-        // To backend
+        // INSTRUCTION OUT //
         val renamed_decoded_fetch_packet    =   Decoupled(Vec(fetchWidth, new decoded_instruction(parameters)))
 
-        //// Instruction input (commit)
-        val FU_outputs                  =   Input(Vec(portCount, new FU_output(parameters)))    // To free free_list regs & to update FTQ
+        // RD FREE //
+        val FU_outputs                      =   Vec(portCount, Flipped(ValidIO(new FU_output(parameters))))
 
+
+
+
+
+        /////////////////
+        // OLD SIGNALS //
+        /////////////////
+
+        //val exception_PC                    =   Flipped(Decoupled(UInt(32.W)))                              // Input
+        //val commit                          =   Flipped(Decoupled(new commit(parameters)))                  // Input
+        //val ROB_commit                      =   Output(Vec(commitWidth, new ROB_entry(parameters)))
+        // To backend
+        //// Instruction input (commit)
         //// checkpoint (create/restore)
-        val create_checkpoint         = Input(Bool())
-        val active_checkpoint_value   = Output(UInt(RATCheckpointBits.W))   // What checkpoint is currently being used
-        val restore_checkpoint        = Input(Bool())                       // Restore to previous valid RAT
-        val restore_checkpoint_value  = Input(UInt(RATCheckpointBits.W))    // ...
-        val free_checkpoint           = Input(Bool())                       // Normal branch commit. Just dealloc. checkpoint
-        val checkpoints_full          = Output(Bool())                      // No more checkpoints available
+        //val create_checkpoint               = Input(Bool())
+        //val active_checkpoint_value         = Output(UInt(RATCheckpointBits.W))   // What checkpoint is currently being used
+        //val restore_checkpoint              = Input(Bool())                       // Restore to previous valid RAT
+        //val restore_checkpoint_value        = Input(UInt(RATCheckpointBits.W))    // ...
+        //val free_checkpoint                 = Input(Bool())                       // Normal branch commit. Just dealloc. checkpoint
+        //val checkpoints_full                = Output(Bool())                      // No more checkpoints available
     })
 
 
-    io.misprediction_PC.ready  := 1.B
-    io.exception_PC.ready      := 1.B
-    io.commit.ready            := 1.B
+    //io.exception_PC.ready      := 1.B
+    //io.commit.ready            := 1.B
 
+    val commit                          =  Wire(Decoupled(new commit(parameters)))
+    commit := DontCare
 
     //////////////
     // Pipeline //////////////////////////////////////////////////////
     // Instruction fetch => Decoders => Renamer => Backend/Allocate //
     //////////////////////////////////////////////////////////////////
 
-    val instruction_fetch = Module(new instruction_fetch(parameters))
-    val decoders = Module(new fetch_packet_decoder(parameters)) // N wide decode
-    val renamer = Module(new renamer(parameters))
+    val instruction_fetch   = Module(new instruction_fetch(parameters))
+    val decoders            = Module(new fetch_packet_decoder(parameters)) // N wide decode
+    val renamer             = Module(new renamer(parameters))
 
     ///////////////////////
     // INSTRUCTION FETCH //
     ///////////////////////
 
 
-    instruction_fetch.io.misprediction_PC.bits  :=   io.misprediction_PC.bits
-    instruction_fetch.io.exception_PC.bits      :=   io.exception_PC.bits
+    instruction_fetch.io.misprediction_PC.bits  :=   io.misprediction.expected_PC
+    //io.misprediction_PC.bits
+    instruction_fetch.io.exception_PC.bits      :=   DontCare //io.exception_PC.bits
     instruction_fetch.io.DRAM_resp.bits         :=   io.DRAM_resp.bits
-    instruction_fetch.io.commit.bits            :=   io.commit.bits
+    instruction_fetch.io.commit.bits            :=   DontCare //io.commit.bits
 
-    instruction_fetch.io.misprediction_PC.valid  :=   io.misprediction_PC.valid
-    instruction_fetch.io.exception_PC.valid      :=   io.exception_PC.valid
+    instruction_fetch.io.misprediction_PC.valid  :=  io.misprediction.valid
+    //io.misprediction_PC.valid
+    instruction_fetch.io.exception_PC.valid      :=   DontCare //io.exception_PC.valid
     instruction_fetch.io.DRAM_resp.valid         :=   io.DRAM_resp.valid
 
-    instruction_fetch.io.commit.valid            :=   io.commit.valid
+    instruction_fetch.io.commit.valid            :=   DontCare
+    //commit.valid
 
     io.DRAM_resp.ready := instruction_fetch.io.DRAM_resp.ready
     instruction_fetch.io.DRAM_request.ready         :=   io.DRAM_request.ready
@@ -115,6 +128,14 @@ class frontend(parameters:Parameters) extends Module{
     io.DRAM_request.valid   := instruction_fetch.io.DRAM_request.valid
 
     instruction_fetch.io.fetch_packet.ready := decoders.io.fetch_packet.ready
+
+    ///////////////
+    // FTQ INPUT //
+    ///////////////
+
+
+    io.prediction := DontCare
+
 
     //////////////
     // DECODERS //
@@ -140,13 +161,13 @@ class frontend(parameters:Parameters) extends Module{
     renamer.io.FU_outputs           :=     io.FU_outputs
 
 
-    renamer.io.create_checkpoint         :=     io.create_checkpoint
-    renamer.io.restore_checkpoint        :=     io.restore_checkpoint
-    renamer.io.restore_checkpoint_value  :=     io.restore_checkpoint_value
-    renamer.io.free_checkpoint           :=     io.free_checkpoint
+    renamer.io.create_checkpoint         :=     DontCare //io.create_checkpoint
+    renamer.io.restore_checkpoint        :=     DontCare //io.restore_checkpoint
+    renamer.io.restore_checkpoint_value  :=     DontCare //io.restore_checkpoint_value
+    renamer.io.free_checkpoint           :=     DontCare //io.free_checkpoint
 
-    io.checkpoints_full                  :=     renamer.io.checkpoints_full
-    io.active_checkpoint_value           :=     renamer.io.active_checkpoint_value
+    //io.checkpoints_full                  :=     renamer.io.checkpoints_full
+    //io.active_checkpoint_value           :=     renamer.io.active_checkpoint_value
     ////////////
     // OUTPUT //
     ////////////

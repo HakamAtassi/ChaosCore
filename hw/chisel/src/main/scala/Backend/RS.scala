@@ -48,14 +48,20 @@ class RS(parameters:Parameters) extends Module{
     val portCountBits = log2Ceil(portCount)
 
     val io = IO(new Bundle{
-        // from allocate
-        val backendPacket  =   Vec(dispatchWidth, Flipped(Decoupled(new BackendPacket(parameters))))
+        // ALLOCATE //
+        val backend_packet          =      Input(Vec(dispatchWidth, new backend_packet(parameters)))
+        val INTRS_ready             =      Output(Vec(dispatchWidth, Bool()))
+        val INTRS_sources_ready     =      Input(Vec(dispatchWidth, new sources_ready()))
 
-        // from FU (notify)
-        val FU_broadcast   =   Vec(portCount, Flipped(ValidIO(new FU_output(parameters))))
+        // UPDATE //
+        val FU_outputs       =      Vec(portCount, Flipped(ValidIO(new FU_output(parameters))))
 
-        // To FU
-        val RF_inputs      =   Vec(ALUportCount, Decoupled(new decoded_instruction(parameters)))
+        // REDIRECTS // 
+        val misprediction    =      Input(new misprediction(parameters))
+
+        // REG READ (then execute) //
+        val RF_inputs        =      Vec(ALUportCount, Decoupled(new decoded_instruction(parameters)))
+
     })
 
     // Allocate RS regs
@@ -69,10 +75,10 @@ class RS(parameters:Parameters) extends Module{
 
     // Allocate new RS entry
     for(i <- 0 until dispatchWidth){
-        when(io.backendPacket(i).valid){
+        when(io.backend_packet(i).valid){
             val allocateIndexBinary = OHToUInt(allocate_index(i))
-            reservation_station(allocateIndexBinary).decoded_instruction <> io.backendPacket(i).bits.decoded_instruction
-            reservation_station(allocateIndexBinary).ready_bits:= io.backendPacket(i).bits.ready_bits
+            reservation_station(allocateIndexBinary).decoded_instruction <> io.backend_packet(i).decoded_instruction
+            reservation_station(allocateIndexBinary).ready_bits:= io.INTRS_sources_ready(i)
             reservation_station(allocateIndexBinary).valid   := 1.B
         }
     }
@@ -93,10 +99,10 @@ class RS(parameters:Parameters) extends Module{
         var _RS2_match = false.B
 
         for (FU <- 0 until portCount) {
-            _RS1_match = _RS1_match || ((io.FU_broadcast(FU).bits.RD === reservation_station(i).decoded_instruction.RS1) && io.FU_broadcast(FU).bits.RD_valid && io.FU_broadcast(FU).valid)
+            _RS1_match = _RS1_match || ((io.FU_outputs(FU).bits.RD === reservation_station(i).decoded_instruction.RS1) && io.FU_outputs(FU).bits.RD_valid && io.FU_outputs(FU).valid)
         }
         for (FU <- 0 until portCount) {
-            _RS2_match = _RS2_match || ((io.FU_broadcast(FU).bits.RD === reservation_station(i).decoded_instruction.RS2) && io.FU_broadcast(FU).bits.RD_valid && io.FU_broadcast(FU).valid)
+            _RS2_match = _RS2_match || ((io.FU_outputs(FU).bits.RD === reservation_station(i).decoded_instruction.RS2) && io.FU_outputs(FU).bits.RD_valid && io.FU_outputs(FU).valid)
         }
 
         RS1_match(i) := _RS1_match
@@ -285,6 +291,6 @@ class RS(parameters:Parameters) extends Module{
     // N-1  |   1111
     val themometor_value = Thermometor(in=availalbe_RS_entries, max=RSEntries)
     for (i <- 0 until dispatchWidth){
-        io.backendPacket(i).ready := themometor_value(dispatchWidth-1,0)(i)
+        io.INTRS_ready(i) := themometor_value(dispatchWidth-1,0)(i)
     }
 }

@@ -163,7 +163,7 @@ async def single_broadcast_good(dut):
     RS = dut.get_RS()
     ports = dut.get_ports()
 
-    dut.print_outputs()
+    #dut.print_outputs()
 
     assert ports[0]["valid"] == 1
     
