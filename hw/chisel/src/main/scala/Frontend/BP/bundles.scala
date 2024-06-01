@@ -142,49 +142,57 @@ class metadata extends Bundle{
 
 class commit(parameters:Parameters) extends Bundle{
     import parameters._
-    val PC      = Input(UInt(32.W))
-    val GHR     = Input(UInt(GHRWidth.W))
-    val T_NT    = Input(Bool())
+
+    val valid   =   Bool()
+
+    val instruction_PC      = UInt(32.W)    // To update gshare/PHT
+    val T_NT                = Bool()    // To update BTB (BTB only updates on taken branches)
+
+    val is_BR               = Bool()
+    //val is_JAL               = Bool()
+    //val is_JALR               = Bool()
     
-    //val tag      =Input(UInt(getBTBTagBits(BTBEntries).W))
-    val target   =  Input(UInt(32.W))
-    val br_type  =  Input(UInt(2.W))
-    val br_mask  =  Input(UInt(fetchWidth.W))
+    //val target              = UInt(32.W)
+    //val br_type             = UInt(2.W)
+    //val br_mask             = UInt(fetchWidth.W)
 
-    val misprediction = Input(Bool())
-    val TOS           = Input(UInt(log2Ceil(RASEntries).W))  // To reset GHR
-    val NEXT          = Input(UInt(log2Ceil(RASEntries).W))  // To reset GHR
-    val misprediction_PC = Input(UInt(32.W))
+    val is_misprediction    = Bool()
+    val expected_PC         = UInt(32.W)    // For BTB aswell
 
+    // SAVED STATE
+    val GHR                 = UInt(GHRWidth.W)
+    val TOS                 = UInt(log2Ceil(RASEntries).W)  // To reset GHR
+    val NEXT                = UInt(log2Ceil(RASEntries).W)  // To reset GHR
+    val RAT_IDX             = UInt(log2Ceil(RATCheckpointCount).W)  // To reset GHR
 }
 
 class RAS_update extends Bundle{    // Request call or ret
-    val call_addr = Input(UInt(32.W))
-    val call      = Input(Bool())
-    val ret       = Input(Bool())
+    val call_addr = UInt(32.W)
+    val call      = Bool()
+    val ret       = Bool()
 }
 
 class RAS_read(parameters:Parameters) extends Bundle{
     import parameters._
-    val NEXT      = Output(UInt((log2Ceil(RASEntries).W)))
-    val TOS       = Output(UInt((log2Ceil(RASEntries).W)))
-    val ret_addr  = Output(UInt(32.W))
+    val NEXT      = UInt((log2Ceil(RASEntries).W))
+    val TOS       = UInt((log2Ceil(RASEntries).W))
+    val ret_addr  = UInt(32.W)
 }
 
 class revert(parameters:Parameters) extends Bundle{
     import parameters._
-    val GHR               = Input(UInt(GHRWidth.W))
-    val PC                = Input(UInt(32.W))
+    val GHR               = UInt(GHRWidth.W)
+    val PC                = UInt(32.W)
 }
 
 class prediction(parameters:Parameters) extends Bundle{
     import parameters._
-    val hit         =   Output(Bool())  // FIXME: I dont think this is assigned in BTB since it was added after the fact
-    val target      =   Output(UInt(32.W))
-    val br_type     =   Output(UInt(2.W))
-    val br_mask     =   Output(UInt(fetchWidth.W))
-    val GHR         =   Output(UInt(GHRWidth.W))
-    val T_NT        =   Output(Bool())
+    val hit         =   Bool()  // FIXME: I dont think this is assigned in BTB since it was added after the fact
+    val target      =   UInt(32.W)
+    val br_type     =   UInt(2.W)
+    val br_mask     =   UInt(fetchWidth.W)
+    val GHR         =   UInt(GHRWidth.W)
+    val T_NT        =   Bool()
 }
 
 class Instruction(parameters:Parameters) extends Bundle{
@@ -209,36 +217,36 @@ class decoded_instruction(parameters:Parameters) extends Bundle{
     //val RDold              =   UInt(physicalRegBits.W) // Actual dest
     //val RDold_valid        =   Bool()
 
-    val RD              =   UInt(physicalRegBits.W) // Actual dest
-    val RD_valid        =   Bool()
-    val RS1             =   UInt(physicalRegBits.W)
-    val RS1_valid       =   Bool()
-    val RS2             =   UInt(physicalRegBits.W)
-    val RS2_valid       =   Bool()
-    val IMM             =   UInt(32.W)
-    val FUNCT3          =   UInt(3.W)
+    val RD                  =   UInt(physicalRegBits.W) // Actual dest
+    val RD_valid            =   Bool()
+    val RS1                 =   UInt(physicalRegBits.W)
+    val RS1_valid           =   Bool()
+    val RS2                 =   UInt(physicalRegBits.W)
+    val RS2_valid           =   Bool()
+    val IMM                 =   UInt(32.W)
+    val FUNCT3              =   UInt(3.W)
 
 
-    val packet_index    =   UInt(log2Ceil(fetchWidth*4).W)    // contains the remainder of the PC. ex: 0, 4, 8, 12, 0, ... for fetchWidth of 4
-    val ROB_index       =   UInt(log2Ceil(ROBEntires).W)
+    val packet_index        =   UInt(log2Ceil(fetchWidth*4).W)    // contains the remainder of the PC. ex: 0, 4, 8, 12, 0, ... for fetchWidth of 4
+    val ROB_index           =   UInt(log2Ceil(ROBEntires).W)
 
     // uOp info
-    val instructionType =   InstructionType()
+    val instructionType     =   InstructionType()
 
-    val portID          =   UInt(log2Ceil(portCount).W)  // Decoder assings port ID
+    val portID              =   UInt(log2Ceil(portCount).W)  // Decoder assings port ID
     
-    val RS_type         =   RS_types()
+    val RS_type             =   RS_types()
 
     val needs_ALU           =  Bool()
     val needs_branch_unit   =  Bool()
     val needs_CSRs          =  Bool()
 
-    val SUBTRACT        =   Bool()
-    val MULTIPLY        =   Bool()
-    val IMMEDIATE       =   Bool()
+    val SUBTRACT            =   Bool()
+    val MULTIPLY            =   Bool()
+    val IMMEDIATE           =   Bool()
 
-    val IS_LOAD       =   Bool()
-    val IS_STORE      =   Bool()
+    val IS_LOAD             =   Bool()
+    val IS_STORE            =   Bool()
     // ADD atomic instructions
 }
 

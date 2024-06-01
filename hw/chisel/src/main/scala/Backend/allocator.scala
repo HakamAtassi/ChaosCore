@@ -50,26 +50,27 @@ class allocator(parameters:Parameters) extends Module{
         val MEMRS_ready                     =   Input(Vec(dispatchWidth, Bool()))
         val INTRS_ready                     =   Input(Vec(dispatchWidth, Bool()))
 
-
         // ALLOCATE //
         // Frontend
         val ROB_packet                      =   Decoupled(Vec(portCount, new ROB_entry(parameters)))
 
-        val INTRS_sources_ready             =      Output(Vec(dispatchWidth, new sources_ready()))
-        val MEMRS_sources_ready             =      Output(Vec(dispatchWidth, new sources_ready()))
-
     })
 
-    io.backend_packet := DontCare
-
-    io.ROB_packet     := DontCare
-
-    io.INTRS_sources_ready := DontCare
-    io.MEMRS_sources_ready := DontCare
 
     io.renamed_decoded_fetch_packet.ready := DontCare
 
 
+    io.backend_packet := DontCare
+
+    for(i <- 0 until dispatchWidth){
+        io.backend_packet(i).decoded_instruction    := io.renamed_decoded_fetch_packet.bits(i)
+        io.backend_packet(i).ready_bits             := DontCare
+    }
+
+
+
+
+    io.ROB_packet     := DontCare
 
 
 }

@@ -89,17 +89,17 @@ class ROB(parameters:Parameters) extends Module{
         val FU_outputs      =   Vec(portCount, Flipped(ValidIO(new FU_output(parameters))))
 
         // COMMIT //
-        val ROB_commit      =   Output(Vec(commitWidth, new ROB_entry(parameters)))
+        val ROB      =   Output(Vec(commitWidth, new ROB_entry(parameters)))
 
         // REDIRECTS // 
-        //val misprediction                   =   Input(new misprediction(parameters))
+        val commit           =   Input(Vec(commitWidth, new commit(parameters)))
     })
 
 
     // ROB is generally a 2 write 1 read memory.
     // 1 write from ROB_packet
     // 1 write from FUs
-    // 1 read to ROB_commit
+    // 1 read to ROB
 
     // ROB_packet port writes metadata, instruction type, PC, etc...
     // FUs simply mark as valid. 
@@ -185,18 +185,18 @@ class ROB(parameters:Parameters) extends Module{
     }
 
     ////////////////
-    // ROB_commit //
+    // ROB //
     ////////////////
 
 
-    // The core can ROB_commit up to commitWidth instructions per cycle.
+    // The core can ROB up to commitWidth instructions per cycle.
     // Commitable instructions are marked valid on the output. 
-    // Instructions ROB_commit from left to right and N at a time. 
+    // Instructions ROB from left to right and N at a time. 
     // When 1 or more instructions are valid and done, that data is sent to the output as a commited instruction.
     // They are also then invalidated from the ROB.
     // front_pointer only increments when an entire row has been commited. 
 
-    for (bank <- 0 until portCount){ // Assign ROB_commit read port
+    for (bank <- 0 until portCount){ // Assign ROB read port
         ROB_busy_banks(bank).io.addrC          := front_index
         ROB_entry_banks(bank).io.addrC         := front_index
 
@@ -223,7 +223,7 @@ class ROB(parameters:Parameters) extends Module{
     }
 
     /////////////////////////////////////
-    // Pointer moving and ROB_commit logic //
+    // Pointer moving and ROB logic //
     /////////////////////////////////////
 
 
@@ -231,7 +231,7 @@ class ROB(parameters:Parameters) extends Module{
     // However, "live commits", or commits that update the element that is already at the front of the ROB, 
     // should cause the ROB pointer to increment the next cycle. This requires extra logic since
     // normally, the updating would take 1 cycle to clear valid bits and another to update the pointer.
-    // To get around this, the pointer is incremented when either all bits at the ROB top are invalid (and a ROB_commit took place last cycle), or 
+    // To get around this, the pointer is incremented when either all bits at the ROB top are invalid (and a ROB took place last cycle), or 
     // when all valid bits are currently being set to busy (active low (but have not yet updated))
 
     val comb_commit = Wire(Bool())
@@ -247,7 +247,7 @@ class ROB(parameters:Parameters) extends Module{
 
     val increment_front_pointer =  !ROB_entry_banks.map(_.io.readDataC.valid).reduce(_ || _) && RegNext(commit_valid.reduce(_ || _)) || comb_commit
 
-    when(increment_front_pointer){  // all ROB_commit entries are invalid. increment pointer
+    when(increment_front_pointer){  // all ROB entries are invalid. increment pointer
         front_pointer := front_pointer + 1.U    // increment actual reg
         front_index := front_pointer + 1.U        // bypass value
     }.otherwise{
@@ -255,8 +255,8 @@ class ROB(parameters:Parameters) extends Module{
     }
 
     for(bank <- 0 until commitWidth){
-        io.ROB_commit(bank) := ROB_entry_banks(bank).io.readDataC
-        io.ROB_commit(bank).valid := ROB_entry_banks(bank).io.readDataC.valid && commit_valid(bank)
+        io.ROB(bank) := ROB_entry_banks(bank).io.readDataC
+        io.ROB(bank).valid := ROB_entry_banks(bank).io.readDataC.valid && commit_valid(bank)
     }
 
 

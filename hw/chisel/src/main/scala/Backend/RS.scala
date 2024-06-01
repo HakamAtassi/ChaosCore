@@ -51,13 +51,13 @@ class RS(parameters:Parameters) extends Module{
         // ALLOCATE //
         val backend_packet          =      Input(Vec(dispatchWidth, new backend_packet(parameters)))
         val INTRS_ready             =      Output(Vec(dispatchWidth, Bool()))
-        val INTRS_sources_ready     =      Input(Vec(dispatchWidth, new sources_ready()))
 
         // UPDATE //
         val FU_outputs       =      Vec(portCount, Flipped(ValidIO(new FU_output(parameters))))
 
+
         // REDIRECTS // 
-        val misprediction    =      Input(new misprediction(parameters))
+        val commit            =   Input(Vec(commitWidth, new commit(parameters)))
 
         // REG READ (then execute) //
         val RF_inputs        =      Vec(ALUportCount, Decoupled(new decoded_instruction(parameters)))
@@ -78,7 +78,7 @@ class RS(parameters:Parameters) extends Module{
         when(io.backend_packet(i).valid){
             val allocateIndexBinary = OHToUInt(allocate_index(i))
             reservation_station(allocateIndexBinary).decoded_instruction <> io.backend_packet(i).decoded_instruction
-            reservation_station(allocateIndexBinary).ready_bits:= io.INTRS_sources_ready(i)
+            reservation_station(allocateIndexBinary).ready_bits:= io.backend_packet(i).ready_bits
             reservation_station(allocateIndexBinary).valid   := 1.B
         }
     }

@@ -40,7 +40,9 @@ class PC_arbit(parameters:Parameters) extends Module{
     import parameters._
 
     val io = IO(new Bundle{
-        val commit      = Flipped(Decoupled(new commit(parameters)))                                  // from BROB
+        val commit                          =   Input(Vec(commitWidth, new commit(parameters)))
+
+
         val prediction  = Flipped(Decoupled(new prediction(parameters)))                         // BTB response
         val revert      = Flipped(Decoupled(new revert(parameters)))                                                    // Pre-decoder revert request
         val RAS_read    = Flipped(new RAS_read(parameters))
@@ -90,7 +92,9 @@ class PC_arbit(parameters:Parameters) extends Module{
     // Assign wires //
     //////////////////
     correct_stage_active := misprediction || reversion /*|| exception */
-    misprediction        := io.commit.valid && io.commit.bits.misprediction
+    misprediction        := io.commit.map(c => c.valid && c.is_misprediction).reduce(_ || _)
+
+    
     reversion            := io.revert.valid
 
     is_branch := io.prediction.bits.br_type === 0.U
@@ -114,8 +118,15 @@ class PC_arbit(parameters:Parameters) extends Module{
     instruction_index_within_packet := (io.PC_next.bits >> 2.U)
     PC_increment    :=  (fetchWidth.U - instruction_index_within_packet) << 2.U
 
-    dontTouch(use_BTB)
-    dontTouch(use_RAS)
+    val expected_PC = Wire(UInt(32.W))
+
+    expected_PC :=  0.U
+    for (i <- commitWidth-1 until 0 by -1){
+        when(io.commit(i).valid && io.commit(i).is_misprediction){
+            expected_PC := io.commit(i).expected_PC
+        }
+    }
+
 
     //////////////////////
     // correction stage //
@@ -127,7 +138,7 @@ class PC_arbit(parameters:Parameters) extends Module{
         //correction_address := io.commit.bits.PC
     //}
     .elsewhen(use_misprediction_PC){
-        correction_address := io.commit.bits.misprediction_PC
+        correction_address := expected_PC
     }
     .otherwise{
         correction_address := 0.U
@@ -135,9 +146,6 @@ class PC_arbit(parameters:Parameters) extends Module{
 
     correction_address_reg := correction_address
 
-    dontTouch(use_BTB)
-    dontTouch(use_RAS)
-    dontTouch(PC_increment)
 
     // output stage
     // FIXME: this priority needs to be swapped
@@ -159,7 +167,6 @@ class PC_arbit(parameters:Parameters) extends Module{
     //FIXME: ready does not do anything at the moment.
 
     io.prediction.ready := 1.B
-    io.commit.ready := 1.B
     io.revert.ready := 1.B
 
 }
