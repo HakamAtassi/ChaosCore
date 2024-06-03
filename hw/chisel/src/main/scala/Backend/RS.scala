@@ -49,8 +49,9 @@ class RS(parameters:Parameters) extends Module{
 
     val io = IO(new Bundle{
         // ALLOCATE //
-        val backend_packet          =      Input(Vec(dispatchWidth, new backend_packet(parameters)))
-        val INTRS_ready             =      Output(Vec(dispatchWidth, Bool()))
+        val backend_packet          =      Vec(dispatchWidth, Flipped(Decoupled(new decoded_instruction(parameters))))
+
+        //val INTRS_ready             =      Output(Vec(dispatchWidth, Bool()))
 
         // UPDATE //
         val FU_outputs       =      Vec(portCount, Flipped(ValidIO(new FU_output(parameters))))
@@ -77,8 +78,7 @@ class RS(parameters:Parameters) extends Module{
     for(i <- 0 until dispatchWidth){
         when(io.backend_packet(i).valid){
             val allocateIndexBinary = OHToUInt(allocate_index(i))
-            reservation_station(allocateIndexBinary).decoded_instruction <> io.backend_packet(i).decoded_instruction
-            reservation_station(allocateIndexBinary).ready_bits:= io.backend_packet(i).ready_bits
+            reservation_station(allocateIndexBinary).decoded_instruction <> io.backend_packet(i).bits
             reservation_station(allocateIndexBinary).valid   := 1.B
         }
     }
@@ -291,6 +291,6 @@ class RS(parameters:Parameters) extends Module{
     // N-1  |   1111
     val themometor_value = Thermometor(in=availalbe_RS_entries, max=RSEntries)
     for (i <- 0 until dispatchWidth){
-        io.INTRS_ready(i) := themometor_value(dispatchWidth-1,0)(i)
+        io.backend_packet(i).ready := themometor_value(dispatchWidth-1,0)(i)
     }
 }

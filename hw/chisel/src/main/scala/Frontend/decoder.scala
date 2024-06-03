@@ -40,16 +40,16 @@ import helperFunctions._
 
 class decoder(parameters:Parameters) extends Module{   // basic decoder and field extraction
     import parameters._
+    import InstructionType._
     val io = IO(new Bundle{
-        val instruction         = Input(new Instruction(parameters))
+        val instruction         = Flipped(Decoupled(new Instruction(parameters)))
 
-        val decoded_instruction = Output(new decoded_instruction(parameters))
+        val decoded_instruction = Decoupled(new decoded_instruction(parameters))
     })
 
-    import InstructionType._
 
 
-    val instruction = io.instruction.instruction
+    val instruction = io.instruction.bits.instruction
 
     // Direct instruction fields
     val opcode      = instruction(6, 0)
@@ -70,61 +70,54 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
     val IMMEDIATE   = (instructionType === InstructionType.OP_IMM)
 
 
-    val needs_divider       =   (instructionType === OP) && 
-                                ( FUNCT3 === 0x4.U  ||
-                                FUNCT3 === 0x5.U  ||
-                                FUNCT3 === 0x6.U  ||
-                                FUNCT3 === 0x7.U) && FUNCT7(0)
-
-    val needs_branch_unit   =   (instructionType === BRANCH) || 
-                                (instructionType === JAL)    ||
-                                (instructionType === JALR)
-
-    val needs_CSRs         =   0.B
-
-
-    val needs_ALU           =       ((instructionType === OP) && (FUNCT7(2) || (FUNCT7 === 0x00.U))) ||
-                                    (instructionType === OP_IMM)
-
-
-    val IS_LOAD             =       (instructionType === LOAD)
-    val IS_STORE            =       (instructionType === STORE)
-
-    val needs_memory        =       (instructionType === STORE) ||(instructionType === LOAD)
+    val needs_divider        =   (instructionType === OP) && ( FUNCT3 === 0x4.U || FUNCT3 === 0x5.U || FUNCT3 === 0x6.U || FUNCT3 === 0x7.U) && FUNCT7(0)
+    val needs_branch_unit    =   (instructionType === BRANCH) || (instructionType === JAL) || (instructionType === JALR)
+    val needs_CSRs           =   0.B
+    val needs_ALU            =   ((instructionType === OP) && (FUNCT7(2) || (FUNCT7 === 0x00.U))) || (instructionType === OP_IMM)
+    val IS_LOAD              =   (instructionType === LOAD)
+    val IS_STORE             =   (instructionType === STORE)
+    val needs_memory         =   (instructionType === STORE) || (instructionType === LOAD)
 
     // Assign output
 
-    io.decoded_instruction.RD_valid := (instructionType === OP || 
-                                    instructionType === OP_IMM || 
-                                    instructionType === LOAD || 
-                                    instructionType === JAL || 
-                                    instructionType === JALR || 
-                                    instructionType === LUI || 
-                                    instructionType === AUIPC || 
-                                    instructionType === SYSTEM)
+    io.decoded_instruction.valid    := io.instruction.valid
+    io.instruction.ready            := io.decoded_instruction.ready
 
-    //io.decoded_instruction.RDold                := 0.U
-    //io.decoded_instruction.RDold_valid          := 0.U
-    io.decoded_instruction.RD                   := RD
-    io.decoded_instruction.RS1                  := RS1
-    io.decoded_instruction.RS1_valid            := 1.B
-    io.decoded_instruction.RS2                  := RS2
-    io.decoded_instruction.RS2_valid            := 1.B
-    io.decoded_instruction.IMM                  := IMM
-    io.decoded_instruction.FUNCT3               := FUNCT3
-    io.decoded_instruction.MULTIPLY             := MULTIPLY // Multiply or Divide
-    io.decoded_instruction.SUBTRACT             := SUBTRACT // subtract or arithmetic shift...
-    io.decoded_instruction.IMMEDIATE            := IMMEDIATE // subtract or arithmetic shift...
+    val initialReady = Wire(new sources_ready)
+    initialReady.RS1_ready := false.B
+    initialReady.RS2_ready := false.B
 
-    io.decoded_instruction.IS_LOAD              := IS_LOAD   // subtract or arithmetic shift...
-    io.decoded_instruction.IS_STORE             := IS_STORE  // subtract or arithmetic shift...
+    io.decoded_instruction.bits.ready_bits      :=   initialReady
 
-    io.decoded_instruction.packet_index         := io.instruction.packet_index 
-    io.decoded_instruction.instructionType      := instructionType
-    io.decoded_instruction.ROB_index            := io.instruction.ROB_index
-    io.decoded_instruction.needs_ALU            := needs_ALU
-    io.decoded_instruction.needs_branch_unit    := needs_branch_unit
-    io.decoded_instruction.needs_CSRs           := needs_CSRs
+    io.decoded_instruction.bits.RD_valid := (instructionType === OP         || 
+                                            instructionType === OP_IMM      || 
+                                            instructionType === LOAD        || 
+                                            instructionType === JAL         || 
+                                            instructionType === JALR        || 
+                                            instructionType === LUI         || 
+                                            instructionType === AUIPC       || 
+                                            instructionType === SYSTEM)
+
+    io.decoded_instruction.bits.RD                   := RD
+    io.decoded_instruction.bits.RS1                  := RS1
+    io.decoded_instruction.bits.RS1_valid            := 1.B
+    io.decoded_instruction.bits.RS2                  := RS2
+    io.decoded_instruction.bits.RS2_valid            := 1.B
+    io.decoded_instruction.bits.IMM                  := IMM
+    io.decoded_instruction.bits.FUNCT3               := FUNCT3
+    io.decoded_instruction.bits.MULTIPLY             := MULTIPLY    // Multiply or Divide
+    io.decoded_instruction.bits.SUBTRACT             := SUBTRACT    // subtract or arithmetic shift...
+    io.decoded_instruction.bits.IMMEDIATE            := IMMEDIATE   // subtract or arithmetic shift...
+
+    io.decoded_instruction.bits.IS_LOAD              := IS_LOAD     // subtract or arithmetic shift...
+    io.decoded_instruction.bits.IS_STORE             := IS_STORE    // subtract or arithmetic shift...
+
+    io.decoded_instruction.bits.packet_index         := io.instruction.bits.packet_index 
+    io.decoded_instruction.bits.instructionType      := instructionType
+    io.decoded_instruction.bits.ROB_index            := io.instruction.bits.ROB_index
+    io.decoded_instruction.bits.needs_ALU            := needs_ALU
+    io.decoded_instruction.bits.needs_branch_unit    := needs_branch_unit
+    io.decoded_instruction.bits.needs_CSRs           := needs_CSRs
 
 
     // TODO: ECALL / EBREAK
@@ -136,65 +129,64 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
     val next_ALU_port = RegInit(VecInit(0.U, 1.U, 2.U))
 
     when(needs_ALU){
-        io.decoded_instruction.portID := next_ALU_port(0)   // schedule to "random"  
+        io.decoded_instruction.bits.portID := next_ALU_port(0)   // schedule to "random"  
         for (i <- 3 - 1 until 0 by -1) {
             next_ALU_port(i) := next_ALU_port(i - 1)
         }
     }.elsewhen(needs_branch_unit){
-        io.decoded_instruction.portID := 0.U
+        io.decoded_instruction.bits.portID := 0.U
     }.elsewhen(needs_CSRs){
-        io.decoded_instruction.portID := 0.U
+        io.decoded_instruction.bits.portID := 0.U
     }.elsewhen(needs_divider){
-        io.decoded_instruction.portID := 1.U
+        io.decoded_instruction.bits.portID := 1.U
     }.elsewhen(needs_memory){
-        io.decoded_instruction.portID := 3.U
+        io.decoded_instruction.bits.portID := 3.U
     }.otherwise{
-        io.decoded_instruction.portID := 0.U
+        io.decoded_instruction.bits.portID := 0.U
     }
 
 
     // Assign a reservation station
 
-    val is_INT  =   (instructionType === OP) || (instructionType === OP_IMM)  || 
-                    (instructionType === BRANCH) || (instructionType === JAL) ||
-                    (instructionType === JALR)
-
+    val is_INT   =   (instructionType === OP) || (instructionType === OP_IMM) || (instructionType === BRANCH) || (instructionType === JAL) || (instructionType === JALR)
     val is_MEM   =   (instructionType === LOAD) || (instructionType === STORE)
 
     when(is_INT){
-        io.decoded_instruction.RS_type  :=   RS_types.INT
+        io.decoded_instruction.bits.RS_type  :=   RS_types.INT
     }.elsewhen(is_MEM){
-        io.decoded_instruction.RS_type  :=   RS_types.MEM
+        io.decoded_instruction.bits.RS_type  :=   RS_types.MEM
     }.otherwise{    // is_FP
-        io.decoded_instruction.RS_type  :=   RS_types.FP
+        io.decoded_instruction.bits.RS_type  :=   RS_types.FP
     }
 
 
 }
 
-
-// FIXME: valid bits of packets from frontend is lost somewhere and is not propogated
 class fetch_packet_decoder(parameters:Parameters) extends Module{
     import parameters._
     val io = IO(new Bundle{
         val fetch_packet         =  Flipped(Decoupled(new fetch_packet(parameters)))          // Fetch packet result (To Decoders)
-        val decoded_fetch_packet =  Decoupled(Vec(fetchWidth, new decoded_instruction(parameters)))
+        val decoded_fetch_packet =  Vec(fetchWidth, Decoupled(new decoded_instruction(parameters)))
     })
 
     val decoders: Seq[decoder] = Seq.tabulate(fetchWidth) { w =>
         Module(new decoder(parameters))
     }
 
-    for(i <- 0 until fetchWidth){   // pass inputs to decoder
-        decoders(i).io.instruction := io.fetch_packet.bits.instructions(i)
+    for(i <- 0 until fetchWidth){
+        decoders(i).io.instruction.bits     := io.fetch_packet.bits.instructions(i)
+        decoders(i).io.instruction.valid    := io.fetch_packet.valid && io.fetch_packet.bits.valid_bits(i)
     }
 
-    //// Register outputs //
+    // Register outputs //
     for(i <- 0 until fetchWidth){   // pass inputs to decoder
-        io.decoded_fetch_packet.bits(i) := RegNext(decoders(i).io.decoded_instruction)
+        io.decoded_fetch_packet(i).bits             := RegNext(decoders(i).io.decoded_instruction.bits)
+        decoders(i).io.decoded_instruction.ready    := io.decoded_fetch_packet(i).ready
+        io.fetch_packet.ready                       := io.decoded_fetch_packet(i).ready
     }
 
-    io.fetch_packet.ready := 1.B
     
-    io.decoded_fetch_packet.valid := RegNext(io.fetch_packet.valid)
+    for(i <- 0 until fetchWidth){
+        io.decoded_fetch_packet(i).valid := RegNext(io.fetch_packet.valid)
+    }
 }

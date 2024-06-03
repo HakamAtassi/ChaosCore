@@ -8907,6 +8907,7 @@ module frontend(
                  io_predictions_3_bits_TOS,
   input          io_renamed_decoded_fetch_packet_ready,
   output         io_renamed_decoded_fetch_packet_valid,
+                 io_renamed_decoded_fetch_packet_bits_0_valid,
   output [5:0]   io_renamed_decoded_fetch_packet_bits_0_RD,
   output         io_renamed_decoded_fetch_packet_bits_0_RD_valid,
   output [5:0]   io_renamed_decoded_fetch_packet_bits_0_RS1,
@@ -8928,6 +8929,7 @@ module frontend(
                  io_renamed_decoded_fetch_packet_bits_0_IMMEDIATE,
                  io_renamed_decoded_fetch_packet_bits_0_IS_LOAD,
                  io_renamed_decoded_fetch_packet_bits_0_IS_STORE,
+                 io_renamed_decoded_fetch_packet_bits_1_valid,
   output [5:0]   io_renamed_decoded_fetch_packet_bits_1_RD,
   output         io_renamed_decoded_fetch_packet_bits_1_RD_valid,
   output [5:0]   io_renamed_decoded_fetch_packet_bits_1_RS1,
@@ -8949,6 +8951,7 @@ module frontend(
                  io_renamed_decoded_fetch_packet_bits_1_IMMEDIATE,
                  io_renamed_decoded_fetch_packet_bits_1_IS_LOAD,
                  io_renamed_decoded_fetch_packet_bits_1_IS_STORE,
+                 io_renamed_decoded_fetch_packet_bits_2_valid,
   output [5:0]   io_renamed_decoded_fetch_packet_bits_2_RD,
   output         io_renamed_decoded_fetch_packet_bits_2_RD_valid,
   output [5:0]   io_renamed_decoded_fetch_packet_bits_2_RS1,
@@ -8970,6 +8973,7 @@ module frontend(
                  io_renamed_decoded_fetch_packet_bits_2_IMMEDIATE,
                  io_renamed_decoded_fetch_packet_bits_2_IS_LOAD,
                  io_renamed_decoded_fetch_packet_bits_2_IS_STORE,
+                 io_renamed_decoded_fetch_packet_bits_3_valid,
   output [5:0]   io_renamed_decoded_fetch_packet_bits_3_RD,
   output         io_renamed_decoded_fetch_packet_bits_3_RD_valid,
   output [5:0]   io_renamed_decoded_fetch_packet_bits_3_RS1,
@@ -9711,15 +9715,19 @@ module frontend(
   assign io_predictions_3_bits_valid = 1'h0;
   assign io_predictions_3_bits_is_misprediction = 1'h0;
   assign io_predictions_3_bits_predicted_expected_PC = 32'h0;
+  assign io_renamed_decoded_fetch_packet_bits_0_valid = 1'h1;
   assign io_renamed_decoded_fetch_packet_bits_0_RS1_valid = 1'h1;
   assign io_renamed_decoded_fetch_packet_bits_0_RS2_valid = 1'h1;
   assign io_renamed_decoded_fetch_packet_bits_0_needs_CSRs = 1'h0;
+  assign io_renamed_decoded_fetch_packet_bits_1_valid = 1'h1;
   assign io_renamed_decoded_fetch_packet_bits_1_RS1_valid = 1'h1;
   assign io_renamed_decoded_fetch_packet_bits_1_RS2_valid = 1'h1;
   assign io_renamed_decoded_fetch_packet_bits_1_needs_CSRs = 1'h0;
+  assign io_renamed_decoded_fetch_packet_bits_2_valid = 1'h1;
   assign io_renamed_decoded_fetch_packet_bits_2_RS1_valid = 1'h1;
   assign io_renamed_decoded_fetch_packet_bits_2_RS2_valid = 1'h1;
   assign io_renamed_decoded_fetch_packet_bits_2_needs_CSRs = 1'h0;
+  assign io_renamed_decoded_fetch_packet_bits_3_valid = 1'h1;
   assign io_renamed_decoded_fetch_packet_bits_3_RS1_valid = 1'h1;
   assign io_renamed_decoded_fetch_packet_bits_3_RS2_valid = 1'h1;
   assign io_renamed_decoded_fetch_packet_bits_3_needs_CSRs = 1'h0;

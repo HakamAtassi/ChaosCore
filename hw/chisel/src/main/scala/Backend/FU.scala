@@ -49,18 +49,16 @@ class ALU(parameters:Parameters) extends Module{
     // misaligned fetch exception ??
 
     // Operand data
-    val RS1_data                =   io.FU_input.bits.RS1_data
-    val RS2_data                =   io.FU_input.bits.RS2_data
-    val imm                     =   io.FU_input.bits.decoded_instruction.IMM
-    val instruction_PC          =   io.FU_input.bits.PC + io.FU_input.bits.decoded_instruction.packet_index
+    val RS1_data            =   io.FU_input.bits.RS1_data
+    val RS2_data            =   io.FU_input.bits.RS2_data
+    val imm                 =   io.FU_input.bits.decoded_instruction.IMM
+    val instruction_PC      =   io.FU_input.bits.PC + io.FU_input.bits.decoded_instruction.packet_index
 
     // Dest reg
     val RD                  =   io.FU_input.bits.decoded_instruction.RD
 
     // Op select
-
     val instructionType     =   io.FU_input.bits.decoded_instruction.instructionType
-
     val FUNCT3              =   io.FU_input.bits.decoded_instruction.FUNCT3
     val IMMEDIATE           =   io.FU_input.bits.decoded_instruction.IMMEDIATE
     val SUBTRACT            =   io.FU_input.bits.decoded_instruction.SUBTRACT
@@ -217,7 +215,6 @@ class ALU(parameters:Parameters) extends Module{
 
 class branch_unit(parameters:Parameters) extends Module{
     import parameters._
-    import InstructionType._
 
     val io = IO(new Bundle{
         // Input
@@ -240,21 +237,19 @@ class branch_unit(parameters:Parameters) extends Module{
     // Op select
 
     val instructionType     =   io.FU_input.bits.decoded_instruction.instructionType
-
     val FUNCT3              =   io.FU_input.bits.decoded_instruction.FUNCT3
     val IMMEDIATE           =   io.FU_input.bits.decoded_instruction.IMMEDIATE
     val SUBTRACT            =   io.FU_input.bits.decoded_instruction.SUBTRACT
     val MULTIPLY            =   io.FU_input.bits.decoded_instruction.MULTIPLY
 
     //
-    val IS_BRANCH   =   instructionType === BRANCH
-    val BEQ         =   instructionType === BRANCH && FUNCT3 === "b000".U
-    val BNE         =   instructionType === BRANCH && FUNCT3 === "b001".U
-    val BLT         =   instructionType === BRANCH && FUNCT3 === "b100".U
-    val BGE         =   instructionType === BRANCH && FUNCT3 === "b101".U
-    val BLTU        =   instructionType === BRANCH && FUNCT3 === "b110".U
-    val BGEU        =   instructionType === BRANCH && FUNCT3 === "b111".U
-
+    val BRANCH      =   instructionType === InstructionType.BRANCH
+    val BEQ         =   instructionType === InstructionType.BRANCH && FUNCT3 === "b000".U
+    val BNE         =   instructionType === InstructionType.BRANCH && FUNCT3 === "b001".U
+    val BLT         =   instructionType === InstructionType.BRANCH && FUNCT3 === "b100".U
+    val BGE         =   instructionType === InstructionType.BRANCH && FUNCT3 === "b101".U
+    val BLTU        =   instructionType === InstructionType.BRANCH && FUNCT3 === "b110".U
+    val BGEU        =   instructionType === InstructionType.BRANCH && FUNCT3 === "b111".U
     val JAL         =   instructionType === InstructionType.JAL
     val JALR        =   instructionType === InstructionType.JALR 
 
@@ -273,15 +268,11 @@ class branch_unit(parameters:Parameters) extends Module{
     LTU        :=  (RS1_data.asUInt   < RS2_data.asUInt) && BLTU
     GEU        :=  (RS1_data.asUInt  >= RS2_data.asUInt) && BGEU
 
-
-    val branch_taken  = Wire(Bool())
+    val branch_taken   = Wire(Bool())
     val target_address = Wire(UInt(32.W))
 
-    io.FU_input.ready := DontCare
-    io.FU_output := DontCare    // FIXME: ???
-
-    branch_taken := 0.B
-    target_address := PC + 4.U
+    branch_taken    := 0.B
+    target_address  := PC + 4.U
 
     when(EQ)        {branch_taken := 1.B; target_address := PC + IMM}
     .elsewhen(NE)   {branch_taken := 1.B; target_address := PC + IMM}
@@ -298,7 +289,8 @@ class branch_unit(parameters:Parameters) extends Module{
     io.FU_output.bits.fetch_packet_index    :=  RegNext(io.FU_input.bits.decoded_instruction.packet_index)
 
     // ALU pipelined; always ready
-    io.FU_input.ready       :=   1.B
+    io.FU_input.ready := 1.B
+    io.FU_output.bits.branch_valid :=   (BRANCH || JAL || JALR )
 
     // Not a branch unit (all FUs share the same output channel)
     io.FU_output.bits.branch_taken      :=      RegNext(branch_taken)
@@ -308,7 +300,6 @@ class branch_unit(parameters:Parameters) extends Module{
     io.FU_output.bits.RD                :=      RegNext(io.FU_input.bits.decoded_instruction.RD)
     io.FU_output.bits.RD_valid          :=      RegNext(io.FU_input.bits.decoded_instruction.RD_valid)
     io.FU_output.bits.RD_data           :=      RegNext(PC + 4.U)
-
     io.FU_output.bits.ROB_index         :=      RegNext(io.FU_input.bits.decoded_instruction.ROB_index)
     io.FU_output.valid                  :=      RegNext(io.FU_input.valid)
 
@@ -326,7 +317,7 @@ class MEMFU(parameters:Parameters) extends Module{
         val DRAM_resp     =   Flipped(Decoupled(new DRAM_resp(parameters)))
 
         // Output
-        val FU_output     =   ValidIO(new FU_output(parameters))      // To RF
+        val FU_output     =   ValidIO(new FU_output(parameters))                // To RF
         val DRAM_request  =   Decoupled(new DRAM_request(parameters))           // To DRAM
     })
 
@@ -417,8 +408,8 @@ class MEMFU(parameters:Parameters) extends Module{
     ////////////////////////
 
     // Not a branch unit (all FUs share the same output channel)
-    io.FU_output.bits.branch_taken              := DontCare
-    io.FU_output.bits.target_address            := DontCare
+    io.FU_output.bits.branch_taken              := 0.B
+    io.FU_output.bits.target_address            := 0.B
     io.FU_output.bits.branch_valid              := 0.B
 
     io.FU_output.bits.instruction_PC        :=  RegNext(io.FU_input.bits.PC + (io.FU_input.bits.decoded_instruction.packet_index)<<2.U)

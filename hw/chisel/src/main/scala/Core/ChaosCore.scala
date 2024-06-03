@@ -69,7 +69,6 @@ class ChaosCore(parameters:Parameters) extends Module{
     val frontend    = Module(new frontend(parameters))
     val backend     = Module(new backend(parameters))
 
-    val allocator   = Module(new allocator(parameters))
 
     val FTQ         = Module(new FTQ(parameters))
     val ROB         = Module(new ROB(parameters))
@@ -84,16 +83,6 @@ class ChaosCore(parameters:Parameters) extends Module{
     backend.io.DRAM_resp        <>  io.backend_DRAM_resp
     backend.io.DRAM_request     <>  io.backend_DRAM_request
 
-    ///////////////////////////
-    // BACKEND <> ALLOCATOR //
-    ///////////////////////////
-    
-    backend.io.backend_packet   <>  allocator.io.backend_packet
-    backend.io.MEMRS_ready      <>  allocator.io.MEMRS_ready
-    backend.io.INTRS_ready      <>  allocator.io.INTRS_ready
-
-    //backend.io.MEMRS_sources_ready      <>  allocator.io.MEMRS_sources_ready
-    //backend.io.INTRS_sources_ready      <>  allocator.io.INTRS_sources_ready
 
     ////////////////////
     // BACKEND <> BRU //
@@ -114,12 +103,6 @@ class ChaosCore(parameters:Parameters) extends Module{
     frontend.io.DRAM_resp       <>  io.frontend_DRAM_resp
     frontend.io.DRAM_request    <>  io.frontend_DRAM_request
 
-    ///////////////////////////
-    // FRONTEND <> ALLOCATOR //
-    ///////////////////////////
-    
-    frontend.io.renamed_decoded_fetch_packet <> allocator.io.renamed_decoded_fetch_packet //FIXME: this name sucks
-
     /////////////////////
     // FRONTEND <> BRU //
     /////////////////////
@@ -131,12 +114,6 @@ class ChaosCore(parameters:Parameters) extends Module{
     /////////////////////////
 
     frontend.io.FU_outputs <> backend.io.FU_outputs
-
-    //////////////////////
-    // ROB <> ALLOCATOR //
-    //////////////////////
-    
-    ROB.io.ROB_packet <> allocator.io.ROB_packet
 
     ////////////////////
     // ROB <> BACKEND //
@@ -175,6 +152,15 @@ class ChaosCore(parameters:Parameters) extends Module{
     ////////////////
 
     BRU.io.FTQ <> FTQ.io.FTQ
+
+
+
+    frontend.io.renamed_decoded_fetch_packet <> backend.io.backend_packet
+    ROB.io.ROB_packet <> frontend.io.ROB_packet
+
+    frontend.io.MEMRS_ready <> backend.io.MEMRS_ready
+    frontend.io.INTRS_ready <> backend.io.INTRS_ready
+
 
 
 }

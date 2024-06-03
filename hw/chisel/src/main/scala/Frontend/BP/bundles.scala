@@ -212,10 +212,12 @@ class decoded_instruction(parameters:Parameters) extends Bundle{
     val portCount       =   4
     val physicalRegBits =   log2Ceil(physicalRegCount)    // FIXME!!
 
-    //
+    //val valid              =    Bool()
 
     //val RDold              =   UInt(physicalRegBits.W) // Actual dest
     //val RDold_valid        =   Bool()
+
+    val ready_bits          =   new sources_ready()
 
     val RD                  =   UInt(physicalRegBits.W) // Actual dest
     val RD_valid            =   Bool()
@@ -383,18 +385,6 @@ class RS_entry(parameters:Parameters) extends Bundle{
 
     val valid        =  Bool()  // Is whole RS entry valid
 }
-
-//FIXME: backend packet should really
-// internally account for its width...
-class backend_packet(parameters:Parameters) extends Bundle{
-    import parameters._
-
-    // FIXME: invalid instructions ???
-    val valid                 =   Bool()
-    val decoded_instruction   =   new decoded_instruction(parameters)
-    val ready_bits            =   new sources_ready()
-}
-
 
 ////////////////////////////
 // EXECUTION ENGINE PORTS //

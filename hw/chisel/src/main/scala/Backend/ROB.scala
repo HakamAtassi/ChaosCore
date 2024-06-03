@@ -83,16 +83,16 @@ class ROB(parameters:Parameters) extends Module{
 
     val io = IO(new Bundle{
         // ALLOCATE //
-        val ROB_packet      =   Flipped(Decoupled(Vec(portCount, new ROB_entry(parameters))))
+        val ROB_packet      =   Vec(dispatchWidth, Flipped(Decoupled(new ROB_entry(parameters))))
 
         // UPDATE //
         val FU_outputs      =   Vec(portCount, Flipped(ValidIO(new FU_output(parameters))))
 
         // COMMIT //
-        val ROB      =   Output(Vec(commitWidth, new ROB_entry(parameters)))
+        val ROB             =   Output(Vec(commitWidth, new ROB_entry(parameters)))
 
         // REDIRECTS // 
-        val commit           =   Input(Vec(commitWidth, new commit(parameters)))
+        val commit          =   Input(Vec(commitWidth, new commit(parameters)))
     })
 
 
@@ -142,17 +142,18 @@ class ROB(parameters:Parameters) extends Module{
     // WRITE FROM ROB_packet //
     /////////////////////////
 
-    for(bank <- 0 until portCount){ // write new ROB_packet data
+    for(bank <- 0 until dispatchWidth){ // write new ROB_packet data
         ROB_entry_banks(bank).io.addrA         := back_index
-        ROB_entry_banks(bank).io.writeDataA    := io.ROB_packet.bits(bank)
-        ROB_entry_banks(bank).io.writeEnableA  := io.ROB_packet.bits(bank).valid
+        ROB_entry_banks(bank).io.writeDataA    := io.ROB_packet(bank).bits
+        ROB_entry_banks(bank).io.writeEnableA  := io.ROB_packet(bank).bits.valid
 
         ROB_busy_banks(bank).io.addrA         := back_index
         ROB_busy_banks(bank).io.writeDataA    := 0.B
-        ROB_busy_banks(bank).io.writeEnableA  := io.ROB_packet.valid
+        ROB_busy_banks(bank).io.writeEnableA  := io.ROB_packet(bank).valid
     }
     
-    back_pointer := back_pointer + io.ROB_packet.valid
+    // FIXME: back pointer doesnt move
+    //back_pointer := back_pointer + io.ROB_packet.map.valid
 
     ////////////////////
     // WRITE FROM FUs //
@@ -265,8 +266,10 @@ class ROB(parameters:Parameters) extends Module{
     /////////////////
 
 
-    val full = (front_index === back_index) && (front_pointer =/= back_pointer)
-    io.ROB_packet.ready := !full
+    //val full = (front_index === back_index) && (front_pointer =/= back_pointer)
+    for(i <- 0 until dispatchWidth){
+        io.ROB_packet(i).ready := DontCare
+    }
 
 
 }
