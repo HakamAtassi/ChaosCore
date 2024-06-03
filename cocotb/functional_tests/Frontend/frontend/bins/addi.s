@@ -1,0 +1,42 @@
+.section .text
+.global _start
+
+_start:
+    addi x0, x0, 0  ; NOP
+    addi x0, x0, 0  ; NOP
+    addi x0, x0, 0  ; NOP
+    addi x0, x0, 0  ; NOP
+    addi x0, x0, 0  ; NOP
+    addi x0, x0, 0  ; NOP
+    addi x0, x0, 0  ; NOP
+    addi x0, x0, 0  ; NOP
+    addi x0, x0, 0  ; NOP
+    addi x0, x0, 0  ; NOP
+    addi x0, x0, 0  ; NOP
+    addi x0, x0, 0  ; NOP
+    addi x0, x0, 0  ; NOP
+    addi x0, x0, 0  ; NOP
+    addi x0, x0, 0  ; NOP
+    addi x0, x0, 0  ; NOP
+    addi x0, x0, 0  ; NOP
+    addi x0, x0, 0  ; NOP
+    addi x0, x0, 0  ; NOP
+    addi x0, x0, 0  ; NOP
+    addi x0, x0, 0  ; NOP
+    addi x0, x0, 0  ; NOP
+    addi x0, x0, 0  ; NOP
+    addi x0, x0, 0  ; NOP
+    addi x0, x0, 0  ; NOP
+    addi x0, x0, 0  ; NOP
+    addi x0, x0, 0  ; NOP
+    addi x0, x0, 0  ; NOP
+    addi x0, x0, 0  ; NOP
+    addi x0, x0, 0  ; NOP
+    addi x0, x0, 0  ; NOP
+    addi x0, x0, 0  ; NOP
+    addi x0, x0, 0  ; NOP
+    addi x0, x0, 0  ; NOP
+    addi x0, x0, 0  ; NOP
+    addi x0, x0, 0  ; NOP
+    addi x0, x0, 0  ; NOP
+    addi x0, x0, 0  ; NOP

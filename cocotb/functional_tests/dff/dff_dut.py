@@ -18,7 +18,6 @@ class dff_dut:
         self.dut.reset.value = 1
         await RisingEdge(self.dut.clock)
         self.dut.reset.value = 0
-        await RisingEdge(self.dut.clock)
 
     # complete class body...
 

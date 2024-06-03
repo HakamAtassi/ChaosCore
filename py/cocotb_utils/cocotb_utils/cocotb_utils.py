@@ -19,7 +19,6 @@ async def reset(dut):
     dut.reset.value = 1
     await RisingEdge(dut.clock)
     dut.reset.value = 0
-    await RisingEdge(dut.clock)
 
 
 def generate_random_commit_request(addr_set):

@@ -125,8 +125,6 @@ class frontend(parameters:Parameters) extends Module{
         val predictions                     =   Vec(fetchWidth, Decoupled(new FTQ_entry(parameters)))
 
         // INSTRUCTION OUT //
-
-        // decoupled???
         val renamed_decoded_fetch_packet    =   Vec(dispatchWidth, Decoupled(new decoded_instruction(parameters)))
 
         // ALLOCATE //
@@ -216,12 +214,49 @@ class frontend(parameters:Parameters) extends Module{
     renamer.io.decoded_fetch_packet <> instruction_queue.io.out
 
 
+    // In a single cycle, both a "create checkpoint" and "restore checkpoint" can be requested
+    // The reason this is possible is because create checkpoint is requested by the frontend (predecoder)
+    // And the restore checkpoint is requested by the ROB on a misprediction. 
+    // As such, if a restore checkpoint is being requested, it takes priority over create checkpoint because
+    // Create checkpoint is not invalid (wrong, as that instruction path is down a mispredicted path)
+
+    // Free checkpoint and restore checkpoint are both requested by the ROB. They can be done in parallell no 
+    // problem. ie, one instruction in the FTQ is correct, the following one is wrong. Free the checkpoint for the first
+    // while restoring the RAT and other structures to the mispredicted state. This is probably a pretty likely case
+    // So make sure its verified correctly. 
+    
+
     renamer.io.FU_outputs           <>     io.FU_outputs
 
-    renamer.io.create_checkpoint         :=     1.B //DontCare //io.create_checkpoint
-    renamer.io.restore_checkpoint        :=     1.B //DontCare //io.restore_checkpoint
-    renamer.io.restore_checkpoint_value  :=     1.B //DontCare //io.restore_checkpoint_value
-    renamer.io.free_checkpoint           :=     1.B //DontCare //io.free_checkpoint
+    // FIXME: This needs to be either fine grain or course grain
+    // Ex, either be able to free several checkpoints at once
+    // Or assign checkpoints to entire fetch packets so that it doesnt matter how many 
+    // frees occur each cycle. Fine grain is easier but less area efficient.
+    // In other words, this is almost certainly bugged
+
+    // Commit logic
+    // Free + Restore
+
+    renamer.io.restore_checkpoint        := 0.B
+    renamer.io.restore_checkpoint_value  := 0.U
+    renamer.io.free_checkpoint           := 0.B
+
+    for(i <- 0 until commitWidth){
+        when(io.commit(i).valid && io.commit(i).is_misprediction){
+            renamer.io.restore_checkpoint        :=     1.B 
+            renamer.io.restore_checkpoint_value  :=     io.commit(i).RAT_IDX
+            renamer.io.free_checkpoint           :=     1.B 
+        }
+    }
+
+    // Create logic
+    renamer.io.create_checkpoint     :=     0.B
+    for(i <- 0 until fetchWidth){
+        io.predictions(i).bits.RAT_IDX           :=      renamer.io.active_checkpoint_value
+        when(io.predictions(i).valid){
+            renamer.io.create_checkpoint         :=     1.B 
+        }
+    }
 
     //io.checkpoints_full                  :=     renamer.io.checkpoints_full
     //io.active_checkpoint_value           :=     renamer.io.active_checkpoint_value

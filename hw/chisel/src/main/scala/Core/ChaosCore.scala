@@ -45,7 +45,7 @@ class ChaosCore(parameters:Parameters) extends Module{
         ////////////////////////////
 
         // From DRAM
-        val frontend_DRAM_resp               =   Flipped(Decoupled(Input(new DRAM_resp(parameters))))
+        val frontend_DRAM_resp               =   Flipped(Decoupled(new DRAM_resp(parameters)))
         
         // To DRAM
         val frontend_DRAM_request            =   Decoupled(new DRAM_request(parameters))
@@ -55,7 +55,7 @@ class ChaosCore(parameters:Parameters) extends Module{
         ///////////////////////////
 
         // From DRAM
-        val backend_DRAM_resp               =   Flipped(Decoupled(Input(new DRAM_resp(parameters))))
+        val backend_DRAM_resp               =   Flipped(Decoupled(new DRAM_resp(parameters)))
 
         // To DRAM
         val backend_DRAM_request            =   Decoupled(new DRAM_request(parameters))

@@ -18,3 +18,4 @@ async def reset(dut):
     await dut.reset()   # reset module
 
     await RisingEdge(dut.clock())
+

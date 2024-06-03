@@ -37,10 +37,12 @@ class Q[T <: Data](dataType: T, depth: Int = 16) extends Module{
     val data_in    = Input(dataType)         // input data (bundle)
     val wr_en      = Input(Bool())           // write element
     val rd_en      = Input(Bool())           // read element
-    val clear      = Input(Bool())           // Clear entire queue
+
     val data_out   = Output(dataType)        // output data (bundle)
     val full       = Output(Bool())          // queue full
     val empty      = Output(Bool())          // queue empty
+
+    val clear      = Input(Bool())           // Clear entire queue
   })
 
   val queue = Module(new Queue(dataType, depth))
@@ -140,9 +142,10 @@ class instruction_fetch(parameters:Parameters) extends Module{
     ////////////
     // Queues //
     ////////////
+    // FIXME: these should be parameters
     val instruction_Q   =   Module(new Q(new fetch_packet(parameters), depth = 16))              // Instantiate queue with fetch_packet data type
-    val PC_Q            =   Module(new Q(UInt(32.W)))                                                       // Queue of predicted PCs
-    val BTB_Q           =   Module(new Q(new prediction(parameters)))         // Queue of BTB responses
+    val PC_Q            =   Module(new Q(UInt(32.W), depth = 16))                                                       // Queue of predicted PCs
+    val BTB_Q           =   Module(new Q(new prediction(parameters), depth = 16))         // Queue of BTB responses
 
     ///////////
     // Wires //

@@ -552,5 +552,114 @@ async def full(dut):
     await RisingEdge(dut.clock())
     await RisingEdge(dut.clock())
 
-    assert False
+    inputs = generate_null_input()
 
+
+    inputs["RS1"][0] = 0x1
+    inputs["RS2"][0] = 0x2
+    inputs["valid"][0] = 1
+
+    for _ in range(4):
+        dut.write_fifo(inputs)
+        await RisingEdge(dut.clock())
+
+    dut.write_fifo(generate_null_input())
+    await ReadOnly()
+    assert dut.get_ready()["ready"] == [1,1,1,1]
+
+    ##
+    await RisingEdge(dut.clock())
+
+    dut.write_fifo(inputs)
+    await RisingEdge(dut.clock())
+
+    dut.write_fifo(generate_null_input())
+    await ReadOnly()
+
+    assert dut.get_ready()["ready"] == [1,1,1,0]
+
+    ##
+
+    await RisingEdge(dut.clock())
+    dut.write_fifo(inputs)
+    await RisingEdge(dut.clock())
+
+    dut.write_fifo(generate_null_input())
+    await ReadOnly()
+
+    assert dut.get_ready()["ready"] == [1,1,0,0]
+
+    ##
+    await RisingEdge(dut.clock())
+
+    dut.write_fifo(inputs)
+    await RisingEdge(dut.clock())
+
+    dut.write_fifo(generate_null_input())
+    await ReadOnly()
+
+    assert dut.get_ready()["ready"] == [1,0,0,0]
+
+    ##
+
+    await RisingEdge(dut.clock())
+
+    dut.write_fifo(inputs)
+    await RisingEdge(dut.clock())
+
+    dut.write_fifo(generate_null_input())
+    await ReadOnly()
+
+    assert dut.get_ready()["ready"] == [0,0,0,0]
+
+    ##
+
+    await RisingEdge(dut.clock())
+
+    read = generate_null_read()
+    read["ready"][0] = 1
+
+    dut.read_fifo(read)
+
+    await RisingEdge(dut.clock())
+
+    dut.read_fifo(generate_null_read())
+
+    await ReadOnly()
+
+    assert dut.get_ready()["ready"] == [1,0,0,0]
+
+    ##
+
+    await RisingEdge(dut.clock())
+
+    read = generate_null_read()
+    read["ready"][0] = 1
+
+    dut.read_fifo(read)
+
+    await RisingEdge(dut.clock())
+
+    dut.read_fifo(generate_null_read())
+
+    await ReadOnly()
+
+    assert dut.get_ready()["ready"] == [1,1,0,0]
+
+    ##
+
+    await RisingEdge(dut.clock())
+
+    read = generate_null_read()
+    read["ready"][0] = 1
+    read["ready"][1] = 1
+
+    dut.read_fifo(read)
+
+    await RisingEdge(dut.clock())
+
+    dut.read_fifo(generate_null_read())
+
+    await ReadOnly()
+
+    assert dut.get_ready()["ready"] == [1,1,1,1]
