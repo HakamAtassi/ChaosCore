@@ -139,7 +139,7 @@ class FTQ(parameters:Parameters) extends Module{
     ////////////////////
 
     for (i <- 0 until commitWidth){
-        io.FTQ(i) := FTQ(front_pointer + i.U)
+        io.FTQ(i) := FTQ(front_index + i.U)
     }
 
     /////////////////

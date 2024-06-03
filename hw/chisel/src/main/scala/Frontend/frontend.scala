@@ -32,6 +32,74 @@ package ChaosCore
 import chisel3._
 import chisel3.util._
 
+// FIXME: enqueue and dequeue at the same time????
+class instruction_queue[T <: Data](gen: T, parameters: Parameters) extends Module {
+  import parameters._
+
+  val io = IO(new Bundle {
+    // input
+    val in = Vec(fetchWidth, Flipped(Decoupled(gen)))
+
+    // output
+    val out = Vec(dispatchWidth, Decoupled(gen))
+  })
+
+    val queue = RegInit(VecInit(Seq.fill(instruction_queue_depth)(0.U.asTypeOf(gen))))
+    val valid = RegInit(VecInit(Seq.fill(instruction_queue_depth)(0.B)))
+
+    val pointer_size    = log2Ceil(instruction_queue_depth)+1
+    val front_pointer   = RegInit(UInt(pointer_size.W), 0.U)
+    val back_pointer    = RegInit(UInt(pointer_size.W), 0.U)
+
+    val front_index     = front_pointer(pointer_size-2, 0)
+    val back_index      = back_pointer(pointer_size-2, 0)
+
+    
+    /////////////
+    // ENQUEUE //
+    /////////////
+
+    // FIXME: I think this eliminates the need for the RAT WAW handler
+    val valid_in_bits = io.in.map(_.valid)
+
+    for(i <- 0 until fetchWidth){
+        when(io.in(i).valid & io.in(i).ready){
+            queue(back_index + PopCount(valid_in_bits.take(i))) := io.in(i).bits
+            valid(back_index + PopCount(valid_in_bits.take(i))) := true.B
+        }
+    }
+
+    back_pointer    :=  back_pointer + PopCount(valid_in_bits)  // FIXME: what if not ready
+
+    /////////////
+    // DEQUEUE //
+    /////////////
+
+    // Assign data
+    for(i <- 0 until dispatchWidth){
+        io.out(i).bits  := queue(front_index + i.U)
+        io.out(i).valid := valid(front_index + i.U)
+    }
+
+    // Assign ready 
+    for (i <- 0 until fetchWidth) {
+        io.in(i).ready := !valid(back_index + i.U)
+    }
+
+    // Move pointer & clear
+
+    val ready_in_bits = io.out.map(_.ready)
+
+    for(i <- 0 until dispatchWidth){
+        // last condition is to ignore all ready bits after a 0 (non thermometor encoded)
+        when(io.out(i).valid & io.out(i).ready & ready_in_bits.take(i+1).reduce(_ && _)){
+            queue(front_index + i.U)    := 0.U.asTypeOf(gen)
+            valid(front_index + i.U)    := 0.B
+            front_pointer               := front_pointer + 1.U
+        }
+    }
+}
+
 
 
 class frontend(parameters:Parameters) extends Module{
@@ -57,31 +125,22 @@ class frontend(parameters:Parameters) extends Module{
         val predictions                     =   Vec(fetchWidth, Decoupled(new FTQ_entry(parameters)))
 
         // INSTRUCTION OUT //
-        val renamed_decoded_fetch_packet    =   Decoupled(Vec(fetchWidth, new decoded_instruction(parameters)))
+
+        // decoupled???
+        val renamed_decoded_fetch_packet    =   Vec(dispatchWidth, Decoupled(new decoded_instruction(parameters)))
+
+        // ALLOCATE //
+        // Backend
+        val MEMRS_ready                     =   Input(Vec(dispatchWidth, Bool()))
+        val INTRS_ready                     =   Input(Vec(dispatchWidth, Bool()))
+
+        // ALLOCATE //
+        // ROB
+        val ROB_packet                      =   Vec(dispatchWidth, Decoupled(new ROB_entry(parameters)))
 
         // RD FREE //
         val FU_outputs                      =   Vec(portCount, Flipped(ValidIO(new FU_output(parameters))))
 
-
-
-
-
-        /////////////////
-        // OLD SIGNALS //
-        /////////////////
-
-        //val exception_PC                    =   Flipped(Decoupled(UInt(32.W)))                              // Input
-        //val commit                          =   Flipped(Decoupled(new commit(parameters)))                  // Input
-        //val ROB_commit                      =   Output(Vec(commitWidth, new ROB_entry(parameters)))
-        // To backend
-        //// Instruction input (commit)
-        //// checkpoint (create/restore)
-        //val create_checkpoint               = Input(Bool())
-        //val active_checkpoint_value         = Output(UInt(RATCheckpointBits.W))   // What checkpoint is currently being used
-        //val restore_checkpoint              = Input(Bool())                       // Restore to previous valid RAT
-        //val restore_checkpoint_value        = Input(UInt(RATCheckpointBits.W))    // ...
-        //val free_checkpoint                 = Input(Bool())                       // Normal branch commit. Just dealloc. checkpoint
-        //val checkpoints_full                = Output(Bool())                      // No more checkpoints available
     })
 
 
@@ -92,12 +151,13 @@ class frontend(parameters:Parameters) extends Module{
     commit := DontCare
 
     //////////////
-    // Pipeline //////////////////////////////////////////////////////
-    // Instruction fetch => Decoders => Renamer => Backend/Allocate //
-    //////////////////////////////////////////////////////////////////
+    // Pipeline //////////////////////////////////////////////////////////////
+    // Instruction fetch => Decoders => Queue => Rename => Backend/Allocate //
+    //////////////////////////////////////////////////////////////////////////
 
     val instruction_fetch   = Module(new instruction_fetch(parameters))
-    val decoders            = Module(new fetch_packet_decoder(parameters)) // N wide decode
+    val decoders            = Module(new fetch_packet_decoder(parameters))
+    val instruction_queue   = Module(new instruction_queue(new decoded_instruction(parameters), parameters))
     val renamer             = Module(new renamer(parameters))
 
 
@@ -107,15 +167,7 @@ class frontend(parameters:Parameters) extends Module{
 
     val misprediction_commit = findMispredictionCommit(io.commit, parameters)
 
-    //instruction_fetch.io.misprediction_PC.bits      :=   misprediction_commit.expected_PC //:=   io.commit.expected_PC
-    //instruction_fetch.io.exception_PC.bits          :=   DontCare //io.exception_PC.bits
-    //instruction_fetch.io.misprediction_PC.valid     :=   misprediction_commit.valid //io.commit.valid
-    //instruction_fetch.io.exception_PC.valid         :=   DontCare //io.exception_PC.valid
-
-    instruction_fetch.io.commit               <>   io.commit //io.commit.bits
-
-    //commit.valid
-
+    instruction_fetch.io.commit               <>   io.commit
     instruction_fetch.io.DRAM_resp            <>   io.DRAM_resp
     instruction_fetch.io.DRAM_request         <>   io.DRAM_request
 
@@ -132,11 +184,36 @@ class frontend(parameters:Parameters) extends Module{
     decoders.io.fetch_packet <> instruction_fetch.io.fetch_packet
 
 
+    ///////////////////////
+    // INSTRUCTION QUEUE //
+    ///////////////////////
+
+    instruction_queue.io.in <> decoders.io.decoded_fetch_packet
+
+    // Control how many entries to allocate
+
+    
+    val is_INTRS = instruction_queue.io.out.map(_.bits.RS_type === RS_types.INT)
+    val is_MEMRS = instruction_queue.io.out.map(_.bits.RS_type === RS_types.MEM)
+
+
+    for(i <- 0 until dispatchWidth) {
+        when(is_INTRS(i)) {
+            instruction_queue.io.out(i).ready :=  PopCount(is_INTRS.take(i+1)) <= PopCount(io.INTRS_ready)
+        } .elsewhen(is_MEMRS(i)) {
+            instruction_queue.io.out(i).ready :=  PopCount(is_MEMRS.take(i+1)) <= PopCount(io.MEMRS_ready)
+        } .otherwise {
+            instruction_queue.io.out(i).ready := 0.B
+        }
+    }
+
+
+
     ////////////
     // RENAME //
     ////////////
 
-    renamer.io.decoded_fetch_packet <> decoders.io.decoded_fetch_packet
+    renamer.io.decoded_fetch_packet <> instruction_queue.io.out
 
 
     renamer.io.FU_outputs           <>     io.FU_outputs
@@ -153,5 +230,7 @@ class frontend(parameters:Parameters) extends Module{
     ////////////
 
     io.renamed_decoded_fetch_packet <> renamer.io.renamed_decoded_fetch_packet
+
+    io.ROB_packet := DontCare
 
 }

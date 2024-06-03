@@ -58,7 +58,7 @@ object Main extends App {
     import Parameters._
 
     val parameters = Parameters()
-    VerilogGenerator.generateVerilog(new instruction_cache(parameters), "../verilog/Frontend/instruction_cache.v")
+    //VerilogGenerator.generateVerilog(new instruction_cache(parameters), "../verilog/Frontend/instruction_cache.v")
 
 
     //VerilogGenerator.generateVerilog(new fetch_packet_decoder(parameters), "../verilog/Frontend/decoders.v")
@@ -102,8 +102,8 @@ object Main extends App {
     //VerilogGenerator.generateVerilog(new backend(parameters), 
     //"../verilog/Backend/backend.v")
 
-    VerilogGenerator.generateVerilog(new frontend(parameters), 
-    "../verilog/Frontend/frontend.v")
+    //VerilogGenerator.generateVerilog(new frontend(parameters), 
+    //"../verilog/Frontend/frontend.v")
 
     //VerilogGenerator.generateVerilog(new FTQ(parameters), 
     //"../verilog/Frontend/FTQ.v")
@@ -114,6 +114,9 @@ object Main extends App {
 
     VerilogGenerator.generateVerilog(new ChaosCore(parameters), 
     "../verilog/Core/ChaosCore.v")
+
+    VerilogGenerator.generateVerilog(new instruction_queue(new decoded_instruction(parameters), parameters), 
+    "../verilog/Frontend/instruction_queue.v")
 
     //ChiselStage.emitSystemVerilogFile(new backend(parameters), Array("--split-verilog"))
 

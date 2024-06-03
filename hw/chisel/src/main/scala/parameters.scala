@@ -80,4 +80,7 @@ case class Parameters(
   MEMportCount:Int = 1,
   FPUportCount:Int = 0,  // not used if not "F"
 
+
+  instruction_queue_depth:Int = 8
+
 )
