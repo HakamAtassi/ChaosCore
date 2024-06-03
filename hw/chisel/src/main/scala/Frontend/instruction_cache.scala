@@ -323,9 +323,6 @@ class instruction_cache(parameters:Parameters) extends Module{
         io.cache_data.bits.instructions(i).instruction:= instruction_vec(packet_index*fetchWidth.U + i.U)   
     }
 
-    dontTouch(current_addr_instruction_offset)
-
-
 
 
     val validator = Module(new instruction_validator(fetchWidth=fetchWidth))

@@ -46,17 +46,14 @@ class FTQ(parameters:Parameters) extends Module{
     val portCount = getPortCount(parameters)
 
     val io = IO(new Bundle{
-
         // UPDATE //
         val FU_outputs          =   Vec(portCount, Flipped(ValidIO(new FU_output(parameters))))
 
         // PREDICTIONS //
         val predictions         =   Vec(fetchWidth, Flipped(Decoupled(new FTQ_entry(parameters))))
 
-
         // COMMIT // 
-        val commit           =   Input(Vec(commitWidth, new commit(parameters)))
-
+        val commit              =   Input(Vec(commitWidth, new commit(parameters)))
 
         // FTQ //
         val FTQ                 =   Output(Vec(commitWidth, new FTQ_entry(parameters)))

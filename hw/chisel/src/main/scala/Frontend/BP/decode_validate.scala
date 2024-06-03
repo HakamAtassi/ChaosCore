@@ -43,6 +43,8 @@ object latchExpectedPC extends ChiselEnum{
 object validate_packet extends ChiselEnum{
     val packet_invalid, packet_valid = Value
 }
+
+// FIXME: make this N wide parameterizable
 class decoder_validator(fetchWidth: Int) extends Module {
   val io = IO(new Bundle {
     val instruction_T_NT_mask = Input(UInt(fetchWidth.W))
@@ -67,6 +69,7 @@ class decoder_validator(fetchWidth: Int) extends Module {
   io.instruction_validity := lut(PriorityEncoder(io.instruction_T_NT_mask))
 }
 
+// FIXME: make sure this actually outputs the correct predictions
 class decode_validate(parameters:Parameters) extends Module{
     import parameters._
 
@@ -78,12 +81,12 @@ class decode_validate(parameters:Parameters) extends Module{
 
         // outputs
         val kill                = Output(Bool())                                        // kill incoming instructions
-        val revert              = Decoupled(new revert(parameters))                     // Redirect frontend // FIXME: should be output...
+        val revert              = Decoupled(new revert(parameters))                     // Redirect frontend 
         val final_fetch_packet  = Decoupled(new fetch_packet(parameters))               // Output validated instructions
         val RAS_update          = Output(new RAS_update)                               // RAS control
 
         // TO FTQ //
-        val predictions         =   Vec(fetchWidth, Decoupled(new FTQ_entry(parameters)))
+        val predictions         = Vec(fetchWidth, Decoupled(new FTQ_entry(parameters)))
     })
 
     /////////////
@@ -105,15 +108,15 @@ class decode_validate(parameters:Parameters) extends Module{
 
     for(i <- 0 until fetchWidth){
         // Inputs
-        decoders(i).io.fetch_PC        :=  io.fetch_packet.bits.fetch_PC
-        decoders(i).io.instruction     :=  io.fetch_packet.bits.instructions(i).instruction
-        decoders(i).io.valid           :=  io.fetch_packet.bits.valid_bits(i)
-        decoders(i).io.prediction.bits :=  io.prediction.bits
+        decoders(i).io.fetch_PC         :=  io.fetch_packet.bits.fetch_PC
+        decoders(i).io.instruction      :=  io.fetch_packet.bits.instructions(i).instruction
+        decoders(i).io.valid            :=  io.fetch_packet.bits.valid_bits(i)
+        decoders(i).io.prediction.bits  :=  io.prediction.bits
         decoders(i).io.prediction.valid :=  io.prediction.valid
-        decoders(i).io.RAS_read        :=  io.RAS_read
+        decoders(i).io.RAS_read         :=  io.RAS_read
         // Outputs
-        decoder_metadata(i)            :=  decoders(i).io.metadata
-        decoder_T_NT(i)                :=  decoders(i).io.T_NT
+        decoder_metadata(i)             :=  decoders(i).io.metadata
+        decoder_T_NT(i)                 :=  decoders(i).io.T_NT
     }
 
     val metadata_reg = Reg(Vec(fetchWidth, new metadata()))
@@ -135,7 +138,7 @@ class decode_validate(parameters:Parameters) extends Module{
     
     val metadata_out    = Wire(new metadata())
     // assign default value to metadata
-    metadata_out := DontCare    // FIXME: Dontcare here is wrong as it can cause mux issues
+    metadata_out := 0.U.asTypeOf(new metadata())
     for(i <- 0 until fetchWidth){    // reverse this
         when(T_NT_reg(i) === 1.B){
             metadata_out := metadata_reg(i)
@@ -151,11 +154,11 @@ class decode_validate(parameters:Parameters) extends Module{
     val PC_expected  = Wire(UInt(32.W))
     //val packet_valid = Wire(Bool())
 
-    val PC_mismatch = Wire(Bool())
-    val PC_match = Wire(Bool())
+    val PC_mismatch  = Wire(Bool())
+    val PC_match     = Wire(Bool())
 
-    PC_match    := (PC_expected === io.fetch_packet.bits.fetch_PC) && inputs_valid
-    PC_mismatch := (PC_expected =/= io.fetch_packet.bits.fetch_PC) && inputs_valid
+    PC_match        := (PC_expected === io.fetch_packet.bits.fetch_PC) && inputs_valid
+    PC_mismatch     := (PC_expected =/= io.fetch_packet.bits.fetch_PC) && inputs_valid
 
 
 
@@ -234,16 +237,17 @@ class decode_validate(parameters:Parameters) extends Module{
 
         io.predictions(i).valid                              := io.final_fetch_packet.bits.valid_bits(i) && is_branch
 
-        io.predictions(i).bits.valid                         := DontCare
-
+        // Buffer branch state
         io.predictions(i).bits.instruction_PC                := io.fetch_packet.bits.fetch_PC + (i.U << 2)
-
-        io.predictions(i).bits.is_misprediction              := 0.B
-        io.predictions(i).bits.predicted_expected_PC         := 0.U  //FIXME: need to store expected addresses for each instruction for FTQ to work at all
-
         io.predictions(i).bits.GHR                           := GHR_reg
         io.predictions(i).bits.NEXT                          := RegNext(io.RAS_read.NEXT)
         io.predictions(i).bits.TOS                           := RegNext(io.RAS_read.TOS)
+        io.predictions(i).bits.predicted_expected_PC         := PC_expected
+
+        // Init FTQ entry data
+        io.predictions(i).bits.valid                         := 0.B
+        io.predictions(i).bits.is_misprediction              := 0.B
+        io.predictions(i).bits.RAT_IDX                       := 0.U
     }
 
 

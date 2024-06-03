@@ -4,14 +4,13 @@
 
 
 
-1) Fix the instruction queue
+1) _Fix the instruction queue_
 2) Fix predecode validate outputting predictions to the FTQ
 3) Fix commit logic in rob/BRU
 4) Fix the clearing on mispredict
 5) Implement Ready bits in the rename stage
 6) An actual memory subsystem
-
-
+7) Right now checkpoints are created per fetch packet. If the Nth instruction is mispredicted, you jump to the first instruction in the fetch packet and replay from there. Ensure this actually works. Otherwise, N checkpoints will need to be made per cycle, which is very expensive.
 
 
 # Test

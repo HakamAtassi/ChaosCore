@@ -1,0 +1,34 @@
+[*]
+[*] GTKWave Analyzer v3.3.116 (w)1999-2023 BSI
+[*] Mon Jun  3 14:46:47 2024
+[*]
+[dumpfile] "/home/hakam/Repos/ChaosCore/cocotb/functional_tests/Frontend/frontend/sim_build/dump.fst"
+[dumpfile_mtime] "Mon Jun  3 14:45:11 2024"
+[dumpfile_size] 20369
+[savefile] "/home/hakam/Repos/ChaosCore/cocotb/functional_tests/Frontend/frontend/frontend.gtkw"
+[timestart] 0
+[size] 1920 1033
+[pos] -51 -51
+*-10.360770 1886 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[sst_width] 458
+[signals_width] 371
+[sst_expanded] 1
+[sst_vpaned_height] 308
+@28
+clock
+@200
+-DRAM request
+@22
+io_DRAM_request_bits_addr[31:0]
+io_DRAM_request_bits_wr_data[31:0]
+@28
+io_DRAM_request_bits_wr_en
+io_DRAM_request_valid
+@200
+-DRAM resp
+@22
+io_DRAM_resp_bits_data[255:0]
+@28
+io_DRAM_resp_valid
+[pattern_trace] 1
+[pattern_trace] 0

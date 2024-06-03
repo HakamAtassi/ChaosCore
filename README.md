@@ -64,3 +64,19 @@ TODO
 TODO
 #### Custom C
 TODO
+
+
+
+
+# Installing RISCV GNU:
+
+Run the following commands (6+ GB download. takes ~10-20 minutes):
+
+```
+sudo apt-get install autoconf automake autotools-dev curl python3 python3-pip libmpc-dev libmpfr-dev libgmp-dev gawk build-essential bison flex texinfo gperf libtool patchutils bc zlib1g-dev libexpat-dev ninja-build git cmake libglib2.0-dev libslirp-dev
+
+git clone https://github.com/riscv-collab/riscv-gnu-toolchain --recurse-submodules
+cd riscv-gnu-toolchain
+./configure --prefix=/opt/riscv --with-arch=rv32gc_zicsr_zifencei --with-abi=ilp32  # build the "complete" RISC-V RV32 config with privilages
+sudo make -j12
+```

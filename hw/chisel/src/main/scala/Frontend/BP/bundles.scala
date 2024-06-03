@@ -341,7 +341,7 @@ class FTQ_entry(parameters:Parameters) extends Bundle{
     val GHR     = UInt(GHRWidth.W)
     val NEXT    = UInt(log2Ceil(RASEntries).W)
     val TOS     = UInt(log2Ceil(RASEntries).W)
-    // RAT index ...
+    val RAT_IDX = UInt(log2Ceil(RATCheckpointCount).W)
 
 }
 
