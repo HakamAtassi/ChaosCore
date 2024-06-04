@@ -277,8 +277,8 @@ class frontend_dut:
 
     async def wait_decoder_outputs_valid(self):
         while(1):
-            await ReadOnly()
             for i in range(4):
+                await ReadOnly()
                 if(self.get_decoder_outputs()["valid"][i]):
                     return 
             await self.update()

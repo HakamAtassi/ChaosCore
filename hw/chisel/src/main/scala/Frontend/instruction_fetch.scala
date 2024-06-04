@@ -134,7 +134,7 @@ class instruction_fetch(parameters:Parameters) extends Module{
         // Output
         val fetch_packet      =   Decoupled(new fetch_packet(parameters))                     // Fetch packet result (To Decoders)
 
-        val predictions       =   Vec(fetchWidth, Decoupled(new FTQ_entry(parameters)))
+        val predictions       =   Decoupled(new FTQ_entry(parameters))
 
     })
 
@@ -143,7 +143,7 @@ class instruction_fetch(parameters:Parameters) extends Module{
     /////////////
     val instruction_cache   = Module(new instruction_cache(parameters))
     val bp                  = Module(new BP(parameters))
-    val predecoder          = Module(new decode_validate(parameters))
+    val predecoder          = Module(new predecoder(parameters))
     val PC_gen              = Module(new PC_arbit(parameters))
 
     ////////////
@@ -189,13 +189,8 @@ class instruction_fetch(parameters:Parameters) extends Module{
     // INSTRUCTION CACHE //
     ///////////////////////
     instruction_cache.io.cache_data     <>   instruction_Q.io.in
-
-    // Dram resp
-    io.DRAM_request                         <>   instruction_cache.io.DRAM_request    //  TO DRAM
-    instruction_cache.io.DRAM_resp          <>   io.DRAM_resp                        //  FROM DRAM
-
-    instruction_cache.io.DRAM_request.ready     := io.DRAM_request.ready                        // Is DRAM ready for request ?
-    io.DRAM_resp.ready                          := instruction_cache.io.DRAM_request.ready      // Is Cache ready to accept DRAM response ?
+    instruction_cache.io.DRAM_resp        <> io.DRAM_resp
+    instruction_cache.io.DRAM_request     <> io.DRAM_request
 
 
     // kill 
@@ -212,7 +207,7 @@ class instruction_fetch(parameters:Parameters) extends Module{
     bp.io.predict           <>  PC_gen.io.PC_next
     bp.io.RAS_update        <>  predecoder.io.RAS_update
     bp.io.revert            <>  predecoder.io.revert
-    bp.io.prediction.ready  := !BTB_Q.io.in.ready
+    bp.io.prediction.ready  <> !BTB_Q.io.in.ready
 
     // Outputs
     predecoder.io.RAS_read  <> bp.io.RAS_read
@@ -220,13 +215,10 @@ class instruction_fetch(parameters:Parameters) extends Module{
     ////////////////
     // PREDECODER //
     ////////////////
-    predecoder.io.prediction <> BTB_Q.io.out
-
-    predecoder.io.fetch_packet <> instruction_Q.io.out
-
-    predecoder.io.RAS_read           :=   bp.io.RAS_read
-
-    predecoder.io.final_fetch_packet <> io.fetch_packet 
+    predecoder.io.prediction          <> BTB_Q.io.out
+    predecoder.io.fetch_packet        <> instruction_Q.io.out
+    predecoder.io.RAS_read            <> bp.io.RAS_read
+    predecoder.io.final_fetch_packet  <> io.fetch_packet 
 
 
     // FIXME: connect the rest of the FTQ up
@@ -235,16 +227,12 @@ class instruction_fetch(parameters:Parameters) extends Module{
     //////////////
     // PC ARBIT //
     //////////////
-    PC_gen.io.commit        <>  io.commit
-
-    PC_gen.io.prediction    <> bp.io.prediction
-    
-    PC_gen.io.RAS_read         := bp.io.RAS_read
-    PC_gen.io.PC_next.ready    := PC_Q.io.in.ready && bp.io.predict.ready
-
-    PC_gen.io.revert      <> predecoder.io.revert
-
-    PC_gen.io.PC_next <> PC_Q.io.in
+    PC_gen.io.commit            <>  io.commit
+    PC_gen.io.prediction        <> bp.io.prediction
+    PC_gen.io.RAS_read          <> bp.io.RAS_read
+    PC_gen.io.PC_next.ready     := PC_Q.io.in.ready && bp.io.predict.ready
+    PC_gen.io.revert            <> predecoder.io.revert
+    PC_gen.io.PC_next           <> PC_Q.io.in
 
 
     // FIXME: PC_gen readies not connected

@@ -105,12 +105,14 @@ object Main extends App {
     VerilogGenerator.generateVerilog(new frontend(parameters), 
     "../verilog/Frontend/frontend.v")
 
+    VerilogGenerator.generateVerilog(new predecoder(parameters), 
+    "../verilog/Frontend/BP/predecoder.v")
+
     //VerilogGenerator.generateVerilog(new FTQ(parameters), 
     //"../verilog/Frontend/FTQ.v")
 
     //VerilogGenerator.generateVerilog(new ROB(parameters), 
     //"../verilog/Backend/ROB.v")
-
 
     //VerilogGenerator.generateVerilog(new ChaosCore(parameters), 
     //"../verilog/Core/ChaosCore.v")
