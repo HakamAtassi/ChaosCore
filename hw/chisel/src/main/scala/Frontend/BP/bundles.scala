@@ -130,7 +130,7 @@ class metadata extends Bundle{
     val BR              = Bool()
     val Call            = Bool()
     val Ret             = Bool()
-    val Imm             = SInt(32.W)
+    val Imm             = UInt(32.W)
     val instruction_PC  = UInt(32.W)
     val RAS             = UInt(32.W)
     val BTB_target      = UInt(32.W)

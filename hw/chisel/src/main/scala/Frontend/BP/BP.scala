@@ -131,7 +131,7 @@ class BP(parameters:Parameters) extends Module{
     val revert = Wire(Bool())
 
 
-    for(i <- commitWidth-1 until 0 by -1){
+    for(i <- commitWidth-1 to 0 by -1){
         when(io.commit(i).is_misprediction){
             misprediction       := 1.B
             misprediction_GHR   := io.commit(i).GHR

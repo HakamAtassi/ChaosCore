@@ -4,7 +4,7 @@ import os
 current_file_dir = os.path.dirname(os.path.abspath(__file__))
 verilog_file_path = os.path.join(current_file_dir, "../../../../hw/verilog/Frontend/BP/predecoder.v") # Target simulation file (Update me!)
 
-module = os.path.basename(os.getcwd())
+module = "predecoder"
 
 configs = {
     "simulator": "verilator",
@@ -39,11 +39,51 @@ def test_ready():
         configs["testcase"] = "test_ready"
         run(**configs)
 
+def test_nonbranch_PC_invalidation():
+        configs["testcase"] = "test_nonbranch_PC_invalidation"
+        run(**configs)
+
+def test_nonbranch_PC_validation():
+        configs["testcase"] = "test_nonbranch_PC_validation"
+        run(**configs)
+
+def test_RAS_update():
+        configs["testcase"] = "test_RAS_update"
+        run(**configs)
+
 def test_JAL_then_correct():
         configs["testcase"] = "test_JAL_then_correct"
         run(**configs)
 
 def test_JAL_then_incorrect():
         configs["testcase"] = "test_JAL_then_incorrect"
+        run(**configs)
+
+def test_JAL_output_invalidation():
+        configs["testcase"] = "test_JAL_output_invalidation"
+        run(**configs)
+
+def test_JALR_output_invalidation():
+        configs["testcase"] = "test_JALR_output_invalidation"
+        run(**configs)
+
+def test_call_RAS_update():
+        configs["testcase"] = "test_call_RAS_update"
+        run(**configs)
+
+def test_FTQ_JAL():
+        configs["testcase"] = "test_FTQ_JAL"
+        run(**configs)
+
+def test_FTQ_JAL_many_branches():
+        configs["testcase"] = "test_FTQ_JAL_many_branches"
+        run(**configs)
+
+def test_FTQ_JAL_second_instruction():
+        configs["testcase"] = "test_FTQ_JAL_second_instruction"
+        run(**configs)
+
+def test_FTQ_JAL_first_instruction_invalid():
+        configs["testcase"] = "test_FTQ_JAL_first_instruction_invalid"
         run(**configs)
 
