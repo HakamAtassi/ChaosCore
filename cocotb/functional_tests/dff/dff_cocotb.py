@@ -10,7 +10,7 @@ from cocotb_utils import *
 from dff_dut import *
 
 @cocotb.test()
-async def reset(dut):
+async def test_reset(dut):
 
     await cocotb.start(generateClock(dut)) 
 

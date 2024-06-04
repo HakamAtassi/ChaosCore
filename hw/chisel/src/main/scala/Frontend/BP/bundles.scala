@@ -97,14 +97,14 @@ object helperFunctions {
         }.elsewhen (I) {
             val imm_11_0      = instruction(31, 20)
 
-            imm := instruction.asSInt.asUInt
+            imm := imm_11_0.asSInt.asUInt
         }.elsewhen(S){
             val imm_11_5      = instruction(31, 25)
             val imm_4_0       = instruction(11, 7)
 
             imm := Cat(imm_11_5, imm_4_0).asSInt.asUInt
         }.elsewhen(U){
-            val imm_31_12       = instruction(31, 12) << 12
+            val imm_31_12     = instruction(31, 12) << 12
 
             imm := Cat(imm_31_12).asSInt.asUInt
         }.otherwise{

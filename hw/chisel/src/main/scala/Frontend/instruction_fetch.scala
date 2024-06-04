@@ -34,30 +34,37 @@ import chisel3.util._
 
 class Q[T <: Data](dataType: T, depth: Int = 16) extends Module{
   val io = IO(new Bundle {
-    val data_in    = Input(dataType)         // input data (bundle)
-    val wr_en      = Input(Bool())           // write element
-    val rd_en      = Input(Bool())           // read element
+    //val data_in    = Input(dataType)         // input data (bundle)
+    //val wr_en      = Input(Bool())           // write element
+    //val rd_en      = Input(Bool())           // read element
 
-    val data_out   = Output(dataType)        // output data (bundle)
-    val full       = Output(Bool())          // queue full
-    val empty      = Output(Bool())          // queue empty
+    val in         = Flipped(Decoupled(dataType)) 
+    val out        = Decoupled(dataType)
+
+    //val data_out   = Output(dataType)        // output data (bundle)
+    //val full       = Output(Bool())          // queue full
+    //val empty      = Output(Bool())          // queue empty
 
     val clear      = Input(Bool())           // Clear entire queue
   })
 
-  val queue = Module(new Queue(dataType, depth))
+  val queue = Module(new Queue(dataType, depth, flow=true))
 
   // Connect inputs
-  queue.io.enq.valid := io.wr_en
-  queue.io.enq.bits := io.data_in
-  queue.io.deq.ready := io.rd_en
+  //queue.io.enq.valid := io.wr_en
+  //queue.io.enq.bits := io.data_in
+  //queue.io.deq.ready := io.rd_en
+
+  queue.io.enq <> io.in
+  queue.io.deq <> io.out
 
   // Connect outputs
-  io.data_out := queue.io.deq.bits
-  io.full :=  !queue.io.enq.ready
-  io.empty := !queue.io.deq.valid
+  //io.data_out := queue.io.deq.bits
+  //io.full :=  !queue.io.enq.ready
+  //io.empty := !queue.io.deq.valid
 
   // Reset logic
+  // FIXME: queues have a "hasflush property that can be used instead of this..."
   queue.reset := io.clear || reset.asBool
 }
 
@@ -158,37 +165,30 @@ class instruction_fetch(parameters:Parameters) extends Module{
     //////////////
     // PC Queue //
     //////////////
-    //PC_Q.io.wr_en       :=  io.PC.valid         // Write to PC_Q whenever the PC is valid
-    //PC_Q.io.data_in     :=  io.PC.bits
-    PC_Q.io.wr_en       :=  PC_gen.io.PC_next.valid
-    PC_Q.io.data_in     :=  PC_gen.io.PC_next.bits
-    PC_Q.io.rd_en       :=  (instruction_cache.io.cpu_addr.ready)  
+    PC_Q.io.out  <>  instruction_cache.io.cpu_addr
+
     PC_Q.io.clear       :=  clear
 
     ///////////////////////
     // INSTRUCTION QUEUE //
     ///////////////////////
-    instruction_Q.io.wr_en       :=  instruction_cache.io.cache_data.valid    // Good
-    instruction_Q.io.data_in     :=  instruction_cache.io.cache_data.bits
-    instruction_Q.io.rd_en       :=  (!BTB_Q.io.empty && predecoder.io.fetch_packet.ready)
+    instruction_Q.io.out <> predecoder.io.fetch_packet
+    instruction_Q.io.out.ready := (!BTB_Q.io.out.valid && predecoder.io.fetch_packet.ready)
+
     instruction_Q.io.clear       :=  clear
 
     ///////////////
     // BTB QUEUE //
     ///////////////
-    BTB_Q.io.wr_en               :=  bp.io.prediction.valid
-    BTB_Q.io.data_in             :=  bp.io.prediction.bits
-    BTB_Q.io.rd_en               :=  (!instruction_Q.io.empty && predecoder.io.prediction.ready)
+    BTB_Q.io.in <> bp.io.prediction
+
+    BTB_Q.io.out.ready           :=  (!instruction_Q.io.out.valid && predecoder.io.prediction.ready)
     BTB_Q.io.clear               :=  clear
   
     ///////////////////////
     // INSTRUCTION CACHE //
     ///////////////////////
-    instruction_cache.io.cache_data.ready     :=   !instruction_Q.io.full
-
-    // Attach PC_Q to instruction cache
-    instruction_cache.io.cpu_addr.bits     :=   PC_Q.io.data_out
-    instruction_cache.io.cpu_addr.valid    :=   (!PC_Q.io.empty)
+    instruction_cache.io.cache_data     <>   instruction_Q.io.in
 
     // Dram resp
     io.DRAM_request                         <>   instruction_cache.io.DRAM_request    //  TO DRAM
@@ -212,7 +212,7 @@ class instruction_fetch(parameters:Parameters) extends Module{
     bp.io.predict           <>  PC_gen.io.PC_next
     bp.io.RAS_update        <>  predecoder.io.RAS_update
     bp.io.revert            <>  predecoder.io.revert
-    bp.io.prediction.ready  := !BTB_Q.io.full
+    bp.io.prediction.ready  := !BTB_Q.io.in.ready
 
     // Outputs
     predecoder.io.RAS_read  <> bp.io.RAS_read
@@ -220,15 +220,13 @@ class instruction_fetch(parameters:Parameters) extends Module{
     ////////////////
     // PREDECODER //
     ////////////////
-    predecoder.io.prediction.bits    :=   BTB_Q.io.data_out
-    predecoder.io.prediction.valid   :=   !BTB_Q.io.empty
+    predecoder.io.prediction <> BTB_Q.io.out
 
-    predecoder.io.fetch_packet.bits  :=   instruction_Q.io.data_out 
-    predecoder.io.fetch_packet.valid :=   !instruction_Q.io.empty
+    predecoder.io.fetch_packet <> instruction_Q.io.out
 
     predecoder.io.RAS_read           :=   bp.io.RAS_read
 
-    predecoder.io.final_fetch_packet.ready := io.fetch_packet.ready
+    predecoder.io.final_fetch_packet <> io.fetch_packet 
 
 
     // FIXME: connect the rest of the FTQ up
@@ -242,9 +240,11 @@ class instruction_fetch(parameters:Parameters) extends Module{
     PC_gen.io.prediction    <> bp.io.prediction
     
     PC_gen.io.RAS_read         := bp.io.RAS_read
-    PC_gen.io.PC_next.ready    := !PC_Q.io.full && bp.io.predict.ready
+    PC_gen.io.PC_next.ready    := PC_Q.io.in.ready && bp.io.predict.ready
 
     PC_gen.io.revert      <> predecoder.io.revert
+
+    PC_gen.io.PC_next <> PC_Q.io.in
 
 
     // FIXME: PC_gen readies not connected
