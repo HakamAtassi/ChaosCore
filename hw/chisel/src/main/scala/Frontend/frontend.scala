@@ -122,7 +122,7 @@ class frontend(parameters:Parameters) extends Module{
         val commit                          =   Input(Vec(commitWidth, new commit(parameters)))
         
         // PREDICTIONS //
-        val predictions                     =   Vec(fetchWidth, Decoupled(new FTQ_entry(parameters)))
+        val predictions                     =   Decoupled(new FTQ_entry(parameters))
 
         // INSTRUCTION OUT //
         val renamed_decoded_fetch_packet    =   Vec(dispatchWidth, Decoupled(new decoded_instruction(parameters)))
@@ -250,12 +250,10 @@ class frontend(parameters:Parameters) extends Module{
     }
 
     // Create logic
-    renamer.io.create_checkpoint     :=     0.B
-    for(i <- 0 until fetchWidth){
-        io.predictions(i).bits.RAT_IDX           :=      renamer.io.active_checkpoint_value
-        when(io.predictions(i).valid){
-            renamer.io.create_checkpoint         :=     1.B 
-        }
+    renamer.io.create_checkpoint          :=     0.B
+    io.predictions.bits.RAT_IDX           :=     renamer.io.active_checkpoint_value
+    when(io.predictions.valid){
+        renamer.io.create_checkpoint      :=     1.B 
     }
 
     //io.checkpoints_full                  :=     renamer.io.checkpoints_full

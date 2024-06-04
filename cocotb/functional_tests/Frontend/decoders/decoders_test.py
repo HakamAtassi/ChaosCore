@@ -2,7 +2,7 @@ from cocotb_test.simulator import run
 import os
 
 current_file_dir = os.path.dirname(os.path.abspath(__file__))
-verilog_file_path = os.path.join(current_file_dir, "../../../../hw/verilog/Frontend/frontend.v") # Target simulation file (Update me!)
+verilog_file_path = os.path.join(current_file_dir, "../../../../hw/verilog/Frontend/decoders.v") # Target simulation file (Update me!)
 
 module = os.path.basename(os.getcwd())
 
@@ -25,13 +25,5 @@ configs = {
 
 def test_reset():
         configs["testcase"] = "test_reset"
-        run(**configs)
-
-def test_decoder_out():
-        configs["testcase"] = "test_decoder_out"
-        run(**configs)
-
-def test_predecoder_stall():
-        configs["testcase"] = "test_predecoder_stall"
         run(**configs)
 

@@ -2,7 +2,7 @@ from cocotb_test.simulator import run
 import os
 
 current_file_dir = os.path.dirname(os.path.abspath(__file__))
-verilog_file_path = os.path.join(current_file_dir, "../../../../hw/verilog/Frontend/frontend.v") # Target simulation file (Update me!)
+verilog_file_path = os.path.join(current_file_dir, "../../../../hw/verilog/Frontend/BP/predecoder.v") # Target simulation file (Update me!)
 
 module = os.path.basename(os.getcwd())
 
@@ -27,11 +27,23 @@ def test_reset():
         configs["testcase"] = "test_reset"
         run(**configs)
 
-def test_decoder_out():
-        configs["testcase"] = "test_decoder_out"
+def test_addi_passthrough():
+        configs["testcase"] = "test_addi_passthrough"
         run(**configs)
 
-def test_predecoder_stall():
-        configs["testcase"] = "test_predecoder_stall"
+def test_addi_with_prediction_invalid():
+        configs["testcase"] = "test_addi_with_prediction_invalid"
+        run(**configs)
+
+def test_ready():
+        configs["testcase"] = "test_ready"
+        run(**configs)
+
+def test_JAL_then_correct():
+        configs["testcase"] = "test_JAL_then_correct"
+        run(**configs)
+
+def test_JAL_then_incorrect():
+        configs["testcase"] = "test_JAL_then_incorrect"
         run(**configs)
 

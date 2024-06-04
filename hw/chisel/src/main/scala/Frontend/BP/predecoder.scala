@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------------------------
-* Filename: decode_validate.scala
+* Filename: predecoder.scala
 * Author: Hakam Atassi
 * Date: Apr 23 2024
 * Description: A module resposible for controlling the RAS and validating the flow of instructions into the decoders/backend
@@ -70,7 +70,7 @@ class decoder_validator(fetchWidth: Int) extends Module {
 }
 
 // FIXME: make sure this actually outputs the correct predictions
-class decode_validate(parameters:Parameters) extends Module{
+class predecoder(parameters:Parameters) extends Module{
     import parameters._
 
     val io = IO(new Bundle{
@@ -86,7 +86,7 @@ class decode_validate(parameters:Parameters) extends Module{
         val RAS_update          = Output(new RAS_update)                               // RAS control
 
         // TO FTQ //
-        val predictions         = Vec(fetchWidth, Decoupled(new FTQ_entry(parameters)))
+        val predictions         = Decoupled(new FTQ_entry(parameters))
     })
 
     /////////////
@@ -230,29 +230,33 @@ class decode_validate(parameters:Parameters) extends Module{
     // FTQ //
     /////////
 
+    val push_FTQ = Wire(Bool())
 
     // Send predictions to FTQ
+    push_FTQ := 0.B
     for(i <- 0 until fetchWidth){
-        val is_branch = metadata_reg(i).JAL ||  metadata_reg(i).JALR ||  metadata_reg(i).BR
-
-        io.predictions(i).valid                              := io.final_fetch_packet.bits.valid_bits(i) && is_branch
-
-        // Buffer branch state
-        io.predictions(i).bits.instruction_PC                := io.fetch_packet.bits.fetch_PC + (i.U << 2)
-        io.predictions(i).bits.GHR                           := GHR_reg
-        io.predictions(i).bits.NEXT                          := RegNext(io.RAS_read.NEXT)
-        io.predictions(i).bits.TOS                           := RegNext(io.RAS_read.TOS)
-        io.predictions(i).bits.predicted_expected_PC         := PC_expected
-
-        // Init FTQ entry data
-        io.predictions(i).bits.valid                         := 0.B
-        io.predictions(i).bits.is_misprediction              := 0.B
-        io.predictions(i).bits.RAT_IDX                       := 0.U
+        when((metadata_reg(i).JAL ||  metadata_reg(i).JALR ||  metadata_reg(i).BR) &&  io.final_fetch_packet.bits.valid_bits(i)){
+            push_FTQ := 1.B
+        }
     }
+
+    io.predictions.valid                              := push_FTQ
+
+    // Buffer branch state
+    io.predictions.bits.instruction_PC                := io.fetch_packet.bits.fetch_PC
+    io.predictions.bits.GHR                           := GHR_reg
+    io.predictions.bits.NEXT                          := RegNext(io.RAS_read.NEXT)
+    io.predictions.bits.TOS                           := RegNext(io.RAS_read.TOS)
+    io.predictions.bits.predicted_expected_PC         := PC_expected
+
+    // Init FTQ entry data
+    io.predictions.bits.valid                         := 0.B
+    io.predictions.bits.is_misprediction              := 0.B
+    io.predictions.bits.RAT_IDX                       := 0.U
 
 
     // Do not accept inputs if outputs have nowhere to go. 
-    io.prediction.ready   := (io.final_fetch_packet.ready && !PC_mismatch)
-    io.fetch_packet.ready := (io.final_fetch_packet.ready && !PC_mismatch)
-    io.final_fetch_packet.valid := inputs_valid && PC_match
+    io.prediction.ready   := (io.final_fetch_packet.ready && io.predictions.ready && !PC_mismatch)
+    io.fetch_packet.ready := (io.final_fetch_packet.ready && io.predictions.ready && !PC_mismatch)
+    io.final_fetch_packet.valid := RegNext(inputs_valid && PC_match)
 }
