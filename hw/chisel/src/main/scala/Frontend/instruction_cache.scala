@@ -181,6 +181,9 @@ class instruction_cache(parameters:Parameters) extends Module{
     io.DRAM_request.bits.wr_data := 0.U
     io.DRAM_request.bits.wr_en   := 0.B
 
+
+    val already_requested = RegInit(Bool(), 0.B)
+
     when(io.cpu_addr.valid === 1.B){replay_addr := io.cpu_addr.bits}
 
     switch(cache_state){
@@ -188,6 +191,7 @@ class instruction_cache(parameters:Parameters) extends Module{
             replay_tag := RegNext(io.cpu_addr.bits(31, 31-tagBits+1))
             io.DRAM_resp.ready  := 0.U   // cache not ready for data from DRAM in active state
             replay_valid        := 0.U
+            already_requested   := io.DRAM_request.valid && io.DRAM_request.ready
             when((miss===1.B && io.kill === 0.U)){           // Buffer current request, stall cache, go to wait state
                 // Request data from DRAM
                 cache_state := cacheState.Allocate
@@ -203,14 +207,14 @@ class instruction_cache(parameters:Parameters) extends Module{
                 fetch_PC_buf := fetch_PC_buf
             }
         }
-        is(cacheState.Allocate){            // Stall till DRAM response. On Response, allocate.
-            io.DRAM_resp.ready          := 1.U      // Ready to accept DRAM data
-            io.DRAM_request.valid       := 1.U      // ...
-            io.DRAM_request.bits.addr   := RegNext(io.DRAM_request.bits.addr)      // Only Request once...
-            when(io.DRAM_request.ready){
-                io.DRAM_request.bits.addr   := 0.U      // Only Request once...
-                io.DRAM_request.valid       := 0.U      // ...
+        is(cacheState.Allocate){                    // Stall till DRAM response. On Response, allocate.
+            when(!already_requested){
+                already_requested   := (io.DRAM_request.valid && io.DRAM_request.ready) 
             }
+            io.DRAM_resp.ready          := !already_requested      // Ready to accept DRAM data
+            io.DRAM_request.valid       := !already_requested     // ...
+            io.DRAM_request.bits.addr   := RegNext(io.DRAM_request.bits.addr)      // Only Request once...
+            
 
             replay_valid        := 0.U
             when(io.kill === 1.U){

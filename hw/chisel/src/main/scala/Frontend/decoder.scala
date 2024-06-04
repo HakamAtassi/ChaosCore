@@ -65,6 +65,9 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
     val (instructionType, valid) = InstructionType.safe(opcode(6, 2))
     assert(valid, "Enum state must be valid, got %d!", opcode(6,2))
 
+
+    dontTouch(instructionType)
+
     val MULTIPLY    = (instructionType === InstructionType.OP && FUNCT7(0))
     val SUBTRACT    = (instructionType === InstructionType.OP && FUNCT7(2))
     val IMMEDIATE   = (instructionType === InstructionType.OP_IMM)
@@ -73,7 +76,9 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
     val needs_divider        =   (instructionType === OP) && ( FUNCT3 === 0x4.U || FUNCT3 === 0x5.U || FUNCT3 === 0x6.U || FUNCT3 === 0x7.U) && FUNCT7(0)
     val needs_branch_unit    =   (instructionType === BRANCH) || (instructionType === JAL) || (instructionType === JALR)
     val needs_CSRs           =   0.B
-    val needs_ALU            =   ((instructionType === OP) && (FUNCT7(2) || (FUNCT7 === 0x00.U))) || (instructionType === OP_IMM)
+    val needs_ALU            =   (((instructionType === OP) || (instructionType === OP_IMM)) && (FUNCT7(2) || (FUNCT7 === 0x00.U))) || (instructionType === OP_IMM)
+
+
     val IS_LOAD              =   (instructionType === LOAD)
     val IS_STORE             =   (instructionType === STORE)
     val needs_memory         =   (instructionType === STORE) || (instructionType === LOAD)
@@ -179,7 +184,7 @@ class fetch_packet_decoder(parameters:Parameters) extends Module{
     }
 
     // Register outputs //
-    for(i <- 0 until fetchWidth){   // pass inputs to decoder
+    for(i <- 0 until fetchWidth){
         io.decoded_fetch_packet(i).bits             := RegNext(decoders(i).io.decoded_instruction.bits)
         decoders(i).io.decoded_instruction.ready    := io.decoded_fetch_packet(i).ready
         io.fetch_packet.ready                       := io.decoded_fetch_packet(i).ready
