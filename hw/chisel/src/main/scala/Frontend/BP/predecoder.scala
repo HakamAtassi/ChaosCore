@@ -80,7 +80,6 @@ class predecoder(parameters:Parameters) extends Module{
         val RAS_read            = Flipped(new RAS_read(parameters))
 
         // outputs
-        val kill                = Output(Bool())                                        // kill incoming instructions
         val revert              = Decoupled(new revert(parameters))                     // Redirect frontend 
         val final_fetch_packet  = Decoupled(new fetch_packet(parameters))               // Output validated instructions
         val RAS_update          = Output(new RAS_update)                               // RAS control
@@ -138,8 +137,9 @@ class predecoder(parameters:Parameters) extends Module{
     
     val metadata_out    = Wire(new metadata())
     // assign default value to metadata
+    dontTouch(metadata_out)
     metadata_out := 0.U.asTypeOf(new metadata())
-    for(i <- 0 until fetchWidth){    // reverse this
+    for(i <- fetchWidth-1 to 0 by - 1){
         when(T_NT_reg(i) === 1.B){
             metadata_out := metadata_reg(i)
         }
@@ -162,7 +162,7 @@ class predecoder(parameters:Parameters) extends Module{
 
 
 
-    io.kill              := PC_mismatch
+    //io.kill              := PC_mismatch
     io.revert.valid      := PC_mismatch
     io.revert.bits.GHR   := GHR_reg
     io.revert.bits.PC    := PC_expected

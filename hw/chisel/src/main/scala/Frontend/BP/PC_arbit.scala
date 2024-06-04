@@ -121,7 +121,7 @@ class PC_arbit(parameters:Parameters) extends Module{
     val expected_PC = Wire(UInt(32.W))
 
     expected_PC :=  0.U
-    for (i <- commitWidth-1 until 0 by -1){
+    for (i <- commitWidth-1 to 0 by -1){
         when(io.commit(i).valid && io.commit(i).is_misprediction){
             expected_PC := io.commit(i).expected_PC
         }

@@ -19,22 +19,27 @@ module branch_decoder(
                 io_metadata_BTB_target
 );
 
-  wire [31:0] imm;
+  wire [31:0] imm =
+    io_instruction[6:0] == 7'h63
+      ? {19'h0, io_instruction[31:25], io_instruction[11:7], 1'h0}
+      : io_instruction[6:0] == 7'h6F
+          ? {11'h0,
+             io_instruction[31],
+             io_instruction[19:12],
+             io_instruction[20],
+             io_instruction[30:21],
+             1'h0}
+          : io_instruction[6:0] == 7'h13 | io_instruction[6:0] == 7'h3
+            | io_instruction[6:0] == 7'h67
+              ? {20'h0, io_instruction[31:20]}
+              : io_instruction[6:0] == 7'h23
+                  ? {20'h0, io_instruction[31:25], io_instruction[11:7]}
+                  : io_instruction[6:0] == 7'h33 ? {io_instruction[31:12], 12'h0} : 32'h0;
   wire        JAL = io_instruction[6:0] == 7'h6F;
   wire        JALR = io_instruction[6:0] == 7'h67;
   wire        BR = io_instruction[6:0] == 7'h63;
   wire        _Call_T_2 = io_instruction[11:7] == 5'h1;
   wire        Ret = JALR & io_instruction[19:15] == 5'h1 & imm == 32'h0;
-  assign imm =
-    BR
-      ? {{19{io_instruction[31]}}, io_instruction[31:25], io_instruction[11:7], 1'h0}
-      : JAL
-          ? {{12{io_instruction[31]}},
-             io_instruction[19:12],
-             io_instruction[20],
-             io_instruction[30:21],
-             1'h0}
-          : JALR ? io_instruction : 32'h0;
   assign io_T_NT =
     JAL
       ? io_valid
@@ -72,22 +77,27 @@ module branch_decoder_1(
                 io_metadata_BTB_target
 );
 
-  wire [31:0] imm;
+  wire [31:0] imm =
+    io_instruction[6:0] == 7'h63
+      ? {19'h0, io_instruction[31:25], io_instruction[11:7], 1'h0}
+      : io_instruction[6:0] == 7'h6F
+          ? {11'h0,
+             io_instruction[31],
+             io_instruction[19:12],
+             io_instruction[20],
+             io_instruction[30:21],
+             1'h0}
+          : io_instruction[6:0] == 7'h13 | io_instruction[6:0] == 7'h3
+            | io_instruction[6:0] == 7'h67
+              ? {20'h0, io_instruction[31:20]}
+              : io_instruction[6:0] == 7'h23
+                  ? {20'h0, io_instruction[31:25], io_instruction[11:7]}
+                  : io_instruction[6:0] == 7'h33 ? {io_instruction[31:12], 12'h0} : 32'h0;
   wire        JAL = io_instruction[6:0] == 7'h6F;
   wire        JALR = io_instruction[6:0] == 7'h67;
   wire        BR = io_instruction[6:0] == 7'h63;
   wire        _Call_T_2 = io_instruction[11:7] == 5'h1;
   wire        Ret = JALR & io_instruction[19:15] == 5'h1 & imm == 32'h0;
-  assign imm =
-    BR
-      ? {{19{io_instruction[31]}}, io_instruction[31:25], io_instruction[11:7], 1'h0}
-      : JAL
-          ? {{12{io_instruction[31]}},
-             io_instruction[19:12],
-             io_instruction[20],
-             io_instruction[30:21],
-             1'h0}
-          : JALR ? io_instruction : 32'h0;
   assign io_T_NT =
     JAL
       ? io_valid
@@ -125,22 +135,27 @@ module branch_decoder_2(
                 io_metadata_BTB_target
 );
 
-  wire [31:0] imm;
+  wire [31:0] imm =
+    io_instruction[6:0] == 7'h63
+      ? {19'h0, io_instruction[31:25], io_instruction[11:7], 1'h0}
+      : io_instruction[6:0] == 7'h6F
+          ? {11'h0,
+             io_instruction[31],
+             io_instruction[19:12],
+             io_instruction[20],
+             io_instruction[30:21],
+             1'h0}
+          : io_instruction[6:0] == 7'h13 | io_instruction[6:0] == 7'h3
+            | io_instruction[6:0] == 7'h67
+              ? {20'h0, io_instruction[31:20]}
+              : io_instruction[6:0] == 7'h23
+                  ? {20'h0, io_instruction[31:25], io_instruction[11:7]}
+                  : io_instruction[6:0] == 7'h33 ? {io_instruction[31:12], 12'h0} : 32'h0;
   wire        JAL = io_instruction[6:0] == 7'h6F;
   wire        JALR = io_instruction[6:0] == 7'h67;
   wire        BR = io_instruction[6:0] == 7'h63;
   wire        _Call_T_2 = io_instruction[11:7] == 5'h1;
   wire        Ret = JALR & io_instruction[19:15] == 5'h1 & imm == 32'h0;
-  assign imm =
-    BR
-      ? {{19{io_instruction[31]}}, io_instruction[31:25], io_instruction[11:7], 1'h0}
-      : JAL
-          ? {{12{io_instruction[31]}},
-             io_instruction[19:12],
-             io_instruction[20],
-             io_instruction[30:21],
-             1'h0}
-          : JALR ? io_instruction : 32'h0;
   assign io_T_NT =
     JAL
       ? io_valid
@@ -178,22 +193,27 @@ module branch_decoder_3(
                 io_metadata_BTB_target
 );
 
-  wire [31:0] imm;
+  wire [31:0] imm =
+    io_instruction[6:0] == 7'h63
+      ? {19'h0, io_instruction[31:25], io_instruction[11:7], 1'h0}
+      : io_instruction[6:0] == 7'h6F
+          ? {11'h0,
+             io_instruction[31],
+             io_instruction[19:12],
+             io_instruction[20],
+             io_instruction[30:21],
+             1'h0}
+          : io_instruction[6:0] == 7'h13 | io_instruction[6:0] == 7'h3
+            | io_instruction[6:0] == 7'h67
+              ? {20'h0, io_instruction[31:20]}
+              : io_instruction[6:0] == 7'h23
+                  ? {20'h0, io_instruction[31:25], io_instruction[11:7]}
+                  : io_instruction[6:0] == 7'h33 ? {io_instruction[31:12], 12'h0} : 32'h0;
   wire        JAL = io_instruction[6:0] == 7'h6F;
   wire        JALR = io_instruction[6:0] == 7'h67;
   wire        BR = io_instruction[6:0] == 7'h63;
   wire        _Call_T_2 = io_instruction[11:7] == 5'h1;
   wire        Ret = JALR & io_instruction[19:15] == 5'h1 & imm == 32'h0;
-  assign imm =
-    BR
-      ? {{19{io_instruction[31]}}, io_instruction[31:25], io_instruction[11:7], 1'h0}
-      : JAL
-          ? {{12{io_instruction[31]}},
-             io_instruction[19:12],
-             io_instruction[20],
-             io_instruction[30:21],
-             1'h0}
-          : JALR ? io_instruction : 32'h0;
   assign io_T_NT =
     JAL
       ? io_valid
@@ -256,7 +276,6 @@ module predecoder(
   input  [6:0]  io_RAS_read_NEXT,
                 io_RAS_read_TOS,
   input  [31:0] io_RAS_read_ret_addr,
-  output        io_kill,
   input         io_revert_ready,
   output        io_revert_valid,
   output [15:0] io_revert_bits_GHR,
@@ -379,63 +398,74 @@ module predecoder(
   reg         T_NT_reg_2;
   reg         T_NT_reg_3;
   reg  [15:0] GHR_reg;
-  wire        use_RAS =
-    T_NT_reg_3
-      ? metadata_reg_3_Ret
-      : T_NT_reg_2
-          ? metadata_reg_2_Ret
-          : T_NT_reg_1 ? metadata_reg_1_Ret : T_NT_reg_0 & metadata_reg_0_Ret;
+  wire        metadata_out_JAL =
+    T_NT_reg_0
+      ? metadata_reg_0_JAL
+      : T_NT_reg_1
+          ? metadata_reg_1_JAL
+          : T_NT_reg_2 ? metadata_reg_2_JAL : T_NT_reg_3 & metadata_reg_3_JAL;
+  wire        metadata_out_JALR =
+    T_NT_reg_0
+      ? metadata_reg_0_JALR
+      : T_NT_reg_1
+          ? metadata_reg_1_JALR
+          : T_NT_reg_2 ? metadata_reg_2_JALR : T_NT_reg_3 & metadata_reg_3_JALR;
+  wire        metadata_out_BR =
+    T_NT_reg_0
+      ? metadata_reg_0_BR
+      : T_NT_reg_1
+          ? metadata_reg_1_BR
+          : T_NT_reg_2 ? metadata_reg_2_BR : T_NT_reg_3 & metadata_reg_3_BR;
+  wire        metadata_out_Call =
+    T_NT_reg_0
+      ? metadata_reg_0_Call
+      : T_NT_reg_1
+          ? metadata_reg_1_Call
+          : T_NT_reg_2 ? metadata_reg_2_Call : T_NT_reg_3 & metadata_reg_3_Call;
+  wire        metadata_out_Ret =
+    T_NT_reg_0
+      ? metadata_reg_0_Ret
+      : T_NT_reg_1
+          ? metadata_reg_1_Ret
+          : T_NT_reg_2 ? metadata_reg_2_Ret : T_NT_reg_3 & metadata_reg_3_Ret;
+  wire [31:0] metadata_out_Imm =
+    T_NT_reg_0
+      ? metadata_reg_0_Imm
+      : T_NT_reg_1
+          ? metadata_reg_1_Imm
+          : T_NT_reg_2 ? metadata_reg_2_Imm : T_NT_reg_3 ? metadata_reg_3_Imm : 32'h0;
   wire [31:0] metadata_out_instruction_PC =
-    T_NT_reg_3
-      ? metadata_reg_3_instruction_PC
-      : T_NT_reg_2
-          ? metadata_reg_2_instruction_PC
-          : T_NT_reg_1
-              ? metadata_reg_1_instruction_PC
-              : T_NT_reg_0 ? metadata_reg_0_instruction_PC : 32'h0;
+    T_NT_reg_0
+      ? metadata_reg_0_instruction_PC
+      : T_NT_reg_1
+          ? metadata_reg_1_instruction_PC
+          : T_NT_reg_2
+              ? metadata_reg_2_instruction_PC
+              : T_NT_reg_3 ? metadata_reg_3_instruction_PC : 32'h0;
+  wire [31:0] metadata_out_RAS =
+    T_NT_reg_0
+      ? metadata_reg_0_RAS
+      : T_NT_reg_1
+          ? metadata_reg_1_RAS
+          : T_NT_reg_2 ? metadata_reg_2_RAS : T_NT_reg_3 ? metadata_reg_3_RAS : 32'h0;
+  wire [31:0] metadata_out_BTB_target =
+    T_NT_reg_0
+      ? metadata_reg_0_BTB_target
+      : T_NT_reg_1
+          ? metadata_reg_1_BTB_target
+          : T_NT_reg_2
+              ? metadata_reg_2_BTB_target
+              : T_NT_reg_3 ? metadata_reg_3_BTB_target : 32'h0;
   reg  [31:0] PC_next_reg;
   wire        PC_mismatch = PC_expected != io_fetch_packet_bits_fetch_PC & inputs_valid;
   reg  [31:0] PC_next_REG;
   wire [31:0] PC_next =
-    (T_NT_reg_3
-       ? metadata_reg_3_JALR
-       : T_NT_reg_2
-           ? metadata_reg_2_JALR
-           : T_NT_reg_1 ? metadata_reg_1_JALR : T_NT_reg_0 & metadata_reg_0_JALR)
-    & ~use_RAS
-      ? (T_NT_reg_3
-           ? metadata_reg_3_BTB_target
-           : T_NT_reg_2
-               ? metadata_reg_2_BTB_target
-               : T_NT_reg_1
-                   ? metadata_reg_1_BTB_target
-                   : T_NT_reg_0 ? metadata_reg_0_BTB_target : 32'h0)
-      : use_RAS
-          ? (T_NT_reg_3
-               ? metadata_reg_3_RAS
-               : T_NT_reg_2
-                   ? metadata_reg_2_RAS
-                   : T_NT_reg_1
-                       ? metadata_reg_1_RAS
-                       : T_NT_reg_0 ? metadata_reg_0_RAS : 32'h0)
-          : (T_NT_reg_3
-               ? metadata_reg_3_BR
-               : T_NT_reg_2
-                   ? metadata_reg_2_BR
-                   : T_NT_reg_1 ? metadata_reg_1_BR : T_NT_reg_0 & metadata_reg_0_BR)
-            | (T_NT_reg_3
-                 ? metadata_reg_3_JAL
-                 : T_NT_reg_2
-                     ? metadata_reg_2_JAL
-                     : T_NT_reg_1 ? metadata_reg_1_JAL : T_NT_reg_0 & metadata_reg_0_JAL)
-              ? metadata_out_instruction_PC
-                + (T_NT_reg_3
-                     ? metadata_reg_3_Imm
-                     : T_NT_reg_2
-                         ? metadata_reg_2_Imm
-                         : T_NT_reg_1
-                             ? metadata_reg_1_Imm
-                             : T_NT_reg_0 ? metadata_reg_0_Imm : 32'h0)
+    metadata_out_JALR & ~metadata_out_Ret
+      ? metadata_out_BTB_target
+      : metadata_out_Ret
+          ? metadata_out_RAS
+          : metadata_out_BR | metadata_out_JAL
+              ? metadata_out_instruction_PC + metadata_out_Imm
               : PC_next_REG;
   reg         PC_next_reg_REG;
   reg         PC_expected_REG;
@@ -654,7 +684,6 @@ module predecoder(
   );
   assign io_prediction_ready = _io_fetch_packet_ready_T & ~PC_mismatch;
   assign io_fetch_packet_ready = _io_fetch_packet_ready_T & ~PC_mismatch;
-  assign io_kill = PC_mismatch;
   assign io_revert_valid = PC_mismatch;
   assign io_revert_bits_GHR = GHR_reg;
   assign io_revert_bits_PC = PC_expected;
@@ -693,13 +722,8 @@ module predecoder(
   assign io_final_fetch_packet_bits_instructions_3_ROB_index =
     io_final_fetch_packet_bits_instructions_3_REG_ROB_index;
   assign io_RAS_update_call_addr = metadata_out_instruction_PC;
-  assign io_RAS_update_call =
-    T_NT_reg_3
-      ? metadata_reg_3_Call
-      : T_NT_reg_2
-          ? metadata_reg_2_Call
-          : T_NT_reg_1 ? metadata_reg_1_Call : T_NT_reg_0 & metadata_reg_0_Call;
-  assign io_RAS_update_ret = use_RAS;
+  assign io_RAS_update_call = metadata_out_Call;
+  assign io_RAS_update_ret = metadata_out_Ret;
   assign io_predictions_valid =
     (metadata_reg_3_JAL | metadata_reg_3_JALR | metadata_reg_3_BR)
     & io_final_fetch_packet_bits_valid_bits_3_0
