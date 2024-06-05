@@ -848,6 +848,7 @@ module branch_decoder(
                 io_prediction_bits_hit,
   input  [31:0] io_prediction_bits_target,
   input  [3:0]  io_prediction_bits_br_mask,
+  input         io_prediction_bits_T_NT,
   input  [31:0] io_RAS_read_ret_addr,
   output        io_T_NT,
                 io_metadata_JAL,
@@ -863,7 +864,12 @@ module branch_decoder(
 
   wire [31:0] imm =
     io_instruction[6:0] == 7'h63
-      ? {19'h0, io_instruction[31:25], io_instruction[11:7], 1'h0}
+      ? {19'h0,
+         io_instruction[31],
+         io_instruction[7],
+         io_instruction[30:25],
+         io_instruction[11:8],
+         1'h0}
       : io_instruction[6:0] == 7'h6F
           ? {11'h0,
              io_instruction[31],
@@ -887,7 +893,7 @@ module branch_decoder(
       ? io_valid
       : JALR
           ? io_valid & (Ret | io_prediction_bits_hit & io_prediction_bits_br_mask[0])
-          : BR & io_valid & io_prediction_bits_br_mask[0];
+          : BR & io_valid & io_prediction_bits_T_NT;
   assign io_metadata_JAL = JAL;
   assign io_metadata_JALR = JALR;
   assign io_metadata_BR = BR;
@@ -906,6 +912,7 @@ module branch_decoder_1(
                 io_prediction_bits_hit,
   input  [31:0] io_prediction_bits_target,
   input  [3:0]  io_prediction_bits_br_mask,
+  input         io_prediction_bits_T_NT,
   input  [31:0] io_RAS_read_ret_addr,
   output        io_T_NT,
                 io_metadata_JAL,
@@ -921,7 +928,12 @@ module branch_decoder_1(
 
   wire [31:0] imm =
     io_instruction[6:0] == 7'h63
-      ? {19'h0, io_instruction[31:25], io_instruction[11:7], 1'h0}
+      ? {19'h0,
+         io_instruction[31],
+         io_instruction[7],
+         io_instruction[30:25],
+         io_instruction[11:8],
+         1'h0}
       : io_instruction[6:0] == 7'h6F
           ? {11'h0,
              io_instruction[31],
@@ -945,7 +957,7 @@ module branch_decoder_1(
       ? io_valid
       : JALR
           ? io_valid & (Ret | io_prediction_bits_hit & io_prediction_bits_br_mask[1])
-          : BR & io_valid & io_prediction_bits_br_mask[1];
+          : BR & io_valid & io_prediction_bits_T_NT;
   assign io_metadata_JAL = JAL;
   assign io_metadata_JALR = JALR;
   assign io_metadata_BR = BR;
@@ -964,6 +976,7 @@ module branch_decoder_2(
                 io_prediction_bits_hit,
   input  [31:0] io_prediction_bits_target,
   input  [3:0]  io_prediction_bits_br_mask,
+  input         io_prediction_bits_T_NT,
   input  [31:0] io_RAS_read_ret_addr,
   output        io_T_NT,
                 io_metadata_JAL,
@@ -979,7 +992,12 @@ module branch_decoder_2(
 
   wire [31:0] imm =
     io_instruction[6:0] == 7'h63
-      ? {19'h0, io_instruction[31:25], io_instruction[11:7], 1'h0}
+      ? {19'h0,
+         io_instruction[31],
+         io_instruction[7],
+         io_instruction[30:25],
+         io_instruction[11:8],
+         1'h0}
       : io_instruction[6:0] == 7'h6F
           ? {11'h0,
              io_instruction[31],
@@ -1003,7 +1021,7 @@ module branch_decoder_2(
       ? io_valid
       : JALR
           ? io_valid & (Ret | io_prediction_bits_hit & io_prediction_bits_br_mask[2])
-          : BR & io_valid & io_prediction_bits_br_mask[2];
+          : BR & io_valid & io_prediction_bits_T_NT;
   assign io_metadata_JAL = JAL;
   assign io_metadata_JALR = JALR;
   assign io_metadata_BR = BR;
@@ -1022,6 +1040,7 @@ module branch_decoder_3(
                 io_prediction_bits_hit,
   input  [31:0] io_prediction_bits_target,
   input  [3:0]  io_prediction_bits_br_mask,
+  input         io_prediction_bits_T_NT,
   input  [31:0] io_RAS_read_ret_addr,
   output        io_T_NT,
                 io_metadata_JAL,
@@ -1037,7 +1056,12 @@ module branch_decoder_3(
 
   wire [31:0] imm =
     io_instruction[6:0] == 7'h63
-      ? {19'h0, io_instruction[31:25], io_instruction[11:7], 1'h0}
+      ? {19'h0,
+         io_instruction[31],
+         io_instruction[7],
+         io_instruction[30:25],
+         io_instruction[11:8],
+         1'h0}
       : io_instruction[6:0] == 7'h6F
           ? {11'h0,
              io_instruction[31],
@@ -1061,7 +1085,7 @@ module branch_decoder_3(
       ? io_valid
       : JALR
           ? io_valid & (Ret | io_prediction_bits_hit & io_prediction_bits_br_mask[3])
-          : BR & io_valid & io_prediction_bits_br_mask[3];
+          : BR & io_valid & io_prediction_bits_T_NT;
   assign io_metadata_JAL = JAL;
   assign io_metadata_JALR = JALR;
   assign io_metadata_BR = BR;
@@ -1094,6 +1118,7 @@ module predecoder(
   input  [31:0] io_prediction_bits_target,
   input  [3:0]  io_prediction_bits_br_mask,
   input  [15:0] io_prediction_bits_GHR,
+  input         io_prediction_bits_T_NT,
   output        io_fetch_packet_ready,
   input         io_fetch_packet_valid,
   input  [31:0] io_fetch_packet_bits_fetch_PC,
@@ -1321,6 +1346,7 @@ module predecoder(
   reg  [5:0]  io_final_fetch_packet_bits_instructions_3_REG_ROB_index;
   reg         io_final_fetch_packet_bits_valid_bits_3_REG;
   reg         io_final_fetch_packet_bits_valid_bits_3_REG_1;
+  reg  [31:0] io_predictions_bits_instruction_PC_REG;
   reg  [6:0]  io_predictions_bits_NEXT_REG;
   reg  [6:0]  io_predictions_bits_TOS_REG;
   wire        _io_fetch_packet_ready_T =
@@ -1408,6 +1434,7 @@ module predecoder(
     io_final_fetch_packet_bits_valid_bits_3_REG <=
       _decoder_validator_io_instruction_validity[3];
     io_final_fetch_packet_bits_valid_bits_3_REG_1 <= inputs_valid;
+    io_predictions_bits_instruction_PC_REG <= io_fetch_packet_bits_fetch_PC;
     io_predictions_bits_NEXT_REG <= io_RAS_read_NEXT;
     io_predictions_bits_TOS_REG <= io_RAS_read_TOS;
     io_final_fetch_packet_valid_REG <=
@@ -1424,6 +1451,7 @@ module predecoder(
     .io_prediction_bits_hit     (io_prediction_bits_hit),
     .io_prediction_bits_target  (io_prediction_bits_target),
     .io_prediction_bits_br_mask (io_prediction_bits_br_mask),
+    .io_prediction_bits_T_NT    (io_prediction_bits_T_NT),
     .io_RAS_read_ret_addr       (io_RAS_read_ret_addr),
     .io_T_NT                    (_decoders_0_io_T_NT),
     .io_metadata_JAL            (_decoders_0_io_metadata_JAL),
@@ -1443,6 +1471,7 @@ module predecoder(
     .io_prediction_bits_hit     (io_prediction_bits_hit),
     .io_prediction_bits_target  (io_prediction_bits_target),
     .io_prediction_bits_br_mask (io_prediction_bits_br_mask),
+    .io_prediction_bits_T_NT    (io_prediction_bits_T_NT),
     .io_RAS_read_ret_addr       (io_RAS_read_ret_addr),
     .io_T_NT                    (_decoders_1_io_T_NT),
     .io_metadata_JAL            (_decoders_1_io_metadata_JAL),
@@ -1462,6 +1491,7 @@ module predecoder(
     .io_prediction_bits_hit     (io_prediction_bits_hit),
     .io_prediction_bits_target  (io_prediction_bits_target),
     .io_prediction_bits_br_mask (io_prediction_bits_br_mask),
+    .io_prediction_bits_T_NT    (io_prediction_bits_T_NT),
     .io_RAS_read_ret_addr       (io_RAS_read_ret_addr),
     .io_T_NT                    (_decoders_2_io_T_NT),
     .io_metadata_JAL            (_decoders_2_io_metadata_JAL),
@@ -1481,6 +1511,7 @@ module predecoder(
     .io_prediction_bits_hit     (io_prediction_bits_hit),
     .io_prediction_bits_target  (io_prediction_bits_target),
     .io_prediction_bits_br_mask (io_prediction_bits_br_mask),
+    .io_prediction_bits_T_NT    (io_prediction_bits_T_NT),
     .io_RAS_read_ret_addr       (io_RAS_read_ret_addr),
     .io_T_NT                    (_decoders_3_io_T_NT),
     .io_metadata_JAL            (_decoders_3_io_metadata_JAL),
@@ -1547,7 +1578,7 @@ module predecoder(
     | (metadata_reg_0_JAL | metadata_reg_0_JALR | metadata_reg_0_BR)
     & io_final_fetch_packet_bits_valid_bits_0_REG
     & io_final_fetch_packet_bits_valid_bits_0_REG_1;
-  assign io_predictions_bits_instruction_PC = io_fetch_packet_bits_fetch_PC;
+  assign io_predictions_bits_instruction_PC = io_predictions_bits_instruction_PC_REG;
   assign io_predictions_bits_predicted_expected_PC = PC_expected;
   assign io_predictions_bits_GHR = GHR_reg;
   assign io_predictions_bits_NEXT = io_predictions_bits_NEXT_REG;
@@ -1929,23 +1960,23 @@ module Q_1(
 endmodule
 
 // VCS coverage exclude_file
-module ram_16x53(
+module ram_16x54(
   input  [3:0]  R0_addr,
   input         R0_en,
                 R0_clk,
-  output [52:0] R0_data,
+  output [53:0] R0_data,
   input  [3:0]  W0_addr,
   input         W0_en,
                 W0_clk,
-  input  [52:0] W0_data
+  input  [53:0] W0_data
 );
 
-  reg [52:0] Memory[0:15];
+  reg [53:0] Memory[0:15];
   always @(posedge W0_clk) begin
     if (W0_en & 1'h1)
       Memory[W0_addr] <= W0_data;
   end // always @(posedge)
-  assign R0_data = R0_en ? Memory[R0_addr] : 53'bx;
+  assign R0_data = R0_en ? Memory[R0_addr] : 54'bx;
 endmodule
 
 module Queue16_prediction(
@@ -1963,10 +1994,11 @@ module Queue16_prediction(
                 io_deq_bits_hit,
   output [31:0] io_deq_bits_target,
   output [3:0]  io_deq_bits_br_mask,
-  output [15:0] io_deq_bits_GHR
+  output [15:0] io_deq_bits_GHR,
+  output        io_deq_bits_T_NT
 );
 
-  wire [52:0] _ram_ext_R0_data;
+  wire [53:0] _ram_ext_R0_data;
   reg  [3:0]  enq_ptr_value;
   reg  [3:0]  deq_ptr_value;
   reg         maybe_full;
@@ -1990,7 +2022,7 @@ module Queue16_prediction(
         maybe_full <= do_enq;
     end
   end // always @(posedge)
-  ram_16x53 ram_ext (
+  ram_16x54 ram_ext (
     .R0_addr (deq_ptr_value),
     .R0_en   (1'h1),
     .R0_clk  (clock),
@@ -1998,13 +2030,19 @@ module Queue16_prediction(
     .W0_addr (enq_ptr_value),
     .W0_en   (do_enq),
     .W0_clk  (clock),
-    .W0_data ({io_enq_bits_GHR, io_enq_bits_br_mask, io_enq_bits_target, io_enq_bits_hit})
+    .W0_data
+      ({io_enq_bits_T_NT,
+        io_enq_bits_GHR,
+        io_enq_bits_br_mask,
+        io_enq_bits_target,
+        io_enq_bits_hit})
   );
   assign io_deq_valid = io_deq_valid_0;
   assign io_deq_bits_hit = empty ? io_enq_bits_hit : _ram_ext_R0_data[0];
   assign io_deq_bits_target = empty ? io_enq_bits_target : _ram_ext_R0_data[32:1];
   assign io_deq_bits_br_mask = empty ? io_enq_bits_br_mask : _ram_ext_R0_data[36:33];
   assign io_deq_bits_GHR = empty ? io_enq_bits_GHR : _ram_ext_R0_data[52:37];
+  assign io_deq_bits_T_NT = empty ? io_enq_bits_T_NT : _ram_ext_R0_data[53];
 endmodule
 
 module Q_2(
@@ -2022,7 +2060,8 @@ module Q_2(
                 io_out_bits_hit,
   output [31:0] io_out_bits_target,
   output [3:0]  io_out_bits_br_mask,
-  output [15:0] io_out_bits_GHR
+  output [15:0] io_out_bits_GHR,
+  output        io_out_bits_T_NT
 );
 
   Queue16_prediction queue (
@@ -2040,7 +2079,8 @@ module Q_2(
     .io_deq_bits_hit     (io_out_bits_hit),
     .io_deq_bits_target  (io_out_bits_target),
     .io_deq_bits_br_mask (io_out_bits_br_mask),
-    .io_deq_bits_GHR     (io_out_bits_GHR)
+    .io_deq_bits_GHR     (io_out_bits_GHR),
+    .io_deq_bits_T_NT    (io_out_bits_T_NT)
   );
 endmodule
 
@@ -2117,6 +2157,7 @@ module instruction_fetch(
   wire [31:0] _BTB_Q_io_out_bits_target;
   wire [3:0]  _BTB_Q_io_out_bits_br_mask;
   wire [15:0] _BTB_Q_io_out_bits_GHR;
+  wire        _BTB_Q_io_out_bits_T_NT;
   wire        _PC_Q_io_in_ready;
   wire        _PC_Q_io_out_valid;
   wire [31:0] _PC_Q_io_out_bits;
@@ -2269,6 +2310,7 @@ module instruction_fetch(
     .io_prediction_bits_target                              (_BTB_Q_io_out_bits_target),
     .io_prediction_bits_br_mask                             (_BTB_Q_io_out_bits_br_mask),
     .io_prediction_bits_GHR                                 (_BTB_Q_io_out_bits_GHR),
+    .io_prediction_bits_T_NT                                (_BTB_Q_io_out_bits_T_NT),
     .io_fetch_packet_ready
       (_predecoder_io_fetch_packet_ready),
     .io_fetch_packet_valid                                  (_instruction_Q_io_out_valid),
@@ -2461,7 +2503,8 @@ module instruction_fetch(
     .io_out_bits_hit     (_BTB_Q_io_out_bits_hit),
     .io_out_bits_target  (_BTB_Q_io_out_bits_target),
     .io_out_bits_br_mask (_BTB_Q_io_out_bits_br_mask),
-    .io_out_bits_GHR     (_BTB_Q_io_out_bits_GHR)
+    .io_out_bits_GHR     (_BTB_Q_io_out_bits_GHR),
+    .io_out_bits_T_NT    (_BTB_Q_io_out_bits_T_NT)
   );
 endmodule
 
@@ -2540,8 +2583,10 @@ module decoder(
   assign io_decoded_instruction_bits_IMM =
     io_instruction_bits_instruction[6:0] == 7'h63
       ? {19'h0,
-         io_instruction_bits_instruction[31:25],
-         io_instruction_bits_instruction[11:7],
+         io_instruction_bits_instruction[31],
+         io_instruction_bits_instruction[7],
+         io_instruction_bits_instruction[30:25],
+         io_instruction_bits_instruction[11:8],
          1'h0}
       : io_instruction_bits_instruction[6:0] == 7'h6F
           ? {11'h0,

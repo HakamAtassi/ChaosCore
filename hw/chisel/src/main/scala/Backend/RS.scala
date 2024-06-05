@@ -65,6 +65,17 @@ class RS(parameters:Parameters) extends Module{
 
     })
 
+    ////////////////////////
+    // MODULE ASSUMPTIONS //
+    ////////////////////////
+    require(isPow2(RSEntries), "Reservation station entries not a power of 2")
+
+
+    ///////////////////////////////
+    // RESERVATION STATION LOGIC //
+    ///////////////////////////////
+
+
     // Allocate RS regs
     val reservation_station = RegInit(VecInit(Seq.fill(RSEntries)(0.U.asTypeOf(new RS_entry(parameters)))))
  

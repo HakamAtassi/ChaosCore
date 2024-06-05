@@ -4,7 +4,7 @@ import os
 current_file_dir = os.path.dirname(os.path.abspath(__file__))
 verilog_file_path = os.path.join(current_file_dir, "../../../hw/verilog/dff.v") # Target simulation file (Update me!)
 
-module = os.path.basename(os.getcwd())
+module = "dff"  # Update me!
 
 configs = {
     "simulator": "verilator",

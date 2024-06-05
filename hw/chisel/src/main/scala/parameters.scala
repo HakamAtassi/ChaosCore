@@ -45,9 +45,7 @@ case class Parameters(
   fetchWidth: Int = 4,   // up to how many instructions does the core fetch each cycle
   dispatchWidth:Int = 4, // Up to how many entires are sent to the reservation station + execution engine from the instruction queue at a time?
   
-
   commitWidth:Int = 4,   // Up to how many entires are freed from the ROB each cycle (cant be larger than the number of ports)
-
 
   GHRWidth: Int = 16,
   RASEntries: Int = 128,
@@ -57,15 +55,12 @@ case class Parameters(
 
   ROBEntires: Int = 64,    // FIXME: 128 causes area scaling problems in the RAT
 
-
   architecturalRegCount: Int = 32,  // RV32...
   RATCheckpointCount:    Int = 16,  // How many checkpoints of the RAT is supported? (this should be a proportion of the ROB size)
 
   physicalRegCount:      Int = 64,   // CHANGING THIS IS CURRENTLY NOT SUPPORTED!!!!
 
-
-
-  RSEntries: Int = 20, // How many entires per reservation station (these are very expensive)
+  RSEntries: Int = 16, // How many entires per reservation station (these are very expensive)
 
 
   // Instruction Cache params

@@ -133,8 +133,8 @@ class BP(parameters:Parameters) extends Module{
 
     for(i <- commitWidth-1 to 0 by -1){
         when(io.commit(i).is_misprediction){
-            misprediction       := 1.B
-            misprediction_GHR   := io.commit(i).GHR
+            misprediction       :=  1.B
+            misprediction_GHR   :=  io.commit(i).GHR
 
             misprediction_TOS   :=  io.commit(i).TOS
             misprediction_NEXT  :=  io.commit(i).NEXT

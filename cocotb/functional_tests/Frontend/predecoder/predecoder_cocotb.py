@@ -779,7 +779,15 @@ async def test_FTQ_JAL(dut):
     dut.write_prediction(prediction_input)
 
     await RisingEdge(dut.clock())
+
+    fetch_packet_input["fetch_PC"]  =   0xc0de
+    dut.write_fetch_packet(fetch_packet_input)
+    dut.write_prediction(prediction_input)
+
     await ReadOnly()
+
+    assert dut.get_expected_address() == 0xc0de
+    assert dut.get_revert()["valid"] == 0
 
     dut.get_FTQ_read()["valid"] == 1
 
@@ -830,7 +838,15 @@ async def test_FTQ_JAL_many_branches(dut):
     dut.write_prediction(prediction_input)
 
     await RisingEdge(dut.clock())
+
+    fetch_packet_input["fetch_PC"]  =   0xc0de
+    dut.write_fetch_packet(fetch_packet_input)
+    dut.write_prediction(prediction_input)
+
     await ReadOnly()
+
+    assert dut.get_expected_address() == 0xc0de
+    assert dut.get_revert()["valid"] == 0
 
     assert dut.get_FTQ_read()["valid"] == 1
 
@@ -882,7 +898,15 @@ async def test_FTQ_JAL_second_instruction(dut):
     dut.write_prediction(prediction_input)
 
     await RisingEdge(dut.clock())
+
+    fetch_packet_input["fetch_PC"]  =   0xbee4
+    dut.write_fetch_packet(fetch_packet_input)
+    dut.write_prediction(prediction_input)
+
     await ReadOnly()
+
+    assert dut.get_expected_address() == 0xbee4
+    assert dut.get_revert()["valid"] == 0
 
     assert dut.get_FTQ_read()["valid"] == 1
 
@@ -933,7 +957,15 @@ async def test_FTQ_JAL_first_instruction_invalid(dut):
     dut.write_prediction(prediction_input)
 
     await RisingEdge(dut.clock())
+
+    fetch_packet_input["fetch_PC"]  =   0xbee4
+    dut.write_fetch_packet(fetch_packet_input)
+    dut.write_prediction(prediction_input)
+
     await ReadOnly()
+
+    assert dut.get_expected_address() == 0xbee4
+    assert dut.get_revert()["valid"] == 0
 
     assert dut.get_FTQ_read()["valid"] == 1
 
@@ -945,5 +977,200 @@ async def test_FTQ_JAL_first_instruction_invalid(dut):
     #assert dut.get_FTQ_read()["TOS"] ==
     #assert dut.get_FTQ_read()["RAT_IDX"] ==
 
-# test branches T/NT
-# test BTB usage
+@cocotb.test()
+async def test_FTQ_BEQ(dut):
+    """Check that JALs request an FTQ write due to FTQ"""
+    # Each FTQ push should store the address of the taken branch (if any) 
+    # and/or information indicating that none of the branches were taken
+    # Naturally, each fetch packet can only have 1 valid taken branch
+    await cocotb.start(generateClock(dut)) 
+
+    dut = predecoder_dut(dut)  # wrap dut with helper class
+    await dut.reset()   # reset module
+
+    fetch_packet_input   = generate_null_fetch_packet()
+    prediction_input     = generate_null_prediction()
+
+    # fetch packet
+    fetch_packet_input["valid"]     =   1
+    fetch_packet_input["fetch_PC"]  =   0x0     # This is not a very useful test because the call address being written to the RAS is 0 since its happening straight out of reset
+
+    fetch_packet_input["instruction"][0]    =   0x7e000fe3  # BEQ x0, x0, 0xc0d0
+    fetch_packet_input["valid_bits"][0]     =   1      # Valid
+    fetch_packet_input["packet_index"][0]   =   0      
+
+    fetch_packet_input["instruction"][1]    =   0x13   # NOP
+    fetch_packet_input["valid_bits"][1]     =   1      # Valid
+    fetch_packet_input["packet_index"][1]   =   1      
+
+    fetch_packet_input["instruction"][2]    =   0x13   # NOP
+    fetch_packet_input["valid_bits"][2]     =   1      # Valid
+    fetch_packet_input["packet_index"][2]   =   2      
+
+    fetch_packet_input["instruction"][3]    =   0x13   # NOP
+    fetch_packet_input["valid_bits"][3]     =   1      # Valid
+    fetch_packet_input["packet_index"][3]   =   3      
+
+    # prediction
+    prediction_input["valid"]     =   1
+    prediction_input["hit"]       =   1
+    prediction_input["target"]    =   0xFFE
+    prediction_input["br_type"]   =   0
+    prediction_input["br_mask"]   =   0
+    prediction_input["GHR"]       =   0
+    prediction_input["T_NT"]      =   1
+
+    dut.write_fetch_packet(fetch_packet_input)
+    dut.write_prediction(prediction_input)
+
+    await RisingEdge(dut.clock())
+    fetch_packet_input["fetch_PC"]  =   0xFFE
+    dut.write_fetch_packet(fetch_packet_input)
+    dut.write_prediction(prediction_input)
+    await ReadOnly()
+
+    assert dut.get_expected_address() == 0xFFE
+    assert dut.get_revert()["valid"] == 0
+
+    assert dut.get_FTQ_read()["valid"] == 1
+
+    assert dut.get_FTQ_read()["instruction_PC"] ==  0x0
+    assert dut.get_FTQ_read()["is_misprediction"] == 0
+    assert dut.get_FTQ_read()["expected_PC"] == 0xFFE  # Should only consider first JAL
+    #assert dut.get_FTQ_read()["GHR"] ==
+    #assert dut.get_FTQ_read()["NEXT"] ==
+    #assert dut.get_FTQ_read()["TOS"] ==
+    #assert dut.get_FTQ_read()["RAT_IDX"] ==
+
+
+@cocotb.test()
+async def test_FTQ_BEQ_second_instruction(dut):
+    """Check that JALs request an FTQ write due to FTQ"""
+    # Each FTQ push should store the address of the taken branch (if any) 
+    # and/or information indicating that none of the branches were taken
+    # Naturally, each fetch packet can only have 1 valid taken branch
+    await cocotb.start(generateClock(dut)) 
+
+    dut = predecoder_dut(dut)  # wrap dut with helper class
+    await dut.reset()   # reset module
+
+    fetch_packet_input   = generate_null_fetch_packet()
+    prediction_input     = generate_null_prediction()
+
+    # fetch packet
+    fetch_packet_input["valid"]     =   1
+    fetch_packet_input["fetch_PC"]  =   0x0     # This is not a very useful test because the call address being written to the RAS is 0 since its happening straight out of reset
+
+    fetch_packet_input["instruction"][0]    =   0x13   # NOP
+    fetch_packet_input["valid_bits"][0]     =   1      # Valid
+    fetch_packet_input["packet_index"][0]   =   0      
+
+    fetch_packet_input["instruction"][1]    =   0x7e000fe3  # BEQ x0, x0, 0xFFE
+    fetch_packet_input["valid_bits"][1]     =   1      # Valid
+    fetch_packet_input["packet_index"][1]   =   1      
+
+    fetch_packet_input["instruction"][2]    =   0x13   # NOP
+    fetch_packet_input["valid_bits"][2]     =   1      # Valid
+    fetch_packet_input["packet_index"][2]   =   2      
+
+    fetch_packet_input["instruction"][3]    =   0x13   # NOP
+    fetch_packet_input["valid_bits"][3]     =   1      # Valid
+    fetch_packet_input["packet_index"][3]   =   3      
+
+    # prediction
+    prediction_input["valid"]     =   1
+    prediction_input["hit"]       =   1
+    prediction_input["target"]    =   0xFFE # IMPORTANT! The BTB stores target FETCH PACKET addresses. So whatever address the BTB returns, the instruciton offset must be added to it. 
+    prediction_input["br_type"]   =   0
+    prediction_input["br_mask"]   =   0
+    prediction_input["GHR"]       =   0
+    prediction_input["T_NT"]      =   1
+
+    dut.write_fetch_packet(fetch_packet_input)
+    dut.write_prediction(prediction_input)
+
+    await RisingEdge(dut.clock())
+    fetch_packet_input["fetch_PC"]  =   0xFFE+4
+    dut.write_fetch_packet(fetch_packet_input)
+    dut.write_prediction(prediction_input)
+    await ReadOnly()
+
+    assert dut.get_expected_address() == 0xFFE+4
+    assert dut.get_revert()["valid"] == 0
+
+    assert dut.get_FTQ_read()["valid"] == 1
+
+    assert dut.get_FTQ_read()["instruction_PC"] ==  0x0
+    assert dut.get_FTQ_read()["is_misprediction"] == 0
+    assert dut.get_FTQ_read()["expected_PC"] == 0xFFE+4  # Should only consider first JAL
+    #assert dut.get_FTQ_read()["GHR"] ==
+    #assert dut.get_FTQ_read()["NEXT"] ==
+    #assert dut.get_FTQ_read()["TOS"] ==
+    #assert dut.get_FTQ_read()["RAT_IDX"] ==
+
+
+
+@cocotb.test()
+async def test_FTQ_BEQ_NT(dut):
+    """Check that JALs request an FTQ write due to FTQ"""
+    # Each FTQ push should store the address of the taken branch (if any) 
+    # and/or information indicating that none of the branches were taken
+    # Naturally, each fetch packet can only have 1 valid taken branch
+    await cocotb.start(generateClock(dut)) 
+
+    dut = predecoder_dut(dut)  # wrap dut with helper class
+    await dut.reset()   # reset module
+
+    fetch_packet_input   = generate_null_fetch_packet()
+    prediction_input     = generate_null_prediction()
+
+    # fetch packet
+    fetch_packet_input["valid"]     =   1
+    fetch_packet_input["fetch_PC"]  =   0x0     # This is not a very useful test because the call address being written to the RAS is 0 since its happening straight out of reset
+
+    fetch_packet_input["instruction"][0]    =   0x7e000fe3   # NOP
+    fetch_packet_input["valid_bits"][0]     =   1      # Valid
+    fetch_packet_input["packet_index"][0]   =   0      
+
+    fetch_packet_input["instruction"][1]    =   0x13  # BEQ x0, x0, 0xFFE
+    fetch_packet_input["valid_bits"][1]     =   1      # Valid
+    fetch_packet_input["packet_index"][1]   =   1      
+
+    fetch_packet_input["instruction"][2]    =   0x13   # NOP
+    fetch_packet_input["valid_bits"][2]     =   1      # Valid
+    fetch_packet_input["packet_index"][2]   =   2      
+
+    fetch_packet_input["instruction"][3]    =   0x13   # NOP
+    fetch_packet_input["valid_bits"][3]     =   1      # Valid
+    fetch_packet_input["packet_index"][3]   =   3      
+
+    # prediction
+    prediction_input["valid"]     =   1
+    prediction_input["hit"]       =   1
+    prediction_input["target"]    =   0xFFE # IMPORTANT! The BTB stores target FETCH PACKET addresses. So whatever address the BTB returns, the instruciton offset must be added to it. 
+    prediction_input["br_type"]   =   0
+    prediction_input["br_mask"]   =   0
+    prediction_input["GHR"]       =   0
+    prediction_input["T_NT"]      =   0
+
+    dut.write_fetch_packet(fetch_packet_input)
+    dut.write_prediction(prediction_input)
+
+    await RisingEdge(dut.clock())
+    fetch_packet_input["fetch_PC"]  =   0x10
+    dut.write_fetch_packet(fetch_packet_input)
+    dut.write_prediction(prediction_input)
+    await ReadOnly()
+
+    assert dut.get_expected_address() == 0x10
+    assert dut.get_revert()["valid"] == 0
+
+    assert dut.get_FTQ_read()["valid"] == 1
+
+    assert dut.get_FTQ_read()["instruction_PC"] ==  0x0
+    assert dut.get_FTQ_read()["is_misprediction"] == 0
+    assert dut.get_FTQ_read()["expected_PC"] == 0x10
+    #assert dut.get_FTQ_read()["GHR"] ==
+    #assert dut.get_FTQ_read()["NEXT"] ==
+    #assert dut.get_FTQ_read()["TOS"] ==
+    #assert dut.get_FTQ_read()["RAT_IDX"] ==

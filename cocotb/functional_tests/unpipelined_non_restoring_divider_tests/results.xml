@@ -1,6 +1,0 @@
-<testsuites name="results">
-  <testsuite name="all" package="all">
-    <property name="random_seed" value="1709936091" />
-    <testcase name="testDividerRandom" classname="test_connections" file="/home/hakam/repos/ChaosCore/cocotb/functional_tests/unpipelined_non_restoring_divider_tests/test_connections.py" lineno="144" time="0.44864511489868164" sim_time_ns="2418.001" ratio_time="5389.562751722064" />
-  </testsuite>
-</testsuites>
