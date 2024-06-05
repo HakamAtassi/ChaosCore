@@ -50,13 +50,13 @@ class FTQ(parameters:Parameters) extends Module{
         val FU_outputs          =   Vec(portCount, Flipped(ValidIO(new FU_output(parameters))))
 
         // PREDICTIONS //
-        val predictions         =   Vec(fetchWidth, Flipped(Decoupled(new FTQ_entry(parameters))))
+        val predictions         =   Flipped(Decoupled(new FTQ_entry(parameters)))
 
         // COMMIT // 
-        val commit              =   Input(Vec(commitWidth, new commit(parameters)))
+        val commit              =   Input(new commit(parameters))
 
         // FTQ //
-        val FTQ                 =   Output(Vec(commitWidth, new FTQ_entry(parameters)))
+        val FTQ                 =   Output(new FTQ_entry(parameters))
     })
 
     val pointer_bits = log2Ceil(FTQEntries)+1
@@ -85,37 +85,28 @@ class FTQ(parameters:Parameters) extends Module{
     // BACKEND POINTER CONTROL //
     /////////////////////////////
     
-
-    for(i <- 0 until fetchWidth){
-        when(io.predictions(i).valid){
-            FTQ(back_index + i.U)   := io.predictions(i).bits
-        }
+    when(io.predictions.valid && io.predictions.ready){
+        FTQ(back_index)             := io.predictions.bits
+        FTQ(back_index).valid       := 1.B
+        back_pointer := back_pointer + 1.U
     }
 
-    back_pointer := back_pointer + PopCount(io.predictions.map(_.valid))
 
     ///////////////////////////
     // FRONT POINTER CONTROL //
     ///////////////////////////
 
-    val front_element_valid             = Wire(Vec(commitWidth, Bool()))
-    val commit_is_branch                = Wire(Vec(commitWidth, Bool()))
 
-    for (i <- 0 until commitWidth){
-        front_element_valid(i)          :=  FTQ(front_index + i.U).valid
-        commit_is_branch(i)             :=  io.commit(i).is_BR && io.commit(i).valid
+
+    val dq = FTQ(front_index).valid && ((FTQ(front_index).fetch_PC>>log2Ceil(fetchWidth*4)) === (io.commit.fetch_PC >> log2Ceil(fetchWidth*4)))
+
+    dontTouch(dq)
+
+    when(dq){
+        FTQ(front_index) := 0.U.asTypeOf(new FTQ_entry(parameters))
+        front_pointer := front_pointer + 1.U
     }
 
-    // Pointer control
-
-
-    for (i <- 0 until commitWidth){
-        when(front_element_valid(i) && commit_is_branch(i)){ // when front element is valid and commiting instruction is a branch, dequeue
-            FTQ(front_index + i.U) := 0.U.asTypeOf(new FTQ_entry(parameters))
-        }
-    }
-
-    front_pointer := front_pointer + PopCount((0 until commitWidth).map(i => front_element_valid(i) && commit_is_branch(i)))
 
     //////////////////////
     // BACKEND UPDATES  //
@@ -123,31 +114,42 @@ class FTQ(parameters:Parameters) extends Module{
 
     // maintain the status of branch instructions/resolution in the FTQ
 
-    for(i <- 0 until FTQEntries){
-        val instruction_PC_match = (FTQ(i).instruction_PC === io.FU_outputs(0).bits.instruction_PC) && FTQ(i).valid   // FIXME: FU_ouputs(0) because port 0 contains the branch unit. Make this a param
-        when(instruction_PC_match){
-            FTQ(i).is_misprediction := FTQ(i).predicted_expected_PC =/= io.FU_outputs(0).bits.target_address
-            FTQ(i).predicted_expected_PC := io.FU_outputs(0).bits.target_address
+
+    // How do you determine the actual next address of a fetch packet?
+    // By finding the earliest taken branch in the fetch packet, if any
+
+    for(i <- 0 until FTQEntries){   // get misprediction
+
+        val is_valid                = FTQ(i).valid && io.FU_outputs(0).valid   
+        val is_branch               = io.FU_outputs(0).bits.branch_valid
+        val is_taken                = io.FU_outputs(0).bits.branch_taken
+        val is_more_dominant        = (io.FU_outputs(0).bits.fetch_packet_index <= FTQ(i).dominant_index)
+        val fetch_packet_PC_match   = ((FTQ(i).fetch_PC>>log2Ceil(fetchWidth*4)) === (io.FU_outputs(0).bits.instruction_PC >> log2Ceil(fetchWidth*4))) // FIXME: FU_ouputs(0) because port 0 contains the branch unit. Make this a param
+
+        // Everytime a branch is resolved in the FU, check if it is the most dominant taken branch in the fetch packet. 
+    
+        when(fetch_packet_PC_match && is_valid && is_branch && is_more_dominant && is_taken){
+            FTQ(i).dominant_index   :=   io.FU_outputs(0).bits.fetch_packet_index
+            FTQ(i).resolved_PC      :=   io.FU_outputs(0).bits.target_address
         }
+
     }
+
+    // FIXME: predictor needs to output the default dominant index as fetchWidth - 1, and the default taken address as fetch pc + 16
 
     ////////////////////
     // ASSIGN OUTPUTS //
     ////////////////////
 
-    for (i <- 0 until commitWidth){
-        io.FTQ(i) := FTQ(front_index + i.U)
-    }
+    io.FTQ := FTQ(front_index)
 
     /////////////////
     // VALID/READY //
     /////////////////
 
-    val available_FTQ_entries =   FTQEntries.U - (back_pointer - front_pointer)
-    val themometor_value = Thermometor(in=available_FTQ_entries, max=FTQEntries)
-    for (i <- 0 until dispatchWidth){
-        io.predictions(i).ready := themometor_value(dispatchWidth-1,0)(i)
-    }
+    val full = (front_pointer =/= back_pointer) && (front_index === back_index)
+
+    io.predictions.ready := !full
 
 
 }

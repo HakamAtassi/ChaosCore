@@ -58,7 +58,7 @@ class MEMRS(parameters:Parameters) extends Module{
         val FU_outputs              =      Vec(portCount, Flipped(ValidIO(new FU_output(parameters))))
 
         // REDIRECTS // 
-        val commit           =   Input(Vec(commitWidth, new commit(parameters)))
+        val commit           =   Input( new commit(parameters))
 
         // REG READ (then execute) //
         val RF_inputs               =      Vec(portCount, Decoupled(new decoded_instruction(parameters)))

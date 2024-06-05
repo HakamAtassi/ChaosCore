@@ -661,42 +661,15 @@ module BP(
                 reset,
                 io_predict_valid,
   input  [31:0] io_predict_bits,
-  input         io_commit_0_valid,
-  input  [31:0] io_commit_0_instruction_PC,
-  input         io_commit_0_T_NT,
-                io_commit_0_is_BR,
-                io_commit_0_is_misprediction,
-  input  [31:0] io_commit_0_expected_PC,
-  input  [15:0] io_commit_0_GHR,
-  input  [6:0]  io_commit_0_TOS,
-                io_commit_0_NEXT,
-  input         io_commit_1_valid,
-  input  [31:0] io_commit_1_instruction_PC,
-  input         io_commit_1_T_NT,
-                io_commit_1_is_BR,
-                io_commit_1_is_misprediction,
-  input  [31:0] io_commit_1_expected_PC,
-  input  [15:0] io_commit_1_GHR,
-  input  [6:0]  io_commit_1_TOS,
-                io_commit_1_NEXT,
-  input         io_commit_2_valid,
-  input  [31:0] io_commit_2_instruction_PC,
-  input         io_commit_2_T_NT,
-                io_commit_2_is_BR,
-                io_commit_2_is_misprediction,
-  input  [31:0] io_commit_2_expected_PC,
-  input  [15:0] io_commit_2_GHR,
-  input  [6:0]  io_commit_2_TOS,
-                io_commit_2_NEXT,
-  input         io_commit_3_valid,
-  input  [31:0] io_commit_3_instruction_PC,
-  input         io_commit_3_T_NT,
-                io_commit_3_is_BR,
-                io_commit_3_is_misprediction,
-  input  [31:0] io_commit_3_expected_PC,
-  input  [15:0] io_commit_3_GHR,
-  input  [6:0]  io_commit_3_TOS,
-                io_commit_3_NEXT,
+  input         io_commit_valid,
+  input  [31:0] io_commit_fetch_PC,
+  input         io_commit_T_NT,
+                io_commit_is_BR,
+                io_commit_is_misprediction,
+  input  [31:0] io_commit_expected_PC,
+  input  [15:0] io_commit_GHR,
+  input  [6:0]  io_commit_TOS,
+                io_commit_NEXT,
   input  [31:0] io_RAS_update_call_addr,
   input         io_RAS_update_call,
                 io_RAS_update_ret,
@@ -720,37 +693,16 @@ module BP(
   wire        _gshare_io_T_NT;
   wire        _gshare_io_valid;
   reg  [15:0] GHR_reg;
-  wire        misprediction =
-    io_commit_0_is_misprediction | io_commit_1_is_misprediction
-    | io_commit_2_is_misprediction | io_commit_3_is_misprediction;
-  wire [15:0] misprediction_GHR =
-    io_commit_0_is_misprediction
-      ? io_commit_0_GHR
-      : io_commit_1_is_misprediction
-          ? io_commit_1_GHR
-          : io_commit_2_is_misprediction
-              ? io_commit_2_GHR
-              : io_commit_3_is_misprediction ? io_commit_3_GHR : 16'h0;
   wire        GHR_update =
     _gshare_io_valid & _BTB_io_BTB_valid & _BTB_io_BTB_hit & _BTB_io_BTB_type == 2'h0;
   wire [15:0] _GEN = {GHR_reg[14:0], _gshare_io_T_NT};
-  wire        _update_PHT_T = io_commit_0_is_BR & io_commit_0_valid;
-  wire        _update_PHT_T_1 = io_commit_1_is_BR & io_commit_1_valid;
-  wire        _update_PHT_T_2 = io_commit_2_is_BR & io_commit_2_valid;
-  wire        _update_PHT_T_3 = io_commit_3_is_BR & io_commit_3_valid;
-  wire [31:0] _GEN_0 =
-    _update_PHT_T_3
-      ? io_commit_3_instruction_PC
-      : _update_PHT_T_2
-          ? io_commit_2_instruction_PC
-          : _update_PHT_T_1
-              ? io_commit_1_instruction_PC
-              : _update_PHT_T ? io_commit_0_instruction_PC : 32'h0;
+  wire        update_PHT = io_commit_is_BR & io_commit_valid;
+  wire [31:0] _GEN_0 = update_PHT ? io_commit_fetch_PC : 32'h0;
   always @(posedge clock) begin
     if (reset)
       GHR_reg <= 16'h0;
-    else if (misprediction)
-      GHR_reg <= misprediction_GHR;
+    else if (io_commit_is_misprediction)
+      GHR_reg <= io_commit_GHR;
     else if (io_revert_valid)
       GHR_reg <= io_revert_bits_GHR;
     else if (GHR_update)
@@ -759,30 +711,17 @@ module BP(
   gshare gshare (
     .clock                      (clock),
     .io_predict_GHR
-      (misprediction
-         ? misprediction_GHR
+      (io_commit_is_misprediction
+         ? io_commit_GHR
          : io_revert_valid ? io_revert_bits_GHR : GHR_update ? _GEN : GHR_reg),
     .io_predict_PC              (io_predict_bits),
     .io_predict_valid           (io_predict_valid),
     .io_T_NT                    (_gshare_io_T_NT),
     .io_valid                   (_gshare_io_valid),
-    .io_commit_GHR
-      (_update_PHT_T_3
-         ? io_commit_3_GHR
-         : _update_PHT_T_2
-             ? io_commit_2_GHR
-             : _update_PHT_T_1
-                 ? io_commit_1_GHR
-                 : _update_PHT_T ? io_commit_0_GHR : 16'h0),
+    .io_commit_GHR              (update_PHT ? io_commit_GHR : 16'h0),
     .io_commit_PC               (_GEN_0),
-    .io_commit_valid
-      (_update_PHT_T | _update_PHT_T_1 | _update_PHT_T_2 | _update_PHT_T_3),
-    .io_commit_branch_direction
-      (_update_PHT_T_3
-         ? io_commit_3_T_NT
-         : _update_PHT_T_2
-             ? io_commit_2_T_NT
-             : _update_PHT_T_1 ? io_commit_1_T_NT : _update_PHT_T & io_commit_0_T_NT)
+    .io_commit_valid            (update_PHT),
+    .io_commit_branch_direction (update_PHT & io_commit_T_NT)
   );
   hash_BTB BTB (
     .clock            (clock),
@@ -795,41 +734,18 @@ module BP(
     .io_BTB_br_mask   (io_prediction_bits_br_mask),
     .io_BTB_hit       (_BTB_io_BTB_hit),
     .io_commit_PC     (_GEN_0),
-    .io_commit_target
-      (_update_PHT_T_3
-         ? io_commit_3_expected_PC
-         : _update_PHT_T_2
-             ? io_commit_2_expected_PC
-             : _update_PHT_T_1
-                 ? io_commit_1_expected_PC
-                 : _update_PHT_T ? io_commit_0_expected_PC : 32'h0),
-    .io_commit_valid
-      (io_commit_0_T_NT & io_commit_0_valid | io_commit_1_T_NT & io_commit_1_valid
-       | io_commit_2_T_NT & io_commit_2_valid | io_commit_3_T_NT & io_commit_3_valid)
+    .io_commit_target (update_PHT ? io_commit_expected_PC : 32'h0),
+    .io_commit_valid  (io_commit_T_NT & io_commit_valid)
   );
   RAS RAS (
     .clock           (clock),
     .reset           (reset),
     .io_wr_addr      (io_RAS_update_call_addr),
-    .io_wr_valid     (io_RAS_update_call & ~misprediction),
-    .io_rd_valid     (io_RAS_update_ret & ~misprediction),
-    .io_revert_NEXT
-      (io_commit_0_is_misprediction
-         ? io_commit_0_NEXT
-         : io_commit_1_is_misprediction
-             ? io_commit_1_NEXT
-             : io_commit_2_is_misprediction
-                 ? io_commit_2_NEXT
-                 : io_commit_3_is_misprediction ? io_commit_3_NEXT : 7'h0),
-    .io_revert_TOS
-      (io_commit_0_is_misprediction
-         ? io_commit_0_TOS
-         : io_commit_1_is_misprediction
-             ? io_commit_1_TOS
-             : io_commit_2_is_misprediction
-                 ? io_commit_2_TOS
-                 : io_commit_3_is_misprediction ? io_commit_3_TOS : 7'h0),
-    .io_revert_valid (misprediction),
+    .io_wr_valid     (io_RAS_update_call & ~io_commit_is_misprediction),
+    .io_rd_valid     (io_RAS_update_ret & ~io_commit_is_misprediction),
+    .io_revert_NEXT  (io_commit_is_misprediction ? io_commit_NEXT : 7'h0),
+    .io_revert_TOS   (io_commit_is_misprediction ? io_commit_TOS : 7'h0),
+    .io_revert_valid (io_commit_is_misprediction),
     .io_ret_addr     (io_RAS_read_ret_addr),
     .io_NEXT         (io_RAS_read_NEXT),
     .io_TOS          (io_RAS_read_TOS)
@@ -1163,11 +1079,12 @@ module predecoder(
                 io_RAS_update_ret,
   input         io_predictions_ready,
   output        io_predictions_valid,
-  output [31:0] io_predictions_bits_instruction_PC,
-                io_predictions_bits_predicted_expected_PC,
+  output [31:0] io_predictions_bits_fetch_PC,
+                io_predictions_bits_predicted_PC,
   output [15:0] io_predictions_bits_GHR,
   output [6:0]  io_predictions_bits_NEXT,
-                io_predictions_bits_TOS
+                io_predictions_bits_TOS,
+  output [31:0] io_predictions_bits_resolved_PC
 );
 
   wire [31:0] PC_expected;
@@ -1254,42 +1171,12 @@ module predecoder(
   reg         T_NT_reg_2;
   reg         T_NT_reg_3;
   reg  [15:0] GHR_reg;
-  wire        metadata_out_JAL =
-    T_NT_reg_0
-      ? metadata_reg_0_JAL
-      : T_NT_reg_1
-          ? metadata_reg_1_JAL
-          : T_NT_reg_2 ? metadata_reg_2_JAL : T_NT_reg_3 & metadata_reg_3_JAL;
-  wire        metadata_out_JALR =
-    T_NT_reg_0
-      ? metadata_reg_0_JALR
-      : T_NT_reg_1
-          ? metadata_reg_1_JALR
-          : T_NT_reg_2 ? metadata_reg_2_JALR : T_NT_reg_3 & metadata_reg_3_JALR;
-  wire        metadata_out_BR =
-    T_NT_reg_0
-      ? metadata_reg_0_BR
-      : T_NT_reg_1
-          ? metadata_reg_1_BR
-          : T_NT_reg_2 ? metadata_reg_2_BR : T_NT_reg_3 & metadata_reg_3_BR;
-  wire        metadata_out_Call =
-    T_NT_reg_0
-      ? metadata_reg_0_Call
-      : T_NT_reg_1
-          ? metadata_reg_1_Call
-          : T_NT_reg_2 ? metadata_reg_2_Call : T_NT_reg_3 & metadata_reg_3_Call;
-  wire        metadata_out_Ret =
+  wire        use_RAS =
     T_NT_reg_0
       ? metadata_reg_0_Ret
       : T_NT_reg_1
           ? metadata_reg_1_Ret
           : T_NT_reg_2 ? metadata_reg_2_Ret : T_NT_reg_3 & metadata_reg_3_Ret;
-  wire [31:0] metadata_out_Imm =
-    T_NT_reg_0
-      ? metadata_reg_0_Imm
-      : T_NT_reg_1
-          ? metadata_reg_1_Imm
-          : T_NT_reg_2 ? metadata_reg_2_Imm : T_NT_reg_3 ? metadata_reg_3_Imm : 32'h0;
   wire [31:0] metadata_out_instruction_PC =
     T_NT_reg_0
       ? metadata_reg_0_instruction_PC
@@ -1298,30 +1185,49 @@ module predecoder(
           : T_NT_reg_2
               ? metadata_reg_2_instruction_PC
               : T_NT_reg_3 ? metadata_reg_3_instruction_PC : 32'h0;
-  wire [31:0] metadata_out_RAS =
-    T_NT_reg_0
-      ? metadata_reg_0_RAS
-      : T_NT_reg_1
-          ? metadata_reg_1_RAS
-          : T_NT_reg_2 ? metadata_reg_2_RAS : T_NT_reg_3 ? metadata_reg_3_RAS : 32'h0;
-  wire [31:0] metadata_out_BTB_target =
-    T_NT_reg_0
-      ? metadata_reg_0_BTB_target
-      : T_NT_reg_1
-          ? metadata_reg_1_BTB_target
-          : T_NT_reg_2
-              ? metadata_reg_2_BTB_target
-              : T_NT_reg_3 ? metadata_reg_3_BTB_target : 32'h0;
   reg  [31:0] PC_next_reg;
   wire        PC_mismatch = PC_expected != io_fetch_packet_bits_fetch_PC & inputs_valid;
   reg  [31:0] PC_next_REG;
   wire [31:0] PC_next =
-    metadata_out_JALR & ~metadata_out_Ret
-      ? metadata_out_BTB_target
-      : metadata_out_Ret
-          ? metadata_out_RAS
-          : metadata_out_BR | metadata_out_JAL
-              ? metadata_out_instruction_PC + metadata_out_Imm
+    (T_NT_reg_0
+       ? metadata_reg_0_JALR
+       : T_NT_reg_1
+           ? metadata_reg_1_JALR
+           : T_NT_reg_2 ? metadata_reg_2_JALR : T_NT_reg_3 & metadata_reg_3_JALR)
+    & ~use_RAS
+      ? (T_NT_reg_0
+           ? metadata_reg_0_BTB_target
+           : T_NT_reg_1
+               ? metadata_reg_1_BTB_target
+               : T_NT_reg_2
+                   ? metadata_reg_2_BTB_target
+                   : T_NT_reg_3 ? metadata_reg_3_BTB_target : 32'h0)
+      : use_RAS
+          ? (T_NT_reg_0
+               ? metadata_reg_0_RAS
+               : T_NT_reg_1
+                   ? metadata_reg_1_RAS
+                   : T_NT_reg_2
+                       ? metadata_reg_2_RAS
+                       : T_NT_reg_3 ? metadata_reg_3_RAS : 32'h0)
+          : (T_NT_reg_0
+               ? metadata_reg_0_BR
+               : T_NT_reg_1
+                   ? metadata_reg_1_BR
+                   : T_NT_reg_2 ? metadata_reg_2_BR : T_NT_reg_3 & metadata_reg_3_BR)
+            | (T_NT_reg_0
+                 ? metadata_reg_0_JAL
+                 : T_NT_reg_1
+                     ? metadata_reg_1_JAL
+                     : T_NT_reg_2 ? metadata_reg_2_JAL : T_NT_reg_3 & metadata_reg_3_JAL)
+              ? metadata_out_instruction_PC
+                + (T_NT_reg_0
+                     ? metadata_reg_0_Imm
+                     : T_NT_reg_1
+                         ? metadata_reg_1_Imm
+                         : T_NT_reg_2
+                             ? metadata_reg_2_Imm
+                             : T_NT_reg_3 ? metadata_reg_3_Imm : 32'h0)
               : PC_next_REG;
   reg         PC_next_reg_REG;
   reg         PC_expected_REG;
@@ -1346,9 +1252,10 @@ module predecoder(
   reg  [5:0]  io_final_fetch_packet_bits_instructions_3_REG_ROB_index;
   reg         io_final_fetch_packet_bits_valid_bits_3_REG;
   reg         io_final_fetch_packet_bits_valid_bits_3_REG_1;
-  reg  [31:0] io_predictions_bits_instruction_PC_REG;
+  reg  [31:0] io_predictions_bits_fetch_PC_REG;
   reg  [6:0]  io_predictions_bits_NEXT_REG;
   reg  [6:0]  io_predictions_bits_TOS_REG;
+  reg  [31:0] io_predictions_bits_resolved_PC_REG;
   wire        _io_fetch_packet_ready_T =
     io_final_fetch_packet_ready & io_predictions_ready;
   reg         io_final_fetch_packet_valid_REG;
@@ -1434,9 +1341,10 @@ module predecoder(
     io_final_fetch_packet_bits_valid_bits_3_REG <=
       _decoder_validator_io_instruction_validity[3];
     io_final_fetch_packet_bits_valid_bits_3_REG_1 <= inputs_valid;
-    io_predictions_bits_instruction_PC_REG <= io_fetch_packet_bits_fetch_PC;
+    io_predictions_bits_fetch_PC_REG <= io_fetch_packet_bits_fetch_PC;
     io_predictions_bits_NEXT_REG <= io_RAS_read_NEXT;
     io_predictions_bits_TOS_REG <= io_RAS_read_TOS;
+    io_predictions_bits_resolved_PC_REG <= io_fetch_packet_bits_fetch_PC;
     io_final_fetch_packet_valid_REG <=
       inputs_valid & PC_expected == io_fetch_packet_bits_fetch_PC;
     if (reset)
@@ -1563,8 +1471,13 @@ module predecoder(
   assign io_final_fetch_packet_bits_instructions_3_ROB_index =
     io_final_fetch_packet_bits_instructions_3_REG_ROB_index;
   assign io_RAS_update_call_addr = metadata_out_instruction_PC;
-  assign io_RAS_update_call = metadata_out_Call;
-  assign io_RAS_update_ret = metadata_out_Ret;
+  assign io_RAS_update_call =
+    T_NT_reg_0
+      ? metadata_reg_0_Call
+      : T_NT_reg_1
+          ? metadata_reg_1_Call
+          : T_NT_reg_2 ? metadata_reg_2_Call : T_NT_reg_3 & metadata_reg_3_Call;
+  assign io_RAS_update_ret = use_RAS;
   assign io_predictions_valid =
     (metadata_reg_3_JAL | metadata_reg_3_JALR | metadata_reg_3_BR)
     & io_final_fetch_packet_bits_valid_bits_3_REG
@@ -1578,28 +1491,20 @@ module predecoder(
     | (metadata_reg_0_JAL | metadata_reg_0_JALR | metadata_reg_0_BR)
     & io_final_fetch_packet_bits_valid_bits_0_REG
     & io_final_fetch_packet_bits_valid_bits_0_REG_1;
-  assign io_predictions_bits_instruction_PC = io_predictions_bits_instruction_PC_REG;
-  assign io_predictions_bits_predicted_expected_PC = PC_expected;
+  assign io_predictions_bits_fetch_PC = io_predictions_bits_fetch_PC_REG;
+  assign io_predictions_bits_predicted_PC = PC_expected;
   assign io_predictions_bits_GHR = GHR_reg;
   assign io_predictions_bits_NEXT = io_predictions_bits_NEXT_REG;
   assign io_predictions_bits_TOS = io_predictions_bits_TOS_REG;
+  assign io_predictions_bits_resolved_PC = io_predictions_bits_resolved_PC_REG + 32'h10;
 endmodule
 
 module PC_arbit(
   input         clock,
                 reset,
-                io_commit_0_valid,
-                io_commit_0_is_misprediction,
-  input  [31:0] io_commit_0_expected_PC,
-  input         io_commit_1_valid,
-                io_commit_1_is_misprediction,
-  input  [31:0] io_commit_1_expected_PC,
-  input         io_commit_2_valid,
-                io_commit_2_is_misprediction,
-  input  [31:0] io_commit_2_expected_PC,
-  input         io_commit_3_valid,
-                io_commit_3_is_misprediction,
-  input  [31:0] io_commit_3_expected_PC,
+                io_commit_valid,
+                io_commit_is_misprediction,
+  input  [31:0] io_commit_expected_PC,
   input         io_prediction_valid,
                 io_prediction_bits_hit,
   input  [31:0] io_prediction_bits_target,
@@ -1617,12 +1522,7 @@ module PC_arbit(
   reg  [31:0] PC;
   reg  [31:0] correction_address_reg;
   wire        correct_stage_active = misprediction | io_revert_valid;
-  wire        _misprediction_T = io_commit_0_valid & io_commit_0_is_misprediction;
-  wire        _misprediction_T_1 = io_commit_1_valid & io_commit_1_is_misprediction;
-  wire        _misprediction_T_2 = io_commit_2_valid & io_commit_2_is_misprediction;
-  wire        _misprediction_T_3 = io_commit_3_valid & io_commit_3_is_misprediction;
-  assign misprediction =
-    _misprediction_T | _misprediction_T_1 | _misprediction_T_2 | _misprediction_T_3;
+  assign misprediction = io_commit_is_misprediction & io_commit_valid;
   wire        is_ret = io_prediction_bits_br_type == 2'h2;
   reg         REG;
   assign io_PC_next_bits_0 =
@@ -1642,14 +1542,8 @@ module PC_arbit(
       correction_address =
         io_revert_valid
           ? io_revert_bits_PC
-          : misprediction
-              ? (_misprediction_T
-                   ? io_commit_0_expected_PC
-                   : _misprediction_T_1
-                       ? io_commit_1_expected_PC
-                       : _misprediction_T_2
-                           ? io_commit_2_expected_PC
-                           : _misprediction_T_3 ? io_commit_3_expected_PC : 32'h0)
+          : misprediction & io_commit_valid & io_commit_is_misprediction
+              ? io_commit_expected_PC
               : 32'h0;
       if (correct_stage_active)
         PC <= correction_address;
@@ -2087,42 +1981,15 @@ endmodule
 module instruction_fetch(
   input          clock,
                  reset,
-                 io_commit_0_valid,
-  input  [31:0]  io_commit_0_instruction_PC,
-  input          io_commit_0_T_NT,
-                 io_commit_0_is_BR,
-                 io_commit_0_is_misprediction,
-  input  [31:0]  io_commit_0_expected_PC,
-  input  [15:0]  io_commit_0_GHR,
-  input  [6:0]   io_commit_0_TOS,
-                 io_commit_0_NEXT,
-  input          io_commit_1_valid,
-  input  [31:0]  io_commit_1_instruction_PC,
-  input          io_commit_1_T_NT,
-                 io_commit_1_is_BR,
-                 io_commit_1_is_misprediction,
-  input  [31:0]  io_commit_1_expected_PC,
-  input  [15:0]  io_commit_1_GHR,
-  input  [6:0]   io_commit_1_TOS,
-                 io_commit_1_NEXT,
-  input          io_commit_2_valid,
-  input  [31:0]  io_commit_2_instruction_PC,
-  input          io_commit_2_T_NT,
-                 io_commit_2_is_BR,
-                 io_commit_2_is_misprediction,
-  input  [31:0]  io_commit_2_expected_PC,
-  input  [15:0]  io_commit_2_GHR,
-  input  [6:0]   io_commit_2_TOS,
-                 io_commit_2_NEXT,
-  input          io_commit_3_valid,
-  input  [31:0]  io_commit_3_instruction_PC,
-  input          io_commit_3_T_NT,
-                 io_commit_3_is_BR,
-                 io_commit_3_is_misprediction,
-  input  [31:0]  io_commit_3_expected_PC,
-  input  [15:0]  io_commit_3_GHR,
-  input  [6:0]   io_commit_3_TOS,
-                 io_commit_3_NEXT,
+                 io_commit_valid,
+  input  [31:0]  io_commit_fetch_PC,
+  input          io_commit_T_NT,
+                 io_commit_is_BR,
+                 io_commit_is_misprediction,
+  input  [31:0]  io_commit_expected_PC,
+  input  [15:0]  io_commit_GHR,
+  input  [6:0]   io_commit_TOS,
+                 io_commit_NEXT,
   input          io_DRAM_request_ready,
   output         io_DRAM_request_valid,
   output [31:0]  io_DRAM_request_bits_addr,
@@ -2145,11 +2012,12 @@ module instruction_fetch(
   output [5:0]   io_fetch_packet_bits_instructions_3_ROB_index,
   input          io_predictions_ready,
   output         io_predictions_valid,
-  output [31:0]  io_predictions_bits_instruction_PC,
-                 io_predictions_bits_predicted_expected_PC,
+  output [31:0]  io_predictions_bits_fetch_PC,
+                 io_predictions_bits_predicted_PC,
   output [15:0]  io_predictions_bits_GHR,
   output [6:0]   io_predictions_bits_NEXT,
-                 io_predictions_bits_TOS
+                 io_predictions_bits_TOS,
+  output [31:0]  io_predictions_bits_resolved_PC
 );
 
   wire        _BTB_Q_io_out_valid;
@@ -2244,61 +2112,34 @@ module instruction_fetch(
     .io_DRAM_request_bits_addr                     (io_DRAM_request_bits_addr)
   );
   BP bp (
-    .clock                        (clock),
-    .reset                        (reset),
-    .io_predict_valid             (_PC_gen_io_PC_next_valid),
-    .io_predict_bits              (_PC_gen_io_PC_next_bits),
-    .io_commit_0_valid            (io_commit_0_valid),
-    .io_commit_0_instruction_PC   (io_commit_0_instruction_PC),
-    .io_commit_0_T_NT             (io_commit_0_T_NT),
-    .io_commit_0_is_BR            (io_commit_0_is_BR),
-    .io_commit_0_is_misprediction (io_commit_0_is_misprediction),
-    .io_commit_0_expected_PC      (io_commit_0_expected_PC),
-    .io_commit_0_GHR              (io_commit_0_GHR),
-    .io_commit_0_TOS              (io_commit_0_TOS),
-    .io_commit_0_NEXT             (io_commit_0_NEXT),
-    .io_commit_1_valid            (io_commit_1_valid),
-    .io_commit_1_instruction_PC   (io_commit_1_instruction_PC),
-    .io_commit_1_T_NT             (io_commit_1_T_NT),
-    .io_commit_1_is_BR            (io_commit_1_is_BR),
-    .io_commit_1_is_misprediction (io_commit_1_is_misprediction),
-    .io_commit_1_expected_PC      (io_commit_1_expected_PC),
-    .io_commit_1_GHR              (io_commit_1_GHR),
-    .io_commit_1_TOS              (io_commit_1_TOS),
-    .io_commit_1_NEXT             (io_commit_1_NEXT),
-    .io_commit_2_valid            (io_commit_2_valid),
-    .io_commit_2_instruction_PC   (io_commit_2_instruction_PC),
-    .io_commit_2_T_NT             (io_commit_2_T_NT),
-    .io_commit_2_is_BR            (io_commit_2_is_BR),
-    .io_commit_2_is_misprediction (io_commit_2_is_misprediction),
-    .io_commit_2_expected_PC      (io_commit_2_expected_PC),
-    .io_commit_2_GHR              (io_commit_2_GHR),
-    .io_commit_2_TOS              (io_commit_2_TOS),
-    .io_commit_2_NEXT             (io_commit_2_NEXT),
-    .io_commit_3_valid            (io_commit_3_valid),
-    .io_commit_3_instruction_PC   (io_commit_3_instruction_PC),
-    .io_commit_3_T_NT             (io_commit_3_T_NT),
-    .io_commit_3_is_BR            (io_commit_3_is_BR),
-    .io_commit_3_is_misprediction (io_commit_3_is_misprediction),
-    .io_commit_3_expected_PC      (io_commit_3_expected_PC),
-    .io_commit_3_GHR              (io_commit_3_GHR),
-    .io_commit_3_TOS              (io_commit_3_TOS),
-    .io_commit_3_NEXT             (io_commit_3_NEXT),
-    .io_RAS_update_call_addr      (_predecoder_io_RAS_update_call_addr),
-    .io_RAS_update_call           (_predecoder_io_RAS_update_call),
-    .io_RAS_update_ret            (_predecoder_io_RAS_update_ret),
-    .io_RAS_read_NEXT             (_bp_io_RAS_read_NEXT),
-    .io_RAS_read_TOS              (_bp_io_RAS_read_TOS),
-    .io_RAS_read_ret_addr         (_bp_io_RAS_read_ret_addr),
-    .io_revert_valid              (_predecoder_io_revert_valid),
-    .io_revert_bits_GHR           (_predecoder_io_revert_bits_GHR),
-    .io_prediction_valid          (_bp_io_prediction_valid),
-    .io_prediction_bits_hit       (_bp_io_prediction_bits_hit),
-    .io_prediction_bits_target    (_bp_io_prediction_bits_target),
-    .io_prediction_bits_br_type   (_bp_io_prediction_bits_br_type),
-    .io_prediction_bits_br_mask   (_bp_io_prediction_bits_br_mask),
-    .io_prediction_bits_GHR       (_bp_io_prediction_bits_GHR),
-    .io_prediction_bits_T_NT      (_bp_io_prediction_bits_T_NT)
+    .clock                      (clock),
+    .reset                      (reset),
+    .io_predict_valid           (_PC_gen_io_PC_next_valid),
+    .io_predict_bits            (_PC_gen_io_PC_next_bits),
+    .io_commit_valid            (io_commit_valid),
+    .io_commit_fetch_PC         (io_commit_fetch_PC),
+    .io_commit_T_NT             (io_commit_T_NT),
+    .io_commit_is_BR            (io_commit_is_BR),
+    .io_commit_is_misprediction (io_commit_is_misprediction),
+    .io_commit_expected_PC      (io_commit_expected_PC),
+    .io_commit_GHR              (io_commit_GHR),
+    .io_commit_TOS              (io_commit_TOS),
+    .io_commit_NEXT             (io_commit_NEXT),
+    .io_RAS_update_call_addr    (_predecoder_io_RAS_update_call_addr),
+    .io_RAS_update_call         (_predecoder_io_RAS_update_call),
+    .io_RAS_update_ret          (_predecoder_io_RAS_update_ret),
+    .io_RAS_read_NEXT           (_bp_io_RAS_read_NEXT),
+    .io_RAS_read_TOS            (_bp_io_RAS_read_TOS),
+    .io_RAS_read_ret_addr       (_bp_io_RAS_read_ret_addr),
+    .io_revert_valid            (_predecoder_io_revert_valid),
+    .io_revert_bits_GHR         (_predecoder_io_revert_bits_GHR),
+    .io_prediction_valid        (_bp_io_prediction_valid),
+    .io_prediction_bits_hit     (_bp_io_prediction_bits_hit),
+    .io_prediction_bits_target  (_bp_io_prediction_bits_target),
+    .io_prediction_bits_br_type (_bp_io_prediction_bits_br_type),
+    .io_prediction_bits_br_mask (_bp_io_prediction_bits_br_mask),
+    .io_prediction_bits_GHR     (_bp_io_prediction_bits_GHR),
+    .io_prediction_bits_T_NT    (_bp_io_prediction_bits_T_NT)
   );
   predecoder predecoder (
     .clock                                                  (clock),
@@ -2390,39 +2231,32 @@ module instruction_fetch(
       (_predecoder_io_RAS_update_ret),
     .io_predictions_ready                                   (io_predictions_ready),
     .io_predictions_valid                                   (io_predictions_valid),
-    .io_predictions_bits_instruction_PC
-      (io_predictions_bits_instruction_PC),
-    .io_predictions_bits_predicted_expected_PC
-      (io_predictions_bits_predicted_expected_PC),
+    .io_predictions_bits_fetch_PC
+      (io_predictions_bits_fetch_PC),
+    .io_predictions_bits_predicted_PC
+      (io_predictions_bits_predicted_PC),
     .io_predictions_bits_GHR                                (io_predictions_bits_GHR),
     .io_predictions_bits_NEXT                               (io_predictions_bits_NEXT),
-    .io_predictions_bits_TOS                                (io_predictions_bits_TOS)
+    .io_predictions_bits_TOS                                (io_predictions_bits_TOS),
+    .io_predictions_bits_resolved_PC
+      (io_predictions_bits_resolved_PC)
   );
   PC_arbit PC_gen (
-    .clock                        (clock),
-    .reset                        (reset),
-    .io_commit_0_valid            (io_commit_0_valid),
-    .io_commit_0_is_misprediction (io_commit_0_is_misprediction),
-    .io_commit_0_expected_PC      (io_commit_0_expected_PC),
-    .io_commit_1_valid            (io_commit_1_valid),
-    .io_commit_1_is_misprediction (io_commit_1_is_misprediction),
-    .io_commit_1_expected_PC      (io_commit_1_expected_PC),
-    .io_commit_2_valid            (io_commit_2_valid),
-    .io_commit_2_is_misprediction (io_commit_2_is_misprediction),
-    .io_commit_2_expected_PC      (io_commit_2_expected_PC),
-    .io_commit_3_valid            (io_commit_3_valid),
-    .io_commit_3_is_misprediction (io_commit_3_is_misprediction),
-    .io_commit_3_expected_PC      (io_commit_3_expected_PC),
-    .io_prediction_valid          (_bp_io_prediction_valid),
-    .io_prediction_bits_hit       (_bp_io_prediction_bits_hit),
-    .io_prediction_bits_target    (_bp_io_prediction_bits_target),
-    .io_prediction_bits_br_type   (_bp_io_prediction_bits_br_type),
-    .io_revert_valid              (_predecoder_io_revert_valid),
-    .io_revert_bits_PC            (_predecoder_io_revert_bits_PC),
-    .io_RAS_read_ret_addr         (_bp_io_RAS_read_ret_addr),
-    .io_PC_next_ready             (_PC_Q_io_in_ready),
-    .io_PC_next_valid             (_PC_gen_io_PC_next_valid),
-    .io_PC_next_bits              (_PC_gen_io_PC_next_bits)
+    .clock                      (clock),
+    .reset                      (reset),
+    .io_commit_valid            (io_commit_valid),
+    .io_commit_is_misprediction (io_commit_is_misprediction),
+    .io_commit_expected_PC      (io_commit_expected_PC),
+    .io_prediction_valid        (_bp_io_prediction_valid),
+    .io_prediction_bits_hit     (_bp_io_prediction_bits_hit),
+    .io_prediction_bits_target  (_bp_io_prediction_bits_target),
+    .io_prediction_bits_br_type (_bp_io_prediction_bits_br_type),
+    .io_revert_valid            (_predecoder_io_revert_valid),
+    .io_revert_bits_PC          (_predecoder_io_revert_bits_PC),
+    .io_RAS_read_ret_addr       (_bp_io_RAS_read_ret_addr),
+    .io_PC_next_ready           (_PC_Q_io_in_ready),
+    .io_PC_next_valid           (_PC_gen_io_PC_next_valid),
+    .io_PC_next_bits            (_PC_gen_io_PC_next_bits)
   );
   Q instruction_Q (
     .clock                                   (clock),
@@ -11560,56 +11394,28 @@ module frontend(
   output [31:0]  io_DRAM_request_bits_addr,
                  io_DRAM_request_bits_wr_data,
   output         io_DRAM_request_bits_wr_en,
-  input          io_commit_0_valid,
-  input  [31:0]  io_commit_0_instruction_PC,
-  input          io_commit_0_T_NT,
-                 io_commit_0_is_BR,
-                 io_commit_0_is_misprediction,
-  input  [31:0]  io_commit_0_expected_PC,
-  input  [15:0]  io_commit_0_GHR,
-  input  [6:0]   io_commit_0_TOS,
-                 io_commit_0_NEXT,
-  input  [3:0]   io_commit_0_RAT_IDX,
-  input          io_commit_1_valid,
-  input  [31:0]  io_commit_1_instruction_PC,
-  input          io_commit_1_T_NT,
-                 io_commit_1_is_BR,
-                 io_commit_1_is_misprediction,
-  input  [31:0]  io_commit_1_expected_PC,
-  input  [15:0]  io_commit_1_GHR,
-  input  [6:0]   io_commit_1_TOS,
-                 io_commit_1_NEXT,
-  input  [3:0]   io_commit_1_RAT_IDX,
-  input          io_commit_2_valid,
-  input  [31:0]  io_commit_2_instruction_PC,
-  input          io_commit_2_T_NT,
-                 io_commit_2_is_BR,
-                 io_commit_2_is_misprediction,
-  input  [31:0]  io_commit_2_expected_PC,
-  input  [15:0]  io_commit_2_GHR,
-  input  [6:0]   io_commit_2_TOS,
-                 io_commit_2_NEXT,
-  input  [3:0]   io_commit_2_RAT_IDX,
-  input          io_commit_3_valid,
-  input  [31:0]  io_commit_3_instruction_PC,
-  input          io_commit_3_T_NT,
-                 io_commit_3_is_BR,
-                 io_commit_3_is_misprediction,
-  input  [31:0]  io_commit_3_expected_PC,
-  input  [15:0]  io_commit_3_GHR,
-  input  [6:0]   io_commit_3_TOS,
-                 io_commit_3_NEXT,
-  input  [3:0]   io_commit_3_RAT_IDX,
+  input          io_commit_valid,
+  input  [31:0]  io_commit_fetch_PC,
+  input          io_commit_T_NT,
+                 io_commit_is_BR,
+                 io_commit_is_misprediction,
+  input  [31:0]  io_commit_expected_PC,
+  input  [15:0]  io_commit_GHR,
+  input  [6:0]   io_commit_TOS,
+                 io_commit_NEXT,
+  input  [3:0]   io_commit_RAT_IDX,
   input          io_predictions_ready,
   output         io_predictions_valid,
                  io_predictions_bits_valid,
-  output [31:0]  io_predictions_bits_instruction_PC,
+  output [31:0]  io_predictions_bits_fetch_PC,
   output         io_predictions_bits_is_misprediction,
-  output [31:0]  io_predictions_bits_predicted_expected_PC,
+  output [31:0]  io_predictions_bits_predicted_PC,
   output [15:0]  io_predictions_bits_GHR,
   output [6:0]   io_predictions_bits_NEXT,
                  io_predictions_bits_TOS,
   output [3:0]   io_predictions_bits_RAT_IDX,
+  output [1:0]   io_predictions_bits_dominant_index,
+  output [31:0]  io_predictions_bits_resolved_PC,
   input          io_renamed_decoded_fetch_packet_0_ready,
   output         io_renamed_decoded_fetch_packet_0_valid,
                  io_renamed_decoded_fetch_packet_0_bits_ready_bits_RS1_ready,
@@ -11960,49 +11766,19 @@ module frontend(
   wire [3:0]  _instruction_fetch_io_fetch_packet_bits_instructions_3_packet_index;
   wire [5:0]  _instruction_fetch_io_fetch_packet_bits_instructions_3_ROB_index;
   wire        _instruction_fetch_io_predictions_valid;
-  wire        _GEN = io_commit_0_valid & io_commit_0_is_misprediction;
-  wire        _GEN_0 = io_commit_1_valid & io_commit_1_is_misprediction;
-  wire        _GEN_1 = io_commit_2_valid & io_commit_2_is_misprediction;
-  wire        _GEN_2 = io_commit_3_valid & io_commit_3_is_misprediction;
+  wire        _GEN = io_commit_valid & io_commit_is_misprediction;
   instruction_fetch instruction_fetch (
     .clock                                            (clock),
     .reset                                            (reset),
-    .io_commit_0_valid                                (io_commit_0_valid),
-    .io_commit_0_instruction_PC                       (io_commit_0_instruction_PC),
-    .io_commit_0_T_NT                                 (io_commit_0_T_NT),
-    .io_commit_0_is_BR                                (io_commit_0_is_BR),
-    .io_commit_0_is_misprediction                     (io_commit_0_is_misprediction),
-    .io_commit_0_expected_PC                          (io_commit_0_expected_PC),
-    .io_commit_0_GHR                                  (io_commit_0_GHR),
-    .io_commit_0_TOS                                  (io_commit_0_TOS),
-    .io_commit_0_NEXT                                 (io_commit_0_NEXT),
-    .io_commit_1_valid                                (io_commit_1_valid),
-    .io_commit_1_instruction_PC                       (io_commit_1_instruction_PC),
-    .io_commit_1_T_NT                                 (io_commit_1_T_NT),
-    .io_commit_1_is_BR                                (io_commit_1_is_BR),
-    .io_commit_1_is_misprediction                     (io_commit_1_is_misprediction),
-    .io_commit_1_expected_PC                          (io_commit_1_expected_PC),
-    .io_commit_1_GHR                                  (io_commit_1_GHR),
-    .io_commit_1_TOS                                  (io_commit_1_TOS),
-    .io_commit_1_NEXT                                 (io_commit_1_NEXT),
-    .io_commit_2_valid                                (io_commit_2_valid),
-    .io_commit_2_instruction_PC                       (io_commit_2_instruction_PC),
-    .io_commit_2_T_NT                                 (io_commit_2_T_NT),
-    .io_commit_2_is_BR                                (io_commit_2_is_BR),
-    .io_commit_2_is_misprediction                     (io_commit_2_is_misprediction),
-    .io_commit_2_expected_PC                          (io_commit_2_expected_PC),
-    .io_commit_2_GHR                                  (io_commit_2_GHR),
-    .io_commit_2_TOS                                  (io_commit_2_TOS),
-    .io_commit_2_NEXT                                 (io_commit_2_NEXT),
-    .io_commit_3_valid                                (io_commit_3_valid),
-    .io_commit_3_instruction_PC                       (io_commit_3_instruction_PC),
-    .io_commit_3_T_NT                                 (io_commit_3_T_NT),
-    .io_commit_3_is_BR                                (io_commit_3_is_BR),
-    .io_commit_3_is_misprediction                     (io_commit_3_is_misprediction),
-    .io_commit_3_expected_PC                          (io_commit_3_expected_PC),
-    .io_commit_3_GHR                                  (io_commit_3_GHR),
-    .io_commit_3_TOS                                  (io_commit_3_TOS),
-    .io_commit_3_NEXT                                 (io_commit_3_NEXT),
+    .io_commit_valid                                  (io_commit_valid),
+    .io_commit_fetch_PC                               (io_commit_fetch_PC),
+    .io_commit_T_NT                                   (io_commit_T_NT),
+    .io_commit_is_BR                                  (io_commit_is_BR),
+    .io_commit_is_misprediction                       (io_commit_is_misprediction),
+    .io_commit_expected_PC                            (io_commit_expected_PC),
+    .io_commit_GHR                                    (io_commit_GHR),
+    .io_commit_TOS                                    (io_commit_TOS),
+    .io_commit_NEXT                                   (io_commit_NEXT),
     .io_DRAM_request_ready                            (io_DRAM_request_ready),
     .io_DRAM_request_valid                            (io_DRAM_request_valid),
     .io_DRAM_request_bits_addr                        (io_DRAM_request_bits_addr),
@@ -12039,13 +11815,12 @@ module frontend(
     .io_predictions_ready                             (io_predictions_ready),
     .io_predictions_valid
       (_instruction_fetch_io_predictions_valid),
-    .io_predictions_bits_instruction_PC
-      (io_predictions_bits_instruction_PC),
-    .io_predictions_bits_predicted_expected_PC
-      (io_predictions_bits_predicted_expected_PC),
+    .io_predictions_bits_fetch_PC                     (io_predictions_bits_fetch_PC),
+    .io_predictions_bits_predicted_PC                 (io_predictions_bits_predicted_PC),
     .io_predictions_bits_GHR                          (io_predictions_bits_GHR),
     .io_predictions_bits_NEXT                         (io_predictions_bits_NEXT),
-    .io_predictions_bits_TOS                          (io_predictions_bits_TOS)
+    .io_predictions_bits_TOS                          (io_predictions_bits_TOS),
+    .io_predictions_bits_resolved_PC                  (io_predictions_bits_resolved_PC)
   );
   fetch_packet_decoder decoders (
     .clock                                            (clock),
@@ -12803,20 +12578,16 @@ module frontend(
       (_instruction_fetch_io_predictions_valid),
     .io_active_checkpoint_value
       (io_predictions_bits_RAT_IDX),
-    .io_restore_checkpoint
-      (_GEN_2 | _GEN_1 | _GEN_0 | _GEN),
+    .io_restore_checkpoint                                    (_GEN),
     .io_restore_checkpoint_value
-      (_GEN_2
-         ? io_commit_3_RAT_IDX
-         : _GEN_1
-             ? io_commit_2_RAT_IDX
-             : _GEN_0 ? io_commit_1_RAT_IDX : _GEN ? io_commit_0_RAT_IDX : 4'h0)
+      (_GEN ? io_commit_RAT_IDX : 4'h0)
   );
   assign io_DRAM_request_bits_wr_data = 32'h0;
   assign io_DRAM_request_bits_wr_en = 1'h0;
   assign io_predictions_valid = _instruction_fetch_io_predictions_valid;
   assign io_predictions_bits_valid = 1'h0;
   assign io_predictions_bits_is_misprediction = 1'h0;
+  assign io_predictions_bits_dominant_index = 2'h0;
   assign io_renamed_decoded_fetch_packet_0_bits_ready_bits_RS1_ready = 1'h1;
   assign io_renamed_decoded_fetch_packet_0_bits_ready_bits_RS2_ready = 1'h1;
   assign io_renamed_decoded_fetch_packet_1_bits_ready_bits_RS1_ready = 1'h1;

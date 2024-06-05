@@ -126,7 +126,7 @@ class commit(parameters:Parameters) extends Bundle{
 
     val valid   =   Bool()
 
-    val instruction_PC      = UInt(32.W)    // To update gshare/PHT
+    val fetch_PC      = UInt(32.W)    // To update gshare/PHT
     val T_NT                = Bool()    // To update BTB (BTB only updates on taken branches)
 
     val is_BR               = Bool()
@@ -312,17 +312,23 @@ class FTQ_entry(parameters:Parameters) extends Bundle{
 
     val valid = Bool()
 
-    // Branch validation data
-    val instruction_PC = UInt(32.W)    // fetch packet pc of the base instruction
 
-    val is_misprediction = Bool()   // If set, predicted_expected_PC represents expected PC. Otherwise, it represents predicted PC
-    val predicted_expected_PC      = UInt(32.W)   
+    // Branch validation data
+    val fetch_PC = UInt(32.W)    // fetch packet pc of the base instruction
+
+    val is_misprediction    = Bool()   // If set, predicted_expected_PC represents expected PC. Otherwise, it represents predicted PC
+    val predicted_PC        = UInt(32.W)    // if fetch packet contains a branch, this containts the dominant branch address
+                                            // if fetch packet does not contain a taken branch, the dominant branch just PC+N
 
     // State revision data
     val GHR     = UInt(GHRWidth.W)
     val NEXT    = UInt(log2Ceil(RASEntries).W)
     val TOS     = UInt(log2Ceil(RASEntries).W)
     val RAT_IDX = UInt(log2Ceil(RATCheckpointCount).W)
+
+    // FU branch data buffers
+    val dominant_index = UInt(log2Ceil(fetchWidth).W)
+    val resolved_PC    = UInt(32.W)
 
 }
 
@@ -380,7 +386,7 @@ class FU_output(parameters:Parameters) extends Bundle{
     val RD_valid    =   Bool()
 
     // Branch
-    val instruction_PC    =   UInt(32.W)
+    val instruction_PC    =   UInt(32.W)    // FIXME: is this necessary?
     val branch_taken      =   Bool()
     val target_address    =   UInt(32.W)
     val branch_valid      =   Bool()

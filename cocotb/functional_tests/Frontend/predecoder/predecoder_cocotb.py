@@ -791,7 +791,7 @@ async def test_FTQ_JAL(dut):
 
     dut.get_FTQ_read()["valid"] == 1
 
-    assert dut.get_FTQ_read()["instruction_PC"] ==  0x0
+    assert dut.get_FTQ_read()["fetch_PC"] ==  0x0
     assert dut.get_FTQ_read()["is_misprediction"] == 0
     assert dut.get_FTQ_read()["expected_PC"] == 0xc0de
     #assert dut.get_FTQ_read()["GHR"] ==
@@ -850,7 +850,7 @@ async def test_FTQ_JAL_many_branches(dut):
 
     assert dut.get_FTQ_read()["valid"] == 1
 
-    assert dut.get_FTQ_read()["instruction_PC"] ==  0x0
+    assert dut.get_FTQ_read()["fetch_PC"] ==  0x0
     assert dut.get_FTQ_read()["is_misprediction"] == 0
     assert dut.get_FTQ_read()["expected_PC"] == 0xc0de  # Should only consider first JAL
     #assert dut.get_FTQ_read()["GHR"] ==
@@ -910,7 +910,7 @@ async def test_FTQ_JAL_second_instruction(dut):
 
     assert dut.get_FTQ_read()["valid"] == 1
 
-    assert dut.get_FTQ_read()["instruction_PC"] ==  0x0
+    assert dut.get_FTQ_read()["fetch_PC"] ==  0x0
     assert dut.get_FTQ_read()["is_misprediction"] == 0
     assert dut.get_FTQ_read()["expected_PC"] == 0xbee4  # Should only consider first JAL
     #assert dut.get_FTQ_read()["GHR"] ==
@@ -969,7 +969,7 @@ async def test_FTQ_JAL_first_instruction_invalid(dut):
 
     assert dut.get_FTQ_read()["valid"] == 1
 
-    assert dut.get_FTQ_read()["instruction_PC"] ==  0x0
+    assert dut.get_FTQ_read()["fetch_PC"] ==  0x0
     assert dut.get_FTQ_read()["is_misprediction"] == 0
     assert dut.get_FTQ_read()["expected_PC"] == 0xbee4  # Should only consider first JAL
     #assert dut.get_FTQ_read()["GHR"] ==
@@ -1034,7 +1034,7 @@ async def test_FTQ_BEQ(dut):
 
     assert dut.get_FTQ_read()["valid"] == 1
 
-    assert dut.get_FTQ_read()["instruction_PC"] ==  0x0
+    assert dut.get_FTQ_read()["fetch_PC"] ==  0x0
     assert dut.get_FTQ_read()["is_misprediction"] == 0
     assert dut.get_FTQ_read()["expected_PC"] == 0xFFE  # Should only consider first JAL
     #assert dut.get_FTQ_read()["GHR"] ==
@@ -1100,7 +1100,7 @@ async def test_FTQ_BEQ_second_instruction(dut):
 
     assert dut.get_FTQ_read()["valid"] == 1
 
-    assert dut.get_FTQ_read()["instruction_PC"] ==  0x0
+    assert dut.get_FTQ_read()["fetch_PC"] ==  0x0
     assert dut.get_FTQ_read()["is_misprediction"] == 0
     assert dut.get_FTQ_read()["expected_PC"] == 0xFFE+4  # Should only consider first JAL
     #assert dut.get_FTQ_read()["GHR"] ==
@@ -1167,7 +1167,7 @@ async def test_FTQ_BEQ_NT(dut):
 
     assert dut.get_FTQ_read()["valid"] == 1
 
-    assert dut.get_FTQ_read()["instruction_PC"] ==  0x0
+    assert dut.get_FTQ_read()["fetch_PC"] ==  0x0
     assert dut.get_FTQ_read()["is_misprediction"] == 0
     assert dut.get_FTQ_read()["expected_PC"] == 0x10
     #assert dut.get_FTQ_read()["GHR"] ==

@@ -40,14 +40,14 @@ class BRU(parameters:Parameters) extends Module{
 
     val io = IO(new Bundle{
         // FTQ //
-        val FTQ           =   Input(Vec(commitWidth, new FTQ_entry(parameters)))
+        val FTQ           =   Input(new FTQ_entry(parameters))
 
         // COMMIT //
         val ROB         =   Input(Vec(commitWidth, new ROB_entry(parameters)))
 
         // Output 
 
-        val commit      =    Output(Vec(commitWidth, new commit(parameters)))
+        val commit      =    Output(new commit(parameters))
     })
 
     io.FTQ := DontCare

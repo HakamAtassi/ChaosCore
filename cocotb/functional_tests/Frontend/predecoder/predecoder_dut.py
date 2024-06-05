@@ -138,7 +138,7 @@ class predecoder_dut:
         #outputs[""] = getattr(self.dut, "io_predictions_bits_valid").value
 
         outputs["valid"]            = int(getattr(self.dut, "io_predictions_valid").value)
-        outputs["instruction_PC"]   = int(getattr(self.dut, "io_predictions_bits_instruction_PC").value)
+        outputs["fetch_PC"]   = int(getattr(self.dut, "io_predictions_bits_fetch_PC").value)
         outputs["is_misprediction"] = int(getattr(self.dut, "io_predictions_bits_is_misprediction").value)
         outputs["expected_PC"]      = int(getattr(self.dut, "io_predictions_bits_predicted_expected_PC").value)
         outputs["GHR"]              = int(getattr(self.dut, "io_predictions_bits_GHR").value)
@@ -228,7 +228,7 @@ class predecoder_dut:
   input         io_predictions_ready,
   output        io_predictions_valid,
                 io_predictions_bits_valid,
-  output [31:0] io_predictions_bits_instruction_PC,
+  output [31:0] io_predictions_bits_fetch_PC,
   output        io_predictions_bits_is_misprediction,
   output [31:0] io_predictions_bits_predicted_expected_PC,
   output [15:0] io_predictions_bits_GHR,

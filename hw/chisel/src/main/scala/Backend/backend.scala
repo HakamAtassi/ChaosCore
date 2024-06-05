@@ -55,7 +55,7 @@ class backend(parameters:Parameters) extends Module{
         val DRAM_request            =   Decoupled(new DRAM_request(parameters))               // TO DRAM
 
         // REDIRECTS // 
-        val commit                  =    Input(Vec(commitWidth, new commit(parameters)))
+        val commit                  =    Input(new commit(parameters))
 
         // ALLOCATE //
         val backend_packet          =   Vec(dispatchWidth, Flipped(Decoupled(new decoded_instruction(parameters))))

@@ -58,7 +58,7 @@ class RS(parameters:Parameters) extends Module{
 
 
         // REDIRECTS // 
-        val commit            =   Input(Vec(commitWidth, new commit(parameters)))
+        val commit            =   Input(new commit(parameters))
 
         // REG READ (then execute) //
         val RF_inputs        =      Vec(ALUportCount, Decoupled(new decoded_instruction(parameters)))
