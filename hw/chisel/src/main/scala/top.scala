@@ -108,14 +108,14 @@ object Main extends App {
     VerilogGenerator.generateVerilog(new predecoder(parameters), 
     "../verilog/Frontend/BP/predecoder.v")
 
-    //VerilogGenerator.generateVerilog(new FTQ(parameters), 
-    //"../verilog/Frontend/FTQ.v")
+    VerilogGenerator.generateVerilog(new FTQ(parameters), 
+    "../verilog/Frontend/FTQ.v")
 
     //VerilogGenerator.generateVerilog(new ROB(parameters), 
     //"../verilog/Backend/ROB.v")
 
-    //VerilogGenerator.generateVerilog(new ChaosCore(parameters), 
-    //"../verilog/Core/ChaosCore.v")
+    VerilogGenerator.generateVerilog(new ChaosCore(parameters), 
+    "../verilog/Core/ChaosCore.v")
 
     VerilogGenerator.generateVerilog(new instruction_queue(new decoded_instruction(parameters), parameters), 
     "../verilog/Frontend/instruction_queue.v")

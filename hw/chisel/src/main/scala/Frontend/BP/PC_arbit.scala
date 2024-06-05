@@ -40,7 +40,7 @@ class PC_arbit(parameters:Parameters) extends Module{
     import parameters._
 
     val io = IO(new Bundle{
-        val commit                          =   Input(Vec(commitWidth, new commit(parameters)))
+        val commit                          =   Input(new commit(parameters))
 
 
         val prediction  = Flipped(Decoupled(new prediction(parameters)))                         // BTB response
@@ -92,7 +92,7 @@ class PC_arbit(parameters:Parameters) extends Module{
     // Assign wires //
     //////////////////
     correct_stage_active := misprediction || reversion /*|| exception */
-    misprediction        := io.commit.map(c => c.valid && c.is_misprediction).reduce(_ || _)
+    misprediction        := io.commit.is_misprediction && io.commit.valid
 
     
     reversion            := io.revert.valid
@@ -121,10 +121,8 @@ class PC_arbit(parameters:Parameters) extends Module{
     val expected_PC = Wire(UInt(32.W))
 
     expected_PC :=  0.U
-    for (i <- commitWidth-1 to 0 by -1){
-        when(io.commit(i).valid && io.commit(i).is_misprediction){
-            expected_PC := io.commit(i).expected_PC
-        }
+    when(io.commit.valid && io.commit.is_misprediction){
+        expected_PC := io.commit.expected_PC
     }
 
 

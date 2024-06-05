@@ -92,7 +92,8 @@ class ROB(parameters:Parameters) extends Module{
         val ROB             =   Output(Vec(commitWidth, new ROB_entry(parameters)))
 
         // REDIRECTS // 
-        val commit          =   Input(Vec(commitWidth, new commit(parameters)))
+        val commit          =   Input(new commit(parameters)) // FIXME: this should not be a vector. 
+        // Commits are at the granularity of fetch packets
     })
 
 

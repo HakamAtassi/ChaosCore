@@ -123,7 +123,7 @@ class instruction_fetch(parameters:Parameters) extends Module{
         //val exception_PC      =   Flipped(Decoupled(UInt(32.W)))                              // Input
 
         
-        val commit            =   Input(Vec(commitWidth, new commit(parameters)))
+        val commit            =   Input(new commit(parameters))
         
         // To DRAM
         val DRAM_request      =   Decoupled(new DRAM_request(parameters))
@@ -227,7 +227,7 @@ class instruction_fetch(parameters:Parameters) extends Module{
     //////////////
     // PC ARBIT //
     //////////////
-    PC_gen.io.commit            <>  io.commit
+    PC_gen.io.commit            <> io.commit
     PC_gen.io.prediction        <> bp.io.prediction
     PC_gen.io.RAS_read          <> bp.io.RAS_read
     PC_gen.io.PC_next.ready     := PC_Q.io.in.ready && bp.io.predict.ready

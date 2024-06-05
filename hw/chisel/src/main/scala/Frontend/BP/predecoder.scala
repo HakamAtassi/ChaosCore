@@ -135,12 +135,16 @@ class predecoder(parameters:Parameters) extends Module{
     // Assign outputs
     
     val metadata_out    = Wire(new metadata())
+
+    val dominant_index = Wire(UInt(log2Ceil(fetchWidth).W))
+
     // assign default value to metadata
-    dontTouch(metadata_out)
     metadata_out := 0.U.asTypeOf(new metadata())
+    dominant_index:= (fetchWidth-1).U
     for(i <- fetchWidth-1 to 0 by - 1){
         when(T_NT_reg(i) === 1.B){
             metadata_out := metadata_reg(i)
+            dominant_index:= i.U
         }
     }
 
@@ -242,11 +246,15 @@ class predecoder(parameters:Parameters) extends Module{
     io.predictions.valid                              := push_FTQ
 
     // Buffer branch state
-    io.predictions.bits.instruction_PC                := RegNext(io.fetch_packet.bits.fetch_PC)
+    io.predictions.bits.fetch_PC                      := RegNext(io.fetch_packet.bits.fetch_PC)
     io.predictions.bits.GHR                           := GHR_reg
     io.predictions.bits.NEXT                          := RegNext(io.RAS_read.NEXT)
     io.predictions.bits.TOS                           := RegNext(io.RAS_read.TOS)
-    io.predictions.bits.predicted_expected_PC         := PC_expected
+    io.predictions.bits.predicted_PC                  := PC_expected
+
+
+    io.predictions.bits.dominant_index                := (fetchWidth).U                        // Set to lowest priority 
+    io.predictions.bits.resolved_PC                   := RegNext(io.fetch_packet.bits.fetch_PC) + (fetchWidth.U*4.U)  // Default to next PC (assume no branches taken)
 
     // Init FTQ entry data
     io.predictions.bits.valid                         := 0.B

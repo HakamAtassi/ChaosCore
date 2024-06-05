@@ -42,12 +42,9 @@ class BP(parameters:Parameters) extends Module{
         val predict     = Flipped(Decoupled(UInt(32.W)))
 
         // Commit Channel 
-        val commit                          =   Input(Vec(commitWidth, new commit(parameters)))
+        val commit                          =   Input(new commit(parameters))
 
         // common case. Update BTB, PHT
-
-        // Mispredict Channel 
-        //val mispredict  = Flipped(Decoupled(new mispredict(GHRWidth=GHRWidth, RASEntries=RASEntries)))
 
         // Revert Channel
         val RAS_update  = Input(new RAS_update)
@@ -131,14 +128,12 @@ class BP(parameters:Parameters) extends Module{
     val revert = Wire(Bool())
 
 
-    for(i <- commitWidth-1 to 0 by -1){
-        when(io.commit(i).is_misprediction){
-            misprediction       :=  1.B
-            misprediction_GHR   :=  io.commit(i).GHR
+    when(io.commit.is_misprediction){
+        misprediction       :=  1.B
+        misprediction_GHR   :=  io.commit.GHR
 
-            misprediction_TOS   :=  io.commit(i).TOS
-            misprediction_NEXT  :=  io.commit(i).NEXT
-        }
+        misprediction_TOS   :=  io.commit.TOS
+        misprediction_NEXT  :=  io.commit.NEXT
     }
 
 
@@ -156,10 +151,8 @@ class BP(parameters:Parameters) extends Module{
         GHR := misprediction_GHR
     }.elsewhen(revert){ // Same for revert
         GHR := io.revert.bits.GHR
-        //GHR := 0x42.U
     }.elsewhen(GHR_update){
         GHR := (GHR_reg << 1) | gshare.io.T_NT.asUInt
-        //GHR := 0x42.U
     }.otherwise{        // Otherwise, GHR comes from the actual GHR reg
         GHR := GHR_reg
     }
@@ -183,8 +176,8 @@ class BP(parameters:Parameters) extends Module{
 
 
 
-    update_BTB := io.commit.map(c => c.T_NT && c.valid).reduce(_ || _)
-    update_PHT := io.commit.map(c => c.is_BR && c.valid).reduce(_ || _)
+    update_BTB := io.commit.T_NT && io.commit.valid
+    update_PHT := io.commit.is_BR && io.commit.valid
     update_RAS := !misprediction
 
 
@@ -210,12 +203,10 @@ class BP(parameters:Parameters) extends Module{
 
     // commit port
 
-    for(i <- 0 until commitWidth){
-        when(io.commit(i).is_BR && io.commit(i).valid){
-            gshare.io.commit_GHR                := io.commit(i).GHR
-            gshare.io.commit_PC                 := io.commit(i).instruction_PC
-            gshare.io.commit_branch_direction   := io.commit(i).T_NT
-        }
+    when(io.commit.is_BR && io.commit.valid){
+        gshare.io.commit_GHR                := io.commit.GHR
+        gshare.io.commit_PC                 := io.commit.fetch_PC
+        gshare.io.commit_branch_direction   := io.commit.T_NT
     }
 
     gshare.io.commit_valid              := update_PHT
@@ -239,11 +230,9 @@ class BP(parameters:Parameters) extends Module{
     //BTB.io.commit_PC                :=   io.commit.bits.instruction_PC
     //BTB.io.commit_target            :=   io.commit.bits.expected_PC
     
-    for(i <- 0 until commitWidth){
-        when(io.commit(i).is_BR && io.commit(i).valid){
-            BTB.io.commit_PC                :=   io.commit(i).instruction_PC
-            BTB.io.commit_target            :=   io.commit(i).expected_PC
-        }
+    when(io.commit.is_BR && io.commit.valid){
+        BTB.io.commit_PC                :=   io.commit.fetch_PC
+        BTB.io.commit_target            :=   io.commit.expected_PC
     }
 
     BTB.io.commit_br_type           :=   DontCare // FIXME: what branch type to place in BTB? this should come from FTQ/ROB

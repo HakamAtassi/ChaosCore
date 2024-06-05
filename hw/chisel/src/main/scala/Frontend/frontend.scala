@@ -129,7 +129,7 @@ class frontend(parameters:Parameters) extends Module{
         val DRAM_request                    =   Decoupled(new DRAM_request(parameters))               // TO DRAM
 
         // COMMIT // 
-        val commit                          =   Input(Vec(commitWidth, new commit(parameters)))
+        val commit                          =   Input(new commit(parameters))
         
         // PREDICTIONS //
         val predictions                     =   Decoupled(new FTQ_entry(parameters))
@@ -172,8 +172,6 @@ class frontend(parameters:Parameters) extends Module{
     ///////////////////////
     // INSTRUCTION FETCH //
     ///////////////////////
-
-    val misprediction_commit = findMispredictionCommit(io.commit, parameters)
 
     instruction_fetch.io.commit               <>   io.commit
     instruction_fetch.io.DRAM_resp            <>   io.DRAM_resp
@@ -251,12 +249,10 @@ class frontend(parameters:Parameters) extends Module{
     renamer.io.restore_checkpoint_value  := 0.U
     renamer.io.free_checkpoint           := 0.B
 
-    for(i <- 0 until commitWidth){
-        when(io.commit(i).valid && io.commit(i).is_misprediction){
-            renamer.io.restore_checkpoint        :=     1.B 
-            renamer.io.restore_checkpoint_value  :=     io.commit(i).RAT_IDX
-            renamer.io.free_checkpoint           :=     1.B 
-        }
+    when(io.commit.valid && io.commit.is_misprediction){
+        renamer.io.restore_checkpoint        :=     1.B 
+        renamer.io.restore_checkpoint_value  :=     io.commit.RAT_IDX
+        renamer.io.free_checkpoint           :=     1.B 
     }
 
     // Create logic

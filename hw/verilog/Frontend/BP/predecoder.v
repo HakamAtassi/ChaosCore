@@ -329,13 +329,15 @@ module predecoder(
   input         io_predictions_ready,
   output        io_predictions_valid,
                 io_predictions_bits_valid,
-  output [31:0] io_predictions_bits_instruction_PC,
+  output [31:0] io_predictions_bits_fetch_PC,
   output        io_predictions_bits_is_misprediction,
-  output [31:0] io_predictions_bits_predicted_expected_PC,
+  output [31:0] io_predictions_bits_predicted_PC,
   output [15:0] io_predictions_bits_GHR,
   output [6:0]  io_predictions_bits_NEXT,
                 io_predictions_bits_TOS,
-  output [3:0]  io_predictions_bits_RAT_IDX
+  output [3:0]  io_predictions_bits_RAT_IDX,
+  output [1:0]  io_predictions_bits_dominant_index,
+  output [31:0] io_predictions_bits_resolved_PC
 );
 
   wire [31:0] PC_expected;
@@ -422,42 +424,12 @@ module predecoder(
   reg         T_NT_reg_2;
   reg         T_NT_reg_3;
   reg  [15:0] GHR_reg;
-  wire        metadata_out_JAL =
-    T_NT_reg_0
-      ? metadata_reg_0_JAL
-      : T_NT_reg_1
-          ? metadata_reg_1_JAL
-          : T_NT_reg_2 ? metadata_reg_2_JAL : T_NT_reg_3 & metadata_reg_3_JAL;
-  wire        metadata_out_JALR =
-    T_NT_reg_0
-      ? metadata_reg_0_JALR
-      : T_NT_reg_1
-          ? metadata_reg_1_JALR
-          : T_NT_reg_2 ? metadata_reg_2_JALR : T_NT_reg_3 & metadata_reg_3_JALR;
-  wire        metadata_out_BR =
-    T_NT_reg_0
-      ? metadata_reg_0_BR
-      : T_NT_reg_1
-          ? metadata_reg_1_BR
-          : T_NT_reg_2 ? metadata_reg_2_BR : T_NT_reg_3 & metadata_reg_3_BR;
-  wire        metadata_out_Call =
-    T_NT_reg_0
-      ? metadata_reg_0_Call
-      : T_NT_reg_1
-          ? metadata_reg_1_Call
-          : T_NT_reg_2 ? metadata_reg_2_Call : T_NT_reg_3 & metadata_reg_3_Call;
-  wire        metadata_out_Ret =
+  wire        use_RAS =
     T_NT_reg_0
       ? metadata_reg_0_Ret
       : T_NT_reg_1
           ? metadata_reg_1_Ret
           : T_NT_reg_2 ? metadata_reg_2_Ret : T_NT_reg_3 & metadata_reg_3_Ret;
-  wire [31:0] metadata_out_Imm =
-    T_NT_reg_0
-      ? metadata_reg_0_Imm
-      : T_NT_reg_1
-          ? metadata_reg_1_Imm
-          : T_NT_reg_2 ? metadata_reg_2_Imm : T_NT_reg_3 ? metadata_reg_3_Imm : 32'h0;
   wire [31:0] metadata_out_instruction_PC =
     T_NT_reg_0
       ? metadata_reg_0_instruction_PC
@@ -466,30 +438,49 @@ module predecoder(
           : T_NT_reg_2
               ? metadata_reg_2_instruction_PC
               : T_NT_reg_3 ? metadata_reg_3_instruction_PC : 32'h0;
-  wire [31:0] metadata_out_RAS =
-    T_NT_reg_0
-      ? metadata_reg_0_RAS
-      : T_NT_reg_1
-          ? metadata_reg_1_RAS
-          : T_NT_reg_2 ? metadata_reg_2_RAS : T_NT_reg_3 ? metadata_reg_3_RAS : 32'h0;
-  wire [31:0] metadata_out_BTB_target =
-    T_NT_reg_0
-      ? metadata_reg_0_BTB_target
-      : T_NT_reg_1
-          ? metadata_reg_1_BTB_target
-          : T_NT_reg_2
-              ? metadata_reg_2_BTB_target
-              : T_NT_reg_3 ? metadata_reg_3_BTB_target : 32'h0;
   reg  [31:0] PC_next_reg;
   wire        PC_mismatch = PC_expected != io_fetch_packet_bits_fetch_PC & inputs_valid;
   reg  [31:0] PC_next_REG;
   wire [31:0] PC_next =
-    metadata_out_JALR & ~metadata_out_Ret
-      ? metadata_out_BTB_target
-      : metadata_out_Ret
-          ? metadata_out_RAS
-          : metadata_out_BR | metadata_out_JAL
-              ? metadata_out_instruction_PC + metadata_out_Imm
+    (T_NT_reg_0
+       ? metadata_reg_0_JALR
+       : T_NT_reg_1
+           ? metadata_reg_1_JALR
+           : T_NT_reg_2 ? metadata_reg_2_JALR : T_NT_reg_3 & metadata_reg_3_JALR)
+    & ~use_RAS
+      ? (T_NT_reg_0
+           ? metadata_reg_0_BTB_target
+           : T_NT_reg_1
+               ? metadata_reg_1_BTB_target
+               : T_NT_reg_2
+                   ? metadata_reg_2_BTB_target
+                   : T_NT_reg_3 ? metadata_reg_3_BTB_target : 32'h0)
+      : use_RAS
+          ? (T_NT_reg_0
+               ? metadata_reg_0_RAS
+               : T_NT_reg_1
+                   ? metadata_reg_1_RAS
+                   : T_NT_reg_2
+                       ? metadata_reg_2_RAS
+                       : T_NT_reg_3 ? metadata_reg_3_RAS : 32'h0)
+          : (T_NT_reg_0
+               ? metadata_reg_0_BR
+               : T_NT_reg_1
+                   ? metadata_reg_1_BR
+                   : T_NT_reg_2 ? metadata_reg_2_BR : T_NT_reg_3 & metadata_reg_3_BR)
+            | (T_NT_reg_0
+                 ? metadata_reg_0_JAL
+                 : T_NT_reg_1
+                     ? metadata_reg_1_JAL
+                     : T_NT_reg_2 ? metadata_reg_2_JAL : T_NT_reg_3 & metadata_reg_3_JAL)
+              ? metadata_out_instruction_PC
+                + (T_NT_reg_0
+                     ? metadata_reg_0_Imm
+                     : T_NT_reg_1
+                         ? metadata_reg_1_Imm
+                         : T_NT_reg_2
+                             ? metadata_reg_2_Imm
+                             : T_NT_reg_3 ? metadata_reg_3_Imm : 32'h0)
               : PC_next_REG;
   reg         PC_next_reg_REG;
   reg         PC_expected_REG;
@@ -526,9 +517,10 @@ module predecoder(
   wire        io_final_fetch_packet_bits_valid_bits_3_0 =
     io_final_fetch_packet_bits_valid_bits_3_REG
     & io_final_fetch_packet_bits_valid_bits_3_REG_1;
-  reg  [31:0] io_predictions_bits_instruction_PC_REG;
+  reg  [31:0] io_predictions_bits_fetch_PC_REG;
   reg  [6:0]  io_predictions_bits_NEXT_REG;
   reg  [6:0]  io_predictions_bits_TOS_REG;
+  reg  [31:0] io_predictions_bits_resolved_PC_REG;
   wire        _io_fetch_packet_ready_T =
     io_final_fetch_packet_ready & io_predictions_ready;
   reg         io_final_fetch_packet_valid_REG;
@@ -614,9 +606,10 @@ module predecoder(
     io_final_fetch_packet_bits_valid_bits_3_REG <=
       _decoder_validator_io_instruction_validity[3];
     io_final_fetch_packet_bits_valid_bits_3_REG_1 <= inputs_valid;
-    io_predictions_bits_instruction_PC_REG <= io_fetch_packet_bits_fetch_PC;
+    io_predictions_bits_fetch_PC_REG <= io_fetch_packet_bits_fetch_PC;
     io_predictions_bits_NEXT_REG <= io_RAS_read_NEXT;
     io_predictions_bits_TOS_REG <= io_RAS_read_TOS;
+    io_predictions_bits_resolved_PC_REG <= io_fetch_packet_bits_fetch_PC;
     io_final_fetch_packet_valid_REG <=
       inputs_valid & PC_expected == io_fetch_packet_bits_fetch_PC;
     if (reset)
@@ -752,8 +745,13 @@ module predecoder(
   assign io_final_fetch_packet_bits_instructions_3_ROB_index =
     io_final_fetch_packet_bits_instructions_3_REG_ROB_index;
   assign io_RAS_update_call_addr = metadata_out_instruction_PC;
-  assign io_RAS_update_call = metadata_out_Call;
-  assign io_RAS_update_ret = metadata_out_Ret;
+  assign io_RAS_update_call =
+    T_NT_reg_0
+      ? metadata_reg_0_Call
+      : T_NT_reg_1
+          ? metadata_reg_1_Call
+          : T_NT_reg_2 ? metadata_reg_2_Call : T_NT_reg_3 & metadata_reg_3_Call;
+  assign io_RAS_update_ret = use_RAS;
   assign io_predictions_valid =
     (metadata_reg_3_JAL | metadata_reg_3_JALR | metadata_reg_3_BR)
     & io_final_fetch_packet_bits_valid_bits_3_0
@@ -764,12 +762,14 @@ module predecoder(
     | (metadata_reg_0_JAL | metadata_reg_0_JALR | metadata_reg_0_BR)
     & io_final_fetch_packet_bits_valid_bits_0_0;
   assign io_predictions_bits_valid = 1'h0;
-  assign io_predictions_bits_instruction_PC = io_predictions_bits_instruction_PC_REG;
+  assign io_predictions_bits_fetch_PC = io_predictions_bits_fetch_PC_REG;
   assign io_predictions_bits_is_misprediction = 1'h0;
-  assign io_predictions_bits_predicted_expected_PC = PC_expected;
+  assign io_predictions_bits_predicted_PC = PC_expected;
   assign io_predictions_bits_GHR = GHR_reg;
   assign io_predictions_bits_NEXT = io_predictions_bits_NEXT_REG;
   assign io_predictions_bits_TOS = io_predictions_bits_TOS_REG;
   assign io_predictions_bits_RAT_IDX = 4'h0;
+  assign io_predictions_bits_dominant_index = 2'h0;
+  assign io_predictions_bits_resolved_PC = io_predictions_bits_resolved_PC_REG + 32'h10;
 endmodule
 
