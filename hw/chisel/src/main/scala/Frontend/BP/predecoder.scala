@@ -110,8 +110,7 @@ class predecoder(parameters:Parameters) extends Module{
         decoders(i).io.fetch_PC         :=  io.fetch_packet.bits.fetch_PC
         decoders(i).io.instruction      :=  io.fetch_packet.bits.instructions(i).instruction
         decoders(i).io.valid            :=  io.fetch_packet.bits.valid_bits(i)
-        decoders(i).io.prediction.bits  :=  io.prediction.bits
-        decoders(i).io.prediction.valid :=  io.prediction.valid
+        decoders(i).io.prediction       <>  io.prediction
         decoders(i).io.RAS_read         :=  io.RAS_read
         // Outputs
         decoder_metadata(i)             :=  decoders(i).io.metadata
@@ -243,7 +242,7 @@ class predecoder(parameters:Parameters) extends Module{
     io.predictions.valid                              := push_FTQ
 
     // Buffer branch state
-    io.predictions.bits.instruction_PC                := io.fetch_packet.bits.fetch_PC
+    io.predictions.bits.instruction_PC                := RegNext(io.fetch_packet.bits.fetch_PC)
     io.predictions.bits.GHR                           := GHR_reg
     io.predictions.bits.NEXT                          := RegNext(io.RAS_read.NEXT)
     io.predictions.bits.TOS                           := RegNext(io.RAS_read.TOS)

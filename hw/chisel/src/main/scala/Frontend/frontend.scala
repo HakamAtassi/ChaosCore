@@ -44,6 +44,16 @@ class instruction_queue[T <: Data](gen: T, parameters: Parameters) extends Modul
     val out = Vec(dispatchWidth, Decoupled(gen))
   })
 
+
+    ////////////////////////
+    // MODULE ASSUMPTIONS //
+    ////////////////////////
+    require(isPow2(instruction_queue_depth), "Instruction Queue entires not a power of 2")
+
+    ///////////////////////
+    // INSTRUCTION QUEUE //
+    //////////////////////
+
     val queue = RegInit(VecInit(Seq.fill(instruction_queue_depth)(0.U.asTypeOf(gen))))
     val valid = RegInit(VecInit(Seq.fill(instruction_queue_depth)(0.B)))
 

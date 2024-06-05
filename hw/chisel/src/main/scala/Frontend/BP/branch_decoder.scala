@@ -92,12 +92,15 @@ class branch_decoder(index:Int, parameters:Parameters) extends Module{
     }.elsewhen (JALR) {
         io.T_NT := io.valid && (Ret || (io.prediction.bits.hit && io.prediction.bits.br_mask(index)))  // Direction is always 2. Address is hit or miss. Only taken if addr is available.
     }.elsewhen (BR) {
-        io.T_NT := io.valid && io.prediction.bits.br_mask(index)  // Address is PC + Imm. Only taken if PHT is 1. However,
+        io.T_NT := io.valid && io.prediction.bits.T_NT
+        //&& io.prediction.bits.br_mask(index)  // Address is PC + Imm. Only taken if PHT is 1. However,
         // BR also depends on BTB idx since, unlike JAL and JALR, where priority can be easily arbitrated based on what comes first,
         // Branches may or may not be taken. Therefore, for the branch to be taken, it must also be the dominant one (where as with JAL, the first one is the dominant one).
     }.otherwise {
         io.T_NT := 0.U  // Not a control flow instruction, not taken. 
     }
+
+    dontTouch(BR)
 
 
     // Assign metadata

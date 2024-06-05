@@ -1,0 +1,62 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Thu Mar  7 23:10:44 2024
+[*]
+[dumpfile] "/home/hakam/repos/ChaosCore/cocotb/functional_tests/unpipelined_non_restoring_divider_tests/dump.fst"
+[dumpfile_mtime] "Thu Mar  7 23:08:53 2024"
+[dumpfile_size] 5110
+[savefile] "/home/hakam/repos/ChaosCore/cocotb/functional_tests/unpipelined_non_restoring_divider_tests/main.gtkw"
+[timestart] 0
+[size] 1920 1043
+[pos] -1 -1
+*-19.421808 0 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[sst_width] 322
+[signals_width] 340
+[sst_expanded] 1
+[sst_vpaned_height] 285
+@28
+unpipelined_non_restoring_divider.clock
+unpipelined_non_restoring_divider.division_state[1:0]
+@200
+-inputs
+@22
+unpipelined_non_restoring_divider.io_dividend_bits[31:0]
+unpipelined_non_restoring_divider.io_divisor_bits[31:0]
+@24
+unpipelined_non_restoring_divider.io_dividend_valid
+unpipelined_non_restoring_divider.io_divisor_valid
+@200
+-outputs
+@28
+unpipelined_non_restoring_divider.io_remainder_valid
+@22
+unpipelined_non_restoring_divider.io_remainder_bits[31:0]
+unpipelined_non_restoring_divider.io_quotient_valid
+unpipelined_non_restoring_divider.io_quotient_bits[31:0]
+@200
+-state
+@28
+unpipelined_non_restoring_divider.division_state[1:0]
+@200
+-quotient
+@24
+unpipelined_non_restoring_divider.state_counter[4:0]
+@22
+unpipelined_non_restoring_divider.quotient[31:0]
+unpipelined_non_restoring_divider.io_quotient_bits[31:0]
+@200
+-partial remainder
+@22
+unpipelined_non_restoring_divider.partial_remainder[32:0]
+@200
+-
+@24
+unpipelined_non_restoring_divider.divisor[31:0]
+unpipelined_non_restoring_divider.dividend[31:0]
+@200
+-Sign stuff
+@28
+unpipelined_non_restoring_divider.dividend_sign_bit
+unpipelined_non_restoring_divider.divisor_sign_bit
+[pattern_trace] 1
+[pattern_trace] 0

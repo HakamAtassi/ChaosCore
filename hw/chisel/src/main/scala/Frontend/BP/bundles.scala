@@ -38,9 +38,7 @@ import java.rmi.server.UID
 import helperFunctions.getBTBTagBits
 
 
-
-
-
+// FIXME: this should be in utils.scala
 // Helper functions //
 object helperFunctions {
     def getBTBTagBits(BTBSize: Int = 4096, fetchWidth:Int=4): Int = (32 - log2Ceil(BTBSize) - 2 - log2Ceil(fetchWidth))
@@ -50,21 +48,6 @@ object helperFunctions {
         val shiftAmount = 32-getBTBTagBits(BTBSize, fetchWidth)
         input >> shiftAmount
     }
-
-
-    //def getInstructionType(instruction:UInt): SInt = {
-
-        //val opcode = instruction(6,0)
-
-        //val R      = (opcode === "b0010111".U) || (opcode === "b0110111".U)
-        //val J      = (opcode === "b1101111".U)
-        //val B      = (opcode === "b1100011".U)
-        //val S      = (opcode === "b0100011".U)
-        //val U      = (opcode === "b0110011".U)
-        //val I      = (opcode === "b0010011".U) || (opcode === "b0000011".U) || (opcode === "b1100111".U)
-
-    //}
-
 
     def getImm(instruction:UInt): UInt = {
 
@@ -86,7 +69,7 @@ object helperFunctions {
             val imm_4_1     = instruction(11, 8)
             val imm_11      = instruction(7)
 
-            imm := Cat(imm_12, imm_10_5, imm_4_1, imm_11, 0.U(1.W)).asSInt.asUInt
+            imm := Cat(imm_12, imm_11, imm_10_5, imm_4_1, 0.U(1.W)).asSInt.asUInt
         }.elsewhen (J) {
             val imm_20    = instruction(31)
             val imm_19_12 = instruction(19, 12)
@@ -112,8 +95,6 @@ object helperFunctions {
         }
         imm
     }
-
-
 }
 
 // Channels //

@@ -1,6 +1,7 @@
 import sys
 from cocotb.clock import Clock
 from cocotb.triggers import RisingEdge, FallingEdge, Timer
+from tabulate import tabulate
 
 import random
 
@@ -31,13 +32,9 @@ def generate_null_input():
     stimulus["IS_LOAD"]             = [0,0,0,0]
     stimulus["IS_STORE"]            = [0,0,0,0]
 
+    stimulus["ready"] = [0]*4
+
     return stimulus
-
-def generate_null_read():
-    null_read = {}
-    null_read["ready"] = [0]*4
-    return null_read
-
 
 class instruction_queue_dut:
     def __init__(self, dut):    # modify as needed (parameters, etc...)
@@ -58,8 +55,9 @@ class instruction_queue_dut:
 
     # Suggestions: 
 
-    def write_fifo(self, inputs):
+    def write_fifo(self, inputs=generate_null_input()):
         for i in range(4):
+            getattr(self.dut, f"io_out_{i}_ready").value = inputs["ready"][i]
             getattr(self.dut, f"io_in_{i}_valid").value = inputs["valid"][i]
             getattr(self.dut, f"io_in_{i}_bits_ready_bits_RS1_ready").value = inputs["RS1_ready"][i]
             getattr(self.dut, f"io_in_{i}_bits_ready_bits_RS2_ready").value = inputs["RS2_ready"][i]
@@ -115,6 +113,7 @@ class instruction_queue_dut:
         outputs["IMMEDIATE"]    = [0]*4
         outputs["IS_LOAD"]      = [0]*4
         outputs["IS_STORE"]     = [0]*4
+        outputs["ready"]        = [0]*4
 
         for i in range(4):
             outputs["valid"][i] = getattr(self.dut, f"io_out_{i}_valid").value
@@ -141,6 +140,7 @@ class instruction_queue_dut:
             outputs["IMMEDIATE"][i] = getattr(self.dut, f"io_out_{i}_bits_IMMEDIATE").value
             outputs["IS_LOAD"][i] = getattr(self.dut, f"io_out_{i}_bits_IS_LOAD").value
             outputs["IS_STORE"][i] = getattr(self.dut, f"io_out_{i}_bits_IS_STORE").value
+            outputs["ready"][i] = getattr(self.dut, f"io_in_{i}_ready").value
 
         return outputs
 
@@ -150,7 +150,6 @@ class instruction_queue_dut:
 
         for i in range(4):
             ready["ready"][i] = getattr(self.dut, f"io_in_{i}_ready").value
-
         return ready
 
 
@@ -208,40 +207,10 @@ class instruction_queue_dut:
 
     def print_fifo_contents(self):
         fifo_contents = self.get_fifo_contents()
+        
+        print(tabulate(fifo_contents, tablefmt="grid"))
 
-        # Print header
-        print("Entry | RS1_ready | RS2_ready | RD | RD_valid | RS1 | RS1_valid | RS2 | RS2_valid | IMM | FUNCT3 | packet_index | ROB_index | instructionType | portID | RS_type | needs_ALU | needs_branch_unit | needs_CSRs | SUBTRACT | MULTIPLY | IMMEDIATE | IS_LOAD | IS_STORE")
 
-        # Print contents
-        for i in range(8):
-            print(f"{i} | ", end="")
-            print(f"{fifo_contents['RS1_ready'][i]} | ", end="")
-            print(f"{fifo_contents['RS2_ready'][i]} | ", end="")
-            print(f"{fifo_contents['RD'][i]} | ", end="")
-            print(f"{fifo_contents['RD_valid'][i]} | ", end="")
-            print(f"{fifo_contents['RS1'][i]} | ", end="")
-            print(f"{fifo_contents['RS1_valid'][i]} | ", end="")
-            print(f"{fifo_contents['RS2'][i]} | ", end="")
-            print(f"{fifo_contents['RS2_valid'][i]} | ", end="")
-            print(f"{fifo_contents['IMM'][i]} | ", end="")
-            print(f"{fifo_contents['FUNCT3'][i]} | ", end="")
-            print(f"{fifo_contents['packet_index'][i]} | ", end="")
-            print(f"{fifo_contents['ROB_index'][i]} | ", end="")
-            print(f"{fifo_contents['instructionType'][i]} | ", end="")
-            print(f"{fifo_contents['portID'][i]} | ", end="")
-            print(f"{fifo_contents['RS_type'][i]} | ", end="")
-            print(f"{fifo_contents['needs_ALU'][i]} | ", end="")
-            print(f"{fifo_contents['needs_branch_unit'][i]} | ", end="")
-            print(f"{fifo_contents['needs_CSRs'][i]} | ", end="")
-            print(f"{fifo_contents['SUBTRACT'][i]} | ", end="")
-            print(f"{fifo_contents['MULTIPLY'][i]} | ", end="")
-            print(f"{fifo_contents['IMMEDIATE'][i]} | ", end="")
-            print(f"{fifo_contents['IS_LOAD'][i]} | ", end="")
-            print(f"{fifo_contents['IS_STORE'][i]}")
-    # Module set outputs ready
-
-    # Module Write functions
-
-    # Module Read functions
-
-    # Module print visualizers
+    def set_output_ready(self, ready):
+        for i in range(4):
+            getattr(self.dut, f"io_out_{i}_ready").value = ready

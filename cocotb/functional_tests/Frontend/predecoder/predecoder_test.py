@@ -87,3 +87,15 @@ def test_FTQ_JAL_first_instruction_invalid():
         configs["testcase"] = "test_FTQ_JAL_first_instruction_invalid"
         run(**configs)
 
+def test_FTQ_BEQ():
+        configs["testcase"] = "test_FTQ_BEQ"
+        run(**configs)
+
+def test_FTQ_BEQ_second_instruction():
+        configs["testcase"] = "test_FTQ_BEQ_second_instruction"
+        run(**configs)
+
+def test_FTQ_BEQ_NT():
+        configs["testcase"] = "test_FTQ_BEQ_NT"
+        run(**configs)
+
