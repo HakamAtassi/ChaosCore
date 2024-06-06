@@ -138,9 +138,10 @@ class predecoder_dut:
         #outputs[""] = getattr(self.dut, "io_predictions_bits_valid").value
 
         outputs["valid"]            = int(getattr(self.dut, "io_predictions_valid").value)
-        outputs["fetch_PC"]   = int(getattr(self.dut, "io_predictions_bits_fetch_PC").value)
+        outputs["fetch_PC"]         = int(getattr(self.dut, "io_predictions_bits_fetch_PC").value)
         outputs["is_misprediction"] = int(getattr(self.dut, "io_predictions_bits_is_misprediction").value)
-        outputs["expected_PC"]      = int(getattr(self.dut, "io_predictions_bits_predicted_expected_PC").value)
+        outputs["predicted_PC"]      = int(getattr(self.dut, "io_predictions_bits_predicted_PC").value)
+        outputs["resolved_PC"]      = int(getattr(self.dut, "io_predictions_bits_resolved_PC").value)
         outputs["GHR"]              = int(getattr(self.dut, "io_predictions_bits_GHR").value)
         outputs["NEXT"]             = int(getattr(self.dut, "io_predictions_bits_NEXT").value)
         outputs["TOS"]              = int(getattr(self.dut, "io_predictions_bits_TOS").value)
@@ -152,6 +153,8 @@ class predecoder_dut:
     def get_expected_address(self):
         return int(self.dut.PC_expected.value)
 
+    def get_GHR(self):
+        return self.dut.io_GHR.value
 
     # Print functions #
     def print_final_fetch_packet(self):
@@ -230,7 +233,7 @@ class predecoder_dut:
                 io_predictions_bits_valid,
   output [31:0] io_predictions_bits_fetch_PC,
   output        io_predictions_bits_is_misprediction,
-  output [31:0] io_predictions_bits_predicted_expected_PC,
+  output [31:0] io_predictions_bits_predicted_resolved_PC,
   output [15:0] io_predictions_bits_GHR,
   output [6:0]  io_predictions_bits_NEXT,
                 io_predictions_bits_TOS,

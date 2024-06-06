@@ -274,7 +274,7 @@ module predecoder(
   input         io_prediction_valid,
                 io_prediction_bits_hit,
   input  [31:0] io_prediction_bits_target,
-  input  [1:0]  io_prediction_bits_br_type,
+  input  [2:0]  io_prediction_bits_br_type,
   input  [3:0]  io_prediction_bits_br_mask,
   input  [15:0] io_prediction_bits_GHR,
   input         io_prediction_bits_T_NT,
@@ -300,10 +300,22 @@ module predecoder(
   input  [6:0]  io_RAS_read_NEXT,
                 io_RAS_read_TOS,
   input  [31:0] io_RAS_read_ret_addr,
+  input         io_commit_valid,
+  input  [31:0] io_commit_fetch_PC,
+  input         io_commit_T_NT,
+  input  [2:0]  io_commit_br_type,
+  input  [1:0]  io_commit_fetch_packet_index,
+  input         io_commit_is_misprediction,
+  input  [31:0] io_commit_expected_PC,
+  input  [15:0] io_commit_GHR,
+  input  [6:0]  io_commit_TOS,
+                io_commit_NEXT,
+  input  [3:0]  io_commit_RAT_IDX,
   input         io_revert_ready,
   output        io_revert_valid,
   output [15:0] io_revert_bits_GHR,
   output [31:0] io_revert_bits_PC,
+  output [15:0] io_GHR,
   input         io_final_fetch_packet_ready,
   output        io_final_fetch_packet_valid,
   output [31:0] io_final_fetch_packet_bits_fetch_PC,
@@ -423,7 +435,6 @@ module predecoder(
   reg         T_NT_reg_1;
   reg         T_NT_reg_2;
   reg         T_NT_reg_3;
-  reg  [15:0] GHR_reg;
   wire        use_RAS =
     T_NT_reg_0
       ? metadata_reg_0_Ret
@@ -440,6 +451,12 @@ module predecoder(
               : T_NT_reg_3 ? metadata_reg_3_instruction_PC : 32'h0;
   reg  [31:0] PC_next_reg;
   wire        PC_mismatch = PC_expected != io_fetch_packet_bits_fetch_PC & inputs_valid;
+  reg  [15:0] GHR;
+  wire        has_control =
+    metadata_reg_3_BR | metadata_reg_3_JAL | metadata_reg_3_JALR | metadata_reg_2_BR
+    | metadata_reg_2_JAL | metadata_reg_2_JALR | metadata_reg_1_BR | metadata_reg_1_JAL
+    | metadata_reg_1_JALR | metadata_reg_0_BR | metadata_reg_0_JAL | metadata_reg_0_JALR;
+  wire [15:0] _GEN = {GHR[14:0], |{T_NT_reg_3, T_NT_reg_2, T_NT_reg_1, T_NT_reg_0}};
   reg  [31:0] PC_next_REG;
   wire [31:0] PC_next =
     (T_NT_reg_0
@@ -566,7 +583,6 @@ module predecoder(
     T_NT_reg_1 <= _decoders_1_io_T_NT;
     T_NT_reg_2 <= _decoders_2_io_T_NT;
     T_NT_reg_3 <= _decoders_3_io_T_NT;
-    GHR_reg <= io_prediction_bits_GHR;
     PC_next_REG <= io_fetch_packet_bits_fetch_PC + 32'h10;
     PC_next_reg_REG <= stage_1_valid;
     PC_expected_REG <= stage_1_valid;
@@ -612,10 +628,18 @@ module predecoder(
     io_predictions_bits_resolved_PC_REG <= io_fetch_packet_bits_fetch_PC;
     io_final_fetch_packet_valid_REG <=
       inputs_valid & PC_expected == io_fetch_packet_bits_fetch_PC;
-    if (reset)
+    if (reset) begin
       PC_next_reg <= 32'h0;
-    else if (PC_next_reg_REG)
-      PC_next_reg <= PC_next;
+      GHR <= 16'h0;
+    end
+    else begin
+      if (PC_next_reg_REG)
+        PC_next_reg <= PC_next;
+      if (io_commit_is_misprediction)
+        GHR <= io_commit_GHR;
+      else if (has_control)
+        GHR <= _GEN;
+    end
   end // always @(posedge)
   branch_decoder decoders_0 (
     .io_fetch_PC                (io_fetch_packet_bits_fetch_PC),
@@ -708,8 +732,9 @@ module predecoder(
   assign io_prediction_ready = _io_fetch_packet_ready_T & ~PC_mismatch;
   assign io_fetch_packet_ready = _io_fetch_packet_ready_T & ~PC_mismatch;
   assign io_revert_valid = PC_mismatch;
-  assign io_revert_bits_GHR = GHR_reg;
+  assign io_revert_bits_GHR = 16'h0;
   assign io_revert_bits_PC = PC_expected;
+  assign io_GHR = has_control ? _GEN : GHR;
   assign io_final_fetch_packet_valid = io_final_fetch_packet_valid_REG;
   assign io_final_fetch_packet_bits_fetch_PC = io_fetch_packet_bits_fetch_PC;
   assign io_final_fetch_packet_bits_valid_bits_0 =
@@ -765,7 +790,7 @@ module predecoder(
   assign io_predictions_bits_fetch_PC = io_predictions_bits_fetch_PC_REG;
   assign io_predictions_bits_is_misprediction = 1'h0;
   assign io_predictions_bits_predicted_PC = PC_expected;
-  assign io_predictions_bits_GHR = GHR_reg;
+  assign io_predictions_bits_GHR = 16'h0;
   assign io_predictions_bits_NEXT = io_predictions_bits_NEXT_REG;
   assign io_predictions_bits_TOS = io_predictions_bits_TOS_REG;
   assign io_predictions_bits_RAT_IDX = 4'h0;

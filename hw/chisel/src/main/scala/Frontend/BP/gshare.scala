@@ -83,10 +83,12 @@ class gshare(parameters:Parameters) extends Module{
         val valid = Output(Bool())
 
         // commit port
-        val commit_GHR         = Input(UInt(GHRWidth.W))
-        val commit_PC          = Input(UInt(32.W))
-        val commit_valid       = Input(Bool())
-        val commit_branch_direction       = Input(Bool())
+        //val commit_GHR         = Input(UInt(GHRWidth.W))
+        //val commit_PC          = Input(UInt(32.W))
+        //val commit_valid       = Input(Bool())
+        //val commit_branch_direction       = Input(Bool())
+
+        val commit      = Input(new commit(parameters))
         
     })
 
@@ -95,43 +97,43 @@ class gshare(parameters:Parameters) extends Module{
     // PHT memory //     
     ////////////////
 
-    val prediction_state = Wire(UInt(2.W))
-    val commit_state     = Wire(UInt(2.W))
-    val commit_state_updated     = Wire(UInt(2.W))
+    val prediction_state            = Wire(UInt(2.W))
+    val commit_state                = Wire(UInt(2.W))
+    val commit_state_updated        = Wire(UInt(2.W))
 
-    val hashed_predict_addr = Wire(UInt(GHRWidth.W))
-    val hashed_commit_addr = Wire(UInt(GHRWidth.W))
+    val hashed_predict_addr         = Wire(UInt(GHRWidth.W))
+    val hashed_commit_addr          = Wire(UInt(GHRWidth.W))
 
     val PHT = Module(new PHT_memory(depth=(1<<GHRWidth), width=2))
 
 
     hashed_predict_addr := io.predict_PC(GHRWidth-1, 0) ^ io.predict_GHR
-    hashed_commit_addr  := io.commit_PC(GHRWidth-1, 0) ^ io.commit_GHR
+    hashed_commit_addr  := io.commit.fetch_PC(GHRWidth-1, 0) ^ io.commit.GHR
 
     dontTouch(hashed_predict_addr)
     dontTouch(hashed_commit_addr)
 
     // Read and generate prediction
-    PHT.io.addrA := hashed_predict_addr
-    prediction_state := PHT.io.readDataA 
+    PHT.io.addrA        := hashed_predict_addr
+    prediction_state    := PHT.io.readDataA 
 
-    io.T_NT := prediction_state(1)
-    io.valid := RegNext(io.predict_valid)
+    io.T_NT     := prediction_state(1)
+    io.valid    := RegNext(io.predict_valid)
 
     // Read and update state
     PHT.io.addrB := hashed_commit_addr
     commit_state := PHT.io.readDataB 
 
     // Write updated data
-    PHT.io.addrC := RegNext(hashed_commit_addr)
-    PHT.io.writeDataC := commit_state_updated
-    PHT.io.writeEnableC := RegNext(io.commit_valid) 
+    PHT.io.addrC        := RegNext(hashed_commit_addr)
+    PHT.io.writeDataC   := commit_state_updated
+    PHT.io.writeEnableC := RegNext(io.commit.valid) 
 
     /////////
     // FSM // 
     /////////
 
-    when(RegNext(io.commit_branch_direction) === 1.U){
+    when(RegNext(io.commit.T_NT) === 1.U){
         when(commit_state < 3.U){
             commit_state_updated := commit_state + 1.U
         }.otherwise{

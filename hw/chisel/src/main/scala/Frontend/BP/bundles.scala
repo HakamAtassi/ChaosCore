@@ -121,6 +121,25 @@ class metadata extends Bundle{
 // BP channels //
 /////////////////
 
+object _br_type extends ChiselEnum{
+
+    val NONE, BR, JAL, JALR, RET = Value
+
+}
+
+class BTB_entry(parameters:Parameters) extends Bundle{
+    import parameters._
+
+    val BTB_tag_size = 32 - log2Ceil(BTBEntries) - 2
+
+    val BTB_valid                   = Bool()
+    val BTB_tag                     = UInt(BTB_tag_size.W)
+    val BTB_target                  = UInt(32.W)   // FIXME: this can be slightly smaller
+
+    val BTB_br_type                 = _br_type()
+    val BTB_fetch_packet_index      = UInt(log2Ceil(fetchWidth).W)
+}
+
 class commit(parameters:Parameters) extends Bundle{
     import parameters._
 
@@ -129,13 +148,10 @@ class commit(parameters:Parameters) extends Bundle{
     val fetch_PC      = UInt(32.W)    // To update gshare/PHT
     val T_NT                = Bool()    // To update BTB (BTB only updates on taken branches)
 
-    val is_BR               = Bool()
-    //val is_JAL               = Bool()
-    //val is_JALR               = Bool()
     
     //val target              = UInt(32.W)
-    //val br_type             = UInt(2.W)
-    //val br_mask             = UInt(fetchWidth.W)
+    val br_type             = _br_type()
+    val fetch_packet_index  = UInt(log2Ceil(fetchWidth).W)
 
     val is_misprediction    = Bool()
     val expected_PC         = UInt(32.W)    // For BTB aswell
@@ -170,7 +186,7 @@ class prediction(parameters:Parameters) extends Bundle{
     import parameters._
     val hit         =   Bool()  // FIXME: I dont think this is assigned in BTB since it was added after the fact
     val target      =   UInt(32.W)
-    val br_type     =   UInt(2.W)
+    val br_type     =   _br_type()
     val br_mask     =   UInt(fetchWidth.W)
     val GHR         =   UInt(GHRWidth.W)
     val T_NT        =   Bool()
