@@ -83,3 +83,7 @@ def test_RAS_call_ret():
         configs["testcase"] = "test_RAS_call_ret"
         run(**configs)
 
+def test_prediction_valid():
+        configs["testcase"] = "test_prediction_valid"
+        run(**configs)
+

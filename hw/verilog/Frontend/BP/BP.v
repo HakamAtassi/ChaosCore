@@ -206,6 +206,7 @@ module hash_BTB(
   input         clock,
                 reset,
   input  [31:0] io_predict_PC,
+  input         io_predict_valid,
   output        io_BTB_hit,
                 io_BTB_output_BTB_valid,
   output [31:0] io_BTB_output_BTB_target,
@@ -220,8 +221,11 @@ module hash_BTB(
   wire        _BTB_memory_io_data_out_BTB_valid;
   wire [17:0] _BTB_memory_io_data_out_BTB_tag;
   reg  [15:0] io_BTB_hit_REG;
-  always @(posedge clock)
+  reg         io_BTB_output_BTB_valid_REG;
+  always @(posedge clock) begin
     io_BTB_hit_REG <= io_predict_PC[31:16];
+    io_BTB_output_BTB_valid_REG <= io_predict_valid;
+  end // always @(posedge)
   hash_BTB_mem BTB_memory (
     .clock                             (clock),
     .reset                             (reset),
@@ -240,7 +244,7 @@ module hash_BTB(
   assign io_BTB_hit =
     {2'h0, io_BTB_hit_REG} == _BTB_memory_io_data_out_BTB_tag
     & _BTB_memory_io_data_out_BTB_valid;
-  assign io_BTB_output_BTB_valid = _BTB_memory_io_data_out_BTB_valid;
+  assign io_BTB_output_BTB_valid = io_BTB_output_BTB_valid_REG;
 endmodule
 
 // VCS coverage exclude_file
@@ -407,6 +411,7 @@ module BP(
     .clock                        (clock),
     .reset                        (reset),
     .io_predict_PC                (io_predict_bits),
+    .io_predict_valid             (io_predict_valid),
     .io_BTB_hit                   (io_prediction_bits_hit),
     .io_BTB_output_BTB_valid      (_BTB_io_BTB_output_BTB_valid),
     .io_BTB_output_BTB_target     (io_prediction_bits_target),

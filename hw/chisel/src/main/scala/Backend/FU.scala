@@ -74,31 +74,31 @@ class ALU(parameters:Parameters) extends Module{
     //val comp_result = RegInit(Bool(), 0.B)
     //val target_addr = Wire(UInt(32.W))
 
-    val arithmetic_result = Wire(UInt(32.W))
+    val arithmetic_result = RegInit(UInt(32.W), 0.U)
 
 
     // Arithmetic Regs
-    val add_result  = RegInit(0.U(32.W))
-    val sub_result  = RegInit(0.U(32.W))
-    val slt_result  = RegInit(0.U(32.W))
-    val sltu_result = RegInit(0.U(32.W))
-    val and_result  = RegInit(0.U(32.W))
-    val or_result   = RegInit(0.U(32.W))
-    val xor_result  = RegInit(0.U(32.W))
-    val sll_result  = RegInit(0.U(32.W))
-    val srl_result  = RegInit(0.U(32.W))
-    val sra_result  = RegInit(0.U(32.W))
+    val add_result  = Wire(UInt(32.W))
+    val sub_result  = Wire(UInt(32.W))
+    val slt_result  = Wire(UInt(32.W))
+    val sltu_result = Wire(UInt(32.W))
+    val and_result  = Wire(UInt(32.W))
+    val or_result   = Wire(UInt(32.W))
+    val xor_result  = Wire(UInt(32.W))
+    val sll_result  = Wire(UInt(32.W))
+    val srl_result  = Wire(UInt(32.W))
+    val sra_result  = Wire(UInt(32.W))
 
     // Multiply Regs
 
-    val mul_result          = RegInit(0.U(32.W))
-    val mulh_result         = RegInit(0.U(32.W))
-    val mulhsu_result       = RegInit(0.U(32.W))
-    val mulhu_result        = RegInit(0.U(32.W))
-    val div_result          = RegInit(0.U(32.W))
-    val divu_result         = RegInit(0.U(32.W))
-    val remainder_result    = RegInit(0.U(32.W))
-    val remainderu_result   = RegInit(0.U(32.W))
+    //val mul_result          = Wire(UInt(32.W))
+    //val mulh_result         = Wire(UInt(32.W))
+    //val mulhsu_result       = Wire(UInt(32.W))
+    //val mulhu_result        = Wire(UInt(32.W))
+    //val div_result          = Wire(UInt(32.W))
+    //val divu_result         = Wire(UInt(32.W))
+    //val remainder_result    = Wire(UInt(32.W))
+    //val remainderu_result   = Wire(UInt(32.W))
 
     // Either use RS1 / RS2 or RS1 / imm based on is_imm flag
     val operand2 = Mux(IMMEDIATE, imm, RS2_data)

@@ -36,23 +36,31 @@ import chisel3.util._
 // "branch resolution unit"
 class BRU(parameters:Parameters) extends Module{
     import parameters._
-    val portCount = getPortCount(parameters)
 
     val io = IO(new Bundle{
         // FTQ //
-        val FTQ           =   Input(new FTQ_entry(parameters))
+        val FTQ         =   Input(new FTQ_entry(parameters))
 
         // COMMIT //
         val ROB         =   Input(Vec(commitWidth, new ROB_entry(parameters)))
 
         // Output 
-
-        val commit      =    Output(new commit(parameters))
+        val commit      =   Output(new commit(parameters))
     })
 
-    io.FTQ := DontCare
-    //io.misprediction := DontCare
     io.commit := DontCare
+
+    // when commit is taking place
+    // if FTQ indicates a misprediction
+    // output mispredict and other metadata
+
+    io.commit.valid := io.ROB.map(_.valid).reduce(_ || _) && io.FTQ.valid
+    io.commit.is_misprediction := (io.FTQ.predicted_PC =/= io.FTQ.resolved_PC) && io.commit.valid && (/*ROB_PC*/ 0.U === io.FTQ.fetch_PC)
+
+    io.commit.GHR      := io.FTQ.GHR
+    io.commit.TOS      := io.FTQ.TOS
+    io.commit.NEXT     := io.FTQ.NEXT
+    io.commit.RAT_IDX  := io.FTQ.RAT_IDX
 
 }
 

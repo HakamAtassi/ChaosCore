@@ -365,6 +365,7 @@ class ROB_entry(parameters:Parameters) extends Bundle{
 }
 
 
+
 class ROB_commit(parameters:Parameters) extends Bundle{
     val placeholder = Bool()
 }
@@ -397,20 +398,20 @@ class RS_entry(parameters:Parameters) extends Bundle{
 class FU_output(parameters:Parameters) extends Bundle{
     import parameters._
     // Arithmetic/Load
-    val RD          =   UInt(physicalRegCount.W)
-    val RD_data     =   UInt(32.W)
-    val RD_valid    =   Bool()
+    val RD                  =   UInt(physicalRegCount.W)
+    val RD_data             =   UInt(32.W)
+    val RD_valid            =   Bool()
 
     // Branch
-    val instruction_PC    =   UInt(32.W)    // FIXME: is this necessary?
-    val branch_taken      =   Bool()
-    val target_address    =   UInt(32.W)
-    val branch_valid      =   Bool()
+    val instruction_PC      =   UInt(32.W)    // FIXME: is this necessary?
+    val branch_taken        =   Bool()
+    val target_address      =   UInt(32.W)
+    val branch_valid        =   Bool()
     // Address of actual branch instruction?
 
-    val ROB_index         =   UInt(log2Ceil(ROBEntires).W)
+    val ROB_index           =   UInt(log2Ceil(ROBEntires).W)
     
-    val fetch_packet_index = UInt(log2Ceil(fetchWidth).W)
+    val fetch_packet_index  =   UInt(log2Ceil(fetchWidth).W)
 
     // FIXME: this should just store fetch_packet PC and 
     // fetch packet index
