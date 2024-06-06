@@ -69,7 +69,6 @@ class decoder_validator(fetchWidth: Int) extends Module {
   io.instruction_validity := lut(PriorityEncoder(io.instruction_T_NT_mask))
 }
 
-// FIXME: make sure this actually outputs the correct predictions
 class predecoder(parameters:Parameters) extends Module{
     import parameters._
 
@@ -79,9 +78,14 @@ class predecoder(parameters:Parameters) extends Module{
         val fetch_packet        = Flipped(Decoupled(new fetch_packet(parameters)))
         val RAS_read            = Flipped(new RAS_read(parameters))
 
+
+        val commit              = Input(new commit(parameters))
+
         // outputs
-        val revert              = Decoupled(new revert(parameters))                     // Redirect frontend 
-        val final_fetch_packet  = Decoupled(new fetch_packet(parameters))               // Output validated instructions
+        val revert              = Decoupled(new revert(parameters))                    // Redirect frontend 
+        val GHR                 = Output(UInt(GHRWidth.W))
+
+        val final_fetch_packet  = Decoupled(new fetch_packet(parameters))              // Output validated instructions
         val RAS_update          = Output(new RAS_update)                               // RAS control
 
         // TO FTQ //
@@ -123,7 +127,7 @@ class predecoder(parameters:Parameters) extends Module{
 
     T_NT_reg := decoder_T_NT
     metadata_reg := decoder_metadata
-    GHR_reg := io.prediction.bits.GHR
+    //GHR_reg := (io.prediction.bits.GHR << 1) | io.prediction.T_NT
 
     /////////////
     // STAGE 2 //
@@ -164,11 +168,40 @@ class predecoder(parameters:Parameters) extends Module{
     PC_mismatch     := (PC_expected =/= io.fetch_packet.bits.fetch_PC) && inputs_valid
 
 
-
     //io.kill              := PC_mismatch
     io.revert.valid      := PC_mismatch
-    io.revert.bits.GHR   := GHR_reg
+    io.revert.bits.GHR   := GHR_reg // FIXME: what??
     io.revert.bits.PC    := PC_expected
+
+    ///////////////
+    // GHR LOGIC //
+    ///////////////
+
+    val GHR = RegInit(UInt(GHRWidth.W), 0.U)
+
+    val has_control          = Wire(Bool())
+
+    has_control := 0.B
+    for(i <- 0 until fetchWidth){
+        when(metadata_reg(i).BR || metadata_reg(i).JAL || metadata_reg(i).JALR){
+            has_control := 1.B
+        }
+    }
+
+    // if dominant instruction is a taken branch
+    // GHR is updated with T/NT regardless of where that T/NT came from
+    // However, the fetch packet must have a control instruction of some sort for that T/NT bit to be relavent
+    io.GHR := GHR
+
+    when(has_control){
+        io.GHR := (GHR << 1) | T_NT_reg.asUInt.orR
+    }
+
+    GHR := io.GHR
+
+    when(io.commit.is_misprediction){
+        GHR := io.commit.GHR
+    }
 
     ///////////////////////////////////
 

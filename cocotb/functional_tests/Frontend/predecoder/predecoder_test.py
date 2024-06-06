@@ -99,3 +99,23 @@ def test_FTQ_BEQ_NT():
         configs["testcase"] = "test_FTQ_BEQ_NT"
         run(**configs)
 
+def test_BEQ_GHR():
+        configs["testcase"] = "test_BEQ_GHR"
+        run(**configs)
+
+def test_BEQ_GHR_many():
+        configs["testcase"] = "test_BEQ_GHR_many"
+        run(**configs)
+
+def test_FTQ_BEQ_GHR_many_2():
+        configs["testcase"] = "test_FTQ_BEQ_GHR_many_2"
+        run(**configs)
+
+def test_FTQ_BEQ_GHR_non_branch():
+        configs["testcase"] = "test_FTQ_BEQ_GHR_non_branch"
+        run(**configs)
+
+def test_FTQ_BEQ_GHR_RET():
+        configs["testcase"] = "test_FTQ_BEQ_GHR_RET"
+        run(**configs)
+

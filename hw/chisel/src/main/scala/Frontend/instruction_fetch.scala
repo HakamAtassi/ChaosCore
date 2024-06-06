@@ -200,13 +200,16 @@ class instruction_fetch(parameters:Parameters) extends Module{
     // BP //
     ////////
 
+
+    predecoder.io.commit <> io.commit
+
     // BP inputs (external)
     bp.io.commit            <>  io.commit
 
     // BP inputs (internal)
     bp.io.predict           <>  PC_gen.io.PC_next
     bp.io.RAS_update        <>  predecoder.io.RAS_update
-    bp.io.revert            <>  predecoder.io.revert
+    bp.io.GHR               <>  predecoder.io.GHR
     bp.io.prediction.ready  <> !BTB_Q.io.in.ready
 
     // Outputs

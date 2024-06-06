@@ -417,52 +417,55 @@ module gshare(
   assign io_valid = io_valid_REG;
 endmodule
 
-module SDPReadWriteSmem_1(
+module hash_BTB_mem(
   input         clock,
                 reset,
-  output [54:0] io_data_out
+  output        io_data_out_BTB_valid,
+  output [17:0] io_data_out_BTB_tag,
+  output [31:0] io_data_out_BTB_target,
+  output [2:0]  io_data_out_BTB_br_type
 );
 
-  reg [54:0] din_buff;
+  reg din_buff_BTB_valid;
   always @(posedge clock) begin
     if (reset)
-      din_buff <= 55'h0;
+      din_buff_BTB_valid <= 1'h0;
     else
-      din_buff <= 55'h40000000000000;
+      din_buff_BTB_valid <= 1'h1;
   end // always @(posedge)
-  assign io_data_out = 55'h0;
+  assign io_data_out_BTB_valid = 1'h0;
+  assign io_data_out_BTB_tag = 18'h0;
+  assign io_data_out_BTB_target = 32'h0;
+  assign io_data_out_BTB_br_type = 3'h0;
 endmodule
 
 module hash_BTB(
   input         clock,
                 reset,
   input  [31:0] io_predict_PC,
-  input         io_predict_valid,
-  output        io_BTB_valid,
-  output [31:0] io_BTB_target,
-  output [1:0]  io_BTB_type,
-  output [3:0]  io_BTB_br_mask,
-  output        io_BTB_hit
+  output        io_BTB_hit,
+                io_BTB_output_BTB_valid,
+  output [31:0] io_BTB_output_BTB_target,
+  output [2:0]  io_BTB_output_BTB_br_type
 );
 
-  wire [54:0] _BTB_memory_io_data_out;
-  reg         io_BTB_valid_REG;
+  wire        _BTB_memory_io_data_out_BTB_valid;
+  wire [17:0] _BTB_memory_io_data_out_BTB_tag;
   reg  [15:0] io_BTB_hit_REG;
-  always @(posedge clock) begin
-    io_BTB_valid_REG <= io_predict_valid;
+  always @(posedge clock)
     io_BTB_hit_REG <= io_predict_PC[31:16];
-  end // always @(posedge)
-  SDPReadWriteSmem_1 BTB_memory (
-    .clock       (clock),
-    .reset       (reset),
-    .io_data_out (_BTB_memory_io_data_out)
+  hash_BTB_mem BTB_memory (
+    .clock                   (clock),
+    .reset                   (reset),
+    .io_data_out_BTB_valid   (_BTB_memory_io_data_out_BTB_valid),
+    .io_data_out_BTB_tag     (_BTB_memory_io_data_out_BTB_tag),
+    .io_data_out_BTB_target  (io_BTB_output_BTB_target),
+    .io_data_out_BTB_br_type (io_BTB_output_BTB_br_type)
   );
-  assign io_BTB_valid = io_BTB_valid_REG;
-  assign io_BTB_target = _BTB_memory_io_data_out[37:6];
-  assign io_BTB_type = _BTB_memory_io_data_out[5:4];
-  assign io_BTB_br_mask = _BTB_memory_io_data_out[3:0];
   assign io_BTB_hit =
-    io_BTB_hit_REG == _BTB_memory_io_data_out[53:38] & _BTB_memory_io_data_out[54];
+    {2'h0, io_BTB_hit_REG} == _BTB_memory_io_data_out_BTB_tag
+    & _BTB_memory_io_data_out_BTB_valid;
+  assign io_BTB_output_BTB_valid = _BTB_memory_io_data_out_BTB_valid;
 endmodule
 
 // VCS coverage exclude_file
@@ -491,7 +494,7 @@ module mem_128x39(
   assign R0_data = _R0_en_d0 ? Memory[_R0_addr_d0] : 39'bx;
 endmodule
 
-module SDPReadWriteSmem_2(
+module SDPReadWriteSmem_1(
   input         clock,
                 reset,
   input  [6:0]  io_rd_addr,
@@ -553,7 +556,7 @@ module RAS(
     else if (io_rd_valid)
       TOS <= NOS;
   end // always @(posedge)
-  SDPReadWriteSmem_2 RAS_memory (
+  SDPReadWriteSmem_1 RAS_memory (
     .clock       (clock),
     .reset       (reset),
     .io_rd_addr  (io_wr_valid ? NEXT : io_rd_valid ? NOS : TOS),
@@ -574,53 +577,33 @@ module BP(
   input         io_RAS_update_call,
                 io_RAS_update_ret,
   output [31:0] io_RAS_read_ret_addr,
-  input         io_revert_valid,
-  input  [15:0] io_revert_bits_GHR,
+  input  [15:0] io_GHR,
   output        io_prediction_valid,
                 io_prediction_bits_hit,
   output [31:0] io_prediction_bits_target,
-  output [1:0]  io_prediction_bits_br_type,
-  output [3:0]  io_prediction_bits_br_mask,
+  output [2:0]  io_prediction_bits_br_type,
   output [15:0] io_prediction_bits_GHR,
   output        io_prediction_bits_T_NT
 );
 
-  wire        _BTB_io_BTB_valid;
-  wire [1:0]  _BTB_io_BTB_type;
-  wire        _BTB_io_BTB_hit;
-  wire        _gshare_io_T_NT;
-  wire        _gshare_io_valid;
-  reg  [15:0] GHR_reg;
-  wire        GHR_update =
-    _gshare_io_valid & _BTB_io_BTB_valid & _BTB_io_BTB_hit & _BTB_io_BTB_type == 2'h0;
-  wire [15:0] _GEN = {GHR_reg[14:0], _gshare_io_T_NT};
-  always @(posedge clock) begin
-    if (reset)
-      GHR_reg <= 16'h0;
-    else if (io_revert_valid)
-      GHR_reg <= io_revert_bits_GHR;
-    else if (GHR_update)
-      GHR_reg <= _GEN;
-  end // always @(posedge)
+  wire _BTB_io_BTB_output_BTB_valid;
+  wire _gshare_io_valid;
   gshare gshare (
     .clock            (clock),
-    .io_predict_GHR
-      (io_revert_valid ? io_revert_bits_GHR : GHR_update ? _GEN : GHR_reg),
+    .io_predict_GHR   (io_GHR),
     .io_predict_PC    (io_predict_bits),
     .io_predict_valid (io_predict_valid),
-    .io_T_NT          (_gshare_io_T_NT),
+    .io_T_NT          (io_prediction_bits_T_NT),
     .io_valid         (_gshare_io_valid)
   );
   hash_BTB BTB (
-    .clock            (clock),
-    .reset            (reset),
-    .io_predict_PC    (io_predict_bits),
-    .io_predict_valid (io_predict_valid),
-    .io_BTB_valid     (_BTB_io_BTB_valid),
-    .io_BTB_target    (io_prediction_bits_target),
-    .io_BTB_type      (_BTB_io_BTB_type),
-    .io_BTB_br_mask   (io_prediction_bits_br_mask),
-    .io_BTB_hit       (_BTB_io_BTB_hit)
+    .clock                     (clock),
+    .reset                     (reset),
+    .io_predict_PC             (io_predict_bits),
+    .io_BTB_hit                (io_prediction_bits_hit),
+    .io_BTB_output_BTB_valid   (_BTB_io_BTB_output_BTB_valid),
+    .io_BTB_output_BTB_target  (io_prediction_bits_target),
+    .io_BTB_output_BTB_br_type (io_prediction_bits_br_type)
   );
   RAS RAS (
     .clock       (clock),
@@ -630,11 +613,8 @@ module BP(
     .io_rd_valid (io_RAS_update_ret),
     .io_ret_addr (io_RAS_read_ret_addr)
   );
-  assign io_prediction_valid = _BTB_io_BTB_valid & _gshare_io_valid;
-  assign io_prediction_bits_hit = _BTB_io_BTB_hit;
-  assign io_prediction_bits_br_type = _BTB_io_BTB_type;
-  assign io_prediction_bits_GHR = GHR_reg;
-  assign io_prediction_bits_T_NT = _gshare_io_T_NT;
+  assign io_prediction_valid = _BTB_io_BTB_output_BTB_valid & _gshare_io_valid;
+  assign io_prediction_bits_GHR = io_GHR;
 endmodule
 
 module branch_decoder(
@@ -913,7 +893,6 @@ module predecoder(
                 io_prediction_bits_hit,
   input  [31:0] io_prediction_bits_target,
   input  [3:0]  io_prediction_bits_br_mask,
-  input  [15:0] io_prediction_bits_GHR,
   input         io_prediction_bits_T_NT,
   output        io_fetch_packet_ready,
   input         io_fetch_packet_valid,
@@ -932,8 +911,8 @@ module predecoder(
   input  [3:0]  io_fetch_packet_bits_instructions_3_packet_index,
   input  [31:0] io_RAS_read_ret_addr,
   output        io_revert_valid,
-  output [15:0] io_revert_bits_GHR,
   output [31:0] io_revert_bits_PC,
+  output [15:0] io_GHR,
   input         io_final_fetch_packet_ready,
   output        io_final_fetch_packet_valid,
   output [31:0] io_final_fetch_packet_bits_instructions_0_instruction,
@@ -1035,7 +1014,6 @@ module predecoder(
   reg         T_NT_reg_1;
   reg         T_NT_reg_2;
   reg         T_NT_reg_3;
-  reg  [15:0] GHR_reg;
   wire        use_RAS =
     T_NT_reg_0
       ? metadata_reg_0_Ret
@@ -1052,6 +1030,12 @@ module predecoder(
               : T_NT_reg_3 ? metadata_reg_3_instruction_PC : 32'h0;
   reg  [31:0] PC_next_reg;
   wire        PC_mismatch = PC_expected != io_fetch_packet_bits_fetch_PC & inputs_valid;
+  reg  [15:0] GHR;
+  wire        has_control =
+    metadata_reg_3_BR | metadata_reg_3_JAL | metadata_reg_3_JALR | metadata_reg_2_BR
+    | metadata_reg_2_JAL | metadata_reg_2_JALR | metadata_reg_1_BR | metadata_reg_1_JAL
+    | metadata_reg_1_JALR | metadata_reg_0_BR | metadata_reg_0_JAL | metadata_reg_0_JALR;
+  wire [15:0] _GEN = {GHR[14:0], |{T_NT_reg_3, T_NT_reg_2, T_NT_reg_1, T_NT_reg_0}};
   reg  [31:0] PC_next_REG;
   wire [31:0] PC_next =
     (T_NT_reg_0
@@ -1159,7 +1143,6 @@ module predecoder(
     T_NT_reg_1 <= _decoders_1_io_T_NT;
     T_NT_reg_2 <= _decoders_2_io_T_NT;
     T_NT_reg_3 <= _decoders_3_io_T_NT;
-    GHR_reg <= io_prediction_bits_GHR;
     PC_next_REG <= io_fetch_packet_bits_fetch_PC + 32'h10;
     PC_next_reg_REG <= stage_1_valid;
     PC_expected_REG <= stage_1_valid;
@@ -1194,10 +1177,16 @@ module predecoder(
     io_predictions_bits_fetch_PC_REG <= io_fetch_packet_bits_fetch_PC;
     io_final_fetch_packet_valid_REG <=
       inputs_valid & PC_expected == io_fetch_packet_bits_fetch_PC;
-    if (reset)
+    if (reset) begin
       PC_next_reg <= 32'h0;
-    else if (PC_next_reg_REG)
-      PC_next_reg <= PC_next;
+      GHR <= 16'h0;
+    end
+    else begin
+      if (PC_next_reg_REG)
+        PC_next_reg <= PC_next;
+      if (has_control)
+        GHR <= _GEN;
+    end
   end // always @(posedge)
   branch_decoder decoders_0 (
     .io_fetch_PC                (io_fetch_packet_bits_fetch_PC),
@@ -1290,8 +1279,8 @@ module predecoder(
   assign io_prediction_ready = _io_fetch_packet_ready_T & ~PC_mismatch;
   assign io_fetch_packet_ready = _io_fetch_packet_ready_T & ~PC_mismatch;
   assign io_revert_valid = PC_mismatch;
-  assign io_revert_bits_GHR = GHR_reg;
   assign io_revert_bits_PC = PC_expected;
+  assign io_GHR = has_control ? _GEN : GHR;
   assign io_final_fetch_packet_valid = io_final_fetch_packet_valid_REG;
   assign io_final_fetch_packet_bits_instructions_0_instruction =
     io_final_fetch_packet_bits_instructions_0_REG_instruction;
@@ -1339,7 +1328,7 @@ module PC_arbit(
                 io_prediction_valid,
                 io_prediction_bits_hit,
   input  [31:0] io_prediction_bits_target,
-  input  [1:0]  io_prediction_bits_br_type,
+  input  [2:0]  io_prediction_bits_br_type,
   input         io_revert_valid,
   input  [31:0] io_revert_bits_PC,
                 io_RAS_read_ret_addr,
@@ -1351,7 +1340,7 @@ module PC_arbit(
   wire [31:0] io_PC_next_bits_0;
   reg  [31:0] PC;
   reg  [31:0] correction_address_reg;
-  wire        is_ret = io_prediction_bits_br_type == 2'h2;
+  wire        is_ret = io_prediction_bits_br_type == 3'h4;
   reg         REG;
   assign io_PC_next_bits_0 =
     REG
@@ -1659,23 +1648,23 @@ module Q_1(
 endmodule
 
 // VCS coverage exclude_file
-module ram_16x54(
+module ram_16x38(
   input  [3:0]  R0_addr,
   input         R0_en,
                 R0_clk,
-  output [53:0] R0_data,
+  output [37:0] R0_data,
   input  [3:0]  W0_addr,
   input         W0_en,
                 W0_clk,
-  input  [53:0] W0_data
+  input  [37:0] W0_data
 );
 
-  reg [53:0] Memory[0:15];
+  reg [37:0] Memory[0:15];
   always @(posedge W0_clk) begin
     if (W0_en & 1'h1)
       Memory[W0_addr] <= W0_data;
   end // always @(posedge)
-  assign R0_data = R0_en ? Memory[R0_addr] : 54'bx;
+  assign R0_data = R0_en ? Memory[R0_addr] : 38'bx;
 endmodule
 
 module Queue16_prediction(
@@ -1684,8 +1673,7 @@ module Queue16_prediction(
                 io_enq_valid,
                 io_enq_bits_hit,
   input  [31:0] io_enq_bits_target,
-  input  [1:0]  io_enq_bits_br_type,
-  input  [3:0]  io_enq_bits_br_mask,
+  input  [2:0]  io_enq_bits_br_type,
   input  [15:0] io_enq_bits_GHR,
   input         io_enq_bits_T_NT,
                 io_deq_ready,
@@ -1693,11 +1681,10 @@ module Queue16_prediction(
                 io_deq_bits_hit,
   output [31:0] io_deq_bits_target,
   output [3:0]  io_deq_bits_br_mask,
-  output [15:0] io_deq_bits_GHR,
   output        io_deq_bits_T_NT
 );
 
-  wire [53:0] _ram_ext_R0_data;
+  wire [37:0] _ram_ext_R0_data;
   reg  [3:0]  enq_ptr_value;
   reg  [3:0]  deq_ptr_value;
   reg         maybe_full;
@@ -1721,7 +1708,7 @@ module Queue16_prediction(
         maybe_full <= do_enq;
     end
   end // always @(posedge)
-  ram_16x54 ram_ext (
+  ram_16x38 ram_ext (
     .R0_addr (deq_ptr_value),
     .R0_en   (1'h1),
     .R0_clk  (clock),
@@ -1729,19 +1716,13 @@ module Queue16_prediction(
     .W0_addr (enq_ptr_value),
     .W0_en   (do_enq),
     .W0_clk  (clock),
-    .W0_data
-      ({io_enq_bits_T_NT,
-        io_enq_bits_GHR,
-        io_enq_bits_br_mask,
-        io_enq_bits_target,
-        io_enq_bits_hit})
+    .W0_data ({io_enq_bits_T_NT, 4'h0, io_enq_bits_target, io_enq_bits_hit})
   );
   assign io_deq_valid = io_deq_valid_0;
   assign io_deq_bits_hit = empty ? io_enq_bits_hit : _ram_ext_R0_data[0];
   assign io_deq_bits_target = empty ? io_enq_bits_target : _ram_ext_R0_data[32:1];
-  assign io_deq_bits_br_mask = empty ? io_enq_bits_br_mask : _ram_ext_R0_data[36:33];
-  assign io_deq_bits_GHR = empty ? io_enq_bits_GHR : _ram_ext_R0_data[52:37];
-  assign io_deq_bits_T_NT = empty ? io_enq_bits_T_NT : _ram_ext_R0_data[53];
+  assign io_deq_bits_br_mask = empty ? 4'h0 : _ram_ext_R0_data[36:33];
+  assign io_deq_bits_T_NT = empty ? io_enq_bits_T_NT : _ram_ext_R0_data[37];
 endmodule
 
 module Q_2(
@@ -1750,8 +1731,7 @@ module Q_2(
                 io_in_valid,
                 io_in_bits_hit,
   input  [31:0] io_in_bits_target,
-  input  [1:0]  io_in_bits_br_type,
-  input  [3:0]  io_in_bits_br_mask,
+  input  [2:0]  io_in_bits_br_type,
   input  [15:0] io_in_bits_GHR,
   input         io_in_bits_T_NT,
                 io_out_ready,
@@ -1759,7 +1739,6 @@ module Q_2(
                 io_out_bits_hit,
   output [31:0] io_out_bits_target,
   output [3:0]  io_out_bits_br_mask,
-  output [15:0] io_out_bits_GHR,
   output        io_out_bits_T_NT
 );
 
@@ -1770,7 +1749,6 @@ module Q_2(
     .io_enq_bits_hit     (io_in_bits_hit),
     .io_enq_bits_target  (io_in_bits_target),
     .io_enq_bits_br_type (io_in_bits_br_type),
-    .io_enq_bits_br_mask (io_in_bits_br_mask),
     .io_enq_bits_GHR     (io_in_bits_GHR),
     .io_enq_bits_T_NT    (io_in_bits_T_NT),
     .io_deq_ready        (io_out_ready),
@@ -1778,7 +1756,6 @@ module Q_2(
     .io_deq_bits_hit     (io_out_bits_hit),
     .io_deq_bits_target  (io_out_bits_target),
     .io_deq_bits_br_mask (io_out_bits_br_mask),
-    .io_deq_bits_GHR     (io_out_bits_GHR),
     .io_deq_bits_T_NT    (io_out_bits_T_NT)
   );
 endmodule
@@ -1811,7 +1788,6 @@ module instruction_fetch(
   wire        _BTB_Q_io_out_bits_hit;
   wire [31:0] _BTB_Q_io_out_bits_target;
   wire [3:0]  _BTB_Q_io_out_bits_br_mask;
-  wire [15:0] _BTB_Q_io_out_bits_GHR;
   wire        _BTB_Q_io_out_bits_T_NT;
   wire        _PC_Q_io_in_ready;
   wire        _PC_Q_io_out_valid;
@@ -1835,8 +1811,8 @@ module instruction_fetch(
   wire        _predecoder_io_prediction_ready;
   wire        _predecoder_io_fetch_packet_ready;
   wire        _predecoder_io_revert_valid;
-  wire [15:0] _predecoder_io_revert_bits_GHR;
   wire [31:0] _predecoder_io_revert_bits_PC;
+  wire [15:0] _predecoder_io_GHR;
   wire [31:0] _predecoder_io_RAS_update_call_addr;
   wire        _predecoder_io_RAS_update_call;
   wire        _predecoder_io_RAS_update_ret;
@@ -1844,8 +1820,7 @@ module instruction_fetch(
   wire        _bp_io_prediction_valid;
   wire        _bp_io_prediction_bits_hit;
   wire [31:0] _bp_io_prediction_bits_target;
-  wire [1:0]  _bp_io_prediction_bits_br_type;
-  wire [3:0]  _bp_io_prediction_bits_br_mask;
+  wire [2:0]  _bp_io_prediction_bits_br_type;
   wire [15:0] _bp_io_prediction_bits_GHR;
   wire        _bp_io_prediction_bits_T_NT;
   wire        _instruction_cache_io_cpu_addr_ready;
@@ -1901,13 +1876,11 @@ module instruction_fetch(
     .io_RAS_update_call         (_predecoder_io_RAS_update_call),
     .io_RAS_update_ret          (_predecoder_io_RAS_update_ret),
     .io_RAS_read_ret_addr       (_bp_io_RAS_read_ret_addr),
-    .io_revert_valid            (_predecoder_io_revert_valid),
-    .io_revert_bits_GHR         (_predecoder_io_revert_bits_GHR),
+    .io_GHR                     (_predecoder_io_GHR),
     .io_prediction_valid        (_bp_io_prediction_valid),
     .io_prediction_bits_hit     (_bp_io_prediction_bits_hit),
     .io_prediction_bits_target  (_bp_io_prediction_bits_target),
     .io_prediction_bits_br_type (_bp_io_prediction_bits_br_type),
-    .io_prediction_bits_br_mask (_bp_io_prediction_bits_br_mask),
     .io_prediction_bits_GHR     (_bp_io_prediction_bits_GHR),
     .io_prediction_bits_T_NT    (_bp_io_prediction_bits_T_NT)
   );
@@ -1920,7 +1893,6 @@ module instruction_fetch(
     .io_prediction_bits_hit                                 (_BTB_Q_io_out_bits_hit),
     .io_prediction_bits_target                              (_BTB_Q_io_out_bits_target),
     .io_prediction_bits_br_mask                             (_BTB_Q_io_out_bits_br_mask),
-    .io_prediction_bits_GHR                                 (_BTB_Q_io_out_bits_GHR),
     .io_prediction_bits_T_NT                                (_BTB_Q_io_out_bits_T_NT),
     .io_fetch_packet_ready
       (_predecoder_io_fetch_packet_ready),
@@ -1953,10 +1925,9 @@ module instruction_fetch(
       (_instruction_Q_io_out_bits_instructions_3_packet_index),
     .io_RAS_read_ret_addr                                   (_bp_io_RAS_read_ret_addr),
     .io_revert_valid                                        (_predecoder_io_revert_valid),
-    .io_revert_bits_GHR
-      (_predecoder_io_revert_bits_GHR),
     .io_revert_bits_PC
       (_predecoder_io_revert_bits_PC),
+    .io_GHR                                                 (_predecoder_io_GHR),
     .io_final_fetch_packet_ready                            (io_fetch_packet_ready),
     .io_final_fetch_packet_valid                            (io_fetch_packet_valid),
     .io_final_fetch_packet_bits_instructions_0_instruction
@@ -2062,7 +2033,6 @@ module instruction_fetch(
     .io_in_bits_hit      (_bp_io_prediction_bits_hit),
     .io_in_bits_target   (_bp_io_prediction_bits_target),
     .io_in_bits_br_type  (_bp_io_prediction_bits_br_type),
-    .io_in_bits_br_mask  (_bp_io_prediction_bits_br_mask),
     .io_in_bits_GHR      (_bp_io_prediction_bits_GHR),
     .io_in_bits_T_NT     (_bp_io_prediction_bits_T_NT),
     .io_out_ready        (_predecoder_io_prediction_ready),
@@ -2070,7 +2040,6 @@ module instruction_fetch(
     .io_out_bits_hit     (_BTB_Q_io_out_bits_hit),
     .io_out_bits_target  (_BTB_Q_io_out_bits_target),
     .io_out_bits_br_mask (_BTB_Q_io_out_bits_br_mask),
-    .io_out_bits_GHR     (_BTB_Q_io_out_bits_GHR),
     .io_out_bits_T_NT    (_BTB_Q_io_out_bits_T_NT)
   );
 endmodule

@@ -97,9 +97,9 @@ class PC_arbit(parameters:Parameters) extends Module{
     
     reversion            := io.revert.valid
 
-    is_branch := io.prediction.bits.br_type === 0.U
-    is_jalr   := io.prediction.bits.br_type === 0.U  // FIXME: idk how jalr helps and what its encoded as in the btb...
-    is_ret    := io.prediction.bits.br_type === 2.U
+    is_branch := io.prediction.bits.br_type === _br_type.BR
+    is_jalr   := io.prediction.bits.br_type === _br_type.JALR  // FIXME: idk how jalr helps and what its encoded as in the btb...
+    is_ret    := io.prediction.bits.br_type === _br_type.RET
 
     use_misprediction_PC   := misprediction
     //use_exception_PC       := exception

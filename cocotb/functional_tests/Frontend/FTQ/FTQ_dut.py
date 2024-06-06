@@ -38,7 +38,7 @@ def generate_null_commit():
     inputs["valid"]                     =   0
     inputs["fetch_PC"]                  =   0
     inputs["T_NT"]                      =   0
-    inputs["is_BR"]                     =   0
+    inputs["br_type"]                   =   0
     inputs["is_misprediction"]          =   0
     inputs["expected_PC"]               =   0
     inputs["GHR"]                       =   0
@@ -93,7 +93,7 @@ class FTQ_dut:
         getattr(self.dut, f"io_commit_valid").value                                     =   inputs["valid"]
         getattr(self.dut, f"io_commit_fetch_PC").value                                  =   inputs["fetch_PC"]
         getattr(self.dut, f"io_commit_T_NT").value                                      =   inputs["T_NT"]
-        getattr(self.dut, f"io_commit_is_BR").value                                     =   inputs["is_BR"]
+        getattr(self.dut, f"io_commit_br_type").value                                   =   inputs["br_type"]
         getattr(self.dut, f"io_commit_is_misprediction").value                          =   inputs["is_misprediction"]
         getattr(self.dut, f"io_commit_expected_PC").value                               =   inputs["expected_PC"]
         getattr(self.dut, f"io_commit_GHR").value                                       =   inputs["GHR"]
