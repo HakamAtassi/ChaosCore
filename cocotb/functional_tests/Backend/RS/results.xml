@@ -1,6 +1,0 @@
-<testsuites name="results">
-  <testsuite name="all" package="all">
-    <property name="random_seed" value="1716336928" />
-    <testcase name="dispatch_uOp1_uOp1" classname="RS_cocotb" file="/home/hakam/Repos/ChaosCore/cocotb/functional_tests/Backend/RS/RS_cocotb.py" lineno="497" time="0.0067272186279296875" sim_time_ns="11.001" ratio_time="1635.2969345052452" />
-  </testsuite>
-</testsuites>

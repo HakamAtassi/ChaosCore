@@ -2,6 +2,7 @@ import sys
 import random
 import numpy as np
 from cocotb.clock import Clock
+import os
 import cocotb
 from cocotb.triggers import RisingEdge, FallingEdge, ReadOnly, ReadWrite, Timer
 from pathlib import Path
@@ -13,7 +14,10 @@ from SimpleDRAM import SimpleDRAM
 @cocotb.test()
 async def test_reset(dut):
 
-    DRAM = SimpleDRAM(sizeKB=2, bin="../bins/addi.bin")
+    base_dir = os.path.dirname(__file__)
+    bin_absolute_path = os.path.join(base_dir, "bins/addi.bin")
+    print(bin_absolute_path)
+    DRAM = SimpleDRAM(sizeKB=4, bin=bin_absolute_path)
 
     await cocotb.start(generateClock(dut)) 
 
@@ -26,7 +30,9 @@ async def test_reset(dut):
 @cocotb.test()
 async def test_decoder_out(dut):
 
-    DRAM = SimpleDRAM(sizeKB=2, bin="../bins/addi.bin")
+    base_dir = os.path.dirname(__file__)
+    bin_absolute_path = os.path.join(base_dir, "bins/addi.bin")
+    DRAM = SimpleDRAM(sizeKB=4, bin=bin_absolute_path)
 
     await cocotb.start(generateClock(dut)) 
 
@@ -37,6 +43,7 @@ async def test_decoder_out(dut):
     await dut.wait_decoder_outputs_valid()
 
     #await ReadOnly()
+
 
 
     assert dut.get_decoder_outputs()["RS1"][0]                  == 0
@@ -99,7 +106,9 @@ async def test_decoder_out(dut):
 async def test_predecoder_stall(dut):
     """Test that the predecoder doesnt change state/lose outputs when its output is not ready"""
 
-    DRAM = SimpleDRAM(sizeKB=2, bin="../bins/addi.bin")
+    base_dir = os.path.dirname(__file__)
+    bin_absolute_path = os.path.join(base_dir, "bins/addi.bin")
+    DRAM = SimpleDRAM(sizeKB=4, bin=bin_absolute_path)
 
     await cocotb.start(generateClock(dut)) 
 

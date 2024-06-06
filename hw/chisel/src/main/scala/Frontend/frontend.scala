@@ -145,6 +145,7 @@ class frontend(parameters:Parameters) extends Module{
         // ALLOCATE //
         // ROB
         val ROB_packet                      =   Vec(dispatchWidth, Decoupled(new ROB_entry(parameters)))
+        val fetch_PC                        =   Output(UInt(32.W))
 
         // RD FREE //
         val FU_outputs                      =   Vec(portCount, Flipped(ValidIO(new FU_output(parameters))))
@@ -157,6 +158,8 @@ class frontend(parameters:Parameters) extends Module{
 
     val commit                          =  Wire(Decoupled(new commit(parameters)))
     commit := DontCare
+
+    io.fetch_PC := DontCare
 
     //////////////
     // Pipeline //////////////////////////////////////////////////////////////

@@ -207,6 +207,6 @@ class BP(parameters:Parameters) extends Module{
 
     // FIXME: stall on revert...
     io.predict.ready        := io.prediction.ready && !(misprediction )   // 1 cycle stall on mispredict or revert
-    io.prediction.valid     := (BTB.io.BTB_output.BTB_valid && gshare.io.valid)
+    io.prediction.valid     := BTB.io.BTB_output.BTB_valid && gshare.io.valid
 
 }

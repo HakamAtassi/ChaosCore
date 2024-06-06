@@ -57,6 +57,11 @@ class backend(parameters:Parameters) extends Module{
         // REDIRECTS // 
         val commit                  =    Input(new commit(parameters))
 
+        // PC_file access (for branch unit)
+        val PC_file_exec_addr           =   Output(UInt(log2Ceil(ROBEntires).W))
+        val PC_file_exec_data           =   Input(UInt(log2Ceil(ROBEntires).W))
+
+
         // ALLOCATE //
         val backend_packet          =   Vec(dispatchWidth, Flipped(Decoupled(new decoded_instruction(parameters))))
 
@@ -124,11 +129,13 @@ class backend(parameters:Parameters) extends Module{
     INT_PRF.io.raddr_6  :=    MEM_RS.io.RF_inputs(3).bits.RS1   // MEM RS PORT 0
     INT_PRF.io.raddr_7  :=    MEM_RS.io.RF_inputs(3).bits.RS2   // MEM RS PORT 0
 
+    io.PC_file_exec_addr := INT_RS.io.RF_inputs(0).bits.ROB_index
+
 
     // update read out data
     read_decoded_instructions(0).RS1_data := INT_PRF.io.rdata_0
     read_decoded_instructions(0).RS2_data := INT_PRF.io.rdata_1
-    read_decoded_instructions(0).PC       := 0.U
+    read_decoded_instructions(0).PC       := io.PC_file_exec_data   // branch unit
 
     read_decoded_instructions(1).RS1_data := INT_PRF.io.rdata_2
     read_decoded_instructions(1).RS2_data := INT_PRF.io.rdata_3

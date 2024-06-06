@@ -560,3 +560,26 @@ async def test_RAS_call_ret(dut):
     assert dut.get_RAS_read_outputs()["NEXT"]       ==  2   # 2 incase the pop was a mispredict
 
 
+
+
+@cocotb.test()
+async def test_prediction_valid(dut):
+
+    await cocotb.start(generateClock(dut)) 
+
+    dut = BP_dut(dut)  # wrap dut with helper class
+    await dut.reset()   # reset module
+
+    await RisingEdge(dut.clock())
+
+    predict_input = generate_null_predict()
+
+    predict_input["valid"] = 1
+
+    dut.write_predict(predict_input)
+
+    await RisingEdge(dut.clock())
+
+    await ReadOnly()
+
+    assert dut.get_prediction_outputs()["valid"] == 1

@@ -93,8 +93,8 @@ object Main extends App {
     //, 
     //"../verilog/Backend/RF.v")
 
-    //VerilogGenerator.generateVerilog(new decoder(parameters), 
-    //"../verilog/Frontend/decoder.v")
+    VerilogGenerator.generateVerilog(new decoder(parameters), 
+    "../verilog/Frontend/decoder.v")
 
     //VerilogGenerator.generateVerilog(new FU(parameters, true, true), 
     //"../verilog/Backend/FU.v")
@@ -114,8 +114,8 @@ object Main extends App {
     VerilogGenerator.generateVerilog(new BP(parameters), 
     "../verilog/Frontend/BP/BP.v")
 
-    //VerilogGenerator.generateVerilog(new ROB(parameters), 
-    //"../verilog/Backend/ROB.v")
+    VerilogGenerator.generateVerilog(new ROB(parameters), 
+    "../verilog/Backend/ROB.v")
 
     VerilogGenerator.generateVerilog(new ChaosCore(parameters), 
     "../verilog/Core/ChaosCore.v")

@@ -141,4 +141,5 @@ class hash_BTB(parameters:Parameters) extends Module{
 
     io.BTB_hit      := (RegNext(predict_input_tag) === BTB_tag_output) && BTB_valid_output.asBool
     io.BTB_output <> BTB_memory.io.data_out
+    io.BTB_output.BTB_valid := RegNext(io.predict_valid)
 }

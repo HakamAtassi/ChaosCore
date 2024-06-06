@@ -137,3 +137,87 @@ class TrueDualPortMemory(depth: Int, width: Int) extends Module {
   }
   io.readDataB := mem.read(io.addrB, io.writeEnableB) // FIXME: write enable???
 }
+
+
+
+class ROB_mem[T <: Data](dataType: T, depth: Int) extends Module {
+  val io = IO(new Bundle {
+    // Port A
+    val addrA = Input(UInt(log2Ceil(depth).W))
+    val writeDataA = Input(dataType)
+    val writeEnableA = Input(Bool())
+    val readDataA = Output(dataType)
+
+    // Port B
+    val addrB = Input(UInt(log2Ceil(depth).W))
+    val writeDataB = Input(dataType)
+    val writeEnableB = Input(Bool())
+    val readDataB = Output(dataType)
+
+    // Port C   (read only)
+    val addrC = Input(UInt(log2Ceil(depth).W))
+    val readDataC = Output(dataType)
+  })
+
+  // Create the true dual-port memory
+  val mem = SyncReadMem(depth, dataType)
+
+  // Operations for Port A
+  when(io.writeEnableA) {
+    mem.write(io.addrA, io.writeDataA)
+  }
+  io.readDataA := mem.read(io.addrA, 1.B)
+
+  // Operations for Port B
+  when(io.writeEnableB) {
+    mem.write(io.addrB, io.writeDataB)
+  }
+  io.readDataB := mem.read(io.addrB, 1.B)
+
+  io.readDataC := mem.read(io.addrC, 1.B)
+
+}
+
+
+
+class PC_file_mem[T <: Data](dataType: T, depth: Int) extends Module {
+  val io = IO(new Bundle {
+    // Port A
+    val addrA = Input(UInt(log2Ceil(depth).W))
+    val writeDataA = Input(dataType)
+    val writeEnableA = Input(Bool())
+    val readDataA = Output(dataType)
+
+    // Port B
+    val addrB = Input(UInt(log2Ceil(depth).W))
+    val writeDataB = Input(dataType)
+    val writeEnableB = Input(Bool())
+    val readDataB = Output(dataType)
+
+    // Port C   (read only)
+    val addrC = Input(UInt(log2Ceil(depth).W))
+    val readDataC = Output(dataType)
+
+    // Port D   (read only)
+    val addrD = Input(UInt(log2Ceil(depth).W))
+    val readDataD = Output(dataType)
+  })
+
+  // Create the true dual-port memory
+  val mem = SyncReadMem(depth, dataType)
+
+  // Operations for Port A
+  when(io.writeEnableA) {
+    mem.write(io.addrA, io.writeDataA)
+  }
+  io.readDataA := mem.read(io.addrA, 1.B)
+
+  // Operations for Port B
+  when(io.writeEnableB) {
+    mem.write(io.addrB, io.writeDataB)
+  }
+  io.readDataB := mem.read(io.addrB, 1.B)
+  io.readDataC := mem.read(io.addrC, 1.B)
+  io.readDataD := mem.read(io.addrD, 1.B)
+
+}

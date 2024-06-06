@@ -140,6 +140,7 @@ class ChaosCore(parameters:Parameters) extends Module{
     ROB.io.commit <> BRU.io.commit
     FTQ.io.commit <> BRU.io.commit
 
+
     ////////////////
     // ROB <> BRU //
     ////////////////
@@ -157,10 +158,14 @@ class ChaosCore(parameters:Parameters) extends Module{
 
     frontend.io.renamed_decoded_fetch_packet <> backend.io.backend_packet
     ROB.io.ROB_packet <> frontend.io.ROB_packet
+    ROB.io.fetch_PC <> frontend.io.fetch_PC
 
     frontend.io.MEMRS_ready <> backend.io.MEMRS_ready
     frontend.io.INTRS_ready <> backend.io.INTRS_ready
 
+
+    backend.io.PC_file_exec_addr <> ROB.io.PC_file_exec_addr
+    backend.io.PC_file_exec_data <> ROB.io.PC_file_exec_data
 
 
 }
