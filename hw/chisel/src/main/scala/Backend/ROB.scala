@@ -47,27 +47,22 @@ class ROB(parameters:Parameters) extends Module{
         // ALLOCATE //
         val ROB_packet      =   Flipped(Decoupled(new decoded_fetch_packet(parameters)))
 
-        //val instruction_queue   = Module(new instruction_queue(new decoded_instruction(parameters), parameters))
-
-
         // UPDATE //
         val FU_outputs      =   Vec(portCount, Flipped(ValidIO(new FU_output(parameters))))
 
         // COMMIT //
-        val ROB             =   Output(Vec(fetchWidth, new ROB_entry(parameters)))
+        val ROB_output      =   ValidIO(new ROB_output(parameters))
+        //Output(Vec(fetchWidth, new ROB_entry(parameters)))
 
         // REDIRECTS // 
         val commit          =   Input(new commit(parameters))
         // Commits are at the granularity of fetch packets
 
         // PC FILE //
-
         // Read port (Exec)
         val PC_file_exec_addr           =   Input(UInt(log2Ceil(ROBEntires).W))
         val PC_file_exec_data           =   Output(UInt(log2Ceil(ROBEntires).W))
 
-        // Read port (Commit)
-        val PC_file_commit_data         =   Output(UInt(log2Ceil(ROBEntires).W))
     })
 
 
@@ -122,7 +117,7 @@ class ROB(parameters:Parameters) extends Module{
     val ROB_valid_bank = Module(new ROB_mem(Bool()/*UInt(8.W)*/, depth=ROBEntires))
 
 
-    val incoming_write = io.ROB_packet.valid
+    val incoming_write = io.ROB_packet.valid && io.ROB_packet.ready
     
 
     //////////////
@@ -144,7 +139,7 @@ class ROB(parameters:Parameters) extends Module{
     for(bank <- 0 until fetchWidth){ // write new ROB_packet data
         ROB_entry_banks(bank).io.addrA         := back_index
         ROB_entry_banks(bank).io.writeDataA    := ROB_packet(bank)
-        ROB_entry_banks(bank).io.writeEnableA  := ROB_packet(bank).valid
+        ROB_entry_banks(bank).io.writeEnableA  := io.ROB_packet.valid
 
         ROB_busy_banks(bank).io.addrA         := back_index
         ROB_busy_banks(bank).io.writeDataA    := 0.B
@@ -227,9 +222,10 @@ class ROB(parameters:Parameters) extends Module{
     ROB_valid_bank.io.writeEnableB  := commit_valid
 
     for(bank <- 0 until fetchWidth){
-        io.ROB(bank) := ROB_entry_banks(bank).io.readDataC
-        io.ROB(bank).valid := ROB_entry_banks(bank).io.readDataC.valid && commit_valid
+        io.ROB_output.bits.ROB_entries(bank) := ROB_entry_banks(bank).io.readDataC
     }
+
+    io.ROB_output.valid := ROB_entry_banks.map(_.io.readDataC.valid).reduce(_ || _) && commit_valid
 
     /////////////
     // PC_FILE //
@@ -255,8 +251,12 @@ class ROB(parameters:Parameters) extends Module{
 
     // Read (Commit)
     PC_file.io.addrD        :=  front_index
-    io.PC_file_commit_data  :=  PC_file.io.readDataD
+    io.ROB_output.bits.fetch_PC := PC_file.io.readDataD
         
+
+    // TODO: 
+    io.ROB_output.bits.RAT_IDX := DontCare
+    
 
     /////////////////
     // VALID/READY //

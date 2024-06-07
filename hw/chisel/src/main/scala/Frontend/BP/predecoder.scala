@@ -180,11 +180,15 @@ class predecoder(parameters:Parameters) extends Module{
     val GHR = RegInit(UInt(GHRWidth.W), 0.U)
 
     val has_control          = Wire(Bool())
+    val dominant_control_type = Wire(_br_type())
 
     has_control := 0.B
+    dominant_control_type :=  _br_type.NONE
+
     for(i <- 0 until fetchWidth){
-        when(metadata_reg(i).BR || metadata_reg(i).JAL || metadata_reg(i).JALR){
+        when((metadata_reg(i).br_type === _br_type.BR) || (metadata_reg(i).br_type === _br_type.JAL) || (metadata_reg(i).br_type === _br_type.JALR)){
             has_control := 1.B
+            dominant_control_type :=  metadata_reg(i).br_type
         }
     }
 
@@ -221,9 +225,9 @@ class predecoder(parameters:Parameters) extends Module{
     stage_1_valid := io.fetch_packet.valid && !PC_mismatch
         
 
-    use_BTB      := metadata_out.JALR && !metadata_out.Ret
-    use_RAS      := metadata_out.Ret
-    use_computed := metadata_out.BR || metadata_out.JAL 
+    use_BTB      := (metadata_out.br_type === _br_type.JALR) && (metadata_out.br_type =/= _br_type.RET)
+    use_RAS      := (metadata_out.br_type === _br_type.RET)
+    use_computed := (metadata_out.br_type === _br_type.BR) || (metadata_out.br_type === _br_type.JAL)
 
 
     when(use_BTB){PC_next := metadata_out.BTB_target}
@@ -257,8 +261,12 @@ class predecoder(parameters:Parameters) extends Module{
 
     io.final_fetch_packet.bits.fetch_PC := io.fetch_packet.bits.fetch_PC  // Pass along fetch PC
     // RAS Control //
-    io.RAS_update.call       := metadata_out.Call
-    io.RAS_update.ret        := metadata_out.Ret
+    //io.RAS_update.call       := metadata_out.Call
+    //io.RAS_update.ret        := metadata_out.Ret
+
+    io.RAS_update.ret        := metadata_out.br_type === _br_type.RET
+    io.RAS_update.call       := metadata_out.br_type === _br_type.CALL
+
     io.RAS_update.call_addr  := metadata_out.instruction_PC // PC of the actual instruction, not fetch_PC
 
 
@@ -271,7 +279,7 @@ class predecoder(parameters:Parameters) extends Module{
     // Send predictions to FTQ
     push_FTQ := 0.B
     for(i <- 0 until fetchWidth){
-        when((metadata_reg(i).JAL ||  metadata_reg(i).JALR ||  metadata_reg(i).BR) &&  io.final_fetch_packet.bits.valid_bits(i)){
+        when((metadata_reg(i).br_type =/= _br_type.NONE) &&  io.final_fetch_packet.bits.valid_bits(i)){
             push_FTQ := 1.B
         }
     }
@@ -292,7 +300,9 @@ class predecoder(parameters:Parameters) extends Module{
     // Init FTQ entry data
     io.predictions.bits.valid                         := 0.B
     io.predictions.bits.is_misprediction              := 0.B
-    io.predictions.bits.RAT_IDX                       := 0.U
+    //io.predictions.bits.RAT_IDX                       := DontCare   // FIXME: 
+    io.predictions.bits.T_NT                          := RegNext(T_NT_mask.orR)
+    io.predictions.bits.br_type                       := metadata_out.br_type
 
 
     // Do not accept inputs if outputs have nowhere to go. 

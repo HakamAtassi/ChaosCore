@@ -29,8 +29,7 @@ module decoder(
   input  [5:0]  io_instruction_bits_ROB_index,
   input         io_decoded_instruction_ready,
   output        io_decoded_instruction_valid,
-  output [31:0] io_decoded_instruction_bits_fetch_PC,
-  output        io_decoded_instruction_bits_ready_bits_RS1_ready,
+                io_decoded_instruction_bits_ready_bits_RS1_ready,
                 io_decoded_instruction_bits_ready_bits_RS2_ready,
   output [5:0]  io_decoded_instruction_bits_RD,
   output        io_decoded_instruction_bits_RD_valid,
@@ -95,7 +94,6 @@ module decoder(
        | io_instruction_bits_instruction[31:25] == 7'h0) | IMMEDIATE;
   assign io_instruction_ready = io_decoded_instruction_ready;
   assign io_decoded_instruction_valid = io_instruction_valid;
-  assign io_decoded_instruction_bits_fetch_PC = 32'h0;
   assign io_decoded_instruction_bits_ready_bits_RS1_ready = 1'h0;
   assign io_decoded_instruction_bits_ready_bits_RS2_ready = 1'h0;
   assign io_decoded_instruction_bits_RD = {1'h0, io_instruction_bits_instruction[11:7]};

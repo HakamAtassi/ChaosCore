@@ -424,5 +424,7 @@ class renamer(parameters:Parameters) extends Module{
         io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).ready_bits      := RAT.io.ready_bits(i)
     }
 
+    io.renamed_decoded_fetch_packet.bits.RAT_IDX    := RAT.io.active_checkpoint_value
+
 
 }
