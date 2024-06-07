@@ -32,7 +32,6 @@ package ChaosCore
 import chisel3._
 import chisel3.util._
 
-// FIXME: enqueue and dequeue at the same time????
 class instruction_queue[T <: Data](gen: T, parameters: Parameters) extends Module {
   import parameters._
 
@@ -135,31 +134,21 @@ class frontend(parameters:Parameters) extends Module{
         val predictions                     =   Decoupled(new FTQ_entry(parameters))
 
         // INSTRUCTION OUT //
-        val renamed_decoded_fetch_packet    =   Vec(dispatchWidth, Decoupled(new decoded_instruction(parameters)))
+        val renamed_decoded_fetch_packet    =   Decoupled(new decoded_fetch_packet(parameters))
 
         // ALLOCATE //
         // Backend
-        val MEMRS_ready                     =   Input(Vec(dispatchWidth, Bool()))
-        val INTRS_ready                     =   Input(Vec(dispatchWidth, Bool()))
+        //val MEMRS_ready                     =   Input(Vec(dispatchWidth, Bool()))
+        //val INTRS_ready                     =   Input(Vec(dispatchWidth, Bool()))
 
         // ALLOCATE //
         // ROB
-        val ROB_packet                      =   Vec(dispatchWidth, Decoupled(new ROB_entry(parameters)))
-        val fetch_PC                        =   Output(UInt(32.W))
 
         // RD FREE //
         val FU_outputs                      =   Vec(portCount, Flipped(ValidIO(new FU_output(parameters))))
 
     })
 
-
-    //io.exception_PC.ready      := 1.B
-    //io.commit.ready            := 1.B
-
-    val commit                          =  Wire(Decoupled(new commit(parameters)))
-    commit := DontCare
-
-    io.fetch_PC := DontCare
 
     //////////////
     // Pipeline //////////////////////////////////////////////////////////////
@@ -168,7 +157,10 @@ class frontend(parameters:Parameters) extends Module{
 
     val instruction_fetch   = Module(new instruction_fetch(parameters))
     val decoders            = Module(new fetch_packet_decoder(parameters))
-    val instruction_queue   = Module(new instruction_queue(new decoded_instruction(parameters), parameters))
+    //val instruction_queue   = Module(new instruction_queue(new decoded_instruction(parameters), parameters))
+
+    val instruction_queue   =   Module(new Q(new decoded_fetch_packet(parameters), depth = 16))
+
     val renamer             = Module(new renamer(parameters))
 
 
@@ -202,20 +194,10 @@ class frontend(parameters:Parameters) extends Module{
     // Control how many entries to allocate
 
     
-    val is_INTRS = instruction_queue.io.out.map(_.bits.RS_type === RS_types.INT)
-    val is_MEMRS = instruction_queue.io.out.map(_.bits.RS_type === RS_types.MEM)
+    //val is_INTRS = instruction_queue.io.out.map(_.bits.RS_type === RS_types.INT)
+    //val is_MEMRS = instruction_queue.io.out.map(_.bits.RS_type === RS_types.MEM)
 
-
-    for(i <- 0 until dispatchWidth) {
-        when(is_INTRS(i)) {
-            instruction_queue.io.out(i).ready :=  PopCount(is_INTRS.take(i+1)) <= PopCount(io.INTRS_ready)
-        } .elsewhen(is_MEMRS(i)) {
-            instruction_queue.io.out(i).ready :=  PopCount(is_MEMRS.take(i+1)) <= PopCount(io.MEMRS_ready)
-        } .otherwise {
-            instruction_queue.io.out(i).ready := 0.B
-        }
-    }
-
+    instruction_queue.io.out.ready := 0.B   // TODO: 
 
 
     ////////////
@@ -223,6 +205,8 @@ class frontend(parameters:Parameters) extends Module{
     ////////////
 
     renamer.io.decoded_fetch_packet <> instruction_queue.io.out
+
+    instruction_queue.io.clear := DontCare
 
 
     // In a single cycle, both a "create checkpoint" and "restore checkpoint" can be requested
@@ -273,6 +257,9 @@ class frontend(parameters:Parameters) extends Module{
 
     io.renamed_decoded_fetch_packet <> renamer.io.renamed_decoded_fetch_packet
 
-    io.ROB_packet := DontCare
+    //io.ROB_packet := instruction_queue.io.out
+
+    //io.ROB_packet <> io.renamed_decoded_fetch_packet
+    //instruction_queue.io.out.fetch_PC
 
 }

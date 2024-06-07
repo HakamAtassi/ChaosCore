@@ -4,7 +4,8 @@ module instruction_queue(
                 reset,
   output        io_in_0_ready,
   input         io_in_0_valid,
-                io_in_0_bits_ready_bits_RS1_ready,
+  input  [31:0] io_in_0_bits_fetch_PC,
+  input         io_in_0_bits_ready_bits_RS1_ready,
                 io_in_0_bits_ready_bits_RS2_ready,
   input  [5:0]  io_in_0_bits_RD,
   input         io_in_0_bits_RD_valid,
@@ -29,7 +30,8 @@ module instruction_queue(
                 io_in_0_bits_IS_STORE,
   output        io_in_1_ready,
   input         io_in_1_valid,
-                io_in_1_bits_ready_bits_RS1_ready,
+  input  [31:0] io_in_1_bits_fetch_PC,
+  input         io_in_1_bits_ready_bits_RS1_ready,
                 io_in_1_bits_ready_bits_RS2_ready,
   input  [5:0]  io_in_1_bits_RD,
   input         io_in_1_bits_RD_valid,
@@ -54,7 +56,8 @@ module instruction_queue(
                 io_in_1_bits_IS_STORE,
   output        io_in_2_ready,
   input         io_in_2_valid,
-                io_in_2_bits_ready_bits_RS1_ready,
+  input  [31:0] io_in_2_bits_fetch_PC,
+  input         io_in_2_bits_ready_bits_RS1_ready,
                 io_in_2_bits_ready_bits_RS2_ready,
   input  [5:0]  io_in_2_bits_RD,
   input         io_in_2_bits_RD_valid,
@@ -79,7 +82,8 @@ module instruction_queue(
                 io_in_2_bits_IS_STORE,
   output        io_in_3_ready,
   input         io_in_3_valid,
-                io_in_3_bits_ready_bits_RS1_ready,
+  input  [31:0] io_in_3_bits_fetch_PC,
+  input         io_in_3_bits_ready_bits_RS1_ready,
                 io_in_3_bits_ready_bits_RS2_ready,
   input  [5:0]  io_in_3_bits_RD,
   input         io_in_3_bits_RD_valid,
@@ -104,7 +108,8 @@ module instruction_queue(
                 io_in_3_bits_IS_STORE,
                 io_out_0_ready,
   output        io_out_0_valid,
-                io_out_0_bits_ready_bits_RS1_ready,
+  output [31:0] io_out_0_bits_fetch_PC,
+  output        io_out_0_bits_ready_bits_RS1_ready,
                 io_out_0_bits_ready_bits_RS2_ready,
   output [5:0]  io_out_0_bits_RD,
   output        io_out_0_bits_RD_valid,
@@ -129,7 +134,8 @@ module instruction_queue(
                 io_out_0_bits_IS_STORE,
   input         io_out_1_ready,
   output        io_out_1_valid,
-                io_out_1_bits_ready_bits_RS1_ready,
+  output [31:0] io_out_1_bits_fetch_PC,
+  output        io_out_1_bits_ready_bits_RS1_ready,
                 io_out_1_bits_ready_bits_RS2_ready,
   output [5:0]  io_out_1_bits_RD,
   output        io_out_1_bits_RD_valid,
@@ -154,7 +160,8 @@ module instruction_queue(
                 io_out_1_bits_IS_STORE,
   input         io_out_2_ready,
   output        io_out_2_valid,
-                io_out_2_bits_ready_bits_RS1_ready,
+  output [31:0] io_out_2_bits_fetch_PC,
+  output        io_out_2_bits_ready_bits_RS1_ready,
                 io_out_2_bits_ready_bits_RS2_ready,
   output [5:0]  io_out_2_bits_RD,
   output        io_out_2_bits_RD_valid,
@@ -179,7 +186,8 @@ module instruction_queue(
                 io_out_2_bits_IS_STORE,
   input         io_out_3_ready,
   output        io_out_3_valid,
-                io_out_3_bits_ready_bits_RS1_ready,
+  output [31:0] io_out_3_bits_fetch_PC,
+  output        io_out_3_bits_ready_bits_RS1_ready,
                 io_out_3_bits_ready_bits_RS2_ready,
   output [5:0]  io_out_3_bits_RD,
   output        io_out_3_bits_RD_valid,
@@ -204,6 +212,7 @@ module instruction_queue(
                 io_out_3_bits_IS_STORE
 );
 
+  reg  [31:0]      queue_0_fetch_PC;
   reg              queue_0_ready_bits_RS1_ready;
   reg              queue_0_ready_bits_RS2_ready;
   reg  [5:0]       queue_0_RD;
@@ -227,6 +236,7 @@ module instruction_queue(
   reg              queue_0_IMMEDIATE;
   reg              queue_0_IS_LOAD;
   reg              queue_0_IS_STORE;
+  reg  [31:0]      queue_1_fetch_PC;
   reg              queue_1_ready_bits_RS1_ready;
   reg              queue_1_ready_bits_RS2_ready;
   reg  [5:0]       queue_1_RD;
@@ -250,6 +260,7 @@ module instruction_queue(
   reg              queue_1_IMMEDIATE;
   reg              queue_1_IS_LOAD;
   reg              queue_1_IS_STORE;
+  reg  [31:0]      queue_2_fetch_PC;
   reg              queue_2_ready_bits_RS1_ready;
   reg              queue_2_ready_bits_RS2_ready;
   reg  [5:0]       queue_2_RD;
@@ -273,6 +284,7 @@ module instruction_queue(
   reg              queue_2_IMMEDIATE;
   reg              queue_2_IS_LOAD;
   reg              queue_2_IS_STORE;
+  reg  [31:0]      queue_3_fetch_PC;
   reg              queue_3_ready_bits_RS1_ready;
   reg              queue_3_ready_bits_RS2_ready;
   reg  [5:0]       queue_3_RD;
@@ -296,6 +308,7 @@ module instruction_queue(
   reg              queue_3_IMMEDIATE;
   reg              queue_3_IS_LOAD;
   reg              queue_3_IS_STORE;
+  reg  [31:0]      queue_4_fetch_PC;
   reg              queue_4_ready_bits_RS1_ready;
   reg              queue_4_ready_bits_RS2_ready;
   reg  [5:0]       queue_4_RD;
@@ -319,6 +332,7 @@ module instruction_queue(
   reg              queue_4_IMMEDIATE;
   reg              queue_4_IS_LOAD;
   reg              queue_4_IS_STORE;
+  reg  [31:0]      queue_5_fetch_PC;
   reg              queue_5_ready_bits_RS1_ready;
   reg              queue_5_ready_bits_RS2_ready;
   reg  [5:0]       queue_5_RD;
@@ -342,6 +356,7 @@ module instruction_queue(
   reg              queue_5_IMMEDIATE;
   reg              queue_5_IS_LOAD;
   reg              queue_5_IS_STORE;
+  reg  [31:0]      queue_6_fetch_PC;
   reg              queue_6_ready_bits_RS1_ready;
   reg              queue_6_ready_bits_RS2_ready;
   reg  [5:0]       queue_6_RD;
@@ -365,6 +380,7 @@ module instruction_queue(
   reg              queue_6_IMMEDIATE;
   reg              queue_6_IS_LOAD;
   reg              queue_6_IS_STORE;
+  reg  [31:0]      queue_7_fetch_PC;
   reg              queue_7_ready_bits_RS1_ready;
   reg              queue_7_ready_bits_RS2_ready;
   reg  [5:0]       queue_7_RD;
@@ -398,7 +414,16 @@ module instruction_queue(
   reg              valid_7;
   reg  [3:0]       front_pointer;
   reg  [3:0]       back_pointer;
-  wire [7:0]       _GEN =
+  wire [7:0][31:0] _GEN =
+    {{queue_7_fetch_PC},
+     {queue_6_fetch_PC},
+     {queue_5_fetch_PC},
+     {queue_4_fetch_PC},
+     {queue_3_fetch_PC},
+     {queue_2_fetch_PC},
+     {queue_1_fetch_PC},
+     {queue_0_fetch_PC}};
+  wire [7:0]       _GEN_0 =
     {{queue_7_ready_bits_RS1_ready},
      {queue_6_ready_bits_RS1_ready},
      {queue_5_ready_bits_RS1_ready},
@@ -407,7 +432,7 @@ module instruction_queue(
      {queue_2_ready_bits_RS1_ready},
      {queue_1_ready_bits_RS1_ready},
      {queue_0_ready_bits_RS1_ready}};
-  wire [7:0]       _GEN_0 =
+  wire [7:0]       _GEN_1 =
     {{queue_7_ready_bits_RS2_ready},
      {queue_6_ready_bits_RS2_ready},
      {queue_5_ready_bits_RS2_ready},
@@ -416,7 +441,7 @@ module instruction_queue(
      {queue_2_ready_bits_RS2_ready},
      {queue_1_ready_bits_RS2_ready},
      {queue_0_ready_bits_RS2_ready}};
-  wire [7:0][5:0]  _GEN_1 =
+  wire [7:0][5:0]  _GEN_2 =
     {{queue_7_RD},
      {queue_6_RD},
      {queue_5_RD},
@@ -425,7 +450,7 @@ module instruction_queue(
      {queue_2_RD},
      {queue_1_RD},
      {queue_0_RD}};
-  wire [7:0]       _GEN_2 =
+  wire [7:0]       _GEN_3 =
     {{queue_7_RD_valid},
      {queue_6_RD_valid},
      {queue_5_RD_valid},
@@ -434,7 +459,7 @@ module instruction_queue(
      {queue_2_RD_valid},
      {queue_1_RD_valid},
      {queue_0_RD_valid}};
-  wire [7:0][5:0]  _GEN_3 =
+  wire [7:0][5:0]  _GEN_4 =
     {{queue_7_RS1},
      {queue_6_RS1},
      {queue_5_RS1},
@@ -443,7 +468,7 @@ module instruction_queue(
      {queue_2_RS1},
      {queue_1_RS1},
      {queue_0_RS1}};
-  wire [7:0]       _GEN_4 =
+  wire [7:0]       _GEN_5 =
     {{queue_7_RS1_valid},
      {queue_6_RS1_valid},
      {queue_5_RS1_valid},
@@ -452,7 +477,7 @@ module instruction_queue(
      {queue_2_RS1_valid},
      {queue_1_RS1_valid},
      {queue_0_RS1_valid}};
-  wire [7:0][5:0]  _GEN_5 =
+  wire [7:0][5:0]  _GEN_6 =
     {{queue_7_RS2},
      {queue_6_RS2},
      {queue_5_RS2},
@@ -461,7 +486,7 @@ module instruction_queue(
      {queue_2_RS2},
      {queue_1_RS2},
      {queue_0_RS2}};
-  wire [7:0]       _GEN_6 =
+  wire [7:0]       _GEN_7 =
     {{queue_7_RS2_valid},
      {queue_6_RS2_valid},
      {queue_5_RS2_valid},
@@ -470,7 +495,7 @@ module instruction_queue(
      {queue_2_RS2_valid},
      {queue_1_RS2_valid},
      {queue_0_RS2_valid}};
-  wire [7:0][31:0] _GEN_7 =
+  wire [7:0][31:0] _GEN_8 =
     {{queue_7_IMM},
      {queue_6_IMM},
      {queue_5_IMM},
@@ -479,7 +504,7 @@ module instruction_queue(
      {queue_2_IMM},
      {queue_1_IMM},
      {queue_0_IMM}};
-  wire [7:0][2:0]  _GEN_8 =
+  wire [7:0][2:0]  _GEN_9 =
     {{queue_7_FUNCT3},
      {queue_6_FUNCT3},
      {queue_5_FUNCT3},
@@ -488,7 +513,7 @@ module instruction_queue(
      {queue_2_FUNCT3},
      {queue_1_FUNCT3},
      {queue_0_FUNCT3}};
-  wire [7:0][3:0]  _GEN_9 =
+  wire [7:0][3:0]  _GEN_10 =
     {{queue_7_packet_index},
      {queue_6_packet_index},
      {queue_5_packet_index},
@@ -497,7 +522,7 @@ module instruction_queue(
      {queue_2_packet_index},
      {queue_1_packet_index},
      {queue_0_packet_index}};
-  wire [7:0][5:0]  _GEN_10 =
+  wire [7:0][5:0]  _GEN_11 =
     {{queue_7_ROB_index},
      {queue_6_ROB_index},
      {queue_5_ROB_index},
@@ -506,7 +531,7 @@ module instruction_queue(
      {queue_2_ROB_index},
      {queue_1_ROB_index},
      {queue_0_ROB_index}};
-  wire [7:0][4:0]  _GEN_11 =
+  wire [7:0][4:0]  _GEN_12 =
     {{queue_7_instructionType},
      {queue_6_instructionType},
      {queue_5_instructionType},
@@ -515,7 +540,7 @@ module instruction_queue(
      {queue_2_instructionType},
      {queue_1_instructionType},
      {queue_0_instructionType}};
-  wire [7:0][1:0]  _GEN_12 =
+  wire [7:0][1:0]  _GEN_13 =
     {{queue_7_portID},
      {queue_6_portID},
      {queue_5_portID},
@@ -524,7 +549,7 @@ module instruction_queue(
      {queue_2_portID},
      {queue_1_portID},
      {queue_0_portID}};
-  wire [7:0][1:0]  _GEN_13 =
+  wire [7:0][1:0]  _GEN_14 =
     {{queue_7_RS_type},
      {queue_6_RS_type},
      {queue_5_RS_type},
@@ -533,7 +558,7 @@ module instruction_queue(
      {queue_2_RS_type},
      {queue_1_RS_type},
      {queue_0_RS_type}};
-  wire [7:0]       _GEN_14 =
+  wire [7:0]       _GEN_15 =
     {{queue_7_needs_ALU},
      {queue_6_needs_ALU},
      {queue_5_needs_ALU},
@@ -542,7 +567,7 @@ module instruction_queue(
      {queue_2_needs_ALU},
      {queue_1_needs_ALU},
      {queue_0_needs_ALU}};
-  wire [7:0]       _GEN_15 =
+  wire [7:0]       _GEN_16 =
     {{queue_7_needs_branch_unit},
      {queue_6_needs_branch_unit},
      {queue_5_needs_branch_unit},
@@ -551,7 +576,7 @@ module instruction_queue(
      {queue_2_needs_branch_unit},
      {queue_1_needs_branch_unit},
      {queue_0_needs_branch_unit}};
-  wire [7:0]       _GEN_16 =
+  wire [7:0]       _GEN_17 =
     {{queue_7_needs_CSRs},
      {queue_6_needs_CSRs},
      {queue_5_needs_CSRs},
@@ -560,7 +585,7 @@ module instruction_queue(
      {queue_2_needs_CSRs},
      {queue_1_needs_CSRs},
      {queue_0_needs_CSRs}};
-  wire [7:0]       _GEN_17 =
+  wire [7:0]       _GEN_18 =
     {{queue_7_SUBTRACT},
      {queue_6_SUBTRACT},
      {queue_5_SUBTRACT},
@@ -569,7 +594,7 @@ module instruction_queue(
      {queue_2_SUBTRACT},
      {queue_1_SUBTRACT},
      {queue_0_SUBTRACT}};
-  wire [7:0]       _GEN_18 =
+  wire [7:0]       _GEN_19 =
     {{queue_7_MULTIPLY},
      {queue_6_MULTIPLY},
      {queue_5_MULTIPLY},
@@ -578,7 +603,7 @@ module instruction_queue(
      {queue_2_MULTIPLY},
      {queue_1_MULTIPLY},
      {queue_0_MULTIPLY}};
-  wire [7:0]       _GEN_19 =
+  wire [7:0]       _GEN_20 =
     {{queue_7_IMMEDIATE},
      {queue_6_IMMEDIATE},
      {queue_5_IMMEDIATE},
@@ -587,7 +612,7 @@ module instruction_queue(
      {queue_2_IMMEDIATE},
      {queue_1_IMMEDIATE},
      {queue_0_IMMEDIATE}};
-  wire [7:0]       _GEN_20 =
+  wire [7:0]       _GEN_21 =
     {{queue_7_IS_LOAD},
      {queue_6_IS_LOAD},
      {queue_5_IS_LOAD},
@@ -596,7 +621,7 @@ module instruction_queue(
      {queue_2_IS_LOAD},
      {queue_1_IS_LOAD},
      {queue_0_IS_LOAD}};
-  wire [7:0]       _GEN_21 =
+  wire [7:0]       _GEN_22 =
     {{queue_7_IS_STORE},
      {queue_6_IS_STORE},
      {queue_5_IS_STORE},
@@ -605,7 +630,7 @@ module instruction_queue(
      {queue_2_IS_STORE},
      {queue_1_IS_STORE},
      {queue_0_IS_STORE}};
-  wire [7:0]       _GEN_22 =
+  wire [7:0]       _GEN_23 =
     {{valid_7},
      {valid_6},
      {valid_5},
@@ -614,16 +639,17 @@ module instruction_queue(
      {valid_2},
      {valid_1},
      {valid_0}};
-  wire             io_out_0_valid_0 = _GEN_22[front_pointer[2:0]];
+  wire             io_out_0_valid_0 = _GEN_23[front_pointer[2:0]];
   wire [2:0]       _io_out_1_valid_T = front_pointer[2:0] + 3'h1;
   wire [2:0]       _io_out_2_valid_T = front_pointer[2:0] + 3'h2;
   wire [2:0]       _io_out_3_valid_T = front_pointer[2:0] + 3'h3;
-  wire             _GEN_23 = _GEN_22[back_pointer[2:0]];
-  wire             _GEN_24 = _GEN_22[back_pointer[2:0] + 3'h1];
-  wire             _GEN_25 = _GEN_22[back_pointer[2:0] + 3'h2];
-  wire             _GEN_26 = _GEN_22[back_pointer[2:0] + 3'h3];
+  wire             _GEN_24 = _GEN_23[back_pointer[2:0]];
+  wire             _GEN_25 = _GEN_23[back_pointer[2:0] + 3'h1];
+  wire             _GEN_26 = _GEN_23[back_pointer[2:0] + 3'h2];
+  wire             _GEN_27 = _GEN_23[back_pointer[2:0] + 3'h3];
   always @(posedge clock) begin
     if (reset) begin
+      queue_0_fetch_PC <= 32'h0;
       queue_0_ready_bits_RS1_ready <= 1'h0;
       queue_0_ready_bits_RS2_ready <= 1'h0;
       queue_0_RD <= 6'h0;
@@ -647,6 +673,7 @@ module instruction_queue(
       queue_0_IMMEDIATE <= 1'h0;
       queue_0_IS_LOAD <= 1'h0;
       queue_0_IS_STORE <= 1'h0;
+      queue_1_fetch_PC <= 32'h0;
       queue_1_ready_bits_RS1_ready <= 1'h0;
       queue_1_ready_bits_RS2_ready <= 1'h0;
       queue_1_RD <= 6'h0;
@@ -670,6 +697,7 @@ module instruction_queue(
       queue_1_IMMEDIATE <= 1'h0;
       queue_1_IS_LOAD <= 1'h0;
       queue_1_IS_STORE <= 1'h0;
+      queue_2_fetch_PC <= 32'h0;
       queue_2_ready_bits_RS1_ready <= 1'h0;
       queue_2_ready_bits_RS2_ready <= 1'h0;
       queue_2_RD <= 6'h0;
@@ -693,6 +721,7 @@ module instruction_queue(
       queue_2_IMMEDIATE <= 1'h0;
       queue_2_IS_LOAD <= 1'h0;
       queue_2_IS_STORE <= 1'h0;
+      queue_3_fetch_PC <= 32'h0;
       queue_3_ready_bits_RS1_ready <= 1'h0;
       queue_3_ready_bits_RS2_ready <= 1'h0;
       queue_3_RD <= 6'h0;
@@ -716,6 +745,7 @@ module instruction_queue(
       queue_3_IMMEDIATE <= 1'h0;
       queue_3_IS_LOAD <= 1'h0;
       queue_3_IS_STORE <= 1'h0;
+      queue_4_fetch_PC <= 32'h0;
       queue_4_ready_bits_RS1_ready <= 1'h0;
       queue_4_ready_bits_RS2_ready <= 1'h0;
       queue_4_RD <= 6'h0;
@@ -739,6 +769,7 @@ module instruction_queue(
       queue_4_IMMEDIATE <= 1'h0;
       queue_4_IS_LOAD <= 1'h0;
       queue_4_IS_STORE <= 1'h0;
+      queue_5_fetch_PC <= 32'h0;
       queue_5_ready_bits_RS1_ready <= 1'h0;
       queue_5_ready_bits_RS2_ready <= 1'h0;
       queue_5_RD <= 6'h0;
@@ -762,6 +793,7 @@ module instruction_queue(
       queue_5_IMMEDIATE <= 1'h0;
       queue_5_IS_LOAD <= 1'h0;
       queue_5_IS_STORE <= 1'h0;
+      queue_6_fetch_PC <= 32'h0;
       queue_6_ready_bits_RS1_ready <= 1'h0;
       queue_6_ready_bits_RS2_ready <= 1'h0;
       queue_6_RD <= 6'h0;
@@ -785,6 +817,7 @@ module instruction_queue(
       queue_6_IMMEDIATE <= 1'h0;
       queue_6_IS_LOAD <= 1'h0;
       queue_6_IS_STORE <= 1'h0;
+      queue_7_fetch_PC <= 32'h0;
       queue_7_ready_bits_RS1_ready <= 1'h0;
       queue_7_ready_bits_RS2_ready <= 1'h0;
       queue_7_RD <= 6'h0;
@@ -820,8 +853,7 @@ module instruction_queue(
       back_pointer <= 4'h0;
     end
     else begin
-      automatic logic       _GEN_27 = io_in_0_valid & ~_GEN_23;
-      automatic logic       _GEN_28;
+      automatic logic       _GEN_28 = io_in_0_valid & ~_GEN_24;
       automatic logic       _GEN_29;
       automatic logic       _GEN_30;
       automatic logic       _GEN_31;
@@ -829,22 +861,22 @@ module instruction_queue(
       automatic logic       _GEN_33;
       automatic logic       _GEN_34;
       automatic logic       _GEN_35;
-      automatic logic       _GEN_36 = io_in_1_valid & ~_GEN_24;
-      automatic logic [2:0] _GEN_37 = back_pointer[2:0] + {2'h0, io_in_0_valid};
-      automatic logic       _GEN_38 = _GEN_37 == 3'h0;
-      automatic logic       _GEN_39;
-      automatic logic       _GEN_40 = _GEN_37 == 3'h1;
-      automatic logic       _GEN_41;
-      automatic logic       _GEN_42 = _GEN_37 == 3'h2;
-      automatic logic       _GEN_43;
-      automatic logic       _GEN_44 = _GEN_37 == 3'h3;
-      automatic logic       _GEN_45;
-      automatic logic       _GEN_46 = _GEN_37 == 3'h4;
-      automatic logic       _GEN_47;
-      automatic logic       _GEN_48 = _GEN_37 == 3'h5;
-      automatic logic       _GEN_49;
-      automatic logic       _GEN_50 = _GEN_37 == 3'h6;
-      automatic logic       _GEN_51;
+      automatic logic       _GEN_36;
+      automatic logic       _GEN_37 = io_in_1_valid & ~_GEN_25;
+      automatic logic [2:0] _GEN_38 = back_pointer[2:0] + {2'h0, io_in_0_valid};
+      automatic logic       _GEN_39 = _GEN_38 == 3'h0;
+      automatic logic       _GEN_40;
+      automatic logic       _GEN_41 = _GEN_38 == 3'h1;
+      automatic logic       _GEN_42;
+      automatic logic       _GEN_43 = _GEN_38 == 3'h2;
+      automatic logic       _GEN_44;
+      automatic logic       _GEN_45 = _GEN_38 == 3'h3;
+      automatic logic       _GEN_46;
+      automatic logic       _GEN_47 = _GEN_38 == 3'h4;
+      automatic logic       _GEN_48;
+      automatic logic       _GEN_49 = _GEN_38 == 3'h5;
+      automatic logic       _GEN_50;
+      automatic logic       _GEN_51 = _GEN_38 == 3'h6;
       automatic logic       _GEN_52;
       automatic logic       _GEN_53;
       automatic logic       _GEN_54;
@@ -854,11 +886,11 @@ module instruction_queue(
       automatic logic       _GEN_58;
       automatic logic       _GEN_59;
       automatic logic       _GEN_60;
-      automatic logic       _GEN_61 = io_in_2_valid & ~_GEN_25;
-      automatic logic [1:0] _GEN_62 = {1'h0, io_in_0_valid};
-      automatic logic [1:0] _GEN_63 = {1'h0, io_in_1_valid};
-      automatic logic [2:0] _GEN_64 = back_pointer[2:0] + {1'h0, _GEN_62 + _GEN_63};
-      automatic logic       _GEN_65;
+      automatic logic       _GEN_61;
+      automatic logic       _GEN_62 = io_in_2_valid & ~_GEN_26;
+      automatic logic [1:0] _GEN_63 = {1'h0, io_in_0_valid};
+      automatic logic [1:0] _GEN_64 = {1'h0, io_in_1_valid};
+      automatic logic [2:0] _GEN_65 = back_pointer[2:0] + {1'h0, _GEN_63 + _GEN_64};
       automatic logic       _GEN_66;
       automatic logic       _GEN_67;
       automatic logic       _GEN_68;
@@ -866,12 +898,12 @@ module instruction_queue(
       automatic logic       _GEN_70;
       automatic logic       _GEN_71;
       automatic logic       _GEN_72;
-      automatic logic       _GEN_73 = io_in_3_valid & ~_GEN_26;
-      automatic logic [1:0] _GEN_74 = {1'h0, io_in_2_valid};
-      automatic logic [2:0] _GEN_75 =
-        back_pointer[2:0] + {1'h0, _GEN_62 + _GEN_63 + _GEN_74};
-      automatic logic       _GEN_76 = _GEN_75 == 3'h0;
-      automatic logic       _GEN_77;
+      automatic logic       _GEN_73;
+      automatic logic       _GEN_74 = io_in_3_valid & ~_GEN_27;
+      automatic logic [1:0] _GEN_75 = {1'h0, io_in_2_valid};
+      automatic logic [2:0] _GEN_76 =
+        back_pointer[2:0] + {1'h0, _GEN_63 + _GEN_64 + _GEN_75};
+      automatic logic       _GEN_77 = _GEN_76 == 3'h0;
       automatic logic       _GEN_78;
       automatic logic       _GEN_79;
       automatic logic       _GEN_80;
@@ -885,8 +917,8 @@ module instruction_queue(
       automatic logic       _GEN_88;
       automatic logic       _GEN_89;
       automatic logic       _GEN_90;
-      automatic logic       _GEN_91 = _GEN_75 == 3'h1;
-      automatic logic       _GEN_92;
+      automatic logic       _GEN_91;
+      automatic logic       _GEN_92 = _GEN_76 == 3'h1;
       automatic logic       _GEN_93;
       automatic logic       _GEN_94;
       automatic logic       _GEN_95;
@@ -900,8 +932,8 @@ module instruction_queue(
       automatic logic       _GEN_103;
       automatic logic       _GEN_104;
       automatic logic       _GEN_105;
-      automatic logic       _GEN_106 = _GEN_75 == 3'h2;
-      automatic logic       _GEN_107;
+      automatic logic       _GEN_106;
+      automatic logic       _GEN_107 = _GEN_76 == 3'h2;
       automatic logic       _GEN_108;
       automatic logic       _GEN_109;
       automatic logic       _GEN_110;
@@ -915,8 +947,8 @@ module instruction_queue(
       automatic logic       _GEN_118;
       automatic logic       _GEN_119;
       automatic logic       _GEN_120;
-      automatic logic       _GEN_121 = _GEN_75 == 3'h3;
-      automatic logic       _GEN_122;
+      automatic logic       _GEN_121;
+      automatic logic       _GEN_122 = _GEN_76 == 3'h3;
       automatic logic       _GEN_123;
       automatic logic       _GEN_124;
       automatic logic       _GEN_125;
@@ -930,8 +962,8 @@ module instruction_queue(
       automatic logic       _GEN_133;
       automatic logic       _GEN_134;
       automatic logic       _GEN_135;
-      automatic logic       _GEN_136 = _GEN_75 == 3'h4;
-      automatic logic       _GEN_137;
+      automatic logic       _GEN_136;
+      automatic logic       _GEN_137 = _GEN_76 == 3'h4;
       automatic logic       _GEN_138;
       automatic logic       _GEN_139;
       automatic logic       _GEN_140;
@@ -945,8 +977,8 @@ module instruction_queue(
       automatic logic       _GEN_148;
       automatic logic       _GEN_149;
       automatic logic       _GEN_150;
-      automatic logic       _GEN_151 = _GEN_75 == 3'h5;
-      automatic logic       _GEN_152;
+      automatic logic       _GEN_151;
+      automatic logic       _GEN_152 = _GEN_76 == 3'h5;
       automatic logic       _GEN_153;
       automatic logic       _GEN_154;
       automatic logic       _GEN_155;
@@ -960,8 +992,8 @@ module instruction_queue(
       automatic logic       _GEN_163;
       automatic logic       _GEN_164;
       automatic logic       _GEN_165;
-      automatic logic       _GEN_166 = _GEN_75 == 3'h6;
-      automatic logic       _GEN_167;
+      automatic logic       _GEN_166;
+      automatic logic       _GEN_167 = _GEN_76 == 3'h6;
       automatic logic       _GEN_168;
       automatic logic       _GEN_169;
       automatic logic       _GEN_170;
@@ -1006,10 +1038,10 @@ module instruction_queue(
       automatic logic       _GEN_209;
       automatic logic       _GEN_210;
       automatic logic       _GEN_211;
-      automatic logic       _GEN_212 = io_out_0_ready & io_out_1_ready;
-      automatic logic       _GEN_213;
-      automatic logic       _GEN_214 = _io_out_1_valid_T == 3'h0;
-      automatic logic       _GEN_215;
+      automatic logic       _GEN_212;
+      automatic logic       _GEN_213 = io_out_0_ready & io_out_1_ready;
+      automatic logic       _GEN_214;
+      automatic logic       _GEN_215 = _io_out_1_valid_T == 3'h0;
       automatic logic       _GEN_216;
       automatic logic       _GEN_217;
       automatic logic       _GEN_218;
@@ -1024,8 +1056,8 @@ module instruction_queue(
       automatic logic       _GEN_227;
       automatic logic       _GEN_228;
       automatic logic       _GEN_229;
-      automatic logic       _GEN_230 = _io_out_1_valid_T == 3'h1;
-      automatic logic       _GEN_231;
+      automatic logic       _GEN_230;
+      automatic logic       _GEN_231 = _io_out_1_valid_T == 3'h1;
       automatic logic       _GEN_232;
       automatic logic       _GEN_233;
       automatic logic       _GEN_234;
@@ -1040,8 +1072,8 @@ module instruction_queue(
       automatic logic       _GEN_243;
       automatic logic       _GEN_244;
       automatic logic       _GEN_245;
-      automatic logic       _GEN_246 = _io_out_1_valid_T == 3'h2;
-      automatic logic       _GEN_247;
+      automatic logic       _GEN_246;
+      automatic logic       _GEN_247 = _io_out_1_valid_T == 3'h2;
       automatic logic       _GEN_248;
       automatic logic       _GEN_249;
       automatic logic       _GEN_250;
@@ -1056,8 +1088,8 @@ module instruction_queue(
       automatic logic       _GEN_259;
       automatic logic       _GEN_260;
       automatic logic       _GEN_261;
-      automatic logic       _GEN_262 = _io_out_1_valid_T == 3'h3;
-      automatic logic       _GEN_263;
+      automatic logic       _GEN_262;
+      automatic logic       _GEN_263 = _io_out_1_valid_T == 3'h3;
       automatic logic       _GEN_264;
       automatic logic       _GEN_265;
       automatic logic       _GEN_266;
@@ -1072,8 +1104,8 @@ module instruction_queue(
       automatic logic       _GEN_275;
       automatic logic       _GEN_276;
       automatic logic       _GEN_277;
-      automatic logic       _GEN_278 = _io_out_1_valid_T == 3'h4;
-      automatic logic       _GEN_279;
+      automatic logic       _GEN_278;
+      automatic logic       _GEN_279 = _io_out_1_valid_T == 3'h4;
       automatic logic       _GEN_280;
       automatic logic       _GEN_281;
       automatic logic       _GEN_282;
@@ -1088,8 +1120,8 @@ module instruction_queue(
       automatic logic       _GEN_291;
       automatic logic       _GEN_292;
       automatic logic       _GEN_293;
-      automatic logic       _GEN_294 = _io_out_1_valid_T == 3'h5;
-      automatic logic       _GEN_295;
+      automatic logic       _GEN_294;
+      automatic logic       _GEN_295 = _io_out_1_valid_T == 3'h5;
       automatic logic       _GEN_296;
       automatic logic       _GEN_297;
       automatic logic       _GEN_298;
@@ -1104,8 +1136,8 @@ module instruction_queue(
       automatic logic       _GEN_307;
       automatic logic       _GEN_308;
       automatic logic       _GEN_309;
-      automatic logic       _GEN_310 = _io_out_1_valid_T == 3'h6;
-      automatic logic       _GEN_311;
+      automatic logic       _GEN_310;
+      automatic logic       _GEN_311 = _io_out_1_valid_T == 3'h6;
       automatic logic       _GEN_312;
       automatic logic       _GEN_313;
       automatic logic       _GEN_314;
@@ -1143,8 +1175,8 @@ module instruction_queue(
       automatic logic       _GEN_346;
       automatic logic       _GEN_347;
       automatic logic       _GEN_348;
-      automatic logic       _GEN_349 = _GEN_212 & io_out_2_ready;
-      automatic logic       _GEN_350;
+      automatic logic       _GEN_349;
+      automatic logic       _GEN_350 = _GEN_213 & io_out_2_ready;
       automatic logic       _GEN_351;
       automatic logic       _GEN_352;
       automatic logic       _GEN_353;
@@ -1153,9 +1185,9 @@ module instruction_queue(
       automatic logic       _GEN_356;
       automatic logic       _GEN_357;
       automatic logic       _GEN_358;
-      automatic logic       _GEN_359 =
-        _GEN_22[_io_out_3_valid_T] & io_out_3_ready & _GEN_349;
-      automatic logic       _GEN_360;
+      automatic logic       _GEN_359;
+      automatic logic       _GEN_360 =
+        _GEN_23[_io_out_3_valid_T] & io_out_3_ready & _GEN_350;
       automatic logic       _GEN_361;
       automatic logic       _GEN_362;
       automatic logic       _GEN_363;
@@ -1163,1309 +1195,1322 @@ module instruction_queue(
       automatic logic       _GEN_365;
       automatic logic       _GEN_366;
       automatic logic       _GEN_367;
-      _GEN_28 = _GEN_27 & back_pointer[2:0] == 3'h0;
-      _GEN_29 = _GEN_27 & back_pointer[2:0] == 3'h1;
-      _GEN_30 = _GEN_27 & back_pointer[2:0] == 3'h2;
-      _GEN_31 = _GEN_27 & back_pointer[2:0] == 3'h3;
-      _GEN_32 = _GEN_27 & back_pointer[2:0] == 3'h4;
-      _GEN_33 = _GEN_27 & back_pointer[2:0] == 3'h5;
-      _GEN_34 = _GEN_27 & back_pointer[2:0] == 3'h6;
-      _GEN_35 = _GEN_27 & (&(back_pointer[2:0]));
-      _GEN_39 = _GEN_36 & _GEN_38;
-      _GEN_41 = _GEN_36 & _GEN_40;
-      _GEN_43 = _GEN_36 & _GEN_42;
-      _GEN_45 = _GEN_36 & _GEN_44;
-      _GEN_47 = _GEN_36 & _GEN_46;
-      _GEN_49 = _GEN_36 & _GEN_48;
-      _GEN_51 = _GEN_36 & _GEN_50;
-      _GEN_52 = _GEN_36 & (&_GEN_37);
-      _GEN_53 = _GEN_36 ? _GEN_38 | _GEN_28 | valid_0 : _GEN_28 | valid_0;
-      _GEN_54 = _GEN_36 ? _GEN_40 | _GEN_29 | valid_1 : _GEN_29 | valid_1;
-      _GEN_55 = _GEN_36 ? _GEN_42 | _GEN_30 | valid_2 : _GEN_30 | valid_2;
-      _GEN_56 = _GEN_36 ? _GEN_44 | _GEN_31 | valid_3 : _GEN_31 | valid_3;
-      _GEN_57 = _GEN_36 ? _GEN_46 | _GEN_32 | valid_4 : _GEN_32 | valid_4;
-      _GEN_58 = _GEN_36 ? _GEN_48 | _GEN_33 | valid_5 : _GEN_33 | valid_5;
-      _GEN_59 = _GEN_36 ? _GEN_50 | _GEN_34 | valid_6 : _GEN_34 | valid_6;
-      _GEN_60 = _GEN_36 ? (&_GEN_37) | _GEN_35 | valid_7 : _GEN_35 | valid_7;
-      _GEN_65 = _GEN_61 & _GEN_64 == 3'h0;
-      _GEN_66 = _GEN_61 & _GEN_64 == 3'h1;
-      _GEN_67 = _GEN_61 & _GEN_64 == 3'h2;
-      _GEN_68 = _GEN_61 & _GEN_64 == 3'h3;
-      _GEN_69 = _GEN_61 & _GEN_64 == 3'h4;
-      _GEN_70 = _GEN_61 & _GEN_64 == 3'h5;
-      _GEN_71 = _GEN_61 & _GEN_64 == 3'h6;
-      _GEN_72 = _GEN_61 & (&_GEN_64);
-      _GEN_77 = _GEN_73 & _GEN_76;
-      _GEN_78 =
-        _GEN_77
+      automatic logic       _GEN_368;
+      automatic logic       _GEN_369;
+      _GEN_29 = _GEN_28 & back_pointer[2:0] == 3'h0;
+      _GEN_30 = _GEN_28 & back_pointer[2:0] == 3'h1;
+      _GEN_31 = _GEN_28 & back_pointer[2:0] == 3'h2;
+      _GEN_32 = _GEN_28 & back_pointer[2:0] == 3'h3;
+      _GEN_33 = _GEN_28 & back_pointer[2:0] == 3'h4;
+      _GEN_34 = _GEN_28 & back_pointer[2:0] == 3'h5;
+      _GEN_35 = _GEN_28 & back_pointer[2:0] == 3'h6;
+      _GEN_36 = _GEN_28 & (&(back_pointer[2:0]));
+      _GEN_40 = _GEN_37 & _GEN_39;
+      _GEN_42 = _GEN_37 & _GEN_41;
+      _GEN_44 = _GEN_37 & _GEN_43;
+      _GEN_46 = _GEN_37 & _GEN_45;
+      _GEN_48 = _GEN_37 & _GEN_47;
+      _GEN_50 = _GEN_37 & _GEN_49;
+      _GEN_52 = _GEN_37 & _GEN_51;
+      _GEN_53 = _GEN_37 & (&_GEN_38);
+      _GEN_54 = _GEN_37 ? _GEN_39 | _GEN_29 | valid_0 : _GEN_29 | valid_0;
+      _GEN_55 = _GEN_37 ? _GEN_41 | _GEN_30 | valid_1 : _GEN_30 | valid_1;
+      _GEN_56 = _GEN_37 ? _GEN_43 | _GEN_31 | valid_2 : _GEN_31 | valid_2;
+      _GEN_57 = _GEN_37 ? _GEN_45 | _GEN_32 | valid_3 : _GEN_32 | valid_3;
+      _GEN_58 = _GEN_37 ? _GEN_47 | _GEN_33 | valid_4 : _GEN_33 | valid_4;
+      _GEN_59 = _GEN_37 ? _GEN_49 | _GEN_34 | valid_5 : _GEN_34 | valid_5;
+      _GEN_60 = _GEN_37 ? _GEN_51 | _GEN_35 | valid_6 : _GEN_35 | valid_6;
+      _GEN_61 = _GEN_37 ? (&_GEN_38) | _GEN_36 | valid_7 : _GEN_36 | valid_7;
+      _GEN_66 = _GEN_62 & _GEN_65 == 3'h0;
+      _GEN_67 = _GEN_62 & _GEN_65 == 3'h1;
+      _GEN_68 = _GEN_62 & _GEN_65 == 3'h2;
+      _GEN_69 = _GEN_62 & _GEN_65 == 3'h3;
+      _GEN_70 = _GEN_62 & _GEN_65 == 3'h4;
+      _GEN_71 = _GEN_62 & _GEN_65 == 3'h5;
+      _GEN_72 = _GEN_62 & _GEN_65 == 3'h6;
+      _GEN_73 = _GEN_62 & (&_GEN_65);
+      _GEN_78 = _GEN_74 & _GEN_77;
+      _GEN_79 =
+        _GEN_78
           ? io_in_3_bits_ready_bits_RS1_ready
-          : _GEN_65
+          : _GEN_66
               ? io_in_2_bits_ready_bits_RS1_ready
-              : _GEN_39
+              : _GEN_40
                   ? io_in_1_bits_ready_bits_RS1_ready
-                  : _GEN_28
+                  : _GEN_29
                       ? io_in_0_bits_ready_bits_RS1_ready
                       : queue_0_ready_bits_RS1_ready;
-      _GEN_79 =
-        _GEN_77
+      _GEN_80 =
+        _GEN_78
           ? io_in_3_bits_ready_bits_RS2_ready
-          : _GEN_65
+          : _GEN_66
               ? io_in_2_bits_ready_bits_RS2_ready
-              : _GEN_39
+              : _GEN_40
                   ? io_in_1_bits_ready_bits_RS2_ready
-                  : _GEN_28
+                  : _GEN_29
                       ? io_in_0_bits_ready_bits_RS2_ready
                       : queue_0_ready_bits_RS2_ready;
-      _GEN_80 =
-        _GEN_77
-          ? io_in_3_bits_RD_valid
-          : _GEN_65
-              ? io_in_2_bits_RD_valid
-              : _GEN_39
-                  ? io_in_1_bits_RD_valid
-                  : _GEN_28 ? io_in_0_bits_RD_valid : queue_0_RD_valid;
       _GEN_81 =
-        _GEN_77
-          ? io_in_3_bits_RS1_valid
-          : _GEN_65
-              ? io_in_2_bits_RS1_valid
-              : _GEN_39
-                  ? io_in_1_bits_RS1_valid
-                  : _GEN_28 ? io_in_0_bits_RS1_valid : queue_0_RS1_valid;
-      _GEN_82 =
-        _GEN_77
-          ? io_in_3_bits_RS2_valid
-          : _GEN_65
-              ? io_in_2_bits_RS2_valid
-              : _GEN_39
-                  ? io_in_1_bits_RS2_valid
-                  : _GEN_28 ? io_in_0_bits_RS2_valid : queue_0_RS2_valid;
-      _GEN_83 =
-        _GEN_77
-          ? io_in_3_bits_needs_ALU
-          : _GEN_65
-              ? io_in_2_bits_needs_ALU
-              : _GEN_39
-                  ? io_in_1_bits_needs_ALU
-                  : _GEN_28 ? io_in_0_bits_needs_ALU : queue_0_needs_ALU;
-      _GEN_84 =
-        _GEN_77
-          ? io_in_3_bits_needs_branch_unit
-          : _GEN_65
-              ? io_in_2_bits_needs_branch_unit
-              : _GEN_39
-                  ? io_in_1_bits_needs_branch_unit
-                  : _GEN_28 ? io_in_0_bits_needs_branch_unit : queue_0_needs_branch_unit;
-      _GEN_85 =
-        _GEN_77
-          ? io_in_3_bits_needs_CSRs
-          : _GEN_65
-              ? io_in_2_bits_needs_CSRs
-              : _GEN_39
-                  ? io_in_1_bits_needs_CSRs
-                  : _GEN_28 ? io_in_0_bits_needs_CSRs : queue_0_needs_CSRs;
-      _GEN_86 =
-        _GEN_77
-          ? io_in_3_bits_SUBTRACT
-          : _GEN_65
-              ? io_in_2_bits_SUBTRACT
-              : _GEN_39
-                  ? io_in_1_bits_SUBTRACT
-                  : _GEN_28 ? io_in_0_bits_SUBTRACT : queue_0_SUBTRACT;
-      _GEN_87 =
-        _GEN_77
-          ? io_in_3_bits_MULTIPLY
-          : _GEN_65
-              ? io_in_2_bits_MULTIPLY
-              : _GEN_39
-                  ? io_in_1_bits_MULTIPLY
-                  : _GEN_28 ? io_in_0_bits_MULTIPLY : queue_0_MULTIPLY;
-      _GEN_88 =
-        _GEN_77
-          ? io_in_3_bits_IMMEDIATE
-          : _GEN_65
-              ? io_in_2_bits_IMMEDIATE
-              : _GEN_39
-                  ? io_in_1_bits_IMMEDIATE
-                  : _GEN_28 ? io_in_0_bits_IMMEDIATE : queue_0_IMMEDIATE;
-      _GEN_89 =
-        _GEN_77
-          ? io_in_3_bits_IS_LOAD
-          : _GEN_65
-              ? io_in_2_bits_IS_LOAD
-              : _GEN_39
-                  ? io_in_1_bits_IS_LOAD
-                  : _GEN_28 ? io_in_0_bits_IS_LOAD : queue_0_IS_LOAD;
-      _GEN_90 =
-        _GEN_77
-          ? io_in_3_bits_IS_STORE
-          : _GEN_65
-              ? io_in_2_bits_IS_STORE
-              : _GEN_39
-                  ? io_in_1_bits_IS_STORE
-                  : _GEN_28 ? io_in_0_bits_IS_STORE : queue_0_IS_STORE;
-      _GEN_92 = _GEN_73 & _GEN_91;
-      _GEN_93 =
-        _GEN_92
-          ? io_in_3_bits_ready_bits_RS1_ready
+        _GEN_78
+          ? io_in_3_bits_RD_valid
           : _GEN_66
+              ? io_in_2_bits_RD_valid
+              : _GEN_40
+                  ? io_in_1_bits_RD_valid
+                  : _GEN_29 ? io_in_0_bits_RD_valid : queue_0_RD_valid;
+      _GEN_82 =
+        _GEN_78
+          ? io_in_3_bits_RS1_valid
+          : _GEN_66
+              ? io_in_2_bits_RS1_valid
+              : _GEN_40
+                  ? io_in_1_bits_RS1_valid
+                  : _GEN_29 ? io_in_0_bits_RS1_valid : queue_0_RS1_valid;
+      _GEN_83 =
+        _GEN_78
+          ? io_in_3_bits_RS2_valid
+          : _GEN_66
+              ? io_in_2_bits_RS2_valid
+              : _GEN_40
+                  ? io_in_1_bits_RS2_valid
+                  : _GEN_29 ? io_in_0_bits_RS2_valid : queue_0_RS2_valid;
+      _GEN_84 =
+        _GEN_78
+          ? io_in_3_bits_needs_ALU
+          : _GEN_66
+              ? io_in_2_bits_needs_ALU
+              : _GEN_40
+                  ? io_in_1_bits_needs_ALU
+                  : _GEN_29 ? io_in_0_bits_needs_ALU : queue_0_needs_ALU;
+      _GEN_85 =
+        _GEN_78
+          ? io_in_3_bits_needs_branch_unit
+          : _GEN_66
+              ? io_in_2_bits_needs_branch_unit
+              : _GEN_40
+                  ? io_in_1_bits_needs_branch_unit
+                  : _GEN_29 ? io_in_0_bits_needs_branch_unit : queue_0_needs_branch_unit;
+      _GEN_86 =
+        _GEN_78
+          ? io_in_3_bits_needs_CSRs
+          : _GEN_66
+              ? io_in_2_bits_needs_CSRs
+              : _GEN_40
+                  ? io_in_1_bits_needs_CSRs
+                  : _GEN_29 ? io_in_0_bits_needs_CSRs : queue_0_needs_CSRs;
+      _GEN_87 =
+        _GEN_78
+          ? io_in_3_bits_SUBTRACT
+          : _GEN_66
+              ? io_in_2_bits_SUBTRACT
+              : _GEN_40
+                  ? io_in_1_bits_SUBTRACT
+                  : _GEN_29 ? io_in_0_bits_SUBTRACT : queue_0_SUBTRACT;
+      _GEN_88 =
+        _GEN_78
+          ? io_in_3_bits_MULTIPLY
+          : _GEN_66
+              ? io_in_2_bits_MULTIPLY
+              : _GEN_40
+                  ? io_in_1_bits_MULTIPLY
+                  : _GEN_29 ? io_in_0_bits_MULTIPLY : queue_0_MULTIPLY;
+      _GEN_89 =
+        _GEN_78
+          ? io_in_3_bits_IMMEDIATE
+          : _GEN_66
+              ? io_in_2_bits_IMMEDIATE
+              : _GEN_40
+                  ? io_in_1_bits_IMMEDIATE
+                  : _GEN_29 ? io_in_0_bits_IMMEDIATE : queue_0_IMMEDIATE;
+      _GEN_90 =
+        _GEN_78
+          ? io_in_3_bits_IS_LOAD
+          : _GEN_66
+              ? io_in_2_bits_IS_LOAD
+              : _GEN_40
+                  ? io_in_1_bits_IS_LOAD
+                  : _GEN_29 ? io_in_0_bits_IS_LOAD : queue_0_IS_LOAD;
+      _GEN_91 =
+        _GEN_78
+          ? io_in_3_bits_IS_STORE
+          : _GEN_66
+              ? io_in_2_bits_IS_STORE
+              : _GEN_40
+                  ? io_in_1_bits_IS_STORE
+                  : _GEN_29 ? io_in_0_bits_IS_STORE : queue_0_IS_STORE;
+      _GEN_93 = _GEN_74 & _GEN_92;
+      _GEN_94 =
+        _GEN_93
+          ? io_in_3_bits_ready_bits_RS1_ready
+          : _GEN_67
               ? io_in_2_bits_ready_bits_RS1_ready
-              : _GEN_41
+              : _GEN_42
                   ? io_in_1_bits_ready_bits_RS1_ready
-                  : _GEN_29
+                  : _GEN_30
                       ? io_in_0_bits_ready_bits_RS1_ready
                       : queue_1_ready_bits_RS1_ready;
-      _GEN_94 =
-        _GEN_92
+      _GEN_95 =
+        _GEN_93
           ? io_in_3_bits_ready_bits_RS2_ready
-          : _GEN_66
+          : _GEN_67
               ? io_in_2_bits_ready_bits_RS2_ready
-              : _GEN_41
+              : _GEN_42
                   ? io_in_1_bits_ready_bits_RS2_ready
-                  : _GEN_29
+                  : _GEN_30
                       ? io_in_0_bits_ready_bits_RS2_ready
                       : queue_1_ready_bits_RS2_ready;
-      _GEN_95 =
-        _GEN_92
-          ? io_in_3_bits_RD_valid
-          : _GEN_66
-              ? io_in_2_bits_RD_valid
-              : _GEN_41
-                  ? io_in_1_bits_RD_valid
-                  : _GEN_29 ? io_in_0_bits_RD_valid : queue_1_RD_valid;
       _GEN_96 =
-        _GEN_92
-          ? io_in_3_bits_RS1_valid
-          : _GEN_66
-              ? io_in_2_bits_RS1_valid
-              : _GEN_41
-                  ? io_in_1_bits_RS1_valid
-                  : _GEN_29 ? io_in_0_bits_RS1_valid : queue_1_RS1_valid;
-      _GEN_97 =
-        _GEN_92
-          ? io_in_3_bits_RS2_valid
-          : _GEN_66
-              ? io_in_2_bits_RS2_valid
-              : _GEN_41
-                  ? io_in_1_bits_RS2_valid
-                  : _GEN_29 ? io_in_0_bits_RS2_valid : queue_1_RS2_valid;
-      _GEN_98 =
-        _GEN_92
-          ? io_in_3_bits_needs_ALU
-          : _GEN_66
-              ? io_in_2_bits_needs_ALU
-              : _GEN_41
-                  ? io_in_1_bits_needs_ALU
-                  : _GEN_29 ? io_in_0_bits_needs_ALU : queue_1_needs_ALU;
-      _GEN_99 =
-        _GEN_92
-          ? io_in_3_bits_needs_branch_unit
-          : _GEN_66
-              ? io_in_2_bits_needs_branch_unit
-              : _GEN_41
-                  ? io_in_1_bits_needs_branch_unit
-                  : _GEN_29 ? io_in_0_bits_needs_branch_unit : queue_1_needs_branch_unit;
-      _GEN_100 =
-        _GEN_92
-          ? io_in_3_bits_needs_CSRs
-          : _GEN_66
-              ? io_in_2_bits_needs_CSRs
-              : _GEN_41
-                  ? io_in_1_bits_needs_CSRs
-                  : _GEN_29 ? io_in_0_bits_needs_CSRs : queue_1_needs_CSRs;
-      _GEN_101 =
-        _GEN_92
-          ? io_in_3_bits_SUBTRACT
-          : _GEN_66
-              ? io_in_2_bits_SUBTRACT
-              : _GEN_41
-                  ? io_in_1_bits_SUBTRACT
-                  : _GEN_29 ? io_in_0_bits_SUBTRACT : queue_1_SUBTRACT;
-      _GEN_102 =
-        _GEN_92
-          ? io_in_3_bits_MULTIPLY
-          : _GEN_66
-              ? io_in_2_bits_MULTIPLY
-              : _GEN_41
-                  ? io_in_1_bits_MULTIPLY
-                  : _GEN_29 ? io_in_0_bits_MULTIPLY : queue_1_MULTIPLY;
-      _GEN_103 =
-        _GEN_92
-          ? io_in_3_bits_IMMEDIATE
-          : _GEN_66
-              ? io_in_2_bits_IMMEDIATE
-              : _GEN_41
-                  ? io_in_1_bits_IMMEDIATE
-                  : _GEN_29 ? io_in_0_bits_IMMEDIATE : queue_1_IMMEDIATE;
-      _GEN_104 =
-        _GEN_92
-          ? io_in_3_bits_IS_LOAD
-          : _GEN_66
-              ? io_in_2_bits_IS_LOAD
-              : _GEN_41
-                  ? io_in_1_bits_IS_LOAD
-                  : _GEN_29 ? io_in_0_bits_IS_LOAD : queue_1_IS_LOAD;
-      _GEN_105 =
-        _GEN_92
-          ? io_in_3_bits_IS_STORE
-          : _GEN_66
-              ? io_in_2_bits_IS_STORE
-              : _GEN_41
-                  ? io_in_1_bits_IS_STORE
-                  : _GEN_29 ? io_in_0_bits_IS_STORE : queue_1_IS_STORE;
-      _GEN_107 = _GEN_73 & _GEN_106;
-      _GEN_108 =
-        _GEN_107
-          ? io_in_3_bits_ready_bits_RS1_ready
+        _GEN_93
+          ? io_in_3_bits_RD_valid
           : _GEN_67
+              ? io_in_2_bits_RD_valid
+              : _GEN_42
+                  ? io_in_1_bits_RD_valid
+                  : _GEN_30 ? io_in_0_bits_RD_valid : queue_1_RD_valid;
+      _GEN_97 =
+        _GEN_93
+          ? io_in_3_bits_RS1_valid
+          : _GEN_67
+              ? io_in_2_bits_RS1_valid
+              : _GEN_42
+                  ? io_in_1_bits_RS1_valid
+                  : _GEN_30 ? io_in_0_bits_RS1_valid : queue_1_RS1_valid;
+      _GEN_98 =
+        _GEN_93
+          ? io_in_3_bits_RS2_valid
+          : _GEN_67
+              ? io_in_2_bits_RS2_valid
+              : _GEN_42
+                  ? io_in_1_bits_RS2_valid
+                  : _GEN_30 ? io_in_0_bits_RS2_valid : queue_1_RS2_valid;
+      _GEN_99 =
+        _GEN_93
+          ? io_in_3_bits_needs_ALU
+          : _GEN_67
+              ? io_in_2_bits_needs_ALU
+              : _GEN_42
+                  ? io_in_1_bits_needs_ALU
+                  : _GEN_30 ? io_in_0_bits_needs_ALU : queue_1_needs_ALU;
+      _GEN_100 =
+        _GEN_93
+          ? io_in_3_bits_needs_branch_unit
+          : _GEN_67
+              ? io_in_2_bits_needs_branch_unit
+              : _GEN_42
+                  ? io_in_1_bits_needs_branch_unit
+                  : _GEN_30 ? io_in_0_bits_needs_branch_unit : queue_1_needs_branch_unit;
+      _GEN_101 =
+        _GEN_93
+          ? io_in_3_bits_needs_CSRs
+          : _GEN_67
+              ? io_in_2_bits_needs_CSRs
+              : _GEN_42
+                  ? io_in_1_bits_needs_CSRs
+                  : _GEN_30 ? io_in_0_bits_needs_CSRs : queue_1_needs_CSRs;
+      _GEN_102 =
+        _GEN_93
+          ? io_in_3_bits_SUBTRACT
+          : _GEN_67
+              ? io_in_2_bits_SUBTRACT
+              : _GEN_42
+                  ? io_in_1_bits_SUBTRACT
+                  : _GEN_30 ? io_in_0_bits_SUBTRACT : queue_1_SUBTRACT;
+      _GEN_103 =
+        _GEN_93
+          ? io_in_3_bits_MULTIPLY
+          : _GEN_67
+              ? io_in_2_bits_MULTIPLY
+              : _GEN_42
+                  ? io_in_1_bits_MULTIPLY
+                  : _GEN_30 ? io_in_0_bits_MULTIPLY : queue_1_MULTIPLY;
+      _GEN_104 =
+        _GEN_93
+          ? io_in_3_bits_IMMEDIATE
+          : _GEN_67
+              ? io_in_2_bits_IMMEDIATE
+              : _GEN_42
+                  ? io_in_1_bits_IMMEDIATE
+                  : _GEN_30 ? io_in_0_bits_IMMEDIATE : queue_1_IMMEDIATE;
+      _GEN_105 =
+        _GEN_93
+          ? io_in_3_bits_IS_LOAD
+          : _GEN_67
+              ? io_in_2_bits_IS_LOAD
+              : _GEN_42
+                  ? io_in_1_bits_IS_LOAD
+                  : _GEN_30 ? io_in_0_bits_IS_LOAD : queue_1_IS_LOAD;
+      _GEN_106 =
+        _GEN_93
+          ? io_in_3_bits_IS_STORE
+          : _GEN_67
+              ? io_in_2_bits_IS_STORE
+              : _GEN_42
+                  ? io_in_1_bits_IS_STORE
+                  : _GEN_30 ? io_in_0_bits_IS_STORE : queue_1_IS_STORE;
+      _GEN_108 = _GEN_74 & _GEN_107;
+      _GEN_109 =
+        _GEN_108
+          ? io_in_3_bits_ready_bits_RS1_ready
+          : _GEN_68
               ? io_in_2_bits_ready_bits_RS1_ready
-              : _GEN_43
+              : _GEN_44
                   ? io_in_1_bits_ready_bits_RS1_ready
-                  : _GEN_30
+                  : _GEN_31
                       ? io_in_0_bits_ready_bits_RS1_ready
                       : queue_2_ready_bits_RS1_ready;
-      _GEN_109 =
-        _GEN_107
+      _GEN_110 =
+        _GEN_108
           ? io_in_3_bits_ready_bits_RS2_ready
-          : _GEN_67
+          : _GEN_68
               ? io_in_2_bits_ready_bits_RS2_ready
-              : _GEN_43
+              : _GEN_44
                   ? io_in_1_bits_ready_bits_RS2_ready
-                  : _GEN_30
+                  : _GEN_31
                       ? io_in_0_bits_ready_bits_RS2_ready
                       : queue_2_ready_bits_RS2_ready;
-      _GEN_110 =
-        _GEN_107
-          ? io_in_3_bits_RD_valid
-          : _GEN_67
-              ? io_in_2_bits_RD_valid
-              : _GEN_43
-                  ? io_in_1_bits_RD_valid
-                  : _GEN_30 ? io_in_0_bits_RD_valid : queue_2_RD_valid;
       _GEN_111 =
-        _GEN_107
-          ? io_in_3_bits_RS1_valid
-          : _GEN_67
-              ? io_in_2_bits_RS1_valid
-              : _GEN_43
-                  ? io_in_1_bits_RS1_valid
-                  : _GEN_30 ? io_in_0_bits_RS1_valid : queue_2_RS1_valid;
-      _GEN_112 =
-        _GEN_107
-          ? io_in_3_bits_RS2_valid
-          : _GEN_67
-              ? io_in_2_bits_RS2_valid
-              : _GEN_43
-                  ? io_in_1_bits_RS2_valid
-                  : _GEN_30 ? io_in_0_bits_RS2_valid : queue_2_RS2_valid;
-      _GEN_113 =
-        _GEN_107
-          ? io_in_3_bits_needs_ALU
-          : _GEN_67
-              ? io_in_2_bits_needs_ALU
-              : _GEN_43
-                  ? io_in_1_bits_needs_ALU
-                  : _GEN_30 ? io_in_0_bits_needs_ALU : queue_2_needs_ALU;
-      _GEN_114 =
-        _GEN_107
-          ? io_in_3_bits_needs_branch_unit
-          : _GEN_67
-              ? io_in_2_bits_needs_branch_unit
-              : _GEN_43
-                  ? io_in_1_bits_needs_branch_unit
-                  : _GEN_30 ? io_in_0_bits_needs_branch_unit : queue_2_needs_branch_unit;
-      _GEN_115 =
-        _GEN_107
-          ? io_in_3_bits_needs_CSRs
-          : _GEN_67
-              ? io_in_2_bits_needs_CSRs
-              : _GEN_43
-                  ? io_in_1_bits_needs_CSRs
-                  : _GEN_30 ? io_in_0_bits_needs_CSRs : queue_2_needs_CSRs;
-      _GEN_116 =
-        _GEN_107
-          ? io_in_3_bits_SUBTRACT
-          : _GEN_67
-              ? io_in_2_bits_SUBTRACT
-              : _GEN_43
-                  ? io_in_1_bits_SUBTRACT
-                  : _GEN_30 ? io_in_0_bits_SUBTRACT : queue_2_SUBTRACT;
-      _GEN_117 =
-        _GEN_107
-          ? io_in_3_bits_MULTIPLY
-          : _GEN_67
-              ? io_in_2_bits_MULTIPLY
-              : _GEN_43
-                  ? io_in_1_bits_MULTIPLY
-                  : _GEN_30 ? io_in_0_bits_MULTIPLY : queue_2_MULTIPLY;
-      _GEN_118 =
-        _GEN_107
-          ? io_in_3_bits_IMMEDIATE
-          : _GEN_67
-              ? io_in_2_bits_IMMEDIATE
-              : _GEN_43
-                  ? io_in_1_bits_IMMEDIATE
-                  : _GEN_30 ? io_in_0_bits_IMMEDIATE : queue_2_IMMEDIATE;
-      _GEN_119 =
-        _GEN_107
-          ? io_in_3_bits_IS_LOAD
-          : _GEN_67
-              ? io_in_2_bits_IS_LOAD
-              : _GEN_43
-                  ? io_in_1_bits_IS_LOAD
-                  : _GEN_30 ? io_in_0_bits_IS_LOAD : queue_2_IS_LOAD;
-      _GEN_120 =
-        _GEN_107
-          ? io_in_3_bits_IS_STORE
-          : _GEN_67
-              ? io_in_2_bits_IS_STORE
-              : _GEN_43
-                  ? io_in_1_bits_IS_STORE
-                  : _GEN_30 ? io_in_0_bits_IS_STORE : queue_2_IS_STORE;
-      _GEN_122 = _GEN_73 & _GEN_121;
-      _GEN_123 =
-        _GEN_122
-          ? io_in_3_bits_ready_bits_RS1_ready
+        _GEN_108
+          ? io_in_3_bits_RD_valid
           : _GEN_68
+              ? io_in_2_bits_RD_valid
+              : _GEN_44
+                  ? io_in_1_bits_RD_valid
+                  : _GEN_31 ? io_in_0_bits_RD_valid : queue_2_RD_valid;
+      _GEN_112 =
+        _GEN_108
+          ? io_in_3_bits_RS1_valid
+          : _GEN_68
+              ? io_in_2_bits_RS1_valid
+              : _GEN_44
+                  ? io_in_1_bits_RS1_valid
+                  : _GEN_31 ? io_in_0_bits_RS1_valid : queue_2_RS1_valid;
+      _GEN_113 =
+        _GEN_108
+          ? io_in_3_bits_RS2_valid
+          : _GEN_68
+              ? io_in_2_bits_RS2_valid
+              : _GEN_44
+                  ? io_in_1_bits_RS2_valid
+                  : _GEN_31 ? io_in_0_bits_RS2_valid : queue_2_RS2_valid;
+      _GEN_114 =
+        _GEN_108
+          ? io_in_3_bits_needs_ALU
+          : _GEN_68
+              ? io_in_2_bits_needs_ALU
+              : _GEN_44
+                  ? io_in_1_bits_needs_ALU
+                  : _GEN_31 ? io_in_0_bits_needs_ALU : queue_2_needs_ALU;
+      _GEN_115 =
+        _GEN_108
+          ? io_in_3_bits_needs_branch_unit
+          : _GEN_68
+              ? io_in_2_bits_needs_branch_unit
+              : _GEN_44
+                  ? io_in_1_bits_needs_branch_unit
+                  : _GEN_31 ? io_in_0_bits_needs_branch_unit : queue_2_needs_branch_unit;
+      _GEN_116 =
+        _GEN_108
+          ? io_in_3_bits_needs_CSRs
+          : _GEN_68
+              ? io_in_2_bits_needs_CSRs
+              : _GEN_44
+                  ? io_in_1_bits_needs_CSRs
+                  : _GEN_31 ? io_in_0_bits_needs_CSRs : queue_2_needs_CSRs;
+      _GEN_117 =
+        _GEN_108
+          ? io_in_3_bits_SUBTRACT
+          : _GEN_68
+              ? io_in_2_bits_SUBTRACT
+              : _GEN_44
+                  ? io_in_1_bits_SUBTRACT
+                  : _GEN_31 ? io_in_0_bits_SUBTRACT : queue_2_SUBTRACT;
+      _GEN_118 =
+        _GEN_108
+          ? io_in_3_bits_MULTIPLY
+          : _GEN_68
+              ? io_in_2_bits_MULTIPLY
+              : _GEN_44
+                  ? io_in_1_bits_MULTIPLY
+                  : _GEN_31 ? io_in_0_bits_MULTIPLY : queue_2_MULTIPLY;
+      _GEN_119 =
+        _GEN_108
+          ? io_in_3_bits_IMMEDIATE
+          : _GEN_68
+              ? io_in_2_bits_IMMEDIATE
+              : _GEN_44
+                  ? io_in_1_bits_IMMEDIATE
+                  : _GEN_31 ? io_in_0_bits_IMMEDIATE : queue_2_IMMEDIATE;
+      _GEN_120 =
+        _GEN_108
+          ? io_in_3_bits_IS_LOAD
+          : _GEN_68
+              ? io_in_2_bits_IS_LOAD
+              : _GEN_44
+                  ? io_in_1_bits_IS_LOAD
+                  : _GEN_31 ? io_in_0_bits_IS_LOAD : queue_2_IS_LOAD;
+      _GEN_121 =
+        _GEN_108
+          ? io_in_3_bits_IS_STORE
+          : _GEN_68
+              ? io_in_2_bits_IS_STORE
+              : _GEN_44
+                  ? io_in_1_bits_IS_STORE
+                  : _GEN_31 ? io_in_0_bits_IS_STORE : queue_2_IS_STORE;
+      _GEN_123 = _GEN_74 & _GEN_122;
+      _GEN_124 =
+        _GEN_123
+          ? io_in_3_bits_ready_bits_RS1_ready
+          : _GEN_69
               ? io_in_2_bits_ready_bits_RS1_ready
-              : _GEN_45
+              : _GEN_46
                   ? io_in_1_bits_ready_bits_RS1_ready
-                  : _GEN_31
+                  : _GEN_32
                       ? io_in_0_bits_ready_bits_RS1_ready
                       : queue_3_ready_bits_RS1_ready;
-      _GEN_124 =
-        _GEN_122
+      _GEN_125 =
+        _GEN_123
           ? io_in_3_bits_ready_bits_RS2_ready
-          : _GEN_68
+          : _GEN_69
               ? io_in_2_bits_ready_bits_RS2_ready
-              : _GEN_45
+              : _GEN_46
                   ? io_in_1_bits_ready_bits_RS2_ready
-                  : _GEN_31
+                  : _GEN_32
                       ? io_in_0_bits_ready_bits_RS2_ready
                       : queue_3_ready_bits_RS2_ready;
-      _GEN_125 =
-        _GEN_122
-          ? io_in_3_bits_RD_valid
-          : _GEN_68
-              ? io_in_2_bits_RD_valid
-              : _GEN_45
-                  ? io_in_1_bits_RD_valid
-                  : _GEN_31 ? io_in_0_bits_RD_valid : queue_3_RD_valid;
       _GEN_126 =
-        _GEN_122
-          ? io_in_3_bits_RS1_valid
-          : _GEN_68
-              ? io_in_2_bits_RS1_valid
-              : _GEN_45
-                  ? io_in_1_bits_RS1_valid
-                  : _GEN_31 ? io_in_0_bits_RS1_valid : queue_3_RS1_valid;
-      _GEN_127 =
-        _GEN_122
-          ? io_in_3_bits_RS2_valid
-          : _GEN_68
-              ? io_in_2_bits_RS2_valid
-              : _GEN_45
-                  ? io_in_1_bits_RS2_valid
-                  : _GEN_31 ? io_in_0_bits_RS2_valid : queue_3_RS2_valid;
-      _GEN_128 =
-        _GEN_122
-          ? io_in_3_bits_needs_ALU
-          : _GEN_68
-              ? io_in_2_bits_needs_ALU
-              : _GEN_45
-                  ? io_in_1_bits_needs_ALU
-                  : _GEN_31 ? io_in_0_bits_needs_ALU : queue_3_needs_ALU;
-      _GEN_129 =
-        _GEN_122
-          ? io_in_3_bits_needs_branch_unit
-          : _GEN_68
-              ? io_in_2_bits_needs_branch_unit
-              : _GEN_45
-                  ? io_in_1_bits_needs_branch_unit
-                  : _GEN_31 ? io_in_0_bits_needs_branch_unit : queue_3_needs_branch_unit;
-      _GEN_130 =
-        _GEN_122
-          ? io_in_3_bits_needs_CSRs
-          : _GEN_68
-              ? io_in_2_bits_needs_CSRs
-              : _GEN_45
-                  ? io_in_1_bits_needs_CSRs
-                  : _GEN_31 ? io_in_0_bits_needs_CSRs : queue_3_needs_CSRs;
-      _GEN_131 =
-        _GEN_122
-          ? io_in_3_bits_SUBTRACT
-          : _GEN_68
-              ? io_in_2_bits_SUBTRACT
-              : _GEN_45
-                  ? io_in_1_bits_SUBTRACT
-                  : _GEN_31 ? io_in_0_bits_SUBTRACT : queue_3_SUBTRACT;
-      _GEN_132 =
-        _GEN_122
-          ? io_in_3_bits_MULTIPLY
-          : _GEN_68
-              ? io_in_2_bits_MULTIPLY
-              : _GEN_45
-                  ? io_in_1_bits_MULTIPLY
-                  : _GEN_31 ? io_in_0_bits_MULTIPLY : queue_3_MULTIPLY;
-      _GEN_133 =
-        _GEN_122
-          ? io_in_3_bits_IMMEDIATE
-          : _GEN_68
-              ? io_in_2_bits_IMMEDIATE
-              : _GEN_45
-                  ? io_in_1_bits_IMMEDIATE
-                  : _GEN_31 ? io_in_0_bits_IMMEDIATE : queue_3_IMMEDIATE;
-      _GEN_134 =
-        _GEN_122
-          ? io_in_3_bits_IS_LOAD
-          : _GEN_68
-              ? io_in_2_bits_IS_LOAD
-              : _GEN_45
-                  ? io_in_1_bits_IS_LOAD
-                  : _GEN_31 ? io_in_0_bits_IS_LOAD : queue_3_IS_LOAD;
-      _GEN_135 =
-        _GEN_122
-          ? io_in_3_bits_IS_STORE
-          : _GEN_68
-              ? io_in_2_bits_IS_STORE
-              : _GEN_45
-                  ? io_in_1_bits_IS_STORE
-                  : _GEN_31 ? io_in_0_bits_IS_STORE : queue_3_IS_STORE;
-      _GEN_137 = _GEN_73 & _GEN_136;
-      _GEN_138 =
-        _GEN_137
-          ? io_in_3_bits_ready_bits_RS1_ready
+        _GEN_123
+          ? io_in_3_bits_RD_valid
           : _GEN_69
+              ? io_in_2_bits_RD_valid
+              : _GEN_46
+                  ? io_in_1_bits_RD_valid
+                  : _GEN_32 ? io_in_0_bits_RD_valid : queue_3_RD_valid;
+      _GEN_127 =
+        _GEN_123
+          ? io_in_3_bits_RS1_valid
+          : _GEN_69
+              ? io_in_2_bits_RS1_valid
+              : _GEN_46
+                  ? io_in_1_bits_RS1_valid
+                  : _GEN_32 ? io_in_0_bits_RS1_valid : queue_3_RS1_valid;
+      _GEN_128 =
+        _GEN_123
+          ? io_in_3_bits_RS2_valid
+          : _GEN_69
+              ? io_in_2_bits_RS2_valid
+              : _GEN_46
+                  ? io_in_1_bits_RS2_valid
+                  : _GEN_32 ? io_in_0_bits_RS2_valid : queue_3_RS2_valid;
+      _GEN_129 =
+        _GEN_123
+          ? io_in_3_bits_needs_ALU
+          : _GEN_69
+              ? io_in_2_bits_needs_ALU
+              : _GEN_46
+                  ? io_in_1_bits_needs_ALU
+                  : _GEN_32 ? io_in_0_bits_needs_ALU : queue_3_needs_ALU;
+      _GEN_130 =
+        _GEN_123
+          ? io_in_3_bits_needs_branch_unit
+          : _GEN_69
+              ? io_in_2_bits_needs_branch_unit
+              : _GEN_46
+                  ? io_in_1_bits_needs_branch_unit
+                  : _GEN_32 ? io_in_0_bits_needs_branch_unit : queue_3_needs_branch_unit;
+      _GEN_131 =
+        _GEN_123
+          ? io_in_3_bits_needs_CSRs
+          : _GEN_69
+              ? io_in_2_bits_needs_CSRs
+              : _GEN_46
+                  ? io_in_1_bits_needs_CSRs
+                  : _GEN_32 ? io_in_0_bits_needs_CSRs : queue_3_needs_CSRs;
+      _GEN_132 =
+        _GEN_123
+          ? io_in_3_bits_SUBTRACT
+          : _GEN_69
+              ? io_in_2_bits_SUBTRACT
+              : _GEN_46
+                  ? io_in_1_bits_SUBTRACT
+                  : _GEN_32 ? io_in_0_bits_SUBTRACT : queue_3_SUBTRACT;
+      _GEN_133 =
+        _GEN_123
+          ? io_in_3_bits_MULTIPLY
+          : _GEN_69
+              ? io_in_2_bits_MULTIPLY
+              : _GEN_46
+                  ? io_in_1_bits_MULTIPLY
+                  : _GEN_32 ? io_in_0_bits_MULTIPLY : queue_3_MULTIPLY;
+      _GEN_134 =
+        _GEN_123
+          ? io_in_3_bits_IMMEDIATE
+          : _GEN_69
+              ? io_in_2_bits_IMMEDIATE
+              : _GEN_46
+                  ? io_in_1_bits_IMMEDIATE
+                  : _GEN_32 ? io_in_0_bits_IMMEDIATE : queue_3_IMMEDIATE;
+      _GEN_135 =
+        _GEN_123
+          ? io_in_3_bits_IS_LOAD
+          : _GEN_69
+              ? io_in_2_bits_IS_LOAD
+              : _GEN_46
+                  ? io_in_1_bits_IS_LOAD
+                  : _GEN_32 ? io_in_0_bits_IS_LOAD : queue_3_IS_LOAD;
+      _GEN_136 =
+        _GEN_123
+          ? io_in_3_bits_IS_STORE
+          : _GEN_69
+              ? io_in_2_bits_IS_STORE
+              : _GEN_46
+                  ? io_in_1_bits_IS_STORE
+                  : _GEN_32 ? io_in_0_bits_IS_STORE : queue_3_IS_STORE;
+      _GEN_138 = _GEN_74 & _GEN_137;
+      _GEN_139 =
+        _GEN_138
+          ? io_in_3_bits_ready_bits_RS1_ready
+          : _GEN_70
               ? io_in_2_bits_ready_bits_RS1_ready
-              : _GEN_47
+              : _GEN_48
                   ? io_in_1_bits_ready_bits_RS1_ready
-                  : _GEN_32
+                  : _GEN_33
                       ? io_in_0_bits_ready_bits_RS1_ready
                       : queue_4_ready_bits_RS1_ready;
-      _GEN_139 =
-        _GEN_137
+      _GEN_140 =
+        _GEN_138
           ? io_in_3_bits_ready_bits_RS2_ready
-          : _GEN_69
+          : _GEN_70
               ? io_in_2_bits_ready_bits_RS2_ready
-              : _GEN_47
+              : _GEN_48
                   ? io_in_1_bits_ready_bits_RS2_ready
-                  : _GEN_32
+                  : _GEN_33
                       ? io_in_0_bits_ready_bits_RS2_ready
                       : queue_4_ready_bits_RS2_ready;
-      _GEN_140 =
-        _GEN_137
-          ? io_in_3_bits_RD_valid
-          : _GEN_69
-              ? io_in_2_bits_RD_valid
-              : _GEN_47
-                  ? io_in_1_bits_RD_valid
-                  : _GEN_32 ? io_in_0_bits_RD_valid : queue_4_RD_valid;
       _GEN_141 =
-        _GEN_137
-          ? io_in_3_bits_RS1_valid
-          : _GEN_69
-              ? io_in_2_bits_RS1_valid
-              : _GEN_47
-                  ? io_in_1_bits_RS1_valid
-                  : _GEN_32 ? io_in_0_bits_RS1_valid : queue_4_RS1_valid;
-      _GEN_142 =
-        _GEN_137
-          ? io_in_3_bits_RS2_valid
-          : _GEN_69
-              ? io_in_2_bits_RS2_valid
-              : _GEN_47
-                  ? io_in_1_bits_RS2_valid
-                  : _GEN_32 ? io_in_0_bits_RS2_valid : queue_4_RS2_valid;
-      _GEN_143 =
-        _GEN_137
-          ? io_in_3_bits_needs_ALU
-          : _GEN_69
-              ? io_in_2_bits_needs_ALU
-              : _GEN_47
-                  ? io_in_1_bits_needs_ALU
-                  : _GEN_32 ? io_in_0_bits_needs_ALU : queue_4_needs_ALU;
-      _GEN_144 =
-        _GEN_137
-          ? io_in_3_bits_needs_branch_unit
-          : _GEN_69
-              ? io_in_2_bits_needs_branch_unit
-              : _GEN_47
-                  ? io_in_1_bits_needs_branch_unit
-                  : _GEN_32 ? io_in_0_bits_needs_branch_unit : queue_4_needs_branch_unit;
-      _GEN_145 =
-        _GEN_137
-          ? io_in_3_bits_needs_CSRs
-          : _GEN_69
-              ? io_in_2_bits_needs_CSRs
-              : _GEN_47
-                  ? io_in_1_bits_needs_CSRs
-                  : _GEN_32 ? io_in_0_bits_needs_CSRs : queue_4_needs_CSRs;
-      _GEN_146 =
-        _GEN_137
-          ? io_in_3_bits_SUBTRACT
-          : _GEN_69
-              ? io_in_2_bits_SUBTRACT
-              : _GEN_47
-                  ? io_in_1_bits_SUBTRACT
-                  : _GEN_32 ? io_in_0_bits_SUBTRACT : queue_4_SUBTRACT;
-      _GEN_147 =
-        _GEN_137
-          ? io_in_3_bits_MULTIPLY
-          : _GEN_69
-              ? io_in_2_bits_MULTIPLY
-              : _GEN_47
-                  ? io_in_1_bits_MULTIPLY
-                  : _GEN_32 ? io_in_0_bits_MULTIPLY : queue_4_MULTIPLY;
-      _GEN_148 =
-        _GEN_137
-          ? io_in_3_bits_IMMEDIATE
-          : _GEN_69
-              ? io_in_2_bits_IMMEDIATE
-              : _GEN_47
-                  ? io_in_1_bits_IMMEDIATE
-                  : _GEN_32 ? io_in_0_bits_IMMEDIATE : queue_4_IMMEDIATE;
-      _GEN_149 =
-        _GEN_137
-          ? io_in_3_bits_IS_LOAD
-          : _GEN_69
-              ? io_in_2_bits_IS_LOAD
-              : _GEN_47
-                  ? io_in_1_bits_IS_LOAD
-                  : _GEN_32 ? io_in_0_bits_IS_LOAD : queue_4_IS_LOAD;
-      _GEN_150 =
-        _GEN_137
-          ? io_in_3_bits_IS_STORE
-          : _GEN_69
-              ? io_in_2_bits_IS_STORE
-              : _GEN_47
-                  ? io_in_1_bits_IS_STORE
-                  : _GEN_32 ? io_in_0_bits_IS_STORE : queue_4_IS_STORE;
-      _GEN_152 = _GEN_73 & _GEN_151;
-      _GEN_153 =
-        _GEN_152
-          ? io_in_3_bits_ready_bits_RS1_ready
+        _GEN_138
+          ? io_in_3_bits_RD_valid
           : _GEN_70
+              ? io_in_2_bits_RD_valid
+              : _GEN_48
+                  ? io_in_1_bits_RD_valid
+                  : _GEN_33 ? io_in_0_bits_RD_valid : queue_4_RD_valid;
+      _GEN_142 =
+        _GEN_138
+          ? io_in_3_bits_RS1_valid
+          : _GEN_70
+              ? io_in_2_bits_RS1_valid
+              : _GEN_48
+                  ? io_in_1_bits_RS1_valid
+                  : _GEN_33 ? io_in_0_bits_RS1_valid : queue_4_RS1_valid;
+      _GEN_143 =
+        _GEN_138
+          ? io_in_3_bits_RS2_valid
+          : _GEN_70
+              ? io_in_2_bits_RS2_valid
+              : _GEN_48
+                  ? io_in_1_bits_RS2_valid
+                  : _GEN_33 ? io_in_0_bits_RS2_valid : queue_4_RS2_valid;
+      _GEN_144 =
+        _GEN_138
+          ? io_in_3_bits_needs_ALU
+          : _GEN_70
+              ? io_in_2_bits_needs_ALU
+              : _GEN_48
+                  ? io_in_1_bits_needs_ALU
+                  : _GEN_33 ? io_in_0_bits_needs_ALU : queue_4_needs_ALU;
+      _GEN_145 =
+        _GEN_138
+          ? io_in_3_bits_needs_branch_unit
+          : _GEN_70
+              ? io_in_2_bits_needs_branch_unit
+              : _GEN_48
+                  ? io_in_1_bits_needs_branch_unit
+                  : _GEN_33 ? io_in_0_bits_needs_branch_unit : queue_4_needs_branch_unit;
+      _GEN_146 =
+        _GEN_138
+          ? io_in_3_bits_needs_CSRs
+          : _GEN_70
+              ? io_in_2_bits_needs_CSRs
+              : _GEN_48
+                  ? io_in_1_bits_needs_CSRs
+                  : _GEN_33 ? io_in_0_bits_needs_CSRs : queue_4_needs_CSRs;
+      _GEN_147 =
+        _GEN_138
+          ? io_in_3_bits_SUBTRACT
+          : _GEN_70
+              ? io_in_2_bits_SUBTRACT
+              : _GEN_48
+                  ? io_in_1_bits_SUBTRACT
+                  : _GEN_33 ? io_in_0_bits_SUBTRACT : queue_4_SUBTRACT;
+      _GEN_148 =
+        _GEN_138
+          ? io_in_3_bits_MULTIPLY
+          : _GEN_70
+              ? io_in_2_bits_MULTIPLY
+              : _GEN_48
+                  ? io_in_1_bits_MULTIPLY
+                  : _GEN_33 ? io_in_0_bits_MULTIPLY : queue_4_MULTIPLY;
+      _GEN_149 =
+        _GEN_138
+          ? io_in_3_bits_IMMEDIATE
+          : _GEN_70
+              ? io_in_2_bits_IMMEDIATE
+              : _GEN_48
+                  ? io_in_1_bits_IMMEDIATE
+                  : _GEN_33 ? io_in_0_bits_IMMEDIATE : queue_4_IMMEDIATE;
+      _GEN_150 =
+        _GEN_138
+          ? io_in_3_bits_IS_LOAD
+          : _GEN_70
+              ? io_in_2_bits_IS_LOAD
+              : _GEN_48
+                  ? io_in_1_bits_IS_LOAD
+                  : _GEN_33 ? io_in_0_bits_IS_LOAD : queue_4_IS_LOAD;
+      _GEN_151 =
+        _GEN_138
+          ? io_in_3_bits_IS_STORE
+          : _GEN_70
+              ? io_in_2_bits_IS_STORE
+              : _GEN_48
+                  ? io_in_1_bits_IS_STORE
+                  : _GEN_33 ? io_in_0_bits_IS_STORE : queue_4_IS_STORE;
+      _GEN_153 = _GEN_74 & _GEN_152;
+      _GEN_154 =
+        _GEN_153
+          ? io_in_3_bits_ready_bits_RS1_ready
+          : _GEN_71
               ? io_in_2_bits_ready_bits_RS1_ready
-              : _GEN_49
+              : _GEN_50
                   ? io_in_1_bits_ready_bits_RS1_ready
-                  : _GEN_33
+                  : _GEN_34
                       ? io_in_0_bits_ready_bits_RS1_ready
                       : queue_5_ready_bits_RS1_ready;
-      _GEN_154 =
-        _GEN_152
+      _GEN_155 =
+        _GEN_153
           ? io_in_3_bits_ready_bits_RS2_ready
-          : _GEN_70
+          : _GEN_71
               ? io_in_2_bits_ready_bits_RS2_ready
-              : _GEN_49
+              : _GEN_50
                   ? io_in_1_bits_ready_bits_RS2_ready
-                  : _GEN_33
+                  : _GEN_34
                       ? io_in_0_bits_ready_bits_RS2_ready
                       : queue_5_ready_bits_RS2_ready;
-      _GEN_155 =
-        _GEN_152
-          ? io_in_3_bits_RD_valid
-          : _GEN_70
-              ? io_in_2_bits_RD_valid
-              : _GEN_49
-                  ? io_in_1_bits_RD_valid
-                  : _GEN_33 ? io_in_0_bits_RD_valid : queue_5_RD_valid;
       _GEN_156 =
-        _GEN_152
-          ? io_in_3_bits_RS1_valid
-          : _GEN_70
-              ? io_in_2_bits_RS1_valid
-              : _GEN_49
-                  ? io_in_1_bits_RS1_valid
-                  : _GEN_33 ? io_in_0_bits_RS1_valid : queue_5_RS1_valid;
-      _GEN_157 =
-        _GEN_152
-          ? io_in_3_bits_RS2_valid
-          : _GEN_70
-              ? io_in_2_bits_RS2_valid
-              : _GEN_49
-                  ? io_in_1_bits_RS2_valid
-                  : _GEN_33 ? io_in_0_bits_RS2_valid : queue_5_RS2_valid;
-      _GEN_158 =
-        _GEN_152
-          ? io_in_3_bits_needs_ALU
-          : _GEN_70
-              ? io_in_2_bits_needs_ALU
-              : _GEN_49
-                  ? io_in_1_bits_needs_ALU
-                  : _GEN_33 ? io_in_0_bits_needs_ALU : queue_5_needs_ALU;
-      _GEN_159 =
-        _GEN_152
-          ? io_in_3_bits_needs_branch_unit
-          : _GEN_70
-              ? io_in_2_bits_needs_branch_unit
-              : _GEN_49
-                  ? io_in_1_bits_needs_branch_unit
-                  : _GEN_33 ? io_in_0_bits_needs_branch_unit : queue_5_needs_branch_unit;
-      _GEN_160 =
-        _GEN_152
-          ? io_in_3_bits_needs_CSRs
-          : _GEN_70
-              ? io_in_2_bits_needs_CSRs
-              : _GEN_49
-                  ? io_in_1_bits_needs_CSRs
-                  : _GEN_33 ? io_in_0_bits_needs_CSRs : queue_5_needs_CSRs;
-      _GEN_161 =
-        _GEN_152
-          ? io_in_3_bits_SUBTRACT
-          : _GEN_70
-              ? io_in_2_bits_SUBTRACT
-              : _GEN_49
-                  ? io_in_1_bits_SUBTRACT
-                  : _GEN_33 ? io_in_0_bits_SUBTRACT : queue_5_SUBTRACT;
-      _GEN_162 =
-        _GEN_152
-          ? io_in_3_bits_MULTIPLY
-          : _GEN_70
-              ? io_in_2_bits_MULTIPLY
-              : _GEN_49
-                  ? io_in_1_bits_MULTIPLY
-                  : _GEN_33 ? io_in_0_bits_MULTIPLY : queue_5_MULTIPLY;
-      _GEN_163 =
-        _GEN_152
-          ? io_in_3_bits_IMMEDIATE
-          : _GEN_70
-              ? io_in_2_bits_IMMEDIATE
-              : _GEN_49
-                  ? io_in_1_bits_IMMEDIATE
-                  : _GEN_33 ? io_in_0_bits_IMMEDIATE : queue_5_IMMEDIATE;
-      _GEN_164 =
-        _GEN_152
-          ? io_in_3_bits_IS_LOAD
-          : _GEN_70
-              ? io_in_2_bits_IS_LOAD
-              : _GEN_49
-                  ? io_in_1_bits_IS_LOAD
-                  : _GEN_33 ? io_in_0_bits_IS_LOAD : queue_5_IS_LOAD;
-      _GEN_165 =
-        _GEN_152
-          ? io_in_3_bits_IS_STORE
-          : _GEN_70
-              ? io_in_2_bits_IS_STORE
-              : _GEN_49
-                  ? io_in_1_bits_IS_STORE
-                  : _GEN_33 ? io_in_0_bits_IS_STORE : queue_5_IS_STORE;
-      _GEN_167 = _GEN_73 & _GEN_166;
-      _GEN_168 =
-        _GEN_167
-          ? io_in_3_bits_ready_bits_RS1_ready
+        _GEN_153
+          ? io_in_3_bits_RD_valid
           : _GEN_71
+              ? io_in_2_bits_RD_valid
+              : _GEN_50
+                  ? io_in_1_bits_RD_valid
+                  : _GEN_34 ? io_in_0_bits_RD_valid : queue_5_RD_valid;
+      _GEN_157 =
+        _GEN_153
+          ? io_in_3_bits_RS1_valid
+          : _GEN_71
+              ? io_in_2_bits_RS1_valid
+              : _GEN_50
+                  ? io_in_1_bits_RS1_valid
+                  : _GEN_34 ? io_in_0_bits_RS1_valid : queue_5_RS1_valid;
+      _GEN_158 =
+        _GEN_153
+          ? io_in_3_bits_RS2_valid
+          : _GEN_71
+              ? io_in_2_bits_RS2_valid
+              : _GEN_50
+                  ? io_in_1_bits_RS2_valid
+                  : _GEN_34 ? io_in_0_bits_RS2_valid : queue_5_RS2_valid;
+      _GEN_159 =
+        _GEN_153
+          ? io_in_3_bits_needs_ALU
+          : _GEN_71
+              ? io_in_2_bits_needs_ALU
+              : _GEN_50
+                  ? io_in_1_bits_needs_ALU
+                  : _GEN_34 ? io_in_0_bits_needs_ALU : queue_5_needs_ALU;
+      _GEN_160 =
+        _GEN_153
+          ? io_in_3_bits_needs_branch_unit
+          : _GEN_71
+              ? io_in_2_bits_needs_branch_unit
+              : _GEN_50
+                  ? io_in_1_bits_needs_branch_unit
+                  : _GEN_34 ? io_in_0_bits_needs_branch_unit : queue_5_needs_branch_unit;
+      _GEN_161 =
+        _GEN_153
+          ? io_in_3_bits_needs_CSRs
+          : _GEN_71
+              ? io_in_2_bits_needs_CSRs
+              : _GEN_50
+                  ? io_in_1_bits_needs_CSRs
+                  : _GEN_34 ? io_in_0_bits_needs_CSRs : queue_5_needs_CSRs;
+      _GEN_162 =
+        _GEN_153
+          ? io_in_3_bits_SUBTRACT
+          : _GEN_71
+              ? io_in_2_bits_SUBTRACT
+              : _GEN_50
+                  ? io_in_1_bits_SUBTRACT
+                  : _GEN_34 ? io_in_0_bits_SUBTRACT : queue_5_SUBTRACT;
+      _GEN_163 =
+        _GEN_153
+          ? io_in_3_bits_MULTIPLY
+          : _GEN_71
+              ? io_in_2_bits_MULTIPLY
+              : _GEN_50
+                  ? io_in_1_bits_MULTIPLY
+                  : _GEN_34 ? io_in_0_bits_MULTIPLY : queue_5_MULTIPLY;
+      _GEN_164 =
+        _GEN_153
+          ? io_in_3_bits_IMMEDIATE
+          : _GEN_71
+              ? io_in_2_bits_IMMEDIATE
+              : _GEN_50
+                  ? io_in_1_bits_IMMEDIATE
+                  : _GEN_34 ? io_in_0_bits_IMMEDIATE : queue_5_IMMEDIATE;
+      _GEN_165 =
+        _GEN_153
+          ? io_in_3_bits_IS_LOAD
+          : _GEN_71
+              ? io_in_2_bits_IS_LOAD
+              : _GEN_50
+                  ? io_in_1_bits_IS_LOAD
+                  : _GEN_34 ? io_in_0_bits_IS_LOAD : queue_5_IS_LOAD;
+      _GEN_166 =
+        _GEN_153
+          ? io_in_3_bits_IS_STORE
+          : _GEN_71
+              ? io_in_2_bits_IS_STORE
+              : _GEN_50
+                  ? io_in_1_bits_IS_STORE
+                  : _GEN_34 ? io_in_0_bits_IS_STORE : queue_5_IS_STORE;
+      _GEN_168 = _GEN_74 & _GEN_167;
+      _GEN_169 =
+        _GEN_168
+          ? io_in_3_bits_ready_bits_RS1_ready
+          : _GEN_72
               ? io_in_2_bits_ready_bits_RS1_ready
-              : _GEN_51
+              : _GEN_52
                   ? io_in_1_bits_ready_bits_RS1_ready
-                  : _GEN_34
+                  : _GEN_35
                       ? io_in_0_bits_ready_bits_RS1_ready
                       : queue_6_ready_bits_RS1_ready;
-      _GEN_169 =
-        _GEN_167
+      _GEN_170 =
+        _GEN_168
           ? io_in_3_bits_ready_bits_RS2_ready
-          : _GEN_71
+          : _GEN_72
               ? io_in_2_bits_ready_bits_RS2_ready
-              : _GEN_51
+              : _GEN_52
                   ? io_in_1_bits_ready_bits_RS2_ready
-                  : _GEN_34
+                  : _GEN_35
                       ? io_in_0_bits_ready_bits_RS2_ready
                       : queue_6_ready_bits_RS2_ready;
-      _GEN_170 =
-        _GEN_167
-          ? io_in_3_bits_RD_valid
-          : _GEN_71
-              ? io_in_2_bits_RD_valid
-              : _GEN_51
-                  ? io_in_1_bits_RD_valid
-                  : _GEN_34 ? io_in_0_bits_RD_valid : queue_6_RD_valid;
       _GEN_171 =
-        _GEN_167
-          ? io_in_3_bits_RS1_valid
-          : _GEN_71
-              ? io_in_2_bits_RS1_valid
-              : _GEN_51
-                  ? io_in_1_bits_RS1_valid
-                  : _GEN_34 ? io_in_0_bits_RS1_valid : queue_6_RS1_valid;
-      _GEN_172 =
-        _GEN_167
-          ? io_in_3_bits_RS2_valid
-          : _GEN_71
-              ? io_in_2_bits_RS2_valid
-              : _GEN_51
-                  ? io_in_1_bits_RS2_valid
-                  : _GEN_34 ? io_in_0_bits_RS2_valid : queue_6_RS2_valid;
-      _GEN_173 =
-        _GEN_167
-          ? io_in_3_bits_needs_ALU
-          : _GEN_71
-              ? io_in_2_bits_needs_ALU
-              : _GEN_51
-                  ? io_in_1_bits_needs_ALU
-                  : _GEN_34 ? io_in_0_bits_needs_ALU : queue_6_needs_ALU;
-      _GEN_174 =
-        _GEN_167
-          ? io_in_3_bits_needs_branch_unit
-          : _GEN_71
-              ? io_in_2_bits_needs_branch_unit
-              : _GEN_51
-                  ? io_in_1_bits_needs_branch_unit
-                  : _GEN_34 ? io_in_0_bits_needs_branch_unit : queue_6_needs_branch_unit;
-      _GEN_175 =
-        _GEN_167
-          ? io_in_3_bits_needs_CSRs
-          : _GEN_71
-              ? io_in_2_bits_needs_CSRs
-              : _GEN_51
-                  ? io_in_1_bits_needs_CSRs
-                  : _GEN_34 ? io_in_0_bits_needs_CSRs : queue_6_needs_CSRs;
-      _GEN_176 =
-        _GEN_167
-          ? io_in_3_bits_SUBTRACT
-          : _GEN_71
-              ? io_in_2_bits_SUBTRACT
-              : _GEN_51
-                  ? io_in_1_bits_SUBTRACT
-                  : _GEN_34 ? io_in_0_bits_SUBTRACT : queue_6_SUBTRACT;
-      _GEN_177 =
-        _GEN_167
-          ? io_in_3_bits_MULTIPLY
-          : _GEN_71
-              ? io_in_2_bits_MULTIPLY
-              : _GEN_51
-                  ? io_in_1_bits_MULTIPLY
-                  : _GEN_34 ? io_in_0_bits_MULTIPLY : queue_6_MULTIPLY;
-      _GEN_178 =
-        _GEN_167
-          ? io_in_3_bits_IMMEDIATE
-          : _GEN_71
-              ? io_in_2_bits_IMMEDIATE
-              : _GEN_51
-                  ? io_in_1_bits_IMMEDIATE
-                  : _GEN_34 ? io_in_0_bits_IMMEDIATE : queue_6_IMMEDIATE;
-      _GEN_179 =
-        _GEN_167
-          ? io_in_3_bits_IS_LOAD
-          : _GEN_71
-              ? io_in_2_bits_IS_LOAD
-              : _GEN_51
-                  ? io_in_1_bits_IS_LOAD
-                  : _GEN_34 ? io_in_0_bits_IS_LOAD : queue_6_IS_LOAD;
-      _GEN_180 =
-        _GEN_167
-          ? io_in_3_bits_IS_STORE
-          : _GEN_71
-              ? io_in_2_bits_IS_STORE
-              : _GEN_51
-                  ? io_in_1_bits_IS_STORE
-                  : _GEN_34 ? io_in_0_bits_IS_STORE : queue_6_IS_STORE;
-      _GEN_181 = _GEN_73 & (&_GEN_75);
-      _GEN_182 =
-        _GEN_181
-          ? io_in_3_bits_ready_bits_RS1_ready
+        _GEN_168
+          ? io_in_3_bits_RD_valid
           : _GEN_72
-              ? io_in_2_bits_ready_bits_RS1_ready
+              ? io_in_2_bits_RD_valid
               : _GEN_52
+                  ? io_in_1_bits_RD_valid
+                  : _GEN_35 ? io_in_0_bits_RD_valid : queue_6_RD_valid;
+      _GEN_172 =
+        _GEN_168
+          ? io_in_3_bits_RS1_valid
+          : _GEN_72
+              ? io_in_2_bits_RS1_valid
+              : _GEN_52
+                  ? io_in_1_bits_RS1_valid
+                  : _GEN_35 ? io_in_0_bits_RS1_valid : queue_6_RS1_valid;
+      _GEN_173 =
+        _GEN_168
+          ? io_in_3_bits_RS2_valid
+          : _GEN_72
+              ? io_in_2_bits_RS2_valid
+              : _GEN_52
+                  ? io_in_1_bits_RS2_valid
+                  : _GEN_35 ? io_in_0_bits_RS2_valid : queue_6_RS2_valid;
+      _GEN_174 =
+        _GEN_168
+          ? io_in_3_bits_needs_ALU
+          : _GEN_72
+              ? io_in_2_bits_needs_ALU
+              : _GEN_52
+                  ? io_in_1_bits_needs_ALU
+                  : _GEN_35 ? io_in_0_bits_needs_ALU : queue_6_needs_ALU;
+      _GEN_175 =
+        _GEN_168
+          ? io_in_3_bits_needs_branch_unit
+          : _GEN_72
+              ? io_in_2_bits_needs_branch_unit
+              : _GEN_52
+                  ? io_in_1_bits_needs_branch_unit
+                  : _GEN_35 ? io_in_0_bits_needs_branch_unit : queue_6_needs_branch_unit;
+      _GEN_176 =
+        _GEN_168
+          ? io_in_3_bits_needs_CSRs
+          : _GEN_72
+              ? io_in_2_bits_needs_CSRs
+              : _GEN_52
+                  ? io_in_1_bits_needs_CSRs
+                  : _GEN_35 ? io_in_0_bits_needs_CSRs : queue_6_needs_CSRs;
+      _GEN_177 =
+        _GEN_168
+          ? io_in_3_bits_SUBTRACT
+          : _GEN_72
+              ? io_in_2_bits_SUBTRACT
+              : _GEN_52
+                  ? io_in_1_bits_SUBTRACT
+                  : _GEN_35 ? io_in_0_bits_SUBTRACT : queue_6_SUBTRACT;
+      _GEN_178 =
+        _GEN_168
+          ? io_in_3_bits_MULTIPLY
+          : _GEN_72
+              ? io_in_2_bits_MULTIPLY
+              : _GEN_52
+                  ? io_in_1_bits_MULTIPLY
+                  : _GEN_35 ? io_in_0_bits_MULTIPLY : queue_6_MULTIPLY;
+      _GEN_179 =
+        _GEN_168
+          ? io_in_3_bits_IMMEDIATE
+          : _GEN_72
+              ? io_in_2_bits_IMMEDIATE
+              : _GEN_52
+                  ? io_in_1_bits_IMMEDIATE
+                  : _GEN_35 ? io_in_0_bits_IMMEDIATE : queue_6_IMMEDIATE;
+      _GEN_180 =
+        _GEN_168
+          ? io_in_3_bits_IS_LOAD
+          : _GEN_72
+              ? io_in_2_bits_IS_LOAD
+              : _GEN_52
+                  ? io_in_1_bits_IS_LOAD
+                  : _GEN_35 ? io_in_0_bits_IS_LOAD : queue_6_IS_LOAD;
+      _GEN_181 =
+        _GEN_168
+          ? io_in_3_bits_IS_STORE
+          : _GEN_72
+              ? io_in_2_bits_IS_STORE
+              : _GEN_52
+                  ? io_in_1_bits_IS_STORE
+                  : _GEN_35 ? io_in_0_bits_IS_STORE : queue_6_IS_STORE;
+      _GEN_182 = _GEN_74 & (&_GEN_76);
+      _GEN_183 =
+        _GEN_182
+          ? io_in_3_bits_ready_bits_RS1_ready
+          : _GEN_73
+              ? io_in_2_bits_ready_bits_RS1_ready
+              : _GEN_53
                   ? io_in_1_bits_ready_bits_RS1_ready
-                  : _GEN_35
+                  : _GEN_36
                       ? io_in_0_bits_ready_bits_RS1_ready
                       : queue_7_ready_bits_RS1_ready;
-      _GEN_183 =
-        _GEN_181
+      _GEN_184 =
+        _GEN_182
           ? io_in_3_bits_ready_bits_RS2_ready
-          : _GEN_72
+          : _GEN_73
               ? io_in_2_bits_ready_bits_RS2_ready
-              : _GEN_52
+              : _GEN_53
                   ? io_in_1_bits_ready_bits_RS2_ready
-                  : _GEN_35
+                  : _GEN_36
                       ? io_in_0_bits_ready_bits_RS2_ready
                       : queue_7_ready_bits_RS2_ready;
-      _GEN_184 =
-        _GEN_181
-          ? io_in_3_bits_RD_valid
-          : _GEN_72
-              ? io_in_2_bits_RD_valid
-              : _GEN_52
-                  ? io_in_1_bits_RD_valid
-                  : _GEN_35 ? io_in_0_bits_RD_valid : queue_7_RD_valid;
       _GEN_185 =
-        _GEN_181
-          ? io_in_3_bits_RS1_valid
-          : _GEN_72
-              ? io_in_2_bits_RS1_valid
-              : _GEN_52
-                  ? io_in_1_bits_RS1_valid
-                  : _GEN_35 ? io_in_0_bits_RS1_valid : queue_7_RS1_valid;
+        _GEN_182
+          ? io_in_3_bits_RD_valid
+          : _GEN_73
+              ? io_in_2_bits_RD_valid
+              : _GEN_53
+                  ? io_in_1_bits_RD_valid
+                  : _GEN_36 ? io_in_0_bits_RD_valid : queue_7_RD_valid;
       _GEN_186 =
-        _GEN_181
-          ? io_in_3_bits_RS2_valid
-          : _GEN_72
-              ? io_in_2_bits_RS2_valid
-              : _GEN_52
-                  ? io_in_1_bits_RS2_valid
-                  : _GEN_35 ? io_in_0_bits_RS2_valid : queue_7_RS2_valid;
+        _GEN_182
+          ? io_in_3_bits_RS1_valid
+          : _GEN_73
+              ? io_in_2_bits_RS1_valid
+              : _GEN_53
+                  ? io_in_1_bits_RS1_valid
+                  : _GEN_36 ? io_in_0_bits_RS1_valid : queue_7_RS1_valid;
       _GEN_187 =
-        _GEN_181
-          ? io_in_3_bits_needs_ALU
-          : _GEN_72
-              ? io_in_2_bits_needs_ALU
-              : _GEN_52
-                  ? io_in_1_bits_needs_ALU
-                  : _GEN_35 ? io_in_0_bits_needs_ALU : queue_7_needs_ALU;
+        _GEN_182
+          ? io_in_3_bits_RS2_valid
+          : _GEN_73
+              ? io_in_2_bits_RS2_valid
+              : _GEN_53
+                  ? io_in_1_bits_RS2_valid
+                  : _GEN_36 ? io_in_0_bits_RS2_valid : queue_7_RS2_valid;
       _GEN_188 =
-        _GEN_181
-          ? io_in_3_bits_needs_branch_unit
-          : _GEN_72
-              ? io_in_2_bits_needs_branch_unit
-              : _GEN_52
-                  ? io_in_1_bits_needs_branch_unit
-                  : _GEN_35 ? io_in_0_bits_needs_branch_unit : queue_7_needs_branch_unit;
+        _GEN_182
+          ? io_in_3_bits_needs_ALU
+          : _GEN_73
+              ? io_in_2_bits_needs_ALU
+              : _GEN_53
+                  ? io_in_1_bits_needs_ALU
+                  : _GEN_36 ? io_in_0_bits_needs_ALU : queue_7_needs_ALU;
       _GEN_189 =
-        _GEN_181
-          ? io_in_3_bits_needs_CSRs
-          : _GEN_72
-              ? io_in_2_bits_needs_CSRs
-              : _GEN_52
-                  ? io_in_1_bits_needs_CSRs
-                  : _GEN_35 ? io_in_0_bits_needs_CSRs : queue_7_needs_CSRs;
+        _GEN_182
+          ? io_in_3_bits_needs_branch_unit
+          : _GEN_73
+              ? io_in_2_bits_needs_branch_unit
+              : _GEN_53
+                  ? io_in_1_bits_needs_branch_unit
+                  : _GEN_36 ? io_in_0_bits_needs_branch_unit : queue_7_needs_branch_unit;
       _GEN_190 =
-        _GEN_181
-          ? io_in_3_bits_SUBTRACT
-          : _GEN_72
-              ? io_in_2_bits_SUBTRACT
-              : _GEN_52
-                  ? io_in_1_bits_SUBTRACT
-                  : _GEN_35 ? io_in_0_bits_SUBTRACT : queue_7_SUBTRACT;
+        _GEN_182
+          ? io_in_3_bits_needs_CSRs
+          : _GEN_73
+              ? io_in_2_bits_needs_CSRs
+              : _GEN_53
+                  ? io_in_1_bits_needs_CSRs
+                  : _GEN_36 ? io_in_0_bits_needs_CSRs : queue_7_needs_CSRs;
       _GEN_191 =
-        _GEN_181
-          ? io_in_3_bits_MULTIPLY
-          : _GEN_72
-              ? io_in_2_bits_MULTIPLY
-              : _GEN_52
-                  ? io_in_1_bits_MULTIPLY
-                  : _GEN_35 ? io_in_0_bits_MULTIPLY : queue_7_MULTIPLY;
+        _GEN_182
+          ? io_in_3_bits_SUBTRACT
+          : _GEN_73
+              ? io_in_2_bits_SUBTRACT
+              : _GEN_53
+                  ? io_in_1_bits_SUBTRACT
+                  : _GEN_36 ? io_in_0_bits_SUBTRACT : queue_7_SUBTRACT;
       _GEN_192 =
-        _GEN_181
-          ? io_in_3_bits_IMMEDIATE
-          : _GEN_72
-              ? io_in_2_bits_IMMEDIATE
-              : _GEN_52
-                  ? io_in_1_bits_IMMEDIATE
-                  : _GEN_35 ? io_in_0_bits_IMMEDIATE : queue_7_IMMEDIATE;
+        _GEN_182
+          ? io_in_3_bits_MULTIPLY
+          : _GEN_73
+              ? io_in_2_bits_MULTIPLY
+              : _GEN_53
+                  ? io_in_1_bits_MULTIPLY
+                  : _GEN_36 ? io_in_0_bits_MULTIPLY : queue_7_MULTIPLY;
       _GEN_193 =
-        _GEN_181
-          ? io_in_3_bits_IS_LOAD
-          : _GEN_72
-              ? io_in_2_bits_IS_LOAD
-              : _GEN_52
-                  ? io_in_1_bits_IS_LOAD
-                  : _GEN_35 ? io_in_0_bits_IS_LOAD : queue_7_IS_LOAD;
+        _GEN_182
+          ? io_in_3_bits_IMMEDIATE
+          : _GEN_73
+              ? io_in_2_bits_IMMEDIATE
+              : _GEN_53
+                  ? io_in_1_bits_IMMEDIATE
+                  : _GEN_36 ? io_in_0_bits_IMMEDIATE : queue_7_IMMEDIATE;
       _GEN_194 =
-        _GEN_181
+        _GEN_182
+          ? io_in_3_bits_IS_LOAD
+          : _GEN_73
+              ? io_in_2_bits_IS_LOAD
+              : _GEN_53
+                  ? io_in_1_bits_IS_LOAD
+                  : _GEN_36 ? io_in_0_bits_IS_LOAD : queue_7_IS_LOAD;
+      _GEN_195 =
+        _GEN_182
           ? io_in_3_bits_IS_STORE
-          : _GEN_72
+          : _GEN_73
               ? io_in_2_bits_IS_STORE
-              : _GEN_52
+              : _GEN_53
                   ? io_in_1_bits_IS_STORE
-                  : _GEN_35 ? io_in_0_bits_IS_STORE : queue_7_IS_STORE;
-      _GEN_195 = _GEN_73 ? _GEN_76 | _GEN_65 | _GEN_53 : _GEN_65 | _GEN_53;
-      _GEN_196 = _GEN_73 ? _GEN_91 | _GEN_66 | _GEN_54 : _GEN_66 | _GEN_54;
-      _GEN_197 = _GEN_73 ? _GEN_106 | _GEN_67 | _GEN_55 : _GEN_67 | _GEN_55;
-      _GEN_198 = _GEN_73 ? _GEN_121 | _GEN_68 | _GEN_56 : _GEN_68 | _GEN_56;
-      _GEN_199 = _GEN_73 ? _GEN_136 | _GEN_69 | _GEN_57 : _GEN_69 | _GEN_57;
-      _GEN_200 = _GEN_73 ? _GEN_151 | _GEN_70 | _GEN_58 : _GEN_70 | _GEN_58;
-      _GEN_201 = _GEN_73 ? _GEN_166 | _GEN_71 | _GEN_59 : _GEN_71 | _GEN_59;
-      _GEN_202 = _GEN_73 ? (&_GEN_75) | _GEN_72 | _GEN_60 : _GEN_72 | _GEN_60;
-      _GEN_203 = io_out_0_valid_0 & io_out_0_ready;
-      _GEN_204 = _GEN_203 & front_pointer[2:0] == 3'h0;
-      _GEN_205 = _GEN_203 & front_pointer[2:0] == 3'h1;
-      _GEN_206 = _GEN_203 & front_pointer[2:0] == 3'h2;
-      _GEN_207 = _GEN_203 & front_pointer[2:0] == 3'h3;
-      _GEN_208 = _GEN_203 & front_pointer[2:0] == 3'h4;
-      _GEN_209 = _GEN_203 & front_pointer[2:0] == 3'h5;
-      _GEN_210 = _GEN_203 & front_pointer[2:0] == 3'h6;
-      _GEN_211 = _GEN_203 & (&(front_pointer[2:0]));
-      _GEN_213 = _GEN_22[_io_out_1_valid_T] & io_out_1_ready & _GEN_212;
-      _GEN_215 = _GEN_214 | _GEN_204;
-      _GEN_216 = _GEN_213 ? ~_GEN_215 & _GEN_78 : ~_GEN_204 & _GEN_78;
-      _GEN_217 = _GEN_213 ? ~_GEN_215 & _GEN_79 : ~_GEN_204 & _GEN_79;
-      _GEN_218 = _GEN_213 & _GEN_214 | _GEN_204;
-      _GEN_219 = _GEN_213 ? ~_GEN_215 & _GEN_80 : ~_GEN_204 & _GEN_80;
-      _GEN_220 = _GEN_213 ? ~_GEN_215 & _GEN_81 : ~_GEN_204 & _GEN_81;
-      _GEN_221 = _GEN_213 ? ~_GEN_215 & _GEN_82 : ~_GEN_204 & _GEN_82;
-      _GEN_222 = _GEN_213 ? ~_GEN_215 & _GEN_83 : ~_GEN_204 & _GEN_83;
-      _GEN_223 = _GEN_213 ? ~_GEN_215 & _GEN_84 : ~_GEN_204 & _GEN_84;
-      _GEN_224 = _GEN_213 ? ~_GEN_215 & _GEN_85 : ~_GEN_204 & _GEN_85;
-      _GEN_225 = _GEN_213 ? ~_GEN_215 & _GEN_86 : ~_GEN_204 & _GEN_86;
-      _GEN_226 = _GEN_213 ? ~_GEN_215 & _GEN_87 : ~_GEN_204 & _GEN_87;
-      _GEN_227 = _GEN_213 ? ~_GEN_215 & _GEN_88 : ~_GEN_204 & _GEN_88;
-      _GEN_228 = _GEN_213 ? ~_GEN_215 & _GEN_89 : ~_GEN_204 & _GEN_89;
-      _GEN_229 = _GEN_213 ? ~_GEN_215 & _GEN_90 : ~_GEN_204 & _GEN_90;
-      _GEN_231 = _GEN_230 | _GEN_205;
-      _GEN_232 = _GEN_213 ? ~_GEN_231 & _GEN_93 : ~_GEN_205 & _GEN_93;
-      _GEN_233 = _GEN_213 ? ~_GEN_231 & _GEN_94 : ~_GEN_205 & _GEN_94;
-      _GEN_234 = _GEN_213 & _GEN_230 | _GEN_205;
-      _GEN_235 = _GEN_213 ? ~_GEN_231 & _GEN_95 : ~_GEN_205 & _GEN_95;
-      _GEN_236 = _GEN_213 ? ~_GEN_231 & _GEN_96 : ~_GEN_205 & _GEN_96;
-      _GEN_237 = _GEN_213 ? ~_GEN_231 & _GEN_97 : ~_GEN_205 & _GEN_97;
-      _GEN_238 = _GEN_213 ? ~_GEN_231 & _GEN_98 : ~_GEN_205 & _GEN_98;
-      _GEN_239 = _GEN_213 ? ~_GEN_231 & _GEN_99 : ~_GEN_205 & _GEN_99;
-      _GEN_240 = _GEN_213 ? ~_GEN_231 & _GEN_100 : ~_GEN_205 & _GEN_100;
-      _GEN_241 = _GEN_213 ? ~_GEN_231 & _GEN_101 : ~_GEN_205 & _GEN_101;
-      _GEN_242 = _GEN_213 ? ~_GEN_231 & _GEN_102 : ~_GEN_205 & _GEN_102;
-      _GEN_243 = _GEN_213 ? ~_GEN_231 & _GEN_103 : ~_GEN_205 & _GEN_103;
-      _GEN_244 = _GEN_213 ? ~_GEN_231 & _GEN_104 : ~_GEN_205 & _GEN_104;
-      _GEN_245 = _GEN_213 ? ~_GEN_231 & _GEN_105 : ~_GEN_205 & _GEN_105;
-      _GEN_247 = _GEN_246 | _GEN_206;
-      _GEN_248 = _GEN_213 ? ~_GEN_247 & _GEN_108 : ~_GEN_206 & _GEN_108;
-      _GEN_249 = _GEN_213 ? ~_GEN_247 & _GEN_109 : ~_GEN_206 & _GEN_109;
-      _GEN_250 = _GEN_213 & _GEN_246 | _GEN_206;
-      _GEN_251 = _GEN_213 ? ~_GEN_247 & _GEN_110 : ~_GEN_206 & _GEN_110;
-      _GEN_252 = _GEN_213 ? ~_GEN_247 & _GEN_111 : ~_GEN_206 & _GEN_111;
-      _GEN_253 = _GEN_213 ? ~_GEN_247 & _GEN_112 : ~_GEN_206 & _GEN_112;
-      _GEN_254 = _GEN_213 ? ~_GEN_247 & _GEN_113 : ~_GEN_206 & _GEN_113;
-      _GEN_255 = _GEN_213 ? ~_GEN_247 & _GEN_114 : ~_GEN_206 & _GEN_114;
-      _GEN_256 = _GEN_213 ? ~_GEN_247 & _GEN_115 : ~_GEN_206 & _GEN_115;
-      _GEN_257 = _GEN_213 ? ~_GEN_247 & _GEN_116 : ~_GEN_206 & _GEN_116;
-      _GEN_258 = _GEN_213 ? ~_GEN_247 & _GEN_117 : ~_GEN_206 & _GEN_117;
-      _GEN_259 = _GEN_213 ? ~_GEN_247 & _GEN_118 : ~_GEN_206 & _GEN_118;
-      _GEN_260 = _GEN_213 ? ~_GEN_247 & _GEN_119 : ~_GEN_206 & _GEN_119;
-      _GEN_261 = _GEN_213 ? ~_GEN_247 & _GEN_120 : ~_GEN_206 & _GEN_120;
-      _GEN_263 = _GEN_262 | _GEN_207;
-      _GEN_264 = _GEN_213 ? ~_GEN_263 & _GEN_123 : ~_GEN_207 & _GEN_123;
-      _GEN_265 = _GEN_213 ? ~_GEN_263 & _GEN_124 : ~_GEN_207 & _GEN_124;
-      _GEN_266 = _GEN_213 & _GEN_262 | _GEN_207;
-      _GEN_267 = _GEN_213 ? ~_GEN_263 & _GEN_125 : ~_GEN_207 & _GEN_125;
-      _GEN_268 = _GEN_213 ? ~_GEN_263 & _GEN_126 : ~_GEN_207 & _GEN_126;
-      _GEN_269 = _GEN_213 ? ~_GEN_263 & _GEN_127 : ~_GEN_207 & _GEN_127;
-      _GEN_270 = _GEN_213 ? ~_GEN_263 & _GEN_128 : ~_GEN_207 & _GEN_128;
-      _GEN_271 = _GEN_213 ? ~_GEN_263 & _GEN_129 : ~_GEN_207 & _GEN_129;
-      _GEN_272 = _GEN_213 ? ~_GEN_263 & _GEN_130 : ~_GEN_207 & _GEN_130;
-      _GEN_273 = _GEN_213 ? ~_GEN_263 & _GEN_131 : ~_GEN_207 & _GEN_131;
-      _GEN_274 = _GEN_213 ? ~_GEN_263 & _GEN_132 : ~_GEN_207 & _GEN_132;
-      _GEN_275 = _GEN_213 ? ~_GEN_263 & _GEN_133 : ~_GEN_207 & _GEN_133;
-      _GEN_276 = _GEN_213 ? ~_GEN_263 & _GEN_134 : ~_GEN_207 & _GEN_134;
-      _GEN_277 = _GEN_213 ? ~_GEN_263 & _GEN_135 : ~_GEN_207 & _GEN_135;
-      _GEN_279 = _GEN_278 | _GEN_208;
-      _GEN_280 = _GEN_213 ? ~_GEN_279 & _GEN_138 : ~_GEN_208 & _GEN_138;
-      _GEN_281 = _GEN_213 ? ~_GEN_279 & _GEN_139 : ~_GEN_208 & _GEN_139;
-      _GEN_282 = _GEN_213 & _GEN_278 | _GEN_208;
-      _GEN_283 = _GEN_213 ? ~_GEN_279 & _GEN_140 : ~_GEN_208 & _GEN_140;
-      _GEN_284 = _GEN_213 ? ~_GEN_279 & _GEN_141 : ~_GEN_208 & _GEN_141;
-      _GEN_285 = _GEN_213 ? ~_GEN_279 & _GEN_142 : ~_GEN_208 & _GEN_142;
-      _GEN_286 = _GEN_213 ? ~_GEN_279 & _GEN_143 : ~_GEN_208 & _GEN_143;
-      _GEN_287 = _GEN_213 ? ~_GEN_279 & _GEN_144 : ~_GEN_208 & _GEN_144;
-      _GEN_288 = _GEN_213 ? ~_GEN_279 & _GEN_145 : ~_GEN_208 & _GEN_145;
-      _GEN_289 = _GEN_213 ? ~_GEN_279 & _GEN_146 : ~_GEN_208 & _GEN_146;
-      _GEN_290 = _GEN_213 ? ~_GEN_279 & _GEN_147 : ~_GEN_208 & _GEN_147;
-      _GEN_291 = _GEN_213 ? ~_GEN_279 & _GEN_148 : ~_GEN_208 & _GEN_148;
-      _GEN_292 = _GEN_213 ? ~_GEN_279 & _GEN_149 : ~_GEN_208 & _GEN_149;
-      _GEN_293 = _GEN_213 ? ~_GEN_279 & _GEN_150 : ~_GEN_208 & _GEN_150;
-      _GEN_295 = _GEN_294 | _GEN_209;
-      _GEN_296 = _GEN_213 ? ~_GEN_295 & _GEN_153 : ~_GEN_209 & _GEN_153;
-      _GEN_297 = _GEN_213 ? ~_GEN_295 & _GEN_154 : ~_GEN_209 & _GEN_154;
-      _GEN_298 = _GEN_213 & _GEN_294 | _GEN_209;
-      _GEN_299 = _GEN_213 ? ~_GEN_295 & _GEN_155 : ~_GEN_209 & _GEN_155;
-      _GEN_300 = _GEN_213 ? ~_GEN_295 & _GEN_156 : ~_GEN_209 & _GEN_156;
-      _GEN_301 = _GEN_213 ? ~_GEN_295 & _GEN_157 : ~_GEN_209 & _GEN_157;
-      _GEN_302 = _GEN_213 ? ~_GEN_295 & _GEN_158 : ~_GEN_209 & _GEN_158;
-      _GEN_303 = _GEN_213 ? ~_GEN_295 & _GEN_159 : ~_GEN_209 & _GEN_159;
-      _GEN_304 = _GEN_213 ? ~_GEN_295 & _GEN_160 : ~_GEN_209 & _GEN_160;
-      _GEN_305 = _GEN_213 ? ~_GEN_295 & _GEN_161 : ~_GEN_209 & _GEN_161;
-      _GEN_306 = _GEN_213 ? ~_GEN_295 & _GEN_162 : ~_GEN_209 & _GEN_162;
-      _GEN_307 = _GEN_213 ? ~_GEN_295 & _GEN_163 : ~_GEN_209 & _GEN_163;
-      _GEN_308 = _GEN_213 ? ~_GEN_295 & _GEN_164 : ~_GEN_209 & _GEN_164;
-      _GEN_309 = _GEN_213 ? ~_GEN_295 & _GEN_165 : ~_GEN_209 & _GEN_165;
-      _GEN_311 = _GEN_310 | _GEN_210;
-      _GEN_312 = _GEN_213 ? ~_GEN_311 & _GEN_168 : ~_GEN_210 & _GEN_168;
-      _GEN_313 = _GEN_213 ? ~_GEN_311 & _GEN_169 : ~_GEN_210 & _GEN_169;
-      _GEN_314 = _GEN_213 & _GEN_310 | _GEN_210;
-      _GEN_315 = _GEN_213 ? ~_GEN_311 & _GEN_170 : ~_GEN_210 & _GEN_170;
-      _GEN_316 = _GEN_213 ? ~_GEN_311 & _GEN_171 : ~_GEN_210 & _GEN_171;
-      _GEN_317 = _GEN_213 ? ~_GEN_311 & _GEN_172 : ~_GEN_210 & _GEN_172;
-      _GEN_318 = _GEN_213 ? ~_GEN_311 & _GEN_173 : ~_GEN_210 & _GEN_173;
-      _GEN_319 = _GEN_213 ? ~_GEN_311 & _GEN_174 : ~_GEN_210 & _GEN_174;
-      _GEN_320 = _GEN_213 ? ~_GEN_311 & _GEN_175 : ~_GEN_210 & _GEN_175;
-      _GEN_321 = _GEN_213 ? ~_GEN_311 & _GEN_176 : ~_GEN_210 & _GEN_176;
-      _GEN_322 = _GEN_213 ? ~_GEN_311 & _GEN_177 : ~_GEN_210 & _GEN_177;
-      _GEN_323 = _GEN_213 ? ~_GEN_311 & _GEN_178 : ~_GEN_210 & _GEN_178;
-      _GEN_324 = _GEN_213 ? ~_GEN_311 & _GEN_179 : ~_GEN_210 & _GEN_179;
-      _GEN_325 = _GEN_213 ? ~_GEN_311 & _GEN_180 : ~_GEN_210 & _GEN_180;
-      _GEN_326 = (&_io_out_1_valid_T) | _GEN_211;
-      _GEN_327 = _GEN_213 ? ~_GEN_326 & _GEN_182 : ~_GEN_211 & _GEN_182;
-      _GEN_328 = _GEN_213 ? ~_GEN_326 & _GEN_183 : ~_GEN_211 & _GEN_183;
-      _GEN_329 = _GEN_213 & (&_io_out_1_valid_T) | _GEN_211;
-      _GEN_330 = _GEN_213 ? ~_GEN_326 & _GEN_184 : ~_GEN_211 & _GEN_184;
-      _GEN_331 = _GEN_213 ? ~_GEN_326 & _GEN_185 : ~_GEN_211 & _GEN_185;
-      _GEN_332 = _GEN_213 ? ~_GEN_326 & _GEN_186 : ~_GEN_211 & _GEN_186;
-      _GEN_333 = _GEN_213 ? ~_GEN_326 & _GEN_187 : ~_GEN_211 & _GEN_187;
-      _GEN_334 = _GEN_213 ? ~_GEN_326 & _GEN_188 : ~_GEN_211 & _GEN_188;
-      _GEN_335 = _GEN_213 ? ~_GEN_326 & _GEN_189 : ~_GEN_211 & _GEN_189;
-      _GEN_336 = _GEN_213 ? ~_GEN_326 & _GEN_190 : ~_GEN_211 & _GEN_190;
-      _GEN_337 = _GEN_213 ? ~_GEN_326 & _GEN_191 : ~_GEN_211 & _GEN_191;
-      _GEN_338 = _GEN_213 ? ~_GEN_326 & _GEN_192 : ~_GEN_211 & _GEN_192;
-      _GEN_339 = _GEN_213 ? ~_GEN_326 & _GEN_193 : ~_GEN_211 & _GEN_193;
-      _GEN_340 = _GEN_213 ? ~_GEN_326 & _GEN_194 : ~_GEN_211 & _GEN_194;
-      _GEN_341 = _GEN_213 ? ~_GEN_215 & _GEN_195 : ~_GEN_204 & _GEN_195;
-      _GEN_342 = _GEN_213 ? ~_GEN_231 & _GEN_196 : ~_GEN_205 & _GEN_196;
-      _GEN_343 = _GEN_213 ? ~_GEN_247 & _GEN_197 : ~_GEN_206 & _GEN_197;
-      _GEN_344 = _GEN_213 ? ~_GEN_263 & _GEN_198 : ~_GEN_207 & _GEN_198;
-      _GEN_345 = _GEN_213 ? ~_GEN_279 & _GEN_199 : ~_GEN_208 & _GEN_199;
-      _GEN_346 = _GEN_213 ? ~_GEN_295 & _GEN_200 : ~_GEN_209 & _GEN_200;
-      _GEN_347 = _GEN_213 ? ~_GEN_311 & _GEN_201 : ~_GEN_210 & _GEN_201;
-      _GEN_348 = _GEN_213 ? ~_GEN_326 & _GEN_202 : ~_GEN_211 & _GEN_202;
-      _GEN_350 = _GEN_22[_io_out_2_valid_T] & io_out_2_ready & _GEN_349;
-      _GEN_351 = _GEN_350 & _io_out_2_valid_T == 3'h0;
-      _GEN_352 = _GEN_350 & _io_out_2_valid_T == 3'h1;
-      _GEN_353 = _GEN_350 & _io_out_2_valid_T == 3'h2;
-      _GEN_354 = _GEN_350 & _io_out_2_valid_T == 3'h3;
-      _GEN_355 = _GEN_350 & _io_out_2_valid_T == 3'h4;
-      _GEN_356 = _GEN_350 & _io_out_2_valid_T == 3'h5;
-      _GEN_357 = _GEN_350 & _io_out_2_valid_T == 3'h6;
-      _GEN_358 = _GEN_350 & (&_io_out_2_valid_T);
-      _GEN_360 = _io_out_3_valid_T == 3'h0 | _GEN_351;
-      _GEN_361 = _io_out_3_valid_T == 3'h1 | _GEN_352;
-      _GEN_362 = _io_out_3_valid_T == 3'h2 | _GEN_353;
-      _GEN_363 = _io_out_3_valid_T == 3'h3 | _GEN_354;
-      _GEN_364 = _io_out_3_valid_T == 3'h4 | _GEN_355;
-      _GEN_365 = _io_out_3_valid_T == 3'h5 | _GEN_356;
-      _GEN_366 = _io_out_3_valid_T == 3'h6 | _GEN_357;
-      _GEN_367 = (&_io_out_3_valid_T) | _GEN_358;
-      if (_GEN_359) begin
-        queue_0_ready_bits_RS1_ready <= ~_GEN_360 & _GEN_216;
-        queue_0_ready_bits_RS2_ready <= ~_GEN_360 & _GEN_217;
-        queue_0_RD_valid <= ~_GEN_360 & _GEN_219;
-        queue_0_RS1_valid <= ~_GEN_360 & _GEN_220;
-        queue_0_RS2_valid <= ~_GEN_360 & _GEN_221;
-        queue_0_needs_ALU <= ~_GEN_360 & _GEN_222;
-        queue_0_needs_branch_unit <= ~_GEN_360 & _GEN_223;
-        queue_0_needs_CSRs <= ~_GEN_360 & _GEN_224;
-        queue_0_SUBTRACT <= ~_GEN_360 & _GEN_225;
-        queue_0_MULTIPLY <= ~_GEN_360 & _GEN_226;
-        queue_0_IMMEDIATE <= ~_GEN_360 & _GEN_227;
-        queue_0_IS_LOAD <= ~_GEN_360 & _GEN_228;
-        queue_0_IS_STORE <= ~_GEN_360 & _GEN_229;
-        queue_1_ready_bits_RS1_ready <= ~_GEN_361 & _GEN_232;
-        queue_1_ready_bits_RS2_ready <= ~_GEN_361 & _GEN_233;
-        queue_1_RD_valid <= ~_GEN_361 & _GEN_235;
-        queue_1_RS1_valid <= ~_GEN_361 & _GEN_236;
-        queue_1_RS2_valid <= ~_GEN_361 & _GEN_237;
-        queue_1_needs_ALU <= ~_GEN_361 & _GEN_238;
-        queue_1_needs_branch_unit <= ~_GEN_361 & _GEN_239;
-        queue_1_needs_CSRs <= ~_GEN_361 & _GEN_240;
-        queue_1_SUBTRACT <= ~_GEN_361 & _GEN_241;
-        queue_1_MULTIPLY <= ~_GEN_361 & _GEN_242;
-        queue_1_IMMEDIATE <= ~_GEN_361 & _GEN_243;
-        queue_1_IS_LOAD <= ~_GEN_361 & _GEN_244;
-        queue_1_IS_STORE <= ~_GEN_361 & _GEN_245;
-        queue_2_ready_bits_RS1_ready <= ~_GEN_362 & _GEN_248;
-        queue_2_ready_bits_RS2_ready <= ~_GEN_362 & _GEN_249;
-        queue_2_RD_valid <= ~_GEN_362 & _GEN_251;
-        queue_2_RS1_valid <= ~_GEN_362 & _GEN_252;
-        queue_2_RS2_valid <= ~_GEN_362 & _GEN_253;
-        queue_2_needs_ALU <= ~_GEN_362 & _GEN_254;
-        queue_2_needs_branch_unit <= ~_GEN_362 & _GEN_255;
-        queue_2_needs_CSRs <= ~_GEN_362 & _GEN_256;
-        queue_2_SUBTRACT <= ~_GEN_362 & _GEN_257;
-        queue_2_MULTIPLY <= ~_GEN_362 & _GEN_258;
-        queue_2_IMMEDIATE <= ~_GEN_362 & _GEN_259;
-        queue_2_IS_LOAD <= ~_GEN_362 & _GEN_260;
-        queue_2_IS_STORE <= ~_GEN_362 & _GEN_261;
-        queue_3_ready_bits_RS1_ready <= ~_GEN_363 & _GEN_264;
-        queue_3_ready_bits_RS2_ready <= ~_GEN_363 & _GEN_265;
-        queue_3_RD_valid <= ~_GEN_363 & _GEN_267;
-        queue_3_RS1_valid <= ~_GEN_363 & _GEN_268;
-        queue_3_RS2_valid <= ~_GEN_363 & _GEN_269;
-        queue_3_needs_ALU <= ~_GEN_363 & _GEN_270;
-        queue_3_needs_branch_unit <= ~_GEN_363 & _GEN_271;
-        queue_3_needs_CSRs <= ~_GEN_363 & _GEN_272;
-        queue_3_SUBTRACT <= ~_GEN_363 & _GEN_273;
-        queue_3_MULTIPLY <= ~_GEN_363 & _GEN_274;
-        queue_3_IMMEDIATE <= ~_GEN_363 & _GEN_275;
-        queue_3_IS_LOAD <= ~_GEN_363 & _GEN_276;
-        queue_3_IS_STORE <= ~_GEN_363 & _GEN_277;
-        queue_4_ready_bits_RS1_ready <= ~_GEN_364 & _GEN_280;
-        queue_4_ready_bits_RS2_ready <= ~_GEN_364 & _GEN_281;
-        queue_4_RD_valid <= ~_GEN_364 & _GEN_283;
-        queue_4_RS1_valid <= ~_GEN_364 & _GEN_284;
-        queue_4_RS2_valid <= ~_GEN_364 & _GEN_285;
-        queue_4_needs_ALU <= ~_GEN_364 & _GEN_286;
-        queue_4_needs_branch_unit <= ~_GEN_364 & _GEN_287;
-        queue_4_needs_CSRs <= ~_GEN_364 & _GEN_288;
-        queue_4_SUBTRACT <= ~_GEN_364 & _GEN_289;
-        queue_4_MULTIPLY <= ~_GEN_364 & _GEN_290;
-        queue_4_IMMEDIATE <= ~_GEN_364 & _GEN_291;
-        queue_4_IS_LOAD <= ~_GEN_364 & _GEN_292;
-        queue_4_IS_STORE <= ~_GEN_364 & _GEN_293;
-        queue_5_ready_bits_RS1_ready <= ~_GEN_365 & _GEN_296;
-        queue_5_ready_bits_RS2_ready <= ~_GEN_365 & _GEN_297;
-        queue_5_RD_valid <= ~_GEN_365 & _GEN_299;
-        queue_5_RS1_valid <= ~_GEN_365 & _GEN_300;
-        queue_5_RS2_valid <= ~_GEN_365 & _GEN_301;
-        queue_5_needs_ALU <= ~_GEN_365 & _GEN_302;
-        queue_5_needs_branch_unit <= ~_GEN_365 & _GEN_303;
-        queue_5_needs_CSRs <= ~_GEN_365 & _GEN_304;
-        queue_5_SUBTRACT <= ~_GEN_365 & _GEN_305;
-        queue_5_MULTIPLY <= ~_GEN_365 & _GEN_306;
-        queue_5_IMMEDIATE <= ~_GEN_365 & _GEN_307;
-        queue_5_IS_LOAD <= ~_GEN_365 & _GEN_308;
-        queue_5_IS_STORE <= ~_GEN_365 & _GEN_309;
-        queue_6_ready_bits_RS1_ready <= ~_GEN_366 & _GEN_312;
-        queue_6_ready_bits_RS2_ready <= ~_GEN_366 & _GEN_313;
-        queue_6_RD_valid <= ~_GEN_366 & _GEN_315;
-        queue_6_RS1_valid <= ~_GEN_366 & _GEN_316;
-        queue_6_RS2_valid <= ~_GEN_366 & _GEN_317;
-        queue_6_needs_ALU <= ~_GEN_366 & _GEN_318;
-        queue_6_needs_branch_unit <= ~_GEN_366 & _GEN_319;
-        queue_6_needs_CSRs <= ~_GEN_366 & _GEN_320;
-        queue_6_SUBTRACT <= ~_GEN_366 & _GEN_321;
-        queue_6_MULTIPLY <= ~_GEN_366 & _GEN_322;
-        queue_6_IMMEDIATE <= ~_GEN_366 & _GEN_323;
-        queue_6_IS_LOAD <= ~_GEN_366 & _GEN_324;
-        queue_6_IS_STORE <= ~_GEN_366 & _GEN_325;
-        queue_7_ready_bits_RS1_ready <= ~_GEN_367 & _GEN_327;
-        queue_7_ready_bits_RS2_ready <= ~_GEN_367 & _GEN_328;
-        queue_7_RD_valid <= ~_GEN_367 & _GEN_330;
-        queue_7_RS1_valid <= ~_GEN_367 & _GEN_331;
-        queue_7_RS2_valid <= ~_GEN_367 & _GEN_332;
-        queue_7_needs_ALU <= ~_GEN_367 & _GEN_333;
-        queue_7_needs_branch_unit <= ~_GEN_367 & _GEN_334;
-        queue_7_needs_CSRs <= ~_GEN_367 & _GEN_335;
-        queue_7_SUBTRACT <= ~_GEN_367 & _GEN_336;
-        queue_7_MULTIPLY <= ~_GEN_367 & _GEN_337;
-        queue_7_IMMEDIATE <= ~_GEN_367 & _GEN_338;
-        queue_7_IS_LOAD <= ~_GEN_367 & _GEN_339;
-        queue_7_IS_STORE <= ~_GEN_367 & _GEN_340;
-        valid_0 <= ~_GEN_360 & _GEN_341;
-        valid_1 <= ~_GEN_361 & _GEN_342;
-        valid_2 <= ~_GEN_362 & _GEN_343;
-        valid_3 <= ~_GEN_363 & _GEN_344;
-        valid_4 <= ~_GEN_364 & _GEN_345;
-        valid_5 <= ~_GEN_365 & _GEN_346;
-        valid_6 <= ~_GEN_366 & _GEN_347;
-        valid_7 <= ~_GEN_367 & _GEN_348;
+                  : _GEN_36 ? io_in_0_bits_IS_STORE : queue_7_IS_STORE;
+      _GEN_196 = _GEN_74 ? _GEN_77 | _GEN_66 | _GEN_54 : _GEN_66 | _GEN_54;
+      _GEN_197 = _GEN_74 ? _GEN_92 | _GEN_67 | _GEN_55 : _GEN_67 | _GEN_55;
+      _GEN_198 = _GEN_74 ? _GEN_107 | _GEN_68 | _GEN_56 : _GEN_68 | _GEN_56;
+      _GEN_199 = _GEN_74 ? _GEN_122 | _GEN_69 | _GEN_57 : _GEN_69 | _GEN_57;
+      _GEN_200 = _GEN_74 ? _GEN_137 | _GEN_70 | _GEN_58 : _GEN_70 | _GEN_58;
+      _GEN_201 = _GEN_74 ? _GEN_152 | _GEN_71 | _GEN_59 : _GEN_71 | _GEN_59;
+      _GEN_202 = _GEN_74 ? _GEN_167 | _GEN_72 | _GEN_60 : _GEN_72 | _GEN_60;
+      _GEN_203 = _GEN_74 ? (&_GEN_76) | _GEN_73 | _GEN_61 : _GEN_73 | _GEN_61;
+      _GEN_204 = io_out_0_valid_0 & io_out_0_ready;
+      _GEN_205 = _GEN_204 & front_pointer[2:0] == 3'h0;
+      _GEN_206 = _GEN_204 & front_pointer[2:0] == 3'h1;
+      _GEN_207 = _GEN_204 & front_pointer[2:0] == 3'h2;
+      _GEN_208 = _GEN_204 & front_pointer[2:0] == 3'h3;
+      _GEN_209 = _GEN_204 & front_pointer[2:0] == 3'h4;
+      _GEN_210 = _GEN_204 & front_pointer[2:0] == 3'h5;
+      _GEN_211 = _GEN_204 & front_pointer[2:0] == 3'h6;
+      _GEN_212 = _GEN_204 & (&(front_pointer[2:0]));
+      _GEN_214 = _GEN_23[_io_out_1_valid_T] & io_out_1_ready & _GEN_213;
+      _GEN_216 = _GEN_215 | _GEN_205;
+      _GEN_217 = _GEN_214 & _GEN_215 | _GEN_205;
+      _GEN_218 = _GEN_214 ? ~_GEN_216 & _GEN_79 : ~_GEN_205 & _GEN_79;
+      _GEN_219 = _GEN_214 ? ~_GEN_216 & _GEN_80 : ~_GEN_205 & _GEN_80;
+      _GEN_220 = _GEN_214 ? ~_GEN_216 & _GEN_81 : ~_GEN_205 & _GEN_81;
+      _GEN_221 = _GEN_214 ? ~_GEN_216 & _GEN_82 : ~_GEN_205 & _GEN_82;
+      _GEN_222 = _GEN_214 ? ~_GEN_216 & _GEN_83 : ~_GEN_205 & _GEN_83;
+      _GEN_223 = _GEN_214 ? ~_GEN_216 & _GEN_84 : ~_GEN_205 & _GEN_84;
+      _GEN_224 = _GEN_214 ? ~_GEN_216 & _GEN_85 : ~_GEN_205 & _GEN_85;
+      _GEN_225 = _GEN_214 ? ~_GEN_216 & _GEN_86 : ~_GEN_205 & _GEN_86;
+      _GEN_226 = _GEN_214 ? ~_GEN_216 & _GEN_87 : ~_GEN_205 & _GEN_87;
+      _GEN_227 = _GEN_214 ? ~_GEN_216 & _GEN_88 : ~_GEN_205 & _GEN_88;
+      _GEN_228 = _GEN_214 ? ~_GEN_216 & _GEN_89 : ~_GEN_205 & _GEN_89;
+      _GEN_229 = _GEN_214 ? ~_GEN_216 & _GEN_90 : ~_GEN_205 & _GEN_90;
+      _GEN_230 = _GEN_214 ? ~_GEN_216 & _GEN_91 : ~_GEN_205 & _GEN_91;
+      _GEN_232 = _GEN_231 | _GEN_206;
+      _GEN_233 = _GEN_214 & _GEN_231 | _GEN_206;
+      _GEN_234 = _GEN_214 ? ~_GEN_232 & _GEN_94 : ~_GEN_206 & _GEN_94;
+      _GEN_235 = _GEN_214 ? ~_GEN_232 & _GEN_95 : ~_GEN_206 & _GEN_95;
+      _GEN_236 = _GEN_214 ? ~_GEN_232 & _GEN_96 : ~_GEN_206 & _GEN_96;
+      _GEN_237 = _GEN_214 ? ~_GEN_232 & _GEN_97 : ~_GEN_206 & _GEN_97;
+      _GEN_238 = _GEN_214 ? ~_GEN_232 & _GEN_98 : ~_GEN_206 & _GEN_98;
+      _GEN_239 = _GEN_214 ? ~_GEN_232 & _GEN_99 : ~_GEN_206 & _GEN_99;
+      _GEN_240 = _GEN_214 ? ~_GEN_232 & _GEN_100 : ~_GEN_206 & _GEN_100;
+      _GEN_241 = _GEN_214 ? ~_GEN_232 & _GEN_101 : ~_GEN_206 & _GEN_101;
+      _GEN_242 = _GEN_214 ? ~_GEN_232 & _GEN_102 : ~_GEN_206 & _GEN_102;
+      _GEN_243 = _GEN_214 ? ~_GEN_232 & _GEN_103 : ~_GEN_206 & _GEN_103;
+      _GEN_244 = _GEN_214 ? ~_GEN_232 & _GEN_104 : ~_GEN_206 & _GEN_104;
+      _GEN_245 = _GEN_214 ? ~_GEN_232 & _GEN_105 : ~_GEN_206 & _GEN_105;
+      _GEN_246 = _GEN_214 ? ~_GEN_232 & _GEN_106 : ~_GEN_206 & _GEN_106;
+      _GEN_248 = _GEN_247 | _GEN_207;
+      _GEN_249 = _GEN_214 & _GEN_247 | _GEN_207;
+      _GEN_250 = _GEN_214 ? ~_GEN_248 & _GEN_109 : ~_GEN_207 & _GEN_109;
+      _GEN_251 = _GEN_214 ? ~_GEN_248 & _GEN_110 : ~_GEN_207 & _GEN_110;
+      _GEN_252 = _GEN_214 ? ~_GEN_248 & _GEN_111 : ~_GEN_207 & _GEN_111;
+      _GEN_253 = _GEN_214 ? ~_GEN_248 & _GEN_112 : ~_GEN_207 & _GEN_112;
+      _GEN_254 = _GEN_214 ? ~_GEN_248 & _GEN_113 : ~_GEN_207 & _GEN_113;
+      _GEN_255 = _GEN_214 ? ~_GEN_248 & _GEN_114 : ~_GEN_207 & _GEN_114;
+      _GEN_256 = _GEN_214 ? ~_GEN_248 & _GEN_115 : ~_GEN_207 & _GEN_115;
+      _GEN_257 = _GEN_214 ? ~_GEN_248 & _GEN_116 : ~_GEN_207 & _GEN_116;
+      _GEN_258 = _GEN_214 ? ~_GEN_248 & _GEN_117 : ~_GEN_207 & _GEN_117;
+      _GEN_259 = _GEN_214 ? ~_GEN_248 & _GEN_118 : ~_GEN_207 & _GEN_118;
+      _GEN_260 = _GEN_214 ? ~_GEN_248 & _GEN_119 : ~_GEN_207 & _GEN_119;
+      _GEN_261 = _GEN_214 ? ~_GEN_248 & _GEN_120 : ~_GEN_207 & _GEN_120;
+      _GEN_262 = _GEN_214 ? ~_GEN_248 & _GEN_121 : ~_GEN_207 & _GEN_121;
+      _GEN_264 = _GEN_263 | _GEN_208;
+      _GEN_265 = _GEN_214 & _GEN_263 | _GEN_208;
+      _GEN_266 = _GEN_214 ? ~_GEN_264 & _GEN_124 : ~_GEN_208 & _GEN_124;
+      _GEN_267 = _GEN_214 ? ~_GEN_264 & _GEN_125 : ~_GEN_208 & _GEN_125;
+      _GEN_268 = _GEN_214 ? ~_GEN_264 & _GEN_126 : ~_GEN_208 & _GEN_126;
+      _GEN_269 = _GEN_214 ? ~_GEN_264 & _GEN_127 : ~_GEN_208 & _GEN_127;
+      _GEN_270 = _GEN_214 ? ~_GEN_264 & _GEN_128 : ~_GEN_208 & _GEN_128;
+      _GEN_271 = _GEN_214 ? ~_GEN_264 & _GEN_129 : ~_GEN_208 & _GEN_129;
+      _GEN_272 = _GEN_214 ? ~_GEN_264 & _GEN_130 : ~_GEN_208 & _GEN_130;
+      _GEN_273 = _GEN_214 ? ~_GEN_264 & _GEN_131 : ~_GEN_208 & _GEN_131;
+      _GEN_274 = _GEN_214 ? ~_GEN_264 & _GEN_132 : ~_GEN_208 & _GEN_132;
+      _GEN_275 = _GEN_214 ? ~_GEN_264 & _GEN_133 : ~_GEN_208 & _GEN_133;
+      _GEN_276 = _GEN_214 ? ~_GEN_264 & _GEN_134 : ~_GEN_208 & _GEN_134;
+      _GEN_277 = _GEN_214 ? ~_GEN_264 & _GEN_135 : ~_GEN_208 & _GEN_135;
+      _GEN_278 = _GEN_214 ? ~_GEN_264 & _GEN_136 : ~_GEN_208 & _GEN_136;
+      _GEN_280 = _GEN_279 | _GEN_209;
+      _GEN_281 = _GEN_214 & _GEN_279 | _GEN_209;
+      _GEN_282 = _GEN_214 ? ~_GEN_280 & _GEN_139 : ~_GEN_209 & _GEN_139;
+      _GEN_283 = _GEN_214 ? ~_GEN_280 & _GEN_140 : ~_GEN_209 & _GEN_140;
+      _GEN_284 = _GEN_214 ? ~_GEN_280 & _GEN_141 : ~_GEN_209 & _GEN_141;
+      _GEN_285 = _GEN_214 ? ~_GEN_280 & _GEN_142 : ~_GEN_209 & _GEN_142;
+      _GEN_286 = _GEN_214 ? ~_GEN_280 & _GEN_143 : ~_GEN_209 & _GEN_143;
+      _GEN_287 = _GEN_214 ? ~_GEN_280 & _GEN_144 : ~_GEN_209 & _GEN_144;
+      _GEN_288 = _GEN_214 ? ~_GEN_280 & _GEN_145 : ~_GEN_209 & _GEN_145;
+      _GEN_289 = _GEN_214 ? ~_GEN_280 & _GEN_146 : ~_GEN_209 & _GEN_146;
+      _GEN_290 = _GEN_214 ? ~_GEN_280 & _GEN_147 : ~_GEN_209 & _GEN_147;
+      _GEN_291 = _GEN_214 ? ~_GEN_280 & _GEN_148 : ~_GEN_209 & _GEN_148;
+      _GEN_292 = _GEN_214 ? ~_GEN_280 & _GEN_149 : ~_GEN_209 & _GEN_149;
+      _GEN_293 = _GEN_214 ? ~_GEN_280 & _GEN_150 : ~_GEN_209 & _GEN_150;
+      _GEN_294 = _GEN_214 ? ~_GEN_280 & _GEN_151 : ~_GEN_209 & _GEN_151;
+      _GEN_296 = _GEN_295 | _GEN_210;
+      _GEN_297 = _GEN_214 & _GEN_295 | _GEN_210;
+      _GEN_298 = _GEN_214 ? ~_GEN_296 & _GEN_154 : ~_GEN_210 & _GEN_154;
+      _GEN_299 = _GEN_214 ? ~_GEN_296 & _GEN_155 : ~_GEN_210 & _GEN_155;
+      _GEN_300 = _GEN_214 ? ~_GEN_296 & _GEN_156 : ~_GEN_210 & _GEN_156;
+      _GEN_301 = _GEN_214 ? ~_GEN_296 & _GEN_157 : ~_GEN_210 & _GEN_157;
+      _GEN_302 = _GEN_214 ? ~_GEN_296 & _GEN_158 : ~_GEN_210 & _GEN_158;
+      _GEN_303 = _GEN_214 ? ~_GEN_296 & _GEN_159 : ~_GEN_210 & _GEN_159;
+      _GEN_304 = _GEN_214 ? ~_GEN_296 & _GEN_160 : ~_GEN_210 & _GEN_160;
+      _GEN_305 = _GEN_214 ? ~_GEN_296 & _GEN_161 : ~_GEN_210 & _GEN_161;
+      _GEN_306 = _GEN_214 ? ~_GEN_296 & _GEN_162 : ~_GEN_210 & _GEN_162;
+      _GEN_307 = _GEN_214 ? ~_GEN_296 & _GEN_163 : ~_GEN_210 & _GEN_163;
+      _GEN_308 = _GEN_214 ? ~_GEN_296 & _GEN_164 : ~_GEN_210 & _GEN_164;
+      _GEN_309 = _GEN_214 ? ~_GEN_296 & _GEN_165 : ~_GEN_210 & _GEN_165;
+      _GEN_310 = _GEN_214 ? ~_GEN_296 & _GEN_166 : ~_GEN_210 & _GEN_166;
+      _GEN_312 = _GEN_311 | _GEN_211;
+      _GEN_313 = _GEN_214 & _GEN_311 | _GEN_211;
+      _GEN_314 = _GEN_214 ? ~_GEN_312 & _GEN_169 : ~_GEN_211 & _GEN_169;
+      _GEN_315 = _GEN_214 ? ~_GEN_312 & _GEN_170 : ~_GEN_211 & _GEN_170;
+      _GEN_316 = _GEN_214 ? ~_GEN_312 & _GEN_171 : ~_GEN_211 & _GEN_171;
+      _GEN_317 = _GEN_214 ? ~_GEN_312 & _GEN_172 : ~_GEN_211 & _GEN_172;
+      _GEN_318 = _GEN_214 ? ~_GEN_312 & _GEN_173 : ~_GEN_211 & _GEN_173;
+      _GEN_319 = _GEN_214 ? ~_GEN_312 & _GEN_174 : ~_GEN_211 & _GEN_174;
+      _GEN_320 = _GEN_214 ? ~_GEN_312 & _GEN_175 : ~_GEN_211 & _GEN_175;
+      _GEN_321 = _GEN_214 ? ~_GEN_312 & _GEN_176 : ~_GEN_211 & _GEN_176;
+      _GEN_322 = _GEN_214 ? ~_GEN_312 & _GEN_177 : ~_GEN_211 & _GEN_177;
+      _GEN_323 = _GEN_214 ? ~_GEN_312 & _GEN_178 : ~_GEN_211 & _GEN_178;
+      _GEN_324 = _GEN_214 ? ~_GEN_312 & _GEN_179 : ~_GEN_211 & _GEN_179;
+      _GEN_325 = _GEN_214 ? ~_GEN_312 & _GEN_180 : ~_GEN_211 & _GEN_180;
+      _GEN_326 = _GEN_214 ? ~_GEN_312 & _GEN_181 : ~_GEN_211 & _GEN_181;
+      _GEN_327 = (&_io_out_1_valid_T) | _GEN_212;
+      _GEN_328 = _GEN_214 & (&_io_out_1_valid_T) | _GEN_212;
+      _GEN_329 = _GEN_214 ? ~_GEN_327 & _GEN_183 : ~_GEN_212 & _GEN_183;
+      _GEN_330 = _GEN_214 ? ~_GEN_327 & _GEN_184 : ~_GEN_212 & _GEN_184;
+      _GEN_331 = _GEN_214 ? ~_GEN_327 & _GEN_185 : ~_GEN_212 & _GEN_185;
+      _GEN_332 = _GEN_214 ? ~_GEN_327 & _GEN_186 : ~_GEN_212 & _GEN_186;
+      _GEN_333 = _GEN_214 ? ~_GEN_327 & _GEN_187 : ~_GEN_212 & _GEN_187;
+      _GEN_334 = _GEN_214 ? ~_GEN_327 & _GEN_188 : ~_GEN_212 & _GEN_188;
+      _GEN_335 = _GEN_214 ? ~_GEN_327 & _GEN_189 : ~_GEN_212 & _GEN_189;
+      _GEN_336 = _GEN_214 ? ~_GEN_327 & _GEN_190 : ~_GEN_212 & _GEN_190;
+      _GEN_337 = _GEN_214 ? ~_GEN_327 & _GEN_191 : ~_GEN_212 & _GEN_191;
+      _GEN_338 = _GEN_214 ? ~_GEN_327 & _GEN_192 : ~_GEN_212 & _GEN_192;
+      _GEN_339 = _GEN_214 ? ~_GEN_327 & _GEN_193 : ~_GEN_212 & _GEN_193;
+      _GEN_340 = _GEN_214 ? ~_GEN_327 & _GEN_194 : ~_GEN_212 & _GEN_194;
+      _GEN_341 = _GEN_214 ? ~_GEN_327 & _GEN_195 : ~_GEN_212 & _GEN_195;
+      _GEN_342 = _GEN_214 ? ~_GEN_216 & _GEN_196 : ~_GEN_205 & _GEN_196;
+      _GEN_343 = _GEN_214 ? ~_GEN_232 & _GEN_197 : ~_GEN_206 & _GEN_197;
+      _GEN_344 = _GEN_214 ? ~_GEN_248 & _GEN_198 : ~_GEN_207 & _GEN_198;
+      _GEN_345 = _GEN_214 ? ~_GEN_264 & _GEN_199 : ~_GEN_208 & _GEN_199;
+      _GEN_346 = _GEN_214 ? ~_GEN_280 & _GEN_200 : ~_GEN_209 & _GEN_200;
+      _GEN_347 = _GEN_214 ? ~_GEN_296 & _GEN_201 : ~_GEN_210 & _GEN_201;
+      _GEN_348 = _GEN_214 ? ~_GEN_312 & _GEN_202 : ~_GEN_211 & _GEN_202;
+      _GEN_349 = _GEN_214 ? ~_GEN_327 & _GEN_203 : ~_GEN_212 & _GEN_203;
+      _GEN_351 = _GEN_23[_io_out_2_valid_T] & io_out_2_ready & _GEN_350;
+      _GEN_352 = _GEN_351 & _io_out_2_valid_T == 3'h0;
+      _GEN_353 = _GEN_351 & _io_out_2_valid_T == 3'h1;
+      _GEN_354 = _GEN_351 & _io_out_2_valid_T == 3'h2;
+      _GEN_355 = _GEN_351 & _io_out_2_valid_T == 3'h3;
+      _GEN_356 = _GEN_351 & _io_out_2_valid_T == 3'h4;
+      _GEN_357 = _GEN_351 & _io_out_2_valid_T == 3'h5;
+      _GEN_358 = _GEN_351 & _io_out_2_valid_T == 3'h6;
+      _GEN_359 = _GEN_351 & (&_io_out_2_valid_T);
+      _GEN_361 = _io_out_3_valid_T == 3'h0 | _GEN_352;
+      _GEN_362 = _GEN_360 ? _GEN_361 | _GEN_217 : _GEN_352 | _GEN_217;
+      _GEN_363 = _io_out_3_valid_T == 3'h1 | _GEN_353;
+      _GEN_364 = _io_out_3_valid_T == 3'h2 | _GEN_354;
+      _GEN_365 = _io_out_3_valid_T == 3'h3 | _GEN_355;
+      _GEN_366 = _io_out_3_valid_T == 3'h4 | _GEN_356;
+      _GEN_367 = _io_out_3_valid_T == 3'h5 | _GEN_357;
+      _GEN_368 = _io_out_3_valid_T == 3'h6 | _GEN_358;
+      _GEN_369 = (&_io_out_3_valid_T) | _GEN_359;
+      if (_GEN_362)
+        queue_0_fetch_PC <= 32'h0;
+      else if (_GEN_78)
+        queue_0_fetch_PC <= io_in_3_bits_fetch_PC;
+      else if (_GEN_66)
+        queue_0_fetch_PC <= io_in_2_bits_fetch_PC;
+      else if (_GEN_40)
+        queue_0_fetch_PC <= io_in_1_bits_fetch_PC;
+      else if (_GEN_29)
+        queue_0_fetch_PC <= io_in_0_bits_fetch_PC;
+      if (_GEN_360) begin
+        queue_0_ready_bits_RS1_ready <= ~_GEN_361 & _GEN_218;
+        queue_0_ready_bits_RS2_ready <= ~_GEN_361 & _GEN_219;
+        queue_0_RD_valid <= ~_GEN_361 & _GEN_220;
+        queue_0_RS1_valid <= ~_GEN_361 & _GEN_221;
+        queue_0_RS2_valid <= ~_GEN_361 & _GEN_222;
+        queue_0_needs_ALU <= ~_GEN_361 & _GEN_223;
+        queue_0_needs_branch_unit <= ~_GEN_361 & _GEN_224;
+        queue_0_needs_CSRs <= ~_GEN_361 & _GEN_225;
+        queue_0_SUBTRACT <= ~_GEN_361 & _GEN_226;
+        queue_0_MULTIPLY <= ~_GEN_361 & _GEN_227;
+        queue_0_IMMEDIATE <= ~_GEN_361 & _GEN_228;
+        queue_0_IS_LOAD <= ~_GEN_361 & _GEN_229;
+        queue_0_IS_STORE <= ~_GEN_361 & _GEN_230;
+        queue_1_ready_bits_RS1_ready <= ~_GEN_363 & _GEN_234;
+        queue_1_ready_bits_RS2_ready <= ~_GEN_363 & _GEN_235;
+        queue_1_RD_valid <= ~_GEN_363 & _GEN_236;
+        queue_1_RS1_valid <= ~_GEN_363 & _GEN_237;
+        queue_1_RS2_valid <= ~_GEN_363 & _GEN_238;
+        queue_1_needs_ALU <= ~_GEN_363 & _GEN_239;
+        queue_1_needs_branch_unit <= ~_GEN_363 & _GEN_240;
+        queue_1_needs_CSRs <= ~_GEN_363 & _GEN_241;
+        queue_1_SUBTRACT <= ~_GEN_363 & _GEN_242;
+        queue_1_MULTIPLY <= ~_GEN_363 & _GEN_243;
+        queue_1_IMMEDIATE <= ~_GEN_363 & _GEN_244;
+        queue_1_IS_LOAD <= ~_GEN_363 & _GEN_245;
+        queue_1_IS_STORE <= ~_GEN_363 & _GEN_246;
+        queue_2_ready_bits_RS1_ready <= ~_GEN_364 & _GEN_250;
+        queue_2_ready_bits_RS2_ready <= ~_GEN_364 & _GEN_251;
+        queue_2_RD_valid <= ~_GEN_364 & _GEN_252;
+        queue_2_RS1_valid <= ~_GEN_364 & _GEN_253;
+        queue_2_RS2_valid <= ~_GEN_364 & _GEN_254;
+        queue_2_needs_ALU <= ~_GEN_364 & _GEN_255;
+        queue_2_needs_branch_unit <= ~_GEN_364 & _GEN_256;
+        queue_2_needs_CSRs <= ~_GEN_364 & _GEN_257;
+        queue_2_SUBTRACT <= ~_GEN_364 & _GEN_258;
+        queue_2_MULTIPLY <= ~_GEN_364 & _GEN_259;
+        queue_2_IMMEDIATE <= ~_GEN_364 & _GEN_260;
+        queue_2_IS_LOAD <= ~_GEN_364 & _GEN_261;
+        queue_2_IS_STORE <= ~_GEN_364 & _GEN_262;
+        queue_3_ready_bits_RS1_ready <= ~_GEN_365 & _GEN_266;
+        queue_3_ready_bits_RS2_ready <= ~_GEN_365 & _GEN_267;
+        queue_3_RD_valid <= ~_GEN_365 & _GEN_268;
+        queue_3_RS1_valid <= ~_GEN_365 & _GEN_269;
+        queue_3_RS2_valid <= ~_GEN_365 & _GEN_270;
+        queue_3_needs_ALU <= ~_GEN_365 & _GEN_271;
+        queue_3_needs_branch_unit <= ~_GEN_365 & _GEN_272;
+        queue_3_needs_CSRs <= ~_GEN_365 & _GEN_273;
+        queue_3_SUBTRACT <= ~_GEN_365 & _GEN_274;
+        queue_3_MULTIPLY <= ~_GEN_365 & _GEN_275;
+        queue_3_IMMEDIATE <= ~_GEN_365 & _GEN_276;
+        queue_3_IS_LOAD <= ~_GEN_365 & _GEN_277;
+        queue_3_IS_STORE <= ~_GEN_365 & _GEN_278;
+        queue_4_ready_bits_RS1_ready <= ~_GEN_366 & _GEN_282;
+        queue_4_ready_bits_RS2_ready <= ~_GEN_366 & _GEN_283;
+        queue_4_RD_valid <= ~_GEN_366 & _GEN_284;
+        queue_4_RS1_valid <= ~_GEN_366 & _GEN_285;
+        queue_4_RS2_valid <= ~_GEN_366 & _GEN_286;
+        queue_4_needs_ALU <= ~_GEN_366 & _GEN_287;
+        queue_4_needs_branch_unit <= ~_GEN_366 & _GEN_288;
+        queue_4_needs_CSRs <= ~_GEN_366 & _GEN_289;
+        queue_4_SUBTRACT <= ~_GEN_366 & _GEN_290;
+        queue_4_MULTIPLY <= ~_GEN_366 & _GEN_291;
+        queue_4_IMMEDIATE <= ~_GEN_366 & _GEN_292;
+        queue_4_IS_LOAD <= ~_GEN_366 & _GEN_293;
+        queue_4_IS_STORE <= ~_GEN_366 & _GEN_294;
+        queue_5_ready_bits_RS1_ready <= ~_GEN_367 & _GEN_298;
+        queue_5_ready_bits_RS2_ready <= ~_GEN_367 & _GEN_299;
+        queue_5_RD_valid <= ~_GEN_367 & _GEN_300;
+        queue_5_RS1_valid <= ~_GEN_367 & _GEN_301;
+        queue_5_RS2_valid <= ~_GEN_367 & _GEN_302;
+        queue_5_needs_ALU <= ~_GEN_367 & _GEN_303;
+        queue_5_needs_branch_unit <= ~_GEN_367 & _GEN_304;
+        queue_5_needs_CSRs <= ~_GEN_367 & _GEN_305;
+        queue_5_SUBTRACT <= ~_GEN_367 & _GEN_306;
+        queue_5_MULTIPLY <= ~_GEN_367 & _GEN_307;
+        queue_5_IMMEDIATE <= ~_GEN_367 & _GEN_308;
+        queue_5_IS_LOAD <= ~_GEN_367 & _GEN_309;
+        queue_5_IS_STORE <= ~_GEN_367 & _GEN_310;
+        queue_6_ready_bits_RS1_ready <= ~_GEN_368 & _GEN_314;
+        queue_6_ready_bits_RS2_ready <= ~_GEN_368 & _GEN_315;
+        queue_6_RD_valid <= ~_GEN_368 & _GEN_316;
+        queue_6_RS1_valid <= ~_GEN_368 & _GEN_317;
+        queue_6_RS2_valid <= ~_GEN_368 & _GEN_318;
+        queue_6_needs_ALU <= ~_GEN_368 & _GEN_319;
+        queue_6_needs_branch_unit <= ~_GEN_368 & _GEN_320;
+        queue_6_needs_CSRs <= ~_GEN_368 & _GEN_321;
+        queue_6_SUBTRACT <= ~_GEN_368 & _GEN_322;
+        queue_6_MULTIPLY <= ~_GEN_368 & _GEN_323;
+        queue_6_IMMEDIATE <= ~_GEN_368 & _GEN_324;
+        queue_6_IS_LOAD <= ~_GEN_368 & _GEN_325;
+        queue_6_IS_STORE <= ~_GEN_368 & _GEN_326;
+        queue_7_ready_bits_RS1_ready <= ~_GEN_369 & _GEN_329;
+        queue_7_ready_bits_RS2_ready <= ~_GEN_369 & _GEN_330;
+        queue_7_RD_valid <= ~_GEN_369 & _GEN_331;
+        queue_7_RS1_valid <= ~_GEN_369 & _GEN_332;
+        queue_7_RS2_valid <= ~_GEN_369 & _GEN_333;
+        queue_7_needs_ALU <= ~_GEN_369 & _GEN_334;
+        queue_7_needs_branch_unit <= ~_GEN_369 & _GEN_335;
+        queue_7_needs_CSRs <= ~_GEN_369 & _GEN_336;
+        queue_7_SUBTRACT <= ~_GEN_369 & _GEN_337;
+        queue_7_MULTIPLY <= ~_GEN_369 & _GEN_338;
+        queue_7_IMMEDIATE <= ~_GEN_369 & _GEN_339;
+        queue_7_IS_LOAD <= ~_GEN_369 & _GEN_340;
+        queue_7_IS_STORE <= ~_GEN_369 & _GEN_341;
+        valid_0 <= ~_GEN_361 & _GEN_342;
+        valid_1 <= ~_GEN_363 & _GEN_343;
+        valid_2 <= ~_GEN_364 & _GEN_344;
+        valid_3 <= ~_GEN_365 & _GEN_345;
+        valid_4 <= ~_GEN_366 & _GEN_346;
+        valid_5 <= ~_GEN_367 & _GEN_347;
+        valid_6 <= ~_GEN_368 & _GEN_348;
+        valid_7 <= ~_GEN_369 & _GEN_349;
         front_pointer <= front_pointer + 4'h1;
       end
       else begin
-        queue_0_ready_bits_RS1_ready <= ~_GEN_351 & _GEN_216;
-        queue_0_ready_bits_RS2_ready <= ~_GEN_351 & _GEN_217;
-        queue_0_RD_valid <= ~_GEN_351 & _GEN_219;
-        queue_0_RS1_valid <= ~_GEN_351 & _GEN_220;
-        queue_0_RS2_valid <= ~_GEN_351 & _GEN_221;
-        queue_0_needs_ALU <= ~_GEN_351 & _GEN_222;
-        queue_0_needs_branch_unit <= ~_GEN_351 & _GEN_223;
-        queue_0_needs_CSRs <= ~_GEN_351 & _GEN_224;
-        queue_0_SUBTRACT <= ~_GEN_351 & _GEN_225;
-        queue_0_MULTIPLY <= ~_GEN_351 & _GEN_226;
-        queue_0_IMMEDIATE <= ~_GEN_351 & _GEN_227;
-        queue_0_IS_LOAD <= ~_GEN_351 & _GEN_228;
-        queue_0_IS_STORE <= ~_GEN_351 & _GEN_229;
-        queue_1_ready_bits_RS1_ready <= ~_GEN_352 & _GEN_232;
-        queue_1_ready_bits_RS2_ready <= ~_GEN_352 & _GEN_233;
-        queue_1_RD_valid <= ~_GEN_352 & _GEN_235;
-        queue_1_RS1_valid <= ~_GEN_352 & _GEN_236;
-        queue_1_RS2_valid <= ~_GEN_352 & _GEN_237;
-        queue_1_needs_ALU <= ~_GEN_352 & _GEN_238;
-        queue_1_needs_branch_unit <= ~_GEN_352 & _GEN_239;
-        queue_1_needs_CSRs <= ~_GEN_352 & _GEN_240;
-        queue_1_SUBTRACT <= ~_GEN_352 & _GEN_241;
-        queue_1_MULTIPLY <= ~_GEN_352 & _GEN_242;
-        queue_1_IMMEDIATE <= ~_GEN_352 & _GEN_243;
-        queue_1_IS_LOAD <= ~_GEN_352 & _GEN_244;
-        queue_1_IS_STORE <= ~_GEN_352 & _GEN_245;
-        queue_2_ready_bits_RS1_ready <= ~_GEN_353 & _GEN_248;
-        queue_2_ready_bits_RS2_ready <= ~_GEN_353 & _GEN_249;
-        queue_2_RD_valid <= ~_GEN_353 & _GEN_251;
-        queue_2_RS1_valid <= ~_GEN_353 & _GEN_252;
-        queue_2_RS2_valid <= ~_GEN_353 & _GEN_253;
-        queue_2_needs_ALU <= ~_GEN_353 & _GEN_254;
-        queue_2_needs_branch_unit <= ~_GEN_353 & _GEN_255;
-        queue_2_needs_CSRs <= ~_GEN_353 & _GEN_256;
-        queue_2_SUBTRACT <= ~_GEN_353 & _GEN_257;
-        queue_2_MULTIPLY <= ~_GEN_353 & _GEN_258;
-        queue_2_IMMEDIATE <= ~_GEN_353 & _GEN_259;
-        queue_2_IS_LOAD <= ~_GEN_353 & _GEN_260;
-        queue_2_IS_STORE <= ~_GEN_353 & _GEN_261;
-        queue_3_ready_bits_RS1_ready <= ~_GEN_354 & _GEN_264;
-        queue_3_ready_bits_RS2_ready <= ~_GEN_354 & _GEN_265;
-        queue_3_RD_valid <= ~_GEN_354 & _GEN_267;
-        queue_3_RS1_valid <= ~_GEN_354 & _GEN_268;
-        queue_3_RS2_valid <= ~_GEN_354 & _GEN_269;
-        queue_3_needs_ALU <= ~_GEN_354 & _GEN_270;
-        queue_3_needs_branch_unit <= ~_GEN_354 & _GEN_271;
-        queue_3_needs_CSRs <= ~_GEN_354 & _GEN_272;
-        queue_3_SUBTRACT <= ~_GEN_354 & _GEN_273;
-        queue_3_MULTIPLY <= ~_GEN_354 & _GEN_274;
-        queue_3_IMMEDIATE <= ~_GEN_354 & _GEN_275;
-        queue_3_IS_LOAD <= ~_GEN_354 & _GEN_276;
-        queue_3_IS_STORE <= ~_GEN_354 & _GEN_277;
-        queue_4_ready_bits_RS1_ready <= ~_GEN_355 & _GEN_280;
-        queue_4_ready_bits_RS2_ready <= ~_GEN_355 & _GEN_281;
-        queue_4_RD_valid <= ~_GEN_355 & _GEN_283;
-        queue_4_RS1_valid <= ~_GEN_355 & _GEN_284;
-        queue_4_RS2_valid <= ~_GEN_355 & _GEN_285;
-        queue_4_needs_ALU <= ~_GEN_355 & _GEN_286;
-        queue_4_needs_branch_unit <= ~_GEN_355 & _GEN_287;
-        queue_4_needs_CSRs <= ~_GEN_355 & _GEN_288;
-        queue_4_SUBTRACT <= ~_GEN_355 & _GEN_289;
-        queue_4_MULTIPLY <= ~_GEN_355 & _GEN_290;
-        queue_4_IMMEDIATE <= ~_GEN_355 & _GEN_291;
-        queue_4_IS_LOAD <= ~_GEN_355 & _GEN_292;
-        queue_4_IS_STORE <= ~_GEN_355 & _GEN_293;
-        queue_5_ready_bits_RS1_ready <= ~_GEN_356 & _GEN_296;
-        queue_5_ready_bits_RS2_ready <= ~_GEN_356 & _GEN_297;
-        queue_5_RD_valid <= ~_GEN_356 & _GEN_299;
-        queue_5_RS1_valid <= ~_GEN_356 & _GEN_300;
-        queue_5_RS2_valid <= ~_GEN_356 & _GEN_301;
-        queue_5_needs_ALU <= ~_GEN_356 & _GEN_302;
-        queue_5_needs_branch_unit <= ~_GEN_356 & _GEN_303;
-        queue_5_needs_CSRs <= ~_GEN_356 & _GEN_304;
-        queue_5_SUBTRACT <= ~_GEN_356 & _GEN_305;
-        queue_5_MULTIPLY <= ~_GEN_356 & _GEN_306;
-        queue_5_IMMEDIATE <= ~_GEN_356 & _GEN_307;
-        queue_5_IS_LOAD <= ~_GEN_356 & _GEN_308;
-        queue_5_IS_STORE <= ~_GEN_356 & _GEN_309;
-        queue_6_ready_bits_RS1_ready <= ~_GEN_357 & _GEN_312;
-        queue_6_ready_bits_RS2_ready <= ~_GEN_357 & _GEN_313;
-        queue_6_RD_valid <= ~_GEN_357 & _GEN_315;
-        queue_6_RS1_valid <= ~_GEN_357 & _GEN_316;
-        queue_6_RS2_valid <= ~_GEN_357 & _GEN_317;
-        queue_6_needs_ALU <= ~_GEN_357 & _GEN_318;
-        queue_6_needs_branch_unit <= ~_GEN_357 & _GEN_319;
-        queue_6_needs_CSRs <= ~_GEN_357 & _GEN_320;
-        queue_6_SUBTRACT <= ~_GEN_357 & _GEN_321;
-        queue_6_MULTIPLY <= ~_GEN_357 & _GEN_322;
-        queue_6_IMMEDIATE <= ~_GEN_357 & _GEN_323;
-        queue_6_IS_LOAD <= ~_GEN_357 & _GEN_324;
-        queue_6_IS_STORE <= ~_GEN_357 & _GEN_325;
-        queue_7_ready_bits_RS1_ready <= ~_GEN_358 & _GEN_327;
-        queue_7_ready_bits_RS2_ready <= ~_GEN_358 & _GEN_328;
-        queue_7_RD_valid <= ~_GEN_358 & _GEN_330;
-        queue_7_RS1_valid <= ~_GEN_358 & _GEN_331;
-        queue_7_RS2_valid <= ~_GEN_358 & _GEN_332;
-        queue_7_needs_ALU <= ~_GEN_358 & _GEN_333;
-        queue_7_needs_branch_unit <= ~_GEN_358 & _GEN_334;
-        queue_7_needs_CSRs <= ~_GEN_358 & _GEN_335;
-        queue_7_SUBTRACT <= ~_GEN_358 & _GEN_336;
-        queue_7_MULTIPLY <= ~_GEN_358 & _GEN_337;
-        queue_7_IMMEDIATE <= ~_GEN_358 & _GEN_338;
-        queue_7_IS_LOAD <= ~_GEN_358 & _GEN_339;
-        queue_7_IS_STORE <= ~_GEN_358 & _GEN_340;
-        valid_0 <= ~_GEN_351 & _GEN_341;
-        valid_1 <= ~_GEN_352 & _GEN_342;
-        valid_2 <= ~_GEN_353 & _GEN_343;
-        valid_3 <= ~_GEN_354 & _GEN_344;
-        valid_4 <= ~_GEN_355 & _GEN_345;
-        valid_5 <= ~_GEN_356 & _GEN_346;
-        valid_6 <= ~_GEN_357 & _GEN_347;
-        valid_7 <= ~_GEN_358 & _GEN_348;
-        if (_GEN_350)
+        queue_0_ready_bits_RS1_ready <= ~_GEN_352 & _GEN_218;
+        queue_0_ready_bits_RS2_ready <= ~_GEN_352 & _GEN_219;
+        queue_0_RD_valid <= ~_GEN_352 & _GEN_220;
+        queue_0_RS1_valid <= ~_GEN_352 & _GEN_221;
+        queue_0_RS2_valid <= ~_GEN_352 & _GEN_222;
+        queue_0_needs_ALU <= ~_GEN_352 & _GEN_223;
+        queue_0_needs_branch_unit <= ~_GEN_352 & _GEN_224;
+        queue_0_needs_CSRs <= ~_GEN_352 & _GEN_225;
+        queue_0_SUBTRACT <= ~_GEN_352 & _GEN_226;
+        queue_0_MULTIPLY <= ~_GEN_352 & _GEN_227;
+        queue_0_IMMEDIATE <= ~_GEN_352 & _GEN_228;
+        queue_0_IS_LOAD <= ~_GEN_352 & _GEN_229;
+        queue_0_IS_STORE <= ~_GEN_352 & _GEN_230;
+        queue_1_ready_bits_RS1_ready <= ~_GEN_353 & _GEN_234;
+        queue_1_ready_bits_RS2_ready <= ~_GEN_353 & _GEN_235;
+        queue_1_RD_valid <= ~_GEN_353 & _GEN_236;
+        queue_1_RS1_valid <= ~_GEN_353 & _GEN_237;
+        queue_1_RS2_valid <= ~_GEN_353 & _GEN_238;
+        queue_1_needs_ALU <= ~_GEN_353 & _GEN_239;
+        queue_1_needs_branch_unit <= ~_GEN_353 & _GEN_240;
+        queue_1_needs_CSRs <= ~_GEN_353 & _GEN_241;
+        queue_1_SUBTRACT <= ~_GEN_353 & _GEN_242;
+        queue_1_MULTIPLY <= ~_GEN_353 & _GEN_243;
+        queue_1_IMMEDIATE <= ~_GEN_353 & _GEN_244;
+        queue_1_IS_LOAD <= ~_GEN_353 & _GEN_245;
+        queue_1_IS_STORE <= ~_GEN_353 & _GEN_246;
+        queue_2_ready_bits_RS1_ready <= ~_GEN_354 & _GEN_250;
+        queue_2_ready_bits_RS2_ready <= ~_GEN_354 & _GEN_251;
+        queue_2_RD_valid <= ~_GEN_354 & _GEN_252;
+        queue_2_RS1_valid <= ~_GEN_354 & _GEN_253;
+        queue_2_RS2_valid <= ~_GEN_354 & _GEN_254;
+        queue_2_needs_ALU <= ~_GEN_354 & _GEN_255;
+        queue_2_needs_branch_unit <= ~_GEN_354 & _GEN_256;
+        queue_2_needs_CSRs <= ~_GEN_354 & _GEN_257;
+        queue_2_SUBTRACT <= ~_GEN_354 & _GEN_258;
+        queue_2_MULTIPLY <= ~_GEN_354 & _GEN_259;
+        queue_2_IMMEDIATE <= ~_GEN_354 & _GEN_260;
+        queue_2_IS_LOAD <= ~_GEN_354 & _GEN_261;
+        queue_2_IS_STORE <= ~_GEN_354 & _GEN_262;
+        queue_3_ready_bits_RS1_ready <= ~_GEN_355 & _GEN_266;
+        queue_3_ready_bits_RS2_ready <= ~_GEN_355 & _GEN_267;
+        queue_3_RD_valid <= ~_GEN_355 & _GEN_268;
+        queue_3_RS1_valid <= ~_GEN_355 & _GEN_269;
+        queue_3_RS2_valid <= ~_GEN_355 & _GEN_270;
+        queue_3_needs_ALU <= ~_GEN_355 & _GEN_271;
+        queue_3_needs_branch_unit <= ~_GEN_355 & _GEN_272;
+        queue_3_needs_CSRs <= ~_GEN_355 & _GEN_273;
+        queue_3_SUBTRACT <= ~_GEN_355 & _GEN_274;
+        queue_3_MULTIPLY <= ~_GEN_355 & _GEN_275;
+        queue_3_IMMEDIATE <= ~_GEN_355 & _GEN_276;
+        queue_3_IS_LOAD <= ~_GEN_355 & _GEN_277;
+        queue_3_IS_STORE <= ~_GEN_355 & _GEN_278;
+        queue_4_ready_bits_RS1_ready <= ~_GEN_356 & _GEN_282;
+        queue_4_ready_bits_RS2_ready <= ~_GEN_356 & _GEN_283;
+        queue_4_RD_valid <= ~_GEN_356 & _GEN_284;
+        queue_4_RS1_valid <= ~_GEN_356 & _GEN_285;
+        queue_4_RS2_valid <= ~_GEN_356 & _GEN_286;
+        queue_4_needs_ALU <= ~_GEN_356 & _GEN_287;
+        queue_4_needs_branch_unit <= ~_GEN_356 & _GEN_288;
+        queue_4_needs_CSRs <= ~_GEN_356 & _GEN_289;
+        queue_4_SUBTRACT <= ~_GEN_356 & _GEN_290;
+        queue_4_MULTIPLY <= ~_GEN_356 & _GEN_291;
+        queue_4_IMMEDIATE <= ~_GEN_356 & _GEN_292;
+        queue_4_IS_LOAD <= ~_GEN_356 & _GEN_293;
+        queue_4_IS_STORE <= ~_GEN_356 & _GEN_294;
+        queue_5_ready_bits_RS1_ready <= ~_GEN_357 & _GEN_298;
+        queue_5_ready_bits_RS2_ready <= ~_GEN_357 & _GEN_299;
+        queue_5_RD_valid <= ~_GEN_357 & _GEN_300;
+        queue_5_RS1_valid <= ~_GEN_357 & _GEN_301;
+        queue_5_RS2_valid <= ~_GEN_357 & _GEN_302;
+        queue_5_needs_ALU <= ~_GEN_357 & _GEN_303;
+        queue_5_needs_branch_unit <= ~_GEN_357 & _GEN_304;
+        queue_5_needs_CSRs <= ~_GEN_357 & _GEN_305;
+        queue_5_SUBTRACT <= ~_GEN_357 & _GEN_306;
+        queue_5_MULTIPLY <= ~_GEN_357 & _GEN_307;
+        queue_5_IMMEDIATE <= ~_GEN_357 & _GEN_308;
+        queue_5_IS_LOAD <= ~_GEN_357 & _GEN_309;
+        queue_5_IS_STORE <= ~_GEN_357 & _GEN_310;
+        queue_6_ready_bits_RS1_ready <= ~_GEN_358 & _GEN_314;
+        queue_6_ready_bits_RS2_ready <= ~_GEN_358 & _GEN_315;
+        queue_6_RD_valid <= ~_GEN_358 & _GEN_316;
+        queue_6_RS1_valid <= ~_GEN_358 & _GEN_317;
+        queue_6_RS2_valid <= ~_GEN_358 & _GEN_318;
+        queue_6_needs_ALU <= ~_GEN_358 & _GEN_319;
+        queue_6_needs_branch_unit <= ~_GEN_358 & _GEN_320;
+        queue_6_needs_CSRs <= ~_GEN_358 & _GEN_321;
+        queue_6_SUBTRACT <= ~_GEN_358 & _GEN_322;
+        queue_6_MULTIPLY <= ~_GEN_358 & _GEN_323;
+        queue_6_IMMEDIATE <= ~_GEN_358 & _GEN_324;
+        queue_6_IS_LOAD <= ~_GEN_358 & _GEN_325;
+        queue_6_IS_STORE <= ~_GEN_358 & _GEN_326;
+        queue_7_ready_bits_RS1_ready <= ~_GEN_359 & _GEN_329;
+        queue_7_ready_bits_RS2_ready <= ~_GEN_359 & _GEN_330;
+        queue_7_RD_valid <= ~_GEN_359 & _GEN_331;
+        queue_7_RS1_valid <= ~_GEN_359 & _GEN_332;
+        queue_7_RS2_valid <= ~_GEN_359 & _GEN_333;
+        queue_7_needs_ALU <= ~_GEN_359 & _GEN_334;
+        queue_7_needs_branch_unit <= ~_GEN_359 & _GEN_335;
+        queue_7_needs_CSRs <= ~_GEN_359 & _GEN_336;
+        queue_7_SUBTRACT <= ~_GEN_359 & _GEN_337;
+        queue_7_MULTIPLY <= ~_GEN_359 & _GEN_338;
+        queue_7_IMMEDIATE <= ~_GEN_359 & _GEN_339;
+        queue_7_IS_LOAD <= ~_GEN_359 & _GEN_340;
+        queue_7_IS_STORE <= ~_GEN_359 & _GEN_341;
+        valid_0 <= ~_GEN_352 & _GEN_342;
+        valid_1 <= ~_GEN_353 & _GEN_343;
+        valid_2 <= ~_GEN_354 & _GEN_344;
+        valid_3 <= ~_GEN_355 & _GEN_345;
+        valid_4 <= ~_GEN_356 & _GEN_346;
+        valid_5 <= ~_GEN_357 & _GEN_347;
+        valid_6 <= ~_GEN_358 & _GEN_348;
+        valid_7 <= ~_GEN_359 & _GEN_349;
+        if (_GEN_351)
           front_pointer <= front_pointer + 4'h1;
-        else if (_GEN_213)
+        else if (_GEN_214)
           front_pointer <= front_pointer + 4'h1;
-        else if (_GEN_203)
+        else if (_GEN_204)
           front_pointer <= front_pointer + 4'h1;
       end
-      if (_GEN_359 ? _GEN_360 | _GEN_218 : _GEN_351 | _GEN_218) begin
+      if (_GEN_362) begin
         queue_0_RD <= 6'h0;
         queue_0_RS1 <= 6'h0;
         queue_0_RS2 <= 6'h0;
@@ -2477,7 +2522,7 @@ module instruction_queue(
         queue_0_portID <= 2'h0;
         queue_0_RS_type <= 2'h0;
       end
-      else if (_GEN_77) begin
+      else if (_GEN_78) begin
         queue_0_RD <= io_in_3_bits_RD;
         queue_0_RS1 <= io_in_3_bits_RS1;
         queue_0_RS2 <= io_in_3_bits_RS2;
@@ -2489,7 +2534,7 @@ module instruction_queue(
         queue_0_portID <= io_in_3_bits_portID;
         queue_0_RS_type <= io_in_3_bits_RS_type;
       end
-      else if (_GEN_65) begin
+      else if (_GEN_66) begin
         queue_0_RD <= io_in_2_bits_RD;
         queue_0_RS1 <= io_in_2_bits_RS1;
         queue_0_RS2 <= io_in_2_bits_RS2;
@@ -2501,7 +2546,7 @@ module instruction_queue(
         queue_0_portID <= io_in_2_bits_portID;
         queue_0_RS_type <= io_in_2_bits_RS_type;
       end
-      else if (_GEN_39) begin
+      else if (_GEN_40) begin
         queue_0_RD <= io_in_1_bits_RD;
         queue_0_RS1 <= io_in_1_bits_RS1;
         queue_0_RS2 <= io_in_1_bits_RS2;
@@ -2513,7 +2558,7 @@ module instruction_queue(
         queue_0_portID <= io_in_1_bits_portID;
         queue_0_RS_type <= io_in_1_bits_RS_type;
       end
-      else if (_GEN_28) begin
+      else if (_GEN_29) begin
         queue_0_RD <= io_in_0_bits_RD;
         queue_0_RS1 <= io_in_0_bits_RS1;
         queue_0_RS2 <= io_in_0_bits_RS2;
@@ -2525,7 +2570,8 @@ module instruction_queue(
         queue_0_portID <= io_in_0_bits_portID;
         queue_0_RS_type <= io_in_0_bits_RS_type;
       end
-      if (_GEN_359 ? _GEN_361 | _GEN_234 : _GEN_352 | _GEN_234) begin
+      if (_GEN_360 ? _GEN_363 | _GEN_233 : _GEN_353 | _GEN_233) begin
+        queue_1_fetch_PC <= 32'h0;
         queue_1_RD <= 6'h0;
         queue_1_RS1 <= 6'h0;
         queue_1_RS2 <= 6'h0;
@@ -2537,7 +2583,8 @@ module instruction_queue(
         queue_1_portID <= 2'h0;
         queue_1_RS_type <= 2'h0;
       end
-      else if (_GEN_92) begin
+      else if (_GEN_93) begin
+        queue_1_fetch_PC <= io_in_3_bits_fetch_PC;
         queue_1_RD <= io_in_3_bits_RD;
         queue_1_RS1 <= io_in_3_bits_RS1;
         queue_1_RS2 <= io_in_3_bits_RS2;
@@ -2549,7 +2596,8 @@ module instruction_queue(
         queue_1_portID <= io_in_3_bits_portID;
         queue_1_RS_type <= io_in_3_bits_RS_type;
       end
-      else if (_GEN_66) begin
+      else if (_GEN_67) begin
+        queue_1_fetch_PC <= io_in_2_bits_fetch_PC;
         queue_1_RD <= io_in_2_bits_RD;
         queue_1_RS1 <= io_in_2_bits_RS1;
         queue_1_RS2 <= io_in_2_bits_RS2;
@@ -2561,7 +2609,8 @@ module instruction_queue(
         queue_1_portID <= io_in_2_bits_portID;
         queue_1_RS_type <= io_in_2_bits_RS_type;
       end
-      else if (_GEN_41) begin
+      else if (_GEN_42) begin
+        queue_1_fetch_PC <= io_in_1_bits_fetch_PC;
         queue_1_RD <= io_in_1_bits_RD;
         queue_1_RS1 <= io_in_1_bits_RS1;
         queue_1_RS2 <= io_in_1_bits_RS2;
@@ -2573,7 +2622,8 @@ module instruction_queue(
         queue_1_portID <= io_in_1_bits_portID;
         queue_1_RS_type <= io_in_1_bits_RS_type;
       end
-      else if (_GEN_29) begin
+      else if (_GEN_30) begin
+        queue_1_fetch_PC <= io_in_0_bits_fetch_PC;
         queue_1_RD <= io_in_0_bits_RD;
         queue_1_RS1 <= io_in_0_bits_RS1;
         queue_1_RS2 <= io_in_0_bits_RS2;
@@ -2585,7 +2635,8 @@ module instruction_queue(
         queue_1_portID <= io_in_0_bits_portID;
         queue_1_RS_type <= io_in_0_bits_RS_type;
       end
-      if (_GEN_359 ? _GEN_362 | _GEN_250 : _GEN_353 | _GEN_250) begin
+      if (_GEN_360 ? _GEN_364 | _GEN_249 : _GEN_354 | _GEN_249) begin
+        queue_2_fetch_PC <= 32'h0;
         queue_2_RD <= 6'h0;
         queue_2_RS1 <= 6'h0;
         queue_2_RS2 <= 6'h0;
@@ -2597,7 +2648,8 @@ module instruction_queue(
         queue_2_portID <= 2'h0;
         queue_2_RS_type <= 2'h0;
       end
-      else if (_GEN_107) begin
+      else if (_GEN_108) begin
+        queue_2_fetch_PC <= io_in_3_bits_fetch_PC;
         queue_2_RD <= io_in_3_bits_RD;
         queue_2_RS1 <= io_in_3_bits_RS1;
         queue_2_RS2 <= io_in_3_bits_RS2;
@@ -2609,7 +2661,8 @@ module instruction_queue(
         queue_2_portID <= io_in_3_bits_portID;
         queue_2_RS_type <= io_in_3_bits_RS_type;
       end
-      else if (_GEN_67) begin
+      else if (_GEN_68) begin
+        queue_2_fetch_PC <= io_in_2_bits_fetch_PC;
         queue_2_RD <= io_in_2_bits_RD;
         queue_2_RS1 <= io_in_2_bits_RS1;
         queue_2_RS2 <= io_in_2_bits_RS2;
@@ -2621,7 +2674,8 @@ module instruction_queue(
         queue_2_portID <= io_in_2_bits_portID;
         queue_2_RS_type <= io_in_2_bits_RS_type;
       end
-      else if (_GEN_43) begin
+      else if (_GEN_44) begin
+        queue_2_fetch_PC <= io_in_1_bits_fetch_PC;
         queue_2_RD <= io_in_1_bits_RD;
         queue_2_RS1 <= io_in_1_bits_RS1;
         queue_2_RS2 <= io_in_1_bits_RS2;
@@ -2633,7 +2687,8 @@ module instruction_queue(
         queue_2_portID <= io_in_1_bits_portID;
         queue_2_RS_type <= io_in_1_bits_RS_type;
       end
-      else if (_GEN_30) begin
+      else if (_GEN_31) begin
+        queue_2_fetch_PC <= io_in_0_bits_fetch_PC;
         queue_2_RD <= io_in_0_bits_RD;
         queue_2_RS1 <= io_in_0_bits_RS1;
         queue_2_RS2 <= io_in_0_bits_RS2;
@@ -2645,7 +2700,8 @@ module instruction_queue(
         queue_2_portID <= io_in_0_bits_portID;
         queue_2_RS_type <= io_in_0_bits_RS_type;
       end
-      if (_GEN_359 ? _GEN_363 | _GEN_266 : _GEN_354 | _GEN_266) begin
+      if (_GEN_360 ? _GEN_365 | _GEN_265 : _GEN_355 | _GEN_265) begin
+        queue_3_fetch_PC <= 32'h0;
         queue_3_RD <= 6'h0;
         queue_3_RS1 <= 6'h0;
         queue_3_RS2 <= 6'h0;
@@ -2657,7 +2713,8 @@ module instruction_queue(
         queue_3_portID <= 2'h0;
         queue_3_RS_type <= 2'h0;
       end
-      else if (_GEN_122) begin
+      else if (_GEN_123) begin
+        queue_3_fetch_PC <= io_in_3_bits_fetch_PC;
         queue_3_RD <= io_in_3_bits_RD;
         queue_3_RS1 <= io_in_3_bits_RS1;
         queue_3_RS2 <= io_in_3_bits_RS2;
@@ -2669,7 +2726,8 @@ module instruction_queue(
         queue_3_portID <= io_in_3_bits_portID;
         queue_3_RS_type <= io_in_3_bits_RS_type;
       end
-      else if (_GEN_68) begin
+      else if (_GEN_69) begin
+        queue_3_fetch_PC <= io_in_2_bits_fetch_PC;
         queue_3_RD <= io_in_2_bits_RD;
         queue_3_RS1 <= io_in_2_bits_RS1;
         queue_3_RS2 <= io_in_2_bits_RS2;
@@ -2681,7 +2739,8 @@ module instruction_queue(
         queue_3_portID <= io_in_2_bits_portID;
         queue_3_RS_type <= io_in_2_bits_RS_type;
       end
-      else if (_GEN_45) begin
+      else if (_GEN_46) begin
+        queue_3_fetch_PC <= io_in_1_bits_fetch_PC;
         queue_3_RD <= io_in_1_bits_RD;
         queue_3_RS1 <= io_in_1_bits_RS1;
         queue_3_RS2 <= io_in_1_bits_RS2;
@@ -2693,7 +2752,8 @@ module instruction_queue(
         queue_3_portID <= io_in_1_bits_portID;
         queue_3_RS_type <= io_in_1_bits_RS_type;
       end
-      else if (_GEN_31) begin
+      else if (_GEN_32) begin
+        queue_3_fetch_PC <= io_in_0_bits_fetch_PC;
         queue_3_RD <= io_in_0_bits_RD;
         queue_3_RS1 <= io_in_0_bits_RS1;
         queue_3_RS2 <= io_in_0_bits_RS2;
@@ -2705,7 +2765,8 @@ module instruction_queue(
         queue_3_portID <= io_in_0_bits_portID;
         queue_3_RS_type <= io_in_0_bits_RS_type;
       end
-      if (_GEN_359 ? _GEN_364 | _GEN_282 : _GEN_355 | _GEN_282) begin
+      if (_GEN_360 ? _GEN_366 | _GEN_281 : _GEN_356 | _GEN_281) begin
+        queue_4_fetch_PC <= 32'h0;
         queue_4_RD <= 6'h0;
         queue_4_RS1 <= 6'h0;
         queue_4_RS2 <= 6'h0;
@@ -2717,7 +2778,8 @@ module instruction_queue(
         queue_4_portID <= 2'h0;
         queue_4_RS_type <= 2'h0;
       end
-      else if (_GEN_137) begin
+      else if (_GEN_138) begin
+        queue_4_fetch_PC <= io_in_3_bits_fetch_PC;
         queue_4_RD <= io_in_3_bits_RD;
         queue_4_RS1 <= io_in_3_bits_RS1;
         queue_4_RS2 <= io_in_3_bits_RS2;
@@ -2729,7 +2791,8 @@ module instruction_queue(
         queue_4_portID <= io_in_3_bits_portID;
         queue_4_RS_type <= io_in_3_bits_RS_type;
       end
-      else if (_GEN_69) begin
+      else if (_GEN_70) begin
+        queue_4_fetch_PC <= io_in_2_bits_fetch_PC;
         queue_4_RD <= io_in_2_bits_RD;
         queue_4_RS1 <= io_in_2_bits_RS1;
         queue_4_RS2 <= io_in_2_bits_RS2;
@@ -2741,7 +2804,8 @@ module instruction_queue(
         queue_4_portID <= io_in_2_bits_portID;
         queue_4_RS_type <= io_in_2_bits_RS_type;
       end
-      else if (_GEN_47) begin
+      else if (_GEN_48) begin
+        queue_4_fetch_PC <= io_in_1_bits_fetch_PC;
         queue_4_RD <= io_in_1_bits_RD;
         queue_4_RS1 <= io_in_1_bits_RS1;
         queue_4_RS2 <= io_in_1_bits_RS2;
@@ -2753,7 +2817,8 @@ module instruction_queue(
         queue_4_portID <= io_in_1_bits_portID;
         queue_4_RS_type <= io_in_1_bits_RS_type;
       end
-      else if (_GEN_32) begin
+      else if (_GEN_33) begin
+        queue_4_fetch_PC <= io_in_0_bits_fetch_PC;
         queue_4_RD <= io_in_0_bits_RD;
         queue_4_RS1 <= io_in_0_bits_RS1;
         queue_4_RS2 <= io_in_0_bits_RS2;
@@ -2765,7 +2830,8 @@ module instruction_queue(
         queue_4_portID <= io_in_0_bits_portID;
         queue_4_RS_type <= io_in_0_bits_RS_type;
       end
-      if (_GEN_359 ? _GEN_365 | _GEN_298 : _GEN_356 | _GEN_298) begin
+      if (_GEN_360 ? _GEN_367 | _GEN_297 : _GEN_357 | _GEN_297) begin
+        queue_5_fetch_PC <= 32'h0;
         queue_5_RD <= 6'h0;
         queue_5_RS1 <= 6'h0;
         queue_5_RS2 <= 6'h0;
@@ -2777,7 +2843,8 @@ module instruction_queue(
         queue_5_portID <= 2'h0;
         queue_5_RS_type <= 2'h0;
       end
-      else if (_GEN_152) begin
+      else if (_GEN_153) begin
+        queue_5_fetch_PC <= io_in_3_bits_fetch_PC;
         queue_5_RD <= io_in_3_bits_RD;
         queue_5_RS1 <= io_in_3_bits_RS1;
         queue_5_RS2 <= io_in_3_bits_RS2;
@@ -2789,7 +2856,8 @@ module instruction_queue(
         queue_5_portID <= io_in_3_bits_portID;
         queue_5_RS_type <= io_in_3_bits_RS_type;
       end
-      else if (_GEN_70) begin
+      else if (_GEN_71) begin
+        queue_5_fetch_PC <= io_in_2_bits_fetch_PC;
         queue_5_RD <= io_in_2_bits_RD;
         queue_5_RS1 <= io_in_2_bits_RS1;
         queue_5_RS2 <= io_in_2_bits_RS2;
@@ -2801,7 +2869,8 @@ module instruction_queue(
         queue_5_portID <= io_in_2_bits_portID;
         queue_5_RS_type <= io_in_2_bits_RS_type;
       end
-      else if (_GEN_49) begin
+      else if (_GEN_50) begin
+        queue_5_fetch_PC <= io_in_1_bits_fetch_PC;
         queue_5_RD <= io_in_1_bits_RD;
         queue_5_RS1 <= io_in_1_bits_RS1;
         queue_5_RS2 <= io_in_1_bits_RS2;
@@ -2813,7 +2882,8 @@ module instruction_queue(
         queue_5_portID <= io_in_1_bits_portID;
         queue_5_RS_type <= io_in_1_bits_RS_type;
       end
-      else if (_GEN_33) begin
+      else if (_GEN_34) begin
+        queue_5_fetch_PC <= io_in_0_bits_fetch_PC;
         queue_5_RD <= io_in_0_bits_RD;
         queue_5_RS1 <= io_in_0_bits_RS1;
         queue_5_RS2 <= io_in_0_bits_RS2;
@@ -2825,7 +2895,8 @@ module instruction_queue(
         queue_5_portID <= io_in_0_bits_portID;
         queue_5_RS_type <= io_in_0_bits_RS_type;
       end
-      if (_GEN_359 ? _GEN_366 | _GEN_314 : _GEN_357 | _GEN_314) begin
+      if (_GEN_360 ? _GEN_368 | _GEN_313 : _GEN_358 | _GEN_313) begin
+        queue_6_fetch_PC <= 32'h0;
         queue_6_RD <= 6'h0;
         queue_6_RS1 <= 6'h0;
         queue_6_RS2 <= 6'h0;
@@ -2837,7 +2908,8 @@ module instruction_queue(
         queue_6_portID <= 2'h0;
         queue_6_RS_type <= 2'h0;
       end
-      else if (_GEN_167) begin
+      else if (_GEN_168) begin
+        queue_6_fetch_PC <= io_in_3_bits_fetch_PC;
         queue_6_RD <= io_in_3_bits_RD;
         queue_6_RS1 <= io_in_3_bits_RS1;
         queue_6_RS2 <= io_in_3_bits_RS2;
@@ -2849,7 +2921,8 @@ module instruction_queue(
         queue_6_portID <= io_in_3_bits_portID;
         queue_6_RS_type <= io_in_3_bits_RS_type;
       end
-      else if (_GEN_71) begin
+      else if (_GEN_72) begin
+        queue_6_fetch_PC <= io_in_2_bits_fetch_PC;
         queue_6_RD <= io_in_2_bits_RD;
         queue_6_RS1 <= io_in_2_bits_RS1;
         queue_6_RS2 <= io_in_2_bits_RS2;
@@ -2861,7 +2934,8 @@ module instruction_queue(
         queue_6_portID <= io_in_2_bits_portID;
         queue_6_RS_type <= io_in_2_bits_RS_type;
       end
-      else if (_GEN_51) begin
+      else if (_GEN_52) begin
+        queue_6_fetch_PC <= io_in_1_bits_fetch_PC;
         queue_6_RD <= io_in_1_bits_RD;
         queue_6_RS1 <= io_in_1_bits_RS1;
         queue_6_RS2 <= io_in_1_bits_RS2;
@@ -2873,7 +2947,8 @@ module instruction_queue(
         queue_6_portID <= io_in_1_bits_portID;
         queue_6_RS_type <= io_in_1_bits_RS_type;
       end
-      else if (_GEN_34) begin
+      else if (_GEN_35) begin
+        queue_6_fetch_PC <= io_in_0_bits_fetch_PC;
         queue_6_RD <= io_in_0_bits_RD;
         queue_6_RS1 <= io_in_0_bits_RS1;
         queue_6_RS2 <= io_in_0_bits_RS2;
@@ -2885,7 +2960,8 @@ module instruction_queue(
         queue_6_portID <= io_in_0_bits_portID;
         queue_6_RS_type <= io_in_0_bits_RS_type;
       end
-      if (_GEN_359 ? _GEN_367 | _GEN_329 : _GEN_358 | _GEN_329) begin
+      if (_GEN_360 ? _GEN_369 | _GEN_328 : _GEN_359 | _GEN_328) begin
+        queue_7_fetch_PC <= 32'h0;
         queue_7_RD <= 6'h0;
         queue_7_RS1 <= 6'h0;
         queue_7_RS2 <= 6'h0;
@@ -2897,7 +2973,8 @@ module instruction_queue(
         queue_7_portID <= 2'h0;
         queue_7_RS_type <= 2'h0;
       end
-      else if (_GEN_181) begin
+      else if (_GEN_182) begin
+        queue_7_fetch_PC <= io_in_3_bits_fetch_PC;
         queue_7_RD <= io_in_3_bits_RD;
         queue_7_RS1 <= io_in_3_bits_RS1;
         queue_7_RS2 <= io_in_3_bits_RS2;
@@ -2909,7 +2986,8 @@ module instruction_queue(
         queue_7_portID <= io_in_3_bits_portID;
         queue_7_RS_type <= io_in_3_bits_RS_type;
       end
-      else if (_GEN_72) begin
+      else if (_GEN_73) begin
+        queue_7_fetch_PC <= io_in_2_bits_fetch_PC;
         queue_7_RD <= io_in_2_bits_RD;
         queue_7_RS1 <= io_in_2_bits_RS1;
         queue_7_RS2 <= io_in_2_bits_RS2;
@@ -2921,7 +2999,8 @@ module instruction_queue(
         queue_7_portID <= io_in_2_bits_portID;
         queue_7_RS_type <= io_in_2_bits_RS_type;
       end
-      else if (_GEN_52) begin
+      else if (_GEN_53) begin
+        queue_7_fetch_PC <= io_in_1_bits_fetch_PC;
         queue_7_RD <= io_in_1_bits_RD;
         queue_7_RS1 <= io_in_1_bits_RS1;
         queue_7_RS2 <= io_in_1_bits_RS2;
@@ -2933,7 +3012,8 @@ module instruction_queue(
         queue_7_portID <= io_in_1_bits_portID;
         queue_7_RS_type <= io_in_1_bits_RS_type;
       end
-      else if (_GEN_35) begin
+      else if (_GEN_36) begin
+        queue_7_fetch_PC <= io_in_0_bits_fetch_PC;
         queue_7_RD <= io_in_0_bits_RD;
         queue_7_RS1 <= io_in_0_bits_RS1;
         queue_7_RS2 <= io_in_0_bits_RS2;
@@ -2947,108 +3027,112 @@ module instruction_queue(
       end
       back_pointer <=
         back_pointer
-        + {1'h0, {1'h0, _GEN_62 + _GEN_63} + {1'h0, _GEN_74 + {1'h0, io_in_3_valid}}};
+        + {1'h0, {1'h0, _GEN_63 + _GEN_64} + {1'h0, _GEN_75 + {1'h0, io_in_3_valid}}};
     end
   end // always @(posedge)
-  assign io_in_0_ready = ~_GEN_23;
-  assign io_in_1_ready = ~_GEN_24;
-  assign io_in_2_ready = ~_GEN_25;
-  assign io_in_3_ready = ~_GEN_26;
+  assign io_in_0_ready = ~_GEN_24;
+  assign io_in_1_ready = ~_GEN_25;
+  assign io_in_2_ready = ~_GEN_26;
+  assign io_in_3_ready = ~_GEN_27;
   assign io_out_0_valid = io_out_0_valid_0;
-  assign io_out_0_bits_ready_bits_RS1_ready = _GEN[front_pointer[2:0]];
-  assign io_out_0_bits_ready_bits_RS2_ready = _GEN_0[front_pointer[2:0]];
-  assign io_out_0_bits_RD = _GEN_1[front_pointer[2:0]];
-  assign io_out_0_bits_RD_valid = _GEN_2[front_pointer[2:0]];
-  assign io_out_0_bits_RS1 = _GEN_3[front_pointer[2:0]];
-  assign io_out_0_bits_RS1_valid = _GEN_4[front_pointer[2:0]];
-  assign io_out_0_bits_RS2 = _GEN_5[front_pointer[2:0]];
-  assign io_out_0_bits_RS2_valid = _GEN_6[front_pointer[2:0]];
-  assign io_out_0_bits_IMM = _GEN_7[front_pointer[2:0]];
-  assign io_out_0_bits_FUNCT3 = _GEN_8[front_pointer[2:0]];
-  assign io_out_0_bits_packet_index = _GEN_9[front_pointer[2:0]];
-  assign io_out_0_bits_ROB_index = _GEN_10[front_pointer[2:0]];
-  assign io_out_0_bits_instructionType = _GEN_11[front_pointer[2:0]];
-  assign io_out_0_bits_portID = _GEN_12[front_pointer[2:0]];
-  assign io_out_0_bits_RS_type = _GEN_13[front_pointer[2:0]];
-  assign io_out_0_bits_needs_ALU = _GEN_14[front_pointer[2:0]];
-  assign io_out_0_bits_needs_branch_unit = _GEN_15[front_pointer[2:0]];
-  assign io_out_0_bits_needs_CSRs = _GEN_16[front_pointer[2:0]];
-  assign io_out_0_bits_SUBTRACT = _GEN_17[front_pointer[2:0]];
-  assign io_out_0_bits_MULTIPLY = _GEN_18[front_pointer[2:0]];
-  assign io_out_0_bits_IMMEDIATE = _GEN_19[front_pointer[2:0]];
-  assign io_out_0_bits_IS_LOAD = _GEN_20[front_pointer[2:0]];
-  assign io_out_0_bits_IS_STORE = _GEN_21[front_pointer[2:0]];
-  assign io_out_1_valid = _GEN_22[_io_out_1_valid_T];
-  assign io_out_1_bits_ready_bits_RS1_ready = _GEN[_io_out_1_valid_T];
-  assign io_out_1_bits_ready_bits_RS2_ready = _GEN_0[_io_out_1_valid_T];
-  assign io_out_1_bits_RD = _GEN_1[_io_out_1_valid_T];
-  assign io_out_1_bits_RD_valid = _GEN_2[_io_out_1_valid_T];
-  assign io_out_1_bits_RS1 = _GEN_3[_io_out_1_valid_T];
-  assign io_out_1_bits_RS1_valid = _GEN_4[_io_out_1_valid_T];
-  assign io_out_1_bits_RS2 = _GEN_5[_io_out_1_valid_T];
-  assign io_out_1_bits_RS2_valid = _GEN_6[_io_out_1_valid_T];
-  assign io_out_1_bits_IMM = _GEN_7[_io_out_1_valid_T];
-  assign io_out_1_bits_FUNCT3 = _GEN_8[_io_out_1_valid_T];
-  assign io_out_1_bits_packet_index = _GEN_9[_io_out_1_valid_T];
-  assign io_out_1_bits_ROB_index = _GEN_10[_io_out_1_valid_T];
-  assign io_out_1_bits_instructionType = _GEN_11[_io_out_1_valid_T];
-  assign io_out_1_bits_portID = _GEN_12[_io_out_1_valid_T];
-  assign io_out_1_bits_RS_type = _GEN_13[_io_out_1_valid_T];
-  assign io_out_1_bits_needs_ALU = _GEN_14[_io_out_1_valid_T];
-  assign io_out_1_bits_needs_branch_unit = _GEN_15[_io_out_1_valid_T];
-  assign io_out_1_bits_needs_CSRs = _GEN_16[_io_out_1_valid_T];
-  assign io_out_1_bits_SUBTRACT = _GEN_17[_io_out_1_valid_T];
-  assign io_out_1_bits_MULTIPLY = _GEN_18[_io_out_1_valid_T];
-  assign io_out_1_bits_IMMEDIATE = _GEN_19[_io_out_1_valid_T];
-  assign io_out_1_bits_IS_LOAD = _GEN_20[_io_out_1_valid_T];
-  assign io_out_1_bits_IS_STORE = _GEN_21[_io_out_1_valid_T];
-  assign io_out_2_valid = _GEN_22[_io_out_2_valid_T];
-  assign io_out_2_bits_ready_bits_RS1_ready = _GEN[_io_out_2_valid_T];
-  assign io_out_2_bits_ready_bits_RS2_ready = _GEN_0[_io_out_2_valid_T];
-  assign io_out_2_bits_RD = _GEN_1[_io_out_2_valid_T];
-  assign io_out_2_bits_RD_valid = _GEN_2[_io_out_2_valid_T];
-  assign io_out_2_bits_RS1 = _GEN_3[_io_out_2_valid_T];
-  assign io_out_2_bits_RS1_valid = _GEN_4[_io_out_2_valid_T];
-  assign io_out_2_bits_RS2 = _GEN_5[_io_out_2_valid_T];
-  assign io_out_2_bits_RS2_valid = _GEN_6[_io_out_2_valid_T];
-  assign io_out_2_bits_IMM = _GEN_7[_io_out_2_valid_T];
-  assign io_out_2_bits_FUNCT3 = _GEN_8[_io_out_2_valid_T];
-  assign io_out_2_bits_packet_index = _GEN_9[_io_out_2_valid_T];
-  assign io_out_2_bits_ROB_index = _GEN_10[_io_out_2_valid_T];
-  assign io_out_2_bits_instructionType = _GEN_11[_io_out_2_valid_T];
-  assign io_out_2_bits_portID = _GEN_12[_io_out_2_valid_T];
-  assign io_out_2_bits_RS_type = _GEN_13[_io_out_2_valid_T];
-  assign io_out_2_bits_needs_ALU = _GEN_14[_io_out_2_valid_T];
-  assign io_out_2_bits_needs_branch_unit = _GEN_15[_io_out_2_valid_T];
-  assign io_out_2_bits_needs_CSRs = _GEN_16[_io_out_2_valid_T];
-  assign io_out_2_bits_SUBTRACT = _GEN_17[_io_out_2_valid_T];
-  assign io_out_2_bits_MULTIPLY = _GEN_18[_io_out_2_valid_T];
-  assign io_out_2_bits_IMMEDIATE = _GEN_19[_io_out_2_valid_T];
-  assign io_out_2_bits_IS_LOAD = _GEN_20[_io_out_2_valid_T];
-  assign io_out_2_bits_IS_STORE = _GEN_21[_io_out_2_valid_T];
-  assign io_out_3_valid = _GEN_22[_io_out_3_valid_T];
-  assign io_out_3_bits_ready_bits_RS1_ready = _GEN[_io_out_3_valid_T];
-  assign io_out_3_bits_ready_bits_RS2_ready = _GEN_0[_io_out_3_valid_T];
-  assign io_out_3_bits_RD = _GEN_1[_io_out_3_valid_T];
-  assign io_out_3_bits_RD_valid = _GEN_2[_io_out_3_valid_T];
-  assign io_out_3_bits_RS1 = _GEN_3[_io_out_3_valid_T];
-  assign io_out_3_bits_RS1_valid = _GEN_4[_io_out_3_valid_T];
-  assign io_out_3_bits_RS2 = _GEN_5[_io_out_3_valid_T];
-  assign io_out_3_bits_RS2_valid = _GEN_6[_io_out_3_valid_T];
-  assign io_out_3_bits_IMM = _GEN_7[_io_out_3_valid_T];
-  assign io_out_3_bits_FUNCT3 = _GEN_8[_io_out_3_valid_T];
-  assign io_out_3_bits_packet_index = _GEN_9[_io_out_3_valid_T];
-  assign io_out_3_bits_ROB_index = _GEN_10[_io_out_3_valid_T];
-  assign io_out_3_bits_instructionType = _GEN_11[_io_out_3_valid_T];
-  assign io_out_3_bits_portID = _GEN_12[_io_out_3_valid_T];
-  assign io_out_3_bits_RS_type = _GEN_13[_io_out_3_valid_T];
-  assign io_out_3_bits_needs_ALU = _GEN_14[_io_out_3_valid_T];
-  assign io_out_3_bits_needs_branch_unit = _GEN_15[_io_out_3_valid_T];
-  assign io_out_3_bits_needs_CSRs = _GEN_16[_io_out_3_valid_T];
-  assign io_out_3_bits_SUBTRACT = _GEN_17[_io_out_3_valid_T];
-  assign io_out_3_bits_MULTIPLY = _GEN_18[_io_out_3_valid_T];
-  assign io_out_3_bits_IMMEDIATE = _GEN_19[_io_out_3_valid_T];
-  assign io_out_3_bits_IS_LOAD = _GEN_20[_io_out_3_valid_T];
-  assign io_out_3_bits_IS_STORE = _GEN_21[_io_out_3_valid_T];
+  assign io_out_0_bits_fetch_PC = _GEN[front_pointer[2:0]];
+  assign io_out_0_bits_ready_bits_RS1_ready = _GEN_0[front_pointer[2:0]];
+  assign io_out_0_bits_ready_bits_RS2_ready = _GEN_1[front_pointer[2:0]];
+  assign io_out_0_bits_RD = _GEN_2[front_pointer[2:0]];
+  assign io_out_0_bits_RD_valid = _GEN_3[front_pointer[2:0]];
+  assign io_out_0_bits_RS1 = _GEN_4[front_pointer[2:0]];
+  assign io_out_0_bits_RS1_valid = _GEN_5[front_pointer[2:0]];
+  assign io_out_0_bits_RS2 = _GEN_6[front_pointer[2:0]];
+  assign io_out_0_bits_RS2_valid = _GEN_7[front_pointer[2:0]];
+  assign io_out_0_bits_IMM = _GEN_8[front_pointer[2:0]];
+  assign io_out_0_bits_FUNCT3 = _GEN_9[front_pointer[2:0]];
+  assign io_out_0_bits_packet_index = _GEN_10[front_pointer[2:0]];
+  assign io_out_0_bits_ROB_index = _GEN_11[front_pointer[2:0]];
+  assign io_out_0_bits_instructionType = _GEN_12[front_pointer[2:0]];
+  assign io_out_0_bits_portID = _GEN_13[front_pointer[2:0]];
+  assign io_out_0_bits_RS_type = _GEN_14[front_pointer[2:0]];
+  assign io_out_0_bits_needs_ALU = _GEN_15[front_pointer[2:0]];
+  assign io_out_0_bits_needs_branch_unit = _GEN_16[front_pointer[2:0]];
+  assign io_out_0_bits_needs_CSRs = _GEN_17[front_pointer[2:0]];
+  assign io_out_0_bits_SUBTRACT = _GEN_18[front_pointer[2:0]];
+  assign io_out_0_bits_MULTIPLY = _GEN_19[front_pointer[2:0]];
+  assign io_out_0_bits_IMMEDIATE = _GEN_20[front_pointer[2:0]];
+  assign io_out_0_bits_IS_LOAD = _GEN_21[front_pointer[2:0]];
+  assign io_out_0_bits_IS_STORE = _GEN_22[front_pointer[2:0]];
+  assign io_out_1_valid = _GEN_23[_io_out_1_valid_T];
+  assign io_out_1_bits_fetch_PC = _GEN[_io_out_1_valid_T];
+  assign io_out_1_bits_ready_bits_RS1_ready = _GEN_0[_io_out_1_valid_T];
+  assign io_out_1_bits_ready_bits_RS2_ready = _GEN_1[_io_out_1_valid_T];
+  assign io_out_1_bits_RD = _GEN_2[_io_out_1_valid_T];
+  assign io_out_1_bits_RD_valid = _GEN_3[_io_out_1_valid_T];
+  assign io_out_1_bits_RS1 = _GEN_4[_io_out_1_valid_T];
+  assign io_out_1_bits_RS1_valid = _GEN_5[_io_out_1_valid_T];
+  assign io_out_1_bits_RS2 = _GEN_6[_io_out_1_valid_T];
+  assign io_out_1_bits_RS2_valid = _GEN_7[_io_out_1_valid_T];
+  assign io_out_1_bits_IMM = _GEN_8[_io_out_1_valid_T];
+  assign io_out_1_bits_FUNCT3 = _GEN_9[_io_out_1_valid_T];
+  assign io_out_1_bits_packet_index = _GEN_10[_io_out_1_valid_T];
+  assign io_out_1_bits_ROB_index = _GEN_11[_io_out_1_valid_T];
+  assign io_out_1_bits_instructionType = _GEN_12[_io_out_1_valid_T];
+  assign io_out_1_bits_portID = _GEN_13[_io_out_1_valid_T];
+  assign io_out_1_bits_RS_type = _GEN_14[_io_out_1_valid_T];
+  assign io_out_1_bits_needs_ALU = _GEN_15[_io_out_1_valid_T];
+  assign io_out_1_bits_needs_branch_unit = _GEN_16[_io_out_1_valid_T];
+  assign io_out_1_bits_needs_CSRs = _GEN_17[_io_out_1_valid_T];
+  assign io_out_1_bits_SUBTRACT = _GEN_18[_io_out_1_valid_T];
+  assign io_out_1_bits_MULTIPLY = _GEN_19[_io_out_1_valid_T];
+  assign io_out_1_bits_IMMEDIATE = _GEN_20[_io_out_1_valid_T];
+  assign io_out_1_bits_IS_LOAD = _GEN_21[_io_out_1_valid_T];
+  assign io_out_1_bits_IS_STORE = _GEN_22[_io_out_1_valid_T];
+  assign io_out_2_valid = _GEN_23[_io_out_2_valid_T];
+  assign io_out_2_bits_fetch_PC = _GEN[_io_out_2_valid_T];
+  assign io_out_2_bits_ready_bits_RS1_ready = _GEN_0[_io_out_2_valid_T];
+  assign io_out_2_bits_ready_bits_RS2_ready = _GEN_1[_io_out_2_valid_T];
+  assign io_out_2_bits_RD = _GEN_2[_io_out_2_valid_T];
+  assign io_out_2_bits_RD_valid = _GEN_3[_io_out_2_valid_T];
+  assign io_out_2_bits_RS1 = _GEN_4[_io_out_2_valid_T];
+  assign io_out_2_bits_RS1_valid = _GEN_5[_io_out_2_valid_T];
+  assign io_out_2_bits_RS2 = _GEN_6[_io_out_2_valid_T];
+  assign io_out_2_bits_RS2_valid = _GEN_7[_io_out_2_valid_T];
+  assign io_out_2_bits_IMM = _GEN_8[_io_out_2_valid_T];
+  assign io_out_2_bits_FUNCT3 = _GEN_9[_io_out_2_valid_T];
+  assign io_out_2_bits_packet_index = _GEN_10[_io_out_2_valid_T];
+  assign io_out_2_bits_ROB_index = _GEN_11[_io_out_2_valid_T];
+  assign io_out_2_bits_instructionType = _GEN_12[_io_out_2_valid_T];
+  assign io_out_2_bits_portID = _GEN_13[_io_out_2_valid_T];
+  assign io_out_2_bits_RS_type = _GEN_14[_io_out_2_valid_T];
+  assign io_out_2_bits_needs_ALU = _GEN_15[_io_out_2_valid_T];
+  assign io_out_2_bits_needs_branch_unit = _GEN_16[_io_out_2_valid_T];
+  assign io_out_2_bits_needs_CSRs = _GEN_17[_io_out_2_valid_T];
+  assign io_out_2_bits_SUBTRACT = _GEN_18[_io_out_2_valid_T];
+  assign io_out_2_bits_MULTIPLY = _GEN_19[_io_out_2_valid_T];
+  assign io_out_2_bits_IMMEDIATE = _GEN_20[_io_out_2_valid_T];
+  assign io_out_2_bits_IS_LOAD = _GEN_21[_io_out_2_valid_T];
+  assign io_out_2_bits_IS_STORE = _GEN_22[_io_out_2_valid_T];
+  assign io_out_3_valid = _GEN_23[_io_out_3_valid_T];
+  assign io_out_3_bits_fetch_PC = _GEN[_io_out_3_valid_T];
+  assign io_out_3_bits_ready_bits_RS1_ready = _GEN_0[_io_out_3_valid_T];
+  assign io_out_3_bits_ready_bits_RS2_ready = _GEN_1[_io_out_3_valid_T];
+  assign io_out_3_bits_RD = _GEN_2[_io_out_3_valid_T];
+  assign io_out_3_bits_RD_valid = _GEN_3[_io_out_3_valid_T];
+  assign io_out_3_bits_RS1 = _GEN_4[_io_out_3_valid_T];
+  assign io_out_3_bits_RS1_valid = _GEN_5[_io_out_3_valid_T];
+  assign io_out_3_bits_RS2 = _GEN_6[_io_out_3_valid_T];
+  assign io_out_3_bits_RS2_valid = _GEN_7[_io_out_3_valid_T];
+  assign io_out_3_bits_IMM = _GEN_8[_io_out_3_valid_T];
+  assign io_out_3_bits_FUNCT3 = _GEN_9[_io_out_3_valid_T];
+  assign io_out_3_bits_packet_index = _GEN_10[_io_out_3_valid_T];
+  assign io_out_3_bits_ROB_index = _GEN_11[_io_out_3_valid_T];
+  assign io_out_3_bits_instructionType = _GEN_12[_io_out_3_valid_T];
+  assign io_out_3_bits_portID = _GEN_13[_io_out_3_valid_T];
+  assign io_out_3_bits_RS_type = _GEN_14[_io_out_3_valid_T];
+  assign io_out_3_bits_needs_ALU = _GEN_15[_io_out_3_valid_T];
+  assign io_out_3_bits_needs_branch_unit = _GEN_16[_io_out_3_valid_T];
+  assign io_out_3_bits_needs_CSRs = _GEN_17[_io_out_3_valid_T];
+  assign io_out_3_bits_SUBTRACT = _GEN_18[_io_out_3_valid_T];
+  assign io_out_3_bits_MULTIPLY = _GEN_19[_io_out_3_valid_T];
+  assign io_out_3_bits_IMMEDIATE = _GEN_20[_io_out_3_valid_T];
+  assign io_out_3_bits_IS_LOAD = _GEN_21[_io_out_3_valid_T];
+  assign io_out_3_bits_IS_STORE = _GEN_22[_io_out_3_valid_T];
 endmodule
 

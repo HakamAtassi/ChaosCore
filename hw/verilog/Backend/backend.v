@@ -7596,106 +7596,109 @@ module backend(
   input  [3:0]   io_commit_RAT_IDX,
   output [5:0]   io_PC_file_exec_addr,
   input  [5:0]   io_PC_file_exec_data,
-  output         io_backend_packet_0_ready,
-  input          io_backend_packet_0_valid,
-                 io_backend_packet_0_bits_ready_bits_RS1_ready,
-                 io_backend_packet_0_bits_ready_bits_RS2_ready,
-  input  [5:0]   io_backend_packet_0_bits_RD,
-  input          io_backend_packet_0_bits_RD_valid,
-  input  [5:0]   io_backend_packet_0_bits_RS1,
-  input          io_backend_packet_0_bits_RS1_valid,
-  input  [5:0]   io_backend_packet_0_bits_RS2,
-  input          io_backend_packet_0_bits_RS2_valid,
-  input  [31:0]  io_backend_packet_0_bits_IMM,
-  input  [2:0]   io_backend_packet_0_bits_FUNCT3,
-  input  [3:0]   io_backend_packet_0_bits_packet_index,
-  input  [5:0]   io_backend_packet_0_bits_ROB_index,
-  input  [4:0]   io_backend_packet_0_bits_instructionType,
-  input  [1:0]   io_backend_packet_0_bits_portID,
-                 io_backend_packet_0_bits_RS_type,
-  input          io_backend_packet_0_bits_needs_ALU,
-                 io_backend_packet_0_bits_needs_branch_unit,
-                 io_backend_packet_0_bits_needs_CSRs,
-                 io_backend_packet_0_bits_SUBTRACT,
-                 io_backend_packet_0_bits_MULTIPLY,
-                 io_backend_packet_0_bits_IMMEDIATE,
-                 io_backend_packet_0_bits_IS_LOAD,
-                 io_backend_packet_0_bits_IS_STORE,
-  output         io_backend_packet_1_ready,
-  input          io_backend_packet_1_valid,
-                 io_backend_packet_1_bits_ready_bits_RS1_ready,
-                 io_backend_packet_1_bits_ready_bits_RS2_ready,
-  input  [5:0]   io_backend_packet_1_bits_RD,
-  input          io_backend_packet_1_bits_RD_valid,
-  input  [5:0]   io_backend_packet_1_bits_RS1,
-  input          io_backend_packet_1_bits_RS1_valid,
-  input  [5:0]   io_backend_packet_1_bits_RS2,
-  input          io_backend_packet_1_bits_RS2_valid,
-  input  [31:0]  io_backend_packet_1_bits_IMM,
-  input  [2:0]   io_backend_packet_1_bits_FUNCT3,
-  input  [3:0]   io_backend_packet_1_bits_packet_index,
-  input  [5:0]   io_backend_packet_1_bits_ROB_index,
-  input  [4:0]   io_backend_packet_1_bits_instructionType,
-  input  [1:0]   io_backend_packet_1_bits_portID,
-                 io_backend_packet_1_bits_RS_type,
-  input          io_backend_packet_1_bits_needs_ALU,
-                 io_backend_packet_1_bits_needs_branch_unit,
-                 io_backend_packet_1_bits_needs_CSRs,
-                 io_backend_packet_1_bits_SUBTRACT,
-                 io_backend_packet_1_bits_MULTIPLY,
-                 io_backend_packet_1_bits_IMMEDIATE,
-                 io_backend_packet_1_bits_IS_LOAD,
-                 io_backend_packet_1_bits_IS_STORE,
-  output         io_backend_packet_2_ready,
-  input          io_backend_packet_2_valid,
-                 io_backend_packet_2_bits_ready_bits_RS1_ready,
-                 io_backend_packet_2_bits_ready_bits_RS2_ready,
-  input  [5:0]   io_backend_packet_2_bits_RD,
-  input          io_backend_packet_2_bits_RD_valid,
-  input  [5:0]   io_backend_packet_2_bits_RS1,
-  input          io_backend_packet_2_bits_RS1_valid,
-  input  [5:0]   io_backend_packet_2_bits_RS2,
-  input          io_backend_packet_2_bits_RS2_valid,
-  input  [31:0]  io_backend_packet_2_bits_IMM,
-  input  [2:0]   io_backend_packet_2_bits_FUNCT3,
-  input  [3:0]   io_backend_packet_2_bits_packet_index,
-  input  [5:0]   io_backend_packet_2_bits_ROB_index,
-  input  [4:0]   io_backend_packet_2_bits_instructionType,
-  input  [1:0]   io_backend_packet_2_bits_portID,
-                 io_backend_packet_2_bits_RS_type,
-  input          io_backend_packet_2_bits_needs_ALU,
-                 io_backend_packet_2_bits_needs_branch_unit,
-                 io_backend_packet_2_bits_needs_CSRs,
-                 io_backend_packet_2_bits_SUBTRACT,
-                 io_backend_packet_2_bits_MULTIPLY,
-                 io_backend_packet_2_bits_IMMEDIATE,
-                 io_backend_packet_2_bits_IS_LOAD,
-                 io_backend_packet_2_bits_IS_STORE,
-  output         io_backend_packet_3_ready,
-  input          io_backend_packet_3_valid,
-                 io_backend_packet_3_bits_ready_bits_RS1_ready,
-                 io_backend_packet_3_bits_ready_bits_RS2_ready,
-  input  [5:0]   io_backend_packet_3_bits_RD,
-  input          io_backend_packet_3_bits_RD_valid,
-  input  [5:0]   io_backend_packet_3_bits_RS1,
-  input          io_backend_packet_3_bits_RS1_valid,
-  input  [5:0]   io_backend_packet_3_bits_RS2,
-  input          io_backend_packet_3_bits_RS2_valid,
-  input  [31:0]  io_backend_packet_3_bits_IMM,
-  input  [2:0]   io_backend_packet_3_bits_FUNCT3,
-  input  [3:0]   io_backend_packet_3_bits_packet_index,
-  input  [5:0]   io_backend_packet_3_bits_ROB_index,
-  input  [4:0]   io_backend_packet_3_bits_instructionType,
-  input  [1:0]   io_backend_packet_3_bits_portID,
-                 io_backend_packet_3_bits_RS_type,
-  input          io_backend_packet_3_bits_needs_ALU,
-                 io_backend_packet_3_bits_needs_branch_unit,
-                 io_backend_packet_3_bits_needs_CSRs,
-                 io_backend_packet_3_bits_SUBTRACT,
-                 io_backend_packet_3_bits_MULTIPLY,
-                 io_backend_packet_3_bits_IMMEDIATE,
-                 io_backend_packet_3_bits_IS_LOAD,
-                 io_backend_packet_3_bits_IS_STORE,
+  output         io_backend_packet_ready,
+  input          io_backend_packet_valid,
+  input  [31:0]  io_backend_packet_bits_fetch_PC,
+                 io_backend_packet_bits_decoded_instruction_0_fetch_PC,
+  input          io_backend_packet_bits_decoded_instruction_0_ready_bits_RS1_ready,
+                 io_backend_packet_bits_decoded_instruction_0_ready_bits_RS2_ready,
+  input  [5:0]   io_backend_packet_bits_decoded_instruction_0_RD,
+  input          io_backend_packet_bits_decoded_instruction_0_RD_valid,
+  input  [5:0]   io_backend_packet_bits_decoded_instruction_0_RS1,
+  input          io_backend_packet_bits_decoded_instruction_0_RS1_valid,
+  input  [5:0]   io_backend_packet_bits_decoded_instruction_0_RS2,
+  input          io_backend_packet_bits_decoded_instruction_0_RS2_valid,
+  input  [31:0]  io_backend_packet_bits_decoded_instruction_0_IMM,
+  input  [2:0]   io_backend_packet_bits_decoded_instruction_0_FUNCT3,
+  input  [3:0]   io_backend_packet_bits_decoded_instruction_0_packet_index,
+  input  [5:0]   io_backend_packet_bits_decoded_instruction_0_ROB_index,
+  input  [4:0]   io_backend_packet_bits_decoded_instruction_0_instructionType,
+  input  [1:0]   io_backend_packet_bits_decoded_instruction_0_portID,
+                 io_backend_packet_bits_decoded_instruction_0_RS_type,
+  input          io_backend_packet_bits_decoded_instruction_0_needs_ALU,
+                 io_backend_packet_bits_decoded_instruction_0_needs_branch_unit,
+                 io_backend_packet_bits_decoded_instruction_0_needs_CSRs,
+                 io_backend_packet_bits_decoded_instruction_0_SUBTRACT,
+                 io_backend_packet_bits_decoded_instruction_0_MULTIPLY,
+                 io_backend_packet_bits_decoded_instruction_0_IMMEDIATE,
+                 io_backend_packet_bits_decoded_instruction_0_IS_LOAD,
+                 io_backend_packet_bits_decoded_instruction_0_IS_STORE,
+  input  [31:0]  io_backend_packet_bits_decoded_instruction_1_fetch_PC,
+  input          io_backend_packet_bits_decoded_instruction_1_ready_bits_RS1_ready,
+                 io_backend_packet_bits_decoded_instruction_1_ready_bits_RS2_ready,
+  input  [5:0]   io_backend_packet_bits_decoded_instruction_1_RD,
+  input          io_backend_packet_bits_decoded_instruction_1_RD_valid,
+  input  [5:0]   io_backend_packet_bits_decoded_instruction_1_RS1,
+  input          io_backend_packet_bits_decoded_instruction_1_RS1_valid,
+  input  [5:0]   io_backend_packet_bits_decoded_instruction_1_RS2,
+  input          io_backend_packet_bits_decoded_instruction_1_RS2_valid,
+  input  [31:0]  io_backend_packet_bits_decoded_instruction_1_IMM,
+  input  [2:0]   io_backend_packet_bits_decoded_instruction_1_FUNCT3,
+  input  [3:0]   io_backend_packet_bits_decoded_instruction_1_packet_index,
+  input  [5:0]   io_backend_packet_bits_decoded_instruction_1_ROB_index,
+  input  [4:0]   io_backend_packet_bits_decoded_instruction_1_instructionType,
+  input  [1:0]   io_backend_packet_bits_decoded_instruction_1_portID,
+                 io_backend_packet_bits_decoded_instruction_1_RS_type,
+  input          io_backend_packet_bits_decoded_instruction_1_needs_ALU,
+                 io_backend_packet_bits_decoded_instruction_1_needs_branch_unit,
+                 io_backend_packet_bits_decoded_instruction_1_needs_CSRs,
+                 io_backend_packet_bits_decoded_instruction_1_SUBTRACT,
+                 io_backend_packet_bits_decoded_instruction_1_MULTIPLY,
+                 io_backend_packet_bits_decoded_instruction_1_IMMEDIATE,
+                 io_backend_packet_bits_decoded_instruction_1_IS_LOAD,
+                 io_backend_packet_bits_decoded_instruction_1_IS_STORE,
+  input  [31:0]  io_backend_packet_bits_decoded_instruction_2_fetch_PC,
+  input          io_backend_packet_bits_decoded_instruction_2_ready_bits_RS1_ready,
+                 io_backend_packet_bits_decoded_instruction_2_ready_bits_RS2_ready,
+  input  [5:0]   io_backend_packet_bits_decoded_instruction_2_RD,
+  input          io_backend_packet_bits_decoded_instruction_2_RD_valid,
+  input  [5:0]   io_backend_packet_bits_decoded_instruction_2_RS1,
+  input          io_backend_packet_bits_decoded_instruction_2_RS1_valid,
+  input  [5:0]   io_backend_packet_bits_decoded_instruction_2_RS2,
+  input          io_backend_packet_bits_decoded_instruction_2_RS2_valid,
+  input  [31:0]  io_backend_packet_bits_decoded_instruction_2_IMM,
+  input  [2:0]   io_backend_packet_bits_decoded_instruction_2_FUNCT3,
+  input  [3:0]   io_backend_packet_bits_decoded_instruction_2_packet_index,
+  input  [5:0]   io_backend_packet_bits_decoded_instruction_2_ROB_index,
+  input  [4:0]   io_backend_packet_bits_decoded_instruction_2_instructionType,
+  input  [1:0]   io_backend_packet_bits_decoded_instruction_2_portID,
+                 io_backend_packet_bits_decoded_instruction_2_RS_type,
+  input          io_backend_packet_bits_decoded_instruction_2_needs_ALU,
+                 io_backend_packet_bits_decoded_instruction_2_needs_branch_unit,
+                 io_backend_packet_bits_decoded_instruction_2_needs_CSRs,
+                 io_backend_packet_bits_decoded_instruction_2_SUBTRACT,
+                 io_backend_packet_bits_decoded_instruction_2_MULTIPLY,
+                 io_backend_packet_bits_decoded_instruction_2_IMMEDIATE,
+                 io_backend_packet_bits_decoded_instruction_2_IS_LOAD,
+                 io_backend_packet_bits_decoded_instruction_2_IS_STORE,
+  input  [31:0]  io_backend_packet_bits_decoded_instruction_3_fetch_PC,
+  input          io_backend_packet_bits_decoded_instruction_3_ready_bits_RS1_ready,
+                 io_backend_packet_bits_decoded_instruction_3_ready_bits_RS2_ready,
+  input  [5:0]   io_backend_packet_bits_decoded_instruction_3_RD,
+  input          io_backend_packet_bits_decoded_instruction_3_RD_valid,
+  input  [5:0]   io_backend_packet_bits_decoded_instruction_3_RS1,
+  input          io_backend_packet_bits_decoded_instruction_3_RS1_valid,
+  input  [5:0]   io_backend_packet_bits_decoded_instruction_3_RS2,
+  input          io_backend_packet_bits_decoded_instruction_3_RS2_valid,
+  input  [31:0]  io_backend_packet_bits_decoded_instruction_3_IMM,
+  input  [2:0]   io_backend_packet_bits_decoded_instruction_3_FUNCT3,
+  input  [3:0]   io_backend_packet_bits_decoded_instruction_3_packet_index,
+  input  [5:0]   io_backend_packet_bits_decoded_instruction_3_ROB_index,
+  input  [4:0]   io_backend_packet_bits_decoded_instruction_3_instructionType,
+  input  [1:0]   io_backend_packet_bits_decoded_instruction_3_portID,
+                 io_backend_packet_bits_decoded_instruction_3_RS_type,
+  input          io_backend_packet_bits_decoded_instruction_3_needs_ALU,
+                 io_backend_packet_bits_decoded_instruction_3_needs_branch_unit,
+                 io_backend_packet_bits_decoded_instruction_3_needs_CSRs,
+                 io_backend_packet_bits_decoded_instruction_3_SUBTRACT,
+                 io_backend_packet_bits_decoded_instruction_3_MULTIPLY,
+                 io_backend_packet_bits_decoded_instruction_3_IMMEDIATE,
+                 io_backend_packet_bits_decoded_instruction_3_IS_LOAD,
+                 io_backend_packet_bits_decoded_instruction_3_IS_STORE,
+                 io_backend_packet_bits_valid_bits_0,
+                 io_backend_packet_bits_valid_bits_1,
+                 io_backend_packet_bits_valid_bits_2,
+                 io_backend_packet_bits_valid_bits_3,
   output         io_MEMRS_ready_0,
                  io_MEMRS_ready_1,
                  io_MEMRS_ready_2,
@@ -7949,72 +7952,132 @@ module backend(
     .reset                                    (reset),
     .io_backend_packet_0_ready                (io_INTRS_ready_0),
     .io_backend_packet_0_valid
-      (io_backend_packet_0_bits_RS_type == 2'h0 & io_backend_packet_0_valid),
-    .io_backend_packet_0_bits_RD              (io_backend_packet_0_bits_RD),
-    .io_backend_packet_0_bits_RD_valid        (io_backend_packet_0_bits_RD_valid),
-    .io_backend_packet_0_bits_RS1             (io_backend_packet_0_bits_RS1),
-    .io_backend_packet_0_bits_RS2             (io_backend_packet_0_bits_RS2),
-    .io_backend_packet_0_bits_IMM             (io_backend_packet_0_bits_IMM),
-    .io_backend_packet_0_bits_FUNCT3          (io_backend_packet_0_bits_FUNCT3),
-    .io_backend_packet_0_bits_packet_index    (io_backend_packet_0_bits_packet_index),
-    .io_backend_packet_0_bits_ROB_index       (io_backend_packet_0_bits_ROB_index),
-    .io_backend_packet_0_bits_instructionType (io_backend_packet_0_bits_instructionType),
-    .io_backend_packet_0_bits_portID          (io_backend_packet_0_bits_portID),
-    .io_backend_packet_0_bits_needs_ALU       (io_backend_packet_0_bits_needs_ALU),
-    .io_backend_packet_0_bits_SUBTRACT        (io_backend_packet_0_bits_SUBTRACT),
-    .io_backend_packet_0_bits_MULTIPLY        (io_backend_packet_0_bits_MULTIPLY),
-    .io_backend_packet_0_bits_IMMEDIATE       (io_backend_packet_0_bits_IMMEDIATE),
+      (io_backend_packet_bits_decoded_instruction_0_RS_type == 2'h0
+       & io_backend_packet_bits_valid_bits_0),
+    .io_backend_packet_0_bits_RD
+      (io_backend_packet_bits_decoded_instruction_0_RD),
+    .io_backend_packet_0_bits_RD_valid
+      (io_backend_packet_bits_decoded_instruction_0_RD_valid),
+    .io_backend_packet_0_bits_RS1
+      (io_backend_packet_bits_decoded_instruction_0_RS1),
+    .io_backend_packet_0_bits_RS2
+      (io_backend_packet_bits_decoded_instruction_0_RS2),
+    .io_backend_packet_0_bits_IMM
+      (io_backend_packet_bits_decoded_instruction_0_IMM),
+    .io_backend_packet_0_bits_FUNCT3
+      (io_backend_packet_bits_decoded_instruction_0_FUNCT3),
+    .io_backend_packet_0_bits_packet_index
+      (io_backend_packet_bits_decoded_instruction_0_packet_index),
+    .io_backend_packet_0_bits_ROB_index
+      (io_backend_packet_bits_decoded_instruction_0_ROB_index),
+    .io_backend_packet_0_bits_instructionType
+      (io_backend_packet_bits_decoded_instruction_0_instructionType),
+    .io_backend_packet_0_bits_portID
+      (io_backend_packet_bits_decoded_instruction_0_portID),
+    .io_backend_packet_0_bits_needs_ALU
+      (io_backend_packet_bits_decoded_instruction_0_needs_ALU),
+    .io_backend_packet_0_bits_SUBTRACT
+      (io_backend_packet_bits_decoded_instruction_0_SUBTRACT),
+    .io_backend_packet_0_bits_MULTIPLY
+      (io_backend_packet_bits_decoded_instruction_0_MULTIPLY),
+    .io_backend_packet_0_bits_IMMEDIATE
+      (io_backend_packet_bits_decoded_instruction_0_IMMEDIATE),
     .io_backend_packet_1_ready                (io_INTRS_ready_1),
     .io_backend_packet_1_valid
-      (io_backend_packet_1_bits_RS_type == 2'h0 & io_backend_packet_1_valid),
-    .io_backend_packet_1_bits_RD              (io_backend_packet_1_bits_RD),
-    .io_backend_packet_1_bits_RD_valid        (io_backend_packet_1_bits_RD_valid),
-    .io_backend_packet_1_bits_RS1             (io_backend_packet_1_bits_RS1),
-    .io_backend_packet_1_bits_RS2             (io_backend_packet_1_bits_RS2),
-    .io_backend_packet_1_bits_IMM             (io_backend_packet_1_bits_IMM),
-    .io_backend_packet_1_bits_FUNCT3          (io_backend_packet_1_bits_FUNCT3),
-    .io_backend_packet_1_bits_packet_index    (io_backend_packet_1_bits_packet_index),
-    .io_backend_packet_1_bits_ROB_index       (io_backend_packet_1_bits_ROB_index),
-    .io_backend_packet_1_bits_instructionType (io_backend_packet_1_bits_instructionType),
-    .io_backend_packet_1_bits_portID          (io_backend_packet_1_bits_portID),
-    .io_backend_packet_1_bits_needs_ALU       (io_backend_packet_1_bits_needs_ALU),
-    .io_backend_packet_1_bits_SUBTRACT        (io_backend_packet_1_bits_SUBTRACT),
-    .io_backend_packet_1_bits_MULTIPLY        (io_backend_packet_1_bits_MULTIPLY),
-    .io_backend_packet_1_bits_IMMEDIATE       (io_backend_packet_1_bits_IMMEDIATE),
+      (io_backend_packet_bits_decoded_instruction_1_RS_type == 2'h0
+       & io_backend_packet_bits_valid_bits_1),
+    .io_backend_packet_1_bits_RD
+      (io_backend_packet_bits_decoded_instruction_1_RD),
+    .io_backend_packet_1_bits_RD_valid
+      (io_backend_packet_bits_decoded_instruction_1_RD_valid),
+    .io_backend_packet_1_bits_RS1
+      (io_backend_packet_bits_decoded_instruction_1_RS1),
+    .io_backend_packet_1_bits_RS2
+      (io_backend_packet_bits_decoded_instruction_1_RS2),
+    .io_backend_packet_1_bits_IMM
+      (io_backend_packet_bits_decoded_instruction_1_IMM),
+    .io_backend_packet_1_bits_FUNCT3
+      (io_backend_packet_bits_decoded_instruction_1_FUNCT3),
+    .io_backend_packet_1_bits_packet_index
+      (io_backend_packet_bits_decoded_instruction_1_packet_index),
+    .io_backend_packet_1_bits_ROB_index
+      (io_backend_packet_bits_decoded_instruction_1_ROB_index),
+    .io_backend_packet_1_bits_instructionType
+      (io_backend_packet_bits_decoded_instruction_1_instructionType),
+    .io_backend_packet_1_bits_portID
+      (io_backend_packet_bits_decoded_instruction_1_portID),
+    .io_backend_packet_1_bits_needs_ALU
+      (io_backend_packet_bits_decoded_instruction_1_needs_ALU),
+    .io_backend_packet_1_bits_SUBTRACT
+      (io_backend_packet_bits_decoded_instruction_1_SUBTRACT),
+    .io_backend_packet_1_bits_MULTIPLY
+      (io_backend_packet_bits_decoded_instruction_1_MULTIPLY),
+    .io_backend_packet_1_bits_IMMEDIATE
+      (io_backend_packet_bits_decoded_instruction_1_IMMEDIATE),
     .io_backend_packet_2_ready                (io_INTRS_ready_2),
     .io_backend_packet_2_valid
-      (io_backend_packet_2_bits_RS_type == 2'h0 & io_backend_packet_2_valid),
-    .io_backend_packet_2_bits_RD              (io_backend_packet_2_bits_RD),
-    .io_backend_packet_2_bits_RD_valid        (io_backend_packet_2_bits_RD_valid),
-    .io_backend_packet_2_bits_RS1             (io_backend_packet_2_bits_RS1),
-    .io_backend_packet_2_bits_RS2             (io_backend_packet_2_bits_RS2),
-    .io_backend_packet_2_bits_IMM             (io_backend_packet_2_bits_IMM),
-    .io_backend_packet_2_bits_FUNCT3          (io_backend_packet_2_bits_FUNCT3),
-    .io_backend_packet_2_bits_packet_index    (io_backend_packet_2_bits_packet_index),
-    .io_backend_packet_2_bits_ROB_index       (io_backend_packet_2_bits_ROB_index),
-    .io_backend_packet_2_bits_instructionType (io_backend_packet_2_bits_instructionType),
-    .io_backend_packet_2_bits_portID          (io_backend_packet_2_bits_portID),
-    .io_backend_packet_2_bits_needs_ALU       (io_backend_packet_2_bits_needs_ALU),
-    .io_backend_packet_2_bits_SUBTRACT        (io_backend_packet_2_bits_SUBTRACT),
-    .io_backend_packet_2_bits_MULTIPLY        (io_backend_packet_2_bits_MULTIPLY),
-    .io_backend_packet_2_bits_IMMEDIATE       (io_backend_packet_2_bits_IMMEDIATE),
+      (io_backend_packet_bits_decoded_instruction_2_RS_type == 2'h0
+       & io_backend_packet_bits_valid_bits_2),
+    .io_backend_packet_2_bits_RD
+      (io_backend_packet_bits_decoded_instruction_2_RD),
+    .io_backend_packet_2_bits_RD_valid
+      (io_backend_packet_bits_decoded_instruction_2_RD_valid),
+    .io_backend_packet_2_bits_RS1
+      (io_backend_packet_bits_decoded_instruction_2_RS1),
+    .io_backend_packet_2_bits_RS2
+      (io_backend_packet_bits_decoded_instruction_2_RS2),
+    .io_backend_packet_2_bits_IMM
+      (io_backend_packet_bits_decoded_instruction_2_IMM),
+    .io_backend_packet_2_bits_FUNCT3
+      (io_backend_packet_bits_decoded_instruction_2_FUNCT3),
+    .io_backend_packet_2_bits_packet_index
+      (io_backend_packet_bits_decoded_instruction_2_packet_index),
+    .io_backend_packet_2_bits_ROB_index
+      (io_backend_packet_bits_decoded_instruction_2_ROB_index),
+    .io_backend_packet_2_bits_instructionType
+      (io_backend_packet_bits_decoded_instruction_2_instructionType),
+    .io_backend_packet_2_bits_portID
+      (io_backend_packet_bits_decoded_instruction_2_portID),
+    .io_backend_packet_2_bits_needs_ALU
+      (io_backend_packet_bits_decoded_instruction_2_needs_ALU),
+    .io_backend_packet_2_bits_SUBTRACT
+      (io_backend_packet_bits_decoded_instruction_2_SUBTRACT),
+    .io_backend_packet_2_bits_MULTIPLY
+      (io_backend_packet_bits_decoded_instruction_2_MULTIPLY),
+    .io_backend_packet_2_bits_IMMEDIATE
+      (io_backend_packet_bits_decoded_instruction_2_IMMEDIATE),
     .io_backend_packet_3_ready                (io_INTRS_ready_3),
     .io_backend_packet_3_valid
-      (io_backend_packet_3_bits_RS_type == 2'h0 & io_backend_packet_3_valid),
-    .io_backend_packet_3_bits_RD              (io_backend_packet_3_bits_RD),
-    .io_backend_packet_3_bits_RD_valid        (io_backend_packet_3_bits_RD_valid),
-    .io_backend_packet_3_bits_RS1             (io_backend_packet_3_bits_RS1),
-    .io_backend_packet_3_bits_RS2             (io_backend_packet_3_bits_RS2),
-    .io_backend_packet_3_bits_IMM             (io_backend_packet_3_bits_IMM),
-    .io_backend_packet_3_bits_FUNCT3          (io_backend_packet_3_bits_FUNCT3),
-    .io_backend_packet_3_bits_packet_index    (io_backend_packet_3_bits_packet_index),
-    .io_backend_packet_3_bits_ROB_index       (io_backend_packet_3_bits_ROB_index),
-    .io_backend_packet_3_bits_instructionType (io_backend_packet_3_bits_instructionType),
-    .io_backend_packet_3_bits_portID          (io_backend_packet_3_bits_portID),
-    .io_backend_packet_3_bits_needs_ALU       (io_backend_packet_3_bits_needs_ALU),
-    .io_backend_packet_3_bits_SUBTRACT        (io_backend_packet_3_bits_SUBTRACT),
-    .io_backend_packet_3_bits_MULTIPLY        (io_backend_packet_3_bits_MULTIPLY),
-    .io_backend_packet_3_bits_IMMEDIATE       (io_backend_packet_3_bits_IMMEDIATE),
+      (io_backend_packet_bits_decoded_instruction_3_RS_type == 2'h0
+       & io_backend_packet_bits_valid_bits_3),
+    .io_backend_packet_3_bits_RD
+      (io_backend_packet_bits_decoded_instruction_3_RD),
+    .io_backend_packet_3_bits_RD_valid
+      (io_backend_packet_bits_decoded_instruction_3_RD_valid),
+    .io_backend_packet_3_bits_RS1
+      (io_backend_packet_bits_decoded_instruction_3_RS1),
+    .io_backend_packet_3_bits_RS2
+      (io_backend_packet_bits_decoded_instruction_3_RS2),
+    .io_backend_packet_3_bits_IMM
+      (io_backend_packet_bits_decoded_instruction_3_IMM),
+    .io_backend_packet_3_bits_FUNCT3
+      (io_backend_packet_bits_decoded_instruction_3_FUNCT3),
+    .io_backend_packet_3_bits_packet_index
+      (io_backend_packet_bits_decoded_instruction_3_packet_index),
+    .io_backend_packet_3_bits_ROB_index
+      (io_backend_packet_bits_decoded_instruction_3_ROB_index),
+    .io_backend_packet_3_bits_instructionType
+      (io_backend_packet_bits_decoded_instruction_3_instructionType),
+    .io_backend_packet_3_bits_portID
+      (io_backend_packet_bits_decoded_instruction_3_portID),
+    .io_backend_packet_3_bits_needs_ALU
+      (io_backend_packet_bits_decoded_instruction_3_needs_ALU),
+    .io_backend_packet_3_bits_SUBTRACT
+      (io_backend_packet_bits_decoded_instruction_3_SUBTRACT),
+    .io_backend_packet_3_bits_MULTIPLY
+      (io_backend_packet_bits_decoded_instruction_3_MULTIPLY),
+    .io_backend_packet_3_bits_IMMEDIATE
+      (io_backend_packet_bits_decoded_instruction_3_IMMEDIATE),
     .io_FU_outputs_0_valid                    (_FU0_io_FU_output_valid),
     .io_FU_outputs_0_bits_RD                  (_FU0_io_FU_output_bits_RD),
     .io_FU_outputs_0_bits_RD_valid            (_FU0_io_FU_output_bits_RD_valid),
@@ -8076,52 +8139,92 @@ module backend(
     .reset                                 (reset),
     .io_backend_packet_0_ready             (io_MEMRS_ready_0),
     .io_backend_packet_0_valid
-      (io_backend_packet_0_bits_RS_type == 2'h1 & io_backend_packet_0_valid),
-    .io_backend_packet_0_bits_RD           (io_backend_packet_0_bits_RD),
-    .io_backend_packet_0_bits_RS1          (io_backend_packet_0_bits_RS1),
-    .io_backend_packet_0_bits_RS2          (io_backend_packet_0_bits_RS2),
-    .io_backend_packet_0_bits_IMM          (io_backend_packet_0_bits_IMM),
-    .io_backend_packet_0_bits_FUNCT3       (io_backend_packet_0_bits_FUNCT3),
-    .io_backend_packet_0_bits_packet_index (io_backend_packet_0_bits_packet_index),
-    .io_backend_packet_0_bits_ROB_index    (io_backend_packet_0_bits_ROB_index),
-    .io_backend_packet_0_bits_IS_LOAD      (io_backend_packet_0_bits_IS_LOAD),
-    .io_backend_packet_0_bits_IS_STORE     (io_backend_packet_0_bits_IS_STORE),
+      (io_backend_packet_bits_decoded_instruction_0_RS_type == 2'h1
+       & io_backend_packet_bits_valid_bits_0),
+    .io_backend_packet_0_bits_RD
+      (io_backend_packet_bits_decoded_instruction_0_RD),
+    .io_backend_packet_0_bits_RS1
+      (io_backend_packet_bits_decoded_instruction_0_RS1),
+    .io_backend_packet_0_bits_RS2
+      (io_backend_packet_bits_decoded_instruction_0_RS2),
+    .io_backend_packet_0_bits_IMM
+      (io_backend_packet_bits_decoded_instruction_0_IMM),
+    .io_backend_packet_0_bits_FUNCT3
+      (io_backend_packet_bits_decoded_instruction_0_FUNCT3),
+    .io_backend_packet_0_bits_packet_index
+      (io_backend_packet_bits_decoded_instruction_0_packet_index),
+    .io_backend_packet_0_bits_ROB_index
+      (io_backend_packet_bits_decoded_instruction_0_ROB_index),
+    .io_backend_packet_0_bits_IS_LOAD
+      (io_backend_packet_bits_decoded_instruction_0_IS_LOAD),
+    .io_backend_packet_0_bits_IS_STORE
+      (io_backend_packet_bits_decoded_instruction_0_IS_STORE),
     .io_backend_packet_1_ready             (io_MEMRS_ready_1),
     .io_backend_packet_1_valid
-      (io_backend_packet_1_bits_RS_type == 2'h1 & io_backend_packet_1_valid),
-    .io_backend_packet_1_bits_RD           (io_backend_packet_1_bits_RD),
-    .io_backend_packet_1_bits_RS1          (io_backend_packet_1_bits_RS1),
-    .io_backend_packet_1_bits_RS2          (io_backend_packet_1_bits_RS2),
-    .io_backend_packet_1_bits_IMM          (io_backend_packet_1_bits_IMM),
-    .io_backend_packet_1_bits_FUNCT3       (io_backend_packet_1_bits_FUNCT3),
-    .io_backend_packet_1_bits_packet_index (io_backend_packet_1_bits_packet_index),
-    .io_backend_packet_1_bits_ROB_index    (io_backend_packet_1_bits_ROB_index),
-    .io_backend_packet_1_bits_IS_LOAD      (io_backend_packet_1_bits_IS_LOAD),
-    .io_backend_packet_1_bits_IS_STORE     (io_backend_packet_1_bits_IS_STORE),
+      (io_backend_packet_bits_decoded_instruction_1_RS_type == 2'h1
+       & io_backend_packet_bits_valid_bits_1),
+    .io_backend_packet_1_bits_RD
+      (io_backend_packet_bits_decoded_instruction_1_RD),
+    .io_backend_packet_1_bits_RS1
+      (io_backend_packet_bits_decoded_instruction_1_RS1),
+    .io_backend_packet_1_bits_RS2
+      (io_backend_packet_bits_decoded_instruction_1_RS2),
+    .io_backend_packet_1_bits_IMM
+      (io_backend_packet_bits_decoded_instruction_1_IMM),
+    .io_backend_packet_1_bits_FUNCT3
+      (io_backend_packet_bits_decoded_instruction_1_FUNCT3),
+    .io_backend_packet_1_bits_packet_index
+      (io_backend_packet_bits_decoded_instruction_1_packet_index),
+    .io_backend_packet_1_bits_ROB_index
+      (io_backend_packet_bits_decoded_instruction_1_ROB_index),
+    .io_backend_packet_1_bits_IS_LOAD
+      (io_backend_packet_bits_decoded_instruction_1_IS_LOAD),
+    .io_backend_packet_1_bits_IS_STORE
+      (io_backend_packet_bits_decoded_instruction_1_IS_STORE),
     .io_backend_packet_2_ready             (io_MEMRS_ready_2),
     .io_backend_packet_2_valid
-      (io_backend_packet_2_bits_RS_type == 2'h1 & io_backend_packet_2_valid),
-    .io_backend_packet_2_bits_RD           (io_backend_packet_2_bits_RD),
-    .io_backend_packet_2_bits_RS1          (io_backend_packet_2_bits_RS1),
-    .io_backend_packet_2_bits_RS2          (io_backend_packet_2_bits_RS2),
-    .io_backend_packet_2_bits_IMM          (io_backend_packet_2_bits_IMM),
-    .io_backend_packet_2_bits_FUNCT3       (io_backend_packet_2_bits_FUNCT3),
-    .io_backend_packet_2_bits_packet_index (io_backend_packet_2_bits_packet_index),
-    .io_backend_packet_2_bits_ROB_index    (io_backend_packet_2_bits_ROB_index),
-    .io_backend_packet_2_bits_IS_LOAD      (io_backend_packet_2_bits_IS_LOAD),
-    .io_backend_packet_2_bits_IS_STORE     (io_backend_packet_2_bits_IS_STORE),
+      (io_backend_packet_bits_decoded_instruction_2_RS_type == 2'h1
+       & io_backend_packet_bits_valid_bits_2),
+    .io_backend_packet_2_bits_RD
+      (io_backend_packet_bits_decoded_instruction_2_RD),
+    .io_backend_packet_2_bits_RS1
+      (io_backend_packet_bits_decoded_instruction_2_RS1),
+    .io_backend_packet_2_bits_RS2
+      (io_backend_packet_bits_decoded_instruction_2_RS2),
+    .io_backend_packet_2_bits_IMM
+      (io_backend_packet_bits_decoded_instruction_2_IMM),
+    .io_backend_packet_2_bits_FUNCT3
+      (io_backend_packet_bits_decoded_instruction_2_FUNCT3),
+    .io_backend_packet_2_bits_packet_index
+      (io_backend_packet_bits_decoded_instruction_2_packet_index),
+    .io_backend_packet_2_bits_ROB_index
+      (io_backend_packet_bits_decoded_instruction_2_ROB_index),
+    .io_backend_packet_2_bits_IS_LOAD
+      (io_backend_packet_bits_decoded_instruction_2_IS_LOAD),
+    .io_backend_packet_2_bits_IS_STORE
+      (io_backend_packet_bits_decoded_instruction_2_IS_STORE),
     .io_backend_packet_3_ready             (io_MEMRS_ready_3),
     .io_backend_packet_3_valid
-      (io_backend_packet_3_bits_RS_type == 2'h1 & io_backend_packet_3_valid),
-    .io_backend_packet_3_bits_RD           (io_backend_packet_3_bits_RD),
-    .io_backend_packet_3_bits_RS1          (io_backend_packet_3_bits_RS1),
-    .io_backend_packet_3_bits_RS2          (io_backend_packet_3_bits_RS2),
-    .io_backend_packet_3_bits_IMM          (io_backend_packet_3_bits_IMM),
-    .io_backend_packet_3_bits_FUNCT3       (io_backend_packet_3_bits_FUNCT3),
-    .io_backend_packet_3_bits_packet_index (io_backend_packet_3_bits_packet_index),
-    .io_backend_packet_3_bits_ROB_index    (io_backend_packet_3_bits_ROB_index),
-    .io_backend_packet_3_bits_IS_LOAD      (io_backend_packet_3_bits_IS_LOAD),
-    .io_backend_packet_3_bits_IS_STORE     (io_backend_packet_3_bits_IS_STORE),
+      (io_backend_packet_bits_decoded_instruction_3_RS_type == 2'h1
+       & io_backend_packet_bits_valid_bits_3),
+    .io_backend_packet_3_bits_RD
+      (io_backend_packet_bits_decoded_instruction_3_RD),
+    .io_backend_packet_3_bits_RS1
+      (io_backend_packet_bits_decoded_instruction_3_RS1),
+    .io_backend_packet_3_bits_RS2
+      (io_backend_packet_bits_decoded_instruction_3_RS2),
+    .io_backend_packet_3_bits_IMM
+      (io_backend_packet_bits_decoded_instruction_3_IMM),
+    .io_backend_packet_3_bits_FUNCT3
+      (io_backend_packet_bits_decoded_instruction_3_FUNCT3),
+    .io_backend_packet_3_bits_packet_index
+      (io_backend_packet_bits_decoded_instruction_3_packet_index),
+    .io_backend_packet_3_bits_ROB_index
+      (io_backend_packet_bits_decoded_instruction_3_ROB_index),
+    .io_backend_packet_3_bits_IS_LOAD
+      (io_backend_packet_bits_decoded_instruction_3_IS_LOAD),
+    .io_backend_packet_3_bits_IS_STORE
+      (io_backend_packet_bits_decoded_instruction_3_IS_STORE),
     .io_FU_outputs_0_valid                 (_FU0_io_FU_output_valid),
     .io_FU_outputs_0_bits_RD               (_FU0_io_FU_output_bits_RD),
     .io_FU_outputs_0_bits_RD_valid         (_FU0_io_FU_output_bits_RD_valid),
@@ -8339,10 +8442,7 @@ module backend(
   );
   assign io_DRAM_resp_ready = 1'h1;
   assign io_PC_file_exec_addr = _INT_RS_io_RF_inputs_0_bits_ROB_index;
-  assign io_backend_packet_0_ready = 1'h0;
-  assign io_backend_packet_1_ready = 1'h0;
-  assign io_backend_packet_2_ready = 1'h0;
-  assign io_backend_packet_3_ready = 1'h0;
+  assign io_backend_packet_ready = 1'h0;
   assign io_FU_outputs_0_valid = _FU0_io_FU_output_valid;
   assign io_FU_outputs_0_bits_RD = _FU0_io_FU_output_bits_RD;
   assign io_FU_outputs_0_bits_RD_data = _FU0_io_FU_output_bits_RD_data;

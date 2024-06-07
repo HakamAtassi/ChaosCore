@@ -45,10 +45,10 @@ class ROB(parameters:Parameters) extends Module{
 
     val io = IO(new Bundle{
         // ALLOCATE //
-        val ROB_packet      =   Vec(dispatchWidth, Flipped(Decoupled(new ROB_entry(parameters))))
+        val ROB_packet      =   Flipped(Decoupled(new decoded_fetch_packet(parameters)))
 
-        // 
-        val fetch_PC        =   Input(UInt(32.W))
+        //val instruction_queue   = Module(new instruction_queue(new decoded_instruction(parameters), parameters))
+
 
         // UPDATE //
         val FU_outputs      =   Vec(portCount, Flipped(ValidIO(new FU_output(parameters))))
@@ -78,6 +78,18 @@ class ROB(parameters:Parameters) extends Module{
 
     // ROB_packet port writes metadata, instruction type, PC, etc...
     // FUs simply mark as valid. 
+
+    //////////////////////////
+    // CONSTRUCT ROB PACKET //
+    //////////////////////////
+
+    val ROB_packet      =   Wire(Vec(fetchWidth, new ROB_entry(parameters)))
+
+    for(i <- 0 until fetchWidth){
+        ROB_packet(i).valid         := io.ROB_packet.bits.valid_bits(i)
+        ROB_packet(i).is_branch     := io.ROB_packet.bits.decoded_instruction(i).needs_branch_unit
+    }
+
 
     ////////////////////////////
     // INSTANTIATE ROB BANKS  //
@@ -110,7 +122,7 @@ class ROB(parameters:Parameters) extends Module{
     val ROB_valid_bank = Module(new ROB_mem(Bool()/*UInt(8.W)*/, depth=ROBEntires))
 
 
-    val incoming_write = io.ROB_packet.map(_.valid).reduce(_ || _)
+    val incoming_write = io.ROB_packet.valid
     
 
     //////////////
@@ -129,21 +141,21 @@ class ROB(parameters:Parameters) extends Module{
     // WRITE FROM ROB_packet //
     ///////////////////////////
 
-    for(bank <- 0 until dispatchWidth){ // write new ROB_packet data
+    for(bank <- 0 until fetchWidth){ // write new ROB_packet data
         ROB_entry_banks(bank).io.addrA         := back_index
-        ROB_entry_banks(bank).io.writeDataA    := io.ROB_packet(bank).bits
-        ROB_entry_banks(bank).io.writeEnableA  := io.ROB_packet(bank).bits.valid
+        ROB_entry_banks(bank).io.writeDataA    := ROB_packet(bank)
+        ROB_entry_banks(bank).io.writeEnableA  := ROB_packet(bank).valid
 
         ROB_busy_banks(bank).io.addrA         := back_index
         ROB_busy_banks(bank).io.writeDataA    := 0.B
-        ROB_busy_banks(bank).io.writeEnableA  := io.ROB_packet(bank).valid
+        ROB_busy_banks(bank).io.writeEnableA  := ROB_packet(bank).valid
     }
     
     ROB_valid_bank.io.addrA         := back_index
     ROB_valid_bank.io.writeEnableA  := incoming_write
     ROB_valid_bank.io.writeDataA    := 1.B
 
-    back_pointer := back_pointer + io.ROB_packet.map(_.valid).reduce(_ || _)
+    back_pointer := back_pointer + ROB_packet.map(_.valid).reduce(_ || _)
 
     ////////////////////
     // WRITE FROM FUs //
@@ -229,7 +241,7 @@ class ROB(parameters:Parameters) extends Module{
 
     // allocate
     PC_file.io.addrA        := back_pointer
-    PC_file.io.writeDataA   := io.fetch_PC
+    PC_file.io.writeDataA   := io.ROB_packet.bits.fetch_PC
     PC_file.io.writeEnableA := incoming_write
 
     // deallocate
@@ -251,10 +263,8 @@ class ROB(parameters:Parameters) extends Module{
     /////////////////
 
 
-    //val full = (front_index === back_index) && (front_pointer =/= back_pointer)
-    for(i <- 0 until fetchWidth){
-        io.ROB_packet(i).ready := DontCare
-    }
+    val full = (front_index === back_index) && (front_pointer =/= back_pointer)
+    io.ROB_packet.ready := !full
 
 
 }

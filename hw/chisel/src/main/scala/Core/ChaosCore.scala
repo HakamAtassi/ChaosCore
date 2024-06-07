@@ -155,17 +155,21 @@ class ChaosCore(parameters:Parameters) extends Module{
     BRU.io.FTQ <> FTQ.io.FTQ
 
 
+    // Cant dequeue a fetchpacket from the frontend unless the entire fetch packet is ready
+    // This is only true when the ROB has available space and the RS entries (both INT and MEM)
+    // Have enough available space
 
-    frontend.io.renamed_decoded_fetch_packet <> backend.io.backend_packet
-    ROB.io.ROB_packet <> frontend.io.ROB_packet
-    ROB.io.fetch_PC <> frontend.io.fetch_PC
-
-    frontend.io.MEMRS_ready <> backend.io.MEMRS_ready
-    frontend.io.INTRS_ready <> backend.io.INTRS_ready
+    //FIXME: Need to orchistrate "fire()" here
+    backend.io.backend_packet   <> frontend.io.renamed_decoded_fetch_packet
+    ROB.io.ROB_packet           <> frontend.io.renamed_decoded_fetch_packet
 
 
+    // Connect branch unit to PC file (which exists in the ROB)
     backend.io.PC_file_exec_addr <> ROB.io.PC_file_exec_addr
     backend.io.PC_file_exec_data <> ROB.io.PC_file_exec_data
+
+    // 
+    BRU.io.PC_file_commit_data <> ROB.io.PC_file_commit_data
 
 
 }

@@ -40,7 +40,6 @@ import Thermometor._
 // The Reservation station is able to allocate up to N items at a time
 // And is able to schedule N items at a time as well, based on port availability. 
 
-// FIXME: scale this up to fetchWidth/dispatchWidth or similar 
 class RS(parameters:Parameters) extends Module{
     import parameters._
 
@@ -55,7 +54,6 @@ class RS(parameters:Parameters) extends Module{
 
         // UPDATE //
         val FU_outputs       =      Vec(portCount, Flipped(ValidIO(new FU_output(parameters))))
-
 
         // REDIRECTS // 
         val commit            =   Input(new commit(parameters))
