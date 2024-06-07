@@ -85,8 +85,11 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
 
     // Assign output
 
-    io.decoded_instruction.valid    := io.instruction.valid
-    io.instruction.ready            := io.decoded_instruction.ready
+    io.decoded_instruction.valid            := io.instruction.valid
+
+
+    //io.decoded_instruction.valid       := DontCare // This is assigned externally (see full decoder)
+    io.instruction.ready                    := io.decoded_instruction.ready
 
     val initialReady = Wire(new sources_ready)
     initialReady.RS1_ready := false.B
@@ -103,6 +106,7 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
                                             instructionType === AUIPC       || 
                                             instructionType === SYSTEM)
 
+    io.decoded_instruction.bits.fetch_PC             := DontCare
     io.decoded_instruction.bits.RD                   := RD
     io.decoded_instruction.bits.RS1                  := RS1
     io.decoded_instruction.bits.RS1_valid            := 1.B
@@ -171,7 +175,7 @@ class fetch_packet_decoder(parameters:Parameters) extends Module{
     import parameters._
     val io = IO(new Bundle{
         val fetch_packet         =  Flipped(Decoupled(new fetch_packet(parameters)))          // Fetch packet result (To Decoders)
-        val decoded_fetch_packet =  Vec(fetchWidth, Decoupled(new decoded_instruction(parameters)))
+        val decoded_fetch_packet =  Decoupled(new decoded_fetch_packet(parameters))
     })
 
     val decoders: Seq[decoder] = Seq.tabulate(fetchWidth) { w =>
@@ -185,13 +189,12 @@ class fetch_packet_decoder(parameters:Parameters) extends Module{
 
     // Register outputs //
     for(i <- 0 until fetchWidth){
-        io.decoded_fetch_packet(i).bits             := RegNext(decoders(i).io.decoded_instruction.bits)
-        decoders(i).io.decoded_instruction.ready    := io.decoded_fetch_packet(i).ready
-        io.fetch_packet.ready                       := io.decoded_fetch_packet(i).ready
+        io.decoded_fetch_packet.bits.decoded_instruction(i)         := RegNext(decoders(i).io.decoded_instruction.bits)
+        decoders(i).io.decoded_instruction.ready                    := io.decoded_fetch_packet.ready
+        io.fetch_packet.ready                                       := io.decoded_fetch_packet.ready
     }
 
-    
-    for(i <- 0 until fetchWidth){
-        io.decoded_fetch_packet(i).valid := RegNext(io.fetch_packet.valid)
-    }
+    io.decoded_fetch_packet.valid := RegNext(io.fetch_packet.valid)
+    io.decoded_fetch_packet.bits.fetch_PC   := RegNext(io.fetch_packet.bits.fetch_PC)
+    io.decoded_fetch_packet.bits.valid_bits := RegNext(io.fetch_packet.bits.valid_bits)
 }

@@ -42,25 +42,32 @@ class BRU(parameters:Parameters) extends Module{
         val FTQ         =   Input(new FTQ_entry(parameters))
 
         // COMMIT //
-        val ROB         =   Input(Vec(commitWidth, new ROB_entry(parameters)))
+        val ROB                         =   Input(Vec(commitWidth, new ROB_entry(parameters)))
+        val PC_file_commit_data         =   Input(UInt(log2Ceil(ROBEntires).W))
 
         // Output 
         val commit      =   Output(new commit(parameters))
     })
 
-    io.commit := DontCare
 
     // when commit is taking place
     // if FTQ indicates a misprediction
     // output mispredict and other metadata
 
     io.commit.valid := io.ROB.map(_.valid).reduce(_ || _) && io.FTQ.valid
-    io.commit.is_misprediction := (io.FTQ.predicted_PC =/= io.FTQ.resolved_PC) && io.commit.valid && (/*ROB_PC*/ 0.U === io.FTQ.fetch_PC)
+    io.commit.is_misprediction := (io.FTQ.predicted_PC =/= io.FTQ.resolved_PC) && io.commit.valid && (io.PC_file_commit_data === io.FTQ.fetch_PC)
 
     io.commit.GHR      := io.FTQ.GHR
     io.commit.TOS      := io.FTQ.TOS
     io.commit.NEXT     := io.FTQ.NEXT
     io.commit.RAT_IDX  := io.FTQ.RAT_IDX
+
+    io.commit.T_NT                  := DontCare
+    io.commit.br_type               := DontCare
+    io.commit.fetch_packet_index    := DontCare
+    io.commit.fetch_PC              := DontCare
+
+    io.commit.expected_PC       := io.FTQ.resolved_PC
 
 }
 

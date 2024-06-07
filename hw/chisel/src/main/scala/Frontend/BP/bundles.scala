@@ -211,8 +211,12 @@ class decoded_instruction(parameters:Parameters) extends Bundle{
 
     //val valid              =    Bool()
 
-    //val RDold              =   UInt(physicalRegBits.W) // Actual dest
+    //val RDold              =   UInt(physicalRegBits.W) // Actual dest, needed for exceptions
     //val RDold_valid        =   Bool()
+
+
+    val fetch_PC            =   UInt(32.W)
+
 
     val ready_bits          =   new sources_ready()
 
@@ -248,6 +252,15 @@ class decoded_instruction(parameters:Parameters) extends Bundle{
     val IS_STORE            =   Bool()
     // ADD atomic instructions
 }
+
+
+class decoded_fetch_packet(parameters:Parameters) extends Bundle{
+    import parameters._
+    val fetch_PC            = UInt(32.W)
+    val decoded_instruction = Vec(fetchWidth, new decoded_instruction(parameters))
+    val valid_bits          = Vec(fetchWidth, Bool())
+}
+
 
 // decoded instruction after it goes through register read
 class read_decoded_instruction(parameters:Parameters) extends Bundle{
@@ -354,7 +367,7 @@ class FTQ_entry(parameters:Parameters) extends Bundle{
 
 // PC stored seperately
 class ROB_entry(parameters:Parameters) extends Bundle{
-    val valid = Bool()
+    val valid = Bool()  // is this particular instruction valid?
     // valid
     // busy
     // exception

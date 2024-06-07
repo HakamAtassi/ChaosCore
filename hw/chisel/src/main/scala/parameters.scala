@@ -43,9 +43,8 @@ case class Parameters(
   coreConfig: String = "RV32I",  // core extension (IMAF, etc...)
 
   fetchWidth: Int = 4,   // up to how many instructions does the core fetch each cycle
-  dispatchWidth:Int = 4, // Up to how many entires are sent to the reservation station + execution engine from the instruction queue at a time?
   
-  commitWidth:Int = 4,   // Up to how many entires are freed from the ROB each cycle (cant be larger than the number of ports)
+
 
   GHRWidth: Int = 16,
   RASEntries: Int = 128,
@@ -76,6 +75,14 @@ case class Parameters(
   FPUportCount:Int = 0,  // not used if not "F"
 
 
-  instruction_queue_depth:Int = 8
+  instruction_queue_depth:Int = 8,
+
+
+
+
+
+  // Be careful with these parameters. They are likely bugged
+  dispatchWidth:Int = 4, // Up to how many entires are sent to the reservation station + execution engine from the instruction queue at a time?
+  commitWidth:Int = 4,   // Up to how many entires are freed from the ROB each cycle (cant be larger than the number of ports)
 
 )

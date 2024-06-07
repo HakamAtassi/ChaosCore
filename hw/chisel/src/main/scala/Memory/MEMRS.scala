@@ -64,6 +64,11 @@ class MEMRS(parameters:Parameters) extends Module{
         val RF_inputs               =      Vec(portCount, Decoupled(new decoded_instruction(parameters)))
     })
 
+    ////////////////////////
+    // MODULE ASSUMPTIONS //
+    ////////////////////////
+    require(isPow2(RSEntries), "MEM Reservation station entries not a power of 2")
+
     
     val reservation_station = RegInit(VecInit(Seq.fill(RSEntries)(0.U.asTypeOf(new RS_entry(parameters)))))
 
