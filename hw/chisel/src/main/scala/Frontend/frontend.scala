@@ -244,7 +244,7 @@ class frontend(parameters:Parameters) extends Module{
 
     // Create logic
     renamer.io.create_checkpoint          :=     0.B
-    io.predictions.bits.RAT_IDX           :=     renamer.io.active_checkpoint_value
+    //io.predictions.bits.RAT_IDX           :=     renamer.io.active_checkpoint_value
     when(io.predictions.valid){
         renamer.io.create_checkpoint      :=     1.B 
     }

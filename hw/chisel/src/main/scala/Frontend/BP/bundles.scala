@@ -106,11 +106,14 @@ class fetch_packet(parameters:Parameters) extends Bundle{
 }
 
 class metadata extends Bundle{
-    val JAL             = Bool()
-    val JALR            = Bool()
-    val BR              = Bool()
-    val Call            = Bool()
-    val Ret             = Bool()
+    //val JAL             = Bool()
+    //val JALR            = Bool()
+    //val BR              = Bool()
+    //val Call            = Bool()
+    //val Ret             = Bool()
+
+    val br_type =       _br_type()
+
     val Imm             = UInt(32.W)
     val instruction_PC  = UInt(32.W)
     val RAS             = UInt(32.W)
@@ -123,7 +126,7 @@ class metadata extends Bundle{
 
 object _br_type extends ChiselEnum{
 
-    val NONE, BR, JAL, JALR, RET = Value
+    val NONE, BR, JAL, JALR, RET, CALL = Value
 
 }
 
@@ -143,11 +146,10 @@ class BTB_entry(parameters:Parameters) extends Bundle{
 class commit(parameters:Parameters) extends Bundle{
     import parameters._
 
-    val valid   =   Bool()
+    val valid               =   Bool()
 
-    val fetch_PC      = UInt(32.W)    // To update gshare/PHT
+    val fetch_PC            = UInt(32.W)    // To update gshare/PHT
     val T_NT                = Bool()    // To update BTB (BTB only updates on taken branches)
-
     
     //val target              = UInt(32.W)
     val br_type             = _br_type()
@@ -215,41 +217,41 @@ class decoded_instruction(parameters:Parameters) extends Bundle{
     //val RDold_valid        =   Bool()
 
 
-    val fetch_PC            =   UInt(32.W)
+    //val fetch_PC            =   UInt(32.W)
 
 
     val ready_bits          =   new sources_ready()
 
-    val RD                  =   UInt(physicalRegBits.W) // Actual dest
-    val RD_valid            =   Bool()
-    val RS1                 =   UInt(physicalRegBits.W)
-    val RS1_valid           =   Bool()
-    val RS2                 =   UInt(physicalRegBits.W)
-    val RS2_valid           =   Bool()
-    val IMM                 =   UInt(32.W)
-    val FUNCT3              =   UInt(3.W)
+    val RD                  =  UInt(physicalRegBits.W) // Actual dest
+    val RD_valid            =  Bool()
+    val RS1                 =  UInt(physicalRegBits.W)
+    val RS1_valid           =  Bool()
+    val RS2                 =  UInt(physicalRegBits.W)
+    val RS2_valid           =  Bool()
+    val IMM                 =  UInt(32.W)
+    val FUNCT3              =  UInt(3.W)
 
 
-    val packet_index        =   UInt(log2Ceil(fetchWidth*4).W)    // contains the remainder of the PC. ex: 0, 4, 8, 12, 0, ... for fetchWidth of 4
-    val ROB_index           =   UInt(log2Ceil(ROBEntires).W)
+    val packet_index        =  UInt(log2Ceil(fetchWidth*4).W)    // contains the remainder of the PC. ex: 0, 4, 8, 12, 0, ... for fetchWidth of 4
+    val ROB_index           =  UInt(log2Ceil(ROBEntires).W)
 
     // uOp info
-    val instructionType     =   InstructionType()
+    val instructionType     =  InstructionType()
 
-    val portID              =   UInt(log2Ceil(portCount).W)  // Decoder assings port ID
+    val portID              =  UInt(log2Ceil(portCount).W)  // Decoder assings port ID
     
-    val RS_type             =   RS_types()
+    val RS_type             =  RS_types()
 
     val needs_ALU           =  Bool()
     val needs_branch_unit   =  Bool()
     val needs_CSRs          =  Bool()
 
-    val SUBTRACT            =   Bool()
-    val MULTIPLY            =   Bool()
-    val IMMEDIATE           =   Bool()
+    val SUBTRACT            =  Bool()
+    val MULTIPLY            =  Bool()
+    val IMMEDIATE           =  Bool()
 
-    val IS_LOAD             =   Bool()
-    val IS_STORE            =   Bool()
+    val IS_LOAD             =  Bool()
+    val IS_STORE            =  Bool()
     // ADD atomic instructions
 }
 
@@ -259,8 +261,9 @@ class decoded_fetch_packet(parameters:Parameters) extends Bundle{
     val fetch_PC            = UInt(32.W)
     val decoded_instruction = Vec(fetchWidth, new decoded_instruction(parameters))
     val valid_bits          = Vec(fetchWidth, Bool())
-}
 
+    val RAT_IDX             = UInt(log2Ceil(RATCheckpointCount).W)
+}
 
 // decoded instruction after it goes through register read
 class read_decoded_instruction(parameters:Parameters) extends Bundle{
@@ -349,11 +352,13 @@ class FTQ_entry(parameters:Parameters) extends Bundle{
     val predicted_PC        = UInt(32.W)    // if fetch packet contains a branch, this containts the dominant branch address
                                             // if fetch packet does not contain a taken branch, the dominant branch just PC+N
 
+    val T_NT = Bool()
+    val br_type = _br_type()
+
     // State revision data
     val GHR     = UInt(GHRWidth.W)
     val NEXT    = UInt(log2Ceil(RASEntries).W)
     val TOS     = UInt(log2Ceil(RASEntries).W)
-    val RAT_IDX = UInt(log2Ceil(RATCheckpointCount).W)
 
     // FU branch data buffers
     val dominant_index = UInt(log2Ceil(fetchWidth).W)
@@ -365,24 +370,35 @@ class FTQ_entry(parameters:Parameters) extends Bundle{
 // BACKEND BUNDLES //
 /////////////////////
 
-// PC stored seperately
+class ROB_output(parameters:Parameters) extends Bundle{
+    import parameters._
+    
+    // 1 per row data
+    val fetch_PC    = UInt(32.W)
+    val RAT_IDX     = UInt(log2Ceil(RATCheckpointCount).W)
+
+    // N per row 
+    val ROB_entries = Vec(fetchWidth, new ROB_entry(parameters))
+}
+
+val ROB_shared(parameters:Parameters) extends Bundle{   //FIXME: this name sucks
+    val row_valid = Bool()
+    val fetch_PC = UInt(32.W)
+    val RAT_idx     =   UInt(log2Ceil(RATCheckpointCount).W)
+}
+
+// ROB entries that pertain to each instruction independantly (this info goes in a standalone bank)
 class ROB_entry(parameters:Parameters) extends Bundle{
-    val valid = Bool()  // is this particular instruction valid?
-    // valid
-    // busy
-    // exception
-    // uOp metdata (to know what to do about exceptions, Loads, Stores, etc...)
-    val is_branch = Bool()
-    // RAT checkpoint
+    val valid       = Bool()  // is this particular instruction valid?
+    val is_branch   = Bool()
 
+    val exception   = Bool()
+    val is_load     = Bool()
+    val is_store    = Bool()
+
+    //val RD          =   UInt(log2Ceil(physicalRegCount).W)
+    //val RD_old      =   UInt(log2Ceil(physicalRegCount).W)
 }
-
-
-
-class ROB_commit(parameters:Parameters) extends Bundle{
-    val placeholder = Bool()
-}
-
 
 class sources_ready extends Bundle{
     val RS1_ready    =   Bool()
@@ -425,11 +441,6 @@ class FU_output(parameters:Parameters) extends Bundle{
     val ROB_index           =   UInt(log2Ceil(ROBEntires).W)
     
     val fetch_packet_index  =   UInt(log2Ceil(fetchWidth).W)
-
-    // FIXME: this should just store fetch_packet PC and 
-    // fetch packet index
-    
-    // needs ROB bank
 }
 
 

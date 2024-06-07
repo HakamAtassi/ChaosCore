@@ -336,7 +336,11 @@ module mem_65536x2(
   input  [15:0] R1_addr,
   input         R1_en,
                 R1_clk,
-  output [1:0]  R1_data
+  output [1:0]  R1_data,
+  input  [15:0] W0_addr,
+  input         W0_en,
+                W0_clk,
+  input  [1:0]  W0_data
 );
 
   reg [1:0]  Memory[0:65535];
@@ -352,6 +356,10 @@ module mem_65536x2(
     _R1_en_d0 <= R1_en;
     _R1_addr_d0 <= R1_addr;
   end // always @(posedge)
+  always @(posedge W0_clk) begin
+    if (W0_en & 1'h1)
+      Memory[W0_addr] <= W0_data;
+  end // always @(posedge)
   assign R0_data = _R0_en_d0 ? Memory[_R0_addr_d0] : 2'bx;
   assign R1_data = _R1_en_d0 ? Memory[_R1_addr_d0] : 2'bx;
 endmodule
@@ -363,7 +371,8 @@ module PHT_memory(
   input  [15:0] io_addrB,
   output [15:0] io_readDataB,
   input  [15:0] io_addrC,
-  input  [1:0]  io_writeDataC
+  input  [1:0]  io_writeDataC,
+  input         io_writeEnableC
 );
 
   wire [1:0] _mem_ext_R0_data;
@@ -376,7 +385,11 @@ module PHT_memory(
     .R1_addr (io_addrA),
     .R1_en   (1'h1),
     .R1_clk  (clock),
-    .R1_data (_mem_ext_R1_data)
+    .R1_data (_mem_ext_R1_data),
+    .W0_addr (io_addrC),
+    .W0_en   (io_writeEnableC),
+    .W0_clk  (clock),
+    .W0_data (io_writeDataC)
   );
   assign io_readDataA = {14'h0, _mem_ext_R1_data};
   assign io_readDataB = {14'h0, _mem_ext_R0_data};
@@ -389,61 +402,127 @@ module gshare(
   input         io_predict_valid,
   output        io_T_NT,
                 io_valid,
+  input         io_commit_valid,
+  input  [31:0] io_commit_fetch_PC,
+  input         io_commit_T_NT,
   input  [15:0] io_commit_GHR
 );
 
   wire [15:0] _PHT_io_readDataA;
   wire [15:0] _PHT_io_readDataB;
-  wire [15:0] hashed_commit_addr = io_commit_GHR;
   wire [15:0] hashed_predict_addr = io_predict_PC[15:0] ^ io_predict_GHR;
+  wire [15:0] hashed_commit_addr = io_commit_fetch_PC[15:0] ^ io_commit_GHR;
   reg         io_valid_REG;
   reg  [15:0] PHT_io_addrC_REG;
+  reg         PHT_io_writeEnableC_REG;
+  reg         REG;
   always @(posedge clock) begin
     io_valid_REG <= io_predict_valid;
     PHT_io_addrC_REG <= hashed_commit_addr;
+    PHT_io_writeEnableC_REG <= io_commit_valid;
+    REG <= io_commit_T_NT;
   end // always @(posedge)
   PHT_memory PHT (
-    .clock         (clock),
-    .io_addrA      (hashed_predict_addr),
-    .io_readDataA  (_PHT_io_readDataA),
-    .io_addrB      (hashed_commit_addr),
-    .io_readDataB  (_PHT_io_readDataB),
-    .io_addrC      (PHT_io_addrC_REG),
+    .clock           (clock),
+    .io_addrA        (hashed_predict_addr),
+    .io_readDataA    (_PHT_io_readDataA),
+    .io_addrB        (hashed_commit_addr),
+    .io_readDataB    (_PHT_io_readDataB),
+    .io_addrC        (PHT_io_addrC_REG),
     .io_writeDataC
-      ((|(_PHT_io_readDataB[1:0]))
-         ? _PHT_io_readDataB[1:0] - 2'h1
-         : _PHT_io_readDataB[1:0])
+      (REG
+         ? (_PHT_io_readDataB[1:0] != 2'h3
+              ? _PHT_io_readDataB[1:0] + 2'h1
+              : _PHT_io_readDataB[1:0])
+         : (|(_PHT_io_readDataB[1:0]))
+             ? _PHT_io_readDataB[1:0] - 2'h1
+             : _PHT_io_readDataB[1:0]),
+    .io_writeEnableC (PHT_io_writeEnableC_REG)
   );
   assign io_T_NT = _PHT_io_readDataA[1];
   assign io_valid = io_valid_REG;
 endmodule
 
+// VCS coverage exclude_file
+module mem_4096x56(
+  input  [11:0] R0_addr,
+  input         R0_en,
+                R0_clk,
+  output [55:0] R0_data,
+  input  [11:0] W0_addr,
+  input         W0_en,
+                W0_clk,
+  input  [55:0] W0_data
+);
+
+  reg [55:0] Memory[0:4095];
+  reg        _R0_en_d0;
+  reg [11:0] _R0_addr_d0;
+  always @(posedge R0_clk) begin
+    _R0_en_d0 <= R0_en;
+    _R0_addr_d0 <= R0_addr;
+  end // always @(posedge)
+  always @(posedge W0_clk) begin
+    if (W0_en & 1'h1)
+      Memory[W0_addr] <= W0_data;
+  end // always @(posedge)
+  assign R0_data = _R0_en_d0 ? Memory[_R0_addr_d0] : 56'bx;
+endmodule
+
 module hash_BTB_mem(
   input         clock,
                 reset,
+  input  [11:0] io_rd_addr,
   output        io_data_out_BTB_valid,
   output [17:0] io_data_out_BTB_tag,
   output [31:0] io_data_out_BTB_target,
   output [2:0]  io_data_out_BTB_br_type,
-  input  [31:0] io_data_in_BTB_target
+  input  [11:0] io_wr_addr,
+  input         io_wr_en,
+  input  [17:0] io_data_in_BTB_tag,
+  input  [31:0] io_data_in_BTB_target,
+  input  [2:0]  io_data_in_BTB_br_type
 );
 
-  reg        din_buff_BTB_valid;
-  reg [31:0] din_buff_BTB_target;
+  wire [55:0] _mem_ext_R0_data;
+  reg         hazard_reg;
+  reg         din_buff_BTB_valid;
+  reg  [17:0] din_buff_BTB_tag;
+  reg  [31:0] din_buff_BTB_target;
+  reg  [2:0]  din_buff_BTB_br_type;
   always @(posedge clock) begin
     if (reset) begin
+      hazard_reg <= 1'h0;
       din_buff_BTB_valid <= 1'h0;
+      din_buff_BTB_tag <= 18'h0;
       din_buff_BTB_target <= 32'h0;
+      din_buff_BTB_br_type <= 3'h0;
     end
     else begin
+      hazard_reg <= io_rd_addr == io_wr_addr & io_wr_en;
       din_buff_BTB_valid <= 1'h1;
+      din_buff_BTB_tag <= io_data_in_BTB_tag;
       din_buff_BTB_target <= io_data_in_BTB_target;
+      din_buff_BTB_br_type <= io_data_in_BTB_br_type;
     end
   end // always @(posedge)
-  assign io_data_out_BTB_valid = 1'h0;
-  assign io_data_out_BTB_tag = 18'h0;
-  assign io_data_out_BTB_target = 32'h0;
-  assign io_data_out_BTB_br_type = 3'h0;
+  mem_4096x56 mem_ext (
+    .R0_addr (io_rd_addr),
+    .R0_en   (1'h1),
+    .R0_clk  (clock),
+    .R0_data (_mem_ext_R0_data),
+    .W0_addr (io_wr_addr),
+    .W0_en   (io_wr_en),
+    .W0_clk  (clock),
+    .W0_data
+      ({2'h0, io_data_in_BTB_br_type, io_data_in_BTB_target, io_data_in_BTB_tag, 1'h1})
+  );
+  assign io_data_out_BTB_valid = hazard_reg ? din_buff_BTB_valid : _mem_ext_R0_data[0];
+  assign io_data_out_BTB_tag = hazard_reg ? din_buff_BTB_tag : _mem_ext_R0_data[18:1];
+  assign io_data_out_BTB_target =
+    hazard_reg ? din_buff_BTB_target : _mem_ext_R0_data[50:19];
+  assign io_data_out_BTB_br_type =
+    hazard_reg ? din_buff_BTB_br_type : _mem_ext_R0_data[53:51];
 endmodule
 
 module hash_BTB(
@@ -455,6 +534,9 @@ module hash_BTB(
                 io_BTB_output_BTB_valid,
   output [31:0] io_BTB_output_BTB_target,
   output [2:0]  io_BTB_output_BTB_br_type,
+  input         io_commit_valid,
+  input  [31:0] io_commit_fetch_PC,
+  input  [2:0]  io_commit_br_type,
   input  [31:0] io_commit_expected_PC
 );
 
@@ -469,11 +551,16 @@ module hash_BTB(
   hash_BTB_mem BTB_memory (
     .clock                   (clock),
     .reset                   (reset),
+    .io_rd_addr              (io_predict_PC[15:4]),
     .io_data_out_BTB_valid   (_BTB_memory_io_data_out_BTB_valid),
     .io_data_out_BTB_tag     (_BTB_memory_io_data_out_BTB_tag),
     .io_data_out_BTB_target  (io_BTB_output_BTB_target),
     .io_data_out_BTB_br_type (io_BTB_output_BTB_br_type),
-    .io_data_in_BTB_target   (io_commit_expected_PC)
+    .io_wr_addr              (io_commit_fetch_PC[15:4]),
+    .io_wr_en                (io_commit_valid),
+    .io_data_in_BTB_tag      ({2'h0, io_commit_fetch_PC[31:16]}),
+    .io_data_in_BTB_target   (io_commit_expected_PC),
+    .io_data_in_BTB_br_type  (io_commit_br_type)
   );
   assign io_BTB_hit =
     {2'h0, io_BTB_hit_REG} == _BTB_memory_io_data_out_BTB_tag
@@ -598,6 +685,10 @@ module BP(
                 reset,
                 io_predict_valid,
   input  [31:0] io_predict_bits,
+  input         io_commit_valid,
+  input  [31:0] io_commit_fetch_PC,
+  input         io_commit_T_NT,
+  input  [2:0]  io_commit_br_type,
   input         io_commit_is_misprediction,
   input  [31:0] io_commit_expected_PC,
   input  [15:0] io_commit_GHR,
@@ -621,13 +712,16 @@ module BP(
   wire _BTB_io_BTB_output_BTB_valid;
   wire _gshare_io_valid;
   gshare gshare (
-    .clock            (clock),
-    .io_predict_GHR   (io_GHR),
-    .io_predict_PC    (io_predict_bits),
-    .io_predict_valid (io_predict_valid),
-    .io_T_NT          (io_prediction_bits_T_NT),
-    .io_valid         (_gshare_io_valid),
-    .io_commit_GHR    (io_commit_GHR)
+    .clock              (clock),
+    .io_predict_GHR     (io_GHR),
+    .io_predict_PC      (io_predict_bits),
+    .io_predict_valid   (io_predict_valid),
+    .io_T_NT            (io_prediction_bits_T_NT),
+    .io_valid           (_gshare_io_valid),
+    .io_commit_valid    ((|io_commit_br_type) & io_commit_valid),
+    .io_commit_fetch_PC (io_commit_fetch_PC),
+    .io_commit_T_NT     (io_commit_T_NT),
+    .io_commit_GHR      (io_commit_GHR)
   );
   hash_BTB BTB (
     .clock                     (clock),
@@ -638,6 +732,9 @@ module BP(
     .io_BTB_output_BTB_valid   (_BTB_io_BTB_output_BTB_valid),
     .io_BTB_output_BTB_target  (io_prediction_bits_target),
     .io_BTB_output_BTB_br_type (io_prediction_bits_br_type),
+    .io_commit_valid           (io_commit_T_NT & io_commit_valid),
+    .io_commit_fetch_PC        (io_commit_fetch_PC),
+    .io_commit_br_type         (io_commit_br_type),
     .io_commit_expected_PC     (io_commit_expected_PC)
   );
   RAS RAS (
@@ -667,17 +764,16 @@ module branch_decoder(
   input         io_prediction_bits_T_NT,
   input  [31:0] io_RAS_read_ret_addr,
   output        io_T_NT,
-                io_metadata_JAL,
-                io_metadata_JALR,
-                io_metadata_BR,
-                io_metadata_Call,
-                io_metadata_Ret,
+  output [2:0]  io_metadata_br_type,
   output [31:0] io_metadata_Imm,
                 io_metadata_instruction_PC,
                 io_metadata_RAS,
                 io_metadata_BTB_target
 );
 
+  wire        BR = io_instruction[6:2] == 5'h18;
+  wire        JALR = io_instruction[6:2] == 5'h19;
+  wire        JAL = io_instruction[6:2] == 5'h1B;
   wire [31:0] imm =
     io_instruction[6:0] == 7'h63
       ? {19'h0,
@@ -699,22 +795,20 @@ module branch_decoder(
               : io_instruction[6:0] == 7'h23
                   ? {20'h0, io_instruction[31:25], io_instruction[11:7]}
                   : io_instruction[6:0] == 7'h33 ? {io_instruction[31:12], 12'h0} : 32'h0;
-  wire        JAL = io_instruction[6:0] == 7'h6F;
-  wire        JALR = io_instruction[6:0] == 7'h67;
-  wire        BR = io_instruction[6:0] == 7'h63;
-  wire        _Call_T_2 = io_instruction[11:7] == 5'h1;
-  wire        Ret = JALR & io_instruction[19:15] == 5'h1 & imm == 32'h0;
+  wire        _CALL_T_2 = io_instruction[11:7] == 5'h1;
+  wire        RET = JALR & io_instruction[19:15] == 5'h1 & imm == 32'h0;
   assign io_T_NT =
     JAL
       ? io_valid
       : JALR
-          ? io_valid & (Ret | io_prediction_bits_hit & io_prediction_bits_br_mask[0])
+          ? io_valid & (RET | io_prediction_bits_hit & io_prediction_bits_br_mask[0])
           : BR & io_valid & io_prediction_bits_T_NT;
-  assign io_metadata_JAL = JAL;
-  assign io_metadata_JALR = JALR;
-  assign io_metadata_BR = BR;
-  assign io_metadata_Call = JAL & _Call_T_2 | JALR & _Call_T_2;
-  assign io_metadata_Ret = Ret;
+  assign io_metadata_br_type =
+    BR
+      ? 3'h1
+      : JAL
+          ? 3'h2
+          : JALR ? 3'h3 : JAL & _CALL_T_2 | JALR & _CALL_T_2 ? 3'h5 : {RET, 2'h0};
   assign io_metadata_Imm = imm;
   assign io_metadata_instruction_PC = io_fetch_PC;
   assign io_metadata_RAS = io_RAS_read_ret_addr;
@@ -731,17 +825,16 @@ module branch_decoder_1(
   input         io_prediction_bits_T_NT,
   input  [31:0] io_RAS_read_ret_addr,
   output        io_T_NT,
-                io_metadata_JAL,
-                io_metadata_JALR,
-                io_metadata_BR,
-                io_metadata_Call,
-                io_metadata_Ret,
+  output [2:0]  io_metadata_br_type,
   output [31:0] io_metadata_Imm,
                 io_metadata_instruction_PC,
                 io_metadata_RAS,
                 io_metadata_BTB_target
 );
 
+  wire        BR = io_instruction[6:2] == 5'h18;
+  wire        JALR = io_instruction[6:2] == 5'h19;
+  wire        JAL = io_instruction[6:2] == 5'h1B;
   wire [31:0] imm =
     io_instruction[6:0] == 7'h63
       ? {19'h0,
@@ -763,22 +856,20 @@ module branch_decoder_1(
               : io_instruction[6:0] == 7'h23
                   ? {20'h0, io_instruction[31:25], io_instruction[11:7]}
                   : io_instruction[6:0] == 7'h33 ? {io_instruction[31:12], 12'h0} : 32'h0;
-  wire        JAL = io_instruction[6:0] == 7'h6F;
-  wire        JALR = io_instruction[6:0] == 7'h67;
-  wire        BR = io_instruction[6:0] == 7'h63;
-  wire        _Call_T_2 = io_instruction[11:7] == 5'h1;
-  wire        Ret = JALR & io_instruction[19:15] == 5'h1 & imm == 32'h0;
+  wire        _CALL_T_2 = io_instruction[11:7] == 5'h1;
+  wire        RET = JALR & io_instruction[19:15] == 5'h1 & imm == 32'h0;
   assign io_T_NT =
     JAL
       ? io_valid
       : JALR
-          ? io_valid & (Ret | io_prediction_bits_hit & io_prediction_bits_br_mask[1])
+          ? io_valid & (RET | io_prediction_bits_hit & io_prediction_bits_br_mask[1])
           : BR & io_valid & io_prediction_bits_T_NT;
-  assign io_metadata_JAL = JAL;
-  assign io_metadata_JALR = JALR;
-  assign io_metadata_BR = BR;
-  assign io_metadata_Call = JAL & _Call_T_2 | JALR & _Call_T_2;
-  assign io_metadata_Ret = Ret;
+  assign io_metadata_br_type =
+    BR
+      ? 3'h1
+      : JAL
+          ? 3'h2
+          : JALR ? 3'h3 : JAL & _CALL_T_2 | JALR & _CALL_T_2 ? 3'h5 : {RET, 2'h0};
   assign io_metadata_Imm = imm;
   assign io_metadata_instruction_PC = io_fetch_PC + 32'h4;
   assign io_metadata_RAS = io_RAS_read_ret_addr;
@@ -795,17 +886,16 @@ module branch_decoder_2(
   input         io_prediction_bits_T_NT,
   input  [31:0] io_RAS_read_ret_addr,
   output        io_T_NT,
-                io_metadata_JAL,
-                io_metadata_JALR,
-                io_metadata_BR,
-                io_metadata_Call,
-                io_metadata_Ret,
+  output [2:0]  io_metadata_br_type,
   output [31:0] io_metadata_Imm,
                 io_metadata_instruction_PC,
                 io_metadata_RAS,
                 io_metadata_BTB_target
 );
 
+  wire        BR = io_instruction[6:2] == 5'h18;
+  wire        JALR = io_instruction[6:2] == 5'h19;
+  wire        JAL = io_instruction[6:2] == 5'h1B;
   wire [31:0] imm =
     io_instruction[6:0] == 7'h63
       ? {19'h0,
@@ -827,22 +917,20 @@ module branch_decoder_2(
               : io_instruction[6:0] == 7'h23
                   ? {20'h0, io_instruction[31:25], io_instruction[11:7]}
                   : io_instruction[6:0] == 7'h33 ? {io_instruction[31:12], 12'h0} : 32'h0;
-  wire        JAL = io_instruction[6:0] == 7'h6F;
-  wire        JALR = io_instruction[6:0] == 7'h67;
-  wire        BR = io_instruction[6:0] == 7'h63;
-  wire        _Call_T_2 = io_instruction[11:7] == 5'h1;
-  wire        Ret = JALR & io_instruction[19:15] == 5'h1 & imm == 32'h0;
+  wire        _CALL_T_2 = io_instruction[11:7] == 5'h1;
+  wire        RET = JALR & io_instruction[19:15] == 5'h1 & imm == 32'h0;
   assign io_T_NT =
     JAL
       ? io_valid
       : JALR
-          ? io_valid & (Ret | io_prediction_bits_hit & io_prediction_bits_br_mask[2])
+          ? io_valid & (RET | io_prediction_bits_hit & io_prediction_bits_br_mask[2])
           : BR & io_valid & io_prediction_bits_T_NT;
-  assign io_metadata_JAL = JAL;
-  assign io_metadata_JALR = JALR;
-  assign io_metadata_BR = BR;
-  assign io_metadata_Call = JAL & _Call_T_2 | JALR & _Call_T_2;
-  assign io_metadata_Ret = Ret;
+  assign io_metadata_br_type =
+    BR
+      ? 3'h1
+      : JAL
+          ? 3'h2
+          : JALR ? 3'h3 : JAL & _CALL_T_2 | JALR & _CALL_T_2 ? 3'h5 : {RET, 2'h0};
   assign io_metadata_Imm = imm;
   assign io_metadata_instruction_PC = io_fetch_PC + 32'h8;
   assign io_metadata_RAS = io_RAS_read_ret_addr;
@@ -859,17 +947,16 @@ module branch_decoder_3(
   input         io_prediction_bits_T_NT,
   input  [31:0] io_RAS_read_ret_addr,
   output        io_T_NT,
-                io_metadata_JAL,
-                io_metadata_JALR,
-                io_metadata_BR,
-                io_metadata_Call,
-                io_metadata_Ret,
+  output [2:0]  io_metadata_br_type,
   output [31:0] io_metadata_Imm,
                 io_metadata_instruction_PC,
                 io_metadata_RAS,
                 io_metadata_BTB_target
 );
 
+  wire        BR = io_instruction[6:2] == 5'h18;
+  wire        JALR = io_instruction[6:2] == 5'h19;
+  wire        JAL = io_instruction[6:2] == 5'h1B;
   wire [31:0] imm =
     io_instruction[6:0] == 7'h63
       ? {19'h0,
@@ -891,22 +978,20 @@ module branch_decoder_3(
               : io_instruction[6:0] == 7'h23
                   ? {20'h0, io_instruction[31:25], io_instruction[11:7]}
                   : io_instruction[6:0] == 7'h33 ? {io_instruction[31:12], 12'h0} : 32'h0;
-  wire        JAL = io_instruction[6:0] == 7'h6F;
-  wire        JALR = io_instruction[6:0] == 7'h67;
-  wire        BR = io_instruction[6:0] == 7'h63;
-  wire        _Call_T_2 = io_instruction[11:7] == 5'h1;
-  wire        Ret = JALR & io_instruction[19:15] == 5'h1 & imm == 32'h0;
+  wire        _CALL_T_2 = io_instruction[11:7] == 5'h1;
+  wire        RET = JALR & io_instruction[19:15] == 5'h1 & imm == 32'h0;
   assign io_T_NT =
     JAL
       ? io_valid
       : JALR
-          ? io_valid & (Ret | io_prediction_bits_hit & io_prediction_bits_br_mask[3])
+          ? io_valid & (RET | io_prediction_bits_hit & io_prediction_bits_br_mask[3])
           : BR & io_valid & io_prediction_bits_T_NT;
-  assign io_metadata_JAL = JAL;
-  assign io_metadata_JALR = JALR;
-  assign io_metadata_BR = BR;
-  assign io_metadata_Call = JAL & _Call_T_2 | JALR & _Call_T_2;
-  assign io_metadata_Ret = Ret;
+  assign io_metadata_br_type =
+    BR
+      ? 3'h1
+      : JAL
+          ? 3'h2
+          : JALR ? 3'h3 : JAL & _CALL_T_2 | JALR & _CALL_T_2 ? 3'h5 : {RET, 2'h0};
   assign io_metadata_Imm = imm;
   assign io_metadata_instruction_PC = io_fetch_PC + 32'hC;
   assign io_metadata_RAS = io_RAS_read_ret_addr;
@@ -987,6 +1072,8 @@ module predecoder(
   output        io_predictions_valid,
   output [31:0] io_predictions_bits_fetch_PC,
                 io_predictions_bits_predicted_PC,
+  output        io_predictions_bits_T_NT,
+  output [2:0]  io_predictions_bits_br_type,
   output [15:0] io_predictions_bits_GHR,
   output [6:0]  io_predictions_bits_NEXT,
                 io_predictions_bits_TOS,
@@ -996,78 +1083,46 @@ module predecoder(
   wire [31:0] PC_expected;
   wire [3:0]  _decoder_validator_io_instruction_validity;
   wire        _decoders_3_io_T_NT;
-  wire        _decoders_3_io_metadata_JAL;
-  wire        _decoders_3_io_metadata_JALR;
-  wire        _decoders_3_io_metadata_BR;
-  wire        _decoders_3_io_metadata_Call;
-  wire        _decoders_3_io_metadata_Ret;
+  wire [2:0]  _decoders_3_io_metadata_br_type;
   wire [31:0] _decoders_3_io_metadata_Imm;
   wire [31:0] _decoders_3_io_metadata_instruction_PC;
   wire [31:0] _decoders_3_io_metadata_RAS;
   wire [31:0] _decoders_3_io_metadata_BTB_target;
   wire        _decoders_2_io_T_NT;
-  wire        _decoders_2_io_metadata_JAL;
-  wire        _decoders_2_io_metadata_JALR;
-  wire        _decoders_2_io_metadata_BR;
-  wire        _decoders_2_io_metadata_Call;
-  wire        _decoders_2_io_metadata_Ret;
+  wire [2:0]  _decoders_2_io_metadata_br_type;
   wire [31:0] _decoders_2_io_metadata_Imm;
   wire [31:0] _decoders_2_io_metadata_instruction_PC;
   wire [31:0] _decoders_2_io_metadata_RAS;
   wire [31:0] _decoders_2_io_metadata_BTB_target;
   wire        _decoders_1_io_T_NT;
-  wire        _decoders_1_io_metadata_JAL;
-  wire        _decoders_1_io_metadata_JALR;
-  wire        _decoders_1_io_metadata_BR;
-  wire        _decoders_1_io_metadata_Call;
-  wire        _decoders_1_io_metadata_Ret;
+  wire [2:0]  _decoders_1_io_metadata_br_type;
   wire [31:0] _decoders_1_io_metadata_Imm;
   wire [31:0] _decoders_1_io_metadata_instruction_PC;
   wire [31:0] _decoders_1_io_metadata_RAS;
   wire [31:0] _decoders_1_io_metadata_BTB_target;
   wire        _decoders_0_io_T_NT;
-  wire        _decoders_0_io_metadata_JAL;
-  wire        _decoders_0_io_metadata_JALR;
-  wire        _decoders_0_io_metadata_BR;
-  wire        _decoders_0_io_metadata_Call;
-  wire        _decoders_0_io_metadata_Ret;
+  wire [2:0]  _decoders_0_io_metadata_br_type;
   wire [31:0] _decoders_0_io_metadata_Imm;
   wire [31:0] _decoders_0_io_metadata_instruction_PC;
   wire [31:0] _decoders_0_io_metadata_RAS;
   wire [31:0] _decoders_0_io_metadata_BTB_target;
   wire        inputs_valid = io_fetch_packet_valid & io_prediction_valid;
-  reg         metadata_reg_0_JAL;
-  reg         metadata_reg_0_JALR;
-  reg         metadata_reg_0_BR;
-  reg         metadata_reg_0_Call;
-  reg         metadata_reg_0_Ret;
+  reg  [2:0]  metadata_reg_0_br_type;
   reg  [31:0] metadata_reg_0_Imm;
   reg  [31:0] metadata_reg_0_instruction_PC;
   reg  [31:0] metadata_reg_0_RAS;
   reg  [31:0] metadata_reg_0_BTB_target;
-  reg         metadata_reg_1_JAL;
-  reg         metadata_reg_1_JALR;
-  reg         metadata_reg_1_BR;
-  reg         metadata_reg_1_Call;
-  reg         metadata_reg_1_Ret;
+  reg  [2:0]  metadata_reg_1_br_type;
   reg  [31:0] metadata_reg_1_Imm;
   reg  [31:0] metadata_reg_1_instruction_PC;
   reg  [31:0] metadata_reg_1_RAS;
   reg  [31:0] metadata_reg_1_BTB_target;
-  reg         metadata_reg_2_JAL;
-  reg         metadata_reg_2_JALR;
-  reg         metadata_reg_2_BR;
-  reg         metadata_reg_2_Call;
-  reg         metadata_reg_2_Ret;
+  reg  [2:0]  metadata_reg_2_br_type;
   reg  [31:0] metadata_reg_2_Imm;
   reg  [31:0] metadata_reg_2_instruction_PC;
   reg  [31:0] metadata_reg_2_RAS;
   reg  [31:0] metadata_reg_2_BTB_target;
-  reg         metadata_reg_3_JAL;
-  reg         metadata_reg_3_JALR;
-  reg         metadata_reg_3_BR;
-  reg         metadata_reg_3_Call;
-  reg         metadata_reg_3_Ret;
+  reg  [2:0]  metadata_reg_3_br_type;
   reg  [31:0] metadata_reg_3_Imm;
   reg  [31:0] metadata_reg_3_instruction_PC;
   reg  [31:0] metadata_reg_3_RAS;
@@ -1076,12 +1131,14 @@ module predecoder(
   reg         T_NT_reg_1;
   reg         T_NT_reg_2;
   reg         T_NT_reg_3;
-  wire        use_RAS =
+  wire [2:0]  metadata_out_br_type =
     T_NT_reg_0
-      ? metadata_reg_0_Ret
+      ? metadata_reg_0_br_type
       : T_NT_reg_1
-          ? metadata_reg_1_Ret
-          : T_NT_reg_2 ? metadata_reg_2_Ret : T_NT_reg_3 & metadata_reg_3_Ret;
+          ? metadata_reg_1_br_type
+          : T_NT_reg_2
+              ? metadata_reg_2_br_type
+              : T_NT_reg_3 ? metadata_reg_3_br_type : 3'h0;
   wire [31:0] metadata_out_instruction_PC =
     T_NT_reg_0
       ? metadata_reg_0_instruction_PC
@@ -1094,18 +1151,17 @@ module predecoder(
   wire        PC_mismatch = PC_expected != io_fetch_packet_bits_fetch_PC & inputs_valid;
   reg  [15:0] GHR;
   wire        has_control =
-    metadata_reg_3_BR | metadata_reg_3_JAL | metadata_reg_3_JALR | metadata_reg_2_BR
-    | metadata_reg_2_JAL | metadata_reg_2_JALR | metadata_reg_1_BR | metadata_reg_1_JAL
-    | metadata_reg_1_JALR | metadata_reg_0_BR | metadata_reg_0_JAL | metadata_reg_0_JALR;
+    metadata_reg_3_br_type == 3'h1 | metadata_reg_3_br_type == 3'h2
+    | metadata_reg_3_br_type == 3'h3 | metadata_reg_2_br_type == 3'h1
+    | metadata_reg_2_br_type == 3'h2 | metadata_reg_2_br_type == 3'h3
+    | metadata_reg_1_br_type == 3'h1 | metadata_reg_1_br_type == 3'h2
+    | metadata_reg_1_br_type == 3'h3 | metadata_reg_0_br_type == 3'h1
+    | metadata_reg_0_br_type == 3'h2 | metadata_reg_0_br_type == 3'h3;
   wire [15:0] _GEN = {GHR[14:0], |{T_NT_reg_3, T_NT_reg_2, T_NT_reg_1, T_NT_reg_0}};
+  wire        use_RAS = metadata_out_br_type == 3'h4;
   reg  [31:0] PC_next_REG;
   wire [31:0] PC_next =
-    (T_NT_reg_0
-       ? metadata_reg_0_JALR
-       : T_NT_reg_1
-           ? metadata_reg_1_JALR
-           : T_NT_reg_2 ? metadata_reg_2_JALR : T_NT_reg_3 & metadata_reg_3_JALR)
-    & ~use_RAS
+    metadata_out_br_type == 3'h3 & metadata_out_br_type != 3'h4
       ? (T_NT_reg_0
            ? metadata_reg_0_BTB_target
            : T_NT_reg_1
@@ -1121,16 +1177,7 @@ module predecoder(
                    : T_NT_reg_2
                        ? metadata_reg_2_RAS
                        : T_NT_reg_3 ? metadata_reg_3_RAS : 32'h0)
-          : (T_NT_reg_0
-               ? metadata_reg_0_BR
-               : T_NT_reg_1
-                   ? metadata_reg_1_BR
-                   : T_NT_reg_2 ? metadata_reg_2_BR : T_NT_reg_3 & metadata_reg_3_BR)
-            | (T_NT_reg_0
-                 ? metadata_reg_0_JAL
-                 : T_NT_reg_1
-                     ? metadata_reg_1_JAL
-                     : T_NT_reg_2 ? metadata_reg_2_JAL : T_NT_reg_3 & metadata_reg_3_JAL)
+          : metadata_out_br_type == 3'h1 | metadata_out_br_type == 3'h2
               ? metadata_out_instruction_PC
                 + (T_NT_reg_0
                      ? metadata_reg_0_Imm
@@ -1143,6 +1190,8 @@ module predecoder(
   reg         PC_next_reg_REG;
   reg         PC_expected_REG;
   assign PC_expected = PC_expected_REG ? PC_next : PC_next_reg;
+  wire [3:0]  T_NT_mask =
+    {_decoders_3_io_T_NT, _decoders_2_io_T_NT, _decoders_1_io_T_NT, _decoders_0_io_T_NT};
   reg  [31:0] io_final_fetch_packet_bits_instructions_0_REG_instruction;
   reg  [3:0]  io_final_fetch_packet_bits_instructions_0_REG_packet_index;
   reg  [5:0]  io_final_fetch_packet_bits_instructions_0_REG_ROB_index;
@@ -1179,43 +1228,28 @@ module predecoder(
   reg  [6:0]  io_predictions_bits_NEXT_REG;
   reg  [6:0]  io_predictions_bits_TOS_REG;
   reg  [31:0] io_predictions_bits_resolved_PC_REG;
+  reg         io_predictions_bits_T_NT_REG;
   wire        _io_fetch_packet_ready_T =
     io_final_fetch_packet_ready & io_predictions_ready;
   reg         io_final_fetch_packet_valid_REG;
   always @(posedge clock) begin
     automatic logic stage_1_valid = io_fetch_packet_valid & ~PC_mismatch;
-    metadata_reg_0_JAL <= _decoders_0_io_metadata_JAL;
-    metadata_reg_0_JALR <= _decoders_0_io_metadata_JALR;
-    metadata_reg_0_BR <= _decoders_0_io_metadata_BR;
-    metadata_reg_0_Call <= _decoders_0_io_metadata_Call;
-    metadata_reg_0_Ret <= _decoders_0_io_metadata_Ret;
+    metadata_reg_0_br_type <= _decoders_0_io_metadata_br_type;
     metadata_reg_0_Imm <= _decoders_0_io_metadata_Imm;
     metadata_reg_0_instruction_PC <= _decoders_0_io_metadata_instruction_PC;
     metadata_reg_0_RAS <= _decoders_0_io_metadata_RAS;
     metadata_reg_0_BTB_target <= _decoders_0_io_metadata_BTB_target;
-    metadata_reg_1_JAL <= _decoders_1_io_metadata_JAL;
-    metadata_reg_1_JALR <= _decoders_1_io_metadata_JALR;
-    metadata_reg_1_BR <= _decoders_1_io_metadata_BR;
-    metadata_reg_1_Call <= _decoders_1_io_metadata_Call;
-    metadata_reg_1_Ret <= _decoders_1_io_metadata_Ret;
+    metadata_reg_1_br_type <= _decoders_1_io_metadata_br_type;
     metadata_reg_1_Imm <= _decoders_1_io_metadata_Imm;
     metadata_reg_1_instruction_PC <= _decoders_1_io_metadata_instruction_PC;
     metadata_reg_1_RAS <= _decoders_1_io_metadata_RAS;
     metadata_reg_1_BTB_target <= _decoders_1_io_metadata_BTB_target;
-    metadata_reg_2_JAL <= _decoders_2_io_metadata_JAL;
-    metadata_reg_2_JALR <= _decoders_2_io_metadata_JALR;
-    metadata_reg_2_BR <= _decoders_2_io_metadata_BR;
-    metadata_reg_2_Call <= _decoders_2_io_metadata_Call;
-    metadata_reg_2_Ret <= _decoders_2_io_metadata_Ret;
+    metadata_reg_2_br_type <= _decoders_2_io_metadata_br_type;
     metadata_reg_2_Imm <= _decoders_2_io_metadata_Imm;
     metadata_reg_2_instruction_PC <= _decoders_2_io_metadata_instruction_PC;
     metadata_reg_2_RAS <= _decoders_2_io_metadata_RAS;
     metadata_reg_2_BTB_target <= _decoders_2_io_metadata_BTB_target;
-    metadata_reg_3_JAL <= _decoders_3_io_metadata_JAL;
-    metadata_reg_3_JALR <= _decoders_3_io_metadata_JALR;
-    metadata_reg_3_BR <= _decoders_3_io_metadata_BR;
-    metadata_reg_3_Call <= _decoders_3_io_metadata_Call;
-    metadata_reg_3_Ret <= _decoders_3_io_metadata_Ret;
+    metadata_reg_3_br_type <= _decoders_3_io_metadata_br_type;
     metadata_reg_3_Imm <= _decoders_3_io_metadata_Imm;
     metadata_reg_3_instruction_PC <= _decoders_3_io_metadata_instruction_PC;
     metadata_reg_3_RAS <= _decoders_3_io_metadata_RAS;
@@ -1267,6 +1301,7 @@ module predecoder(
     io_predictions_bits_NEXT_REG <= io_RAS_read_NEXT;
     io_predictions_bits_TOS_REG <= io_RAS_read_TOS;
     io_predictions_bits_resolved_PC_REG <= io_fetch_packet_bits_fetch_PC;
+    io_predictions_bits_T_NT_REG <= |T_NT_mask;
     io_final_fetch_packet_valid_REG <=
       inputs_valid & PC_expected == io_fetch_packet_bits_fetch_PC;
     if (reset) begin
@@ -1292,11 +1327,7 @@ module predecoder(
     .io_prediction_bits_T_NT    (io_prediction_bits_T_NT),
     .io_RAS_read_ret_addr       (io_RAS_read_ret_addr),
     .io_T_NT                    (_decoders_0_io_T_NT),
-    .io_metadata_JAL            (_decoders_0_io_metadata_JAL),
-    .io_metadata_JALR           (_decoders_0_io_metadata_JALR),
-    .io_metadata_BR             (_decoders_0_io_metadata_BR),
-    .io_metadata_Call           (_decoders_0_io_metadata_Call),
-    .io_metadata_Ret            (_decoders_0_io_metadata_Ret),
+    .io_metadata_br_type        (_decoders_0_io_metadata_br_type),
     .io_metadata_Imm            (_decoders_0_io_metadata_Imm),
     .io_metadata_instruction_PC (_decoders_0_io_metadata_instruction_PC),
     .io_metadata_RAS            (_decoders_0_io_metadata_RAS),
@@ -1312,11 +1343,7 @@ module predecoder(
     .io_prediction_bits_T_NT    (io_prediction_bits_T_NT),
     .io_RAS_read_ret_addr       (io_RAS_read_ret_addr),
     .io_T_NT                    (_decoders_1_io_T_NT),
-    .io_metadata_JAL            (_decoders_1_io_metadata_JAL),
-    .io_metadata_JALR           (_decoders_1_io_metadata_JALR),
-    .io_metadata_BR             (_decoders_1_io_metadata_BR),
-    .io_metadata_Call           (_decoders_1_io_metadata_Call),
-    .io_metadata_Ret            (_decoders_1_io_metadata_Ret),
+    .io_metadata_br_type        (_decoders_1_io_metadata_br_type),
     .io_metadata_Imm            (_decoders_1_io_metadata_Imm),
     .io_metadata_instruction_PC (_decoders_1_io_metadata_instruction_PC),
     .io_metadata_RAS            (_decoders_1_io_metadata_RAS),
@@ -1332,11 +1359,7 @@ module predecoder(
     .io_prediction_bits_T_NT    (io_prediction_bits_T_NT),
     .io_RAS_read_ret_addr       (io_RAS_read_ret_addr),
     .io_T_NT                    (_decoders_2_io_T_NT),
-    .io_metadata_JAL            (_decoders_2_io_metadata_JAL),
-    .io_metadata_JALR           (_decoders_2_io_metadata_JALR),
-    .io_metadata_BR             (_decoders_2_io_metadata_BR),
-    .io_metadata_Call           (_decoders_2_io_metadata_Call),
-    .io_metadata_Ret            (_decoders_2_io_metadata_Ret),
+    .io_metadata_br_type        (_decoders_2_io_metadata_br_type),
     .io_metadata_Imm            (_decoders_2_io_metadata_Imm),
     .io_metadata_instruction_PC (_decoders_2_io_metadata_instruction_PC),
     .io_metadata_RAS            (_decoders_2_io_metadata_RAS),
@@ -1352,22 +1375,14 @@ module predecoder(
     .io_prediction_bits_T_NT    (io_prediction_bits_T_NT),
     .io_RAS_read_ret_addr       (io_RAS_read_ret_addr),
     .io_T_NT                    (_decoders_3_io_T_NT),
-    .io_metadata_JAL            (_decoders_3_io_metadata_JAL),
-    .io_metadata_JALR           (_decoders_3_io_metadata_JALR),
-    .io_metadata_BR             (_decoders_3_io_metadata_BR),
-    .io_metadata_Call           (_decoders_3_io_metadata_Call),
-    .io_metadata_Ret            (_decoders_3_io_metadata_Ret),
+    .io_metadata_br_type        (_decoders_3_io_metadata_br_type),
     .io_metadata_Imm            (_decoders_3_io_metadata_Imm),
     .io_metadata_instruction_PC (_decoders_3_io_metadata_instruction_PC),
     .io_metadata_RAS            (_decoders_3_io_metadata_RAS),
     .io_metadata_BTB_target     (_decoders_3_io_metadata_BTB_target)
   );
   decoder_validator decoder_validator (
-    .io_instruction_T_NT_mask
-      ({_decoders_3_io_T_NT,
-        _decoders_2_io_T_NT,
-        _decoders_1_io_T_NT,
-        _decoders_0_io_T_NT}),
+    .io_instruction_T_NT_mask (T_NT_mask),
     .io_instruction_validity  (_decoder_validator_io_instruction_validity)
   );
   assign io_prediction_ready = _io_fetch_packet_ready_T & ~PC_mismatch;
@@ -1410,24 +1425,17 @@ module predecoder(
   assign io_final_fetch_packet_bits_instructions_3_ROB_index =
     io_final_fetch_packet_bits_instructions_3_REG_ROB_index;
   assign io_RAS_update_call_addr = metadata_out_instruction_PC;
-  assign io_RAS_update_call =
-    T_NT_reg_0
-      ? metadata_reg_0_Call
-      : T_NT_reg_1
-          ? metadata_reg_1_Call
-          : T_NT_reg_2 ? metadata_reg_2_Call : T_NT_reg_3 & metadata_reg_3_Call;
+  assign io_RAS_update_call = metadata_out_br_type == 3'h5;
   assign io_RAS_update_ret = use_RAS;
   assign io_predictions_valid =
-    (metadata_reg_3_JAL | metadata_reg_3_JALR | metadata_reg_3_BR)
-    & io_final_fetch_packet_bits_valid_bits_3_0
-    | (metadata_reg_2_JAL | metadata_reg_2_JALR | metadata_reg_2_BR)
-    & io_final_fetch_packet_bits_valid_bits_2_0
-    | (metadata_reg_1_JAL | metadata_reg_1_JALR | metadata_reg_1_BR)
-    & io_final_fetch_packet_bits_valid_bits_1_0
-    | (metadata_reg_0_JAL | metadata_reg_0_JALR | metadata_reg_0_BR)
-    & io_final_fetch_packet_bits_valid_bits_0_0;
+    (|metadata_reg_3_br_type) & io_final_fetch_packet_bits_valid_bits_3_0
+    | (|metadata_reg_2_br_type) & io_final_fetch_packet_bits_valid_bits_2_0
+    | (|metadata_reg_1_br_type) & io_final_fetch_packet_bits_valid_bits_1_0
+    | (|metadata_reg_0_br_type) & io_final_fetch_packet_bits_valid_bits_0_0;
   assign io_predictions_bits_fetch_PC = io_predictions_bits_fetch_PC_REG;
   assign io_predictions_bits_predicted_PC = PC_expected;
+  assign io_predictions_bits_T_NT = io_predictions_bits_T_NT_REG;
+  assign io_predictions_bits_br_type = metadata_out_br_type;
   assign io_predictions_bits_GHR = 16'h0;
   assign io_predictions_bits_NEXT = io_predictions_bits_NEXT_REG;
   assign io_predictions_bits_TOS = io_predictions_bits_TOS_REG;
@@ -1905,7 +1913,10 @@ module instruction_fetch(
   input          clock,
                  reset,
                  io_commit_valid,
-                 io_commit_is_misprediction,
+  input  [31:0]  io_commit_fetch_PC,
+  input          io_commit_T_NT,
+  input  [2:0]   io_commit_br_type,
+  input          io_commit_is_misprediction,
   input  [31:0]  io_commit_expected_PC,
   input  [15:0]  io_commit_GHR,
   input  [6:0]   io_commit_TOS,
@@ -1939,6 +1950,8 @@ module instruction_fetch(
   output         io_predictions_valid,
   output [31:0]  io_predictions_bits_fetch_PC,
                  io_predictions_bits_predicted_PC,
+  output         io_predictions_bits_T_NT,
+  output [2:0]   io_predictions_bits_br_type,
   output [15:0]  io_predictions_bits_GHR,
   output [6:0]   io_predictions_bits_NEXT,
                  io_predictions_bits_TOS,
@@ -2039,6 +2052,10 @@ module instruction_fetch(
     .reset                      (reset),
     .io_predict_valid           (_PC_gen_io_PC_next_valid),
     .io_predict_bits            (_PC_gen_io_PC_next_bits),
+    .io_commit_valid            (io_commit_valid),
+    .io_commit_fetch_PC         (io_commit_fetch_PC),
+    .io_commit_T_NT             (io_commit_T_NT),
+    .io_commit_br_type          (io_commit_br_type),
     .io_commit_is_misprediction (io_commit_is_misprediction),
     .io_commit_expected_PC      (io_commit_expected_PC),
     .io_commit_GHR              (io_commit_GHR),
@@ -2162,6 +2179,8 @@ module instruction_fetch(
       (io_predictions_bits_fetch_PC),
     .io_predictions_bits_predicted_PC
       (io_predictions_bits_predicted_PC),
+    .io_predictions_bits_T_NT                               (io_predictions_bits_T_NT),
+    .io_predictions_bits_br_type                            (io_predictions_bits_br_type),
     .io_predictions_bits_GHR                                (io_predictions_bits_GHR),
     .io_predictions_bits_NEXT                               (io_predictions_bits_NEXT),
     .io_predictions_bits_TOS                                (io_predictions_bits_TOS),
@@ -5033,9 +5052,7 @@ module RAT(
                io_free_list_RD_2,
                io_free_list_RD_3,
   input        io_create_checkpoint,
-  output [3:0] io_active_checkpoint_value,
-  input        io_restore_checkpoint,
-  input  [3:0] io_restore_checkpoint_value,
+               io_restore_checkpoint,
   output [5:0] io_RAT_RS1_0,
                io_RAT_RS1_1,
                io_RAT_RS1_2,
@@ -7116,7 +7133,7 @@ module RAT(
       _GEN_186 = _GEN_157 == 4'hE & io_create_checkpoint;
       _GEN_187 = (&_GEN_157) & io_create_checkpoint;
       if (io_restore_checkpoint)
-        active_RAT <= io_restore_checkpoint_value;
+        active_RAT <= 4'h0;
       else if (io_create_checkpoint)
         active_RAT <= active_RAT + 4'h1;
       if (_GEN_156 & is_being_written_vec_0)
@@ -9264,7 +9281,6 @@ module RAT(
     io_RAT_RS1_3_REG <= _GEN_31[io_instruction_RS1_3];
     io_RAT_RS2_3_REG <= _GEN_31[io_instruction_RS2_3];
   end // always @(posedge)
-  assign io_active_checkpoint_value = active_RAT;
   assign io_RAT_RS1_0 = io_RAT_RS1_0_REG;
   assign io_RAT_RS1_1 = io_RAT_RS1_1_REG;
   assign io_RAT_RS1_2 = io_RAT_RS1_2_REG;
@@ -9445,9 +9461,7 @@ module renamer(
   input  [63:0] io_FU_outputs_3_bits_RD,
   input         io_FU_outputs_3_bits_RD_valid,
                 io_create_checkpoint,
-  output [3:0]  io_active_checkpoint_value,
-  input         io_restore_checkpoint,
-  input  [3:0]  io_restore_checkpoint_value
+                io_restore_checkpoint
 );
 
   wire       _WAW_handler_io_RAT_wr_en_0;
@@ -9513,44 +9527,30 @@ module renamer(
     .io_FL_RD_values_3          (_WAW_handler_io_FL_RD_values_3)
   );
   RAT RAT (
-    .clock                       (clock),
-    .reset                       (reset),
-    .io_instruction_RD_0
-      (io_decoded_fetch_packet_bits_decoded_instruction_0_RD[4:0]),
-    .io_instruction_RD_1
-      (io_decoded_fetch_packet_bits_decoded_instruction_1_RD[4:0]),
-    .io_instruction_RD_2
-      (io_decoded_fetch_packet_bits_decoded_instruction_2_RD[4:0]),
-    .io_instruction_RD_3
-      (io_decoded_fetch_packet_bits_decoded_instruction_3_RD[4:0]),
-    .io_instruction_RS1_0
-      (io_decoded_fetch_packet_bits_decoded_instruction_0_RS1[4:0]),
-    .io_instruction_RS1_1
-      (io_decoded_fetch_packet_bits_decoded_instruction_1_RS1[4:0]),
-    .io_instruction_RS1_2
-      (io_decoded_fetch_packet_bits_decoded_instruction_2_RS1[4:0]),
-    .io_instruction_RS1_3
-      (io_decoded_fetch_packet_bits_decoded_instruction_3_RS1[4:0]),
-    .io_instruction_RS2_0
-      (io_decoded_fetch_packet_bits_decoded_instruction_0_RS2[4:0]),
-    .io_instruction_RS2_1
-      (io_decoded_fetch_packet_bits_decoded_instruction_1_RS2[4:0]),
-    .io_instruction_RS2_2
-      (io_decoded_fetch_packet_bits_decoded_instruction_2_RS2[4:0]),
-    .io_instruction_RS2_3
-      (io_decoded_fetch_packet_bits_decoded_instruction_3_RS2[4:0]),
-    .io_free_list_wr_en_0        (_WAW_handler_io_RAT_wr_en_0),
-    .io_free_list_wr_en_1        (_WAW_handler_io_RAT_wr_en_1),
-    .io_free_list_wr_en_2        (_WAW_handler_io_RAT_wr_en_2),
-    .io_free_list_wr_en_3        (_WAW_handler_io_RAT_wr_en_3),
-    .io_free_list_RD_0           (_WAW_handler_io_FL_RD_values_0),
-    .io_free_list_RD_1           (_WAW_handler_io_FL_RD_values_1),
-    .io_free_list_RD_2           (_WAW_handler_io_FL_RD_values_2),
-    .io_free_list_RD_3           (_WAW_handler_io_FL_RD_values_3),
-    .io_create_checkpoint        (io_create_checkpoint),
-    .io_active_checkpoint_value  (io_active_checkpoint_value),
-    .io_restore_checkpoint       (io_restore_checkpoint),
-    .io_restore_checkpoint_value (io_restore_checkpoint_value),
+    .clock                 (clock),
+    .reset                 (reset),
+    .io_instruction_RD_0   (io_decoded_fetch_packet_bits_decoded_instruction_0_RD[4:0]),
+    .io_instruction_RD_1   (io_decoded_fetch_packet_bits_decoded_instruction_1_RD[4:0]),
+    .io_instruction_RD_2   (io_decoded_fetch_packet_bits_decoded_instruction_2_RD[4:0]),
+    .io_instruction_RD_3   (io_decoded_fetch_packet_bits_decoded_instruction_3_RD[4:0]),
+    .io_instruction_RS1_0  (io_decoded_fetch_packet_bits_decoded_instruction_0_RS1[4:0]),
+    .io_instruction_RS1_1  (io_decoded_fetch_packet_bits_decoded_instruction_1_RS1[4:0]),
+    .io_instruction_RS1_2  (io_decoded_fetch_packet_bits_decoded_instruction_2_RS1[4:0]),
+    .io_instruction_RS1_3  (io_decoded_fetch_packet_bits_decoded_instruction_3_RS1[4:0]),
+    .io_instruction_RS2_0  (io_decoded_fetch_packet_bits_decoded_instruction_0_RS2[4:0]),
+    .io_instruction_RS2_1  (io_decoded_fetch_packet_bits_decoded_instruction_1_RS2[4:0]),
+    .io_instruction_RS2_2  (io_decoded_fetch_packet_bits_decoded_instruction_2_RS2[4:0]),
+    .io_instruction_RS2_3  (io_decoded_fetch_packet_bits_decoded_instruction_3_RS2[4:0]),
+    .io_free_list_wr_en_0  (_WAW_handler_io_RAT_wr_en_0),
+    .io_free_list_wr_en_1  (_WAW_handler_io_RAT_wr_en_1),
+    .io_free_list_wr_en_2  (_WAW_handler_io_RAT_wr_en_2),
+    .io_free_list_wr_en_3  (_WAW_handler_io_RAT_wr_en_3),
+    .io_free_list_RD_0     (_WAW_handler_io_FL_RD_values_0),
+    .io_free_list_RD_1     (_WAW_handler_io_FL_RD_values_1),
+    .io_free_list_RD_2     (_WAW_handler_io_FL_RD_values_2),
+    .io_free_list_RD_3     (_WAW_handler_io_FL_RD_values_3),
+    .io_create_checkpoint  (io_create_checkpoint),
+    .io_restore_checkpoint (io_restore_checkpoint),
     .io_RAT_RS1_0
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS1),
     .io_RAT_RS1_1
@@ -9720,20 +9720,23 @@ module frontend(
   output         io_DRAM_request_valid,
   output [31:0]  io_DRAM_request_bits_addr,
   input          io_commit_valid,
-                 io_commit_is_misprediction,
+  input  [31:0]  io_commit_fetch_PC,
+  input          io_commit_T_NT,
+  input  [2:0]   io_commit_br_type,
+  input          io_commit_is_misprediction,
   input  [31:0]  io_commit_expected_PC,
   input  [15:0]  io_commit_GHR,
   input  [6:0]   io_commit_TOS,
                  io_commit_NEXT,
-  input  [3:0]   io_commit_RAT_IDX,
   input          io_predictions_ready,
   output         io_predictions_valid,
   output [31:0]  io_predictions_bits_fetch_PC,
                  io_predictions_bits_predicted_PC,
+  output         io_predictions_bits_T_NT,
+  output [2:0]   io_predictions_bits_br_type,
   output [15:0]  io_predictions_bits_GHR,
   output [6:0]   io_predictions_bits_NEXT,
                  io_predictions_bits_TOS,
-  output [3:0]   io_predictions_bits_RAT_IDX,
   output [31:0]  io_predictions_bits_resolved_PC,
   input          io_renamed_decoded_fetch_packet_ready,
   output         io_renamed_decoded_fetch_packet_valid,
@@ -10010,11 +10013,13 @@ module frontend(
   wire [3:0]  _instruction_fetch_io_fetch_packet_bits_instructions_3_packet_index;
   wire [5:0]  _instruction_fetch_io_fetch_packet_bits_instructions_3_ROB_index;
   wire        _instruction_fetch_io_predictions_valid;
-  wire        _GEN = io_commit_valid & io_commit_is_misprediction;
   instruction_fetch instruction_fetch (
     .clock                                            (clock),
     .reset                                            (reset),
     .io_commit_valid                                  (io_commit_valid),
+    .io_commit_fetch_PC                               (io_commit_fetch_PC),
+    .io_commit_T_NT                                   (io_commit_T_NT),
+    .io_commit_br_type                                (io_commit_br_type),
     .io_commit_is_misprediction                       (io_commit_is_misprediction),
     .io_commit_expected_PC                            (io_commit_expected_PC),
     .io_commit_GHR                                    (io_commit_GHR),
@@ -10068,6 +10073,8 @@ module frontend(
       (_instruction_fetch_io_predictions_valid),
     .io_predictions_bits_fetch_PC                     (io_predictions_bits_fetch_PC),
     .io_predictions_bits_predicted_PC                 (io_predictions_bits_predicted_PC),
+    .io_predictions_bits_T_NT                         (io_predictions_bits_T_NT),
+    .io_predictions_bits_br_type                      (io_predictions_bits_br_type),
     .io_predictions_bits_GHR                          (io_predictions_bits_GHR),
     .io_predictions_bits_NEXT                         (io_predictions_bits_NEXT),
     .io_predictions_bits_TOS                          (io_predictions_bits_TOS),
@@ -10929,11 +10936,8 @@ module frontend(
       (io_FU_outputs_3_bits_RD_valid),
     .io_create_checkpoint
       (_instruction_fetch_io_predictions_valid),
-    .io_active_checkpoint_value
-      (io_predictions_bits_RAT_IDX),
-    .io_restore_checkpoint                                                        (_GEN),
-    .io_restore_checkpoint_value
-      (_GEN ? io_commit_RAT_IDX : 4'h0)
+    .io_restore_checkpoint
+      (io_commit_valid & io_commit_is_misprediction)
   );
   assign io_predictions_valid = _instruction_fetch_io_predictions_valid;
 endmodule
@@ -19195,18 +19199,21 @@ module FTQ(
   input         io_predictions_valid,
   input  [31:0] io_predictions_bits_fetch_PC,
                 io_predictions_bits_predicted_PC,
+  input         io_predictions_bits_T_NT,
+  input  [2:0]  io_predictions_bits_br_type,
   input  [15:0] io_predictions_bits_GHR,
   input  [6:0]  io_predictions_bits_NEXT,
                 io_predictions_bits_TOS,
-  input  [3:0]  io_predictions_bits_RAT_IDX,
   input  [31:0] io_predictions_bits_resolved_PC,
+                io_commit_fetch_PC,
   output        io_FTQ_valid,
   output [31:0] io_FTQ_fetch_PC,
                 io_FTQ_predicted_PC,
+  output        io_FTQ_T_NT,
+  output [2:0]  io_FTQ_br_type,
   output [15:0] io_FTQ_GHR,
   output [6:0]  io_FTQ_NEXT,
                 io_FTQ_TOS,
-  output [3:0]  io_FTQ_RAT_IDX,
   output [31:0] io_FTQ_resolved_PC
 );
 
@@ -19215,145 +19222,161 @@ module FTQ(
   reg               FTQ_0_valid;
   reg  [31:0]       FTQ_0_fetch_PC;
   reg  [31:0]       FTQ_0_predicted_PC;
+  reg               FTQ_0_T_NT;
+  reg  [2:0]        FTQ_0_br_type;
   reg  [15:0]       FTQ_0_GHR;
   reg  [6:0]        FTQ_0_NEXT;
   reg  [6:0]        FTQ_0_TOS;
-  reg  [3:0]        FTQ_0_RAT_IDX;
   reg  [1:0]        FTQ_0_dominant_index;
   reg  [31:0]       FTQ_0_resolved_PC;
   reg               FTQ_1_valid;
   reg  [31:0]       FTQ_1_fetch_PC;
   reg  [31:0]       FTQ_1_predicted_PC;
+  reg               FTQ_1_T_NT;
+  reg  [2:0]        FTQ_1_br_type;
   reg  [15:0]       FTQ_1_GHR;
   reg  [6:0]        FTQ_1_NEXT;
   reg  [6:0]        FTQ_1_TOS;
-  reg  [3:0]        FTQ_1_RAT_IDX;
   reg  [1:0]        FTQ_1_dominant_index;
   reg  [31:0]       FTQ_1_resolved_PC;
   reg               FTQ_2_valid;
   reg  [31:0]       FTQ_2_fetch_PC;
   reg  [31:0]       FTQ_2_predicted_PC;
+  reg               FTQ_2_T_NT;
+  reg  [2:0]        FTQ_2_br_type;
   reg  [15:0]       FTQ_2_GHR;
   reg  [6:0]        FTQ_2_NEXT;
   reg  [6:0]        FTQ_2_TOS;
-  reg  [3:0]        FTQ_2_RAT_IDX;
   reg  [1:0]        FTQ_2_dominant_index;
   reg  [31:0]       FTQ_2_resolved_PC;
   reg               FTQ_3_valid;
   reg  [31:0]       FTQ_3_fetch_PC;
   reg  [31:0]       FTQ_3_predicted_PC;
+  reg               FTQ_3_T_NT;
+  reg  [2:0]        FTQ_3_br_type;
   reg  [15:0]       FTQ_3_GHR;
   reg  [6:0]        FTQ_3_NEXT;
   reg  [6:0]        FTQ_3_TOS;
-  reg  [3:0]        FTQ_3_RAT_IDX;
   reg  [1:0]        FTQ_3_dominant_index;
   reg  [31:0]       FTQ_3_resolved_PC;
   reg               FTQ_4_valid;
   reg  [31:0]       FTQ_4_fetch_PC;
   reg  [31:0]       FTQ_4_predicted_PC;
+  reg               FTQ_4_T_NT;
+  reg  [2:0]        FTQ_4_br_type;
   reg  [15:0]       FTQ_4_GHR;
   reg  [6:0]        FTQ_4_NEXT;
   reg  [6:0]        FTQ_4_TOS;
-  reg  [3:0]        FTQ_4_RAT_IDX;
   reg  [1:0]        FTQ_4_dominant_index;
   reg  [31:0]       FTQ_4_resolved_PC;
   reg               FTQ_5_valid;
   reg  [31:0]       FTQ_5_fetch_PC;
   reg  [31:0]       FTQ_5_predicted_PC;
+  reg               FTQ_5_T_NT;
+  reg  [2:0]        FTQ_5_br_type;
   reg  [15:0]       FTQ_5_GHR;
   reg  [6:0]        FTQ_5_NEXT;
   reg  [6:0]        FTQ_5_TOS;
-  reg  [3:0]        FTQ_5_RAT_IDX;
   reg  [1:0]        FTQ_5_dominant_index;
   reg  [31:0]       FTQ_5_resolved_PC;
   reg               FTQ_6_valid;
   reg  [31:0]       FTQ_6_fetch_PC;
   reg  [31:0]       FTQ_6_predicted_PC;
+  reg               FTQ_6_T_NT;
+  reg  [2:0]        FTQ_6_br_type;
   reg  [15:0]       FTQ_6_GHR;
   reg  [6:0]        FTQ_6_NEXT;
   reg  [6:0]        FTQ_6_TOS;
-  reg  [3:0]        FTQ_6_RAT_IDX;
   reg  [1:0]        FTQ_6_dominant_index;
   reg  [31:0]       FTQ_6_resolved_PC;
   reg               FTQ_7_valid;
   reg  [31:0]       FTQ_7_fetch_PC;
   reg  [31:0]       FTQ_7_predicted_PC;
+  reg               FTQ_7_T_NT;
+  reg  [2:0]        FTQ_7_br_type;
   reg  [15:0]       FTQ_7_GHR;
   reg  [6:0]        FTQ_7_NEXT;
   reg  [6:0]        FTQ_7_TOS;
-  reg  [3:0]        FTQ_7_RAT_IDX;
   reg  [1:0]        FTQ_7_dominant_index;
   reg  [31:0]       FTQ_7_resolved_PC;
   reg               FTQ_8_valid;
   reg  [31:0]       FTQ_8_fetch_PC;
   reg  [31:0]       FTQ_8_predicted_PC;
+  reg               FTQ_8_T_NT;
+  reg  [2:0]        FTQ_8_br_type;
   reg  [15:0]       FTQ_8_GHR;
   reg  [6:0]        FTQ_8_NEXT;
   reg  [6:0]        FTQ_8_TOS;
-  reg  [3:0]        FTQ_8_RAT_IDX;
   reg  [1:0]        FTQ_8_dominant_index;
   reg  [31:0]       FTQ_8_resolved_PC;
   reg               FTQ_9_valid;
   reg  [31:0]       FTQ_9_fetch_PC;
   reg  [31:0]       FTQ_9_predicted_PC;
+  reg               FTQ_9_T_NT;
+  reg  [2:0]        FTQ_9_br_type;
   reg  [15:0]       FTQ_9_GHR;
   reg  [6:0]        FTQ_9_NEXT;
   reg  [6:0]        FTQ_9_TOS;
-  reg  [3:0]        FTQ_9_RAT_IDX;
   reg  [1:0]        FTQ_9_dominant_index;
   reg  [31:0]       FTQ_9_resolved_PC;
   reg               FTQ_10_valid;
   reg  [31:0]       FTQ_10_fetch_PC;
   reg  [31:0]       FTQ_10_predicted_PC;
+  reg               FTQ_10_T_NT;
+  reg  [2:0]        FTQ_10_br_type;
   reg  [15:0]       FTQ_10_GHR;
   reg  [6:0]        FTQ_10_NEXT;
   reg  [6:0]        FTQ_10_TOS;
-  reg  [3:0]        FTQ_10_RAT_IDX;
   reg  [1:0]        FTQ_10_dominant_index;
   reg  [31:0]       FTQ_10_resolved_PC;
   reg               FTQ_11_valid;
   reg  [31:0]       FTQ_11_fetch_PC;
   reg  [31:0]       FTQ_11_predicted_PC;
+  reg               FTQ_11_T_NT;
+  reg  [2:0]        FTQ_11_br_type;
   reg  [15:0]       FTQ_11_GHR;
   reg  [6:0]        FTQ_11_NEXT;
   reg  [6:0]        FTQ_11_TOS;
-  reg  [3:0]        FTQ_11_RAT_IDX;
   reg  [1:0]        FTQ_11_dominant_index;
   reg  [31:0]       FTQ_11_resolved_PC;
   reg               FTQ_12_valid;
   reg  [31:0]       FTQ_12_fetch_PC;
   reg  [31:0]       FTQ_12_predicted_PC;
+  reg               FTQ_12_T_NT;
+  reg  [2:0]        FTQ_12_br_type;
   reg  [15:0]       FTQ_12_GHR;
   reg  [6:0]        FTQ_12_NEXT;
   reg  [6:0]        FTQ_12_TOS;
-  reg  [3:0]        FTQ_12_RAT_IDX;
   reg  [1:0]        FTQ_12_dominant_index;
   reg  [31:0]       FTQ_12_resolved_PC;
   reg               FTQ_13_valid;
   reg  [31:0]       FTQ_13_fetch_PC;
   reg  [31:0]       FTQ_13_predicted_PC;
+  reg               FTQ_13_T_NT;
+  reg  [2:0]        FTQ_13_br_type;
   reg  [15:0]       FTQ_13_GHR;
   reg  [6:0]        FTQ_13_NEXT;
   reg  [6:0]        FTQ_13_TOS;
-  reg  [3:0]        FTQ_13_RAT_IDX;
   reg  [1:0]        FTQ_13_dominant_index;
   reg  [31:0]       FTQ_13_resolved_PC;
   reg               FTQ_14_valid;
   reg  [31:0]       FTQ_14_fetch_PC;
   reg  [31:0]       FTQ_14_predicted_PC;
+  reg               FTQ_14_T_NT;
+  reg  [2:0]        FTQ_14_br_type;
   reg  [15:0]       FTQ_14_GHR;
   reg  [6:0]        FTQ_14_NEXT;
   reg  [6:0]        FTQ_14_TOS;
-  reg  [3:0]        FTQ_14_RAT_IDX;
   reg  [1:0]        FTQ_14_dominant_index;
   reg  [31:0]       FTQ_14_resolved_PC;
   reg               FTQ_15_valid;
   reg  [31:0]       FTQ_15_fetch_PC;
   reg  [31:0]       FTQ_15_predicted_PC;
+  reg               FTQ_15_T_NT;
+  reg  [2:0]        FTQ_15_br_type;
   reg  [15:0]       FTQ_15_GHR;
   reg  [6:0]        FTQ_15_NEXT;
   reg  [6:0]        FTQ_15_TOS;
-  reg  [3:0]        FTQ_15_RAT_IDX;
   reg  [1:0]        FTQ_15_dominant_index;
   reg  [31:0]       FTQ_15_resolved_PC;
   wire [15:0]       _GEN =
@@ -19409,7 +19432,41 @@ module FTQ(
      {FTQ_2_predicted_PC},
      {FTQ_1_predicted_PC},
      {FTQ_0_predicted_PC}};
-  wire [15:0][15:0] _GEN_2 =
+  wire [15:0]       _GEN_2 =
+    {{FTQ_15_T_NT},
+     {FTQ_14_T_NT},
+     {FTQ_13_T_NT},
+     {FTQ_12_T_NT},
+     {FTQ_11_T_NT},
+     {FTQ_10_T_NT},
+     {FTQ_9_T_NT},
+     {FTQ_8_T_NT},
+     {FTQ_7_T_NT},
+     {FTQ_6_T_NT},
+     {FTQ_5_T_NT},
+     {FTQ_4_T_NT},
+     {FTQ_3_T_NT},
+     {FTQ_2_T_NT},
+     {FTQ_1_T_NT},
+     {FTQ_0_T_NT}};
+  wire [15:0][2:0]  _GEN_3 =
+    {{FTQ_15_br_type},
+     {FTQ_14_br_type},
+     {FTQ_13_br_type},
+     {FTQ_12_br_type},
+     {FTQ_11_br_type},
+     {FTQ_10_br_type},
+     {FTQ_9_br_type},
+     {FTQ_8_br_type},
+     {FTQ_7_br_type},
+     {FTQ_6_br_type},
+     {FTQ_5_br_type},
+     {FTQ_4_br_type},
+     {FTQ_3_br_type},
+     {FTQ_2_br_type},
+     {FTQ_1_br_type},
+     {FTQ_0_br_type}};
+  wire [15:0][15:0] _GEN_4 =
     {{FTQ_15_GHR},
      {FTQ_14_GHR},
      {FTQ_13_GHR},
@@ -19426,7 +19483,7 @@ module FTQ(
      {FTQ_2_GHR},
      {FTQ_1_GHR},
      {FTQ_0_GHR}};
-  wire [15:0][6:0]  _GEN_3 =
+  wire [15:0][6:0]  _GEN_5 =
     {{FTQ_15_NEXT},
      {FTQ_14_NEXT},
      {FTQ_13_NEXT},
@@ -19443,7 +19500,7 @@ module FTQ(
      {FTQ_2_NEXT},
      {FTQ_1_NEXT},
      {FTQ_0_NEXT}};
-  wire [15:0][6:0]  _GEN_4 =
+  wire [15:0][6:0]  _GEN_6 =
     {{FTQ_15_TOS},
      {FTQ_14_TOS},
      {FTQ_13_TOS},
@@ -19460,24 +19517,7 @@ module FTQ(
      {FTQ_2_TOS},
      {FTQ_1_TOS},
      {FTQ_0_TOS}};
-  wire [15:0][3:0]  _GEN_5 =
-    {{FTQ_15_RAT_IDX},
-     {FTQ_14_RAT_IDX},
-     {FTQ_13_RAT_IDX},
-     {FTQ_12_RAT_IDX},
-     {FTQ_11_RAT_IDX},
-     {FTQ_10_RAT_IDX},
-     {FTQ_9_RAT_IDX},
-     {FTQ_8_RAT_IDX},
-     {FTQ_7_RAT_IDX},
-     {FTQ_6_RAT_IDX},
-     {FTQ_5_RAT_IDX},
-     {FTQ_4_RAT_IDX},
-     {FTQ_3_RAT_IDX},
-     {FTQ_2_RAT_IDX},
-     {FTQ_1_RAT_IDX},
-     {FTQ_0_RAT_IDX}};
-  wire [15:0][31:0] _GEN_6 =
+  wire [15:0][31:0] _GEN_7 =
     {{FTQ_15_resolved_PC},
      {FTQ_14_resolved_PC},
      {FTQ_13_resolved_PC},
@@ -19494,7 +19534,8 @@ module FTQ(
      {FTQ_2_resolved_PC},
      {FTQ_1_resolved_PC},
      {FTQ_0_resolved_PC}};
-  wire              dq = io_FTQ_valid_0 & io_FTQ_fetch_PC_0[31:4] == 28'h0;
+  wire              dq =
+    io_FTQ_valid_0 & io_FTQ_fetch_PC_0[31:4] == io_commit_fetch_PC[31:4];
   wire              full =
     front_pointer != back_pointer & front_pointer[3:0] == back_pointer[3:0];
   always @(posedge clock) begin
@@ -19504,180 +19545,195 @@ module FTQ(
       FTQ_0_valid <= 1'h0;
       FTQ_0_fetch_PC <= 32'h0;
       FTQ_0_predicted_PC <= 32'h0;
+      FTQ_0_T_NT <= 1'h0;
+      FTQ_0_br_type <= 3'h0;
       FTQ_0_GHR <= 16'h0;
       FTQ_0_NEXT <= 7'h0;
       FTQ_0_TOS <= 7'h0;
-      FTQ_0_RAT_IDX <= 4'h0;
       FTQ_0_dominant_index <= 2'h0;
       FTQ_0_resolved_PC <= 32'h0;
       FTQ_1_valid <= 1'h0;
       FTQ_1_fetch_PC <= 32'h0;
       FTQ_1_predicted_PC <= 32'h0;
+      FTQ_1_T_NT <= 1'h0;
+      FTQ_1_br_type <= 3'h0;
       FTQ_1_GHR <= 16'h0;
       FTQ_1_NEXT <= 7'h0;
       FTQ_1_TOS <= 7'h0;
-      FTQ_1_RAT_IDX <= 4'h0;
       FTQ_1_dominant_index <= 2'h0;
       FTQ_1_resolved_PC <= 32'h0;
       FTQ_2_valid <= 1'h0;
       FTQ_2_fetch_PC <= 32'h0;
       FTQ_2_predicted_PC <= 32'h0;
+      FTQ_2_T_NT <= 1'h0;
+      FTQ_2_br_type <= 3'h0;
       FTQ_2_GHR <= 16'h0;
       FTQ_2_NEXT <= 7'h0;
       FTQ_2_TOS <= 7'h0;
-      FTQ_2_RAT_IDX <= 4'h0;
       FTQ_2_dominant_index <= 2'h0;
       FTQ_2_resolved_PC <= 32'h0;
       FTQ_3_valid <= 1'h0;
       FTQ_3_fetch_PC <= 32'h0;
       FTQ_3_predicted_PC <= 32'h0;
+      FTQ_3_T_NT <= 1'h0;
+      FTQ_3_br_type <= 3'h0;
       FTQ_3_GHR <= 16'h0;
       FTQ_3_NEXT <= 7'h0;
       FTQ_3_TOS <= 7'h0;
-      FTQ_3_RAT_IDX <= 4'h0;
       FTQ_3_dominant_index <= 2'h0;
       FTQ_3_resolved_PC <= 32'h0;
       FTQ_4_valid <= 1'h0;
       FTQ_4_fetch_PC <= 32'h0;
       FTQ_4_predicted_PC <= 32'h0;
+      FTQ_4_T_NT <= 1'h0;
+      FTQ_4_br_type <= 3'h0;
       FTQ_4_GHR <= 16'h0;
       FTQ_4_NEXT <= 7'h0;
       FTQ_4_TOS <= 7'h0;
-      FTQ_4_RAT_IDX <= 4'h0;
       FTQ_4_dominant_index <= 2'h0;
       FTQ_4_resolved_PC <= 32'h0;
       FTQ_5_valid <= 1'h0;
       FTQ_5_fetch_PC <= 32'h0;
       FTQ_5_predicted_PC <= 32'h0;
+      FTQ_5_T_NT <= 1'h0;
+      FTQ_5_br_type <= 3'h0;
       FTQ_5_GHR <= 16'h0;
       FTQ_5_NEXT <= 7'h0;
       FTQ_5_TOS <= 7'h0;
-      FTQ_5_RAT_IDX <= 4'h0;
       FTQ_5_dominant_index <= 2'h0;
       FTQ_5_resolved_PC <= 32'h0;
       FTQ_6_valid <= 1'h0;
       FTQ_6_fetch_PC <= 32'h0;
       FTQ_6_predicted_PC <= 32'h0;
+      FTQ_6_T_NT <= 1'h0;
+      FTQ_6_br_type <= 3'h0;
       FTQ_6_GHR <= 16'h0;
       FTQ_6_NEXT <= 7'h0;
       FTQ_6_TOS <= 7'h0;
-      FTQ_6_RAT_IDX <= 4'h0;
       FTQ_6_dominant_index <= 2'h0;
       FTQ_6_resolved_PC <= 32'h0;
       FTQ_7_valid <= 1'h0;
       FTQ_7_fetch_PC <= 32'h0;
       FTQ_7_predicted_PC <= 32'h0;
+      FTQ_7_T_NT <= 1'h0;
+      FTQ_7_br_type <= 3'h0;
       FTQ_7_GHR <= 16'h0;
       FTQ_7_NEXT <= 7'h0;
       FTQ_7_TOS <= 7'h0;
-      FTQ_7_RAT_IDX <= 4'h0;
       FTQ_7_dominant_index <= 2'h0;
       FTQ_7_resolved_PC <= 32'h0;
       FTQ_8_valid <= 1'h0;
       FTQ_8_fetch_PC <= 32'h0;
       FTQ_8_predicted_PC <= 32'h0;
+      FTQ_8_T_NT <= 1'h0;
+      FTQ_8_br_type <= 3'h0;
       FTQ_8_GHR <= 16'h0;
       FTQ_8_NEXT <= 7'h0;
       FTQ_8_TOS <= 7'h0;
-      FTQ_8_RAT_IDX <= 4'h0;
       FTQ_8_dominant_index <= 2'h0;
       FTQ_8_resolved_PC <= 32'h0;
       FTQ_9_valid <= 1'h0;
       FTQ_9_fetch_PC <= 32'h0;
       FTQ_9_predicted_PC <= 32'h0;
+      FTQ_9_T_NT <= 1'h0;
+      FTQ_9_br_type <= 3'h0;
       FTQ_9_GHR <= 16'h0;
       FTQ_9_NEXT <= 7'h0;
       FTQ_9_TOS <= 7'h0;
-      FTQ_9_RAT_IDX <= 4'h0;
       FTQ_9_dominant_index <= 2'h0;
       FTQ_9_resolved_PC <= 32'h0;
       FTQ_10_valid <= 1'h0;
       FTQ_10_fetch_PC <= 32'h0;
       FTQ_10_predicted_PC <= 32'h0;
+      FTQ_10_T_NT <= 1'h0;
+      FTQ_10_br_type <= 3'h0;
       FTQ_10_GHR <= 16'h0;
       FTQ_10_NEXT <= 7'h0;
       FTQ_10_TOS <= 7'h0;
-      FTQ_10_RAT_IDX <= 4'h0;
       FTQ_10_dominant_index <= 2'h0;
       FTQ_10_resolved_PC <= 32'h0;
       FTQ_11_valid <= 1'h0;
       FTQ_11_fetch_PC <= 32'h0;
       FTQ_11_predicted_PC <= 32'h0;
+      FTQ_11_T_NT <= 1'h0;
+      FTQ_11_br_type <= 3'h0;
       FTQ_11_GHR <= 16'h0;
       FTQ_11_NEXT <= 7'h0;
       FTQ_11_TOS <= 7'h0;
-      FTQ_11_RAT_IDX <= 4'h0;
       FTQ_11_dominant_index <= 2'h0;
       FTQ_11_resolved_PC <= 32'h0;
       FTQ_12_valid <= 1'h0;
       FTQ_12_fetch_PC <= 32'h0;
       FTQ_12_predicted_PC <= 32'h0;
+      FTQ_12_T_NT <= 1'h0;
+      FTQ_12_br_type <= 3'h0;
       FTQ_12_GHR <= 16'h0;
       FTQ_12_NEXT <= 7'h0;
       FTQ_12_TOS <= 7'h0;
-      FTQ_12_RAT_IDX <= 4'h0;
       FTQ_12_dominant_index <= 2'h0;
       FTQ_12_resolved_PC <= 32'h0;
       FTQ_13_valid <= 1'h0;
       FTQ_13_fetch_PC <= 32'h0;
       FTQ_13_predicted_PC <= 32'h0;
+      FTQ_13_T_NT <= 1'h0;
+      FTQ_13_br_type <= 3'h0;
       FTQ_13_GHR <= 16'h0;
       FTQ_13_NEXT <= 7'h0;
       FTQ_13_TOS <= 7'h0;
-      FTQ_13_RAT_IDX <= 4'h0;
       FTQ_13_dominant_index <= 2'h0;
       FTQ_13_resolved_PC <= 32'h0;
       FTQ_14_valid <= 1'h0;
       FTQ_14_fetch_PC <= 32'h0;
       FTQ_14_predicted_PC <= 32'h0;
+      FTQ_14_T_NT <= 1'h0;
+      FTQ_14_br_type <= 3'h0;
       FTQ_14_GHR <= 16'h0;
       FTQ_14_NEXT <= 7'h0;
       FTQ_14_TOS <= 7'h0;
-      FTQ_14_RAT_IDX <= 4'h0;
       FTQ_14_dominant_index <= 2'h0;
       FTQ_14_resolved_PC <= 32'h0;
       FTQ_15_valid <= 1'h0;
       FTQ_15_fetch_PC <= 32'h0;
       FTQ_15_predicted_PC <= 32'h0;
+      FTQ_15_T_NT <= 1'h0;
+      FTQ_15_br_type <= 3'h0;
       FTQ_15_GHR <= 16'h0;
       FTQ_15_NEXT <= 7'h0;
       FTQ_15_TOS <= 7'h0;
-      FTQ_15_RAT_IDX <= 4'h0;
       FTQ_15_dominant_index <= 2'h0;
       FTQ_15_resolved_PC <= 32'h0;
     end
     else begin
-      automatic logic _GEN_7 = io_predictions_valid & ~full;
-      automatic logic _GEN_8 = back_pointer[3:0] == 4'h0;
-      automatic logic _GEN_9;
-      automatic logic _GEN_10 = back_pointer[3:0] == 4'h1;
-      automatic logic _GEN_11;
-      automatic logic _GEN_12 = back_pointer[3:0] == 4'h2;
-      automatic logic _GEN_13;
-      automatic logic _GEN_14 = back_pointer[3:0] == 4'h3;
-      automatic logic _GEN_15;
-      automatic logic _GEN_16 = back_pointer[3:0] == 4'h4;
-      automatic logic _GEN_17;
-      automatic logic _GEN_18 = back_pointer[3:0] == 4'h5;
-      automatic logic _GEN_19;
-      automatic logic _GEN_20 = back_pointer[3:0] == 4'h6;
-      automatic logic _GEN_21;
-      automatic logic _GEN_22 = back_pointer[3:0] == 4'h7;
-      automatic logic _GEN_23;
-      automatic logic _GEN_24 = back_pointer[3:0] == 4'h8;
-      automatic logic _GEN_25;
-      automatic logic _GEN_26 = back_pointer[3:0] == 4'h9;
-      automatic logic _GEN_27;
-      automatic logic _GEN_28 = back_pointer[3:0] == 4'hA;
-      automatic logic _GEN_29;
-      automatic logic _GEN_30 = back_pointer[3:0] == 4'hB;
-      automatic logic _GEN_31;
-      automatic logic _GEN_32 = back_pointer[3:0] == 4'hC;
-      automatic logic _GEN_33;
-      automatic logic _GEN_34 = back_pointer[3:0] == 4'hD;
-      automatic logic _GEN_35;
-      automatic logic _GEN_36 = back_pointer[3:0] == 4'hE;
-      automatic logic _GEN_37;
+      automatic logic _GEN_8 = io_predictions_valid & ~full;
+      automatic logic _GEN_9 = back_pointer[3:0] == 4'h0;
+      automatic logic _GEN_10;
+      automatic logic _GEN_11 = back_pointer[3:0] == 4'h1;
+      automatic logic _GEN_12;
+      automatic logic _GEN_13 = back_pointer[3:0] == 4'h2;
+      automatic logic _GEN_14;
+      automatic logic _GEN_15 = back_pointer[3:0] == 4'h3;
+      automatic logic _GEN_16;
+      automatic logic _GEN_17 = back_pointer[3:0] == 4'h4;
+      automatic logic _GEN_18;
+      automatic logic _GEN_19 = back_pointer[3:0] == 4'h5;
+      automatic logic _GEN_20;
+      automatic logic _GEN_21 = back_pointer[3:0] == 4'h6;
+      automatic logic _GEN_22;
+      automatic logic _GEN_23 = back_pointer[3:0] == 4'h7;
+      automatic logic _GEN_24;
+      automatic logic _GEN_25 = back_pointer[3:0] == 4'h8;
+      automatic logic _GEN_26;
+      automatic logic _GEN_27 = back_pointer[3:0] == 4'h9;
+      automatic logic _GEN_28;
+      automatic logic _GEN_29 = back_pointer[3:0] == 4'hA;
+      automatic logic _GEN_30;
+      automatic logic _GEN_31 = back_pointer[3:0] == 4'hB;
+      automatic logic _GEN_32;
+      automatic logic _GEN_33 = back_pointer[3:0] == 4'hC;
+      automatic logic _GEN_34;
+      automatic logic _GEN_35 = back_pointer[3:0] == 4'hD;
+      automatic logic _GEN_36;
+      automatic logic _GEN_37 = back_pointer[3:0] == 4'hE;
       automatic logic _GEN_38;
       automatic logic _GEN_39;
       automatic logic _GEN_40;
@@ -19695,59 +19751,61 @@ module FTQ(
       automatic logic _GEN_52;
       automatic logic _GEN_53;
       automatic logic _GEN_54;
-      _GEN_9 = _GEN_7 & _GEN_8;
-      _GEN_11 = _GEN_7 & _GEN_10;
-      _GEN_13 = _GEN_7 & _GEN_12;
-      _GEN_15 = _GEN_7 & _GEN_14;
-      _GEN_17 = _GEN_7 & _GEN_16;
-      _GEN_19 = _GEN_7 & _GEN_18;
-      _GEN_21 = _GEN_7 & _GEN_20;
-      _GEN_23 = _GEN_7 & _GEN_22;
-      _GEN_25 = _GEN_7 & _GEN_24;
-      _GEN_27 = _GEN_7 & _GEN_26;
-      _GEN_29 = _GEN_7 & _GEN_28;
-      _GEN_31 = _GEN_7 & _GEN_30;
-      _GEN_33 = _GEN_7 & _GEN_32;
-      _GEN_35 = _GEN_7 & _GEN_34;
-      _GEN_37 = _GEN_7 & _GEN_36;
-      _GEN_38 = _GEN_7 & (&(back_pointer[3:0]));
-      _GEN_39 = dq & front_pointer[3:0] == 4'h0;
-      _GEN_40 = dq & front_pointer[3:0] == 4'h1;
-      _GEN_41 = dq & front_pointer[3:0] == 4'h2;
-      _GEN_42 = dq & front_pointer[3:0] == 4'h3;
-      _GEN_43 = dq & front_pointer[3:0] == 4'h4;
-      _GEN_44 = dq & front_pointer[3:0] == 4'h5;
-      _GEN_45 = dq & front_pointer[3:0] == 4'h6;
-      _GEN_46 = dq & front_pointer[3:0] == 4'h7;
-      _GEN_47 = dq & front_pointer[3:0] == 4'h8;
-      _GEN_48 = dq & front_pointer[3:0] == 4'h9;
-      _GEN_49 = dq & front_pointer[3:0] == 4'hA;
-      _GEN_50 = dq & front_pointer[3:0] == 4'hB;
-      _GEN_51 = dq & front_pointer[3:0] == 4'hC;
-      _GEN_52 = dq & front_pointer[3:0] == 4'hD;
-      _GEN_53 = dq & front_pointer[3:0] == 4'hE;
-      _GEN_54 = dq & (&(front_pointer[3:0]));
+      automatic logic _GEN_55;
+      _GEN_10 = _GEN_8 & _GEN_9;
+      _GEN_12 = _GEN_8 & _GEN_11;
+      _GEN_14 = _GEN_8 & _GEN_13;
+      _GEN_16 = _GEN_8 & _GEN_15;
+      _GEN_18 = _GEN_8 & _GEN_17;
+      _GEN_20 = _GEN_8 & _GEN_19;
+      _GEN_22 = _GEN_8 & _GEN_21;
+      _GEN_24 = _GEN_8 & _GEN_23;
+      _GEN_26 = _GEN_8 & _GEN_25;
+      _GEN_28 = _GEN_8 & _GEN_27;
+      _GEN_30 = _GEN_8 & _GEN_29;
+      _GEN_32 = _GEN_8 & _GEN_31;
+      _GEN_34 = _GEN_8 & _GEN_33;
+      _GEN_36 = _GEN_8 & _GEN_35;
+      _GEN_38 = _GEN_8 & _GEN_37;
+      _GEN_39 = _GEN_8 & (&(back_pointer[3:0]));
+      _GEN_40 = dq & front_pointer[3:0] == 4'h0;
+      _GEN_41 = dq & front_pointer[3:0] == 4'h1;
+      _GEN_42 = dq & front_pointer[3:0] == 4'h2;
+      _GEN_43 = dq & front_pointer[3:0] == 4'h3;
+      _GEN_44 = dq & front_pointer[3:0] == 4'h4;
+      _GEN_45 = dq & front_pointer[3:0] == 4'h5;
+      _GEN_46 = dq & front_pointer[3:0] == 4'h6;
+      _GEN_47 = dq & front_pointer[3:0] == 4'h7;
+      _GEN_48 = dq & front_pointer[3:0] == 4'h8;
+      _GEN_49 = dq & front_pointer[3:0] == 4'h9;
+      _GEN_50 = dq & front_pointer[3:0] == 4'hA;
+      _GEN_51 = dq & front_pointer[3:0] == 4'hB;
+      _GEN_52 = dq & front_pointer[3:0] == 4'hC;
+      _GEN_53 = dq & front_pointer[3:0] == 4'hD;
+      _GEN_54 = dq & front_pointer[3:0] == 4'hE;
+      _GEN_55 = dq & (&(front_pointer[3:0]));
       if (dq)
         front_pointer <= front_pointer + 5'h1;
-      if (_GEN_7)
+      if (_GEN_8)
         back_pointer <= back_pointer + 5'h1;
-      FTQ_0_valid <= ~_GEN_39 & (_GEN_7 ? _GEN_8 | ~_GEN_8 & FTQ_0_valid : FTQ_0_valid);
-      if (_GEN_39) begin
+      FTQ_0_valid <= ~_GEN_40 & (_GEN_8 ? _GEN_9 | ~_GEN_9 & FTQ_0_valid : FTQ_0_valid);
+      if (_GEN_40) begin
         FTQ_0_fetch_PC <= 32'h0;
         FTQ_0_predicted_PC <= 32'h0;
+        FTQ_0_br_type <= 3'h0;
         FTQ_0_GHR <= 16'h0;
         FTQ_0_NEXT <= 7'h0;
         FTQ_0_TOS <= 7'h0;
-        FTQ_0_RAT_IDX <= 4'h0;
       end
-      else if (_GEN_9) begin
+      else if (_GEN_10) begin
         FTQ_0_fetch_PC <= io_predictions_bits_fetch_PC;
         FTQ_0_predicted_PC <= io_predictions_bits_predicted_PC;
+        FTQ_0_br_type <= io_predictions_bits_br_type;
         FTQ_0_GHR <= io_predictions_bits_GHR;
         FTQ_0_NEXT <= io_predictions_bits_NEXT;
         FTQ_0_TOS <= io_predictions_bits_TOS;
-        FTQ_0_RAT_IDX <= io_predictions_bits_RAT_IDX;
       end
+      FTQ_0_T_NT <= ~_GEN_40 & (_GEN_10 ? io_predictions_bits_T_NT : FTQ_0_T_NT);
       if (FTQ_0_fetch_PC[31:4] == io_FU_outputs_0_bits_instruction_PC[31:4] & FTQ_0_valid
           & io_FU_outputs_0_valid & io_FU_outputs_0_bits_branch_valid
           & io_FU_outputs_0_bits_fetch_packet_index <= FTQ_0_dominant_index
@@ -19756,30 +19814,31 @@ module FTQ(
         FTQ_0_resolved_PC <= io_FU_outputs_0_bits_target_address;
       end
       else begin
-        if (_GEN_39 | _GEN_9)
+        if (_GEN_40 | _GEN_10)
           FTQ_0_dominant_index <= 2'h0;
-        if (_GEN_39)
+        if (_GEN_40)
           FTQ_0_resolved_PC <= 32'h0;
-        else if (_GEN_9)
+        else if (_GEN_10)
           FTQ_0_resolved_PC <= io_predictions_bits_resolved_PC;
       end
-      FTQ_1_valid <= ~_GEN_40 & (_GEN_7 ? _GEN_10 | ~_GEN_10 & FTQ_1_valid : FTQ_1_valid);
-      if (_GEN_40) begin
+      FTQ_1_valid <= ~_GEN_41 & (_GEN_8 ? _GEN_11 | ~_GEN_11 & FTQ_1_valid : FTQ_1_valid);
+      if (_GEN_41) begin
         FTQ_1_fetch_PC <= 32'h0;
         FTQ_1_predicted_PC <= 32'h0;
+        FTQ_1_br_type <= 3'h0;
         FTQ_1_GHR <= 16'h0;
         FTQ_1_NEXT <= 7'h0;
         FTQ_1_TOS <= 7'h0;
-        FTQ_1_RAT_IDX <= 4'h0;
       end
-      else if (_GEN_11) begin
+      else if (_GEN_12) begin
         FTQ_1_fetch_PC <= io_predictions_bits_fetch_PC;
         FTQ_1_predicted_PC <= io_predictions_bits_predicted_PC;
+        FTQ_1_br_type <= io_predictions_bits_br_type;
         FTQ_1_GHR <= io_predictions_bits_GHR;
         FTQ_1_NEXT <= io_predictions_bits_NEXT;
         FTQ_1_TOS <= io_predictions_bits_TOS;
-        FTQ_1_RAT_IDX <= io_predictions_bits_RAT_IDX;
       end
+      FTQ_1_T_NT <= ~_GEN_41 & (_GEN_12 ? io_predictions_bits_T_NT : FTQ_1_T_NT);
       if (FTQ_1_fetch_PC[31:4] == io_FU_outputs_0_bits_instruction_PC[31:4] & FTQ_1_valid
           & io_FU_outputs_0_valid & io_FU_outputs_0_bits_branch_valid
           & io_FU_outputs_0_bits_fetch_packet_index <= FTQ_1_dominant_index
@@ -19788,30 +19847,31 @@ module FTQ(
         FTQ_1_resolved_PC <= io_FU_outputs_0_bits_target_address;
       end
       else begin
-        if (_GEN_40 | _GEN_11)
+        if (_GEN_41 | _GEN_12)
           FTQ_1_dominant_index <= 2'h0;
-        if (_GEN_40)
+        if (_GEN_41)
           FTQ_1_resolved_PC <= 32'h0;
-        else if (_GEN_11)
+        else if (_GEN_12)
           FTQ_1_resolved_PC <= io_predictions_bits_resolved_PC;
       end
-      FTQ_2_valid <= ~_GEN_41 & (_GEN_7 ? _GEN_12 | ~_GEN_12 & FTQ_2_valid : FTQ_2_valid);
-      if (_GEN_41) begin
+      FTQ_2_valid <= ~_GEN_42 & (_GEN_8 ? _GEN_13 | ~_GEN_13 & FTQ_2_valid : FTQ_2_valid);
+      if (_GEN_42) begin
         FTQ_2_fetch_PC <= 32'h0;
         FTQ_2_predicted_PC <= 32'h0;
+        FTQ_2_br_type <= 3'h0;
         FTQ_2_GHR <= 16'h0;
         FTQ_2_NEXT <= 7'h0;
         FTQ_2_TOS <= 7'h0;
-        FTQ_2_RAT_IDX <= 4'h0;
       end
-      else if (_GEN_13) begin
+      else if (_GEN_14) begin
         FTQ_2_fetch_PC <= io_predictions_bits_fetch_PC;
         FTQ_2_predicted_PC <= io_predictions_bits_predicted_PC;
+        FTQ_2_br_type <= io_predictions_bits_br_type;
         FTQ_2_GHR <= io_predictions_bits_GHR;
         FTQ_2_NEXT <= io_predictions_bits_NEXT;
         FTQ_2_TOS <= io_predictions_bits_TOS;
-        FTQ_2_RAT_IDX <= io_predictions_bits_RAT_IDX;
       end
+      FTQ_2_T_NT <= ~_GEN_42 & (_GEN_14 ? io_predictions_bits_T_NT : FTQ_2_T_NT);
       if (FTQ_2_fetch_PC[31:4] == io_FU_outputs_0_bits_instruction_PC[31:4] & FTQ_2_valid
           & io_FU_outputs_0_valid & io_FU_outputs_0_bits_branch_valid
           & io_FU_outputs_0_bits_fetch_packet_index <= FTQ_2_dominant_index
@@ -19820,30 +19880,31 @@ module FTQ(
         FTQ_2_resolved_PC <= io_FU_outputs_0_bits_target_address;
       end
       else begin
-        if (_GEN_41 | _GEN_13)
+        if (_GEN_42 | _GEN_14)
           FTQ_2_dominant_index <= 2'h0;
-        if (_GEN_41)
+        if (_GEN_42)
           FTQ_2_resolved_PC <= 32'h0;
-        else if (_GEN_13)
+        else if (_GEN_14)
           FTQ_2_resolved_PC <= io_predictions_bits_resolved_PC;
       end
-      FTQ_3_valid <= ~_GEN_42 & (_GEN_7 ? _GEN_14 | ~_GEN_14 & FTQ_3_valid : FTQ_3_valid);
-      if (_GEN_42) begin
+      FTQ_3_valid <= ~_GEN_43 & (_GEN_8 ? _GEN_15 | ~_GEN_15 & FTQ_3_valid : FTQ_3_valid);
+      if (_GEN_43) begin
         FTQ_3_fetch_PC <= 32'h0;
         FTQ_3_predicted_PC <= 32'h0;
+        FTQ_3_br_type <= 3'h0;
         FTQ_3_GHR <= 16'h0;
         FTQ_3_NEXT <= 7'h0;
         FTQ_3_TOS <= 7'h0;
-        FTQ_3_RAT_IDX <= 4'h0;
       end
-      else if (_GEN_15) begin
+      else if (_GEN_16) begin
         FTQ_3_fetch_PC <= io_predictions_bits_fetch_PC;
         FTQ_3_predicted_PC <= io_predictions_bits_predicted_PC;
+        FTQ_3_br_type <= io_predictions_bits_br_type;
         FTQ_3_GHR <= io_predictions_bits_GHR;
         FTQ_3_NEXT <= io_predictions_bits_NEXT;
         FTQ_3_TOS <= io_predictions_bits_TOS;
-        FTQ_3_RAT_IDX <= io_predictions_bits_RAT_IDX;
       end
+      FTQ_3_T_NT <= ~_GEN_43 & (_GEN_16 ? io_predictions_bits_T_NT : FTQ_3_T_NT);
       if (FTQ_3_fetch_PC[31:4] == io_FU_outputs_0_bits_instruction_PC[31:4] & FTQ_3_valid
           & io_FU_outputs_0_valid & io_FU_outputs_0_bits_branch_valid
           & io_FU_outputs_0_bits_fetch_packet_index <= FTQ_3_dominant_index
@@ -19852,30 +19913,31 @@ module FTQ(
         FTQ_3_resolved_PC <= io_FU_outputs_0_bits_target_address;
       end
       else begin
-        if (_GEN_42 | _GEN_15)
+        if (_GEN_43 | _GEN_16)
           FTQ_3_dominant_index <= 2'h0;
-        if (_GEN_42)
+        if (_GEN_43)
           FTQ_3_resolved_PC <= 32'h0;
-        else if (_GEN_15)
+        else if (_GEN_16)
           FTQ_3_resolved_PC <= io_predictions_bits_resolved_PC;
       end
-      FTQ_4_valid <= ~_GEN_43 & (_GEN_7 ? _GEN_16 | ~_GEN_16 & FTQ_4_valid : FTQ_4_valid);
-      if (_GEN_43) begin
+      FTQ_4_valid <= ~_GEN_44 & (_GEN_8 ? _GEN_17 | ~_GEN_17 & FTQ_4_valid : FTQ_4_valid);
+      if (_GEN_44) begin
         FTQ_4_fetch_PC <= 32'h0;
         FTQ_4_predicted_PC <= 32'h0;
+        FTQ_4_br_type <= 3'h0;
         FTQ_4_GHR <= 16'h0;
         FTQ_4_NEXT <= 7'h0;
         FTQ_4_TOS <= 7'h0;
-        FTQ_4_RAT_IDX <= 4'h0;
       end
-      else if (_GEN_17) begin
+      else if (_GEN_18) begin
         FTQ_4_fetch_PC <= io_predictions_bits_fetch_PC;
         FTQ_4_predicted_PC <= io_predictions_bits_predicted_PC;
+        FTQ_4_br_type <= io_predictions_bits_br_type;
         FTQ_4_GHR <= io_predictions_bits_GHR;
         FTQ_4_NEXT <= io_predictions_bits_NEXT;
         FTQ_4_TOS <= io_predictions_bits_TOS;
-        FTQ_4_RAT_IDX <= io_predictions_bits_RAT_IDX;
       end
+      FTQ_4_T_NT <= ~_GEN_44 & (_GEN_18 ? io_predictions_bits_T_NT : FTQ_4_T_NT);
       if (FTQ_4_fetch_PC[31:4] == io_FU_outputs_0_bits_instruction_PC[31:4] & FTQ_4_valid
           & io_FU_outputs_0_valid & io_FU_outputs_0_bits_branch_valid
           & io_FU_outputs_0_bits_fetch_packet_index <= FTQ_4_dominant_index
@@ -19884,30 +19946,31 @@ module FTQ(
         FTQ_4_resolved_PC <= io_FU_outputs_0_bits_target_address;
       end
       else begin
-        if (_GEN_43 | _GEN_17)
+        if (_GEN_44 | _GEN_18)
           FTQ_4_dominant_index <= 2'h0;
-        if (_GEN_43)
+        if (_GEN_44)
           FTQ_4_resolved_PC <= 32'h0;
-        else if (_GEN_17)
+        else if (_GEN_18)
           FTQ_4_resolved_PC <= io_predictions_bits_resolved_PC;
       end
-      FTQ_5_valid <= ~_GEN_44 & (_GEN_7 ? _GEN_18 | ~_GEN_18 & FTQ_5_valid : FTQ_5_valid);
-      if (_GEN_44) begin
+      FTQ_5_valid <= ~_GEN_45 & (_GEN_8 ? _GEN_19 | ~_GEN_19 & FTQ_5_valid : FTQ_5_valid);
+      if (_GEN_45) begin
         FTQ_5_fetch_PC <= 32'h0;
         FTQ_5_predicted_PC <= 32'h0;
+        FTQ_5_br_type <= 3'h0;
         FTQ_5_GHR <= 16'h0;
         FTQ_5_NEXT <= 7'h0;
         FTQ_5_TOS <= 7'h0;
-        FTQ_5_RAT_IDX <= 4'h0;
       end
-      else if (_GEN_19) begin
+      else if (_GEN_20) begin
         FTQ_5_fetch_PC <= io_predictions_bits_fetch_PC;
         FTQ_5_predicted_PC <= io_predictions_bits_predicted_PC;
+        FTQ_5_br_type <= io_predictions_bits_br_type;
         FTQ_5_GHR <= io_predictions_bits_GHR;
         FTQ_5_NEXT <= io_predictions_bits_NEXT;
         FTQ_5_TOS <= io_predictions_bits_TOS;
-        FTQ_5_RAT_IDX <= io_predictions_bits_RAT_IDX;
       end
+      FTQ_5_T_NT <= ~_GEN_45 & (_GEN_20 ? io_predictions_bits_T_NT : FTQ_5_T_NT);
       if (FTQ_5_fetch_PC[31:4] == io_FU_outputs_0_bits_instruction_PC[31:4] & FTQ_5_valid
           & io_FU_outputs_0_valid & io_FU_outputs_0_bits_branch_valid
           & io_FU_outputs_0_bits_fetch_packet_index <= FTQ_5_dominant_index
@@ -19916,30 +19979,31 @@ module FTQ(
         FTQ_5_resolved_PC <= io_FU_outputs_0_bits_target_address;
       end
       else begin
-        if (_GEN_44 | _GEN_19)
+        if (_GEN_45 | _GEN_20)
           FTQ_5_dominant_index <= 2'h0;
-        if (_GEN_44)
+        if (_GEN_45)
           FTQ_5_resolved_PC <= 32'h0;
-        else if (_GEN_19)
+        else if (_GEN_20)
           FTQ_5_resolved_PC <= io_predictions_bits_resolved_PC;
       end
-      FTQ_6_valid <= ~_GEN_45 & (_GEN_7 ? _GEN_20 | ~_GEN_20 & FTQ_6_valid : FTQ_6_valid);
-      if (_GEN_45) begin
+      FTQ_6_valid <= ~_GEN_46 & (_GEN_8 ? _GEN_21 | ~_GEN_21 & FTQ_6_valid : FTQ_6_valid);
+      if (_GEN_46) begin
         FTQ_6_fetch_PC <= 32'h0;
         FTQ_6_predicted_PC <= 32'h0;
+        FTQ_6_br_type <= 3'h0;
         FTQ_6_GHR <= 16'h0;
         FTQ_6_NEXT <= 7'h0;
         FTQ_6_TOS <= 7'h0;
-        FTQ_6_RAT_IDX <= 4'h0;
       end
-      else if (_GEN_21) begin
+      else if (_GEN_22) begin
         FTQ_6_fetch_PC <= io_predictions_bits_fetch_PC;
         FTQ_6_predicted_PC <= io_predictions_bits_predicted_PC;
+        FTQ_6_br_type <= io_predictions_bits_br_type;
         FTQ_6_GHR <= io_predictions_bits_GHR;
         FTQ_6_NEXT <= io_predictions_bits_NEXT;
         FTQ_6_TOS <= io_predictions_bits_TOS;
-        FTQ_6_RAT_IDX <= io_predictions_bits_RAT_IDX;
       end
+      FTQ_6_T_NT <= ~_GEN_46 & (_GEN_22 ? io_predictions_bits_T_NT : FTQ_6_T_NT);
       if (FTQ_6_fetch_PC[31:4] == io_FU_outputs_0_bits_instruction_PC[31:4] & FTQ_6_valid
           & io_FU_outputs_0_valid & io_FU_outputs_0_bits_branch_valid
           & io_FU_outputs_0_bits_fetch_packet_index <= FTQ_6_dominant_index
@@ -19948,30 +20012,31 @@ module FTQ(
         FTQ_6_resolved_PC <= io_FU_outputs_0_bits_target_address;
       end
       else begin
-        if (_GEN_45 | _GEN_21)
+        if (_GEN_46 | _GEN_22)
           FTQ_6_dominant_index <= 2'h0;
-        if (_GEN_45)
+        if (_GEN_46)
           FTQ_6_resolved_PC <= 32'h0;
-        else if (_GEN_21)
+        else if (_GEN_22)
           FTQ_6_resolved_PC <= io_predictions_bits_resolved_PC;
       end
-      FTQ_7_valid <= ~_GEN_46 & (_GEN_7 ? _GEN_22 | ~_GEN_22 & FTQ_7_valid : FTQ_7_valid);
-      if (_GEN_46) begin
+      FTQ_7_valid <= ~_GEN_47 & (_GEN_8 ? _GEN_23 | ~_GEN_23 & FTQ_7_valid : FTQ_7_valid);
+      if (_GEN_47) begin
         FTQ_7_fetch_PC <= 32'h0;
         FTQ_7_predicted_PC <= 32'h0;
+        FTQ_7_br_type <= 3'h0;
         FTQ_7_GHR <= 16'h0;
         FTQ_7_NEXT <= 7'h0;
         FTQ_7_TOS <= 7'h0;
-        FTQ_7_RAT_IDX <= 4'h0;
       end
-      else if (_GEN_23) begin
+      else if (_GEN_24) begin
         FTQ_7_fetch_PC <= io_predictions_bits_fetch_PC;
         FTQ_7_predicted_PC <= io_predictions_bits_predicted_PC;
+        FTQ_7_br_type <= io_predictions_bits_br_type;
         FTQ_7_GHR <= io_predictions_bits_GHR;
         FTQ_7_NEXT <= io_predictions_bits_NEXT;
         FTQ_7_TOS <= io_predictions_bits_TOS;
-        FTQ_7_RAT_IDX <= io_predictions_bits_RAT_IDX;
       end
+      FTQ_7_T_NT <= ~_GEN_47 & (_GEN_24 ? io_predictions_bits_T_NT : FTQ_7_T_NT);
       if (FTQ_7_fetch_PC[31:4] == io_FU_outputs_0_bits_instruction_PC[31:4] & FTQ_7_valid
           & io_FU_outputs_0_valid & io_FU_outputs_0_bits_branch_valid
           & io_FU_outputs_0_bits_fetch_packet_index <= FTQ_7_dominant_index
@@ -19980,30 +20045,31 @@ module FTQ(
         FTQ_7_resolved_PC <= io_FU_outputs_0_bits_target_address;
       end
       else begin
-        if (_GEN_46 | _GEN_23)
+        if (_GEN_47 | _GEN_24)
           FTQ_7_dominant_index <= 2'h0;
-        if (_GEN_46)
+        if (_GEN_47)
           FTQ_7_resolved_PC <= 32'h0;
-        else if (_GEN_23)
+        else if (_GEN_24)
           FTQ_7_resolved_PC <= io_predictions_bits_resolved_PC;
       end
-      FTQ_8_valid <= ~_GEN_47 & (_GEN_7 ? _GEN_24 | ~_GEN_24 & FTQ_8_valid : FTQ_8_valid);
-      if (_GEN_47) begin
+      FTQ_8_valid <= ~_GEN_48 & (_GEN_8 ? _GEN_25 | ~_GEN_25 & FTQ_8_valid : FTQ_8_valid);
+      if (_GEN_48) begin
         FTQ_8_fetch_PC <= 32'h0;
         FTQ_8_predicted_PC <= 32'h0;
+        FTQ_8_br_type <= 3'h0;
         FTQ_8_GHR <= 16'h0;
         FTQ_8_NEXT <= 7'h0;
         FTQ_8_TOS <= 7'h0;
-        FTQ_8_RAT_IDX <= 4'h0;
       end
-      else if (_GEN_25) begin
+      else if (_GEN_26) begin
         FTQ_8_fetch_PC <= io_predictions_bits_fetch_PC;
         FTQ_8_predicted_PC <= io_predictions_bits_predicted_PC;
+        FTQ_8_br_type <= io_predictions_bits_br_type;
         FTQ_8_GHR <= io_predictions_bits_GHR;
         FTQ_8_NEXT <= io_predictions_bits_NEXT;
         FTQ_8_TOS <= io_predictions_bits_TOS;
-        FTQ_8_RAT_IDX <= io_predictions_bits_RAT_IDX;
       end
+      FTQ_8_T_NT <= ~_GEN_48 & (_GEN_26 ? io_predictions_bits_T_NT : FTQ_8_T_NT);
       if (FTQ_8_fetch_PC[31:4] == io_FU_outputs_0_bits_instruction_PC[31:4] & FTQ_8_valid
           & io_FU_outputs_0_valid & io_FU_outputs_0_bits_branch_valid
           & io_FU_outputs_0_bits_fetch_packet_index <= FTQ_8_dominant_index
@@ -20012,30 +20078,31 @@ module FTQ(
         FTQ_8_resolved_PC <= io_FU_outputs_0_bits_target_address;
       end
       else begin
-        if (_GEN_47 | _GEN_25)
+        if (_GEN_48 | _GEN_26)
           FTQ_8_dominant_index <= 2'h0;
-        if (_GEN_47)
+        if (_GEN_48)
           FTQ_8_resolved_PC <= 32'h0;
-        else if (_GEN_25)
+        else if (_GEN_26)
           FTQ_8_resolved_PC <= io_predictions_bits_resolved_PC;
       end
-      FTQ_9_valid <= ~_GEN_48 & (_GEN_7 ? _GEN_26 | ~_GEN_26 & FTQ_9_valid : FTQ_9_valid);
-      if (_GEN_48) begin
+      FTQ_9_valid <= ~_GEN_49 & (_GEN_8 ? _GEN_27 | ~_GEN_27 & FTQ_9_valid : FTQ_9_valid);
+      if (_GEN_49) begin
         FTQ_9_fetch_PC <= 32'h0;
         FTQ_9_predicted_PC <= 32'h0;
+        FTQ_9_br_type <= 3'h0;
         FTQ_9_GHR <= 16'h0;
         FTQ_9_NEXT <= 7'h0;
         FTQ_9_TOS <= 7'h0;
-        FTQ_9_RAT_IDX <= 4'h0;
       end
-      else if (_GEN_27) begin
+      else if (_GEN_28) begin
         FTQ_9_fetch_PC <= io_predictions_bits_fetch_PC;
         FTQ_9_predicted_PC <= io_predictions_bits_predicted_PC;
+        FTQ_9_br_type <= io_predictions_bits_br_type;
         FTQ_9_GHR <= io_predictions_bits_GHR;
         FTQ_9_NEXT <= io_predictions_bits_NEXT;
         FTQ_9_TOS <= io_predictions_bits_TOS;
-        FTQ_9_RAT_IDX <= io_predictions_bits_RAT_IDX;
       end
+      FTQ_9_T_NT <= ~_GEN_49 & (_GEN_28 ? io_predictions_bits_T_NT : FTQ_9_T_NT);
       if (FTQ_9_fetch_PC[31:4] == io_FU_outputs_0_bits_instruction_PC[31:4] & FTQ_9_valid
           & io_FU_outputs_0_valid & io_FU_outputs_0_bits_branch_valid
           & io_FU_outputs_0_bits_fetch_packet_index <= FTQ_9_dominant_index
@@ -20044,31 +20111,32 @@ module FTQ(
         FTQ_9_resolved_PC <= io_FU_outputs_0_bits_target_address;
       end
       else begin
-        if (_GEN_48 | _GEN_27)
+        if (_GEN_49 | _GEN_28)
           FTQ_9_dominant_index <= 2'h0;
-        if (_GEN_48)
+        if (_GEN_49)
           FTQ_9_resolved_PC <= 32'h0;
-        else if (_GEN_27)
+        else if (_GEN_28)
           FTQ_9_resolved_PC <= io_predictions_bits_resolved_PC;
       end
       FTQ_10_valid <=
-        ~_GEN_49 & (_GEN_7 ? _GEN_28 | ~_GEN_28 & FTQ_10_valid : FTQ_10_valid);
-      if (_GEN_49) begin
+        ~_GEN_50 & (_GEN_8 ? _GEN_29 | ~_GEN_29 & FTQ_10_valid : FTQ_10_valid);
+      if (_GEN_50) begin
         FTQ_10_fetch_PC <= 32'h0;
         FTQ_10_predicted_PC <= 32'h0;
+        FTQ_10_br_type <= 3'h0;
         FTQ_10_GHR <= 16'h0;
         FTQ_10_NEXT <= 7'h0;
         FTQ_10_TOS <= 7'h0;
-        FTQ_10_RAT_IDX <= 4'h0;
       end
-      else if (_GEN_29) begin
+      else if (_GEN_30) begin
         FTQ_10_fetch_PC <= io_predictions_bits_fetch_PC;
         FTQ_10_predicted_PC <= io_predictions_bits_predicted_PC;
+        FTQ_10_br_type <= io_predictions_bits_br_type;
         FTQ_10_GHR <= io_predictions_bits_GHR;
         FTQ_10_NEXT <= io_predictions_bits_NEXT;
         FTQ_10_TOS <= io_predictions_bits_TOS;
-        FTQ_10_RAT_IDX <= io_predictions_bits_RAT_IDX;
       end
+      FTQ_10_T_NT <= ~_GEN_50 & (_GEN_30 ? io_predictions_bits_T_NT : FTQ_10_T_NT);
       if (FTQ_10_fetch_PC[31:4] == io_FU_outputs_0_bits_instruction_PC[31:4]
           & FTQ_10_valid & io_FU_outputs_0_valid & io_FU_outputs_0_bits_branch_valid
           & io_FU_outputs_0_bits_fetch_packet_index <= FTQ_10_dominant_index
@@ -20077,31 +20145,32 @@ module FTQ(
         FTQ_10_resolved_PC <= io_FU_outputs_0_bits_target_address;
       end
       else begin
-        if (_GEN_49 | _GEN_29)
+        if (_GEN_50 | _GEN_30)
           FTQ_10_dominant_index <= 2'h0;
-        if (_GEN_49)
+        if (_GEN_50)
           FTQ_10_resolved_PC <= 32'h0;
-        else if (_GEN_29)
+        else if (_GEN_30)
           FTQ_10_resolved_PC <= io_predictions_bits_resolved_PC;
       end
       FTQ_11_valid <=
-        ~_GEN_50 & (_GEN_7 ? _GEN_30 | ~_GEN_30 & FTQ_11_valid : FTQ_11_valid);
-      if (_GEN_50) begin
+        ~_GEN_51 & (_GEN_8 ? _GEN_31 | ~_GEN_31 & FTQ_11_valid : FTQ_11_valid);
+      if (_GEN_51) begin
         FTQ_11_fetch_PC <= 32'h0;
         FTQ_11_predicted_PC <= 32'h0;
+        FTQ_11_br_type <= 3'h0;
         FTQ_11_GHR <= 16'h0;
         FTQ_11_NEXT <= 7'h0;
         FTQ_11_TOS <= 7'h0;
-        FTQ_11_RAT_IDX <= 4'h0;
       end
-      else if (_GEN_31) begin
+      else if (_GEN_32) begin
         FTQ_11_fetch_PC <= io_predictions_bits_fetch_PC;
         FTQ_11_predicted_PC <= io_predictions_bits_predicted_PC;
+        FTQ_11_br_type <= io_predictions_bits_br_type;
         FTQ_11_GHR <= io_predictions_bits_GHR;
         FTQ_11_NEXT <= io_predictions_bits_NEXT;
         FTQ_11_TOS <= io_predictions_bits_TOS;
-        FTQ_11_RAT_IDX <= io_predictions_bits_RAT_IDX;
       end
+      FTQ_11_T_NT <= ~_GEN_51 & (_GEN_32 ? io_predictions_bits_T_NT : FTQ_11_T_NT);
       if (FTQ_11_fetch_PC[31:4] == io_FU_outputs_0_bits_instruction_PC[31:4]
           & FTQ_11_valid & io_FU_outputs_0_valid & io_FU_outputs_0_bits_branch_valid
           & io_FU_outputs_0_bits_fetch_packet_index <= FTQ_11_dominant_index
@@ -20110,31 +20179,32 @@ module FTQ(
         FTQ_11_resolved_PC <= io_FU_outputs_0_bits_target_address;
       end
       else begin
-        if (_GEN_50 | _GEN_31)
+        if (_GEN_51 | _GEN_32)
           FTQ_11_dominant_index <= 2'h0;
-        if (_GEN_50)
+        if (_GEN_51)
           FTQ_11_resolved_PC <= 32'h0;
-        else if (_GEN_31)
+        else if (_GEN_32)
           FTQ_11_resolved_PC <= io_predictions_bits_resolved_PC;
       end
       FTQ_12_valid <=
-        ~_GEN_51 & (_GEN_7 ? _GEN_32 | ~_GEN_32 & FTQ_12_valid : FTQ_12_valid);
-      if (_GEN_51) begin
+        ~_GEN_52 & (_GEN_8 ? _GEN_33 | ~_GEN_33 & FTQ_12_valid : FTQ_12_valid);
+      if (_GEN_52) begin
         FTQ_12_fetch_PC <= 32'h0;
         FTQ_12_predicted_PC <= 32'h0;
+        FTQ_12_br_type <= 3'h0;
         FTQ_12_GHR <= 16'h0;
         FTQ_12_NEXT <= 7'h0;
         FTQ_12_TOS <= 7'h0;
-        FTQ_12_RAT_IDX <= 4'h0;
       end
-      else if (_GEN_33) begin
+      else if (_GEN_34) begin
         FTQ_12_fetch_PC <= io_predictions_bits_fetch_PC;
         FTQ_12_predicted_PC <= io_predictions_bits_predicted_PC;
+        FTQ_12_br_type <= io_predictions_bits_br_type;
         FTQ_12_GHR <= io_predictions_bits_GHR;
         FTQ_12_NEXT <= io_predictions_bits_NEXT;
         FTQ_12_TOS <= io_predictions_bits_TOS;
-        FTQ_12_RAT_IDX <= io_predictions_bits_RAT_IDX;
       end
+      FTQ_12_T_NT <= ~_GEN_52 & (_GEN_34 ? io_predictions_bits_T_NT : FTQ_12_T_NT);
       if (FTQ_12_fetch_PC[31:4] == io_FU_outputs_0_bits_instruction_PC[31:4]
           & FTQ_12_valid & io_FU_outputs_0_valid & io_FU_outputs_0_bits_branch_valid
           & io_FU_outputs_0_bits_fetch_packet_index <= FTQ_12_dominant_index
@@ -20143,31 +20213,32 @@ module FTQ(
         FTQ_12_resolved_PC <= io_FU_outputs_0_bits_target_address;
       end
       else begin
-        if (_GEN_51 | _GEN_33)
+        if (_GEN_52 | _GEN_34)
           FTQ_12_dominant_index <= 2'h0;
-        if (_GEN_51)
+        if (_GEN_52)
           FTQ_12_resolved_PC <= 32'h0;
-        else if (_GEN_33)
+        else if (_GEN_34)
           FTQ_12_resolved_PC <= io_predictions_bits_resolved_PC;
       end
       FTQ_13_valid <=
-        ~_GEN_52 & (_GEN_7 ? _GEN_34 | ~_GEN_34 & FTQ_13_valid : FTQ_13_valid);
-      if (_GEN_52) begin
+        ~_GEN_53 & (_GEN_8 ? _GEN_35 | ~_GEN_35 & FTQ_13_valid : FTQ_13_valid);
+      if (_GEN_53) begin
         FTQ_13_fetch_PC <= 32'h0;
         FTQ_13_predicted_PC <= 32'h0;
+        FTQ_13_br_type <= 3'h0;
         FTQ_13_GHR <= 16'h0;
         FTQ_13_NEXT <= 7'h0;
         FTQ_13_TOS <= 7'h0;
-        FTQ_13_RAT_IDX <= 4'h0;
       end
-      else if (_GEN_35) begin
+      else if (_GEN_36) begin
         FTQ_13_fetch_PC <= io_predictions_bits_fetch_PC;
         FTQ_13_predicted_PC <= io_predictions_bits_predicted_PC;
+        FTQ_13_br_type <= io_predictions_bits_br_type;
         FTQ_13_GHR <= io_predictions_bits_GHR;
         FTQ_13_NEXT <= io_predictions_bits_NEXT;
         FTQ_13_TOS <= io_predictions_bits_TOS;
-        FTQ_13_RAT_IDX <= io_predictions_bits_RAT_IDX;
       end
+      FTQ_13_T_NT <= ~_GEN_53 & (_GEN_36 ? io_predictions_bits_T_NT : FTQ_13_T_NT);
       if (FTQ_13_fetch_PC[31:4] == io_FU_outputs_0_bits_instruction_PC[31:4]
           & FTQ_13_valid & io_FU_outputs_0_valid & io_FU_outputs_0_bits_branch_valid
           & io_FU_outputs_0_bits_fetch_packet_index <= FTQ_13_dominant_index
@@ -20176,31 +20247,32 @@ module FTQ(
         FTQ_13_resolved_PC <= io_FU_outputs_0_bits_target_address;
       end
       else begin
-        if (_GEN_52 | _GEN_35)
+        if (_GEN_53 | _GEN_36)
           FTQ_13_dominant_index <= 2'h0;
-        if (_GEN_52)
+        if (_GEN_53)
           FTQ_13_resolved_PC <= 32'h0;
-        else if (_GEN_35)
+        else if (_GEN_36)
           FTQ_13_resolved_PC <= io_predictions_bits_resolved_PC;
       end
       FTQ_14_valid <=
-        ~_GEN_53 & (_GEN_7 ? _GEN_36 | ~_GEN_36 & FTQ_14_valid : FTQ_14_valid);
-      if (_GEN_53) begin
+        ~_GEN_54 & (_GEN_8 ? _GEN_37 | ~_GEN_37 & FTQ_14_valid : FTQ_14_valid);
+      if (_GEN_54) begin
         FTQ_14_fetch_PC <= 32'h0;
         FTQ_14_predicted_PC <= 32'h0;
+        FTQ_14_br_type <= 3'h0;
         FTQ_14_GHR <= 16'h0;
         FTQ_14_NEXT <= 7'h0;
         FTQ_14_TOS <= 7'h0;
-        FTQ_14_RAT_IDX <= 4'h0;
       end
-      else if (_GEN_37) begin
+      else if (_GEN_38) begin
         FTQ_14_fetch_PC <= io_predictions_bits_fetch_PC;
         FTQ_14_predicted_PC <= io_predictions_bits_predicted_PC;
+        FTQ_14_br_type <= io_predictions_bits_br_type;
         FTQ_14_GHR <= io_predictions_bits_GHR;
         FTQ_14_NEXT <= io_predictions_bits_NEXT;
         FTQ_14_TOS <= io_predictions_bits_TOS;
-        FTQ_14_RAT_IDX <= io_predictions_bits_RAT_IDX;
       end
+      FTQ_14_T_NT <= ~_GEN_54 & (_GEN_38 ? io_predictions_bits_T_NT : FTQ_14_T_NT);
       if (FTQ_14_fetch_PC[31:4] == io_FU_outputs_0_bits_instruction_PC[31:4]
           & FTQ_14_valid & io_FU_outputs_0_valid & io_FU_outputs_0_bits_branch_valid
           & io_FU_outputs_0_bits_fetch_packet_index <= FTQ_14_dominant_index
@@ -20209,34 +20281,35 @@ module FTQ(
         FTQ_14_resolved_PC <= io_FU_outputs_0_bits_target_address;
       end
       else begin
-        if (_GEN_53 | _GEN_37)
+        if (_GEN_54 | _GEN_38)
           FTQ_14_dominant_index <= 2'h0;
-        if (_GEN_53)
+        if (_GEN_54)
           FTQ_14_resolved_PC <= 32'h0;
-        else if (_GEN_37)
+        else if (_GEN_38)
           FTQ_14_resolved_PC <= io_predictions_bits_resolved_PC;
       end
       FTQ_15_valid <=
-        ~_GEN_54
-        & (_GEN_7
+        ~_GEN_55
+        & (_GEN_8
              ? (&(back_pointer[3:0])) | ~(&(back_pointer[3:0])) & FTQ_15_valid
              : FTQ_15_valid);
-      if (_GEN_54) begin
+      if (_GEN_55) begin
         FTQ_15_fetch_PC <= 32'h0;
         FTQ_15_predicted_PC <= 32'h0;
+        FTQ_15_br_type <= 3'h0;
         FTQ_15_GHR <= 16'h0;
         FTQ_15_NEXT <= 7'h0;
         FTQ_15_TOS <= 7'h0;
-        FTQ_15_RAT_IDX <= 4'h0;
       end
-      else if (_GEN_38) begin
+      else if (_GEN_39) begin
         FTQ_15_fetch_PC <= io_predictions_bits_fetch_PC;
         FTQ_15_predicted_PC <= io_predictions_bits_predicted_PC;
+        FTQ_15_br_type <= io_predictions_bits_br_type;
         FTQ_15_GHR <= io_predictions_bits_GHR;
         FTQ_15_NEXT <= io_predictions_bits_NEXT;
         FTQ_15_TOS <= io_predictions_bits_TOS;
-        FTQ_15_RAT_IDX <= io_predictions_bits_RAT_IDX;
       end
+      FTQ_15_T_NT <= ~_GEN_55 & (_GEN_39 ? io_predictions_bits_T_NT : FTQ_15_T_NT);
       if (FTQ_15_fetch_PC[31:4] == io_FU_outputs_0_bits_instruction_PC[31:4]
           & FTQ_15_valid & io_FU_outputs_0_valid & io_FU_outputs_0_bits_branch_valid
           & io_FU_outputs_0_bits_fetch_packet_index <= FTQ_15_dominant_index
@@ -20245,11 +20318,11 @@ module FTQ(
         FTQ_15_resolved_PC <= io_FU_outputs_0_bits_target_address;
       end
       else begin
-        if (_GEN_54 | _GEN_38)
+        if (_GEN_55 | _GEN_39)
           FTQ_15_dominant_index <= 2'h0;
-        if (_GEN_54)
+        if (_GEN_55)
           FTQ_15_resolved_PC <= 32'h0;
-        else if (_GEN_38)
+        else if (_GEN_39)
           FTQ_15_resolved_PC <= io_predictions_bits_resolved_PC;
       end
     end
@@ -20258,11 +20331,12 @@ module FTQ(
   assign io_FTQ_valid = io_FTQ_valid_0;
   assign io_FTQ_fetch_PC = io_FTQ_fetch_PC_0;
   assign io_FTQ_predicted_PC = _GEN_1[front_pointer[3:0]];
-  assign io_FTQ_GHR = _GEN_2[front_pointer[3:0]];
-  assign io_FTQ_NEXT = _GEN_3[front_pointer[3:0]];
-  assign io_FTQ_TOS = _GEN_4[front_pointer[3:0]];
-  assign io_FTQ_RAT_IDX = _GEN_5[front_pointer[3:0]];
-  assign io_FTQ_resolved_PC = _GEN_6[front_pointer[3:0]];
+  assign io_FTQ_T_NT = _GEN_2[front_pointer[3:0]];
+  assign io_FTQ_br_type = _GEN_3[front_pointer[3:0]];
+  assign io_FTQ_GHR = _GEN_4[front_pointer[3:0]];
+  assign io_FTQ_NEXT = _GEN_5[front_pointer[3:0]];
+  assign io_FTQ_TOS = _GEN_6[front_pointer[3:0]];
+  assign io_FTQ_resolved_PC = _GEN_7[front_pointer[3:0]];
 endmodule
 
 // VCS coverage exclude_file
@@ -20489,17 +20563,14 @@ module ROB(
   input         io_FU_outputs_3_valid,
   input  [5:0]  io_FU_outputs_3_bits_ROB_index,
   input  [1:0]  io_FU_outputs_3_bits_fetch_packet_index,
-  output        io_ROB_0_valid,
-                io_ROB_1_valid,
-                io_ROB_2_valid,
-                io_ROB_3_valid,
+  output        io_ROB_output_valid,
+  output [31:0] io_ROB_output_bits_fetch_PC,
   input  [5:0]  io_PC_file_exec_addr,
-  output [5:0]  io_PC_file_exec_data,
-                io_PC_file_commit_data
+  output [5:0]  io_PC_file_exec_data
 );
 
+  wire        full;
   wire [31:0] _PC_file_io_readDataC;
-  wire [31:0] _PC_file_io_readDataD;
   wire        _ROB_valid_bank_io_readDataC;
   wire        _ROB_busy_banks_3_io_readDataC;
   wire        _ROB_busy_banks_2_io_readDataC;
@@ -20509,6 +20580,7 @@ module ROB(
   wire        _ROB_entry_banks_2_io_readDataC_valid;
   wire        _ROB_entry_banks_1_io_readDataC_valid;
   wire        _ROB_entry_banks_0_io_readDataC_valid;
+  wire        incoming_write = io_ROB_packet_valid & ~full;
   reg  [6:0]  front_pointer;
   reg  [6:0]  back_pointer;
   wire        _GEN =
@@ -20558,6 +20630,7 @@ module ROB(
          & _ROB_entry_banks_0_io_readDataC_valid}) & _ROB_valid_bank_io_readDataC;
   wire [6:0]  _front_index_T = front_pointer + 7'h1;
   wire [5:0]  front_index = commit_valid ? _front_index_T[5:0] : front_pointer[5:0];
+  assign full = front_index == back_pointer[5:0] & front_pointer != back_pointer;
   always @(posedge clock) begin
     if (reset) begin
       front_pointer <= 7'h0;
@@ -20578,7 +20651,7 @@ module ROB(
     .io_addrA                (back_pointer[5:0]),
     .io_writeDataA_valid     (io_ROB_packet_bits_valid_bits_0),
     .io_writeDataA_is_branch (io_ROB_packet_bits_decoded_instruction_0_needs_branch_unit),
-    .io_writeEnableA         (io_ROB_packet_bits_valid_bits_0),
+    .io_writeEnableA         (io_ROB_packet_valid),
     .io_addrB                (back_pointer[5:0]),
     .io_writeEnableB         (commit_valid),
     .io_addrC                (front_index),
@@ -20589,7 +20662,7 @@ module ROB(
     .io_addrA                (back_pointer[5:0]),
     .io_writeDataA_valid     (io_ROB_packet_bits_valid_bits_1),
     .io_writeDataA_is_branch (io_ROB_packet_bits_decoded_instruction_1_needs_branch_unit),
-    .io_writeEnableA         (io_ROB_packet_bits_valid_bits_1),
+    .io_writeEnableA         (io_ROB_packet_valid),
     .io_addrB                (back_pointer[5:0]),
     .io_writeEnableB         (commit_valid),
     .io_addrC                (front_index),
@@ -20600,7 +20673,7 @@ module ROB(
     .io_addrA                (back_pointer[5:0]),
     .io_writeDataA_valid     (io_ROB_packet_bits_valid_bits_2),
     .io_writeDataA_is_branch (io_ROB_packet_bits_decoded_instruction_2_needs_branch_unit),
-    .io_writeEnableA         (io_ROB_packet_bits_valid_bits_2),
+    .io_writeEnableA         (io_ROB_packet_valid),
     .io_addrB                (back_pointer[5:0]),
     .io_writeEnableB         (commit_valid),
     .io_addrC                (front_index),
@@ -20611,7 +20684,7 @@ module ROB(
     .io_addrA                (back_pointer[5:0]),
     .io_writeDataA_valid     (io_ROB_packet_bits_valid_bits_3),
     .io_writeDataA_is_branch (io_ROB_packet_bits_decoded_instruction_3_needs_branch_unit),
-    .io_writeEnableA         (io_ROB_packet_bits_valid_bits_3),
+    .io_writeEnableA         (io_ROB_packet_valid),
     .io_addrB                (back_pointer[5:0]),
     .io_writeEnableB         (commit_valid),
     .io_addrC                (front_index),
@@ -20693,7 +20766,7 @@ module ROB(
     .clock           (clock),
     .io_addrA        (back_pointer[5:0]),
     .io_writeDataA   (1'h1),
-    .io_writeEnableA (io_ROB_packet_valid),
+    .io_writeEnableA (incoming_write),
     .io_addrB        (front_index),
     .io_writeDataB   (1'h0),
     .io_writeEnableB (commit_valid),
@@ -20704,58 +20777,57 @@ module ROB(
     .clock           (clock),
     .io_addrA        (back_pointer[5:0]),
     .io_writeDataA   (io_ROB_packet_bits_fetch_PC),
-    .io_writeEnableA (io_ROB_packet_valid),
+    .io_writeEnableA (incoming_write),
     .io_addrB        (front_index),
     .io_writeEnableB (commit_valid),
     .io_addrC        (io_PC_file_exec_addr),
     .io_readDataC    (_PC_file_io_readDataC),
     .io_addrD        (front_index),
-    .io_readDataD    (_PC_file_io_readDataD)
+    .io_readDataD    (io_ROB_output_bits_fetch_PC)
   );
-  assign io_ROB_packet_ready =
-    ~(front_index == back_pointer[5:0] & front_pointer != back_pointer);
-  assign io_ROB_0_valid = _ROB_entry_banks_0_io_readDataC_valid & commit_valid;
-  assign io_ROB_1_valid = _ROB_entry_banks_1_io_readDataC_valid & commit_valid;
-  assign io_ROB_2_valid = _ROB_entry_banks_2_io_readDataC_valid & commit_valid;
-  assign io_ROB_3_valid = _ROB_entry_banks_3_io_readDataC_valid & commit_valid;
+  assign io_ROB_packet_ready = ~full;
+  assign io_ROB_output_valid =
+    (_ROB_entry_banks_0_io_readDataC_valid | _ROB_entry_banks_1_io_readDataC_valid
+     | _ROB_entry_banks_2_io_readDataC_valid | _ROB_entry_banks_3_io_readDataC_valid)
+    & commit_valid;
   assign io_PC_file_exec_data = _PC_file_io_readDataC[5:0];
-  assign io_PC_file_commit_data = _PC_file_io_readDataD[5:0];
 endmodule
 
 module BRU(
   input         io_FTQ_valid,
   input  [31:0] io_FTQ_fetch_PC,
                 io_FTQ_predicted_PC,
+  input         io_FTQ_T_NT,
+  input  [2:0]  io_FTQ_br_type,
   input  [15:0] io_FTQ_GHR,
   input  [6:0]  io_FTQ_NEXT,
                 io_FTQ_TOS,
-  input  [3:0]  io_FTQ_RAT_IDX,
   input  [31:0] io_FTQ_resolved_PC,
-  input         io_ROB_0_valid,
-                io_ROB_1_valid,
-                io_ROB_2_valid,
-                io_ROB_3_valid,
-  input  [5:0]  io_PC_file_commit_data,
+  input         io_ROB_output_valid,
+  input  [31:0] io_ROB_output_bits_fetch_PC,
   output        io_commit_valid,
-                io_commit_is_misprediction,
+  output [31:0] io_commit_fetch_PC,
+  output        io_commit_T_NT,
+  output [2:0]  io_commit_br_type,
+  output        io_commit_is_misprediction,
   output [31:0] io_commit_expected_PC,
   output [15:0] io_commit_GHR,
   output [6:0]  io_commit_TOS,
-                io_commit_NEXT,
-  output [3:0]  io_commit_RAT_IDX
+                io_commit_NEXT
 );
 
-  wire io_commit_valid_0 =
-    (io_ROB_0_valid | io_ROB_1_valid | io_ROB_2_valid | io_ROB_3_valid) & io_FTQ_valid;
+  wire io_commit_valid_0 = io_ROB_output_valid & io_FTQ_valid;
   assign io_commit_valid = io_commit_valid_0;
+  assign io_commit_fetch_PC = io_FTQ_fetch_PC;
+  assign io_commit_T_NT = io_FTQ_T_NT;
+  assign io_commit_br_type = io_FTQ_br_type;
   assign io_commit_is_misprediction =
     io_FTQ_predicted_PC != io_FTQ_resolved_PC & io_commit_valid_0
-    & {26'h0, io_PC_file_commit_data} == io_FTQ_fetch_PC;
+    & io_ROB_output_bits_fetch_PC == io_FTQ_fetch_PC;
   assign io_commit_expected_PC = io_FTQ_resolved_PC;
   assign io_commit_GHR = io_FTQ_GHR;
   assign io_commit_TOS = io_FTQ_TOS;
   assign io_commit_NEXT = io_FTQ_NEXT;
-  assign io_commit_RAT_IDX = io_FTQ_RAT_IDX;
 endmodule
 
 module ChaosCore(
@@ -20780,27 +20852,27 @@ module ChaosCore(
 );
 
   wire        _BRU_io_commit_valid;
+  wire [31:0] _BRU_io_commit_fetch_PC;
+  wire        _BRU_io_commit_T_NT;
+  wire [2:0]  _BRU_io_commit_br_type;
   wire        _BRU_io_commit_is_misprediction;
   wire [31:0] _BRU_io_commit_expected_PC;
   wire [15:0] _BRU_io_commit_GHR;
   wire [6:0]  _BRU_io_commit_TOS;
   wire [6:0]  _BRU_io_commit_NEXT;
-  wire [3:0]  _BRU_io_commit_RAT_IDX;
   wire        _ROB_io_ROB_packet_ready;
-  wire        _ROB_io_ROB_0_valid;
-  wire        _ROB_io_ROB_1_valid;
-  wire        _ROB_io_ROB_2_valid;
-  wire        _ROB_io_ROB_3_valid;
+  wire        _ROB_io_ROB_output_valid;
+  wire [31:0] _ROB_io_ROB_output_bits_fetch_PC;
   wire [5:0]  _ROB_io_PC_file_exec_data;
-  wire [5:0]  _ROB_io_PC_file_commit_data;
   wire        _FTQ_io_predictions_ready;
   wire        _FTQ_io_FTQ_valid;
   wire [31:0] _FTQ_io_FTQ_fetch_PC;
   wire [31:0] _FTQ_io_FTQ_predicted_PC;
+  wire        _FTQ_io_FTQ_T_NT;
+  wire [2:0]  _FTQ_io_FTQ_br_type;
   wire [15:0] _FTQ_io_FTQ_GHR;
   wire [6:0]  _FTQ_io_FTQ_NEXT;
   wire [6:0]  _FTQ_io_FTQ_TOS;
-  wire [3:0]  _FTQ_io_FTQ_RAT_IDX;
   wire [31:0] _FTQ_io_FTQ_resolved_PC;
   wire [5:0]  _backend_io_PC_file_exec_addr;
   wire        _backend_io_FU_outputs_0_valid;
@@ -20830,10 +20902,11 @@ module ChaosCore(
   wire        _frontend_io_predictions_valid;
   wire [31:0] _frontend_io_predictions_bits_fetch_PC;
   wire [31:0] _frontend_io_predictions_bits_predicted_PC;
+  wire        _frontend_io_predictions_bits_T_NT;
+  wire [2:0]  _frontend_io_predictions_bits_br_type;
   wire [15:0] _frontend_io_predictions_bits_GHR;
   wire [6:0]  _frontend_io_predictions_bits_NEXT;
   wire [6:0]  _frontend_io_predictions_bits_TOS;
-  wire [3:0]  _frontend_io_predictions_bits_RAT_IDX;
   wire [31:0] _frontend_io_predictions_bits_resolved_PC;
   wire        _frontend_io_renamed_decoded_fetch_packet_valid;
   wire [31:0] _frontend_io_renamed_decoded_fetch_packet_bits_fetch_PC;
@@ -20978,6 +21051,12 @@ module ChaosCore(
       (io_frontend_DRAM_request_bits_addr),
     .io_commit_valid
       (_BRU_io_commit_valid),
+    .io_commit_fetch_PC
+      (_BRU_io_commit_fetch_PC),
+    .io_commit_T_NT
+      (_BRU_io_commit_T_NT),
+    .io_commit_br_type
+      (_BRU_io_commit_br_type),
     .io_commit_is_misprediction
       (_BRU_io_commit_is_misprediction),
     .io_commit_expected_PC
@@ -20988,8 +21067,6 @@ module ChaosCore(
       (_BRU_io_commit_TOS),
     .io_commit_NEXT
       (_BRU_io_commit_NEXT),
-    .io_commit_RAT_IDX
-      (_BRU_io_commit_RAT_IDX),
     .io_predictions_ready
       (_FTQ_io_predictions_ready),
     .io_predictions_valid
@@ -20998,14 +21075,16 @@ module ChaosCore(
       (_frontend_io_predictions_bits_fetch_PC),
     .io_predictions_bits_predicted_PC
       (_frontend_io_predictions_bits_predicted_PC),
+    .io_predictions_bits_T_NT
+      (_frontend_io_predictions_bits_T_NT),
+    .io_predictions_bits_br_type
+      (_frontend_io_predictions_bits_br_type),
     .io_predictions_bits_GHR
       (_frontend_io_predictions_bits_GHR),
     .io_predictions_bits_NEXT
       (_frontend_io_predictions_bits_NEXT),
     .io_predictions_bits_TOS
       (_frontend_io_predictions_bits_TOS),
-    .io_predictions_bits_RAT_IDX
-      (_frontend_io_predictions_bits_RAT_IDX),
     .io_predictions_bits_resolved_PC
       (_frontend_io_predictions_bits_resolved_PC),
     .io_renamed_decoded_fetch_packet_ready
@@ -21409,18 +21488,21 @@ module ChaosCore(
     .io_predictions_valid                    (_frontend_io_predictions_valid),
     .io_predictions_bits_fetch_PC            (_frontend_io_predictions_bits_fetch_PC),
     .io_predictions_bits_predicted_PC        (_frontend_io_predictions_bits_predicted_PC),
+    .io_predictions_bits_T_NT                (_frontend_io_predictions_bits_T_NT),
+    .io_predictions_bits_br_type             (_frontend_io_predictions_bits_br_type),
     .io_predictions_bits_GHR                 (_frontend_io_predictions_bits_GHR),
     .io_predictions_bits_NEXT                (_frontend_io_predictions_bits_NEXT),
     .io_predictions_bits_TOS                 (_frontend_io_predictions_bits_TOS),
-    .io_predictions_bits_RAT_IDX             (_frontend_io_predictions_bits_RAT_IDX),
     .io_predictions_bits_resolved_PC         (_frontend_io_predictions_bits_resolved_PC),
+    .io_commit_fetch_PC                      (_BRU_io_commit_fetch_PC),
     .io_FTQ_valid                            (_FTQ_io_FTQ_valid),
     .io_FTQ_fetch_PC                         (_FTQ_io_FTQ_fetch_PC),
     .io_FTQ_predicted_PC                     (_FTQ_io_FTQ_predicted_PC),
+    .io_FTQ_T_NT                             (_FTQ_io_FTQ_T_NT),
+    .io_FTQ_br_type                          (_FTQ_io_FTQ_br_type),
     .io_FTQ_GHR                              (_FTQ_io_FTQ_GHR),
     .io_FTQ_NEXT                             (_FTQ_io_FTQ_NEXT),
     .io_FTQ_TOS                              (_FTQ_io_FTQ_TOS),
-    .io_FTQ_RAT_IDX                          (_FTQ_io_FTQ_RAT_IDX),
     .io_FTQ_resolved_PC                      (_FTQ_io_FTQ_resolved_PC)
   );
   ROB ROB (
@@ -21472,38 +21554,36 @@ module ChaosCore(
       (_backend_io_FU_outputs_3_bits_ROB_index),
     .io_FU_outputs_3_bits_fetch_packet_index
       (_backend_io_FU_outputs_3_bits_fetch_packet_index),
-    .io_ROB_0_valid                                             (_ROB_io_ROB_0_valid),
-    .io_ROB_1_valid                                             (_ROB_io_ROB_1_valid),
-    .io_ROB_2_valid                                             (_ROB_io_ROB_2_valid),
-    .io_ROB_3_valid                                             (_ROB_io_ROB_3_valid),
+    .io_ROB_output_valid
+      (_ROB_io_ROB_output_valid),
+    .io_ROB_output_bits_fetch_PC
+      (_ROB_io_ROB_output_bits_fetch_PC),
     .io_PC_file_exec_addr
       (_backend_io_PC_file_exec_addr),
     .io_PC_file_exec_data
-      (_ROB_io_PC_file_exec_data),
-    .io_PC_file_commit_data
-      (_ROB_io_PC_file_commit_data)
+      (_ROB_io_PC_file_exec_data)
   );
   BRU BRU (
-    .io_FTQ_valid               (_FTQ_io_FTQ_valid),
-    .io_FTQ_fetch_PC            (_FTQ_io_FTQ_fetch_PC),
-    .io_FTQ_predicted_PC        (_FTQ_io_FTQ_predicted_PC),
-    .io_FTQ_GHR                 (_FTQ_io_FTQ_GHR),
-    .io_FTQ_NEXT                (_FTQ_io_FTQ_NEXT),
-    .io_FTQ_TOS                 (_FTQ_io_FTQ_TOS),
-    .io_FTQ_RAT_IDX             (_FTQ_io_FTQ_RAT_IDX),
-    .io_FTQ_resolved_PC         (_FTQ_io_FTQ_resolved_PC),
-    .io_ROB_0_valid             (_ROB_io_ROB_0_valid),
-    .io_ROB_1_valid             (_ROB_io_ROB_1_valid),
-    .io_ROB_2_valid             (_ROB_io_ROB_2_valid),
-    .io_ROB_3_valid             (_ROB_io_ROB_3_valid),
-    .io_PC_file_commit_data     (_ROB_io_PC_file_commit_data),
-    .io_commit_valid            (_BRU_io_commit_valid),
-    .io_commit_is_misprediction (_BRU_io_commit_is_misprediction),
-    .io_commit_expected_PC      (_BRU_io_commit_expected_PC),
-    .io_commit_GHR              (_BRU_io_commit_GHR),
-    .io_commit_TOS              (_BRU_io_commit_TOS),
-    .io_commit_NEXT             (_BRU_io_commit_NEXT),
-    .io_commit_RAT_IDX          (_BRU_io_commit_RAT_IDX)
+    .io_FTQ_valid                (_FTQ_io_FTQ_valid),
+    .io_FTQ_fetch_PC             (_FTQ_io_FTQ_fetch_PC),
+    .io_FTQ_predicted_PC         (_FTQ_io_FTQ_predicted_PC),
+    .io_FTQ_T_NT                 (_FTQ_io_FTQ_T_NT),
+    .io_FTQ_br_type              (_FTQ_io_FTQ_br_type),
+    .io_FTQ_GHR                  (_FTQ_io_FTQ_GHR),
+    .io_FTQ_NEXT                 (_FTQ_io_FTQ_NEXT),
+    .io_FTQ_TOS                  (_FTQ_io_FTQ_TOS),
+    .io_FTQ_resolved_PC          (_FTQ_io_FTQ_resolved_PC),
+    .io_ROB_output_valid         (_ROB_io_ROB_output_valid),
+    .io_ROB_output_bits_fetch_PC (_ROB_io_ROB_output_bits_fetch_PC),
+    .io_commit_valid             (_BRU_io_commit_valid),
+    .io_commit_fetch_PC          (_BRU_io_commit_fetch_PC),
+    .io_commit_T_NT              (_BRU_io_commit_T_NT),
+    .io_commit_br_type           (_BRU_io_commit_br_type),
+    .io_commit_is_misprediction  (_BRU_io_commit_is_misprediction),
+    .io_commit_expected_PC       (_BRU_io_commit_expected_PC),
+    .io_commit_GHR               (_BRU_io_commit_GHR),
+    .io_commit_TOS               (_BRU_io_commit_TOS),
+    .io_commit_NEXT              (_BRU_io_commit_NEXT)
   );
   assign io_frontend_DRAM_request_bits_wr_data = 32'h0;
   assign io_frontend_DRAM_request_bits_wr_en = 1'h0;

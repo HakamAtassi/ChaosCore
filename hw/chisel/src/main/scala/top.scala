@@ -83,6 +83,9 @@ object Main extends App {
     VerilogGenerator.generateVerilog(new RS(parameters), 
     "../verilog/Backend/RS.v")
 
+    VerilogGenerator.generateVerilog(new ROB(parameters), 
+    "../verilog/Backend/ROB.v")
+
     //VerilogGenerator.generateVerilog(new MEMRS(parameters), 
     //"../verilog/Backend/MEMRS.v")
 

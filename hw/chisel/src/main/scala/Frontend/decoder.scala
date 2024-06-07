@@ -106,7 +106,7 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
                                             instructionType === AUIPC       || 
                                             instructionType === SYSTEM)
 
-    io.decoded_instruction.bits.fetch_PC             := DontCare
+    //io.decoded_instruction.bits.fetch_PC             := DontCare
     io.decoded_instruction.bits.RD                   := RD
     io.decoded_instruction.bits.RS1                  := RS1
     io.decoded_instruction.bits.RS1_valid            := 1.B
@@ -127,6 +127,7 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
     io.decoded_instruction.bits.needs_ALU            := needs_ALU
     io.decoded_instruction.bits.needs_branch_unit    := needs_branch_unit
     io.decoded_instruction.bits.needs_CSRs           := needs_CSRs
+
 
 
     // TODO: ECALL / EBREAK
@@ -197,4 +198,6 @@ class fetch_packet_decoder(parameters:Parameters) extends Module{
     io.decoded_fetch_packet.valid := RegNext(io.fetch_packet.valid)
     io.decoded_fetch_packet.bits.fetch_PC   := RegNext(io.fetch_packet.bits.fetch_PC)
     io.decoded_fetch_packet.bits.valid_bits := RegNext(io.fetch_packet.bits.valid_bits)
+
+    io.decoded_fetch_packet.bits.RAT_IDX    := DontCare // This is fine. RAT_IDX is assigned during rename
 }
