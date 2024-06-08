@@ -179,45 +179,121 @@ class ROB_mem[T <: Data](dataType: T, depth: Int) extends Module {
 }
 
 
-
-class PC_file_mem[T <: Data](dataType: T, depth: Int) extends Module {
+class ROB_shared_mem(parameters:Parameters, depth: Int) extends Module { // 2 read, 1 write
   val io = IO(new Bundle {
-    // Port A
+    
+    // Port A (write only)
     val addrA = Input(UInt(log2Ceil(depth).W))
-    val writeDataA = Input(dataType)
+    val writeDataA = Input(new ROB_shared(parameters))
     val writeEnableA = Input(Bool())
-    val readDataA = Output(dataType)
 
-    // Port B
+    // Port B (read only)
     val addrB = Input(UInt(log2Ceil(depth).W))
-    val writeDataB = Input(dataType)
-    val writeEnableB = Input(Bool())
-    val readDataB = Output(dataType)
+    val readDataB = Output(new ROB_shared(parameters))
 
-    // Port C   (read only)
+    // Port C (read only)
     val addrC = Input(UInt(log2Ceil(depth).W))
-    val readDataC = Output(dataType)
+    val readDataC = Output(new ROB_shared(parameters))
 
-    // Port D   (read only)
-    val addrD = Input(UInt(log2Ceil(depth).W))
-    val readDataD = Output(dataType)
   })
 
   // Create the true dual-port memory
-  val mem = SyncReadMem(depth, dataType)
+  val mem = SyncReadMem(depth, new ROB_shared(parameters))
 
   // Operations for Port A
   when(io.writeEnableA) {
     mem.write(io.addrA, io.writeDataA)
   }
-  io.readDataA := mem.read(io.addrA, 1.B)
 
-  // Operations for Port B
-  when(io.writeEnableB) {
-    mem.write(io.addrB, io.writeDataB)
-  }
   io.readDataB := mem.read(io.addrB, 1.B)
   io.readDataC := mem.read(io.addrC, 1.B)
-  io.readDataD := mem.read(io.addrD, 1.B)
 
 }
+
+// make this parameterizable
+class ROB_WB_mem(parameters:Parameters, depth: Int) extends Module { // 1 read, 1 write (allocate) + N write(FUs)
+  val io = IO(new Bundle {
+    // Port A (write only/Allocate)
+    val addrA = Input(UInt(log2Ceil(depth).W))
+    val writeDataA = Input(new ROB_WB(parameters))
+    val writeEnableA = Input(Bool())
+
+    // FU access
+    val addrB = Input(UInt(log2Ceil(depth).W))
+    val writeDataB = Input(new ROB_WB(parameters))
+    val writeEnableB = Input(Bool())
+
+    val addrC = Input(UInt(log2Ceil(depth).W)) //(write only/FU1)
+    val writeDataC = Input(new ROB_WB(parameters))
+    val writeEnableC = Input(Bool())
+
+    val addrD = Input(UInt(log2Ceil(depth).W)) //(write only/FU2)
+    val writeDataD = Input(new ROB_WB(parameters))
+    val writeEnableD = Input(Bool())
+
+    val addrE = Input(UInt(log2Ceil(depth).W)) //(write only/FU3)
+    val writeDataE = Input(new ROB_WB(parameters))
+    val writeEnableE = Input(Bool())
+    
+    // Port C (read only)
+    val addrG = Input(UInt(log2Ceil(depth).W))
+    val readDataG = Output(new ROB_WB(parameters))
+
+  })
+
+  // Create the true dual-port memory
+  val mem = SyncReadMem(depth, new ROB_WB(parameters))
+
+
+  when(io.writeEnableA) { // Allocate
+    mem.write(io.addrA, io.writeDataA)
+  }
+
+  when(io.writeEnableB) { // FU1
+    mem.write(io.addrB, io.writeDataB)
+  }
+
+  when(io.writeEnableC) { // FU2
+    mem.write(io.addrC, io.writeDataC)
+  }
+
+  when(io.writeEnableD) { // FU3
+    mem.write(io.addrD, io.writeDataC)
+  }
+
+  when(io.writeEnableE) { // FU4
+    mem.write(io.addrE, io.writeDataE)
+  }
+
+  io.readDataG := mem.read(io.addrG, 1.B)
+
+  dontTouch(io.readDataG)
+
+}
+
+class ROB_entry_mem(parameters:Parameters, depth: Int) extends Module { // 1 read, 1 write
+  val io = IO(new Bundle {
+    
+    // Port A (write only)
+    val addrA = Input(UInt(log2Ceil(depth).W))
+    val writeDataA = Input(new ROB_entry(parameters))
+    val writeEnableA = Input(Bool())
+
+    // Port C (read only)
+    val addrB = Input(UInt(log2Ceil(depth).W))
+    val readDataB = Output(new ROB_entry(parameters))
+
+  })
+
+  // Create the true dual-port memory
+  val mem = SyncReadMem(depth, new ROB_entry(parameters))
+
+  // Operations for Port A
+  when(io.writeEnableA) {
+    mem.write(io.addrA, io.writeDataA)
+  }
+
+  io.readDataB := mem.read(io.addrB, 1.B)
+
+}
+

@@ -31,7 +31,7 @@ def test_print_ROB():
         configs["testcase"] = "test_print_ROB"
         run(**configs)
 
-def test_ROB_write():
-        configs["testcase"] = "test_ROB_write"
+def test_write_1():
+        configs["testcase"] = "test_write_1"
         run(**configs)
 

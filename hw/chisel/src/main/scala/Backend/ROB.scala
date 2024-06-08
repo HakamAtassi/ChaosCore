@@ -62,209 +62,173 @@ class ROB(parameters:Parameters) extends Module{
         // Read port (Exec)
         val PC_file_exec_addr           =   Input(UInt(log2Ceil(ROBEntires).W))
         val PC_file_exec_data           =   Output(UInt(log2Ceil(ROBEntires).W))
-
     })
 
+    //////////////////
+    // REQUIREMENTS //
+    //////////////////
+    require(isPow2(ROBEntires), "ROB entries not a power of 2")
 
-    // ROB is generally a 2 write 1 read memory.
-    // 1 write from ROB_packet
-    // 1 write from FUs
-    // 1 read to ROB
+    //////////////
+    // POINTERS // 
+    //////////////
 
-    // ROB_packet port writes metadata, instruction type, PC, etc...
-    // FUs simply mark as valid. 
+    val pointer_width = log2Ceil(ROBEntires)+1
 
-    //////////////////////////
-    // CONSTRUCT ROB PACKET //
-    //////////////////////////
+    val front_pointer = RegInit(UInt(pointer_width.W), 0.U)
+    val back_pointer  = RegInit(UInt(pointer_width.W), 0.U)
 
-    val ROB_packet      =   Wire(Vec(fetchWidth, new ROB_entry(parameters)))
+    val front_index = Wire(UInt((pointer_width-1).W))
+    val back_index  = Wire(UInt((pointer_width-1).W))
+
+
+
+    front_index := front_pointer >> 1
+    back_index  := back_pointer >> 1
+    
+    //////////////////////////////////
+    // BACK POINTER CTRL / ALLOCATE //
+    //////////////////////////////////
+    
+    val allocate = Wire(Bool())
+
+    allocate := io.ROB_packet.valid && io.ROB_packet.ready
+
+    front_pointer := front_pointer + allocate
+
+
+    //////////////
+    // MEMORIES //
+    //////////////
+
+    //|-------------------------|//
+    //| SHARED MEM              |//
+    //| 2R/1W                   |//
+    //| Write on allocate       |//
+    //| Read to FUs (for PC)    |//
+    //| Read to commit          |//
+    //|-------------------------|//
+
+    val shared_mem = Module(new ROB_shared_mem(parameters, depth=ROBEntires))
+
+    val shared_mem_input = Wire(new ROB_shared(parameters))
+
+    shared_mem_input.row_valid  := io.ROB_packet.valid
+    shared_mem_input.fetch_PC   := io.ROB_packet.bits.fetch_PC
+    shared_mem_input.RAT_IDX    := io.ROB_packet.bits.RAT_IDX
+    
+    // Port A / allocate
+    shared_mem.io.addrA         := front_index
+    shared_mem.io.writeDataA    := shared_mem_input
+    shared_mem.io.writeEnableA  := allocate
+
+    // Port B / commit
+    shared_mem.io.addrB         := front_index
+    io.ROB_output.bits.fetch_PC := shared_mem.io.readDataB.fetch_PC
+    io.ROB_output.bits.RAT_IDX  := shared_mem.io.readDataB.RAT_IDX
+
+    // Port C / FUs
+    shared_mem.io.addrC         := io.PC_file_exec_addr
+    io.PC_file_exec_data        := shared_mem.io.readDataC.fetch_PC
+
+
+    //|------------------------------|//
+    //| BUSY MEM                     |//
+    //| 1R/(N+1)W                    |//
+    //| Write on allocate            |//
+    //| Write on complete            |//
+    //| Read to commit               |//
+    //|------------------------------|//
+
+    val ROB_WB_banks: Seq[ROB_WB_mem] = Seq.tabulate(fetchWidth) { w =>
+        Module(new ROB_WB_mem(parameters, depth=ROBEntires))
+    }
 
     for(i <- 0 until fetchWidth){
-        ROB_packet(i).valid         := io.ROB_packet.bits.valid_bits(i)
-        ROB_packet(i).is_branch     := io.ROB_packet.bits.decoded_instruction(i).needs_branch_unit
+        val ROB_WB_data = Wire(new ROB_WB(parameters))
+        ROB_WB_data.busy := 0.B
+        ROB_WB_data.exception := 0.B
+
+        // allocate
+        ROB_WB_banks(i).io.addrA          := back_index
+        ROB_WB_banks(i).io.writeDataA     := ROB_WB_data
+        ROB_WB_banks(i).io.writeEnableA   := allocate
+
+        // WB (connect all ports)
+
+        val ROB_WB_data_FU0 = Wire(new ROB_WB(parameters))
+        ROB_WB_data_FU0.busy            := 0.B
+        ROB_WB_data_FU0.exception       := 0.B
+        ROB_WB_banks(i).io.addrB         :=  io.FU_outputs(i).bits.ROB_index
+        ROB_WB_banks(i).io.writeDataB    :=  ROB_WB_data_FU0
+        ROB_WB_banks(i).io.writeEnableB  :=  io.FU_outputs(i).valid
+
+        val ROB_WB_data_FU1 = Wire(new ROB_WB(parameters))
+        ROB_WB_data_FU1.busy := 0.B
+        ROB_WB_data_FU1.exception := 0.B
+        ROB_WB_banks(i).io.addrC         :=  io.FU_outputs(i).bits.ROB_index
+        ROB_WB_banks(i).io.writeDataC    :=  ROB_WB_data_FU1
+        ROB_WB_banks(i).io.writeEnableC  :=  io.FU_outputs(i).valid
+
+        val ROB_WB_data_FU2 = Wire(new ROB_WB(parameters))
+        ROB_WB_data_FU2.busy := 0.B
+        ROB_WB_data_FU2.exception := 0.B
+        ROB_WB_banks(i).io.addrD         :=  io.FU_outputs(i).bits.ROB_index
+        ROB_WB_banks(i).io.writeDataD    :=  ROB_WB_data_FU2
+        ROB_WB_banks(i).io.writeEnableD  :=  io.FU_outputs(i).valid
+
+        val ROB_WB_data_FU3 = Wire(new ROB_WB(parameters))
+        ROB_WB_data_FU3.busy := 0.B
+        ROB_WB_data_FU3.exception := 0.B
+        ROB_WB_banks(i).io.addrE         :=  io.FU_outputs(i).bits.ROB_index
+        ROB_WB_banks(i).io.writeDataE    :=  ROB_WB_data_FU3
+        ROB_WB_banks(i).io.writeEnableE  :=  io.FU_outputs(i).valid
+
+
+        // commit (connect all ports)
+
+        ROB_WB_banks(i).io.addrG       := front_index
+
+    }
+        //io.ROB_output.bits.ROB_entries(i) := ROB_WB_banks(i).readDataG
+    io.ROB_output.valid := ROB_WB_banks.map(_.io.readDataG.busy).reduce(_ && _) && shared_mem.io.readDataB.row_valid
+
+
+    //|----------------------------|//
+    //| INSTR MEM                  |//
+    //| 1R/1W                      |//
+    //| Write on allocate          |//
+    //| Read to commit             |//
+    //|----------------------------|//
+
+
+    val ROB_entry_banks: Seq[ROB_entry_mem] = Seq.tabulate(fetchWidth) { w =>
+        Module(new ROB_entry_mem(parameters=parameters, depth=ROBEntires))
     }
 
 
-    ////////////////////////////
-    // INSTANTIATE ROB BANKS  //
-    ////////////////////////////
+    for(i <- 0 until fetchWidth){
+        val ROB_entry_data = Wire(new ROB_entry(parameters))
+        ROB_entry_data.valid                 := io.ROB_packet.bits.valid_bits(i)
+        ROB_entry_data.is_branch             := io.ROB_packet.bits.decoded_instruction(i).needs_branch_unit
+        ROB_entry_data.is_load               := io.ROB_packet.bits.decoded_instruction(i).IS_LOAD
+        ROB_entry_data.is_store              := io.ROB_packet.bits.decoded_instruction(i).IS_STORE
 
-    val ROB_entry_banks: Seq[ROB_mem[ROB_entry]] = Seq.tabulate(portCount) { w =>
-        Module(new ROB_mem(new ROB_entry(parameters), depth=ROBEntires))
+        // allocate
+        ROB_entry_banks(i).io.addrA          := back_index
+        ROB_entry_banks(i).io.writeDataA     := ROB_entry_data
+        ROB_entry_banks(i).io.writeEnableA   := allocate
+
+        // commit
+        ROB_entry_banks(i).io.addrB          := front_index
+        io.ROB_output.bits.ROB_entries(i)    := ROB_entry_banks(i).io.readDataB
     }
-
-    ////////////////////////////
-    // INSTANTIATE BUSY BANKS //
-    ////////////////////////////
-
-    // Busy bit banks are kept seperate 
-    // Since the FUs should write to the ENTIRE ROB_entry.
-    // Keeping busy bits seperate is easier than using some sort of mask...
-
-    val ROB_busy_banks: Seq[ROB_mem[Bool]] = Seq.tabulate(portCount) { w =>
-        Module(new ROB_mem(Bool()/*UInt(8.W)*/, depth=ROBEntires))
-    }
-
-    ////////////////////////////
-    // INSTANTIATE VALID BANK //
-    ////////////////////////////
-
-    // Busy bit banks are kept seperate 
-    // Since the FUs should write to the ENTIRE ROB_entry.
-    // Keeping busy bits seperate is easier than using some sort of mask...
-
-    val ROB_valid_bank = Module(new ROB_mem(Bool()/*UInt(8.W)*/, depth=ROBEntires))
-
-
-    val incoming_write = io.ROB_packet.valid && io.ROB_packet.ready
-    
-
-    //////////////
-    // POINTERS //
-    //////////////
-
-    val pointer_width   =   log2Ceil(ROBEntires) + 1
-    val front_pointer   =   RegInit(UInt(pointer_width.W), 0.U)
-    val back_pointer    =   RegInit(UInt(pointer_width.W), 0.U)
-
-    val front_index     =   Wire(UInt(log2Ceil(ROBEntires).W))
-    val back_index      =   back_pointer(pointer_width-2, 0)
-
-
-    ///////////////////////////
-    // WRITE FROM ROB_packet //
-    ///////////////////////////
-
-    for(bank <- 0 until fetchWidth){ // write new ROB_packet data
-        ROB_entry_banks(bank).io.addrA         := back_index
-        ROB_entry_banks(bank).io.writeDataA    := ROB_packet(bank)
-        ROB_entry_banks(bank).io.writeEnableA  := io.ROB_packet.valid
-
-        ROB_busy_banks(bank).io.addrA         := back_index
-        ROB_busy_banks(bank).io.writeDataA    := 0.B
-        ROB_busy_banks(bank).io.writeEnableA  := ROB_packet(bank).valid
-    }
-    
-    ROB_valid_bank.io.addrA         := back_index
-    ROB_valid_bank.io.writeEnableA  := incoming_write
-    ROB_valid_bank.io.writeDataA    := 1.B
-
-    back_pointer := back_pointer + ROB_packet.map(_.valid).reduce(_ || _)
-
-    ////////////////////
-    // WRITE FROM FUs //
-    ////////////////////
-
-    // Each input needs to be matched with its corresponding bank to set busy bit.
-    // This is because instructions from any ROB bank can be scheduled to any FU port (ex ALU scheduling entirely depends on availability.)
-
-
-    
-    for(bank <- 0 until portCount){
-        ROB_busy_banks(bank).io.addrB         := 0.B
-        ROB_busy_banks(bank).io.writeDataB    := 0.B
-        ROB_busy_banks(bank).io.writeEnableB  := 0.B
-
-        for(FU <- 0 until portCount){
-            // port B for FU access
-            when(bank.U === (io.FU_outputs(FU).bits.fetch_packet_index) && io.FU_outputs(FU).valid){
-                ROB_busy_banks(bank).io.addrB         := io.FU_outputs(FU).bits.ROB_index
-                ROB_busy_banks(bank).io.writeDataB    := 1.B
-                ROB_busy_banks(bank).io.writeEnableB  := 1.B
-            }
-        }
-    }
-
-    /////////
-    // ROB //
-    /////////
-
-    for (bank <- 0 until portCount){ // Assign ROB read port
-        ROB_busy_banks(bank).io.addrC          := front_index
-        ROB_entry_banks(bank).io.addrC         := front_index
-    }
-    ROB_valid_bank.io.addrC         := front_index
-
-    // Assign valid bits
-
-    val commit_valid_vec        = Wire(Vec(fetchWidth, Bool()))
-    
-    for(i <- 0 until fetchWidth){  // commit when all entries are complete or invalid
-        commit_valid_vec(i) := (!ROB_entry_banks(i).io.readDataC.valid) || (ROB_busy_banks(i).io.readDataC && ROB_entry_banks(i).io.readDataC.valid)
-    }
-
-    val commit_valid = Wire(Bool())
-    commit_valid := commit_valid_vec.asUInt.andR && ROB_valid_bank.io.readDataC.asBool
-
-    // invalidate commited entires
-    for(bank <- 0 until fetchWidth){            // clear commited entry
-        ROB_entry_banks(bank).io.addrB         := back_index
-        ROB_entry_banks(bank).io.writeDataB    := 0.U.asTypeOf(new ROB_entry(parameters))
-        ROB_entry_banks(bank).io.writeEnableB  := commit_valid
-    }
-
-
-    //////////////////////////////////
-    // Pointer moving and ROB logic //
-    //////////////////////////////////
-
-    when(commit_valid){  // all ROB entries are invalid. increment pointer
-        front_pointer := front_pointer + 1.U    // increment actual reg
-        front_index := front_pointer + 1.U      // bypass value
-    }.otherwise{
-        front_index := front_pointer(log2Ceil(ROBEntires)-1,0)
-    }
-
-    // clear row on commit
-    ROB_valid_bank.io.addrB         := front_index
-    ROB_valid_bank.io.writeDataB    := 0.B
-    ROB_valid_bank.io.writeEnableB  := commit_valid
-
-    for(bank <- 0 until fetchWidth){
-        io.ROB_output.bits.ROB_entries(bank) := ROB_entry_banks(bank).io.readDataC
-    }
-
-    io.ROB_output.valid := ROB_entry_banks.map(_.io.readDataC.valid).reduce(_ || _) && commit_valid
-
-    /////////////
-    // PC_FILE //
-    /////////////
-
-    val PC_file = Module(new PC_file_mem(UInt(32.W), depth=ROBEntires))
-
-    // FIXME: this can be simplified 
-
-    // allocate
-    PC_file.io.addrA        := back_pointer
-    PC_file.io.writeDataA   := io.ROB_packet.bits.fetch_PC
-    PC_file.io.writeEnableA := incoming_write
-
-    // deallocate
-    PC_file.io.addrB        := front_index
-    PC_file.io.writeDataB   := 0.B
-    PC_file.io.writeEnableB := commit_valid
-
-    // Read (Exec)
-    PC_file.io.addrC        :=  io.PC_file_exec_addr
-    io.PC_file_exec_data    :=  PC_file.io.readDataC
-
-    // Read (Commit)
-    PC_file.io.addrD        :=  front_index
-    io.ROB_output.bits.fetch_PC := PC_file.io.readDataD
-        
-
-    // TODO: 
-    io.ROB_output.bits.RAT_IDX := DontCare
-    
-
-    /////////////////
-    // VALID/READY //
-    /////////////////
 
 
     val full = (front_index === back_index) && (front_pointer =/= back_pointer)
+
     io.ROB_packet.ready := !full
+
 
 
 }

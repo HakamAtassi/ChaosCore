@@ -381,10 +381,11 @@ class ROB_output(parameters:Parameters) extends Bundle{
     val ROB_entries = Vec(fetchWidth, new ROB_entry(parameters))
 }
 
-val ROB_shared(parameters:Parameters) extends Bundle{   //FIXME: this name sucks
-    val row_valid = Bool()
-    val fetch_PC = UInt(32.W)
-    val RAT_idx     =   UInt(log2Ceil(RATCheckpointCount).W)
+class ROB_shared(parameters:Parameters) extends Bundle{   //FIXME: this name sucks
+    import parameters._
+    val row_valid   = Bool()
+    val fetch_PC    = UInt(32.W)
+    val RAT_IDX     = UInt(log2Ceil(RATCheckpointCount).W)
 }
 
 // ROB entries that pertain to each instruction independantly (this info goes in a standalone bank)
@@ -392,12 +393,17 @@ class ROB_entry(parameters:Parameters) extends Bundle{
     val valid       = Bool()  // is this particular instruction valid?
     val is_branch   = Bool()
 
-    val exception   = Bool()
+    //val exception   = Bool()
     val is_load     = Bool()
     val is_store    = Bool()
 
     //val RD          =   UInt(log2Ceil(physicalRegCount).W)
     //val RD_old      =   UInt(log2Ceil(physicalRegCount).W)
+}
+
+class ROB_WB(parameters:Parameters) extends Bundle{
+    val busy        = Bool()
+    val exception   = Bool()
 }
 
 class sources_ready extends Bundle{
