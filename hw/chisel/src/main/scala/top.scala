@@ -58,6 +58,7 @@ object Main extends App {
     import Parameters._
 
     val parameters = Parameters()
+    val addressMap = AddressMap()
     //VerilogGenerator.generateVerilog(new instruction_cache(parameters), "../verilog/Frontend/instruction_cache.v")
 
 
@@ -125,6 +126,12 @@ object Main extends App {
 
     VerilogGenerator.generateVerilog(new instruction_queue(new decoded_instruction(parameters), parameters), 
     "../verilog/Frontend/instruction_queue.v")
+
+    VerilogGenerator.generateVerilog(new debug_printer(parameters, addressMap), 
+    "../verilog/peripherals/debug_printer.v")
+
+    VerilogGenerator.generateVerilog(new SOC(parameters, addressMap), 
+    "../verilog/SOC/SOC.v")
 
     //ChiselStage.emitSystemVerilogFile(new backend(parameters), Array("--split-verilog"))
 

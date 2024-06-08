@@ -243,7 +243,7 @@ class ROB(parameters:Parameters) extends Module{
 
     commit := commit_row_valid && commit_row_complete.reduce(_ && _)
 
-    front_pointer := front_pointer + commit // TODO: add bypass
+    front_pointer := front_pointer + commit
 
     io.ROB_output.valid := commit
 

@@ -27,7 +27,6 @@ module branch_decoder(
   input         io_valid,
                 io_prediction_bits_hit,
   input  [31:0] io_prediction_bits_target,
-  input  [3:0]  io_prediction_bits_br_mask,
   input         io_prediction_bits_T_NT,
   input  [31:0] io_RAS_read_ret_addr,
   output        io_T_NT,
@@ -79,7 +78,7 @@ module branch_decoder(
     JAL
       ? io_valid
       : JALR
-          ? io_valid & (RET | io_prediction_bits_hit & io_prediction_bits_br_mask[0])
+          ? io_valid & (RET | io_prediction_bits_hit)
           : BR & io_valid & io_prediction_bits_T_NT;
   assign io_metadata_br_type =
     CALL ? 3'h5 : RET ? 3'h4 : JAL ? 3'h2 : JALR ? 3'h3 : {2'h0, BR};
@@ -97,7 +96,6 @@ module branch_decoder_1(
   input         io_valid,
                 io_prediction_bits_hit,
   input  [31:0] io_prediction_bits_target,
-  input  [3:0]  io_prediction_bits_br_mask,
   input         io_prediction_bits_T_NT,
   input  [31:0] io_RAS_read_ret_addr,
   output        io_T_NT,
@@ -149,7 +147,7 @@ module branch_decoder_1(
     JAL
       ? io_valid
       : JALR
-          ? io_valid & (RET | io_prediction_bits_hit & io_prediction_bits_br_mask[1])
+          ? io_valid & (RET | io_prediction_bits_hit)
           : BR & io_valid & io_prediction_bits_T_NT;
   assign io_metadata_br_type =
     CALL ? 3'h5 : RET ? 3'h4 : JAL ? 3'h2 : JALR ? 3'h3 : {2'h0, BR};
@@ -167,7 +165,6 @@ module branch_decoder_2(
   input         io_valid,
                 io_prediction_bits_hit,
   input  [31:0] io_prediction_bits_target,
-  input  [3:0]  io_prediction_bits_br_mask,
   input         io_prediction_bits_T_NT,
   input  [31:0] io_RAS_read_ret_addr,
   output        io_T_NT,
@@ -219,7 +216,7 @@ module branch_decoder_2(
     JAL
       ? io_valid
       : JALR
-          ? io_valid & (RET | io_prediction_bits_hit & io_prediction_bits_br_mask[2])
+          ? io_valid & (RET | io_prediction_bits_hit)
           : BR & io_valid & io_prediction_bits_T_NT;
   assign io_metadata_br_type =
     CALL ? 3'h5 : RET ? 3'h4 : JAL ? 3'h2 : JALR ? 3'h3 : {2'h0, BR};
@@ -237,7 +234,6 @@ module branch_decoder_3(
   input         io_valid,
                 io_prediction_bits_hit,
   input  [31:0] io_prediction_bits_target,
-  input  [3:0]  io_prediction_bits_br_mask,
   input         io_prediction_bits_T_NT,
   input  [31:0] io_RAS_read_ret_addr,
   output        io_T_NT,
@@ -289,7 +285,7 @@ module branch_decoder_3(
     JAL
       ? io_valid
       : JALR
-          ? io_valid & (RET | io_prediction_bits_hit & io_prediction_bits_br_mask[3])
+          ? io_valid & (RET | io_prediction_bits_hit)
           : BR & io_valid & io_prediction_bits_T_NT;
   assign io_metadata_br_type =
     CALL ? 3'h5 : RET ? 3'h4 : JAL ? 3'h2 : JALR ? 3'h3 : {2'h0, BR};
@@ -646,7 +642,6 @@ module predecoder(
     .io_valid                   (io_fetch_packet_bits_valid_bits_0),
     .io_prediction_bits_hit     (io_prediction_bits_hit),
     .io_prediction_bits_target  (io_prediction_bits_target),
-    .io_prediction_bits_br_mask (io_prediction_bits_br_mask),
     .io_prediction_bits_T_NT    (io_prediction_bits_T_NT),
     .io_RAS_read_ret_addr       (io_RAS_read_ret_addr),
     .io_T_NT                    (_decoders_0_io_T_NT),
@@ -664,7 +659,6 @@ module predecoder(
     .io_valid                   (io_fetch_packet_bits_valid_bits_1),
     .io_prediction_bits_hit     (io_prediction_bits_hit),
     .io_prediction_bits_target  (io_prediction_bits_target),
-    .io_prediction_bits_br_mask (io_prediction_bits_br_mask),
     .io_prediction_bits_T_NT    (io_prediction_bits_T_NT),
     .io_RAS_read_ret_addr       (io_RAS_read_ret_addr),
     .io_T_NT                    (_decoders_1_io_T_NT),
@@ -682,7 +676,6 @@ module predecoder(
     .io_valid                   (io_fetch_packet_bits_valid_bits_2),
     .io_prediction_bits_hit     (io_prediction_bits_hit),
     .io_prediction_bits_target  (io_prediction_bits_target),
-    .io_prediction_bits_br_mask (io_prediction_bits_br_mask),
     .io_prediction_bits_T_NT    (io_prediction_bits_T_NT),
     .io_RAS_read_ret_addr       (io_RAS_read_ret_addr),
     .io_T_NT                    (_decoders_2_io_T_NT),
@@ -700,7 +693,6 @@ module predecoder(
     .io_valid                   (io_fetch_packet_bits_valid_bits_3),
     .io_prediction_bits_hit     (io_prediction_bits_hit),
     .io_prediction_bits_target  (io_prediction_bits_target),
-    .io_prediction_bits_br_mask (io_prediction_bits_br_mask),
     .io_prediction_bits_T_NT    (io_prediction_bits_T_NT),
     .io_RAS_read_ret_addr       (io_RAS_read_ret_addr),
     .io_T_NT                    (_decoders_3_io_T_NT),

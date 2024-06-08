@@ -59,6 +59,10 @@ def test_FU_all_valid_diff_rows():
         configs["testcase"] = "test_FU_all_valid_diff_rows"
         run(**configs)
 
+def test_FU_all_valid_single_bank():
+        configs["testcase"] = "test_FU_all_valid_single_bank"
+        run(**configs)
+
 def test_basic_commit():
         configs["testcase"] = "test_basic_commit"
         run(**configs)

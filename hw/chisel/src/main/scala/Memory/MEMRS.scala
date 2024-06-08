@@ -167,7 +167,7 @@ class MEMRS(parameters:Parameters) extends Module{
 
 
     // assign MEMRS_ready bits
-    val availalbe_RS_entries =   PopCount(~Cat(reservation_station.map(_.valid)))
+    val availalbe_RS_entries = PopCount(~Cat(reservation_station.map(_.valid)))
     val themometor_value = Thermometor(in=availalbe_RS_entries, max=RSEntries)
     for (i <- 0 until dispatchWidth){
         io.backend_packet(i).ready := themometor_value(dispatchWidth-1,0)(i)
@@ -175,3 +175,8 @@ class MEMRS(parameters:Parameters) extends Module{
 
 
 }
+
+
+// update so that this has instructures queue in order
+// when a commit takes place, a bit is set in that instruction RS entry
+// the output is one instruction at a type
