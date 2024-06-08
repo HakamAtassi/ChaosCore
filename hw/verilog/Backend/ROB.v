@@ -422,27 +422,22 @@ module ROB(
   wire        _ROB_WB_banks_2_io_readDataG_busy;
   wire        _ROB_WB_banks_1_io_readDataG_busy;
   wire        _ROB_WB_banks_0_io_readDataG_busy;
+  wire        _shared_mem_io_readDataB_row_valid;
   wire [31:0] _shared_mem_io_readDataC_fetch_PC;
   reg  [6:0]  front_pointer;
   reg  [6:0]  back_pointer;
   wire        full;
   wire        allocate = io_ROB_packet_valid & ~full;
-  wire        commit_row_complete_0 =
-    _ROB_WB_banks_0_io_readDataG_busy & _ROB_entry_banks_0_io_readDataB_valid
-    | ~_ROB_entry_banks_0_io_readDataB_valid;
-  wire        commit_row_complete_1 =
-    _ROB_WB_banks_1_io_readDataG_busy & _ROB_entry_banks_1_io_readDataB_valid
-    | ~_ROB_entry_banks_1_io_readDataB_valid;
-  wire        commit_row_complete_2 =
-    _ROB_WB_banks_2_io_readDataG_busy & _ROB_entry_banks_2_io_readDataB_valid
-    | ~_ROB_entry_banks_2_io_readDataB_valid;
-  wire        commit_row_valid;
-  wire        commit_row_complete_3 =
-    _ROB_WB_banks_3_io_readDataG_busy & _ROB_entry_banks_3_io_readDataB_valid
-    | ~_ROB_entry_banks_3_io_readDataB_valid;
   wire        commit =
-    commit_row_valid & commit_row_complete_0 & commit_row_complete_1
-    & commit_row_complete_2 & commit_row_complete_3;
+    _shared_mem_io_readDataB_row_valid
+    & (_ROB_WB_banks_0_io_readDataG_busy & _ROB_entry_banks_0_io_readDataB_valid
+       | ~_ROB_entry_banks_0_io_readDataB_valid)
+    & (_ROB_WB_banks_1_io_readDataG_busy & _ROB_entry_banks_1_io_readDataB_valid
+       | ~_ROB_entry_banks_1_io_readDataB_valid)
+    & (_ROB_WB_banks_2_io_readDataG_busy & _ROB_entry_banks_2_io_readDataB_valid
+       | ~_ROB_entry_banks_2_io_readDataB_valid)
+    & (_ROB_WB_banks_3_io_readDataG_busy & _ROB_entry_banks_3_io_readDataB_valid
+       | ~_ROB_entry_banks_3_io_readDataB_valid);
   wire [6:0]  _front_pointer_T_2 = front_pointer + 7'h1;
   wire [5:0]  front_index = commit ? _front_pointer_T_2[5:0] : front_pointer[5:0];
   assign full = front_index == back_pointer[5:0] & front_pointer != back_pointer;
@@ -467,7 +462,7 @@ module ROB(
     .io_writeDataA_RAT_IDX   (io_ROB_packet_bits_RAT_IDX),
     .io_writeEnableA         (allocate),
     .io_addrB                (front_index),
-    .io_readDataB_row_valid  (commit_row_valid),
+    .io_readDataB_row_valid  (_shared_mem_io_readDataB_row_valid),
     .io_readDataB_fetch_PC   (io_ROB_output_bits_fetch_PC),
     .io_readDataB_RAT_IDX    (io_ROB_output_bits_RAT_IDX),
     .io_addrC                (io_PC_file_exec_addr),

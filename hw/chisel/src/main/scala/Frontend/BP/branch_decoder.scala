@@ -120,7 +120,7 @@ class branch_decoder(index:Int, parameters:Parameters) extends Module{
     when (JAL) {
         io.T_NT := io.valid // JAL addr == PC+imm. dir is always 1. Therefore, taken if valid (everything available).
     }.elsewhen (JALR) {
-        io.T_NT := io.valid && (RET || (io.prediction.bits.hit && io.prediction.bits.br_mask(index)))  // Direction is always 2. Address is hit or miss. Only taken if addr is available.
+        io.T_NT := io.valid && (RET || (io.prediction.bits.hit))  // Direction is always 2. Address is hit or miss. Only taken if addr is available.
     }.elsewhen (BR) {
         io.T_NT := io.valid && io.prediction.bits.T_NT
         //&& io.prediction.bits.br_mask(index)  // Address is PC + Imm. Only taken if PHT is 1. However,

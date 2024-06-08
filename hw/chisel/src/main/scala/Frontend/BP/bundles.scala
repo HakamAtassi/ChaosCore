@@ -459,7 +459,7 @@ class PC_file(fetchWidth:Int){
 // DRAM //
 //////////
 
-class DRAM_request(parameters:Parameters) extends Bundle{
+class DRAM_request(parameters:Parameters) extends Bundle{   // FIXME: change this to something generic like MMIO request...
     val addr    = UInt(32.W)
     val wr_data = UInt(32.W)
     val wr_en   = Bool()
@@ -469,3 +469,9 @@ class DRAM_resp(parameters:Parameters) extends Bundle{
     val data = UInt(256.W)  // Must be same size as cache line
 }
 
+
+//class MMIO_interface(parameter:Parameters) extends Bundle{
+    //val addr    = UInt(32.W)
+    //val wr_data = UInt(32.W)
+    //val wr_en   = Bool()
+//}
