@@ -268,6 +268,7 @@ class ROB_WB_mem(parameters:Parameters, depth: Int) extends Module { // 1 read, 
   io.readDataG := mem.read(io.addrG, 1.B)
 
   dontTouch(io.readDataG)
+  //dontTouch(io)
 
 }
 

@@ -145,7 +145,6 @@ class predecoder_dut:
         outputs["GHR"]              = int(getattr(self.dut, "io_predictions_bits_GHR").value)
         outputs["NEXT"]             = int(getattr(self.dut, "io_predictions_bits_NEXT").value)
         outputs["TOS"]              = int(getattr(self.dut, "io_predictions_bits_TOS").value)
-        outputs["RAT_IDX"]          = int(getattr(self.dut, "io_predictions_bits_RAT_IDX").value)
 
         return outputs
 

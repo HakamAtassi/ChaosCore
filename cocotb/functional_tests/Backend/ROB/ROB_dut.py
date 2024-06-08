@@ -35,6 +35,23 @@ def generate_null_allocate():
 
     return allocate_input
 
+def generate_null_FU_inputs():
+
+    FU_inputs = {}
+
+    FU_inputs["valid"] = [0, 0, 0, 0]
+    FU_inputs["RD"] = [0, 0, 0, 0]
+    FU_inputs["RD_data"] = [0, 0, 0, 0]
+    FU_inputs["RD_valid"] = [0, 0, 0, 0]
+    FU_inputs["instruction_PC"] = [0, 0, 0, 0]
+    FU_inputs["branch_taken"] = [0, 0, 0, 0]
+    FU_inputs["target_address"] = [0, 0, 0, 0]
+    FU_inputs["branch_valid"] = [0, 0, 0, 0]
+    FU_inputs["ROB_index"] = [0, 0, 0, 0]
+    FU_inputs["fetch_packet_index"] = [0, 0, 0, 0]
+
+    return FU_inputs
+
 
 
 class ROB_dut:
@@ -137,40 +154,6 @@ class ROB_dut:
 
         return ROB_entries
 
-
-    def print_ROB(self):
-        shared_mem  = self.get_shared_mem()
-        WB_mem      = self.get_WB_mem()
-        entry_mem   = self.get_ROB_entry()
-
-        
-        for i in range(64):
-            #shared = shared_mem[i]
-            for bank in range(4):
-
-                shared_valid    = shared_mem["row_valid"][i]
-                shared_PC       = shared_mem["fetch_PC"][i]
-                shared_RAT_IDX  = shared_mem["RAT_IDX"][i]
-
-                bank_valid      = WB_mem[bank]["valid"][i]
-                bank_except     = WB_mem[bank]["except"][i]
-
-
-                entry_valid = entry_mem[bank]["valid"][i]
-                entry_branch = entry_mem[bank]["is_branch"][i]
-                entry_is_load = entry_mem[bank]["is_load"][i]
-                entry_is_store = entry_mem[bank]["is_store"][i]
-
-                # use pretty printing to print like this
-                # | shared_valid shared_PC shared_RAT_IDX |       | bank_valid bank_except | entry_valid entry_branch entry_is_load entry_is_store | entry_valid entry_branch entry_is_load entry_is_store | etc ... for each brank
-
-                print(tabulate([[shared_valid, shared_PC, shared_RAT_IDX]]))  # Ensure tabulate is properly used
-                pass
-
-
-
-
-
     def print_ROB(self, bank):
         shared_mem = self.get_shared_mem()
         WB_mem = self.get_WB_mem()
@@ -178,7 +161,7 @@ class ROB_dut:
 
         # Create headers for each part of the row
         shared_headers  = ["row_valid", "fetch_PC", "RAT_IDX"]
-        wb_headers      = ["row_valid", "exception"]
+        wb_headers      = ["busy", "exception"]
         entry_headers   = [f"Valid[{bank}]", f"Branch[{bank}]", f"Load[{bank}]", f"Store[{bank}]"]
 
         header = shared_headers + wb_headers + entry_headers
@@ -204,10 +187,61 @@ class ROB_dut:
         # Print the tabulated data
         print(tabulate(rows, headers=header, tablefmt="grid"))
 
-    # Example usage
-    # Assuming self is defined and the get_shared_mem, get_WB_mem, and get_ROB_entry functions work correctly
-    # self.print_ROB()
+    def get_allocate_ready(self):
+        return self.dut.io_ROB_packet_ready.value
 
+    def write_FU(self, FU_inputs = generate_null_FU_inputs()):
+
+        for i in range(4):
+            getattr(self.dut, f"io_FU_outputs_{i}_valid").value                       = FU_inputs["valid"][i]
+            getattr(self.dut, f"io_FU_outputs_{i}_bits_RD").value                     = FU_inputs["RD"][i]
+            getattr(self.dut, f"io_FU_outputs_{i}_bits_RD_data").value                = FU_inputs["RD_data"][i]
+            getattr(self.dut, f"io_FU_outputs_{i}_bits_RD_valid").value               = FU_inputs["RD_valid"][i]
+            getattr(self.dut, f"io_FU_outputs_{i}_bits_instruction_PC").value         = FU_inputs["instruction_PC"][i]
+            getattr(self.dut, f"io_FU_outputs_{i}_bits_branch_taken").value           = FU_inputs["branch_taken"][i]
+            getattr(self.dut, f"io_FU_outputs_{i}_bits_target_address").value         = FU_inputs["target_address"][i]
+            getattr(self.dut, f"io_FU_outputs_{i}_bits_branch_valid").value           = FU_inputs["branch_valid"][i]
+            getattr(self.dut, f"io_FU_outputs_{i}_bits_ROB_index").value              = FU_inputs["ROB_index"][i]
+            getattr(self.dut, f"io_FU_outputs_{i}_bits_fetch_packet_index").value     = FU_inputs["fetch_packet_index"][i]
+
+
+#    def get_commit(self):
+
+        #commit = {}
+
+        #commit["valid"]             = getattr(self.dut, f"io_commit_valid").value
+        #commit["fetch_PC"]          = getattr(self.dut, f"io_commit_fetch_PC").value
+        #commit["T_NT"]              = getattr(self.dut, f"io_commit_T_NT").value
+        #commit["br_type"]           = getattr(self.dut, f"io_commit_br_type").value
+        #commit["packet_index"]      = getattr(self.dut, f"io_commit_fetch_packet_index").value
+        #commit["is_misprediction"]  = getattr(self.dut, f"io_commit_is_misprediction").value
+        #commit["expected_PC"]       = getattr(self.dut, f"io_commit_expected_PC").value
+        #commit["GHR"]               = getattr(self.dut, f"io_commit_GHR").value
+        #commit["TOS"]               = getattr(self.dut, f"io_commit_TOS").value
+        #commit["NEXT"]              = getattr(self.dut, f"io_commit_NEXT").value
+        #commit["RAT_IDX"]           = getattr(self.dut, f"io_commit_RAT_IDX").value
+
+        #return commit
+
+    def get_ROB_output(self):
+        ROB_output = {}
+
+        ROB_output["valid"] = getattr(self.dut, f"io_ROB_output_valid")
+        ROB_output["fetch_PC"] = getattr(self.dut, f"io_ROB_output_bits_fetch_PC")
+        ROB_output["RAT_IDX"] = getattr(self.dut, f"io_ROB_output_bits_RAT_IDX")
+        
+        ROB_output["entry_valid"] = [0]*4
+        ROB_output["is_branch"] = [0]*4
+        ROB_output["is_load"] = [0]*4
+        ROB_output["is_store"] = [0]*4
+
+        for i in range(4):
+            ROB_output["entry_valid"][i]      = getattr(self.dut, f"io_ROB_output_bits_ROB_entries_{i}_valid")
+            ROB_output["is_branch"][i]  = getattr(self.dut, f"io_ROB_output_bits_ROB_entries_{i}_is_branch")
+            ROB_output["is_load"][i]    = getattr(self.dut, f"io_ROB_output_bits_ROB_entries_{i}_is_load")
+            ROB_output["is_store"][i]   = getattr(self.dut, f"io_ROB_output_bits_ROB_entries_{i}_is_store")
+        
+        return ROB_output
 
 
     """

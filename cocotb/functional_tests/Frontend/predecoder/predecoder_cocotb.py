@@ -685,7 +685,7 @@ async def test_call_RAS_update(dut):
     fetch_packet_input["valid"]     =   1
     fetch_packet_input["fetch_PC"]  =   0x0     # This is not a very usefull test because the call address being written to the RAS is 0 since its happening straight out of reset
 
-    fetch_packet_input["instruction"][0]    =   0x0de0c0ef   # CALL (JAL x1, 0xc0de)
+    fetch_packet_input["instruction"][0]    =   0xfe0080e7  # jalr x1, 0xfe0(x1)
     fetch_packet_input["valid_bits"][0]     =   1      # Valid
     fetch_packet_input["packet_index"][0]   =   0      
 
@@ -709,7 +709,7 @@ async def test_call_RAS_update(dut):
     await RisingEdge(dut.clock())
 
     fetch_packet_input["valid"]     =   1
-    fetch_packet_input["fetch_PC"]  =   0xc0de
+    fetch_packet_input["fetch_PC"]  =   0xfe0
 
     fetch_packet_input["instruction"][0]    =   0x13   # NOP
     fetch_packet_input["valid_bits"][0]     =   1      # Valid

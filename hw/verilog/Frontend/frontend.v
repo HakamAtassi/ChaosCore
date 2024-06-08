@@ -764,6 +764,8 @@ module BP(
 endmodule
 
 module branch_decoder(
+  input         clock,
+                reset,
   input  [31:0] io_fetch_PC,
                 io_instruction,
   input         io_valid,
@@ -804,8 +806,19 @@ module branch_decoder(
               : io_instruction[6:0] == 7'h23
                   ? {20'h0, io_instruction[31:25], io_instruction[11:7]}
                   : io_instruction[6:0] == 7'h33 ? {io_instruction[31:12], 12'h0} : 32'h0;
-  wire        _CALL_T_2 = io_instruction[11:7] == 5'h1;
-  wire        RET = JALR & io_instruction[19:15] == 5'h1 & imm == 32'h0;
+  wire        _RET_T_2 = io_instruction[19:15] == 5'h1;
+  wire        CALL = JALR & io_instruction[11:7] == 5'h1 & _RET_T_2;
+  wire        RET = JALR & io_instruction[11:7] == 5'h0 & _RET_T_2 & imm == 32'h0;
+  `ifndef SYNTHESIS
+    always @(posedge clock) begin
+      if (~reset & CALL & RET) begin
+        if (`ASSERT_VERBOSE_COND_)
+          $error("Assertion failed: Cant have call and ret both be valid\n    at branch_decoder.scala:78 assert(!(CALL && RET), \"Cant have call and ret both be valid\")\n");
+        if (`STOP_COND_)
+          $fatal;
+      end
+    end // always @(posedge)
+  `endif // not def SYNTHESIS
   assign io_T_NT =
     JAL
       ? io_valid
@@ -813,11 +826,7 @@ module branch_decoder(
           ? io_valid & (RET | io_prediction_bits_hit & io_prediction_bits_br_mask[0])
           : BR & io_valid & io_prediction_bits_T_NT;
   assign io_metadata_br_type =
-    BR
-      ? 3'h1
-      : JAL
-          ? 3'h2
-          : JALR ? 3'h3 : JAL & _CALL_T_2 | JALR & _CALL_T_2 ? 3'h5 : {RET, 2'h0};
+    CALL ? 3'h5 : RET ? 3'h4 : JAL ? 3'h2 : JALR ? 3'h3 : {2'h0, BR};
   assign io_metadata_Imm = imm;
   assign io_metadata_instruction_PC = io_fetch_PC;
   assign io_metadata_RAS = io_RAS_read_ret_addr;
@@ -825,6 +834,8 @@ module branch_decoder(
 endmodule
 
 module branch_decoder_1(
+  input         clock,
+                reset,
   input  [31:0] io_fetch_PC,
                 io_instruction,
   input         io_valid,
@@ -865,8 +876,19 @@ module branch_decoder_1(
               : io_instruction[6:0] == 7'h23
                   ? {20'h0, io_instruction[31:25], io_instruction[11:7]}
                   : io_instruction[6:0] == 7'h33 ? {io_instruction[31:12], 12'h0} : 32'h0;
-  wire        _CALL_T_2 = io_instruction[11:7] == 5'h1;
-  wire        RET = JALR & io_instruction[19:15] == 5'h1 & imm == 32'h0;
+  wire        _RET_T_2 = io_instruction[19:15] == 5'h1;
+  wire        CALL = JALR & io_instruction[11:7] == 5'h1 & _RET_T_2;
+  wire        RET = JALR & io_instruction[11:7] == 5'h0 & _RET_T_2 & imm == 32'h0;
+  `ifndef SYNTHESIS
+    always @(posedge clock) begin
+      if (~reset & CALL & RET) begin
+        if (`ASSERT_VERBOSE_COND_)
+          $error("Assertion failed: Cant have call and ret both be valid\n    at branch_decoder.scala:78 assert(!(CALL && RET), \"Cant have call and ret both be valid\")\n");
+        if (`STOP_COND_)
+          $fatal;
+      end
+    end // always @(posedge)
+  `endif // not def SYNTHESIS
   assign io_T_NT =
     JAL
       ? io_valid
@@ -874,11 +896,7 @@ module branch_decoder_1(
           ? io_valid & (RET | io_prediction_bits_hit & io_prediction_bits_br_mask[1])
           : BR & io_valid & io_prediction_bits_T_NT;
   assign io_metadata_br_type =
-    BR
-      ? 3'h1
-      : JAL
-          ? 3'h2
-          : JALR ? 3'h3 : JAL & _CALL_T_2 | JALR & _CALL_T_2 ? 3'h5 : {RET, 2'h0};
+    CALL ? 3'h5 : RET ? 3'h4 : JAL ? 3'h2 : JALR ? 3'h3 : {2'h0, BR};
   assign io_metadata_Imm = imm;
   assign io_metadata_instruction_PC = io_fetch_PC + 32'h4;
   assign io_metadata_RAS = io_RAS_read_ret_addr;
@@ -886,6 +904,8 @@ module branch_decoder_1(
 endmodule
 
 module branch_decoder_2(
+  input         clock,
+                reset,
   input  [31:0] io_fetch_PC,
                 io_instruction,
   input         io_valid,
@@ -926,8 +946,19 @@ module branch_decoder_2(
               : io_instruction[6:0] == 7'h23
                   ? {20'h0, io_instruction[31:25], io_instruction[11:7]}
                   : io_instruction[6:0] == 7'h33 ? {io_instruction[31:12], 12'h0} : 32'h0;
-  wire        _CALL_T_2 = io_instruction[11:7] == 5'h1;
-  wire        RET = JALR & io_instruction[19:15] == 5'h1 & imm == 32'h0;
+  wire        _RET_T_2 = io_instruction[19:15] == 5'h1;
+  wire        CALL = JALR & io_instruction[11:7] == 5'h1 & _RET_T_2;
+  wire        RET = JALR & io_instruction[11:7] == 5'h0 & _RET_T_2 & imm == 32'h0;
+  `ifndef SYNTHESIS
+    always @(posedge clock) begin
+      if (~reset & CALL & RET) begin
+        if (`ASSERT_VERBOSE_COND_)
+          $error("Assertion failed: Cant have call and ret both be valid\n    at branch_decoder.scala:78 assert(!(CALL && RET), \"Cant have call and ret both be valid\")\n");
+        if (`STOP_COND_)
+          $fatal;
+      end
+    end // always @(posedge)
+  `endif // not def SYNTHESIS
   assign io_T_NT =
     JAL
       ? io_valid
@@ -935,11 +966,7 @@ module branch_decoder_2(
           ? io_valid & (RET | io_prediction_bits_hit & io_prediction_bits_br_mask[2])
           : BR & io_valid & io_prediction_bits_T_NT;
   assign io_metadata_br_type =
-    BR
-      ? 3'h1
-      : JAL
-          ? 3'h2
-          : JALR ? 3'h3 : JAL & _CALL_T_2 | JALR & _CALL_T_2 ? 3'h5 : {RET, 2'h0};
+    CALL ? 3'h5 : RET ? 3'h4 : JAL ? 3'h2 : JALR ? 3'h3 : {2'h0, BR};
   assign io_metadata_Imm = imm;
   assign io_metadata_instruction_PC = io_fetch_PC + 32'h8;
   assign io_metadata_RAS = io_RAS_read_ret_addr;
@@ -947,6 +974,8 @@ module branch_decoder_2(
 endmodule
 
 module branch_decoder_3(
+  input         clock,
+                reset,
   input  [31:0] io_fetch_PC,
                 io_instruction,
   input         io_valid,
@@ -987,8 +1016,19 @@ module branch_decoder_3(
               : io_instruction[6:0] == 7'h23
                   ? {20'h0, io_instruction[31:25], io_instruction[11:7]}
                   : io_instruction[6:0] == 7'h33 ? {io_instruction[31:12], 12'h0} : 32'h0;
-  wire        _CALL_T_2 = io_instruction[11:7] == 5'h1;
-  wire        RET = JALR & io_instruction[19:15] == 5'h1 & imm == 32'h0;
+  wire        _RET_T_2 = io_instruction[19:15] == 5'h1;
+  wire        CALL = JALR & io_instruction[11:7] == 5'h1 & _RET_T_2;
+  wire        RET = JALR & io_instruction[11:7] == 5'h0 & _RET_T_2 & imm == 32'h0;
+  `ifndef SYNTHESIS
+    always @(posedge clock) begin
+      if (~reset & CALL & RET) begin
+        if (`ASSERT_VERBOSE_COND_)
+          $error("Assertion failed: Cant have call and ret both be valid\n    at branch_decoder.scala:78 assert(!(CALL && RET), \"Cant have call and ret both be valid\")\n");
+        if (`STOP_COND_)
+          $fatal;
+      end
+    end // always @(posedge)
+  `endif // not def SYNTHESIS
   assign io_T_NT =
     JAL
       ? io_valid
@@ -996,11 +1036,7 @@ module branch_decoder_3(
           ? io_valid & (RET | io_prediction_bits_hit & io_prediction_bits_br_mask[3])
           : BR & io_valid & io_prediction_bits_T_NT;
   assign io_metadata_br_type =
-    BR
-      ? 3'h1
-      : JAL
-          ? 3'h2
-          : JALR ? 3'h3 : JAL & _CALL_T_2 | JALR & _CALL_T_2 ? 3'h5 : {RET, 2'h0};
+    CALL ? 3'h5 : RET ? 3'h4 : JAL ? 3'h2 : JALR ? 3'h3 : {2'h0, BR};
   assign io_metadata_Imm = imm;
   assign io_metadata_instruction_PC = io_fetch_PC + 32'hC;
   assign io_metadata_RAS = io_RAS_read_ret_addr;
@@ -1161,11 +1197,15 @@ module predecoder(
   reg  [15:0] GHR;
   wire        has_control =
     metadata_reg_3_br_type == 3'h1 | metadata_reg_3_br_type == 3'h2
-    | metadata_reg_3_br_type == 3'h3 | metadata_reg_2_br_type == 3'h1
+    | metadata_reg_3_br_type == 3'h3 | metadata_reg_3_br_type == 3'h5
+    | metadata_reg_3_br_type == 3'h4 | metadata_reg_2_br_type == 3'h1
     | metadata_reg_2_br_type == 3'h2 | metadata_reg_2_br_type == 3'h3
+    | metadata_reg_2_br_type == 3'h5 | metadata_reg_2_br_type == 3'h4
     | metadata_reg_1_br_type == 3'h1 | metadata_reg_1_br_type == 3'h2
-    | metadata_reg_1_br_type == 3'h3 | metadata_reg_0_br_type == 3'h1
-    | metadata_reg_0_br_type == 3'h2 | metadata_reg_0_br_type == 3'h3;
+    | metadata_reg_1_br_type == 3'h3 | metadata_reg_1_br_type == 3'h5
+    | metadata_reg_1_br_type == 3'h4 | metadata_reg_0_br_type == 3'h1
+    | metadata_reg_0_br_type == 3'h2 | metadata_reg_0_br_type == 3'h3
+    | metadata_reg_0_br_type == 3'h5 | metadata_reg_0_br_type == 3'h4;
   wire [15:0] _GEN = {GHR[14:0], |{T_NT_reg_3, T_NT_reg_2, T_NT_reg_1, T_NT_reg_0}};
   wire        use_RAS = metadata_out_br_type == 3'h4;
   reg  [31:0] PC_next_REG;
@@ -1327,6 +1367,8 @@ module predecoder(
     end
   end // always @(posedge)
   branch_decoder decoders_0 (
+    .clock                      (clock),
+    .reset                      (reset),
     .io_fetch_PC                (io_fetch_packet_bits_fetch_PC),
     .io_instruction             (io_fetch_packet_bits_instructions_0_instruction),
     .io_valid                   (io_fetch_packet_bits_valid_bits_0),
@@ -1343,6 +1385,8 @@ module predecoder(
     .io_metadata_BTB_target     (_decoders_0_io_metadata_BTB_target)
   );
   branch_decoder_1 decoders_1 (
+    .clock                      (clock),
+    .reset                      (reset),
     .io_fetch_PC                (io_fetch_packet_bits_fetch_PC),
     .io_instruction             (io_fetch_packet_bits_instructions_1_instruction),
     .io_valid                   (io_fetch_packet_bits_valid_bits_1),
@@ -1359,6 +1403,8 @@ module predecoder(
     .io_metadata_BTB_target     (_decoders_1_io_metadata_BTB_target)
   );
   branch_decoder_2 decoders_2 (
+    .clock                      (clock),
+    .reset                      (reset),
     .io_fetch_PC                (io_fetch_packet_bits_fetch_PC),
     .io_instruction             (io_fetch_packet_bits_instructions_2_instruction),
     .io_valid                   (io_fetch_packet_bits_valid_bits_2),
@@ -1375,6 +1421,8 @@ module predecoder(
     .io_metadata_BTB_target     (_decoders_2_io_metadata_BTB_target)
   );
   branch_decoder_3 decoders_3 (
+    .clock                      (clock),
+    .reset                      (reset),
     .io_fetch_PC                (io_fetch_packet_bits_fetch_PC),
     .io_instruction             (io_fetch_packet_bits_instructions_3_instruction),
     .io_valid                   (io_fetch_packet_bits_valid_bits_3),
