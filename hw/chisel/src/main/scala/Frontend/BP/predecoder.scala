@@ -186,7 +186,8 @@ class predecoder(parameters:Parameters) extends Module{
     dominant_control_type :=  _br_type.NONE
 
     for(i <- 0 until fetchWidth){
-        when((metadata_reg(i).br_type === _br_type.BR) || (metadata_reg(i).br_type === _br_type.JAL) || (metadata_reg(i).br_type === _br_type.JALR)){
+        when((metadata_reg(i).br_type === _br_type.BR) || (metadata_reg(i).br_type === _br_type.JAL) || (metadata_reg(i).br_type === _br_type.JALR)
+            || (metadata_reg(i).br_type === _br_type.CALL) || (metadata_reg(i).br_type === _br_type.RET)){
             has_control := 1.B
             dominant_control_type :=  metadata_reg(i).br_type
         }

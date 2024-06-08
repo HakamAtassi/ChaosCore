@@ -128,19 +128,23 @@ module ROB_WB_mem(
   input  [5:0] io_addrA,
   input        io_writeEnableA,
   input  [5:0] io_addrB,
-  input        io_writeEnableB,
+  input        io_writeDataB_busy,
+               io_writeEnableB,
   input  [5:0] io_addrC,
-  input        io_writeEnableC,
+  input        io_writeDataC_busy,
+               io_writeEnableC,
   input  [5:0] io_addrD,
   input        io_writeEnableD,
   input  [5:0] io_addrE,
-  input        io_writeEnableE,
+  input        io_writeDataE_busy,
+               io_writeEnableE,
   input  [5:0] io_addrG,
   output       io_readDataG_busy,
                io_readDataG_exception
 );
 
   wire [1:0] _mem_ext_R0_data;
+  wire [1:0] _GEN = {1'h0, io_writeDataC_busy};
   mem_64x2 mem_ext (
     .R0_addr (io_addrG),
     .R0_en   (1'h1),
@@ -149,19 +153,19 @@ module ROB_WB_mem(
     .W0_addr (io_addrE),
     .W0_en   (io_writeEnableE),
     .W0_clk  (clock),
-    .W0_data (2'h0),
+    .W0_data ({1'h0, io_writeDataE_busy}),
     .W1_addr (io_addrD),
     .W1_en   (io_writeEnableD),
     .W1_clk  (clock),
-    .W1_data (2'h0),
+    .W1_data (_GEN),
     .W2_addr (io_addrC),
     .W2_en   (io_writeEnableC),
     .W2_clk  (clock),
-    .W2_data (2'h0),
+    .W2_data (_GEN),
     .W3_addr (io_addrB),
     .W3_en   (io_writeEnableB),
     .W3_clk  (clock),
-    .W3_data (2'h0),
+    .W3_data ({1'h0, io_writeDataB_busy}),
     .W4_addr (io_addrA),
     .W4_en   (io_writeEnableA),
     .W4_clk  (clock),
@@ -410,31 +414,60 @@ module ROB(
   output [5:0]  io_PC_file_exec_data
 );
 
-  wire        full;
+  wire        _ROB_entry_banks_3_io_readDataB_valid;
+  wire        _ROB_entry_banks_2_io_readDataB_valid;
+  wire        _ROB_entry_banks_1_io_readDataB_valid;
+  wire        _ROB_entry_banks_0_io_readDataB_valid;
   wire        _ROB_WB_banks_3_io_readDataG_busy;
   wire        _ROB_WB_banks_2_io_readDataG_busy;
   wire        _ROB_WB_banks_1_io_readDataG_busy;
   wire        _ROB_WB_banks_0_io_readDataG_busy;
-  wire        _shared_mem_io_readDataB_row_valid;
   wire [31:0] _shared_mem_io_readDataC_fetch_PC;
   reg  [6:0]  front_pointer;
+  reg  [6:0]  back_pointer;
+  wire        full;
   wire        allocate = io_ROB_packet_valid & ~full;
-  assign full = front_pointer[6:1] == 6'h0 & (|front_pointer);
+  wire        commit_row_complete_0 =
+    _ROB_WB_banks_0_io_readDataG_busy & _ROB_entry_banks_0_io_readDataB_valid
+    | ~_ROB_entry_banks_0_io_readDataB_valid;
+  wire        commit_row_complete_1 =
+    _ROB_WB_banks_1_io_readDataG_busy & _ROB_entry_banks_1_io_readDataB_valid
+    | ~_ROB_entry_banks_1_io_readDataB_valid;
+  wire        commit_row_complete_2 =
+    _ROB_WB_banks_2_io_readDataG_busy & _ROB_entry_banks_2_io_readDataB_valid
+    | ~_ROB_entry_banks_2_io_readDataB_valid;
+  wire        commit_row_valid;
+  wire        commit_row_complete_3 =
+    _ROB_WB_banks_3_io_readDataG_busy & _ROB_entry_banks_3_io_readDataB_valid
+    | ~_ROB_entry_banks_3_io_readDataB_valid;
+  wire        commit =
+    commit_row_valid & commit_row_complete_0 & commit_row_complete_1
+    & commit_row_complete_2 & commit_row_complete_3;
+  wire [6:0]  _front_pointer_T_2 = front_pointer + 7'h1;
+  wire [5:0]  front_index = commit ? _front_pointer_T_2[5:0] : front_pointer[5:0];
+  assign full = front_index == back_pointer[5:0] & front_pointer != back_pointer;
   always @(posedge clock) begin
-    if (reset)
+    if (reset) begin
       front_pointer <= 7'h0;
-    else
-      front_pointer <= front_pointer + {6'h0, allocate};
+      back_pointer <= 7'h0;
+    end
+    else begin
+      if (commit)
+        front_pointer <= _front_pointer_T_2;
+      else
+        front_pointer <= front_pointer + {6'h0, commit};
+      back_pointer <= back_pointer + {6'h0, allocate};
+    end
   end // always @(posedge)
   ROB_shared_mem shared_mem (
     .clock                   (clock),
-    .io_addrA                (front_pointer[6:1]),
+    .io_addrA                (back_pointer[5:0]),
     .io_writeDataA_row_valid (io_ROB_packet_valid),
     .io_writeDataA_fetch_PC  (io_ROB_packet_bits_fetch_PC),
     .io_writeDataA_RAT_IDX   (io_ROB_packet_bits_RAT_IDX),
     .io_writeEnableA         (allocate),
-    .io_addrB                (front_pointer[6:1]),
-    .io_readDataB_row_valid  (_shared_mem_io_readDataB_row_valid),
+    .io_addrB                (front_index),
+    .io_readDataB_row_valid  (commit_row_valid),
     .io_readDataB_fetch_PC   (io_ROB_output_bits_fetch_PC),
     .io_readDataB_RAT_IDX    (io_ROB_output_bits_RAT_IDX),
     .io_addrC                (io_PC_file_exec_addr),
@@ -442,129 +475,158 @@ module ROB(
   );
   ROB_WB_mem ROB_WB_banks_0 (
     .clock                  (clock),
-    .io_addrA               (6'h0),
+    .io_addrA               (back_pointer[5:0]),
     .io_writeEnableA        (allocate),
     .io_addrB               (io_FU_outputs_0_bits_ROB_index),
-    .io_writeEnableB        (io_FU_outputs_0_valid),
-    .io_addrC               (io_FU_outputs_0_bits_ROB_index),
-    .io_writeEnableC        (io_FU_outputs_0_valid),
-    .io_addrD               (io_FU_outputs_0_bits_ROB_index),
-    .io_writeEnableD        (io_FU_outputs_0_valid),
-    .io_addrE               (io_FU_outputs_0_bits_ROB_index),
-    .io_writeEnableE        (io_FU_outputs_0_valid),
-    .io_addrG               (front_pointer[6:1]),
+    .io_writeDataB_busy     (io_FU_outputs_0_valid),
+    .io_writeEnableB
+      (io_FU_outputs_0_valid & io_FU_outputs_0_bits_fetch_packet_index == 2'h0),
+    .io_addrC               (io_FU_outputs_1_bits_ROB_index),
+    .io_writeDataC_busy     (io_FU_outputs_1_valid),
+    .io_writeEnableC
+      (io_FU_outputs_1_valid & io_FU_outputs_1_bits_fetch_packet_index == 2'h0),
+    .io_addrD               (io_FU_outputs_2_bits_ROB_index),
+    .io_writeEnableD
+      (io_FU_outputs_2_valid & io_FU_outputs_2_bits_fetch_packet_index == 2'h0),
+    .io_addrE               (io_FU_outputs_3_bits_ROB_index),
+    .io_writeDataE_busy     (io_FU_outputs_3_valid),
+    .io_writeEnableE
+      (io_FU_outputs_3_valid & io_FU_outputs_3_bits_fetch_packet_index == 2'h0),
+    .io_addrG               (front_index),
     .io_readDataG_busy      (_ROB_WB_banks_0_io_readDataG_busy),
     .io_readDataG_exception (/* unused */)
   );
   ROB_WB_mem ROB_WB_banks_1 (
     .clock                  (clock),
-    .io_addrA               (6'h0),
+    .io_addrA               (back_pointer[5:0]),
     .io_writeEnableA        (allocate),
-    .io_addrB               (io_FU_outputs_1_bits_ROB_index),
-    .io_writeEnableB        (io_FU_outputs_1_valid),
+    .io_addrB               (io_FU_outputs_0_bits_ROB_index),
+    .io_writeDataB_busy     (io_FU_outputs_0_valid),
+    .io_writeEnableB
+      (io_FU_outputs_0_valid & io_FU_outputs_0_bits_fetch_packet_index == 2'h1),
     .io_addrC               (io_FU_outputs_1_bits_ROB_index),
-    .io_writeEnableC        (io_FU_outputs_1_valid),
-    .io_addrD               (io_FU_outputs_1_bits_ROB_index),
-    .io_writeEnableD        (io_FU_outputs_1_valid),
-    .io_addrE               (io_FU_outputs_1_bits_ROB_index),
-    .io_writeEnableE        (io_FU_outputs_1_valid),
-    .io_addrG               (front_pointer[6:1]),
+    .io_writeDataC_busy     (io_FU_outputs_1_valid),
+    .io_writeEnableC
+      (io_FU_outputs_1_valid & io_FU_outputs_1_bits_fetch_packet_index == 2'h1),
+    .io_addrD               (io_FU_outputs_2_bits_ROB_index),
+    .io_writeEnableD
+      (io_FU_outputs_2_valid & io_FU_outputs_2_bits_fetch_packet_index == 2'h1),
+    .io_addrE               (io_FU_outputs_3_bits_ROB_index),
+    .io_writeDataE_busy     (io_FU_outputs_3_valid),
+    .io_writeEnableE
+      (io_FU_outputs_3_valid & io_FU_outputs_3_bits_fetch_packet_index == 2'h1),
+    .io_addrG               (front_index),
     .io_readDataG_busy      (_ROB_WB_banks_1_io_readDataG_busy),
     .io_readDataG_exception (/* unused */)
   );
   ROB_WB_mem ROB_WB_banks_2 (
     .clock                  (clock),
-    .io_addrA               (6'h0),
+    .io_addrA               (back_pointer[5:0]),
     .io_writeEnableA        (allocate),
-    .io_addrB               (io_FU_outputs_2_bits_ROB_index),
-    .io_writeEnableB        (io_FU_outputs_2_valid),
-    .io_addrC               (io_FU_outputs_2_bits_ROB_index),
-    .io_writeEnableC        (io_FU_outputs_2_valid),
+    .io_addrB               (io_FU_outputs_0_bits_ROB_index),
+    .io_writeDataB_busy     (io_FU_outputs_0_valid),
+    .io_writeEnableB
+      (io_FU_outputs_0_valid & io_FU_outputs_0_bits_fetch_packet_index == 2'h2),
+    .io_addrC               (io_FU_outputs_1_bits_ROB_index),
+    .io_writeDataC_busy     (io_FU_outputs_1_valid),
+    .io_writeEnableC
+      (io_FU_outputs_1_valid & io_FU_outputs_1_bits_fetch_packet_index == 2'h2),
     .io_addrD               (io_FU_outputs_2_bits_ROB_index),
-    .io_writeEnableD        (io_FU_outputs_2_valid),
-    .io_addrE               (io_FU_outputs_2_bits_ROB_index),
-    .io_writeEnableE        (io_FU_outputs_2_valid),
-    .io_addrG               (front_pointer[6:1]),
+    .io_writeEnableD
+      (io_FU_outputs_2_valid & io_FU_outputs_2_bits_fetch_packet_index == 2'h2),
+    .io_addrE               (io_FU_outputs_3_bits_ROB_index),
+    .io_writeDataE_busy     (io_FU_outputs_3_valid),
+    .io_writeEnableE
+      (io_FU_outputs_3_valid & io_FU_outputs_3_bits_fetch_packet_index == 2'h2),
+    .io_addrG               (front_index),
     .io_readDataG_busy      (_ROB_WB_banks_2_io_readDataG_busy),
     .io_readDataG_exception (/* unused */)
   );
   ROB_WB_mem ROB_WB_banks_3 (
     .clock                  (clock),
-    .io_addrA               (6'h0),
+    .io_addrA               (back_pointer[5:0]),
     .io_writeEnableA        (allocate),
-    .io_addrB               (io_FU_outputs_3_bits_ROB_index),
-    .io_writeEnableB        (io_FU_outputs_3_valid),
-    .io_addrC               (io_FU_outputs_3_bits_ROB_index),
-    .io_writeEnableC        (io_FU_outputs_3_valid),
-    .io_addrD               (io_FU_outputs_3_bits_ROB_index),
-    .io_writeEnableD        (io_FU_outputs_3_valid),
+    .io_addrB               (io_FU_outputs_0_bits_ROB_index),
+    .io_writeDataB_busy     (io_FU_outputs_0_valid),
+    .io_writeEnableB
+      (io_FU_outputs_0_valid & (&io_FU_outputs_0_bits_fetch_packet_index)),
+    .io_addrC               (io_FU_outputs_1_bits_ROB_index),
+    .io_writeDataC_busy     (io_FU_outputs_1_valid),
+    .io_writeEnableC
+      (io_FU_outputs_1_valid & (&io_FU_outputs_1_bits_fetch_packet_index)),
+    .io_addrD               (io_FU_outputs_2_bits_ROB_index),
+    .io_writeEnableD
+      (io_FU_outputs_2_valid & (&io_FU_outputs_2_bits_fetch_packet_index)),
     .io_addrE               (io_FU_outputs_3_bits_ROB_index),
-    .io_writeEnableE        (io_FU_outputs_3_valid),
-    .io_addrG               (front_pointer[6:1]),
+    .io_writeDataE_busy     (io_FU_outputs_3_valid),
+    .io_writeEnableE
+      (io_FU_outputs_3_valid & (&io_FU_outputs_3_bits_fetch_packet_index)),
+    .io_addrG               (front_index),
     .io_readDataG_busy      (_ROB_WB_banks_3_io_readDataG_busy),
     .io_readDataG_exception (/* unused */)
   );
   ROB_entry_mem ROB_entry_banks_0 (
     .clock                   (clock),
-    .io_addrA                (6'h0),
+    .io_addrA                (back_pointer[5:0]),
     .io_writeDataA_valid     (io_ROB_packet_bits_valid_bits_0),
     .io_writeDataA_is_branch (io_ROB_packet_bits_decoded_instruction_0_needs_branch_unit),
     .io_writeDataA_is_load   (io_ROB_packet_bits_decoded_instruction_0_IS_LOAD),
     .io_writeDataA_is_store  (io_ROB_packet_bits_decoded_instruction_0_IS_STORE),
     .io_writeEnableA         (allocate),
-    .io_addrB                (front_pointer[6:1]),
-    .io_readDataB_valid      (io_ROB_output_bits_ROB_entries_0_valid),
+    .io_addrB                (front_index),
+    .io_readDataB_valid      (_ROB_entry_banks_0_io_readDataB_valid),
     .io_readDataB_is_branch  (io_ROB_output_bits_ROB_entries_0_is_branch),
     .io_readDataB_is_load    (io_ROB_output_bits_ROB_entries_0_is_load),
     .io_readDataB_is_store   (io_ROB_output_bits_ROB_entries_0_is_store)
   );
   ROB_entry_mem ROB_entry_banks_1 (
     .clock                   (clock),
-    .io_addrA                (6'h0),
+    .io_addrA                (back_pointer[5:0]),
     .io_writeDataA_valid     (io_ROB_packet_bits_valid_bits_1),
     .io_writeDataA_is_branch (io_ROB_packet_bits_decoded_instruction_1_needs_branch_unit),
     .io_writeDataA_is_load   (io_ROB_packet_bits_decoded_instruction_1_IS_LOAD),
     .io_writeDataA_is_store  (io_ROB_packet_bits_decoded_instruction_1_IS_STORE),
     .io_writeEnableA         (allocate),
-    .io_addrB                (front_pointer[6:1]),
-    .io_readDataB_valid      (io_ROB_output_bits_ROB_entries_1_valid),
+    .io_addrB                (front_index),
+    .io_readDataB_valid      (_ROB_entry_banks_1_io_readDataB_valid),
     .io_readDataB_is_branch  (io_ROB_output_bits_ROB_entries_1_is_branch),
     .io_readDataB_is_load    (io_ROB_output_bits_ROB_entries_1_is_load),
     .io_readDataB_is_store   (io_ROB_output_bits_ROB_entries_1_is_store)
   );
   ROB_entry_mem ROB_entry_banks_2 (
     .clock                   (clock),
-    .io_addrA                (6'h0),
+    .io_addrA                (back_pointer[5:0]),
     .io_writeDataA_valid     (io_ROB_packet_bits_valid_bits_2),
     .io_writeDataA_is_branch (io_ROB_packet_bits_decoded_instruction_2_needs_branch_unit),
     .io_writeDataA_is_load   (io_ROB_packet_bits_decoded_instruction_2_IS_LOAD),
     .io_writeDataA_is_store  (io_ROB_packet_bits_decoded_instruction_2_IS_STORE),
     .io_writeEnableA         (allocate),
-    .io_addrB                (front_pointer[6:1]),
-    .io_readDataB_valid      (io_ROB_output_bits_ROB_entries_2_valid),
+    .io_addrB                (front_index),
+    .io_readDataB_valid      (_ROB_entry_banks_2_io_readDataB_valid),
     .io_readDataB_is_branch  (io_ROB_output_bits_ROB_entries_2_is_branch),
     .io_readDataB_is_load    (io_ROB_output_bits_ROB_entries_2_is_load),
     .io_readDataB_is_store   (io_ROB_output_bits_ROB_entries_2_is_store)
   );
   ROB_entry_mem ROB_entry_banks_3 (
     .clock                   (clock),
-    .io_addrA                (6'h0),
+    .io_addrA                (back_pointer[5:0]),
     .io_writeDataA_valid     (io_ROB_packet_bits_valid_bits_3),
     .io_writeDataA_is_branch (io_ROB_packet_bits_decoded_instruction_3_needs_branch_unit),
     .io_writeDataA_is_load   (io_ROB_packet_bits_decoded_instruction_3_IS_LOAD),
     .io_writeDataA_is_store  (io_ROB_packet_bits_decoded_instruction_3_IS_STORE),
     .io_writeEnableA         (allocate),
-    .io_addrB                (front_pointer[6:1]),
-    .io_readDataB_valid      (io_ROB_output_bits_ROB_entries_3_valid),
+    .io_addrB                (front_index),
+    .io_readDataB_valid      (_ROB_entry_banks_3_io_readDataB_valid),
     .io_readDataB_is_branch  (io_ROB_output_bits_ROB_entries_3_is_branch),
     .io_readDataB_is_load    (io_ROB_output_bits_ROB_entries_3_is_load),
     .io_readDataB_is_store   (io_ROB_output_bits_ROB_entries_3_is_store)
   );
   assign io_ROB_packet_ready = ~full;
-  assign io_ROB_output_valid =
-    _ROB_WB_banks_0_io_readDataG_busy & _ROB_WB_banks_1_io_readDataG_busy
-    & _ROB_WB_banks_2_io_readDataG_busy & _ROB_WB_banks_3_io_readDataG_busy
-    & _shared_mem_io_readDataB_row_valid;
+  assign io_ROB_output_valid = commit;
+  assign io_ROB_output_bits_ROB_entries_0_valid = _ROB_entry_banks_0_io_readDataB_valid;
+  assign io_ROB_output_bits_ROB_entries_1_valid = _ROB_entry_banks_1_io_readDataB_valid;
+  assign io_ROB_output_bits_ROB_entries_2_valid = _ROB_entry_banks_2_io_readDataB_valid;
+  assign io_ROB_output_bits_ROB_entries_3_valid = _ROB_entry_banks_3_io_readDataB_valid;
   assign io_PC_file_exec_data = _shared_mem_io_readDataC_fetch_PC[5:0];
 endmodule
 

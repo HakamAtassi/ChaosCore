@@ -35,3 +35,31 @@ def test_write_1():
         configs["testcase"] = "test_write_1"
         run(**configs)
 
+def test_write_4():
+        configs["testcase"] = "test_write_4"
+        run(**configs)
+
+def test_many_writes():
+        configs["testcase"] = "test_many_writes"
+        run(**configs)
+
+def test_many_full():
+        configs["testcase"] = "test_many_full"
+        run(**configs)
+
+def test_FU_all_valid():
+        configs["testcase"] = "test_FU_all_valid"
+        run(**configs)
+
+def test_FU_not_all_valid():
+        configs["testcase"] = "test_FU_not_all_valid"
+        run(**configs)
+
+def test_FU_all_valid_diff_rows():
+        configs["testcase"] = "test_FU_all_valid_diff_rows"
+        run(**configs)
+
+def test_basic_commit():
+        configs["testcase"] = "test_basic_commit"
+        run(**configs)
+

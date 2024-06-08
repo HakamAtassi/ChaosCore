@@ -70,8 +70,15 @@ class branch_decoder(index:Int, parameters:Parameters) extends Module{
     val BR      = (instructionType === InstructionType.BRANCH)
 
     // Sub types
-    val CALL = (JAL && RD === 1.U) || (JALR && RD === 1.U)       // Either JAL or JALR with RD = x1
-    val RET = (JALR && (RS1 === 1.U) && imm === 0.U)             // JALR with RS1 = x1 & imm = 0
+    //val CALL = (JAL && RD === 1.U) || (JALR && RD === 1.U)       // Either JAL or JALR with RD = x1
+    //val RET = (JALR && (RS1 === 1.U) && imm === 0.U)             // JALR with RS1 = x1 & imm = 0
+
+    val CALL = (JALR && (RD === 1.U) && (RS1 === 1.U))
+    val RET = (JALR && (RD === 0.U) && (RS1 === 1.U) && imm === 0.U)
+    assert(!(CALL && RET), "Cant have call and ret both be valid")
+
+    dontTouch(CALL)
+    dontTouch(RET)
 
     val fetch_PC_adjusted = Wire(UInt(32.W))
     fetch_PC_adjusted := io.fetch_PC + (index*4).U
@@ -81,23 +88,26 @@ class branch_decoder(index:Int, parameters:Parameters) extends Module{
     // Note that since 1 packet can have several branches, so simplify things, predictions depend on the BTB to inform BP of the dominant branch
     // if that is not available, default to NT. 
 
-
     
     val br_type = Wire(_br_type())
 
-    when(BR){
-        br_type := _br_type.BR
+
+    when(CALL){
+        br_type := _br_type.CALL
+    }.elsewhen(RET){
+        br_type := _br_type.RET
     }.elsewhen(JAL){
         br_type := _br_type.JAL
     }.elsewhen(JALR){
         br_type := _br_type.JALR
-    }.elsewhen(CALL){
-        br_type := _br_type.CALL
-    }.elsewhen(RET){
-        br_type := _br_type.RET
+    }.elsewhen(BR){
+        br_type := _br_type.BR
     }.otherwise{
         br_type := _br_type.NONE
     }
+
+
+
 
 
 
@@ -128,6 +138,8 @@ class branch_decoder(index:Int, parameters:Parameters) extends Module{
     //io.metadata.Call            :=  Call
     //io.metadata.Ret             :=  Ret
 
+
+        //br_type := 
 
 
     io.metadata.br_type         :=  br_type
