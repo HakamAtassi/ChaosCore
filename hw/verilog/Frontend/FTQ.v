@@ -58,6 +58,7 @@ module FTQ(
   input         io_commit_valid,
   input  [31:0] io_commit_fetch_PC,
   input         io_commit_T_NT,
+  input  [5:0]  io_commit_ROB_index,
   input  [2:0]  io_commit_br_type,
   input  [1:0]  io_commit_fetch_packet_index,
   input         io_commit_is_misprediction,

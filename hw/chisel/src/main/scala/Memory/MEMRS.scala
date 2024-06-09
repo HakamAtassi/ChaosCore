@@ -52,13 +52,12 @@ class MEMRS(parameters:Parameters) extends Module{
     val io = IO(new Bundle{
         // ALLOCATE //
         val backend_packet          =      Vec(dispatchWidth, Flipped(Decoupled(new decoded_instruction(parameters))))
-        //val MEMRS_ready             =      Output(Vec(dispatchWidth, Bool()))
 
         // UPDATE //
         val FU_outputs              =      Vec(portCount, Flipped(ValidIO(new FU_output(parameters))))
 
         // REDIRECTS // 
-        val commit           =   Input( new commit(parameters))
+        val commit                  =      Input(new commit(parameters))
 
         // REG READ (then execute) //
         val RF_inputs               =      Vec(portCount, Decoupled(new decoded_instruction(parameters)))
@@ -70,14 +69,15 @@ class MEMRS(parameters:Parameters) extends Module{
     require(isPow2(RSEntries), "MEM Reservation station entries not a power of 2")
 
     
-    val reservation_station = RegInit(VecInit(Seq.fill(RSEntries)(0.U.asTypeOf(new RS_entry(parameters)))))
+    val reservation_station = RegInit(VecInit(Seq.fill(RSEntries)(0.U.asTypeOf(new MEMRS_entry(parameters)))))
 
     // queue pointers
-    val front_pointer = RegInit(UInt((log2Ceil(RSEntries)+1).W), 0.U)
-    val back_pointer  = RegInit(UInt((log2Ceil(RSEntries)+1).W), 0.U)
+    val pointer_width = log2Ceil(RSEntries)+1
+    val front_pointer = RegInit(UInt(pointer_width.W), 0.U)
+    val back_pointer  = RegInit(UInt(pointer_width.W), 0.U)
 
-    val front_index     =   front_pointer(log2Ceil(RSEntries)-1, 0)
-    val back_index      =   back_pointer(log2Ceil(RSEntries)-1, 0)
+    val front_index     =   front_pointer(pointer_width-2, 0)
+    val back_index      =   back_pointer(pointer_width-2, 0)
 
     //////////////
     // ALLOCATE //
@@ -85,21 +85,26 @@ class MEMRS(parameters:Parameters) extends Module{
     // write up to dispatchWidth entries into the queue (in order).
     
     // Allocate new RS entry
+
+    val written_vec = Wire(Vec(fetchWidth, Bool()))
+
+
     var j = 0
     for(i <- 0 until dispatchWidth){
-        when(io.backend_packet(i).valid){
-            reservation_station(front_index + j.U).decoded_instruction <> io.backend_packet(i).bits
-            reservation_station(front_index + j.U).valid              := 1.B
+        written_vec(i) := 0.B
+        when(io.backend_packet(i).valid && io.backend_packet(i).ready){
+            reservation_station(back_index + j.U).decoded_instruction <> io.backend_packet(i).bits
+            reservation_station(back_index + j.U).valid              := 1.B
+            written_vec(i) := 1.B
             j = j + 1
-            
         }
     }
-    front_pointer := front_pointer + j.U
+    back_pointer := back_pointer + PopCount(written_vec)
 
 
-    ////////////
-    // UPDATE //
-    ////////////
+    //////////////////////
+    // UPDATE (SOURCES) //
+    //////////////////////
     // mark RS1/RS2 as MEMRS_ready based on CDB.
 
     val RS1_match = Wire(Vec(RSEntries, Bool()))
@@ -121,36 +126,55 @@ class MEMRS(parameters:Parameters) extends Module{
     }
 
 
+    dontTouch(RS2_match)
+    dontTouch(RS1_match)
+
     for(i <- 0 until RSEntries){
-        when(!reservation_station(i).ready_bits.RS2_ready && reservation_station(i).valid){
-            reservation_station(i).ready_bits.RS2_ready := RS2_match(i)
+        when(!reservation_station(i).decoded_instruction.ready_bits.RS2_ready && reservation_station(i).valid){
+            reservation_station(i).decoded_instruction.ready_bits.RS2_ready := RS2_match(i)
         }
     }
 
     for(i <- 0 until RSEntries){
-        when(!reservation_station(i).ready_bits.RS1_ready && reservation_station(i).valid){
-            reservation_station(i).ready_bits.RS1_ready := RS1_match(i)
+        when(!reservation_station(i).decoded_instruction.ready_bits.RS1_ready && reservation_station(i).valid){
+            reservation_station(i).decoded_instruction.ready_bits.RS1_ready := RS1_match(i)
         }
     }
+
+
+    /////////////////////
+    // UPDATE (COMMIT) //
+    /////////////////////
+    // Mark instruction as commited via commit channel
+
+    for(i <- 0 until RSEntries){
+        when(!reservation_station(i).commited && reservation_station(i).valid){
+            val commited = (io.commit.ROB_index === reservation_station(i).decoded_instruction.ROB_index) && io.commit.valid
+            reservation_station(i).commited := commited
+        }
+    }
+
 
     /////////////////
     // MEM REQUEST //
     /////////////////
-    // if oldest RS entry is MEMRS_ready to send to MEM and MEM is not busy, send MEM request.
+    // If front of the MEMRS has its sources ready and has committed, send to memory and update front pointer
 
+    val good_to_go =    (reservation_station(front_index).valid && reservation_station(front_index).commited &&
+                        reservation_station(front_index).decoded_instruction.ready_bits.RS1_ready && reservation_station(front_index).decoded_instruction.ready_bits.RS2_ready)
 
-    val load_valid_ready  =         reservation_station(back_index).valid && (reservation_station(back_index).ready_bits.RS1_ready || RS1_match(back_index))
+    front_pointer := front_pointer + good_to_go
 
-    val store_valid_ready =         (reservation_station(back_index).ready_bits.RS1_ready || RS1_match(back_index)) && 
-                                    (reservation_station(back_index).ready_bits.RS2_ready || RS2_match(back_index)) && 
-                                    reservation_station(back_index).valid
-
-    when(load_valid_ready || store_valid_ready){
-        // free scheduled instruction
-        reservation_station(back_index).valid := 0.B
-        reservation_station(back_index) <> 0.U.asTypeOf(new RS_entry(parameters))
-        front_pointer := front_pointer + 1.U
+    // clear RS entry
+    when(good_to_go){
+        reservation_station(front_index) := 0.U.asTypeOf(new MEMRS_entry(parameters))
     }
+
+
+
+    ////////////////////
+    // ASSIGN OUTPUTS //
+    ////////////////////
 
     io.RF_inputs(0).bits    := 0.U.asTypeOf(new decoded_instruction(parameters))
     io.RF_inputs(0).valid   := 0.B
@@ -163,7 +187,7 @@ class MEMRS(parameters:Parameters) extends Module{
 
     // FIXME: RF_inputs port should be a parameter
     io.RF_inputs(3).bits   <> reservation_station(front_index).decoded_instruction
-    io.RF_inputs(3).valid  := reservation_station(front_index).valid
+    io.RF_inputs(3).valid  := good_to_go
 
 
     // assign MEMRS_ready bits
@@ -175,8 +199,3 @@ class MEMRS(parameters:Parameters) extends Module{
 
 
 }
-
-
-// update so that this has instructures queue in order
-// when a commit takes place, a bit is set in that instruction RS entry
-// the output is one instruction at a type

@@ -246,6 +246,7 @@ class ROB(parameters:Parameters) extends Module{
     front_pointer := front_pointer + commit
 
     io.ROB_output.valid := commit
+    io.ROB_output.bits.ROB_index := front_index
 
     when(commit){   // bypass
         val bypassed_pointer = (front_pointer + 1.U)
