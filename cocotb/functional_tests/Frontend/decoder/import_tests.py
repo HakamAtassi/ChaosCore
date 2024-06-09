@@ -37,7 +37,7 @@ def test_generate_test_list():
 
     lines=lines[:line_number]
     lines.append("\n")
-    testlist = get_cocotb_testlist(f"{configs["module"]}.py")
+    testlist = get_cocotb_testlist(configs["module"] + ".py")
 
     for test in testlist:
         lines.append(generate_test_call(test))

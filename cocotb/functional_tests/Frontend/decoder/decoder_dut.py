@@ -49,14 +49,16 @@ class decoder_sw:
         self.IMMEDIATE = int(self.opcode == IMM_OP)
         self.IS_LOAD = int(self.opcode == LOAD)
         self.IS_STORE = int(self.opcode == STORE)
-        self.needs_ALU = int(self.opcode in ALU_OPS)
+        self.needs_ALU = int(((self.opcode == OP) and 
+                            (self.FUNCT7 == 0x00 or self.SUBTRACT)) or 
+                            self.opcode == IMM_OP)
         self.needs_branch_unit = int(self.opcode in BRANCH_OPS)
         self.needs_CSRs = 0
         self.needs_memory = int(self.opcode in MEM)
         
         self.packet_index = packet_index
         self.ROB_index = ROB_index
-        self.instructionType = self.opcode
+        self.instructionType = self.opcode >> 2
         if self.opcode in INT:
             self.RS_type = 0
         elif self.opcode in MEM:
@@ -76,7 +78,7 @@ class decoder_sw:
             self.portID = 0
             
         self.ready_bits_RS1_ready = 0
-        self.ready_bits_RS1_ready = 0
+        self.ready_bits_RS2_ready = 0
         if self.opcode in ALL_OPS:
             self.valid = 1
         else:
@@ -169,3 +171,44 @@ class decoder_dut:
         outputs["IS_STORE"] = self.dut.io_decoded_instruction_bits_IS_STORE.value
         
         return outputs
+
+class fetch_pkt_decoder_dut:
+    
+    FETCH_WIDTH = 4
+    
+    def __init__(self, dut):    # modify as needed (parameters, etc...)
+        self.dut = dut
+
+    def clock(self):            # Do not touch
+        return self.dut.clock
+
+    async def reset(self):      # Do not touch
+        self.dut.reset.value = 0
+        await RisingEdge(self.dut.clock)
+        self.dut.reset.value = 1
+        await RisingEdge(self.dut.clock)
+        self.dut.reset.value = 0
+        
+    def fetch_packet(self, 
+                          fetch_PC:int, 
+                          valid_bits:list,
+                          decoded_fetch_pkt_rdy_bits:list, 
+                          instructions:list,
+                          packet_indices:list,
+                          ROB_indices:list):
+        self.dut.io_fetch_packet_valid.value = 1
+        self.dut.io_fetch_packet_bits_fetch_PC.value = fetch_PC
+        for i in range(self.FETCH_WIDTH):
+            setattr(self.dut, f"io_fetch_packet_bits_valid_bits_{i}", valid_bits[0])
+            setattr(self.dut, f"io_fetch_packet_bits_instructions_{i}_instruction", instructions[0])
+            setattr(self.dut, f"io_fetch_packet_bits_instructions_{i}_packet_index", packet_indices[0])
+            setattr(self.dut, f"io_fetch_packet_bits_instructions_{i}_ROB_index", ROB_indices[0])
+            setattr(self.dut, f"io_decoded_fetch_packet_{i}_ready", decoded_fetch_pkt_rdy_bits[0])
+            
+    def get_output(self):
+        outputs = {}
+        
+        outputs["fetch_packet_ready"] = self.dut.io_fetch_packet_ready
+        for i in range(self.FETCH_WIDTH):
+            outputs[f"io_decoded_fetch_packet_{i}_valid"] = getattr(self.dut, f"io_decoded_fetch_packet_{i}_valid")
+            outputs[f"fetch_packet_{i}_ready"] = getattr(self.dut, f"io_decoded_fetch_packet_{i}_ready")

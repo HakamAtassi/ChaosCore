@@ -68,6 +68,7 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
 
     dontTouch(instructionType)
 
+    //Do we check entire funct7 field or just check for single bit?
     val MULTIPLY    = (instructionType === InstructionType.OP && FUNCT7 === 0x1.U)
     val SUBTRACT    = (instructionType === InstructionType.OP && FUNCT7 === 0x20.U)
     val IMMEDIATE   = (instructionType === InstructionType.OP_IMM)
@@ -76,12 +77,16 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
     val needs_divider        =   (instructionType === OP) && ( FUNCT3 === 0x4.U || FUNCT3 === 0x5.U || FUNCT3 === 0x6.U || FUNCT3 === 0x7.U) && FUNCT7(0)
     val needs_branch_unit    =   (instructionType === BRANCH) || (instructionType === JAL) || (instructionType === JALR)
     val needs_CSRs           =   0.B
-    val needs_ALU            =   (((instructionType === OP) || (instructionType === OP_IMM)) && (FUNCT7(2) || (FUNCT7 === 0x00.U))) || (instructionType === OP_IMM)
+    val needs_ALU            =   ((instructionType === OP) &&
+                                 ((FUNCT7 === 0x20.U) || (FUNCT7 === 0x00.U))) || 
+                                 (instructionType === OP_IMM)
 
 
     val IS_LOAD              =   (instructionType === LOAD)
     val IS_STORE             =   (instructionType === STORE)
     val needs_memory         =   (instructionType === STORE) || (instructionType === LOAD)
+
+    dontTouch(needs_memory)
 
     // Assign output
 
@@ -143,10 +148,10 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
     val next_ALU_port = RegInit(VecInit(0.U, 1.U, 2.U))
 
     when(needs_ALU){
-        io.decoded_instruction.bits.portID := next_ALU_port(0)   // schedule to "random"  
-        for (i <- 3 - 1 until 0 by -1) {
-            next_ALU_port(i) := next_ALU_port(i - 1)
-        }
+        io.decoded_instruction.bits.portID := next_ALU_port(0)   // schedule to "random"
+        next_ALU_port(0) := next_ALU_port(1)
+        next_ALU_port(1) := next_ALU_port(2)
+        next_ALU_port(2) := next_ALU_port(0)  // shift register didnt appear in verilog before
     }.elsewhen(needs_branch_unit){
         io.decoded_instruction.bits.portID := 0.U
     }.elsewhen(needs_CSRs){
@@ -187,20 +192,23 @@ class fetch_packet_decoder(parameters:Parameters) extends Module{
         Module(new decoder(parameters))
     }
 
+    var fetch_packet_ready = 1.B
     for(i <- 0 until fetchWidth){
         decoders(i).io.instruction.bits     := io.fetch_packet.bits.instructions(i)
         decoders(i).io.instruction.valid    := io.fetch_packet.valid && io.fetch_packet.bits.valid_bits(i)
+        fetch_packet_ready                   = fetch_packet_ready && io.decoded_fetch_packet(i).ready
     }
+    io.fetch_packet.ready := fetch_packet_ready // was only being assigned to last instruction's ready bit before
 
     // Register outputs //
     for(i <- 0 until fetchWidth){
         io.decoded_fetch_packet(i).bits             := RegNext(decoders(i).io.decoded_instruction.bits)
         decoders(i).io.decoded_instruction.ready    := io.decoded_fetch_packet(i).ready
-        io.fetch_packet.ready                       := io.decoded_fetch_packet(i).ready
     }
 
     
     for(i <- 0 until fetchWidth){
-        io.decoded_fetch_packet(i).valid := RegNext(io.fetch_packet.valid)
+        io.decoded_fetch_packet(i).valid := RegNext(io.fetch_packet.valid && io.fetch_packet.bits.valid_bits(i))//wasnt checking if individual instructions were valid
     }
+
 }
