@@ -383,6 +383,7 @@ module ROB(
   output        io_ROB_output_valid,
   output [31:0] io_ROB_output_bits_fetch_PC,
   output [3:0]  io_ROB_output_bits_RAT_IDX,
+                io_ROB_output_bits_ROB_index,
   output        io_ROB_output_bits_ROB_entries_0_valid,
                 io_ROB_output_bits_ROB_entries_0_is_branch,
                 io_ROB_output_bits_ROB_entries_0_is_load,
@@ -402,6 +403,7 @@ module ROB(
   input         io_commit_valid,
   input  [31:0] io_commit_fetch_PC,
   input         io_commit_T_NT,
+  input  [5:0]  io_commit_ROB_index,
   input  [2:0]  io_commit_br_type,
   input  [1:0]  io_commit_fetch_packet_index,
   input         io_commit_is_misprediction,
@@ -414,6 +416,7 @@ module ROB(
   output [5:0]  io_PC_file_exec_data
 );
 
+  wire [5:0]  front_index;
   wire        _ROB_entry_banks_3_io_readDataB_valid;
   wire        _ROB_entry_banks_2_io_readDataB_valid;
   wire        _ROB_entry_banks_1_io_readDataB_valid;
@@ -439,7 +442,7 @@ module ROB(
     & (_ROB_WB_banks_3_io_readDataG_busy & _ROB_entry_banks_3_io_readDataB_valid
        | ~_ROB_entry_banks_3_io_readDataB_valid);
   wire [6:0]  _front_pointer_T_2 = front_pointer + 7'h1;
-  wire [5:0]  front_index = commit ? _front_pointer_T_2[5:0] : front_pointer[5:0];
+  assign front_index = commit ? _front_pointer_T_2[5:0] : front_pointer[5:0];
   assign full = front_index == back_pointer[5:0] & front_pointer != back_pointer;
   always @(posedge clock) begin
     if (reset) begin
@@ -618,6 +621,7 @@ module ROB(
   );
   assign io_ROB_packet_ready = ~full;
   assign io_ROB_output_valid = commit;
+  assign io_ROB_output_bits_ROB_index = front_index[3:0];
   assign io_ROB_output_bits_ROB_entries_0_valid = _ROB_entry_banks_0_io_readDataB_valid;
   assign io_ROB_output_bits_ROB_entries_1_valid = _ROB_entry_banks_1_io_readDataB_valid;
   assign io_ROB_output_bits_ROB_entries_2_valid = _ROB_entry_banks_2_io_readDataB_valid;

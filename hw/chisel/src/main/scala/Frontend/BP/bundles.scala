@@ -150,6 +150,8 @@ class commit(parameters:Parameters) extends Bundle{
 
     val fetch_PC            = UInt(32.W)    // To update gshare/PHT
     val T_NT                = Bool()    // To update BTB (BTB only updates on taken branches)
+    // ROB index or something?
+    val ROB_index           = UInt(log2Ceil(ROBEntires).W)
     
     //val target              = UInt(32.W)
     val br_type             = _br_type()
@@ -376,6 +378,7 @@ class ROB_output(parameters:Parameters) extends Bundle{
     // 1 per row data
     val fetch_PC    = UInt(32.W)
     val RAT_IDX     = UInt(log2Ceil(RATCheckpointCount).W)
+    val ROB_index   = UInt(log2Ceil(RATCheckpointCount).W)
 
     // N per row 
     val ROB_entries = Vec(fetchWidth, new ROB_entry(parameters))
@@ -418,11 +421,23 @@ class RS_entry(parameters:Parameters) extends Bundle{
 
     val decoded_instruction = new decoded_instruction(parameters)
 
-    val ready_bits          =   new sources_ready()
+    //val ready_bits          =   new sources_ready()
 
-    // TODO: Add ROB entry (to read PC from PC file)
+    val valid               =  Bool()  // Is whole RS entry valid
+}
 
-    val valid        =  Bool()  // Is whole RS entry valid
+class MEMRS_entry(parameters:Parameters) extends Bundle{
+    import parameters._
+    val physicalRegBits     = log2Ceil(physicalRegCount)
+
+    val decoded_instruction =  new decoded_instruction(parameters)
+
+    //val ready_bits          =  new sources_ready()
+
+    val commited            =  Bool()  // Has this instruction commited
+    val valid               =  Bool()  // Is whole RS entry valid
+
+
 }
 
 ////////////////////////////

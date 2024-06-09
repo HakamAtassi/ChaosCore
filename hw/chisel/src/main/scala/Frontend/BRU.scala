@@ -42,7 +42,7 @@ class BRU(parameters:Parameters) extends Module{
         val FTQ         =   Input(new FTQ_entry(parameters))
 
         // COMMIT //
-        val ROB_output         =   Flipped(ValidIO(new ROB_output(parameters)))
+        val ROB_output  =   Flipped(ValidIO(new ROB_output(parameters)))
 
         // Output 
         val commit      =   Output(new commit(parameters))
@@ -57,10 +57,11 @@ class BRU(parameters:Parameters) extends Module{
 
     io.commit.is_misprediction := (io.FTQ.predicted_PC =/= io.FTQ.resolved_PC) && io.commit.valid && (io.ROB_output.bits.fetch_PC === io.FTQ.fetch_PC)
 
-    io.commit.GHR      := io.FTQ.GHR
-    io.commit.TOS      := io.FTQ.TOS
-    io.commit.NEXT     := io.FTQ.NEXT
-    io.commit.RAT_IDX  := io.ROB_output.bits.RAT_IDX
+    io.commit.GHR       := io.FTQ.GHR
+    io.commit.TOS       := io.FTQ.TOS
+    io.commit.NEXT      := io.FTQ.NEXT
+    io.commit.RAT_IDX   := io.ROB_output.bits.RAT_IDX
+    io.commit.ROB_index := io.ROB_output.bits.ROB_index
 
     io.commit.T_NT                  := io.FTQ.T_NT
     io.commit.br_type               := io.FTQ.br_type
