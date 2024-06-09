@@ -103,9 +103,10 @@ module decoder(
     | _io_decoded_instruction_bits_RD_valid_T_11
     | _io_decoded_instruction_bits_RD_valid_T_13;
   assign io_decoded_instruction_bits_RS1 = {1'h0, io_instruction_bits_instruction[19:15]};
-  assign io_decoded_instruction_bits_RS1_valid = 1'h1;
+  assign io_decoded_instruction_bits_RS1_valid =
+    _is_INT_T | IMMEDIATE | IS_LOAD | IS_STORE | _is_INT_T_7 | _is_INT_T_3;
   assign io_decoded_instruction_bits_RS2 = {1'h0, io_instruction_bits_instruction[24:20]};
-  assign io_decoded_instruction_bits_RS2_valid = 1'h1;
+  assign io_decoded_instruction_bits_RS2_valid = _is_INT_T | IS_STORE | _is_INT_T_3;
   assign io_decoded_instruction_bits_IMM =
     io_instruction_bits_instruction[6:0] == 7'h63
       ? {19'h0,
@@ -129,7 +130,8 @@ module decoder(
                   ? {20'h0,
                      io_instruction_bits_instruction[31:25],
                      io_instruction_bits_instruction[11:7]}
-                  : io_instruction_bits_instruction[6:0] == 7'h33
+                  : io_instruction_bits_instruction[6:0] == 7'h17
+                    | io_instruction_bits_instruction[6:0] == 7'h37
                       ? {io_instruction_bits_instruction[31:12], 12'h0}
                       : 32'h0;
   assign io_decoded_instruction_bits_FUNCT3 = io_instruction_bits_instruction[14:12];

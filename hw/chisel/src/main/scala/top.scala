@@ -80,8 +80,8 @@ object Main extends App {
     //"../verilog/Frontend/RAT.v")
 
 
-    VerilogGenerator.generateVerilog(new RS(parameters), 
-    "../verilog/Backend/RS.v")
+    // VerilogGenerator.generateVerilog(new RS(parameters), 
+    // "../verilog/Backend/RS.v")
 
     //VerilogGenerator.generateVerilog(new MEMRS(parameters), 
     //"../verilog/Backend/MEMRS.v")
@@ -99,29 +99,29 @@ object Main extends App {
     //VerilogGenerator.generateVerilog(new FU(parameters, true, true), 
     //"../verilog/Backend/FU.v")
 
-    VerilogGenerator.generateVerilog(new backend(parameters), 
-    "../verilog/Backend/backend.v")
+    // VerilogGenerator.generateVerilog(new backend(parameters), 
+    // "../verilog/Backend/backend.v")
 
-    VerilogGenerator.generateVerilog(new frontend(parameters), 
-    "../verilog/Frontend/frontend.v")
+    // VerilogGenerator.generateVerilog(new frontend(parameters), 
+    // "../verilog/Frontend/frontend.v")
 
-    VerilogGenerator.generateVerilog(new predecoder(parameters), 
-    "../verilog/Frontend/BP/predecoder.v")
+    // VerilogGenerator.generateVerilog(new predecoder(parameters), 
+    // "../verilog/Frontend/BP/predecoder.v")
 
-    VerilogGenerator.generateVerilog(new FTQ(parameters), 
-    "../verilog/Frontend/FTQ.v")
+    // VerilogGenerator.generateVerilog(new FTQ(parameters), 
+    // "../verilog/Frontend/FTQ.v")
 
-    VerilogGenerator.generateVerilog(new BP(parameters), 
-    "../verilog/Frontend/BP/BP.v")
+    // VerilogGenerator.generateVerilog(new BP(parameters), 
+    // "../verilog/Frontend/BP/BP.v")
 
-    VerilogGenerator.generateVerilog(new ROB(parameters), 
-    "../verilog/Backend/ROB.v")
+    // VerilogGenerator.generateVerilog(new ROB(parameters), 
+    // "../verilog/Backend/ROB.v")
 
-    VerilogGenerator.generateVerilog(new ChaosCore(parameters), 
-    "../verilog/Core/ChaosCore.v")
+    // VerilogGenerator.generateVerilog(new ChaosCore(parameters), 
+    // "../verilog/Core/ChaosCore.v")
 
-    VerilogGenerator.generateVerilog(new instruction_queue(new decoded_instruction(parameters), parameters), 
-    "../verilog/Frontend/instruction_queue.v")
+    // VerilogGenerator.generateVerilog(new instruction_queue(new decoded_instruction(parameters), parameters), 
+    // "../verilog/Frontend/instruction_queue.v")
 
     //ChiselStage.emitSystemVerilogFile(new backend(parameters), Array("--split-verilog"))
 

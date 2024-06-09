@@ -68,8 +68,8 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
 
     dontTouch(instructionType)
 
-    val MULTIPLY    = (instructionType === InstructionType.OP && FUNCT7(0))
-    val SUBTRACT    = (instructionType === InstructionType.OP && FUNCT7(2))
+    val MULTIPLY    = (instructionType === InstructionType.OP && FUNCT7 === 0x1.U)
+    val SUBTRACT    = (instructionType === InstructionType.OP && FUNCT7 === 0x20.U)
     val IMMEDIATE   = (instructionType === InstructionType.OP_IMM)
 
 
@@ -103,11 +103,20 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
                                             instructionType === AUIPC       || 
                                             instructionType === SYSTEM)
 
+    io.decoded_instruction.bits.RS1_valid            := (instructionType === OP         || 
+                                                        instructionType === OP_IMM      || 
+                                                        instructionType === LOAD        || 
+                                                        instructionType === STORE       || 
+                                                        instructionType === JALR        || 
+                                                        instructionType === BRANCH)
+
+    io.decoded_instruction.bits.RS2_valid            := (instructionType === OP         ||
+                                                        instructionType === STORE       || 
+                                                        instructionType === BRANCH)
+
     io.decoded_instruction.bits.RD                   := RD
     io.decoded_instruction.bits.RS1                  := RS1
-    io.decoded_instruction.bits.RS1_valid            := 1.B
     io.decoded_instruction.bits.RS2                  := RS2
-    io.decoded_instruction.bits.RS2_valid            := 1.B
     io.decoded_instruction.bits.IMM                  := IMM
     io.decoded_instruction.bits.FUNCT3               := FUNCT3
     io.decoded_instruction.bits.MULTIPLY             := MULTIPLY    // Multiply or Divide
