@@ -25519,5 +25519,3 @@ module nReadmWrite (
 endmodule
 
 // ----- 8< ----- FILE "firrtl_black_box_resource_files.f" ----- 8< -----
-
-nReadmWrite.v
