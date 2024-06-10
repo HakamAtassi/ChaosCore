@@ -193,10 +193,13 @@ class fetch_packet_decoder(parameters:Parameters) extends Module{
         Module(new decoder(parameters))
     }
 
+    var fetch_packet_ready = 1.B
     for(i <- 0 until fetchWidth){
         decoders(i).io.instruction.bits     := io.fetch_packet.bits.instructions(i)
         decoders(i).io.instruction.valid    := io.fetch_packet.valid && io.fetch_packet.bits.valid_bits(i)
+        fetch_packet_ready                   = fetch_packet_ready && io.decoded_fetch_packet(i).ready
     }
+    io.fetch_packet.ready := fetch_packet_ready // was only being assigned to last instruction's ready bit before
 
     // Register outputs //
     for(i <- 0 until fetchWidth){
