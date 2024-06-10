@@ -2,9 +2,9 @@ from cocotb_test.simulator import run
 import os
 
 current_file_dir = os.path.dirname(os.path.abspath(__file__))
-verilog_file_path = os.path.join(current_file_dir, "../../../hw/verilog/Core/ChaosCore.v") # Target simulation file (Update me!)
+verilog_file_path = os.path.join(current_file_dir, "../../../../hw/verilog/Frontend/instruction_cache") # Target simulation file (Update me!)
 
-module = "ChaosCore"  # Update me!
+module = "instruction_cache"  # Update me!
 
 configs = {
     "simulator": "verilator",
@@ -27,7 +27,27 @@ def test_reset():
         configs["testcase"] = "test_reset"
         run(**configs)
 
-def test_reset():
-        configs["testcase"] = "test_reset"
+def test_write_1_all_ready():
+        configs["testcase"] = "test_write_1_all_ready"
+        run(**configs)
+
+def test_write_2_all_ready():
+        configs["testcase"] = "test_write_2_all_ready"
+        run(**configs)
+
+def test_write_3_all_ready():
+        configs["testcase"] = "test_write_3_all_ready"
+        run(**configs)
+
+def test_write_1_cpu_not_ready():
+        configs["testcase"] = "test_write_1_cpu_not_ready"
+        run(**configs)
+
+def test_write_1_DRAM_not_ready():
+        configs["testcase"] = "test_write_1_DRAM_not_ready"
+        run(**configs)
+
+def test_reads_fifo_style_all_ready():
+        configs["testcase"] = "test_reads_fifo_style_all_ready"
         run(**configs)
 

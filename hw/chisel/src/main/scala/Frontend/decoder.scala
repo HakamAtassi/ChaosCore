@@ -37,7 +37,6 @@ import java.rmi.server.UID
 
 import helperFunctions._
 
-
 class decoder(parameters:Parameters) extends Module{   // basic decoder and field extraction
     import parameters._
     import InstructionType._
@@ -58,6 +57,7 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
     val RD          = instruction(11, 7)
     val IMM         = getImm(instruction)
 
+
     val FUNCT3      = instruction(14, 12)
     val FUNCT7      = instruction(31, 25)
 
@@ -68,28 +68,30 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
 
     dontTouch(instructionType)
 
-    val MULTIPLY    = (instructionType === InstructionType.OP && FUNCT7(0))
-    val SUBTRACT    = (instructionType === InstructionType.OP && FUNCT7(2))
+    //Do we check entire funct7 field or just check for single bit?
+    val MULTIPLY    = (instructionType === InstructionType.OP && FUNCT7 === 0x1.U)
+    val SUBTRACT    = (instructionType === InstructionType.OP && FUNCT7 === 0x20.U)
     val IMMEDIATE   = (instructionType === InstructionType.OP_IMM)
 
 
     val needs_divider        =   (instructionType === OP) && ( FUNCT3 === 0x4.U || FUNCT3 === 0x5.U || FUNCT3 === 0x6.U || FUNCT3 === 0x7.U) && FUNCT7(0)
     val needs_branch_unit    =   (instructionType === BRANCH) || (instructionType === JAL) || (instructionType === JALR)
     val needs_CSRs           =   0.B
-    val needs_ALU            =   (((instructionType === OP) || (instructionType === OP_IMM)) && (FUNCT7(2) || (FUNCT7 === 0x00.U))) || (instructionType === OP_IMM)
+    val needs_ALU            =   ((instructionType === OP) &&
+                                 ((FUNCT7 === 0x20.U) || (FUNCT7 === 0x00.U))) || 
+                                 (instructionType === OP_IMM)
 
 
     val IS_LOAD              =   (instructionType === LOAD)
     val IS_STORE             =   (instructionType === STORE)
     val needs_memory         =   (instructionType === STORE) || (instructionType === LOAD)
 
+    dontTouch(needs_memory)
+
     // Assign output
 
-    io.decoded_instruction.valid            := io.instruction.valid
-
-
-    //io.decoded_instruction.valid       := DontCare // This is assigned externally (see full decoder)
-    io.instruction.ready                    := io.decoded_instruction.ready
+    io.decoded_instruction.valid    := io.instruction.valid
+    io.instruction.ready            := io.decoded_instruction.ready
 
     val initialReady = Wire(new sources_ready)
     initialReady.RS1_ready := false.B
@@ -106,12 +108,20 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
                                             instructionType === AUIPC       || 
                                             instructionType === SYSTEM)
 
-    //io.decoded_instruction.bits.fetch_PC             := DontCare
+    io.decoded_instruction.bits.RS1_valid            := (instructionType === OP         || 
+                                                        instructionType === OP_IMM      || 
+                                                        instructionType === LOAD        || 
+                                                        instructionType === STORE       || 
+                                                        instructionType === JALR        || 
+                                                        instructionType === BRANCH)
+
+    io.decoded_instruction.bits.RS2_valid            := (instructionType === OP         ||
+                                                        instructionType === STORE       || 
+                                                        instructionType === BRANCH)
+
     io.decoded_instruction.bits.RD                   := RD
     io.decoded_instruction.bits.RS1                  := RS1
-    io.decoded_instruction.bits.RS1_valid            := 1.B
     io.decoded_instruction.bits.RS2                  := RS2
-    io.decoded_instruction.bits.RS2_valid            := 1.B
     io.decoded_instruction.bits.IMM                  := IMM
     io.decoded_instruction.bits.FUNCT3               := FUNCT3
     io.decoded_instruction.bits.MULTIPLY             := MULTIPLY    // Multiply or Divide
@@ -129,7 +139,6 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
     io.decoded_instruction.bits.needs_CSRs           := needs_CSRs
 
 
-
     // TODO: ECALL / EBREAK
 
     // There is currently only 1 branch unit, 1 div unit, and 1 CSR unit. 
@@ -139,10 +148,10 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
     val next_ALU_port = RegInit(VecInit(0.U, 1.U, 2.U))
 
     when(needs_ALU){
-        io.decoded_instruction.bits.portID := next_ALU_port(0)   // schedule to "random"  
-        for (i <- 3 - 1 until 0 by -1) {
-            next_ALU_port(i) := next_ALU_port(i - 1)
-        }
+        io.decoded_instruction.bits.portID := next_ALU_port(0)   // schedule to "random"
+        next_ALU_port(0) := next_ALU_port(1)
+        next_ALU_port(1) := next_ALU_port(2)
+        next_ALU_port(2) := next_ALU_port(0)  // shift register didnt appear in verilog before
     }.elsewhen(needs_branch_unit){
         io.decoded_instruction.bits.portID := 0.U
     }.elsewhen(needs_CSRs){
@@ -171,6 +180,7 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
 
 
 }
+
 
 class fetch_packet_decoder(parameters:Parameters) extends Module{
     import parameters._

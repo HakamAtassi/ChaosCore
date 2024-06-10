@@ -68,46 +68,6 @@ class Q[T <: Data](dataType: T, depth: Int = 16) extends Module{
   queue.reset := io.clear || reset.asBool
 }
 
-class skidbuffer[T <: Data](datatype: T) extends Module{
-  val io = IO(new Bundle{
-    val in   = Flipped(Decoupled(datatype))
-    val out  = Decoupled(datatype)
-  })
-
-  object State extends ChiselEnum {
-    val passthrough, stall = Value
-  }
-
-  val buffer = Reg(datatype)
-  val state = RegInit(State.passthrough)
-
-  when(io.in.valid){
-    buffer  := io.in.bits
-  }
-
-  switch(state){
-    is(State.passthrough){
-      io.in.ready := 1.B
-      when(io.out.ready === 1.B){
-        io.out.bits   := io.in.bits // Pass data along
-        io.out.valid  := 1.B
-      }.otherwise{
-        state := State.stall
-      }
-    }
-    is(State.stall){
-      io.in.ready := 0.B
-      when(io.out.ready === 0.B){
-        io.out.bits   := buffer
-        io.out.valid  := 1.B
-      }.otherwise{
-        state := State.passthrough
-      }
-
-    }
-  }
-
-}
 
 // TODO: handle mispredict
 // TODO: handle kills/reverts/clears

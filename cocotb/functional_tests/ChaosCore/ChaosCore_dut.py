@@ -27,10 +27,27 @@ class ChaosCore_dut:
         self.dut.reset.value = 0
 
 
+    def set_dram_ready(self, ready):
+        getattr(self.dut ,f"io_backend_DRAM_request_ready").value = ready
+        getattr(self.dut ,f"io_frontend_DRAM_request_ready").value = ready
+
+    #def set_cache_ready(self, ready):
+        #getattr(self.dut ,f"io_cache_data_ready").value = ready
+
+
     def write_dram_resp(self, data=0, valid = 0):
         self.dut.io_frontend_DRAM_resp_valid.value = valid
         self.dut.io_frontend_DRAM_resp_bits_data.value = data
         #input          io_DRAM_request_ready,
+
+    def read_frontend_output(self):
+        outputs = {}
+        outputs["resp_ready"]           = int(self.dut.io_frontend_DRAM_resp_ready.value)
+        outputs["request_valid"]        = int(self.dut.io_frontend_DRAM_request_valid.value)
+        outputs["request_addr"]         = int(self.dut.io_frontend_DRAM_request_bits_addr.value)
+        outputs["request_wr_en"]        = int(self.dut.io_frontend_DRAM_request_bits_wr_en.value)
+
+        return outputs
 
     async def update(self):
         # await cycle
@@ -49,4 +66,7 @@ class ChaosCore_dut:
             self.write_dram_resp(data, 1)
 
         await ReadOnly()
+
+        self.DRAM_request       =   self.read_frontend_output()["request_valid"]
+        self.DRAM_request_addr  =   self.read_frontend_output()["request_addr"]
 

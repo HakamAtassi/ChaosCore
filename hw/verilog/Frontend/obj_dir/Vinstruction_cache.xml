@@ -1,0 +1,1193 @@
+<?xml version="1.0" ?>
+<!-- DESCRIPTION: Verilator output: XML representation of netlist -->
+<verilator_xml>
+  <files>
+    <file id="c" filename="/usr/local/share/verilator/include/verilated_std.sv" language="1800-2023"/>
+    <file id="a" filename="&lt;built-in&gt;" language="1800-2023"/>
+    <file id="b" filename="&lt;command-line&gt;" language="1800-2023"/>
+    <file id="d" filename="instruction_cache.v" language="1800-2023"/>
+  </files>
+  <module_files>
+    <file id="d" filename="instruction_cache.v" language="1800-2023"/>
+  </module_files>
+  <cells>
+    <cell loc="d,126,8,126,25" name="instruction_cache" submodname="instruction_cache" hier="instruction_cache">
+      <cell loc="d,266,20,266,30" name="LRU_memory" submodname="SDPReadWriteSmem" hier="instruction_cache.LRU_memory">
+        <cell loc="d,51,12,51,19" name="mem_ext" submodname="mem_64x2" hier="instruction_cache.LRU_memory.mem_ext"/>
+      </cell>
+      <cell loc="d,276,24,276,37" name="data_memory_0" submodname="icache_ReadWriteSmem" hier="instruction_cache.data_memory_0">
+        <cell loc="d,102,14,102,21" name="mem_ext" submodname="mem_64x278" hier="instruction_cache.data_memory_0.mem_ext"/>
+      </cell>
+      <cell loc="d,286,24,286,37" name="data_memory_1" submodname="icache_ReadWriteSmem" hier="instruction_cache.data_memory_1">
+        <cell loc="d,102,14,102,21" name="mem_ext" submodname="mem_64x278" hier="instruction_cache.data_memory_1.mem_ext"/>
+      </cell>
+      <cell loc="d,296,25,296,34" name="validator" submodname="instruction_validator" hier="instruction_cache.validator"/>
+    </cell>
+  </cells>
+  <netlist>
+    <module loc="d,126,8,126,25" name="instruction_cache" origName="instruction_cache" topModule="1">
+      <var loc="d,127,18,127,23" name="clock" dtype_id="1" dir="input" pinIndex="1" vartype="logic" origName="clock"/>
+      <var loc="d,128,18,128,23" name="reset" dtype_id="1" dir="input" pinIndex="2" vartype="logic" origName="reset"/>
+      <var loc="d,129,18,129,35" name="io_cpu_addr_ready" dtype_id="1" dir="output" pinIndex="3" vartype="logic" origName="io_cpu_addr_ready"/>
+      <var loc="d,130,18,130,35" name="io_cpu_addr_valid" dtype_id="1" dir="input" pinIndex="4" vartype="logic" origName="io_cpu_addr_valid"/>
+      <var loc="d,131,18,131,34" name="io_cpu_addr_bits" dtype_id="2" dir="input" pinIndex="5" vartype="logic" origName="io_cpu_addr_bits"/>
+      <var loc="d,132,18,132,25" name="io_kill" dtype_id="1" dir="input" pinIndex="6" vartype="logic" origName="io_kill"/>
+      <var loc="d,133,18,133,36" name="io_DRAM_resp_ready" dtype_id="1" dir="output" pinIndex="7" vartype="logic" origName="io_DRAM_resp_ready"/>
+      <var loc="d,134,18,134,36" name="io_DRAM_resp_valid" dtype_id="1" dir="input" pinIndex="8" vartype="logic" origName="io_DRAM_resp_valid"/>
+      <var loc="d,135,18,135,40" name="io_DRAM_resp_bits_data" dtype_id="3" dir="input" pinIndex="9" vartype="logic" origName="io_DRAM_resp_bits_data"/>
+      <var loc="d,136,18,136,37" name="io_cache_data_ready" dtype_id="1" dir="input" pinIndex="10" vartype="logic" origName="io_cache_data_ready"/>
+      <var loc="d,137,18,137,37" name="io_cache_data_valid" dtype_id="1" dir="output" pinIndex="11" vartype="logic" origName="io_cache_data_valid"/>
+      <var loc="d,138,18,138,45" name="io_cache_data_bits_fetch_PC" dtype_id="2" dir="output" pinIndex="12" vartype="logic" origName="io_cache_data_bits_fetch_PC">
+        <const loc="d,303,40,303,45" name="32&apos;h0" dtype_id="2"/>
+      </var>
+      <var loc="d,139,18,139,49" name="io_cache_data_bits_valid_bits_0" dtype_id="1" dir="output" pinIndex="13" vartype="logic" origName="io_cache_data_bits_valid_bits_0"/>
+      <var loc="d,140,18,140,49" name="io_cache_data_bits_valid_bits_1" dtype_id="1" dir="output" pinIndex="14" vartype="logic" origName="io_cache_data_bits_valid_bits_1"/>
+      <var loc="d,141,18,141,49" name="io_cache_data_bits_valid_bits_2" dtype_id="1" dir="output" pinIndex="15" vartype="logic" origName="io_cache_data_bits_valid_bits_2"/>
+      <var loc="d,142,18,142,49" name="io_cache_data_bits_valid_bits_3" dtype_id="1" dir="output" pinIndex="16" vartype="logic" origName="io_cache_data_bits_valid_bits_3"/>
+      <var loc="d,143,18,143,63" name="io_cache_data_bits_instructions_0_instruction" dtype_id="2" dir="output" pinIndex="17" vartype="logic" origName="io_cache_data_bits_instructions_0_instruction"/>
+      <var loc="d,144,18,144,64" name="io_cache_data_bits_instructions_0_packet_index" dtype_id="4" dir="output" pinIndex="18" vartype="logic" origName="io_cache_data_bits_instructions_0_packet_index">
+        <const loc="d,309,59,309,63" name="4&apos;h0" dtype_id="4"/>
+      </var>
+      <var loc="d,145,18,145,61" name="io_cache_data_bits_instructions_0_ROB_index" dtype_id="5" dir="output" pinIndex="19" vartype="logic" origName="io_cache_data_bits_instructions_0_ROB_index">
+        <const loc="d,310,56,310,60" name="6&apos;h0" dtype_id="5"/>
+      </var>
+      <var loc="d,146,18,146,63" name="io_cache_data_bits_instructions_1_instruction" dtype_id="2" dir="output" pinIndex="20" vartype="logic" origName="io_cache_data_bits_instructions_1_instruction"/>
+      <var loc="d,147,18,147,64" name="io_cache_data_bits_instructions_1_packet_index" dtype_id="4" dir="output" pinIndex="21" vartype="logic" origName="io_cache_data_bits_instructions_1_packet_index">
+        <const loc="d,312,59,312,63" name="4&apos;h0" dtype_id="4"/>
+      </var>
+      <var loc="d,148,18,148,61" name="io_cache_data_bits_instructions_1_ROB_index" dtype_id="5" dir="output" pinIndex="22" vartype="logic" origName="io_cache_data_bits_instructions_1_ROB_index">
+        <const loc="d,313,56,313,60" name="6&apos;h0" dtype_id="5"/>
+      </var>
+      <var loc="d,149,18,149,63" name="io_cache_data_bits_instructions_2_instruction" dtype_id="2" dir="output" pinIndex="23" vartype="logic" origName="io_cache_data_bits_instructions_2_instruction"/>
+      <var loc="d,150,18,150,64" name="io_cache_data_bits_instructions_2_packet_index" dtype_id="4" dir="output" pinIndex="24" vartype="logic" origName="io_cache_data_bits_instructions_2_packet_index">
+        <const loc="d,315,59,315,63" name="4&apos;h0" dtype_id="4"/>
+      </var>
+      <var loc="d,151,18,151,61" name="io_cache_data_bits_instructions_2_ROB_index" dtype_id="5" dir="output" pinIndex="25" vartype="logic" origName="io_cache_data_bits_instructions_2_ROB_index">
+        <const loc="d,316,56,316,60" name="6&apos;h0" dtype_id="5"/>
+      </var>
+      <var loc="d,152,18,152,63" name="io_cache_data_bits_instructions_3_instruction" dtype_id="2" dir="output" pinIndex="26" vartype="logic" origName="io_cache_data_bits_instructions_3_instruction"/>
+      <var loc="d,153,18,153,64" name="io_cache_data_bits_instructions_3_packet_index" dtype_id="4" dir="output" pinIndex="27" vartype="logic" origName="io_cache_data_bits_instructions_3_packet_index">
+        <const loc="d,318,59,318,63" name="4&apos;h0" dtype_id="4"/>
+      </var>
+      <var loc="d,154,18,154,61" name="io_cache_data_bits_instructions_3_ROB_index" dtype_id="5" dir="output" pinIndex="28" vartype="logic" origName="io_cache_data_bits_instructions_3_ROB_index">
+        <const loc="d,319,56,319,60" name="6&apos;h0" dtype_id="5"/>
+      </var>
+      <var loc="d,155,18,155,39" name="io_DRAM_request_ready" dtype_id="1" dir="input" pinIndex="29" vartype="logic" origName="io_DRAM_request_ready"/>
+      <var loc="d,156,18,156,39" name="io_DRAM_request_valid" dtype_id="1" dir="output" pinIndex="30" vartype="logic" origName="io_DRAM_request_valid"/>
+      <var loc="d,157,18,157,43" name="io_DRAM_request_bits_addr" dtype_id="2" dir="output" pinIndex="31" vartype="logic" origName="io_DRAM_request_bits_addr"/>
+      <var loc="d,158,18,158,46" name="io_DRAM_request_bits_wr_data" dtype_id="2" dir="output" pinIndex="32" vartype="logic" origName="io_DRAM_request_bits_wr_data">
+        <const loc="d,322,41,322,46" name="32&apos;h0" dtype_id="2"/>
+      </var>
+      <var loc="d,159,18,159,44" name="io_DRAM_request_bits_wr_en" dtype_id="1" dir="output" pinIndex="33" vartype="logic" origName="io_DRAM_request_bits_wr_en">
+        <const loc="d,323,39,323,43" name="1&apos;h0" dtype_id="1"/>
+      </var>
+      <var loc="d,162,16,162,20" name="miss" dtype_id="1" vartype="logic" origName="miss"/>
+      <var loc="d,163,16,163,22" name="hit_oh" dtype_id="6" vartype="logic" origName="hit_oh"/>
+      <var loc="d,164,16,164,48" name="_validator_io_instruction_output" dtype_id="4" vartype="logic" origName="_validator_io_instruction_output"/>
+      <var loc="d,165,16,165,48" name="_data_memory_1_io_data_out_valid" dtype_id="1" vartype="logic" origName="_data_memory_1_io_data_out_valid"/>
+      <var loc="d,166,16,166,46" name="_data_memory_1_io_data_out_tag" dtype_id="7" vartype="logic" origName="_data_memory_1_io_data_out_tag"/>
+      <var loc="d,167,16,167,47" name="_data_memory_1_io_data_out_data" dtype_id="3" vartype="logic" origName="_data_memory_1_io_data_out_data"/>
+      <var loc="d,168,16,168,48" name="_data_memory_0_io_data_out_valid" dtype_id="1" vartype="logic" origName="_data_memory_0_io_data_out_valid"/>
+      <var loc="d,169,16,169,46" name="_data_memory_0_io_data_out_tag" dtype_id="7" vartype="logic" origName="_data_memory_0_io_data_out_tag"/>
+      <var loc="d,170,16,170,47" name="_data_memory_0_io_data_out_data" dtype_id="3" vartype="logic" origName="_data_memory_0_io_data_out_data"/>
+      <var loc="d,171,16,171,39" name="_LRU_memory_io_data_out" dtype_id="6" vartype="logic" origName="_LRU_memory_io_data_out"/>
+      <var loc="d,172,16,172,27" name="cache_state" dtype_id="6" vartype="logic" origName="cache_state"/>
+      <var loc="d,173,16,173,30" name="replay_address" dtype_id="2" vartype="logic" origName="replay_address"/>
+      <var loc="d,174,16,174,29" name="request_valid" dtype_id="1" vartype="logic" origName="request_valid"/>
+      <var loc="d,175,16,175,28" name="request_addr" dtype_id="2" vartype="logic" origName="request_addr"/>
+      <var loc="d,176,16,176,26" name="resp_ready" dtype_id="1" vartype="logic" origName="resp_ready"/>
+      <var loc="d,177,16,177,32" name="request_addr_REG" dtype_id="2" vartype="logic" origName="request_addr_REG"/>
+      <var loc="d,178,16,178,31" name="current_address" dtype_id="8" vartype="logic" origName="current_address"/>
+      <var loc="d,180,16,180,41" name="LRU_memory_io_wr_addr_REG" dtype_id="5" vartype="logic" origName="LRU_memory_io_wr_addr_REG"/>
+      <var loc="d,181,16,181,28" name="allocate_way" dtype_id="6" vartype="logic" origName="allocate_way"/>
+      <var loc="d,183,16,183,32" name="hit_oh_vec_0_REG" dtype_id="7" vartype="logic" origName="hit_oh_vec_0_REG"/>
+      <var loc="d,184,16,184,28" name="hit_oh_vec_0" dtype_id="1" vartype="logic" origName="hit_oh_vec_0"/>
+      <var loc="d,186,16,186,32" name="hit_oh_vec_1_REG" dtype_id="7" vartype="logic" origName="hit_oh_vec_1_REG"/>
+      <var loc="d,187,16,187,28" name="hit_oh_vec_1" dtype_id="1" vartype="logic" origName="hit_oh_vec_1"/>
+      <var loc="d,190,16,190,28" name="replay_valid" dtype_id="1" vartype="logic" origName="replay_valid"/>
+      <var loc="d,191,16,191,23" name="hit_REG" dtype_id="1" vartype="logic" origName="hit_REG"/>
+      <var loc="d,192,16,192,25" name="hit_REG_1" dtype_id="1" vartype="logic" origName="hit_REG_1"/>
+      <var loc="d,193,16,193,25" name="hit_REG_2" dtype_id="1" vartype="logic" origName="hit_REG_2"/>
+      <var loc="d,195,16,195,24" name="miss_REG" dtype_id="1" vartype="logic" origName="miss_REG"/>
+      <var loc="d,196,16,196,26" name="miss_REG_1" dtype_id="1" vartype="logic" origName="miss_REG_1"/>
+      <var loc="d,197,16,197,26" name="miss_REG_2" dtype_id="1" vartype="logic" origName="miss_REG_2"/>
+      <var loc="d,199,16,199,36" name="hit_instruction_data" dtype_id="9" vartype="logic" origName="hit_instruction_data"/>
+      <always loc="d,203,3,203,9">
+        <sentree loc="d,203,10,203,11">
+          <senitem loc="d,203,12,203,19" edgeType="POS">
+            <varref loc="d,203,20,203,25" name="clock" dtype_id="1"/>
+          </senitem>
+        </sentree>
+        <begin loc="d,203,27,203,32">
+          <if loc="d,204,5,204,7">
+            <varref loc="d,204,9,204,14" name="reset" dtype_id="1"/>
+            <begin>
+              <begin loc="d,204,16,204,21">
+                <assigndly loc="d,205,19,205,21" dtype_id="6">
+                  <const loc="d,205,22,205,26" name="2&apos;h0" dtype_id="6"/>
+                  <varref loc="d,205,7,205,18" name="cache_state" dtype_id="6"/>
+                </assigndly>
+                <assigndly loc="d,206,22,206,24" dtype_id="2">
+                  <const loc="d,206,25,206,30" name="32&apos;h0" dtype_id="2"/>
+                  <varref loc="d,206,7,206,21" name="replay_address" dtype_id="2"/>
+                </assigndly>
+                <assigndly loc="d,207,21,207,23" dtype_id="1">
+                  <const loc="d,207,24,207,28" name="1&apos;h0" dtype_id="1"/>
+                  <varref loc="d,207,7,207,20" name="request_valid" dtype_id="1"/>
+                </assigndly>
+                <assigndly loc="d,208,20,208,22" dtype_id="2">
+                  <const loc="d,208,23,208,28" name="32&apos;h0" dtype_id="2"/>
+                  <varref loc="d,208,7,208,19" name="request_addr" dtype_id="2"/>
+                </assigndly>
+                <assigndly loc="d,209,18,209,20" dtype_id="1">
+                  <const loc="d,209,21,209,25" name="1&apos;h0" dtype_id="1"/>
+                  <varref loc="d,209,7,209,17" name="resp_ready" dtype_id="1"/>
+                </assigndly>
+              </begin>
+            </begin>
+            <begin>
+              <begin loc="d,211,10,211,15" name="unnamedblk1">
+                <var loc="d,212,23,212,27" name="_GEN" dtype_id="1" vartype="logic" origName="_GEN"/>
+                <assign loc="d,213,12,213,13" dtype_id="1">
+                  <and loc="d,213,19,213,20" dtype_id="1">
+                    <varref loc="d,213,14,213,18" name="miss" dtype_id="1"/>
+                    <not loc="d,213,21,213,22" dtype_id="1">
+                      <varref loc="d,213,22,213,29" name="io_kill" dtype_id="1"/>
+                    </not>
+                  </and>
+                  <varref loc="d,213,7,213,11" name="_GEN" dtype_id="1"/>
+                </assign>
+                <if loc="d,214,7,214,9">
+                  <redor loc="d,214,11,214,12" dtype_id="1">
+                    <varref loc="d,214,12,214,23" name="cache_state" dtype_id="6"/>
+                  </redor>
+                  <begin>
+                    <begin loc="d,214,25,214,30" name="unnamedblk2">
+                      <var loc="d,215,25,215,31" name="_GEN_0" dtype_id="1" vartype="logic" origName="_GEN_0"/>
+                      <assign loc="d,215,46,215,48" dtype_id="1">
+                        <eq loc="d,215,46,215,48" dtype_id="1">
+                          <const loc="d,215,49,215,53" name="2&apos;h1" dtype_id="6"/>
+                          <varref loc="d,215,34,215,45" name="cache_state" dtype_id="6"/>
+                        </eq>
+                        <varref loc="d,215,46,215,48" name="_GEN_0" dtype_id="1"/>
+                      </assign>
+                      <var loc="d,216,25,216,31" name="_GEN_1" dtype_id="1" vartype="logic" origName="_GEN_1"/>
+                      <assign loc="d,216,65,216,66" dtype_id="1">
+                        <and loc="d,216,65,216,66" dtype_id="1">
+                          <and loc="d,216,41,216,42" dtype_id="1">
+                            <varref loc="d,216,34,216,40" name="_GEN_0" dtype_id="1"/>
+                            <varref loc="d,216,43,216,64" name="io_DRAM_request_ready" dtype_id="1"/>
+                          </and>
+                          <varref loc="d,216,67,216,80" name="request_valid" dtype_id="1"/>
+                        </and>
+                        <varref loc="d,216,65,216,66" name="_GEN_1" dtype_id="1"/>
+                      </assign>
+                      <var loc="d,217,25,217,31" name="_GEN_2" dtype_id="1" vartype="logic" origName="_GEN_2"/>
+                      <assign loc="d,218,16,218,17" dtype_id="1">
+                        <and loc="d,218,37,218,38" dtype_id="1">
+                          <varref loc="d,218,18,218,36" name="io_DRAM_resp_valid" dtype_id="1"/>
+                          <varref loc="d,218,39,218,49" name="resp_ready" dtype_id="1"/>
+                        </and>
+                        <varref loc="d,218,9,218,15" name="_GEN_2" dtype_id="1"/>
+                      </assign>
+                      <if loc="d,219,9,219,11">
+                        <varref loc="d,219,13,219,19" name="_GEN_0" dtype_id="1"/>
+                        <begin>
+                          <begin loc="d,219,21,219,26">
+                            <if loc="d,220,11,220,13">
+                              <varref loc="d,220,15,220,22" name="io_kill" dtype_id="1"/>
+                              <begin>
+                                <assigndly loc="d,221,25,221,27" dtype_id="6">
+                                  <const loc="d,221,28,221,32" name="2&apos;h0" dtype_id="6"/>
+                                  <varref loc="d,221,13,221,24" name="cache_state" dtype_id="6"/>
+                                </assigndly>
+                              </begin>
+                              <begin>
+                                <if loc="d,222,16,222,18">
+                                  <varref loc="d,222,20,222,26" name="_GEN_2" dtype_id="1"/>
+                                  <begin>
+                                    <assigndly loc="d,223,25,223,27" dtype_id="6">
+                                      <const loc="d,223,28,223,32" name="2&apos;h2" dtype_id="6"/>
+                                      <varref loc="d,223,13,223,24" name="cache_state" dtype_id="6"/>
+                                    </assigndly>
+                                  </begin>
+                                </if>
+                              </begin>
+                            </if>
+                          </begin>
+                        </begin>
+                        <begin>
+                          <begin loc="d,225,14,225,19" name="unnamedblk3">
+                            <var loc="d,226,27,226,33" name="_GEN_3" dtype_id="1" vartype="logic" origName="_GEN_3"/>
+                            <assign loc="d,227,18,227,19" dtype_id="1">
+                              <and loc="d,227,24,227,25" dtype_id="1">
+                                <varref loc="d,227,20,227,23" name="io_cache_data_valid" dtype_id="1"/>
+                                <varref loc="d,227,26,227,45" name="io_cache_data_ready" dtype_id="1"/>
+                              </and>
+                              <varref loc="d,227,11,227,17" name="_GEN_3" dtype_id="1"/>
+                            </assign>
+                            <if loc="d,228,11,228,13">
+                              <eq loc="d,228,27,228,29" dtype_id="1">
+                                <const loc="d,228,30,228,34" name="2&apos;h2" dtype_id="6"/>
+                                <varref loc="d,228,15,228,26" name="cache_state" dtype_id="6"/>
+                              </eq>
+                              <begin>
+                                <begin loc="d,228,36,228,41">
+                                  <assigndly loc="d,230,27,230,29" dtype_id="6">
+                                    <cond loc="d,230,30,230,34" dtype_id="6">
+                                      <varref loc="d,229,17,229,23" name="_GEN_3" dtype_id="1"/>
+                                      <const loc="d,230,30,230,34" name="2&apos;h0" dtype_id="6"/>
+                                      <const loc="d,232,30,232,34" name="2&apos;h3" dtype_id="6"/>
+                                    </cond>
+                                    <varref loc="d,230,15,230,26" name="cache_state" dtype_id="6"/>
+                                  </assigndly>
+                                </begin>
+                              </begin>
+                              <begin>
+                                <if loc="d,234,16,234,18">
+                                  <and loc="d,234,35,234,36" dtype_id="1">
+                                    <redand loc="d,234,21,234,22" dtype_id="1">
+                                      <varref loc="d,234,22,234,33" name="cache_state" dtype_id="6"/>
+                                    </redand>
+                                    <varref loc="d,234,37,234,43" name="_GEN_3" dtype_id="1"/>
+                                  </and>
+                                  <begin>
+                                    <assigndly loc="d,235,25,235,27" dtype_id="6">
+                                      <const loc="d,235,28,235,32" name="2&apos;h0" dtype_id="6"/>
+                                      <varref loc="d,235,13,235,24" name="cache_state" dtype_id="6"/>
+                                    </assigndly>
+                                  </begin>
+                                </if>
+                              </begin>
+                            </if>
+                          </begin>
+                        </begin>
+                      </if>
+                      <assigndly loc="d,237,23,237,25" dtype_id="1">
+                        <and loc="d,237,34,237,35" dtype_id="1">
+                          <not loc="d,237,26,237,27" dtype_id="1">
+                            <varref loc="d,237,27,237,33" name="_GEN_1" dtype_id="1"/>
+                          </not>
+                          <varref loc="d,237,36,237,49" name="request_valid" dtype_id="1"/>
+                        </and>
+                        <varref loc="d,237,9,237,22" name="request_valid" dtype_id="1"/>
+                      </assigndly>
+                      <if loc="d,238,9,238,11">
+                        <varref loc="d,238,13,238,19" name="_GEN_1" dtype_id="1"/>
+                        <begin>
+                          <assigndly loc="d,239,24,239,26" dtype_id="2">
+                            <const loc="d,239,27,239,32" name="32&apos;h0" dtype_id="2"/>
+                            <varref loc="d,239,11,239,23" name="request_addr" dtype_id="2"/>
+                          </assigndly>
+                        </begin>
+                      </if>
+                      <assigndly loc="d,240,20,240,22" dtype_id="1">
+                        <and loc="d,240,42,240,43" dtype_id="1">
+                          <not loc="d,240,23,240,24" dtype_id="1">
+                            <and loc="d,240,32,240,33" dtype_id="1">
+                              <varref loc="d,240,25,240,31" name="_GEN_0" dtype_id="1"/>
+                              <varref loc="d,240,34,240,40" name="_GEN_2" dtype_id="1"/>
+                            </and>
+                          </not>
+                          <varref loc="d,240,44,240,54" name="resp_ready" dtype_id="1"/>
+                        </and>
+                        <varref loc="d,240,9,240,19" name="resp_ready" dtype_id="1"/>
+                      </assigndly>
+                    </begin>
+                  </begin>
+                  <begin>
+                    <begin loc="d,242,12,242,17">
+                      <if loc="d,243,9,243,11">
+                        <varref loc="d,243,13,243,17" name="_GEN" dtype_id="1"/>
+                        <begin>
+                          <begin loc="d,243,19,243,24">
+                            <assigndly loc="d,244,23,244,25" dtype_id="6">
+                              <const loc="d,244,26,244,30" name="2&apos;h1" dtype_id="6"/>
+                              <varref loc="d,244,11,244,22" name="cache_state" dtype_id="6"/>
+                            </assigndly>
+                            <assigndly loc="d,245,24,245,26" dtype_id="2">
+                              <and loc="d,245,44,245,45" dtype_id="2">
+                                <const loc="d,245,46,245,58" name="32&apos;hffffffe0" dtype_id="2"/>
+                                <varref loc="d,245,27,245,43" name="request_addr_REG" dtype_id="2"/>
+                              </and>
+                              <varref loc="d,245,11,245,23" name="request_addr" dtype_id="2"/>
+                            </assigndly>
+                          </begin>
+                        </begin>
+                      </if>
+                      <assigndly loc="d,247,23,247,25" dtype_id="1">
+                        <or loc="d,247,31,247,32" dtype_id="1">
+                          <varref loc="d,247,26,247,30" name="_GEN" dtype_id="1"/>
+                          <varref loc="d,247,33,247,46" name="request_valid" dtype_id="1"/>
+                        </or>
+                        <varref loc="d,247,9,247,22" name="request_valid" dtype_id="1"/>
+                      </assigndly>
+                      <assigndly loc="d,248,20,248,22" dtype_id="1">
+                        <or loc="d,248,28,248,29" dtype_id="1">
+                          <varref loc="d,248,23,248,27" name="_GEN" dtype_id="1"/>
+                          <varref loc="d,248,30,248,40" name="resp_ready" dtype_id="1"/>
+                        </or>
+                        <varref loc="d,248,9,248,19" name="resp_ready" dtype_id="1"/>
+                      </assigndly>
+                    </begin>
+                  </begin>
+                </if>
+                <if loc="d,250,7,250,9">
+                  <or loc="d,250,26,250,27" dtype_id="1">
+                    <redor loc="d,250,12,250,13" dtype_id="1">
+                      <varref loc="d,250,13,250,24" name="cache_state" dtype_id="6"/>
+                    </redor>
+                    <varref loc="d,250,28,250,32" name="_GEN" dtype_id="1"/>
+                  </or>
+                  <begin>
+                    <begin loc="d,250,34,250,39"/>
+                  </begin>
+                  <begin>
+                    <assigndly loc="d,253,24,253,26" dtype_id="2">
+                      <varref loc="d,253,27,253,43" name="io_cpu_addr_bits" dtype_id="2"/>
+                      <varref loc="d,253,9,253,23" name="replay_address" dtype_id="2"/>
+                    </assigndly>
+                  </begin>
+                </if>
+              </begin>
+            </begin>
+          </if>
+          <assigndly loc="d,255,22,255,24" dtype_id="2">
+            <varref loc="d,255,25,255,41" name="io_cpu_addr_bits" dtype_id="2"/>
+            <varref loc="d,255,5,255,21" name="request_addr_REG" dtype_id="2"/>
+          </assigndly>
+          <assigndly loc="d,256,31,256,33" dtype_id="5">
+            <sel loc="d,256,49,256,50" dtype_id="5">
+              <varref loc="d,256,34,256,49" name="current_address" dtype_id="8"/>
+              <const loc="d,256,52,256,53" name="5&apos;h3" dtype_id="10"/>
+              <const loc="d,256,50,256,51" name="32&apos;h6" dtype_id="2"/>
+            </sel>
+            <varref loc="d,256,5,256,30" name="LRU_memory_io_wr_addr_REG" dtype_id="5"/>
+          </assigndly>
+          <assigndly loc="d,257,22,257,24" dtype_id="7">
+            <sel loc="d,257,40,257,41" dtype_id="7">
+              <varref loc="d,257,25,257,40" name="current_address" dtype_id="8"/>
+              <const loc="d,257,44,257,45" name="5&apos;h9" dtype_id="10"/>
+              <const loc="d,257,41,257,43" name="32&apos;h15" dtype_id="2"/>
+            </sel>
+            <varref loc="d,257,5,257,21" name="hit_oh_vec_0_REG" dtype_id="7"/>
+          </assigndly>
+          <assigndly loc="d,258,22,258,24" dtype_id="7">
+            <sel loc="d,258,40,258,41" dtype_id="7">
+              <varref loc="d,258,25,258,40" name="current_address" dtype_id="8"/>
+              <const loc="d,258,44,258,45" name="5&apos;h9" dtype_id="10"/>
+              <const loc="d,258,41,258,43" name="32&apos;h15" dtype_id="2"/>
+            </sel>
+            <varref loc="d,258,5,258,21" name="hit_oh_vec_1_REG" dtype_id="7"/>
+          </assigndly>
+          <assigndly loc="d,259,13,259,15" dtype_id="1">
+            <varref loc="d,259,16,259,33" name="io_cpu_addr_valid" dtype_id="1"/>
+            <varref loc="d,259,5,259,12" name="hit_REG" dtype_id="1"/>
+          </assigndly>
+          <assigndly loc="d,260,15,260,17" dtype_id="1">
+            <varref loc="d,260,18,260,25" name="io_kill" dtype_id="1"/>
+            <varref loc="d,260,5,260,14" name="hit_REG_1" dtype_id="1"/>
+          </assigndly>
+          <assigndly loc="d,261,15,261,17" dtype_id="1">
+            <varref loc="d,261,18,261,23" name="reset" dtype_id="1"/>
+            <varref loc="d,261,5,261,14" name="hit_REG_2" dtype_id="1"/>
+          </assigndly>
+          <assigndly loc="d,262,14,262,16" dtype_id="1">
+            <varref loc="d,262,17,262,34" name="io_cpu_addr_valid" dtype_id="1"/>
+            <varref loc="d,262,5,262,13" name="miss_REG" dtype_id="1"/>
+          </assigndly>
+          <assigndly loc="d,263,16,263,18" dtype_id="1">
+            <varref loc="d,263,19,263,26" name="io_kill" dtype_id="1"/>
+            <varref loc="d,263,5,263,15" name="miss_REG_1" dtype_id="1"/>
+          </assigndly>
+          <assigndly loc="d,264,16,264,18" dtype_id="1">
+            <varref loc="d,264,19,264,24" name="reset" dtype_id="1"/>
+            <varref loc="d,264,5,264,15" name="miss_REG_2" dtype_id="1"/>
+          </assigndly>
+        </begin>
+      </always>
+      <instance loc="d,266,20,266,30" name="LRU_memory" defName="SDPReadWriteSmem" origName="LRU_memory">
+        <port loc="d,267,6,267,11" name="clock" direction="in" portIndex="1">
+          <varref loc="d,267,19,267,24" name="clock" dtype_id="1"/>
+        </port>
+        <port loc="d,268,6,268,11" name="reset" direction="in" portIndex="2">
+          <varref loc="d,268,19,268,24" name="reset" dtype_id="1"/>
+        </port>
+        <port loc="d,269,6,269,16" name="io_rd_addr" direction="in" portIndex="3">
+          <sel loc="d,269,34,269,35" dtype_id="5">
+            <varref loc="d,269,19,269,34" name="current_address" dtype_id="8"/>
+            <const loc="d,269,37,269,38" name="5&apos;h3" dtype_id="10"/>
+            <const loc="d,269,35,269,36" name="32&apos;h6" dtype_id="2"/>
+          </sel>
+        </port>
+        <port loc="d,270,6,270,17" name="io_data_out" direction="out" portIndex="4">
+          <varref loc="d,270,19,270,42" name="_LRU_memory_io_data_out" dtype_id="6"/>
+        </port>
+        <port loc="d,271,6,271,16" name="io_wr_addr" direction="in" portIndex="5">
+          <varref loc="d,271,19,271,44" name="LRU_memory_io_wr_addr_REG" dtype_id="5"/>
+        </port>
+        <port loc="d,272,6,272,14" name="io_wr_en" direction="in" portIndex="6">
+          <varref loc="d,272,19,272,22" name="io_cache_data_valid" dtype_id="1"/>
+        </port>
+        <port loc="d,273,6,273,16" name="io_data_in" direction="in" portIndex="7">
+          <or loc="d,274,82,274,83" dtype_id="6">
+            <and loc="d,274,56,274,57" dtype_id="6">
+              <replicate loc="d,274,10,274,11" dtype_id="6">
+                <neq loc="d,274,46,274,48" dtype_id="1">
+                  <const loc="d,274,49,274,53" name="2&apos;h3" dtype_id="6"/>
+                  <or loc="d,274,36,274,37" dtype_id="6">
+                    <varref loc="d,274,12,274,35" name="_LRU_memory_io_data_out" dtype_id="6"/>
+                    <varref loc="d,274,38,274,44" name="hit_oh" dtype_id="6"/>
+                  </or>
+                </neq>
+                <const loc="d,274,9,274,10" name="32&apos;sh2" dtype_id="11"/>
+              </replicate>
+              <varref loc="d,274,58,274,81" name="_LRU_memory_io_data_out" dtype_id="6"/>
+            </and>
+            <varref loc="d,274,84,274,90" name="hit_oh" dtype_id="6"/>
+          </or>
+        </port>
+      </instance>
+      <instance loc="d,276,24,276,37" name="data_memory_0" defName="icache_ReadWriteSmem" origName="data_memory_0">
+        <port loc="d,277,6,277,11" name="clock" direction="in" portIndex="1">
+          <varref loc="d,277,25,277,30" name="clock" dtype_id="1"/>
+        </port>
+        <port loc="d,278,6,278,14" name="io_wr_en" direction="in" portIndex="2">
+          <and loc="d,278,44,278,45" dtype_id="1">
+            <varref loc="d,278,25,278,43" name="io_DRAM_resp_valid" dtype_id="1"/>
+            <sel loc="d,278,58,278,59" dtype_id="1">
+              <varref loc="d,278,46,278,58" name="allocate_way" dtype_id="6"/>
+              <const loc="d,278,59,278,60" name="1&apos;h0" dtype_id="12"/>
+              <const loc="d,278,58,278,59" name="32&apos;h1" dtype_id="2"/>
+            </sel>
+          </and>
+        </port>
+        <port loc="d,279,6,279,13" name="io_addr" direction="in" portIndex="3">
+          <sel loc="d,279,40,279,41" dtype_id="5">
+            <varref loc="d,279,25,279,40" name="current_address" dtype_id="8"/>
+            <const loc="d,279,43,279,44" name="5&apos;h3" dtype_id="10"/>
+            <const loc="d,279,41,279,42" name="32&apos;h6" dtype_id="2"/>
+          </sel>
+        </port>
+        <port loc="d,280,6,280,20" name="io_data_in_tag" direction="in" portIndex="4">
+          <sel loc="d,280,39,280,40" dtype_id="7">
+            <varref loc="d,280,25,280,39" name="replay_address" dtype_id="2"/>
+            <const loc="d,280,43,280,45" name="5&apos;hb" dtype_id="10"/>
+            <const loc="d,280,40,280,42" name="32&apos;h15" dtype_id="2"/>
+          </sel>
+        </port>
+        <port loc="d,281,6,281,21" name="io_data_in_data" direction="in" portIndex="5">
+          <varref loc="d,281,25,281,47" name="io_DRAM_resp_bits_data" dtype_id="3"/>
+        </port>
+        <port loc="d,282,6,282,23" name="io_data_out_valid" direction="out" portIndex="6">
+          <varref loc="d,282,25,282,57" name="_data_memory_0_io_data_out_valid" dtype_id="1"/>
+        </port>
+        <port loc="d,283,6,283,21" name="io_data_out_tag" direction="out" portIndex="7">
+          <varref loc="d,283,25,283,55" name="_data_memory_0_io_data_out_tag" dtype_id="7"/>
+        </port>
+        <port loc="d,284,6,284,22" name="io_data_out_data" direction="out" portIndex="8">
+          <varref loc="d,284,25,284,56" name="_data_memory_0_io_data_out_data" dtype_id="3"/>
+        </port>
+      </instance>
+      <instance loc="d,286,24,286,37" name="data_memory_1" defName="icache_ReadWriteSmem" origName="data_memory_1">
+        <port loc="d,287,6,287,11" name="clock" direction="in" portIndex="1">
+          <varref loc="d,287,25,287,30" name="clock" dtype_id="1"/>
+        </port>
+        <port loc="d,288,6,288,14" name="io_wr_en" direction="in" portIndex="2">
+          <and loc="d,288,44,288,45" dtype_id="1">
+            <varref loc="d,288,25,288,43" name="io_DRAM_resp_valid" dtype_id="1"/>
+            <sel loc="d,288,58,288,59" dtype_id="1">
+              <varref loc="d,288,46,288,58" name="allocate_way" dtype_id="6"/>
+              <const loc="d,288,59,288,60" name="1&apos;h1" dtype_id="12"/>
+              <const loc="d,288,58,288,59" name="32&apos;h1" dtype_id="2"/>
+            </sel>
+          </and>
+        </port>
+        <port loc="d,289,6,289,13" name="io_addr" direction="in" portIndex="3">
+          <sel loc="d,289,40,289,41" dtype_id="5">
+            <varref loc="d,289,25,289,40" name="current_address" dtype_id="8"/>
+            <const loc="d,289,43,289,44" name="5&apos;h3" dtype_id="10"/>
+            <const loc="d,289,41,289,42" name="32&apos;h6" dtype_id="2"/>
+          </sel>
+        </port>
+        <port loc="d,290,6,290,20" name="io_data_in_tag" direction="in" portIndex="4">
+          <sel loc="d,290,39,290,40" dtype_id="7">
+            <varref loc="d,290,25,290,39" name="replay_address" dtype_id="2"/>
+            <const loc="d,290,43,290,45" name="5&apos;hb" dtype_id="10"/>
+            <const loc="d,290,40,290,42" name="32&apos;h15" dtype_id="2"/>
+          </sel>
+        </port>
+        <port loc="d,291,6,291,21" name="io_data_in_data" direction="in" portIndex="5">
+          <varref loc="d,291,25,291,47" name="io_DRAM_resp_bits_data" dtype_id="3"/>
+        </port>
+        <port loc="d,292,6,292,23" name="io_data_out_valid" direction="out" portIndex="6">
+          <varref loc="d,292,25,292,57" name="_data_memory_1_io_data_out_valid" dtype_id="1"/>
+        </port>
+        <port loc="d,293,6,293,21" name="io_data_out_tag" direction="out" portIndex="7">
+          <varref loc="d,293,25,293,55" name="_data_memory_1_io_data_out_tag" dtype_id="7"/>
+        </port>
+        <port loc="d,294,6,294,22" name="io_data_out_data" direction="out" portIndex="8">
+          <varref loc="d,294,25,294,56" name="_data_memory_1_io_data_out_data" dtype_id="3"/>
+        </port>
+      </instance>
+      <instance loc="d,296,25,296,34" name="validator" defName="instruction_validator" origName="validator">
+        <port loc="d,297,6,297,26" name="io_instruction_index" direction="in" portIndex="1">
+          <sel loc="d,297,44,297,45" dtype_id="6">
+            <varref loc="d,297,29,297,44" name="current_address" dtype_id="8"/>
+            <const loc="d,297,47,297,48" name="5&apos;h0" dtype_id="10"/>
+            <const loc="d,297,45,297,46" name="32&apos;h2" dtype_id="2"/>
+          </sel>
+        </port>
+        <port loc="d,298,6,298,27" name="io_instruction_output" direction="out" portIndex="2">
+          <varref loc="d,298,29,298,61" name="_validator_io_instruction_output" dtype_id="4"/>
+        </port>
+      </instance>
+      <initial loc="d,303,38,303,39">
+        <assign loc="d,303,38,303,39" dtype_id="2">
+          <const loc="d,303,40,303,45" name="32&apos;h0" dtype_id="2"/>
+          <varref loc="d,303,10,303,37" name="io_cache_data_bits_fetch_PC" dtype_id="2"/>
+        </assign>
+      </initial>
+      <initial loc="d,309,57,309,58">
+        <assign loc="d,309,57,309,58" dtype_id="4">
+          <const loc="d,309,59,309,63" name="4&apos;h0" dtype_id="4"/>
+          <varref loc="d,309,10,309,56" name="io_cache_data_bits_instructions_0_packet_index" dtype_id="4"/>
+        </assign>
+      </initial>
+      <initial loc="d,310,54,310,55">
+        <assign loc="d,310,54,310,55" dtype_id="5">
+          <const loc="d,310,56,310,60" name="6&apos;h0" dtype_id="5"/>
+          <varref loc="d,310,10,310,53" name="io_cache_data_bits_instructions_0_ROB_index" dtype_id="5"/>
+        </assign>
+      </initial>
+      <initial loc="d,312,57,312,58">
+        <assign loc="d,312,57,312,58" dtype_id="4">
+          <const loc="d,312,59,312,63" name="4&apos;h0" dtype_id="4"/>
+          <varref loc="d,312,10,312,56" name="io_cache_data_bits_instructions_1_packet_index" dtype_id="4"/>
+        </assign>
+      </initial>
+      <initial loc="d,313,54,313,55">
+        <assign loc="d,313,54,313,55" dtype_id="5">
+          <const loc="d,313,56,313,60" name="6&apos;h0" dtype_id="5"/>
+          <varref loc="d,313,10,313,53" name="io_cache_data_bits_instructions_1_ROB_index" dtype_id="5"/>
+        </assign>
+      </initial>
+      <initial loc="d,315,57,315,58">
+        <assign loc="d,315,57,315,58" dtype_id="4">
+          <const loc="d,315,59,315,63" name="4&apos;h0" dtype_id="4"/>
+          <varref loc="d,315,10,315,56" name="io_cache_data_bits_instructions_2_packet_index" dtype_id="4"/>
+        </assign>
+      </initial>
+      <initial loc="d,316,54,316,55">
+        <assign loc="d,316,54,316,55" dtype_id="5">
+          <const loc="d,316,56,316,60" name="6&apos;h0" dtype_id="5"/>
+          <varref loc="d,316,10,316,53" name="io_cache_data_bits_instructions_2_ROB_index" dtype_id="5"/>
+        </assign>
+      </initial>
+      <initial loc="d,318,57,318,58">
+        <assign loc="d,318,57,318,58" dtype_id="4">
+          <const loc="d,318,59,318,63" name="4&apos;h0" dtype_id="4"/>
+          <varref loc="d,318,10,318,56" name="io_cache_data_bits_instructions_3_packet_index" dtype_id="4"/>
+        </assign>
+      </initial>
+      <initial loc="d,319,54,319,55">
+        <assign loc="d,319,54,319,55" dtype_id="5">
+          <const loc="d,319,56,319,60" name="6&apos;h0" dtype_id="5"/>
+          <varref loc="d,319,10,319,53" name="io_cache_data_bits_instructions_3_ROB_index" dtype_id="5"/>
+        </assign>
+      </initial>
+      <initial loc="d,322,39,322,40">
+        <assign loc="d,322,39,322,40" dtype_id="2">
+          <const loc="d,322,41,322,46" name="32&apos;h0" dtype_id="2"/>
+          <varref loc="d,322,10,322,38" name="io_DRAM_request_bits_wr_data" dtype_id="2"/>
+        </assign>
+      </initial>
+      <initial loc="d,323,37,323,38">
+        <assign loc="d,323,37,323,38" dtype_id="1">
+          <const loc="d,323,39,323,43" name="1&apos;h0" dtype_id="1"/>
+          <varref loc="d,323,10,323,36" name="io_DRAM_request_bits_wr_en" dtype_id="1"/>
+        </assign>
+      </initial>
+      <var loc="d,179,20,179,21" name="__VdfgRegularize_h59e36adc_0_0" dtype_id="1" vartype="logic" origName="__VdfgRegularize_h59e36adc_0_0"/>
+      <var loc="d,194,23,194,24" name="__VdfgRegularize_h59e36adc_0_1" dtype_id="1" vartype="logic" origName="__VdfgRegularize_h59e36adc_0_1"/>
+      <contassign loc="d,300,28,300,29" dtype_id="1">
+        <not loc="d,300,46,300,47" dtype_id="1">
+          <varref loc="d,179,20,179,21" name="__VdfgRegularize_h59e36adc_0_0" dtype_id="1"/>
+        </not>
+        <varref loc="d,300,28,300,29" name="io_cpu_addr_ready" dtype_id="1"/>
+      </contassign>
+      <contassign loc="d,302,30,302,31" dtype_id="1">
+        <and loc="d,194,32,194,33" dtype_id="1">
+          <varref loc="d,194,23,194,24" name="__VdfgRegularize_h59e36adc_0_1" dtype_id="1"/>
+          <and loc="d,194,59,194,60" dtype_id="1">
+            <not loc="d,194,72,194,73" dtype_id="1">
+              <or loc="d,194,72,194,73" dtype_id="1">
+                <varref loc="d,192,16,192,25" name="hit_REG_1" dtype_id="1"/>
+                <varref loc="d,193,16,193,25" name="hit_REG_2" dtype_id="1"/>
+              </or>
+            </not>
+            <or loc="d,194,43,194,44" dtype_id="1">
+              <varref loc="d,191,16,191,23" name="hit_REG" dtype_id="1"/>
+              <varref loc="d,190,16,190,28" name="replay_valid" dtype_id="1"/>
+            </or>
+          </and>
+        </and>
+        <varref loc="d,302,30,302,31" name="io_cache_data_valid" dtype_id="1"/>
+      </contassign>
+      <contassign loc="d,304,42,304,43" dtype_id="1">
+        <and loc="d,304,80,304,81" dtype_id="1">
+          <sel loc="d,304,76,304,77" dtype_id="1">
+            <varref loc="d,164,16,164,48" name="_validator_io_instruction_output" dtype_id="4"/>
+            <const loc="d,304,76,304,77" name="32&apos;h3" dtype_id="2"/>
+            <const loc="d,304,76,304,77" name="32&apos;h1" dtype_id="2"/>
+          </sel>
+          <varref loc="d,137,18,137,37" name="io_cache_data_valid" dtype_id="1"/>
+        </and>
+        <varref loc="d,304,42,304,43" name="io_cache_data_bits_valid_bits_0" dtype_id="1"/>
+      </contassign>
+      <contassign loc="d,305,42,305,43" dtype_id="1">
+        <and loc="d,305,80,305,81" dtype_id="1">
+          <sel loc="d,305,76,305,77" dtype_id="1">
+            <varref loc="d,164,16,164,48" name="_validator_io_instruction_output" dtype_id="4"/>
+            <const loc="d,305,76,305,77" name="32&apos;h2" dtype_id="2"/>
+            <const loc="d,305,76,305,77" name="32&apos;h1" dtype_id="2"/>
+          </sel>
+          <varref loc="d,137,18,137,37" name="io_cache_data_valid" dtype_id="1"/>
+        </and>
+        <varref loc="d,305,42,305,43" name="io_cache_data_bits_valid_bits_1" dtype_id="1"/>
+      </contassign>
+      <contassign loc="d,306,42,306,43" dtype_id="1">
+        <and loc="d,306,80,306,81" dtype_id="1">
+          <sel loc="d,306,76,306,77" dtype_id="1">
+            <varref loc="d,164,16,164,48" name="_validator_io_instruction_output" dtype_id="4"/>
+            <const loc="d,306,76,306,77" name="32&apos;h1" dtype_id="2"/>
+            <const loc="d,306,76,306,77" name="32&apos;h1" dtype_id="2"/>
+          </sel>
+          <varref loc="d,137,18,137,37" name="io_cache_data_valid" dtype_id="1"/>
+        </and>
+        <varref loc="d,306,42,306,43" name="io_cache_data_bits_valid_bits_2" dtype_id="1"/>
+      </contassign>
+      <contassign loc="d,307,42,307,43" dtype_id="1">
+        <and loc="d,307,80,307,81" dtype_id="1">
+          <sel loc="d,307,76,307,77" dtype_id="1">
+            <varref loc="d,164,16,164,48" name="_validator_io_instruction_output" dtype_id="4"/>
+            <const loc="d,307,76,307,77" name="32&apos;h0" dtype_id="2"/>
+            <const loc="d,307,76,307,77" name="32&apos;h1" dtype_id="2"/>
+          </sel>
+          <varref loc="d,137,18,137,37" name="io_cache_data_valid" dtype_id="1"/>
+        </and>
+        <varref loc="d,307,42,307,43" name="io_cache_data_bits_valid_bits_3" dtype_id="1"/>
+      </contassign>
+      <contassign loc="d,308,56,308,57" dtype_id="2">
+        <sel loc="d,308,78,308,79" dtype_id="2">
+          <varref loc="d,199,16,199,36" name="hit_instruction_data" dtype_id="9"/>
+          <const loc="d,308,78,308,79" name="32&apos;h0" dtype_id="2"/>
+          <const loc="d,308,78,308,79" name="32&apos;h20" dtype_id="2"/>
+        </sel>
+        <varref loc="d,308,56,308,57" name="io_cache_data_bits_instructions_0_instruction" dtype_id="2"/>
+      </contassign>
+      <contassign loc="d,311,56,311,57" dtype_id="2">
+        <sel loc="d,311,78,311,79" dtype_id="2">
+          <varref loc="d,199,16,199,36" name="hit_instruction_data" dtype_id="9"/>
+          <const loc="d,311,78,311,79" name="32&apos;h20" dtype_id="2"/>
+          <const loc="d,311,78,311,79" name="32&apos;h20" dtype_id="2"/>
+        </sel>
+        <varref loc="d,311,56,311,57" name="io_cache_data_bits_instructions_1_instruction" dtype_id="2"/>
+      </contassign>
+      <contassign loc="d,314,56,314,57" dtype_id="2">
+        <sel loc="d,314,78,314,79" dtype_id="2">
+          <varref loc="d,199,16,199,36" name="hit_instruction_data" dtype_id="9"/>
+          <const loc="d,314,78,314,79" name="32&apos;h40" dtype_id="2"/>
+          <const loc="d,314,78,314,79" name="32&apos;h20" dtype_id="2"/>
+        </sel>
+        <varref loc="d,314,56,314,57" name="io_cache_data_bits_instructions_2_instruction" dtype_id="2"/>
+      </contassign>
+      <contassign loc="d,317,56,317,57" dtype_id="2">
+        <sel loc="d,317,78,317,79" dtype_id="2">
+          <varref loc="d,199,16,199,36" name="hit_instruction_data" dtype_id="9"/>
+          <const loc="d,317,78,317,79" name="32&apos;h60" dtype_id="2"/>
+          <const loc="d,317,78,317,79" name="32&apos;h20" dtype_id="2"/>
+        </sel>
+        <varref loc="d,317,56,317,57" name="io_cache_data_bits_instructions_3_instruction" dtype_id="2"/>
+      </contassign>
+      <contassign loc="d,198,15,198,16" dtype_id="1">
+        <and loc="d,198,28,198,29" dtype_id="1">
+          <not loc="d,198,17,198,18" dtype_id="1">
+            <varref loc="d,194,23,194,24" name="__VdfgRegularize_h59e36adc_0_1" dtype_id="1"/>
+          </not>
+          <and loc="d,198,56,198,57" dtype_id="1">
+            <not loc="d,198,70,198,71" dtype_id="1">
+              <or loc="d,198,70,198,71" dtype_id="1">
+                <varref loc="d,196,16,196,26" name="miss_REG_1" dtype_id="1"/>
+                <varref loc="d,197,16,197,26" name="miss_REG_2" dtype_id="1"/>
+              </or>
+            </not>
+            <or loc="d,198,40,198,41" dtype_id="1">
+              <varref loc="d,195,16,195,24" name="miss_REG" dtype_id="1"/>
+              <varref loc="d,190,16,190,28" name="replay_valid" dtype_id="1"/>
+            </or>
+          </and>
+        </and>
+        <varref loc="d,198,15,198,16" name="miss" dtype_id="1"/>
+      </contassign>
+      <contassign loc="d,178,32,178,33" dtype_id="8">
+        <cond loc="d,179,27,179,28" dtype_id="8">
+          <varref loc="d,179,20,179,21" name="__VdfgRegularize_h59e36adc_0_0" dtype_id="1"/>
+          <sel loc="d,179,43,179,44" dtype_id="8">
+            <varref loc="d,173,16,173,30" name="replay_address" dtype_id="2"/>
+            <const loc="d,179,43,179,44" name="32&apos;h2" dtype_id="2"/>
+            <const loc="d,179,43,179,44" name="32&apos;h1e" dtype_id="2"/>
+          </sel>
+          <sel loc="d,179,68,179,69" dtype_id="8">
+            <varref loc="d,131,18,131,34" name="io_cpu_addr_bits" dtype_id="2"/>
+            <const loc="d,179,68,179,69" name="32&apos;h2" dtype_id="2"/>
+            <const loc="d,179,68,179,69" name="32&apos;h1e" dtype_id="2"/>
+          </sel>
+        </cond>
+        <varref loc="d,178,32,178,33" name="current_address" dtype_id="8"/>
+      </contassign>
+      <contassign loc="d,184,16,184,28" dtype_id="6">
+        <concat loc="d,184,16,184,28" dtype_id="6">
+          <varref loc="d,187,16,187,28" name="hit_oh_vec_1" dtype_id="1"/>
+          <varref loc="d,184,16,184,28" name="hit_oh_vec_0" dtype_id="1"/>
+        </concat>
+        <varref loc="d,184,16,184,28" name="hit_oh" dtype_id="6"/>
+      </contassign>
+      <contassign loc="d,179,20,179,21" dtype_id="1">
+        <or loc="d,179,20,179,21" dtype_id="1">
+          <redor loc="d,179,6,179,7" dtype_id="1">
+            <varref loc="d,172,16,172,27" name="cache_state" dtype_id="6"/>
+          </redor>
+          <varref loc="d,162,16,162,20" name="miss" dtype_id="1"/>
+        </or>
+        <varref loc="d,179,20,179,21" name="__VdfgRegularize_h59e36adc_0_0" dtype_id="1"/>
+      </contassign>
+      <contassign loc="d,194,23,194,24" dtype_id="1">
+        <redor loc="d,194,23,194,24" dtype_id="1">
+          <varref loc="d,163,16,163,22" name="hit_oh" dtype_id="6"/>
+        </redor>
+        <varref loc="d,194,23,194,24" name="__VdfgRegularize_h59e36adc_0_1" dtype_id="1"/>
+      </contassign>
+      <contassign loc="d,190,29,190,30" dtype_id="1">
+        <eq loc="d,190,43,190,45" dtype_id="1">
+          <const loc="d,190,46,190,50" name="2&apos;h2" dtype_id="6"/>
+          <varref loc="d,172,16,172,27" name="cache_state" dtype_id="6"/>
+        </eq>
+        <varref loc="d,190,29,190,30" name="replay_valid" dtype_id="1"/>
+      </contassign>
+      <contassign loc="d,199,37,199,38" dtype_id="9">
+        <cond loc="d,201,7,201,8" dtype_id="9">
+          <varref loc="d,187,16,187,28" name="hit_oh_vec_1" dtype_id="1"/>
+          <sel loc="d,201,40,201,41" dtype_id="9">
+            <varref loc="d,167,16,167,47" name="_data_memory_1_io_data_out_data" dtype_id="3"/>
+            <const loc="d,201,40,201,41" name="32&apos;h0" dtype_id="2"/>
+            <const loc="d,201,40,201,41" name="32&apos;h80" dtype_id="2"/>
+          </sel>
+          <cond loc="d,202,22,202,23" dtype_id="9">
+            <varref loc="d,184,16,184,28" name="hit_oh_vec_0" dtype_id="1"/>
+            <sel loc="d,202,55,202,56" dtype_id="9">
+              <varref loc="d,170,16,170,47" name="_data_memory_0_io_data_out_data" dtype_id="3"/>
+              <const loc="d,202,55,202,56" name="32&apos;h0" dtype_id="2"/>
+              <const loc="d,202,55,202,56" name="32&apos;h80" dtype_id="2"/>
+            </sel>
+            <const loc="d,202,65,202,71" name="128&apos;h0" dtype_id="9"/>
+          </cond>
+        </cond>
+        <varref loc="d,199,37,199,38" name="hit_instruction_data" dtype_id="9"/>
+      </contassign>
+      <contassign loc="d,184,29,184,30" dtype_id="1">
+        <and loc="d,185,56,185,57" dtype_id="1">
+          <eq loc="d,185,36,185,38" dtype_id="1">
+            <varref loc="d,169,16,169,46" name="_data_memory_0_io_data_out_tag" dtype_id="7"/>
+            <varref loc="d,183,16,183,32" name="hit_oh_vec_0_REG" dtype_id="7"/>
+          </eq>
+          <varref loc="d,168,16,168,48" name="_data_memory_0_io_data_out_valid" dtype_id="1"/>
+        </and>
+        <varref loc="d,184,29,184,30" name="hit_oh_vec_0" dtype_id="1"/>
+      </contassign>
+      <contassign loc="d,187,29,187,30" dtype_id="1">
+        <and loc="d,188,56,188,57" dtype_id="1">
+          <eq loc="d,188,36,188,38" dtype_id="1">
+            <varref loc="d,166,16,166,46" name="_data_memory_1_io_data_out_tag" dtype_id="7"/>
+            <varref loc="d,186,16,186,32" name="hit_oh_vec_1_REG" dtype_id="7"/>
+          </eq>
+          <varref loc="d,165,16,165,48" name="_data_memory_1_io_data_out_valid" dtype_id="1"/>
+        </and>
+        <varref loc="d,187,29,187,30" name="hit_oh_vec_1" dtype_id="1"/>
+      </contassign>
+      <contassign loc="d,301,29,301,30" dtype_id="1">
+        <varref loc="d,176,16,176,26" name="resp_ready" dtype_id="1"/>
+        <varref loc="d,301,29,301,30" name="io_DRAM_resp_ready" dtype_id="1"/>
+      </contassign>
+      <contassign loc="d,320,32,320,33" dtype_id="1">
+        <varref loc="d,174,16,174,29" name="request_valid" dtype_id="1"/>
+        <varref loc="d,320,32,320,33" name="io_DRAM_request_valid" dtype_id="1"/>
+      </contassign>
+      <contassign loc="d,321,36,321,37" dtype_id="2">
+        <varref loc="d,175,16,175,28" name="request_addr" dtype_id="2"/>
+        <varref loc="d,321,36,321,37" name="io_DRAM_request_bits_addr" dtype_id="2"/>
+      </contassign>
+      <contassign loc="d,181,29,181,30" dtype_id="6">
+        <cond loc="d,182,32,182,33" dtype_id="6">
+          <sel loc="d,182,28,182,29" dtype_id="1">
+            <varref loc="d,171,16,171,39" name="_LRU_memory_io_data_out" dtype_id="6"/>
+            <const loc="d,182,28,182,29" name="32&apos;h1" dtype_id="2"/>
+            <const loc="d,182,28,182,29" name="32&apos;h1" dtype_id="2"/>
+          </sel>
+          <extend loc="d,182,39,182,40" dtype_id="6" width="2" widthminv="1">
+            <not loc="d,182,41,182,42" dtype_id="1">
+              <sel loc="d,182,66,182,67" dtype_id="1">
+                <varref loc="d,171,16,171,39" name="_LRU_memory_io_data_out" dtype_id="6"/>
+                <const loc="d,182,66,182,67" name="32&apos;h0" dtype_id="2"/>
+                <const loc="d,182,66,182,67" name="32&apos;h1" dtype_id="2"/>
+              </sel>
+            </not>
+          </extend>
+          <const loc="d,182,74,182,78" name="2&apos;h2" dtype_id="6"/>
+        </cond>
+        <varref loc="d,181,29,181,30" name="allocate_way" dtype_id="6"/>
+      </contassign>
+    </module>
+    <module loc="d,28,8,28,24" name="SDPReadWriteSmem" origName="SDPReadWriteSmem">
+      <var loc="d,29,16,29,21" name="clock" dtype_id="1" dir="input" pinIndex="1" vartype="logic" origName="clock"/>
+      <var loc="d,30,16,30,21" name="reset" dtype_id="1" dir="input" pinIndex="2" vartype="logic" origName="reset"/>
+      <var loc="d,31,16,31,26" name="io_rd_addr" dtype_id="5" dir="input" pinIndex="3" vartype="logic" origName="io_rd_addr"/>
+      <var loc="d,32,16,32,27" name="io_data_out" dtype_id="6" dir="output" pinIndex="4" vartype="logic" origName="io_data_out"/>
+      <var loc="d,33,16,33,26" name="io_wr_addr" dtype_id="5" dir="input" pinIndex="5" vartype="logic" origName="io_wr_addr"/>
+      <var loc="d,34,16,34,24" name="io_wr_en" dtype_id="1" dir="input" pinIndex="6" vartype="logic" origName="io_wr_en"/>
+      <var loc="d,35,16,35,26" name="io_data_in" dtype_id="6" dir="input" pinIndex="7" vartype="logic" origName="io_data_in"/>
+      <var loc="d,38,14,38,30" name="_mem_ext_R0_data" dtype_id="6" vartype="logic" origName="_mem_ext_R0_data"/>
+      <var loc="d,39,14,39,24" name="hazard_reg" dtype_id="1" vartype="logic" origName="hazard_reg"/>
+      <var loc="d,40,14,40,22" name="din_buff" dtype_id="6" vartype="logic" origName="din_buff"/>
+      <always loc="d,41,3,41,9">
+        <sentree loc="d,41,10,41,11">
+          <senitem loc="d,41,12,41,19" edgeType="POS">
+            <varref loc="d,41,20,41,25" name="clock" dtype_id="1"/>
+          </senitem>
+        </sentree>
+        <begin loc="d,41,27,41,32">
+          <if loc="d,42,5,42,7">
+            <varref loc="d,42,9,42,14" name="reset" dtype_id="1"/>
+            <begin>
+              <begin loc="d,42,16,42,21">
+                <assigndly loc="d,43,18,43,20" dtype_id="1">
+                  <const loc="d,43,21,43,25" name="1&apos;h0" dtype_id="1"/>
+                  <varref loc="d,43,7,43,17" name="hazard_reg" dtype_id="1"/>
+                </assigndly>
+                <assigndly loc="d,44,16,44,18" dtype_id="6">
+                  <const loc="d,44,19,44,23" name="2&apos;h0" dtype_id="6"/>
+                  <varref loc="d,44,7,44,15" name="din_buff" dtype_id="6"/>
+                </assigndly>
+              </begin>
+            </begin>
+            <begin>
+              <begin loc="d,46,10,46,15">
+                <assigndly loc="d,47,18,47,20" dtype_id="1">
+                  <and loc="d,47,46,47,47" dtype_id="1">
+                    <eq loc="d,47,32,47,34" dtype_id="1">
+                      <varref loc="d,47,21,47,31" name="io_rd_addr" dtype_id="5"/>
+                      <varref loc="d,47,35,47,45" name="io_wr_addr" dtype_id="5"/>
+                    </eq>
+                    <varref loc="d,47,48,47,56" name="io_wr_en" dtype_id="1"/>
+                  </and>
+                  <varref loc="d,47,7,47,17" name="hazard_reg" dtype_id="1"/>
+                </assigndly>
+                <assigndly loc="d,48,16,48,18" dtype_id="6">
+                  <varref loc="d,48,19,48,29" name="io_data_in" dtype_id="6"/>
+                  <varref loc="d,48,7,48,15" name="din_buff" dtype_id="6"/>
+                </assigndly>
+              </begin>
+            </begin>
+          </if>
+        </begin>
+      </always>
+      <instance loc="d,51,12,51,19" name="mem_ext" defName="mem_64x2" origName="mem_ext">
+        <port loc="d,52,6,52,13" name="R0_addr" direction="in" portIndex="1">
+          <varref loc="d,52,15,52,25" name="io_rd_addr" dtype_id="5"/>
+        </port>
+        <port loc="d,53,6,53,11" name="R0_en" direction="in" portIndex="2">
+          <const loc="d,53,15,53,19" name="1&apos;h1" dtype_id="1"/>
+        </port>
+        <port loc="d,54,6,54,12" name="R0_clk" direction="in" portIndex="3">
+          <varref loc="d,54,15,54,20" name="clock" dtype_id="1"/>
+        </port>
+        <port loc="d,55,6,55,13" name="R0_data" direction="out" portIndex="4">
+          <varref loc="d,55,15,55,31" name="_mem_ext_R0_data" dtype_id="6"/>
+        </port>
+        <port loc="d,56,6,56,13" name="W0_addr" direction="in" portIndex="5">
+          <varref loc="d,56,15,56,25" name="io_wr_addr" dtype_id="5"/>
+        </port>
+        <port loc="d,57,6,57,11" name="W0_en" direction="in" portIndex="6">
+          <varref loc="d,57,15,57,23" name="io_wr_en" dtype_id="1"/>
+        </port>
+        <port loc="d,58,6,58,12" name="W0_clk" direction="in" portIndex="7">
+          <varref loc="d,58,15,58,20" name="clock" dtype_id="1"/>
+        </port>
+        <port loc="d,59,6,59,13" name="W0_data" direction="in" portIndex="8">
+          <varref loc="d,59,15,59,25" name="io_data_in" dtype_id="6"/>
+        </port>
+      </instance>
+      <contassign loc="d,61,22,61,23" dtype_id="6">
+        <cond loc="d,61,35,61,36" dtype_id="6">
+          <varref loc="d,39,14,39,24" name="hazard_reg" dtype_id="1"/>
+          <varref loc="d,40,14,40,22" name="din_buff" dtype_id="6"/>
+          <varref loc="d,38,14,38,30" name="_mem_ext_R0_data" dtype_id="6"/>
+        </cond>
+        <varref loc="d,61,22,61,23" name="io_data_out" dtype_id="6"/>
+      </contassign>
+    </module>
+    <module loc="d,90,8,90,28" name="icache_ReadWriteSmem" origName="icache_ReadWriteSmem">
+      <var loc="d,91,18,91,23" name="clock" dtype_id="1" dir="input" pinIndex="1" vartype="logic" origName="clock"/>
+      <var loc="d,92,18,92,26" name="io_wr_en" dtype_id="1" dir="input" pinIndex="2" vartype="logic" origName="io_wr_en"/>
+      <var loc="d,93,18,93,25" name="io_addr" dtype_id="5" dir="input" pinIndex="3" vartype="logic" origName="io_addr"/>
+      <var loc="d,94,18,94,32" name="io_data_in_tag" dtype_id="7" dir="input" pinIndex="4" vartype="logic" origName="io_data_in_tag"/>
+      <var loc="d,95,18,95,33" name="io_data_in_data" dtype_id="3" dir="input" pinIndex="5" vartype="logic" origName="io_data_in_data"/>
+      <var loc="d,96,18,96,35" name="io_data_out_valid" dtype_id="1" dir="output" pinIndex="6" vartype="logic" origName="io_data_out_valid"/>
+      <var loc="d,97,18,97,33" name="io_data_out_tag" dtype_id="7" dir="output" pinIndex="7" vartype="logic" origName="io_data_out_tag"/>
+      <var loc="d,98,18,98,34" name="io_data_out_data" dtype_id="3" dir="output" pinIndex="8" vartype="logic" origName="io_data_out_data"/>
+      <var loc="d,101,16,101,32" name="_mem_ext_R0_data" dtype_id="13" vartype="logic" origName="_mem_ext_R0_data"/>
+      <instance loc="d,102,14,102,21" name="mem_ext" defName="mem_64x278" origName="mem_ext">
+        <port loc="d,103,6,103,13" name="R0_addr" direction="in" portIndex="1">
+          <varref loc="d,103,15,103,22" name="io_addr" dtype_id="5"/>
+        </port>
+        <port loc="d,104,6,104,11" name="R0_en" direction="in" portIndex="2">
+          <const loc="d,104,15,104,19" name="1&apos;h1" dtype_id="1"/>
+        </port>
+        <port loc="d,105,6,105,12" name="R0_clk" direction="in" portIndex="3">
+          <varref loc="d,105,15,105,20" name="clock" dtype_id="1"/>
+        </port>
+        <port loc="d,106,6,106,13" name="R0_data" direction="out" portIndex="4">
+          <varref loc="d,106,15,106,31" name="_mem_ext_R0_data" dtype_id="13"/>
+        </port>
+        <port loc="d,107,6,107,13" name="W0_addr" direction="in" portIndex="5">
+          <varref loc="d,107,15,107,22" name="io_addr" dtype_id="5"/>
+        </port>
+        <port loc="d,108,6,108,11" name="W0_en" direction="in" portIndex="6">
+          <varref loc="d,108,15,108,23" name="io_wr_en" dtype_id="1"/>
+        </port>
+        <port loc="d,109,6,109,12" name="W0_clk" direction="in" portIndex="7">
+          <varref loc="d,109,15,109,20" name="clock" dtype_id="1"/>
+        </port>
+        <port loc="d,110,6,110,13" name="W0_data" direction="in" portIndex="8">
+          <concat loc="d,110,47,110,48" dtype_id="13">
+            <varref loc="d,110,16,110,31" name="io_data_in_data" dtype_id="3"/>
+            <concat loc="d,110,31,110,32" dtype_id="14">
+              <varref loc="d,110,33,110,47" name="io_data_in_tag" dtype_id="7"/>
+              <const loc="d,110,49,110,53" name="1&apos;h1" dtype_id="1"/>
+            </concat>
+          </concat>
+        </port>
+      </instance>
+      <contassign loc="d,112,28,112,29" dtype_id="1">
+        <sel loc="d,112,46,112,47" dtype_id="1">
+          <varref loc="d,101,16,101,32" name="_mem_ext_R0_data" dtype_id="13"/>
+          <const loc="d,112,46,112,47" name="32&apos;h0" dtype_id="2"/>
+          <const loc="d,112,46,112,47" name="32&apos;h1" dtype_id="2"/>
+        </sel>
+        <varref loc="d,112,28,112,29" name="io_data_out_valid" dtype_id="1"/>
+      </contassign>
+      <contassign loc="d,113,26,113,27" dtype_id="7">
+        <sel loc="d,113,44,113,45" dtype_id="7">
+          <varref loc="d,101,16,101,32" name="_mem_ext_R0_data" dtype_id="13"/>
+          <const loc="d,113,44,113,45" name="32&apos;h1" dtype_id="2"/>
+          <const loc="d,113,44,113,45" name="32&apos;h15" dtype_id="2"/>
+        </sel>
+        <varref loc="d,113,26,113,27" name="io_data_out_tag" dtype_id="7"/>
+      </contassign>
+      <contassign loc="d,114,27,114,28" dtype_id="3">
+        <sel loc="d,114,45,114,46" dtype_id="3">
+          <varref loc="d,101,16,101,32" name="_mem_ext_R0_data" dtype_id="13"/>
+          <const loc="d,114,45,114,46" name="32&apos;h16" dtype_id="2"/>
+          <const loc="d,114,45,114,46" name="32&apos;h100" dtype_id="2"/>
+        </sel>
+        <varref loc="d,114,27,114,28" name="io_data_out_data" dtype_id="3"/>
+      </contassign>
+    </module>
+    <module loc="d,117,8,117,29" name="instruction_validator" origName="instruction_validator">
+      <var loc="d,118,16,118,36" name="io_instruction_index" dtype_id="6" dir="input" pinIndex="1" vartype="logic" origName="io_instruction_index"/>
+      <var loc="d,119,16,119,37" name="io_instruction_output" dtype_id="4" dir="output" pinIndex="2" vartype="logic" origName="io_instruction_output"/>
+      <var loc="d,122,19,122,23" name="_GEN" dtype_id="15" vartype="wire" origName="_GEN">
+        <const loc="d,122,46,122,50" name="16&apos;h137f" dtype_id="16"/>
+      </var>
+      <initial loc="d,122,24,122,25">
+        <assign loc="d,122,24,122,25" dtype_id="15">
+          <const loc="d,122,46,122,50" name="16&apos;h137f" dtype_id="16"/>
+          <varref loc="d,122,19,122,23" name="_GEN" dtype_id="15"/>
+        </assign>
+      </initial>
+      <contassign loc="d,123,32,123,33" dtype_id="4">
+        <sel loc="d,123,38,123,39" dtype_id="4">
+          <const loc="d,123,34,123,38" name="16&apos;h137f" dtype_id="16"/>
+          <shiftl loc="d,123,38,123,39" dtype_id="4">
+            <extend loc="d,123,39,123,59" dtype_id="4" width="4" widthminv="2">
+              <varref loc="d,118,16,118,36" name="io_instruction_index" dtype_id="6"/>
+            </extend>
+            <const loc="d,123,38,123,39" name="32&apos;h2" dtype_id="2"/>
+          </shiftl>
+          <const loc="d,123,38,123,39" name="32&apos;h4" dtype_id="2"/>
+        </sel>
+        <varref loc="d,123,32,123,33" name="io_instruction_output" dtype_id="4"/>
+      </contassign>
+    </module>
+    <module loc="d,3,8,3,16" name="mem_64x2" origName="mem_64x2">
+      <var loc="d,4,16,4,23" name="R0_addr" dtype_id="5" dir="input" pinIndex="1" vartype="logic" origName="R0_addr"/>
+      <var loc="d,5,16,5,21" name="R0_en" dtype_id="1" dir="input" pinIndex="2" vartype="logic" origName="R0_en"/>
+      <var loc="d,6,16,6,22" name="R0_clk" dtype_id="1" dir="input" pinIndex="3" vartype="logic" origName="R0_clk"/>
+      <var loc="d,7,16,7,23" name="R0_data" dtype_id="6" dir="output" pinIndex="4" vartype="logic" origName="R0_data"/>
+      <var loc="d,8,16,8,23" name="W0_addr" dtype_id="5" dir="input" pinIndex="5" vartype="logic" origName="W0_addr"/>
+      <var loc="d,9,16,9,21" name="W0_en" dtype_id="1" dir="input" pinIndex="6" vartype="logic" origName="W0_en"/>
+      <var loc="d,10,16,10,22" name="W0_clk" dtype_id="1" dir="input" pinIndex="7" vartype="logic" origName="W0_clk"/>
+      <var loc="d,11,16,11,23" name="W0_data" dtype_id="6" dir="input" pinIndex="8" vartype="logic" origName="W0_data"/>
+      <var loc="d,14,13,14,19" name="Memory" dtype_id="17" vartype="" origName="Memory"/>
+      <var loc="d,15,13,15,22" name="_R0_en_d0" dtype_id="1" vartype="logic" origName="_R0_en_d0"/>
+      <var loc="d,16,13,16,24" name="_R0_addr_d0" dtype_id="5" vartype="logic" origName="_R0_addr_d0"/>
+      <always loc="d,17,3,17,9">
+        <sentree loc="d,17,10,17,11">
+          <senitem loc="d,17,12,17,19" edgeType="POS">
+            <varref loc="d,17,20,17,26" name="R0_clk" dtype_id="1"/>
+          </senitem>
+        </sentree>
+        <begin loc="d,17,28,17,33">
+          <assigndly loc="d,18,15,18,17" dtype_id="1">
+            <varref loc="d,18,18,18,23" name="R0_en" dtype_id="1"/>
+            <varref loc="d,18,5,18,14" name="_R0_en_d0" dtype_id="1"/>
+          </assigndly>
+          <assigndly loc="d,19,17,19,19" dtype_id="5">
+            <varref loc="d,19,20,19,27" name="R0_addr" dtype_id="5"/>
+            <varref loc="d,19,5,19,16" name="_R0_addr_d0" dtype_id="5"/>
+          </assigndly>
+        </begin>
+      </always>
+      <always loc="d,21,3,21,9">
+        <sentree loc="d,21,10,21,11">
+          <senitem loc="d,21,12,21,19" edgeType="POS">
+            <varref loc="d,21,20,21,26" name="W0_clk" dtype_id="1"/>
+          </senitem>
+        </sentree>
+        <begin loc="d,21,28,21,33">
+          <if loc="d,22,5,22,7">
+            <varref loc="d,22,9,22,14" name="W0_en" dtype_id="1"/>
+            <begin>
+              <assigndly loc="d,23,23,23,25" dtype_id="6">
+                <varref loc="d,23,26,23,33" name="W0_data" dtype_id="6"/>
+                <arraysel loc="d,23,13,23,14" dtype_id="6">
+                  <varref loc="d,23,7,23,13" name="Memory" dtype_id="17"/>
+                  <varref loc="d,23,14,23,21" name="W0_addr" dtype_id="5"/>
+                </arraysel>
+              </assigndly>
+            </begin>
+          </if>
+        </begin>
+      </always>
+      <contassign loc="d,25,18,25,19" dtype_id="6">
+        <cond loc="d,25,30,25,31" dtype_id="6">
+          <varref loc="d,15,13,15,22" name="_R0_en_d0" dtype_id="1"/>
+          <arraysel loc="d,25,38,25,39" dtype_id="6">
+            <varref loc="d,14,13,14,19" name="Memory" dtype_id="17"/>
+            <varref loc="d,16,13,16,24" name="_R0_addr_d0" dtype_id="5"/>
+          </arraysel>
+          <const loc="d,25,54,25,58" name="2&apos;bxx" dtype_id="6"/>
+        </cond>
+        <varref loc="d,25,18,25,19" name="R0_data" dtype_id="6"/>
+      </contassign>
+    </module>
+    <module loc="d,65,8,65,18" name="mem_64x278" origName="mem_64x278">
+      <var loc="d,66,18,66,25" name="R0_addr" dtype_id="5" dir="input" pinIndex="1" vartype="logic" origName="R0_addr"/>
+      <var loc="d,67,18,67,23" name="R0_en" dtype_id="1" dir="input" pinIndex="2" vartype="logic" origName="R0_en"/>
+      <var loc="d,68,18,68,24" name="R0_clk" dtype_id="1" dir="input" pinIndex="3" vartype="logic" origName="R0_clk"/>
+      <var loc="d,69,18,69,25" name="R0_data" dtype_id="13" dir="output" pinIndex="4" vartype="logic" origName="R0_data"/>
+      <var loc="d,70,18,70,25" name="W0_addr" dtype_id="5" dir="input" pinIndex="5" vartype="logic" origName="W0_addr"/>
+      <var loc="d,71,18,71,23" name="W0_en" dtype_id="1" dir="input" pinIndex="6" vartype="logic" origName="W0_en"/>
+      <var loc="d,72,18,72,24" name="W0_clk" dtype_id="1" dir="input" pinIndex="7" vartype="logic" origName="W0_clk"/>
+      <var loc="d,73,18,73,25" name="W0_data" dtype_id="13" dir="input" pinIndex="8" vartype="logic" origName="W0_data"/>
+      <var loc="d,76,15,76,21" name="Memory" dtype_id="18" vartype="" origName="Memory"/>
+      <var loc="d,77,15,77,24" name="_R0_en_d0" dtype_id="1" vartype="logic" origName="_R0_en_d0"/>
+      <var loc="d,78,15,78,26" name="_R0_addr_d0" dtype_id="5" vartype="logic" origName="_R0_addr_d0"/>
+      <always loc="d,79,3,79,9">
+        <sentree loc="d,79,10,79,11">
+          <senitem loc="d,79,12,79,19" edgeType="POS">
+            <varref loc="d,79,20,79,26" name="R0_clk" dtype_id="1"/>
+          </senitem>
+        </sentree>
+        <begin loc="d,79,28,79,33">
+          <assigndly loc="d,80,15,80,17" dtype_id="1">
+            <varref loc="d,80,18,80,23" name="R0_en" dtype_id="1"/>
+            <varref loc="d,80,5,80,14" name="_R0_en_d0" dtype_id="1"/>
+          </assigndly>
+          <assigndly loc="d,81,17,81,19" dtype_id="5">
+            <varref loc="d,81,20,81,27" name="R0_addr" dtype_id="5"/>
+            <varref loc="d,81,5,81,16" name="_R0_addr_d0" dtype_id="5"/>
+          </assigndly>
+        </begin>
+      </always>
+      <always loc="d,83,3,83,9">
+        <sentree loc="d,83,10,83,11">
+          <senitem loc="d,83,12,83,19" edgeType="POS">
+            <varref loc="d,83,20,83,26" name="W0_clk" dtype_id="1"/>
+          </senitem>
+        </sentree>
+        <begin loc="d,83,28,83,33">
+          <if loc="d,84,5,84,7">
+            <varref loc="d,84,9,84,14" name="W0_en" dtype_id="1"/>
+            <begin>
+              <assigndly loc="d,85,23,85,25" dtype_id="13">
+                <varref loc="d,85,26,85,33" name="W0_data" dtype_id="13"/>
+                <arraysel loc="d,85,13,85,14" dtype_id="13">
+                  <varref loc="d,85,7,85,13" name="Memory" dtype_id="18"/>
+                  <varref loc="d,85,14,85,21" name="W0_addr" dtype_id="5"/>
+                </arraysel>
+              </assigndly>
+            </begin>
+          </if>
+        </begin>
+      </always>
+      <contassign loc="d,87,18,87,19" dtype_id="13">
+        <cond loc="d,87,30,87,31" dtype_id="13">
+          <varref loc="d,77,15,77,24" name="_R0_en_d0" dtype_id="1"/>
+          <arraysel loc="d,87,38,87,39" dtype_id="13">
+            <varref loc="d,76,15,76,21" name="Memory" dtype_id="18"/>
+            <varref loc="d,78,15,78,26" name="_R0_addr_d0" dtype_id="5"/>
+          </arraysel>
+          <const loc="d,87,54,87,60" name="278&apos;bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" dtype_id="13"/>
+        </cond>
+        <varref loc="d,87,18,87,19" name="R0_data" dtype_id="13"/>
+      </contassign>
+    </module>
+    <typetable loc="a,0,0,0,0">
+      <basicdtype loc="c,50,22,50,24" id="1" name="logic"/>
+      <voiddtype loc="c,51,21,51,30" id="19"/>
+      <unpackarraydtype loc="d,76,21,76,22" id="18" sub_dtype_id="13">
+        <range loc="d,76,21,76,22">
+          <const loc="d,76,22,76,23" name="32&apos;sh0" dtype_id="11"/>
+          <const loc="d,76,24,76,26" name="32&apos;sh3f" dtype_id="11"/>
+        </range>
+      </unpackarraydtype>
+      <unpackarraydtype loc="d,14,19,14,20" id="17" sub_dtype_id="6">
+        <range loc="d,14,19,14,20">
+          <const loc="d,14,20,14,21" name="32&apos;sh0" dtype_id="11"/>
+          <const loc="d,14,22,14,24" name="32&apos;sh3f" dtype_id="11"/>
+        </range>
+      </unpackarraydtype>
+      <packarraydtype loc="d,122,8,122,9" id="15" sub_dtype_id="4">
+        <range loc="d,122,8,122,9">
+          <const loc="d,122,9,122,10" name="32&apos;sh3" dtype_id="11"/>
+          <const loc="d,122,11,122,12" name="32&apos;sh0" dtype_id="11"/>
+        </range>
+      </packarraydtype>
+      <basicdtype loc="d,122,46,122,50" id="16" name="logic" left="15" right="0"/>
+      <basicdtype loc="d,101,8,101,9" id="13" name="logic" left="277" right="0"/>
+      <basicdtype loc="d,131,10,131,11" id="2" name="logic" left="31" right="0"/>
+      <basicdtype loc="d,135,10,135,11" id="3" name="logic" left="255" right="0"/>
+      <basicdtype loc="d,144,10,144,11" id="4" name="logic" left="3" right="0"/>
+      <basicdtype loc="d,145,10,145,11" id="5" name="logic" left="5" right="0"/>
+      <basicdtype loc="d,163,8,163,9" id="6" name="logic" left="1" right="0"/>
+      <basicdtype loc="d,166,8,166,9" id="7" name="logic" left="20" right="0"/>
+      <basicdtype loc="d,178,8,178,9" id="8" name="logic" left="29" right="0"/>
+      <basicdtype loc="d,179,43,179,44" id="10" name="logic" left="4" right="0" signed="true"/>
+      <basicdtype loc="d,182,28,182,29" id="12" name="logic" signed="true"/>
+      <basicdtype loc="d,199,8,199,9" id="9" name="logic" left="127" right="0"/>
+      <basicdtype loc="d,274,9,274,10" id="11" name="logic" left="31" right="0" signed="true"/>
+      <basicdtype loc="d,110,31,110,32" id="14" name="logic" left="21" right="0"/>
+    </typetable>
+  </netlist>
+</verilator_xml>

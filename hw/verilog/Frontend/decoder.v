@@ -87,11 +87,27 @@ module decoder(
       end
     end // always @(posedge)
   `endif // not def SYNTHESIS
+  wire       _needs_ALU_T_1 = io_instruction_bits_instruction[31:25] == 7'h20;
   wire       needs_branch_unit = _is_INT_T_3 | _is_INT_T_5 | _is_INT_T_7;
   wire       needs_ALU =
-    (_is_INT_T | IMMEDIATE)
-    & (io_instruction_bits_instruction[27]
-       | io_instruction_bits_instruction[31:25] == 7'h0) | IMMEDIATE;
+    _is_INT_T & (_needs_ALU_T_1 | io_instruction_bits_instruction[31:25] == 7'h0)
+    | IMMEDIATE;
+  wire       needs_memory = IS_STORE | IS_LOAD;
+  reg  [1:0] next_ALU_port_0;
+  reg  [1:0] next_ALU_port_1;
+  reg  [1:0] next_ALU_port_2;
+  always @(posedge clock) begin
+    if (reset) begin
+      next_ALU_port_0 <= 2'h0;
+      next_ALU_port_1 <= 2'h1;
+      next_ALU_port_2 <= 2'h2;
+    end
+    else if (needs_ALU) begin
+      next_ALU_port_0 <= next_ALU_port_1;
+      next_ALU_port_1 <= next_ALU_port_2;
+      next_ALU_port_2 <= next_ALU_port_0;
+    end
+  end // always @(posedge)
   assign io_instruction_ready = io_decoded_instruction_ready;
   assign io_decoded_instruction_valid = io_instruction_valid;
   assign io_decoded_instruction_bits_ready_bits_RS1_ready = 1'h0;
@@ -103,9 +119,10 @@ module decoder(
     | _io_decoded_instruction_bits_RD_valid_T_11
     | _io_decoded_instruction_bits_RD_valid_T_13;
   assign io_decoded_instruction_bits_RS1 = {1'h0, io_instruction_bits_instruction[19:15]};
-  assign io_decoded_instruction_bits_RS1_valid = 1'h1;
+  assign io_decoded_instruction_bits_RS1_valid =
+    _is_INT_T | IMMEDIATE | IS_LOAD | IS_STORE | _is_INT_T_7 | _is_INT_T_3;
   assign io_decoded_instruction_bits_RS2 = {1'h0, io_instruction_bits_instruction[24:20]};
-  assign io_decoded_instruction_bits_RS2_valid = 1'h1;
+  assign io_decoded_instruction_bits_RS2_valid = _is_INT_T | IS_STORE | _is_INT_T_3;
   assign io_decoded_instruction_bits_IMM =
     io_instruction_bits_instruction[6:0] == 7'h63
       ? {19'h0,
@@ -137,16 +154,18 @@ module decoder(
   assign io_decoded_instruction_bits_ROB_index = io_instruction_bits_ROB_index;
   assign io_decoded_instruction_bits_instructionType = instructionType;
   assign io_decoded_instruction_bits_portID =
-    needs_ALU | needs_branch_unit
-      ? 2'h0
-      : _is_INT_T
-        & (io_instruction_bits_instruction[14:12] == 3'h4
-           | io_instruction_bits_instruction[14:12] == 3'h5
-           | io_instruction_bits_instruction[14:12] == 3'h6
-           | (&(io_instruction_bits_instruction[14:12])))
-        & io_instruction_bits_instruction[25]
-          ? 2'h1
-          : {2{IS_STORE | IS_LOAD}};
+    needs_ALU
+      ? next_ALU_port_0
+      : needs_branch_unit
+          ? 2'h0
+          : _is_INT_T
+            & (io_instruction_bits_instruction[14:12] == 3'h4
+               | io_instruction_bits_instruction[14:12] == 3'h5
+               | io_instruction_bits_instruction[14:12] == 3'h6
+               | (&(io_instruction_bits_instruction[14:12])))
+            & io_instruction_bits_instruction[25]
+              ? 2'h1
+              : {2{needs_memory}};
   assign io_decoded_instruction_bits_RS_type =
     _is_INT_T | IMMEDIATE | _is_INT_T_3 | _is_INT_T_5 | _is_INT_T_7
       ? 2'h0
@@ -154,10 +173,9 @@ module decoder(
   assign io_decoded_instruction_bits_needs_ALU = needs_ALU;
   assign io_decoded_instruction_bits_needs_branch_unit = needs_branch_unit;
   assign io_decoded_instruction_bits_needs_CSRs = 1'h0;
-  assign io_decoded_instruction_bits_SUBTRACT =
-    _is_INT_T & io_instruction_bits_instruction[27];
+  assign io_decoded_instruction_bits_SUBTRACT = _is_INT_T & _needs_ALU_T_1;
   assign io_decoded_instruction_bits_MULTIPLY =
-    _is_INT_T & io_instruction_bits_instruction[25];
+    _is_INT_T & io_instruction_bits_instruction[31:25] == 7'h1;
   assign io_decoded_instruction_bits_IMMEDIATE = IMMEDIATE;
   assign io_decoded_instruction_bits_IS_LOAD = IS_LOAD;
   assign io_decoded_instruction_bits_IS_STORE = IS_STORE;
