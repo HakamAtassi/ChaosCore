@@ -62,7 +62,7 @@ module SDPReadWriteSmem(
 endmodule
 
 // VCS coverage exclude_file
-module ram_64x278(
+module mem_64x278(
   input  [5:0]   R0_addr,
   input          R0_en,
                  R0_clk,
@@ -74,36 +74,44 @@ module ram_64x278(
 );
 
   reg [277:0] Memory[0:63];
+  reg         _R0_en_d0;
+  reg [5:0]   _R0_addr_d0;
+  always @(posedge R0_clk) begin
+    _R0_en_d0 <= R0_en;
+    _R0_addr_d0 <= R0_addr;
+  end // always @(posedge)
   always @(posedge W0_clk) begin
     if (W0_en & 1'h1)
       Memory[W0_addr] <= W0_data;
   end // always @(posedge)
-  assign R0_data = R0_en ? Memory[R0_addr] : 278'bx;
+  assign R0_data = _R0_en_d0 ? Memory[_R0_addr_d0] : 278'bx;
 endmodule
 
-module ReadWriteSmem(
+module icache_ReadWriteSmem(
   input          clock,
                  io_wr_en,
   input  [5:0]   io_addr,
-  input  [277:0] io_data_in,
-  output [277:0] io_data_out
+  input  [20:0]  io_data_in_tag,
+  input  [255:0] io_data_in_data,
+  output         io_data_out_valid,
+  output [20:0]  io_data_out_tag,
+  output [255:0] io_data_out_data
 );
 
-  wire [277:0] _ram_ext_R0_data;
-  reg  [277:0] dataOut;
-  always @(posedge clock)
-    dataOut <= _ram_ext_R0_data;
-  ram_64x278 ram_ext (
+  wire [277:0] _mem_ext_R0_data;
+  mem_64x278 mem_ext (
     .R0_addr (io_addr),
     .R0_en   (1'h1),
     .R0_clk  (clock),
-    .R0_data (_ram_ext_R0_data),
+    .R0_data (_mem_ext_R0_data),
     .W0_addr (io_addr),
     .W0_en   (io_wr_en),
     .W0_clk  (clock),
-    .W0_data (io_data_in)
+    .W0_data ({io_data_in_data, io_data_in_tag, 1'h1})
   );
-  assign io_data_out = dataOut;
+  assign io_data_out_valid = _mem_ext_R0_data[0];
+  assign io_data_out_tag = _mem_ext_R0_data[21:1];
+  assign io_data_out_data = _mem_ext_R0_data[277:22];
 endmodule
 
 module instruction_validator(
@@ -152,56 +160,57 @@ module instruction_cache(
 );
 
   wire             miss;
+  wire             hit;
   wire [1:0]       hit_oh;
-  wire [29:0]      current_addr;
   wire [3:0]       _validator_io_instruction_output;
-  wire [277:0]     _data_memory_1_io_data_out;
-  wire [277:0]     _data_memory_0_io_data_out;
+  wire             _data_memory_1_io_data_out_valid;
+  wire [20:0]      _data_memory_1_io_data_out_tag;
+  wire [255:0]     _data_memory_1_io_data_out_data;
+  wire             _data_memory_0_io_data_out_valid;
+  wire [20:0]      _data_memory_0_io_data_out_tag;
+  wire [255:0]     _data_memory_0_io_data_out_data;
   wire [1:0]       _LRU_memory_io_data_out;
   reg  [1:0]       cache_state;
-  reg  [31:0]      replay_addr;
-  reg  [20:0]      replay_tag;
-  reg              replay_valid;
   reg  [31:0]      fetch_PC_buf;
-  reg              packet_index;
-  wire [2:0]       current_addr_instruction_offset = current_addr[2:0];
-  reg  [20:0]      replay_tag_REG;
-  wire             _GEN = miss & ~io_kill;
-  reg  [31:0]      io_DRAM_request_bits_addr_REG;
-  wire [31:0]      _GEN_0 = _GEN ? io_DRAM_request_bits_addr_REG & 32'hFFFFFFE0 : 32'h0;
-  wire             _GEN_1 = cache_state == 2'h1;
-  reg  [31:0]      io_DRAM_request_bits_addr_REG_1;
-  wire             _GEN_2 = ~_GEN_1 | io_DRAM_request_ready;
-  assign current_addr =
-    (|cache_state) | miss ? replay_addr[31:2] : io_cpu_addr_bits[31:2];
-  wire [277:0]     current_data = {1'h1, replay_tag, io_DRAM_resp_bits_data};
+  reg  [31:0]      replay_address;
+  reg              request_valid;
+  reg  [31:0]      request_addr;
+  reg              resp_ready;
+  reg              cache_valid;
+  wire             io_cache_data_valid_0 = cache_valid | hit;
+  reg  [31:0]      request_addr_REG;
+  wire [31:0]      current_address =
+    (|cache_state) | miss ? replay_address : io_cpu_addr_bits;
+  wire [20:0]      current_packet_tag = current_address[31:11];
+  wire [5:0]       current_packet_set = current_address[10:5];
+  wire             current_packet_fetch_packet = current_address[4];
+  wire [2:0]       current_packet_instruction_offset = current_address[4:2];
   reg  [5:0]       LRU_memory_io_wr_addr_REG;
   wire [1:0]       allocate_way =
     _LRU_memory_io_data_out[1] ? {1'h0, ~(_LRU_memory_io_data_out[0])} : 2'h2;
-  wire [20:0]      memory_tags_vec_0 = _data_memory_0_io_data_out[276:256];
-  wire [20:0]      memory_tags_vec_1 = _data_memory_1_io_data_out[276:256];
+  wire             _data_memory_1_io_wr_en_T_2 = cache_state == 2'h1;
   reg  [20:0]      hit_oh_vec_0_REG;
   wire             hit_oh_vec_0 =
-    memory_tags_vec_0 == hit_oh_vec_0_REG & _data_memory_0_io_data_out[277];
+    _data_memory_0_io_data_out_tag == hit_oh_vec_0_REG & _data_memory_0_io_data_out_valid;
   reg  [20:0]      hit_oh_vec_1_REG;
   wire             hit_oh_vec_1 =
-    memory_tags_vec_1 == hit_oh_vec_1_REG & _data_memory_1_io_data_out[277];
+    _data_memory_1_io_data_out_tag == hit_oh_vec_1_REG & _data_memory_1_io_data_out_valid;
   assign hit_oh = {hit_oh_vec_1, hit_oh_vec_0};
+  wire             replay_valid = cache_state == 2'h2;
   reg              hit_REG;
   reg              hit_REG_1;
   reg              hit_REG_2;
-  reg              hit_REG_3;
-  wire             hit = (|hit_oh) & (hit_REG | hit_REG_1) & ~hit_REG_2 & ~hit_REG_3;
+  assign hit = (|hit_oh) & (hit_REG | replay_valid) & ~hit_REG_1 & ~hit_REG_2;
   reg              miss_REG;
   reg              miss_REG_1;
   reg              miss_REG_2;
-  reg              miss_REG_3;
-  assign miss = ~(|hit_oh) & (miss_REG | miss_REG_1) & ~miss_REG_2 & ~miss_REG_3;
+  assign miss = ~(|hit_oh) & (miss_REG | replay_valid) & ~miss_REG_1 & ~miss_REG_2;
   wire [255:0]     hit_instruction_data =
     hit_oh_vec_1
-      ? _data_memory_1_io_data_out[255:0]
-      : hit_oh_vec_0 ? _data_memory_0_io_data_out[255:0] : 256'h0;
-  wire [7:0][31:0] _GEN_3 =
+      ? _data_memory_1_io_data_out_data
+      : hit_oh_vec_0 ? _data_memory_0_io_data_out_data : 256'h0;
+  reg              io_cache_data_bits_instructions_0_instruction_REG;
+  wire [7:0][31:0] _GEN =
     {{hit_instruction_data[255:224]},
      {hit_instruction_data[223:192]},
      {hit_instruction_data[191:160]},
@@ -210,128 +219,142 @@ module instruction_cache(
      {hit_instruction_data[95:64]},
      {hit_instruction_data[63:32]},
      {hit_instruction_data[31:0]}};
-  wire [2:0]       _GEN_4 = {packet_index, 2'h0};
-  reg              io_cache_data_bits_valid_bits_0_REG;
-  reg              io_cache_data_bits_valid_bits_1_REG;
-  reg              io_cache_data_bits_valid_bits_2_REG;
-  reg              io_cache_data_bits_valid_bits_3_REG;
+  reg              io_cache_data_bits_instructions_1_instruction_REG;
+  reg              io_cache_data_bits_instructions_2_instruction_REG;
+  reg              io_cache_data_bits_instructions_3_instruction_REG;
   always @(posedge clock) begin
     if (reset) begin
       cache_state <= 2'h0;
-      replay_addr <= 32'h0;
-      replay_tag <= 21'h0;
-      replay_valid <= 1'h0;
       fetch_PC_buf <= 32'h0;
-      packet_index <= 1'h0;
+      replay_address <= 32'h0;
+      request_valid <= 1'h0;
+      request_addr <= 32'h0;
+      resp_ready <= 1'h0;
+      cache_valid <= 1'h0;
     end
     else begin
-      automatic logic _GEN_5;
-      _GEN_5 = cache_state == 2'h2;
+      automatic logic _GEN_0;
+      _GEN_0 = miss & ~io_kill;
       if (|cache_state) begin
+        automatic logic _GEN_1 = cache_state == 2'h1;
+        automatic logic _GEN_2 = _GEN_1 & io_DRAM_request_ready & request_valid;
+        automatic logic _GEN_3;
+        _GEN_3 = io_DRAM_resp_valid & resp_ready;
         if (_GEN_1) begin
           if (io_kill)
             cache_state <= 2'h0;
-          else if (io_DRAM_resp_valid)
+          else if (_GEN_3)
             cache_state <= 2'h2;
+          cache_valid <= _GEN_3 | cache_valid;
         end
-        else if (_GEN_5)
-          cache_state <= 2'h0;
+        else begin
+          automatic logic _GEN_4 =
+            cache_state == 2'h2 & io_cache_data_valid_0 & io_cache_data_ready;
+          if (_GEN_4)
+            cache_state <= 2'h0;
+          cache_valid <= ~_GEN_4 & cache_valid;
+        end
+        request_valid <= ~_GEN_2 & request_valid;
+        if (_GEN_2)
+          request_addr <= 32'h0;
+        resp_ready <= ~(_GEN_1 & _GEN_3) & resp_ready;
       end
       else begin
-        if (_GEN)
+        if (_GEN_0) begin
           cache_state <= 2'h1;
-        replay_tag <= replay_tag_REG;
+          request_addr <= request_addr_REG & 32'hFFFFFFE0;
+        end
+        request_valid <= _GEN_0 | request_valid;
+        resp_ready <= _GEN_0 | resp_ready;
       end
-      if (io_cpu_addr_valid)
-        replay_addr <= io_cpu_addr_bits;
-      replay_valid <=
-        (|cache_state)
-        & (_GEN_1 ? ~io_kill & io_DRAM_resp_valid : ~_GEN_5 & replay_valid);
-      if (~(|cache_state) & ~miss) begin
+      if ((|cache_state) | _GEN_0) begin
+      end
+      else begin
         fetch_PC_buf <= io_cpu_addr_bits;
-        packet_index <= current_addr[2];
+        replay_address <= io_cpu_addr_bits;
       end
     end
-    replay_tag_REG <= io_cpu_addr_bits[31:11];
-    io_DRAM_request_bits_addr_REG <= io_cpu_addr_bits;
-    if (|cache_state) begin
-      if (_GEN_2)
-        io_DRAM_request_bits_addr_REG_1 <= 32'h0;
-    end
-    else
-      io_DRAM_request_bits_addr_REG_1 <= _GEN_0;
-    LRU_memory_io_wr_addr_REG <= current_addr[8:3];
-    hit_oh_vec_0_REG <= current_addr[29:9];
-    hit_oh_vec_1_REG <= current_addr[29:9];
-    hit_REG <= io_cpu_addr_valid;
-    hit_REG_1 <= replay_valid;
-    hit_REG_2 <= io_kill;
-    hit_REG_3 <= reset;
+    request_addr_REG <= io_cpu_addr_bits;
+    LRU_memory_io_wr_addr_REG <= current_packet_set;
+    hit_oh_vec_0_REG <= current_packet_tag;
+    hit_oh_vec_1_REG <= current_packet_tag;
+    hit_REG <= io_cpu_addr_valid & ~(|cache_state);
+    hit_REG_1 <= io_kill;
+    hit_REG_2 <= reset;
     miss_REG <= io_cpu_addr_valid;
-    miss_REG_1 <= replay_valid;
-    miss_REG_2 <= io_kill;
-    miss_REG_3 <= reset;
-    io_cache_data_bits_valid_bits_0_REG <= _validator_io_instruction_output[3];
-    io_cache_data_bits_valid_bits_1_REG <= _validator_io_instruction_output[2];
-    io_cache_data_bits_valid_bits_2_REG <= _validator_io_instruction_output[1];
-    io_cache_data_bits_valid_bits_3_REG <= _validator_io_instruction_output[0];
+    miss_REG_1 <= io_kill;
+    miss_REG_2 <= reset;
+    io_cache_data_bits_instructions_0_instruction_REG <= current_packet_fetch_packet;
+    io_cache_data_bits_instructions_1_instruction_REG <= current_packet_fetch_packet;
+    io_cache_data_bits_instructions_2_instruction_REG <= current_packet_fetch_packet;
+    io_cache_data_bits_instructions_3_instruction_REG <= current_packet_fetch_packet;
   end // always @(posedge)
   SDPReadWriteSmem LRU_memory (
     .clock       (clock),
     .reset       (reset),
-    .io_rd_addr  (current_addr[8:3]),
+    .io_rd_addr  (current_packet_set),
     .io_data_out (_LRU_memory_io_data_out),
     .io_wr_addr  (LRU_memory_io_wr_addr_REG),
     .io_wr_en    (hit),
     .io_data_in
       ({2{(_LRU_memory_io_data_out | hit_oh) != 2'h3}} & _LRU_memory_io_data_out | hit_oh)
   );
-  ReadWriteSmem data_memory_0 (
-    .clock       (clock),
-    .io_wr_en    (io_DRAM_resp_valid & allocate_way[0]),
-    .io_addr     (current_addr[8:3]),
-    .io_data_in  (current_data),
-    .io_data_out (_data_memory_0_io_data_out)
+  icache_ReadWriteSmem data_memory_0 (
+    .clock             (clock),
+    .io_wr_en
+      (io_DRAM_resp_valid & allocate_way[0] & _data_memory_1_io_wr_en_T_2),
+    .io_addr           (current_packet_set),
+    .io_data_in_tag    (replay_address[31:11]),
+    .io_data_in_data   (io_DRAM_resp_bits_data),
+    .io_data_out_valid (_data_memory_0_io_data_out_valid),
+    .io_data_out_tag   (_data_memory_0_io_data_out_tag),
+    .io_data_out_data  (_data_memory_0_io_data_out_data)
   );
-  ReadWriteSmem data_memory_1 (
-    .clock       (clock),
-    .io_wr_en    (io_DRAM_resp_valid & allocate_way[1]),
-    .io_addr     (current_addr[8:3]),
-    .io_data_in  (current_data),
-    .io_data_out (_data_memory_1_io_data_out)
+  icache_ReadWriteSmem data_memory_1 (
+    .clock             (clock),
+    .io_wr_en
+      (io_DRAM_resp_valid & allocate_way[1] & _data_memory_1_io_wr_en_T_2),
+    .io_addr           (current_packet_set),
+    .io_data_in_tag    (replay_address[31:11]),
+    .io_data_in_data   (io_DRAM_resp_bits_data),
+    .io_data_out_valid (_data_memory_1_io_data_out_valid),
+    .io_data_out_tag   (_data_memory_1_io_data_out_tag),
+    .io_data_out_data  (_data_memory_1_io_data_out_data)
   );
   instruction_validator validator (
-    .io_instruction_index  (current_addr_instruction_offset[1:0]),
+    .io_instruction_index  (current_packet_instruction_offset[1:0]),
     .io_instruction_output (_validator_io_instruction_output)
   );
   assign io_cpu_addr_ready = ~(|cache_state) & ~miss;
-  assign io_DRAM_resp_ready =
-    (|cache_state) ? _GEN_1 & (io_kill | ~io_DRAM_resp_valid) : _GEN;
-  assign io_cache_data_valid = hit & ~io_kill;
+  assign io_DRAM_resp_ready = resp_ready;
+  assign io_cache_data_valid = io_cache_data_valid_0;
   assign io_cache_data_bits_fetch_PC = fetch_PC_buf;
   assign io_cache_data_bits_valid_bits_0 =
-    io_cache_data_bits_valid_bits_0_REG & hit & ~io_kill;
+    _validator_io_instruction_output[3] & io_cache_data_valid_0;
   assign io_cache_data_bits_valid_bits_1 =
-    io_cache_data_bits_valid_bits_1_REG & hit & ~io_kill;
+    _validator_io_instruction_output[2] & io_cache_data_valid_0;
   assign io_cache_data_bits_valid_bits_2 =
-    io_cache_data_bits_valid_bits_2_REG & hit & ~io_kill;
+    _validator_io_instruction_output[1] & io_cache_data_valid_0;
   assign io_cache_data_bits_valid_bits_3 =
-    io_cache_data_bits_valid_bits_3_REG & hit & ~io_kill;
-  assign io_cache_data_bits_instructions_0_instruction = _GEN_3[{packet_index, 2'h0}];
+    _validator_io_instruction_output[0] & io_cache_data_valid_0;
+  assign io_cache_data_bits_instructions_0_instruction =
+    _GEN[{io_cache_data_bits_instructions_0_instruction_REG, 2'h0}];
   assign io_cache_data_bits_instructions_0_packet_index = 4'h0;
   assign io_cache_data_bits_instructions_0_ROB_index = 6'h0;
-  assign io_cache_data_bits_instructions_1_instruction = _GEN_3[_GEN_4 + 3'h1];
+  assign io_cache_data_bits_instructions_1_instruction =
+    _GEN[{io_cache_data_bits_instructions_1_instruction_REG, 2'h0} + 3'h1];
   assign io_cache_data_bits_instructions_1_packet_index = 4'h0;
   assign io_cache_data_bits_instructions_1_ROB_index = 6'h0;
-  assign io_cache_data_bits_instructions_2_instruction = _GEN_3[_GEN_4 + 3'h2];
+  assign io_cache_data_bits_instructions_2_instruction =
+    _GEN[{io_cache_data_bits_instructions_2_instruction_REG, 2'h0} + 3'h2];
   assign io_cache_data_bits_instructions_2_packet_index = 4'h0;
   assign io_cache_data_bits_instructions_2_ROB_index = 6'h0;
-  assign io_cache_data_bits_instructions_3_instruction = _GEN_3[_GEN_4 + 3'h3];
+  assign io_cache_data_bits_instructions_3_instruction =
+    _GEN[{io_cache_data_bits_instructions_3_instruction_REG, 2'h0} + 3'h3];
   assign io_cache_data_bits_instructions_3_packet_index = 4'h0;
   assign io_cache_data_bits_instructions_3_ROB_index = 6'h0;
-  assign io_DRAM_request_valid = (|cache_state) ? _GEN_1 & ~io_DRAM_request_ready : _GEN;
-  assign io_DRAM_request_bits_addr =
-    (|cache_state) ? (_GEN_2 ? 32'h0 : io_DRAM_request_bits_addr_REG_1) : _GEN_0;
+  assign io_DRAM_request_valid = request_valid;
+  assign io_DRAM_request_bits_addr = request_addr;
   assign io_DRAM_request_bits_wr_data = 32'h0;
   assign io_DRAM_request_bits_wr_en = 1'h0;
 endmodule

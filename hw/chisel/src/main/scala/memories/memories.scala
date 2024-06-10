@@ -56,6 +56,27 @@ class ReadWriteSmem(depth: Int, width: Int) extends Module {
   io.data_out := dataOut
 }
 
+class icache_ReadWriteSmem[T <: Data](dataType: T, depth: Int) extends Module {
+  val io = IO(new Bundle {
+    val enable = Input(Bool())
+    val wr_en = Input(Bool())
+    val addr = Input(UInt(log2Ceil(depth).W))
+    val data_in = Input(dataType)
+    val data_out = Output(dataType)
+  })
+
+  val mem = SyncReadMem(depth, dataType)
+
+    when(io.enable) {
+      when(io.wr_en) {
+        mem.write(io.addr, io.data_in)
+      }
+    }
+
+  io.data_out := mem.read(io.addr)
+
+}
+
 
 // Simple dual port memory
 // 1 dedicated read, 1 dedicated write

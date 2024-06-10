@@ -120,6 +120,39 @@ class metadata extends Bundle{
     val BTB_target      = UInt(32.W)
 }
 
+class instruction_cache_data_line(parameters:Parameters) extends Bundle{
+    import parameters._
+
+    val set_bits                        = log2Ceil(L1_instructionCacheSets)
+    val byte_offset_bits                = log2Ceil(L1_instructionCacheBlockSizeBytes)
+
+    val tag_bits                        = 32 - set_bits - byte_offset_bits
+    val data_bits                       = L1_instructionCacheBlockSizeBytes*8
+
+    val valid   = Bool()
+    val tag     = UInt(tag_bits.W)
+    val data    = UInt(data_bits.W)
+
+}
+
+class instruction_cache_address_packet(parameters: Parameters) extends Bundle {
+
+    import parameters._
+
+    val set_bits                    = log2Ceil(L1_instructionCacheSets)
+    val tag_bits                    = 32 - log2Ceil(L1_instructionCacheBlockSizeBytes)-set_bits    // 32 - bits required to index set - bits required to index within line - 2 bits due to 4 byte aligned data
+    val instruction_offset_bits     = log2Ceil(L1_instructionCacheBlockSizeBytes/4)
+    val fetch_packet_bits           = log2Ceil(L1_instructionCacheBlockSizeBytes/4/fetchWidth)
+
+    val tag                     = UInt(tag_bits.W)
+    val set                     = UInt(set_bits.W)
+    val fetch_packet            = UInt(fetch_packet_bits.W)
+    val instruction_offset      = UInt(instruction_offset_bits.W)
+}
+
+
+
+
 /////////////////
 // BP channels //
 /////////////////

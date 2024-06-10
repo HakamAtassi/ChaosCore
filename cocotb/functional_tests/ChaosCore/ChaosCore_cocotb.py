@@ -32,8 +32,12 @@ async def test_reset(dut):
 
     await cocotb.start(generateClock(dut)) 
 
+
+
     dut = ChaosCore_dut(dut, DRAM=DRAM)  # wrap dut with helper class
     await dut.reset()   # reset module
+
+    dut.set_dram_ready(1)   # dram ready for request (from cache)
 
     await RisingEdge(dut.clock())
 
