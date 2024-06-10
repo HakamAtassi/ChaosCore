@@ -146,7 +146,8 @@ module decoder(
                   ? {20'h0,
                      io_instruction_bits_instruction[31:25],
                      io_instruction_bits_instruction[11:7]}
-                  : io_instruction_bits_instruction[6:0] == 7'h33
+                  : io_instruction_bits_instruction[6:0] == 7'h17
+                    | io_instruction_bits_instruction[6:0] == 7'h37
                       ? {io_instruction_bits_instruction[31:12], 12'h0}
                       : 32'h0;
   assign io_decoded_instruction_bits_FUNCT3 = io_instruction_bits_instruction[14:12];
