@@ -168,3 +168,5 @@ class PC_arbit(parameters:Parameters) extends Module{
     io.revert.ready := 1.B
 
 }
+
+// FIXME: this module is missing fire()

@@ -63,7 +63,8 @@ class backend(parameters:Parameters) extends Module{
 
 
         // ALLOCATE //
-        val backend_packet          =   Vec(dispatchWidth, Flipped(Decoupled(new decoded_instruction(parameters))))
+        //val backend_packet          =   Vec(dispatchWidth, Flipped(Decoupled(new decoded_instruction(parameters))))
+        val backend_packet          =   Flipped(Decoupled(new decoded_fetch_packet(parameters)))
 
         //val INTRS_sources_ready     =   Input(Vec(dispatchWidth, new sources_ready()))
         //val MEMRS_sources_ready     =   Input(Vec(dispatchWidth, new sources_ready()))
@@ -90,16 +91,18 @@ class backend(parameters:Parameters) extends Module{
     INT_RS.io.commit <> io.commit
 
     for (i <- 0 until dispatchWidth){
-        INT_RS.io.backend_packet(i).bits     := io.backend_packet(i).bits  // pass data along
-        INT_RS.io.backend_packet(i).valid    := (io.backend_packet(i).bits.RS_type === RS_types.INT) && io.backend_packet(i).valid   // does this entry correspond to RS
+        INT_RS.io.backend_packet(i).bits     := io.backend_packet.bits.decoded_instruction(i)  // pass data along
+        INT_RS.io.backend_packet(i).valid    := (io.backend_packet.bits.decoded_instruction(i).RS_type === RS_types.INT) && io.backend_packet.bits.valid_bits(i)   
+        
+        // does this entry correspond to RS
     }
 
 
     INT_RS.io.commit <> io.commit
 
     for (i <- 0 until dispatchWidth){
-        MEM_RS.io.backend_packet(i).bits     := io.backend_packet(i).bits  // pass data along
-        MEM_RS.io.backend_packet(i).valid    := (io.backend_packet(i).bits.RS_type === RS_types.MEM)  && io.backend_packet(i).valid // does this entry correspond to RS
+        MEM_RS.io.backend_packet(i).bits     := io.backend_packet.bits.decoded_instruction(i)  // pass data along
+        MEM_RS.io.backend_packet(i).valid    := (io.backend_packet.bits.decoded_instruction(i).RS_type === RS_types.MEM)  && io.backend_packet.bits.valid_bits(i) // does this entry correspond to RS
     }
 
     // Assign ready bits
@@ -256,6 +259,6 @@ class backend(parameters:Parameters) extends Module{
     io.DRAM_resp    <>  FU3.io.DRAM_resp
 
 
-    io.backend_packet.foreach(_.ready := DontCare)
+    io.backend_packet.ready := DontCare
 
 }

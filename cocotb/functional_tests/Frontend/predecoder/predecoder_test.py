@@ -67,10 +67,6 @@ def test_JALR_output_invalidation():
         configs["testcase"] = "test_JALR_output_invalidation"
         run(**configs)
 
-def test_call_RAS_update():
-        configs["testcase"] = "test_call_RAS_update"
-        run(**configs)
-
 def test_FTQ_JAL():
         configs["testcase"] = "test_FTQ_JAL"
         run(**configs)
@@ -117,5 +113,13 @@ def test_FTQ_BEQ_GHR_non_branch():
 
 def test_FTQ_BEQ_GHR_RET():
         configs["testcase"] = "test_FTQ_BEQ_GHR_RET"
+        run(**configs)
+
+def test_call_RAS_update_no_BTB():
+        configs["testcase"] = "test_call_RAS_update_no_BTB"
+        run(**configs)
+
+def test_call_RAS_update_has_BTB():
+        configs["testcase"] = "test_call_RAS_update_has_BTB"
         run(**configs)
 

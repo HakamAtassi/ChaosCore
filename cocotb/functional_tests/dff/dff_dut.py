@@ -1,6 +1,6 @@
 import sys
 from cocotb.clock import Clock
-from cocotb.triggers import RisingEdge, FallingEdge, Timer
+from cocotb.triggers import RisingEdge, FallingEdge, Timer, ReadOnly
 
 # Add helper functions as needed
 

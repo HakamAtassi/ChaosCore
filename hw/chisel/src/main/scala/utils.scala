@@ -159,3 +159,28 @@ object helperFunctions {
         imm
     }
 }
+
+
+
+
+object get_decomposed_icache_address{
+  def apply(parameters:Parameters, address:UInt):instruction_cache_address_packet={
+      import parameters._
+
+      // FIXME: move these value calculations elsewhere
+      val set_bits                    = log2Ceil(L1_instructionCacheSets)
+      val tag_bits                    = 32 - log2Ceil(L1_instructionCacheBlockSizeBytes)-set_bits    // 32 - bits required to index set - bits required to index within line - 2 bits due to 4 byte aligned data
+      val instruction_offset_bits     = log2Ceil(L1_instructionCacheBlockSizeBytes/4)
+      val fetch_packet_bits           = log2Ceil(L1_instructionCacheBlockSizeBytes/4/fetchWidth)
+
+      val decomposed_icache_address = Wire(new instruction_cache_address_packet(parameters))
+
+      decomposed_icache_address.tag                 := address(31, 31-tag_bits+1)
+      decomposed_icache_address.set                 := address(31-tag_bits, 31-tag_bits-set_bits+1)
+      decomposed_icache_address.fetch_packet        := address(31-tag_bits-set_bits, 31-tag_bits-set_bits-fetch_packet_bits+1) 
+      decomposed_icache_address.instruction_offset  := address(2+instruction_offset_bits, 2) // The offset within the packet
+
+      decomposed_icache_address
+
+  }
+}

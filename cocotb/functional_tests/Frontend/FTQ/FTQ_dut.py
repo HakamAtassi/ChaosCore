@@ -29,7 +29,6 @@ def generate_null_predictions():
     inputs["GHR"]                       =   0
     inputs["NEXT"]                      =   0
     inputs["TOS"]                       =   0
-    inputs["RAT_IDX"]                   =   0
     return inputs
 
 def generate_null_commit():
@@ -44,7 +43,6 @@ def generate_null_commit():
     inputs["GHR"]                       =   0
     inputs["TOS"]                       =   0
     inputs["NEXT"]                      =   0
-    inputs["RAT_IDX"]                   =   0
     return inputs
 
 class FTQ_dut:
@@ -86,7 +84,6 @@ class FTQ_dut:
         getattr(self.dut, f"io_predictions_bits_GHR").value                             =   inputs["GHR"]
         getattr(self.dut, f"io_predictions_bits_NEXT").value                            =   inputs["NEXT"]
         getattr(self.dut, f"io_predictions_bits_TOS").value                             =   inputs["TOS"]
-        getattr(self.dut, f"io_predictions_bits_RAT_IDX").value                         =   inputs["RAT_IDX"]
         getattr(self.dut, f"io_predictions_bits_resolved_PC").value                     =   inputs["resolved_PC"]
 
     def write_commit(self, inputs=generate_null_commit()):
@@ -99,7 +96,6 @@ class FTQ_dut:
         getattr(self.dut, f"io_commit_GHR").value                                       =   inputs["GHR"]
         getattr(self.dut, f"io_commit_TOS").value                                       =   inputs["TOS"]
         getattr(self.dut, f"io_commit_NEXT").value                                      =   inputs["NEXT"]
-        getattr(self.dut, f"io_commit_RAT_IDX").value                                   =   inputs["RAT_IDX"]
 
     def get_outputs(self):
         outputs = {}
@@ -113,7 +109,6 @@ class FTQ_dut:
         outputs["GHR"] = getattr(self.dut, f"io_FTQ_GHR").value
         outputs["NEXT"] = getattr(self.dut, f"io_FTQ_NEXT").value
         outputs["TOS"] = getattr(self.dut, f"io_FTQ_TOS").value
-        outputs["RAT_IDX"] = getattr(self.dut, f"io_FTQ_RAT_IDX").value
         outputs["resolved_PC"] = getattr(self.dut, f"io_FTQ_resolved_PC")
         return outputs
 
@@ -139,7 +134,6 @@ class FTQ_dut:
             FTQ["GHR"][i] = getattr(self.dut, f"FTQ_{i}_GHR").value
             FTQ["NEXT"][i] = getattr(self.dut, f"FTQ_{i}_NEXT").value
             FTQ["TOS"][i] = getattr(self.dut, f"FTQ_{i}_TOS").value
-            FTQ["RAT_IDX"][i] = getattr(self.dut, f"FTQ_{i}_RAT_IDX").value
             FTQ["resolved_PC"][i] = getattr(self.dut, f"FTQ_{i}_resolved_PC").value
 
 

@@ -667,79 +667,6 @@ async def test_JALR_output_invalidation(dut):
     dut.print_final_fetch_packet()
 
 
-# test RAS update
-@cocotb.test()
-async def test_call_RAS_update(dut):
-
-    await cocotb.start(generateClock(dut)) 
-
-    dut = predecoder_dut(dut)  # wrap dut with helper class
-    await dut.reset()   # reset module
-
-
-
-    fetch_packet_input   = generate_null_fetch_packet()
-    prediction_input     = generate_null_prediction()
-
-
-    fetch_packet_input["valid"]     =   1
-    fetch_packet_input["fetch_PC"]  =   0x0     # This is not a very usefull test because the call address being written to the RAS is 0 since its happening straight out of reset
-
-    fetch_packet_input["instruction"][0]    =   0x0de0c0ef   # CALL (JAL x1, 0xc0de)
-    fetch_packet_input["valid_bits"][0]     =   1      # Valid
-    fetch_packet_input["packet_index"][0]   =   0      
-
-    fetch_packet_input["instruction"][1]    =   0x13   # NOP
-    fetch_packet_input["valid_bits"][1]     =   1      # Valid
-    fetch_packet_input["packet_index"][1]   =   1      
-
-    fetch_packet_input["instruction"][2]    =   0x13   # NOP
-    fetch_packet_input["valid_bits"][2]     =   1      # Valid
-    fetch_packet_input["packet_index"][2]   =   2      
-
-    fetch_packet_input["instruction"][3]    =   0x13   # NOP
-    fetch_packet_input["valid_bits"][3]     =   1      # Valid
-    fetch_packet_input["packet_index"][3]   =   3      
-
-    prediction_input["valid"] =   1
-
-    dut.write_fetch_packet(fetch_packet_input)
-    dut.write_prediction(prediction_input)
-
-    await RisingEdge(dut.clock())
-
-    fetch_packet_input["valid"]     =   1
-    fetch_packet_input["fetch_PC"]  =   0xc0de
-
-    fetch_packet_input["instruction"][0]    =   0x13   # NOP
-    fetch_packet_input["valid_bits"][0]     =   1      # Valid
-    fetch_packet_input["packet_index"][0]   =   0      
-
-    fetch_packet_input["instruction"][1]    =   0x13   # NOP
-    fetch_packet_input["valid_bits"][1]     =   1      # Valid
-    fetch_packet_input["packet_index"][1]   =   1      
-
-    fetch_packet_input["instruction"][2]    =   0x13   # NOP
-    fetch_packet_input["valid_bits"][2]     =   1      # Valid
-    fetch_packet_input["packet_index"][2]   =   2      
-
-    fetch_packet_input["instruction"][3]    =   0x13   # NOP
-    fetch_packet_input["valid_bits"][3]     =   1      # Valid
-    fetch_packet_input["packet_index"][3]   =   3      
-
-    prediction_input["valid"] =   1
-
-    dut.write_fetch_packet(fetch_packet_input)
-    dut.write_prediction(prediction_input)
-    await ReadOnly()
-
-    assert dut.get_expected_address() == 0xc0de
-    assert dut.get_revert()["valid"] == 0
-    assert dut.get_RAS_read()["is_call"]   == 1
-    assert dut.get_RAS_read()["call_addr"] == 0x0
-
-    assert dut.get_final_fetch_packet()["instruction_valid"] == [1,0,0,0]
-
 @cocotb.test()
 async def test_FTQ_JAL(dut):
     """Check that JALs request an FTQ write due to FTQ"""
@@ -1460,3 +1387,32 @@ async def test_FTQ_BEQ_GHR_RET(dut):
     await ReadOnly()
 
     assert dut.get_GHR() == 0b01
+
+
+
+
+
+# test RAS update
+@cocotb.test()
+async def test_call_RAS_update_no_BTB(dut):
+    await cocotb.start(generateClock(dut)) 
+    """When a call takes place, the RAS should be updated"""
+    """If the the call address (JALR) is not in the BTB, branch is predicted not taken"""
+
+    dut = predecoder_dut(dut)  # wrap dut with helper class
+    await dut.reset()   # reset module
+
+    
+    assert False
+
+# test RAS update
+@cocotb.test()
+async def test_call_RAS_update_has_BTB(dut):
+    await cocotb.start(generateClock(dut)) 
+    """When a call takes place, the RAS should be updated"""
+    """If the the call address (JALR) is in the BTB, branch is predicted taken"""
+
+    dut = predecoder_dut(dut)  # wrap dut with helper class
+    await dut.reset()   # reset module
+    
+    assert False
