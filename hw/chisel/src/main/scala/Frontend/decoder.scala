@@ -37,7 +37,6 @@ import java.rmi.server.UID
 
 import helperFunctions._
 
-
 class decoder(parameters:Parameters) extends Module{   // basic decoder and field extraction
     import parameters._
     import InstructionType._
@@ -57,6 +56,7 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
     val RS2         = instruction(24, 20)
     val RD          = instruction(11, 7)
     val IMM         = getImm(instruction)
+
 
     val FUNCT3      = instruction(14, 12)
     val FUNCT7      = instruction(31, 25)
@@ -181,11 +181,12 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
 
 }
 
+
 class fetch_packet_decoder(parameters:Parameters) extends Module{
     import parameters._
     val io = IO(new Bundle{
         val fetch_packet         =  Flipped(Decoupled(new fetch_packet(parameters)))          // Fetch packet result (To Decoders)
-        val decoded_fetch_packet =  Vec(fetchWidth, Decoupled(new decoded_instruction(parameters)))
+        val decoded_fetch_packet =  Decoupled(new decoded_fetch_packet(parameters))
     })
 
     val decoders: Seq[decoder] = Seq.tabulate(fetchWidth) { w =>
@@ -202,13 +203,14 @@ class fetch_packet_decoder(parameters:Parameters) extends Module{
 
     // Register outputs //
     for(i <- 0 until fetchWidth){
-        io.decoded_fetch_packet(i).bits             := RegNext(decoders(i).io.decoded_instruction.bits)
-        decoders(i).io.decoded_instruction.ready    := io.decoded_fetch_packet(i).ready
+        io.decoded_fetch_packet.bits.decoded_instruction(i)         := RegNext(decoders(i).io.decoded_instruction.bits)
+        decoders(i).io.decoded_instruction.ready                    := io.decoded_fetch_packet.ready
+        io.fetch_packet.ready                                       := io.decoded_fetch_packet.ready
     }
 
-    
-    for(i <- 0 until fetchWidth){
-        io.decoded_fetch_packet(i).valid := RegNext(io.fetch_packet.valid && io.fetch_packet.bits.valid_bits(i))//wasnt checking if individual instructions were valid
-    }
+    io.decoded_fetch_packet.valid := RegNext(io.fetch_packet.valid)
+    io.decoded_fetch_packet.bits.fetch_PC   := RegNext(io.fetch_packet.bits.fetch_PC)
+    io.decoded_fetch_packet.bits.valid_bits := RegNext(io.fetch_packet.bits.valid_bits)
 
+    io.decoded_fetch_packet.bits.RAT_IDX    := DontCare // This is fine. RAT_IDX is assigned during rename
 }

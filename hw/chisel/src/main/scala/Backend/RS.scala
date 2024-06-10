@@ -40,7 +40,6 @@ import Thermometor._
 // The Reservation station is able to allocate up to N items at a time
 // And is able to schedule N items at a time as well, based on port availability. 
 
-// FIXME: scale this up to fetchWidth/dispatchWidth or similar 
 class RS(parameters:Parameters) extends Module{
     import parameters._
 
@@ -55,7 +54,6 @@ class RS(parameters:Parameters) extends Module{
 
         // UPDATE //
         val FU_outputs       =      Vec(portCount, Flipped(ValidIO(new FU_output(parameters))))
-
 
         // REDIRECTS // 
         val commit            =   Input(new commit(parameters))
@@ -124,14 +122,14 @@ class RS(parameters:Parameters) extends Module{
 
 
     for(i <- 0 until RSEntries){
-        when(!reservation_station(i).ready_bits.RS2_ready && reservation_station(i).valid){
-            reservation_station(i).ready_bits.RS2_ready := RS2_match(i)
+        when(!reservation_station(i).decoded_instruction.ready_bits.RS2_ready && reservation_station(i).valid){
+            reservation_station(i).decoded_instruction.ready_bits.RS2_ready := RS2_match(i)
         }
     }
 
     for(i <- 0 until RSEntries){
-        when(!reservation_station(i).ready_bits.RS1_ready && reservation_station(i).valid){
-            reservation_station(i).ready_bits.RS1_ready := RS1_match(i)
+        when(!reservation_station(i).decoded_instruction.ready_bits.RS1_ready && reservation_station(i).valid){
+            reservation_station(i).decoded_instruction.ready_bits.RS1_ready := RS1_match(i)
         }
     }
 
@@ -152,8 +150,8 @@ class RS(parameters:Parameters) extends Module{
     val schedulable_instructions = Wire(Vec(RSEntries, Bool()))    // what instructions have both inputs ready?
     for(i <- 0 until RSEntries){
 
-        schedulable_instructions(i) :=  (reservation_station(i).ready_bits.RS1_ready || RS1_match(i)) && 
-                                        (reservation_station(i).ready_bits.RS2_ready || RS2_match(i)) && 
+        schedulable_instructions(i) :=  (reservation_station(i).decoded_instruction.ready_bits.RS1_ready || RS1_match(i)) && 
+                                        (reservation_station(i).decoded_instruction.ready_bits.RS2_ready || RS2_match(i)) && 
                                         reservation_station(i).valid
     }
 

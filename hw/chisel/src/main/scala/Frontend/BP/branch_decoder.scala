@@ -56,18 +56,29 @@ class branch_decoder(index:Int, parameters:Parameters) extends Module{
     })
 
 
+
+
     val opcode = io.instruction(6, 0)
+    val (instructionType, valid) = InstructionType.safe(opcode(6, 2))
+
     val RS1 = io.instruction(19, 15)
     val RD = io.instruction(11, 7)
     val imm = getImm(io.instruction)
 
-    val JAL     = (opcode === "b1101111".U)     // Always taken if valid    
-    val JALR    = (opcode === "b1100111".U)     // Only taken if Ret || BTB has target
-    val BR      = (opcode === "b1100011".U)     // Taken based on prediction 
+    val JAL     = (instructionType === InstructionType.JAL)
+    val JALR    = (instructionType === InstructionType.JALR)
+    val BR      = (instructionType === InstructionType.BRANCH)
 
     // Sub types
-    val Call = (JAL && RD === 1.U) || (JALR && RD === 1.U)       // Either JAL or JALR with RD = x1
-    val Ret = (JALR && (RS1 === 1.U) && imm === 0.U)               // JALR with RS1 = x1 & imm = 0
+    //val CALL = (JAL && RD === 1.U) || (JALR && RD === 1.U)       // Either JAL or JALR with RD = x1
+    //val RET = (JALR && (RS1 === 1.U) && imm === 0.U)             // JALR with RS1 = x1 & imm = 0
+
+    val CALL = (JALR && (RD === 1.U) && (RS1 === 1.U))
+    val RET = (JALR && (RD === 0.U) && (RS1 === 1.U) && imm === 0.U)
+    assert(!(CALL && RET), "Cant have call and ret both be valid")
+
+    dontTouch(CALL)
+    dontTouch(RET)
 
     val fetch_PC_adjusted = Wire(UInt(32.W))
     fetch_PC_adjusted := io.fetch_PC + (index*4).U
@@ -77,9 +88,28 @@ class branch_decoder(index:Int, parameters:Parameters) extends Module{
     // Note that since 1 packet can have several branches, so simplify things, predictions depend on the BTB to inform BP of the dominant branch
     // if that is not available, default to NT. 
 
-
-
     
+    val br_type = Wire(_br_type())
+
+
+    when(CALL){
+        br_type := _br_type.CALL
+    }.elsewhen(RET){
+        br_type := _br_type.RET
+    }.elsewhen(JAL){
+        br_type := _br_type.JAL
+    }.elsewhen(JALR){
+        br_type := _br_type.JALR
+    }.elsewhen(BR){
+        br_type := _br_type.BR
+    }.otherwise{
+        br_type := _br_type.NONE
+    }
+
+
+
+
+
 
     // Assign T/NT
     // Every branch has a direction and address. For taken to be 1, the direction must be taken and the address must be available...
@@ -90,7 +120,7 @@ class branch_decoder(index:Int, parameters:Parameters) extends Module{
     when (JAL) {
         io.T_NT := io.valid // JAL addr == PC+imm. dir is always 1. Therefore, taken if valid (everything available).
     }.elsewhen (JALR) {
-        io.T_NT := io.valid && (Ret || (io.prediction.bits.hit && io.prediction.bits.br_mask(index)))  // Direction is always 2. Address is hit or miss. Only taken if addr is available.
+        io.T_NT := io.valid && (RET || (io.prediction.bits.hit))  // Direction is always 2. Address is hit or miss. Only taken if addr is available.
     }.elsewhen (BR) {
         io.T_NT := io.valid && io.prediction.bits.T_NT
         //&& io.prediction.bits.br_mask(index)  // Address is PC + Imm. Only taken if PHT is 1. However,
@@ -100,15 +130,19 @@ class branch_decoder(index:Int, parameters:Parameters) extends Module{
         io.T_NT := 0.U  // Not a control flow instruction, not taken. 
     }
 
-    dontTouch(BR)
-
 
     // Assign metadata
-    io.metadata.JAL             :=  JAL 
-    io.metadata.JALR            :=  JALR
-    io.metadata.BR              :=  BR
-    io.metadata.Call            :=  Call
-    io.metadata.Ret             :=  Ret
+    //io.metadata.JAL             :=  JAL 
+    //io.metadata.JALR            :=  JALR
+    //io.metadata.BR              :=  BR
+    //io.metadata.Call            :=  Call
+    //io.metadata.Ret             :=  Ret
+
+
+        //br_type := 
+
+
+    io.metadata.br_type         :=  br_type
     io.metadata.Imm             :=  imm
     io.metadata.instruction_PC  :=  fetch_PC_adjusted
     io.metadata.RAS             :=  io.RAS_read.ret_addr

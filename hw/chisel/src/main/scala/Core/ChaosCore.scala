@@ -37,6 +37,8 @@ import chisel3.util._
 // Top level integrates the Frontend, Allocator, Backend, ROB and FTQ
 
 class ChaosCore(parameters:Parameters) extends Module{
+    
+    import parameters._
 
     val io = IO(new Bundle{
 
@@ -145,7 +147,7 @@ class ChaosCore(parameters:Parameters) extends Module{
     // ROB <> BRU //
     ////////////////
 
-    ROB.io.ROB <>  BRU.io.ROB
+    ROB.io.ROB_output <>  BRU.io.ROB_output
 
 
     ////////////////
@@ -155,17 +157,45 @@ class ChaosCore(parameters:Parameters) extends Module{
     BRU.io.FTQ <> FTQ.io.FTQ
 
 
+    //////////////////////
+    // ALLOCATION LOGIC //
+    //////////////////////
 
-    frontend.io.renamed_decoded_fetch_packet <> backend.io.backend_packet
-    ROB.io.ROB_packet <> frontend.io.ROB_packet
-    ROB.io.fetch_PC <> frontend.io.fetch_PC
-
-    frontend.io.MEMRS_ready <> backend.io.MEMRS_ready
-    frontend.io.INTRS_ready <> backend.io.INTRS_ready
+    // Cant dequeue a fetchpacket from the frontend unless the entire fetch packet is ready
+    // This is only true when the ROB has available space and the RS entries (both INT and MEM)
+    // Have enough available space
 
 
+    // overwrite frontend renamed_decoded_fetch_packet ready bit
+
+    val needs_INTRS           = Wire(Vec(fetchWidth, Bool()))
+    val needs_MEMRS          = Wire(Vec(fetchWidth, Bool()))
+
+    for(i <- 0 until fetchWidth){
+        needs_INTRS(i) := frontend.io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS_type === RS_types.INT
+        needs_MEMRS(i) := frontend.io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS_type === RS_types.MEM
+    }
+
+    val all_INT_RS_accepted = Wire(Bool())  // every valid INT RS instruction has an available spot
+    val all_MEM_RS_accepted = Wire(Bool())  // every valid MEM RS instruction has an available spot
+
+    // there must be more available RS entries than requesting instructions for that RS
+    // Otherwise, entry doesnt allocate
+    all_INT_RS_accepted := PopCount(backend.io.INTRS_ready) <= PopCount(needs_INTRS)
+    all_MEM_RS_accepted := PopCount(backend.io.MEMRS_ready) <= PopCount(needs_MEMRS)
+
+    frontend.io.renamed_decoded_fetch_packet.ready := (ROB.io.ROB_packet.ready && all_INT_RS_accepted && all_MEM_RS_accepted)
+
+    // ROB and RS do not update until ready
+    backend.io.backend_packet   <> frontend.io.renamed_decoded_fetch_packet
+    ROB.io.ROB_packet           <> frontend.io.renamed_decoded_fetch_packet
+
+    // Connect branch unit to PC file (which exists in the ROB)
     backend.io.PC_file_exec_addr <> ROB.io.PC_file_exec_addr
     backend.io.PC_file_exec_data <> ROB.io.PC_file_exec_data
+
+    // 
+    //BRU.io.PC_file_commit_data <> ROB.io.PC_file_commit_data
 
 
 }
