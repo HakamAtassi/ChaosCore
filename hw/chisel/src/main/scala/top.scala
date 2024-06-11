@@ -73,8 +73,8 @@ object Main extends App {
     //"../verilog/Frontend/WAW_handler.v")
 
 
-    //VerilogGenerator.generateVerilog(new rename(parameters), 
-    //"../verilog/Frontend/rename.v")
+    VerilogGenerator.generateVerilog(new rename(parameters), 
+    "../verilog/Frontend/rename.v")
 
 
     //VerilogGenerator.generateVerilog(new RAT(parameters), 
@@ -100,8 +100,8 @@ object Main extends App {
     VerilogGenerator.generateVerilog(new decoder(parameters), 
     "../verilog/Frontend/decoder.v")
 
-    //VerilogGenerator.generateVerilog(new FU(parameters, true, true), 
-    //"../verilog/Backend/FU.v")
+    VerilogGenerator.generateVerilog(new FU(parameters, true, true), 
+    "../verilog/Backend/FU.v")
 
     // VerilogGenerator.generateVerilog(new backend(parameters), 
     // "../verilog/Backend/backend.v")
@@ -121,8 +121,8 @@ object Main extends App {
     // VerilogGenerator.generateVerilog(new ROB(parameters), 
     // "../verilog/Backend/ROB.v")
 
-    // VerilogGenerator.generateVerilog(new ChaosCore(parameters), 
-    // "../verilog/Core/ChaosCore.v")
+     VerilogGenerator.generateVerilog(new ChaosCore(parameters), 
+     "../verilog/Core/ChaosCore.v")
 
     // VerilogGenerator.generateVerilog(new instruction_queue(new decoded_instruction(parameters), parameters), 
     // "../verilog/Frontend/instruction_queue.v")

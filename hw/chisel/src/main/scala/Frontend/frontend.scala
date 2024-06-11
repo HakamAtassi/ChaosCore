@@ -161,7 +161,7 @@ class frontend(parameters:Parameters) extends Module{
 
     val instruction_queue   =   Module(new Q(new decoded_fetch_packet(parameters), depth = 16))
 
-    val renamer             = Module(new renamer(parameters))
+    val rename             = Module(new rename(parameters))
 
 
     ///////////////////////
@@ -204,7 +204,7 @@ class frontend(parameters:Parameters) extends Module{
     // RENAME //
     ////////////
 
-    renamer.io.decoded_fetch_packet <> instruction_queue.io.out
+    rename.io.decoded_fetch_packet <> instruction_queue.io.out
 
     instruction_queue.io.clear := DontCare
 
@@ -221,7 +221,7 @@ class frontend(parameters:Parameters) extends Module{
     // So make sure its verified correctly. 
     
 
-    renamer.io.FU_outputs           <>     io.FU_outputs
+    rename.io.FU_outputs           <>     io.FU_outputs
 
     // FIXME: This needs to be either fine grain or course grain
     // Ex, either be able to free several checkpoints at once
@@ -232,30 +232,30 @@ class frontend(parameters:Parameters) extends Module{
     // Commit logic
     // Free + Restore
 
-    renamer.io.restore_checkpoint        := 0.B
-    renamer.io.restore_checkpoint_value  := 0.U
-    renamer.io.free_checkpoint           := 0.B
+    rename.io.restore_checkpoint        := 0.B
+    rename.io.restore_checkpoint_value  := 0.U
+    rename.io.free_checkpoint           := 0.B
 
     when(io.commit.valid && io.commit.is_misprediction){
-        renamer.io.restore_checkpoint        :=     1.B 
-        renamer.io.restore_checkpoint_value  :=     io.commit.RAT_IDX
-        renamer.io.free_checkpoint           :=     1.B 
+        rename.io.restore_checkpoint        :=     1.B 
+        rename.io.restore_checkpoint_value  :=     io.commit.RAT_IDX
+        rename.io.free_checkpoint           :=     1.B 
     }
 
     // Create logic
-    renamer.io.create_checkpoint          :=     0.B
-    //io.predictions.bits.RAT_IDX           :=     renamer.io.active_checkpoint_value
+    rename.io.create_checkpoint          :=     0.B
+    //io.predictions.bits.RAT_IDX           :=     rename.io.active_checkpoint_value
     when(io.predictions.valid){
-        renamer.io.create_checkpoint      :=     1.B 
+        rename.io.create_checkpoint      :=     1.B 
     }
 
-    //io.checkpoints_full                  :=     renamer.io.checkpoints_full
-    //io.active_checkpoint_value           :=     renamer.io.active_checkpoint_value
+    //io.checkpoints_full                  :=     rename.io.checkpoints_full
+    //io.active_checkpoint_value           :=     rename.io.active_checkpoint_value
     ////////////
     // OUTPUT //
     ////////////
 
-    io.renamed_decoded_fetch_packet <> renamer.io.renamed_decoded_fetch_packet
+    io.renamed_decoded_fetch_packet <> rename.io.renamed_decoded_fetch_packet
 
     //io.ROB_packet := instruction_queue.io.out
 
