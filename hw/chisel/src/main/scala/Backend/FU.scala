@@ -87,7 +87,7 @@ class ALU(parameters:Parameters) extends Module{
     val xor_result  = Wire(UInt(32.W))
     val sll_result  = Wire(UInt(32.W))
     val srl_result  = Wire(UInt(32.W))
-    val sra_result  = Wire(UInt(32.W))
+    val sra_result  = Wire(SInt(32.W))
 
     // Multiply Regs
 
@@ -113,7 +113,11 @@ class ALU(parameters:Parameters) extends Module{
     xor_result  := RS1_data ^ operand2
     sll_result  := RS1_data << operand2(4,0) // Logical left shift
     srl_result  := RS1_data >> operand2(4,0) // Logical right shift
-    sra_result  := (RS1_data >> operand2(4,0)).asSInt.asUInt // Arithmetic right shift
+
+    sra_result  := ((RS1_data.asSInt) >> operand2(4,0)).asSInt
+    //.asUInt // Arithmetic right shift
+
+    dontTouch(sra_result)
 
     // perform multiply operations
     //val multiply_temp = Wire(UInt(64.W))
@@ -127,26 +131,25 @@ class ALU(parameters:Parameters) extends Module{
     // CONTROL //
     /////////////
 
-    val ADD      =   instructionType === OP && FUNCT3 === "b000".U  && !MULTIPLY && SUBTRACT
-    val SUB      =   instructionType === OP && FUNCT3 === "b000".U  && !MULTIPLY && SUBTRACT
-    val XOR      =   instructionType === OP && FUNCT3 === "b100".U  && !MULTIPLY
-    val OR       =   instructionType === OP && FUNCT3 === "b110".U  && !MULTIPLY
-    val AND      =   instructionType === OP && FUNCT3 === "b111".U  && !MULTIPLY
-    val SLL      =   instructionType === OP && FUNCT3 === "b001".U  && !MULTIPLY
-    val SRL      =   instructionType === OP && FUNCT3 === "b101".U  && !MULTIPLY
-    val SRA      =   instructionType === OP && FUNCT3 === "b101".U  && !MULTIPLY
-    val SLT      =   instructionType === OP && FUNCT3 === "b010".U  && !MULTIPLY
-    val SLTU     =   instructionType === OP && FUNCT3 === "b011".U  && !MULTIPLY
+    val ADD      =   (instructionType === OP || instructionType === OP_IMM) && FUNCT3 === "b000".U  && !MULTIPLY && !SUBTRACT
+    val SUB      =   (instructionType === OP || instructionType === OP_IMM) && FUNCT3 === "b000".U  && !MULTIPLY && SUBTRACT
+    val XOR      =   (instructionType === OP || instructionType === OP_IMM) && FUNCT3 === "b100".U  && !MULTIPLY
+    val OR       =   (instructionType === OP || instructionType === OP_IMM) && FUNCT3 === "b110".U  && !MULTIPLY
+    val AND      =   (instructionType === OP || instructionType === OP_IMM) && FUNCT3 === "b111".U  && !MULTIPLY
+    val SLL      =   (instructionType === OP || instructionType === OP_IMM) && FUNCT3 === "b001".U  && !MULTIPLY
+    val SRL      =   (instructionType === OP || instructionType === OP_IMM) && FUNCT3 === "b101".U  && !MULTIPLY && !SUBTRACT
+    val SRA      =   (instructionType === OP || instructionType === OP_IMM) && FUNCT3 === "b101".U  && !MULTIPLY && SUBTRACT
+    val SLT      =   (instructionType === OP || instructionType === OP_IMM) && FUNCT3 === "b010".U  && !MULTIPLY
+    val SLTU     =   (instructionType === OP || instructionType === OP_IMM) && FUNCT3 === "b011".U  && !MULTIPLY
 
-    val MUL      =   instructionType === OP && FUNCT3 === "b000".U  && MULTIPLY
-    val MULH     =   instructionType === OP && FUNCT3 === "b001".U  && MULTIPLY
-    val MULHSU   =   instructionType === OP && FUNCT3 === "b010".U  && MULTIPLY
-    val MULHU    =   instructionType === OP && FUNCT3 === "b011".U  && MULTIPLY
-    val DIV      =   instructionType === OP && FUNCT3 === "b100".U  && MULTIPLY
-    val DIVU     =   instructionType === OP && FUNCT3 === "b101".U  && MULTIPLY
-    val REM      =   instructionType === OP && FUNCT3 === "b110".U  && MULTIPLY
-    val REMU     =   instructionType === OP && FUNCT3 === "b111".U  && MULTIPLY
-
+    val MUL      =   (instructionType === OP) && FUNCT3 === "b000".U  && MULTIPLY
+    val MULH     =   (instructionType === OP) && FUNCT3 === "b001".U  && MULTIPLY
+    val MULHSU   =   (instructionType === OP) && FUNCT3 === "b010".U  && MULTIPLY
+    val MULHU    =   (instructionType === OP) && FUNCT3 === "b011".U  && MULTIPLY
+    val DIV      =   (instructionType === OP) && FUNCT3 === "b100".U  && MULTIPLY
+    val DIVU     =   (instructionType === OP) && FUNCT3 === "b101".U  && MULTIPLY
+    val REM      =   (instructionType === OP) && FUNCT3 === "b110".U  && MULTIPLY
+    val REMU     =   (instructionType === OP) && FUNCT3 === "b111".U  && MULTIPLY
 
     arithmetic_result := 0.U
     when(ADD)       {
@@ -164,7 +167,7 @@ class ALU(parameters:Parameters) extends Module{
     }.elsewhen(SRL) {
         arithmetic_result   := srl_result
     }.elsewhen(SRA) {
-        arithmetic_result   := sra_result
+        arithmetic_result   := sra_result.asUInt
     }.elsewhen(SLT) {
         arithmetic_result   := slt_result
     }.elsewhen(SLTU){
@@ -253,6 +256,8 @@ class branch_unit(parameters:Parameters) extends Module{
     val JAL         =   instructionType === InstructionType.JAL
     val JALR        =   instructionType === InstructionType.JALR 
 
+
+
     //
     val EQ      = Wire(Bool())
     val NE      = Wire(Bool())
@@ -272,7 +277,12 @@ class branch_unit(parameters:Parameters) extends Module{
     val target_address = Wire(UInt(32.W))
 
     branch_taken    := 0.B
-    target_address  := PC + 4.U
+    target_address  := PC   // FIXME: what should the default address be?
+
+    
+    dontTouch(BEQ)
+    dontTouch(EQ)
+    dontTouch(GE)
 
     when(EQ)        {branch_taken := 1.B; target_address := PC + IMM}
     .elsewhen(NE)   {branch_taken := 1.B; target_address := PC + IMM}
@@ -290,7 +300,7 @@ class branch_unit(parameters:Parameters) extends Module{
 
     // ALU pipelined; always ready
     io.FU_input.ready := 1.B
-    io.FU_output.bits.branch_valid :=   (BRANCH || JAL || JALR )
+    io.FU_output.bits.branch_valid :=   (BRANCH || JAL || JALR)
 
     // Not a branch unit (all FUs share the same output channel)
     io.FU_output.bits.branch_taken      :=      RegNext(branch_taken)
@@ -467,15 +477,17 @@ class FU(parameters:Parameters,
 
     io.FU_output := DontCare
 
-    if(branch_unit.isDefined){
-        when(is_CTRL) {
-            io.FU_output := branch_unit.get.io.FU_output    //FIXME: Get??
-        }
-    }
 
     if(ALU.isDefined){
         when(is_ALU) {
             io.FU_output := ALU.get.io.FU_output
+        }
+    }
+
+
+    if(branch_unit.isDefined){
+        when(is_CTRL) {
+            io.FU_output := branch_unit.get.io.FU_output    //FIXME: Get??
         }
     }
 

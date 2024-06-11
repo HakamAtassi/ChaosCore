@@ -212,6 +212,8 @@ class RAT(parameters:Parameters) extends Module{
         }
     }
 
+
+    // FIXME: what if write and checkpoint at the same time??
     for(i <- 1 until RATCheckpointCount){
         for (j <- 0 until architecturalRegCount){
             when((active_RAT === i.U) && is_being_written_vec(j)){
@@ -267,7 +269,7 @@ class RAT(parameters:Parameters) extends Module{
 // FIXME: Checkpoints??
 
 
-class renamer(parameters:Parameters) extends Module{
+class rename(parameters:Parameters) extends Module{
     import parameters._
     // Takes in N input instructions
     // Reads the renamed versions of RS1, RS2, and RD (old)
@@ -320,7 +322,18 @@ class renamer(parameters:Parameters) extends Module{
     // In superscalar, where multiple renames are done every cycle, the renamed value must be forwarded, since the RAT will not represent the earlier rename requets. 
 
     val instruction_RD            =   io.decoded_fetch_packet.bits.decoded_instruction.map(_.RD)
-    val instruction_RD_valid      =   io.decoded_fetch_packet.bits.decoded_instruction.map(_.RD_valid)
+
+
+
+    val instruction_RD_valid      =   Wire(Vec(fetchWidth, Bool()))
+
+    for(i <- 0 until fetchWidth){
+        instruction_RD_valid(i)      :=   io.decoded_fetch_packet.bits.decoded_instruction(i).RD_valid && io.decoded_fetch_packet.valid
+    }
+
+
+
+
     val instruction_RS1           =   io.decoded_fetch_packet.bits.decoded_instruction.map(_.RS1)
     val instruction_RS1_valid     =   io.decoded_fetch_packet.bits.decoded_instruction.map(_.RS1_valid)
     val instruction_RS2           =   io.decoded_fetch_packet.bits.decoded_instruction.map(_.RS2)
@@ -348,7 +361,6 @@ class renamer(parameters:Parameters) extends Module{
     val free_list   =   Module(new free_list(parameters))
 
     free_list.io.rename_valid                   :=  instruction_RD_valid
-
     free_list.io.free_valid                     :=  io.FU_outputs.map(_.bits).map(_.RD_valid)
     free_list.io.free_values                    :=  io.FU_outputs.map(_.bits).map(_.RD)
 
@@ -365,11 +377,10 @@ class renamer(parameters:Parameters) extends Module{
 
     // Assign write ports
     RAT.io.free_list_wr_en                  :=  WAW_handler.io.RAT_wr_en
-    RAT.io.instruction_RD                   :=  WAW_handler.io.RAT_RD_values
     RAT.io.free_list_RD                     :=  WAW_handler.io.FL_RD_values
     
     // Assign read ports
-    RAT.io.instruction_RD                   :=  instruction_RD
+    RAT.io.instruction_RD                   :=  WAW_handler.io.RAT_RD_values
     RAT.io.instruction_RS1                  :=  instruction_RS1
     RAT.io.instruction_RS2                  :=  instruction_RS2
 
@@ -416,9 +427,27 @@ class renamer(parameters:Parameters) extends Module{
     io.checkpoints_full                := RAT.io.checkpoints_full
 
     io.renamed_decoded_fetch_packet <> io.decoded_fetch_packet
+    io.renamed_decoded_fetch_packet.bits := RegNext(io.decoded_fetch_packet.bits)
 
+
+    
+    val input_valid = Wire(Vec(fetchWidth, Bool()))
     for(i <- 0 until fetchWidth){
-        io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RD              := free_list.io.renamed_values(i)
+        input_valid(i) :=  io.decoded_fetch_packet.bits.decoded_instruction(i).RD_valid
+    }
+
+    //val RD_index_vec = Wire(Vec(fetchWidth, UInt(2.W)))
+
+    //for (i <- 0 until fetchWidth){
+        //val renamed_value_index      = PopCount(input_valid.take(i+1))-1.U
+        //RD_index_vec(i)             := renamed_value_index
+    //}
+
+    //dontTouch(RD_index_vec)
+   
+    for(i <- 0 until fetchWidth){
+        io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RD              := RegNext(free_list.io.renamed_values(i))
+        io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RD_valid        := RegNext(instruction_RD_valid(i))
         io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS1             := RAT.io.RAT_RS1(i)
         io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS2             := RAT.io.RAT_RS2(i)
         io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).ready_bits      := RAT.io.ready_bits(i)

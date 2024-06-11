@@ -820,7 +820,9 @@ module branch_decoder(
               ? {20'h0, io_instruction[31:20]}
               : io_instruction[6:0] == 7'h23
                   ? {20'h0, io_instruction[31:25], io_instruction[11:7]}
-                  : io_instruction[6:0] == 7'h33 ? {io_instruction[31:12], 12'h0} : 32'h0;
+                  : io_instruction[6:0] == 7'h17 | io_instruction[6:0] == 7'h37
+                      ? {io_instruction[31:12], 12'h0}
+                      : 32'h0;
   wire        _RET_T_2 = io_instruction[19:15] == 5'h1;
   wire        CALL = JALR & io_instruction[11:7] == 5'h1 & _RET_T_2;
   wire        RET = JALR & io_instruction[11:7] == 5'h0 & _RET_T_2 & imm == 32'h0;
@@ -889,7 +891,9 @@ module branch_decoder_1(
               ? {20'h0, io_instruction[31:20]}
               : io_instruction[6:0] == 7'h23
                   ? {20'h0, io_instruction[31:25], io_instruction[11:7]}
-                  : io_instruction[6:0] == 7'h33 ? {io_instruction[31:12], 12'h0} : 32'h0;
+                  : io_instruction[6:0] == 7'h17 | io_instruction[6:0] == 7'h37
+                      ? {io_instruction[31:12], 12'h0}
+                      : 32'h0;
   wire        _RET_T_2 = io_instruction[19:15] == 5'h1;
   wire        CALL = JALR & io_instruction[11:7] == 5'h1 & _RET_T_2;
   wire        RET = JALR & io_instruction[11:7] == 5'h0 & _RET_T_2 & imm == 32'h0;
@@ -958,7 +962,9 @@ module branch_decoder_2(
               ? {20'h0, io_instruction[31:20]}
               : io_instruction[6:0] == 7'h23
                   ? {20'h0, io_instruction[31:25], io_instruction[11:7]}
-                  : io_instruction[6:0] == 7'h33 ? {io_instruction[31:12], 12'h0} : 32'h0;
+                  : io_instruction[6:0] == 7'h17 | io_instruction[6:0] == 7'h37
+                      ? {io_instruction[31:12], 12'h0}
+                      : 32'h0;
   wire        _RET_T_2 = io_instruction[19:15] == 5'h1;
   wire        CALL = JALR & io_instruction[11:7] == 5'h1 & _RET_T_2;
   wire        RET = JALR & io_instruction[11:7] == 5'h0 & _RET_T_2 & imm == 32'h0;
@@ -1027,7 +1033,9 @@ module branch_decoder_3(
               ? {20'h0, io_instruction[31:20]}
               : io_instruction[6:0] == 7'h23
                   ? {20'h0, io_instruction[31:25], io_instruction[11:7]}
-                  : io_instruction[6:0] == 7'h33 ? {io_instruction[31:12], 12'h0} : 32'h0;
+                  : io_instruction[6:0] == 7'h17 | io_instruction[6:0] == 7'h37
+                      ? {io_instruction[31:12], 12'h0}
+                      : 32'h0;
   wire        _RET_T_2 = io_instruction[19:15] == 5'h1;
   wire        CALL = JALR & io_instruction[11:7] == 5'h1 & _RET_T_2;
   wire        RET = JALR & io_instruction[11:7] == 5'h0 & _RET_T_2 & imm == 32'h0;
@@ -2355,6 +2363,7 @@ endmodule
 module decoder(
   input         clock,
                 reset,
+                io_instruction_valid,
   input  [31:0] io_instruction_bits_instruction,
   input  [3:0]  io_instruction_bits_packet_index,
   input  [5:0]  io_instruction_bits_ROB_index,
@@ -2383,10 +2392,10 @@ module decoder(
   wire [4:0] instructionType = io_instruction_bits_instruction[6:2];
   wire       IS_LOAD = instructionType == 5'h0;
   wire       IMMEDIATE = instructionType == 5'h4;
-  wire       _io_decoded_instruction_bits_RD_valid_T_11 = instructionType == 5'h5;
+  wire       _is_INT_T_11 = instructionType == 5'h5;
   wire       IS_STORE = instructionType == 5'h8;
   wire       _is_INT_T = instructionType == 5'hC;
-  wire       _io_decoded_instruction_bits_RD_valid_T_9 = instructionType == 5'hD;
+  wire       _is_INT_T_9 = instructionType == 5'hD;
   wire       _is_INT_T_3 = instructionType == 5'h18;
   wire       _is_INT_T_7 = instructionType == 5'h19;
   wire       _is_INT_T_5 = instructionType == 5'h1B;
@@ -2395,15 +2404,14 @@ module decoder(
     always @(posedge clock) begin
       if (~reset
           & ~(IS_LOAD | instructionType == 5'h1 | instructionType == 5'h2
-              | instructionType == 5'h3 | IMMEDIATE
-              | _io_decoded_instruction_bits_RD_valid_T_11 | instructionType == 5'h6
-              | IS_STORE | instructionType == 5'h9 | instructionType == 5'hA
-              | instructionType == 5'hB | _is_INT_T
-              | _io_decoded_instruction_bits_RD_valid_T_9 | instructionType == 5'hE
-              | instructionType == 5'h10 | instructionType == 5'h11
-              | instructionType == 5'h12 | instructionType == 5'h13
-              | instructionType == 5'h14 | instructionType == 5'h16 | _is_INT_T_3
-              | _is_INT_T_7 | _is_INT_T_5 | _io_decoded_instruction_bits_RD_valid_T_13
+              | instructionType == 5'h3 | IMMEDIATE | _is_INT_T_11
+              | instructionType == 5'h6 | IS_STORE | instructionType == 5'h9
+              | instructionType == 5'hA | instructionType == 5'hB | _is_INT_T
+              | _is_INT_T_9 | instructionType == 5'hE | instructionType == 5'h10
+              | instructionType == 5'h11 | instructionType == 5'h12
+              | instructionType == 5'h13 | instructionType == 5'h14
+              | instructionType == 5'h16 | _is_INT_T_3 | _is_INT_T_7 | _is_INT_T_5
+              | _io_decoded_instruction_bits_RD_valid_T_13
               | instructionType == 5'h1E)) begin
         if (`ASSERT_VERBOSE_COND_)
           $error("Assertion failed: Enum state must be valid, got %d!\n    at decoder.scala:66 assert(valid, \"Enum state must be valid, got %%%%d!\", opcode(6,2))\n",
@@ -2436,15 +2444,15 @@ module decoder(
   end // always @(posedge)
   assign io_decoded_instruction_bits_RD = {1'h0, io_instruction_bits_instruction[11:7]};
   assign io_decoded_instruction_bits_RD_valid =
-    _is_INT_T | IMMEDIATE | IS_LOAD | _is_INT_T_5 | _is_INT_T_7
-    | _io_decoded_instruction_bits_RD_valid_T_9
-    | _io_decoded_instruction_bits_RD_valid_T_11
-    | _io_decoded_instruction_bits_RD_valid_T_13;
+    (_is_INT_T | IMMEDIATE | IS_LOAD | _is_INT_T_5 | _is_INT_T_7 | _is_INT_T_9
+     | _is_INT_T_11 | _io_decoded_instruction_bits_RD_valid_T_13) & io_instruction_valid;
   assign io_decoded_instruction_bits_RS1 = {1'h0, io_instruction_bits_instruction[19:15]};
   assign io_decoded_instruction_bits_RS1_valid =
-    _is_INT_T | IMMEDIATE | IS_LOAD | IS_STORE | _is_INT_T_7 | _is_INT_T_3;
+    (_is_INT_T | IMMEDIATE | IS_LOAD | IS_STORE | _is_INT_T_7 | _is_INT_T_3)
+    & io_instruction_valid;
   assign io_decoded_instruction_bits_RS2 = {1'h0, io_instruction_bits_instruction[24:20]};
-  assign io_decoded_instruction_bits_RS2_valid = _is_INT_T | IS_STORE | _is_INT_T_3;
+  assign io_decoded_instruction_bits_RS2_valid =
+    (_is_INT_T | IS_STORE | _is_INT_T_3) & io_instruction_valid;
   assign io_decoded_instruction_bits_IMM =
     io_instruction_bits_instruction[6:0] == 7'h63
       ? {19'h0,
@@ -2468,7 +2476,8 @@ module decoder(
                   ? {20'h0,
                      io_instruction_bits_instruction[31:25],
                      io_instruction_bits_instruction[11:7]}
-                  : io_instruction_bits_instruction[6:0] == 7'h33
+                  : io_instruction_bits_instruction[6:0] == 7'h17
+                    | io_instruction_bits_instruction[6:0] == 7'h37
                       ? {io_instruction_bits_instruction[31:12], 12'h0}
                       : 32'h0;
   assign io_decoded_instruction_bits_FUNCT3 = io_instruction_bits_instruction[14:12];
@@ -2489,12 +2498,13 @@ module decoder(
               ? 2'h1
               : {2{needs_memory}};
   assign io_decoded_instruction_bits_RS_type =
-    _is_INT_T | IMMEDIATE | _is_INT_T_3 | _is_INT_T_5 | _is_INT_T_7
+    _is_INT_T | IMMEDIATE | _is_INT_T_3 | _is_INT_T_5 | _is_INT_T_7 | _is_INT_T_9
+    | _is_INT_T_11
       ? 2'h0
       : IS_LOAD | IS_STORE ? 2'h1 : 2'h2;
   assign io_decoded_instruction_bits_needs_ALU = needs_ALU;
   assign io_decoded_instruction_bits_needs_branch_unit = needs_branch_unit;
-  assign io_decoded_instruction_bits_SUBTRACT = _is_INT_T & _needs_ALU_T_1;
+  assign io_decoded_instruction_bits_SUBTRACT = (_is_INT_T | IMMEDIATE) & _needs_ALU_T_1;
   assign io_decoded_instruction_bits_MULTIPLY =
     _is_INT_T & io_instruction_bits_instruction[31:25] == 7'h1;
   assign io_decoded_instruction_bits_IMMEDIATE = IMMEDIATE;
@@ -2950,6 +2960,8 @@ module fetch_packet_decoder(
   decoder decoders_0 (
     .clock                                         (clock),
     .reset                                         (reset),
+    .io_instruction_valid
+      (io_fetch_packet_valid & io_fetch_packet_bits_valid_bits_0),
     .io_instruction_bits_instruction
       (io_fetch_packet_bits_instructions_0_instruction),
     .io_instruction_bits_packet_index
@@ -3000,6 +3012,8 @@ module fetch_packet_decoder(
   decoder decoders_1 (
     .clock                                         (clock),
     .reset                                         (reset),
+    .io_instruction_valid
+      (io_fetch_packet_valid & io_fetch_packet_bits_valid_bits_1),
     .io_instruction_bits_instruction
       (io_fetch_packet_bits_instructions_1_instruction),
     .io_instruction_bits_packet_index
@@ -3050,6 +3064,8 @@ module fetch_packet_decoder(
   decoder decoders_2 (
     .clock                                         (clock),
     .reset                                         (reset),
+    .io_instruction_valid
+      (io_fetch_packet_valid & io_fetch_packet_bits_valid_bits_2),
     .io_instruction_bits_instruction
       (io_fetch_packet_bits_instructions_2_instruction),
     .io_instruction_bits_packet_index
@@ -3100,6 +3116,8 @@ module fetch_packet_decoder(
   decoder decoders_3 (
     .clock                                         (clock),
     .reset                                         (reset),
+    .io_instruction_valid
+      (io_fetch_packet_valid & io_fetch_packet_bits_valid_bits_3),
     .io_instruction_bits_instruction
       (io_fetch_packet_bits_instructions_3_instruction),
     .io_instruction_bits_packet_index
@@ -3318,23 +3336,23 @@ module fetch_packet_decoder(
 endmodule
 
 // VCS coverage exclude_file
-module ram_16x356(
+module ram_16x352(
   input  [3:0]   R0_addr,
   input          R0_en,
                  R0_clk,
-  output [355:0] R0_data,
+  output [351:0] R0_data,
   input  [3:0]   W0_addr,
   input          W0_en,
                  W0_clk,
-  input  [355:0] W0_data
+  input  [351:0] W0_data
 );
 
-  reg [355:0] Memory[0:15];
+  reg [351:0] Memory[0:15];
   always @(posedge W0_clk) begin
     if (W0_en & 1'h1)
       Memory[W0_addr] <= W0_data;
   end // always @(posedge)
-  assign R0_data = R0_en ? Memory[R0_addr] : 356'bx;
+  assign R0_data = R0_en ? Memory[R0_addr] : 352'bx;
 endmodule
 
 module Queue16_decoded_fetch_packet(
@@ -3441,8 +3459,7 @@ module Queue16_decoded_fetch_packet(
   output [4:0]  io_deq_bits_decoded_instruction_0_instructionType,
   output [1:0]  io_deq_bits_decoded_instruction_0_portID,
                 io_deq_bits_decoded_instruction_0_RS_type,
-  output        io_deq_bits_decoded_instruction_0_needs_ALU,
-                io_deq_bits_decoded_instruction_0_needs_branch_unit,
+  output        io_deq_bits_decoded_instruction_0_needs_branch_unit,
                 io_deq_bits_decoded_instruction_0_SUBTRACT,
                 io_deq_bits_decoded_instruction_0_MULTIPLY,
                 io_deq_bits_decoded_instruction_0_IMMEDIATE,
@@ -3459,8 +3476,7 @@ module Queue16_decoded_fetch_packet(
   output [4:0]  io_deq_bits_decoded_instruction_1_instructionType,
   output [1:0]  io_deq_bits_decoded_instruction_1_portID,
                 io_deq_bits_decoded_instruction_1_RS_type,
-  output        io_deq_bits_decoded_instruction_1_needs_ALU,
-                io_deq_bits_decoded_instruction_1_needs_branch_unit,
+  output        io_deq_bits_decoded_instruction_1_needs_branch_unit,
                 io_deq_bits_decoded_instruction_1_SUBTRACT,
                 io_deq_bits_decoded_instruction_1_MULTIPLY,
                 io_deq_bits_decoded_instruction_1_IMMEDIATE,
@@ -3477,8 +3493,7 @@ module Queue16_decoded_fetch_packet(
   output [4:0]  io_deq_bits_decoded_instruction_2_instructionType,
   output [1:0]  io_deq_bits_decoded_instruction_2_portID,
                 io_deq_bits_decoded_instruction_2_RS_type,
-  output        io_deq_bits_decoded_instruction_2_needs_ALU,
-                io_deq_bits_decoded_instruction_2_needs_branch_unit,
+  output        io_deq_bits_decoded_instruction_2_needs_branch_unit,
                 io_deq_bits_decoded_instruction_2_SUBTRACT,
                 io_deq_bits_decoded_instruction_2_MULTIPLY,
                 io_deq_bits_decoded_instruction_2_IMMEDIATE,
@@ -3495,8 +3510,7 @@ module Queue16_decoded_fetch_packet(
   output [4:0]  io_deq_bits_decoded_instruction_3_instructionType,
   output [1:0]  io_deq_bits_decoded_instruction_3_portID,
                 io_deq_bits_decoded_instruction_3_RS_type,
-  output        io_deq_bits_decoded_instruction_3_needs_ALU,
-                io_deq_bits_decoded_instruction_3_needs_branch_unit,
+  output        io_deq_bits_decoded_instruction_3_needs_branch_unit,
                 io_deq_bits_decoded_instruction_3_SUBTRACT,
                 io_deq_bits_decoded_instruction_3_MULTIPLY,
                 io_deq_bits_decoded_instruction_3_IMMEDIATE,
@@ -3508,7 +3522,7 @@ module Queue16_decoded_fetch_packet(
                 io_deq_bits_valid_bits_3
 );
 
-  wire [355:0] _ram_ext_R0_data;
+  wire [351:0] _ram_ext_R0_data;
   reg  [3:0]   enq_ptr_value;
   reg  [3:0]   deq_ptr_value;
   reg          maybe_full;
@@ -3533,7 +3547,7 @@ module Queue16_decoded_fetch_packet(
         maybe_full <= do_enq;
     end
   end // always @(posedge)
-  ram_16x356 ram_ext (
+  ram_16x352 ram_ext (
     .R0_addr (deq_ptr_value),
     .R0_en   (1'h1),
     .R0_clk  (clock),
@@ -3552,7 +3566,6 @@ module Queue16_decoded_fetch_packet(
         io_enq_bits_decoded_instruction_3_MULTIPLY,
         io_enq_bits_decoded_instruction_3_SUBTRACT,
         io_enq_bits_decoded_instruction_3_needs_branch_unit,
-        io_enq_bits_decoded_instruction_3_needs_ALU,
         io_enq_bits_decoded_instruction_3_RS_type,
         io_enq_bits_decoded_instruction_3_portID,
         io_enq_bits_decoded_instruction_3_instructionType,
@@ -3570,7 +3583,6 @@ module Queue16_decoded_fetch_packet(
         io_enq_bits_decoded_instruction_2_MULTIPLY,
         io_enq_bits_decoded_instruction_2_SUBTRACT,
         io_enq_bits_decoded_instruction_2_needs_branch_unit,
-        io_enq_bits_decoded_instruction_2_needs_ALU,
         io_enq_bits_decoded_instruction_2_RS_type,
         io_enq_bits_decoded_instruction_2_portID,
         io_enq_bits_decoded_instruction_2_instructionType,
@@ -3588,7 +3600,6 @@ module Queue16_decoded_fetch_packet(
         io_enq_bits_decoded_instruction_1_MULTIPLY,
         io_enq_bits_decoded_instruction_1_SUBTRACT,
         io_enq_bits_decoded_instruction_1_needs_branch_unit,
-        io_enq_bits_decoded_instruction_1_needs_ALU,
         io_enq_bits_decoded_instruction_1_RS_type,
         io_enq_bits_decoded_instruction_1_portID,
         io_enq_bits_decoded_instruction_1_instructionType,
@@ -3606,7 +3617,6 @@ module Queue16_decoded_fetch_packet(
         io_enq_bits_decoded_instruction_0_MULTIPLY,
         io_enq_bits_decoded_instruction_0_SUBTRACT,
         io_enq_bits_decoded_instruction_0_needs_branch_unit,
-        io_enq_bits_decoded_instruction_0_needs_ALU,
         io_enq_bits_decoded_instruction_0_RS_type,
         io_enq_bits_decoded_instruction_0_portID,
         io_enq_bits_decoded_instruction_0_instructionType,
@@ -3645,136 +3655,128 @@ module Queue16_decoded_fetch_packet(
     empty ? io_enq_bits_decoded_instruction_0_portID : _ram_ext_R0_data[102:101];
   assign io_deq_bits_decoded_instruction_0_RS_type =
     empty ? io_enq_bits_decoded_instruction_0_RS_type : _ram_ext_R0_data[104:103];
-  assign io_deq_bits_decoded_instruction_0_needs_ALU =
-    empty ? io_enq_bits_decoded_instruction_0_needs_ALU : _ram_ext_R0_data[105];
   assign io_deq_bits_decoded_instruction_0_needs_branch_unit =
-    empty ? io_enq_bits_decoded_instruction_0_needs_branch_unit : _ram_ext_R0_data[106];
+    empty ? io_enq_bits_decoded_instruction_0_needs_branch_unit : _ram_ext_R0_data[105];
   assign io_deq_bits_decoded_instruction_0_SUBTRACT =
-    empty ? io_enq_bits_decoded_instruction_0_SUBTRACT : _ram_ext_R0_data[107];
+    empty ? io_enq_bits_decoded_instruction_0_SUBTRACT : _ram_ext_R0_data[106];
   assign io_deq_bits_decoded_instruction_0_MULTIPLY =
-    empty ? io_enq_bits_decoded_instruction_0_MULTIPLY : _ram_ext_R0_data[108];
+    empty ? io_enq_bits_decoded_instruction_0_MULTIPLY : _ram_ext_R0_data[107];
   assign io_deq_bits_decoded_instruction_0_IMMEDIATE =
-    empty ? io_enq_bits_decoded_instruction_0_IMMEDIATE : _ram_ext_R0_data[109];
+    empty ? io_enq_bits_decoded_instruction_0_IMMEDIATE : _ram_ext_R0_data[108];
   assign io_deq_bits_decoded_instruction_0_IS_LOAD =
-    empty ? io_enq_bits_decoded_instruction_0_IS_LOAD : _ram_ext_R0_data[110];
+    empty ? io_enq_bits_decoded_instruction_0_IS_LOAD : _ram_ext_R0_data[109];
   assign io_deq_bits_decoded_instruction_0_IS_STORE =
-    empty ? io_enq_bits_decoded_instruction_0_IS_STORE : _ram_ext_R0_data[111];
+    empty ? io_enq_bits_decoded_instruction_0_IS_STORE : _ram_ext_R0_data[110];
   assign io_deq_bits_decoded_instruction_1_RD =
-    empty ? io_enq_bits_decoded_instruction_1_RD : _ram_ext_R0_data[117:112];
+    empty ? io_enq_bits_decoded_instruction_1_RD : _ram_ext_R0_data[116:111];
   assign io_deq_bits_decoded_instruction_1_RD_valid =
-    empty ? io_enq_bits_decoded_instruction_1_RD_valid : _ram_ext_R0_data[118];
+    empty ? io_enq_bits_decoded_instruction_1_RD_valid : _ram_ext_R0_data[117];
   assign io_deq_bits_decoded_instruction_1_RS1 =
-    empty ? io_enq_bits_decoded_instruction_1_RS1 : _ram_ext_R0_data[124:119];
+    empty ? io_enq_bits_decoded_instruction_1_RS1 : _ram_ext_R0_data[123:118];
   assign io_deq_bits_decoded_instruction_1_RS2 =
-    empty ? io_enq_bits_decoded_instruction_1_RS2 : _ram_ext_R0_data[130:125];
+    empty ? io_enq_bits_decoded_instruction_1_RS2 : _ram_ext_R0_data[129:124];
   assign io_deq_bits_decoded_instruction_1_IMM =
-    empty ? io_enq_bits_decoded_instruction_1_IMM : _ram_ext_R0_data[162:131];
+    empty ? io_enq_bits_decoded_instruction_1_IMM : _ram_ext_R0_data[161:130];
   assign io_deq_bits_decoded_instruction_1_FUNCT3 =
-    empty ? io_enq_bits_decoded_instruction_1_FUNCT3 : _ram_ext_R0_data[165:163];
+    empty ? io_enq_bits_decoded_instruction_1_FUNCT3 : _ram_ext_R0_data[164:162];
   assign io_deq_bits_decoded_instruction_1_packet_index =
-    empty ? io_enq_bits_decoded_instruction_1_packet_index : _ram_ext_R0_data[169:166];
+    empty ? io_enq_bits_decoded_instruction_1_packet_index : _ram_ext_R0_data[168:165];
   assign io_deq_bits_decoded_instruction_1_ROB_index =
-    empty ? io_enq_bits_decoded_instruction_1_ROB_index : _ram_ext_R0_data[175:170];
+    empty ? io_enq_bits_decoded_instruction_1_ROB_index : _ram_ext_R0_data[174:169];
   assign io_deq_bits_decoded_instruction_1_instructionType =
-    empty ? io_enq_bits_decoded_instruction_1_instructionType : _ram_ext_R0_data[180:176];
+    empty ? io_enq_bits_decoded_instruction_1_instructionType : _ram_ext_R0_data[179:175];
   assign io_deq_bits_decoded_instruction_1_portID =
-    empty ? io_enq_bits_decoded_instruction_1_portID : _ram_ext_R0_data[182:181];
+    empty ? io_enq_bits_decoded_instruction_1_portID : _ram_ext_R0_data[181:180];
   assign io_deq_bits_decoded_instruction_1_RS_type =
-    empty ? io_enq_bits_decoded_instruction_1_RS_type : _ram_ext_R0_data[184:183];
-  assign io_deq_bits_decoded_instruction_1_needs_ALU =
-    empty ? io_enq_bits_decoded_instruction_1_needs_ALU : _ram_ext_R0_data[185];
+    empty ? io_enq_bits_decoded_instruction_1_RS_type : _ram_ext_R0_data[183:182];
   assign io_deq_bits_decoded_instruction_1_needs_branch_unit =
-    empty ? io_enq_bits_decoded_instruction_1_needs_branch_unit : _ram_ext_R0_data[186];
+    empty ? io_enq_bits_decoded_instruction_1_needs_branch_unit : _ram_ext_R0_data[184];
   assign io_deq_bits_decoded_instruction_1_SUBTRACT =
-    empty ? io_enq_bits_decoded_instruction_1_SUBTRACT : _ram_ext_R0_data[187];
+    empty ? io_enq_bits_decoded_instruction_1_SUBTRACT : _ram_ext_R0_data[185];
   assign io_deq_bits_decoded_instruction_1_MULTIPLY =
-    empty ? io_enq_bits_decoded_instruction_1_MULTIPLY : _ram_ext_R0_data[188];
+    empty ? io_enq_bits_decoded_instruction_1_MULTIPLY : _ram_ext_R0_data[186];
   assign io_deq_bits_decoded_instruction_1_IMMEDIATE =
-    empty ? io_enq_bits_decoded_instruction_1_IMMEDIATE : _ram_ext_R0_data[189];
+    empty ? io_enq_bits_decoded_instruction_1_IMMEDIATE : _ram_ext_R0_data[187];
   assign io_deq_bits_decoded_instruction_1_IS_LOAD =
-    empty ? io_enq_bits_decoded_instruction_1_IS_LOAD : _ram_ext_R0_data[190];
+    empty ? io_enq_bits_decoded_instruction_1_IS_LOAD : _ram_ext_R0_data[188];
   assign io_deq_bits_decoded_instruction_1_IS_STORE =
-    empty ? io_enq_bits_decoded_instruction_1_IS_STORE : _ram_ext_R0_data[191];
+    empty ? io_enq_bits_decoded_instruction_1_IS_STORE : _ram_ext_R0_data[189];
   assign io_deq_bits_decoded_instruction_2_RD =
-    empty ? io_enq_bits_decoded_instruction_2_RD : _ram_ext_R0_data[197:192];
+    empty ? io_enq_bits_decoded_instruction_2_RD : _ram_ext_R0_data[195:190];
   assign io_deq_bits_decoded_instruction_2_RD_valid =
-    empty ? io_enq_bits_decoded_instruction_2_RD_valid : _ram_ext_R0_data[198];
+    empty ? io_enq_bits_decoded_instruction_2_RD_valid : _ram_ext_R0_data[196];
   assign io_deq_bits_decoded_instruction_2_RS1 =
-    empty ? io_enq_bits_decoded_instruction_2_RS1 : _ram_ext_R0_data[204:199];
+    empty ? io_enq_bits_decoded_instruction_2_RS1 : _ram_ext_R0_data[202:197];
   assign io_deq_bits_decoded_instruction_2_RS2 =
-    empty ? io_enq_bits_decoded_instruction_2_RS2 : _ram_ext_R0_data[210:205];
+    empty ? io_enq_bits_decoded_instruction_2_RS2 : _ram_ext_R0_data[208:203];
   assign io_deq_bits_decoded_instruction_2_IMM =
-    empty ? io_enq_bits_decoded_instruction_2_IMM : _ram_ext_R0_data[242:211];
+    empty ? io_enq_bits_decoded_instruction_2_IMM : _ram_ext_R0_data[240:209];
   assign io_deq_bits_decoded_instruction_2_FUNCT3 =
-    empty ? io_enq_bits_decoded_instruction_2_FUNCT3 : _ram_ext_R0_data[245:243];
+    empty ? io_enq_bits_decoded_instruction_2_FUNCT3 : _ram_ext_R0_data[243:241];
   assign io_deq_bits_decoded_instruction_2_packet_index =
-    empty ? io_enq_bits_decoded_instruction_2_packet_index : _ram_ext_R0_data[249:246];
+    empty ? io_enq_bits_decoded_instruction_2_packet_index : _ram_ext_R0_data[247:244];
   assign io_deq_bits_decoded_instruction_2_ROB_index =
-    empty ? io_enq_bits_decoded_instruction_2_ROB_index : _ram_ext_R0_data[255:250];
+    empty ? io_enq_bits_decoded_instruction_2_ROB_index : _ram_ext_R0_data[253:248];
   assign io_deq_bits_decoded_instruction_2_instructionType =
-    empty ? io_enq_bits_decoded_instruction_2_instructionType : _ram_ext_R0_data[260:256];
+    empty ? io_enq_bits_decoded_instruction_2_instructionType : _ram_ext_R0_data[258:254];
   assign io_deq_bits_decoded_instruction_2_portID =
-    empty ? io_enq_bits_decoded_instruction_2_portID : _ram_ext_R0_data[262:261];
+    empty ? io_enq_bits_decoded_instruction_2_portID : _ram_ext_R0_data[260:259];
   assign io_deq_bits_decoded_instruction_2_RS_type =
-    empty ? io_enq_bits_decoded_instruction_2_RS_type : _ram_ext_R0_data[264:263];
-  assign io_deq_bits_decoded_instruction_2_needs_ALU =
-    empty ? io_enq_bits_decoded_instruction_2_needs_ALU : _ram_ext_R0_data[265];
+    empty ? io_enq_bits_decoded_instruction_2_RS_type : _ram_ext_R0_data[262:261];
   assign io_deq_bits_decoded_instruction_2_needs_branch_unit =
-    empty ? io_enq_bits_decoded_instruction_2_needs_branch_unit : _ram_ext_R0_data[266];
+    empty ? io_enq_bits_decoded_instruction_2_needs_branch_unit : _ram_ext_R0_data[263];
   assign io_deq_bits_decoded_instruction_2_SUBTRACT =
-    empty ? io_enq_bits_decoded_instruction_2_SUBTRACT : _ram_ext_R0_data[267];
+    empty ? io_enq_bits_decoded_instruction_2_SUBTRACT : _ram_ext_R0_data[264];
   assign io_deq_bits_decoded_instruction_2_MULTIPLY =
-    empty ? io_enq_bits_decoded_instruction_2_MULTIPLY : _ram_ext_R0_data[268];
+    empty ? io_enq_bits_decoded_instruction_2_MULTIPLY : _ram_ext_R0_data[265];
   assign io_deq_bits_decoded_instruction_2_IMMEDIATE =
-    empty ? io_enq_bits_decoded_instruction_2_IMMEDIATE : _ram_ext_R0_data[269];
+    empty ? io_enq_bits_decoded_instruction_2_IMMEDIATE : _ram_ext_R0_data[266];
   assign io_deq_bits_decoded_instruction_2_IS_LOAD =
-    empty ? io_enq_bits_decoded_instruction_2_IS_LOAD : _ram_ext_R0_data[270];
+    empty ? io_enq_bits_decoded_instruction_2_IS_LOAD : _ram_ext_R0_data[267];
   assign io_deq_bits_decoded_instruction_2_IS_STORE =
-    empty ? io_enq_bits_decoded_instruction_2_IS_STORE : _ram_ext_R0_data[271];
+    empty ? io_enq_bits_decoded_instruction_2_IS_STORE : _ram_ext_R0_data[268];
   assign io_deq_bits_decoded_instruction_3_RD =
-    empty ? io_enq_bits_decoded_instruction_3_RD : _ram_ext_R0_data[277:272];
+    empty ? io_enq_bits_decoded_instruction_3_RD : _ram_ext_R0_data[274:269];
   assign io_deq_bits_decoded_instruction_3_RD_valid =
-    empty ? io_enq_bits_decoded_instruction_3_RD_valid : _ram_ext_R0_data[278];
+    empty ? io_enq_bits_decoded_instruction_3_RD_valid : _ram_ext_R0_data[275];
   assign io_deq_bits_decoded_instruction_3_RS1 =
-    empty ? io_enq_bits_decoded_instruction_3_RS1 : _ram_ext_R0_data[284:279];
+    empty ? io_enq_bits_decoded_instruction_3_RS1 : _ram_ext_R0_data[281:276];
   assign io_deq_bits_decoded_instruction_3_RS2 =
-    empty ? io_enq_bits_decoded_instruction_3_RS2 : _ram_ext_R0_data[290:285];
+    empty ? io_enq_bits_decoded_instruction_3_RS2 : _ram_ext_R0_data[287:282];
   assign io_deq_bits_decoded_instruction_3_IMM =
-    empty ? io_enq_bits_decoded_instruction_3_IMM : _ram_ext_R0_data[322:291];
+    empty ? io_enq_bits_decoded_instruction_3_IMM : _ram_ext_R0_data[319:288];
   assign io_deq_bits_decoded_instruction_3_FUNCT3 =
-    empty ? io_enq_bits_decoded_instruction_3_FUNCT3 : _ram_ext_R0_data[325:323];
+    empty ? io_enq_bits_decoded_instruction_3_FUNCT3 : _ram_ext_R0_data[322:320];
   assign io_deq_bits_decoded_instruction_3_packet_index =
-    empty ? io_enq_bits_decoded_instruction_3_packet_index : _ram_ext_R0_data[329:326];
+    empty ? io_enq_bits_decoded_instruction_3_packet_index : _ram_ext_R0_data[326:323];
   assign io_deq_bits_decoded_instruction_3_ROB_index =
-    empty ? io_enq_bits_decoded_instruction_3_ROB_index : _ram_ext_R0_data[335:330];
+    empty ? io_enq_bits_decoded_instruction_3_ROB_index : _ram_ext_R0_data[332:327];
   assign io_deq_bits_decoded_instruction_3_instructionType =
-    empty ? io_enq_bits_decoded_instruction_3_instructionType : _ram_ext_R0_data[340:336];
+    empty ? io_enq_bits_decoded_instruction_3_instructionType : _ram_ext_R0_data[337:333];
   assign io_deq_bits_decoded_instruction_3_portID =
-    empty ? io_enq_bits_decoded_instruction_3_portID : _ram_ext_R0_data[342:341];
+    empty ? io_enq_bits_decoded_instruction_3_portID : _ram_ext_R0_data[339:338];
   assign io_deq_bits_decoded_instruction_3_RS_type =
-    empty ? io_enq_bits_decoded_instruction_3_RS_type : _ram_ext_R0_data[344:343];
-  assign io_deq_bits_decoded_instruction_3_needs_ALU =
-    empty ? io_enq_bits_decoded_instruction_3_needs_ALU : _ram_ext_R0_data[345];
+    empty ? io_enq_bits_decoded_instruction_3_RS_type : _ram_ext_R0_data[341:340];
   assign io_deq_bits_decoded_instruction_3_needs_branch_unit =
-    empty ? io_enq_bits_decoded_instruction_3_needs_branch_unit : _ram_ext_R0_data[346];
+    empty ? io_enq_bits_decoded_instruction_3_needs_branch_unit : _ram_ext_R0_data[342];
   assign io_deq_bits_decoded_instruction_3_SUBTRACT =
-    empty ? io_enq_bits_decoded_instruction_3_SUBTRACT : _ram_ext_R0_data[347];
+    empty ? io_enq_bits_decoded_instruction_3_SUBTRACT : _ram_ext_R0_data[343];
   assign io_deq_bits_decoded_instruction_3_MULTIPLY =
-    empty ? io_enq_bits_decoded_instruction_3_MULTIPLY : _ram_ext_R0_data[348];
+    empty ? io_enq_bits_decoded_instruction_3_MULTIPLY : _ram_ext_R0_data[344];
   assign io_deq_bits_decoded_instruction_3_IMMEDIATE =
-    empty ? io_enq_bits_decoded_instruction_3_IMMEDIATE : _ram_ext_R0_data[349];
+    empty ? io_enq_bits_decoded_instruction_3_IMMEDIATE : _ram_ext_R0_data[345];
   assign io_deq_bits_decoded_instruction_3_IS_LOAD =
-    empty ? io_enq_bits_decoded_instruction_3_IS_LOAD : _ram_ext_R0_data[350];
+    empty ? io_enq_bits_decoded_instruction_3_IS_LOAD : _ram_ext_R0_data[346];
   assign io_deq_bits_decoded_instruction_3_IS_STORE =
-    empty ? io_enq_bits_decoded_instruction_3_IS_STORE : _ram_ext_R0_data[351];
+    empty ? io_enq_bits_decoded_instruction_3_IS_STORE : _ram_ext_R0_data[347];
   assign io_deq_bits_valid_bits_0 =
-    empty ? io_enq_bits_valid_bits_0 : _ram_ext_R0_data[352];
+    empty ? io_enq_bits_valid_bits_0 : _ram_ext_R0_data[348];
   assign io_deq_bits_valid_bits_1 =
-    empty ? io_enq_bits_valid_bits_1 : _ram_ext_R0_data[353];
+    empty ? io_enq_bits_valid_bits_1 : _ram_ext_R0_data[349];
   assign io_deq_bits_valid_bits_2 =
-    empty ? io_enq_bits_valid_bits_2 : _ram_ext_R0_data[354];
+    empty ? io_enq_bits_valid_bits_2 : _ram_ext_R0_data[350];
   assign io_deq_bits_valid_bits_3 =
-    empty ? io_enq_bits_valid_bits_3 : _ram_ext_R0_data[355];
+    empty ? io_enq_bits_valid_bits_3 : _ram_ext_R0_data[351];
 endmodule
 
 module Q_3(
@@ -3881,8 +3883,7 @@ module Q_3(
   output [4:0]  io_out_bits_decoded_instruction_0_instructionType,
   output [1:0]  io_out_bits_decoded_instruction_0_portID,
                 io_out_bits_decoded_instruction_0_RS_type,
-  output        io_out_bits_decoded_instruction_0_needs_ALU,
-                io_out_bits_decoded_instruction_0_needs_branch_unit,
+  output        io_out_bits_decoded_instruction_0_needs_branch_unit,
                 io_out_bits_decoded_instruction_0_SUBTRACT,
                 io_out_bits_decoded_instruction_0_MULTIPLY,
                 io_out_bits_decoded_instruction_0_IMMEDIATE,
@@ -3899,8 +3900,7 @@ module Q_3(
   output [4:0]  io_out_bits_decoded_instruction_1_instructionType,
   output [1:0]  io_out_bits_decoded_instruction_1_portID,
                 io_out_bits_decoded_instruction_1_RS_type,
-  output        io_out_bits_decoded_instruction_1_needs_ALU,
-                io_out_bits_decoded_instruction_1_needs_branch_unit,
+  output        io_out_bits_decoded_instruction_1_needs_branch_unit,
                 io_out_bits_decoded_instruction_1_SUBTRACT,
                 io_out_bits_decoded_instruction_1_MULTIPLY,
                 io_out_bits_decoded_instruction_1_IMMEDIATE,
@@ -3917,8 +3917,7 @@ module Q_3(
   output [4:0]  io_out_bits_decoded_instruction_2_instructionType,
   output [1:0]  io_out_bits_decoded_instruction_2_portID,
                 io_out_bits_decoded_instruction_2_RS_type,
-  output        io_out_bits_decoded_instruction_2_needs_ALU,
-                io_out_bits_decoded_instruction_2_needs_branch_unit,
+  output        io_out_bits_decoded_instruction_2_needs_branch_unit,
                 io_out_bits_decoded_instruction_2_SUBTRACT,
                 io_out_bits_decoded_instruction_2_MULTIPLY,
                 io_out_bits_decoded_instruction_2_IMMEDIATE,
@@ -3935,8 +3934,7 @@ module Q_3(
   output [4:0]  io_out_bits_decoded_instruction_3_instructionType,
   output [1:0]  io_out_bits_decoded_instruction_3_portID,
                 io_out_bits_decoded_instruction_3_RS_type,
-  output        io_out_bits_decoded_instruction_3_needs_ALU,
-                io_out_bits_decoded_instruction_3_needs_branch_unit,
+  output        io_out_bits_decoded_instruction_3_needs_branch_unit,
                 io_out_bits_decoded_instruction_3_SUBTRACT,
                 io_out_bits_decoded_instruction_3_MULTIPLY,
                 io_out_bits_decoded_instruction_3_IMMEDIATE,
@@ -4143,8 +4141,6 @@ module Q_3(
       (io_out_bits_decoded_instruction_0_portID),
     .io_deq_bits_decoded_instruction_0_RS_type
       (io_out_bits_decoded_instruction_0_RS_type),
-    .io_deq_bits_decoded_instruction_0_needs_ALU
-      (io_out_bits_decoded_instruction_0_needs_ALU),
     .io_deq_bits_decoded_instruction_0_needs_branch_unit
       (io_out_bits_decoded_instruction_0_needs_branch_unit),
     .io_deq_bits_decoded_instruction_0_SUBTRACT
@@ -4179,8 +4175,6 @@ module Q_3(
       (io_out_bits_decoded_instruction_1_portID),
     .io_deq_bits_decoded_instruction_1_RS_type
       (io_out_bits_decoded_instruction_1_RS_type),
-    .io_deq_bits_decoded_instruction_1_needs_ALU
-      (io_out_bits_decoded_instruction_1_needs_ALU),
     .io_deq_bits_decoded_instruction_1_needs_branch_unit
       (io_out_bits_decoded_instruction_1_needs_branch_unit),
     .io_deq_bits_decoded_instruction_1_SUBTRACT
@@ -4215,8 +4209,6 @@ module Q_3(
       (io_out_bits_decoded_instruction_2_portID),
     .io_deq_bits_decoded_instruction_2_RS_type
       (io_out_bits_decoded_instruction_2_RS_type),
-    .io_deq_bits_decoded_instruction_2_needs_ALU
-      (io_out_bits_decoded_instruction_2_needs_ALU),
     .io_deq_bits_decoded_instruction_2_needs_branch_unit
       (io_out_bits_decoded_instruction_2_needs_branch_unit),
     .io_deq_bits_decoded_instruction_2_SUBTRACT
@@ -4251,8 +4243,6 @@ module Q_3(
       (io_out_bits_decoded_instruction_3_portID),
     .io_deq_bits_decoded_instruction_3_RS_type
       (io_out_bits_decoded_instruction_3_RS_type),
-    .io_deq_bits_decoded_instruction_3_needs_ALU
-      (io_out_bits_decoded_instruction_3_needs_ALU),
     .io_deq_bits_decoded_instruction_3_needs_branch_unit
       (io_out_bits_decoded_instruction_3_needs_branch_unit),
     .io_deq_bits_decoded_instruction_3_SUBTRACT
@@ -5195,6 +5185,10 @@ module WAW_handler(
                io_RAT_wr_en_1,
                io_RAT_wr_en_2,
                io_RAT_wr_en_3,
+  output [4:0] io_RAT_RD_values_0,
+               io_RAT_RD_values_1,
+               io_RAT_RD_values_2,
+               io_RAT_RD_values_3,
   output [5:0] io_FL_RD_values_0,
                io_FL_RD_values_1,
                io_FL_RD_values_2,
@@ -5214,6 +5208,10 @@ module WAW_handler(
     io_decoder_RD_valid_bits_2
     & (io_decoder_RD_values_2 != io_decoder_RD_values_3 | ~io_decoder_RD_valid_bits_3);
   assign io_RAT_wr_en_3 = io_decoder_RD_valid_bits_3;
+  assign io_RAT_RD_values_0 = io_decoder_RD_values_0;
+  assign io_RAT_RD_values_1 = io_decoder_RD_values_1;
+  assign io_RAT_RD_values_2 = io_decoder_RD_values_2;
+  assign io_RAT_RD_values_3 = io_decoder_RD_values_3;
   assign io_FL_RD_values_0 = io_free_list_RD_values_0;
   assign io_FL_RD_values_1 = io_free_list_RD_values_1;
   assign io_FL_RD_values_2 = io_free_list_RD_values_2;
@@ -9486,7 +9484,7 @@ module RAT(
   assign io_RAT_RS2_3 = io_RAT_RS2_3_REG;
 endmodule
 
-module renamer(
+module rename(
   input         clock,
                 reset,
   output        io_decoded_fetch_packet_ready,
@@ -9503,8 +9501,7 @@ module renamer(
   input  [4:0]  io_decoded_fetch_packet_bits_decoded_instruction_0_instructionType,
   input  [1:0]  io_decoded_fetch_packet_bits_decoded_instruction_0_portID,
                 io_decoded_fetch_packet_bits_decoded_instruction_0_RS_type,
-  input         io_decoded_fetch_packet_bits_decoded_instruction_0_needs_ALU,
-                io_decoded_fetch_packet_bits_decoded_instruction_0_needs_branch_unit,
+  input         io_decoded_fetch_packet_bits_decoded_instruction_0_needs_branch_unit,
                 io_decoded_fetch_packet_bits_decoded_instruction_0_SUBTRACT,
                 io_decoded_fetch_packet_bits_decoded_instruction_0_MULTIPLY,
                 io_decoded_fetch_packet_bits_decoded_instruction_0_IMMEDIATE,
@@ -9521,8 +9518,7 @@ module renamer(
   input  [4:0]  io_decoded_fetch_packet_bits_decoded_instruction_1_instructionType,
   input  [1:0]  io_decoded_fetch_packet_bits_decoded_instruction_1_portID,
                 io_decoded_fetch_packet_bits_decoded_instruction_1_RS_type,
-  input         io_decoded_fetch_packet_bits_decoded_instruction_1_needs_ALU,
-                io_decoded_fetch_packet_bits_decoded_instruction_1_needs_branch_unit,
+  input         io_decoded_fetch_packet_bits_decoded_instruction_1_needs_branch_unit,
                 io_decoded_fetch_packet_bits_decoded_instruction_1_SUBTRACT,
                 io_decoded_fetch_packet_bits_decoded_instruction_1_MULTIPLY,
                 io_decoded_fetch_packet_bits_decoded_instruction_1_IMMEDIATE,
@@ -9539,8 +9535,7 @@ module renamer(
   input  [4:0]  io_decoded_fetch_packet_bits_decoded_instruction_2_instructionType,
   input  [1:0]  io_decoded_fetch_packet_bits_decoded_instruction_2_portID,
                 io_decoded_fetch_packet_bits_decoded_instruction_2_RS_type,
-  input         io_decoded_fetch_packet_bits_decoded_instruction_2_needs_ALU,
-                io_decoded_fetch_packet_bits_decoded_instruction_2_needs_branch_unit,
+  input         io_decoded_fetch_packet_bits_decoded_instruction_2_needs_branch_unit,
                 io_decoded_fetch_packet_bits_decoded_instruction_2_SUBTRACT,
                 io_decoded_fetch_packet_bits_decoded_instruction_2_MULTIPLY,
                 io_decoded_fetch_packet_bits_decoded_instruction_2_IMMEDIATE,
@@ -9557,8 +9552,7 @@ module renamer(
   input  [4:0]  io_decoded_fetch_packet_bits_decoded_instruction_3_instructionType,
   input  [1:0]  io_decoded_fetch_packet_bits_decoded_instruction_3_portID,
                 io_decoded_fetch_packet_bits_decoded_instruction_3_RS_type,
-  input         io_decoded_fetch_packet_bits_decoded_instruction_3_needs_ALU,
-                io_decoded_fetch_packet_bits_decoded_instruction_3_needs_branch_unit,
+  input         io_decoded_fetch_packet_bits_decoded_instruction_3_needs_branch_unit,
                 io_decoded_fetch_packet_bits_decoded_instruction_3_SUBTRACT,
                 io_decoded_fetch_packet_bits_decoded_instruction_3_MULTIPLY,
                 io_decoded_fetch_packet_bits_decoded_instruction_3_IMMEDIATE,
@@ -9582,8 +9576,7 @@ module renamer(
   output [4:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_instructionType,
   output [1:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_portID,
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS_type,
-  output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_ALU,
-                io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_branch_unit,
+  output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_branch_unit,
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_SUBTRACT,
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_MULTIPLY,
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_IMMEDIATE,
@@ -9600,8 +9593,7 @@ module renamer(
   output [4:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_instructionType,
   output [1:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_portID,
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS_type,
-  output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_ALU,
-                io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_branch_unit,
+  output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_branch_unit,
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_SUBTRACT,
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_MULTIPLY,
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_IMMEDIATE,
@@ -9618,8 +9610,7 @@ module renamer(
   output [4:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_instructionType,
   output [1:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_portID,
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS_type,
-  output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_ALU,
-                io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_branch_unit,
+  output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_branch_unit,
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_SUBTRACT,
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_MULTIPLY,
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_IMMEDIATE,
@@ -9636,8 +9627,7 @@ module renamer(
   output [4:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_instructionType,
   output [1:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_portID,
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS_type,
-  output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_ALU,
-                io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_branch_unit,
+  output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_branch_unit,
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_SUBTRACT,
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_MULTIPLY,
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_IMMEDIATE,
@@ -9661,25 +9651,246 @@ module renamer(
   input  [3:0]  io_restore_checkpoint_value
 );
 
-  wire       _WAW_handler_io_RAT_wr_en_0;
-  wire       _WAW_handler_io_RAT_wr_en_1;
-  wire       _WAW_handler_io_RAT_wr_en_2;
-  wire       _WAW_handler_io_RAT_wr_en_3;
-  wire [5:0] _WAW_handler_io_FL_RD_values_0;
-  wire [5:0] _WAW_handler_io_FL_RD_values_1;
-  wire [5:0] _WAW_handler_io_FL_RD_values_2;
-  wire [5:0] _WAW_handler_io_FL_RD_values_3;
-  wire [5:0] _free_list_io_renamed_values_0;
-  wire [5:0] _free_list_io_renamed_values_1;
-  wire [5:0] _free_list_io_renamed_values_2;
-  wire [5:0] _free_list_io_renamed_values_3;
+  wire        _WAW_handler_io_RAT_wr_en_0;
+  wire        _WAW_handler_io_RAT_wr_en_1;
+  wire        _WAW_handler_io_RAT_wr_en_2;
+  wire        _WAW_handler_io_RAT_wr_en_3;
+  wire [4:0]  _WAW_handler_io_RAT_RD_values_0;
+  wire [4:0]  _WAW_handler_io_RAT_RD_values_1;
+  wire [4:0]  _WAW_handler_io_RAT_RD_values_2;
+  wire [4:0]  _WAW_handler_io_RAT_RD_values_3;
+  wire [5:0]  _WAW_handler_io_FL_RD_values_0;
+  wire [5:0]  _WAW_handler_io_FL_RD_values_1;
+  wire [5:0]  _WAW_handler_io_FL_RD_values_2;
+  wire [5:0]  _WAW_handler_io_FL_RD_values_3;
+  wire [5:0]  _free_list_io_renamed_values_0;
+  wire [5:0]  _free_list_io_renamed_values_1;
+  wire [5:0]  _free_list_io_renamed_values_2;
+  wire [5:0]  _free_list_io_renamed_values_3;
+  wire        instruction_RD_valid_0 =
+    io_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid
+    & io_decoded_fetch_packet_valid;
+  wire        instruction_RD_valid_1 =
+    io_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid
+    & io_decoded_fetch_packet_valid;
+  wire        instruction_RD_valid_2 =
+    io_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid
+    & io_decoded_fetch_packet_valid;
+  wire        instruction_RD_valid_3 =
+    io_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid
+    & io_decoded_fetch_packet_valid;
+  reg  [31:0] io_renamed_decoded_fetch_packet_bits_REG_fetch_PC;
+  reg  [31:0] io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_IMM;
+  reg  [2:0]  io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_FUNCT3;
+  reg  [3:0]  io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_packet_index;
+  reg  [5:0]  io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_ROB_index;
+  reg  [4:0]
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_instructionType;
+  reg  [1:0]  io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_portID;
+  reg  [1:0]  io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_RS_type;
+  reg
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_needs_branch_unit;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_SUBTRACT;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_MULTIPLY;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_IMMEDIATE;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_IS_LOAD;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_IS_STORE;
+  reg  [31:0] io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_IMM;
+  reg  [2:0]  io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_FUNCT3;
+  reg  [3:0]  io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_packet_index;
+  reg  [5:0]  io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_ROB_index;
+  reg  [4:0]
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_instructionType;
+  reg  [1:0]  io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_portID;
+  reg  [1:0]  io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_RS_type;
+  reg
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_needs_branch_unit;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_SUBTRACT;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_MULTIPLY;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_IMMEDIATE;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_IS_LOAD;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_IS_STORE;
+  reg  [31:0] io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_IMM;
+  reg  [2:0]  io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_FUNCT3;
+  reg  [3:0]  io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_packet_index;
+  reg  [5:0]  io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_ROB_index;
+  reg  [4:0]
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_instructionType;
+  reg  [1:0]  io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_portID;
+  reg  [1:0]  io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_RS_type;
+  reg
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_needs_branch_unit;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_SUBTRACT;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_MULTIPLY;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_IMMEDIATE;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_IS_LOAD;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_IS_STORE;
+  reg  [31:0] io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_IMM;
+  reg  [2:0]  io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_FUNCT3;
+  reg  [3:0]  io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_packet_index;
+  reg  [5:0]  io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_ROB_index;
+  reg  [4:0]
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_instructionType;
+  reg  [1:0]  io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_portID;
+  reg  [1:0]  io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_RS_type;
+  reg
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_needs_branch_unit;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_SUBTRACT;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_MULTIPLY;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_IMMEDIATE;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_IS_LOAD;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_IS_STORE;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_valid_bits_0;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_valid_bits_1;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_valid_bits_2;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_valid_bits_3;
+  reg  [5:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD_REG;
+  reg         io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid_REG;
+  reg  [5:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD_REG;
+  reg         io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid_REG;
+  reg  [5:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD_REG;
+  reg         io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid_REG;
+  reg  [5:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD_REG;
+  reg         io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid_REG;
+  always @(posedge clock) begin
+    io_renamed_decoded_fetch_packet_bits_REG_fetch_PC <=
+      io_decoded_fetch_packet_bits_fetch_PC;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_IMM <=
+      io_decoded_fetch_packet_bits_decoded_instruction_0_IMM;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_FUNCT3 <=
+      io_decoded_fetch_packet_bits_decoded_instruction_0_FUNCT3;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_packet_index <=
+      io_decoded_fetch_packet_bits_decoded_instruction_0_packet_index;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_ROB_index <=
+      io_decoded_fetch_packet_bits_decoded_instruction_0_ROB_index;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_instructionType <=
+      io_decoded_fetch_packet_bits_decoded_instruction_0_instructionType;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_portID <=
+      io_decoded_fetch_packet_bits_decoded_instruction_0_portID;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_RS_type <=
+      io_decoded_fetch_packet_bits_decoded_instruction_0_RS_type;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_needs_branch_unit <=
+      io_decoded_fetch_packet_bits_decoded_instruction_0_needs_branch_unit;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_SUBTRACT <=
+      io_decoded_fetch_packet_bits_decoded_instruction_0_SUBTRACT;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_MULTIPLY <=
+      io_decoded_fetch_packet_bits_decoded_instruction_0_MULTIPLY;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_IMMEDIATE <=
+      io_decoded_fetch_packet_bits_decoded_instruction_0_IMMEDIATE;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_IS_LOAD <=
+      io_decoded_fetch_packet_bits_decoded_instruction_0_IS_LOAD;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_IS_STORE <=
+      io_decoded_fetch_packet_bits_decoded_instruction_0_IS_STORE;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_IMM <=
+      io_decoded_fetch_packet_bits_decoded_instruction_1_IMM;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_FUNCT3 <=
+      io_decoded_fetch_packet_bits_decoded_instruction_1_FUNCT3;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_packet_index <=
+      io_decoded_fetch_packet_bits_decoded_instruction_1_packet_index;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_ROB_index <=
+      io_decoded_fetch_packet_bits_decoded_instruction_1_ROB_index;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_instructionType <=
+      io_decoded_fetch_packet_bits_decoded_instruction_1_instructionType;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_portID <=
+      io_decoded_fetch_packet_bits_decoded_instruction_1_portID;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_RS_type <=
+      io_decoded_fetch_packet_bits_decoded_instruction_1_RS_type;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_needs_branch_unit <=
+      io_decoded_fetch_packet_bits_decoded_instruction_1_needs_branch_unit;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_SUBTRACT <=
+      io_decoded_fetch_packet_bits_decoded_instruction_1_SUBTRACT;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_MULTIPLY <=
+      io_decoded_fetch_packet_bits_decoded_instruction_1_MULTIPLY;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_IMMEDIATE <=
+      io_decoded_fetch_packet_bits_decoded_instruction_1_IMMEDIATE;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_IS_LOAD <=
+      io_decoded_fetch_packet_bits_decoded_instruction_1_IS_LOAD;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_IS_STORE <=
+      io_decoded_fetch_packet_bits_decoded_instruction_1_IS_STORE;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_IMM <=
+      io_decoded_fetch_packet_bits_decoded_instruction_2_IMM;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_FUNCT3 <=
+      io_decoded_fetch_packet_bits_decoded_instruction_2_FUNCT3;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_packet_index <=
+      io_decoded_fetch_packet_bits_decoded_instruction_2_packet_index;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_ROB_index <=
+      io_decoded_fetch_packet_bits_decoded_instruction_2_ROB_index;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_instructionType <=
+      io_decoded_fetch_packet_bits_decoded_instruction_2_instructionType;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_portID <=
+      io_decoded_fetch_packet_bits_decoded_instruction_2_portID;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_RS_type <=
+      io_decoded_fetch_packet_bits_decoded_instruction_2_RS_type;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_needs_branch_unit <=
+      io_decoded_fetch_packet_bits_decoded_instruction_2_needs_branch_unit;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_SUBTRACT <=
+      io_decoded_fetch_packet_bits_decoded_instruction_2_SUBTRACT;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_MULTIPLY <=
+      io_decoded_fetch_packet_bits_decoded_instruction_2_MULTIPLY;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_IMMEDIATE <=
+      io_decoded_fetch_packet_bits_decoded_instruction_2_IMMEDIATE;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_IS_LOAD <=
+      io_decoded_fetch_packet_bits_decoded_instruction_2_IS_LOAD;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_IS_STORE <=
+      io_decoded_fetch_packet_bits_decoded_instruction_2_IS_STORE;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_IMM <=
+      io_decoded_fetch_packet_bits_decoded_instruction_3_IMM;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_FUNCT3 <=
+      io_decoded_fetch_packet_bits_decoded_instruction_3_FUNCT3;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_packet_index <=
+      io_decoded_fetch_packet_bits_decoded_instruction_3_packet_index;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_ROB_index <=
+      io_decoded_fetch_packet_bits_decoded_instruction_3_ROB_index;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_instructionType <=
+      io_decoded_fetch_packet_bits_decoded_instruction_3_instructionType;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_portID <=
+      io_decoded_fetch_packet_bits_decoded_instruction_3_portID;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_RS_type <=
+      io_decoded_fetch_packet_bits_decoded_instruction_3_RS_type;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_needs_branch_unit <=
+      io_decoded_fetch_packet_bits_decoded_instruction_3_needs_branch_unit;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_SUBTRACT <=
+      io_decoded_fetch_packet_bits_decoded_instruction_3_SUBTRACT;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_MULTIPLY <=
+      io_decoded_fetch_packet_bits_decoded_instruction_3_MULTIPLY;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_IMMEDIATE <=
+      io_decoded_fetch_packet_bits_decoded_instruction_3_IMMEDIATE;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_IS_LOAD <=
+      io_decoded_fetch_packet_bits_decoded_instruction_3_IS_LOAD;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_IS_STORE <=
+      io_decoded_fetch_packet_bits_decoded_instruction_3_IS_STORE;
+    io_renamed_decoded_fetch_packet_bits_REG_valid_bits_0 <=
+      io_decoded_fetch_packet_bits_valid_bits_0;
+    io_renamed_decoded_fetch_packet_bits_REG_valid_bits_1 <=
+      io_decoded_fetch_packet_bits_valid_bits_1;
+    io_renamed_decoded_fetch_packet_bits_REG_valid_bits_2 <=
+      io_decoded_fetch_packet_bits_valid_bits_2;
+    io_renamed_decoded_fetch_packet_bits_REG_valid_bits_3 <=
+      io_decoded_fetch_packet_bits_valid_bits_3;
+    io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD_REG <=
+      _free_list_io_renamed_values_0;
+    io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid_REG <=
+      instruction_RD_valid_0;
+    io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD_REG <=
+      _free_list_io_renamed_values_1;
+    io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid_REG <=
+      instruction_RD_valid_1;
+    io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD_REG <=
+      _free_list_io_renamed_values_2;
+    io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid_REG <=
+      instruction_RD_valid_2;
+    io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD_REG <=
+      _free_list_io_renamed_values_3;
+    io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid_REG <=
+      instruction_RD_valid_3;
+  end // always @(posedge)
   free_list free_list (
     .clock               (clock),
     .reset               (reset),
-    .io_rename_valid_0   (io_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid),
-    .io_rename_valid_1   (io_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid),
-    .io_rename_valid_2   (io_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid),
-    .io_rename_valid_3   (io_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid),
+    .io_rename_valid_0   (instruction_RD_valid_0),
+    .io_rename_valid_1   (instruction_RD_valid_1),
+    .io_rename_valid_2   (instruction_RD_valid_2),
+    .io_rename_valid_3   (instruction_RD_valid_3),
     .io_renamed_values_0 (_free_list_io_renamed_values_0),
     .io_renamed_values_1 (_free_list_io_renamed_values_1),
     .io_renamed_values_2 (_free_list_io_renamed_values_2),
@@ -9694,14 +9905,10 @@ module renamer(
     .io_free_values_3    (io_FU_outputs_3_bits_RD[5:0])
   );
   WAW_handler WAW_handler (
-    .io_decoder_RD_valid_bits_0
-      (io_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid),
-    .io_decoder_RD_valid_bits_1
-      (io_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid),
-    .io_decoder_RD_valid_bits_2
-      (io_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid),
-    .io_decoder_RD_valid_bits_3
-      (io_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid),
+    .io_decoder_RD_valid_bits_0 (instruction_RD_valid_0),
+    .io_decoder_RD_valid_bits_1 (instruction_RD_valid_1),
+    .io_decoder_RD_valid_bits_2 (instruction_RD_valid_2),
+    .io_decoder_RD_valid_bits_3 (instruction_RD_valid_3),
     .io_decoder_RD_values_0
       (io_decoded_fetch_packet_bits_decoded_instruction_0_RD[4:0]),
     .io_decoder_RD_values_1
@@ -9718,6 +9925,10 @@ module renamer(
     .io_RAT_wr_en_1             (_WAW_handler_io_RAT_wr_en_1),
     .io_RAT_wr_en_2             (_WAW_handler_io_RAT_wr_en_2),
     .io_RAT_wr_en_3             (_WAW_handler_io_RAT_wr_en_3),
+    .io_RAT_RD_values_0         (_WAW_handler_io_RAT_RD_values_0),
+    .io_RAT_RD_values_1         (_WAW_handler_io_RAT_RD_values_1),
+    .io_RAT_RD_values_2         (_WAW_handler_io_RAT_RD_values_2),
+    .io_RAT_RD_values_3         (_WAW_handler_io_RAT_RD_values_3),
     .io_FL_RD_values_0          (_WAW_handler_io_FL_RD_values_0),
     .io_FL_RD_values_1          (_WAW_handler_io_FL_RD_values_1),
     .io_FL_RD_values_2          (_WAW_handler_io_FL_RD_values_2),
@@ -9726,14 +9937,10 @@ module renamer(
   RAT RAT (
     .clock                       (clock),
     .reset                       (reset),
-    .io_instruction_RD_0
-      (io_decoded_fetch_packet_bits_decoded_instruction_0_RD[4:0]),
-    .io_instruction_RD_1
-      (io_decoded_fetch_packet_bits_decoded_instruction_1_RD[4:0]),
-    .io_instruction_RD_2
-      (io_decoded_fetch_packet_bits_decoded_instruction_2_RD[4:0]),
-    .io_instruction_RD_3
-      (io_decoded_fetch_packet_bits_decoded_instruction_3_RD[4:0]),
+    .io_instruction_RD_0         (_WAW_handler_io_RAT_RD_values_0),
+    .io_instruction_RD_1         (_WAW_handler_io_RAT_RD_values_1),
+    .io_instruction_RD_2         (_WAW_handler_io_RAT_RD_values_2),
+    .io_instruction_RD_3         (_WAW_handler_io_RAT_RD_values_3),
     .io_instruction_RS1_0
       (io_decoded_fetch_packet_bits_decoded_instruction_0_RS1[4:0]),
     .io_instruction_RS1_1
@@ -9782,143 +9989,135 @@ module renamer(
   assign io_decoded_fetch_packet_ready = io_renamed_decoded_fetch_packet_ready;
   assign io_renamed_decoded_fetch_packet_valid = io_decoded_fetch_packet_valid;
   assign io_renamed_decoded_fetch_packet_bits_fetch_PC =
-    io_decoded_fetch_packet_bits_fetch_PC;
+    io_renamed_decoded_fetch_packet_bits_REG_fetch_PC;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD =
-    _free_list_io_renamed_values_0;
+    io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD_REG;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid =
-    io_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid;
+    io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid_REG;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_IMM =
-    io_decoded_fetch_packet_bits_decoded_instruction_0_IMM;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_IMM;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_FUNCT3 =
-    io_decoded_fetch_packet_bits_decoded_instruction_0_FUNCT3;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_FUNCT3;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_packet_index =
-    io_decoded_fetch_packet_bits_decoded_instruction_0_packet_index;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_packet_index;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_ROB_index =
-    io_decoded_fetch_packet_bits_decoded_instruction_0_ROB_index;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_ROB_index;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_instructionType =
-    io_decoded_fetch_packet_bits_decoded_instruction_0_instructionType;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_instructionType;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_portID =
-    io_decoded_fetch_packet_bits_decoded_instruction_0_portID;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_portID;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS_type =
-    io_decoded_fetch_packet_bits_decoded_instruction_0_RS_type;
-  assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_ALU =
-    io_decoded_fetch_packet_bits_decoded_instruction_0_needs_ALU;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_RS_type;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_branch_unit =
-    io_decoded_fetch_packet_bits_decoded_instruction_0_needs_branch_unit;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_needs_branch_unit;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_SUBTRACT =
-    io_decoded_fetch_packet_bits_decoded_instruction_0_SUBTRACT;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_SUBTRACT;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_MULTIPLY =
-    io_decoded_fetch_packet_bits_decoded_instruction_0_MULTIPLY;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_MULTIPLY;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_IMMEDIATE =
-    io_decoded_fetch_packet_bits_decoded_instruction_0_IMMEDIATE;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_IMMEDIATE;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_IS_LOAD =
-    io_decoded_fetch_packet_bits_decoded_instruction_0_IS_LOAD;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_IS_LOAD;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_IS_STORE =
-    io_decoded_fetch_packet_bits_decoded_instruction_0_IS_STORE;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_IS_STORE;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD =
-    _free_list_io_renamed_values_1;
+    io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD_REG;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid =
-    io_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid;
+    io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid_REG;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_IMM =
-    io_decoded_fetch_packet_bits_decoded_instruction_1_IMM;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_IMM;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_FUNCT3 =
-    io_decoded_fetch_packet_bits_decoded_instruction_1_FUNCT3;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_FUNCT3;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_packet_index =
-    io_decoded_fetch_packet_bits_decoded_instruction_1_packet_index;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_packet_index;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ROB_index =
-    io_decoded_fetch_packet_bits_decoded_instruction_1_ROB_index;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_ROB_index;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_instructionType =
-    io_decoded_fetch_packet_bits_decoded_instruction_1_instructionType;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_instructionType;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_portID =
-    io_decoded_fetch_packet_bits_decoded_instruction_1_portID;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_portID;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS_type =
-    io_decoded_fetch_packet_bits_decoded_instruction_1_RS_type;
-  assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_ALU =
-    io_decoded_fetch_packet_bits_decoded_instruction_1_needs_ALU;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_RS_type;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_branch_unit =
-    io_decoded_fetch_packet_bits_decoded_instruction_1_needs_branch_unit;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_needs_branch_unit;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_SUBTRACT =
-    io_decoded_fetch_packet_bits_decoded_instruction_1_SUBTRACT;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_SUBTRACT;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_MULTIPLY =
-    io_decoded_fetch_packet_bits_decoded_instruction_1_MULTIPLY;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_MULTIPLY;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_IMMEDIATE =
-    io_decoded_fetch_packet_bits_decoded_instruction_1_IMMEDIATE;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_IMMEDIATE;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_IS_LOAD =
-    io_decoded_fetch_packet_bits_decoded_instruction_1_IS_LOAD;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_IS_LOAD;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_IS_STORE =
-    io_decoded_fetch_packet_bits_decoded_instruction_1_IS_STORE;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_IS_STORE;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD =
-    _free_list_io_renamed_values_2;
+    io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD_REG;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid =
-    io_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid;
+    io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid_REG;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_IMM =
-    io_decoded_fetch_packet_bits_decoded_instruction_2_IMM;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_IMM;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_FUNCT3 =
-    io_decoded_fetch_packet_bits_decoded_instruction_2_FUNCT3;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_FUNCT3;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_packet_index =
-    io_decoded_fetch_packet_bits_decoded_instruction_2_packet_index;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_packet_index;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ROB_index =
-    io_decoded_fetch_packet_bits_decoded_instruction_2_ROB_index;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_ROB_index;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_instructionType =
-    io_decoded_fetch_packet_bits_decoded_instruction_2_instructionType;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_instructionType;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_portID =
-    io_decoded_fetch_packet_bits_decoded_instruction_2_portID;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_portID;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS_type =
-    io_decoded_fetch_packet_bits_decoded_instruction_2_RS_type;
-  assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_ALU =
-    io_decoded_fetch_packet_bits_decoded_instruction_2_needs_ALU;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_RS_type;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_branch_unit =
-    io_decoded_fetch_packet_bits_decoded_instruction_2_needs_branch_unit;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_needs_branch_unit;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_SUBTRACT =
-    io_decoded_fetch_packet_bits_decoded_instruction_2_SUBTRACT;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_SUBTRACT;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_MULTIPLY =
-    io_decoded_fetch_packet_bits_decoded_instruction_2_MULTIPLY;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_MULTIPLY;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_IMMEDIATE =
-    io_decoded_fetch_packet_bits_decoded_instruction_2_IMMEDIATE;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_IMMEDIATE;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_IS_LOAD =
-    io_decoded_fetch_packet_bits_decoded_instruction_2_IS_LOAD;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_IS_LOAD;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_IS_STORE =
-    io_decoded_fetch_packet_bits_decoded_instruction_2_IS_STORE;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_IS_STORE;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD =
-    _free_list_io_renamed_values_3;
+    io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD_REG;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid =
-    io_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid;
+    io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid_REG;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_IMM =
-    io_decoded_fetch_packet_bits_decoded_instruction_3_IMM;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_IMM;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_FUNCT3 =
-    io_decoded_fetch_packet_bits_decoded_instruction_3_FUNCT3;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_FUNCT3;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_packet_index =
-    io_decoded_fetch_packet_bits_decoded_instruction_3_packet_index;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_packet_index;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ROB_index =
-    io_decoded_fetch_packet_bits_decoded_instruction_3_ROB_index;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_ROB_index;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_instructionType =
-    io_decoded_fetch_packet_bits_decoded_instruction_3_instructionType;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_instructionType;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_portID =
-    io_decoded_fetch_packet_bits_decoded_instruction_3_portID;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_portID;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS_type =
-    io_decoded_fetch_packet_bits_decoded_instruction_3_RS_type;
-  assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_ALU =
-    io_decoded_fetch_packet_bits_decoded_instruction_3_needs_ALU;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_RS_type;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_branch_unit =
-    io_decoded_fetch_packet_bits_decoded_instruction_3_needs_branch_unit;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_needs_branch_unit;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_SUBTRACT =
-    io_decoded_fetch_packet_bits_decoded_instruction_3_SUBTRACT;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_SUBTRACT;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_MULTIPLY =
-    io_decoded_fetch_packet_bits_decoded_instruction_3_MULTIPLY;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_MULTIPLY;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_IMMEDIATE =
-    io_decoded_fetch_packet_bits_decoded_instruction_3_IMMEDIATE;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_IMMEDIATE;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_IS_LOAD =
-    io_decoded_fetch_packet_bits_decoded_instruction_3_IS_LOAD;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_IS_LOAD;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_IS_STORE =
-    io_decoded_fetch_packet_bits_decoded_instruction_3_IS_STORE;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_IS_STORE;
   assign io_renamed_decoded_fetch_packet_bits_valid_bits_0 =
-    io_decoded_fetch_packet_bits_valid_bits_0;
+    io_renamed_decoded_fetch_packet_bits_REG_valid_bits_0;
   assign io_renamed_decoded_fetch_packet_bits_valid_bits_1 =
-    io_decoded_fetch_packet_bits_valid_bits_1;
+    io_renamed_decoded_fetch_packet_bits_REG_valid_bits_1;
   assign io_renamed_decoded_fetch_packet_bits_valid_bits_2 =
-    io_decoded_fetch_packet_bits_valid_bits_2;
+    io_renamed_decoded_fetch_packet_bits_REG_valid_bits_2;
   assign io_renamed_decoded_fetch_packet_bits_valid_bits_3 =
-    io_decoded_fetch_packet_bits_valid_bits_3;
+    io_renamed_decoded_fetch_packet_bits_REG_valid_bits_3;
 endmodule
 
 module frontend(
@@ -9965,8 +10164,7 @@ module frontend(
   output [4:0]   io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_instructionType,
   output [1:0]   io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_portID,
                  io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS_type,
-  output         io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_ALU,
-                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_branch_unit,
+  output         io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_branch_unit,
                  io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_SUBTRACT,
                  io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_MULTIPLY,
                  io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_IMMEDIATE,
@@ -9983,8 +10181,7 @@ module frontend(
   output [4:0]   io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_instructionType,
   output [1:0]   io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_portID,
                  io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS_type,
-  output         io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_ALU,
-                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_branch_unit,
+  output         io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_branch_unit,
                  io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_SUBTRACT,
                  io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_MULTIPLY,
                  io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_IMMEDIATE,
@@ -10001,8 +10198,7 @@ module frontend(
   output [4:0]   io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_instructionType,
   output [1:0]   io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_portID,
                  io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS_type,
-  output         io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_ALU,
-                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_branch_unit,
+  output         io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_branch_unit,
                  io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_SUBTRACT,
                  io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_MULTIPLY,
                  io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_IMMEDIATE,
@@ -10019,8 +10215,7 @@ module frontend(
   output [4:0]   io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_instructionType,
   output [1:0]   io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_portID,
                  io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS_type,
-  output         io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_ALU,
-                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_branch_unit,
+  output         io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_branch_unit,
                  io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_SUBTRACT,
                  io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_MULTIPLY,
                  io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_IMMEDIATE,
@@ -10041,7 +10236,7 @@ module frontend(
   input          io_FU_outputs_3_bits_RD_valid
 );
 
-  wire        _renamer_io_decoded_fetch_packet_ready;
+  wire        _rename_io_decoded_fetch_packet_ready;
   wire        _instruction_queue_io_in_ready;
   wire        _instruction_queue_io_out_valid;
   wire [31:0] _instruction_queue_io_out_bits_fetch_PC;
@@ -10056,7 +10251,6 @@ module frontend(
   wire [4:0]  _instruction_queue_io_out_bits_decoded_instruction_0_instructionType;
   wire [1:0]  _instruction_queue_io_out_bits_decoded_instruction_0_portID;
   wire [1:0]  _instruction_queue_io_out_bits_decoded_instruction_0_RS_type;
-  wire        _instruction_queue_io_out_bits_decoded_instruction_0_needs_ALU;
   wire        _instruction_queue_io_out_bits_decoded_instruction_0_needs_branch_unit;
   wire        _instruction_queue_io_out_bits_decoded_instruction_0_SUBTRACT;
   wire        _instruction_queue_io_out_bits_decoded_instruction_0_MULTIPLY;
@@ -10074,7 +10268,6 @@ module frontend(
   wire [4:0]  _instruction_queue_io_out_bits_decoded_instruction_1_instructionType;
   wire [1:0]  _instruction_queue_io_out_bits_decoded_instruction_1_portID;
   wire [1:0]  _instruction_queue_io_out_bits_decoded_instruction_1_RS_type;
-  wire        _instruction_queue_io_out_bits_decoded_instruction_1_needs_ALU;
   wire        _instruction_queue_io_out_bits_decoded_instruction_1_needs_branch_unit;
   wire        _instruction_queue_io_out_bits_decoded_instruction_1_SUBTRACT;
   wire        _instruction_queue_io_out_bits_decoded_instruction_1_MULTIPLY;
@@ -10092,7 +10285,6 @@ module frontend(
   wire [4:0]  _instruction_queue_io_out_bits_decoded_instruction_2_instructionType;
   wire [1:0]  _instruction_queue_io_out_bits_decoded_instruction_2_portID;
   wire [1:0]  _instruction_queue_io_out_bits_decoded_instruction_2_RS_type;
-  wire        _instruction_queue_io_out_bits_decoded_instruction_2_needs_ALU;
   wire        _instruction_queue_io_out_bits_decoded_instruction_2_needs_branch_unit;
   wire        _instruction_queue_io_out_bits_decoded_instruction_2_SUBTRACT;
   wire        _instruction_queue_io_out_bits_decoded_instruction_2_MULTIPLY;
@@ -10110,7 +10302,6 @@ module frontend(
   wire [4:0]  _instruction_queue_io_out_bits_decoded_instruction_3_instructionType;
   wire [1:0]  _instruction_queue_io_out_bits_decoded_instruction_3_portID;
   wire [1:0]  _instruction_queue_io_out_bits_decoded_instruction_3_RS_type;
-  wire        _instruction_queue_io_out_bits_decoded_instruction_3_needs_ALU;
   wire        _instruction_queue_io_out_bits_decoded_instruction_3_needs_branch_unit;
   wire        _instruction_queue_io_out_bits_decoded_instruction_3_SUBTRACT;
   wire        _instruction_queue_io_out_bits_decoded_instruction_3_MULTIPLY;
@@ -10697,7 +10888,7 @@ module frontend(
     .io_in_bits_valid_bits_3
       (_decoders_io_decoded_fetch_packet_bits_valid_bits_3),
     .io_out_ready
-      (_renamer_io_decoded_fetch_packet_ready),
+      (_rename_io_decoded_fetch_packet_ready),
     .io_out_valid
       (_instruction_queue_io_out_valid),
     .io_out_bits_fetch_PC
@@ -10724,8 +10915,6 @@ module frontend(
       (_instruction_queue_io_out_bits_decoded_instruction_0_portID),
     .io_out_bits_decoded_instruction_0_RS_type
       (_instruction_queue_io_out_bits_decoded_instruction_0_RS_type),
-    .io_out_bits_decoded_instruction_0_needs_ALU
-      (_instruction_queue_io_out_bits_decoded_instruction_0_needs_ALU),
     .io_out_bits_decoded_instruction_0_needs_branch_unit
       (_instruction_queue_io_out_bits_decoded_instruction_0_needs_branch_unit),
     .io_out_bits_decoded_instruction_0_SUBTRACT
@@ -10760,8 +10949,6 @@ module frontend(
       (_instruction_queue_io_out_bits_decoded_instruction_1_portID),
     .io_out_bits_decoded_instruction_1_RS_type
       (_instruction_queue_io_out_bits_decoded_instruction_1_RS_type),
-    .io_out_bits_decoded_instruction_1_needs_ALU
-      (_instruction_queue_io_out_bits_decoded_instruction_1_needs_ALU),
     .io_out_bits_decoded_instruction_1_needs_branch_unit
       (_instruction_queue_io_out_bits_decoded_instruction_1_needs_branch_unit),
     .io_out_bits_decoded_instruction_1_SUBTRACT
@@ -10796,8 +10983,6 @@ module frontend(
       (_instruction_queue_io_out_bits_decoded_instruction_2_portID),
     .io_out_bits_decoded_instruction_2_RS_type
       (_instruction_queue_io_out_bits_decoded_instruction_2_RS_type),
-    .io_out_bits_decoded_instruction_2_needs_ALU
-      (_instruction_queue_io_out_bits_decoded_instruction_2_needs_ALU),
     .io_out_bits_decoded_instruction_2_needs_branch_unit
       (_instruction_queue_io_out_bits_decoded_instruction_2_needs_branch_unit),
     .io_out_bits_decoded_instruction_2_SUBTRACT
@@ -10832,8 +11017,6 @@ module frontend(
       (_instruction_queue_io_out_bits_decoded_instruction_3_portID),
     .io_out_bits_decoded_instruction_3_RS_type
       (_instruction_queue_io_out_bits_decoded_instruction_3_RS_type),
-    .io_out_bits_decoded_instruction_3_needs_ALU
-      (_instruction_queue_io_out_bits_decoded_instruction_3_needs_ALU),
     .io_out_bits_decoded_instruction_3_needs_branch_unit
       (_instruction_queue_io_out_bits_decoded_instruction_3_needs_branch_unit),
     .io_out_bits_decoded_instruction_3_SUBTRACT
@@ -10855,11 +11038,11 @@ module frontend(
     .io_out_bits_valid_bits_3
       (_instruction_queue_io_out_bits_valid_bits_3)
   );
-  renamer renamer (
+  rename rename (
     .clock                                                                        (clock),
     .reset                                                                        (reset),
     .io_decoded_fetch_packet_ready
-      (_renamer_io_decoded_fetch_packet_ready),
+      (_rename_io_decoded_fetch_packet_ready),
     .io_decoded_fetch_packet_valid
       (_instruction_queue_io_out_valid),
     .io_decoded_fetch_packet_bits_fetch_PC
@@ -10886,8 +11069,6 @@ module frontend(
       (_instruction_queue_io_out_bits_decoded_instruction_0_portID),
     .io_decoded_fetch_packet_bits_decoded_instruction_0_RS_type
       (_instruction_queue_io_out_bits_decoded_instruction_0_RS_type),
-    .io_decoded_fetch_packet_bits_decoded_instruction_0_needs_ALU
-      (_instruction_queue_io_out_bits_decoded_instruction_0_needs_ALU),
     .io_decoded_fetch_packet_bits_decoded_instruction_0_needs_branch_unit
       (_instruction_queue_io_out_bits_decoded_instruction_0_needs_branch_unit),
     .io_decoded_fetch_packet_bits_decoded_instruction_0_SUBTRACT
@@ -10922,8 +11103,6 @@ module frontend(
       (_instruction_queue_io_out_bits_decoded_instruction_1_portID),
     .io_decoded_fetch_packet_bits_decoded_instruction_1_RS_type
       (_instruction_queue_io_out_bits_decoded_instruction_1_RS_type),
-    .io_decoded_fetch_packet_bits_decoded_instruction_1_needs_ALU
-      (_instruction_queue_io_out_bits_decoded_instruction_1_needs_ALU),
     .io_decoded_fetch_packet_bits_decoded_instruction_1_needs_branch_unit
       (_instruction_queue_io_out_bits_decoded_instruction_1_needs_branch_unit),
     .io_decoded_fetch_packet_bits_decoded_instruction_1_SUBTRACT
@@ -10958,8 +11137,6 @@ module frontend(
       (_instruction_queue_io_out_bits_decoded_instruction_2_portID),
     .io_decoded_fetch_packet_bits_decoded_instruction_2_RS_type
       (_instruction_queue_io_out_bits_decoded_instruction_2_RS_type),
-    .io_decoded_fetch_packet_bits_decoded_instruction_2_needs_ALU
-      (_instruction_queue_io_out_bits_decoded_instruction_2_needs_ALU),
     .io_decoded_fetch_packet_bits_decoded_instruction_2_needs_branch_unit
       (_instruction_queue_io_out_bits_decoded_instruction_2_needs_branch_unit),
     .io_decoded_fetch_packet_bits_decoded_instruction_2_SUBTRACT
@@ -10994,8 +11171,6 @@ module frontend(
       (_instruction_queue_io_out_bits_decoded_instruction_3_portID),
     .io_decoded_fetch_packet_bits_decoded_instruction_3_RS_type
       (_instruction_queue_io_out_bits_decoded_instruction_3_RS_type),
-    .io_decoded_fetch_packet_bits_decoded_instruction_3_needs_ALU
-      (_instruction_queue_io_out_bits_decoded_instruction_3_needs_ALU),
     .io_decoded_fetch_packet_bits_decoded_instruction_3_needs_branch_unit
       (_instruction_queue_io_out_bits_decoded_instruction_3_needs_branch_unit),
     .io_decoded_fetch_packet_bits_decoded_instruction_3_SUBTRACT
@@ -11044,8 +11219,6 @@ module frontend(
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_portID),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS_type
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS_type),
-    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_ALU
-      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_ALU),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_branch_unit
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_branch_unit),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_SUBTRACT
@@ -11080,8 +11253,6 @@ module frontend(
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_portID),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS_type
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS_type),
-    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_ALU
-      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_ALU),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_branch_unit
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_branch_unit),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_SUBTRACT
@@ -11116,8 +11287,6 @@ module frontend(
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_portID),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS_type
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS_type),
-    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_ALU
-      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_ALU),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_branch_unit
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_branch_unit),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_SUBTRACT
@@ -11152,8 +11321,6 @@ module frontend(
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_portID),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS_type
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS_type),
-    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_ALU
-      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_ALU),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_branch_unit
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_branch_unit),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_SUBTRACT
@@ -11215,7 +11382,7 @@ module RS(
   input  [5:0]  io_backend_packet_0_bits_ROB_index,
   input  [4:0]  io_backend_packet_0_bits_instructionType,
   input  [1:0]  io_backend_packet_0_bits_portID,
-  input         io_backend_packet_0_bits_needs_ALU,
+  input         io_backend_packet_0_bits_needs_branch_unit,
                 io_backend_packet_0_bits_SUBTRACT,
                 io_backend_packet_0_bits_MULTIPLY,
                 io_backend_packet_0_bits_IMMEDIATE,
@@ -11230,7 +11397,7 @@ module RS(
   input  [5:0]  io_backend_packet_1_bits_ROB_index,
   input  [4:0]  io_backend_packet_1_bits_instructionType,
   input  [1:0]  io_backend_packet_1_bits_portID,
-  input         io_backend_packet_1_bits_needs_ALU,
+  input         io_backend_packet_1_bits_needs_branch_unit,
                 io_backend_packet_1_bits_SUBTRACT,
                 io_backend_packet_1_bits_MULTIPLY,
                 io_backend_packet_1_bits_IMMEDIATE,
@@ -11245,7 +11412,7 @@ module RS(
   input  [5:0]  io_backend_packet_2_bits_ROB_index,
   input  [4:0]  io_backend_packet_2_bits_instructionType,
   input  [1:0]  io_backend_packet_2_bits_portID,
-  input         io_backend_packet_2_bits_needs_ALU,
+  input         io_backend_packet_2_bits_needs_branch_unit,
                 io_backend_packet_2_bits_SUBTRACT,
                 io_backend_packet_2_bits_MULTIPLY,
                 io_backend_packet_2_bits_IMMEDIATE,
@@ -11260,7 +11427,7 @@ module RS(
   input  [5:0]  io_backend_packet_3_bits_ROB_index,
   input  [4:0]  io_backend_packet_3_bits_instructionType,
   input  [1:0]  io_backend_packet_3_bits_portID,
-  input         io_backend_packet_3_bits_needs_ALU,
+  input         io_backend_packet_3_bits_needs_branch_unit,
                 io_backend_packet_3_bits_SUBTRACT,
                 io_backend_packet_3_bits_MULTIPLY,
                 io_backend_packet_3_bits_IMMEDIATE,
@@ -11286,7 +11453,7 @@ module RS(
   output [3:0]  io_RF_inputs_0_bits_packet_index,
   output [5:0]  io_RF_inputs_0_bits_ROB_index,
   output [4:0]  io_RF_inputs_0_bits_instructionType,
-  output        io_RF_inputs_0_bits_needs_ALU,
+  output        io_RF_inputs_0_bits_needs_branch_unit,
                 io_RF_inputs_0_bits_SUBTRACT,
                 io_RF_inputs_0_bits_MULTIPLY,
                 io_RF_inputs_0_bits_IMMEDIATE,
@@ -11330,7 +11497,7 @@ module RS(
   reg  [5:0]        reservation_station_0_decoded_instruction_ROB_index;
   reg  [4:0]        reservation_station_0_decoded_instruction_instructionType;
   reg  [1:0]        reservation_station_0_decoded_instruction_portID;
-  reg               reservation_station_0_decoded_instruction_needs_ALU;
+  reg               reservation_station_0_decoded_instruction_needs_branch_unit;
   reg               reservation_station_0_decoded_instruction_SUBTRACT;
   reg               reservation_station_0_decoded_instruction_MULTIPLY;
   reg               reservation_station_0_decoded_instruction_IMMEDIATE;
@@ -11347,7 +11514,7 @@ module RS(
   reg  [5:0]        reservation_station_1_decoded_instruction_ROB_index;
   reg  [4:0]        reservation_station_1_decoded_instruction_instructionType;
   reg  [1:0]        reservation_station_1_decoded_instruction_portID;
-  reg               reservation_station_1_decoded_instruction_needs_ALU;
+  reg               reservation_station_1_decoded_instruction_needs_branch_unit;
   reg               reservation_station_1_decoded_instruction_SUBTRACT;
   reg               reservation_station_1_decoded_instruction_MULTIPLY;
   reg               reservation_station_1_decoded_instruction_IMMEDIATE;
@@ -11364,7 +11531,7 @@ module RS(
   reg  [5:0]        reservation_station_2_decoded_instruction_ROB_index;
   reg  [4:0]        reservation_station_2_decoded_instruction_instructionType;
   reg  [1:0]        reservation_station_2_decoded_instruction_portID;
-  reg               reservation_station_2_decoded_instruction_needs_ALU;
+  reg               reservation_station_2_decoded_instruction_needs_branch_unit;
   reg               reservation_station_2_decoded_instruction_SUBTRACT;
   reg               reservation_station_2_decoded_instruction_MULTIPLY;
   reg               reservation_station_2_decoded_instruction_IMMEDIATE;
@@ -11381,7 +11548,7 @@ module RS(
   reg  [5:0]        reservation_station_3_decoded_instruction_ROB_index;
   reg  [4:0]        reservation_station_3_decoded_instruction_instructionType;
   reg  [1:0]        reservation_station_3_decoded_instruction_portID;
-  reg               reservation_station_3_decoded_instruction_needs_ALU;
+  reg               reservation_station_3_decoded_instruction_needs_branch_unit;
   reg               reservation_station_3_decoded_instruction_SUBTRACT;
   reg               reservation_station_3_decoded_instruction_MULTIPLY;
   reg               reservation_station_3_decoded_instruction_IMMEDIATE;
@@ -11398,7 +11565,7 @@ module RS(
   reg  [5:0]        reservation_station_4_decoded_instruction_ROB_index;
   reg  [4:0]        reservation_station_4_decoded_instruction_instructionType;
   reg  [1:0]        reservation_station_4_decoded_instruction_portID;
-  reg               reservation_station_4_decoded_instruction_needs_ALU;
+  reg               reservation_station_4_decoded_instruction_needs_branch_unit;
   reg               reservation_station_4_decoded_instruction_SUBTRACT;
   reg               reservation_station_4_decoded_instruction_MULTIPLY;
   reg               reservation_station_4_decoded_instruction_IMMEDIATE;
@@ -11415,7 +11582,7 @@ module RS(
   reg  [5:0]        reservation_station_5_decoded_instruction_ROB_index;
   reg  [4:0]        reservation_station_5_decoded_instruction_instructionType;
   reg  [1:0]        reservation_station_5_decoded_instruction_portID;
-  reg               reservation_station_5_decoded_instruction_needs_ALU;
+  reg               reservation_station_5_decoded_instruction_needs_branch_unit;
   reg               reservation_station_5_decoded_instruction_SUBTRACT;
   reg               reservation_station_5_decoded_instruction_MULTIPLY;
   reg               reservation_station_5_decoded_instruction_IMMEDIATE;
@@ -11432,7 +11599,7 @@ module RS(
   reg  [5:0]        reservation_station_6_decoded_instruction_ROB_index;
   reg  [4:0]        reservation_station_6_decoded_instruction_instructionType;
   reg  [1:0]        reservation_station_6_decoded_instruction_portID;
-  reg               reservation_station_6_decoded_instruction_needs_ALU;
+  reg               reservation_station_6_decoded_instruction_needs_branch_unit;
   reg               reservation_station_6_decoded_instruction_SUBTRACT;
   reg               reservation_station_6_decoded_instruction_MULTIPLY;
   reg               reservation_station_6_decoded_instruction_IMMEDIATE;
@@ -11449,7 +11616,7 @@ module RS(
   reg  [5:0]        reservation_station_7_decoded_instruction_ROB_index;
   reg  [4:0]        reservation_station_7_decoded_instruction_instructionType;
   reg  [1:0]        reservation_station_7_decoded_instruction_portID;
-  reg               reservation_station_7_decoded_instruction_needs_ALU;
+  reg               reservation_station_7_decoded_instruction_needs_branch_unit;
   reg               reservation_station_7_decoded_instruction_SUBTRACT;
   reg               reservation_station_7_decoded_instruction_MULTIPLY;
   reg               reservation_station_7_decoded_instruction_IMMEDIATE;
@@ -11466,7 +11633,7 @@ module RS(
   reg  [5:0]        reservation_station_8_decoded_instruction_ROB_index;
   reg  [4:0]        reservation_station_8_decoded_instruction_instructionType;
   reg  [1:0]        reservation_station_8_decoded_instruction_portID;
-  reg               reservation_station_8_decoded_instruction_needs_ALU;
+  reg               reservation_station_8_decoded_instruction_needs_branch_unit;
   reg               reservation_station_8_decoded_instruction_SUBTRACT;
   reg               reservation_station_8_decoded_instruction_MULTIPLY;
   reg               reservation_station_8_decoded_instruction_IMMEDIATE;
@@ -11483,7 +11650,7 @@ module RS(
   reg  [5:0]        reservation_station_9_decoded_instruction_ROB_index;
   reg  [4:0]        reservation_station_9_decoded_instruction_instructionType;
   reg  [1:0]        reservation_station_9_decoded_instruction_portID;
-  reg               reservation_station_9_decoded_instruction_needs_ALU;
+  reg               reservation_station_9_decoded_instruction_needs_branch_unit;
   reg               reservation_station_9_decoded_instruction_SUBTRACT;
   reg               reservation_station_9_decoded_instruction_MULTIPLY;
   reg               reservation_station_9_decoded_instruction_IMMEDIATE;
@@ -11500,7 +11667,7 @@ module RS(
   reg  [5:0]        reservation_station_10_decoded_instruction_ROB_index;
   reg  [4:0]        reservation_station_10_decoded_instruction_instructionType;
   reg  [1:0]        reservation_station_10_decoded_instruction_portID;
-  reg               reservation_station_10_decoded_instruction_needs_ALU;
+  reg               reservation_station_10_decoded_instruction_needs_branch_unit;
   reg               reservation_station_10_decoded_instruction_SUBTRACT;
   reg               reservation_station_10_decoded_instruction_MULTIPLY;
   reg               reservation_station_10_decoded_instruction_IMMEDIATE;
@@ -11517,7 +11684,7 @@ module RS(
   reg  [5:0]        reservation_station_11_decoded_instruction_ROB_index;
   reg  [4:0]        reservation_station_11_decoded_instruction_instructionType;
   reg  [1:0]        reservation_station_11_decoded_instruction_portID;
-  reg               reservation_station_11_decoded_instruction_needs_ALU;
+  reg               reservation_station_11_decoded_instruction_needs_branch_unit;
   reg               reservation_station_11_decoded_instruction_SUBTRACT;
   reg               reservation_station_11_decoded_instruction_MULTIPLY;
   reg               reservation_station_11_decoded_instruction_IMMEDIATE;
@@ -11534,7 +11701,7 @@ module RS(
   reg  [5:0]        reservation_station_12_decoded_instruction_ROB_index;
   reg  [4:0]        reservation_station_12_decoded_instruction_instructionType;
   reg  [1:0]        reservation_station_12_decoded_instruction_portID;
-  reg               reservation_station_12_decoded_instruction_needs_ALU;
+  reg               reservation_station_12_decoded_instruction_needs_branch_unit;
   reg               reservation_station_12_decoded_instruction_SUBTRACT;
   reg               reservation_station_12_decoded_instruction_MULTIPLY;
   reg               reservation_station_12_decoded_instruction_IMMEDIATE;
@@ -11551,7 +11718,7 @@ module RS(
   reg  [5:0]        reservation_station_13_decoded_instruction_ROB_index;
   reg  [4:0]        reservation_station_13_decoded_instruction_instructionType;
   reg  [1:0]        reservation_station_13_decoded_instruction_portID;
-  reg               reservation_station_13_decoded_instruction_needs_ALU;
+  reg               reservation_station_13_decoded_instruction_needs_branch_unit;
   reg               reservation_station_13_decoded_instruction_SUBTRACT;
   reg               reservation_station_13_decoded_instruction_MULTIPLY;
   reg               reservation_station_13_decoded_instruction_IMMEDIATE;
@@ -11568,7 +11735,7 @@ module RS(
   reg  [5:0]        reservation_station_14_decoded_instruction_ROB_index;
   reg  [4:0]        reservation_station_14_decoded_instruction_instructionType;
   reg  [1:0]        reservation_station_14_decoded_instruction_portID;
-  reg               reservation_station_14_decoded_instruction_needs_ALU;
+  reg               reservation_station_14_decoded_instruction_needs_branch_unit;
   reg               reservation_station_14_decoded_instruction_SUBTRACT;
   reg               reservation_station_14_decoded_instruction_MULTIPLY;
   reg               reservation_station_14_decoded_instruction_IMMEDIATE;
@@ -11585,7 +11752,7 @@ module RS(
   reg  [5:0]        reservation_station_15_decoded_instruction_ROB_index;
   reg  [4:0]        reservation_station_15_decoded_instruction_instructionType;
   reg  [1:0]        reservation_station_15_decoded_instruction_portID;
-  reg               reservation_station_15_decoded_instruction_needs_ALU;
+  reg               reservation_station_15_decoded_instruction_needs_branch_unit;
   reg               reservation_station_15_decoded_instruction_SUBTRACT;
   reg               reservation_station_15_decoded_instruction_MULTIPLY;
   reg               reservation_station_15_decoded_instruction_IMMEDIATE;
@@ -12474,22 +12641,22 @@ module RS(
      {reservation_station_1_decoded_instruction_instructionType},
      {reservation_station_0_decoded_instruction_instructionType}};
   wire [15:0]       _GEN_102 =
-    {{reservation_station_15_decoded_instruction_needs_ALU},
-     {reservation_station_14_decoded_instruction_needs_ALU},
-     {reservation_station_13_decoded_instruction_needs_ALU},
-     {reservation_station_12_decoded_instruction_needs_ALU},
-     {reservation_station_11_decoded_instruction_needs_ALU},
-     {reservation_station_10_decoded_instruction_needs_ALU},
-     {reservation_station_9_decoded_instruction_needs_ALU},
-     {reservation_station_8_decoded_instruction_needs_ALU},
-     {reservation_station_7_decoded_instruction_needs_ALU},
-     {reservation_station_6_decoded_instruction_needs_ALU},
-     {reservation_station_5_decoded_instruction_needs_ALU},
-     {reservation_station_4_decoded_instruction_needs_ALU},
-     {reservation_station_3_decoded_instruction_needs_ALU},
-     {reservation_station_2_decoded_instruction_needs_ALU},
-     {reservation_station_1_decoded_instruction_needs_ALU},
-     {reservation_station_0_decoded_instruction_needs_ALU}};
+    {{reservation_station_15_decoded_instruction_needs_branch_unit},
+     {reservation_station_14_decoded_instruction_needs_branch_unit},
+     {reservation_station_13_decoded_instruction_needs_branch_unit},
+     {reservation_station_12_decoded_instruction_needs_branch_unit},
+     {reservation_station_11_decoded_instruction_needs_branch_unit},
+     {reservation_station_10_decoded_instruction_needs_branch_unit},
+     {reservation_station_9_decoded_instruction_needs_branch_unit},
+     {reservation_station_8_decoded_instruction_needs_branch_unit},
+     {reservation_station_7_decoded_instruction_needs_branch_unit},
+     {reservation_station_6_decoded_instruction_needs_branch_unit},
+     {reservation_station_5_decoded_instruction_needs_branch_unit},
+     {reservation_station_4_decoded_instruction_needs_branch_unit},
+     {reservation_station_3_decoded_instruction_needs_branch_unit},
+     {reservation_station_2_decoded_instruction_needs_branch_unit},
+     {reservation_station_1_decoded_instruction_needs_branch_unit},
+     {reservation_station_0_decoded_instruction_needs_branch_unit}};
   wire [15:0]       _GEN_103 =
     {{reservation_station_15_decoded_instruction_SUBTRACT},
      {reservation_station_14_decoded_instruction_SUBTRACT},
@@ -12555,7 +12722,7 @@ module RS(
       reservation_station_0_decoded_instruction_ROB_index <= 6'h0;
       reservation_station_0_decoded_instruction_instructionType <= 5'h0;
       reservation_station_0_decoded_instruction_portID <= 2'h0;
-      reservation_station_0_decoded_instruction_needs_ALU <= 1'h0;
+      reservation_station_0_decoded_instruction_needs_branch_unit <= 1'h0;
       reservation_station_0_decoded_instruction_SUBTRACT <= 1'h0;
       reservation_station_0_decoded_instruction_MULTIPLY <= 1'h0;
       reservation_station_0_decoded_instruction_IMMEDIATE <= 1'h0;
@@ -12572,7 +12739,7 @@ module RS(
       reservation_station_1_decoded_instruction_ROB_index <= 6'h0;
       reservation_station_1_decoded_instruction_instructionType <= 5'h0;
       reservation_station_1_decoded_instruction_portID <= 2'h0;
-      reservation_station_1_decoded_instruction_needs_ALU <= 1'h0;
+      reservation_station_1_decoded_instruction_needs_branch_unit <= 1'h0;
       reservation_station_1_decoded_instruction_SUBTRACT <= 1'h0;
       reservation_station_1_decoded_instruction_MULTIPLY <= 1'h0;
       reservation_station_1_decoded_instruction_IMMEDIATE <= 1'h0;
@@ -12589,7 +12756,7 @@ module RS(
       reservation_station_2_decoded_instruction_ROB_index <= 6'h0;
       reservation_station_2_decoded_instruction_instructionType <= 5'h0;
       reservation_station_2_decoded_instruction_portID <= 2'h0;
-      reservation_station_2_decoded_instruction_needs_ALU <= 1'h0;
+      reservation_station_2_decoded_instruction_needs_branch_unit <= 1'h0;
       reservation_station_2_decoded_instruction_SUBTRACT <= 1'h0;
       reservation_station_2_decoded_instruction_MULTIPLY <= 1'h0;
       reservation_station_2_decoded_instruction_IMMEDIATE <= 1'h0;
@@ -12606,7 +12773,7 @@ module RS(
       reservation_station_3_decoded_instruction_ROB_index <= 6'h0;
       reservation_station_3_decoded_instruction_instructionType <= 5'h0;
       reservation_station_3_decoded_instruction_portID <= 2'h0;
-      reservation_station_3_decoded_instruction_needs_ALU <= 1'h0;
+      reservation_station_3_decoded_instruction_needs_branch_unit <= 1'h0;
       reservation_station_3_decoded_instruction_SUBTRACT <= 1'h0;
       reservation_station_3_decoded_instruction_MULTIPLY <= 1'h0;
       reservation_station_3_decoded_instruction_IMMEDIATE <= 1'h0;
@@ -12623,7 +12790,7 @@ module RS(
       reservation_station_4_decoded_instruction_ROB_index <= 6'h0;
       reservation_station_4_decoded_instruction_instructionType <= 5'h0;
       reservation_station_4_decoded_instruction_portID <= 2'h0;
-      reservation_station_4_decoded_instruction_needs_ALU <= 1'h0;
+      reservation_station_4_decoded_instruction_needs_branch_unit <= 1'h0;
       reservation_station_4_decoded_instruction_SUBTRACT <= 1'h0;
       reservation_station_4_decoded_instruction_MULTIPLY <= 1'h0;
       reservation_station_4_decoded_instruction_IMMEDIATE <= 1'h0;
@@ -12640,7 +12807,7 @@ module RS(
       reservation_station_5_decoded_instruction_ROB_index <= 6'h0;
       reservation_station_5_decoded_instruction_instructionType <= 5'h0;
       reservation_station_5_decoded_instruction_portID <= 2'h0;
-      reservation_station_5_decoded_instruction_needs_ALU <= 1'h0;
+      reservation_station_5_decoded_instruction_needs_branch_unit <= 1'h0;
       reservation_station_5_decoded_instruction_SUBTRACT <= 1'h0;
       reservation_station_5_decoded_instruction_MULTIPLY <= 1'h0;
       reservation_station_5_decoded_instruction_IMMEDIATE <= 1'h0;
@@ -12657,7 +12824,7 @@ module RS(
       reservation_station_6_decoded_instruction_ROB_index <= 6'h0;
       reservation_station_6_decoded_instruction_instructionType <= 5'h0;
       reservation_station_6_decoded_instruction_portID <= 2'h0;
-      reservation_station_6_decoded_instruction_needs_ALU <= 1'h0;
+      reservation_station_6_decoded_instruction_needs_branch_unit <= 1'h0;
       reservation_station_6_decoded_instruction_SUBTRACT <= 1'h0;
       reservation_station_6_decoded_instruction_MULTIPLY <= 1'h0;
       reservation_station_6_decoded_instruction_IMMEDIATE <= 1'h0;
@@ -12674,7 +12841,7 @@ module RS(
       reservation_station_7_decoded_instruction_ROB_index <= 6'h0;
       reservation_station_7_decoded_instruction_instructionType <= 5'h0;
       reservation_station_7_decoded_instruction_portID <= 2'h0;
-      reservation_station_7_decoded_instruction_needs_ALU <= 1'h0;
+      reservation_station_7_decoded_instruction_needs_branch_unit <= 1'h0;
       reservation_station_7_decoded_instruction_SUBTRACT <= 1'h0;
       reservation_station_7_decoded_instruction_MULTIPLY <= 1'h0;
       reservation_station_7_decoded_instruction_IMMEDIATE <= 1'h0;
@@ -12691,7 +12858,7 @@ module RS(
       reservation_station_8_decoded_instruction_ROB_index <= 6'h0;
       reservation_station_8_decoded_instruction_instructionType <= 5'h0;
       reservation_station_8_decoded_instruction_portID <= 2'h0;
-      reservation_station_8_decoded_instruction_needs_ALU <= 1'h0;
+      reservation_station_8_decoded_instruction_needs_branch_unit <= 1'h0;
       reservation_station_8_decoded_instruction_SUBTRACT <= 1'h0;
       reservation_station_8_decoded_instruction_MULTIPLY <= 1'h0;
       reservation_station_8_decoded_instruction_IMMEDIATE <= 1'h0;
@@ -12708,7 +12875,7 @@ module RS(
       reservation_station_9_decoded_instruction_ROB_index <= 6'h0;
       reservation_station_9_decoded_instruction_instructionType <= 5'h0;
       reservation_station_9_decoded_instruction_portID <= 2'h0;
-      reservation_station_9_decoded_instruction_needs_ALU <= 1'h0;
+      reservation_station_9_decoded_instruction_needs_branch_unit <= 1'h0;
       reservation_station_9_decoded_instruction_SUBTRACT <= 1'h0;
       reservation_station_9_decoded_instruction_MULTIPLY <= 1'h0;
       reservation_station_9_decoded_instruction_IMMEDIATE <= 1'h0;
@@ -12725,7 +12892,7 @@ module RS(
       reservation_station_10_decoded_instruction_ROB_index <= 6'h0;
       reservation_station_10_decoded_instruction_instructionType <= 5'h0;
       reservation_station_10_decoded_instruction_portID <= 2'h0;
-      reservation_station_10_decoded_instruction_needs_ALU <= 1'h0;
+      reservation_station_10_decoded_instruction_needs_branch_unit <= 1'h0;
       reservation_station_10_decoded_instruction_SUBTRACT <= 1'h0;
       reservation_station_10_decoded_instruction_MULTIPLY <= 1'h0;
       reservation_station_10_decoded_instruction_IMMEDIATE <= 1'h0;
@@ -12742,7 +12909,7 @@ module RS(
       reservation_station_11_decoded_instruction_ROB_index <= 6'h0;
       reservation_station_11_decoded_instruction_instructionType <= 5'h0;
       reservation_station_11_decoded_instruction_portID <= 2'h0;
-      reservation_station_11_decoded_instruction_needs_ALU <= 1'h0;
+      reservation_station_11_decoded_instruction_needs_branch_unit <= 1'h0;
       reservation_station_11_decoded_instruction_SUBTRACT <= 1'h0;
       reservation_station_11_decoded_instruction_MULTIPLY <= 1'h0;
       reservation_station_11_decoded_instruction_IMMEDIATE <= 1'h0;
@@ -12759,7 +12926,7 @@ module RS(
       reservation_station_12_decoded_instruction_ROB_index <= 6'h0;
       reservation_station_12_decoded_instruction_instructionType <= 5'h0;
       reservation_station_12_decoded_instruction_portID <= 2'h0;
-      reservation_station_12_decoded_instruction_needs_ALU <= 1'h0;
+      reservation_station_12_decoded_instruction_needs_branch_unit <= 1'h0;
       reservation_station_12_decoded_instruction_SUBTRACT <= 1'h0;
       reservation_station_12_decoded_instruction_MULTIPLY <= 1'h0;
       reservation_station_12_decoded_instruction_IMMEDIATE <= 1'h0;
@@ -12776,7 +12943,7 @@ module RS(
       reservation_station_13_decoded_instruction_ROB_index <= 6'h0;
       reservation_station_13_decoded_instruction_instructionType <= 5'h0;
       reservation_station_13_decoded_instruction_portID <= 2'h0;
-      reservation_station_13_decoded_instruction_needs_ALU <= 1'h0;
+      reservation_station_13_decoded_instruction_needs_branch_unit <= 1'h0;
       reservation_station_13_decoded_instruction_SUBTRACT <= 1'h0;
       reservation_station_13_decoded_instruction_MULTIPLY <= 1'h0;
       reservation_station_13_decoded_instruction_IMMEDIATE <= 1'h0;
@@ -12793,7 +12960,7 @@ module RS(
       reservation_station_14_decoded_instruction_ROB_index <= 6'h0;
       reservation_station_14_decoded_instruction_instructionType <= 5'h0;
       reservation_station_14_decoded_instruction_portID <= 2'h0;
-      reservation_station_14_decoded_instruction_needs_ALU <= 1'h0;
+      reservation_station_14_decoded_instruction_needs_branch_unit <= 1'h0;
       reservation_station_14_decoded_instruction_SUBTRACT <= 1'h0;
       reservation_station_14_decoded_instruction_MULTIPLY <= 1'h0;
       reservation_station_14_decoded_instruction_IMMEDIATE <= 1'h0;
@@ -12810,7 +12977,7 @@ module RS(
       reservation_station_15_decoded_instruction_ROB_index <= 6'h0;
       reservation_station_15_decoded_instruction_instructionType <= 5'h0;
       reservation_station_15_decoded_instruction_portID <= 2'h0;
-      reservation_station_15_decoded_instruction_needs_ALU <= 1'h0;
+      reservation_station_15_decoded_instruction_needs_branch_unit <= 1'h0;
       reservation_station_15_decoded_instruction_SUBTRACT <= 1'h0;
       reservation_station_15_decoded_instruction_MULTIPLY <= 1'h0;
       reservation_station_15_decoded_instruction_IMMEDIATE <= 1'h0;
@@ -13315,14 +13482,14 @@ module RS(
                       : reservation_station_0_decoded_instruction_RD_valid;
       _GEN_189 =
         _GEN_186
-          ? io_backend_packet_3_bits_needs_ALU
+          ? io_backend_packet_3_bits_needs_branch_unit
           : _GEN_169
-              ? io_backend_packet_2_bits_needs_ALU
+              ? io_backend_packet_2_bits_needs_branch_unit
               : _GEN_123
-                  ? io_backend_packet_1_bits_needs_ALU
+                  ? io_backend_packet_1_bits_needs_branch_unit
                   : _GEN_106
-                      ? io_backend_packet_0_bits_needs_ALU
-                      : reservation_station_0_decoded_instruction_needs_ALU;
+                      ? io_backend_packet_0_bits_needs_branch_unit
+                      : reservation_station_0_decoded_instruction_needs_branch_unit;
       _GEN_190 =
         _GEN_186
           ? io_backend_packet_3_bits_SUBTRACT
@@ -13367,14 +13534,14 @@ module RS(
                       : reservation_station_1_decoded_instruction_RD_valid;
       _GEN_197 =
         _GEN_194
-          ? io_backend_packet_3_bits_needs_ALU
+          ? io_backend_packet_3_bits_needs_branch_unit
           : _GEN_170
-              ? io_backend_packet_2_bits_needs_ALU
+              ? io_backend_packet_2_bits_needs_branch_unit
               : _GEN_125
-                  ? io_backend_packet_1_bits_needs_ALU
+                  ? io_backend_packet_1_bits_needs_branch_unit
                   : _GEN_107
-                      ? io_backend_packet_0_bits_needs_ALU
-                      : reservation_station_1_decoded_instruction_needs_ALU;
+                      ? io_backend_packet_0_bits_needs_branch_unit
+                      : reservation_station_1_decoded_instruction_needs_branch_unit;
       _GEN_198 =
         _GEN_194
           ? io_backend_packet_3_bits_SUBTRACT
@@ -13419,14 +13586,14 @@ module RS(
                       : reservation_station_2_decoded_instruction_RD_valid;
       _GEN_205 =
         _GEN_202
-          ? io_backend_packet_3_bits_needs_ALU
+          ? io_backend_packet_3_bits_needs_branch_unit
           : _GEN_171
-              ? io_backend_packet_2_bits_needs_ALU
+              ? io_backend_packet_2_bits_needs_branch_unit
               : _GEN_127
-                  ? io_backend_packet_1_bits_needs_ALU
+                  ? io_backend_packet_1_bits_needs_branch_unit
                   : _GEN_108
-                      ? io_backend_packet_0_bits_needs_ALU
-                      : reservation_station_2_decoded_instruction_needs_ALU;
+                      ? io_backend_packet_0_bits_needs_branch_unit
+                      : reservation_station_2_decoded_instruction_needs_branch_unit;
       _GEN_206 =
         _GEN_202
           ? io_backend_packet_3_bits_SUBTRACT
@@ -13471,14 +13638,14 @@ module RS(
                       : reservation_station_3_decoded_instruction_RD_valid;
       _GEN_213 =
         _GEN_210
-          ? io_backend_packet_3_bits_needs_ALU
+          ? io_backend_packet_3_bits_needs_branch_unit
           : _GEN_172
-              ? io_backend_packet_2_bits_needs_ALU
+              ? io_backend_packet_2_bits_needs_branch_unit
               : _GEN_129
-                  ? io_backend_packet_1_bits_needs_ALU
+                  ? io_backend_packet_1_bits_needs_branch_unit
                   : _GEN_109
-                      ? io_backend_packet_0_bits_needs_ALU
-                      : reservation_station_3_decoded_instruction_needs_ALU;
+                      ? io_backend_packet_0_bits_needs_branch_unit
+                      : reservation_station_3_decoded_instruction_needs_branch_unit;
       _GEN_214 =
         _GEN_210
           ? io_backend_packet_3_bits_SUBTRACT
@@ -13523,14 +13690,14 @@ module RS(
                       : reservation_station_4_decoded_instruction_RD_valid;
       _GEN_221 =
         _GEN_218
-          ? io_backend_packet_3_bits_needs_ALU
+          ? io_backend_packet_3_bits_needs_branch_unit
           : _GEN_173
-              ? io_backend_packet_2_bits_needs_ALU
+              ? io_backend_packet_2_bits_needs_branch_unit
               : _GEN_131
-                  ? io_backend_packet_1_bits_needs_ALU
+                  ? io_backend_packet_1_bits_needs_branch_unit
                   : _GEN_110
-                      ? io_backend_packet_0_bits_needs_ALU
-                      : reservation_station_4_decoded_instruction_needs_ALU;
+                      ? io_backend_packet_0_bits_needs_branch_unit
+                      : reservation_station_4_decoded_instruction_needs_branch_unit;
       _GEN_222 =
         _GEN_218
           ? io_backend_packet_3_bits_SUBTRACT
@@ -13575,14 +13742,14 @@ module RS(
                       : reservation_station_5_decoded_instruction_RD_valid;
       _GEN_229 =
         _GEN_226
-          ? io_backend_packet_3_bits_needs_ALU
+          ? io_backend_packet_3_bits_needs_branch_unit
           : _GEN_174
-              ? io_backend_packet_2_bits_needs_ALU
+              ? io_backend_packet_2_bits_needs_branch_unit
               : _GEN_133
-                  ? io_backend_packet_1_bits_needs_ALU
+                  ? io_backend_packet_1_bits_needs_branch_unit
                   : _GEN_111
-                      ? io_backend_packet_0_bits_needs_ALU
-                      : reservation_station_5_decoded_instruction_needs_ALU;
+                      ? io_backend_packet_0_bits_needs_branch_unit
+                      : reservation_station_5_decoded_instruction_needs_branch_unit;
       _GEN_230 =
         _GEN_226
           ? io_backend_packet_3_bits_SUBTRACT
@@ -13627,14 +13794,14 @@ module RS(
                       : reservation_station_6_decoded_instruction_RD_valid;
       _GEN_237 =
         _GEN_234
-          ? io_backend_packet_3_bits_needs_ALU
+          ? io_backend_packet_3_bits_needs_branch_unit
           : _GEN_175
-              ? io_backend_packet_2_bits_needs_ALU
+              ? io_backend_packet_2_bits_needs_branch_unit
               : _GEN_135
-                  ? io_backend_packet_1_bits_needs_ALU
+                  ? io_backend_packet_1_bits_needs_branch_unit
                   : _GEN_112
-                      ? io_backend_packet_0_bits_needs_ALU
-                      : reservation_station_6_decoded_instruction_needs_ALU;
+                      ? io_backend_packet_0_bits_needs_branch_unit
+                      : reservation_station_6_decoded_instruction_needs_branch_unit;
       _GEN_238 =
         _GEN_234
           ? io_backend_packet_3_bits_SUBTRACT
@@ -13679,14 +13846,14 @@ module RS(
                       : reservation_station_7_decoded_instruction_RD_valid;
       _GEN_245 =
         _GEN_242
-          ? io_backend_packet_3_bits_needs_ALU
+          ? io_backend_packet_3_bits_needs_branch_unit
           : _GEN_176
-              ? io_backend_packet_2_bits_needs_ALU
+              ? io_backend_packet_2_bits_needs_branch_unit
               : _GEN_137
-                  ? io_backend_packet_1_bits_needs_ALU
+                  ? io_backend_packet_1_bits_needs_branch_unit
                   : _GEN_113
-                      ? io_backend_packet_0_bits_needs_ALU
-                      : reservation_station_7_decoded_instruction_needs_ALU;
+                      ? io_backend_packet_0_bits_needs_branch_unit
+                      : reservation_station_7_decoded_instruction_needs_branch_unit;
       _GEN_246 =
         _GEN_242
           ? io_backend_packet_3_bits_SUBTRACT
@@ -13731,14 +13898,14 @@ module RS(
                       : reservation_station_8_decoded_instruction_RD_valid;
       _GEN_253 =
         _GEN_250
-          ? io_backend_packet_3_bits_needs_ALU
+          ? io_backend_packet_3_bits_needs_branch_unit
           : _GEN_177
-              ? io_backend_packet_2_bits_needs_ALU
+              ? io_backend_packet_2_bits_needs_branch_unit
               : _GEN_139
-                  ? io_backend_packet_1_bits_needs_ALU
+                  ? io_backend_packet_1_bits_needs_branch_unit
                   : _GEN_114
-                      ? io_backend_packet_0_bits_needs_ALU
-                      : reservation_station_8_decoded_instruction_needs_ALU;
+                      ? io_backend_packet_0_bits_needs_branch_unit
+                      : reservation_station_8_decoded_instruction_needs_branch_unit;
       _GEN_254 =
         _GEN_250
           ? io_backend_packet_3_bits_SUBTRACT
@@ -13783,14 +13950,14 @@ module RS(
                       : reservation_station_9_decoded_instruction_RD_valid;
       _GEN_261 =
         _GEN_258
-          ? io_backend_packet_3_bits_needs_ALU
+          ? io_backend_packet_3_bits_needs_branch_unit
           : _GEN_178
-              ? io_backend_packet_2_bits_needs_ALU
+              ? io_backend_packet_2_bits_needs_branch_unit
               : _GEN_141
-                  ? io_backend_packet_1_bits_needs_ALU
+                  ? io_backend_packet_1_bits_needs_branch_unit
                   : _GEN_115
-                      ? io_backend_packet_0_bits_needs_ALU
-                      : reservation_station_9_decoded_instruction_needs_ALU;
+                      ? io_backend_packet_0_bits_needs_branch_unit
+                      : reservation_station_9_decoded_instruction_needs_branch_unit;
       _GEN_262 =
         _GEN_258
           ? io_backend_packet_3_bits_SUBTRACT
@@ -13835,14 +14002,14 @@ module RS(
                       : reservation_station_10_decoded_instruction_RD_valid;
       _GEN_269 =
         _GEN_266
-          ? io_backend_packet_3_bits_needs_ALU
+          ? io_backend_packet_3_bits_needs_branch_unit
           : _GEN_179
-              ? io_backend_packet_2_bits_needs_ALU
+              ? io_backend_packet_2_bits_needs_branch_unit
               : _GEN_143
-                  ? io_backend_packet_1_bits_needs_ALU
+                  ? io_backend_packet_1_bits_needs_branch_unit
                   : _GEN_116
-                      ? io_backend_packet_0_bits_needs_ALU
-                      : reservation_station_10_decoded_instruction_needs_ALU;
+                      ? io_backend_packet_0_bits_needs_branch_unit
+                      : reservation_station_10_decoded_instruction_needs_branch_unit;
       _GEN_270 =
         _GEN_266
           ? io_backend_packet_3_bits_SUBTRACT
@@ -13887,14 +14054,14 @@ module RS(
                       : reservation_station_11_decoded_instruction_RD_valid;
       _GEN_277 =
         _GEN_274
-          ? io_backend_packet_3_bits_needs_ALU
+          ? io_backend_packet_3_bits_needs_branch_unit
           : _GEN_180
-              ? io_backend_packet_2_bits_needs_ALU
+              ? io_backend_packet_2_bits_needs_branch_unit
               : _GEN_145
-                  ? io_backend_packet_1_bits_needs_ALU
+                  ? io_backend_packet_1_bits_needs_branch_unit
                   : _GEN_117
-                      ? io_backend_packet_0_bits_needs_ALU
-                      : reservation_station_11_decoded_instruction_needs_ALU;
+                      ? io_backend_packet_0_bits_needs_branch_unit
+                      : reservation_station_11_decoded_instruction_needs_branch_unit;
       _GEN_278 =
         _GEN_274
           ? io_backend_packet_3_bits_SUBTRACT
@@ -13939,14 +14106,14 @@ module RS(
                       : reservation_station_12_decoded_instruction_RD_valid;
       _GEN_285 =
         _GEN_282
-          ? io_backend_packet_3_bits_needs_ALU
+          ? io_backend_packet_3_bits_needs_branch_unit
           : _GEN_181
-              ? io_backend_packet_2_bits_needs_ALU
+              ? io_backend_packet_2_bits_needs_branch_unit
               : _GEN_147
-                  ? io_backend_packet_1_bits_needs_ALU
+                  ? io_backend_packet_1_bits_needs_branch_unit
                   : _GEN_118
-                      ? io_backend_packet_0_bits_needs_ALU
-                      : reservation_station_12_decoded_instruction_needs_ALU;
+                      ? io_backend_packet_0_bits_needs_branch_unit
+                      : reservation_station_12_decoded_instruction_needs_branch_unit;
       _GEN_286 =
         _GEN_282
           ? io_backend_packet_3_bits_SUBTRACT
@@ -13991,14 +14158,14 @@ module RS(
                       : reservation_station_13_decoded_instruction_RD_valid;
       _GEN_293 =
         _GEN_290
-          ? io_backend_packet_3_bits_needs_ALU
+          ? io_backend_packet_3_bits_needs_branch_unit
           : _GEN_182
-              ? io_backend_packet_2_bits_needs_ALU
+              ? io_backend_packet_2_bits_needs_branch_unit
               : _GEN_149
-                  ? io_backend_packet_1_bits_needs_ALU
+                  ? io_backend_packet_1_bits_needs_branch_unit
                   : _GEN_119
-                      ? io_backend_packet_0_bits_needs_ALU
-                      : reservation_station_13_decoded_instruction_needs_ALU;
+                      ? io_backend_packet_0_bits_needs_branch_unit
+                      : reservation_station_13_decoded_instruction_needs_branch_unit;
       _GEN_294 =
         _GEN_290
           ? io_backend_packet_3_bits_SUBTRACT
@@ -14043,14 +14210,14 @@ module RS(
                       : reservation_station_14_decoded_instruction_RD_valid;
       _GEN_301 =
         _GEN_298
-          ? io_backend_packet_3_bits_needs_ALU
+          ? io_backend_packet_3_bits_needs_branch_unit
           : _GEN_183
-              ? io_backend_packet_2_bits_needs_ALU
+              ? io_backend_packet_2_bits_needs_branch_unit
               : _GEN_151
-                  ? io_backend_packet_1_bits_needs_ALU
+                  ? io_backend_packet_1_bits_needs_branch_unit
                   : _GEN_120
-                      ? io_backend_packet_0_bits_needs_ALU
-                      : reservation_station_14_decoded_instruction_needs_ALU;
+                      ? io_backend_packet_0_bits_needs_branch_unit
+                      : reservation_station_14_decoded_instruction_needs_branch_unit;
       _GEN_302 =
         _GEN_298
           ? io_backend_packet_3_bits_SUBTRACT
@@ -14095,14 +14262,14 @@ module RS(
                       : reservation_station_15_decoded_instruction_RD_valid;
       _GEN_308 =
         _GEN_305
-          ? io_backend_packet_3_bits_needs_ALU
+          ? io_backend_packet_3_bits_needs_branch_unit
           : _GEN_184
-              ? io_backend_packet_2_bits_needs_ALU
+              ? io_backend_packet_2_bits_needs_branch_unit
               : _GEN_152
-                  ? io_backend_packet_1_bits_needs_ALU
+                  ? io_backend_packet_1_bits_needs_branch_unit
                   : _GEN_121
-                      ? io_backend_packet_0_bits_needs_ALU
-                      : reservation_station_15_decoded_instruction_needs_ALU;
+                      ? io_backend_packet_0_bits_needs_branch_unit
+                      : reservation_station_15_decoded_instruction_needs_branch_unit;
       _GEN_309 =
         _GEN_305
           ? io_backend_packet_3_bits_SUBTRACT
@@ -14413,7 +14580,7 @@ module RS(
         reservation_station_0_decoded_instruction_portID <=
           io_backend_packet_0_bits_portID;
       end
-      reservation_station_0_decoded_instruction_needs_ALU <=
+      reservation_station_0_decoded_instruction_needs_branch_unit <=
         ~_GEN_410 & (_GEN_377 ? ~_GEN_393 & _GEN_189 : ~_GEN_361 & _GEN_189);
       reservation_station_0_decoded_instruction_SUBTRACT <=
         ~_GEN_410 & (_GEN_377 ? ~_GEN_393 & _GEN_190 : ~_GEN_361 & _GEN_190);
@@ -14509,7 +14676,7 @@ module RS(
         reservation_station_1_decoded_instruction_portID <=
           io_backend_packet_0_bits_portID;
       end
-      reservation_station_1_decoded_instruction_needs_ALU <=
+      reservation_station_1_decoded_instruction_needs_branch_unit <=
         ~_GEN_412 & (_GEN_377 ? ~_GEN_394 & _GEN_197 : ~_GEN_362 & _GEN_197);
       reservation_station_1_decoded_instruction_SUBTRACT <=
         ~_GEN_412 & (_GEN_377 ? ~_GEN_394 & _GEN_198 : ~_GEN_362 & _GEN_198);
@@ -14605,7 +14772,7 @@ module RS(
         reservation_station_2_decoded_instruction_portID <=
           io_backend_packet_0_bits_portID;
       end
-      reservation_station_2_decoded_instruction_needs_ALU <=
+      reservation_station_2_decoded_instruction_needs_branch_unit <=
         ~_GEN_414 & (_GEN_377 ? ~_GEN_395 & _GEN_205 : ~_GEN_363 & _GEN_205);
       reservation_station_2_decoded_instruction_SUBTRACT <=
         ~_GEN_414 & (_GEN_377 ? ~_GEN_395 & _GEN_206 : ~_GEN_363 & _GEN_206);
@@ -14701,7 +14868,7 @@ module RS(
         reservation_station_3_decoded_instruction_portID <=
           io_backend_packet_0_bits_portID;
       end
-      reservation_station_3_decoded_instruction_needs_ALU <=
+      reservation_station_3_decoded_instruction_needs_branch_unit <=
         ~_GEN_416 & (_GEN_377 ? ~_GEN_396 & _GEN_213 : ~_GEN_364 & _GEN_213);
       reservation_station_3_decoded_instruction_SUBTRACT <=
         ~_GEN_416 & (_GEN_377 ? ~_GEN_396 & _GEN_214 : ~_GEN_364 & _GEN_214);
@@ -14797,7 +14964,7 @@ module RS(
         reservation_station_4_decoded_instruction_portID <=
           io_backend_packet_0_bits_portID;
       end
-      reservation_station_4_decoded_instruction_needs_ALU <=
+      reservation_station_4_decoded_instruction_needs_branch_unit <=
         ~_GEN_418 & (_GEN_377 ? ~_GEN_397 & _GEN_221 : ~_GEN_365 & _GEN_221);
       reservation_station_4_decoded_instruction_SUBTRACT <=
         ~_GEN_418 & (_GEN_377 ? ~_GEN_397 & _GEN_222 : ~_GEN_365 & _GEN_222);
@@ -14893,7 +15060,7 @@ module RS(
         reservation_station_5_decoded_instruction_portID <=
           io_backend_packet_0_bits_portID;
       end
-      reservation_station_5_decoded_instruction_needs_ALU <=
+      reservation_station_5_decoded_instruction_needs_branch_unit <=
         ~_GEN_420 & (_GEN_377 ? ~_GEN_398 & _GEN_229 : ~_GEN_366 & _GEN_229);
       reservation_station_5_decoded_instruction_SUBTRACT <=
         ~_GEN_420 & (_GEN_377 ? ~_GEN_398 & _GEN_230 : ~_GEN_366 & _GEN_230);
@@ -14989,7 +15156,7 @@ module RS(
         reservation_station_6_decoded_instruction_portID <=
           io_backend_packet_0_bits_portID;
       end
-      reservation_station_6_decoded_instruction_needs_ALU <=
+      reservation_station_6_decoded_instruction_needs_branch_unit <=
         ~_GEN_422 & (_GEN_377 ? ~_GEN_399 & _GEN_237 : ~_GEN_367 & _GEN_237);
       reservation_station_6_decoded_instruction_SUBTRACT <=
         ~_GEN_422 & (_GEN_377 ? ~_GEN_399 & _GEN_238 : ~_GEN_367 & _GEN_238);
@@ -15085,7 +15252,7 @@ module RS(
         reservation_station_7_decoded_instruction_portID <=
           io_backend_packet_0_bits_portID;
       end
-      reservation_station_7_decoded_instruction_needs_ALU <=
+      reservation_station_7_decoded_instruction_needs_branch_unit <=
         ~_GEN_424 & (_GEN_377 ? ~_GEN_400 & _GEN_245 : ~_GEN_368 & _GEN_245);
       reservation_station_7_decoded_instruction_SUBTRACT <=
         ~_GEN_424 & (_GEN_377 ? ~_GEN_400 & _GEN_246 : ~_GEN_368 & _GEN_246);
@@ -15181,7 +15348,7 @@ module RS(
         reservation_station_8_decoded_instruction_portID <=
           io_backend_packet_0_bits_portID;
       end
-      reservation_station_8_decoded_instruction_needs_ALU <=
+      reservation_station_8_decoded_instruction_needs_branch_unit <=
         ~_GEN_426 & (_GEN_377 ? ~_GEN_401 & _GEN_253 : ~_GEN_369 & _GEN_253);
       reservation_station_8_decoded_instruction_SUBTRACT <=
         ~_GEN_426 & (_GEN_377 ? ~_GEN_401 & _GEN_254 : ~_GEN_369 & _GEN_254);
@@ -15277,7 +15444,7 @@ module RS(
         reservation_station_9_decoded_instruction_portID <=
           io_backend_packet_0_bits_portID;
       end
-      reservation_station_9_decoded_instruction_needs_ALU <=
+      reservation_station_9_decoded_instruction_needs_branch_unit <=
         ~_GEN_428 & (_GEN_377 ? ~_GEN_402 & _GEN_261 : ~_GEN_370 & _GEN_261);
       reservation_station_9_decoded_instruction_SUBTRACT <=
         ~_GEN_428 & (_GEN_377 ? ~_GEN_402 & _GEN_262 : ~_GEN_370 & _GEN_262);
@@ -15373,7 +15540,7 @@ module RS(
         reservation_station_10_decoded_instruction_portID <=
           io_backend_packet_0_bits_portID;
       end
-      reservation_station_10_decoded_instruction_needs_ALU <=
+      reservation_station_10_decoded_instruction_needs_branch_unit <=
         ~_GEN_430 & (_GEN_377 ? ~_GEN_403 & _GEN_269 : ~_GEN_371 & _GEN_269);
       reservation_station_10_decoded_instruction_SUBTRACT <=
         ~_GEN_430 & (_GEN_377 ? ~_GEN_403 & _GEN_270 : ~_GEN_371 & _GEN_270);
@@ -15469,7 +15636,7 @@ module RS(
         reservation_station_11_decoded_instruction_portID <=
           io_backend_packet_0_bits_portID;
       end
-      reservation_station_11_decoded_instruction_needs_ALU <=
+      reservation_station_11_decoded_instruction_needs_branch_unit <=
         ~_GEN_432 & (_GEN_377 ? ~_GEN_404 & _GEN_277 : ~_GEN_372 & _GEN_277);
       reservation_station_11_decoded_instruction_SUBTRACT <=
         ~_GEN_432 & (_GEN_377 ? ~_GEN_404 & _GEN_278 : ~_GEN_372 & _GEN_278);
@@ -15565,7 +15732,7 @@ module RS(
         reservation_station_12_decoded_instruction_portID <=
           io_backend_packet_0_bits_portID;
       end
-      reservation_station_12_decoded_instruction_needs_ALU <=
+      reservation_station_12_decoded_instruction_needs_branch_unit <=
         ~_GEN_434 & (_GEN_377 ? ~_GEN_405 & _GEN_285 : ~_GEN_373 & _GEN_285);
       reservation_station_12_decoded_instruction_SUBTRACT <=
         ~_GEN_434 & (_GEN_377 ? ~_GEN_405 & _GEN_286 : ~_GEN_373 & _GEN_286);
@@ -15661,7 +15828,7 @@ module RS(
         reservation_station_13_decoded_instruction_portID <=
           io_backend_packet_0_bits_portID;
       end
-      reservation_station_13_decoded_instruction_needs_ALU <=
+      reservation_station_13_decoded_instruction_needs_branch_unit <=
         ~_GEN_436 & (_GEN_377 ? ~_GEN_406 & _GEN_293 : ~_GEN_374 & _GEN_293);
       reservation_station_13_decoded_instruction_SUBTRACT <=
         ~_GEN_436 & (_GEN_377 ? ~_GEN_406 & _GEN_294 : ~_GEN_374 & _GEN_294);
@@ -15757,7 +15924,7 @@ module RS(
         reservation_station_14_decoded_instruction_portID <=
           io_backend_packet_0_bits_portID;
       end
-      reservation_station_14_decoded_instruction_needs_ALU <=
+      reservation_station_14_decoded_instruction_needs_branch_unit <=
         ~_GEN_438 & (_GEN_377 ? ~_GEN_407 & _GEN_301 : ~_GEN_375 & _GEN_301);
       reservation_station_14_decoded_instruction_SUBTRACT <=
         ~_GEN_438 & (_GEN_377 ? ~_GEN_407 & _GEN_302 : ~_GEN_375 & _GEN_302);
@@ -15853,7 +16020,7 @@ module RS(
         reservation_station_15_decoded_instruction_portID <=
           io_backend_packet_0_bits_portID;
       end
-      reservation_station_15_decoded_instruction_needs_ALU <=
+      reservation_station_15_decoded_instruction_needs_branch_unit <=
         ~_GEN_440 & (_GEN_377 ? ~_GEN_408 & _GEN_308 : ~_GEN_376 & _GEN_308);
       reservation_station_15_decoded_instruction_SUBTRACT <=
         ~_GEN_440 & (_GEN_377 ? ~_GEN_408 & _GEN_309 : ~_GEN_376 & _GEN_309);
@@ -15877,7 +16044,7 @@ module RS(
   assign io_RF_inputs_0_bits_ROB_index = port0_valid ? _GEN_100[port0_RS_index] : 6'h0;
   assign io_RF_inputs_0_bits_instructionType =
     port0_valid ? _GEN_101[port0_RS_index] : 5'h0;
-  assign io_RF_inputs_0_bits_needs_ALU = port0_valid & _GEN_102[port0_RS_index];
+  assign io_RF_inputs_0_bits_needs_branch_unit = port0_valid & _GEN_102[port0_RS_index];
   assign io_RF_inputs_0_bits_SUBTRACT = port0_valid & _GEN_103[port0_RS_index];
   assign io_RF_inputs_0_bits_MULTIPLY = port0_valid & _GEN_104[port0_RS_index];
   assign io_RF_inputs_0_bits_IMMEDIATE = port0_valid & _GEN_105[port0_RS_index];
@@ -18886,24 +19053,27 @@ module ALU(
   output [1:0]  io_FU_output_bits_fetch_packet_index
 );
 
-  reg [31:0] arithmetic_result;
-  reg [34:0] io_FU_output_bits_instruction_PC_REG;
-  reg [3:0]  io_FU_output_bits_fetch_packet_index_REG;
-  reg [5:0]  io_FU_output_bits_RD_REG;
-  reg        io_FU_output_bits_RD_valid_REG;
-  reg [5:0]  io_FU_output_bits_ROB_index_REG;
-  reg        io_FU_output_valid_REG;
+  reg  [31:0] arithmetic_result;
+  wire [31:0] operand2 =
+    io_FU_input_bits_decoded_instruction_IMMEDIATE
+      ? io_FU_input_bits_decoded_instruction_IMM
+      : io_FU_input_bits_RS2_data;
+  wire [31:0] _GEN = {27'h0, operand2[4:0]};
+  wire [31:0] sra_result = $signed($signed(io_FU_input_bits_RS1_data) >>> _GEN);
+  reg  [34:0] io_FU_output_bits_instruction_PC_REG;
+  reg  [3:0]  io_FU_output_bits_fetch_packet_index_REG;
+  reg  [5:0]  io_FU_output_bits_RD_REG;
+  reg         io_FU_output_bits_RD_valid_REG;
+  reg  [5:0]  io_FU_output_bits_ROB_index_REG;
+  reg         io_FU_output_valid_REG;
   always @(posedge clock) begin
     if (reset)
       arithmetic_result <= 32'h0;
     else begin
-      automatic logic [31:0] operand2 =
-        io_FU_input_bits_decoded_instruction_IMMEDIATE
-          ? io_FU_input_bits_decoded_instruction_IMM
-          : io_FU_input_bits_RS2_data;
-      automatic logic [31:0] _GEN = {27'h0, operand2[4:0]};
       automatic logic        _REMU_T =
         io_FU_input_bits_decoded_instruction_instructionType == 5'hC;
+      automatic logic        _SLTU_T_1 =
+        io_FU_input_bits_decoded_instruction_instructionType == 5'h4;
       automatic logic        _MUL_T_1 =
         io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h0;
       automatic logic        _DIVU_T_1 =
@@ -18911,36 +19081,43 @@ module ALU(
       automatic logic [62:0] _sll_result_T_1 =
         {31'h0, io_FU_input_bits_RS1_data} << operand2[4:0];
       arithmetic_result <=
-        _REMU_T & _MUL_T_1 & ~io_FU_input_bits_decoded_instruction_MULTIPLY
-        & io_FU_input_bits_decoded_instruction_SUBTRACT
+        (_REMU_T | _SLTU_T_1) & _MUL_T_1 & ~io_FU_input_bits_decoded_instruction_MULTIPLY
+        & ~io_FU_input_bits_decoded_instruction_SUBTRACT
           ? io_FU_input_bits_RS1_data + operand2
-          : _REMU_T & _MUL_T_1 & ~io_FU_input_bits_decoded_instruction_MULTIPLY
+          : (_REMU_T | _SLTU_T_1) & _MUL_T_1
+            & ~io_FU_input_bits_decoded_instruction_MULTIPLY
             & io_FU_input_bits_decoded_instruction_SUBTRACT
               ? io_FU_input_bits_RS1_data - operand2
-              : _REMU_T & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h4
+              : (_REMU_T | _SLTU_T_1)
+                & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h4
                 & ~io_FU_input_bits_decoded_instruction_MULTIPLY
                   ? io_FU_input_bits_RS1_data ^ operand2
-                  : _REMU_T & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h6
+                  : (_REMU_T | _SLTU_T_1)
+                    & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h6
                     & ~io_FU_input_bits_decoded_instruction_MULTIPLY
                       ? io_FU_input_bits_RS1_data | operand2
-                      : _REMU_T & (&io_FU_input_bits_decoded_instruction_FUNCT3)
+                      : (_REMU_T | _SLTU_T_1)
+                        & (&io_FU_input_bits_decoded_instruction_FUNCT3)
                         & ~io_FU_input_bits_decoded_instruction_MULTIPLY
                           ? io_FU_input_bits_RS1_data & operand2
-                          : _REMU_T & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h1
+                          : (_REMU_T | _SLTU_T_1)
+                            & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h1
                             & ~io_FU_input_bits_decoded_instruction_MULTIPLY
                               ? _sll_result_T_1[31:0]
-                              : _REMU_T & _DIVU_T_1
+                              : (_REMU_T | _SLTU_T_1) & _DIVU_T_1
                                 & ~io_FU_input_bits_decoded_instruction_MULTIPLY
+                                & ~io_FU_input_bits_decoded_instruction_SUBTRACT
                                   ? io_FU_input_bits_RS1_data >> _GEN
-                                  : _REMU_T & _DIVU_T_1
+                                  : (_REMU_T | _SLTU_T_1) & _DIVU_T_1
                                     & ~io_FU_input_bits_decoded_instruction_MULTIPLY
-                                      ? io_FU_input_bits_RS1_data >> _GEN
-                                      : _REMU_T
+                                    & io_FU_input_bits_decoded_instruction_SUBTRACT
+                                      ? sra_result
+                                      : (_REMU_T | _SLTU_T_1)
                                         & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h2
                                         & ~io_FU_input_bits_decoded_instruction_MULTIPLY
                                           ? {31'h0,
                                              $signed(io_FU_input_bits_RS1_data) < $signed(operand2)}
-                                          : _REMU_T
+                                          : (_REMU_T | _SLTU_T_1)
                                             & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h3
                                             & ~io_FU_input_bits_decoded_instruction_MULTIPLY
                                               ? {31'h0,
@@ -18994,8 +19171,13 @@ module branch_unit(
 );
 
   wire        BRANCH = io_FU_input_bits_decoded_instruction_instructionType == 5'h18;
+  wire        BEQ = BRANCH & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h0;
   wire        JAL = io_FU_input_bits_decoded_instruction_instructionType == 5'h1B;
   wire        JALR = io_FU_input_bits_decoded_instruction_instructionType == 5'h19;
+  wire        EQ = io_FU_input_bits_RS1_data == io_FU_input_bits_RS2_data & BEQ;
+  wire        GE =
+    $signed(io_FU_input_bits_RS1_data) >= $signed(io_FU_input_bits_RS2_data) & BRANCH
+    & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h5;
   reg  [34:0] io_FU_output_bits_instruction_PC_REG;
   reg  [3:0]  io_FU_output_bits_fetch_packet_index_REG;
   reg         io_FU_output_bits_branch_taken_REG;
@@ -19008,26 +19190,18 @@ module branch_unit(
   always @(posedge clock) begin
     automatic logic [31:0] _io_FU_output_bits_instruction_PC_T =
       io_FU_input_bits_PC + {28'h0, io_FU_input_bits_decoded_instruction_packet_index};
-    automatic logic        EQ =
-      io_FU_input_bits_RS1_data == io_FU_input_bits_RS2_data & BRANCH
-      & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h0;
     automatic logic        NE =
       io_FU_input_bits_RS1_data != io_FU_input_bits_RS2_data & BRANCH
       & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h1;
     automatic logic        LT =
       $signed(io_FU_input_bits_RS1_data) < $signed(io_FU_input_bits_RS2_data) & BRANCH
       & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h4;
-    automatic logic        GE =
-      $signed(io_FU_input_bits_RS1_data) >= $signed(io_FU_input_bits_RS2_data) & BRANCH
-      & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h5;
     automatic logic        LTU =
       io_FU_input_bits_RS1_data < io_FU_input_bits_RS2_data & BRANCH
       & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h6;
     automatic logic        GEU =
       io_FU_input_bits_RS1_data >= io_FU_input_bits_RS2_data & BRANCH
       & (&io_FU_input_bits_decoded_instruction_FUNCT3);
-    automatic logic [31:0] _io_FU_output_bits_RD_data_T =
-      _io_FU_output_bits_instruction_PC_T + 32'h4;
     io_FU_output_bits_instruction_PC_REG <=
       {1'h0, _io_FU_output_bits_instruction_PC_T, 2'h0};
     io_FU_output_bits_fetch_packet_index_REG <=
@@ -19057,10 +19231,10 @@ module branch_unit(
                                 : JALR
                                     ? io_FU_input_bits_RS1_data
                                       + io_FU_input_bits_decoded_instruction_IMM
-                                    : _io_FU_output_bits_RD_data_T;
+                                    : _io_FU_output_bits_instruction_PC_T;
     io_FU_output_bits_RD_REG <= io_FU_input_bits_decoded_instruction_RD;
     io_FU_output_bits_RD_valid_REG <= io_FU_input_bits_decoded_instruction_RD_valid;
-    io_FU_output_bits_RD_data_REG <= _io_FU_output_bits_RD_data_T;
+    io_FU_output_bits_RD_data_REG <= _io_FU_output_bits_instruction_PC_T + 32'h4;
     io_FU_output_bits_ROB_index_REG <= io_FU_input_bits_decoded_instruction_ROB_index;
     io_FU_output_valid_REG <= io_FU_input_valid;
   end // always @(posedge)
@@ -19088,7 +19262,7 @@ module FU(
   input  [3:0]  io_FU_input_bits_decoded_instruction_packet_index,
   input  [5:0]  io_FU_input_bits_decoded_instruction_ROB_index,
   input  [4:0]  io_FU_input_bits_decoded_instruction_instructionType,
-  input         io_FU_input_bits_decoded_instruction_needs_ALU,
+  input         io_FU_input_bits_decoded_instruction_needs_branch_unit,
                 io_FU_input_bits_decoded_instruction_SUBTRACT,
                 io_FU_input_bits_decoded_instruction_MULTIPLY,
                 io_FU_input_bits_decoded_instruction_IMMEDIATE,
@@ -19124,7 +19298,8 @@ module FU(
   wire [31:0] _ALU_io_FU_output_bits_instruction_PC;
   wire [5:0]  _ALU_io_FU_output_bits_ROB_index;
   wire [1:0]  _ALU_io_FU_output_bits_fetch_packet_index;
-  wire        is_ALU = io_FU_input_bits_decoded_instruction_needs_ALU & io_FU_input_valid;
+  wire        is_CTRL =
+    io_FU_input_bits_decoded_instruction_needs_branch_unit & io_FU_input_valid;
   ALU ALU (
     .clock                                                (clock),
     .reset                                                (reset),
@@ -19207,29 +19382,29 @@ module FU(
       (_branch_unit_io_FU_output_bits_fetch_packet_index)
   );
   assign io_FU_output_valid =
-    is_ALU ? _ALU_io_FU_output_valid : _branch_unit_io_FU_output_valid;
+    is_CTRL ? _branch_unit_io_FU_output_valid : _ALU_io_FU_output_valid;
   assign io_FU_output_bits_RD =
-    is_ALU ? _ALU_io_FU_output_bits_RD : _branch_unit_io_FU_output_bits_RD;
+    is_CTRL ? _branch_unit_io_FU_output_bits_RD : _ALU_io_FU_output_bits_RD;
   assign io_FU_output_bits_RD_data =
-    is_ALU ? _ALU_io_FU_output_bits_RD_data : _branch_unit_io_FU_output_bits_RD_data;
+    is_CTRL ? _branch_unit_io_FU_output_bits_RD_data : _ALU_io_FU_output_bits_RD_data;
   assign io_FU_output_bits_RD_valid =
-    is_ALU ? _ALU_io_FU_output_bits_RD_valid : _branch_unit_io_FU_output_bits_RD_valid;
+    is_CTRL ? _branch_unit_io_FU_output_bits_RD_valid : _ALU_io_FU_output_bits_RD_valid;
   assign io_FU_output_bits_instruction_PC =
-    is_ALU
-      ? _ALU_io_FU_output_bits_instruction_PC
-      : _branch_unit_io_FU_output_bits_instruction_PC;
+    is_CTRL
+      ? _branch_unit_io_FU_output_bits_instruction_PC
+      : _ALU_io_FU_output_bits_instruction_PC;
   assign io_FU_output_bits_branch_taken =
-    ~is_ALU & _branch_unit_io_FU_output_bits_branch_taken;
+    is_CTRL & _branch_unit_io_FU_output_bits_branch_taken;
   assign io_FU_output_bits_target_address =
-    is_ALU ? 32'h0 : _branch_unit_io_FU_output_bits_target_address;
+    is_CTRL ? _branch_unit_io_FU_output_bits_target_address : 32'h0;
   assign io_FU_output_bits_branch_valid =
-    ~is_ALU & _branch_unit_io_FU_output_bits_branch_valid;
+    is_CTRL & _branch_unit_io_FU_output_bits_branch_valid;
   assign io_FU_output_bits_ROB_index =
-    is_ALU ? _ALU_io_FU_output_bits_ROB_index : _branch_unit_io_FU_output_bits_ROB_index;
+    is_CTRL ? _branch_unit_io_FU_output_bits_ROB_index : _ALU_io_FU_output_bits_ROB_index;
   assign io_FU_output_bits_fetch_packet_index =
-    is_ALU
-      ? _ALU_io_FU_output_bits_fetch_packet_index
-      : _branch_unit_io_FU_output_bits_fetch_packet_index;
+    is_CTRL
+      ? _branch_unit_io_FU_output_bits_fetch_packet_index
+      : _ALU_io_FU_output_bits_fetch_packet_index;
 endmodule
 
 module FU_1(
@@ -19401,7 +19576,7 @@ module backend(
   input  [4:0]   io_backend_packet_bits_decoded_instruction_0_instructionType,
   input  [1:0]   io_backend_packet_bits_decoded_instruction_0_portID,
                  io_backend_packet_bits_decoded_instruction_0_RS_type,
-  input          io_backend_packet_bits_decoded_instruction_0_needs_ALU,
+  input          io_backend_packet_bits_decoded_instruction_0_needs_branch_unit,
                  io_backend_packet_bits_decoded_instruction_0_SUBTRACT,
                  io_backend_packet_bits_decoded_instruction_0_MULTIPLY,
                  io_backend_packet_bits_decoded_instruction_0_IMMEDIATE,
@@ -19418,7 +19593,7 @@ module backend(
   input  [4:0]   io_backend_packet_bits_decoded_instruction_1_instructionType,
   input  [1:0]   io_backend_packet_bits_decoded_instruction_1_portID,
                  io_backend_packet_bits_decoded_instruction_1_RS_type,
-  input          io_backend_packet_bits_decoded_instruction_1_needs_ALU,
+  input          io_backend_packet_bits_decoded_instruction_1_needs_branch_unit,
                  io_backend_packet_bits_decoded_instruction_1_SUBTRACT,
                  io_backend_packet_bits_decoded_instruction_1_MULTIPLY,
                  io_backend_packet_bits_decoded_instruction_1_IMMEDIATE,
@@ -19435,7 +19610,7 @@ module backend(
   input  [4:0]   io_backend_packet_bits_decoded_instruction_2_instructionType,
   input  [1:0]   io_backend_packet_bits_decoded_instruction_2_portID,
                  io_backend_packet_bits_decoded_instruction_2_RS_type,
-  input          io_backend_packet_bits_decoded_instruction_2_needs_ALU,
+  input          io_backend_packet_bits_decoded_instruction_2_needs_branch_unit,
                  io_backend_packet_bits_decoded_instruction_2_SUBTRACT,
                  io_backend_packet_bits_decoded_instruction_2_MULTIPLY,
                  io_backend_packet_bits_decoded_instruction_2_IMMEDIATE,
@@ -19452,7 +19627,7 @@ module backend(
   input  [4:0]   io_backend_packet_bits_decoded_instruction_3_instructionType,
   input  [1:0]   io_backend_packet_bits_decoded_instruction_3_portID,
                  io_backend_packet_bits_decoded_instruction_3_RS_type,
-  input          io_backend_packet_bits_decoded_instruction_3_needs_ALU,
+  input          io_backend_packet_bits_decoded_instruction_3_needs_branch_unit,
                  io_backend_packet_bits_decoded_instruction_3_SUBTRACT,
                  io_backend_packet_bits_decoded_instruction_3_MULTIPLY,
                  io_backend_packet_bits_decoded_instruction_3_IMMEDIATE,
@@ -19532,7 +19707,7 @@ module backend(
   wire [3:0]  _INT_RS_io_RF_inputs_0_bits_packet_index;
   wire [5:0]  _INT_RS_io_RF_inputs_0_bits_ROB_index;
   wire [4:0]  _INT_RS_io_RF_inputs_0_bits_instructionType;
-  wire        _INT_RS_io_RF_inputs_0_bits_needs_ALU;
+  wire        _INT_RS_io_RF_inputs_0_bits_needs_branch_unit;
   wire        _INT_RS_io_RF_inputs_0_bits_SUBTRACT;
   wire        _INT_RS_io_RF_inputs_0_bits_MULTIPLY;
   wire        _INT_RS_io_RF_inputs_0_bits_IMMEDIATE;
@@ -19569,7 +19744,7 @@ module backend(
   reg  [3:0]  read_decoded_instructions_0_decoded_instruction_REG_packet_index;
   reg  [5:0]  read_decoded_instructions_0_decoded_instruction_REG_ROB_index;
   reg  [4:0]  read_decoded_instructions_0_decoded_instruction_REG_instructionType;
-  reg         read_decoded_instructions_0_decoded_instruction_REG_needs_ALU;
+  reg         read_decoded_instructions_0_decoded_instruction_REG_needs_branch_unit;
   reg         read_decoded_instructions_0_decoded_instruction_REG_SUBTRACT;
   reg         read_decoded_instructions_0_decoded_instruction_REG_MULTIPLY;
   reg         read_decoded_instructions_0_decoded_instruction_REG_IMMEDIATE;
@@ -19619,8 +19794,8 @@ module backend(
       _INT_RS_io_RF_inputs_0_bits_ROB_index;
     read_decoded_instructions_0_decoded_instruction_REG_instructionType <=
       _INT_RS_io_RF_inputs_0_bits_instructionType;
-    read_decoded_instructions_0_decoded_instruction_REG_needs_ALU <=
-      _INT_RS_io_RF_inputs_0_bits_needs_ALU;
+    read_decoded_instructions_0_decoded_instruction_REG_needs_branch_unit <=
+      _INT_RS_io_RF_inputs_0_bits_needs_branch_unit;
     read_decoded_instructions_0_decoded_instruction_REG_SUBTRACT <=
       _INT_RS_io_RF_inputs_0_bits_SUBTRACT;
     read_decoded_instructions_0_decoded_instruction_REG_MULTIPLY <=
@@ -19687,8 +19862,8 @@ module backend(
     FU3_io_FU_input_valid_REG <= _MEM_RS_io_RF_inputs_3_valid;
   end // always @(posedge)
   RS INT_RS (
-    .clock                                    (clock),
-    .reset                                    (reset),
+    .clock                                      (clock),
+    .reset                                      (reset),
     .io_backend_packet_0_valid
       (io_backend_packet_bits_decoded_instruction_0_RS_type == 2'h0
        & io_backend_packet_bits_valid_bits_0),
@@ -19712,8 +19887,8 @@ module backend(
       (io_backend_packet_bits_decoded_instruction_0_instructionType),
     .io_backend_packet_0_bits_portID
       (io_backend_packet_bits_decoded_instruction_0_portID),
-    .io_backend_packet_0_bits_needs_ALU
-      (io_backend_packet_bits_decoded_instruction_0_needs_ALU),
+    .io_backend_packet_0_bits_needs_branch_unit
+      (io_backend_packet_bits_decoded_instruction_0_needs_branch_unit),
     .io_backend_packet_0_bits_SUBTRACT
       (io_backend_packet_bits_decoded_instruction_0_SUBTRACT),
     .io_backend_packet_0_bits_MULTIPLY
@@ -19743,8 +19918,8 @@ module backend(
       (io_backend_packet_bits_decoded_instruction_1_instructionType),
     .io_backend_packet_1_bits_portID
       (io_backend_packet_bits_decoded_instruction_1_portID),
-    .io_backend_packet_1_bits_needs_ALU
-      (io_backend_packet_bits_decoded_instruction_1_needs_ALU),
+    .io_backend_packet_1_bits_needs_branch_unit
+      (io_backend_packet_bits_decoded_instruction_1_needs_branch_unit),
     .io_backend_packet_1_bits_SUBTRACT
       (io_backend_packet_bits_decoded_instruction_1_SUBTRACT),
     .io_backend_packet_1_bits_MULTIPLY
@@ -19774,8 +19949,8 @@ module backend(
       (io_backend_packet_bits_decoded_instruction_2_instructionType),
     .io_backend_packet_2_bits_portID
       (io_backend_packet_bits_decoded_instruction_2_portID),
-    .io_backend_packet_2_bits_needs_ALU
-      (io_backend_packet_bits_decoded_instruction_2_needs_ALU),
+    .io_backend_packet_2_bits_needs_branch_unit
+      (io_backend_packet_bits_decoded_instruction_2_needs_branch_unit),
     .io_backend_packet_2_bits_SUBTRACT
       (io_backend_packet_bits_decoded_instruction_2_SUBTRACT),
     .io_backend_packet_2_bits_MULTIPLY
@@ -19805,69 +19980,73 @@ module backend(
       (io_backend_packet_bits_decoded_instruction_3_instructionType),
     .io_backend_packet_3_bits_portID
       (io_backend_packet_bits_decoded_instruction_3_portID),
-    .io_backend_packet_3_bits_needs_ALU
-      (io_backend_packet_bits_decoded_instruction_3_needs_ALU),
+    .io_backend_packet_3_bits_needs_branch_unit
+      (io_backend_packet_bits_decoded_instruction_3_needs_branch_unit),
     .io_backend_packet_3_bits_SUBTRACT
       (io_backend_packet_bits_decoded_instruction_3_SUBTRACT),
     .io_backend_packet_3_bits_MULTIPLY
       (io_backend_packet_bits_decoded_instruction_3_MULTIPLY),
     .io_backend_packet_3_bits_IMMEDIATE
       (io_backend_packet_bits_decoded_instruction_3_IMMEDIATE),
-    .io_FU_outputs_0_valid                    (_FU0_io_FU_output_valid),
-    .io_FU_outputs_0_bits_RD                  (_FU0_io_FU_output_bits_RD),
-    .io_FU_outputs_0_bits_RD_valid            (_FU0_io_FU_output_bits_RD_valid),
-    .io_FU_outputs_1_valid                    (_FU1_io_FU_output_valid),
-    .io_FU_outputs_1_bits_RD                  (_FU1_io_FU_output_bits_RD),
-    .io_FU_outputs_1_bits_RD_valid            (_FU1_io_FU_output_bits_RD_valid),
-    .io_FU_outputs_2_valid                    (_FU2_io_FU_output_valid),
-    .io_FU_outputs_2_bits_RD                  (_FU2_io_FU_output_bits_RD),
-    .io_FU_outputs_2_bits_RD_valid            (_FU2_io_FU_output_bits_RD_valid),
-    .io_FU_outputs_3_valid                    (_FU3_io_FU_output_valid),
-    .io_FU_outputs_3_bits_RD                  (_FU3_io_FU_output_bits_RD),
-    .io_FU_outputs_3_bits_RD_valid            (_FU3_io_FU_output_bits_RD_valid),
-    .io_RF_inputs_0_valid                     (_INT_RS_io_RF_inputs_0_valid),
-    .io_RF_inputs_0_bits_RD                   (_INT_RS_io_RF_inputs_0_bits_RD),
-    .io_RF_inputs_0_bits_RD_valid             (_INT_RS_io_RF_inputs_0_bits_RD_valid),
-    .io_RF_inputs_0_bits_RS1                  (_INT_RS_io_RF_inputs_0_bits_RS1),
-    .io_RF_inputs_0_bits_RS2                  (_INT_RS_io_RF_inputs_0_bits_RS2),
-    .io_RF_inputs_0_bits_IMM                  (_INT_RS_io_RF_inputs_0_bits_IMM),
-    .io_RF_inputs_0_bits_FUNCT3               (_INT_RS_io_RF_inputs_0_bits_FUNCT3),
-    .io_RF_inputs_0_bits_packet_index         (_INT_RS_io_RF_inputs_0_bits_packet_index),
-    .io_RF_inputs_0_bits_ROB_index            (_INT_RS_io_RF_inputs_0_bits_ROB_index),
+    .io_FU_outputs_0_valid                      (_FU0_io_FU_output_valid),
+    .io_FU_outputs_0_bits_RD                    (_FU0_io_FU_output_bits_RD),
+    .io_FU_outputs_0_bits_RD_valid              (_FU0_io_FU_output_bits_RD_valid),
+    .io_FU_outputs_1_valid                      (_FU1_io_FU_output_valid),
+    .io_FU_outputs_1_bits_RD                    (_FU1_io_FU_output_bits_RD),
+    .io_FU_outputs_1_bits_RD_valid              (_FU1_io_FU_output_bits_RD_valid),
+    .io_FU_outputs_2_valid                      (_FU2_io_FU_output_valid),
+    .io_FU_outputs_2_bits_RD                    (_FU2_io_FU_output_bits_RD),
+    .io_FU_outputs_2_bits_RD_valid              (_FU2_io_FU_output_bits_RD_valid),
+    .io_FU_outputs_3_valid                      (_FU3_io_FU_output_valid),
+    .io_FU_outputs_3_bits_RD                    (_FU3_io_FU_output_bits_RD),
+    .io_FU_outputs_3_bits_RD_valid              (_FU3_io_FU_output_bits_RD_valid),
+    .io_RF_inputs_0_valid                       (_INT_RS_io_RF_inputs_0_valid),
+    .io_RF_inputs_0_bits_RD                     (_INT_RS_io_RF_inputs_0_bits_RD),
+    .io_RF_inputs_0_bits_RD_valid               (_INT_RS_io_RF_inputs_0_bits_RD_valid),
+    .io_RF_inputs_0_bits_RS1                    (_INT_RS_io_RF_inputs_0_bits_RS1),
+    .io_RF_inputs_0_bits_RS2                    (_INT_RS_io_RF_inputs_0_bits_RS2),
+    .io_RF_inputs_0_bits_IMM                    (_INT_RS_io_RF_inputs_0_bits_IMM),
+    .io_RF_inputs_0_bits_FUNCT3                 (_INT_RS_io_RF_inputs_0_bits_FUNCT3),
+    .io_RF_inputs_0_bits_packet_index
+      (_INT_RS_io_RF_inputs_0_bits_packet_index),
+    .io_RF_inputs_0_bits_ROB_index              (_INT_RS_io_RF_inputs_0_bits_ROB_index),
     .io_RF_inputs_0_bits_instructionType
       (_INT_RS_io_RF_inputs_0_bits_instructionType),
-    .io_RF_inputs_0_bits_needs_ALU            (_INT_RS_io_RF_inputs_0_bits_needs_ALU),
-    .io_RF_inputs_0_bits_SUBTRACT             (_INT_RS_io_RF_inputs_0_bits_SUBTRACT),
-    .io_RF_inputs_0_bits_MULTIPLY             (_INT_RS_io_RF_inputs_0_bits_MULTIPLY),
-    .io_RF_inputs_0_bits_IMMEDIATE            (_INT_RS_io_RF_inputs_0_bits_IMMEDIATE),
-    .io_RF_inputs_1_valid                     (_INT_RS_io_RF_inputs_1_valid),
-    .io_RF_inputs_1_bits_RD                   (_INT_RS_io_RF_inputs_1_bits_RD),
-    .io_RF_inputs_1_bits_RD_valid             (_INT_RS_io_RF_inputs_1_bits_RD_valid),
-    .io_RF_inputs_1_bits_RS1                  (_INT_RS_io_RF_inputs_1_bits_RS1),
-    .io_RF_inputs_1_bits_RS2                  (_INT_RS_io_RF_inputs_1_bits_RS2),
-    .io_RF_inputs_1_bits_IMM                  (_INT_RS_io_RF_inputs_1_bits_IMM),
-    .io_RF_inputs_1_bits_FUNCT3               (_INT_RS_io_RF_inputs_1_bits_FUNCT3),
-    .io_RF_inputs_1_bits_packet_index         (_INT_RS_io_RF_inputs_1_bits_packet_index),
-    .io_RF_inputs_1_bits_ROB_index            (_INT_RS_io_RF_inputs_1_bits_ROB_index),
+    .io_RF_inputs_0_bits_needs_branch_unit
+      (_INT_RS_io_RF_inputs_0_bits_needs_branch_unit),
+    .io_RF_inputs_0_bits_SUBTRACT               (_INT_RS_io_RF_inputs_0_bits_SUBTRACT),
+    .io_RF_inputs_0_bits_MULTIPLY               (_INT_RS_io_RF_inputs_0_bits_MULTIPLY),
+    .io_RF_inputs_0_bits_IMMEDIATE              (_INT_RS_io_RF_inputs_0_bits_IMMEDIATE),
+    .io_RF_inputs_1_valid                       (_INT_RS_io_RF_inputs_1_valid),
+    .io_RF_inputs_1_bits_RD                     (_INT_RS_io_RF_inputs_1_bits_RD),
+    .io_RF_inputs_1_bits_RD_valid               (_INT_RS_io_RF_inputs_1_bits_RD_valid),
+    .io_RF_inputs_1_bits_RS1                    (_INT_RS_io_RF_inputs_1_bits_RS1),
+    .io_RF_inputs_1_bits_RS2                    (_INT_RS_io_RF_inputs_1_bits_RS2),
+    .io_RF_inputs_1_bits_IMM                    (_INT_RS_io_RF_inputs_1_bits_IMM),
+    .io_RF_inputs_1_bits_FUNCT3                 (_INT_RS_io_RF_inputs_1_bits_FUNCT3),
+    .io_RF_inputs_1_bits_packet_index
+      (_INT_RS_io_RF_inputs_1_bits_packet_index),
+    .io_RF_inputs_1_bits_ROB_index              (_INT_RS_io_RF_inputs_1_bits_ROB_index),
     .io_RF_inputs_1_bits_instructionType
       (_INT_RS_io_RF_inputs_1_bits_instructionType),
-    .io_RF_inputs_1_bits_SUBTRACT             (_INT_RS_io_RF_inputs_1_bits_SUBTRACT),
-    .io_RF_inputs_1_bits_MULTIPLY             (_INT_RS_io_RF_inputs_1_bits_MULTIPLY),
-    .io_RF_inputs_1_bits_IMMEDIATE            (_INT_RS_io_RF_inputs_1_bits_IMMEDIATE),
-    .io_RF_inputs_2_valid                     (_INT_RS_io_RF_inputs_2_valid),
-    .io_RF_inputs_2_bits_RD                   (_INT_RS_io_RF_inputs_2_bits_RD),
-    .io_RF_inputs_2_bits_RD_valid             (_INT_RS_io_RF_inputs_2_bits_RD_valid),
-    .io_RF_inputs_2_bits_RS1                  (_INT_RS_io_RF_inputs_2_bits_RS1),
-    .io_RF_inputs_2_bits_RS2                  (_INT_RS_io_RF_inputs_2_bits_RS2),
-    .io_RF_inputs_2_bits_IMM                  (_INT_RS_io_RF_inputs_2_bits_IMM),
-    .io_RF_inputs_2_bits_FUNCT3               (_INT_RS_io_RF_inputs_2_bits_FUNCT3),
-    .io_RF_inputs_2_bits_packet_index         (_INT_RS_io_RF_inputs_2_bits_packet_index),
-    .io_RF_inputs_2_bits_ROB_index            (_INT_RS_io_RF_inputs_2_bits_ROB_index),
+    .io_RF_inputs_1_bits_SUBTRACT               (_INT_RS_io_RF_inputs_1_bits_SUBTRACT),
+    .io_RF_inputs_1_bits_MULTIPLY               (_INT_RS_io_RF_inputs_1_bits_MULTIPLY),
+    .io_RF_inputs_1_bits_IMMEDIATE              (_INT_RS_io_RF_inputs_1_bits_IMMEDIATE),
+    .io_RF_inputs_2_valid                       (_INT_RS_io_RF_inputs_2_valid),
+    .io_RF_inputs_2_bits_RD                     (_INT_RS_io_RF_inputs_2_bits_RD),
+    .io_RF_inputs_2_bits_RD_valid               (_INT_RS_io_RF_inputs_2_bits_RD_valid),
+    .io_RF_inputs_2_bits_RS1                    (_INT_RS_io_RF_inputs_2_bits_RS1),
+    .io_RF_inputs_2_bits_RS2                    (_INT_RS_io_RF_inputs_2_bits_RS2),
+    .io_RF_inputs_2_bits_IMM                    (_INT_RS_io_RF_inputs_2_bits_IMM),
+    .io_RF_inputs_2_bits_FUNCT3                 (_INT_RS_io_RF_inputs_2_bits_FUNCT3),
+    .io_RF_inputs_2_bits_packet_index
+      (_INT_RS_io_RF_inputs_2_bits_packet_index),
+    .io_RF_inputs_2_bits_ROB_index              (_INT_RS_io_RF_inputs_2_bits_ROB_index),
     .io_RF_inputs_2_bits_instructionType
       (_INT_RS_io_RF_inputs_2_bits_instructionType),
-    .io_RF_inputs_2_bits_SUBTRACT             (_INT_RS_io_RF_inputs_2_bits_SUBTRACT),
-    .io_RF_inputs_2_bits_MULTIPLY             (_INT_RS_io_RF_inputs_2_bits_MULTIPLY),
-    .io_RF_inputs_2_bits_IMMEDIATE            (_INT_RS_io_RF_inputs_2_bits_IMMEDIATE)
+    .io_RF_inputs_2_bits_SUBTRACT               (_INT_RS_io_RF_inputs_2_bits_SUBTRACT),
+    .io_RF_inputs_2_bits_MULTIPLY               (_INT_RS_io_RF_inputs_2_bits_MULTIPLY),
+    .io_RF_inputs_2_bits_IMMEDIATE              (_INT_RS_io_RF_inputs_2_bits_IMMEDIATE)
   );
   MEMRS MEM_RS (
     .clock                                 (clock),
@@ -20014,9 +20193,9 @@ module backend(
     .wdata_3 (_FU3_io_FU_output_bits_RD_data)
   );
   FU FU0 (
-    .clock                                                (clock),
-    .reset                                                (reset),
-    .io_FU_input_valid                                    (FU0_io_FU_input_valid_REG),
+    .clock                                                  (clock),
+    .reset                                                  (reset),
+    .io_FU_input_valid                                      (FU0_io_FU_input_valid_REG),
     .io_FU_input_bits_decoded_instruction_RD
       (read_decoded_instructions_0_decoded_instruction_REG_RD),
     .io_FU_input_bits_decoded_instruction_RD_valid
@@ -20031,19 +20210,20 @@ module backend(
       (read_decoded_instructions_0_decoded_instruction_REG_ROB_index),
     .io_FU_input_bits_decoded_instruction_instructionType
       (read_decoded_instructions_0_decoded_instruction_REG_instructionType),
-    .io_FU_input_bits_decoded_instruction_needs_ALU
-      (read_decoded_instructions_0_decoded_instruction_REG_needs_ALU),
+    .io_FU_input_bits_decoded_instruction_needs_branch_unit
+      (read_decoded_instructions_0_decoded_instruction_REG_needs_branch_unit),
     .io_FU_input_bits_decoded_instruction_SUBTRACT
       (read_decoded_instructions_0_decoded_instruction_REG_SUBTRACT),
     .io_FU_input_bits_decoded_instruction_MULTIPLY
       (read_decoded_instructions_0_decoded_instruction_REG_MULTIPLY),
     .io_FU_input_bits_decoded_instruction_IMMEDIATE
       (read_decoded_instructions_0_decoded_instruction_REG_IMMEDIATE),
-    .io_FU_input_bits_RS1_data                            (_INT_PRF_rdata_0),
-    .io_FU_input_bits_RS2_data                            (_INT_PRF_rdata_1),
-    .io_FU_input_bits_PC                                  ({26'h0, io_PC_file_exec_data}),
-    .io_FU_output_valid                                   (_FU0_io_FU_output_valid),
-    .io_FU_output_bits_RD                                 (_FU0_io_FU_output_bits_RD),
+    .io_FU_input_bits_RS1_data                              (_INT_PRF_rdata_0),
+    .io_FU_input_bits_RS2_data                              (_INT_PRF_rdata_1),
+    .io_FU_input_bits_PC
+      ({26'h0, io_PC_file_exec_data}),
+    .io_FU_output_valid                                     (_FU0_io_FU_output_valid),
+    .io_FU_output_bits_RD                                   (_FU0_io_FU_output_bits_RD),
     .io_FU_output_bits_RD_data
       (_FU0_io_FU_output_bits_RD_data),
     .io_FU_output_bits_RD_valid
@@ -21951,8 +22131,6 @@ module ChaosCore(
   wire [1:0]
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS_type;
   wire
-    _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_ALU;
-  wire
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_branch_unit;
   wire
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_SUBTRACT;
@@ -21980,8 +22158,6 @@ module ChaosCore(
   wire [1:0]  _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_portID;
   wire [1:0]
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS_type;
-  wire
-    _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_ALU;
   wire
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_branch_unit;
   wire
@@ -22011,8 +22187,6 @@ module ChaosCore(
   wire [1:0]
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS_type;
   wire
-    _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_ALU;
-  wire
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_branch_unit;
   wire
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_SUBTRACT;
@@ -22040,8 +22214,6 @@ module ChaosCore(
   wire [1:0]  _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_portID;
   wire [1:0]
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS_type;
-  wire
-    _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_ALU;
   wire
     _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_branch_unit;
   wire
@@ -22144,8 +22316,6 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_portID),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS_type
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS_type),
-    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_ALU
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_ALU),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_branch_unit
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_branch_unit),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_SUBTRACT
@@ -22180,8 +22350,6 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_portID),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS_type
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS_type),
-    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_ALU
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_ALU),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_branch_unit
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_branch_unit),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_SUBTRACT
@@ -22216,8 +22384,6 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_portID),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS_type
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS_type),
-    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_ALU
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_ALU),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_branch_unit
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_branch_unit),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_SUBTRACT
@@ -22252,8 +22418,6 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_portID),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS_type
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS_type),
-    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_ALU
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_ALU),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_branch_unit
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_branch_unit),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_SUBTRACT
@@ -22294,8 +22458,8 @@ module ChaosCore(
       (_backend_io_FU_outputs_3_bits_RD_valid)
   );
   backend backend (
-    .clock                                                        (clock),
-    .reset                                                        (reset),
+    .clock                                                          (clock),
+    .reset                                                          (reset),
     .io_DRAM_resp_bits_data
       (io_backend_DRAM_resp_bits_data),
     .io_DRAM_request_valid
@@ -22306,7 +22470,8 @@ module ChaosCore(
       (io_backend_DRAM_request_bits_wr_data),
     .io_DRAM_request_bits_wr_en
       (io_backend_DRAM_request_bits_wr_en),
-    .io_commit_valid                                              (_BRU_io_commit_valid),
+    .io_commit_valid
+      (_BRU_io_commit_valid),
     .io_commit_ROB_index
       (_BRU_io_commit_ROB_index),
     .io_PC_file_exec_addr
@@ -22335,8 +22500,8 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_portID),
     .io_backend_packet_bits_decoded_instruction_0_RS_type
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS_type),
-    .io_backend_packet_bits_decoded_instruction_0_needs_ALU
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_ALU),
+    .io_backend_packet_bits_decoded_instruction_0_needs_branch_unit
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_branch_unit),
     .io_backend_packet_bits_decoded_instruction_0_SUBTRACT
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_SUBTRACT),
     .io_backend_packet_bits_decoded_instruction_0_MULTIPLY
@@ -22369,8 +22534,8 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_portID),
     .io_backend_packet_bits_decoded_instruction_1_RS_type
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS_type),
-    .io_backend_packet_bits_decoded_instruction_1_needs_ALU
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_ALU),
+    .io_backend_packet_bits_decoded_instruction_1_needs_branch_unit
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_branch_unit),
     .io_backend_packet_bits_decoded_instruction_1_SUBTRACT
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_SUBTRACT),
     .io_backend_packet_bits_decoded_instruction_1_MULTIPLY
@@ -22403,8 +22568,8 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_portID),
     .io_backend_packet_bits_decoded_instruction_2_RS_type
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS_type),
-    .io_backend_packet_bits_decoded_instruction_2_needs_ALU
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_ALU),
+    .io_backend_packet_bits_decoded_instruction_2_needs_branch_unit
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_branch_unit),
     .io_backend_packet_bits_decoded_instruction_2_SUBTRACT
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_SUBTRACT),
     .io_backend_packet_bits_decoded_instruction_2_MULTIPLY
@@ -22437,8 +22602,8 @@ module ChaosCore(
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_portID),
     .io_backend_packet_bits_decoded_instruction_3_RS_type
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS_type),
-    .io_backend_packet_bits_decoded_instruction_3_needs_ALU
-      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_ALU),
+    .io_backend_packet_bits_decoded_instruction_3_needs_branch_unit
+      (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_branch_unit),
     .io_backend_packet_bits_decoded_instruction_3_SUBTRACT
       (_frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_SUBTRACT),
     .io_backend_packet_bits_decoded_instruction_3_MULTIPLY
@@ -25722,3 +25887,5 @@ module nReadmWrite (
 endmodule
 
 // ----- 8< ----- FILE "firrtl_black_box_resource_files.f" ----- 8< -----
+
+nReadmWrite.v

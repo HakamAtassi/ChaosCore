@@ -99,8 +99,6 @@ class free_list(parameters:Parameters) extends Module{
     // Similarly, the queue will output the values in [0,0,1,1] format but needs to reorganize things such that the are in the appropriate 
     // spots, depending on what the read request expects
 
-    // FIXME: does the output need to be flopped?
-
     val io = IO(new Bundle{
 
         val rename_valid    = Input(Vec(fetchWidth, Bool()))

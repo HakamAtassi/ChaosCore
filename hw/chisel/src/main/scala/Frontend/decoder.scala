@@ -70,7 +70,7 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
 
     //Do we check entire funct7 field or just check for single bit?
     val MULTIPLY    = (instructionType === InstructionType.OP && FUNCT7 === 0x1.U)
-    val SUBTRACT    = (instructionType === InstructionType.OP && FUNCT7 === 0x20.U)
+    val SUBTRACT    = ((instructionType === InstructionType.OP || instructionType === InstructionType.OP_IMM) && FUNCT7 === 0x20.U)
     val IMMEDIATE   = (instructionType === InstructionType.OP_IMM)
 
 
@@ -106,18 +106,21 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
                                             instructionType === JALR        || 
                                             instructionType === LUI         || 
                                             instructionType === AUIPC       || 
-                                            instructionType === SYSTEM)
+                                            instructionType === SYSTEM)     && 
+                                            io.instruction.valid
 
     io.decoded_instruction.bits.RS1_valid            := (instructionType === OP         || 
                                                         instructionType === OP_IMM      || 
                                                         instructionType === LOAD        || 
                                                         instructionType === STORE       || 
                                                         instructionType === JALR        || 
-                                                        instructionType === BRANCH)
+                                                        instructionType === BRANCH)     && 
+                                                        io.instruction.valid
 
     io.decoded_instruction.bits.RS2_valid            := (instructionType === OP         ||
                                                         instructionType === STORE       || 
-                                                        instructionType === BRANCH)
+                                                        instructionType === BRANCH)     && 
+                                                        io.instruction.valid
 
     io.decoded_instruction.bits.RD                   := RD
     io.decoded_instruction.bits.RS1                  := RS1
@@ -167,7 +170,7 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
 
     // Assign a reservation station
 
-    val is_INT   =   (instructionType === OP) || (instructionType === OP_IMM) || (instructionType === BRANCH) || (instructionType === JAL) || (instructionType === JALR)
+    val is_INT   =   (instructionType === OP) || (instructionType === OP_IMM) || (instructionType === BRANCH) || (instructionType === JAL) || (instructionType === JALR) || (instructionType === LUI) || (instructionType === AUIPC)
     val is_MEM   =   (instructionType === LOAD) || (instructionType === STORE)
 
     when(is_INT){
@@ -197,9 +200,8 @@ class fetch_packet_decoder(parameters:Parameters) extends Module{
     for(i <- 0 until fetchWidth){
         decoders(i).io.instruction.bits     := io.fetch_packet.bits.instructions(i)
         decoders(i).io.instruction.valid    := io.fetch_packet.valid && io.fetch_packet.bits.valid_bits(i)
-        fetch_packet_ready                   = fetch_packet_ready && io.decoded_fetch_packet(i).ready
     }
-    io.fetch_packet.ready := fetch_packet_ready // was only being assigned to last instruction's ready bit before
+    io.fetch_packet.ready :=  io.decoded_fetch_packet.ready
 
     // Register outputs //
     for(i <- 0 until fetchWidth){

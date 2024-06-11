@@ -57,10 +57,10 @@ module decoder(
   wire [4:0] instructionType = io_instruction_bits_instruction[6:2];
   wire       IS_LOAD = instructionType == 5'h0;
   wire       IMMEDIATE = instructionType == 5'h4;
-  wire       _io_decoded_instruction_bits_RD_valid_T_11 = instructionType == 5'h5;
+  wire       _is_INT_T_11 = instructionType == 5'h5;
   wire       IS_STORE = instructionType == 5'h8;
   wire       _is_INT_T = instructionType == 5'hC;
-  wire       _io_decoded_instruction_bits_RD_valid_T_9 = instructionType == 5'hD;
+  wire       _is_INT_T_9 = instructionType == 5'hD;
   wire       _is_INT_T_3 = instructionType == 5'h18;
   wire       _is_INT_T_7 = instructionType == 5'h19;
   wire       _is_INT_T_5 = instructionType == 5'h1B;
@@ -69,15 +69,14 @@ module decoder(
     always @(posedge clock) begin
       if (~reset
           & ~(IS_LOAD | instructionType == 5'h1 | instructionType == 5'h2
-              | instructionType == 5'h3 | IMMEDIATE
-              | _io_decoded_instruction_bits_RD_valid_T_11 | instructionType == 5'h6
-              | IS_STORE | instructionType == 5'h9 | instructionType == 5'hA
-              | instructionType == 5'hB | _is_INT_T
-              | _io_decoded_instruction_bits_RD_valid_T_9 | instructionType == 5'hE
-              | instructionType == 5'h10 | instructionType == 5'h11
-              | instructionType == 5'h12 | instructionType == 5'h13
-              | instructionType == 5'h14 | instructionType == 5'h16 | _is_INT_T_3
-              | _is_INT_T_7 | _is_INT_T_5 | _io_decoded_instruction_bits_RD_valid_T_13
+              | instructionType == 5'h3 | IMMEDIATE | _is_INT_T_11
+              | instructionType == 5'h6 | IS_STORE | instructionType == 5'h9
+              | instructionType == 5'hA | instructionType == 5'hB | _is_INT_T
+              | _is_INT_T_9 | instructionType == 5'hE | instructionType == 5'h10
+              | instructionType == 5'h11 | instructionType == 5'h12
+              | instructionType == 5'h13 | instructionType == 5'h14
+              | instructionType == 5'h16 | _is_INT_T_3 | _is_INT_T_7 | _is_INT_T_5
+              | _io_decoded_instruction_bits_RD_valid_T_13
               | instructionType == 5'h1E)) begin
         if (`ASSERT_VERBOSE_COND_)
           $error("Assertion failed: Enum state must be valid, got %d!\n    at decoder.scala:66 assert(valid, \"Enum state must be valid, got %%%%d!\", opcode(6,2))\n",
@@ -114,15 +113,15 @@ module decoder(
   assign io_decoded_instruction_bits_ready_bits_RS2_ready = 1'h0;
   assign io_decoded_instruction_bits_RD = {1'h0, io_instruction_bits_instruction[11:7]};
   assign io_decoded_instruction_bits_RD_valid =
-    _is_INT_T | IMMEDIATE | IS_LOAD | _is_INT_T_5 | _is_INT_T_7
-    | _io_decoded_instruction_bits_RD_valid_T_9
-    | _io_decoded_instruction_bits_RD_valid_T_11
-    | _io_decoded_instruction_bits_RD_valid_T_13;
+    (_is_INT_T | IMMEDIATE | IS_LOAD | _is_INT_T_5 | _is_INT_T_7 | _is_INT_T_9
+     | _is_INT_T_11 | _io_decoded_instruction_bits_RD_valid_T_13) & io_instruction_valid;
   assign io_decoded_instruction_bits_RS1 = {1'h0, io_instruction_bits_instruction[19:15]};
   assign io_decoded_instruction_bits_RS1_valid =
-    _is_INT_T | IMMEDIATE | IS_LOAD | IS_STORE | _is_INT_T_7 | _is_INT_T_3;
+    (_is_INT_T | IMMEDIATE | IS_LOAD | IS_STORE | _is_INT_T_7 | _is_INT_T_3)
+    & io_instruction_valid;
   assign io_decoded_instruction_bits_RS2 = {1'h0, io_instruction_bits_instruction[24:20]};
-  assign io_decoded_instruction_bits_RS2_valid = _is_INT_T | IS_STORE | _is_INT_T_3;
+  assign io_decoded_instruction_bits_RS2_valid =
+    (_is_INT_T | IS_STORE | _is_INT_T_3) & io_instruction_valid;
   assign io_decoded_instruction_bits_IMM =
     io_instruction_bits_instruction[6:0] == 7'h63
       ? {19'h0,
@@ -168,13 +167,14 @@ module decoder(
               ? 2'h1
               : {2{needs_memory}};
   assign io_decoded_instruction_bits_RS_type =
-    _is_INT_T | IMMEDIATE | _is_INT_T_3 | _is_INT_T_5 | _is_INT_T_7
+    _is_INT_T | IMMEDIATE | _is_INT_T_3 | _is_INT_T_5 | _is_INT_T_7 | _is_INT_T_9
+    | _is_INT_T_11
       ? 2'h0
       : IS_LOAD | IS_STORE ? 2'h1 : 2'h2;
   assign io_decoded_instruction_bits_needs_ALU = needs_ALU;
   assign io_decoded_instruction_bits_needs_branch_unit = needs_branch_unit;
   assign io_decoded_instruction_bits_needs_CSRs = 1'h0;
-  assign io_decoded_instruction_bits_SUBTRACT = _is_INT_T & _needs_ALU_T_1;
+  assign io_decoded_instruction_bits_SUBTRACT = (_is_INT_T | IMMEDIATE) & _needs_ALU_T_1;
   assign io_decoded_instruction_bits_MULTIPLY =
     _is_INT_T & io_instruction_bits_instruction[31:25] == 7'h1;
   assign io_decoded_instruction_bits_IMMEDIATE = IMMEDIATE;
