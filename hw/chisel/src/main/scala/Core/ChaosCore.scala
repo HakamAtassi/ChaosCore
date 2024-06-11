@@ -56,11 +56,14 @@ class ChaosCore(parameters:Parameters) extends Module{
         // D$ BACKEND MEM ACCESS //
         ///////////////////////////
 
-        // From DRAM
-        val backend_DRAM_resp               =   Flipped(Decoupled(new DRAM_resp(parameters)))
+        //// From DRAM
+        //val backend_DRAM_resp               =   Flipped(Decoupled(new DRAM_resp(parameters)))
+        //// To DRAM
+        //val backend_DRAM_request            =   Decoupled(new DRAM_request(parameters))
 
-        // To DRAM
-        val backend_DRAM_request            =   Decoupled(new DRAM_request(parameters))
+
+        val data_cache_response     =   Flipped(Decoupled(new data_cache_response(parameters))) // From MEM
+        val data_cache_request      =   Decoupled(new data_cache_request(parameters))     // To MEM
     })
 
 
@@ -82,8 +85,8 @@ class ChaosCore(parameters:Parameters) extends Module{
     // BACKEND <> DRAM //
     /////////////////////
 
-    backend.io.DRAM_resp        <>  io.backend_DRAM_resp
-    backend.io.DRAM_request     <>  io.backend_DRAM_request
+    backend.io.data_cache_response    <>  io.data_cache_response
+    backend.io.data_cache_request     <>  io.data_cache_request
 
 
     ////////////////////
@@ -188,6 +191,11 @@ class ChaosCore(parameters:Parameters) extends Module{
 
     // ROB and RS do not update until ready
     backend.io.backend_packet   <> frontend.io.renamed_decoded_fetch_packet
+
+    for(i <- 0 until fetchWidth){   // pass along the ROB index for each instruction (for commit and PC read)
+        backend.io.backend_packet.bits.decoded_instruction(i).ROB_index := ROB.io.ROB_index
+    }
+
     ROB.io.ROB_packet           <> frontend.io.renamed_decoded_fetch_packet
 
     // Connect branch unit to PC file (which exists in the ROB)

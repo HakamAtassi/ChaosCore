@@ -316,10 +316,12 @@ class instruction_cache(parameters:Parameters) extends Module{
         instruction_vec(instruction) := hit_instruction_data((instruction+1)*32-1, (instruction)*32)    
     }
 
-    io.cache_data.bits.instructions := DontCare
+
 
     for(i <- 0 until fetchWidth){
-        io.cache_data.bits.instructions(i).instruction:= instruction_vec(RegNext(current_packet.fetch_packet)*fetchWidth.U + i.U)   
+        io.cache_data.bits.instructions(i).instruction  := instruction_vec(RegNext(current_packet.fetch_packet)*fetchWidth.U + i.U)   
+        io.cache_data.bits.instructions(i).packet_index := i.U
+        io.cache_data.bits.instructions(i).ROB_index    := 0.U
     }
 
     val validator = Module(new instruction_validator(fetchWidth=fetchWidth))

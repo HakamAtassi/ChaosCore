@@ -412,15 +412,23 @@ module ROB(
   input  [6:0]  io_commit_TOS,
                 io_commit_NEXT,
   input  [3:0]  io_commit_RAT_IDX,
+  output [5:0]  io_ROB_index,
   input  [5:0]  io_PC_file_exec_addr,
   output [5:0]  io_PC_file_exec_data
 );
 
-  wire [5:0]  front_index;
   wire        _ROB_entry_banks_3_io_readDataB_valid;
+  wire        _ROB_entry_banks_3_io_readDataB_is_load;
+  wire        _ROB_entry_banks_3_io_readDataB_is_store;
   wire        _ROB_entry_banks_2_io_readDataB_valid;
+  wire        _ROB_entry_banks_2_io_readDataB_is_load;
+  wire        _ROB_entry_banks_2_io_readDataB_is_store;
   wire        _ROB_entry_banks_1_io_readDataB_valid;
+  wire        _ROB_entry_banks_1_io_readDataB_is_load;
+  wire        _ROB_entry_banks_1_io_readDataB_is_store;
   wire        _ROB_entry_banks_0_io_readDataB_valid;
+  wire        _ROB_entry_banks_0_io_readDataB_is_load;
+  wire        _ROB_entry_banks_0_io_readDataB_is_store;
   wire        _ROB_WB_banks_3_io_readDataG_busy;
   wire        _ROB_WB_banks_2_io_readDataG_busy;
   wire        _ROB_WB_banks_1_io_readDataG_busy;
@@ -434,15 +442,20 @@ module ROB(
   wire        commit =
     _shared_mem_io_readDataB_row_valid
     & (_ROB_WB_banks_0_io_readDataG_busy & _ROB_entry_banks_0_io_readDataB_valid
-       | ~_ROB_entry_banks_0_io_readDataB_valid)
+       | ~_ROB_entry_banks_0_io_readDataB_valid | _ROB_entry_banks_0_io_readDataB_is_load
+       | _ROB_entry_banks_0_io_readDataB_is_store)
     & (_ROB_WB_banks_1_io_readDataG_busy & _ROB_entry_banks_1_io_readDataB_valid
-       | ~_ROB_entry_banks_1_io_readDataB_valid)
+       | ~_ROB_entry_banks_1_io_readDataB_valid | _ROB_entry_banks_1_io_readDataB_is_load
+       | _ROB_entry_banks_1_io_readDataB_is_store)
     & (_ROB_WB_banks_2_io_readDataG_busy & _ROB_entry_banks_2_io_readDataB_valid
-       | ~_ROB_entry_banks_2_io_readDataB_valid)
+       | ~_ROB_entry_banks_2_io_readDataB_valid | _ROB_entry_banks_2_io_readDataB_is_load
+       | _ROB_entry_banks_2_io_readDataB_is_store)
     & (_ROB_WB_banks_3_io_readDataG_busy & _ROB_entry_banks_3_io_readDataB_valid
-       | ~_ROB_entry_banks_3_io_readDataB_valid);
+       | ~_ROB_entry_banks_3_io_readDataB_valid | _ROB_entry_banks_3_io_readDataB_is_load
+       | _ROB_entry_banks_3_io_readDataB_is_store);
+  reg  [5:0]  io_ROB_output_bits_ROB_index_REG;
   wire [6:0]  _front_pointer_T_2 = front_pointer + 7'h1;
-  assign front_index = commit ? _front_pointer_T_2[5:0] : front_pointer[5:0];
+  wire [5:0]  front_index = commit ? _front_pointer_T_2[5:0] : front_pointer[5:0];
   assign full = front_index == back_pointer[5:0] & front_pointer != back_pointer;
   always @(posedge clock) begin
     if (reset) begin
@@ -456,6 +469,7 @@ module ROB(
         front_pointer <= front_pointer + {6'h0, commit};
       back_pointer <= back_pointer + {6'h0, allocate};
     end
+    io_ROB_output_bits_ROB_index_REG <= front_index;
   end // always @(posedge)
   ROB_shared_mem shared_mem (
     .clock                   (clock),
@@ -574,8 +588,8 @@ module ROB(
     .io_addrB                (front_index),
     .io_readDataB_valid      (_ROB_entry_banks_0_io_readDataB_valid),
     .io_readDataB_is_branch  (io_ROB_output_bits_ROB_entries_0_is_branch),
-    .io_readDataB_is_load    (io_ROB_output_bits_ROB_entries_0_is_load),
-    .io_readDataB_is_store   (io_ROB_output_bits_ROB_entries_0_is_store)
+    .io_readDataB_is_load    (_ROB_entry_banks_0_io_readDataB_is_load),
+    .io_readDataB_is_store   (_ROB_entry_banks_0_io_readDataB_is_store)
   );
   ROB_entry_mem ROB_entry_banks_1 (
     .clock                   (clock),
@@ -588,8 +602,8 @@ module ROB(
     .io_addrB                (front_index),
     .io_readDataB_valid      (_ROB_entry_banks_1_io_readDataB_valid),
     .io_readDataB_is_branch  (io_ROB_output_bits_ROB_entries_1_is_branch),
-    .io_readDataB_is_load    (io_ROB_output_bits_ROB_entries_1_is_load),
-    .io_readDataB_is_store   (io_ROB_output_bits_ROB_entries_1_is_store)
+    .io_readDataB_is_load    (_ROB_entry_banks_1_io_readDataB_is_load),
+    .io_readDataB_is_store   (_ROB_entry_banks_1_io_readDataB_is_store)
   );
   ROB_entry_mem ROB_entry_banks_2 (
     .clock                   (clock),
@@ -602,8 +616,8 @@ module ROB(
     .io_addrB                (front_index),
     .io_readDataB_valid      (_ROB_entry_banks_2_io_readDataB_valid),
     .io_readDataB_is_branch  (io_ROB_output_bits_ROB_entries_2_is_branch),
-    .io_readDataB_is_load    (io_ROB_output_bits_ROB_entries_2_is_load),
-    .io_readDataB_is_store   (io_ROB_output_bits_ROB_entries_2_is_store)
+    .io_readDataB_is_load    (_ROB_entry_banks_2_io_readDataB_is_load),
+    .io_readDataB_is_store   (_ROB_entry_banks_2_io_readDataB_is_store)
   );
   ROB_entry_mem ROB_entry_banks_3 (
     .clock                   (clock),
@@ -616,16 +630,33 @@ module ROB(
     .io_addrB                (front_index),
     .io_readDataB_valid      (_ROB_entry_banks_3_io_readDataB_valid),
     .io_readDataB_is_branch  (io_ROB_output_bits_ROB_entries_3_is_branch),
-    .io_readDataB_is_load    (io_ROB_output_bits_ROB_entries_3_is_load),
-    .io_readDataB_is_store   (io_ROB_output_bits_ROB_entries_3_is_store)
+    .io_readDataB_is_load    (_ROB_entry_banks_3_io_readDataB_is_load),
+    .io_readDataB_is_store   (_ROB_entry_banks_3_io_readDataB_is_store)
   );
   assign io_ROB_packet_ready = ~full;
   assign io_ROB_output_valid = commit;
-  assign io_ROB_output_bits_ROB_index = front_index[3:0];
+  assign io_ROB_output_bits_ROB_index = io_ROB_output_bits_ROB_index_REG[3:0];
   assign io_ROB_output_bits_ROB_entries_0_valid = _ROB_entry_banks_0_io_readDataB_valid;
+  assign io_ROB_output_bits_ROB_entries_0_is_load =
+    _ROB_entry_banks_0_io_readDataB_is_load;
+  assign io_ROB_output_bits_ROB_entries_0_is_store =
+    _ROB_entry_banks_0_io_readDataB_is_store;
   assign io_ROB_output_bits_ROB_entries_1_valid = _ROB_entry_banks_1_io_readDataB_valid;
+  assign io_ROB_output_bits_ROB_entries_1_is_load =
+    _ROB_entry_banks_1_io_readDataB_is_load;
+  assign io_ROB_output_bits_ROB_entries_1_is_store =
+    _ROB_entry_banks_1_io_readDataB_is_store;
   assign io_ROB_output_bits_ROB_entries_2_valid = _ROB_entry_banks_2_io_readDataB_valid;
+  assign io_ROB_output_bits_ROB_entries_2_is_load =
+    _ROB_entry_banks_2_io_readDataB_is_load;
+  assign io_ROB_output_bits_ROB_entries_2_is_store =
+    _ROB_entry_banks_2_io_readDataB_is_store;
   assign io_ROB_output_bits_ROB_entries_3_valid = _ROB_entry_banks_3_io_readDataB_valid;
+  assign io_ROB_output_bits_ROB_entries_3_is_load =
+    _ROB_entry_banks_3_io_readDataB_is_load;
+  assign io_ROB_output_bits_ROB_entries_3_is_store =
+    _ROB_entry_banks_3_io_readDataB_is_store;
+  assign io_ROB_index = back_pointer[5:0];
   assign io_PC_file_exec_data = _shared_mem_io_readDataC_fetch_PC[5:0];
 endmodule
 

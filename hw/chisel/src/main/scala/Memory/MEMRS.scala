@@ -88,15 +88,18 @@ class MEMRS(parameters:Parameters) extends Module{
 
     val written_vec = Wire(Vec(fetchWidth, Bool()))
 
-
-    var j = 0
     for(i <- 0 until dispatchWidth){
         written_vec(i) := 0.B
         when(io.backend_packet(i).valid && io.backend_packet(i).ready){
-            reservation_station(back_index + j.U).decoded_instruction <> io.backend_packet(i).bits
-            reservation_station(back_index + j.U).valid              := 1.B
             written_vec(i) := 1.B
-            j = j + 1
+        }
+    }
+
+    for(i <- 0 until dispatchWidth){
+        when(written_vec(i)){
+            val index_offset = PopCount(written_vec.take(i+1))-1.U
+            reservation_station(back_index + index_offset).decoded_instruction <> io.backend_packet(i).bits
+            reservation_station(back_index + index_offset).valid              := 1.B
         }
     }
     back_pointer := back_pointer + PopCount(written_vec)

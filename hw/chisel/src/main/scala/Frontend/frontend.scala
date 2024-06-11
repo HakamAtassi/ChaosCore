@@ -197,7 +197,6 @@ class frontend(parameters:Parameters) extends Module{
     //val is_INTRS = instruction_queue.io.out.map(_.bits.RS_type === RS_types.INT)
     //val is_MEMRS = instruction_queue.io.out.map(_.bits.RS_type === RS_types.MEM)
 
-    instruction_queue.io.out.ready := 0.B   // TODO: 
 
 
     ////////////
@@ -220,7 +219,6 @@ class frontend(parameters:Parameters) extends Module{
     // while restoring the RAT and other structures to the mispredicted state. This is probably a pretty likely case
     // So make sure its verified correctly. 
     
-
     rename.io.FU_outputs           <>     io.FU_outputs
 
     // FIXME: This needs to be either fine grain or course grain

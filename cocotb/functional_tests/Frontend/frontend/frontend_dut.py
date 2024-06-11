@@ -30,7 +30,6 @@ class frontend_dut:
 
     # complete class body...
 
-
     def write_dram_resp(self, data=0, valid = 0):
         self.dut.io_DRAM_resp_valid.value = valid
         self.dut.io_DRAM_resp_bits_data.value = data
@@ -50,91 +49,134 @@ class frontend_dut:
 
     def get_renamed_decoded_fetch_packet(self):
         outputs = {}
-        outputs["valid"]            = [0] * 4
-        outputs["RS1_ready"]        = [0] * 4
-        outputs["RS2_ready"]        = [0] * 4
-        outputs["RD"]               = [0] * 4
-        outputs["RD_valid"]         = [0] * 4
-        outputs["RS1"]              = [0] * 4
-        outputs["RS1_valid"]        = [0] * 4
-        outputs["RS2"]              = [0] * 4
-        outputs["RS2_valid"]        = [0] * 4
-        outputs["IMM"]              = [0] * 4
-        outputs["FUNCT3"]           = [0] * 4
-        outputs["packet_index"]     = [0] * 4
-        outputs["ROB_index"]        = [0] * 4
-        outputs["instructionType"]  = [0] * 4
-        outputs["portID"]           = [0] * 4
-        outputs["RS_type"]          = [0] * 4
-        outputs["needs_ALU"]        = [0] * 4
+
+        outputs["RS1_ready"]    = [0] * 4
+        outputs["RS2_ready"]    = [0] * 4
+        outputs["RD"]           = [0] * 4
+        outputs["RD_valid"]     = [0] * 4
+        outputs["RS1"]          = [0] * 4
+        outputs["RS1_valid"]    = [0] * 4
+        outputs["RS2"]          = [0] * 4
+        outputs["RS2_valid"]    = [0] * 4
+        outputs["IMM"]          = [0] * 4
+        outputs["FUNCT3"]       = [0] * 4
+        outputs["packet_index"] = [0] * 4
+        outputs["ROB_index"]    = [0] * 4
+        outputs["instructionType"] = [0] * 4
+        outputs["portID"]       = [0] * 4
+        outputs["RS_type"]      = [0] * 4
+        outputs["needs_ALU"]    = [0] * 4
         outputs["needs_branch_unit"] = [0] * 4
-        outputs["needs_CSRs"]       = [0] * 4
-        outputs["SUBTRACT"]         = [0] * 4
-        outputs["MULTIPLY"]         = [0] * 4
-        outputs["IMMEDIATE"]        = [0] * 4
-        outputs["IS_LOAD"]          = [0] * 4
-        outputs["IS_STORE"]         = [0] * 4
+        outputs["needs_CSRs"]   = [0] * 4
+        outputs["SUBTRACT"]     = [0] * 4
+        outputs["MULTIPLY"]     = [0] * 4
+        outputs["IMMEDIATE"]    = [0] * 4
+        outputs["IS_LOAD"]      = [0] * 4
+        outputs["IS_STORE"]     = [0] * 4
+        outputs["valid_bits"]   = [0] * 4
+
+        outputs["fetch_packet_valid"]                  = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_valid").value)
+        outputs["fetch_PC"]                      = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_fetch_PC").value)
 
         for i in range(4):
-            outputs["valid"][i] = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_{i}_valid").value)
-            outputs["RS1_ready"][i] = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_{i}_bits_ready_bits_RS1_ready").value)
-            outputs["RS2_ready"][i] = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_{i}_bits_ready_bits_RS2_ready").value)
-            outputs["RD"][i] = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_{i}_bits_RD").value)
-            outputs["RD_valid"][i] = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_{i}_bits_RD_valid").value)
-            outputs["RS1"][i] = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_{i}_bits_RS1").value)
-            outputs["RS1_valid"][i] = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_{i}_bits_RS1_valid").value)
-            outputs["RS2"][i] = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_{i}_bits_RS2").value)
-            outputs["RS2_valid"][i] = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_{i}_bits_RS2_valid").value)
-            outputs["IMM"][i] = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_{i}_bits_IMM").value)
-            outputs["FUNCT3"][i] = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_{i}_bits_FUNCT3").value)
-            outputs["packet_index"][i] = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_{i}_bits_packet_index").value)
-            outputs["ROB_index"][i] = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_{i}_bits_ROB_index").value)
-            outputs["instructionType"][i] = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_{i}_bits_instructionType").value)
-            outputs["portID"][i] = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_{i}_bits_portID").value)
-            outputs["RS_type"][i] = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_{i}_bits_RS_type").value)
-            outputs["needs_ALU"][i] = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_{i}_bits_needs_ALU").value)
-            outputs["needs_branch_unit"][i] = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_{i}_bits_needs_branch_unit").value)
-            outputs["needs_CSRs"][i] = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_{i}_bits_needs_CSRs").value)
-            outputs["SUBTRACT"][i] = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_{i}_bits_SUBTRACT").value)
-            outputs["MULTIPLY"][i] = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_{i}_bits_MULTIPLY").value)
-            outputs["IMMEDIATE"][i] = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_{i}_bits_IMMEDIATE").value)
-            outputs["IS_LOAD"][i] = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_{i}_bits_IS_LOAD").value)
-            outputs["IS_STORE"][i] = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_{i}_bits_IS_STORE").value)
+            outputs["RS1_ready"][i]                     = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_ready_bits_RS1_ready").value)
+            outputs["RS2_ready"][i]                     = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_ready_bits_RS2_ready").value)
+            outputs["RD"][i]                            = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_RD").value)
+            outputs["RD_valid"][i]                      = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_RD_valid").value)
+            outputs["RS1"][i]                           = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_RS1").value)
+            outputs["RS1_valid"][i]                     = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_RS1_valid").value)
+            outputs["RS2"][i]                           = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_RS2").value)
+            outputs["RS2_valid"][i]                     = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_RS2_valid").value)
+            outputs["IMM"][i]                           = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_IMM").value)
+            outputs["FUNCT3"][i]                        = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_FUNCT3").value)
+            outputs["packet_index"][i]                  = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_packet_index").value)
+            outputs["ROB_index"][i]                     = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_ROB_index").value)
+            outputs["instructionType"][i]               = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_instructionType").value)
+            outputs["portID"][i]                        = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_portID").value)
+            outputs["RS_type"][i]                       = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_RS_type").value)
+            outputs["needs_ALU"][i]                     = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_needs_ALU").value)
+            outputs["needs_branch_unit"][i]             = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_needs_branch_unit").value)
+            outputs["needs_CSRs"][i]                    = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_needs_CSRs").value)
+            outputs["SUBTRACT"][i]                      = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_SUBTRACT").value)
+            outputs["MULTIPLY"][i]                      = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_MULTIPLY").value)
+            outputs["IMMEDIATE"][i]                     = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_IMMEDIATE").value)
+            outputs["IS_LOAD"][i]                       = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_IS_LOAD").value)
+            outputs["IS_STORE"][i]                      = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_IS_STORE").value)
+            outputs["valid_bits"][i]                    = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_valid_bits_{i}").value)
 
         return outputs
 
 
-
     def print_renamed_decoded_fetch_packet(self):
-        outputs = self.get_renamed_decoded_fetch_packet()
-        headers = ["Data Name"] + [f"Entry {i}" for i in range(len(outputs["valid"]))]
-        table = []
+        data = self.get_renamed_decoded_fetch_packet()
+        for key, value in data.items(): # this does not
+            print(f"{key} \t\t {value}")
 
-        for key in outputs:
-            row = [key] + outputs[key]
-            table.append(row)
+        print("")
 
-        print(tabulate(table, headers=headers, tablefmt="grid"))
-
-
-    def print_decoder_outputs(self):
-        outputs = self.get_decoder_outputs()
-        headers = ["Data Name"] + [f"Entry {i}" for i in range(len(outputs["valid"]))]
-        table = []
-
-        for key in outputs:
-            row = [key] + outputs[key]
-            table.append(row)
-
-        print(tabulate(table, headers=headers, tablefmt="grid"))
 
     def get_decoder_outputs(self):
         outputs = {}
-        outputs["valid"] = [0] * 4
+
+        outputs["RD"]               = [0, 0, 0, 0]
+        outputs["RD_valid"]         = [0, 0, 0, 0]
+        outputs["RS1"]              = [0, 0, 0, 0]
+        outputs["RS1_valid"]        = [0, 0, 0, 0]
+        outputs["RS2"]              = [0, 0, 0, 0]
+        outputs["RS2_valid"]        = [0, 0, 0, 0]
+        outputs["IMM"]              = [0, 0, 0, 0]
+        outputs["FUNCT3"]           = [0, 0, 0, 0]
+        outputs["packet_index"]     = [0, 0, 0, 0]
+        outputs["ROB_index"]        = [0, 0, 0, 0]
+        outputs["instructionType"]  = [0, 0, 0, 0]
+        outputs["portID"]           = [0, 0, 0, 0]
+        outputs["RS_type"]          = [0, 0, 0, 0]
+        outputs["needs_ALU"]        = [0, 0, 0, 0]
+        outputs["needs_branch_unit"]= [0, 0, 0, 0]
+        outputs["SUBTRACT"]         = [0, 0, 0, 0]
+        outputs["MULTIPLY"]         = [0, 0, 0, 0]
+        outputs["IMMEDIATE"]        = [0, 0, 0, 0]
+        outputs["IS_LOAD"]          = [0, 0, 0, 0]
+        outputs["IS_STORE"]         = [0, 0, 0, 0]
+        outputs["valid_bits"]       = [0, 0, 0, 0]
+
+        outputs["fetch_packet_valid"]   =   getattr(self.dut, f"decoders.io_decoded_fetch_packet_valid").value
+        outputs["fetch_packet_PC"]      =   getattr(self.dut, f"decoders.io_decoded_fetch_packet_bits_fetch_PC").value
+
+        for i in range(4):
+            outputs["RD"][i] = getattr(self.dut, f"decoders.io_decoded_fetch_packet_bits_decoded_instruction_{i}_RD").value
+            outputs["RD_valid"][i] = getattr(self.dut, f"decoders.io_decoded_fetch_packet_bits_decoded_instruction_{i}_RD_valid").value
+            outputs["RS1"][i] = getattr(self.dut, f"decoders.io_decoded_fetch_packet_bits_decoded_instruction_{i}_RS1").value
+            outputs["RS1_valid"][i] = getattr(self.dut, f"decoders.io_decoded_fetch_packet_bits_decoded_instruction_{i}_RS1_valid").value
+            outputs["RS2"][i] = getattr(self.dut, f"decoders.io_decoded_fetch_packet_bits_decoded_instruction_{i}_RS2").value
+            outputs["RS2_valid"][i] = getattr(self.dut, f"decoders.io_decoded_fetch_packet_bits_decoded_instruction_{i}_RS2_valid").value
+            outputs["IMM"][i] = getattr(self.dut, f"decoders.io_decoded_fetch_packet_bits_decoded_instruction_{i}_IMM").value
+            outputs["FUNCT3"][i] = getattr(self.dut, f"decoders.io_decoded_fetch_packet_bits_decoded_instruction_{i}_FUNCT3").value
+            outputs["packet_index"][i] = getattr(self.dut, f"decoders.io_decoded_fetch_packet_bits_decoded_instruction_{i}_packet_index").value
+            outputs["ROB_index"][i] = getattr(self.dut, f"decoders.io_decoded_fetch_packet_bits_decoded_instruction_{i}_ROB_index").value
+            outputs["instructionType"][i] = getattr(self.dut, f"decoders.io_decoded_fetch_packet_bits_decoded_instruction_{i}_instructionType").value
+            outputs["portID"][i] = getattr(self.dut, f"decoders.io_decoded_fetch_packet_bits_decoded_instruction_{i}_portID").value
+            outputs["RS_type"][i] = getattr(self.dut, f"decoders.io_decoded_fetch_packet_bits_decoded_instruction_{i}_RS_type").value
+            outputs["needs_ALU"][i] = getattr(self.dut, f"decoders.io_decoded_fetch_packet_bits_decoded_instruction_{i}_needs_ALU").value
+            outputs["needs_branch_unit"][i] = getattr(self.dut, f"decoders.io_decoded_fetch_packet_bits_decoded_instruction_{i}_needs_branch_unit").value
+            outputs["SUBTRACT"][i] = getattr(self.dut, f"decoders.io_decoded_fetch_packet_bits_decoded_instruction_{i}_SUBTRACT").value
+            outputs["MULTIPLY"][i] = getattr(self.dut, f"decoders.io_decoded_fetch_packet_bits_decoded_instruction_{i}_MULTIPLY").value
+            outputs["IMMEDIATE"][i] = getattr(self.dut, f"decoders.io_decoded_fetch_packet_bits_decoded_instruction_{i}_IMMEDIATE").value
+            outputs["IS_LOAD"][i] = getattr(self.dut, f"decoders.io_decoded_fetch_packet_bits_decoded_instruction_{i}_IS_LOAD").value
+            outputs["IS_STORE"][i] = getattr(self.dut, f"decoders.io_decoded_fetch_packet_bits_decoded_instruction_{i}_IS_STORE").value
+            outputs["valid_bits"][i] = getattr(self.dut, f"decoders.io_decoded_fetch_packet_bits_valid_bits_{i}").value
+
+        return outputs
+
+    def get_instruction_Q_outputs(self):
+        outputs = {}
+
         outputs["RD"] = [0] * 4
         outputs["RD_valid"] = [0] * 4
         outputs["RS1"] = [0] * 4
+        outputs["RS1_valid"] = [0] * 4
         outputs["RS2"] = [0] * 4
+        outputs["RS2_valid"] = [0] * 4
         outputs["IMM"] = [0] * 4
         outputs["FUNCT3"] = [0] * 4
         outputs["packet_index"] = [0] * 4
@@ -144,36 +186,43 @@ class frontend_dut:
         outputs["RS_type"] = [0] * 4
         outputs["needs_ALU"] = [0] * 4
         outputs["needs_branch_unit"] = [0] * 4
+        outputs["needs_CSRs"] = [0] * 4
         outputs["SUBTRACT"] = [0] * 4
         outputs["MULTIPLY"] = [0] * 4
         outputs["IMMEDIATE"] = [0] * 4
         outputs["IS_LOAD"] = [0] * 4
         outputs["IS_STORE"] = [0] * 4
+        outputs["valid_bits"] = [0] * 4
+
+        outputs["valid"]    = int(getattr(self.dut, f"instruction_queue.io_out_valid").value)
+        outputs["fetch_PC"] = int(getattr(self.dut, f"instruction_queue.io_out_bits_fetch_PC").value)
 
         for i in range(4):
-            outputs["valid"][i]             = int(getattr(self.dut, f"decoders.io_decoded_fetch_packet_{i}_valid").value)
-            outputs["RD"][i]                = int(getattr(self.dut, f"decoders.io_decoded_fetch_packet_{i}_bits_RD").value)
-            outputs["RD_valid"][i]          = int(getattr(self.dut, f"decoders.io_decoded_fetch_packet_{i}_bits_RD_valid").value)
-            outputs["RS1"][i]               = int(getattr(self.dut, f"decoders.io_decoded_fetch_packet_{i}_bits_RS1").value)
-            outputs["RS2"][i]               = int(getattr(self.dut, f"decoders.io_decoded_fetch_packet_{i}_bits_RS2").value)
-            outputs["IMM"][i]               = int(getattr(self.dut, f"decoders.io_decoded_fetch_packet_{i}_bits_IMM").value)
-            outputs["FUNCT3"][i]            = int(getattr(self.dut, f"decoders.io_decoded_fetch_packet_{i}_bits_FUNCT3").value)
-            outputs["packet_index"][i]      = int(getattr(self.dut, f"decoders.io_decoded_fetch_packet_{i}_bits_packet_index").value)
-            outputs["ROB_index"][i]         = int(getattr(self.dut, f"decoders.io_decoded_fetch_packet_{i}_bits_ROB_index").value)
-            outputs["instructionType"][i]   = int(getattr(self.dut, f"decoders.io_decoded_fetch_packet_{i}_bits_instructionType").value)
-            outputs["portID"][i]            = int(getattr(self.dut, f"decoders.io_decoded_fetch_packet_{i}_bits_portID").value)
-            outputs["RS_type"][i]           = int(getattr(self.dut, f"decoders.io_decoded_fetch_packet_{i}_bits_RS_type").value)
-            outputs["needs_ALU"][i]         = int(getattr(self.dut, f"decoders.io_decoded_fetch_packet_{i}_bits_needs_ALU").value)
-            outputs["needs_branch_unit"][i] = int(getattr(self.dut, f"decoders.io_decoded_fetch_packet_{i}_bits_needs_branch_unit").value)
-            outputs["SUBTRACT"][i]          = int(getattr(self.dut, f"decoders.io_decoded_fetch_packet_{i}_bits_SUBTRACT").value)
-            outputs["MULTIPLY"][i]          = int(getattr(self.dut, f"decoders.io_decoded_fetch_packet_{i}_bits_MULTIPLY").value)
-            outputs["IMMEDIATE"][i]         = int(getattr(self.dut, f"decoders.io_decoded_fetch_packet_{i}_bits_IMMEDIATE").value)
-            outputs["IS_LOAD"][i]           = int(getattr(self.dut, f"decoders.io_decoded_fetch_packet_{i}_bits_IS_LOAD").value)
-            outputs["IS_STORE"][i]          = int(getattr(self.dut, f"decoders.io_decoded_fetch_packet_{i}_bits_IS_STORE").value)
+            outputs["RD"][i]                = int(getattr(self.dut, f"instruction_queue.io_out_bits_decoded_instruction_{i}_RD").value)
+            outputs["RD_valid"][i]          = int(getattr(self.dut, f"instruction_queue.io_out_bits_decoded_instruction_{i}_RD_valid").value)
+            outputs["RS1"][i]               = int(getattr(self.dut, f"instruction_queue.io_out_bits_decoded_instruction_{i}_RS1").value)
+            outputs["RS1_valid"][i]         = int(getattr(self.dut, f"instruction_queue.io_out_bits_decoded_instruction_{i}_RS1_valid").value)
+            outputs["RS2"][i]               = int(getattr(self.dut, f"instruction_queue.io_out_bits_decoded_instruction_{i}_RS2").value)
+            outputs["RS2_valid"][i]         = int(getattr(self.dut, f"instruction_queue.io_out_bits_decoded_instruction_{i}_RS2_valid").value)
+            outputs["IMM"][i]               = int(getattr(self.dut, f"instruction_queue.io_out_bits_decoded_instruction_{i}_IMM").value)
+            outputs["FUNCT3"][i]            = int(getattr(self.dut, f"instruction_queue.io_out_bits_decoded_instruction_{i}_FUNCT3").value)
+            outputs["packet_index"][i]      = int(getattr(self.dut, f"instruction_queue.io_out_bits_decoded_instruction_{i}_packet_index").value)
+            outputs["ROB_index"][i]         = int(getattr(self.dut, f"instruction_queue.io_out_bits_decoded_instruction_{i}_ROB_index").value)
+            outputs["instructionType"][i]   = int(getattr(self.dut, f"instruction_queue.io_out_bits_decoded_instruction_{i}_instructionType").value)
+            outputs["portID"][i]            = int(getattr(self.dut, f"instruction_queue.io_out_bits_decoded_instruction_{i}_portID").value)
+            outputs["RS_type"][i]           = int(getattr(self.dut, f"instruction_queue.io_out_bits_decoded_instruction_{i}_RS_type").value)
+            outputs["needs_ALU"][i]         = int(getattr(self.dut, f"instruction_queue.io_out_bits_decoded_instruction_{i}_needs_ALU").value)
+            outputs["needs_branch_unit"][i] = int(getattr(self.dut, f"instruction_queue.io_out_bits_decoded_instruction_{i}_needs_branch_unit").value)
+            outputs["needs_CSRs"][i]        = int(getattr(self.dut, f"instruction_queue.io_out_bits_decoded_instruction_{i}_needs_CSRs").value)
+            outputs["SUBTRACT"][i]          = int(getattr(self.dut, f"instruction_queue.io_out_bits_decoded_instruction_{i}_SUBTRACT").value)
+            outputs["MULTIPLY"][i]          = int(getattr(self.dut, f"instruction_queue.io_out_bits_decoded_instruction_{i}_MULTIPLY").value)
+            outputs["IMMEDIATE"][i]         = int(getattr(self.dut, f"instruction_queue.io_out_bits_decoded_instruction_{i}_IMMEDIATE").value)
+            outputs["IS_LOAD"][i]           = int(getattr(self.dut, f"instruction_queue.io_out_bits_decoded_instruction_{i}_IS_LOAD").value)
+            outputs["IS_STORE"][i]          = int(getattr(self.dut, f"instruction_queue.io_out_bits_decoded_instruction_{i}_IS_STORE").value)
+            outputs["valid_bits"][i]        = int(getattr(self.dut, f"instruction_queue.io_out_bits_valid_bits_{i}").value)
 
         return outputs
-
-    
+        
     #####################
     ## CACHE FUNCTIONS ##
     #####################
@@ -253,6 +302,12 @@ class frontend_dut:
         self.DRAM_request       =   self.read_output()["request_valid"]
         self.DRAM_request_addr  =   self.read_output()["request_addr"]
 
+
+    def set_backend_ready(self, ready):
+        getattr(self.dut, f"io_renamed_decoded_fetch_packet_ready").value = ready
+
+    def set_FTQ_ready(self, ready):
+        getattr(self.dut, f"io_predictions_ready").value = ready
     
     ####################
     ## WAIT FUNCTIONS ##
@@ -260,12 +315,18 @@ class frontend_dut:
 
     # What useful things may you want to wait for (but dont care how long it takes to get there)?
 
+    async def wait_instruction_queue_output_valid(self):
+        while(1):
+            await ReadOnly()
+            if(self.get_instruction_Q_outputs()["valid"]):
+                return 
+            await self.update()
+
     async def wait_frontend_output_valid(self):
         while(1):
             await ReadOnly()
-            for i in range(4):
-                if(self.get_renamed_decoded_fetch_packet()["valid"][i]):
-                    return 
+            if(self.get_renamed_decoded_fetch_packet()["fetch_packet_valid"]):
+                return 
             await self.update()
 
     async def wait_cache_request_valid(self):
@@ -277,10 +338,9 @@ class frontend_dut:
 
     async def wait_decoder_outputs_valid(self):
         while(1):
-            for i in range(4):
-                await ReadOnly()
-                if(self.get_decoder_outputs()["valid"][i]):
-                    return 
+            await ReadOnly()
+            if(self.get_decoder_outputs()["fetch_packet_valid"]):
+                return 
             await self.update()
 
 

@@ -71,3 +71,7 @@ def test_good_to_go_backed_up():
         configs["testcase"] = "test_good_to_go_backed_up"
         run(**configs)
 
+def test_write_1_not_first():
+        configs["testcase"] = "test_write_1_not_first"
+        run(**configs)
+

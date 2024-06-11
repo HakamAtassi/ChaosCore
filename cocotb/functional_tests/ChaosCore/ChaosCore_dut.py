@@ -28,7 +28,7 @@ class ChaosCore_dut:
 
 
     def set_dram_ready(self, ready):
-        getattr(self.dut ,f"io_backend_DRAM_request_ready").value = ready
+        getattr(self.dut ,f"io_data_cache_response_ready").value = ready
         getattr(self.dut ,f"io_frontend_DRAM_request_ready").value = ready
 
     #def set_cache_ready(self, ready):
@@ -48,6 +48,98 @@ class ChaosCore_dut:
         outputs["request_wr_en"]        = int(self.dut.io_frontend_DRAM_request_bits_wr_en.value)
 
         return outputs
+
+    def get_instruction_fetch_output(self):
+
+        outputs = {}
+
+        outputs["valid"]            = int(getattr(self.dut, f"frontend.instruction_fetch.io_fetch_packet_valid").value)
+        #outputs["fetch_PC"]         = int(getattr(self.dut, f"frontend.instruction_fetch.io_fetch_packet_bits_fetch_PC").value)
+        #outputs["valid"]            = int(getattr(self.dut, f"frontend.instruction_fetch.io_predictions_valid").value)
+        #outputs["fetch_PC"]         = int(getattr(self.dut, f"frontend.instruction_fetch.io_predictions_bits_fetch_PC").value)
+        outputs["predicted_PC"]     = int(getattr(self.dut, f"frontend.instruction_fetch.io_predictions_bits_predicted_PC").value)
+        outputs["T_NT"]             = int(getattr(self.dut, f"frontend.instruction_fetch.io_predictions_bits_T_NT").value)
+        outputs["br_type"]          = int(getattr(self.dut, f"frontend.instruction_fetch.io_predictions_bits_br_type").value)
+        outputs["GHR"]              = int(getattr(self.dut, f"frontend.instruction_fetch.io_predictions_bits_GHR").value)
+        outputs["NEXT"]             = int(getattr(self.dut, f"frontend.instruction_fetch.io_predictions_bits_NEXT").value)
+        outputs["TOS"]              = int(getattr(self.dut, f"frontend.instruction_fetch.io_predictions_bits_TOS").value)
+        outputs["resolved_PC"]      = int(getattr(self.dut, f"frontend.instruction_fetch.io_predictions_bits_resolved_PC").value)
+
+
+        outputs["valid_bits"]        = [0,0,0,0]
+        outputs["instruction"]       = [0,0,0,0]
+        outputs["packet_index"]      = [0,0,0,0]
+        outputs["ROB_index"]         = [0,0,0,0]
+
+        for i in range(4):
+            outputs["valid_bits"][i]        = int(getattr(self.dut, f"frontend.instruction_fetch.io_fetch_packet_bits_valid_bits_{i}"))
+            outputs["instruction"][i]       = int(getattr(self.dut, f"frontend.instruction_fetch.io_fetch_packet_bits_instructions_{i}_instruction"))
+            outputs["packet_index"][i]      = int(getattr(self.dut, f"frontend.instruction_fetch.io_fetch_packet_bits_instructions_{i}_packet_index"))
+            outputs["ROB_index"][i]         = int(getattr(self.dut, f"frontend.instruction_fetch.io_fetch_packet_bits_instructions_{i}_ROB_index"))
+
+        return outputs
+
+
+    def get_frontend_output(self):
+        outputs = {}
+
+        outputs["RS1_ready"]    = [0] * 4
+        outputs["RS2_ready"]    = [0] * 4
+        outputs["RD"]           = [0] * 4
+        outputs["RD_valid"]     = [0] * 4
+        outputs["RS1"]          = [0] * 4
+        outputs["RS1_valid"]    = [0] * 4
+        outputs["RS2"]          = [0] * 4
+        outputs["RS2_valid"]    = [0] * 4
+        outputs["IMM"]          = [0] * 4
+        outputs["FUNCT3"]       = [0] * 4
+        outputs["packet_index"] = [0] * 4
+        outputs["ROB_index"]    = [0] * 4
+        outputs["instructionType"] = [0] * 4
+        outputs["portID"]       = [0] * 4
+        outputs["RS_type"]      = [0] * 4
+        outputs["needs_ALU"]    = [0] * 4
+        outputs["needs_branch_unit"] = [0] * 4
+        outputs["needs_CSRs"]   = [0] * 4
+        outputs["SUBTRACT"]     = [0] * 4
+        outputs["MULTIPLY"]     = [0] * 4
+        outputs["IMMEDIATE"]    = [0] * 4
+        outputs["IS_LOAD"]      = [0] * 4
+        outputs["IS_STORE"]     = [0] * 4
+        outputs["valid_bits"]   = [0] * 4
+
+        outputs["fetch_packet_valid"]                   = int(getattr(self.dut, f"frontend.io_renamed_decoded_fetch_packet_valid").value)
+        outputs["fetch_PC"]                             = int(getattr(self.dut, f"frontend.io_renamed_decoded_fetch_packet_bits_fetch_PC").value)
+
+
+        for i in range(4):
+            #outputs["RS1_ready"][i]                     = int(getattr(self.dut, f"frontend.io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_ready_bits_RS1_ready").value)
+            #outputs["RS2_ready"][i]                     = int(getattr(self.dut, f"frontend.io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_ready_bits_RS2_ready").value)
+            outputs["RD"][i]                            = int(getattr(self.dut, f"frontend.io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_RD").value)
+            outputs["RD_valid"][i]                      = int(getattr(self.dut, f"frontend.io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_RD_valid").value)
+            outputs["RS1"][i]                           = int(getattr(self.dut, f"frontend.io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_RS1").value)
+            outputs["RS1_valid"][i]                     = int(getattr(self.dut, f"frontend.io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_RS1_valid").value)
+            outputs["RS2"][i]                           = int(getattr(self.dut, f"frontend.io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_RS2").value)
+            outputs["RS2_valid"][i]                     = int(getattr(self.dut, f"frontend.io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_RS2_valid").value)
+            outputs["IMM"][i]                           = int(getattr(self.dut, f"frontend.io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_IMM").value)
+            outputs["FUNCT3"][i]                        = int(getattr(self.dut, f"frontend.io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_FUNCT3").value)
+            outputs["packet_index"][i]                  = int(getattr(self.dut, f"frontend.io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_packet_index").value)
+            #outputs["ROB_index"][i]                     = int(getattr(self.dut, f"frontend.io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_ROB_index").value)
+            outputs["instructionType"][i]               = int(getattr(self.dut, f"frontend.io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_instructionType").value)
+            outputs["portID"][i]                        = int(getattr(self.dut, f"frontend.io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_portID").value)
+            outputs["RS_type"][i]                       = int(getattr(self.dut, f"frontend.io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_RS_type").value)
+            outputs["needs_ALU"][i]                     = int(getattr(self.dut, f"frontend.io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_needs_ALU").value)
+            outputs["needs_branch_unit"][i]             = int(getattr(self.dut, f"frontend.io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_needs_branch_unit").value)
+            outputs["needs_CSRs"][i]                    = int(getattr(self.dut, f"frontend.io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_needs_CSRs").value)
+            outputs["SUBTRACT"][i]                      = int(getattr(self.dut, f"frontend.io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_SUBTRACT").value)
+            outputs["MULTIPLY"][i]                      = int(getattr(self.dut, f"frontend.io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_MULTIPLY").value)
+            outputs["IMMEDIATE"][i]                     = int(getattr(self.dut, f"frontend.io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_IMMEDIATE").value)
+            outputs["IS_LOAD"][i]                       = int(getattr(self.dut, f"frontend.io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_IS_LOAD").value)
+            outputs["IS_STORE"][i]                      = int(getattr(self.dut, f"frontend.io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_IS_STORE").value)
+            outputs["valid_bits"][i]                    = int(getattr(self.dut, f"frontend.io_renamed_decoded_fetch_packet_bits_valid_bits_{i}").value)
+
+        return outputs
+
 
     async def update(self):
         # await cycle
@@ -70,3 +162,9 @@ class ChaosCore_dut:
         self.DRAM_request       =   self.read_frontend_output()["request_valid"]
         self.DRAM_request_addr  =   self.read_frontend_output()["request_addr"]
 
+
+    def get_PRF(self):
+        PRF = [0]*64
+        for i in range(64):
+            PRF[i] = int(getattr(self.dut, f"backend.INT_PRF.mem_ext.Memory")[i].value)
+        return PRF

@@ -829,7 +829,9 @@ module branch_decoder(
               ? {20'h0, io_instruction[31:20]}
               : io_instruction[6:0] == 7'h23
                   ? {20'h0, io_instruction[31:25], io_instruction[11:7]}
-                  : io_instruction[6:0] == 7'h33 ? {io_instruction[31:12], 12'h0} : 32'h0;
+                  : io_instruction[6:0] == 7'h17 | io_instruction[6:0] == 7'h37
+                      ? {io_instruction[31:12], 12'h0}
+                      : 32'h0;
   wire        _RET_T_2 = io_instruction[19:15] == 5'h1;
   wire        CALL = JALR & io_instruction[11:7] == 5'h1 & _RET_T_2;
   wire        RET = JALR & io_instruction[11:7] == 5'h0 & _RET_T_2 & imm == 32'h0;
@@ -898,7 +900,9 @@ module branch_decoder_1(
               ? {20'h0, io_instruction[31:20]}
               : io_instruction[6:0] == 7'h23
                   ? {20'h0, io_instruction[31:25], io_instruction[11:7]}
-                  : io_instruction[6:0] == 7'h33 ? {io_instruction[31:12], 12'h0} : 32'h0;
+                  : io_instruction[6:0] == 7'h17 | io_instruction[6:0] == 7'h37
+                      ? {io_instruction[31:12], 12'h0}
+                      : 32'h0;
   wire        _RET_T_2 = io_instruction[19:15] == 5'h1;
   wire        CALL = JALR & io_instruction[11:7] == 5'h1 & _RET_T_2;
   wire        RET = JALR & io_instruction[11:7] == 5'h0 & _RET_T_2 & imm == 32'h0;
@@ -967,7 +971,9 @@ module branch_decoder_2(
               ? {20'h0, io_instruction[31:20]}
               : io_instruction[6:0] == 7'h23
                   ? {20'h0, io_instruction[31:25], io_instruction[11:7]}
-                  : io_instruction[6:0] == 7'h33 ? {io_instruction[31:12], 12'h0} : 32'h0;
+                  : io_instruction[6:0] == 7'h17 | io_instruction[6:0] == 7'h37
+                      ? {io_instruction[31:12], 12'h0}
+                      : 32'h0;
   wire        _RET_T_2 = io_instruction[19:15] == 5'h1;
   wire        CALL = JALR & io_instruction[11:7] == 5'h1 & _RET_T_2;
   wire        RET = JALR & io_instruction[11:7] == 5'h0 & _RET_T_2 & imm == 32'h0;
@@ -1036,7 +1042,9 @@ module branch_decoder_3(
               ? {20'h0, io_instruction[31:20]}
               : io_instruction[6:0] == 7'h23
                   ? {20'h0, io_instruction[31:25], io_instruction[11:7]}
-                  : io_instruction[6:0] == 7'h33 ? {io_instruction[31:12], 12'h0} : 32'h0;
+                  : io_instruction[6:0] == 7'h17 | io_instruction[6:0] == 7'h37
+                      ? {io_instruction[31:12], 12'h0}
+                      : 32'h0;
   wire        _RET_T_2 = io_instruction[19:15] == 5'h1;
   wire        CALL = JALR & io_instruction[11:7] == 5'h1 & _RET_T_2;
   wire        RET = JALR & io_instruction[11:7] == 5'h0 & _RET_T_2 & imm == 32'h0;
@@ -1662,11 +1670,11 @@ module Queue16_fetch_packet(
     .W0_en   (do_enq),
     .W0_clk  (clock),
     .W0_data
-      ({10'h0,
+      ({10'h3,
         io_enq_bits_instructions_3_instruction,
-        10'h0,
+        10'h2,
         io_enq_bits_instructions_2_instruction,
-        10'h0,
+        10'h1,
         io_enq_bits_instructions_1_instruction,
         10'h0,
         io_enq_bits_instructions_0_instruction,
@@ -1694,17 +1702,17 @@ module Queue16_fetch_packet(
   assign io_deq_bits_instructions_1_instruction =
     empty ? io_enq_bits_instructions_1_instruction : _ram_ext_R0_data[109:78];
   assign io_deq_bits_instructions_1_packet_index =
-    empty ? 4'h0 : _ram_ext_R0_data[113:110];
+    empty ? 4'h1 : _ram_ext_R0_data[113:110];
   assign io_deq_bits_instructions_1_ROB_index = empty ? 6'h0 : _ram_ext_R0_data[119:114];
   assign io_deq_bits_instructions_2_instruction =
     empty ? io_enq_bits_instructions_2_instruction : _ram_ext_R0_data[151:120];
   assign io_deq_bits_instructions_2_packet_index =
-    empty ? 4'h0 : _ram_ext_R0_data[155:152];
+    empty ? 4'h2 : _ram_ext_R0_data[155:152];
   assign io_deq_bits_instructions_2_ROB_index = empty ? 6'h0 : _ram_ext_R0_data[161:156];
   assign io_deq_bits_instructions_3_instruction =
     empty ? io_enq_bits_instructions_3_instruction : _ram_ext_R0_data[193:162];
   assign io_deq_bits_instructions_3_packet_index =
-    empty ? 4'h0 : _ram_ext_R0_data[197:194];
+    empty ? 4'h3 : _ram_ext_R0_data[197:194];
   assign io_deq_bits_instructions_3_ROB_index = empty ? 6'h0 : _ram_ext_R0_data[203:198];
 endmodule
 
@@ -2366,9 +2374,15 @@ endmodule
 module decoder(
   input         clock,
                 reset,
+  output        io_instruction_ready,
+  input         io_instruction_valid,
   input  [31:0] io_instruction_bits_instruction,
   input  [3:0]  io_instruction_bits_packet_index,
   input  [5:0]  io_instruction_bits_ROB_index,
+  input         io_decoded_instruction_ready,
+  output        io_decoded_instruction_valid,
+                io_decoded_instruction_bits_ready_bits_RS1_ready,
+                io_decoded_instruction_bits_ready_bits_RS2_ready,
   output [5:0]  io_decoded_instruction_bits_RD,
   output        io_decoded_instruction_bits_RD_valid,
   output [5:0]  io_decoded_instruction_bits_RS1,
@@ -2384,6 +2398,7 @@ module decoder(
                 io_decoded_instruction_bits_RS_type,
   output        io_decoded_instruction_bits_needs_ALU,
                 io_decoded_instruction_bits_needs_branch_unit,
+                io_decoded_instruction_bits_needs_CSRs,
                 io_decoded_instruction_bits_SUBTRACT,
                 io_decoded_instruction_bits_MULTIPLY,
                 io_decoded_instruction_bits_IMMEDIATE,
@@ -2394,10 +2409,10 @@ module decoder(
   wire [4:0] instructionType = io_instruction_bits_instruction[6:2];
   wire       IS_LOAD = instructionType == 5'h0;
   wire       IMMEDIATE = instructionType == 5'h4;
-  wire       _io_decoded_instruction_bits_RD_valid_T_11 = instructionType == 5'h5;
+  wire       _is_INT_T_11 = instructionType == 5'h5;
   wire       IS_STORE = instructionType == 5'h8;
   wire       _is_INT_T = instructionType == 5'hC;
-  wire       _io_decoded_instruction_bits_RD_valid_T_9 = instructionType == 5'hD;
+  wire       _is_INT_T_9 = instructionType == 5'hD;
   wire       _is_INT_T_3 = instructionType == 5'h18;
   wire       _is_INT_T_7 = instructionType == 5'h19;
   wire       _is_INT_T_5 = instructionType == 5'h1B;
@@ -2406,18 +2421,17 @@ module decoder(
     always @(posedge clock) begin
       if (~reset
           & ~(IS_LOAD | instructionType == 5'h1 | instructionType == 5'h2
-              | instructionType == 5'h3 | IMMEDIATE
-              | _io_decoded_instruction_bits_RD_valid_T_11 | instructionType == 5'h6
-              | IS_STORE | instructionType == 5'h9 | instructionType == 5'hA
-              | instructionType == 5'hB | _is_INT_T
-              | _io_decoded_instruction_bits_RD_valid_T_9 | instructionType == 5'hE
-              | instructionType == 5'h10 | instructionType == 5'h11
-              | instructionType == 5'h12 | instructionType == 5'h13
-              | instructionType == 5'h14 | instructionType == 5'h16 | _is_INT_T_3
-              | _is_INT_T_7 | _is_INT_T_5 | _io_decoded_instruction_bits_RD_valid_T_13
+              | instructionType == 5'h3 | IMMEDIATE | _is_INT_T_11
+              | instructionType == 5'h6 | IS_STORE | instructionType == 5'h9
+              | instructionType == 5'hA | instructionType == 5'hB | _is_INT_T
+              | _is_INT_T_9 | instructionType == 5'hE | instructionType == 5'h10
+              | instructionType == 5'h11 | instructionType == 5'h12
+              | instructionType == 5'h13 | instructionType == 5'h14
+              | instructionType == 5'h16 | _is_INT_T_3 | _is_INT_T_7 | _is_INT_T_5
+              | _io_decoded_instruction_bits_RD_valid_T_13
               | instructionType == 5'h1E)) begin
         if (`ASSERT_VERBOSE_COND_)
-          $error("Assertion failed: Enum state must be valid, got %d!\n    at decoder.scala:66 assert(valid, \"Enum state must be valid, got %%%%d!\", opcode(6,2))\n",
+          $error("Assertion failed: Enum state must be valid, got %d!\n    at decoder.scala:68 assert(valid, \"Enum state must be valid, got %%%%d!\", opcode(6,2))\n",
                  instructionType);
         if (`STOP_COND_)
           $fatal;
@@ -2445,17 +2459,21 @@ module decoder(
       next_ALU_port_2 <= next_ALU_port_0;
     end
   end // always @(posedge)
+  assign io_instruction_ready = io_decoded_instruction_ready;
+  assign io_decoded_instruction_valid = io_instruction_valid;
+  assign io_decoded_instruction_bits_ready_bits_RS1_ready = 1'h0;
+  assign io_decoded_instruction_bits_ready_bits_RS2_ready = 1'h0;
   assign io_decoded_instruction_bits_RD = {1'h0, io_instruction_bits_instruction[11:7]};
   assign io_decoded_instruction_bits_RD_valid =
-    _is_INT_T | IMMEDIATE | IS_LOAD | _is_INT_T_5 | _is_INT_T_7
-    | _io_decoded_instruction_bits_RD_valid_T_9
-    | _io_decoded_instruction_bits_RD_valid_T_11
-    | _io_decoded_instruction_bits_RD_valid_T_13;
+    (_is_INT_T | IMMEDIATE | IS_LOAD | _is_INT_T_5 | _is_INT_T_7 | _is_INT_T_9
+     | _is_INT_T_11 | _io_decoded_instruction_bits_RD_valid_T_13) & io_instruction_valid;
   assign io_decoded_instruction_bits_RS1 = {1'h0, io_instruction_bits_instruction[19:15]};
   assign io_decoded_instruction_bits_RS1_valid =
-    _is_INT_T | IMMEDIATE | IS_LOAD | IS_STORE | _is_INT_T_7 | _is_INT_T_3;
+    (_is_INT_T | IMMEDIATE | IS_LOAD | IS_STORE | _is_INT_T_7 | _is_INT_T_3)
+    & io_instruction_valid;
   assign io_decoded_instruction_bits_RS2 = {1'h0, io_instruction_bits_instruction[24:20]};
-  assign io_decoded_instruction_bits_RS2_valid = _is_INT_T | IS_STORE | _is_INT_T_3;
+  assign io_decoded_instruction_bits_RS2_valid =
+    (_is_INT_T | IS_STORE | _is_INT_T_3) & io_instruction_valid;
   assign io_decoded_instruction_bits_IMM =
     io_instruction_bits_instruction[6:0] == 7'h63
       ? {19'h0,
@@ -2479,7 +2497,8 @@ module decoder(
                   ? {20'h0,
                      io_instruction_bits_instruction[31:25],
                      io_instruction_bits_instruction[11:7]}
-                  : io_instruction_bits_instruction[6:0] == 7'h33
+                  : io_instruction_bits_instruction[6:0] == 7'h17
+                    | io_instruction_bits_instruction[6:0] == 7'h37
                       ? {io_instruction_bits_instruction[31:12], 12'h0}
                       : 32'h0;
   assign io_decoded_instruction_bits_FUNCT3 = io_instruction_bits_instruction[14:12];
@@ -2500,12 +2519,14 @@ module decoder(
               ? 2'h1
               : {2{needs_memory}};
   assign io_decoded_instruction_bits_RS_type =
-    _is_INT_T | IMMEDIATE | _is_INT_T_3 | _is_INT_T_5 | _is_INT_T_7
+    _is_INT_T | IMMEDIATE | _is_INT_T_3 | _is_INT_T_5 | _is_INT_T_7 | _is_INT_T_9
+    | _is_INT_T_11
       ? 2'h0
       : IS_LOAD | IS_STORE ? 2'h1 : 2'h2;
   assign io_decoded_instruction_bits_needs_ALU = needs_ALU;
   assign io_decoded_instruction_bits_needs_branch_unit = needs_branch_unit;
-  assign io_decoded_instruction_bits_SUBTRACT = _is_INT_T & _needs_ALU_T_1;
+  assign io_decoded_instruction_bits_needs_CSRs = 1'h0;
+  assign io_decoded_instruction_bits_SUBTRACT = (_is_INT_T | IMMEDIATE) & _needs_ALU_T_1;
   assign io_decoded_instruction_bits_MULTIPLY =
     _is_INT_T & io_instruction_bits_instruction[31:25] == 7'h1;
   assign io_decoded_instruction_bits_IMMEDIATE = IMMEDIATE;
@@ -2538,6 +2559,8 @@ module fetch_packet_decoder(
   input         io_decoded_fetch_packet_ready,
   output        io_decoded_fetch_packet_valid,
   output [31:0] io_decoded_fetch_packet_bits_fetch_PC,
+  output        io_decoded_fetch_packet_bits_decoded_instruction_0_ready_bits_RS1_ready,
+                io_decoded_fetch_packet_bits_decoded_instruction_0_ready_bits_RS2_ready,
   output [5:0]  io_decoded_fetch_packet_bits_decoded_instruction_0_RD,
   output        io_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid,
   output [5:0]  io_decoded_fetch_packet_bits_decoded_instruction_0_RS1,
@@ -2553,11 +2576,14 @@ module fetch_packet_decoder(
                 io_decoded_fetch_packet_bits_decoded_instruction_0_RS_type,
   output        io_decoded_fetch_packet_bits_decoded_instruction_0_needs_ALU,
                 io_decoded_fetch_packet_bits_decoded_instruction_0_needs_branch_unit,
+                io_decoded_fetch_packet_bits_decoded_instruction_0_needs_CSRs,
                 io_decoded_fetch_packet_bits_decoded_instruction_0_SUBTRACT,
                 io_decoded_fetch_packet_bits_decoded_instruction_0_MULTIPLY,
                 io_decoded_fetch_packet_bits_decoded_instruction_0_IMMEDIATE,
                 io_decoded_fetch_packet_bits_decoded_instruction_0_IS_LOAD,
                 io_decoded_fetch_packet_bits_decoded_instruction_0_IS_STORE,
+                io_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS1_ready,
+                io_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS2_ready,
   output [5:0]  io_decoded_fetch_packet_bits_decoded_instruction_1_RD,
   output        io_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid,
   output [5:0]  io_decoded_fetch_packet_bits_decoded_instruction_1_RS1,
@@ -2573,11 +2599,14 @@ module fetch_packet_decoder(
                 io_decoded_fetch_packet_bits_decoded_instruction_1_RS_type,
   output        io_decoded_fetch_packet_bits_decoded_instruction_1_needs_ALU,
                 io_decoded_fetch_packet_bits_decoded_instruction_1_needs_branch_unit,
+                io_decoded_fetch_packet_bits_decoded_instruction_1_needs_CSRs,
                 io_decoded_fetch_packet_bits_decoded_instruction_1_SUBTRACT,
                 io_decoded_fetch_packet_bits_decoded_instruction_1_MULTIPLY,
                 io_decoded_fetch_packet_bits_decoded_instruction_1_IMMEDIATE,
                 io_decoded_fetch_packet_bits_decoded_instruction_1_IS_LOAD,
                 io_decoded_fetch_packet_bits_decoded_instruction_1_IS_STORE,
+                io_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS1_ready,
+                io_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS2_ready,
   output [5:0]  io_decoded_fetch_packet_bits_decoded_instruction_2_RD,
   output        io_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid,
   output [5:0]  io_decoded_fetch_packet_bits_decoded_instruction_2_RS1,
@@ -2593,11 +2622,14 @@ module fetch_packet_decoder(
                 io_decoded_fetch_packet_bits_decoded_instruction_2_RS_type,
   output        io_decoded_fetch_packet_bits_decoded_instruction_2_needs_ALU,
                 io_decoded_fetch_packet_bits_decoded_instruction_2_needs_branch_unit,
+                io_decoded_fetch_packet_bits_decoded_instruction_2_needs_CSRs,
                 io_decoded_fetch_packet_bits_decoded_instruction_2_SUBTRACT,
                 io_decoded_fetch_packet_bits_decoded_instruction_2_MULTIPLY,
                 io_decoded_fetch_packet_bits_decoded_instruction_2_IMMEDIATE,
                 io_decoded_fetch_packet_bits_decoded_instruction_2_IS_LOAD,
                 io_decoded_fetch_packet_bits_decoded_instruction_2_IS_STORE,
+                io_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS1_ready,
+                io_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS2_ready,
   output [5:0]  io_decoded_fetch_packet_bits_decoded_instruction_3_RD,
   output        io_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid,
   output [5:0]  io_decoded_fetch_packet_bits_decoded_instruction_3_RS1,
@@ -2613,6 +2645,7 @@ module fetch_packet_decoder(
                 io_decoded_fetch_packet_bits_decoded_instruction_3_RS_type,
   output        io_decoded_fetch_packet_bits_decoded_instruction_3_needs_ALU,
                 io_decoded_fetch_packet_bits_decoded_instruction_3_needs_branch_unit,
+                io_decoded_fetch_packet_bits_decoded_instruction_3_needs_CSRs,
                 io_decoded_fetch_packet_bits_decoded_instruction_3_SUBTRACT,
                 io_decoded_fetch_packet_bits_decoded_instruction_3_MULTIPLY,
                 io_decoded_fetch_packet_bits_decoded_instruction_3_IMMEDIATE,
@@ -2624,6 +2657,8 @@ module fetch_packet_decoder(
                 io_decoded_fetch_packet_bits_valid_bits_3
 );
 
+  wire        _decoders_3_io_decoded_instruction_bits_ready_bits_RS1_ready;
+  wire        _decoders_3_io_decoded_instruction_bits_ready_bits_RS2_ready;
   wire [5:0]  _decoders_3_io_decoded_instruction_bits_RD;
   wire        _decoders_3_io_decoded_instruction_bits_RD_valid;
   wire [5:0]  _decoders_3_io_decoded_instruction_bits_RS1;
@@ -2639,11 +2674,14 @@ module fetch_packet_decoder(
   wire [1:0]  _decoders_3_io_decoded_instruction_bits_RS_type;
   wire        _decoders_3_io_decoded_instruction_bits_needs_ALU;
   wire        _decoders_3_io_decoded_instruction_bits_needs_branch_unit;
+  wire        _decoders_3_io_decoded_instruction_bits_needs_CSRs;
   wire        _decoders_3_io_decoded_instruction_bits_SUBTRACT;
   wire        _decoders_3_io_decoded_instruction_bits_MULTIPLY;
   wire        _decoders_3_io_decoded_instruction_bits_IMMEDIATE;
   wire        _decoders_3_io_decoded_instruction_bits_IS_LOAD;
   wire        _decoders_3_io_decoded_instruction_bits_IS_STORE;
+  wire        _decoders_2_io_decoded_instruction_bits_ready_bits_RS1_ready;
+  wire        _decoders_2_io_decoded_instruction_bits_ready_bits_RS2_ready;
   wire [5:0]  _decoders_2_io_decoded_instruction_bits_RD;
   wire        _decoders_2_io_decoded_instruction_bits_RD_valid;
   wire [5:0]  _decoders_2_io_decoded_instruction_bits_RS1;
@@ -2659,11 +2697,14 @@ module fetch_packet_decoder(
   wire [1:0]  _decoders_2_io_decoded_instruction_bits_RS_type;
   wire        _decoders_2_io_decoded_instruction_bits_needs_ALU;
   wire        _decoders_2_io_decoded_instruction_bits_needs_branch_unit;
+  wire        _decoders_2_io_decoded_instruction_bits_needs_CSRs;
   wire        _decoders_2_io_decoded_instruction_bits_SUBTRACT;
   wire        _decoders_2_io_decoded_instruction_bits_MULTIPLY;
   wire        _decoders_2_io_decoded_instruction_bits_IMMEDIATE;
   wire        _decoders_2_io_decoded_instruction_bits_IS_LOAD;
   wire        _decoders_2_io_decoded_instruction_bits_IS_STORE;
+  wire        _decoders_1_io_decoded_instruction_bits_ready_bits_RS1_ready;
+  wire        _decoders_1_io_decoded_instruction_bits_ready_bits_RS2_ready;
   wire [5:0]  _decoders_1_io_decoded_instruction_bits_RD;
   wire        _decoders_1_io_decoded_instruction_bits_RD_valid;
   wire [5:0]  _decoders_1_io_decoded_instruction_bits_RS1;
@@ -2679,11 +2720,14 @@ module fetch_packet_decoder(
   wire [1:0]  _decoders_1_io_decoded_instruction_bits_RS_type;
   wire        _decoders_1_io_decoded_instruction_bits_needs_ALU;
   wire        _decoders_1_io_decoded_instruction_bits_needs_branch_unit;
+  wire        _decoders_1_io_decoded_instruction_bits_needs_CSRs;
   wire        _decoders_1_io_decoded_instruction_bits_SUBTRACT;
   wire        _decoders_1_io_decoded_instruction_bits_MULTIPLY;
   wire        _decoders_1_io_decoded_instruction_bits_IMMEDIATE;
   wire        _decoders_1_io_decoded_instruction_bits_IS_LOAD;
   wire        _decoders_1_io_decoded_instruction_bits_IS_STORE;
+  wire        _decoders_0_io_decoded_instruction_bits_ready_bits_RS1_ready;
+  wire        _decoders_0_io_decoded_instruction_bits_ready_bits_RS2_ready;
   wire [5:0]  _decoders_0_io_decoded_instruction_bits_RD;
   wire        _decoders_0_io_decoded_instruction_bits_RD_valid;
   wire [5:0]  _decoders_0_io_decoded_instruction_bits_RS1;
@@ -2699,11 +2743,14 @@ module fetch_packet_decoder(
   wire [1:0]  _decoders_0_io_decoded_instruction_bits_RS_type;
   wire        _decoders_0_io_decoded_instruction_bits_needs_ALU;
   wire        _decoders_0_io_decoded_instruction_bits_needs_branch_unit;
+  wire        _decoders_0_io_decoded_instruction_bits_needs_CSRs;
   wire        _decoders_0_io_decoded_instruction_bits_SUBTRACT;
   wire        _decoders_0_io_decoded_instruction_bits_MULTIPLY;
   wire        _decoders_0_io_decoded_instruction_bits_IMMEDIATE;
   wire        _decoders_0_io_decoded_instruction_bits_IS_LOAD;
   wire        _decoders_0_io_decoded_instruction_bits_IS_STORE;
+  reg         io_decoded_fetch_packet_bits_decoded_instruction_0_REG_ready_bits_RS1_ready;
+  reg         io_decoded_fetch_packet_bits_decoded_instruction_0_REG_ready_bits_RS2_ready;
   reg  [5:0]  io_decoded_fetch_packet_bits_decoded_instruction_0_REG_RD;
   reg         io_decoded_fetch_packet_bits_decoded_instruction_0_REG_RD_valid;
   reg  [5:0]  io_decoded_fetch_packet_bits_decoded_instruction_0_REG_RS1;
@@ -2719,11 +2766,14 @@ module fetch_packet_decoder(
   reg  [1:0]  io_decoded_fetch_packet_bits_decoded_instruction_0_REG_RS_type;
   reg         io_decoded_fetch_packet_bits_decoded_instruction_0_REG_needs_ALU;
   reg         io_decoded_fetch_packet_bits_decoded_instruction_0_REG_needs_branch_unit;
+  reg         io_decoded_fetch_packet_bits_decoded_instruction_0_REG_needs_CSRs;
   reg         io_decoded_fetch_packet_bits_decoded_instruction_0_REG_SUBTRACT;
   reg         io_decoded_fetch_packet_bits_decoded_instruction_0_REG_MULTIPLY;
   reg         io_decoded_fetch_packet_bits_decoded_instruction_0_REG_IMMEDIATE;
   reg         io_decoded_fetch_packet_bits_decoded_instruction_0_REG_IS_LOAD;
   reg         io_decoded_fetch_packet_bits_decoded_instruction_0_REG_IS_STORE;
+  reg         io_decoded_fetch_packet_bits_decoded_instruction_1_REG_ready_bits_RS1_ready;
+  reg         io_decoded_fetch_packet_bits_decoded_instruction_1_REG_ready_bits_RS2_ready;
   reg  [5:0]  io_decoded_fetch_packet_bits_decoded_instruction_1_REG_RD;
   reg         io_decoded_fetch_packet_bits_decoded_instruction_1_REG_RD_valid;
   reg  [5:0]  io_decoded_fetch_packet_bits_decoded_instruction_1_REG_RS1;
@@ -2739,11 +2789,14 @@ module fetch_packet_decoder(
   reg  [1:0]  io_decoded_fetch_packet_bits_decoded_instruction_1_REG_RS_type;
   reg         io_decoded_fetch_packet_bits_decoded_instruction_1_REG_needs_ALU;
   reg         io_decoded_fetch_packet_bits_decoded_instruction_1_REG_needs_branch_unit;
+  reg         io_decoded_fetch_packet_bits_decoded_instruction_1_REG_needs_CSRs;
   reg         io_decoded_fetch_packet_bits_decoded_instruction_1_REG_SUBTRACT;
   reg         io_decoded_fetch_packet_bits_decoded_instruction_1_REG_MULTIPLY;
   reg         io_decoded_fetch_packet_bits_decoded_instruction_1_REG_IMMEDIATE;
   reg         io_decoded_fetch_packet_bits_decoded_instruction_1_REG_IS_LOAD;
   reg         io_decoded_fetch_packet_bits_decoded_instruction_1_REG_IS_STORE;
+  reg         io_decoded_fetch_packet_bits_decoded_instruction_2_REG_ready_bits_RS1_ready;
+  reg         io_decoded_fetch_packet_bits_decoded_instruction_2_REG_ready_bits_RS2_ready;
   reg  [5:0]  io_decoded_fetch_packet_bits_decoded_instruction_2_REG_RD;
   reg         io_decoded_fetch_packet_bits_decoded_instruction_2_REG_RD_valid;
   reg  [5:0]  io_decoded_fetch_packet_bits_decoded_instruction_2_REG_RS1;
@@ -2759,11 +2812,14 @@ module fetch_packet_decoder(
   reg  [1:0]  io_decoded_fetch_packet_bits_decoded_instruction_2_REG_RS_type;
   reg         io_decoded_fetch_packet_bits_decoded_instruction_2_REG_needs_ALU;
   reg         io_decoded_fetch_packet_bits_decoded_instruction_2_REG_needs_branch_unit;
+  reg         io_decoded_fetch_packet_bits_decoded_instruction_2_REG_needs_CSRs;
   reg         io_decoded_fetch_packet_bits_decoded_instruction_2_REG_SUBTRACT;
   reg         io_decoded_fetch_packet_bits_decoded_instruction_2_REG_MULTIPLY;
   reg         io_decoded_fetch_packet_bits_decoded_instruction_2_REG_IMMEDIATE;
   reg         io_decoded_fetch_packet_bits_decoded_instruction_2_REG_IS_LOAD;
   reg         io_decoded_fetch_packet_bits_decoded_instruction_2_REG_IS_STORE;
+  reg         io_decoded_fetch_packet_bits_decoded_instruction_3_REG_ready_bits_RS1_ready;
+  reg         io_decoded_fetch_packet_bits_decoded_instruction_3_REG_ready_bits_RS2_ready;
   reg  [5:0]  io_decoded_fetch_packet_bits_decoded_instruction_3_REG_RD;
   reg         io_decoded_fetch_packet_bits_decoded_instruction_3_REG_RD_valid;
   reg  [5:0]  io_decoded_fetch_packet_bits_decoded_instruction_3_REG_RS1;
@@ -2779,6 +2835,7 @@ module fetch_packet_decoder(
   reg  [1:0]  io_decoded_fetch_packet_bits_decoded_instruction_3_REG_RS_type;
   reg         io_decoded_fetch_packet_bits_decoded_instruction_3_REG_needs_ALU;
   reg         io_decoded_fetch_packet_bits_decoded_instruction_3_REG_needs_branch_unit;
+  reg         io_decoded_fetch_packet_bits_decoded_instruction_3_REG_needs_CSRs;
   reg         io_decoded_fetch_packet_bits_decoded_instruction_3_REG_SUBTRACT;
   reg         io_decoded_fetch_packet_bits_decoded_instruction_3_REG_MULTIPLY;
   reg         io_decoded_fetch_packet_bits_decoded_instruction_3_REG_IMMEDIATE;
@@ -2791,6 +2848,10 @@ module fetch_packet_decoder(
   reg         REG_2;
   reg         REG_3;
   always @(posedge clock) begin
+    io_decoded_fetch_packet_bits_decoded_instruction_0_REG_ready_bits_RS1_ready <=
+      _decoders_0_io_decoded_instruction_bits_ready_bits_RS1_ready;
+    io_decoded_fetch_packet_bits_decoded_instruction_0_REG_ready_bits_RS2_ready <=
+      _decoders_0_io_decoded_instruction_bits_ready_bits_RS2_ready;
     io_decoded_fetch_packet_bits_decoded_instruction_0_REG_RD <=
       _decoders_0_io_decoded_instruction_bits_RD;
     io_decoded_fetch_packet_bits_decoded_instruction_0_REG_RD_valid <=
@@ -2821,6 +2882,8 @@ module fetch_packet_decoder(
       _decoders_0_io_decoded_instruction_bits_needs_ALU;
     io_decoded_fetch_packet_bits_decoded_instruction_0_REG_needs_branch_unit <=
       _decoders_0_io_decoded_instruction_bits_needs_branch_unit;
+    io_decoded_fetch_packet_bits_decoded_instruction_0_REG_needs_CSRs <=
+      _decoders_0_io_decoded_instruction_bits_needs_CSRs;
     io_decoded_fetch_packet_bits_decoded_instruction_0_REG_SUBTRACT <=
       _decoders_0_io_decoded_instruction_bits_SUBTRACT;
     io_decoded_fetch_packet_bits_decoded_instruction_0_REG_MULTIPLY <=
@@ -2831,6 +2894,10 @@ module fetch_packet_decoder(
       _decoders_0_io_decoded_instruction_bits_IS_LOAD;
     io_decoded_fetch_packet_bits_decoded_instruction_0_REG_IS_STORE <=
       _decoders_0_io_decoded_instruction_bits_IS_STORE;
+    io_decoded_fetch_packet_bits_decoded_instruction_1_REG_ready_bits_RS1_ready <=
+      _decoders_1_io_decoded_instruction_bits_ready_bits_RS1_ready;
+    io_decoded_fetch_packet_bits_decoded_instruction_1_REG_ready_bits_RS2_ready <=
+      _decoders_1_io_decoded_instruction_bits_ready_bits_RS2_ready;
     io_decoded_fetch_packet_bits_decoded_instruction_1_REG_RD <=
       _decoders_1_io_decoded_instruction_bits_RD;
     io_decoded_fetch_packet_bits_decoded_instruction_1_REG_RD_valid <=
@@ -2861,6 +2928,8 @@ module fetch_packet_decoder(
       _decoders_1_io_decoded_instruction_bits_needs_ALU;
     io_decoded_fetch_packet_bits_decoded_instruction_1_REG_needs_branch_unit <=
       _decoders_1_io_decoded_instruction_bits_needs_branch_unit;
+    io_decoded_fetch_packet_bits_decoded_instruction_1_REG_needs_CSRs <=
+      _decoders_1_io_decoded_instruction_bits_needs_CSRs;
     io_decoded_fetch_packet_bits_decoded_instruction_1_REG_SUBTRACT <=
       _decoders_1_io_decoded_instruction_bits_SUBTRACT;
     io_decoded_fetch_packet_bits_decoded_instruction_1_REG_MULTIPLY <=
@@ -2871,6 +2940,10 @@ module fetch_packet_decoder(
       _decoders_1_io_decoded_instruction_bits_IS_LOAD;
     io_decoded_fetch_packet_bits_decoded_instruction_1_REG_IS_STORE <=
       _decoders_1_io_decoded_instruction_bits_IS_STORE;
+    io_decoded_fetch_packet_bits_decoded_instruction_2_REG_ready_bits_RS1_ready <=
+      _decoders_2_io_decoded_instruction_bits_ready_bits_RS1_ready;
+    io_decoded_fetch_packet_bits_decoded_instruction_2_REG_ready_bits_RS2_ready <=
+      _decoders_2_io_decoded_instruction_bits_ready_bits_RS2_ready;
     io_decoded_fetch_packet_bits_decoded_instruction_2_REG_RD <=
       _decoders_2_io_decoded_instruction_bits_RD;
     io_decoded_fetch_packet_bits_decoded_instruction_2_REG_RD_valid <=
@@ -2901,6 +2974,8 @@ module fetch_packet_decoder(
       _decoders_2_io_decoded_instruction_bits_needs_ALU;
     io_decoded_fetch_packet_bits_decoded_instruction_2_REG_needs_branch_unit <=
       _decoders_2_io_decoded_instruction_bits_needs_branch_unit;
+    io_decoded_fetch_packet_bits_decoded_instruction_2_REG_needs_CSRs <=
+      _decoders_2_io_decoded_instruction_bits_needs_CSRs;
     io_decoded_fetch_packet_bits_decoded_instruction_2_REG_SUBTRACT <=
       _decoders_2_io_decoded_instruction_bits_SUBTRACT;
     io_decoded_fetch_packet_bits_decoded_instruction_2_REG_MULTIPLY <=
@@ -2911,6 +2986,10 @@ module fetch_packet_decoder(
       _decoders_2_io_decoded_instruction_bits_IS_LOAD;
     io_decoded_fetch_packet_bits_decoded_instruction_2_REG_IS_STORE <=
       _decoders_2_io_decoded_instruction_bits_IS_STORE;
+    io_decoded_fetch_packet_bits_decoded_instruction_3_REG_ready_bits_RS1_ready <=
+      _decoders_3_io_decoded_instruction_bits_ready_bits_RS1_ready;
+    io_decoded_fetch_packet_bits_decoded_instruction_3_REG_ready_bits_RS2_ready <=
+      _decoders_3_io_decoded_instruction_bits_ready_bits_RS2_ready;
     io_decoded_fetch_packet_bits_decoded_instruction_3_REG_RD <=
       _decoders_3_io_decoded_instruction_bits_RD;
     io_decoded_fetch_packet_bits_decoded_instruction_3_REG_RD_valid <=
@@ -2941,6 +3020,8 @@ module fetch_packet_decoder(
       _decoders_3_io_decoded_instruction_bits_needs_ALU;
     io_decoded_fetch_packet_bits_decoded_instruction_3_REG_needs_branch_unit <=
       _decoders_3_io_decoded_instruction_bits_needs_branch_unit;
+    io_decoded_fetch_packet_bits_decoded_instruction_3_REG_needs_CSRs <=
+      _decoders_3_io_decoded_instruction_bits_needs_CSRs;
     io_decoded_fetch_packet_bits_decoded_instruction_3_REG_SUBTRACT <=
       _decoders_3_io_decoded_instruction_bits_SUBTRACT;
     io_decoded_fetch_packet_bits_decoded_instruction_3_REG_MULTIPLY <=
@@ -2959,14 +3040,23 @@ module fetch_packet_decoder(
     REG_3 <= io_fetch_packet_bits_valid_bits_3;
   end // always @(posedge)
   decoder decoders_0 (
-    .clock                                         (clock),
-    .reset                                         (reset),
+    .clock                                            (clock),
+    .reset                                            (reset),
+    .io_instruction_ready                             (/* unused */),
+    .io_instruction_valid
+      (io_fetch_packet_valid & io_fetch_packet_bits_valid_bits_0),
     .io_instruction_bits_instruction
       (io_fetch_packet_bits_instructions_0_instruction),
     .io_instruction_bits_packet_index
       (io_fetch_packet_bits_instructions_0_packet_index),
     .io_instruction_bits_ROB_index
       (io_fetch_packet_bits_instructions_0_ROB_index),
+    .io_decoded_instruction_ready                     (io_decoded_fetch_packet_ready),
+    .io_decoded_instruction_valid                     (/* unused */),
+    .io_decoded_instruction_bits_ready_bits_RS1_ready
+      (_decoders_0_io_decoded_instruction_bits_ready_bits_RS1_ready),
+    .io_decoded_instruction_bits_ready_bits_RS2_ready
+      (_decoders_0_io_decoded_instruction_bits_ready_bits_RS2_ready),
     .io_decoded_instruction_bits_RD
       (_decoders_0_io_decoded_instruction_bits_RD),
     .io_decoded_instruction_bits_RD_valid
@@ -2997,6 +3087,8 @@ module fetch_packet_decoder(
       (_decoders_0_io_decoded_instruction_bits_needs_ALU),
     .io_decoded_instruction_bits_needs_branch_unit
       (_decoders_0_io_decoded_instruction_bits_needs_branch_unit),
+    .io_decoded_instruction_bits_needs_CSRs
+      (_decoders_0_io_decoded_instruction_bits_needs_CSRs),
     .io_decoded_instruction_bits_SUBTRACT
       (_decoders_0_io_decoded_instruction_bits_SUBTRACT),
     .io_decoded_instruction_bits_MULTIPLY
@@ -3009,14 +3101,23 @@ module fetch_packet_decoder(
       (_decoders_0_io_decoded_instruction_bits_IS_STORE)
   );
   decoder decoders_1 (
-    .clock                                         (clock),
-    .reset                                         (reset),
+    .clock                                            (clock),
+    .reset                                            (reset),
+    .io_instruction_ready                             (/* unused */),
+    .io_instruction_valid
+      (io_fetch_packet_valid & io_fetch_packet_bits_valid_bits_1),
     .io_instruction_bits_instruction
       (io_fetch_packet_bits_instructions_1_instruction),
     .io_instruction_bits_packet_index
       (io_fetch_packet_bits_instructions_1_packet_index),
     .io_instruction_bits_ROB_index
       (io_fetch_packet_bits_instructions_1_ROB_index),
+    .io_decoded_instruction_ready                     (io_decoded_fetch_packet_ready),
+    .io_decoded_instruction_valid                     (/* unused */),
+    .io_decoded_instruction_bits_ready_bits_RS1_ready
+      (_decoders_1_io_decoded_instruction_bits_ready_bits_RS1_ready),
+    .io_decoded_instruction_bits_ready_bits_RS2_ready
+      (_decoders_1_io_decoded_instruction_bits_ready_bits_RS2_ready),
     .io_decoded_instruction_bits_RD
       (_decoders_1_io_decoded_instruction_bits_RD),
     .io_decoded_instruction_bits_RD_valid
@@ -3047,6 +3148,8 @@ module fetch_packet_decoder(
       (_decoders_1_io_decoded_instruction_bits_needs_ALU),
     .io_decoded_instruction_bits_needs_branch_unit
       (_decoders_1_io_decoded_instruction_bits_needs_branch_unit),
+    .io_decoded_instruction_bits_needs_CSRs
+      (_decoders_1_io_decoded_instruction_bits_needs_CSRs),
     .io_decoded_instruction_bits_SUBTRACT
       (_decoders_1_io_decoded_instruction_bits_SUBTRACT),
     .io_decoded_instruction_bits_MULTIPLY
@@ -3059,14 +3162,23 @@ module fetch_packet_decoder(
       (_decoders_1_io_decoded_instruction_bits_IS_STORE)
   );
   decoder decoders_2 (
-    .clock                                         (clock),
-    .reset                                         (reset),
+    .clock                                            (clock),
+    .reset                                            (reset),
+    .io_instruction_ready                             (/* unused */),
+    .io_instruction_valid
+      (io_fetch_packet_valid & io_fetch_packet_bits_valid_bits_2),
     .io_instruction_bits_instruction
       (io_fetch_packet_bits_instructions_2_instruction),
     .io_instruction_bits_packet_index
       (io_fetch_packet_bits_instructions_2_packet_index),
     .io_instruction_bits_ROB_index
       (io_fetch_packet_bits_instructions_2_ROB_index),
+    .io_decoded_instruction_ready                     (io_decoded_fetch_packet_ready),
+    .io_decoded_instruction_valid                     (/* unused */),
+    .io_decoded_instruction_bits_ready_bits_RS1_ready
+      (_decoders_2_io_decoded_instruction_bits_ready_bits_RS1_ready),
+    .io_decoded_instruction_bits_ready_bits_RS2_ready
+      (_decoders_2_io_decoded_instruction_bits_ready_bits_RS2_ready),
     .io_decoded_instruction_bits_RD
       (_decoders_2_io_decoded_instruction_bits_RD),
     .io_decoded_instruction_bits_RD_valid
@@ -3097,6 +3209,8 @@ module fetch_packet_decoder(
       (_decoders_2_io_decoded_instruction_bits_needs_ALU),
     .io_decoded_instruction_bits_needs_branch_unit
       (_decoders_2_io_decoded_instruction_bits_needs_branch_unit),
+    .io_decoded_instruction_bits_needs_CSRs
+      (_decoders_2_io_decoded_instruction_bits_needs_CSRs),
     .io_decoded_instruction_bits_SUBTRACT
       (_decoders_2_io_decoded_instruction_bits_SUBTRACT),
     .io_decoded_instruction_bits_MULTIPLY
@@ -3109,14 +3223,23 @@ module fetch_packet_decoder(
       (_decoders_2_io_decoded_instruction_bits_IS_STORE)
   );
   decoder decoders_3 (
-    .clock                                         (clock),
-    .reset                                         (reset),
+    .clock                                            (clock),
+    .reset                                            (reset),
+    .io_instruction_ready                             (/* unused */),
+    .io_instruction_valid
+      (io_fetch_packet_valid & io_fetch_packet_bits_valid_bits_3),
     .io_instruction_bits_instruction
       (io_fetch_packet_bits_instructions_3_instruction),
     .io_instruction_bits_packet_index
       (io_fetch_packet_bits_instructions_3_packet_index),
     .io_instruction_bits_ROB_index
       (io_fetch_packet_bits_instructions_3_ROB_index),
+    .io_decoded_instruction_ready                     (io_decoded_fetch_packet_ready),
+    .io_decoded_instruction_valid                     (/* unused */),
+    .io_decoded_instruction_bits_ready_bits_RS1_ready
+      (_decoders_3_io_decoded_instruction_bits_ready_bits_RS1_ready),
+    .io_decoded_instruction_bits_ready_bits_RS2_ready
+      (_decoders_3_io_decoded_instruction_bits_ready_bits_RS2_ready),
     .io_decoded_instruction_bits_RD
       (_decoders_3_io_decoded_instruction_bits_RD),
     .io_decoded_instruction_bits_RD_valid
@@ -3147,6 +3270,8 @@ module fetch_packet_decoder(
       (_decoders_3_io_decoded_instruction_bits_needs_ALU),
     .io_decoded_instruction_bits_needs_branch_unit
       (_decoders_3_io_decoded_instruction_bits_needs_branch_unit),
+    .io_decoded_instruction_bits_needs_CSRs
+      (_decoders_3_io_decoded_instruction_bits_needs_CSRs),
     .io_decoded_instruction_bits_SUBTRACT
       (_decoders_3_io_decoded_instruction_bits_SUBTRACT),
     .io_decoded_instruction_bits_MULTIPLY
@@ -3162,6 +3287,10 @@ module fetch_packet_decoder(
   assign io_decoded_fetch_packet_valid = io_decoded_fetch_packet_valid_REG;
   assign io_decoded_fetch_packet_bits_fetch_PC =
     io_decoded_fetch_packet_bits_fetch_PC_REG;
+  assign io_decoded_fetch_packet_bits_decoded_instruction_0_ready_bits_RS1_ready =
+    io_decoded_fetch_packet_bits_decoded_instruction_0_REG_ready_bits_RS1_ready;
+  assign io_decoded_fetch_packet_bits_decoded_instruction_0_ready_bits_RS2_ready =
+    io_decoded_fetch_packet_bits_decoded_instruction_0_REG_ready_bits_RS2_ready;
   assign io_decoded_fetch_packet_bits_decoded_instruction_0_RD =
     io_decoded_fetch_packet_bits_decoded_instruction_0_REG_RD;
   assign io_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid =
@@ -3192,6 +3321,8 @@ module fetch_packet_decoder(
     io_decoded_fetch_packet_bits_decoded_instruction_0_REG_needs_ALU;
   assign io_decoded_fetch_packet_bits_decoded_instruction_0_needs_branch_unit =
     io_decoded_fetch_packet_bits_decoded_instruction_0_REG_needs_branch_unit;
+  assign io_decoded_fetch_packet_bits_decoded_instruction_0_needs_CSRs =
+    io_decoded_fetch_packet_bits_decoded_instruction_0_REG_needs_CSRs;
   assign io_decoded_fetch_packet_bits_decoded_instruction_0_SUBTRACT =
     io_decoded_fetch_packet_bits_decoded_instruction_0_REG_SUBTRACT;
   assign io_decoded_fetch_packet_bits_decoded_instruction_0_MULTIPLY =
@@ -3202,6 +3333,10 @@ module fetch_packet_decoder(
     io_decoded_fetch_packet_bits_decoded_instruction_0_REG_IS_LOAD;
   assign io_decoded_fetch_packet_bits_decoded_instruction_0_IS_STORE =
     io_decoded_fetch_packet_bits_decoded_instruction_0_REG_IS_STORE;
+  assign io_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS1_ready =
+    io_decoded_fetch_packet_bits_decoded_instruction_1_REG_ready_bits_RS1_ready;
+  assign io_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS2_ready =
+    io_decoded_fetch_packet_bits_decoded_instruction_1_REG_ready_bits_RS2_ready;
   assign io_decoded_fetch_packet_bits_decoded_instruction_1_RD =
     io_decoded_fetch_packet_bits_decoded_instruction_1_REG_RD;
   assign io_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid =
@@ -3232,6 +3367,8 @@ module fetch_packet_decoder(
     io_decoded_fetch_packet_bits_decoded_instruction_1_REG_needs_ALU;
   assign io_decoded_fetch_packet_bits_decoded_instruction_1_needs_branch_unit =
     io_decoded_fetch_packet_bits_decoded_instruction_1_REG_needs_branch_unit;
+  assign io_decoded_fetch_packet_bits_decoded_instruction_1_needs_CSRs =
+    io_decoded_fetch_packet_bits_decoded_instruction_1_REG_needs_CSRs;
   assign io_decoded_fetch_packet_bits_decoded_instruction_1_SUBTRACT =
     io_decoded_fetch_packet_bits_decoded_instruction_1_REG_SUBTRACT;
   assign io_decoded_fetch_packet_bits_decoded_instruction_1_MULTIPLY =
@@ -3242,6 +3379,10 @@ module fetch_packet_decoder(
     io_decoded_fetch_packet_bits_decoded_instruction_1_REG_IS_LOAD;
   assign io_decoded_fetch_packet_bits_decoded_instruction_1_IS_STORE =
     io_decoded_fetch_packet_bits_decoded_instruction_1_REG_IS_STORE;
+  assign io_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS1_ready =
+    io_decoded_fetch_packet_bits_decoded_instruction_2_REG_ready_bits_RS1_ready;
+  assign io_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS2_ready =
+    io_decoded_fetch_packet_bits_decoded_instruction_2_REG_ready_bits_RS2_ready;
   assign io_decoded_fetch_packet_bits_decoded_instruction_2_RD =
     io_decoded_fetch_packet_bits_decoded_instruction_2_REG_RD;
   assign io_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid =
@@ -3272,6 +3413,8 @@ module fetch_packet_decoder(
     io_decoded_fetch_packet_bits_decoded_instruction_2_REG_needs_ALU;
   assign io_decoded_fetch_packet_bits_decoded_instruction_2_needs_branch_unit =
     io_decoded_fetch_packet_bits_decoded_instruction_2_REG_needs_branch_unit;
+  assign io_decoded_fetch_packet_bits_decoded_instruction_2_needs_CSRs =
+    io_decoded_fetch_packet_bits_decoded_instruction_2_REG_needs_CSRs;
   assign io_decoded_fetch_packet_bits_decoded_instruction_2_SUBTRACT =
     io_decoded_fetch_packet_bits_decoded_instruction_2_REG_SUBTRACT;
   assign io_decoded_fetch_packet_bits_decoded_instruction_2_MULTIPLY =
@@ -3282,6 +3425,10 @@ module fetch_packet_decoder(
     io_decoded_fetch_packet_bits_decoded_instruction_2_REG_IS_LOAD;
   assign io_decoded_fetch_packet_bits_decoded_instruction_2_IS_STORE =
     io_decoded_fetch_packet_bits_decoded_instruction_2_REG_IS_STORE;
+  assign io_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS1_ready =
+    io_decoded_fetch_packet_bits_decoded_instruction_3_REG_ready_bits_RS1_ready;
+  assign io_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS2_ready =
+    io_decoded_fetch_packet_bits_decoded_instruction_3_REG_ready_bits_RS2_ready;
   assign io_decoded_fetch_packet_bits_decoded_instruction_3_RD =
     io_decoded_fetch_packet_bits_decoded_instruction_3_REG_RD;
   assign io_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid =
@@ -3312,6 +3459,8 @@ module fetch_packet_decoder(
     io_decoded_fetch_packet_bits_decoded_instruction_3_REG_needs_ALU;
   assign io_decoded_fetch_packet_bits_decoded_instruction_3_needs_branch_unit =
     io_decoded_fetch_packet_bits_decoded_instruction_3_REG_needs_branch_unit;
+  assign io_decoded_fetch_packet_bits_decoded_instruction_3_needs_CSRs =
+    io_decoded_fetch_packet_bits_decoded_instruction_3_REG_needs_CSRs;
   assign io_decoded_fetch_packet_bits_decoded_instruction_3_SUBTRACT =
     io_decoded_fetch_packet_bits_decoded_instruction_3_REG_SUBTRACT;
   assign io_decoded_fetch_packet_bits_decoded_instruction_3_MULTIPLY =
@@ -3354,6 +3503,8 @@ module Queue16_decoded_fetch_packet(
   output        io_enq_ready,
   input         io_enq_valid,
   input  [31:0] io_enq_bits_fetch_PC,
+  input         io_enq_bits_decoded_instruction_0_ready_bits_RS1_ready,
+                io_enq_bits_decoded_instruction_0_ready_bits_RS2_ready,
   input  [5:0]  io_enq_bits_decoded_instruction_0_RD,
   input         io_enq_bits_decoded_instruction_0_RD_valid,
   input  [5:0]  io_enq_bits_decoded_instruction_0_RS1,
@@ -3369,11 +3520,14 @@ module Queue16_decoded_fetch_packet(
                 io_enq_bits_decoded_instruction_0_RS_type,
   input         io_enq_bits_decoded_instruction_0_needs_ALU,
                 io_enq_bits_decoded_instruction_0_needs_branch_unit,
+                io_enq_bits_decoded_instruction_0_needs_CSRs,
                 io_enq_bits_decoded_instruction_0_SUBTRACT,
                 io_enq_bits_decoded_instruction_0_MULTIPLY,
                 io_enq_bits_decoded_instruction_0_IMMEDIATE,
                 io_enq_bits_decoded_instruction_0_IS_LOAD,
                 io_enq_bits_decoded_instruction_0_IS_STORE,
+                io_enq_bits_decoded_instruction_1_ready_bits_RS1_ready,
+                io_enq_bits_decoded_instruction_1_ready_bits_RS2_ready,
   input  [5:0]  io_enq_bits_decoded_instruction_1_RD,
   input         io_enq_bits_decoded_instruction_1_RD_valid,
   input  [5:0]  io_enq_bits_decoded_instruction_1_RS1,
@@ -3389,11 +3543,14 @@ module Queue16_decoded_fetch_packet(
                 io_enq_bits_decoded_instruction_1_RS_type,
   input         io_enq_bits_decoded_instruction_1_needs_ALU,
                 io_enq_bits_decoded_instruction_1_needs_branch_unit,
+                io_enq_bits_decoded_instruction_1_needs_CSRs,
                 io_enq_bits_decoded_instruction_1_SUBTRACT,
                 io_enq_bits_decoded_instruction_1_MULTIPLY,
                 io_enq_bits_decoded_instruction_1_IMMEDIATE,
                 io_enq_bits_decoded_instruction_1_IS_LOAD,
                 io_enq_bits_decoded_instruction_1_IS_STORE,
+                io_enq_bits_decoded_instruction_2_ready_bits_RS1_ready,
+                io_enq_bits_decoded_instruction_2_ready_bits_RS2_ready,
   input  [5:0]  io_enq_bits_decoded_instruction_2_RD,
   input         io_enq_bits_decoded_instruction_2_RD_valid,
   input  [5:0]  io_enq_bits_decoded_instruction_2_RS1,
@@ -3409,11 +3566,14 @@ module Queue16_decoded_fetch_packet(
                 io_enq_bits_decoded_instruction_2_RS_type,
   input         io_enq_bits_decoded_instruction_2_needs_ALU,
                 io_enq_bits_decoded_instruction_2_needs_branch_unit,
+                io_enq_bits_decoded_instruction_2_needs_CSRs,
                 io_enq_bits_decoded_instruction_2_SUBTRACT,
                 io_enq_bits_decoded_instruction_2_MULTIPLY,
                 io_enq_bits_decoded_instruction_2_IMMEDIATE,
                 io_enq_bits_decoded_instruction_2_IS_LOAD,
                 io_enq_bits_decoded_instruction_2_IS_STORE,
+                io_enq_bits_decoded_instruction_3_ready_bits_RS1_ready,
+                io_enq_bits_decoded_instruction_3_ready_bits_RS2_ready,
   input  [5:0]  io_enq_bits_decoded_instruction_3_RD,
   input         io_enq_bits_decoded_instruction_3_RD_valid,
   input  [5:0]  io_enq_bits_decoded_instruction_3_RS1,
@@ -3429,6 +3589,7 @@ module Queue16_decoded_fetch_packet(
                 io_enq_bits_decoded_instruction_3_RS_type,
   input         io_enq_bits_decoded_instruction_3_needs_ALU,
                 io_enq_bits_decoded_instruction_3_needs_branch_unit,
+                io_enq_bits_decoded_instruction_3_needs_CSRs,
                 io_enq_bits_decoded_instruction_3_SUBTRACT,
                 io_enq_bits_decoded_instruction_3_MULTIPLY,
                 io_enq_bits_decoded_instruction_3_IMMEDIATE,
@@ -3574,7 +3735,7 @@ module Queue16_decoded_fetch_packet(
         io_enq_bits_decoded_instruction_3_IMMEDIATE,
         io_enq_bits_decoded_instruction_3_MULTIPLY,
         io_enq_bits_decoded_instruction_3_SUBTRACT,
-        1'h0,
+        io_enq_bits_decoded_instruction_3_needs_CSRs,
         io_enq_bits_decoded_instruction_3_needs_branch_unit,
         io_enq_bits_decoded_instruction_3_needs_ALU,
         io_enq_bits_decoded_instruction_3_RS_type,
@@ -3595,7 +3756,7 @@ module Queue16_decoded_fetch_packet(
         io_enq_bits_decoded_instruction_2_IMMEDIATE,
         io_enq_bits_decoded_instruction_2_MULTIPLY,
         io_enq_bits_decoded_instruction_2_SUBTRACT,
-        1'h0,
+        io_enq_bits_decoded_instruction_2_needs_CSRs,
         io_enq_bits_decoded_instruction_2_needs_branch_unit,
         io_enq_bits_decoded_instruction_2_needs_ALU,
         io_enq_bits_decoded_instruction_2_RS_type,
@@ -3616,7 +3777,7 @@ module Queue16_decoded_fetch_packet(
         io_enq_bits_decoded_instruction_1_IMMEDIATE,
         io_enq_bits_decoded_instruction_1_MULTIPLY,
         io_enq_bits_decoded_instruction_1_SUBTRACT,
-        1'h0,
+        io_enq_bits_decoded_instruction_1_needs_CSRs,
         io_enq_bits_decoded_instruction_1_needs_branch_unit,
         io_enq_bits_decoded_instruction_1_needs_ALU,
         io_enq_bits_decoded_instruction_1_RS_type,
@@ -3637,7 +3798,7 @@ module Queue16_decoded_fetch_packet(
         io_enq_bits_decoded_instruction_0_IMMEDIATE,
         io_enq_bits_decoded_instruction_0_MULTIPLY,
         io_enq_bits_decoded_instruction_0_SUBTRACT,
-        1'h0,
+        io_enq_bits_decoded_instruction_0_needs_CSRs,
         io_enq_bits_decoded_instruction_0_needs_branch_unit,
         io_enq_bits_decoded_instruction_0_needs_ALU,
         io_enq_bits_decoded_instruction_0_RS_type,
@@ -3688,7 +3849,8 @@ module Queue16_decoded_fetch_packet(
     empty ? io_enq_bits_decoded_instruction_0_needs_ALU : _ram_ext_R0_data[107];
   assign io_deq_bits_decoded_instruction_0_needs_branch_unit =
     empty ? io_enq_bits_decoded_instruction_0_needs_branch_unit : _ram_ext_R0_data[108];
-  assign io_deq_bits_decoded_instruction_0_needs_CSRs = ~empty & _ram_ext_R0_data[109];
+  assign io_deq_bits_decoded_instruction_0_needs_CSRs =
+    empty ? io_enq_bits_decoded_instruction_0_needs_CSRs : _ram_ext_R0_data[109];
   assign io_deq_bits_decoded_instruction_0_SUBTRACT =
     empty ? io_enq_bits_decoded_instruction_0_SUBTRACT : _ram_ext_R0_data[110];
   assign io_deq_bits_decoded_instruction_0_MULTIPLY =
@@ -3729,7 +3891,8 @@ module Queue16_decoded_fetch_packet(
     empty ? io_enq_bits_decoded_instruction_1_needs_ALU : _ram_ext_R0_data[190];
   assign io_deq_bits_decoded_instruction_1_needs_branch_unit =
     empty ? io_enq_bits_decoded_instruction_1_needs_branch_unit : _ram_ext_R0_data[191];
-  assign io_deq_bits_decoded_instruction_1_needs_CSRs = ~empty & _ram_ext_R0_data[192];
+  assign io_deq_bits_decoded_instruction_1_needs_CSRs =
+    empty ? io_enq_bits_decoded_instruction_1_needs_CSRs : _ram_ext_R0_data[192];
   assign io_deq_bits_decoded_instruction_1_SUBTRACT =
     empty ? io_enq_bits_decoded_instruction_1_SUBTRACT : _ram_ext_R0_data[193];
   assign io_deq_bits_decoded_instruction_1_MULTIPLY =
@@ -3770,7 +3933,8 @@ module Queue16_decoded_fetch_packet(
     empty ? io_enq_bits_decoded_instruction_2_needs_ALU : _ram_ext_R0_data[273];
   assign io_deq_bits_decoded_instruction_2_needs_branch_unit =
     empty ? io_enq_bits_decoded_instruction_2_needs_branch_unit : _ram_ext_R0_data[274];
-  assign io_deq_bits_decoded_instruction_2_needs_CSRs = ~empty & _ram_ext_R0_data[275];
+  assign io_deq_bits_decoded_instruction_2_needs_CSRs =
+    empty ? io_enq_bits_decoded_instruction_2_needs_CSRs : _ram_ext_R0_data[275];
   assign io_deq_bits_decoded_instruction_2_SUBTRACT =
     empty ? io_enq_bits_decoded_instruction_2_SUBTRACT : _ram_ext_R0_data[276];
   assign io_deq_bits_decoded_instruction_2_MULTIPLY =
@@ -3811,7 +3975,8 @@ module Queue16_decoded_fetch_packet(
     empty ? io_enq_bits_decoded_instruction_3_needs_ALU : _ram_ext_R0_data[356];
   assign io_deq_bits_decoded_instruction_3_needs_branch_unit =
     empty ? io_enq_bits_decoded_instruction_3_needs_branch_unit : _ram_ext_R0_data[357];
-  assign io_deq_bits_decoded_instruction_3_needs_CSRs = ~empty & _ram_ext_R0_data[358];
+  assign io_deq_bits_decoded_instruction_3_needs_CSRs =
+    empty ? io_enq_bits_decoded_instruction_3_needs_CSRs : _ram_ext_R0_data[358];
   assign io_deq_bits_decoded_instruction_3_SUBTRACT =
     empty ? io_enq_bits_decoded_instruction_3_SUBTRACT : _ram_ext_R0_data[359];
   assign io_deq_bits_decoded_instruction_3_MULTIPLY =
@@ -3838,6 +4003,8 @@ module Q_3(
   output        io_in_ready,
   input         io_in_valid,
   input  [31:0] io_in_bits_fetch_PC,
+  input         io_in_bits_decoded_instruction_0_ready_bits_RS1_ready,
+                io_in_bits_decoded_instruction_0_ready_bits_RS2_ready,
   input  [5:0]  io_in_bits_decoded_instruction_0_RD,
   input         io_in_bits_decoded_instruction_0_RD_valid,
   input  [5:0]  io_in_bits_decoded_instruction_0_RS1,
@@ -3853,11 +4020,14 @@ module Q_3(
                 io_in_bits_decoded_instruction_0_RS_type,
   input         io_in_bits_decoded_instruction_0_needs_ALU,
                 io_in_bits_decoded_instruction_0_needs_branch_unit,
+                io_in_bits_decoded_instruction_0_needs_CSRs,
                 io_in_bits_decoded_instruction_0_SUBTRACT,
                 io_in_bits_decoded_instruction_0_MULTIPLY,
                 io_in_bits_decoded_instruction_0_IMMEDIATE,
                 io_in_bits_decoded_instruction_0_IS_LOAD,
                 io_in_bits_decoded_instruction_0_IS_STORE,
+                io_in_bits_decoded_instruction_1_ready_bits_RS1_ready,
+                io_in_bits_decoded_instruction_1_ready_bits_RS2_ready,
   input  [5:0]  io_in_bits_decoded_instruction_1_RD,
   input         io_in_bits_decoded_instruction_1_RD_valid,
   input  [5:0]  io_in_bits_decoded_instruction_1_RS1,
@@ -3873,11 +4043,14 @@ module Q_3(
                 io_in_bits_decoded_instruction_1_RS_type,
   input         io_in_bits_decoded_instruction_1_needs_ALU,
                 io_in_bits_decoded_instruction_1_needs_branch_unit,
+                io_in_bits_decoded_instruction_1_needs_CSRs,
                 io_in_bits_decoded_instruction_1_SUBTRACT,
                 io_in_bits_decoded_instruction_1_MULTIPLY,
                 io_in_bits_decoded_instruction_1_IMMEDIATE,
                 io_in_bits_decoded_instruction_1_IS_LOAD,
                 io_in_bits_decoded_instruction_1_IS_STORE,
+                io_in_bits_decoded_instruction_2_ready_bits_RS1_ready,
+                io_in_bits_decoded_instruction_2_ready_bits_RS2_ready,
   input  [5:0]  io_in_bits_decoded_instruction_2_RD,
   input         io_in_bits_decoded_instruction_2_RD_valid,
   input  [5:0]  io_in_bits_decoded_instruction_2_RS1,
@@ -3893,11 +4066,14 @@ module Q_3(
                 io_in_bits_decoded_instruction_2_RS_type,
   input         io_in_bits_decoded_instruction_2_needs_ALU,
                 io_in_bits_decoded_instruction_2_needs_branch_unit,
+                io_in_bits_decoded_instruction_2_needs_CSRs,
                 io_in_bits_decoded_instruction_2_SUBTRACT,
                 io_in_bits_decoded_instruction_2_MULTIPLY,
                 io_in_bits_decoded_instruction_2_IMMEDIATE,
                 io_in_bits_decoded_instruction_2_IS_LOAD,
                 io_in_bits_decoded_instruction_2_IS_STORE,
+                io_in_bits_decoded_instruction_3_ready_bits_RS1_ready,
+                io_in_bits_decoded_instruction_3_ready_bits_RS2_ready,
   input  [5:0]  io_in_bits_decoded_instruction_3_RD,
   input         io_in_bits_decoded_instruction_3_RD_valid,
   input  [5:0]  io_in_bits_decoded_instruction_3_RS1,
@@ -3913,6 +4089,7 @@ module Q_3(
                 io_in_bits_decoded_instruction_3_RS_type,
   input         io_in_bits_decoded_instruction_3_needs_ALU,
                 io_in_bits_decoded_instruction_3_needs_branch_unit,
+                io_in_bits_decoded_instruction_3_needs_CSRs,
                 io_in_bits_decoded_instruction_3_SUBTRACT,
                 io_in_bits_decoded_instruction_3_MULTIPLY,
                 io_in_bits_decoded_instruction_3_IMMEDIATE,
@@ -4016,11 +4193,15 @@ module Q_3(
 );
 
   Queue16_decoded_fetch_packet queue (
-    .clock                                               (clock),
-    .reset                                               (reset),
-    .io_enq_ready                                        (io_in_ready),
-    .io_enq_valid                                        (io_in_valid),
-    .io_enq_bits_fetch_PC                                (io_in_bits_fetch_PC),
+    .clock                                                  (clock),
+    .reset                                                  (reset),
+    .io_enq_ready                                           (io_in_ready),
+    .io_enq_valid                                           (io_in_valid),
+    .io_enq_bits_fetch_PC                                   (io_in_bits_fetch_PC),
+    .io_enq_bits_decoded_instruction_0_ready_bits_RS1_ready
+      (io_in_bits_decoded_instruction_0_ready_bits_RS1_ready),
+    .io_enq_bits_decoded_instruction_0_ready_bits_RS2_ready
+      (io_in_bits_decoded_instruction_0_ready_bits_RS2_ready),
     .io_enq_bits_decoded_instruction_0_RD
       (io_in_bits_decoded_instruction_0_RD),
     .io_enq_bits_decoded_instruction_0_RD_valid
@@ -4051,6 +4232,8 @@ module Q_3(
       (io_in_bits_decoded_instruction_0_needs_ALU),
     .io_enq_bits_decoded_instruction_0_needs_branch_unit
       (io_in_bits_decoded_instruction_0_needs_branch_unit),
+    .io_enq_bits_decoded_instruction_0_needs_CSRs
+      (io_in_bits_decoded_instruction_0_needs_CSRs),
     .io_enq_bits_decoded_instruction_0_SUBTRACT
       (io_in_bits_decoded_instruction_0_SUBTRACT),
     .io_enq_bits_decoded_instruction_0_MULTIPLY
@@ -4061,6 +4244,10 @@ module Q_3(
       (io_in_bits_decoded_instruction_0_IS_LOAD),
     .io_enq_bits_decoded_instruction_0_IS_STORE
       (io_in_bits_decoded_instruction_0_IS_STORE),
+    .io_enq_bits_decoded_instruction_1_ready_bits_RS1_ready
+      (io_in_bits_decoded_instruction_1_ready_bits_RS1_ready),
+    .io_enq_bits_decoded_instruction_1_ready_bits_RS2_ready
+      (io_in_bits_decoded_instruction_1_ready_bits_RS2_ready),
     .io_enq_bits_decoded_instruction_1_RD
       (io_in_bits_decoded_instruction_1_RD),
     .io_enq_bits_decoded_instruction_1_RD_valid
@@ -4091,6 +4278,8 @@ module Q_3(
       (io_in_bits_decoded_instruction_1_needs_ALU),
     .io_enq_bits_decoded_instruction_1_needs_branch_unit
       (io_in_bits_decoded_instruction_1_needs_branch_unit),
+    .io_enq_bits_decoded_instruction_1_needs_CSRs
+      (io_in_bits_decoded_instruction_1_needs_CSRs),
     .io_enq_bits_decoded_instruction_1_SUBTRACT
       (io_in_bits_decoded_instruction_1_SUBTRACT),
     .io_enq_bits_decoded_instruction_1_MULTIPLY
@@ -4101,6 +4290,10 @@ module Q_3(
       (io_in_bits_decoded_instruction_1_IS_LOAD),
     .io_enq_bits_decoded_instruction_1_IS_STORE
       (io_in_bits_decoded_instruction_1_IS_STORE),
+    .io_enq_bits_decoded_instruction_2_ready_bits_RS1_ready
+      (io_in_bits_decoded_instruction_2_ready_bits_RS1_ready),
+    .io_enq_bits_decoded_instruction_2_ready_bits_RS2_ready
+      (io_in_bits_decoded_instruction_2_ready_bits_RS2_ready),
     .io_enq_bits_decoded_instruction_2_RD
       (io_in_bits_decoded_instruction_2_RD),
     .io_enq_bits_decoded_instruction_2_RD_valid
@@ -4131,6 +4324,8 @@ module Q_3(
       (io_in_bits_decoded_instruction_2_needs_ALU),
     .io_enq_bits_decoded_instruction_2_needs_branch_unit
       (io_in_bits_decoded_instruction_2_needs_branch_unit),
+    .io_enq_bits_decoded_instruction_2_needs_CSRs
+      (io_in_bits_decoded_instruction_2_needs_CSRs),
     .io_enq_bits_decoded_instruction_2_SUBTRACT
       (io_in_bits_decoded_instruction_2_SUBTRACT),
     .io_enq_bits_decoded_instruction_2_MULTIPLY
@@ -4141,6 +4336,10 @@ module Q_3(
       (io_in_bits_decoded_instruction_2_IS_LOAD),
     .io_enq_bits_decoded_instruction_2_IS_STORE
       (io_in_bits_decoded_instruction_2_IS_STORE),
+    .io_enq_bits_decoded_instruction_3_ready_bits_RS1_ready
+      (io_in_bits_decoded_instruction_3_ready_bits_RS1_ready),
+    .io_enq_bits_decoded_instruction_3_ready_bits_RS2_ready
+      (io_in_bits_decoded_instruction_3_ready_bits_RS2_ready),
     .io_enq_bits_decoded_instruction_3_RD
       (io_in_bits_decoded_instruction_3_RD),
     .io_enq_bits_decoded_instruction_3_RD_valid
@@ -4171,6 +4370,8 @@ module Q_3(
       (io_in_bits_decoded_instruction_3_needs_ALU),
     .io_enq_bits_decoded_instruction_3_needs_branch_unit
       (io_in_bits_decoded_instruction_3_needs_branch_unit),
+    .io_enq_bits_decoded_instruction_3_needs_CSRs
+      (io_in_bits_decoded_instruction_3_needs_CSRs),
     .io_enq_bits_decoded_instruction_3_SUBTRACT
       (io_in_bits_decoded_instruction_3_SUBTRACT),
     .io_enq_bits_decoded_instruction_3_MULTIPLY
@@ -4181,13 +4382,13 @@ module Q_3(
       (io_in_bits_decoded_instruction_3_IS_LOAD),
     .io_enq_bits_decoded_instruction_3_IS_STORE
       (io_in_bits_decoded_instruction_3_IS_STORE),
-    .io_enq_bits_valid_bits_0                            (io_in_bits_valid_bits_0),
-    .io_enq_bits_valid_bits_1                            (io_in_bits_valid_bits_1),
-    .io_enq_bits_valid_bits_2                            (io_in_bits_valid_bits_2),
-    .io_enq_bits_valid_bits_3                            (io_in_bits_valid_bits_3),
-    .io_deq_ready                                        (io_out_ready),
-    .io_deq_valid                                        (io_out_valid),
-    .io_deq_bits_fetch_PC                                (io_out_bits_fetch_PC),
+    .io_enq_bits_valid_bits_0                               (io_in_bits_valid_bits_0),
+    .io_enq_bits_valid_bits_1                               (io_in_bits_valid_bits_1),
+    .io_enq_bits_valid_bits_2                               (io_in_bits_valid_bits_2),
+    .io_enq_bits_valid_bits_3                               (io_in_bits_valid_bits_3),
+    .io_deq_ready                                           (io_out_ready),
+    .io_deq_valid                                           (io_out_valid),
+    .io_deq_bits_fetch_PC                                   (io_out_bits_fetch_PC),
     .io_deq_bits_decoded_instruction_0_RD
       (io_out_bits_decoded_instruction_0_RD),
     .io_deq_bits_decoded_instruction_0_RD_valid
@@ -4356,10 +4557,10 @@ module Q_3(
       (io_out_bits_decoded_instruction_3_IS_LOAD),
     .io_deq_bits_decoded_instruction_3_IS_STORE
       (io_out_bits_decoded_instruction_3_IS_STORE),
-    .io_deq_bits_valid_bits_0                            (io_out_bits_valid_bits_0),
-    .io_deq_bits_valid_bits_1                            (io_out_bits_valid_bits_1),
-    .io_deq_bits_valid_bits_2                            (io_out_bits_valid_bits_2),
-    .io_deq_bits_valid_bits_3                            (io_out_bits_valid_bits_3)
+    .io_deq_bits_valid_bits_0                               (io_out_bits_valid_bits_0),
+    .io_deq_bits_valid_bits_1                               (io_out_bits_valid_bits_1),
+    .io_deq_bits_valid_bits_2                               (io_out_bits_valid_bits_2),
+    .io_deq_bits_valid_bits_3                               (io_out_bits_valid_bits_3)
   );
 endmodule
 
@@ -4487,7 +4688,8 @@ module free_list(
   input  [5:0] io_free_values_0,
                io_free_values_1,
                io_free_values_2,
-               io_free_values_3
+               io_free_values_3,
+  output       io_empty
 );
 
   wire             _input_sorter_io_free_valid_sorted_0;
@@ -4629,6 +4831,9 @@ module free_list(
      {free_list_buffer_2},
      {free_list_buffer_1},
      {free_list_buffer_0}};
+  wire [6:0]       _io_empty_T_5 = front_pointer + 7'h4;
+  wire             io_empty_0 =
+    _io_empty_T_5[5:0] == back_pointer[5:0] & _io_empty_T_5[6] != back_pointer[6];
   always @(posedge clock) begin
     if (reset) begin
       front_pointer <= 7'h0;
@@ -4702,11 +4907,9 @@ module free_list(
       automatic logic [5:0] _GEN_0;
       automatic logic [5:0] _GEN_1;
       automatic logic [5:0] _GEN_2 = back_pointer[5:0] + 6'h3;
-      automatic logic [6:0] _io_empty_T_5 = front_pointer + 7'h4;
       _GEN_0 = back_pointer[5:0] + 6'h1;
       _GEN_1 = back_pointer[5:0] + 6'h2;
-      if (~(_io_empty_T_5[5:0] == back_pointer[5:0]
-            & _io_empty_T_5[6] != back_pointer[6]))
+      if (~io_empty_0)
         front_pointer <=
           front_pointer
           + {4'h0,
@@ -5267,6 +5470,7 @@ module free_list(
     .io_renamed_values_sorted_2 (io_renamed_values_2),
     .io_renamed_values_sorted_3 (io_renamed_values_3)
   );
+  assign io_empty = io_empty_0;
 endmodule
 
 module WAW_handler(
@@ -5286,6 +5490,10 @@ module WAW_handler(
                io_RAT_wr_en_1,
                io_RAT_wr_en_2,
                io_RAT_wr_en_3,
+  output [4:0] io_RAT_RD_values_0,
+               io_RAT_RD_values_1,
+               io_RAT_RD_values_2,
+               io_RAT_RD_values_3,
   output [5:0] io_FL_RD_values_0,
                io_FL_RD_values_1,
                io_FL_RD_values_2,
@@ -5305,6 +5513,10 @@ module WAW_handler(
     io_decoder_RD_valid_bits_2
     & (io_decoder_RD_values_2 != io_decoder_RD_values_3 | ~io_decoder_RD_valid_bits_3);
   assign io_RAT_wr_en_3 = io_decoder_RD_valid_bits_3;
+  assign io_RAT_RD_values_0 = io_decoder_RD_values_0;
+  assign io_RAT_RD_values_1 = io_decoder_RD_values_1;
+  assign io_RAT_RD_values_2 = io_decoder_RD_values_2;
+  assign io_RAT_RD_values_3 = io_decoder_RD_values_3;
   assign io_FL_RD_values_0 = io_free_list_RD_values_0;
   assign io_FL_RD_values_1 = io_free_list_RD_values_1;
   assign io_FL_RD_values_2 = io_free_list_RD_values_2;
@@ -5338,7 +5550,11 @@ module RAT(
   output [3:0] io_active_checkpoint_value,
   input        io_restore_checkpoint,
   input  [3:0] io_restore_checkpoint_value,
-  output [5:0] io_RAT_RS1_0,
+  output [5:0] io_RAT_RD_0,
+               io_RAT_RD_1,
+               io_RAT_RD_2,
+               io_RAT_RD_3,
+               io_RAT_RS1_0,
                io_RAT_RS1_1,
                io_RAT_RS1_2,
                io_RAT_RS1_3,
@@ -5861,12 +6077,16 @@ module RAT(
   reg [5:0] RAT_memories_15_29;
   reg [5:0] RAT_memories_15_30;
   reg [5:0] RAT_memories_15_31;
+  reg [5:0] io_RAT_RD_0_REG;
   reg [5:0] io_RAT_RS1_0_REG;
   reg [5:0] io_RAT_RS2_0_REG;
+  reg [5:0] io_RAT_RD_1_REG;
   reg [5:0] io_RAT_RS1_1_REG;
   reg [5:0] io_RAT_RS2_1_REG;
+  reg [5:0] io_RAT_RD_2_REG;
   reg [5:0] io_RAT_RS1_2_REG;
   reg [5:0] io_RAT_RS2_2_REG;
+  reg [5:0] io_RAT_RD_3_REG;
   reg [5:0] io_RAT_RS1_3_REG;
   reg [5:0] io_RAT_RS2_3_REG;
   always @(posedge clock) begin
@@ -9557,16 +9777,24 @@ module RAT(
       else if (_GEN_187)
         RAT_memories_15_31 <= RAT_memories_14_31;
     end
+    io_RAT_RD_0_REG <= _GEN_31[io_instruction_RD_0];
     io_RAT_RS1_0_REG <= _GEN_31[io_instruction_RS1_0];
     io_RAT_RS2_0_REG <= _GEN_31[io_instruction_RS2_0];
+    io_RAT_RD_1_REG <= _GEN_31[io_instruction_RD_1];
     io_RAT_RS1_1_REG <= _GEN_31[io_instruction_RS1_1];
     io_RAT_RS2_1_REG <= _GEN_31[io_instruction_RS2_1];
+    io_RAT_RD_2_REG <= _GEN_31[io_instruction_RD_2];
     io_RAT_RS1_2_REG <= _GEN_31[io_instruction_RS1_2];
     io_RAT_RS2_2_REG <= _GEN_31[io_instruction_RS2_2];
+    io_RAT_RD_3_REG <= _GEN_31[io_instruction_RD_3];
     io_RAT_RS1_3_REG <= _GEN_31[io_instruction_RS1_3];
     io_RAT_RS2_3_REG <= _GEN_31[io_instruction_RS2_3];
   end // always @(posedge)
   assign io_active_checkpoint_value = active_RAT;
+  assign io_RAT_RD_0 = io_RAT_RD_0_REG;
+  assign io_RAT_RD_1 = io_RAT_RD_1_REG;
+  assign io_RAT_RD_2 = io_RAT_RD_2_REG;
+  assign io_RAT_RD_3 = io_RAT_RD_3_REG;
   assign io_RAT_RS1_0 = io_RAT_RS1_0_REG;
   assign io_RAT_RS1_1 = io_RAT_RS1_1_REG;
   assign io_RAT_RS1_2 = io_RAT_RS1_2_REG;
@@ -9577,7 +9805,7 @@ module RAT(
   assign io_RAT_RS2_3 = io_RAT_RS2_3_REG;
 endmodule
 
-module renamer(
+module rename(
   input         clock,
                 reset,
   output        io_decoded_fetch_packet_ready,
@@ -9776,25 +10004,415 @@ module renamer(
   input  [3:0]  io_restore_checkpoint_value
 );
 
-  wire       _WAW_handler_io_RAT_wr_en_0;
-  wire       _WAW_handler_io_RAT_wr_en_1;
-  wire       _WAW_handler_io_RAT_wr_en_2;
-  wire       _WAW_handler_io_RAT_wr_en_3;
-  wire [5:0] _WAW_handler_io_FL_RD_values_0;
-  wire [5:0] _WAW_handler_io_FL_RD_values_1;
-  wire [5:0] _WAW_handler_io_FL_RD_values_2;
-  wire [5:0] _WAW_handler_io_FL_RD_values_3;
-  wire [5:0] _free_list_io_renamed_values_0;
-  wire [5:0] _free_list_io_renamed_values_1;
-  wire [5:0] _free_list_io_renamed_values_2;
-  wire [5:0] _free_list_io_renamed_values_3;
+  wire [5:0]  renamed_RS2_0;
+  wire [5:0]  renamed_RS1_0;
+  wire [5:0]  renamed_RD_3;
+  wire [5:0]  renamed_RD_2;
+  wire [5:0]  renamed_RD_1;
+  wire [5:0]  renamed_RD_0;
+  wire [5:0]  _RAT_io_RAT_RS1_1;
+  wire [5:0]  _RAT_io_RAT_RS1_2;
+  wire [5:0]  _RAT_io_RAT_RS1_3;
+  wire [5:0]  _RAT_io_RAT_RS2_1;
+  wire [5:0]  _RAT_io_RAT_RS2_2;
+  wire [5:0]  _RAT_io_RAT_RS2_3;
+  wire        _WAW_handler_io_RAT_wr_en_0;
+  wire        _WAW_handler_io_RAT_wr_en_1;
+  wire        _WAW_handler_io_RAT_wr_en_2;
+  wire        _WAW_handler_io_RAT_wr_en_3;
+  wire [4:0]  _WAW_handler_io_RAT_RD_values_0;
+  wire [4:0]  _WAW_handler_io_RAT_RD_values_1;
+  wire [4:0]  _WAW_handler_io_RAT_RD_values_2;
+  wire [4:0]  _WAW_handler_io_RAT_RD_values_3;
+  wire [5:0]  _WAW_handler_io_FL_RD_values_0;
+  wire [5:0]  _WAW_handler_io_FL_RD_values_1;
+  wire [5:0]  _WAW_handler_io_FL_RD_values_2;
+  wire [5:0]  _WAW_handler_io_FL_RD_values_3;
+  wire [5:0]  _free_list_io_renamed_values_0;
+  wire [5:0]  _free_list_io_renamed_values_1;
+  wire [5:0]  _free_list_io_renamed_values_2;
+  wire [5:0]  _free_list_io_renamed_values_3;
+  wire        _free_list_io_empty;
+  wire [5:0]  instruction_RD_0 = io_decoded_fetch_packet_bits_decoded_instruction_0_RD;
+  wire [5:0]  instruction_RD_1 = io_decoded_fetch_packet_bits_decoded_instruction_1_RD;
+  wire [5:0]  instruction_RD_2 = io_decoded_fetch_packet_bits_decoded_instruction_2_RD;
+  wire [5:0]  instruction_RD_3 = io_decoded_fetch_packet_bits_decoded_instruction_3_RD;
+  wire [5:0]  instruction_RS1_0 = io_decoded_fetch_packet_bits_decoded_instruction_0_RS1;
+  wire [5:0]  instruction_RS1_1 = io_decoded_fetch_packet_bits_decoded_instruction_1_RS1;
+  wire [5:0]  instruction_RS1_2 = io_decoded_fetch_packet_bits_decoded_instruction_2_RS1;
+  wire [5:0]  instruction_RS1_3 = io_decoded_fetch_packet_bits_decoded_instruction_3_RS1;
+  wire [5:0]  instruction_RS2_0 = io_decoded_fetch_packet_bits_decoded_instruction_0_RS2;
+  wire [5:0]  instruction_RS2_1 = io_decoded_fetch_packet_bits_decoded_instruction_1_RS2;
+  wire [5:0]  instruction_RS2_2 = io_decoded_fetch_packet_bits_decoded_instruction_2_RS2;
+  wire [5:0]  instruction_RS2_3 = io_decoded_fetch_packet_bits_decoded_instruction_3_RS2;
+  wire        instruction_RD_valid_0 =
+    io_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid
+    & io_decoded_fetch_packet_valid;
+  wire        instruction_RD_valid_1 =
+    io_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid
+    & io_decoded_fetch_packet_valid;
+  wire        instruction_RD_valid_2 =
+    io_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid
+    & io_decoded_fetch_packet_valid;
+  wire        instruction_RD_valid_3 =
+    io_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid
+    & io_decoded_fetch_packet_valid;
+  reg  [5:0]  REG;
+  reg  [5:0]  REG_1;
+  reg  [5:0]  renamed_RS1_1_REG;
+  wire [5:0]  renamed_RS1_1 = REG == REG_1 ? renamed_RS1_1_REG : _RAT_io_RAT_RS1_1;
+  reg  [5:0]  REG_2;
+  reg  [5:0]  REG_3;
+  reg  [5:0]  renamed_RS2_1_REG;
+  wire [5:0]  renamed_RS2_1 = REG_2 == REG_3 ? renamed_RS2_1_REG : _RAT_io_RAT_RS2_1;
+  reg  [5:0]  REG_4;
+  reg  [5:0]  REG_5;
+  reg  [5:0]  renamed_RS1_2_REG;
+  reg  [5:0]  REG_6;
+  reg  [5:0]  REG_7;
+  reg  [5:0]  renamed_RS2_2_REG;
+  reg  [5:0]  REG_8;
+  reg  [5:0]  REG_9;
+  reg  [5:0]  renamed_RS1_2_REG_1;
+  wire [5:0]  renamed_RS1_2 =
+    REG_8 == REG_9
+      ? renamed_RS1_2_REG_1
+      : REG_4 == REG_5 ? renamed_RS1_2_REG : _RAT_io_RAT_RS1_2;
+  reg  [5:0]  REG_10;
+  reg  [5:0]  REG_11;
+  reg  [5:0]  renamed_RS2_2_REG_1;
+  wire [5:0]  renamed_RS2_2 =
+    REG_10 == REG_11
+      ? renamed_RS2_2_REG_1
+      : REG_6 == REG_7 ? renamed_RS2_2_REG : _RAT_io_RAT_RS2_2;
+  reg  [5:0]  REG_12;
+  reg  [5:0]  REG_13;
+  reg  [5:0]  renamed_RS1_3_REG;
+  reg  [5:0]  REG_14;
+  reg  [5:0]  REG_15;
+  reg  [5:0]  renamed_RS2_3_REG;
+  reg  [5:0]  REG_16;
+  reg  [5:0]  REG_17;
+  reg  [5:0]  renamed_RS1_3_REG_1;
+  reg  [5:0]  REG_18;
+  reg  [5:0]  REG_19;
+  reg  [5:0]  renamed_RS2_3_REG_1;
+  reg  [5:0]  REG_20;
+  reg  [5:0]  REG_21;
+  reg  [5:0]  renamed_RS1_3_REG_2;
+  wire [5:0]  renamed_RS1_3 =
+    REG_20 == REG_21
+      ? renamed_RS1_3_REG_2
+      : REG_16 == REG_17
+          ? renamed_RS1_3_REG_1
+          : REG_12 == REG_13 ? renamed_RS1_3_REG : _RAT_io_RAT_RS1_3;
+  reg  [5:0]  REG_22;
+  reg  [5:0]  REG_23;
+  reg  [5:0]  renamed_RS2_3_REG_2;
+  wire [5:0]  renamed_RS2_3 =
+    REG_22 == REG_23
+      ? renamed_RS2_3_REG_2
+      : REG_18 == REG_19
+          ? renamed_RS2_3_REG_1
+          : REG_14 == REG_15 ? renamed_RS2_3_REG : _RAT_io_RAT_RS2_3;
+  reg  [31:0] io_renamed_decoded_fetch_packet_bits_REG_fetch_PC;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_RS1_valid;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_RS2_valid;
+  reg  [31:0] io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_IMM;
+  reg  [2:0]  io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_FUNCT3;
+  reg  [3:0]  io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_packet_index;
+  reg  [5:0]  io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_ROB_index;
+  reg  [4:0]
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_instructionType;
+  reg  [1:0]  io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_portID;
+  reg  [1:0]  io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_RS_type;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_needs_ALU;
+  reg
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_needs_branch_unit;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_needs_CSRs;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_SUBTRACT;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_MULTIPLY;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_IMMEDIATE;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_IS_LOAD;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_IS_STORE;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_RS1_valid;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_RS2_valid;
+  reg  [31:0] io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_IMM;
+  reg  [2:0]  io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_FUNCT3;
+  reg  [3:0]  io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_packet_index;
+  reg  [5:0]  io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_ROB_index;
+  reg  [4:0]
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_instructionType;
+  reg  [1:0]  io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_portID;
+  reg  [1:0]  io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_RS_type;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_needs_ALU;
+  reg
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_needs_branch_unit;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_needs_CSRs;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_SUBTRACT;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_MULTIPLY;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_IMMEDIATE;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_IS_LOAD;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_IS_STORE;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_RS1_valid;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_RS2_valid;
+  reg  [31:0] io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_IMM;
+  reg  [2:0]  io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_FUNCT3;
+  reg  [3:0]  io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_packet_index;
+  reg  [5:0]  io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_ROB_index;
+  reg  [4:0]
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_instructionType;
+  reg  [1:0]  io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_portID;
+  reg  [1:0]  io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_RS_type;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_needs_ALU;
+  reg
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_needs_branch_unit;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_needs_CSRs;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_SUBTRACT;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_MULTIPLY;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_IMMEDIATE;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_IS_LOAD;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_IS_STORE;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_RS1_valid;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_RS2_valid;
+  reg  [31:0] io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_IMM;
+  reg  [2:0]  io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_FUNCT3;
+  reg  [3:0]  io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_packet_index;
+  reg  [5:0]  io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_ROB_index;
+  reg  [4:0]
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_instructionType;
+  reg  [1:0]  io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_portID;
+  reg  [1:0]  io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_RS_type;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_needs_ALU;
+  reg
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_needs_branch_unit;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_needs_CSRs;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_SUBTRACT;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_MULTIPLY;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_IMMEDIATE;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_IS_LOAD;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_IS_STORE;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_valid_bits_0;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_valid_bits_1;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_valid_bits_2;
+  reg         io_renamed_decoded_fetch_packet_bits_REG_valid_bits_3;
+  reg  [5:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD_REG;
+  reg         io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid_REG;
+  reg  [5:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD_REG;
+  reg         io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid_REG;
+  reg  [5:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD_REG;
+  reg         io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid_REG;
+  reg  [5:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD_REG;
+  reg         io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid_REG;
+  reg         io_renamed_decoded_fetch_packet_valid_REG;
+  always @(posedge clock) begin
+    REG <= instruction_RS1_1;
+    REG_1 <= instruction_RD_0;
+    renamed_RS1_1_REG <= _free_list_io_renamed_values_0;
+    REG_2 <= instruction_RS2_1;
+    REG_3 <= instruction_RD_0;
+    renamed_RS2_1_REG <= _free_list_io_renamed_values_0;
+    REG_4 <= instruction_RS1_2;
+    REG_5 <= instruction_RD_0;
+    renamed_RS1_2_REG <= _free_list_io_renamed_values_0;
+    REG_6 <= instruction_RS2_2;
+    REG_7 <= instruction_RD_0;
+    renamed_RS2_2_REG <= _free_list_io_renamed_values_0;
+    REG_8 <= instruction_RS1_2;
+    REG_9 <= instruction_RD_1;
+    renamed_RS1_2_REG_1 <= _free_list_io_renamed_values_1;
+    REG_10 <= instruction_RS2_2;
+    REG_11 <= instruction_RD_1;
+    renamed_RS2_2_REG_1 <= _free_list_io_renamed_values_1;
+    REG_12 <= instruction_RS1_3;
+    REG_13 <= instruction_RD_0;
+    renamed_RS1_3_REG <= _free_list_io_renamed_values_0;
+    REG_14 <= instruction_RS2_3;
+    REG_15 <= instruction_RD_0;
+    renamed_RS2_3_REG <= _free_list_io_renamed_values_0;
+    REG_16 <= instruction_RS1_3;
+    REG_17 <= instruction_RD_1;
+    renamed_RS1_3_REG_1 <= _free_list_io_renamed_values_1;
+    REG_18 <= instruction_RS2_3;
+    REG_19 <= instruction_RD_1;
+    renamed_RS2_3_REG_1 <= _free_list_io_renamed_values_1;
+    REG_20 <= instruction_RS1_3;
+    REG_21 <= instruction_RD_2;
+    renamed_RS1_3_REG_2 <= _free_list_io_renamed_values_2;
+    REG_22 <= instruction_RS2_3;
+    REG_23 <= instruction_RD_2;
+    renamed_RS2_3_REG_2 <= _free_list_io_renamed_values_2;
+    io_renamed_decoded_fetch_packet_bits_REG_fetch_PC <=
+      io_decoded_fetch_packet_bits_fetch_PC;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_RS1_valid <=
+      io_decoded_fetch_packet_bits_decoded_instruction_0_RS1_valid;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_RS2_valid <=
+      io_decoded_fetch_packet_bits_decoded_instruction_0_RS2_valid;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_IMM <=
+      io_decoded_fetch_packet_bits_decoded_instruction_0_IMM;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_FUNCT3 <=
+      io_decoded_fetch_packet_bits_decoded_instruction_0_FUNCT3;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_packet_index <=
+      io_decoded_fetch_packet_bits_decoded_instruction_0_packet_index;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_ROB_index <=
+      io_decoded_fetch_packet_bits_decoded_instruction_0_ROB_index;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_instructionType <=
+      io_decoded_fetch_packet_bits_decoded_instruction_0_instructionType;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_portID <=
+      io_decoded_fetch_packet_bits_decoded_instruction_0_portID;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_RS_type <=
+      io_decoded_fetch_packet_bits_decoded_instruction_0_RS_type;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_needs_ALU <=
+      io_decoded_fetch_packet_bits_decoded_instruction_0_needs_ALU;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_needs_branch_unit <=
+      io_decoded_fetch_packet_bits_decoded_instruction_0_needs_branch_unit;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_needs_CSRs <=
+      io_decoded_fetch_packet_bits_decoded_instruction_0_needs_CSRs;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_SUBTRACT <=
+      io_decoded_fetch_packet_bits_decoded_instruction_0_SUBTRACT;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_MULTIPLY <=
+      io_decoded_fetch_packet_bits_decoded_instruction_0_MULTIPLY;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_IMMEDIATE <=
+      io_decoded_fetch_packet_bits_decoded_instruction_0_IMMEDIATE;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_IS_LOAD <=
+      io_decoded_fetch_packet_bits_decoded_instruction_0_IS_LOAD;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_IS_STORE <=
+      io_decoded_fetch_packet_bits_decoded_instruction_0_IS_STORE;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_RS1_valid <=
+      io_decoded_fetch_packet_bits_decoded_instruction_1_RS1_valid;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_RS2_valid <=
+      io_decoded_fetch_packet_bits_decoded_instruction_1_RS2_valid;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_IMM <=
+      io_decoded_fetch_packet_bits_decoded_instruction_1_IMM;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_FUNCT3 <=
+      io_decoded_fetch_packet_bits_decoded_instruction_1_FUNCT3;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_packet_index <=
+      io_decoded_fetch_packet_bits_decoded_instruction_1_packet_index;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_ROB_index <=
+      io_decoded_fetch_packet_bits_decoded_instruction_1_ROB_index;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_instructionType <=
+      io_decoded_fetch_packet_bits_decoded_instruction_1_instructionType;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_portID <=
+      io_decoded_fetch_packet_bits_decoded_instruction_1_portID;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_RS_type <=
+      io_decoded_fetch_packet_bits_decoded_instruction_1_RS_type;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_needs_ALU <=
+      io_decoded_fetch_packet_bits_decoded_instruction_1_needs_ALU;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_needs_branch_unit <=
+      io_decoded_fetch_packet_bits_decoded_instruction_1_needs_branch_unit;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_needs_CSRs <=
+      io_decoded_fetch_packet_bits_decoded_instruction_1_needs_CSRs;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_SUBTRACT <=
+      io_decoded_fetch_packet_bits_decoded_instruction_1_SUBTRACT;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_MULTIPLY <=
+      io_decoded_fetch_packet_bits_decoded_instruction_1_MULTIPLY;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_IMMEDIATE <=
+      io_decoded_fetch_packet_bits_decoded_instruction_1_IMMEDIATE;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_IS_LOAD <=
+      io_decoded_fetch_packet_bits_decoded_instruction_1_IS_LOAD;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_IS_STORE <=
+      io_decoded_fetch_packet_bits_decoded_instruction_1_IS_STORE;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_RS1_valid <=
+      io_decoded_fetch_packet_bits_decoded_instruction_2_RS1_valid;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_RS2_valid <=
+      io_decoded_fetch_packet_bits_decoded_instruction_2_RS2_valid;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_IMM <=
+      io_decoded_fetch_packet_bits_decoded_instruction_2_IMM;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_FUNCT3 <=
+      io_decoded_fetch_packet_bits_decoded_instruction_2_FUNCT3;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_packet_index <=
+      io_decoded_fetch_packet_bits_decoded_instruction_2_packet_index;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_ROB_index <=
+      io_decoded_fetch_packet_bits_decoded_instruction_2_ROB_index;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_instructionType <=
+      io_decoded_fetch_packet_bits_decoded_instruction_2_instructionType;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_portID <=
+      io_decoded_fetch_packet_bits_decoded_instruction_2_portID;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_RS_type <=
+      io_decoded_fetch_packet_bits_decoded_instruction_2_RS_type;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_needs_ALU <=
+      io_decoded_fetch_packet_bits_decoded_instruction_2_needs_ALU;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_needs_branch_unit <=
+      io_decoded_fetch_packet_bits_decoded_instruction_2_needs_branch_unit;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_needs_CSRs <=
+      io_decoded_fetch_packet_bits_decoded_instruction_2_needs_CSRs;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_SUBTRACT <=
+      io_decoded_fetch_packet_bits_decoded_instruction_2_SUBTRACT;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_MULTIPLY <=
+      io_decoded_fetch_packet_bits_decoded_instruction_2_MULTIPLY;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_IMMEDIATE <=
+      io_decoded_fetch_packet_bits_decoded_instruction_2_IMMEDIATE;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_IS_LOAD <=
+      io_decoded_fetch_packet_bits_decoded_instruction_2_IS_LOAD;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_IS_STORE <=
+      io_decoded_fetch_packet_bits_decoded_instruction_2_IS_STORE;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_RS1_valid <=
+      io_decoded_fetch_packet_bits_decoded_instruction_3_RS1_valid;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_RS2_valid <=
+      io_decoded_fetch_packet_bits_decoded_instruction_3_RS2_valid;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_IMM <=
+      io_decoded_fetch_packet_bits_decoded_instruction_3_IMM;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_FUNCT3 <=
+      io_decoded_fetch_packet_bits_decoded_instruction_3_FUNCT3;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_packet_index <=
+      io_decoded_fetch_packet_bits_decoded_instruction_3_packet_index;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_ROB_index <=
+      io_decoded_fetch_packet_bits_decoded_instruction_3_ROB_index;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_instructionType <=
+      io_decoded_fetch_packet_bits_decoded_instruction_3_instructionType;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_portID <=
+      io_decoded_fetch_packet_bits_decoded_instruction_3_portID;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_RS_type <=
+      io_decoded_fetch_packet_bits_decoded_instruction_3_RS_type;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_needs_ALU <=
+      io_decoded_fetch_packet_bits_decoded_instruction_3_needs_ALU;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_needs_branch_unit <=
+      io_decoded_fetch_packet_bits_decoded_instruction_3_needs_branch_unit;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_needs_CSRs <=
+      io_decoded_fetch_packet_bits_decoded_instruction_3_needs_CSRs;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_SUBTRACT <=
+      io_decoded_fetch_packet_bits_decoded_instruction_3_SUBTRACT;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_MULTIPLY <=
+      io_decoded_fetch_packet_bits_decoded_instruction_3_MULTIPLY;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_IMMEDIATE <=
+      io_decoded_fetch_packet_bits_decoded_instruction_3_IMMEDIATE;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_IS_LOAD <=
+      io_decoded_fetch_packet_bits_decoded_instruction_3_IS_LOAD;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_IS_STORE <=
+      io_decoded_fetch_packet_bits_decoded_instruction_3_IS_STORE;
+    io_renamed_decoded_fetch_packet_bits_REG_valid_bits_0 <=
+      io_decoded_fetch_packet_bits_valid_bits_0;
+    io_renamed_decoded_fetch_packet_bits_REG_valid_bits_1 <=
+      io_decoded_fetch_packet_bits_valid_bits_1;
+    io_renamed_decoded_fetch_packet_bits_REG_valid_bits_2 <=
+      io_decoded_fetch_packet_bits_valid_bits_2;
+    io_renamed_decoded_fetch_packet_bits_REG_valid_bits_3 <=
+      io_decoded_fetch_packet_bits_valid_bits_3;
+    io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD_REG <=
+      _free_list_io_renamed_values_0;
+    io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid_REG <=
+      instruction_RD_valid_0;
+    io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD_REG <=
+      _free_list_io_renamed_values_1;
+    io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid_REG <=
+      instruction_RD_valid_1;
+    io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD_REG <=
+      _free_list_io_renamed_values_2;
+    io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid_REG <=
+      instruction_RD_valid_2;
+    io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD_REG <=
+      _free_list_io_renamed_values_3;
+    io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid_REG <=
+      instruction_RD_valid_3;
+    io_renamed_decoded_fetch_packet_valid_REG <= io_decoded_fetch_packet_valid;
+  end // always @(posedge)
   free_list free_list (
     .clock               (clock),
     .reset               (reset),
-    .io_rename_valid_0   (io_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid),
-    .io_rename_valid_1   (io_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid),
-    .io_rename_valid_2   (io_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid),
-    .io_rename_valid_3   (io_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid),
+    .io_rename_valid_0   (instruction_RD_valid_0),
+    .io_rename_valid_1   (instruction_RD_valid_1),
+    .io_rename_valid_2   (instruction_RD_valid_2),
+    .io_rename_valid_3   (instruction_RD_valid_3),
     .io_renamed_values_0 (_free_list_io_renamed_values_0),
     .io_renamed_values_1 (_free_list_io_renamed_values_1),
     .io_renamed_values_2 (_free_list_io_renamed_values_2),
@@ -9806,25 +10424,18 @@ module renamer(
     .io_free_values_0    (io_FU_outputs_0_bits_RD[5:0]),
     .io_free_values_1    (io_FU_outputs_1_bits_RD[5:0]),
     .io_free_values_2    (io_FU_outputs_2_bits_RD[5:0]),
-    .io_free_values_3    (io_FU_outputs_3_bits_RD[5:0])
+    .io_free_values_3    (io_FU_outputs_3_bits_RD[5:0]),
+    .io_empty            (_free_list_io_empty)
   );
   WAW_handler WAW_handler (
-    .io_decoder_RD_valid_bits_0
-      (io_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid),
-    .io_decoder_RD_valid_bits_1
-      (io_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid),
-    .io_decoder_RD_valid_bits_2
-      (io_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid),
-    .io_decoder_RD_valid_bits_3
-      (io_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid),
-    .io_decoder_RD_values_0
-      (io_decoded_fetch_packet_bits_decoded_instruction_0_RD[4:0]),
-    .io_decoder_RD_values_1
-      (io_decoded_fetch_packet_bits_decoded_instruction_1_RD[4:0]),
-    .io_decoder_RD_values_2
-      (io_decoded_fetch_packet_bits_decoded_instruction_2_RD[4:0]),
-    .io_decoder_RD_values_3
-      (io_decoded_fetch_packet_bits_decoded_instruction_3_RD[4:0]),
+    .io_decoder_RD_valid_bits_0 (instruction_RD_valid_0),
+    .io_decoder_RD_valid_bits_1 (instruction_RD_valid_1),
+    .io_decoder_RD_valid_bits_2 (instruction_RD_valid_2),
+    .io_decoder_RD_valid_bits_3 (instruction_RD_valid_3),
+    .io_decoder_RD_values_0     (instruction_RD_0[4:0]),
+    .io_decoder_RD_values_1     (instruction_RD_1[4:0]),
+    .io_decoder_RD_values_2     (instruction_RD_2[4:0]),
+    .io_decoder_RD_values_3     (instruction_RD_3[4:0]),
     .io_free_list_RD_values_0   (_free_list_io_renamed_values_0),
     .io_free_list_RD_values_1   (_free_list_io_renamed_values_1),
     .io_free_list_RD_values_2   (_free_list_io_renamed_values_2),
@@ -9833,6 +10444,10 @@ module renamer(
     .io_RAT_wr_en_1             (_WAW_handler_io_RAT_wr_en_1),
     .io_RAT_wr_en_2             (_WAW_handler_io_RAT_wr_en_2),
     .io_RAT_wr_en_3             (_WAW_handler_io_RAT_wr_en_3),
+    .io_RAT_RD_values_0         (_WAW_handler_io_RAT_RD_values_0),
+    .io_RAT_RD_values_1         (_WAW_handler_io_RAT_RD_values_1),
+    .io_RAT_RD_values_2         (_WAW_handler_io_RAT_RD_values_2),
+    .io_RAT_RD_values_3         (_WAW_handler_io_RAT_RD_values_3),
     .io_FL_RD_values_0          (_WAW_handler_io_FL_RD_values_0),
     .io_FL_RD_values_1          (_WAW_handler_io_FL_RD_values_1),
     .io_FL_RD_values_2          (_WAW_handler_io_FL_RD_values_2),
@@ -9841,30 +10456,18 @@ module renamer(
   RAT RAT (
     .clock                       (clock),
     .reset                       (reset),
-    .io_instruction_RD_0
-      (io_decoded_fetch_packet_bits_decoded_instruction_0_RD[4:0]),
-    .io_instruction_RD_1
-      (io_decoded_fetch_packet_bits_decoded_instruction_1_RD[4:0]),
-    .io_instruction_RD_2
-      (io_decoded_fetch_packet_bits_decoded_instruction_2_RD[4:0]),
-    .io_instruction_RD_3
-      (io_decoded_fetch_packet_bits_decoded_instruction_3_RD[4:0]),
-    .io_instruction_RS1_0
-      (io_decoded_fetch_packet_bits_decoded_instruction_0_RS1[4:0]),
-    .io_instruction_RS1_1
-      (io_decoded_fetch_packet_bits_decoded_instruction_1_RS1[4:0]),
-    .io_instruction_RS1_2
-      (io_decoded_fetch_packet_bits_decoded_instruction_2_RS1[4:0]),
-    .io_instruction_RS1_3
-      (io_decoded_fetch_packet_bits_decoded_instruction_3_RS1[4:0]),
-    .io_instruction_RS2_0
-      (io_decoded_fetch_packet_bits_decoded_instruction_0_RS2[4:0]),
-    .io_instruction_RS2_1
-      (io_decoded_fetch_packet_bits_decoded_instruction_1_RS2[4:0]),
-    .io_instruction_RS2_2
-      (io_decoded_fetch_packet_bits_decoded_instruction_2_RS2[4:0]),
-    .io_instruction_RS2_3
-      (io_decoded_fetch_packet_bits_decoded_instruction_3_RS2[4:0]),
+    .io_instruction_RD_0         (_WAW_handler_io_RAT_RD_values_0),
+    .io_instruction_RD_1         (_WAW_handler_io_RAT_RD_values_1),
+    .io_instruction_RD_2         (_WAW_handler_io_RAT_RD_values_2),
+    .io_instruction_RD_3         (_WAW_handler_io_RAT_RD_values_3),
+    .io_instruction_RS1_0        (instruction_RS1_0[4:0]),
+    .io_instruction_RS1_1        (instruction_RS1_1[4:0]),
+    .io_instruction_RS1_2        (instruction_RS1_2[4:0]),
+    .io_instruction_RS1_3        (instruction_RS1_3[4:0]),
+    .io_instruction_RS2_0        (instruction_RS2_0[4:0]),
+    .io_instruction_RS2_1        (instruction_RS2_1[4:0]),
+    .io_instruction_RS2_2        (instruction_RS2_2[4:0]),
+    .io_instruction_RS2_3        (instruction_RS2_3[4:0]),
     .io_free_list_wr_en_0        (_WAW_handler_io_RAT_wr_en_0),
     .io_free_list_wr_en_1        (_WAW_handler_io_RAT_wr_en_1),
     .io_free_list_wr_en_2        (_WAW_handler_io_RAT_wr_en_2),
@@ -9877,187 +10480,193 @@ module renamer(
     .io_active_checkpoint_value  (io_renamed_decoded_fetch_packet_bits_RAT_IDX),
     .io_restore_checkpoint       (io_restore_checkpoint),
     .io_restore_checkpoint_value (io_restore_checkpoint_value),
-    .io_RAT_RS1_0
-      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS1),
-    .io_RAT_RS1_1
-      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS1),
-    .io_RAT_RS1_2
-      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS1),
-    .io_RAT_RS1_3
-      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS1),
-    .io_RAT_RS2_0
-      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS2),
-    .io_RAT_RS2_1
-      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS2),
-    .io_RAT_RS2_2
-      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS2),
-    .io_RAT_RS2_3
-      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS2)
+    .io_RAT_RD_0                 (renamed_RD_0),
+    .io_RAT_RD_1                 (renamed_RD_1),
+    .io_RAT_RD_2                 (renamed_RD_2),
+    .io_RAT_RD_3                 (renamed_RD_3),
+    .io_RAT_RS1_0                (renamed_RS1_0),
+    .io_RAT_RS1_1                (_RAT_io_RAT_RS1_1),
+    .io_RAT_RS1_2                (_RAT_io_RAT_RS1_2),
+    .io_RAT_RS1_3                (_RAT_io_RAT_RS1_3),
+    .io_RAT_RS2_0                (renamed_RS2_0),
+    .io_RAT_RS2_1                (_RAT_io_RAT_RS2_1),
+    .io_RAT_RS2_2                (_RAT_io_RAT_RS2_2),
+    .io_RAT_RS2_3                (_RAT_io_RAT_RS2_3)
   );
-  assign io_decoded_fetch_packet_ready = io_renamed_decoded_fetch_packet_ready;
-  assign io_renamed_decoded_fetch_packet_valid = io_decoded_fetch_packet_valid;
+  assign io_decoded_fetch_packet_ready =
+    ~_free_list_io_empty & io_renamed_decoded_fetch_packet_ready;
+  assign io_renamed_decoded_fetch_packet_valid =
+    io_renamed_decoded_fetch_packet_valid_REG;
   assign io_renamed_decoded_fetch_packet_bits_fetch_PC =
-    io_decoded_fetch_packet_bits_fetch_PC;
+    io_renamed_decoded_fetch_packet_bits_REG_fetch_PC;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD =
-    _free_list_io_renamed_values_0;
+    io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD_REG;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid =
-    io_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid;
+    io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid_REG;
+  assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS1 = renamed_RS1_0;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS1_valid =
-    io_decoded_fetch_packet_bits_decoded_instruction_0_RS1_valid;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_RS1_valid;
+  assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS2 = renamed_RS2_0;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS2_valid =
-    io_decoded_fetch_packet_bits_decoded_instruction_0_RS2_valid;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_RS2_valid;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_IMM =
-    io_decoded_fetch_packet_bits_decoded_instruction_0_IMM;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_IMM;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_FUNCT3 =
-    io_decoded_fetch_packet_bits_decoded_instruction_0_FUNCT3;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_FUNCT3;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_packet_index =
-    io_decoded_fetch_packet_bits_decoded_instruction_0_packet_index;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_packet_index;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_ROB_index =
-    io_decoded_fetch_packet_bits_decoded_instruction_0_ROB_index;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_ROB_index;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_instructionType =
-    io_decoded_fetch_packet_bits_decoded_instruction_0_instructionType;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_instructionType;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_portID =
-    io_decoded_fetch_packet_bits_decoded_instruction_0_portID;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_portID;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS_type =
-    io_decoded_fetch_packet_bits_decoded_instruction_0_RS_type;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_RS_type;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_ALU =
-    io_decoded_fetch_packet_bits_decoded_instruction_0_needs_ALU;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_needs_ALU;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_branch_unit =
-    io_decoded_fetch_packet_bits_decoded_instruction_0_needs_branch_unit;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_needs_branch_unit;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_CSRs =
-    io_decoded_fetch_packet_bits_decoded_instruction_0_needs_CSRs;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_needs_CSRs;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_SUBTRACT =
-    io_decoded_fetch_packet_bits_decoded_instruction_0_SUBTRACT;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_SUBTRACT;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_MULTIPLY =
-    io_decoded_fetch_packet_bits_decoded_instruction_0_MULTIPLY;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_MULTIPLY;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_IMMEDIATE =
-    io_decoded_fetch_packet_bits_decoded_instruction_0_IMMEDIATE;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_IMMEDIATE;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_IS_LOAD =
-    io_decoded_fetch_packet_bits_decoded_instruction_0_IS_LOAD;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_IS_LOAD;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_IS_STORE =
-    io_decoded_fetch_packet_bits_decoded_instruction_0_IS_STORE;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_IS_STORE;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD =
-    _free_list_io_renamed_values_1;
+    io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD_REG;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid =
-    io_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid;
+    io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid_REG;
+  assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS1 = renamed_RS1_1;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS1_valid =
-    io_decoded_fetch_packet_bits_decoded_instruction_1_RS1_valid;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_RS1_valid;
+  assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS2 = renamed_RS2_1;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS2_valid =
-    io_decoded_fetch_packet_bits_decoded_instruction_1_RS2_valid;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_RS2_valid;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_IMM =
-    io_decoded_fetch_packet_bits_decoded_instruction_1_IMM;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_IMM;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_FUNCT3 =
-    io_decoded_fetch_packet_bits_decoded_instruction_1_FUNCT3;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_FUNCT3;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_packet_index =
-    io_decoded_fetch_packet_bits_decoded_instruction_1_packet_index;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_packet_index;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ROB_index =
-    io_decoded_fetch_packet_bits_decoded_instruction_1_ROB_index;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_ROB_index;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_instructionType =
-    io_decoded_fetch_packet_bits_decoded_instruction_1_instructionType;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_instructionType;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_portID =
-    io_decoded_fetch_packet_bits_decoded_instruction_1_portID;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_portID;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS_type =
-    io_decoded_fetch_packet_bits_decoded_instruction_1_RS_type;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_RS_type;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_ALU =
-    io_decoded_fetch_packet_bits_decoded_instruction_1_needs_ALU;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_needs_ALU;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_branch_unit =
-    io_decoded_fetch_packet_bits_decoded_instruction_1_needs_branch_unit;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_needs_branch_unit;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_CSRs =
-    io_decoded_fetch_packet_bits_decoded_instruction_1_needs_CSRs;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_needs_CSRs;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_SUBTRACT =
-    io_decoded_fetch_packet_bits_decoded_instruction_1_SUBTRACT;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_SUBTRACT;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_MULTIPLY =
-    io_decoded_fetch_packet_bits_decoded_instruction_1_MULTIPLY;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_MULTIPLY;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_IMMEDIATE =
-    io_decoded_fetch_packet_bits_decoded_instruction_1_IMMEDIATE;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_IMMEDIATE;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_IS_LOAD =
-    io_decoded_fetch_packet_bits_decoded_instruction_1_IS_LOAD;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_IS_LOAD;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_IS_STORE =
-    io_decoded_fetch_packet_bits_decoded_instruction_1_IS_STORE;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_IS_STORE;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD =
-    _free_list_io_renamed_values_2;
+    io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD_REG;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid =
-    io_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid;
+    io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid_REG;
+  assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS1 = renamed_RS1_2;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS1_valid =
-    io_decoded_fetch_packet_bits_decoded_instruction_2_RS1_valid;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_RS1_valid;
+  assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS2 = renamed_RS2_2;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS2_valid =
-    io_decoded_fetch_packet_bits_decoded_instruction_2_RS2_valid;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_RS2_valid;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_IMM =
-    io_decoded_fetch_packet_bits_decoded_instruction_2_IMM;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_IMM;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_FUNCT3 =
-    io_decoded_fetch_packet_bits_decoded_instruction_2_FUNCT3;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_FUNCT3;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_packet_index =
-    io_decoded_fetch_packet_bits_decoded_instruction_2_packet_index;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_packet_index;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ROB_index =
-    io_decoded_fetch_packet_bits_decoded_instruction_2_ROB_index;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_ROB_index;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_instructionType =
-    io_decoded_fetch_packet_bits_decoded_instruction_2_instructionType;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_instructionType;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_portID =
-    io_decoded_fetch_packet_bits_decoded_instruction_2_portID;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_portID;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS_type =
-    io_decoded_fetch_packet_bits_decoded_instruction_2_RS_type;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_RS_type;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_ALU =
-    io_decoded_fetch_packet_bits_decoded_instruction_2_needs_ALU;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_needs_ALU;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_branch_unit =
-    io_decoded_fetch_packet_bits_decoded_instruction_2_needs_branch_unit;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_needs_branch_unit;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_CSRs =
-    io_decoded_fetch_packet_bits_decoded_instruction_2_needs_CSRs;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_needs_CSRs;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_SUBTRACT =
-    io_decoded_fetch_packet_bits_decoded_instruction_2_SUBTRACT;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_SUBTRACT;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_MULTIPLY =
-    io_decoded_fetch_packet_bits_decoded_instruction_2_MULTIPLY;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_MULTIPLY;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_IMMEDIATE =
-    io_decoded_fetch_packet_bits_decoded_instruction_2_IMMEDIATE;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_IMMEDIATE;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_IS_LOAD =
-    io_decoded_fetch_packet_bits_decoded_instruction_2_IS_LOAD;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_IS_LOAD;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_IS_STORE =
-    io_decoded_fetch_packet_bits_decoded_instruction_2_IS_STORE;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_IS_STORE;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD =
-    _free_list_io_renamed_values_3;
+    io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD_REG;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid =
-    io_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid;
+    io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid_REG;
+  assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS1 = renamed_RS1_3;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS1_valid =
-    io_decoded_fetch_packet_bits_decoded_instruction_3_RS1_valid;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_RS1_valid;
+  assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS2 = renamed_RS2_3;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS2_valid =
-    io_decoded_fetch_packet_bits_decoded_instruction_3_RS2_valid;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_RS2_valid;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_IMM =
-    io_decoded_fetch_packet_bits_decoded_instruction_3_IMM;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_IMM;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_FUNCT3 =
-    io_decoded_fetch_packet_bits_decoded_instruction_3_FUNCT3;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_FUNCT3;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_packet_index =
-    io_decoded_fetch_packet_bits_decoded_instruction_3_packet_index;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_packet_index;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ROB_index =
-    io_decoded_fetch_packet_bits_decoded_instruction_3_ROB_index;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_ROB_index;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_instructionType =
-    io_decoded_fetch_packet_bits_decoded_instruction_3_instructionType;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_instructionType;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_portID =
-    io_decoded_fetch_packet_bits_decoded_instruction_3_portID;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_portID;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS_type =
-    io_decoded_fetch_packet_bits_decoded_instruction_3_RS_type;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_RS_type;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_ALU =
-    io_decoded_fetch_packet_bits_decoded_instruction_3_needs_ALU;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_needs_ALU;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_branch_unit =
-    io_decoded_fetch_packet_bits_decoded_instruction_3_needs_branch_unit;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_needs_branch_unit;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_CSRs =
-    io_decoded_fetch_packet_bits_decoded_instruction_3_needs_CSRs;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_needs_CSRs;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_SUBTRACT =
-    io_decoded_fetch_packet_bits_decoded_instruction_3_SUBTRACT;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_SUBTRACT;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_MULTIPLY =
-    io_decoded_fetch_packet_bits_decoded_instruction_3_MULTIPLY;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_MULTIPLY;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_IMMEDIATE =
-    io_decoded_fetch_packet_bits_decoded_instruction_3_IMMEDIATE;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_IMMEDIATE;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_IS_LOAD =
-    io_decoded_fetch_packet_bits_decoded_instruction_3_IS_LOAD;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_IS_LOAD;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_IS_STORE =
-    io_decoded_fetch_packet_bits_decoded_instruction_3_IS_STORE;
+    io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_IS_STORE;
   assign io_renamed_decoded_fetch_packet_bits_valid_bits_0 =
-    io_decoded_fetch_packet_bits_valid_bits_0;
+    io_renamed_decoded_fetch_packet_bits_REG_valid_bits_0;
   assign io_renamed_decoded_fetch_packet_bits_valid_bits_1 =
-    io_decoded_fetch_packet_bits_valid_bits_1;
+    io_renamed_decoded_fetch_packet_bits_REG_valid_bits_1;
   assign io_renamed_decoded_fetch_packet_bits_valid_bits_2 =
-    io_decoded_fetch_packet_bits_valid_bits_2;
+    io_renamed_decoded_fetch_packet_bits_REG_valid_bits_2;
   assign io_renamed_decoded_fetch_packet_bits_valid_bits_3 =
-    io_decoded_fetch_packet_bits_valid_bits_3;
+    io_renamed_decoded_fetch_packet_bits_REG_valid_bits_3;
 endmodule
 
 module frontend(
@@ -10238,7 +10847,7 @@ module frontend(
   input  [1:0]   io_FU_outputs_3_bits_fetch_packet_index
 );
 
-  wire        _renamer_io_decoded_fetch_packet_ready;
+  wire        _rename_io_decoded_fetch_packet_ready;
   wire        _instruction_queue_io_in_ready;
   wire        _instruction_queue_io_out_valid;
   wire [31:0] _instruction_queue_io_out_bits_fetch_PC;
@@ -10333,6 +10942,10 @@ module frontend(
   wire        _decoders_io_fetch_packet_ready;
   wire        _decoders_io_decoded_fetch_packet_valid;
   wire [31:0] _decoders_io_decoded_fetch_packet_bits_fetch_PC;
+  wire
+    _decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_ready_bits_RS1_ready;
+  wire
+    _decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_ready_bits_RS2_ready;
   wire [5:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_RD;
   wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid;
   wire [5:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_RS1;
@@ -10350,11 +10963,16 @@ module frontend(
   wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_needs_ALU;
   wire
     _decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_needs_branch_unit;
+  wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_needs_CSRs;
   wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_SUBTRACT;
   wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_MULTIPLY;
   wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_IMMEDIATE;
   wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_IS_LOAD;
   wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_IS_STORE;
+  wire
+    _decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS1_ready;
+  wire
+    _decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS2_ready;
   wire [5:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_RD;
   wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid;
   wire [5:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_RS1;
@@ -10372,11 +10990,16 @@ module frontend(
   wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_needs_ALU;
   wire
     _decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_needs_branch_unit;
+  wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_needs_CSRs;
   wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_SUBTRACT;
   wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_MULTIPLY;
   wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_IMMEDIATE;
   wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_IS_LOAD;
   wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_IS_STORE;
+  wire
+    _decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS1_ready;
+  wire
+    _decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS2_ready;
   wire [5:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_RD;
   wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid;
   wire [5:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_RS1;
@@ -10394,11 +11017,16 @@ module frontend(
   wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_needs_ALU;
   wire
     _decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_needs_branch_unit;
+  wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_needs_CSRs;
   wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_SUBTRACT;
   wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_MULTIPLY;
   wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_IMMEDIATE;
   wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_IS_LOAD;
   wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_IS_STORE;
+  wire
+    _decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS1_ready;
+  wire
+    _decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS2_ready;
   wire [5:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_RD;
   wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid;
   wire [5:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_RS1;
@@ -10416,6 +11044,7 @@ module frontend(
   wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_needs_ALU;
   wire
     _decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_needs_branch_unit;
+  wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_needs_CSRs;
   wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_SUBTRACT;
   wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_MULTIPLY;
   wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_IMMEDIATE;
@@ -10515,8 +11144,8 @@ module frontend(
     .io_predictions_bits_resolved_PC                  (io_predictions_bits_resolved_PC)
   );
   fetch_packet_decoder decoders (
-    .clock                                                                (clock),
-    .reset                                                                (reset),
+    .clock                                                                   (clock),
+    .reset                                                                   (reset),
     .io_fetch_packet_ready
       (_decoders_io_fetch_packet_ready),
     .io_fetch_packet_valid
@@ -10561,6 +11190,10 @@ module frontend(
       (_decoders_io_decoded_fetch_packet_valid),
     .io_decoded_fetch_packet_bits_fetch_PC
       (_decoders_io_decoded_fetch_packet_bits_fetch_PC),
+    .io_decoded_fetch_packet_bits_decoded_instruction_0_ready_bits_RS1_ready
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_ready_bits_RS1_ready),
+    .io_decoded_fetch_packet_bits_decoded_instruction_0_ready_bits_RS2_ready
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_ready_bits_RS2_ready),
     .io_decoded_fetch_packet_bits_decoded_instruction_0_RD
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_RD),
     .io_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid
@@ -10591,6 +11224,8 @@ module frontend(
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_needs_ALU),
     .io_decoded_fetch_packet_bits_decoded_instruction_0_needs_branch_unit
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_needs_branch_unit),
+    .io_decoded_fetch_packet_bits_decoded_instruction_0_needs_CSRs
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_needs_CSRs),
     .io_decoded_fetch_packet_bits_decoded_instruction_0_SUBTRACT
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_SUBTRACT),
     .io_decoded_fetch_packet_bits_decoded_instruction_0_MULTIPLY
@@ -10601,6 +11236,10 @@ module frontend(
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_IS_LOAD),
     .io_decoded_fetch_packet_bits_decoded_instruction_0_IS_STORE
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_IS_STORE),
+    .io_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS1_ready
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS1_ready),
+    .io_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS2_ready
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS2_ready),
     .io_decoded_fetch_packet_bits_decoded_instruction_1_RD
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_RD),
     .io_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid
@@ -10631,6 +11270,8 @@ module frontend(
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_needs_ALU),
     .io_decoded_fetch_packet_bits_decoded_instruction_1_needs_branch_unit
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_needs_branch_unit),
+    .io_decoded_fetch_packet_bits_decoded_instruction_1_needs_CSRs
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_needs_CSRs),
     .io_decoded_fetch_packet_bits_decoded_instruction_1_SUBTRACT
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_SUBTRACT),
     .io_decoded_fetch_packet_bits_decoded_instruction_1_MULTIPLY
@@ -10641,6 +11282,10 @@ module frontend(
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_IS_LOAD),
     .io_decoded_fetch_packet_bits_decoded_instruction_1_IS_STORE
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_IS_STORE),
+    .io_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS1_ready
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS1_ready),
+    .io_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS2_ready
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS2_ready),
     .io_decoded_fetch_packet_bits_decoded_instruction_2_RD
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_RD),
     .io_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid
@@ -10671,6 +11316,8 @@ module frontend(
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_needs_ALU),
     .io_decoded_fetch_packet_bits_decoded_instruction_2_needs_branch_unit
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_needs_branch_unit),
+    .io_decoded_fetch_packet_bits_decoded_instruction_2_needs_CSRs
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_needs_CSRs),
     .io_decoded_fetch_packet_bits_decoded_instruction_2_SUBTRACT
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_SUBTRACT),
     .io_decoded_fetch_packet_bits_decoded_instruction_2_MULTIPLY
@@ -10681,6 +11328,10 @@ module frontend(
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_IS_LOAD),
     .io_decoded_fetch_packet_bits_decoded_instruction_2_IS_STORE
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_IS_STORE),
+    .io_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS1_ready
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS1_ready),
+    .io_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS2_ready
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS2_ready),
     .io_decoded_fetch_packet_bits_decoded_instruction_3_RD
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_RD),
     .io_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid
@@ -10711,6 +11362,8 @@ module frontend(
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_needs_ALU),
     .io_decoded_fetch_packet_bits_decoded_instruction_3_needs_branch_unit
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_needs_branch_unit),
+    .io_decoded_fetch_packet_bits_decoded_instruction_3_needs_CSRs
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_needs_CSRs),
     .io_decoded_fetch_packet_bits_decoded_instruction_3_SUBTRACT
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_SUBTRACT),
     .io_decoded_fetch_packet_bits_decoded_instruction_3_MULTIPLY
@@ -10731,13 +11384,18 @@ module frontend(
       (_decoders_io_decoded_fetch_packet_bits_valid_bits_3)
   );
   Q_3 instruction_queue (
-    .clock                                               (clock),
-    .reset                                               (reset),
-    .io_in_ready                                         (_instruction_queue_io_in_ready),
+    .clock                                                 (clock),
+    .reset                                                 (reset),
+    .io_in_ready
+      (_instruction_queue_io_in_ready),
     .io_in_valid
       (_decoders_io_decoded_fetch_packet_valid),
     .io_in_bits_fetch_PC
       (_decoders_io_decoded_fetch_packet_bits_fetch_PC),
+    .io_in_bits_decoded_instruction_0_ready_bits_RS1_ready
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_ready_bits_RS1_ready),
+    .io_in_bits_decoded_instruction_0_ready_bits_RS2_ready
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_ready_bits_RS2_ready),
     .io_in_bits_decoded_instruction_0_RD
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_RD),
     .io_in_bits_decoded_instruction_0_RD_valid
@@ -10768,6 +11426,8 @@ module frontend(
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_needs_ALU),
     .io_in_bits_decoded_instruction_0_needs_branch_unit
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_needs_branch_unit),
+    .io_in_bits_decoded_instruction_0_needs_CSRs
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_needs_CSRs),
     .io_in_bits_decoded_instruction_0_SUBTRACT
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_SUBTRACT),
     .io_in_bits_decoded_instruction_0_MULTIPLY
@@ -10778,6 +11438,10 @@ module frontend(
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_IS_LOAD),
     .io_in_bits_decoded_instruction_0_IS_STORE
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_IS_STORE),
+    .io_in_bits_decoded_instruction_1_ready_bits_RS1_ready
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS1_ready),
+    .io_in_bits_decoded_instruction_1_ready_bits_RS2_ready
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS2_ready),
     .io_in_bits_decoded_instruction_1_RD
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_RD),
     .io_in_bits_decoded_instruction_1_RD_valid
@@ -10808,6 +11472,8 @@ module frontend(
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_needs_ALU),
     .io_in_bits_decoded_instruction_1_needs_branch_unit
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_needs_branch_unit),
+    .io_in_bits_decoded_instruction_1_needs_CSRs
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_needs_CSRs),
     .io_in_bits_decoded_instruction_1_SUBTRACT
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_SUBTRACT),
     .io_in_bits_decoded_instruction_1_MULTIPLY
@@ -10818,6 +11484,10 @@ module frontend(
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_IS_LOAD),
     .io_in_bits_decoded_instruction_1_IS_STORE
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_IS_STORE),
+    .io_in_bits_decoded_instruction_2_ready_bits_RS1_ready
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS1_ready),
+    .io_in_bits_decoded_instruction_2_ready_bits_RS2_ready
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS2_ready),
     .io_in_bits_decoded_instruction_2_RD
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_RD),
     .io_in_bits_decoded_instruction_2_RD_valid
@@ -10848,6 +11518,8 @@ module frontend(
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_needs_ALU),
     .io_in_bits_decoded_instruction_2_needs_branch_unit
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_needs_branch_unit),
+    .io_in_bits_decoded_instruction_2_needs_CSRs
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_needs_CSRs),
     .io_in_bits_decoded_instruction_2_SUBTRACT
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_SUBTRACT),
     .io_in_bits_decoded_instruction_2_MULTIPLY
@@ -10858,6 +11530,10 @@ module frontend(
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_IS_LOAD),
     .io_in_bits_decoded_instruction_2_IS_STORE
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_IS_STORE),
+    .io_in_bits_decoded_instruction_3_ready_bits_RS1_ready
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS1_ready),
+    .io_in_bits_decoded_instruction_3_ready_bits_RS2_ready
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS2_ready),
     .io_in_bits_decoded_instruction_3_RD
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_RD),
     .io_in_bits_decoded_instruction_3_RD_valid
@@ -10888,6 +11564,8 @@ module frontend(
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_needs_ALU),
     .io_in_bits_decoded_instruction_3_needs_branch_unit
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_needs_branch_unit),
+    .io_in_bits_decoded_instruction_3_needs_CSRs
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_needs_CSRs),
     .io_in_bits_decoded_instruction_3_SUBTRACT
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_SUBTRACT),
     .io_in_bits_decoded_instruction_3_MULTIPLY
@@ -10907,7 +11585,7 @@ module frontend(
     .io_in_bits_valid_bits_3
       (_decoders_io_decoded_fetch_packet_bits_valid_bits_3),
     .io_out_ready
-      (_renamer_io_decoded_fetch_packet_ready),
+      (_rename_io_decoded_fetch_packet_ready),
     .io_out_valid
       (_instruction_queue_io_out_valid),
     .io_out_bits_fetch_PC
@@ -11089,11 +11767,11 @@ module frontend(
     .io_out_bits_valid_bits_3
       (_instruction_queue_io_out_bits_valid_bits_3)
   );
-  renamer renamer (
+  rename rename (
     .clock                                                                        (clock),
     .reset                                                                        (reset),
     .io_decoded_fetch_packet_ready
-      (_renamer_io_decoded_fetch_packet_ready),
+      (_rename_io_decoded_fetch_packet_ready),
     .io_decoded_fetch_packet_valid
       (_instruction_queue_io_out_valid),
     .io_decoded_fetch_packet_bits_fetch_PC

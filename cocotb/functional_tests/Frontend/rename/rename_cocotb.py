@@ -455,3 +455,67 @@ async def test_single_checkpoint(dut):
     assert dut.get_RAT(0) == dut.get_RAT(1)
 
     assert dut.get_outputs()["RAT_IDX"] == 1
+
+
+@cocotb.test()
+async def test_rename_4_at_a_time_with_hazard(dut): 
+
+    await cocotb.start(generateClock(dut)) 
+
+    dut = rename_dut(dut)  # wrap dut with helper class
+    await dut.reset()   # reset module
+
+    await RisingEdge(dut.clock())
+
+
+    rename_inputs = generate_null_rename_inputs()
+
+
+   #10074:	04800793          	li	x15,72
+   #10078:	40f02023          	sw	x15,1024(x0) # 400 <main-0xfc74>
+   #1007c:	04500793          	li	x15,69
+   #10080:	40f02023          	sw	x15,1024(x0) # 400 <main-0xfc74>
+
+    rename_inputs["valid"] = 1
+    rename_inputs["fetch_PC"] = 0
+
+    rename_inputs["RS1_ready"]          = [0, 0, 0, 0]
+    rename_inputs["RS2_ready"]          = [0, 0, 0, 0]
+    rename_inputs["RD"]                 = [15, 0, 15, 0]
+    rename_inputs["RD_valid"]           = [1, 0, 1, 1]
+    rename_inputs["RS1"]                = [0, 0, 0, 0]
+    rename_inputs["RS1_valid"]          = [0, 0, 0, 0]
+    rename_inputs["RS2"]                = [0, 15, 0, 15]
+    rename_inputs["RS2_valid"]          = [0, 1, 0, 1]
+    rename_inputs["IMM"]                = [0, 0, 0, 0]
+    rename_inputs["FUNCT3"]             = [0, 0, 0, 0]
+    rename_inputs["packet_index"]       = [0, 0, 0, 0]
+    rename_inputs["ROB_index"]          = [0, 0, 0, 0]
+    rename_inputs["instructionType"]    = [0, 0, 0, 0]
+    rename_inputs["portID"]             = [0, 0, 0, 0]
+    rename_inputs["RS_type"]            = [0, 0, 0, 0]
+    rename_inputs["needs_ALU"]          = [0, 0, 0, 0]
+    rename_inputs["needs_branch_unit"]  = [0, 0, 0, 0]
+    rename_inputs["needs_CSRs"]         = [0, 0, 0, 0]
+    rename_inputs["SUBTRACT"]           = [0, 0, 0, 0]
+    rename_inputs["MULTIPLY"]           = [0, 0, 0, 0]
+    rename_inputs["IMMEDIATE"]          = [0, 0, 0, 0]
+    rename_inputs["IS_LOAD"]            = [0, 0, 0, 0]
+    rename_inputs["IS_STORE"]           = [0, 0, 0, 0]
+    rename_inputs["valid_bit"]          = [0, 0, 0, 0]
+
+    dut.rename(rename_inputs)
+
+    await RisingEdge(dut.clock())
+    dut.rename()
+
+    await ReadOnly()
+    assert dut.get_outputs()["RD"][0] == 0
+    assert dut.get_outputs()["RD"][2] == 1
+
+    assert dut.get_outputs()["RS2"][1] == 0
+    assert dut.get_outputs()["RS2"][3] == 1
+
+    await RisingEdge(dut.clock())
+    await RisingEdge(dut.clock())
+    await RisingEdge(dut.clock())

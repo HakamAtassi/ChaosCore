@@ -867,3 +867,55 @@ async def test_good_to_go_backed_up(dut):
     await RisingEdge(dut.clock())
     await RisingEdge(dut.clock())
     await RisingEdge(dut.clock())
+
+@cocotb.test()
+async def test_write_1_not_first(dut):
+
+    await cocotb.start(generateClock(dut)) 
+
+    dut = MEMRS_dut(dut)  # wrap dut with helper class
+    await dut.reset()   # reset module
+
+    await RisingEdge(dut.clock())
+
+
+    allocate_inputs = generate_null_allocate_inputs()
+
+
+    allocate_inputs["valid"] = [0, 1, 0, 0]
+    allocate_inputs["RS1_ready"] = [0, 0, 0, 0]
+    allocate_inputs["RS2_ready"] = [0, 0, 0, 0]
+    allocate_inputs["RD"] = [0, 0, 0, 0]
+    allocate_inputs["RD_valid"] = [0, 0, 0, 0]
+    allocate_inputs["RS1"] = [0, 3, 0, 0]
+    allocate_inputs["RS1_valid"] = [0, 0, 0, 0]
+    allocate_inputs["RS2"] = [0, 7, 0, 0]
+    allocate_inputs["RS2_valid"] = [0, 0, 0, 0]
+    allocate_inputs["IMM"] = [0, 0, 0, 0]
+    allocate_inputs["FUNCT3"] = [0, 0, 0, 0]
+    allocate_inputs["packet_index"] = [0, 0, 0, 0]
+    allocate_inputs["ROB_index"] = [0, 0, 0, 0]
+    allocate_inputs["instructionType"] = [0, 0, 0, 0]
+    allocate_inputs["portID"] = [0, 0, 0, 0]
+    allocate_inputs["RS_type"] = [0, 0, 0, 0]
+    allocate_inputs["needs_ALU"] = [0, 0, 0, 0]
+    allocate_inputs["needs_branch_unit"] = [0, 0, 0, 0]
+    allocate_inputs["needs_CSRs"] = [0, 0, 0, 0]
+    allocate_inputs["SUBTRACT"] = [0, 1, 0, 0]
+    allocate_inputs["MULTIPLY"] = [0, 0, 0, 0]
+    allocate_inputs["IMMEDIATE"] = [0, 0, 0, 0]
+    allocate_inputs["IS_LOAD"] = [0, 0, 0, 0]
+    allocate_inputs["IS_STORE"] = [0, 0, 0, 0]
+
+    dut.write_allocate(allocate_inputs)
+
+    await RisingEdge(dut.clock())
+    await ReadOnly()
+
+    dut.print_MEMRS()
+
+    assert dut.get_MEMRS_contents()["RS2"][0]          == 7
+    assert dut.get_MEMRS_contents()["RS1"][0]          == 3
+    assert dut.get_MEMRS_contents()["SUBTRACT"][0]     == 1
+
+

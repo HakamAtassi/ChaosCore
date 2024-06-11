@@ -21,6 +21,7 @@ async def reset(dut):
     dut.reset.value = 0
 
 
+
 def generate_random_commit_request(addr_set):
     #commit = generate_random_commit_request()
     #revert = generate_random_revert_request()

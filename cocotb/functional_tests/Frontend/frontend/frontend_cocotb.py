@@ -15,7 +15,7 @@ from SimpleDRAM import SimpleDRAM
 async def test_reset(dut):
 
     base_dir = os.path.dirname(__file__)
-    bin_absolute_path = os.path.join(base_dir, "bins/addi.bin")
+    bin_absolute_path = os.path.join(base_dir, "../../binaries/bin/addi.bin")
     print(bin_absolute_path)
     DRAM = SimpleDRAM(sizeKB=4, bin=bin_absolute_path)
 
@@ -28,10 +28,10 @@ async def test_reset(dut):
 
 
 @cocotb.test()
-async def test_decoder_out(dut):
+async def test_decoder_out_addi(dut):
 
     base_dir = os.path.dirname(__file__)
-    bin_absolute_path = os.path.join(base_dir, "bins/addi.bin")
+    bin_absolute_path = os.path.join(base_dir, "../../binaries/bin/addi.bin")
     DRAM = SimpleDRAM(sizeKB=4, bin=bin_absolute_path)
 
     await cocotb.start(generateClock(dut)) 
@@ -40,80 +40,183 @@ async def test_decoder_out(dut):
     await dut.reset()   # reset module
 
 
-    await dut.wait_decoder_outputs_valid()
+    dut.set_backend_ready(1)
+    dut.set_FTQ_ready(1)
 
-    #await ReadOnly()
-
-
-
-    assert dut.get_decoder_outputs()["RS1"][0]                  == 0
-    assert dut.get_decoder_outputs()["RS2"][0]                  == 0
-    assert dut.get_decoder_outputs()["needs_ALU"][0]            == 1
-    assert dut.get_decoder_outputs()["IMM"][0]                  == 0
-    assert dut.get_decoder_outputs()["IMMEDIATE"][0]            == 1  # FIXME: the name of this flag should be changed to IS_IMMEDIATE
-    # in the hardware and in the tests...
-
-    assert dut.get_decoder_outputs()["RS1"][1]                  == 0
-    assert dut.get_decoder_outputs()["RS2"][1]                  == 0
-    assert dut.get_decoder_outputs()["needs_ALU"][1]            == 1
-    assert dut.get_decoder_outputs()["IMM"][1]                  == 0
-    assert dut.get_decoder_outputs()["IMMEDIATE"][1]            == 1 
-
-    assert dut.get_decoder_outputs()["RS1"][2]                  == 0
-    assert dut.get_decoder_outputs()["RS2"][2]                  == 0
-    assert dut.get_decoder_outputs()["needs_ALU"][2]            == 1
-    assert dut.get_decoder_outputs()["IMM"][2]                  == 0
-    assert dut.get_decoder_outputs()["IMMEDIATE"][2]            == 1 
-
-    assert dut.get_decoder_outputs()["RS1"][3]                  == 0
-    assert dut.get_decoder_outputs()["RS2"][3]                  == 0
-    assert dut.get_decoder_outputs()["needs_ALU"][3]            == 1
-    assert dut.get_decoder_outputs()["IMM"][3]                  == 0
-    assert dut.get_decoder_outputs()["IMMEDIATE"][3]            == 1 
 
     await dut.wait_decoder_outputs_valid()
+    await ReadOnly()
 
-    dut.print_decoder_outputs()
+    dut.print_renamed_decoded_fetch_packet()
 
 
-    assert dut.get_decoder_outputs()["RS1"][0]                  == 0
-    assert dut.get_decoder_outputs()["RS2"][0]                  == 0
-    assert dut.get_decoder_outputs()["needs_ALU"][0]            == 1
-    assert dut.get_decoder_outputs()["IMM"][0]                  == 0
-    assert dut.get_decoder_outputs()["IMMEDIATE"][0]            == 1 
-    # in the hardware and in the tests...
+    #await dut.wait_decoder_outputs_valid() # this is broken
+    await dut.update()
+    await dut.update()
+    await dut.update()
+    await dut.update()
 
-    assert dut.get_decoder_outputs()["RS1"][1]                  == 0
-    assert dut.get_decoder_outputs()["RS2"][1]                  == 0
-    assert dut.get_decoder_outputs()["needs_ALU"][1]            == 1
-    assert dut.get_decoder_outputs()["IMM"][1]                  == 0
-    assert dut.get_decoder_outputs()["IMMEDIATE"][1]            == 1 
+    assert dut.get_decoder_outputs()["RD"]                      == [1,2,3,4]
+    assert dut.get_decoder_outputs()["RD_valid"]                == [1,1,1,1]
+    assert dut.get_decoder_outputs()["needs_ALU"]               == [1,1,1,1]
+    assert dut.get_decoder_outputs()["needs_branch_unit"]       == [0,0,0,0]
+    assert dut.get_decoder_outputs()["packet_index"]            == [0,1,2,3]
+    assert dut.get_decoder_outputs()["IMMEDIATE"]               == [1,1,1,1]
 
-    assert dut.get_decoder_outputs()["RS1"][2]                  == 0
-    assert dut.get_decoder_outputs()["RS2"][2]                  == 0
-    assert dut.get_decoder_outputs()["needs_ALU"][2]            == 1
-    assert dut.get_decoder_outputs()["IMM"][2]                  == 0
-    assert dut.get_decoder_outputs()["IMMEDIATE"][2]            == 1 
+    assert dut.get_decoder_outputs()["RS1"]                     == [0,0,0,0]
+    assert dut.get_decoder_outputs()["RS1_valid"]               == [1,1,1,1]
+    assert dut.get_decoder_outputs()["IS_LOAD"]                 == [0,0,0,0]
+    assert dut.get_decoder_outputs()["IS_STORE"]                == [0,0,0,0]
 
-    assert dut.get_decoder_outputs()["RS1"][3]                  == 0
-    assert dut.get_decoder_outputs()["RS2"][3]                  == 0
-    assert dut.get_decoder_outputs()["needs_ALU"][3]            == 1
-    assert dut.get_decoder_outputs()["IMM"][3]                  == 0
-    assert dut.get_decoder_outputs()["IMMEDIATE"][3]            == 1 
+
+    await dut.update()
+    await dut.update()
+
+
+
+
+    dut.print_renamed_decoded_fetch_packet()
+
+    assert dut.get_decoder_outputs()["RD"]                      == [5,6,7,8]
+    assert dut.get_decoder_outputs()["RD_valid"]                == [1,1,1,1]
+    assert dut.get_decoder_outputs()["needs_ALU"]               == [1,1,1,1]
+    assert dut.get_decoder_outputs()["needs_branch_unit"]       == [0,0,0,0]
+    assert dut.get_decoder_outputs()["packet_index"]            == [0,1,2,3]
+    assert dut.get_decoder_outputs()["IMMEDIATE"]               == [1,1,1,1]
+
+    assert dut.get_decoder_outputs()["RS1"]                     == [0,0,0,0]
+    assert dut.get_decoder_outputs()["RS1_valid"]               == [1,1,1,1]
+    assert dut.get_decoder_outputs()["IS_LOAD"]                 == [0,0,0,0]
+    assert dut.get_decoder_outputs()["IS_STORE"]                == [0,0,0,0]
+
 
 
 @cocotb.test()
-async def test_predecoder_stall(dut):
-    """Test that the predecoder doesnt change state/lose outputs when its output is not ready"""
+async def test_rename_out_addi(dut):
 
     base_dir = os.path.dirname(__file__)
-    bin_absolute_path = os.path.join(base_dir, "bins/addi.bin")
+    bin_absolute_path = os.path.join(base_dir, "../../binaries/bin/addi.bin")
     DRAM = SimpleDRAM(sizeKB=4, bin=bin_absolute_path)
 
     await cocotb.start(generateClock(dut)) 
 
     dut = frontend_dut(dut, DRAM=DRAM)  # wrap dut with helper class
     await dut.reset()   # reset module
+
+    dut.set_backend_ready(1)
+    dut.set_FTQ_ready(1)
+
+    
+    for _ in range(100):
+        ReadOnly()
+        if(dut.get_instruction_Q_outputs()["valid"] == 1):
+            break
+        await dut.update()
+
+    # check inputs into rename
+
+
+
+    assert dut.get_instruction_Q_outputs()["RD"]                      == [1,2,3,4]
+    assert dut.get_instruction_Q_outputs()["RD_valid"]                == [1,1,1,1]
+    assert dut.get_instruction_Q_outputs()["needs_ALU"]               == [1,1,1,1]
+    assert dut.get_instruction_Q_outputs()["needs_branch_unit"]       == [0,0,0,0]
+    assert dut.get_instruction_Q_outputs()["packet_index"]            == [0,1,2,3]
+    assert dut.get_instruction_Q_outputs()["IMMEDIATE"]               == [1,1,1,1]
+
+    assert dut.get_instruction_Q_outputs()["RS1"]                     == [0,0,0,0]
+    assert dut.get_instruction_Q_outputs()["RS1_valid"]               == [1,1,1,1]
+    assert dut.get_instruction_Q_outputs()["IS_LOAD"]                 == [0,0,0,0]
+    assert dut.get_instruction_Q_outputs()["IS_STORE"]                == [0,0,0,0]
+
+    await dut.update()  # wait for rename to complete
+
+    # check rename outputs
+    assert dut.get_renamed_decoded_fetch_packet()["RD"]                      == [0,1,2,3]
+    assert dut.get_renamed_decoded_fetch_packet()["RD_valid"]                == [1,1,1,1]
+    assert dut.get_renamed_decoded_fetch_packet()["needs_ALU"]               == [1,1,1,1]
+    assert dut.get_renamed_decoded_fetch_packet()["needs_branch_unit"]       == [0,0,0,0]
+    assert dut.get_renamed_decoded_fetch_packet()["packet_index"]            == [0,1,2,3]
+    assert dut.get_renamed_decoded_fetch_packet()["IMMEDIATE"]               == [1,1,1,1]
+
+    assert dut.get_renamed_decoded_fetch_packet()["RS1"]                     == [0,0,0,0]
+    assert dut.get_renamed_decoded_fetch_packet()["RS1_valid"]               == [1,1,1,1]
+    assert dut.get_renamed_decoded_fetch_packet()["IS_LOAD"]                 == [0,0,0,0]
+    assert dut.get_renamed_decoded_fetch_packet()["IS_STORE"]                == [0,0,0,0]
+
+
+    # check new inputs into rename
+    for _ in range(100):
+        ReadOnly()
+        if(dut.get_instruction_Q_outputs()["valid"] == 1):
+            break
+        await dut.update()
+
+
+    assert dut.get_instruction_Q_outputs()["RD"]                      == [5,6,7,8]
+    assert dut.get_instruction_Q_outputs()["RD_valid"]                == [1,1,1,1]
+    assert dut.get_instruction_Q_outputs()["needs_ALU"]               == [1,1,1,1]
+    assert dut.get_instruction_Q_outputs()["needs_branch_unit"]       == [0,0,0,0]
+    assert dut.get_instruction_Q_outputs()["packet_index"]            == [0,1,2,3]
+    assert dut.get_instruction_Q_outputs()["IMMEDIATE"]               == [1,1,1,1]
+
+    assert dut.get_instruction_Q_outputs()["RS1"]                     == [0,0,0,0]
+    assert dut.get_instruction_Q_outputs()["RS1_valid"]               == [1,1,1,1]
+    assert dut.get_instruction_Q_outputs()["IS_LOAD"]                 == [0,0,0,0]
+    assert dut.get_instruction_Q_outputs()["IS_STORE"]                == [0,0,0,0]
+
+
+    await dut.update()  # wait for rename to complete
+
+    # check rename outputs
+    assert dut.get_renamed_decoded_fetch_packet()["RD"]                      == [4,5,6,7]
+    assert dut.get_renamed_decoded_fetch_packet()["RD_valid"]                == [1,1,1,1]
+    assert dut.get_renamed_decoded_fetch_packet()["needs_ALU"]               == [1,1,1,1]
+    assert dut.get_renamed_decoded_fetch_packet()["needs_branch_unit"]       == [0,0,0,0]
+    assert dut.get_renamed_decoded_fetch_packet()["packet_index"]            == [0,1,2,3]
+    assert dut.get_renamed_decoded_fetch_packet()["IMMEDIATE"]               == [1,1,1,1]
+
+    assert dut.get_renamed_decoded_fetch_packet()["RS1"]                     == [0,0,0,0]
+    assert dut.get_renamed_decoded_fetch_packet()["RS1_valid"]               == [1,1,1,1]
+    assert dut.get_renamed_decoded_fetch_packet()["IS_LOAD"]                 == [0,0,0,0]
+    assert dut.get_renamed_decoded_fetch_packet()["IS_STORE"]                == [0,0,0,0]
+
+
+@cocotb.test()
+async def test_frontend_outputs(dut):
+
+    base_dir = os.path.dirname(__file__)
+    bin_absolute_path = os.path.join(base_dir, "../../binaries/bin/addi.bin")
+    DRAM = SimpleDRAM(sizeKB=4, bin=bin_absolute_path)
+
+    await cocotb.start(generateClock(dut)) 
+
+    dut = frontend_dut(dut, DRAM=DRAM)  # wrap dut with helper class
+    await dut.reset()   # reset module
+
+    dut.set_backend_ready(1)
+    dut.set_FTQ_ready(1)
+
+    
+    for _ in range(100):
+        ReadOnly()
+        if(dut.get_renamed_decoded_fetch_packet()["fetch_packet_valid"] == 1):
+            break
+        await dut.update()
+
+
+    assert dut.get_renamed_decoded_fetch_packet()["RD"]                      == [0,1,2,3]
+    assert dut.get_renamed_decoded_fetch_packet()["RD_valid"]                == [1,1,1,1]
+    assert dut.get_renamed_decoded_fetch_packet()["needs_ALU"]               == [1,1,1,1]
+    assert dut.get_renamed_decoded_fetch_packet()["needs_branch_unit"]       == [0,0,0,0]
+    assert dut.get_renamed_decoded_fetch_packet()["packet_index"]            == [0,1,2,3]
+    assert dut.get_renamed_decoded_fetch_packet()["IMMEDIATE"]               == [1,1,1,1]
+
+    assert dut.get_renamed_decoded_fetch_packet()["RS1"]                     == [0,0,0,0]
+    assert dut.get_renamed_decoded_fetch_packet()["RS1_valid"]               == [1,1,1,1]
+    assert dut.get_renamed_decoded_fetch_packet()["IS_LOAD"]                 == [0,0,0,0]
+    assert dut.get_renamed_decoded_fetch_packet()["IS_STORE"]                == [0,0,0,0]
+
 
 
 

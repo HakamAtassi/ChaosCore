@@ -77,3 +77,74 @@ class nReadmWrite extends BlackBox with HasBlackBoxResource {
   // Reference the external Verilog file
   addResource("/nReadmWrite.v")
 }
+
+
+// a simulation version of the nReadmWrite memory 
+// because LVT memories are hard to read during debug
+class sim_nReadmWrite extends Module {
+  val io = IO(new Bundle {
+
+    val raddr_0 = Input(UInt(6.W))
+    val raddr_1 = Input(UInt(6.W))
+    val raddr_2 = Input(UInt(6.W))
+    val raddr_3 = Input(UInt(6.W))
+    val raddr_4 = Input(UInt(6.W))
+    val raddr_5 = Input(UInt(6.W))
+    val raddr_6 = Input(UInt(6.W))
+    val raddr_7 = Input(UInt(6.W))
+    val rdata_0 = Output(UInt(32.W))
+    val rdata_1 = Output(UInt(32.W))
+    val rdata_2 = Output(UInt(32.W))
+    val rdata_3 = Output(UInt(32.W))
+    val rdata_4 = Output(UInt(32.W))
+    val rdata_5 = Output(UInt(32.W))
+    val rdata_6 = Output(UInt(32.W))
+    val rdata_7 = Output(UInt(32.W))
+    val waddr_0 = Input(UInt(6.W))
+    val waddr_1 = Input(UInt(6.W))
+    val waddr_2 = Input(UInt(6.W))
+    val waddr_3 = Input(UInt(6.W))
+    val wen_0 = Input(Bool())
+    val wen_1 = Input(Bool())
+    val wen_2 = Input(Bool())
+    val wen_3 = Input(Bool())
+    val wdata_0 = Input(UInt(32.W))
+    val wdata_1 = Input(UInt(32.W))
+    val wdata_2 = Input(UInt(32.W))
+    val wdata_3 = Input(UInt(32.W))
+  })
+
+
+  val mem = SyncReadMem(64, UInt(32.W))
+
+  // Write ports
+  when(io.wen_0){
+    mem.write(io.waddr_0, io.wdata_0)
+  }
+
+  when(io.wen_1){
+    mem.write(io.waddr_1, io.wdata_1)
+  }
+
+  when(io.wen_2){
+    mem.write(io.waddr_2, io.wdata_2)
+  }
+
+  when(io.wen_3){
+    mem.write(io.waddr_3, io.wdata_3)
+  }
+
+
+  // Read ports
+  io.rdata_0 := mem.read(io.raddr_0)
+  io.rdata_1 := mem.read(io.raddr_1)
+  io.rdata_2 := mem.read(io.raddr_2)
+  io.rdata_3 := mem.read(io.raddr_3)
+  io.rdata_4 := mem.read(io.raddr_4)
+  io.rdata_5 := mem.read(io.raddr_5)
+  io.rdata_6 := mem.read(io.raddr_6)
+  io.rdata_7 := mem.read(io.raddr_7)
+
+
+
+}
