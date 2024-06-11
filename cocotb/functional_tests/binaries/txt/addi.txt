@@ -1,0 +1,15 @@
+
+elf/addi.elf:     file format elf32-littleriscv
+
+
+Disassembly of section .text:
+
+00010074 <__start>:
+   10074:	00100093          	li	x1,1
+   10078:	00100113          	li	x2,1
+   1007c:	00100193          	li	x3,1
+   10080:	00100213          	li	x4,1
+   10084:	00100293          	li	x5,1
+   10088:	00100313          	li	x6,1
+   1008c:	00100393          	li	x7,1
+   10090:	00100413          	li	x8,1

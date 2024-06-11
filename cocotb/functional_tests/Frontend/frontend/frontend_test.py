@@ -27,11 +27,15 @@ def test_reset():
         configs["testcase"] = "test_reset"
         run(**configs)
 
-def test_decoder_out():
-        configs["testcase"] = "test_decoder_out"
+def test_decoder_out_addi():
+        configs["testcase"] = "test_decoder_out_addi"
         run(**configs)
 
-def test_predecoder_stall():
-        configs["testcase"] = "test_predecoder_stall"
+def test_rename_out_addi():
+        configs["testcase"] = "test_rename_out_addi"
+        run(**configs)
+
+def test_frontend_outputs():
+        configs["testcase"] = "test_frontend_outputs"
         run(**configs)
 

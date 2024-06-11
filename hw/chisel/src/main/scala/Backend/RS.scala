@@ -76,7 +76,9 @@ class RS(parameters:Parameters) extends Module{
 
     // Allocate RS regs
     val reservation_station = RegInit(VecInit(Seq.fill(RSEntries)(0.U.asTypeOf(new RS_entry(parameters)))))
- 
+
+    dontTouch(reservation_station)
+    
     // Reg allocate POS for new input
     val validVec = reservation_station.map(_.valid)
     val validUInt = Cat(validVec.reverse)

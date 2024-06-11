@@ -460,6 +460,26 @@ class DRAM_resp(parameters:Parameters) extends Bundle{
 }
 
 
+// FIXME:
+// There should be a standard memory request bus
+// And a seperate dram repsonse bus
+//
+
+class data_cache_request(parameters:Parameters) extends Bundle{   // FIXME: change this to something generic like MMIO request...
+    val addr    = UInt(32.W)
+    val wr_data = UInt(32.W)
+    val wr_en   = Bool()
+}
+
+class data_cache_response(parameters:Parameters) extends Bundle{
+    val data = UInt(32.W)
+}
+
+
+
+
+
+
 //class MMIO_interface(parameter:Parameters) extends Bundle{
     //val addr    = UInt(32.W)
     //val wr_data = UInt(32.W)

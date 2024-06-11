@@ -47,6 +47,8 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
     })
 
 
+    dontTouch(io)
+
 
     val instruction = io.instruction.bits.instruction
 

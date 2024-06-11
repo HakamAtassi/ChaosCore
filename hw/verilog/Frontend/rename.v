@@ -123,7 +123,8 @@ module free_list(
   input  [5:0] io_free_values_0,
                io_free_values_1,
                io_free_values_2,
-               io_free_values_3
+               io_free_values_3,
+  output       io_empty
 );
 
   wire             _input_sorter_io_free_valid_sorted_0;
@@ -265,6 +266,9 @@ module free_list(
      {free_list_buffer_2},
      {free_list_buffer_1},
      {free_list_buffer_0}};
+  wire [6:0]       _io_empty_T_5 = front_pointer + 7'h4;
+  wire             io_empty_0 =
+    _io_empty_T_5[5:0] == back_pointer[5:0] & _io_empty_T_5[6] != back_pointer[6];
   always @(posedge clock) begin
     if (reset) begin
       front_pointer <= 7'h0;
@@ -338,11 +342,9 @@ module free_list(
       automatic logic [5:0] _GEN_0;
       automatic logic [5:0] _GEN_1;
       automatic logic [5:0] _GEN_2 = back_pointer[5:0] + 6'h3;
-      automatic logic [6:0] _io_empty_T_5 = front_pointer + 7'h4;
       _GEN_0 = back_pointer[5:0] + 6'h1;
       _GEN_1 = back_pointer[5:0] + 6'h2;
-      if (~(_io_empty_T_5[5:0] == back_pointer[5:0]
-            & _io_empty_T_5[6] != back_pointer[6]))
+      if (~io_empty_0)
         front_pointer <=
           front_pointer
           + {4'h0,
@@ -903,6 +905,7 @@ module free_list(
     .io_renamed_values_sorted_2 (io_renamed_values_2),
     .io_renamed_values_sorted_3 (io_renamed_values_3)
   );
+  assign io_empty = io_empty_0;
 endmodule
 
 module WAW_handler(
@@ -984,7 +987,11 @@ module RAT(
   input  [3:0] io_restore_checkpoint_value,
   input        io_free_checkpoint,
   output       io_checkpoints_full,
-  output [5:0] io_RAT_RS1_0,
+  output [5:0] io_RAT_RD_0,
+               io_RAT_RD_1,
+               io_RAT_RD_2,
+               io_RAT_RD_3,
+               io_RAT_RS1_0,
                io_RAT_RS1_1,
                io_RAT_RS1_2,
                io_RAT_RS1_3,
@@ -1508,12 +1515,16 @@ module RAT(
   reg [5:0] RAT_memories_15_29;
   reg [5:0] RAT_memories_15_30;
   reg [5:0] RAT_memories_15_31;
+  reg [5:0] io_RAT_RD_0_REG;
   reg [5:0] io_RAT_RS1_0_REG;
   reg [5:0] io_RAT_RS2_0_REG;
+  reg [5:0] io_RAT_RD_1_REG;
   reg [5:0] io_RAT_RS1_1_REG;
   reg [5:0] io_RAT_RS2_1_REG;
+  reg [5:0] io_RAT_RD_2_REG;
   reg [5:0] io_RAT_RS1_2_REG;
   reg [5:0] io_RAT_RS2_2_REG;
+  reg [5:0] io_RAT_RD_3_REG;
   reg [5:0] io_RAT_RS1_3_REG;
   reg [5:0] io_RAT_RS2_3_REG;
   always @(posedge clock) begin
@@ -5209,17 +5220,25 @@ module RAT(
       else if (_GEN_187)
         RAT_memories_15_31 <= RAT_memories_14_31;
     end
+    io_RAT_RD_0_REG <= _GEN_31[io_instruction_RD_0];
     io_RAT_RS1_0_REG <= _GEN_31[io_instruction_RS1_0];
     io_RAT_RS2_0_REG <= _GEN_31[io_instruction_RS2_0];
+    io_RAT_RD_1_REG <= _GEN_31[io_instruction_RD_1];
     io_RAT_RS1_1_REG <= _GEN_31[io_instruction_RS1_1];
     io_RAT_RS2_1_REG <= _GEN_31[io_instruction_RS2_1];
+    io_RAT_RD_2_REG <= _GEN_31[io_instruction_RD_2];
     io_RAT_RS1_2_REG <= _GEN_31[io_instruction_RS1_2];
     io_RAT_RS2_2_REG <= _GEN_31[io_instruction_RS2_2];
+    io_RAT_RD_3_REG <= _GEN_31[io_instruction_RD_3];
     io_RAT_RS1_3_REG <= _GEN_31[io_instruction_RS1_3];
     io_RAT_RS2_3_REG <= _GEN_31[io_instruction_RS2_3];
   end // always @(posedge)
   assign io_active_checkpoint_value = active_RAT;
   assign io_checkpoints_full = available_checkpoints == 4'h0;
+  assign io_RAT_RD_0 = io_RAT_RD_0_REG;
+  assign io_RAT_RD_1 = io_RAT_RD_1_REG;
+  assign io_RAT_RD_2 = io_RAT_RD_2_REG;
+  assign io_RAT_RD_3 = io_RAT_RD_3_REG;
   assign io_RAT_RS1_0 = io_RAT_RS1_0_REG;
   assign io_RAT_RS1_1 = io_RAT_RS1_1_REG;
   assign io_RAT_RS1_2 = io_RAT_RS1_2_REG;
@@ -5481,7 +5500,19 @@ module rename(
   output        io_checkpoints_full
 );
 
+  wire [5:0]  renamed_RS2_0;
+  wire [5:0]  renamed_RS1_0;
+  wire [5:0]  renamed_RD_3;
+  wire [5:0]  renamed_RD_2;
+  wire [5:0]  renamed_RD_1;
+  wire [5:0]  renamed_RD_0;
   wire [3:0]  _RAT_io_active_checkpoint_value;
+  wire [5:0]  _RAT_io_RAT_RS1_1;
+  wire [5:0]  _RAT_io_RAT_RS1_2;
+  wire [5:0]  _RAT_io_RAT_RS1_3;
+  wire [5:0]  _RAT_io_RAT_RS2_1;
+  wire [5:0]  _RAT_io_RAT_RS2_2;
+  wire [5:0]  _RAT_io_RAT_RS2_3;
   wire        _WAW_handler_io_RAT_wr_en_0;
   wire        _WAW_handler_io_RAT_wr_en_1;
   wire        _WAW_handler_io_RAT_wr_en_2;
@@ -5498,6 +5529,19 @@ module rename(
   wire [5:0]  _free_list_io_renamed_values_1;
   wire [5:0]  _free_list_io_renamed_values_2;
   wire [5:0]  _free_list_io_renamed_values_3;
+  wire        _free_list_io_empty;
+  wire [5:0]  instruction_RD_0 = io_decoded_fetch_packet_bits_decoded_instruction_0_RD;
+  wire [5:0]  instruction_RD_1 = io_decoded_fetch_packet_bits_decoded_instruction_1_RD;
+  wire [5:0]  instruction_RD_2 = io_decoded_fetch_packet_bits_decoded_instruction_2_RD;
+  wire [5:0]  instruction_RD_3 = io_decoded_fetch_packet_bits_decoded_instruction_3_RD;
+  wire [5:0]  instruction_RS1_0 = io_decoded_fetch_packet_bits_decoded_instruction_0_RS1;
+  wire [5:0]  instruction_RS1_1 = io_decoded_fetch_packet_bits_decoded_instruction_1_RS1;
+  wire [5:0]  instruction_RS1_2 = io_decoded_fetch_packet_bits_decoded_instruction_2_RS1;
+  wire [5:0]  instruction_RS1_3 = io_decoded_fetch_packet_bits_decoded_instruction_3_RS1;
+  wire [5:0]  instruction_RS2_0 = io_decoded_fetch_packet_bits_decoded_instruction_0_RS2;
+  wire [5:0]  instruction_RS2_1 = io_decoded_fetch_packet_bits_decoded_instruction_1_RS2;
+  wire [5:0]  instruction_RS2_2 = io_decoded_fetch_packet_bits_decoded_instruction_2_RS2;
+  wire [5:0]  instruction_RS2_3 = io_decoded_fetch_packet_bits_decoded_instruction_3_RS2;
   wire        instruction_RD_valid_0 =
     io_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid
     & io_decoded_fetch_packet_valid;
@@ -5510,6 +5554,64 @@ module rename(
   wire        instruction_RD_valid_3 =
     io_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid
     & io_decoded_fetch_packet_valid;
+  reg  [5:0]  REG;
+  reg  [5:0]  REG_1;
+  reg  [5:0]  renamed_RS1_1_REG;
+  wire [5:0]  renamed_RS1_1 = REG == REG_1 ? renamed_RS1_1_REG : _RAT_io_RAT_RS1_1;
+  reg  [5:0]  REG_2;
+  reg  [5:0]  REG_3;
+  reg  [5:0]  renamed_RS2_1_REG;
+  wire [5:0]  renamed_RS2_1 = REG_2 == REG_3 ? renamed_RS2_1_REG : _RAT_io_RAT_RS2_1;
+  reg  [5:0]  REG_4;
+  reg  [5:0]  REG_5;
+  reg  [5:0]  renamed_RS1_2_REG;
+  reg  [5:0]  REG_6;
+  reg  [5:0]  REG_7;
+  reg  [5:0]  renamed_RS2_2_REG;
+  reg  [5:0]  REG_8;
+  reg  [5:0]  REG_9;
+  reg  [5:0]  renamed_RS1_2_REG_1;
+  wire [5:0]  renamed_RS1_2 =
+    REG_8 == REG_9
+      ? renamed_RS1_2_REG_1
+      : REG_4 == REG_5 ? renamed_RS1_2_REG : _RAT_io_RAT_RS1_2;
+  reg  [5:0]  REG_10;
+  reg  [5:0]  REG_11;
+  reg  [5:0]  renamed_RS2_2_REG_1;
+  wire [5:0]  renamed_RS2_2 =
+    REG_10 == REG_11
+      ? renamed_RS2_2_REG_1
+      : REG_6 == REG_7 ? renamed_RS2_2_REG : _RAT_io_RAT_RS2_2;
+  reg  [5:0]  REG_12;
+  reg  [5:0]  REG_13;
+  reg  [5:0]  renamed_RS1_3_REG;
+  reg  [5:0]  REG_14;
+  reg  [5:0]  REG_15;
+  reg  [5:0]  renamed_RS2_3_REG;
+  reg  [5:0]  REG_16;
+  reg  [5:0]  REG_17;
+  reg  [5:0]  renamed_RS1_3_REG_1;
+  reg  [5:0]  REG_18;
+  reg  [5:0]  REG_19;
+  reg  [5:0]  renamed_RS2_3_REG_1;
+  reg  [5:0]  REG_20;
+  reg  [5:0]  REG_21;
+  reg  [5:0]  renamed_RS1_3_REG_2;
+  wire [5:0]  renamed_RS1_3 =
+    REG_20 == REG_21
+      ? renamed_RS1_3_REG_2
+      : REG_16 == REG_17
+          ? renamed_RS1_3_REG_1
+          : REG_12 == REG_13 ? renamed_RS1_3_REG : _RAT_io_RAT_RS1_3;
+  reg  [5:0]  REG_22;
+  reg  [5:0]  REG_23;
+  reg  [5:0]  renamed_RS2_3_REG_2;
+  wire [5:0]  renamed_RS2_3 =
+    REG_22 == REG_23
+      ? renamed_RS2_3_REG_2
+      : REG_18 == REG_19
+          ? renamed_RS2_3_REG_1
+          : REG_14 == REG_15 ? renamed_RS2_3_REG : _RAT_io_RAT_RS2_3;
   reg  [31:0] io_renamed_decoded_fetch_packet_bits_REG_fetch_PC;
   reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_RS1_valid;
   reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_RS2_valid;
@@ -5599,7 +5701,44 @@ module rename(
   reg         io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid_REG;
   reg  [5:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD_REG;
   reg         io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid_REG;
+  reg         io_renamed_decoded_fetch_packet_valid_REG;
   always @(posedge clock) begin
+    REG <= instruction_RS1_1;
+    REG_1 <= instruction_RD_0;
+    renamed_RS1_1_REG <= _free_list_io_renamed_values_0;
+    REG_2 <= instruction_RS2_1;
+    REG_3 <= instruction_RD_0;
+    renamed_RS2_1_REG <= _free_list_io_renamed_values_0;
+    REG_4 <= instruction_RS1_2;
+    REG_5 <= instruction_RD_0;
+    renamed_RS1_2_REG <= _free_list_io_renamed_values_0;
+    REG_6 <= instruction_RS2_2;
+    REG_7 <= instruction_RD_0;
+    renamed_RS2_2_REG <= _free_list_io_renamed_values_0;
+    REG_8 <= instruction_RS1_2;
+    REG_9 <= instruction_RD_1;
+    renamed_RS1_2_REG_1 <= _free_list_io_renamed_values_1;
+    REG_10 <= instruction_RS2_2;
+    REG_11 <= instruction_RD_1;
+    renamed_RS2_2_REG_1 <= _free_list_io_renamed_values_1;
+    REG_12 <= instruction_RS1_3;
+    REG_13 <= instruction_RD_0;
+    renamed_RS1_3_REG <= _free_list_io_renamed_values_0;
+    REG_14 <= instruction_RS2_3;
+    REG_15 <= instruction_RD_0;
+    renamed_RS2_3_REG <= _free_list_io_renamed_values_0;
+    REG_16 <= instruction_RS1_3;
+    REG_17 <= instruction_RD_1;
+    renamed_RS1_3_REG_1 <= _free_list_io_renamed_values_1;
+    REG_18 <= instruction_RS2_3;
+    REG_19 <= instruction_RD_1;
+    renamed_RS2_3_REG_1 <= _free_list_io_renamed_values_1;
+    REG_20 <= instruction_RS1_3;
+    REG_21 <= instruction_RD_2;
+    renamed_RS1_3_REG_2 <= _free_list_io_renamed_values_2;
+    REG_22 <= instruction_RS2_3;
+    REG_23 <= instruction_RD_2;
+    renamed_RS2_3_REG_2 <= _free_list_io_renamed_values_2;
     io_renamed_decoded_fetch_packet_bits_REG_fetch_PC <=
       io_decoded_fetch_packet_bits_fetch_PC;
     io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_RS1_valid <=
@@ -5762,6 +5901,7 @@ module rename(
       _free_list_io_renamed_values_3;
     io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid_REG <=
       instruction_RD_valid_3;
+    io_renamed_decoded_fetch_packet_valid_REG <= io_decoded_fetch_packet_valid;
   end // always @(posedge)
   free_list free_list (
     .clock               (clock),
@@ -5781,21 +5921,18 @@ module rename(
     .io_free_values_0    (io_FU_outputs_0_bits_RD[5:0]),
     .io_free_values_1    (io_FU_outputs_1_bits_RD[5:0]),
     .io_free_values_2    (io_FU_outputs_2_bits_RD[5:0]),
-    .io_free_values_3    (io_FU_outputs_3_bits_RD[5:0])
+    .io_free_values_3    (io_FU_outputs_3_bits_RD[5:0]),
+    .io_empty            (_free_list_io_empty)
   );
   WAW_handler WAW_handler (
     .io_decoder_RD_valid_bits_0 (instruction_RD_valid_0),
     .io_decoder_RD_valid_bits_1 (instruction_RD_valid_1),
     .io_decoder_RD_valid_bits_2 (instruction_RD_valid_2),
     .io_decoder_RD_valid_bits_3 (instruction_RD_valid_3),
-    .io_decoder_RD_values_0
-      (io_decoded_fetch_packet_bits_decoded_instruction_0_RD[4:0]),
-    .io_decoder_RD_values_1
-      (io_decoded_fetch_packet_bits_decoded_instruction_1_RD[4:0]),
-    .io_decoder_RD_values_2
-      (io_decoded_fetch_packet_bits_decoded_instruction_2_RD[4:0]),
-    .io_decoder_RD_values_3
-      (io_decoded_fetch_packet_bits_decoded_instruction_3_RD[4:0]),
+    .io_decoder_RD_values_0     (instruction_RD_0[4:0]),
+    .io_decoder_RD_values_1     (instruction_RD_1[4:0]),
+    .io_decoder_RD_values_2     (instruction_RD_2[4:0]),
+    .io_decoder_RD_values_3     (instruction_RD_3[4:0]),
     .io_free_list_RD_values_0   (_free_list_io_renamed_values_0),
     .io_free_list_RD_values_1   (_free_list_io_renamed_values_1),
     .io_free_list_RD_values_2   (_free_list_io_renamed_values_2),
@@ -5820,22 +5957,14 @@ module rename(
     .io_instruction_RD_1         (_WAW_handler_io_RAT_RD_values_1),
     .io_instruction_RD_2         (_WAW_handler_io_RAT_RD_values_2),
     .io_instruction_RD_3         (_WAW_handler_io_RAT_RD_values_3),
-    .io_instruction_RS1_0
-      (io_decoded_fetch_packet_bits_decoded_instruction_0_RS1[4:0]),
-    .io_instruction_RS1_1
-      (io_decoded_fetch_packet_bits_decoded_instruction_1_RS1[4:0]),
-    .io_instruction_RS1_2
-      (io_decoded_fetch_packet_bits_decoded_instruction_2_RS1[4:0]),
-    .io_instruction_RS1_3
-      (io_decoded_fetch_packet_bits_decoded_instruction_3_RS1[4:0]),
-    .io_instruction_RS2_0
-      (io_decoded_fetch_packet_bits_decoded_instruction_0_RS2[4:0]),
-    .io_instruction_RS2_1
-      (io_decoded_fetch_packet_bits_decoded_instruction_1_RS2[4:0]),
-    .io_instruction_RS2_2
-      (io_decoded_fetch_packet_bits_decoded_instruction_2_RS2[4:0]),
-    .io_instruction_RS2_3
-      (io_decoded_fetch_packet_bits_decoded_instruction_3_RS2[4:0]),
+    .io_instruction_RS1_0        (instruction_RS1_0[4:0]),
+    .io_instruction_RS1_1        (instruction_RS1_1[4:0]),
+    .io_instruction_RS1_2        (instruction_RS1_2[4:0]),
+    .io_instruction_RS1_3        (instruction_RS1_3[4:0]),
+    .io_instruction_RS2_0        (instruction_RS2_0[4:0]),
+    .io_instruction_RS2_1        (instruction_RS2_1[4:0]),
+    .io_instruction_RS2_2        (instruction_RS2_2[4:0]),
+    .io_instruction_RS2_3        (instruction_RS2_3[4:0]),
     .io_free_list_wr_en_0        (_WAW_handler_io_RAT_wr_en_0),
     .io_free_list_wr_en_1        (_WAW_handler_io_RAT_wr_en_1),
     .io_free_list_wr_en_2        (_WAW_handler_io_RAT_wr_en_2),
@@ -5850,25 +5979,23 @@ module rename(
     .io_restore_checkpoint_value (io_restore_checkpoint_value),
     .io_free_checkpoint          (io_free_checkpoint),
     .io_checkpoints_full         (io_checkpoints_full),
-    .io_RAT_RS1_0
-      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS1),
-    .io_RAT_RS1_1
-      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS1),
-    .io_RAT_RS1_2
-      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS1),
-    .io_RAT_RS1_3
-      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS1),
-    .io_RAT_RS2_0
-      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS2),
-    .io_RAT_RS2_1
-      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS2),
-    .io_RAT_RS2_2
-      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS2),
-    .io_RAT_RS2_3
-      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS2)
+    .io_RAT_RD_0                 (renamed_RD_0),
+    .io_RAT_RD_1                 (renamed_RD_1),
+    .io_RAT_RD_2                 (renamed_RD_2),
+    .io_RAT_RD_3                 (renamed_RD_3),
+    .io_RAT_RS1_0                (renamed_RS1_0),
+    .io_RAT_RS1_1                (_RAT_io_RAT_RS1_1),
+    .io_RAT_RS1_2                (_RAT_io_RAT_RS1_2),
+    .io_RAT_RS1_3                (_RAT_io_RAT_RS1_3),
+    .io_RAT_RS2_0                (renamed_RS2_0),
+    .io_RAT_RS2_1                (_RAT_io_RAT_RS2_1),
+    .io_RAT_RS2_2                (_RAT_io_RAT_RS2_2),
+    .io_RAT_RS2_3                (_RAT_io_RAT_RS2_3)
   );
-  assign io_decoded_fetch_packet_ready = io_renamed_decoded_fetch_packet_ready;
-  assign io_renamed_decoded_fetch_packet_valid = io_decoded_fetch_packet_valid;
+  assign io_decoded_fetch_packet_ready =
+    ~_free_list_io_empty & io_renamed_decoded_fetch_packet_ready;
+  assign io_renamed_decoded_fetch_packet_valid =
+    io_renamed_decoded_fetch_packet_valid_REG;
   assign io_renamed_decoded_fetch_packet_bits_fetch_PC =
     io_renamed_decoded_fetch_packet_bits_REG_fetch_PC;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_ready_bits_RS1_ready =
@@ -5879,8 +6006,10 @@ module rename(
     io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD_REG;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid =
     io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid_REG;
+  assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS1 = renamed_RS1_0;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS1_valid =
     io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_RS1_valid;
+  assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS2 = renamed_RS2_0;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS2_valid =
     io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_RS2_valid;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_IMM =
@@ -5921,8 +6050,10 @@ module rename(
     io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD_REG;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid =
     io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid_REG;
+  assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS1 = renamed_RS1_1;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS1_valid =
     io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_RS1_valid;
+  assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS2 = renamed_RS2_1;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS2_valid =
     io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_RS2_valid;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_IMM =
@@ -5963,8 +6094,10 @@ module rename(
     io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD_REG;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid =
     io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid_REG;
+  assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS1 = renamed_RS1_2;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS1_valid =
     io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_RS1_valid;
+  assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS2 = renamed_RS2_2;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS2_valid =
     io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_RS2_valid;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_IMM =
@@ -6005,8 +6138,10 @@ module rename(
     io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD_REG;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid =
     io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid_REG;
+  assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS1 = renamed_RS1_3;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS1_valid =
     io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_RS1_valid;
+  assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS2 = renamed_RS2_3;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS2_valid =
     io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_RS2_valid;
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_IMM =

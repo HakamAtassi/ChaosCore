@@ -51,8 +51,11 @@ class backend(parameters:Parameters) extends Module{
     val io = IO(new Bundle{
 
         // DRAM CHANNELS //
-        val DRAM_resp               =   Flipped(Decoupled(Input(new DRAM_resp(parameters))))  // FROM DRAM
-        val DRAM_request            =   Decoupled(new DRAM_request(parameters))               // TO DRAM
+        //val DRAM_resp               =   Flipped(Decoupled(Input(new DRAM_resp(parameters))))  // FROM DRAM
+        //val DRAM_request            =   Decoupled(new DRAM_request(parameters))               // TO DRAM
+
+        val data_cache_response     =   Flipped(Decoupled(new data_cache_response(parameters))) // From MEM
+        val data_cache_request      =   Decoupled(new data_cache_request(parameters))     // To MEM
 
         // REDIRECTS // 
         val commit                  =    Input(new commit(parameters))
@@ -60,7 +63,6 @@ class backend(parameters:Parameters) extends Module{
         // PC_file access (for branch unit)
         val PC_file_exec_addr           =   Output(UInt(log2Ceil(ROBEntires).W))
         val PC_file_exec_data           =   Input(UInt(log2Ceil(ROBEntires).W))
-
 
         // ALLOCATE //
         //val backend_packet          =   Vec(dispatchWidth, Flipped(Decoupled(new decoded_instruction(parameters))))
@@ -116,7 +118,8 @@ class backend(parameters:Parameters) extends Module{
     // REGISTER FILES (READ) //
     ///////////////////////////
 
-    val INT_PRF = Module(new nReadmWrite); INT_PRF.io.clock := clock; INT_PRF.io.reset := reset;    // Connect blackbox
+    //val INT_PRF = Module(new nReadmWrite); INT_PRF.io.clock := clock; INT_PRF.io.reset := reset;    // Connect blackbox
+    val INT_PRF = Module(new sim_nReadmWrite)
 
 
     // FIXME: portcount should consist of ALU port count + MEM ports. now it only counts the number of ALU ports
@@ -255,8 +258,8 @@ class backend(parameters:Parameters) extends Module{
     // MEM_RS TO MEM //
     ///////////////////
     
-    io.DRAM_request <>  FU3.io.DRAM_request
-    io.DRAM_resp    <>  FU3.io.DRAM_resp
+    io.data_cache_request <>  FU3.io.data_cache_request
+    io.data_cache_response    <>  FU3.io.data_cache_response
 
 
     io.backend_packet.ready := DontCare

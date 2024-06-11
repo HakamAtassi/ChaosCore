@@ -318,17 +318,21 @@ class branch_unit(parameters:Parameters) extends Module{
 
 
 // MEM FU
+
+// FIXME: MEMFU needs many fixes
+// First, when a request is made, the MEMFU needs to be marked busy until the 
+// Data is recieved
 class MEMFU(parameters:Parameters) extends Module{
     import parameters._
     import InstructionType._
     val io = IO(new Bundle{
         // Input
-        val FU_input      =   Flipped(Decoupled(new read_decoded_instruction(parameters)))
-        val DRAM_resp     =   Flipped(Decoupled(new DRAM_resp(parameters)))
+        val FU_input                =   Flipped(Decoupled(new read_decoded_instruction(parameters)))
+        val data_cache_response     =   Flipped(Decoupled(new data_cache_response(parameters))) // From MEM
 
         // Output
-        val FU_output     =   ValidIO(new FU_output(parameters))                // To RF
-        val DRAM_request  =   Decoupled(new DRAM_request(parameters))           // To DRAM
+        val FU_output               =   ValidIO(new FU_output(parameters))                // To RF
+        val data_cache_request      =   Decoupled(new data_cache_request(parameters))     // To MEM
     })
 
 
@@ -369,7 +373,8 @@ class MEMFU(parameters:Parameters) extends Module{
     // COMPUTE ADDRESS //
     /////////////////////
 
-    val addr = RS1_data + IMM
+    //val addr = RS1_data + IMM
+    val addr = 0.U + IMM
 
     ///////////////////////
     // FORMAT WRITE DATA //
@@ -378,9 +383,9 @@ class MEMFU(parameters:Parameters) extends Module{
     val wr_data = Wire(UInt(32.W))
 
     wr_data := 0.U
-    when(SW){wr_data := RS2_data & 0xFF.U}
+    when(SB){wr_data := RS2_data & 0xFF.U}
     when(SH){wr_data := RS2_data & 0xFFFF.U}
-    when(SB){wr_data := RS2_data.asUInt & "hFFFF_FFFF".U(32.W)}
+    when(SW){wr_data := RS2_data.asUInt & "hFFFF_FFFF".U(32.W)}
 
 
     ///////////////////
@@ -390,13 +395,13 @@ class MEMFU(parameters:Parameters) extends Module{
     // For loads, Send request to memory. 1 Cycle later, write back to PRF (place output).
 
 
-    // For store, just send store request to memory.
+    // For store, just send store request to memory 1 cycle after input is placed
 
 
-    io.DRAM_request.valid           := IS_LOAD || IS_STORE
-    io.DRAM_request.bits.wr_en      := IS_STORE
-    io.DRAM_request.bits.wr_data    := wr_data
-    io.DRAM_request.bits.addr       := addr
+    io.data_cache_request.valid           := RegNext(IS_LOAD || IS_STORE)
+    io.data_cache_request.bits.wr_en      := RegNext(IS_STORE)
+    io.data_cache_request.bits.wr_data    := RegNext(wr_data)
+    io.data_cache_request.bits.addr       := RegNext(addr)
 
 
     //////////////////////
@@ -407,11 +412,11 @@ class MEMFU(parameters:Parameters) extends Module{
 
     rd_data := 0.U
     // this can be parallelized, I'm pretty sure (byte enable with paralell muxes...)
-    when(RegNext(LB)) {rd_data := (io.DRAM_resp.bits.data & 0xFF.U).asSInt.asUInt}
-    when(RegNext(LH)) {rd_data := (io.DRAM_resp.bits.data & 0xFFFF.U).asSInt.asUInt}
-    when(RegNext(LW)) {rd_data := (io.DRAM_resp.bits.data & "hFFFF_FFFF".U).asSInt.asUInt}
-    when(RegNext(LBU)){rd_data := (io.DRAM_resp.bits.data & 0xFF.U).asUInt}
-    when(RegNext(LHU)){rd_data := (io.DRAM_resp.bits.data & 0xFFFF.U).asUInt}
+    when(RegNext(LB)) {rd_data := (io.data_cache_response.bits.data & 0xFF.U).asSInt.asUInt}
+    when(RegNext(LH)) {rd_data := (io.data_cache_response.bits.data & 0xFFFF.U).asSInt.asUInt}
+    when(RegNext(LW)) {rd_data := (io.data_cache_response.bits.data & "hFFFF_FFFF".U).asSInt.asUInt}
+    when(RegNext(LBU)){rd_data := (io.data_cache_response.bits.data & 0xFF.U).asUInt}
+    when(RegNext(LHU)){rd_data := (io.data_cache_response.bits.data & 0xFFFF.U).asUInt}
 
     ////////////////////////
     // ASSIGN PRF OUTPUTS //
@@ -422,7 +427,7 @@ class MEMFU(parameters:Parameters) extends Module{
     io.FU_output.bits.target_address            := 0.B
     io.FU_output.bits.branch_valid              := 0.B
 
-    io.FU_output.bits.instruction_PC        :=  RegNext(io.FU_input.bits.PC + (io.FU_input.bits.decoded_instruction.packet_index)<<2.U)
+    io.FU_output.bits.instruction_PC        :=  RegNext(io.FU_input.bits.PC + (io.FU_input.bits.decoded_instruction.packet_index<<2.U))
     io.FU_output.bits.fetch_packet_index    :=  RegNext(io.FU_input.bits.decoded_instruction.packet_index)
 
     io.FU_output.bits.RD_data   := rd_data
@@ -430,7 +435,7 @@ class MEMFU(parameters:Parameters) extends Module{
     io.FU_output.bits.RD_valid  := RegNext(IS_LOAD)
 
     io.FU_input.ready  := 1.B
-    io.DRAM_resp.ready := 1.B
+    io.data_cache_response.ready := 1.B
 
     io.FU_output.bits.ROB_index  :=   RegNext(io.FU_input.bits.decoded_instruction.ROB_index)
     io.FU_output.valid           :=   RegNext(io.FU_input.valid)

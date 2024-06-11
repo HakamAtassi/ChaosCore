@@ -79,7 +79,7 @@ module decoder(
               | _io_decoded_instruction_bits_RD_valid_T_13
               | instructionType == 5'h1E)) begin
         if (`ASSERT_VERBOSE_COND_)
-          $error("Assertion failed: Enum state must be valid, got %d!\n    at decoder.scala:66 assert(valid, \"Enum state must be valid, got %%%%d!\", opcode(6,2))\n",
+          $error("Assertion failed: Enum state must be valid, got %d!\n    at decoder.scala:68 assert(valid, \"Enum state must be valid, got %%%%d!\", opcode(6,2))\n",
                  instructionType);
         if (`STOP_COND_)
           $fatal;

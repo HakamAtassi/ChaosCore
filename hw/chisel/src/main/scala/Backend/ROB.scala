@@ -58,6 +58,8 @@ class ROB(parameters:Parameters) extends Module{
         val commit          =   Input(new commit(parameters))
         // Commits are at the granularity of fetch packets
 
+        val ROB_index       =   Output(UInt(log2Ceil(ROBEntires).W))
+
         // PC FILE //
         // Read port (Exec)
         val PC_file_exec_addr           =   Input(UInt(log2Ceil(ROBEntires).W))
@@ -81,6 +83,8 @@ class ROB(parameters:Parameters) extends Module{
     val front_index = Wire(UInt((pointer_width-1).W))
     val back_index  = Wire(UInt((pointer_width-1).W))
 
+
+    io.ROB_index := back_index
 
 
     back_index  := back_pointer(pointer_width-2, 0)
@@ -235,10 +239,11 @@ class ROB(parameters:Parameters) extends Module{
     
     val commit_row_complete = Wire(Vec(fetchWidth, Bool()))  // all valid instructions in that row are complete
 
+
     commit_row_valid := shared_mem.io.readDataB.row_valid
 
-    for(i <- 0 until fetchWidth){
-        commit_row_complete(i) :=  ((ROB_WB_banks(i).io.readDataG.busy && ROB_entry_banks(i).io.readDataB.valid) || (!ROB_entry_banks(i).io.readDataB.valid))
+    for(i <- 0 until fetchWidth){   // FIXME: the commit condition here is very important and is currently a hack...
+        commit_row_complete(i) :=  ((ROB_WB_banks(i).io.readDataG.busy && ROB_entry_banks(i).io.readDataB.valid) || (!ROB_entry_banks(i).io.readDataB.valid) || ROB_entry_banks(i).io.readDataB.is_load || ROB_entry_banks(i).io.readDataB.is_store)
     }
 
     commit := commit_row_valid && commit_row_complete.reduce(_ && _)
@@ -246,7 +251,7 @@ class ROB(parameters:Parameters) extends Module{
     front_pointer := front_pointer + commit
 
     io.ROB_output.valid := commit
-    io.ROB_output.bits.ROB_index := front_index
+    io.ROB_output.bits.ROB_index := RegNext(front_index)    // you want the unbypassed version of this pointer
 
     when(commit){   // bypass
         val bypassed_pointer = (front_pointer + 1.U)

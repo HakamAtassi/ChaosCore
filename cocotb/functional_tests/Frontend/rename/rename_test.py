@@ -51,3 +51,7 @@ def test_single_checkpoint():
         configs["testcase"] = "test_single_checkpoint"
         run(**configs)
 
+def test_rename_4_at_a_time_with_hazard():
+        configs["testcase"] = "test_rename_4_at_a_time_with_hazard"
+        run(**configs)
+

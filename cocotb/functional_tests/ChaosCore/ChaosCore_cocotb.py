@@ -39,8 +39,61 @@ async def test_reset(dut):
 
     dut.set_dram_ready(1)   # dram ready for request (from cache)
 
-    await RisingEdge(dut.clock())
 
-    for _ in range(1000):
+    for _ in range(100):
+        await ReadOnly()
+        if(dut.get_instruction_fetch_output()["valid"] == 1):
+            break;
         await dut.update()
 
+    print(dut.get_instruction_fetch_output())
+
+    assert dut.get_instruction_fetch_output()["valid"] == 1
+    assert dut.get_instruction_fetch_output()["instruction"][0] == 0x04800793
+    assert dut.get_instruction_fetch_output()["instruction"][1] == 0x40f02023
+    assert dut.get_instruction_fetch_output()["instruction"][2] == 0x04500793
+    assert dut.get_instruction_fetch_output()["instruction"][3] == 0x40f02023
+
+    assert dut.get_instruction_fetch_output()["valid_bits"][0]  == 1
+    assert dut.get_instruction_fetch_output()["valid_bits"][1]  == 1
+    assert dut.get_instruction_fetch_output()["valid_bits"][2]  == 1
+    assert dut.get_instruction_fetch_output()["valid_bits"][3]  == 1
+
+
+    for _ in range(100):
+        await ReadOnly()
+        if(dut.get_frontend_output()["fetch_packet_valid"] == 1):
+            break;
+        await dut.update()
+
+    assert dut.get_frontend_output()["fetch_packet_valid"] == 1
+
+   #10074:	04800793          	li	x15,72
+   #10078:	40f02023          	sw	x15,1024(x0) # 400 <main-0xfc74>
+   #1007c:	04500793          	li	x15,69
+   #10080:	40f02023          	sw	x15,1024(x0) # 400 <main-0xfc74>
+
+    assert dut.get_frontend_output()["valid_bits"]  == [1,1,1,1]
+    assert dut.get_frontend_output()["IS_STORE"]    == [0,1,0,1]
+    assert dut.get_frontend_output()["needs_ALU"]   == [1,0,1,0]
+    assert dut.get_frontend_output()["RS_type"]     == [0,1,0,1]
+
+    assert dut.get_frontend_output()["RD"][0]        == 0
+    assert dut.get_frontend_output()["RD"][2]        == 1
+
+    assert dut.get_frontend_output()["RS2"][1]        == 0  # First rename maps x15 => 0
+    assert dut.get_frontend_output()["RS2"][3]        == 1  # Second rename maps x15 => 1
+
+
+    assert dut.get_frontend_output()["RD_valid"]    == [1, 0, 1, 0]
+
+    await dut.update()
+
+
+
+    for i in range(200):
+        await dut.update()
+
+    print(dut.get_PRF())
+
+    assert False

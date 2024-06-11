@@ -343,15 +343,15 @@ module instruction_cache(
   assign io_cache_data_bits_instructions_0_ROB_index = 6'h0;
   assign io_cache_data_bits_instructions_1_instruction =
     _GEN[{io_cache_data_bits_instructions_1_instruction_REG, 2'h0} + 3'h1];
-  assign io_cache_data_bits_instructions_1_packet_index = 4'h0;
+  assign io_cache_data_bits_instructions_1_packet_index = 4'h1;
   assign io_cache_data_bits_instructions_1_ROB_index = 6'h0;
   assign io_cache_data_bits_instructions_2_instruction =
     _GEN[{io_cache_data_bits_instructions_2_instruction_REG, 2'h0} + 3'h2];
-  assign io_cache_data_bits_instructions_2_packet_index = 4'h0;
+  assign io_cache_data_bits_instructions_2_packet_index = 4'h2;
   assign io_cache_data_bits_instructions_2_ROB_index = 6'h0;
   assign io_cache_data_bits_instructions_3_instruction =
     _GEN[{io_cache_data_bits_instructions_3_instruction_REG, 2'h0} + 3'h3];
-  assign io_cache_data_bits_instructions_3_packet_index = 4'h0;
+  assign io_cache_data_bits_instructions_3_packet_index = 4'h3;
   assign io_cache_data_bits_instructions_3_ROB_index = 6'h0;
   assign io_DRAM_request_valid = request_valid;
   assign io_DRAM_request_bits_addr = request_addr;

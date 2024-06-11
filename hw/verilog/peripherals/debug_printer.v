@@ -13,20 +13,20 @@
 module debug_printer(
   input         clock,
                 reset,
-  output        io_DRAM_request_ready,
-  input         io_DRAM_request_valid,
-  input  [31:0] io_DRAM_request_bits_addr,
-                io_DRAM_request_bits_wr_data,
-  input         io_DRAM_request_bits_wr_en
+  output        io_data_cache_request_ready,
+  input         io_data_cache_request_valid,
+  input  [31:0] io_data_cache_request_bits_addr,
+                io_data_cache_request_bits_wr_data,
+  input         io_data_cache_request_bits_wr_en
 );
 
   `ifndef SYNTHESIS
     always @(posedge clock) begin
-      if ((`PRINTF_COND_) & io_DRAM_request_bits_addr == 32'h80000000
-          & io_DRAM_request_valid & ~reset)
-        $fwrite(32'h80000002, "%c", io_DRAM_request_bits_wr_data);
+      if ((`PRINTF_COND_) & io_data_cache_request_bits_addr == 32'h400
+          & io_data_cache_request_valid & ~reset)
+        $fwrite(32'h80000002, "DEBUG: %c\n", io_data_cache_request_bits_wr_data);
     end // always @(posedge)
   `endif // not def SYNTHESIS
-  assign io_DRAM_request_ready = 1'h1;
+  assign io_data_cache_request_ready = 1'h1;
 endmodule
 
