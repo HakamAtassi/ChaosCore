@@ -229,11 +229,12 @@ class ROB_dut:
         ROB_output["valid"] = getattr(self.dut, f"io_ROB_output_valid")
         ROB_output["fetch_PC"] = getattr(self.dut, f"io_ROB_output_bits_fetch_PC")
         ROB_output["RAT_IDX"] = getattr(self.dut, f"io_ROB_output_bits_RAT_IDX")
+        ROB_output["ROB_index"]  = getattr(self.dut, f"io_ROB_index")
         
-        ROB_output["entry_valid"] = [0]*4
-        ROB_output["is_branch"] = [0]*4
-        ROB_output["is_load"] = [0]*4
-        ROB_output["is_store"] = [0]*4
+        ROB_output["entry_valid"]   = [0]*4
+        ROB_output["is_branch"]     = [0]*4
+        ROB_output["is_load"]       = [0]*4
+        ROB_output["is_store"]      = [0]*4
 
         for i in range(4):
             ROB_output["entry_valid"][i]      = getattr(self.dut, f"io_ROB_output_bits_ROB_entries_{i}_valid")

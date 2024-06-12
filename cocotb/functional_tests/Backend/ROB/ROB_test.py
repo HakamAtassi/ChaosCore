@@ -67,3 +67,15 @@ def test_basic_commit():
         configs["testcase"] = "test_basic_commit"
         run(**configs)
 
+def test_allocate_rob_index():
+        configs["testcase"] = "test_allocate_rob_index"
+        run(**configs)
+
+def test_commit_rob_index():
+        configs["testcase"] = "test_commit_rob_index"
+        run(**configs)
+
+def test_WB_port_B():
+        configs["testcase"] = "test_WB_port_B"
+        run(**configs)
+

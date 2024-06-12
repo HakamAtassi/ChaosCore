@@ -117,7 +117,7 @@ class free_list(parameters:Parameters) extends Module{
     val front_pointer = RegInit(UInt(ptr_width.W), 0.U)
     val back_pointer  = RegInit(UInt(ptr_width.W), 0.U)
 
-    val free_list_buffer = RegInit(VecInit((0 until physicalRegCount).map(_.U(log2Ceil(physicalRegCount).W))))
+    val free_list_buffer = RegInit(VecInit((1 until physicalRegCount).map(_.U(log2Ceil(physicalRegCount).W))))
 
 
     ///////////////////////
@@ -162,12 +162,20 @@ class free_list(parameters:Parameters) extends Module{
     ////////////////////////
 
     // scatter outputs
-    val output_sorter = Module(new reorder_renamed_outputs(parameters))
 
-    output_sorter.io.renamed_valid          := io.rename_valid
-    output_sorter.io.renamed_values         := renamed_values
 
-    io.renamed_values := output_sorter.io.renamed_values_sorted
+    val renamed_index = Wire(Vec(fetchWidth, UInt(log2Ceil(fetchWidth).W)))
+
+    for(i <- 1 to fetchWidth){   // Assign outputs
+        renamed_index(i-1) :=  PopCount(io.rename_valid.take(i)) - 1.U
+    }
+   
+    for(i <- 0 until fetchWidth){   // Assign outputs
+        val rename_valid = io.rename_valid(i)
+        io.renamed_values(i) := Mux(rename_valid, renamed_values(renamed_index(i)), 0.U)
+    }
+
+
 
     ////////////////
     // Full/Empty //

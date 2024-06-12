@@ -47,7 +47,7 @@ class debug_printer(parameters:Parameters, addressMap:AddressMap) extends Module
     })
 
     when((io.data_cache_request.bits.addr === debug_printer_address) && io.data_cache_request.valid){
-        printf("DEBUG: %c\n", io.data_cache_request.bits.wr_data)
+        printf("%c", io.data_cache_request.bits.wr_data)
     }
 
     io.data_cache_request.ready := 1.B

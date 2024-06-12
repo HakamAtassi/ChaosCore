@@ -262,7 +262,7 @@ class ROB_WB_mem(parameters:Parameters, depth: Int) extends Module { // 1 read, 
 
   })
 
-  // Create the true dual-port memory
+
   val mem = SyncReadMem(depth, new ROB_WB(parameters))
 
 
@@ -279,7 +279,7 @@ class ROB_WB_mem(parameters:Parameters, depth: Int) extends Module { // 1 read, 
   }
 
   when(io.writeEnableD) { // FU3
-    mem.write(io.addrD, io.writeDataC)
+    mem.write(io.addrD, io.writeDataD)
   }
 
   when(io.writeEnableE) { // FU4
@@ -288,7 +288,6 @@ class ROB_WB_mem(parameters:Parameters, depth: Int) extends Module { // 1 read, 
 
   io.readDataG := mem.read(io.addrG, 1.B)
 
-  dontTouch(io.readDataG)
   //dontTouch(io)
 
 }
