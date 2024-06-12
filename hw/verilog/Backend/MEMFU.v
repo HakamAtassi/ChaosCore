@@ -85,7 +85,8 @@ module MEMFU(
             : IS_STORE & _LB_T & io_FU_input_valid
                 ? {24'h0, io_FU_input_bits_RS2_data[7:0]}
                 : 32'h0;
-    io_data_cache_request_bits_addr_REG <= io_FU_input_bits_decoded_instruction_IMM;
+    io_data_cache_request_bits_addr_REG <=
+      io_FU_input_bits_RS1_data + io_FU_input_bits_decoded_instruction_IMM;
     REG <= IS_LOAD & _LB_T & io_FU_input_valid;
     REG_1 <= IS_LOAD & _LH_T & io_FU_input_valid;
     REG_2 <= IS_LOAD & _LW_T & io_FU_input_valid;

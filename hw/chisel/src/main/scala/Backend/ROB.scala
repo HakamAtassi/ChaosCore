@@ -159,6 +159,7 @@ class ROB(parameters:Parameters) extends Module{
 
         // WB (connect all ports)
 
+        // FU0
         val ROB_WB_data_FU0 = Wire(new ROB_WB(parameters))
         ROB_WB_data_FU0.busy             :=  io.FU_outputs(0).valid
         ROB_WB_data_FU0.exception        :=  0.B
@@ -166,6 +167,7 @@ class ROB(parameters:Parameters) extends Module{
         ROB_WB_banks(i).io.writeDataB    :=  ROB_WB_data_FU0
         ROB_WB_banks(i).io.writeEnableB  :=  io.FU_outputs(0).valid && (io.FU_outputs(0).bits.fetch_packet_index === i.U)
 
+        // FU1
         val ROB_WB_data_FU1 = Wire(new ROB_WB(parameters))
         ROB_WB_data_FU1.busy             :=  io.FU_outputs(1).valid
         ROB_WB_data_FU1.exception        :=  0.B
@@ -173,6 +175,7 @@ class ROB(parameters:Parameters) extends Module{
         ROB_WB_banks(i).io.writeDataC    :=  ROB_WB_data_FU1
         ROB_WB_banks(i).io.writeEnableC  :=  io.FU_outputs(1).valid && (io.FU_outputs(1).bits.fetch_packet_index === i.U)
 
+        // FU2
         val ROB_WB_data_FU2 = Wire(new ROB_WB(parameters))
         ROB_WB_data_FU2.busy             :=  io.FU_outputs(2).valid
         ROB_WB_data_FU2.exception        :=  0.B
@@ -180,6 +183,7 @@ class ROB(parameters:Parameters) extends Module{
         ROB_WB_banks(i).io.writeDataD    :=  ROB_WB_data_FU2
         ROB_WB_banks(i).io.writeEnableD  :=  io.FU_outputs(2).valid && (io.FU_outputs(2).bits.fetch_packet_index === i.U)
 
+        // FU3
         val ROB_WB_data_FU3 = Wire(new ROB_WB(parameters))
         ROB_WB_data_FU3.busy             :=  io.FU_outputs(3).valid
         ROB_WB_data_FU3.exception        :=  0.B
@@ -243,10 +247,18 @@ class ROB(parameters:Parameters) extends Module{
     commit_row_valid := shared_mem.io.readDataB.row_valid
 
     for(i <- 0 until fetchWidth){   // FIXME: the commit condition here is very important and is currently a hack...
-        commit_row_complete(i) :=  ((ROB_WB_banks(i).io.readDataG.busy && ROB_entry_banks(i).io.readDataB.valid) || (!ROB_entry_banks(i).io.readDataB.valid) || ROB_entry_banks(i).io.readDataB.is_load || ROB_entry_banks(i).io.readDataB.is_store)
+        val is_completed    = (ROB_WB_banks(i).io.readDataG.busy && ROB_entry_banks(i).io.readDataB.valid)
+        val is_invalid      = (!ROB_entry_banks(i).io.readDataB.valid)
+        val is_load         = ROB_entry_banks(i).io.readDataB.is_load
+        val is_store        = ROB_entry_banks(i).io.readDataB.is_store
+        commit_row_complete(i) := is_completed || is_invalid || is_load || is_store
     }
 
+
     commit := commit_row_valid && commit_row_complete.reduce(_ && _)
+
+
+    dontTouch(commit_row_complete)
 
     front_pointer := front_pointer + commit
 
@@ -266,10 +278,9 @@ class ROB(parameters:Parameters) extends Module{
     // READY //
     ///////////
 
-    val full = (front_index === back_index) && (front_pointer =/= back_pointer)
+    val full = (front_pointer(pointer_width-2, 0) === back_pointer(pointer_width-2, 0)) && (front_pointer =/= back_pointer)
 
-    dontTouch(full)
-
+    dontTouch(back_index)
 
     io.ROB_packet.ready := !full
 

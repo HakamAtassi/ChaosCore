@@ -24,7 +24,7 @@ module debug_printer(
     always @(posedge clock) begin
       if ((`PRINTF_COND_) & io_data_cache_request_bits_addr == 32'h400
           & io_data_cache_request_valid & ~reset)
-        $fwrite(32'h80000002, "DEBUG: %c\n", io_data_cache_request_bits_wr_data);
+        $fwrite(32'h80000002, "%c", io_data_cache_request_bits_wr_data);
     end // always @(posedge)
   `endif // not def SYNTHESIS
   assign io_data_cache_request_ready = 1'h1;

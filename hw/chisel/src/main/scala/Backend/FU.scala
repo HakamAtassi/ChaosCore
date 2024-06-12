@@ -373,8 +373,7 @@ class MEMFU(parameters:Parameters) extends Module{
     // COMPUTE ADDRESS //
     /////////////////////
 
-    //val addr = RS1_data + IMM
-    val addr = 0.U + IMM
+    val addr = RS1_data + IMM
 
     ///////////////////////
     // FORMAT WRITE DATA //

@@ -31,6 +31,10 @@ def test_rename_1_RD():
         configs["testcase"] = "test_rename_1_RD"
         run(**configs)
 
+def test_rename_1_RD_x0():
+        configs["testcase"] = "test_rename_1_RD_x0"
+        run(**configs)
+
 def test_rename_2_with_stall():
         configs["testcase"] = "test_rename_2_with_stall"
         run(**configs)

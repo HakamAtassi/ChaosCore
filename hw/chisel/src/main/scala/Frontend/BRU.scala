@@ -54,9 +54,9 @@ class BRU(parameters:Parameters) extends Module{
     // output mispredict and other metadata
 
     io.commit.valid := io.ROB_output.valid 
-    //&& io.FTQ.valid
+    
 
-    io.commit.is_misprediction := (io.FTQ.predicted_PC =/= io.FTQ.resolved_PC) && io.commit.valid && (io.ROB_output.bits.fetch_PC === io.FTQ.fetch_PC)
+    io.commit.is_misprediction := (io.FTQ.predicted_PC =/= io.FTQ.resolved_PC) && io.commit.valid && (io.ROB_output.bits.fetch_PC === io.FTQ.fetch_PC) && io.FTQ.valid
 
     io.commit.GHR       := io.FTQ.GHR
     io.commit.TOS       := io.FTQ.TOS

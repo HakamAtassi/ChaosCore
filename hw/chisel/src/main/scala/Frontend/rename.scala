@@ -322,21 +322,15 @@ class rename(parameters:Parameters) extends Module{
     // In superscalar, where multiple renames are done every cycle, the renamed value must be forwarded, since the RAT will not represent the earlier rename requets. 
 
     val instruction_RD            =   Wire(Vec(fetchWidth, UInt(physicalRegBits.W)))
-    //io.decoded_fetch_packet.bits.decoded_instruction.map(_.RD)
 
     val instruction_RD_valid      =   Wire(Vec(fetchWidth, Bool()))
 
     for(i <- 0 until fetchWidth){
-        instruction_RD_valid(i)      :=   io.decoded_fetch_packet.bits.decoded_instruction(i).RD_valid && io.decoded_fetch_packet.valid
+        // perform rename if RD is valid, packet is valid, and reg is not x0
+        instruction_RD_valid(i)      :=   io.decoded_fetch_packet.bits.decoded_instruction(i).RD_valid && io.decoded_fetch_packet.valid && (io.decoded_fetch_packet.bits.decoded_instruction(i).RD =/= 0.U)
         instruction_RD(i)              := io.decoded_fetch_packet.bits.decoded_instruction(i).RD
     }
 
-    dontTouch(instruction_RD)
-
-    //val instruction_RS1           =   io.decoded_fetch_packet.bits.decoded_instruction.map(_.RS1)
-    //val instruction_RS1_valid     =   io.decoded_fetch_packet.bits.decoded_instruction.map(_.RS1_valid)
-    //val instruction_RS2           =   io.decoded_fetch_packet.bits.decoded_instruction.map(_.RS2)
-    //val instruction_RS2_valid     =   io.decoded_fetch_packet.bits.decoded_instruction.map(_.RS2_valid)
 
     val instruction_RS1         = Wire(Vec(fetchWidth, UInt(physicalRegBits.W))) // RAT RD outputs
     val instruction_RS1_valid   = Wire(Vec(fetchWidth, Bool())) // RAT RD outputs
@@ -351,8 +345,6 @@ class rename(parameters:Parameters) extends Module{
         instruction_RS2_valid(i) := io.decoded_fetch_packet.bits.decoded_instruction(i).RS2_valid
     }
 
-    dontTouch(instruction_RS1)
-    dontTouch(instruction_RS2)
 
 
     //val free_list_RD              =   Wire(Vec(fetchWidth, UInt(physicalRegBits.W))) // From free list 
@@ -440,6 +432,7 @@ class rename(parameters:Parameters) extends Module{
             when(RegNext(instruction_RS2(i)) === RegNext(instruction_RD(j))){
                 renamed_RS2(i) := RegNext(free_list.io.renamed_values(j))
             }
+
         }
     }
 

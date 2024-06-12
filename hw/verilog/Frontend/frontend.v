@@ -4642,34 +4642,6 @@ module reorder_free_inputs(
     | (sels_3[2] ? io_free_values_2 : 6'h0) | (sels_3[3] ? io_free_values_3 : 6'h0);
 endmodule
 
-module reorder_renamed_outputs(
-  input        io_renamed_valid_0,
-               io_renamed_valid_1,
-               io_renamed_valid_2,
-               io_renamed_valid_3,
-  input  [5:0] io_renamed_values_0,
-               io_renamed_values_1,
-               io_renamed_values_2,
-               io_renamed_values_3,
-  output [5:0] io_renamed_values_sorted_0,
-               io_renamed_values_sorted_1,
-               io_renamed_values_sorted_2,
-               io_renamed_values_sorted_3
-);
-
-  wire [1:0]      _GEN = {1'h0, io_renamed_valid_0};
-  wire [1:0]      _GEN_0 = {1'h0, io_renamed_valid_1};
-  wire [3:0][5:0] _GEN_1 =
-    {{io_renamed_values_3},
-     {io_renamed_values_2},
-     {io_renamed_values_1},
-     {io_renamed_values_0}};
-  assign io_renamed_values_sorted_0 = io_renamed_values_0;
-  assign io_renamed_values_sorted_1 = _GEN_1[{1'h0, io_renamed_valid_0}];
-  assign io_renamed_values_sorted_2 = _GEN_1[_GEN + _GEN_0];
-  assign io_renamed_values_sorted_3 = _GEN_1[_GEN + _GEN_0 + {1'h0, io_renamed_valid_2}];
-endmodule
-
 module free_list(
   input        clock,
                reset,
@@ -4765,9 +4737,12 @@ module free_list(
   reg  [5:0]       free_list_buffer_60;
   reg  [5:0]       free_list_buffer_61;
   reg  [5:0]       free_list_buffer_62;
-  reg  [5:0]       free_list_buffer_63;
-  wire [63:0][5:0] _GEN =
-    {{free_list_buffer_63},
+  wire [1:0]       _GEN = {1'h0, io_rename_valid_0};
+  wire [1:0]       _GEN_0 = {1'h0, io_rename_valid_1};
+  wire [1:0]       _GEN_1 = {1'h0, io_rename_valid_2};
+  wire [1:0]       _GEN_2 = {1'h0, io_rename_valid_3};
+  wire [63:0][5:0] _GEN_3 =
+    {{free_list_buffer_0},
      {free_list_buffer_62},
      {free_list_buffer_61},
      {free_list_buffer_60},
@@ -4831,6 +4806,12 @@ module free_list(
      {free_list_buffer_2},
      {free_list_buffer_1},
      {free_list_buffer_0}};
+  wire [1:0]       _renamed_index_3_T_1 = _GEN + _GEN_0;
+  wire [3:0][5:0]  _GEN_4 =
+    {{_GEN_3[front_pointer[5:0] + 6'h3]},
+     {_GEN_3[front_pointer[5:0] + 6'h2]},
+     {_GEN_3[front_pointer[5:0] + 6'h1]},
+     {_GEN_3[front_pointer[5:0]]}};
   wire [6:0]       _io_empty_T_5 = front_pointer + 7'h4;
   wire             io_empty_0 =
     _io_empty_T_5[5:0] == back_pointer[5:0] & _io_empty_T_5[6] != back_pointer[6];
@@ -4838,83 +4819,79 @@ module free_list(
     if (reset) begin
       front_pointer <= 7'h0;
       back_pointer <= 7'h0;
-      free_list_buffer_0 <= 6'h0;
-      free_list_buffer_1 <= 6'h1;
-      free_list_buffer_2 <= 6'h2;
-      free_list_buffer_3 <= 6'h3;
-      free_list_buffer_4 <= 6'h4;
-      free_list_buffer_5 <= 6'h5;
-      free_list_buffer_6 <= 6'h6;
-      free_list_buffer_7 <= 6'h7;
-      free_list_buffer_8 <= 6'h8;
-      free_list_buffer_9 <= 6'h9;
-      free_list_buffer_10 <= 6'hA;
-      free_list_buffer_11 <= 6'hB;
-      free_list_buffer_12 <= 6'hC;
-      free_list_buffer_13 <= 6'hD;
-      free_list_buffer_14 <= 6'hE;
-      free_list_buffer_15 <= 6'hF;
-      free_list_buffer_16 <= 6'h10;
-      free_list_buffer_17 <= 6'h11;
-      free_list_buffer_18 <= 6'h12;
-      free_list_buffer_19 <= 6'h13;
-      free_list_buffer_20 <= 6'h14;
-      free_list_buffer_21 <= 6'h15;
-      free_list_buffer_22 <= 6'h16;
-      free_list_buffer_23 <= 6'h17;
-      free_list_buffer_24 <= 6'h18;
-      free_list_buffer_25 <= 6'h19;
-      free_list_buffer_26 <= 6'h1A;
-      free_list_buffer_27 <= 6'h1B;
-      free_list_buffer_28 <= 6'h1C;
-      free_list_buffer_29 <= 6'h1D;
-      free_list_buffer_30 <= 6'h1E;
-      free_list_buffer_31 <= 6'h1F;
-      free_list_buffer_32 <= 6'h20;
-      free_list_buffer_33 <= 6'h21;
-      free_list_buffer_34 <= 6'h22;
-      free_list_buffer_35 <= 6'h23;
-      free_list_buffer_36 <= 6'h24;
-      free_list_buffer_37 <= 6'h25;
-      free_list_buffer_38 <= 6'h26;
-      free_list_buffer_39 <= 6'h27;
-      free_list_buffer_40 <= 6'h28;
-      free_list_buffer_41 <= 6'h29;
-      free_list_buffer_42 <= 6'h2A;
-      free_list_buffer_43 <= 6'h2B;
-      free_list_buffer_44 <= 6'h2C;
-      free_list_buffer_45 <= 6'h2D;
-      free_list_buffer_46 <= 6'h2E;
-      free_list_buffer_47 <= 6'h2F;
-      free_list_buffer_48 <= 6'h30;
-      free_list_buffer_49 <= 6'h31;
-      free_list_buffer_50 <= 6'h32;
-      free_list_buffer_51 <= 6'h33;
-      free_list_buffer_52 <= 6'h34;
-      free_list_buffer_53 <= 6'h35;
-      free_list_buffer_54 <= 6'h36;
-      free_list_buffer_55 <= 6'h37;
-      free_list_buffer_56 <= 6'h38;
-      free_list_buffer_57 <= 6'h39;
-      free_list_buffer_58 <= 6'h3A;
-      free_list_buffer_59 <= 6'h3B;
-      free_list_buffer_60 <= 6'h3C;
-      free_list_buffer_61 <= 6'h3D;
-      free_list_buffer_62 <= 6'h3E;
-      free_list_buffer_63 <= 6'h3F;
+      free_list_buffer_0 <= 6'h1;
+      free_list_buffer_1 <= 6'h2;
+      free_list_buffer_2 <= 6'h3;
+      free_list_buffer_3 <= 6'h4;
+      free_list_buffer_4 <= 6'h5;
+      free_list_buffer_5 <= 6'h6;
+      free_list_buffer_6 <= 6'h7;
+      free_list_buffer_7 <= 6'h8;
+      free_list_buffer_8 <= 6'h9;
+      free_list_buffer_9 <= 6'hA;
+      free_list_buffer_10 <= 6'hB;
+      free_list_buffer_11 <= 6'hC;
+      free_list_buffer_12 <= 6'hD;
+      free_list_buffer_13 <= 6'hE;
+      free_list_buffer_14 <= 6'hF;
+      free_list_buffer_15 <= 6'h10;
+      free_list_buffer_16 <= 6'h11;
+      free_list_buffer_17 <= 6'h12;
+      free_list_buffer_18 <= 6'h13;
+      free_list_buffer_19 <= 6'h14;
+      free_list_buffer_20 <= 6'h15;
+      free_list_buffer_21 <= 6'h16;
+      free_list_buffer_22 <= 6'h17;
+      free_list_buffer_23 <= 6'h18;
+      free_list_buffer_24 <= 6'h19;
+      free_list_buffer_25 <= 6'h1A;
+      free_list_buffer_26 <= 6'h1B;
+      free_list_buffer_27 <= 6'h1C;
+      free_list_buffer_28 <= 6'h1D;
+      free_list_buffer_29 <= 6'h1E;
+      free_list_buffer_30 <= 6'h1F;
+      free_list_buffer_31 <= 6'h20;
+      free_list_buffer_32 <= 6'h21;
+      free_list_buffer_33 <= 6'h22;
+      free_list_buffer_34 <= 6'h23;
+      free_list_buffer_35 <= 6'h24;
+      free_list_buffer_36 <= 6'h25;
+      free_list_buffer_37 <= 6'h26;
+      free_list_buffer_38 <= 6'h27;
+      free_list_buffer_39 <= 6'h28;
+      free_list_buffer_40 <= 6'h29;
+      free_list_buffer_41 <= 6'h2A;
+      free_list_buffer_42 <= 6'h2B;
+      free_list_buffer_43 <= 6'h2C;
+      free_list_buffer_44 <= 6'h2D;
+      free_list_buffer_45 <= 6'h2E;
+      free_list_buffer_46 <= 6'h2F;
+      free_list_buffer_47 <= 6'h30;
+      free_list_buffer_48 <= 6'h31;
+      free_list_buffer_49 <= 6'h32;
+      free_list_buffer_50 <= 6'h33;
+      free_list_buffer_51 <= 6'h34;
+      free_list_buffer_52 <= 6'h35;
+      free_list_buffer_53 <= 6'h36;
+      free_list_buffer_54 <= 6'h37;
+      free_list_buffer_55 <= 6'h38;
+      free_list_buffer_56 <= 6'h39;
+      free_list_buffer_57 <= 6'h3A;
+      free_list_buffer_58 <= 6'h3B;
+      free_list_buffer_59 <= 6'h3C;
+      free_list_buffer_60 <= 6'h3D;
+      free_list_buffer_61 <= 6'h3E;
+      free_list_buffer_62 <= 6'h3F;
     end
     else begin
-      automatic logic [5:0] _GEN_0;
-      automatic logic [5:0] _GEN_1;
-      automatic logic [5:0] _GEN_2 = back_pointer[5:0] + 6'h3;
-      _GEN_0 = back_pointer[5:0] + 6'h1;
-      _GEN_1 = back_pointer[5:0] + 6'h2;
+      automatic logic [5:0] _GEN_5;
+      automatic logic [5:0] _GEN_6;
+      automatic logic [5:0] _GEN_7 = back_pointer[5:0] + 6'h3;
+      _GEN_5 = back_pointer[5:0] + 6'h1;
+      _GEN_6 = back_pointer[5:0] + 6'h2;
       if (~io_empty_0)
         front_pointer <=
-          front_pointer
-          + {4'h0,
-             {1'h0, {1'h0, io_rename_valid_0} + {1'h0, io_rename_valid_1}}
-               + {1'h0, {1'h0, io_rename_valid_2} + {1'h0, io_rename_valid_3}}};
+          front_pointer + {4'h0, {1'h0, _GEN + _GEN_0} + {1'h0, _GEN_1 + _GEN_2}};
       back_pointer <=
         back_pointer
         + {4'h0,
@@ -4924,518 +4901,510 @@ module free_list(
              + {1'h0,
                 {1'h0, _input_sorter_io_free_valid_sorted_2}
                   + {1'h0, _input_sorter_io_free_valid_sorted_3}}};
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h0)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h0)
         free_list_buffer_0 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h0)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h0)
         free_list_buffer_0 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h0)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h0)
         free_list_buffer_0 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h0)
         free_list_buffer_0 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h1)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h1)
         free_list_buffer_1 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h1)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h1)
         free_list_buffer_1 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h1)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h1)
         free_list_buffer_1 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h1)
         free_list_buffer_1 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h2)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h2)
         free_list_buffer_2 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h2)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h2)
         free_list_buffer_2 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h2)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h2)
         free_list_buffer_2 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h2)
         free_list_buffer_2 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h3)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h3)
         free_list_buffer_3 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h3)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h3)
         free_list_buffer_3 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h3)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h3)
         free_list_buffer_3 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h3)
         free_list_buffer_3 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h4)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h4)
         free_list_buffer_4 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h4)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h4)
         free_list_buffer_4 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h4)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h4)
         free_list_buffer_4 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h4)
         free_list_buffer_4 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h5)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h5)
         free_list_buffer_5 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h5)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h5)
         free_list_buffer_5 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h5)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h5)
         free_list_buffer_5 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h5)
         free_list_buffer_5 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h6)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h6)
         free_list_buffer_6 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h6)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h6)
         free_list_buffer_6 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h6)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h6)
         free_list_buffer_6 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h6)
         free_list_buffer_6 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h7)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h7)
         free_list_buffer_7 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h7)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h7)
         free_list_buffer_7 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h7)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h7)
         free_list_buffer_7 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h7)
         free_list_buffer_7 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h8)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h8)
         free_list_buffer_8 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h8)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h8)
         free_list_buffer_8 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h8)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h8)
         free_list_buffer_8 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h8)
         free_list_buffer_8 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h9)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h9)
         free_list_buffer_9 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h9)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h9)
         free_list_buffer_9 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h9)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h9)
         free_list_buffer_9 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h9)
         free_list_buffer_9 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'hA)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'hA)
         free_list_buffer_10 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'hA)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'hA)
         free_list_buffer_10 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'hA)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'hA)
         free_list_buffer_10 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'hA)
         free_list_buffer_10 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'hB)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'hB)
         free_list_buffer_11 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'hB)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'hB)
         free_list_buffer_11 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'hB)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'hB)
         free_list_buffer_11 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'hB)
         free_list_buffer_11 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'hC)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'hC)
         free_list_buffer_12 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'hC)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'hC)
         free_list_buffer_12 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'hC)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'hC)
         free_list_buffer_12 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'hC)
         free_list_buffer_12 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'hD)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'hD)
         free_list_buffer_13 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'hD)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'hD)
         free_list_buffer_13 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'hD)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'hD)
         free_list_buffer_13 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'hD)
         free_list_buffer_13 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'hE)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'hE)
         free_list_buffer_14 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'hE)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'hE)
         free_list_buffer_14 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'hE)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'hE)
         free_list_buffer_14 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'hE)
         free_list_buffer_14 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'hF)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'hF)
         free_list_buffer_15 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'hF)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'hF)
         free_list_buffer_15 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'hF)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'hF)
         free_list_buffer_15 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'hF)
         free_list_buffer_15 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h10)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h10)
         free_list_buffer_16 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h10)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h10)
         free_list_buffer_16 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h10)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h10)
         free_list_buffer_16 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h10)
         free_list_buffer_16 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h11)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h11)
         free_list_buffer_17 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h11)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h11)
         free_list_buffer_17 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h11)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h11)
         free_list_buffer_17 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h11)
         free_list_buffer_17 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h12)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h12)
         free_list_buffer_18 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h12)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h12)
         free_list_buffer_18 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h12)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h12)
         free_list_buffer_18 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h12)
         free_list_buffer_18 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h13)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h13)
         free_list_buffer_19 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h13)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h13)
         free_list_buffer_19 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h13)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h13)
         free_list_buffer_19 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h13)
         free_list_buffer_19 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h14)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h14)
         free_list_buffer_20 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h14)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h14)
         free_list_buffer_20 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h14)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h14)
         free_list_buffer_20 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h14)
         free_list_buffer_20 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h15)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h15)
         free_list_buffer_21 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h15)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h15)
         free_list_buffer_21 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h15)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h15)
         free_list_buffer_21 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h15)
         free_list_buffer_21 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h16)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h16)
         free_list_buffer_22 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h16)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h16)
         free_list_buffer_22 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h16)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h16)
         free_list_buffer_22 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h16)
         free_list_buffer_22 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h17)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h17)
         free_list_buffer_23 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h17)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h17)
         free_list_buffer_23 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h17)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h17)
         free_list_buffer_23 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h17)
         free_list_buffer_23 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h18)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h18)
         free_list_buffer_24 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h18)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h18)
         free_list_buffer_24 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h18)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h18)
         free_list_buffer_24 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h18)
         free_list_buffer_24 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h19)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h19)
         free_list_buffer_25 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h19)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h19)
         free_list_buffer_25 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h19)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h19)
         free_list_buffer_25 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h19)
         free_list_buffer_25 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h1A)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h1A)
         free_list_buffer_26 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h1A)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h1A)
         free_list_buffer_26 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h1A)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h1A)
         free_list_buffer_26 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h1A)
         free_list_buffer_26 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h1B)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h1B)
         free_list_buffer_27 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h1B)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h1B)
         free_list_buffer_27 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h1B)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h1B)
         free_list_buffer_27 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h1B)
         free_list_buffer_27 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h1C)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h1C)
         free_list_buffer_28 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h1C)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h1C)
         free_list_buffer_28 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h1C)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h1C)
         free_list_buffer_28 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h1C)
         free_list_buffer_28 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h1D)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h1D)
         free_list_buffer_29 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h1D)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h1D)
         free_list_buffer_29 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h1D)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h1D)
         free_list_buffer_29 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h1D)
         free_list_buffer_29 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h1E)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h1E)
         free_list_buffer_30 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h1E)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h1E)
         free_list_buffer_30 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h1E)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h1E)
         free_list_buffer_30 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h1E)
         free_list_buffer_30 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h1F)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h1F)
         free_list_buffer_31 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h1F)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h1F)
         free_list_buffer_31 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h1F)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h1F)
         free_list_buffer_31 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h1F)
         free_list_buffer_31 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h20)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h20)
         free_list_buffer_32 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h20)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h20)
         free_list_buffer_32 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h20)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h20)
         free_list_buffer_32 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h20)
         free_list_buffer_32 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h21)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h21)
         free_list_buffer_33 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h21)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h21)
         free_list_buffer_33 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h21)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h21)
         free_list_buffer_33 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h21)
         free_list_buffer_33 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h22)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h22)
         free_list_buffer_34 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h22)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h22)
         free_list_buffer_34 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h22)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h22)
         free_list_buffer_34 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h22)
         free_list_buffer_34 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h23)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h23)
         free_list_buffer_35 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h23)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h23)
         free_list_buffer_35 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h23)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h23)
         free_list_buffer_35 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h23)
         free_list_buffer_35 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h24)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h24)
         free_list_buffer_36 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h24)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h24)
         free_list_buffer_36 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h24)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h24)
         free_list_buffer_36 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h24)
         free_list_buffer_36 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h25)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h25)
         free_list_buffer_37 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h25)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h25)
         free_list_buffer_37 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h25)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h25)
         free_list_buffer_37 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h25)
         free_list_buffer_37 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h26)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h26)
         free_list_buffer_38 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h26)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h26)
         free_list_buffer_38 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h26)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h26)
         free_list_buffer_38 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h26)
         free_list_buffer_38 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h27)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h27)
         free_list_buffer_39 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h27)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h27)
         free_list_buffer_39 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h27)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h27)
         free_list_buffer_39 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h27)
         free_list_buffer_39 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h28)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h28)
         free_list_buffer_40 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h28)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h28)
         free_list_buffer_40 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h28)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h28)
         free_list_buffer_40 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h28)
         free_list_buffer_40 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h29)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h29)
         free_list_buffer_41 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h29)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h29)
         free_list_buffer_41 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h29)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h29)
         free_list_buffer_41 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h29)
         free_list_buffer_41 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h2A)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h2A)
         free_list_buffer_42 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h2A)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h2A)
         free_list_buffer_42 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h2A)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h2A)
         free_list_buffer_42 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h2A)
         free_list_buffer_42 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h2B)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h2B)
         free_list_buffer_43 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h2B)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h2B)
         free_list_buffer_43 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h2B)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h2B)
         free_list_buffer_43 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h2B)
         free_list_buffer_43 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h2C)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h2C)
         free_list_buffer_44 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h2C)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h2C)
         free_list_buffer_44 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h2C)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h2C)
         free_list_buffer_44 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h2C)
         free_list_buffer_44 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h2D)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h2D)
         free_list_buffer_45 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h2D)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h2D)
         free_list_buffer_45 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h2D)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h2D)
         free_list_buffer_45 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h2D)
         free_list_buffer_45 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h2E)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h2E)
         free_list_buffer_46 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h2E)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h2E)
         free_list_buffer_46 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h2E)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h2E)
         free_list_buffer_46 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h2E)
         free_list_buffer_46 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h2F)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h2F)
         free_list_buffer_47 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h2F)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h2F)
         free_list_buffer_47 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h2F)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h2F)
         free_list_buffer_47 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h2F)
         free_list_buffer_47 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h30)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h30)
         free_list_buffer_48 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h30)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h30)
         free_list_buffer_48 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h30)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h30)
         free_list_buffer_48 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h30)
         free_list_buffer_48 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h31)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h31)
         free_list_buffer_49 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h31)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h31)
         free_list_buffer_49 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h31)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h31)
         free_list_buffer_49 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h31)
         free_list_buffer_49 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h32)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h32)
         free_list_buffer_50 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h32)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h32)
         free_list_buffer_50 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h32)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h32)
         free_list_buffer_50 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h32)
         free_list_buffer_50 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h33)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h33)
         free_list_buffer_51 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h33)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h33)
         free_list_buffer_51 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h33)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h33)
         free_list_buffer_51 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h33)
         free_list_buffer_51 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h34)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h34)
         free_list_buffer_52 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h34)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h34)
         free_list_buffer_52 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h34)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h34)
         free_list_buffer_52 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h34)
         free_list_buffer_52 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h35)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h35)
         free_list_buffer_53 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h35)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h35)
         free_list_buffer_53 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h35)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h35)
         free_list_buffer_53 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h35)
         free_list_buffer_53 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h36)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h36)
         free_list_buffer_54 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h36)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h36)
         free_list_buffer_54 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h36)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h36)
         free_list_buffer_54 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h36)
         free_list_buffer_54 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h37)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h37)
         free_list_buffer_55 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h37)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h37)
         free_list_buffer_55 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h37)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h37)
         free_list_buffer_55 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h37)
         free_list_buffer_55 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h38)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h38)
         free_list_buffer_56 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h38)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h38)
         free_list_buffer_56 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h38)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h38)
         free_list_buffer_56 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h38)
         free_list_buffer_56 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h39)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h39)
         free_list_buffer_57 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h39)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h39)
         free_list_buffer_57 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h39)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h39)
         free_list_buffer_57 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h39)
         free_list_buffer_57 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h3A)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h3A)
         free_list_buffer_58 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h3A)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h3A)
         free_list_buffer_58 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h3A)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h3A)
         free_list_buffer_58 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h3A)
         free_list_buffer_58 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h3B)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h3B)
         free_list_buffer_59 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h3B)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h3B)
         free_list_buffer_59 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h3B)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h3B)
         free_list_buffer_59 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h3B)
         free_list_buffer_59 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h3C)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h3C)
         free_list_buffer_60 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h3C)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h3C)
         free_list_buffer_60 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h3C)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h3C)
         free_list_buffer_60 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h3C)
         free_list_buffer_60 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h3D)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h3D)
         free_list_buffer_61 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h3D)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h3D)
         free_list_buffer_61 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h3D)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h3D)
         free_list_buffer_61 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h3D)
         free_list_buffer_61 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & _GEN_2 == 6'h3E)
+      if (_input_sorter_io_free_valid_sorted_3 & _GEN_7 == 6'h3E)
         free_list_buffer_62 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_1 == 6'h3E)
+      else if (_input_sorter_io_free_valid_sorted_2 & _GEN_6 == 6'h3E)
         free_list_buffer_62 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_0 == 6'h3E)
+      else if (_input_sorter_io_free_valid_sorted_1 & _GEN_5 == 6'h3E)
         free_list_buffer_62 <= _input_sorter_io_free_values_sorted_1;
       else if (_input_sorter_io_free_valid_sorted_0 & back_pointer[5:0] == 6'h3E)
         free_list_buffer_62 <= _input_sorter_io_free_values_sorted_0;
-      if (_input_sorter_io_free_valid_sorted_3 & (&_GEN_2))
-        free_list_buffer_63 <= _input_sorter_io_free_values_sorted_3;
-      else if (_input_sorter_io_free_valid_sorted_2 & (&_GEN_1))
-        free_list_buffer_63 <= _input_sorter_io_free_values_sorted_2;
-      else if (_input_sorter_io_free_valid_sorted_1 & (&_GEN_0))
-        free_list_buffer_63 <= _input_sorter_io_free_values_sorted_1;
-      else if (_input_sorter_io_free_valid_sorted_0 & (&(back_pointer[5:0])))
-        free_list_buffer_63 <= _input_sorter_io_free_values_sorted_0;
     end
   end // always @(posedge)
   reorder_free_inputs input_sorter (
@@ -5456,20 +5425,14 @@ module free_list(
     .io_free_values_sorted_2 (_input_sorter_io_free_values_sorted_2),
     .io_free_values_sorted_3 (_input_sorter_io_free_values_sorted_3)
   );
-  reorder_renamed_outputs output_sorter (
-    .io_renamed_valid_0         (io_rename_valid_0),
-    .io_renamed_valid_1         (io_rename_valid_1),
-    .io_renamed_valid_2         (io_rename_valid_2),
-    .io_renamed_valid_3         (io_rename_valid_3),
-    .io_renamed_values_0        (_GEN[front_pointer[5:0]]),
-    .io_renamed_values_1        (_GEN[front_pointer[5:0] + 6'h1]),
-    .io_renamed_values_2        (_GEN[front_pointer[5:0] + 6'h2]),
-    .io_renamed_values_3        (_GEN[front_pointer[5:0] + 6'h3]),
-    .io_renamed_values_sorted_0 (io_renamed_values_0),
-    .io_renamed_values_sorted_1 (io_renamed_values_1),
-    .io_renamed_values_sorted_2 (io_renamed_values_2),
-    .io_renamed_values_sorted_3 (io_renamed_values_3)
-  );
+  assign io_renamed_values_0 =
+    io_rename_valid_0 ? _GEN_4[{1'h0, io_rename_valid_0 - 1'h1}] : 6'h0;
+  assign io_renamed_values_1 =
+    io_rename_valid_1 ? _GEN_4[_renamed_index_3_T_1 - 2'h1] : 6'h0;
+  assign io_renamed_values_2 =
+    io_rename_valid_2 ? _GEN_4[_GEN + _GEN_0 + _GEN_1 - 2'h1] : 6'h0;
+  assign io_renamed_values_3 =
+    io_rename_valid_3 ? _GEN_4[_renamed_index_3_T_1 + _GEN_1 + _GEN_2 - 2'h1] : 6'h0;
   assign io_empty = io_empty_0;
 endmodule
 
@@ -10033,30 +9996,22 @@ module rename(
   wire [5:0]  _free_list_io_renamed_values_2;
   wire [5:0]  _free_list_io_renamed_values_3;
   wire        _free_list_io_empty;
-  wire [5:0]  instruction_RD_0 = io_decoded_fetch_packet_bits_decoded_instruction_0_RD;
-  wire [5:0]  instruction_RD_1 = io_decoded_fetch_packet_bits_decoded_instruction_1_RD;
-  wire [5:0]  instruction_RD_2 = io_decoded_fetch_packet_bits_decoded_instruction_2_RD;
-  wire [5:0]  instruction_RD_3 = io_decoded_fetch_packet_bits_decoded_instruction_3_RD;
-  wire [5:0]  instruction_RS1_0 = io_decoded_fetch_packet_bits_decoded_instruction_0_RS1;
-  wire [5:0]  instruction_RS1_1 = io_decoded_fetch_packet_bits_decoded_instruction_1_RS1;
-  wire [5:0]  instruction_RS1_2 = io_decoded_fetch_packet_bits_decoded_instruction_2_RS1;
-  wire [5:0]  instruction_RS1_3 = io_decoded_fetch_packet_bits_decoded_instruction_3_RS1;
-  wire [5:0]  instruction_RS2_0 = io_decoded_fetch_packet_bits_decoded_instruction_0_RS2;
-  wire [5:0]  instruction_RS2_1 = io_decoded_fetch_packet_bits_decoded_instruction_1_RS2;
-  wire [5:0]  instruction_RS2_2 = io_decoded_fetch_packet_bits_decoded_instruction_2_RS2;
-  wire [5:0]  instruction_RS2_3 = io_decoded_fetch_packet_bits_decoded_instruction_3_RS2;
   wire        instruction_RD_valid_0 =
     io_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid
-    & io_decoded_fetch_packet_valid;
+    & io_decoded_fetch_packet_valid
+    & (|io_decoded_fetch_packet_bits_decoded_instruction_0_RD);
   wire        instruction_RD_valid_1 =
     io_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid
-    & io_decoded_fetch_packet_valid;
+    & io_decoded_fetch_packet_valid
+    & (|io_decoded_fetch_packet_bits_decoded_instruction_1_RD);
   wire        instruction_RD_valid_2 =
     io_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid
-    & io_decoded_fetch_packet_valid;
+    & io_decoded_fetch_packet_valid
+    & (|io_decoded_fetch_packet_bits_decoded_instruction_2_RD);
   wire        instruction_RD_valid_3 =
     io_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid
-    & io_decoded_fetch_packet_valid;
+    & io_decoded_fetch_packet_valid
+    & (|io_decoded_fetch_packet_bits_decoded_instruction_3_RD);
   reg  [5:0]  REG;
   reg  [5:0]  REG_1;
   reg  [5:0]  renamed_RS1_1_REG;
@@ -10206,41 +10161,41 @@ module rename(
   reg         io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid_REG;
   reg         io_renamed_decoded_fetch_packet_valid_REG;
   always @(posedge clock) begin
-    REG <= instruction_RS1_1;
-    REG_1 <= instruction_RD_0;
+    REG <= io_decoded_fetch_packet_bits_decoded_instruction_1_RS1;
+    REG_1 <= io_decoded_fetch_packet_bits_decoded_instruction_0_RD;
     renamed_RS1_1_REG <= _free_list_io_renamed_values_0;
-    REG_2 <= instruction_RS2_1;
-    REG_3 <= instruction_RD_0;
+    REG_2 <= io_decoded_fetch_packet_bits_decoded_instruction_1_RS2;
+    REG_3 <= io_decoded_fetch_packet_bits_decoded_instruction_0_RD;
     renamed_RS2_1_REG <= _free_list_io_renamed_values_0;
-    REG_4 <= instruction_RS1_2;
-    REG_5 <= instruction_RD_0;
+    REG_4 <= io_decoded_fetch_packet_bits_decoded_instruction_2_RS1;
+    REG_5 <= io_decoded_fetch_packet_bits_decoded_instruction_0_RD;
     renamed_RS1_2_REG <= _free_list_io_renamed_values_0;
-    REG_6 <= instruction_RS2_2;
-    REG_7 <= instruction_RD_0;
+    REG_6 <= io_decoded_fetch_packet_bits_decoded_instruction_2_RS2;
+    REG_7 <= io_decoded_fetch_packet_bits_decoded_instruction_0_RD;
     renamed_RS2_2_REG <= _free_list_io_renamed_values_0;
-    REG_8 <= instruction_RS1_2;
-    REG_9 <= instruction_RD_1;
+    REG_8 <= io_decoded_fetch_packet_bits_decoded_instruction_2_RS1;
+    REG_9 <= io_decoded_fetch_packet_bits_decoded_instruction_1_RD;
     renamed_RS1_2_REG_1 <= _free_list_io_renamed_values_1;
-    REG_10 <= instruction_RS2_2;
-    REG_11 <= instruction_RD_1;
+    REG_10 <= io_decoded_fetch_packet_bits_decoded_instruction_2_RS2;
+    REG_11 <= io_decoded_fetch_packet_bits_decoded_instruction_1_RD;
     renamed_RS2_2_REG_1 <= _free_list_io_renamed_values_1;
-    REG_12 <= instruction_RS1_3;
-    REG_13 <= instruction_RD_0;
+    REG_12 <= io_decoded_fetch_packet_bits_decoded_instruction_3_RS1;
+    REG_13 <= io_decoded_fetch_packet_bits_decoded_instruction_0_RD;
     renamed_RS1_3_REG <= _free_list_io_renamed_values_0;
-    REG_14 <= instruction_RS2_3;
-    REG_15 <= instruction_RD_0;
+    REG_14 <= io_decoded_fetch_packet_bits_decoded_instruction_3_RS2;
+    REG_15 <= io_decoded_fetch_packet_bits_decoded_instruction_0_RD;
     renamed_RS2_3_REG <= _free_list_io_renamed_values_0;
-    REG_16 <= instruction_RS1_3;
-    REG_17 <= instruction_RD_1;
+    REG_16 <= io_decoded_fetch_packet_bits_decoded_instruction_3_RS1;
+    REG_17 <= io_decoded_fetch_packet_bits_decoded_instruction_1_RD;
     renamed_RS1_3_REG_1 <= _free_list_io_renamed_values_1;
-    REG_18 <= instruction_RS2_3;
-    REG_19 <= instruction_RD_1;
+    REG_18 <= io_decoded_fetch_packet_bits_decoded_instruction_3_RS2;
+    REG_19 <= io_decoded_fetch_packet_bits_decoded_instruction_1_RD;
     renamed_RS2_3_REG_1 <= _free_list_io_renamed_values_1;
-    REG_20 <= instruction_RS1_3;
-    REG_21 <= instruction_RD_2;
+    REG_20 <= io_decoded_fetch_packet_bits_decoded_instruction_3_RS1;
+    REG_21 <= io_decoded_fetch_packet_bits_decoded_instruction_2_RD;
     renamed_RS1_3_REG_2 <= _free_list_io_renamed_values_2;
-    REG_22 <= instruction_RS2_3;
-    REG_23 <= instruction_RD_2;
+    REG_22 <= io_decoded_fetch_packet_bits_decoded_instruction_3_RS2;
+    REG_23 <= io_decoded_fetch_packet_bits_decoded_instruction_2_RD;
     renamed_RS2_3_REG_2 <= _free_list_io_renamed_values_2;
     io_renamed_decoded_fetch_packet_bits_REG_fetch_PC <=
       io_decoded_fetch_packet_bits_fetch_PC;
@@ -10432,10 +10387,14 @@ module rename(
     .io_decoder_RD_valid_bits_1 (instruction_RD_valid_1),
     .io_decoder_RD_valid_bits_2 (instruction_RD_valid_2),
     .io_decoder_RD_valid_bits_3 (instruction_RD_valid_3),
-    .io_decoder_RD_values_0     (instruction_RD_0[4:0]),
-    .io_decoder_RD_values_1     (instruction_RD_1[4:0]),
-    .io_decoder_RD_values_2     (instruction_RD_2[4:0]),
-    .io_decoder_RD_values_3     (instruction_RD_3[4:0]),
+    .io_decoder_RD_values_0
+      (io_decoded_fetch_packet_bits_decoded_instruction_0_RD[4:0]),
+    .io_decoder_RD_values_1
+      (io_decoded_fetch_packet_bits_decoded_instruction_1_RD[4:0]),
+    .io_decoder_RD_values_2
+      (io_decoded_fetch_packet_bits_decoded_instruction_2_RD[4:0]),
+    .io_decoder_RD_values_3
+      (io_decoded_fetch_packet_bits_decoded_instruction_3_RD[4:0]),
     .io_free_list_RD_values_0   (_free_list_io_renamed_values_0),
     .io_free_list_RD_values_1   (_free_list_io_renamed_values_1),
     .io_free_list_RD_values_2   (_free_list_io_renamed_values_2),
@@ -10460,14 +10419,22 @@ module rename(
     .io_instruction_RD_1         (_WAW_handler_io_RAT_RD_values_1),
     .io_instruction_RD_2         (_WAW_handler_io_RAT_RD_values_2),
     .io_instruction_RD_3         (_WAW_handler_io_RAT_RD_values_3),
-    .io_instruction_RS1_0        (instruction_RS1_0[4:0]),
-    .io_instruction_RS1_1        (instruction_RS1_1[4:0]),
-    .io_instruction_RS1_2        (instruction_RS1_2[4:0]),
-    .io_instruction_RS1_3        (instruction_RS1_3[4:0]),
-    .io_instruction_RS2_0        (instruction_RS2_0[4:0]),
-    .io_instruction_RS2_1        (instruction_RS2_1[4:0]),
-    .io_instruction_RS2_2        (instruction_RS2_2[4:0]),
-    .io_instruction_RS2_3        (instruction_RS2_3[4:0]),
+    .io_instruction_RS1_0
+      (io_decoded_fetch_packet_bits_decoded_instruction_0_RS1[4:0]),
+    .io_instruction_RS1_1
+      (io_decoded_fetch_packet_bits_decoded_instruction_1_RS1[4:0]),
+    .io_instruction_RS1_2
+      (io_decoded_fetch_packet_bits_decoded_instruction_2_RS1[4:0]),
+    .io_instruction_RS1_3
+      (io_decoded_fetch_packet_bits_decoded_instruction_3_RS1[4:0]),
+    .io_instruction_RS2_0
+      (io_decoded_fetch_packet_bits_decoded_instruction_0_RS2[4:0]),
+    .io_instruction_RS2_1
+      (io_decoded_fetch_packet_bits_decoded_instruction_1_RS2[4:0]),
+    .io_instruction_RS2_2
+      (io_decoded_fetch_packet_bits_decoded_instruction_2_RS2[4:0]),
+    .io_instruction_RS2_3
+      (io_decoded_fetch_packet_bits_decoded_instruction_3_RS2[4:0]),
     .io_free_list_wr_en_0        (_WAW_handler_io_RAT_wr_en_0),
     .io_free_list_wr_en_1        (_WAW_handler_io_RAT_wr_en_1),
     .io_free_list_wr_en_2        (_WAW_handler_io_RAT_wr_en_2),

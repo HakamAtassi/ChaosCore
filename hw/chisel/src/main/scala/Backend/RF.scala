@@ -119,19 +119,23 @@ class sim_nReadmWrite extends Module {
 
   // Write ports
   when(io.wen_0){
-    mem.write(io.waddr_0, io.wdata_0)
+    val data = Mux(io.waddr_0 === 0.U, 0.U, io.wdata_0)
+    mem.write(io.waddr_0, data)
   }
 
   when(io.wen_1){
-    mem.write(io.waddr_1, io.wdata_1)
+    val data = Mux(io.waddr_1 === 0.U, 0.U, io.wdata_1)
+    mem.write(io.waddr_1, data)
   }
 
   when(io.wen_2){
-    mem.write(io.waddr_2, io.wdata_2)
+    val data = Mux(io.waddr_2 === 0.U, 0.U, io.wdata_2)
+    mem.write(io.waddr_2, data)
   }
 
   when(io.wen_3){
-    mem.write(io.waddr_3, io.wdata_3)
+    val data = Mux(io.waddr_3 === 0.U, 0.U, io.wdata_3)
+    mem.write(io.waddr_3, data)
   }
 
 
