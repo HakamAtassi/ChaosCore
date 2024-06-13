@@ -30,11 +30,16 @@ module MEMFU(
   input  [31:0] io_FU_input_bits_RS1_data,
                 io_FU_input_bits_RS2_data,
                 io_FU_input_bits_PC,
-  output        io_data_cache_response_ready,
-  input         io_data_cache_response_valid,
-  input  [31:0] io_data_cache_response_bits_data,
-  output        io_FU_output_valid,
-  output [63:0] io_FU_output_bits_RD,
+  output        io_memory_response_ready,
+  input         io_memory_response_valid,
+  input  [31:0] io_memory_response_bits_data,
+  input         io_memory_request_ready,
+  output        io_memory_request_valid,
+  output [31:0] io_memory_request_bits_addr,
+                io_memory_request_bits_wr_data,
+  output        io_memory_request_bits_wr_en,
+                io_FU_output_valid,
+  output [5:0]  io_FU_output_bits_RD,
   output [31:0] io_FU_output_bits_RD_data,
   output        io_FU_output_bits_RD_valid,
   output [31:0] io_FU_output_bits_instruction_PC,
@@ -42,80 +47,139 @@ module MEMFU(
   output [31:0] io_FU_output_bits_target_address,
   output        io_FU_output_bits_branch_valid,
   output [5:0]  io_FU_output_bits_ROB_index,
-  output [1:0]  io_FU_output_bits_fetch_packet_index,
-  input         io_data_cache_request_ready,
-  output        io_data_cache_request_valid,
-  output [31:0] io_data_cache_request_bits_addr,
-                io_data_cache_request_bits_wr_data,
-  output        io_data_cache_request_bits_wr_en
+  output [1:0]  io_FU_output_bits_fetch_packet_index
 );
 
-  reg         io_data_cache_request_valid_REG;
-  reg         io_data_cache_request_bits_wr_en_REG;
-  reg  [31:0] io_data_cache_request_bits_wr_data_REG;
-  reg  [31:0] io_data_cache_request_bits_addr_REG;
-  reg         REG;
-  wire [31:0] _GEN = {24'h0, io_data_cache_response_bits_data[7:0]};
-  reg         REG_1;
-  wire [31:0] _GEN_0 = {16'h0, io_data_cache_response_bits_data[15:0]};
-  reg         REG_2;
-  reg         REG_3;
-  reg         REG_4;
+  reg         memfu_state;
+  reg  [5:0]  FU_input_bits_reg_decoded_instruction_RD;
+  reg  [31:0] FU_input_bits_reg_decoded_instruction_IMM;
+  reg  [2:0]  FU_input_bits_reg_decoded_instruction_FUNCT3;
+  reg         FU_input_bits_reg_decoded_instruction_IS_LOAD;
+  reg         FU_input_bits_reg_decoded_instruction_IS_STORE;
+  reg  [31:0] FU_input_bits_reg_RS1_data;
+  reg  [31:0] FU_input_bits_reg_RS2_data;
+  reg         FU_input_valid_reg;
+  wire [2:0]  FU_input_decoded_instruction_FUNCT3 =
+    memfu_state
+      ? FU_input_bits_reg_decoded_instruction_FUNCT3
+      : io_FU_input_bits_decoded_instruction_FUNCT3;
+  wire [31:0] FU_input_RS2_data =
+    memfu_state ? FU_input_bits_reg_RS2_data : io_FU_input_bits_RS2_data;
+  wire        FU_input_valid = memfu_state ? FU_input_valid_reg : io_FU_input_valid;
+  wire        IS_STORE =
+    (memfu_state
+       ? FU_input_bits_reg_decoded_instruction_IS_STORE
+       : io_FU_input_bits_decoded_instruction_IS_STORE) & FU_input_valid;
+  wire        _LB_T = FU_input_decoded_instruction_FUNCT3 == 3'h0;
+  wire        _LH_T = FU_input_decoded_instruction_FUNCT3 == 3'h1;
+  wire        _LW_T = FU_input_decoded_instruction_FUNCT3 == 3'h2;
+  reg         instruction_complete;
   reg  [31:0] io_FU_output_bits_instruction_PC_REG;
   reg  [3:0]  io_FU_output_bits_fetch_packet_index_REG;
+  reg  [31:0] io_FU_output_bits_RD_data_REG;
   reg  [5:0]  io_FU_output_bits_RD_REG;
   reg         io_FU_output_bits_RD_valid_REG;
   reg  [5:0]  io_FU_output_bits_ROB_index_REG;
-  reg         io_FU_output_valid_REG;
   always @(posedge clock) begin
     automatic logic IS_LOAD =
-      io_FU_input_bits_decoded_instruction_IS_LOAD & io_FU_input_valid;
-    automatic logic IS_STORE =
-      io_FU_input_bits_decoded_instruction_IS_STORE & io_FU_input_valid;
-    automatic logic _LB_T = io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h0;
-    automatic logic _LH_T = io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h1;
-    automatic logic _LW_T = io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h2;
-    io_data_cache_request_valid_REG <= IS_LOAD | IS_STORE;
-    io_data_cache_request_bits_wr_en_REG <= IS_STORE;
-    io_data_cache_request_bits_wr_data_REG <=
-      IS_STORE & _LW_T & io_FU_input_valid
-        ? io_FU_input_bits_RS2_data
-        : IS_STORE & _LH_T & io_FU_input_valid
-            ? {16'h0, io_FU_input_bits_RS2_data[15:0]}
-            : IS_STORE & _LB_T & io_FU_input_valid
-                ? {24'h0, io_FU_input_bits_RS2_data[7:0]}
-                : 32'h0;
-    io_data_cache_request_bits_addr_REG <=
-      io_FU_input_bits_RS1_data + io_FU_input_bits_decoded_instruction_IMM;
-    REG <= IS_LOAD & _LB_T & io_FU_input_valid;
-    REG_1 <= IS_LOAD & _LH_T & io_FU_input_valid;
-    REG_2 <= IS_LOAD & _LW_T & io_FU_input_valid;
-    REG_3 <=
-      IS_LOAD & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h4 & io_FU_input_valid;
-    REG_4 <=
-      IS_LOAD & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h5 & io_FU_input_valid;
+      (memfu_state
+         ? FU_input_bits_reg_decoded_instruction_IS_LOAD
+         : io_FU_input_bits_decoded_instruction_IS_LOAD) & FU_input_valid;
+    if (reset) begin
+      memfu_state <= 1'h0;
+      FU_input_bits_reg_decoded_instruction_RD <= 6'h0;
+      FU_input_bits_reg_decoded_instruction_IMM <= 32'h0;
+      FU_input_bits_reg_decoded_instruction_FUNCT3 <= 3'h0;
+      FU_input_bits_reg_decoded_instruction_IS_LOAD <= 1'h0;
+      FU_input_bits_reg_decoded_instruction_IS_STORE <= 1'h0;
+      FU_input_bits_reg_RS1_data <= 32'h0;
+      FU_input_bits_reg_RS2_data <= 32'h0;
+      FU_input_valid_reg <= 1'h0;
+    end
+    else begin
+      automatic logic _GEN;
+      _GEN = io_memory_request_ready & FU_input_valid;
+      if (memfu_state) begin
+        automatic logic _GEN_0;
+        _GEN_0 = memfu_state & _GEN;
+        memfu_state <= ~_GEN_0 & memfu_state;
+        if (_GEN_0) begin
+          FU_input_bits_reg_decoded_instruction_RD <= 6'h0;
+          FU_input_bits_reg_decoded_instruction_IMM <= 32'h0;
+          FU_input_bits_reg_decoded_instruction_FUNCT3 <= 3'h0;
+          FU_input_bits_reg_RS1_data <= 32'h0;
+          FU_input_bits_reg_RS2_data <= 32'h0;
+        end
+        FU_input_bits_reg_decoded_instruction_IS_LOAD <=
+          ~_GEN_0 & FU_input_bits_reg_decoded_instruction_IS_LOAD;
+        FU_input_bits_reg_decoded_instruction_IS_STORE <=
+          ~_GEN_0 & FU_input_bits_reg_decoded_instruction_IS_STORE;
+      end
+      else begin
+        automatic logic _GEN_1 = ~memfu_state & io_FU_input_valid;
+        memfu_state <= ~(_GEN_1 & _GEN) & (_GEN_1 | memfu_state);
+        FU_input_bits_reg_decoded_instruction_RD <=
+          io_FU_input_bits_decoded_instruction_RD;
+        FU_input_bits_reg_decoded_instruction_IMM <=
+          io_FU_input_bits_decoded_instruction_IMM;
+        FU_input_bits_reg_decoded_instruction_FUNCT3 <=
+          io_FU_input_bits_decoded_instruction_FUNCT3;
+        FU_input_bits_reg_decoded_instruction_IS_LOAD <=
+          io_FU_input_bits_decoded_instruction_IS_LOAD;
+        FU_input_bits_reg_decoded_instruction_IS_STORE <=
+          io_FU_input_bits_decoded_instruction_IS_STORE;
+        FU_input_bits_reg_RS1_data <= io_FU_input_bits_RS1_data;
+        FU_input_bits_reg_RS2_data <= io_FU_input_bits_RS2_data;
+        FU_input_valid_reg <= io_FU_input_valid;
+      end
+    end
+    instruction_complete <=
+      IS_LOAD & io_memory_response_valid | IS_STORE & io_memory_request_ready
+      & FU_input_valid;
     io_FU_output_bits_instruction_PC_REG <=
       {26'h0, io_FU_input_bits_decoded_instruction_packet_index, 2'h0}
       + io_FU_input_bits_PC;
     io_FU_output_bits_fetch_packet_index_REG <=
       io_FU_input_bits_decoded_instruction_packet_index;
-    io_FU_output_bits_RD_REG <= io_FU_input_bits_decoded_instruction_RD;
+    io_FU_output_bits_RD_data_REG <=
+      IS_LOAD & FU_input_decoded_instruction_FUNCT3 == 3'h5 & FU_input_valid
+        ? {16'h0, io_memory_response_bits_data[15:0]}
+        : IS_LOAD & FU_input_decoded_instruction_FUNCT3 == 3'h4 & FU_input_valid
+            ? {24'h0, io_memory_response_bits_data[7:0]}
+            : IS_LOAD & _LW_T & FU_input_valid
+                ? io_memory_response_bits_data
+                : IS_LOAD & _LH_T & FU_input_valid
+                    ? {{16{io_memory_response_bits_data[15]}},
+                       io_memory_response_bits_data[15:0]}
+                    : IS_LOAD & _LB_T & FU_input_valid
+                        ? {{24{io_memory_response_bits_data[7]}},
+                           io_memory_response_bits_data[7:0]}
+                        : 32'h0;
+    io_FU_output_bits_RD_REG <=
+      memfu_state
+        ? FU_input_bits_reg_decoded_instruction_RD
+        : io_FU_input_bits_decoded_instruction_RD;
     io_FU_output_bits_RD_valid_REG <= IS_LOAD;
     io_FU_output_bits_ROB_index_REG <= io_FU_input_bits_decoded_instruction_ROB_index;
-    io_FU_output_valid_REG <= io_FU_input_valid;
   end // always @(posedge)
-  assign io_FU_input_ready = 1'h1;
-  assign io_data_cache_response_ready = 1'h1;
-  assign io_FU_output_valid = io_FU_output_valid_REG;
-  assign io_FU_output_bits_RD = {58'h0, io_FU_output_bits_RD_REG};
-  assign io_FU_output_bits_RD_data =
-    REG_4
-      ? _GEN_0
-      : REG_3
-          ? _GEN
-          : REG_2
-              ? io_data_cache_response_bits_data
-              : REG_1 ? _GEN_0 : REG ? _GEN : 32'h0;
+  assign io_FU_input_ready = ~memfu_state;
+  assign io_memory_response_ready = 1'h1;
+  assign io_memory_request_valid = FU_input_valid;
+  assign io_memory_request_bits_addr =
+    (memfu_state ? FU_input_bits_reg_RS1_data : io_FU_input_bits_RS1_data)
+    + (memfu_state
+         ? FU_input_bits_reg_decoded_instruction_IMM
+         : io_FU_input_bits_decoded_instruction_IMM);
+  assign io_memory_request_bits_wr_data =
+    IS_STORE & _LW_T & FU_input_valid
+      ? FU_input_RS2_data
+      : IS_STORE & _LH_T & FU_input_valid
+          ? {16'h0, FU_input_RS2_data[15:0]}
+          : IS_STORE & _LB_T & FU_input_valid ? {24'h0, FU_input_RS2_data[7:0]} : 32'h0;
+  assign io_memory_request_bits_wr_en = IS_STORE;
+  assign io_FU_output_valid = instruction_complete;
+  assign io_FU_output_bits_RD = io_FU_output_bits_RD_REG;
+  assign io_FU_output_bits_RD_data = io_FU_output_bits_RD_data_REG;
   assign io_FU_output_bits_RD_valid = io_FU_output_bits_RD_valid_REG;
   assign io_FU_output_bits_instruction_PC = io_FU_output_bits_instruction_PC_REG;
   assign io_FU_output_bits_branch_taken = 1'h0;
@@ -124,9 +188,5 @@ module MEMFU(
   assign io_FU_output_bits_ROB_index = io_FU_output_bits_ROB_index_REG;
   assign io_FU_output_bits_fetch_packet_index =
     io_FU_output_bits_fetch_packet_index_REG[1:0];
-  assign io_data_cache_request_valid = io_data_cache_request_valid_REG;
-  assign io_data_cache_request_bits_addr = io_data_cache_request_bits_addr_REG;
-  assign io_data_cache_request_bits_wr_data = io_data_cache_request_bits_wr_data_REG;
-  assign io_data_cache_request_bits_wr_en = io_data_cache_request_bits_wr_en_REG;
 endmodule
 

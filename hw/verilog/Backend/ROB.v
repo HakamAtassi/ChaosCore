@@ -126,28 +126,21 @@ endmodule
 module ROB_WB_mem(
   input        clock,
   input  [5:0] io_addrA,
-  input        io_writeDataA_busy,
-               io_writeDataA_exception,
-               io_writeEnableA,
+  input        io_writeEnableA,
   input  [5:0] io_addrB,
   input        io_writeDataB_busy,
-               io_writeDataB_exception,
                io_writeEnableB,
   input  [5:0] io_addrC,
   input        io_writeDataC_busy,
-               io_writeDataC_exception,
                io_writeEnableC,
   input  [5:0] io_addrD,
   input        io_writeDataD_busy,
-               io_writeDataD_exception,
                io_writeEnableD,
   input  [5:0] io_addrE,
   input        io_writeDataE_busy,
-               io_writeDataE_exception,
                io_writeEnableE,
   input  [5:0] io_addrG,
-  output       io_readDataG_busy,
-               io_readDataG_exception
+  output       io_readDataG_busy
 );
 
   wire [1:0] _mem_ext_R0_data;
@@ -159,26 +152,25 @@ module ROB_WB_mem(
     .W0_addr (io_addrE),
     .W0_en   (io_writeEnableE),
     .W0_clk  (clock),
-    .W0_data ({io_writeDataE_exception, io_writeDataE_busy}),
+    .W0_data ({1'h0, io_writeDataE_busy}),
     .W1_addr (io_addrD),
     .W1_en   (io_writeEnableD),
     .W1_clk  (clock),
-    .W1_data ({io_writeDataD_exception, io_writeDataD_busy}),
+    .W1_data ({1'h0, io_writeDataD_busy}),
     .W2_addr (io_addrC),
     .W2_en   (io_writeEnableC),
     .W2_clk  (clock),
-    .W2_data ({io_writeDataC_exception, io_writeDataC_busy}),
+    .W2_data ({1'h0, io_writeDataC_busy}),
     .W3_addr (io_addrB),
     .W3_en   (io_writeEnableB),
     .W3_clk  (clock),
-    .W3_data ({io_writeDataB_exception, io_writeDataB_busy}),
+    .W3_data ({1'h0, io_writeDataB_busy}),
     .W4_addr (io_addrA),
     .W4_en   (io_writeEnableA),
     .W4_clk  (clock),
-    .W4_data ({io_writeDataA_exception, io_writeDataA_busy})
+    .W4_data (2'h0)
   );
   assign io_readDataG_busy = _mem_ext_R0_data[0];
-  assign io_readDataG_exception = _mem_ext_R0_data[1];
 endmodule
 
 // VCS coverage exclude_file
@@ -347,7 +339,7 @@ module ROB(
                 io_ROB_packet_bits_valid_bits_3,
   input  [3:0]  io_ROB_packet_bits_RAT_IDX,
   input         io_FU_outputs_0_valid,
-  input  [63:0] io_FU_outputs_0_bits_RD,
+  input  [5:0]  io_FU_outputs_0_bits_RD,
   input  [31:0] io_FU_outputs_0_bits_RD_data,
   input         io_FU_outputs_0_bits_RD_valid,
   input  [31:0] io_FU_outputs_0_bits_instruction_PC,
@@ -357,7 +349,7 @@ module ROB(
   input  [5:0]  io_FU_outputs_0_bits_ROB_index,
   input  [1:0]  io_FU_outputs_0_bits_fetch_packet_index,
   input         io_FU_outputs_1_valid,
-  input  [63:0] io_FU_outputs_1_bits_RD,
+  input  [5:0]  io_FU_outputs_1_bits_RD,
   input  [31:0] io_FU_outputs_1_bits_RD_data,
   input         io_FU_outputs_1_bits_RD_valid,
   input  [31:0] io_FU_outputs_1_bits_instruction_PC,
@@ -367,7 +359,7 @@ module ROB(
   input  [5:0]  io_FU_outputs_1_bits_ROB_index,
   input  [1:0]  io_FU_outputs_1_bits_fetch_packet_index,
   input         io_FU_outputs_2_valid,
-  input  [63:0] io_FU_outputs_2_bits_RD,
+  input  [5:0]  io_FU_outputs_2_bits_RD,
   input  [31:0] io_FU_outputs_2_bits_RD_data,
   input         io_FU_outputs_2_bits_RD_valid,
   input  [31:0] io_FU_outputs_2_bits_instruction_PC,
@@ -377,7 +369,7 @@ module ROB(
   input  [5:0]  io_FU_outputs_2_bits_ROB_index,
   input  [1:0]  io_FU_outputs_2_bits_fetch_packet_index,
   input         io_FU_outputs_3_valid,
-  input  [63:0] io_FU_outputs_3_bits_RD,
+  input  [5:0]  io_FU_outputs_3_bits_RD,
   input  [31:0] io_FU_outputs_3_bits_RD_data,
   input         io_FU_outputs_3_bits_RD_valid,
   input  [31:0] io_FU_outputs_3_bits_instruction_PC,
@@ -498,124 +490,96 @@ module ROB(
     .io_readDataC_fetch_PC   (_shared_mem_io_readDataC_fetch_PC)
   );
   ROB_WB_mem ROB_WB_banks_0 (
-    .clock                   (clock),
-    .io_addrA                (back_index),
-    .io_writeDataA_busy      (1'h0),
-    .io_writeDataA_exception (1'h0),
-    .io_writeEnableA         (allocate),
-    .io_addrB                (io_FU_outputs_0_bits_ROB_index),
-    .io_writeDataB_busy      (io_FU_outputs_0_valid),
-    .io_writeDataB_exception (1'h0),
+    .clock              (clock),
+    .io_addrA           (back_index),
+    .io_writeEnableA    (allocate),
+    .io_addrB           (io_FU_outputs_0_bits_ROB_index),
+    .io_writeDataB_busy (io_FU_outputs_0_valid),
     .io_writeEnableB
       (io_FU_outputs_0_valid & io_FU_outputs_0_bits_fetch_packet_index == 2'h0),
-    .io_addrC                (io_FU_outputs_1_bits_ROB_index),
-    .io_writeDataC_busy      (io_FU_outputs_1_valid),
-    .io_writeDataC_exception (1'h0),
+    .io_addrC           (io_FU_outputs_1_bits_ROB_index),
+    .io_writeDataC_busy (io_FU_outputs_1_valid),
     .io_writeEnableC
       (io_FU_outputs_1_valid & io_FU_outputs_1_bits_fetch_packet_index == 2'h0),
-    .io_addrD                (io_FU_outputs_2_bits_ROB_index),
-    .io_writeDataD_busy      (io_FU_outputs_2_valid),
-    .io_writeDataD_exception (1'h0),
+    .io_addrD           (io_FU_outputs_2_bits_ROB_index),
+    .io_writeDataD_busy (io_FU_outputs_2_valid),
     .io_writeEnableD
       (io_FU_outputs_2_valid & io_FU_outputs_2_bits_fetch_packet_index == 2'h0),
-    .io_addrE                (io_FU_outputs_3_bits_ROB_index),
-    .io_writeDataE_busy      (io_FU_outputs_3_valid),
-    .io_writeDataE_exception (1'h0),
+    .io_addrE           (io_FU_outputs_3_bits_ROB_index),
+    .io_writeDataE_busy (io_FU_outputs_3_valid),
     .io_writeEnableE
       (io_FU_outputs_3_valid & io_FU_outputs_3_bits_fetch_packet_index == 2'h0),
-    .io_addrG                (front_index),
-    .io_readDataG_busy       (_ROB_WB_banks_0_io_readDataG_busy),
-    .io_readDataG_exception  (/* unused */)
+    .io_addrG           (front_index),
+    .io_readDataG_busy  (_ROB_WB_banks_0_io_readDataG_busy)
   );
   ROB_WB_mem ROB_WB_banks_1 (
-    .clock                   (clock),
-    .io_addrA                (back_index),
-    .io_writeDataA_busy      (1'h0),
-    .io_writeDataA_exception (1'h0),
-    .io_writeEnableA         (allocate),
-    .io_addrB                (io_FU_outputs_0_bits_ROB_index),
-    .io_writeDataB_busy      (io_FU_outputs_0_valid),
-    .io_writeDataB_exception (1'h0),
+    .clock              (clock),
+    .io_addrA           (back_index),
+    .io_writeEnableA    (allocate),
+    .io_addrB           (io_FU_outputs_0_bits_ROB_index),
+    .io_writeDataB_busy (io_FU_outputs_0_valid),
     .io_writeEnableB
       (io_FU_outputs_0_valid & io_FU_outputs_0_bits_fetch_packet_index == 2'h1),
-    .io_addrC                (io_FU_outputs_1_bits_ROB_index),
-    .io_writeDataC_busy      (io_FU_outputs_1_valid),
-    .io_writeDataC_exception (1'h0),
+    .io_addrC           (io_FU_outputs_1_bits_ROB_index),
+    .io_writeDataC_busy (io_FU_outputs_1_valid),
     .io_writeEnableC
       (io_FU_outputs_1_valid & io_FU_outputs_1_bits_fetch_packet_index == 2'h1),
-    .io_addrD                (io_FU_outputs_2_bits_ROB_index),
-    .io_writeDataD_busy      (io_FU_outputs_2_valid),
-    .io_writeDataD_exception (1'h0),
+    .io_addrD           (io_FU_outputs_2_bits_ROB_index),
+    .io_writeDataD_busy (io_FU_outputs_2_valid),
     .io_writeEnableD
       (io_FU_outputs_2_valid & io_FU_outputs_2_bits_fetch_packet_index == 2'h1),
-    .io_addrE                (io_FU_outputs_3_bits_ROB_index),
-    .io_writeDataE_busy      (io_FU_outputs_3_valid),
-    .io_writeDataE_exception (1'h0),
+    .io_addrE           (io_FU_outputs_3_bits_ROB_index),
+    .io_writeDataE_busy (io_FU_outputs_3_valid),
     .io_writeEnableE
       (io_FU_outputs_3_valid & io_FU_outputs_3_bits_fetch_packet_index == 2'h1),
-    .io_addrG                (front_index),
-    .io_readDataG_busy       (_ROB_WB_banks_1_io_readDataG_busy),
-    .io_readDataG_exception  (/* unused */)
+    .io_addrG           (front_index),
+    .io_readDataG_busy  (_ROB_WB_banks_1_io_readDataG_busy)
   );
   ROB_WB_mem ROB_WB_banks_2 (
-    .clock                   (clock),
-    .io_addrA                (back_index),
-    .io_writeDataA_busy      (1'h0),
-    .io_writeDataA_exception (1'h0),
-    .io_writeEnableA         (allocate),
-    .io_addrB                (io_FU_outputs_0_bits_ROB_index),
-    .io_writeDataB_busy      (io_FU_outputs_0_valid),
-    .io_writeDataB_exception (1'h0),
+    .clock              (clock),
+    .io_addrA           (back_index),
+    .io_writeEnableA    (allocate),
+    .io_addrB           (io_FU_outputs_0_bits_ROB_index),
+    .io_writeDataB_busy (io_FU_outputs_0_valid),
     .io_writeEnableB
       (io_FU_outputs_0_valid & io_FU_outputs_0_bits_fetch_packet_index == 2'h2),
-    .io_addrC                (io_FU_outputs_1_bits_ROB_index),
-    .io_writeDataC_busy      (io_FU_outputs_1_valid),
-    .io_writeDataC_exception (1'h0),
+    .io_addrC           (io_FU_outputs_1_bits_ROB_index),
+    .io_writeDataC_busy (io_FU_outputs_1_valid),
     .io_writeEnableC
       (io_FU_outputs_1_valid & io_FU_outputs_1_bits_fetch_packet_index == 2'h2),
-    .io_addrD                (io_FU_outputs_2_bits_ROB_index),
-    .io_writeDataD_busy      (io_FU_outputs_2_valid),
-    .io_writeDataD_exception (1'h0),
+    .io_addrD           (io_FU_outputs_2_bits_ROB_index),
+    .io_writeDataD_busy (io_FU_outputs_2_valid),
     .io_writeEnableD
       (io_FU_outputs_2_valid & io_FU_outputs_2_bits_fetch_packet_index == 2'h2),
-    .io_addrE                (io_FU_outputs_3_bits_ROB_index),
-    .io_writeDataE_busy      (io_FU_outputs_3_valid),
-    .io_writeDataE_exception (1'h0),
+    .io_addrE           (io_FU_outputs_3_bits_ROB_index),
+    .io_writeDataE_busy (io_FU_outputs_3_valid),
     .io_writeEnableE
       (io_FU_outputs_3_valid & io_FU_outputs_3_bits_fetch_packet_index == 2'h2),
-    .io_addrG                (front_index),
-    .io_readDataG_busy       (_ROB_WB_banks_2_io_readDataG_busy),
-    .io_readDataG_exception  (/* unused */)
+    .io_addrG           (front_index),
+    .io_readDataG_busy  (_ROB_WB_banks_2_io_readDataG_busy)
   );
   ROB_WB_mem ROB_WB_banks_3 (
-    .clock                   (clock),
-    .io_addrA                (back_index),
-    .io_writeDataA_busy      (1'h0),
-    .io_writeDataA_exception (1'h0),
-    .io_writeEnableA         (allocate),
-    .io_addrB                (io_FU_outputs_0_bits_ROB_index),
-    .io_writeDataB_busy      (io_FU_outputs_0_valid),
-    .io_writeDataB_exception (1'h0),
+    .clock              (clock),
+    .io_addrA           (back_index),
+    .io_writeEnableA    (allocate),
+    .io_addrB           (io_FU_outputs_0_bits_ROB_index),
+    .io_writeDataB_busy (io_FU_outputs_0_valid),
     .io_writeEnableB
       (io_FU_outputs_0_valid & (&io_FU_outputs_0_bits_fetch_packet_index)),
-    .io_addrC                (io_FU_outputs_1_bits_ROB_index),
-    .io_writeDataC_busy      (io_FU_outputs_1_valid),
-    .io_writeDataC_exception (1'h0),
+    .io_addrC           (io_FU_outputs_1_bits_ROB_index),
+    .io_writeDataC_busy (io_FU_outputs_1_valid),
     .io_writeEnableC
       (io_FU_outputs_1_valid & (&io_FU_outputs_1_bits_fetch_packet_index)),
-    .io_addrD                (io_FU_outputs_2_bits_ROB_index),
-    .io_writeDataD_busy      (io_FU_outputs_2_valid),
-    .io_writeDataD_exception (1'h0),
+    .io_addrD           (io_FU_outputs_2_bits_ROB_index),
+    .io_writeDataD_busy (io_FU_outputs_2_valid),
     .io_writeEnableD
       (io_FU_outputs_2_valid & (&io_FU_outputs_2_bits_fetch_packet_index)),
-    .io_addrE                (io_FU_outputs_3_bits_ROB_index),
-    .io_writeDataE_busy      (io_FU_outputs_3_valid),
-    .io_writeDataE_exception (1'h0),
+    .io_addrE           (io_FU_outputs_3_bits_ROB_index),
+    .io_writeDataE_busy (io_FU_outputs_3_valid),
     .io_writeEnableE
       (io_FU_outputs_3_valid & (&io_FU_outputs_3_bits_fetch_packet_index)),
-    .io_addrG                (front_index),
-    .io_readDataG_busy       (_ROB_WB_banks_3_io_readDataG_busy),
-    .io_readDataG_exception  (/* unused */)
+    .io_addrG           (front_index),
+    .io_readDataG_busy  (_ROB_WB_banks_3_io_readDataG_busy)
   );
   ROB_entry_mem ROB_entry_banks_0 (
     .clock                   (clock),

@@ -163,3 +163,7 @@ def test_bge_nt():
         configs["testcase"] = "test_bge_nt"
         run(**configs)
 
+def test_LUI():
+        configs["testcase"] = "test_LUI"
+        run(**configs)
+

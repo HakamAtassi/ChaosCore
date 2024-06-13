@@ -34,11 +34,12 @@ import chisel3.util._
 import java.io.{File, FileWriter}
 import java.rmi.server.UID
 
-import Thermometor._
 
 object cacheState extends ChiselEnum{
     val Active, Allocate, Replay, Stall = Value
 }
+
+
 class instruction_validator(fetchWidth: Int) extends Module {
   val io = IO(new Bundle {
     val instruction_index = Input(UInt(log2Ceil(fetchWidth).W))

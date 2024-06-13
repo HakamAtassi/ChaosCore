@@ -1816,3 +1816,54 @@ async def test_bge_nt(dut):
 #FIXME: add BLT U and BGE U 
 
 
+@cocotb.test()
+async def test_LUI(dut):
+
+    await cocotb.start(generateClock(dut)) 
+
+    dut = FU_dut(dut)  # wrap dut with helper class
+    await dut.reset()   # reset module
+
+    await RisingEdge(dut.clock())
+
+    FU_inputs = generate_null_FU_inputs()
+
+    FU_inputs["valid"] = 1
+    FU_inputs["RS1_ready"] = 0
+    FU_inputs["RS2_ready"] = 0
+    FU_inputs["RD"] = 10
+    FU_inputs["RD_valid"] = 1
+    FU_inputs["RS1"] = 0
+    FU_inputs["RS1_valid"] = 0
+    FU_inputs["RS2"] = 0
+    FU_inputs["RS2_valid"] = 0
+    FU_inputs["IMM"] = 1
+    FU_inputs["FUNCT3"] = 0x0
+    FU_inputs["packet_index"] = 0
+    FU_inputs["ROB_index"] = 0
+    FU_inputs["instructionType"] = 0b01101
+    FU_inputs["portID"] = 0
+    FU_inputs["RS_type"] = 0
+    FU_inputs["needs_ALU"] = 1
+    FU_inputs["needs_branch_unit"] = 0
+    FU_inputs["needs_CSRs"] = 0
+    FU_inputs["SUBTRACT"] = 0
+    FU_inputs["MULTIPLY"] = 0
+    FU_inputs["IMMEDIATE"] = 1
+    FU_inputs["IS_LOAD"] = 0
+    FU_inputs["IS_STORE"] = 0
+    FU_inputs["RS1_data"] = 0
+    FU_inputs["RS2_data"] =  0
+    FU_inputs["PC"] = 0
+
+    dut.write_FU(FU_inputs)
+
+    await RisingEdge(dut.clock())
+
+    await ReadOnly()
+
+    dut.print_outputs()
+
+    assert dut.get_outputs()["valid"] == 1
+    assert dut.get_outputs()["RD"] == 10
+    assert dut.get_outputs()["RD_data"] == (1<<12)

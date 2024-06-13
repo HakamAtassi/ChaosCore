@@ -59,8 +59,6 @@ class MEMFU_dut:
         await RisingEdge(self.dut.clock)
         self.dut.reset.value = 0
 
-    def set_DRAM_ready(self, ready):
-        self.dut.io_data_cache_request_ready.value = ready
 
     def write_FU(self, FU_inputs = generate_null_FU_inputs()):
 
@@ -94,11 +92,11 @@ class MEMFU_dut:
 
     def get_DRAM_outputs(self):
         outputs = {}
-        outputs["resp_ready"]       = int(getattr(self.dut, f"io_data_cache_response_ready").value)
-        outputs["request_valid"]    = int(getattr(self.dut, f"io_data_cache_request_valid").value)
-        outputs["request_addr"]     = int(getattr(self.dut, f"io_data_cache_request_bits_addr").value)
-        outputs["request_wr_data"]  = int(getattr(self.dut, f"io_data_cache_request_bits_wr_data").value)
-        outputs["request_wr_en"]    = int(getattr(self.dut, f"io_data_cache_request_bits_wr_en").value)
+        outputs["resp_ready"]       = int(getattr(self.dut, f"io_memory_response_ready").value)
+        outputs["request_valid"]    = int(getattr(self.dut, f"io_memory_request_valid").value)
+        outputs["request_addr"]     = int(getattr(self.dut, f"io_memory_request_bits_addr").value)
+        outputs["request_wr_data"]  = int(getattr(self.dut, f"io_memory_request_bits_wr_data").value)
+        outputs["request_wr_en"]    = int(getattr(self.dut, f"io_memory_request_bits_wr_en").value)
 
         return outputs
 
@@ -112,7 +110,7 @@ class MEMFU_dut:
         outputs["ready"]                = int(getattr(self.dut, f"io_FU_input_ready").value)
         outputs["valid"]                = int(getattr(self.dut, f"io_FU_output_valid").value)
         outputs["RD"]                   = int(getattr(self.dut, f"io_FU_output_bits_RD").value)
-        outputs["RD_valid"]             = int(getattr(self.dut, f"io_FU_output_bits_RD_data").value)
+        outputs["RD_data"]              = int(getattr(self.dut, f"io_FU_output_bits_RD_data").value)
         outputs["RD_valid"]             = int(getattr(self.dut, f"io_FU_output_bits_RD_valid").value)
         outputs["instruction_PC"]       = int(getattr(self.dut, f"io_FU_output_bits_instruction_PC").value)
         outputs["branch_taken"]         = int(getattr(self.dut, f"io_FU_output_bits_branch_taken").value)
@@ -124,11 +122,13 @@ class MEMFU_dut:
         return outputs
 
     def write_dram_resp(self, data=0, valid = 0):
-        self.dut.io_data_cache_response_valid.value = valid
-        self.dut.io_data_cache_response_bits_data.value = data
+        self.dut.io_memory_response_valid.value = valid
+        self.dut.io_memory_response_bits_data.value = data
 
 
 
+    def get_FU_ready(self):
+        return self.dut.io_FU_input_ready.value
 
 
 
@@ -148,67 +148,5 @@ class MEMFU_dut:
         self.DRAM_request_addr  =   self.get_DRAM_outputs()["request_addr"]
 
 
-
-    
-
-    # complete class body...
-
-    # Suggestions: 
-
-    # Module set outputs ready
-
-    # Module Write functions
-
-    # Module Read functions
-
-    # Module print visualizers
-
-
-  #input          clock,
-                 #reset,
-  #output         io_FU_input_ready,
-  #input          io_FU_input_valid,
-                 #io_FU_input_bits_decoded_instruction_ready_bits_RS1_ready,
-                 #io_FU_input_bits_decoded_instruction_ready_bits_RS2_ready,
-  #input  [5:0]   io_FU_input_bits_decoded_instruction_RD,
-  #input          io_FU_input_bits_decoded_instruction_RD_valid,
-  #input  [5:0]   io_FU_input_bits_decoded_instruction_RS1,
-  #input          io_FU_input_bits_decoded_instruction_RS1_valid,
-  #input  [5:0]   io_FU_input_bits_decoded_instruction_RS2,
-  #input          io_FU_input_bits_decoded_instruction_RS2_valid,
-  #input  [31:0]  io_FU_input_bits_decoded_instruction_IMM,
-  #input  [2:0]   io_FU_input_bits_decoded_instruction_FUNCT3,
-  #input  [3:0]   io_FU_input_bits_decoded_instruction_packet_index,
-  #input  [5:0]   io_FU_input_bits_decoded_instruction_ROB_index,
-  #input  [4:0]   io_FU_input_bits_decoded_instruction_instructionType,
-  #input  [1:0]   io_FU_input_bits_decoded_instruction_portID,
-                 #io_FU_input_bits_decoded_instruction_RS_type,
-  #input          io_FU_input_bits_decoded_instruction_needs_ALU,
-                 #io_FU_input_bits_decoded_instruction_needs_branch_unit,
-                 #io_FU_input_bits_decoded_instruction_needs_CSRs,
-                 #io_FU_input_bits_decoded_instruction_SUBTRACT,
-                 #io_FU_input_bits_decoded_instruction_MULTIPLY,
-                 #io_FU_input_bits_decoded_instruction_IMMEDIATE,
-                 #io_FU_input_bits_decoded_instruction_IS_LOAD,
-                 #io_FU_input_bits_decoded_instruction_IS_STORE,
-  #input  [31:0]  io_FU_input_bits_RS1_data,
-                 #io_FU_input_bits_RS2_data,
-                 #io_FU_input_bits_PC,
-  #output         io_DRAM_resp_ready,
-  #input          io_DRAM_resp_valid,
-  #input  [255:0] io_DRAM_resp_bits_data,
-  #output         io_FU_output_valid,
-  #output [63:0]  io_FU_output_bits_RD,
-  #output [31:0]  io_FU_output_bits_RD_data,
-  #output         io_FU_output_bits_RD_valid,
-  #output [31:0]  io_FU_output_bits_instruction_PC,
-  #output         io_FU_output_bits_branch_taken,
-  #output [31:0]  io_FU_output_bits_target_address,
-  #output         io_FU_output_bits_branch_valid,
-  #output [5:0]   io_FU_output_bits_ROB_index,
-  #output [1:0]   io_FU_output_bits_fetch_packet_index,
-  #input          io_DRAM_request_ready,
-  #output         io_DRAM_request_valid,
-  #output [31:0]  io_DRAM_request_bits_addr,
-                 #io_DRAM_request_bits_wr_data,
-  #output         io_DRAM_request_bits_wr_en
+    def set_DRAM_ready(self, ready):
+        self.dut.io_memory_request_ready.value = ready

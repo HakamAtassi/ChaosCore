@@ -62,8 +62,8 @@ class ChaosCore(parameters:Parameters) extends Module{
         //val backend_DRAM_request            =   Decoupled(new DRAM_request(parameters))
 
 
-        val data_cache_response     =   Flipped(Decoupled(new data_cache_response(parameters))) // From MEM
-        val data_cache_request      =   Decoupled(new data_cache_request(parameters))     // To MEM
+        val memory_response     =   Flipped(Decoupled(new memory_response(parameters))) // From MEM
+        val memory_request      =   Decoupled(new memory_request(parameters))     // To MEM
     })
 
 
@@ -85,8 +85,8 @@ class ChaosCore(parameters:Parameters) extends Module{
     // BACKEND <> DRAM //
     /////////////////////
 
-    backend.io.data_cache_response    <>  io.data_cache_response
-    backend.io.data_cache_request     <>  io.data_cache_request
+    backend.io.memory_response    <>  io.memory_response
+    backend.io.memory_request     <>  io.memory_request
 
 
     ////////////////////

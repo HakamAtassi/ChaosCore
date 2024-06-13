@@ -41,15 +41,15 @@ class debug_printer(parameters:Parameters, addressMap:AddressMap) extends Module
     import addressMap._
 
     val io = IO(new Bundle{
-        //val data_cache_request = Flipped(Decoupled(new DRAM_request(parameters)))
+        //val memory_request = Flipped(Decoupled(new DRAM_request(parameters)))
 
-        val data_cache_request      =   Flipped(Decoupled(new data_cache_request(parameters)))     // To MEM
+        val memory_request      =   Flipped(Decoupled(new memory_request(parameters)))     // To MEM
     })
 
-    when((io.data_cache_request.bits.addr === debug_printer_address) && io.data_cache_request.valid){
-        printf("%c", io.data_cache_request.bits.wr_data)
+    when((io.memory_request.bits.addr === debug_printer_address) && io.memory_request.valid){
+        printf("%c", io.memory_request.bits.wr_data)
     }
 
-    io.data_cache_request.ready := 1.B
+    io.memory_request.ready := 1.B
 
 }

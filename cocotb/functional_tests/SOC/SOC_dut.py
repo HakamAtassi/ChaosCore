@@ -28,7 +28,7 @@ class SOC_dut:
 
 
     def set_dram_ready(self, ready):
-        getattr(self.dut ,f"io_data_cache_response_ready").value = ready
+        getattr(self.dut ,f"io_memory_response_ready").value = ready
         getattr(self.dut ,f"io_frontend_DRAM_request_ready").value = ready
 
     #def set_cache_ready(self, ready):

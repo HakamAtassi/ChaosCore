@@ -27,10 +27,6 @@ def test_reset():
         configs["testcase"] = "test_reset"
         run(**configs)
 
-def test_reset():
-        configs["testcase"] = "test_reset"
-        run(**configs)
-
 def test_SW():
         configs["testcase"] = "test_SW"
         run(**configs)
@@ -41,5 +37,41 @@ def test_SH():
 
 def test_SB():
         configs["testcase"] = "test_SB"
+        run(**configs)
+
+def test_LW():
+        configs["testcase"] = "test_LW"
+        run(**configs)
+
+def test_LHW():
+        configs["testcase"] = "test_LHW"
+        run(**configs)
+
+def test_LB():
+        configs["testcase"] = "test_LB"
+        run(**configs)
+
+def test_LHW_signed():
+        configs["testcase"] = "test_LHW_signed"
+        run(**configs)
+
+def test_LB_signed():
+        configs["testcase"] = "test_LB_signed"
+        run(**configs)
+
+def test_LBU_signed():
+        configs["testcase"] = "test_LBU_signed"
+        run(**configs)
+
+def test_LHWU_signed():
+        configs["testcase"] = "test_LHWU_signed"
+        run(**configs)
+
+def test_ready_after_waiting_request():
+        configs["testcase"] = "test_ready_after_waiting_request"
+        run(**configs)
+
+def test_ready_after_accepted_request():
+        configs["testcase"] = "test_ready_after_accepted_request"
         run(**configs)
 

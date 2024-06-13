@@ -33,7 +33,6 @@ async def test_reset(dut):
     await cocotb.start(generateClock(dut)) 
 
 
-
     dut = SOC_dut(dut, DRAM=DRAM)  # wrap dut with helper class
     await dut.reset()   # reset module
 
