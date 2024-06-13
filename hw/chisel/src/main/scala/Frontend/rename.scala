@@ -114,49 +114,57 @@ class RAT_memory(fetchWidth:Int, physicalRegCount:Int, architecturalRegCount:Int
 }
 
 
+// Big FIXME: Ready bits not completed
 class RAT(parameters:Parameters) extends Module{
     import parameters._
     val RATCheckpointBits    = log2Ceil(RATCheckpointCount)
     val physicalRegBits      = log2Ceil(physicalRegCount)
     val architecturalRegBits = log2Ceil(architecturalRegCount)
 
+    val portCount = getPortCount(parameters)
+
     assert(RATCheckpointCount%2 == 0, "Rat checkpoint count must be multiple of 2")
 
     val io = IO(new Bundle{
         // input read ports
-        val instruction_RD    =   Input(Vec(fetchWidth, UInt(architecturalRegBits.W)))
-        val instruction_RS1   =   Input(Vec(fetchWidth, UInt(architecturalRegBits.W)))
-        val instruction_RS2   =   Input(Vec(fetchWidth, UInt(architecturalRegBits.W)))
+        val instruction_RD              =   Input(Vec(fetchWidth, UInt(architecturalRegBits.W)))
+        val instruction_RS1             =   Input(Vec(fetchWidth, UInt(architecturalRegBits.W)))
+        val instruction_RS2             =   Input(Vec(fetchWidth, UInt(architecturalRegBits.W)))
 
+        // UPDATE //
+        val FU_outputs                  = Vec(portCount, Flipped(ValidIO(new FU_output(parameters))))
 
         // write ports (post WAW handling)
-        val free_list_wr_en  =   Input(Vec(fetchWidth, Bool()))
-        val free_list_RD     =   Input(Vec(fetchWidth, UInt(physicalRegBits.W)))
+        val free_list_wr_en             =   Input(Vec(fetchWidth, Bool()))
+        val free_list_RD                =   Input(Vec(fetchWidth, UInt(physicalRegBits.W)))
 
         // checkpoint (create/restore)
-        val create_checkpoint        = Input(Bool())
-        val active_checkpoint_value  = Output(UInt(RATCheckpointBits.W))   // What checkpoint is currently being used
+        val create_checkpoint           = Input(Bool())
+        val active_checkpoint_value     = Output(UInt(RATCheckpointBits.W))   // What checkpoint is currently being used
 
-        val restore_checkpoint       = Input(Bool())                       // Restore to previous valid RAT
-        val restore_checkpoint_value = Input(UInt(RATCheckpointBits.W))    // ...
+        val restore_checkpoint          = Input(Bool())                       // Restore to previous valid RAT
+        val restore_checkpoint_value    = Input(UInt(RATCheckpointBits.W))    // ...
       
-        val free_checkpoint          = Input(Bool())                       // Normal branch commit. Just dealloc. checkpoint
+        val free_checkpoint             = Input(Bool())                       // Normal branch commit. Just dealloc. checkpoint
 
-        val checkpoints_full         = Output(Bool())                      // No more checkpoints available
+        val checkpoints_full            = Output(Bool())                      // No more checkpoints available
 
         // renamed outputs
-        val RAT_RD          =   Output(Vec(fetchWidth, UInt(physicalRegBits.W)))
-        val RAT_RS1         =   Output(Vec(fetchWidth, UInt(physicalRegBits.W)))
-        val RAT_RS2         =   Output(Vec(fetchWidth, UInt(physicalRegBits.W)))
+        val RAT_RD                      =   Output(Vec(fetchWidth, UInt(physicalRegBits.W)))
+        val RAT_RS1                     =   Output(Vec(fetchWidth, UInt(physicalRegBits.W)))
+        val RAT_RS2                     =   Output(Vec(fetchWidth, UInt(physicalRegBits.W)))
 
-        val ready_bits      =   Output(Vec(fetchWidth, new sources_ready()))
+        val ready_bits                  =   Output(Vec(fetchWidth, new sources_ready()))
     })
 
     val active_RAT            = RegInit(UInt(RATCheckpointBits.W), 0.U)
     val available_checkpoints = RegInit(UInt(RATCheckpointBits.W), RATCheckpointCount.U - 1.U)
 
     val RAT_memories = RegInit(VecInit.tabulate(RATCheckpointCount, architecturalRegCount){ (x, y) => 0.U(physicalRegBits.W) })
-    
+
+    //val ready_memories = RegInit(UInt(architecturalRegCount.W), 0.U)
+    //val ready_memories = RegInit(VecInit(Seq.fill(RATCheckpointCount)(0.U(architecturalRegCount.W))))
+    val ready_memories = RegInit(VecInit.tabulate(RATCheckpointCount, architecturalRegCount){ (x, y) => 0.B })
 
     // outputs of ALL RAT checkpoints
 
@@ -224,7 +232,6 @@ class RAT(parameters:Parameters) extends Module{
         }
     }
 
-
     io.active_checkpoint_value := active_RAT
 
     
@@ -249,15 +256,56 @@ class RAT(parameters:Parameters) extends Module{
 
     io.checkpoints_full     := (available_checkpoints === 0.U)
 
+    ////////////////
+    // READY BITS //
+    ////////////////
+    
+    // setting ready bit
+    // whenever an instruction completes
+    // if the completing instruction(s) is writing to the mapping that exists in the ith entry of the ROB
+    // and that completing instruction is valid
+    // set that ready bit, and bypass it as needed
 
-    // FIXME: implement ready bits
-    val initialReady = Wire(new sources_ready)
-    initialReady.RS1_ready := 1.B
-    initialReady.RS2_ready := 1.B
+    val comb_ready_bits = Wire(Vec(architecturalRegCount, Bool()))
+
+
+    for(i <- 0 until architecturalRegCount){
+        var ready_bit = 0.B
+        for(j <- 0 until portCount){
+            val set_ready = (io.FU_outputs(j).bits.RD === RAT_memories(active_RAT)(i)) && io.FU_outputs(j).valid
+            ready_bit = ready_bit || set_ready
+        }
+        comb_ready_bits(i)              := ready_bit || ready_memories(active_RAT)(i)
+        ready_memories(active_RAT)(i)   := comb_ready_bits(i) 
+    }
+
+
+    // resetting ready bit
+    // if a mapping in the RAT is being updated, reset the ready bit.
+    // helpful not: it is very important this step is completed AFTER the previous step.
+    // clearing a ready bit takes precidence over a setting a ready bit
+    for(i <- 0 until fetchWidth){
+        when(io.free_list_wr_en(i)){
+            ready_memories(active_RAT)(io.instruction_RD(i)) := 0.B
+        }
+    }
+
+
+    // assign ready output
+
 
     for(i <- 0 until fetchWidth){
-        io.ready_bits(i)      :=   initialReady
+        val initialReady = Wire(new sources_ready)
+        //initialReady.RS1_ready := RegNext(comb_ready_bits(io.instruction_RS1(i))).asBool
+
+        // if the source is x0, its ready regardless of what its value says
+        // if the source is not valid, its ready regardless of what its value says
+        initialReady.RS1_ready := RegNext(Mux(io.instruction_RS1(i) === 0.U, 1.B, comb_ready_bits(io.instruction_RS1(i))))
+        initialReady.RS2_ready := RegNext(Mux(io.instruction_RS2(i) === 0.U, 1.B, comb_ready_bits(io.instruction_RS2(i))))
+
+        io.ready_bits(i)       := initialReady
     }
+
     
 }
 
@@ -391,6 +439,7 @@ class rename(parameters:Parameters) extends Module{
     RAT.io.instruction_RD                   :=  WAW_handler.io.RAT_RD_values
     RAT.io.instruction_RS1                  :=  instruction_RS1
     RAT.io.instruction_RS2                  :=  instruction_RS2
+    RAT.io.FU_outputs                       :=  io.FU_outputs
 
     // Assign checkpoint stuff
 

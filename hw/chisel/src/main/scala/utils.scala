@@ -150,7 +150,7 @@ object helperFunctions {
 
             imm := Cat(imm_11_5, imm_4_0).asSInt.asUInt
         }.elsewhen(U){
-            val imm_31_12     = instruction(31, 12) << 12
+            val imm_31_12     = instruction(31, 12)
 
             imm := Cat(imm_31_12).asSInt.asUInt
         }.otherwise{
