@@ -152,8 +152,8 @@ class RS(parameters:Parameters) extends Module{
     val schedulable_instructions = Wire(Vec(RSEntries, Bool()))    // what instructions have both inputs ready?
     for(i <- 0 until RSEntries){
 
-        schedulable_instructions(i) :=  (reservation_station(i).decoded_instruction.ready_bits.RS1_ready || RS1_match(i)) && 
-                                        (reservation_station(i).decoded_instruction.ready_bits.RS2_ready || RS2_match(i)) && 
+        schedulable_instructions(i) :=  (reservation_station(i).decoded_instruction.ready_bits.RS1_ready || RS1_match(i) || !reservation_station(i).decoded_instruction.RS1_valid) && 
+                                        (reservation_station(i).decoded_instruction.ready_bits.RS2_ready || RS2_match(i) || !reservation_station(i).decoded_instruction.RS2_valid) && 
                                         reservation_station(i).valid
     }
 

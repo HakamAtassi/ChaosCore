@@ -59,3 +59,7 @@ def test_rename_4_at_a_time_with_hazard():
         configs["testcase"] = "test_rename_4_at_a_time_with_hazard"
         run(**configs)
 
+def test_set_ready():
+        configs["testcase"] = "test_set_ready"
+        run(**configs)
+

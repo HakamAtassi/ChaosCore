@@ -22,7 +22,7 @@ module debug_printer(
 
   `ifndef SYNTHESIS
     always @(posedge clock) begin
-      if ((`PRINTF_COND_) & io_memory_request_bits_addr == 32'h400
+      if ((`PRINTF_COND_) & io_memory_request_bits_addr == 32'h80000000
           & io_memory_request_valid & ~reset)
         $fwrite(32'h80000002, "%c", io_memory_request_bits_wr_data);
     end // always @(posedge)

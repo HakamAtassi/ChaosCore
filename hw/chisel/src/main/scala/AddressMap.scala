@@ -38,7 +38,7 @@ import java.rmi.server.UID
 
 
 case class AddressMap(
-  debug_printer_address: UInt = "h400".U,
+  debug_printer_address: UInt = "h8000_0000".U,
 
 
 )

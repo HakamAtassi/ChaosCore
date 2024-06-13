@@ -41,15 +41,15 @@ def generate_null_FU_inputs():
 
     FU_inputs = {}
     FU_inputs["valid"] = [0,0,0,0]
-    FU_inputs["bits_RD"] = [0,0,0,0]
-    FU_inputs["bits_RD_data"] = [0,0,0,0]
-    FU_inputs["bits_RD_valid"] = [0,0,0,0]
-    FU_inputs["bits_instruction_PC"] = [0,0,0,0]
-    FU_inputs["bits_branch_taken"] = [0,0,0,0]
-    FU_inputs["bits_target_address"] = [0,0,0,0]
-    FU_inputs["bits_branch_valid"] = [0,0,0,0]
-    FU_inputs["bits_ROB_index"] = [0,0,0,0]
-    FU_inputs["bits_fetch_packet_index"] = [0,0,0,0]
+    FU_inputs["RD"] = [0,0,0,0]
+    FU_inputs["RD_data"] = [0,0,0,0]
+    FU_inputs["RD_valid"] = [0,0,0,0]
+    FU_inputs["instruction_PC"] = [0,0,0,0]
+    FU_inputs["branch_taken"] = [0,0,0,0]
+    FU_inputs["target_address"] = [0,0,0,0]
+    FU_inputs["branch_valid"] = [0,0,0,0]
+    FU_inputs["ROB_index"] = [0,0,0,0]
+    FU_inputs["fetch_packet_index"] = [0,0,0,0]
 
     return FU_inputs
 
@@ -99,7 +99,7 @@ class rename_dut:
             getattr(self.dut, f"io_decoded_fetch_packet_bits_decoded_instruction_{i}_IS_STORE").value = rename_inputs["IS_STORE"][i]
             getattr(self.dut, f"io_decoded_fetch_packet_bits_valid_bits_{i}").value = rename_inputs["valid_bit"][i]
 
-    def write_FU(self, FU_inputs):
+    def write_FU(self, FU_inputs=generate_null_FU_inputs()):
 
         for i in range(4):
             getattr(self.dut, f"io_FU_outputs_{i}_valid").value = FU_inputs["valid"][i]
@@ -184,18 +184,28 @@ class rename_dut:
         return outputs
 
     def get_RAT(self, RAT_idx):
-
         RAT = [0]*32
-
         for i in range(32):
             RAT[i] = int(getattr(self.dut, f"RAT.RAT_memories_{RAT_idx}_{i}").value)
+        return RAT
+
+    def get_ready(self, RAT_idx):
+        RAT = [0]*32
+        for i in range(32):
+            RAT[i] = int(getattr(self.dut, f"RAT.ready_memories_{RAT_idx}_{i}").value)
         return RAT
 
     def print_RAT(self, RAT_idx):
         print(f"checkpoint {RAT_idx}")
         for i in range(32):
             print(f"{i}: {self.get_RAT(RAT_idx)[i]}")
-        pass
+
+    def print_RAT(self, RAT_idx):
+        print(f"checkpoint {RAT_idx}")
+        for i in range(32):
+            print(f"{i}: {self.get_ready(RAT_idx)[i]}")
+
+
 
 
 

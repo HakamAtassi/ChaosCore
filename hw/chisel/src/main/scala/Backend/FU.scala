@@ -183,6 +183,8 @@ class ALU(parameters:Parameters) extends Module{
         arithmetic_result   := auipc_result
     }
 
+    dontTouch(LUI)
+
     /////////
     /*
     when(MUL){
