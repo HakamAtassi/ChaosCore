@@ -2,7 +2,7 @@
 * Filename: FU.scala
 * Author: Hakam Atassi
 * Date: May 23 2024
-* Description: The "merged" register files. 
+* Description: The Core Functional Units
 * License: MIT
 *
 * Copyright (c) 2024 by Hakam Atassi
@@ -78,16 +78,18 @@ class ALU(parameters:Parameters) extends Module{
 
 
     // Arithmetic Regs
-    val add_result  = Wire(UInt(32.W))
-    val sub_result  = Wire(UInt(32.W))
-    val slt_result  = Wire(UInt(32.W))
-    val sltu_result = Wire(UInt(32.W))
-    val and_result  = Wire(UInt(32.W))
-    val or_result   = Wire(UInt(32.W))
-    val xor_result  = Wire(UInt(32.W))
-    val sll_result  = Wire(UInt(32.W))
-    val srl_result  = Wire(UInt(32.W))
-    val sra_result  = Wire(SInt(32.W))
+    val add_result      = Wire(UInt(32.W))
+    val sub_result      = Wire(UInt(32.W))
+    val slt_result      = Wire(UInt(32.W))
+    val sltu_result     = Wire(UInt(32.W))
+    val and_result      = Wire(UInt(32.W))
+    val or_result       = Wire(UInt(32.W))
+    val xor_result      = Wire(UInt(32.W))
+    val sll_result      = Wire(UInt(32.W))
+    val srl_result      = Wire(UInt(32.W))
+    val sra_result      = Wire(SInt(32.W))
+    val lui_result      = Wire(UInt(32.W))
+    val auipc_result    = Wire(UInt(32.W))
 
     // Multiply Regs
 
@@ -104,20 +106,20 @@ class ALU(parameters:Parameters) extends Module{
     val operand2 = Mux(IMMEDIATE, imm, RS2_data)
 
     // Perform arithmetic operations
-    add_result  := RS1_data + operand2
-    sub_result  := RS1_data - operand2
-    slt_result  := Mux(RS1_data.asSInt < operand2.asSInt, 1.U, 0.U)
-    sltu_result := Mux(RS1_data.asUInt < operand2.asUInt, 1.U, 0.U)
-    and_result  := RS1_data & operand2
-    or_result   := RS1_data | operand2
-    xor_result  := RS1_data ^ operand2
-    sll_result  := RS1_data << operand2(4,0) // Logical left shift
-    srl_result  := RS1_data >> operand2(4,0) // Logical right shift
+    add_result      := RS1_data + operand2
+    sub_result      := RS1_data - operand2
+    slt_result      := Mux(RS1_data.asSInt < operand2.asSInt, 1.U, 0.U)
+    sltu_result     := Mux(RS1_data.asUInt < operand2.asUInt, 1.U, 0.U)
+    and_result      := RS1_data & operand2
+    or_result       := RS1_data | operand2
+    xor_result      := RS1_data ^ operand2
+    sll_result      := RS1_data << operand2(4,0) // Logical left shift
+    srl_result      := RS1_data >> operand2(4,0) // Logical right shift
+    sra_result      := ((RS1_data.asSInt) >> operand2(4,0)).asSInt
 
-    sra_result  := ((RS1_data.asSInt) >> operand2(4,0)).asSInt
-    //.asUInt // Arithmetic right shift
+    lui_result      := (imm << 12)  // FIXME: is imm signed??
+    auipc_result    := (instruction_PC + (imm<<12)) // same here???
 
-    dontTouch(sra_result)
 
     // perform multiply operations
     //val multiply_temp = Wire(UInt(64.W))
@@ -141,6 +143,9 @@ class ALU(parameters:Parameters) extends Module{
     val SRA      =   (instructionType === OP || instructionType === OP_IMM) && FUNCT3 === "b101".U  && !MULTIPLY && SUBTRACT
     val SLT      =   (instructionType === OP || instructionType === OP_IMM) && FUNCT3 === "b010".U  && !MULTIPLY
     val SLTU     =   (instructionType === OP || instructionType === OP_IMM) && FUNCT3 === "b011".U  && !MULTIPLY
+
+    val LUI     =   (instructionType === InstructionType.LUI) && !MULTIPLY
+    val AUIPC   =   (instructionType === InstructionType.AUIPC) && !MULTIPLY
 
     val MUL      =   (instructionType === OP) && FUNCT3 === "b000".U  && MULTIPLY
     val MULH     =   (instructionType === OP) && FUNCT3 === "b001".U  && MULTIPLY
@@ -172,6 +177,10 @@ class ALU(parameters:Parameters) extends Module{
         arithmetic_result   := slt_result
     }.elsewhen(SLTU){
         arithmetic_result   := sltu_result
+    }.elsewhen(LUI){
+        arithmetic_result   := lui_result
+    }.elsewhen(AUIPC){
+        arithmetic_result   := auipc_result
     }
 
     /////////
@@ -315,132 +324,6 @@ class branch_unit(parameters:Parameters) extends Module{
 
 }
 
-
-
-// MEM FU
-
-// FIXME: MEMFU needs many fixes
-// First, when a request is made, the MEMFU needs to be marked busy until the 
-// Data is recieved
-class MEMFU(parameters:Parameters) extends Module{
-    import parameters._
-    import InstructionType._
-    val io = IO(new Bundle{
-        // Input
-        val FU_input                =   Flipped(Decoupled(new read_decoded_instruction(parameters)))
-        val data_cache_response     =   Flipped(Decoupled(new data_cache_response(parameters))) // From MEM
-
-        // Output
-        val FU_output               =   ValidIO(new FU_output(parameters))                // To RF
-        val data_cache_request      =   Decoupled(new data_cache_request(parameters))     // To MEM
-    })
-
-
-    val IS_LOAD  = io.FU_input.bits.decoded_instruction.IS_LOAD  && io.FU_input.valid
-    val IS_STORE = io.FU_input.bits.decoded_instruction.IS_STORE && io.FU_input.valid
-
-    // Operand data
-    val RS1_data    =   io.FU_input.bits.RS1_data
-    val RS2_data    =   io.FU_input.bits.RS2_data
-    val IMM         =   io.FU_input.bits.decoded_instruction.IMM
-    val PC          =   io.FU_input.bits.PC + io.FU_input.bits.decoded_instruction.packet_index
-
-    // Dest reg
-    val RD                  =   io.FU_input.bits.decoded_instruction.RD
-
-    // Op select
-
-    val instructionType     =   io.FU_input.bits.decoded_instruction.instructionType
-
-    val FUNCT3              =   io.FU_input.bits.decoded_instruction.FUNCT3
-    val IMMEDIATE           =   io.FU_input.bits.decoded_instruction.IMMEDIATE
-    val SUBTRACT            =   io.FU_input.bits.decoded_instruction.SUBTRACT
-    val MULTIPLY            =   io.FU_input.bits.decoded_instruction.MULTIPLY
-
-
-    val SB                  =   IS_STORE && FUNCT3 === "b000".U && io.FU_input.valid
-    val SH                  =   IS_STORE && FUNCT3 === "b001".U && io.FU_input.valid
-    val SW                  =   IS_STORE && FUNCT3 === "b010".U && io.FU_input.valid
-
-    val LB                  =   IS_LOAD && FUNCT3 === "b000".U  && io.FU_input.valid
-    val LH                  =   IS_LOAD && FUNCT3 === "b001".U  && io.FU_input.valid
-    val LW                  =   IS_LOAD && FUNCT3 === "b010".U  && io.FU_input.valid
-    val LBU                 =   IS_LOAD && FUNCT3 === "b100".U  && io.FU_input.valid
-    val LHU                 =   IS_LOAD && FUNCT3 === "b101".U  && io.FU_input.valid
-
-
-    /////////////////////
-    // COMPUTE ADDRESS //
-    /////////////////////
-
-    val addr = RS1_data + IMM
-
-    ///////////////////////
-    // FORMAT WRITE DATA //
-    ///////////////////////
-
-    val wr_data = Wire(UInt(32.W))
-
-    wr_data := 0.U
-    when(SB){wr_data := RS2_data & 0xFF.U}
-    when(SH){wr_data := RS2_data & 0xFFFF.U}
-    when(SW){wr_data := RS2_data.asUInt & "hFFFF_FFFF".U(32.W)}
-
-
-    ///////////////////
-    // DRAM REQUESTS //
-    ///////////////////
-
-    // For loads, Send request to memory. 1 Cycle later, write back to PRF (place output).
-
-
-    // For store, just send store request to memory 1 cycle after input is placed
-
-
-    io.data_cache_request.valid           := RegNext(IS_LOAD || IS_STORE)
-    io.data_cache_request.bits.wr_en      := RegNext(IS_STORE)
-    io.data_cache_request.bits.wr_data    := RegNext(wr_data)
-    io.data_cache_request.bits.addr       := RegNext(addr)
-
-
-    //////////////////////
-    // FORMAT READ DATA //
-    //////////////////////
-
-    val rd_data = Wire(UInt(32.W))
-
-    rd_data := 0.U
-    // this can be parallelized, I'm pretty sure (byte enable with paralell muxes...)
-    when(RegNext(LB)) {rd_data := (io.data_cache_response.bits.data & 0xFF.U).asSInt.asUInt}
-    when(RegNext(LH)) {rd_data := (io.data_cache_response.bits.data & 0xFFFF.U).asSInt.asUInt}
-    when(RegNext(LW)) {rd_data := (io.data_cache_response.bits.data & "hFFFF_FFFF".U).asSInt.asUInt}
-    when(RegNext(LBU)){rd_data := (io.data_cache_response.bits.data & 0xFF.U).asUInt}
-    when(RegNext(LHU)){rd_data := (io.data_cache_response.bits.data & 0xFFFF.U).asUInt}
-
-    ////////////////////////
-    // ASSIGN PRF OUTPUTS //
-    ////////////////////////
-
-    // Not a branch unit (all FUs share the same output channel)
-    io.FU_output.bits.branch_taken              := 0.B
-    io.FU_output.bits.target_address            := 0.B
-    io.FU_output.bits.branch_valid              := 0.B
-
-    io.FU_output.bits.instruction_PC        :=  RegNext(io.FU_input.bits.PC + (io.FU_input.bits.decoded_instruction.packet_index<<2.U))
-    io.FU_output.bits.fetch_packet_index    :=  RegNext(io.FU_input.bits.decoded_instruction.packet_index)
-
-    io.FU_output.bits.RD_data   := rd_data
-    io.FU_output.bits.RD        := RegNext(RD)
-    io.FU_output.bits.RD_valid  := RegNext(IS_LOAD)
-
-    io.FU_input.ready  := 1.B
-    io.data_cache_response.ready := 1.B
-
-    io.FU_output.bits.ROB_index  :=   RegNext(io.FU_input.bits.decoded_instruction.ROB_index)
-    io.FU_output.valid           :=   RegNext(io.FU_input.valid)
-
-
-}
 
 
 // Top Level FU

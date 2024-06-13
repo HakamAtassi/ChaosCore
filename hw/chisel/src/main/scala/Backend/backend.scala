@@ -54,8 +54,8 @@ class backend(parameters:Parameters) extends Module{
         //val DRAM_resp               =   Flipped(Decoupled(Input(new DRAM_resp(parameters))))  // FROM DRAM
         //val DRAM_request            =   Decoupled(new DRAM_request(parameters))               // TO DRAM
 
-        val data_cache_response     =   Flipped(Decoupled(new data_cache_response(parameters))) // From MEM
-        val data_cache_request      =   Decoupled(new data_cache_request(parameters))     // To MEM
+        val memory_response     =   Flipped(Decoupled(new memory_response(parameters))) // From MEM
+        val memory_request      =   Decoupled(new memory_request(parameters))     // To MEM
 
         // REDIRECTS // 
         val commit                  =    Input(new commit(parameters))
@@ -258,8 +258,8 @@ class backend(parameters:Parameters) extends Module{
     // MEM_RS TO MEM //
     ///////////////////
     
-    io.data_cache_request <>  FU3.io.data_cache_request
-    io.data_cache_response    <>  FU3.io.data_cache_response
+    io.memory_request <>  FU3.io.memory_request
+    io.memory_response    <>  FU3.io.memory_response
 
 
     io.backend_packet.ready := DontCare

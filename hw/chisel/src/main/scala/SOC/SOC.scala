@@ -53,8 +53,8 @@ class SOC(parameters:Parameters, addressMap:AddressMap) extends Module{
         //// To DRAM
         //val backend_DRAM_request            =   Decoupled(new DRAM_request(parameters))
 
-        val data_cache_response     =   Flipped(Decoupled(new data_cache_response(parameters))) // From MEM
-        val data_cache_request      =   Decoupled(new data_cache_request(parameters))     // To MEM
+        val memory_response     =   Flipped(Decoupled(new memory_response(parameters))) // From MEM
+        val memory_request      =   Decoupled(new memory_request(parameters))     // To MEM
     })
 
     ///////////////
@@ -80,11 +80,11 @@ class SOC(parameters:Parameters, addressMap:AddressMap) extends Module{
     ChaosCore.io.frontend_DRAM_request <> io.frontend_DRAM_request
 
     //
-    ChaosCore.io.data_cache_response     <> io.data_cache_response
-    ChaosCore.io.data_cache_request      <> io.data_cache_request
+    ChaosCore.io.memory_response     <> io.memory_response
+    ChaosCore.io.memory_request      <> io.memory_request
 
     // 
-    ChaosCore.io.data_cache_request  <> debug_printer.io.data_cache_request
+    ChaosCore.io.memory_request  <> debug_printer.io.memory_request
 
 
 

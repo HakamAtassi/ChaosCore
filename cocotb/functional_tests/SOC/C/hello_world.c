@@ -15,5 +15,5 @@ int main()
     printf('D');
     printf('!');
     printf('\n');
-    while (1) { }
+    while (1) {}
 }

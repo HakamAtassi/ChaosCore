@@ -47,7 +47,6 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
     })
 
 
-    dontTouch(io)
 
 
     val instruction = io.instruction.bits.instruction
@@ -73,7 +72,7 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
     //Do we check entire funct7 field or just check for single bit?
     val MULTIPLY    = (instructionType === InstructionType.OP && FUNCT7 === 0x1.U)
     val SUBTRACT    = ((instructionType === InstructionType.OP || instructionType === InstructionType.OP_IMM) && FUNCT7 === 0x20.U)
-    val IMMEDIATE   = (instructionType === InstructionType.OP_IMM)
+    val IMMEDIATE   = (instructionType === InstructionType.OP_IMM) || (instructionType === LUI) || (instructionType === AUIPC)
 
 
     val needs_divider        =   (instructionType === OP) && ( FUNCT3 === 0x4.U || FUNCT3 === 0x5.U || FUNCT3 === 0x6.U || FUNCT3 === 0x7.U) && FUNCT7(0)
@@ -81,14 +80,13 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
     val needs_CSRs           =   0.B
     val needs_ALU            =   ((instructionType === OP) &&
                                  ((FUNCT7 === 0x20.U) || (FUNCT7 === 0x00.U))) || 
-                                 (instructionType === OP_IMM)
+                                 (instructionType === OP_IMM) || (instructionType === LUI) || (instructionType === AUIPC)
 
 
     val IS_LOAD              =   (instructionType === LOAD)
     val IS_STORE             =   (instructionType === STORE)
     val needs_memory         =   (instructionType === STORE) || (instructionType === LOAD)
 
-    dontTouch(needs_memory)
 
     // Assign output
 
@@ -125,6 +123,7 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
                                                         io.instruction.valid
 
     io.decoded_instruction.bits.RD                   := RD
+    //io.decoded_instruction.bits.RDold                := DontCare
     io.decoded_instruction.bits.RS1                  := RS1
     io.decoded_instruction.bits.RS2                  := RS2
     io.decoded_instruction.bits.IMM                  := IMM

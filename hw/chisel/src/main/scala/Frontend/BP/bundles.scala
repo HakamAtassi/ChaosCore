@@ -190,7 +190,7 @@ class decoded_instruction(parameters:Parameters) extends Bundle{
 
     //val valid              =    Bool()
 
-    //val RDold              =   UInt(physicalRegBits.W) // Actual dest, needed for exceptions
+    //val RDold              =   UInt(physicalRegBits.W)
     //val RDold_valid        =   Bool()
 
 
@@ -423,7 +423,7 @@ class MEMRS_entry(parameters:Parameters) extends Bundle{
 class FU_output(parameters:Parameters) extends Bundle{
     import parameters._
     // Arithmetic/Load
-    val RD                  =   UInt(physicalRegCount.W)
+    val RD                  =   UInt(log2Ceil(physicalRegCount).W)
     val RD_data             =   UInt(32.W)
     val RD_valid            =   Bool()
 
@@ -465,13 +465,13 @@ class DRAM_resp(parameters:Parameters) extends Bundle{
 // And a seperate dram repsonse bus
 //
 
-class data_cache_request(parameters:Parameters) extends Bundle{   // FIXME: change this to something generic like MMIO request...
+class memory_request(parameters:Parameters) extends Bundle{   // FIXME: change this to something generic like MMIO request...
     val addr    = UInt(32.W)
     val wr_data = UInt(32.W)
     val wr_en   = Bool()
 }
 
-class data_cache_response(parameters:Parameters) extends Bundle{
+class memory_response(parameters:Parameters) extends Bundle{
     val data = UInt(32.W)
 }
 
