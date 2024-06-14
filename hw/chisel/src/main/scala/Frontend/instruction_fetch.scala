@@ -48,7 +48,7 @@ class Q[T <: Data](dataType: T, depth: Int = 16) extends Module{
     val clear      = Input(Bool())           // Clear entire queue
   })
 
-  val queue = Module(new Queue(dataType, depth, flow=true))
+  val queue = Module(new Queue(dataType, depth, flow=true, useSyncReadMem=true))
 
   // Connect inputs
   //queue.io.enq.valid := io.wr_en
