@@ -63,3 +63,11 @@ def test_set_ready():
         configs["testcase"] = "test_set_ready"
         run(**configs)
 
+def test_ready_checkpoints():
+        configs["testcase"] = "test_ready_checkpoints"
+        run(**configs)
+
+def test_random():
+        configs["testcase"] = "test_random"
+        run(**configs)
+

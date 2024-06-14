@@ -160,11 +160,8 @@ class RAT(parameters:Parameters) extends Module{
     val active_RAT            = RegInit(UInt(RATCheckpointBits.W), 0.U)
     val available_checkpoints = RegInit(UInt(RATCheckpointBits.W), RATCheckpointCount.U - 1.U)
 
-    val RAT_memories = RegInit(VecInit.tabulate(RATCheckpointCount, architecturalRegCount){ (x, y) => 0.U(physicalRegBits.W) })
-
-    //val ready_memories = RegInit(UInt(architecturalRegCount.W), 0.U)
-    //val ready_memories = RegInit(VecInit(Seq.fill(RATCheckpointCount)(0.U(architecturalRegCount.W))))
-    val ready_memories = RegInit(VecInit.tabulate(RATCheckpointCount, architecturalRegCount){ (x, y) => 0.B })
+    val RAT_memories    = RegInit(VecInit.tabulate(RATCheckpointCount, architecturalRegCount){ (x, y) => 0.U(physicalRegBits.W) })
+    val ready_memories  = RegInit(VecInit.tabulate(RATCheckpointCount, architecturalRegCount){ (x, y) => 0.B })
 
     // outputs of ALL RAT checkpoints
 
@@ -217,6 +214,7 @@ class RAT(parameters:Parameters) extends Module{
             RAT_memories(0)(j) :=  wr_data_in(j)
         }.elsewhen((((active_RAT + 1.U) === 0.U) && io.create_checkpoint)){
             RAT_memories(0)(j) := RAT_memories(RATCheckpointBits)(j)
+            ready_memories(0)(j) := ready_memories(RATCheckpointBits)(j)
         }
     }
 
@@ -228,6 +226,7 @@ class RAT(parameters:Parameters) extends Module{
                 RAT_memories(i)(j) :=  wr_data_in(i)
             }.elsewhen((((active_RAT + 1.U) === i.U) && io.create_checkpoint)){
                 RAT_memories(i)(j) := RAT_memories(i-1)(j)
+                ready_memories(i)(j) := ready_memories(i-1)(j)
             }
         }
     }
@@ -312,7 +311,6 @@ class RAT(parameters:Parameters) extends Module{
 
 
 
-// FIXME: Renamer has no ready bits
 // FIXME: Single free list of break up into 4 free lists
 // FIXME: Checkpoints??
 
@@ -462,9 +460,6 @@ class rename(parameters:Parameters) extends Module{
     // Forwarding logic + Output //
     ///////////////////////////////
 
-    dontTouch(renamed_RS1)
-    dontTouch(renamed_RS2)
-    dontTouch(renamed_RD)
 
     // superscalar forwarding logic
     for(i <- 0 until fetchWidth){
