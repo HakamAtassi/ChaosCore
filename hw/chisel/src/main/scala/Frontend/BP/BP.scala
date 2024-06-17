@@ -39,7 +39,7 @@ class BP(parameters:Parameters) extends Module{
     import parameters._
     val io = IO(new Bundle{
         // Predict Channel
-        val predict     = Flipped(Decoupled(UInt(32.W)))
+        val predict     = Flipped(Decoupled(new memory_request(parameters)))
 
         // Commit Channel 
         val commit      = Input(new commit(parameters))
@@ -153,7 +153,7 @@ class BP(parameters:Parameters) extends Module{
 
     // predict port
     gshare.io.predict_GHR               := io.GHR
-    gshare.io.predict_PC                := io.predict.bits
+    gshare.io.predict_PC                := io.predict.bits.addr
     gshare.io.predict_valid             := io.predict.valid
 
     // commit port
@@ -167,7 +167,7 @@ class BP(parameters:Parameters) extends Module{
     // Reminder: BTB only updates on taken branches...
 
     // predict port
-    BTB.io.predict_PC                       := io.predict.bits
+    BTB.io.predict_PC                       := io.predict.bits.addr
     BTB.io.predict_valid                    := io.predict.valid
 
 

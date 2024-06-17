@@ -12,7 +12,7 @@ module MEMFU(
   input         io_FU_input_bits_decoded_instruction_RS1_valid,
   input  [5:0]  io_FU_input_bits_decoded_instruction_RS2,
   input         io_FU_input_bits_decoded_instruction_RS2_valid,
-  input  [31:0] io_FU_input_bits_decoded_instruction_IMM,
+  input  [20:0] io_FU_input_bits_decoded_instruction_IMM,
   input  [2:0]  io_FU_input_bits_decoded_instruction_FUNCT3,
   input  [3:0]  io_FU_input_bits_decoded_instruction_packet_index,
   input  [5:0]  io_FU_input_bits_decoded_instruction_ROB_index,
@@ -52,7 +52,7 @@ module MEMFU(
 
   reg         memfu_state;
   reg  [5:0]  FU_input_bits_reg_decoded_instruction_RD;
-  reg  [31:0] FU_input_bits_reg_decoded_instruction_IMM;
+  reg  [20:0] FU_input_bits_reg_decoded_instruction_IMM;
   reg  [2:0]  FU_input_bits_reg_decoded_instruction_FUNCT3;
   reg         FU_input_bits_reg_decoded_instruction_IS_LOAD;
   reg         FU_input_bits_reg_decoded_instruction_IS_STORE;
@@ -88,7 +88,7 @@ module MEMFU(
     if (reset) begin
       memfu_state <= 1'h0;
       FU_input_bits_reg_decoded_instruction_RD <= 6'h0;
-      FU_input_bits_reg_decoded_instruction_IMM <= 32'h0;
+      FU_input_bits_reg_decoded_instruction_IMM <= 21'h0;
       FU_input_bits_reg_decoded_instruction_FUNCT3 <= 3'h0;
       FU_input_bits_reg_decoded_instruction_IS_LOAD <= 1'h0;
       FU_input_bits_reg_decoded_instruction_IS_STORE <= 1'h0;
@@ -105,7 +105,7 @@ module MEMFU(
         memfu_state <= ~_GEN_0 & memfu_state;
         if (_GEN_0) begin
           FU_input_bits_reg_decoded_instruction_RD <= 6'h0;
-          FU_input_bits_reg_decoded_instruction_IMM <= 32'h0;
+          FU_input_bits_reg_decoded_instruction_IMM <= 21'h0;
           FU_input_bits_reg_decoded_instruction_FUNCT3 <= 3'h0;
           FU_input_bits_reg_RS1_data <= 32'h0;
           FU_input_bits_reg_RS2_data <= 32'h0;
@@ -167,9 +167,10 @@ module MEMFU(
   assign io_memory_request_valid = FU_input_valid;
   assign io_memory_request_bits_addr =
     (memfu_state ? FU_input_bits_reg_RS1_data : io_FU_input_bits_RS1_data)
-    + (memfu_state
+    + {11'h0,
+       memfu_state
          ? FU_input_bits_reg_decoded_instruction_IMM
-         : io_FU_input_bits_decoded_instruction_IMM);
+         : io_FU_input_bits_decoded_instruction_IMM};
   assign io_memory_request_bits_wr_data =
     IS_STORE & _LW_T & FU_input_valid
       ? FU_input_RS2_data

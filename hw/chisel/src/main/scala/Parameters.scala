@@ -79,6 +79,11 @@ case class Parameters(
 
 
 
+  speculative:Boolean = true, 
+
+
+
+
 
 
   // Be careful with these parameters. They are likely bugged

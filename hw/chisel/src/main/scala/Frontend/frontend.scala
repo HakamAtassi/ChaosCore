@@ -124,8 +124,9 @@ class frontend(parameters:Parameters) extends Module{
     val io = IO(new Bundle{
 
         // DRAM CHANNELS //
-        val DRAM_resp                       =   Flipped(Decoupled(Input(new DRAM_resp(parameters))))  // FROM DRAM
-        val DRAM_request                    =   Decoupled(new DRAM_request(parameters))               // TO DRAM
+        val memory_request                    =   Decoupled(new memory_request(parameters))
+        val memory_response                   =   Flipped(Decoupled(new fetch_packet(parameters)))
+        
 
         // COMMIT // 
         val commit                          =   Input(new commit(parameters))
@@ -157,11 +158,10 @@ class frontend(parameters:Parameters) extends Module{
 
     val instruction_fetch   = Module(new instruction_fetch(parameters))
     val decoders            = Module(new fetch_packet_decoder(parameters))
-    //val instruction_queue   = Module(new instruction_queue(new decoded_instruction(parameters), parameters))
 
-    val instruction_queue   =   Module(new Q(new decoded_fetch_packet(parameters), depth = 16))
+    val instruction_queue   = Module(new Q(new decoded_fetch_packet(parameters), depth = 16))
 
-    val rename             = Module(new rename(parameters))
+    val rename              = Module(new rename(parameters))
 
 
     ///////////////////////
@@ -169,8 +169,8 @@ class frontend(parameters:Parameters) extends Module{
     ///////////////////////
 
     instruction_fetch.io.commit               <>   io.commit
-    instruction_fetch.io.DRAM_resp            <>   io.DRAM_resp
-    instruction_fetch.io.DRAM_request         <>   io.DRAM_request
+    instruction_fetch.io.memory_response      <>   io.memory_response
+    instruction_fetch.io.memory_request       <>   io.memory_request
 
     ///////////////
     // FTQ INPUT //
@@ -205,7 +205,7 @@ class frontend(parameters:Parameters) extends Module{
 
     rename.io.decoded_fetch_packet <> instruction_queue.io.out
 
-    instruction_queue.io.clear := DontCare
+    instruction_queue.io.flush := DontCare  // FIXME: pass flush condition from frontend or something
 
 
     // In a single cycle, both a "create checkpoint" and "restore checkpoint" can be requested

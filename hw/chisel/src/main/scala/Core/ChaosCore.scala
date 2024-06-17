@@ -45,25 +45,14 @@ class ChaosCore(parameters:Parameters) extends Module{
         ////////////////////////////
         // I$ FRONTEND MEM ACCESS //
         ////////////////////////////
-
-        // From DRAM
-        val frontend_DRAM_resp               =   Flipped(Decoupled(new DRAM_resp(parameters)))
-        
-        // To DRAM
-        val frontend_DRAM_request            =   Decoupled(new DRAM_request(parameters))
+        val frontend_memory_response            =   Flipped(Decoupled(new fetch_packet(parameters)))
+        val frontend_memory_request             =   Decoupled(new memory_request(parameters))
 
         ///////////////////////////
         // D$ BACKEND MEM ACCESS //
         ///////////////////////////
-
-        //// From DRAM
-        //val backend_DRAM_resp               =   Flipped(Decoupled(new DRAM_resp(parameters)))
-        //// To DRAM
-        //val backend_DRAM_request            =   Decoupled(new DRAM_request(parameters))
-
-
-        val memory_response     =   Flipped(Decoupled(new memory_response(parameters))) // From MEM
-        val memory_request      =   Decoupled(new memory_request(parameters))     // To MEM
+        val backend_memory_response             =   Flipped(Decoupled(new memory_response(parameters)))
+        val backend_memory_request              =   Decoupled(new memory_request(parameters))
     })
 
 
@@ -85,8 +74,8 @@ class ChaosCore(parameters:Parameters) extends Module{
     // BACKEND <> DRAM //
     /////////////////////
 
-    backend.io.memory_response    <>  io.memory_response
-    backend.io.memory_request     <>  io.memory_request
+    backend.io.memory_response    <>  io.backend_memory_response
+    backend.io.memory_request     <>  io.backend_memory_request
 
 
     ////////////////////
@@ -105,8 +94,8 @@ class ChaosCore(parameters:Parameters) extends Module{
     // FRONTEND <> DRAM //
     //////////////////////
 
-    frontend.io.DRAM_resp       <>  io.frontend_DRAM_resp
-    frontend.io.DRAM_request    <>  io.frontend_DRAM_request
+    frontend.io.memory_request       <>  io.frontend_memory_request
+    frontend.io.memory_response      <>  io.frontend_memory_response
 
     /////////////////////
     // FRONTEND <> BRU //

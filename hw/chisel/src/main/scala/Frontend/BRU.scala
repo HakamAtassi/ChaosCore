@@ -63,11 +63,11 @@ class BRU(parameters:Parameters) extends Module{
     io.commit.NEXT      := io.FTQ.NEXT
     io.commit.RAT_IDX   := io.ROB_output.bits.RAT_IDX
     io.commit.ROB_index := io.ROB_output.bits.ROB_index
+    io.commit.fetch_PC  := io.ROB_output.bits.fetch_PC //io.FTQ.fetch_PC
 
     io.commit.T_NT                  := io.FTQ.T_NT
     io.commit.br_type               := io.FTQ.br_type
     io.commit.fetch_packet_index    := DontCare
-    io.commit.fetch_PC              := io.FTQ.fetch_PC
 
     io.commit.expected_PC       := io.FTQ.resolved_PC
 

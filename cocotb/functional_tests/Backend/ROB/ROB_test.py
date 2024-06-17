@@ -27,55 +27,7 @@ def test_reset():
         configs["testcase"] = "test_reset"
         run(**configs)
 
-def test_print_ROB():
-        configs["testcase"] = "test_print_ROB"
-        run(**configs)
-
-def test_write_1():
-        configs["testcase"] = "test_write_1"
-        run(**configs)
-
-def test_write_4():
-        configs["testcase"] = "test_write_4"
-        run(**configs)
-
-def test_many_writes():
-        configs["testcase"] = "test_many_writes"
-        run(**configs)
-
-def test_many_full():
-        configs["testcase"] = "test_many_full"
-        run(**configs)
-
-def test_FU_all_valid():
-        configs["testcase"] = "test_FU_all_valid"
-        run(**configs)
-
-def test_FU_not_all_valid():
-        configs["testcase"] = "test_FU_not_all_valid"
-        run(**configs)
-
-def test_FU_all_valid_diff_rows():
-        configs["testcase"] = "test_FU_all_valid_diff_rows"
-        run(**configs)
-
-def test_FU_all_valid_single_bank():
-        configs["testcase"] = "test_FU_all_valid_single_bank"
-        run(**configs)
-
-def test_basic_commit():
-        configs["testcase"] = "test_basic_commit"
-        run(**configs)
-
-def test_allocate_rob_index():
-        configs["testcase"] = "test_allocate_rob_index"
-        run(**configs)
-
-def test_commit_rob_index():
-        configs["testcase"] = "test_commit_rob_index"
-        run(**configs)
-
-def test_WB_port_B():
-        configs["testcase"] = "test_WB_port_B"
+def test_fuzz_allocate():
+        configs["testcase"] = "test_fuzz_allocate"
         run(**configs)
 

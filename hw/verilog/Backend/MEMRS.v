@@ -12,7 +12,7 @@ module MEMRS(
   input         io_backend_packet_0_bits_RS1_valid,
   input  [5:0]  io_backend_packet_0_bits_RS2,
   input         io_backend_packet_0_bits_RS2_valid,
-  input  [31:0] io_backend_packet_0_bits_IMM,
+  input  [20:0] io_backend_packet_0_bits_IMM,
   input  [2:0]  io_backend_packet_0_bits_FUNCT3,
   input  [3:0]  io_backend_packet_0_bits_packet_index,
   input  [5:0]  io_backend_packet_0_bits_ROB_index,
@@ -37,7 +37,7 @@ module MEMRS(
   input         io_backend_packet_1_bits_RS1_valid,
   input  [5:0]  io_backend_packet_1_bits_RS2,
   input         io_backend_packet_1_bits_RS2_valid,
-  input  [31:0] io_backend_packet_1_bits_IMM,
+  input  [20:0] io_backend_packet_1_bits_IMM,
   input  [2:0]  io_backend_packet_1_bits_FUNCT3,
   input  [3:0]  io_backend_packet_1_bits_packet_index,
   input  [5:0]  io_backend_packet_1_bits_ROB_index,
@@ -62,7 +62,7 @@ module MEMRS(
   input         io_backend_packet_2_bits_RS1_valid,
   input  [5:0]  io_backend_packet_2_bits_RS2,
   input         io_backend_packet_2_bits_RS2_valid,
-  input  [31:0] io_backend_packet_2_bits_IMM,
+  input  [20:0] io_backend_packet_2_bits_IMM,
   input  [2:0]  io_backend_packet_2_bits_FUNCT3,
   input  [3:0]  io_backend_packet_2_bits_packet_index,
   input  [5:0]  io_backend_packet_2_bits_ROB_index,
@@ -87,7 +87,7 @@ module MEMRS(
   input         io_backend_packet_3_bits_RS1_valid,
   input  [5:0]  io_backend_packet_3_bits_RS2,
   input         io_backend_packet_3_bits_RS2_valid,
-  input  [31:0] io_backend_packet_3_bits_IMM,
+  input  [20:0] io_backend_packet_3_bits_IMM,
   input  [2:0]  io_backend_packet_3_bits_FUNCT3,
   input  [3:0]  io_backend_packet_3_bits_packet_index,
   input  [5:0]  io_backend_packet_3_bits_ROB_index,
@@ -164,7 +164,7 @@ module MEMRS(
   output        io_RF_inputs_0_bits_RS1_valid,
   output [5:0]  io_RF_inputs_0_bits_RS2,
   output        io_RF_inputs_0_bits_RS2_valid,
-  output [31:0] io_RF_inputs_0_bits_IMM,
+  output [20:0] io_RF_inputs_0_bits_IMM,
   output [2:0]  io_RF_inputs_0_bits_FUNCT3,
   output [3:0]  io_RF_inputs_0_bits_packet_index,
   output [5:0]  io_RF_inputs_0_bits_ROB_index,
@@ -189,7 +189,7 @@ module MEMRS(
   output        io_RF_inputs_1_bits_RS1_valid,
   output [5:0]  io_RF_inputs_1_bits_RS2,
   output        io_RF_inputs_1_bits_RS2_valid,
-  output [31:0] io_RF_inputs_1_bits_IMM,
+  output [20:0] io_RF_inputs_1_bits_IMM,
   output [2:0]  io_RF_inputs_1_bits_FUNCT3,
   output [3:0]  io_RF_inputs_1_bits_packet_index,
   output [5:0]  io_RF_inputs_1_bits_ROB_index,
@@ -214,7 +214,7 @@ module MEMRS(
   output        io_RF_inputs_2_bits_RS1_valid,
   output [5:0]  io_RF_inputs_2_bits_RS2,
   output        io_RF_inputs_2_bits_RS2_valid,
-  output [31:0] io_RF_inputs_2_bits_IMM,
+  output [20:0] io_RF_inputs_2_bits_IMM,
   output [2:0]  io_RF_inputs_2_bits_FUNCT3,
   output [3:0]  io_RF_inputs_2_bits_packet_index,
   output [5:0]  io_RF_inputs_2_bits_ROB_index,
@@ -239,7 +239,7 @@ module MEMRS(
   output        io_RF_inputs_3_bits_RS1_valid,
   output [5:0]  io_RF_inputs_3_bits_RS2,
   output        io_RF_inputs_3_bits_RS2_valid,
-  output [31:0] io_RF_inputs_3_bits_IMM,
+  output [20:0] io_RF_inputs_3_bits_IMM,
   output [2:0]  io_RF_inputs_3_bits_FUNCT3,
   output [3:0]  io_RF_inputs_3_bits_packet_index,
   output [5:0]  io_RF_inputs_3_bits_ROB_index,
@@ -264,7 +264,7 @@ module MEMRS(
   reg               reservation_station_0_decoded_instruction_RS1_valid;
   reg  [5:0]        reservation_station_0_decoded_instruction_RS2;
   reg               reservation_station_0_decoded_instruction_RS2_valid;
-  reg  [31:0]       reservation_station_0_decoded_instruction_IMM;
+  reg  [20:0]       reservation_station_0_decoded_instruction_IMM;
   reg  [2:0]        reservation_station_0_decoded_instruction_FUNCT3;
   reg  [3:0]        reservation_station_0_decoded_instruction_packet_index;
   reg  [5:0]        reservation_station_0_decoded_instruction_ROB_index;
@@ -289,7 +289,7 @@ module MEMRS(
   reg               reservation_station_1_decoded_instruction_RS1_valid;
   reg  [5:0]        reservation_station_1_decoded_instruction_RS2;
   reg               reservation_station_1_decoded_instruction_RS2_valid;
-  reg  [31:0]       reservation_station_1_decoded_instruction_IMM;
+  reg  [20:0]       reservation_station_1_decoded_instruction_IMM;
   reg  [2:0]        reservation_station_1_decoded_instruction_FUNCT3;
   reg  [3:0]        reservation_station_1_decoded_instruction_packet_index;
   reg  [5:0]        reservation_station_1_decoded_instruction_ROB_index;
@@ -314,7 +314,7 @@ module MEMRS(
   reg               reservation_station_2_decoded_instruction_RS1_valid;
   reg  [5:0]        reservation_station_2_decoded_instruction_RS2;
   reg               reservation_station_2_decoded_instruction_RS2_valid;
-  reg  [31:0]       reservation_station_2_decoded_instruction_IMM;
+  reg  [20:0]       reservation_station_2_decoded_instruction_IMM;
   reg  [2:0]        reservation_station_2_decoded_instruction_FUNCT3;
   reg  [3:0]        reservation_station_2_decoded_instruction_packet_index;
   reg  [5:0]        reservation_station_2_decoded_instruction_ROB_index;
@@ -339,7 +339,7 @@ module MEMRS(
   reg               reservation_station_3_decoded_instruction_RS1_valid;
   reg  [5:0]        reservation_station_3_decoded_instruction_RS2;
   reg               reservation_station_3_decoded_instruction_RS2_valid;
-  reg  [31:0]       reservation_station_3_decoded_instruction_IMM;
+  reg  [20:0]       reservation_station_3_decoded_instruction_IMM;
   reg  [2:0]        reservation_station_3_decoded_instruction_FUNCT3;
   reg  [3:0]        reservation_station_3_decoded_instruction_packet_index;
   reg  [5:0]        reservation_station_3_decoded_instruction_ROB_index;
@@ -364,7 +364,7 @@ module MEMRS(
   reg               reservation_station_4_decoded_instruction_RS1_valid;
   reg  [5:0]        reservation_station_4_decoded_instruction_RS2;
   reg               reservation_station_4_decoded_instruction_RS2_valid;
-  reg  [31:0]       reservation_station_4_decoded_instruction_IMM;
+  reg  [20:0]       reservation_station_4_decoded_instruction_IMM;
   reg  [2:0]        reservation_station_4_decoded_instruction_FUNCT3;
   reg  [3:0]        reservation_station_4_decoded_instruction_packet_index;
   reg  [5:0]        reservation_station_4_decoded_instruction_ROB_index;
@@ -389,7 +389,7 @@ module MEMRS(
   reg               reservation_station_5_decoded_instruction_RS1_valid;
   reg  [5:0]        reservation_station_5_decoded_instruction_RS2;
   reg               reservation_station_5_decoded_instruction_RS2_valid;
-  reg  [31:0]       reservation_station_5_decoded_instruction_IMM;
+  reg  [20:0]       reservation_station_5_decoded_instruction_IMM;
   reg  [2:0]        reservation_station_5_decoded_instruction_FUNCT3;
   reg  [3:0]        reservation_station_5_decoded_instruction_packet_index;
   reg  [5:0]        reservation_station_5_decoded_instruction_ROB_index;
@@ -414,7 +414,7 @@ module MEMRS(
   reg               reservation_station_6_decoded_instruction_RS1_valid;
   reg  [5:0]        reservation_station_6_decoded_instruction_RS2;
   reg               reservation_station_6_decoded_instruction_RS2_valid;
-  reg  [31:0]       reservation_station_6_decoded_instruction_IMM;
+  reg  [20:0]       reservation_station_6_decoded_instruction_IMM;
   reg  [2:0]        reservation_station_6_decoded_instruction_FUNCT3;
   reg  [3:0]        reservation_station_6_decoded_instruction_packet_index;
   reg  [5:0]        reservation_station_6_decoded_instruction_ROB_index;
@@ -439,7 +439,7 @@ module MEMRS(
   reg               reservation_station_7_decoded_instruction_RS1_valid;
   reg  [5:0]        reservation_station_7_decoded_instruction_RS2;
   reg               reservation_station_7_decoded_instruction_RS2_valid;
-  reg  [31:0]       reservation_station_7_decoded_instruction_IMM;
+  reg  [20:0]       reservation_station_7_decoded_instruction_IMM;
   reg  [2:0]        reservation_station_7_decoded_instruction_FUNCT3;
   reg  [3:0]        reservation_station_7_decoded_instruction_packet_index;
   reg  [5:0]        reservation_station_7_decoded_instruction_ROB_index;
@@ -464,7 +464,7 @@ module MEMRS(
   reg               reservation_station_8_decoded_instruction_RS1_valid;
   reg  [5:0]        reservation_station_8_decoded_instruction_RS2;
   reg               reservation_station_8_decoded_instruction_RS2_valid;
-  reg  [31:0]       reservation_station_8_decoded_instruction_IMM;
+  reg  [20:0]       reservation_station_8_decoded_instruction_IMM;
   reg  [2:0]        reservation_station_8_decoded_instruction_FUNCT3;
   reg  [3:0]        reservation_station_8_decoded_instruction_packet_index;
   reg  [5:0]        reservation_station_8_decoded_instruction_ROB_index;
@@ -489,7 +489,7 @@ module MEMRS(
   reg               reservation_station_9_decoded_instruction_RS1_valid;
   reg  [5:0]        reservation_station_9_decoded_instruction_RS2;
   reg               reservation_station_9_decoded_instruction_RS2_valid;
-  reg  [31:0]       reservation_station_9_decoded_instruction_IMM;
+  reg  [20:0]       reservation_station_9_decoded_instruction_IMM;
   reg  [2:0]        reservation_station_9_decoded_instruction_FUNCT3;
   reg  [3:0]        reservation_station_9_decoded_instruction_packet_index;
   reg  [5:0]        reservation_station_9_decoded_instruction_ROB_index;
@@ -514,7 +514,7 @@ module MEMRS(
   reg               reservation_station_10_decoded_instruction_RS1_valid;
   reg  [5:0]        reservation_station_10_decoded_instruction_RS2;
   reg               reservation_station_10_decoded_instruction_RS2_valid;
-  reg  [31:0]       reservation_station_10_decoded_instruction_IMM;
+  reg  [20:0]       reservation_station_10_decoded_instruction_IMM;
   reg  [2:0]        reservation_station_10_decoded_instruction_FUNCT3;
   reg  [3:0]        reservation_station_10_decoded_instruction_packet_index;
   reg  [5:0]        reservation_station_10_decoded_instruction_ROB_index;
@@ -539,7 +539,7 @@ module MEMRS(
   reg               reservation_station_11_decoded_instruction_RS1_valid;
   reg  [5:0]        reservation_station_11_decoded_instruction_RS2;
   reg               reservation_station_11_decoded_instruction_RS2_valid;
-  reg  [31:0]       reservation_station_11_decoded_instruction_IMM;
+  reg  [20:0]       reservation_station_11_decoded_instruction_IMM;
   reg  [2:0]        reservation_station_11_decoded_instruction_FUNCT3;
   reg  [3:0]        reservation_station_11_decoded_instruction_packet_index;
   reg  [5:0]        reservation_station_11_decoded_instruction_ROB_index;
@@ -564,7 +564,7 @@ module MEMRS(
   reg               reservation_station_12_decoded_instruction_RS1_valid;
   reg  [5:0]        reservation_station_12_decoded_instruction_RS2;
   reg               reservation_station_12_decoded_instruction_RS2_valid;
-  reg  [31:0]       reservation_station_12_decoded_instruction_IMM;
+  reg  [20:0]       reservation_station_12_decoded_instruction_IMM;
   reg  [2:0]        reservation_station_12_decoded_instruction_FUNCT3;
   reg  [3:0]        reservation_station_12_decoded_instruction_packet_index;
   reg  [5:0]        reservation_station_12_decoded_instruction_ROB_index;
@@ -589,7 +589,7 @@ module MEMRS(
   reg               reservation_station_13_decoded_instruction_RS1_valid;
   reg  [5:0]        reservation_station_13_decoded_instruction_RS2;
   reg               reservation_station_13_decoded_instruction_RS2_valid;
-  reg  [31:0]       reservation_station_13_decoded_instruction_IMM;
+  reg  [20:0]       reservation_station_13_decoded_instruction_IMM;
   reg  [2:0]        reservation_station_13_decoded_instruction_FUNCT3;
   reg  [3:0]        reservation_station_13_decoded_instruction_packet_index;
   reg  [5:0]        reservation_station_13_decoded_instruction_ROB_index;
@@ -614,7 +614,7 @@ module MEMRS(
   reg               reservation_station_14_decoded_instruction_RS1_valid;
   reg  [5:0]        reservation_station_14_decoded_instruction_RS2;
   reg               reservation_station_14_decoded_instruction_RS2_valid;
-  reg  [31:0]       reservation_station_14_decoded_instruction_IMM;
+  reg  [20:0]       reservation_station_14_decoded_instruction_IMM;
   reg  [2:0]        reservation_station_14_decoded_instruction_FUNCT3;
   reg  [3:0]        reservation_station_14_decoded_instruction_packet_index;
   reg  [5:0]        reservation_station_14_decoded_instruction_ROB_index;
@@ -639,7 +639,7 @@ module MEMRS(
   reg               reservation_station_15_decoded_instruction_RS1_valid;
   reg  [5:0]        reservation_station_15_decoded_instruction_RS2;
   reg               reservation_station_15_decoded_instruction_RS2_valid;
-  reg  [31:0]       reservation_station_15_decoded_instruction_IMM;
+  reg  [20:0]       reservation_station_15_decoded_instruction_IMM;
   reg  [2:0]        reservation_station_15_decoded_instruction_FUNCT3;
   reg  [3:0]        reservation_station_15_decoded_instruction_packet_index;
   reg  [5:0]        reservation_station_15_decoded_instruction_ROB_index;
@@ -1085,7 +1085,7 @@ module MEMRS(
      {reservation_station_2_decoded_instruction_RS2_valid},
      {reservation_station_1_decoded_instruction_RS2_valid},
      {reservation_station_0_decoded_instruction_RS2_valid}};
-  wire [15:0][31:0] _GEN_7 =
+  wire [15:0][20:0] _GEN_7 =
     {{reservation_station_15_decoded_instruction_IMM},
      {reservation_station_14_decoded_instruction_IMM},
      {reservation_station_13_decoded_instruction_IMM},
@@ -1441,7 +1441,7 @@ module MEMRS(
       reservation_station_0_decoded_instruction_RS1_valid <= 1'h0;
       reservation_station_0_decoded_instruction_RS2 <= 6'h0;
       reservation_station_0_decoded_instruction_RS2_valid <= 1'h0;
-      reservation_station_0_decoded_instruction_IMM <= 32'h0;
+      reservation_station_0_decoded_instruction_IMM <= 21'h0;
       reservation_station_0_decoded_instruction_FUNCT3 <= 3'h0;
       reservation_station_0_decoded_instruction_packet_index <= 4'h0;
       reservation_station_0_decoded_instruction_ROB_index <= 6'h0;
@@ -1466,7 +1466,7 @@ module MEMRS(
       reservation_station_1_decoded_instruction_RS1_valid <= 1'h0;
       reservation_station_1_decoded_instruction_RS2 <= 6'h0;
       reservation_station_1_decoded_instruction_RS2_valid <= 1'h0;
-      reservation_station_1_decoded_instruction_IMM <= 32'h0;
+      reservation_station_1_decoded_instruction_IMM <= 21'h0;
       reservation_station_1_decoded_instruction_FUNCT3 <= 3'h0;
       reservation_station_1_decoded_instruction_packet_index <= 4'h0;
       reservation_station_1_decoded_instruction_ROB_index <= 6'h0;
@@ -1491,7 +1491,7 @@ module MEMRS(
       reservation_station_2_decoded_instruction_RS1_valid <= 1'h0;
       reservation_station_2_decoded_instruction_RS2 <= 6'h0;
       reservation_station_2_decoded_instruction_RS2_valid <= 1'h0;
-      reservation_station_2_decoded_instruction_IMM <= 32'h0;
+      reservation_station_2_decoded_instruction_IMM <= 21'h0;
       reservation_station_2_decoded_instruction_FUNCT3 <= 3'h0;
       reservation_station_2_decoded_instruction_packet_index <= 4'h0;
       reservation_station_2_decoded_instruction_ROB_index <= 6'h0;
@@ -1516,7 +1516,7 @@ module MEMRS(
       reservation_station_3_decoded_instruction_RS1_valid <= 1'h0;
       reservation_station_3_decoded_instruction_RS2 <= 6'h0;
       reservation_station_3_decoded_instruction_RS2_valid <= 1'h0;
-      reservation_station_3_decoded_instruction_IMM <= 32'h0;
+      reservation_station_3_decoded_instruction_IMM <= 21'h0;
       reservation_station_3_decoded_instruction_FUNCT3 <= 3'h0;
       reservation_station_3_decoded_instruction_packet_index <= 4'h0;
       reservation_station_3_decoded_instruction_ROB_index <= 6'h0;
@@ -1541,7 +1541,7 @@ module MEMRS(
       reservation_station_4_decoded_instruction_RS1_valid <= 1'h0;
       reservation_station_4_decoded_instruction_RS2 <= 6'h0;
       reservation_station_4_decoded_instruction_RS2_valid <= 1'h0;
-      reservation_station_4_decoded_instruction_IMM <= 32'h0;
+      reservation_station_4_decoded_instruction_IMM <= 21'h0;
       reservation_station_4_decoded_instruction_FUNCT3 <= 3'h0;
       reservation_station_4_decoded_instruction_packet_index <= 4'h0;
       reservation_station_4_decoded_instruction_ROB_index <= 6'h0;
@@ -1566,7 +1566,7 @@ module MEMRS(
       reservation_station_5_decoded_instruction_RS1_valid <= 1'h0;
       reservation_station_5_decoded_instruction_RS2 <= 6'h0;
       reservation_station_5_decoded_instruction_RS2_valid <= 1'h0;
-      reservation_station_5_decoded_instruction_IMM <= 32'h0;
+      reservation_station_5_decoded_instruction_IMM <= 21'h0;
       reservation_station_5_decoded_instruction_FUNCT3 <= 3'h0;
       reservation_station_5_decoded_instruction_packet_index <= 4'h0;
       reservation_station_5_decoded_instruction_ROB_index <= 6'h0;
@@ -1591,7 +1591,7 @@ module MEMRS(
       reservation_station_6_decoded_instruction_RS1_valid <= 1'h0;
       reservation_station_6_decoded_instruction_RS2 <= 6'h0;
       reservation_station_6_decoded_instruction_RS2_valid <= 1'h0;
-      reservation_station_6_decoded_instruction_IMM <= 32'h0;
+      reservation_station_6_decoded_instruction_IMM <= 21'h0;
       reservation_station_6_decoded_instruction_FUNCT3 <= 3'h0;
       reservation_station_6_decoded_instruction_packet_index <= 4'h0;
       reservation_station_6_decoded_instruction_ROB_index <= 6'h0;
@@ -1616,7 +1616,7 @@ module MEMRS(
       reservation_station_7_decoded_instruction_RS1_valid <= 1'h0;
       reservation_station_7_decoded_instruction_RS2 <= 6'h0;
       reservation_station_7_decoded_instruction_RS2_valid <= 1'h0;
-      reservation_station_7_decoded_instruction_IMM <= 32'h0;
+      reservation_station_7_decoded_instruction_IMM <= 21'h0;
       reservation_station_7_decoded_instruction_FUNCT3 <= 3'h0;
       reservation_station_7_decoded_instruction_packet_index <= 4'h0;
       reservation_station_7_decoded_instruction_ROB_index <= 6'h0;
@@ -1641,7 +1641,7 @@ module MEMRS(
       reservation_station_8_decoded_instruction_RS1_valid <= 1'h0;
       reservation_station_8_decoded_instruction_RS2 <= 6'h0;
       reservation_station_8_decoded_instruction_RS2_valid <= 1'h0;
-      reservation_station_8_decoded_instruction_IMM <= 32'h0;
+      reservation_station_8_decoded_instruction_IMM <= 21'h0;
       reservation_station_8_decoded_instruction_FUNCT3 <= 3'h0;
       reservation_station_8_decoded_instruction_packet_index <= 4'h0;
       reservation_station_8_decoded_instruction_ROB_index <= 6'h0;
@@ -1666,7 +1666,7 @@ module MEMRS(
       reservation_station_9_decoded_instruction_RS1_valid <= 1'h0;
       reservation_station_9_decoded_instruction_RS2 <= 6'h0;
       reservation_station_9_decoded_instruction_RS2_valid <= 1'h0;
-      reservation_station_9_decoded_instruction_IMM <= 32'h0;
+      reservation_station_9_decoded_instruction_IMM <= 21'h0;
       reservation_station_9_decoded_instruction_FUNCT3 <= 3'h0;
       reservation_station_9_decoded_instruction_packet_index <= 4'h0;
       reservation_station_9_decoded_instruction_ROB_index <= 6'h0;
@@ -1691,7 +1691,7 @@ module MEMRS(
       reservation_station_10_decoded_instruction_RS1_valid <= 1'h0;
       reservation_station_10_decoded_instruction_RS2 <= 6'h0;
       reservation_station_10_decoded_instruction_RS2_valid <= 1'h0;
-      reservation_station_10_decoded_instruction_IMM <= 32'h0;
+      reservation_station_10_decoded_instruction_IMM <= 21'h0;
       reservation_station_10_decoded_instruction_FUNCT3 <= 3'h0;
       reservation_station_10_decoded_instruction_packet_index <= 4'h0;
       reservation_station_10_decoded_instruction_ROB_index <= 6'h0;
@@ -1716,7 +1716,7 @@ module MEMRS(
       reservation_station_11_decoded_instruction_RS1_valid <= 1'h0;
       reservation_station_11_decoded_instruction_RS2 <= 6'h0;
       reservation_station_11_decoded_instruction_RS2_valid <= 1'h0;
-      reservation_station_11_decoded_instruction_IMM <= 32'h0;
+      reservation_station_11_decoded_instruction_IMM <= 21'h0;
       reservation_station_11_decoded_instruction_FUNCT3 <= 3'h0;
       reservation_station_11_decoded_instruction_packet_index <= 4'h0;
       reservation_station_11_decoded_instruction_ROB_index <= 6'h0;
@@ -1741,7 +1741,7 @@ module MEMRS(
       reservation_station_12_decoded_instruction_RS1_valid <= 1'h0;
       reservation_station_12_decoded_instruction_RS2 <= 6'h0;
       reservation_station_12_decoded_instruction_RS2_valid <= 1'h0;
-      reservation_station_12_decoded_instruction_IMM <= 32'h0;
+      reservation_station_12_decoded_instruction_IMM <= 21'h0;
       reservation_station_12_decoded_instruction_FUNCT3 <= 3'h0;
       reservation_station_12_decoded_instruction_packet_index <= 4'h0;
       reservation_station_12_decoded_instruction_ROB_index <= 6'h0;
@@ -1766,7 +1766,7 @@ module MEMRS(
       reservation_station_13_decoded_instruction_RS1_valid <= 1'h0;
       reservation_station_13_decoded_instruction_RS2 <= 6'h0;
       reservation_station_13_decoded_instruction_RS2_valid <= 1'h0;
-      reservation_station_13_decoded_instruction_IMM <= 32'h0;
+      reservation_station_13_decoded_instruction_IMM <= 21'h0;
       reservation_station_13_decoded_instruction_FUNCT3 <= 3'h0;
       reservation_station_13_decoded_instruction_packet_index <= 4'h0;
       reservation_station_13_decoded_instruction_ROB_index <= 6'h0;
@@ -1791,7 +1791,7 @@ module MEMRS(
       reservation_station_14_decoded_instruction_RS1_valid <= 1'h0;
       reservation_station_14_decoded_instruction_RS2 <= 6'h0;
       reservation_station_14_decoded_instruction_RS2_valid <= 1'h0;
-      reservation_station_14_decoded_instruction_IMM <= 32'h0;
+      reservation_station_14_decoded_instruction_IMM <= 21'h0;
       reservation_station_14_decoded_instruction_FUNCT3 <= 3'h0;
       reservation_station_14_decoded_instruction_packet_index <= 4'h0;
       reservation_station_14_decoded_instruction_ROB_index <= 6'h0;
@@ -1816,7 +1816,7 @@ module MEMRS(
       reservation_station_15_decoded_instruction_RS1_valid <= 1'h0;
       reservation_station_15_decoded_instruction_RS2 <= 6'h0;
       reservation_station_15_decoded_instruction_RS2_valid <= 1'h0;
-      reservation_station_15_decoded_instruction_IMM <= 32'h0;
+      reservation_station_15_decoded_instruction_IMM <= 21'h0;
       reservation_station_15_decoded_instruction_FUNCT3 <= 3'h0;
       reservation_station_15_decoded_instruction_packet_index <= 4'h0;
       reservation_station_15_decoded_instruction_ROB_index <= 6'h0;
@@ -2143,7 +2143,7 @@ module MEMRS(
         reservation_station_0_decoded_instruction_RD <= 6'h0;
         reservation_station_0_decoded_instruction_RS1 <= 6'h0;
         reservation_station_0_decoded_instruction_RS2 <= 6'h0;
-        reservation_station_0_decoded_instruction_IMM <= 32'h0;
+        reservation_station_0_decoded_instruction_IMM <= 21'h0;
         reservation_station_0_decoded_instruction_FUNCT3 <= 3'h0;
         reservation_station_0_decoded_instruction_packet_index <= 4'h0;
         reservation_station_0_decoded_instruction_ROB_index <= 6'h0;
@@ -2384,7 +2384,7 @@ module MEMRS(
         reservation_station_1_decoded_instruction_RD <= 6'h0;
         reservation_station_1_decoded_instruction_RS1 <= 6'h0;
         reservation_station_1_decoded_instruction_RS2 <= 6'h0;
-        reservation_station_1_decoded_instruction_IMM <= 32'h0;
+        reservation_station_1_decoded_instruction_IMM <= 21'h0;
         reservation_station_1_decoded_instruction_FUNCT3 <= 3'h0;
         reservation_station_1_decoded_instruction_packet_index <= 4'h0;
         reservation_station_1_decoded_instruction_ROB_index <= 6'h0;
@@ -2625,7 +2625,7 @@ module MEMRS(
         reservation_station_2_decoded_instruction_RD <= 6'h0;
         reservation_station_2_decoded_instruction_RS1 <= 6'h0;
         reservation_station_2_decoded_instruction_RS2 <= 6'h0;
-        reservation_station_2_decoded_instruction_IMM <= 32'h0;
+        reservation_station_2_decoded_instruction_IMM <= 21'h0;
         reservation_station_2_decoded_instruction_FUNCT3 <= 3'h0;
         reservation_station_2_decoded_instruction_packet_index <= 4'h0;
         reservation_station_2_decoded_instruction_ROB_index <= 6'h0;
@@ -2866,7 +2866,7 @@ module MEMRS(
         reservation_station_3_decoded_instruction_RD <= 6'h0;
         reservation_station_3_decoded_instruction_RS1 <= 6'h0;
         reservation_station_3_decoded_instruction_RS2 <= 6'h0;
-        reservation_station_3_decoded_instruction_IMM <= 32'h0;
+        reservation_station_3_decoded_instruction_IMM <= 21'h0;
         reservation_station_3_decoded_instruction_FUNCT3 <= 3'h0;
         reservation_station_3_decoded_instruction_packet_index <= 4'h0;
         reservation_station_3_decoded_instruction_ROB_index <= 6'h0;
@@ -3107,7 +3107,7 @@ module MEMRS(
         reservation_station_4_decoded_instruction_RD <= 6'h0;
         reservation_station_4_decoded_instruction_RS1 <= 6'h0;
         reservation_station_4_decoded_instruction_RS2 <= 6'h0;
-        reservation_station_4_decoded_instruction_IMM <= 32'h0;
+        reservation_station_4_decoded_instruction_IMM <= 21'h0;
         reservation_station_4_decoded_instruction_FUNCT3 <= 3'h0;
         reservation_station_4_decoded_instruction_packet_index <= 4'h0;
         reservation_station_4_decoded_instruction_ROB_index <= 6'h0;
@@ -3348,7 +3348,7 @@ module MEMRS(
         reservation_station_5_decoded_instruction_RD <= 6'h0;
         reservation_station_5_decoded_instruction_RS1 <= 6'h0;
         reservation_station_5_decoded_instruction_RS2 <= 6'h0;
-        reservation_station_5_decoded_instruction_IMM <= 32'h0;
+        reservation_station_5_decoded_instruction_IMM <= 21'h0;
         reservation_station_5_decoded_instruction_FUNCT3 <= 3'h0;
         reservation_station_5_decoded_instruction_packet_index <= 4'h0;
         reservation_station_5_decoded_instruction_ROB_index <= 6'h0;
@@ -3589,7 +3589,7 @@ module MEMRS(
         reservation_station_6_decoded_instruction_RD <= 6'h0;
         reservation_station_6_decoded_instruction_RS1 <= 6'h0;
         reservation_station_6_decoded_instruction_RS2 <= 6'h0;
-        reservation_station_6_decoded_instruction_IMM <= 32'h0;
+        reservation_station_6_decoded_instruction_IMM <= 21'h0;
         reservation_station_6_decoded_instruction_FUNCT3 <= 3'h0;
         reservation_station_6_decoded_instruction_packet_index <= 4'h0;
         reservation_station_6_decoded_instruction_ROB_index <= 6'h0;
@@ -3830,7 +3830,7 @@ module MEMRS(
         reservation_station_7_decoded_instruction_RD <= 6'h0;
         reservation_station_7_decoded_instruction_RS1 <= 6'h0;
         reservation_station_7_decoded_instruction_RS2 <= 6'h0;
-        reservation_station_7_decoded_instruction_IMM <= 32'h0;
+        reservation_station_7_decoded_instruction_IMM <= 21'h0;
         reservation_station_7_decoded_instruction_FUNCT3 <= 3'h0;
         reservation_station_7_decoded_instruction_packet_index <= 4'h0;
         reservation_station_7_decoded_instruction_ROB_index <= 6'h0;
@@ -4071,7 +4071,7 @@ module MEMRS(
         reservation_station_8_decoded_instruction_RD <= 6'h0;
         reservation_station_8_decoded_instruction_RS1 <= 6'h0;
         reservation_station_8_decoded_instruction_RS2 <= 6'h0;
-        reservation_station_8_decoded_instruction_IMM <= 32'h0;
+        reservation_station_8_decoded_instruction_IMM <= 21'h0;
         reservation_station_8_decoded_instruction_FUNCT3 <= 3'h0;
         reservation_station_8_decoded_instruction_packet_index <= 4'h0;
         reservation_station_8_decoded_instruction_ROB_index <= 6'h0;
@@ -4312,7 +4312,7 @@ module MEMRS(
         reservation_station_9_decoded_instruction_RD <= 6'h0;
         reservation_station_9_decoded_instruction_RS1 <= 6'h0;
         reservation_station_9_decoded_instruction_RS2 <= 6'h0;
-        reservation_station_9_decoded_instruction_IMM <= 32'h0;
+        reservation_station_9_decoded_instruction_IMM <= 21'h0;
         reservation_station_9_decoded_instruction_FUNCT3 <= 3'h0;
         reservation_station_9_decoded_instruction_packet_index <= 4'h0;
         reservation_station_9_decoded_instruction_ROB_index <= 6'h0;
@@ -4553,7 +4553,7 @@ module MEMRS(
         reservation_station_10_decoded_instruction_RD <= 6'h0;
         reservation_station_10_decoded_instruction_RS1 <= 6'h0;
         reservation_station_10_decoded_instruction_RS2 <= 6'h0;
-        reservation_station_10_decoded_instruction_IMM <= 32'h0;
+        reservation_station_10_decoded_instruction_IMM <= 21'h0;
         reservation_station_10_decoded_instruction_FUNCT3 <= 3'h0;
         reservation_station_10_decoded_instruction_packet_index <= 4'h0;
         reservation_station_10_decoded_instruction_ROB_index <= 6'h0;
@@ -4794,7 +4794,7 @@ module MEMRS(
         reservation_station_11_decoded_instruction_RD <= 6'h0;
         reservation_station_11_decoded_instruction_RS1 <= 6'h0;
         reservation_station_11_decoded_instruction_RS2 <= 6'h0;
-        reservation_station_11_decoded_instruction_IMM <= 32'h0;
+        reservation_station_11_decoded_instruction_IMM <= 21'h0;
         reservation_station_11_decoded_instruction_FUNCT3 <= 3'h0;
         reservation_station_11_decoded_instruction_packet_index <= 4'h0;
         reservation_station_11_decoded_instruction_ROB_index <= 6'h0;
@@ -5035,7 +5035,7 @@ module MEMRS(
         reservation_station_12_decoded_instruction_RD <= 6'h0;
         reservation_station_12_decoded_instruction_RS1 <= 6'h0;
         reservation_station_12_decoded_instruction_RS2 <= 6'h0;
-        reservation_station_12_decoded_instruction_IMM <= 32'h0;
+        reservation_station_12_decoded_instruction_IMM <= 21'h0;
         reservation_station_12_decoded_instruction_FUNCT3 <= 3'h0;
         reservation_station_12_decoded_instruction_packet_index <= 4'h0;
         reservation_station_12_decoded_instruction_ROB_index <= 6'h0;
@@ -5276,7 +5276,7 @@ module MEMRS(
         reservation_station_13_decoded_instruction_RD <= 6'h0;
         reservation_station_13_decoded_instruction_RS1 <= 6'h0;
         reservation_station_13_decoded_instruction_RS2 <= 6'h0;
-        reservation_station_13_decoded_instruction_IMM <= 32'h0;
+        reservation_station_13_decoded_instruction_IMM <= 21'h0;
         reservation_station_13_decoded_instruction_FUNCT3 <= 3'h0;
         reservation_station_13_decoded_instruction_packet_index <= 4'h0;
         reservation_station_13_decoded_instruction_ROB_index <= 6'h0;
@@ -5517,7 +5517,7 @@ module MEMRS(
         reservation_station_14_decoded_instruction_RD <= 6'h0;
         reservation_station_14_decoded_instruction_RS1 <= 6'h0;
         reservation_station_14_decoded_instruction_RS2 <= 6'h0;
-        reservation_station_14_decoded_instruction_IMM <= 32'h0;
+        reservation_station_14_decoded_instruction_IMM <= 21'h0;
         reservation_station_14_decoded_instruction_FUNCT3 <= 3'h0;
         reservation_station_14_decoded_instruction_packet_index <= 4'h0;
         reservation_station_14_decoded_instruction_ROB_index <= 6'h0;
@@ -5758,7 +5758,7 @@ module MEMRS(
         reservation_station_15_decoded_instruction_RD <= 6'h0;
         reservation_station_15_decoded_instruction_RS1 <= 6'h0;
         reservation_station_15_decoded_instruction_RS2 <= 6'h0;
-        reservation_station_15_decoded_instruction_IMM <= 32'h0;
+        reservation_station_15_decoded_instruction_IMM <= 21'h0;
         reservation_station_15_decoded_instruction_FUNCT3 <= 3'h0;
         reservation_station_15_decoded_instruction_packet_index <= 4'h0;
         reservation_station_15_decoded_instruction_ROB_index <= 6'h0;
@@ -5986,7 +5986,7 @@ module MEMRS(
   assign io_RF_inputs_0_bits_RS1_valid = 1'h0;
   assign io_RF_inputs_0_bits_RS2 = 6'h0;
   assign io_RF_inputs_0_bits_RS2_valid = 1'h0;
-  assign io_RF_inputs_0_bits_IMM = 32'h0;
+  assign io_RF_inputs_0_bits_IMM = 21'h0;
   assign io_RF_inputs_0_bits_FUNCT3 = 3'h0;
   assign io_RF_inputs_0_bits_packet_index = 4'h0;
   assign io_RF_inputs_0_bits_ROB_index = 6'h0;
@@ -6010,7 +6010,7 @@ module MEMRS(
   assign io_RF_inputs_1_bits_RS1_valid = 1'h0;
   assign io_RF_inputs_1_bits_RS2 = 6'h0;
   assign io_RF_inputs_1_bits_RS2_valid = 1'h0;
-  assign io_RF_inputs_1_bits_IMM = 32'h0;
+  assign io_RF_inputs_1_bits_IMM = 21'h0;
   assign io_RF_inputs_1_bits_FUNCT3 = 3'h0;
   assign io_RF_inputs_1_bits_packet_index = 4'h0;
   assign io_RF_inputs_1_bits_ROB_index = 6'h0;
@@ -6034,7 +6034,7 @@ module MEMRS(
   assign io_RF_inputs_2_bits_RS1_valid = 1'h0;
   assign io_RF_inputs_2_bits_RS2 = 6'h0;
   assign io_RF_inputs_2_bits_RS2_valid = 1'h0;
-  assign io_RF_inputs_2_bits_IMM = 32'h0;
+  assign io_RF_inputs_2_bits_IMM = 21'h0;
   assign io_RF_inputs_2_bits_FUNCT3 = 3'h0;
   assign io_RF_inputs_2_bits_packet_index = 4'h0;
   assign io_RF_inputs_2_bits_ROB_index = 6'h0;

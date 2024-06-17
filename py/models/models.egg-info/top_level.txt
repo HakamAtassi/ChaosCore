@@ -1,12 +1,9 @@
 BP
-Channels
-Frontend
-GenericCache
-Gshare
-HashBTB
+ChaosCore
+FU
 Instruction
-InstructionCache
-Predecoder
+PC_gen
 RAS
+ROB
 SimpleDRAM
 model_utils

@@ -37,7 +37,7 @@ module decoder(
   output        io_decoded_instruction_bits_RS1_valid,
   output [5:0]  io_decoded_instruction_bits_RS2,
   output        io_decoded_instruction_bits_RS2_valid,
-  output [31:0] io_decoded_instruction_bits_IMM,
+  output [20:0] io_decoded_instruction_bits_IMM,
   output [2:0]  io_decoded_instruction_bits_FUNCT3,
   output [3:0]  io_decoded_instruction_bits_packet_index,
   output [5:0]  io_decoded_instruction_bits_ROB_index,
@@ -54,6 +54,7 @@ module decoder(
                 io_decoded_instruction_bits_IS_STORE
 );
 
+  wire [8:0] _GEN = {9{io_instruction_bits_instruction[31]}};
   wire [4:0] instructionType = io_instruction_bits_instruction[6:2];
   wire       IS_LOAD = instructionType == 5'h0;
   wire       _is_INT_T_1 = instructionType == 5'h4;
@@ -79,7 +80,7 @@ module decoder(
               | _io_decoded_instruction_bits_RD_valid_T_13
               | instructionType == 5'h1E)) begin
         if (`ASSERT_VERBOSE_COND_)
-          $error("Assertion failed: Enum state must be valid, got %d!\n    at decoder.scala:67 assert(valid, \"Enum state must be valid, got %%%%d!\", opcode(6,2))\n",
+          $error("Assertion failed: Enum state must be valid, got %d!\n    at decoder.scala:66 assert(valid, \"Enum state must be valid, got %%%%d!\", opcode(6,2))\n",
                  instructionType);
         if (`STOP_COND_)
           $fatal;
@@ -123,15 +124,13 @@ module decoder(
     (_is_INT_T | IS_STORE | _is_INT_T_3) & io_instruction_valid;
   assign io_decoded_instruction_bits_IMM =
     io_instruction_bits_instruction[6:0] == 7'h63
-      ? {19'h0,
-         io_instruction_bits_instruction[31],
+      ? {{9{io_instruction_bits_instruction[31]}},
          io_instruction_bits_instruction[7],
          io_instruction_bits_instruction[30:25],
          io_instruction_bits_instruction[11:8],
          1'h0}
       : io_instruction_bits_instruction[6:0] == 7'h6F
-          ? {11'h0,
-             io_instruction_bits_instruction[31],
+          ? {io_instruction_bits_instruction[31],
              io_instruction_bits_instruction[19:12],
              io_instruction_bits_instruction[20],
              io_instruction_bits_instruction[30:21],
@@ -139,15 +138,16 @@ module decoder(
           : io_instruction_bits_instruction[6:0] == 7'h13
             | io_instruction_bits_instruction[6:0] == 7'h3
             | io_instruction_bits_instruction[6:0] == 7'h67
-              ? {20'h0, io_instruction_bits_instruction[31:20]}
+              ? {_GEN, io_instruction_bits_instruction[31:20]}
               : io_instruction_bits_instruction[6:0] == 7'h23
-                  ? {20'h0,
+                  ? {_GEN,
                      io_instruction_bits_instruction[31:25],
                      io_instruction_bits_instruction[11:7]}
                   : io_instruction_bits_instruction[6:0] == 7'h17
                     | io_instruction_bits_instruction[6:0] == 7'h37
-                      ? {12'h0, io_instruction_bits_instruction[31:12]}
-                      : 32'h0;
+                      ? {io_instruction_bits_instruction[31],
+                         io_instruction_bits_instruction[31:12]}
+                      : 21'h0;
   assign io_decoded_instruction_bits_FUNCT3 = io_instruction_bits_instruction[14:12];
   assign io_decoded_instruction_bits_packet_index = io_instruction_bits_packet_index;
   assign io_decoded_instruction_bits_ROB_index = io_instruction_bits_ROB_index;

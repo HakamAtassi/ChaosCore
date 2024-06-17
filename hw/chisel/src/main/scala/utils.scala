@@ -123,38 +123,55 @@ object helperFunctions {
         val R      = (opcode === "b0110011".U)
         val I      = (opcode === "b0010011".U) || (opcode === "b0000011".U) || (opcode === "b1100111".U)
 
-        val imm = Wire(UInt(32.W))
-        imm := 0.U
+        val imm = Wire(UInt(21.W))
 
         when(B) {
+
+            val temp = Wire(SInt(32.W))
+
             val imm_12      = instruction(31)
             val imm_10_5    = instruction(30, 25)
             val imm_4_1     = instruction(11, 8)
             val imm_11      = instruction(7)
 
-            imm := Cat(imm_12, imm_11, imm_10_5, imm_4_1, 0.U(1.W)).asSInt.asUInt
+            temp := Cat(imm_12, imm_11, imm_10_5, imm_4_1, 0.U(1.W)).asSInt
+            imm := temp.asUInt
+
         }.elsewhen (J) {
+            val temp = Wire(SInt(32.W))
+
             val imm_20    = instruction(31)
             val imm_19_12 = instruction(19, 12)
             val imm_11    = instruction(20)
             val imm_10_1  = instruction(30,21)
 
-            imm := Cat(imm_20, imm_19_12, imm_11, imm_10_1, 0.U(1.W)).asSInt.asUInt
+            temp := Cat(imm_20, imm_19_12, imm_11, imm_10_1, 0.U(1.W)).asSInt
+            imm  := temp.asUInt
         }.elsewhen (I) {
-            val imm_11_0      = instruction(31, 20)
+            val temp = Wire(SInt(32.W))
 
-            imm := imm_11_0.asSInt.asUInt
+            val imm_11_0      = instruction(31, 20)
+            temp := imm_11_0.asSInt
+            imm := temp.asUInt
         }.elsewhen(S){
+            val temp = Wire(SInt(32.W))
+
             val imm_11_5      = instruction(31, 25)
             val imm_4_0       = instruction(11, 7)
 
-            imm := Cat(imm_11_5, imm_4_0).asSInt.asUInt
+            temp := Cat(imm_11_5, imm_4_0).asSInt
+
+            imm := temp.asUInt
         }.elsewhen(U){
+            val temp = Wire(SInt(32.W))
+
             val imm_31_12     = instruction(31, 12)
 
-            imm := Cat(imm_31_12).asSInt.asUInt
+            temp := Cat(imm_31_12).asSInt
+
+            imm := temp.asUInt
         }.otherwise{
-            imm := 0.asSInt.asUInt
+            imm := 0.U
         }
         imm
     }
