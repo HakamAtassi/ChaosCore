@@ -231,7 +231,8 @@ class predecoder(parameters:Parameters) extends Module{
     use_computed := (metadata_out.br_type === _br_type.BR) || (metadata_out.br_type === _br_type.JAL)
 
 
-    when(use_BTB){PC_next := metadata_out.BTB_target}
+    when(io.commit.is_misprediction){PC_next := io.commit.expected_PC}
+    .elsewhen(use_BTB){PC_next := metadata_out.BTB_target}
     .elsewhen(use_RAS){PC_next := metadata_out.RAS}
     .elsewhen(use_computed){PC_next := metadata_out.instruction_PC + metadata_out.Imm.asUInt}
     .otherwise{PC_next := RegNext(io.fetch_packet.bits.fetch_PC + (fetchWidth*4).U)} // FIXME: should this always be +16?
@@ -239,6 +240,11 @@ class predecoder(parameters:Parameters) extends Module{
     PC_next_reg := Mux(RegNext(stage_1_valid), PC_next, PC_next_reg)
     PC_expected := Mux(RegNext(stage_1_valid), PC_next, PC_next_reg)
 
+
+    when(io.commit.is_misprediction && io.commit.valid){
+        PC_next_reg := io.commit.expected_PC
+        PC_expected := io.commit.expected_PC
+    }
 
 
     // validate instructions
@@ -260,7 +266,7 @@ class predecoder(parameters:Parameters) extends Module{
     }
 
 
-    io.final_fetch_packet.bits.fetch_PC := io.fetch_packet.bits.fetch_PC  // Pass along fetch PC
+    io.final_fetch_packet.bits.fetch_PC := RegNext(io.fetch_packet.bits.fetch_PC)  // Pass along fetch PC
     // RAS Control //
     //io.RAS_update.call       := metadata_out.Call
     //io.RAS_update.ret        := metadata_out.Ret

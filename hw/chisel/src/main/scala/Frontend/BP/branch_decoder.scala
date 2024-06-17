@@ -63,7 +63,11 @@ class branch_decoder(index:Int, parameters:Parameters) extends Module{
 
     val RS1 = io.instruction(19, 15)
     val RD = io.instruction(11, 7)
-    val imm = getImm(io.instruction)
+    val _imm = Wire(SInt(32.W))
+    val imm = Wire(UInt(32.W))
+
+    _imm := getImm(io.instruction).asSInt
+    imm := _imm.asUInt
 
     val JAL     = (instructionType === InstructionType.JAL)
     val JALR    = (instructionType === InstructionType.JALR)

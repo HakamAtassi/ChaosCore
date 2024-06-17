@@ -52,7 +52,7 @@ class ALU(parameters:Parameters) extends Module{
     val RS1_data            =   io.FU_input.bits.RS1_data
     val RS2_data            =   io.FU_input.bits.RS2_data
     val imm                 =   io.FU_input.bits.decoded_instruction.IMM
-    val instruction_PC      =   io.FU_input.bits.PC + io.FU_input.bits.decoded_instruction.packet_index
+    val instruction_PC      =   io.FU_input.bits.PC + (io.FU_input.bits.decoded_instruction.packet_index * fetchWidth.U)
 
     // Dest reg
     val RD                  =   io.FU_input.bits.decoded_instruction.RD
@@ -68,11 +68,6 @@ class ALU(parameters:Parameters) extends Module{
     //////////////////////////
     //////////////////////////
 
-    //val target_address     = RegInit(UInt(32.W), 0.U)
-    //val not_target_address = RegInit(UInt(32.W), 0.U)
-
-    //val comp_result = RegInit(Bool(), 0.B)
-    //val target_addr = Wire(UInt(32.W))
 
     val arithmetic_result = RegInit(UInt(32.W), 0.U)
 
@@ -91,42 +86,63 @@ class ALU(parameters:Parameters) extends Module{
     val lui_result      = Wire(UInt(32.W))
     val auipc_result    = Wire(UInt(32.W))
 
-    // Multiply Regs
+    val RS1_signed      = Wire(SInt(32.W))
+    val RS1_unsigned    = Wire(UInt(32.W))
 
-    //val mul_result          = Wire(UInt(32.W))
-    //val mulh_result         = Wire(UInt(32.W))
-    //val mulhsu_result       = Wire(UInt(32.W))
-    //val mulhu_result        = Wire(UInt(32.W))
-    //val div_result          = Wire(UInt(32.W))
-    //val divu_result         = Wire(UInt(32.W))
-    //val remainder_result    = Wire(UInt(32.W))
-    //val remainderu_result   = Wire(UInt(32.W))
+    val RS2_signed      = Wire(SInt(32.W))
+    val RS2_unsigned    = Wire(UInt(32.W))
 
-    // Either use RS1 / RS2 or RS1 / imm based on is_imm flag
-    val operand2 = Mux(IMMEDIATE, imm, RS2_data)
+    val IMM_signed          = Wire(SInt(32.W))
+    val IMM_unsigned        = Wire(UInt(32.W))
+
+    RS1_signed              := RS1_data.asSInt
+    RS1_unsigned            := RS1_data.asUInt
+
+    RS2_signed              := RS2_data.asSInt
+    RS2_unsigned            := RS2_data.asUInt
+
+    IMM_signed              := imm(12,0).asSInt
+    IMM_unsigned            := imm(12,0).asUInt
+
+
+    val operand1_signed     = RS1_signed
+    val operand1_unsigned   = RS1_unsigned
+
+    val operand2_signed     = Mux(IMMEDIATE, IMM_signed, RS2_signed)
+    val operand2_unsigned   = Mux(IMMEDIATE, IMM_unsigned, RS2_unsigned)
+
+
+
+    val shamt = Wire(UInt(5.W))
+
+    when(operand2_unsigned >= 32.U){
+        shamt := 32.U
+    }.otherwise{
+        shamt := operand2_unsigned(4, 0).asUInt
+    }
+
 
     // Perform arithmetic operations
-    add_result      := RS1_data + operand2
-    sub_result      := RS1_data - operand2
-    slt_result      := Mux(RS1_data.asSInt < operand2.asSInt, 1.U, 0.U)
-    sltu_result     := Mux(RS1_data.asUInt < operand2.asUInt, 1.U, 0.U)
-    and_result      := RS1_data & operand2
-    or_result       := RS1_data | operand2
-    xor_result      := RS1_data ^ operand2
-    sll_result      := RS1_data << operand2(4,0) // Logical left shift
-    srl_result      := RS1_data >> operand2(4,0) // Logical right shift
-    sra_result      := ((RS1_data.asSInt) >> operand2(4,0)).asSInt
+    add_result      := operand1_unsigned + operand2_unsigned
+    sub_result      := operand1_unsigned - operand2_unsigned
+    xor_result      := operand1_unsigned ^ operand2_unsigned
+    or_result       := operand1_unsigned | operand2_unsigned
+    and_result      := operand1_unsigned & operand2_unsigned
+
+    sll_result      := RS1_unsigned << shamt
+    srl_result      := RS1_unsigned >> shamt
+    sra_result      := RS1_signed   >> shamt
+
+    slt_result      := RS1_signed < operand2_signed
+    sltu_result     := RS1_unsigned < operand2_unsigned
+
+
+    val RS2_shamt = Mux(RS2_data >= 32.U, 32.U, RS2_data(4,0))   // Saturate RS2 shift amount
+
+    
 
     lui_result      := (imm << 12)  // FIXME: is imm signed??
     auipc_result    := (instruction_PC + (imm<<12)) // same here???
-
-
-    // perform multiply operations
-    //val multiply_temp = Wire(UInt(64.W))
-    //multiply_temp := RS1_data * operand2
-    //mul_result := multiply_temp(31,0)
-    //mul_result := multiply_temp(63,32)
-    //mul_result := multiply_temp(31,0)
 
 
     /////////////
@@ -183,27 +199,6 @@ class ALU(parameters:Parameters) extends Module{
         arithmetic_result   := auipc_result
     }
 
-    dontTouch(LUI)
-
-    /////////
-    /*
-    when(MUL){
-    }.elsewhen(MULH){
-
-    }.elsewhen(MULHSU){
-
-    }.elsewhen(MULHU){
-
-    }.elsewhen(DIV){
-
-    }.elsewhen(DIVU){
-
-    }.elsewhen(REM){
-
-    }.elsewhen(REMU){
-
-    }
-    */
 
     // ALU pipelined; always ready
     io.FU_input.ready       :=   1.B    
@@ -238,18 +233,23 @@ class branch_unit(parameters:Parameters) extends Module{
         val FU_output     =   ValidIO(new FU_output(parameters))
     })
 
-
     // Operand data
-    val RS1_data    =   io.FU_input.bits.RS1_data
-    val RS2_data    =   io.FU_input.bits.RS2_data
-    val IMM         =   io.FU_input.bits.decoded_instruction.IMM
-    val PC          =   io.FU_input.bits.PC + io.FU_input.bits.decoded_instruction.packet_index
+    val RS1_data        =   io.FU_input.bits.RS1_data
+    val RS2_data        =   io.FU_input.bits.RS2_data
+
+    val IMM           = Wire(UInt(32.W))
+
+    val instruction_PC       = Wire(UInt(32.W))
+
+    IMM                             :=  (io.FU_input.bits.decoded_instruction.IMM).asUInt
+
+
+    instruction_PC          :=   io.FU_input.bits.PC + (io.FU_input.bits.decoded_instruction.packet_index * fetchWidth.U)
 
     // Dest reg
     val RD                  =   io.FU_input.bits.decoded_instruction.RD
 
     // Op select
-
     val instructionType     =   io.FU_input.bits.decoded_instruction.instructionType
     val FUNCT3              =   io.FU_input.bits.decoded_instruction.FUNCT3
     val IMMEDIATE           =   io.FU_input.bits.decoded_instruction.IMMEDIATE
@@ -264,9 +264,6 @@ class branch_unit(parameters:Parameters) extends Module{
     val BGE         =   instructionType === InstructionType.BRANCH && FUNCT3 === "b101".U
     val BLTU        =   instructionType === InstructionType.BRANCH && FUNCT3 === "b110".U
     val BGEU        =   instructionType === InstructionType.BRANCH && FUNCT3 === "b111".U
-    val JAL         =   instructionType === InstructionType.JAL
-    val JALR        =   instructionType === InstructionType.JALR 
-
 
 
     //
@@ -276,6 +273,8 @@ class branch_unit(parameters:Parameters) extends Module{
     val GE      = Wire(Bool())
     val LTU     = Wire(Bool())
     val GEU     = Wire(Bool())
+    val JAL     = Wire(Bool())
+    val JALR    = Wire(Bool())
     
     EQ         :=  (RS1_data.asSInt === RS2_data.asSInt) && BEQ
     NE         :=  (RS1_data.asSInt =/= RS2_data.asSInt) && BNE
@@ -283,35 +282,34 @@ class branch_unit(parameters:Parameters) extends Module{
     GE         :=  (RS1_data.asSInt  >= RS2_data.asSInt) && BGE
     LTU        :=  (RS1_data.asUInt   < RS2_data.asUInt) && BLTU
     GEU        :=  (RS1_data.asUInt  >= RS2_data.asUInt) && BGEU
+    JAL        :=  instructionType === InstructionType.JAL
+    JALR       :=  instructionType === InstructionType.JALR 
+
 
     val branch_taken   = Wire(Bool())
     val target_address = Wire(UInt(32.W))
 
     branch_taken    := 0.B
-    target_address  := PC   // FIXME: what should the default address be?
+    target_address  := io.FU_input.bits.PC + (fetchWidth.U * 4.U)    // default address is the next fetch_PC
 
-    
-    dontTouch(BEQ)
-    dontTouch(EQ)
-    dontTouch(GE)
 
-    when(EQ)        {branch_taken := 1.B; target_address := PC + IMM}
-    .elsewhen(NE)   {branch_taken := 1.B; target_address := PC + IMM}
-    .elsewhen(LT)   {branch_taken := 1.B; target_address := PC + IMM}
-    .elsewhen(GE)   {branch_taken := 1.B; target_address := PC + IMM}
-    .elsewhen(LTU)  {branch_taken := 1.B; target_address := PC + IMM}
-    .elsewhen(GEU)  {branch_taken := 1.B; target_address := PC + IMM}
-    .elsewhen(JAL)  {branch_taken := 1.B; target_address := PC + IMM}
-    .elsewhen(JALR) {branch_taken := 1.B; target_address := RS1_data + IMM}
+    when(EQ)        {branch_taken := 1.B; target_address := instruction_PC + (IMM(12,0).asSInt).asUInt}
+    .elsewhen(NE)   {branch_taken := 1.B; target_address := instruction_PC + (IMM(12,0).asSInt).asUInt}
+    .elsewhen(LT)   {branch_taken := 1.B; target_address := instruction_PC + (IMM(12,0).asSInt).asUInt}
+    .elsewhen(GE)   {branch_taken := 1.B; target_address := instruction_PC + (IMM(12,0).asSInt).asUInt}
+    .elsewhen(LTU)  {branch_taken := 1.B; target_address := instruction_PC + (IMM(12,0).asSInt).asUInt}
+    .elsewhen(GEU)  {branch_taken := 1.B; target_address := instruction_PC + (IMM(12,0).asSInt).asUInt}
+    .elsewhen(JAL)  {branch_taken := 1.B; target_address := instruction_PC + (IMM(20,0).asSInt).asUInt}
+    .elsewhen(JALR) {branch_taken := 1.B; target_address := RS1_data       + (IMM(11,0).asSInt).asUInt}
 
 
     // PC of branch instruction and packet index (to access ROB bank)
-    io.FU_output.bits.instruction_PC        :=  RegNext(io.FU_input.bits.PC + (io.FU_input.bits.decoded_instruction.packet_index)<<2.U)
+    io.FU_output.bits.instruction_PC        :=  RegNext(io.FU_input.bits.PC)
     io.FU_output.bits.fetch_packet_index    :=  RegNext(io.FU_input.bits.decoded_instruction.packet_index)
 
     // ALU pipelined; always ready
     io.FU_input.ready := 1.B
-    io.FU_output.bits.branch_valid :=   (BRANCH || JAL || JALR)
+    io.FU_output.bits.branch_valid      :=   RegNext(BRANCH || JAL || JALR)
 
     // Not a branch unit (all FUs share the same output channel)
     io.FU_output.bits.branch_taken      :=      RegNext(branch_taken)
@@ -320,7 +318,7 @@ class branch_unit(parameters:Parameters) extends Module{
     // Actual Outputs
     io.FU_output.bits.RD                :=      RegNext(io.FU_input.bits.decoded_instruction.RD)
     io.FU_output.bits.RD_valid          :=      RegNext(io.FU_input.bits.decoded_instruction.RD_valid)
-    io.FU_output.bits.RD_data           :=      RegNext(PC + 4.U)
+    io.FU_output.bits.RD_data           :=      RegNext(instruction_PC + 4.U)
     io.FU_output.bits.ROB_index         :=      RegNext(io.FU_input.bits.decoded_instruction.ROB_index)
     io.FU_output.valid                  :=      RegNext(io.FU_input.valid)
 
@@ -368,15 +366,15 @@ class FU(parameters:Parameters,
 
 
     if(ALU.isDefined){
-        when(is_ALU) {
+        when(RegNext(is_ALU)) {
             io.FU_output := ALU.get.io.FU_output
         }
     }
 
 
     if(branch_unit.isDefined){
-        when(is_CTRL) {
-            io.FU_output := branch_unit.get.io.FU_output    //FIXME: Get??
+        when(RegNext(is_CTRL)) {
+            io.FU_output := branch_unit.get.io.FU_output
         }
     }
 

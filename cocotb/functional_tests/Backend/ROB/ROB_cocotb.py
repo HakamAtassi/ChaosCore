@@ -6,1279 +6,173 @@ import cocotb
 from cocotb.triggers import RisingEdge, FallingEdge, ReadOnly, ReadWrite, Timer
 from pathlib import Path
 
+from ROB_tb import *
+
 from cocotb_utils import *
-from ROB_dut import *
+from ROB.signals import *
 
 @cocotb.test()
 async def test_reset(dut):
 
     await cocotb.start(generateClock(dut)) 
 
-    dut = ROB_dut(dut)  # wrap dut with helper class
-    await dut.reset()   # reset module
+    dut = ROB_dut(dut)    # Wrap Dut
+
+    ROB_tb = ROB_TB(dut)  # Init TB
+
+    ROB_tb.reset()
+
+    ROB_tb.start()
+
+
+    # Drive signals...
+
 
     await RisingEdge(dut.clock())
-
-@cocotb.test()
-async def test_print_ROB(dut):
-
-    await cocotb.start(generateClock(dut)) 
-
-    dut = ROB_dut(dut)  # wrap dut with helper class
-    await dut.reset()   # reset module
-
     await RisingEdge(dut.clock())
-
-    dut.print_ROB(0)
-    dut.print_ROB(1)
-    dut.print_ROB(2)
-    dut.print_ROB(3)
-
-
-@cocotb.test()
-async def test_write_1(dut):
-
-    await cocotb.start(generateClock(dut)) 
-
-    dut = ROB_dut(dut)  # wrap dut with helper class
-    await dut.reset()   # reset module
-
     await RisingEdge(dut.clock())
-
-    allocate_input = generate_null_allocate()
-
-    allocate_input["valid"]                        =  1
-    allocate_input["fetch_PC"]                     =  0xfee0
-    allocate_input["valid_bits"]                   =  [1, 0, 0, 0]
-    allocate_input["ready_bits_RS1_ready"]         =  [0, 0, 0, 0]
-    allocate_input["ready_bits_RS2_ready"]         =  [0, 0, 0, 0]
-    allocate_input["RD"]                           =  [0, 0, 0, 0]
-    allocate_input["RD_valid"]                     =  [0, 0, 0, 0]
-    allocate_input["RS1"]                          =  [0, 0, 0, 0]
-    allocate_input["RS1_valid"]                    =  [0, 0, 0, 0]
-    allocate_input["RS2"]                          =  [0, 0, 0, 0]
-    allocate_input["RS2_valid"]                    =  [0, 0, 0, 0]
-    allocate_input["IMM"]                          =  [0, 0, 0, 0]
-    allocate_input["FUNCT3"]                       =  [0, 0, 0, 0]
-    allocate_input["packet_index"]                 =  [0, 0, 0, 0]
-    allocate_input["ROB_index"]                    =  [0, 0, 0, 0]
-    allocate_input["instructionType"]              =  [0, 0, 0, 0]
-    allocate_input["portID"]                       =  [0, 0, 0, 0]
-    allocate_input["RS_type"]                      =  [0, 0, 0, 0]
-    allocate_input["needs_ALU"]                    =  [0, 0, 0, 0]
-    allocate_input["needs_branch_unit"]            =  [0, 0, 0, 0]
-    allocate_input["needs_CSRs"]                   =  [0, 0, 0, 0]
-    allocate_input["SUBTRACT"]                     =  [0, 0, 0, 0]
-    allocate_input["MULTIPLY"]                     =  [0, 0, 0, 0]
-    allocate_input["IMMEDIATE"]                    =  [0, 0, 0, 0]
-    allocate_input["IS_LOAD"]                      =  [1, 0, 0, 0]
-    allocate_input["IS_STORE"]                     =  [1, 0, 0, 0]
-
-    dut.write_allocate(allocate_input)
-
-    await RisingEdge(dut.clock())
-    await ReadOnly()
-    dut.print_ROB(0)
-    
-    assert dut.get_shared_mem()["fetch_PC"][0] == 0xfee0
-    assert dut.get_shared_mem()["row_valid"][0] == 1
-
-    assert dut.get_ROB_entry()[0]["is_load"][0] == 1
-    assert dut.get_ROB_entry()[0]["is_store"][0] == 1
-
-
-@cocotb.test()
-async def test_write_4(dut):
-
-    await cocotb.start(generateClock(dut)) 
-
-    dut = ROB_dut(dut)  # wrap dut with helper class
-    await dut.reset()   # reset module
-
-    await RisingEdge(dut.clock())
-
-    allocate_input = generate_null_allocate()
-
-    allocate_input["valid"]                        =  1
-    allocate_input["fetch_PC"]                     =  0xfee0
-    allocate_input["valid_bits"]                   =  [1, 1, 1, 1]
-    allocate_input["ready_bits_RS1_ready"]         =  [0, 0, 0, 0]
-    allocate_input["ready_bits_RS2_ready"]         =  [0, 0, 0, 0]
-    allocate_input["RD"]                           =  [0, 0, 0, 0]
-    allocate_input["RD_valid"]                     =  [0, 0, 0, 0]
-    allocate_input["RS1"]                          =  [0, 0, 0, 0]
-    allocate_input["RS1_valid"]                    =  [0, 0, 0, 0]
-    allocate_input["RS2"]                          =  [0, 0, 0, 0]
-    allocate_input["RS2_valid"]                    =  [0, 0, 0, 0]
-    allocate_input["IMM"]                          =  [0, 0, 0, 0]
-    allocate_input["FUNCT3"]                       =  [0, 0, 0, 0]
-    allocate_input["packet_index"]                 =  [0, 0, 0, 0]
-    allocate_input["ROB_index"]                    =  [0, 0, 0, 0]
-    allocate_input["instructionType"]              =  [0, 0, 0, 0]
-    allocate_input["portID"]                       =  [0, 0, 0, 0]
-    allocate_input["RS_type"]                      =  [0, 0, 0, 0]
-    allocate_input["needs_ALU"]                    =  [0, 0, 0, 0]
-    allocate_input["needs_branch_unit"]            =  [0, 0, 0, 0]
-    allocate_input["needs_CSRs"]                   =  [0, 0, 0, 0]
-    allocate_input["SUBTRACT"]                     =  [0, 0, 0, 0]
-    allocate_input["MULTIPLY"]                     =  [0, 0, 0, 0]
-    allocate_input["IMMEDIATE"]                    =  [0, 0, 0, 0]
-    allocate_input["IS_LOAD"]                      =  [1, 1, 1, 1]
-    allocate_input["IS_STORE"]                     =  [1, 1, 1, 1]
-
-    dut.write_allocate(allocate_input)
-
-    await RisingEdge(dut.clock())
-    await ReadOnly()
-    dut.print_ROB(0)
-    dut.print_ROB(1)
-    dut.print_ROB(2)
-    dut.print_ROB(3)
-    
-    assert dut.get_shared_mem()["fetch_PC"][0] == 0xfee0
-    assert dut.get_shared_mem()["row_valid"][0] == 1
-
-    assert dut.get_ROB_entry()[0]["is_load"][0] == 1
-    assert dut.get_ROB_entry()[0]["is_store"][0] == 1
-
-    assert dut.get_ROB_entry()[1]["is_load"][0] == 1
-    assert dut.get_ROB_entry()[1]["is_store"][0] == 1
-
-    assert dut.get_ROB_entry()[2]["is_load"][0] == 1
-    assert dut.get_ROB_entry()[2]["is_store"][0] == 1
-
-    assert dut.get_ROB_entry()[3]["is_load"][0] == 1
-    assert dut.get_ROB_entry()[3]["is_store"][0] == 1
-
-
-
-@cocotb.test()
-async def test_many_writes(dut):
-
-    await cocotb.start(generateClock(dut)) 
-
-    dut = ROB_dut(dut)  # wrap dut with helper class
-    await dut.reset()   # reset module
-
-    await RisingEdge(dut.clock())
-
-    allocate_input = generate_null_allocate()
-
-    allocate_input["valid"]                        =  1
-    allocate_input["fetch_PC"]                     =  0xfee0
-    allocate_input["valid_bits"]                   =  [1, 1, 1, 1]
-    allocate_input["ready_bits_RS1_ready"]         =  [0, 0, 0, 0]
-    allocate_input["ready_bits_RS2_ready"]         =  [0, 0, 0, 0]
-    allocate_input["RD"]                           =  [0, 0, 0, 0]
-    allocate_input["RD_valid"]                     =  [0, 0, 0, 0]
-    allocate_input["RS1"]                          =  [0, 0, 0, 0]
-    allocate_input["RS1_valid"]                    =  [0, 0, 0, 0]
-    allocate_input["RS2"]                          =  [0, 0, 0, 0]
-    allocate_input["RS2_valid"]                    =  [0, 0, 0, 0]
-    allocate_input["IMM"]                          =  [0, 0, 0, 0]
-    allocate_input["FUNCT3"]                       =  [0, 0, 0, 0]
-    allocate_input["packet_index"]                 =  [0, 0, 0, 0]
-    allocate_input["ROB_index"]                    =  [0, 0, 0, 0]
-    allocate_input["instructionType"]              =  [0, 0, 0, 0]
-    allocate_input["portID"]                       =  [0, 0, 0, 0]
-    allocate_input["RS_type"]                      =  [0, 0, 0, 0]
-    allocate_input["needs_ALU"]                    =  [0, 0, 0, 0]
-    allocate_input["needs_branch_unit"]            =  [0, 0, 0, 0]
-    allocate_input["needs_CSRs"]                   =  [0, 0, 0, 0]
-    allocate_input["SUBTRACT"]                     =  [0, 0, 0, 0]
-    allocate_input["MULTIPLY"]                     =  [0, 0, 0, 0]
-    allocate_input["IMMEDIATE"]                    =  [0, 0, 0, 0]
-    allocate_input["IS_LOAD"]                      =  [1, 1, 1, 1]
-    allocate_input["IS_STORE"]                     =  [1, 1, 1, 1]
-
-    dut.write_allocate(allocate_input)
-    await RisingEdge(dut.clock())
-    dut.write_allocate(allocate_input)
-    await RisingEdge(dut.clock())
-    dut.write_allocate(allocate_input)
-    await RisingEdge(dut.clock())
-    dut.write_allocate(allocate_input)
-    await RisingEdge(dut.clock())
-
-    await ReadOnly()
-
-    dut.print_ROB(0)
-    
-    assert dut.get_shared_mem()["fetch_PC"][0] == 0xfee0
-    assert dut.get_shared_mem()["row_valid"][0] == 1
-
-    assert dut.get_ROB_entry()[0]["is_load"][0] == 1
-    assert dut.get_ROB_entry()[0]["is_store"][0] == 1
-
-    assert dut.get_ROB_entry()[1]["is_load"][0] == 1
-    assert dut.get_ROB_entry()[1]["is_store"][0] == 1
-
-    assert dut.get_ROB_entry()[2]["is_load"][0] == 1
-    assert dut.get_ROB_entry()[2]["is_store"][0] == 1
-
-    assert dut.get_ROB_entry()[3]["is_load"][0] == 1
-    assert dut.get_ROB_entry()[3]["is_store"][0] == 1
-
-
-    assert dut.get_shared_mem()["fetch_PC"][1] == 0xfee0
-    assert dut.get_shared_mem()["row_valid"][1] == 1
-
-    assert dut.get_ROB_entry()[0]["is_load"][1] == 1
-    assert dut.get_ROB_entry()[0]["is_store"][1] == 1
-
-    assert dut.get_ROB_entry()[1]["is_load"][1] == 1
-    assert dut.get_ROB_entry()[1]["is_store"][1] == 1
-
-    assert dut.get_ROB_entry()[2]["is_load"][1] == 1
-    assert dut.get_ROB_entry()[2]["is_store"][1] == 1
-
-    assert dut.get_ROB_entry()[3]["is_load"][1] == 1
-    assert dut.get_ROB_entry()[3]["is_store"][1] == 1
-
-    assert dut.get_shared_mem()["fetch_PC"][2] == 0xfee0
-    assert dut.get_shared_mem()["row_valid"][2] == 1
-
-    assert dut.get_ROB_entry()[0]["is_load"][2] == 1
-    assert dut.get_ROB_entry()[0]["is_store"][2] == 1
-
-    assert dut.get_ROB_entry()[1]["is_load"][2] == 1
-    assert dut.get_ROB_entry()[1]["is_store"][2] == 1
-
-    assert dut.get_ROB_entry()[2]["is_load"][2] == 1
-    assert dut.get_ROB_entry()[2]["is_store"][2] == 1
-
-    assert dut.get_ROB_entry()[3]["is_load"][2] == 1
-    assert dut.get_ROB_entry()[3]["is_store"][2] == 1
-
-    assert dut.get_shared_mem()["fetch_PC"][3] == 0xfee0
-    assert dut.get_shared_mem()["row_valid"][3] == 1
-
-    assert dut.get_ROB_entry()[0]["is_load"][3] == 1
-    assert dut.get_ROB_entry()[0]["is_store"][3] == 1
-
-    assert dut.get_ROB_entry()[1]["is_load"][3] == 1
-    assert dut.get_ROB_entry()[1]["is_store"][3] == 1
-
-    assert dut.get_ROB_entry()[2]["is_load"][3] == 1
-    assert dut.get_ROB_entry()[2]["is_store"][3] == 1
-
-    assert dut.get_ROB_entry()[3]["is_load"][3] == 1
-    assert dut.get_ROB_entry()[3]["is_store"][3] == 1
 
 
 
 
 
 @cocotb.test()
-async def test_many_full(dut):
+async def test_fuzz_allocate(dut):
+    random.seed(0x42)
 
     await cocotb.start(generateClock(dut)) 
 
-    dut = ROB_dut(dut)  # wrap dut with helper class
-    await dut.reset()   # reset module
+    dut = ROB_dut(dut)    # Wrap Dut
+
+    ROB_tb = ROB_TB(dut)  # Init TB
+
+    await ROB_tb.reset()
+
+    ROB_tb.start()
+
+
+    # Drive signals...
+
 
     await RisingEdge(dut.clock())
+    await RisingEdge(dut.clock())
+    await RisingEdge(dut.clock())
 
-    allocate_input = generate_null_allocate()
 
-    allocate_input["valid"]                        =  1
-    allocate_input["fetch_PC"]                     =  0xfee0
-    allocate_input["valid_bits"]                   =  [1, 1, 1, 1]
-    allocate_input["ready_bits_RS1_ready"]         =  [0, 0, 0, 0]
-    allocate_input["ready_bits_RS2_ready"]         =  [0, 0, 0, 0]
-    allocate_input["RD"]                           =  [0, 0, 0, 0]
-    allocate_input["RD_valid"]                     =  [0, 0, 0, 0]
-    allocate_input["RS1"]                          =  [0, 0, 0, 0]
-    allocate_input["RS1_valid"]                    =  [0, 0, 0, 0]
-    allocate_input["RS2"]                          =  [0, 0, 0, 0]
-    allocate_input["RS2_valid"]                    =  [0, 0, 0, 0]
-    allocate_input["IMM"]                          =  [0, 0, 0, 0]
-    allocate_input["FUNCT3"]                       =  [0, 0, 0, 0]
-    allocate_input["packet_index"]                 =  [0, 0, 0, 0]
-    allocate_input["ROB_index"]                    =  [0, 0, 0, 0]
-    allocate_input["instructionType"]              =  [0, 0, 0, 0]
-    allocate_input["portID"]                       =  [0, 0, 0, 0]
-    allocate_input["RS_type"]                      =  [0, 0, 0, 0]
-    allocate_input["needs_ALU"]                    =  [0, 0, 0, 0]
-    allocate_input["needs_branch_unit"]            =  [0, 0, 0, 0]
-    allocate_input["needs_CSRs"]                   =  [0, 0, 0, 0]
-    allocate_input["SUBTRACT"]                     =  [0, 0, 0, 0]
-    allocate_input["MULTIPLY"]                     =  [0, 0, 0, 0]
-    allocate_input["IMMEDIATE"]                    =  [0, 0, 0, 0]
-    allocate_input["IS_LOAD"]                      =  [0, 0, 0, 0]
-    allocate_input["IS_STORE"]                     =  [0, 0, 0, 0]
+    random_ROB_packet = generate_null_allocate()
 
-    assert dut.get_allocate_ready() == 1
+    for i in range(1000):
 
-    for i in range(64):
-        dut.write_allocate(allocate_input)
+        random_ROB_packet["valid"]                        =  random.randint(0,1)
+        random_ROB_packet["fetch_PC"]                     =  random.randint(0,0xFFFFFFFF)
+        random_ROB_packet["RS1_ready"]                    =  [0]*4
+        random_ROB_packet["RS2_ready"]                    =  [0]*4
+        random_ROB_packet["RD"]                           =  [0]*4
+        random_ROB_packet["RD_valid"]                     =  [0]*4
+        random_ROB_packet["RS1"]                          =  [0]*4
+        random_ROB_packet["RS1_valid"]                    =  [0]*4
+        random_ROB_packet["RS2"]                          =  [0]*4
+        random_ROB_packet["RS2_valid"]                    =  [0]*4
+        random_ROB_packet["IMM"]                          =  [0]*4
+        random_ROB_packet["FUNCT3"]                       =  [0]*4
+        random_ROB_packet["packet_index"]                 =  [0]*4
+        random_ROB_packet["ROB_index"]                    =  [0]*4
+        random_ROB_packet["instructionType"]              =  [0]*4
+        random_ROB_packet["portID"]                       =  [0]*4
+        random_ROB_packet["RS_type"]                      =  [0]*4
+        random_ROB_packet["needs_ALU"]                    =  [0]*4
+        random_ROB_packet["needs_branch_unit"]            =  [0]*4
+        random_ROB_packet["needs_CSRs"]                   =  [0]*4
+        random_ROB_packet["SUBTRACT"]                     =  [0]*4
+        random_ROB_packet["MULTIPLY"]                     =  [0]*4
+        random_ROB_packet["IMMEDIATE"]                    =  [0]*4
+        random_ROB_packet["IS_LOAD"]                      =  [0]*4
+        random_ROB_packet["IS_STORE"]                     =  [0]*4
+        random_ROB_packet["valid_bits"]                   =  [random.randint(0, 1) for _ in range(4)]
+
+
+        dut.write_ROB_packet(random_ROB_packet)
         await RisingEdge(dut.clock())
 
-    await ReadOnly()
 
+
+# ROB test
+
+def generate_load_store_bits():
+    load = [0,0,0,0]
+    store = [0,0,0,0]
+
+    for i in range(4):
+        load[i] = random.choices([1, 0], weights=[0.3, 0.7], k=1)
+        if(load[i]): store[i] = 0
+        else: random.choices([1, 0], weights=[0.3, 0.7], k=1)
+
+    return load, store
+
+
+def generate_random_ROB_packet(valid:bool):
+
+    random_ROB_packet = generate_null_allocate()
     
-    assert dut.get_shared_mem()["fetch_PC"][0] == 0xfee0
-    assert dut.get_shared_mem()["row_valid"][0] == 1
-
-    assert dut.get_ROB_entry()[0]["is_load"][0] == 0
-    assert dut.get_ROB_entry()[0]["is_store"][0] == 0
-
-    assert dut.get_ROB_entry()[1]["is_load"][0] == 0
-    assert dut.get_ROB_entry()[1]["is_store"][0] == 0
-
-    assert dut.get_ROB_entry()[2]["is_load"][0] == 0
-    assert dut.get_ROB_entry()[2]["is_store"][0] == 0
-
-    assert dut.get_ROB_entry()[3]["is_load"][0] == 0
-    assert dut.get_ROB_entry()[3]["is_store"][0] == 0
-
-    assert dut.get_shared_mem()["fetch_PC"][63] == 0xfee0
-    assert dut.get_shared_mem()["row_valid"][63] == 1
-
-    assert dut.get_ROB_entry()[0]["is_load"][63] == 0
-    assert dut.get_ROB_entry()[0]["is_store"][63] == 0
-
-    assert dut.get_ROB_entry()[1]["is_load"][63] == 0
-    assert dut.get_ROB_entry()[1]["is_store"][63] == 0
-
-    assert dut.get_ROB_entry()[2]["is_load"][63] == 0
-    assert dut.get_ROB_entry()[2]["is_store"][63] == 0
-
-    assert dut.get_ROB_entry()[3]["is_load"][63] == 0
-    assert dut.get_ROB_entry()[3]["is_store"][63] == 0
-
-    await RisingEdge(dut.clock())
-    await RisingEdge(dut.clock())
-    await RisingEdge(dut.clock())
-
-    assert dut.get_allocate_ready() == 0
-
-
-@cocotb.test()
-async def test_FU_all_valid(dut):
-
-    await cocotb.start(generateClock(dut)) 
-
-    dut = ROB_dut(dut)  # wrap dut with helper class
-    await dut.reset()   # reset module
-
-    await RisingEdge(dut.clock())
-
-    allocate_input = generate_null_allocate()
-
-    allocate_input["valid"]                        =  1
-    allocate_input["fetch_PC"]                     =  0xfee0
-    allocate_input["valid_bits"]                   =  [1, 1, 1, 1]
-    allocate_input["ready_bits_RS1_ready"]         =  [0, 0, 0, 0]
-    allocate_input["ready_bits_RS2_ready"]         =  [0, 0, 0, 0]
-    allocate_input["RD"]                           =  [0, 0, 0, 0]
-    allocate_input["RD_valid"]                     =  [0, 0, 0, 0]
-    allocate_input["RS1"]                          =  [0, 0, 0, 0]
-    allocate_input["RS1_valid"]                    =  [0, 0, 0, 0]
-    allocate_input["RS2"]                          =  [0, 0, 0, 0]
-    allocate_input["RS2_valid"]                    =  [0, 0, 0, 0]
-    allocate_input["IMM"]                          =  [0, 0, 0, 0]
-    allocate_input["FUNCT3"]                       =  [0, 0, 0, 0]
-    allocate_input["packet_index"]                 =  [0, 0, 0, 0]
-    allocate_input["ROB_index"]                    =  [0, 0, 0, 0]
-    allocate_input["instructionType"]              =  [0, 0, 0, 0]
-    allocate_input["portID"]                       =  [0, 0, 0, 0]
-    allocate_input["RS_type"]                      =  [0, 0, 0, 0]
-    allocate_input["needs_ALU"]                    =  [0, 0, 0, 0]
-    allocate_input["needs_branch_unit"]            =  [0, 0, 0, 0]
-    allocate_input["needs_CSRs"]                   =  [0, 0, 0, 0]
-    allocate_input["SUBTRACT"]                     =  [0, 0, 0, 0]
-    allocate_input["MULTIPLY"]                     =  [0, 0, 0, 0]
-    allocate_input["IMMEDIATE"]                    =  [0, 0, 0, 0]
-    allocate_input["IS_LOAD"]                      =  [1, 1, 1, 1]
-    allocate_input["IS_STORE"]                     =  [1, 1, 1, 1]
-
-    assert dut.get_allocate_ready() == 1
-
-    dut.write_allocate(allocate_input)
-    await RisingEdge(dut.clock())
-    dut.write_allocate()
-    await ReadOnly()
+    # shared data
+    random_ROB_packet["valid"]                        =  valid
+    random_ROB_packet["fetch_PC"]                     =  random.randint(0,0xFFFFFFFF/16)*16
     
-    assert dut.get_shared_mem()["fetch_PC"][0] == 0xfee0
-    assert dut.get_shared_mem()["row_valid"][0] == 1
+    # RS1
+    random_ROB_packet["RS1_ready"]                    =  [0]*4
+    random_ROB_packet["RS1_valid"]                    =  [0]*4
+    random_ROB_packet["RS1"]                          =  [0]*4
 
-    assert dut.get_ROB_entry()[0]["is_load"][0] == 1
-    assert dut.get_ROB_entry()[0]["is_store"][0] == 1
-
-    assert dut.get_ROB_entry()[1]["is_load"][0] == 1
-    assert dut.get_ROB_entry()[1]["is_store"][0] == 1
-
-    assert dut.get_ROB_entry()[2]["is_load"][0] == 1
-    assert dut.get_ROB_entry()[2]["is_store"][0] == 1
-
-    assert dut.get_ROB_entry()[3]["is_load"][0] == 1
-    assert dut.get_ROB_entry()[3]["is_store"][0] == 1
+    random_ROB_packet["RS2_ready"]                    =  [0]*4
+    random_ROB_packet["RS2"]                          =  [0]*4
+    random_ROB_packet["RS2_valid"]                    =  [0]*4
 
 
-    await RisingEdge(dut.clock())
-    await RisingEdge(dut.clock())
-    await RisingEdge(dut.clock())
-
-    FU_inputs  = generate_null_FU_inputs()
-
-    FU_inputs["valid"] = [1, 1, 1, 1]
-    FU_inputs["RD"] = [0, 0, 0, 0]
-    FU_inputs["RD_data"] = [0, 0, 0, 0]
-    FU_inputs["RD_valid"] = [0, 0, 0, 0]
-    FU_inputs["instruction_PC"] = [0, 0, 0, 0]
-    FU_inputs["branch_taken"] = [0, 0, 0, 0]
-    FU_inputs["target_address"] = [0, 0, 0, 0]
-    FU_inputs["branch_valid"] = [0, 0, 0, 0]
-    FU_inputs["ROB_index"] = [0, 0, 0, 0]
-    FU_inputs["fetch_packet_index"] = [0, 1, 2, 3]
-
-    dut.write_FU(FU_inputs)
-
-    await RisingEdge(dut.clock())
-    dut.write_FU()
-    await ReadOnly()
-    await RisingEdge(dut.clock())
-    await RisingEdge(dut.clock())
-    await RisingEdge(dut.clock())
-
-    dut.print_ROB(1)
-
-    assert dut.get_WB_mem()[0]["busy"][0] == 1
-    assert dut.get_WB_mem()[1]["busy"][0] == 1
-    assert dut.get_WB_mem()[2]["busy"][0] == 1
-    assert dut.get_WB_mem()[3]["busy"][0] == 1
+    random_ROB_packet["RD"]                           =  [0]*4
+    random_ROB_packet["RD_valid"]                     =  [0]*4
 
 
-    assert dut.get_allocate_ready() == 1
+    random_ROB_packet["IMM"]                          =  [0]*4
+    random_ROB_packet["FUNCT3"]                       =  [0]*4
+    random_ROB_packet["instructionType"]              =  [0]*4
+
+    random_ROB_packet["ROB_index"]                    =  [0]*4
+    random_ROB_packet["packet_index"]                 =  [0,1,2,3]
+    random_ROB_packet["portID"]                       =  [random.randint(0,3) for _ in range(4)]
 
 
-@cocotb.test()
-async def test_FU_not_all_valid(dut):
+    random_ROB_packet["RS_type"]                      =  [0]*4
+    random_ROB_packet["needs_ALU"]                    =  [0]*4
+    random_ROB_packet["needs_branch_unit"]            =  [0]*4
+    random_ROB_packet["needs_CSRs"]                   =  [0]*4
+    random_ROB_packet["SUBTRACT"]                     =  [0]*4
+    random_ROB_packet["MULTIPLY"]                     =  [0]*4
+    random_ROB_packet["IMMEDIATE"]                    =  [0]*4
 
-    await cocotb.start(generateClock(dut)) 
-
-    dut = ROB_dut(dut)  # wrap dut with helper class
-    await dut.reset()   # reset module
-
-    await RisingEdge(dut.clock())
-
-    allocate_input = generate_null_allocate()
-
-    allocate_input["valid"]                        =  1
-    allocate_input["fetch_PC"]                     =  0xfee0
-    allocate_input["valid_bits"]                   =  [1, 1, 1, 1]
-    allocate_input["ready_bits_RS1_ready"]         =  [0, 0, 0, 0]
-    allocate_input["ready_bits_RS2_ready"]         =  [0, 0, 0, 0]
-    allocate_input["RD"]                           =  [0, 0, 0, 0]
-    allocate_input["RD_valid"]                     =  [0, 0, 0, 0]
-    allocate_input["RS1"]                          =  [0, 0, 0, 0]
-    allocate_input["RS1_valid"]                    =  [0, 0, 0, 0]
-    allocate_input["RS2"]                          =  [0, 0, 0, 0]
-    allocate_input["RS2_valid"]                    =  [0, 0, 0, 0]
-    allocate_input["IMM"]                          =  [0, 0, 0, 0]
-    allocate_input["FUNCT3"]                       =  [0, 0, 0, 0]
-    allocate_input["packet_index"]                 =  [0, 0, 0, 0]
-    allocate_input["ROB_index"]                    =  [0, 0, 0, 0]
-    allocate_input["instructionType"]              =  [0, 0, 0, 0]
-    allocate_input["portID"]                       =  [0, 0, 0, 0]
-    allocate_input["RS_type"]                      =  [0, 0, 0, 0]
-    allocate_input["needs_ALU"]                    =  [0, 0, 0, 0]
-    allocate_input["needs_branch_unit"]            =  [0, 0, 0, 0]
-    allocate_input["needs_CSRs"]                   =  [0, 0, 0, 0]
-    allocate_input["SUBTRACT"]                     =  [0, 0, 0, 0]
-    allocate_input["MULTIPLY"]                     =  [0, 0, 0, 0]
-    allocate_input["IMMEDIATE"]                    =  [0, 0, 0, 0]
-    allocate_input["IS_LOAD"]                      =  [1, 1, 1, 1]
-    allocate_input["IS_STORE"]                     =  [1, 1, 1, 1]
-
-    assert dut.get_allocate_ready() == 1
-
-    dut.write_allocate(allocate_input)
-    await RisingEdge(dut.clock())
-    dut.write_allocate()
-    await ReadOnly()
+    random_ROB_packet["IS_LOAD"]                      = [random.choices([1, 0], weights=[0.3, 0.7], k=1) for _ in range(4)]
     
-    assert dut.get_shared_mem()["fetch_PC"][0] == 0xfee0
-    assert dut.get_shared_mem()["row_valid"][0] == 1
+    for i in range(4):
+        if(not random_ROB_packet["IS_LOAD"][i]):
+            random_ROB_packet["IS_STORE"][i]         = random.choices([1, 0], weights=[0.3, 0.7], k=1)
 
-    assert dut.get_ROB_entry()[0]["is_load"][0] == 1
-    assert dut.get_ROB_entry()[0]["is_store"][0] == 1
+    random_ROB_packet["valid_bits"]                   =  [random.randint(0, 1) for _ in range(4)]
 
-    assert dut.get_ROB_entry()[1]["is_load"][0] == 1
-    assert dut.get_ROB_entry()[1]["is_store"][0] == 1
+    return random_ROB_packet
 
-    assert dut.get_ROB_entry()[2]["is_load"][0] == 1
-    assert dut.get_ROB_entry()[2]["is_store"][0] == 1
 
-    assert dut.get_ROB_entry()[3]["is_load"][0] == 1
-    assert dut.get_ROB_entry()[3]["is_store"][0] == 1
+current_ROB_index = 0
 
+def generate_random_FU_output(valid:bool):
 
-    await RisingEdge(dut.clock())
-    await RisingEdge(dut.clock())
-    await RisingEdge(dut.clock())
 
-    FU_inputs  = generate_null_FU_inputs()
 
-    FU_inputs["valid"] = [1, 0, 0, 1]
-    FU_inputs["RD"] = [0, 0, 0, 0]
-    FU_inputs["RD_data"] = [0, 0, 0, 0]
-    FU_inputs["RD_valid"] = [0, 0, 0, 0]
-    FU_inputs["instruction_PC"] = [0, 0, 0, 0]
-    FU_inputs["branch_taken"] = [0, 0, 0, 0]
-    FU_inputs["target_address"] = [0, 0, 0, 0]
-    FU_inputs["branch_valid"] = [0, 0, 0, 0]
-    FU_inputs["ROB_index"] = [0, 0, 0, 0]
-    FU_inputs["fetch_packet_index"] = [0, 1, 2, 3]
 
-    dut.write_FU(FU_inputs)
+    pass
 
-    await RisingEdge(dut.clock())
-    dut.write_FU()
-    await ReadOnly()
-    await RisingEdge(dut.clock())
-    await RisingEdge(dut.clock())
-    await RisingEdge(dut.clock())
+def generate_random_commit():
+    pass
 
-    dut.print_ROB(1)
+def generate_random_index():
+    pass
 
-    assert dut.get_WB_mem()[0]["busy"][0] == 1
-    assert dut.get_WB_mem()[1]["busy"][0] == 0
-    assert dut.get_WB_mem()[2]["busy"][0] == 0
-    assert dut.get_WB_mem()[3]["busy"][0] == 1
-
-
-    assert dut.get_allocate_ready() == 1
-
-
-@cocotb.test()
-async def test_FU_all_valid_diff_rows(dut):
-
-    await cocotb.start(generateClock(dut)) 
-
-    dut = ROB_dut(dut)  # wrap dut with helper class
-    await dut.reset()   # reset module
-
-    await RisingEdge(dut.clock())
-
-    allocate_input = generate_null_allocate()
-
-    allocate_input["valid"]                        =  1
-    allocate_input["fetch_PC"]                     =  0xfee0
-    allocate_input["valid_bits"]                   =  [1, 1, 1, 1]
-    allocate_input["ready_bits_RS1_ready"]         =  [0, 0, 0, 0]
-    allocate_input["ready_bits_RS2_ready"]         =  [0, 0, 0, 0]
-    allocate_input["RD"]                           =  [0, 0, 0, 0]
-    allocate_input["RD_valid"]                     =  [0, 0, 0, 0]
-    allocate_input["RS1"]                          =  [0, 0, 0, 0]
-    allocate_input["RS1_valid"]                    =  [0, 0, 0, 0]
-    allocate_input["RS2"]                          =  [0, 0, 0, 0]
-    allocate_input["RS2_valid"]                    =  [0, 0, 0, 0]
-    allocate_input["IMM"]                          =  [0, 0, 0, 0]
-    allocate_input["FUNCT3"]                       =  [0, 0, 0, 0]
-    allocate_input["packet_index"]                 =  [0, 0, 0, 0]
-    allocate_input["ROB_index"]                    =  [0, 0, 0, 0]
-    allocate_input["instructionType"]              =  [0, 0, 0, 0]
-    allocate_input["portID"]                       =  [0, 0, 0, 0]
-    allocate_input["RS_type"]                      =  [0, 0, 0, 0]
-    allocate_input["needs_ALU"]                    =  [0, 0, 0, 0]
-    allocate_input["needs_branch_unit"]            =  [0, 0, 0, 0]
-    allocate_input["needs_CSRs"]                   =  [0, 0, 0, 0]
-    allocate_input["SUBTRACT"]                     =  [0, 0, 0, 0]
-    allocate_input["MULTIPLY"]                     =  [0, 0, 0, 0]
-    allocate_input["IMMEDIATE"]                    =  [0, 0, 0, 0]
-    allocate_input["IS_LOAD"]                      =  [1, 1, 1, 1]
-    allocate_input["IS_STORE"]                     =  [1, 1, 1, 1]
-
-    assert dut.get_allocate_ready() == 1
-
-    dut.write_allocate(allocate_input)
-    await RisingEdge(dut.clock())
-
-    allocate_input["valid"]                        =  1
-    allocate_input["fetch_PC"]                     =  0xdead
-    allocate_input["valid_bits"]                   =  [1, 1, 1, 1]
-    allocate_input["ready_bits_RS1_ready"]         =  [0, 0, 0, 0]
-    allocate_input["ready_bits_RS2_ready"]         =  [0, 0, 0, 0]
-    allocate_input["RD"]                           =  [0, 0, 0, 0]
-    allocate_input["RD_valid"]                     =  [0, 0, 0, 0]
-    allocate_input["RS1"]                          =  [0, 0, 0, 0]
-    allocate_input["RS1_valid"]                    =  [0, 0, 0, 0]
-    allocate_input["RS2"]                          =  [0, 0, 0, 0]
-    allocate_input["RS2_valid"]                    =  [0, 0, 0, 0]
-    allocate_input["IMM"]                          =  [0, 0, 0, 0]
-    allocate_input["FUNCT3"]                       =  [0, 0, 0, 0]
-    allocate_input["packet_index"]                 =  [0, 0, 0, 0]
-    allocate_input["ROB_index"]                    =  [0, 0, 0, 0]
-    allocate_input["instructionType"]              =  [0, 0, 0, 0]
-    allocate_input["portID"]                       =  [0, 0, 0, 0]
-    allocate_input["RS_type"]                      =  [0, 0, 0, 0]
-    allocate_input["needs_ALU"]                    =  [0, 0, 0, 0]
-    allocate_input["needs_branch_unit"]            =  [0, 0, 0, 0]
-    allocate_input["needs_CSRs"]                   =  [0, 0, 0, 0]
-    allocate_input["SUBTRACT"]                     =  [0, 0, 0, 0]
-    allocate_input["MULTIPLY"]                     =  [0, 0, 0, 0]
-    allocate_input["IMMEDIATE"]                    =  [0, 0, 0, 0]
-    allocate_input["IS_LOAD"]                      =  [1, 1, 1, 1]
-    allocate_input["IS_STORE"]                     =  [1, 1, 1, 1]
-
-    dut.write_allocate(allocate_input)
-    await RisingEdge(dut.clock())
-    dut.write_allocate()
-    await ReadOnly()
-    
-    assert dut.get_shared_mem()["fetch_PC"][0] == 0xfee0
-    assert dut.get_shared_mem()["row_valid"][0] == 1
-
-    assert dut.get_ROB_entry()[0]["is_load"][0] == 1
-    assert dut.get_ROB_entry()[0]["is_store"][0] == 1
-
-    assert dut.get_ROB_entry()[1]["is_load"][0] == 1
-    assert dut.get_ROB_entry()[1]["is_store"][0] == 1
-
-    assert dut.get_ROB_entry()[2]["is_load"][0] == 1
-    assert dut.get_ROB_entry()[2]["is_store"][0] == 1
-
-    assert dut.get_ROB_entry()[3]["is_load"][0] == 1
-    assert dut.get_ROB_entry()[3]["is_store"][0] == 1
-
-    assert dut.get_shared_mem()["fetch_PC"][1] == 0xdead
-    assert dut.get_shared_mem()["row_valid"][1] == 1
-
-    assert dut.get_ROB_entry()[0]["is_load"][1] == 1
-    assert dut.get_ROB_entry()[0]["is_store"][1] == 1
-
-    assert dut.get_ROB_entry()[1]["is_load"][1] == 1
-    assert dut.get_ROB_entry()[1]["is_store"][1] == 1
-
-    assert dut.get_ROB_entry()[2]["is_load"][1] == 1
-    assert dut.get_ROB_entry()[2]["is_store"][1] == 1
-
-    assert dut.get_ROB_entry()[3]["is_load"][1] == 1
-    assert dut.get_ROB_entry()[3]["is_store"][1] == 1
-
-    await RisingEdge(dut.clock())
-    await RisingEdge(dut.clock())
-    await RisingEdge(dut.clock())
-
-    FU_inputs  = generate_null_FU_inputs()
-
-    FU_inputs["valid"] = [1, 1, 1, 1]
-    FU_inputs["RD"] = [0, 0, 0, 0]
-    FU_inputs["RD_data"] = [0, 0, 0, 0]
-    FU_inputs["RD_valid"] = [0, 0, 0, 0]
-    FU_inputs["instruction_PC"] = [0, 0, 0, 0]
-    FU_inputs["branch_taken"] = [0, 0, 0, 0]
-    FU_inputs["target_address"] = [0, 0, 0, 0]
-    FU_inputs["branch_valid"] = [0, 0, 0, 0]
-    FU_inputs["ROB_index"] = [0, 1, 0, 1]
-    FU_inputs["fetch_packet_index"] = [0, 0, 1, 1]
-
-    dut.write_FU(FU_inputs)
-
-    await RisingEdge(dut.clock())
-    dut.write_FU()
-    await ReadOnly()
-    await RisingEdge(dut.clock())
-    await RisingEdge(dut.clock())
-    await RisingEdge(dut.clock())
-
-    dut.print_ROB(1)
-
-    assert dut.get_WB_mem()[0]["busy"][0] == 1
-    assert dut.get_WB_mem()[1]["busy"][0] == 1
-    assert dut.get_WB_mem()[2]["busy"][0] == 0
-    assert dut.get_WB_mem()[3]["busy"][0] == 0
-
-    assert dut.get_WB_mem()[0]["busy"][1] == 1
-    assert dut.get_WB_mem()[1]["busy"][1] == 1
-    assert dut.get_WB_mem()[2]["busy"][1] == 0
-    assert dut.get_WB_mem()[3]["busy"][1] == 0
-
-    assert dut.get_allocate_ready() == 1
-
-
-@cocotb.test()
-async def test_FU_all_valid_single_bank(dut):
-
-    await cocotb.start(generateClock(dut)) 
-
-    dut = ROB_dut(dut)  # wrap dut with helper class
-    await dut.reset()   # reset module
-
-    await RisingEdge(dut.clock())
-
-    allocate_input = generate_null_allocate()
-
-    allocate_input["valid"]                        =  1
-    allocate_input["fetch_PC"]                     =  0xfee0
-    allocate_input["valid_bits"]                   =  [1, 1, 1, 1]
-    allocate_input["ready_bits_RS1_ready"]         =  [0, 0, 0, 0]
-    allocate_input["ready_bits_RS2_ready"]         =  [0, 0, 0, 0]
-    allocate_input["RD"]                           =  [0, 0, 0, 0]
-    allocate_input["RD_valid"]                     =  [0, 0, 0, 0]
-    allocate_input["RS1"]                          =  [0, 0, 0, 0]
-    allocate_input["RS1_valid"]                    =  [0, 0, 0, 0]
-    allocate_input["RS2"]                          =  [0, 0, 0, 0]
-    allocate_input["RS2_valid"]                    =  [0, 0, 0, 0]
-    allocate_input["IMM"]                          =  [0, 0, 0, 0]
-    allocate_input["FUNCT3"]                       =  [0, 0, 0, 0]
-    allocate_input["packet_index"]                 =  [0, 0, 0, 0]
-    allocate_input["ROB_index"]                    =  [0, 0, 0, 0]
-    allocate_input["instructionType"]              =  [0, 0, 0, 0]
-    allocate_input["portID"]                       =  [0, 0, 0, 0]
-    allocate_input["RS_type"]                      =  [0, 0, 0, 0]
-    allocate_input["needs_ALU"]                    =  [0, 0, 0, 0]
-    allocate_input["needs_branch_unit"]            =  [0, 0, 0, 0]
-    allocate_input["needs_CSRs"]                   =  [0, 0, 0, 0]
-    allocate_input["SUBTRACT"]                     =  [0, 0, 0, 0]
-    allocate_input["MULTIPLY"]                     =  [0, 0, 0, 0]
-    allocate_input["IMMEDIATE"]                    =  [0, 0, 0, 0]
-    allocate_input["IS_LOAD"]                      =  [1, 1, 1, 1]
-    allocate_input["IS_STORE"]                     =  [1, 1, 1, 1]
-
-    assert dut.get_allocate_ready() == 1
-
-    dut.write_allocate(allocate_input)
-    await RisingEdge(dut.clock())
-
-    dut.write_allocate(allocate_input)
-    await RisingEdge(dut.clock())
-
-    dut.write_allocate(allocate_input)
-    await RisingEdge(dut.clock())
-
-    dut.write_allocate(allocate_input)
-    await RisingEdge(dut.clock())
-    dut.write_allocate()
-    await ReadOnly()
-    
-    assert dut.get_shared_mem()["fetch_PC"][0] == 0xfee0
-    assert dut.get_shared_mem()["row_valid"][0] == 1
-
-    assert dut.get_ROB_entry()[0]["is_load"][0] == 1
-    assert dut.get_ROB_entry()[0]["is_store"][0] == 1
-
-    assert dut.get_ROB_entry()[1]["is_load"][0] == 1
-    assert dut.get_ROB_entry()[1]["is_store"][0] == 1
-
-    assert dut.get_ROB_entry()[2]["is_load"][0] == 1
-    assert dut.get_ROB_entry()[2]["is_store"][0] == 1
-
-    assert dut.get_ROB_entry()[3]["is_load"][0] == 1
-    assert dut.get_ROB_entry()[3]["is_store"][0] == 1
-
-    assert dut.get_shared_mem()["fetch_PC"][1] == 0xfee0
-    assert dut.get_shared_mem()["row_valid"][1] == 1
-
-    assert dut.get_ROB_entry()[0]["is_load"][1] == 1
-    assert dut.get_ROB_entry()[0]["is_store"][1] == 1
-
-    assert dut.get_ROB_entry()[1]["is_load"][1] == 1
-    assert dut.get_ROB_entry()[1]["is_store"][1] == 1
-
-    assert dut.get_ROB_entry()[2]["is_load"][1] == 1
-    assert dut.get_ROB_entry()[2]["is_store"][1] == 1
-
-    assert dut.get_ROB_entry()[3]["is_load"][1] == 1
-    assert dut.get_ROB_entry()[3]["is_store"][1] == 1
-
-    assert dut.get_shared_mem()["fetch_PC"][2] == 0xfee0
-    assert dut.get_shared_mem()["row_valid"][2] == 1
-
-    assert dut.get_ROB_entry()[0]["is_load"][2] == 1
-    assert dut.get_ROB_entry()[0]["is_store"][2] == 1
-
-    assert dut.get_ROB_entry()[1]["is_load"][2] == 1
-    assert dut.get_ROB_entry()[1]["is_store"][2] == 1
-
-    assert dut.get_ROB_entry()[2]["is_load"][2] == 1
-    assert dut.get_ROB_entry()[2]["is_store"][2] == 1
-
-    assert dut.get_ROB_entry()[3]["is_load"][2] == 1
-    assert dut.get_ROB_entry()[3]["is_store"][2] == 1
-
-    assert dut.get_shared_mem()["fetch_PC"][3] == 0xfee0
-    assert dut.get_shared_mem()["row_valid"][3] == 1
-
-    assert dut.get_ROB_entry()[0]["is_load"][3] == 1
-    assert dut.get_ROB_entry()[0]["is_store"][3] == 1
-
-    assert dut.get_ROB_entry()[1]["is_load"][3] == 1
-    assert dut.get_ROB_entry()[1]["is_store"][3] == 1
-
-    assert dut.get_ROB_entry()[2]["is_load"][3] == 1
-    assert dut.get_ROB_entry()[2]["is_store"][3] == 1
-
-    assert dut.get_ROB_entry()[3]["is_load"][3] == 1
-    assert dut.get_ROB_entry()[3]["is_store"][3] == 1
-
-    await RisingEdge(dut.clock())
-    await RisingEdge(dut.clock())
-    await RisingEdge(dut.clock())
-
-    FU_inputs  = generate_null_FU_inputs()
-
-    FU_inputs["valid"] = [1, 1, 1, 1]
-    FU_inputs["RD"] = [0, 0, 0, 0]
-    FU_inputs["RD_data"] = [0, 0, 0, 0]
-    FU_inputs["RD_valid"] = [0, 0, 0, 0]
-    FU_inputs["instruction_PC"] = [0, 0, 0, 0]
-    FU_inputs["branch_taken"] = [0, 0, 0, 0]
-    FU_inputs["target_address"] = [0, 0, 0, 0]
-    FU_inputs["branch_valid"] = [0, 0, 0, 0]
-    FU_inputs["ROB_index"] = [0, 1, 2, 3]
-    FU_inputs["fetch_packet_index"] = [0, 0, 0, 0]
-
-    dut.write_FU(FU_inputs)
-
-    await RisingEdge(dut.clock())
-    dut.write_FU()
-    await ReadOnly()
-    await RisingEdge(dut.clock())
-    await RisingEdge(dut.clock())
-    await RisingEdge(dut.clock())
-
-    dut.print_ROB(1)
-
-    assert dut.get_WB_mem()[0]["busy"][0] == 1
-    assert dut.get_WB_mem()[1]["busy"][0] == 0
-    assert dut.get_WB_mem()[2]["busy"][0] == 0
-    assert dut.get_WB_mem()[3]["busy"][0] == 0
-
-    assert dut.get_WB_mem()[0]["busy"][1] == 1
-    assert dut.get_WB_mem()[1]["busy"][1] == 0
-    assert dut.get_WB_mem()[2]["busy"][1] == 0
-    assert dut.get_WB_mem()[3]["busy"][1] == 0
-
-    assert dut.get_WB_mem()[0]["busy"][2] == 1
-    assert dut.get_WB_mem()[1]["busy"][2] == 0
-    assert dut.get_WB_mem()[2]["busy"][2] == 0
-    assert dut.get_WB_mem()[3]["busy"][2] == 0
-
-    assert dut.get_WB_mem()[0]["busy"][3] == 1
-    assert dut.get_WB_mem()[1]["busy"][3] == 0
-    assert dut.get_WB_mem()[2]["busy"][3] == 0
-    assert dut.get_WB_mem()[3]["busy"][3] == 0
-
-    assert dut.get_allocate_ready() == 1
-
-
-
-
-
-
-@cocotb.test()
-async def test_basic_commit(dut):
-
-    await cocotb.start(generateClock(dut)) 
-
-    dut = ROB_dut(dut)  # wrap dut with helper class
-    await dut.reset()   # reset module
-
-    await RisingEdge(dut.clock())
-
-    allocate_input = generate_null_allocate()
-
-    allocate_input["valid"]                        =  1
-    allocate_input["fetch_PC"]                     =  0xfee0
-    allocate_input["valid_bits"]                   =  [1, 1, 1, 1]
-    allocate_input["ready_bits_RS1_ready"]         =  [0, 0, 0, 0]
-    allocate_input["ready_bits_RS2_ready"]         =  [0, 0, 0, 0]
-    allocate_input["RD"]                           =  [0, 0, 0, 0]
-    allocate_input["RD_valid"]                     =  [0, 0, 0, 0]
-    allocate_input["RS1"]                          =  [0, 0, 0, 0]
-    allocate_input["RS1_valid"]                    =  [0, 0, 0, 0]
-    allocate_input["RS2"]                          =  [0, 0, 0, 0]
-    allocate_input["RS2_valid"]                    =  [0, 0, 0, 0]
-    allocate_input["IMM"]                          =  [0, 0, 0, 0]
-    allocate_input["FUNCT3"]                       =  [0, 0, 0, 0]
-    allocate_input["packet_index"]                 =  [0, 0, 0, 0]
-    allocate_input["ROB_index"]                    =  [0, 0, 0, 0]
-    allocate_input["instructionType"]              =  [0, 0, 0, 0]
-    allocate_input["portID"]                       =  [0, 0, 0, 0]
-    allocate_input["RS_type"]                      =  [0, 0, 0, 0]
-    allocate_input["needs_ALU"]                    =  [0, 0, 0, 0]
-    allocate_input["needs_branch_unit"]            =  [0, 0, 0, 0]
-    allocate_input["needs_CSRs"]                   =  [0, 0, 0, 0]
-    allocate_input["SUBTRACT"]                     =  [0, 0, 0, 0]
-    allocate_input["MULTIPLY"]                     =  [0, 0, 0, 0]
-    allocate_input["IMMEDIATE"]                    =  [0, 0, 0, 0]
-    allocate_input["IS_LOAD"]                      =  [0, 1, 0, 0]
-    allocate_input["IS_STORE"]                     =  [0, 1, 0, 0]
-
-    assert dut.get_allocate_ready() == 1
-
-    dut.write_allocate(allocate_input)
-    await RisingEdge(dut.clock())
-    dut.write_allocate()
-    await ReadOnly()
-    
-    assert dut.get_shared_mem()["fetch_PC"][0] == 0xfee0
-    assert dut.get_shared_mem()["row_valid"][0] == 1
-
-    assert dut.get_ROB_entry()[0]["is_load"][0] == 0
-    assert dut.get_ROB_entry()[0]["is_store"][0] == 0
-
-    assert dut.get_ROB_entry()[1]["is_load"][0] == 1
-    assert dut.get_ROB_entry()[1]["is_store"][0] == 1
-
-    assert dut.get_ROB_entry()[2]["is_load"][0] == 0
-    assert dut.get_ROB_entry()[2]["is_store"][0] == 0
-
-    assert dut.get_ROB_entry()[3]["is_load"][0] == 0
-    assert dut.get_ROB_entry()[3]["is_store"][0] == 0
-
-    await RisingEdge(dut.clock())
-
-    FU_inputs  = generate_null_FU_inputs()
-
-    FU_inputs["valid"] = [1, 1, 1, 1]
-    FU_inputs["RD"] = [0, 0, 0, 0]
-    FU_inputs["RD_data"] = [0, 0, 0, 0]
-    FU_inputs["RD_valid"] = [0, 0, 0, 0]
-    FU_inputs["instruction_PC"] = [0, 0, 0, 0]
-    FU_inputs["branch_taken"] = [0, 0, 0, 0]
-    FU_inputs["target_address"] = [0, 0, 0, 0]
-    FU_inputs["branch_valid"] = [0, 0, 0, 0]
-    FU_inputs["ROB_index"] = [0, 0, 0, 0]
-    FU_inputs["fetch_packet_index"] = [0, 1, 2, 3]
-
-    dut.write_FU(FU_inputs)
-
-    await RisingEdge(dut.clock())
-    dut.write_FU()
-    await ReadOnly()
-
-    dut.print_ROB(1)
-
-    assert dut.get_WB_mem()[0]["busy"][0] == 1
-    assert dut.get_WB_mem()[1]["busy"][0] == 1
-    assert dut.get_WB_mem()[2]["busy"][0] == 1
-    assert dut.get_WB_mem()[3]["busy"][0] == 1
-
-    assert dut.get_ROB_output()["valid"] == 1
-    #assert dut.get_ROB_output()["RS1"] == [4,4,4,4]
-    assert dut.get_ROB_output()["is_load"] == [0,1,0,0]
-    assert dut.get_ROB_output()["is_store"] == [0,1,0,0]
-
-
-    
-# test ROB allocate index 
-
-@cocotb.test()
-async def test_allocate_rob_index(dut):
-
-    await cocotb.start(generateClock(dut)) 
-
-    dut = ROB_dut(dut)  # wrap dut with helper class
-    await dut.reset()   # reset module
-
-    await RisingEdge(dut.clock())
-
-    allocate_input = generate_null_allocate()
-
-    allocate_input["valid"]                        =  1
-    allocate_input["fetch_PC"]                     =  0xfee0
-    allocate_input["valid_bits"]                   =  [1, 1, 1, 1]
-    allocate_input["ready_bits_RS1_ready"]         =  [0, 0, 0, 0]
-    allocate_input["ready_bits_RS2_ready"]         =  [0, 0, 0, 0]
-    allocate_input["RD"]                           =  [0, 0, 0, 0]
-    allocate_input["RD_valid"]                     =  [0, 0, 0, 0]
-    allocate_input["RS1"]                          =  [0, 0, 0, 0]
-    allocate_input["RS1_valid"]                    =  [0, 0, 0, 0]
-    allocate_input["RS2"]                          =  [0, 0, 0, 0]
-    allocate_input["RS2_valid"]                    =  [0, 0, 0, 0]
-    allocate_input["IMM"]                          =  [0, 0, 0, 0]
-    allocate_input["FUNCT3"]                       =  [0, 0, 0, 0]
-    allocate_input["packet_index"]                 =  [0, 0, 0, 0]
-    allocate_input["ROB_index"]                    =  [0, 0, 0, 0]
-    allocate_input["instructionType"]              =  [0, 0, 0, 0]
-    allocate_input["portID"]                       =  [0, 0, 0, 0]
-    allocate_input["RS_type"]                      =  [0, 0, 0, 0]
-    allocate_input["needs_ALU"]                    =  [0, 0, 0, 0]
-    allocate_input["needs_branch_unit"]            =  [0, 0, 0, 0]
-    allocate_input["needs_CSRs"]                   =  [0, 0, 0, 0]
-    allocate_input["SUBTRACT"]                     =  [0, 0, 0, 0]
-    allocate_input["MULTIPLY"]                     =  [0, 0, 0, 0]
-    allocate_input["IMMEDIATE"]                    =  [0, 0, 0, 0]
-    allocate_input["IS_LOAD"]                      =  [0, 1, 0, 0]
-    allocate_input["IS_STORE"]                     =  [0, 1, 0, 0]
-
-    assert dut.get_allocate_ready() == 1
-
-    dut.write_allocate(allocate_input)
-    assert dut.get_ROB_output()["ROB_index"] == 0
-    await RisingEdge(dut.clock())
-    dut.write_allocate()
-    await ReadOnly()
-
-    assert dut.get_ROB_output()["ROB_index"] == 1
-
-    await RisingEdge(dut.clock())
-    await RisingEdge(dut.clock())
-    await RisingEdge(dut.clock())
-    await RisingEdge(dut.clock())
-
-
-    assert dut.get_allocate_ready() == 1
-
-    dut.write_allocate(allocate_input)
-    assert dut.get_ROB_output()["ROB_index"] == 1
-    await RisingEdge(dut.clock())
-    dut.write_allocate()
-    await ReadOnly()
-
-
-    assert dut.get_allocate_ready() == 1
-
-
-    await RisingEdge(dut.clock())
-
-    dut.write_allocate(allocate_input)
-    assert dut.get_ROB_output()["ROB_index"] == 2
-    await RisingEdge(dut.clock())
-    dut.write_allocate()
-    await ReadOnly()
-
-
-
-# test commit_rob_index
-
-@cocotb.test()
-async def test_commit_rob_index(dut):
-
-    await cocotb.start(generateClock(dut)) 
-
-    dut = ROB_dut(dut)  # wrap dut with helper class
-    await dut.reset()   # reset module
-
-    await RisingEdge(dut.clock())
-
-    allocate_input = generate_null_allocate()
-
-    allocate_input["valid"]                        =  1
-    allocate_input["fetch_PC"]                     =  0xfee0
-    allocate_input["valid_bits"]                   =  [1, 1, 1, 1]
-    allocate_input["ready_bits_RS1_ready"]         =  [0, 0, 0, 0]
-    allocate_input["ready_bits_RS2_ready"]         =  [0, 0, 0, 0]
-    allocate_input["RD"]                           =  [0, 0, 0, 0]
-    allocate_input["RD_valid"]                     =  [0, 0, 0, 0]
-    allocate_input["RS1"]                          =  [0, 0, 0, 0]
-    allocate_input["RS1_valid"]                    =  [0, 0, 0, 0]
-    allocate_input["RS2"]                          =  [0, 0, 0, 0]
-    allocate_input["RS2_valid"]                    =  [0, 0, 0, 0]
-    allocate_input["IMM"]                          =  [0, 0, 0, 0]
-    allocate_input["FUNCT3"]                       =  [0, 0, 0, 0]
-    allocate_input["packet_index"]                 =  [0, 0, 0, 0]
-    allocate_input["ROB_index"]                    =  [0, 0, 0, 0]
-    allocate_input["instructionType"]              =  [0, 0, 0, 0]
-    allocate_input["portID"]                       =  [0, 0, 0, 0]
-    allocate_input["RS_type"]                      =  [0, 0, 0, 0]
-    allocate_input["needs_ALU"]                    =  [0, 0, 0, 0]
-    allocate_input["needs_branch_unit"]            =  [0, 0, 0, 0]
-    allocate_input["needs_CSRs"]                   =  [0, 0, 0, 0]
-    allocate_input["SUBTRACT"]                     =  [0, 0, 0, 0]
-    allocate_input["MULTIPLY"]                     =  [0, 0, 0, 0]
-    allocate_input["IMMEDIATE"]                    =  [0, 0, 0, 0]
-    allocate_input["IS_LOAD"]                      =  [0, 1, 0, 0]
-    allocate_input["IS_STORE"]                     =  [0, 1, 0, 0]
-
-    assert dut.get_allocate_ready() == 1
-
-    dut.write_allocate(allocate_input)
-    await RisingEdge(dut.clock())
-    await RisingEdge(dut.clock())
-    await RisingEdge(dut.clock())
-    await RisingEdge(dut.clock())
-    await RisingEdge(dut.clock())
-    dut.write_allocate()
-    await ReadOnly()
-    
-    assert dut.get_shared_mem()["fetch_PC"][0] == 0xfee0
-    assert dut.get_shared_mem()["row_valid"][0] == 1
-
-    assert dut.get_ROB_entry()[0]["is_load"][0] == 0
-    assert dut.get_ROB_entry()[0]["is_store"][0] == 0
-
-    assert dut.get_ROB_entry()[1]["is_load"][0] == 1
-    assert dut.get_ROB_entry()[1]["is_store"][0] == 1
-
-    assert dut.get_ROB_entry()[2]["is_load"][0] == 0
-    assert dut.get_ROB_entry()[2]["is_store"][0] == 0
-
-    assert dut.get_ROB_entry()[3]["is_load"][0] == 0
-    assert dut.get_ROB_entry()[3]["is_store"][0] == 0
-
-    await RisingEdge(dut.clock())
-
-    FU_inputs  = generate_null_FU_inputs()
-
-    FU_inputs["valid"] = [1, 1, 1, 1]
-    FU_inputs["RD"] = [0, 0, 0, 0]
-    FU_inputs["RD_data"] = [0, 0, 0, 0]
-    FU_inputs["RD_valid"] = [0, 0, 0, 0]
-    FU_inputs["instruction_PC"] = [0, 0, 0, 0]
-    FU_inputs["branch_taken"] = [0, 0, 0, 0]
-    FU_inputs["target_address"] = [0, 0, 0, 0]
-    FU_inputs["branch_valid"] = [0, 0, 0, 0]
-    FU_inputs["ROB_index"] = [0, 0, 0, 0]
-    FU_inputs["fetch_packet_index"] = [0, 1, 2, 3]
-
-    dut.write_FU(FU_inputs)
-
-    await RisingEdge(dut.clock())
-    dut.write_FU()
-    await ReadOnly()
-
-    dut.print_ROB(1)
-
-    assert dut.get_WB_mem()[0]["busy"][0] == 1
-    assert dut.get_WB_mem()[1]["busy"][0] == 1
-    assert dut.get_WB_mem()[2]["busy"][0] == 1
-    assert dut.get_WB_mem()[3]["busy"][0] == 1
-
-    assert dut.get_ROB_output()["valid"] == 1
-    #assert dut.get_ROB_output()["RS1"] == [4,4,4,4]
-    assert dut.get_ROB_output()["is_load"] == [0,1,0,0]
-    assert dut.get_ROB_output()["is_store"] == [0,1,0,0]
-
-
-    await RisingEdge(dut.clock())
-    await RisingEdge(dut.clock())
-    await RisingEdge(dut.clock())
-
-    FU_inputs  = generate_null_FU_inputs()
-
-    FU_inputs["valid"] = [1, 1, 1, 1]
-    FU_inputs["RD"] = [0, 0, 0, 0]
-    FU_inputs["RD_data"] = [0, 0, 0, 0]
-    FU_inputs["RD_valid"] = [0, 0, 0, 0]
-    FU_inputs["instruction_PC"] = [0, 0, 0, 0]
-    FU_inputs["branch_taken"] = [0, 0, 0, 0]
-    FU_inputs["target_address"] = [0, 0, 0, 0]
-    FU_inputs["branch_valid"] = [0, 0, 0, 0]
-    FU_inputs["ROB_index"] = [1, 1, 1, 1]
-    FU_inputs["fetch_packet_index"] = [0, 1, 2, 3]
-
-    dut.write_FU(FU_inputs)
-
-    await RisingEdge(dut.clock())
-    dut.write_FU()
-    await ReadOnly()
-
-    dut.print_ROB(1)
-
-    assert dut.get_WB_mem()[0]["busy"][1] == 1
-    assert dut.get_WB_mem()[1]["busy"][1] == 1
-    assert dut.get_WB_mem()[2]["busy"][1] == 1
-    assert dut.get_WB_mem()[3]["busy"][1] == 1
-
-    assert dut.get_ROB_output()["valid"] == 1
-    #assert dut.get_ROB_output()["RS1"] == [4,4,4,4]
-    assert dut.get_ROB_output()["is_load"] == [0,1,0,0]
-    assert dut.get_ROB_output()["is_store"] == [0,1,0,0]
-
-    await RisingEdge(dut.clock())
-    await ReadOnly()
-    assert dut.get_ROB_output()["valid"] == 0
-
-
-
-
-
-@cocotb.test()
-async def test_WB_port_B(dut):
-
-    await cocotb.start(generateClock(dut)) 
-
-    dut = ROB_dut(dut)  # wrap dut with helper class
-    await dut.reset()   # reset module
-
-    await RisingEdge(dut.clock())
-
-    allocate_input = generate_null_allocate()
-
-    allocate_input["valid"]                        =  1
-    allocate_input["fetch_PC"]                     =  0xfee0
-    allocate_input["valid_bits"]                   =  [1, 1, 1, 1]
-    allocate_input["ready_bits_RS1_ready"]         =  [0, 0, 0, 0]
-    allocate_input["ready_bits_RS2_ready"]         =  [0, 0, 0, 0]
-    allocate_input["RD"]                           =  [0, 0, 0, 0]
-    allocate_input["RD_valid"]                     =  [0, 0, 0, 0]
-    allocate_input["RS1"]                          =  [0, 0, 0, 0]
-    allocate_input["RS1_valid"]                    =  [0, 0, 0, 0]
-    allocate_input["RS2"]                          =  [0, 0, 0, 0]
-    allocate_input["RS2_valid"]                    =  [0, 0, 0, 0]
-    allocate_input["IMM"]                          =  [0, 0, 0, 0]
-    allocate_input["FUNCT3"]                       =  [0, 0, 0, 0]
-    allocate_input["packet_index"]                 =  [0, 0, 0, 0]
-    allocate_input["ROB_index"]                    =  [0, 0, 0, 0]
-    allocate_input["instructionType"]              =  [0, 0, 0, 0]
-    allocate_input["portID"]                       =  [0, 0, 0, 0]
-    allocate_input["RS_type"]                      =  [0, 0, 0, 0]
-    allocate_input["needs_ALU"]                    =  [0, 0, 0, 0]
-    allocate_input["needs_branch_unit"]            =  [0, 0, 0, 0]
-    allocate_input["needs_CSRs"]                   =  [0, 0, 0, 0]
-    allocate_input["SUBTRACT"]                     =  [0, 0, 0, 0]
-    allocate_input["MULTIPLY"]                     =  [0, 0, 0, 0]
-    allocate_input["IMMEDIATE"]                    =  [0, 0, 0, 0]
-    allocate_input["IS_LOAD"]                      =  [0, 1, 0, 0]
-    allocate_input["IS_STORE"]                     =  [0, 1, 0, 0]
-
-    assert dut.get_allocate_ready() == 1
-
-    dut.write_allocate(allocate_input)
-    await RisingEdge(dut.clock())
-    dut.write_allocate()
-    await ReadOnly()
-    
-    assert dut.get_shared_mem()["fetch_PC"][0] == 0xfee0
-    assert dut.get_shared_mem()["row_valid"][0] == 1
-
-    assert dut.get_ROB_entry()[0]["is_load"][0] == 0
-    assert dut.get_ROB_entry()[0]["is_store"][0] == 0
-
-    assert dut.get_ROB_entry()[1]["is_load"][0] == 1
-    assert dut.get_ROB_entry()[1]["is_store"][0] == 1
-
-    assert dut.get_ROB_entry()[2]["is_load"][0] == 0
-    assert dut.get_ROB_entry()[2]["is_store"][0] == 0
-
-    assert dut.get_ROB_entry()[3]["is_load"][0] == 0
-    assert dut.get_ROB_entry()[3]["is_store"][0] == 0
-
-    await RisingEdge(dut.clock())
-
-    FU_inputs  = generate_null_FU_inputs()
-
-    FU_inputs["valid"] = [1, 0, 0, 0]
-    FU_inputs["RD"] = [0, 0, 0, 0]
-    FU_inputs["RD_data"] = [0, 0, 0, 0]
-    FU_inputs["RD_valid"] = [0, 0, 0, 0]
-    FU_inputs["instruction_PC"] = [0, 0, 0, 0]
-    FU_inputs["branch_taken"] = [0, 0, 0, 0]
-    FU_inputs["target_address"] = [0, 0, 0, 0]
-    FU_inputs["branch_valid"] = [0, 0, 0, 0]
-    FU_inputs["ROB_index"] = [0, 0, 0, 0]
-    FU_inputs["fetch_packet_index"] = [2, 0, 0, 0]
-
-    dut.write_FU(FU_inputs)
-
-    await RisingEdge(dut.clock())
-    dut.write_FU()
-    await ReadOnly()
-
-    dut.print_ROB(1)
-
-    assert dut.get_WB_mem()[0]["busy"][0] == 0
-    assert dut.get_WB_mem()[1]["busy"][0] == 0
-    assert dut.get_WB_mem()[2]["busy"][0] == 1
-    assert dut.get_WB_mem()[3]["busy"][0] == 0
-
-    #assert dut.get_ROB_output()["valid"] == 1
-    #assert dut.get_ROB_output()["RS1"] == [4,4,4,4]
-    #assert dut.get_ROB_output()["is_load"] == [0,1,0,0]
-    #assert dut.get_ROB_output()["is_store"] == [0,1,0,0]
 

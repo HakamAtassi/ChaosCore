@@ -6,6 +6,21 @@ from tabulate import tabulate
 from SimpleDRAM import *
 # Add helper functions as needed
 
+def generate_null_commit_inputs():
+    commit_inputs = {}
+    commit_inputs["valid"] = 0
+    commit_inputs["fetch_PC"] = 0
+    commit_inputs["T_NT"] = 0
+    commit_inputs["ROB_index"] = 0
+    commit_inputs["br_type"] = 0
+    commit_inputs["fetch_packet_index"] = 0
+    commit_inputs["is_misprediction"] = 0
+    commit_inputs["expected_PC"] = 0
+    commit_inputs["GHR"] = 0
+    commit_inputs["TOS"] = 0
+    commit_inputs["NEXT"] = 0
+    commit_inputs["RAT_IDX"] = 0
+    return commit_inputs
 
 class frontend_dut:
     def __init__(self, dut, DRAM, DRAM_line_size=32):    # modify as needed (parameters, etc...)
@@ -29,6 +44,21 @@ class frontend_dut:
         self.dut.reset.value = 0
 
     # complete class body...
+
+    def write_commit(self, data=generate_null_commit_inputs()):
+
+        getattr(self.dut, f"io_commit_valid").value = data["valid"]
+        getattr(self.dut, f"io_commit_fetch_PC").value = data["fetch_PC"]
+        getattr(self.dut, f"io_commit_T_NT").value = data["T_NT"]
+        getattr(self.dut, f"io_commit_ROB_index").value = data["ROB_index"]
+        getattr(self.dut, f"io_commit_br_type").value = data["br_type"]
+        getattr(self.dut, f"io_commit_fetch_packet_index").value = data["fetch_packet_index"]
+        getattr(self.dut, f"io_commit_is_misprediction").value = data["is_misprediction"]
+        getattr(self.dut, f"io_commit_expected_PC").value = data["expected_PC"]
+        getattr(self.dut, f"io_commit_GHR").value = data["GHR"]
+        getattr(self.dut, f"io_commit_TOS").value = data["TOS"]
+        getattr(self.dut, f"io_commit_NEXT").value = data["NEXT"]
+        getattr(self.dut, f"io_commit_RAT_IDX").value = data["RAT_IDX"]
 
     def write_dram_resp(self, data=0, valid = 0):
         self.dut.io_DRAM_resp_valid.value = valid

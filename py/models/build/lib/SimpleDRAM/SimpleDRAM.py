@@ -9,6 +9,7 @@ class SimpleDRAM:
             self.init_from_bin(bin)
 
     def init_from_bin(self, bin):
+
         with open(bin, "rb") as f:
             bin_data = f.read()
             bin_size = len(bin_data)
@@ -20,7 +21,7 @@ class SimpleDRAM:
         if address + size > len(self.memory):
             raise ValueError("Writing to Memory Out of Bounds")
         data = self.memory[address:address + size]
-        return int.from_bytes(data, "little")
+        return data
 
     def write(self, address, data, size):
         if address + size > len(self.memory):

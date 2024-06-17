@@ -58,7 +58,6 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
     val RD          = instruction(11, 7)
     val IMM         = getImm(instruction)
 
-
     val FUNCT3      = instruction(14, 12)
     val FUNCT7      = instruction(31, 25)
 

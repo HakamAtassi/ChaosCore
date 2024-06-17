@@ -37,24 +37,15 @@ import chisel3.util._
 class SOC(parameters:Parameters, addressMap:AddressMap) extends Module{
 
     val io = IO(new Bundle{
-        // From DRAM
-        val frontend_DRAM_resp               =   Flipped(Decoupled(new DRAM_resp(parameters)))
-        
-        // To DRAM
-        val frontend_DRAM_request            =   Decoupled(new DRAM_request(parameters))
+        val frontend_memory_request                =   Decoupled(new memory_request(parameters))
+        val frontend_memory_response               =   Flipped(Decoupled(new DRAM_resp(parameters)))
 
         ///////////////////////////
         // D$ BACKEND MEM ACCESS //
         ///////////////////////////
 
-        //// From DRAM
-        //val backend_DRAM_resp               =   Flipped(Decoupled(new DRAM_resp(parameters)))
-
-        //// To DRAM
-        //val backend_DRAM_request            =   Decoupled(new DRAM_request(parameters))
-
-        val memory_response     =   Flipped(Decoupled(new memory_response(parameters))) // From MEM
-        val memory_request      =   Decoupled(new memory_request(parameters))     // To MEM
+        val backend_memory_request                =   Decoupled(new memory_request(parameters))
+        val backend_memory_response               =   Flipped(Decoupled(new memory_response(parameters)))
     })
 
     ///////////////
@@ -62,7 +53,23 @@ class SOC(parameters:Parameters, addressMap:AddressMap) extends Module{
     ///////////////
 
     val ChaosCore = Module(new ChaosCore(parameters))
-    
+
+
+    ////////////////////
+    // PIPELINE FLUSH //
+    ////////////////////
+
+    ////////////
+    // CACHES //
+    ////////////
+
+    // TODO: forward kill signal to the cache to kill requests
+    val instruction_cache   = Module(new instruction_cache(parameters))
+
+    instruction_cache.io.memory_response        <> io.frontend_memory_response
+    instruction_cache.io.memory_request         <> io.frontend_memory_request
+
+
     /////////////////
     // PERIPHIRALS //
     /////////////////
@@ -75,16 +82,13 @@ class SOC(parameters:Parameters, addressMap:AddressMap) extends Module{
     /////////////////
 
 
-    // 
-    ChaosCore.io.frontend_DRAM_resp    <> io.frontend_DRAM_resp
-    ChaosCore.io.frontend_DRAM_request <> io.frontend_DRAM_request
+    ChaosCore.io.frontend_memory_response    <> io.frontend_memory_response
+    ChaosCore.io.frontend_memory_request     <> io.frontend_memory_request
 
-    //
-    ChaosCore.io.memory_response     <> io.memory_response
-    ChaosCore.io.memory_request      <> io.memory_request
+    ChaosCore.io.backend_memory_response     <> io.backend_memory_response
+    ChaosCore.io.backend_memory_request      <> io.backend_memory_request
 
-    // 
-    ChaosCore.io.memory_request  <> debug_printer.io.memory_request
+    ChaosCore.io.backend_memory_request  <> debug_printer.io.memory_request
 
 
 

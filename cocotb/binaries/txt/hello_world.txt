@@ -1,0 +1,82 @@
+
+elf/hello_world.elf:     file format elf32-littleriscv
+
+
+Disassembly of section .text:
+
+00000000 <putchar>:
+   0:	fd010113          	addi	x2,x2,-48
+   4:	02812623          	sw	x8,44(x2)
+   8:	03010413          	addi	x8,x2,48
+   c:	fca42e23          	sw	x10,-36(x8)
+  10:	800007b7          	lui	x15,0x80000
+  14:	fef42623          	sw	x15,-20(x8)
+  18:	fdc42703          	lw	x14,-36(x8)
+  1c:	fec42783          	lw	x15,-20(x8)
+  20:	00e7a023          	sw	x14,0(x15) # 80000000 <__global_pointer$+0x7fffe6e4>
+  24:	00000013          	nop
+  28:	02c12403          	lw	x8,44(x2)
+  2c:	03010113          	addi	x2,x2,48
+  30:	00008067          	ret
+
+00000034 <printf>:
+  34:	fe010113          	addi	x2,x2,-32
+  38:	00112e23          	sw	x1,28(x2)
+  3c:	00812c23          	sw	x8,24(x2)
+  40:	02010413          	addi	x8,x2,32
+  44:	fea42623          	sw	x10,-20(x8)
+  48:	0200006f          	j	68 <printf+0x34>
+  4c:	fec42783          	lw	x15,-20(x8)
+  50:	0007c783          	lbu	x15,0(x15)
+  54:	00078513          	mv	x10,x15
+  58:	fa9ff0ef          	jal	0 <putchar>
+  5c:	fec42783          	lw	x15,-20(x8)
+  60:	00178793          	addi	x15,x15,1
+  64:	fef42623          	sw	x15,-20(x8)
+  68:	fec42783          	lw	x15,-20(x8)
+  6c:	0007c783          	lbu	x15,0(x15)
+  70:	fc079ee3          	bnez	x15,4c <printf+0x18>
+  74:	00000013          	nop
+  78:	00000013          	nop
+  7c:	01c12083          	lw	x1,28(x2)
+  80:	01812403          	lw	x8,24(x2)
+  84:	02010113          	addi	x2,x2,32
+  88:	00008067          	ret
+
+0000008c <main>:
+  8c:	ff010113          	addi	x2,x2,-16
+  90:	00112623          	sw	x1,12(x2)
+  94:	00812423          	sw	x8,8(x2)
+  98:	01010413          	addi	x8,x2,16
+  9c:	04800513          	li	x10,72
+  a0:	f61ff0ef          	jal	0 <putchar>
+  a4:	04500513          	li	x10,69
+  a8:	f59ff0ef          	jal	0 <putchar>
+  ac:	04c00513          	li	x10,76
+  b0:	f51ff0ef          	jal	0 <putchar>
+  b4:	04c00513          	li	x10,76
+  b8:	f49ff0ef          	jal	0 <putchar>
+  bc:	04f00513          	li	x10,79
+  c0:	f41ff0ef          	jal	0 <putchar>
+  c4:	02c00513          	li	x10,44
+  c8:	f39ff0ef          	jal	0 <putchar>
+  cc:	05700513          	li	x10,87
+  d0:	f31ff0ef          	jal	0 <putchar>
+  d4:	04f00513          	li	x10,79
+  d8:	f29ff0ef          	jal	0 <putchar>
+  dc:	05200513          	li	x10,82
+  e0:	f21ff0ef          	jal	0 <putchar>
+  e4:	04c00513          	li	x10,76
+  e8:	f19ff0ef          	jal	0 <putchar>
+  ec:	04400513          	li	x10,68
+  f0:	f11ff0ef          	jal	0 <putchar>
+  f4:	02100513          	li	x10,33
+  f8:	f09ff0ef          	jal	0 <putchar>
+  fc:	00a00513          	li	x10,10
+ 100:	f01ff0ef          	jal	0 <putchar>
+ 104:	00000793          	li	x15,0
+ 108:	00078513          	mv	x10,x15
+ 10c:	00c12083          	lw	x1,12(x2)
+ 110:	00812403          	lw	x8,8(x2)
+ 114:	01010113          	addi	x2,x2,16
+ 118:	00008067          	ret

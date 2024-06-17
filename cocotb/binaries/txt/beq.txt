@@ -1,0 +1,12 @@
+
+elf/beq.elf:     file format elf32-littleriscv
+
+
+Disassembly of section .text:
+
+00010074 <__start>:
+   10074:	00000013          	nop
+   10078:	00000013          	nop
+   1007c:	00000013          	nop
+   10080:	00000013          	nop
+   10084:	fe0008e3          	beqz	x0,10074 <__start>

@@ -39,3 +39,7 @@ def test_frontend_outputs():
         configs["testcase"] = "test_frontend_outputs"
         run(**configs)
 
+def test_mispredictions():
+        configs["testcase"] = "test_mispredictions"
+        run(**configs)
+

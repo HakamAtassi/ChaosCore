@@ -5,6 +5,47 @@ from cocotb.triggers import RisingEdge, FallingEdge, Timer, ReadOnly
 
 # Add helper functions as needed
 
+  #input         io_FU_input_valid,
+                #io_FU_input_bits_decoded_instruction_ready_bits_RS1_ready,
+                #io_FU_input_bits_decoded_instruction_ready_bits_RS2_ready,
+  #input  [5:0]  io_FU_input_bits_decoded_instruction_RD,
+  #input         io_FU_input_bits_decoded_instruction_RD_valid,
+  #input  [5:0]  io_FU_input_bits_decoded_instruction_RS1,
+  #input         io_FU_input_bits_decoded_instruction_RS1_valid,
+  #input  [5:0]  io_FU_input_bits_decoded_instruction_RS2,
+  #input         io_FU_input_bits_decoded_instruction_RS2_valid,
+  #input  [19:0] io_FU_input_bits_decoded_instruction_IMM,
+  #input  [2:0]  io_FU_input_bits_decoded_instruction_FUNCT3,
+  #input  [3:0]  io_FU_input_bits_decoded_instruction_packet_index,
+  #input  [5:0]  io_FU_input_bits_decoded_instruction_ROB_index,
+  #input  [4:0]  io_FU_input_bits_decoded_instruction_instructionType,
+  #input  [1:0]  io_FU_input_bits_decoded_instruction_portID,
+                #io_FU_input_bits_decoded_instruction_RS_type,
+  #input         io_FU_input_bits_decoded_instruction_needs_ALU,
+                #io_FU_input_bits_decoded_instruction_needs_branch_unit,
+                #io_FU_input_bits_decoded_instruction_needs_CSRs,
+                #io_FU_input_bits_decoded_instruction_SUBTRACT,
+                #io_FU_input_bits_decoded_instruction_MULTIPLY,
+                #io_FU_input_bits_decoded_instruction_IMMEDIATE,
+                #io_FU_input_bits_decoded_instruction_IS_LOAD,
+                #io_FU_input_bits_decoded_instruction_IS_STORE,
+  #input  [31:0] io_FU_input_bits_RS1_data,
+                #io_FU_input_bits_RS2_data,
+                #io_FU_input_bits_PC,
+
+
+  #output        io_FU_input_ready,
+  #output        io_FU_output_valid,
+  #output [5:0]  io_FU_output_bits_RD,
+  #output [31:0] io_FU_output_bits_RD_data,
+  #output        io_FU_output_bits_RD_valid,
+  #output [31:0] io_FU_output_bits_instruction_PC,
+  #output        io_FU_output_bits_branch_taken,
+  #output [31:0] io_FU_output_bits_target_address,
+  #output        io_FU_output_bits_branch_valid,
+  #output [5:0]  io_FU_output_bits_ROB_index,
+  #output [1:0]  io_FU_output_bits_fetch_packet_index
+
 def generate_null_FU_inputs():
     FU_inputs = {}
 

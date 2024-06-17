@@ -14927,7 +14927,7 @@ module rename(
   input         io_decoded_fetch_packet_bits_decoded_instruction_0_RS1_valid,
   input  [5:0]  io_decoded_fetch_packet_bits_decoded_instruction_0_RS2,
   input         io_decoded_fetch_packet_bits_decoded_instruction_0_RS2_valid,
-  input  [31:0] io_decoded_fetch_packet_bits_decoded_instruction_0_IMM,
+  input  [20:0] io_decoded_fetch_packet_bits_decoded_instruction_0_IMM,
   input  [2:0]  io_decoded_fetch_packet_bits_decoded_instruction_0_FUNCT3,
   input  [3:0]  io_decoded_fetch_packet_bits_decoded_instruction_0_packet_index,
   input  [5:0]  io_decoded_fetch_packet_bits_decoded_instruction_0_ROB_index,
@@ -14950,7 +14950,7 @@ module rename(
   input         io_decoded_fetch_packet_bits_decoded_instruction_1_RS1_valid,
   input  [5:0]  io_decoded_fetch_packet_bits_decoded_instruction_1_RS2,
   input         io_decoded_fetch_packet_bits_decoded_instruction_1_RS2_valid,
-  input  [31:0] io_decoded_fetch_packet_bits_decoded_instruction_1_IMM,
+  input  [20:0] io_decoded_fetch_packet_bits_decoded_instruction_1_IMM,
   input  [2:0]  io_decoded_fetch_packet_bits_decoded_instruction_1_FUNCT3,
   input  [3:0]  io_decoded_fetch_packet_bits_decoded_instruction_1_packet_index,
   input  [5:0]  io_decoded_fetch_packet_bits_decoded_instruction_1_ROB_index,
@@ -14973,7 +14973,7 @@ module rename(
   input         io_decoded_fetch_packet_bits_decoded_instruction_2_RS1_valid,
   input  [5:0]  io_decoded_fetch_packet_bits_decoded_instruction_2_RS2,
   input         io_decoded_fetch_packet_bits_decoded_instruction_2_RS2_valid,
-  input  [31:0] io_decoded_fetch_packet_bits_decoded_instruction_2_IMM,
+  input  [20:0] io_decoded_fetch_packet_bits_decoded_instruction_2_IMM,
   input  [2:0]  io_decoded_fetch_packet_bits_decoded_instruction_2_FUNCT3,
   input  [3:0]  io_decoded_fetch_packet_bits_decoded_instruction_2_packet_index,
   input  [5:0]  io_decoded_fetch_packet_bits_decoded_instruction_2_ROB_index,
@@ -14996,7 +14996,7 @@ module rename(
   input         io_decoded_fetch_packet_bits_decoded_instruction_3_RS1_valid,
   input  [5:0]  io_decoded_fetch_packet_bits_decoded_instruction_3_RS2,
   input         io_decoded_fetch_packet_bits_decoded_instruction_3_RS2_valid,
-  input  [31:0] io_decoded_fetch_packet_bits_decoded_instruction_3_IMM,
+  input  [20:0] io_decoded_fetch_packet_bits_decoded_instruction_3_IMM,
   input  [2:0]  io_decoded_fetch_packet_bits_decoded_instruction_3_FUNCT3,
   input  [3:0]  io_decoded_fetch_packet_bits_decoded_instruction_3_packet_index,
   input  [5:0]  io_decoded_fetch_packet_bits_decoded_instruction_3_ROB_index,
@@ -15027,7 +15027,7 @@ module rename(
   output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS1_valid,
   output [5:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS2,
   output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS2_valid,
-  output [31:0] io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_IMM,
+  output [20:0] io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_IMM,
   output [2:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_FUNCT3,
   output [3:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_packet_index,
   output [5:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_ROB_index,
@@ -15050,7 +15050,7 @@ module rename(
   output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS1_valid,
   output [5:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS2,
   output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS2_valid,
-  output [31:0] io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_IMM,
+  output [20:0] io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_IMM,
   output [2:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_FUNCT3,
   output [3:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_packet_index,
   output [5:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ROB_index,
@@ -15073,7 +15073,7 @@ module rename(
   output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS1_valid,
   output [5:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS2,
   output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS2_valid,
-  output [31:0] io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_IMM,
+  output [20:0] io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_IMM,
   output [2:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_FUNCT3,
   output [3:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_packet_index,
   output [5:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ROB_index,
@@ -15096,7 +15096,7 @@ module rename(
   output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS1_valid,
   output [5:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS2,
   output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS2_valid,
-  output [31:0] io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_IMM,
+  output [20:0] io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_IMM,
   output [2:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_FUNCT3,
   output [3:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_packet_index,
   output [5:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ROB_index,
@@ -15243,7 +15243,7 @@ module rename(
   reg  [31:0] io_renamed_decoded_fetch_packet_bits_REG_fetch_PC;
   reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_RS1_valid;
   reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_RS2_valid;
-  reg  [31:0] io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_IMM;
+  reg  [20:0] io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_IMM;
   reg  [2:0]  io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_FUNCT3;
   reg  [3:0]  io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_packet_index;
   reg  [5:0]  io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_ROB_index;
@@ -15262,7 +15262,7 @@ module rename(
   reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_IS_STORE;
   reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_RS1_valid;
   reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_RS2_valid;
-  reg  [31:0] io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_IMM;
+  reg  [20:0] io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_IMM;
   reg  [2:0]  io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_FUNCT3;
   reg  [3:0]  io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_packet_index;
   reg  [5:0]  io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_ROB_index;
@@ -15281,7 +15281,7 @@ module rename(
   reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_IS_STORE;
   reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_RS1_valid;
   reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_RS2_valid;
-  reg  [31:0] io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_IMM;
+  reg  [20:0] io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_IMM;
   reg  [2:0]  io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_FUNCT3;
   reg  [3:0]  io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_packet_index;
   reg  [5:0]  io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_ROB_index;
@@ -15300,7 +15300,7 @@ module rename(
   reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_IS_STORE;
   reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_RS1_valid;
   reg         io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_RS2_valid;
-  reg  [31:0] io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_IMM;
+  reg  [20:0] io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_IMM;
   reg  [2:0]  io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_FUNCT3;
   reg  [3:0]  io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_packet_index;
   reg  [5:0]  io_renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_ROB_index;

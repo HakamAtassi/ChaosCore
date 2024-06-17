@@ -566,7 +566,7 @@ async def test_slti_t_signed(dut):
     FU_inputs["RS1_valid"] = 0
     FU_inputs["RS2"] = 0
     FU_inputs["RS2_valid"] = 0
-    FU_inputs["IMM"] = (2**32 - 5) # -5
+    FU_inputs["IMM"] = (2**21 - 5) # -5
     FU_inputs["FUNCT3"] = 0x2
     FU_inputs["packet_index"] = 0
     FU_inputs["ROB_index"] = 0
@@ -618,7 +618,7 @@ async def test_slti_f_signed(dut):
     FU_inputs["RS1_valid"] = 0
     FU_inputs["RS2"] = 0
     FU_inputs["RS2_valid"] = 0
-    FU_inputs["IMM"] = (2**32 - 6) # -5
+    FU_inputs["IMM"] = (2**21 - 6) # -5
     FU_inputs["FUNCT3"] = 0x2
     FU_inputs["packet_index"] = 0
     FU_inputs["ROB_index"] = 0
@@ -1414,7 +1414,7 @@ async def test_beq_t(dut):
     FU_inputs["RS1_valid"] = 0
     FU_inputs["RS2"] = 0
     FU_inputs["RS2_valid"] = 0
-    FU_inputs["IMM"] = 0xc0fe
+    FU_inputs["IMM"] = 0x0ffe
     FU_inputs["FUNCT3"] = 0x0
     FU_inputs["packet_index"] = 0
     FU_inputs["ROB_index"] = 0
@@ -1443,7 +1443,7 @@ async def test_beq_t(dut):
 
     assert dut.get_outputs()["valid"] == 1
     assert dut.get_outputs()["branch_taken"] == 1
-    assert dut.get_outputs()["target_address"] == 0xc0dec0fe
+    assert dut.get_outputs()["target_address"] == 0xc0de0ffe
 
 @cocotb.test()
 async def test_beq_nt(dut):
@@ -1495,7 +1495,7 @@ async def test_beq_nt(dut):
 
     assert dut.get_outputs()["valid"] == 1
     assert dut.get_outputs()["branch_taken"] == 0
-    assert dut.get_outputs()["target_address"] == 0xc0de0000
+    assert dut.get_outputs()["target_address"] == 0xc0de0010
 
 
 @cocotb.test()
@@ -1519,7 +1519,7 @@ async def test_bne_t(dut):
     FU_inputs["RS1_valid"] = 0
     FU_inputs["RS2"] = 0
     FU_inputs["RS2_valid"] = 0
-    FU_inputs["IMM"] = 0xc0fe
+    FU_inputs["IMM"] = 0x0ffe
     FU_inputs["FUNCT3"] = 0x1
     FU_inputs["packet_index"] = 0
     FU_inputs["ROB_index"] = 0
@@ -1548,7 +1548,7 @@ async def test_bne_t(dut):
 
     assert dut.get_outputs()["valid"] == 1
     assert dut.get_outputs()["branch_taken"] == 1
-    assert dut.get_outputs()["target_address"] == 0xc0dec0fe
+    assert dut.get_outputs()["target_address"] == 0xc0de0ffe
 
 @cocotb.test()
 async def test_bne_nt(dut):
@@ -1600,7 +1600,7 @@ async def test_bne_nt(dut):
 
     assert dut.get_outputs()["valid"] == 1
     assert dut.get_outputs()["branch_taken"] == 0
-    assert dut.get_outputs()["target_address"] == 0xc0de0000
+    assert dut.get_outputs()["target_address"] == 0xc0de0010
 
 
 
@@ -1625,7 +1625,7 @@ async def test_blt_t(dut):
     FU_inputs["RS1_valid"] = 0
     FU_inputs["RS2"] = 0
     FU_inputs["RS2_valid"] = 0
-    FU_inputs["IMM"] = 0xcafe
+    FU_inputs["IMM"] = 0x0ffe
     FU_inputs["FUNCT3"] = 0x4
     FU_inputs["packet_index"] = 0
     FU_inputs["ROB_index"] = 0
@@ -1654,7 +1654,7 @@ async def test_blt_t(dut):
 
     assert dut.get_outputs()["valid"] == 1
     assert dut.get_outputs()["branch_taken"] == 1
-    assert dut.get_outputs()["target_address"] == 0xc0decafe
+    assert dut.get_outputs()["target_address"] == 0xc0de0ffe
 
 @cocotb.test()
 async def test_blt_nt(dut):
@@ -1706,7 +1706,7 @@ async def test_blt_nt(dut):
 
     assert dut.get_outputs()["valid"] == 1
     assert dut.get_outputs()["branch_taken"] == 0
-    assert dut.get_outputs()["target_address"] == 0xc0de0000
+    assert dut.get_outputs()["target_address"] == 0xc0de0010
 
 @cocotb.test()
 async def test_bge_t(dut):
@@ -1729,7 +1729,7 @@ async def test_bge_t(dut):
     FU_inputs["RS1_valid"] = 0
     FU_inputs["RS2"] = 0
     FU_inputs["RS2_valid"] = 0
-    FU_inputs["IMM"] = 0xcafe
+    FU_inputs["IMM"] = 0xffe
     FU_inputs["FUNCT3"] = 0x5
     FU_inputs["packet_index"] = 0
     FU_inputs["ROB_index"] = 0
@@ -1758,7 +1758,7 @@ async def test_bge_t(dut):
 
     assert dut.get_outputs()["valid"] == 1
     assert dut.get_outputs()["branch_taken"] == 1
-    assert dut.get_outputs()["target_address"] == 0xc0decafe
+    assert dut.get_outputs()["target_address"] == 0xc0de0ffe
 
 @cocotb.test()
 async def test_bge_nt(dut):
@@ -1781,7 +1781,7 @@ async def test_bge_nt(dut):
     FU_inputs["RS1_valid"] = 0
     FU_inputs["RS2"] = 0
     FU_inputs["RS2_valid"] = 0
-    FU_inputs["IMM"] = 0xcafe
+    FU_inputs["IMM"] = 0xffe
     FU_inputs["FUNCT3"] = 0x5
     FU_inputs["packet_index"] = 0
     FU_inputs["ROB_index"] = 0
@@ -1810,7 +1810,7 @@ async def test_bge_nt(dut):
 
     assert dut.get_outputs()["valid"] == 1
     assert dut.get_outputs()["branch_taken"] == 0
-    assert dut.get_outputs()["target_address"] == 0xc0de0000
+    assert dut.get_outputs()["target_address"] == 0xc0de0010
 
 
 #FIXME: add BLT U and BGE U 
@@ -1867,3 +1867,4 @@ async def test_LUI(dut):
     assert dut.get_outputs()["valid"] == 1
     assert dut.get_outputs()["RD"] == 10
     assert dut.get_outputs()["RD_data"] == (1<<12)
+

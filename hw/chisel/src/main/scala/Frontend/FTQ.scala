@@ -98,7 +98,7 @@ class FTQ(parameters:Parameters) extends Module{
 
 
 
-    val dq = FTQ(front_index).valid && ((FTQ(front_index).fetch_PC>>log2Ceil(fetchWidth*4)) === (io.commit.fetch_PC >> log2Ceil(fetchWidth*4)))
+    val dq = FTQ(front_index).valid && io.commit.valid && ((FTQ(front_index).fetch_PC>>log2Ceil(fetchWidth*4)) === (io.commit.fetch_PC >> log2Ceil(fetchWidth*4)))
 
     dontTouch(dq)
 
@@ -131,8 +131,17 @@ class FTQ(parameters:Parameters) extends Module{
         when(fetch_packet_PC_match && is_valid && is_branch && is_more_dominant && is_taken){
             FTQ(i).dominant_index   :=   io.FU_outputs(0).bits.fetch_packet_index
             FTQ(i).resolved_PC      :=   io.FU_outputs(0).bits.target_address
+            FTQ(i).T_NT             :=   1.B
+            // FIXME: other signals?
         }
 
+    }
+
+
+    when(io.commit.is_misprediction && io.commit.valid){
+        for(i <- 0 until FTQEntries){
+            FTQ(i) := 0.U.asTypeOf(0.U.asTypeOf(new FTQ_entry(parameters)))
+        }
     }
 
     // FIXME: predictor needs to output the default dominant index as fetchWidth - 1, and the default taken address as fetch pc + 16

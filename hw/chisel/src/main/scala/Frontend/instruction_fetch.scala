@@ -45,10 +45,10 @@ class Q[T <: Data](dataType: T, depth: Int = 16) extends Module{
     //val full       = Output(Bool())          // queue full
     //val empty      = Output(Bool())          // queue empty
 
-    val clear      = Input(Bool())           // Clear entire queue
+    val flush      = Input(Bool())           // Clear entire queue
   })
 
-  val queue = Module(new Queue(dataType, depth, flow=true, useSyncReadMem=true))
+  val queue = Module(new Queue(dataType, depth, flow=true, hasFlush=true, useSyncReadMem=true))
 
   // Connect inputs
   //queue.io.enq.valid := io.wr_en
@@ -57,6 +57,7 @@ class Q[T <: Data](dataType: T, depth: Int = 16) extends Module{
 
   queue.io.enq <> io.in
   queue.io.deq <> io.out
+  queue.io.flush.get <> io.flush
 
   // Connect outputs
   //io.data_out := queue.io.deq.bits
@@ -65,7 +66,7 @@ class Q[T <: Data](dataType: T, depth: Int = 16) extends Module{
 
   // Reset logic
   // FIXME: queues have a "hasflush property that can be used instead of this..."
-  queue.reset := io.clear || reset.asBool
+  //queue.reset := io.clear || reset.asBool
 }
 
 
@@ -85,13 +86,9 @@ class instruction_fetch(parameters:Parameters) extends Module{
         
         val commit            =   Input(new commit(parameters))
         
-        // To DRAM
-        val DRAM_request      =   Decoupled(new DRAM_request(parameters))
+        val memory_request         =   Decoupled(new memory_request(parameters))
+        val memory_response        =   Flipped(Decoupled(new fetch_packet(parameters)))               // TO CPU
 
-        // From DRAM
-        val DRAM_resp         =   Flipped(Decoupled(new DRAM_resp(parameters)))
-
-        // Output
         val fetch_packet      =   Decoupled(new fetch_packet(parameters))                     // Fetch packet result (To Decoders)
 
         val predictions       =   Decoupled(new FTQ_entry(parameters))
@@ -101,33 +98,30 @@ class instruction_fetch(parameters:Parameters) extends Module{
     /////////////
     // Modules //
     /////////////
-    val instruction_cache   = Module(new instruction_cache(parameters))
     val bp                  = Module(new BP(parameters))
     val predecoder          = Module(new predecoder(parameters))
-    val PC_gen              = Module(new PC_arbit(parameters))
+    val PC_gen              = Module(new PC_gen(parameters))
 
     ////////////
     // Queues //
     ////////////
     // FIXME: these should be parameters
     val instruction_Q   =   Module(new Q(new fetch_packet(parameters), depth = 16))              // Instantiate queue with fetch_packet data type
-    val PC_Q            =   Module(new Q(UInt(32.W), depth = 16))                                                       // Queue of predicted PCs
+    val PC_Q            =   Module(new Q(new memory_request(parameters), depth = 16))                                                       // Queue of predicted PCs
     val BTB_Q           =   Module(new Q(new prediction(parameters), depth = 16))         // Queue of BTB responses
 
     ///////////
     // Wires //
     ///////////
     //val predict_PC     =   Wire(Decoupled(UInt(32.W)))
-    val clear            =   Wire(Bool())
-    clear :=  DontCare
-    //io.commit.bits.misprediction || predecoder.io.revert.valid // && exception ... //FIXME: 
+    val flush            =   Wire(Bool())
+    flush :=  io.commit.is_misprediction || predecoder.io.revert.valid // && exception ... //FIXME: 
 
     //////////////
     // PC Queue //
     //////////////
-    PC_Q.io.out  <>  instruction_cache.io.cpu_addr
-
-    PC_Q.io.clear       :=  clear
+    PC_Q.io.out  <>  io.memory_request
+    PC_Q.io.flush       :=  flush
 
     ///////////////////////
     // INSTRUCTION QUEUE //
@@ -135,7 +129,7 @@ class instruction_fetch(parameters:Parameters) extends Module{
     instruction_Q.io.out <> predecoder.io.fetch_packet
     instruction_Q.io.out.ready := (!BTB_Q.io.out.valid && predecoder.io.fetch_packet.ready)
 
-    instruction_Q.io.clear       :=  clear
+    instruction_Q.io.flush       :=  flush
 
     ///////////////
     // BTB QUEUE //
@@ -143,18 +137,13 @@ class instruction_fetch(parameters:Parameters) extends Module{
     BTB_Q.io.in <> bp.io.prediction
 
     BTB_Q.io.out.ready           :=  (!instruction_Q.io.out.valid && predecoder.io.prediction.ready)
-    BTB_Q.io.clear               :=  clear
+    BTB_Q.io.flush               :=  flush
   
     ///////////////////////
     // INSTRUCTION CACHE //
     ///////////////////////
-    instruction_cache.io.cache_data     <>   instruction_Q.io.in
-    instruction_cache.io.DRAM_resp        <> io.DRAM_resp
-    instruction_cache.io.DRAM_request     <> io.DRAM_request
+    io.memory_response     <>   instruction_Q.io.in
 
-
-    // kill 
-    instruction_cache.io.kill                   := clear
 
     ////////
     // BP //

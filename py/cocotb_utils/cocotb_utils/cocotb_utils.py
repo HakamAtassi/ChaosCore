@@ -6,6 +6,15 @@ from cocotb.triggers import RisingEdge, FallingEdge, Timer
 from pathlib import Path
 
 
+import cocotb
+import pytest
+from cocotb.clock import Clock
+from cocotb.handle import SimHandleBase
+from cocotb.queue import Queue
+from cocotb.triggers import RisingEdge
+from cocotb.types import LogicArray, Range
+
+
 async def generateClock(dut):
     while(1):
         dut.clock.value = 0
@@ -85,3 +94,38 @@ def generate_address_set(count=1000):
 
     
     return addresses
+
+###########
+# MONITOR #
+###########
+
+class Monitor:
+    def __init__(self, clock, data, valid):
+        self.values = Queue()
+        self.clock = clock
+        self.data = data
+        self.valid = valid
+        self.coro = None
+
+    def start(self):
+        if self.coro is not None:
+            raise RuntimeError("Monitor already started")
+        self.coro = cocotb.start_soon(self.run())
+
+    def stop(self):
+        if self.coro is None:
+            raise RuntimeError("Monitor never started")
+        self.coro.kill()
+        self.coro = None
+
+    async def run(self):
+        while True:
+            await RisingEdge(self.clock)
+            if self.valid.value != 1:
+                await RisingEdge(self.valid)
+                continue
+            self.values.put_nowait(self.sample())
+    
+    def sample(self): 
+        return self.data()
+

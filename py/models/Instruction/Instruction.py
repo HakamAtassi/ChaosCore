@@ -5,6 +5,8 @@ B_type_opcodes = [0b1100011]
 U_type_opcodes = [0b0110111, 0b0010111]
 J_type_opcodes = [0b1101111]
 
+
+
 class Instruction:
     def __init__(self, instruction, index, PC):
         self.instruction = instruction

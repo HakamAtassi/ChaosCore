@@ -97,7 +97,11 @@ class ROB(parameters:Parameters) extends Module{
 
     allocate := io.ROB_packet.valid && io.ROB_packet.ready
 
-    back_pointer := back_pointer + allocate
+    when(io.commit.valid && io.commit.is_misprediction){
+        back_pointer := 0.U
+    }.otherwise{
+        back_pointer := back_pointer + allocate
+    }
 
 
     //////////////
@@ -258,17 +262,18 @@ class ROB(parameters:Parameters) extends Module{
     commit := commit_row_valid && commit_row_complete.reduce(_ && _)
 
 
-    dontTouch(commit_row_complete)
 
     front_pointer := front_pointer + commit
 
     io.ROB_output.valid := commit
     io.ROB_output.bits.ROB_index := RegNext(front_index)    // you want the unbypassed version of this pointer
 
-    when(commit){   // bypass
+    when(io.commit.is_misprediction && io.commit.valid){
+        front_pointer := 0.U
+        front_index   := 0.U
+    }.elsewhen(commit){   // bypass
         val bypassed_pointer = (front_pointer + 1.U)
         front_index := bypassed_pointer(pointer_width-2, 0)
-
         front_pointer := front_pointer + 1.U
     }.otherwise{
         front_index := front_pointer(pointer_width-2, 0)
@@ -280,9 +285,16 @@ class ROB(parameters:Parameters) extends Module{
 
     val full = (front_pointer(pointer_width-2, 0) === back_pointer(pointer_width-2, 0)) && (front_pointer =/= back_pointer)
 
-    dontTouch(back_index)
 
     io.ROB_packet.ready := !full
+
+
+    ///////////
+    // DEBUG //
+    ///////////
+
+    val shared_memory_update_notif = RegNext(io.ROB_packet.valid)
+    dontTouch(shared_memory_update_notif)
 
 
 
