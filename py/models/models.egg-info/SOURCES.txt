@@ -19,9 +19,14 @@ ROB/__init__.py
 ROB/signals.py
 SimpleDRAM/SimpleDRAM.py
 SimpleDRAM/__init__.py
+fetch_packet_decoder/__init__.py
+fetch_packet_decoder/fetch_packet_decoder_model.py
+fetch_packet_decoder/opcodes.py
 model_utils/__init__.py
 model_utils/model_utils.py
 models.egg-info/PKG-INFO
 models.egg-info/SOURCES.txt
 models.egg-info/dependency_links.txt
 models.egg-info/top_level.txt
+predecoder/__init__.py
+predecoder/predecoder_model.py

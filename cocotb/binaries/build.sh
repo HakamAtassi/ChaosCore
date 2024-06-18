@@ -3,6 +3,7 @@
 echo "Building all C and ASM files"
 
 rvdir=/opt/riscv/bin
+linker_script=linker.ld  # Specify the linker script
 
 # Build C files
 for cfile in C/*.c; 
@@ -11,13 +12,13 @@ do
     name="${filename%.*}"
     echo "Building C File: $name"
 
-    # Compile the C file to ELF
-    ${rvdir}/riscv32-unknown-elf-gcc -ffreestanding -nostdlib -Wl,-Ttext=0x0 -O0 -fno-plt -fno-pic -march=rv32i -mabi=ilp32 "C/$name.c" -o "elf/$name.elf"
+    # Compile the C file to ELF using the linker script
+    ${rvdir}/riscv32-unknown-elf-gcc -ffreestanding -nostdlib -O0 -fno-plt -fno-pic -march=rv32i -mabi=ilp32 startup.S "C/$name.c" -T $linker_script -o "elf/$name.elf"
 
     # Disassemble the ELF file to TXT
     ${rvdir}/riscv32-unknown-elf-objdump -d -Mnumeric "elf/$name.elf" > "txt/$name.txt"
 
-    # Assemble the C file to binary
+    # Assemble the ELF file to binary
     ${rvdir}/riscv32-unknown-elf-objcopy "elf/$name.elf" -O binary "bin/$name.bin"
 done
 
@@ -30,7 +31,7 @@ do
 
     # Assemble the ASM file to ELF
     ${rvdir}/riscv32-unknown-elf-as "asm/$name.asm" -o "$name.o"
-    ${rvdir}/riscv32-unknown-elf-ld -o "elf/$name.elf" "$name.o"
+    ${rvdir}/riscv32-unknown-elf-ld -T $linker_script -o "elf/$name.elf" "$name.o"
     rm "$name.o"
 
     # Disassemble the ELF file to TXT

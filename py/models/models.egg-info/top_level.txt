@@ -6,4 +6,6 @@ PC_gen
 RAS
 ROB
 SimpleDRAM
+fetch_packet_decoder
 model_utils
+predecoder

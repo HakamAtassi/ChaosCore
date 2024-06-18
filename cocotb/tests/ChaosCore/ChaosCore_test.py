@@ -23,7 +23,7 @@ configs = {
 
 # DO NOT MODIFY ANYTHING INCLUDING AND AFTER THIS LINE #
 
-def test_reset():
-        configs["testcase"] = "test_reset"
+def test_increment():
+        configs["testcase"] = "test_increment"
         run(**configs)
 

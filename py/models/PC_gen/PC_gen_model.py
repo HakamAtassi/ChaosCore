@@ -13,7 +13,6 @@ class PC_gen_model:
         self.revert_valid = 0
         self.revert_PC = 0
 
-        self.RAS_read = 0
 
         self.PC = 0
 
@@ -27,7 +26,7 @@ class PC_gen_model:
         self.prediction_PC = prediction["target"]
         self.prediction_hit = prediction["hit"]
         self.prediction_br_type = prediction["br_type"]
-        self.prediction_br_mask = prediction["br_mask"]
+        #self.prediction_br_mask = prediction["br_mask"]
 
     def revert(self, revert):
         self.revert_valid = revert["valid"]

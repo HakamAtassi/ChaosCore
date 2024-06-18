@@ -77,8 +77,6 @@ class predecoder(parameters:Parameters) extends Module{
         val prediction          = Flipped(Decoupled(new prediction(parameters)))
         val fetch_packet        = Flipped(Decoupled(new fetch_packet(parameters)))
         val RAS_read            = Flipped(new RAS_read(parameters))
-
-
         val commit              = Input(new commit(parameters))
 
         // outputs
@@ -91,6 +89,8 @@ class predecoder(parameters:Parameters) extends Module{
         // TO FTQ //
         val predictions         = Decoupled(new FTQ_entry(parameters))
     })
+
+    dontTouch(io)
 
     /////////////
     // STAGE 1 //
@@ -127,7 +127,6 @@ class predecoder(parameters:Parameters) extends Module{
 
     T_NT_reg := decoder_T_NT
     metadata_reg := decoder_metadata
-    //GHR_reg := (io.prediction.bits.GHR << 1) | io.prediction.T_NT
 
     /////////////
     // STAGE 2 //
@@ -152,21 +151,22 @@ class predecoder(parameters:Parameters) extends Module{
         }
     }
 
-    /////////
-    // FSM //
-    /////////
 
     val PC_next      = Wire(UInt(32.W))
     val PC_next_reg  = RegInit(UInt(32.W), startPC)
+
     val PC_expected  = Wire(UInt(32.W))
-    //val packet_valid = Wire(Bool())
+    val PC_current   = Wire(UInt(32.W))
 
-    val PC_mismatch  = Wire(Bool())
-    val PC_match     = Wire(Bool())
+    PC_current := io.fetch_packet.bits.fetch_PC
 
-    PC_match        := (PC_expected === io.fetch_packet.bits.fetch_PC) && inputs_valid
-    PC_mismatch     := (PC_expected =/= io.fetch_packet.bits.fetch_PC) && inputs_valid
 
+    PC_next_reg := Mux(RegNext(io.fetch_packet.valid), PC_next, PC_next_reg)    // latch expected address incase there is an instruction bubble
+    PC_expected := Mux(RegNext(io.fetch_packet.valid), PC_next, PC_next_reg)
+
+    val PC_mismatch       = Wire(Bool())
+
+    PC_mismatch := PC_current =/= PC_expected
 
     //io.kill              := PC_mismatch
     io.revert.valid      := PC_mismatch
@@ -212,7 +212,6 @@ class predecoder(parameters:Parameters) extends Module{
 
 
     // Select PC based on metadata
-    
 
     // If need BTB, use BTB (non ret JALR)
     // If need RAS, use RAS (Ret)
@@ -231,20 +230,11 @@ class predecoder(parameters:Parameters) extends Module{
     use_computed := (metadata_out.br_type === _br_type.BR) || (metadata_out.br_type === _br_type.JAL)
 
 
-    when(io.commit.is_misprediction){PC_next := io.commit.expected_PC}
+    when(io.commit.is_misprediction && io.commit.valid){PC_next := io.commit.expected_PC}
     .elsewhen(use_BTB){PC_next := metadata_out.BTB_target}
     .elsewhen(use_RAS){PC_next := metadata_out.RAS}
     .elsewhen(use_computed){PC_next := metadata_out.instruction_PC + metadata_out.Imm.asUInt}
     .otherwise{PC_next := RegNext(io.fetch_packet.bits.fetch_PC + (fetchWidth*4).U)} // FIXME: should this always be +16?
-
-    PC_next_reg := Mux(RegNext(stage_1_valid), PC_next, PC_next_reg)
-    PC_expected := Mux(RegNext(stage_1_valid), PC_next, PC_next_reg)
-
-
-    when(io.commit.is_misprediction && io.commit.valid){
-        PC_next_reg := io.commit.expected_PC
-        PC_expected := io.commit.expected_PC
-    }
 
 
     // validate instructions
@@ -255,7 +245,6 @@ class predecoder(parameters:Parameters) extends Module{
     validate_flag := 1.B
 
     val T_NT_mask = decoder_T_NT.asUInt
-
 
     val decoder_validator = Module(new decoder_validator(fetchWidth=fetchWidth))
     decoder_validator.io.instruction_T_NT_mask := T_NT_mask
@@ -315,5 +304,5 @@ class predecoder(parameters:Parameters) extends Module{
     // Do not accept inputs if outputs have nowhere to go. 
     io.prediction.ready   := (io.final_fetch_packet.ready && io.predictions.ready && !PC_mismatch)
     io.fetch_packet.ready := (io.final_fetch_packet.ready && io.predictions.ready && !PC_mismatch)
-    io.final_fetch_packet.valid := RegNext(inputs_valid && PC_match)
+    io.final_fetch_packet.valid := RegNext(inputs_valid && !PC_mismatch)
 }

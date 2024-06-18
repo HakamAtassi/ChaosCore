@@ -16,4 +16,5 @@ int main()
     putchar('D');
     putchar('!');
     putchar('\n');
+    while(1){};
 }
