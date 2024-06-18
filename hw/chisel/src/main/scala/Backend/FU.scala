@@ -60,7 +60,7 @@ class ALU(parameters:Parameters) extends Module{
     // Op select
     val instructionType     =   io.FU_input.bits.decoded_instruction.instructionType
     val FUNCT3              =   io.FU_input.bits.decoded_instruction.FUNCT3
-    val IMMEDIATE           =   io.FU_input.bits.decoded_instruction.IMMEDIATE
+    val IS_IMM           =   io.FU_input.bits.decoded_instruction.IS_IMM
     val SUBTRACT            =   io.FU_input.bits.decoded_instruction.SUBTRACT
     val MULTIPLY            =   io.FU_input.bits.decoded_instruction.MULTIPLY
 
@@ -108,8 +108,8 @@ class ALU(parameters:Parameters) extends Module{
     val operand1_signed     = RS1_signed
     val operand1_unsigned   = RS1_unsigned
 
-    val operand2_signed     = Mux(IMMEDIATE, IMM_signed, RS2_signed)
-    val operand2_unsigned   = Mux(IMMEDIATE, IMM_unsigned, RS2_unsigned)
+    val operand2_signed     = Mux(IS_IMM, IMM_signed, RS2_signed)
+    val operand2_unsigned   = Mux(IS_IMM, IMM_unsigned, RS2_unsigned)
 
 
 
@@ -252,7 +252,7 @@ class branch_unit(parameters:Parameters) extends Module{
     // Op select
     val instructionType     =   io.FU_input.bits.decoded_instruction.instructionType
     val FUNCT3              =   io.FU_input.bits.decoded_instruction.FUNCT3
-    val IMMEDIATE           =   io.FU_input.bits.decoded_instruction.IMMEDIATE
+    val IS_IMM           =   io.FU_input.bits.decoded_instruction.IS_IMM
     val SUBTRACT            =   io.FU_input.bits.decoded_instruction.SUBTRACT
     val MULTIPLY            =   io.FU_input.bits.decoded_instruction.MULTIPLY
 

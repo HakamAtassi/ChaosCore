@@ -1,20 +1,10 @@
 from tabulate import tabulate
 from cocotb.clock import Clock
 from cocotb.triggers import RisingEdge
+from model_utils import signed, unsigned
 
 from cocotb.types import LogicArray
 from cocotb.types.range import Range
-
-def unsigned(op: int, bits:int):
-    """cast to 32 bits and set unsigned as needed"""
-    if(op<0): return (2**bits + op) & 0xffff_ffff
-    else: return op & 0xffff_ffff
-
-def signed(op: int, bits:int):
-    """cast to negative number if MSB is set"""
-    is_negative = op & 0x8000_0000
-    if(is_negative): return -(2**bits - op) 
-    else: return op
 
 
 def generate_null_FU_inputs():

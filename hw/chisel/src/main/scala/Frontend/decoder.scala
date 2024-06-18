@@ -69,10 +69,16 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
     dontTouch(instructionType)
 
     //Do we check entire funct7 field or just check for single bit?
-    val MULTIPLY    = (instructionType === InstructionType.OP && FUNCT7 === 0x1.U)
-    val SUBTRACT    = ((instructionType === InstructionType.OP || instructionType === InstructionType.OP_IMM) && FUNCT7 === 0x20.U)
-    val IMMEDIATE   = (instructionType === InstructionType.OP_IMM) || (instructionType === LUI) || (instructionType === AUIPC)
-
+    val MULTIPLY    =   (instructionType === OP && FUNCT7 === 0x1.U)
+    val SUBTRACT    =   ((instructionType === OP || instructionType === OP_IMM) && FUNCT7 === 0x20.U)
+    val IS_IMM   =      (instructionType === OP_IMM) || 
+                        (instructionType === LUI) || 
+                        (instructionType === AUIPC) || 
+                        (instructionType === STORE) || 
+                        (instructionType === LOAD) || 
+                        (instructionType === BRANCH) || 
+                        (instructionType === JAL) || 
+                        (instructionType === JALR) 
 
     val needs_divider        =   (instructionType === OP) && ( FUNCT3 === 0x4.U || FUNCT3 === 0x5.U || FUNCT3 === 0x6.U || FUNCT3 === 0x7.U) && FUNCT7(0)
     val needs_branch_unit    =   (instructionType === BRANCH) || (instructionType === JAL) || (instructionType === JALR)
@@ -129,7 +135,7 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
     io.decoded_instruction.bits.FUNCT3               := FUNCT3
     io.decoded_instruction.bits.MULTIPLY             := MULTIPLY    // Multiply or Divide
     io.decoded_instruction.bits.SUBTRACT             := SUBTRACT    // subtract or arithmetic shift...
-    io.decoded_instruction.bits.IMMEDIATE            := IMMEDIATE   // subtract or arithmetic shift...
+    io.decoded_instruction.bits.IS_IMM            := IS_IMM   // subtract or arithmetic shift...
 
     io.decoded_instruction.bits.IS_LOAD              := IS_LOAD     // subtract or arithmetic shift...
     io.decoded_instruction.bits.IS_STORE             := IS_STORE    // subtract or arithmetic shift...

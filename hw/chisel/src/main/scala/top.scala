@@ -62,6 +62,10 @@ object Main extends App {
     //VerilogGenerator.generateVerilog(new instruction_cache(parameters), "../verilog/Frontend/instruction_cache.v")
     VerilogGenerator.generateVerilog(new ChaosCore(parameters), 
     "../verilog/Core/ChaosCore.v")
+
+    //VerilogGenerator.generateVerilog(new SOC(parameters, addressMap), 
+    //"../verilog/SOC/SOC.v")
+
     //ChiselStage.emitSystemVerilogFile(new ChaosCore(parameters), Array("--split-verilog", "--target-dir", "../verilog"))
 
 }

@@ -225,8 +225,8 @@ class decoded_instruction(parameters:Parameters) extends Bundle{
 
     val SUBTRACT            =  Bool()
     val MULTIPLY            =  Bool()
-    val IMMEDIATE           =  Bool() // FIXME: rename this to is_IMMEDIATE or something
 
+    val IS_IMM              =  Bool() 
     val IS_LOAD             =  Bool()
     val IS_STORE            =  Bool()
     // ADD atomic instructions
