@@ -121,25 +121,26 @@ class predecoder(parameters:Parameters) extends Module{
         decoder_T_NT(i)                 :=  decoders(i).io.T_NT
     }
 
+
+
+
+
+
+    ///////////////////////
+    // NEXT PC SELECTION //
+    ///////////////////////
+
+
+
+    // GET DOMINANT BRANCH //
     val metadata_reg = Reg(Vec(fetchWidth, new metadata()))
     val T_NT_reg     = Reg(Vec(fetchWidth, Bool()))
     val GHR_reg      = Reg(UInt(GHRWidth.W))
+    val metadata_out    = Wire(new metadata())
+    val dominant_index = Wire(UInt(log2Ceil(fetchWidth).W))
 
     T_NT_reg := decoder_T_NT
     metadata_reg := decoder_metadata
-
-    /////////////
-    // STAGE 2 //
-    /////////////
-
-    // Select dominant branch; select expected PC
-    // Control RAS
-    // Validate instructions
-    // Assign outputs
-    
-    val metadata_out    = Wire(new metadata())
-
-    val dominant_index = Wire(UInt(log2Ceil(fetchWidth).W))
 
     // assign default value to metadata
     metadata_out := 0.U.asTypeOf(new metadata())
@@ -152,11 +153,44 @@ class predecoder(parameters:Parameters) extends Module{
     }
 
 
+
+
     val PC_next      = Wire(UInt(32.W))
     val PC_next_reg  = RegInit(UInt(32.W), startPC)
 
-    val PC_expected  = Wire(UInt(32.W))
+    val PC_expected  = Wire(UInt(32.W)) // the final expected address for the next incoming fetch packet. 
     val PC_current   = Wire(UInt(32.W))
+
+
+    val use_BTB      = Wire(Bool())
+    val use_RAS      = Wire(Bool())
+    val use_computed = Wire(Bool())
+
+    val stage_1_valid = Wire(Bool())
+    val PC_mismatch       = Wire(Bool())
+
+    stage_1_valid := io.fetch_packet.valid && !PC_mismatch
+        
+
+    use_BTB      := (metadata_out.br_type === _br_type.JALR) && (metadata_out.br_type =/= _br_type.RET)
+    use_RAS      := (metadata_out.br_type === _br_type.RET)
+    use_computed := (metadata_out.br_type === _br_type.BR) || (metadata_out.br_type === _br_type.JAL)
+
+
+    when(io.commit.is_misprediction && io.commit.valid){PC_next := io.commit.expected_PC}
+    .elsewhen(use_BTB){PC_next := metadata_out.BTB_target}
+    .elsewhen(use_RAS){PC_next := metadata_out.RAS}
+    .elsewhen(use_computed){PC_next := metadata_out.instruction_PC + metadata_out.Imm.asUInt}
+    .otherwise{PC_next := (PC_next_reg + (fetchWidth*4).U)}
+
+
+
+
+
+
+
+
+
 
     PC_current := io.fetch_packet.bits.fetch_PC
 
@@ -164,14 +198,28 @@ class predecoder(parameters:Parameters) extends Module{
     PC_next_reg := Mux(RegNext(io.fetch_packet.valid), PC_next, PC_next_reg)    // latch expected address incase there is an instruction bubble
     PC_expected := Mux(RegNext(io.fetch_packet.valid), PC_next, PC_next_reg)
 
-    val PC_mismatch       = Wire(Bool())
 
     PC_mismatch := PC_current =/= PC_expected
 
     //io.kill              := PC_mismatch
-    io.revert.valid      := PC_mismatch
+    io.revert.valid      := PC_mismatch && RegNext(!PC_mismatch)
     io.revert.bits.GHR   := GHR_reg // FIXME: what??
     io.revert.bits.PC    := PC_expected
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     ///////////////
     // GHR LOGIC //
@@ -216,26 +264,6 @@ class predecoder(parameters:Parameters) extends Module{
     // If need BTB, use BTB (non ret JALR)
     // If need RAS, use RAS (Ret)
     // If need computed, use computed (BR)
-
-    val use_BTB      = Wire(Bool())
-    val use_RAS      = Wire(Bool())
-    val use_computed = Wire(Bool())
-
-    val stage_1_valid = Wire(Bool())
-    stage_1_valid := io.fetch_packet.valid && !PC_mismatch
-        
-
-    use_BTB      := (metadata_out.br_type === _br_type.JALR) && (metadata_out.br_type =/= _br_type.RET)
-    use_RAS      := (metadata_out.br_type === _br_type.RET)
-    use_computed := (metadata_out.br_type === _br_type.BR) || (metadata_out.br_type === _br_type.JAL)
-
-
-    when(io.commit.is_misprediction && io.commit.valid){PC_next := io.commit.expected_PC}
-    .elsewhen(use_BTB){PC_next := metadata_out.BTB_target}
-    .elsewhen(use_RAS){PC_next := metadata_out.RAS}
-    .elsewhen(use_computed){PC_next := metadata_out.instruction_PC + metadata_out.Imm.asUInt}
-    .otherwise{PC_next := RegNext(io.fetch_packet.bits.fetch_PC + (fetchWidth*4).U)} // FIXME: should this always be +16?
-
 
     // validate instructions
 
