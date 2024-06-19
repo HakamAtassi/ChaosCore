@@ -135,8 +135,10 @@ class predecoder_model:
         (fetch_packet_index, taken, taken_address) = self.get_dominant_branch()
         if(not taken and self.input_fetch_packet["valid"]):
             self.expected_PC = self.expected_PC + 16
-        else:
+        elif(taken and self.input_fetch_packet["valid"]):
             self.expected_PC = taken_address
+        elif(taken and self.input_fetch_packet["valid"]):
+            self.expected_PC = self.expected_PC
 
 
     def get_is_misprediction(self):
@@ -148,15 +150,21 @@ class predecoder_model:
 
 
     def inputs(self, prediction, fetch_packet, RAS_read, commit):
+
+        
         # place inputs 
         self.prediction(prediction)
         self.fetch_packet(fetch_packet)
+
+
+        self.is_reversion = self.get_is_reversion()
+
+
         self.RAS_read(RAS_read)
         self.commit(commit)
 
 
         self.is_misprediction = self.get_is_misprediction()
-        self.is_reversion = self.get_is_reversion()
 
 
 
@@ -174,16 +182,16 @@ class predecoder_model:
     # outputs
     def revert(self):
 
-        current_PC = self.input_fetch_packet["fetch_PC"]
 
-        PC_mismatch = self.expected_PC != current_PC
-        self.is_reversion = PC_mismatch and not self.is_misprediction
-
+        #print(f"expected {self.expected_PC} got {current_PC} | {PC_mismatch}")
+        #print(self.input_fetch_packet)
         revert = {}
 
         revert["valid"] = self.is_reversion
         revert["GHR"] = self.GHR
         revert["PC"] = self.expected_PC
+        print(revert)
+        #print(f"{current_PC}")
 
         return revert
 

@@ -161,6 +161,7 @@ class decode_instruction:
         return int(valid)
     
     def get_IMM(self):
+        
         instruction = LogicArray(self.instruction, Range(32, 'downto', 0))
         if(self.is_I_type):
             imm = instruction[31:20].integer

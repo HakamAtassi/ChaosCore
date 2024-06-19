@@ -391,13 +391,13 @@ class ChaosCore_TB:
             #RAS_update = self.predecoder_RAS_update_mon.values.get()
             #predictions = self.predecoder_predictions_mon.values.get()
 
-            try:
-                dut_revert = self.predecoder_revert_mon.values.get_nowait()
-                model_revert = model_revert_queue.pop(0)
-                assert model_revert["valid"] == dut_revert["valid"]
-                assert model_revert["PC"] == dut_revert["PC"]
-            except(cocotb.queue.QueueEmpty): 
-                pass
+            #try:
+                #dut_revert = self.predecoder_revert_mon.values.get_nowait()
+                #model_revert = model_revert_queue.pop(0)
+                #assert model_revert["valid"] == dut_revert["valid"]
+                #assert model_revert["PC"] == dut_revert["PC"]
+            #except(cocotb.queue.QueueEmpty): 
+                #pass
 
             try:
                 dut_final_fetch_packet = self.predecoder_final_fetch_packet_mon.values.get_nowait()

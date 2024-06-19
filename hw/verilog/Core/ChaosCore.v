@@ -829,7 +829,6 @@ module predecoder(
   output [31:0] io_predictions_bits_resolved_PC
 );
 
-  wire [31:0] PC_next;
   wire [3:0]  _decoder_validator_io_instruction_validity;
   wire        _decoders_3_io_T_NT;
   wire [2:0]  _decoders_3_io_metadata_br_type;
@@ -895,11 +894,45 @@ module predecoder(
           : T_NT_reg_2
               ? metadata_reg_2_instruction_PC
               : T_NT_reg_3 ? metadata_reg_3_instruction_PC : 32'h0;
+  wire [31:0] metadata_out_RAS =
+    T_NT_reg_0
+      ? metadata_reg_0_RAS
+      : T_NT_reg_1
+          ? metadata_reg_1_RAS
+          : T_NT_reg_2 ? metadata_reg_2_RAS : T_NT_reg_3 ? metadata_reg_3_RAS : 32'h0;
+  wire [31:0] metadata_out_BTB_target =
+    T_NT_reg_0
+      ? metadata_reg_0_BTB_target
+      : T_NT_reg_1
+          ? metadata_reg_1_BTB_target
+          : T_NT_reg_2
+              ? metadata_reg_2_BTB_target
+              : T_NT_reg_3 ? metadata_reg_3_BTB_target : 32'h0;
   reg  [31:0] PC_next_reg;
+  wire        use_BTB = metadata_out_br_type == 3'h3 & metadata_out_br_type != 3'h4;
+  wire        use_RAS = metadata_out_br_type == 3'h4;
+  wire        use_computed = metadata_out_br_type == 3'h1 | metadata_out_br_type == 3'h2;
+  wire        _GEN = io_commit_is_misprediction & io_commit_valid;
+  wire [31:0] _PC_next_T =
+    metadata_out_instruction_PC
+    + (T_NT_reg_0
+         ? metadata_reg_0_Imm
+         : T_NT_reg_1
+             ? metadata_reg_1_Imm
+             : T_NT_reg_2 ? metadata_reg_2_Imm : T_NT_reg_3 ? metadata_reg_3_Imm : 32'h0);
+  wire [31:0] _PC_next_T_2 = PC_next_reg + 32'h10;
   reg         PC_next_reg_REG;
   reg         PC_expected_REG;
-  wire [31:0] PC_expected = PC_expected_REG ? PC_next : PC_next_reg;
+  wire [31:0] PC_expected =
+    PC_expected_REG
+      ? (_GEN
+           ? io_commit_expected_PC
+           : use_BTB
+               ? metadata_out_BTB_target
+               : use_RAS ? metadata_out_RAS : use_computed ? _PC_next_T : _PC_next_T_2)
+      : PC_next_reg;
   wire        PC_mismatch = io_fetch_packet_bits_fetch_PC != PC_expected;
+  reg         io_revert_valid_REG;
   reg  [15:0] GHR;
   wire        has_control =
     metadata_reg_3_br_type == 3'h1 | metadata_reg_3_br_type == 3'h2
@@ -912,38 +945,7 @@ module predecoder(
     | metadata_reg_1_br_type == 3'h4 | metadata_reg_0_br_type == 3'h1
     | metadata_reg_0_br_type == 3'h2 | metadata_reg_0_br_type == 3'h3
     | metadata_reg_0_br_type == 3'h5 | metadata_reg_0_br_type == 3'h4;
-  wire [15:0] _GEN = {GHR[14:0], |{T_NT_reg_3, T_NT_reg_2, T_NT_reg_1, T_NT_reg_0}};
-  wire        use_RAS = metadata_out_br_type == 3'h4;
-  reg  [31:0] PC_next_REG;
-  assign PC_next =
-    io_commit_is_misprediction & io_commit_valid
-      ? io_commit_expected_PC
-      : metadata_out_br_type == 3'h3 & metadata_out_br_type != 3'h4
-          ? (T_NT_reg_0
-               ? metadata_reg_0_BTB_target
-               : T_NT_reg_1
-                   ? metadata_reg_1_BTB_target
-                   : T_NT_reg_2
-                       ? metadata_reg_2_BTB_target
-                       : T_NT_reg_3 ? metadata_reg_3_BTB_target : 32'h0)
-          : use_RAS
-              ? (T_NT_reg_0
-                   ? metadata_reg_0_RAS
-                   : T_NT_reg_1
-                       ? metadata_reg_1_RAS
-                       : T_NT_reg_2
-                           ? metadata_reg_2_RAS
-                           : T_NT_reg_3 ? metadata_reg_3_RAS : 32'h0)
-              : metadata_out_br_type == 3'h1 | metadata_out_br_type == 3'h2
-                  ? metadata_out_instruction_PC
-                    + (T_NT_reg_0
-                         ? metadata_reg_0_Imm
-                         : T_NT_reg_1
-                             ? metadata_reg_1_Imm
-                             : T_NT_reg_2
-                                 ? metadata_reg_2_Imm
-                                 : T_NT_reg_3 ? metadata_reg_3_Imm : 32'h0)
-                  : PC_next_REG;
+  wire [15:0] _GEN_0 = {GHR[14:0], |{T_NT_reg_3, T_NT_reg_2, T_NT_reg_1, T_NT_reg_0}};
   wire [3:0]  T_NT_mask =
     {_decoders_3_io_T_NT, _decoders_2_io_T_NT, _decoders_1_io_T_NT, _decoders_0_io_T_NT};
   reg  [31:0] io_final_fetch_packet_bits_instructions_0_REG_instruction;
@@ -1015,7 +1017,7 @@ module predecoder(
     T_NT_reg_3 <= _decoders_3_io_T_NT;
     PC_next_reg_REG <= io_fetch_packet_valid;
     PC_expected_REG <= io_fetch_packet_valid;
-    PC_next_REG <= io_fetch_packet_bits_fetch_PC + 32'h10;
+    io_revert_valid_REG <= ~PC_mismatch;
     io_final_fetch_packet_bits_instructions_0_REG_instruction <=
       io_fetch_packet_bits_instructions_0_instruction;
     io_final_fetch_packet_bits_instructions_0_REG_packet_index <=
@@ -1064,12 +1066,22 @@ module predecoder(
       GHR <= 16'h0;
     end
     else begin
-      if (PC_next_reg_REG)
-        PC_next_reg <= PC_next;
+      if (PC_next_reg_REG) begin
+        if (_GEN)
+          PC_next_reg <= io_commit_expected_PC;
+        else if (use_BTB)
+          PC_next_reg <= metadata_out_BTB_target;
+        else if (use_RAS)
+          PC_next_reg <= metadata_out_RAS;
+        else if (use_computed)
+          PC_next_reg <= _PC_next_T;
+        else
+          PC_next_reg <= _PC_next_T_2;
+      end
       if (io_commit_is_misprediction)
         GHR <= io_commit_GHR;
       else if (has_control)
-        GHR <= _GEN;
+        GHR <= _GEN_0;
     end
   end // always @(posedge)
   branch_decoder decoders_0 (
@@ -1146,10 +1158,10 @@ module predecoder(
   );
   assign io_prediction_ready = _io_fetch_packet_ready_T & ~PC_mismatch;
   assign io_fetch_packet_ready = _io_fetch_packet_ready_T & ~PC_mismatch;
-  assign io_revert_valid = PC_mismatch;
+  assign io_revert_valid = PC_mismatch & io_revert_valid_REG;
   assign io_revert_bits_GHR = 16'h0;
   assign io_revert_bits_PC = PC_expected;
-  assign io_GHR = has_control ? _GEN : GHR;
+  assign io_GHR = has_control ? _GEN_0 : GHR;
   assign io_final_fetch_packet_valid = io_final_fetch_packet_valid_REG;
   assign io_final_fetch_packet_bits_fetch_PC = io_final_fetch_packet_bits_fetch_PC_REG;
   assign io_final_fetch_packet_bits_valid_bits_0 =
