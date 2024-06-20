@@ -15,10 +15,6 @@ def signed(op: int, bits:int):
     else: return op
 
 
-
-
-
-
 def getSet(address, sets, blockSize):
     block_number = address // blockSize
     setIndex = block_number % sets
@@ -185,127 +181,15 @@ def generate_R_type(opcode, rs1, rs2, rd, funct3, funct7):
     return int(instruction, 2)
 
 
-################
-## Generators ##
-################
-def fuzz(instruction_type=random.choice(["J", "B", "I", "U", "S", "R"])):
-    # Randomly select an instruction type
-
-    # Randomly generate inputs based on the selected instruction type
-    if instruction_type == "J":
-        opcode = random.choice([0b1101111])
-        rd = random.randint(0, 31)
-        imm = random.randint(0, (1 << 20) - 1) << 1
-        return generate_J_type(opcode, rd, imm)
-    elif instruction_type == "B":
-        opcode = random.choice([0b1100011])
-        rs1 = random.randint(0, 31)
-        rs2 = random.randint(0, 31)
-        imm = random.randint(0, (1 << 12) - 1)
-        funct3 = random.randint(0, 7)
-        return generate_B_type(opcode, rs1, rs2, imm, funct3)
-    elif instruction_type == "I":
-        opcode = random.choice(
-            [0b0010011, 0b0000011, 0b1100111, 0b0010111, 0b0001111, 0b0011011]
-        )
-        rs1 = random.randint(0, 31)
-        rd = random.randint(0, 31)
-        imm = random.randint(0, (1 << 12) - 1)
-        return generate_I_type(opcode, rs1, rd, imm)
-    elif instruction_type == "U":
-        opcode = random.choice([0b0110111, 0b0010111])
-        rd = random.randint(0, 31)
-        imm = random.randint(0, (1 << 20) - 1)
-        return generate_U_type(opcode, rd, imm)
-    elif instruction_type == "S":
-        opcode = random.choice([0b0100011])
-        rs1 = random.randint(0, 31)
-        rs2 = random.randint(0, 31)
-        imm = random.randint(0, (1 << 11) - 1)
-        funct3 = random.randint(0, 7)
-        return generate_S_type(opcode, rs1, rs2, imm, funct3)
-    elif instruction_type == "R":
-        opcode = random.choice([0b0110011, 0b0111011])
-        rs1 = random.randint(0, 31)
-        rs2 = random.randint(0, 31)
-        rd = random.randint(0, 31)
-        funct3 = random.randint(0, 7)
-        funct7 = random.randint(0, 127)
-        return generate_R_type(opcode, rs1, rs2, rd, funct3, funct7)
-
-
-def generate_call():
-    # Generate a JAL instruction with a random immediate
-    opcode = 0b1101111
-    rd = 1  # Typically, rd is set to the return address register (x1)
-    imm = random.randint(0, (1 << 20) - 1)
-    return generate_J_type(opcode, rd, imm)
-
-
-def generate_ret():
-    # Generate a JALR instruction with rd=x0 and a random immediate
-    opcode = 0b1100111
-    rs1 = 1  # Typically, rs1 is set to the return address register (x1)
-    rd = 0  # Set rd to x0 (zero register)
-    imm = 0
-    return generate_I_type(opcode, rs1, rd, imm)
-
-
-def generate_add():
-    pass
-
-
 # decode utils #
 
-
-def get_is_jal(instruction):
-    instruction = LogicArray(instruction, Range(31, "downto", 0))
-    opcode = instruction[6:0].integer
-    return opcode == 0b1101111
-
-
-def get_is_jalr(instruction):
-    instruction = LogicArray(instruction, Range(31, "downto", 0))
-    opcode = instruction[6:0].integer
-    return opcode == 0b1100111
-
-
-def get_is_call(instruction):
-    instruction = LogicArray(instruction, Range(31, "downto", 0))
-    opcode = instruction[6:0].integer
-    rd = instruction[11:7].integer
-
-    # if opcode == 0b1101111 and rd == 1:
-    # return True  # JAL
-    if opcode == 0b1100111 and rd == 1:
-        return True  # JALR
+def sign_extend(value, from_size, to_size):
+    MSB = (value & (1<<(from_size-1))) > 0
+    
+    if(MSB):
+        negative_value = value - (2**from_size)
+        sign_extended_value = (2**to_size) + negative_value
+        return sign_extended_value
     else:
-        return False
-
-
-def get_is_ret(instruction):
-    instruction = LogicArray(instruction, Range(31, "downto", 0))
-    opcode = instruction[6:0].integer
-    rd = instruction[11:7].integer
-    rs1 = instruction[19:15].integer
-    imm = instruction[31:20].integer
-    # is JALR x0, x1, 0
-    if opcode == 0b1100111 and rd == 0 and rs1 == 1 and imm == 0:
-        return True
-    else:
-        return False
-
-
-def get_is_branch(instruction):
-    instruction = LogicArray(instruction, Range(31, "downto", 0))
-    opcode = instruction[6:0].integer
-    rd = instruction[11:7].integer
-    if opcode == 0b1100011:
-        return True
-    else:
-        return False
-
-
-
-
+        return value
 

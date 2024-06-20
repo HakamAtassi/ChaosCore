@@ -6,77 +6,47 @@ Disassembly of section .text:
 
 00000000 <_start>:
    0:	00000297          	auipc	x5,0x0
-   4:	09828293          	addi	x5,x5,152 # 98 <main>
+   4:	03828293          	addi	x5,x5,56 # 38 <main>
    8:	00028067          	jr	x5
 
 0000000c <putchar>:
-   c:	fd010113          	addi	x2,x2,-48
-  10:	02812623          	sw	x8,44(x2)
-  14:	03010413          	addi	x8,x2,48
-  18:	fca42e23          	sw	x10,-36(x8)
-  1c:	800007b7          	lui	x15,0x80000
-  20:	fef42623          	sw	x15,-20(x8)
-  24:	fdc42703          	lw	x14,-36(x8)
-  28:	fec42783          	lw	x15,-20(x8)
-  2c:	00e7a023          	sw	x14,0(x15) # 80000000 <main+0x7fffff68>
-  30:	00000013          	nop
-  34:	02c12403          	lw	x8,44(x2)
-  38:	03010113          	addi	x2,x2,48
-  3c:	00008067          	ret
+   c:	800007b7          	lui	x15,0x80000
+  10:	00a7a023          	sw	x10,0(x15) # 80000000 <main+0x7fffffc8>
+  14:	00008067          	ret
 
-00000040 <printf>:
-  40:	fe010113          	addi	x2,x2,-32
-  44:	00112e23          	sw	x1,28(x2)
-  48:	00812c23          	sw	x8,24(x2)
-  4c:	02010413          	addi	x8,x2,32
-  50:	fea42623          	sw	x10,-20(x8)
-  54:	0200006f          	j	74 <printf+0x34>
-  58:	fec42783          	lw	x15,-20(x8)
-  5c:	0007c783          	lbu	x15,0(x15)
-  60:	00078513          	mv	x10,x15
-  64:	fa9ff0ef          	jal	c <putchar>
-  68:	fec42783          	lw	x15,-20(x8)
-  6c:	00178793          	addi	x15,x15,1
-  70:	fef42623          	sw	x15,-20(x8)
-  74:	fec42783          	lw	x15,-20(x8)
-  78:	0007c783          	lbu	x15,0(x15)
-  7c:	fc079ee3          	bnez	x15,58 <printf+0x18>
-  80:	00000013          	nop
-  84:	00000013          	nop
-  88:	01c12083          	lw	x1,28(x2)
-  8c:	01812403          	lw	x8,24(x2)
-  90:	02010113          	addi	x2,x2,32
-  94:	00008067          	ret
+00000018 <printf>:
+  18:	00054783          	lbu	x15,0(x10)
+  1c:	00078c63          	beqz	x15,34 <printf+0x1c>
+  20:	80000737          	lui	x14,0x80000
+  24:	00f72023          	sw	x15,0(x14) # 80000000 <main+0x7fffffc8>
+  28:	00154783          	lbu	x15,1(x10)
+  2c:	00150513          	addi	x10,x10,1
+  30:	fe079ae3          	bnez	x15,24 <printf+0xc>
+  34:	00008067          	ret
 
-00000098 <main>:
-  98:	ff010113          	addi	x2,x2,-16
-  9c:	00112623          	sw	x1,12(x2)
-  a0:	00812423          	sw	x8,8(x2)
-  a4:	01010413          	addi	x8,x2,16
-  a8:	04800513          	li	x10,72
-  ac:	f61ff0ef          	jal	c <putchar>
-  b0:	04500513          	li	x10,69
-  b4:	f59ff0ef          	jal	c <putchar>
-  b8:	04c00513          	li	x10,76
-  bc:	f51ff0ef          	jal	c <putchar>
-  c0:	04c00513          	li	x10,76
-  c4:	f49ff0ef          	jal	c <putchar>
-  c8:	04f00513          	li	x10,79
-  cc:	f41ff0ef          	jal	c <putchar>
-  d0:	02c00513          	li	x10,44
-  d4:	f39ff0ef          	jal	c <putchar>
-  d8:	05700513          	li	x10,87
-  dc:	f31ff0ef          	jal	c <putchar>
-  e0:	04f00513          	li	x10,79
-  e4:	f29ff0ef          	jal	c <putchar>
-  e8:	05200513          	li	x10,82
-  ec:	f21ff0ef          	jal	c <putchar>
-  f0:	04c00513          	li	x10,76
-  f4:	f19ff0ef          	jal	c <putchar>
-  f8:	04400513          	li	x10,68
-  fc:	f11ff0ef          	jal	c <putchar>
- 100:	02100513          	li	x10,33
- 104:	f09ff0ef          	jal	c <putchar>
- 108:	00a00513          	li	x10,10
- 10c:	f01ff0ef          	jal	c <putchar>
- 110:	0000006f          	j	110 <main+0x78>
+00000038 <main>:
+  38:	800007b7          	lui	x15,0x80000
+  3c:	04800713          	li	x14,72
+  40:	00e7a023          	sw	x14,0(x15) # 80000000 <main+0x7fffffc8>
+  44:	04500713          	li	x14,69
+  48:	00e7a023          	sw	x14,0(x15)
+  4c:	04c00713          	li	x14,76
+  50:	00e7a023          	sw	x14,0(x15)
+  54:	00e7a023          	sw	x14,0(x15)
+  58:	04f00693          	li	x13,79
+  5c:	00d7a023          	sw	x13,0(x15)
+  60:	02c00613          	li	x12,44
+  64:	00c7a023          	sw	x12,0(x15)
+  68:	05700613          	li	x12,87
+  6c:	00c7a023          	sw	x12,0(x15)
+  70:	00d7a023          	sw	x13,0(x15)
+  74:	05200693          	li	x13,82
+  78:	00d7a023          	sw	x13,0(x15)
+  7c:	00e7a023          	sw	x14,0(x15)
+  80:	04400713          	li	x14,68
+  84:	00e7a023          	sw	x14,0(x15)
+  88:	02100713          	li	x14,33
+  8c:	00e7a023          	sw	x14,0(x15)
+  90:	00a00713          	li	x14,10
+  94:	00e7a023          	sw	x14,0(x15)
+  98:	0000006f          	j	98 <main+0x60>

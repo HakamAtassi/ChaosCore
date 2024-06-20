@@ -40,8 +40,9 @@ object latchExpectedPC extends ChiselEnum{
     val wire_wire, wire_reg = Value
 }
 
-object validate_packet extends ChiselEnum{
-    val packet_invalid, packet_valid = Value
+
+object PredecoderState extends ChiselEnum{
+    val Active, Idle, Revert = Value
 }
 
 // FIXME: make this N wide parameterizable
@@ -73,6 +74,9 @@ class predecoder(parameters:Parameters) extends Module{
     import parameters._
 
     val io = IO(new Bundle{
+        // FLUSH
+        val flush               = Input(Bool())
+
         // inputs
         val prediction          = Flipped(Decoupled(new prediction(parameters)))
         val fetch_packet        = Flipped(Decoupled(new fetch_packet(parameters)))
@@ -80,7 +84,6 @@ class predecoder(parameters:Parameters) extends Module{
         val commit              = Input(new commit(parameters))
 
         // outputs
-        val revert              = Decoupled(new revert(parameters))                    // Redirect frontend 
         val GHR                 = Output(UInt(GHRWidth.W))
 
         val final_fetch_packet  = Decoupled(new fetch_packet(parameters))              // Output validated instructions
@@ -92,20 +95,17 @@ class predecoder(parameters:Parameters) extends Module{
 
     dontTouch(io)
 
-    /////////////
-    // STAGE 1 //
-    /////////////
-    
-    // Assign decoders register outputs
-    // Assign decoders in first stage
+    ///////////////////
+    // BRANCH DECODE //
+    ///////////////////
 
+    
     val decoders: Seq[branch_decoder] = Seq.tabulate(fetchWidth) { w =>
         Module(new branch_decoder(index=w, parameters))
     }
 
     val decoder_metadata         = Wire(Vec(fetchWidth, new metadata()))
     val decoder_T_NT             = Wire(Vec(fetchWidth, Bool()))
-
     val inputs_valid             = Wire(Bool())
     inputs_valid    := io.fetch_packet.valid && io.prediction.valid         // Are both inputs valid?
 
@@ -122,124 +122,39 @@ class predecoder(parameters:Parameters) extends Module{
     }
 
 
+    ////////////////
+    // RAS UPDATE //
+    ////////////////
 
+    // If dominant branch is a Call or Ret, request a RAS update. 
 
-
-
-    ///////////////////////
-    // NEXT PC SELECTION //
-    ///////////////////////
-
-
-
-    // GET DOMINANT BRANCH //
-    val metadata_reg = Reg(Vec(fetchWidth, new metadata()))
-    val T_NT_reg     = Reg(Vec(fetchWidth, Bool()))
-    val GHR_reg      = Reg(UInt(GHRWidth.W))
-    val metadata_out    = Wire(new metadata())
-    val dominant_index = Wire(UInt(log2Ceil(fetchWidth).W))
-
-    T_NT_reg := decoder_T_NT
-    metadata_reg := decoder_metadata
-
-    // assign default value to metadata
-    metadata_out := 0.U.asTypeOf(new metadata())
-    dominant_index:= (fetchWidth-1).U
-    for(i <- fetchWidth-1 to 0 by - 1){
-        when(T_NT_reg(i) === 1.B){
-            metadata_out := metadata_reg(i)
-            dominant_index:= i.U
+    var dominant_branch_index = 0
+    for(i <- fetchWidth-1 to 0){
+        when(decoder_T_NT(i)){
+            dominant_branch_index = i
         }
     }
 
+    val dominant_branch_metadata = decoder_metadata(dominant_branch_index)
+
+
+    // RAS Control //
+    io.RAS_update.ret        := dominant_branch_metadata.br_type === _br_type.RET
+    io.RAS_update.call       := dominant_branch_metadata.br_type === _br_type.CALL
+
+    io.RAS_update.call_addr  := dominant_branch_metadata.instruction_PC // PC of the actual instruction, not fetch_PC
 
 
 
-    val PC_next      = Wire(UInt(32.W))
-    val PC_next_reg  = RegInit(UInt(32.W), startPC)
-
-    val PC_expected  = Wire(UInt(32.W)) // the final expected address for the next incoming fetch packet. 
-    val PC_current   = Wire(UInt(32.W))
-
-
-    val use_BTB      = Wire(Bool())
-    val use_RAS      = Wire(Bool())
-    val use_computed = Wire(Bool())
-
-    val stage_1_valid = Wire(Bool())
-    val PC_mismatch       = Wire(Bool())
-
-    stage_1_valid := io.fetch_packet.valid && !PC_mismatch
-        
-
-    use_BTB      := (metadata_out.br_type === _br_type.JALR) && (metadata_out.br_type =/= _br_type.RET)
-    use_RAS      := (metadata_out.br_type === _br_type.RET)
-    use_computed := (metadata_out.br_type === _br_type.BR) || (metadata_out.br_type === _br_type.JAL)
-
-
-    when(io.commit.is_misprediction && io.commit.valid){PC_next := io.commit.expected_PC}
-    .elsewhen(use_BTB){PC_next := metadata_out.BTB_target}
-    .elsewhen(use_RAS){PC_next := metadata_out.RAS}
-    .elsewhen(use_computed){PC_next := metadata_out.instruction_PC + metadata_out.Imm.asUInt}
-    .otherwise{PC_next := (PC_next_reg + (fetchWidth*4).U)}
-
-
-
-
-
-
-
-
-
-
-    PC_current := io.fetch_packet.bits.fetch_PC
-
-
-    PC_next_reg := Mux(RegNext(io.fetch_packet.valid), PC_next, PC_next_reg)    // latch expected address incase there is an instruction bubble
-    PC_expected := Mux(RegNext(io.fetch_packet.valid), PC_next, PC_next_reg)
-
-
-    PC_mismatch := PC_current =/= PC_expected
-
-    //io.kill              := PC_mismatch
-    io.revert.valid      := PC_mismatch && RegNext(!PC_mismatch)
-    io.revert.bits.GHR   := GHR_reg // FIXME: what??
-    io.revert.bits.PC    := PC_expected
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    ///////////////
-    // GHR LOGIC //
-    ///////////////
+    ////////////////
+    // GHR UPDATE //
+    ////////////////
 
     val GHR = RegInit(UInt(GHRWidth.W), 0.U)
+    val has_control           = Wire(Bool())
 
-    val has_control          = Wire(Bool())
-    val dominant_control_type = Wire(_br_type())
+    has_control := decoder_metadata.map(_.is_control).reduce(_ || _)
 
-    has_control := 0.B
-    dominant_control_type :=  _br_type.NONE
-
-    for(i <- 0 until fetchWidth){
-        when((metadata_reg(i).br_type === _br_type.BR) || (metadata_reg(i).br_type === _br_type.JAL) || (metadata_reg(i).br_type === _br_type.JALR)
-            || (metadata_reg(i).br_type === _br_type.CALL) || (metadata_reg(i).br_type === _br_type.RET)){
-            has_control := 1.B
-            dominant_control_type :=  metadata_reg(i).br_type
-        }
-    }
 
     // if dominant instruction is a taken branch
     // GHR is updated with T/NT regardless of where that T/NT came from
@@ -247,7 +162,7 @@ class predecoder(parameters:Parameters) extends Module{
     io.GHR := GHR
 
     when(has_control){
-        io.GHR := (GHR << 1) | T_NT_reg.asUInt.orR
+        io.GHR := (GHR << 1) | decoder_T_NT.asUInt.orR
     }
 
     GHR := io.GHR
@@ -256,81 +171,64 @@ class predecoder(parameters:Parameters) extends Module{
         GHR := io.commit.GHR
     }
 
-    ///////////////////////////////////
 
-
-    // Select PC based on metadata
-
-    // If need BTB, use BTB (non ret JALR)
-    // If need RAS, use RAS (Ret)
-    // If need computed, use computed (BR)
-
-    // validate instructions
-
-    // "validator"
-    // iterate and valid as you go along.
-    val validate_flag = Wire(Bool())
-    validate_flag := 1.B
-
-    val T_NT_mask = decoder_T_NT.asUInt
-
-    val decoder_validator = Module(new decoder_validator(fetchWidth=fetchWidth))
-    decoder_validator.io.instruction_T_NT_mask := T_NT_mask
-
-    for(i <- 0 until fetchWidth){
-        io.final_fetch_packet.bits.instructions(i) := RegNext(io.fetch_packet.bits.instructions(i))    // pass along actual instruction
-        io.final_fetch_packet.bits.valid_bits(i)   := RegNext(decoder_validator.io.instruction_validity(i)) && RegNext(inputs_valid)
-    }
-
-
-    io.final_fetch_packet.bits.fetch_PC := RegNext(io.fetch_packet.bits.fetch_PC)  // Pass along fetch PC
-    // RAS Control //
-    //io.RAS_update.call       := metadata_out.Call
-    //io.RAS_update.ret        := metadata_out.Ret
-
-    io.RAS_update.ret        := metadata_out.br_type === _br_type.RET
-    io.RAS_update.call       := metadata_out.br_type === _br_type.CALL
-
-    io.RAS_update.call_addr  := metadata_out.instruction_PC // PC of the actual instruction, not fetch_PC
-
-
-    /////////
-    // FTQ //
-    /////////
+    ////////////////
+    // FTQ OUTPUT //
+    ////////////////
 
     val push_FTQ = Wire(Bool())
 
     // Send predictions to FTQ
-    push_FTQ := 0.B
-    for(i <- 0 until fetchWidth){
-        when((metadata_reg(i).br_type =/= _br_type.NONE) &&  io.final_fetch_packet.bits.valid_bits(i)){
-            push_FTQ := 1.B
-        }
-    }
+
+    push_FTQ := decoder_metadata.map(_.is_control).reduce(_ || _)
+
 
     io.predictions.valid                              := push_FTQ
 
     // Buffer branch state
-    io.predictions.bits.fetch_PC                      := RegNext(io.fetch_packet.bits.fetch_PC)
-    io.predictions.bits.GHR                           := GHR_reg
-    io.predictions.bits.NEXT                          := RegNext(io.RAS_read.NEXT)
-    io.predictions.bits.TOS                           := RegNext(io.RAS_read.TOS)
-    io.predictions.bits.predicted_PC                  := PC_expected
+    io.predictions.bits.fetch_PC                      := io.fetch_packet.bits.fetch_PC
+    io.predictions.bits.GHR                           := GHR
+    io.predictions.bits.NEXT                          := io.RAS_read.NEXT
+    io.predictions.bits.TOS                           := io.RAS_read.TOS
 
 
-    io.predictions.bits.dominant_index                := (fetchWidth).U                        // Set to lowest priority 
-    io.predictions.bits.resolved_PC                   := RegNext(io.fetch_packet.bits.fetch_PC) + (fetchWidth.U*4.U)  // Default to next PC (assume no branches taken)
+    io.predictions.bits.dominant_index                := (fetchWidth-1).U                        // Set to lowest priority 
+    io.predictions.bits.resolved_PC                   := io.fetch_packet.bits.fetch_PC + (fetchWidth.U*4.U)  // Default to next PC (assume no branches taken)
 
     // Init FTQ entry data
+    io.predictions.bits.T_NT                          := decoder_T_NT.asUInt.orR
+    when(io.predictions.bits.T_NT){
+        io.predictions.bits.predicted_PC              := io.prediction.bits.target
+    }.otherwise{
+        io.predictions.bits.predicted_PC              := io.fetch_packet.bits.fetch_PC + (fetchWidth.U*4.U)
+    }
     io.predictions.bits.valid                         := 0.B
     io.predictions.bits.is_misprediction              := 0.B
     //io.predictions.bits.RAT_IDX                       := DontCare   // FIXME: 
-    io.predictions.bits.T_NT                          := RegNext(T_NT_mask.orR)
-    io.predictions.bits.br_type                       := metadata_out.br_type
+    io.predictions.bits.br_type                       := dominant_branch_metadata.br_type
 
 
-    // Do not accept inputs if outputs have nowhere to go. 
-    io.prediction.ready   := (io.final_fetch_packet.ready && io.predictions.ready && !PC_mismatch)
-    io.fetch_packet.ready := (io.final_fetch_packet.ready && io.predictions.ready && !PC_mismatch)
-    io.final_fetch_packet.valid := RegNext(inputs_valid && !PC_mismatch)
+    ////////////////////////
+    // INSTRUCTION OUTPUT //
+    ////////////////////////
+
+    // "validator"
+    val decoder_validator = Module(new decoder_validator(fetchWidth=fetchWidth))
+    val T_NT_mask = RegNext(decoder_T_NT.asUInt)
+    decoder_validator.io.instruction_T_NT_mask := T_NT_mask // FIXME: T_NT should not be set for uncond branches if not in btb...
+
+
+
+    // ASSIGN FINAL FETCH PACKET //
+    io.final_fetch_packet.valid := RegNext(io.fetch_packet.valid && !io.flush)
+    io.final_fetch_packet.bits.fetch_PC := RegNext(io.fetch_packet.bits.fetch_PC)
+    
+    for(i <- 0 until fetchWidth){
+        io.final_fetch_packet.bits.instructions(i) := RegNext(io.fetch_packet.bits.instructions(i))                                     // pass instructions
+        io.final_fetch_packet.bits.valid_bits(i)   := decoder_validator.io.instruction_validity(i) && io.final_fetch_packet.valid     // pass valid bits
+    }
+
+    io.prediction.ready   := (io.final_fetch_packet.ready && io.predictions.ready)
+    io.fetch_packet.ready := (io.final_fetch_packet.ready && io.predictions.ready)
+
 }

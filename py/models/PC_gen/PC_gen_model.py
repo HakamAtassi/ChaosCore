@@ -1,61 +1,61 @@
 class PC_gen_model:
     def __init__(self):
-        self.misprediction_valid = 0
-        self.misprediction_PC = 0
-        self.is_misprediction = 0
-
-        self.prediction_valid = 0
-        self.prediction_PC = 0
-        self.prediction_hit = 0
-        self.prediction_br_type = 0
-        self.prediction_br_mask = 0
-
-        self.revert_valid = 0
-        self.revert_PC = 0
-
+        self.commit = {}
+        self.prediction = {}
+        self.revert = {}
+        self.RAS_read = {}
 
         self.PC = 0
 
-    def commit(self, commit):
-        self.misprediction_valid = commit["valid"]
-        self.misprediction_PC = commit["expected_PC"]
-        self.is_misprediction = commit["is_misprediction"]
+        self.PC_next_queue = []
 
-    def prediction(self, prediction):
-        self.prediction_valid = prediction["valid"]
-        self.prediction_PC = prediction["target"]
-        self.prediction_hit = prediction["hit"]
-        self.prediction_br_type = prediction["br_type"]
-        #self.prediction_br_mask = prediction["br_mask"]
 
-    def revert(self, revert):
-        self.revert_valid = revert["valid"]
-        self.revert_PC = revert["PC"]
+    def inputs(self, commit, prediction, revert, RAS_read, PC_next):
+        self.commit = commit
+        self.prediction = prediction
+        self.revert = revert
+        self.RAS_read = RAS_read
+        self.PC_next = PC_next
 
-    def RAS_read(self, RAS_read):
-        self.RAS_read_PC = RAS_read["ret_addr"]
+        
+        next_PC = self.update()
 
-    def PC_next(self):
+
+    def get_is_misprediction(self):
+        return self.commit["valid"] and self.commit["is_misprediction"]
+
+    def get_is_prediction(self):
+        return self.prediction["valid"] and self.prediction["hit"] and self.prediction["T_NT"]
+
+    def get_is_RAS(self):
+        return self.prediction["br_type"] == 4
+
+
+    def get_next_PC(self):
         PC_next = {}
 
+        PC_next["valid"] = 1
         PC_next["next"] = self.PC
 
-        take_misprediction = self.misprediction_PC and self.misprediction_valid
-        take_revert = self.revert_valid
-        take_prediction = self.prediction_valid and self.prediction_hit
-        take_RAS = self.prediction_br_type == 4  # "RET"
-        take_16 = 1
+        is_misprediction = self.get_is_misprediction()
+        is_revert = self.revert["valid"]
+        is_prediction = self.get_is_prediction()
+        is_RAS = self.get_is_RAS()
+        
 
-        if take_misprediction:
-            self.PC = self.misprediction_PC
-        elif take_revert:
-            self.PC = self.revert_PC
-        elif take_prediction:
-            self.PC = self.RAS_PC if take_RAS else self.prediction_PC
-        elif take_16:
+        if is_misprediction:
+            self.PC = self.commit["expected_PC"]
+        elif is_revert:
+            self.PC = self.revert["PC"]
+        elif is_RAS:
+            self.PC = self.RAS["ret_addr"]
+        elif is_prediction:
+            self.PC = self.prediction["target"]
+        else:
             self.PC = self.PC + 16
 
-        # PC_next["ready"] = self.PC_gen.io_PC_next_ready.value
-        # PC_next["valid"] = self.PC_gen.io_PC_next_valid.value
 
         return PC_next
+
+
+

@@ -1,11 +1,11 @@
 BP
 ChaosCore
 FU
-Instruction
 PC_gen
 RAS
 ROB
 SimpleDRAM
 fetch_packet_decoder
+instruction
 model_utils
 predecoder

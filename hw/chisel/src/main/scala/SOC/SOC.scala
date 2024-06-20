@@ -37,6 +37,7 @@ import chisel3.util._
 class SOC(parameters:Parameters, addressMap:AddressMap) extends Module{
 
     val io = IO(new Bundle{
+
         val frontend_memory_request                =   Decoupled(new memory_request(parameters))
         val frontend_memory_response               =   Flipped(Decoupled(new DRAM_resp(parameters)))
 

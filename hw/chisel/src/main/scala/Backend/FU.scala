@@ -39,6 +39,9 @@ class ALU(parameters:Parameters) extends Module{
     import InstructionType._
 
     val io = IO(new Bundle{
+        // FLUSH
+        val flush         =   Input(Bool())
+
         // Input
         val FU_input      =   Flipped(Decoupled(new read_decoded_instruction(parameters)))
         
@@ -52,7 +55,7 @@ class ALU(parameters:Parameters) extends Module{
     val RS1_data            =   io.FU_input.bits.RS1_data
     val RS2_data            =   io.FU_input.bits.RS2_data
     val imm                 =   io.FU_input.bits.decoded_instruction.IMM
-    val instruction_PC      =   io.FU_input.bits.PC + (io.FU_input.bits.decoded_instruction.packet_index * fetchWidth.U)
+    val instruction_PC      =   io.FU_input.bits.fetch_PC + (io.FU_input.bits.decoded_instruction.packet_index * fetchWidth.U)
 
     // Dest reg
     val RD                  =   io.FU_input.bits.decoded_instruction.RD
@@ -60,7 +63,7 @@ class ALU(parameters:Parameters) extends Module{
     // Op select
     val instructionType     =   io.FU_input.bits.decoded_instruction.instructionType
     val FUNCT3              =   io.FU_input.bits.decoded_instruction.FUNCT3
-    val IS_IMM           =   io.FU_input.bits.decoded_instruction.IS_IMM
+    val IS_IMM              =   io.FU_input.bits.decoded_instruction.IS_IMM
     val SUBTRACT            =   io.FU_input.bits.decoded_instruction.SUBTRACT
     val MULTIPLY            =   io.FU_input.bits.decoded_instruction.MULTIPLY
 
@@ -208,7 +211,7 @@ class ALU(parameters:Parameters) extends Module{
     io.FU_output.bits.target_address        := DontCare
     io.FU_output.bits.branch_valid          := 0.B
 
-    io.FU_output.bits.instruction_PC        := RegNext(io.FU_input.bits.PC + (io.FU_input.bits.decoded_instruction.packet_index)<<2.U)
+    io.FU_output.bits.fetch_PC              := RegNext(io.FU_input.bits.fetch_PC)
     io.FU_output.bits.fetch_packet_index    := RegNext(io.FU_input.bits.decoded_instruction.packet_index)
 
     // Actual Outputs
@@ -217,7 +220,7 @@ class ALU(parameters:Parameters) extends Module{
     io.FU_output.bits.RD_data    :=   arithmetic_result
 
     io.FU_output.bits.ROB_index  :=   RegNext(io.FU_input.bits.decoded_instruction.ROB_index)
-    io.FU_output.valid           :=   RegNext(io.FU_input.valid)
+    io.FU_output.valid           :=   RegNext(io.FU_input.valid && !io.flush)
 
 }
 
@@ -226,6 +229,8 @@ class branch_unit(parameters:Parameters) extends Module{
     import parameters._
 
     val io = IO(new Bundle{
+        val flush         =   Input(Bool())
+
         // Input
         val FU_input      =   Flipped(Decoupled(new read_decoded_instruction(parameters)))
         
@@ -241,10 +246,11 @@ class branch_unit(parameters:Parameters) extends Module{
 
     val instruction_PC       = Wire(UInt(32.W))
 
-    IMM                             :=  (io.FU_input.bits.decoded_instruction.IMM).asUInt
+    IMM                            :=  (io.FU_input.bits.decoded_instruction.IMM).asUInt
 
 
-    instruction_PC          :=   io.FU_input.bits.PC + (io.FU_input.bits.decoded_instruction.packet_index * fetchWidth.U)
+
+    instruction_PC          :=   io.FU_input.bits.fetch_PC + (io.FU_input.bits.decoded_instruction.packet_index * fetchWidth.U)
 
     // Dest reg
     val RD                  =   io.FU_input.bits.decoded_instruction.RD
@@ -290,21 +296,43 @@ class branch_unit(parameters:Parameters) extends Module{
     val target_address = Wire(UInt(32.W))
 
     branch_taken    := 0.B
-    target_address  := io.FU_input.bits.PC + (fetchWidth.U * 4.U)    // default address is the next fetch_PC
+    target_address  := io.FU_input.bits.fetch_PC + (fetchWidth.U * 4.U)    // default address is the next fetch_PC
+    
+
+    val SIMM_12_0 = Wire(SInt(32.W))
+    val IMM_12_0  = Wire(UInt(32.W))
+
+    val SIMM_20_0 = Wire(SInt(32.W))
+    val IMM_20_0  = Wire(UInt(32.W))
+
+    val SIMM_11_0 = Wire(SInt(32.W))
+    val IMM_11_0  = Wire(UInt(32.W))
+
+    SIMM_12_0 := IMM(12,0).asSInt
+    IMM_12_0 := SIMM_12_0.asUInt
+
+    SIMM_20_0 := IMM(20,0).asSInt
+    IMM_20_0 := SIMM_20_0.asUInt
+
+    SIMM_11_0 := IMM(11,0).asSInt
+    IMM_11_0 := SIMM_11_0.asUInt
 
 
-    when(EQ)        {branch_taken := 1.B; target_address := instruction_PC + (IMM(12,0).asSInt).asUInt}
-    .elsewhen(NE)   {branch_taken := 1.B; target_address := instruction_PC + (IMM(12,0).asSInt).asUInt}
-    .elsewhen(LT)   {branch_taken := 1.B; target_address := instruction_PC + (IMM(12,0).asSInt).asUInt}
-    .elsewhen(GE)   {branch_taken := 1.B; target_address := instruction_PC + (IMM(12,0).asSInt).asUInt}
-    .elsewhen(LTU)  {branch_taken := 1.B; target_address := instruction_PC + (IMM(12,0).asSInt).asUInt}
-    .elsewhen(GEU)  {branch_taken := 1.B; target_address := instruction_PC + (IMM(12,0).asSInt).asUInt}
-    .elsewhen(JAL)  {branch_taken := 1.B; target_address := instruction_PC + (IMM(20,0).asSInt).asUInt}
-    .elsewhen(JALR) {branch_taken := 1.B; target_address := RS1_data       + (IMM(11,0).asSInt).asUInt}
+
+
+
+    when(EQ)        {branch_taken := 1.B; target_address := instruction_PC + IMM_12_0}
+    .elsewhen(NE)   {branch_taken := 1.B; target_address := instruction_PC + IMM_12_0}
+    .elsewhen(LT)   {branch_taken := 1.B; target_address := instruction_PC + IMM_12_0}
+    .elsewhen(GE)   {branch_taken := 1.B; target_address := instruction_PC + IMM_12_0}
+    .elsewhen(LTU)  {branch_taken := 1.B; target_address := instruction_PC + IMM_12_0}
+    .elsewhen(GEU)  {branch_taken := 1.B; target_address := instruction_PC + IMM_12_0}
+    .elsewhen(JAL)  {branch_taken := 1.B; target_address := instruction_PC + IMM_20_0}
+    .elsewhen(JALR) {branch_taken := 1.B; target_address := RS1_data       + IMM_11_0}
 
 
     // PC of branch instruction and packet index (to access ROB bank)
-    io.FU_output.bits.instruction_PC        :=  RegNext(io.FU_input.bits.PC)
+    io.FU_output.bits.fetch_PC              :=  RegNext(io.FU_input.bits.fetch_PC)
     io.FU_output.bits.fetch_packet_index    :=  RegNext(io.FU_input.bits.decoded_instruction.packet_index)
 
     // ALU pipelined; always ready
@@ -320,7 +348,7 @@ class branch_unit(parameters:Parameters) extends Module{
     io.FU_output.bits.RD_valid          :=      RegNext(io.FU_input.bits.decoded_instruction.RD_valid)
     io.FU_output.bits.RD_data           :=      RegNext(instruction_PC + 4.U)
     io.FU_output.bits.ROB_index         :=      RegNext(io.FU_input.bits.decoded_instruction.ROB_index)
-    io.FU_output.valid                  :=      RegNext(io.FU_input.valid)
+    io.FU_output.valid                  :=      RegNext(io.FU_input.valid && !io.flush)
 
 }
 
@@ -335,6 +363,9 @@ class FU(parameters:Parameters,
     import parameters._
     import InstructionType._
     val io = IO(new Bundle{
+        // FLUSH
+        val flush         =   Input(Bool())
+
         // Input
         val FU_input      =   Flipped(Decoupled(new read_decoded_instruction(parameters)))
         
@@ -356,10 +387,12 @@ class FU(parameters:Parameters,
 
     ALU.foreach { alu =>
         alu.io.FU_input <> io.FU_input
+        alu.io.flush    <> io.flush
     }
 
     branch_unit.foreach { bu =>
         bu.io.FU_input <> io.FU_input
+        bu.io.flush    <> io.flush
     }
 
     io.FU_output := DontCare

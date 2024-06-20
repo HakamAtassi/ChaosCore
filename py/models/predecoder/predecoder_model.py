@@ -1,5 +1,5 @@
 from model_utils import *
-
+from instruction import *
 
 class predecoder_model:
     def __init__(self):
@@ -12,11 +12,15 @@ class predecoder_model:
         self.expected_PC = 0
         self.is_misprediction = 0
         self.is_reversion = 0
+        self.waiting_for_reversion = 0
         self.GHR = 0
 
         # outputs
-
         self.final_fetch_packet = {}
+
+        # Response queues 
+        self.final_fetch_packet_queue = []
+        self.revert_queue = []
 
     # inputs
     def prediction(self, prediction):
@@ -31,6 +35,30 @@ class predecoder_model:
     def commit(self, commit):
         self.input_commit = commit
 
+    def inputs(self, prediction, fetch_packet, RAS_read, commit):
+
+        # place inputs 
+        self.prediction(prediction)
+        self.fetch_packet(fetch_packet)
+        self.RAS_read(RAS_read)
+        self.commit(commit)
+
+        # compute outputs
+        self.is_misprediction = self.get_is_misprediction()
+        self.get_is_reversion()
+
+        final_fetch_packet = self.get_final_fetch_packet()
+        revert = self.revert()
+
+        # queue outputs
+        if(final_fetch_packet["valid"]): self.final_fetch_packet_queue.append(final_fetch_packet)
+        if(revert["valid"]): self.revert_queue.append(revert)
+
+
+        # update state
+        self.update_expected_PC()
+
+
 
 
     def GHR(self):
@@ -44,35 +72,38 @@ class predecoder_model:
         taken_address = 0
 
         for i in range(4):
-            instruction = self.input_fetch_packet["instruction"][i]
-            is_ret      = get_is_ret(instruction)
-            is_call     = get_is_call(instruction)
-            is_jal      = get_is_jal(instruction)
-            is_jalr     = get_is_jalr(instruction)
-            is_branch   = get_is_branch(instruction)
+            current_instruction = instruction(self.input_fetch_packet["instruction"][i])
+            current_valid = self.input_fetch_packet["valid"] and self.input_fetch_packet["valid_bits"][i]
+
+            is_RET      = current_instruction.get_is_RET()
+            is_CALL     = current_instruction.get_is_CALL()
+            is_JAL      = current_instruction.get_is_JAL()
+            is_JALR     = current_instruction.get_is_JALR()
+            is_BRANCH   = current_instruction.get_is_BRANCH()
+
             is_BTB_hit  = self.input_prediction["hit"] & self.input_prediction["valid"]
             is_T_NT     = self.input_prediction["T_NT"]
             taken_index = i
 
-            if(is_call): # IDK
-                taken_address = 0   # FIXME: 
+            if(is_CALL and is_BTB_hit and current_valid):
+                taken_address = self.input_prediction["target_address"]
                 taken = 1
                 break
-            if(is_ret):
+            if(is_RET and current_valid):
                 taken_address = self.input_RAS_read["ret_addr"]
                 taken = 1
                 break
-            if(is_jal):
-                imm = LogicArray(instruction, Range(31, 'downto', 0))[31:20].integer
-                imm = signed(imm, 12)
+            if(is_JAL and current_valid):
+                imm = current_instruction.get_IMM()
                 instruction_PC = self.input_fetch_packet["fetch_PC"]
                 taken_address = instruction_PC + i*4 + imm
                 taken = 1
                 break
-            if(is_jalr):    # IDK
+            if(is_JALR and is_BTB_hit and is_T_NT and current_valid):
+                taken_address = self.input_prediction["target_address"]
                 taken = 1
                 break
-            if(is_branch and is_BTB_hit and is_T_NT):
+            if(is_BRANCH and is_BTB_hit and is_T_NT and current_valid):
                 taken_address = self.input_prediction["target_address"]
                 taken = 1
                 break
@@ -106,11 +137,11 @@ class predecoder_model:
     def predictions(self):  # To FTQ
 
         (taken_index, taken, taken_address) = self.get_dominant_branch()
-        instruction = self.input_fetch_packet["instruction"][taken_index]
+        _instruction = instruction(self.input_fetch_packet["instruction"][taken_index])
 
-        is_jal      = get_is_jal(instruction)
-        is_jalr     = get_is_jalr(instruction)
-        is_branch   = get_is_branch(instruction)
+        is_jal      = _instruction.get_is_JAL()
+        is_jalr     = _instruction.get_is_JALR()
+        is_branch   = _instruction.get_is_BRANCH()
 
         predictions = {}
 
@@ -133,7 +164,10 @@ class predecoder_model:
     def update_expected_PC(self):
 
         (fetch_packet_index, taken, taken_address) = self.get_dominant_branch()
-        if(not taken and self.input_fetch_packet["valid"]):
+
+        if(self.waiting_for_reversion):
+            self.expected_PC = self.expected_PC
+        elif(not taken and self.input_fetch_packet["valid"]):
             self.expected_PC = self.expected_PC + 16
         elif(taken and self.input_fetch_packet["valid"]):
             self.expected_PC = taken_address
@@ -141,52 +175,34 @@ class predecoder_model:
             self.expected_PC = self.expected_PC
 
 
+
+
     def get_is_misprediction(self):
         return self.input_commit["valid"] & self.input_commit["is_misprediction"]
 
     def get_is_reversion(self):
         PC_mismatch = self.input_fetch_packet["valid"] & (self.input_fetch_packet["fetch_PC"] != self.expected_PC)
-        return PC_mismatch 
+        PC_match = self.input_fetch_packet["valid"] & (self.input_fetch_packet["fetch_PC"] == self.expected_PC)
 
-
-    def inputs(self, prediction, fetch_packet, RAS_read, commit):
-
+        if(PC_match):
+            self.is_reversion = 0
+            self.waiting_for_reversion = 0
         
-        # place inputs 
-        self.prediction(prediction)
-        self.fetch_packet(fetch_packet)
-        self.RAS_read(RAS_read)
-        self.commit(commit)
-
-
-        self.is_misprediction = self.get_is_misprediction()
-        self.is_reversion = self.get_is_reversion()
-
-
-        # set outputs 
-
-        self.final_fetch_packet = self.get_final_fetch_packet()
-
-        #
-
-
-        self.update_expected_PC()
-
+        if(PC_mismatch and self.is_reversion):
+            self.waiting_for_reversion = 1
+            self.is_reversion = 0       # is_reversion only high for 1 cycle
+        elif(PC_mismatch):
+            self.waiting_for_reversion = 1
+            self.is_reversion = 1
 
 
     # outputs
     def revert(self):
-
-
-        #print(f"expected {self.expected_PC} got {current_PC} | {PC_mismatch}")
-        #print(self.input_fetch_packet)
         revert = {}
 
         revert["valid"] = self.is_reversion
         revert["GHR"] = self.GHR
         revert["PC"] = self.expected_PC
-        print(revert)
-        #print(f"{current_PC}")
 
         return revert
 
@@ -194,6 +210,7 @@ class predecoder_model:
         final_fetch_packet = {}
 
         (fetch_packet_index, taken, taken_address) = self.get_dominant_branch()
+
 
         final_fetch_packet["valid"] = int(
             not self.is_reversion
@@ -211,3 +228,21 @@ class predecoder_model:
         final_fetch_packet["ROB_index"] = self.input_fetch_packet["ROB_index"]
 
         return final_fetch_packet
+
+
+    ########################
+    ## READ OUTPUT QUEUES ##
+    ########################
+
+    def read_queue(self, queue_name):   # Factory 
+        if not getattr(self, f"{queue_name}"):
+            raise RuntimeError(f"{queue_name} contains no elements")
+        return getattr(self, f"{queue_name}").pop(0)
+    
+    def read_final_fetch_packet(self):
+        return self.read_queue("final_fetch_packet_queue")
+
+    def read_revert(self):
+        return self.read_queue("revert_queue")
+
+

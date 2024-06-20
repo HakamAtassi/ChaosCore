@@ -53,23 +53,34 @@ class BRU(parameters:Parameters) extends Module{
     // if FTQ indicates a misprediction
     // output mispredict and other metadata
 
-    io.commit.valid := io.ROB_output.valid 
-    
-
-    io.commit.is_misprediction := (io.FTQ.predicted_PC =/= io.FTQ.resolved_PC) && io.commit.valid && (io.ROB_output.bits.fetch_PC === io.FTQ.fetch_PC) && io.FTQ.valid
 
     io.commit.GHR       := io.FTQ.GHR
     io.commit.TOS       := io.FTQ.TOS
     io.commit.NEXT      := io.FTQ.NEXT
     io.commit.RAT_IDX   := io.ROB_output.bits.RAT_IDX
     io.commit.ROB_index := io.ROB_output.bits.ROB_index
-    io.commit.fetch_PC  := io.ROB_output.bits.fetch_PC //io.FTQ.fetch_PC
+    io.commit.fetch_PC  := io.ROB_output.bits.fetch_PC
 
-    io.commit.T_NT                  := io.FTQ.T_NT
-    io.commit.br_type               := io.FTQ.br_type
-    io.commit.fetch_packet_index    := DontCare
 
-    io.commit.expected_PC       := io.FTQ.resolved_PC
+    val branch_commit = Wire(Bool())
+
+
+    io.commit.valid := io.ROB_output.valid 
+    branch_commit := io.commit.valid && (io.ROB_output.bits.fetch_PC === io.FTQ.fetch_PC) && io.FTQ.valid
+
+    io.commit.is_misprediction      := 0.B
+    io.commit.T_NT                  := 0.B
+    io.commit.br_type               := _br_type.NONE
+    io.commit.fetch_packet_index    := 0.B
+    io.commit.expected_PC           := 0.B
+
+    when(branch_commit){
+        io.commit.is_misprediction      := (io.FTQ.predicted_PC =/= io.FTQ.resolved_PC) && branch_commit
+        io.commit.T_NT                  := io.FTQ.T_NT
+        io.commit.br_type               := io.FTQ.br_type
+        io.commit.fetch_packet_index    := DontCare
+        io.commit.expected_PC           := io.FTQ.resolved_PC
+    }
 
 }
 

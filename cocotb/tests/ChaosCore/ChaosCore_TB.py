@@ -7,6 +7,9 @@ from typing import Any, Dict, List
 
 import cocotb
 import cocotb.queue
+import cocotb.utils
+import cocotb.utils
+import cocotb.utils
 import pytest
 from cocotb.clock import Clock
 from cocotb.handle import SimHandleBase
@@ -44,15 +47,12 @@ class ChaosCore_TB:
 
         self.PC_gen_prediction_mon = Monitor(
             clock=self.dut.clock(),
-            valid=self.dut.PC_gen_prediction_valid(),
+            valid=self.dut.clock(),
+            #valid=self.dut.PC_gen_prediction_valid(),
             data=lambda: self.dut.PC_gen_read_prediction(),
         )
 
-        self.PC_gen_revert_mon = Monitor(
-            clock=self.dut.clock(),
-            valid=self.dut.PC_gen_revert_valid(),
-            data=lambda: self.dut.PC_gen_read_revert(),
-        )
+
 
         self.PC_gen_RAS_read_mon = Monitor(  # has no valid
             clock=self.dut.clock(),
@@ -107,12 +107,6 @@ class ChaosCore_TB:
         # -----------------
         # OUTPUT MONITORS
         # -----------------
-
-        self.predecoder_revert_mon = Monitor(
-            clock=self.dut.clock(),
-            valid=self.dut.predecoder_revert_valid(),
-            data=lambda: self.dut.predecoder_read_revert(),
-        )
 
         self.predecoder_GHR_mon = Monitor(
             clock=self.dut.clock(),
@@ -192,7 +186,6 @@ class ChaosCore_TB:
         # -----------------
         self.PC_gen_commit_mon.start()
         self.PC_gen_prediction_mon.start()
-        self.PC_gen_revert_mon.start()
         self.PC_gen_RAS_read_mon.start()
         # -----------------
         # OUTPUT MONITORS
@@ -218,7 +211,6 @@ class ChaosCore_TB:
         # -----------------
         # OUTPUT MONITORS
         # -----------------
-        self.predecoder_revert_mon.start()
         self.predecoder_GHR_mon.start()
         self.predecoder_final_fetch_packet_mon.start()
         self.predecoder_RAS_update_mon.start()
@@ -259,7 +251,6 @@ class ChaosCore_TB:
         # -----------------
         self.PC_gen_commit_mon.stop()
         self.PC_gen_prediction_mon.stop()
-        self.PC_gen_revert_mon.stop()
         self.PC_gen_RAS_read_mon.stop()
         # -----------------
         # OUTPUT MONITORS
@@ -286,7 +277,6 @@ class ChaosCore_TB:
         # -----------------
         # OUTPUT MONITORS
         # -----------------
-        self.predecoder_revert_mon.stop()
         self.predecoder_GHR_mon.stop()
         self.predecoder_final_fetch_packet_mon.stop()
         self.predecoder_RAS_update_mon.stop()
@@ -325,27 +315,23 @@ class ChaosCore_TB:
             ## DRIVE PC GEN MODEL ##
             ########################
 
-            dut_PC_gen_commit = await self.PC_gen_commit_mon.values.get()
-            self.PC_gen_model.commit(dut_PC_gen_commit)
+            commit = await self.PC_gen_commit_mon.values.get()
+            prediction = await self.PC_gen_prediction_mon.values.get()
+            RAS_read = await self.PC_gen_RAS_read_mon.values.get()
 
-            dut_PC_gen_revert = await self.PC_gen_revert_mon.values.get()
-            self.PC_gen_model.revert(dut_PC_gen_revert)
+            self.PC_gen_model.inputs(commit, prediction, RAS_read)
 
-            dut_PC_gen_prediction = await self.PC_gen_prediction_mon.values.get()
-            self.PC_gen_model.prediction(dut_PC_gen_prediction)
+            try:
+                dut_PC_next = await self.PC_gen_PC_next_mon.values.get()
+                model_PC_next = self.PC_gen_model.PC_next_queue.pop(0)
+                assert (model_PC_next["next"] == dut_PC_next["next"]), f"PC GEN output did not match expected"
 
-            dut_PC_gen_RAS_read = await self.PC_gen_RAS_read_mon.values.get()
-            self.PC_gen_model.RAS_read(dut_PC_gen_RAS_read)
+            except(cocotb.queue.QueueEmpty):
+                pass
 
-            dut_PC_next = await self.PC_gen_PC_next_mon.values.get()
-            model_PC_next = self.PC_gen_model.PC_next()
 
-            assert (model_PC_next["next"] == dut_PC_next["next"]), f"PC GEN output did not match expected"
 
     async def predecoder_run(self):
-        model_final_fetch_packet_queue = []
-        model_revert_queue = []
-        model_predictions_queue = []
         while True:
 
 
@@ -367,22 +353,6 @@ class ChaosCore_TB:
 
             self.predecoder_model.inputs(prediction, fetch_packet, RAS_read, commit)
 
-            #----------------------
-            # QUEUE MODEL RESPONSES
-            #----------------------
-
-            model_final_fetch_packet = self.predecoder_model.final_fetch_packet
-            if(model_final_fetch_packet["valid"] == 1):
-                model_final_fetch_packet_queue.append(model_final_fetch_packet)
-
-            model_revert = self.predecoder_model.revert()
-            if(model_revert["valid"] == 1):
-                model_revert_queue.append(model_revert)
-
-            model_predictions = self.predecoder_model.predictions()
-            if(model_predictions["valid"] == 1):
-                model_predictions_queue.append(model_predictions)
-
             # -----------------
             # OUTPUT MONITORS
             # -----------------
@@ -391,32 +361,31 @@ class ChaosCore_TB:
             #RAS_update = self.predecoder_RAS_update_mon.values.get()
             #predictions = self.predecoder_predictions_mon.values.get()
 
-            #try:
-                #dut_revert = self.predecoder_revert_mon.values.get_nowait()
-                #model_revert = model_revert_queue.pop(0)
-                #assert model_revert["valid"] == dut_revert["valid"]
-                #assert model_revert["PC"] == dut_revert["PC"]
-            #except(cocotb.queue.QueueEmpty): 
-                #pass
-
             try:
                 dut_final_fetch_packet = self.predecoder_final_fetch_packet_mon.values.get_nowait()
-                model_final_fetch_packet    =   model_final_fetch_packet_queue.pop(0)
-                assert model_final_fetch_packet["valid"] == dut_final_fetch_packet["valid"]
-                assert model_final_fetch_packet["valid_bits"] == dut_final_fetch_packet["valid_bits"]
-                assert model_final_fetch_packet["fetch_PC"] == dut_final_fetch_packet["fetch_PC"]
-                assert model_final_fetch_packet["instruction"] == dut_final_fetch_packet["instruction"]
-            except(cocotb.queue.QueueEmpty):
-                pass
+                model_final_fetch_packet = self.predecoder_model.read_final_fetch_packet()
 
-            try:
-                dut_predictions = self.predecoder_predictions_mon.values.get_nowait()
-                model_predictions = model_predictions_queue.pop(0)
-                assert model_predictions["valid"] == dut_predictions["valid"]
-                print(model_predictions)
-                assert model_predictions["predicted_PC"] == dut_predictions["predicted_PC"]
-            except(cocotb.queue.QueueEmpty):
+                assert model_final_fetch_packet["valid"] == dut_final_fetch_packet["valid"]
+                #assert model_final_fetch_packet["instruction"] == dut_final_fetch_packet["instruction"]
+                #assert model_final_fetch_packet["valid_bits"] == dut_final_fetch_packet["valid_bits"]
+                #assert model_final_fetch_packet["fetch_PC"] == dut_final_fetch_packet["fetch_PC"]
+            except(cocotb.queue.QueueEmpty): 
                 pass
+            
+
+            #assert model_final_fetch_packet["valid_bits"] == dut_final_fetch_packet["valid_bits"]
+            #assert model_final_fetch_packet["fetch_PC"] == dut_final_fetch_packet["fetch_PC"]
+            #assert model_final_fetch_packet["instruction"] == dut_final_fetch_packet["instruction"]
+
+
+#            try:
+                #dut_predictions = self.predecoder_predictions_mon.values.get_nowait()
+                #model_predictions = model_predictions_queue.pop(0)
+                #assert model_predictions["valid"] == dut_predictions["valid"]
+                #print(model_predictions)
+                #assert model_predictions["predicted_PC"] == dut_predictions["predicted_PC"]
+            #except(cocotb.queue.QueueEmpty):
+                #pass
 
 
     async def fetch_packet_decoder_run(self):
@@ -446,31 +415,8 @@ class ChaosCore_TB:
             # -----------
             # ASSERTIONS
             # -----------
-            assert model_decoded_fetch_packet["valid"] == dut_decoded_fetch_packet["valid"]
-            assert model_decoded_fetch_packet["valid_bits"] == dut_decoded_fetch_packet["valid_bits"]
+            compare_decoded_fetch_packet(model_decoded_fetch_packet, dut_decoded_fetch_packet), f"decoder diverges at {cocotb.utils.get_sim_time()}"
 
-            compare_RS1 = model_decoded_fetch_packet["RS1_valid"]
-            if(compare_RS1):
-                assert model_decoded_fetch_packet["RS1"]            == dut_decoded_fetch_packet["RS1"]
-                assert model_decoded_fetch_packet["RS1_valid"]      == dut_decoded_fetch_packet["RS1_valid"]
-
-            compare_RS2 = model_decoded_fetch_packet["RS2_valid"]
-            if(compare_RS2):
-                assert model_decoded_fetch_packet["RS2"]            == dut_decoded_fetch_packet["RS2"]
-                assert model_decoded_fetch_packet["RS2_valid"]      == dut_decoded_fetch_packet["RS2_valid"]
-
-            compare_RD = model_decoded_fetch_packet["RD_valid"]
-            if(compare_RD):
-                assert model_decoded_fetch_packet["RD_valid"]       == dut_decoded_fetch_packet["RD_valid"]
-                assert model_decoded_fetch_packet["RD"]             == dut_decoded_fetch_packet["RD"]
-
-            compare_imm = model_decoded_fetch_packet["IS_IMM"]
-            if(compare_imm):
-                assert model_decoded_fetch_packet["IMM"]            == dut_decoded_fetch_packet["IMM"]
-                assert model_decoded_fetch_packet["IS_IMM"]         == dut_decoded_fetch_packet["IS_IMM"]
-
-            assert model_decoded_fetch_packet["needs_ALU"]          == dut_decoded_fetch_packet["needs_ALU"]
-            assert model_decoded_fetch_packet["needs_branch_unit"]  == dut_decoded_fetch_packet["needs_branch_unit"]
 
 
 

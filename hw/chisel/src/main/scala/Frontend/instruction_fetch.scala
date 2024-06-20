@@ -79,11 +79,9 @@ class instruction_fetch(parameters:Parameters) extends Module{
     val dataSizeBits                = L1_instructionCacheBlockSizeBytes*8
 
     val io = IO(new Bundle{
-        // Inputs: A series of PCs and control signals
-        //val misprediction_PC  =   Flipped(Decoupled(UInt(32.W)))                              // Input
-        //val exception_PC      =   Flipped(Decoupled(UInt(32.W)))                              // Input
+        // FLUSH
+        val flush         =   Input(Bool())
 
-        
         val commit            =   Input(new commit(parameters))
         
         val memory_request         =   Decoupled(new memory_request(parameters))
@@ -110,18 +108,11 @@ class instruction_fetch(parameters:Parameters) extends Module{
     val PC_Q            =   Module(new Q(new memory_request(parameters), depth = 16))                                                       // Queue of predicted PCs
     val BTB_Q           =   Module(new Q(new prediction(parameters), depth = 16))         // Queue of BTB responses
 
-    ///////////
-    // Wires //
-    ///////////
-    //val predict_PC     =   Wire(Decoupled(UInt(32.W)))
-    val flush            =   Wire(Bool())
-    flush :=  io.commit.is_misprediction || predecoder.io.revert.valid // && exception ... //FIXME: 
-
     //////////////
     // PC Queue //
     //////////////
     PC_Q.io.out  <>  io.memory_request
-    PC_Q.io.flush       :=  flush
+    PC_Q.io.flush       :=  io.flush
 
     ///////////////////////
     // INSTRUCTION QUEUE //
@@ -129,7 +120,7 @@ class instruction_fetch(parameters:Parameters) extends Module{
     instruction_Q.io.out <> predecoder.io.fetch_packet
     instruction_Q.io.out.ready := (!BTB_Q.io.out.valid && predecoder.io.fetch_packet.ready)
 
-    instruction_Q.io.flush       :=  flush
+    instruction_Q.io.flush       :=  io.flush
 
     ///////////////
     // BTB QUEUE //
@@ -137,7 +128,7 @@ class instruction_fetch(parameters:Parameters) extends Module{
     BTB_Q.io.in <> bp.io.prediction
 
     BTB_Q.io.out.ready           :=  (!instruction_Q.io.out.valid && predecoder.io.prediction.ready)
-    BTB_Q.io.flush               :=  flush
+    BTB_Q.io.flush               :=  io.flush
   
     ///////////////////////
     // INSTRUCTION CACHE //
@@ -167,10 +158,12 @@ class instruction_fetch(parameters:Parameters) extends Module{
     ////////////////
     // PREDECODER //
     ////////////////
-    predecoder.io.prediction          <> BTB_Q.io.out
-    predecoder.io.fetch_packet        <> instruction_Q.io.out
-    predecoder.io.RAS_read            <> bp.io.RAS_read
-    predecoder.io.final_fetch_packet  <> io.fetch_packet 
+    predecoder.io.prediction            <> BTB_Q.io.out
+    predecoder.io.fetch_packet          <> instruction_Q.io.out
+    predecoder.io.fetch_packet.valid        := instruction_Q.io.out.valid     // FIXME: this only works under the SRAM memory assumption (ie, simulation)
+    predecoder.io.RAS_read              <> bp.io.RAS_read
+    predecoder.io.final_fetch_packet    <> io.fetch_packet 
+    predecoder.io.flush                 <> io.flush 
 
 
     // FIXME: connect the rest of the FTQ up
@@ -183,7 +176,6 @@ class instruction_fetch(parameters:Parameters) extends Module{
     PC_gen.io.prediction        <> bp.io.prediction
     PC_gen.io.RAS_read          <> bp.io.RAS_read
     PC_gen.io.PC_next.ready     := PC_Q.io.in.ready && bp.io.predict.ready
-    PC_gen.io.revert            <> predecoder.io.revert
     PC_gen.io.PC_next           <> PC_Q.io.in
 
 
@@ -198,7 +190,6 @@ class instruction_fetch(parameters:Parameters) extends Module{
     //io.exception_PC.ready      := 1.U
     //io.commit.ready            := 1.U
     //io.mispredict.ready        := 1.U
-    predecoder.io.revert.ready := 1.U
     //PC_gen.io.revert.ready && bp.io.revert.ready // FIXME: when is revert ready??
 
     io.fetch_packet <> predecoder.io.final_fetch_packet
