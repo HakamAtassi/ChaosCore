@@ -19,7 +19,7 @@ class SimpleDRAM:
 
     def read(self, address, size):
         if address + size > len(self.memory):
-            raise ValueError("Writing to Memory Out of Bounds")
+            raise ValueError("Reading from Memory Out of Bounds")
         data = self.memory[address:address + size]
         return data
 

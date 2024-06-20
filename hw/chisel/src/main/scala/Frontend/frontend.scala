@@ -122,6 +122,8 @@ class frontend(parameters:Parameters) extends Module{
     val portCount = getPortCount(parameters)
 
     val io = IO(new Bundle{
+        // FLUSH //
+        val flush                   =   Input(Bool())
 
         // DRAM CHANNELS //
         val memory_request                    =   Decoupled(new memory_request(parameters))
@@ -163,6 +165,7 @@ class frontend(parameters:Parameters) extends Module{
 
     val rename              = Module(new rename(parameters))
 
+    val flush = io.commit.is_misprediction && io.commit.valid
 
     ///////////////////////
     // INSTRUCTION FETCH //
@@ -172,6 +175,7 @@ class frontend(parameters:Parameters) extends Module{
     instruction_fetch.io.memory_response      <>   io.memory_response
     instruction_fetch.io.memory_request       <>   io.memory_request
 
+    instruction_fetch.io.flush                <>   io.flush
     ///////////////
     // FTQ INPUT //
     ///////////////
@@ -183,6 +187,7 @@ class frontend(parameters:Parameters) extends Module{
     //////////////
 
     decoders.io.fetch_packet <> instruction_fetch.io.fetch_packet
+    decoders.io.flush <> io.flush
 
 
     ///////////////////////
@@ -205,7 +210,7 @@ class frontend(parameters:Parameters) extends Module{
 
     rename.io.decoded_fetch_packet <> instruction_queue.io.out
 
-    instruction_queue.io.flush := DontCare  // FIXME: pass flush condition from frontend or something
+    instruction_queue.io.flush := flush 
 
 
     // In a single cycle, both a "create checkpoint" and "restore checkpoint" can be requested
@@ -220,6 +225,7 @@ class frontend(parameters:Parameters) extends Module{
     // So make sure its verified correctly. 
     
     rename.io.FU_outputs           <>     io.FU_outputs
+    rename.io.flush                <>     io.flush
 
     // FIXME: This needs to be either fine grain or course grain
     // Ex, either be able to free several checkpoints at once

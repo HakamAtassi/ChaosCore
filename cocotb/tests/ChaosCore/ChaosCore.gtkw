@@ -1,0 +1,63 @@
+[*]
+[*] GTKWave Analyzer v3.3.116 (w)1999-2023 BSI
+[*] Wed Jun 19 17:50:49 2024
+[*]
+[dumpfile] "/home/hakam/Repos/ChaosCore/cocotb/tests/ChaosCore/sim_build/dump.fst"
+[dumpfile_mtime] "Wed Jun 19 17:45:25 2024"
+[dumpfile_size] 62547
+[savefile] "/home/hakam/Repos/ChaosCore/cocotb/tests/ChaosCore/ChaosCore.gtkw"
+[timestart] 0
+[size] 1920 1033
+[pos] -1 -1
+*-13.410378 7000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] .
+[treeopen] .ChaosCore.
+[treeopen] .ChaosCore.frontend.
+[treeopen] .ChaosCore.frontend.instruction_fetch.
+[treeopen] .ChaosCore.frontend.instruction_fetch.PC_Q.
+[sst_width] 515
+[signals_width] 587
+[sst_expanded] 1
+[sst_vpaned_height] 443
+@28
+ChaosCore.frontend.instruction_fetch.predecoder.reset
+ChaosCore.frontend.instruction_fetch.predecoder.clock
+@200
+-PC Gen (inputs)
+@28
+ChaosCore.frontend.instruction_fetch.PC_gen.io_revert_valid
+@22
+ChaosCore.frontend.instruction_fetch.PC_gen.io_revert_bits_PC[31:0]
+ChaosCore.frontend.instruction_fetch.PC_gen.io_revert_bits_GHR[15:0]
+@200
+-PC Gen (outputs)
+@28
+ChaosCore.frontend.instruction_fetch.PC_gen.io_PC_next_valid
+@22
+ChaosCore.frontend.instruction_fetch.PC_gen.io_PC_next_bits_addr[31:0]
+@200
+-Predecoder(input)
+@28
+ChaosCore.frontend.instruction_fetch.predecoder.io_fetch_packet_valid
+@22
+ChaosCore.frontend.instruction_fetch.predecoder.io_fetch_packet_bits_instructions_0_instruction[31:0]
+ChaosCore.frontend.instruction_fetch.predecoder.io_fetch_packet_bits_instructions_1_instruction[31:0]
+ChaosCore.frontend.instruction_fetch.predecoder.io_fetch_packet_bits_instructions_2_instruction[31:0]
+ChaosCore.frontend.instruction_fetch.predecoder.io_fetch_packet_bits_instructions_3_instruction[31:0]
+ChaosCore.frontend.instruction_fetch.predecoder.io_fetch_packet_bits_fetch_PC[31:0]
+@200
+-Predecoder (outputs)
+@28
+ChaosCore.frontend.instruction_fetch.predecoder.io_final_fetch_packet_valid
+@22
+ChaosCore.frontend.instruction_fetch.predecoder.io_final_fetch_packet_bits_instructions_0_instruction[31:0]
+ChaosCore.frontend.instruction_fetch.predecoder.io_final_fetch_packet_bits_instructions_1_instruction[31:0]
+ChaosCore.frontend.instruction_fetch.predecoder.io_final_fetch_packet_bits_instructions_2_instruction[31:0]
+ChaosCore.frontend.instruction_fetch.predecoder.io_final_fetch_packet_bits_instructions_3_instruction[31:0]
+@28
+ChaosCore.frontend.instruction_fetch.predecoder.io_final_fetch_packet_bits_valid_bits_0
+ChaosCore.frontend.instruction_fetch.predecoder.io_final_fetch_packet_bits_valid_bits_1
+ChaosCore.frontend.instruction_fetch.predecoder.io_final_fetch_packet_bits_valid_bits_2
+ChaosCore.frontend.instruction_fetch.predecoder.io_final_fetch_packet_bits_valid_bits_3
+[pattern_trace] 1
+[pattern_trace] 0

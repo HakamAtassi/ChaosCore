@@ -194,6 +194,9 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
 class fetch_packet_decoder(parameters:Parameters) extends Module{
     import parameters._
     val io = IO(new Bundle{
+        // FLUSH
+        val flush                =  Input(Bool())
+
         val fetch_packet         =  Flipped(Decoupled(new fetch_packet(parameters)))          // Fetch packet result (To Decoders)
         val decoded_fetch_packet =  Decoupled(new decoded_fetch_packet(parameters))
     })
@@ -216,7 +219,7 @@ class fetch_packet_decoder(parameters:Parameters) extends Module{
         io.fetch_packet.ready                                       := io.decoded_fetch_packet.ready
     }
 
-    io.decoded_fetch_packet.valid := RegNext(io.fetch_packet.valid)
+    io.decoded_fetch_packet.valid := RegNext(io.fetch_packet.valid && !io.flush)
     io.decoded_fetch_packet.bits.fetch_PC   := RegNext(io.fetch_packet.bits.fetch_PC)
     io.decoded_fetch_packet.bits.valid_bits := RegNext(io.fetch_packet.bits.valid_bits)
 

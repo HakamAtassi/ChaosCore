@@ -43,6 +43,9 @@ object memfuState extends ChiselEnum{
 class MEMFU(parameters:Parameters) extends Module{
     import parameters._
     val io = IO(new Bundle{
+        // Flush
+        val flush                   =   Input(Bool())
+
         // Instruction Input
         val FU_input                =   Flipped(Decoupled(new read_decoded_instruction(parameters)))
 
@@ -112,7 +115,7 @@ class MEMFU(parameters:Parameters) extends Module{
     val RS1_data                =   FU_input.RS1_data
     val RS2_data                =   FU_input.RS2_data
     val IMM                     =   FU_input.decoded_instruction.IMM
-    val PC                      =   FU_input.PC + (FU_input.decoded_instruction.packet_index * fetchWidth.U)
+    val PC                      =   FU_input.fetch_PC + (FU_input.decoded_instruction.packet_index * fetchWidth.U)
 
     // Dest reg
     val RD                      =   FU_input.decoded_instruction.RD
@@ -216,7 +219,7 @@ class MEMFU(parameters:Parameters) extends Module{
     io.FU_output.bits.target_address            := 0.B
     io.FU_output.bits.branch_valid              := 0.B
 
-    io.FU_output.bits.instruction_PC            := RegNext(io.FU_input.bits.PC + (io.FU_input.bits.decoded_instruction.packet_index<<2.U))
+    io.FU_output.bits.fetch_PC            := RegNext(io.FU_input.bits.fetch_PC + (io.FU_input.bits.decoded_instruction.packet_index<<2.U))
     io.FU_output.bits.fetch_packet_index        := RegNext(io.FU_input.bits.decoded_instruction.packet_index)
 
     io.FU_output.bits.RD_data                   := RegNext(rd_data.asUInt)

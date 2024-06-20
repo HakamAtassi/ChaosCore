@@ -19,33 +19,34 @@ async def test_increment(dut):
     await cocotb.start(generateClock(dut))
 
     base_dir = os.path.dirname(__file__)
-    bin = "../../binaries/bin/increment.bin"
+    bin = "../../binaries/bin/hello_world.bin"
     bin = os.path.join(base_dir, bin)
 
-    imem = SimpleDRAM(sizeKB=4, bin=bin)
-    dmem = SimpleDRAM(sizeKB=4)
+    imem = SimpleDRAM(bin=bin)
+    dmem = SimpleDRAM()
 
     # wrap dut with helper class
     dut = ChaosCore_dut(dut, imem=imem, dmem=dmem)
 
     ChaosCore_tb = ChaosCore_TB(dut)
 
-    await ChaosCore_tb.reset()
-
     dut.write_dmem_request_ready(1)
     dut.write_imem_request_ready(1)
 
-    ChaosCore_tb.PC_gen_start()
-    ChaosCore_tb.predecoder_start()
-    ChaosCore_tb.fetch_packet_decoder_start()
+
+    await ChaosCore_tb.reset()
+
+    #ChaosCore_tb.PC_gen_start()
+    #ChaosCore_tb.predecoder_start()
+    #ChaosCore_tb.fetch_packet_decoder_start()
+
+
 
     for _ in range(1000):
         await ChaosCore_tb.update()
 
-    ChaosCore_tb.PC_gen_stop()
-    ChaosCore_tb.predecoder_stop()
-    ChaosCore_tb.fetch_packet_decoder_stop()
-
+    #ChaosCore_tb.PC_gen_stop()
+    #ChaosCore_tb.predecoder_stop()
+    #ChaosCore_tb.fetch_packet_decoder_stop()
 
     assert False
-

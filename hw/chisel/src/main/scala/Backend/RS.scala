@@ -47,19 +47,22 @@ class RS(parameters:Parameters) extends Module{
     val portCountBits = log2Ceil(portCount)
 
     val io = IO(new Bundle{
+        // FLUSH //
+        val flush                   =   Input(Bool())
+
         // ALLOCATE //
         val backend_packet          =      Vec(dispatchWidth, Flipped(Decoupled(new decoded_instruction(parameters))))
 
         //val INTRS_ready             =      Output(Vec(dispatchWidth, Bool()))
 
         // UPDATE //
-        val FU_outputs       =      Vec(portCount, Flipped(ValidIO(new FU_output(parameters))))
+        val FU_outputs        =      Vec(portCount, Flipped(ValidIO(new FU_output(parameters))))
 
         // REDIRECTS // 
         val commit            =   Input(new commit(parameters))
 
         // REG READ (then execute) //
-        val RF_inputs        =      Vec(ALUportCount, Decoupled(new decoded_instruction(parameters)))
+        val RF_inputs         =      Vec(ALUportCount, Decoupled(new decoded_instruction(parameters)))
 
     })
 
@@ -136,6 +139,8 @@ class RS(parameters:Parameters) extends Module{
     }
 
 
+
+
     ////////////////////////////
     // INSTRUCTION SCHEDULING //
     ////////////////////////////
@@ -156,6 +161,17 @@ class RS(parameters:Parameters) extends Module{
                                         (reservation_station(i).decoded_instruction.ready_bits.RS2_ready || RS2_match(i) || !reservation_station(i).decoded_instruction.RS2_valid) && 
                                         reservation_station(i).valid
     }
+
+    //////////////
+    // FLUSH RS //
+    //////////////
+
+    for(i <- 0 until RSEntries){
+        when(io.flush){
+            reservation_station(i) := 0.U.asTypeOf(new RS_entry(parameters))
+        }
+    }
+
 
     /////////////////////
     // PORT SCHEDULING //

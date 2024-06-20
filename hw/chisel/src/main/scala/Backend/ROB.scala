@@ -44,6 +44,9 @@ class ROB(parameters:Parameters) extends Module{
     val portCount = getPortCount(parameters)
 
     val io = IO(new Bundle{
+        // FLUSH //
+        val flush           =   Input(Bool())
+
         // ALLOCATE //
         val ROB_packet      =   Flipped(Decoupled(new decoded_fetch_packet(parameters)))
 
@@ -63,7 +66,7 @@ class ROB(parameters:Parameters) extends Module{
         // PC FILE //
         // Read port (Exec)
         val PC_file_exec_addr           =   Input(UInt(log2Ceil(ROBEntires).W))
-        val PC_file_exec_data           =   Output(UInt(log2Ceil(ROBEntires).W))
+        val PC_file_exec_data           =   Output(UInt(32.W))
     })
 
     //////////////////
@@ -97,7 +100,7 @@ class ROB(parameters:Parameters) extends Module{
 
     allocate := io.ROB_packet.valid && io.ROB_packet.ready
 
-    when(io.commit.valid && io.commit.is_misprediction){
+    when(io.flush){
         back_pointer := 0.U
     }.otherwise{
         back_pointer := back_pointer + allocate
@@ -268,7 +271,7 @@ class ROB(parameters:Parameters) extends Module{
     io.ROB_output.valid := commit
     io.ROB_output.bits.ROB_index := RegNext(front_index)    // you want the unbypassed version of this pointer
 
-    when(io.commit.is_misprediction && io.commit.valid){
+    when(io.flush){
         front_pointer := 0.U
         front_index   := 0.U
     }.elsewhen(commit){   // bypass
@@ -299,4 +302,6 @@ class ROB(parameters:Parameters) extends Module{
 
 
 }
+// FIXME: ROB commit doesnt really work
+// Front and back pointers are reset, but what if the first element is valid? 
 

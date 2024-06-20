@@ -7,8 +7,6 @@ ChaosCore/__init__.py
 ChaosCore/signals.py
 FU/FU.py
 FU/__init__.py
-Instruction/Instruction.py
-Instruction/__init__.py
 PC_gen/PC_gen_model.py
 PC_gen/__init__.py
 RAS/RAS.py
@@ -21,7 +19,8 @@ SimpleDRAM/SimpleDRAM.py
 SimpleDRAM/__init__.py
 fetch_packet_decoder/__init__.py
 fetch_packet_decoder/fetch_packet_decoder_model.py
-fetch_packet_decoder/opcodes.py
+instruction/__init__.py
+instruction/instruction.py
 model_utils/__init__.py
 model_utils/model_utils.py
 models.egg-info/PKG-INFO

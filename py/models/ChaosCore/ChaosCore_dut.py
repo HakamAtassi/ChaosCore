@@ -22,11 +22,13 @@ class ChaosCore_dut:
         return self.ChaosCore.clock
 
     async def reset(self):  # Do not touch
-        self.ChaosCore.reset.value = 0
         await RisingEdge(self.ChaosCore.clock)
         self.ChaosCore.reset.value = 1
         await RisingEdge(self.ChaosCore.clock)
         self.ChaosCore.reset.value = 0
+
+    def read_reset(self):
+        return self.ChaosCore.reset.value
 
     # -----------------
     # ADDRESSING LOGIC
@@ -126,19 +128,19 @@ class ChaosCore_dut:
     # -------------
 
     def read_dmem_request_valid(self):
-        return self.ChaosCore.io_backend_memory_request_valid.value
+        return int(self.ChaosCore.io_backend_memory_request_valid.value)
 
     def read_dmem_request_ready(self):
-        return self.ChaosCore.io_backend_memory_request_ready.value
+        return int(self.ChaosCore.io_backend_memory_request_ready.value)
 
     def read_dmem_request_addr(self):
-        return self.ChaosCore.io_backend_memory_request_bits_addr.value
+        return int(self.ChaosCore.io_backend_memory_request_bits_addr.value)
 
     def read_dmem_request_wr_en(self):
-        return self.ChaosCore.io_backend_memory_request_bits_wr_en.value
+        return int(self.ChaosCore.io_backend_memory_request_bits_wr_en.value)
 
     def read_dmem_request_data(self):
-        return self.ChaosCore.io_backend_memory_request_bits_wr_data.value
+        return int(self.ChaosCore.io_backend_memory_request_bits_wr_data.value)
 
     def write_dmem_request_ready(self, ready):
         self.ChaosCore.io_backend_memory_request_ready.value = ready
@@ -154,13 +156,13 @@ class ChaosCore_dut:
         self.write_dmem_response()
 
         # handle imem read requests
-        if self.read_imem_request_ready() & self.read_imem_request_valid():
+        if (self.read_imem_request_ready() and self.read_imem_request_valid() and not self.read_reset()):
             addr = self.read_imem_request_addr()
             data = self.imem.read(address=self.get_aligned_PC(addr), size=16)
             self.write_imem_response(data, 1)
 
         # handle dmem read/write requests
-        if self.read_dmem_request_ready() & self.read_dmem_request_valid():
+        if self.read_dmem_request_ready() and self.read_dmem_request_valid() and not self.read_reset():
             wr_en = self.read_dmem_request_wr_en()
             data = self.read_dmem_request_data()
             addr = self.read_dmem_request_addr()
@@ -170,6 +172,7 @@ class ChaosCore_dut:
             else:  # read
                 # FIXME: size depends on instruction
                 data = self.dmem.read(address=addr, size=4)
+                data = int.from_bytes(data, byteorder="little")
                 self.write_dmem_response(data, 1)
 
         await RisingEdge(self.clock())
@@ -267,16 +270,6 @@ class ChaosCore_dut:
         commit["RAT_IDX"] = self.predecoder.io_commit_RAT_IDX.value
         return commit
 
-    def predecoder_revert_valid(self):
-        return self.predecoder.io_revert_valid
-
-    def predecoder_read_revert(self):
-        revert = {}
-        # revert["ready"] = self.predecoder.io_revert_ready.value   # FIXME: optimized out?
-        revert["valid"] = self.predecoder.io_revert_valid.value
-        revert["GHR"] = self.predecoder.io_revert_bits_GHR.value
-        revert["PC"] = self.predecoder.io_revert_bits_PC.value
-        return revert
 
     def predecoder_read_GHR(self):
         GHR = {}
@@ -399,18 +392,6 @@ class ChaosCore_dut:
         # prediction["GHR"] = self.PC_gen.io_prediction_bits_GHR.value
         # prediction["T_NT"] = self.PC_gen.io_prediction_bits_T_NT.value
         return prediction
-
-    def PC_gen_revert_valid(self):
-        return self.PC_gen.io_revert_valid
-
-    def PC_gen_read_revert(self):
-        revert = {}
-
-        revert["ready"] = self.PC_gen.io_revert_ready.value
-        revert["valid"] = self.PC_gen.io_revert_valid.value
-        revert["GHR"] = self.PC_gen.io_revert_bits_GHR.value
-        revert["PC"] = self.PC_gen.io_revert_bits_PC.value
-        return revert
 
     def PC_gen_read_RAS_read(self):
         RAS_read = {}

@@ -49,10 +49,8 @@ class backend(parameters:Parameters) extends Module{
     val portCount = getPortCount(parameters)
 
     val io = IO(new Bundle{
-
-        // DRAM CHANNELS //
-        //val DRAM_resp               =   Flipped(Decoupled(Input(new DRAM_resp(parameters))))  // FROM DRAM
-        //val DRAM_request            =   Decoupled(new DRAM_request(parameters))               // TO DRAM
+        // FLUSH //
+        val flush                   =   Input(Bool())
 
         val memory_response     =   Flipped(Decoupled(new memory_response(parameters))) // From MEM
         val memory_request      =   Decoupled(new memory_request(parameters))     // To MEM
@@ -62,14 +60,11 @@ class backend(parameters:Parameters) extends Module{
 
         // PC_file access (for branch unit)
         val PC_file_exec_addr           =   Output(UInt(log2Ceil(ROBEntires).W))
-        val PC_file_exec_data           =   Input(UInt(log2Ceil(ROBEntires).W))
+        val PC_file_exec_data           =   Input(UInt(32.W))
 
         // ALLOCATE //
         //val backend_packet          =   Vec(dispatchWidth, Flipped(Decoupled(new decoded_instruction(parameters))))
         val backend_packet          =   Flipped(Decoupled(new decoded_fetch_packet(parameters)))
-
-        //val INTRS_sources_ready     =   Input(Vec(dispatchWidth, new sources_ready()))
-        //val MEMRS_sources_ready     =   Input(Vec(dispatchWidth, new sources_ready()))
 
         val MEMRS_ready             =   Output(Vec(dispatchWidth, Bool()))
         val INTRS_ready             =   Output(Vec(dispatchWidth, Bool()))
@@ -94,7 +89,7 @@ class backend(parameters:Parameters) extends Module{
 
     for (i <- 0 until dispatchWidth){
         INT_RS.io.backend_packet(i).bits     := io.backend_packet.bits.decoded_instruction(i)  // pass data along
-        INT_RS.io.backend_packet(i).valid    := (io.backend_packet.bits.decoded_instruction(i).RS_type === RS_types.INT) && io.backend_packet.bits.valid_bits(i)   
+        INT_RS.io.backend_packet(i).valid    := (io.backend_packet.bits.decoded_instruction(i).RS_type === RS_types.INT) && io.backend_packet.bits.valid_bits(i) && io.backend_packet.valid
         
         // does this entry correspond to RS
     }
@@ -104,7 +99,7 @@ class backend(parameters:Parameters) extends Module{
 
     for (i <- 0 until dispatchWidth){
         MEM_RS.io.backend_packet(i).bits     := io.backend_packet.bits.decoded_instruction(i)  // pass data along
-        MEM_RS.io.backend_packet(i).valid    := (io.backend_packet.bits.decoded_instruction(i).RS_type === RS_types.MEM)  && io.backend_packet.bits.valid_bits(i) // does this entry correspond to RS
+        MEM_RS.io.backend_packet(i).valid    := (io.backend_packet.bits.decoded_instruction(i).RS_type === RS_types.MEM)  && io.backend_packet.bits.valid_bits(i) && io.backend_packet.valid // does this entry correspond to RS
     }
 
     // Assign ready bits
@@ -141,19 +136,19 @@ class backend(parameters:Parameters) extends Module{
     // update read out data
     read_decoded_instructions(0).RS1_data := INT_PRF.io.rdata_0
     read_decoded_instructions(0).RS2_data := INT_PRF.io.rdata_1
-    read_decoded_instructions(0).PC       := io.PC_file_exec_data   // branch unit
+    read_decoded_instructions(0).fetch_PC := io.PC_file_exec_data   // branch unit
 
     read_decoded_instructions(1).RS1_data := INT_PRF.io.rdata_2
     read_decoded_instructions(1).RS2_data := INT_PRF.io.rdata_3
-    read_decoded_instructions(1).PC       := 0.U
+    read_decoded_instructions(1).fetch_PC  := 0.U
 
     read_decoded_instructions(2).RS1_data := INT_PRF.io.rdata_4
     read_decoded_instructions(2).RS2_data := INT_PRF.io.rdata_5
-    read_decoded_instructions(2).PC       := 0.U
+    read_decoded_instructions(2).fetch_PC := 0.U
 
     read_decoded_instructions(3).RS1_data := INT_PRF.io.rdata_6
     read_decoded_instructions(3).RS2_data := INT_PRF.io.rdata_7
-    read_decoded_instructions(3).PC       := 0.U
+    read_decoded_instructions(3).fetch_PC       := 0.U
 
 
     // Convert decoded_instructions to read_decoded_instructions
@@ -257,6 +252,20 @@ class backend(parameters:Parameters) extends Module{
     ///////////////////
     // MEM_RS TO MEM //
     ///////////////////
+
+
+    ///////////
+    // FLUSH //
+    ///////////
+
+    INT_RS.io.flush <> io.flush
+    MEM_RS.io.flush <> io.flush
+
+    FU0.io.flush    <> io.flush
+    FU1.io.flush    <> io.flush
+    FU2.io.flush    <> io.flush
+    FU3.io.flush    <> io.flush
+
     
     io.memory_request <>  FU3.io.memory_request
     io.memory_response    <>  FU3.io.memory_response

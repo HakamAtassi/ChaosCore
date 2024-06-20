@@ -161,7 +161,11 @@ class RAT(parameters:Parameters) extends Module{
     val available_checkpoints = RegInit(UInt(RATCheckpointBits.W), RATCheckpointCount.U - 1.U)
 
     val RAT_memories    = RegInit(VecInit.tabulate(RATCheckpointCount, architecturalRegCount){ (x, y) => 0.U(physicalRegBits.W) })
-    val ready_memories  = RegInit(VecInit.tabulate(RATCheckpointCount, architecturalRegCount){ (x, y) => 0.B })
+    // Strictly speaking, registers should start off as ready (on reset), then do a superscalar write bypass thing 
+    // such that if an instruciton in the same fetch packet has an RD/RS conflict, the RS is set to not ready. 
+    // With that said, you should not be using regs without initializing them...
+    // But we cant control what users do, so the core should not stall if a reg is used as a source without it being initialized, written to preivously (which would set it to ready)
+    val ready_memories  = RegInit(VecInit.tabulate(RATCheckpointCount, architecturalRegCount){ (x, y) => 0.B }) // FIXME: Start ready or unready? (see above)
 
     // outputs of ALL RAT checkpoints
 
@@ -331,6 +335,9 @@ class rename(parameters:Parameters) extends Module{
     val portCount = getPortCount(parameters)
 
     val io = IO(new Bundle{
+        // FLUSH
+        val flush                        =  Input(Bool())
+
         // Instruction input (decoded)
         val decoded_fetch_packet         =  Flipped(Decoupled(new decoded_fetch_packet(parameters)))
 
@@ -519,7 +526,7 @@ class rename(parameters:Parameters) extends Module{
     }
 
 
-    io.renamed_decoded_fetch_packet.valid              := RegNext(io.decoded_fetch_packet.valid)
+    io.renamed_decoded_fetch_packet.valid              := RegNext(io.decoded_fetch_packet.valid && !io.flush)
 
     io.renamed_decoded_fetch_packet.bits.RAT_IDX    := RAT.io.active_checkpoint_value
 

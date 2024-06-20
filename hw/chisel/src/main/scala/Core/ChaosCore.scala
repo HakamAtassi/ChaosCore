@@ -69,6 +69,7 @@ class ChaosCore(parameters:Parameters) extends Module{
     val BRU         = Module(new BRU(parameters))
 
 
+    val flush       = Wire(Bool())
 
     /////////////////////
     // BACKEND <> DRAM //
@@ -147,6 +148,17 @@ class ChaosCore(parameters:Parameters) extends Module{
     ////////////////
 
     BRU.io.FTQ <> FTQ.io.FTQ
+
+    ///////////
+    // FLUSH //
+    ///////////
+    flush := BRU.io.commit.valid && BRU.io.commit.is_misprediction
+
+    frontend.io.flush   <>  flush
+    backend.io.flush    <>  flush
+    ROB.io.flush        <>  flush
+    FTQ.io.flush        <>  flush
+    // FIXME: LSQ FLUSH
 
 
     //////////////////////

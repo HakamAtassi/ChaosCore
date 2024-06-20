@@ -50,6 +50,9 @@ class MEMRS(parameters:Parameters) extends Module{
     val pointerSize = log2Ceil(RSEntries)+1
 
     val io = IO(new Bundle{
+        // FLUSH //
+        val flush                   =   Input(Bool())
+
         // ALLOCATE //
         val backend_packet          =      Vec(dispatchWidth, Flipped(Decoupled(new decoded_instruction(parameters))))
 
@@ -172,7 +175,16 @@ class MEMRS(parameters:Parameters) extends Module{
     when(good_to_go){
         reservation_station(front_index) := 0.U.asTypeOf(new MEMRS_entry(parameters))
     }
+    
 
+    //////////////
+    // FLUSH RS //
+    //////////////
+    for(i <- 0 until RSEntries){
+        when(io.flush){
+            reservation_station(i) := 0.U.asTypeOf(new MEMRS_entry(parameters))
+        }
+    }
 
 
     ////////////////////

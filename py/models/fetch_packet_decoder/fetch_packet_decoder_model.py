@@ -1,8 +1,7 @@
 from model_utils import *
 from cocotb.types import LogicArray
 from cocotb.types.range import Range
-
-from .opcodes import *
+from instruction import *
 
 
 def sign_extend(value, from_size, to_size):
@@ -16,11 +15,10 @@ def sign_extend(value, from_size, to_size):
         return value
 
 
-
+# A model for a standalone decoder
 class decode_instruction:
-    def __init__(self, instruction):
-
-        self.instruction = instruction
+    def __init__(self, input_instruction):
+        self.instruction = instruction(input_instruction)
 
         self.opcode    = 0
 
@@ -41,7 +39,7 @@ class decode_instruction:
         self.FUNCT3             =  0 
         self.packet_index       =  0 
         self.ROB_index          =  0 
-        self.instructionType    =  0 
+        self.instruction_type   =  0 
         self.portID             =  0 
         self.RS_type            =  0 
         self.needs_ALU          =  0 
@@ -56,169 +54,56 @@ class decode_instruction:
 
     def decode(self):
 
-        self.opcode             = self.get_opcode()   # first, get opcode
-        #self.instructionType    = self.get_instruction_type()   # first, get opcode
+        self.instruction_type    = self.instruction.instruction_type
 
-        self.is_R_type = self.get_is_R_type()           # then determine instruction type
-        self.is_I_type = self.get_is_I_type()
-        self.is_S_type = self.get_is_S_type()
-        self.is_B_type = self.get_is_B_type()
-        self.is_U_type = self.get_is_U_type()
-        self.is_J_type = self.get_is_J_type()
+        self.is_R_type = self.instruction.is_R_type
+        self.is_I_type = self.instruction.is_I_type
+        self.is_S_type = self.instruction.is_S_type
+        self.is_B_type = self.instruction.is_B_type
+        self.is_U_type = self.instruction.is_U_type
+        self.is_J_type = self.instruction.is_J_type
 
         # CONSTRUCT
-        self.RD                 = self.get_RD()
-        self.RD_valid           = self.get_RD_valid()
-        self.RS1                = self.get_RS1()
-        self.RS1_valid          = self.get_RS1_valid()
-        self.RS2                = self.get_RS2()
-        self.RS2_valid          = self.get_RS2_valid()
-        self.IMM                = self.get_IMM()
-        self.IS_IMM             = self.get_IS_IMM()
-        self.FUNCT3             = self.get_FUNCT3()
-        self.packet_index       = 0 #self.get_packet_index()  # TODO:
-        self.ROB_index          = 0 #self.get_ROB_index()
-        self.instructionType    = self.opcode.instructionType
-        self.portID             = 0 #self.get_portID()
-        self.RS_type            = 0 #self.get_RS_type()
+        self.RD                 = self.instruction.RD
+        self.RD_valid           = self.instruction.RD_valid
+        self.RS1                = self.instruction.RS1
+        self.RS1_valid          = self.instruction.RS1_valid
+        self.RS2                = self.instruction.RS2
+        self.RS2_valid          = self.instruction.RS2_valid
+        self.IMM                = self.instruction.IMM
+        self.IS_IMM             = self.instruction.IS_IMM
+        self.FUNCT3             = self.instruction.FUNCT3
+
         self.needs_ALU          = self.get_needs_ALU()
         self.needs_branch_unit  = self.get_needs_branch_unit()
-        self.SUBTRACT           = 0 #self.get_SUBTRACT()
-        self.MULTIPLY           = 0 #self.get_MULTIPLY()
         self.IS_LOAD            = self.get_IS_LOAD()
         self.IS_STORE           = self.get_IS_STORE()
 
+        self.packet_index       = 0 #self.get_packet_index()  # TODO:
+        self.ROB_index          = 0 #self.get_ROB_index()
+        self.portID             = 0 #self.get_portID()
+        self.RS_type            = 0 #self.get_RS_type()
+        self.SUBTRACT           = 0 #self.get_SUBTRACT()
+        self.MULTIPLY           = 0 #self.get_MULTIPLY()
 
 
-    ############
-    ## DECODE ##
-    ############
-
-    #----------------------
-    # GET INSTRUCTION TYPES 
-    #----------------------
-    def get_opcode(self):
-        instruction = LogicArray(self.instruction, Range(32, 'downto', 0))
-        return opcode(instruction[6:0].integer)
-
-    def get_is_R_type(self):
-        instructionType = self.opcode.instructionType
-        is_R_type = (instructionType == InstructionType.OP)
-        return int(is_R_type)
-
-    def get_is_I_type(self):
-        instructionType = self.opcode.instructionType
-        is_I_type = ((instructionType == InstructionType.OP_IMM) | (instructionType == InstructionType.LOAD) | (instructionType == InstructionType.SYSTEM))
-        return int(is_I_type)
-
-    def get_is_S_type(self):
-        instructionType = self.opcode.instructionType
-        is_S_type = (instructionType == InstructionType.STORE)
-        return int(is_S_type)
-
-    def get_is_B_type(self):
-        instructionType = self.opcode.instructionType
-        is_B_type = (instructionType == InstructionType.BRANCH)
-        return int(is_B_type)
-
-    def get_is_J_type(self):
-        instructionType = self.opcode.instructionType
-        is_J_type = (instructionType == InstructionType.JAL)
-        return int(is_J_type)
-
-    def get_is_U_type(self):
-        instructionType = self.opcode.instructionType
-        is_U_type = ((instructionType == InstructionType.LUI) | (instructionType == InstructionType.AUIPC))
-        return int(is_U_type)
-
-    #------------------------
-    # GET INSTRUCTION FIELDS
-    #------------------------
-
-
-    def get_RD(self):
-        instruction = LogicArray(self.instruction, Range(32, 'downto', 0))
-        return instruction[11:7].integer
-
-    def get_RD_valid(self):
-        valid = self.is_R_type | self.is_I_type | self.is_U_type | self.is_J_type
-        return int(valid)
-
-    def get_RS1(self):
-        instruction = LogicArray(self.instruction, Range(32, 'downto', 0))
-        return instruction[19:15].integer
-
-    def get_RS1_valid(self):
-        valid = (self.is_R_type | self.is_I_type | self.is_S_type | self.is_B_type)
-        return int(valid)
-
-    def get_RS2(self):
-        instruction = LogicArray(self.instruction, Range(32, 'downto', 0))
-        return instruction[24:20].integer
-
-    def get_RS2_valid(self):
-        valid = self.is_R_type | self.is_S_type | self.is_B_type
-        return int(valid)
-    
-    def get_IMM(self):
-        
-        instruction = LogicArray(self.instruction, Range(32, 'downto', 0))
-        if(self.is_I_type):
-            imm = instruction[31:20].integer
-            return sign_extend(imm, from_size=12, to_size=21)
-        elif(self.is_S_type):
-            imm_11_5 = instruction[31:25].integer
-            imm_4_0 = instruction[11:7].integer
-            imm = (imm_11_5 << 5) | (imm_4_0 << 0)
-            return sign_extend(imm, from_size=12, to_size=21)
-        elif(self.is_B_type):
-            imm_12 = instruction[31:31].integer
-            imm_10_5 = instruction[30:25].integer
-            imm_4_1 = instruction[11:8].integer
-            imm_11 = instruction[7:7].integer
-            imm = (imm_12 << 12) | (imm_11 << 11) | (imm_10_5 << 5) | (imm_4_1 << 1)
-            return sign_extend(imm, from_size=13, to_size=21)
-        elif(self.is_U_type):
-            imm_31_12 = instruction[31:12].integer
-            imm = (imm_31_12 << 0)
-            return sign_extend(imm, from_size=20, to_size=21)
-        elif(self.is_J_type):
-            imm_20      = instruction[31:31].integer
-            imm_10_1    = instruction[30:21].integer
-            imm_11      = instruction[20:20].integer
-            imm_19_12   = instruction[19:12].integer
-            imm = (imm_20 << 20) | (imm_19_12 << 12) | (imm_11 << 11) | (imm_10_1 << 1)
-            return sign_extend(imm, from_size=21, to_size=21)
-
-
-    def get_IS_IMM(self):
-        valid = self.is_I_type | self.is_S_type | self.is_B_type | self.is_U_type | self.is_J_type
-        return int(valid)
-
-    def get_FUNCT3(self):
-        instruction = LogicArray(self.instruction, Range(32, 'downto', 0))
-        return instruction[14:12].integer
-
-    #----------
-    # METADATA
-    #----------
 
     def get_IS_LOAD(self):
-        instructionType = self.opcode.instructionType
-        return int(instructionType == InstructionType.LOAD)
+        instruction_type = self.instruction_type
+        return int(instruction_type == instruction_type.LOAD)
 
     def get_IS_STORE(self):
-        instructionType = self.opcode.instructionType
-        return int(instructionType == InstructionType.STORE)
+        instruction_type = self.instruction_type
+        return int(instruction_type == instruction_type.STORE)
 
     def get_needs_ALU(self):
-        instructionType = self.opcode.instructionType
-        needs_ALU = ((instructionType == InstructionType.OP) | (instructionType == InstructionType.OP_IMM) | (instructionType == InstructionType.LUI) |  (instructionType == InstructionType.AUIPC))
+        instruction_type = self.instruction_type
+        needs_ALU = ((instruction_type == instruction_type.OP) | (instruction_type == instruction_type.OP_IMM) | (instruction_type == instruction_type.LUI) |  (instruction_type == instruction_type.AUIPC))
         return int(needs_ALU)
 
     def get_needs_branch_unit(self):
-        instructionType = self.instructionType
-        needs_branch_unit = ((instructionType == InstructionType.BRANCH) | (instructionType == InstructionType.JAL) | (instructionType == InstructionType.JALR))
+        instruction_type = self.instruction_type
+        needs_branch_unit = ((instruction_type == instruction_type.BRANCH) | (instruction_type == instruction_type.JAL) | (instruction_type == instruction_type.JALR))
         return int(needs_branch_unit)
 
 
@@ -228,7 +113,6 @@ class fetch_packet_decoder_model:
 
     def inputs(self, fetch_packet):
         self.input_fetch_packet = fetch_packet
-
 
     def get_decoded_fetch_packet(self):
 
@@ -267,7 +151,7 @@ class fetch_packet_decoder_model:
             instruction_valid = self.input_fetch_packet["valid"] &  self.input_fetch_packet["valid_bits"][i]
 
             decoded_fetch_packet["RD"][i]                  = decoded_instruction.RD
-            decoded_fetch_packet["RD_valid"][i]            = decoded_instruction.RD_valid   & instruction_valid
+            decoded_fetch_packet["RD_valid"][i]            = decoded_instruction.RD_valid & instruction_valid
             decoded_fetch_packet["RS1"][i]                 = decoded_instruction.RS1
             decoded_fetch_packet["RS1_valid"][i]           = decoded_instruction.RS1_valid & instruction_valid
             decoded_fetch_packet["RS2"][i]                 = decoded_instruction.RS2
@@ -277,7 +161,7 @@ class fetch_packet_decoder_model:
             decoded_fetch_packet["FUNCT3"][i]              = decoded_instruction.FUNCT3
             decoded_fetch_packet["packet_index"][i]        = decoded_instruction.packet_index
             decoded_fetch_packet["ROB_index"][i]           = decoded_instruction.ROB_index
-            decoded_fetch_packet["instructionType"][i]     = decoded_instruction.instructionType
+            decoded_fetch_packet["instructionType"][i]     = decoded_instruction.instruction_type
             decoded_fetch_packet["portID"][i]              = decoded_instruction.portID
             decoded_fetch_packet["RS_type"][i]             = decoded_instruction.RS_type
             decoded_fetch_packet["needs_ALU"][i]           = decoded_instruction.needs_ALU

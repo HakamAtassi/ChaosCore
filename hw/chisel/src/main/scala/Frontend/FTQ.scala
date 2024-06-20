@@ -46,6 +46,9 @@ class FTQ(parameters:Parameters) extends Module{
     val portCount = getPortCount(parameters)
 
     val io = IO(new Bundle{
+        // FLUSH //
+        val flush               =   Input(Bool())
+
         // UPDATE //
         val FU_outputs          =   Vec(portCount, Flipped(ValidIO(new FU_output(parameters))))
 
@@ -124,7 +127,7 @@ class FTQ(parameters:Parameters) extends Module{
         val is_branch               = io.FU_outputs(0).bits.branch_valid
         val is_taken                = io.FU_outputs(0).bits.branch_taken
         val is_more_dominant        = (io.FU_outputs(0).bits.fetch_packet_index <= FTQ(i).dominant_index)
-        val fetch_packet_PC_match   = ((FTQ(i).fetch_PC>>log2Ceil(fetchWidth*4)) === (io.FU_outputs(0).bits.instruction_PC >> log2Ceil(fetchWidth*4))) // FIXME: FU_ouputs(0) because port 0 contains the branch unit. Make this a param
+        val fetch_packet_PC_match   = ((FTQ(i).fetch_PC) === (io.FU_outputs(0).bits.fetch_PC))
 
         // Everytime a branch is resolved in the FU, check if it is the most dominant taken branch in the fetch packet. 
     
@@ -138,7 +141,7 @@ class FTQ(parameters:Parameters) extends Module{
     }
 
 
-    when(io.commit.is_misprediction && io.commit.valid){
+    when(io.flush){
         for(i <- 0 until FTQEntries){
             FTQ(i) := 0.U.asTypeOf(0.U.asTypeOf(new FTQ_entry(parameters)))
         }

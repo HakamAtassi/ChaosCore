@@ -128,3 +128,34 @@ class Monitor:
     
     def sample(self): 
         return self.data()
+
+
+
+
+def compare_decoded_fetch_packet(model_decoded_fetch_packet, dut_decoded_fetch_packet):
+    assert model_decoded_fetch_packet["valid"] == dut_decoded_fetch_packet["valid"]
+    assert model_decoded_fetch_packet["valid_bits"] == dut_decoded_fetch_packet["valid_bits"]
+
+    for i in range(4):
+        compare_RS1 = model_decoded_fetch_packet["RS1_valid"][i]
+        if(compare_RS1):
+            assert model_decoded_fetch_packet["RS1"][i]            == dut_decoded_fetch_packet["RS1"][i]
+            assert model_decoded_fetch_packet["RS1_valid"][i]      == dut_decoded_fetch_packet["RS1_valid"][i]
+
+        compare_RS2 = model_decoded_fetch_packet["RS2_valid"][i]
+        if(compare_RS2):
+            assert model_decoded_fetch_packet["RS2"][i]            == dut_decoded_fetch_packet["RS2"][i]
+            assert model_decoded_fetch_packet["RS2_valid"][i]      == dut_decoded_fetch_packet["RS2_valid"][i]
+
+        compare_RD = model_decoded_fetch_packet["RD_valid"][i]
+        if(compare_RD):
+            assert model_decoded_fetch_packet["RD_valid"][i]       == dut_decoded_fetch_packet["RD_valid"][i]
+            assert model_decoded_fetch_packet["RD"][i]             == dut_decoded_fetch_packet["RD"][i]
+
+        compare_imm = model_decoded_fetch_packet["IS_IMM"][i]
+        if(compare_imm):
+            assert model_decoded_fetch_packet["IMM"][i]            == dut_decoded_fetch_packet["IMM"][i]
+            assert model_decoded_fetch_packet["IS_IMM"][i]         == dut_decoded_fetch_packet["IS_IMM"][i]
+
+        assert model_decoded_fetch_packet["needs_ALU"][i]          == dut_decoded_fetch_packet["needs_ALU"][i]
+        assert model_decoded_fetch_packet["needs_branch_unit"][i]  == dut_decoded_fetch_packet["needs_branch_unit"][i]

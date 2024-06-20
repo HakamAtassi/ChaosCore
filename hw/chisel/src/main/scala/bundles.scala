@@ -60,6 +60,8 @@ class metadata extends Bundle{
     val instruction_PC  = UInt(32.W)
     val RAS             = UInt(32.W)
     val BTB_target      = UInt(32.W)
+
+    val is_control      = Bool()
 }
 
 class instruction_cache_data_line(parameters:Parameters) extends Bundle{
@@ -251,7 +253,7 @@ class read_decoded_instruction(parameters:Parameters) extends Bundle{
     // read data from register read 
     val RS1_data        =   UInt(32.W)
     val RS2_data        =   UInt(32.W)
-    val PC              =   UInt(32.W)
+    val fetch_PC        =   UInt(32.W)
 }
 
 /////////////////////
@@ -428,7 +430,7 @@ class FU_output(parameters:Parameters) extends Bundle{
     val RD_valid            =   Bool()
 
     // Branch
-    val instruction_PC      =   UInt(32.W)    // FIXME: is this necessary?
+    val fetch_PC      =   UInt(32.W)    // FIXME: is this necessary?
     val branch_taken        =   Bool()
     val target_address      =   UInt(32.W)
     val branch_valid        =   Bool()
