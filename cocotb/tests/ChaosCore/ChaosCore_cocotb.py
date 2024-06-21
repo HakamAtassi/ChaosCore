@@ -8,8 +8,6 @@ from pathlib import Path
 import os
 
 from cocotb_utils import *
-from ChaosCore import ChaosCore_dut
-from SimpleDRAM import *
 from ChaosCore_TB import *
 
 
@@ -18,27 +16,18 @@ async def test_increment(dut):
 
     await cocotb.start(generateClock(dut))
 
-    base_dir = os.path.dirname(__file__)
-    bin = "../../binaries/bin/hello_world.bin"
-    bin = os.path.join(base_dir, bin)
-
-    imem = SimpleDRAM(bin=bin)
-    dmem = SimpleDRAM()
 
     # wrap dut with helper class
-    dut = ChaosCore_dut(dut, imem=imem, dmem=dmem)
+    #dut = ChaosCore_dut(dut, imem=imem, dmem=dmem)
 
-    ChaosCore_tb = ChaosCore_TB(dut)
-
-    dut.write_dmem_request_ready(1)
-    dut.write_imem_request_ready(1)
-
+    bin = "../../binaries/bin/hello_world.bin"
+    ChaosCore_tb = ChaosCore_TB(dut, bin)
 
     await ChaosCore_tb.reset()
 
     #ChaosCore_tb.PC_gen_start()
     #ChaosCore_tb.predecoder_start()
-    #ChaosCore_tb.fetch_packet_decoder_start()
+    ChaosCore_tb.start()
 
 
 
@@ -47,6 +36,6 @@ async def test_increment(dut):
 
     #ChaosCore_tb.PC_gen_stop()
     #ChaosCore_tb.predecoder_stop()
-    #ChaosCore_tb.fetch_packet_decoder_stop()
+    ChaosCore_tb.stop()
 
     assert False

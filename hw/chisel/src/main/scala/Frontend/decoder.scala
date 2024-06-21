@@ -224,4 +224,10 @@ class fetch_packet_decoder(parameters:Parameters) extends Module{
     io.decoded_fetch_packet.bits.valid_bits := RegNext(io.fetch_packet.bits.valid_bits)
 
     io.decoded_fetch_packet.bits.RAT_IDX    := DontCare // This is fine. RAT_IDX is assigned during rename
+
+    // DEBUG SIGNALS //
+
+    val monitor_output = Wire(Bool())
+    monitor_output := RegNext(io.fetch_packet.valid)
+    dontTouch(monitor_output)
 }

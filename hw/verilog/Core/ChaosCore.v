@@ -2339,6 +2339,8 @@ module fetch_packet_decoder(
   reg         REG_1;
   reg         REG_2;
   reg         REG_3;
+  reg         monitor_output_REG;
+  wire        monitor_output = monitor_output_REG;
   always @(posedge clock) begin
     io_decoded_fetch_packet_bits_decoded_instruction_0_REG_RD <=
       _decoders_0_io_decoded_instruction_bits_RD;
@@ -2506,6 +2508,7 @@ module fetch_packet_decoder(
     REG_1 <= io_fetch_packet_bits_valid_bits_1;
     REG_2 <= io_fetch_packet_bits_valid_bits_2;
     REG_3 <= io_fetch_packet_bits_valid_bits_3;
+    monitor_output_REG <= io_fetch_packet_valid;
   end // always @(posedge)
   decoder decoders_0 (
     .clock                                         (clock),
