@@ -2,7 +2,7 @@ import random
 import numpy as np
 import cocotb
 from cocotb.triggers import Timer
-from cocotb.triggers import RisingEdge, FallingEdge, Timer
+from cocotb.triggers import RisingEdge, FallingEdge, Timer, ReadOnly
 from pathlib import Path
 
 
@@ -120,11 +120,12 @@ class Monitor:
 
     async def run(self):
         while True:
-            await RisingEdge(self.clock)
+            await ReadOnly()
             if self.valid.value != 1:
                 await RisingEdge(self.valid)
                 continue
             self.values.put_nowait(self.sample())
+            await RisingEdge(self.clock)
     
     def sample(self): 
         return self.data()
