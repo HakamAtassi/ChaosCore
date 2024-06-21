@@ -17,25 +17,16 @@ async def test_increment(dut):
     await cocotb.start(generateClock(dut))
 
 
-    # wrap dut with helper class
-    #dut = ChaosCore_dut(dut, imem=imem, dmem=dmem)
-
     bin = "../../binaries/bin/hello_world.bin"
     ChaosCore_tb = ChaosCore_TB(dut, bin)
 
     await ChaosCore_tb.reset()
 
-    #ChaosCore_tb.PC_gen_start()
-    #ChaosCore_tb.predecoder_start()
     ChaosCore_tb.start()
-
-
 
     for _ in range(1000):
         await ChaosCore_tb.update()
 
-    #ChaosCore_tb.PC_gen_stop()
-    #ChaosCore_tb.predecoder_stop()
     ChaosCore_tb.stop()
 
     assert False

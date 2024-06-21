@@ -10,6 +10,9 @@ class ChaosCore_TB:
         self.predecoder           = self.ChaosCore.frontend.instruction_fetch.predecoder
         # etc...
 
+        # Backend Modules
+        self.FU0                  = self.ChaosCore.backend.FU0
+
 
         # Top level dut #
         base_dir = os.path.dirname(__file__)
@@ -20,12 +23,12 @@ class ChaosCore_TB:
 
         # Frontend duts #
         self.fetch_packet_decoder_dut       = fetch_packet_decoder_dut(self.fetch_packet_decoder)
-        #self.predecoder_dut                = predecoder(self.ChaosCore.frontend.instruction_fetch.predecoder)
+        #self.predecoder_dut                = predecoder_dut(self.ChaosCore.frontend.instruction_fetch.predecoder)
         #self.PC_gen_dut                    = PC_gen_dut(self.ChaosCore.frontend.instruction_fetch.PC_gen)
         #self.rename_dut                    = rename_dut(self.ChaosCore.frontend.rename)
 
         # Backend Modules #
-        # TODO
+        self.FU0_dut                        = FU_dut(self.FU0)
 
         # Memory Modules #
         # TODO
@@ -33,6 +36,9 @@ class ChaosCore_TB:
 
         # Agents #
         self.fetch_packet_decoder_agent        = fetch_packet_decoder_agent(self.fetch_packet_decoder_dut)
+
+
+        self.FU0_agent                         = FU_agent(self.FU0_dut)
 
 
 
@@ -56,10 +62,13 @@ class ChaosCore_TB:
         self.ChaosCore_dut.write_dmem_request_ready(1)
         self.ChaosCore_dut.write_imem_request_ready(1)
 
-        # Start internal agents
+        # Start Frontend Agents
         self.fetch_packet_decoder_agent.start()
         #self.PC_gen_agent.start()
         #self.predecoder_agent_agent.start()
+
+        # Start Backend Agents
+        self.FU0_agent.start()
 
     ###############
     # STOP AGENTS #
@@ -67,9 +76,11 @@ class ChaosCore_TB:
 
     def stop(self):
 
-        # Stop internal agents       
+        # Stop Frontend Agents       
         self.fetch_packet_decoder_agent.stop()
         #self.predecoder_agent.stop()
         #self.PC_gen_agent.stop()
 
+        # Stop Backend Agents
+        self.FU0_agent.stop()
 

@@ -519,7 +519,7 @@ class rename(parameters:Parameters) extends Module{
    
     for(i <- 0 until fetchWidth){
         io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RD              := RegNext(free_list.io.renamed_values(i))
-        io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RD_valid        := RegNext(instruction_RD_valid(i))
+        io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RD_valid        := RegNext(io.decoded_fetch_packet.bits.decoded_instruction(i).RD_valid)
         io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS1             := renamed_RS1(i)//RAT.io.RAT_RS1(i)
         io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS2             := renamed_RS2(i)//RAT.io.RAT_RS2(i)
         io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).ready_bits      := RAT.io.ready_bits(i)

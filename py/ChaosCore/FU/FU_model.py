@@ -2,80 +2,20 @@ from tabulate import tabulate
 from cocotb.clock import Clock
 from cocotb.triggers import RisingEdge
 from model_utils import signed, unsigned
+from instruction import instruction_type
 
 from cocotb.types import LogicArray
 from cocotb.types.range import Range
 
 
-def generate_null_FU_inputs():
-    FU_inputs = {}
-
-    FU_inputs["valid"]              = 0
-    FU_inputs["RS1_ready"]          = 0
-    FU_inputs["RS2_ready"]          = 0
-    FU_inputs["RD"]                 = 0
-    FU_inputs["RD_valid"]           = 0
-    FU_inputs["RS1"]                = 0
-    FU_inputs["RS1_valid"]          = 0
-    FU_inputs["RS2"]                = 0
-    FU_inputs["RS2_valid"]          = 0
-    FU_inputs["IMM"]                = 0
-    FU_inputs["FUNCT3"]             = 0
-    FU_inputs["packet_index"]       = 0
-    FU_inputs["ROB_index"]          = 0
-    FU_inputs["instructionType"]    = 0
-    FU_inputs["portID"]             = 0
-    FU_inputs["RS_type"]            = 0
-    FU_inputs["needs_ALU"]          = 0
-    FU_inputs["needs_branch_unit"]  = 0
-    FU_inputs["needs_CSRs"]         = 0
-    FU_inputs["SUBTRACT"]           = 0
-    FU_inputs["MULTIPLY"]           = 0
-    FU_inputs["IMMEDIATE"]          = 0
-    FU_inputs["IS_LOAD"]            = 0
-    FU_inputs["IS_STORE"]           = 0
-    FU_inputs["RS1_data"]           = 0
-    FU_inputs["RS2_data"]           = 0
-    FU_inputs["PC"]                 = 0
-
-    return FU_inputs
-
-
 class FU_model:
     def __init__(self):
-        pass
+        self.FU_output_queue = []
 
-    def write_FU_input(self, FU_inputs=generate_null_FU_inputs()):
-        self.valid                  = int(FU_inputs["valid"]             )
-        self.RS1_ready              = int(FU_inputs["RS1_ready"]         )
-        self.RS2_ready              = int(FU_inputs["RS2_ready"]         )
-        self.RD                     = int(FU_inputs["RD"]                )
-        self.RD_valid               = int(FU_inputs["RD_valid"]          )
-        self.RS1                    = int(FU_inputs["RS1"]               )
-        self.RS1_valid              = int(FU_inputs["RS1_valid"]         )
-        self.RS2                    = int(FU_inputs["RS2"]               )
-        self.RS2_valid              = int(FU_inputs["RS2_valid"]         )
-        self.IMM                    = int(FU_inputs["IMM"]               )
-        self.FUNCT3                 = int(FU_inputs["FUNCT3"]            )
-        self.packet_index           = int(FU_inputs["packet_index"]      )
-        self.ROB_index              = int(FU_inputs["ROB_index"]         )
-        self.instruction_type       = int(FU_inputs["instructionType"]   )
-        self.portID                 = int(FU_inputs["portID"]            )
-        self.RS_type                = int(FU_inputs["RS_type"]           )
-        self.needs_ALU              = int(FU_inputs["needs_ALU"]         )
-        self.needs_branch_unit      = int(FU_inputs["needs_branch_unit"] )
-        self.needs_CSRs             = int(FU_inputs["needs_CSRs"]        )
-        self.SUBTRACT               = int(FU_inputs["SUBTRACT"]          )
-        self.MULTIPLY               = int(FU_inputs["MULTIPLY"]          )
-        self.IMMEDIATE              = int(FU_inputs["IMMEDIATE"]         )
-        self.IS_LOAD                = int(FU_inputs["IS_LOAD"]           )
-        self.IS_STORE               = int(FU_inputs["IS_STORE"]          )
-        self.RS1_data               = int(FU_inputs["RS1_data"]          )
-        self.RS2_data               = int(FU_inputs["RS2_data"]          )
-        self.PC                     = int(FU_inputs["PC"]    )
+
 
     def get_valid(self):
-        valid = self.valid
+        valid = self.valid 
         return valid
 
     def get_RD(self):
@@ -91,39 +31,39 @@ class FU_model:
         SUBTRACT            = self.SUBTRACT
         operation = "NONE"
         
-        if(instruction_type == 0b01100 and FUNCT3 == 0x0 and not SUBTRACT): operation = "ADD"   # OP type
-        if(instruction_type == 0b01100 and FUNCT3 == 0x0 and     SUBTRACT): operation = "SUB"
-        if(instruction_type == 0b01100 and FUNCT3 == 0x4 and not SUBTRACT): operation = "XOR"
-        if(instruction_type == 0b01100 and FUNCT3 == 0x6 and not SUBTRACT): operation = "OR"
-        if(instruction_type == 0b01100 and FUNCT3 == 0x7 and not SUBTRACT): operation = "AND"
-        if(instruction_type == 0b01100 and FUNCT3 == 0x1 and not SUBTRACT): operation = "SLL"
-        if(instruction_type == 0b01100 and FUNCT3 == 0x5 and not SUBTRACT): operation = "SRL"
-        if(instruction_type == 0b01100 and FUNCT3 == 0x5 and     SUBTRACT): operation = "SRA"
-        if(instruction_type == 0b01100 and FUNCT3 == 0x2 and not SUBTRACT): operation = "SLT"
-        if(instruction_type == 0b01100 and FUNCT3 == 0x3 and not SUBTRACT): operation = "SLTU"
+        if(instruction_type == instruction_type.OP and FUNCT3 == 0x0 and not SUBTRACT): operation = "ADD"   # OP type
+        if(instruction_type == instruction_type.OP and FUNCT3 == 0x0 and     SUBTRACT): operation = "SUB"
+        if(instruction_type == instruction_type.OP and FUNCT3 == 0x4 and not SUBTRACT): operation = "XOR"
+        if(instruction_type == instruction_type.OP and FUNCT3 == 0x6 and not SUBTRACT): operation = "OR"
+        if(instruction_type == instruction_type.OP and FUNCT3 == 0x7 and not SUBTRACT): operation = "AND"
+        if(instruction_type == instruction_type.OP and FUNCT3 == 0x1 and not SUBTRACT): operation = "SLL"
+        if(instruction_type == instruction_type.OP and FUNCT3 == 0x5 and not SUBTRACT): operation = "SRL"
+        if(instruction_type == instruction_type.OP and FUNCT3 == 0x5 and     SUBTRACT): operation = "SRA"
+        if(instruction_type == instruction_type.OP and FUNCT3 == 0x2 and not SUBTRACT): operation = "SLT"
+        if(instruction_type == instruction_type.OP and FUNCT3 == 0x3 and not SUBTRACT): operation = "SLTU"
 
-        if(instruction_type == 0b00100 and FUNCT3 == 0x0): operation = "ADDI"   # OP_IMM
-        if(instruction_type == 0b00100 and FUNCT3 == 0x4): operation = "XORI"
-        if(instruction_type == 0b00100 and FUNCT3 == 0x6): operation = "ORI"
-        if(instruction_type == 0b00100 and FUNCT3 == 0x7): operation = "ANDI"
-        if(instruction_type == 0b00100 and FUNCT3 == 0x1): operation = "SLLI"
-        if(instruction_type == 0b00100 and FUNCT3 == 0x5): operation = "SRLI"
-        if(instruction_type == 0b00100 and FUNCT3 == 0x5): operation = "SRAI"
-        if(instruction_type == 0b00100 and FUNCT3 == 0x2): operation = "SLTI"
-        if(instruction_type == 0b00100 and FUNCT3 == 0x3): operation = "SLTIU"
+        if(instruction_type == instruction_type.OP_IMM and FUNCT3 == 0x0): operation = "ADDI"   # OP_IMM
+        if(instruction_type == instruction_type.OP_IMM and FUNCT3 == 0x4): operation = "XORI"
+        if(instruction_type == instruction_type.OP_IMM and FUNCT3 == 0x6): operation = "ORI"
+        if(instruction_type == instruction_type.OP_IMM and FUNCT3 == 0x7): operation = "ANDI"
+        if(instruction_type == instruction_type.OP_IMM and FUNCT3 == 0x1): operation = "SLLI"
+        if(instruction_type == instruction_type.OP_IMM and FUNCT3 == 0x5): operation = "SRLI"
+        if(instruction_type == instruction_type.OP_IMM and FUNCT3 == 0x5): operation = "SRAI"
+        if(instruction_type == instruction_type.OP_IMM and FUNCT3 == 0x2): operation = "SLTI"
+        if(instruction_type == instruction_type.OP_IMM and FUNCT3 == 0x3): operation = "SLTIU"
 
-        if(instruction_type == 0b11000 and FUNCT3 == 0x0): operation = "BEQ"    # BRANCH
-        if(instruction_type == 0b11000 and FUNCT3 == 0x1): operation = "BNE"
-        if(instruction_type == 0b11000 and FUNCT3 == 0x4): operation = "BLT"
-        if(instruction_type == 0b11000 and FUNCT3 == 0x5): operation = "BGE"
-        if(instruction_type == 0b11000 and FUNCT3 == 0x6): operation = "BLTU"
-        if(instruction_type == 0b11000 and FUNCT3 == 0x7): operation = "BGEU"
+        if(instruction_type == instruction_type.BRANCH and FUNCT3 == 0x0): operation = "BEQ"    # BRANCH
+        if(instruction_type == instruction_type.BRANCH and FUNCT3 == 0x1): operation = "BNE"
+        if(instruction_type == instruction_type.BRANCH and FUNCT3 == 0x4): operation = "BLT"
+        if(instruction_type == instruction_type.BRANCH and FUNCT3 == 0x5): operation = "BGE"
+        if(instruction_type == instruction_type.BRANCH and FUNCT3 == 0x6): operation = "BLTU"
+        if(instruction_type == instruction_type.BRANCH and FUNCT3 == 0x7): operation = "BGEU"
 
-        if(instruction_type == 0b11011):                    operation = "JAL"    # JAL
-        if(instruction_type == 0b11001 and FUNCT3 == 0x0):  operation = "JALR"   # JALR
+        if(instruction_type == instruction_type.JAL):                     operation = "JAL"    # JAL
+        if(instruction_type == instruction_type.JALR and FUNCT3 == 0x0):  operation = "JALR"   # JALR
 
-        if(instruction_type == 0b01101): operation = "LUI"    # LUI
-        if(instruction_type == 0b00101): operation = "AUIPC"  # AUIPC
+        if(instruction_type == instruction_type.LUI):   operation = "LUI"    # LUI
+        if(instruction_type == instruction_type.AUIPC): operation = "AUIPC"  # AUIPC
 
         return operation
 
@@ -185,20 +125,22 @@ class FU_model:
     def get_RD_valid(self):
         RD_valid = 0
 
-        instruction_type    = self.instruction_type
         
         # OP type
-        if(instruction_type == 0b01100): RD_valid = 1
+        if(self.instruction_type == instruction_type.OP): RD_valid = 1
         # OP_IMM type
-        if(instruction_type == 0b00100): RD_valid = 1
-        #JAL
-        if(instruction_type == 0b11011): RD_valid = 1
-        #JALR
-        if(instruction_type == 0b11001): RD_valid = 1
-        #LUI
-        if(instruction_type == 0b01101): RD_valid = 1
-        #AUIPC
-        if(instruction_type == 0b00101): RD_valid = 1
+        if(self.instruction_type == instruction_type.OP_IMM): RD_valid = 1
+        # JAL
+        if(self.instruction_type == instruction_type.JAL): RD_valid = 1
+        # JALR
+        if(self.instruction_type == instruction_type.JALR): RD_valid = 1
+        # LUI
+        if(self.instruction_type == instruction_type.LUI): RD_valid = 1
+        # AUIPC
+        if(self.instruction_type == instruction_type.AUIPC): RD_valid = 1
+        # LOAD
+        if(self.instruction_type == instruction_type.LOAD): RD_valid = 1
+
 
         return RD_valid
 
@@ -261,121 +203,59 @@ class FU_model:
     def get_packet_index(self):
         return self.packet_index
 
-    def read_FU_output(self):
+    def inputs(self, FU_inputs, flush):
+        self.FU_inputs = FU_inputs
+        self.flush = flush
+
+        self.update()
+
+    def update(self):
         outputs = {}
-        outputs["valid"]            = self.get_valid()
+
+        self.valid                  = int(self.FU_inputs["valid"]             )
+        self.RS1_ready              = int(self.FU_inputs["RS1_ready"]         )
+        self.RS2_ready              = int(self.FU_inputs["RS2_ready"]         )
+        self.RD                     = int(self.FU_inputs["RD"]                )
+        self.RD_valid               = int(self.FU_inputs["RD_valid"]          )
+        self.RS1                    = int(self.FU_inputs["RS1"]               )
+        self.RS1_valid              = int(self.FU_inputs["RS1_valid"]         )
+        self.RS2                    = int(self.FU_inputs["RS2"]               )
+        self.RS2_valid              = int(self.FU_inputs["RS2_valid"]         )
+        self.IMM                    = int(self.FU_inputs["IMM"]               )
+        self.FUNCT3                 = int(self.FU_inputs["FUNCT3"]            )
+        self.packet_index           = int(self.FU_inputs["packet_index"]      )
+        self.ROB_index              = int(self.FU_inputs["ROB_index"]         )
+        #self.instruction_type       = int(self.FU_inputs["instructionType"]   )
+        self.instruction_type       = instruction_type(self.FU_inputs["instructionType"])
+        self.portID                 = int(self.FU_inputs["portID"]            )
+        self.RS_type                = int(self.FU_inputs["RS_type"]           )
+        self.needs_ALU              = int(self.FU_inputs["needs_ALU"]         )
+        self.needs_branch_unit      = int(self.FU_inputs["needs_branch_unit"] )
+        self.needs_CSRs             = int(self.FU_inputs["needs_CSRs"]        )
+        self.SUBTRACT               = int(self.FU_inputs["SUBTRACT"]          )
+        self.MULTIPLY               = int(self.FU_inputs["MULTIPLY"]          )
+        self.IMMEDIATE              = int(self.FU_inputs["IMMEDIATE"]         )
+        self.IS_LOAD                = int(self.FU_inputs["IS_LOAD"]           )
+        self.IS_STORE               = int(self.FU_inputs["IS_STORE"]          )
+        self.RS1_data               = int(self.FU_inputs["RS1_data"]          )
+        self.RS2_data               = int(self.FU_inputs["RS2_data"]          )
+        self.PC                     = int(self.FU_inputs["fetch_PC"]    )
+
+
+        outputs["valid"]            = self.get_valid() & (~self.flush)
 
         outputs["RD"]               = self.get_RD()
         outputs["RD_data"]          = self.get_RD_data()
         outputs["RD_valid"]         = self.get_RD_valid()
 
-        outputs["PC"]               = self.get_PC()
+        outputs["fetch_PC"]         = self.get_PC()
         outputs["branch_taken"]     = self.get_branch_taken()
         outputs["target_address"]   = self.get_target_address()
         outputs["branch_valid"]     = self.get_branch_valid()
         outputs["ROB_index"]        = self.get_ROB_index()
         outputs["packet_index"]     = self.get_packet_index()
-        return outputs 
 
+        self.FU_output_queue.append(outputs)
 
-
-
-####################
-## FU DUT WRAPPER ##
-####################
-
-
-# Add helper functions as needed
-
-class FU_dut:
-    def __init__(self, dut):    # modify as needed (parameters, etc...)
-        self.dut = dut
-
-    def clock(self):            # Do not touch
-        return self.dut.clock
-
-    async def reset(self):      # Do not touch
-        self.dut.reset.value = 0
-        await RisingEdge(self.dut.clock)
-        self.dut.reset.value = 1
-        await RisingEdge(self.dut.clock)
-        self.dut.reset.value = 0
-
-    # complete class body...
-
-    def write_FU_input(self, FU_inputs=generate_null_FU_inputs()):
-
-        getattr(self.dut, f"io_FU_input_valid").value                                           = FU_inputs["valid"]
-        getattr(self.dut, f"io_FU_input_bits_decoded_instruction_ready_bits_RS1_ready").value   = FU_inputs["RS1_ready"]
-        getattr(self.dut, f"io_FU_input_bits_decoded_instruction_ready_bits_RS2_ready").value   = FU_inputs["RS2_ready"]
-        getattr(self.dut, f"io_FU_input_bits_decoded_instruction_RD").value                     = FU_inputs["RD"]
-        getattr(self.dut, f"io_FU_input_bits_decoded_instruction_RD_valid").value               = FU_inputs["RD_valid"]
-        getattr(self.dut, f"io_FU_input_bits_decoded_instruction_RS1").value                    = FU_inputs["RS1"]
-        getattr(self.dut, f"io_FU_input_bits_decoded_instruction_RS1_valid").value              = FU_inputs["RS1_valid"]
-        getattr(self.dut, f"io_FU_input_bits_decoded_instruction_RS2").value                    = FU_inputs["RS2"]
-        getattr(self.dut, f"io_FU_input_bits_decoded_instruction_RS2_valid").value              = FU_inputs["RS2_valid"]
-        getattr(self.dut, f"io_FU_input_bits_decoded_instruction_IMM").value                    = FU_inputs["IMM"]
-        getattr(self.dut, f"io_FU_input_bits_decoded_instruction_FUNCT3").value                 = FU_inputs["FUNCT3"]
-        getattr(self.dut, f"io_FU_input_bits_decoded_instruction_packet_index").value           = FU_inputs["packet_index"]
-        getattr(self.dut, f"io_FU_input_bits_decoded_instruction_ROB_index").value              = FU_inputs["ROB_index"]
-        getattr(self.dut, f"io_FU_input_bits_decoded_instruction_instructionType").value        = FU_inputs["instructionType"]
-        getattr(self.dut, f"io_FU_input_bits_decoded_instruction_portID").value                 = FU_inputs["portID"]
-        getattr(self.dut, f"io_FU_input_bits_decoded_instruction_RS_type").value                = FU_inputs["RS_type"]
-        getattr(self.dut, f"io_FU_input_bits_decoded_instruction_needs_ALU").value              = FU_inputs["needs_ALU"]
-        getattr(self.dut, f"io_FU_input_bits_decoded_instruction_needs_branch_unit").value      = FU_inputs["needs_branch_unit"]
-        getattr(self.dut, f"io_FU_input_bits_decoded_instruction_needs_CSRs").value             = FU_inputs["needs_CSRs"]
-        getattr(self.dut, f"io_FU_input_bits_decoded_instruction_SUBTRACT").value               = FU_inputs["SUBTRACT"]
-        getattr(self.dut, f"io_FU_input_bits_decoded_instruction_MULTIPLY").value               = FU_inputs["MULTIPLY"]
-        getattr(self.dut, f"io_FU_input_bits_decoded_instruction_IMMEDIATE").value              = FU_inputs["IMMEDIATE"]
-        getattr(self.dut, f"io_FU_input_bits_decoded_instruction_IS_LOAD").value                = FU_inputs["IS_LOAD"]
-        getattr(self.dut, f"io_FU_input_bits_decoded_instruction_IS_STORE").value               = FU_inputs["IS_STORE"]
-        getattr(self.dut, f"io_FU_input_bits_RS1_data").value                                   = FU_inputs["RS1_data"]
-        getattr(self.dut, f"io_FU_input_bits_RS2_data").value                                   = FU_inputs["RS2_data"]
-        getattr(self.dut, f"io_FU_input_bits_PC").value                                         = FU_inputs["PC"]
-
-    def read_FU_input(self):
-        FU_inputs = {}
-        FU_inputs["ready"]              = int(getattr(self.dut, f"io_FU_input_ready").value)
-        FU_inputs["valid"]              = int(getattr(self.dut, f"io_FU_input_valid").value                                          )
-        FU_inputs["RS1_ready"]          = int(getattr(self.dut, f"io_FU_input_bits_decoded_instruction_ready_bits_RS1_ready").value)
-        FU_inputs["RS2_ready"]          = int(getattr(self.dut, f"io_FU_input_bits_decoded_instruction_ready_bits_RS2_ready").value   )
-        FU_inputs["RD"]                 = int(getattr(self.dut, f"io_FU_input_bits_decoded_instruction_RD").value                     )
-        FU_inputs["RD_valid"]           = int(getattr(self.dut, f"io_FU_input_bits_decoded_instruction_RD_valid").value               )
-        FU_inputs["RS1"]                = int(getattr(self.dut, f"io_FU_input_bits_decoded_instruction_RS1").value                    )
-        FU_inputs["RS1_valid"]          = int(getattr(self.dut, f"io_FU_input_bits_decoded_instruction_RS1_valid").value              )
-        FU_inputs["RS2"]                = int(getattr(self.dut, f"io_FU_input_bits_decoded_instruction_RS2").value                    )
-        FU_inputs["RS2_valid"]          = int(getattr(self.dut, f"io_FU_input_bits_decoded_instruction_RS2_valid").value              )
-        FU_inputs["IMM"]                = int(getattr(self.dut, f"io_FU_input_bits_decoded_instruction_IMM").value                    )
-        FU_inputs["FUNCT3"]             = int(getattr(self.dut, f"io_FU_input_bits_decoded_instruction_FUNCT3").value                 )
-        FU_inputs["packet_index"]       = int(getattr(self.dut, f"io_FU_input_bits_decoded_instruction_packet_index").value           )
-        FU_inputs["ROB_index"]          = int(getattr(self.dut, f"io_FU_input_bits_decoded_instruction_ROB_index").value              )
-        FU_inputs["instructionType"]    = getattr(self.dut, f"io_FU_input_bits_decoded_instruction_instructionType").value        
-        FU_inputs["portID"]             = int(getattr(self.dut, f"io_FU_input_bits_decoded_instruction_portID").value                 )
-        FU_inputs["RS_type"]            = int(getattr(self.dut, f"io_FU_input_bits_decoded_instruction_RS_type").value                )
-        FU_inputs["needs_ALU"]          = int(getattr(self.dut, f"io_FU_input_bits_decoded_instruction_needs_ALU").value              )
-        FU_inputs["needs_branch_unit"]  = int(getattr(self.dut, f"io_FU_input_bits_decoded_instruction_needs_branch_unit").value      )
-        FU_inputs["needs_CSRs"]         = int(getattr(self.dut, f"io_FU_input_bits_decoded_instruction_needs_CSRs").value             )
-        FU_inputs["SUBTRACT"]           = int(getattr(self.dut, f"io_FU_input_bits_decoded_instruction_SUBTRACT").value               )
-        FU_inputs["MULTIPLY"]           = int(getattr(self.dut, f"io_FU_input_bits_decoded_instruction_MULTIPLY").value               )
-        FU_inputs["IMMEDIATE"]          = int(getattr(self.dut, f"io_FU_input_bits_decoded_instruction_IMMEDIATE").value              )
-        FU_inputs["IS_LOAD"]            = int(getattr(self.dut, f"io_FU_input_bits_decoded_instruction_IS_LOAD").value                )
-        FU_inputs["IS_STORE"]           = int(getattr(self.dut, f"io_FU_input_bits_decoded_instruction_IS_STORE").value               )
-        FU_inputs["RS1_data"]           = int(getattr(self.dut, f"io_FU_input_bits_RS1_data").value                                   )
-        FU_inputs["RS2_data"]           = int(getattr(self.dut, f"io_FU_input_bits_RS2_data").value                                   )
-        FU_inputs["PC"]                 = int(getattr(self.dut, f"io_FU_input_bits_PC").value                                         )
-
-        return FU_inputs
-
-    def read_FU_output(self):
-        outputs = {}
-        outputs["valid"]            = int(getattr(self.dut, f"io_FU_output_valid").value)
-        outputs["RD"]               = int(getattr(self.dut, f"io_FU_output_bits_RD").value)
-        outputs["RD_data"]          = int(getattr(self.dut, f"io_FU_output_bits_RD_data").value)
-        outputs["RD_valid"]         = int(getattr(self.dut, f"io_FU_output_bits_RD_valid").value)
-        outputs["PC"]               = int(getattr(self.dut, f"io_FU_output_bits_instruction_PC").value)
-        outputs["branch_taken"]     = int(getattr(self.dut, f"io_FU_output_bits_branch_taken").value)
-        outputs["target_address"]   = int(getattr(self.dut, f"io_FU_output_bits_target_address").value)
-        outputs["branch_valid"]     = int(getattr(self.dut, f"io_FU_output_bits_branch_valid").value)
-        outputs["ROB_index"]        = int(getattr(self.dut, f"io_FU_output_bits_ROB_index").value)
-        outputs["packet_index"]     = int(getattr(self.dut, f"io_FU_output_bits_fetch_packet_index").value)
-        return outputs 
+    def get_FU_output(self):
+        return self.FU_output_queue.pop(0)

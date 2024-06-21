@@ -140,7 +140,7 @@ class backend(parameters:Parameters) extends Module{
 
     read_decoded_instructions(1).RS1_data := INT_PRF.io.rdata_2
     read_decoded_instructions(1).RS2_data := INT_PRF.io.rdata_3
-    read_decoded_instructions(1).fetch_PC  := 0.U
+    read_decoded_instructions(1).fetch_PC := 0.U
 
     read_decoded_instructions(2).RS1_data := INT_PRF.io.rdata_4
     read_decoded_instructions(2).RS2_data := INT_PRF.io.rdata_5
@@ -148,7 +148,7 @@ class backend(parameters:Parameters) extends Module{
 
     read_decoded_instructions(3).RS1_data := INT_PRF.io.rdata_6
     read_decoded_instructions(3).RS2_data := INT_PRF.io.rdata_7
-    read_decoded_instructions(3).fetch_PC       := 0.U
+    read_decoded_instructions(3).fetch_PC := 0.U
 
 
     // Convert decoded_instructions to read_decoded_instructions

@@ -372,7 +372,7 @@ class FU(parameters:Parameters,
         // Output
         val FU_output     =   ValidIO(new FU_output(parameters))
     })
-
+    dontTouch(io)
     // All functional have a latency of 1 cycle (for now)
     // FIXME: Add Mul/Div + bypassing
     // Also make sure to inner modules dont write to CDB at the same time
@@ -411,4 +411,8 @@ class FU(parameters:Parameters,
         }
     }
 
+    // DEBUG SIGNALS //
+    val monitor_output = Wire(Bool())
+    monitor_output := RegNext(io.FU_input.valid)
+    dontTouch(monitor_output)
 }
