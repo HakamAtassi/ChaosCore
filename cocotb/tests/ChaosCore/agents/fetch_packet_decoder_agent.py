@@ -106,7 +106,6 @@ class fetch_packet_decoder_agent:
             # -----------
 
             sim_time = cocotb.utils.get_sim_time('ns')
-            logger.info(f"Asserted @ {sim_time} ns")
             assert model_decoded_fetch_packet["valid"]                  == dut_decoded_fetch_packet["valid"]
             assert model_decoded_fetch_packet["fetch_PC"]               == dut_decoded_fetch_packet["fetch_PC"]
             assert model_decoded_fetch_packet["RD"]                     == dut_decoded_fetch_packet["RD"]

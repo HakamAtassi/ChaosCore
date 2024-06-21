@@ -168,7 +168,6 @@ class fetch_packet_decoder_model:
 
 
         self.decoded_fetch_packet_queue.append(decoded_fetch_packet)
-        return 
 
 
     def get_decoded_fetch_packet(self):
