@@ -5,6 +5,299 @@ from cocotb.types.range import Range
 
 from enum import Enum
 
+INSTR_DICT = {
+    #R type base operations
+    "add" : {
+        "type" : "R",
+        "funct3" : 0x0, 
+        "funct7": 0x0,
+        "opcode" : 0b0110011
+    },
+    "sub" : {
+        "type" : "R",
+        "funct3" : 0x0, 
+        "funct7": 0x20,
+        "opcode" : 0b0110011
+    },
+    "xor" : {
+        "type" : "R",
+        "funct3" : 0x4, 
+        "funct7": 0x0,
+        "opcode" : 0b0110011
+    },
+    "or" : {
+        "type" : "R",
+        "funct3" : 0x6, 
+        "funct7": 0x0,
+        "opcode" : 0b0110011
+    },
+    "and" : {
+        "type" : "R",
+        "funct3" : 0x7, 
+        "funct7": 0x0,
+        "opcode" : 0b0110011
+    },
+    "sll" : {
+        "type" : "R",
+        "funct3" : 0x1, 
+        "funct7": 0x0,
+        "opcode" : 0b0110011
+    },
+    "srl" : {
+        "type" : "R",
+        "funct3" : 0x5, 
+        "funct7": 0x0,
+        "opcode" : 0b0110011
+    },
+    "sra" : {
+        "type" : "R",
+        "funct3" : 0x5, 
+        "funct7": 0x20,
+        "opcode" : 0b0110011
+    },
+    "slt" : {
+        "type" : "R",
+        "funct3" : 0x2, 
+        "funct7": 0x0,
+        "opcode" : 0b0110011
+    },
+    "sltu" : {
+        "type" : "R",
+        "funct3" : 0x3, 
+        "funct7": 0x0,
+        "opcode" : 0b0110011
+    },
+    #I type 
+    "addi" : {
+        "type" : "I",
+        "funct3" : 0x0, 
+        "funct7": 0x0,
+        "opcode" : 0b0010011
+    },
+    "xori" : {
+        "type" : "I",
+        "funct3" : 0x4, 
+        "funct7": 0x0,
+        "opcode" : 0b0010011
+    },
+    "ori" : {
+        "type" : "I",
+        "funct3" : 0x6, 
+        "funct7": 0x0,
+        "opcode" : 0b0010011
+    },
+    "andi" : {
+        "type" : "I",
+        "funct3" : 0x7, 
+        "funct7": 0x0,
+        "opcode" : 0b0010011
+    },
+    "slli" : {
+        "type" : "I",
+        "funct3" : 0x1, 
+        "funct7": 0x0,
+        "opcode" : 0b0010011
+    },
+    "srli" : {
+        "type" : "I",
+        "funct3" : 0x5, 
+        "funct7": 0x0,
+        "opcode" : 0b0010011
+    },
+    "srai" : {
+        "type" : "I",
+        "funct3" : 0x5, 
+        "funct7": 0x20,
+        "opcode" : 0b0010011
+    },
+    "slti" : {
+        "type" : "I",
+        "funct3" : 0x2, 
+        "funct7": 0x0,
+        "opcode" : 0b0010011
+    },
+    "sltiu" : {
+        "type" : "I",
+        "funct3" : 0x3, 
+        "funct7": 0x0,
+        "opcode" : 0b0010011
+    },
+    #I type Load
+    "lb" : {
+        "type" : "I",
+        "funct3" : 0x0, 
+        "funct7": 0x0,
+        "opcode" : 0b0000011
+    },
+    "lh" : {
+        "type" : "I",
+        "funct3" : 0x1, 
+        "funct7": 0x0,
+        "opcode" : 0b0000011
+    },
+    "lw" : {
+        "type" : "I",
+        "funct3" : 0x2, 
+        "funct7": 0x0,
+        "opcode" : 0b0000011
+    },
+    "lbu" : {
+        "type" : "I",
+        "funct3" : 0x4, 
+        "funct7": 0x0,
+        "opcode" : 0b0000011
+    },
+    "lhu" : {
+        "type" : "I",
+        "funct3" : 0x5, 
+        "funct7": 0x0,
+        "opcode" : 0b0000011
+    },
+    #S type
+    "sb" : {
+        "type" : "S",
+        "funct3" : 0x0, 
+        "funct7": 0x0,
+        "opcode" : 0b0100011
+    },
+    "sh" : {
+        "type" : "S",
+        "funct3" : 0x1, 
+        "funct7": 0x0,
+        "opcode" : 0b0100011
+    },
+    "sw" : {
+        "type" : "S",
+        "funct3" : 0x2, 
+        "funct7": 0x0,
+        "opcode" : 0b0100011
+    },
+    #Branch
+    "beq" : {
+        "type" : "B",
+        "funct3" : 0x0, 
+        "funct7": 0x0,
+        "opcode" : 0b1100011
+    },
+    "bne" : {
+        "type" : "B",
+        "funct3" : 0x1, 
+        "funct7": 0x0,
+        "opcode" : 0b1100011
+    },
+    "blt" : {
+        "type" : "B",
+        "funct3" : 0x4, 
+        "funct7": 0x0,
+        "opcode" : 0b1100011
+    },
+    "bge" : {
+        "type" : "B",
+        "funct3" : 0x5, 
+        "funct7": 0x0,
+        "opcode" : 0b1100011
+    },
+    "bltu" : {
+        "type" : "B",
+        "funct3" : 0x6, 
+        "funct7": 0x0,
+        "opcode" : 0b1100011
+    },
+    "bgeu" : {
+        "type" : "B",
+        "funct3" : 0x7, 
+        "funct7": 0x0,
+        "opcode" : 0b1100011
+    },
+    #JAL, JALR, LUI, AUIPC, ECALL, EBREAK
+    "jal" : {
+        "type" : "J",
+        "funct3" : 0x0, 
+        "funct7": 0x0,
+        "opcode" : 0b1101111
+    },
+    "jalr" : {
+        "type" : "I",
+        "funct3" : 0x0, 
+        "funct7": 0x0,
+        "opcode" : 0b1100111
+    },
+    "lui" : {
+        "type" : "U",
+        "funct3" : 0x0, 
+        "funct7": 0x0,
+        "opcode" : 0b0110111
+    },
+    "auipc" : {
+        "type" : "U",
+        "funct3" : 0x0, 
+        "funct7": 0x0,
+        "opcode" : 0b0010111
+    },
+    "ecall" : {
+        "type" : "I",
+        "funct3" : 0x0, 
+        "funct7": 0x0,
+        "opcode" : 0b1110011
+    },
+    "ebreak" : {
+        "type" : "I",
+        "funct3" : 0x0, 
+        "funct7": 0x1, #?
+        "opcode" : 0b1110011
+    },
+    #MULTIPLY EXT
+    "mul" : {
+        "type" : "R",
+        "funct3" : 0x0, 
+        "funct7": 0x1, 
+        "opcode" : 0b0110011
+    },
+    "mulh" : {
+        "type" : "R",
+        "funct3" : 0x1, 
+        "funct7": 0x1, 
+        "opcode" : 0b0110011
+    },
+    "mulsu" : {
+        "type" : "R",
+        "funct3" : 0x0, 
+        "funct7": 0x2, 
+        "opcode" : 0b0110011
+    },
+    "mulu" : {
+        "type" : "R",
+        "funct3" : 0x0, 
+        "funct7": 0x3, 
+        "opcode" : 0b0110011
+    },
+    "div" : {
+        "type" : "R",
+        "funct3" : 0x0, 
+        "funct7": 0x4, 
+        "opcode" : 0b0110011
+    },
+    "divu" : {
+        "type" : "R",
+        "funct3" : 0x0, 
+        "funct7": 0x5, 
+        "opcode" : 0b0110011
+    },
+    "rem" : {
+        "type" : "R",
+        "funct3" : 0x0, 
+        "funct7": 0x6, 
+        "opcode" : 0b0110011
+    },
+    "remu" : {
+        "type" : "R",
+        "funct3" : 0x0, 
+        "funct7": 0x7, 
+        "opcode" : 0b0110011
+    },
+}
+
+
 class instruction_type(Enum):
     LOAD        = 0b00000
     LOAD_FP     = 0b00001
@@ -239,4 +532,70 @@ class instruction:
         if(is_JALR and self.RD == 0 and self.RS1 == 1 and self.get_IMM() == 0):
             return True
 
+def encode_instruction(
+                instruction_name:str, 
+                rs1:int = None, 
+                rs2:int = None, 
+                rd:int = None, 
+                imm:int = None
+                ):
+    opcode = INSTR_DICT[instruction_name]["opcode"]
+    type = INSTR_DICT[instruction_name]["type"]
+    funct3 = INSTR_DICT[instruction_name]["funct3"]
+    funct7 = INSTR_DICT[instruction_name]["funct7"]
+    
+    instruction = opcode
+    if type == "R":
+        if rs1 == None or rs2 == None or rd == None: 
+            raise ValueError("Missing arguments for R type")
+        instruction |= (rd & 0x1f) << 7
+        instruction |= (funct3 & 0x7) << 12
+        instruction |= (rs1 & 0x1f) << 15
+        instruction |= (rs2 & 0x1f) << 20
+        instruction |= (funct7 & 0x7f) << 25
+    elif type == "I":
+        if rs1 == None or imm == None or rd == None: 
+            raise ValueError("Missing arguments for I type")
+        instruction |= (rd & 0x1f) << 7
+        instruction |= (funct3 & 0x7) << 12
+        instruction |= (rs1 & 0x1f) << 15
+        
+        instruction |= (imm & 0xfff) << 20
+    elif type == "S":
+        if rs1 == None or rs2 == None or imm == None: 
+            raise ValueError("Missing arguments for S type")
+        instruction |= (funct3 & 0x7) << 12
+        instruction |= (rs1 & 0x1f) << 15
+        instruction |= (rs2 & 0x1f) << 20
+        
+        instruction |= (imm & 0x1f) << 7
+        instruction |= (imm & 0xfe0) << 20
+    elif type == "B":
+        if rs1 == None or rs2 == None or imm == None: 
+            raise ValueError("Missing arguments for B type")
+        instruction |= (funct3 & 0x7) << 12
+        instruction |= (rs1 & 0x1f) << 15
+        instruction |= (rs2 & 0x1f) << 20
+        
+        instruction |= (imm & 0x800) >> 4
+        instruction |= (imm & 0x1e) << 7
+        instruction |= (imm & 0x7e0) << 20
+        instruction |= (imm & 0x1000) << 19
+    elif type == "U":
+        if rd == None or imm == None: 
+            raise ValueError("Missing arguments for U type")
+        instruction |= (rd & 0x1f) << 7
+        
+        instruction |= (imm & 0xfffff000) 
+    elif type == "J":
+        if rd == None or imm == None: 
+            raise ValueError("Missing arguments for J type")
+        instruction |= (rd & 0x1f) << 7
+        
+        instruction |= (imm & 0xff000)
+        instruction |= (imm & 0x800) << 9
+        instruction |= (imm & 0x7fe) << 20
+        instruction |= (imm & 0x100000) << 11
+    
+    return instruction
 
