@@ -28,6 +28,7 @@ from model_utils import *
 #import rename_dut
 from ChaosCore import ChaosCore_dut
 from fetch_packet_decoder import *
+from predecoder import *
 from FU import *
 
 from SimpleDRAM import *
@@ -38,4 +39,4 @@ from SimpleDRAM import *
 
 from agents import fetch_packet_decoder_agent
 from agents import FU_agent
-
+from agents import predecoder_agent

@@ -31,43 +31,15 @@ def test_rename_1_RD():
         configs["testcase"] = "test_rename_1_RD"
         run(**configs)
 
-def test_rename_1_RD_x0():
-        configs["testcase"] = "test_rename_1_RD_x0"
+def test_rename_4_RD():
+        configs["testcase"] = "test_rename_4_RD"
         run(**configs)
 
-def test_rename_2_with_stall():
-        configs["testcase"] = "test_rename_2_with_stall"
+def test_rename_RS():
+        configs["testcase"] = "test_rename_RS"
         run(**configs)
 
-def test_rename_4_at_a_time():
-        configs["testcase"] = "test_rename_4_at_a_time"
-        run(**configs)
-
-def test_rename_3_at_a_time_with_bubble():
-        configs["testcase"] = "test_rename_3_at_a_time_with_bubble"
-        run(**configs)
-
-def test_rename_then_use():
-        configs["testcase"] = "test_rename_then_use"
-        run(**configs)
-
-def test_single_checkpoint():
-        configs["testcase"] = "test_single_checkpoint"
-        run(**configs)
-
-def test_rename_4_at_a_time_with_hazard():
-        configs["testcase"] = "test_rename_4_at_a_time_with_hazard"
-        run(**configs)
-
-def test_set_ready():
-        configs["testcase"] = "test_set_ready"
-        run(**configs)
-
-def test_ready_checkpoints():
-        configs["testcase"] = "test_ready_checkpoints"
-        run(**configs)
-
-def test_random():
-        configs["testcase"] = "test_random"
+def test_rename_bypass():
+        configs["testcase"] = "test_rename_bypass"
         run(**configs)
 

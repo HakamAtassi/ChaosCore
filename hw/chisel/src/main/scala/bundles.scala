@@ -457,7 +457,7 @@ class DRAM_request(parameters:Parameters) extends Bundle{   // FIXME: change thi
     val wr_en   = Bool()
 }
 
-class DRAM_resp(parameters:Parameters) extends Bundle{
+class DRAM_response(parameters:Parameters) extends Bundle{
     val data = UInt(256.W)  // Must be same size as cache line
 }
 

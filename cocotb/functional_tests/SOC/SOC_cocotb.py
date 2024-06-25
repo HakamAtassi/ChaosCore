@@ -26,7 +26,7 @@ async def test_reset(dut):
 async def test_reset(dut):
 
     base_dir = os.path.dirname(__file__)
-    bin_absolute_path = os.path.join(base_dir, "../binaries/bin/hello_world.bin")
+    bin_absolute_path = os.path.join(base_dir, "../../binaries/bin/hello_world.bin")
     print(bin_absolute_path)
     DRAM = SimpleDRAM(sizeKB=4, bin=bin_absolute_path)
 
@@ -49,3 +49,5 @@ async def test_reset(dut):
     #print(dut.get_PRF())
 
     assert False
+
+

@@ -39,7 +39,7 @@ class SOC(parameters:Parameters, addressMap:AddressMap) extends Module{
     val io = IO(new Bundle{
 
         val frontend_memory_request                =   Decoupled(new memory_request(parameters))
-        val frontend_memory_response               =   Flipped(Decoupled(new DRAM_resp(parameters)))
+        val frontend_memory_response               =   Flipped(Decoupled(new DRAM_response(parameters)))
 
         ///////////////////////////
         // D$ BACKEND MEM ACCESS //
@@ -55,6 +55,10 @@ class SOC(parameters:Parameters, addressMap:AddressMap) extends Module{
 
     val ChaosCore = Module(new ChaosCore(parameters))
 
+    val flush = ChaosCore.io.commit.valid && ChaosCore.io.commit.is_misprediction
+
+
+
 
     ////////////////////
     // PIPELINE FLUSH //
@@ -67,8 +71,10 @@ class SOC(parameters:Parameters, addressMap:AddressMap) extends Module{
     // TODO: forward kill signal to the cache to kill requests
     val instruction_cache   = Module(new instruction_cache(parameters))
 
-    instruction_cache.io.memory_response        <> io.frontend_memory_response
-    instruction_cache.io.memory_request         <> io.frontend_memory_request
+    instruction_cache.io.flush := flush
+
+    instruction_cache.io.DRAM_response        <> io.frontend_memory_response
+    instruction_cache.io.DRAM_request         <> io.frontend_memory_request
 
 
     /////////////////
@@ -83,8 +89,8 @@ class SOC(parameters:Parameters, addressMap:AddressMap) extends Module{
     /////////////////
 
 
-    ChaosCore.io.frontend_memory_response    <> io.frontend_memory_response
-    ChaosCore.io.frontend_memory_request     <> io.frontend_memory_request
+    ChaosCore.io.frontend_memory_response    <> instruction_cache.io.CPU_response
+    ChaosCore.io.frontend_memory_request     <> instruction_cache.io.CPU_request 
 
     ChaosCore.io.backend_memory_response     <> io.backend_memory_response
     ChaosCore.io.backend_memory_request      <> io.backend_memory_request

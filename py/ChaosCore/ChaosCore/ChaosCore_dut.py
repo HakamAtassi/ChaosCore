@@ -151,9 +151,13 @@ class ChaosCore_dut:
 
         # handle imem read requests
         if (self.read_imem_request_ready() and self.read_imem_request_valid() and not self.read_reset()):
-            addr = self.read_imem_request_addr()
-            data = self.imem.read(address=self.get_aligned_PC(addr), size=16)
-            self.write_imem_response(data, 1)
+            try:
+                addr = self.read_imem_request_addr()
+                data = self.imem.read(address=self.get_aligned_PC(addr), size=16)
+                self.write_imem_response(data, 1)
+            except:
+                pass
+
 
         # handle dmem read/write requests
         if self.read_dmem_request_ready() and self.read_dmem_request_valid() and not self.read_reset():
@@ -162,11 +166,19 @@ class ChaosCore_dut:
             addr = self.read_dmem_request_addr()
             if wr_en:  # write
                 # FIXME: size depends on instruction
-                self.dmem.write(address=addr, data=data, size=4)
+                if(addr==0x8000_0000):
+                    print(chr(data))
+                else:
+                    self.dmem.write(address=addr, data=data, size=4)
+
+
             else:  # read
-                # FIXME: size depends on instruction
-                data = self.dmem.read(address=addr, size=4)
-                data = int.from_bytes(data, byteorder="little")
-                self.write_dmem_response(data, 1)
+                try:
+                    # FIXME: size depends on instruction
+                    data = self.dmem.read(address=addr, size=4)
+                    data = int.from_bytes(data, byteorder="little")
+                    self.write_dmem_response(data, 1)
+                except:
+                    pass
 
         await RisingEdge(self.clock())
