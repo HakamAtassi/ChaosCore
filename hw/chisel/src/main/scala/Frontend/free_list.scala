@@ -59,33 +59,6 @@ class reorder_free_inputs(parameters:Parameters) extends Module{
 }
 
 
-class reorder_renamed_outputs(parameters:Parameters) extends Module{
-    import parameters._
-    val io = IO(new Bundle{
-        val renamed_valid          = Input(Vec(fetchWidth, Bool()))
-        val renamed_values         = Input(Vec(fetchWidth, UInt(log2Ceil(physicalRegCount).W)))
-
-        val renamed_values_sorted     = Output(Vec(fetchWidth, UInt(log2Ceil(physicalRegCount).W)))
-    })
-
-
-    val valid_bits = Reverse(Cat(io.renamed_valid))
-
-    val sels = Wire(Vec(fetchWidth, UInt(log2Ceil(fetchWidth).W)))
-
-    sels(0)  :=  0.U 
-
-    for (i <- 1 until fetchWidth){
-        sels(i) := PopCount(valid_bits(i-1, 0)) 
-    }
-
-    for (i <- 0 until fetchWidth){
-        io.renamed_values_sorted(i) := io.renamed_values(sels(i))
-    }
-    
-
-}
-
  
 class free_list(parameters:Parameters) extends Module{
     import parameters._
@@ -108,6 +81,7 @@ class free_list(parameters:Parameters) extends Module{
         // The number of values you need to free at at a time is equal to the number of functional unit ports. 
         val free_valid      = Input(Vec(portCount, Bool()))
         val free_values     = Input(Vec(portCount, UInt(log2Ceil(physicalRegCount).W)))
+
 
         val empty           = Output(Bool())
         val full            = Output(Bool())
@@ -174,6 +148,7 @@ class free_list(parameters:Parameters) extends Module{
         val rename_valid = io.rename_valid(i)
         io.renamed_values(i) := Mux(rename_valid, renamed_values(renamed_index(i)), 0.U)
     }
+
 
 
 

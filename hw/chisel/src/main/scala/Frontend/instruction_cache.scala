@@ -96,22 +96,18 @@ class instruction_cache(parameters:Parameters) extends Module{
 
     val consumedKB                  = (sets*ways*wayDataWidth + sets*LRUBits)/8.0/1024.0 
 
-
     println(s"Buidling L1 Cache")
     println(s"Cache Config: Fetch Width=${fetchWidth}, Ways=${ways}, Sets=${sets}, Block Size=${blockSizeBytes}B")
     println(s"Consumed memory: ${consumedKB}KB")
 
-
     val io = IO(new Bundle{
-        // Inputs
-        val memory_request      =     Flipped(Decoupled(new memory_request(parameters)))                        // inputs from CPU
-        val kill                =     Input(Bool())                                         // Kill in progress request(s) 
+        val flush               =     Input(Bool())                                                 // flush in progress request(s) 
 
-        val memory_response     =     Flipped(Decoupled(Input(new memory_response(parameters))))  // FROM DRAM
+        val CPU_request         =     Flipped(Decoupled(new memory_request(parameters)))            // Inputs from CPU
+        val CPU_response        =     Decoupled(new fetch_packet(parameters))                       // TO CPU
 
-        // Outputs
-        val cache_data          =     Decoupled(new fetch_packet(parameters))               // TO CPU
-        val DRAM_request        =     Decoupled(new DRAM_request(parameters))               // TO DRAM
+        val DRAM_request        =     Decoupled(new DRAM_request(parameters))                       // TO DRAM
+        val DRAM_response       =     Flipped(Decoupled(Input(new DRAM_response(parameters))))      // FROM DRAM
     })
 
 
@@ -119,7 +115,7 @@ class instruction_cache(parameters:Parameters) extends Module{
     val cache_state     = RegInit(cacheState(), cacheState.Active)
 
     val current_data    = Wire(new instruction_cache_data_line(parameters))
-    val fetch_PC_buf    = RegInit(UInt(32.W), 0.U)
+    val fetch_PC_buf    = RegInit(new memory_request(parameters), 0.U.asTypeOf(new memory_request(parameters)))//RegInit(UInt(32.W), 0.U)
 
     val miss            = Wire(Bool())
     val hit             = Wire(Bool())
@@ -132,7 +128,7 @@ class instruction_cache(parameters:Parameters) extends Module{
     val allocate_way    = Wire(UInt(ways.W))
 
     // 
-    val replay_address          = RegInit(UInt(32.W), 0.U)
+    val replay_address          = RegInit(new memory_request(parameters), 0.U.asTypeOf(new memory_request(parameters)))
 
     val current_packet          = Wire(new instruction_cache_address_packet(parameters))
 
@@ -163,14 +159,14 @@ class instruction_cache(parameters:Parameters) extends Module{
     //RegInit(Bool(), 0.B)
     
 
-    io.memory_response.ready           := resp_ready
+    io.DRAM_response.ready           := resp_ready
 
     io.DRAM_request.valid        := request_valid
     io.DRAM_request.bits.addr    := request_addr
     io.DRAM_request.bits.wr_data := request_data
     io.DRAM_request.bits.wr_en   := request_wr_en
 
-    io.cache_data.valid     := cache_valid || hit
+    io.CPU_response.valid     := cache_valid || hit
 
     val already_requested = RegInit(Bool(), 0.B)
 
@@ -178,17 +174,17 @@ class instruction_cache(parameters:Parameters) extends Module{
 
         is(cacheState.Active){  // Wait for request
 
-            when(miss===1.B && io.kill === 0.U){           // Buffer current request, stall cache, go to wait state
+            when(miss===1.B && io.flush === 0.U){           // Buffer current request, stall cache, go to wait state
 
-                request_addr             := RegNext(io.memory_request.bits.addr) & dram_addr_mask
+                request_addr             := RegNext(io.CPU_request.bits.addr) & dram_addr_mask
                 request_valid            := 1.B
                 resp_ready               := 1.B
 
                 cache_state              := cacheState.Allocate
 
             }.otherwise{
-                replay_address := io.memory_request.bits  // if miss, buffer address
-                fetch_PC_buf    :=  io.memory_request.bits
+                replay_address := io.CPU_request.bits  // if miss, buffer address
+                fetch_PC_buf    :=  io.CPU_request.bits
             }
         }
 
@@ -199,19 +195,19 @@ class instruction_cache(parameters:Parameters) extends Module{
                 request_valid            := 0.B
             }
 
-            when(io.memory_response.valid && io.memory_response.ready){         // DRAM response accepted
+            when(io.CPU_response.valid && io.CPU_response.ready){         // DRAM response accepted
                 resp_ready  := 0.U  // Data received; no longer ready
                 cache_valid := 1.B
                 cache_state := cacheState.Replay    // Allow cycle for cache replay
             }
 
-            when(io.kill === 1.U){
+            when(io.flush === 1.U){
                 cache_state := cacheState.Active    // Ignore miss, go back to active.
             }
         }
 
         is(cacheState.Replay){
-            when(io.cache_data.valid && io.cache_data.ready){   // Cache output accepted
+            when(io.CPU_response.valid && io.CPU_response.ready){   // Cache output accepted
                 cache_valid := 0.B
                 cache_state     := cacheState.Active    // Go back to active after replay
             }
@@ -222,18 +218,18 @@ class instruction_cache(parameters:Parameters) extends Module{
 
     // Address arbitration
 
-    val current_address = Wire(UInt(32.W))
+    val current_address = Wire(new memory_request(parameters)) //Wire(UInt(32.W))
     dontTouch(current_address)
 
-    current_address     := Mux(cache_state=/=cacheState.Active || miss, replay_address, io.memory_request.bits) // During allocate and replay, current address is from buffered request. 
-    current_packet      := get_decomposed_icache_address(parameters, current_address)
+    current_address     := Mux(cache_state=/=cacheState.Active || miss, replay_address, io.CPU_request.bits) // During allocate and replay, current address is from buffered request. 
+    current_packet      := get_decomposed_icache_address(parameters, current_address.addr)
     dontTouch(current_packet)
     
     // For a new input to be accepted:
     // cache must be active
     // cache must not have just received a miss
     // output must be disposable 
-    io.memory_request.ready := (cache_state === cacheState.Active) && !miss 
+    io.CPU_request.ready := (cache_state === cacheState.Active) && !miss 
 
 
     ////////////////
@@ -262,8 +258,8 @@ class instruction_cache(parameters:Parameters) extends Module{
     ///////////////////
 
     current_data.valid  := 1.B
-    current_data.tag    := get_decomposed_icache_address(parameters, replay_address).tag
-    current_data.data   := io.memory_response.bits.data
+    current_data.tag    := get_decomposed_icache_address(parameters, replay_address.addr).tag
+    current_data.data   := io.DRAM_response.bits.data
 
     ///////////////////////////////
     // ASSIGN DATA MEMORY READS //
@@ -281,7 +277,7 @@ class instruction_cache(parameters:Parameters) extends Module{
     //////////////////////////////
     
     for (way <- 0 until ways){
-        data_memory(way).io.wr_en   := io.memory_response.valid & allocate_way(way) && (cache_state === cacheState.Allocate)
+        data_memory(way).io.wr_en   := io.CPU_response.valid & allocate_way(way) && (cache_state === cacheState.Allocate)
         data_memory(way).io.data_in := current_data
     }
 
@@ -296,8 +292,8 @@ class instruction_cache(parameters:Parameters) extends Module{
     val replay_valid = Wire(Bool())
     replay_valid := cache_state === cacheState.Replay
 
-    hit     := (hit_oh.orR & (RegNext(io.memory_request.valid && cache_state === cacheState.Active) | replay_valid)) & !RegNext(io.kill) & !RegNext(reset.asBool)
-    miss    := (~hit_oh.orR) & (RegNext(io.memory_request.valid) | replay_valid) & !RegNext(io.kill) & !RegNext(reset.asBool)
+    hit     := (hit_oh.orR & (RegNext(io.CPU_request.valid && cache_state === cacheState.Active) | replay_valid)) & !RegNext(io.flush) & !RegNext(reset.asBool)
+    miss    := (~hit_oh.orR) & (RegNext(io.CPU_request.valid) | replay_valid) & !RegNext(io.flush) & !RegNext(reset.asBool)
 
     /////////////////////////////////////
     // Fetch Packet Selecting & Output //
@@ -320,20 +316,20 @@ class instruction_cache(parameters:Parameters) extends Module{
 
 
     for(i <- 0 until fetchWidth){
-        io.cache_data.bits.instructions(i).instruction  := instruction_vec(RegNext(current_packet.fetch_packet)*fetchWidth.U + i.U)   
-        io.cache_data.bits.instructions(i).packet_index := i.U
-        io.cache_data.bits.instructions(i).ROB_index    := 0.U
+        io.CPU_response.bits.instructions(i).instruction  := instruction_vec(RegNext(current_packet.fetch_packet)*fetchWidth.U + i.U)   
+        io.CPU_response.bits.instructions(i).packet_index := i.U
+        io.CPU_response.bits.instructions(i).ROB_index    := 0.U
     }
 
     val validator = Module(new instruction_validator(fetchWidth=fetchWidth))
     validator.io.instruction_index := current_packet.instruction_offset
 
     for(i <- 0 until fetchWidth){
-        io.cache_data.bits.valid_bits(i):=validator.io.instruction_output(fetchWidth-1-i) && io.cache_data.valid
+        io.CPU_response.bits.valid_bits(i):=validator.io.instruction_output(fetchWidth-1-i) && io.CPU_response.valid
     }
 
 
-    io.cache_data.bits.fetch_PC := fetch_PC_buf
+    io.CPU_response.bits.fetch_PC := fetch_PC_buf.addr
 
     // FIXME: 
     validator.io.instruction_index := current_packet.instruction_offset

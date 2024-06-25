@@ -218,6 +218,15 @@ class predecoder(parameters:Parameters) extends Module{
     decoder_validator.io.instruction_T_NT_mask := T_NT_mask // FIXME: T_NT should not be set for uncond branches if not in btb...
 
 
+    val offset_validity = Wire(UInt(4.W))
+    offset_validity := 0.U  // FIXME: this is hardcoded...
+    val test = io.fetch_packet.bits.fetch_PC & 0xF.U
+    when(test === 0x0.U){offset_validity := "b1111".U}
+    when(test === 0x4.U){offset_validity := "b1110".U}
+    when(test === 0x8.U){offset_validity := "b1100".U}
+    when(test === 0xA.U){offset_validity := "b1000".U}
+
+
 
     // ASSIGN FINAL FETCH PACKET //
     io.final_fetch_packet.valid := RegNext(io.fetch_packet.valid && !io.flush)
@@ -225,7 +234,7 @@ class predecoder(parameters:Parameters) extends Module{
     
     for(i <- 0 until fetchWidth){
         io.final_fetch_packet.bits.instructions(i) := RegNext(io.fetch_packet.bits.instructions(i))                                     // pass instructions
-        io.final_fetch_packet.bits.valid_bits(i)   := decoder_validator.io.instruction_validity(i) && io.final_fetch_packet.valid     // pass valid bits
+        io.final_fetch_packet.bits.valid_bits(i)   := RegNext(decoder_validator.io.instruction_validity(i) && offset_validity(i)) && io.final_fetch_packet.valid     // pass valid bits
     }
 
     io.prediction.ready   := (io.final_fetch_packet.ready && io.predictions.ready)

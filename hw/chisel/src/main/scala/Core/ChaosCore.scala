@@ -42,6 +42,8 @@ class ChaosCore(parameters:Parameters) extends Module{
 
     val io = IO(new Bundle{
 
+        val commit                              =   Output(new commit(parameters))
+
         ////////////////////////////
         // I$ FRONTEND MEM ACCESS //
         ////////////////////////////
@@ -84,6 +86,8 @@ class ChaosCore(parameters:Parameters) extends Module{
     ////////////////////
 
     backend.io.commit <> BRU.io.commit
+
+    io.commit <> BRU.io.commit
 
     /////////////////////
     // FRONTEND <> FTQ //

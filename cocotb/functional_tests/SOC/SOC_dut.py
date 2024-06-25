@@ -27,25 +27,29 @@ class SOC_dut:
         self.dut.reset.value = 0
 
 
+
+
+
     def set_dram_ready(self, ready):
-        getattr(self.dut ,f"io_memory_response_ready").value = ready
-        getattr(self.dut ,f"io_frontend_DRAM_request_ready").value = ready
+        getattr(self.dut ,f"io_frontend_memory_request_ready").value = ready
+        getattr(self.dut ,f"io_backend_memory_request_ready").value = ready
 
     #def set_cache_ready(self, ready):
         #getattr(self.dut ,f"io_cache_data_ready").value = ready
 
 
+
     def write_dram_resp(self, data=0, valid = 0):
-        self.dut.io_frontend_DRAM_resp_valid.value = valid
-        self.dut.io_frontend_DRAM_resp_bits_data.value = data
+        self.dut.io_frontend_memory_response_valid.value = valid
+        self.dut.io_frontend_memory_response_bits_data.value = data
         #input          io_DRAM_request_ready,
 
     def read_frontend_output(self):
         outputs = {}
-        outputs["resp_ready"]           = int(self.dut.io_frontend_DRAM_resp_ready.value)
-        outputs["request_valid"]        = int(self.dut.io_frontend_DRAM_request_valid.value)
-        outputs["request_addr"]         = int(self.dut.io_frontend_DRAM_request_bits_addr.value)
-        outputs["request_wr_en"]        = int(self.dut.io_frontend_DRAM_request_bits_wr_en.value)
+        outputs["resp_ready"]           = int(self.dut.io_backend_memory_response_ready.value)
+        outputs["request_valid"]        = int(self.dut.io_frontend_memory_request_valid.value)
+        outputs["request_addr"]         = int(self.dut.io_backend_memory_request_bits_addr.value)
+        outputs["request_wr_en"]        = int(self.dut.io_backend_memory_request_bits_wr_en.value)
 
         return outputs
 
@@ -155,6 +159,8 @@ class SOC_dut:
 
         if(self.DRAM_request):
             data = self.DRAM.read(address=self.DRAM_request_addr, size=self.DRAM_request_size)
+
+            data = int.from_bytes(data, byteorder="little")
             self.write_dram_resp(data, 1)
 
         await ReadOnly()

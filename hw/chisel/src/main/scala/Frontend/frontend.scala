@@ -129,7 +129,6 @@ class frontend(parameters:Parameters) extends Module{
         val memory_request                    =   Decoupled(new memory_request(parameters))
         val memory_response                   =   Flipped(Decoupled(new fetch_packet(parameters)))
         
-
         // COMMIT // 
         val commit                          =   Input(new commit(parameters))
         
@@ -138,14 +137,6 @@ class frontend(parameters:Parameters) extends Module{
 
         // INSTRUCTION OUT //
         val renamed_decoded_fetch_packet    =   Decoupled(new decoded_fetch_packet(parameters))
-
-        // ALLOCATE //
-        // Backend
-        //val MEMRS_ready                     =   Input(Vec(dispatchWidth, Bool()))
-        //val INTRS_ready                     =   Input(Vec(dispatchWidth, Bool()))
-
-        // ALLOCATE //
-        // ROB
 
         // RD FREE //
         val FU_outputs                      =   Vec(portCount, Flipped(ValidIO(new FU_output(parameters))))
@@ -189,7 +180,6 @@ class frontend(parameters:Parameters) extends Module{
     decoders.io.fetch_packet <> instruction_fetch.io.fetch_packet
     decoders.io.flush <> io.flush
 
-
     ///////////////////////
     // INSTRUCTION QUEUE //
     ///////////////////////
@@ -199,11 +189,6 @@ class frontend(parameters:Parameters) extends Module{
     // Control how many entries to allocate
 
     
-    //val is_INTRS = instruction_queue.io.out.map(_.bits.RS_type === RS_types.INT)
-    //val is_MEMRS = instruction_queue.io.out.map(_.bits.RS_type === RS_types.MEM)
-
-
-
     ////////////
     // RENAME //
     ////////////
@@ -213,57 +198,16 @@ class frontend(parameters:Parameters) extends Module{
     instruction_queue.io.flush := flush 
 
 
-    // In a single cycle, both a "create checkpoint" and "restore checkpoint" can be requested
-    // The reason this is possible is because create checkpoint is requested by the frontend (predecoder)
-    // And the restore checkpoint is requested by the ROB on a misprediction. 
-    // As such, if a restore checkpoint is being requested, it takes priority over create checkpoint because
-    // Create checkpoint is not invalid (wrong, as that instruction path is down a mispredicted path)
-
-    // Free checkpoint and restore checkpoint are both requested by the ROB. They can be done in parallell no 
-    // problem. ie, one instruction in the FTQ is correct, the following one is wrong. Free the checkpoint for the first
-    // while restoring the RAT and other structures to the mispredicted state. This is probably a pretty likely case
-    // So make sure its verified correctly. 
-    
     rename.io.FU_outputs           <>     io.FU_outputs
     rename.io.flush                <>     io.flush
+    rename.io.commit               <>     io.commit
 
-    // FIXME: This needs to be either fine grain or course grain
-    // Ex, either be able to free several checkpoints at once
-    // Or assign checkpoints to entire fetch packets so that it doesnt matter how many 
-    // frees occur each cycle. Fine grain is easier but less area efficient.
-    // In other words, this is almost certainly bugged
-
-    // Commit logic
-    // Free + Restore
-
-    rename.io.restore_checkpoint        := 0.B
-    rename.io.restore_checkpoint_value  := 0.U
-    rename.io.free_checkpoint           := 0.B
-
-    when(io.commit.valid && io.commit.is_misprediction){
-        rename.io.restore_checkpoint        :=     1.B 
-        rename.io.restore_checkpoint_value  :=     io.commit.RAT_IDX
-        rename.io.free_checkpoint           :=     1.B 
-    }
-
-    // Create logic
-    rename.io.create_checkpoint          :=     0.B
-    //io.predictions.bits.RAT_IDX           :=     rename.io.active_checkpoint_value
-    when(io.predictions.valid){
-        rename.io.create_checkpoint      :=     1.B 
-    }
-
-    //io.checkpoints_full                  :=     rename.io.checkpoints_full
-    //io.active_checkpoint_value           :=     rename.io.active_checkpoint_value
     ////////////
     // OUTPUT //
     ////////////
 
     io.renamed_decoded_fetch_packet <> rename.io.renamed_decoded_fetch_packet
 
-    //io.ROB_packet := instruction_queue.io.out
-
-    //io.ROB_packet <> io.renamed_decoded_fetch_packet
-    //instruction_queue.io.out.fetch_PC
+    
 
 }

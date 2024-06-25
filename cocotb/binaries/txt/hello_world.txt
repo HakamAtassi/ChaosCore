@@ -26,8 +26,8 @@ Disassembly of section .text:
 
 00000038 <main>:
   38:	800007b7          	lui	x15,0x80000
-  3c:	04800713          	li	x14,72
-  40:	00e7a023          	sw	x14,0(x15) # 80000000 <main+0x7fffffc8>
+  3c:	04800713          	li	x14,72  # Addi
+  40:	00e7a023          	sw	x14,0(x15)  # 
   44:	04500713          	li	x14,69
   48:	00e7a023          	sw	x14,0(x15)
   4c:	04c00713          	li	x14,76

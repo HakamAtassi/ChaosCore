@@ -166,6 +166,7 @@ class MEMRS(parameters:Parameters) extends Module{
     /////////////////
     // If front of the MEMRS has its sources ready and has committed, send to memory and update front pointer
 
+    // FIXME: this is missing the valid for RS1 and RS2
     val good_to_go =    (reservation_station(front_index).valid && reservation_station(front_index).commited &&
                         reservation_station(front_index).decoded_instruction.ready_bits.RS1_ready && reservation_station(front_index).decoded_instruction.ready_bits.RS2_ready)
 
