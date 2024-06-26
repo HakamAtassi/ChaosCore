@@ -166,9 +166,11 @@ class instruction_cache(parameters:Parameters) extends Module{
     io.DRAM_request.bits.wr_data := request_data
     io.DRAM_request.bits.wr_en   := request_wr_en
 
-    io.CPU_response.valid     := cache_valid || hit
+    io.CPU_response.valid     := (cache_valid || hit) && !(io.flush || RegNext(io.flush))
 
     val already_requested = RegInit(Bool(), 0.B)
+
+    dontTouch(io.DRAM_response)
 
     switch(cache_state){
 
@@ -184,32 +186,37 @@ class instruction_cache(parameters:Parameters) extends Module{
 
             }.otherwise{
                 replay_address := io.CPU_request.bits  // if miss, buffer address
-                fetch_PC_buf    :=  io.CPU_request.bits
+                fetch_PC_buf   := io.CPU_request.bits
             }
         }
 
         is(cacheState.Allocate){    // wait for response
-
-            when(io.DRAM_request.ready && io.DRAM_request.valid){   // DRAM request accepted
-                request_addr             := 0.U
-                request_valid            := 0.B
-            }
-
-            when(io.CPU_response.valid && io.CPU_response.ready){         // DRAM response accepted
-                resp_ready  := 0.U  // Data received; no longer ready
-                cache_valid := 1.B
-                cache_state := cacheState.Replay    // Allow cycle for cache replay
-            }
-
             when(io.flush === 1.U){
                 cache_state := cacheState.Active    // Ignore miss, go back to active.
+                cache_valid := 0.B
+
+            }.otherwise{
+                when(io.DRAM_request.ready && io.DRAM_request.valid){   // DRAM request accepted
+                    request_addr             := 0.U
+                    request_valid            := 0.B
+                }
+                when(io.DRAM_response.valid && io.DRAM_response.ready){         // DRAM response accepted
+                    resp_ready  := 0.U  // Data received; no longer ready
+                    cache_valid := 1.B
+                    cache_state := cacheState.Replay    // Allow cycle for cache replay
+                }
             }
         }
 
         is(cacheState.Replay){
-            when(io.CPU_response.valid && io.CPU_response.ready){   // Cache output accepted
+            when(io.flush === 1.U){
+                cache_state := cacheState.Active    // Ignore miss, go back to active.
                 cache_valid := 0.B
-                cache_state     := cacheState.Active    // Go back to active after replay
+            }.otherwise{
+                when(io.CPU_response.valid && io.CPU_response.ready){   // Cache output accepted
+                    cache_valid := 0.B
+                    cache_state     := cacheState.Active    // Go back to active after replay
+                }
             }
         }
 
@@ -272,12 +279,12 @@ class instruction_cache(parameters:Parameters) extends Module{
         data_way(way)               := data_memory(way).io.data_out
     }
 
-    //////////////////////////////
+    ///////////////////////////////
     // ASSIGN DATA MEMORY WRITES //
-    //////////////////////////////
+    ///////////////////////////////
     
     for (way <- 0 until ways){
-        data_memory(way).io.wr_en   := io.CPU_response.valid & allocate_way(way) && (cache_state === cacheState.Allocate)
+        data_memory(way).io.wr_en   := io.DRAM_response.valid & allocate_way(way) && (cache_state === cacheState.Allocate)
         data_memory(way).io.data_in := current_data
     }
 
@@ -313,8 +320,6 @@ class instruction_cache(parameters:Parameters) extends Module{
         instruction_vec(instruction) := hit_instruction_data((instruction+1)*32-1, (instruction)*32)    
     }
 
-
-
     for(i <- 0 until fetchWidth){
         io.CPU_response.bits.instructions(i).instruction  := instruction_vec(RegNext(current_packet.fetch_packet)*fetchWidth.U + i.U)   
         io.CPU_response.bits.instructions(i).packet_index := i.U
@@ -322,16 +327,17 @@ class instruction_cache(parameters:Parameters) extends Module{
     }
 
     val validator = Module(new instruction_validator(fetchWidth=fetchWidth))
-    validator.io.instruction_index := current_packet.instruction_offset
+
+
+    val test = get_decomposed_icache_address(parameters, io.CPU_response.bits.fetch_PC).instruction_offset //current_packet.instruction_offset
+    validator.io.instruction_index := test
 
     for(i <- 0 until fetchWidth){
-        io.CPU_response.bits.valid_bits(i):=validator.io.instruction_output(fetchWidth-1-i) && io.CPU_response.valid
+        io.CPU_response.bits.valid_bits(i):= validator.io.instruction_output(fetchWidth-1-i) && io.CPU_response.valid
     }
 
 
     io.CPU_response.bits.fetch_PC := fetch_PC_buf.addr
 
-    // FIXME: 
-    validator.io.instruction_index := current_packet.instruction_offset
 
 }

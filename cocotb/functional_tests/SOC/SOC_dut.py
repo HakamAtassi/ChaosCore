@@ -39,17 +39,16 @@ class SOC_dut:
 
 
 
-    def write_dram_resp(self, data=0, valid = 0):
+    def write_dram_resp(self, data=0, valid=0):
         self.dut.io_frontend_memory_response_valid.value = valid
         self.dut.io_frontend_memory_response_bits_data.value = data
-        #input          io_DRAM_request_ready,
 
     def read_frontend_output(self):
         outputs = {}
-        outputs["resp_ready"]           = int(self.dut.io_backend_memory_response_ready.value)
+        outputs["resp_ready"]           = int(self.dut.io_frontend_memory_response_ready.value)
         outputs["request_valid"]        = int(self.dut.io_frontend_memory_request_valid.value)
-        outputs["request_addr"]         = int(self.dut.io_backend_memory_request_bits_addr.value)
-        outputs["request_wr_en"]        = int(self.dut.io_backend_memory_request_bits_wr_en.value)
+        outputs["request_addr"]         = int(self.dut.io_frontend_memory_request_bits_addr.value)
+        outputs["request_wr_en"]        = int(self.dut.io_frontend_memory_request_bits_wr_en.value)
 
         return outputs
 

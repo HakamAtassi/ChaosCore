@@ -979,24 +979,43 @@ module PC_gen(
   output        io_PC_next_bits_wr_en
 );
 
+  reg         PC_gen_state;
   reg  [31:0] PC;
   wire        is_ret = io_prediction_bits_br_type == 3'h4 & io_prediction_valid;
+  wire        misprediction = io_commit_is_misprediction & io_commit_valid;
+  reg  [31:0] misprediction_PC_buf;
   wire [31:0] io_PC_next_bits_addr_0 =
-    io_commit_is_misprediction & io_commit_valid
-      ? io_commit_expected_PC
-      : io_prediction_bits_hit & io_prediction_valid & ~is_ret
-          ? io_prediction_bits_target
-          : is_ret ? io_RAS_read_ret_addr : PC;
+    PC_gen_state
+      ? misprediction_PC_buf
+      : misprediction
+          ? 32'h0
+          : io_prediction_bits_hit & io_prediction_valid & ~is_ret
+              ? io_prediction_bits_target
+              : is_ret ? io_RAS_read_ret_addr : PC;
+  wire        io_PC_next_valid_0 = PC_gen_state ? PC_gen_state : ~misprediction;
   always @(posedge clock) begin
-    if (reset)
+    if (reset) begin
+      PC_gen_state <= 1'h0;
       PC <= 32'h0;
-    else if (io_PC_next_ready)
-      PC <=
-        io_PC_next_bits_addr_0
-        + {27'h0, 3'h4 - {1'h0, io_PC_next_bits_addr_0[3:2]}, 2'h0};
+      misprediction_PC_buf <= 32'h0;
+    end
+    else begin
+      automatic logic _GEN;
+      _GEN = io_PC_next_ready & io_PC_next_valid_0;
+      if (PC_gen_state)
+        PC_gen_state <= ~(PC_gen_state & _GEN) & PC_gen_state;
+      else
+        PC_gen_state <= misprediction | PC_gen_state;
+      if (_GEN)
+        PC <=
+          io_PC_next_bits_addr_0
+          + {27'h0, 3'h4 - {1'h0, io_PC_next_bits_addr_0[3:2]}, 2'h0};
+      if (~PC_gen_state & misprediction)
+        misprediction_PC_buf <= io_commit_expected_PC;
+    end
   end // always @(posedge)
   assign io_prediction_ready = 1'h1;
-  assign io_PC_next_valid = 1'h1;
+  assign io_PC_next_valid = io_PC_next_valid_0;
   assign io_PC_next_bits_addr = io_PC_next_bits_addr_0;
   assign io_PC_next_bits_wr_data = 32'h0;
   assign io_PC_next_bits_wr_en = 1'h0;
