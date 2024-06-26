@@ -160,7 +160,7 @@ class instruction_fetch(parameters:Parameters) extends Module{
     ////////////////
     predecoder.io.prediction            <> BTB_Q.io.out
     predecoder.io.fetch_packet          <> instruction_Q.io.out
-    predecoder.io.fetch_packet.valid        := instruction_Q.io.out.valid     // FIXME: this only works under the SRAM memory assumption (ie, simulation)
+    predecoder.io.fetch_packet.valid    := instruction_Q.io.out.valid     // FIXME: this only works under the SRAM memory assumption (ie, simulation)
     predecoder.io.RAS_read              <> bp.io.RAS_read
     predecoder.io.final_fetch_packet    <> io.fetch_packet 
     predecoder.io.flush                 <> io.flush 

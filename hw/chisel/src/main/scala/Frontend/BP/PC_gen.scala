@@ -38,7 +38,7 @@ import java.rmi.server.UID
 
 
 object PcGenState extends ChiselEnum{
-    val Active, Idle, Correct = Value
+    val Active, Flush = Value
 }
 
 
@@ -57,6 +57,8 @@ class PC_gen(parameters:Parameters) extends Module{
 
     dontTouch(io)
 
+    val PC_gen_state       = RegInit(PcGenState(), PcGenState.Active)
+
     val PC                 = RegInit(UInt(32.W), startPC.asUInt)
 
     val use_BTB            = Wire(Bool())
@@ -74,6 +76,7 @@ class PC_gen(parameters:Parameters) extends Module{
     val PC_increment                    =   Wire(UInt((log2Ceil(fetchWidth)+3).W))
 
 
+
     is_branch           := (io.prediction.bits.br_type === _br_type.BR)     && io.prediction.valid
     is_jalr             := (io.prediction.bits.br_type === _br_type.JALR)   && io.prediction.valid
     is_ret              := (io.prediction.bits.br_type === _br_type.RET)    && io.prediction.valid
@@ -82,6 +85,7 @@ class PC_gen(parameters:Parameters) extends Module{
     use_RAS             := is_ret
 
     misprediction       := io.commit.is_misprediction && io.commit.valid
+
 
 
     instruction_index_within_packet := ( io.PC_next.bits.addr >> log2Ceil(fetchWidth))
@@ -93,20 +97,43 @@ class PC_gen(parameters:Parameters) extends Module{
     }
 
     // output stage
-    when(misprediction){
-        io.PC_next.bits.addr := io.commit.expected_PC
-        io.PC_next.valid    := 1.B
-    }.elsewhen(use_BTB){
-        io.PC_next.bits.addr := io.prediction.bits.target
-        io.PC_next.valid    := 1.B
-    }.elsewhen(use_RAS){
-        io.PC_next.valid    := 1.B
-        io.PC_next.bits.addr := io.RAS_read.ret_addr
-    }.otherwise{    // use correction address
-        io.PC_next.valid    := 1.B
-        io.PC_next.bits.addr := PC
-    }
 
+    val misprediction_PC_buf = RegInit(UInt(32.W), 0.U)
+
+
+    io.PC_next.bits.addr := 0.B
+    io.PC_next.valid     := 0.B
+
+    switch(PC_gen_state){
+
+        is(PcGenState.Active){
+            when(misprediction){    // When flush, wait for queues to reset & set new PC
+                misprediction_PC_buf := io.commit.expected_PC
+                PC_gen_state := PcGenState.Flush
+            }.otherwise{
+                when(use_BTB){
+                    io.PC_next.bits.addr := io.prediction.bits.target
+                    io.PC_next.valid    := 1.B
+                }.elsewhen(use_RAS){
+                    io.PC_next.valid    := 1.B
+                    io.PC_next.bits.addr := io.RAS_read.ret_addr
+                }.otherwise{    // use correction address
+                    io.PC_next.valid    := 1.B
+                    io.PC_next.bits.addr := PC
+                }
+            }
+
+        }
+
+        is(PcGenState.Flush){
+            when(io.PC_next.fire){
+                PC_gen_state := PcGenState.Active
+            }
+            io.PC_next.bits.addr := misprediction_PC_buf
+            io.PC_next.valid     := 1.B
+        }
+
+    }
 
 
 

@@ -988,24 +988,43 @@ module PC_gen(
   output        io_PC_next_bits_wr_en
 );
 
+  reg         PC_gen_state;
   reg  [31:0] PC;
   wire        is_ret = io_prediction_bits_br_type == 3'h4 & io_prediction_valid;
+  wire        misprediction = io_commit_is_misprediction & io_commit_valid;
+  reg  [31:0] misprediction_PC_buf;
   wire [31:0] io_PC_next_bits_addr_0 =
-    io_commit_is_misprediction & io_commit_valid
-      ? io_commit_expected_PC
-      : io_prediction_bits_hit & io_prediction_valid & ~is_ret
-          ? io_prediction_bits_target
-          : is_ret ? io_RAS_read_ret_addr : PC;
+    PC_gen_state
+      ? misprediction_PC_buf
+      : misprediction
+          ? 32'h0
+          : io_prediction_bits_hit & io_prediction_valid & ~is_ret
+              ? io_prediction_bits_target
+              : is_ret ? io_RAS_read_ret_addr : PC;
+  wire        io_PC_next_valid_0 = PC_gen_state ? PC_gen_state : ~misprediction;
   always @(posedge clock) begin
-    if (reset)
+    if (reset) begin
+      PC_gen_state <= 1'h0;
       PC <= 32'h0;
-    else if (io_PC_next_ready)
-      PC <=
-        io_PC_next_bits_addr_0
-        + {27'h0, 3'h4 - {1'h0, io_PC_next_bits_addr_0[3:2]}, 2'h0};
+      misprediction_PC_buf <= 32'h0;
+    end
+    else begin
+      automatic logic _GEN;
+      _GEN = io_PC_next_ready & io_PC_next_valid_0;
+      if (PC_gen_state)
+        PC_gen_state <= ~(PC_gen_state & _GEN) & PC_gen_state;
+      else
+        PC_gen_state <= misprediction | PC_gen_state;
+      if (_GEN)
+        PC <=
+          io_PC_next_bits_addr_0
+          + {27'h0, 3'h4 - {1'h0, io_PC_next_bits_addr_0[3:2]}, 2'h0};
+      if (~PC_gen_state & misprediction)
+        misprediction_PC_buf <= io_commit_expected_PC;
+    end
   end // always @(posedge)
   assign io_prediction_ready = 1'h1;
-  assign io_PC_next_valid = 1'h1;
+  assign io_PC_next_valid = io_PC_next_valid_0;
   assign io_PC_next_bits_addr = io_PC_next_bits_addr_0;
   assign io_PC_next_bits_wr_data = 32'h0;
   assign io_PC_next_bits_wr_en = 1'h0;
@@ -28118,6 +28137,7 @@ module instruction_cache(
   output [31:0]  io_DRAM_request_bits_addr,
                  io_DRAM_request_bits_wr_data,
   output         io_DRAM_response_ready,
+  input          io_DRAM_response_valid,
   input  [255:0] io_DRAM_response_bits_data
 );
 
@@ -28141,7 +28161,9 @@ module instruction_cache(
   reg  [31:0]      request_addr;
   reg              resp_ready;
   reg              cache_valid;
-  wire             io_CPU_response_valid_0 = cache_valid | hit;
+  reg              io_CPU_response_valid_REG;
+  wire             io_CPU_response_valid_0 =
+    (cache_valid | hit) & ~(io_flush | io_CPU_response_valid_REG);
   reg  [31:0]      request_addr_REG;
   wire             _current_address_T_1 = (|cache_state) | miss;
   wire [31:0]      current_address_addr =
@@ -28208,27 +28230,31 @@ module instruction_cache(
       _GEN_0 = miss & ~io_flush;
       if (|cache_state) begin
         automatic logic _GEN_1 = cache_state == 2'h1;
-        automatic logic _GEN_2 = _GEN_1 & io_DRAM_request_ready & request_valid;
+        automatic logic _GEN_2 =
+          ~_GEN_1 | io_flush | ~(io_DRAM_request_ready & request_valid);
         automatic logic _GEN_3;
-        _GEN_3 = io_CPU_response_valid_0 & io_CPU_response_ready;
+        _GEN_3 = io_DRAM_response_valid & resp_ready;
         if (_GEN_1) begin
           if (io_flush)
             cache_state <= 2'h0;
           else if (_GEN_3)
             cache_state <= 2'h2;
-          cache_valid <= _GEN_3 | cache_valid;
+          cache_valid <= ~io_flush & (_GEN_3 | cache_valid);
         end
         else begin
-          automatic logic _GEN_4;
-          _GEN_4 = cache_state == 2'h2 & _GEN_3;
+          automatic logic _GEN_4 =
+            cache_state == 2'h2
+            & (io_flush | io_CPU_response_valid_0 & io_CPU_response_ready);
           if (_GEN_4)
             cache_state <= 2'h0;
           cache_valid <= ~_GEN_4 & cache_valid;
         end
-        request_valid <= ~_GEN_2 & request_valid;
-        if (_GEN_2)
+        request_valid <= _GEN_2 & request_valid;
+        if (_GEN_2) begin
+        end
+        else
           request_addr <= 32'h0;
-        resp_ready <= ~(_GEN_1 & _GEN_3) & resp_ready;
+        resp_ready <= (~_GEN_1 | io_flush | ~_GEN_3) & resp_ready;
       end
       else begin
         if (_GEN_0) begin
@@ -28247,6 +28273,7 @@ module instruction_cache(
         replay_address_wr_en <= io_CPU_request_bits_wr_en;
       end
     end
+    io_CPU_response_valid_REG <= io_flush;
     request_addr_REG <= io_CPU_request_bits_addr;
     LRU_memory_io_wr_addr_REG <= current_packet_set;
     hit_oh_vec_0_REG <= current_packet_tag;
@@ -28275,7 +28302,7 @@ module instruction_cache(
   icache_ReadWriteSmem data_memory_0 (
     .clock             (clock),
     .io_wr_en
-      (io_CPU_response_valid_0 & allocate_way[0] & _data_memory_1_io_wr_en_T_2),
+      (io_DRAM_response_valid & allocate_way[0] & _data_memory_1_io_wr_en_T_2),
     .io_addr           (current_packet_set),
     .io_data_in_tag    (replay_address_addr[31:11]),
     .io_data_in_data   (io_DRAM_response_bits_data),
@@ -28286,7 +28313,7 @@ module instruction_cache(
   icache_ReadWriteSmem data_memory_1 (
     .clock             (clock),
     .io_wr_en
-      (io_CPU_response_valid_0 & allocate_way[1] & _data_memory_1_io_wr_en_T_2),
+      (io_DRAM_response_valid & allocate_way[1] & _data_memory_1_io_wr_en_T_2),
     .io_addr           (current_packet_set),
     .io_data_in_tag    (replay_address_addr[31:11]),
     .io_data_in_data   (io_DRAM_response_bits_data),
@@ -28295,7 +28322,7 @@ module instruction_cache(
     .io_data_out_data  (_data_memory_1_io_data_out_data)
   );
   instruction_validator validator (
-    .io_instruction_index  (current_packet_instruction_offset[1:0]),
+    .io_instruction_index  (fetch_PC_buf_addr[3:2]),
     .io_instruction_output (_validator_io_instruction_output)
   );
   assign io_CPU_request_ready = ~(|cache_state) & ~miss;
@@ -28478,6 +28505,7 @@ module SOC(
     .io_DRAM_request_bits_wr_data
       (io_frontend_memory_request_bits_wr_data),
     .io_DRAM_response_ready                          (io_frontend_memory_response_ready),
+    .io_DRAM_response_valid                          (io_frontend_memory_response_valid),
     .io_DRAM_response_bits_data
       (io_frontend_memory_response_bits_data)
   );
