@@ -120,8 +120,8 @@ class RAT(parameters:Parameters) extends Module{
     // RAT STRUCTURES //
     ////////////////////
 
-    val RAT_memories    = RegInit(VecInit.tabulate(RATCheckpointCount, architecturalRegCount){ (x, y) => 0.U(physicalRegBits.W) })
-    val ready_memories  = RegInit(VecInit(Seq.fill(architecturalRegCount)(0.B)))
+    val RAT_memories    = RegInit(VecInit.tabulate(RATCheckpointCount, architecturalRegCount){(x, y) => 0.U(physicalRegBits.W) })
+    val ready_memory  = RegInit(VecInit(Seq.fill(physicalRegCount)(0.B)))
     
     ////////////////
     // CHECKPOINT //
@@ -192,38 +192,45 @@ class RAT(parameters:Parameters) extends Module{
     ////////////////
     // READY BITS //
     ////////////////
-    
+
     // setting ready bit
     // whenever an instruction completes
     // if the completing instruction(s) is writing to the mapping that exists in the ith entry of the ROB
     // and that completing instruction is valid
     // set that ready bit, and bypass it as needed
 
-    val comb_ready_bits = Wire(Vec(architecturalRegCount, Bool()))
+    val comb_ready_bits = Wire(Vec(physicalRegCount, Bool()))
 
-    for(i <- 0 until architecturalRegCount){
-        var ready_bit = 0.B
-        for(j <- 0 until portCount){
-            val set_ready = (io.FU_outputs(j).bits.RD === RAT_memories(active_RAT_comb)(i)) && 
-                            io.FU_outputs(j).valid &&
-                            io.FU_outputs(j).bits.RD =/= 0.U
-
-            ready_bit = ready_bit || set_ready
-        }
-        comb_ready_bits(i)  := ready_bit || ready_memories(i)
-        ready_memories(i)   := comb_ready_bits(i) 
+    for(i <- 0 until physicalRegCount){
+        comb_ready_bits(i) := ready_memory(i)
     }
 
-    dontTouch(comb_ready_bits)
-
-
-    // resetting ready bit
-    // if a mapping in the RAT is being updated, reset the ready bit.
-    // helpful note: it is very important this step is completed AFTER the previous step.
-    // clearing a ready bit takes precidence over a setting a ready bit
+    // Set ready bit from FU
     for(i <- 0 until fetchWidth){
-        ready_memories(io.instruction_RD(i)) := 0.B
+        val set_RD      = io.FU_outputs(i).bits.RD
+        val RD_valid    = io.FU_outputs(i).valid && io.FU_outputs(i).bits.RD_valid
+
+        comb_ready_bits(set_RD) := ready_memory(set_RD) || RD_valid
     }
+
+    // Reset ready bit
+    for(i <- 0 until fetchWidth){
+        val set_RD      = io.free_list_RD(i)
+        val RD_valid    = io.free_list_wr_en(i)
+
+        when(RD_valid){
+            comb_ready_bits(set_RD) := 0.B
+        }
+    }
+
+    // Update ready register
+    for(i <- 0 until physicalRegCount){
+        ready_memory(i) := comb_ready_bits(i)
+    }
+
+
+
+
 
 
     // assign ready output
@@ -234,8 +241,8 @@ class RAT(parameters:Parameters) extends Module{
 
         // if the source is x0, its ready regardless of what its value says
         // if the source is not valid, its ready regardless of what its value says
-        initialReady.RS1_ready := Mux(RegNext(io.instruction_RS1(i)) === 0.U, 1.B, comb_ready_bits(RegNext(io.instruction_RS1(i))))
-        initialReady.RS2_ready := Mux(RegNext(io.instruction_RS2(i)) === 0.U, 1.B, comb_ready_bits(RegNext(io.instruction_RS2(i))))
+        initialReady.RS1_ready := Mux(RegNext(io.instruction_RS1(i)) === 0.U, 1.B, comb_ready_bits(io.RAT_RS1(i)))
+        initialReady.RS2_ready := Mux(RegNext(io.instruction_RS2(i)) === 0.U, 1.B, comb_ready_bits(io.RAT_RS2(i)))
 
         io.ready_bits(i)       := initialReady
     }

@@ -107,6 +107,11 @@ class MEMRS(parameters:Parameters) extends Module{
     }
     back_pointer := back_pointer + PopCount(written_vec)
 
+    when(io.flush){
+        front_pointer := 0.B
+        back_pointer := 0.B
+    }
+
 
     //////////////////////
     // UPDATE (SOURCES) //
