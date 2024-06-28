@@ -329,6 +329,7 @@ class instruction_cache(parameters:Parameters) extends Module{
     val validator = Module(new instruction_validator(fetchWidth=fetchWidth))
 
 
+    // FIXME: ???
     val test = get_decomposed_icache_address(parameters, io.CPU_response.bits.fetch_PC).instruction_offset //current_packet.instruction_offset
     validator.io.instruction_index := test
 

@@ -22,7 +22,7 @@ def generate_null_commit():
     commit_inputs["GHR"]                        = 0
     commit_inputs["TOS"]                        = 0
     commit_inputs["NEXT"]                       = 0
-    commit_inputs["RAT_IDX"]                    = 0
+    commit_inputs["RAT_index"]                    = 0
     commit_inputs["br_type"]                    = 0
     commit_inputs["fetch_packet_index"]         = 0
     return commit_inputs
@@ -85,7 +85,7 @@ class BP_dut:
         getattr(self.dut, f"io_commit_GHR").value                     =   inputs["GHR"]
         getattr(self.dut, f"io_commit_TOS").value                     =   inputs["TOS"]
         getattr(self.dut, f"io_commit_NEXT").value                    =   inputs["NEXT"]
-        getattr(self.dut, f"io_commit_RAT_IDX").value                 =   inputs["RAT_IDX"]
+        getattr(self.dut, f"io_commit_RAT_index").value                 =   inputs["RAT_index"]
         getattr(self.dut, f"io_commit_fetch_packet_index").value      =   inputs["fetch_packet_index"]
         getattr(self.dut, f"io_commit_br_type").value                 =   inputs["br_type"]
 
@@ -203,7 +203,7 @@ class BP_dut:
   input  [15:0] io_commit_GHR,
   input  [6:0]  io_commit_TOS,
                 io_commit_NEXT,
-  input  [3:0]  io_commit_RAT_IDX,
+  input  [3:0]  io_commit_RAT_index,
   input  [31:0] io_RAS_update_call_addr,
   input         io_RAS_update_call,
                 io_RAS_update_ret,

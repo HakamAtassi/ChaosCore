@@ -101,11 +101,11 @@ class hash_BTB(parameters:Parameters) extends Module{
         val BTB_output                          = Output(new BTB_entry(parameters))
 
         //commit-input
-        val commit                              = Input(new commit(parameters))
+        val commit                              = Flipped(ValidIO(new commit(parameters)))
 
     })
 
-    val commit_input_tag    = shiftDownByTagBits(io.commit.fetch_PC)
+    val commit_input_tag    = shiftDownByTagBits(io.commit.bits.fetch_PC)
     val predict_input_tag   = shiftDownByTagBits(io.predict_PC)
 
     // memory // 
@@ -113,7 +113,7 @@ class hash_BTB(parameters:Parameters) extends Module{
     val BTB_memory = Module(new hash_BTB_mem(new BTB_entry(parameters), depth = BTBEntries))
 
     val prediction_BTB_address  = (io.predict_PC >> log2Ceil(fetchWidth*4))
-    val commit_BTB_address      = (io.commit.fetch_PC >> log2Ceil(fetchWidth*4))
+    val commit_BTB_address      = (io.commit.bits.fetch_PC >> log2Ceil(fetchWidth*4))
 
     BTB_memory.io.enable    := 1.B
     BTB_memory.io.rd_addr   := prediction_BTB_address
@@ -126,9 +126,9 @@ class hash_BTB(parameters:Parameters) extends Module{
     // FIXME: consider updating this to its own bundle and using <>
     commit_BTB_entry.BTB_valid                  := 1.B
     commit_BTB_entry.BTB_tag                    := commit_input_tag
-    commit_BTB_entry.BTB_target                 := io.commit.expected_PC
-    commit_BTB_entry.BTB_br_type                := io.commit.br_type
-    commit_BTB_entry.BTB_fetch_packet_index     := io.commit.fetch_packet_index
+    commit_BTB_entry.BTB_target                 := io.commit.bits.expected_PC
+    commit_BTB_entry.BTB_br_type                := io.commit.bits.br_type
+    commit_BTB_entry.BTB_fetch_packet_index     := io.commit.bits.fetch_packet_index
 
     BTB_memory.io.data_in := commit_BTB_entry
 

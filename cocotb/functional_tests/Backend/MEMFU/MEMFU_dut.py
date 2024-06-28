@@ -30,8 +30,8 @@ def generate_null_FU_inputs():
     FU_inputs["SUBTRACT"] = 0
     FU_inputs["MULTIPLY"] = 0
     FU_inputs["IMMEDIATE"] = 0
-    FU_inputs["IS_LOAD"] = 0
-    FU_inputs["IS_STORE"] = 0
+    FU_inputs["is_load"] = 0
+    FU_inputs["is_store"] = 0
     FU_inputs["RS1_data"] = 0
     FU_inputs["RS2_data"] = 0
     FU_inputs["PC"] = 0
@@ -84,8 +84,8 @@ class MEMFU_dut:
         getattr(self.dut, f"io_FU_input_bits_decoded_instruction_SUBTRACT").value = FU_inputs["SUBTRACT"]
         getattr(self.dut, f"io_FU_input_bits_decoded_instruction_MULTIPLY").value = FU_inputs["MULTIPLY"]
         getattr(self.dut, f"io_FU_input_bits_decoded_instruction_IMMEDIATE").value = FU_inputs["IMMEDIATE"]
-        getattr(self.dut, f"io_FU_input_bits_decoded_instruction_IS_LOAD").value = FU_inputs["IS_LOAD"]
-        getattr(self.dut, f"io_FU_input_bits_decoded_instruction_IS_STORE").value = FU_inputs["IS_STORE"]
+        getattr(self.dut, f"io_FU_input_bits_decoded_instruction_is_load").value = FU_inputs["is_load"]
+        getattr(self.dut, f"io_FU_input_bits_decoded_instruction_is_store").value = FU_inputs["is_store"]
         getattr(self.dut, f"io_FU_input_bits_RS1_data").value = FU_inputs["RS1_data"]
         getattr(self.dut, f"io_FU_input_bits_RS2_data").value = FU_inputs["RS2_data"]
         getattr(self.dut, f"io_FU_input_bits_PC").value = FU_inputs["PC"]

@@ -55,7 +55,7 @@
       <var loc="d,8937,18,8937,31" name="io_commit_GHR" dtype_id="7" dir="input" pinIndex="19" vartype="logic" origName="io_commit_GHR"/>
       <var loc="d,8938,18,8938,31" name="io_commit_TOS" dtype_id="8" dir="input" pinIndex="20" vartype="logic" origName="io_commit_TOS"/>
       <var loc="d,8939,18,8939,32" name="io_commit_NEXT" dtype_id="8" dir="input" pinIndex="21" vartype="logic" origName="io_commit_NEXT"/>
-      <var loc="d,8940,18,8940,35" name="io_commit_RAT_IDX" dtype_id="9" dir="input" pinIndex="22" vartype="logic" origName="io_commit_RAT_IDX"/>
+      <var loc="d,8940,18,8940,35" name="io_commit_RAT_index" dtype_id="9" dir="input" pinIndex="22" vartype="logic" origName="io_commit_RAT_index"/>
       <var loc="d,8941,18,8941,38" name="io_PC_file_exec_addr" dtype_id="4" dir="output" pinIndex="23" vartype="logic" origName="io_PC_file_exec_addr"/>
       <var loc="d,8942,18,8942,38" name="io_PC_file_exec_data" dtype_id="4" dir="input" pinIndex="24" vartype="logic" origName="io_PC_file_exec_data"/>
       <var loc="d,8943,18,8943,41" name="io_backend_packet_ready" dtype_id="1" dir="output" pinIndex="25" vartype="logic" origName="io_backend_packet_ready">
@@ -84,8 +84,8 @@
       <var loc="d,8964,18,8964,71" name="io_backend_packet_bits_decoded_instruction_0_SUBTRACT" dtype_id="1" dir="input" pinIndex="46" vartype="logic" origName="io_backend_packet_bits_decoded_instruction_0_SUBTRACT"/>
       <var loc="d,8965,18,8965,71" name="io_backend_packet_bits_decoded_instruction_0_MULTIPLY" dtype_id="1" dir="input" pinIndex="47" vartype="logic" origName="io_backend_packet_bits_decoded_instruction_0_MULTIPLY"/>
       <var loc="d,8966,18,8966,72" name="io_backend_packet_bits_decoded_instruction_0_IMMEDIATE" dtype_id="1" dir="input" pinIndex="48" vartype="logic" origName="io_backend_packet_bits_decoded_instruction_0_IMMEDIATE"/>
-      <var loc="d,8967,18,8967,70" name="io_backend_packet_bits_decoded_instruction_0_IS_LOAD" dtype_id="1" dir="input" pinIndex="49" vartype="logic" origName="io_backend_packet_bits_decoded_instruction_0_IS_LOAD"/>
-      <var loc="d,8968,18,8968,71" name="io_backend_packet_bits_decoded_instruction_0_IS_STORE" dtype_id="1" dir="input" pinIndex="50" vartype="logic" origName="io_backend_packet_bits_decoded_instruction_0_IS_STORE"/>
+      <var loc="d,8967,18,8967,70" name="io_backend_packet_bits_decoded_instruction_0_is_load" dtype_id="1" dir="input" pinIndex="49" vartype="logic" origName="io_backend_packet_bits_decoded_instruction_0_is_load"/>
+      <var loc="d,8968,18,8968,71" name="io_backend_packet_bits_decoded_instruction_0_is_store" dtype_id="1" dir="input" pinIndex="50" vartype="logic" origName="io_backend_packet_bits_decoded_instruction_0_is_store"/>
       <var loc="d,8969,18,8969,83" name="io_backend_packet_bits_decoded_instruction_1_ready_bits_RS1_ready" dtype_id="1" dir="input" pinIndex="51" vartype="logic" origName="io_backend_packet_bits_decoded_instruction_1_ready_bits_RS1_ready"/>
       <var loc="d,8970,18,8970,83" name="io_backend_packet_bits_decoded_instruction_1_ready_bits_RS2_ready" dtype_id="1" dir="input" pinIndex="52" vartype="logic" origName="io_backend_packet_bits_decoded_instruction_1_ready_bits_RS2_ready"/>
       <var loc="d,8971,18,8971,65" name="io_backend_packet_bits_decoded_instruction_1_RD" dtype_id="4" dir="input" pinIndex="53" vartype="logic" origName="io_backend_packet_bits_decoded_instruction_1_RD"/>
@@ -107,8 +107,8 @@
       <var loc="d,8987,18,8987,71" name="io_backend_packet_bits_decoded_instruction_1_SUBTRACT" dtype_id="1" dir="input" pinIndex="69" vartype="logic" origName="io_backend_packet_bits_decoded_instruction_1_SUBTRACT"/>
       <var loc="d,8988,18,8988,71" name="io_backend_packet_bits_decoded_instruction_1_MULTIPLY" dtype_id="1" dir="input" pinIndex="70" vartype="logic" origName="io_backend_packet_bits_decoded_instruction_1_MULTIPLY"/>
       <var loc="d,8989,18,8989,72" name="io_backend_packet_bits_decoded_instruction_1_IMMEDIATE" dtype_id="1" dir="input" pinIndex="71" vartype="logic" origName="io_backend_packet_bits_decoded_instruction_1_IMMEDIATE"/>
-      <var loc="d,8990,18,8990,70" name="io_backend_packet_bits_decoded_instruction_1_IS_LOAD" dtype_id="1" dir="input" pinIndex="72" vartype="logic" origName="io_backend_packet_bits_decoded_instruction_1_IS_LOAD"/>
-      <var loc="d,8991,18,8991,71" name="io_backend_packet_bits_decoded_instruction_1_IS_STORE" dtype_id="1" dir="input" pinIndex="73" vartype="logic" origName="io_backend_packet_bits_decoded_instruction_1_IS_STORE"/>
+      <var loc="d,8990,18,8990,70" name="io_backend_packet_bits_decoded_instruction_1_is_load" dtype_id="1" dir="input" pinIndex="72" vartype="logic" origName="io_backend_packet_bits_decoded_instruction_1_is_load"/>
+      <var loc="d,8991,18,8991,71" name="io_backend_packet_bits_decoded_instruction_1_is_store" dtype_id="1" dir="input" pinIndex="73" vartype="logic" origName="io_backend_packet_bits_decoded_instruction_1_is_store"/>
       <var loc="d,8992,18,8992,83" name="io_backend_packet_bits_decoded_instruction_2_ready_bits_RS1_ready" dtype_id="1" dir="input" pinIndex="74" vartype="logic" origName="io_backend_packet_bits_decoded_instruction_2_ready_bits_RS1_ready"/>
       <var loc="d,8993,18,8993,83" name="io_backend_packet_bits_decoded_instruction_2_ready_bits_RS2_ready" dtype_id="1" dir="input" pinIndex="75" vartype="logic" origName="io_backend_packet_bits_decoded_instruction_2_ready_bits_RS2_ready"/>
       <var loc="d,8994,18,8994,65" name="io_backend_packet_bits_decoded_instruction_2_RD" dtype_id="4" dir="input" pinIndex="76" vartype="logic" origName="io_backend_packet_bits_decoded_instruction_2_RD"/>
@@ -130,8 +130,8 @@
       <var loc="d,9010,18,9010,71" name="io_backend_packet_bits_decoded_instruction_2_SUBTRACT" dtype_id="1" dir="input" pinIndex="92" vartype="logic" origName="io_backend_packet_bits_decoded_instruction_2_SUBTRACT"/>
       <var loc="d,9011,18,9011,71" name="io_backend_packet_bits_decoded_instruction_2_MULTIPLY" dtype_id="1" dir="input" pinIndex="93" vartype="logic" origName="io_backend_packet_bits_decoded_instruction_2_MULTIPLY"/>
       <var loc="d,9012,18,9012,72" name="io_backend_packet_bits_decoded_instruction_2_IMMEDIATE" dtype_id="1" dir="input" pinIndex="94" vartype="logic" origName="io_backend_packet_bits_decoded_instruction_2_IMMEDIATE"/>
-      <var loc="d,9013,18,9013,70" name="io_backend_packet_bits_decoded_instruction_2_IS_LOAD" dtype_id="1" dir="input" pinIndex="95" vartype="logic" origName="io_backend_packet_bits_decoded_instruction_2_IS_LOAD"/>
-      <var loc="d,9014,18,9014,71" name="io_backend_packet_bits_decoded_instruction_2_IS_STORE" dtype_id="1" dir="input" pinIndex="96" vartype="logic" origName="io_backend_packet_bits_decoded_instruction_2_IS_STORE"/>
+      <var loc="d,9013,18,9013,70" name="io_backend_packet_bits_decoded_instruction_2_is_load" dtype_id="1" dir="input" pinIndex="95" vartype="logic" origName="io_backend_packet_bits_decoded_instruction_2_is_load"/>
+      <var loc="d,9014,18,9014,71" name="io_backend_packet_bits_decoded_instruction_2_is_store" dtype_id="1" dir="input" pinIndex="96" vartype="logic" origName="io_backend_packet_bits_decoded_instruction_2_is_store"/>
       <var loc="d,9015,18,9015,83" name="io_backend_packet_bits_decoded_instruction_3_ready_bits_RS1_ready" dtype_id="1" dir="input" pinIndex="97" vartype="logic" origName="io_backend_packet_bits_decoded_instruction_3_ready_bits_RS1_ready"/>
       <var loc="d,9016,18,9016,83" name="io_backend_packet_bits_decoded_instruction_3_ready_bits_RS2_ready" dtype_id="1" dir="input" pinIndex="98" vartype="logic" origName="io_backend_packet_bits_decoded_instruction_3_ready_bits_RS2_ready"/>
       <var loc="d,9017,18,9017,65" name="io_backend_packet_bits_decoded_instruction_3_RD" dtype_id="4" dir="input" pinIndex="99" vartype="logic" origName="io_backend_packet_bits_decoded_instruction_3_RD"/>
@@ -153,13 +153,13 @@
       <var loc="d,9033,18,9033,71" name="io_backend_packet_bits_decoded_instruction_3_SUBTRACT" dtype_id="1" dir="input" pinIndex="115" vartype="logic" origName="io_backend_packet_bits_decoded_instruction_3_SUBTRACT"/>
       <var loc="d,9034,18,9034,71" name="io_backend_packet_bits_decoded_instruction_3_MULTIPLY" dtype_id="1" dir="input" pinIndex="116" vartype="logic" origName="io_backend_packet_bits_decoded_instruction_3_MULTIPLY"/>
       <var loc="d,9035,18,9035,72" name="io_backend_packet_bits_decoded_instruction_3_IMMEDIATE" dtype_id="1" dir="input" pinIndex="117" vartype="logic" origName="io_backend_packet_bits_decoded_instruction_3_IMMEDIATE"/>
-      <var loc="d,9036,18,9036,70" name="io_backend_packet_bits_decoded_instruction_3_IS_LOAD" dtype_id="1" dir="input" pinIndex="118" vartype="logic" origName="io_backend_packet_bits_decoded_instruction_3_IS_LOAD"/>
-      <var loc="d,9037,18,9037,71" name="io_backend_packet_bits_decoded_instruction_3_IS_STORE" dtype_id="1" dir="input" pinIndex="119" vartype="logic" origName="io_backend_packet_bits_decoded_instruction_3_IS_STORE"/>
+      <var loc="d,9036,18,9036,70" name="io_backend_packet_bits_decoded_instruction_3_is_load" dtype_id="1" dir="input" pinIndex="118" vartype="logic" origName="io_backend_packet_bits_decoded_instruction_3_is_load"/>
+      <var loc="d,9037,18,9037,71" name="io_backend_packet_bits_decoded_instruction_3_is_store" dtype_id="1" dir="input" pinIndex="119" vartype="logic" origName="io_backend_packet_bits_decoded_instruction_3_is_store"/>
       <var loc="d,9038,18,9038,53" name="io_backend_packet_bits_valid_bits_0" dtype_id="1" dir="input" pinIndex="120" vartype="logic" origName="io_backend_packet_bits_valid_bits_0"/>
       <var loc="d,9039,18,9039,53" name="io_backend_packet_bits_valid_bits_1" dtype_id="1" dir="input" pinIndex="121" vartype="logic" origName="io_backend_packet_bits_valid_bits_1"/>
       <var loc="d,9040,18,9040,53" name="io_backend_packet_bits_valid_bits_2" dtype_id="1" dir="input" pinIndex="122" vartype="logic" origName="io_backend_packet_bits_valid_bits_2"/>
       <var loc="d,9041,18,9041,53" name="io_backend_packet_bits_valid_bits_3" dtype_id="1" dir="input" pinIndex="123" vartype="logic" origName="io_backend_packet_bits_valid_bits_3"/>
-      <var loc="d,9042,18,9042,48" name="io_backend_packet_bits_RAT_IDX" dtype_id="9" dir="input" pinIndex="124" vartype="logic" origName="io_backend_packet_bits_RAT_IDX"/>
+      <var loc="d,9042,18,9042,48" name="io_backend_packet_bits_RAT_index" dtype_id="9" dir="input" pinIndex="124" vartype="logic" origName="io_backend_packet_bits_RAT_index"/>
       <var loc="d,9043,18,9043,34" name="io_MEMRS_ready_0" dtype_id="1" dir="output" pinIndex="125" vartype="logic" origName="io_MEMRS_ready_0"/>
       <var loc="d,9044,18,9044,34" name="io_MEMRS_ready_1" dtype_id="1" dir="output" pinIndex="126" vartype="logic" origName="io_MEMRS_ready_1"/>
       <var loc="d,9045,18,9045,34" name="io_MEMRS_ready_2" dtype_id="1" dir="output" pinIndex="127" vartype="logic" origName="io_MEMRS_ready_2"/>
@@ -258,8 +258,8 @@
       <var loc="d,9122,15,9122,49" name="_MEM_RS_io_RF_inputs_3_bits_FUNCT3" dtype_id="5" vartype="logic" origName="_MEM_RS_io_RF_inputs_3_bits_FUNCT3"/>
       <var loc="d,9123,15,9123,55" name="_MEM_RS_io_RF_inputs_3_bits_packet_index" dtype_id="9" vartype="logic" origName="_MEM_RS_io_RF_inputs_3_bits_packet_index"/>
       <var loc="d,9124,15,9124,52" name="_MEM_RS_io_RF_inputs_3_bits_ROB_index" dtype_id="4" vartype="logic" origName="_MEM_RS_io_RF_inputs_3_bits_ROB_index"/>
-      <var loc="d,9125,15,9125,50" name="_MEM_RS_io_RF_inputs_3_bits_IS_LOAD" dtype_id="1" vartype="logic" origName="_MEM_RS_io_RF_inputs_3_bits_IS_LOAD"/>
-      <var loc="d,9126,15,9126,51" name="_MEM_RS_io_RF_inputs_3_bits_IS_STORE" dtype_id="1" vartype="logic" origName="_MEM_RS_io_RF_inputs_3_bits_IS_STORE"/>
+      <var loc="d,9125,15,9125,50" name="_MEM_RS_io_RF_inputs_3_bits_is_load" dtype_id="1" vartype="logic" origName="_MEM_RS_io_RF_inputs_3_bits_is_load"/>
+      <var loc="d,9126,15,9126,51" name="_MEM_RS_io_RF_inputs_3_bits_is_store" dtype_id="1" vartype="logic" origName="_MEM_RS_io_RF_inputs_3_bits_is_store"/>
       <var loc="d,9127,15,9127,43" name="_INT_RS_io_RF_inputs_0_valid" dtype_id="1" vartype="logic" origName="_INT_RS_io_RF_inputs_0_valid"/>
       <var loc="d,9128,15,9128,45" name="_INT_RS_io_RF_inputs_0_bits_RD" dtype_id="4" vartype="logic" origName="_INT_RS_io_RF_inputs_0_bits_RD"/>
       <var loc="d,9129,15,9129,51" name="_INT_RS_io_RF_inputs_0_bits_RD_valid" dtype_id="1" vartype="logic" origName="_INT_RS_io_RF_inputs_0_bits_RD_valid"/>
@@ -336,8 +336,8 @@
       <var loc="d,9200,15,9200,73" name="read_decoded_instructions_3_decoded_instruction_REG_FUNCT3" dtype_id="5" vartype="logic" origName="read_decoded_instructions_3_decoded_instruction_REG_FUNCT3"/>
       <var loc="d,9201,15,9201,79" name="read_decoded_instructions_3_decoded_instruction_REG_packet_index" dtype_id="9" vartype="logic" origName="read_decoded_instructions_3_decoded_instruction_REG_packet_index"/>
       <var loc="d,9202,15,9202,76" name="read_decoded_instructions_3_decoded_instruction_REG_ROB_index" dtype_id="4" vartype="logic" origName="read_decoded_instructions_3_decoded_instruction_REG_ROB_index"/>
-      <var loc="d,9203,15,9203,74" name="read_decoded_instructions_3_decoded_instruction_REG_IS_LOAD" dtype_id="1" vartype="logic" origName="read_decoded_instructions_3_decoded_instruction_REG_IS_LOAD"/>
-      <var loc="d,9204,15,9204,75" name="read_decoded_instructions_3_decoded_instruction_REG_IS_STORE" dtype_id="1" vartype="logic" origName="read_decoded_instructions_3_decoded_instruction_REG_IS_STORE"/>
+      <var loc="d,9203,15,9203,74" name="read_decoded_instructions_3_decoded_instruction_REG_is_load" dtype_id="1" vartype="logic" origName="read_decoded_instructions_3_decoded_instruction_REG_is_load"/>
+      <var loc="d,9204,15,9204,75" name="read_decoded_instructions_3_decoded_instruction_REG_is_store" dtype_id="1" vartype="logic" origName="read_decoded_instructions_3_decoded_instruction_REG_is_store"/>
       <var loc="d,9205,15,9205,40" name="FU0_io_FU_input_valid_REG" dtype_id="1" vartype="logic" origName="FU0_io_FU_input_valid_REG"/>
       <var loc="d,9206,15,9206,40" name="FU1_io_FU_input_valid_REG" dtype_id="1" vartype="logic" origName="FU1_io_FU_input_valid_REG"/>
       <var loc="d,9207,15,9207,40" name="FU2_io_FU_input_valid_REG" dtype_id="1" vartype="logic" origName="FU2_io_FU_input_valid_REG"/>
@@ -494,12 +494,12 @@
             <varref loc="d,9280,5,9280,66" name="read_decoded_instructions_3_decoded_instruction_REG_ROB_index" dtype_id="4"/>
           </assigndly>
           <assigndly loc="d,9282,65,9282,67" dtype_id="1">
-            <varref loc="d,9283,7,9283,42" name="_MEM_RS_io_RF_inputs_3_bits_IS_LOAD" dtype_id="1"/>
-            <varref loc="d,9282,5,9282,64" name="read_decoded_instructions_3_decoded_instruction_REG_IS_LOAD" dtype_id="1"/>
+            <varref loc="d,9283,7,9283,42" name="_MEM_RS_io_RF_inputs_3_bits_is_load" dtype_id="1"/>
+            <varref loc="d,9282,5,9282,64" name="read_decoded_instructions_3_decoded_instruction_REG_is_load" dtype_id="1"/>
           </assigndly>
           <assigndly loc="d,9284,66,9284,68" dtype_id="1">
-            <varref loc="d,9285,7,9285,43" name="_MEM_RS_io_RF_inputs_3_bits_IS_STORE" dtype_id="1"/>
-            <varref loc="d,9284,5,9284,65" name="read_decoded_instructions_3_decoded_instruction_REG_IS_STORE" dtype_id="1"/>
+            <varref loc="d,9285,7,9285,43" name="_MEM_RS_io_RF_inputs_3_bits_is_store" dtype_id="1"/>
+            <varref loc="d,9284,5,9284,65" name="read_decoded_instructions_3_decoded_instruction_REG_is_store" dtype_id="1"/>
           </assigndly>
           <assigndly loc="d,9286,31,9286,33" dtype_id="1">
             <varref loc="d,9286,34,9286,62" name="_INT_RS_io_RF_inputs_0_valid" dtype_id="1"/>
@@ -969,11 +969,11 @@
         <port loc="d,9526,6,9526,40" name="io_backend_packet_0_bits_ROB_index" direction="in" portIndex="13">
           <varref loc="d,9527,8,9527,62" name="io_backend_packet_bits_decoded_instruction_0_ROB_index" dtype_id="4"/>
         </port>
-        <port loc="d,9528,6,9528,38" name="io_backend_packet_0_bits_IS_LOAD" direction="in" portIndex="14">
-          <varref loc="d,9529,8,9529,60" name="io_backend_packet_bits_decoded_instruction_0_IS_LOAD" dtype_id="1"/>
+        <port loc="d,9528,6,9528,38" name="io_backend_packet_0_bits_is_load" direction="in" portIndex="14">
+          <varref loc="d,9529,8,9529,60" name="io_backend_packet_bits_decoded_instruction_0_is_load" dtype_id="1"/>
         </port>
-        <port loc="d,9530,6,9530,39" name="io_backend_packet_0_bits_IS_STORE" direction="in" portIndex="15">
-          <varref loc="d,9531,8,9531,61" name="io_backend_packet_bits_decoded_instruction_0_IS_STORE" dtype_id="1"/>
+        <port loc="d,9530,6,9530,39" name="io_backend_packet_0_bits_is_store" direction="in" portIndex="15">
+          <varref loc="d,9531,8,9531,61" name="io_backend_packet_bits_decoded_instruction_0_is_store" dtype_id="1"/>
         </port>
         <port loc="d,9532,6,9532,31" name="io_backend_packet_1_ready" direction="out" portIndex="16">
           <varref loc="d,9532,53,9532,69" name="io_MEMRS_ready_1" dtype_id="1"/>
@@ -1014,11 +1014,11 @@
         <port loc="d,9552,6,9552,40" name="io_backend_packet_1_bits_ROB_index" direction="in" portIndex="26">
           <varref loc="d,9553,8,9553,62" name="io_backend_packet_bits_decoded_instruction_1_ROB_index" dtype_id="4"/>
         </port>
-        <port loc="d,9554,6,9554,38" name="io_backend_packet_1_bits_IS_LOAD" direction="in" portIndex="27">
-          <varref loc="d,9555,8,9555,60" name="io_backend_packet_bits_decoded_instruction_1_IS_LOAD" dtype_id="1"/>
+        <port loc="d,9554,6,9554,38" name="io_backend_packet_1_bits_is_load" direction="in" portIndex="27">
+          <varref loc="d,9555,8,9555,60" name="io_backend_packet_bits_decoded_instruction_1_is_load" dtype_id="1"/>
         </port>
-        <port loc="d,9556,6,9556,39" name="io_backend_packet_1_bits_IS_STORE" direction="in" portIndex="28">
-          <varref loc="d,9557,8,9557,61" name="io_backend_packet_bits_decoded_instruction_1_IS_STORE" dtype_id="1"/>
+        <port loc="d,9556,6,9556,39" name="io_backend_packet_1_bits_is_store" direction="in" portIndex="28">
+          <varref loc="d,9557,8,9557,61" name="io_backend_packet_bits_decoded_instruction_1_is_store" dtype_id="1"/>
         </port>
         <port loc="d,9558,6,9558,31" name="io_backend_packet_2_ready" direction="out" portIndex="29">
           <varref loc="d,9558,53,9558,69" name="io_MEMRS_ready_2" dtype_id="1"/>
@@ -1059,11 +1059,11 @@
         <port loc="d,9578,6,9578,40" name="io_backend_packet_2_bits_ROB_index" direction="in" portIndex="39">
           <varref loc="d,9579,8,9579,62" name="io_backend_packet_bits_decoded_instruction_2_ROB_index" dtype_id="4"/>
         </port>
-        <port loc="d,9580,6,9580,38" name="io_backend_packet_2_bits_IS_LOAD" direction="in" portIndex="40">
-          <varref loc="d,9581,8,9581,60" name="io_backend_packet_bits_decoded_instruction_2_IS_LOAD" dtype_id="1"/>
+        <port loc="d,9580,6,9580,38" name="io_backend_packet_2_bits_is_load" direction="in" portIndex="40">
+          <varref loc="d,9581,8,9581,60" name="io_backend_packet_bits_decoded_instruction_2_is_load" dtype_id="1"/>
         </port>
-        <port loc="d,9582,6,9582,39" name="io_backend_packet_2_bits_IS_STORE" direction="in" portIndex="41">
-          <varref loc="d,9583,8,9583,61" name="io_backend_packet_bits_decoded_instruction_2_IS_STORE" dtype_id="1"/>
+        <port loc="d,9582,6,9582,39" name="io_backend_packet_2_bits_is_store" direction="in" portIndex="41">
+          <varref loc="d,9583,8,9583,61" name="io_backend_packet_bits_decoded_instruction_2_is_store" dtype_id="1"/>
         </port>
         <port loc="d,9584,6,9584,31" name="io_backend_packet_3_ready" direction="out" portIndex="42">
           <varref loc="d,9584,53,9584,69" name="io_MEMRS_ready_3" dtype_id="1"/>
@@ -1104,11 +1104,11 @@
         <port loc="d,9604,6,9604,40" name="io_backend_packet_3_bits_ROB_index" direction="in" portIndex="52">
           <varref loc="d,9605,8,9605,62" name="io_backend_packet_bits_decoded_instruction_3_ROB_index" dtype_id="4"/>
         </port>
-        <port loc="d,9606,6,9606,38" name="io_backend_packet_3_bits_IS_LOAD" direction="in" portIndex="53">
-          <varref loc="d,9607,8,9607,60" name="io_backend_packet_bits_decoded_instruction_3_IS_LOAD" dtype_id="1"/>
+        <port loc="d,9606,6,9606,38" name="io_backend_packet_3_bits_is_load" direction="in" portIndex="53">
+          <varref loc="d,9607,8,9607,60" name="io_backend_packet_bits_decoded_instruction_3_is_load" dtype_id="1"/>
         </port>
-        <port loc="d,9608,6,9608,39" name="io_backend_packet_3_bits_IS_STORE" direction="in" portIndex="54">
-          <varref loc="d,9609,8,9609,61" name="io_backend_packet_bits_decoded_instruction_3_IS_STORE" dtype_id="1"/>
+        <port loc="d,9608,6,9608,39" name="io_backend_packet_3_bits_is_store" direction="in" portIndex="54">
+          <varref loc="d,9609,8,9609,61" name="io_backend_packet_bits_decoded_instruction_3_is_store" dtype_id="1"/>
         </port>
         <port loc="d,9610,6,9610,27" name="io_FU_outputs_0_valid" direction="in" portIndex="55">
           <varref loc="d,9610,53,9610,76" name="_FU0_io_FU_output_valid" dtype_id="1"/>
@@ -1176,11 +1176,11 @@
         <port loc="d,9632,6,9632,35" name="io_RF_inputs_3_bits_ROB_index" direction="out" portIndex="76">
           <varref loc="d,9633,8,9633,45" name="_MEM_RS_io_RF_inputs_3_bits_ROB_index" dtype_id="4"/>
         </port>
-        <port loc="d,9634,6,9634,33" name="io_RF_inputs_3_bits_IS_LOAD" direction="out" portIndex="77">
-          <varref loc="d,9634,53,9634,88" name="_MEM_RS_io_RF_inputs_3_bits_IS_LOAD" dtype_id="1"/>
+        <port loc="d,9634,6,9634,33" name="io_RF_inputs_3_bits_is_load" direction="out" portIndex="77">
+          <varref loc="d,9634,53,9634,88" name="_MEM_RS_io_RF_inputs_3_bits_is_load" dtype_id="1"/>
         </port>
-        <port loc="d,9635,6,9635,34" name="io_RF_inputs_3_bits_IS_STORE" direction="out" portIndex="78">
-          <varref loc="d,9635,53,9635,89" name="_MEM_RS_io_RF_inputs_3_bits_IS_STORE" dtype_id="1"/>
+        <port loc="d,9635,6,9635,34" name="io_RF_inputs_3_bits_is_store" direction="out" portIndex="78">
+          <varref loc="d,9635,53,9635,89" name="_MEM_RS_io_RF_inputs_3_bits_is_store" dtype_id="1"/>
         </port>
       </instance>
       <instance loc="d,9637,19,9637,26" name="INT_PRF" defName="sim_nReadmWrite" origName="INT_PRF">
@@ -1543,11 +1543,11 @@
         <port loc="d,9806,6,9806,52" name="io_FU_input_bits_decoded_instruction_ROB_index" direction="in" portIndex="7">
           <varref loc="d,9807,8,9807,69" name="read_decoded_instructions_3_decoded_instruction_REG_ROB_index" dtype_id="4"/>
         </port>
-        <port loc="d,9808,6,9808,50" name="io_FU_input_bits_decoded_instruction_IS_LOAD" direction="in" portIndex="8">
-          <varref loc="d,9809,8,9809,67" name="read_decoded_instructions_3_decoded_instruction_REG_IS_LOAD" dtype_id="1"/>
+        <port loc="d,9808,6,9808,50" name="io_FU_input_bits_decoded_instruction_is_load" direction="in" portIndex="8">
+          <varref loc="d,9809,8,9809,67" name="read_decoded_instructions_3_decoded_instruction_REG_is_load" dtype_id="1"/>
         </port>
-        <port loc="d,9810,6,9810,51" name="io_FU_input_bits_decoded_instruction_IS_STORE" direction="in" portIndex="9">
-          <varref loc="d,9811,8,9811,68" name="read_decoded_instructions_3_decoded_instruction_REG_IS_STORE" dtype_id="1"/>
+        <port loc="d,9810,6,9810,51" name="io_FU_input_bits_decoded_instruction_is_store" direction="in" portIndex="9">
+          <varref loc="d,9811,8,9811,68" name="read_decoded_instructions_3_decoded_instruction_REG_is_store" dtype_id="1"/>
         </port>
         <port loc="d,9812,6,9812,31" name="io_FU_input_bits_RS1_data" direction="in" portIndex="10">
           <varref loc="d,9812,57,9812,76" name="_INT_PRF_io_rdata_6" dtype_id="3"/>
@@ -23112,8 +23112,8 @@
       <var loc="d,5016,17,5016,48" name="io_backend_packet_0_bits_FUNCT3" dtype_id="5" dir="input" pinIndex="11" vartype="logic" origName="io_backend_packet_0_bits_FUNCT3"/>
       <var loc="d,5017,17,5017,54" name="io_backend_packet_0_bits_packet_index" dtype_id="9" dir="input" pinIndex="12" vartype="logic" origName="io_backend_packet_0_bits_packet_index"/>
       <var loc="d,5018,17,5018,51" name="io_backend_packet_0_bits_ROB_index" dtype_id="4" dir="input" pinIndex="13" vartype="logic" origName="io_backend_packet_0_bits_ROB_index"/>
-      <var loc="d,5019,17,5019,49" name="io_backend_packet_0_bits_IS_LOAD" dtype_id="1" dir="input" pinIndex="14" vartype="logic" origName="io_backend_packet_0_bits_IS_LOAD"/>
-      <var loc="d,5020,17,5020,50" name="io_backend_packet_0_bits_IS_STORE" dtype_id="1" dir="input" pinIndex="15" vartype="logic" origName="io_backend_packet_0_bits_IS_STORE"/>
+      <var loc="d,5019,17,5019,49" name="io_backend_packet_0_bits_is_load" dtype_id="1" dir="input" pinIndex="14" vartype="logic" origName="io_backend_packet_0_bits_is_load"/>
+      <var loc="d,5020,17,5020,50" name="io_backend_packet_0_bits_is_store" dtype_id="1" dir="input" pinIndex="15" vartype="logic" origName="io_backend_packet_0_bits_is_store"/>
       <var loc="d,5021,17,5021,42" name="io_backend_packet_1_ready" dtype_id="1" dir="output" pinIndex="16" vartype="logic" origName="io_backend_packet_1_ready"/>
       <var loc="d,5022,17,5022,42" name="io_backend_packet_1_valid" dtype_id="1" dir="input" pinIndex="17" vartype="logic" origName="io_backend_packet_1_valid"/>
       <var loc="d,5023,17,5023,62" name="io_backend_packet_1_bits_ready_bits_RS1_ready" dtype_id="1" dir="input" pinIndex="18" vartype="logic" origName="io_backend_packet_1_bits_ready_bits_RS1_ready"/>
@@ -23125,8 +23125,8 @@
       <var loc="d,5029,17,5029,48" name="io_backend_packet_1_bits_FUNCT3" dtype_id="5" dir="input" pinIndex="24" vartype="logic" origName="io_backend_packet_1_bits_FUNCT3"/>
       <var loc="d,5030,17,5030,54" name="io_backend_packet_1_bits_packet_index" dtype_id="9" dir="input" pinIndex="25" vartype="logic" origName="io_backend_packet_1_bits_packet_index"/>
       <var loc="d,5031,17,5031,51" name="io_backend_packet_1_bits_ROB_index" dtype_id="4" dir="input" pinIndex="26" vartype="logic" origName="io_backend_packet_1_bits_ROB_index"/>
-      <var loc="d,5032,17,5032,49" name="io_backend_packet_1_bits_IS_LOAD" dtype_id="1" dir="input" pinIndex="27" vartype="logic" origName="io_backend_packet_1_bits_IS_LOAD"/>
-      <var loc="d,5033,17,5033,50" name="io_backend_packet_1_bits_IS_STORE" dtype_id="1" dir="input" pinIndex="28" vartype="logic" origName="io_backend_packet_1_bits_IS_STORE"/>
+      <var loc="d,5032,17,5032,49" name="io_backend_packet_1_bits_is_load" dtype_id="1" dir="input" pinIndex="27" vartype="logic" origName="io_backend_packet_1_bits_is_load"/>
+      <var loc="d,5033,17,5033,50" name="io_backend_packet_1_bits_is_store" dtype_id="1" dir="input" pinIndex="28" vartype="logic" origName="io_backend_packet_1_bits_is_store"/>
       <var loc="d,5034,17,5034,42" name="io_backend_packet_2_ready" dtype_id="1" dir="output" pinIndex="29" vartype="logic" origName="io_backend_packet_2_ready"/>
       <var loc="d,5035,17,5035,42" name="io_backend_packet_2_valid" dtype_id="1" dir="input" pinIndex="30" vartype="logic" origName="io_backend_packet_2_valid"/>
       <var loc="d,5036,17,5036,62" name="io_backend_packet_2_bits_ready_bits_RS1_ready" dtype_id="1" dir="input" pinIndex="31" vartype="logic" origName="io_backend_packet_2_bits_ready_bits_RS1_ready"/>
@@ -23138,8 +23138,8 @@
       <var loc="d,5042,17,5042,48" name="io_backend_packet_2_bits_FUNCT3" dtype_id="5" dir="input" pinIndex="37" vartype="logic" origName="io_backend_packet_2_bits_FUNCT3"/>
       <var loc="d,5043,17,5043,54" name="io_backend_packet_2_bits_packet_index" dtype_id="9" dir="input" pinIndex="38" vartype="logic" origName="io_backend_packet_2_bits_packet_index"/>
       <var loc="d,5044,17,5044,51" name="io_backend_packet_2_bits_ROB_index" dtype_id="4" dir="input" pinIndex="39" vartype="logic" origName="io_backend_packet_2_bits_ROB_index"/>
-      <var loc="d,5045,17,5045,49" name="io_backend_packet_2_bits_IS_LOAD" dtype_id="1" dir="input" pinIndex="40" vartype="logic" origName="io_backend_packet_2_bits_IS_LOAD"/>
-      <var loc="d,5046,17,5046,50" name="io_backend_packet_2_bits_IS_STORE" dtype_id="1" dir="input" pinIndex="41" vartype="logic" origName="io_backend_packet_2_bits_IS_STORE"/>
+      <var loc="d,5045,17,5045,49" name="io_backend_packet_2_bits_is_load" dtype_id="1" dir="input" pinIndex="40" vartype="logic" origName="io_backend_packet_2_bits_is_load"/>
+      <var loc="d,5046,17,5046,50" name="io_backend_packet_2_bits_is_store" dtype_id="1" dir="input" pinIndex="41" vartype="logic" origName="io_backend_packet_2_bits_is_store"/>
       <var loc="d,5047,17,5047,42" name="io_backend_packet_3_ready" dtype_id="1" dir="output" pinIndex="42" vartype="logic" origName="io_backend_packet_3_ready"/>
       <var loc="d,5048,17,5048,42" name="io_backend_packet_3_valid" dtype_id="1" dir="input" pinIndex="43" vartype="logic" origName="io_backend_packet_3_valid"/>
       <var loc="d,5049,17,5049,62" name="io_backend_packet_3_bits_ready_bits_RS1_ready" dtype_id="1" dir="input" pinIndex="44" vartype="logic" origName="io_backend_packet_3_bits_ready_bits_RS1_ready"/>
@@ -23151,8 +23151,8 @@
       <var loc="d,5055,17,5055,48" name="io_backend_packet_3_bits_FUNCT3" dtype_id="5" dir="input" pinIndex="50" vartype="logic" origName="io_backend_packet_3_bits_FUNCT3"/>
       <var loc="d,5056,17,5056,54" name="io_backend_packet_3_bits_packet_index" dtype_id="9" dir="input" pinIndex="51" vartype="logic" origName="io_backend_packet_3_bits_packet_index"/>
       <var loc="d,5057,17,5057,51" name="io_backend_packet_3_bits_ROB_index" dtype_id="4" dir="input" pinIndex="52" vartype="logic" origName="io_backend_packet_3_bits_ROB_index"/>
-      <var loc="d,5058,17,5058,49" name="io_backend_packet_3_bits_IS_LOAD" dtype_id="1" dir="input" pinIndex="53" vartype="logic" origName="io_backend_packet_3_bits_IS_LOAD"/>
-      <var loc="d,5059,17,5059,50" name="io_backend_packet_3_bits_IS_STORE" dtype_id="1" dir="input" pinIndex="54" vartype="logic" origName="io_backend_packet_3_bits_IS_STORE"/>
+      <var loc="d,5058,17,5058,49" name="io_backend_packet_3_bits_is_load" dtype_id="1" dir="input" pinIndex="53" vartype="logic" origName="io_backend_packet_3_bits_is_load"/>
+      <var loc="d,5059,17,5059,50" name="io_backend_packet_3_bits_is_store" dtype_id="1" dir="input" pinIndex="54" vartype="logic" origName="io_backend_packet_3_bits_is_store"/>
       <var loc="d,5060,17,5060,38" name="io_FU_outputs_0_valid" dtype_id="1" dir="input" pinIndex="55" vartype="logic" origName="io_FU_outputs_0_valid"/>
       <var loc="d,5061,17,5061,40" name="io_FU_outputs_0_bits_RD" dtype_id="11" dir="input" pinIndex="56" vartype="logic" origName="io_FU_outputs_0_bits_RD"/>
       <var loc="d,5062,17,5062,46" name="io_FU_outputs_0_bits_RD_valid" dtype_id="1" dir="input" pinIndex="57" vartype="logic" origName="io_FU_outputs_0_bits_RD_valid"/>
@@ -23175,8 +23175,8 @@
       <var loc="d,5079,17,5079,43" name="io_RF_inputs_3_bits_FUNCT3" dtype_id="5" dir="output" pinIndex="74" vartype="logic" origName="io_RF_inputs_3_bits_FUNCT3"/>
       <var loc="d,5080,17,5080,49" name="io_RF_inputs_3_bits_packet_index" dtype_id="9" dir="output" pinIndex="75" vartype="logic" origName="io_RF_inputs_3_bits_packet_index"/>
       <var loc="d,5081,17,5081,46" name="io_RF_inputs_3_bits_ROB_index" dtype_id="4" dir="output" pinIndex="76" vartype="logic" origName="io_RF_inputs_3_bits_ROB_index"/>
-      <var loc="d,5082,17,5082,44" name="io_RF_inputs_3_bits_IS_LOAD" dtype_id="1" dir="output" pinIndex="77" vartype="logic" origName="io_RF_inputs_3_bits_IS_LOAD"/>
-      <var loc="d,5083,17,5083,45" name="io_RF_inputs_3_bits_IS_STORE" dtype_id="1" dir="output" pinIndex="78" vartype="logic" origName="io_RF_inputs_3_bits_IS_STORE"/>
+      <var loc="d,5082,17,5082,44" name="io_RF_inputs_3_bits_is_load" dtype_id="1" dir="output" pinIndex="77" vartype="logic" origName="io_RF_inputs_3_bits_is_load"/>
+      <var loc="d,5083,17,5083,45" name="io_RF_inputs_3_bits_is_store" dtype_id="1" dir="output" pinIndex="78" vartype="logic" origName="io_RF_inputs_3_bits_is_store"/>
       <var loc="d,5086,21,5086,83" name="reservation_station_0_decoded_instruction_ready_bits_RS1_ready" dtype_id="1" vartype="logic" origName="reservation_station_0_decoded_instruction_ready_bits_RS1_ready"/>
       <var loc="d,5087,21,5087,83" name="reservation_station_0_decoded_instruction_ready_bits_RS2_ready" dtype_id="1" vartype="logic" origName="reservation_station_0_decoded_instruction_ready_bits_RS2_ready"/>
       <var loc="d,5088,21,5088,65" name="reservation_station_0_decoded_instruction_RD" dtype_id="4" vartype="logic" origName="reservation_station_0_decoded_instruction_RD"/>
@@ -23186,8 +23186,8 @@
       <var loc="d,5092,21,5092,69" name="reservation_station_0_decoded_instruction_FUNCT3" dtype_id="5" vartype="logic" origName="reservation_station_0_decoded_instruction_FUNCT3"/>
       <var loc="d,5093,21,5093,75" name="reservation_station_0_decoded_instruction_packet_index" dtype_id="9" vartype="logic" origName="reservation_station_0_decoded_instruction_packet_index"/>
       <var loc="d,5094,21,5094,72" name="reservation_station_0_decoded_instruction_ROB_index" dtype_id="4" vartype="logic" origName="reservation_station_0_decoded_instruction_ROB_index"/>
-      <var loc="d,5095,21,5095,70" name="reservation_station_0_decoded_instruction_IS_LOAD" dtype_id="1" vartype="logic" origName="reservation_station_0_decoded_instruction_IS_LOAD"/>
-      <var loc="d,5096,21,5096,71" name="reservation_station_0_decoded_instruction_IS_STORE" dtype_id="1" vartype="logic" origName="reservation_station_0_decoded_instruction_IS_STORE"/>
+      <var loc="d,5095,21,5095,70" name="reservation_station_0_decoded_instruction_is_load" dtype_id="1" vartype="logic" origName="reservation_station_0_decoded_instruction_is_load"/>
+      <var loc="d,5096,21,5096,71" name="reservation_station_0_decoded_instruction_is_store" dtype_id="1" vartype="logic" origName="reservation_station_0_decoded_instruction_is_store"/>
       <var loc="d,5097,21,5097,51" name="reservation_station_0_commited" dtype_id="1" vartype="logic" origName="reservation_station_0_commited"/>
       <var loc="d,5098,21,5098,48" name="reservation_station_0_valid" dtype_id="1" vartype="logic" origName="reservation_station_0_valid"/>
       <var loc="d,5099,21,5099,83" name="reservation_station_1_decoded_instruction_ready_bits_RS1_ready" dtype_id="1" vartype="logic" origName="reservation_station_1_decoded_instruction_ready_bits_RS1_ready"/>
@@ -23199,8 +23199,8 @@
       <var loc="d,5105,21,5105,69" name="reservation_station_1_decoded_instruction_FUNCT3" dtype_id="5" vartype="logic" origName="reservation_station_1_decoded_instruction_FUNCT3"/>
       <var loc="d,5106,21,5106,75" name="reservation_station_1_decoded_instruction_packet_index" dtype_id="9" vartype="logic" origName="reservation_station_1_decoded_instruction_packet_index"/>
       <var loc="d,5107,21,5107,72" name="reservation_station_1_decoded_instruction_ROB_index" dtype_id="4" vartype="logic" origName="reservation_station_1_decoded_instruction_ROB_index"/>
-      <var loc="d,5108,21,5108,70" name="reservation_station_1_decoded_instruction_IS_LOAD" dtype_id="1" vartype="logic" origName="reservation_station_1_decoded_instruction_IS_LOAD"/>
-      <var loc="d,5109,21,5109,71" name="reservation_station_1_decoded_instruction_IS_STORE" dtype_id="1" vartype="logic" origName="reservation_station_1_decoded_instruction_IS_STORE"/>
+      <var loc="d,5108,21,5108,70" name="reservation_station_1_decoded_instruction_is_load" dtype_id="1" vartype="logic" origName="reservation_station_1_decoded_instruction_is_load"/>
+      <var loc="d,5109,21,5109,71" name="reservation_station_1_decoded_instruction_is_store" dtype_id="1" vartype="logic" origName="reservation_station_1_decoded_instruction_is_store"/>
       <var loc="d,5110,21,5110,51" name="reservation_station_1_commited" dtype_id="1" vartype="logic" origName="reservation_station_1_commited"/>
       <var loc="d,5111,21,5111,48" name="reservation_station_1_valid" dtype_id="1" vartype="logic" origName="reservation_station_1_valid"/>
       <var loc="d,5112,21,5112,83" name="reservation_station_2_decoded_instruction_ready_bits_RS1_ready" dtype_id="1" vartype="logic" origName="reservation_station_2_decoded_instruction_ready_bits_RS1_ready"/>
@@ -23212,8 +23212,8 @@
       <var loc="d,5118,21,5118,69" name="reservation_station_2_decoded_instruction_FUNCT3" dtype_id="5" vartype="logic" origName="reservation_station_2_decoded_instruction_FUNCT3"/>
       <var loc="d,5119,21,5119,75" name="reservation_station_2_decoded_instruction_packet_index" dtype_id="9" vartype="logic" origName="reservation_station_2_decoded_instruction_packet_index"/>
       <var loc="d,5120,21,5120,72" name="reservation_station_2_decoded_instruction_ROB_index" dtype_id="4" vartype="logic" origName="reservation_station_2_decoded_instruction_ROB_index"/>
-      <var loc="d,5121,21,5121,70" name="reservation_station_2_decoded_instruction_IS_LOAD" dtype_id="1" vartype="logic" origName="reservation_station_2_decoded_instruction_IS_LOAD"/>
-      <var loc="d,5122,21,5122,71" name="reservation_station_2_decoded_instruction_IS_STORE" dtype_id="1" vartype="logic" origName="reservation_station_2_decoded_instruction_IS_STORE"/>
+      <var loc="d,5121,21,5121,70" name="reservation_station_2_decoded_instruction_is_load" dtype_id="1" vartype="logic" origName="reservation_station_2_decoded_instruction_is_load"/>
+      <var loc="d,5122,21,5122,71" name="reservation_station_2_decoded_instruction_is_store" dtype_id="1" vartype="logic" origName="reservation_station_2_decoded_instruction_is_store"/>
       <var loc="d,5123,21,5123,51" name="reservation_station_2_commited" dtype_id="1" vartype="logic" origName="reservation_station_2_commited"/>
       <var loc="d,5124,21,5124,48" name="reservation_station_2_valid" dtype_id="1" vartype="logic" origName="reservation_station_2_valid"/>
       <var loc="d,5125,21,5125,83" name="reservation_station_3_decoded_instruction_ready_bits_RS1_ready" dtype_id="1" vartype="logic" origName="reservation_station_3_decoded_instruction_ready_bits_RS1_ready"/>
@@ -23225,8 +23225,8 @@
       <var loc="d,5131,21,5131,69" name="reservation_station_3_decoded_instruction_FUNCT3" dtype_id="5" vartype="logic" origName="reservation_station_3_decoded_instruction_FUNCT3"/>
       <var loc="d,5132,21,5132,75" name="reservation_station_3_decoded_instruction_packet_index" dtype_id="9" vartype="logic" origName="reservation_station_3_decoded_instruction_packet_index"/>
       <var loc="d,5133,21,5133,72" name="reservation_station_3_decoded_instruction_ROB_index" dtype_id="4" vartype="logic" origName="reservation_station_3_decoded_instruction_ROB_index"/>
-      <var loc="d,5134,21,5134,70" name="reservation_station_3_decoded_instruction_IS_LOAD" dtype_id="1" vartype="logic" origName="reservation_station_3_decoded_instruction_IS_LOAD"/>
-      <var loc="d,5135,21,5135,71" name="reservation_station_3_decoded_instruction_IS_STORE" dtype_id="1" vartype="logic" origName="reservation_station_3_decoded_instruction_IS_STORE"/>
+      <var loc="d,5134,21,5134,70" name="reservation_station_3_decoded_instruction_is_load" dtype_id="1" vartype="logic" origName="reservation_station_3_decoded_instruction_is_load"/>
+      <var loc="d,5135,21,5135,71" name="reservation_station_3_decoded_instruction_is_store" dtype_id="1" vartype="logic" origName="reservation_station_3_decoded_instruction_is_store"/>
       <var loc="d,5136,21,5136,51" name="reservation_station_3_commited" dtype_id="1" vartype="logic" origName="reservation_station_3_commited"/>
       <var loc="d,5137,21,5137,48" name="reservation_station_3_valid" dtype_id="1" vartype="logic" origName="reservation_station_3_valid"/>
       <var loc="d,5138,21,5138,83" name="reservation_station_4_decoded_instruction_ready_bits_RS1_ready" dtype_id="1" vartype="logic" origName="reservation_station_4_decoded_instruction_ready_bits_RS1_ready"/>
@@ -23238,8 +23238,8 @@
       <var loc="d,5144,21,5144,69" name="reservation_station_4_decoded_instruction_FUNCT3" dtype_id="5" vartype="logic" origName="reservation_station_4_decoded_instruction_FUNCT3"/>
       <var loc="d,5145,21,5145,75" name="reservation_station_4_decoded_instruction_packet_index" dtype_id="9" vartype="logic" origName="reservation_station_4_decoded_instruction_packet_index"/>
       <var loc="d,5146,21,5146,72" name="reservation_station_4_decoded_instruction_ROB_index" dtype_id="4" vartype="logic" origName="reservation_station_4_decoded_instruction_ROB_index"/>
-      <var loc="d,5147,21,5147,70" name="reservation_station_4_decoded_instruction_IS_LOAD" dtype_id="1" vartype="logic" origName="reservation_station_4_decoded_instruction_IS_LOAD"/>
-      <var loc="d,5148,21,5148,71" name="reservation_station_4_decoded_instruction_IS_STORE" dtype_id="1" vartype="logic" origName="reservation_station_4_decoded_instruction_IS_STORE"/>
+      <var loc="d,5147,21,5147,70" name="reservation_station_4_decoded_instruction_is_load" dtype_id="1" vartype="logic" origName="reservation_station_4_decoded_instruction_is_load"/>
+      <var loc="d,5148,21,5148,71" name="reservation_station_4_decoded_instruction_is_store" dtype_id="1" vartype="logic" origName="reservation_station_4_decoded_instruction_is_store"/>
       <var loc="d,5149,21,5149,51" name="reservation_station_4_commited" dtype_id="1" vartype="logic" origName="reservation_station_4_commited"/>
       <var loc="d,5150,21,5150,48" name="reservation_station_4_valid" dtype_id="1" vartype="logic" origName="reservation_station_4_valid"/>
       <var loc="d,5151,21,5151,83" name="reservation_station_5_decoded_instruction_ready_bits_RS1_ready" dtype_id="1" vartype="logic" origName="reservation_station_5_decoded_instruction_ready_bits_RS1_ready"/>
@@ -23251,8 +23251,8 @@
       <var loc="d,5157,21,5157,69" name="reservation_station_5_decoded_instruction_FUNCT3" dtype_id="5" vartype="logic" origName="reservation_station_5_decoded_instruction_FUNCT3"/>
       <var loc="d,5158,21,5158,75" name="reservation_station_5_decoded_instruction_packet_index" dtype_id="9" vartype="logic" origName="reservation_station_5_decoded_instruction_packet_index"/>
       <var loc="d,5159,21,5159,72" name="reservation_station_5_decoded_instruction_ROB_index" dtype_id="4" vartype="logic" origName="reservation_station_5_decoded_instruction_ROB_index"/>
-      <var loc="d,5160,21,5160,70" name="reservation_station_5_decoded_instruction_IS_LOAD" dtype_id="1" vartype="logic" origName="reservation_station_5_decoded_instruction_IS_LOAD"/>
-      <var loc="d,5161,21,5161,71" name="reservation_station_5_decoded_instruction_IS_STORE" dtype_id="1" vartype="logic" origName="reservation_station_5_decoded_instruction_IS_STORE"/>
+      <var loc="d,5160,21,5160,70" name="reservation_station_5_decoded_instruction_is_load" dtype_id="1" vartype="logic" origName="reservation_station_5_decoded_instruction_is_load"/>
+      <var loc="d,5161,21,5161,71" name="reservation_station_5_decoded_instruction_is_store" dtype_id="1" vartype="logic" origName="reservation_station_5_decoded_instruction_is_store"/>
       <var loc="d,5162,21,5162,51" name="reservation_station_5_commited" dtype_id="1" vartype="logic" origName="reservation_station_5_commited"/>
       <var loc="d,5163,21,5163,48" name="reservation_station_5_valid" dtype_id="1" vartype="logic" origName="reservation_station_5_valid"/>
       <var loc="d,5164,21,5164,83" name="reservation_station_6_decoded_instruction_ready_bits_RS1_ready" dtype_id="1" vartype="logic" origName="reservation_station_6_decoded_instruction_ready_bits_RS1_ready"/>
@@ -23264,8 +23264,8 @@
       <var loc="d,5170,21,5170,69" name="reservation_station_6_decoded_instruction_FUNCT3" dtype_id="5" vartype="logic" origName="reservation_station_6_decoded_instruction_FUNCT3"/>
       <var loc="d,5171,21,5171,75" name="reservation_station_6_decoded_instruction_packet_index" dtype_id="9" vartype="logic" origName="reservation_station_6_decoded_instruction_packet_index"/>
       <var loc="d,5172,21,5172,72" name="reservation_station_6_decoded_instruction_ROB_index" dtype_id="4" vartype="logic" origName="reservation_station_6_decoded_instruction_ROB_index"/>
-      <var loc="d,5173,21,5173,70" name="reservation_station_6_decoded_instruction_IS_LOAD" dtype_id="1" vartype="logic" origName="reservation_station_6_decoded_instruction_IS_LOAD"/>
-      <var loc="d,5174,21,5174,71" name="reservation_station_6_decoded_instruction_IS_STORE" dtype_id="1" vartype="logic" origName="reservation_station_6_decoded_instruction_IS_STORE"/>
+      <var loc="d,5173,21,5173,70" name="reservation_station_6_decoded_instruction_is_load" dtype_id="1" vartype="logic" origName="reservation_station_6_decoded_instruction_is_load"/>
+      <var loc="d,5174,21,5174,71" name="reservation_station_6_decoded_instruction_is_store" dtype_id="1" vartype="logic" origName="reservation_station_6_decoded_instruction_is_store"/>
       <var loc="d,5175,21,5175,51" name="reservation_station_6_commited" dtype_id="1" vartype="logic" origName="reservation_station_6_commited"/>
       <var loc="d,5176,21,5176,48" name="reservation_station_6_valid" dtype_id="1" vartype="logic" origName="reservation_station_6_valid"/>
       <var loc="d,5177,21,5177,83" name="reservation_station_7_decoded_instruction_ready_bits_RS1_ready" dtype_id="1" vartype="logic" origName="reservation_station_7_decoded_instruction_ready_bits_RS1_ready"/>
@@ -23277,8 +23277,8 @@
       <var loc="d,5183,21,5183,69" name="reservation_station_7_decoded_instruction_FUNCT3" dtype_id="5" vartype="logic" origName="reservation_station_7_decoded_instruction_FUNCT3"/>
       <var loc="d,5184,21,5184,75" name="reservation_station_7_decoded_instruction_packet_index" dtype_id="9" vartype="logic" origName="reservation_station_7_decoded_instruction_packet_index"/>
       <var loc="d,5185,21,5185,72" name="reservation_station_7_decoded_instruction_ROB_index" dtype_id="4" vartype="logic" origName="reservation_station_7_decoded_instruction_ROB_index"/>
-      <var loc="d,5186,21,5186,70" name="reservation_station_7_decoded_instruction_IS_LOAD" dtype_id="1" vartype="logic" origName="reservation_station_7_decoded_instruction_IS_LOAD"/>
-      <var loc="d,5187,21,5187,71" name="reservation_station_7_decoded_instruction_IS_STORE" dtype_id="1" vartype="logic" origName="reservation_station_7_decoded_instruction_IS_STORE"/>
+      <var loc="d,5186,21,5186,70" name="reservation_station_7_decoded_instruction_is_load" dtype_id="1" vartype="logic" origName="reservation_station_7_decoded_instruction_is_load"/>
+      <var loc="d,5187,21,5187,71" name="reservation_station_7_decoded_instruction_is_store" dtype_id="1" vartype="logic" origName="reservation_station_7_decoded_instruction_is_store"/>
       <var loc="d,5188,21,5188,51" name="reservation_station_7_commited" dtype_id="1" vartype="logic" origName="reservation_station_7_commited"/>
       <var loc="d,5189,21,5189,48" name="reservation_station_7_valid" dtype_id="1" vartype="logic" origName="reservation_station_7_valid"/>
       <var loc="d,5190,21,5190,83" name="reservation_station_8_decoded_instruction_ready_bits_RS1_ready" dtype_id="1" vartype="logic" origName="reservation_station_8_decoded_instruction_ready_bits_RS1_ready"/>
@@ -23290,8 +23290,8 @@
       <var loc="d,5196,21,5196,69" name="reservation_station_8_decoded_instruction_FUNCT3" dtype_id="5" vartype="logic" origName="reservation_station_8_decoded_instruction_FUNCT3"/>
       <var loc="d,5197,21,5197,75" name="reservation_station_8_decoded_instruction_packet_index" dtype_id="9" vartype="logic" origName="reservation_station_8_decoded_instruction_packet_index"/>
       <var loc="d,5198,21,5198,72" name="reservation_station_8_decoded_instruction_ROB_index" dtype_id="4" vartype="logic" origName="reservation_station_8_decoded_instruction_ROB_index"/>
-      <var loc="d,5199,21,5199,70" name="reservation_station_8_decoded_instruction_IS_LOAD" dtype_id="1" vartype="logic" origName="reservation_station_8_decoded_instruction_IS_LOAD"/>
-      <var loc="d,5200,21,5200,71" name="reservation_station_8_decoded_instruction_IS_STORE" dtype_id="1" vartype="logic" origName="reservation_station_8_decoded_instruction_IS_STORE"/>
+      <var loc="d,5199,21,5199,70" name="reservation_station_8_decoded_instruction_is_load" dtype_id="1" vartype="logic" origName="reservation_station_8_decoded_instruction_is_load"/>
+      <var loc="d,5200,21,5200,71" name="reservation_station_8_decoded_instruction_is_store" dtype_id="1" vartype="logic" origName="reservation_station_8_decoded_instruction_is_store"/>
       <var loc="d,5201,21,5201,51" name="reservation_station_8_commited" dtype_id="1" vartype="logic" origName="reservation_station_8_commited"/>
       <var loc="d,5202,21,5202,48" name="reservation_station_8_valid" dtype_id="1" vartype="logic" origName="reservation_station_8_valid"/>
       <var loc="d,5203,21,5203,83" name="reservation_station_9_decoded_instruction_ready_bits_RS1_ready" dtype_id="1" vartype="logic" origName="reservation_station_9_decoded_instruction_ready_bits_RS1_ready"/>
@@ -23303,8 +23303,8 @@
       <var loc="d,5209,21,5209,69" name="reservation_station_9_decoded_instruction_FUNCT3" dtype_id="5" vartype="logic" origName="reservation_station_9_decoded_instruction_FUNCT3"/>
       <var loc="d,5210,21,5210,75" name="reservation_station_9_decoded_instruction_packet_index" dtype_id="9" vartype="logic" origName="reservation_station_9_decoded_instruction_packet_index"/>
       <var loc="d,5211,21,5211,72" name="reservation_station_9_decoded_instruction_ROB_index" dtype_id="4" vartype="logic" origName="reservation_station_9_decoded_instruction_ROB_index"/>
-      <var loc="d,5212,21,5212,70" name="reservation_station_9_decoded_instruction_IS_LOAD" dtype_id="1" vartype="logic" origName="reservation_station_9_decoded_instruction_IS_LOAD"/>
-      <var loc="d,5213,21,5213,71" name="reservation_station_9_decoded_instruction_IS_STORE" dtype_id="1" vartype="logic" origName="reservation_station_9_decoded_instruction_IS_STORE"/>
+      <var loc="d,5212,21,5212,70" name="reservation_station_9_decoded_instruction_is_load" dtype_id="1" vartype="logic" origName="reservation_station_9_decoded_instruction_is_load"/>
+      <var loc="d,5213,21,5213,71" name="reservation_station_9_decoded_instruction_is_store" dtype_id="1" vartype="logic" origName="reservation_station_9_decoded_instruction_is_store"/>
       <var loc="d,5214,21,5214,51" name="reservation_station_9_commited" dtype_id="1" vartype="logic" origName="reservation_station_9_commited"/>
       <var loc="d,5215,21,5215,48" name="reservation_station_9_valid" dtype_id="1" vartype="logic" origName="reservation_station_9_valid"/>
       <var loc="d,5216,21,5216,84" name="reservation_station_10_decoded_instruction_ready_bits_RS1_ready" dtype_id="1" vartype="logic" origName="reservation_station_10_decoded_instruction_ready_bits_RS1_ready"/>
@@ -23316,8 +23316,8 @@
       <var loc="d,5222,21,5222,70" name="reservation_station_10_decoded_instruction_FUNCT3" dtype_id="5" vartype="logic" origName="reservation_station_10_decoded_instruction_FUNCT3"/>
       <var loc="d,5223,21,5223,76" name="reservation_station_10_decoded_instruction_packet_index" dtype_id="9" vartype="logic" origName="reservation_station_10_decoded_instruction_packet_index"/>
       <var loc="d,5224,21,5224,73" name="reservation_station_10_decoded_instruction_ROB_index" dtype_id="4" vartype="logic" origName="reservation_station_10_decoded_instruction_ROB_index"/>
-      <var loc="d,5225,21,5225,71" name="reservation_station_10_decoded_instruction_IS_LOAD" dtype_id="1" vartype="logic" origName="reservation_station_10_decoded_instruction_IS_LOAD"/>
-      <var loc="d,5226,21,5226,72" name="reservation_station_10_decoded_instruction_IS_STORE" dtype_id="1" vartype="logic" origName="reservation_station_10_decoded_instruction_IS_STORE"/>
+      <var loc="d,5225,21,5225,71" name="reservation_station_10_decoded_instruction_is_load" dtype_id="1" vartype="logic" origName="reservation_station_10_decoded_instruction_is_load"/>
+      <var loc="d,5226,21,5226,72" name="reservation_station_10_decoded_instruction_is_store" dtype_id="1" vartype="logic" origName="reservation_station_10_decoded_instruction_is_store"/>
       <var loc="d,5227,21,5227,52" name="reservation_station_10_commited" dtype_id="1" vartype="logic" origName="reservation_station_10_commited"/>
       <var loc="d,5228,21,5228,49" name="reservation_station_10_valid" dtype_id="1" vartype="logic" origName="reservation_station_10_valid"/>
       <var loc="d,5229,21,5229,84" name="reservation_station_11_decoded_instruction_ready_bits_RS1_ready" dtype_id="1" vartype="logic" origName="reservation_station_11_decoded_instruction_ready_bits_RS1_ready"/>
@@ -23329,8 +23329,8 @@
       <var loc="d,5235,21,5235,70" name="reservation_station_11_decoded_instruction_FUNCT3" dtype_id="5" vartype="logic" origName="reservation_station_11_decoded_instruction_FUNCT3"/>
       <var loc="d,5236,21,5236,76" name="reservation_station_11_decoded_instruction_packet_index" dtype_id="9" vartype="logic" origName="reservation_station_11_decoded_instruction_packet_index"/>
       <var loc="d,5237,21,5237,73" name="reservation_station_11_decoded_instruction_ROB_index" dtype_id="4" vartype="logic" origName="reservation_station_11_decoded_instruction_ROB_index"/>
-      <var loc="d,5238,21,5238,71" name="reservation_station_11_decoded_instruction_IS_LOAD" dtype_id="1" vartype="logic" origName="reservation_station_11_decoded_instruction_IS_LOAD"/>
-      <var loc="d,5239,21,5239,72" name="reservation_station_11_decoded_instruction_IS_STORE" dtype_id="1" vartype="logic" origName="reservation_station_11_decoded_instruction_IS_STORE"/>
+      <var loc="d,5238,21,5238,71" name="reservation_station_11_decoded_instruction_is_load" dtype_id="1" vartype="logic" origName="reservation_station_11_decoded_instruction_is_load"/>
+      <var loc="d,5239,21,5239,72" name="reservation_station_11_decoded_instruction_is_store" dtype_id="1" vartype="logic" origName="reservation_station_11_decoded_instruction_is_store"/>
       <var loc="d,5240,21,5240,52" name="reservation_station_11_commited" dtype_id="1" vartype="logic" origName="reservation_station_11_commited"/>
       <var loc="d,5241,21,5241,49" name="reservation_station_11_valid" dtype_id="1" vartype="logic" origName="reservation_station_11_valid"/>
       <var loc="d,5242,21,5242,84" name="reservation_station_12_decoded_instruction_ready_bits_RS1_ready" dtype_id="1" vartype="logic" origName="reservation_station_12_decoded_instruction_ready_bits_RS1_ready"/>
@@ -23342,8 +23342,8 @@
       <var loc="d,5248,21,5248,70" name="reservation_station_12_decoded_instruction_FUNCT3" dtype_id="5" vartype="logic" origName="reservation_station_12_decoded_instruction_FUNCT3"/>
       <var loc="d,5249,21,5249,76" name="reservation_station_12_decoded_instruction_packet_index" dtype_id="9" vartype="logic" origName="reservation_station_12_decoded_instruction_packet_index"/>
       <var loc="d,5250,21,5250,73" name="reservation_station_12_decoded_instruction_ROB_index" dtype_id="4" vartype="logic" origName="reservation_station_12_decoded_instruction_ROB_index"/>
-      <var loc="d,5251,21,5251,71" name="reservation_station_12_decoded_instruction_IS_LOAD" dtype_id="1" vartype="logic" origName="reservation_station_12_decoded_instruction_IS_LOAD"/>
-      <var loc="d,5252,21,5252,72" name="reservation_station_12_decoded_instruction_IS_STORE" dtype_id="1" vartype="logic" origName="reservation_station_12_decoded_instruction_IS_STORE"/>
+      <var loc="d,5251,21,5251,71" name="reservation_station_12_decoded_instruction_is_load" dtype_id="1" vartype="logic" origName="reservation_station_12_decoded_instruction_is_load"/>
+      <var loc="d,5252,21,5252,72" name="reservation_station_12_decoded_instruction_is_store" dtype_id="1" vartype="logic" origName="reservation_station_12_decoded_instruction_is_store"/>
       <var loc="d,5253,21,5253,52" name="reservation_station_12_commited" dtype_id="1" vartype="logic" origName="reservation_station_12_commited"/>
       <var loc="d,5254,21,5254,49" name="reservation_station_12_valid" dtype_id="1" vartype="logic" origName="reservation_station_12_valid"/>
       <var loc="d,5255,21,5255,84" name="reservation_station_13_decoded_instruction_ready_bits_RS1_ready" dtype_id="1" vartype="logic" origName="reservation_station_13_decoded_instruction_ready_bits_RS1_ready"/>
@@ -23355,8 +23355,8 @@
       <var loc="d,5261,21,5261,70" name="reservation_station_13_decoded_instruction_FUNCT3" dtype_id="5" vartype="logic" origName="reservation_station_13_decoded_instruction_FUNCT3"/>
       <var loc="d,5262,21,5262,76" name="reservation_station_13_decoded_instruction_packet_index" dtype_id="9" vartype="logic" origName="reservation_station_13_decoded_instruction_packet_index"/>
       <var loc="d,5263,21,5263,73" name="reservation_station_13_decoded_instruction_ROB_index" dtype_id="4" vartype="logic" origName="reservation_station_13_decoded_instruction_ROB_index"/>
-      <var loc="d,5264,21,5264,71" name="reservation_station_13_decoded_instruction_IS_LOAD" dtype_id="1" vartype="logic" origName="reservation_station_13_decoded_instruction_IS_LOAD"/>
-      <var loc="d,5265,21,5265,72" name="reservation_station_13_decoded_instruction_IS_STORE" dtype_id="1" vartype="logic" origName="reservation_station_13_decoded_instruction_IS_STORE"/>
+      <var loc="d,5264,21,5264,71" name="reservation_station_13_decoded_instruction_is_load" dtype_id="1" vartype="logic" origName="reservation_station_13_decoded_instruction_is_load"/>
+      <var loc="d,5265,21,5265,72" name="reservation_station_13_decoded_instruction_is_store" dtype_id="1" vartype="logic" origName="reservation_station_13_decoded_instruction_is_store"/>
       <var loc="d,5266,21,5266,52" name="reservation_station_13_commited" dtype_id="1" vartype="logic" origName="reservation_station_13_commited"/>
       <var loc="d,5267,21,5267,49" name="reservation_station_13_valid" dtype_id="1" vartype="logic" origName="reservation_station_13_valid"/>
       <var loc="d,5268,21,5268,84" name="reservation_station_14_decoded_instruction_ready_bits_RS1_ready" dtype_id="1" vartype="logic" origName="reservation_station_14_decoded_instruction_ready_bits_RS1_ready"/>
@@ -23368,8 +23368,8 @@
       <var loc="d,5274,21,5274,70" name="reservation_station_14_decoded_instruction_FUNCT3" dtype_id="5" vartype="logic" origName="reservation_station_14_decoded_instruction_FUNCT3"/>
       <var loc="d,5275,21,5275,76" name="reservation_station_14_decoded_instruction_packet_index" dtype_id="9" vartype="logic" origName="reservation_station_14_decoded_instruction_packet_index"/>
       <var loc="d,5276,21,5276,73" name="reservation_station_14_decoded_instruction_ROB_index" dtype_id="4" vartype="logic" origName="reservation_station_14_decoded_instruction_ROB_index"/>
-      <var loc="d,5277,21,5277,71" name="reservation_station_14_decoded_instruction_IS_LOAD" dtype_id="1" vartype="logic" origName="reservation_station_14_decoded_instruction_IS_LOAD"/>
-      <var loc="d,5278,21,5278,72" name="reservation_station_14_decoded_instruction_IS_STORE" dtype_id="1" vartype="logic" origName="reservation_station_14_decoded_instruction_IS_STORE"/>
+      <var loc="d,5277,21,5277,71" name="reservation_station_14_decoded_instruction_is_load" dtype_id="1" vartype="logic" origName="reservation_station_14_decoded_instruction_is_load"/>
+      <var loc="d,5278,21,5278,72" name="reservation_station_14_decoded_instruction_is_store" dtype_id="1" vartype="logic" origName="reservation_station_14_decoded_instruction_is_store"/>
       <var loc="d,5279,21,5279,52" name="reservation_station_14_commited" dtype_id="1" vartype="logic" origName="reservation_station_14_commited"/>
       <var loc="d,5280,21,5280,49" name="reservation_station_14_valid" dtype_id="1" vartype="logic" origName="reservation_station_14_valid"/>
       <var loc="d,5281,21,5281,84" name="reservation_station_15_decoded_instruction_ready_bits_RS1_ready" dtype_id="1" vartype="logic" origName="reservation_station_15_decoded_instruction_ready_bits_RS1_ready"/>
@@ -23381,8 +23381,8 @@
       <var loc="d,5287,21,5287,70" name="reservation_station_15_decoded_instruction_FUNCT3" dtype_id="5" vartype="logic" origName="reservation_station_15_decoded_instruction_FUNCT3"/>
       <var loc="d,5288,21,5288,76" name="reservation_station_15_decoded_instruction_packet_index" dtype_id="9" vartype="logic" origName="reservation_station_15_decoded_instruction_packet_index"/>
       <var loc="d,5289,21,5289,73" name="reservation_station_15_decoded_instruction_ROB_index" dtype_id="4" vartype="logic" origName="reservation_station_15_decoded_instruction_ROB_index"/>
-      <var loc="d,5290,21,5290,71" name="reservation_station_15_decoded_instruction_IS_LOAD" dtype_id="1" vartype="logic" origName="reservation_station_15_decoded_instruction_IS_LOAD"/>
-      <var loc="d,5291,21,5291,72" name="reservation_station_15_decoded_instruction_IS_STORE" dtype_id="1" vartype="logic" origName="reservation_station_15_decoded_instruction_IS_STORE"/>
+      <var loc="d,5290,21,5290,71" name="reservation_station_15_decoded_instruction_is_load" dtype_id="1" vartype="logic" origName="reservation_station_15_decoded_instruction_is_load"/>
+      <var loc="d,5291,21,5291,72" name="reservation_station_15_decoded_instruction_is_store" dtype_id="1" vartype="logic" origName="reservation_station_15_decoded_instruction_is_store"/>
       <var loc="d,5292,21,5292,52" name="reservation_station_15_commited" dtype_id="1" vartype="logic" origName="reservation_station_15_commited"/>
       <var loc="d,5293,21,5293,49" name="reservation_station_15_valid" dtype_id="1" vartype="logic" origName="reservation_station_15_valid"/>
       <var loc="d,5294,21,5294,34" name="front_pointer" dtype_id="10" vartype="logic" origName="front_pointer"/>
@@ -23503,11 +23503,11 @@
                 </assigndly>
                 <assigndly loc="d,5840,57,5840,59" dtype_id="1">
                   <const loc="d,5840,60,5840,64" name="1&apos;h0" dtype_id="1"/>
-                  <varref loc="d,5840,7,5840,56" name="reservation_station_0_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                  <varref loc="d,5840,7,5840,56" name="reservation_station_0_decoded_instruction_is_load" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,5841,58,5841,60" dtype_id="1">
                   <const loc="d,5841,61,5841,65" name="1&apos;h0" dtype_id="1"/>
-                  <varref loc="d,5841,7,5841,57" name="reservation_station_0_decoded_instruction_IS_STORE" dtype_id="1"/>
+                  <varref loc="d,5841,7,5841,57" name="reservation_station_0_decoded_instruction_is_store" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,5842,38,5842,40" dtype_id="1">
                   <const loc="d,5842,41,5842,45" name="1&apos;h0" dtype_id="1"/>
@@ -23555,11 +23555,11 @@
                 </assigndly>
                 <assigndly loc="d,5853,57,5853,59" dtype_id="1">
                   <const loc="d,5853,60,5853,64" name="1&apos;h0" dtype_id="1"/>
-                  <varref loc="d,5853,7,5853,56" name="reservation_station_1_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                  <varref loc="d,5853,7,5853,56" name="reservation_station_1_decoded_instruction_is_load" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,5854,58,5854,60" dtype_id="1">
                   <const loc="d,5854,61,5854,65" name="1&apos;h0" dtype_id="1"/>
-                  <varref loc="d,5854,7,5854,57" name="reservation_station_1_decoded_instruction_IS_STORE" dtype_id="1"/>
+                  <varref loc="d,5854,7,5854,57" name="reservation_station_1_decoded_instruction_is_store" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,5855,38,5855,40" dtype_id="1">
                   <const loc="d,5855,41,5855,45" name="1&apos;h0" dtype_id="1"/>
@@ -23607,11 +23607,11 @@
                 </assigndly>
                 <assigndly loc="d,5866,57,5866,59" dtype_id="1">
                   <const loc="d,5866,60,5866,64" name="1&apos;h0" dtype_id="1"/>
-                  <varref loc="d,5866,7,5866,56" name="reservation_station_2_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                  <varref loc="d,5866,7,5866,56" name="reservation_station_2_decoded_instruction_is_load" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,5867,58,5867,60" dtype_id="1">
                   <const loc="d,5867,61,5867,65" name="1&apos;h0" dtype_id="1"/>
-                  <varref loc="d,5867,7,5867,57" name="reservation_station_2_decoded_instruction_IS_STORE" dtype_id="1"/>
+                  <varref loc="d,5867,7,5867,57" name="reservation_station_2_decoded_instruction_is_store" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,5868,38,5868,40" dtype_id="1">
                   <const loc="d,5868,41,5868,45" name="1&apos;h0" dtype_id="1"/>
@@ -23659,11 +23659,11 @@
                 </assigndly>
                 <assigndly loc="d,5879,57,5879,59" dtype_id="1">
                   <const loc="d,5879,60,5879,64" name="1&apos;h0" dtype_id="1"/>
-                  <varref loc="d,5879,7,5879,56" name="reservation_station_3_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                  <varref loc="d,5879,7,5879,56" name="reservation_station_3_decoded_instruction_is_load" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,5880,58,5880,60" dtype_id="1">
                   <const loc="d,5880,61,5880,65" name="1&apos;h0" dtype_id="1"/>
-                  <varref loc="d,5880,7,5880,57" name="reservation_station_3_decoded_instruction_IS_STORE" dtype_id="1"/>
+                  <varref loc="d,5880,7,5880,57" name="reservation_station_3_decoded_instruction_is_store" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,5881,38,5881,40" dtype_id="1">
                   <const loc="d,5881,41,5881,45" name="1&apos;h0" dtype_id="1"/>
@@ -23711,11 +23711,11 @@
                 </assigndly>
                 <assigndly loc="d,5892,57,5892,59" dtype_id="1">
                   <const loc="d,5892,60,5892,64" name="1&apos;h0" dtype_id="1"/>
-                  <varref loc="d,5892,7,5892,56" name="reservation_station_4_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                  <varref loc="d,5892,7,5892,56" name="reservation_station_4_decoded_instruction_is_load" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,5893,58,5893,60" dtype_id="1">
                   <const loc="d,5893,61,5893,65" name="1&apos;h0" dtype_id="1"/>
-                  <varref loc="d,5893,7,5893,57" name="reservation_station_4_decoded_instruction_IS_STORE" dtype_id="1"/>
+                  <varref loc="d,5893,7,5893,57" name="reservation_station_4_decoded_instruction_is_store" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,5894,38,5894,40" dtype_id="1">
                   <const loc="d,5894,41,5894,45" name="1&apos;h0" dtype_id="1"/>
@@ -23763,11 +23763,11 @@
                 </assigndly>
                 <assigndly loc="d,5905,57,5905,59" dtype_id="1">
                   <const loc="d,5905,60,5905,64" name="1&apos;h0" dtype_id="1"/>
-                  <varref loc="d,5905,7,5905,56" name="reservation_station_5_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                  <varref loc="d,5905,7,5905,56" name="reservation_station_5_decoded_instruction_is_load" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,5906,58,5906,60" dtype_id="1">
                   <const loc="d,5906,61,5906,65" name="1&apos;h0" dtype_id="1"/>
-                  <varref loc="d,5906,7,5906,57" name="reservation_station_5_decoded_instruction_IS_STORE" dtype_id="1"/>
+                  <varref loc="d,5906,7,5906,57" name="reservation_station_5_decoded_instruction_is_store" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,5907,38,5907,40" dtype_id="1">
                   <const loc="d,5907,41,5907,45" name="1&apos;h0" dtype_id="1"/>
@@ -23815,11 +23815,11 @@
                 </assigndly>
                 <assigndly loc="d,5918,57,5918,59" dtype_id="1">
                   <const loc="d,5918,60,5918,64" name="1&apos;h0" dtype_id="1"/>
-                  <varref loc="d,5918,7,5918,56" name="reservation_station_6_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                  <varref loc="d,5918,7,5918,56" name="reservation_station_6_decoded_instruction_is_load" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,5919,58,5919,60" dtype_id="1">
                   <const loc="d,5919,61,5919,65" name="1&apos;h0" dtype_id="1"/>
-                  <varref loc="d,5919,7,5919,57" name="reservation_station_6_decoded_instruction_IS_STORE" dtype_id="1"/>
+                  <varref loc="d,5919,7,5919,57" name="reservation_station_6_decoded_instruction_is_store" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,5920,38,5920,40" dtype_id="1">
                   <const loc="d,5920,41,5920,45" name="1&apos;h0" dtype_id="1"/>
@@ -23867,11 +23867,11 @@
                 </assigndly>
                 <assigndly loc="d,5931,57,5931,59" dtype_id="1">
                   <const loc="d,5931,60,5931,64" name="1&apos;h0" dtype_id="1"/>
-                  <varref loc="d,5931,7,5931,56" name="reservation_station_7_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                  <varref loc="d,5931,7,5931,56" name="reservation_station_7_decoded_instruction_is_load" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,5932,58,5932,60" dtype_id="1">
                   <const loc="d,5932,61,5932,65" name="1&apos;h0" dtype_id="1"/>
-                  <varref loc="d,5932,7,5932,57" name="reservation_station_7_decoded_instruction_IS_STORE" dtype_id="1"/>
+                  <varref loc="d,5932,7,5932,57" name="reservation_station_7_decoded_instruction_is_store" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,5933,38,5933,40" dtype_id="1">
                   <const loc="d,5933,41,5933,45" name="1&apos;h0" dtype_id="1"/>
@@ -23919,11 +23919,11 @@
                 </assigndly>
                 <assigndly loc="d,5944,57,5944,59" dtype_id="1">
                   <const loc="d,5944,60,5944,64" name="1&apos;h0" dtype_id="1"/>
-                  <varref loc="d,5944,7,5944,56" name="reservation_station_8_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                  <varref loc="d,5944,7,5944,56" name="reservation_station_8_decoded_instruction_is_load" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,5945,58,5945,60" dtype_id="1">
                   <const loc="d,5945,61,5945,65" name="1&apos;h0" dtype_id="1"/>
-                  <varref loc="d,5945,7,5945,57" name="reservation_station_8_decoded_instruction_IS_STORE" dtype_id="1"/>
+                  <varref loc="d,5945,7,5945,57" name="reservation_station_8_decoded_instruction_is_store" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,5946,38,5946,40" dtype_id="1">
                   <const loc="d,5946,41,5946,45" name="1&apos;h0" dtype_id="1"/>
@@ -23971,11 +23971,11 @@
                 </assigndly>
                 <assigndly loc="d,5957,57,5957,59" dtype_id="1">
                   <const loc="d,5957,60,5957,64" name="1&apos;h0" dtype_id="1"/>
-                  <varref loc="d,5957,7,5957,56" name="reservation_station_9_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                  <varref loc="d,5957,7,5957,56" name="reservation_station_9_decoded_instruction_is_load" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,5958,58,5958,60" dtype_id="1">
                   <const loc="d,5958,61,5958,65" name="1&apos;h0" dtype_id="1"/>
-                  <varref loc="d,5958,7,5958,57" name="reservation_station_9_decoded_instruction_IS_STORE" dtype_id="1"/>
+                  <varref loc="d,5958,7,5958,57" name="reservation_station_9_decoded_instruction_is_store" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,5959,38,5959,40" dtype_id="1">
                   <const loc="d,5959,41,5959,45" name="1&apos;h0" dtype_id="1"/>
@@ -24023,11 +24023,11 @@
                 </assigndly>
                 <assigndly loc="d,5970,58,5970,60" dtype_id="1">
                   <const loc="d,5970,61,5970,65" name="1&apos;h0" dtype_id="1"/>
-                  <varref loc="d,5970,7,5970,57" name="reservation_station_10_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                  <varref loc="d,5970,7,5970,57" name="reservation_station_10_decoded_instruction_is_load" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,5971,59,5971,61" dtype_id="1">
                   <const loc="d,5971,62,5971,66" name="1&apos;h0" dtype_id="1"/>
-                  <varref loc="d,5971,7,5971,58" name="reservation_station_10_decoded_instruction_IS_STORE" dtype_id="1"/>
+                  <varref loc="d,5971,7,5971,58" name="reservation_station_10_decoded_instruction_is_store" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,5972,39,5972,41" dtype_id="1">
                   <const loc="d,5972,42,5972,46" name="1&apos;h0" dtype_id="1"/>
@@ -24075,11 +24075,11 @@
                 </assigndly>
                 <assigndly loc="d,5983,58,5983,60" dtype_id="1">
                   <const loc="d,5983,61,5983,65" name="1&apos;h0" dtype_id="1"/>
-                  <varref loc="d,5983,7,5983,57" name="reservation_station_11_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                  <varref loc="d,5983,7,5983,57" name="reservation_station_11_decoded_instruction_is_load" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,5984,59,5984,61" dtype_id="1">
                   <const loc="d,5984,62,5984,66" name="1&apos;h0" dtype_id="1"/>
-                  <varref loc="d,5984,7,5984,58" name="reservation_station_11_decoded_instruction_IS_STORE" dtype_id="1"/>
+                  <varref loc="d,5984,7,5984,58" name="reservation_station_11_decoded_instruction_is_store" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,5985,39,5985,41" dtype_id="1">
                   <const loc="d,5985,42,5985,46" name="1&apos;h0" dtype_id="1"/>
@@ -24127,11 +24127,11 @@
                 </assigndly>
                 <assigndly loc="d,5996,58,5996,60" dtype_id="1">
                   <const loc="d,5996,61,5996,65" name="1&apos;h0" dtype_id="1"/>
-                  <varref loc="d,5996,7,5996,57" name="reservation_station_12_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                  <varref loc="d,5996,7,5996,57" name="reservation_station_12_decoded_instruction_is_load" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,5997,59,5997,61" dtype_id="1">
                   <const loc="d,5997,62,5997,66" name="1&apos;h0" dtype_id="1"/>
-                  <varref loc="d,5997,7,5997,58" name="reservation_station_12_decoded_instruction_IS_STORE" dtype_id="1"/>
+                  <varref loc="d,5997,7,5997,58" name="reservation_station_12_decoded_instruction_is_store" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,5998,39,5998,41" dtype_id="1">
                   <const loc="d,5998,42,5998,46" name="1&apos;h0" dtype_id="1"/>
@@ -24179,11 +24179,11 @@
                 </assigndly>
                 <assigndly loc="d,6009,58,6009,60" dtype_id="1">
                   <const loc="d,6009,61,6009,65" name="1&apos;h0" dtype_id="1"/>
-                  <varref loc="d,6009,7,6009,57" name="reservation_station_13_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                  <varref loc="d,6009,7,6009,57" name="reservation_station_13_decoded_instruction_is_load" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,6010,59,6010,61" dtype_id="1">
                   <const loc="d,6010,62,6010,66" name="1&apos;h0" dtype_id="1"/>
-                  <varref loc="d,6010,7,6010,58" name="reservation_station_13_decoded_instruction_IS_STORE" dtype_id="1"/>
+                  <varref loc="d,6010,7,6010,58" name="reservation_station_13_decoded_instruction_is_store" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,6011,39,6011,41" dtype_id="1">
                   <const loc="d,6011,42,6011,46" name="1&apos;h0" dtype_id="1"/>
@@ -24231,11 +24231,11 @@
                 </assigndly>
                 <assigndly loc="d,6022,58,6022,60" dtype_id="1">
                   <const loc="d,6022,61,6022,65" name="1&apos;h0" dtype_id="1"/>
-                  <varref loc="d,6022,7,6022,57" name="reservation_station_14_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                  <varref loc="d,6022,7,6022,57" name="reservation_station_14_decoded_instruction_is_load" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,6023,59,6023,61" dtype_id="1">
                   <const loc="d,6023,62,6023,66" name="1&apos;h0" dtype_id="1"/>
-                  <varref loc="d,6023,7,6023,58" name="reservation_station_14_decoded_instruction_IS_STORE" dtype_id="1"/>
+                  <varref loc="d,6023,7,6023,58" name="reservation_station_14_decoded_instruction_is_store" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,6024,39,6024,41" dtype_id="1">
                   <const loc="d,6024,42,6024,46" name="1&apos;h0" dtype_id="1"/>
@@ -24283,11 +24283,11 @@
                 </assigndly>
                 <assigndly loc="d,6035,58,6035,60" dtype_id="1">
                   <const loc="d,6035,61,6035,65" name="1&apos;h0" dtype_id="1"/>
-                  <varref loc="d,6035,7,6035,57" name="reservation_station_15_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                  <varref loc="d,6035,7,6035,57" name="reservation_station_15_decoded_instruction_is_load" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,6036,59,6036,61" dtype_id="1">
                   <const loc="d,6036,62,6036,66" name="1&apos;h0" dtype_id="1"/>
-                  <varref loc="d,6036,7,6036,58" name="reservation_station_15_decoded_instruction_IS_STORE" dtype_id="1"/>
+                  <varref loc="d,6036,7,6036,58" name="reservation_station_15_decoded_instruction_is_store" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,6037,39,6037,41" dtype_id="1">
                   <const loc="d,6037,42,6037,46" name="1&apos;h0" dtype_id="1"/>
@@ -26094,23 +26094,23 @@
                     </not>
                     <cond loc="d,6396,14,6396,15" dtype_id="1">
                       <varref loc="d,6395,12,6395,20" name="_GEN_127" dtype_id="1"/>
-                      <varref loc="d,6396,16,6396,48" name="io_backend_packet_3_bits_IS_LOAD" dtype_id="1"/>
+                      <varref loc="d,6396,16,6396,48" name="io_backend_packet_3_bits_is_load" dtype_id="1"/>
                       <cond loc="d,6398,18,6398,19" dtype_id="1">
                         <varref loc="d,6397,16,6397,24" name="_GEN_109" dtype_id="1"/>
-                        <varref loc="d,6398,20,6398,52" name="io_backend_packet_2_bits_IS_LOAD" dtype_id="1"/>
+                        <varref loc="d,6398,20,6398,52" name="io_backend_packet_2_bits_is_load" dtype_id="1"/>
                         <cond loc="d,6400,22,6400,23" dtype_id="1">
                           <varref loc="d,6399,20,6399,27" name="_GEN_62" dtype_id="1"/>
-                          <varref loc="d,6400,24,6400,56" name="io_backend_packet_1_bits_IS_LOAD" dtype_id="1"/>
+                          <varref loc="d,6400,24,6400,56" name="io_backend_packet_1_bits_is_load" dtype_id="1"/>
                           <cond loc="d,6402,26,6402,27" dtype_id="1">
                             <varref loc="d,6401,24,6401,31" name="_GEN_44" dtype_id="1"/>
-                            <varref loc="d,6402,28,6402,60" name="io_backend_packet_0_bits_IS_LOAD" dtype_id="1"/>
-                            <varref loc="d,6403,28,6403,77" name="reservation_station_0_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                            <varref loc="d,6402,28,6402,60" name="io_backend_packet_0_bits_is_load" dtype_id="1"/>
+                            <varref loc="d,6403,28,6403,77" name="reservation_station_0_decoded_instruction_is_load" dtype_id="1"/>
                           </cond>
                         </cond>
                       </cond>
                     </cond>
                   </and>
-                  <varref loc="d,6393,7,6393,56" name="reservation_station_0_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                  <varref loc="d,6393,7,6393,56" name="reservation_station_0_decoded_instruction_is_load" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,6404,58,6404,60" dtype_id="1">
                   <and loc="d,6406,9,6406,10" dtype_id="1">
@@ -26119,23 +26119,23 @@
                     </not>
                     <cond loc="d,6407,14,6407,15" dtype_id="1">
                       <varref loc="d,6406,12,6406,20" name="_GEN_127" dtype_id="1"/>
-                      <varref loc="d,6407,16,6407,49" name="io_backend_packet_3_bits_IS_STORE" dtype_id="1"/>
+                      <varref loc="d,6407,16,6407,49" name="io_backend_packet_3_bits_is_store" dtype_id="1"/>
                       <cond loc="d,6409,18,6409,19" dtype_id="1">
                         <varref loc="d,6408,16,6408,24" name="_GEN_109" dtype_id="1"/>
-                        <varref loc="d,6409,20,6409,53" name="io_backend_packet_2_bits_IS_STORE" dtype_id="1"/>
+                        <varref loc="d,6409,20,6409,53" name="io_backend_packet_2_bits_is_store" dtype_id="1"/>
                         <cond loc="d,6411,22,6411,23" dtype_id="1">
                           <varref loc="d,6410,20,6410,27" name="_GEN_62" dtype_id="1"/>
-                          <varref loc="d,6411,24,6411,57" name="io_backend_packet_1_bits_IS_STORE" dtype_id="1"/>
+                          <varref loc="d,6411,24,6411,57" name="io_backend_packet_1_bits_is_store" dtype_id="1"/>
                           <cond loc="d,6413,26,6413,27" dtype_id="1">
                             <varref loc="d,6412,24,6412,31" name="_GEN_44" dtype_id="1"/>
-                            <varref loc="d,6413,28,6413,61" name="io_backend_packet_0_bits_IS_STORE" dtype_id="1"/>
-                            <varref loc="d,6414,28,6414,78" name="reservation_station_0_decoded_instruction_IS_STORE" dtype_id="1"/>
+                            <varref loc="d,6413,28,6413,61" name="io_backend_packet_0_bits_is_store" dtype_id="1"/>
+                            <varref loc="d,6414,28,6414,78" name="reservation_station_0_decoded_instruction_is_store" dtype_id="1"/>
                           </cond>
                         </cond>
                       </cond>
                     </cond>
                   </and>
-                  <varref loc="d,6404,7,6404,57" name="reservation_station_0_decoded_instruction_IS_STORE" dtype_id="1"/>
+                  <varref loc="d,6404,7,6404,57" name="reservation_station_0_decoded_instruction_is_store" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,6415,38,6415,40" dtype_id="1">
                   <and loc="d,6417,9,6417,10" dtype_id="1">
@@ -26441,23 +26441,23 @@
                     </not>
                     <cond loc="d,6511,14,6511,15" dtype_id="1">
                       <varref loc="d,6510,12,6510,20" name="_GEN_129" dtype_id="1"/>
-                      <varref loc="d,6511,16,6511,48" name="io_backend_packet_3_bits_IS_LOAD" dtype_id="1"/>
+                      <varref loc="d,6511,16,6511,48" name="io_backend_packet_3_bits_is_load" dtype_id="1"/>
                       <cond loc="d,6513,18,6513,19" dtype_id="1">
                         <varref loc="d,6512,16,6512,24" name="_GEN_110" dtype_id="1"/>
-                        <varref loc="d,6513,20,6513,52" name="io_backend_packet_2_bits_IS_LOAD" dtype_id="1"/>
+                        <varref loc="d,6513,20,6513,52" name="io_backend_packet_2_bits_is_load" dtype_id="1"/>
                         <cond loc="d,6515,22,6515,23" dtype_id="1">
                           <varref loc="d,6514,20,6514,27" name="_GEN_64" dtype_id="1"/>
-                          <varref loc="d,6515,24,6515,56" name="io_backend_packet_1_bits_IS_LOAD" dtype_id="1"/>
+                          <varref loc="d,6515,24,6515,56" name="io_backend_packet_1_bits_is_load" dtype_id="1"/>
                           <cond loc="d,6517,26,6517,27" dtype_id="1">
                             <varref loc="d,6516,24,6516,31" name="_GEN_45" dtype_id="1"/>
-                            <varref loc="d,6517,28,6517,60" name="io_backend_packet_0_bits_IS_LOAD" dtype_id="1"/>
-                            <varref loc="d,6518,28,6518,77" name="reservation_station_1_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                            <varref loc="d,6517,28,6517,60" name="io_backend_packet_0_bits_is_load" dtype_id="1"/>
+                            <varref loc="d,6518,28,6518,77" name="reservation_station_1_decoded_instruction_is_load" dtype_id="1"/>
                           </cond>
                         </cond>
                       </cond>
                     </cond>
                   </and>
-                  <varref loc="d,6508,7,6508,56" name="reservation_station_1_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                  <varref loc="d,6508,7,6508,56" name="reservation_station_1_decoded_instruction_is_load" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,6519,58,6519,60" dtype_id="1">
                   <and loc="d,6521,9,6521,10" dtype_id="1">
@@ -26466,23 +26466,23 @@
                     </not>
                     <cond loc="d,6522,14,6522,15" dtype_id="1">
                       <varref loc="d,6521,12,6521,20" name="_GEN_129" dtype_id="1"/>
-                      <varref loc="d,6522,16,6522,49" name="io_backend_packet_3_bits_IS_STORE" dtype_id="1"/>
+                      <varref loc="d,6522,16,6522,49" name="io_backend_packet_3_bits_is_store" dtype_id="1"/>
                       <cond loc="d,6524,18,6524,19" dtype_id="1">
                         <varref loc="d,6523,16,6523,24" name="_GEN_110" dtype_id="1"/>
-                        <varref loc="d,6524,20,6524,53" name="io_backend_packet_2_bits_IS_STORE" dtype_id="1"/>
+                        <varref loc="d,6524,20,6524,53" name="io_backend_packet_2_bits_is_store" dtype_id="1"/>
                         <cond loc="d,6526,22,6526,23" dtype_id="1">
                           <varref loc="d,6525,20,6525,27" name="_GEN_64" dtype_id="1"/>
-                          <varref loc="d,6526,24,6526,57" name="io_backend_packet_1_bits_IS_STORE" dtype_id="1"/>
+                          <varref loc="d,6526,24,6526,57" name="io_backend_packet_1_bits_is_store" dtype_id="1"/>
                           <cond loc="d,6528,26,6528,27" dtype_id="1">
                             <varref loc="d,6527,24,6527,31" name="_GEN_45" dtype_id="1"/>
-                            <varref loc="d,6528,28,6528,61" name="io_backend_packet_0_bits_IS_STORE" dtype_id="1"/>
-                            <varref loc="d,6529,28,6529,78" name="reservation_station_1_decoded_instruction_IS_STORE" dtype_id="1"/>
+                            <varref loc="d,6528,28,6528,61" name="io_backend_packet_0_bits_is_store" dtype_id="1"/>
+                            <varref loc="d,6529,28,6529,78" name="reservation_station_1_decoded_instruction_is_store" dtype_id="1"/>
                           </cond>
                         </cond>
                       </cond>
                     </cond>
                   </and>
-                  <varref loc="d,6519,7,6519,57" name="reservation_station_1_decoded_instruction_IS_STORE" dtype_id="1"/>
+                  <varref loc="d,6519,7,6519,57" name="reservation_station_1_decoded_instruction_is_store" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,6530,38,6530,40" dtype_id="1">
                   <and loc="d,6532,9,6532,10" dtype_id="1">
@@ -26788,23 +26788,23 @@
                     </not>
                     <cond loc="d,6626,14,6626,15" dtype_id="1">
                       <varref loc="d,6625,12,6625,20" name="_GEN_131" dtype_id="1"/>
-                      <varref loc="d,6626,16,6626,48" name="io_backend_packet_3_bits_IS_LOAD" dtype_id="1"/>
+                      <varref loc="d,6626,16,6626,48" name="io_backend_packet_3_bits_is_load" dtype_id="1"/>
                       <cond loc="d,6628,18,6628,19" dtype_id="1">
                         <varref loc="d,6627,16,6627,24" name="_GEN_111" dtype_id="1"/>
-                        <varref loc="d,6628,20,6628,52" name="io_backend_packet_2_bits_IS_LOAD" dtype_id="1"/>
+                        <varref loc="d,6628,20,6628,52" name="io_backend_packet_2_bits_is_load" dtype_id="1"/>
                         <cond loc="d,6630,22,6630,23" dtype_id="1">
                           <varref loc="d,6629,20,6629,27" name="_GEN_66" dtype_id="1"/>
-                          <varref loc="d,6630,24,6630,56" name="io_backend_packet_1_bits_IS_LOAD" dtype_id="1"/>
+                          <varref loc="d,6630,24,6630,56" name="io_backend_packet_1_bits_is_load" dtype_id="1"/>
                           <cond loc="d,6632,26,6632,27" dtype_id="1">
                             <varref loc="d,6631,24,6631,31" name="_GEN_46" dtype_id="1"/>
-                            <varref loc="d,6632,28,6632,60" name="io_backend_packet_0_bits_IS_LOAD" dtype_id="1"/>
-                            <varref loc="d,6633,28,6633,77" name="reservation_station_2_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                            <varref loc="d,6632,28,6632,60" name="io_backend_packet_0_bits_is_load" dtype_id="1"/>
+                            <varref loc="d,6633,28,6633,77" name="reservation_station_2_decoded_instruction_is_load" dtype_id="1"/>
                           </cond>
                         </cond>
                       </cond>
                     </cond>
                   </and>
-                  <varref loc="d,6623,7,6623,56" name="reservation_station_2_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                  <varref loc="d,6623,7,6623,56" name="reservation_station_2_decoded_instruction_is_load" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,6634,58,6634,60" dtype_id="1">
                   <and loc="d,6636,9,6636,10" dtype_id="1">
@@ -26813,23 +26813,23 @@
                     </not>
                     <cond loc="d,6637,14,6637,15" dtype_id="1">
                       <varref loc="d,6636,12,6636,20" name="_GEN_131" dtype_id="1"/>
-                      <varref loc="d,6637,16,6637,49" name="io_backend_packet_3_bits_IS_STORE" dtype_id="1"/>
+                      <varref loc="d,6637,16,6637,49" name="io_backend_packet_3_bits_is_store" dtype_id="1"/>
                       <cond loc="d,6639,18,6639,19" dtype_id="1">
                         <varref loc="d,6638,16,6638,24" name="_GEN_111" dtype_id="1"/>
-                        <varref loc="d,6639,20,6639,53" name="io_backend_packet_2_bits_IS_STORE" dtype_id="1"/>
+                        <varref loc="d,6639,20,6639,53" name="io_backend_packet_2_bits_is_store" dtype_id="1"/>
                         <cond loc="d,6641,22,6641,23" dtype_id="1">
                           <varref loc="d,6640,20,6640,27" name="_GEN_66" dtype_id="1"/>
-                          <varref loc="d,6641,24,6641,57" name="io_backend_packet_1_bits_IS_STORE" dtype_id="1"/>
+                          <varref loc="d,6641,24,6641,57" name="io_backend_packet_1_bits_is_store" dtype_id="1"/>
                           <cond loc="d,6643,26,6643,27" dtype_id="1">
                             <varref loc="d,6642,24,6642,31" name="_GEN_46" dtype_id="1"/>
-                            <varref loc="d,6643,28,6643,61" name="io_backend_packet_0_bits_IS_STORE" dtype_id="1"/>
-                            <varref loc="d,6644,28,6644,78" name="reservation_station_2_decoded_instruction_IS_STORE" dtype_id="1"/>
+                            <varref loc="d,6643,28,6643,61" name="io_backend_packet_0_bits_is_store" dtype_id="1"/>
+                            <varref loc="d,6644,28,6644,78" name="reservation_station_2_decoded_instruction_is_store" dtype_id="1"/>
                           </cond>
                         </cond>
                       </cond>
                     </cond>
                   </and>
-                  <varref loc="d,6634,7,6634,57" name="reservation_station_2_decoded_instruction_IS_STORE" dtype_id="1"/>
+                  <varref loc="d,6634,7,6634,57" name="reservation_station_2_decoded_instruction_is_store" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,6645,38,6645,40" dtype_id="1">
                   <and loc="d,6647,9,6647,10" dtype_id="1">
@@ -27135,23 +27135,23 @@
                     </not>
                     <cond loc="d,6741,14,6741,15" dtype_id="1">
                       <varref loc="d,6740,12,6740,20" name="_GEN_133" dtype_id="1"/>
-                      <varref loc="d,6741,16,6741,48" name="io_backend_packet_3_bits_IS_LOAD" dtype_id="1"/>
+                      <varref loc="d,6741,16,6741,48" name="io_backend_packet_3_bits_is_load" dtype_id="1"/>
                       <cond loc="d,6743,18,6743,19" dtype_id="1">
                         <varref loc="d,6742,16,6742,24" name="_GEN_112" dtype_id="1"/>
-                        <varref loc="d,6743,20,6743,52" name="io_backend_packet_2_bits_IS_LOAD" dtype_id="1"/>
+                        <varref loc="d,6743,20,6743,52" name="io_backend_packet_2_bits_is_load" dtype_id="1"/>
                         <cond loc="d,6745,22,6745,23" dtype_id="1">
                           <varref loc="d,6744,20,6744,27" name="_GEN_68" dtype_id="1"/>
-                          <varref loc="d,6745,24,6745,56" name="io_backend_packet_1_bits_IS_LOAD" dtype_id="1"/>
+                          <varref loc="d,6745,24,6745,56" name="io_backend_packet_1_bits_is_load" dtype_id="1"/>
                           <cond loc="d,6747,26,6747,27" dtype_id="1">
                             <varref loc="d,6746,24,6746,31" name="_GEN_47" dtype_id="1"/>
-                            <varref loc="d,6747,28,6747,60" name="io_backend_packet_0_bits_IS_LOAD" dtype_id="1"/>
-                            <varref loc="d,6748,28,6748,77" name="reservation_station_3_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                            <varref loc="d,6747,28,6747,60" name="io_backend_packet_0_bits_is_load" dtype_id="1"/>
+                            <varref loc="d,6748,28,6748,77" name="reservation_station_3_decoded_instruction_is_load" dtype_id="1"/>
                           </cond>
                         </cond>
                       </cond>
                     </cond>
                   </and>
-                  <varref loc="d,6738,7,6738,56" name="reservation_station_3_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                  <varref loc="d,6738,7,6738,56" name="reservation_station_3_decoded_instruction_is_load" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,6749,58,6749,60" dtype_id="1">
                   <and loc="d,6751,9,6751,10" dtype_id="1">
@@ -27160,23 +27160,23 @@
                     </not>
                     <cond loc="d,6752,14,6752,15" dtype_id="1">
                       <varref loc="d,6751,12,6751,20" name="_GEN_133" dtype_id="1"/>
-                      <varref loc="d,6752,16,6752,49" name="io_backend_packet_3_bits_IS_STORE" dtype_id="1"/>
+                      <varref loc="d,6752,16,6752,49" name="io_backend_packet_3_bits_is_store" dtype_id="1"/>
                       <cond loc="d,6754,18,6754,19" dtype_id="1">
                         <varref loc="d,6753,16,6753,24" name="_GEN_112" dtype_id="1"/>
-                        <varref loc="d,6754,20,6754,53" name="io_backend_packet_2_bits_IS_STORE" dtype_id="1"/>
+                        <varref loc="d,6754,20,6754,53" name="io_backend_packet_2_bits_is_store" dtype_id="1"/>
                         <cond loc="d,6756,22,6756,23" dtype_id="1">
                           <varref loc="d,6755,20,6755,27" name="_GEN_68" dtype_id="1"/>
-                          <varref loc="d,6756,24,6756,57" name="io_backend_packet_1_bits_IS_STORE" dtype_id="1"/>
+                          <varref loc="d,6756,24,6756,57" name="io_backend_packet_1_bits_is_store" dtype_id="1"/>
                           <cond loc="d,6758,26,6758,27" dtype_id="1">
                             <varref loc="d,6757,24,6757,31" name="_GEN_47" dtype_id="1"/>
-                            <varref loc="d,6758,28,6758,61" name="io_backend_packet_0_bits_IS_STORE" dtype_id="1"/>
-                            <varref loc="d,6759,28,6759,78" name="reservation_station_3_decoded_instruction_IS_STORE" dtype_id="1"/>
+                            <varref loc="d,6758,28,6758,61" name="io_backend_packet_0_bits_is_store" dtype_id="1"/>
+                            <varref loc="d,6759,28,6759,78" name="reservation_station_3_decoded_instruction_is_store" dtype_id="1"/>
                           </cond>
                         </cond>
                       </cond>
                     </cond>
                   </and>
-                  <varref loc="d,6749,7,6749,57" name="reservation_station_3_decoded_instruction_IS_STORE" dtype_id="1"/>
+                  <varref loc="d,6749,7,6749,57" name="reservation_station_3_decoded_instruction_is_store" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,6760,38,6760,40" dtype_id="1">
                   <and loc="d,6762,9,6762,10" dtype_id="1">
@@ -27482,23 +27482,23 @@
                     </not>
                     <cond loc="d,6856,14,6856,15" dtype_id="1">
                       <varref loc="d,6855,12,6855,20" name="_GEN_135" dtype_id="1"/>
-                      <varref loc="d,6856,16,6856,48" name="io_backend_packet_3_bits_IS_LOAD" dtype_id="1"/>
+                      <varref loc="d,6856,16,6856,48" name="io_backend_packet_3_bits_is_load" dtype_id="1"/>
                       <cond loc="d,6858,18,6858,19" dtype_id="1">
                         <varref loc="d,6857,16,6857,24" name="_GEN_113" dtype_id="1"/>
-                        <varref loc="d,6858,20,6858,52" name="io_backend_packet_2_bits_IS_LOAD" dtype_id="1"/>
+                        <varref loc="d,6858,20,6858,52" name="io_backend_packet_2_bits_is_load" dtype_id="1"/>
                         <cond loc="d,6860,22,6860,23" dtype_id="1">
                           <varref loc="d,6859,20,6859,27" name="_GEN_70" dtype_id="1"/>
-                          <varref loc="d,6860,24,6860,56" name="io_backend_packet_1_bits_IS_LOAD" dtype_id="1"/>
+                          <varref loc="d,6860,24,6860,56" name="io_backend_packet_1_bits_is_load" dtype_id="1"/>
                           <cond loc="d,6862,26,6862,27" dtype_id="1">
                             <varref loc="d,6861,24,6861,31" name="_GEN_48" dtype_id="1"/>
-                            <varref loc="d,6862,28,6862,60" name="io_backend_packet_0_bits_IS_LOAD" dtype_id="1"/>
-                            <varref loc="d,6863,28,6863,77" name="reservation_station_4_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                            <varref loc="d,6862,28,6862,60" name="io_backend_packet_0_bits_is_load" dtype_id="1"/>
+                            <varref loc="d,6863,28,6863,77" name="reservation_station_4_decoded_instruction_is_load" dtype_id="1"/>
                           </cond>
                         </cond>
                       </cond>
                     </cond>
                   </and>
-                  <varref loc="d,6853,7,6853,56" name="reservation_station_4_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                  <varref loc="d,6853,7,6853,56" name="reservation_station_4_decoded_instruction_is_load" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,6864,58,6864,60" dtype_id="1">
                   <and loc="d,6866,9,6866,10" dtype_id="1">
@@ -27507,23 +27507,23 @@
                     </not>
                     <cond loc="d,6867,14,6867,15" dtype_id="1">
                       <varref loc="d,6866,12,6866,20" name="_GEN_135" dtype_id="1"/>
-                      <varref loc="d,6867,16,6867,49" name="io_backend_packet_3_bits_IS_STORE" dtype_id="1"/>
+                      <varref loc="d,6867,16,6867,49" name="io_backend_packet_3_bits_is_store" dtype_id="1"/>
                       <cond loc="d,6869,18,6869,19" dtype_id="1">
                         <varref loc="d,6868,16,6868,24" name="_GEN_113" dtype_id="1"/>
-                        <varref loc="d,6869,20,6869,53" name="io_backend_packet_2_bits_IS_STORE" dtype_id="1"/>
+                        <varref loc="d,6869,20,6869,53" name="io_backend_packet_2_bits_is_store" dtype_id="1"/>
                         <cond loc="d,6871,22,6871,23" dtype_id="1">
                           <varref loc="d,6870,20,6870,27" name="_GEN_70" dtype_id="1"/>
-                          <varref loc="d,6871,24,6871,57" name="io_backend_packet_1_bits_IS_STORE" dtype_id="1"/>
+                          <varref loc="d,6871,24,6871,57" name="io_backend_packet_1_bits_is_store" dtype_id="1"/>
                           <cond loc="d,6873,26,6873,27" dtype_id="1">
                             <varref loc="d,6872,24,6872,31" name="_GEN_48" dtype_id="1"/>
-                            <varref loc="d,6873,28,6873,61" name="io_backend_packet_0_bits_IS_STORE" dtype_id="1"/>
-                            <varref loc="d,6874,28,6874,78" name="reservation_station_4_decoded_instruction_IS_STORE" dtype_id="1"/>
+                            <varref loc="d,6873,28,6873,61" name="io_backend_packet_0_bits_is_store" dtype_id="1"/>
+                            <varref loc="d,6874,28,6874,78" name="reservation_station_4_decoded_instruction_is_store" dtype_id="1"/>
                           </cond>
                         </cond>
                       </cond>
                     </cond>
                   </and>
-                  <varref loc="d,6864,7,6864,57" name="reservation_station_4_decoded_instruction_IS_STORE" dtype_id="1"/>
+                  <varref loc="d,6864,7,6864,57" name="reservation_station_4_decoded_instruction_is_store" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,6875,38,6875,40" dtype_id="1">
                   <and loc="d,6877,9,6877,10" dtype_id="1">
@@ -27829,23 +27829,23 @@
                     </not>
                     <cond loc="d,6971,14,6971,15" dtype_id="1">
                       <varref loc="d,6970,12,6970,20" name="_GEN_137" dtype_id="1"/>
-                      <varref loc="d,6971,16,6971,48" name="io_backend_packet_3_bits_IS_LOAD" dtype_id="1"/>
+                      <varref loc="d,6971,16,6971,48" name="io_backend_packet_3_bits_is_load" dtype_id="1"/>
                       <cond loc="d,6973,18,6973,19" dtype_id="1">
                         <varref loc="d,6972,16,6972,24" name="_GEN_114" dtype_id="1"/>
-                        <varref loc="d,6973,20,6973,52" name="io_backend_packet_2_bits_IS_LOAD" dtype_id="1"/>
+                        <varref loc="d,6973,20,6973,52" name="io_backend_packet_2_bits_is_load" dtype_id="1"/>
                         <cond loc="d,6975,22,6975,23" dtype_id="1">
                           <varref loc="d,6974,20,6974,27" name="_GEN_72" dtype_id="1"/>
-                          <varref loc="d,6975,24,6975,56" name="io_backend_packet_1_bits_IS_LOAD" dtype_id="1"/>
+                          <varref loc="d,6975,24,6975,56" name="io_backend_packet_1_bits_is_load" dtype_id="1"/>
                           <cond loc="d,6977,26,6977,27" dtype_id="1">
                             <varref loc="d,6976,24,6976,31" name="_GEN_49" dtype_id="1"/>
-                            <varref loc="d,6977,28,6977,60" name="io_backend_packet_0_bits_IS_LOAD" dtype_id="1"/>
-                            <varref loc="d,6978,28,6978,77" name="reservation_station_5_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                            <varref loc="d,6977,28,6977,60" name="io_backend_packet_0_bits_is_load" dtype_id="1"/>
+                            <varref loc="d,6978,28,6978,77" name="reservation_station_5_decoded_instruction_is_load" dtype_id="1"/>
                           </cond>
                         </cond>
                       </cond>
                     </cond>
                   </and>
-                  <varref loc="d,6968,7,6968,56" name="reservation_station_5_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                  <varref loc="d,6968,7,6968,56" name="reservation_station_5_decoded_instruction_is_load" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,6979,58,6979,60" dtype_id="1">
                   <and loc="d,6981,9,6981,10" dtype_id="1">
@@ -27854,23 +27854,23 @@
                     </not>
                     <cond loc="d,6982,14,6982,15" dtype_id="1">
                       <varref loc="d,6981,12,6981,20" name="_GEN_137" dtype_id="1"/>
-                      <varref loc="d,6982,16,6982,49" name="io_backend_packet_3_bits_IS_STORE" dtype_id="1"/>
+                      <varref loc="d,6982,16,6982,49" name="io_backend_packet_3_bits_is_store" dtype_id="1"/>
                       <cond loc="d,6984,18,6984,19" dtype_id="1">
                         <varref loc="d,6983,16,6983,24" name="_GEN_114" dtype_id="1"/>
-                        <varref loc="d,6984,20,6984,53" name="io_backend_packet_2_bits_IS_STORE" dtype_id="1"/>
+                        <varref loc="d,6984,20,6984,53" name="io_backend_packet_2_bits_is_store" dtype_id="1"/>
                         <cond loc="d,6986,22,6986,23" dtype_id="1">
                           <varref loc="d,6985,20,6985,27" name="_GEN_72" dtype_id="1"/>
-                          <varref loc="d,6986,24,6986,57" name="io_backend_packet_1_bits_IS_STORE" dtype_id="1"/>
+                          <varref loc="d,6986,24,6986,57" name="io_backend_packet_1_bits_is_store" dtype_id="1"/>
                           <cond loc="d,6988,26,6988,27" dtype_id="1">
                             <varref loc="d,6987,24,6987,31" name="_GEN_49" dtype_id="1"/>
-                            <varref loc="d,6988,28,6988,61" name="io_backend_packet_0_bits_IS_STORE" dtype_id="1"/>
-                            <varref loc="d,6989,28,6989,78" name="reservation_station_5_decoded_instruction_IS_STORE" dtype_id="1"/>
+                            <varref loc="d,6988,28,6988,61" name="io_backend_packet_0_bits_is_store" dtype_id="1"/>
+                            <varref loc="d,6989,28,6989,78" name="reservation_station_5_decoded_instruction_is_store" dtype_id="1"/>
                           </cond>
                         </cond>
                       </cond>
                     </cond>
                   </and>
-                  <varref loc="d,6979,7,6979,57" name="reservation_station_5_decoded_instruction_IS_STORE" dtype_id="1"/>
+                  <varref loc="d,6979,7,6979,57" name="reservation_station_5_decoded_instruction_is_store" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,6990,38,6990,40" dtype_id="1">
                   <and loc="d,6992,9,6992,10" dtype_id="1">
@@ -28176,23 +28176,23 @@
                     </not>
                     <cond loc="d,7086,14,7086,15" dtype_id="1">
                       <varref loc="d,7085,12,7085,20" name="_GEN_139" dtype_id="1"/>
-                      <varref loc="d,7086,16,7086,48" name="io_backend_packet_3_bits_IS_LOAD" dtype_id="1"/>
+                      <varref loc="d,7086,16,7086,48" name="io_backend_packet_3_bits_is_load" dtype_id="1"/>
                       <cond loc="d,7088,18,7088,19" dtype_id="1">
                         <varref loc="d,7087,16,7087,24" name="_GEN_115" dtype_id="1"/>
-                        <varref loc="d,7088,20,7088,52" name="io_backend_packet_2_bits_IS_LOAD" dtype_id="1"/>
+                        <varref loc="d,7088,20,7088,52" name="io_backend_packet_2_bits_is_load" dtype_id="1"/>
                         <cond loc="d,7090,22,7090,23" dtype_id="1">
                           <varref loc="d,7089,20,7089,27" name="_GEN_74" dtype_id="1"/>
-                          <varref loc="d,7090,24,7090,56" name="io_backend_packet_1_bits_IS_LOAD" dtype_id="1"/>
+                          <varref loc="d,7090,24,7090,56" name="io_backend_packet_1_bits_is_load" dtype_id="1"/>
                           <cond loc="d,7092,26,7092,27" dtype_id="1">
                             <varref loc="d,7091,24,7091,31" name="_GEN_50" dtype_id="1"/>
-                            <varref loc="d,7092,28,7092,60" name="io_backend_packet_0_bits_IS_LOAD" dtype_id="1"/>
-                            <varref loc="d,7093,28,7093,77" name="reservation_station_6_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                            <varref loc="d,7092,28,7092,60" name="io_backend_packet_0_bits_is_load" dtype_id="1"/>
+                            <varref loc="d,7093,28,7093,77" name="reservation_station_6_decoded_instruction_is_load" dtype_id="1"/>
                           </cond>
                         </cond>
                       </cond>
                     </cond>
                   </and>
-                  <varref loc="d,7083,7,7083,56" name="reservation_station_6_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                  <varref loc="d,7083,7,7083,56" name="reservation_station_6_decoded_instruction_is_load" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,7094,58,7094,60" dtype_id="1">
                   <and loc="d,7096,9,7096,10" dtype_id="1">
@@ -28201,23 +28201,23 @@
                     </not>
                     <cond loc="d,7097,14,7097,15" dtype_id="1">
                       <varref loc="d,7096,12,7096,20" name="_GEN_139" dtype_id="1"/>
-                      <varref loc="d,7097,16,7097,49" name="io_backend_packet_3_bits_IS_STORE" dtype_id="1"/>
+                      <varref loc="d,7097,16,7097,49" name="io_backend_packet_3_bits_is_store" dtype_id="1"/>
                       <cond loc="d,7099,18,7099,19" dtype_id="1">
                         <varref loc="d,7098,16,7098,24" name="_GEN_115" dtype_id="1"/>
-                        <varref loc="d,7099,20,7099,53" name="io_backend_packet_2_bits_IS_STORE" dtype_id="1"/>
+                        <varref loc="d,7099,20,7099,53" name="io_backend_packet_2_bits_is_store" dtype_id="1"/>
                         <cond loc="d,7101,22,7101,23" dtype_id="1">
                           <varref loc="d,7100,20,7100,27" name="_GEN_74" dtype_id="1"/>
-                          <varref loc="d,7101,24,7101,57" name="io_backend_packet_1_bits_IS_STORE" dtype_id="1"/>
+                          <varref loc="d,7101,24,7101,57" name="io_backend_packet_1_bits_is_store" dtype_id="1"/>
                           <cond loc="d,7103,26,7103,27" dtype_id="1">
                             <varref loc="d,7102,24,7102,31" name="_GEN_50" dtype_id="1"/>
-                            <varref loc="d,7103,28,7103,61" name="io_backend_packet_0_bits_IS_STORE" dtype_id="1"/>
-                            <varref loc="d,7104,28,7104,78" name="reservation_station_6_decoded_instruction_IS_STORE" dtype_id="1"/>
+                            <varref loc="d,7103,28,7103,61" name="io_backend_packet_0_bits_is_store" dtype_id="1"/>
+                            <varref loc="d,7104,28,7104,78" name="reservation_station_6_decoded_instruction_is_store" dtype_id="1"/>
                           </cond>
                         </cond>
                       </cond>
                     </cond>
                   </and>
-                  <varref loc="d,7094,7,7094,57" name="reservation_station_6_decoded_instruction_IS_STORE" dtype_id="1"/>
+                  <varref loc="d,7094,7,7094,57" name="reservation_station_6_decoded_instruction_is_store" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,7105,38,7105,40" dtype_id="1">
                   <and loc="d,7107,9,7107,10" dtype_id="1">
@@ -28523,23 +28523,23 @@
                     </not>
                     <cond loc="d,7201,14,7201,15" dtype_id="1">
                       <varref loc="d,7200,12,7200,20" name="_GEN_141" dtype_id="1"/>
-                      <varref loc="d,7201,16,7201,48" name="io_backend_packet_3_bits_IS_LOAD" dtype_id="1"/>
+                      <varref loc="d,7201,16,7201,48" name="io_backend_packet_3_bits_is_load" dtype_id="1"/>
                       <cond loc="d,7203,18,7203,19" dtype_id="1">
                         <varref loc="d,7202,16,7202,24" name="_GEN_116" dtype_id="1"/>
-                        <varref loc="d,7203,20,7203,52" name="io_backend_packet_2_bits_IS_LOAD" dtype_id="1"/>
+                        <varref loc="d,7203,20,7203,52" name="io_backend_packet_2_bits_is_load" dtype_id="1"/>
                         <cond loc="d,7205,22,7205,23" dtype_id="1">
                           <varref loc="d,7204,20,7204,27" name="_GEN_76" dtype_id="1"/>
-                          <varref loc="d,7205,24,7205,56" name="io_backend_packet_1_bits_IS_LOAD" dtype_id="1"/>
+                          <varref loc="d,7205,24,7205,56" name="io_backend_packet_1_bits_is_load" dtype_id="1"/>
                           <cond loc="d,7207,26,7207,27" dtype_id="1">
                             <varref loc="d,7206,24,7206,31" name="_GEN_51" dtype_id="1"/>
-                            <varref loc="d,7207,28,7207,60" name="io_backend_packet_0_bits_IS_LOAD" dtype_id="1"/>
-                            <varref loc="d,7208,28,7208,77" name="reservation_station_7_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                            <varref loc="d,7207,28,7207,60" name="io_backend_packet_0_bits_is_load" dtype_id="1"/>
+                            <varref loc="d,7208,28,7208,77" name="reservation_station_7_decoded_instruction_is_load" dtype_id="1"/>
                           </cond>
                         </cond>
                       </cond>
                     </cond>
                   </and>
-                  <varref loc="d,7198,7,7198,56" name="reservation_station_7_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                  <varref loc="d,7198,7,7198,56" name="reservation_station_7_decoded_instruction_is_load" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,7209,58,7209,60" dtype_id="1">
                   <and loc="d,7211,9,7211,10" dtype_id="1">
@@ -28548,23 +28548,23 @@
                     </not>
                     <cond loc="d,7212,14,7212,15" dtype_id="1">
                       <varref loc="d,7211,12,7211,20" name="_GEN_141" dtype_id="1"/>
-                      <varref loc="d,7212,16,7212,49" name="io_backend_packet_3_bits_IS_STORE" dtype_id="1"/>
+                      <varref loc="d,7212,16,7212,49" name="io_backend_packet_3_bits_is_store" dtype_id="1"/>
                       <cond loc="d,7214,18,7214,19" dtype_id="1">
                         <varref loc="d,7213,16,7213,24" name="_GEN_116" dtype_id="1"/>
-                        <varref loc="d,7214,20,7214,53" name="io_backend_packet_2_bits_IS_STORE" dtype_id="1"/>
+                        <varref loc="d,7214,20,7214,53" name="io_backend_packet_2_bits_is_store" dtype_id="1"/>
                         <cond loc="d,7216,22,7216,23" dtype_id="1">
                           <varref loc="d,7215,20,7215,27" name="_GEN_76" dtype_id="1"/>
-                          <varref loc="d,7216,24,7216,57" name="io_backend_packet_1_bits_IS_STORE" dtype_id="1"/>
+                          <varref loc="d,7216,24,7216,57" name="io_backend_packet_1_bits_is_store" dtype_id="1"/>
                           <cond loc="d,7218,26,7218,27" dtype_id="1">
                             <varref loc="d,7217,24,7217,31" name="_GEN_51" dtype_id="1"/>
-                            <varref loc="d,7218,28,7218,61" name="io_backend_packet_0_bits_IS_STORE" dtype_id="1"/>
-                            <varref loc="d,7219,28,7219,78" name="reservation_station_7_decoded_instruction_IS_STORE" dtype_id="1"/>
+                            <varref loc="d,7218,28,7218,61" name="io_backend_packet_0_bits_is_store" dtype_id="1"/>
+                            <varref loc="d,7219,28,7219,78" name="reservation_station_7_decoded_instruction_is_store" dtype_id="1"/>
                           </cond>
                         </cond>
                       </cond>
                     </cond>
                   </and>
-                  <varref loc="d,7209,7,7209,57" name="reservation_station_7_decoded_instruction_IS_STORE" dtype_id="1"/>
+                  <varref loc="d,7209,7,7209,57" name="reservation_station_7_decoded_instruction_is_store" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,7220,38,7220,40" dtype_id="1">
                   <and loc="d,7222,9,7222,10" dtype_id="1">
@@ -28870,23 +28870,23 @@
                     </not>
                     <cond loc="d,7316,14,7316,15" dtype_id="1">
                       <varref loc="d,7315,12,7315,20" name="_GEN_143" dtype_id="1"/>
-                      <varref loc="d,7316,16,7316,48" name="io_backend_packet_3_bits_IS_LOAD" dtype_id="1"/>
+                      <varref loc="d,7316,16,7316,48" name="io_backend_packet_3_bits_is_load" dtype_id="1"/>
                       <cond loc="d,7318,18,7318,19" dtype_id="1">
                         <varref loc="d,7317,16,7317,24" name="_GEN_117" dtype_id="1"/>
-                        <varref loc="d,7318,20,7318,52" name="io_backend_packet_2_bits_IS_LOAD" dtype_id="1"/>
+                        <varref loc="d,7318,20,7318,52" name="io_backend_packet_2_bits_is_load" dtype_id="1"/>
                         <cond loc="d,7320,22,7320,23" dtype_id="1">
                           <varref loc="d,7319,20,7319,27" name="_GEN_78" dtype_id="1"/>
-                          <varref loc="d,7320,24,7320,56" name="io_backend_packet_1_bits_IS_LOAD" dtype_id="1"/>
+                          <varref loc="d,7320,24,7320,56" name="io_backend_packet_1_bits_is_load" dtype_id="1"/>
                           <cond loc="d,7322,26,7322,27" dtype_id="1">
                             <varref loc="d,7321,24,7321,31" name="_GEN_52" dtype_id="1"/>
-                            <varref loc="d,7322,28,7322,60" name="io_backend_packet_0_bits_IS_LOAD" dtype_id="1"/>
-                            <varref loc="d,7323,28,7323,77" name="reservation_station_8_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                            <varref loc="d,7322,28,7322,60" name="io_backend_packet_0_bits_is_load" dtype_id="1"/>
+                            <varref loc="d,7323,28,7323,77" name="reservation_station_8_decoded_instruction_is_load" dtype_id="1"/>
                           </cond>
                         </cond>
                       </cond>
                     </cond>
                   </and>
-                  <varref loc="d,7313,7,7313,56" name="reservation_station_8_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                  <varref loc="d,7313,7,7313,56" name="reservation_station_8_decoded_instruction_is_load" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,7324,58,7324,60" dtype_id="1">
                   <and loc="d,7326,9,7326,10" dtype_id="1">
@@ -28895,23 +28895,23 @@
                     </not>
                     <cond loc="d,7327,14,7327,15" dtype_id="1">
                       <varref loc="d,7326,12,7326,20" name="_GEN_143" dtype_id="1"/>
-                      <varref loc="d,7327,16,7327,49" name="io_backend_packet_3_bits_IS_STORE" dtype_id="1"/>
+                      <varref loc="d,7327,16,7327,49" name="io_backend_packet_3_bits_is_store" dtype_id="1"/>
                       <cond loc="d,7329,18,7329,19" dtype_id="1">
                         <varref loc="d,7328,16,7328,24" name="_GEN_117" dtype_id="1"/>
-                        <varref loc="d,7329,20,7329,53" name="io_backend_packet_2_bits_IS_STORE" dtype_id="1"/>
+                        <varref loc="d,7329,20,7329,53" name="io_backend_packet_2_bits_is_store" dtype_id="1"/>
                         <cond loc="d,7331,22,7331,23" dtype_id="1">
                           <varref loc="d,7330,20,7330,27" name="_GEN_78" dtype_id="1"/>
-                          <varref loc="d,7331,24,7331,57" name="io_backend_packet_1_bits_IS_STORE" dtype_id="1"/>
+                          <varref loc="d,7331,24,7331,57" name="io_backend_packet_1_bits_is_store" dtype_id="1"/>
                           <cond loc="d,7333,26,7333,27" dtype_id="1">
                             <varref loc="d,7332,24,7332,31" name="_GEN_52" dtype_id="1"/>
-                            <varref loc="d,7333,28,7333,61" name="io_backend_packet_0_bits_IS_STORE" dtype_id="1"/>
-                            <varref loc="d,7334,28,7334,78" name="reservation_station_8_decoded_instruction_IS_STORE" dtype_id="1"/>
+                            <varref loc="d,7333,28,7333,61" name="io_backend_packet_0_bits_is_store" dtype_id="1"/>
+                            <varref loc="d,7334,28,7334,78" name="reservation_station_8_decoded_instruction_is_store" dtype_id="1"/>
                           </cond>
                         </cond>
                       </cond>
                     </cond>
                   </and>
-                  <varref loc="d,7324,7,7324,57" name="reservation_station_8_decoded_instruction_IS_STORE" dtype_id="1"/>
+                  <varref loc="d,7324,7,7324,57" name="reservation_station_8_decoded_instruction_is_store" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,7335,38,7335,40" dtype_id="1">
                   <and loc="d,7337,9,7337,10" dtype_id="1">
@@ -29217,23 +29217,23 @@
                     </not>
                     <cond loc="d,7432,14,7432,15" dtype_id="1">
                       <varref loc="d,7431,12,7431,20" name="_GEN_145" dtype_id="1"/>
-                      <varref loc="d,7432,16,7432,48" name="io_backend_packet_3_bits_IS_LOAD" dtype_id="1"/>
+                      <varref loc="d,7432,16,7432,48" name="io_backend_packet_3_bits_is_load" dtype_id="1"/>
                       <cond loc="d,7434,18,7434,19" dtype_id="1">
                         <varref loc="d,7433,16,7433,24" name="_GEN_118" dtype_id="1"/>
-                        <varref loc="d,7434,20,7434,52" name="io_backend_packet_2_bits_IS_LOAD" dtype_id="1"/>
+                        <varref loc="d,7434,20,7434,52" name="io_backend_packet_2_bits_is_load" dtype_id="1"/>
                         <cond loc="d,7436,22,7436,23" dtype_id="1">
                           <varref loc="d,7435,20,7435,27" name="_GEN_80" dtype_id="1"/>
-                          <varref loc="d,7436,24,7436,56" name="io_backend_packet_1_bits_IS_LOAD" dtype_id="1"/>
+                          <varref loc="d,7436,24,7436,56" name="io_backend_packet_1_bits_is_load" dtype_id="1"/>
                           <cond loc="d,7438,26,7438,27" dtype_id="1">
                             <varref loc="d,7437,24,7437,31" name="_GEN_53" dtype_id="1"/>
-                            <varref loc="d,7438,28,7438,60" name="io_backend_packet_0_bits_IS_LOAD" dtype_id="1"/>
-                            <varref loc="d,7439,28,7439,77" name="reservation_station_9_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                            <varref loc="d,7438,28,7438,60" name="io_backend_packet_0_bits_is_load" dtype_id="1"/>
+                            <varref loc="d,7439,28,7439,77" name="reservation_station_9_decoded_instruction_is_load" dtype_id="1"/>
                           </cond>
                         </cond>
                       </cond>
                     </cond>
                   </and>
-                  <varref loc="d,7429,7,7429,56" name="reservation_station_9_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                  <varref loc="d,7429,7,7429,56" name="reservation_station_9_decoded_instruction_is_load" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,7440,58,7440,60" dtype_id="1">
                   <and loc="d,7442,9,7442,10" dtype_id="1">
@@ -29242,23 +29242,23 @@
                     </not>
                     <cond loc="d,7443,14,7443,15" dtype_id="1">
                       <varref loc="d,7442,12,7442,20" name="_GEN_145" dtype_id="1"/>
-                      <varref loc="d,7443,16,7443,49" name="io_backend_packet_3_bits_IS_STORE" dtype_id="1"/>
+                      <varref loc="d,7443,16,7443,49" name="io_backend_packet_3_bits_is_store" dtype_id="1"/>
                       <cond loc="d,7445,18,7445,19" dtype_id="1">
                         <varref loc="d,7444,16,7444,24" name="_GEN_118" dtype_id="1"/>
-                        <varref loc="d,7445,20,7445,53" name="io_backend_packet_2_bits_IS_STORE" dtype_id="1"/>
+                        <varref loc="d,7445,20,7445,53" name="io_backend_packet_2_bits_is_store" dtype_id="1"/>
                         <cond loc="d,7447,22,7447,23" dtype_id="1">
                           <varref loc="d,7446,20,7446,27" name="_GEN_80" dtype_id="1"/>
-                          <varref loc="d,7447,24,7447,57" name="io_backend_packet_1_bits_IS_STORE" dtype_id="1"/>
+                          <varref loc="d,7447,24,7447,57" name="io_backend_packet_1_bits_is_store" dtype_id="1"/>
                           <cond loc="d,7449,26,7449,27" dtype_id="1">
                             <varref loc="d,7448,24,7448,31" name="_GEN_53" dtype_id="1"/>
-                            <varref loc="d,7449,28,7449,61" name="io_backend_packet_0_bits_IS_STORE" dtype_id="1"/>
-                            <varref loc="d,7450,28,7450,78" name="reservation_station_9_decoded_instruction_IS_STORE" dtype_id="1"/>
+                            <varref loc="d,7449,28,7449,61" name="io_backend_packet_0_bits_is_store" dtype_id="1"/>
+                            <varref loc="d,7450,28,7450,78" name="reservation_station_9_decoded_instruction_is_store" dtype_id="1"/>
                           </cond>
                         </cond>
                       </cond>
                     </cond>
                   </and>
-                  <varref loc="d,7440,7,7440,57" name="reservation_station_9_decoded_instruction_IS_STORE" dtype_id="1"/>
+                  <varref loc="d,7440,7,7440,57" name="reservation_station_9_decoded_instruction_is_store" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,7451,38,7451,40" dtype_id="1">
                   <and loc="d,7453,9,7453,10" dtype_id="1">
@@ -29564,23 +29564,23 @@
                     </not>
                     <cond loc="d,7548,14,7548,15" dtype_id="1">
                       <varref loc="d,7547,12,7547,20" name="_GEN_147" dtype_id="1"/>
-                      <varref loc="d,7548,16,7548,48" name="io_backend_packet_3_bits_IS_LOAD" dtype_id="1"/>
+                      <varref loc="d,7548,16,7548,48" name="io_backend_packet_3_bits_is_load" dtype_id="1"/>
                       <cond loc="d,7550,18,7550,19" dtype_id="1">
                         <varref loc="d,7549,16,7549,24" name="_GEN_119" dtype_id="1"/>
-                        <varref loc="d,7550,20,7550,52" name="io_backend_packet_2_bits_IS_LOAD" dtype_id="1"/>
+                        <varref loc="d,7550,20,7550,52" name="io_backend_packet_2_bits_is_load" dtype_id="1"/>
                         <cond loc="d,7552,22,7552,23" dtype_id="1">
                           <varref loc="d,7551,20,7551,27" name="_GEN_82" dtype_id="1"/>
-                          <varref loc="d,7552,24,7552,56" name="io_backend_packet_1_bits_IS_LOAD" dtype_id="1"/>
+                          <varref loc="d,7552,24,7552,56" name="io_backend_packet_1_bits_is_load" dtype_id="1"/>
                           <cond loc="d,7554,26,7554,27" dtype_id="1">
                             <varref loc="d,7553,24,7553,31" name="_GEN_54" dtype_id="1"/>
-                            <varref loc="d,7554,28,7554,60" name="io_backend_packet_0_bits_IS_LOAD" dtype_id="1"/>
-                            <varref loc="d,7555,28,7555,78" name="reservation_station_10_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                            <varref loc="d,7554,28,7554,60" name="io_backend_packet_0_bits_is_load" dtype_id="1"/>
+                            <varref loc="d,7555,28,7555,78" name="reservation_station_10_decoded_instruction_is_load" dtype_id="1"/>
                           </cond>
                         </cond>
                       </cond>
                     </cond>
                   </and>
-                  <varref loc="d,7545,7,7545,57" name="reservation_station_10_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                  <varref loc="d,7545,7,7545,57" name="reservation_station_10_decoded_instruction_is_load" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,7556,59,7556,61" dtype_id="1">
                   <and loc="d,7558,9,7558,10" dtype_id="1">
@@ -29589,23 +29589,23 @@
                     </not>
                     <cond loc="d,7559,14,7559,15" dtype_id="1">
                       <varref loc="d,7558,12,7558,20" name="_GEN_147" dtype_id="1"/>
-                      <varref loc="d,7559,16,7559,49" name="io_backend_packet_3_bits_IS_STORE" dtype_id="1"/>
+                      <varref loc="d,7559,16,7559,49" name="io_backend_packet_3_bits_is_store" dtype_id="1"/>
                       <cond loc="d,7561,18,7561,19" dtype_id="1">
                         <varref loc="d,7560,16,7560,24" name="_GEN_119" dtype_id="1"/>
-                        <varref loc="d,7561,20,7561,53" name="io_backend_packet_2_bits_IS_STORE" dtype_id="1"/>
+                        <varref loc="d,7561,20,7561,53" name="io_backend_packet_2_bits_is_store" dtype_id="1"/>
                         <cond loc="d,7563,22,7563,23" dtype_id="1">
                           <varref loc="d,7562,20,7562,27" name="_GEN_82" dtype_id="1"/>
-                          <varref loc="d,7563,24,7563,57" name="io_backend_packet_1_bits_IS_STORE" dtype_id="1"/>
+                          <varref loc="d,7563,24,7563,57" name="io_backend_packet_1_bits_is_store" dtype_id="1"/>
                           <cond loc="d,7565,26,7565,27" dtype_id="1">
                             <varref loc="d,7564,24,7564,31" name="_GEN_54" dtype_id="1"/>
-                            <varref loc="d,7565,28,7565,61" name="io_backend_packet_0_bits_IS_STORE" dtype_id="1"/>
-                            <varref loc="d,7566,28,7566,79" name="reservation_station_10_decoded_instruction_IS_STORE" dtype_id="1"/>
+                            <varref loc="d,7565,28,7565,61" name="io_backend_packet_0_bits_is_store" dtype_id="1"/>
+                            <varref loc="d,7566,28,7566,79" name="reservation_station_10_decoded_instruction_is_store" dtype_id="1"/>
                           </cond>
                         </cond>
                       </cond>
                     </cond>
                   </and>
-                  <varref loc="d,7556,7,7556,58" name="reservation_station_10_decoded_instruction_IS_STORE" dtype_id="1"/>
+                  <varref loc="d,7556,7,7556,58" name="reservation_station_10_decoded_instruction_is_store" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,7567,39,7567,41" dtype_id="1">
                   <and loc="d,7569,9,7569,10" dtype_id="1">
@@ -29911,23 +29911,23 @@
                     </not>
                     <cond loc="d,7664,14,7664,15" dtype_id="1">
                       <varref loc="d,7663,12,7663,20" name="_GEN_149" dtype_id="1"/>
-                      <varref loc="d,7664,16,7664,48" name="io_backend_packet_3_bits_IS_LOAD" dtype_id="1"/>
+                      <varref loc="d,7664,16,7664,48" name="io_backend_packet_3_bits_is_load" dtype_id="1"/>
                       <cond loc="d,7666,18,7666,19" dtype_id="1">
                         <varref loc="d,7665,16,7665,24" name="_GEN_120" dtype_id="1"/>
-                        <varref loc="d,7666,20,7666,52" name="io_backend_packet_2_bits_IS_LOAD" dtype_id="1"/>
+                        <varref loc="d,7666,20,7666,52" name="io_backend_packet_2_bits_is_load" dtype_id="1"/>
                         <cond loc="d,7668,22,7668,23" dtype_id="1">
                           <varref loc="d,7667,20,7667,27" name="_GEN_84" dtype_id="1"/>
-                          <varref loc="d,7668,24,7668,56" name="io_backend_packet_1_bits_IS_LOAD" dtype_id="1"/>
+                          <varref loc="d,7668,24,7668,56" name="io_backend_packet_1_bits_is_load" dtype_id="1"/>
                           <cond loc="d,7670,26,7670,27" dtype_id="1">
                             <varref loc="d,7669,24,7669,31" name="_GEN_55" dtype_id="1"/>
-                            <varref loc="d,7670,28,7670,60" name="io_backend_packet_0_bits_IS_LOAD" dtype_id="1"/>
-                            <varref loc="d,7671,28,7671,78" name="reservation_station_11_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                            <varref loc="d,7670,28,7670,60" name="io_backend_packet_0_bits_is_load" dtype_id="1"/>
+                            <varref loc="d,7671,28,7671,78" name="reservation_station_11_decoded_instruction_is_load" dtype_id="1"/>
                           </cond>
                         </cond>
                       </cond>
                     </cond>
                   </and>
-                  <varref loc="d,7661,7,7661,57" name="reservation_station_11_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                  <varref loc="d,7661,7,7661,57" name="reservation_station_11_decoded_instruction_is_load" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,7672,59,7672,61" dtype_id="1">
                   <and loc="d,7674,9,7674,10" dtype_id="1">
@@ -29936,23 +29936,23 @@
                     </not>
                     <cond loc="d,7675,14,7675,15" dtype_id="1">
                       <varref loc="d,7674,12,7674,20" name="_GEN_149" dtype_id="1"/>
-                      <varref loc="d,7675,16,7675,49" name="io_backend_packet_3_bits_IS_STORE" dtype_id="1"/>
+                      <varref loc="d,7675,16,7675,49" name="io_backend_packet_3_bits_is_store" dtype_id="1"/>
                       <cond loc="d,7677,18,7677,19" dtype_id="1">
                         <varref loc="d,7676,16,7676,24" name="_GEN_120" dtype_id="1"/>
-                        <varref loc="d,7677,20,7677,53" name="io_backend_packet_2_bits_IS_STORE" dtype_id="1"/>
+                        <varref loc="d,7677,20,7677,53" name="io_backend_packet_2_bits_is_store" dtype_id="1"/>
                         <cond loc="d,7679,22,7679,23" dtype_id="1">
                           <varref loc="d,7678,20,7678,27" name="_GEN_84" dtype_id="1"/>
-                          <varref loc="d,7679,24,7679,57" name="io_backend_packet_1_bits_IS_STORE" dtype_id="1"/>
+                          <varref loc="d,7679,24,7679,57" name="io_backend_packet_1_bits_is_store" dtype_id="1"/>
                           <cond loc="d,7681,26,7681,27" dtype_id="1">
                             <varref loc="d,7680,24,7680,31" name="_GEN_55" dtype_id="1"/>
-                            <varref loc="d,7681,28,7681,61" name="io_backend_packet_0_bits_IS_STORE" dtype_id="1"/>
-                            <varref loc="d,7682,28,7682,79" name="reservation_station_11_decoded_instruction_IS_STORE" dtype_id="1"/>
+                            <varref loc="d,7681,28,7681,61" name="io_backend_packet_0_bits_is_store" dtype_id="1"/>
+                            <varref loc="d,7682,28,7682,79" name="reservation_station_11_decoded_instruction_is_store" dtype_id="1"/>
                           </cond>
                         </cond>
                       </cond>
                     </cond>
                   </and>
-                  <varref loc="d,7672,7,7672,58" name="reservation_station_11_decoded_instruction_IS_STORE" dtype_id="1"/>
+                  <varref loc="d,7672,7,7672,58" name="reservation_station_11_decoded_instruction_is_store" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,7683,39,7683,41" dtype_id="1">
                   <and loc="d,7685,9,7685,10" dtype_id="1">
@@ -30258,23 +30258,23 @@
                     </not>
                     <cond loc="d,7780,14,7780,15" dtype_id="1">
                       <varref loc="d,7779,12,7779,20" name="_GEN_151" dtype_id="1"/>
-                      <varref loc="d,7780,16,7780,48" name="io_backend_packet_3_bits_IS_LOAD" dtype_id="1"/>
+                      <varref loc="d,7780,16,7780,48" name="io_backend_packet_3_bits_is_load" dtype_id="1"/>
                       <cond loc="d,7782,18,7782,19" dtype_id="1">
                         <varref loc="d,7781,16,7781,24" name="_GEN_121" dtype_id="1"/>
-                        <varref loc="d,7782,20,7782,52" name="io_backend_packet_2_bits_IS_LOAD" dtype_id="1"/>
+                        <varref loc="d,7782,20,7782,52" name="io_backend_packet_2_bits_is_load" dtype_id="1"/>
                         <cond loc="d,7784,22,7784,23" dtype_id="1">
                           <varref loc="d,7783,20,7783,27" name="_GEN_86" dtype_id="1"/>
-                          <varref loc="d,7784,24,7784,56" name="io_backend_packet_1_bits_IS_LOAD" dtype_id="1"/>
+                          <varref loc="d,7784,24,7784,56" name="io_backend_packet_1_bits_is_load" dtype_id="1"/>
                           <cond loc="d,7786,26,7786,27" dtype_id="1">
                             <varref loc="d,7785,24,7785,31" name="_GEN_56" dtype_id="1"/>
-                            <varref loc="d,7786,28,7786,60" name="io_backend_packet_0_bits_IS_LOAD" dtype_id="1"/>
-                            <varref loc="d,7787,28,7787,78" name="reservation_station_12_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                            <varref loc="d,7786,28,7786,60" name="io_backend_packet_0_bits_is_load" dtype_id="1"/>
+                            <varref loc="d,7787,28,7787,78" name="reservation_station_12_decoded_instruction_is_load" dtype_id="1"/>
                           </cond>
                         </cond>
                       </cond>
                     </cond>
                   </and>
-                  <varref loc="d,7777,7,7777,57" name="reservation_station_12_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                  <varref loc="d,7777,7,7777,57" name="reservation_station_12_decoded_instruction_is_load" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,7788,59,7788,61" dtype_id="1">
                   <and loc="d,7790,9,7790,10" dtype_id="1">
@@ -30283,23 +30283,23 @@
                     </not>
                     <cond loc="d,7791,14,7791,15" dtype_id="1">
                       <varref loc="d,7790,12,7790,20" name="_GEN_151" dtype_id="1"/>
-                      <varref loc="d,7791,16,7791,49" name="io_backend_packet_3_bits_IS_STORE" dtype_id="1"/>
+                      <varref loc="d,7791,16,7791,49" name="io_backend_packet_3_bits_is_store" dtype_id="1"/>
                       <cond loc="d,7793,18,7793,19" dtype_id="1">
                         <varref loc="d,7792,16,7792,24" name="_GEN_121" dtype_id="1"/>
-                        <varref loc="d,7793,20,7793,53" name="io_backend_packet_2_bits_IS_STORE" dtype_id="1"/>
+                        <varref loc="d,7793,20,7793,53" name="io_backend_packet_2_bits_is_store" dtype_id="1"/>
                         <cond loc="d,7795,22,7795,23" dtype_id="1">
                           <varref loc="d,7794,20,7794,27" name="_GEN_86" dtype_id="1"/>
-                          <varref loc="d,7795,24,7795,57" name="io_backend_packet_1_bits_IS_STORE" dtype_id="1"/>
+                          <varref loc="d,7795,24,7795,57" name="io_backend_packet_1_bits_is_store" dtype_id="1"/>
                           <cond loc="d,7797,26,7797,27" dtype_id="1">
                             <varref loc="d,7796,24,7796,31" name="_GEN_56" dtype_id="1"/>
-                            <varref loc="d,7797,28,7797,61" name="io_backend_packet_0_bits_IS_STORE" dtype_id="1"/>
-                            <varref loc="d,7798,28,7798,79" name="reservation_station_12_decoded_instruction_IS_STORE" dtype_id="1"/>
+                            <varref loc="d,7797,28,7797,61" name="io_backend_packet_0_bits_is_store" dtype_id="1"/>
+                            <varref loc="d,7798,28,7798,79" name="reservation_station_12_decoded_instruction_is_store" dtype_id="1"/>
                           </cond>
                         </cond>
                       </cond>
                     </cond>
                   </and>
-                  <varref loc="d,7788,7,7788,58" name="reservation_station_12_decoded_instruction_IS_STORE" dtype_id="1"/>
+                  <varref loc="d,7788,7,7788,58" name="reservation_station_12_decoded_instruction_is_store" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,7799,39,7799,41" dtype_id="1">
                   <and loc="d,7801,9,7801,10" dtype_id="1">
@@ -30605,23 +30605,23 @@
                     </not>
                     <cond loc="d,7896,14,7896,15" dtype_id="1">
                       <varref loc="d,7895,12,7895,20" name="_GEN_153" dtype_id="1"/>
-                      <varref loc="d,7896,16,7896,48" name="io_backend_packet_3_bits_IS_LOAD" dtype_id="1"/>
+                      <varref loc="d,7896,16,7896,48" name="io_backend_packet_3_bits_is_load" dtype_id="1"/>
                       <cond loc="d,7898,18,7898,19" dtype_id="1">
                         <varref loc="d,7897,16,7897,24" name="_GEN_122" dtype_id="1"/>
-                        <varref loc="d,7898,20,7898,52" name="io_backend_packet_2_bits_IS_LOAD" dtype_id="1"/>
+                        <varref loc="d,7898,20,7898,52" name="io_backend_packet_2_bits_is_load" dtype_id="1"/>
                         <cond loc="d,7900,22,7900,23" dtype_id="1">
                           <varref loc="d,7899,20,7899,27" name="_GEN_88" dtype_id="1"/>
-                          <varref loc="d,7900,24,7900,56" name="io_backend_packet_1_bits_IS_LOAD" dtype_id="1"/>
+                          <varref loc="d,7900,24,7900,56" name="io_backend_packet_1_bits_is_load" dtype_id="1"/>
                           <cond loc="d,7902,26,7902,27" dtype_id="1">
                             <varref loc="d,7901,24,7901,31" name="_GEN_57" dtype_id="1"/>
-                            <varref loc="d,7902,28,7902,60" name="io_backend_packet_0_bits_IS_LOAD" dtype_id="1"/>
-                            <varref loc="d,7903,28,7903,78" name="reservation_station_13_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                            <varref loc="d,7902,28,7902,60" name="io_backend_packet_0_bits_is_load" dtype_id="1"/>
+                            <varref loc="d,7903,28,7903,78" name="reservation_station_13_decoded_instruction_is_load" dtype_id="1"/>
                           </cond>
                         </cond>
                       </cond>
                     </cond>
                   </and>
-                  <varref loc="d,7893,7,7893,57" name="reservation_station_13_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                  <varref loc="d,7893,7,7893,57" name="reservation_station_13_decoded_instruction_is_load" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,7904,59,7904,61" dtype_id="1">
                   <and loc="d,7906,9,7906,10" dtype_id="1">
@@ -30630,23 +30630,23 @@
                     </not>
                     <cond loc="d,7907,14,7907,15" dtype_id="1">
                       <varref loc="d,7906,12,7906,20" name="_GEN_153" dtype_id="1"/>
-                      <varref loc="d,7907,16,7907,49" name="io_backend_packet_3_bits_IS_STORE" dtype_id="1"/>
+                      <varref loc="d,7907,16,7907,49" name="io_backend_packet_3_bits_is_store" dtype_id="1"/>
                       <cond loc="d,7909,18,7909,19" dtype_id="1">
                         <varref loc="d,7908,16,7908,24" name="_GEN_122" dtype_id="1"/>
-                        <varref loc="d,7909,20,7909,53" name="io_backend_packet_2_bits_IS_STORE" dtype_id="1"/>
+                        <varref loc="d,7909,20,7909,53" name="io_backend_packet_2_bits_is_store" dtype_id="1"/>
                         <cond loc="d,7911,22,7911,23" dtype_id="1">
                           <varref loc="d,7910,20,7910,27" name="_GEN_88" dtype_id="1"/>
-                          <varref loc="d,7911,24,7911,57" name="io_backend_packet_1_bits_IS_STORE" dtype_id="1"/>
+                          <varref loc="d,7911,24,7911,57" name="io_backend_packet_1_bits_is_store" dtype_id="1"/>
                           <cond loc="d,7913,26,7913,27" dtype_id="1">
                             <varref loc="d,7912,24,7912,31" name="_GEN_57" dtype_id="1"/>
-                            <varref loc="d,7913,28,7913,61" name="io_backend_packet_0_bits_IS_STORE" dtype_id="1"/>
-                            <varref loc="d,7914,28,7914,79" name="reservation_station_13_decoded_instruction_IS_STORE" dtype_id="1"/>
+                            <varref loc="d,7913,28,7913,61" name="io_backend_packet_0_bits_is_store" dtype_id="1"/>
+                            <varref loc="d,7914,28,7914,79" name="reservation_station_13_decoded_instruction_is_store" dtype_id="1"/>
                           </cond>
                         </cond>
                       </cond>
                     </cond>
                   </and>
-                  <varref loc="d,7904,7,7904,58" name="reservation_station_13_decoded_instruction_IS_STORE" dtype_id="1"/>
+                  <varref loc="d,7904,7,7904,58" name="reservation_station_13_decoded_instruction_is_store" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,7915,39,7915,41" dtype_id="1">
                   <and loc="d,7917,9,7917,10" dtype_id="1">
@@ -30952,23 +30952,23 @@
                     </not>
                     <cond loc="d,8012,14,8012,15" dtype_id="1">
                       <varref loc="d,8011,12,8011,20" name="_GEN_155" dtype_id="1"/>
-                      <varref loc="d,8012,16,8012,48" name="io_backend_packet_3_bits_IS_LOAD" dtype_id="1"/>
+                      <varref loc="d,8012,16,8012,48" name="io_backend_packet_3_bits_is_load" dtype_id="1"/>
                       <cond loc="d,8014,18,8014,19" dtype_id="1">
                         <varref loc="d,8013,16,8013,24" name="_GEN_123" dtype_id="1"/>
-                        <varref loc="d,8014,20,8014,52" name="io_backend_packet_2_bits_IS_LOAD" dtype_id="1"/>
+                        <varref loc="d,8014,20,8014,52" name="io_backend_packet_2_bits_is_load" dtype_id="1"/>
                         <cond loc="d,8016,22,8016,23" dtype_id="1">
                           <varref loc="d,8015,20,8015,27" name="_GEN_90" dtype_id="1"/>
-                          <varref loc="d,8016,24,8016,56" name="io_backend_packet_1_bits_IS_LOAD" dtype_id="1"/>
+                          <varref loc="d,8016,24,8016,56" name="io_backend_packet_1_bits_is_load" dtype_id="1"/>
                           <cond loc="d,8018,26,8018,27" dtype_id="1">
                             <varref loc="d,8017,24,8017,31" name="_GEN_58" dtype_id="1"/>
-                            <varref loc="d,8018,28,8018,60" name="io_backend_packet_0_bits_IS_LOAD" dtype_id="1"/>
-                            <varref loc="d,8019,28,8019,78" name="reservation_station_14_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                            <varref loc="d,8018,28,8018,60" name="io_backend_packet_0_bits_is_load" dtype_id="1"/>
+                            <varref loc="d,8019,28,8019,78" name="reservation_station_14_decoded_instruction_is_load" dtype_id="1"/>
                           </cond>
                         </cond>
                       </cond>
                     </cond>
                   </and>
-                  <varref loc="d,8009,7,8009,57" name="reservation_station_14_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                  <varref loc="d,8009,7,8009,57" name="reservation_station_14_decoded_instruction_is_load" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,8020,59,8020,61" dtype_id="1">
                   <and loc="d,8022,9,8022,10" dtype_id="1">
@@ -30977,23 +30977,23 @@
                     </not>
                     <cond loc="d,8023,14,8023,15" dtype_id="1">
                       <varref loc="d,8022,12,8022,20" name="_GEN_155" dtype_id="1"/>
-                      <varref loc="d,8023,16,8023,49" name="io_backend_packet_3_bits_IS_STORE" dtype_id="1"/>
+                      <varref loc="d,8023,16,8023,49" name="io_backend_packet_3_bits_is_store" dtype_id="1"/>
                       <cond loc="d,8025,18,8025,19" dtype_id="1">
                         <varref loc="d,8024,16,8024,24" name="_GEN_123" dtype_id="1"/>
-                        <varref loc="d,8025,20,8025,53" name="io_backend_packet_2_bits_IS_STORE" dtype_id="1"/>
+                        <varref loc="d,8025,20,8025,53" name="io_backend_packet_2_bits_is_store" dtype_id="1"/>
                         <cond loc="d,8027,22,8027,23" dtype_id="1">
                           <varref loc="d,8026,20,8026,27" name="_GEN_90" dtype_id="1"/>
-                          <varref loc="d,8027,24,8027,57" name="io_backend_packet_1_bits_IS_STORE" dtype_id="1"/>
+                          <varref loc="d,8027,24,8027,57" name="io_backend_packet_1_bits_is_store" dtype_id="1"/>
                           <cond loc="d,8029,26,8029,27" dtype_id="1">
                             <varref loc="d,8028,24,8028,31" name="_GEN_58" dtype_id="1"/>
-                            <varref loc="d,8029,28,8029,61" name="io_backend_packet_0_bits_IS_STORE" dtype_id="1"/>
-                            <varref loc="d,8030,28,8030,79" name="reservation_station_14_decoded_instruction_IS_STORE" dtype_id="1"/>
+                            <varref loc="d,8029,28,8029,61" name="io_backend_packet_0_bits_is_store" dtype_id="1"/>
+                            <varref loc="d,8030,28,8030,79" name="reservation_station_14_decoded_instruction_is_store" dtype_id="1"/>
                           </cond>
                         </cond>
                       </cond>
                     </cond>
                   </and>
-                  <varref loc="d,8020,7,8020,58" name="reservation_station_14_decoded_instruction_IS_STORE" dtype_id="1"/>
+                  <varref loc="d,8020,7,8020,58" name="reservation_station_14_decoded_instruction_is_store" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,8031,39,8031,41" dtype_id="1">
                   <and loc="d,8033,9,8033,10" dtype_id="1">
@@ -31299,23 +31299,23 @@
                     </not>
                     <cond loc="d,8128,14,8128,15" dtype_id="1">
                       <varref loc="d,8127,12,8127,20" name="_GEN_156" dtype_id="1"/>
-                      <varref loc="d,8128,16,8128,48" name="io_backend_packet_3_bits_IS_LOAD" dtype_id="1"/>
+                      <varref loc="d,8128,16,8128,48" name="io_backend_packet_3_bits_is_load" dtype_id="1"/>
                       <cond loc="d,8130,18,8130,19" dtype_id="1">
                         <varref loc="d,8129,16,8129,24" name="_GEN_124" dtype_id="1"/>
-                        <varref loc="d,8130,20,8130,52" name="io_backend_packet_2_bits_IS_LOAD" dtype_id="1"/>
+                        <varref loc="d,8130,20,8130,52" name="io_backend_packet_2_bits_is_load" dtype_id="1"/>
                         <cond loc="d,8132,22,8132,23" dtype_id="1">
                           <varref loc="d,8131,20,8131,27" name="_GEN_91" dtype_id="1"/>
-                          <varref loc="d,8132,24,8132,56" name="io_backend_packet_1_bits_IS_LOAD" dtype_id="1"/>
+                          <varref loc="d,8132,24,8132,56" name="io_backend_packet_1_bits_is_load" dtype_id="1"/>
                           <cond loc="d,8134,26,8134,27" dtype_id="1">
                             <varref loc="d,8133,24,8133,31" name="_GEN_59" dtype_id="1"/>
-                            <varref loc="d,8134,28,8134,60" name="io_backend_packet_0_bits_IS_LOAD" dtype_id="1"/>
-                            <varref loc="d,8135,28,8135,78" name="reservation_station_15_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                            <varref loc="d,8134,28,8134,60" name="io_backend_packet_0_bits_is_load" dtype_id="1"/>
+                            <varref loc="d,8135,28,8135,78" name="reservation_station_15_decoded_instruction_is_load" dtype_id="1"/>
                           </cond>
                         </cond>
                       </cond>
                     </cond>
                   </and>
-                  <varref loc="d,8125,7,8125,57" name="reservation_station_15_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                  <varref loc="d,8125,7,8125,57" name="reservation_station_15_decoded_instruction_is_load" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,8136,59,8136,61" dtype_id="1">
                   <and loc="d,8138,9,8138,10" dtype_id="1">
@@ -31324,23 +31324,23 @@
                     </not>
                     <cond loc="d,8139,14,8139,15" dtype_id="1">
                       <varref loc="d,8138,12,8138,20" name="_GEN_156" dtype_id="1"/>
-                      <varref loc="d,8139,16,8139,49" name="io_backend_packet_3_bits_IS_STORE" dtype_id="1"/>
+                      <varref loc="d,8139,16,8139,49" name="io_backend_packet_3_bits_is_store" dtype_id="1"/>
                       <cond loc="d,8141,18,8141,19" dtype_id="1">
                         <varref loc="d,8140,16,8140,24" name="_GEN_124" dtype_id="1"/>
-                        <varref loc="d,8141,20,8141,53" name="io_backend_packet_2_bits_IS_STORE" dtype_id="1"/>
+                        <varref loc="d,8141,20,8141,53" name="io_backend_packet_2_bits_is_store" dtype_id="1"/>
                         <cond loc="d,8143,22,8143,23" dtype_id="1">
                           <varref loc="d,8142,20,8142,27" name="_GEN_91" dtype_id="1"/>
-                          <varref loc="d,8143,24,8143,57" name="io_backend_packet_1_bits_IS_STORE" dtype_id="1"/>
+                          <varref loc="d,8143,24,8143,57" name="io_backend_packet_1_bits_is_store" dtype_id="1"/>
                           <cond loc="d,8145,26,8145,27" dtype_id="1">
                             <varref loc="d,8144,24,8144,31" name="_GEN_59" dtype_id="1"/>
-                            <varref loc="d,8145,28,8145,61" name="io_backend_packet_0_bits_IS_STORE" dtype_id="1"/>
-                            <varref loc="d,8146,28,8146,79" name="reservation_station_15_decoded_instruction_IS_STORE" dtype_id="1"/>
+                            <varref loc="d,8145,28,8145,61" name="io_backend_packet_0_bits_is_store" dtype_id="1"/>
+                            <varref loc="d,8146,28,8146,79" name="reservation_station_15_decoded_instruction_is_store" dtype_id="1"/>
                           </cond>
                         </cond>
                       </cond>
                     </cond>
                   </and>
-                  <varref loc="d,8136,7,8136,58" name="reservation_station_15_decoded_instruction_IS_STORE" dtype_id="1"/>
+                  <varref loc="d,8136,7,8136,58" name="reservation_station_15_decoded_instruction_is_store" dtype_id="1"/>
                 </assigndly>
                 <assigndly loc="d,8147,39,8147,41" dtype_id="1">
                   <and loc="d,8149,9,8149,10" dtype_id="1">
@@ -32073,36 +32073,36 @@
       <contassign loc="d,8176,38,8176,39" dtype_id="1">
         <sel loc="d,8176,47,8176,48" dtype_id="1">
           <concat loc="d,5095,21,5095,70" dtype_id="7">
-            <varref loc="d,5290,21,5290,71" name="reservation_station_15_decoded_instruction_IS_LOAD" dtype_id="1"/>
+            <varref loc="d,5290,21,5290,71" name="reservation_station_15_decoded_instruction_is_load" dtype_id="1"/>
             <concat loc="d,5095,21,5095,70" dtype_id="26">
-              <varref loc="d,5277,21,5277,71" name="reservation_station_14_decoded_instruction_IS_LOAD" dtype_id="1"/>
+              <varref loc="d,5277,21,5277,71" name="reservation_station_14_decoded_instruction_is_load" dtype_id="1"/>
               <concat loc="d,5095,21,5095,70" dtype_id="27">
-                <varref loc="d,5264,21,5264,71" name="reservation_station_13_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                <varref loc="d,5264,21,5264,71" name="reservation_station_13_decoded_instruction_is_load" dtype_id="1"/>
                 <concat loc="d,5095,21,5095,70" dtype_id="28">
-                  <varref loc="d,5251,21,5251,71" name="reservation_station_12_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                  <varref loc="d,5251,21,5251,71" name="reservation_station_12_decoded_instruction_is_load" dtype_id="1"/>
                   <concat loc="d,5095,21,5095,70" dtype_id="29">
-                    <varref loc="d,5238,21,5238,71" name="reservation_station_11_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                    <varref loc="d,5238,21,5238,71" name="reservation_station_11_decoded_instruction_is_load" dtype_id="1"/>
                     <concat loc="d,5095,21,5095,70" dtype_id="30">
-                      <varref loc="d,5225,21,5225,71" name="reservation_station_10_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                      <varref loc="d,5225,21,5225,71" name="reservation_station_10_decoded_instruction_is_load" dtype_id="1"/>
                       <concat loc="d,5095,21,5095,70" dtype_id="31">
-                        <varref loc="d,5212,21,5212,70" name="reservation_station_9_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                        <varref loc="d,5212,21,5212,70" name="reservation_station_9_decoded_instruction_is_load" dtype_id="1"/>
                         <concat loc="d,5095,21,5095,70" dtype_id="25">
-                          <varref loc="d,5199,21,5199,70" name="reservation_station_8_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                          <varref loc="d,5199,21,5199,70" name="reservation_station_8_decoded_instruction_is_load" dtype_id="1"/>
                           <concat loc="d,5095,21,5095,70" dtype_id="23">
-                            <varref loc="d,5186,21,5186,70" name="reservation_station_7_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                            <varref loc="d,5186,21,5186,70" name="reservation_station_7_decoded_instruction_is_load" dtype_id="1"/>
                             <concat loc="d,5095,21,5095,70" dtype_id="8">
-                              <varref loc="d,5173,21,5173,70" name="reservation_station_6_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                              <varref loc="d,5173,21,5173,70" name="reservation_station_6_decoded_instruction_is_load" dtype_id="1"/>
                               <concat loc="d,5095,21,5095,70" dtype_id="4">
-                                <varref loc="d,5160,21,5160,70" name="reservation_station_5_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                                <varref loc="d,5160,21,5160,70" name="reservation_station_5_decoded_instruction_is_load" dtype_id="1"/>
                                 <concat loc="d,5095,21,5095,70" dtype_id="10">
-                                  <varref loc="d,5147,21,5147,70" name="reservation_station_4_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                                  <varref loc="d,5147,21,5147,70" name="reservation_station_4_decoded_instruction_is_load" dtype_id="1"/>
                                   <concat loc="d,5095,21,5095,70" dtype_id="9">
-                                    <varref loc="d,5134,21,5134,70" name="reservation_station_3_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                                    <varref loc="d,5134,21,5134,70" name="reservation_station_3_decoded_instruction_is_load" dtype_id="1"/>
                                     <concat loc="d,5095,21,5095,70" dtype_id="5">
-                                      <varref loc="d,5121,21,5121,70" name="reservation_station_2_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                                      <varref loc="d,5121,21,5121,70" name="reservation_station_2_decoded_instruction_is_load" dtype_id="1"/>
                                       <concat loc="d,5095,21,5095,70" dtype_id="6">
-                                        <varref loc="d,5108,21,5108,70" name="reservation_station_1_decoded_instruction_IS_LOAD" dtype_id="1"/>
-                                        <varref loc="d,5095,21,5095,70" name="reservation_station_0_decoded_instruction_IS_LOAD" dtype_id="1"/>
+                                        <varref loc="d,5108,21,5108,70" name="reservation_station_1_decoded_instruction_is_load" dtype_id="1"/>
+                                        <varref loc="d,5095,21,5095,70" name="reservation_station_0_decoded_instruction_is_load" dtype_id="1"/>
                                       </concat>
                                     </concat>
                                   </concat>
@@ -32121,41 +32121,41 @@
           <varref loc="d,5774,26,5774,27" name="__VdfgRegularize_h713d897c_0_0" dtype_id="9"/>
           <const loc="d,8176,47,8176,48" name="32&apos;h1" dtype_id="3"/>
         </sel>
-        <varref loc="d,8176,38,8176,39" name="io_RF_inputs_3_bits_IS_LOAD" dtype_id="1"/>
+        <varref loc="d,8176,38,8176,39" name="io_RF_inputs_3_bits_is_load" dtype_id="1"/>
       </contassign>
       <contassign loc="d,8177,39,8177,40" dtype_id="1">
         <sel loc="d,8177,48,8177,49" dtype_id="1">
           <concat loc="d,5096,21,5096,71" dtype_id="7">
-            <varref loc="d,5291,21,5291,72" name="reservation_station_15_decoded_instruction_IS_STORE" dtype_id="1"/>
+            <varref loc="d,5291,21,5291,72" name="reservation_station_15_decoded_instruction_is_store" dtype_id="1"/>
             <concat loc="d,5096,21,5096,71" dtype_id="26">
-              <varref loc="d,5278,21,5278,72" name="reservation_station_14_decoded_instruction_IS_STORE" dtype_id="1"/>
+              <varref loc="d,5278,21,5278,72" name="reservation_station_14_decoded_instruction_is_store" dtype_id="1"/>
               <concat loc="d,5096,21,5096,71" dtype_id="27">
-                <varref loc="d,5265,21,5265,72" name="reservation_station_13_decoded_instruction_IS_STORE" dtype_id="1"/>
+                <varref loc="d,5265,21,5265,72" name="reservation_station_13_decoded_instruction_is_store" dtype_id="1"/>
                 <concat loc="d,5096,21,5096,71" dtype_id="28">
-                  <varref loc="d,5252,21,5252,72" name="reservation_station_12_decoded_instruction_IS_STORE" dtype_id="1"/>
+                  <varref loc="d,5252,21,5252,72" name="reservation_station_12_decoded_instruction_is_store" dtype_id="1"/>
                   <concat loc="d,5096,21,5096,71" dtype_id="29">
-                    <varref loc="d,5239,21,5239,72" name="reservation_station_11_decoded_instruction_IS_STORE" dtype_id="1"/>
+                    <varref loc="d,5239,21,5239,72" name="reservation_station_11_decoded_instruction_is_store" dtype_id="1"/>
                     <concat loc="d,5096,21,5096,71" dtype_id="30">
-                      <varref loc="d,5226,21,5226,72" name="reservation_station_10_decoded_instruction_IS_STORE" dtype_id="1"/>
+                      <varref loc="d,5226,21,5226,72" name="reservation_station_10_decoded_instruction_is_store" dtype_id="1"/>
                       <concat loc="d,5096,21,5096,71" dtype_id="31">
-                        <varref loc="d,5213,21,5213,71" name="reservation_station_9_decoded_instruction_IS_STORE" dtype_id="1"/>
+                        <varref loc="d,5213,21,5213,71" name="reservation_station_9_decoded_instruction_is_store" dtype_id="1"/>
                         <concat loc="d,5096,21,5096,71" dtype_id="25">
-                          <varref loc="d,5200,21,5200,71" name="reservation_station_8_decoded_instruction_IS_STORE" dtype_id="1"/>
+                          <varref loc="d,5200,21,5200,71" name="reservation_station_8_decoded_instruction_is_store" dtype_id="1"/>
                           <concat loc="d,5096,21,5096,71" dtype_id="23">
-                            <varref loc="d,5187,21,5187,71" name="reservation_station_7_decoded_instruction_IS_STORE" dtype_id="1"/>
+                            <varref loc="d,5187,21,5187,71" name="reservation_station_7_decoded_instruction_is_store" dtype_id="1"/>
                             <concat loc="d,5096,21,5096,71" dtype_id="8">
-                              <varref loc="d,5174,21,5174,71" name="reservation_station_6_decoded_instruction_IS_STORE" dtype_id="1"/>
+                              <varref loc="d,5174,21,5174,71" name="reservation_station_6_decoded_instruction_is_store" dtype_id="1"/>
                               <concat loc="d,5096,21,5096,71" dtype_id="4">
-                                <varref loc="d,5161,21,5161,71" name="reservation_station_5_decoded_instruction_IS_STORE" dtype_id="1"/>
+                                <varref loc="d,5161,21,5161,71" name="reservation_station_5_decoded_instruction_is_store" dtype_id="1"/>
                                 <concat loc="d,5096,21,5096,71" dtype_id="10">
-                                  <varref loc="d,5148,21,5148,71" name="reservation_station_4_decoded_instruction_IS_STORE" dtype_id="1"/>
+                                  <varref loc="d,5148,21,5148,71" name="reservation_station_4_decoded_instruction_is_store" dtype_id="1"/>
                                   <concat loc="d,5096,21,5096,71" dtype_id="9">
-                                    <varref loc="d,5135,21,5135,71" name="reservation_station_3_decoded_instruction_IS_STORE" dtype_id="1"/>
+                                    <varref loc="d,5135,21,5135,71" name="reservation_station_3_decoded_instruction_is_store" dtype_id="1"/>
                                     <concat loc="d,5096,21,5096,71" dtype_id="5">
-                                      <varref loc="d,5122,21,5122,71" name="reservation_station_2_decoded_instruction_IS_STORE" dtype_id="1"/>
+                                      <varref loc="d,5122,21,5122,71" name="reservation_station_2_decoded_instruction_is_store" dtype_id="1"/>
                                       <concat loc="d,5096,21,5096,71" dtype_id="6">
-                                        <varref loc="d,5109,21,5109,71" name="reservation_station_1_decoded_instruction_IS_STORE" dtype_id="1"/>
-                                        <varref loc="d,5096,21,5096,71" name="reservation_station_0_decoded_instruction_IS_STORE" dtype_id="1"/>
+                                        <varref loc="d,5109,21,5109,71" name="reservation_station_1_decoded_instruction_is_store" dtype_id="1"/>
+                                        <varref loc="d,5096,21,5096,71" name="reservation_station_0_decoded_instruction_is_store" dtype_id="1"/>
                                       </concat>
                                     </concat>
                                   </concat>
@@ -32174,7 +32174,7 @@
           <varref loc="d,5774,26,5774,27" name="__VdfgRegularize_h713d897c_0_0" dtype_id="9"/>
           <const loc="d,8177,48,8177,49" name="32&apos;h1" dtype_id="3"/>
         </sel>
-        <varref loc="d,8177,39,8177,40" name="io_RF_inputs_3_bits_IS_STORE" dtype_id="1"/>
+        <varref loc="d,8177,39,8177,40" name="io_RF_inputs_3_bits_is_store" dtype_id="1"/>
       </contassign>
       <contassign loc="d,5819,38,5819,39" dtype_id="9">
         <or loc="d,5822,5,5822,6" dtype_id="9">
@@ -34529,8 +34529,8 @@
       <var loc="d,8834,18,8834,61" name="io_FU_input_bits_decoded_instruction_FUNCT3" dtype_id="5" dir="input" pinIndex="5" vartype="logic" origName="io_FU_input_bits_decoded_instruction_FUNCT3"/>
       <var loc="d,8835,18,8835,67" name="io_FU_input_bits_decoded_instruction_packet_index" dtype_id="9" dir="input" pinIndex="6" vartype="logic" origName="io_FU_input_bits_decoded_instruction_packet_index"/>
       <var loc="d,8836,18,8836,64" name="io_FU_input_bits_decoded_instruction_ROB_index" dtype_id="4" dir="input" pinIndex="7" vartype="logic" origName="io_FU_input_bits_decoded_instruction_ROB_index"/>
-      <var loc="d,8837,18,8837,62" name="io_FU_input_bits_decoded_instruction_IS_LOAD" dtype_id="1" dir="input" pinIndex="8" vartype="logic" origName="io_FU_input_bits_decoded_instruction_IS_LOAD"/>
-      <var loc="d,8838,18,8838,63" name="io_FU_input_bits_decoded_instruction_IS_STORE" dtype_id="1" dir="input" pinIndex="9" vartype="logic" origName="io_FU_input_bits_decoded_instruction_IS_STORE"/>
+      <var loc="d,8837,18,8837,62" name="io_FU_input_bits_decoded_instruction_is_load" dtype_id="1" dir="input" pinIndex="8" vartype="logic" origName="io_FU_input_bits_decoded_instruction_is_load"/>
+      <var loc="d,8838,18,8838,63" name="io_FU_input_bits_decoded_instruction_is_store" dtype_id="1" dir="input" pinIndex="9" vartype="logic" origName="io_FU_input_bits_decoded_instruction_is_store"/>
       <var loc="d,8839,18,8839,43" name="io_FU_input_bits_RS1_data" dtype_id="3" dir="input" pinIndex="10" vartype="logic" origName="io_FU_input_bits_RS1_data"/>
       <var loc="d,8840,18,8840,43" name="io_FU_input_bits_RS2_data" dtype_id="3" dir="input" pinIndex="11" vartype="logic" origName="io_FU_input_bits_RS2_data"/>
       <var loc="d,8841,18,8841,40" name="io_DRAM_resp_bits_data" dtype_id="2" dir="input" pinIndex="12" vartype="logic" origName="io_DRAM_resp_bits_data"/>
@@ -34545,7 +34545,7 @@
       <var loc="d,8850,18,8850,43" name="io_DRAM_request_bits_addr" dtype_id="3" dir="output" pinIndex="21" vartype="logic" origName="io_DRAM_request_bits_addr"/>
       <var loc="d,8851,18,8851,46" name="io_DRAM_request_bits_wr_data" dtype_id="3" dir="output" pinIndex="22" vartype="logic" origName="io_DRAM_request_bits_wr_data"/>
       <var loc="d,8852,18,8852,44" name="io_DRAM_request_bits_wr_en" dtype_id="1" dir="output" pinIndex="23" vartype="logic" origName="io_DRAM_request_bits_wr_en"/>
-      <var loc="d,8855,15,8855,22" name="IS_LOAD" dtype_id="1" vartype="logic" origName="IS_LOAD"/>
+      <var loc="d,8855,15,8855,22" name="is_load" dtype_id="1" vartype="logic" origName="is_load"/>
       <var loc="d,8858,15,8858,20" name="_LB_T" dtype_id="1" vartype="logic" origName="_LB_T"/>
       <var loc="d,8859,15,8859,20" name="_LH_T" dtype_id="1" vartype="logic" origName="_LH_T"/>
       <var loc="d,8860,15,8860,20" name="_LW_T" dtype_id="1" vartype="logic" origName="_LW_T"/>
@@ -34572,7 +34572,7 @@
           <assigndly loc="d,8875,9,8875,11" dtype_id="1">
             <and loc="d,8875,28,8875,29" dtype_id="1">
               <and loc="d,8875,20,8875,21" dtype_id="1">
-                <varref loc="d,8875,12,8875,19" name="IS_LOAD" dtype_id="1"/>
+                <varref loc="d,8875,12,8875,19" name="is_load" dtype_id="1"/>
                 <varref loc="d,8875,22,8875,27" name="_LB_T" dtype_id="1"/>
               </and>
               <varref loc="d,8875,30,8875,47" name="io_FU_input_valid" dtype_id="1"/>
@@ -34582,7 +34582,7 @@
           <assigndly loc="d,8876,11,8876,13" dtype_id="1">
             <and loc="d,8876,30,8876,31" dtype_id="1">
               <and loc="d,8876,22,8876,23" dtype_id="1">
-                <varref loc="d,8876,14,8876,21" name="IS_LOAD" dtype_id="1"/>
+                <varref loc="d,8876,14,8876,21" name="is_load" dtype_id="1"/>
                 <varref loc="d,8876,24,8876,29" name="_LH_T" dtype_id="1"/>
               </and>
               <varref loc="d,8876,32,8876,49" name="io_FU_input_valid" dtype_id="1"/>
@@ -34592,7 +34592,7 @@
           <assigndly loc="d,8877,11,8877,13" dtype_id="1">
             <and loc="d,8877,30,8877,31" dtype_id="1">
               <and loc="d,8877,22,8877,23" dtype_id="1">
-                <varref loc="d,8877,14,8877,21" name="IS_LOAD" dtype_id="1"/>
+                <varref loc="d,8877,14,8877,21" name="is_load" dtype_id="1"/>
                 <varref loc="d,8877,24,8877,29" name="_LW_T" dtype_id="1"/>
               </and>
               <varref loc="d,8877,32,8877,49" name="io_FU_input_valid" dtype_id="1"/>
@@ -34602,7 +34602,7 @@
           <assigndly loc="d,8878,11,8878,13" dtype_id="1">
             <and loc="d,8879,69,8879,70" dtype_id="1">
               <and loc="d,8879,15,8879,16" dtype_id="1">
-                <varref loc="d,8879,7,8879,14" name="IS_LOAD" dtype_id="1"/>
+                <varref loc="d,8879,7,8879,14" name="is_load" dtype_id="1"/>
                 <eq loc="d,8879,61,8879,63" dtype_id="1">
                   <const loc="d,8879,64,8879,68" name="3&apos;h4" dtype_id="5"/>
                   <varref loc="d,8879,17,8879,60" name="io_FU_input_bits_decoded_instruction_FUNCT3" dtype_id="5"/>
@@ -34615,7 +34615,7 @@
           <assigndly loc="d,8880,11,8880,13" dtype_id="1">
             <and loc="d,8881,69,8881,70" dtype_id="1">
               <and loc="d,8881,15,8881,16" dtype_id="1">
-                <varref loc="d,8881,7,8881,14" name="IS_LOAD" dtype_id="1"/>
+                <varref loc="d,8881,7,8881,14" name="is_load" dtype_id="1"/>
                 <eq loc="d,8881,61,8881,63" dtype_id="1">
                   <const loc="d,8881,64,8881,68" name="3&apos;h5" dtype_id="5"/>
                   <varref loc="d,8881,17,8881,60" name="io_FU_input_bits_decoded_instruction_FUNCT3" dtype_id="5"/>
@@ -34643,7 +34643,7 @@
             <varref loc="d,8886,5,8886,29" name="io_FU_output_bits_RD_REG" dtype_id="4"/>
           </assigndly>
           <assigndly loc="d,8887,36,8887,38" dtype_id="1">
-            <varref loc="d,8887,39,8887,46" name="IS_LOAD" dtype_id="1"/>
+            <varref loc="d,8887,39,8887,46" name="is_load" dtype_id="1"/>
             <varref loc="d,8887,5,8887,35" name="io_FU_output_bits_RD_valid_REG" dtype_id="1"/>
           </assigndly>
           <assigndly loc="d,8888,37,8888,39" dtype_id="4">
@@ -34658,7 +34658,7 @@
       </always>
       <contassign loc="d,8904,32,8904,33" dtype_id="1">
         <or loc="d,8904,42,8904,43" dtype_id="1">
-          <varref loc="d,8855,15,8855,22" name="IS_LOAD" dtype_id="1"/>
+          <varref loc="d,8855,15,8855,22" name="is_load" dtype_id="1"/>
           <varref loc="d,8852,18,8852,44" name="io_DRAM_request_bits_wr_en" dtype_id="1"/>
         </or>
         <varref loc="d,8904,32,8904,33" name="io_DRAM_request_valid" dtype_id="1"/>
@@ -34711,17 +34711,17 @@
       </contassign>
       <contassign loc="d,8915,37,8915,38" dtype_id="1">
         <and loc="d,8857,51,8857,52" dtype_id="1">
-          <varref loc="d,8838,18,8838,63" name="io_FU_input_bits_decoded_instruction_IS_STORE" dtype_id="1"/>
+          <varref loc="d,8838,18,8838,63" name="io_FU_input_bits_decoded_instruction_is_store" dtype_id="1"/>
           <varref loc="d,8831,18,8831,35" name="io_FU_input_valid" dtype_id="1"/>
         </and>
         <varref loc="d,8915,37,8915,38" name="io_DRAM_request_bits_wr_en" dtype_id="1"/>
       </contassign>
       <contassign loc="d,8855,23,8855,24" dtype_id="1">
         <and loc="d,8855,70,8855,71" dtype_id="1">
-          <varref loc="d,8837,18,8837,62" name="io_FU_input_bits_decoded_instruction_IS_LOAD" dtype_id="1"/>
+          <varref loc="d,8837,18,8837,62" name="io_FU_input_bits_decoded_instruction_is_load" dtype_id="1"/>
           <varref loc="d,8831,18,8831,35" name="io_FU_input_valid" dtype_id="1"/>
         </and>
-        <varref loc="d,8855,23,8855,24" name="IS_LOAD" dtype_id="1"/>
+        <varref loc="d,8855,23,8855,24" name="is_load" dtype_id="1"/>
       </contassign>
       <contassign loc="d,8858,21,8858,22" dtype_id="1">
         <eq loc="d,8858,67,8858,69" dtype_id="1">

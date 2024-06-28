@@ -88,7 +88,7 @@ class gshare(parameters:Parameters) extends Module{
         //val commit_valid       = Input(Bool())
         //val commit_branch_direction       = Input(Bool())
 
-        val commit      = Input(new commit(parameters))
+        val commit      = Flipped(ValidIO(new commit(parameters)))
         
     })
 
@@ -108,7 +108,7 @@ class gshare(parameters:Parameters) extends Module{
 
 
     hashed_predict_addr := io.predict_PC(GHRWidth-1, 0) ^ io.predict_GHR
-    hashed_commit_addr  := io.commit.fetch_PC(GHRWidth-1, 0) ^ io.commit.GHR
+    hashed_commit_addr  := io.commit.bits.fetch_PC(GHRWidth-1, 0) ^ io.commit.bits.GHR
 
     dontTouch(hashed_predict_addr)
     dontTouch(hashed_commit_addr)
@@ -133,7 +133,7 @@ class gshare(parameters:Parameters) extends Module{
     // FSM // 
     /////////
 
-    when(RegNext(io.commit.T_NT) === 1.U){
+    when(RegNext(io.commit.bits.T_NT) === 1.U){
         when(commit_state < 3.U){
             commit_state_updated := commit_state + 1.U
         }.otherwise{

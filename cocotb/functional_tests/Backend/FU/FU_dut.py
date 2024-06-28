@@ -27,8 +27,8 @@ from cocotb.triggers import RisingEdge, FallingEdge, Timer, ReadOnly
                 #io_FU_input_bits_decoded_instruction_SUBTRACT,
                 #io_FU_input_bits_decoded_instruction_MULTIPLY,
                 #io_FU_input_bits_decoded_instruction_IMMEDIATE,
-                #io_FU_input_bits_decoded_instruction_IS_LOAD,
-                #io_FU_input_bits_decoded_instruction_IS_STORE,
+                #io_FU_input_bits_decoded_instruction_is_load,
+                #io_FU_input_bits_decoded_instruction_is_store,
   #input  [31:0] io_FU_input_bits_RS1_data,
                 #io_FU_input_bits_RS2_data,
                 #io_FU_input_bits_PC,
@@ -71,8 +71,8 @@ def generate_null_FU_inputs():
     FU_inputs["SUBTRACT"] = 0
     FU_inputs["MULTIPLY"] = 0
     FU_inputs["IMMEDIATE"] = 0
-    FU_inputs["IS_LOAD"] = 0
-    FU_inputs["IS_STORE"] = 0
+    FU_inputs["is_load"] = 0
+    FU_inputs["is_store"] = 0
     FU_inputs["RS1_data"] = 0
     FU_inputs["RS2_data"] = 0
     FU_inputs["PC"] = 0

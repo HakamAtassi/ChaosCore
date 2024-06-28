@@ -376,7 +376,7 @@ module BP(
   input  [15:0] io_commit_GHR,
   input  [6:0]  io_commit_TOS,
                 io_commit_NEXT,
-  input  [3:0]  io_commit_RAT_IDX,
+  input  [3:0]  io_commit_RAT_index,
   input  [31:0] io_RAS_update_call_addr,
   input         io_RAS_update_call,
                 io_RAS_update_ret,

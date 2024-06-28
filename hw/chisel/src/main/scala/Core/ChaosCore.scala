@@ -42,7 +42,7 @@ class ChaosCore(parameters:Parameters) extends Module{
 
     val io = IO(new Bundle{
 
-        val commit                              =   Output(new commit(parameters))
+        val commit                              =   ValidIO(new commit(parameters))
 
         ////////////////////////////
         // I$ FRONTEND MEM ACCESS //
@@ -156,7 +156,7 @@ class ChaosCore(parameters:Parameters) extends Module{
     ///////////
     // FLUSH //
     ///////////
-    flush := BRU.io.commit.valid && BRU.io.commit.is_misprediction
+    flush := BRU.io.commit.valid && BRU.io.commit.bits.is_misprediction
 
     frontend.io.flush   <>  flush
     backend.io.flush    <>  flush
@@ -173,29 +173,39 @@ class ChaosCore(parameters:Parameters) extends Module{
     // This is only true when the ROB has available space and the RS entries (both INT and MEM)
     // Have enough available space
 
+    //FIXME: 
+    //Problem: 
+    //MEMRS is still allocating partially if not all fetch packets are accepted. this causes instructions to leak...
+
 
     // overwrite frontend renamed_decoded_fetch_packet ready bit
 
-    val needs_INTRS           = Wire(Vec(fetchWidth, Bool()))
+    val needs_INTRS          = Wire(Vec(fetchWidth, Bool()))
     val needs_MEMRS          = Wire(Vec(fetchWidth, Bool()))
 
     for(i <- 0 until fetchWidth){
-        needs_INTRS(i) := frontend.io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS_type === RS_types.INT
-        needs_MEMRS(i) := frontend.io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS_type === RS_types.MEM
+        needs_INTRS(i) := (frontend.io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS_type === RS_types.INT) && frontend.io.renamed_decoded_fetch_packet.bits.valid_bits(i)
+        needs_MEMRS(i) := (frontend.io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS_type === RS_types.MEM) && frontend.io.renamed_decoded_fetch_packet.bits.valid_bits(i)
     }
 
     val all_INT_RS_accepted = Wire(Bool())  // every valid INT RS instruction has an available spot
     val all_MEM_RS_accepted = Wire(Bool())  // every valid MEM RS instruction has an available spot
 
+    dontTouch(all_INT_RS_accepted)
+    dontTouch(all_MEM_RS_accepted)
+
+    dontTouch(needs_MEMRS)
+    dontTouch(needs_INTRS)
+
     // there must be more available RS entries than requesting instructions for that RS
     // Otherwise, entry doesnt allocate
-    all_INT_RS_accepted := PopCount(backend.io.INTRS_ready) <= PopCount(needs_INTRS)
-    all_MEM_RS_accepted := PopCount(backend.io.MEMRS_ready) <= PopCount(needs_MEMRS)
+    all_INT_RS_accepted := PopCount(backend.io.INTRS_ready) >= PopCount(needs_INTRS)
+    all_MEM_RS_accepted := PopCount(backend.io.MEMRS_ready) >= PopCount(needs_MEMRS)
 
-    frontend.io.renamed_decoded_fetch_packet.ready := (ROB.io.ROB_packet.ready && all_INT_RS_accepted && all_MEM_RS_accepted)
 
     // ROB and RS do not update until ready
     backend.io.backend_packet   <> frontend.io.renamed_decoded_fetch_packet
+
 
     for(i <- 0 until fetchWidth){   // pass along the ROB index for each instruction (for commit and PC read)
         backend.io.backend_packet.bits.decoded_instruction(i).ROB_index := ROB.io.ROB_index
@@ -209,6 +219,10 @@ class ChaosCore(parameters:Parameters) extends Module{
 
     // 
     //BRU.io.PC_file_commit_data <> ROB.io.PC_file_commit_data
+
+
+
+    frontend.io.renamed_decoded_fetch_packet.ready := (ROB.io.ROB_packet.ready && all_INT_RS_accepted && all_MEM_RS_accepted)
 
 
 }

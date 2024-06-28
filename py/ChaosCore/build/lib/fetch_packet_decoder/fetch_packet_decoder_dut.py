@@ -61,8 +61,8 @@ class fetch_packet_decoder_dut:
         decoded_fetch_packet["SUBTRACT"] = [0]*4
         decoded_fetch_packet["MULTIPLY"] = [0]*4
         decoded_fetch_packet["IS_IMM"] = [0]*4
-        decoded_fetch_packet["IS_LOAD"] = [0]*4
-        decoded_fetch_packet["IS_STORE"] = [0]*4
+        decoded_fetch_packet["is_load"] = [0]*4
+        decoded_fetch_packet["is_store"] = [0]*4
         decoded_fetch_packet["valid_bits"] = [0]*4
 
         for i in range(4):
@@ -84,8 +84,8 @@ class fetch_packet_decoder_dut:
             decoded_fetch_packet["SUBTRACT"][i] = int(getattr(self.dut, f"io_decoded_fetch_packet_bits_decoded_instruction_{i}_SUBTRACT").value)
             decoded_fetch_packet["MULTIPLY"][i] = int(getattr(self.dut, f"io_decoded_fetch_packet_bits_decoded_instruction_{i}_MULTIPLY").value)
             decoded_fetch_packet["IS_IMM"][i] = int(getattr(self.dut, f"io_decoded_fetch_packet_bits_decoded_instruction_{i}_IS_IMM").value)
-            decoded_fetch_packet["IS_LOAD"][i] = int(getattr(self.dut, f"io_decoded_fetch_packet_bits_decoded_instruction_{i}_IS_LOAD").value)
-            decoded_fetch_packet["IS_STORE"][i] = int(getattr(self.dut, f"io_decoded_fetch_packet_bits_decoded_instruction_{i}_IS_STORE").value)
+            decoded_fetch_packet["is_load"][i] = int(getattr(self.dut, f"io_decoded_fetch_packet_bits_decoded_instruction_{i}_is_load").value)
+            decoded_fetch_packet["is_store"][i] = int(getattr(self.dut, f"io_decoded_fetch_packet_bits_decoded_instruction_{i}_is_store").value)
             decoded_fetch_packet["valid_bits"][i] = int(getattr(self.dut, f"io_decoded_fetch_packet_bits_valid_bits_{i}").value)
 
         return decoded_fetch_packet

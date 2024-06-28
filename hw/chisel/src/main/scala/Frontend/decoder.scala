@@ -88,8 +88,8 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
                                  (instructionType === OP_IMM) || (instructionType === LUI) || (instructionType === AUIPC)
 
 
-    val IS_LOAD              =   (instructionType === LOAD)
-    val IS_STORE             =   (instructionType === STORE)
+    val is_load              =   (instructionType === LOAD)
+    val is_store             =   (instructionType === STORE)
     val needs_memory         =   (instructionType === STORE) || (instructionType === LOAD)
 
 
@@ -137,8 +137,8 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
     io.decoded_instruction.bits.SUBTRACT             := SUBTRACT    // subtract or arithmetic shift...
     io.decoded_instruction.bits.IS_IMM            := IS_IMM   // subtract or arithmetic shift...
 
-    io.decoded_instruction.bits.IS_LOAD              := IS_LOAD     // subtract or arithmetic shift...
-    io.decoded_instruction.bits.IS_STORE             := IS_STORE    // subtract or arithmetic shift...
+    io.decoded_instruction.bits.is_load              := is_load     // subtract or arithmetic shift...
+    io.decoded_instruction.bits.is_store             := is_store    // subtract or arithmetic shift...
 
     io.decoded_instruction.bits.packet_index         := io.instruction.bits.packet_index 
     io.decoded_instruction.bits.instructionType      := instructionType
@@ -223,7 +223,8 @@ class fetch_packet_decoder(parameters:Parameters) extends Module{
     io.decoded_fetch_packet.bits.fetch_PC   := RegNext(io.fetch_packet.bits.fetch_PC)
     io.decoded_fetch_packet.bits.valid_bits := RegNext(io.fetch_packet.bits.valid_bits)
 
-    io.decoded_fetch_packet.bits.RAT_IDX    := DontCare // This is fine. RAT_IDX is assigned during rename
+    io.decoded_fetch_packet.bits.RAT_index                  := DontCare // This is fine. Allocated during rename
+    io.decoded_fetch_packet.bits.free_list_front_pointer    := DontCare // This is fine. Allocated during rename
 
     // DEBUG SIGNALS //
     val monitor_output = Wire(Bool())

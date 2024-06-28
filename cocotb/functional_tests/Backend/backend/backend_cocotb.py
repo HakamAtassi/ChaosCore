@@ -80,7 +80,7 @@ async def test_addi_RS_allocate(dut):
 
     backend_packet["backend_packet_valid"]              = 1
     backend_packet["fetch_PC"]                          = 0x0
-    backend_packet["io_backend_packet_bits_RAT_IDX"]    = 0x0
+    backend_packet["io_backend_packet_bits_RAT_index"]    = 0x0
 
     backend_packet["RS1_ready"]             = [1, 1, 1, 1]
     backend_packet["RS1"]                   = [0, 0, 0, 0]
@@ -106,8 +106,8 @@ async def test_addi_RS_allocate(dut):
     backend_packet["SUBTRACT"]              = [0, 0, 0, 0]
     backend_packet["MULTIPLY"]              = [0, 0, 0, 0]
     backend_packet["IMMEDIATE"]             = [1, 1, 1, 1]
-    backend_packet["IS_LOAD"]               = [0, 0, 0, 0]
-    backend_packet["IS_STORE"]              = [0, 0, 0, 0]
+    backend_packet["is_load"]               = [0, 0, 0, 0]
+    backend_packet["is_store"]              = [0, 0, 0, 0]
     backend_packet["valid"]                 = [1, 1, 1, 1]
 
 
@@ -195,7 +195,7 @@ async def test_addi_RS_deallocate_port_contention(dut):
 
     backend_packet["backend_packet_valid"]              = 1
     backend_packet["fetch_PC"]                          = 0x0
-    backend_packet["io_backend_packet_bits_RAT_IDX"]    = 0x0
+    backend_packet["io_backend_packet_bits_RAT_index"]    = 0x0
 
     backend_packet["RS1_ready"]             = [1, 1, 1, 1]
     backend_packet["RS1"]                   = [0, 0, 0, 0]
@@ -221,8 +221,8 @@ async def test_addi_RS_deallocate_port_contention(dut):
     backend_packet["SUBTRACT"]              = [0, 0, 0, 0]
     backend_packet["MULTIPLY"]              = [0, 0, 0, 0]
     backend_packet["IMMEDIATE"]             = [1, 1, 1, 1]
-    backend_packet["IS_LOAD"]               = [0, 0, 0, 0]
-    backend_packet["IS_STORE"]              = [0, 0, 0, 0]
+    backend_packet["is_load"]               = [0, 0, 0, 0]
+    backend_packet["is_store"]              = [0, 0, 0, 0]
     backend_packet["valid"]                 = [1, 1, 1, 1]
 
 
@@ -325,7 +325,7 @@ async def test_addi_RS_deallocate_many_free_ports(dut):
 
     backend_packet["backend_packet_valid"]              = 1
     backend_packet["fetch_PC"]                          = 0x0
-    backend_packet["io_backend_packet_bits_RAT_IDX"]    = 0x0
+    backend_packet["io_backend_packet_bits_RAT_index"]    = 0x0
 
     backend_packet["RS1_ready"]             = [1, 1, 1, 1]
     backend_packet["RS1"]                   = [0, 0, 0, 0]
@@ -351,8 +351,8 @@ async def test_addi_RS_deallocate_many_free_ports(dut):
     backend_packet["SUBTRACT"]              = [0, 0, 0, 0]
     backend_packet["MULTIPLY"]              = [0, 0, 0, 0]
     backend_packet["IMMEDIATE"]             = [1, 1, 1, 1]
-    backend_packet["IS_LOAD"]               = [0, 0, 0, 0]
-    backend_packet["IS_STORE"]              = [0, 0, 0, 0]
+    backend_packet["is_load"]               = [0, 0, 0, 0]
+    backend_packet["is_store"]              = [0, 0, 0, 0]
     backend_packet["valid"]                 = [1, 1, 1, 1]
 
 
@@ -500,7 +500,7 @@ async def test_addi_RS_deallocate_many_free_ports_2(dut):
 
     backend_packet["backend_packet_valid"]              = 1
     backend_packet["fetch_PC"]                          = 0x0
-    backend_packet["io_backend_packet_bits_RAT_IDX"]    = 0x0
+    backend_packet["io_backend_packet_bits_RAT_index"]    = 0x0
 
     backend_packet["RS1_ready"]             = [1, 1, 1, 1]
     backend_packet["RS1"]                   = [0, 0, 0, 0]
@@ -526,8 +526,8 @@ async def test_addi_RS_deallocate_many_free_ports_2(dut):
     backend_packet["SUBTRACT"]              = [0, 0, 0, 0]
     backend_packet["MULTIPLY"]              = [0, 0, 0, 0]
     backend_packet["IMMEDIATE"]             = [1, 1, 1, 1]
-    backend_packet["IS_LOAD"]               = [0, 0, 0, 0]
-    backend_packet["IS_STORE"]              = [0, 0, 0, 0]
+    backend_packet["is_load"]               = [0, 0, 0, 0]
+    backend_packet["is_store"]              = [0, 0, 0, 0]
     backend_packet["valid"]                 = [1, 1, 1, 1]
 
 
@@ -673,7 +673,7 @@ async def test_addi_RS_deallocate_many_free_ports_2_init_PRF(dut):
 
     backend_packet["backend_packet_valid"]              = 1
     backend_packet["fetch_PC"]                          = 0x0
-    backend_packet["io_backend_packet_bits_RAT_IDX"]    = 0x0
+    backend_packet["io_backend_packet_bits_RAT_index"]    = 0x0
 
     backend_packet["RS1_ready"]             = [1, 1, 1, 1]
     backend_packet["RS1"]                   = [0, 0, 0, 0]
@@ -699,8 +699,8 @@ async def test_addi_RS_deallocate_many_free_ports_2_init_PRF(dut):
     backend_packet["SUBTRACT"]              = [0, 0, 0, 0]
     backend_packet["MULTIPLY"]              = [0, 0, 0, 0]
     backend_packet["IMMEDIATE"]             = [1, 1, 1, 1]
-    backend_packet["IS_LOAD"]               = [0, 0, 0, 0]
-    backend_packet["IS_STORE"]              = [0, 0, 0, 0]
+    backend_packet["is_load"]               = [0, 0, 0, 0]
+    backend_packet["is_store"]              = [0, 0, 0, 0]
     backend_packet["valid"]                 = [1, 1, 1, 1]
 
 
@@ -842,7 +842,7 @@ async def test_addi_RS_reg_read_RD(dut):
 
     backend_packet["backend_packet_valid"]              = 1
     backend_packet["fetch_PC"]                          = 0x0
-    backend_packet["io_backend_packet_bits_RAT_IDX"]    = 0x0
+    backend_packet["io_backend_packet_bits_RAT_index"]    = 0x0
 
     backend_packet["RS1_ready"]             = [1, 1, 1, 1]
     backend_packet["RS1"]                   = [1, 2, 3, 4]
@@ -868,8 +868,8 @@ async def test_addi_RS_reg_read_RD(dut):
     backend_packet["SUBTRACT"]              = [0, 0, 0, 0]
     backend_packet["MULTIPLY"]              = [0, 0, 0, 0]
     backend_packet["IMMEDIATE"]             = [0, 0, 0, 0]
-    backend_packet["IS_LOAD"]               = [0, 0, 0, 0]
-    backend_packet["IS_STORE"]              = [0, 0, 0, 0]
+    backend_packet["is_load"]               = [0, 0, 0, 0]
+    backend_packet["is_store"]              = [0, 0, 0, 0]
     backend_packet["valid"]                 = [1, 1, 1, 1]
 
 

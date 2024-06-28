@@ -60,7 +60,7 @@ def generate_null_commit():
     commit["GHR"] =0
     commit["TOS"] =0
     commit["NEXT"] = 0
-    commit["RAT_IDX"] = 0
+    commit["RAT_index"] = 0
     return commit
 
 def test_addi_passthrough():
@@ -961,7 +961,7 @@ def test_revert():
     ##assert dut.get_FTQ_read()["GHR"] ==
     ##assert dut.get_FTQ_read()["NEXT"] ==
     ##assert dut.get_FTQ_read()["TOS"] ==
-    ##assert dut.get_FTQ_read()["RAT_IDX"] ==
+    ##assert dut.get_FTQ_read()["RAT_index"] ==
 
 
 #def test_FTQ_JAL_many_branches(dut):
@@ -1020,7 +1020,7 @@ def test_revert():
     ##assert dut.get_FTQ_read()["GHR"] ==
     ##assert dut.get_FTQ_read()["NEXT"] ==
     ##assert dut.get_FTQ_read()["TOS"] ==
-    ##assert dut.get_FTQ_read()["RAT_IDX"] ==
+    ##assert dut.get_FTQ_read()["RAT_index"] ==
 
 
 
@@ -1080,7 +1080,7 @@ def test_revert():
     ##assert dut.get_FTQ_read()["GHR"] ==
     ##assert dut.get_FTQ_read()["NEXT"] ==
     ##assert dut.get_FTQ_read()["TOS"] ==
-    ##assert dut.get_FTQ_read()["RAT_IDX"] ==
+    ##assert dut.get_FTQ_read()["RAT_index"] ==
 
 
 #def test_FTQ_JAL_first_instruction_invalid(dut):
@@ -1139,7 +1139,7 @@ def test_revert():
     ##assert dut.get_FTQ_read()["GHR"] ==
     ##assert dut.get_FTQ_read()["NEXT"] ==
     ##assert dut.get_FTQ_read()["TOS"] ==
-    ##assert dut.get_FTQ_read()["RAT_IDX"] ==
+    ##assert dut.get_FTQ_read()["RAT_index"] ==
 
 
 #def test_FTQ_BEQ(dut):
@@ -1204,7 +1204,7 @@ def test_revert():
     ##assert dut.get_FTQ_read()["GHR"] ==
     ##assert dut.get_FTQ_read()["NEXT"] ==
     ##assert dut.get_FTQ_read()["TOS"] ==
-    ##assert dut.get_FTQ_read()["RAT_IDX"] ==
+    ##assert dut.get_FTQ_read()["RAT_index"] ==
 
 
 
@@ -1270,7 +1270,7 @@ def test_revert():
     ##assert dut.get_FTQ_read()["GHR"] ==
     ##assert dut.get_FTQ_read()["NEXT"] ==
     ##assert dut.get_FTQ_read()["TOS"] ==
-    ##assert dut.get_FTQ_read()["RAT_IDX"] ==
+    ##assert dut.get_FTQ_read()["RAT_index"] ==
 
 
 
@@ -1337,7 +1337,7 @@ def test_revert():
     ##assert dut.get_FTQ_read()["GHR"] ==
     ##assert dut.get_FTQ_read()["NEXT"] ==
     ##assert dut.get_FTQ_read()["TOS"] ==
-    ##assert dut.get_FTQ_read()["RAT_IDX"] ==
+    ##assert dut.get_FTQ_read()["RAT_index"] ==
 
 
 ## FIXME: Add resolved_PC test they should default to the next address if no branches are taken

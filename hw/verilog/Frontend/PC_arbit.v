@@ -13,7 +13,7 @@ module PC_arbit(
   input  [15:0] io_commit_GHR,
   input  [6:0]  io_commit_TOS,
                 io_commit_NEXT,
-  input  [3:0]  io_commit_RAT_IDX,
+  input  [3:0]  io_commit_RAT_index,
   output        io_prediction_ready,
   input         io_prediction_valid,
                 io_prediction_bits_hit,

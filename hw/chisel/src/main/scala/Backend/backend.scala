@@ -56,7 +56,7 @@ class backend(parameters:Parameters) extends Module{
         val memory_request      =   Decoupled(new memory_request(parameters))     // To MEM
 
         // REDIRECTS // 
-        val commit                  =    Input(new commit(parameters))
+        val commit                  =    Flipped(ValidIO(new commit(parameters)))
 
         // PC_file access (for branch unit)
         val PC_file_exec_addr           =   Output(UInt(log2Ceil(ROBEntires).W))

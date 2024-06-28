@@ -93,7 +93,7 @@ class predecoder_dut:
         commit["GHR"] = self.predecoder.io_commit_GHR.value
         commit["TOS"] = self.predecoder.io_commit_TOS.value
         commit["NEXT"] = self.predecoder.io_commit_NEXT.value
-        commit["RAT_IDX"] = self.predecoder.io_commit_RAT_IDX.value
+        commit["RAT_index"] = self.predecoder.io_commit_RAT_index.value
         return commit
 
 

@@ -45,31 +45,6 @@ object PredecoderState extends ChiselEnum{
     val Active, Idle, Revert = Value
 }
 
-// FIXME: make this N wide parameterizable
-class decoder_validator(fetchWidth: Int) extends Module {
-  val io = IO(new Bundle {
-    val instruction_T_NT_mask = Input(UInt(fetchWidth.W))
-    val instruction_validity = Output(UInt(fetchWidth.W))
-  })
-
-  // Define LUTs for different fetchWidth sizes
-  val lut4 = VecInit(Seq(
-    "b0001".U(fetchWidth.W),
-    "b0011".U(fetchWidth.W),
-    "b0111".U(fetchWidth.W),
-    "b1111".U(fetchWidth.W)
-  ))
-
-  val lut2 = VecInit(Seq(
-    "b10".U(fetchWidth.W),   // Validity mask for pattern 01 -> 01
-    "b11".U(fetchWidth.W)  // Validity mask for pattern 10 -> 10
-  ))
-
-  val lut = if (fetchWidth == 4) lut4 else lut2
-
-  io.instruction_validity := lut(PriorityEncoder(io.instruction_T_NT_mask))
-}
-
 class predecoder(parameters:Parameters) extends Module{
     import parameters._
 
@@ -81,7 +56,7 @@ class predecoder(parameters:Parameters) extends Module{
         val prediction          = Flipped(Decoupled(new prediction(parameters)))
         val fetch_packet        = Flipped(Decoupled(new fetch_packet(parameters)))
         val RAS_read            = Flipped(new RAS_read(parameters))
-        val commit              = Input(new commit(parameters))
+        val commit              = Flipped(ValidIO(new commit(parameters)))
 
         // outputs
         val GHR                 = Output(UInt(GHRWidth.W))
@@ -167,8 +142,8 @@ class predecoder(parameters:Parameters) extends Module{
 
     GHR := io.GHR
 
-    when(io.commit.is_misprediction){
-        GHR := io.commit.GHR
+    when(io.commit.bits.is_misprediction){
+        GHR := io.commit.bits.GHR
     }
 
 
@@ -204,7 +179,7 @@ class predecoder(parameters:Parameters) extends Module{
     }
     io.predictions.bits.valid                         := 0.B
     io.predictions.bits.is_misprediction              := 0.B
-    //io.predictions.bits.RAT_IDX                       := DontCare   // FIXME: 
+    //io.predictions.bits.RAT_index                       := DontCare   // FIXME: 
     io.predictions.bits.br_type                       := dominant_branch_metadata.br_type
 
 
@@ -212,21 +187,12 @@ class predecoder(parameters:Parameters) extends Module{
     // INSTRUCTION OUTPUT //
     ////////////////////////
 
-    // "validator"
-    val decoder_validator = Module(new decoder_validator(fetchWidth=fetchWidth))
-    val T_NT_mask = RegNext(decoder_T_NT.asUInt)
-    decoder_validator.io.instruction_T_NT_mask := T_NT_mask // FIXME: T_NT should not be set for uncond branches if not in btb...
+    val T_NT_mask = RegNext(decoder_T_NT)
+    val final_fetch_packet_valid = Wire(Vec(fetchWidth, Bool()))
 
-
-    val offset_validity = Wire(UInt(4.W))
-    offset_validity := 0.U  // FIXME: this is hardcoded...
-    val test = io.fetch_packet.bits.fetch_PC & 0xF.U
-    when(test === 0x0.U){offset_validity := "b1111".U}
-    when(test === 0x4.U){offset_validity := "b1110".U}
-    when(test === 0x8.U){offset_validity := "b1100".U}
-    when(test === 0xA.U){offset_validity := "b1000".U}
-
-
+    for(i <- 0 until fetchWidth){
+        final_fetch_packet_valid(i) := RegNext(io.fetch_packet.valid) && RegNext(io.fetch_packet.bits.valid_bits(i)) && (!PopCount(T_NT_mask.take(i)))
+    }
 
     // ASSIGN FINAL FETCH PACKET //
     io.final_fetch_packet.valid := RegNext(io.fetch_packet.valid && !io.flush)
@@ -234,7 +200,7 @@ class predecoder(parameters:Parameters) extends Module{
     
     for(i <- 0 until fetchWidth){
         io.final_fetch_packet.bits.instructions(i) := RegNext(io.fetch_packet.bits.instructions(i))                                     // pass instructions
-        io.final_fetch_packet.bits.valid_bits(i)   := RegNext(decoder_validator.io.instruction_validity(i) && offset_validity(i)) && io.final_fetch_packet.valid     // pass valid bits
+        io.final_fetch_packet.bits.valid_bits(i)   := final_fetch_packet_valid(i)
     }
 
     io.prediction.ready   := (io.final_fetch_packet.ready && io.predictions.ready)

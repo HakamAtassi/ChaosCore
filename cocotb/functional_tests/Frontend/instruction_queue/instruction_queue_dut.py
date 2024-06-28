@@ -29,8 +29,8 @@ def generate_null_input():
     stimulus["SUBTRACT"]            = [0,0,0,0]
     stimulus["MULTIPLY"]            = [0,0,0,0]
     stimulus["IMMEDIATE"]           = [0,0,0,0]
-    stimulus["IS_LOAD"]             = [0,0,0,0]
-    stimulus["IS_STORE"]            = [0,0,0,0]
+    stimulus["is_load"]             = [0,0,0,0]
+    stimulus["is_store"]            = [0,0,0,0]
 
     stimulus["ready"] = [0]*4
 
@@ -80,8 +80,8 @@ class instruction_queue_dut:
             getattr(self.dut, f"io_in_{i}_bits_SUBTRACT").value = inputs["SUBTRACT"][i]
             getattr(self.dut, f"io_in_{i}_bits_MULTIPLY").value = inputs["MULTIPLY"][i]
             getattr(self.dut, f"io_in_{i}_bits_IMMEDIATE").value = inputs["IMMEDIATE"][i]
-            getattr(self.dut, f"io_in_{i}_bits_IS_LOAD").value = inputs["IS_LOAD"][i]
-            getattr(self.dut, f"io_in_{i}_bits_IS_STORE").value = inputs["IS_STORE"][i]
+            getattr(self.dut, f"io_in_{i}_bits_is_load").value = inputs["is_load"][i]
+            getattr(self.dut, f"io_in_{i}_bits_is_store").value = inputs["is_store"][i]
 
     def read_fifo(self, inputs):
         for i in range(4):
@@ -111,8 +111,8 @@ class instruction_queue_dut:
         outputs["SUBTRACT"]     = [0]*4
         outputs["MULTIPLY"]     = [0]*4
         outputs["IMMEDIATE"]    = [0]*4
-        outputs["IS_LOAD"]      = [0]*4
-        outputs["IS_STORE"]     = [0]*4
+        outputs["is_load"]      = [0]*4
+        outputs["is_store"]     = [0]*4
         outputs["ready"]        = [0]*4
 
         for i in range(4):
@@ -138,8 +138,8 @@ class instruction_queue_dut:
             outputs["SUBTRACT"][i] = getattr(self.dut, f"io_out_{i}_bits_SUBTRACT").value
             outputs["MULTIPLY"][i] = getattr(self.dut, f"io_out_{i}_bits_MULTIPLY").value
             outputs["IMMEDIATE"][i] = getattr(self.dut, f"io_out_{i}_bits_IMMEDIATE").value
-            outputs["IS_LOAD"][i] = getattr(self.dut, f"io_out_{i}_bits_IS_LOAD").value
-            outputs["IS_STORE"][i] = getattr(self.dut, f"io_out_{i}_bits_IS_STORE").value
+            outputs["is_load"][i] = getattr(self.dut, f"io_out_{i}_bits_is_load").value
+            outputs["is_store"][i] = getattr(self.dut, f"io_out_{i}_bits_is_store").value
             outputs["ready"][i] = getattr(self.dut, f"io_in_{i}_ready").value
 
         return outputs
@@ -176,8 +176,8 @@ class instruction_queue_dut:
         FIFO["SUBTRACT"]            = [0]*8
         FIFO["MULTIPLY"]            = [0]*8
         FIFO["IMMEDIATE"]           = [0]*8
-        FIFO["IS_LOAD"]             = [0]*8
-        FIFO["IS_STORE"]            = [0]*8
+        FIFO["is_load"]             = [0]*8
+        FIFO["is_store"]            = [0]*8
 
         for i in range(8):
             FIFO["RS1_ready"][i]            = int(getattr(self.dut, f"queue_{i}_ready_bits_RS1_ready").value)
@@ -201,8 +201,8 @@ class instruction_queue_dut:
             FIFO["SUBTRACT"][i]             = int(getattr(self.dut, f"queue_{i}_SUBTRACT").value)
             FIFO["MULTIPLY"][i]             = int(getattr(self.dut, f"queue_{i}_MULTIPLY").value)
             FIFO["IMMEDIATE"][i]            = int(getattr(self.dut, f"queue_{i}_IMMEDIATE").value)
-            FIFO["IS_LOAD"][i]              = int(getattr(self.dut, f"queue_{i}_IS_LOAD").value)
-            FIFO["IS_STORE"][i]             = int(getattr(self.dut, f"queue_{i}_IS_STORE").value)
+            FIFO["is_load"][i]              = int(getattr(self.dut, f"queue_{i}_is_load").value)
+            FIFO["is_store"][i]             = int(getattr(self.dut, f"queue_{i}_is_store").value)
         return FIFO
 
     def print_fifo_contents(self):

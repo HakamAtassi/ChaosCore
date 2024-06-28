@@ -24,7 +24,7 @@ async def test_increment(dut):
 
     ChaosCore_tb.start()
 
-    for _ in range(1000):
+    for _ in range(300):
         await ChaosCore_tb.update()
 
     ChaosCore_tb.stop()

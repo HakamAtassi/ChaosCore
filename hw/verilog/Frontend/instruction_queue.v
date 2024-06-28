@@ -25,8 +25,8 @@ module instruction_queue(
                 io_in_0_bits_SUBTRACT,
                 io_in_0_bits_MULTIPLY,
                 io_in_0_bits_IMMEDIATE,
-                io_in_0_bits_IS_LOAD,
-                io_in_0_bits_IS_STORE,
+                io_in_0_bits_is_load,
+                io_in_0_bits_is_store,
   output        io_in_1_ready,
   input         io_in_1_valid,
                 io_in_1_bits_ready_bits_RS1_ready,
@@ -50,8 +50,8 @@ module instruction_queue(
                 io_in_1_bits_SUBTRACT,
                 io_in_1_bits_MULTIPLY,
                 io_in_1_bits_IMMEDIATE,
-                io_in_1_bits_IS_LOAD,
-                io_in_1_bits_IS_STORE,
+                io_in_1_bits_is_load,
+                io_in_1_bits_is_store,
   output        io_in_2_ready,
   input         io_in_2_valid,
                 io_in_2_bits_ready_bits_RS1_ready,
@@ -75,8 +75,8 @@ module instruction_queue(
                 io_in_2_bits_SUBTRACT,
                 io_in_2_bits_MULTIPLY,
                 io_in_2_bits_IMMEDIATE,
-                io_in_2_bits_IS_LOAD,
-                io_in_2_bits_IS_STORE,
+                io_in_2_bits_is_load,
+                io_in_2_bits_is_store,
   output        io_in_3_ready,
   input         io_in_3_valid,
                 io_in_3_bits_ready_bits_RS1_ready,
@@ -100,8 +100,8 @@ module instruction_queue(
                 io_in_3_bits_SUBTRACT,
                 io_in_3_bits_MULTIPLY,
                 io_in_3_bits_IMMEDIATE,
-                io_in_3_bits_IS_LOAD,
-                io_in_3_bits_IS_STORE,
+                io_in_3_bits_is_load,
+                io_in_3_bits_is_store,
                 io_out_0_ready,
   output        io_out_0_valid,
                 io_out_0_bits_ready_bits_RS1_ready,
@@ -125,8 +125,8 @@ module instruction_queue(
                 io_out_0_bits_SUBTRACT,
                 io_out_0_bits_MULTIPLY,
                 io_out_0_bits_IMMEDIATE,
-                io_out_0_bits_IS_LOAD,
-                io_out_0_bits_IS_STORE,
+                io_out_0_bits_is_load,
+                io_out_0_bits_is_store,
   input         io_out_1_ready,
   output        io_out_1_valid,
                 io_out_1_bits_ready_bits_RS1_ready,
@@ -150,8 +150,8 @@ module instruction_queue(
                 io_out_1_bits_SUBTRACT,
                 io_out_1_bits_MULTIPLY,
                 io_out_1_bits_IMMEDIATE,
-                io_out_1_bits_IS_LOAD,
-                io_out_1_bits_IS_STORE,
+                io_out_1_bits_is_load,
+                io_out_1_bits_is_store,
   input         io_out_2_ready,
   output        io_out_2_valid,
                 io_out_2_bits_ready_bits_RS1_ready,
@@ -175,8 +175,8 @@ module instruction_queue(
                 io_out_2_bits_SUBTRACT,
                 io_out_2_bits_MULTIPLY,
                 io_out_2_bits_IMMEDIATE,
-                io_out_2_bits_IS_LOAD,
-                io_out_2_bits_IS_STORE,
+                io_out_2_bits_is_load,
+                io_out_2_bits_is_store,
   input         io_out_3_ready,
   output        io_out_3_valid,
                 io_out_3_bits_ready_bits_RS1_ready,
@@ -200,8 +200,8 @@ module instruction_queue(
                 io_out_3_bits_SUBTRACT,
                 io_out_3_bits_MULTIPLY,
                 io_out_3_bits_IMMEDIATE,
-                io_out_3_bits_IS_LOAD,
-                io_out_3_bits_IS_STORE
+                io_out_3_bits_is_load,
+                io_out_3_bits_is_store
 );
 
   reg              queue_0_ready_bits_RS1_ready;
@@ -225,8 +225,8 @@ module instruction_queue(
   reg              queue_0_SUBTRACT;
   reg              queue_0_MULTIPLY;
   reg              queue_0_IMMEDIATE;
-  reg              queue_0_IS_LOAD;
-  reg              queue_0_IS_STORE;
+  reg              queue_0_is_load;
+  reg              queue_0_is_store;
   reg              queue_1_ready_bits_RS1_ready;
   reg              queue_1_ready_bits_RS2_ready;
   reg  [5:0]       queue_1_RD;
@@ -248,8 +248,8 @@ module instruction_queue(
   reg              queue_1_SUBTRACT;
   reg              queue_1_MULTIPLY;
   reg              queue_1_IMMEDIATE;
-  reg              queue_1_IS_LOAD;
-  reg              queue_1_IS_STORE;
+  reg              queue_1_is_load;
+  reg              queue_1_is_store;
   reg              queue_2_ready_bits_RS1_ready;
   reg              queue_2_ready_bits_RS2_ready;
   reg  [5:0]       queue_2_RD;
@@ -271,8 +271,8 @@ module instruction_queue(
   reg              queue_2_SUBTRACT;
   reg              queue_2_MULTIPLY;
   reg              queue_2_IMMEDIATE;
-  reg              queue_2_IS_LOAD;
-  reg              queue_2_IS_STORE;
+  reg              queue_2_is_load;
+  reg              queue_2_is_store;
   reg              queue_3_ready_bits_RS1_ready;
   reg              queue_3_ready_bits_RS2_ready;
   reg  [5:0]       queue_3_RD;
@@ -294,8 +294,8 @@ module instruction_queue(
   reg              queue_3_SUBTRACT;
   reg              queue_3_MULTIPLY;
   reg              queue_3_IMMEDIATE;
-  reg              queue_3_IS_LOAD;
-  reg              queue_3_IS_STORE;
+  reg              queue_3_is_load;
+  reg              queue_3_is_store;
   reg              queue_4_ready_bits_RS1_ready;
   reg              queue_4_ready_bits_RS2_ready;
   reg  [5:0]       queue_4_RD;
@@ -317,8 +317,8 @@ module instruction_queue(
   reg              queue_4_SUBTRACT;
   reg              queue_4_MULTIPLY;
   reg              queue_4_IMMEDIATE;
-  reg              queue_4_IS_LOAD;
-  reg              queue_4_IS_STORE;
+  reg              queue_4_is_load;
+  reg              queue_4_is_store;
   reg              queue_5_ready_bits_RS1_ready;
   reg              queue_5_ready_bits_RS2_ready;
   reg  [5:0]       queue_5_RD;
@@ -340,8 +340,8 @@ module instruction_queue(
   reg              queue_5_SUBTRACT;
   reg              queue_5_MULTIPLY;
   reg              queue_5_IMMEDIATE;
-  reg              queue_5_IS_LOAD;
-  reg              queue_5_IS_STORE;
+  reg              queue_5_is_load;
+  reg              queue_5_is_store;
   reg              queue_6_ready_bits_RS1_ready;
   reg              queue_6_ready_bits_RS2_ready;
   reg  [5:0]       queue_6_RD;
@@ -363,8 +363,8 @@ module instruction_queue(
   reg              queue_6_SUBTRACT;
   reg              queue_6_MULTIPLY;
   reg              queue_6_IMMEDIATE;
-  reg              queue_6_IS_LOAD;
-  reg              queue_6_IS_STORE;
+  reg              queue_6_is_load;
+  reg              queue_6_is_store;
   reg              queue_7_ready_bits_RS1_ready;
   reg              queue_7_ready_bits_RS2_ready;
   reg  [5:0]       queue_7_RD;
@@ -386,8 +386,8 @@ module instruction_queue(
   reg              queue_7_SUBTRACT;
   reg              queue_7_MULTIPLY;
   reg              queue_7_IMMEDIATE;
-  reg              queue_7_IS_LOAD;
-  reg              queue_7_IS_STORE;
+  reg              queue_7_is_load;
+  reg              queue_7_is_store;
   reg              valid_0;
   reg              valid_1;
   reg              valid_2;
@@ -588,23 +588,23 @@ module instruction_queue(
      {queue_1_IMMEDIATE},
      {queue_0_IMMEDIATE}};
   wire [7:0]       _GEN_20 =
-    {{queue_7_IS_LOAD},
-     {queue_6_IS_LOAD},
-     {queue_5_IS_LOAD},
-     {queue_4_IS_LOAD},
-     {queue_3_IS_LOAD},
-     {queue_2_IS_LOAD},
-     {queue_1_IS_LOAD},
-     {queue_0_IS_LOAD}};
+    {{queue_7_is_load},
+     {queue_6_is_load},
+     {queue_5_is_load},
+     {queue_4_is_load},
+     {queue_3_is_load},
+     {queue_2_is_load},
+     {queue_1_is_load},
+     {queue_0_is_load}};
   wire [7:0]       _GEN_21 =
-    {{queue_7_IS_STORE},
-     {queue_6_IS_STORE},
-     {queue_5_IS_STORE},
-     {queue_4_IS_STORE},
-     {queue_3_IS_STORE},
-     {queue_2_IS_STORE},
-     {queue_1_IS_STORE},
-     {queue_0_IS_STORE}};
+    {{queue_7_is_store},
+     {queue_6_is_store},
+     {queue_5_is_store},
+     {queue_4_is_store},
+     {queue_3_is_store},
+     {queue_2_is_store},
+     {queue_1_is_store},
+     {queue_0_is_store}};
   wire [7:0]       _GEN_22 =
     {{valid_7},
      {valid_6},
@@ -645,8 +645,8 @@ module instruction_queue(
       queue_0_SUBTRACT <= 1'h0;
       queue_0_MULTIPLY <= 1'h0;
       queue_0_IMMEDIATE <= 1'h0;
-      queue_0_IS_LOAD <= 1'h0;
-      queue_0_IS_STORE <= 1'h0;
+      queue_0_is_load <= 1'h0;
+      queue_0_is_store <= 1'h0;
       queue_1_ready_bits_RS1_ready <= 1'h0;
       queue_1_ready_bits_RS2_ready <= 1'h0;
       queue_1_RD <= 6'h0;
@@ -668,8 +668,8 @@ module instruction_queue(
       queue_1_SUBTRACT <= 1'h0;
       queue_1_MULTIPLY <= 1'h0;
       queue_1_IMMEDIATE <= 1'h0;
-      queue_1_IS_LOAD <= 1'h0;
-      queue_1_IS_STORE <= 1'h0;
+      queue_1_is_load <= 1'h0;
+      queue_1_is_store <= 1'h0;
       queue_2_ready_bits_RS1_ready <= 1'h0;
       queue_2_ready_bits_RS2_ready <= 1'h0;
       queue_2_RD <= 6'h0;
@@ -691,8 +691,8 @@ module instruction_queue(
       queue_2_SUBTRACT <= 1'h0;
       queue_2_MULTIPLY <= 1'h0;
       queue_2_IMMEDIATE <= 1'h0;
-      queue_2_IS_LOAD <= 1'h0;
-      queue_2_IS_STORE <= 1'h0;
+      queue_2_is_load <= 1'h0;
+      queue_2_is_store <= 1'h0;
       queue_3_ready_bits_RS1_ready <= 1'h0;
       queue_3_ready_bits_RS2_ready <= 1'h0;
       queue_3_RD <= 6'h0;
@@ -714,8 +714,8 @@ module instruction_queue(
       queue_3_SUBTRACT <= 1'h0;
       queue_3_MULTIPLY <= 1'h0;
       queue_3_IMMEDIATE <= 1'h0;
-      queue_3_IS_LOAD <= 1'h0;
-      queue_3_IS_STORE <= 1'h0;
+      queue_3_is_load <= 1'h0;
+      queue_3_is_store <= 1'h0;
       queue_4_ready_bits_RS1_ready <= 1'h0;
       queue_4_ready_bits_RS2_ready <= 1'h0;
       queue_4_RD <= 6'h0;
@@ -737,8 +737,8 @@ module instruction_queue(
       queue_4_SUBTRACT <= 1'h0;
       queue_4_MULTIPLY <= 1'h0;
       queue_4_IMMEDIATE <= 1'h0;
-      queue_4_IS_LOAD <= 1'h0;
-      queue_4_IS_STORE <= 1'h0;
+      queue_4_is_load <= 1'h0;
+      queue_4_is_store <= 1'h0;
       queue_5_ready_bits_RS1_ready <= 1'h0;
       queue_5_ready_bits_RS2_ready <= 1'h0;
       queue_5_RD <= 6'h0;
@@ -760,8 +760,8 @@ module instruction_queue(
       queue_5_SUBTRACT <= 1'h0;
       queue_5_MULTIPLY <= 1'h0;
       queue_5_IMMEDIATE <= 1'h0;
-      queue_5_IS_LOAD <= 1'h0;
-      queue_5_IS_STORE <= 1'h0;
+      queue_5_is_load <= 1'h0;
+      queue_5_is_store <= 1'h0;
       queue_6_ready_bits_RS1_ready <= 1'h0;
       queue_6_ready_bits_RS2_ready <= 1'h0;
       queue_6_RD <= 6'h0;
@@ -783,8 +783,8 @@ module instruction_queue(
       queue_6_SUBTRACT <= 1'h0;
       queue_6_MULTIPLY <= 1'h0;
       queue_6_IMMEDIATE <= 1'h0;
-      queue_6_IS_LOAD <= 1'h0;
-      queue_6_IS_STORE <= 1'h0;
+      queue_6_is_load <= 1'h0;
+      queue_6_is_store <= 1'h0;
       queue_7_ready_bits_RS1_ready <= 1'h0;
       queue_7_ready_bits_RS2_ready <= 1'h0;
       queue_7_RD <= 6'h0;
@@ -806,8 +806,8 @@ module instruction_queue(
       queue_7_SUBTRACT <= 1'h0;
       queue_7_MULTIPLY <= 1'h0;
       queue_7_IMMEDIATE <= 1'h0;
-      queue_7_IS_LOAD <= 1'h0;
-      queue_7_IS_STORE <= 1'h0;
+      queue_7_is_load <= 1'h0;
+      queue_7_is_store <= 1'h0;
       valid_0 <= 1'h0;
       valid_1 <= 1'h0;
       valid_2 <= 1'h0;
@@ -1290,20 +1290,20 @@ module instruction_queue(
                   : _GEN_28 ? io_in_0_bits_IMMEDIATE : queue_0_IMMEDIATE;
       _GEN_89 =
         _GEN_77
-          ? io_in_3_bits_IS_LOAD
+          ? io_in_3_bits_is_load
           : _GEN_65
-              ? io_in_2_bits_IS_LOAD
+              ? io_in_2_bits_is_load
               : _GEN_39
-                  ? io_in_1_bits_IS_LOAD
-                  : _GEN_28 ? io_in_0_bits_IS_LOAD : queue_0_IS_LOAD;
+                  ? io_in_1_bits_is_load
+                  : _GEN_28 ? io_in_0_bits_is_load : queue_0_is_load;
       _GEN_90 =
         _GEN_77
-          ? io_in_3_bits_IS_STORE
+          ? io_in_3_bits_is_store
           : _GEN_65
-              ? io_in_2_bits_IS_STORE
+              ? io_in_2_bits_is_store
               : _GEN_39
-                  ? io_in_1_bits_IS_STORE
-                  : _GEN_28 ? io_in_0_bits_IS_STORE : queue_0_IS_STORE;
+                  ? io_in_1_bits_is_store
+                  : _GEN_28 ? io_in_0_bits_is_store : queue_0_is_store;
       _GEN_92 = _GEN_73 & _GEN_91;
       _GEN_93 =
         _GEN_92
@@ -1399,20 +1399,20 @@ module instruction_queue(
                   : _GEN_29 ? io_in_0_bits_IMMEDIATE : queue_1_IMMEDIATE;
       _GEN_104 =
         _GEN_92
-          ? io_in_3_bits_IS_LOAD
+          ? io_in_3_bits_is_load
           : _GEN_66
-              ? io_in_2_bits_IS_LOAD
+              ? io_in_2_bits_is_load
               : _GEN_41
-                  ? io_in_1_bits_IS_LOAD
-                  : _GEN_29 ? io_in_0_bits_IS_LOAD : queue_1_IS_LOAD;
+                  ? io_in_1_bits_is_load
+                  : _GEN_29 ? io_in_0_bits_is_load : queue_1_is_load;
       _GEN_105 =
         _GEN_92
-          ? io_in_3_bits_IS_STORE
+          ? io_in_3_bits_is_store
           : _GEN_66
-              ? io_in_2_bits_IS_STORE
+              ? io_in_2_bits_is_store
               : _GEN_41
-                  ? io_in_1_bits_IS_STORE
-                  : _GEN_29 ? io_in_0_bits_IS_STORE : queue_1_IS_STORE;
+                  ? io_in_1_bits_is_store
+                  : _GEN_29 ? io_in_0_bits_is_store : queue_1_is_store;
       _GEN_107 = _GEN_73 & _GEN_106;
       _GEN_108 =
         _GEN_107
@@ -1508,20 +1508,20 @@ module instruction_queue(
                   : _GEN_30 ? io_in_0_bits_IMMEDIATE : queue_2_IMMEDIATE;
       _GEN_119 =
         _GEN_107
-          ? io_in_3_bits_IS_LOAD
+          ? io_in_3_bits_is_load
           : _GEN_67
-              ? io_in_2_bits_IS_LOAD
+              ? io_in_2_bits_is_load
               : _GEN_43
-                  ? io_in_1_bits_IS_LOAD
-                  : _GEN_30 ? io_in_0_bits_IS_LOAD : queue_2_IS_LOAD;
+                  ? io_in_1_bits_is_load
+                  : _GEN_30 ? io_in_0_bits_is_load : queue_2_is_load;
       _GEN_120 =
         _GEN_107
-          ? io_in_3_bits_IS_STORE
+          ? io_in_3_bits_is_store
           : _GEN_67
-              ? io_in_2_bits_IS_STORE
+              ? io_in_2_bits_is_store
               : _GEN_43
-                  ? io_in_1_bits_IS_STORE
-                  : _GEN_30 ? io_in_0_bits_IS_STORE : queue_2_IS_STORE;
+                  ? io_in_1_bits_is_store
+                  : _GEN_30 ? io_in_0_bits_is_store : queue_2_is_store;
       _GEN_122 = _GEN_73 & _GEN_121;
       _GEN_123 =
         _GEN_122
@@ -1617,20 +1617,20 @@ module instruction_queue(
                   : _GEN_31 ? io_in_0_bits_IMMEDIATE : queue_3_IMMEDIATE;
       _GEN_134 =
         _GEN_122
-          ? io_in_3_bits_IS_LOAD
+          ? io_in_3_bits_is_load
           : _GEN_68
-              ? io_in_2_bits_IS_LOAD
+              ? io_in_2_bits_is_load
               : _GEN_45
-                  ? io_in_1_bits_IS_LOAD
-                  : _GEN_31 ? io_in_0_bits_IS_LOAD : queue_3_IS_LOAD;
+                  ? io_in_1_bits_is_load
+                  : _GEN_31 ? io_in_0_bits_is_load : queue_3_is_load;
       _GEN_135 =
         _GEN_122
-          ? io_in_3_bits_IS_STORE
+          ? io_in_3_bits_is_store
           : _GEN_68
-              ? io_in_2_bits_IS_STORE
+              ? io_in_2_bits_is_store
               : _GEN_45
-                  ? io_in_1_bits_IS_STORE
-                  : _GEN_31 ? io_in_0_bits_IS_STORE : queue_3_IS_STORE;
+                  ? io_in_1_bits_is_store
+                  : _GEN_31 ? io_in_0_bits_is_store : queue_3_is_store;
       _GEN_137 = _GEN_73 & _GEN_136;
       _GEN_138 =
         _GEN_137
@@ -1726,20 +1726,20 @@ module instruction_queue(
                   : _GEN_32 ? io_in_0_bits_IMMEDIATE : queue_4_IMMEDIATE;
       _GEN_149 =
         _GEN_137
-          ? io_in_3_bits_IS_LOAD
+          ? io_in_3_bits_is_load
           : _GEN_69
-              ? io_in_2_bits_IS_LOAD
+              ? io_in_2_bits_is_load
               : _GEN_47
-                  ? io_in_1_bits_IS_LOAD
-                  : _GEN_32 ? io_in_0_bits_IS_LOAD : queue_4_IS_LOAD;
+                  ? io_in_1_bits_is_load
+                  : _GEN_32 ? io_in_0_bits_is_load : queue_4_is_load;
       _GEN_150 =
         _GEN_137
-          ? io_in_3_bits_IS_STORE
+          ? io_in_3_bits_is_store
           : _GEN_69
-              ? io_in_2_bits_IS_STORE
+              ? io_in_2_bits_is_store
               : _GEN_47
-                  ? io_in_1_bits_IS_STORE
-                  : _GEN_32 ? io_in_0_bits_IS_STORE : queue_4_IS_STORE;
+                  ? io_in_1_bits_is_store
+                  : _GEN_32 ? io_in_0_bits_is_store : queue_4_is_store;
       _GEN_152 = _GEN_73 & _GEN_151;
       _GEN_153 =
         _GEN_152
@@ -1835,20 +1835,20 @@ module instruction_queue(
                   : _GEN_33 ? io_in_0_bits_IMMEDIATE : queue_5_IMMEDIATE;
       _GEN_164 =
         _GEN_152
-          ? io_in_3_bits_IS_LOAD
+          ? io_in_3_bits_is_load
           : _GEN_70
-              ? io_in_2_bits_IS_LOAD
+              ? io_in_2_bits_is_load
               : _GEN_49
-                  ? io_in_1_bits_IS_LOAD
-                  : _GEN_33 ? io_in_0_bits_IS_LOAD : queue_5_IS_LOAD;
+                  ? io_in_1_bits_is_load
+                  : _GEN_33 ? io_in_0_bits_is_load : queue_5_is_load;
       _GEN_165 =
         _GEN_152
-          ? io_in_3_bits_IS_STORE
+          ? io_in_3_bits_is_store
           : _GEN_70
-              ? io_in_2_bits_IS_STORE
+              ? io_in_2_bits_is_store
               : _GEN_49
-                  ? io_in_1_bits_IS_STORE
-                  : _GEN_33 ? io_in_0_bits_IS_STORE : queue_5_IS_STORE;
+                  ? io_in_1_bits_is_store
+                  : _GEN_33 ? io_in_0_bits_is_store : queue_5_is_store;
       _GEN_167 = _GEN_73 & _GEN_166;
       _GEN_168 =
         _GEN_167
@@ -1944,20 +1944,20 @@ module instruction_queue(
                   : _GEN_34 ? io_in_0_bits_IMMEDIATE : queue_6_IMMEDIATE;
       _GEN_179 =
         _GEN_167
-          ? io_in_3_bits_IS_LOAD
+          ? io_in_3_bits_is_load
           : _GEN_71
-              ? io_in_2_bits_IS_LOAD
+              ? io_in_2_bits_is_load
               : _GEN_51
-                  ? io_in_1_bits_IS_LOAD
-                  : _GEN_34 ? io_in_0_bits_IS_LOAD : queue_6_IS_LOAD;
+                  ? io_in_1_bits_is_load
+                  : _GEN_34 ? io_in_0_bits_is_load : queue_6_is_load;
       _GEN_180 =
         _GEN_167
-          ? io_in_3_bits_IS_STORE
+          ? io_in_3_bits_is_store
           : _GEN_71
-              ? io_in_2_bits_IS_STORE
+              ? io_in_2_bits_is_store
               : _GEN_51
-                  ? io_in_1_bits_IS_STORE
-                  : _GEN_34 ? io_in_0_bits_IS_STORE : queue_6_IS_STORE;
+                  ? io_in_1_bits_is_store
+                  : _GEN_34 ? io_in_0_bits_is_store : queue_6_is_store;
       _GEN_181 = _GEN_73 & (&_GEN_75);
       _GEN_182 =
         _GEN_181
@@ -2053,20 +2053,20 @@ module instruction_queue(
                   : _GEN_35 ? io_in_0_bits_IMMEDIATE : queue_7_IMMEDIATE;
       _GEN_193 =
         _GEN_181
-          ? io_in_3_bits_IS_LOAD
+          ? io_in_3_bits_is_load
           : _GEN_72
-              ? io_in_2_bits_IS_LOAD
+              ? io_in_2_bits_is_load
               : _GEN_52
-                  ? io_in_1_bits_IS_LOAD
-                  : _GEN_35 ? io_in_0_bits_IS_LOAD : queue_7_IS_LOAD;
+                  ? io_in_1_bits_is_load
+                  : _GEN_35 ? io_in_0_bits_is_load : queue_7_is_load;
       _GEN_194 =
         _GEN_181
-          ? io_in_3_bits_IS_STORE
+          ? io_in_3_bits_is_store
           : _GEN_72
-              ? io_in_2_bits_IS_STORE
+              ? io_in_2_bits_is_store
               : _GEN_52
-                  ? io_in_1_bits_IS_STORE
-                  : _GEN_35 ? io_in_0_bits_IS_STORE : queue_7_IS_STORE;
+                  ? io_in_1_bits_is_store
+                  : _GEN_35 ? io_in_0_bits_is_store : queue_7_is_store;
       _GEN_195 = _GEN_73 ? _GEN_76 | _GEN_65 | _GEN_53 : _GEN_65 | _GEN_53;
       _GEN_196 = _GEN_73 ? _GEN_91 | _GEN_66 | _GEN_54 : _GEN_66 | _GEN_54;
       _GEN_197 = _GEN_73 ? _GEN_106 | _GEN_67 | _GEN_55 : _GEN_67 | _GEN_55;
@@ -2242,8 +2242,8 @@ module instruction_queue(
         queue_0_SUBTRACT <= ~_GEN_360 & _GEN_225;
         queue_0_MULTIPLY <= ~_GEN_360 & _GEN_226;
         queue_0_IMMEDIATE <= ~_GEN_360 & _GEN_227;
-        queue_0_IS_LOAD <= ~_GEN_360 & _GEN_228;
-        queue_0_IS_STORE <= ~_GEN_360 & _GEN_229;
+        queue_0_is_load <= ~_GEN_360 & _GEN_228;
+        queue_0_is_store <= ~_GEN_360 & _GEN_229;
         queue_1_ready_bits_RS1_ready <= ~_GEN_361 & _GEN_232;
         queue_1_ready_bits_RS2_ready <= ~_GEN_361 & _GEN_233;
         queue_1_RD_valid <= ~_GEN_361 & _GEN_235;
@@ -2255,8 +2255,8 @@ module instruction_queue(
         queue_1_SUBTRACT <= ~_GEN_361 & _GEN_241;
         queue_1_MULTIPLY <= ~_GEN_361 & _GEN_242;
         queue_1_IMMEDIATE <= ~_GEN_361 & _GEN_243;
-        queue_1_IS_LOAD <= ~_GEN_361 & _GEN_244;
-        queue_1_IS_STORE <= ~_GEN_361 & _GEN_245;
+        queue_1_is_load <= ~_GEN_361 & _GEN_244;
+        queue_1_is_store <= ~_GEN_361 & _GEN_245;
         queue_2_ready_bits_RS1_ready <= ~_GEN_362 & _GEN_248;
         queue_2_ready_bits_RS2_ready <= ~_GEN_362 & _GEN_249;
         queue_2_RD_valid <= ~_GEN_362 & _GEN_251;
@@ -2268,8 +2268,8 @@ module instruction_queue(
         queue_2_SUBTRACT <= ~_GEN_362 & _GEN_257;
         queue_2_MULTIPLY <= ~_GEN_362 & _GEN_258;
         queue_2_IMMEDIATE <= ~_GEN_362 & _GEN_259;
-        queue_2_IS_LOAD <= ~_GEN_362 & _GEN_260;
-        queue_2_IS_STORE <= ~_GEN_362 & _GEN_261;
+        queue_2_is_load <= ~_GEN_362 & _GEN_260;
+        queue_2_is_store <= ~_GEN_362 & _GEN_261;
         queue_3_ready_bits_RS1_ready <= ~_GEN_363 & _GEN_264;
         queue_3_ready_bits_RS2_ready <= ~_GEN_363 & _GEN_265;
         queue_3_RD_valid <= ~_GEN_363 & _GEN_267;
@@ -2281,8 +2281,8 @@ module instruction_queue(
         queue_3_SUBTRACT <= ~_GEN_363 & _GEN_273;
         queue_3_MULTIPLY <= ~_GEN_363 & _GEN_274;
         queue_3_IMMEDIATE <= ~_GEN_363 & _GEN_275;
-        queue_3_IS_LOAD <= ~_GEN_363 & _GEN_276;
-        queue_3_IS_STORE <= ~_GEN_363 & _GEN_277;
+        queue_3_is_load <= ~_GEN_363 & _GEN_276;
+        queue_3_is_store <= ~_GEN_363 & _GEN_277;
         queue_4_ready_bits_RS1_ready <= ~_GEN_364 & _GEN_280;
         queue_4_ready_bits_RS2_ready <= ~_GEN_364 & _GEN_281;
         queue_4_RD_valid <= ~_GEN_364 & _GEN_283;
@@ -2294,8 +2294,8 @@ module instruction_queue(
         queue_4_SUBTRACT <= ~_GEN_364 & _GEN_289;
         queue_4_MULTIPLY <= ~_GEN_364 & _GEN_290;
         queue_4_IMMEDIATE <= ~_GEN_364 & _GEN_291;
-        queue_4_IS_LOAD <= ~_GEN_364 & _GEN_292;
-        queue_4_IS_STORE <= ~_GEN_364 & _GEN_293;
+        queue_4_is_load <= ~_GEN_364 & _GEN_292;
+        queue_4_is_store <= ~_GEN_364 & _GEN_293;
         queue_5_ready_bits_RS1_ready <= ~_GEN_365 & _GEN_296;
         queue_5_ready_bits_RS2_ready <= ~_GEN_365 & _GEN_297;
         queue_5_RD_valid <= ~_GEN_365 & _GEN_299;
@@ -2307,8 +2307,8 @@ module instruction_queue(
         queue_5_SUBTRACT <= ~_GEN_365 & _GEN_305;
         queue_5_MULTIPLY <= ~_GEN_365 & _GEN_306;
         queue_5_IMMEDIATE <= ~_GEN_365 & _GEN_307;
-        queue_5_IS_LOAD <= ~_GEN_365 & _GEN_308;
-        queue_5_IS_STORE <= ~_GEN_365 & _GEN_309;
+        queue_5_is_load <= ~_GEN_365 & _GEN_308;
+        queue_5_is_store <= ~_GEN_365 & _GEN_309;
         queue_6_ready_bits_RS1_ready <= ~_GEN_366 & _GEN_312;
         queue_6_ready_bits_RS2_ready <= ~_GEN_366 & _GEN_313;
         queue_6_RD_valid <= ~_GEN_366 & _GEN_315;
@@ -2320,8 +2320,8 @@ module instruction_queue(
         queue_6_SUBTRACT <= ~_GEN_366 & _GEN_321;
         queue_6_MULTIPLY <= ~_GEN_366 & _GEN_322;
         queue_6_IMMEDIATE <= ~_GEN_366 & _GEN_323;
-        queue_6_IS_LOAD <= ~_GEN_366 & _GEN_324;
-        queue_6_IS_STORE <= ~_GEN_366 & _GEN_325;
+        queue_6_is_load <= ~_GEN_366 & _GEN_324;
+        queue_6_is_store <= ~_GEN_366 & _GEN_325;
         queue_7_ready_bits_RS1_ready <= ~_GEN_367 & _GEN_327;
         queue_7_ready_bits_RS2_ready <= ~_GEN_367 & _GEN_328;
         queue_7_RD_valid <= ~_GEN_367 & _GEN_330;
@@ -2333,8 +2333,8 @@ module instruction_queue(
         queue_7_SUBTRACT <= ~_GEN_367 & _GEN_336;
         queue_7_MULTIPLY <= ~_GEN_367 & _GEN_337;
         queue_7_IMMEDIATE <= ~_GEN_367 & _GEN_338;
-        queue_7_IS_LOAD <= ~_GEN_367 & _GEN_339;
-        queue_7_IS_STORE <= ~_GEN_367 & _GEN_340;
+        queue_7_is_load <= ~_GEN_367 & _GEN_339;
+        queue_7_is_store <= ~_GEN_367 & _GEN_340;
         valid_0 <= ~_GEN_360 & _GEN_341;
         valid_1 <= ~_GEN_361 & _GEN_342;
         valid_2 <= ~_GEN_362 & _GEN_343;
@@ -2357,8 +2357,8 @@ module instruction_queue(
         queue_0_SUBTRACT <= ~_GEN_351 & _GEN_225;
         queue_0_MULTIPLY <= ~_GEN_351 & _GEN_226;
         queue_0_IMMEDIATE <= ~_GEN_351 & _GEN_227;
-        queue_0_IS_LOAD <= ~_GEN_351 & _GEN_228;
-        queue_0_IS_STORE <= ~_GEN_351 & _GEN_229;
+        queue_0_is_load <= ~_GEN_351 & _GEN_228;
+        queue_0_is_store <= ~_GEN_351 & _GEN_229;
         queue_1_ready_bits_RS1_ready <= ~_GEN_352 & _GEN_232;
         queue_1_ready_bits_RS2_ready <= ~_GEN_352 & _GEN_233;
         queue_1_RD_valid <= ~_GEN_352 & _GEN_235;
@@ -2370,8 +2370,8 @@ module instruction_queue(
         queue_1_SUBTRACT <= ~_GEN_352 & _GEN_241;
         queue_1_MULTIPLY <= ~_GEN_352 & _GEN_242;
         queue_1_IMMEDIATE <= ~_GEN_352 & _GEN_243;
-        queue_1_IS_LOAD <= ~_GEN_352 & _GEN_244;
-        queue_1_IS_STORE <= ~_GEN_352 & _GEN_245;
+        queue_1_is_load <= ~_GEN_352 & _GEN_244;
+        queue_1_is_store <= ~_GEN_352 & _GEN_245;
         queue_2_ready_bits_RS1_ready <= ~_GEN_353 & _GEN_248;
         queue_2_ready_bits_RS2_ready <= ~_GEN_353 & _GEN_249;
         queue_2_RD_valid <= ~_GEN_353 & _GEN_251;
@@ -2383,8 +2383,8 @@ module instruction_queue(
         queue_2_SUBTRACT <= ~_GEN_353 & _GEN_257;
         queue_2_MULTIPLY <= ~_GEN_353 & _GEN_258;
         queue_2_IMMEDIATE <= ~_GEN_353 & _GEN_259;
-        queue_2_IS_LOAD <= ~_GEN_353 & _GEN_260;
-        queue_2_IS_STORE <= ~_GEN_353 & _GEN_261;
+        queue_2_is_load <= ~_GEN_353 & _GEN_260;
+        queue_2_is_store <= ~_GEN_353 & _GEN_261;
         queue_3_ready_bits_RS1_ready <= ~_GEN_354 & _GEN_264;
         queue_3_ready_bits_RS2_ready <= ~_GEN_354 & _GEN_265;
         queue_3_RD_valid <= ~_GEN_354 & _GEN_267;
@@ -2396,8 +2396,8 @@ module instruction_queue(
         queue_3_SUBTRACT <= ~_GEN_354 & _GEN_273;
         queue_3_MULTIPLY <= ~_GEN_354 & _GEN_274;
         queue_3_IMMEDIATE <= ~_GEN_354 & _GEN_275;
-        queue_3_IS_LOAD <= ~_GEN_354 & _GEN_276;
-        queue_3_IS_STORE <= ~_GEN_354 & _GEN_277;
+        queue_3_is_load <= ~_GEN_354 & _GEN_276;
+        queue_3_is_store <= ~_GEN_354 & _GEN_277;
         queue_4_ready_bits_RS1_ready <= ~_GEN_355 & _GEN_280;
         queue_4_ready_bits_RS2_ready <= ~_GEN_355 & _GEN_281;
         queue_4_RD_valid <= ~_GEN_355 & _GEN_283;
@@ -2409,8 +2409,8 @@ module instruction_queue(
         queue_4_SUBTRACT <= ~_GEN_355 & _GEN_289;
         queue_4_MULTIPLY <= ~_GEN_355 & _GEN_290;
         queue_4_IMMEDIATE <= ~_GEN_355 & _GEN_291;
-        queue_4_IS_LOAD <= ~_GEN_355 & _GEN_292;
-        queue_4_IS_STORE <= ~_GEN_355 & _GEN_293;
+        queue_4_is_load <= ~_GEN_355 & _GEN_292;
+        queue_4_is_store <= ~_GEN_355 & _GEN_293;
         queue_5_ready_bits_RS1_ready <= ~_GEN_356 & _GEN_296;
         queue_5_ready_bits_RS2_ready <= ~_GEN_356 & _GEN_297;
         queue_5_RD_valid <= ~_GEN_356 & _GEN_299;
@@ -2422,8 +2422,8 @@ module instruction_queue(
         queue_5_SUBTRACT <= ~_GEN_356 & _GEN_305;
         queue_5_MULTIPLY <= ~_GEN_356 & _GEN_306;
         queue_5_IMMEDIATE <= ~_GEN_356 & _GEN_307;
-        queue_5_IS_LOAD <= ~_GEN_356 & _GEN_308;
-        queue_5_IS_STORE <= ~_GEN_356 & _GEN_309;
+        queue_5_is_load <= ~_GEN_356 & _GEN_308;
+        queue_5_is_store <= ~_GEN_356 & _GEN_309;
         queue_6_ready_bits_RS1_ready <= ~_GEN_357 & _GEN_312;
         queue_6_ready_bits_RS2_ready <= ~_GEN_357 & _GEN_313;
         queue_6_RD_valid <= ~_GEN_357 & _GEN_315;
@@ -2435,8 +2435,8 @@ module instruction_queue(
         queue_6_SUBTRACT <= ~_GEN_357 & _GEN_321;
         queue_6_MULTIPLY <= ~_GEN_357 & _GEN_322;
         queue_6_IMMEDIATE <= ~_GEN_357 & _GEN_323;
-        queue_6_IS_LOAD <= ~_GEN_357 & _GEN_324;
-        queue_6_IS_STORE <= ~_GEN_357 & _GEN_325;
+        queue_6_is_load <= ~_GEN_357 & _GEN_324;
+        queue_6_is_store <= ~_GEN_357 & _GEN_325;
         queue_7_ready_bits_RS1_ready <= ~_GEN_358 & _GEN_327;
         queue_7_ready_bits_RS2_ready <= ~_GEN_358 & _GEN_328;
         queue_7_RD_valid <= ~_GEN_358 & _GEN_330;
@@ -2448,8 +2448,8 @@ module instruction_queue(
         queue_7_SUBTRACT <= ~_GEN_358 & _GEN_336;
         queue_7_MULTIPLY <= ~_GEN_358 & _GEN_337;
         queue_7_IMMEDIATE <= ~_GEN_358 & _GEN_338;
-        queue_7_IS_LOAD <= ~_GEN_358 & _GEN_339;
-        queue_7_IS_STORE <= ~_GEN_358 & _GEN_340;
+        queue_7_is_load <= ~_GEN_358 & _GEN_339;
+        queue_7_is_store <= ~_GEN_358 & _GEN_340;
         valid_0 <= ~_GEN_351 & _GEN_341;
         valid_1 <= ~_GEN_352 & _GEN_342;
         valid_2 <= ~_GEN_353 & _GEN_343;
@@ -2976,8 +2976,8 @@ module instruction_queue(
   assign io_out_0_bits_SUBTRACT = _GEN_17[front_pointer[2:0]];
   assign io_out_0_bits_MULTIPLY = _GEN_18[front_pointer[2:0]];
   assign io_out_0_bits_IMMEDIATE = _GEN_19[front_pointer[2:0]];
-  assign io_out_0_bits_IS_LOAD = _GEN_20[front_pointer[2:0]];
-  assign io_out_0_bits_IS_STORE = _GEN_21[front_pointer[2:0]];
+  assign io_out_0_bits_is_load = _GEN_20[front_pointer[2:0]];
+  assign io_out_0_bits_is_store = _GEN_21[front_pointer[2:0]];
   assign io_out_1_valid = _GEN_22[_io_out_1_valid_T];
   assign io_out_1_bits_ready_bits_RS1_ready = _GEN[_io_out_1_valid_T];
   assign io_out_1_bits_ready_bits_RS2_ready = _GEN_0[_io_out_1_valid_T];
@@ -3000,8 +3000,8 @@ module instruction_queue(
   assign io_out_1_bits_SUBTRACT = _GEN_17[_io_out_1_valid_T];
   assign io_out_1_bits_MULTIPLY = _GEN_18[_io_out_1_valid_T];
   assign io_out_1_bits_IMMEDIATE = _GEN_19[_io_out_1_valid_T];
-  assign io_out_1_bits_IS_LOAD = _GEN_20[_io_out_1_valid_T];
-  assign io_out_1_bits_IS_STORE = _GEN_21[_io_out_1_valid_T];
+  assign io_out_1_bits_is_load = _GEN_20[_io_out_1_valid_T];
+  assign io_out_1_bits_is_store = _GEN_21[_io_out_1_valid_T];
   assign io_out_2_valid = _GEN_22[_io_out_2_valid_T];
   assign io_out_2_bits_ready_bits_RS1_ready = _GEN[_io_out_2_valid_T];
   assign io_out_2_bits_ready_bits_RS2_ready = _GEN_0[_io_out_2_valid_T];
@@ -3024,8 +3024,8 @@ module instruction_queue(
   assign io_out_2_bits_SUBTRACT = _GEN_17[_io_out_2_valid_T];
   assign io_out_2_bits_MULTIPLY = _GEN_18[_io_out_2_valid_T];
   assign io_out_2_bits_IMMEDIATE = _GEN_19[_io_out_2_valid_T];
-  assign io_out_2_bits_IS_LOAD = _GEN_20[_io_out_2_valid_T];
-  assign io_out_2_bits_IS_STORE = _GEN_21[_io_out_2_valid_T];
+  assign io_out_2_bits_is_load = _GEN_20[_io_out_2_valid_T];
+  assign io_out_2_bits_is_store = _GEN_21[_io_out_2_valid_T];
   assign io_out_3_valid = _GEN_22[_io_out_3_valid_T];
   assign io_out_3_bits_ready_bits_RS1_ready = _GEN[_io_out_3_valid_T];
   assign io_out_3_bits_ready_bits_RS2_ready = _GEN_0[_io_out_3_valid_T];
@@ -3048,7 +3048,7 @@ module instruction_queue(
   assign io_out_3_bits_SUBTRACT = _GEN_17[_io_out_3_valid_T];
   assign io_out_3_bits_MULTIPLY = _GEN_18[_io_out_3_valid_T];
   assign io_out_3_bits_IMMEDIATE = _GEN_19[_io_out_3_valid_T];
-  assign io_out_3_bits_IS_LOAD = _GEN_20[_io_out_3_valid_T];
-  assign io_out_3_bits_IS_STORE = _GEN_21[_io_out_3_valid_T];
+  assign io_out_3_bits_is_load = _GEN_20[_io_out_3_valid_T];
+  assign io_out_3_bits_is_store = _GEN_21[_io_out_3_valid_T];
 endmodule
 

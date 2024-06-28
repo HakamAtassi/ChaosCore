@@ -45,29 +45,30 @@ class ROB(parameters:Parameters) extends Module{
 
     val io = IO(new Bundle{
         // FLUSH //
-        val flush           =   Input(Bool())
+        val flush                       =   Input(Bool())
 
         // ALLOCATE //
-        val ROB_packet      =   Flipped(Decoupled(new decoded_fetch_packet(parameters)))
+        val ROB_packet                  =   Flipped(Decoupled(new decoded_fetch_packet(parameters)))
 
         // UPDATE //
-        val FU_outputs      =   Vec(portCount, Flipped(ValidIO(new FU_output(parameters))))
+        val FU_outputs                  =   Vec(portCount, Flipped(ValidIO(new FU_output(parameters))))
 
         // COMMIT //
-        val ROB_output      =   ValidIO(new ROB_output(parameters))
-        //Output(Vec(fetchWidth, new ROB_entry(parameters)))
+        val ROB_output                  =   Output(new ROB_output(parameters))
 
         // REDIRECTS // 
-        val commit          =   Input(new commit(parameters))
-        // Commits are at the granularity of fetch packets
-
-        val ROB_index       =   Output(UInt(log2Ceil(ROBEntires).W))
+        val commit                      =   Flipped(ValidIO(new commit(parameters)))
+        
+        val ROB_index                   =   Output(UInt(log2Ceil(ROBEntires).W))
 
         // PC FILE //
         // Read port (Exec)
         val PC_file_exec_addr           =   Input(UInt(log2Ceil(ROBEntires).W))
         val PC_file_exec_data           =   Output(UInt(32.W))
     })
+
+    dontTouch(io)
+
 
     //////////////////
     // REQUIREMENTS //
@@ -86,11 +87,7 @@ class ROB(parameters:Parameters) extends Module{
     val front_index = Wire(UInt((pointer_width-1).W))
     val back_index  = Wire(UInt((pointer_width-1).W))
 
-
     io.ROB_index := back_index
-
-
-    back_index  := back_pointer(pointer_width-2, 0)
     
     //////////////////////////////////
     // BACK POINTER CTRL / ALLOCATE //
@@ -100,16 +97,33 @@ class ROB(parameters:Parameters) extends Module{
 
     allocate := io.ROB_packet.valid && io.ROB_packet.ready
 
-    when(io.flush){
-        back_pointer := 0.U
-    }.otherwise{
-        back_pointer := back_pointer + allocate
-    }
-
 
     //////////////
     // MEMORIES //
     //////////////
+
+    //|-----------------------|//
+    //| Row valid             |//
+    //| Regs                  |//
+    //| Write on allocate     |//
+    //| Write on commit       |//
+    //| Read to commit        |//
+    //|-----------------------|//
+
+    val row_valid_mem   =   RegInit(VecInit(Seq.fill(ROBEntires)(0.B)))
+    val row_valid       =   row_valid_mem(front_pointer(pointer_width-2, 0))
+
+    when(io.ROB_packet.valid){  // Allocate
+        row_valid_mem(back_pointer(pointer_width-2, 0)) := 1.B
+    }
+
+    when(io.commit.valid){  // Commit
+        row_valid_mem(front_pointer(pointer_width-2, 0)) := 0.B
+    }
+
+    when(io.flush){
+        row_valid_mem := Seq.fill(ROBEntires)(0.B)
+    }
 
     //|-------------------------|//
     //| SHARED MEM              |//
@@ -119,13 +133,12 @@ class ROB(parameters:Parameters) extends Module{
     //| Read to commit          |//
     //|-------------------------|//
 
-    val shared_mem = Module(new ROB_shared_mem(parameters, depth=ROBEntires))
-
+    val shared_mem      = Module(new ROB_shared_mem(parameters, depth=ROBEntires))
     val shared_mem_input = Wire(new ROB_shared(parameters))
 
-    shared_mem_input.row_valid  := io.ROB_packet.valid
-    shared_mem_input.fetch_PC   := io.ROB_packet.bits.fetch_PC
-    shared_mem_input.RAT_IDX    := io.ROB_packet.bits.RAT_IDX
+    shared_mem_input.fetch_PC                   := io.ROB_packet.bits.fetch_PC
+    shared_mem_input.RAT_index                  := io.ROB_packet.bits.RAT_index
+    shared_mem_input.free_list_front_pointer    := io.ROB_packet.bits.free_list_front_pointer
     
     // Port A / allocate
     shared_mem.io.addrA         := back_index
@@ -133,9 +146,7 @@ class ROB(parameters:Parameters) extends Module{
     shared_mem.io.writeEnableA  := allocate
 
     // Port B / commit
-    shared_mem.io.addrB         := front_index
-    io.ROB_output.bits.fetch_PC := shared_mem.io.readDataB.fetch_PC
-    io.ROB_output.bits.RAT_IDX  := shared_mem.io.readDataB.RAT_IDX
+    shared_mem.io.addrB                    := front_index
 
     // Port C / FUs
     shared_mem.io.addrC         := io.PC_file_exec_addr
@@ -199,15 +210,9 @@ class ROB(parameters:Parameters) extends Module{
         ROB_WB_banks(i).io.writeEnableE  :=  io.FU_outputs(3).valid && (io.FU_outputs(3).bits.fetch_packet_index === i.U)
 
         // commit (connect all ports)
-
         ROB_WB_banks(i).io.addrG       := front_index
 
     }
-
-
-    
-    //ROB_WB_banks.map(_.io.readDataG.busy).reduce(_ && _) && shared_mem.io.readDataB.row_valid
-
 
     //|----------------------------|//
     //| INSTR MEM                  |//
@@ -216,18 +221,18 @@ class ROB(parameters:Parameters) extends Module{
     //| Read to commit             |//
     //|----------------------------|//
 
-
     val ROB_entry_banks: Seq[ROB_entry_mem] = Seq.tabulate(fetchWidth) { w =>
         Module(new ROB_entry_mem(parameters=parameters, depth=ROBEntires))
     }
-
 
     for(i <- 0 until fetchWidth){
         val ROB_entry_data = Wire(new ROB_entry(parameters))
         ROB_entry_data.valid                 := io.ROB_packet.bits.valid_bits(i)
         ROB_entry_data.is_branch             := io.ROB_packet.bits.decoded_instruction(i).needs_branch_unit
-        ROB_entry_data.is_load               := io.ROB_packet.bits.decoded_instruction(i).IS_LOAD
-        ROB_entry_data.is_store              := io.ROB_packet.bits.decoded_instruction(i).IS_STORE
+        ROB_entry_data.is_load               := io.ROB_packet.bits.decoded_instruction(i).is_load
+        ROB_entry_data.is_store              := io.ROB_packet.bits.decoded_instruction(i).is_store
+        ROB_entry_data.RD                    := io.ROB_packet.bits.decoded_instruction(i).RD
+        ROB_entry_data.RD_valid              := io.ROB_packet.bits.decoded_instruction(i).RD_valid
 
         // allocate
         ROB_entry_banks(i).io.addrA          := back_index
@@ -236,50 +241,47 @@ class ROB(parameters:Parameters) extends Module{
 
         // commit
         ROB_entry_banks(i).io.addrB          := front_index
-        io.ROB_output.bits.ROB_entries(i)    := ROB_entry_banks(i).io.readDataB
     }
-
 
     /////////////////////////////////
     // FRONT POINTER CTRL / COMMIT //
     /////////////////////////////////
+    front_pointer := front_pointer + io.commit.valid
 
-    val commit = Wire(Bool())
-
-    val commit_row_valid    = Wire(Bool())  // the row is valid
-    
-    val commit_row_complete = Wire(Vec(fetchWidth, Bool()))  // all valid instructions in that row are complete
-
-
-    commit_row_valid := shared_mem.io.readDataB.row_valid
-
-    for(i <- 0 until fetchWidth){   // FIXME: the commit condition here is very important and is currently a hack...
-        val is_completed    = (ROB_WB_banks(i).io.readDataG.busy && ROB_entry_banks(i).io.readDataB.valid)
-        val is_invalid      = (!ROB_entry_banks(i).io.readDataB.valid)
-        val is_load         = ROB_entry_banks(i).io.readDataB.is_load
-        val is_store        = ROB_entry_banks(i).io.readDataB.is_store
-        commit_row_complete(i) := is_completed || is_invalid || is_load || is_store
-    }
-
-
-    commit := commit_row_valid && commit_row_complete.reduce(_ && _)
-
-
-
-    front_pointer := front_pointer + commit
-
-    io.ROB_output.valid := commit
-    io.ROB_output.bits.ROB_index := RegNext(front_index)    // you want the unbypassed version of this pointer
 
     when(io.flush){
         front_pointer := 0.U
         front_index   := 0.U
-    }.elsewhen(commit){   // bypass
+    }.elsewhen(io.commit.valid){   // bypass
         val bypassed_pointer = (front_pointer + 1.U)
         front_index := bypassed_pointer(pointer_width-2, 0)
         front_pointer := front_pointer + 1.U
     }.otherwise{
         front_index := front_pointer(pointer_width-2, 0)
+    }
+
+    when(io.flush){
+        back_pointer := 0.U
+        back_index  := 0.U
+    }.otherwise{
+        back_pointer := back_pointer + allocate
+        back_index   := back_pointer(pointer_width-2, 0)
+    }
+
+    ///////////////////////
+    // ASSIGN ROB OUTPUT //
+    ///////////////////////
+
+    io.ROB_output.row_valid := row_valid
+    io.ROB_output.ROB_index := RegNext(front_index)    // you want the unbypassed version of this pointer
+
+    io.ROB_output.fetch_PC                 := shared_mem.io.readDataB.fetch_PC
+    io.ROB_output.RAT_index                := shared_mem.io.readDataB.RAT_index
+    io.ROB_output.free_list_front_pointer  := shared_mem.io.readDataB.free_list_front_pointer
+
+    for(i <- 0 until fetchWidth){
+        io.ROB_output.complete(i)       := ROB_WB_banks(i).io.readDataG.busy    // Rename busy to complete
+        io.ROB_output.ROB_entries(i)    := ROB_entry_banks(i).io.readDataB
     }
 
     ///////////
@@ -288,9 +290,7 @@ class ROB(parameters:Parameters) extends Module{
 
     val full = (front_pointer(pointer_width-2, 0) === back_pointer(pointer_width-2, 0)) && (front_pointer =/= back_pointer)
 
-
     io.ROB_packet.ready := !full
-
 
     ///////////
     // DEBUG //
@@ -302,6 +302,4 @@ class ROB(parameters:Parameters) extends Module{
 
 
 }
-// FIXME: ROB commit doesnt really work
-// Front and back pointers are reset, but what if the first element is valid? 
 

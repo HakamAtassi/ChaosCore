@@ -29,8 +29,8 @@ def generate_null_allocate_inputs():
     allocate_inputs["SUBTRACT"] = [0, 0, 0, 0]
     allocate_inputs["MULTIPLY"] = [0, 0, 0, 0]
     allocate_inputs["IMMEDIATE"] = [0, 0, 0, 0]
-    allocate_inputs["IS_LOAD"] = [0, 0, 0, 0]
-    allocate_inputs["IS_STORE"] = [0, 0, 0, 0]
+    allocate_inputs["is_load"] = [0, 0, 0, 0]
+    allocate_inputs["is_store"] = [0, 0, 0, 0]
     return allocate_inputs
 
 def generate_null_FU_inputs():
@@ -64,7 +64,7 @@ def generate_null_commit_input():
     commit_inputs["GHR"] = 0
     commit_inputs["TOS"] = 0
     commit_inputs["NEXT"] = 0
-    commit_inputs["RAT_IDX"] = 0
+    commit_inputs["RAT_index"] = 0
 
     return commit_inputs
 
@@ -95,7 +95,7 @@ class MEMRS_dut:
         getattr(self.dut, f"io_commit_GHR").value = commit_input["GHR"]
         getattr(self.dut, f"io_commit_TOS").value = commit_input["TOS"]
         getattr(self.dut, f"io_commit_NEXT").value = commit_input["NEXT"]
-        getattr(self.dut, f"io_commit_RAT_IDX").value = commit_input["RAT_IDX"]
+        getattr(self.dut, f"io_commit_RAT_index").value = commit_input["RAT_index"]
 
     def write_allocate(self, allocate_inputs=generate_null_allocate_inputs()):
         for i in range(4):
@@ -121,8 +121,8 @@ class MEMRS_dut:
             getattr(self.dut, f"io_backend_packet_{i}_bits_SUBTRACT").value = allocate_inputs["SUBTRACT"][i]
             getattr(self.dut, f"io_backend_packet_{i}_bits_MULTIPLY").value = allocate_inputs["MULTIPLY"][i]
             getattr(self.dut, f"io_backend_packet_{i}_bits_IMMEDIATE").value = allocate_inputs["IMMEDIATE"][i]
-            getattr(self.dut, f"io_backend_packet_{i}_bits_IS_LOAD").value = allocate_inputs["IS_LOAD"][i]
-            getattr(self.dut, f"io_backend_packet_{i}_bits_IS_STORE").value = allocate_inputs["IS_STORE"][i]
+            getattr(self.dut, f"io_backend_packet_{i}_bits_is_load").value = allocate_inputs["is_load"][i]
+            getattr(self.dut, f"io_backend_packet_{i}_bits_is_store").value = allocate_inputs["is_store"][i]
 
     def write_FU(self, FU_inputs=generate_null_FU_inputs()):
         for i in range(4):
@@ -160,8 +160,8 @@ class MEMRS_dut:
         reservation_station["SUBTRACT"] = [0]*16
         reservation_station["MULTIPLY"] = [0]*16
         reservation_station["IMMEDIATE"] = [0]*16
-        reservation_station["IS_LOAD"] = [0]*16
-        reservation_station["IS_STORE"] = [0]*16
+        reservation_station["is_load"] = [0]*16
+        reservation_station["is_store"] = [0]*16
         reservation_station["commited"] = [0]*16
         reservation_station["valid"] = [0]*16
 
@@ -187,8 +187,8 @@ class MEMRS_dut:
             reservation_station["SUBTRACT"][i] = getattr(self.dut, f"reservation_station_{i}_decoded_instruction_SUBTRACT").value
             reservation_station["MULTIPLY"][i] = getattr(self.dut, f"reservation_station_{i}_decoded_instruction_MULTIPLY").value
             reservation_station["IMMEDIATE"][i] = getattr(self.dut, f"reservation_station_{i}_decoded_instruction_IMMEDIATE").value
-            reservation_station["IS_LOAD"][i] = getattr(self.dut, f"reservation_station_{i}_decoded_instruction_IS_LOAD").value
-            reservation_station["IS_STORE"][i] = getattr(self.dut, f"reservation_station_{i}_decoded_instruction_IS_STORE").value
+            reservation_station["is_load"][i] = getattr(self.dut, f"reservation_station_{i}_decoded_instruction_is_load").value
+            reservation_station["is_store"][i] = getattr(self.dut, f"reservation_station_{i}_decoded_instruction_is_store").value
             reservation_station["commited"][i] = getattr(self.dut, f"reservation_station_{i}_commited").value
             reservation_station["valid"][i] = getattr(self.dut, f"reservation_station_{i}_valid").value
 
@@ -224,8 +224,8 @@ class MEMRS_dut:
         outputs["SUBTRACT"] = getattr(self.dut, f"io_RF_inputs_3_bits_SUBTRACT").value
         outputs["MULTIPLY"] = getattr(self.dut, f"io_RF_inputs_3_bits_MULTIPLY").value
         outputs["IMMEDIATE"] = getattr(self.dut, f"io_RF_inputs_3_bits_IMMEDIATE").value
-        outputs["IS_LOAD"] = getattr(self.dut, f"io_RF_inputs_3_bits_IS_LOAD").value
-        outputs["IS_STORE"] = getattr(self.dut, f"io_RF_inputs_3_bits_IS_STORE").value
+        outputs["is_load"] = getattr(self.dut, f"io_RF_inputs_3_bits_is_load").value
+        outputs["is_store"] = getattr(self.dut, f"io_RF_inputs_3_bits_is_store").value
         return outputs
 
     def print_MEMRS(self):

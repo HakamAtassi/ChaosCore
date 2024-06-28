@@ -47,8 +47,8 @@ class decoder_sw:
         self.MULTIPLY = int((self.opcode == OP) and (self.FUNCT7 == 0x01))
         self.SUBTRACT = int((self.opcode == OP) and (self.FUNCT7 == 0x20))
         self.IMMEDIATE = int(self.opcode == IMM_OP)
-        self.IS_LOAD = int(self.opcode == LOAD)
-        self.IS_STORE = int(self.opcode == STORE)
+        self.is_load = int(self.opcode == LOAD)
+        self.is_store = int(self.opcode == STORE)
         self.needs_ALU = int(((self.opcode == OP) and 
                             (self.FUNCT7 == 0x00 or self.SUBTRACT)) or 
                             self.opcode == IMM_OP)
@@ -167,8 +167,8 @@ class decoder_dut:
         outputs["SUBTRACT"] = self.dut.io_decoded_instruction_bits_SUBTRACT.value
         outputs["MULTIPLY"] = self.dut.io_decoded_instruction_bits_MULTIPLY.value
         outputs["IMMEDIATE"] = self.dut.io_decoded_instruction_bits_IMMEDIATE.value
-        outputs["IS_LOAD"] = self.dut.io_decoded_instruction_bits_IS_LOAD.value
-        outputs["IS_STORE"] = self.dut.io_decoded_instruction_bits_IS_STORE.value
+        outputs["is_load"] = self.dut.io_decoded_instruction_bits_is_load.value
+        outputs["is_store"] = self.dut.io_decoded_instruction_bits_is_store.value
         
         return outputs
 

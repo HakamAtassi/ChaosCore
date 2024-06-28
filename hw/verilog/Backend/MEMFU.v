@@ -25,8 +25,8 @@ module MEMFU(
                 io_FU_input_bits_decoded_instruction_SUBTRACT,
                 io_FU_input_bits_decoded_instruction_MULTIPLY,
                 io_FU_input_bits_decoded_instruction_IMMEDIATE,
-                io_FU_input_bits_decoded_instruction_IS_LOAD,
-                io_FU_input_bits_decoded_instruction_IS_STORE,
+                io_FU_input_bits_decoded_instruction_is_load,
+                io_FU_input_bits_decoded_instruction_is_store,
   input  [31:0] io_FU_input_bits_RS1_data,
                 io_FU_input_bits_RS2_data,
                 io_FU_input_bits_PC,
@@ -54,8 +54,8 @@ module MEMFU(
   reg  [5:0]  FU_input_bits_reg_decoded_instruction_RD;
   reg  [20:0] FU_input_bits_reg_decoded_instruction_IMM;
   reg  [2:0]  FU_input_bits_reg_decoded_instruction_FUNCT3;
-  reg         FU_input_bits_reg_decoded_instruction_IS_LOAD;
-  reg         FU_input_bits_reg_decoded_instruction_IS_STORE;
+  reg         FU_input_bits_reg_decoded_instruction_is_load;
+  reg         FU_input_bits_reg_decoded_instruction_is_store;
   reg  [31:0] FU_input_bits_reg_RS1_data;
   reg  [31:0] FU_input_bits_reg_RS2_data;
   reg         FU_input_valid_reg;
@@ -66,10 +66,10 @@ module MEMFU(
   wire [31:0] FU_input_RS2_data =
     memfu_state ? FU_input_bits_reg_RS2_data : io_FU_input_bits_RS2_data;
   wire        FU_input_valid = memfu_state ? FU_input_valid_reg : io_FU_input_valid;
-  wire        IS_STORE =
+  wire        is_store =
     (memfu_state
-       ? FU_input_bits_reg_decoded_instruction_IS_STORE
-       : io_FU_input_bits_decoded_instruction_IS_STORE) & FU_input_valid;
+       ? FU_input_bits_reg_decoded_instruction_is_store
+       : io_FU_input_bits_decoded_instruction_is_store) & FU_input_valid;
   wire        _LB_T = FU_input_decoded_instruction_FUNCT3 == 3'h0;
   wire        _LH_T = FU_input_decoded_instruction_FUNCT3 == 3'h1;
   wire        _LW_T = FU_input_decoded_instruction_FUNCT3 == 3'h2;
@@ -81,17 +81,17 @@ module MEMFU(
   reg         io_FU_output_bits_RD_valid_REG;
   reg  [5:0]  io_FU_output_bits_ROB_index_REG;
   always @(posedge clock) begin
-    automatic logic IS_LOAD =
+    automatic logic is_load =
       (memfu_state
-         ? FU_input_bits_reg_decoded_instruction_IS_LOAD
-         : io_FU_input_bits_decoded_instruction_IS_LOAD) & FU_input_valid;
+         ? FU_input_bits_reg_decoded_instruction_is_load
+         : io_FU_input_bits_decoded_instruction_is_load) & FU_input_valid;
     if (reset) begin
       memfu_state <= 1'h0;
       FU_input_bits_reg_decoded_instruction_RD <= 6'h0;
       FU_input_bits_reg_decoded_instruction_IMM <= 21'h0;
       FU_input_bits_reg_decoded_instruction_FUNCT3 <= 3'h0;
-      FU_input_bits_reg_decoded_instruction_IS_LOAD <= 1'h0;
-      FU_input_bits_reg_decoded_instruction_IS_STORE <= 1'h0;
+      FU_input_bits_reg_decoded_instruction_is_load <= 1'h0;
+      FU_input_bits_reg_decoded_instruction_is_store <= 1'h0;
       FU_input_bits_reg_RS1_data <= 32'h0;
       FU_input_bits_reg_RS2_data <= 32'h0;
       FU_input_valid_reg <= 1'h0;
@@ -110,10 +110,10 @@ module MEMFU(
           FU_input_bits_reg_RS1_data <= 32'h0;
           FU_input_bits_reg_RS2_data <= 32'h0;
         end
-        FU_input_bits_reg_decoded_instruction_IS_LOAD <=
-          ~_GEN_0 & FU_input_bits_reg_decoded_instruction_IS_LOAD;
-        FU_input_bits_reg_decoded_instruction_IS_STORE <=
-          ~_GEN_0 & FU_input_bits_reg_decoded_instruction_IS_STORE;
+        FU_input_bits_reg_decoded_instruction_is_load <=
+          ~_GEN_0 & FU_input_bits_reg_decoded_instruction_is_load;
+        FU_input_bits_reg_decoded_instruction_is_store <=
+          ~_GEN_0 & FU_input_bits_reg_decoded_instruction_is_store;
       end
       else begin
         automatic logic _GEN_1 = ~memfu_state & io_FU_input_valid;
@@ -124,17 +124,17 @@ module MEMFU(
           io_FU_input_bits_decoded_instruction_IMM;
         FU_input_bits_reg_decoded_instruction_FUNCT3 <=
           io_FU_input_bits_decoded_instruction_FUNCT3;
-        FU_input_bits_reg_decoded_instruction_IS_LOAD <=
-          io_FU_input_bits_decoded_instruction_IS_LOAD;
-        FU_input_bits_reg_decoded_instruction_IS_STORE <=
-          io_FU_input_bits_decoded_instruction_IS_STORE;
+        FU_input_bits_reg_decoded_instruction_is_load <=
+          io_FU_input_bits_decoded_instruction_is_load;
+        FU_input_bits_reg_decoded_instruction_is_store <=
+          io_FU_input_bits_decoded_instruction_is_store;
         FU_input_bits_reg_RS1_data <= io_FU_input_bits_RS1_data;
         FU_input_bits_reg_RS2_data <= io_FU_input_bits_RS2_data;
         FU_input_valid_reg <= io_FU_input_valid;
       end
     end
     instruction_complete <=
-      IS_LOAD & io_memory_response_valid | IS_STORE & io_memory_request_ready
+      is_load & io_memory_response_valid | is_store & io_memory_request_ready
       & FU_input_valid;
     io_FU_output_bits_instruction_PC_REG <=
       {26'h0, io_FU_input_bits_decoded_instruction_packet_index, 2'h0}
@@ -142,16 +142,16 @@ module MEMFU(
     io_FU_output_bits_fetch_packet_index_REG <=
       io_FU_input_bits_decoded_instruction_packet_index;
     io_FU_output_bits_RD_data_REG <=
-      IS_LOAD & FU_input_decoded_instruction_FUNCT3 == 3'h5 & FU_input_valid
+      is_load & FU_input_decoded_instruction_FUNCT3 == 3'h5 & FU_input_valid
         ? {16'h0, io_memory_response_bits_data[15:0]}
-        : IS_LOAD & FU_input_decoded_instruction_FUNCT3 == 3'h4 & FU_input_valid
+        : is_load & FU_input_decoded_instruction_FUNCT3 == 3'h4 & FU_input_valid
             ? {24'h0, io_memory_response_bits_data[7:0]}
-            : IS_LOAD & _LW_T & FU_input_valid
+            : is_load & _LW_T & FU_input_valid
                 ? io_memory_response_bits_data
-                : IS_LOAD & _LH_T & FU_input_valid
+                : is_load & _LH_T & FU_input_valid
                     ? {{16{io_memory_response_bits_data[15]}},
                        io_memory_response_bits_data[15:0]}
-                    : IS_LOAD & _LB_T & FU_input_valid
+                    : is_load & _LB_T & FU_input_valid
                         ? {{24{io_memory_response_bits_data[7]}},
                            io_memory_response_bits_data[7:0]}
                         : 32'h0;
@@ -159,7 +159,7 @@ module MEMFU(
       memfu_state
         ? FU_input_bits_reg_decoded_instruction_RD
         : io_FU_input_bits_decoded_instruction_RD;
-    io_FU_output_bits_RD_valid_REG <= IS_LOAD;
+    io_FU_output_bits_RD_valid_REG <= is_load;
     io_FU_output_bits_ROB_index_REG <= io_FU_input_bits_decoded_instruction_ROB_index;
   end // always @(posedge)
   assign io_FU_input_ready = ~memfu_state;
@@ -172,12 +172,12 @@ module MEMFU(
          ? FU_input_bits_reg_decoded_instruction_IMM
          : io_FU_input_bits_decoded_instruction_IMM};
   assign io_memory_request_bits_wr_data =
-    IS_STORE & _LW_T & FU_input_valid
+    is_store & _LW_T & FU_input_valid
       ? FU_input_RS2_data
-      : IS_STORE & _LH_T & FU_input_valid
+      : is_store & _LH_T & FU_input_valid
           ? {16'h0, FU_input_RS2_data[15:0]}
-          : IS_STORE & _LB_T & FU_input_valid ? {24'h0, FU_input_RS2_data[7:0]} : 32'h0;
-  assign io_memory_request_bits_wr_en = IS_STORE;
+          : is_store & _LB_T & FU_input_valid ? {24'h0, FU_input_RS2_data[7:0]} : 32'h0;
+  assign io_memory_request_bits_wr_en = is_store;
   assign io_FU_output_valid = instruction_complete;
   assign io_FU_output_bits_RD = io_FU_output_bits_RD_REG;
   assign io_FU_output_bits_RD_data = io_FU_output_bits_RD_data_REG;

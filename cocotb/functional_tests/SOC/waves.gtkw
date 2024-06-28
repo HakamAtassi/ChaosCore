@@ -1,53 +1,19 @@
 [*]
 [*] GTKWave Analyzer v3.3.116 (w)1999-2023 BSI
-[*] Mon Jun 10 12:03:52 2024
+[*] Fri Jun 28 11:03:10 2024
 [*]
-[dumpfile] "/home/hakam/Repos/ChaosCore/cocotb/functional_tests/ChaosCore/sim_build/dump.fst"
-[dumpfile_mtime] "Mon Jun 10 12:01:21 2024"
-[dumpfile_size] 67459
-[savefile] "/home/hakam/Repos/ChaosCore/cocotb/functional_tests/ChaosCore/waves.gtkw"
+[dumpfile] "/home/hakam/Repos/ChaosCore/cocotb/functional_tests/SOC/sim_build/dump.fst"
+[dumpfile_mtime] "Fri Jun 28 11:02:52 2024"
+[dumpfile_size] 66446
+[savefile] "/home/hakam/Repos/ChaosCore/cocotb/functional_tests/SOC/waves.gtkw"
 [timestart] 0
 [size] 1920 1033
 [pos] -1 -1
 *-13.158675 11000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] .
-[treeopen] .ChaosCore.
-[treeopen] .ChaosCore.frontend.
-[treeopen] .ChaosCore.frontend.instruction_fetch.instruction_cache.data_memory_1.
 [sst_width] 467
 [signals_width] 616
 [sst_expanded] 1
-[sst_vpaned_height] 410
-@28
-ChaosCore.frontend.instruction_fetch.PC_Q.clock
-@200
--PC_Q
--in
-@22
-ChaosCore.frontend.instruction_fetch.PC_Q.io_in_bits[31:0]
-@28
-ChaosCore.frontend.instruction_fetch.PC_Q.io_in_valid
-ChaosCore.frontend.instruction_fetch.PC_Q.io_in_ready
-@200
--out
-@22
-ChaosCore.frontend.instruction_fetch.PC_Q.io_out_bits[31:0]
-@28
-ChaosCore.frontend.instruction_fetch.PC_Q.io_out_ready
-ChaosCore.frontend.instruction_fetch.PC_Q.io_out_valid
-@200
--
--
--frontend
-@22
-ChaosCore.frontend.instruction_fetch.io_fetch_packet_bits_instructions_0_instruction[31:0]
-ChaosCore.frontend.instruction_fetch.io_fetch_packet_bits_instructions_1_instruction[31:0]
-ChaosCore.frontend.instruction_fetch.io_fetch_packet_bits_instructions_2_instruction[31:0]
-ChaosCore.frontend.instruction_fetch.io_fetch_packet_bits_instructions_3_instruction[31:0]
-@28
-ChaosCore.frontend.instruction_fetch.io_fetch_packet_bits_valid_bits_0
-ChaosCore.frontend.instruction_fetch.io_fetch_packet_bits_valid_bits_1
-ChaosCore.frontend.instruction_fetch.io_fetch_packet_bits_valid_bits_2
-ChaosCore.frontend.instruction_fetch.io_fetch_packet_bits_valid_bits_3
+[sst_vpaned_height] 388
 [pattern_trace] 1
 [pattern_trace] 0

@@ -39,7 +39,7 @@ async def test_write_1(dut):
     inputs["GHR"]                       =   0
     inputs["NEXT"]                      =   0
     inputs["TOS"]                       =   0
-    inputs["RAT_IDX"]                   =   0
+    inputs["RAT_index"]                   =   0
 
     dut.write_predictions(inputs)
 
@@ -75,7 +75,7 @@ async def test_FU_broadcast(dut):
     inputs["GHR"]                       =   0
     inputs["NEXT"]                      =   0
     inputs["TOS"]                       =   0
-    inputs["RAT_IDX"]                   =   0
+    inputs["RAT_index"]                   =   0
 
     dut.write_predictions(inputs)
 
@@ -135,7 +135,7 @@ async def test_FU_broadcast_higher_priority(dut):
     inputs["GHR"]                       =   0
     inputs["NEXT"]                      =   0
     inputs["TOS"]                       =   0
-    inputs["RAT_IDX"]                   =   0
+    inputs["RAT_index"]                   =   0
 
     dut.write_predictions(inputs)
 
@@ -227,7 +227,7 @@ async def test_FU_broadcast_lower_priority(dut):
     inputs["GHR"]                       =   0
     inputs["NEXT"]                      =   0
     inputs["TOS"]                       =   0
-    inputs["RAT_IDX"]                   =   0
+    inputs["RAT_index"]                   =   0
 
     dut.write_predictions(inputs)
 
@@ -318,7 +318,7 @@ async def test_FU_broadcast_parallel(dut):
     inputs["GHR"]                       =   0
     inputs["NEXT"]                      =   0
     inputs["TOS"]                       =   0
-    inputs["RAT_IDX"]                   =   0
+    inputs["RAT_index"]                   =   0
 
     dut.write_predictions(inputs)
 
@@ -378,7 +378,7 @@ async def test_FU_broadcast_parallel_random_order(dut):
     inputs["GHR"]                       =   0
     inputs["NEXT"]                      =   0
     inputs["TOS"]                       =   0
-    inputs["RAT_IDX"]                   =   0
+    inputs["RAT_index"]                   =   0
 
     dut.write_predictions(inputs)
 
@@ -444,7 +444,7 @@ async def test_FU_broadcast_none_taken(dut):
     inputs["GHR"]                       =   0
     inputs["NEXT"]                      =   0
     inputs["TOS"]                       =   0
-    inputs["RAT_IDX"]                   =   0
+    inputs["RAT_index"]                   =   0
 
     dut.write_predictions(inputs)
 
@@ -537,7 +537,7 @@ async def test_full(dut):
     inputs["GHR"]                       =   0
     inputs["NEXT"]                      =   0
     inputs["TOS"]                       =   0
-    inputs["RAT_IDX"]                   =   0
+    inputs["RAT_index"]                   =   0
 
     dut.write_predictions(inputs)
 
@@ -573,7 +573,7 @@ async def test_write_1_read_1(dut):
     inputs["GHR"]                       =   0
     inputs["NEXT"]                      =   0
     inputs["TOS"]                       =   0
-    inputs["RAT_IDX"]                   =   0
+    inputs["RAT_index"]                   =   0
 
     dut.write_predictions(inputs)
 
@@ -604,7 +604,7 @@ async def test_write_1_read_1(dut):
     commit_inputs["GHR"] = 0
     commit_inputs["TOS"] = 0
     commit_inputs["NEXT"] = 0
-    commit_inputs["RAT_IDX"] = 0
+    commit_inputs["RAT_index"] = 0
 
     dut.write_commit(commit_inputs)
 

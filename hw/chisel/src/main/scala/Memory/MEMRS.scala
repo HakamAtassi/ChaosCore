@@ -51,7 +51,7 @@ class MEMRS(parameters:Parameters) extends Module{
 
     val io = IO(new Bundle{
         // FLUSH //
-        val flush                   =   Input(Bool())
+        val flush                   =      Input(Bool())
 
         // ALLOCATE //
         val backend_packet          =      Vec(dispatchWidth, Flipped(Decoupled(new decoded_instruction(parameters))))
@@ -60,7 +60,7 @@ class MEMRS(parameters:Parameters) extends Module{
         val FU_outputs              =      Vec(portCount, Flipped(ValidIO(new FU_output(parameters))))
 
         // REDIRECTS // 
-        val commit                  =      Input(new commit(parameters))
+        val commit                  =      Flipped(ValidIO(new commit(parameters)))
 
         // REG READ (then execute) //
         val RF_inputs               =      Vec(portCount, Decoupled(new decoded_instruction(parameters)))
@@ -160,7 +160,7 @@ class MEMRS(parameters:Parameters) extends Module{
 
     for(i <- 0 until RSEntries){
         when(!reservation_station(i).commited && reservation_station(i).valid){
-            val commited = (io.commit.ROB_index === reservation_station(i).decoded_instruction.ROB_index) && io.commit.valid
+            val commited = (io.commit.bits.ROB_index === reservation_station(i).decoded_instruction.ROB_index) && io.commit.valid
             reservation_station(i).commited := commited
         }
     }
@@ -213,10 +213,14 @@ class MEMRS(parameters:Parameters) extends Module{
 
     // assign MEMRS_ready bits
     val availalbe_RS_entries = PopCount(~Cat(reservation_station.map(_.valid)))
-    val themometor_value = Thermometor(in=availalbe_RS_entries, max=RSEntries)
+    
     for (i <- 0 until dispatchWidth){
-        io.backend_packet(i).ready := themometor_value(dispatchWidth-1,0)(i)
+        io.backend_packet(i).ready := availalbe_RS_entries >= fetchWidth.U
     }
+
+
+
+    dontTouch(io.backend_packet)
 
 
 }

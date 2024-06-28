@@ -82,7 +82,7 @@ class instruction_fetch(parameters:Parameters) extends Module{
         // FLUSH
         val flush         =   Input(Bool())
 
-        val commit            =   Input(new commit(parameters))
+        val commit            =   Flipped(ValidIO(new commit(parameters)))
         
         val memory_request         =   Decoupled(new memory_request(parameters))
         val memory_response        =   Flipped(Decoupled(new fetch_packet(parameters)))               // TO CPU

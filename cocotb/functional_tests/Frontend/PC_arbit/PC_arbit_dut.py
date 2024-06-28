@@ -17,7 +17,7 @@ def generate_null_commit_inputs():
     commit_inputs["GHR"] = 0
     commit_inputs["TOS"] = 0
     commit_inputs["NEXT"] = 0
-    commit_inputs["RAT_IDX"] = 0
+    commit_inputs["RAT_index"] = 0
     return commit_inputs
 
 def generate_null_prediction_inputs():
@@ -77,7 +77,7 @@ class PC_arbit_dut:
         getattr(self.dut, f"io_commit_GHR").value = commit_inputs["GHR"]
         getattr(self.dut, f"io_commit_TOS").value = commit_inputs["TOS"]
         getattr(self.dut, f"io_commit_NEXT").value = commit_inputs["NEXT"]
-        getattr(self.dut, f"io_commit_RAT_IDX").value = commit_inputs["RAT_IDX"]
+        getattr(self.dut, f"io_commit_RAT_index").value = commit_inputs["RAT_index"]
 
     def write_prediction(self, prediction_inputs=generate_null_prediction_inputs()):
 
@@ -127,7 +127,7 @@ class PC_arbit_dut:
   input  [15:0] io_commit_GHR,
   input  [6:0]  io_commit_TOS,
                 io_commit_NEXT,
-  input  [3:0]  io_commit_RAT_IDX,
+  input  [3:0]  io_commit_RAT_index,
   output        io_prediction_ready,
   input         io_prediction_valid,
                 io_prediction_bits_hit,

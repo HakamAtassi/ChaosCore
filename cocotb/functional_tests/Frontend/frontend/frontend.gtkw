@@ -81,8 +81,8 @@ frontend.io_renamed_decoded_fetch_packet_0_bits_IMMEDIATE
 @22
 frontend.io_renamed_decoded_fetch_packet_0_bits_IMM[31:0]
 @28
-frontend.io_renamed_decoded_fetch_packet_0_bits_IS_LOAD
-frontend.io_renamed_decoded_fetch_packet_0_bits_IS_STORE
+frontend.io_renamed_decoded_fetch_packet_0_bits_is_load
+frontend.io_renamed_decoded_fetch_packet_0_bits_is_store
 frontend.io_renamed_decoded_fetch_packet_0_bits_MULTIPLY
 @22
 frontend.io_renamed_decoded_fetch_packet_0_bits_RD[5:0]
@@ -120,8 +120,8 @@ frontend.io_renamed_decoded_fetch_packet_1_bits_IMMEDIATE
 @22
 frontend.io_renamed_decoded_fetch_packet_1_bits_IMM[31:0]
 @28
-frontend.io_renamed_decoded_fetch_packet_1_bits_IS_LOAD
-frontend.io_renamed_decoded_fetch_packet_1_bits_IS_STORE
+frontend.io_renamed_decoded_fetch_packet_1_bits_is_load
+frontend.io_renamed_decoded_fetch_packet_1_bits_is_store
 frontend.io_renamed_decoded_fetch_packet_1_bits_MULTIPLY
 @22
 frontend.io_renamed_decoded_fetch_packet_1_bits_RD[5:0]
@@ -159,8 +159,8 @@ frontend.io_renamed_decoded_fetch_packet_2_bits_IMMEDIATE
 @22
 frontend.io_renamed_decoded_fetch_packet_2_bits_IMM[31:0]
 @28
-frontend.io_renamed_decoded_fetch_packet_2_bits_IS_LOAD
-frontend.io_renamed_decoded_fetch_packet_2_bits_IS_STORE
+frontend.io_renamed_decoded_fetch_packet_2_bits_is_load
+frontend.io_renamed_decoded_fetch_packet_2_bits_is_store
 frontend.io_renamed_decoded_fetch_packet_2_bits_MULTIPLY
 @22
 frontend.io_renamed_decoded_fetch_packet_2_bits_RD[5:0]
@@ -198,8 +198,8 @@ frontend.io_renamed_decoded_fetch_packet_3_bits_IMMEDIATE
 @22
 frontend.io_renamed_decoded_fetch_packet_3_bits_IMM[31:0]
 @28
-frontend.io_renamed_decoded_fetch_packet_3_bits_IS_LOAD
-frontend.io_renamed_decoded_fetch_packet_3_bits_IS_STORE
+frontend.io_renamed_decoded_fetch_packet_3_bits_is_load
+frontend.io_renamed_decoded_fetch_packet_3_bits_is_store
 frontend.io_renamed_decoded_fetch_packet_3_bits_MULTIPLY
 @22
 frontend.io_renamed_decoded_fetch_packet_3_bits_RD[5:0]

@@ -59,7 +59,7 @@ class RS(parameters:Parameters) extends Module{
         val FU_outputs        =      Vec(portCount, Flipped(ValidIO(new FU_output(parameters))))
 
         // REDIRECTS // 
-        val commit            =   Input(new commit(parameters))
+        val commit            =   Flipped(ValidIO(new commit(parameters)))
 
         // REG READ (then execute) //
         val RF_inputs         =      Vec(ALUportCount, Decoupled(new decoded_instruction(parameters)))
@@ -307,17 +307,11 @@ class RS(parameters:Parameters) extends Module{
     // There are 4 possible ready bits. 
     // These bits corrispond to how many instructions you can dispatch to the RS per cycle. 
     
-    val availalbe_RS_entries =   PopCount(~Cat(reservation_station.map(_.valid)))
-
-    // 0    |   0
-    // 1    |   1
-    // 2    |   11
-    // 3    |   111
-    // 4    |   1111
-    // 5    |   1111
-    // N-1  |   1111
-    val themometor_value = Thermometor(in=availalbe_RS_entries, max=RSEntries)
+    val availalbe_RS_entries = PopCount(~Cat(reservation_station.map(_.valid)))
+    
     for (i <- 0 until dispatchWidth){
-        io.backend_packet(i).ready := themometor_value(dispatchWidth-1,0)(i)
+        io.backend_packet(i).ready := availalbe_RS_entries >= fetchWidth.U
     }
+
+
 }

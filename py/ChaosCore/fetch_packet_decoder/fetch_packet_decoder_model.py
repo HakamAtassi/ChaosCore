@@ -35,8 +35,8 @@ class decode_instruction:
         self.SUBTRACT           =  0 
         self.MULTIPLY           =  0 
         self.IMMEDIATE          =  0 
-        self.IS_LOAD            =  0 
-        self.IS_STORE           =  0 
+        self.is_load            =  0 
+        self.is_store           =  0 
 
         self.decode()
 
@@ -64,8 +64,8 @@ class decode_instruction:
 
         self.needs_ALU          = self.get_needs_ALU()
         self.needs_branch_unit  = self.get_needs_branch_unit()
-        self.IS_LOAD            = self.get_IS_LOAD()
-        self.IS_STORE           = self.get_IS_STORE()
+        self.is_load            = self.get_is_load()
+        self.is_store           = self.get_is_store()
 
         self.packet_index       = 0 #self.get_packet_index()  # TODO:
         self.ROB_index          = 0 #self.get_ROB_index()
@@ -76,11 +76,11 @@ class decode_instruction:
 
 
 
-    def get_IS_LOAD(self):
+    def get_is_load(self):
         instruction_type = self.instruction_type
         return int(instruction_type == instruction_type.LOAD)
 
-    def get_IS_STORE(self):
+    def get_is_store(self):
         instruction_type = self.instruction_type
         return int(instruction_type == instruction_type.STORE)
 
@@ -130,8 +130,8 @@ class fetch_packet_decoder_model:
         decoded_fetch_packet["needs_branch_unit"] = [0]*4
         decoded_fetch_packet["SUBTRACT"] = [0]*4
         decoded_fetch_packet["MULTIPLY"] = [0]*4
-        decoded_fetch_packet["IS_LOAD"] = [0]*4
-        decoded_fetch_packet["IS_STORE"] = [0]*4
+        decoded_fetch_packet["is_load"] = [0]*4
+        decoded_fetch_packet["is_store"] = [0]*4
         decoded_fetch_packet["valid_bits"] = [0]*4
 
 
@@ -162,8 +162,8 @@ class fetch_packet_decoder_model:
             decoded_fetch_packet["needs_branch_unit"][i]   = decoded_instruction.needs_branch_unit
             decoded_fetch_packet["SUBTRACT"][i]            = decoded_instruction.SUBTRACT
             decoded_fetch_packet["MULTIPLY"][i]            = decoded_instruction.MULTIPLY
-            decoded_fetch_packet["IS_LOAD"][i]             = decoded_instruction.IS_LOAD
-            decoded_fetch_packet["IS_STORE"][i]            = decoded_instruction.IS_STORE
+            decoded_fetch_packet["is_load"][i]             = decoded_instruction.is_load
+            decoded_fetch_packet["is_store"][i]            = decoded_instruction.is_store
             decoded_fetch_packet["valid_bits"][i]          = instruction_valid
 
 

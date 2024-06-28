@@ -35,136 +35,85 @@ import chisel3.util._
 import java.io.{File, FileWriter}
 import java.rmi.server.UID
 
-import SelectFirstN._
-
-class reorder_free_inputs(parameters:Parameters) extends Module{
-    import parameters._
-
-    val io = IO(new Bundle{
-        val free_valid             = Input(Vec(fetchWidth, Bool()))
-        val free_values            = Input(Vec(fetchWidth, UInt(log2Ceil(physicalRegCount).W)))
-
-        val free_valid_sorted      = Output(Vec(fetchWidth, Bool()))
-        val free_values_sorted     = Output(Vec(fetchWidth, UInt(log2Ceil(physicalRegCount).W)))
-    })
-
-    val sels = SelectFirstN(Reverse(Cat(io.free_valid)), fetchWidth)
-
-    for (i <- 0 until fetchWidth){
-        io.free_valid_sorted(i)   := Mux1H(sels(i), io.free_valid)
-        io.free_values_sorted(i)  := Mux1H(sels(i), io.free_values)
-    }
-
-
-}
-
-
- 
 class free_list(parameters:Parameters) extends Module{
     import parameters._
     val ptr_width = log2Ceil(physicalRegCount) + 1
-    val portCount = getPortCount(parameters)
-
-    // important:
-    // This module assumes that the free and read requests are "ordered"
-    // This is important because where the write in a 2+ wire free request, for exmaple, is based on the index of that valid bit.
-    // If inputs are not reordere from [0,1,0,1] to [0,0,1,1], the queue will have random empty (garbage) spots
-    // Similarly, the queue will output the values in [0,0,1,1] format but needs to reorganize things such that the are in the appropriate 
-    // spots, depending on what the read request expects
+    val physicalRegBits = log2Ceil(physicalRegCount)
 
     val io = IO(new Bundle{
+        val rename_valid            = Input(Vec(fetchWidth, Bool()))                                    // Request rename valid
+        val renamed_values          = Output(Vec(fetchWidth, UInt(log2Ceil(physicalRegCount).W)))       // Renamed RDs
+        val renamed_valid           = Output(Vec(fetchWidth, Bool()))                                   // Renamed RDs valid
 
-        val rename_valid    = Input(Vec(fetchWidth, Bool()))
-        val renamed_values  = Output(Vec(fetchWidth, UInt(log2Ceil(physicalRegCount).W)))    // valid mask for RD (how many renamed regs do you need from free list)
-        val renamed_valid   = Output(Vec(fetchWidth, Bool()))
+        val commit                  = Flipped(ValidIO(new commit(parameters)))                                     // Free regs on commit
 
-        // The number of values you need to free at at a time is equal to the number of functional unit ports. 
-        val free_valid      = Input(Vec(portCount, Bool()))
-        val free_values     = Input(Vec(portCount, UInt(log2Ceil(physicalRegCount).W)))
+        val free_list_front_pointer = Output(UInt((log2Ceil(physicalRegCount) + 1).W))                  // To ROB
 
-
-        val empty           = Output(Bool())
-        val full            = Output(Bool())
+        val empty                   = Output(Bool())                                                    // Cant rename anymore, less than 4 entries available.
+        val full                    = Output(Bool())                                                    // Cant free anymore, less than 4 positions free.
     })
 
+    val flush = io.commit.valid && io.commit.bits.is_misprediction
 
-    val front_pointer = RegInit(UInt(ptr_width.W), 0.U)
-    val back_pointer  = RegInit(UInt(ptr_width.W), 0.U)
+    // Pointers
+    val front_pointer   = RegInit(UInt(ptr_width.W), 0.U)
+    val back_pointer    = RegInit(UInt(ptr_width.W), (physicalRegCount-2).U)  // -2 because there are N-1 elements, and you want the last element
 
-    val free_list_buffer = RegInit(VecInit((1 until physicalRegCount).map(_.U(log2Ceil(physicalRegCount).W))))
+    val front_index     = Wire(UInt((ptr_width-1).W))
+    val back_index      = Wire(UInt((ptr_width-1).W))
 
+    // Free list
+    val free_list_buffer = RegInit(VecInit((1 until physicalRegCount).map(_.U(physicalRegBits.W))))
 
-    ///////////////////////
-    // Reorganize inputs //
-    ///////////////////////
+    front_index := front_pointer(ptr_width-2, 0)
+    back_index  := back_pointer(ptr_width-2, 0)
 
-    // Gather inputs 
-    val input_sorter = Module(new reorder_free_inputs(parameters))
+    //////////////////
+    // POP ELEMENTS //
+    //////////////////
 
-    input_sorter.io.free_valid             := io.free_valid
-    input_sorter.io.free_values            := io.free_values
-
-    val free_valid_sorted  = input_sorter.io.free_valid_sorted
-    val free_values_sorted = input_sorter.io.free_values_sorted
-
-    /////////////////////
-    // Actual Freelist //
-    /////////////////////
-
-    val renamed_values  = Wire(Vec(fetchWidth, UInt(log2Ceil(physicalRegCount).W)))    // valid mask for RD (how many renamed regs do you need from free list)
-
-    // front pointer
-    when(!io.empty){
-        front_pointer := front_pointer + PopCount(io.rename_valid)
-    }
-
-    for(i <- 0 until fetchWidth){   // assign output values
-        renamed_values(i) := free_list_buffer(front_pointer(ptr_width-2, 0) + i.U)
-    }
-
-    // back pointer
-    back_pointer := back_pointer + PopCount(free_valid_sorted)
-
-    for(i <- 0 until fetchWidth){   // assign output values
-        when(free_valid_sorted(i) === 1.B){
-            free_list_buffer(back_pointer(ptr_width-2, 0) + i.U) := free_values_sorted(i)
+    for(i <- 0 until fetchWidth){
+        val read_offset          = PopCount(io.rename_valid.take(i+1)) - 1.U
+        val valid = io.rename_valid(i) && !flush   // pass through valid
+        io.renamed_valid(i)     := valid
+        when(valid){
+            io.renamed_values(i)    := free_list_buffer(front_index + read_offset)
+        }.otherwise{
+            io.renamed_values(i)    := 0.U
         }
     }
 
-    ////////////////////////
-    // Reorganize Outputs //
-    ////////////////////////
 
-    // scatter outputs
+    io.free_list_front_pointer  := front_pointer
+    
+    ///////////////////
+    // PUSH ELEMENTS //
+    ///////////////////
+    //////////////////
+    // POINTER CTRL //
+    //////////////////
 
+    val allocate_valid  =   io.commit.bits.RD_valid
 
-    val renamed_index = Wire(Vec(fetchWidth, UInt(log2Ceil(fetchWidth).W)))
-
-    for(i <- 1 to fetchWidth){   // Assign outputs
-        renamed_index(i-1) :=  PopCount(io.rename_valid.take(i)) - 1.U
+    when(!(io.commit.valid && io.commit.bits.is_misprediction)){                               // not misprediction
+        front_pointer := front_pointer + PopCount(io.rename_valid)
+    }.elsewhen(io.commit.valid && io.commit.bits.is_misprediction){                            // misprediction 
+        front_pointer := io.commit.bits.free_list_front_pointer
     }
-   
-    for(i <- 0 until fetchWidth){   // Assign outputs
-        val rename_valid = io.rename_valid(i)
-        io.renamed_values(i) := Mux(rename_valid, renamed_values(renamed_index(i)), 0.U)
+    when(io.commit.valid && !(io.commit.bits.is_misprediction)){                               // commit
+        back_pointer := back_pointer + PopCount(allocate_valid)
     }
-
-
 
 
     ////////////////
     // Full/Empty //
     ////////////////
 
-    io.empty := ((front_pointer + 4.U)(ptr_width-2, 0)  ===  back_pointer(ptr_width-2, 0)) && ((front_pointer + 4.U)(ptr_width-1)  =/=  back_pointer(ptr_width-1))
-    io.full  := (front_pointer)  ===  back_pointer
+    val remaining_RDs   = back_pointer - front_pointer
+    val free_spots      = 0.U
 
-
-    // Assign output valid bits
-
-    for(i <- 0 until fetchWidth){
-        io.renamed_valid(i) := io.rename_valid(i) && (!io.empty)
-    }
+    io.empty := remaining_RDs < 4.U
+    io.full  := free_spots < 4.U
 
 }
 

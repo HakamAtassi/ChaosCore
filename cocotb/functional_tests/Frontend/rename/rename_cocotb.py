@@ -57,8 +57,8 @@ async def test_rename_1_RD(dut):
     rename_inputs["SUBTRACT"]           = [0, 0, 0, 0]
     rename_inputs["MULTIPLY"]           = [0, 0, 0, 0]
     rename_inputs["IMMEDIATE"]          = [0, 0, 0, 0]
-    rename_inputs["IS_LOAD"]            = [0, 0, 0, 0]
-    rename_inputs["IS_STORE"]           = [0, 0, 0, 0]
+    rename_inputs["is_load"]            = [0, 0, 0, 0]
+    rename_inputs["is_store"]           = [0, 0, 0, 0]
     rename_inputs["valid_bits"]         = [1, 0, 0, 0]
 
 
@@ -111,8 +111,8 @@ async def test_rename_4_RD(dut):
     rename_inputs["SUBTRACT"]           = [0, 0, 0, 0]
     rename_inputs["MULTIPLY"]           = [0, 0, 0, 0]
     rename_inputs["IMMEDIATE"]          = [0, 0, 0, 0]
-    rename_inputs["IS_LOAD"]            = [0, 0, 0, 0]
-    rename_inputs["IS_STORE"]           = [0, 0, 0, 0]
+    rename_inputs["is_load"]            = [0, 0, 0, 0]
+    rename_inputs["is_store"]           = [0, 0, 0, 0]
     rename_inputs["valid_bits"]         = [1, 1, 1, 1]
 
 
@@ -175,8 +175,8 @@ async def test_rename_RS(dut):
     rename_inputs["SUBTRACT"]           = [0, 0, 0, 0]
     rename_inputs["MULTIPLY"]           = [0, 0, 0, 0]
     rename_inputs["IMMEDIATE"]          = [0, 0, 0, 0]
-    rename_inputs["IS_LOAD"]            = [0, 0, 0, 0]
-    rename_inputs["IS_STORE"]           = [0, 0, 0, 0]
+    rename_inputs["is_load"]            = [0, 0, 0, 0]
+    rename_inputs["is_store"]           = [0, 0, 0, 0]
     rename_inputs["valid_bits"]         = [1, 1, 1, 1]
 
 
@@ -208,8 +208,8 @@ async def test_rename_RS(dut):
     rename_inputs["SUBTRACT"]           = [0, 0, 0, 0]
     rename_inputs["MULTIPLY"]           = [0, 0, 0, 0]
     rename_inputs["IMMEDIATE"]          = [0, 0, 0, 0]
-    rename_inputs["IS_LOAD"]            = [0, 0, 0, 0]
-    rename_inputs["IS_STORE"]           = [0, 0, 0, 0]
+    rename_inputs["is_load"]            = [0, 0, 0, 0]
+    rename_inputs["is_store"]           = [0, 0, 0, 0]
     rename_inputs["valid_bits"]         = [1, 1, 1, 1]
 
 
@@ -271,8 +271,8 @@ async def test_rename_bypass(dut):
     rename_inputs["SUBTRACT"]           = [0, 0, 0, 0]
     rename_inputs["MULTIPLY"]           = [0, 0, 0, 0]
     rename_inputs["IMMEDIATE"]          = [0, 0, 0, 0]
-    rename_inputs["IS_LOAD"]            = [0, 0, 0, 0]
-    rename_inputs["IS_STORE"]           = [0, 0, 0, 0]
+    rename_inputs["is_load"]            = [0, 0, 0, 0]
+    rename_inputs["is_store"]           = [0, 0, 0, 0]
     rename_inputs["valid_bits"]         = [1, 1, 0, 0]
 
     dut.write_decoded_fetch_packet(rename_inputs)
@@ -311,8 +311,8 @@ async def test_rename_bypass(dut):
     rename_inputs["SUBTRACT"]           = [0, 0, 0, 0]
     rename_inputs["MULTIPLY"]           = [0, 0, 0, 0]
     rename_inputs["IMMEDIATE"]          = [0, 0, 0, 0]
-    rename_inputs["IS_LOAD"]            = [0, 0, 0, 0]
-    rename_inputs["IS_STORE"]           = [0, 0, 0, 0]
+    rename_inputs["is_load"]            = [0, 0, 0, 0]
+    rename_inputs["is_store"]           = [0, 0, 0, 0]
     rename_inputs["valid_bits"]         = [1, 0, 0, 0]
 
 

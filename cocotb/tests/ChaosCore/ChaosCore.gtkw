@@ -1,63 +1,65 @@
 [*]
 [*] GTKWave Analyzer v3.3.116 (w)1999-2023 BSI
-[*] Wed Jun 19 17:50:49 2024
+[*] Fri Jun 28 22:54:01 2024
 [*]
 [dumpfile] "/home/hakam/Repos/ChaosCore/cocotb/tests/ChaosCore/sim_build/dump.fst"
-[dumpfile_mtime] "Wed Jun 19 17:45:25 2024"
-[dumpfile_size] 62547
+[dumpfile_mtime] "Fri Jun 28 22:11:03 2024"
+[dumpfile_size] 91420
 [savefile] "/home/hakam/Repos/ChaosCore/cocotb/tests/ChaosCore/ChaosCore.gtkw"
-[timestart] 0
+[timestart] 111480
 [size] 1920 1033
 [pos] -1 -1
-*-13.410378 7000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-13.856053 121000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] .
 [treeopen] .ChaosCore.
+[treeopen] .ChaosCore.backend.
 [treeopen] .ChaosCore.frontend.
 [treeopen] .ChaosCore.frontend.instruction_fetch.
-[treeopen] .ChaosCore.frontend.instruction_fetch.PC_Q.
-[sst_width] 515
-[signals_width] 587
+[treeopen] .ChaosCore.frontend.rename.
+[sst_width] 703
+[signals_width] 609
 [sst_expanded] 1
-[sst_vpaned_height] 443
+[sst_vpaned_height] 444
 @28
-ChaosCore.frontend.instruction_fetch.predecoder.reset
-ChaosCore.frontend.instruction_fetch.predecoder.clock
-@200
--PC Gen (inputs)
-@28
-ChaosCore.frontend.instruction_fetch.PC_gen.io_revert_valid
-@22
-ChaosCore.frontend.instruction_fetch.PC_gen.io_revert_bits_PC[31:0]
-ChaosCore.frontend.instruction_fetch.PC_gen.io_revert_bits_GHR[15:0]
-@200
--PC Gen (outputs)
-@28
+clock
+reset
 ChaosCore.frontend.instruction_fetch.PC_gen.io_PC_next_valid
 @22
 ChaosCore.frontend.instruction_fetch.PC_gen.io_PC_next_bits_addr[31:0]
 @200
--Predecoder(input)
+-
+-decoder
 @28
-ChaosCore.frontend.instruction_fetch.predecoder.io_fetch_packet_valid
-@22
-ChaosCore.frontend.instruction_fetch.predecoder.io_fetch_packet_bits_instructions_0_instruction[31:0]
-ChaosCore.frontend.instruction_fetch.predecoder.io_fetch_packet_bits_instructions_1_instruction[31:0]
-ChaosCore.frontend.instruction_fetch.predecoder.io_fetch_packet_bits_instructions_2_instruction[31:0]
-ChaosCore.frontend.instruction_fetch.predecoder.io_fetch_packet_bits_instructions_3_instruction[31:0]
-ChaosCore.frontend.instruction_fetch.predecoder.io_fetch_packet_bits_fetch_PC[31:0]
+ChaosCore.frontend.decoders.io_decoded_fetch_packet_ready
+ChaosCore.frontend.decoders.io_decoded_fetch_packet_valid
 @200
--Predecoder (outputs)
+-decoded queue
 @28
-ChaosCore.frontend.instruction_fetch.predecoder.io_final_fetch_packet_valid
+ChaosCore.frontend.instruction_queue.io_in_valid
+ChaosCore.frontend.instruction_queue.io_in_ready
+@200
+-
+@28
+ChaosCore.frontend.instruction_queue.io_out_ready
+ChaosCore.frontend.instruction_queue.io_out_valid
 @22
-ChaosCore.frontend.instruction_fetch.predecoder.io_final_fetch_packet_bits_instructions_0_instruction[31:0]
-ChaosCore.frontend.instruction_fetch.predecoder.io_final_fetch_packet_bits_instructions_1_instruction[31:0]
-ChaosCore.frontend.instruction_fetch.predecoder.io_final_fetch_packet_bits_instructions_2_instruction[31:0]
-ChaosCore.frontend.instruction_fetch.predecoder.io_final_fetch_packet_bits_instructions_3_instruction[31:0]
+ChaosCore.frontend.instruction_queue.io_out_bits_fetch_PC[31:0]
+@200
+-rename
 @28
-ChaosCore.frontend.instruction_fetch.predecoder.io_final_fetch_packet_bits_valid_bits_0
-ChaosCore.frontend.instruction_fetch.predecoder.io_final_fetch_packet_bits_valid_bits_1
-ChaosCore.frontend.instruction_fetch.predecoder.io_final_fetch_packet_bits_valid_bits_2
-ChaosCore.frontend.instruction_fetch.predecoder.io_final_fetch_packet_bits_valid_bits_3
+ChaosCore.frontend.rename.io_decoded_fetch_packet_ready
+ChaosCore.frontend.rename.io_decoded_fetch_packet_valid
+@200
+-
+@28
+ChaosCore.frontend.rename.io_renamed_decoded_fetch_packet_ready
+ChaosCore.frontend.rename.io_renamed_decoded_fetch_packet_valid
+@200
+-
+@22
+ChaosCore.frontend.rename.io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS2[5:0]
+ChaosCore.frontend.rename.io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS2[5:0]
+ChaosCore.frontend.rename.io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS2[5:0]
+ChaosCore.frontend.rename.io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS2[5:0]
 [pattern_trace] 1
 [pattern_trace] 0

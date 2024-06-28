@@ -42,44 +42,58 @@ class BRU(parameters:Parameters) extends Module{
         val FTQ         =   Input(new FTQ_entry(parameters))
 
         // COMMIT //
-        val ROB_output  =   Flipped(ValidIO(new ROB_output(parameters)))
+        val ROB_output  =   Input(new ROB_output(parameters))
 
         // Output 
-        val commit      =   Output(new commit(parameters))
+        val commit      =   ValidIO(new commit(parameters))
     })
 
+    val commit_valid        = Wire(Bool())
+    val commit_row_complete = Wire(Vec(fetchWidth, Bool()))  // all valid instructions in that row are complete
+
+    for(i <- 0 until fetchWidth){
+        val is_completed    = (io.ROB_output.complete(i) && io.ROB_output.ROB_entries(i).valid)
+        val is_invalid      = (!io.ROB_output.ROB_entries(i).valid)
+        val is_load         = io.ROB_output.ROB_entries(i).is_load
+        val is_store        = io.ROB_output.ROB_entries(i).is_store
+        commit_row_complete(i) := is_completed || is_invalid || is_load || is_store
+    }
+    commit_valid := io.ROB_output.row_valid && commit_row_complete.reduce(_ && _)
 
     // when commit is taking place
     // if FTQ indicates a misprediction
     // output mispredict and other metadata
 
+    io.commit.bits.GHR                           := io.FTQ.GHR
+    io.commit.bits.TOS                           := io.FTQ.TOS
+    io.commit.bits.NEXT                          := io.FTQ.NEXT
+    io.commit.bits.RAT_index                     := io.ROB_output.RAT_index
+    io.commit.bits.ROB_index                     := io.ROB_output.ROB_index
+    io.commit.bits.free_list_front_pointer       := io.ROB_output.free_list_front_pointer
+    io.commit.bits.fetch_PC                      := io.ROB_output.fetch_PC
 
-    io.commit.GHR       := io.FTQ.GHR
-    io.commit.TOS       := io.FTQ.TOS
-    io.commit.NEXT      := io.FTQ.NEXT
-    io.commit.RAT_IDX   := io.ROB_output.bits.RAT_IDX
-    io.commit.ROB_index := io.ROB_output.bits.ROB_index
-    io.commit.fetch_PC  := io.ROB_output.bits.fetch_PC
-
+    for(i <- 0 until fetchWidth){
+        io.commit.bits.RD(i)                     := io.ROB_output.ROB_entries(i).RD
+        io.commit.bits.RD_valid(i)               := io.ROB_output.ROB_entries(i).RD_valid
+    }
 
     val branch_commit = Wire(Bool())
 
+    io.commit.valid := commit_valid
+    branch_commit := io.commit.valid && (io.ROB_output.fetch_PC === io.FTQ.fetch_PC) && io.FTQ.valid
 
-    io.commit.valid := io.ROB_output.valid 
-    branch_commit := io.commit.valid && (io.ROB_output.bits.fetch_PC === io.FTQ.fetch_PC) && io.FTQ.valid
-
-    io.commit.is_misprediction      := 0.B
-    io.commit.T_NT                  := 0.B
-    io.commit.br_type               := _br_type.NONE
-    io.commit.fetch_packet_index    := 0.B
-    io.commit.expected_PC           := 0.B
+    io.commit.bits.is_misprediction      := 0.B
+    io.commit.bits.T_NT                  := 0.B
+    io.commit.bits.br_type               := _br_type.NONE
+    io.commit.bits.fetch_packet_index    := 0.B
+    io.commit.bits.expected_PC           := 0.B
 
     when(branch_commit){
-        io.commit.is_misprediction      := (io.FTQ.predicted_PC =/= io.FTQ.resolved_PC) && branch_commit
-        io.commit.T_NT                  := io.FTQ.T_NT
-        io.commit.br_type               := io.FTQ.br_type
-        io.commit.fetch_packet_index    := DontCare
-        io.commit.expected_PC           := io.FTQ.resolved_PC
+        io.commit.bits.is_misprediction      := (io.FTQ.predicted_PC =/= io.FTQ.resolved_PC) && branch_commit
+        io.commit.bits.T_NT                  := io.FTQ.T_NT
+        io.commit.bits.br_type               := io.FTQ.br_type
+        io.commit.bits.fetch_packet_index    := DontCare
+        io.commit.bits.expected_PC           := io.FTQ.resolved_PC
     }
 
 }
