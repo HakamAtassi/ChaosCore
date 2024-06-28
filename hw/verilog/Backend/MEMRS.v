@@ -25,8 +25,8 @@ module MEMRS(
                 io_backend_packet_0_bits_SUBTRACT,
                 io_backend_packet_0_bits_MULTIPLY,
                 io_backend_packet_0_bits_IMMEDIATE,
-                io_backend_packet_0_bits_IS_LOAD,
-                io_backend_packet_0_bits_IS_STORE,
+                io_backend_packet_0_bits_is_load,
+                io_backend_packet_0_bits_is_store,
   output        io_backend_packet_1_ready,
   input         io_backend_packet_1_valid,
                 io_backend_packet_1_bits_ready_bits_RS1_ready,
@@ -50,8 +50,8 @@ module MEMRS(
                 io_backend_packet_1_bits_SUBTRACT,
                 io_backend_packet_1_bits_MULTIPLY,
                 io_backend_packet_1_bits_IMMEDIATE,
-                io_backend_packet_1_bits_IS_LOAD,
-                io_backend_packet_1_bits_IS_STORE,
+                io_backend_packet_1_bits_is_load,
+                io_backend_packet_1_bits_is_store,
   output        io_backend_packet_2_ready,
   input         io_backend_packet_2_valid,
                 io_backend_packet_2_bits_ready_bits_RS1_ready,
@@ -75,8 +75,8 @@ module MEMRS(
                 io_backend_packet_2_bits_SUBTRACT,
                 io_backend_packet_2_bits_MULTIPLY,
                 io_backend_packet_2_bits_IMMEDIATE,
-                io_backend_packet_2_bits_IS_LOAD,
-                io_backend_packet_2_bits_IS_STORE,
+                io_backend_packet_2_bits_is_load,
+                io_backend_packet_2_bits_is_store,
   output        io_backend_packet_3_ready,
   input         io_backend_packet_3_valid,
                 io_backend_packet_3_bits_ready_bits_RS1_ready,
@@ -100,8 +100,8 @@ module MEMRS(
                 io_backend_packet_3_bits_SUBTRACT,
                 io_backend_packet_3_bits_MULTIPLY,
                 io_backend_packet_3_bits_IMMEDIATE,
-                io_backend_packet_3_bits_IS_LOAD,
-                io_backend_packet_3_bits_IS_STORE,
+                io_backend_packet_3_bits_is_load,
+                io_backend_packet_3_bits_is_store,
                 io_FU_outputs_0_valid,
   input  [5:0]  io_FU_outputs_0_bits_RD,
   input  [31:0] io_FU_outputs_0_bits_RD_data,
@@ -153,7 +153,7 @@ module MEMRS(
   input  [15:0] io_commit_GHR,
   input  [6:0]  io_commit_TOS,
                 io_commit_NEXT,
-  input  [3:0]  io_commit_RAT_IDX,
+  input  [3:0]  io_commit_RAT_index,
   input         io_RF_inputs_0_ready,
   output        io_RF_inputs_0_valid,
                 io_RF_inputs_0_bits_ready_bits_RS1_ready,
@@ -177,8 +177,8 @@ module MEMRS(
                 io_RF_inputs_0_bits_SUBTRACT,
                 io_RF_inputs_0_bits_MULTIPLY,
                 io_RF_inputs_0_bits_IMMEDIATE,
-                io_RF_inputs_0_bits_IS_LOAD,
-                io_RF_inputs_0_bits_IS_STORE,
+                io_RF_inputs_0_bits_is_load,
+                io_RF_inputs_0_bits_is_store,
   input         io_RF_inputs_1_ready,
   output        io_RF_inputs_1_valid,
                 io_RF_inputs_1_bits_ready_bits_RS1_ready,
@@ -202,8 +202,8 @@ module MEMRS(
                 io_RF_inputs_1_bits_SUBTRACT,
                 io_RF_inputs_1_bits_MULTIPLY,
                 io_RF_inputs_1_bits_IMMEDIATE,
-                io_RF_inputs_1_bits_IS_LOAD,
-                io_RF_inputs_1_bits_IS_STORE,
+                io_RF_inputs_1_bits_is_load,
+                io_RF_inputs_1_bits_is_store,
   input         io_RF_inputs_2_ready,
   output        io_RF_inputs_2_valid,
                 io_RF_inputs_2_bits_ready_bits_RS1_ready,
@@ -227,8 +227,8 @@ module MEMRS(
                 io_RF_inputs_2_bits_SUBTRACT,
                 io_RF_inputs_2_bits_MULTIPLY,
                 io_RF_inputs_2_bits_IMMEDIATE,
-                io_RF_inputs_2_bits_IS_LOAD,
-                io_RF_inputs_2_bits_IS_STORE,
+                io_RF_inputs_2_bits_is_load,
+                io_RF_inputs_2_bits_is_store,
   input         io_RF_inputs_3_ready,
   output        io_RF_inputs_3_valid,
                 io_RF_inputs_3_bits_ready_bits_RS1_ready,
@@ -252,8 +252,8 @@ module MEMRS(
                 io_RF_inputs_3_bits_SUBTRACT,
                 io_RF_inputs_3_bits_MULTIPLY,
                 io_RF_inputs_3_bits_IMMEDIATE,
-                io_RF_inputs_3_bits_IS_LOAD,
-                io_RF_inputs_3_bits_IS_STORE
+                io_RF_inputs_3_bits_is_load,
+                io_RF_inputs_3_bits_is_store
 );
 
   reg               reservation_station_0_decoded_instruction_ready_bits_RS1_ready;
@@ -277,8 +277,8 @@ module MEMRS(
   reg               reservation_station_0_decoded_instruction_SUBTRACT;
   reg               reservation_station_0_decoded_instruction_MULTIPLY;
   reg               reservation_station_0_decoded_instruction_IMMEDIATE;
-  reg               reservation_station_0_decoded_instruction_IS_LOAD;
-  reg               reservation_station_0_decoded_instruction_IS_STORE;
+  reg               reservation_station_0_decoded_instruction_is_load;
+  reg               reservation_station_0_decoded_instruction_is_store;
   reg               reservation_station_0_commited;
   reg               reservation_station_0_valid;
   reg               reservation_station_1_decoded_instruction_ready_bits_RS1_ready;
@@ -302,8 +302,8 @@ module MEMRS(
   reg               reservation_station_1_decoded_instruction_SUBTRACT;
   reg               reservation_station_1_decoded_instruction_MULTIPLY;
   reg               reservation_station_1_decoded_instruction_IMMEDIATE;
-  reg               reservation_station_1_decoded_instruction_IS_LOAD;
-  reg               reservation_station_1_decoded_instruction_IS_STORE;
+  reg               reservation_station_1_decoded_instruction_is_load;
+  reg               reservation_station_1_decoded_instruction_is_store;
   reg               reservation_station_1_commited;
   reg               reservation_station_1_valid;
   reg               reservation_station_2_decoded_instruction_ready_bits_RS1_ready;
@@ -327,8 +327,8 @@ module MEMRS(
   reg               reservation_station_2_decoded_instruction_SUBTRACT;
   reg               reservation_station_2_decoded_instruction_MULTIPLY;
   reg               reservation_station_2_decoded_instruction_IMMEDIATE;
-  reg               reservation_station_2_decoded_instruction_IS_LOAD;
-  reg               reservation_station_2_decoded_instruction_IS_STORE;
+  reg               reservation_station_2_decoded_instruction_is_load;
+  reg               reservation_station_2_decoded_instruction_is_store;
   reg               reservation_station_2_commited;
   reg               reservation_station_2_valid;
   reg               reservation_station_3_decoded_instruction_ready_bits_RS1_ready;
@@ -352,8 +352,8 @@ module MEMRS(
   reg               reservation_station_3_decoded_instruction_SUBTRACT;
   reg               reservation_station_3_decoded_instruction_MULTIPLY;
   reg               reservation_station_3_decoded_instruction_IMMEDIATE;
-  reg               reservation_station_3_decoded_instruction_IS_LOAD;
-  reg               reservation_station_3_decoded_instruction_IS_STORE;
+  reg               reservation_station_3_decoded_instruction_is_load;
+  reg               reservation_station_3_decoded_instruction_is_store;
   reg               reservation_station_3_commited;
   reg               reservation_station_3_valid;
   reg               reservation_station_4_decoded_instruction_ready_bits_RS1_ready;
@@ -377,8 +377,8 @@ module MEMRS(
   reg               reservation_station_4_decoded_instruction_SUBTRACT;
   reg               reservation_station_4_decoded_instruction_MULTIPLY;
   reg               reservation_station_4_decoded_instruction_IMMEDIATE;
-  reg               reservation_station_4_decoded_instruction_IS_LOAD;
-  reg               reservation_station_4_decoded_instruction_IS_STORE;
+  reg               reservation_station_4_decoded_instruction_is_load;
+  reg               reservation_station_4_decoded_instruction_is_store;
   reg               reservation_station_4_commited;
   reg               reservation_station_4_valid;
   reg               reservation_station_5_decoded_instruction_ready_bits_RS1_ready;
@@ -402,8 +402,8 @@ module MEMRS(
   reg               reservation_station_5_decoded_instruction_SUBTRACT;
   reg               reservation_station_5_decoded_instruction_MULTIPLY;
   reg               reservation_station_5_decoded_instruction_IMMEDIATE;
-  reg               reservation_station_5_decoded_instruction_IS_LOAD;
-  reg               reservation_station_5_decoded_instruction_IS_STORE;
+  reg               reservation_station_5_decoded_instruction_is_load;
+  reg               reservation_station_5_decoded_instruction_is_store;
   reg               reservation_station_5_commited;
   reg               reservation_station_5_valid;
   reg               reservation_station_6_decoded_instruction_ready_bits_RS1_ready;
@@ -427,8 +427,8 @@ module MEMRS(
   reg               reservation_station_6_decoded_instruction_SUBTRACT;
   reg               reservation_station_6_decoded_instruction_MULTIPLY;
   reg               reservation_station_6_decoded_instruction_IMMEDIATE;
-  reg               reservation_station_6_decoded_instruction_IS_LOAD;
-  reg               reservation_station_6_decoded_instruction_IS_STORE;
+  reg               reservation_station_6_decoded_instruction_is_load;
+  reg               reservation_station_6_decoded_instruction_is_store;
   reg               reservation_station_6_commited;
   reg               reservation_station_6_valid;
   reg               reservation_station_7_decoded_instruction_ready_bits_RS1_ready;
@@ -452,8 +452,8 @@ module MEMRS(
   reg               reservation_station_7_decoded_instruction_SUBTRACT;
   reg               reservation_station_7_decoded_instruction_MULTIPLY;
   reg               reservation_station_7_decoded_instruction_IMMEDIATE;
-  reg               reservation_station_7_decoded_instruction_IS_LOAD;
-  reg               reservation_station_7_decoded_instruction_IS_STORE;
+  reg               reservation_station_7_decoded_instruction_is_load;
+  reg               reservation_station_7_decoded_instruction_is_store;
   reg               reservation_station_7_commited;
   reg               reservation_station_7_valid;
   reg               reservation_station_8_decoded_instruction_ready_bits_RS1_ready;
@@ -477,8 +477,8 @@ module MEMRS(
   reg               reservation_station_8_decoded_instruction_SUBTRACT;
   reg               reservation_station_8_decoded_instruction_MULTIPLY;
   reg               reservation_station_8_decoded_instruction_IMMEDIATE;
-  reg               reservation_station_8_decoded_instruction_IS_LOAD;
-  reg               reservation_station_8_decoded_instruction_IS_STORE;
+  reg               reservation_station_8_decoded_instruction_is_load;
+  reg               reservation_station_8_decoded_instruction_is_store;
   reg               reservation_station_8_commited;
   reg               reservation_station_8_valid;
   reg               reservation_station_9_decoded_instruction_ready_bits_RS1_ready;
@@ -502,8 +502,8 @@ module MEMRS(
   reg               reservation_station_9_decoded_instruction_SUBTRACT;
   reg               reservation_station_9_decoded_instruction_MULTIPLY;
   reg               reservation_station_9_decoded_instruction_IMMEDIATE;
-  reg               reservation_station_9_decoded_instruction_IS_LOAD;
-  reg               reservation_station_9_decoded_instruction_IS_STORE;
+  reg               reservation_station_9_decoded_instruction_is_load;
+  reg               reservation_station_9_decoded_instruction_is_store;
   reg               reservation_station_9_commited;
   reg               reservation_station_9_valid;
   reg               reservation_station_10_decoded_instruction_ready_bits_RS1_ready;
@@ -527,8 +527,8 @@ module MEMRS(
   reg               reservation_station_10_decoded_instruction_SUBTRACT;
   reg               reservation_station_10_decoded_instruction_MULTIPLY;
   reg               reservation_station_10_decoded_instruction_IMMEDIATE;
-  reg               reservation_station_10_decoded_instruction_IS_LOAD;
-  reg               reservation_station_10_decoded_instruction_IS_STORE;
+  reg               reservation_station_10_decoded_instruction_is_load;
+  reg               reservation_station_10_decoded_instruction_is_store;
   reg               reservation_station_10_commited;
   reg               reservation_station_10_valid;
   reg               reservation_station_11_decoded_instruction_ready_bits_RS1_ready;
@@ -552,8 +552,8 @@ module MEMRS(
   reg               reservation_station_11_decoded_instruction_SUBTRACT;
   reg               reservation_station_11_decoded_instruction_MULTIPLY;
   reg               reservation_station_11_decoded_instruction_IMMEDIATE;
-  reg               reservation_station_11_decoded_instruction_IS_LOAD;
-  reg               reservation_station_11_decoded_instruction_IS_STORE;
+  reg               reservation_station_11_decoded_instruction_is_load;
+  reg               reservation_station_11_decoded_instruction_is_store;
   reg               reservation_station_11_commited;
   reg               reservation_station_11_valid;
   reg               reservation_station_12_decoded_instruction_ready_bits_RS1_ready;
@@ -577,8 +577,8 @@ module MEMRS(
   reg               reservation_station_12_decoded_instruction_SUBTRACT;
   reg               reservation_station_12_decoded_instruction_MULTIPLY;
   reg               reservation_station_12_decoded_instruction_IMMEDIATE;
-  reg               reservation_station_12_decoded_instruction_IS_LOAD;
-  reg               reservation_station_12_decoded_instruction_IS_STORE;
+  reg               reservation_station_12_decoded_instruction_is_load;
+  reg               reservation_station_12_decoded_instruction_is_store;
   reg               reservation_station_12_commited;
   reg               reservation_station_12_valid;
   reg               reservation_station_13_decoded_instruction_ready_bits_RS1_ready;
@@ -602,8 +602,8 @@ module MEMRS(
   reg               reservation_station_13_decoded_instruction_SUBTRACT;
   reg               reservation_station_13_decoded_instruction_MULTIPLY;
   reg               reservation_station_13_decoded_instruction_IMMEDIATE;
-  reg               reservation_station_13_decoded_instruction_IS_LOAD;
-  reg               reservation_station_13_decoded_instruction_IS_STORE;
+  reg               reservation_station_13_decoded_instruction_is_load;
+  reg               reservation_station_13_decoded_instruction_is_store;
   reg               reservation_station_13_commited;
   reg               reservation_station_13_valid;
   reg               reservation_station_14_decoded_instruction_ready_bits_RS1_ready;
@@ -627,8 +627,8 @@ module MEMRS(
   reg               reservation_station_14_decoded_instruction_SUBTRACT;
   reg               reservation_station_14_decoded_instruction_MULTIPLY;
   reg               reservation_station_14_decoded_instruction_IMMEDIATE;
-  reg               reservation_station_14_decoded_instruction_IS_LOAD;
-  reg               reservation_station_14_decoded_instruction_IS_STORE;
+  reg               reservation_station_14_decoded_instruction_is_load;
+  reg               reservation_station_14_decoded_instruction_is_store;
   reg               reservation_station_14_commited;
   reg               reservation_station_14_valid;
   reg               reservation_station_15_decoded_instruction_ready_bits_RS1_ready;
@@ -652,8 +652,8 @@ module MEMRS(
   reg               reservation_station_15_decoded_instruction_SUBTRACT;
   reg               reservation_station_15_decoded_instruction_MULTIPLY;
   reg               reservation_station_15_decoded_instruction_IMMEDIATE;
-  reg               reservation_station_15_decoded_instruction_IS_LOAD;
-  reg               reservation_station_15_decoded_instruction_IS_STORE;
+  reg               reservation_station_15_decoded_instruction_is_load;
+  reg               reservation_station_15_decoded_instruction_is_store;
   reg               reservation_station_15_commited;
   reg               reservation_station_15_valid;
   reg  [4:0]        front_pointer;
@@ -1307,39 +1307,39 @@ module MEMRS(
      {reservation_station_1_decoded_instruction_IMMEDIATE},
      {reservation_station_0_decoded_instruction_IMMEDIATE}};
   wire [15:0]       _GEN_20 =
-    {{reservation_station_15_decoded_instruction_IS_LOAD},
-     {reservation_station_14_decoded_instruction_IS_LOAD},
-     {reservation_station_13_decoded_instruction_IS_LOAD},
-     {reservation_station_12_decoded_instruction_IS_LOAD},
-     {reservation_station_11_decoded_instruction_IS_LOAD},
-     {reservation_station_10_decoded_instruction_IS_LOAD},
-     {reservation_station_9_decoded_instruction_IS_LOAD},
-     {reservation_station_8_decoded_instruction_IS_LOAD},
-     {reservation_station_7_decoded_instruction_IS_LOAD},
-     {reservation_station_6_decoded_instruction_IS_LOAD},
-     {reservation_station_5_decoded_instruction_IS_LOAD},
-     {reservation_station_4_decoded_instruction_IS_LOAD},
-     {reservation_station_3_decoded_instruction_IS_LOAD},
-     {reservation_station_2_decoded_instruction_IS_LOAD},
-     {reservation_station_1_decoded_instruction_IS_LOAD},
-     {reservation_station_0_decoded_instruction_IS_LOAD}};
+    {{reservation_station_15_decoded_instruction_is_load},
+     {reservation_station_14_decoded_instruction_is_load},
+     {reservation_station_13_decoded_instruction_is_load},
+     {reservation_station_12_decoded_instruction_is_load},
+     {reservation_station_11_decoded_instruction_is_load},
+     {reservation_station_10_decoded_instruction_is_load},
+     {reservation_station_9_decoded_instruction_is_load},
+     {reservation_station_8_decoded_instruction_is_load},
+     {reservation_station_7_decoded_instruction_is_load},
+     {reservation_station_6_decoded_instruction_is_load},
+     {reservation_station_5_decoded_instruction_is_load},
+     {reservation_station_4_decoded_instruction_is_load},
+     {reservation_station_3_decoded_instruction_is_load},
+     {reservation_station_2_decoded_instruction_is_load},
+     {reservation_station_1_decoded_instruction_is_load},
+     {reservation_station_0_decoded_instruction_is_load}};
   wire [15:0]       _GEN_21 =
-    {{reservation_station_15_decoded_instruction_IS_STORE},
-     {reservation_station_14_decoded_instruction_IS_STORE},
-     {reservation_station_13_decoded_instruction_IS_STORE},
-     {reservation_station_12_decoded_instruction_IS_STORE},
-     {reservation_station_11_decoded_instruction_IS_STORE},
-     {reservation_station_10_decoded_instruction_IS_STORE},
-     {reservation_station_9_decoded_instruction_IS_STORE},
-     {reservation_station_8_decoded_instruction_IS_STORE},
-     {reservation_station_7_decoded_instruction_IS_STORE},
-     {reservation_station_6_decoded_instruction_IS_STORE},
-     {reservation_station_5_decoded_instruction_IS_STORE},
-     {reservation_station_4_decoded_instruction_IS_STORE},
-     {reservation_station_3_decoded_instruction_IS_STORE},
-     {reservation_station_2_decoded_instruction_IS_STORE},
-     {reservation_station_1_decoded_instruction_IS_STORE},
-     {reservation_station_0_decoded_instruction_IS_STORE}};
+    {{reservation_station_15_decoded_instruction_is_store},
+     {reservation_station_14_decoded_instruction_is_store},
+     {reservation_station_13_decoded_instruction_is_store},
+     {reservation_station_12_decoded_instruction_is_store},
+     {reservation_station_11_decoded_instruction_is_store},
+     {reservation_station_10_decoded_instruction_is_store},
+     {reservation_station_9_decoded_instruction_is_store},
+     {reservation_station_8_decoded_instruction_is_store},
+     {reservation_station_7_decoded_instruction_is_store},
+     {reservation_station_6_decoded_instruction_is_store},
+     {reservation_station_5_decoded_instruction_is_store},
+     {reservation_station_4_decoded_instruction_is_store},
+     {reservation_station_3_decoded_instruction_is_store},
+     {reservation_station_2_decoded_instruction_is_store},
+     {reservation_station_1_decoded_instruction_is_store},
+     {reservation_station_0_decoded_instruction_is_store}};
   wire [15:0]       _GEN_22 =
     {{reservation_station_15_commited},
      {reservation_station_14_commited},
@@ -1454,8 +1454,8 @@ module MEMRS(
       reservation_station_0_decoded_instruction_SUBTRACT <= 1'h0;
       reservation_station_0_decoded_instruction_MULTIPLY <= 1'h0;
       reservation_station_0_decoded_instruction_IMMEDIATE <= 1'h0;
-      reservation_station_0_decoded_instruction_IS_LOAD <= 1'h0;
-      reservation_station_0_decoded_instruction_IS_STORE <= 1'h0;
+      reservation_station_0_decoded_instruction_is_load <= 1'h0;
+      reservation_station_0_decoded_instruction_is_store <= 1'h0;
       reservation_station_0_commited <= 1'h0;
       reservation_station_0_valid <= 1'h0;
       reservation_station_1_decoded_instruction_ready_bits_RS1_ready <= 1'h0;
@@ -1479,8 +1479,8 @@ module MEMRS(
       reservation_station_1_decoded_instruction_SUBTRACT <= 1'h0;
       reservation_station_1_decoded_instruction_MULTIPLY <= 1'h0;
       reservation_station_1_decoded_instruction_IMMEDIATE <= 1'h0;
-      reservation_station_1_decoded_instruction_IS_LOAD <= 1'h0;
-      reservation_station_1_decoded_instruction_IS_STORE <= 1'h0;
+      reservation_station_1_decoded_instruction_is_load <= 1'h0;
+      reservation_station_1_decoded_instruction_is_store <= 1'h0;
       reservation_station_1_commited <= 1'h0;
       reservation_station_1_valid <= 1'h0;
       reservation_station_2_decoded_instruction_ready_bits_RS1_ready <= 1'h0;
@@ -1504,8 +1504,8 @@ module MEMRS(
       reservation_station_2_decoded_instruction_SUBTRACT <= 1'h0;
       reservation_station_2_decoded_instruction_MULTIPLY <= 1'h0;
       reservation_station_2_decoded_instruction_IMMEDIATE <= 1'h0;
-      reservation_station_2_decoded_instruction_IS_LOAD <= 1'h0;
-      reservation_station_2_decoded_instruction_IS_STORE <= 1'h0;
+      reservation_station_2_decoded_instruction_is_load <= 1'h0;
+      reservation_station_2_decoded_instruction_is_store <= 1'h0;
       reservation_station_2_commited <= 1'h0;
       reservation_station_2_valid <= 1'h0;
       reservation_station_3_decoded_instruction_ready_bits_RS1_ready <= 1'h0;
@@ -1529,8 +1529,8 @@ module MEMRS(
       reservation_station_3_decoded_instruction_SUBTRACT <= 1'h0;
       reservation_station_3_decoded_instruction_MULTIPLY <= 1'h0;
       reservation_station_3_decoded_instruction_IMMEDIATE <= 1'h0;
-      reservation_station_3_decoded_instruction_IS_LOAD <= 1'h0;
-      reservation_station_3_decoded_instruction_IS_STORE <= 1'h0;
+      reservation_station_3_decoded_instruction_is_load <= 1'h0;
+      reservation_station_3_decoded_instruction_is_store <= 1'h0;
       reservation_station_3_commited <= 1'h0;
       reservation_station_3_valid <= 1'h0;
       reservation_station_4_decoded_instruction_ready_bits_RS1_ready <= 1'h0;
@@ -1554,8 +1554,8 @@ module MEMRS(
       reservation_station_4_decoded_instruction_SUBTRACT <= 1'h0;
       reservation_station_4_decoded_instruction_MULTIPLY <= 1'h0;
       reservation_station_4_decoded_instruction_IMMEDIATE <= 1'h0;
-      reservation_station_4_decoded_instruction_IS_LOAD <= 1'h0;
-      reservation_station_4_decoded_instruction_IS_STORE <= 1'h0;
+      reservation_station_4_decoded_instruction_is_load <= 1'h0;
+      reservation_station_4_decoded_instruction_is_store <= 1'h0;
       reservation_station_4_commited <= 1'h0;
       reservation_station_4_valid <= 1'h0;
       reservation_station_5_decoded_instruction_ready_bits_RS1_ready <= 1'h0;
@@ -1579,8 +1579,8 @@ module MEMRS(
       reservation_station_5_decoded_instruction_SUBTRACT <= 1'h0;
       reservation_station_5_decoded_instruction_MULTIPLY <= 1'h0;
       reservation_station_5_decoded_instruction_IMMEDIATE <= 1'h0;
-      reservation_station_5_decoded_instruction_IS_LOAD <= 1'h0;
-      reservation_station_5_decoded_instruction_IS_STORE <= 1'h0;
+      reservation_station_5_decoded_instruction_is_load <= 1'h0;
+      reservation_station_5_decoded_instruction_is_store <= 1'h0;
       reservation_station_5_commited <= 1'h0;
       reservation_station_5_valid <= 1'h0;
       reservation_station_6_decoded_instruction_ready_bits_RS1_ready <= 1'h0;
@@ -1604,8 +1604,8 @@ module MEMRS(
       reservation_station_6_decoded_instruction_SUBTRACT <= 1'h0;
       reservation_station_6_decoded_instruction_MULTIPLY <= 1'h0;
       reservation_station_6_decoded_instruction_IMMEDIATE <= 1'h0;
-      reservation_station_6_decoded_instruction_IS_LOAD <= 1'h0;
-      reservation_station_6_decoded_instruction_IS_STORE <= 1'h0;
+      reservation_station_6_decoded_instruction_is_load <= 1'h0;
+      reservation_station_6_decoded_instruction_is_store <= 1'h0;
       reservation_station_6_commited <= 1'h0;
       reservation_station_6_valid <= 1'h0;
       reservation_station_7_decoded_instruction_ready_bits_RS1_ready <= 1'h0;
@@ -1629,8 +1629,8 @@ module MEMRS(
       reservation_station_7_decoded_instruction_SUBTRACT <= 1'h0;
       reservation_station_7_decoded_instruction_MULTIPLY <= 1'h0;
       reservation_station_7_decoded_instruction_IMMEDIATE <= 1'h0;
-      reservation_station_7_decoded_instruction_IS_LOAD <= 1'h0;
-      reservation_station_7_decoded_instruction_IS_STORE <= 1'h0;
+      reservation_station_7_decoded_instruction_is_load <= 1'h0;
+      reservation_station_7_decoded_instruction_is_store <= 1'h0;
       reservation_station_7_commited <= 1'h0;
       reservation_station_7_valid <= 1'h0;
       reservation_station_8_decoded_instruction_ready_bits_RS1_ready <= 1'h0;
@@ -1654,8 +1654,8 @@ module MEMRS(
       reservation_station_8_decoded_instruction_SUBTRACT <= 1'h0;
       reservation_station_8_decoded_instruction_MULTIPLY <= 1'h0;
       reservation_station_8_decoded_instruction_IMMEDIATE <= 1'h0;
-      reservation_station_8_decoded_instruction_IS_LOAD <= 1'h0;
-      reservation_station_8_decoded_instruction_IS_STORE <= 1'h0;
+      reservation_station_8_decoded_instruction_is_load <= 1'h0;
+      reservation_station_8_decoded_instruction_is_store <= 1'h0;
       reservation_station_8_commited <= 1'h0;
       reservation_station_8_valid <= 1'h0;
       reservation_station_9_decoded_instruction_ready_bits_RS1_ready <= 1'h0;
@@ -1679,8 +1679,8 @@ module MEMRS(
       reservation_station_9_decoded_instruction_SUBTRACT <= 1'h0;
       reservation_station_9_decoded_instruction_MULTIPLY <= 1'h0;
       reservation_station_9_decoded_instruction_IMMEDIATE <= 1'h0;
-      reservation_station_9_decoded_instruction_IS_LOAD <= 1'h0;
-      reservation_station_9_decoded_instruction_IS_STORE <= 1'h0;
+      reservation_station_9_decoded_instruction_is_load <= 1'h0;
+      reservation_station_9_decoded_instruction_is_store <= 1'h0;
       reservation_station_9_commited <= 1'h0;
       reservation_station_9_valid <= 1'h0;
       reservation_station_10_decoded_instruction_ready_bits_RS1_ready <= 1'h0;
@@ -1704,8 +1704,8 @@ module MEMRS(
       reservation_station_10_decoded_instruction_SUBTRACT <= 1'h0;
       reservation_station_10_decoded_instruction_MULTIPLY <= 1'h0;
       reservation_station_10_decoded_instruction_IMMEDIATE <= 1'h0;
-      reservation_station_10_decoded_instruction_IS_LOAD <= 1'h0;
-      reservation_station_10_decoded_instruction_IS_STORE <= 1'h0;
+      reservation_station_10_decoded_instruction_is_load <= 1'h0;
+      reservation_station_10_decoded_instruction_is_store <= 1'h0;
       reservation_station_10_commited <= 1'h0;
       reservation_station_10_valid <= 1'h0;
       reservation_station_11_decoded_instruction_ready_bits_RS1_ready <= 1'h0;
@@ -1729,8 +1729,8 @@ module MEMRS(
       reservation_station_11_decoded_instruction_SUBTRACT <= 1'h0;
       reservation_station_11_decoded_instruction_MULTIPLY <= 1'h0;
       reservation_station_11_decoded_instruction_IMMEDIATE <= 1'h0;
-      reservation_station_11_decoded_instruction_IS_LOAD <= 1'h0;
-      reservation_station_11_decoded_instruction_IS_STORE <= 1'h0;
+      reservation_station_11_decoded_instruction_is_load <= 1'h0;
+      reservation_station_11_decoded_instruction_is_store <= 1'h0;
       reservation_station_11_commited <= 1'h0;
       reservation_station_11_valid <= 1'h0;
       reservation_station_12_decoded_instruction_ready_bits_RS1_ready <= 1'h0;
@@ -1754,8 +1754,8 @@ module MEMRS(
       reservation_station_12_decoded_instruction_SUBTRACT <= 1'h0;
       reservation_station_12_decoded_instruction_MULTIPLY <= 1'h0;
       reservation_station_12_decoded_instruction_IMMEDIATE <= 1'h0;
-      reservation_station_12_decoded_instruction_IS_LOAD <= 1'h0;
-      reservation_station_12_decoded_instruction_IS_STORE <= 1'h0;
+      reservation_station_12_decoded_instruction_is_load <= 1'h0;
+      reservation_station_12_decoded_instruction_is_store <= 1'h0;
       reservation_station_12_commited <= 1'h0;
       reservation_station_12_valid <= 1'h0;
       reservation_station_13_decoded_instruction_ready_bits_RS1_ready <= 1'h0;
@@ -1779,8 +1779,8 @@ module MEMRS(
       reservation_station_13_decoded_instruction_SUBTRACT <= 1'h0;
       reservation_station_13_decoded_instruction_MULTIPLY <= 1'h0;
       reservation_station_13_decoded_instruction_IMMEDIATE <= 1'h0;
-      reservation_station_13_decoded_instruction_IS_LOAD <= 1'h0;
-      reservation_station_13_decoded_instruction_IS_STORE <= 1'h0;
+      reservation_station_13_decoded_instruction_is_load <= 1'h0;
+      reservation_station_13_decoded_instruction_is_store <= 1'h0;
       reservation_station_13_commited <= 1'h0;
       reservation_station_13_valid <= 1'h0;
       reservation_station_14_decoded_instruction_ready_bits_RS1_ready <= 1'h0;
@@ -1804,8 +1804,8 @@ module MEMRS(
       reservation_station_14_decoded_instruction_SUBTRACT <= 1'h0;
       reservation_station_14_decoded_instruction_MULTIPLY <= 1'h0;
       reservation_station_14_decoded_instruction_IMMEDIATE <= 1'h0;
-      reservation_station_14_decoded_instruction_IS_LOAD <= 1'h0;
-      reservation_station_14_decoded_instruction_IS_STORE <= 1'h0;
+      reservation_station_14_decoded_instruction_is_load <= 1'h0;
+      reservation_station_14_decoded_instruction_is_store <= 1'h0;
       reservation_station_14_commited <= 1'h0;
       reservation_station_14_valid <= 1'h0;
       reservation_station_15_decoded_instruction_ready_bits_RS1_ready <= 1'h0;
@@ -1829,8 +1829,8 @@ module MEMRS(
       reservation_station_15_decoded_instruction_SUBTRACT <= 1'h0;
       reservation_station_15_decoded_instruction_MULTIPLY <= 1'h0;
       reservation_station_15_decoded_instruction_IMMEDIATE <= 1'h0;
-      reservation_station_15_decoded_instruction_IS_LOAD <= 1'h0;
-      reservation_station_15_decoded_instruction_IS_STORE <= 1'h0;
+      reservation_station_15_decoded_instruction_is_load <= 1'h0;
+      reservation_station_15_decoded_instruction_is_store <= 1'h0;
       reservation_station_15_commited <= 1'h0;
       reservation_station_15_valid <= 1'h0;
       front_pointer <= 5'h0;
@@ -2322,28 +2322,28 @@ module MEMRS(
                      : _GEN_26
                          ? io_backend_packet_0_bits_IMMEDIATE
                          : reservation_station_0_decoded_instruction_IMMEDIATE);
-      reservation_station_0_decoded_instruction_IS_LOAD <=
+      reservation_station_0_decoded_instruction_is_load <=
         ~_GEN_142
         & (_GEN_112
-             ? io_backend_packet_3_bits_IS_LOAD
+             ? io_backend_packet_3_bits_is_load
              : _GEN_93
-                 ? io_backend_packet_2_bits_IS_LOAD
+                 ? io_backend_packet_2_bits_is_load
                  : _GEN_45
-                     ? io_backend_packet_1_bits_IS_LOAD
+                     ? io_backend_packet_1_bits_is_load
                      : _GEN_26
-                         ? io_backend_packet_0_bits_IS_LOAD
-                         : reservation_station_0_decoded_instruction_IS_LOAD);
-      reservation_station_0_decoded_instruction_IS_STORE <=
+                         ? io_backend_packet_0_bits_is_load
+                         : reservation_station_0_decoded_instruction_is_load);
+      reservation_station_0_decoded_instruction_is_store <=
         ~_GEN_142
         & (_GEN_112
-             ? io_backend_packet_3_bits_IS_STORE
+             ? io_backend_packet_3_bits_is_store
              : _GEN_93
-                 ? io_backend_packet_2_bits_IS_STORE
+                 ? io_backend_packet_2_bits_is_store
                  : _GEN_45
-                     ? io_backend_packet_1_bits_IS_STORE
+                     ? io_backend_packet_1_bits_is_store
                      : _GEN_26
-                         ? io_backend_packet_0_bits_IS_STORE
-                         : reservation_station_0_decoded_instruction_IS_STORE);
+                         ? io_backend_packet_0_bits_is_store
+                         : reservation_station_0_decoded_instruction_is_store);
       reservation_station_0_commited <=
         ~_GEN_142
         & (~reservation_station_0_commited & reservation_station_0_valid
@@ -2563,28 +2563,28 @@ module MEMRS(
                      : _GEN_27
                          ? io_backend_packet_0_bits_IMMEDIATE
                          : reservation_station_1_decoded_instruction_IMMEDIATE);
-      reservation_station_1_decoded_instruction_IS_LOAD <=
+      reservation_station_1_decoded_instruction_is_load <=
         ~_GEN_143
         & (_GEN_114
-             ? io_backend_packet_3_bits_IS_LOAD
+             ? io_backend_packet_3_bits_is_load
              : _GEN_94
-                 ? io_backend_packet_2_bits_IS_LOAD
+                 ? io_backend_packet_2_bits_is_load
                  : _GEN_47
-                     ? io_backend_packet_1_bits_IS_LOAD
+                     ? io_backend_packet_1_bits_is_load
                      : _GEN_27
-                         ? io_backend_packet_0_bits_IS_LOAD
-                         : reservation_station_1_decoded_instruction_IS_LOAD);
-      reservation_station_1_decoded_instruction_IS_STORE <=
+                         ? io_backend_packet_0_bits_is_load
+                         : reservation_station_1_decoded_instruction_is_load);
+      reservation_station_1_decoded_instruction_is_store <=
         ~_GEN_143
         & (_GEN_114
-             ? io_backend_packet_3_bits_IS_STORE
+             ? io_backend_packet_3_bits_is_store
              : _GEN_94
-                 ? io_backend_packet_2_bits_IS_STORE
+                 ? io_backend_packet_2_bits_is_store
                  : _GEN_47
-                     ? io_backend_packet_1_bits_IS_STORE
+                     ? io_backend_packet_1_bits_is_store
                      : _GEN_27
-                         ? io_backend_packet_0_bits_IS_STORE
-                         : reservation_station_1_decoded_instruction_IS_STORE);
+                         ? io_backend_packet_0_bits_is_store
+                         : reservation_station_1_decoded_instruction_is_store);
       reservation_station_1_commited <=
         ~_GEN_143
         & (~reservation_station_1_commited & reservation_station_1_valid
@@ -2804,28 +2804,28 @@ module MEMRS(
                      : _GEN_28
                          ? io_backend_packet_0_bits_IMMEDIATE
                          : reservation_station_2_decoded_instruction_IMMEDIATE);
-      reservation_station_2_decoded_instruction_IS_LOAD <=
+      reservation_station_2_decoded_instruction_is_load <=
         ~_GEN_144
         & (_GEN_116
-             ? io_backend_packet_3_bits_IS_LOAD
+             ? io_backend_packet_3_bits_is_load
              : _GEN_95
-                 ? io_backend_packet_2_bits_IS_LOAD
+                 ? io_backend_packet_2_bits_is_load
                  : _GEN_49
-                     ? io_backend_packet_1_bits_IS_LOAD
+                     ? io_backend_packet_1_bits_is_load
                      : _GEN_28
-                         ? io_backend_packet_0_bits_IS_LOAD
-                         : reservation_station_2_decoded_instruction_IS_LOAD);
-      reservation_station_2_decoded_instruction_IS_STORE <=
+                         ? io_backend_packet_0_bits_is_load
+                         : reservation_station_2_decoded_instruction_is_load);
+      reservation_station_2_decoded_instruction_is_store <=
         ~_GEN_144
         & (_GEN_116
-             ? io_backend_packet_3_bits_IS_STORE
+             ? io_backend_packet_3_bits_is_store
              : _GEN_95
-                 ? io_backend_packet_2_bits_IS_STORE
+                 ? io_backend_packet_2_bits_is_store
                  : _GEN_49
-                     ? io_backend_packet_1_bits_IS_STORE
+                     ? io_backend_packet_1_bits_is_store
                      : _GEN_28
-                         ? io_backend_packet_0_bits_IS_STORE
-                         : reservation_station_2_decoded_instruction_IS_STORE);
+                         ? io_backend_packet_0_bits_is_store
+                         : reservation_station_2_decoded_instruction_is_store);
       reservation_station_2_commited <=
         ~_GEN_144
         & (~reservation_station_2_commited & reservation_station_2_valid
@@ -3045,28 +3045,28 @@ module MEMRS(
                      : _GEN_29
                          ? io_backend_packet_0_bits_IMMEDIATE
                          : reservation_station_3_decoded_instruction_IMMEDIATE);
-      reservation_station_3_decoded_instruction_IS_LOAD <=
+      reservation_station_3_decoded_instruction_is_load <=
         ~_GEN_145
         & (_GEN_118
-             ? io_backend_packet_3_bits_IS_LOAD
+             ? io_backend_packet_3_bits_is_load
              : _GEN_96
-                 ? io_backend_packet_2_bits_IS_LOAD
+                 ? io_backend_packet_2_bits_is_load
                  : _GEN_51
-                     ? io_backend_packet_1_bits_IS_LOAD
+                     ? io_backend_packet_1_bits_is_load
                      : _GEN_29
-                         ? io_backend_packet_0_bits_IS_LOAD
-                         : reservation_station_3_decoded_instruction_IS_LOAD);
-      reservation_station_3_decoded_instruction_IS_STORE <=
+                         ? io_backend_packet_0_bits_is_load
+                         : reservation_station_3_decoded_instruction_is_load);
+      reservation_station_3_decoded_instruction_is_store <=
         ~_GEN_145
         & (_GEN_118
-             ? io_backend_packet_3_bits_IS_STORE
+             ? io_backend_packet_3_bits_is_store
              : _GEN_96
-                 ? io_backend_packet_2_bits_IS_STORE
+                 ? io_backend_packet_2_bits_is_store
                  : _GEN_51
-                     ? io_backend_packet_1_bits_IS_STORE
+                     ? io_backend_packet_1_bits_is_store
                      : _GEN_29
-                         ? io_backend_packet_0_bits_IS_STORE
-                         : reservation_station_3_decoded_instruction_IS_STORE);
+                         ? io_backend_packet_0_bits_is_store
+                         : reservation_station_3_decoded_instruction_is_store);
       reservation_station_3_commited <=
         ~_GEN_145
         & (~reservation_station_3_commited & reservation_station_3_valid
@@ -3286,28 +3286,28 @@ module MEMRS(
                      : _GEN_30
                          ? io_backend_packet_0_bits_IMMEDIATE
                          : reservation_station_4_decoded_instruction_IMMEDIATE);
-      reservation_station_4_decoded_instruction_IS_LOAD <=
+      reservation_station_4_decoded_instruction_is_load <=
         ~_GEN_146
         & (_GEN_120
-             ? io_backend_packet_3_bits_IS_LOAD
+             ? io_backend_packet_3_bits_is_load
              : _GEN_97
-                 ? io_backend_packet_2_bits_IS_LOAD
+                 ? io_backend_packet_2_bits_is_load
                  : _GEN_53
-                     ? io_backend_packet_1_bits_IS_LOAD
+                     ? io_backend_packet_1_bits_is_load
                      : _GEN_30
-                         ? io_backend_packet_0_bits_IS_LOAD
-                         : reservation_station_4_decoded_instruction_IS_LOAD);
-      reservation_station_4_decoded_instruction_IS_STORE <=
+                         ? io_backend_packet_0_bits_is_load
+                         : reservation_station_4_decoded_instruction_is_load);
+      reservation_station_4_decoded_instruction_is_store <=
         ~_GEN_146
         & (_GEN_120
-             ? io_backend_packet_3_bits_IS_STORE
+             ? io_backend_packet_3_bits_is_store
              : _GEN_97
-                 ? io_backend_packet_2_bits_IS_STORE
+                 ? io_backend_packet_2_bits_is_store
                  : _GEN_53
-                     ? io_backend_packet_1_bits_IS_STORE
+                     ? io_backend_packet_1_bits_is_store
                      : _GEN_30
-                         ? io_backend_packet_0_bits_IS_STORE
-                         : reservation_station_4_decoded_instruction_IS_STORE);
+                         ? io_backend_packet_0_bits_is_store
+                         : reservation_station_4_decoded_instruction_is_store);
       reservation_station_4_commited <=
         ~_GEN_146
         & (~reservation_station_4_commited & reservation_station_4_valid
@@ -3527,28 +3527,28 @@ module MEMRS(
                      : _GEN_31
                          ? io_backend_packet_0_bits_IMMEDIATE
                          : reservation_station_5_decoded_instruction_IMMEDIATE);
-      reservation_station_5_decoded_instruction_IS_LOAD <=
+      reservation_station_5_decoded_instruction_is_load <=
         ~_GEN_147
         & (_GEN_122
-             ? io_backend_packet_3_bits_IS_LOAD
+             ? io_backend_packet_3_bits_is_load
              : _GEN_98
-                 ? io_backend_packet_2_bits_IS_LOAD
+                 ? io_backend_packet_2_bits_is_load
                  : _GEN_55
-                     ? io_backend_packet_1_bits_IS_LOAD
+                     ? io_backend_packet_1_bits_is_load
                      : _GEN_31
-                         ? io_backend_packet_0_bits_IS_LOAD
-                         : reservation_station_5_decoded_instruction_IS_LOAD);
-      reservation_station_5_decoded_instruction_IS_STORE <=
+                         ? io_backend_packet_0_bits_is_load
+                         : reservation_station_5_decoded_instruction_is_load);
+      reservation_station_5_decoded_instruction_is_store <=
         ~_GEN_147
         & (_GEN_122
-             ? io_backend_packet_3_bits_IS_STORE
+             ? io_backend_packet_3_bits_is_store
              : _GEN_98
-                 ? io_backend_packet_2_bits_IS_STORE
+                 ? io_backend_packet_2_bits_is_store
                  : _GEN_55
-                     ? io_backend_packet_1_bits_IS_STORE
+                     ? io_backend_packet_1_bits_is_store
                      : _GEN_31
-                         ? io_backend_packet_0_bits_IS_STORE
-                         : reservation_station_5_decoded_instruction_IS_STORE);
+                         ? io_backend_packet_0_bits_is_store
+                         : reservation_station_5_decoded_instruction_is_store);
       reservation_station_5_commited <=
         ~_GEN_147
         & (~reservation_station_5_commited & reservation_station_5_valid
@@ -3768,28 +3768,28 @@ module MEMRS(
                      : _GEN_32
                          ? io_backend_packet_0_bits_IMMEDIATE
                          : reservation_station_6_decoded_instruction_IMMEDIATE);
-      reservation_station_6_decoded_instruction_IS_LOAD <=
+      reservation_station_6_decoded_instruction_is_load <=
         ~_GEN_148
         & (_GEN_124
-             ? io_backend_packet_3_bits_IS_LOAD
+             ? io_backend_packet_3_bits_is_load
              : _GEN_99
-                 ? io_backend_packet_2_bits_IS_LOAD
+                 ? io_backend_packet_2_bits_is_load
                  : _GEN_57
-                     ? io_backend_packet_1_bits_IS_LOAD
+                     ? io_backend_packet_1_bits_is_load
                      : _GEN_32
-                         ? io_backend_packet_0_bits_IS_LOAD
-                         : reservation_station_6_decoded_instruction_IS_LOAD);
-      reservation_station_6_decoded_instruction_IS_STORE <=
+                         ? io_backend_packet_0_bits_is_load
+                         : reservation_station_6_decoded_instruction_is_load);
+      reservation_station_6_decoded_instruction_is_store <=
         ~_GEN_148
         & (_GEN_124
-             ? io_backend_packet_3_bits_IS_STORE
+             ? io_backend_packet_3_bits_is_store
              : _GEN_99
-                 ? io_backend_packet_2_bits_IS_STORE
+                 ? io_backend_packet_2_bits_is_store
                  : _GEN_57
-                     ? io_backend_packet_1_bits_IS_STORE
+                     ? io_backend_packet_1_bits_is_store
                      : _GEN_32
-                         ? io_backend_packet_0_bits_IS_STORE
-                         : reservation_station_6_decoded_instruction_IS_STORE);
+                         ? io_backend_packet_0_bits_is_store
+                         : reservation_station_6_decoded_instruction_is_store);
       reservation_station_6_commited <=
         ~_GEN_148
         & (~reservation_station_6_commited & reservation_station_6_valid
@@ -4009,28 +4009,28 @@ module MEMRS(
                      : _GEN_33
                          ? io_backend_packet_0_bits_IMMEDIATE
                          : reservation_station_7_decoded_instruction_IMMEDIATE);
-      reservation_station_7_decoded_instruction_IS_LOAD <=
+      reservation_station_7_decoded_instruction_is_load <=
         ~_GEN_149
         & (_GEN_126
-             ? io_backend_packet_3_bits_IS_LOAD
+             ? io_backend_packet_3_bits_is_load
              : _GEN_100
-                 ? io_backend_packet_2_bits_IS_LOAD
+                 ? io_backend_packet_2_bits_is_load
                  : _GEN_59
-                     ? io_backend_packet_1_bits_IS_LOAD
+                     ? io_backend_packet_1_bits_is_load
                      : _GEN_33
-                         ? io_backend_packet_0_bits_IS_LOAD
-                         : reservation_station_7_decoded_instruction_IS_LOAD);
-      reservation_station_7_decoded_instruction_IS_STORE <=
+                         ? io_backend_packet_0_bits_is_load
+                         : reservation_station_7_decoded_instruction_is_load);
+      reservation_station_7_decoded_instruction_is_store <=
         ~_GEN_149
         & (_GEN_126
-             ? io_backend_packet_3_bits_IS_STORE
+             ? io_backend_packet_3_bits_is_store
              : _GEN_100
-                 ? io_backend_packet_2_bits_IS_STORE
+                 ? io_backend_packet_2_bits_is_store
                  : _GEN_59
-                     ? io_backend_packet_1_bits_IS_STORE
+                     ? io_backend_packet_1_bits_is_store
                      : _GEN_33
-                         ? io_backend_packet_0_bits_IS_STORE
-                         : reservation_station_7_decoded_instruction_IS_STORE);
+                         ? io_backend_packet_0_bits_is_store
+                         : reservation_station_7_decoded_instruction_is_store);
       reservation_station_7_commited <=
         ~_GEN_149
         & (~reservation_station_7_commited & reservation_station_7_valid
@@ -4250,28 +4250,28 @@ module MEMRS(
                      : _GEN_34
                          ? io_backend_packet_0_bits_IMMEDIATE
                          : reservation_station_8_decoded_instruction_IMMEDIATE);
-      reservation_station_8_decoded_instruction_IS_LOAD <=
+      reservation_station_8_decoded_instruction_is_load <=
         ~_GEN_150
         & (_GEN_128
-             ? io_backend_packet_3_bits_IS_LOAD
+             ? io_backend_packet_3_bits_is_load
              : _GEN_101
-                 ? io_backend_packet_2_bits_IS_LOAD
+                 ? io_backend_packet_2_bits_is_load
                  : _GEN_61
-                     ? io_backend_packet_1_bits_IS_LOAD
+                     ? io_backend_packet_1_bits_is_load
                      : _GEN_34
-                         ? io_backend_packet_0_bits_IS_LOAD
-                         : reservation_station_8_decoded_instruction_IS_LOAD);
-      reservation_station_8_decoded_instruction_IS_STORE <=
+                         ? io_backend_packet_0_bits_is_load
+                         : reservation_station_8_decoded_instruction_is_load);
+      reservation_station_8_decoded_instruction_is_store <=
         ~_GEN_150
         & (_GEN_128
-             ? io_backend_packet_3_bits_IS_STORE
+             ? io_backend_packet_3_bits_is_store
              : _GEN_101
-                 ? io_backend_packet_2_bits_IS_STORE
+                 ? io_backend_packet_2_bits_is_store
                  : _GEN_61
-                     ? io_backend_packet_1_bits_IS_STORE
+                     ? io_backend_packet_1_bits_is_store
                      : _GEN_34
-                         ? io_backend_packet_0_bits_IS_STORE
-                         : reservation_station_8_decoded_instruction_IS_STORE);
+                         ? io_backend_packet_0_bits_is_store
+                         : reservation_station_8_decoded_instruction_is_store);
       reservation_station_8_commited <=
         ~_GEN_150
         & (~reservation_station_8_commited & reservation_station_8_valid
@@ -4491,28 +4491,28 @@ module MEMRS(
                      : _GEN_35
                          ? io_backend_packet_0_bits_IMMEDIATE
                          : reservation_station_9_decoded_instruction_IMMEDIATE);
-      reservation_station_9_decoded_instruction_IS_LOAD <=
+      reservation_station_9_decoded_instruction_is_load <=
         ~_GEN_151
         & (_GEN_130
-             ? io_backend_packet_3_bits_IS_LOAD
+             ? io_backend_packet_3_bits_is_load
              : _GEN_102
-                 ? io_backend_packet_2_bits_IS_LOAD
+                 ? io_backend_packet_2_bits_is_load
                  : _GEN_63
-                     ? io_backend_packet_1_bits_IS_LOAD
+                     ? io_backend_packet_1_bits_is_load
                      : _GEN_35
-                         ? io_backend_packet_0_bits_IS_LOAD
-                         : reservation_station_9_decoded_instruction_IS_LOAD);
-      reservation_station_9_decoded_instruction_IS_STORE <=
+                         ? io_backend_packet_0_bits_is_load
+                         : reservation_station_9_decoded_instruction_is_load);
+      reservation_station_9_decoded_instruction_is_store <=
         ~_GEN_151
         & (_GEN_130
-             ? io_backend_packet_3_bits_IS_STORE
+             ? io_backend_packet_3_bits_is_store
              : _GEN_102
-                 ? io_backend_packet_2_bits_IS_STORE
+                 ? io_backend_packet_2_bits_is_store
                  : _GEN_63
-                     ? io_backend_packet_1_bits_IS_STORE
+                     ? io_backend_packet_1_bits_is_store
                      : _GEN_35
-                         ? io_backend_packet_0_bits_IS_STORE
-                         : reservation_station_9_decoded_instruction_IS_STORE);
+                         ? io_backend_packet_0_bits_is_store
+                         : reservation_station_9_decoded_instruction_is_store);
       reservation_station_9_commited <=
         ~_GEN_151
         & (~reservation_station_9_commited & reservation_station_9_valid
@@ -4732,28 +4732,28 @@ module MEMRS(
                      : _GEN_36
                          ? io_backend_packet_0_bits_IMMEDIATE
                          : reservation_station_10_decoded_instruction_IMMEDIATE);
-      reservation_station_10_decoded_instruction_IS_LOAD <=
+      reservation_station_10_decoded_instruction_is_load <=
         ~_GEN_152
         & (_GEN_132
-             ? io_backend_packet_3_bits_IS_LOAD
+             ? io_backend_packet_3_bits_is_load
              : _GEN_103
-                 ? io_backend_packet_2_bits_IS_LOAD
+                 ? io_backend_packet_2_bits_is_load
                  : _GEN_65
-                     ? io_backend_packet_1_bits_IS_LOAD
+                     ? io_backend_packet_1_bits_is_load
                      : _GEN_36
-                         ? io_backend_packet_0_bits_IS_LOAD
-                         : reservation_station_10_decoded_instruction_IS_LOAD);
-      reservation_station_10_decoded_instruction_IS_STORE <=
+                         ? io_backend_packet_0_bits_is_load
+                         : reservation_station_10_decoded_instruction_is_load);
+      reservation_station_10_decoded_instruction_is_store <=
         ~_GEN_152
         & (_GEN_132
-             ? io_backend_packet_3_bits_IS_STORE
+             ? io_backend_packet_3_bits_is_store
              : _GEN_103
-                 ? io_backend_packet_2_bits_IS_STORE
+                 ? io_backend_packet_2_bits_is_store
                  : _GEN_65
-                     ? io_backend_packet_1_bits_IS_STORE
+                     ? io_backend_packet_1_bits_is_store
                      : _GEN_36
-                         ? io_backend_packet_0_bits_IS_STORE
-                         : reservation_station_10_decoded_instruction_IS_STORE);
+                         ? io_backend_packet_0_bits_is_store
+                         : reservation_station_10_decoded_instruction_is_store);
       reservation_station_10_commited <=
         ~_GEN_152
         & (~reservation_station_10_commited & reservation_station_10_valid
@@ -4973,28 +4973,28 @@ module MEMRS(
                      : _GEN_37
                          ? io_backend_packet_0_bits_IMMEDIATE
                          : reservation_station_11_decoded_instruction_IMMEDIATE);
-      reservation_station_11_decoded_instruction_IS_LOAD <=
+      reservation_station_11_decoded_instruction_is_load <=
         ~_GEN_153
         & (_GEN_134
-             ? io_backend_packet_3_bits_IS_LOAD
+             ? io_backend_packet_3_bits_is_load
              : _GEN_104
-                 ? io_backend_packet_2_bits_IS_LOAD
+                 ? io_backend_packet_2_bits_is_load
                  : _GEN_67
-                     ? io_backend_packet_1_bits_IS_LOAD
+                     ? io_backend_packet_1_bits_is_load
                      : _GEN_37
-                         ? io_backend_packet_0_bits_IS_LOAD
-                         : reservation_station_11_decoded_instruction_IS_LOAD);
-      reservation_station_11_decoded_instruction_IS_STORE <=
+                         ? io_backend_packet_0_bits_is_load
+                         : reservation_station_11_decoded_instruction_is_load);
+      reservation_station_11_decoded_instruction_is_store <=
         ~_GEN_153
         & (_GEN_134
-             ? io_backend_packet_3_bits_IS_STORE
+             ? io_backend_packet_3_bits_is_store
              : _GEN_104
-                 ? io_backend_packet_2_bits_IS_STORE
+                 ? io_backend_packet_2_bits_is_store
                  : _GEN_67
-                     ? io_backend_packet_1_bits_IS_STORE
+                     ? io_backend_packet_1_bits_is_store
                      : _GEN_37
-                         ? io_backend_packet_0_bits_IS_STORE
-                         : reservation_station_11_decoded_instruction_IS_STORE);
+                         ? io_backend_packet_0_bits_is_store
+                         : reservation_station_11_decoded_instruction_is_store);
       reservation_station_11_commited <=
         ~_GEN_153
         & (~reservation_station_11_commited & reservation_station_11_valid
@@ -5214,28 +5214,28 @@ module MEMRS(
                      : _GEN_38
                          ? io_backend_packet_0_bits_IMMEDIATE
                          : reservation_station_12_decoded_instruction_IMMEDIATE);
-      reservation_station_12_decoded_instruction_IS_LOAD <=
+      reservation_station_12_decoded_instruction_is_load <=
         ~_GEN_154
         & (_GEN_136
-             ? io_backend_packet_3_bits_IS_LOAD
+             ? io_backend_packet_3_bits_is_load
              : _GEN_105
-                 ? io_backend_packet_2_bits_IS_LOAD
+                 ? io_backend_packet_2_bits_is_load
                  : _GEN_69
-                     ? io_backend_packet_1_bits_IS_LOAD
+                     ? io_backend_packet_1_bits_is_load
                      : _GEN_38
-                         ? io_backend_packet_0_bits_IS_LOAD
-                         : reservation_station_12_decoded_instruction_IS_LOAD);
-      reservation_station_12_decoded_instruction_IS_STORE <=
+                         ? io_backend_packet_0_bits_is_load
+                         : reservation_station_12_decoded_instruction_is_load);
+      reservation_station_12_decoded_instruction_is_store <=
         ~_GEN_154
         & (_GEN_136
-             ? io_backend_packet_3_bits_IS_STORE
+             ? io_backend_packet_3_bits_is_store
              : _GEN_105
-                 ? io_backend_packet_2_bits_IS_STORE
+                 ? io_backend_packet_2_bits_is_store
                  : _GEN_69
-                     ? io_backend_packet_1_bits_IS_STORE
+                     ? io_backend_packet_1_bits_is_store
                      : _GEN_38
-                         ? io_backend_packet_0_bits_IS_STORE
-                         : reservation_station_12_decoded_instruction_IS_STORE);
+                         ? io_backend_packet_0_bits_is_store
+                         : reservation_station_12_decoded_instruction_is_store);
       reservation_station_12_commited <=
         ~_GEN_154
         & (~reservation_station_12_commited & reservation_station_12_valid
@@ -5455,28 +5455,28 @@ module MEMRS(
                      : _GEN_39
                          ? io_backend_packet_0_bits_IMMEDIATE
                          : reservation_station_13_decoded_instruction_IMMEDIATE);
-      reservation_station_13_decoded_instruction_IS_LOAD <=
+      reservation_station_13_decoded_instruction_is_load <=
         ~_GEN_155
         & (_GEN_138
-             ? io_backend_packet_3_bits_IS_LOAD
+             ? io_backend_packet_3_bits_is_load
              : _GEN_106
-                 ? io_backend_packet_2_bits_IS_LOAD
+                 ? io_backend_packet_2_bits_is_load
                  : _GEN_71
-                     ? io_backend_packet_1_bits_IS_LOAD
+                     ? io_backend_packet_1_bits_is_load
                      : _GEN_39
-                         ? io_backend_packet_0_bits_IS_LOAD
-                         : reservation_station_13_decoded_instruction_IS_LOAD);
-      reservation_station_13_decoded_instruction_IS_STORE <=
+                         ? io_backend_packet_0_bits_is_load
+                         : reservation_station_13_decoded_instruction_is_load);
+      reservation_station_13_decoded_instruction_is_store <=
         ~_GEN_155
         & (_GEN_138
-             ? io_backend_packet_3_bits_IS_STORE
+             ? io_backend_packet_3_bits_is_store
              : _GEN_106
-                 ? io_backend_packet_2_bits_IS_STORE
+                 ? io_backend_packet_2_bits_is_store
                  : _GEN_71
-                     ? io_backend_packet_1_bits_IS_STORE
+                     ? io_backend_packet_1_bits_is_store
                      : _GEN_39
-                         ? io_backend_packet_0_bits_IS_STORE
-                         : reservation_station_13_decoded_instruction_IS_STORE);
+                         ? io_backend_packet_0_bits_is_store
+                         : reservation_station_13_decoded_instruction_is_store);
       reservation_station_13_commited <=
         ~_GEN_155
         & (~reservation_station_13_commited & reservation_station_13_valid
@@ -5696,28 +5696,28 @@ module MEMRS(
                      : _GEN_40
                          ? io_backend_packet_0_bits_IMMEDIATE
                          : reservation_station_14_decoded_instruction_IMMEDIATE);
-      reservation_station_14_decoded_instruction_IS_LOAD <=
+      reservation_station_14_decoded_instruction_is_load <=
         ~_GEN_156
         & (_GEN_140
-             ? io_backend_packet_3_bits_IS_LOAD
+             ? io_backend_packet_3_bits_is_load
              : _GEN_107
-                 ? io_backend_packet_2_bits_IS_LOAD
+                 ? io_backend_packet_2_bits_is_load
                  : _GEN_73
-                     ? io_backend_packet_1_bits_IS_LOAD
+                     ? io_backend_packet_1_bits_is_load
                      : _GEN_40
-                         ? io_backend_packet_0_bits_IS_LOAD
-                         : reservation_station_14_decoded_instruction_IS_LOAD);
-      reservation_station_14_decoded_instruction_IS_STORE <=
+                         ? io_backend_packet_0_bits_is_load
+                         : reservation_station_14_decoded_instruction_is_load);
+      reservation_station_14_decoded_instruction_is_store <=
         ~_GEN_156
         & (_GEN_140
-             ? io_backend_packet_3_bits_IS_STORE
+             ? io_backend_packet_3_bits_is_store
              : _GEN_107
-                 ? io_backend_packet_2_bits_IS_STORE
+                 ? io_backend_packet_2_bits_is_store
                  : _GEN_73
-                     ? io_backend_packet_1_bits_IS_STORE
+                     ? io_backend_packet_1_bits_is_store
                      : _GEN_40
-                         ? io_backend_packet_0_bits_IS_STORE
-                         : reservation_station_14_decoded_instruction_IS_STORE);
+                         ? io_backend_packet_0_bits_is_store
+                         : reservation_station_14_decoded_instruction_is_store);
       reservation_station_14_commited <=
         ~_GEN_156
         & (~reservation_station_14_commited & reservation_station_14_valid
@@ -5937,28 +5937,28 @@ module MEMRS(
                      : _GEN_41
                          ? io_backend_packet_0_bits_IMMEDIATE
                          : reservation_station_15_decoded_instruction_IMMEDIATE);
-      reservation_station_15_decoded_instruction_IS_LOAD <=
+      reservation_station_15_decoded_instruction_is_load <=
         ~_GEN_157
         & (_GEN_141
-             ? io_backend_packet_3_bits_IS_LOAD
+             ? io_backend_packet_3_bits_is_load
              : _GEN_108
-                 ? io_backend_packet_2_bits_IS_LOAD
+                 ? io_backend_packet_2_bits_is_load
                  : _GEN_74
-                     ? io_backend_packet_1_bits_IS_LOAD
+                     ? io_backend_packet_1_bits_is_load
                      : _GEN_41
-                         ? io_backend_packet_0_bits_IS_LOAD
-                         : reservation_station_15_decoded_instruction_IS_LOAD);
-      reservation_station_15_decoded_instruction_IS_STORE <=
+                         ? io_backend_packet_0_bits_is_load
+                         : reservation_station_15_decoded_instruction_is_load);
+      reservation_station_15_decoded_instruction_is_store <=
         ~_GEN_157
         & (_GEN_141
-             ? io_backend_packet_3_bits_IS_STORE
+             ? io_backend_packet_3_bits_is_store
              : _GEN_108
-                 ? io_backend_packet_2_bits_IS_STORE
+                 ? io_backend_packet_2_bits_is_store
                  : _GEN_74
-                     ? io_backend_packet_1_bits_IS_STORE
+                     ? io_backend_packet_1_bits_is_store
                      : _GEN_41
-                         ? io_backend_packet_0_bits_IS_STORE
-                         : reservation_station_15_decoded_instruction_IS_STORE);
+                         ? io_backend_packet_0_bits_is_store
+                         : reservation_station_15_decoded_instruction_is_store);
       reservation_station_15_commited <=
         ~_GEN_157
         & (~reservation_station_15_commited & reservation_station_15_valid
@@ -5999,8 +5999,8 @@ module MEMRS(
   assign io_RF_inputs_0_bits_SUBTRACT = 1'h0;
   assign io_RF_inputs_0_bits_MULTIPLY = 1'h0;
   assign io_RF_inputs_0_bits_IMMEDIATE = 1'h0;
-  assign io_RF_inputs_0_bits_IS_LOAD = 1'h0;
-  assign io_RF_inputs_0_bits_IS_STORE = 1'h0;
+  assign io_RF_inputs_0_bits_is_load = 1'h0;
+  assign io_RF_inputs_0_bits_is_store = 1'h0;
   assign io_RF_inputs_1_valid = 1'h0;
   assign io_RF_inputs_1_bits_ready_bits_RS1_ready = 1'h0;
   assign io_RF_inputs_1_bits_ready_bits_RS2_ready = 1'h0;
@@ -6023,8 +6023,8 @@ module MEMRS(
   assign io_RF_inputs_1_bits_SUBTRACT = 1'h0;
   assign io_RF_inputs_1_bits_MULTIPLY = 1'h0;
   assign io_RF_inputs_1_bits_IMMEDIATE = 1'h0;
-  assign io_RF_inputs_1_bits_IS_LOAD = 1'h0;
-  assign io_RF_inputs_1_bits_IS_STORE = 1'h0;
+  assign io_RF_inputs_1_bits_is_load = 1'h0;
+  assign io_RF_inputs_1_bits_is_store = 1'h0;
   assign io_RF_inputs_2_valid = 1'h0;
   assign io_RF_inputs_2_bits_ready_bits_RS1_ready = 1'h0;
   assign io_RF_inputs_2_bits_ready_bits_RS2_ready = 1'h0;
@@ -6047,8 +6047,8 @@ module MEMRS(
   assign io_RF_inputs_2_bits_SUBTRACT = 1'h0;
   assign io_RF_inputs_2_bits_MULTIPLY = 1'h0;
   assign io_RF_inputs_2_bits_IMMEDIATE = 1'h0;
-  assign io_RF_inputs_2_bits_IS_LOAD = 1'h0;
-  assign io_RF_inputs_2_bits_IS_STORE = 1'h0;
+  assign io_RF_inputs_2_bits_is_load = 1'h0;
+  assign io_RF_inputs_2_bits_is_store = 1'h0;
   assign io_RF_inputs_3_valid = good_to_go;
   assign io_RF_inputs_3_bits_ready_bits_RS1_ready =
     io_RF_inputs_3_bits_ready_bits_RS1_ready_0;
@@ -6073,7 +6073,7 @@ module MEMRS(
   assign io_RF_inputs_3_bits_SUBTRACT = _GEN_17[front_pointer[3:0]];
   assign io_RF_inputs_3_bits_MULTIPLY = _GEN_18[front_pointer[3:0]];
   assign io_RF_inputs_3_bits_IMMEDIATE = _GEN_19[front_pointer[3:0]];
-  assign io_RF_inputs_3_bits_IS_LOAD = _GEN_20[front_pointer[3:0]];
-  assign io_RF_inputs_3_bits_IS_STORE = _GEN_21[front_pointer[3:0]];
+  assign io_RF_inputs_3_bits_is_load = _GEN_20[front_pointer[3:0]];
+  assign io_RF_inputs_3_bits_is_store = _GEN_21[front_pointer[3:0]];
 endmodule
 

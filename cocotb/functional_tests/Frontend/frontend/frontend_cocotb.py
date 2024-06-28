@@ -65,8 +65,8 @@ async def test_decoder_out_addi(dut):
 
     assert dut.get_decoder_outputs()["RS1"]                     == [0,0,0,0]
     assert dut.get_decoder_outputs()["RS1_valid"]               == [1,1,1,1]
-    assert dut.get_decoder_outputs()["IS_LOAD"]                 == [0,0,0,0]
-    assert dut.get_decoder_outputs()["IS_STORE"]                == [0,0,0,0]
+    assert dut.get_decoder_outputs()["is_load"]                 == [0,0,0,0]
+    assert dut.get_decoder_outputs()["is_store"]                == [0,0,0,0]
 
 
     await dut.update()
@@ -86,8 +86,8 @@ async def test_decoder_out_addi(dut):
 
     assert dut.get_decoder_outputs()["RS1"]                     == [0,0,0,0]
     assert dut.get_decoder_outputs()["RS1_valid"]               == [1,1,1,1]
-    assert dut.get_decoder_outputs()["IS_LOAD"]                 == [0,0,0,0]
-    assert dut.get_decoder_outputs()["IS_STORE"]                == [0,0,0,0]
+    assert dut.get_decoder_outputs()["is_load"]                 == [0,0,0,0]
+    assert dut.get_decoder_outputs()["is_store"]                == [0,0,0,0]
 
 
 
@@ -126,8 +126,8 @@ async def test_rename_out_addi(dut):
 
     assert dut.get_instruction_Q_outputs()["RS1"]                     == [0,0,0,0]
     assert dut.get_instruction_Q_outputs()["RS1_valid"]               == [1,1,1,1]
-    assert dut.get_instruction_Q_outputs()["IS_LOAD"]                 == [0,0,0,0]
-    assert dut.get_instruction_Q_outputs()["IS_STORE"]                == [0,0,0,0]
+    assert dut.get_instruction_Q_outputs()["is_load"]                 == [0,0,0,0]
+    assert dut.get_instruction_Q_outputs()["is_store"]                == [0,0,0,0]
 
     await dut.update()  # wait for rename to complete
 
@@ -141,8 +141,8 @@ async def test_rename_out_addi(dut):
 
     assert dut.get_renamed_decoded_fetch_packet()["RS1"]                     == [0,0,0,0]
     assert dut.get_renamed_decoded_fetch_packet()["RS1_valid"]               == [1,1,1,1]
-    assert dut.get_renamed_decoded_fetch_packet()["IS_LOAD"]                 == [0,0,0,0]
-    assert dut.get_renamed_decoded_fetch_packet()["IS_STORE"]                == [0,0,0,0]
+    assert dut.get_renamed_decoded_fetch_packet()["is_load"]                 == [0,0,0,0]
+    assert dut.get_renamed_decoded_fetch_packet()["is_store"]                == [0,0,0,0]
 
 
     # check new inputs into rename
@@ -162,8 +162,8 @@ async def test_rename_out_addi(dut):
 
     assert dut.get_instruction_Q_outputs()["RS1"]                     == [0,0,0,0]
     assert dut.get_instruction_Q_outputs()["RS1_valid"]               == [1,1,1,1]
-    assert dut.get_instruction_Q_outputs()["IS_LOAD"]                 == [0,0,0,0]
-    assert dut.get_instruction_Q_outputs()["IS_STORE"]                == [0,0,0,0]
+    assert dut.get_instruction_Q_outputs()["is_load"]                 == [0,0,0,0]
+    assert dut.get_instruction_Q_outputs()["is_store"]                == [0,0,0,0]
 
 
     await dut.update()  # wait for rename to complete
@@ -178,8 +178,8 @@ async def test_rename_out_addi(dut):
 
     assert dut.get_renamed_decoded_fetch_packet()["RS1"]                     == [0,0,0,0]
     assert dut.get_renamed_decoded_fetch_packet()["RS1_valid"]               == [1,1,1,1]
-    assert dut.get_renamed_decoded_fetch_packet()["IS_LOAD"]                 == [0,0,0,0]
-    assert dut.get_renamed_decoded_fetch_packet()["IS_STORE"]                == [0,0,0,0]
+    assert dut.get_renamed_decoded_fetch_packet()["is_load"]                 == [0,0,0,0]
+    assert dut.get_renamed_decoded_fetch_packet()["is_store"]                == [0,0,0,0]
 
 
 @cocotb.test()
@@ -214,8 +214,8 @@ async def test_frontend_outputs(dut):
 
     assert dut.get_renamed_decoded_fetch_packet()["RS1"]                     == [0,0,0,0]
     assert dut.get_renamed_decoded_fetch_packet()["RS1_valid"]               == [1,1,1,1]
-    assert dut.get_renamed_decoded_fetch_packet()["IS_LOAD"]                 == [0,0,0,0]
-    assert dut.get_renamed_decoded_fetch_packet()["IS_STORE"]                == [0,0,0,0]
+    assert dut.get_renamed_decoded_fetch_packet()["is_load"]                 == [0,0,0,0]
+    assert dut.get_renamed_decoded_fetch_packet()["is_store"]                == [0,0,0,0]
 
 
 @cocotb.test()
@@ -251,7 +251,7 @@ async def test_mispredictions(dut):
     commit_inputs["GHR"] = 0
     commit_inputs["TOS"] = 0
     commit_inputs["NEXT"] = 0
-    commit_inputs["RAT_IDX"] = 0
+    commit_inputs["RAT_index"] = 0
 
     dut.write_commit(data = commit_inputs)
     await RisingEdge(dut.clock())
@@ -275,7 +275,7 @@ async def test_mispredictions(dut):
     commit_inputs["GHR"] = 0
     commit_inputs["TOS"] = 0
     commit_inputs["NEXT"] = 0
-    commit_inputs["RAT_IDX"] = 0
+    commit_inputs["RAT_index"] = 0
 
     dut.write_commit(data = commit_inputs)
     await RisingEdge(dut.clock())

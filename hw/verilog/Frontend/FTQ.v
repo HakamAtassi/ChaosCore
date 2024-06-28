@@ -66,7 +66,7 @@ module FTQ(
   input  [15:0] io_commit_GHR,
   input  [6:0]  io_commit_TOS,
                 io_commit_NEXT,
-  input  [3:0]  io_commit_RAT_IDX,
+  input  [3:0]  io_commit_RAT_index,
   output        io_FTQ_valid,
   output [31:0] io_FTQ_fetch_PC,
   output        io_FTQ_is_misprediction,

@@ -22,7 +22,7 @@ class PC_gen_dut:
         commit["commit_GHR"] = self.PC_gen.io_commit_GHR.value
         commit["TOS"] = self.PC_gen.io_commit_TOS.value
         commit["NEXT"] = self.PC_gen.io_commit_NEXT.value
-        commit["RAT_IDX"] = self.PC_gen.io_commit_RAT_IDX.value
+        commit["RAT_index"] = self.PC_gen.io_commit_RAT_index.value
         return commit
 
     def PC_gen_prediction_valid(self):

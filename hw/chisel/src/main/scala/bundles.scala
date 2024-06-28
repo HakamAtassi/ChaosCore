@@ -122,26 +122,29 @@ class BTB_entry(parameters:Parameters) extends Bundle{
 
 class commit(parameters:Parameters) extends Bundle{
     import parameters._
+    val physicalRegBits = log2Ceil(physicalRegCount)
 
-    val valid               =   Bool()
-
-    val fetch_PC            = UInt(32.W)    // To update gshare/PHT
-    val T_NT                = Bool()    // To update BTB (BTB only updates on taken branches)
-    // ROB index or something?
-    val ROB_index           = UInt(log2Ceil(ROBEntires).W)
+    val fetch_PC                = UInt(32.W)    // To update gshare/PHT
+    val T_NT                    = Bool()    // To update BTB (BTB only updates on taken branches)
+    val ROB_index               = UInt(log2Ceil(ROBEntires).W)
     
-    //val target              = UInt(32.W)
-    val br_type             = _br_type()
-    val fetch_packet_index  = UInt(log2Ceil(fetchWidth).W)
+    val br_type                 = _br_type()
+    val fetch_packet_index      = UInt(log2Ceil(fetchWidth).W)
 
-    val is_misprediction    = Bool()
-    val expected_PC         = UInt(32.W)    // For BTB aswell
+    val is_misprediction        = Bool()
+    val expected_PC             = UInt(32.W)    // For BTB aswell
 
     // SAVED STATE
-    val GHR                 = UInt(GHRWidth.W)
-    val TOS                 = UInt(log2Ceil(RASEntries).W)  // To reset GHR
-    val NEXT                = UInt(log2Ceil(RASEntries).W)  // To reset GHR
-    val RAT_IDX             = UInt(log2Ceil(RATCheckpointCount).W)  // To reset GHR
+    val GHR                     = UInt(GHRWidth.W)
+    val TOS                     = UInt(log2Ceil(RASEntries).W)
+    val NEXT                    = UInt(log2Ceil(RASEntries).W)
+    val RAT_index               = UInt(log2Ceil(RATCheckpointCount).W)
+
+    val free_list_front_pointer = UInt((log2Ceil(physicalRegCount) + 1).W)
+
+    val RD                      = Vec(fetchWidth, UInt(physicalRegBits.W))
+    val RD_valid                = Vec(fetchWidth, Bool())
+
 }
 
 class RAS_update extends Bundle{    // Request call or ret
@@ -229,19 +232,20 @@ class decoded_instruction(parameters:Parameters) extends Bundle{
     val MULTIPLY            =  Bool()
 
     val IS_IMM              =  Bool() 
-    val IS_LOAD             =  Bool()
-    val IS_STORE            =  Bool()
+    val is_load             =  Bool()
+    val is_store            =  Bool()
     // ADD atomic instructions
 }
 
 
 class decoded_fetch_packet(parameters:Parameters) extends Bundle{
     import parameters._
-    val fetch_PC            = UInt(32.W)
-    val decoded_instruction = Vec(fetchWidth, new decoded_instruction(parameters))
-    val valid_bits          = Vec(fetchWidth, Bool())
+    val fetch_PC                = UInt(32.W)
+    val decoded_instruction     = Vec(fetchWidth, new decoded_instruction(parameters))
+    val valid_bits              = Vec(fetchWidth, Bool())
 
-    val RAT_IDX             = UInt(log2Ceil(RATCheckpointCount).W)
+    val RAT_index               = UInt(log2Ceil(RATCheckpointCount).W)
+    val free_list_front_pointer = UInt((log2Ceil(physicalRegCount) + 1).W)
 }
 
 // decoded instruction after it goes through register read
@@ -353,23 +357,32 @@ class ROB_output(parameters:Parameters) extends Bundle{
     import parameters._
     
     // 1 per row data
-    val fetch_PC    = UInt(32.W)
-    val RAT_IDX     = UInt(log2Ceil(RATCheckpointCount).W)
-    val ROB_index   = UInt(log2Ceil(RATCheckpointCount).W)
+    val row_valid               = Bool()
+    val fetch_PC                = UInt(32.W)
+    val RAT_index               = UInt(log2Ceil(RATCheckpointCount).W)
+    val ROB_index               = UInt(log2Ceil(ROBEntires).W)
+
+    val free_list_front_pointer = UInt((log2Ceil(physicalRegCount) + 1).W)
 
     // N per row 
-    val ROB_entries = Vec(fetchWidth, new ROB_entry(parameters))
+    val ROB_entries             = Vec(fetchWidth, new ROB_entry(parameters))    // "static" instruction data
+    val complete                = Vec(fetchWidth, Bool())                       // Is instruction complete
+    //val exception                = Vec(fetchWidth, Bool())                      // Is instruction complete
 }
 
-class ROB_shared(parameters:Parameters) extends Bundle{   //FIXME: this name sucks
+class ROB_shared(parameters:Parameters) extends Bundle{
     import parameters._
-    val row_valid   = Bool()
-    val fetch_PC    = UInt(32.W)
-    val RAT_IDX     = UInt(log2Ceil(RATCheckpointCount).W)
+
+    val fetch_PC                = UInt(32.W)
+    val RAT_index               = UInt(log2Ceil(RATCheckpointCount).W)
+
+    val free_list_front_pointer = UInt((log2Ceil(physicalRegCount) + 1).W)
 }
 
 // ROB entries that pertain to each instruction independantly (this info goes in a standalone bank)
 class ROB_entry(parameters:Parameters) extends Bundle{
+    import parameters._
+
     val valid       = Bool()  // is this particular instruction valid?
     val is_branch   = Bool()
 
@@ -377,7 +390,8 @@ class ROB_entry(parameters:Parameters) extends Bundle{
     val is_load     = Bool()
     val is_store    = Bool()
 
-    //val RD          =   UInt(log2Ceil(physicalRegCount).W)
+    val RD          =   UInt(log2Ceil(physicalRegCount).W)
+    val RD_valid    =   Bool()
     //val RD_old      =   UInt(log2Ceil(physicalRegCount).W)
 }
 
@@ -413,8 +427,6 @@ class MEMRS_entry(parameters:Parameters) extends Bundle{
 
     val commited            =  Bool()  // Has this instruction commited
     val valid               =  Bool()  // Is whole RS entry valid
-
-
 }
 
 ////////////////////////////

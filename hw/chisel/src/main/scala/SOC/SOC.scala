@@ -55,7 +55,7 @@ class SOC(parameters:Parameters, addressMap:AddressMap) extends Module{
 
     val ChaosCore = Module(new ChaosCore(parameters))
 
-    val flush = ChaosCore.io.commit.valid && ChaosCore.io.commit.is_misprediction
+    val flush = ChaosCore.io.commit.valid && ChaosCore.io.commit.bits.is_misprediction
 
 
 

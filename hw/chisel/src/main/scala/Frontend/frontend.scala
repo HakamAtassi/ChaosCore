@@ -32,84 +32,6 @@ package ChaosCore
 import chisel3._
 import chisel3.util._
 
-class instruction_queue[T <: Data](gen: T, parameters: Parameters) extends Module {
-  import parameters._
-
-  val io = IO(new Bundle {
-    // input
-    val in = Vec(fetchWidth, Flipped(Decoupled(gen)))
-
-    // output
-    val out = Vec(dispatchWidth, Decoupled(gen))
-  })
-
-
-    ////////////////////////
-    // MODULE ASSUMPTIONS //
-    ////////////////////////
-    require(isPow2(instruction_queue_depth), "Instruction Queue entires not a power of 2")
-
-    ///////////////////////
-    // INSTRUCTION QUEUE //
-    //////////////////////
-
-    val queue = RegInit(VecInit(Seq.fill(instruction_queue_depth)(0.U.asTypeOf(gen))))
-    val valid = RegInit(VecInit(Seq.fill(instruction_queue_depth)(0.B)))
-
-    val pointer_size    = log2Ceil(instruction_queue_depth)+1
-    val front_pointer   = RegInit(UInt(pointer_size.W), 0.U)
-    val back_pointer    = RegInit(UInt(pointer_size.W), 0.U)
-
-    val front_index     = front_pointer(pointer_size-2, 0)
-    val back_index      = back_pointer(pointer_size-2, 0)
-
-    
-    /////////////
-    // ENQUEUE //
-    /////////////
-
-    // FIXME: I think this eliminates the need for the RAT WAW handler
-    val valid_in_bits = io.in.map(_.valid)
-
-    for(i <- 0 until fetchWidth){
-        when(io.in(i).valid & io.in(i).ready){
-            queue(back_index + PopCount(valid_in_bits.take(i))) := io.in(i).bits
-            valid(back_index + PopCount(valid_in_bits.take(i))) := true.B
-        }
-    }
-
-    back_pointer    :=  back_pointer + PopCount(valid_in_bits)  // FIXME: what if not ready
-
-    /////////////
-    // DEQUEUE //
-    /////////////
-
-    // Assign data
-    for(i <- 0 until dispatchWidth){
-        io.out(i).bits  := queue(front_index + i.U)
-        io.out(i).valid := valid(front_index + i.U)
-    }
-
-    // Assign ready 
-    for (i <- 0 until fetchWidth) {
-        io.in(i).ready := !valid(back_index + i.U)
-    }
-
-    // Move pointer & clear
-
-    val ready_in_bits = io.out.map(_.ready)
-
-    for(i <- 0 until dispatchWidth){
-        // last condition is to ignore all ready bits after a 0 (non thermometor encoded)
-        when(io.out(i).valid & io.out(i).ready & ready_in_bits.take(i+1).reduce(_ && _)){
-            queue(front_index + i.U)    := 0.U.asTypeOf(gen)
-            valid(front_index + i.U)    := 0.B
-            front_pointer               := front_pointer + 1.U
-        }
-    }
-}
-
-
 
 class frontend(parameters:Parameters) extends Module{
     import parameters._
@@ -123,14 +45,14 @@ class frontend(parameters:Parameters) extends Module{
 
     val io = IO(new Bundle{
         // FLUSH //
-        val flush                   =   Input(Bool())
+        val flush                           =   Input(Bool())
 
         // DRAM CHANNELS //
-        val memory_request                    =   Decoupled(new memory_request(parameters))
-        val memory_response                   =   Flipped(Decoupled(new fetch_packet(parameters)))
+        val memory_request                  =   Decoupled(new memory_request(parameters))
+        val memory_response                 =   Flipped(Decoupled(new fetch_packet(parameters)))
         
         // COMMIT // 
-        val commit                          =   Input(new commit(parameters))
+        val commit                          =   Flipped(ValidIO(new commit(parameters)))
         
         // PREDICTIONS //
         val predictions                     =   Decoupled(new FTQ_entry(parameters))
@@ -156,7 +78,7 @@ class frontend(parameters:Parameters) extends Module{
 
     val rename              = Module(new rename(parameters))
 
-    val flush = io.commit.is_misprediction && io.commit.valid
+    val flush = io.commit.bits.is_misprediction && io.commit.valid
 
     ///////////////////////
     // INSTRUCTION FETCH //

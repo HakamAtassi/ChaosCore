@@ -108,8 +108,8 @@ class MEMFU(parameters:Parameters) extends Module{
     val FU_input_valid          =   Mux(use_buffered_FU_input, FU_input_valid_reg,    io.FU_input.valid)
 
 
-    val IS_LOAD                 =   FU_input.decoded_instruction.IS_LOAD  && FU_input_valid
-    val IS_STORE                =   FU_input.decoded_instruction.IS_STORE && FU_input_valid
+    val is_load                 =   FU_input.decoded_instruction.is_load  && FU_input_valid
+    val is_store                =   FU_input.decoded_instruction.is_store && FU_input_valid
 
     // Operand data
     val RS1_data                =   FU_input.RS1_data
@@ -123,18 +123,18 @@ class MEMFU(parameters:Parameters) extends Module{
     // Op select
     val FUNCT3                  =   FU_input.decoded_instruction.FUNCT3
 
-    val SB                      =   IS_STORE && FUNCT3 === "b000".U && FU_input_valid
-    val SH                      =   IS_STORE && FUNCT3 === "b001".U && FU_input_valid
-    val SW                      =   IS_STORE && FUNCT3 === "b010".U && FU_input_valid
+    val SB                      =   is_store && FUNCT3 === "b000".U && FU_input_valid
+    val SH                      =   is_store && FUNCT3 === "b001".U && FU_input_valid
+    val SW                      =   is_store && FUNCT3 === "b010".U && FU_input_valid
 
-    val LB                      =   IS_LOAD && FUNCT3 === "b000".U  && FU_input_valid
-    val LH                      =   IS_LOAD && FUNCT3 === "b001".U  && FU_input_valid
-    val LW                      =   IS_LOAD && FUNCT3 === "b010".U  && FU_input_valid
-    val LBU                     =   IS_LOAD && FUNCT3 === "b100".U  && FU_input_valid
-    val LHU                     =   IS_LOAD && FUNCT3 === "b101".U  && FU_input_valid
+    val LB                      =   is_load && FUNCT3 === "b000".U  && FU_input_valid
+    val LH                      =   is_load && FUNCT3 === "b001".U  && FU_input_valid
+    val LW                      =   is_load && FUNCT3 === "b010".U  && FU_input_valid
+    val LBU                     =   is_load && FUNCT3 === "b100".U  && FU_input_valid
+    val LHU                     =   is_load && FUNCT3 === "b101".U  && FU_input_valid
 
 
-    val instruction_complete    = RegNext((IS_LOAD && io.memory_response.fire) || (IS_STORE && io.memory_request.fire))
+    val instruction_complete    = RegNext((is_load && io.memory_response.fire) || (is_store && io.memory_request.fire))
 
 
     /////////////////////
@@ -160,8 +160,8 @@ class MEMFU(parameters:Parameters) extends Module{
     ///////////////////
 
 
-    io.memory_request.valid           := IS_LOAD || IS_STORE
-    io.memory_request.bits.wr_en      := IS_STORE
+    io.memory_request.valid           := is_load || is_store
+    io.memory_request.bits.wr_en      := is_store
     io.memory_request.bits.wr_data    := wr_data
     io.memory_request.bits.addr       := addr
 
@@ -224,7 +224,7 @@ class MEMFU(parameters:Parameters) extends Module{
 
     io.FU_output.bits.RD_data                   := RegNext(rd_data.asUInt)
     io.FU_output.bits.RD                        := RegNext(RD)
-    io.FU_output.bits.RD_valid                  := RegNext(IS_LOAD)
+    io.FU_output.bits.RD_valid                  := RegNext(is_load)
 
     io.FU_output.bits.ROB_index                 := RegNext(io.FU_input.bits.decoded_instruction.ROB_index)
 

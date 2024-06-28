@@ -273,7 +273,7 @@ class rename(parameters:Parameters) extends Module{
         val flush                           =   Input(Bool())
 
         // CHECKPOINT 
-        val commit                          =   Input(new commit(parameters))
+        val commit                          =   Flipped(ValidIO(new commit(parameters)))
 
         // Instruction input (decoded)
         val decoded_fetch_packet            =   Flipped(Decoupled(new decoded_fetch_packet(parameters)))
@@ -297,15 +297,19 @@ class rename(parameters:Parameters) extends Module{
 
     io.renamed_decoded_fetch_packet.bits                := RegNext(io.decoded_fetch_packet.bits)
 
+    val renamed_decoded_fetch_packet        =   Wire(new decoded_fetch_packet(parameters))
+
+    renamed_decoded_fetch_packet    := RegNext(io.decoded_fetch_packet.bits)
+
     ////////////////
     // CHECKPOINT //
     ////////////////
 
 
     // GENERATE SIGNALS
-    val restore_checkpoint          = io.commit.valid && io.commit.is_misprediction
-    val restore_checkpoint_value    = io.commit.RAT_IDX
-    val free_checkpoint             = io.commit.valid && !io.commit.is_misprediction && (io.commit.br_type =/= _br_type.NONE)
+    val restore_checkpoint          = io.commit.valid && io.commit.bits.is_misprediction
+    val restore_checkpoint_value    = io.commit.bits.RAT_index
+    val free_checkpoint             = io.commit.valid && !io.commit.bits.is_misprediction && (io.commit.bits.br_type =/= _br_type.NONE)
     val create_checkpoint           = Wire(Bool())
 
     val create_checkpoint_vec   = Wire(Vec(fetchWidth, Bool()))
@@ -367,14 +371,15 @@ class rename(parameters:Parameters) extends Module{
             when(RegNext(io.decoded_fetch_packet.bits.decoded_instruction(i).RS2) === RegNext(io.decoded_fetch_packet.bits.decoded_instruction(j).RD)){
                 renamed_RS2(i) := RegNext(free_list.io.renamed_values(j))
             }
-
         }
     }
 
     for(i <- 0 until fetchWidth){
-        io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS1             := renamed_RS1(i)
-        io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS2             := renamed_RS2(i)
+        renamed_decoded_fetch_packet.decoded_instruction(i).RS1             := renamed_RS1(i)
+        renamed_decoded_fetch_packet.decoded_instruction(i).RS2             := renamed_RS2(i)
     }
+
+    renamed_decoded_fetch_packet.RAT_index                  := RegNext(RAT.io.active_checkpoint_value)
 
     ///////////////
     // FREE LIST //
@@ -388,24 +393,40 @@ class rename(parameters:Parameters) extends Module{
         free_list.io.rename_valid(i)                   :=   io.decoded_fetch_packet.bits.decoded_instruction(i).RD_valid && 
                                                             io.decoded_fetch_packet.valid && 
                                                             (io.decoded_fetch_packet.bits.decoded_instruction(i).RD =/= 0.U)
-        // allocate completed values
-        free_list.io.free_valid(i)                     :=   io.FU_outputs(i).bits.RD_valid
-        free_list.io.free_values(i)                    :=   io.FU_outputs(i).bits.RD
     }
-
-    io.renamed_decoded_fetch_packet.bits.RAT_IDX        := RegNext(RAT.io.active_checkpoint_value)
+    free_list.io.commit := io.commit
     
     for(i <- 0 until fetchWidth){
-        io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RD              := RegNext(free_list.io.renamed_values(i))
-        io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RD_valid        := RegNext(io.decoded_fetch_packet.bits.decoded_instruction(i).RD_valid)
-        io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).ready_bits      := RAT.io.ready_bits(i)
+        renamed_decoded_fetch_packet.decoded_instruction(i).RD              := RegNext(free_list.io.renamed_values(i))
+        renamed_decoded_fetch_packet.decoded_instruction(i).RD_valid        := RegNext(io.decoded_fetch_packet.bits.decoded_instruction(i).RD_valid)
+        renamed_decoded_fetch_packet.decoded_instruction(i).ready_bits      := RAT.io.ready_bits(i)
     }
+
+    renamed_decoded_fetch_packet.free_list_front_pointer    := RegNext(free_list.io.free_list_front_pointer)
+
+
+
+    /////////////////
+    // SKID BUFFER //
+    /////////////////
+
+
+    // FIXME: there maybe something wrong here...
+    val renamed_decoded_fetch_packet_skid_buffer = Module(new Queue(new decoded_fetch_packet(parameters), 1, flow=true, hasFlush=true, useSyncReadMem=false))
+    
+
+    renamed_decoded_fetch_packet_skid_buffer.io.enq.bits         :=  renamed_decoded_fetch_packet
+    renamed_decoded_fetch_packet_skid_buffer.io.enq.valid        :=  RegNext(io.decoded_fetch_packet.valid && !io.flush)
+
+
+    renamed_decoded_fetch_packet_skid_buffer.io.deq         <> io.renamed_decoded_fetch_packet
+    renamed_decoded_fetch_packet_skid_buffer.io.flush.get   <> io.flush
+
 
     /////////////////
     // READY/VALID //
     /////////////////
 
     io.decoded_fetch_packet.ready                       := !free_list.io.empty && io.renamed_decoded_fetch_packet.ready
-    io.renamed_decoded_fetch_packet.valid               := RegNext(io.decoded_fetch_packet.valid && !io.flush)
 
 }

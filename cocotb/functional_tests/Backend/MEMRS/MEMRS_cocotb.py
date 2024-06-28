@@ -68,8 +68,8 @@ async def test_write_1(dut):
     allocate_inputs["SUBTRACT"] = [1, 0, 0, 0]
     allocate_inputs["MULTIPLY"] = [0, 0, 0, 0]
     allocate_inputs["IMMEDIATE"] = [0, 0, 0, 0]
-    allocate_inputs["IS_LOAD"] = [0, 0, 0, 0]
-    allocate_inputs["IS_STORE"] = [0, 0, 0, 0]
+    allocate_inputs["is_load"] = [0, 0, 0, 0]
+    allocate_inputs["is_store"] = [0, 0, 0, 0]
 
     dut.write_allocate(allocate_inputs)
 
@@ -120,8 +120,8 @@ async def test_write_many(dut):
     allocate_inputs["SUBTRACT"] = [1, 0, 0, 0]
     allocate_inputs["MULTIPLY"] = [0, 0, 0, 0]
     allocate_inputs["IMMEDIATE"] = [0, 0, 0, 0]
-    allocate_inputs["IS_LOAD"] = [0, 0, 0, 0]
-    allocate_inputs["IS_STORE"] = [0, 0, 0, 0]
+    allocate_inputs["is_load"] = [0, 0, 0, 0]
+    allocate_inputs["is_store"] = [0, 0, 0, 0]
 
     dut.write_allocate(allocate_inputs)
 
@@ -194,8 +194,8 @@ async def test_full(dut):
     allocate_inputs["SUBTRACT"] = [1, 0, 0, 0]
     allocate_inputs["MULTIPLY"] = [0, 0, 0, 0]
     allocate_inputs["IMMEDIATE"] = [0, 0, 0, 0]
-    allocate_inputs["IS_LOAD"] = [0, 0, 0, 0]
-    allocate_inputs["IS_STORE"] = [0, 0, 0, 0]
+    allocate_inputs["is_load"] = [0, 0, 0, 0]
+    allocate_inputs["is_store"] = [0, 0, 0, 0]
 
 
     for i in range(16):
@@ -254,8 +254,8 @@ async def test_full_but_1(dut):
     allocate_inputs["SUBTRACT"] = [1, 0, 0, 0]
     allocate_inputs["MULTIPLY"] = [0, 0, 0, 0]
     allocate_inputs["IMMEDIATE"] = [0, 0, 0, 0]
-    allocate_inputs["IS_LOAD"] = [0, 0, 0, 0]
-    allocate_inputs["IS_STORE"] = [0, 0, 0, 0]
+    allocate_inputs["is_load"] = [0, 0, 0, 0]
+    allocate_inputs["is_store"] = [0, 0, 0, 0]
 
 
     for i in range(15):
@@ -318,8 +318,8 @@ async def test_full_but_2(dut):
     allocate_inputs["SUBTRACT"] = [1, 0, 0, 0]
     allocate_inputs["MULTIPLY"] = [0, 0, 0, 0]
     allocate_inputs["IMMEDIATE"] = [0, 0, 0, 0]
-    allocate_inputs["IS_LOAD"] = [0, 0, 0, 0]
-    allocate_inputs["IS_STORE"] = [0, 0, 0, 0]
+    allocate_inputs["is_load"] = [0, 0, 0, 0]
+    allocate_inputs["is_store"] = [0, 0, 0, 0]
 
 
     for i in range(14):
@@ -385,8 +385,8 @@ async def test_full_but_3(dut):
     allocate_inputs["SUBTRACT"] = [1, 0, 0, 0]
     allocate_inputs["MULTIPLY"] = [0, 0, 0, 0]
     allocate_inputs["IMMEDIATE"] = [0, 0, 0, 0]
-    allocate_inputs["IS_LOAD"] = [0, 0, 0, 0]
-    allocate_inputs["IS_STORE"] = [0, 0, 0, 0]
+    allocate_inputs["is_load"] = [0, 0, 0, 0]
+    allocate_inputs["is_store"] = [0, 0, 0, 0]
 
 
     for i in range(13):
@@ -455,8 +455,8 @@ async def test_full_but_4(dut):
     allocate_inputs["SUBTRACT"] = [1, 0, 0, 0]
     allocate_inputs["MULTIPLY"] = [0, 0, 0, 0]
     allocate_inputs["IMMEDIATE"] = [0, 0, 0, 0]
-    allocate_inputs["IS_LOAD"] = [0, 0, 0, 0]
-    allocate_inputs["IS_STORE"] = [0, 0, 0, 0]
+    allocate_inputs["is_load"] = [0, 0, 0, 0]
+    allocate_inputs["is_store"] = [0, 0, 0, 0]
 
 
     for i in range(12):
@@ -527,8 +527,8 @@ async def test_write_1_FU_complete(dut):
     allocate_inputs["SUBTRACT"] = [1, 0, 0, 0]
     allocate_inputs["MULTIPLY"] = [0, 0, 0, 0]
     allocate_inputs["IMMEDIATE"] = [0, 0, 0, 0]
-    allocate_inputs["IS_LOAD"] = [0, 0, 0, 0]
-    allocate_inputs["IS_STORE"] = [0, 0, 0, 0]
+    allocate_inputs["is_load"] = [0, 0, 0, 0]
+    allocate_inputs["is_store"] = [0, 0, 0, 0]
 
     dut.write_allocate(allocate_inputs)
 
@@ -614,8 +614,8 @@ async def test_good_to_go(dut):
     allocate_inputs["SUBTRACT"] = [1, 0, 0, 0]
     allocate_inputs["MULTIPLY"] = [0, 0, 0, 0]
     allocate_inputs["IMMEDIATE"] = [0, 0, 0, 0]
-    allocate_inputs["IS_LOAD"] = [0, 0, 0, 0]
-    allocate_inputs["IS_STORE"] = [0, 0, 0, 0]
+    allocate_inputs["is_load"] = [0, 0, 0, 0]
+    allocate_inputs["is_store"] = [0, 0, 0, 0]
 
     dut.write_allocate(allocate_inputs)
 
@@ -681,7 +681,7 @@ async def test_good_to_go(dut):
     commit_inputs["GHR"]                    = 0
     commit_inputs["TOS"]                    = 0
     commit_inputs["NEXT"]                   = 0
-    commit_inputs["RAT_IDX"]                = 0
+    commit_inputs["RAT_index"]                = 0
 
     dut.write_commit(commit_inputs)
     await RisingEdge(dut.clock())
@@ -731,8 +731,8 @@ async def test_good_to_go_backed_up(dut):
     allocate_inputs["SUBTRACT"] = [1, 0, 0, 0]
     allocate_inputs["MULTIPLY"] = [0, 0, 0, 0]
     allocate_inputs["IMMEDIATE"] = [0, 0, 0, 0]
-    allocate_inputs["IS_LOAD"] = [0, 0, 0, 0]
-    allocate_inputs["IS_STORE"] = [0, 0, 0, 0]
+    allocate_inputs["is_load"] = [0, 0, 0, 0]
+    allocate_inputs["is_store"] = [0, 0, 0, 0]
 
     dut.write_allocate(allocate_inputs)
 
@@ -815,7 +815,7 @@ async def test_good_to_go_backed_up(dut):
     commit_inputs["GHR"]                    = 0
     commit_inputs["TOS"]                    = 0
     commit_inputs["NEXT"]                   = 0
-    commit_inputs["RAT_IDX"]                = 0
+    commit_inputs["RAT_index"]                = 0
 
     dut.write_commit(commit_inputs)
     await RisingEdge(dut.clock())
@@ -904,8 +904,8 @@ async def test_write_1_not_first(dut):
     allocate_inputs["SUBTRACT"] = [0, 1, 0, 0]
     allocate_inputs["MULTIPLY"] = [0, 0, 0, 0]
     allocate_inputs["IMMEDIATE"] = [0, 0, 0, 0]
-    allocate_inputs["IS_LOAD"] = [0, 0, 0, 0]
-    allocate_inputs["IS_STORE"] = [0, 0, 0, 0]
+    allocate_inputs["is_load"] = [0, 0, 0, 0]
+    allocate_inputs["is_store"] = [0, 0, 0, 0]
 
     dut.write_allocate(allocate_inputs)
 

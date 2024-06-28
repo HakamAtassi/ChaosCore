@@ -117,7 +117,7 @@ class fetch_packet_decoder_agent:
             assert model_decoded_fetch_packet["needs_ALU"]              == dut_decoded_fetch_packet["needs_ALU"]
             assert model_decoded_fetch_packet["needs_branch_unit"]      == dut_decoded_fetch_packet["needs_branch_unit"]
             assert model_decoded_fetch_packet["IS_IMM"]                 == dut_decoded_fetch_packet["IS_IMM"]
-            assert model_decoded_fetch_packet["IS_LOAD"]                == dut_decoded_fetch_packet["IS_LOAD"]
-            assert model_decoded_fetch_packet["IS_STORE"]               == dut_decoded_fetch_packet["IS_STORE"]
+            assert model_decoded_fetch_packet["is_load"]                == dut_decoded_fetch_packet["is_load"]
+            assert model_decoded_fetch_packet["is_store"]               == dut_decoded_fetch_packet["is_store"]
 
 

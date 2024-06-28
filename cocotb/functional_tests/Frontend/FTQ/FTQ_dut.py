@@ -122,7 +122,7 @@ class FTQ_dut:
         FTQ["GHR"]                  = [0]*16
         FTQ["NEXT"]                 = [0]*16
         FTQ["TOS"]                  = [0]*16
-        FTQ["RAT_IDX"]              = [0]*16
+        FTQ["RAT_index"]              = [0]*16
         FTQ["resolved_PC"]          = [0]*16
 
         for i in range(16):
@@ -218,7 +218,7 @@ input  [31:0] io_predictions_bits_predicted_expected_PC,
 input  [15:0] io_predictions_bits_GHR,
 input  [6:0]  io_predictions_bits_NEXT,
             io_predictions_bits_TOS,
-input  [3:0]  io_predictions_bits_RAT_IDX,
+input  [3:0]  io_predictions_bits_RAT_index,
 input         io_commit_valid,
 input  [31:0] io_commit_fetch_PC,
 input         io_commit_T_NT,
@@ -228,7 +228,7 @@ input  [31:0] io_commit_expected_PC,
 input  [15:0] io_commit_GHR,
 input  [6:0]  io_commit_TOS,
             io_commit_NEXT,
-input  [3:0]  io_commit_RAT_IDX,
+input  [3:0]  io_commit_RAT_index,
 output        io_FTQ_valid,
 output [1:0]  io_FTQ_dominant_index,
 output [31:0] io_FTQ_fetch_PC,
@@ -237,5 +237,5 @@ output [31:0] io_FTQ_predicted_expected_PC,
 output [15:0] io_FTQ_GHR,
 output [6:0]  io_FTQ_NEXT,
             io_FTQ_TOS,
-output [3:0]  io_FTQ_RAT_IDX
+output [3:0]  io_FTQ_RAT_index
 """

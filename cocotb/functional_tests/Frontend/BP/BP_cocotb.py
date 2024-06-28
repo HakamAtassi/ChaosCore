@@ -41,7 +41,7 @@ async def test_BTB_write(dut):
     commit_inputs["GHR"]                = 0xF
     commit_inputs["TOS"]                = 0
     commit_inputs["NEXT"]               = 0
-    commit_inputs["RAT_IDX"]            = 0
+    commit_inputs["RAT_index"]            = 0
 
     dut.write_commit(commit_inputs)
 
@@ -76,7 +76,7 @@ async def test_BTB_overwrite(dut):
     commit_inputs["GHR"]                = 0xF
     commit_inputs["TOS"]                = 0
     commit_inputs["NEXT"]               = 0
-    commit_inputs["RAT_IDX"]            = 0
+    commit_inputs["RAT_index"]            = 0
 
     dut.write_commit(commit_inputs)
 
@@ -113,7 +113,7 @@ async def test_BTB_indexing(dut):
     commit_inputs["GHR"]                = 0xF
     commit_inputs["TOS"]                = 0
     commit_inputs["NEXT"]               = 0
-    commit_inputs["RAT_IDX"]            = 0
+    commit_inputs["RAT_index"]            = 0
 
     dut.write_commit(commit_inputs)
 
@@ -149,7 +149,7 @@ async def test_BTB_indexing_2(dut):
     commit_inputs["GHR"]                = 0xF
     commit_inputs["TOS"]                = 0
     commit_inputs["NEXT"]               = 0
-    commit_inputs["RAT_IDX"]            = 0
+    commit_inputs["RAT_index"]            = 0
 
     dut.write_commit(commit_inputs)
 
@@ -184,7 +184,7 @@ async def test_BTB_indexing_4(dut):
     commit_inputs["GHR"]                = 0xF
     commit_inputs["TOS"]                = 0
     commit_inputs["NEXT"]               = 0
-    commit_inputs["RAT_IDX"]            = 0
+    commit_inputs["RAT_index"]            = 0
 
     dut.write_commit(commit_inputs)
 
@@ -220,7 +220,7 @@ async def test_BTB_non_branch(dut):
     commit_inputs["GHR"]                = 0xF
     commit_inputs["TOS"]                = 0
     commit_inputs["NEXT"]               = 0
-    commit_inputs["RAT_IDX"]            = 0
+    commit_inputs["RAT_index"]            = 0
 
     dut.write_commit(commit_inputs)
 
@@ -255,7 +255,7 @@ async def test_BTB_NT(dut):
     commit_inputs["GHR"]                = 0xF
     commit_inputs["TOS"]                = 0
     commit_inputs["NEXT"]               = 0
-    commit_inputs["RAT_IDX"]            = 0
+    commit_inputs["RAT_index"]            = 0
 
     dut.write_commit(commit_inputs)
 
@@ -290,7 +290,7 @@ async def test_1_PHT_write(dut):
     commit_inputs["GHR"]                = 0x0
     commit_inputs["TOS"]                = 0
     commit_inputs["NEXT"]               = 0
-    commit_inputs["RAT_IDX"]            = 0
+    commit_inputs["RAT_index"]            = 0
 
     dut.write_commit(commit_inputs)
 
@@ -328,7 +328,7 @@ async def test_2_PHT_write(dut):
     commit_inputs["GHR"]                = 0x0
     commit_inputs["TOS"]                = 0
     commit_inputs["NEXT"]               = 0
-    commit_inputs["RAT_IDX"]            = 0
+    commit_inputs["RAT_index"]            = 0
 
     dut.write_commit(commit_inputs)
 
@@ -369,7 +369,7 @@ async def test_3_PHT_write(dut):
     commit_inputs["GHR"]                = 0x0
     commit_inputs["TOS"]                = 0
     commit_inputs["NEXT"]               = 0
-    commit_inputs["RAT_IDX"]            = 0
+    commit_inputs["RAT_index"]            = 0
 
     dut.write_commit(commit_inputs)
 
@@ -411,7 +411,7 @@ async def test_PHT_up_down(dut):
     commit_inputs["GHR"]                = 0x0
     commit_inputs["TOS"]                = 0
     commit_inputs["NEXT"]               = 0
-    commit_inputs["RAT_IDX"]            = 0
+    commit_inputs["RAT_index"]            = 0
 
     dut.write_commit(commit_inputs)
 
@@ -447,7 +447,7 @@ async def test_PHT_up_down(dut):
     commit_inputs["GHR"]                = 0x0
     commit_inputs["TOS"]                = 0
     commit_inputs["NEXT"]               = 0
-    commit_inputs["RAT_IDX"]            = 0
+    commit_inputs["RAT_index"]            = 0
 
     dut.write_commit(commit_inputs)
     await RisingEdge(dut.clock())

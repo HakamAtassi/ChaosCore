@@ -24,8 +24,8 @@ def generate_null_allocate():
     allocate_input["MULTIPLY"]                     =  [0]*4
     allocate_input["IMMEDIATE"]                    =  [0]*4
     allocate_input["is_branch"]                    =  [0]*4
-    allocate_input["IS_LOAD"]                      =  [0]*4
-    allocate_input["IS_STORE"]                     =  [0]*4
+    allocate_input["is_load"]                      =  [0]*4
+    allocate_input["is_store"]                     =  [0]*4
     allocate_input["valid_bits"]                   =  [0]*4
 
     return allocate_input
@@ -60,7 +60,7 @@ def generate_null_commit():
     commit_inputs["GHR"] = 0
     commit_inputs["TOS"] = 0
     commit_inputs["NEXT"] = 0
-    commit_inputs["RAT_IDX"] = 0
+    commit_inputs["RAT_index"] = 0
     return commit_inputs
 
 def generate_null_PC_file_inputs():

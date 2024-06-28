@@ -107,8 +107,8 @@ class SOC_dut:
         outputs["SUBTRACT"]     = [0] * 4
         outputs["MULTIPLY"]     = [0] * 4
         outputs["IMMEDIATE"]    = [0] * 4
-        outputs["IS_LOAD"]      = [0] * 4
-        outputs["IS_STORE"]     = [0] * 4
+        outputs["is_load"]      = [0] * 4
+        outputs["is_store"]     = [0] * 4
         outputs["valid_bits"]   = [0] * 4
 
         outputs["fetch_packet_valid"]                   = int(getattr(self.dut, f"frontend.io_renamed_decoded_fetch_packet_valid").value)
@@ -137,8 +137,8 @@ class SOC_dut:
             outputs["SUBTRACT"][i]                      = int(getattr(self.dut, f"frontend.io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_SUBTRACT").value)
             outputs["MULTIPLY"][i]                      = int(getattr(self.dut, f"frontend.io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_MULTIPLY").value)
             outputs["IMMEDIATE"][i]                     = int(getattr(self.dut, f"frontend.io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_IMMEDIATE").value)
-            outputs["IS_LOAD"][i]                       = int(getattr(self.dut, f"frontend.io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_IS_LOAD").value)
-            outputs["IS_STORE"][i]                      = int(getattr(self.dut, f"frontend.io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_IS_STORE").value)
+            outputs["is_load"][i]                       = int(getattr(self.dut, f"frontend.io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_is_load").value)
+            outputs["is_store"][i]                      = int(getattr(self.dut, f"frontend.io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_is_store").value)
             outputs["valid_bits"][i]                    = int(getattr(self.dut, f"frontend.io_renamed_decoded_fetch_packet_bits_valid_bits_{i}").value)
 
         return outputs

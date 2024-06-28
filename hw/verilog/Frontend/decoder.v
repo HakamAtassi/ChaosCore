@@ -50,16 +50,16 @@ module decoder(
                 io_decoded_instruction_bits_SUBTRACT,
                 io_decoded_instruction_bits_MULTIPLY,
                 io_decoded_instruction_bits_IMMEDIATE,
-                io_decoded_instruction_bits_IS_LOAD,
-                io_decoded_instruction_bits_IS_STORE
+                io_decoded_instruction_bits_is_load,
+                io_decoded_instruction_bits_is_store
 );
 
   wire [8:0] _GEN = {9{io_instruction_bits_instruction[31]}};
   wire [4:0] instructionType = io_instruction_bits_instruction[6:2];
-  wire       IS_LOAD = instructionType == 5'h0;
+  wire       is_load = instructionType == 5'h0;
   wire       _is_INT_T_1 = instructionType == 5'h4;
   wire       _is_INT_T_11 = instructionType == 5'h5;
-  wire       IS_STORE = instructionType == 5'h8;
+  wire       is_store = instructionType == 5'h8;
   wire       _is_INT_T = instructionType == 5'hC;
   wire       _is_INT_T_9 = instructionType == 5'hD;
   wire       _is_INT_T_3 = instructionType == 5'h18;
@@ -69,9 +69,9 @@ module decoder(
   `ifndef SYNTHESIS
     always @(posedge clock) begin
       if (~reset
-          & ~(IS_LOAD | instructionType == 5'h1 | instructionType == 5'h2
+          & ~(is_load | instructionType == 5'h1 | instructionType == 5'h2
               | instructionType == 5'h3 | _is_INT_T_1 | _is_INT_T_11
-              | instructionType == 5'h6 | IS_STORE | instructionType == 5'h9
+              | instructionType == 5'h6 | is_store | instructionType == 5'h9
               | instructionType == 5'hA | instructionType == 5'hB | _is_INT_T
               | _is_INT_T_9 | instructionType == 5'hE | instructionType == 5'h10
               | instructionType == 5'h11 | instructionType == 5'h12
@@ -113,15 +113,15 @@ module decoder(
   assign io_decoded_instruction_bits_ready_bits_RS2_ready = 1'h0;
   assign io_decoded_instruction_bits_RD = {1'h0, io_instruction_bits_instruction[11:7]};
   assign io_decoded_instruction_bits_RD_valid =
-    (_is_INT_T | _is_INT_T_1 | IS_LOAD | _is_INT_T_5 | _is_INT_T_7 | _is_INT_T_9
+    (_is_INT_T | _is_INT_T_1 | is_load | _is_INT_T_5 | _is_INT_T_7 | _is_INT_T_9
      | _is_INT_T_11 | _io_decoded_instruction_bits_RD_valid_T_13) & io_instruction_valid;
   assign io_decoded_instruction_bits_RS1 = {1'h0, io_instruction_bits_instruction[19:15]};
   assign io_decoded_instruction_bits_RS1_valid =
-    (_is_INT_T | _is_INT_T_1 | IS_LOAD | IS_STORE | _is_INT_T_7 | _is_INT_T_3)
+    (_is_INT_T | _is_INT_T_1 | is_load | is_store | _is_INT_T_7 | _is_INT_T_3)
     & io_instruction_valid;
   assign io_decoded_instruction_bits_RS2 = {1'h0, io_instruction_bits_instruction[24:20]};
   assign io_decoded_instruction_bits_RS2_valid =
-    (_is_INT_T | IS_STORE | _is_INT_T_3) & io_instruction_valid;
+    (_is_INT_T | is_store | _is_INT_T_3) & io_instruction_valid;
   assign io_decoded_instruction_bits_IMM =
     io_instruction_bits_instruction[6:0] == 7'h63
       ? {{9{io_instruction_bits_instruction[31]}},
@@ -164,12 +164,12 @@ module decoder(
                | (&(io_instruction_bits_instruction[14:12])))
             & io_instruction_bits_instruction[25]
               ? 2'h1
-              : {2{IS_STORE | IS_LOAD}};
+              : {2{is_store | is_load}};
   assign io_decoded_instruction_bits_RS_type =
     _is_INT_T | _is_INT_T_1 | _is_INT_T_3 | _is_INT_T_5 | _is_INT_T_7 | _is_INT_T_9
     | _is_INT_T_11
       ? 2'h0
-      : IS_LOAD | IS_STORE ? 2'h1 : 2'h2;
+      : is_load | is_store ? 2'h1 : 2'h2;
   assign io_decoded_instruction_bits_needs_ALU = needs_ALU;
   assign io_decoded_instruction_bits_needs_branch_unit = needs_branch_unit;
   assign io_decoded_instruction_bits_needs_CSRs = 1'h0;
@@ -178,7 +178,7 @@ module decoder(
   assign io_decoded_instruction_bits_MULTIPLY =
     _is_INT_T & io_instruction_bits_instruction[31:25] == 7'h1;
   assign io_decoded_instruction_bits_IMMEDIATE = _is_INT_T_1 | _is_INT_T_9 | _is_INT_T_11;
-  assign io_decoded_instruction_bits_IS_LOAD = IS_LOAD;
-  assign io_decoded_instruction_bits_IS_STORE = IS_STORE;
+  assign io_decoded_instruction_bits_is_load = is_load;
+  assign io_decoded_instruction_bits_is_store = is_store;
 endmodule
 

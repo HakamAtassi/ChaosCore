@@ -56,7 +56,7 @@ class FTQ(parameters:Parameters) extends Module{
         val predictions         =   Flipped(Decoupled(new FTQ_entry(parameters)))
 
         // COMMIT // 
-        val commit              =   Input(new commit(parameters))
+        val commit              =   Flipped(ValidIO(new commit(parameters)))
 
         // FTQ //
         val FTQ                 =   Output(new FTQ_entry(parameters))
@@ -101,7 +101,7 @@ class FTQ(parameters:Parameters) extends Module{
 
 
 
-    val dq = FTQ(front_index).valid && io.commit.valid && ((FTQ(front_index).fetch_PC>>log2Ceil(fetchWidth*4)) === (io.commit.fetch_PC >> log2Ceil(fetchWidth*4)))
+    val dq = FTQ(front_index).valid && io.commit.valid && ((FTQ(front_index).fetch_PC>>log2Ceil(fetchWidth*4)) === (io.commit.bits.fetch_PC >> log2Ceil(fetchWidth*4)))
 
     dontTouch(dq)
 
@@ -145,6 +145,8 @@ class FTQ(parameters:Parameters) extends Module{
         for(i <- 0 until FTQEntries){
             FTQ(i) := 0.U.asTypeOf(0.U.asTypeOf(new FTQ_entry(parameters)))
         }
+        front_pointer := 0.B
+        back_pointer := 0.B
     }
 
     // FIXME: predictor needs to output the default dominant index as fetchWidth - 1, and the default taken address as fetch pc + 16

@@ -236,5 +236,5 @@ class predecoder_dut:
   output [15:0] io_predictions_bits_GHR,
   output [6:0]  io_predictions_bits_NEXT,
                 io_predictions_bits_TOS,
-  output [3:0]  io_predictions_bits_RAT_IDX
+  output [3:0]  io_predictions_bits_RAT_index
 """

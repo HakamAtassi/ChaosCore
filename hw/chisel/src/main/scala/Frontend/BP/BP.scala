@@ -42,7 +42,7 @@ class BP(parameters:Parameters) extends Module{
         val predict     = Flipped(Decoupled(new memory_request(parameters)))
 
         // Commit Channel 
-        val commit      = Input(new commit(parameters))
+        val commit      = Flipped(ValidIO(new commit(parameters)))
 
         // Revert Channel
         val RAS_update  = Input(new RAS_update)
@@ -121,10 +121,10 @@ class BP(parameters:Parameters) extends Module{
 
 
 
-    misprediction       :=  io.commit.is_misprediction
+    misprediction       :=  io.commit.bits.is_misprediction
 
-    misprediction_TOS   :=  io.commit.TOS
-    misprediction_NEXT  :=  io.commit.NEXT
+    misprediction_TOS   :=  io.commit.bits.TOS
+    misprediction_NEXT  :=  io.commit.bits.NEXT
 
 
     //////////////////
@@ -142,8 +142,8 @@ class BP(parameters:Parameters) extends Module{
 
     // BTB and PHT are updated for ALL taken branches
     // Regardless of type (BT, JAL, etc...)
-    update_BTB := io.commit.T_NT && io.commit.valid
-    update_PHT := (io.commit.br_type =/= _br_type.NONE) && io.commit.valid
+    update_BTB := io.commit.bits.T_NT && io.commit.valid
+    update_PHT := (io.commit.bits.br_type =/= _br_type.NONE) && io.commit.valid
     update_RAS := !misprediction
 
 

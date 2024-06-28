@@ -46,7 +46,7 @@ class PC_gen(parameters:Parameters) extends Module{
     import parameters._
 
     val io = IO(new Bundle{
-        val commit                          =   Input(new commit(parameters))
+        val commit                          =   Flipped(ValidIO(new commit(parameters)))
 
         val prediction  = Flipped(Decoupled(new prediction(parameters)))           // BTB response
         val RAS_read    = Flipped(new RAS_read(parameters))
@@ -84,7 +84,7 @@ class PC_gen(parameters:Parameters) extends Module{
     use_BTB             := (io.prediction.bits.hit && io.prediction.valid && !is_ret)
     use_RAS             := is_ret
 
-    misprediction       := io.commit.is_misprediction && io.commit.valid
+    misprediction       := io.commit.bits.is_misprediction && io.commit.valid
 
 
 
@@ -108,7 +108,7 @@ class PC_gen(parameters:Parameters) extends Module{
 
         is(PcGenState.Active){
             when(misprediction){    // When flush, wait for queues to reset & set new PC
-                misprediction_PC_buf := io.commit.expected_PC
+                misprediction_PC_buf := io.commit.bits.expected_PC
                 PC_gen_state := PcGenState.Flush
             }.otherwise{
                 when(use_BTB){

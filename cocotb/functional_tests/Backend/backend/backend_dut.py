@@ -10,7 +10,7 @@ def generate_null_backend_packet():
 
     backend_packet["backend_packet_valid"] = 0
     backend_packet["fetch_PC"] = 0
-    backend_packet["io_backend_packet_bits_RAT_IDX"] = 0
+    backend_packet["io_backend_packet_bits_RAT_index"] = 0
 
     backend_packet["RS1_ready"]             = [0, 0, 0, 0]
     backend_packet["RS2_ready"]             = [0, 0, 0, 0]
@@ -33,8 +33,8 @@ def generate_null_backend_packet():
     backend_packet["SUBTRACT"]              = [0, 0, 0, 0]
     backend_packet["MULTIPLY"]              = [0, 0, 0, 0]
     backend_packet["IMMEDIATE"]             = [0, 0, 0, 0]
-    backend_packet["IS_LOAD"]               = [0, 0, 0, 0]
-    backend_packet["IS_STORE"]              = [0, 0, 0, 0]
+    backend_packet["is_load"]               = [0, 0, 0, 0]
+    backend_packet["is_store"]              = [0, 0, 0, 0]
     backend_packet["valid"]                 = [0, 0, 0, 0]
 
     return backend_packet
@@ -67,7 +67,7 @@ class backend_dut:
 
         getattr(self.dut, f"io_backend_packet_valid").value             =   decoded_instructions_inputs["backend_packet_valid"]
         getattr(self.dut, f"io_backend_packet_bits_fetch_PC").value     =   decoded_instructions_inputs["fetch_PC"]
-        #getattr(self.dut, f"io_backend_packet_bits_RAT_IDX").value      =   decoded_instructions_inputs["RAT_IDX"]
+        #getattr(self.dut, f"io_backend_packet_bits_RAT_index").value      =   decoded_instructions_inputs["RAT_index"]
 
         for i in range(4):
             getattr(self.dut, f"io_backend_packet_bits_decoded_instruction_{i}_ready_bits_RS1_ready").value =   decoded_instructions_inputs["RS1_ready"][i]
@@ -91,8 +91,8 @@ class backend_dut:
             getattr(self.dut, f"io_backend_packet_bits_decoded_instruction_{i}_SUBTRACT").value =   decoded_instructions_inputs["SUBTRACT"][i]
             getattr(self.dut, f"io_backend_packet_bits_decoded_instruction_{i}_MULTIPLY").value =   decoded_instructions_inputs["MULTIPLY"][i]
             getattr(self.dut, f"io_backend_packet_bits_decoded_instruction_{i}_IMMEDIATE").value    =   decoded_instructions_inputs["IMMEDIATE"][i]
-            getattr(self.dut, f"io_backend_packet_bits_decoded_instruction_{i}_IS_LOAD").value  =   decoded_instructions_inputs["IS_LOAD"][i]
-            getattr(self.dut, f"io_backend_packet_bits_decoded_instruction_{i}_IS_STORE").value =   decoded_instructions_inputs["IS_STORE"][i]
+            getattr(self.dut, f"io_backend_packet_bits_decoded_instruction_{i}_is_load").value  =   decoded_instructions_inputs["is_load"][i]
+            getattr(self.dut, f"io_backend_packet_bits_decoded_instruction_{i}_is_store").value =   decoded_instructions_inputs["is_store"][i]
             getattr(self.dut, f"io_backend_packet_bits_valid_bits_{i}").value   =   decoded_instructions_inputs["valid"][i]
 
     def write_commit(self):
@@ -156,8 +156,8 @@ class backend_dut:
         reservation_station["SUBTRACT"] = [0]*16
         reservation_station["MULTIPLY"] = [0]*16
         reservation_station["IMMEDIATE"] = [0]*16
-        reservation_station["IS_LOAD"] = [0]*16
-        reservation_station["IS_STORE"] = [0]*16
+        reservation_station["is_load"] = [0]*16
+        reservation_station["is_store"] = [0]*16
         reservation_station["commited"] = [0]*16
         reservation_station["valid"] = [0]*16
 
@@ -185,8 +185,8 @@ class backend_dut:
             #reservation_station["RS1_valid"][i]             = getattr(self.dut, f"INT_RS.reservation_station_{i}_decoded_instruction_RS1_valid").value
             #reservation_station["RS2_valid"][i]             = getattr(self.dut, f"INT_RS.reservation_station_{i}_decoded_instruction_RS2_valid").value
             #reservation_station["RS_type"][i]               = getattr(self.dut, f"INT_RS.reservation_station_{i}_decoded_instruction_RS_type").value
-            #reservation_station["IS_LOAD"][i]               = getattr(self.dut, f"INT_RS.reservation_station_{i}_decoded_instruction_IS_LOAD").value
-            #reservation_station["IS_STORE"][i]              = getattr(self.dut, f"INT_RS.reservation_station_{i}_decoded_instruction_IS_STORE").value
+            #reservation_station["is_load"][i]               = getattr(self.dut, f"INT_RS.reservation_station_{i}_decoded_instruction_is_load").value
+            #reservation_station["is_store"][i]              = getattr(self.dut, f"INT_RS.reservation_station_{i}_decoded_instruction_is_store").value
             #reservation_station["commited"][i]              = getattr(self.dut, f"INT_RS.reservation_station_{i}_commited").value
         return reservation_station
 
@@ -213,8 +213,8 @@ class backend_dut:
         reservation_station["SUBTRACT"] = [0]*16
         reservation_station["MULTIPLY"] = [0]*16
         reservation_station["IMMEDIATE"] = [0]*16
-        reservation_station["IS_LOAD"] = [0]*16
-        reservation_station["IS_STORE"] = [0]*16
+        reservation_station["is_load"] = [0]*16
+        reservation_station["is_store"] = [0]*16
         reservation_station["commited"] = [0]*16
         reservation_station["valid"] = [0]*16
 
@@ -240,8 +240,8 @@ class backend_dut:
             #reservation_station["SUBTRACT"][i]              = getattr(self.dut, f"MEM_RS.reservation_station_{i}_decoded_instruction_SUBTRACT").value
             #reservation_station["MULTIPLY"][i]              = getattr(self.dut, f"MEM_RS.reservation_station_{i}_decoded_instruction_MULTIPLY").value
             #reservation_station["IMMEDIATE"][i]             = getattr(self.dut, f"MEM_RS.reservation_station_{i}_decoded_instruction_IMMEDIATE").value
-            reservation_station["IS_LOAD"][i]               = getattr(self.dut, f"MEM_RS.reservation_station_{i}_decoded_instruction_IS_LOAD").value
-            reservation_station["IS_STORE"][i]              = getattr(self.dut, f"MEM_RS.reservation_station_{i}_decoded_instruction_IS_STORE").value
+            reservation_station["is_load"][i]               = getattr(self.dut, f"MEM_RS.reservation_station_{i}_decoded_instruction_is_load").value
+            reservation_station["is_store"][i]              = getattr(self.dut, f"MEM_RS.reservation_station_{i}_decoded_instruction_is_store").value
             reservation_station["commited"][i]              = getattr(self.dut, f"MEM_RS.reservation_station_{i}_commited").value
             reservation_station["valid"][i]                 = getattr(self.dut, f"MEM_RS.reservation_station_{i}_valid").value
 

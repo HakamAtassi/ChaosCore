@@ -86,8 +86,8 @@ async def test_fuzz_allocate(dut):
         random_ROB_packet["SUBTRACT"]                     =  [0]*4
         random_ROB_packet["MULTIPLY"]                     =  [0]*4
         random_ROB_packet["IMMEDIATE"]                    =  [0]*4
-        random_ROB_packet["IS_LOAD"]                      =  [0]*4
-        random_ROB_packet["IS_STORE"]                     =  [0]*4
+        random_ROB_packet["is_load"]                      =  [0]*4
+        random_ROB_packet["is_store"]                     =  [0]*4
         random_ROB_packet["valid_bits"]                   =  [random.randint(0, 1) for _ in range(4)]
 
 
@@ -149,11 +149,11 @@ def generate_random_ROB_packet(valid:bool):
     random_ROB_packet["MULTIPLY"]                     =  [0]*4
     random_ROB_packet["IMMEDIATE"]                    =  [0]*4
 
-    random_ROB_packet["IS_LOAD"]                      = [random.choices([1, 0], weights=[0.3, 0.7], k=1) for _ in range(4)]
+    random_ROB_packet["is_load"]                      = [random.choices([1, 0], weights=[0.3, 0.7], k=1) for _ in range(4)]
     
     for i in range(4):
-        if(not random_ROB_packet["IS_LOAD"][i]):
-            random_ROB_packet["IS_STORE"][i]         = random.choices([1, 0], weights=[0.3, 0.7], k=1)
+        if(not random_ROB_packet["is_load"][i]):
+            random_ROB_packet["is_store"][i]         = random.choices([1, 0], weights=[0.3, 0.7], k=1)
 
     random_ROB_packet["valid_bits"]                   =  [random.randint(0, 1) for _ in range(4)]
 

@@ -45,7 +45,7 @@
       <var loc="d,343,17,343,30" name="io_commit_GHR" dtype_id="3" dir="input" pinIndex="12" vartype="logic" origName="io_commit_GHR"/>
       <var loc="d,344,17,344,30" name="io_commit_TOS" dtype_id="4" dir="input" pinIndex="13" vartype="logic" origName="io_commit_TOS"/>
       <var loc="d,345,17,345,31" name="io_commit_NEXT" dtype_id="4" dir="input" pinIndex="14" vartype="logic" origName="io_commit_NEXT"/>
-      <var loc="d,346,17,346,34" name="io_commit_RAT_IDX" dtype_id="5" dir="input" pinIndex="15" vartype="logic" origName="io_commit_RAT_IDX"/>
+      <var loc="d,346,17,346,34" name="io_commit_RAT_index" dtype_id="5" dir="input" pinIndex="15" vartype="logic" origName="io_commit_RAT_index"/>
       <var loc="d,347,17,347,40" name="io_RAS_update_call_addr" dtype_id="2" dir="input" pinIndex="16" vartype="logic" origName="io_RAS_update_call_addr"/>
       <var loc="d,348,17,348,35" name="io_RAS_update_call" dtype_id="1" dir="input" pinIndex="17" vartype="logic" origName="io_RAS_update_call"/>
       <var loc="d,349,17,349,34" name="io_RAS_update_ret" dtype_id="1" dir="input" pinIndex="18" vartype="logic" origName="io_RAS_update_ret"/>

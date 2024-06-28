@@ -33,8 +33,8 @@ def test_1_write():
     random_ROB_packet["MULTIPLY"]                     =  [0]*4
     random_ROB_packet["IMMEDIATE"]                    =  [0]*4
     random_ROB_packet["is_branch"]                    =  [0]*4
-    random_ROB_packet["IS_LOAD"]                      =  [0]*4
-    random_ROB_packet["IS_STORE"]                     =  [0]*4
+    random_ROB_packet["is_load"]                      =  [0]*4
+    random_ROB_packet["is_store"]                     =  [0]*4
     random_ROB_packet["valid_bits"]                   = [random.randint(0, 1) for _ in range(4)]
 
 
@@ -73,8 +73,8 @@ def test_many_writes():
     random_ROB_packet["MULTIPLY"]                     =  [0]*4
     random_ROB_packet["IMMEDIATE"]                    =  [0]*4
     random_ROB_packet["is_branch"]                    =  [0]*4
-    random_ROB_packet["IS_LOAD"]                      =  [0]*4
-    random_ROB_packet["IS_STORE"]                     =  [0]*4
+    random_ROB_packet["is_load"]                      =  [0]*4
+    random_ROB_packet["is_store"]                     =  [0]*4
     random_ROB_packet["valid_bits"]                   = [random.randint(0, 1) for _ in range(4)]
 
 
@@ -106,8 +106,8 @@ def test_many_writes():
         random_ROB_packet["MULTIPLY"]                     =  [0]*4
         random_ROB_packet["IMMEDIATE"]                    =  [0]*4
         random_ROB_packet["is_branch"]                    =  [0]*4
-        random_ROB_packet["IS_LOAD"]                      =  [0]*4
-        random_ROB_packet["IS_STORE"]                     =  [0]*4
+        random_ROB_packet["is_load"]                      =  [0]*4
+        random_ROB_packet["is_store"]                     =  [0]*4
         random_ROB_packet["valid_bits"]                   = [random.randint(0, 1) for _ in range(4)]
 
         ROB_model.write_ROB_packet(random_ROB_packet)
@@ -152,8 +152,8 @@ def test_writes_over_capacity():
     random_ROB_packet["MULTIPLY"]                     =  [0]*4
     random_ROB_packet["IMMEDIATE"]                    =  [0]*4
     random_ROB_packet["is_branch"]                    =  [0]*4
-    random_ROB_packet["IS_LOAD"]                      =  [0]*4
-    random_ROB_packet["IS_STORE"]                     =  [0]*4
+    random_ROB_packet["is_load"]                      =  [0]*4
+    random_ROB_packet["is_store"]                     =  [0]*4
     random_ROB_packet["valid_bits"]                   = [random.randint(0, 1) for _ in range(4)]
 
 
@@ -185,8 +185,8 @@ def test_writes_over_capacity():
         random_ROB_packet["MULTIPLY"]                     =  [0]*4
         random_ROB_packet["IMMEDIATE"]                    =  [0]*4
         random_ROB_packet["is_branch"]                    =  [0]*4
-        random_ROB_packet["IS_LOAD"]                      =  [0]*4
-        random_ROB_packet["IS_STORE"]                     =  [0]*4
+        random_ROB_packet["is_load"]                      =  [0]*4
+        random_ROB_packet["is_store"]                     =  [0]*4
         random_ROB_packet["valid_bits"]                   = [random.randint(0, 1) for _ in range(4)]
 
 
@@ -222,8 +222,8 @@ def test_writes_over_capacity():
         random_ROB_packet["MULTIPLY"]                     =  [0]*4
         random_ROB_packet["IMMEDIATE"]                    =  [0]*4
         random_ROB_packet["is_branch"]                    =  [0]*4
-        random_ROB_packet["IS_LOAD"]                      =  [0]*4
-        random_ROB_packet["IS_STORE"]                     =  [0]*4
+        random_ROB_packet["is_load"]                      =  [0]*4
+        random_ROB_packet["is_store"]                     =  [0]*4
         random_ROB_packet["valid_bits"]                   = [random.randint(0, 1) for _ in range(4)]
 
         assert ROB_model.shared_mem["fetch_PC"][i] != random_ROB_packet["fetch_PC"]
@@ -266,8 +266,8 @@ def test_WB_mem():
     random_ROB_packet["MULTIPLY"]                     =  [0]*4
     random_ROB_packet["IMMEDIATE"]                    =  [0]*4
     random_ROB_packet["is_branch"]                    =  [0]*4
-    random_ROB_packet["IS_LOAD"]                      =  [0]*4
-    random_ROB_packet["IS_STORE"]                     =  [0]*4
+    random_ROB_packet["is_load"]                      =  [0]*4
+    random_ROB_packet["is_store"]                     =  [0]*4
     random_ROB_packet["valid_bits"]                   =  [0]*4
 
     ROB_model.write_ROB_packet(random_ROB_packet)
@@ -372,8 +372,8 @@ def test_WB_mem_after_full():
         random_ROB_packet["MULTIPLY"]                     =  [0]*4
         random_ROB_packet["IMMEDIATE"]                    =  [0]*4
         random_ROB_packet["is_branch"]                    =  [0]*4
-        random_ROB_packet["IS_LOAD"]                      =  [0]*4
-        random_ROB_packet["IS_STORE"]                     =  [0]*4
+        random_ROB_packet["is_load"]                      =  [0]*4
+        random_ROB_packet["is_store"]                     =  [0]*4
         random_ROB_packet["valid_bits"]                   =  [1,1,1,1]
 
         ROB_model.write_ROB_packet(random_ROB_packet)

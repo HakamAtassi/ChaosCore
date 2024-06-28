@@ -25,6 +25,7 @@ class ChaosCore_TB:
         # Frontend duts #
         self.fetch_packet_decoder_dut       = fetch_packet_decoder_dut(self.fetch_packet_decoder)
         self.predecoder_dut                = predecoder_dut(self.ChaosCore.frontend.instruction_fetch.predecoder)
+        self.ROB_dut                       = ROB_dut(self.ChaosCore.ROB)
         #self.PC_gen_dut                    = PC_gen_dut(self.ChaosCore.frontend.instruction_fetch.PC_gen)
         #self.rename_dut                    = rename_dut(self.ChaosCore.frontend.rename)
 
@@ -39,8 +40,9 @@ class ChaosCore_TB:
         self.fetch_packet_decoder_agent        = fetch_packet_decoder_agent(self.fetch_packet_decoder_dut)
         self.FU0_agent                         = FU_agent(self.FU0_dut)
         #self.rename_agent                      = rename_agent(self.rename_dut)
-
         #self.predecoder_agent                  = predecoder_agent(self.predecoder_dut)
+
+        self.ROB_agent                =   ROB_agent(self.ROB_dut)
 
 
 
@@ -73,6 +75,8 @@ class ChaosCore_TB:
         # Start Backend Agents
         self.FU0_agent.start()
 
+        self.ROB_agent.start()
+
     ###############
     # STOP AGENTS #
     ###############
@@ -87,4 +91,7 @@ class ChaosCore_TB:
         # Stop Backend Agents
         self.FU0_agent.stop()
         #self.rename.stop()
+
+
+        self.ROB_agent.stop()
 

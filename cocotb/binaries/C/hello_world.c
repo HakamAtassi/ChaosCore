@@ -3,18 +3,21 @@
 int main()
 {
     //printf("HELLO, WORLD!");
-    putchar('H');
-    putchar('E');
-    putchar('L');
-    putchar('L');
-    putchar('O');
-    putchar(',');
-    putchar('W');
-    putchar('O');
-    putchar('R');
-    putchar('L');
-    putchar('D');
-    putchar('!');
-    putchar('\n');
-    while(1){};
+
+    while(1){
+        putchar('H');
+        putchar('E');
+        putchar('L');
+        putchar('L');
+        putchar('O');
+        putchar(',');
+        putchar(' ');
+        putchar('W');
+        putchar('O');
+        putchar('R');
+        putchar('L');
+        putchar('D');
+        putchar('!');
+        putchar('\n');
+    };
 }

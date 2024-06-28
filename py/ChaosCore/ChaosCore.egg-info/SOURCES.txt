@@ -20,7 +20,6 @@ RAS/__init__.py
 ROB/ROB_dut.py
 ROB/ROB_model.py
 ROB/__init__.py
-ROB/signals.py
 SimpleDRAM/SimpleDRAM.py
 SimpleDRAM/__init__.py
 fetch_packet_decoder/__init__.py

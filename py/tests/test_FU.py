@@ -27,8 +27,8 @@ def test_BEQ():
     FU_inputs["SUBTRACT"]           = 0
     FU_inputs["MULTIPLY"]           = 0
     FU_inputs["IMMEDIATE"]          = 0
-    FU_inputs["IS_LOAD"]            = 0
-    FU_inputs["IS_STORE"]           = 0
+    FU_inputs["is_load"]            = 0
+    FU_inputs["is_store"]           = 0
     FU_inputs["RS1_data"]           = 0b01001011010001100100100010101000
     FU_inputs["RS2_data"]           = 0b11010111111010111011010011100100
     FU_inputs["PC"]                 = 0b00101111001010011011110110100101
@@ -65,8 +65,8 @@ def test_BNE():
     FU_inputs["SUBTRACT"]           = 0
     FU_inputs["MULTIPLY"]           = 0
     FU_inputs["IMMEDIATE"]          = 0
-    FU_inputs["IS_LOAD"]            = 0
-    FU_inputs["IS_STORE"]           = 0
+    FU_inputs["is_load"]            = 0
+    FU_inputs["is_store"]           = 0
     FU_inputs["RS1_data"]           = 0b01001011010001100100100010101000
     FU_inputs["RS2_data"]           = 0b11010111111010111011010011100100
     FU_inputs["PC"]                 = 0b00101111001010011011110110100101
@@ -103,8 +103,8 @@ def test_BLT_signed():
     FU_inputs["SUBTRACT"]           = 0
     FU_inputs["MULTIPLY"]           = 0
     FU_inputs["IMMEDIATE"]          = 0
-    FU_inputs["IS_LOAD"]            = 0
-    FU_inputs["IS_STORE"]           = 0
+    FU_inputs["is_load"]            = 0
+    FU_inputs["is_store"]           = 0
     FU_inputs["RS1_data"]           = 0b01001011010001100100100010101000
     FU_inputs["RS2_data"]           = 0b11010111111010111011010011100100
     FU_inputs["PC"]                 = 0b00101111001010011011110110100101
@@ -141,8 +141,8 @@ def test_BLT():
     FU_inputs["SUBTRACT"]           = 0
     FU_inputs["MULTIPLY"]           = 0
     FU_inputs["IMMEDIATE"]          = 0
-    FU_inputs["IS_LOAD"]            = 0
-    FU_inputs["IS_STORE"]           = 0
+    FU_inputs["is_load"]            = 0
+    FU_inputs["is_store"]           = 0
     FU_inputs["RS1_data"]           = 0b01001011010001100100100010101000
     FU_inputs["RS2_data"]           = 0b01010111111010111011010011100100
     FU_inputs["PC"]                 = 0b00101111001010011011110110100101
@@ -179,8 +179,8 @@ def test_BLT_signed_2():
     FU_inputs["SUBTRACT"]           = 0
     FU_inputs["MULTIPLY"]           = 0
     FU_inputs["IMMEDIATE"]          = 0
-    FU_inputs["IS_LOAD"]            = 0
-    FU_inputs["IS_STORE"]           = 0
+    FU_inputs["is_load"]            = 0
+    FU_inputs["is_store"]           = 0
     FU_inputs["RS1_data"]           = 0b01001011010001100100100010101000
     FU_inputs["RS2_data"]           = 0b11010111111010111011010011100100
     FU_inputs["PC"]                 = 0b00101111001010011011110110100101
@@ -217,8 +217,8 @@ def test_BGE():
     FU_inputs["SUBTRACT"]           = 0
     FU_inputs["MULTIPLY"]           = 0
     FU_inputs["IMMEDIATE"]          = 0
-    FU_inputs["IS_LOAD"]            = 0
-    FU_inputs["IS_STORE"]           = 0
+    FU_inputs["is_load"]            = 0
+    FU_inputs["is_store"]           = 0
     FU_inputs["RS1_data"]           = 0b01001011010001100100100010101000
     FU_inputs["RS2_data"]           = 0b01010111111010111011010011100100
     FU_inputs["PC"]                 = 0b00101111001010011011110110100101
@@ -256,8 +256,8 @@ def test_BGE_2():
     FU_inputs["SUBTRACT"]           = 0
     FU_inputs["MULTIPLY"]           = 0
     FU_inputs["IMMEDIATE"]          = 0
-    FU_inputs["IS_LOAD"]            = 0
-    FU_inputs["IS_STORE"]           = 0
+    FU_inputs["is_load"]            = 0
+    FU_inputs["is_store"]           = 0
     FU_inputs["RS1_data"]           = 0b01101011010001100100100010101000
     FU_inputs["RS2_data"]           = 0b01010111111010111011010011100100
     FU_inputs["PC"]                 = 0b00101111001010011011110110100101
@@ -294,8 +294,8 @@ def test_BGE_signed():
     FU_inputs["SUBTRACT"]           = 0
     FU_inputs["MULTIPLY"]           = 0
     FU_inputs["IMMEDIATE"]          = 0
-    FU_inputs["IS_LOAD"]            = 0
-    FU_inputs["IS_STORE"]           = 0
+    FU_inputs["is_load"]            = 0
+    FU_inputs["is_store"]           = 0
     FU_inputs["RS1_data"]           = 0b01101011010001100100100010101000
     FU_inputs["RS2_data"]           = 0b11010111111010111011010011100100
     FU_inputs["PC"]                 = 0b00101111001010011011110110100101

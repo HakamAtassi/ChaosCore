@@ -69,8 +69,8 @@
       <var loc="d,256,17,256,66" name="io_ROB_packet_bits_decoded_instruction_0_SUBTRACT" dtype_id="1" dir="input" pinIndex="24" vartype="logic" origName="io_ROB_packet_bits_decoded_instruction_0_SUBTRACT"/>
       <var loc="d,257,17,257,66" name="io_ROB_packet_bits_decoded_instruction_0_MULTIPLY" dtype_id="1" dir="input" pinIndex="25" vartype="logic" origName="io_ROB_packet_bits_decoded_instruction_0_MULTIPLY"/>
       <var loc="d,258,17,258,67" name="io_ROB_packet_bits_decoded_instruction_0_IMMEDIATE" dtype_id="1" dir="input" pinIndex="26" vartype="logic" origName="io_ROB_packet_bits_decoded_instruction_0_IMMEDIATE"/>
-      <var loc="d,259,17,259,65" name="io_ROB_packet_bits_decoded_instruction_0_IS_LOAD" dtype_id="1" dir="input" pinIndex="27" vartype="logic" origName="io_ROB_packet_bits_decoded_instruction_0_IS_LOAD"/>
-      <var loc="d,260,17,260,66" name="io_ROB_packet_bits_decoded_instruction_0_IS_STORE" dtype_id="1" dir="input" pinIndex="28" vartype="logic" origName="io_ROB_packet_bits_decoded_instruction_0_IS_STORE"/>
+      <var loc="d,259,17,259,65" name="io_ROB_packet_bits_decoded_instruction_0_is_load" dtype_id="1" dir="input" pinIndex="27" vartype="logic" origName="io_ROB_packet_bits_decoded_instruction_0_is_load"/>
+      <var loc="d,260,17,260,66" name="io_ROB_packet_bits_decoded_instruction_0_is_store" dtype_id="1" dir="input" pinIndex="28" vartype="logic" origName="io_ROB_packet_bits_decoded_instruction_0_is_store"/>
       <var loc="d,261,17,261,78" name="io_ROB_packet_bits_decoded_instruction_1_ready_bits_RS1_ready" dtype_id="1" dir="input" pinIndex="29" vartype="logic" origName="io_ROB_packet_bits_decoded_instruction_1_ready_bits_RS1_ready"/>
       <var loc="d,262,17,262,78" name="io_ROB_packet_bits_decoded_instruction_1_ready_bits_RS2_ready" dtype_id="1" dir="input" pinIndex="30" vartype="logic" origName="io_ROB_packet_bits_decoded_instruction_1_ready_bits_RS2_ready"/>
       <var loc="d,263,17,263,60" name="io_ROB_packet_bits_decoded_instruction_1_RD" dtype_id="3" dir="input" pinIndex="31" vartype="logic" origName="io_ROB_packet_bits_decoded_instruction_1_RD"/>
@@ -92,8 +92,8 @@
       <var loc="d,279,17,279,66" name="io_ROB_packet_bits_decoded_instruction_1_SUBTRACT" dtype_id="1" dir="input" pinIndex="47" vartype="logic" origName="io_ROB_packet_bits_decoded_instruction_1_SUBTRACT"/>
       <var loc="d,280,17,280,66" name="io_ROB_packet_bits_decoded_instruction_1_MULTIPLY" dtype_id="1" dir="input" pinIndex="48" vartype="logic" origName="io_ROB_packet_bits_decoded_instruction_1_MULTIPLY"/>
       <var loc="d,281,17,281,67" name="io_ROB_packet_bits_decoded_instruction_1_IMMEDIATE" dtype_id="1" dir="input" pinIndex="49" vartype="logic" origName="io_ROB_packet_bits_decoded_instruction_1_IMMEDIATE"/>
-      <var loc="d,282,17,282,65" name="io_ROB_packet_bits_decoded_instruction_1_IS_LOAD" dtype_id="1" dir="input" pinIndex="50" vartype="logic" origName="io_ROB_packet_bits_decoded_instruction_1_IS_LOAD"/>
-      <var loc="d,283,17,283,66" name="io_ROB_packet_bits_decoded_instruction_1_IS_STORE" dtype_id="1" dir="input" pinIndex="51" vartype="logic" origName="io_ROB_packet_bits_decoded_instruction_1_IS_STORE"/>
+      <var loc="d,282,17,282,65" name="io_ROB_packet_bits_decoded_instruction_1_is_load" dtype_id="1" dir="input" pinIndex="50" vartype="logic" origName="io_ROB_packet_bits_decoded_instruction_1_is_load"/>
+      <var loc="d,283,17,283,66" name="io_ROB_packet_bits_decoded_instruction_1_is_store" dtype_id="1" dir="input" pinIndex="51" vartype="logic" origName="io_ROB_packet_bits_decoded_instruction_1_is_store"/>
       <var loc="d,284,17,284,78" name="io_ROB_packet_bits_decoded_instruction_2_ready_bits_RS1_ready" dtype_id="1" dir="input" pinIndex="52" vartype="logic" origName="io_ROB_packet_bits_decoded_instruction_2_ready_bits_RS1_ready"/>
       <var loc="d,285,17,285,78" name="io_ROB_packet_bits_decoded_instruction_2_ready_bits_RS2_ready" dtype_id="1" dir="input" pinIndex="53" vartype="logic" origName="io_ROB_packet_bits_decoded_instruction_2_ready_bits_RS2_ready"/>
       <var loc="d,286,17,286,60" name="io_ROB_packet_bits_decoded_instruction_2_RD" dtype_id="3" dir="input" pinIndex="54" vartype="logic" origName="io_ROB_packet_bits_decoded_instruction_2_RD"/>
@@ -115,8 +115,8 @@
       <var loc="d,302,17,302,66" name="io_ROB_packet_bits_decoded_instruction_2_SUBTRACT" dtype_id="1" dir="input" pinIndex="70" vartype="logic" origName="io_ROB_packet_bits_decoded_instruction_2_SUBTRACT"/>
       <var loc="d,303,17,303,66" name="io_ROB_packet_bits_decoded_instruction_2_MULTIPLY" dtype_id="1" dir="input" pinIndex="71" vartype="logic" origName="io_ROB_packet_bits_decoded_instruction_2_MULTIPLY"/>
       <var loc="d,304,17,304,67" name="io_ROB_packet_bits_decoded_instruction_2_IMMEDIATE" dtype_id="1" dir="input" pinIndex="72" vartype="logic" origName="io_ROB_packet_bits_decoded_instruction_2_IMMEDIATE"/>
-      <var loc="d,305,17,305,65" name="io_ROB_packet_bits_decoded_instruction_2_IS_LOAD" dtype_id="1" dir="input" pinIndex="73" vartype="logic" origName="io_ROB_packet_bits_decoded_instruction_2_IS_LOAD"/>
-      <var loc="d,306,17,306,66" name="io_ROB_packet_bits_decoded_instruction_2_IS_STORE" dtype_id="1" dir="input" pinIndex="74" vartype="logic" origName="io_ROB_packet_bits_decoded_instruction_2_IS_STORE"/>
+      <var loc="d,305,17,305,65" name="io_ROB_packet_bits_decoded_instruction_2_is_load" dtype_id="1" dir="input" pinIndex="73" vartype="logic" origName="io_ROB_packet_bits_decoded_instruction_2_is_load"/>
+      <var loc="d,306,17,306,66" name="io_ROB_packet_bits_decoded_instruction_2_is_store" dtype_id="1" dir="input" pinIndex="74" vartype="logic" origName="io_ROB_packet_bits_decoded_instruction_2_is_store"/>
       <var loc="d,307,17,307,78" name="io_ROB_packet_bits_decoded_instruction_3_ready_bits_RS1_ready" dtype_id="1" dir="input" pinIndex="75" vartype="logic" origName="io_ROB_packet_bits_decoded_instruction_3_ready_bits_RS1_ready"/>
       <var loc="d,308,17,308,78" name="io_ROB_packet_bits_decoded_instruction_3_ready_bits_RS2_ready" dtype_id="1" dir="input" pinIndex="76" vartype="logic" origName="io_ROB_packet_bits_decoded_instruction_3_ready_bits_RS2_ready"/>
       <var loc="d,309,17,309,60" name="io_ROB_packet_bits_decoded_instruction_3_RD" dtype_id="3" dir="input" pinIndex="77" vartype="logic" origName="io_ROB_packet_bits_decoded_instruction_3_RD"/>
@@ -138,13 +138,13 @@
       <var loc="d,325,17,325,66" name="io_ROB_packet_bits_decoded_instruction_3_SUBTRACT" dtype_id="1" dir="input" pinIndex="93" vartype="logic" origName="io_ROB_packet_bits_decoded_instruction_3_SUBTRACT"/>
       <var loc="d,326,17,326,66" name="io_ROB_packet_bits_decoded_instruction_3_MULTIPLY" dtype_id="1" dir="input" pinIndex="94" vartype="logic" origName="io_ROB_packet_bits_decoded_instruction_3_MULTIPLY"/>
       <var loc="d,327,17,327,67" name="io_ROB_packet_bits_decoded_instruction_3_IMMEDIATE" dtype_id="1" dir="input" pinIndex="95" vartype="logic" origName="io_ROB_packet_bits_decoded_instruction_3_IMMEDIATE"/>
-      <var loc="d,328,17,328,65" name="io_ROB_packet_bits_decoded_instruction_3_IS_LOAD" dtype_id="1" dir="input" pinIndex="96" vartype="logic" origName="io_ROB_packet_bits_decoded_instruction_3_IS_LOAD"/>
-      <var loc="d,329,17,329,66" name="io_ROB_packet_bits_decoded_instruction_3_IS_STORE" dtype_id="1" dir="input" pinIndex="97" vartype="logic" origName="io_ROB_packet_bits_decoded_instruction_3_IS_STORE"/>
+      <var loc="d,328,17,328,65" name="io_ROB_packet_bits_decoded_instruction_3_is_load" dtype_id="1" dir="input" pinIndex="96" vartype="logic" origName="io_ROB_packet_bits_decoded_instruction_3_is_load"/>
+      <var loc="d,329,17,329,66" name="io_ROB_packet_bits_decoded_instruction_3_is_store" dtype_id="1" dir="input" pinIndex="97" vartype="logic" origName="io_ROB_packet_bits_decoded_instruction_3_is_store"/>
       <var loc="d,330,17,330,48" name="io_ROB_packet_bits_valid_bits_0" dtype_id="1" dir="input" pinIndex="98" vartype="logic" origName="io_ROB_packet_bits_valid_bits_0"/>
       <var loc="d,331,17,331,48" name="io_ROB_packet_bits_valid_bits_1" dtype_id="1" dir="input" pinIndex="99" vartype="logic" origName="io_ROB_packet_bits_valid_bits_1"/>
       <var loc="d,332,17,332,48" name="io_ROB_packet_bits_valid_bits_2" dtype_id="1" dir="input" pinIndex="100" vartype="logic" origName="io_ROB_packet_bits_valid_bits_2"/>
       <var loc="d,333,17,333,48" name="io_ROB_packet_bits_valid_bits_3" dtype_id="1" dir="input" pinIndex="101" vartype="logic" origName="io_ROB_packet_bits_valid_bits_3"/>
-      <var loc="d,334,17,334,43" name="io_ROB_packet_bits_RAT_IDX" dtype_id="5" dir="input" pinIndex="102" vartype="logic" origName="io_ROB_packet_bits_RAT_IDX"/>
+      <var loc="d,334,17,334,43" name="io_ROB_packet_bits_RAT_index" dtype_id="5" dir="input" pinIndex="102" vartype="logic" origName="io_ROB_packet_bits_RAT_index"/>
       <var loc="d,335,17,335,38" name="io_FU_outputs_0_valid" dtype_id="1" dir="input" pinIndex="103" vartype="logic" origName="io_FU_outputs_0_valid"/>
       <var loc="d,336,17,336,40" name="io_FU_outputs_0_bits_RD" dtype_id="8" dir="input" pinIndex="104" vartype="logic" origName="io_FU_outputs_0_bits_RD"/>
       <var loc="d,337,17,337,45" name="io_FU_outputs_0_bits_RD_data" dtype_id="2" dir="input" pinIndex="105" vartype="logic" origName="io_FU_outputs_0_bits_RD_data"/>
@@ -187,7 +187,7 @@
       <var loc="d,374,17,374,56" name="io_FU_outputs_3_bits_fetch_packet_index" dtype_id="7" dir="input" pinIndex="142" vartype="logic" origName="io_FU_outputs_3_bits_fetch_packet_index"/>
       <var loc="d,375,17,375,36" name="io_ROB_output_valid" dtype_id="1" dir="output" pinIndex="143" vartype="logic" origName="io_ROB_output_valid"/>
       <var loc="d,376,17,376,44" name="io_ROB_output_bits_fetch_PC" dtype_id="2" dir="output" pinIndex="144" vartype="logic" origName="io_ROB_output_bits_fetch_PC"/>
-      <var loc="d,377,17,377,43" name="io_ROB_output_bits_RAT_IDX" dtype_id="5" dir="output" pinIndex="145" vartype="logic" origName="io_ROB_output_bits_RAT_IDX"/>
+      <var loc="d,377,17,377,43" name="io_ROB_output_bits_RAT_index" dtype_id="5" dir="output" pinIndex="145" vartype="logic" origName="io_ROB_output_bits_RAT_index"/>
       <var loc="d,378,17,378,55" name="io_ROB_output_bits_ROB_entries_0_valid" dtype_id="1" dir="output" pinIndex="146" vartype="logic" origName="io_ROB_output_bits_ROB_entries_0_valid"/>
       <var loc="d,379,17,379,59" name="io_ROB_output_bits_ROB_entries_0_is_branch" dtype_id="1" dir="output" pinIndex="147" vartype="logic" origName="io_ROB_output_bits_ROB_entries_0_is_branch"/>
       <var loc="d,380,17,380,57" name="io_ROB_output_bits_ROB_entries_0_is_load" dtype_id="1" dir="output" pinIndex="148" vartype="logic" origName="io_ROB_output_bits_ROB_entries_0_is_load"/>
@@ -214,7 +214,7 @@
       <var loc="d,401,17,401,30" name="io_commit_GHR" dtype_id="9" dir="input" pinIndex="169" vartype="logic" origName="io_commit_GHR"/>
       <var loc="d,402,17,402,30" name="io_commit_TOS" dtype_id="10" dir="input" pinIndex="170" vartype="logic" origName="io_commit_TOS"/>
       <var loc="d,403,17,403,31" name="io_commit_NEXT" dtype_id="10" dir="input" pinIndex="171" vartype="logic" origName="io_commit_NEXT"/>
-      <var loc="d,404,17,404,34" name="io_commit_RAT_IDX" dtype_id="5" dir="input" pinIndex="172" vartype="logic" origName="io_commit_RAT_IDX"/>
+      <var loc="d,404,17,404,34" name="io_commit_RAT_index" dtype_id="5" dir="input" pinIndex="172" vartype="logic" origName="io_commit_RAT_index"/>
       <var loc="d,405,17,405,37" name="io_PC_file_exec_addr" dtype_id="3" dir="input" pinIndex="173" vartype="logic" origName="io_PC_file_exec_addr"/>
       <var loc="d,406,17,406,37" name="io_PC_file_exec_data" dtype_id="3" dir="output" pinIndex="174" vartype="logic" origName="io_PC_file_exec_data"/>
       <var loc="d,410,15,410,48" name="_ROB_WB_banks_3_io_readDataG_busy" dtype_id="1" vartype="logic" origName="_ROB_WB_banks_3_io_readDataG_busy"/>
@@ -263,8 +263,8 @@
         <port loc="d,428,6,428,28" name="io_writeDataA_fetch_PC" direction="in" portIndex="4">
           <varref loc="d,428,31,428,58" name="io_ROB_packet_bits_fetch_PC" dtype_id="2"/>
         </port>
-        <port loc="d,429,6,429,27" name="io_writeDataA_RAT_IDX" direction="in" portIndex="5">
-          <varref loc="d,429,31,429,57" name="io_ROB_packet_bits_RAT_IDX" dtype_id="5"/>
+        <port loc="d,429,6,429,27" name="io_writeDataA_RAT_index" direction="in" portIndex="5">
+          <varref loc="d,429,31,429,57" name="io_ROB_packet_bits_RAT_index" dtype_id="5"/>
         </port>
         <port loc="d,430,6,430,21" name="io_writeEnableA" direction="in" portIndex="6">
           <varref loc="d,430,31,430,39" name="allocate" dtype_id="1"/>
@@ -279,8 +279,8 @@
         <port loc="d,432,6,432,27" name="io_readDataB_fetch_PC" direction="out" portIndex="8">
           <varref loc="d,432,31,432,58" name="io_ROB_output_bits_fetch_PC" dtype_id="2"/>
         </port>
-        <port loc="d,433,6,433,26" name="io_readDataB_RAT_IDX" direction="out" portIndex="9">
-          <varref loc="d,433,31,433,57" name="io_ROB_output_bits_RAT_IDX" dtype_id="5"/>
+        <port loc="d,433,6,433,26" name="io_readDataB_RAT_index" direction="out" portIndex="9">
+          <varref loc="d,433,31,433,57" name="io_ROB_output_bits_RAT_index" dtype_id="5"/>
         </port>
         <port loc="d,434,6,434,14" name="io_addrC" direction="in" portIndex="10">
           <varref loc="d,434,31,434,51" name="io_PC_file_exec_addr" dtype_id="3"/>
@@ -483,10 +483,10 @@
           <varref loc="d,501,31,501,89" name="io_ROB_packet_bits_decoded_instruction_0_needs_branch_unit" dtype_id="1"/>
         </port>
         <port loc="d,502,6,502,27" name="io_writeDataA_is_load" direction="in" portIndex="5">
-          <varref loc="d,502,31,502,79" name="io_ROB_packet_bits_decoded_instruction_0_IS_LOAD" dtype_id="1"/>
+          <varref loc="d,502,31,502,79" name="io_ROB_packet_bits_decoded_instruction_0_is_load" dtype_id="1"/>
         </port>
         <port loc="d,503,6,503,28" name="io_writeDataA_is_store" direction="in" portIndex="6">
-          <varref loc="d,503,31,503,80" name="io_ROB_packet_bits_decoded_instruction_0_IS_STORE" dtype_id="1"/>
+          <varref loc="d,503,31,503,80" name="io_ROB_packet_bits_decoded_instruction_0_is_store" dtype_id="1"/>
         </port>
         <port loc="d,504,6,504,21" name="io_writeEnableA" direction="in" portIndex="7">
           <varref loc="d,504,31,504,39" name="allocate" dtype_id="1"/>
@@ -525,10 +525,10 @@
           <varref loc="d,515,31,515,89" name="io_ROB_packet_bits_decoded_instruction_1_needs_branch_unit" dtype_id="1"/>
         </port>
         <port loc="d,516,6,516,27" name="io_writeDataA_is_load" direction="in" portIndex="5">
-          <varref loc="d,516,31,516,79" name="io_ROB_packet_bits_decoded_instruction_1_IS_LOAD" dtype_id="1"/>
+          <varref loc="d,516,31,516,79" name="io_ROB_packet_bits_decoded_instruction_1_is_load" dtype_id="1"/>
         </port>
         <port loc="d,517,6,517,28" name="io_writeDataA_is_store" direction="in" portIndex="6">
-          <varref loc="d,517,31,517,80" name="io_ROB_packet_bits_decoded_instruction_1_IS_STORE" dtype_id="1"/>
+          <varref loc="d,517,31,517,80" name="io_ROB_packet_bits_decoded_instruction_1_is_store" dtype_id="1"/>
         </port>
         <port loc="d,518,6,518,21" name="io_writeEnableA" direction="in" portIndex="7">
           <varref loc="d,518,31,518,39" name="allocate" dtype_id="1"/>
@@ -567,10 +567,10 @@
           <varref loc="d,529,31,529,89" name="io_ROB_packet_bits_decoded_instruction_2_needs_branch_unit" dtype_id="1"/>
         </port>
         <port loc="d,530,6,530,27" name="io_writeDataA_is_load" direction="in" portIndex="5">
-          <varref loc="d,530,31,530,79" name="io_ROB_packet_bits_decoded_instruction_2_IS_LOAD" dtype_id="1"/>
+          <varref loc="d,530,31,530,79" name="io_ROB_packet_bits_decoded_instruction_2_is_load" dtype_id="1"/>
         </port>
         <port loc="d,531,6,531,28" name="io_writeDataA_is_store" direction="in" portIndex="6">
-          <varref loc="d,531,31,531,80" name="io_ROB_packet_bits_decoded_instruction_2_IS_STORE" dtype_id="1"/>
+          <varref loc="d,531,31,531,80" name="io_ROB_packet_bits_decoded_instruction_2_is_store" dtype_id="1"/>
         </port>
         <port loc="d,532,6,532,21" name="io_writeEnableA" direction="in" portIndex="7">
           <varref loc="d,532,31,532,39" name="allocate" dtype_id="1"/>
@@ -609,10 +609,10 @@
           <varref loc="d,543,31,543,89" name="io_ROB_packet_bits_decoded_instruction_3_needs_branch_unit" dtype_id="1"/>
         </port>
         <port loc="d,544,6,544,27" name="io_writeDataA_is_load" direction="in" portIndex="5">
-          <varref loc="d,544,31,544,79" name="io_ROB_packet_bits_decoded_instruction_3_IS_LOAD" dtype_id="1"/>
+          <varref loc="d,544,31,544,79" name="io_ROB_packet_bits_decoded_instruction_3_is_load" dtype_id="1"/>
         </port>
         <port loc="d,545,6,545,28" name="io_writeDataA_is_store" direction="in" portIndex="6">
-          <varref loc="d,545,31,545,80" name="io_ROB_packet_bits_decoded_instruction_3_IS_STORE" dtype_id="1"/>
+          <varref loc="d,545,31,545,80" name="io_ROB_packet_bits_decoded_instruction_3_is_store" dtype_id="1"/>
         </port>
         <port loc="d,546,6,546,21" name="io_writeEnableA" direction="in" portIndex="7">
           <varref loc="d,546,31,546,39" name="allocate" dtype_id="1"/>
@@ -689,11 +689,11 @@
       <var loc="d,41,17,41,25" name="io_addrA" dtype_id="3" dir="input" pinIndex="2" vartype="logic" origName="io_addrA"/>
       <var loc="d,42,17,42,40" name="io_writeDataA_row_valid" dtype_id="1" dir="input" pinIndex="3" vartype="logic" origName="io_writeDataA_row_valid"/>
       <var loc="d,43,17,43,39" name="io_writeDataA_fetch_PC" dtype_id="2" dir="input" pinIndex="4" vartype="logic" origName="io_writeDataA_fetch_PC"/>
-      <var loc="d,44,17,44,38" name="io_writeDataA_RAT_IDX" dtype_id="5" dir="input" pinIndex="5" vartype="logic" origName="io_writeDataA_RAT_IDX"/>
+      <var loc="d,44,17,44,38" name="io_writeDataA_RAT_index" dtype_id="5" dir="input" pinIndex="5" vartype="logic" origName="io_writeDataA_RAT_index"/>
       <var loc="d,45,17,45,32" name="io_writeEnableA" dtype_id="1" dir="input" pinIndex="6" vartype="logic" origName="io_writeEnableA"/>
       <var loc="d,46,17,46,25" name="io_addrB" dtype_id="3" dir="input" pinIndex="7" vartype="logic" origName="io_addrB"/>
       <var loc="d,47,17,47,38" name="io_readDataB_fetch_PC" dtype_id="2" dir="output" pinIndex="8" vartype="logic" origName="io_readDataB_fetch_PC"/>
-      <var loc="d,48,17,48,37" name="io_readDataB_RAT_IDX" dtype_id="5" dir="output" pinIndex="9" vartype="logic" origName="io_readDataB_RAT_IDX"/>
+      <var loc="d,48,17,48,37" name="io_readDataB_RAT_index" dtype_id="5" dir="output" pinIndex="9" vartype="logic" origName="io_readDataB_RAT_index"/>
       <var loc="d,49,17,49,25" name="io_addrC" dtype_id="3" dir="input" pinIndex="10" vartype="logic" origName="io_addrC"/>
       <var loc="d,50,17,50,38" name="io_readDataC_fetch_PC" dtype_id="2" dir="output" pinIndex="11" vartype="logic" origName="io_readDataC_fetch_PC"/>
       <var loc="d,53,15,53,31" name="_mem_ext_R0_data" dtype_id="12" vartype="logic" origName="_mem_ext_R0_data"/>
@@ -734,7 +734,7 @@
         </port>
         <port loc="d,67,6,67,13" name="W0_data" direction="in" portIndex="12">
           <concat loc="d,67,61,67,62" dtype_id="12">
-            <varref loc="d,67,16,67,37" name="io_writeDataA_RAT_IDX" dtype_id="5"/>
+            <varref loc="d,67,16,67,37" name="io_writeDataA_RAT_index" dtype_id="5"/>
             <concat loc="d,67,37,67,38" dtype_id="13">
               <varref loc="d,67,39,67,61" name="io_writeDataA_fetch_PC" dtype_id="2"/>
               <varref loc="d,67,63,67,86" name="io_writeDataA_row_valid" dtype_id="1"/>
@@ -756,7 +756,7 @@
           <const loc="d,70,49,70,50" name="32&apos;h21" dtype_id="2"/>
           <const loc="d,70,49,70,50" name="32&apos;h4" dtype_id="2"/>
         </sel>
-        <varref loc="d,70,31,70,32" name="io_readDataB_RAT_IDX" dtype_id="5"/>
+        <varref loc="d,70,31,70,32" name="io_readDataB_RAT_index" dtype_id="5"/>
       </contassign>
       <contassign loc="d,71,32,71,33" dtype_id="2">
         <sel loc="d,71,50,71,51" dtype_id="2">
