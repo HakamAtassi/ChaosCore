@@ -1,90 +1,40 @@
 [*]
 [*] GTKWave Analyzer v3.3.116 (w)1999-2023 BSI
-[*] Sat Jun 29 15:12:43 2024
+[*] Sat Jun 29 22:06:05 2024
 [*]
 [dumpfile] "/home/hakam/Repos/ChaosCore/cocotb/functional_tests/SOC/sim_build/dump.fst"
-[dumpfile_mtime] "Sat Jun 29 15:04:48 2024"
-[dumpfile_size] 108075
+[dumpfile_mtime] "Sat Jun 29 22:04:22 2024"
+[dumpfile_size] 153634
 [savefile] "/home/hakam/Repos/ChaosCore/cocotb/functional_tests/SOC/waves.gtkw"
-[timestart] 29200
+[timestart] 1801900
 [size] 1920 1033
 [pos] -1 -1
-*-14.744368 89000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-15.344368 223000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] .
 [treeopen] .SOC.
 [treeopen] .SOC.ChaosCore.
-[treeopen] .SOC.ChaosCore.backend.
 [treeopen] .SOC.ChaosCore.frontend.
 [treeopen] .SOC.ChaosCore.frontend.instruction_fetch.
 [treeopen] .SOC.ChaosCore.frontend.instruction_fetch.BTB_Q.
 [treeopen] .SOC.ChaosCore.frontend.instruction_fetch.BTB_Q.queue.
-[sst_width] 640
-[signals_width] 488
+[treeopen] .SOC.ChaosCore.frontend.instruction_fetch.PC_Q.
+[treeopen] .SOC.ChaosCore.frontend.instruction_queue.
+[treeopen] .SOC.instruction_cache.
+[sst_width] 468
+[signals_width] 454
 [sst_expanded] 1
-[sst_vpaned_height] 379
+[sst_vpaned_height] 427
 @28
 SOC.ChaosCore.frontend.instruction_fetch.PC_gen.clock
 SOC.ChaosCore.frontend.instruction_fetch.PC_gen.reset
-@200
--
-@28
-SOC.ChaosCore.frontend.instruction_fetch.PC_gen.io_PC_next_valid
-@22
-SOC.ChaosCore.frontend.instruction_fetch.PC_gen.io_PC_next_bits_addr[31:0]
+SOC.ChaosCore.backend.MEM_RS.io_flush
 @200
 -
 @22
 SOC.ChaosCore.io_backend_memory_request_bits_addr[31:0]
-@28
-SOC.ChaosCore.io_backend_memory_request_valid
-@820
 SOC.ChaosCore.io_backend_memory_request_bits_wr_data[31:0]
-@200
--
-@24
-SOC.ChaosCore.backend.MEM_RS.io_backend_packet_0_bits_RS2[5:0]
-SOC.ChaosCore.backend.MEM_RS.io_backend_packet_1_bits_RS2[5:0]
-SOC.ChaosCore.backend.MEM_RS.io_backend_packet_2_bits_RS2[5:0]
-SOC.ChaosCore.backend.MEM_RS.io_backend_packet_3_bits_RS2[5:0]
-SOC.ChaosCore.backend.MEM_RS.io_backend_packet_0_bits_RS2_valid
-SOC.ChaosCore.backend.MEM_RS.io_backend_packet_1_bits_RS2_valid
-SOC.ChaosCore.backend.MEM_RS.io_backend_packet_2_bits_RS2_valid
-SOC.ChaosCore.backend.MEM_RS.io_backend_packet_3_bits_RS2_valid
 @28
-SOC.ChaosCore.backend.MEM_RS.io_backend_packet_0_ready
-SOC.ChaosCore.backend.MEM_RS.io_backend_packet_1_ready
-SOC.ChaosCore.backend.MEM_RS.io_backend_packet_2_ready
-SOC.ChaosCore.backend.MEM_RS.io_backend_packet_3_ready
-@201
--
-@24
-SOC.ChaosCore.backend.MEM_RS.reservation_station_0_decoded_instruction_RS2[5:0]
-SOC.ChaosCore.backend.MEM_RS.reservation_station_1_decoded_instruction_RS2[5:0]
-SOC.ChaosCore.backend.MEM_RS.reservation_station_2_decoded_instruction_RS2[5:0]
-SOC.ChaosCore.backend.MEM_RS.reservation_station_3_decoded_instruction_RS2[5:0]
-SOC.ChaosCore.backend.MEM_RS.reservation_station_4_decoded_instruction_RS2[5:0]
-SOC.ChaosCore.backend.MEM_RS.reservation_station_5_decoded_instruction_RS2[5:0]
-SOC.ChaosCore.backend.MEM_RS.reservation_station_6_decoded_instruction_RS2[5:0]
-SOC.ChaosCore.backend.MEM_RS.reservation_station_7_decoded_instruction_RS2[5:0]
-SOC.ChaosCore.backend.MEM_RS.reservation_station_8_decoded_instruction_RS2[5:0]
-SOC.ChaosCore.backend.MEM_RS.reservation_station_9_decoded_instruction_RS2[5:0]
-SOC.ChaosCore.backend.MEM_RS.reservation_station_10_decoded_instruction_RS2[5:0]
-SOC.ChaosCore.backend.MEM_RS.reservation_station_11_decoded_instruction_RS2[5:0]
-SOC.ChaosCore.backend.MEM_RS.reservation_station_12_decoded_instruction_RS2[5:0]
-SOC.ChaosCore.backend.MEM_RS.reservation_station_13_decoded_instruction_RS2[5:0]
-SOC.ChaosCore.backend.MEM_RS.reservation_station_14_decoded_instruction_RS2[5:0]
-SOC.ChaosCore.backend.MEM_RS.reservation_station_15_decoded_instruction_RS2[5:0]
-@200
--
-@28
-SOC.ChaosCore.backend.MEM_RS.io_flush
-@24
-SOC.ChaosCore.backend.MEM_RS.front_pointer[4:0]
-@200
--
-@24
-SOC.ChaosCore.backend.MEM_RS.io_RF_inputs_3_bits_RS2[5:0]
-@28
-SOC.ChaosCore.backend.MEM_RS.io_RF_inputs_3_valid
+SOC.ChaosCore.io_backend_memory_request_bits_wr_en
+SOC.ChaosCore.io_backend_memory_request_valid
 [pattern_trace] 1
 [pattern_trace] 0

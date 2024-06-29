@@ -111,6 +111,12 @@ class instruction_cache(parameters:Parameters) extends Module{
     })
 
 
+    ////////////////////
+    // OUTPUT BUNDLES //
+    ////////////////////
+    val CPU_response         = Wire(Decoupled(new fetch_packet(parameters)))
+
+
 
     val cache_state     = RegInit(cacheState(), cacheState.Active)
 
@@ -166,7 +172,6 @@ class instruction_cache(parameters:Parameters) extends Module{
     io.DRAM_request.bits.wr_data := request_data
     io.DRAM_request.bits.wr_en   := request_wr_en
 
-    io.CPU_response.valid     := (cache_valid || hit) && !(io.flush || RegNext(io.flush))
 
     val already_requested = RegInit(Bool(), 0.B)
 
@@ -213,7 +218,7 @@ class instruction_cache(parameters:Parameters) extends Module{
                 cache_state := cacheState.Active    // Ignore miss, go back to active.
                 cache_valid := 0.B
             }.otherwise{
-                when(io.CPU_response.valid && io.CPU_response.ready){   // Cache output accepted
+                when(CPU_response.valid && CPU_response.ready){   // Cache output accepted
                     cache_valid := 0.B
                     cache_state     := cacheState.Active    // Go back to active after replay
                 }
@@ -232,11 +237,6 @@ class instruction_cache(parameters:Parameters) extends Module{
     current_packet      := get_decomposed_icache_address(parameters, current_address.addr)
     dontTouch(current_packet)
     
-    // For a new input to be accepted:
-    // cache must be active
-    // cache must not have just received a miss
-    // output must be disposable 
-    io.CPU_request.ready := (cache_state === cacheState.Active) && !miss 
 
 
     ////////////////
@@ -321,24 +321,45 @@ class instruction_cache(parameters:Parameters) extends Module{
     }
 
     for(i <- 0 until fetchWidth){
-        io.CPU_response.bits.instructions(i).instruction  := instruction_vec(RegNext(current_packet.fetch_packet)*fetchWidth.U + i.U)   
-        io.CPU_response.bits.instructions(i).packet_index := i.U
-        io.CPU_response.bits.instructions(i).ROB_index    := 0.U
+        CPU_response.bits.instructions(i).instruction  := instruction_vec(RegNext(current_packet.fetch_packet)*fetchWidth.U + i.U)   
+        CPU_response.bits.instructions(i).packet_index := i.U
+        CPU_response.bits.instructions(i).ROB_index    := 0.U
     }
 
     val validator = Module(new instruction_validator(fetchWidth=fetchWidth))
 
 
     // FIXME: ???
-    val test = get_decomposed_icache_address(parameters, io.CPU_response.bits.fetch_PC).instruction_offset //current_packet.instruction_offset
+    val test = get_decomposed_icache_address(parameters, CPU_response.bits.fetch_PC).instruction_offset //current_packet.instruction_offset
     validator.io.instruction_index := test
 
     for(i <- 0 until fetchWidth){
-        io.CPU_response.bits.valid_bits(i):= validator.io.instruction_output(fetchWidth-1-i) && io.CPU_response.valid
+        CPU_response.bits.valid_bits(i):= validator.io.instruction_output(fetchWidth-1-i) && CPU_response.valid
     }
 
 
-    io.CPU_response.bits.fetch_PC := fetch_PC_buf.addr
+    //////////////////
+    // SKID BUFFERS //
+    //////////////////
+    // predecoded instruction & FTQ outputs passed through a skid buffer
 
+    CPU_response.valid     := (cache_valid || hit) && !(io.flush || RegNext(io.flush))
+
+
+    // For a new input to be accepted:
+    // cache must be active
+    // cache must not have just received a miss
+    // output must be disposable 
+    io.CPU_request.ready := (cache_state === cacheState.Active) && !miss && io.CPU_response.ready
+
+    val CPU_response_skid_buffer         = Module(new Queue(new fetch_packet(parameters), 1, flow=true, hasFlush=true, useSyncReadMem=false))
+
+    CPU_response_skid_buffer.io.enq                  <> CPU_response
+    CPU_response_skid_buffer.io.flush.get            <> io.flush
+
+    CPU_response.bits.fetch_PC := fetch_PC_buf.addr
+
+    CPU_response_skid_buffer.io.deq                  <> io.CPU_response
+    
 
 }
