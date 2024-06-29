@@ -43,7 +43,7 @@ async def test_reset(dut):
 
 
 
-    for i in range(300):
+    for i in range(500):
         await dut.update()
 
     #print(dut.get_PRF())

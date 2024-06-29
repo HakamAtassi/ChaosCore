@@ -107,10 +107,6 @@ class MEMRS(parameters:Parameters) extends Module{
     }
     back_pointer := back_pointer + PopCount(written_vec)
 
-    when(io.flush){
-        front_pointer := 0.B
-        back_pointer := 0.B
-    }
 
 
     //////////////////////
@@ -186,11 +182,7 @@ class MEMRS(parameters:Parameters) extends Module{
     //////////////
     // FLUSH RS //
     //////////////
-    for(i <- 0 until RSEntries){
-        when(io.flush){
-            reservation_station(i) := 0.U.asTypeOf(new MEMRS_entry(parameters))
-        }
-    }
+
 
 
     ////////////////////
@@ -216,6 +208,31 @@ class MEMRS(parameters:Parameters) extends Module{
     
     for (i <- 0 until dispatchWidth){
         io.backend_packet(i).ready := availalbe_RS_entries >= fetchWidth.U
+    }
+
+
+
+    ///////////
+    // FLUSH //
+    ///////////
+
+    // When a flush takes place, you only want to clear the elements that have not commited. 
+
+    var valid_uncommited_count = PopCount(reservation_station.map(rs => !rs.commited && rs.valid))
+
+
+
+    for(i <- 0 until RSEntries){
+        when(io.flush && (!reservation_station(i).commited)){
+            reservation_station(i) := 0.U.asTypeOf(new MEMRS_entry(parameters))
+        }
+    }
+
+
+
+    when(io.flush){
+        //front_pointer := 0.B
+        back_pointer := back_pointer - (valid_uncommited_count)
     }
 
 

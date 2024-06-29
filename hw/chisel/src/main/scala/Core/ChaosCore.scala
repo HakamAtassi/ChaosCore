@@ -95,6 +95,7 @@ class ChaosCore(parameters:Parameters) extends Module{
 
     frontend.io.predictions <> FTQ.io.predictions   //buffer made predictions
 
+
     //////////////////////
     // FRONTEND <> DRAM //
     //////////////////////

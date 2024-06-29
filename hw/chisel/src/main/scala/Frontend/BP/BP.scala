@@ -38,6 +38,10 @@ import java.rmi.server.UID
 class BP(parameters:Parameters) extends Module{
     import parameters._
     val io = IO(new Bundle{
+
+        // Flush
+        val flush       = Input(Bool())
+
         // Predict Channel
         val predict     = Flipped(Decoupled(new memory_request(parameters)))
 
@@ -58,48 +62,11 @@ class BP(parameters:Parameters) extends Module{
     })
 
 
-    // It is assumed that whether or not the BTB is updated is controller externally.
-    // That is, the BTB is only allocated with taken branches.
-    //===
-    // FIXME: there are 2 options here, either multiplex the GHR so that ongoing predictuions use the correct value
-    // or insert a frontend bubble
 
-    // On commits (misprediction) (predicted, actual)
-        // (T / NT) 
-            // GHR revert
-            // RAS revert
-            // PHT update
-            // BTB no change
-            // prediction no change (mispredict PC should be on input due to mux)
-            // reverts ignored
-        // (NT / T)
-            // GHR revert
-            // RAS revert
-            // PHT update
-            // BTB update
-            // prediction no change (mispredict PC should be on input due to mux)
-            // reverts ignored
-    // On reverts (pre-decoder)
-        // Commit as normal
-        // Predict as normal
-        // GHR revert
-    // On commits (no mispredict or revert)
-        // (NT / NT)
-            // PHT update
-            // BTB no change
-        // (T / T)
-            // PHT update
-            // BTB update
-
-    // predictions
-    //FIXME: what needs to be muxed here?
-        // valid as normal
-    // reverts
-        // invalid during mispredictions
-        // otherwise valid
-    // RAS updates
-        // only valid when no mispredict or revert
-
+    ////////////////////
+    // OUTPUT BUNDLES //
+    ////////////////////
+    val prediction = Wire(Decoupled(new prediction(parameters)))
 
     /////////////
     // MODULES //
@@ -198,15 +165,30 @@ class BP(parameters:Parameters) extends Module{
     io.RAS_read.TOS      := RAS.io.TOS
 
     // BTB
-    io.prediction.bits.target    := BTB.io.BTB_output.BTB_target
-    io.prediction.bits.br_type   := BTB.io.BTB_output.BTB_br_type
-    io.prediction.bits.br_mask   := DontCare
-    io.prediction.bits.hit       := BTB.io.BTB_hit
-    io.prediction.bits.GHR       := io.GHR
-    io.prediction.bits.T_NT      := gshare.io.T_NT
+    prediction.bits.target    := BTB.io.BTB_output.BTB_target
+    prediction.bits.br_type   := BTB.io.BTB_output.BTB_br_type
+    prediction.bits.br_mask   := DontCare
+    prediction.bits.hit       := BTB.io.BTB_hit
+    prediction.bits.GHR       := io.GHR
+    prediction.bits.T_NT      := gshare.io.T_NT
 
-    // FIXME: stall on revert...
-    io.predict.ready        := io.prediction.ready && !(misprediction )   // 1 cycle stall on mispredict or revert
-    io.prediction.valid     := BTB.io.BTB_output.BTB_valid && gshare.io.valid
+
+
+    prediction.ready        := io.prediction.ready
+    prediction.valid        := BTB.io.BTB_output.BTB_valid && gshare.io.valid
+
+    prediction <> io.prediction
+
+    /////////////////
+    // SKID BUFFER //
+    /////////////////
+
+    val prediction_skid_buffer      = Module(new Queue(new prediction(parameters), 1, flow=true, hasFlush=true, useSyncReadMem=false))
+
+    prediction_skid_buffer.io.enq                  <> prediction
+    prediction_skid_buffer.io.deq                  <> io.prediction
+    prediction_skid_buffer.io.flush.get            := io.flush
+
+    io.predict.ready        := io.prediction.ready && !(misprediction)   // 1 cycle stall on mispredict or revert
 
 }
