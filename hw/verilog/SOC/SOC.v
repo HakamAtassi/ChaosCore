@@ -381,10 +381,60 @@ module RAS(
   assign io_TOS = TOS;
 endmodule
 
+module Queue1_prediction(
+  input         clock,
+                reset,
+                io_enq_valid,
+                io_enq_bits_hit,
+  input  [31:0] io_enq_bits_target,
+  input  [2:0]  io_enq_bits_br_type,
+  input  [15:0] io_enq_bits_GHR,
+  input         io_enq_bits_T_NT,
+                io_deq_ready,
+  output        io_deq_valid,
+                io_deq_bits_hit,
+  output [31:0] io_deq_bits_target,
+  output [2:0]  io_deq_bits_br_type,
+  output [3:0]  io_deq_bits_br_mask,
+  output [15:0] io_deq_bits_GHR,
+  output        io_deq_bits_T_NT,
+  input         io_flush
+);
+
+  reg  [56:0] ram;
+  reg         full;
+  wire        io_deq_valid_0 = io_enq_valid | full;
+  wire        do_enq = ~(~full & io_deq_ready) & ~full & io_enq_valid;
+  always @(posedge clock) begin
+    if (do_enq)
+      ram <=
+        {io_enq_bits_T_NT,
+         io_enq_bits_GHR,
+         4'h0,
+         io_enq_bits_br_type,
+         io_enq_bits_target,
+         io_enq_bits_hit};
+    if (reset)
+      full <= 1'h0;
+    else
+      full <=
+        ~io_flush & (do_enq == (full & io_deq_ready & io_deq_valid_0) ? full : do_enq);
+  end // always @(posedge)
+  assign io_deq_valid = io_deq_valid_0;
+  assign io_deq_bits_hit = full ? ram[0] : io_enq_bits_hit;
+  assign io_deq_bits_target = full ? ram[32:1] : io_enq_bits_target;
+  assign io_deq_bits_br_type = full ? ram[35:33] : io_enq_bits_br_type;
+  assign io_deq_bits_br_mask = full ? ram[39:36] : 4'h0;
+  assign io_deq_bits_GHR = full ? ram[55:40] : io_enq_bits_GHR;
+  assign io_deq_bits_T_NT = full ? ram[56] : io_enq_bits_T_NT;
+endmodule
+
 module BP(
   input         clock,
                 reset,
-                io_predict_valid,
+                io_flush,
+  output        io_predict_ready,
+  input         io_predict_valid,
   input  [31:0] io_predict_bits_addr,
   input         io_commit_valid,
   input  [31:0] io_commit_bits_fetch_PC,
@@ -402,22 +452,28 @@ module BP(
                 io_RAS_read_TOS,
   output [31:0] io_RAS_read_ret_addr,
   input  [15:0] io_GHR,
+  input         io_prediction_ready,
   output        io_prediction_valid,
                 io_prediction_bits_hit,
   output [31:0] io_prediction_bits_target,
   output [2:0]  io_prediction_bits_br_type,
+  output [3:0]  io_prediction_bits_br_mask,
   output [15:0] io_prediction_bits_GHR,
   output        io_prediction_bits_T_NT
 );
 
-  wire _BTB_io_BTB_output_BTB_valid;
-  wire _gshare_io_valid;
+  wire        _BTB_io_BTB_hit;
+  wire        _BTB_io_BTB_output_BTB_valid;
+  wire [31:0] _BTB_io_BTB_output_BTB_target;
+  wire [2:0]  _BTB_io_BTB_output_BTB_br_type;
+  wire        _gshare_io_T_NT;
+  wire        _gshare_io_valid;
   gshare gshare (
     .clock                   (clock),
     .io_predict_GHR          (io_GHR),
     .io_predict_PC           (io_predict_bits_addr),
     .io_predict_valid        (io_predict_valid),
-    .io_T_NT                 (io_prediction_bits_T_NT),
+    .io_T_NT                 (_gshare_io_T_NT),
     .io_valid                (_gshare_io_valid),
     .io_commit_valid         ((|io_commit_bits_br_type) & io_commit_valid),
     .io_commit_bits_fetch_PC (io_commit_bits_fetch_PC),
@@ -429,10 +485,10 @@ module BP(
     .reset                      (reset),
     .io_predict_PC              (io_predict_bits_addr),
     .io_predict_valid           (io_predict_valid),
-    .io_BTB_hit                 (io_prediction_bits_hit),
+    .io_BTB_hit                 (_BTB_io_BTB_hit),
     .io_BTB_output_BTB_valid    (_BTB_io_BTB_output_BTB_valid),
-    .io_BTB_output_BTB_target   (io_prediction_bits_target),
-    .io_BTB_output_BTB_br_type  (io_prediction_bits_br_type),
+    .io_BTB_output_BTB_target   (_BTB_io_BTB_output_BTB_target),
+    .io_BTB_output_BTB_br_type  (_BTB_io_BTB_output_BTB_br_type),
     .io_commit_valid            (io_commit_bits_T_NT & io_commit_valid),
     .io_commit_bits_fetch_PC    (io_commit_bits_fetch_PC),
     .io_commit_bits_br_type     (io_commit_bits_br_type),
@@ -451,8 +507,26 @@ module BP(
     .io_NEXT         (io_RAS_read_NEXT),
     .io_TOS          (io_RAS_read_TOS)
   );
-  assign io_prediction_valid = _BTB_io_BTB_output_BTB_valid & _gshare_io_valid;
-  assign io_prediction_bits_GHR = io_GHR;
+  Queue1_prediction prediction_skid_buffer (
+    .clock               (clock),
+    .reset               (reset),
+    .io_enq_valid        (_BTB_io_BTB_output_BTB_valid & _gshare_io_valid),
+    .io_enq_bits_hit     (_BTB_io_BTB_hit),
+    .io_enq_bits_target  (_BTB_io_BTB_output_BTB_target),
+    .io_enq_bits_br_type (_BTB_io_BTB_output_BTB_br_type),
+    .io_enq_bits_GHR     (io_GHR),
+    .io_enq_bits_T_NT    (_gshare_io_T_NT),
+    .io_deq_ready        (io_prediction_ready),
+    .io_deq_valid        (io_prediction_valid),
+    .io_deq_bits_hit     (io_prediction_bits_hit),
+    .io_deq_bits_target  (io_prediction_bits_target),
+    .io_deq_bits_br_type (io_prediction_bits_br_type),
+    .io_deq_bits_br_mask (io_prediction_bits_br_mask),
+    .io_deq_bits_GHR     (io_prediction_bits_GHR),
+    .io_deq_bits_T_NT    (io_prediction_bits_T_NT),
+    .io_flush            (io_flush)
+  );
+  assign io_predict_ready = io_prediction_ready & ~io_commit_bits_is_misprediction;
 endmodule
 
 module branch_decoder(
@@ -1063,8 +1137,9 @@ module predecoder(
     .clock                        (clock),
     .reset                        (reset),
     .io_enq_valid
-      (_push_FTQ_T | _decoders_2_io_metadata_is_control
-       | _decoders_3_io_metadata_is_control),
+      ((_push_FTQ_T | _decoders_2_io_metadata_is_control
+        | _decoders_3_io_metadata_is_control) & io_prediction_valid
+       & io_fetch_packet_valid),
     .io_enq_bits_fetch_PC         (io_fetch_packet_bits_fetch_PC),
     .io_enq_bits_predicted_PC
       ((|_predictions_bits_T_NT_T)
@@ -1627,10 +1702,12 @@ endmodule
 module Queue16_prediction(
   input         clock,
                 reset,
-                io_enq_valid,
+  output        io_enq_ready,
+  input         io_enq_valid,
                 io_enq_bits_hit,
   input  [31:0] io_enq_bits_target,
   input  [2:0]  io_enq_bits_br_type,
+  input  [3:0]  io_enq_bits_br_mask,
   input  [15:0] io_enq_bits_GHR,
   input         io_enq_bits_T_NT,
                 io_deq_ready,
@@ -1651,9 +1728,10 @@ module Queue16_prediction(
   reg         maybe_full;
   wire        ptr_match = enq_ptr_value == deq_ptr_value;
   wire        empty = ptr_match & ~maybe_full;
+  wire        full = ptr_match & maybe_full;
   wire        io_deq_valid_0 = io_enq_valid | ~empty;
   assign do_deq = ~empty & io_deq_ready & io_deq_valid_0;
-  wire        do_enq = ~(empty & io_deq_ready) & ~(ptr_match & maybe_full) & io_enq_valid;
+  wire        do_enq = ~(empty & io_deq_ready) & ~full & io_enq_valid;
   always @(posedge clock) begin
     if (reset) begin
       enq_ptr_value <= 4'h0;
@@ -1685,16 +1763,17 @@ module Queue16_prediction(
     .W0_data
       ({io_enq_bits_T_NT,
         io_enq_bits_GHR,
-        4'h0,
+        io_enq_bits_br_mask,
         io_enq_bits_br_type,
         io_enq_bits_target,
         io_enq_bits_hit})
   );
+  assign io_enq_ready = ~full;
   assign io_deq_valid = io_deq_valid_0;
   assign io_deq_bits_hit = empty ? io_enq_bits_hit : _ram_ext_R0_data[0];
   assign io_deq_bits_target = empty ? io_enq_bits_target : _ram_ext_R0_data[32:1];
   assign io_deq_bits_br_type = empty ? io_enq_bits_br_type : _ram_ext_R0_data[35:33];
-  assign io_deq_bits_br_mask = empty ? 4'h0 : _ram_ext_R0_data[39:36];
+  assign io_deq_bits_br_mask = empty ? io_enq_bits_br_mask : _ram_ext_R0_data[39:36];
   assign io_deq_bits_GHR = empty ? io_enq_bits_GHR : _ram_ext_R0_data[55:40];
   assign io_deq_bits_T_NT = empty ? io_enq_bits_T_NT : _ram_ext_R0_data[56];
 endmodule
@@ -1702,10 +1781,12 @@ endmodule
 module Q_2(
   input         clock,
                 reset,
-                io_in_valid,
+  output        io_in_ready,
+  input         io_in_valid,
                 io_in_bits_hit,
   input  [31:0] io_in_bits_target,
   input  [2:0]  io_in_bits_br_type,
+  input  [3:0]  io_in_bits_br_mask,
   input  [15:0] io_in_bits_GHR,
   input         io_in_bits_T_NT,
                 io_out_ready,
@@ -1722,10 +1803,12 @@ module Q_2(
   Queue16_prediction queue (
     .clock               (clock),
     .reset               (reset),
+    .io_enq_ready        (io_in_ready),
     .io_enq_valid        (io_in_valid),
     .io_enq_bits_hit     (io_in_bits_hit),
     .io_enq_bits_target  (io_in_bits_target),
     .io_enq_bits_br_type (io_in_bits_br_type),
+    .io_enq_bits_br_mask (io_in_bits_br_mask),
     .io_enq_bits_GHR     (io_in_bits_GHR),
     .io_enq_bits_T_NT    (io_in_bits_T_NT),
     .io_deq_ready        (io_out_ready),
@@ -1813,6 +1896,7 @@ module instruction_fetch(
   output [31:0] io_predictions_bits_resolved_PC
 );
 
+  wire        _BTB_Q_io_in_ready;
   wire        _BTB_Q_io_out_valid;
   wire        _BTB_Q_io_out_bits_hit;
   wire [31:0] _BTB_Q_io_out_bits_target;
@@ -1839,6 +1923,7 @@ module instruction_fetch(
   wire [31:0] _instruction_Q_io_out_bits_instructions_3_instruction;
   wire [3:0]  _instruction_Q_io_out_bits_instructions_3_packet_index;
   wire [5:0]  _instruction_Q_io_out_bits_instructions_3_ROB_index;
+  wire        _PC_gen_io_prediction_ready;
   wire        _PC_gen_io_PC_next_valid;
   wire [31:0] _PC_gen_io_PC_next_bits_addr;
   wire [31:0] _PC_gen_io_PC_next_bits_wr_data;
@@ -1849,6 +1934,7 @@ module instruction_fetch(
   wire [31:0] _predecoder_io_RAS_update_call_addr;
   wire        _predecoder_io_RAS_update_call;
   wire        _predecoder_io_RAS_update_ret;
+  wire        _bp_io_predict_ready;
   wire [6:0]  _bp_io_RAS_read_NEXT;
   wire [6:0]  _bp_io_RAS_read_TOS;
   wire [31:0] _bp_io_RAS_read_ret_addr;
@@ -1856,11 +1942,14 @@ module instruction_fetch(
   wire        _bp_io_prediction_bits_hit;
   wire [31:0] _bp_io_prediction_bits_target;
   wire [2:0]  _bp_io_prediction_bits_br_type;
+  wire [3:0]  _bp_io_prediction_bits_br_mask;
   wire [15:0] _bp_io_prediction_bits_GHR;
   wire        _bp_io_prediction_bits_T_NT;
   BP bp (
     .clock                           (clock),
     .reset                           (reset),
+    .io_flush                        (io_flush),
+    .io_predict_ready                (_bp_io_predict_ready),
     .io_predict_valid                (_PC_gen_io_PC_next_valid),
     .io_predict_bits_addr            (_PC_gen_io_PC_next_bits_addr),
     .io_commit_valid                 (io_commit_valid),
@@ -1879,10 +1968,12 @@ module instruction_fetch(
     .io_RAS_read_TOS                 (_bp_io_RAS_read_TOS),
     .io_RAS_read_ret_addr            (_bp_io_RAS_read_ret_addr),
     .io_GHR                          (_predecoder_io_GHR),
+    .io_prediction_ready             (_BTB_Q_io_in_ready & _PC_gen_io_prediction_ready),
     .io_prediction_valid             (_bp_io_prediction_valid),
     .io_prediction_bits_hit          (_bp_io_prediction_bits_hit),
     .io_prediction_bits_target       (_bp_io_prediction_bits_target),
     .io_prediction_bits_br_type      (_bp_io_prediction_bits_br_type),
+    .io_prediction_bits_br_mask      (_bp_io_prediction_bits_br_mask),
     .io_prediction_bits_GHR          (_bp_io_prediction_bits_GHR),
     .io_prediction_bits_T_NT         (_bp_io_prediction_bits_T_NT)
   );
@@ -2047,18 +2138,18 @@ module instruction_fetch(
     .io_commit_bits_RD_valid_1              (io_commit_bits_RD_valid_1),
     .io_commit_bits_RD_valid_2              (io_commit_bits_RD_valid_2),
     .io_commit_bits_RD_valid_3              (io_commit_bits_RD_valid_3),
-    .io_prediction_ready                    (/* unused */),
+    .io_prediction_ready                    (_PC_gen_io_prediction_ready),
     .io_prediction_valid                    (_bp_io_prediction_valid),
     .io_prediction_bits_hit                 (_bp_io_prediction_bits_hit),
     .io_prediction_bits_target              (_bp_io_prediction_bits_target),
     .io_prediction_bits_br_type             (_bp_io_prediction_bits_br_type),
-    .io_prediction_bits_br_mask             (4'h0),
+    .io_prediction_bits_br_mask             (_bp_io_prediction_bits_br_mask),
     .io_prediction_bits_GHR                 (_bp_io_prediction_bits_GHR),
     .io_prediction_bits_T_NT                (_bp_io_prediction_bits_T_NT),
     .io_RAS_read_NEXT                       (_bp_io_RAS_read_NEXT),
     .io_RAS_read_TOS                        (_bp_io_RAS_read_TOS),
     .io_RAS_read_ret_addr                   (_bp_io_RAS_read_ret_addr),
-    .io_PC_next_ready                       (_PC_Q_io_in_ready),
+    .io_PC_next_ready                       (_PC_Q_io_in_ready & _bp_io_predict_ready),
     .io_PC_next_valid                       (_PC_gen_io_PC_next_valid),
     .io_PC_next_bits_addr                   (_PC_gen_io_PC_next_bits_addr),
     .io_PC_next_bits_wr_data                (_PC_gen_io_PC_next_bits_wr_data),
@@ -2133,10 +2224,12 @@ module instruction_fetch(
   Q_2 BTB_Q (
     .clock               (clock),
     .reset               (reset),
+    .io_in_ready         (_BTB_Q_io_in_ready),
     .io_in_valid         (_bp_io_prediction_valid),
     .io_in_bits_hit      (_bp_io_prediction_bits_hit),
     .io_in_bits_target   (_bp_io_prediction_bits_target),
     .io_in_bits_br_type  (_bp_io_prediction_bits_br_type),
+    .io_in_bits_br_mask  (_bp_io_prediction_bits_br_mask),
     .io_in_bits_GHR      (_bp_io_prediction_bits_GHR),
     .io_in_bits_T_NT     (_bp_io_prediction_bits_T_NT),
     .io_out_ready        (_predecoder_io_prediction_ready),
@@ -22829,22 +22922,54 @@ module MEMRS(
       automatic logic       _GEN_127;
       automatic logic       _GEN_128;
       automatic logic       _GEN_129;
-      automatic logic       _GEN_130 = io_flush | good_to_go & front_pointer[3:0] == 4'h0;
-      automatic logic       _GEN_131 = io_flush | good_to_go & front_pointer[3:0] == 4'h1;
-      automatic logic       _GEN_132 = io_flush | good_to_go & front_pointer[3:0] == 4'h2;
-      automatic logic       _GEN_133 = io_flush | good_to_go & front_pointer[3:0] == 4'h3;
-      automatic logic       _GEN_134 = io_flush | good_to_go & front_pointer[3:0] == 4'h4;
-      automatic logic       _GEN_135 = io_flush | good_to_go & front_pointer[3:0] == 4'h5;
-      automatic logic       _GEN_136 = io_flush | good_to_go & front_pointer[3:0] == 4'h6;
-      automatic logic       _GEN_137 = io_flush | good_to_go & front_pointer[3:0] == 4'h7;
-      automatic logic       _GEN_138 = io_flush | good_to_go & front_pointer[3:0] == 4'h8;
-      automatic logic       _GEN_139 = io_flush | good_to_go & front_pointer[3:0] == 4'h9;
-      automatic logic       _GEN_140 = io_flush | good_to_go & front_pointer[3:0] == 4'hA;
-      automatic logic       _GEN_141 = io_flush | good_to_go & front_pointer[3:0] == 4'hB;
-      automatic logic       _GEN_142 = io_flush | good_to_go & front_pointer[3:0] == 4'hC;
-      automatic logic       _GEN_143 = io_flush | good_to_go & front_pointer[3:0] == 4'hD;
-      automatic logic       _GEN_144 = io_flush | good_to_go & front_pointer[3:0] == 4'hE;
-      automatic logic       _GEN_145 = io_flush | good_to_go & (&(front_pointer[3:0]));
+      automatic logic       _GEN_130 =
+        io_flush & ~reservation_station_0_commited | good_to_go
+        & front_pointer[3:0] == 4'h0;
+      automatic logic       _GEN_131 =
+        io_flush & ~reservation_station_1_commited | good_to_go
+        & front_pointer[3:0] == 4'h1;
+      automatic logic       _GEN_132 =
+        io_flush & ~reservation_station_2_commited | good_to_go
+        & front_pointer[3:0] == 4'h2;
+      automatic logic       _GEN_133 =
+        io_flush & ~reservation_station_3_commited | good_to_go
+        & front_pointer[3:0] == 4'h3;
+      automatic logic       _GEN_134 =
+        io_flush & ~reservation_station_4_commited | good_to_go
+        & front_pointer[3:0] == 4'h4;
+      automatic logic       _GEN_135 =
+        io_flush & ~reservation_station_5_commited | good_to_go
+        & front_pointer[3:0] == 4'h5;
+      automatic logic       _GEN_136 =
+        io_flush & ~reservation_station_6_commited | good_to_go
+        & front_pointer[3:0] == 4'h6;
+      automatic logic       _GEN_137 =
+        io_flush & ~reservation_station_7_commited | good_to_go
+        & front_pointer[3:0] == 4'h7;
+      automatic logic       _GEN_138 =
+        io_flush & ~reservation_station_8_commited | good_to_go
+        & front_pointer[3:0] == 4'h8;
+      automatic logic       _GEN_139 =
+        io_flush & ~reservation_station_9_commited | good_to_go
+        & front_pointer[3:0] == 4'h9;
+      automatic logic       _GEN_140 =
+        io_flush & ~reservation_station_10_commited | good_to_go
+        & front_pointer[3:0] == 4'hA;
+      automatic logic       _GEN_141 =
+        io_flush & ~reservation_station_11_commited | good_to_go
+        & front_pointer[3:0] == 4'hB;
+      automatic logic       _GEN_142 =
+        io_flush & ~reservation_station_12_commited | good_to_go
+        & front_pointer[3:0] == 4'hC;
+      automatic logic       _GEN_143 =
+        io_flush & ~reservation_station_13_commited | good_to_go
+        & front_pointer[3:0] == 4'hD;
+      automatic logic       _GEN_144 =
+        io_flush & ~reservation_station_14_commited | good_to_go
+        & front_pointer[3:0] == 4'hE;
+      automatic logic       _GEN_145 =
+        io_flush & ~reservation_station_15_commited | good_to_go
+        & (&(front_pointer[3:0]));
       _GEN_12 = {1'h0, written_vec_0};
       _GEN_14 = written_vec_0 & _GEN_13 == 4'h0;
       _GEN_15 = written_vec_0 & _GEN_13 == 4'h1;
@@ -24854,7 +24979,54 @@ module MEMRS(
         ~_GEN_145 & (written_vec_3 ? (&_GEN_98) | _GEN_96 | _GEN_78 : _GEN_96 | _GEN_78);
       front_pointer <= front_pointer + {4'h0, good_to_go};
       if (io_flush)
-        back_pointer <= 5'h0;
+        back_pointer <=
+          back_pointer
+          - ({1'h0,
+              {1'h0,
+               {1'h0,
+                {1'h0, ~reservation_station_0_commited & reservation_station_0_valid}
+                  + {1'h0, ~reservation_station_1_commited & reservation_station_1_valid}}
+                 + {1'h0,
+                    {1'h0, ~reservation_station_2_commited & reservation_station_2_valid}
+                      + {1'h0,
+                         ~reservation_station_3_commited & reservation_station_3_valid}}}
+                + {1'h0,
+                   {1'h0,
+                    {1'h0, ~reservation_station_4_commited & reservation_station_4_valid}
+                      + {1'h0,
+                         ~reservation_station_5_commited & reservation_station_5_valid}}
+                     + {1'h0,
+                        {1'h0,
+                         ~reservation_station_6_commited & reservation_station_6_valid}
+                          + {1'h0,
+                             ~reservation_station_7_commited
+                               & reservation_station_7_valid}}}}
+             + {1'h0,
+                {1'h0,
+                 {1'h0,
+                  {1'h0, ~reservation_station_8_commited & reservation_station_8_valid}
+                    + {1'h0,
+                       ~reservation_station_9_commited & reservation_station_9_valid}}
+                   + {1'h0,
+                      {1'h0,
+                       ~reservation_station_10_commited & reservation_station_10_valid}
+                        + {1'h0,
+                           ~reservation_station_11_commited
+                             & reservation_station_11_valid}}}
+                  + {1'h0,
+                     {1'h0,
+                      {1'h0,
+                       ~reservation_station_12_commited & reservation_station_12_valid}
+                        + {1'h0,
+                           ~reservation_station_13_commited
+                             & reservation_station_13_valid}}
+                       + {1'h0,
+                          {1'h0,
+                           ~reservation_station_14_commited
+                             & reservation_station_14_valid}
+                            + {1'h0,
+                               ~reservation_station_15_commited
+                                 & reservation_station_15_valid}}}});
       else
         back_pointer <=
           back_pointer + {2'h0, {1'h0, _GEN_12 + _GEN_30} + {1'h0, _GEN_79 + _GEN_97}};

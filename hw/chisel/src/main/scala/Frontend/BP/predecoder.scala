@@ -164,7 +164,7 @@ class predecoder(parameters:Parameters) extends Module{
 
     predictions.ready                              := io.predictions.ready
 
-    predictions.valid                              := push_FTQ
+    predictions.valid                              := push_FTQ && io.prediction.valid && io.fetch_packet.valid
 
     // Buffer branch state
     predictions.bits.fetch_PC                      := io.fetch_packet.bits.fetch_PC

@@ -69,10 +69,6 @@ class Q[T <: Data](dataType: T, depth: Int = 16) extends Module{
   //queue.reset := io.clear || reset.asBool
 }
 
-
-// TODO: handle mispredict
-// TODO: handle kills/reverts/clears
-
 class instruction_fetch(parameters:Parameters) extends Module{
   import parameters._
 
@@ -103,7 +99,6 @@ class instruction_fetch(parameters:Parameters) extends Module{
     ////////////
     // Queues //
     ////////////
-    // FIXME: these should be parameters
     val instruction_Q   =   Module(new Q(new fetch_packet(parameters), depth = 16))              // Instantiate queue with fetch_packet data type
     val PC_Q            =   Module(new Q(new memory_request(parameters), depth = 16))                                                       // Queue of predicted PCs
     val BTB_Q           =   Module(new Q(new prediction(parameters), depth = 16))         // Queue of BTB responses
@@ -145,12 +140,12 @@ class instruction_fetch(parameters:Parameters) extends Module{
 
     // BP inputs (external)
     bp.io.commit            <>  io.commit
+    bp.io.flush <> io.flush
 
     // BP inputs (internal)
     bp.io.predict           <>  PC_gen.io.PC_next
     bp.io.RAS_update        <>  predecoder.io.RAS_update
     bp.io.GHR               <>  predecoder.io.GHR
-    bp.io.prediction.ready  <> !BTB_Q.io.in.ready
 
     // Outputs
     predecoder.io.RAS_read  <> bp.io.RAS_read
@@ -175,8 +170,8 @@ class instruction_fetch(parameters:Parameters) extends Module{
     PC_gen.io.commit            <> io.commit
     PC_gen.io.prediction        <> bp.io.prediction
     PC_gen.io.RAS_read          <> bp.io.RAS_read
-    PC_gen.io.PC_next.ready     := PC_Q.io.in.ready && bp.io.predict.ready
     PC_gen.io.PC_next           <> PC_Q.io.in
+    PC_gen.io.PC_next.ready     := PC_Q.io.in.ready && bp.io.predict.ready
 
 
     // FIXME: PC_gen readies not connected
@@ -191,6 +186,9 @@ class instruction_fetch(parameters:Parameters) extends Module{
     //io.commit.ready            := 1.U
     //io.mispredict.ready        := 1.U
     //PC_gen.io.revert.ready && bp.io.revert.ready // FIXME: when is revert ready??
+
+
+    bp.io.prediction.ready  :=  BTB_Q.io.in.ready && PC_gen.io.prediction.ready
 
     io.fetch_packet <> predecoder.io.final_fetch_packet
 
