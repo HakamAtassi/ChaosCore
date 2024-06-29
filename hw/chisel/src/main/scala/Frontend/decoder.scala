@@ -198,8 +198,14 @@ class fetch_packet_decoder(parameters:Parameters) extends Module{
         val flush                =  Input(Bool())
 
         val fetch_packet         =  Flipped(Decoupled(new fetch_packet(parameters)))          // Fetch packet result (To Decoders)
+
         val decoded_fetch_packet =  Decoupled(new decoded_fetch_packet(parameters))
     })
+
+    ////////////////////
+    // OUTPUT BUNDLES //
+    ////////////////////
+    val decoded_fetch_packet = Wire(Decoupled(new decoded_fetch_packet(parameters)))
 
     val decoders: Seq[decoder] = Seq.tabulate(fetchWidth) { w =>
         Module(new decoder(parameters))
@@ -214,17 +220,32 @@ class fetch_packet_decoder(parameters:Parameters) extends Module{
 
     // Register outputs //
     for(i <- 0 until fetchWidth){
-        io.decoded_fetch_packet.bits.decoded_instruction(i)         := RegNext(decoders(i).io.decoded_instruction.bits)
+        decoded_fetch_packet.bits.decoded_instruction(i)         := RegNext(decoders(i).io.decoded_instruction.bits)
         decoders(i).io.decoded_instruction.ready                    := io.decoded_fetch_packet.ready
         io.fetch_packet.ready                                       := io.decoded_fetch_packet.ready
     }
 
-    io.decoded_fetch_packet.valid := RegNext(io.fetch_packet.valid && !io.flush)
-    io.decoded_fetch_packet.bits.fetch_PC   := RegNext(io.fetch_packet.bits.fetch_PC)
-    io.decoded_fetch_packet.bits.valid_bits := RegNext(io.fetch_packet.bits.valid_bits)
+    decoded_fetch_packet.valid := RegNext(io.fetch_packet.valid && !io.flush)
+    decoded_fetch_packet.bits.fetch_PC   := RegNext(io.fetch_packet.bits.fetch_PC)
+    decoded_fetch_packet.bits.valid_bits := RegNext(io.fetch_packet.bits.valid_bits)
+    decoded_fetch_packet.bits.RAT_index                  := DontCare // This is fine. Allocated during rename
+    decoded_fetch_packet.bits.free_list_front_pointer    := DontCare // This is fine. Allocated during rename
 
-    io.decoded_fetch_packet.bits.RAT_index                  := DontCare // This is fine. Allocated during rename
-    io.decoded_fetch_packet.bits.free_list_front_pointer    := DontCare // This is fine. Allocated during rename
+
+
+    //////////////////
+    // SKID BUFFERS //
+    //////////////////
+
+    decoded_fetch_packet.ready := io.decoded_fetch_packet.ready
+
+    val decoded_fetch_packet_skid_buffer      = Module(new Queue(new decoded_fetch_packet(parameters), 1, flow=true, hasFlush=true, useSyncReadMem=false))
+
+    decoded_fetch_packet_skid_buffer.io.enq                  <> decoded_fetch_packet
+    decoded_fetch_packet_skid_buffer.io.deq                  <> io.decoded_fetch_packet
+    decoded_fetch_packet_skid_buffer.io.flush.get            := io.flush
+
+    io.fetch_packet.ready := io.decoded_fetch_packet.ready
 
     // DEBUG SIGNALS //
     val monitor_output = Wire(Bool())

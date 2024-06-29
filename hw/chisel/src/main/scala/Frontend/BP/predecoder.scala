@@ -59,16 +59,20 @@ class predecoder(parameters:Parameters) extends Module{
         val commit              = Flipped(ValidIO(new commit(parameters)))
 
         // outputs
-        val GHR                 = Output(UInt(GHRWidth.W))
-
-        val final_fetch_packet  = Decoupled(new fetch_packet(parameters))              // Output validated instructions
-        val RAS_update          = Output(new RAS_update)                               // RAS control
-
-        // TO FTQ //
         val predictions         = Decoupled(new FTQ_entry(parameters))
+        val final_fetch_packet  = Decoupled(new fetch_packet(parameters))              // Output validated instructions
+
+        val GHR                 = Output(UInt(GHRWidth.W))
+        val RAS_update          = Output(new RAS_update)                               // RAS control
     })
 
     dontTouch(io)
+
+    ////////////////////
+    // OUTPUT BUNDLES //
+    ////////////////////
+    val predictions         = Wire(Decoupled(new FTQ_entry(parameters)))
+    val final_fetch_packet  = Wire(Decoupled(new fetch_packet(parameters)))
 
     ///////////////////
     // BRANCH DECODE //
@@ -158,29 +162,29 @@ class predecoder(parameters:Parameters) extends Module{
     push_FTQ := decoder_metadata.map(_.is_control).reduce(_ || _)
 
 
-    io.predictions.valid                              := push_FTQ
+    predictions.ready                              := io.predictions.ready
+
+    predictions.valid                              := push_FTQ
 
     // Buffer branch state
-    io.predictions.bits.fetch_PC                      := io.fetch_packet.bits.fetch_PC
-    io.predictions.bits.GHR                           := GHR
-    io.predictions.bits.NEXT                          := io.RAS_read.NEXT
-    io.predictions.bits.TOS                           := io.RAS_read.TOS
+    predictions.bits.fetch_PC                      := io.fetch_packet.bits.fetch_PC
+    predictions.bits.GHR                           := GHR
+    predictions.bits.NEXT                          := io.RAS_read.NEXT
+    predictions.bits.TOS                           := io.RAS_read.TOS
 
-
-    io.predictions.bits.dominant_index                := (fetchWidth-1).U                        // Set to lowest priority 
-    io.predictions.bits.resolved_PC                   := io.fetch_packet.bits.fetch_PC + (fetchWidth.U*4.U)  // Default to next PC (assume no branches taken)
+    predictions.bits.dominant_index                := (fetchWidth-1).U                        // Set to lowest priority 
+    predictions.bits.resolved_PC                   := io.fetch_packet.bits.fetch_PC + (fetchWidth.U*4.U)  // Default to next PC (assume no branches taken)
 
     // Init FTQ entry data
-    io.predictions.bits.T_NT                          := decoder_T_NT.asUInt.orR
-    when(io.predictions.bits.T_NT){
-        io.predictions.bits.predicted_PC              := io.prediction.bits.target
+    predictions.bits.T_NT                          := decoder_T_NT.asUInt.orR
+    when(predictions.bits.T_NT){
+        predictions.bits.predicted_PC              := io.prediction.bits.target
     }.otherwise{
-        io.predictions.bits.predicted_PC              := io.fetch_packet.bits.fetch_PC + (fetchWidth.U*4.U)
+        predictions.bits.predicted_PC              := io.fetch_packet.bits.fetch_PC + (fetchWidth.U*4.U)
     }
-    io.predictions.bits.valid                         := 0.B
-    io.predictions.bits.is_misprediction              := 0.B
-    //io.predictions.bits.RAT_index                       := DontCare   // FIXME: 
-    io.predictions.bits.br_type                       := dominant_branch_metadata.br_type
+    predictions.bits.valid                         := 0.B
+    predictions.bits.is_misprediction              := 0.B
+    predictions.bits.br_type                       := dominant_branch_metadata.br_type
 
 
     ////////////////////////
@@ -190,18 +194,39 @@ class predecoder(parameters:Parameters) extends Module{
     val T_NT_mask = RegNext(decoder_T_NT)
     val final_fetch_packet_valid = Wire(Vec(fetchWidth, Bool()))
 
+    final_fetch_packet.ready := io.final_fetch_packet.ready
+
     for(i <- 0 until fetchWidth){
         final_fetch_packet_valid(i) := RegNext(io.fetch_packet.valid) && RegNext(io.fetch_packet.bits.valid_bits(i)) && (!PopCount(T_NT_mask.take(i)))
     }
 
     // ASSIGN FINAL FETCH PACKET //
-    io.final_fetch_packet.valid := RegNext(io.fetch_packet.valid && !io.flush)
-    io.final_fetch_packet.bits.fetch_PC := RegNext(io.fetch_packet.bits.fetch_PC)
+    final_fetch_packet.valid := RegNext(io.fetch_packet.valid && !io.flush)
+    final_fetch_packet.bits.fetch_PC := RegNext(io.fetch_packet.bits.fetch_PC)
     
     for(i <- 0 until fetchWidth){
-        io.final_fetch_packet.bits.instructions(i) := RegNext(io.fetch_packet.bits.instructions(i))                                     // pass instructions
-        io.final_fetch_packet.bits.valid_bits(i)   := final_fetch_packet_valid(i)
+        final_fetch_packet.bits.instructions(i) := RegNext(io.fetch_packet.bits.instructions(i))                                     // pass instructions
+        final_fetch_packet.bits.valid_bits(i)   := final_fetch_packet_valid(i)
     }
+
+
+
+    //////////////////
+    // SKID BUFFERS //
+    //////////////////
+    // predecoded instruction & FTQ outputs passed through a skid buffer
+
+    val predictions_skid_buffer         = Module(new Queue(new FTQ_entry(parameters), 1, flow=true, hasFlush=true, useSyncReadMem=false))
+    val final_fetch_packet_skid_buffer  = Module(new Queue(new fetch_packet(parameters), 1, flow=true, hasFlush=true, useSyncReadMem=false))
+
+    predictions_skid_buffer.io.enq                  <> predictions
+    predictions_skid_buffer.io.deq                  <> io.predictions
+    predictions_skid_buffer.io.flush.get            <> io.flush
+
+    final_fetch_packet_skid_buffer.io.enq           <> final_fetch_packet
+    final_fetch_packet_skid_buffer.io.deq           <> io.final_fetch_packet
+    final_fetch_packet_skid_buffer.io.flush.get     <> io.flush
+
 
     io.prediction.ready   := (io.final_fetch_packet.ready && io.predictions.ready)
     io.fetch_packet.ready := (io.final_fetch_packet.ready && io.predictions.ready)

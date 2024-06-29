@@ -278,13 +278,19 @@ class rename(parameters:Parameters) extends Module{
         // Instruction input (decoded)
         val decoded_fetch_packet            =   Flipped(Decoupled(new decoded_fetch_packet(parameters)))
 
+        val FU_outputs                      =   Vec(portCount, Flipped(ValidIO(new FU_output(parameters))))
+
         // Instruction output (renamed)
         val renamed_decoded_fetch_packet    =   Decoupled(new decoded_fetch_packet(parameters))
-
-        val FU_outputs                      =   Vec(portCount, Flipped(ValidIO(new FU_output(parameters))))
     })
 
     dontTouch(io)
+
+    ////////////////////
+    // OUTPUT BUNDLES //
+    ////////////////////
+    val renamed_decoded_fetch_packet = Wire(Decoupled(new decoded_fetch_packet(parameters)))
+
 
     /////////////
     // MODULES //
@@ -295,11 +301,8 @@ class rename(parameters:Parameters) extends Module{
     val RAT             = Module(new RAT(parameters:Parameters))
 
 
-    io.renamed_decoded_fetch_packet.bits                := RegNext(io.decoded_fetch_packet.bits)
+    renamed_decoded_fetch_packet.bits                := RegNext(io.decoded_fetch_packet.bits)
 
-    val renamed_decoded_fetch_packet        =   Wire(new decoded_fetch_packet(parameters))
-
-    renamed_decoded_fetch_packet    := RegNext(io.decoded_fetch_packet.bits)
 
     ////////////////
     // CHECKPOINT //
@@ -375,11 +378,11 @@ class rename(parameters:Parameters) extends Module{
     }
 
     for(i <- 0 until fetchWidth){
-        renamed_decoded_fetch_packet.decoded_instruction(i).RS1             := renamed_RS1(i)
-        renamed_decoded_fetch_packet.decoded_instruction(i).RS2             := renamed_RS2(i)
+        renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS1             := renamed_RS1(i)
+        renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS2             := renamed_RS2(i)
     }
 
-    renamed_decoded_fetch_packet.RAT_index                  := RegNext(RAT.io.active_checkpoint_value)
+    renamed_decoded_fetch_packet.bits.RAT_index                  := RegNext(RAT.io.active_checkpoint_value)
 
     ///////////////
     // FREE LIST //
@@ -397,31 +400,24 @@ class rename(parameters:Parameters) extends Module{
     free_list.io.commit := io.commit
     
     for(i <- 0 until fetchWidth){
-        renamed_decoded_fetch_packet.decoded_instruction(i).RD              := RegNext(free_list.io.renamed_values(i))
-        renamed_decoded_fetch_packet.decoded_instruction(i).RD_valid        := RegNext(io.decoded_fetch_packet.bits.decoded_instruction(i).RD_valid)
-        renamed_decoded_fetch_packet.decoded_instruction(i).ready_bits      := RAT.io.ready_bits(i)
+        renamed_decoded_fetch_packet.bits.decoded_instruction(i).RD              := RegNext(free_list.io.renamed_values(i))
+        renamed_decoded_fetch_packet.bits.decoded_instruction(i).RD_valid        := RegNext(io.decoded_fetch_packet.bits.decoded_instruction(i).RD_valid)
+        renamed_decoded_fetch_packet.bits.decoded_instruction(i).ready_bits      := RAT.io.ready_bits(i)
     }
 
-    renamed_decoded_fetch_packet.free_list_front_pointer    := RegNext(free_list.io.free_list_front_pointer)
+    renamed_decoded_fetch_packet.bits.free_list_front_pointer    := RegNext(free_list.io.free_list_front_pointer)
 
-
+    renamed_decoded_fetch_packet.valid := RegNext(io.decoded_fetch_packet.valid && !io.flush)
+    renamed_decoded_fetch_packet.ready := io.renamed_decoded_fetch_packet.ready
 
     /////////////////
     // SKID BUFFER //
     /////////////////
-
-
-    // FIXME: there maybe something wrong here...
     val renamed_decoded_fetch_packet_skid_buffer = Module(new Queue(new decoded_fetch_packet(parameters), 1, flow=true, hasFlush=true, useSyncReadMem=false))
-    
 
-    renamed_decoded_fetch_packet_skid_buffer.io.enq.bits         :=  renamed_decoded_fetch_packet
-    renamed_decoded_fetch_packet_skid_buffer.io.enq.valid        :=  RegNext(io.decoded_fetch_packet.valid && !io.flush)
-
-
+    renamed_decoded_fetch_packet_skid_buffer.io.enq         <> renamed_decoded_fetch_packet
     renamed_decoded_fetch_packet_skid_buffer.io.deq         <> io.renamed_decoded_fetch_packet
-    renamed_decoded_fetch_packet_skid_buffer.io.flush.get   <> io.flush
-
+    renamed_decoded_fetch_packet_skid_buffer.io.flush.get   := io.flush
 
     /////////////////
     // READY/VALID //

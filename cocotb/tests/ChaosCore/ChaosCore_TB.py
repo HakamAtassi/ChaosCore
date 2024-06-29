@@ -67,31 +67,31 @@ class ChaosCore_TB:
         self.ChaosCore_dut.write_imem_request_ready(1)
 
         # Start Frontend Agents
-        self.fetch_packet_decoder_agent.start()
+        #self.fetch_packet_decoder_agent.start()
         #self.rename.start()
         #self.PC_gen_agent.start()
         #self.predecoder_agent_agent.start()
 
         # Start Backend Agents
-        self.FU0_agent.start()
-
-        self.ROB_agent.start()
+        #self.FU0_agent.start()
+        #self.ROB_agent.start()
 
     ###############
     # STOP AGENTS #
     ###############
 
     def stop(self):
+        pass
 
         # Stop Frontend Agents       
-        self.fetch_packet_decoder_agent.stop()
+        #self.fetch_packet_decoder_agent.stop()
         #self.predecoder_agent.stop()
         #self.PC_gen_agent.stop()
 
         # Stop Backend Agents
-        self.FU0_agent.stop()
+        #self.FU0_agent.stop()
+        #self.ROB_agent.stop()
         #self.rename.stop()
 
 
-        self.ROB_agent.stop()
 
