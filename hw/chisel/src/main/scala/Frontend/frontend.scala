@@ -75,6 +75,7 @@ class frontend(parameters:Parameters) extends Module{
     val decoders            = Module(new fetch_packet_decoder(parameters))
 
     val instruction_queue   = Module(new Q(new decoded_fetch_packet(parameters), depth = 16))
+    val FTQ_queue           = Module(new Q(new FTQ_entry(parameters), depth = 16))
 
     val rename              = Module(new rename(parameters))
 
@@ -89,18 +90,11 @@ class frontend(parameters:Parameters) extends Module{
     instruction_fetch.io.memory_request       <>   io.memory_request
 
     instruction_fetch.io.flush                <>   io.flush
-    ///////////////
-    // FTQ INPUT //
-    ///////////////
-
-    instruction_fetch.io.predictions <> io.predictions
 
     //////////////
     // DECODERS //
     //////////////
-
     decoders.io.fetch_packet <> instruction_fetch.io.fetch_packet
-    decoders.io.flush <> io.flush
 
     ///////////////////////
     // INSTRUCTION QUEUE //
@@ -108,7 +102,19 @@ class frontend(parameters:Parameters) extends Module{
 
     instruction_queue.io.in <> decoders.io.decoded_fetch_packet
 
-    // Control how many entries to allocate
+    ///////////////
+    // FTQ QUEUE //
+    ///////////////
+
+    FTQ_queue.io.in <> decoders.io.predictions_out
+    FTQ_queue.io.out <> io.predictions
+    FTQ_queue.io.flush := io.flush
+
+    ///////////////
+    // FTQ INPUT //
+    ///////////////
+    decoders.io.predictions_in <> instruction_fetch.io.predictions
+    decoders.io.flush <> io.flush
 
     
     ////////////

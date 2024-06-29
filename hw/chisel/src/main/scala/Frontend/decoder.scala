@@ -198,14 +198,19 @@ class fetch_packet_decoder(parameters:Parameters) extends Module{
         val flush                =  Input(Bool())
 
         val fetch_packet         =  Flipped(Decoupled(new fetch_packet(parameters)))          // Fetch packet result (To Decoders)
+        val predictions_in       =  Flipped(Decoupled(new FTQ_entry(parameters)))
 
         val decoded_fetch_packet =  Decoupled(new decoded_fetch_packet(parameters))
+        val predictions_out      =  Decoupled(new FTQ_entry(parameters))
     })
 
     ////////////////////
     // OUTPUT BUNDLES //
     ////////////////////
-    val decoded_fetch_packet = Wire(Decoupled(new decoded_fetch_packet(parameters)))
+    val decoded_fetch_packet    = Wire(Decoupled(new decoded_fetch_packet(parameters)))
+    val predictions_out         = Wire(Decoupled(new FTQ_entry(parameters)))
+
+
 
     val decoders: Seq[decoder] = Seq.tabulate(fetchWidth) { w =>
         Module(new decoder(parameters))
@@ -237,6 +242,7 @@ class fetch_packet_decoder(parameters:Parameters) extends Module{
     // SKID BUFFERS //
     //////////////////
 
+    // decoded fetch packet skid
     decoded_fetch_packet.ready := io.decoded_fetch_packet.ready
 
     val decoded_fetch_packet_skid_buffer      = Module(new Queue(new decoded_fetch_packet(parameters), 1, flow=true, hasFlush=true, useSyncReadMem=false))
@@ -246,6 +252,20 @@ class fetch_packet_decoder(parameters:Parameters) extends Module{
     decoded_fetch_packet_skid_buffer.io.flush.get            := io.flush
 
     io.fetch_packet.ready := io.decoded_fetch_packet.ready
+
+
+
+    // FTQ in skid 
+    val predictions_out_skid_buffer = Module(new Queue(new FTQ_entry(parameters), 1, flow=true, hasFlush=true, useSyncReadMem=false))
+
+    predictions_out.bits    := RegNext(io.predictions_in.bits)
+    predictions_out.valid   := RegNext(io.predictions_in.valid)
+
+    predictions_out_skid_buffer.io.enq                  <> predictions_out
+    predictions_out_skid_buffer.io.deq                  <> io.predictions_out
+    predictions_out_skid_buffer.io.flush.get            := io.flush
+
+    io.predictions_in.ready := io.predictions_out.ready
 
     // DEBUG SIGNALS //
     val monitor_output = Wire(Bool())

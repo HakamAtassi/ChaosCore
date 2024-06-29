@@ -433,8 +433,7 @@ module BP(
   input         clock,
                 reset,
                 io_flush,
-  output        io_predict_ready,
-  input         io_predict_valid,
+                io_predict_valid,
   input  [31:0] io_predict_bits_addr,
   input         io_commit_valid,
   input  [31:0] io_commit_bits_fetch_PC,
@@ -526,7 +525,6 @@ module BP(
     .io_deq_bits_T_NT    (io_prediction_bits_T_NT),
     .io_flush            (io_flush)
   );
-  assign io_predict_ready = io_prediction_ready & ~io_commit_bits_is_misprediction;
 endmodule
 
 module branch_decoder(
@@ -743,13 +741,16 @@ module Queue1_FTQ_entry(
   input         clock,
                 reset,
                 io_enq_valid,
+                io_enq_bits_valid,
   input  [31:0] io_enq_bits_fetch_PC,
-                io_enq_bits_predicted_PC,
+  input         io_enq_bits_is_misprediction,
+  input  [31:0] io_enq_bits_predicted_PC,
   input         io_enq_bits_T_NT,
   input  [2:0]  io_enq_bits_br_type,
   input  [15:0] io_enq_bits_GHR,
   input  [6:0]  io_enq_bits_NEXT,
                 io_enq_bits_TOS,
+  input  [1:0]  io_enq_bits_dominant_index,
   input  [31:0] io_enq_bits_resolved_PC,
   input         io_deq_ready,
   output        io_deq_valid,
@@ -775,16 +776,16 @@ module Queue1_FTQ_entry(
     if (do_enq)
       ram <=
         {io_enq_bits_resolved_PC,
-         2'h3,
+         io_enq_bits_dominant_index,
          io_enq_bits_TOS,
          io_enq_bits_NEXT,
          io_enq_bits_GHR,
          io_enq_bits_br_type,
          io_enq_bits_T_NT,
          io_enq_bits_predicted_PC,
-         1'h0,
+         io_enq_bits_is_misprediction,
          io_enq_bits_fetch_PC,
-         1'h0};
+         io_enq_bits_valid};
     if (reset)
       full <= 1'h0;
     else
@@ -792,23 +793,24 @@ module Queue1_FTQ_entry(
         ~io_flush & (do_enq == (full & io_deq_ready & io_deq_valid_0) ? full : do_enq);
   end // always @(posedge)
   assign io_deq_valid = io_deq_valid_0;
-  assign io_deq_bits_valid = full & ram[0];
+  assign io_deq_bits_valid = full ? ram[0] : io_enq_bits_valid;
   assign io_deq_bits_fetch_PC = full ? ram[32:1] : io_enq_bits_fetch_PC;
-  assign io_deq_bits_is_misprediction = full & ram[33];
+  assign io_deq_bits_is_misprediction = full ? ram[33] : io_enq_bits_is_misprediction;
   assign io_deq_bits_predicted_PC = full ? ram[65:34] : io_enq_bits_predicted_PC;
   assign io_deq_bits_T_NT = full ? ram[66] : io_enq_bits_T_NT;
   assign io_deq_bits_br_type = full ? ram[69:67] : io_enq_bits_br_type;
   assign io_deq_bits_GHR = full ? ram[85:70] : io_enq_bits_GHR;
   assign io_deq_bits_NEXT = full ? ram[92:86] : io_enq_bits_NEXT;
   assign io_deq_bits_TOS = full ? ram[99:93] : io_enq_bits_TOS;
-  assign io_deq_bits_dominant_index = full ? ram[101:100] : 2'h3;
+  assign io_deq_bits_dominant_index = full ? ram[101:100] : io_enq_bits_dominant_index;
   assign io_deq_bits_resolved_PC = full ? ram[133:102] : io_enq_bits_resolved_PC;
 endmodule
 
 module Queue1_fetch_packet(
   input         clock,
                 reset,
-                io_enq_valid,
+  output        io_enq_ready,
+  input         io_enq_valid,
   input  [31:0] io_enq_bits_fetch_PC,
   input         io_enq_bits_valid_bits_0,
                 io_enq_bits_valid_bits_1,
@@ -878,6 +880,7 @@ module Queue1_fetch_packet(
       full <=
         ~io_flush & (do_enq == (full & io_deq_ready & io_deq_valid_0) ? full : do_enq);
   end // always @(posedge)
+  assign io_enq_ready = ~full;
   assign io_deq_valid = io_deq_valid_0;
   assign io_deq_bits_fetch_PC = full ? ram[31:0] : io_enq_bits_fetch_PC;
   assign io_deq_bits_valid_bits_0 = full ? ram[32] : io_enq_bits_valid_bits_0;
@@ -1140,7 +1143,9 @@ module predecoder(
       ((_push_FTQ_T | _decoders_2_io_metadata_is_control
         | _decoders_3_io_metadata_is_control) & io_prediction_valid
        & io_fetch_packet_valid),
+    .io_enq_bits_valid            (1'h0),
     .io_enq_bits_fetch_PC         (io_fetch_packet_bits_fetch_PC),
+    .io_enq_bits_is_misprediction (1'h0),
     .io_enq_bits_predicted_PC
       ((|_predictions_bits_T_NT_T)
          ? io_prediction_bits_target
@@ -1150,6 +1155,7 @@ module predecoder(
     .io_enq_bits_GHR              (GHR),
     .io_enq_bits_NEXT             (io_RAS_read_NEXT),
     .io_enq_bits_TOS              (io_RAS_read_TOS),
+    .io_enq_bits_dominant_index   (2'h3),
     .io_enq_bits_resolved_PC      (io_fetch_packet_bits_fetch_PC + 32'h10),
     .io_deq_ready                 (io_predictions_ready),
     .io_deq_valid                 (io_predictions_valid),
@@ -1169,6 +1175,7 @@ module predecoder(
   Queue1_fetch_packet final_fetch_packet_skid_buffer (
     .clock                                   (clock),
     .reset                                   (reset),
+    .io_enq_ready                            (/* unused */),
     .io_enq_valid                            (final_fetch_packet_valid_REG),
     .io_enq_bits_fetch_PC                    (final_fetch_packet_bits_fetch_PC_REG),
     .io_enq_bits_valid_bits_0
@@ -1366,9 +1373,17 @@ module Queue16_fetch_packet(
                 io_enq_bits_valid_bits_2,
                 io_enq_bits_valid_bits_3,
   input  [31:0] io_enq_bits_instructions_0_instruction,
-                io_enq_bits_instructions_1_instruction,
-                io_enq_bits_instructions_2_instruction,
-                io_enq_bits_instructions_3_instruction,
+  input  [3:0]  io_enq_bits_instructions_0_packet_index,
+  input  [5:0]  io_enq_bits_instructions_0_ROB_index,
+  input  [31:0] io_enq_bits_instructions_1_instruction,
+  input  [3:0]  io_enq_bits_instructions_1_packet_index,
+  input  [5:0]  io_enq_bits_instructions_1_ROB_index,
+  input  [31:0] io_enq_bits_instructions_2_instruction,
+  input  [3:0]  io_enq_bits_instructions_2_packet_index,
+  input  [5:0]  io_enq_bits_instructions_2_ROB_index,
+  input  [31:0] io_enq_bits_instructions_3_instruction,
+  input  [3:0]  io_enq_bits_instructions_3_packet_index,
+  input  [5:0]  io_enq_bits_instructions_3_ROB_index,
   input         io_deq_ready,
   output        io_deq_valid,
   output [31:0] io_deq_bits_fetch_PC,
@@ -1431,13 +1446,17 @@ module Queue16_fetch_packet(
     .W0_en   (do_enq),
     .W0_clk  (clock),
     .W0_data
-      ({10'h3,
+      ({io_enq_bits_instructions_3_ROB_index,
+        io_enq_bits_instructions_3_packet_index,
         io_enq_bits_instructions_3_instruction,
-        10'h2,
+        io_enq_bits_instructions_2_ROB_index,
+        io_enq_bits_instructions_2_packet_index,
         io_enq_bits_instructions_2_instruction,
-        10'h1,
+        io_enq_bits_instructions_1_ROB_index,
+        io_enq_bits_instructions_1_packet_index,
         io_enq_bits_instructions_1_instruction,
-        10'h0,
+        io_enq_bits_instructions_0_ROB_index,
+        io_enq_bits_instructions_0_packet_index,
         io_enq_bits_instructions_0_instruction,
         io_enq_bits_valid_bits_3,
         io_enq_bits_valid_bits_2,
@@ -1458,23 +1477,28 @@ module Queue16_fetch_packet(
     empty ? io_enq_bits_valid_bits_3 : _ram_ext_R0_data[35];
   assign io_deq_bits_instructions_0_instruction =
     empty ? io_enq_bits_instructions_0_instruction : _ram_ext_R0_data[67:36];
-  assign io_deq_bits_instructions_0_packet_index = empty ? 4'h0 : _ram_ext_R0_data[71:68];
-  assign io_deq_bits_instructions_0_ROB_index = empty ? 6'h0 : _ram_ext_R0_data[77:72];
+  assign io_deq_bits_instructions_0_packet_index =
+    empty ? io_enq_bits_instructions_0_packet_index : _ram_ext_R0_data[71:68];
+  assign io_deq_bits_instructions_0_ROB_index =
+    empty ? io_enq_bits_instructions_0_ROB_index : _ram_ext_R0_data[77:72];
   assign io_deq_bits_instructions_1_instruction =
     empty ? io_enq_bits_instructions_1_instruction : _ram_ext_R0_data[109:78];
   assign io_deq_bits_instructions_1_packet_index =
-    empty ? 4'h1 : _ram_ext_R0_data[113:110];
-  assign io_deq_bits_instructions_1_ROB_index = empty ? 6'h0 : _ram_ext_R0_data[119:114];
+    empty ? io_enq_bits_instructions_1_packet_index : _ram_ext_R0_data[113:110];
+  assign io_deq_bits_instructions_1_ROB_index =
+    empty ? io_enq_bits_instructions_1_ROB_index : _ram_ext_R0_data[119:114];
   assign io_deq_bits_instructions_2_instruction =
     empty ? io_enq_bits_instructions_2_instruction : _ram_ext_R0_data[151:120];
   assign io_deq_bits_instructions_2_packet_index =
-    empty ? 4'h2 : _ram_ext_R0_data[155:152];
-  assign io_deq_bits_instructions_2_ROB_index = empty ? 6'h0 : _ram_ext_R0_data[161:156];
+    empty ? io_enq_bits_instructions_2_packet_index : _ram_ext_R0_data[155:152];
+  assign io_deq_bits_instructions_2_ROB_index =
+    empty ? io_enq_bits_instructions_2_ROB_index : _ram_ext_R0_data[161:156];
   assign io_deq_bits_instructions_3_instruction =
     empty ? io_enq_bits_instructions_3_instruction : _ram_ext_R0_data[193:162];
   assign io_deq_bits_instructions_3_packet_index =
-    empty ? 4'h3 : _ram_ext_R0_data[197:194];
-  assign io_deq_bits_instructions_3_ROB_index = empty ? 6'h0 : _ram_ext_R0_data[203:198];
+    empty ? io_enq_bits_instructions_3_packet_index : _ram_ext_R0_data[197:194];
+  assign io_deq_bits_instructions_3_ROB_index =
+    empty ? io_enq_bits_instructions_3_ROB_index : _ram_ext_R0_data[203:198];
 endmodule
 
 module Q(
@@ -1488,9 +1512,17 @@ module Q(
                 io_in_bits_valid_bits_2,
                 io_in_bits_valid_bits_3,
   input  [31:0] io_in_bits_instructions_0_instruction,
-                io_in_bits_instructions_1_instruction,
-                io_in_bits_instructions_2_instruction,
-                io_in_bits_instructions_3_instruction,
+  input  [3:0]  io_in_bits_instructions_0_packet_index,
+  input  [5:0]  io_in_bits_instructions_0_ROB_index,
+  input  [31:0] io_in_bits_instructions_1_instruction,
+  input  [3:0]  io_in_bits_instructions_1_packet_index,
+  input  [5:0]  io_in_bits_instructions_1_ROB_index,
+  input  [31:0] io_in_bits_instructions_2_instruction,
+  input  [3:0]  io_in_bits_instructions_2_packet_index,
+  input  [5:0]  io_in_bits_instructions_2_ROB_index,
+  input  [31:0] io_in_bits_instructions_3_instruction,
+  input  [3:0]  io_in_bits_instructions_3_packet_index,
+  input  [5:0]  io_in_bits_instructions_3_ROB_index,
   input         io_out_ready,
   output        io_out_valid,
   output [31:0] io_out_bits_fetch_PC,
@@ -1524,9 +1556,17 @@ module Q(
     .io_enq_bits_valid_bits_2                (io_in_bits_valid_bits_2),
     .io_enq_bits_valid_bits_3                (io_in_bits_valid_bits_3),
     .io_enq_bits_instructions_0_instruction  (io_in_bits_instructions_0_instruction),
+    .io_enq_bits_instructions_0_packet_index (io_in_bits_instructions_0_packet_index),
+    .io_enq_bits_instructions_0_ROB_index    (io_in_bits_instructions_0_ROB_index),
     .io_enq_bits_instructions_1_instruction  (io_in_bits_instructions_1_instruction),
+    .io_enq_bits_instructions_1_packet_index (io_in_bits_instructions_1_packet_index),
+    .io_enq_bits_instructions_1_ROB_index    (io_in_bits_instructions_1_ROB_index),
     .io_enq_bits_instructions_2_instruction  (io_in_bits_instructions_2_instruction),
+    .io_enq_bits_instructions_2_packet_index (io_in_bits_instructions_2_packet_index),
+    .io_enq_bits_instructions_2_ROB_index    (io_in_bits_instructions_2_ROB_index),
     .io_enq_bits_instructions_3_instruction  (io_in_bits_instructions_3_instruction),
+    .io_enq_bits_instructions_3_packet_index (io_in_bits_instructions_3_packet_index),
+    .io_enq_bits_instructions_3_ROB_index    (io_in_bits_instructions_3_ROB_index),
     .io_deq_ready                            (io_out_ready),
     .io_deq_valid                            (io_out_valid),
     .io_deq_bits_fetch_PC                    (io_out_bits_fetch_PC),
@@ -1860,9 +1900,17 @@ module instruction_fetch(
                 io_memory_response_bits_valid_bits_2,
                 io_memory_response_bits_valid_bits_3,
   input  [31:0] io_memory_response_bits_instructions_0_instruction,
-                io_memory_response_bits_instructions_1_instruction,
-                io_memory_response_bits_instructions_2_instruction,
-                io_memory_response_bits_instructions_3_instruction,
+  input  [3:0]  io_memory_response_bits_instructions_0_packet_index,
+  input  [5:0]  io_memory_response_bits_instructions_0_ROB_index,
+  input  [31:0] io_memory_response_bits_instructions_1_instruction,
+  input  [3:0]  io_memory_response_bits_instructions_1_packet_index,
+  input  [5:0]  io_memory_response_bits_instructions_1_ROB_index,
+  input  [31:0] io_memory_response_bits_instructions_2_instruction,
+  input  [3:0]  io_memory_response_bits_instructions_2_packet_index,
+  input  [5:0]  io_memory_response_bits_instructions_2_ROB_index,
+  input  [31:0] io_memory_response_bits_instructions_3_instruction,
+  input  [3:0]  io_memory_response_bits_instructions_3_packet_index,
+  input  [5:0]  io_memory_response_bits_instructions_3_ROB_index,
   input         io_fetch_packet_ready,
   output        io_fetch_packet_valid,
   output [31:0] io_fetch_packet_bits_fetch_PC,
@@ -1886,7 +1934,8 @@ module instruction_fetch(
   output        io_predictions_valid,
                 io_predictions_bits_valid,
   output [31:0] io_predictions_bits_fetch_PC,
-                io_predictions_bits_predicted_PC,
+  output        io_predictions_bits_is_misprediction,
+  output [31:0] io_predictions_bits_predicted_PC,
   output        io_predictions_bits_T_NT,
   output [2:0]  io_predictions_bits_br_type,
   output [15:0] io_predictions_bits_GHR,
@@ -1905,6 +1954,8 @@ module instruction_fetch(
   wire [15:0] _BTB_Q_io_out_bits_GHR;
   wire        _BTB_Q_io_out_bits_T_NT;
   wire        _PC_Q_io_in_ready;
+  wire        _PC_Q_io_out_valid;
+  wire [31:0] _PC_Q_io_out_bits_addr;
   wire        _instruction_Q_io_out_valid;
   wire [31:0] _instruction_Q_io_out_bits_fetch_PC;
   wire        _instruction_Q_io_out_bits_valid_bits_0;
@@ -1923,7 +1974,6 @@ module instruction_fetch(
   wire [31:0] _instruction_Q_io_out_bits_instructions_3_instruction;
   wire [3:0]  _instruction_Q_io_out_bits_instructions_3_packet_index;
   wire [5:0]  _instruction_Q_io_out_bits_instructions_3_ROB_index;
-  wire        _PC_gen_io_prediction_ready;
   wire        _PC_gen_io_PC_next_valid;
   wire [31:0] _PC_gen_io_PC_next_bits_addr;
   wire [31:0] _PC_gen_io_PC_next_bits_wr_data;
@@ -1934,7 +1984,6 @@ module instruction_fetch(
   wire [31:0] _predecoder_io_RAS_update_call_addr;
   wire        _predecoder_io_RAS_update_call;
   wire        _predecoder_io_RAS_update_ret;
-  wire        _bp_io_predict_ready;
   wire [6:0]  _bp_io_RAS_read_NEXT;
   wire [6:0]  _bp_io_RAS_read_TOS;
   wire [31:0] _bp_io_RAS_read_ret_addr;
@@ -1949,9 +1998,8 @@ module instruction_fetch(
     .clock                           (clock),
     .reset                           (reset),
     .io_flush                        (io_flush),
-    .io_predict_ready                (_bp_io_predict_ready),
-    .io_predict_valid                (_PC_gen_io_PC_next_valid),
-    .io_predict_bits_addr            (_PC_gen_io_PC_next_bits_addr),
+    .io_predict_valid                (_PC_Q_io_out_valid),
+    .io_predict_bits_addr            (_PC_Q_io_out_bits_addr),
     .io_commit_valid                 (io_commit_valid),
     .io_commit_bits_fetch_PC         (io_commit_bits_fetch_PC),
     .io_commit_bits_T_NT             (io_commit_bits_T_NT),
@@ -1968,7 +2016,7 @@ module instruction_fetch(
     .io_RAS_read_TOS                 (_bp_io_RAS_read_TOS),
     .io_RAS_read_ret_addr            (_bp_io_RAS_read_ret_addr),
     .io_GHR                          (_predecoder_io_GHR),
-    .io_prediction_ready             (_BTB_Q_io_in_ready & _PC_gen_io_prediction_ready),
+    .io_prediction_ready             (_BTB_Q_io_in_ready),
     .io_prediction_valid             (_bp_io_prediction_valid),
     .io_prediction_bits_hit          (_bp_io_prediction_bits_hit),
     .io_prediction_bits_target       (_bp_io_prediction_bits_target),
@@ -2058,7 +2106,8 @@ module instruction_fetch(
     .io_predictions_bits_valid                              (io_predictions_bits_valid),
     .io_predictions_bits_fetch_PC
       (io_predictions_bits_fetch_PC),
-    .io_predictions_bits_is_misprediction                   (/* unused */),
+    .io_predictions_bits_is_misprediction
+      (io_predictions_bits_is_misprediction),
     .io_predictions_bits_predicted_PC
       (io_predictions_bits_predicted_PC),
     .io_predictions_bits_T_NT                               (io_predictions_bits_T_NT),
@@ -2138,7 +2187,7 @@ module instruction_fetch(
     .io_commit_bits_RD_valid_1              (io_commit_bits_RD_valid_1),
     .io_commit_bits_RD_valid_2              (io_commit_bits_RD_valid_2),
     .io_commit_bits_RD_valid_3              (io_commit_bits_RD_valid_3),
-    .io_prediction_ready                    (_PC_gen_io_prediction_ready),
+    .io_prediction_ready                    (/* unused */),
     .io_prediction_valid                    (_bp_io_prediction_valid),
     .io_prediction_bits_hit                 (_bp_io_prediction_bits_hit),
     .io_prediction_bits_target              (_bp_io_prediction_bits_target),
@@ -2149,7 +2198,7 @@ module instruction_fetch(
     .io_RAS_read_NEXT                       (_bp_io_RAS_read_NEXT),
     .io_RAS_read_TOS                        (_bp_io_RAS_read_TOS),
     .io_RAS_read_ret_addr                   (_bp_io_RAS_read_ret_addr),
-    .io_PC_next_ready                       (_PC_Q_io_in_ready & _bp_io_predict_ready),
+    .io_PC_next_ready                       (_PC_Q_io_in_ready),
     .io_PC_next_valid                       (_PC_gen_io_PC_next_valid),
     .io_PC_next_bits_addr                   (_PC_gen_io_PC_next_bits_addr),
     .io_PC_next_bits_wr_data                (_PC_gen_io_PC_next_bits_wr_data),
@@ -2167,12 +2216,28 @@ module instruction_fetch(
     .io_in_bits_valid_bits_3                 (io_memory_response_bits_valid_bits_3),
     .io_in_bits_instructions_0_instruction
       (io_memory_response_bits_instructions_0_instruction),
+    .io_in_bits_instructions_0_packet_index
+      (io_memory_response_bits_instructions_0_packet_index),
+    .io_in_bits_instructions_0_ROB_index
+      (io_memory_response_bits_instructions_0_ROB_index),
     .io_in_bits_instructions_1_instruction
       (io_memory_response_bits_instructions_1_instruction),
+    .io_in_bits_instructions_1_packet_index
+      (io_memory_response_bits_instructions_1_packet_index),
+    .io_in_bits_instructions_1_ROB_index
+      (io_memory_response_bits_instructions_1_ROB_index),
     .io_in_bits_instructions_2_instruction
       (io_memory_response_bits_instructions_2_instruction),
+    .io_in_bits_instructions_2_packet_index
+      (io_memory_response_bits_instructions_2_packet_index),
+    .io_in_bits_instructions_2_ROB_index
+      (io_memory_response_bits_instructions_2_ROB_index),
     .io_in_bits_instructions_3_instruction
       (io_memory_response_bits_instructions_3_instruction),
+    .io_in_bits_instructions_3_packet_index
+      (io_memory_response_bits_instructions_3_packet_index),
+    .io_in_bits_instructions_3_ROB_index
+      (io_memory_response_bits_instructions_3_ROB_index),
     .io_out_ready                            (_predecoder_io_fetch_packet_ready),
     .io_out_valid                            (_instruction_Q_io_out_valid),
     .io_out_bits_fetch_PC                    (_instruction_Q_io_out_bits_fetch_PC),
@@ -2215,8 +2280,8 @@ module instruction_fetch(
     .io_in_bits_wr_data  (_PC_gen_io_PC_next_bits_wr_data),
     .io_in_bits_wr_en    (_PC_gen_io_PC_next_bits_wr_en),
     .io_out_ready        (io_memory_request_ready),
-    .io_out_valid        (io_memory_request_valid),
-    .io_out_bits_addr    (io_memory_request_bits_addr),
+    .io_out_valid        (_PC_Q_io_out_valid),
+    .io_out_bits_addr    (_PC_Q_io_out_bits_addr),
     .io_out_bits_wr_data (io_memory_request_bits_wr_data),
     .io_out_bits_wr_en   (io_memory_request_bits_wr_en),
     .io_flush            (io_flush)
@@ -2242,6 +2307,8 @@ module instruction_fetch(
     .io_out_bits_T_NT    (_BTB_Q_io_out_bits_T_NT),
     .io_flush            (io_flush)
   );
+  assign io_memory_request_valid = _PC_Q_io_out_valid;
+  assign io_memory_request_bits_addr = _PC_Q_io_out_bits_addr;
 endmodule
 
 module decoder(
@@ -2935,6 +3002,19 @@ module fetch_packet_decoder(
   input  [31:0] io_fetch_packet_bits_instructions_3_instruction,
   input  [3:0]  io_fetch_packet_bits_instructions_3_packet_index,
   input  [5:0]  io_fetch_packet_bits_instructions_3_ROB_index,
+  output        io_predictions_in_ready,
+  input         io_predictions_in_valid,
+                io_predictions_in_bits_valid,
+  input  [31:0] io_predictions_in_bits_fetch_PC,
+  input         io_predictions_in_bits_is_misprediction,
+  input  [31:0] io_predictions_in_bits_predicted_PC,
+  input         io_predictions_in_bits_T_NT,
+  input  [2:0]  io_predictions_in_bits_br_type,
+  input  [15:0] io_predictions_in_bits_GHR,
+  input  [6:0]  io_predictions_in_bits_NEXT,
+                io_predictions_in_bits_TOS,
+  input  [1:0]  io_predictions_in_bits_dominant_index,
+  input  [31:0] io_predictions_in_bits_resolved_PC,
   input         io_decoded_fetch_packet_ready,
   output        io_decoded_fetch_packet_valid,
   output [31:0] io_decoded_fetch_packet_bits_fetch_PC,
@@ -3035,7 +3115,20 @@ module fetch_packet_decoder(
                 io_decoded_fetch_packet_bits_valid_bits_2,
                 io_decoded_fetch_packet_bits_valid_bits_3,
   output [3:0]  io_decoded_fetch_packet_bits_RAT_index,
-  output [6:0]  io_decoded_fetch_packet_bits_free_list_front_pointer
+  output [6:0]  io_decoded_fetch_packet_bits_free_list_front_pointer,
+  input         io_predictions_out_ready,
+  output        io_predictions_out_valid,
+                io_predictions_out_bits_valid,
+  output [31:0] io_predictions_out_bits_fetch_PC,
+  output        io_predictions_out_bits_is_misprediction,
+  output [31:0] io_predictions_out_bits_predicted_PC,
+  output        io_predictions_out_bits_T_NT,
+  output [2:0]  io_predictions_out_bits_br_type,
+  output [15:0] io_predictions_out_bits_GHR,
+  output [6:0]  io_predictions_out_bits_NEXT,
+                io_predictions_out_bits_TOS,
+  output [1:0]  io_predictions_out_bits_dominant_index,
+  output [31:0] io_predictions_out_bits_resolved_PC
 );
 
   wire [5:0]  _decoders_3_io_decoded_instruction_bits_RD;
@@ -3204,6 +3297,18 @@ module fetch_packet_decoder(
   reg         REG_1;
   reg         REG_2;
   reg         REG_3;
+  reg         predictions_out_bits_REG_valid;
+  reg  [31:0] predictions_out_bits_REG_fetch_PC;
+  reg         predictions_out_bits_REG_is_misprediction;
+  reg  [31:0] predictions_out_bits_REG_predicted_PC;
+  reg         predictions_out_bits_REG_T_NT;
+  reg  [2:0]  predictions_out_bits_REG_br_type;
+  reg  [15:0] predictions_out_bits_REG_GHR;
+  reg  [6:0]  predictions_out_bits_REG_NEXT;
+  reg  [6:0]  predictions_out_bits_REG_TOS;
+  reg  [1:0]  predictions_out_bits_REG_dominant_index;
+  reg  [31:0] predictions_out_bits_REG_resolved_PC;
+  reg         predictions_out_valid_REG;
   reg         monitor_output_REG;
   wire        monitor_output = monitor_output_REG;
   always @(posedge clock) begin
@@ -3373,6 +3478,18 @@ module fetch_packet_decoder(
     REG_1 <= io_fetch_packet_bits_valid_bits_1;
     REG_2 <= io_fetch_packet_bits_valid_bits_2;
     REG_3 <= io_fetch_packet_bits_valid_bits_3;
+    predictions_out_bits_REG_valid <= io_predictions_in_bits_valid;
+    predictions_out_bits_REG_fetch_PC <= io_predictions_in_bits_fetch_PC;
+    predictions_out_bits_REG_is_misprediction <= io_predictions_in_bits_is_misprediction;
+    predictions_out_bits_REG_predicted_PC <= io_predictions_in_bits_predicted_PC;
+    predictions_out_bits_REG_T_NT <= io_predictions_in_bits_T_NT;
+    predictions_out_bits_REG_br_type <= io_predictions_in_bits_br_type;
+    predictions_out_bits_REG_GHR <= io_predictions_in_bits_GHR;
+    predictions_out_bits_REG_NEXT <= io_predictions_in_bits_NEXT;
+    predictions_out_bits_REG_TOS <= io_predictions_in_bits_TOS;
+    predictions_out_bits_REG_dominant_index <= io_predictions_in_bits_dominant_index;
+    predictions_out_bits_REG_resolved_PC <= io_predictions_in_bits_resolved_PC;
+    predictions_out_valid_REG <= io_predictions_in_valid;
     monitor_output_REG <= io_fetch_packet_valid;
   end // always @(posedge)
   decoder decoders_0 (
@@ -3972,7 +4089,38 @@ module fetch_packet_decoder(
       (io_decoded_fetch_packet_bits_free_list_front_pointer),
     .io_flush                                               (io_flush)
   );
+  Queue1_FTQ_entry predictions_out_skid_buffer (
+    .clock                        (clock),
+    .reset                        (reset),
+    .io_enq_valid                 (predictions_out_valid_REG),
+    .io_enq_bits_valid            (predictions_out_bits_REG_valid),
+    .io_enq_bits_fetch_PC         (predictions_out_bits_REG_fetch_PC),
+    .io_enq_bits_is_misprediction (predictions_out_bits_REG_is_misprediction),
+    .io_enq_bits_predicted_PC     (predictions_out_bits_REG_predicted_PC),
+    .io_enq_bits_T_NT             (predictions_out_bits_REG_T_NT),
+    .io_enq_bits_br_type          (predictions_out_bits_REG_br_type),
+    .io_enq_bits_GHR              (predictions_out_bits_REG_GHR),
+    .io_enq_bits_NEXT             (predictions_out_bits_REG_NEXT),
+    .io_enq_bits_TOS              (predictions_out_bits_REG_TOS),
+    .io_enq_bits_dominant_index   (predictions_out_bits_REG_dominant_index),
+    .io_enq_bits_resolved_PC      (predictions_out_bits_REG_resolved_PC),
+    .io_deq_ready                 (io_predictions_out_ready),
+    .io_deq_valid                 (io_predictions_out_valid),
+    .io_deq_bits_valid            (io_predictions_out_bits_valid),
+    .io_deq_bits_fetch_PC         (io_predictions_out_bits_fetch_PC),
+    .io_deq_bits_is_misprediction (io_predictions_out_bits_is_misprediction),
+    .io_deq_bits_predicted_PC     (io_predictions_out_bits_predicted_PC),
+    .io_deq_bits_T_NT             (io_predictions_out_bits_T_NT),
+    .io_deq_bits_br_type          (io_predictions_out_bits_br_type),
+    .io_deq_bits_GHR              (io_predictions_out_bits_GHR),
+    .io_deq_bits_NEXT             (io_predictions_out_bits_NEXT),
+    .io_deq_bits_TOS              (io_predictions_out_bits_TOS),
+    .io_deq_bits_dominant_index   (io_predictions_out_bits_dominant_index),
+    .io_deq_bits_resolved_PC      (io_predictions_out_bits_resolved_PC),
+    .io_flush                     (io_flush)
+  );
   assign io_fetch_packet_ready = io_decoded_fetch_packet_ready;
+  assign io_predictions_in_ready = io_predictions_out_ready;
 endmodule
 
 // VCS coverage exclude_file
@@ -5162,6 +5310,195 @@ module Q_3(
     .io_deq_bits_free_list_front_pointer
       (io_out_bits_free_list_front_pointer),
     .io_flush                                               (io_flush)
+  );
+endmodule
+
+// VCS coverage exclude_file
+module ram_16x134(
+  input  [3:0]   R0_addr,
+  input          R0_en,
+                 R0_clk,
+  output [133:0] R0_data,
+  input  [3:0]   W0_addr,
+  input          W0_en,
+                 W0_clk,
+  input  [133:0] W0_data
+);
+
+  reg [133:0] Memory[0:15];
+  reg         _R0_en_d0;
+  reg [3:0]   _R0_addr_d0;
+  always @(posedge R0_clk) begin
+    _R0_en_d0 <= R0_en;
+    _R0_addr_d0 <= R0_addr;
+  end // always @(posedge)
+  always @(posedge W0_clk) begin
+    if (W0_en & 1'h1)
+      Memory[W0_addr] <= W0_data;
+  end // always @(posedge)
+  assign R0_data = _R0_en_d0 ? Memory[_R0_addr_d0] : 134'bx;
+endmodule
+
+module Queue16_FTQ_entry(
+  input         clock,
+                reset,
+  output        io_enq_ready,
+  input         io_enq_valid,
+                io_enq_bits_valid,
+  input  [31:0] io_enq_bits_fetch_PC,
+  input         io_enq_bits_is_misprediction,
+  input  [31:0] io_enq_bits_predicted_PC,
+  input         io_enq_bits_T_NT,
+  input  [2:0]  io_enq_bits_br_type,
+  input  [15:0] io_enq_bits_GHR,
+  input  [6:0]  io_enq_bits_NEXT,
+                io_enq_bits_TOS,
+  input  [1:0]  io_enq_bits_dominant_index,
+  input  [31:0] io_enq_bits_resolved_PC,
+  input         io_deq_ready,
+  output        io_deq_valid,
+                io_deq_bits_valid,
+  output [31:0] io_deq_bits_fetch_PC,
+                io_deq_bits_predicted_PC,
+  output        io_deq_bits_T_NT,
+  output [2:0]  io_deq_bits_br_type,
+  output [15:0] io_deq_bits_GHR,
+  output [6:0]  io_deq_bits_NEXT,
+                io_deq_bits_TOS,
+  output [1:0]  io_deq_bits_dominant_index,
+  output [31:0] io_deq_bits_resolved_PC,
+  input         io_flush
+);
+
+  wire         do_deq;
+  wire [133:0] _ram_ext_R0_data;
+  reg  [3:0]   enq_ptr_value;
+  reg  [3:0]   deq_ptr_value;
+  reg          maybe_full;
+  wire         ptr_match = enq_ptr_value == deq_ptr_value;
+  wire         empty = ptr_match & ~maybe_full;
+  wire         full = ptr_match & maybe_full;
+  wire         io_deq_valid_0 = io_enq_valid | ~empty;
+  assign do_deq = ~empty & io_deq_ready & io_deq_valid_0;
+  wire         do_enq = ~(empty & io_deq_ready) & ~full & io_enq_valid;
+  always @(posedge clock) begin
+    if (reset) begin
+      enq_ptr_value <= 4'h0;
+      deq_ptr_value <= 4'h0;
+      maybe_full <= 1'h0;
+    end
+    else begin
+      if (io_flush) begin
+        enq_ptr_value <= 4'h0;
+        deq_ptr_value <= 4'h0;
+      end
+      else begin
+        if (do_enq)
+          enq_ptr_value <= enq_ptr_value + 4'h1;
+        if (do_deq)
+          deq_ptr_value <= deq_ptr_value + 4'h1;
+      end
+      maybe_full <= ~io_flush & (do_enq == do_deq ? maybe_full : do_enq);
+    end
+  end // always @(posedge)
+  ram_16x134 ram_ext (
+    .R0_addr (do_deq ? ((&deq_ptr_value) ? 4'h0 : deq_ptr_value + 4'h1) : deq_ptr_value),
+    .R0_en   (1'h1),
+    .R0_clk  (clock),
+    .R0_data (_ram_ext_R0_data),
+    .W0_addr (enq_ptr_value),
+    .W0_en   (do_enq),
+    .W0_clk  (clock),
+    .W0_data
+      ({io_enq_bits_resolved_PC,
+        io_enq_bits_dominant_index,
+        io_enq_bits_TOS,
+        io_enq_bits_NEXT,
+        io_enq_bits_GHR,
+        io_enq_bits_br_type,
+        io_enq_bits_T_NT,
+        io_enq_bits_predicted_PC,
+        io_enq_bits_is_misprediction,
+        io_enq_bits_fetch_PC,
+        io_enq_bits_valid})
+  );
+  assign io_enq_ready = ~full;
+  assign io_deq_valid = io_deq_valid_0;
+  assign io_deq_bits_valid = empty ? io_enq_bits_valid : _ram_ext_R0_data[0];
+  assign io_deq_bits_fetch_PC = empty ? io_enq_bits_fetch_PC : _ram_ext_R0_data[32:1];
+  assign io_deq_bits_predicted_PC =
+    empty ? io_enq_bits_predicted_PC : _ram_ext_R0_data[65:34];
+  assign io_deq_bits_T_NT = empty ? io_enq_bits_T_NT : _ram_ext_R0_data[66];
+  assign io_deq_bits_br_type = empty ? io_enq_bits_br_type : _ram_ext_R0_data[69:67];
+  assign io_deq_bits_GHR = empty ? io_enq_bits_GHR : _ram_ext_R0_data[85:70];
+  assign io_deq_bits_NEXT = empty ? io_enq_bits_NEXT : _ram_ext_R0_data[92:86];
+  assign io_deq_bits_TOS = empty ? io_enq_bits_TOS : _ram_ext_R0_data[99:93];
+  assign io_deq_bits_dominant_index =
+    empty ? io_enq_bits_dominant_index : _ram_ext_R0_data[101:100];
+  assign io_deq_bits_resolved_PC =
+    empty ? io_enq_bits_resolved_PC : _ram_ext_R0_data[133:102];
+endmodule
+
+module Q_4(
+  input         clock,
+                reset,
+  output        io_in_ready,
+  input         io_in_valid,
+                io_in_bits_valid,
+  input  [31:0] io_in_bits_fetch_PC,
+  input         io_in_bits_is_misprediction,
+  input  [31:0] io_in_bits_predicted_PC,
+  input         io_in_bits_T_NT,
+  input  [2:0]  io_in_bits_br_type,
+  input  [15:0] io_in_bits_GHR,
+  input  [6:0]  io_in_bits_NEXT,
+                io_in_bits_TOS,
+  input  [1:0]  io_in_bits_dominant_index,
+  input  [31:0] io_in_bits_resolved_PC,
+  input         io_out_ready,
+  output        io_out_valid,
+                io_out_bits_valid,
+  output [31:0] io_out_bits_fetch_PC,
+                io_out_bits_predicted_PC,
+  output        io_out_bits_T_NT,
+  output [2:0]  io_out_bits_br_type,
+  output [15:0] io_out_bits_GHR,
+  output [6:0]  io_out_bits_NEXT,
+                io_out_bits_TOS,
+  output [1:0]  io_out_bits_dominant_index,
+  output [31:0] io_out_bits_resolved_PC,
+  input         io_flush
+);
+
+  Queue16_FTQ_entry queue (
+    .clock                        (clock),
+    .reset                        (reset),
+    .io_enq_ready                 (io_in_ready),
+    .io_enq_valid                 (io_in_valid),
+    .io_enq_bits_valid            (io_in_bits_valid),
+    .io_enq_bits_fetch_PC         (io_in_bits_fetch_PC),
+    .io_enq_bits_is_misprediction (io_in_bits_is_misprediction),
+    .io_enq_bits_predicted_PC     (io_in_bits_predicted_PC),
+    .io_enq_bits_T_NT             (io_in_bits_T_NT),
+    .io_enq_bits_br_type          (io_in_bits_br_type),
+    .io_enq_bits_GHR              (io_in_bits_GHR),
+    .io_enq_bits_NEXT             (io_in_bits_NEXT),
+    .io_enq_bits_TOS              (io_in_bits_TOS),
+    .io_enq_bits_dominant_index   (io_in_bits_dominant_index),
+    .io_enq_bits_resolved_PC      (io_in_bits_resolved_PC),
+    .io_deq_ready                 (io_out_ready),
+    .io_deq_valid                 (io_out_valid),
+    .io_deq_bits_valid            (io_out_bits_valid),
+    .io_deq_bits_fetch_PC         (io_out_bits_fetch_PC),
+    .io_deq_bits_predicted_PC     (io_out_bits_predicted_PC),
+    .io_deq_bits_T_NT             (io_out_bits_T_NT),
+    .io_deq_bits_br_type          (io_out_bits_br_type),
+    .io_deq_bits_GHR              (io_out_bits_GHR),
+    .io_deq_bits_NEXT             (io_out_bits_NEXT),
+    .io_deq_bits_TOS              (io_out_bits_TOS),
+    .io_deq_bits_dominant_index   (io_out_bits_dominant_index),
+    .io_deq_bits_resolved_PC      (io_out_bits_resolved_PC),
+    .io_flush                     (io_flush)
   );
 endmodule
 
@@ -12516,9 +12853,17 @@ module frontend(
                 io_memory_response_bits_valid_bits_2,
                 io_memory_response_bits_valid_bits_3,
   input  [31:0] io_memory_response_bits_instructions_0_instruction,
-                io_memory_response_bits_instructions_1_instruction,
-                io_memory_response_bits_instructions_2_instruction,
-                io_memory_response_bits_instructions_3_instruction,
+  input  [3:0]  io_memory_response_bits_instructions_0_packet_index,
+  input  [5:0]  io_memory_response_bits_instructions_0_ROB_index,
+  input  [31:0] io_memory_response_bits_instructions_1_instruction,
+  input  [3:0]  io_memory_response_bits_instructions_1_packet_index,
+  input  [5:0]  io_memory_response_bits_instructions_1_ROB_index,
+  input  [31:0] io_memory_response_bits_instructions_2_instruction,
+  input  [3:0]  io_memory_response_bits_instructions_2_packet_index,
+  input  [5:0]  io_memory_response_bits_instructions_2_ROB_index,
+  input  [31:0] io_memory_response_bits_instructions_3_instruction,
+  input  [3:0]  io_memory_response_bits_instructions_3_packet_index,
+  input  [5:0]  io_memory_response_bits_instructions_3_ROB_index,
   input         io_commit_valid,
   input  [31:0] io_commit_bits_fetch_PC,
   input         io_commit_bits_T_NT,
@@ -12692,6 +13037,7 @@ module frontend(
 );
 
   wire        _rename_io_decoded_fetch_packet_ready;
+  wire        _FTQ_queue_io_in_ready;
   wire        _instruction_queue_io_in_ready;
   wire        _instruction_queue_io_out_valid;
   wire [31:0] _instruction_queue_io_out_bits_fetch_PC;
@@ -12794,6 +13140,7 @@ module frontend(
   wire [3:0]  _instruction_queue_io_out_bits_RAT_index;
   wire [6:0]  _instruction_queue_io_out_bits_free_list_front_pointer;
   wire        _decoders_io_fetch_packet_ready;
+  wire        _decoders_io_predictions_in_ready;
   wire        _decoders_io_decoded_fetch_packet_valid;
   wire [31:0] _decoders_io_decoded_fetch_packet_bits_fetch_PC;
   wire
@@ -12910,6 +13257,18 @@ module frontend(
   wire        _decoders_io_decoded_fetch_packet_bits_valid_bits_3;
   wire [3:0]  _decoders_io_decoded_fetch_packet_bits_RAT_index;
   wire [6:0]  _decoders_io_decoded_fetch_packet_bits_free_list_front_pointer;
+  wire        _decoders_io_predictions_out_valid;
+  wire        _decoders_io_predictions_out_bits_valid;
+  wire [31:0] _decoders_io_predictions_out_bits_fetch_PC;
+  wire        _decoders_io_predictions_out_bits_is_misprediction;
+  wire [31:0] _decoders_io_predictions_out_bits_predicted_PC;
+  wire        _decoders_io_predictions_out_bits_T_NT;
+  wire [2:0]  _decoders_io_predictions_out_bits_br_type;
+  wire [15:0] _decoders_io_predictions_out_bits_GHR;
+  wire [6:0]  _decoders_io_predictions_out_bits_NEXT;
+  wire [6:0]  _decoders_io_predictions_out_bits_TOS;
+  wire [1:0]  _decoders_io_predictions_out_bits_dominant_index;
+  wire [31:0] _decoders_io_predictions_out_bits_resolved_PC;
   wire        _instruction_fetch_io_fetch_packet_valid;
   wire [31:0] _instruction_fetch_io_fetch_packet_bits_fetch_PC;
   wire        _instruction_fetch_io_fetch_packet_bits_valid_bits_0;
@@ -12928,38 +13287,51 @@ module frontend(
   wire [31:0] _instruction_fetch_io_fetch_packet_bits_instructions_3_instruction;
   wire [3:0]  _instruction_fetch_io_fetch_packet_bits_instructions_3_packet_index;
   wire [5:0]  _instruction_fetch_io_fetch_packet_bits_instructions_3_ROB_index;
+  wire        _instruction_fetch_io_predictions_valid;
+  wire        _instruction_fetch_io_predictions_bits_valid;
+  wire [31:0] _instruction_fetch_io_predictions_bits_fetch_PC;
+  wire        _instruction_fetch_io_predictions_bits_is_misprediction;
+  wire [31:0] _instruction_fetch_io_predictions_bits_predicted_PC;
+  wire        _instruction_fetch_io_predictions_bits_T_NT;
+  wire [2:0]  _instruction_fetch_io_predictions_bits_br_type;
+  wire [15:0] _instruction_fetch_io_predictions_bits_GHR;
+  wire [6:0]  _instruction_fetch_io_predictions_bits_NEXT;
+  wire [6:0]  _instruction_fetch_io_predictions_bits_TOS;
+  wire [1:0]  _instruction_fetch_io_predictions_bits_dominant_index;
+  wire [31:0] _instruction_fetch_io_predictions_bits_resolved_PC;
   instruction_fetch instruction_fetch (
-    .clock                                              (clock),
-    .reset                                              (reset),
-    .io_flush                                           (io_flush),
-    .io_commit_valid                                    (io_commit_valid),
-    .io_commit_bits_fetch_PC                            (io_commit_bits_fetch_PC),
-    .io_commit_bits_T_NT                                (io_commit_bits_T_NT),
-    .io_commit_bits_ROB_index                           (io_commit_bits_ROB_index),
-    .io_commit_bits_br_type                             (io_commit_bits_br_type),
-    .io_commit_bits_is_misprediction                    (io_commit_bits_is_misprediction),
-    .io_commit_bits_expected_PC                         (io_commit_bits_expected_PC),
-    .io_commit_bits_GHR                                 (io_commit_bits_GHR),
-    .io_commit_bits_TOS                                 (io_commit_bits_TOS),
-    .io_commit_bits_NEXT                                (io_commit_bits_NEXT),
-    .io_commit_bits_RAT_index                           (io_commit_bits_RAT_index),
+    .clock                                               (clock),
+    .reset                                               (reset),
+    .io_flush                                            (io_flush),
+    .io_commit_valid                                     (io_commit_valid),
+    .io_commit_bits_fetch_PC                             (io_commit_bits_fetch_PC),
+    .io_commit_bits_T_NT                                 (io_commit_bits_T_NT),
+    .io_commit_bits_ROB_index                            (io_commit_bits_ROB_index),
+    .io_commit_bits_br_type                              (io_commit_bits_br_type),
+    .io_commit_bits_is_misprediction
+      (io_commit_bits_is_misprediction),
+    .io_commit_bits_expected_PC                          (io_commit_bits_expected_PC),
+    .io_commit_bits_GHR                                  (io_commit_bits_GHR),
+    .io_commit_bits_TOS                                  (io_commit_bits_TOS),
+    .io_commit_bits_NEXT                                 (io_commit_bits_NEXT),
+    .io_commit_bits_RAT_index                            (io_commit_bits_RAT_index),
     .io_commit_bits_free_list_front_pointer
       (io_commit_bits_free_list_front_pointer),
-    .io_commit_bits_RD_0                                (io_commit_bits_RD_0),
-    .io_commit_bits_RD_1                                (io_commit_bits_RD_1),
-    .io_commit_bits_RD_2                                (io_commit_bits_RD_2),
-    .io_commit_bits_RD_3                                (io_commit_bits_RD_3),
-    .io_commit_bits_RD_valid_0                          (io_commit_bits_RD_valid_0),
-    .io_commit_bits_RD_valid_1                          (io_commit_bits_RD_valid_1),
-    .io_commit_bits_RD_valid_2                          (io_commit_bits_RD_valid_2),
-    .io_commit_bits_RD_valid_3                          (io_commit_bits_RD_valid_3),
-    .io_memory_request_ready                            (io_memory_request_ready),
-    .io_memory_request_valid                            (io_memory_request_valid),
-    .io_memory_request_bits_addr                        (io_memory_request_bits_addr),
-    .io_memory_request_bits_wr_data                     (io_memory_request_bits_wr_data),
-    .io_memory_request_bits_wr_en                       (io_memory_request_bits_wr_en),
-    .io_memory_response_ready                           (io_memory_response_ready),
-    .io_memory_response_valid                           (io_memory_response_valid),
+    .io_commit_bits_RD_0                                 (io_commit_bits_RD_0),
+    .io_commit_bits_RD_1                                 (io_commit_bits_RD_1),
+    .io_commit_bits_RD_2                                 (io_commit_bits_RD_2),
+    .io_commit_bits_RD_3                                 (io_commit_bits_RD_3),
+    .io_commit_bits_RD_valid_0                           (io_commit_bits_RD_valid_0),
+    .io_commit_bits_RD_valid_1                           (io_commit_bits_RD_valid_1),
+    .io_commit_bits_RD_valid_2                           (io_commit_bits_RD_valid_2),
+    .io_commit_bits_RD_valid_3                           (io_commit_bits_RD_valid_3),
+    .io_memory_request_ready                             (io_memory_request_ready),
+    .io_memory_request_valid                             (io_memory_request_valid),
+    .io_memory_request_bits_addr                         (io_memory_request_bits_addr),
+    .io_memory_request_bits_wr_data                      (io_memory_request_bits_wr_data),
+    .io_memory_request_bits_wr_en                        (io_memory_request_bits_wr_en),
+    .io_memory_response_ready                            (io_memory_response_ready),
+    .io_memory_response_valid                            (io_memory_response_valid),
     .io_memory_response_bits_fetch_PC
       (io_memory_response_bits_fetch_PC),
     .io_memory_response_bits_valid_bits_0
@@ -12972,13 +13344,30 @@ module frontend(
       (io_memory_response_bits_valid_bits_3),
     .io_memory_response_bits_instructions_0_instruction
       (io_memory_response_bits_instructions_0_instruction),
+    .io_memory_response_bits_instructions_0_packet_index
+      (io_memory_response_bits_instructions_0_packet_index),
+    .io_memory_response_bits_instructions_0_ROB_index
+      (io_memory_response_bits_instructions_0_ROB_index),
     .io_memory_response_bits_instructions_1_instruction
       (io_memory_response_bits_instructions_1_instruction),
+    .io_memory_response_bits_instructions_1_packet_index
+      (io_memory_response_bits_instructions_1_packet_index),
+    .io_memory_response_bits_instructions_1_ROB_index
+      (io_memory_response_bits_instructions_1_ROB_index),
     .io_memory_response_bits_instructions_2_instruction
       (io_memory_response_bits_instructions_2_instruction),
+    .io_memory_response_bits_instructions_2_packet_index
+      (io_memory_response_bits_instructions_2_packet_index),
+    .io_memory_response_bits_instructions_2_ROB_index
+      (io_memory_response_bits_instructions_2_ROB_index),
     .io_memory_response_bits_instructions_3_instruction
       (io_memory_response_bits_instructions_3_instruction),
-    .io_fetch_packet_ready                              (_decoders_io_fetch_packet_ready),
+    .io_memory_response_bits_instructions_3_packet_index
+      (io_memory_response_bits_instructions_3_packet_index),
+    .io_memory_response_bits_instructions_3_ROB_index
+      (io_memory_response_bits_instructions_3_ROB_index),
+    .io_fetch_packet_ready
+      (_decoders_io_fetch_packet_ready),
     .io_fetch_packet_valid
       (_instruction_fetch_io_fetch_packet_valid),
     .io_fetch_packet_bits_fetch_PC
@@ -13015,20 +13404,32 @@ module frontend(
       (_instruction_fetch_io_fetch_packet_bits_instructions_3_packet_index),
     .io_fetch_packet_bits_instructions_3_ROB_index
       (_instruction_fetch_io_fetch_packet_bits_instructions_3_ROB_index),
-    .io_predictions_ready                               (io_predictions_ready),
-    .io_predictions_valid                               (io_predictions_valid),
-    .io_predictions_bits_valid                          (io_predictions_bits_valid),
-    .io_predictions_bits_fetch_PC                       (io_predictions_bits_fetch_PC),
+    .io_predictions_ready
+      (_decoders_io_predictions_in_ready),
+    .io_predictions_valid
+      (_instruction_fetch_io_predictions_valid),
+    .io_predictions_bits_valid
+      (_instruction_fetch_io_predictions_bits_valid),
+    .io_predictions_bits_fetch_PC
+      (_instruction_fetch_io_predictions_bits_fetch_PC),
+    .io_predictions_bits_is_misprediction
+      (_instruction_fetch_io_predictions_bits_is_misprediction),
     .io_predictions_bits_predicted_PC
-      (io_predictions_bits_predicted_PC),
-    .io_predictions_bits_T_NT                           (io_predictions_bits_T_NT),
-    .io_predictions_bits_br_type                        (io_predictions_bits_br_type),
-    .io_predictions_bits_GHR                            (io_predictions_bits_GHR),
-    .io_predictions_bits_NEXT                           (io_predictions_bits_NEXT),
-    .io_predictions_bits_TOS                            (io_predictions_bits_TOS),
+      (_instruction_fetch_io_predictions_bits_predicted_PC),
+    .io_predictions_bits_T_NT
+      (_instruction_fetch_io_predictions_bits_T_NT),
+    .io_predictions_bits_br_type
+      (_instruction_fetch_io_predictions_bits_br_type),
+    .io_predictions_bits_GHR
+      (_instruction_fetch_io_predictions_bits_GHR),
+    .io_predictions_bits_NEXT
+      (_instruction_fetch_io_predictions_bits_NEXT),
+    .io_predictions_bits_TOS
+      (_instruction_fetch_io_predictions_bits_TOS),
     .io_predictions_bits_dominant_index
-      (io_predictions_bits_dominant_index),
-    .io_predictions_bits_resolved_PC                    (io_predictions_bits_resolved_PC)
+      (_instruction_fetch_io_predictions_bits_dominant_index),
+    .io_predictions_bits_resolved_PC
+      (_instruction_fetch_io_predictions_bits_resolved_PC)
   );
   fetch_packet_decoder decoders (
     .clock                                                                   (clock),
@@ -13072,6 +13473,32 @@ module frontend(
       (_instruction_fetch_io_fetch_packet_bits_instructions_3_packet_index),
     .io_fetch_packet_bits_instructions_3_ROB_index
       (_instruction_fetch_io_fetch_packet_bits_instructions_3_ROB_index),
+    .io_predictions_in_ready
+      (_decoders_io_predictions_in_ready),
+    .io_predictions_in_valid
+      (_instruction_fetch_io_predictions_valid),
+    .io_predictions_in_bits_valid
+      (_instruction_fetch_io_predictions_bits_valid),
+    .io_predictions_in_bits_fetch_PC
+      (_instruction_fetch_io_predictions_bits_fetch_PC),
+    .io_predictions_in_bits_is_misprediction
+      (_instruction_fetch_io_predictions_bits_is_misprediction),
+    .io_predictions_in_bits_predicted_PC
+      (_instruction_fetch_io_predictions_bits_predicted_PC),
+    .io_predictions_in_bits_T_NT
+      (_instruction_fetch_io_predictions_bits_T_NT),
+    .io_predictions_in_bits_br_type
+      (_instruction_fetch_io_predictions_bits_br_type),
+    .io_predictions_in_bits_GHR
+      (_instruction_fetch_io_predictions_bits_GHR),
+    .io_predictions_in_bits_NEXT
+      (_instruction_fetch_io_predictions_bits_NEXT),
+    .io_predictions_in_bits_TOS
+      (_instruction_fetch_io_predictions_bits_TOS),
+    .io_predictions_in_bits_dominant_index
+      (_instruction_fetch_io_predictions_bits_dominant_index),
+    .io_predictions_in_bits_resolved_PC
+      (_instruction_fetch_io_predictions_bits_resolved_PC),
     .io_decoded_fetch_packet_ready
       (_instruction_queue_io_in_ready),
     .io_decoded_fetch_packet_valid
@@ -13273,7 +13700,33 @@ module frontend(
     .io_decoded_fetch_packet_bits_RAT_index
       (_decoders_io_decoded_fetch_packet_bits_RAT_index),
     .io_decoded_fetch_packet_bits_free_list_front_pointer
-      (_decoders_io_decoded_fetch_packet_bits_free_list_front_pointer)
+      (_decoders_io_decoded_fetch_packet_bits_free_list_front_pointer),
+    .io_predictions_out_ready
+      (_FTQ_queue_io_in_ready),
+    .io_predictions_out_valid
+      (_decoders_io_predictions_out_valid),
+    .io_predictions_out_bits_valid
+      (_decoders_io_predictions_out_bits_valid),
+    .io_predictions_out_bits_fetch_PC
+      (_decoders_io_predictions_out_bits_fetch_PC),
+    .io_predictions_out_bits_is_misprediction
+      (_decoders_io_predictions_out_bits_is_misprediction),
+    .io_predictions_out_bits_predicted_PC
+      (_decoders_io_predictions_out_bits_predicted_PC),
+    .io_predictions_out_bits_T_NT
+      (_decoders_io_predictions_out_bits_T_NT),
+    .io_predictions_out_bits_br_type
+      (_decoders_io_predictions_out_bits_br_type),
+    .io_predictions_out_bits_GHR
+      (_decoders_io_predictions_out_bits_GHR),
+    .io_predictions_out_bits_NEXT
+      (_decoders_io_predictions_out_bits_NEXT),
+    .io_predictions_out_bits_TOS
+      (_decoders_io_predictions_out_bits_TOS),
+    .io_predictions_out_bits_dominant_index
+      (_decoders_io_predictions_out_bits_dominant_index),
+    .io_predictions_out_bits_resolved_PC
+      (_decoders_io_predictions_out_bits_resolved_PC)
   );
   Q_3 instruction_queue (
     .clock                                                  (clock),
@@ -13684,6 +14137,36 @@ module frontend(
       (_instruction_queue_io_out_bits_free_list_front_pointer),
     .io_flush
       (io_commit_bits_is_misprediction & io_commit_valid)
+  );
+  Q_4 FTQ_queue (
+    .clock                       (clock),
+    .reset                       (reset),
+    .io_in_ready                 (_FTQ_queue_io_in_ready),
+    .io_in_valid                 (_decoders_io_predictions_out_valid),
+    .io_in_bits_valid            (_decoders_io_predictions_out_bits_valid),
+    .io_in_bits_fetch_PC         (_decoders_io_predictions_out_bits_fetch_PC),
+    .io_in_bits_is_misprediction (_decoders_io_predictions_out_bits_is_misprediction),
+    .io_in_bits_predicted_PC     (_decoders_io_predictions_out_bits_predicted_PC),
+    .io_in_bits_T_NT             (_decoders_io_predictions_out_bits_T_NT),
+    .io_in_bits_br_type          (_decoders_io_predictions_out_bits_br_type),
+    .io_in_bits_GHR              (_decoders_io_predictions_out_bits_GHR),
+    .io_in_bits_NEXT             (_decoders_io_predictions_out_bits_NEXT),
+    .io_in_bits_TOS              (_decoders_io_predictions_out_bits_TOS),
+    .io_in_bits_dominant_index   (_decoders_io_predictions_out_bits_dominant_index),
+    .io_in_bits_resolved_PC      (_decoders_io_predictions_out_bits_resolved_PC),
+    .io_out_ready                (io_predictions_ready),
+    .io_out_valid                (io_predictions_valid),
+    .io_out_bits_valid           (io_predictions_bits_valid),
+    .io_out_bits_fetch_PC        (io_predictions_bits_fetch_PC),
+    .io_out_bits_predicted_PC    (io_predictions_bits_predicted_PC),
+    .io_out_bits_T_NT            (io_predictions_bits_T_NT),
+    .io_out_bits_br_type         (io_predictions_bits_br_type),
+    .io_out_bits_GHR             (io_predictions_bits_GHR),
+    .io_out_bits_NEXT            (io_predictions_bits_NEXT),
+    .io_out_bits_TOS             (io_predictions_bits_TOS),
+    .io_out_bits_dominant_index  (io_predictions_bits_dominant_index),
+    .io_out_bits_resolved_PC     (io_predictions_bits_resolved_PC),
+    .io_flush                    (io_flush)
   );
   rename rename (
     .clock
@@ -29816,9 +30299,17 @@ module ChaosCore(
                 io_frontend_memory_response_bits_valid_bits_2,
                 io_frontend_memory_response_bits_valid_bits_3,
   input  [31:0] io_frontend_memory_response_bits_instructions_0_instruction,
-                io_frontend_memory_response_bits_instructions_1_instruction,
-                io_frontend_memory_response_bits_instructions_2_instruction,
-                io_frontend_memory_response_bits_instructions_3_instruction,
+  input  [3:0]  io_frontend_memory_response_bits_instructions_0_packet_index,
+  input  [5:0]  io_frontend_memory_response_bits_instructions_0_ROB_index,
+  input  [31:0] io_frontend_memory_response_bits_instructions_1_instruction,
+  input  [3:0]  io_frontend_memory_response_bits_instructions_1_packet_index,
+  input  [5:0]  io_frontend_memory_response_bits_instructions_1_ROB_index,
+  input  [31:0] io_frontend_memory_response_bits_instructions_2_instruction,
+  input  [3:0]  io_frontend_memory_response_bits_instructions_2_packet_index,
+  input  [5:0]  io_frontend_memory_response_bits_instructions_2_ROB_index,
+  input  [31:0] io_frontend_memory_response_bits_instructions_3_instruction,
+  input  [3:0]  io_frontend_memory_response_bits_instructions_3_packet_index,
+  input  [5:0]  io_frontend_memory_response_bits_instructions_3_ROB_index,
   input         io_frontend_memory_request_ready,
   output        io_frontend_memory_request_valid,
   output [31:0] io_frontend_memory_request_bits_addr,
@@ -30189,12 +30680,28 @@ module ChaosCore(
       (io_frontend_memory_response_bits_valid_bits_3),
     .io_memory_response_bits_instructions_0_instruction
       (io_frontend_memory_response_bits_instructions_0_instruction),
+    .io_memory_response_bits_instructions_0_packet_index
+      (io_frontend_memory_response_bits_instructions_0_packet_index),
+    .io_memory_response_bits_instructions_0_ROB_index
+      (io_frontend_memory_response_bits_instructions_0_ROB_index),
     .io_memory_response_bits_instructions_1_instruction
       (io_frontend_memory_response_bits_instructions_1_instruction),
+    .io_memory_response_bits_instructions_1_packet_index
+      (io_frontend_memory_response_bits_instructions_1_packet_index),
+    .io_memory_response_bits_instructions_1_ROB_index
+      (io_frontend_memory_response_bits_instructions_1_ROB_index),
     .io_memory_response_bits_instructions_2_instruction
       (io_frontend_memory_response_bits_instructions_2_instruction),
+    .io_memory_response_bits_instructions_2_packet_index
+      (io_frontend_memory_response_bits_instructions_2_packet_index),
+    .io_memory_response_bits_instructions_2_ROB_index
+      (io_frontend_memory_response_bits_instructions_2_ROB_index),
     .io_memory_response_bits_instructions_3_instruction
       (io_frontend_memory_response_bits_instructions_3_instruction),
+    .io_memory_response_bits_instructions_3_packet_index
+      (io_frontend_memory_response_bits_instructions_3_packet_index),
+    .io_memory_response_bits_instructions_3_ROB_index
+      (io_frontend_memory_response_bits_instructions_3_ROB_index),
     .io_commit_valid
       (_BRU_io_commit_valid),
     .io_commit_bits_fetch_PC
@@ -31478,9 +31985,17 @@ module instruction_cache(
                  io_CPU_response_bits_valid_bits_2,
                  io_CPU_response_bits_valid_bits_3,
   output [31:0]  io_CPU_response_bits_instructions_0_instruction,
-                 io_CPU_response_bits_instructions_1_instruction,
-                 io_CPU_response_bits_instructions_2_instruction,
-                 io_CPU_response_bits_instructions_3_instruction,
+  output [3:0]   io_CPU_response_bits_instructions_0_packet_index,
+  output [5:0]   io_CPU_response_bits_instructions_0_ROB_index,
+  output [31:0]  io_CPU_response_bits_instructions_1_instruction,
+  output [3:0]   io_CPU_response_bits_instructions_1_packet_index,
+  output [5:0]   io_CPU_response_bits_instructions_1_ROB_index,
+  output [31:0]  io_CPU_response_bits_instructions_2_instruction,
+  output [3:0]   io_CPU_response_bits_instructions_2_packet_index,
+  output [5:0]   io_CPU_response_bits_instructions_2_ROB_index,
+  output [31:0]  io_CPU_response_bits_instructions_3_instruction,
+  output [3:0]   io_CPU_response_bits_instructions_3_packet_index,
+  output [5:0]   io_CPU_response_bits_instructions_3_ROB_index,
   input          io_DRAM_request_ready,
   output         io_DRAM_request_valid,
   output [31:0]  io_DRAM_request_bits_addr,
@@ -31490,9 +32005,10 @@ module instruction_cache(
   input  [255:0] io_DRAM_response_bits_data
 );
 
+  wire             CPU_response_valid;
   wire             miss;
-  wire             hit;
   wire [1:0]       hit_oh;
+  wire             _CPU_response_skid_buffer_io_enq_ready;
   wire [3:0]       _validator_io_instruction_output;
   wire             _data_memory_1_io_data_out_valid;
   wire [20:0]      _data_memory_1_io_data_out_tag;
@@ -31510,9 +32026,6 @@ module instruction_cache(
   reg  [31:0]      request_addr;
   reg              resp_ready;
   reg              cache_valid;
-  reg              io_CPU_response_valid_REG;
-  wire             io_CPU_response_valid_0 =
-    (cache_valid | hit) & ~(io_flush | io_CPU_response_valid_REG);
   reg  [31:0]      request_addr_REG;
   wire             _current_address_T_1 = (|cache_state) | miss;
   wire [31:0]      current_address_addr =
@@ -31540,7 +32053,7 @@ module instruction_cache(
   reg              hit_REG;
   reg              hit_REG_1;
   reg              hit_REG_2;
-  assign hit = (|hit_oh) & (hit_REG | replay_valid) & ~hit_REG_1 & ~hit_REG_2;
+  wire             hit = (|hit_oh) & (hit_REG | replay_valid) & ~hit_REG_1 & ~hit_REG_2;
   reg              miss_REG;
   reg              miss_REG_1;
   reg              miss_REG_2;
@@ -31549,7 +32062,7 @@ module instruction_cache(
     hit_oh_vec_1
       ? _data_memory_1_io_data_out_data
       : hit_oh_vec_0 ? _data_memory_0_io_data_out_data : 256'h0;
-  reg              io_CPU_response_bits_instructions_0_instruction_REG;
+  reg              CPU_response_bits_instructions_0_instruction_REG;
   wire [7:0][31:0] _GEN =
     {{hit_instruction_data[255:224]},
      {hit_instruction_data[223:192]},
@@ -31559,9 +32072,11 @@ module instruction_cache(
      {hit_instruction_data[95:64]},
      {hit_instruction_data[63:32]},
      {hit_instruction_data[31:0]}};
-  reg              io_CPU_response_bits_instructions_1_instruction_REG;
-  reg              io_CPU_response_bits_instructions_2_instruction_REG;
-  reg              io_CPU_response_bits_instructions_3_instruction_REG;
+  reg              CPU_response_bits_instructions_1_instruction_REG;
+  reg              CPU_response_bits_instructions_2_instruction_REG;
+  reg              CPU_response_bits_instructions_3_instruction_REG;
+  reg              CPU_response_valid_REG;
+  assign CPU_response_valid = (cache_valid | hit) & ~(io_flush | CPU_response_valid_REG);
   always @(posedge clock) begin
     if (reset) begin
       cache_state <= 2'h0;
@@ -31593,7 +32108,7 @@ module instruction_cache(
         else begin
           automatic logic _GEN_4 =
             cache_state == 2'h2
-            & (io_flush | io_CPU_response_valid_0 & io_CPU_response_ready);
+            & (io_flush | CPU_response_valid & _CPU_response_skid_buffer_io_enq_ready);
           if (_GEN_4)
             cache_state <= 2'h0;
           cache_valid <= ~_GEN_4 & cache_valid;
@@ -31622,7 +32137,6 @@ module instruction_cache(
         replay_address_wr_en <= io_CPU_request_bits_wr_en;
       end
     end
-    io_CPU_response_valid_REG <= io_flush;
     request_addr_REG <= io_CPU_request_bits_addr;
     LRU_memory_io_wr_addr_REG <= current_packet_set;
     hit_oh_vec_0_REG <= current_packet_tag;
@@ -31633,10 +32147,11 @@ module instruction_cache(
     miss_REG <= io_CPU_request_valid;
     miss_REG_1 <= io_flush;
     miss_REG_2 <= reset;
-    io_CPU_response_bits_instructions_0_instruction_REG <= current_packet_fetch_packet;
-    io_CPU_response_bits_instructions_1_instruction_REG <= current_packet_fetch_packet;
-    io_CPU_response_bits_instructions_2_instruction_REG <= current_packet_fetch_packet;
-    io_CPU_response_bits_instructions_3_instruction_REG <= current_packet_fetch_packet;
+    CPU_response_bits_instructions_0_instruction_REG <= current_packet_fetch_packet;
+    CPU_response_bits_instructions_1_instruction_REG <= current_packet_fetch_packet;
+    CPU_response_bits_instructions_2_instruction_REG <= current_packet_fetch_packet;
+    CPU_response_bits_instructions_3_instruction_REG <= current_packet_fetch_packet;
+    CPU_response_valid_REG <= io_flush;
   end // always @(posedge)
   SDPReadWriteSmem_1 LRU_memory (
     .clock       (clock),
@@ -31674,25 +32189,70 @@ module instruction_cache(
     .io_instruction_index  (fetch_PC_buf_addr[3:2]),
     .io_instruction_output (_validator_io_instruction_output)
   );
-  assign io_CPU_request_ready = ~(|cache_state) & ~miss;
-  assign io_CPU_response_valid = io_CPU_response_valid_0;
-  assign io_CPU_response_bits_fetch_PC = fetch_PC_buf_addr;
-  assign io_CPU_response_bits_valid_bits_0 =
-    _validator_io_instruction_output[3] & io_CPU_response_valid_0;
-  assign io_CPU_response_bits_valid_bits_1 =
-    _validator_io_instruction_output[2] & io_CPU_response_valid_0;
-  assign io_CPU_response_bits_valid_bits_2 =
-    _validator_io_instruction_output[1] & io_CPU_response_valid_0;
-  assign io_CPU_response_bits_valid_bits_3 =
-    _validator_io_instruction_output[0] & io_CPU_response_valid_0;
-  assign io_CPU_response_bits_instructions_0_instruction =
-    _GEN[{io_CPU_response_bits_instructions_0_instruction_REG, 2'h0}];
-  assign io_CPU_response_bits_instructions_1_instruction =
-    _GEN[{io_CPU_response_bits_instructions_1_instruction_REG, 2'h0} + 3'h1];
-  assign io_CPU_response_bits_instructions_2_instruction =
-    _GEN[{io_CPU_response_bits_instructions_2_instruction_REG, 2'h0} + 3'h2];
-  assign io_CPU_response_bits_instructions_3_instruction =
-    _GEN[{io_CPU_response_bits_instructions_3_instruction_REG, 2'h0} + 3'h3];
+  Queue1_fetch_packet CPU_response_skid_buffer (
+    .clock                                   (clock),
+    .reset                                   (reset),
+    .io_enq_ready                            (_CPU_response_skid_buffer_io_enq_ready),
+    .io_enq_valid                            (CPU_response_valid),
+    .io_enq_bits_fetch_PC                    (fetch_PC_buf_addr),
+    .io_enq_bits_valid_bits_0
+      (_validator_io_instruction_output[3] & CPU_response_valid),
+    .io_enq_bits_valid_bits_1
+      (_validator_io_instruction_output[2] & CPU_response_valid),
+    .io_enq_bits_valid_bits_2
+      (_validator_io_instruction_output[1] & CPU_response_valid),
+    .io_enq_bits_valid_bits_3
+      (_validator_io_instruction_output[0] & CPU_response_valid),
+    .io_enq_bits_instructions_0_instruction
+      (_GEN[{CPU_response_bits_instructions_0_instruction_REG, 2'h0}]),
+    .io_enq_bits_instructions_0_packet_index (4'h0),
+    .io_enq_bits_instructions_0_ROB_index    (6'h0),
+    .io_enq_bits_instructions_1_instruction
+      (_GEN[{CPU_response_bits_instructions_1_instruction_REG, 2'h0} + 3'h1]),
+    .io_enq_bits_instructions_1_packet_index (4'h1),
+    .io_enq_bits_instructions_1_ROB_index    (6'h0),
+    .io_enq_bits_instructions_2_instruction
+      (_GEN[{CPU_response_bits_instructions_2_instruction_REG, 2'h0} + 3'h2]),
+    .io_enq_bits_instructions_2_packet_index (4'h2),
+    .io_enq_bits_instructions_2_ROB_index    (6'h0),
+    .io_enq_bits_instructions_3_instruction
+      (_GEN[{CPU_response_bits_instructions_3_instruction_REG, 2'h0} + 3'h3]),
+    .io_enq_bits_instructions_3_packet_index (4'h3),
+    .io_enq_bits_instructions_3_ROB_index    (6'h0),
+    .io_deq_ready                            (io_CPU_response_ready),
+    .io_deq_valid                            (io_CPU_response_valid),
+    .io_deq_bits_fetch_PC                    (io_CPU_response_bits_fetch_PC),
+    .io_deq_bits_valid_bits_0                (io_CPU_response_bits_valid_bits_0),
+    .io_deq_bits_valid_bits_1                (io_CPU_response_bits_valid_bits_1),
+    .io_deq_bits_valid_bits_2                (io_CPU_response_bits_valid_bits_2),
+    .io_deq_bits_valid_bits_3                (io_CPU_response_bits_valid_bits_3),
+    .io_deq_bits_instructions_0_instruction
+      (io_CPU_response_bits_instructions_0_instruction),
+    .io_deq_bits_instructions_0_packet_index
+      (io_CPU_response_bits_instructions_0_packet_index),
+    .io_deq_bits_instructions_0_ROB_index
+      (io_CPU_response_bits_instructions_0_ROB_index),
+    .io_deq_bits_instructions_1_instruction
+      (io_CPU_response_bits_instructions_1_instruction),
+    .io_deq_bits_instructions_1_packet_index
+      (io_CPU_response_bits_instructions_1_packet_index),
+    .io_deq_bits_instructions_1_ROB_index
+      (io_CPU_response_bits_instructions_1_ROB_index),
+    .io_deq_bits_instructions_2_instruction
+      (io_CPU_response_bits_instructions_2_instruction),
+    .io_deq_bits_instructions_2_packet_index
+      (io_CPU_response_bits_instructions_2_packet_index),
+    .io_deq_bits_instructions_2_ROB_index
+      (io_CPU_response_bits_instructions_2_ROB_index),
+    .io_deq_bits_instructions_3_instruction
+      (io_CPU_response_bits_instructions_3_instruction),
+    .io_deq_bits_instructions_3_packet_index
+      (io_CPU_response_bits_instructions_3_packet_index),
+    .io_deq_bits_instructions_3_ROB_index
+      (io_CPU_response_bits_instructions_3_ROB_index),
+    .io_flush                                (io_flush)
+  );
+  assign io_CPU_request_ready = ~(|cache_state) & ~miss & io_CPU_response_ready;
   assign io_DRAM_request_valid = request_valid;
   assign io_DRAM_request_bits_addr = request_addr;
   assign io_DRAM_request_bits_wr_data = 32'h0;
@@ -31745,9 +32305,17 @@ module SOC(
   wire        _instruction_cache_io_CPU_response_bits_valid_bits_2;
   wire        _instruction_cache_io_CPU_response_bits_valid_bits_3;
   wire [31:0] _instruction_cache_io_CPU_response_bits_instructions_0_instruction;
+  wire [3:0]  _instruction_cache_io_CPU_response_bits_instructions_0_packet_index;
+  wire [5:0]  _instruction_cache_io_CPU_response_bits_instructions_0_ROB_index;
   wire [31:0] _instruction_cache_io_CPU_response_bits_instructions_1_instruction;
+  wire [3:0]  _instruction_cache_io_CPU_response_bits_instructions_1_packet_index;
+  wire [5:0]  _instruction_cache_io_CPU_response_bits_instructions_1_ROB_index;
   wire [31:0] _instruction_cache_io_CPU_response_bits_instructions_2_instruction;
+  wire [3:0]  _instruction_cache_io_CPU_response_bits_instructions_2_packet_index;
+  wire [5:0]  _instruction_cache_io_CPU_response_bits_instructions_2_ROB_index;
   wire [31:0] _instruction_cache_io_CPU_response_bits_instructions_3_instruction;
+  wire [3:0]  _instruction_cache_io_CPU_response_bits_instructions_3_packet_index;
+  wire [5:0]  _instruction_cache_io_CPU_response_bits_instructions_3_ROB_index;
   wire        _ChaosCore_io_commit_valid;
   wire        _ChaosCore_io_commit_bits_is_misprediction;
   wire        _ChaosCore_io_frontend_memory_response_ready;
@@ -31759,8 +32327,8 @@ module SOC(
   wire [31:0] _ChaosCore_io_backend_memory_request_bits_addr;
   wire [31:0] _ChaosCore_io_backend_memory_request_bits_wr_data;
   ChaosCore ChaosCore (
-    .clock                                                       (clock),
-    .reset                                                       (reset),
+    .clock                                                        (clock),
+    .reset                                                        (reset),
     .io_commit_valid
       (_ChaosCore_io_commit_valid),
     .io_commit_bits_is_misprediction
@@ -31781,12 +32349,28 @@ module SOC(
       (_instruction_cache_io_CPU_response_bits_valid_bits_3),
     .io_frontend_memory_response_bits_instructions_0_instruction
       (_instruction_cache_io_CPU_response_bits_instructions_0_instruction),
+    .io_frontend_memory_response_bits_instructions_0_packet_index
+      (_instruction_cache_io_CPU_response_bits_instructions_0_packet_index),
+    .io_frontend_memory_response_bits_instructions_0_ROB_index
+      (_instruction_cache_io_CPU_response_bits_instructions_0_ROB_index),
     .io_frontend_memory_response_bits_instructions_1_instruction
       (_instruction_cache_io_CPU_response_bits_instructions_1_instruction),
+    .io_frontend_memory_response_bits_instructions_1_packet_index
+      (_instruction_cache_io_CPU_response_bits_instructions_1_packet_index),
+    .io_frontend_memory_response_bits_instructions_1_ROB_index
+      (_instruction_cache_io_CPU_response_bits_instructions_1_ROB_index),
     .io_frontend_memory_response_bits_instructions_2_instruction
       (_instruction_cache_io_CPU_response_bits_instructions_2_instruction),
+    .io_frontend_memory_response_bits_instructions_2_packet_index
+      (_instruction_cache_io_CPU_response_bits_instructions_2_packet_index),
+    .io_frontend_memory_response_bits_instructions_2_ROB_index
+      (_instruction_cache_io_CPU_response_bits_instructions_2_ROB_index),
     .io_frontend_memory_response_bits_instructions_3_instruction
       (_instruction_cache_io_CPU_response_bits_instructions_3_instruction),
+    .io_frontend_memory_response_bits_instructions_3_packet_index
+      (_instruction_cache_io_CPU_response_bits_instructions_3_packet_index),
+    .io_frontend_memory_response_bits_instructions_3_ROB_index
+      (_instruction_cache_io_CPU_response_bits_instructions_3_ROB_index),
     .io_frontend_memory_request_ready
       (_instruction_cache_io_CPU_request_ready),
     .io_frontend_memory_request_valid
@@ -31811,8 +32395,8 @@ module SOC(
       (io_backend_memory_request_bits_wr_en)
   );
   instruction_cache instruction_cache (
-    .clock                                           (clock),
-    .reset                                           (reset),
+    .clock                                            (clock),
+    .reset                                            (reset),
     .io_flush
       (_ChaosCore_io_commit_valid & _ChaosCore_io_commit_bits_is_misprediction),
     .io_CPU_request_ready
@@ -31841,20 +32425,36 @@ module SOC(
       (_instruction_cache_io_CPU_response_bits_valid_bits_3),
     .io_CPU_response_bits_instructions_0_instruction
       (_instruction_cache_io_CPU_response_bits_instructions_0_instruction),
+    .io_CPU_response_bits_instructions_0_packet_index
+      (_instruction_cache_io_CPU_response_bits_instructions_0_packet_index),
+    .io_CPU_response_bits_instructions_0_ROB_index
+      (_instruction_cache_io_CPU_response_bits_instructions_0_ROB_index),
     .io_CPU_response_bits_instructions_1_instruction
       (_instruction_cache_io_CPU_response_bits_instructions_1_instruction),
+    .io_CPU_response_bits_instructions_1_packet_index
+      (_instruction_cache_io_CPU_response_bits_instructions_1_packet_index),
+    .io_CPU_response_bits_instructions_1_ROB_index
+      (_instruction_cache_io_CPU_response_bits_instructions_1_ROB_index),
     .io_CPU_response_bits_instructions_2_instruction
       (_instruction_cache_io_CPU_response_bits_instructions_2_instruction),
+    .io_CPU_response_bits_instructions_2_packet_index
+      (_instruction_cache_io_CPU_response_bits_instructions_2_packet_index),
+    .io_CPU_response_bits_instructions_2_ROB_index
+      (_instruction_cache_io_CPU_response_bits_instructions_2_ROB_index),
     .io_CPU_response_bits_instructions_3_instruction
       (_instruction_cache_io_CPU_response_bits_instructions_3_instruction),
-    .io_DRAM_request_ready                           (io_frontend_memory_request_ready),
-    .io_DRAM_request_valid                           (io_frontend_memory_request_valid),
+    .io_CPU_response_bits_instructions_3_packet_index
+      (_instruction_cache_io_CPU_response_bits_instructions_3_packet_index),
+    .io_CPU_response_bits_instructions_3_ROB_index
+      (_instruction_cache_io_CPU_response_bits_instructions_3_ROB_index),
+    .io_DRAM_request_ready                            (io_frontend_memory_request_ready),
+    .io_DRAM_request_valid                            (io_frontend_memory_request_valid),
     .io_DRAM_request_bits_addr
       (io_frontend_memory_request_bits_addr),
     .io_DRAM_request_bits_wr_data
       (io_frontend_memory_request_bits_wr_data),
-    .io_DRAM_response_ready                          (io_frontend_memory_response_ready),
-    .io_DRAM_response_valid                          (io_frontend_memory_response_valid),
+    .io_DRAM_response_ready                           (io_frontend_memory_response_ready),
+    .io_DRAM_response_valid                           (io_frontend_memory_response_valid),
     .io_DRAM_response_bits_data
       (io_frontend_memory_response_bits_data)
   );

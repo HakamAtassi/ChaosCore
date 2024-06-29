@@ -103,11 +103,7 @@ class instruction_fetch(parameters:Parameters) extends Module{
     val PC_Q            =   Module(new Q(new memory_request(parameters), depth = 16))                                                       // Queue of predicted PCs
     val BTB_Q           =   Module(new Q(new prediction(parameters), depth = 16))         // Queue of BTB responses
 
-    //////////////
-    // PC Queue //
-    //////////////
-    PC_Q.io.out  <>  io.memory_request
-    PC_Q.io.flush       :=  io.flush
+
 
     ///////////////////////
     // INSTRUCTION QUEUE //
@@ -134,8 +130,6 @@ class instruction_fetch(parameters:Parameters) extends Module{
     ////////
     // BP //
     ////////
-
-
     predecoder.io.commit <> io.commit
 
     // BP inputs (external)
@@ -143,9 +137,15 @@ class instruction_fetch(parameters:Parameters) extends Module{
     bp.io.flush <> io.flush
 
     // BP inputs (internal)
-    bp.io.predict           <>  PC_gen.io.PC_next
+    bp.io.predict           <>  PC_Q.io.out
     bp.io.RAS_update        <>  predecoder.io.RAS_update
     bp.io.GHR               <>  predecoder.io.GHR
+
+    //////////////
+    // PC Queue //
+    //////////////
+    PC_Q.io.out  <>  io.memory_request
+    PC_Q.io.flush       :=  io.flush
 
     // Outputs
     predecoder.io.RAS_read  <> bp.io.RAS_read
@@ -171,7 +171,6 @@ class instruction_fetch(parameters:Parameters) extends Module{
     PC_gen.io.prediction        <> bp.io.prediction
     PC_gen.io.RAS_read          <> bp.io.RAS_read
     PC_gen.io.PC_next           <> PC_Q.io.in
-    PC_gen.io.PC_next.ready     := PC_Q.io.in.ready && bp.io.predict.ready
 
 
     // FIXME: PC_gen readies not connected
