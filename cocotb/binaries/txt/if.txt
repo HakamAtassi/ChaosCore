@@ -1,0 +1,28 @@
+
+elf/if.elf:     file format elf32-littleriscv
+
+
+Disassembly of section .text:
+
+00000000 <_start>:
+   0:	00000297          	auipc	x5,0x0
+   4:	03828293          	addi	x5,x5,56 # 38 <main>
+   8:	00028067          	jr	x5
+
+0000000c <putchar>:
+   c:	800007b7          	lui	x15,0x80000
+  10:	00a7a023          	sw	x10,0(x15) # 80000000 <main+0x7fffffc8>
+  14:	00008067          	ret
+
+00000018 <printf>:
+  18:	00054783          	lbu	x15,0(x10)
+  1c:	00078c63          	beqz	x15,34 <printf+0x1c>
+  20:	80000737          	lui	x14,0x80000
+  24:	00f72023          	sw	x15,0(x14) # 80000000 <main+0x7fffffc8>
+  28:	00154783          	lbu	x15,1(x10)
+  2c:	00150513          	addi	x10,x10,1
+  30:	fe079ae3          	bnez	x15,24 <printf+0xc>
+  34:	00008067          	ret
+
+00000038 <main>:
+  38:	0000006f          	j	38 <main>

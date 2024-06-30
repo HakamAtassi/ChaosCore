@@ -149,27 +149,13 @@ class MEMRS(parameters:Parameters) extends Module{
     }
 
 
-    /////////////////////
-    // UPDATE (COMMIT) //
-    /////////////////////
-    // Mark instruction as commited via commit channel
-
-    for(i <- 0 until RSEntries){
-        when(!reservation_station(i).commited && reservation_station(i).valid){
-            val commited = (io.commit.bits.ROB_index === reservation_station(i).decoded_instruction.ROB_index) && io.commit.valid
-            reservation_station(i).commited := commited
-        }
-    }
-
 
     /////////////////
     // MEM REQUEST //
     /////////////////
     // If front of the MEMRS has its sources ready and has committed, send to memory and update front pointer
 
-    // FIXME: this is missing the valid for RS1 and RS2
-    val good_to_go =    (reservation_station(front_index).valid && reservation_station(front_index).commited &&
-                        reservation_station(front_index).decoded_instruction.ready_bits.RS1_ready && reservation_station(front_index).decoded_instruction.ready_bits.RS2_ready)
+    val good_to_go =    (reservation_station(front_index).valid && reservation_station(front_index).commited)
 
     front_pointer := front_pointer + good_to_go
 
@@ -178,12 +164,6 @@ class MEMRS(parameters:Parameters) extends Module{
         reservation_station(front_index) := 0.U.asTypeOf(new MEMRS_entry(parameters))
     }
     
-
-    //////////////
-    // FLUSH RS //
-    //////////////
-
-
 
     ////////////////////
     // ASSIGN OUTPUTS //
@@ -210,7 +190,21 @@ class MEMRS(parameters:Parameters) extends Module{
         io.backend_packet(i).ready := availalbe_RS_entries >= fetchWidth.U
     }
 
+    /////////////////////
+    // UPDATE (COMMIT) //
+    /////////////////////
+    // Mark instruction as commited via commit channel
 
+    for(i <- 0 until RSEntries){
+        when(!reservation_station(i).commited && reservation_station(i).valid){
+            val commited = (io.commit.bits.ROB_index === reservation_station(i).decoded_instruction.ROB_index) && 
+                            io.commit.valid 
+                            /*&& io.commit.bits.fetch_packet_index >= reservation_station(i).decoded_instruction.packet_index*/
+            reservation_station(i).commited := commited
+        }
+    }
+
+    dontTouch(io.commit.bits.fetch_packet_index)
 
     ///////////
     // FLUSH //
@@ -218,16 +212,16 @@ class MEMRS(parameters:Parameters) extends Module{
 
     // When a flush takes place, you only want to clear the elements that have not commited. 
 
-    var valid_uncommited_count = PopCount(reservation_station.map(rs => !rs.commited && rs.valid))
-
-
+    var valid_uncommited_count = PopCount(reservation_station.map(  rs => !rs.commited && rs.valid && 
+                                                                    !((io.commit.bits.ROB_index === rs.decoded_instruction.ROB_index) && 
+                                                                    io.commit.bits.fetch_packet_index >= rs.decoded_instruction.packet_index)))
 
     for(i <- 0 until RSEntries){
-        when(io.flush && (!reservation_station(i).commited)){
+        val is_commiting = (io.commit.bits.ROB_index === reservation_station(i).decoded_instruction.ROB_index) && io.commit.bits.fetch_packet_index >= reservation_station(i).decoded_instruction.packet_index
+        when(io.flush && (!reservation_station(i).commited) && !is_commiting){
             reservation_station(i) := 0.U.asTypeOf(new MEMRS_entry(parameters))
         }
     }
-
 
 
     when(io.flush){
