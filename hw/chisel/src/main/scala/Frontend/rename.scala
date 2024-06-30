@@ -156,9 +156,9 @@ class RAT(parameters:Parameters) extends Module{
     dontTouch(active_RAT_comb)
 
     for(i <- 0 until fetchWidth){
-        io.RAT_RD(i)  := RegNext(RAT_memories(active_RAT_comb)(io.instruction_RD(i)))
-        io.RAT_RS1(i) := RegNext(RAT_memories(active_RAT_comb)(io.instruction_RS1(i)))
-        io.RAT_RS2(i) := RegNext(RAT_memories(active_RAT_comb)(io.instruction_RS2(i)))
+        io.RAT_RD(i)  := RegNext(RAT_memories(active_RAT)(io.instruction_RD(i)))
+        io.RAT_RS1(i) := RegNext(RAT_memories(active_RAT)(io.instruction_RS1(i)))
+        io.RAT_RS2(i) := RegNext(RAT_memories(active_RAT)(io.instruction_RS2(i)))
     }
 
     // CREATE CHECKPOINT

@@ -129,7 +129,7 @@ class commit(parameters:Parameters) extends Bundle{
     val ROB_index               = UInt(log2Ceil(ROBEntires).W)
     
     val br_type                 = _br_type()
-    val fetch_packet_index      = UInt(log2Ceil(fetchWidth).W)
+    val fetch_packet_index      = UInt(log2Ceil(fetchWidth).W)  // fetch packet index of the branch
 
     val is_misprediction        = Bool()
     val expected_PC             = UInt(32.W)    // For BTB aswell
@@ -214,7 +214,7 @@ class decoded_instruction(parameters:Parameters) extends Bundle{
     val FUNCT3              =  UInt(3.W)
 
 
-    val packet_index        =  UInt(log2Ceil(fetchWidth*4).W)    // FIXME: *4??
+    val packet_index        =  UInt(log2Ceil(fetchWidth).W)    // FIXME: *4??
     val ROB_index           =  UInt(log2Ceil(ROBEntires).W)
 
     // uOp info
