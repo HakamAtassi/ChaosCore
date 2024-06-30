@@ -407,7 +407,10 @@ class rename(parameters:Parameters) extends Module{
 
     renamed_decoded_fetch_packet.bits.free_list_front_pointer    := RegNext(free_list.io.free_list_front_pointer)
 
-    renamed_decoded_fetch_packet.valid := RegNext(io.decoded_fetch_packet.valid && !io.flush)
+    // FIXME: output valid should be if all the instructions that need a rename, are renamed. 
+    // IE, if input has no RD, free list empty should not matter.
+    // So, instead of free_list.io.empty being a condition to valid, there should be a "renameble" signal
+    renamed_decoded_fetch_packet.valid := RegNext(io.decoded_fetch_packet.valid && !io.flush && !free_list.io.empty)
     renamed_decoded_fetch_packet.ready := io.renamed_decoded_fetch_packet.ready
 
     /////////////////

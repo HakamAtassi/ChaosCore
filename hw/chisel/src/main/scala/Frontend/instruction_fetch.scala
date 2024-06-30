@@ -173,8 +173,6 @@ class instruction_fetch(parameters:Parameters) extends Module{
     PC_gen.io.PC_next           <> PC_Q.io.in
 
 
-    // FIXME: PC_gen readies not connected
-
 
     /////////////
     // OUTPUTS //
@@ -188,6 +186,13 @@ class instruction_fetch(parameters:Parameters) extends Module{
 
 
     bp.io.prediction.ready  :=  BTB_Q.io.in.ready && PC_gen.io.prediction.ready
+    bp.io.predict.valid     :=  PC_gen.io.PC_next.valid && PC_Q.io.in.ready
+
+
+    PC_gen.io.PC_next.ready := bp.io.predict.ready && PC_Q.io.in.ready
+    PC_Q.io.in.valid := PC_gen.io.PC_next.valid && bp.io.predict.ready
+
+
 
     io.fetch_packet <> predecoder.io.final_fetch_packet
 
