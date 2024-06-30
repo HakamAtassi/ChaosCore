@@ -77,13 +77,9 @@ class MEMFU(parameters:Parameters) extends Module{
 
             when(io.FU_input.fire && io.memory_request.fire){
                 // send request to memory directly
-
-
                 memfu_state := memfuState.ACTIVE
             }.elsewhen(io.FU_input.fire){
                 // Wait till memory is valid
-
-
                 memfu_state := memfuState.WAIT
             }
         }
@@ -94,6 +90,7 @@ class MEMFU(parameters:Parameters) extends Module{
                 // send request to memory
 
                 FU_input_bits_reg := 0.U.asTypeOf(new read_decoded_instruction(parameters))
+                FU_input_valid_reg := 0.B
 
                 memfu_state := memfuState.ACTIVE
             }
@@ -219,7 +216,7 @@ class MEMFU(parameters:Parameters) extends Module{
     io.FU_output.bits.target_address            := 0.B
     io.FU_output.bits.branch_valid              := 0.B
 
-    io.FU_output.bits.fetch_PC            := RegNext(io.FU_input.bits.fetch_PC + (io.FU_input.bits.decoded_instruction.packet_index<<2.U))
+    io.FU_output.bits.fetch_PC                  := RegNext(io.FU_input.bits.fetch_PC + (io.FU_input.bits.decoded_instruction.packet_index<<2.U))
     io.FU_output.bits.fetch_packet_index        := RegNext(io.FU_input.bits.decoded_instruction.packet_index)
 
     io.FU_output.bits.RD_data                   := RegNext(rd_data.asUInt)
@@ -237,9 +234,7 @@ class MEMFU(parameters:Parameters) extends Module{
     io.memory_response.ready        :=  1.B // FIXME: this may work but is not 100% correct
 
     // VALID
-    io.memory_request.valid         :=   FU_input_valid
-
-
+    io.memory_request.valid         :=  FU_input_valid
 
     io.FU_output.valid              :=  instruction_complete   // I dont think this outputs anything on stores...
 

@@ -95,20 +95,11 @@ class frontend(parameters:Parameters) extends Module{
     // DECODERS //
     //////////////
     decoders.io.fetch_packet <> instruction_fetch.io.fetch_packet
+    decoders.io.decoded_fetch_packet.ready := FTQ_queue.io.in.ready && instruction_queue.io.in.ready
 
-    ///////////////////////
-    // INSTRUCTION QUEUE //
-    ///////////////////////
 
-    instruction_queue.io.in <> decoders.io.decoded_fetch_packet
 
-    ///////////////
-    // FTQ QUEUE //
-    ///////////////
 
-    FTQ_queue.io.in <> decoders.io.predictions_out
-    FTQ_queue.io.out <> io.predictions
-    FTQ_queue.io.flush := io.flush
 
     ///////////////
     // FTQ INPUT //
@@ -121,7 +112,6 @@ class frontend(parameters:Parameters) extends Module{
     // RENAME //
     ////////////
 
-    rename.io.decoded_fetch_packet <> instruction_queue.io.out
 
     instruction_queue.io.flush := flush 
 
@@ -135,6 +125,30 @@ class frontend(parameters:Parameters) extends Module{
     ////////////
 
     io.renamed_decoded_fetch_packet <> rename.io.renamed_decoded_fetch_packet
+
+
+    ///////////////
+    // FTQ QUEUE //
+    ///////////////
+
+    FTQ_queue.io.in <> decoders.io.predictions_out
+    FTQ_queue.io.in.valid := decoders.io.predictions_out.valid && instruction_queue.io.in.ready
+
+
+    FTQ_queue.io.out <> io.predictions
+    FTQ_queue.io.flush := io.flush
+
+
+    ///////////////////////
+    // INSTRUCTION QUEUE //
+    ///////////////////////
+
+    instruction_queue.io.in <> decoders.io.decoded_fetch_packet
+    instruction_queue.io.in.valid := decoders.io.decoded_fetch_packet.valid && FTQ_queue.io.in.ready
+
+
+    rename.io.decoded_fetch_packet <> instruction_queue.io.out
+
 
     
 

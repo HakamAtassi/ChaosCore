@@ -13,6 +13,10 @@ module free_list(
   input        io_commit_valid,
                io_commit_bits_is_misprediction,
   input  [6:0] io_commit_bits_free_list_front_pointer,
+  input  [5:0] io_commit_bits_RD_0,
+               io_commit_bits_RD_1,
+               io_commit_bits_RD_2,
+               io_commit_bits_RD_3,
   input        io_commit_bits_RD_valid_0,
                io_commit_bits_RD_valid_1,
                io_commit_bits_RD_valid_2,
@@ -109,9 +113,12 @@ module free_list(
         back_pointer <=
           back_pointer
           + {4'h0,
-             {1'h0, {1'h0, io_commit_bits_RD_valid_0} + {1'h0, io_commit_bits_RD_valid_1}}
+             {1'h0,
+              {1'h0, io_commit_bits_RD_valid_0 & (|io_commit_bits_RD_0)}
+                + {1'h0, io_commit_bits_RD_valid_1 & (|io_commit_bits_RD_1)}}
                + {1'h0,
-                  {1'h0, io_commit_bits_RD_valid_2} + {1'h0, io_commit_bits_RD_valid_3}}};
+                  {1'h0, io_commit_bits_RD_valid_2 & (|io_commit_bits_RD_2)}
+                    + {1'h0, io_commit_bits_RD_valid_3 & (|io_commit_bits_RD_3)}}};
     end
   end // always @(posedge)
   assign io_renamed_values_0 =
@@ -7293,7 +7300,8 @@ module rename(
       io_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid;
     renamed_decoded_fetch_packet_bits_free_list_front_pointer_REG <=
       _free_list_io_free_list_front_pointer;
-    renamed_decoded_fetch_packet_valid_REG <= io_decoded_fetch_packet_valid & ~io_flush;
+    renamed_decoded_fetch_packet_valid_REG <=
+      io_decoded_fetch_packet_valid & ~io_flush & ~_free_list_io_empty;
   end // always @(posedge)
   free_list free_list (
     .clock                                  (clock),
@@ -7317,6 +7325,10 @@ module rename(
     .io_commit_valid                        (io_commit_valid),
     .io_commit_bits_is_misprediction        (io_commit_bits_is_misprediction),
     .io_commit_bits_free_list_front_pointer (io_commit_bits_free_list_front_pointer),
+    .io_commit_bits_RD_0                    (io_commit_bits_RD_0),
+    .io_commit_bits_RD_1                    (io_commit_bits_RD_1),
+    .io_commit_bits_RD_2                    (io_commit_bits_RD_2),
+    .io_commit_bits_RD_3                    (io_commit_bits_RD_3),
     .io_commit_bits_RD_valid_0              (io_commit_bits_RD_valid_0),
     .io_commit_bits_RD_valid_1              (io_commit_bits_RD_valid_1),
     .io_commit_bits_RD_valid_2              (io_commit_bits_RD_valid_2),

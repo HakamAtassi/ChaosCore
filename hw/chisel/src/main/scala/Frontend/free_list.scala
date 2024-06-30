@@ -93,7 +93,12 @@ class free_list(parameters:Parameters) extends Module{
     // POINTER CTRL //
     //////////////////
 
-    val allocate_valid  =   io.commit.bits.RD_valid
+    val allocate_valid  =   Wire(Vec(fetchWidth, Bool()))
+
+    for(i <- 0 until fetchWidth){
+        allocate_valid(i) := (io.commit.bits.RD_valid(i)) && (io.commit.bits.RD(i) =/= 0.U)
+    }
+    
 
     when(!(io.commit.valid && io.commit.bits.is_misprediction)){                               // not misprediction
         front_pointer := front_pointer + PopCount(io.rename_valid)
