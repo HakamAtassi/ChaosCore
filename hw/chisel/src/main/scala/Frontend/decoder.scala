@@ -230,7 +230,7 @@ class fetch_packet_decoder(parameters:Parameters) extends Module{
         io.fetch_packet.ready                                       := io.decoded_fetch_packet.ready
     }
 
-    decoded_fetch_packet.valid := RegNext(io.fetch_packet.valid && !io.flush)
+    decoded_fetch_packet.valid := RegNext(io.fetch_packet.fire && !io.flush)
     decoded_fetch_packet.bits.fetch_PC   := RegNext(io.fetch_packet.bits.fetch_PC)
     decoded_fetch_packet.bits.valid_bits := RegNext(io.fetch_packet.bits.valid_bits)
     decoded_fetch_packet.bits.RAT_index                  := DontCare // This is fine. Allocated during rename
@@ -259,7 +259,7 @@ class fetch_packet_decoder(parameters:Parameters) extends Module{
     val predictions_out_skid_buffer = Module(new Queue(new FTQ_entry(parameters), 1, flow=true, hasFlush=true, useSyncReadMem=false))
 
     predictions_out.bits    := RegNext(io.predictions_in.bits)
-    predictions_out.valid   := RegNext(io.predictions_in.valid)
+    predictions_out.valid   := RegNext(io.predictions_in.fire)
 
     predictions_out_skid_buffer.io.enq                  <> predictions_out
     predictions_out_skid_buffer.io.deq                  <> io.predictions_out

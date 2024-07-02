@@ -200,3 +200,15 @@ object get_decomposed_icache_address{
 
   }
 }
+
+
+object get_PC_increment{
+  def apply(parameters:Parameters, address:UInt):UInt={
+    import parameters._
+    val instruction_index_within_packet =   Wire(UInt(log2Ceil(fetchWidth).W))
+    val PC_increment                    =   Wire(UInt(32.W))
+    instruction_index_within_packet := ( address >> log2Ceil(fetchWidth))
+    PC_increment    :=  (fetchWidth.U - instruction_index_within_packet) << log2Ceil(fetchWidth)
+    PC_increment
+  }
+}

@@ -48,12 +48,6 @@ class fetch_packet(parameters:Parameters) extends Bundle{
 }
 
 class metadata extends Bundle{
-    //val JAL             = Bool()
-    //val JALR            = Bool()
-    //val BR              = Bool()
-    //val Call            = Bool()
-    //val Ret             = Bool()
-
     val br_type =       _br_type()
 
     val Imm             = UInt(32.W)
@@ -162,8 +156,16 @@ class RAS_read(parameters:Parameters) extends Bundle{
 
 class revert(parameters:Parameters) extends Bundle{
     import parameters._
-    val GHR               = UInt(GHRWidth.W)
+    val nextBits = log2Ceil(RASEntries)
+    val tosBits  = log2Ceil(RASEntries)
+    val nosBits  = log2Ceil(RASEntries)
+
+    //val GHR               = UInt(GHRWidth.W)
     val PC                = UInt(32.W)
+
+
+    //val RAS_TOS           = UInt(tosBits.W)
+    //val RAS_NEXT          = UInt(nextBits)
 }
 
 class prediction(parameters:Parameters) extends Bundle{
@@ -171,7 +173,6 @@ class prediction(parameters:Parameters) extends Bundle{
     val hit         =   Bool()  // FIXME: I dont think this is assigned in BTB since it was added after the fact
     val target      =   UInt(32.W)
     val br_type     =   _br_type()
-    val br_mask     =   UInt(fetchWidth.W)
     val GHR         =   UInt(GHRWidth.W)
     val T_NT        =   Bool()
 }

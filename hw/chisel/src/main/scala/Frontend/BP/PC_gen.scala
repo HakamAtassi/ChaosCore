@@ -47,6 +47,7 @@ class PC_gen(parameters:Parameters) extends Module{
 
     val io = IO(new Bundle{
         val commit                          =   Flipped(ValidIO(new commit(parameters)))
+        val revert                          =   Flipped(ValidIO(new revert(parameters)))
 
         val prediction  = Flipped(Decoupled(new prediction(parameters)))           // BTB response
         val RAS_read    = Flipped(new RAS_read(parameters))
@@ -73,7 +74,7 @@ class PC_gen(parameters:Parameters) extends Module{
     //val exception                   = Wire(Bool())
 
     val instruction_index_within_packet =   Wire(UInt(log2Ceil(fetchWidth).W))
-    val PC_increment                    =   Wire(UInt((log2Ceil(fetchWidth)+3).W))
+    val PC_increment                    =   Wire(UInt(32.W))
 
 
 
@@ -92,9 +93,6 @@ class PC_gen(parameters:Parameters) extends Module{
     PC_increment    :=  (fetchWidth.U - instruction_index_within_packet) << log2Ceil(fetchWidth)
 
 
-    when(io.PC_next.fire){
-        PC := io.PC_next.bits.addr + PC_increment
-    }
 
     // output stage
 
@@ -108,7 +106,10 @@ class PC_gen(parameters:Parameters) extends Module{
 
         is(PcGenState.Active){
             when(misprediction){    // When flush, wait for queues to reset & set new PC
-                misprediction_PC_buf := io.commit.bits.expected_PC
+                misprediction_PC_buf := io.commit.bits.fetch_PC 
+                PC_gen_state := PcGenState.Flush
+            }.elsewhen(io.revert.valid){
+                misprediction_PC_buf := io.revert.bits.PC
                 PC_gen_state := PcGenState.Flush
             }.otherwise{
                 when(use_BTB){
@@ -122,20 +123,32 @@ class PC_gen(parameters:Parameters) extends Module{
                     io.PC_next.bits.addr := PC
                 }
             }
-
         }
 
         is(PcGenState.Flush){
-            when(io.PC_next.fire){
+            when(misprediction){
+                misprediction_PC_buf := io.commit.bits.fetch_PC 
+                PC_gen_state := PcGenState.Flush
+            }.elsewhen(io.revert.valid){
+                misprediction_PC_buf := io.revert.bits.PC
+                PC_gen_state := PcGenState.Flush
+            }.otherwise{
+                io.PC_next.bits.addr := misprediction_PC_buf
+                io.PC_next.valid     := 1.B
                 PC_gen_state := PcGenState.Active
             }
-            io.PC_next.bits.addr := misprediction_PC_buf
-            io.PC_next.valid     := 1.B
         }
 
     }
 
 
+    dontTouch(use_BTB)
+    dontTouch(use_RAS)
+    dontTouch(PC_increment)
+
+    when(io.PC_next.fire){
+        PC := io.PC_next.bits.addr + PC_increment
+    }
 
 
 

@@ -63,6 +63,9 @@ class frontend(parameters:Parameters) extends Module{
         // RD FREE //
         val FU_outputs                      =   Vec(portCount, Flipped(ValidIO(new FU_output(parameters))))
 
+
+
+        val revert                = ValidIO(new revert(parameters))
     })
 
 
@@ -81,6 +84,10 @@ class frontend(parameters:Parameters) extends Module{
 
     val flush = io.commit.bits.is_misprediction && io.commit.valid
 
+
+    io.revert <> instruction_fetch.io.revert
+
+
     ///////////////////////
     // INSTRUCTION FETCH //
     ///////////////////////
@@ -89,7 +96,8 @@ class frontend(parameters:Parameters) extends Module{
     instruction_fetch.io.memory_response      <>   io.memory_response
     instruction_fetch.io.memory_request       <>   io.memory_request
 
-    instruction_fetch.io.flush                <>   io.flush
+    instruction_fetch.io.flush                :=   io.flush
+
 
     //////////////
     // DECODERS //
@@ -105,7 +113,7 @@ class frontend(parameters:Parameters) extends Module{
     // FTQ INPUT //
     ///////////////
     decoders.io.predictions_in <> instruction_fetch.io.predictions
-    decoders.io.flush <> io.flush
+    decoders.io.flush := io.flush
 
     
     ////////////
@@ -113,7 +121,7 @@ class frontend(parameters:Parameters) extends Module{
     ////////////
 
 
-    instruction_queue.io.flush := flush 
+    instruction_queue.io.flush := flush
 
 
     rename.io.FU_outputs           <>     io.FU_outputs
@@ -132,11 +140,11 @@ class frontend(parameters:Parameters) extends Module{
     ///////////////
 
     FTQ_queue.io.in <> decoders.io.predictions_out
-    FTQ_queue.io.in.valid := decoders.io.predictions_out.valid && instruction_queue.io.in.ready
+    FTQ_queue.io.in.valid := decoders.io.predictions_out.valid && instruction_queue.io.in.ready && !io.revert.valid
 
 
     FTQ_queue.io.out <> io.predictions
-    FTQ_queue.io.flush := io.flush
+    FTQ_queue.io.flush := io.flush || io.revert.valid
 
 
     ///////////////////////

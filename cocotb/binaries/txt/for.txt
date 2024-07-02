@@ -1,5 +1,5 @@
 
-elf/hello_world.elf:     file format elf32-littleriscv
+elf/for.elf:     file format elf32-littleriscv
 
 
 Disassembly of section .text:
@@ -49,36 +49,15 @@ Disassembly of section .text:
   94:	00008067          	ret
 
 00000098 <main>:
-  98:	ff010113          	addi	x2,x2,-16
-  9c:	00112623          	sw	x1,12(x2)
-  a0:	00812423          	sw	x8,8(x2)
-  a4:	01010413          	addi	x8,x2,16
-  a8:	04800513          	li	x10,72
-  ac:	f61ff0ef          	jal	c <putchar>
-  b0:	04500513          	li	x10,69
-  b4:	f59ff0ef          	jal	c <putchar>
-  b8:	04c00513          	li	x10,76
-  bc:	f51ff0ef          	jal	c <putchar>
-  c0:	04c00513          	li	x10,76
-  c4:	f49ff0ef          	jal	c <putchar>
-  c8:	04f00513          	li	x10,79
-  cc:	f41ff0ef          	jal	c <putchar>
-  d0:	02c00513          	li	x10,44
-  d4:	f39ff0ef          	jal	c <putchar>
-  d8:	02000513          	li	x10,32
-  dc:	f31ff0ef          	jal	c <putchar>
-  e0:	05700513          	li	x10,87
-  e4:	f29ff0ef          	jal	c <putchar>
-  e8:	04f00513          	li	x10,79
-  ec:	f21ff0ef          	jal	c <putchar>
-  f0:	05200513          	li	x10,82
-  f4:	f19ff0ef          	jal	c <putchar>
-  f8:	04c00513          	li	x10,76
-  fc:	f11ff0ef          	jal	c <putchar>
- 100:	04400513          	li	x10,68
- 104:	f09ff0ef          	jal	c <putchar>
- 108:	02100513          	li	x10,33
- 10c:	f01ff0ef          	jal	c <putchar>
- 110:	00a00513          	li	x10,10
- 114:	ef9ff0ef          	jal	c <putchar>
- 118:	f91ff06f          	j	a8 <main+0x10>
+  98:	fe010113          	addi	x2,x2,-32
+  9c:	00112e23          	sw	x1,28(x2)
+  a0:	00812c23          	sw	x8,24(x2)
+  a4:	02010413          	addi	x8,x2,32
+  a8:	00100793          	li	x15,1
+  ac:	fef42623          	sw	x15,-20(x8)
+  b0:	fec42703          	lw	x14,-20(x8)
+  b4:	00200793          	li	x15,2
+  b8:	00f71663          	bne	x14,x15,c4 <main+0x2c>
+  bc:	03100513          	li	x10,49
+  c0:	f4dff0ef          	jal	c <putchar>
+  c4:	0000006f          	j	c4 <main+0x2c>

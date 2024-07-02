@@ -27,7 +27,15 @@ def test_reset():
         configs["testcase"] = "test_reset"
         run(**configs)
 
+def test_reset():
+        configs["testcase"] = "test_reset"
+        run(**configs)
+
 def test_if():
         configs["testcase"] = "test_if"
+        run(**configs)
+
+def test_for():
+        configs["testcase"] = "test_for"
         run(**configs)
 
