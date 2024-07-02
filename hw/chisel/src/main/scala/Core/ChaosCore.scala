@@ -43,6 +43,9 @@ class ChaosCore(parameters:Parameters) extends Module{
     val io = IO(new Bundle{
 
         val commit                              =   ValidIO(new commit(parameters))
+        val flush                               =   Output(Bool())
+
+        val revert                              =   ValidIO(new revert(parameters))
 
         ////////////////////////////
         // I$ FRONTEND MEM ACCESS //
@@ -73,6 +76,11 @@ class ChaosCore(parameters:Parameters) extends Module{
 
     val flush       = Wire(Bool())
 
+
+    io.flush := flush
+
+    io.revert <> frontend.io.revert
+
     /////////////////////
     // BACKEND <> DRAM //
     /////////////////////
@@ -92,51 +100,43 @@ class ChaosCore(parameters:Parameters) extends Module{
     /////////////////////
     // FRONTEND <> FTQ //
     /////////////////////
-
     frontend.io.predictions <> FTQ.io.predictions   //buffer made predictions
 
 
     //////////////////////
     // FRONTEND <> DRAM //
     //////////////////////
-
     frontend.io.memory_request       <>  io.frontend_memory_request
     frontend.io.memory_response      <>  io.frontend_memory_response
 
     /////////////////////
     // FRONTEND <> BRU //
     /////////////////////
-
     frontend.io.commit <> BRU.io.commit
 
     /////////////////////////
     // FRONTEND <> BACKEND //
     /////////////////////////
-
     frontend.io.FU_outputs <> backend.io.FU_outputs
 
     ////////////////////
     // ROB <> BACKEND //
     ////////////////////
-
     ROB.io.FU_outputs <> backend.io.FU_outputs 
 
     ////////////////////
     // FTQ <> BACKEND //
     ////////////////////
-
     FTQ.io.FU_outputs <> backend.io.FU_outputs
 
     ////////////////
     // FTQ <> BRU //
     ////////////////
-
     FTQ.io.commit    <>  BRU.io.commit
 
     ////////////////
     // ROB <> FTQ //
     ////////////////
-
     ROB.io.commit <> BRU.io.commit
     FTQ.io.commit <> BRU.io.commit
 
@@ -144,14 +144,11 @@ class ChaosCore(parameters:Parameters) extends Module{
     ////////////////
     // ROB <> BRU //
     ////////////////
-
     ROB.io.ROB_output <>  BRU.io.ROB_output
-
 
     ////////////////
     // BRU <> FTQ //
     ////////////////
-
     BRU.io.FTQ <> FTQ.io.FTQ
 
     ///////////
@@ -163,7 +160,6 @@ class ChaosCore(parameters:Parameters) extends Module{
     backend.io.flush    <>  flush
     ROB.io.flush        <>  flush
     FTQ.io.flush        <>  flush
-    // FIXME: LSQ FLUSH
 
 
     //////////////////////

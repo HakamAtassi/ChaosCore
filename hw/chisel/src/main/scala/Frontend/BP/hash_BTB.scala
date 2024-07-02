@@ -138,8 +138,11 @@ class hash_BTB(parameters:Parameters) extends Module{
 
     val BTB_valid_output    = BTB_memory.io.data_out.BTB_valid
     val BTB_tag_output      = BTB_memory.io.data_out.BTB_tag
+    val BTB_fetch_packet_index_output      = BTB_memory.io.data_out.BTB_fetch_packet_index
 
-    io.BTB_hit      := (RegNext(predict_input_tag) === BTB_tag_output) && BTB_valid_output.asBool
+    val access_fetch_packet_index = RegNext(get_decomposed_icache_address(parameters, io.predict_PC).instruction_offset)
+
+    io.BTB_hit      := (RegNext(predict_input_tag) === BTB_tag_output) && BTB_valid_output.asBool && (BTB_fetch_packet_index_output >= access_fetch_packet_index)
     io.BTB_output <> BTB_memory.io.data_out
     io.BTB_output.BTB_valid := RegNext(io.predict_valid)
 }

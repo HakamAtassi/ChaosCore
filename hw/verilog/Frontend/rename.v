@@ -7055,7 +7055,6 @@ module rename(
   reg  [5:0]  REG_22;
   reg  [5:0]  REG_23;
   reg  [5:0]  renamed_RS2_3_REG_2;
-  reg  [3:0]  renamed_decoded_fetch_packet_bits_RAT_index_REG;
   reg  [5:0]  renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD_REG;
   reg         renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid_REG;
   reg  [5:0]  renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD_REG;
@@ -7249,7 +7248,6 @@ module rename(
     REG_22 <= io_decoded_fetch_packet_bits_decoded_instruction_3_RS2;
     REG_23 <= io_decoded_fetch_packet_bits_decoded_instruction_2_RD;
     renamed_RS2_3_REG_2 <= _free_list_io_renamed_values_2;
-    renamed_decoded_fetch_packet_bits_RAT_index_REG <= _RAT_io_active_checkpoint_value;
     renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD_REG <=
       _free_list_io_renamed_values_0;
     renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid_REG <=
@@ -7616,7 +7614,7 @@ module rename(
     .io_enq_bits_valid_bits_3
       (renamed_decoded_fetch_packet_bits_REG_valid_bits_3),
     .io_enq_bits_RAT_index
-      (renamed_decoded_fetch_packet_bits_RAT_index_REG),
+      (_RAT_io_active_checkpoint_value),
     .io_enq_bits_free_list_front_pointer
       (renamed_decoded_fetch_packet_bits_free_list_front_pointer_REG),
     .io_deq_ready

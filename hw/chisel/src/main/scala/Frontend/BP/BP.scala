@@ -38,7 +38,6 @@ import java.rmi.server.UID
 class BP(parameters:Parameters) extends Module{
     import parameters._
     val io = IO(new Bundle{
-
         // Flush
         val flush       = Input(Bool())
 
@@ -61,8 +60,6 @@ class BP(parameters:Parameters) extends Module{
         val prediction  = Decoupled(new prediction(parameters))    // Output of predictions
     })
 
-
-
     ////////////////////
     // OUTPUT BUNDLES //
     ////////////////////
@@ -71,8 +68,6 @@ class BP(parameters:Parameters) extends Module{
     /////////////
     // MODULES //
     /////////////
-
-
     val gshare      = Module(new gshare(parameters)) // FIXME: should this be addressed by the PC or by the fetch packet aligned PC?
     val BTB         = Module(new hash_BTB(parameters))
     val RAS         = Module(new RAS(parameters))
@@ -80,24 +75,19 @@ class BP(parameters:Parameters) extends Module{
     ///////////////
     // GHR LOGIC //
     ///////////////
-
     val misprediction       = Wire(Bool());                         misprediction := 0.U
 
     val misprediction_TOS   = Wire(UInt(log2Ceil(RASEntries).W));   misprediction_TOS := 0.U
     val misprediction_NEXT  = Wire(UInt(log2Ceil(RASEntries).W));   misprediction_NEXT := 0.U
-
-
 
     misprediction       :=  io.commit.bits.is_misprediction
 
     misprediction_TOS   :=  io.commit.bits.TOS
     misprediction_NEXT  :=  io.commit.bits.NEXT
 
-
     //////////////////
     // Commit logic //
     //////////////////
-
     // PHT => updates on cond branches, correct or incorrect
     // BTB => updates on truely taken branches
     // GHR => updates speculatively. Reverts on reverts from predecoder or mispredictions
@@ -117,7 +107,6 @@ class BP(parameters:Parameters) extends Module{
     /////////////////
     // Init gshare //
     /////////////////
-
     // predict port
     gshare.io.predict_GHR               := io.GHR
     gshare.io.predict_PC                := io.predict.bits.addr
@@ -125,14 +114,12 @@ class BP(parameters:Parameters) extends Module{
 
     // commit port
     gshare.io.commit                <> io.commit
-    gshare.io.commit.valid              := update_PHT
-
+    gshare.io.commit.valid          := update_PHT
 
     //////////////
     // Init BTB //
     //////////////
     // Reminder: BTB only updates on taken branches...
-
     // predict port
     BTB.io.predict_PC                       := io.predict.bits.addr
     BTB.io.predict_valid                    := io.predict.valid
@@ -146,7 +133,6 @@ class BP(parameters:Parameters) extends Module{
     ///////////////////////////////
     // Init Return-Address-Stack //
     ///////////////////////////////
-    
     // handle misprediction
     RAS.io.revert_NEXT  :=   misprediction_NEXT
     RAS.io.revert_TOS   :=   misprediction_TOS
@@ -167,22 +153,19 @@ class BP(parameters:Parameters) extends Module{
     // BTB
     prediction.bits.target    := BTB.io.BTB_output.BTB_target
     prediction.bits.br_type   := BTB.io.BTB_output.BTB_br_type
-    prediction.bits.br_mask   := DontCare
     prediction.bits.hit       := BTB.io.BTB_hit
     prediction.bits.GHR       := io.GHR
     prediction.bits.T_NT      := gshare.io.T_NT
-
-
 
     prediction.ready        := io.prediction.ready
     prediction.valid        := BTB.io.BTB_output.BTB_valid && gshare.io.valid
 
     prediction <> io.prediction
 
+
     /////////////////
     // SKID BUFFER //
     /////////////////
-
     val prediction_skid_buffer      = Module(new Queue(new prediction(parameters), 1, flow=true, hasFlush=true, useSyncReadMem=false))
 
     prediction_skid_buffer.io.enq                  <> prediction

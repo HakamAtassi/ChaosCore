@@ -382,7 +382,7 @@ class rename(parameters:Parameters) extends Module{
         renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS2             := renamed_RS2(i)
     }
 
-    renamed_decoded_fetch_packet.bits.RAT_index                  := RegNext(RAT.io.active_checkpoint_value)
+    renamed_decoded_fetch_packet.bits.RAT_index                  := RAT.io.active_checkpoint_value
 
     ///////////////
     // FREE LIST //

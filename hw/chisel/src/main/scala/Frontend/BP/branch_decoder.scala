@@ -69,8 +69,10 @@ class branch_decoder(index:Int, parameters:Parameters) extends Module{
     val JAL     = (instructionType === InstructionType.JAL)
     val JALR    = (instructionType === InstructionType.JALR)
     val BR      = (instructionType === InstructionType.BRANCH)
-    val CALL = (JALR && (RD === 1.U) && (RS1 === 1.U))
-    val RET = (JALR && (RD === 0.U) && (RS1 === 1.U) && imm === 0.U)
+    val CALL    = (JALR && (RD === 1.U)) || (JAL && (RD === 1.U))
+    val RET     = (JALR && (RD === 0.U) && (RS1 === 1.U) && imm === 0.U)
+
+    dontTouch(CALL)
 
     val fetch_PC_adjusted = Wire(UInt(32.W))
     fetch_PC_adjusted := io.fetch_PC + (index*4).U
@@ -82,6 +84,8 @@ class branch_decoder(index:Int, parameters:Parameters) extends Module{
 
     
     val br_type = Wire(_br_type())
+
+    dontTouch(br_type)
 
 
     when(CALL){
@@ -106,22 +110,25 @@ class branch_decoder(index:Int, parameters:Parameters) extends Module{
 
     when (RET) {    // Doesnt need BTB hit since addr is from RAS
         io.T_NT := io.valid
+        io.metadata.BTB_target      :=  io.RAS_read.ret_addr
     }.elsewhen (JAL) {
-        io.T_NT := io.valid && BTB_hit_valid
+        io.T_NT := io.valid
+        io.metadata.BTB_target      :=  fetch_PC_adjusted + imm
     }.elsewhen (JALR) {
         io.T_NT := io.valid && BTB_hit_valid
+        io.metadata.BTB_target      :=  io.prediction.bits.target
     }.elsewhen(BR) {
         io.T_NT := io.valid && BTB_hit_valid
+        io.metadata.BTB_target      :=  io.prediction.bits.target
     }.otherwise{
         io.T_NT := 0.U  
+        io.metadata.BTB_target      :=  0.U
     }
-
 
     io.metadata.br_type         :=  br_type
     io.metadata.Imm             :=  imm
     io.metadata.instruction_PC  :=  fetch_PC_adjusted
     io.metadata.RAS             :=  io.RAS_read.ret_addr
-    io.metadata.BTB_target      :=  io.prediction.bits.target
 
     io.prediction.ready := 1.B
 

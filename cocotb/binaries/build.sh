@@ -13,7 +13,7 @@ do
     echo "Building C File: $name"
 
     # Compile the C file to ELF using the linker script
-    ${rvdir}/riscv32-unknown-elf-gcc -ffreestanding -nostdlib -O3 -fno-plt -fno-pic -march=rv32i -mabi=ilp32 startup.S "C/$name.c" -T $linker_script -o "elf/$name.elf"
+    ${rvdir}/riscv32-unknown-elf-gcc -ffreestanding -nostdlib -O0 -fno-plt -fno-pic -march=rv32i -mabi=ilp32 startup.S "C/$name.c" -T $linker_script -o "elf/$name.elf"
 
     # Disassemble the ELF file to TXT
     ${rvdir}/riscv32-unknown-elf-objdump -d -Mnumeric "elf/$name.elf" > "txt/$name.txt"

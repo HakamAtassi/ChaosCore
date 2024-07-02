@@ -64,9 +64,6 @@ class Q[T <: Data](dataType: T, depth: Int = 16) extends Module{
   //io.full :=  !queue.io.enq.ready
   //io.empty := !queue.io.deq.valid
 
-  // Reset logic
-  // FIXME: queues have a "hasflush property that can be used instead of this..."
-  //queue.reset := io.clear || reset.asBool
 }
 
 class instruction_fetch(parameters:Parameters) extends Module{
@@ -76,17 +73,15 @@ class instruction_fetch(parameters:Parameters) extends Module{
 
     val io = IO(new Bundle{
         // FLUSH
-        val flush         =   Input(Bool())
+        val flush                 =   Input(Bool())
+        val commit                =   Flipped(ValidIO(new commit(parameters)))
+        val memory_response       =   Flipped(Decoupled(new fetch_packet(parameters)))               // TO CPU
 
-        val commit            =   Flipped(ValidIO(new commit(parameters)))
-        
-        val memory_request         =   Decoupled(new memory_request(parameters))
-        val memory_response        =   Flipped(Decoupled(new fetch_packet(parameters)))               // TO CPU
+        val memory_request        =   Decoupled(new memory_request(parameters))
+        val fetch_packet          =   Decoupled(new fetch_packet(parameters))                     // Fetch packet result (To Decoders)
+        val predictions           =   Decoupled(new FTQ_entry(parameters))
 
-        val fetch_packet      =   Decoupled(new fetch_packet(parameters))                     // Fetch packet result (To Decoders)
-
-        val predictions       =   Decoupled(new FTQ_entry(parameters))
-
+        val revert                =   ValidIO(new revert(parameters))
     })
 
     /////////////
@@ -100,69 +95,26 @@ class instruction_fetch(parameters:Parameters) extends Module{
     // Queues //
     ////////////
     val instruction_Q   =   Module(new Q(new fetch_packet(parameters), depth = 16))              // Instantiate queue with fetch_packet data type
-    val PC_Q            =   Module(new Q(new memory_request(parameters), depth = 16))                                                       // Queue of predicted PCs
-    val BTB_Q           =   Module(new Q(new prediction(parameters), depth = 16))         // Queue of BTB responses
-
-
+    val PC_Q            =   Module(new Q(new memory_request(parameters), depth = 16))            // Queue of predicted PCs
+    val BTB_Q           =   Module(new Q(new prediction(parameters), depth = 16))                // Queue of BTB responses
 
     ///////////////////////
     // INSTRUCTION QUEUE //
     ///////////////////////
-    instruction_Q.io.out <> predecoder.io.fetch_packet
-    instruction_Q.io.out.ready := (!BTB_Q.io.out.valid && predecoder.io.fetch_packet.ready)
+    instruction_Q.io.in           <> io.memory_response
+    instruction_Q.io.out          <> predecoder.io.fetch_packet
+    instruction_Q.io.out.ready    := (BTB_Q.io.out.valid && predecoder.io.fetch_packet.ready)
 
-    instruction_Q.io.flush       :=  io.flush
-
-    ///////////////
-    // BTB QUEUE //
-    ///////////////
-    BTB_Q.io.in <> bp.io.prediction
-
-    BTB_Q.io.out.ready           :=  (!instruction_Q.io.out.valid && predecoder.io.prediction.ready)
-    BTB_Q.io.flush               :=  io.flush
-  
-    ///////////////////////
-    // INSTRUCTION CACHE //
-    ///////////////////////
-    io.memory_response     <>   instruction_Q.io.in
-
-
-    ////////
-    // BP //
-    ////////
-    predecoder.io.commit <> io.commit
-
-    // BP inputs (external)
-    bp.io.commit            <>  io.commit
-    bp.io.flush <> io.flush
-
-    // BP inputs (internal)
-    bp.io.predict           <>  PC_Q.io.out
-    bp.io.RAS_update        <>  predecoder.io.RAS_update
-    bp.io.GHR               <>  predecoder.io.GHR
-
-    //////////////
-    // PC Queue //
-    //////////////
-    PC_Q.io.out  <>  io.memory_request
-    PC_Q.io.flush       :=  io.flush
-
-    // Outputs
-    predecoder.io.RAS_read  <> bp.io.RAS_read
 
     ////////////////
     // PREDECODER //
     ////////////////
     predecoder.io.prediction            <> BTB_Q.io.out
     predecoder.io.fetch_packet          <> instruction_Q.io.out
-    predecoder.io.fetch_packet.valid    := instruction_Q.io.out.valid     // FIXME: this only works under the SRAM memory assumption (ie, simulation)
     predecoder.io.RAS_read              <> bp.io.RAS_read
     predecoder.io.final_fetch_packet    <> io.fetch_packet 
-    predecoder.io.flush                 <> io.flush 
-
-
-    // FIXME: connect the rest of the FTQ up
-    predecoder.io.predictions <> io.predictions
+    predecoder.io.predictions           <> io.predictions
+    predecoder.io.commit                <> io.commit
     
     //////////////
     // PC ARBIT //
@@ -170,30 +122,44 @@ class instruction_fetch(parameters:Parameters) extends Module{
     PC_gen.io.commit            <> io.commit
     PC_gen.io.prediction        <> bp.io.prediction
     PC_gen.io.RAS_read          <> bp.io.RAS_read
-    PC_gen.io.PC_next           <> PC_Q.io.in
+    PC_gen.io.revert            <> predecoder.io.revert
+    PC_gen.io.PC_next.ready     := bp.io.predict.ready && PC_Q.io.in.ready
 
+    ///////////////
+    // BTB QUEUE //
+    ///////////////
+    BTB_Q.io.in                   <> bp.io.prediction
+    BTB_Q.io.out                  <> predecoder.io.prediction
+    BTB_Q.io.out.ready            := (instruction_Q.io.out.valid && predecoder.io.prediction.ready)
+    
+    ////////
+    // BP //
+    ////////
+    bp.io.commit            <>  io.commit
+    bp.io.predict           <>  PC_Q.io.out
+    bp.io.RAS_update        <>  predecoder.io.RAS_update
+    bp.io.GHR               <>  predecoder.io.GHR
+    bp.io.predict.valid     :=  PC_gen.io.PC_next.fire
 
+    //////////////
+    // PC Queue //
+    //////////////
+    PC_Q.io.in              <> PC_gen.io.PC_next
+    PC_Q.io.out             <> io.memory_request
+    PC_Q.io.in.valid        := PC_gen.io.PC_next.valid && bp.io.predict.ready
+
+    /////////////
+    // FLUSHES //
+    /////////////
+    BTB_Q.io.flush                :=  io.flush || io.revert.valid
+    PC_Q.io.flush                 :=  io.flush || io.revert.valid
+    instruction_Q.io.flush        :=  io.flush || io.revert.valid
+    bp.io.flush                   :=  io.flush || io.revert.valid
+    predecoder.io.flush           :=  io.flush // NO REVERT HERE 
 
     /////////////
     // OUTPUTS //
     /////////////
-    
-    //io.misprediction_PC.ready  := 1.U
-    //io.exception_PC.ready      := 1.U
-    //io.commit.ready            := 1.U
-    //io.mispredict.ready        := 1.U
-    //PC_gen.io.revert.ready && bp.io.revert.ready // FIXME: when is revert ready??
-
-
-    bp.io.prediction.ready  :=  BTB_Q.io.in.ready && PC_gen.io.prediction.ready
-    bp.io.predict.valid     :=  PC_gen.io.PC_next.valid && PC_Q.io.in.ready
-
-
-    PC_gen.io.PC_next.ready := bp.io.predict.ready && PC_Q.io.in.ready
-    PC_Q.io.in.valid := PC_gen.io.PC_next.valid && bp.io.predict.ready
-
-
-
-    io.fetch_packet <> predecoder.io.final_fetch_packet
-
+    io.fetch_packet         <> predecoder.io.final_fetch_packet
+    io.revert := predecoder.io.revert
 }
