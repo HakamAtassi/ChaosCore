@@ -144,28 +144,28 @@ class SOC_dut:
         return outputs
 
 
-    async def update(self):
-        # await cycle
-        # if needs memory (from prev cycle)
-            # send data from dram model
-        # await ReadOnly()
-        # set mem addr flag, size, etc
+#    async def update(self):
+        ## await cycle
+        ## if needs memory (from prev cycle)
+            ## send data from dram model
+        ## await ReadOnly()
+        ## set mem addr flag, size, etc
 
-        await RisingEdge(self.dut.clock)
+        #await RisingEdge(self.dut.clock)
 
-        # Clear writes from prev cycle (so you dont write twice)
-        self.write_dram_resp()
+        ## Clear writes from prev cycle (so you dont write twice)
+        #self.write_dram_resp()
 
-        if(self.DRAM_request):
-            data = self.DRAM.read(address=self.DRAM_request_addr, size=self.DRAM_request_size)
+        #if(self.DRAM_request):
+            #data = self.DRAM.read(address=self.DRAM_request_addr, size=self.DRAM_request_size)
 
-            data = int.from_bytes(data, byteorder="little")
-            self.write_dram_resp(data, 1)
+            #data = int.from_bytes(data, byteorder="little")
+            #self.write_dram_resp(data, 1)
 
-        await ReadOnly()
+        #await ReadOnly()
 
-        self.DRAM_request       =   self.read_frontend_output()["request_valid"]
-        self.DRAM_request_addr  =   self.read_frontend_output()["request_addr"]
+        #self.DRAM_request       =   self.read_frontend_output()["request_valid"]
+        #self.DRAM_request_addr  =   self.read_frontend_output()["request_addr"]
 
 
     def get_PRF(self):
@@ -173,3 +173,82 @@ class SOC_dut:
         for i in range(64):
             PRF[i] = int(getattr(self.dut, f"backend.INT_PRF.mem_ext.Memory")[i].value)
         return PRF
+
+    def read_reset(self):
+        return self.dut.reset.value
+    
+    # IMEM 
+    def read_imem_request_valid(self):
+        return self.dut.io_frontend_memory_request_valid.value
+
+    def read_imem_request_ready(self):
+        return self.dut.io_frontend_memory_request_ready.value
+
+    def read_imem_request_addr(self):
+        return self.dut.io_frontend_memory_request_bits_addr.value
+
+    def write_imem_request_ready(self, ready):
+        self.dut.io_frontend_memory_request_ready.value = ready
+
+    def write_imem_response(self, data=0, valid=0):
+        self.dut.io_frontend_memory_response_valid.value        = valid
+        self.dut.io_frontend_memory_response_bits_data.value    = data if valid else 0
+
+    # -------------
+    # DMEM CONTROL
+    # -------------
+    def read_dmem_request_valid(self):
+        return int(self.dut.io_backend_memory_request_valid.value)
+
+    def read_dmem_request_ready(self):
+        return int(self.dut.io_backend_memory_request_ready.value)
+
+    def read_dmem_request_addr(self):
+        return int(self.dut.io_backend_memory_request_bits_addr.value)
+
+    def read_dmem_request_wr_en(self):
+        return int(self.dut.io_backend_memory_request_bits_wr_en.value)
+
+    def read_dmem_request_data(self):
+        return int(self.dut.io_backend_memory_request_bits_wr_data.value)
+
+    def write_dmem_request_ready(self, ready):
+        self.dut.io_backend_memory_request_ready.value = ready
+
+    def write_dmem_response(self, data=0, valid=0):
+        self.dut.io_backend_memory_response_valid.value = valid
+        self.dut.io_backend_memory_response_bits_data.value = data if valid else 0
+
+    async def update(self):  # clock cycle with memory handling
+
+        # clear previous responses
+        self.write_imem_response()
+        self.write_dmem_response()
+
+        # handle imem read requests
+        if (self.read_imem_request_ready() and self.read_imem_request_valid() and not self.read_reset()):
+            addr = self.read_imem_request_addr()
+                
+            data = self.DRAM.read(address=addr & 0xFFFFFFF0, size=32)
+            data = int.from_bytes(data, byteorder="little")
+            self.write_imem_response(data, 1)
+
+        # handle dmem read/write requests
+        if self.read_dmem_request_ready() and self.read_dmem_request_valid() and not self.read_reset():
+            wr_en   = self.read_dmem_request_wr_en()
+            data    = self.read_dmem_request_data()
+            addr    = self.read_dmem_request_addr()
+
+            if(addr == 0x8000_0000):
+                await RisingEdge(self.clock())
+                return 
+            if wr_en:  # write
+                # FIXME: size depends on instruction
+                self.DRAM.write(address=addr, data=data, size=4)
+            else:  # read
+                # FIXME: size depends on instruction
+                data = self.DRAM.read(address=addr, size=4)
+                data = int.from_bytes(data, byteorder="little")
+                self.write_dmem_response(data, 1)
+
+        await RisingEdge(self.clock())

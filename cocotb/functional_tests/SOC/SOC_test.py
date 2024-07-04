@@ -39,3 +39,7 @@ def test_for():
         configs["testcase"] = "test_for"
         run(**configs)
 
+def test_store():
+        configs["testcase"] = "test_store"
+        run(**configs)
+

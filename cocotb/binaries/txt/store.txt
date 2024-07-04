@@ -1,5 +1,5 @@
 
-elf/if.elf:     file format elf32-littleriscv
+elf/store.elf:     file format elf32-littleriscv
 
 
 Disassembly of section .text:
@@ -26,4 +26,7 @@ Disassembly of section .text:
   38:	00008067          	ret
 
 0000003c <main>:
-  3c:	0000006f          	j	3c <main>
+  3c:	800007b7          	lui	x15,0x80000
+  40:	04800713          	li	x14,72
+  44:	00e7a023          	sw	x14,0(x15) # 80000000 <main+0x7fffffc4>
+  48:	0000006f          	j	48 <main+0xc>

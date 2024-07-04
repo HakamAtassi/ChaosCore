@@ -155,7 +155,12 @@ class MEMRS(parameters:Parameters) extends Module{
     /////////////////
     // If front of the MEMRS has its sources ready and has committed, send to memory and update front pointer
 
-    val good_to_go =    (reservation_station(front_index).valid && reservation_station(front_index).commited)
+    val RS1_ready_valid = (reservation_station(front_index).decoded_instruction.ready_bits.RS1_ready || !reservation_station(front_index).decoded_instruction.RS1_valid)
+    val RS2_ready_valid = (reservation_station(front_index).decoded_instruction.ready_bits.RS2_ready || !reservation_station(front_index).decoded_instruction.RS2_valid)
+
+    val good_to_go =    (reservation_station(front_index).valid && 
+                        (reservation_station(front_index).commited && reservation_station(front_index).decoded_instruction.is_store) || 
+                        ((RS1_ready_valid && RS2_ready_valid) && reservation_station(front_index).decoded_instruction.is_load))
 
     front_pointer := front_pointer + good_to_go
 
@@ -164,7 +169,6 @@ class MEMRS(parameters:Parameters) extends Module{
         reservation_station(front_index) := 0.U.asTypeOf(new MEMRS_entry(parameters))
     }
     
-
     ////////////////////
     // ASSIGN OUTPUTS //
     ////////////////////
@@ -211,7 +215,6 @@ class MEMRS(parameters:Parameters) extends Module{
     ///////////
 
     // When a flush takes place, you only want to clear the elements that have not commited. 
-
     var valid_uncommited_count = PopCount(reservation_station.map(  rs => !rs.commited && rs.valid && 
                                                                     !((io.commit.bits.ROB_index === rs.decoded_instruction.ROB_index) && 
                                                                     io.commit.bits.fetch_packet_index >= rs.decoded_instruction.packet_index)))
@@ -223,15 +226,11 @@ class MEMRS(parameters:Parameters) extends Module{
         }
     }
 
-
     when(io.flush){
         //front_pointer := 0.B
         back_pointer := back_pointer - (valid_uncommited_count)
     }
 
-
-
+    dontTouch(reservation_station)
     dontTouch(io.backend_packet)
-
-
 }
