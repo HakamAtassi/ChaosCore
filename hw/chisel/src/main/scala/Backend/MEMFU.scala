@@ -39,6 +39,22 @@ object memfuState extends ChiselEnum{
     val ACTIVE, WAIT = Value
 }
 
+class load_request(parameters:Parameters) extends Bundle{
+    import parameters._
+    val physicalRegBits = log2Ceil(physicalRegCount)
+
+    val packet_index           = UInt(log2Ceil(fetchWidth).W)  // fetch packet index of the branch
+
+    val ROB_index              = UInt(log2Ceil(ROBEntires).W)
+    val RD                     = UInt(log2Ceil(physicalRegBits).W)
+    val RD_valid               = Bool()
+
+    val LB                     = Bool()
+    val LH                     = Bool()
+    val LW                     = Bool()
+    val LBU                    = Bool()
+    val LHU                    = Bool()
+}
 
 class MEMFU(parameters:Parameters) extends Module{
     import parameters._
@@ -59,130 +75,107 @@ class MEMFU(parameters:Parameters) extends Module{
         val FU_output               =   ValidIO(new FU_output(parameters))                 
     })
 
-    val memfu_state     = RegInit(memfuState(), memfuState.ACTIVE)
+    dontTouch(io)
+    ////////////////////
+    // MEMORY REQUEST //
+    ////////////////////
+    // METADATA //
+    //////////////
+    val _imm                   =   Wire(SInt(32.W))
+    val imm                    =   Wire(UInt(32.W))
 
-    /////////
-    // FSM //
-    /////////
+    _imm                      :=  (io.FU_input.bits.decoded_instruction.IMM).asSInt
+    imm                       :=  _imm.asUInt
 
-    val FU_input_bits_reg   = RegInit(new read_decoded_instruction(parameters), 0.U.asTypeOf(new read_decoded_instruction(parameters)))
-    val FU_input_valid_reg  = RegInit(Bool(), 0.B)
+    val RS1_data               =   io.FU_input.bits.RS1_data
+    val RS2_data               =   io.FU_input.bits.RS2_data
+    val IMM                    =   imm
+    val PC                     =   io.FU_input.bits.fetch_PC + (io.FU_input.bits.decoded_instruction.packet_index * fetchWidth.U)
+    val RD                     =   io.FU_input.bits.decoded_instruction.RD
 
-    switch(memfu_state){
+    val FUNCT3                 =   io.FU_input.bits.decoded_instruction.FUNCT3
 
-        is(memfuState.ACTIVE){
+    val is_load                =   io.FU_input.bits.decoded_instruction.is_load   &&   io.FU_input.valid
+    val is_store               =   io.FU_input.bits.decoded_instruction.is_store  &&   io.FU_input.valid
+    val SB                     =   is_store && FUNCT3  === "b000".U               &&   io.FU_input.valid
+    val SH                     =   is_store && FUNCT3  === "b001".U               &&   io.FU_input.valid
+    val SW                     =   is_store && FUNCT3  === "b010".U               &&   io.FU_input.valid
 
-            FU_input_bits_reg   := io.FU_input.bits
-            FU_input_valid_reg  := io.FU_input.valid
+    val LB                     =   is_load  && FUNCT3  === "b000".U               &&   io.FU_input.valid
+    val LH                     =   is_load  && FUNCT3  === "b001".U               &&   io.FU_input.valid
+    val LW                     =   is_load  && FUNCT3  === "b010".U               &&   io.FU_input.valid
+    val LBU                    =   is_load  && FUNCT3  === "b100".U               &&   io.FU_input.valid
+    val LHU                    =   is_load  && FUNCT3  === "b101".U               &&   io.FU_input.valid
 
-            when(io.FU_input.fire && io.memory_request.fire){
-                // send request to memory directly
-                memfu_state := memfuState.ACTIVE
-            }.elsewhen(io.FU_input.fire){
-                // Wait till memory is valid
-                memfu_state := memfuState.WAIT
-            }
-        }
-
-
-        is(memfuState.WAIT){
-            when(io.memory_request.fire){
-                // send request to memory
-
-                FU_input_bits_reg := 0.U.asTypeOf(new read_decoded_instruction(parameters))
-                FU_input_valid_reg := 0.B
-
-                memfu_state := memfuState.ACTIVE
-            }
-        }
-    }
-
-
-
-    val use_buffered_FU_input   =   (memfu_state === memfuState.WAIT)
-
-    val FU_input                =   Mux(use_buffered_FU_input, FU_input_bits_reg,     io.FU_input.bits)
-    val FU_input_valid          =   Mux(use_buffered_FU_input, FU_input_valid_reg,    io.FU_input.valid)
-
-
-    val is_load                 =   FU_input.decoded_instruction.is_load  && FU_input_valid
-    val is_store                =   FU_input.decoded_instruction.is_store && FU_input_valid
-
-    // Operand data
-    val RS1_data                =   FU_input.RS1_data
-    val RS2_data                =   FU_input.RS2_data
-
-    val _imm = Wire(SInt(32.W))
-    val imm = Wire(UInt(32.W))
-
-    _imm := (FU_input.decoded_instruction.IMM).asSInt
-    imm := _imm.asUInt
-
-    val IMM                     =   imm
-
-
-    val PC                      =   FU_input.fetch_PC + (FU_input.decoded_instruction.packet_index * fetchWidth.U)
-
-    // Dest reg
-    val RD                      =   FU_input.decoded_instruction.RD
-
-    // Op select
-    val FUNCT3                  =   FU_input.decoded_instruction.FUNCT3
-
-    val SB                      =   RegNext(is_store && FUNCT3 === "b000".U && FU_input_valid)
-    val SH                      =   RegNext(is_store && FUNCT3 === "b001".U && FU_input_valid)
-    val SW                      =   RegNext(is_store && FUNCT3 === "b010".U && FU_input_valid)
-
-    val LB                      =   RegNext(is_load && FUNCT3 === "b000".U  && FU_input_valid)
-    val LH                      =   RegNext(is_load && FUNCT3 === "b001".U  && FU_input_valid)
-    val LW                      =   RegNext(is_load && FUNCT3 === "b010".U  && FU_input_valid)
-    val LBU                     =   RegNext(is_load && FUNCT3 === "b100".U  && FU_input_valid)
-    val LHU                     =   RegNext(is_load && FUNCT3 === "b101".U  && FU_input_valid)
-
-
-    val instruction_complete    = RegNext((is_load && io.memory_response.fire) || (is_store && io.memory_request.fire))
-
-
-    /////////////////////
-    // COMPUTE ADDRESS //
-    /////////////////////
-
-    dontTouch(imm)
-
-    val addr = RS1_data + imm
-
-    ///////////////////////
-    // FORMAT WRITE DATA //
-    ///////////////////////
-
+    ////////////////////
+    // GENERATE WRITE //
+    ////////////////////
     val wr_data = Wire(UInt(32.W))
+    val wr_addr = Wire(UInt(32.W))
+
+    val memory_request  = Wire(Decoupled(new memory_request(parameters)))
+    dontTouch(memory_request)
 
     wr_data := 0.U
     when(SB){wr_data := RS2_data & 0xFF.U}
     when(SH){wr_data := RS2_data & 0xFFFF.U}
     when(SW){wr_data := RS2_data.asUInt & "hFFFF_FFFF".U(32.W)}
 
+    wr_addr := RS1_data + imm
+
+    memory_request.valid           := io.FU_input.valid// && io.load_Q.enq.ready
+    memory_request.bits.wr_en      := is_store
+    memory_request.bits.wr_data    := wr_data
+    memory_request.bits.addr       := wr_addr
 
     ///////////////////
-    // DRAM REQUESTS //
+    // Request Queue //
     ///////////////////
+    val memory_request_Q            = Module(new Queue(new memory_request(parameters), 16, flow=false, hasFlush=false, useSyncReadMem=true))
 
-    io.memory_request.valid           := is_load || is_store
-    io.memory_request.bits.wr_en      := is_store
-    io.memory_request.bits.wr_data    := wr_data
-    io.memory_request.bits.addr       := addr
+    memory_request_Q.io.enq        <> memory_request
+    memory_request_Q.io.deq        <> io.memory_request
+    //memory_request_Q.io.flush.get  := io.flush
 
-    //////////////////////
-    // FORMAT READ DATA //
-    //////////////////////
+    ////////////////
+    // LOAD QUEUE //
+    ////////////////
+    val load_Q           = Module(new Queue(new load_request(parameters), 16, flow=false, hasFlush=false, useSyncReadMem=true))
+    val load_request_in  = Wire(Decoupled(new load_request(parameters)))
+    val load_request_out = Wire(Decoupled(new load_request(parameters)))
 
-    // this can be parallelized, I'm pretty sure (byte enable with parallel muxes...)
+    load_request_in.valid         := is_load
+
+    io.FU_output.bits.fetch_packet_index        := load_request_out.bits.packet_index
+    io.FU_output.bits.RD                        := load_request_out.bits.RD
+    io.FU_output.bits.RD_valid                  := load_request_out.bits.RD_valid
+    io.FU_output.bits.ROB_index                 := load_request_out.bits.ROB_index
+
+    load_request_in.bits.packet_index           := io.FU_input.bits.decoded_instruction.packet_index
+    load_request_in.bits.ROB_index              := io.FU_input.bits.decoded_instruction.ROB_index
+
+    load_request_in.bits.RD       := io.FU_input.bits.decoded_instruction.RD
+    load_request_in.bits.RD_valid := io.FU_input.bits.decoded_instruction.RD_valid
+    load_request_in.bits.LB       := LB
+    load_request_in.bits.LH       := LH
+    load_request_in.bits.LW       := LW
+    load_request_in.bits.LBU      := LBU
+    load_request_in.bits.LHU      := LHU
+    load_request_out.ready        := io.memory_request.ready
+
+    load_Q.io.enq        <> load_request_in
+    load_Q.io.deq        <> load_request_out
+    //load_Q.io.flush.get  := io.flush
+
+    ////////////////////////////
+    // MEMORY RESPONSE (LOAD) //
+    ////////////////////////////
 
     val rd_data = Wire(UInt(32.W))
 
-    val memory_response_8   = Wire(UInt(8.W))
-    val memory_response_16  = Wire(UInt(16.W))
-    val memory_response_32  = Wire(UInt(32.W))
+    val memory_response_8     = Wire(UInt(8.W))
+    val memory_response_16    = Wire(UInt(16.W))
+    val memory_response_32    = Wire(UInt(32.W))
 
     val memory_response_8_s   = Wire(SInt(32.W))
     val memory_response_16_s  = Wire(SInt(32.W))
@@ -192,61 +185,40 @@ class MEMFU(parameters:Parameters) extends Module{
     val memory_response_16_u  = Wire(UInt(32.W))
     val memory_response_32_u  = Wire(UInt(32.W))
 
-
-    memory_response_8   := (io.memory_response.bits.data & "hFF".U)
-    memory_response_16  := (io.memory_response.bits.data & "hFFFF".U)
-    memory_response_32  := (io.memory_response.bits.data & "hFFFF_FFFF".U)
-
-
+    memory_response_8        := (io.memory_response.bits.data & "hFF".U)
+    memory_response_16       := (io.memory_response.bits.data & "hFFFF".U)
+    memory_response_32       := (io.memory_response.bits.data & "hFFFF_FFFF".U)
     memory_response_8_s      := (memory_response_8).asSInt
     memory_response_16_s     := (memory_response_16).asSInt
     memory_response_32_s     := (memory_response_32).asSInt
-
     memory_response_8_u      := (memory_response_8).asUInt
     memory_response_16_u     := (memory_response_16).asUInt
     memory_response_32_u     := (memory_response_32).asUInt
 
     rd_data := 0.U
-
-    when(LB)  {rd_data := memory_response_8_s.asUInt}
-    when(LH)  {rd_data := memory_response_16_s.asUInt}
-    when(LW)  {rd_data := memory_response_32_s.asUInt}
-    when(LBU) {rd_data := memory_response_8_u}
-    when(LHU) {rd_data := memory_response_16_u}
-
-
+    when(load_request_out.bits.LB)  {rd_data := memory_response_8_s.asUInt}
+    when(load_request_out.bits.LH)  {rd_data := memory_response_16_s.asUInt}
+    when(load_request_out.bits.LW)  {rd_data := memory_response_32_s.asUInt}
+    when(load_request_out.bits.LBU) {rd_data := memory_response_8_u}
+    when(load_request_out.bits.LHU) {rd_data := memory_response_16_u}
 
     ////////////////////////
     // ASSIGN PRF OUTPUTS //
     ////////////////////////
-
-    // Not a branch unit (all FUs share the same output channel)
-
-    // FIXME: this needs to be an FSM type thing that waits for mem resp in case its not next cycle
+    io.FU_output.valid                          := 0.B
     io.FU_output.bits.branch_taken              := 0.B
     io.FU_output.bits.target_address            := 0.B
     io.FU_output.bits.branch_valid              := 0.B
-
-    io.FU_output.bits.fetch_PC                  := RegNext(io.FU_input.bits.fetch_PC + (io.FU_input.bits.decoded_instruction.packet_index<<2.U))
-    io.FU_output.bits.fetch_packet_index        := RegNext(io.FU_input.bits.decoded_instruction.packet_index)
-
+    io.FU_output.bits.fetch_PC                  := 0.U
+    io.FU_output.bits.fetch_packet_index        := load_request_out.bits.packet_index
+    io.FU_output.bits.RD                        := load_request_out.bits.RD
+    io.FU_output.bits.RD_valid                  := load_request_out.bits.RD_valid
+    io.FU_output.bits.ROB_index                 := load_request_out.bits.ROB_index
     io.FU_output.bits.RD_data                   := rd_data.asUInt
-    io.FU_output.bits.RD                        := RegNext(RD)
-    io.FU_output.bits.RD_valid                  := RegNext(is_load)
-
-    io.FU_output.bits.ROB_index                 := RegNext(io.FU_input.bits.decoded_instruction.ROB_index)
 
     /////////////////
     // VALID/READY //
     /////////////////
-
-    // READY
-    io.FU_input.ready               :=  (memfu_state === memfuState.ACTIVE)
-    io.memory_response.ready        :=  1.B // FIXME: this may work but is not 100% correct
-
-    // VALID
-    io.memory_request.valid         :=  FU_input_valid
-
-    io.FU_output.valid              :=  instruction_complete   // I dont think this outputs anything on stores...
-
+    io.FU_input.ready               := load_Q.io.enq.ready && memory_request_Q.io.enq.ready
+    io.memory_response.ready        := load_Q.io.deq.valid  // output valid is the same as !empty
 }

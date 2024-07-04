@@ -95,21 +95,6 @@ class FTQ(parameters:Parameters) extends Module{
     }
 
 
-    ///////////////////////////
-    // FRONT POINTER CONTROL //
-    ///////////////////////////
-
-
-
-    val dq = FTQ(front_index).valid && io.commit.valid && ((FTQ(front_index).fetch_PC>>log2Ceil(fetchWidth*4)) === (io.commit.bits.fetch_PC >> log2Ceil(fetchWidth*4)))
-
-    dontTouch(dq)
-
-    when(dq){
-        FTQ(front_index) := 0.U.asTypeOf(new FTQ_entry(parameters))
-        front_pointer := front_pointer + 1.U
-    }
-
 
     //////////////////////
     // BACKEND UPDATES  //
@@ -139,6 +124,21 @@ class FTQ(parameters:Parameters) extends Module{
         }
 
     }
+
+    ///////////////////////////
+    // FRONT POINTER CONTROL //
+    ///////////////////////////
+
+    val dq = FTQ(front_index).valid && io.commit.valid && ((FTQ(front_index).fetch_PC>>log2Ceil(fetchWidth*4)) === (io.commit.bits.fetch_PC >> log2Ceil(fetchWidth*4)))
+
+    dontTouch(dq)
+
+    when(dq){
+        FTQ(front_index) := 0.U.asTypeOf(new FTQ_entry(parameters))
+        front_pointer := front_pointer + 1.U
+    }
+
+
 
 
     when(io.flush){
