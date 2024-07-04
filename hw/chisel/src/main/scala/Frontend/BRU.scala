@@ -85,7 +85,7 @@ class BRU(parameters:Parameters) extends Module{
     io.commit.bits.is_misprediction      := 0.B
     io.commit.bits.T_NT                  := 0.B
     io.commit.bits.br_type               := _br_type.NONE
-    io.commit.bits.fetch_packet_index    := 0.B
+    io.commit.bits.fetch_packet_index    := 0.U
     io.commit.bits.expected_PC           := 0.B
 
     when(branch_commit){
@@ -94,6 +94,7 @@ class BRU(parameters:Parameters) extends Module{
         io.commit.bits.br_type               := io.FTQ.br_type
         io.commit.bits.fetch_packet_index    := DontCare
         io.commit.bits.expected_PC           := io.FTQ.resolved_PC
+        io.commit.bits.fetch_packet_index    := io.FTQ.dominant_index
     }
 
 }

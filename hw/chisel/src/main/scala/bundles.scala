@@ -480,7 +480,7 @@ class DRAM_response(parameters:Parameters) extends Bundle{
 // And a seperate dram repsonse bus
 //
 
-class memory_request(parameters:Parameters) extends Bundle{   // FIXME: change this to something generic like MMIO request...
+class memory_request(parameters:Parameters) extends Bundle{
     val addr    = UInt(32.W)
     val wr_data = UInt(32.W)
     val wr_en   = Bool()
@@ -489,8 +489,6 @@ class memory_request(parameters:Parameters) extends Bundle{   // FIXME: change t
 class memory_response(parameters:Parameters) extends Bundle{
     val data = UInt(32.W)
 }
-
-
 
 
 

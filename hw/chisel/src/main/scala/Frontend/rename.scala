@@ -375,20 +375,6 @@ class rename(parameters:Parameters) extends Module{
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-    
-
     ////////////////
     // READY BITS //
     ////////////////

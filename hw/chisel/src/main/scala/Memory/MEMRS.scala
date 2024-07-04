@@ -163,6 +163,7 @@ class MEMRS(parameters:Parameters) extends Module{
                         ((RS1_ready_valid && RS2_ready_valid) && reservation_station(front_index).decoded_instruction.is_load))
 
     front_pointer := front_pointer + good_to_go
+    dontTouch(front_index)
 
     // clear RS entry
     when(good_to_go){
@@ -215,13 +216,11 @@ class MEMRS(parameters:Parameters) extends Module{
     ///////////
 
     // When a flush takes place, you only want to clear the elements that have not commited. 
-    var valid_uncommited_count = PopCount(reservation_station.map(  rs => !rs.commited && rs.valid && 
-                                                                    !((io.commit.bits.ROB_index === rs.decoded_instruction.ROB_index) && 
-                                                                    io.commit.bits.fetch_packet_index >= rs.decoded_instruction.packet_index)))
+    var valid_uncommited_count = PopCount(reservation_station.map(  rs => !rs.commited && rs.valid))
 
     for(i <- 0 until RSEntries){
         val is_commiting = (io.commit.bits.ROB_index === reservation_station(i).decoded_instruction.ROB_index) && io.commit.bits.fetch_packet_index >= reservation_station(i).decoded_instruction.packet_index
-        when(io.flush && (!reservation_station(i).commited) && !is_commiting){
+        when(io.flush && (!reservation_station(i).commited)){
             reservation_station(i) := 0.U.asTypeOf(new MEMRS_entry(parameters))
         }
     }
