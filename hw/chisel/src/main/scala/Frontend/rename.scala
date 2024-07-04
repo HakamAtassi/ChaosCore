@@ -111,8 +111,6 @@ class RAT(parameters:Parameters) extends Module{
         val RAT_RD                      =   Output(Vec(fetchWidth, UInt(physicalRegBits.W)))
         val RAT_RS1                     =   Output(Vec(fetchWidth, UInt(physicalRegBits.W)))
         val RAT_RS2                     =   Output(Vec(fetchWidth, UInt(physicalRegBits.W)))
-
-        val ready_bits                  =   Output(Vec(fetchWidth, new sources_ready()))
     })
 
 
@@ -121,7 +119,6 @@ class RAT(parameters:Parameters) extends Module{
     ////////////////////
 
     val RAT_memories    = RegInit(VecInit.tabulate(RATCheckpointCount, architecturalRegCount){(x, y) => 0.U(physicalRegBits.W) })
-    val ready_memory  = RegInit(VecInit(Seq.fill(physicalRegCount)(0.B)))
     
     ////////////////
     // CHECKPOINT //
@@ -153,13 +150,23 @@ class RAT(parameters:Parameters) extends Module{
     // RENAME/MAP //
     ////////////////
 
-    dontTouch(active_RAT_comb)
+    val row_valid_mem   =   RegInit(VecInit(Seq.fill(ROBEntires)(0.B)))
+
+
+    val RAT_RD  = RegInit(VecInit(Seq.fill(fetchWidth)(0.U(physicalRegBits.W))))
+    val RAT_RS1 = RegInit(VecInit(Seq.fill(fetchWidth)(0.U(physicalRegBits.W))))
+    val RAT_RS2 = RegInit(VecInit(Seq.fill(fetchWidth)(0.U(physicalRegBits.W))))
 
     for(i <- 0 until fetchWidth){
-        io.RAT_RD(i)  := RegNext(RAT_memories(active_RAT)(io.instruction_RD(i)))
-        io.RAT_RS1(i) := RegNext(RAT_memories(active_RAT)(io.instruction_RS1(i)))
-        io.RAT_RS2(i) := RegNext(RAT_memories(active_RAT)(io.instruction_RS2(i)))
+        RAT_RD(i)  := RAT_memories(active_RAT)(io.instruction_RD(i))
+        RAT_RS1(i) := RAT_memories(active_RAT)(io.instruction_RS1(i))
+        RAT_RS2(i) := RAT_memories(active_RAT)(io.instruction_RS2(i))
     }
+
+    io.RAT_RD  := RAT_RD
+    io.RAT_RS1 := RAT_RS1
+    io.RAT_RS2 := RAT_RS2
+
 
     // CREATE CHECKPOINT
     when(io.create_checkpoint){
@@ -189,63 +196,7 @@ class RAT(parameters:Parameters) extends Module{
         }
     }
 
-    ////////////////
-    // READY BITS //
-    ////////////////
 
-    // setting ready bit
-    // whenever an instruction completes
-    // if the completing instruction(s) is writing to the mapping that exists in the ith entry of the ROB
-    // and that completing instruction is valid
-    // set that ready bit, and bypass it as needed
-
-    val comb_ready_bits = Wire(Vec(physicalRegCount, Bool()))
-
-    for(i <- 0 until physicalRegCount){
-        comb_ready_bits(i) := ready_memory(i)
-    }
-
-    // Set ready bit from FU
-    for(i <- 0 until fetchWidth){
-        val set_RD      = io.FU_outputs(i).bits.RD
-        val RD_valid    = io.FU_outputs(i).valid && io.FU_outputs(i).bits.RD_valid
-
-        comb_ready_bits(set_RD) := ready_memory(set_RD) || RD_valid
-    }
-
-    // Reset ready bit
-    for(i <- 0 until fetchWidth){
-        val set_RD      = io.free_list_RD(i)
-        val RD_valid    = io.free_list_wr_en(i)
-
-        when(RD_valid){
-            comb_ready_bits(set_RD) := 0.B
-        }
-    }
-
-    // Update ready register
-    for(i <- 0 until physicalRegCount){
-        ready_memory(i) := comb_ready_bits(i)
-    }
-
-
-
-
-
-
-    // assign ready output
-
-    for(i <- 0 until fetchWidth){
-        val initialReady = Wire(new sources_ready)
-        //initialReady.RS1_ready := RegNext(comb_ready_bits(io.instruction_RS1(i))).asBool
-
-        // if the source is x0, its ready regardless of what its value says
-        // if the source is not valid, its ready regardless of what its value says
-        initialReady.RS1_ready := Mux(RegNext(io.instruction_RS1(i)) === 0.U, 1.B, comb_ready_bits(io.RAT_RS1(i)))
-        initialReady.RS2_ready := Mux(RegNext(io.instruction_RS2(i)) === 0.U, 1.B, comb_ready_bits(io.RAT_RS2(i)))
-
-        io.ready_bits(i)       := initialReady
-    }
 
 
     io.active_checkpoint_value  := active_RAT
@@ -361,17 +312,24 @@ class rename(parameters:Parameters) extends Module{
     val renamed_RS1 = Wire(Vec(fetchWidth, UInt(log2Ceil(physicalRegCount).W)))
     val renamed_RS2 = Wire(Vec(fetchWidth, UInt(log2Ceil(physicalRegCount).W)))
 
+    dontTouch(renamed_RS1)
+    dontTouch(renamed_RS2)
+
     // superscalar forwarding logic
     for(i <- 0 until fetchWidth){
        renamed_RS1(i) := RAT.io.RAT_RS1(i)   // default case (no forwarding)
        renamed_RS2(i) := RAT.io.RAT_RS2(i)   // default case (no forwarding)
         for(j <- 0 until i){
             // forward RS1
-            when(RegNext(io.decoded_fetch_packet.bits.decoded_instruction(i).RS1) === RegNext(io.decoded_fetch_packet.bits.decoded_instruction(j).RD)){
+            when(RegNext(io.decoded_fetch_packet.bits.decoded_instruction(i).RS1) === RegNext(io.decoded_fetch_packet.bits.decoded_instruction(j).RD) && 
+                RegNext(io.decoded_fetch_packet.bits.decoded_instruction(i).RS1_valid) && RegNext(io.decoded_fetch_packet.bits.decoded_instruction(j).RD_valid)
+                        ){
                 renamed_RS1(i) := RegNext(free_list.io.renamed_values(j))
             }
             // forward RS2
-            when(RegNext(io.decoded_fetch_packet.bits.decoded_instruction(i).RS2) === RegNext(io.decoded_fetch_packet.bits.decoded_instruction(j).RD)){
+            when(RegNext(io.decoded_fetch_packet.bits.decoded_instruction(i).RS2) === RegNext(io.decoded_fetch_packet.bits.decoded_instruction(j).RD) && 
+                            RegNext(io.decoded_fetch_packet.bits.decoded_instruction(i).RS2_valid) && RegNext(io.decoded_fetch_packet.bits.decoded_instruction(j).RD_valid)
+            ){
                 renamed_RS2(i) := RegNext(free_list.io.renamed_values(j))
             }
         }
@@ -382,7 +340,9 @@ class rename(parameters:Parameters) extends Module{
         renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS2             := renamed_RS2(i)
     }
 
-    renamed_decoded_fetch_packet.bits.RAT_index                  := RAT.io.active_checkpoint_value
+    dontTouch(renamed_decoded_fetch_packet)
+
+    renamed_decoded_fetch_packet.bits.RAT_index                  := RegNext(RAT.io.active_checkpoint_value) // Need the previously active checkpoint
 
     ///////////////
     // FREE LIST //
@@ -402,7 +362,7 @@ class rename(parameters:Parameters) extends Module{
     for(i <- 0 until fetchWidth){
         renamed_decoded_fetch_packet.bits.decoded_instruction(i).RD              := RegNext(free_list.io.renamed_values(i))
         renamed_decoded_fetch_packet.bits.decoded_instruction(i).RD_valid        := RegNext(io.decoded_fetch_packet.bits.decoded_instruction(i).RD_valid)
-        renamed_decoded_fetch_packet.bits.decoded_instruction(i).ready_bits      := RAT.io.ready_bits(i)
+        //renamed_decoded_fetch_packet.bits.decoded_instruction(i).ready_bits      := RAT.io.ready_bits(i)
     }
 
     renamed_decoded_fetch_packet.bits.free_list_front_pointer    := RegNext(free_list.io.free_list_front_pointer)
@@ -412,6 +372,102 @@ class rename(parameters:Parameters) extends Module{
     // So, instead of free_list.io.empty being a condition to valid, there should be a "renameble" signal
     renamed_decoded_fetch_packet.valid := RegNext(io.decoded_fetch_packet.valid && !io.flush && !free_list.io.empty)
     renamed_decoded_fetch_packet.ready := io.renamed_decoded_fetch_packet.ready
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+    ////////////////
+    // READY BITS //
+    ////////////////
+
+
+    val ready_memory  = RegInit(VecInit(Seq.fill(physicalRegCount)(0.B)))
+
+    // setting ready bit
+    // whenever an instruction completes
+    // if the completing instruction(s) is writing to the mapping that exists in the ith entry of the ROB
+    // and that completing instruction is valid
+    // set that ready bit, and bypass it as needed
+
+    val comb_ready_bits = Wire(Vec(physicalRegCount, Bool()))
+
+    for(i <- 0 until physicalRegCount){
+        comb_ready_bits(i) := ready_memory(i)
+    }
+
+    // Set ready bit from FU
+    for(i <- 0 until fetchWidth){   // FIXME: this should be port width...
+        val set_RD      = io.FU_outputs(i).bits.RD
+        val RD_valid    = io.FU_outputs(i).valid && io.FU_outputs(i).bits.RD_valid
+
+        comb_ready_bits(set_RD) := ready_memory(set_RD) || RD_valid
+    }
+
+    // Reset ready bit
+    for(i <- 0 until fetchWidth){
+        val set_RD      = renamed_decoded_fetch_packet.bits.decoded_instruction(i).RD //io.free_list_RD(i)
+        val RD_valid    = renamed_decoded_fetch_packet.bits.decoded_instruction(i).RD_valid
+
+        when(RD_valid){
+            comb_ready_bits(set_RD) := 0.B
+        }
+    }
+
+    // Update ready register
+    for(i <- 0 until physicalRegCount){
+        ready_memory(i) := comb_ready_bits(i)
+    }
+
+    // assign ready output
+    for(i <- 0 until fetchWidth){
+        val initialReady = Wire(new sources_ready)
+        //initialReady.RS1_ready := RegNext(comb_ready_bits(io.instruction_RS1(i))).asBool
+
+        // if the source is x0, its ready regardless of what its value says
+        // if the source is not valid, its ready regardless of what its value says
+        initialReady.RS1_ready := Mux(RegNext(io.decoded_fetch_packet.bits.decoded_instruction(i).RS1) === 0.U, 1.B, comb_ready_bits(renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS1))
+        initialReady.RS2_ready := Mux(RegNext(io.decoded_fetch_packet.bits.decoded_instruction(i).RS2) === 0.U, 1.B, comb_ready_bits(renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS2))
+
+        renamed_decoded_fetch_packet.bits.decoded_instruction(i).ready_bits := initialReady
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /////////////////
     // SKID BUFFER //

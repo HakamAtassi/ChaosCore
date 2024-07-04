@@ -271,4 +271,14 @@ class fetch_packet_decoder(parameters:Parameters) extends Module{
     val monitor_output = Wire(Bool())
     monitor_output := RegNext(io.fetch_packet.valid)
     dontTouch(monitor_output)
+
+    for(i <- 0 until fetchWidth){
+        when(io.decoded_fetch_packet.valid){
+            var instruction_PC = io.decoded_fetch_packet.bits.fetch_PC & "hFFFF_FFF0".U // FIXME: move this to function
+            instruction_PC = instruction_PC + (i.U*4.U)
+            val scheduled_port = io.decoded_fetch_packet.bits.decoded_instruction(i).portID
+            //printf("instruction @ 0x%x scheduled to port %d\n", instruction_PC, scheduled_port)
+        }
+    }
+
 }

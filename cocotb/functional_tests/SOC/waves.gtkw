@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.116 (w)1999-2023 BSI
-[*] Tue Jul  2 19:39:31 2024
+[*] Thu Jul  4 00:13:40 2024
 [*]
 [dumpfile] "/home/hakam/Repos/ChaosCore/cocotb/functional_tests/SOC/sim_build/dump.fst"
-[dumpfile_mtime] "Tue Jul  2 19:39:20 2024"
-[dumpfile_size] 130655
+[dumpfile_mtime] "Thu Jul  4 00:09:42 2024"
+[dumpfile_size] 80979
 [savefile] "/home/hakam/Repos/ChaosCore/cocotb/functional_tests/SOC/waves.gtkw"
-[timestart] 0
+[timestart] 83720
 [size] 1920 1033
 [pos] -1 -1
-*-14.791066 13000 369000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-13.691067 103000 369000 35000 103000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] .
 [treeopen] .SOC.
 [treeopen] .SOC.ChaosCore.
@@ -18,10 +18,10 @@
 [treeopen] .SOC.ChaosCore.frontend.instruction_fetch.
 [treeopen] .SOC.ChaosCore.frontend.instruction_fetch.predecoder.
 [treeopen] .SOC.ChaosCore.frontend.rename.
-[sst_width] 539
-[signals_width] 659
+[sst_width] 644
+[signals_width] 661
 [sst_expanded] 1
-[sst_vpaned_height] 462
+[sst_vpaned_height] 390
 @28
 clock
 reset
@@ -31,88 +31,99 @@ reset
 SOC.ChaosCore.frontend.instruction_fetch.PC_gen.io_PC_next_valid
 @22
 SOC.ChaosCore.frontend.instruction_fetch.PC_gen.io_PC_next_bits_addr[31:0]
-@201
+@200
 -
--predecoder
-@23
-SOC.ChaosCore.frontend.instruction_fetch.predecoder.io_fetch_packet_bits_fetch_PC[31:0]
-@29
-SOC.ChaosCore.frontend.instruction_fetch.predecoder.io_fetch_packet_valid
-SOC.ChaosCore.frontend.instruction_fetch.predecoder.io_fetch_packet_ready
-@23
-SOC.ChaosCore.frontend.instruction_fetch.predecoder.io_fetch_packet_bits_instructions_0_instruction[31:0]
-SOC.ChaosCore.frontend.instruction_fetch.predecoder.io_fetch_packet_bits_instructions_1_instruction[31:0]
-SOC.ChaosCore.frontend.instruction_fetch.predecoder.io_fetch_packet_bits_instructions_2_instruction[31:0]
-SOC.ChaosCore.frontend.instruction_fetch.predecoder.io_fetch_packet_bits_instructions_3_instruction[31:0]
-@201
--
-@29
-SOC.ChaosCore.frontend.instruction_fetch.predecoder.io_fetch_packet_bits_valid_bits_0
-SOC.ChaosCore.frontend.instruction_fetch.predecoder.io_fetch_packet_bits_valid_bits_1
-SOC.ChaosCore.frontend.instruction_fetch.predecoder.io_fetch_packet_bits_valid_bits_2
-SOC.ChaosCore.frontend.instruction_fetch.predecoder.io_fetch_packet_bits_valid_bits_3
-SOC.ChaosCore.frontend.instruction_fetch.predecoder.io_fetch_packet_valid
-SOC.ChaosCore.frontend.instruction_fetch.predecoder.T_NT_0
-SOC.ChaosCore.frontend.instruction_fetch.predecoder.T_NT_1
-SOC.ChaosCore.frontend.instruction_fetch.predecoder.T_NT_2
-SOC.ChaosCore.frontend.instruction_fetch.predecoder.io_final_fetch_packet_bits_valid_bits_0
-SOC.ChaosCore.frontend.instruction_fetch.predecoder.io_final_fetch_packet_bits_valid_bits_1
-SOC.ChaosCore.frontend.instruction_fetch.predecoder.io_final_fetch_packet_bits_valid_bits_2
-SOC.ChaosCore.frontend.instruction_fetch.predecoder.io_final_fetch_packet_bits_valid_bits_3
-@201
--
-@23
+@22
 SOC.ChaosCore.frontend.instruction_fetch.predecoder.io_final_fetch_packet_bits_fetch_PC[31:0]
-@29
+@28
 SOC.ChaosCore.frontend.instruction_fetch.predecoder.io_final_fetch_packet_valid
-@23
+@22
 SOC.ChaosCore.frontend.instruction_fetch.predecoder.io_final_fetch_packet_bits_instructions_0_instruction[31:0]
 SOC.ChaosCore.frontend.instruction_fetch.predecoder.io_final_fetch_packet_bits_instructions_1_instruction[31:0]
 SOC.ChaosCore.frontend.instruction_fetch.predecoder.io_final_fetch_packet_bits_instructions_2_instruction[31:0]
 SOC.ChaosCore.frontend.instruction_fetch.predecoder.io_final_fetch_packet_bits_instructions_3_instruction[31:0]
-@29
+@28
 SOC.ChaosCore.frontend.instruction_fetch.predecoder.io_final_fetch_packet_bits_valid_bits_0
 SOC.ChaosCore.frontend.instruction_fetch.predecoder.io_final_fetch_packet_bits_valid_bits_1
 SOC.ChaosCore.frontend.instruction_fetch.predecoder.io_final_fetch_packet_bits_valid_bits_2
 SOC.ChaosCore.frontend.instruction_fetch.predecoder.io_final_fetch_packet_bits_valid_bits_3
-@201
+@200
 -
-@29
-SOC.ChaosCore.frontend.instruction_fetch.predecoder.io_final_fetch_packet_ready
-SOC.ChaosCore.frontend.instruction_fetch.predecoder.io_final_fetch_packet_valid
-@23
-SOC.ChaosCore.frontend.instruction_fetch.predecoder.io_final_fetch_packet_bits_fetch_PC[31:0]
-@201
+@28
+SOC.ChaosCore.backend.MEM_RS.io_RF_inputs_3_valid
+@22
+SOC.ChaosCore.backend.MEM_RS.io_RF_inputs_3_bits_RS1[5:0]
+SOC.ChaosCore.backend.MEM_RS.io_RF_inputs_3_bits_RS2[5:0]
+@24
+SOC.ChaosCore.backend.MEM_RS.io_RF_inputs_3_bits_packet_index[1:0]
+@200
 -
--
-@29
-SOC.ChaosCore.frontend.instruction_fetch.predecoder.io_predictions_valid
-@23
-SOC.ChaosCore.frontend.instruction_fetch.predecoder.io_predictions_bits_fetch_PC[31:0]
-SOC.ChaosCore.frontend.instruction_fetch.predecoder.io_predictions_bits_predicted_PC[31:0]
-@29
-SOC.ChaosCore.frontend.instruction_fetch.predecoder.io_predictions_bits_br_type[2:0]
-SOC.ChaosCore.frontend.instruction_fetch.predecoder.io_predictions_bits_T_NT
-@201
--
--
-@29
-SOC.ChaosCore.frontend.instruction_fetch.predecoder.io_revert_valid
-@23
-SOC.ChaosCore.frontend.instruction_fetch.predecoder.io_revert_bits_PC[31:0]
-@201
--
-@29
-SOC.ChaosCore.frontend.instruction_fetch.predecoder.io_commit_valid
-SOC.ChaosCore.frontend.instruction_fetch.predecoder.io_commit_bits_is_misprediction
-@201
--
+@28
+SOC.ChaosCore.io_backend_memory_request_valid
 @22
 SOC.ChaosCore.io_backend_memory_request_bits_addr[31:0]
-@820
 SOC.ChaosCore.io_backend_memory_request_bits_wr_data[31:0]
 @28
 SOC.ChaosCore.io_backend_memory_request_bits_wr_en
 SOC.ChaosCore.io_backend_memory_request_valid
+@22
+SOC.ChaosCore.io_backend_memory_response_bits_data[31:0]
+@200
+-
+@28
+SOC.ChaosCore.backend.MEM_RS.io_RF_inputs_3_valid
+@22
+SOC.ChaosCore.backend.MEM_RS.io_RF_inputs_3_bits_RS1[5:0]
+SOC.ChaosCore.backend.MEM_RS.io_RF_inputs_3_bits_RS2[5:0]
+@28
+SOC.ChaosCore.backend.MEM_RS.reservation_station_7_valid
+@200
+-
+-FU
+@28
+SOC.ChaosCore.backend.FU3.io_FU_input_valid
+SOC.ChaosCore.backend.FU3.io_FU_input_bits_decoded_instruction_is_load
+SOC.ChaosCore.backend.FU3.io_FU_input_bits_decoded_instruction_is_store
+SOC.ChaosCore.backend.FU3.io_FU_input_bits_decoded_instruction_FUNCT3[2:0]
+@22
+SOC.ChaosCore.backend.FU3.io_FU_input_bits_decoded_instruction_IMM[20:0]
+SOC.ChaosCore.backend.FU3.io_FU_input_bits_RS1_data[31:0]
+SOC.ChaosCore.backend.FU3.io_FU_input_bits_RS2_data[31:0]
+@200
+-
+@28
+SOC.ChaosCore.backend.FU3.io_FU_output_bits_RD_valid
+@22
+SOC.ChaosCore.backend.FU3.io_FU_output_bits_RD_data[31:0]
+SOC.ChaosCore.backend.FU3.io_FU_output_bits_RD[5:0]
+@28
+SOC.ChaosCore.backend.FU3.io_FU_output_bits_RD_valid
+@200
+-
+@22
+SOC.ChaosCore.io_backend_memory_response_bits_data[31:0]
+@200
+-
+@23
+SOC.ChaosCore.backend.FU0.io_FU_output_bits_RD[5:0]
+@28
+SOC.ChaosCore.backend.FU0.io_FU_output_bits_RD_valid
+@200
+-
+@28
+SOC.ChaosCore.backend.MEM_RS.reservation_station_0_commited
+SOC.ChaosCore.backend.MEM_RS.reservation_station_1_commited
+SOC.ChaosCore.backend.MEM_RS.reservation_station_2_commited
+SOC.ChaosCore.backend.MEM_RS.reservation_station_3_commited
+SOC.ChaosCore.backend.MEM_RS.reservation_station_4_commited
+SOC.ChaosCore.backend.MEM_RS.reservation_station_5_commited
+SOC.ChaosCore.backend.MEM_RS.reservation_station_6_commited
+SOC.ChaosCore.backend.MEM_RS.reservation_station_7_commited
+SOC.ChaosCore.backend.MEM_RS.reservation_station_8_commited
+@22
+SOC.ChaosCore.backend.MEM_RS.reservation_station_7_decoded_instruction_RS1[5:0]
+SOC.ChaosCore.backend.MEM_RS.reservation_station_7_decoded_instruction_RS2[5:0]
+@200
+-
 [pattern_trace] 1
 [pattern_trace] 0

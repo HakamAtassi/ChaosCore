@@ -119,6 +119,7 @@ async def test_rename_4_RD(dut):
     dut.write_decoded_fetch_packet(rename_inputs)
 
     await RisingEdge(dut.clock())
+    dut.write_decoded_fetch_packet()
 
     await ReadOnly()
     assert dut.rename_renamed_decoded_fetch_packet()["RD"][0] == 1
@@ -126,15 +127,54 @@ async def test_rename_4_RD(dut):
     assert dut.rename_renamed_decoded_fetch_packet()["RD"][2] == 3
     assert dut.rename_renamed_decoded_fetch_packet()["RD"][3] == 4
 
+
     await RisingEdge(dut.clock())
-    await ReadOnly()
+    await RisingEdge(dut.clock())
+    await RisingEdge(dut.clock())
 
-    assert dut.rename_renamed_decoded_fetch_packet()["RD"][0] == 5
-    assert dut.rename_renamed_decoded_fetch_packet()["RD"][1] == 6
-    assert dut.rename_renamed_decoded_fetch_packet()["RD"][2] == 7
-    assert dut.rename_renamed_decoded_fetch_packet()["RD"][3] == 8
+    rename_inputs = generate_null_decoded_fetch_packet()
+
+    rename_inputs["valid"] = 1
+    rename_inputs["fetch_PC"] = 0
+
+    rename_inputs["RS1_ready"]          = [0, 0, 0, 0]
+    rename_inputs["RS2_ready"]          = [0, 0, 0, 0]
+    rename_inputs["RD"]                 = [0, 0, 0, 0]
+    rename_inputs["RD_valid"]           = [0, 0, 0, 0]
+    rename_inputs["RS1"]                = [2, 4, 6, 7]
+    rename_inputs["RS1_valid"]          = [1, 1, 1, 1]
+    rename_inputs["RS2"]                = [0, 0, 0, 0]
+    rename_inputs["RS2_valid"]          = [0, 0, 0, 0]
+    rename_inputs["IMM"]                = [0, 0, 0, 0]
+    rename_inputs["FUNCT3"]             = [0, 0, 0, 0]
+    rename_inputs["packet_index"]       = [0, 0, 0, 0]
+    rename_inputs["ROB_index"]          = [0, 0, 0, 0]
+    rename_inputs["instructionType"]    = [0, 0, 0, 0]
+    rename_inputs["portID"]             = [0, 0, 0, 0]
+    rename_inputs["RS_type"]            = [0, 0, 0, 0]
+    rename_inputs["needs_ALU"]          = [0, 0, 0, 0]
+    rename_inputs["needs_branch_unit"]  = [0, 0, 0, 0]
+    rename_inputs["needs_CSRs"]         = [0, 0, 0, 0]
+    rename_inputs["SUBTRACT"]           = [0, 0, 0, 0]
+    rename_inputs["MULTIPLY"]           = [0, 0, 0, 0]
+    rename_inputs["IMMEDIATE"]          = [0, 0, 0, 0]
+    rename_inputs["is_load"]            = [0, 0, 0, 0]
+    rename_inputs["is_store"]           = [0, 0, 0, 0]
+    rename_inputs["valid_bits"]         = [1, 1, 1, 1]
+
+
+    dut.write_decoded_fetch_packet(rename_inputs)
+
+    await RisingEdge(dut.clock())
+    dut.write_decoded_fetch_packet()
+    await RisingEdge(dut.clock())
+    await RisingEdge(dut.clock())
 
     await ReadOnly()
+    assert dut.rename_renamed_decoded_fetch_packet()["RS1"][0] == 1
+    assert dut.rename_renamed_decoded_fetch_packet()["RS1"][1] == 2
+    assert dut.rename_renamed_decoded_fetch_packet()["RS1"][2] == 3
+    assert dut.rename_renamed_decoded_fetch_packet()["RS1"][3] == 4
 
 
 @cocotb.test()

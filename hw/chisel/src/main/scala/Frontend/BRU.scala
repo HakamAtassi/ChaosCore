@@ -56,7 +56,7 @@ class BRU(parameters:Parameters) extends Module{
         val is_invalid      = (!io.ROB_output.ROB_entries(i).valid)
         val is_load         = io.ROB_output.ROB_entries(i).is_load
         val is_store        = io.ROB_output.ROB_entries(i).is_store
-        commit_row_complete(i) := is_completed || is_invalid || is_load || is_store
+        commit_row_complete(i) := is_completed || is_invalid || /*is_load ||*/ is_store
     }
     commit_valid := io.ROB_output.row_valid && commit_row_complete.reduce(_ && _)
 

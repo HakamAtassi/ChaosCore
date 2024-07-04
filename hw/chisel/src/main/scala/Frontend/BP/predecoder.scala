@@ -113,7 +113,7 @@ class predecoder(parameters:Parameters) extends Module{
         val RS1                         = instruction(19, 15)
         val RS2                         = instruction(24, 20)
         val RD                          = instruction(11, 7)
-        val is_BTB_taken                = io.prediction.valid && io.prediction.bits.hit && io.prediction.bits.T_NT
+        val is_BTB_taken                = io.prediction.valid && io.prediction.bits.hit && io.prediction.bits.T_NT && io.fetch_packet.bits.valid_bits(i) && io.fetch_packet.valid
 
         val (instruction_type, valid)   = InstructionType.safe(opcode(6, 2))
 
@@ -124,7 +124,7 @@ class predecoder(parameters:Parameters) extends Module{
         val curr_is_RET      =   (is_JALR && (RD === 0.U) && (RS1 === 1.U)) // FIXME: this should maybe check for imm...
         val curr_is_CALL     =   (is_JALR && (RD === 1.U)) || (is_JAL && (RD === 1.U))
 
-        val is_taken                    = (curr_is_BRANCH && is_BTB_taken) || curr_is_JALR || curr_is_JAL
+        val is_taken                    = ((curr_is_BRANCH && is_BTB_taken) || curr_is_JALR || curr_is_JAL)
 
         T_NT(i) := is_taken
         when(is_taken){
@@ -158,9 +158,11 @@ class predecoder(parameters:Parameters) extends Module{
 
     _imm := 0.S
     imm := 0.U
+    dontTouch(imm)
 
     dontTouch(target_address)
 
+    val masked_addr = io.fetch_packet.bits.fetch_PC & "hFFFF_FFF0".U        // FIXME: make this a parameterizable function 
     when(is_RET){
         // FROM RAS
         target_address := io.RAS_read.ret_addr
@@ -168,7 +170,7 @@ class predecoder(parameters:Parameters) extends Module{
         // COMPUTED
         _imm := getImm(dominant_instruction).asSInt
         imm := _imm.asUInt
-        target_address := imm + io.fetch_packet.bits.fetch_PC + (dominant_branch_index*4.U)
+        target_address := imm + masked_addr + (dominant_branch_index*4.U)
     }.elsewhen(is_JALR && io.prediction.bits.hit && io.prediction.valid){
         // FROM BTB (Assuming hit)
         target_address := io.prediction.bits.target
@@ -228,7 +230,7 @@ class predecoder(parameters:Parameters) extends Module{
     // RAS Control //
     io.RAS_update.ret        := is_RET  && input_fetch_packet_valid
     io.RAS_update.call       := is_CALL && input_fetch_packet_valid
-    io.RAS_update.call_addr  := io.fetch_packet.bits.fetch_PC + (dominant_branch_index*4.U) + 4.U
+    io.RAS_update.call_addr  := masked_addr + (dominant_branch_index*4.U) + 4.U
 
     //////////////////////////////////
     // GENERATE FINAL FETCH PACKET  //

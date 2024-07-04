@@ -105,7 +105,7 @@ class ALU(parameters:Parameters) extends Module{
     RS2_unsigned            := RS2_data.asUInt
 
     IMM_signed              := imm(12,0).asSInt
-    IMM_unsigned            := imm(12,0).asUInt
+    IMM_unsigned            := IMM_signed.asUInt
 
 
     val operand1_signed     = RS1_signed

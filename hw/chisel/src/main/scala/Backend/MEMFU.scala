@@ -111,7 +111,16 @@ class MEMFU(parameters:Parameters) extends Module{
     // Operand data
     val RS1_data                =   FU_input.RS1_data
     val RS2_data                =   FU_input.RS2_data
-    val IMM                     =   FU_input.decoded_instruction.IMM
+
+    val _imm = Wire(SInt(32.W))
+    val imm = Wire(UInt(32.W))
+
+    _imm := (FU_input.decoded_instruction.IMM).asSInt
+    imm := _imm.asUInt
+
+    val IMM                     =   imm
+
+
     val PC                      =   FU_input.fetch_PC + (FU_input.decoded_instruction.packet_index * fetchWidth.U)
 
     // Dest reg
@@ -120,15 +129,15 @@ class MEMFU(parameters:Parameters) extends Module{
     // Op select
     val FUNCT3                  =   FU_input.decoded_instruction.FUNCT3
 
-    val SB                      =   is_store && FUNCT3 === "b000".U && FU_input_valid
-    val SH                      =   is_store && FUNCT3 === "b001".U && FU_input_valid
-    val SW                      =   is_store && FUNCT3 === "b010".U && FU_input_valid
+    val SB                      =   RegNext(is_store && FUNCT3 === "b000".U && FU_input_valid)
+    val SH                      =   RegNext(is_store && FUNCT3 === "b001".U && FU_input_valid)
+    val SW                      =   RegNext(is_store && FUNCT3 === "b010".U && FU_input_valid)
 
-    val LB                      =   is_load && FUNCT3 === "b000".U  && FU_input_valid
-    val LH                      =   is_load && FUNCT3 === "b001".U  && FU_input_valid
-    val LW                      =   is_load && FUNCT3 === "b010".U  && FU_input_valid
-    val LBU                     =   is_load && FUNCT3 === "b100".U  && FU_input_valid
-    val LHU                     =   is_load && FUNCT3 === "b101".U  && FU_input_valid
+    val LB                      =   RegNext(is_load && FUNCT3 === "b000".U  && FU_input_valid)
+    val LH                      =   RegNext(is_load && FUNCT3 === "b001".U  && FU_input_valid)
+    val LW                      =   RegNext(is_load && FUNCT3 === "b010".U  && FU_input_valid)
+    val LBU                     =   RegNext(is_load && FUNCT3 === "b100".U  && FU_input_valid)
+    val LHU                     =   RegNext(is_load && FUNCT3 === "b101".U  && FU_input_valid)
 
 
     val instruction_complete    = RegNext((is_load && io.memory_response.fire) || (is_store && io.memory_request.fire))
@@ -138,7 +147,9 @@ class MEMFU(parameters:Parameters) extends Module{
     // COMPUTE ADDRESS //
     /////////////////////
 
-    val addr = RS1_data + IMM
+    dontTouch(imm)
+
+    val addr = RS1_data + imm
 
     ///////////////////////
     // FORMAT WRITE DATA //
@@ -156,12 +167,10 @@ class MEMFU(parameters:Parameters) extends Module{
     // DRAM REQUESTS //
     ///////////////////
 
-
     io.memory_request.valid           := is_load || is_store
     io.memory_request.bits.wr_en      := is_store
     io.memory_request.bits.wr_data    := wr_data
     io.memory_request.bits.addr       := addr
-
 
     //////////////////////
     // FORMAT READ DATA //
@@ -212,6 +221,8 @@ class MEMFU(parameters:Parameters) extends Module{
     ////////////////////////
 
     // Not a branch unit (all FUs share the same output channel)
+
+    // FIXME: this needs to be an FSM type thing that waits for mem resp in case its not next cycle
     io.FU_output.bits.branch_taken              := 0.B
     io.FU_output.bits.target_address            := 0.B
     io.FU_output.bits.branch_valid              := 0.B
@@ -219,7 +230,7 @@ class MEMFU(parameters:Parameters) extends Module{
     io.FU_output.bits.fetch_PC                  := RegNext(io.FU_input.bits.fetch_PC + (io.FU_input.bits.decoded_instruction.packet_index<<2.U))
     io.FU_output.bits.fetch_packet_index        := RegNext(io.FU_input.bits.decoded_instruction.packet_index)
 
-    io.FU_output.bits.RD_data                   := RegNext(rd_data.asUInt)
+    io.FU_output.bits.RD_data                   := rd_data.asUInt
     io.FU_output.bits.RD                        := RegNext(RD)
     io.FU_output.bits.RD_valid                  := RegNext(is_load)
 
