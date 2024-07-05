@@ -46,7 +46,7 @@ class load_request(parameters:Parameters) extends Bundle{
     val packet_index           = UInt(log2Ceil(fetchWidth).W)  // fetch packet index of the branch
 
     val ROB_index              = UInt(log2Ceil(ROBEntires).W)
-    val RD                     = UInt(log2Ceil(physicalRegBits).W)
+    val RD                     = UInt(log2Ceil(physicalRegCount).W)
     val RD_valid               = Bool()
 
     val LB                     = Bool()
@@ -144,7 +144,7 @@ class MEMFU(parameters:Parameters) extends Module{
     val load_request_in  = Wire(Decoupled(new load_request(parameters)))
     val load_request_out = Wire(Decoupled(new load_request(parameters)))
 
-    load_request_in.valid         := is_load
+    load_request_in.valid                       := is_load
 
     io.FU_output.bits.fetch_packet_index        := load_request_out.bits.packet_index
     io.FU_output.bits.RD                        := load_request_out.bits.RD
@@ -154,14 +154,14 @@ class MEMFU(parameters:Parameters) extends Module{
     load_request_in.bits.packet_index           := io.FU_input.bits.decoded_instruction.packet_index
     load_request_in.bits.ROB_index              := io.FU_input.bits.decoded_instruction.ROB_index
 
-    load_request_in.bits.RD       := io.FU_input.bits.decoded_instruction.RD
-    load_request_in.bits.RD_valid := io.FU_input.bits.decoded_instruction.RD_valid
-    load_request_in.bits.LB       := LB
-    load_request_in.bits.LH       := LH
-    load_request_in.bits.LW       := LW
-    load_request_in.bits.LBU      := LBU
-    load_request_in.bits.LHU      := LHU
-    load_request_out.ready        := io.memory_request.ready
+    load_request_in.bits.RD                     := io.FU_input.bits.decoded_instruction.RD
+    load_request_in.bits.RD_valid               := io.FU_input.bits.decoded_instruction.RD_valid
+    load_request_in.bits.LB                     := LB
+    load_request_in.bits.LH                     := LH
+    load_request_in.bits.LW                     := LW
+    load_request_in.bits.LBU                    := LBU
+    load_request_in.bits.LHU                    := LHU
+    load_request_out.ready                      := io.memory_response.valid // Dequeue when input arrives
 
     load_Q.io.enq        <> load_request_in
     load_Q.io.deq        <> load_request_out
@@ -205,7 +205,7 @@ class MEMFU(parameters:Parameters) extends Module{
     ////////////////////////
     // ASSIGN PRF OUTPUTS //
     ////////////////////////
-    io.FU_output.valid                          := 0.B
+    io.FU_output.valid                          := io.memory_response.valid
     io.FU_output.bits.branch_taken              := 0.B
     io.FU_output.bits.target_address            := 0.B
     io.FU_output.bits.branch_valid              := 0.B

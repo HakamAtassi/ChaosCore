@@ -158,9 +158,13 @@ class MEMRS(parameters:Parameters) extends Module{
     val RS1_ready_valid = (reservation_station(front_index).decoded_instruction.ready_bits.RS1_ready || !reservation_station(front_index).decoded_instruction.RS1_valid)
     val RS2_ready_valid = (reservation_station(front_index).decoded_instruction.ready_bits.RS2_ready || !reservation_station(front_index).decoded_instruction.RS2_valid)
 
+    //val good_to_go =    (reservation_station(front_index).valid && 
+                        //(reservation_station(front_index).commited && reservation_station(front_index).decoded_instruction.is_store) || 
+                        //((RS1_ready_valid && RS2_ready_valid) && reservation_station(front_index).decoded_instruction.is_load))
+
+
     val good_to_go =    (reservation_station(front_index).valid && 
-                        (reservation_station(front_index).commited && reservation_station(front_index).decoded_instruction.is_store) || 
-                        ((RS1_ready_valid && RS2_ready_valid) && reservation_station(front_index).decoded_instruction.is_load))
+                        reservation_station(front_index).commited && RS1_ready_valid && RS2_ready_valid)
 
     front_pointer := front_pointer + good_to_go
     dontTouch(front_index)
