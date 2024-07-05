@@ -24227,9 +24227,9 @@ module MEMRS(
      {reservation_station_1_valid},
      {reservation_station_0_valid}};
   wire              good_to_go =
-    _GEN_23[front_index] & _GEN_22[front_index] & _GEN_21[front_index]
-    | (_GEN[front_index] | ~_GEN_4[front_index])
-    & (_GEN_0[front_index] | ~_GEN_6[front_index]) & _GEN_20[front_index];
+    _GEN_23[front_index] & _GEN_22[front_index]
+    & (_GEN[front_index] | ~_GEN_4[front_index])
+    & (_GEN_0[front_index] | ~_GEN_6[front_index]);
   wire [15:0]       _availalbe_RS_entries_T_1 =
     ~{reservation_station_0_valid,
       reservation_station_1_valid,
@@ -29736,18 +29736,18 @@ module Queue16_memory_request_1(
 endmodule
 
 // VCS coverage exclude_file
-module ram_16x17(
+module ram_16x20(
   input  [3:0]  R0_addr,
   input         R0_en,
                 R0_clk,
-  output [16:0] R0_data,
+  output [19:0] R0_data,
   input  [3:0]  W0_addr,
   input         W0_en,
                 W0_clk,
-  input  [16:0] W0_data
+  input  [19:0] W0_data
 );
 
-  reg [16:0] Memory[0:15];
+  reg [19:0] Memory[0:15];
   reg        _R0_en_d0;
   reg [3:0]  _R0_addr_d0;
   always @(posedge R0_clk) begin
@@ -29758,7 +29758,7 @@ module ram_16x17(
     if (W0_en & 1'h1)
       Memory[W0_addr] <= W0_data;
   end // always @(posedge)
-  assign R0_data = _R0_en_d0 ? Memory[_R0_addr_d0] : 17'bx;
+  assign R0_data = _R0_en_d0 ? Memory[_R0_addr_d0] : 20'bx;
 endmodule
 
 module Queue16_load_request(
@@ -29768,7 +29768,7 @@ module Queue16_load_request(
   input        io_enq_valid,
   input  [1:0] io_enq_bits_packet_index,
   input  [5:0] io_enq_bits_ROB_index,
-  input  [2:0] io_enq_bits_RD,
+               io_enq_bits_RD,
   input        io_enq_bits_RD_valid,
                io_enq_bits_LB,
                io_enq_bits_LH,
@@ -29779,7 +29779,7 @@ module Queue16_load_request(
   output       io_deq_valid,
   output [1:0] io_deq_bits_packet_index,
   output [5:0] io_deq_bits_ROB_index,
-  output [2:0] io_deq_bits_RD,
+               io_deq_bits_RD,
   output       io_deq_bits_RD_valid,
                io_deq_bits_LB,
                io_deq_bits_LH,
@@ -29788,7 +29788,7 @@ module Queue16_load_request(
                io_deq_bits_LHU
 );
 
-  wire [16:0] _ram_ext_R0_data;
+  wire [19:0] _ram_ext_R0_data;
   reg  [3:0]  enq_ptr_value;
   reg  [3:0]  deq_ptr_value;
   reg         maybe_full;
@@ -29812,7 +29812,7 @@ module Queue16_load_request(
         maybe_full <= do_enq;
     end
   end // always @(posedge)
-  ram_16x17 ram_ext (
+  ram_16x20 ram_ext (
     .R0_addr (do_deq ? ((&deq_ptr_value) ? 4'h0 : deq_ptr_value + 4'h1) : deq_ptr_value),
     .R0_en   (1'h1),
     .R0_clk  (clock),
@@ -29835,13 +29835,13 @@ module Queue16_load_request(
   assign io_deq_valid = ~empty;
   assign io_deq_bits_packet_index = _ram_ext_R0_data[1:0];
   assign io_deq_bits_ROB_index = _ram_ext_R0_data[7:2];
-  assign io_deq_bits_RD = _ram_ext_R0_data[10:8];
-  assign io_deq_bits_RD_valid = _ram_ext_R0_data[11];
-  assign io_deq_bits_LB = _ram_ext_R0_data[12];
-  assign io_deq_bits_LH = _ram_ext_R0_data[13];
-  assign io_deq_bits_LW = _ram_ext_R0_data[14];
-  assign io_deq_bits_LBU = _ram_ext_R0_data[15];
-  assign io_deq_bits_LHU = _ram_ext_R0_data[16];
+  assign io_deq_bits_RD = _ram_ext_R0_data[13:8];
+  assign io_deq_bits_RD_valid = _ram_ext_R0_data[14];
+  assign io_deq_bits_LB = _ram_ext_R0_data[15];
+  assign io_deq_bits_LH = _ram_ext_R0_data[16];
+  assign io_deq_bits_LW = _ram_ext_R0_data[17];
+  assign io_deq_bits_LBU = _ram_ext_R0_data[18];
+  assign io_deq_bits_LHU = _ram_ext_R0_data[19];
 endmodule
 
 module MEMFU(
@@ -29897,7 +29897,6 @@ module MEMFU(
 );
 
   wire        _load_Q_io_enq_ready;
-  wire [2:0]  _load_Q_io_deq_bits_RD;
   wire        _load_Q_io_deq_bits_LB;
   wire        _load_Q_io_deq_bits_LH;
   wire        _load_Q_io_deq_bits_LW;
@@ -29946,7 +29945,7 @@ module MEMFU(
     .io_enq_valid             (is_load),
     .io_enq_bits_packet_index (io_FU_input_bits_decoded_instruction_packet_index),
     .io_enq_bits_ROB_index    (io_FU_input_bits_decoded_instruction_ROB_index),
-    .io_enq_bits_RD           (io_FU_input_bits_decoded_instruction_RD[2:0]),
+    .io_enq_bits_RD           (io_FU_input_bits_decoded_instruction_RD),
     .io_enq_bits_RD_valid     (io_FU_input_bits_decoded_instruction_RD_valid),
     .io_enq_bits_LB           (is_load & _LB_T & io_FU_input_valid),
     .io_enq_bits_LH           (is_load & _LH_T & io_FU_input_valid),
@@ -29955,11 +29954,11 @@ module MEMFU(
       (is_load & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h4 & io_FU_input_valid),
     .io_enq_bits_LHU
       (is_load & io_FU_input_bits_decoded_instruction_FUNCT3 == 3'h5 & io_FU_input_valid),
-    .io_deq_ready             (io_memory_request_ready),
+    .io_deq_ready             (io_memory_response_valid),
     .io_deq_valid             (io_memory_response_ready),
     .io_deq_bits_packet_index (io_FU_output_bits_fetch_packet_index),
     .io_deq_bits_ROB_index    (io_FU_output_bits_ROB_index),
-    .io_deq_bits_RD           (_load_Q_io_deq_bits_RD),
+    .io_deq_bits_RD           (io_FU_output_bits_RD),
     .io_deq_bits_RD_valid     (io_FU_output_bits_RD_valid),
     .io_deq_bits_LB           (_load_Q_io_deq_bits_LB),
     .io_deq_bits_LH           (_load_Q_io_deq_bits_LH),
@@ -29968,8 +29967,7 @@ module MEMFU(
     .io_deq_bits_LHU          (_load_Q_io_deq_bits_LHU)
   );
   assign io_FU_input_ready = _load_Q_io_enq_ready & _memory_request_Q_io_enq_ready;
-  assign io_FU_output_valid = 1'h0;
-  assign io_FU_output_bits_RD = {3'h0, _load_Q_io_deq_bits_RD};
+  assign io_FU_output_valid = io_memory_response_valid;
   assign io_FU_output_bits_RD_data =
     _load_Q_io_deq_bits_LHU
       ? {16'h0, io_memory_response_bits_data[15:0]}
@@ -33856,18 +33854,22 @@ module BRU(
   input  [5:0]  io_ROB_output_ROB_index,
   input  [6:0]  io_ROB_output_free_list_front_pointer,
   input         io_ROB_output_ROB_entries_0_valid,
+                io_ROB_output_ROB_entries_0_is_load,
                 io_ROB_output_ROB_entries_0_is_store,
   input  [5:0]  io_ROB_output_ROB_entries_0_RD,
   input         io_ROB_output_ROB_entries_0_RD_valid,
                 io_ROB_output_ROB_entries_1_valid,
+                io_ROB_output_ROB_entries_1_is_load,
                 io_ROB_output_ROB_entries_1_is_store,
   input  [5:0]  io_ROB_output_ROB_entries_1_RD,
   input         io_ROB_output_ROB_entries_1_RD_valid,
                 io_ROB_output_ROB_entries_2_valid,
+                io_ROB_output_ROB_entries_2_is_load,
                 io_ROB_output_ROB_entries_2_is_store,
   input  [5:0]  io_ROB_output_ROB_entries_2_RD,
   input         io_ROB_output_ROB_entries_2_RD_valid,
                 io_ROB_output_ROB_entries_3_valid,
+                io_ROB_output_ROB_entries_3_is_load,
                 io_ROB_output_ROB_entries_3_is_store,
   input  [5:0]  io_ROB_output_ROB_entries_3_RD,
   input         io_ROB_output_ROB_entries_3_RD_valid,
@@ -33901,13 +33903,17 @@ module BRU(
   wire commit_valid =
     io_ROB_output_row_valid
     & (io_ROB_output_complete_0 & io_ROB_output_ROB_entries_0_valid
-       | ~io_ROB_output_ROB_entries_0_valid | io_ROB_output_ROB_entries_0_is_store)
+       | ~io_ROB_output_ROB_entries_0_valid | io_ROB_output_ROB_entries_0_is_load
+       | io_ROB_output_ROB_entries_0_is_store)
     & (io_ROB_output_complete_1 & io_ROB_output_ROB_entries_1_valid
-       | ~io_ROB_output_ROB_entries_1_valid | io_ROB_output_ROB_entries_1_is_store)
+       | ~io_ROB_output_ROB_entries_1_valid | io_ROB_output_ROB_entries_1_is_load
+       | io_ROB_output_ROB_entries_1_is_store)
     & (io_ROB_output_complete_2 & io_ROB_output_ROB_entries_2_valid
-       | ~io_ROB_output_ROB_entries_2_valid | io_ROB_output_ROB_entries_2_is_store)
+       | ~io_ROB_output_ROB_entries_2_valid | io_ROB_output_ROB_entries_2_is_load
+       | io_ROB_output_ROB_entries_2_is_store)
     & (io_ROB_output_complete_3 & io_ROB_output_ROB_entries_3_valid
-       | ~io_ROB_output_ROB_entries_3_valid | io_ROB_output_ROB_entries_3_is_store);
+       | ~io_ROB_output_ROB_entries_3_valid | io_ROB_output_ROB_entries_3_is_load
+       | io_ROB_output_ROB_entries_3_is_store);
   wire branch_commit =
     commit_valid & io_ROB_output_fetch_PC == io_FTQ_fetch_PC & io_FTQ_valid;
   assign io_commit_valid = commit_valid;
@@ -34023,18 +34029,22 @@ module ChaosCore(
   wire [5:0]  _ROB_io_ROB_output_ROB_index;
   wire [6:0]  _ROB_io_ROB_output_free_list_front_pointer;
   wire        _ROB_io_ROB_output_ROB_entries_0_valid;
+  wire        _ROB_io_ROB_output_ROB_entries_0_is_load;
   wire        _ROB_io_ROB_output_ROB_entries_0_is_store;
   wire [5:0]  _ROB_io_ROB_output_ROB_entries_0_RD;
   wire        _ROB_io_ROB_output_ROB_entries_0_RD_valid;
   wire        _ROB_io_ROB_output_ROB_entries_1_valid;
+  wire        _ROB_io_ROB_output_ROB_entries_1_is_load;
   wire        _ROB_io_ROB_output_ROB_entries_1_is_store;
   wire [5:0]  _ROB_io_ROB_output_ROB_entries_1_RD;
   wire        _ROB_io_ROB_output_ROB_entries_1_RD_valid;
   wire        _ROB_io_ROB_output_ROB_entries_2_valid;
+  wire        _ROB_io_ROB_output_ROB_entries_2_is_load;
   wire        _ROB_io_ROB_output_ROB_entries_2_is_store;
   wire [5:0]  _ROB_io_ROB_output_ROB_entries_2_RD;
   wire        _ROB_io_ROB_output_ROB_entries_2_RD_valid;
   wire        _ROB_io_ROB_output_ROB_entries_3_valid;
+  wire        _ROB_io_ROB_output_ROB_entries_3_is_load;
   wire        _ROB_io_ROB_output_ROB_entries_3_is_store;
   wire [5:0]  _ROB_io_ROB_output_ROB_entries_3_RD;
   wire        _ROB_io_ROB_output_ROB_entries_3_RD_valid;
@@ -35386,7 +35396,8 @@ module ChaosCore(
     .io_ROB_output_ROB_entries_0_valid
       (_ROB_io_ROB_output_ROB_entries_0_valid),
     .io_ROB_output_ROB_entries_0_is_branch                         (/* unused */),
-    .io_ROB_output_ROB_entries_0_is_load                           (/* unused */),
+    .io_ROB_output_ROB_entries_0_is_load
+      (_ROB_io_ROB_output_ROB_entries_0_is_load),
     .io_ROB_output_ROB_entries_0_is_store
       (_ROB_io_ROB_output_ROB_entries_0_is_store),
     .io_ROB_output_ROB_entries_0_RD
@@ -35396,7 +35407,8 @@ module ChaosCore(
     .io_ROB_output_ROB_entries_1_valid
       (_ROB_io_ROB_output_ROB_entries_1_valid),
     .io_ROB_output_ROB_entries_1_is_branch                         (/* unused */),
-    .io_ROB_output_ROB_entries_1_is_load                           (/* unused */),
+    .io_ROB_output_ROB_entries_1_is_load
+      (_ROB_io_ROB_output_ROB_entries_1_is_load),
     .io_ROB_output_ROB_entries_1_is_store
       (_ROB_io_ROB_output_ROB_entries_1_is_store),
     .io_ROB_output_ROB_entries_1_RD
@@ -35406,7 +35418,8 @@ module ChaosCore(
     .io_ROB_output_ROB_entries_2_valid
       (_ROB_io_ROB_output_ROB_entries_2_valid),
     .io_ROB_output_ROB_entries_2_is_branch                         (/* unused */),
-    .io_ROB_output_ROB_entries_2_is_load                           (/* unused */),
+    .io_ROB_output_ROB_entries_2_is_load
+      (_ROB_io_ROB_output_ROB_entries_2_is_load),
     .io_ROB_output_ROB_entries_2_is_store
       (_ROB_io_ROB_output_ROB_entries_2_is_store),
     .io_ROB_output_ROB_entries_2_RD
@@ -35416,7 +35429,8 @@ module ChaosCore(
     .io_ROB_output_ROB_entries_3_valid
       (_ROB_io_ROB_output_ROB_entries_3_valid),
     .io_ROB_output_ROB_entries_3_is_branch                         (/* unused */),
-    .io_ROB_output_ROB_entries_3_is_load                           (/* unused */),
+    .io_ROB_output_ROB_entries_3_is_load
+      (_ROB_io_ROB_output_ROB_entries_3_is_load),
     .io_ROB_output_ROB_entries_3_is_store
       (_ROB_io_ROB_output_ROB_entries_3_is_store),
     .io_ROB_output_ROB_entries_3_RD
@@ -35495,18 +35509,22 @@ module ChaosCore(
     .io_ROB_output_ROB_index                (_ROB_io_ROB_output_ROB_index),
     .io_ROB_output_free_list_front_pointer  (_ROB_io_ROB_output_free_list_front_pointer),
     .io_ROB_output_ROB_entries_0_valid      (_ROB_io_ROB_output_ROB_entries_0_valid),
+    .io_ROB_output_ROB_entries_0_is_load    (_ROB_io_ROB_output_ROB_entries_0_is_load),
     .io_ROB_output_ROB_entries_0_is_store   (_ROB_io_ROB_output_ROB_entries_0_is_store),
     .io_ROB_output_ROB_entries_0_RD         (_ROB_io_ROB_output_ROB_entries_0_RD),
     .io_ROB_output_ROB_entries_0_RD_valid   (_ROB_io_ROB_output_ROB_entries_0_RD_valid),
     .io_ROB_output_ROB_entries_1_valid      (_ROB_io_ROB_output_ROB_entries_1_valid),
+    .io_ROB_output_ROB_entries_1_is_load    (_ROB_io_ROB_output_ROB_entries_1_is_load),
     .io_ROB_output_ROB_entries_1_is_store   (_ROB_io_ROB_output_ROB_entries_1_is_store),
     .io_ROB_output_ROB_entries_1_RD         (_ROB_io_ROB_output_ROB_entries_1_RD),
     .io_ROB_output_ROB_entries_1_RD_valid   (_ROB_io_ROB_output_ROB_entries_1_RD_valid),
     .io_ROB_output_ROB_entries_2_valid      (_ROB_io_ROB_output_ROB_entries_2_valid),
+    .io_ROB_output_ROB_entries_2_is_load    (_ROB_io_ROB_output_ROB_entries_2_is_load),
     .io_ROB_output_ROB_entries_2_is_store   (_ROB_io_ROB_output_ROB_entries_2_is_store),
     .io_ROB_output_ROB_entries_2_RD         (_ROB_io_ROB_output_ROB_entries_2_RD),
     .io_ROB_output_ROB_entries_2_RD_valid   (_ROB_io_ROB_output_ROB_entries_2_RD_valid),
     .io_ROB_output_ROB_entries_3_valid      (_ROB_io_ROB_output_ROB_entries_3_valid),
+    .io_ROB_output_ROB_entries_3_is_load    (_ROB_io_ROB_output_ROB_entries_3_is_load),
     .io_ROB_output_ROB_entries_3_is_store   (_ROB_io_ROB_output_ROB_entries_3_is_store),
     .io_ROB_output_ROB_entries_3_RD         (_ROB_io_ROB_output_ROB_entries_3_RD),
     .io_ROB_output_ROB_entries_3_RD_valid   (_ROB_io_ROB_output_ROB_entries_3_RD_valid),
