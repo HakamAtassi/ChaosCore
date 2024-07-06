@@ -30,7 +30,7 @@
 package ChaosCore
 
 import chisel3._
-import circt.stage.ChiselStage
+import circt.stage.ChiselStage 
 
 import chisel3.util._
 import getPortCount._
@@ -66,10 +66,6 @@ class RS(parameters:Parameters) extends Module{
 
     })
 
-    ////////////////////////
-    // MODULE ASSUMPTIONS //
-    ////////////////////////
-    require(isPow2(RSEntries), "Reservation station entries not a power of 2")
 
 
     ///////////////////////////////

@@ -31,7 +31,7 @@ package ChaosCore
 
 
 import chisel3._
-import circt.stage.ChiselStage
+import circt.stage.ChiselStage 
 import chisel3.util._
 import java.io.{File, FileWriter}
 import java.rmi.server.UID
@@ -57,7 +57,7 @@ case class Parameters(
   architecturalRegCount: Int = 32,  // RV32...
   RATCheckpointCount:    Int = 16,  // How many checkpoints of the RAT is supported? (this should be a proportion of the ROB size)
 
-  physicalRegCount:      Int = 64,   // CHANGING THIS IS CURRENTLY NOT SUPPORTED!!!!
+  physicalRegCount:      Int = 65,  // 64 physical regs + x0 (not renamed)
 
   RSEntries: Int = 16, // How many entires per reservation station (these are very expensive)
 
@@ -83,11 +83,16 @@ case class Parameters(
 
 
 
-
-
-
   // Be careful with these parameters. They are likely bugged
   dispatchWidth:Int = 4, // Up to how many entires are sent to the reservation station + execution engine from the instruction queue at a time?
   commitWidth:Int = 4,   // Up to how many entires are freed from the ROB each cycle (cant be larger than the number of ports)
 
-)
+
+){
+  // DO NOT TOUCH PARAMETERS //
+  val physicalRegBits: Int      = log2Ceil(physicalRegCount)      // N regs but x0 does not exist as a physical reg
+  val architecturalRegBits: Int = log2Ceil(architecturalRegCount)
+  val RATCheckpointBits:Int     = log2Ceil(RATCheckpointCount)
+
+
+}

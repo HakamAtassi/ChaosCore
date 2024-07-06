@@ -2,42 +2,46 @@ import sys
 from cocotb.clock import Clock
 from cocotb.triggers import RisingEdge, FallingEdge, Timer
 from tabulate import tabulate
+import random
 
 
 
-def generate_null_decoded_fetch_packet():
+def generate_decoded_fetch_packet(stim):
+    if stim == None:
+        stim = ""
+
     decoded_fetch_packet = {}
 
-    decoded_fetch_packet["valid"]                   = 0
-    decoded_fetch_packet["fetch_PC"]                = 0
-    decoded_fetch_packet["RS1_ready"]               = [0]*4
-    decoded_fetch_packet["RS2_ready"]               = [0]*4
-    decoded_fetch_packet["RD"]                      = [0]*4
-    decoded_fetch_packet["RD_valid"]                = [0]*4
-    decoded_fetch_packet["RS1"]                     = [0]*4
-    decoded_fetch_packet["RS1_valid"]               = [0]*4
-    decoded_fetch_packet["RS2"]                     = [0]*4
-    decoded_fetch_packet["RS2_valid"]               = [0]*4
-    decoded_fetch_packet["IMM"]                     = [0]*4
-    decoded_fetch_packet["FUNCT3"]                  = [0]*4
-    decoded_fetch_packet["packet_index"]            = [0]*4
-    decoded_fetch_packet["ROB_index"]               = [0]*4
-    decoded_fetch_packet["instructionType"]         = [0]*4
-    decoded_fetch_packet["portID"]                  = [0]*4
-    decoded_fetch_packet["RS_type"]                 = [0]*4
-    decoded_fetch_packet["needs_ALU"]               = [0]*4
-    decoded_fetch_packet["needs_branch_unit"]       = [0]*4
-    decoded_fetch_packet["needs_CSRs"]              = [0]*4
-    decoded_fetch_packet["SUBTRACT"]                = [0]*4
-    decoded_fetch_packet["MULTIPLY"]                = [0]*4
-    decoded_fetch_packet["IS_IMM"]                  = [0]*4
-    decoded_fetch_packet["is_load"]                 = [0]*4
-    decoded_fetch_packet["is_store"]                = [0]*4
-    decoded_fetch_packet["valid_bits"]              = [0]*4
+    decoded_fetch_packet["valid"]                   = random.randint(0, 1) if stim == "random"  else 0
+    decoded_fetch_packet["fetch_PC"]                = random.randint(0, 0xFFFF_FFFF) if stim == "random"  else 0
+    decoded_fetch_packet["RS1_ready"]               = [random.randint(0,1) for _ in range(4)] if stim == "random" else 0
+    decoded_fetch_packet["RS2_ready"]               = [random.randint(0,1) for _ in range(4)] if stim == "random" else 0
+    decoded_fetch_packet["RD"]                      = [random.randint(0,31) for _ in range(4)] if stim == "random" else 0
+    decoded_fetch_packet["RD_valid"]                = [random.randint(0,1) for _ in range(4)] if stim == "random" else 0
+    decoded_fetch_packet["RS1"]                     = [random.randint(0,31) for _ in range(4)] if stim == "random" else 0
+    decoded_fetch_packet["RS1_valid"]               = [random.randint(0,1) for _ in range(4)] if stim == "random" else 0
+    decoded_fetch_packet["RS2"]                     = [random.randint(0,31) for _ in range(4)] if stim == "random" else 0
+    decoded_fetch_packet["RS2_valid"]               = [random.randint(0,1) for _ in range(4)] if stim == "random" else 0
+    decoded_fetch_packet["IMM"]                     = [random.randint(0,0xFFF) for _ in range(4)] if stim == "random" else 0
+    decoded_fetch_packet["FUNCT3"]                  = [random.randint(0,0b111) for _ in range(4)] if stim == "random" else 0
+    decoded_fetch_packet["packet_index"]            = [random.randint(0,0b11) for _ in range(4)] if stim == "random" else 0
+    decoded_fetch_packet["ROB_index"]               = [random.randint(0, 63) for _ in range(4)] if stim == "random" else 0
+    decoded_fetch_packet["instructionType"]         = 0
+    decoded_fetch_packet["portID"]                  = 0
+    decoded_fetch_packet["RS_type"]                 = 0
+    decoded_fetch_packet["needs_ALU"]               = 0
+    decoded_fetch_packet["needs_branch_unit"]       = 0
+    decoded_fetch_packet["needs_CSRs"]              = 0
+    decoded_fetch_packet["SUBTRACT"]                = 0
+    decoded_fetch_packet["MULTIPLY"]                = 0
+    decoded_fetch_packet["IS_IMM"]                  = 0
+    decoded_fetch_packet["is_load"]                 = 0
+    decoded_fetch_packet["is_store"]                = 0
+    decoded_fetch_packet["valid_bits"]              = [random.randint(0,1) for _ in range(4)] if stim == "random" else 0
 
     return decoded_fetch_packet
 
-def generate_null_commit():
+def generate_commit():
     commit = {}
     commit["valid,"] = 0
     commit["fetch_PC"] = 0
@@ -55,7 +59,7 @@ def generate_null_commit():
 
     return commit
 
-def generate_null_FU_outputs():
+def generate_FU_outputs():
     FU_outputs = {}
 
     FU_outputs["valid"]= [0]*4
@@ -88,13 +92,20 @@ class rename_dut:
 
 
     ##########
-    # RENAME #
+    # INPUTS #
     ##########
 
-    def write_decoded_fetch_packet(self, decoded_fetch_packet=generate_null_decoded_fetch_packet()):
+
+    def write_flush(self, flush):
+        self.dut.io_flush = flush
+
+    def write_decoded_fetch_packet(self, decoded_fetch_packet=generate_decoded_fetch_packet()):
         
-        self.dut.io_decoded_fetch_packet_valid.value            = decoded_fetch_packet["valid"]
-        self.dut.io_decoded_fetch_packet_bits_fetch_PC.value    = decoded_fetch_packet["fetch_PC"]
+        self.dut.io_decoded_fetch_packet_valid.value                            = decoded_fetch_packet["valid"]
+        self.dut.io_decoded_fetch_packet_bits_fetch_PC.value                    = decoded_fetch_packet["fetch_PC"]
+        self.dut.io_decoded_fetch_packet_bits_RAT_index.value                   = decoded_fetch_packet["RAT_index"]
+        self.dut.io_decoded_fetch_packet_bits_free_list_front_pointer.value     = decoded_fetch_packet["free_list_front_pointer"]
+        self.dut.io_renamed_decoded_fetch_packet_ready.value                    = decoded_fetch_packet["ready"]
 
         for i in range(4):
             getattr(self.dut, f"io_decoded_fetch_packet_bits_decoded_instruction_{i}_ready_bits_RS1_ready").value     =     decoded_fetch_packet["RS1_ready"][i]
@@ -119,24 +130,30 @@ class rename_dut:
             getattr(self.dut, f"io_decoded_fetch_packet_bits_decoded_instruction_{i}_IS_IMM").value                   =     decoded_fetch_packet["IS_IMM"][i]
             getattr(self.dut, f"io_decoded_fetch_packet_bits_decoded_instruction_{i}_is_load").value                  =     decoded_fetch_packet["is_load"][i]
             getattr(self.dut, f"io_decoded_fetch_packet_bits_decoded_instruction_{i}_is_store").value                 =     decoded_fetch_packet["is_store"][i]
+            getattr(self.dut, f"io_decoded_fetch_packet_bits_decoded_instruction_{i}_ROB_index").value                =     decoded_fetch_packet["ROB_index"][i]
             getattr(self.dut, f"io_decoded_fetch_packet_bits_valid_bits_{i}").value                                   =     decoded_fetch_packet["valid_bits"][i]
 
 
     def write_commit(self, commit):
-        self.dut.io_commit_valid                = commit["valid,"] = 0
-        self.dut.io_commit_fetch_PC             = commit["fetch_PC"] = 0
-        self.dut.io_commit_T_NT                 = commit["T_NT"] = 0
-        self.dut.io_commit_ROB_index            = commit["ROB_index"] = 0
-        self.dut.io_commit_br_type              = commit["br_type"] = 0
-        self.dut.io_commit_fetch_packet_index   = commit["fetch_packet_index"] = 0
-        self.dut.io_commit_is_misprediction     = commit["is_misprediction"] = 0
-        self.dut.io_commit_expected_PC          = commit["expected_PC"] = 0
-        self.dut.io_commit_GHR                  = commit["GHR"] = 0
-        self.dut.io_commit_TOS                  = commit["TOS"] = 0
-        self.dut.io_commit_NEXT                 = commit["NEXT"] = 0
-        self.dut.io_commit_RAT_index              = commit["RAT_index"] = 0
+        self.dut.io_commit_valid                        = commit["valid,"]
+        self.dut.io_commit_bits_fetch_PC                = commit["fetch_PC"]
+        self.dut.io_commit_bits_T_NT                    = commit["T_NT"]
+        self.dut.io_commit_bits_ROB_index               = commit["ROB_index"]
+        self.dut.io_commit_bits_br_type                 = commit["br_type"]
+        self.dut.io_commit_bits_fetch_packet_index      = commit["fetch_packet_index"]
+        self.dut.io_commit_bits_is_misprediction        = commit["is_misprediction"]
+        self.dut.io_commit_bits_expected_PC             = commit["expected_PC"]
+        self.dut.io_commit_bits_GHR                     = commit["GHR"]
+        self.dut.io_commit_bits_TOS                     = commit["TOS"]
+        self.dut.io_commit_bits_NEXT                    = commit["NEXT"]
+        self.dut.io_commit_bits_RAT_index               = commit["RAT_index"]
+        self.dut.io_commit_bits_free_list_front_pointer = commit["free_list_front_pointer"]
 
-    def write_FU_outputs(self, FU_outputs = generate_null_FU_outputs()):
+        for i in range(4):
+            getattr(self.dut, f"io_commit_bits_RD_{i}").value         = commit["RD"][i]
+            getattr(self.dut, f"io_commit_bits_RD_valid_{i}").value   = commit["RD_valid"][i]
+
+    def write_FU_outputs(self, FU_outputs = generate_FU_outputs()):
         for i in range(4):
             getattr(self.dut, f"io_FU_outputs_{i}_valid").value                     = FU_outputs["valid"][i]
             getattr(self.dut, f"io_FU_outputs_{i}_bits_RD").value                   = FU_outputs["RD"][i]
@@ -148,7 +165,17 @@ class rename_dut:
             getattr(self.dut, f"io_FU_outputs_{i}_bits_branch_valid").value         = FU_outputs["branch_valid"][i]
             getattr(self.dut, f"io_FU_outputs_{i}_bits_ROB_index").value            = FU_outputs["ROB_index"][i]
             getattr(self.dut, f"io_FU_outputs_{i}_bits_fetch_packet_index").value   = FU_outputs["fetch_packet_index"][i]
-        
+
+    def inputs(self, flush, decoded_fetch_packet, commit, FU_outputs):
+        self.write_flush(flush)
+        self.write_decoded_fetch_packet(decoded_fetch_packet)
+        self.write_commit(commit)
+        self.write_FU_outputs(FU_outputs)
+
+
+    ###########
+    # OUTPUTS #
+    ###########
 
     def read_decoded_fetch_packet(self):
         decoded_fetch_packet = {}
@@ -204,6 +231,8 @@ class rename_dut:
 
         return decoded_fetch_packet
 
+
+
     def rename_renamed_decoded_fetch_packet(self):
         renamed_decoded_fetch_packet = {}
         renamed_decoded_fetch_packet["valid"]       = int(self.dut.io_renamed_decoded_fetch_packet_valid.value)
@@ -235,29 +264,29 @@ class rename_dut:
         renamed_decoded_fetch_packet["valid_bits"] = [0]*4
 
         for i in range(4):
-            renamed_decoded_fetch_packet["RS1_ready"][i] = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_ready_bits_RS1_ready").value)
-            renamed_decoded_fetch_packet["RS2_ready"][i] = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_ready_bits_RS2_ready").value)
-            renamed_decoded_fetch_packet["RD"][i] = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_RD").value)
-            renamed_decoded_fetch_packet["RD_valid"][i] = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_RD_valid").value)
-            renamed_decoded_fetch_packet["RS1"][i] = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_RS1").value)
-            renamed_decoded_fetch_packet["RS1_valid"][i] = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_RS1_valid").value)
-            renamed_decoded_fetch_packet["RS2"][i] = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_RS2").value)
-            renamed_decoded_fetch_packet["RS2_valid"][i] = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_RS2_valid").value)
-            renamed_decoded_fetch_packet["IMM"][i] = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_IMM").value)
-            renamed_decoded_fetch_packet["FUNCT3"][i] = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_FUNCT3").value)
-            renamed_decoded_fetch_packet["packet_index"][i] = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_packet_index").value)
-            renamed_decoded_fetch_packet["instructionType"][i] = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_instructionType").value)
-            renamed_decoded_fetch_packet["portID"][i] = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_portID").value)
-            renamed_decoded_fetch_packet["RS_type"][i] = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_RS_type").value)
-            renamed_decoded_fetch_packet["needs_ALU"][i] = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_needs_ALU").value)
-            renamed_decoded_fetch_packet["needs_branch_unit"][i] = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_needs_branch_unit").value)
-            renamed_decoded_fetch_packet["needs_CSRs"][i] = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_needs_CSRs").value)
-            renamed_decoded_fetch_packet["SUBTRACT"][i] = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_SUBTRACT").value)
-            renamed_decoded_fetch_packet["MULTIPLY"][i] = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_MULTIPLY").value)
-            renamed_decoded_fetch_packet["IS_IMM"][i] = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_IS_IMM").value)
-            renamed_decoded_fetch_packet["is_load"][i] = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_is_load").value)
-            renamed_decoded_fetch_packet["is_store"][i] = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_is_store").value)
-            renamed_decoded_fetch_packet["valid_bits"][i] = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_valid_bits_{i}").value)
+            renamed_decoded_fetch_packet["RS1_ready"][i]            = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_ready_bits_RS1_ready").value)
+            renamed_decoded_fetch_packet["RS2_ready"][i]            = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_ready_bits_RS2_ready").value)
+            renamed_decoded_fetch_packet["RD"][i]                   = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_RD").value)
+            renamed_decoded_fetch_packet["RD_valid"][i]             = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_RD_valid").value)
+            renamed_decoded_fetch_packet["RS1"][i]                  = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_RS1").value)
+            renamed_decoded_fetch_packet["RS1_valid"][i]            = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_RS1_valid").value)
+            renamed_decoded_fetch_packet["RS2"][i]                  = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_RS2").value)
+            renamed_decoded_fetch_packet["RS2_valid"][i]            = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_RS2_valid").value)
+            renamed_decoded_fetch_packet["IMM"][i]                  = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_IMM").value)
+            renamed_decoded_fetch_packet["FUNCT3"][i]               = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_FUNCT3").value)
+            renamed_decoded_fetch_packet["packet_index"][i]         = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_packet_index").value)
+            renamed_decoded_fetch_packet["instructionType"][i]      = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_instructionType").value)
+            renamed_decoded_fetch_packet["portID"][i]               = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_portID").value)
+            renamed_decoded_fetch_packet["RS_type"][i]              = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_RS_type").value)
+            renamed_decoded_fetch_packet["needs_ALU"][i]            = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_needs_ALU").value)
+            renamed_decoded_fetch_packet["needs_branch_unit"][i]    = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_needs_branch_unit").value)
+            renamed_decoded_fetch_packet["needs_CSRs"][i]           = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_needs_CSRs").value)
+            renamed_decoded_fetch_packet["SUBTRACT"][i]             = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_SUBTRACT").value)
+            renamed_decoded_fetch_packet["MULTIPLY"][i]             = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_MULTIPLY").value)
+            renamed_decoded_fetch_packet["IS_IMM"][i]               = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_IS_IMM").value)
+            renamed_decoded_fetch_packet["is_load"][i]              = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_is_load").value)
+            renamed_decoded_fetch_packet["is_store"][i]             = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_decoded_instruction_{i}_is_store").value)
+            renamed_decoded_fetch_packet["valid_bits"][i]           = int(getattr(self.dut, f"io_renamed_decoded_fetch_packet_bits_valid_bits_{i}").value)
 
         return renamed_decoded_fetch_packet
 
@@ -276,6 +305,11 @@ class rename_dut:
 
     def free_checkpoint(self):
         return int(self.dut.free_checkpoint.value)
+
+
+
+
+
 
 
 

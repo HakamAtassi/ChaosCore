@@ -30,7 +30,7 @@
 package ChaosCore
 
 import chisel3._
-import circt.stage.ChiselStage
+import circt.stage.ChiselStage 
 
 import chisel3.util._
 
@@ -41,7 +41,6 @@ object memfuState extends ChiselEnum{
 
 class load_request(parameters:Parameters) extends Bundle{
     import parameters._
-    val physicalRegBits = log2Ceil(physicalRegCount)
 
     val packet_index           = UInt(log2Ceil(fetchWidth).W)  // fetch packet index of the branch
 

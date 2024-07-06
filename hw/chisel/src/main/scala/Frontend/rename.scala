@@ -42,8 +42,6 @@ class WAW_handler(parameters:Parameters) extends Module{
     // arch. reg and physical reg from the free list. 
     // This module ensures that the RAT is updated with the most recent mapping in said fetch packet.
 
-    val physicalRegBits = log2Ceil(physicalRegCount)
-    val architecturalRegBits = log2Ceil(architecturalRegCount)
 
     val io = IO(new Bundle{
         // From decoders and free_list
@@ -76,9 +74,6 @@ class WAW_handler(parameters:Parameters) extends Module{
 
 class RAT(parameters:Parameters) extends Module{
     import parameters._
-    val RATCheckpointBits    = log2Ceil(RATCheckpointCount)
-    val physicalRegBits      = log2Ceil(physicalRegCount)
-    val architecturalRegBits = log2Ceil(architecturalRegCount)
 
     val portCount = getPortCount(parameters)
 
@@ -152,20 +147,12 @@ class RAT(parameters:Parameters) extends Module{
 
     val row_valid_mem   =   RegInit(VecInit(Seq.fill(ROBEntires)(0.B)))
 
-
-    val RAT_RD  = RegInit(VecInit(Seq.fill(fetchWidth)(0.U(physicalRegBits.W))))
-    val RAT_RS1 = RegInit(VecInit(Seq.fill(fetchWidth)(0.U(physicalRegBits.W))))
-    val RAT_RS2 = RegInit(VecInit(Seq.fill(fetchWidth)(0.U(physicalRegBits.W))))
-
     for(i <- 0 until fetchWidth){
-        RAT_RD(i)  := RAT_memories(active_RAT)(io.instruction_RD(i))
-        RAT_RS1(i) := RAT_memories(active_RAT)(io.instruction_RS1(i))
-        RAT_RS2(i) := RAT_memories(active_RAT)(io.instruction_RS2(i))
+        io.RAT_RD(i)  := RegNext(RAT_memories(active_RAT)(io.instruction_RD(i)))
+        io.RAT_RS1(i) := RegNext(RAT_memories(active_RAT)(io.instruction_RS1(i)))
+        io.RAT_RS2(i) := RegNext(RAT_memories(active_RAT)(io.instruction_RS2(i)))
     }
 
-    io.RAT_RD  := RAT_RD
-    io.RAT_RS1 := RAT_RS1
-    io.RAT_RS2 := RAT_RS2
 
 
     // CREATE CHECKPOINT
@@ -185,9 +172,17 @@ class RAT(parameters:Parameters) extends Module{
     }
 
     for(i <- 0 until fetchWidth){
-        wr_din(io.instruction_RD(i))   := io.free_list_RD(i)
-        wr_en(io.instruction_RD(i))    := io.free_list_wr_en(i)
+        when(io.free_list_wr_en(i)){
+            wr_din(io.instruction_RD(i))   := io.free_list_RD(i)
+            wr_en(io.instruction_RD(i))    := 1.B 
+        }
     }
+
+
+    dontTouch(wr_en)
+    dontTouch(wr_din)
+
+    dontTouch(active_RAT_comb)
 
     // WRITE MAPPING
     for (i <- 0 until architecturalRegCount){
@@ -195,9 +190,6 @@ class RAT(parameters:Parameters) extends Module{
             RAT_memories(active_RAT_comb)(i) := wr_din(i)
         }
     }
-
-
-
 
     io.active_checkpoint_value  := active_RAT
     io.checkpoints_full         := (available_checkpoints === 0.U)
@@ -213,8 +205,6 @@ class rename(parameters:Parameters) extends Module{
 
     // Also provides checkpointing capability.
 
-    val physicalRegBits      = log2Ceil(physicalRegCount)
-    val architecturalRegBits = log2Ceil(architecturalRegCount)
     val RATCheckpointBits    = log2Ceil(RATCheckpointCount)
 
     val portCount = getPortCount(parameters)
@@ -288,7 +278,7 @@ class rename(parameters:Parameters) extends Module{
     /////////
 
     for(i <- 0 until fetchWidth){
-        WAW_handler.io.decoder_RD_valid_bits(i)    :=  io.decoded_fetch_packet.bits.decoded_instruction(i).RD_valid && io.decoded_fetch_packet.valid
+        WAW_handler.io.decoder_RD_valid_bits(i)    :=  io.decoded_fetch_packet.bits.decoded_instruction(i).RD_valid && io.decoded_fetch_packet.fire
         WAW_handler.io.decoder_RD_values(i)        :=  io.decoded_fetch_packet.bits.decoded_instruction(i).RD
         WAW_handler.io.free_list_RD_values(i)      :=  free_list.io.renamed_values(i)
     }
@@ -298,7 +288,7 @@ class rename(parameters:Parameters) extends Module{
     /////////
 
     // Assign write ports
-    RAT.io.free_list_wr_en                         :=  WAW_handler.io.RAT_wr_en
+    RAT.io.free_list_wr_en                         :=  WAW_handler.io.RAT_wr_en 
     RAT.io.free_list_RD                            :=  WAW_handler.io.FL_RD_values
     RAT.io.FU_outputs                              :=  io.FU_outputs
     
@@ -309,8 +299,8 @@ class rename(parameters:Parameters) extends Module{
         RAT.io.instruction_RS2(i)                  :=  io.decoded_fetch_packet.bits.decoded_instruction(i).RS2
     }
 
-    val renamed_RS1 = Wire(Vec(fetchWidth, UInt(log2Ceil(physicalRegCount).W)))
-    val renamed_RS2 = Wire(Vec(fetchWidth, UInt(log2Ceil(physicalRegCount).W)))
+    val renamed_RS1 = Wire(Vec(fetchWidth, UInt(physicalRegBits.W)))
+    val renamed_RS2 = Wire(Vec(fetchWidth, UInt(physicalRegBits.W)))
 
     dontTouch(renamed_RS1)
     dontTouch(renamed_RS2)
@@ -354,7 +344,7 @@ class rename(parameters:Parameters) extends Module{
 
         // Request new values
         free_list.io.rename_valid(i)                   :=   io.decoded_fetch_packet.bits.decoded_instruction(i).RD_valid && 
-                                                            io.decoded_fetch_packet.valid && 
+                                                            io.decoded_fetch_packet.fire && 
                                                             (io.decoded_fetch_packet.bits.decoded_instruction(i).RD =/= 0.U)
     }
     free_list.io.commit := io.commit
@@ -374,6 +364,16 @@ class rename(parameters:Parameters) extends Module{
     renamed_decoded_fetch_packet.ready := io.renamed_decoded_fetch_packet.ready
 
 
+    /////////////////
+    // SKID BUFFER //
+    /////////////////
+    val renamed_decoded_fetch_packet_skid_buffer = Module(new Queue(new decoded_fetch_packet(parameters), 1, flow=true, hasFlush=true, useSyncReadMem=false))
+
+    renamed_decoded_fetch_packet_skid_buffer.io.enq         <> renamed_decoded_fetch_packet
+    renamed_decoded_fetch_packet_skid_buffer.io.deq         <> io.renamed_decoded_fetch_packet
+    renamed_decoded_fetch_packet_skid_buffer.io.flush.get   := io.flush
+
+
 
     ////////////////
     // READY BITS //
@@ -389,6 +389,7 @@ class rename(parameters:Parameters) extends Module{
     // set that ready bit, and bypass it as needed
 
     val comb_ready_bits = Wire(Vec(physicalRegCount, Bool()))
+    dontTouch(comb_ready_bits)
 
     for(i <- 0 until physicalRegCount){
         comb_ready_bits(i) := ready_memory(i)
@@ -417,52 +418,20 @@ class rename(parameters:Parameters) extends Module{
         ready_memory(i) := comb_ready_bits(i)
     }
 
+    // x0 as a dest or source is never remapped
+    // x0 always ready
+    comb_ready_bits(0) := 1.U
+
     // assign ready output
     for(i <- 0 until fetchWidth){
-        val initialReady = Wire(new sources_ready)
-        //initialReady.RS1_ready := RegNext(comb_ready_bits(io.instruction_RS1(i))).asBool
-
         // if the source is x0, its ready regardless of what its value says
         // if the source is not valid, its ready regardless of what its value says
-        initialReady.RS1_ready := Mux(RegNext(io.decoded_fetch_packet.bits.decoded_instruction(i).RS1) === 0.U, 1.B, comb_ready_bits(renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS1))
-        initialReady.RS2_ready := Mux(RegNext(io.decoded_fetch_packet.bits.decoded_instruction(i).RS2) === 0.U, 1.B, comb_ready_bits(renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS2))
-
-        renamed_decoded_fetch_packet.bits.decoded_instruction(i).ready_bits := initialReady
+        val initialReady = Wire(new sources_ready)
+        initialReady.RS1_ready := comb_ready_bits(io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS1)//Mux(RegNext(io.decoded_fetch_packet.bits.decoded_instruction(i).RS1) === 0.U, 1.B, comb_ready_bits(io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS1))
+        initialReady.RS2_ready := comb_ready_bits(io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS2) //Mux(RegNext(io.decoded_fetch_packet.bits.decoded_instruction(i).RS2) === 0.U, 1.B, comb_ready_bits(io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS2))
+        io.renamed_decoded_fetch_packet.bits.decoded_instruction(i).ready_bits := initialReady
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    /////////////////
-    // SKID BUFFER //
-    /////////////////
-    val renamed_decoded_fetch_packet_skid_buffer = Module(new Queue(new decoded_fetch_packet(parameters), 1, flow=true, hasFlush=true, useSyncReadMem=false))
-
-    renamed_decoded_fetch_packet_skid_buffer.io.enq         <> renamed_decoded_fetch_packet
-    renamed_decoded_fetch_packet_skid_buffer.io.deq         <> io.renamed_decoded_fetch_packet
-    renamed_decoded_fetch_packet_skid_buffer.io.flush.get   := io.flush
 
     /////////////////
     // READY/VALID //
