@@ -27,15 +27,20 @@
 * ------------------------------------------------------------------------------------ 
 */
 
-import circt.stage.ChiselStage
+import circt.stage.ChiselStage 
 import chisel3._
 import chisel3.util._
 import java.io.{File, FileWriter}
 import java.rmi.server.UID
 
+import chisel3.util.Enum
+
 object unpipelined_non_restoring_divider{
-  object division_state extends ChiselEnum{
-    val idle, active, delay, done = Value
+  object division_state extends Bundle{
+    val idle   = 0.U
+    val active = 1.U
+    val delay  = 2.U
+    val done   = 3.U
   }
 }
 

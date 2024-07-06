@@ -30,7 +30,7 @@
 package ChaosCore
 
 import chisel3._
-import circt.stage.ChiselStage
+import circt.stage.ChiselStage 
 import chisel3.util._
 import java.io.{File, FileWriter}
 import java.rmi.server.UID
@@ -54,6 +54,12 @@ object VerilogGenerator {
     }
 }
 
+class DummyModule extends RawModule {
+  val io = IO(new Bundle {
+    val ras_update = Input(new RAS_update())
+  })
+}
+
 object Main extends App {
     import Parameters._
 
@@ -70,6 +76,8 @@ object Main extends App {
     "../verilog/SOC/SOC.v")
 
     //ChiselStage.emitSystemVerilogFile(new ChaosCore(parameters), Array("--split-verilog", "--target-dir", "../verilog"))
+
+    //ChiselStage.emitSystemVerilogFile(new DummyModule(), Array("--split-verilog", "--target-dir", "../verilog"))
 
 }
 

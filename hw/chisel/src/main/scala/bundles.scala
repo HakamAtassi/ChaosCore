@@ -96,9 +96,7 @@ class instruction_cache_address_packet(parameters: Parameters) extends Bundle {
 /////////////////
 
 object _br_type extends ChiselEnum{
-
     val NONE, BR, JAL, JALR, RET, CALL = Value
-
 }
 
 class BTB_entry(parameters:Parameters) extends Bundle{
@@ -116,7 +114,6 @@ class BTB_entry(parameters:Parameters) extends Bundle{
 
 class commit(parameters:Parameters) extends Bundle{
     import parameters._
-    val physicalRegBits = log2Ceil(physicalRegCount)
 
     val fetch_PC                = UInt(32.W)    // To update gshare/PHT
     val T_NT                    = Bool()    // To update BTB (BTB only updates on taken branches)
@@ -134,7 +131,7 @@ class commit(parameters:Parameters) extends Bundle{
     val NEXT                    = UInt(log2Ceil(RASEntries).W)
     val RAT_index               = UInt(log2Ceil(RATCheckpointCount).W)
 
-    val free_list_front_pointer = UInt((log2Ceil(physicalRegCount) + 1).W)
+    val free_list_front_pointer = UInt((physicalRegBits + 1).W)
 
     val RD                      = Vec(fetchWidth, UInt(physicalRegBits.W))
     val RD_valid                = Vec(fetchWidth, Bool())
@@ -192,7 +189,6 @@ class decoded_instruction(parameters:Parameters) extends Bundle{
     // Parameters
     import parameters._
     val portCount       =   4
-    val physicalRegBits =   log2Ceil(physicalRegCount)    // FIXME!!
 
     //val valid              =    Bool()
 
@@ -215,7 +211,7 @@ class decoded_instruction(parameters:Parameters) extends Bundle{
     val FUNCT3              =  UInt(3.W)
 
 
-    val packet_index        =  UInt(log2Ceil(fetchWidth).W)    // FIXME: *4??
+    val packet_index        =  UInt(log2Ceil(fetchWidth).W)
     val ROB_index           =  UInt(log2Ceil(ROBEntires).W)
 
     // uOp info
@@ -246,7 +242,7 @@ class decoded_fetch_packet(parameters:Parameters) extends Bundle{
     val valid_bits              = Vec(fetchWidth, Bool())
 
     val RAT_index               = UInt(log2Ceil(RATCheckpointCount).W)
-    val free_list_front_pointer = UInt((log2Ceil(physicalRegCount) + 1).W)
+    val free_list_front_pointer = UInt((physicalRegBits + 1).W)
 }
 
 // decoded instruction after it goes through register read
@@ -363,7 +359,7 @@ class ROB_output(parameters:Parameters) extends Bundle{
     val RAT_index               = UInt(log2Ceil(RATCheckpointCount).W)
     val ROB_index               = UInt(log2Ceil(ROBEntires).W)
 
-    val free_list_front_pointer = UInt((log2Ceil(physicalRegCount) + 1).W)
+    val free_list_front_pointer = UInt((physicalRegBits + 1).W)
 
     // N per row 
     val ROB_entries             = Vec(fetchWidth, new ROB_entry(parameters))    // "static" instruction data
@@ -377,7 +373,7 @@ class ROB_shared(parameters:Parameters) extends Bundle{
     val fetch_PC                = UInt(32.W)
     val RAT_index               = UInt(log2Ceil(RATCheckpointCount).W)
 
-    val free_list_front_pointer = UInt((log2Ceil(physicalRegCount) + 1).W)
+    val free_list_front_pointer = UInt((physicalRegBits + 1).W)
 }
 
 // ROB entries that pertain to each instruction independantly (this info goes in a standalone bank)
@@ -391,9 +387,9 @@ class ROB_entry(parameters:Parameters) extends Bundle{
     val is_load     = Bool()
     val is_store    = Bool()
 
-    val RD          =   UInt(log2Ceil(physicalRegCount).W)
+    val RD          =   UInt(physicalRegBits.W)
     val RD_valid    =   Bool()
-    //val RD_old      =   UInt(log2Ceil(physicalRegCount).W)
+    //val RD_old      =   UInt(physicalRegBits.W)
 }
 
 class ROB_WB(parameters:Parameters) extends Bundle{
@@ -409,7 +405,6 @@ class sources_ready extends Bundle{
 // FIXME:  This is messed up 
 class RS_entry(parameters:Parameters) extends Bundle{
     import parameters._
-    val physicalRegBits = log2Ceil(physicalRegCount)
 
     val decoded_instruction = new decoded_instruction(parameters)
 
@@ -420,8 +415,6 @@ class RS_entry(parameters:Parameters) extends Bundle{
 
 class MEMRS_entry(parameters:Parameters) extends Bundle{
     import parameters._
-    val physicalRegBits     = log2Ceil(physicalRegCount)
-
     val decoded_instruction =  new decoded_instruction(parameters)
 
     //val ready_bits          =  new sources_ready()
@@ -438,7 +431,7 @@ class MEMRS_entry(parameters:Parameters) extends Bundle{
 class FU_output(parameters:Parameters) extends Bundle{
     import parameters._
     // Arithmetic/Load
-    val RD                  =   UInt(log2Ceil(physicalRegCount).W)
+    val RD                  =   UInt(physicalRegBits.W)
     val RD_data             =   UInt(32.W)
     val RD_valid            =   Bool()
 

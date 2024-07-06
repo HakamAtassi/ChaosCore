@@ -37,7 +37,6 @@ class frontend(parameters:Parameters) extends Module{
     import parameters._
 
     val dataSizeBits         = L1_instructionCacheBlockSizeBytes*8
-    val physicalRegBits      = log2Ceil(physicalRegCount)
     val architecturalRegBits = log2Ceil(architecturalRegCount)
     val RATCheckpointBits    = log2Ceil(RATCheckpointCount)
 

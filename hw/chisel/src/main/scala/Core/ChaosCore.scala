@@ -30,7 +30,7 @@
 package ChaosCore
 
 import chisel3._
-import circt.stage.ChiselStage
+import circt.stage.ChiselStage 
 import chisel3.util._
 
 
@@ -59,6 +59,14 @@ class ChaosCore(parameters:Parameters) extends Module{
         val backend_memory_response             =   Flipped(Decoupled(new memory_response(parameters)))
         val backend_memory_request              =   Decoupled(new memory_request(parameters))
     })
+
+    //////////////////
+    // REQUIREMENTS //
+    //////////////////
+    require(isPow2(physicalRegCount-1), "Number of physical regs must be a power of 2 (excluding x0)")
+    require(isPow2(ROBEntires), "ROB entries not a power of 2")
+    require(isPow2(RSEntries), "Reservation station entries not a power of 2")
+
 
 
     /////////////
@@ -208,7 +216,9 @@ class ChaosCore(parameters:Parameters) extends Module{
         backend.io.backend_packet.bits.decoded_instruction(i).ROB_index := ROB.io.ROB_index
     }
 
+    // FIXME: does the frontend have appropriate backpressure incase the ROB cant accept/is not ready????
     ROB.io.ROB_packet           <> frontend.io.renamed_decoded_fetch_packet
+    ROB.io.ROB_packet.valid     := frontend.io.renamed_decoded_fetch_packet.valid && all_INT_RS_accepted && all_MEM_RS_accepted
 
     // Connect branch unit to PC file (which exists in the ROB)
     backend.io.PC_file_exec_addr <> ROB.io.PC_file_exec_addr

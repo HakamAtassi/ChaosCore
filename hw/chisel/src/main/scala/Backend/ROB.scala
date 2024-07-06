@@ -70,10 +70,6 @@ class ROB(parameters:Parameters) extends Module{
     dontTouch(io)
 
 
-    //////////////////
-    // REQUIREMENTS //
-    //////////////////
-    require(isPow2(ROBEntires), "ROB entries not a power of 2")
 
     //////////////
     // POINTERS // 

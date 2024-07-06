@@ -30,22 +30,22 @@
 package ChaosCore
 
 import chisel3._
-import circt.stage.ChiselStage
+import circt.stage.ChiselStage 
 import chisel3.util._
 import java.io.{File, FileWriter}
 import java.rmi.server.UID
 
+
 class free_list(parameters:Parameters) extends Module{
     import parameters._
-    val ptr_width = log2Ceil(physicalRegCount) + 1
-    val physicalRegBits = log2Ceil(physicalRegCount)
+    val ptr_width = log2Ceil(physicalRegCount-1) + 1
 
     val io = IO(new Bundle{
         val rename_valid            = Input(Vec(fetchWidth, Bool()))                                    // Request rename valid
         val renamed_values          = Output(Vec(fetchWidth, UInt(log2Ceil(physicalRegCount).W)))       // Renamed RDs
         val renamed_valid           = Output(Vec(fetchWidth, Bool()))                                   // Renamed RDs valid
 
-        val commit                  = Flipped(ValidIO(new commit(parameters)))                                     // Free regs on commit
+        val commit                  = Flipped(ValidIO(new commit(parameters)))                          // Free regs on commit
 
         val free_list_front_pointer = Output(UInt((log2Ceil(physicalRegCount) + 1).W))                  // To ROB
 
@@ -56,14 +56,14 @@ class free_list(parameters:Parameters) extends Module{
     val flush = io.commit.valid && io.commit.bits.is_misprediction
 
     // Pointers
-    val front_pointer   = RegInit(UInt(ptr_width.W), 0.U)
-    val back_pointer    = RegInit(UInt(ptr_width.W), (physicalRegCount-2).U)  // -2 because there are N-1 elements, and you want the last element
+    val front_pointer   = RegInit(UInt(ptr_width.W), 0.U)                       // front pointer starts at 0
+    val back_pointer    = RegInit(UInt(ptr_width.W), (physicalRegCount-2).U)    // back pointer starts at N-1
 
     val front_index     = Wire(UInt((ptr_width-1).W))
     val back_index      = Wire(UInt((ptr_width-1).W))
 
     // Free list
-    val free_list_buffer = RegInit(VecInit((1 until physicalRegCount).map(_.U(physicalRegBits.W))))
+    val free_list_buffer = RegInit(VecInit((1 until physicalRegCount).map(_.U(physicalRegBits.W)))) //x0 not in free list
 
     front_index := front_pointer(ptr_width-2, 0)
     back_index  := back_pointer(ptr_width-2, 0)
@@ -83,7 +83,6 @@ class free_list(parameters:Parameters) extends Module{
         }
     }
 
-
     io.free_list_front_pointer  := front_pointer
     
     ///////////////////
@@ -95,10 +94,13 @@ class free_list(parameters:Parameters) extends Module{
 
     val allocate_valid  =   Wire(Vec(fetchWidth, Bool()))
 
+    dontTouch(allocate_valid)
+
     for(i <- 0 until fetchWidth){
         allocate_valid(i) := (io.commit.bits.RD_valid(i)) && (io.commit.bits.RD(i) =/= 0.U)
     }
     
+
 
     when(!(io.commit.valid && io.commit.bits.is_misprediction)){                               // not misprediction
         front_pointer := front_pointer + PopCount(io.rename_valid)
@@ -117,8 +119,12 @@ class free_list(parameters:Parameters) extends Module{
     val remaining_RDs   = back_pointer - front_pointer
     val free_spots      = 0.U
 
-    io.empty := remaining_RDs < 4.U
-    io.full  := free_spots < 4.U
+    val elements_in_queue = Mux(back_pointer >= front_pointer,
+                                back_pointer - front_pointer,
+                                (back_pointer + physicalRegCount.U) - front_pointer)
+
+    io.empty := elements_in_queue < 4.U
+    io.full  := elements_in_queue === (physicalRegCount - 1).U
 
 }
 
