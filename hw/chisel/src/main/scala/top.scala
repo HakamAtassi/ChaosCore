@@ -75,7 +75,7 @@ object Main extends App {
     VerilogGenerator.generateVerilog(new SOC(parameters, addressMap), 
     "../verilog/SOC/SOC.v")
 
-    //ChiselStage.emitSystemVerilogFile(new ChaosCore(parameters), Array("--split-verilog", "--target-dir", "../verilog"))
+    ChiselStage.emitSystemVerilogFile(new ChaosCore(parameters), Array("--split-verilog", "--target-dir", "../verilog"))
 
     //ChiselStage.emitSystemVerilogFile(new DummyModule(), Array("--split-verilog", "--target-dir", "../verilog"))
 

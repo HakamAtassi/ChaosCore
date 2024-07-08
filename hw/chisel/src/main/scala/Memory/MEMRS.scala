@@ -40,8 +40,6 @@ import Thermometor._
 // Expected operation: writes incoming memory operations from allocate stage.
 // Sends instruction to MEM when its both the front of the queue and has its operands MEMRS_ready
 
-// FIXME: MEMRS is full of issues
-// one in particular is the lack of wrap around for the points since RSEntires is not always a multiple of 2
 class MEMRS(parameters:Parameters) extends Module{
     import parameters._
     val portCount = getPortCount(parameters)
@@ -55,6 +53,8 @@ class MEMRS(parameters:Parameters) extends Module{
 
         // ALLOCATE //
         val backend_packet          =      Vec(dispatchWidth, Flipped(Decoupled(new decoded_instruction(parameters))))
+
+        val fetch_PC                = Input(UInt(32.W)) // DEBUG
 
         // UPDATE //
         val FU_outputs              =      Vec(portCount, Flipped(ValidIO(new FU_output(parameters))))
@@ -99,11 +99,12 @@ class MEMRS(parameters:Parameters) extends Module{
             val index_offset = PopCount(written_vec.take(i+1))-1.U
             reservation_station(back_index + index_offset).decoded_instruction <> io.backend_packet(i).bits
             reservation_station(back_index + index_offset).valid              := 1.B
+            reservation_station(back_index + index_offset).fetch_PC              := io.fetch_PC
         }
     }
+
+
     back_pointer := back_pointer + PopCount(written_vec)
-
-
 
     //////////////////////
     // UPDATE (SOURCES) //
@@ -232,4 +233,8 @@ class MEMRS(parameters:Parameters) extends Module{
 
     dontTouch(reservation_station)
     dontTouch(io.backend_packet)
+
+    dontTouch(back_index)
+
+
 }

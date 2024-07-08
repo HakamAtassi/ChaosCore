@@ -64,6 +64,7 @@ class backend(parameters:Parameters) extends Module{
 
         // ALLOCATE //
         //val backend_packet          =   Vec(dispatchWidth, Flipped(Decoupled(new decoded_instruction(parameters))))
+        val fetch_PC                =   Input(UInt(32.W))  // DEBUG
         val backend_packet          =   Flipped(Decoupled(new decoded_fetch_packet(parameters)))
 
         val MEMRS_ready             =   Output(Vec(dispatchWidth, Bool()))
@@ -100,6 +101,8 @@ class backend(parameters:Parameters) extends Module{
     for (i <- 0 until dispatchWidth){
         MEM_RS.io.backend_packet(i).bits     := io.backend_packet.bits.decoded_instruction(i)  // pass data along
         MEM_RS.io.backend_packet(i).valid    := (io.backend_packet.bits.decoded_instruction(i).RS_type === RS_types.MEM)  && io.backend_packet.bits.valid_bits(i) && io.backend_packet.valid // does this entry correspond to RS
+        MEM_RS.io.fetch_PC := io.fetch_PC
+        
     }
 
     // Assign ready bits

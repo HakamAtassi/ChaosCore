@@ -47,10 +47,11 @@ class free_list(parameters:Parameters) extends Module{
 
         val commit                  = Flipped(ValidIO(new commit(parameters)))                          // Free regs on commit
 
-        val free_list_front_pointer = Output(UInt((log2Ceil(physicalRegCount) + 1).W))                  // To ROB
+        val free_list_front_pointer = Output(UInt(ptr_width.W))                  // To ROB
 
-        val empty                   = Output(Bool())                                                    // Cant rename anymore, less than 4 entries available.
-        val full                    = Output(Bool())                                                    // Cant free anymore, less than 4 positions free.
+        //val available_elemets        = Output(log2Ceil(physicalRegCount-1).W)   // how many elements does the FL contain. Used for can free/can reallocate
+        val can_reallocate = Output(Bool())
+        val can_allocate   = Output(Bool())
     })
 
     val flush = io.commit.valid && io.commit.bits.is_misprediction
@@ -74,7 +75,7 @@ class free_list(parameters:Parameters) extends Module{
 
     for(i <- 0 until fetchWidth){
         val read_offset          = PopCount(io.rename_valid.take(i+1)) - 1.U
-        val valid = io.rename_valid(i) && !flush   // pass through valid
+        val valid = io.rename_valid(i) && !flush && io.can_allocate
         io.renamed_valid(i)     := valid
         when(valid){
             io.renamed_values(i)    := free_list_buffer(front_index + read_offset)
@@ -91,40 +92,45 @@ class free_list(parameters:Parameters) extends Module{
     //////////////////
     // POINTER CTRL //
     //////////////////
-
     val allocate_valid  =   Wire(Vec(fetchWidth, Bool()))
 
-    dontTouch(allocate_valid)
-
     for(i <- 0 until fetchWidth){
-        allocate_valid(i) := (io.commit.bits.RD_valid(i)) && (io.commit.bits.RD(i) =/= 0.U)
+        allocate_valid(i) := (io.commit.bits.RD_valid(i)) && (io.commit.bits.RD(i) =/= 0.U) && io.commit.valid
     }
-    
 
-
-    when(!(io.commit.valid && io.commit.bits.is_misprediction)){                               // not misprediction
+    when(!(io.commit.valid && io.commit.bits.is_misprediction) && io.can_allocate){            // Allocate elements
         front_pointer := front_pointer + PopCount(io.rename_valid)
     }.elsewhen(io.commit.valid && io.commit.bits.is_misprediction){                            // misprediction 
         front_pointer := io.commit.bits.free_list_front_pointer
     }
-    when(io.commit.valid && !(io.commit.bits.is_misprediction)){                               // commit
+
+    when(io.commit.valid && io.can_reallocate && ~flush){                                      // reallocate
         back_pointer := back_pointer + PopCount(allocate_valid)
     }
-
 
     ////////////////
     // Full/Empty //
     ////////////////
 
-    val remaining_RDs   = back_pointer - front_pointer
-    val free_spots      = 0.U
+    val available_elemets   = back_pointer - front_pointer + 1.U
 
-    val elements_in_queue = Mux(back_pointer >= front_pointer,
-                                back_pointer - front_pointer,
-                                (back_pointer + physicalRegCount.U) - front_pointer)
+    io.can_reallocate := (available_elemets + fetchWidth.U) <= (physicalRegCount.U - 1.U)  // elements are reallocated if they fit into the buffer
+    io.can_allocate   := fetchWidth.U <= available_elemets
 
-    io.empty := elements_in_queue < 4.U
-    io.full  := elements_in_queue === (physicalRegCount - 1).U
+    ////////////////
+    // ASSERTIONS //
+    ////////////////
+
+    dontTouch(front_index)
+    dontTouch(back_index)
+    dontTouch(available_elemets)
+    dontTouch(allocate_valid)
+
+
+    //assert ((io.full && io.empty) === 0.B, "full and empty cannot both be high")
+    //assume (assertion_allocation_counter >= assertion_deallocation_counter, "More reallocates than allocates")
+
+
 
 }
 

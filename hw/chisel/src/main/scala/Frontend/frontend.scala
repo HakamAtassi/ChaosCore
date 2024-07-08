@@ -137,21 +137,18 @@ class frontend(parameters:Parameters) extends Module{
     ///////////////
     // FTQ QUEUE //
     ///////////////
-
     FTQ_queue.io.in <> decoders.io.predictions_out
-    FTQ_queue.io.in.valid := decoders.io.predictions_out.valid && instruction_queue.io.in.ready && !io.revert.valid
-
+    FTQ_queue.io.in.valid := decoders.io.predictions_out.valid && instruction_queue.io.in.ready
 
     FTQ_queue.io.out <> io.predictions
-    FTQ_queue.io.flush := io.flush || io.revert.valid
-
+    FTQ_queue.io.flush := io.flush 
 
     ///////////////////////
     // INSTRUCTION QUEUE //
     ///////////////////////
-
-    instruction_queue.io.in <> decoders.io.decoded_fetch_packet
-    instruction_queue.io.in.valid := decoders.io.decoded_fetch_packet.valid && FTQ_queue.io.in.ready
+    instruction_queue.io.in         <> decoders.io.decoded_fetch_packet
+    instruction_queue.io.in.valid   := decoders.io.decoded_fetch_packet.valid && FTQ_queue.io.in.ready
+    instruction_queue.io.flush      <> io.flush
 
 
     rename.io.decoded_fetch_packet <> instruction_queue.io.out

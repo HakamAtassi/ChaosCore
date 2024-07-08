@@ -161,6 +161,9 @@ class FTQ(parameters:Parameters) extends Module{
     // VALID/READY //
     /////////////////
 
+    dontTouch(front_index)
+    dontTouch(back_index)
+
     val full = (front_pointer =/= back_pointer) && (front_index === back_index)
 
     io.predictions.ready := !full

@@ -69,8 +69,6 @@ class ROB(parameters:Parameters) extends Module{
 
     dontTouch(io)
 
-
-
     //////////////
     // POINTERS // 
     //////////////

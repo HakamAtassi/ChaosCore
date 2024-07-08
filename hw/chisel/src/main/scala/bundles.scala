@@ -324,7 +324,6 @@ class FTQ_entry(parameters:Parameters) extends Bundle{
 
     val valid = Bool()
 
-
     // Branch validation data
     val fetch_PC = UInt(32.W)    // fetch packet pc of the base instruction
 
@@ -336,6 +335,7 @@ class FTQ_entry(parameters:Parameters) extends Bundle{
     val br_type = _br_type()
 
     // State revision data
+    // this should be moved to the ROB
     val GHR     = UInt(GHRWidth.W)
     val NEXT    = UInt(log2Ceil(RASEntries).W)
     val TOS     = UInt(log2Ceil(RASEntries).W)
@@ -419,6 +419,7 @@ class MEMRS_entry(parameters:Parameters) extends Bundle{
 
     //val ready_bits          =  new sources_ready()
 
+    val fetch_PC            =  UInt(32.W)
     val commited            =  Bool()  // Has this instruction commited
     val valid               =  Bool()  // Is whole RS entry valid
 }

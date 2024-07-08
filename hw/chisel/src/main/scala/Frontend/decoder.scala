@@ -225,14 +225,14 @@ class fetch_packet_decoder(parameters:Parameters) extends Module{
 
     // Register outputs //
     for(i <- 0 until fetchWidth){
-        decoded_fetch_packet.bits.decoded_instruction(i)         := RegNext(decoders(i).io.decoded_instruction.bits)
-        decoders(i).io.decoded_instruction.ready                    := io.decoded_fetch_packet.ready
-        io.fetch_packet.ready                                       := io.decoded_fetch_packet.ready
+        decoded_fetch_packet.bits.decoded_instruction(i) := RegNext(decoders(i).io.decoded_instruction.bits)
+        decoders(i).io.decoded_instruction.ready         := io.decoded_fetch_packet.ready
+        io.fetch_packet.ready                            := io.decoded_fetch_packet.ready
     }
 
-    decoded_fetch_packet.valid := RegNext(io.fetch_packet.fire && !io.flush) 
-    decoded_fetch_packet.bits.fetch_PC   := RegNext(io.fetch_packet.bits.fetch_PC)
-    decoded_fetch_packet.bits.valid_bits := RegNext(io.fetch_packet.bits.valid_bits)
+    decoded_fetch_packet.valid                           := RegNext(io.fetch_packet.fire && !io.flush) 
+    decoded_fetch_packet.bits.fetch_PC                   := RegNext(io.fetch_packet.bits.fetch_PC)
+    decoded_fetch_packet.bits.valid_bits                 := RegNext(io.fetch_packet.bits.valid_bits)
     decoded_fetch_packet.bits.RAT_index                  := DontCare // This is fine. Allocated during rename
     decoded_fetch_packet.bits.free_list_front_pointer    := DontCare // This is fine. Allocated during rename
 
@@ -243,7 +243,6 @@ class fetch_packet_decoder(parameters:Parameters) extends Module{
     //////////////////
 
     // decoded fetch packet skid
-    decoded_fetch_packet.ready := io.decoded_fetch_packet.ready
 
     val decoded_fetch_packet_skid_buffer      = Module(new Queue(new decoded_fetch_packet(parameters), 1, flow=true, hasFlush=true, useSyncReadMem=false))
 

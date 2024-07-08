@@ -22,6 +22,12 @@ ROB/ROB_model.py
 ROB/__init__.py
 SimpleDRAM/SimpleDRAM.py
 SimpleDRAM/__init__.py
+agents/FU_agent.py
+agents/ROB_agent.py
+agents/__init__.py
+agents/fetch_packet_decoder_agent.py
+agents/predecoder_agent.py
+agents/rename_agent.py
 fetch_packet_decoder/__init__.py
 fetch_packet_decoder/fetch_packet_decoder_dut.py
 fetch_packet_decoder/fetch_packet_decoder_model.py
