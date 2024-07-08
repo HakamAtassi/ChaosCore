@@ -5,6 +5,7 @@ PC_gen
 RAS
 ROB
 SimpleDRAM
+agents
 fetch_packet_decoder
 instruction
 model_utils

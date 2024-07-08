@@ -1,0 +1,44 @@
+make: Entering directory '/tmp/ParametricSimulator_53491@hakam-MS-7D46_3492482480019069161/workdir-default'
+ls . | grep -v Makefile | grep -v execution-script.txt | xargs rm -rf
+\
+/usr/local/bin/verilator \
+	'--cc' \
+	'--exe' \
+	'--build' \
+	'-j' \
+	'0' \
+	'-o' \
+	'../simulation' \
+	'--top-module' \
+	'svsimTestbench' \
+	'--Mdir' \
+	'verilated-sources' \
+	'--assert' \
+	'--timescale' \
+	'1ms/1ms' \
+	'--trace' \
+	'-O1' \
+	'-MAKEFLAGS' \
+	'-j 4' \
+	'-CFLAGS' \
+	'-O1 -std=c++14 -I/tmp/ParametricSimulator_53491@hakam-MS-7D46_3492482480019069161/workdir-default -DSVSIM_ENABLE_VERILATOR_SUPPORT -DSVSIM_VERILATOR_TRACE_ENABLED' \
+	'+define+SVSIM_ENABLE_VCD_TRACING_SUPPORT' \
+	'../primary-sources/free_list.sv' 'simulation-driver.cpp' '../generated-sources/testbench.sv' '../generated-sources/c-dpi-bridge.cpp'
+make[1]: Entering directory '/tmp/ParametricSimulator_53491@hakam-MS-7D46_3492482480019069161/workdir-default/verilated-sources'
+ccache g++  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=1 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=1 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O1 -std=c++14 -I/tmp/ParametricSimulator_53491@hakam-MS-7D46_3492482480019069161/workdir-default -DSVSIM_ENABLE_VERILATOR_SUPPORT -DSVSIM_VERILATOR_TRACE_ENABLED   -Os -c -o c-dpi-bridge.o c-dpi-bridge.cpp
+ccache g++  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=1 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=1 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O1 -std=c++14 -I/tmp/ParametricSimulator_53491@hakam-MS-7D46_3492482480019069161/workdir-default -DSVSIM_ENABLE_VERILATOR_SUPPORT -DSVSIM_VERILATOR_TRACE_ENABLED   -Os -c -o simulation-driver.o simulation-driver.cpp
+ccache g++ -Os  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=1 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=1 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O1 -std=c++14 -I/tmp/ParametricSimulator_53491@hakam-MS-7D46_3492482480019069161/workdir-default -DSVSIM_ENABLE_VERILATOR_SUPPORT -DSVSIM_VERILATOR_TRACE_ENABLED   -c -o verilated.o /usr/local/share/verilator/include/verilated.cpp
+ccache g++ -Os  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=1 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=1 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O1 -std=c++14 -I/tmp/ParametricSimulator_53491@hakam-MS-7D46_3492482480019069161/workdir-default -DSVSIM_ENABLE_VERILATOR_SUPPORT -DSVSIM_VERILATOR_TRACE_ENABLED   -c -o verilated_dpi.o /usr/local/share/verilator/include/verilated_dpi.cpp
+ccache g++ -Os  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=1 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=1 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O1 -std=c++14 -I/tmp/ParametricSimulator_53491@hakam-MS-7D46_3492482480019069161/workdir-default -DSVSIM_ENABLE_VERILATOR_SUPPORT -DSVSIM_VERILATOR_TRACE_ENABLED   -c -o verilated_vcd_c.o /usr/local/share/verilator/include/verilated_vcd_c.cpp
+ccache g++ -Os  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=1 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=1 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O1 -std=c++14 -I/tmp/ParametricSimulator_53491@hakam-MS-7D46_3492482480019069161/workdir-default -DSVSIM_ENABLE_VERILATOR_SUPPORT -DSVSIM_VERILATOR_TRACE_ENABLED   -c -o verilated_threads.o /usr/local/share/verilator/include/verilated_threads.cpp
+/usr/bin/python3 /usr/local/share/verilator/bin/verilator_includer -DVL_INCLUDE_OPT=include VsvsimTestbench.cpp VsvsimTestbench__Dpi_Export__0.cpp VsvsimTestbench___024root__DepSet_hb8c279e6__0.cpp VsvsimTestbench___024root__DepSet_h80ae70f8__0.cpp VsvsimTestbench__Dpi.cpp VsvsimTestbench__Trace__0.cpp VsvsimTestbench__ConstPool_0.cpp VsvsimTestbench___024root__Slow.cpp VsvsimTestbench___024root__DepSet_hb8c279e6__0__Slow.cpp VsvsimTestbench___024root__DepSet_h80ae70f8__0__Slow.cpp VsvsimTestbench__Syms.cpp VsvsimTestbench__Trace__0__Slow.cpp VsvsimTestbench__TraceDecls__0__Slow.cpp > VsvsimTestbench__ALL.cpp
+echo "" > VsvsimTestbench__ALL.verilator_deplist.tmp
+ccache g++ -Os  -I.  -MMD -I/usr/local/share/verilator/include -I/usr/local/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=1 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=1 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -O1 -std=c++14 -I/tmp/ParametricSimulator_53491@hakam-MS-7D46_3492482480019069161/workdir-default -DSVSIM_ENABLE_VERILATOR_SUPPORT -DSVSIM_VERILATOR_TRACE_ENABLED   -c -o VsvsimTestbench__ALL.o VsvsimTestbench__ALL.cpp
+Archive ar -rcs VsvsimTestbench__ALL.a VsvsimTestbench__ALL.o
+g++    c-dpi-bridge.o simulation-driver.o verilated.o verilated_dpi.o verilated_vcd_c.o verilated_threads.o VsvsimTestbench__ALL.a    -pthread -lpthread -latomic   -o ../simulation
+rm VsvsimTestbench__ALL.verilator_deplist.tmp
+make[1]: Leaving directory '/tmp/ParametricSimulator_53491@hakam-MS-7D46_3492482480019069161/workdir-default/verilated-sources'
+- V e r i l a t i o n   R e p o r t: Verilator 5.024 2024-04-05 rev v5.024-42-gc561fe8ba
+- Verilator: Built from 0.058 MB sources in 3 modules, into 0.350 MB in 13 C++ files needing 0.001 MB
+- Verilator: Walltime 0.605 s (elab=0.001, cvt=0.008, bld=0.591); cpu 0.000 s on 8 threads; alloced 35.777 MB
+make: Leaving directory '/tmp/ParametricSimulator_53491@hakam-MS-7D46_3492482480019069161/workdir-default'

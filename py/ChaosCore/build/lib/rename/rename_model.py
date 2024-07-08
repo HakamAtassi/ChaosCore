@@ -1,292 +1,262 @@
+import copy 
+
+def generate_null_renamed_decoded_fetch_packet():
+
+    renamed_decoded_fetch_packet = {}
+    renamed_decoded_fetch_packet["valid"]           = 0
+    renamed_decoded_fetch_packet["fetch_PC"]        = 0
+    renamed_decoded_fetch_packet["RAT_index"]       = 0
+
+    renamed_decoded_fetch_packet["RS1_ready"]           = [0]*4
+    renamed_decoded_fetch_packet["RS2_ready"]           = [0]*4
+    renamed_decoded_fetch_packet["RD_valid"]            = [0]*4
+    renamed_decoded_fetch_packet["RS1_valid"]           = [0]*4
+    renamed_decoded_fetch_packet["RS2_valid"]           = [0]*4
+
+    renamed_decoded_fetch_packet["RD"]                  = [0]*4
+    renamed_decoded_fetch_packet["RS1"]                 = [0]*4
+    renamed_decoded_fetch_packet["RS2"]                 = [0]*4
+
+    renamed_decoded_fetch_packet["IMM"]                 = [0]*4
+    renamed_decoded_fetch_packet["FUNCT3"]              = [0]*4
+    renamed_decoded_fetch_packet["packet_index"]        = [0]*4
+    renamed_decoded_fetch_packet["instructionType"]     = [0]*4
+    renamed_decoded_fetch_packet["portID"]              = [0]*4
+    renamed_decoded_fetch_packet["RS_type"]             = [0]*4
+    renamed_decoded_fetch_packet["needs_ALU"]           = [0]*4
+    renamed_decoded_fetch_packet["needs_branch_unit"]   = [0]*4
+    renamed_decoded_fetch_packet["needs_CSRs"]          = [0]*4
+    renamed_decoded_fetch_packet["SUBTRACT"]            = [0]*4
+    renamed_decoded_fetch_packet["MULTIPLY"]            = [0]*4
+    renamed_decoded_fetch_packet["IS_IMM"]              = [0]*4
+    renamed_decoded_fetch_packet["is_load"]             = [0]*4
+    renamed_decoded_fetch_packet["is_store"]            = [0]*4
+    renamed_decoded_fetch_packet["valid_bits"]          = [0]*4
+
+    return renamed_decoded_fetch_packet
+
+
+
 
 class rename_model:
-    def __init__(self):
-        self.active_checkpoint = 0
 
-        self.RAT_memories   = [[0]*64 for _ in range(self.checkpoints)]
-        self.ready_memories = [[0]*64 for _ in range(self.checkpoints)]
-        self.free_list      = [i for i in range(1, 64)]
+    def __init__(self):
+        self.checkpoints = 16
+
+        self.RAT_front_pointer = 0
+        self.RAT_back_pointer = 0
+
+        self.RAT_memories   = [[0]*32 for _ in range(self.checkpoints)]
+        self.ready_memories = [0]*65
+        self.ready_memories[0] = 1
+        
+        self.free_list      = [i for i in range(1, 65)]
+        self.free_list_front_pointer = 0
+        self.free_list_back_pointer  = 64
+
+
+        # I/O
+        self.input_flush = 0
+        self.input_commit = 0
+        self.input_decoded_fetch_packet = 0
+        self.input_renamed_decoded_fetch_packet = 0
+        self.input_FU_outputs = 0
+
+
+        self.output_renamed_decoded_fetch_packet = generate_null_renamed_decoded_fetch_packet()
 
 
         self.renamed_decoded_fetch_packet_queue = []
+        self.RAT_queue = []
 
-
-    def inputs(self, flush, restore_checkpoint_value, create_checkpoint, free_checkpoint, decoded_fetch_packet, renamed_decoded_fetch_packet, FU_outputs):
+    def inputs(self, flush, commit, decoded_fetch_packet, FU_outputs):
         self.input_flush = flush
-        self.input_restore_checkpoint_value = restore_checkpoint_value
-        self.input_create_checkpoint = create_checkpoint
-        self.input_free_checkpoint = free_checkpoint
+        self.input_commit = commit
         self.input_decoded_fetch_packet = decoded_fetch_packet
-        self.input_renamed_decoded_fetch_packet = renamed_decoded_fetch_packet
-        self.FU_outputs = FU_outputs
+        self.input_renamed_decoded_fetch_packet = generate_null_renamed_decoded_fetch_packet()
+        self.input_FU_outputs = FU_outputs
+
+    ######################
+    ## HELPER FUNCTIONS ##
+    ######################
+
+    def decoded_fetch_packet_ready(self):
+        """is the input ready"""
+        return self.input_decoded_fetch_packet["ready"]
+
+    def decoded_fetch_packet_valid(self):
+        """is the input valid"""
+        return self.input_decoded_fetch_packet["valid"]
+
+    def get_is_RAT_full(self):
+        """are there any available RAT checkpoints"""
+        full = abs(self.RAT_back_pointer - self.RAT_back_pointer) >= 15
+        return full
+
+    def get_is_free_list_empty(self):
+        empty = abs(self.free_list_back_pointer - self.free_list_front_pointer) < 4
+        return empty
 
     def get_is_branch(self):
-        is_branch = 0
+        """does the current decoded fetch packet contain a branch"""
+        fetch_packet_valid = self.input_decoded_fetch_packet["valid"]
         for i in range(4):
-            is_branch = is_branch | int(self.input_decoded_fetch_packet["needs_branch_unit"][i])
-        return is_branch
+            needs_branch_unit = self.input_decoded_fetch_packet["needs_branch_unit"][i]
+            instruction_valid = self.input_decoded_fetch_packet["valid_bits"][i]
+            if(needs_branch_unit and instruction_valid and fetch_packet_valid):
+                return 1
+        return 0
+
+    def get_is_misprediction(self):
+        """does the current commit contain a misprediction"""
+        valid = self.input_commit["valid"]
+        is_misprediction = self.input_commit["is_misprediction"]
+        if(valid and is_misprediction):
+            return 1
+        return 0
+
+    def increment_free_list_back_pointer(self):
+        self.free_list_back_pointer +=1
+        self.free_list_back_pointer %= 64
+
+    def increment_free_list_front_pointer(self):
+        self.free_list_front_pointer +=1
+        self.free_list_front_pointer %= 64
+
+    def pop_free_list(self):
+        RD = self.free_list[self.free_list_front_pointer]
+        self.increment_free_list_front_pointer()
+        return RD
+
+    def reallocate_RD(self):
+        valid       = self.input_commit["valid"]
+        for i in range(4):
+            RD_valid    = self.input_commit["RD_valid"][i]
+            RD          = self.input_commit["RD"][i]
+            if(valid & RD_valid & RD):
+                self.increment_free_list_back_pointer()
+
+    def update_ready(self):
+        for i in range(4):
+            valid = self.input_FU_outputs["valid"][i]
+            RD_valid = self.input_FU_outputs["RD_valid"][i]
+            RD = self.input_FU_outputs["RD"][i]
+
+            if(valid & RD_valid):
+                self.ready_memories[RD] = 1
+    
+    def rename(self):
+        """Output renamed RDs based on RAT mapping"""
+        RAT = self.RAT_memories[self.RAT_front_pointer]
+        self.output_renamed_decoded_fetch_packet = self.input_decoded_fetch_packet
+        valid       = self.input_decoded_fetch_packet["valid"]
+
+        for index in range(4):
+
+            # Read RS1, RS2 & ready bits
+            if(self.output_renamed_decoded_fetch_packet["RS1_valid"][index] and valid):
+                self.output_renamed_decoded_fetch_packet["RS1"][index]  =   RAT[self.input_decoded_fetch_packet["RS1"][index]]
+            if(self.output_renamed_decoded_fetch_packet["RS2_valid"][index] and valid):
+                self.output_renamed_decoded_fetch_packet["RS2"][index]  =   RAT[self.input_decoded_fetch_packet["RS2"][index]]
+
+            # rename RD, update mapping & ready bits
+            RDold       = self.input_decoded_fetch_packet["RD"][index]
+            RD_valid    = self.input_decoded_fetch_packet["RD_valid"][index]
+
+            if(valid and RD_valid and RDold != 0):
+                RD = self.pop_free_list()                                                       # Rename RD
+                RAT[RDold] = RD                                                                 # update mapping
+                self.output_renamed_decoded_fetch_packet["RD"][index] = RD                      # output new name
+                self.ready_memories[RD] = 0                                                     # Set RD ready 0
+            else:
+                self.output_renamed_decoded_fetch_packet["RD"][index] = 0
+
+        assert self.ready_memories[0] == 1, "x0 Not ready for some reason"
+
+        self.RAT_memories[self.RAT_front_pointer] = RAT
+
+        if(self.output_renamed_decoded_fetch_packet["valid"]):
+            self.renamed_decoded_fetch_packet_queue.append(self.output_renamed_decoded_fetch_packet)
+
 
     def create_checkpoint(self):
-        pass
+        """copy over RAT content. increment RAT pointer."""
+        next_RAT_front_pointer = (self.RAT_front_pointer + 1) % self.checkpoints
+        self.RAT_memories[next_RAT_front_pointer] = copy.deepcopy(self.RAT_memories[self.RAT_front_pointer])
+        self.RAT_front_pointer = next_RAT_front_pointer
+
+    def restore_rat(self):
+        """decrement RAT pointer"""
+        #print(f"restore to {self.input_commit["RAT_index"]}")
+        #print(self.RAT_memories[self.RAT_front_pointer])
+        self.RAT_front_pointer = self.input_commit["RAT_index"]
+    
+    def deallocate_rat(self):
+        self.RAT_back_pointer = (self.RAT_back_pointer + 1)  & self.checkpoints
+        
+
+    def restore_free_list(self):
+        """restore free_list front pointer"""
+        self.free_list_front_pointer = self.input_commit["free_list_front_pointer"]
+
+    ##########
+    ## EVAL ##
+    ##########
 
     def eval(self):
-        is_branch = self.get_is_branch()
-
-        if is_branch:
-            self.create_checkpoint()
+        input_valid  = self.input_decoded_fetch_packet["valid"]
+        output_ready = 1  # assume 1 for now
 
 
+        if(self.get_is_branch() and input_valid and output_ready and not self.input_flush):
+            #print(self.input_decoded_fetch_packet)
+            #print(self.RAT_front_pointer)
+            #print(self.RAT_memories[self.RAT_front_pointer])
+            self.create_checkpoint()    # if branch, create checkpoint
+            #print(self.RAT_memories[self.RAT_front_pointer])
+
+        # set ready bits
+        if(~self.input_flush):
+            self.update_ready()         # if FU valid, set RDs ready
+
+        if (input_valid and output_ready and not self.get_is_free_list_empty() and not self.input_flush):   # renamer can rename (!empty)
+            #print(f"{self.input_decoded_fetch_packet}")
+            self.rename()
+
+
+        # Commit stuff
+        if (not self.get_is_RAT_full() and not self.input_flush):   # renamer can allocate (!full)
+            self.reallocate_RD()        # if commit and not mispred, reallocate RDs
+        
+        # misprediction
+        if(self.get_is_misprediction()):
+            self.restore_free_list()
+            self.restore_rat()
+
+
+        self.RAT_queue.append(self.RAT_memories)
 
 
 
-        pass
 
+        
+# very carefully think about skid buffers, valid ready, etc...
+# how do you simulate skid buffer?
 
-    
+"""
+in order of operations:
 
+## comb update
+is valid && ready?      yes: continue, No: return
+is misprediction/flush? yes: restore freelist pointer, rat index, return. Else: pass
+FU inputs?              yes: set ready bits. No: pass
 
-                #io_flush,
-                #io_restore_checkpoint,
-  #input  [3:0]  io_restore_checkpoint_value,
-  #input         io_create_checkpoint,
-                #io_free_checkpoint,
-  #output        io_decoded_fetch_packet_ready,
-  #input         io_decoded_fetch_packet_valid,
-  #input  [31:0] io_decoded_fetch_packet_bits_fetch_PC,
-  #input         io_decoded_fetch_packet_bits_decoded_instruction_0_ready_bits_RS1_ready,
-                #io_decoded_fetch_packet_bits_decoded_instruction_0_ready_bits_RS2_ready,
-  #input  [5:0]  io_decoded_fetch_packet_bits_decoded_instruction_0_RD,
-  #input         io_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid,
-  #input  [5:0]  io_decoded_fetch_packet_bits_decoded_instruction_0_RS1,
-  #input         io_decoded_fetch_packet_bits_decoded_instruction_0_RS1_valid,
-  #input  [5:0]  io_decoded_fetch_packet_bits_decoded_instruction_0_RS2,
-  #input         io_decoded_fetch_packet_bits_decoded_instruction_0_RS2_valid,
-  #input  [20:0] io_decoded_fetch_packet_bits_decoded_instruction_0_IMM,
-  #input  [2:0]  io_decoded_fetch_packet_bits_decoded_instruction_0_FUNCT3,
-  #input  [3:0]  io_decoded_fetch_packet_bits_decoded_instruction_0_packet_index,
-  #input  [5:0]  io_decoded_fetch_packet_bits_decoded_instruction_0_ROB_index,
-  #input  [4:0]  io_decoded_fetch_packet_bits_decoded_instruction_0_instructionType,
-  #input  [1:0]  io_decoded_fetch_packet_bits_decoded_instruction_0_portID,
-                #io_decoded_fetch_packet_bits_decoded_instruction_0_RS_type,
-  #input         io_decoded_fetch_packet_bits_decoded_instruction_0_needs_ALU,
-                #io_decoded_fetch_packet_bits_decoded_instruction_0_needs_branch_unit,
-                #io_decoded_fetch_packet_bits_decoded_instruction_0_needs_CSRs,
-                #io_decoded_fetch_packet_bits_decoded_instruction_0_SUBTRACT,
-                #io_decoded_fetch_packet_bits_decoded_instruction_0_MULTIPLY,
-                #io_decoded_fetch_packet_bits_decoded_instruction_0_IS_IMM,
-                #io_decoded_fetch_packet_bits_decoded_instruction_0_is_load,
-                #io_decoded_fetch_packet_bits_decoded_instruction_0_is_store,
-                #io_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS1_ready,
-                #io_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS2_ready,
-  #input  [5:0]  io_decoded_fetch_packet_bits_decoded_instruction_1_RD,
-  #input         io_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid,
-  #input  [5:0]  io_decoded_fetch_packet_bits_decoded_instruction_1_RS1,
-  #input         io_decoded_fetch_packet_bits_decoded_instruction_1_RS1_valid,
-  #input  [5:0]  io_decoded_fetch_packet_bits_decoded_instruction_1_RS2,
-  #input         io_decoded_fetch_packet_bits_decoded_instruction_1_RS2_valid,
-  #input  [20:0] io_decoded_fetch_packet_bits_decoded_instruction_1_IMM,
-  #input  [2:0]  io_decoded_fetch_packet_bits_decoded_instruction_1_FUNCT3,
-  #input  [3:0]  io_decoded_fetch_packet_bits_decoded_instruction_1_packet_index,
-  #input  [5:0]  io_decoded_fetch_packet_bits_decoded_instruction_1_ROB_index,
-  #input  [4:0]  io_decoded_fetch_packet_bits_decoded_instruction_1_instructionType,
-  #input  [1:0]  io_decoded_fetch_packet_bits_decoded_instruction_1_portID,
-                #io_decoded_fetch_packet_bits_decoded_instruction_1_RS_type,
-  #input         io_decoded_fetch_packet_bits_decoded_instruction_1_needs_ALU,
-                #io_decoded_fetch_packet_bits_decoded_instruction_1_needs_branch_unit,
-                #io_decoded_fetch_packet_bits_decoded_instruction_1_needs_CSRs,
-                #io_decoded_fetch_packet_bits_decoded_instruction_1_SUBTRACT,
-                #io_decoded_fetch_packet_bits_decoded_instruction_1_MULTIPLY,
-                #io_decoded_fetch_packet_bits_decoded_instruction_1_IS_IMM,
-                #io_decoded_fetch_packet_bits_decoded_instruction_1_is_load,
-                #io_decoded_fetch_packet_bits_decoded_instruction_1_is_store,
-                #io_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS1_ready,
-                #io_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS2_ready,
-  #input  [5:0]  io_decoded_fetch_packet_bits_decoded_instruction_2_RD,
-  #input         io_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid,
-  #input  [5:0]  io_decoded_fetch_packet_bits_decoded_instruction_2_RS1,
-  #input         io_decoded_fetch_packet_bits_decoded_instruction_2_RS1_valid,
-  #input  [5:0]  io_decoded_fetch_packet_bits_decoded_instruction_2_RS2,
-  #input         io_decoded_fetch_packet_bits_decoded_instruction_2_RS2_valid,
-  #input  [20:0] io_decoded_fetch_packet_bits_decoded_instruction_2_IMM,
-  #input  [2:0]  io_decoded_fetch_packet_bits_decoded_instruction_2_FUNCT3,
-  #input  [3:0]  io_decoded_fetch_packet_bits_decoded_instruction_2_packet_index,
-  #input  [5:0]  io_decoded_fetch_packet_bits_decoded_instruction_2_ROB_index,
-  #input  [4:0]  io_decoded_fetch_packet_bits_decoded_instruction_2_instructionType,
-  #input  [1:0]  io_decoded_fetch_packet_bits_decoded_instruction_2_portID,
-                #io_decoded_fetch_packet_bits_decoded_instruction_2_RS_type,
-  #input         io_decoded_fetch_packet_bits_decoded_instruction_2_needs_ALU,
-                #io_decoded_fetch_packet_bits_decoded_instruction_2_needs_branch_unit,
-                #io_decoded_fetch_packet_bits_decoded_instruction_2_needs_CSRs,
-                #io_decoded_fetch_packet_bits_decoded_instruction_2_SUBTRACT,
-                #io_decoded_fetch_packet_bits_decoded_instruction_2_MULTIPLY,
-                #io_decoded_fetch_packet_bits_decoded_instruction_2_IS_IMM,
-                #io_decoded_fetch_packet_bits_decoded_instruction_2_is_load,
-                #io_decoded_fetch_packet_bits_decoded_instruction_2_is_store,
-                #io_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS1_ready,
-                #io_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS2_ready,
-  #input  [5:0]  io_decoded_fetch_packet_bits_decoded_instruction_3_RD,
-  #input         io_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid,
-  #input  [5:0]  io_decoded_fetch_packet_bits_decoded_instruction_3_RS1,
-  #input         io_decoded_fetch_packet_bits_decoded_instruction_3_RS1_valid,
-  #input  [5:0]  io_decoded_fetch_packet_bits_decoded_instruction_3_RS2,
-  #input         io_decoded_fetch_packet_bits_decoded_instruction_3_RS2_valid,
-  #input  [20:0] io_decoded_fetch_packet_bits_decoded_instruction_3_IMM,
-  #input  [2:0]  io_decoded_fetch_packet_bits_decoded_instruction_3_FUNCT3,
-  #input  [3:0]  io_decoded_fetch_packet_bits_decoded_instruction_3_packet_index,
-  #input  [5:0]  io_decoded_fetch_packet_bits_decoded_instruction_3_ROB_index,
-  #input  [4:0]  io_decoded_fetch_packet_bits_decoded_instruction_3_instructionType,
-  #input  [1:0]  io_decoded_fetch_packet_bits_decoded_instruction_3_portID,
-                #io_decoded_fetch_packet_bits_decoded_instruction_3_RS_type,
-  #input         io_decoded_fetch_packet_bits_decoded_instruction_3_needs_ALU,
-                #io_decoded_fetch_packet_bits_decoded_instruction_3_needs_branch_unit,
-                #io_decoded_fetch_packet_bits_decoded_instruction_3_needs_CSRs,
-                #io_decoded_fetch_packet_bits_decoded_instruction_3_SUBTRACT,
-                #io_decoded_fetch_packet_bits_decoded_instruction_3_MULTIPLY,
-                #io_decoded_fetch_packet_bits_decoded_instruction_3_IS_IMM,
-                #io_decoded_fetch_packet_bits_decoded_instruction_3_is_load,
-                #io_decoded_fetch_packet_bits_decoded_instruction_3_is_store,
-                #io_decoded_fetch_packet_bits_valid_bits_0,
-                #io_decoded_fetch_packet_bits_valid_bits_1,
-                #io_decoded_fetch_packet_bits_valid_bits_2,
-                #io_decoded_fetch_packet_bits_valid_bits_3,
-  #input  [3:0]  io_decoded_fetch_packet_bits_RAT_index,
-  #input         io_renamed_decoded_fetch_packet_ready,
-  #output        io_renamed_decoded_fetch_packet_valid,
-  #output [31:0] io_renamed_decoded_fetch_packet_bits_fetch_PC,
-  #output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_ready_bits_RS1_ready,
-                #io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_ready_bits_RS2_ready,
-  #output [5:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD,
-  #output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid,
-  #output [5:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS1,
-  #output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS1_valid,
-  #output [5:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS2,
-  #output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS2_valid,
-  #output [20:0] io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_IMM,
-  #output [2:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_FUNCT3,
-  #output [3:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_packet_index,
-  #output [5:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_ROB_index,
-  #output [4:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_instructionType,
-  #output [1:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_portID,
-                #io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS_type,
-  #output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_ALU,
-                #io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_branch_unit,
-                #io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_CSRs,
-                #io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_SUBTRACT,
-                #io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_MULTIPLY,
-                #io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_IS_IMM,
-                #io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_is_load,
-                #io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_is_store,
-                #io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS1_ready,
-                #io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS2_ready,
-  #output [5:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD,
-  #output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid,
-  #output [5:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS1,
-  #output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS1_valid,
-  #output [5:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS2,
-  #output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS2_valid,
-  #output [20:0] io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_IMM,
-  #output [2:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_FUNCT3,
-  #output [3:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_packet_index,
-  #output [5:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ROB_index,
-  #output [4:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_instructionType,
-  #output [1:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_portID,
-                #io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS_type,
-  #output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_ALU,
-                #io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_branch_unit,
-                #io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_CSRs,
-                #io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_SUBTRACT,
-                #io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_MULTIPLY,
-                #io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_IS_IMM,
-                #io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_is_load,
-                #io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_is_store,
-                #io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS1_ready,
-                #io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS2_ready,
-  #output [5:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD,
-  #output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid,
-  #output [5:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS1,
-  #output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS1_valid,
-  #output [5:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS2,
-  #output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS2_valid,
-  #output [20:0] io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_IMM,
-  #output [2:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_FUNCT3,
-  #output [3:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_packet_index,
-  #output [5:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ROB_index,
-  #output [4:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_instructionType,
-  #output [1:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_portID,
-                #io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS_type,
-  #output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_ALU,
-                #io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_branch_unit,
-                #io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_CSRs,
-                #io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_SUBTRACT,
-                #io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_MULTIPLY,
-                #io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_IS_IMM,
-                #io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_is_load,
-                #io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_is_store,
-                #io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS1_ready,
-                #io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS2_ready,
-  #output [5:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD,
-  #output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid,
-  #output [5:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS1,
-  #output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS1_valid,
-  #output [5:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS2,
-  #output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS2_valid,
-  #output [20:0] io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_IMM,
-  #output [2:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_FUNCT3,
-  #output [3:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_packet_index,
-  #output [5:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ROB_index,
-  #output [4:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_instructionType,
-  #output [1:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_portID,
-                #io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS_type,
-  #output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_ALU,
-                #io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_branch_unit,
-                #io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_CSRs,
-                #io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_SUBTRACT,
-                #io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_MULTIPLY,
-                #io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_IS_IMM,
-                #io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_is_load,
-                #io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_is_store,
-                #io_renamed_decoded_fetch_packet_bits_valid_bits_0,
-                #io_renamed_decoded_fetch_packet_bits_valid_bits_1,
-                #io_renamed_decoded_fetch_packet_bits_valid_bits_2,
-                #io_renamed_decoded_fetch_packet_bits_valid_bits_3,
-  #output [3:0]  io_renamed_decoded_fetch_packet_bits_RAT_index,
-  #input         io_FU_outputs_0_valid,
-  #input  [5:0]  io_FU_outputs_0_bits_RD,
-  #input  [31:0] io_FU_outputs_0_bits_RD_data,
-  #input         io_FU_outputs_0_bits_RD_valid,
-  #input  [31:0] io_FU_outputs_0_bits_fetch_PC,
-  #input         io_FU_outputs_0_bits_branch_taken,
-  #input  [31:0] io_FU_outputs_0_bits_target_address,
-  #input         io_FU_outputs_0_bits_branch_valid,
-  #input  [5:0]  io_FU_outputs_0_bits_ROB_index,
-  #input  [1:0]  io_FU_outputs_0_bits_fetch_packet_index,
-  #input         io_FU_outputs_1_valid,
-  #input  [5:0]  io_FU_outputs_1_bits_RD,
-  #input  [31:0] io_FU_outputs_1_bits_RD_data,
-  #input         io_FU_outputs_1_bits_RD_valid,
-  #input  [31:0] io_FU_outputs_1_bits_fetch_PC,
-  #input         io_FU_outputs_1_bits_branch_taken,
-  #input  [31:0] io_FU_outputs_1_bits_target_address,
-  #input         io_FU_outputs_1_bits_branch_valid,
-  #input  [5:0]  io_FU_outputs_1_bits_ROB_index,
-  #input  [1:0]  io_FU_outputs_1_bits_fetch_packet_index,
-  #input         io_FU_outputs_2_valid,
-  #input  [5:0]  io_FU_outputs_2_bits_RD,
-  #input  [31:0] io_FU_outputs_2_bits_RD_data,
-  #input         io_FU_outputs_2_bits_RD_valid,
-  #input  [31:0] io_FU_outputs_2_bits_fetch_PC,
-  #input         io_FU_outputs_2_bits_branch_taken,
-  #input  [31:0] io_FU_outputs_2_bits_target_address,
-  #input         io_FU_outputs_2_bits_branch_valid,
-  #input  [5:0]  io_FU_outputs_2_bits_ROB_index,
-  #input  [1:0]  io_FU_outputs_2_bits_fetch_packet_index,
-  #input         io_FU_outputs_3_valid,
-  #input  [5:0]  io_FU_outputs_3_bits_RD,
-  #input  [31:0] io_FU_outputs_3_bits_RD_data,
-  #input         io_FU_outputs_3_bits_RD_valid,
-  #input  [31:0] io_FU_outputs_3_bits_fetch_PC,
-  #input         io_FU_outputs_3_bits_branch_taken,
-  #input  [31:0] io_FU_outputs_3_bits_target_address,
-  #input         io_FU_outputs_3_bits_branch_valid,
-  #input  [5:0]  io_FU_outputs_3_bits_ROB_index,
-  #input  [1:0]  io_FU_outputs_3_bits_fetch_packet_index
+## read
+fetch packet            yes: Get RDs, RS1/RS2, free list front pointer, RAT checkpoint. No: pass
+
+## state update
+branch                  yes: increment RAT. No: pass
+commit                  yes: reallocate RDs. No: pass
+
+"""
+

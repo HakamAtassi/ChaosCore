@@ -64,58 +64,24 @@ class ChaosCore_dut:
         fetch_PC = self.read_imem_request_addr()
         valid_bits = self.get_fetch_packet_valid_bits(fetch_PC)
 
-        self.ChaosCore.io_frontend_memory_response_valid.value = valid if valid else 0
-        self.ChaosCore.io_frontend_memory_response_bits_fetch_PC.value = (
-            fetch_PC if valid else 0
-        )
-        self.ChaosCore.io_frontend_memory_response_bits_valid_bits_0.value = (
-            valid_bits[0] if valid else 0
-        )
-        self.ChaosCore.io_frontend_memory_response_bits_valid_bits_1.value = (
-            valid_bits[1] if valid else 0
-        )
-        self.ChaosCore.io_frontend_memory_response_bits_valid_bits_2.value = (
-            valid_bits[2] if valid else 0
-        )
-        self.ChaosCore.io_frontend_memory_response_bits_valid_bits_3.value = (
-            valid_bits[3] if valid else 0
-        )
-        self.ChaosCore.io_frontend_memory_response_bits_instructions_0_instruction.value = (
-            int.from_bytes(data[0:4], byteorder="little") if valid else 0
-        )
-        self.ChaosCore.io_frontend_memory_response_bits_instructions_0_packet_index.value = (
-            0 if valid else 0
-        )
-        self.ChaosCore.io_frontend_memory_response_bits_instructions_0_ROB_index.value = (
-            0 if valid else 0
-        )
-        self.ChaosCore.io_frontend_memory_response_bits_instructions_1_instruction.value = (
-            int.from_bytes(data[4:8], byteorder="little") if valid else 0
-        )
-        self.ChaosCore.io_frontend_memory_response_bits_instructions_1_packet_index.value = (
-            1 if valid else 0
-        )
-        self.ChaosCore.io_frontend_memory_response_bits_instructions_1_ROB_index.value = (
-            0 if valid else 0
-        )
-        self.ChaosCore.io_frontend_memory_response_bits_instructions_2_instruction.value = (
-            int.from_bytes(data[8:12], byteorder="little") if valid else 0
-        )
-        self.ChaosCore.io_frontend_memory_response_bits_instructions_2_packet_index.value = (
-            2 if valid else 0
-        )
-        self.ChaosCore.io_frontend_memory_response_bits_instructions_2_ROB_index.value = (
-            0 if valid else 0
-        )
-        self.ChaosCore.io_frontend_memory_response_bits_instructions_3_instruction.value = (
-            int.from_bytes(data[12:16], byteorder="little") if valid else 0
-        )
-        self.ChaosCore.io_frontend_memory_response_bits_instructions_3_packet_index.value = (
-            3 if valid else 0
-        )
-        self.ChaosCore.io_frontend_memory_response_bits_instructions_3_ROB_index.value = (
-            0 if valid else 0
-        )
+        self.ChaosCore.io_frontend_memory_response_valid.value                              = valid if valid else 0
+        self.ChaosCore.io_frontend_memory_response_bits_fetch_PC.value                      = (fetch_PC if valid else 0)
+        self.ChaosCore.io_frontend_memory_response_bits_valid_bits_0.value                  = (valid_bits[0] if valid else 0)
+        self.ChaosCore.io_frontend_memory_response_bits_valid_bits_1.value                  = (valid_bits[1] if valid else 0)
+        self.ChaosCore.io_frontend_memory_response_bits_valid_bits_2.value                  = (valid_bits[2] if valid else 0)
+        self.ChaosCore.io_frontend_memory_response_bits_valid_bits_3.value                  = (valid_bits[3] if valid else 0)
+        self.ChaosCore.io_frontend_memory_response_bits_instructions_0_instruction.value    = (int.from_bytes(data[0:4], byteorder="little") if valid else 0)
+        self.ChaosCore.io_frontend_memory_response_bits_instructions_0_packet_index.value   = (0 if valid else 0)
+        self.ChaosCore.io_frontend_memory_response_bits_instructions_0_ROB_index.value      = (0 if valid else 0)
+        self.ChaosCore.io_frontend_memory_response_bits_instructions_1_instruction.value    = (int.from_bytes(data[4:8], byteorder="little") if valid else 0)
+        self.ChaosCore.io_frontend_memory_response_bits_instructions_1_packet_index.value   = (1 if valid else 0)
+        self.ChaosCore.io_frontend_memory_response_bits_instructions_1_ROB_index.value      = (0 if valid else 0)
+        self.ChaosCore.io_frontend_memory_response_bits_instructions_2_instruction.value    = (int.from_bytes(data[8:12], byteorder="little") if valid else 0)
+        self.ChaosCore.io_frontend_memory_response_bits_instructions_2_packet_index.value   = (2 if valid else 0)
+        self.ChaosCore.io_frontend_memory_response_bits_instructions_2_ROB_index.value      = (0 if valid else 0)
+        self.ChaosCore.io_frontend_memory_response_bits_instructions_3_instruction.value    = (int.from_bytes(data[12:16], byteorder="little") if valid else 0)
+        self.ChaosCore.io_frontend_memory_response_bits_instructions_3_packet_index.value   = (3 if valid else 0)
+        self.ChaosCore.io_frontend_memory_response_bits_instructions_3_ROB_index.value      = (0 if valid else 0)
 
     # -------------
     # DMEM CONTROL

@@ -99,6 +99,9 @@ class ChaosCore_dut:
     def read_dmem_request_wr_en(self):
         return int(self.ChaosCore.io_backend_memory_request_bits_wr_en.value)
 
+    def read_dmem_request_wr_en(self):
+        return int(self.ChaosCore.io_backend_memory_request_valid.value)
+
     def read_dmem_request_data(self):
         return int(self.ChaosCore.io_backend_memory_request_bits_wr_data.value)
 

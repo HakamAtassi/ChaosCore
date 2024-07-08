@@ -210,6 +210,7 @@ class ChaosCore(parameters:Parameters) extends Module{
 
     // ROB and RS do not update until ready
     backend.io.backend_packet   <> frontend.io.renamed_decoded_fetch_packet
+    backend.io.fetch_PC   <> frontend.io.renamed_decoded_fetch_packet.bits.fetch_PC
 
 
     for(i <- 0 until fetchWidth){   // pass along the ROB index for each instruction (for commit and PC read)

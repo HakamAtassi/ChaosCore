@@ -31,15 +31,11 @@ def test_rename_1_RD():
         configs["testcase"] = "test_rename_1_RD"
         run(**configs)
 
-def test_rename_4_RD():
-        configs["testcase"] = "test_rename_4_RD"
+def test_simple_fuzz():
+        configs["testcase"] = "test_simple_fuzz"
         run(**configs)
 
-def test_rename_RS():
-        configs["testcase"] = "test_rename_RS"
-        run(**configs)
-
-def test_rename_bypass():
-        configs["testcase"] = "test_rename_bypass"
+def test_fuzz_while_ready():
+        configs["testcase"] = "test_fuzz_while_ready"
         run(**configs)
 

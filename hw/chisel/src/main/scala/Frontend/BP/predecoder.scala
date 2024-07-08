@@ -61,24 +61,11 @@ class predecoder(parameters:Parameters) extends Module{
     })
     dontTouch(io)
 
-    ////////////////////
-    // OUTPUT BUNDLES //
-    ////////////////////
+    ////////////////////////
+    // SKID BUFFER INPUTS //
+    ////////////////////////
     val predictions         = Wire(Decoupled(new FTQ_entry(parameters)))
     val final_fetch_packet  = Wire(Decoupled(new fetch_packet(parameters)))
-
-    ///////////////////
-    // INPUT BUFFERS //
-    ///////////////////
-    val fetch_packet_queue  = Module(new Queue(new fetch_packet(parameters), 2, flow=false, hasFlush=true, useSyncReadMem=false))
-
-    ////////////////////////
-    // FETCH PACKET QUEUE //
-    ////////////////////////
-    fetch_packet_queue.io.enq <> io.fetch_packet
-    fetch_packet_queue.io.enq.valid := io.fetch_packet.fire
-
-    fetch_packet_queue.io.deq.ready := io.final_fetch_packet.ready
 
     ///////////////////
     // BRANCH DECODE //
@@ -144,9 +131,6 @@ class predecoder(parameters:Parameters) extends Module{
         final_fetch_packet_valid_bits(i) := io.fetch_packet.valid && io.fetch_packet.bits.valid_bits(i) && !PopCount(T_NT.take(i))
     }
 
-    dontTouch(final_fetch_packet_valid_bits)
-
-
     ///////////////////////
     // TARGET GENERATION //
     ///////////////////////
@@ -193,22 +177,31 @@ class predecoder(parameters:Parameters) extends Module{
     // EXPECTED NEXT ADDRESS //
     ///////////////////////////
     val expected_next_PC            = RegInit(UInt(32.W), startPC)
-    val update_expected_next_PC     = Wire(Bool())
     val input_fetch_packet_valid    = Wire(Bool())
+    val input_valid                 = Wire(Bool())
+    val PC_match                    = Wire(Bool())
+    val PC_mismatch                 = Wire(Bool())
 
-    input_fetch_packet_valid := io.fetch_packet.fire && io.prediction.fire && expected_next_PC === io.fetch_packet.bits.fetch_PC
-    update_expected_next_PC := input_fetch_packet_valid
 
-    when(update_expected_next_PC){expected_next_PC := target_address}
+
+    PC_match                    :=  expected_next_PC === io.fetch_packet.bits.fetch_PC
+    PC_mismatch                 :=  expected_next_PC =/= io.fetch_packet.bits.fetch_PC
+
+    input_valid                 :=  io.fetch_packet.fire    && 
+                                    io.prediction.fire      && 
+                                   !io.flush
+    
+    input_fetch_packet_valid    :=  input_valid && PC_match
+
+    final_fetch_packet.valid    := RegNext(input_fetch_packet_valid)
+    when(input_fetch_packet_valid){expected_next_PC := target_address}
     when(io.commit.valid && io.commit.bits.is_misprediction){expected_next_PC := io.commit.bits.fetch_PC}
 
     ////////////
     // REVERT //
     ////////////
-    io.revert.valid := (io.fetch_packet.bits.fetch_PC =/= expected_next_PC) && io.fetch_packet.fire && io.prediction.fire
+    io.revert.valid := input_valid && PC_mismatch 
     io.revert.bits.PC := expected_next_PC
-
-    fetch_packet_queue.io.flush.get := io.flush || io.revert.valid
 
     ////////////////
     // GHR UPDATE //
@@ -236,11 +229,10 @@ class predecoder(parameters:Parameters) extends Module{
     // GENERATE FINAL FETCH PACKET  //
     //////////////////////////////////
     // ASSIGN FINAL FETCH PACKET //
-    final_fetch_packet := fetch_packet_queue.io.deq
-    final_fetch_packet.valid                    := fetch_packet_queue.io.deq.valid //io.fetch_packet.valid && io.predictions.ready && !io.flush
+    final_fetch_packet.bits := RegNext(io.fetch_packet.bits)
+    final_fetch_packet.bits.fetch_PC := RegNext(masked_addr)
     for(i <- 0 until fetchWidth){
-        final_fetch_packet.bits.instructions(i) := fetch_packet_queue.io.deq.bits.instructions(i)                                     // pass instructions
-        final_fetch_packet.bits.valid_bits(i)   := fetch_packet_queue.io.deq.valid && fetch_packet_queue.io.deq.bits.valid_bits(i) && RegNext(final_fetch_packet_valid_bits(i))
+        final_fetch_packet.bits.valid_bits(i)   := RegNext(io.fetch_packet.bits.valid_bits(i)) && RegNext(final_fetch_packet_valid_bits(i))
     }
 
     /////////////////////////
@@ -249,7 +241,7 @@ class predecoder(parameters:Parameters) extends Module{
     val push_FTQ = is_control.reduce(_ || _)
 
     predictions.ready                              := io.predictions.ready
-    predictions.valid                              := push_FTQ && io.prediction.fire && io.fetch_packet.fire
+    predictions.valid                              := push_FTQ && input_fetch_packet_valid
 
     // Buffer branch state
     predictions.bits.fetch_PC                      := io.fetch_packet.bits.fetch_PC
@@ -277,18 +269,16 @@ class predecoder(parameters:Parameters) extends Module{
     //////////////////////
     // predecoded instruction & FTQ outputs passed through a skid buffer
 
-    val predictions_skid_buffer         = Module(new Queue(new FTQ_entry(parameters), 1, flow=true, hasFlush=true, useSyncReadMem=false))
-    val final_fetch_packet_skid_buffer  = Module(new Queue(new fetch_packet(parameters), 1, flow=true, hasFlush=true, useSyncReadMem=false))
+    val predictions_skid_buffer         = Module(new Queue(new FTQ_entry(parameters), 1, flow=true, hasFlush=false, useSyncReadMem=false))
+    val final_fetch_packet_skid_buffer  = Module(new Queue(new fetch_packet(parameters), 1, flow=true, hasFlush=false, useSyncReadMem=false))
 
     predictions_skid_buffer.io.enq                  <> predictions
     predictions_skid_buffer.io.deq                  <> io.predictions
-    predictions_skid_buffer.io.flush.get            := io.flush || io.revert.valid
 
     final_fetch_packet_skid_buffer.io.enq           <> final_fetch_packet
     final_fetch_packet_skid_buffer.io.deq           <> io.final_fetch_packet
-    final_fetch_packet_skid_buffer.io.flush.get     := io.flush || io.revert.valid
 
-    io.prediction.ready   := (io.final_fetch_packet.ready && io.predictions.ready && io.fetch_packet.valid)
-    io.fetch_packet.ready := (io.final_fetch_packet.ready && io.predictions.ready && io.prediction.valid)
+    io.prediction.ready   := (io.final_fetch_packet.ready && io.predictions.ready)
+    io.fetch_packet.ready := (io.final_fetch_packet.ready && io.predictions.ready)
 
 }
