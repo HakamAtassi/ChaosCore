@@ -425,7 +425,9 @@ module predecoder(	// src/main/scala/Frontend/BP/predecoder.scala:40:7
     .reset                        (reset),
     .io_enq_valid
       ((_push_FTQ_T | is_control_2 | is_control_3) & input_fetch_packet_valid),	// src/main/scala/Frontend/BP/predecoder.scala:124:{41,56}, :194:49, :212:30, :241:40, :244:64
+    .io_enq_bits_valid            (1'h0),
     .io_enq_bits_fetch_PC         (io_fetch_packet_bits_fetch_PC),
+    .io_enq_bits_is_misprediction (1'h0),
     .io_enq_bits_predicted_PC
       (predictions_bits_T_NT ? target_address : io_fetch_packet_bits_fetch_PC + 32'h10),	// src/main/scala/Frontend/BP/predecoder.scala:137:35, :256:69, :257:32, :258:52, :260:{52,85}
     .io_enq_bits_T_NT             (predictions_bits_T_NT),	// src/main/scala/Frontend/BP/predecoder.scala:256:69
@@ -436,6 +438,7 @@ module predecoder(	// src/main/scala/Frontend/BP/predecoder.scala:40:7
     .io_enq_bits_GHR              (GHR),	// src/main/scala/Frontend/BP/predecoder.scala:209:22
     .io_enq_bits_NEXT             (io_RAS_read_NEXT),
     .io_enq_bits_TOS              (io_RAS_read_TOS),
+    .io_enq_bits_dominant_index   (2'h3),
     .io_enq_bits_resolved_PC      (io_fetch_packet_bits_fetch_PC + 32'h10),	// src/main/scala/Frontend/BP/predecoder.scala:253:85
     .io_deq_ready                 (io_predictions_ready),
     .io_deq_valid                 (io_predictions_valid),

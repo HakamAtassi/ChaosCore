@@ -34,6 +34,7 @@ import circt.stage.ChiselStage
 
 import chisel3.util._
 
+
 class ALU(parameters:Parameters) extends Module{
     import parameters._
     import InstructionType._
@@ -219,6 +220,19 @@ class ALU(parameters:Parameters) extends Module{
     io.FU_output.bits.RD_valid   :=   RegNext(io.FU_input.bits.decoded_instruction.RD_valid)
     io.FU_output.bits.RD_data    :=   arithmetic_result
 
+
+    io.FU_output.bits.MOB_index  :=   RegNext(io.FU_input.bits.decoded_instruction.MOB_index)
+    io.FU_output.bits.FTQ_index  :=   RegNext(io.FU_input.bits.decoded_instruction.FTQ_index)
+    io.FU_output.bits.address    :=   0.U
+
+    io.FU_output.bits.address             :=   DontCare
+    io.FU_output.bits.memory_type         :=   DontCare
+    io.FU_output.bits.access_width        :=   DontCare
+    io.FU_output.bits.unsigned            :=   DontCare
+    io.FU_output.bits.wr_data             :=   DontCare
+
+
+
     io.FU_output.bits.ROB_index  :=   RegNext(io.FU_input.bits.decoded_instruction.ROB_index)
     io.FU_output.valid           :=   RegNext(io.FU_input.valid && !io.flush)
 
@@ -348,6 +362,18 @@ class branch_unit(parameters:Parameters) extends Module{
     io.FU_output.bits.RD_valid          :=      RegNext(io.FU_input.bits.decoded_instruction.RD_valid)
     io.FU_output.bits.RD_data           :=      RegNext(instruction_PC + 4.U)
     io.FU_output.bits.ROB_index         :=      RegNext(io.FU_input.bits.decoded_instruction.ROB_index)
+    io.FU_output.bits.FTQ_index         :=      RegNext(io.FU_input.bits.decoded_instruction.FTQ_index)
+    io.FU_output.bits.MOB_index         :=      RegNext(io.FU_input.bits.decoded_instruction.MOB_index)
+    io.FU_output.bits.address           :=      0.U
+
+
+    io.FU_output.bits.address             :=   DontCare
+    io.FU_output.bits.memory_type         :=   DontCare
+    io.FU_output.bits.access_width        :=   DontCare
+    io.FU_output.bits.unsigned            :=   DontCare
+    io.FU_output.bits.wr_data             :=   DontCare
+
+
     io.FU_output.valid                  :=      RegNext(io.FU_input.valid && !io.flush)
 
 }

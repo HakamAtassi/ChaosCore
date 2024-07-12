@@ -19,7 +19,8 @@ module Q_4(	// src/main/scala/Frontend/instruction_fetch.scala:35:7
   output        io_out_valid,	// src/main/scala/Frontend/instruction_fetch.scala:36:14
                 io_out_bits_valid,	// src/main/scala/Frontend/instruction_fetch.scala:36:14
   output [31:0] io_out_bits_fetch_PC,	// src/main/scala/Frontend/instruction_fetch.scala:36:14
-                io_out_bits_predicted_PC,	// src/main/scala/Frontend/instruction_fetch.scala:36:14
+  output        io_out_bits_is_misprediction,	// src/main/scala/Frontend/instruction_fetch.scala:36:14
+  output [31:0] io_out_bits_predicted_PC,	// src/main/scala/Frontend/instruction_fetch.scala:36:14
   output        io_out_bits_T_NT,	// src/main/scala/Frontend/instruction_fetch.scala:36:14
   output [2:0]  io_out_bits_br_type,	// src/main/scala/Frontend/instruction_fetch.scala:36:14
   output [15:0] io_out_bits_GHR,	// src/main/scala/Frontend/instruction_fetch.scala:36:14
@@ -50,6 +51,7 @@ module Q_4(	// src/main/scala/Frontend/instruction_fetch.scala:35:7
     .io_deq_valid                 (io_out_valid),
     .io_deq_bits_valid            (io_out_bits_valid),
     .io_deq_bits_fetch_PC         (io_out_bits_fetch_PC),
+    .io_deq_bits_is_misprediction (io_out_bits_is_misprediction),
     .io_deq_bits_predicted_PC     (io_out_bits_predicted_PC),
     .io_deq_bits_T_NT             (io_out_bits_T_NT),
     .io_deq_bits_br_type          (io_out_bits_br_type),

@@ -64,15 +64,12 @@ module sim_nReadmWrite(	// src/main/scala/Backend/RF.scala:84:7
   input  [5:0]  io_waddr_0,	// src/main/scala/Backend/RF.scala:85:14
                 io_waddr_1,	// src/main/scala/Backend/RF.scala:85:14
                 io_waddr_2,	// src/main/scala/Backend/RF.scala:85:14
-                io_waddr_3,	// src/main/scala/Backend/RF.scala:85:14
   input         io_wen_0,	// src/main/scala/Backend/RF.scala:85:14
                 io_wen_1,	// src/main/scala/Backend/RF.scala:85:14
                 io_wen_2,	// src/main/scala/Backend/RF.scala:85:14
-                io_wen_3,	// src/main/scala/Backend/RF.scala:85:14
   input  [31:0] io_wdata_0,	// src/main/scala/Backend/RF.scala:85:14
                 io_wdata_1,	// src/main/scala/Backend/RF.scala:85:14
-                io_wdata_2,	// src/main/scala/Backend/RF.scala:85:14
-                io_wdata_3	// src/main/scala/Backend/RF.scala:85:14
+                io_wdata_2	// src/main/scala/Backend/RF.scala:85:14
 );
 
   mem_64x32 mem_ext (	// src/main/scala/Backend/RF.scala:118:24
@@ -108,22 +105,18 @@ module sim_nReadmWrite(	// src/main/scala/Backend/RF.scala:84:7
     .R7_en   (1'h1),	// src/main/scala/Backend/RF.scala:84:7
     .R7_clk  (clock),
     .R7_data (io_rdata_0),
-    .W0_addr (io_waddr_3),
-    .W0_en   (io_wen_3),
+    .W0_addr (io_waddr_2),
+    .W0_en   (io_wen_2),
     .W0_clk  (clock),
-    .W0_data (io_waddr_3 == 6'h0 ? 32'h0 : io_wdata_3),	// src/main/scala/Backend/RF.scala:122:31, :137:{19,31}
-    .W1_addr (io_waddr_2),
-    .W1_en   (io_wen_2),
+    .W0_data (io_waddr_2 == 6'h0 ? 32'h0 : io_wdata_2),	// src/main/scala/Backend/RF.scala:122:31, :132:{19,31}
+    .W1_addr (io_waddr_1),
+    .W1_en   (io_wen_1),
     .W1_clk  (clock),
-    .W1_data (io_waddr_2 == 6'h0 ? 32'h0 : io_wdata_2),	// src/main/scala/Backend/RF.scala:122:31, :132:{19,31}
-    .W2_addr (io_waddr_1),
-    .W2_en   (io_wen_1),
+    .W1_data (io_waddr_1 == 6'h0 ? 32'h0 : io_wdata_1),	// src/main/scala/Backend/RF.scala:122:31, :127:{19,31}
+    .W2_addr (io_waddr_0),
+    .W2_en   (io_wen_0),
     .W2_clk  (clock),
-    .W2_data (io_waddr_1 == 6'h0 ? 32'h0 : io_wdata_1),	// src/main/scala/Backend/RF.scala:122:31, :127:{19,31}
-    .W3_addr (io_waddr_0),
-    .W3_en   (io_wen_0),
-    .W3_clk  (clock),
-    .W3_data (io_waddr_0 == 6'h0 ? 32'h0 : io_wdata_0)	// src/main/scala/Backend/RF.scala:122:{19,31}
+    .W2_data (io_waddr_0 == 6'h0 ? 32'h0 : io_wdata_0)	// src/main/scala/Backend/RF.scala:122:{19,31}
   );	// src/main/scala/Backend/RF.scala:118:24
 endmodule
 

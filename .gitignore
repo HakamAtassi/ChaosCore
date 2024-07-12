@@ -16,6 +16,9 @@ sim_build/
 *.pyc
 
 
+gcdWorkdir/
+
+
 # Junk/incomplete files
 
 pipelined_non_restoring.c

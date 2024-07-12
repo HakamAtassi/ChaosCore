@@ -1,0 +1,224 @@
+/* ------------------------------------------------------------------------------------
+* Filename: MEMFU.scala
+* Author: Hakam Atassi
+* Date: May 23 2024
+* Description: The core Memory Functional Unit
+* License: MIT
+*
+* Copyright (c) 2024 by Hakam Atassi
+*
+* Permission is hereby granted, free of charge, to any person obtaining a copy
+* of this software and associated documentation files (the "Software"), to deal
+* in the Software without restriction, including without limitation the rights
+* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+* copies of the Software, and to permit persons to whom the Software is
+* furnished to do so, subject to the following conditions:
+* 
+* The above copyright notice and this permission notice shall be included in all
+* copies or substantial portions of the Software.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+* SOFTWARE.
+* ------------------------------------------------------------------------------------ 
+*/
+
+package ChaosCore
+
+import chisel3._
+import circt.stage.ChiselStage 
+
+import chisel3.util._
+
+
+object memfuState extends ChiselEnum{
+    val ACTIVE, WAIT = Value
+}
+
+class load_request(parameters:Parameters) extends Bundle{
+    import parameters._
+
+    val packet_index           = UInt(log2Ceil(fetchWidth).W)  // fetch packet index of the branch
+
+    val ROB_index              = UInt(log2Ceil(ROBEntries).W)
+    val RD                     = UInt(log2Ceil(physicalRegCount).W)
+    val RD_valid               = Bool()
+
+    val LB                     = Bool()
+    val LH                     = Bool()
+    val LW                     = Bool()
+    val LBU                    = Bool()
+    val LHU                    = Bool()
+}
+
+class MEMFU(parameters:Parameters) extends Module{
+    import parameters._
+    val io = IO(new Bundle{
+        // Flush
+        val flush                   =   Input(Bool())
+
+        // Instruction Input
+        val FU_input                =   Flipped(Decoupled(new read_decoded_instruction(parameters)))
+
+        // Memory Input
+        val memory_response         =   Flipped(Decoupled(new memory_response(parameters))) 
+
+        // Memory Output
+        val memory_request          =   Decoupled(new memory_request(parameters))        
+
+        // Instruction Output
+        val FU_output               =   ValidIO(new FU_output(parameters))                 
+    })
+
+    dontTouch(io)
+    ////////////////////
+    // MEMORY REQUEST //
+    ////////////////////
+    // METADATA //
+    //////////////
+    val _imm                   =   Wire(SInt(32.W))
+    val imm                    =   Wire(UInt(32.W))
+
+    _imm                      :=  (io.FU_input.bits.decoded_instruction.IMM).asSInt
+    imm                       :=  _imm.asUInt
+
+    val RS1_data               =   io.FU_input.bits.RS1_data
+    val RS2_data               =   io.FU_input.bits.RS2_data
+    val IMM                    =   imm
+    val PC                     =   io.FU_input.bits.fetch_PC + (io.FU_input.bits.decoded_instruction.packet_index * fetchWidth.U)
+    val RD                     =   io.FU_input.bits.decoded_instruction.RD
+
+    val FUNCT3                 =   io.FU_input.bits.decoded_instruction.FUNCT3
+
+    val is_load                =   io.FU_input.bits.decoded_instruction.is_load   &&   io.FU_input.valid
+    val is_store               =   io.FU_input.bits.decoded_instruction.is_store  &&   io.FU_input.valid
+    val SB                     =   is_store && FUNCT3  === "b000".U               &&   io.FU_input.valid
+    val SH                     =   is_store && FUNCT3  === "b001".U               &&   io.FU_input.valid
+    val SW                     =   is_store && FUNCT3  === "b010".U               &&   io.FU_input.valid
+
+    val LB                     =   is_load  && FUNCT3  === "b000".U               &&   io.FU_input.valid
+    val LH                     =   is_load  && FUNCT3  === "b001".U               &&   io.FU_input.valid
+    val LW                     =   is_load  && FUNCT3  === "b010".U               &&   io.FU_input.valid
+    val LBU                    =   is_load  && FUNCT3  === "b100".U               &&   io.FU_input.valid
+    val LHU                    =   is_load  && FUNCT3  === "b101".U               &&   io.FU_input.valid
+
+    ////////////////////
+    // GENERATE WRITE //
+    ////////////////////
+    val wr_data = Wire(UInt(32.W))
+    val wr_addr = Wire(UInt(32.W))
+
+    val memory_request  = Wire(Decoupled(new memory_request(parameters)))
+    dontTouch(memory_request)
+
+    wr_data := 0.U
+    when(SB){wr_data := RS2_data & 0xFF.U}
+    when(SH){wr_data := RS2_data & 0xFFFF.U}
+    when(SW){wr_data := RS2_data.asUInt & "hFFFF_FFFF".U(32.W)}
+
+    wr_addr := RS1_data + imm
+
+    memory_request.valid           := io.FU_input.valid// && io.load_Q.enq.ready
+    memory_request.bits.wr_en      := is_store
+    memory_request.bits.wr_data    := wr_data
+    memory_request.bits.addr       := wr_addr
+
+    ///////////////////
+    // Request Queue //
+    ///////////////////
+    val memory_request_Q            = Module(new Queue(new memory_request(parameters), 16, flow=false, hasFlush=false, useSyncReadMem=true))
+
+    memory_request_Q.io.enq        <> memory_request
+    memory_request_Q.io.deq        <> io.memory_request
+    //memory_request_Q.io.flush.get  := io.flush
+
+    ////////////////
+    // LOAD QUEUE //
+    ////////////////
+    val load_Q           = Module(new Queue(new load_request(parameters), 16, flow=false, hasFlush=false, useSyncReadMem=true))
+    val load_request_in  = Wire(Decoupled(new load_request(parameters)))
+    val load_request_out = Wire(Decoupled(new load_request(parameters)))
+
+    load_request_in.valid                       := is_load
+
+    io.FU_output.bits.fetch_packet_index        := load_request_out.bits.packet_index
+    io.FU_output.bits.RD                        := load_request_out.bits.RD
+    io.FU_output.bits.RD_valid                  := load_request_out.bits.RD_valid
+    io.FU_output.bits.ROB_index                 := load_request_out.bits.ROB_index
+
+    load_request_in.bits.packet_index           := io.FU_input.bits.decoded_instruction.packet_index
+    load_request_in.bits.ROB_index              := io.FU_input.bits.decoded_instruction.ROB_index
+
+    load_request_in.bits.RD                     := io.FU_input.bits.decoded_instruction.RD
+    load_request_in.bits.RD_valid               := io.FU_input.bits.decoded_instruction.RD_valid
+    load_request_in.bits.LB                     := LB
+    load_request_in.bits.LH                     := LH
+    load_request_in.bits.LW                     := LW
+    load_request_in.bits.LBU                    := LBU
+    load_request_in.bits.LHU                    := LHU
+    load_request_out.ready                      := io.memory_response.valid // Dequeue when input arrives
+
+    load_Q.io.enq        <> load_request_in
+    load_Q.io.deq        <> load_request_out
+    //load_Q.io.flush.get  := io.flush
+
+    ////////////////////////////
+    // MEMORY RESPONSE (LOAD) //
+    ////////////////////////////
+
+    val rd_data = Wire(UInt(32.W))
+
+    val memory_response_8     = Wire(UInt(8.W))
+    val memory_response_16    = Wire(UInt(16.W))
+    val memory_response_32    = Wire(UInt(32.W))
+
+    val memory_response_8_s   = Wire(SInt(32.W))
+    val memory_response_16_s  = Wire(SInt(32.W))
+    val memory_response_32_s  = Wire(SInt(32.W))
+
+    val memory_response_8_u   = Wire(UInt(32.W))
+    val memory_response_16_u  = Wire(UInt(32.W))
+    val memory_response_32_u  = Wire(UInt(32.W))
+
+    memory_response_8        := (io.memory_response.bits.data & "hFF".U)
+    memory_response_16       := (io.memory_response.bits.data & "hFFFF".U)
+    memory_response_32       := (io.memory_response.bits.data & "hFFFF_FFFF".U)
+    memory_response_8_s      := (memory_response_8).asSInt
+    memory_response_16_s     := (memory_response_16).asSInt
+    memory_response_32_s     := (memory_response_32).asSInt
+    memory_response_8_u      := (memory_response_8).asUInt
+    memory_response_16_u     := (memory_response_16).asUInt
+    memory_response_32_u     := (memory_response_32).asUInt
+
+    rd_data := 0.U
+    when(load_request_out.bits.LB)  {rd_data := memory_response_8_s.asUInt}
+    when(load_request_out.bits.LH)  {rd_data := memory_response_16_s.asUInt}
+    when(load_request_out.bits.LW)  {rd_data := memory_response_32_s.asUInt}
+    when(load_request_out.bits.LBU) {rd_data := memory_response_8_u}
+    when(load_request_out.bits.LHU) {rd_data := memory_response_16_u}
+
+    ////////////////////////
+    // ASSIGN PRF OUTPUTS //
+    ////////////////////////
+    io.FU_output.valid                          := io.memory_response.valid
+    io.FU_output.bits.branch_taken              := 0.B
+    io.FU_output.bits.target_address            := 0.B
+    io.FU_output.bits.branch_valid              := 0.B
+    io.FU_output.bits.fetch_PC                  := 0.U
+    io.FU_output.bits.fetch_packet_index        := load_request_out.bits.packet_index
+    io.FU_output.bits.RD                        := load_request_out.bits.RD
+    io.FU_output.bits.RD_valid                  := load_request_out.bits.RD_valid
+    io.FU_output.bits.ROB_index                 := load_request_out.bits.ROB_index
+    io.FU_output.bits.FTQ_index                 := RegNext(io.FU_input.bits.decoded_instruction.FTQ_index)
+    io.FU_output.bits.RD_data                   := rd_data.asUInt
+
+    /////////////////
+    // VALID/READY //
+    /////////////////
+    io.FU_input.ready               := load_Q.io.enq.ready && memory_request_Q.io.enq.ready
+    io.memory_response.ready        := load_Q.io.deq.valid  // output valid is the same as !empty
+}

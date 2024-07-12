@@ -104,35 +104,11 @@ class frontend(parameters:Parameters) extends Module{
     decoders.io.fetch_packet <> instruction_fetch.io.fetch_packet
     decoders.io.decoded_fetch_packet.ready := FTQ_queue.io.in.ready && instruction_queue.io.in.ready
 
-
-
-
-
     ///////////////
     // FTQ INPUT //
     ///////////////
-    decoders.io.predictions_in <> instruction_fetch.io.predictions
     decoders.io.flush := io.flush
-
-    
-    ////////////
-    // RENAME //
-    ////////////
-
-
-    instruction_queue.io.flush := flush
-
-
-    rename.io.FU_outputs           <>     io.FU_outputs
-    rename.io.flush                <>     io.flush
-    rename.io.commit               <>     io.commit
-
-    ////////////
-    // OUTPUT //
-    ////////////
-
-    io.renamed_decoded_fetch_packet <> rename.io.renamed_decoded_fetch_packet
-
+    decoders.io.predictions_in <> instruction_fetch.io.predictions
 
     ///////////////
     // FTQ QUEUE //
@@ -140,8 +116,24 @@ class frontend(parameters:Parameters) extends Module{
     FTQ_queue.io.in <> decoders.io.predictions_out
     FTQ_queue.io.in.valid := decoders.io.predictions_out.valid && instruction_queue.io.in.ready
 
-    FTQ_queue.io.out <> io.predictions
     FTQ_queue.io.flush := io.flush 
+    
+    ////////////
+    // RENAME //
+    ////////////
+    instruction_queue.io.flush := flush
+
+    rename.io.FU_outputs           <>     io.FU_outputs
+    rename.io.flush                <>     io.flush
+    rename.io.commit               <>     io.commit
+    rename.io.predictions_in       <>     FTQ_queue.io.out
+    rename.io.predictions_out      <>     io.predictions
+
+    ////////////
+    // OUTPUT //
+    ////////////
+    io.renamed_decoded_fetch_packet <> rename.io.renamed_decoded_fetch_packet
+
 
     ///////////////////////
     // INSTRUCTION QUEUE //

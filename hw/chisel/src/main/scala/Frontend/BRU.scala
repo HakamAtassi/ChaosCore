@@ -32,6 +32,7 @@ package ChaosCore
 import chisel3._
 import circt.stage.ChiselStage 
 import chisel3.util._
+import chisel3.ltl._
 
 // "branch resolution unit"
 class BRU(parameters:Parameters) extends Module{
@@ -39,13 +40,14 @@ class BRU(parameters:Parameters) extends Module{
 
     val io = IO(new Bundle{
         // FTQ //
-        val FTQ         =   Input(new FTQ_entry(parameters))
+        val FTQ             =   Input(new FTQ_entry(parameters))
 
         // COMMIT //
-        val ROB_output  =   Input(new ROB_output(parameters))
+        val ROB_output      =   Input(new ROB_output(parameters))
 
         // Output 
-        val commit      =   ValidIO(new commit(parameters))
+        val commit          =   ValidIO(new commit(parameters))
+
     })
 
     val commit_valid        = Wire(Bool())
@@ -54,9 +56,9 @@ class BRU(parameters:Parameters) extends Module{
     for(i <- 0 until fetchWidth){
         val is_completed    = (io.ROB_output.complete(i) && io.ROB_output.ROB_entries(i).valid)
         val is_invalid      = (!io.ROB_output.ROB_entries(i).valid)
-        val is_load         = io.ROB_output.ROB_entries(i).is_load
-        val is_store        = io.ROB_output.ROB_entries(i).is_store
-        commit_row_complete(i) := is_completed || is_invalid || is_load || is_store
+        val is_load         = io.ROB_output.ROB_entries(i).memory_type === memory_type_t.LOAD
+        val is_store        = io.ROB_output.ROB_entries(i).memory_type === memory_type_t.STORE
+        commit_row_complete(i) := is_completed || is_invalid  || is_store 
     }
     commit_valid := io.ROB_output.row_valid && commit_row_complete.reduce(_ && _)
 
@@ -96,6 +98,11 @@ class BRU(parameters:Parameters) extends Module{
         io.commit.bits.expected_PC           := io.FTQ.resolved_PC
         io.commit.bits.fetch_packet_index    := io.FTQ.dominant_index
     }
+
+    AssertProperty(io.commit.bits.GHR =/= 1.U)
+    AssumeProperty(io.commit.bits.GHR =/= 1.U)
+
+
 
 }
 

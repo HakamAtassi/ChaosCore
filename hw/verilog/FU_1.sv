@@ -43,73 +43,82 @@
     `define INIT_RANDOM_PROLOG_
   `endif // RANDOMIZE
 `endif // not def INIT_RANDOM_PROLOG_
-module FU_1(	// src/main/scala/Backend/FU.scala:358:7
-  input         clock,	// src/main/scala/Backend/FU.scala:358:7
-                reset,	// src/main/scala/Backend/FU.scala:358:7
-                io_flush,	// src/main/scala/Backend/FU.scala:365:16
-  output        io_FU_input_ready,	// src/main/scala/Backend/FU.scala:365:16
-  input         io_FU_input_valid,	// src/main/scala/Backend/FU.scala:365:16
-                io_FU_input_bits_decoded_instruction_ready_bits_RS1_ready,	// src/main/scala/Backend/FU.scala:365:16
-                io_FU_input_bits_decoded_instruction_ready_bits_RS2_ready,	// src/main/scala/Backend/FU.scala:365:16
-  input  [6:0]  io_FU_input_bits_decoded_instruction_RD,	// src/main/scala/Backend/FU.scala:365:16
-  input         io_FU_input_bits_decoded_instruction_RD_valid,	// src/main/scala/Backend/FU.scala:365:16
-  input  [6:0]  io_FU_input_bits_decoded_instruction_RS1,	// src/main/scala/Backend/FU.scala:365:16
-  input         io_FU_input_bits_decoded_instruction_RS1_valid,	// src/main/scala/Backend/FU.scala:365:16
-  input  [6:0]  io_FU_input_bits_decoded_instruction_RS2,	// src/main/scala/Backend/FU.scala:365:16
-  input         io_FU_input_bits_decoded_instruction_RS2_valid,	// src/main/scala/Backend/FU.scala:365:16
-  input  [20:0] io_FU_input_bits_decoded_instruction_IMM,	// src/main/scala/Backend/FU.scala:365:16
-  input  [2:0]  io_FU_input_bits_decoded_instruction_FUNCT3,	// src/main/scala/Backend/FU.scala:365:16
-  input  [1:0]  io_FU_input_bits_decoded_instruction_packet_index,	// src/main/scala/Backend/FU.scala:365:16
-  input  [5:0]  io_FU_input_bits_decoded_instruction_ROB_index,	// src/main/scala/Backend/FU.scala:365:16
-  input  [4:0]  io_FU_input_bits_decoded_instruction_instructionType,	// src/main/scala/Backend/FU.scala:365:16
-  input  [1:0]  io_FU_input_bits_decoded_instruction_portID,	// src/main/scala/Backend/FU.scala:365:16
-                io_FU_input_bits_decoded_instruction_RS_type,	// src/main/scala/Backend/FU.scala:365:16
-  input         io_FU_input_bits_decoded_instruction_needs_ALU,	// src/main/scala/Backend/FU.scala:365:16
-                io_FU_input_bits_decoded_instruction_needs_branch_unit,	// src/main/scala/Backend/FU.scala:365:16
-                io_FU_input_bits_decoded_instruction_needs_CSRs,	// src/main/scala/Backend/FU.scala:365:16
-                io_FU_input_bits_decoded_instruction_SUBTRACT,	// src/main/scala/Backend/FU.scala:365:16
-                io_FU_input_bits_decoded_instruction_MULTIPLY,	// src/main/scala/Backend/FU.scala:365:16
-                io_FU_input_bits_decoded_instruction_IS_IMM,	// src/main/scala/Backend/FU.scala:365:16
-                io_FU_input_bits_decoded_instruction_is_load,	// src/main/scala/Backend/FU.scala:365:16
-                io_FU_input_bits_decoded_instruction_is_store,	// src/main/scala/Backend/FU.scala:365:16
-  input  [31:0] io_FU_input_bits_RS1_data,	// src/main/scala/Backend/FU.scala:365:16
-                io_FU_input_bits_RS2_data,	// src/main/scala/Backend/FU.scala:365:16
-                io_FU_input_bits_fetch_PC,	// src/main/scala/Backend/FU.scala:365:16
-  output        io_FU_output_valid,	// src/main/scala/Backend/FU.scala:365:16
-  output [6:0]  io_FU_output_bits_RD,	// src/main/scala/Backend/FU.scala:365:16
-  output [31:0] io_FU_output_bits_RD_data,	// src/main/scala/Backend/FU.scala:365:16
-  output        io_FU_output_bits_RD_valid,	// src/main/scala/Backend/FU.scala:365:16
-  output [31:0] io_FU_output_bits_fetch_PC,	// src/main/scala/Backend/FU.scala:365:16
-  output        io_FU_output_bits_branch_taken,	// src/main/scala/Backend/FU.scala:365:16
-  output [31:0] io_FU_output_bits_target_address,	// src/main/scala/Backend/FU.scala:365:16
-  output        io_FU_output_bits_branch_valid,	// src/main/scala/Backend/FU.scala:365:16
-  output [5:0]  io_FU_output_bits_ROB_index,	// src/main/scala/Backend/FU.scala:365:16
-  output [1:0]  io_FU_output_bits_fetch_packet_index	// src/main/scala/Backend/FU.scala:365:16
+module FU_1(	// src/main/scala/Backend/FU.scala:384:7
+  input         clock,	// src/main/scala/Backend/FU.scala:384:7
+                reset,	// src/main/scala/Backend/FU.scala:384:7
+                io_flush,	// src/main/scala/Backend/FU.scala:391:16
+  output        io_FU_input_ready,	// src/main/scala/Backend/FU.scala:391:16
+  input         io_FU_input_valid,	// src/main/scala/Backend/FU.scala:391:16
+                io_FU_input_bits_decoded_instruction_ready_bits_RS1_ready,	// src/main/scala/Backend/FU.scala:391:16
+                io_FU_input_bits_decoded_instruction_ready_bits_RS2_ready,	// src/main/scala/Backend/FU.scala:391:16
+  input  [6:0]  io_FU_input_bits_decoded_instruction_RD,	// src/main/scala/Backend/FU.scala:391:16
+  input         io_FU_input_bits_decoded_instruction_RD_valid,	// src/main/scala/Backend/FU.scala:391:16
+  input  [6:0]  io_FU_input_bits_decoded_instruction_RS1,	// src/main/scala/Backend/FU.scala:391:16
+  input         io_FU_input_bits_decoded_instruction_RS1_valid,	// src/main/scala/Backend/FU.scala:391:16
+  input  [6:0]  io_FU_input_bits_decoded_instruction_RS2,	// src/main/scala/Backend/FU.scala:391:16
+  input         io_FU_input_bits_decoded_instruction_RS2_valid,	// src/main/scala/Backend/FU.scala:391:16
+  input  [20:0] io_FU_input_bits_decoded_instruction_IMM,	// src/main/scala/Backend/FU.scala:391:16
+  input  [2:0]  io_FU_input_bits_decoded_instruction_FUNCT3,	// src/main/scala/Backend/FU.scala:391:16
+  input  [1:0]  io_FU_input_bits_decoded_instruction_packet_index,	// src/main/scala/Backend/FU.scala:391:16
+  input  [5:0]  io_FU_input_bits_decoded_instruction_ROB_index,	// src/main/scala/Backend/FU.scala:391:16
+  input  [3:0]  io_FU_input_bits_decoded_instruction_MOB_index,	// src/main/scala/Backend/FU.scala:391:16
+                io_FU_input_bits_decoded_instruction_FTQ_index,	// src/main/scala/Backend/FU.scala:391:16
+  input  [4:0]  io_FU_input_bits_decoded_instruction_instructionType,	// src/main/scala/Backend/FU.scala:391:16
+  input  [1:0]  io_FU_input_bits_decoded_instruction_portID,	// src/main/scala/Backend/FU.scala:391:16
+                io_FU_input_bits_decoded_instruction_RS_type,	// src/main/scala/Backend/FU.scala:391:16
+  input         io_FU_input_bits_decoded_instruction_needs_ALU,	// src/main/scala/Backend/FU.scala:391:16
+                io_FU_input_bits_decoded_instruction_needs_branch_unit,	// src/main/scala/Backend/FU.scala:391:16
+                io_FU_input_bits_decoded_instruction_needs_CSRs,	// src/main/scala/Backend/FU.scala:391:16
+                io_FU_input_bits_decoded_instruction_SUBTRACT,	// src/main/scala/Backend/FU.scala:391:16
+                io_FU_input_bits_decoded_instruction_MULTIPLY,	// src/main/scala/Backend/FU.scala:391:16
+                io_FU_input_bits_decoded_instruction_IS_IMM,	// src/main/scala/Backend/FU.scala:391:16
+  input  [1:0]  io_FU_input_bits_decoded_instruction_memory_type,	// src/main/scala/Backend/FU.scala:391:16
+                io_FU_input_bits_decoded_instruction_access_width,	// src/main/scala/Backend/FU.scala:391:16
+  input  [31:0] io_FU_input_bits_RS1_data,	// src/main/scala/Backend/FU.scala:391:16
+                io_FU_input_bits_RS2_data,	// src/main/scala/Backend/FU.scala:391:16
+                io_FU_input_bits_fetch_PC,	// src/main/scala/Backend/FU.scala:391:16
+  output        io_FU_output_valid,	// src/main/scala/Backend/FU.scala:391:16
+  output [6:0]  io_FU_output_bits_RD,	// src/main/scala/Backend/FU.scala:391:16
+  output [31:0] io_FU_output_bits_RD_data,	// src/main/scala/Backend/FU.scala:391:16
+  output        io_FU_output_bits_RD_valid,	// src/main/scala/Backend/FU.scala:391:16
+  output [31:0] io_FU_output_bits_fetch_PC,	// src/main/scala/Backend/FU.scala:391:16
+  output        io_FU_output_bits_branch_taken,	// src/main/scala/Backend/FU.scala:391:16
+  output [31:0] io_FU_output_bits_target_address,	// src/main/scala/Backend/FU.scala:391:16
+  output        io_FU_output_bits_branch_valid,	// src/main/scala/Backend/FU.scala:391:16
+  output [31:0] io_FU_output_bits_address,	// src/main/scala/Backend/FU.scala:391:16
+  output [1:0]  io_FU_output_bits_memory_type,	// src/main/scala/Backend/FU.scala:391:16
+                io_FU_output_bits_access_width,	// src/main/scala/Backend/FU.scala:391:16
+  output        io_FU_output_bits_unsigned,	// src/main/scala/Backend/FU.scala:391:16
+  output [31:0] io_FU_output_bits_wr_data,	// src/main/scala/Backend/FU.scala:391:16
+  output [3:0]  io_FU_output_bits_MOB_index,	// src/main/scala/Backend/FU.scala:391:16
+  output [5:0]  io_FU_output_bits_ROB_index,	// src/main/scala/Backend/FU.scala:391:16
+  output [3:0]  io_FU_output_bits_FTQ_index,	// src/main/scala/Backend/FU.scala:391:16
+  output [1:0]  io_FU_output_bits_fetch_packet_index	// src/main/scala/Backend/FU.scala:391:16
 );
 
-  reg  monitor_output_REG;	// src/main/scala/Backend/FU.scala:416:30
-  wire monitor_output = monitor_output_REG;	// src/main/scala/Backend/FU.scala:415:30, :416:30
-  always @(posedge clock)	// src/main/scala/Backend/FU.scala:358:7
-    monitor_output_REG <= io_FU_input_valid;	// src/main/scala/Backend/FU.scala:416:30
-  `ifdef ENABLE_INITIAL_REG_	// src/main/scala/Backend/FU.scala:358:7
-    `ifdef FIRRTL_BEFORE_INITIAL	// src/main/scala/Backend/FU.scala:358:7
-      `FIRRTL_BEFORE_INITIAL	// src/main/scala/Backend/FU.scala:358:7
+  reg  monitor_output_REG;	// src/main/scala/Backend/FU.scala:442:30
+  wire monitor_output = monitor_output_REG;	// src/main/scala/Backend/FU.scala:441:30, :442:30
+  always @(posedge clock)	// src/main/scala/Backend/FU.scala:384:7
+    monitor_output_REG <= io_FU_input_valid;	// src/main/scala/Backend/FU.scala:442:30
+  `ifdef ENABLE_INITIAL_REG_	// src/main/scala/Backend/FU.scala:384:7
+    `ifdef FIRRTL_BEFORE_INITIAL	// src/main/scala/Backend/FU.scala:384:7
+      `FIRRTL_BEFORE_INITIAL	// src/main/scala/Backend/FU.scala:384:7
     `endif // FIRRTL_BEFORE_INITIAL
-    initial begin	// src/main/scala/Backend/FU.scala:358:7
-      automatic logic [31:0] _RANDOM[0:0];	// src/main/scala/Backend/FU.scala:358:7
-      `ifdef INIT_RANDOM_PROLOG_	// src/main/scala/Backend/FU.scala:358:7
-        `INIT_RANDOM_PROLOG_	// src/main/scala/Backend/FU.scala:358:7
+    initial begin	// src/main/scala/Backend/FU.scala:384:7
+      automatic logic [31:0] _RANDOM[0:0];	// src/main/scala/Backend/FU.scala:384:7
+      `ifdef INIT_RANDOM_PROLOG_	// src/main/scala/Backend/FU.scala:384:7
+        `INIT_RANDOM_PROLOG_	// src/main/scala/Backend/FU.scala:384:7
       `endif // INIT_RANDOM_PROLOG_
-      `ifdef RANDOMIZE_REG_INIT	// src/main/scala/Backend/FU.scala:358:7
-        _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// src/main/scala/Backend/FU.scala:358:7
-        monitor_output_REG = _RANDOM[/*Zero width*/ 1'b0][1];	// src/main/scala/Backend/FU.scala:358:7, :416:30
+      `ifdef RANDOMIZE_REG_INIT	// src/main/scala/Backend/FU.scala:384:7
+        _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// src/main/scala/Backend/FU.scala:384:7
+        monitor_output_REG = _RANDOM[/*Zero width*/ 1'b0][1];	// src/main/scala/Backend/FU.scala:384:7, :442:30
       `endif // RANDOMIZE_REG_INIT
     end // initial
-    `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/Backend/FU.scala:358:7
-      `FIRRTL_AFTER_INITIAL	// src/main/scala/Backend/FU.scala:358:7
+    `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/Backend/FU.scala:384:7
+      `FIRRTL_AFTER_INITIAL	// src/main/scala/Backend/FU.scala:384:7
     `endif // FIRRTL_AFTER_INITIAL
   `endif // ENABLE_INITIAL_REG_
-  ALU ALU (	// src/main/scala/Backend/FU.scala:385:39
+  ALU ALU (	// src/main/scala/Backend/FU.scala:411:39
     .clock                                                (clock),
     .reset                                                (reset),
     .io_flush                                             (io_flush),
@@ -126,6 +135,10 @@ module FU_1(	// src/main/scala/Backend/FU.scala:358:7
       (io_FU_input_bits_decoded_instruction_packet_index),
     .io_FU_input_bits_decoded_instruction_ROB_index
       (io_FU_input_bits_decoded_instruction_ROB_index),
+    .io_FU_input_bits_decoded_instruction_MOB_index
+      (io_FU_input_bits_decoded_instruction_MOB_index),
+    .io_FU_input_bits_decoded_instruction_FTQ_index
+      (io_FU_input_bits_decoded_instruction_FTQ_index),
     .io_FU_input_bits_decoded_instruction_instructionType
       (io_FU_input_bits_decoded_instruction_instructionType),
     .io_FU_input_bits_decoded_instruction_SUBTRACT
@@ -142,13 +155,20 @@ module FU_1(	// src/main/scala/Backend/FU.scala:358:7
     .io_FU_output_bits_RD_data                            (io_FU_output_bits_RD_data),
     .io_FU_output_bits_RD_valid                           (io_FU_output_bits_RD_valid),
     .io_FU_output_bits_fetch_PC                           (io_FU_output_bits_fetch_PC),
+    .io_FU_output_bits_MOB_index                          (io_FU_output_bits_MOB_index),
     .io_FU_output_bits_ROB_index                          (io_FU_output_bits_ROB_index),
+    .io_FU_output_bits_FTQ_index                          (io_FU_output_bits_FTQ_index),
     .io_FU_output_bits_fetch_packet_index
       (io_FU_output_bits_fetch_packet_index)
-  );	// src/main/scala/Backend/FU.scala:385:39
-  assign io_FU_input_ready = 1'h1;	// src/main/scala/Backend/FU.scala:358:7
-  assign io_FU_output_bits_branch_taken = 1'h0;	// src/main/scala/Backend/FU.scala:358:7
-  assign io_FU_output_bits_target_address = 32'h0;	// src/main/scala/Backend/FU.scala:358:7, :385:39
-  assign io_FU_output_bits_branch_valid = 1'h0;	// src/main/scala/Backend/FU.scala:358:7
+  );	// src/main/scala/Backend/FU.scala:411:39
+  assign io_FU_input_ready = 1'h1;	// src/main/scala/Backend/FU.scala:384:7
+  assign io_FU_output_bits_branch_taken = 1'h0;	// src/main/scala/Backend/FU.scala:384:7
+  assign io_FU_output_bits_target_address = 32'h0;	// src/main/scala/Backend/FU.scala:384:7, :411:39
+  assign io_FU_output_bits_branch_valid = 1'h0;	// src/main/scala/Backend/FU.scala:384:7
+  assign io_FU_output_bits_address = 32'h0;	// src/main/scala/Backend/FU.scala:384:7, :411:39
+  assign io_FU_output_bits_memory_type = 2'h0;	// src/main/scala/Backend/FU.scala:384:7, :411:39
+  assign io_FU_output_bits_access_width = 2'h0;	// src/main/scala/Backend/FU.scala:384:7, :411:39
+  assign io_FU_output_bits_unsigned = 1'h0;	// src/main/scala/Backend/FU.scala:384:7
+  assign io_FU_output_bits_wr_data = 32'h0;	// src/main/scala/Backend/FU.scala:384:7, :411:39
 endmodule
 

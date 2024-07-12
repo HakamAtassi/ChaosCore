@@ -57,16 +57,12 @@ module instruction_fetch(	// src/main/scala/Frontend/instruction_fetch.scala:69:
                 io_fetch_packet_bits_valid_bits_3,	// src/main/scala/Frontend/instruction_fetch.scala:74:16
   output [31:0] io_fetch_packet_bits_instructions_0_instruction,	// src/main/scala/Frontend/instruction_fetch.scala:74:16
   output [3:0]  io_fetch_packet_bits_instructions_0_packet_index,	// src/main/scala/Frontend/instruction_fetch.scala:74:16
-  output [5:0]  io_fetch_packet_bits_instructions_0_ROB_index,	// src/main/scala/Frontend/instruction_fetch.scala:74:16
   output [31:0] io_fetch_packet_bits_instructions_1_instruction,	// src/main/scala/Frontend/instruction_fetch.scala:74:16
   output [3:0]  io_fetch_packet_bits_instructions_1_packet_index,	// src/main/scala/Frontend/instruction_fetch.scala:74:16
-  output [5:0]  io_fetch_packet_bits_instructions_1_ROB_index,	// src/main/scala/Frontend/instruction_fetch.scala:74:16
   output [31:0] io_fetch_packet_bits_instructions_2_instruction,	// src/main/scala/Frontend/instruction_fetch.scala:74:16
   output [3:0]  io_fetch_packet_bits_instructions_2_packet_index,	// src/main/scala/Frontend/instruction_fetch.scala:74:16
-  output [5:0]  io_fetch_packet_bits_instructions_2_ROB_index,	// src/main/scala/Frontend/instruction_fetch.scala:74:16
   output [31:0] io_fetch_packet_bits_instructions_3_instruction,	// src/main/scala/Frontend/instruction_fetch.scala:74:16
   output [3:0]  io_fetch_packet_bits_instructions_3_packet_index,	// src/main/scala/Frontend/instruction_fetch.scala:74:16
-  output [5:0]  io_fetch_packet_bits_instructions_3_ROB_index,	// src/main/scala/Frontend/instruction_fetch.scala:74:16
   input         io_predictions_ready,	// src/main/scala/Frontend/instruction_fetch.scala:74:16
   output        io_predictions_valid,	// src/main/scala/Frontend/instruction_fetch.scala:74:16
                 io_predictions_bits_valid,	// src/main/scala/Frontend/instruction_fetch.scala:74:16
@@ -279,26 +275,22 @@ module instruction_fetch(	// src/main/scala/Frontend/instruction_fetch.scala:69:
       (io_fetch_packet_bits_instructions_0_instruction),
     .io_final_fetch_packet_bits_instructions_0_packet_index
       (io_fetch_packet_bits_instructions_0_packet_index),
-    .io_final_fetch_packet_bits_instructions_0_ROB_index
-      (io_fetch_packet_bits_instructions_0_ROB_index),
+    .io_final_fetch_packet_bits_instructions_0_ROB_index    (/* unused */),
     .io_final_fetch_packet_bits_instructions_1_instruction
       (io_fetch_packet_bits_instructions_1_instruction),
     .io_final_fetch_packet_bits_instructions_1_packet_index
       (io_fetch_packet_bits_instructions_1_packet_index),
-    .io_final_fetch_packet_bits_instructions_1_ROB_index
-      (io_fetch_packet_bits_instructions_1_ROB_index),
+    .io_final_fetch_packet_bits_instructions_1_ROB_index    (/* unused */),
     .io_final_fetch_packet_bits_instructions_2_instruction
       (io_fetch_packet_bits_instructions_2_instruction),
     .io_final_fetch_packet_bits_instructions_2_packet_index
       (io_fetch_packet_bits_instructions_2_packet_index),
-    .io_final_fetch_packet_bits_instructions_2_ROB_index
-      (io_fetch_packet_bits_instructions_2_ROB_index),
+    .io_final_fetch_packet_bits_instructions_2_ROB_index    (/* unused */),
     .io_final_fetch_packet_bits_instructions_3_instruction
       (io_fetch_packet_bits_instructions_3_instruction),
     .io_final_fetch_packet_bits_instructions_3_packet_index
       (io_fetch_packet_bits_instructions_3_packet_index),
-    .io_final_fetch_packet_bits_instructions_3_ROB_index
-      (io_fetch_packet_bits_instructions_3_ROB_index),
+    .io_final_fetch_packet_bits_instructions_3_ROB_index    (/* unused */),
     .io_GHR                                                 (_predecoder_io_GHR),
     .io_RAS_update_call_addr
       (_predecoder_io_RAS_update_call_addr),

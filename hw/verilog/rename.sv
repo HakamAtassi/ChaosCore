@@ -68,6 +68,32 @@ module rename(	// src/main/scala/Frontend/rename.scala:204:7
                 io_commit_bits_RD_valid_1,	// src/main/scala/Frontend/rename.scala:217:16
                 io_commit_bits_RD_valid_2,	// src/main/scala/Frontend/rename.scala:217:16
                 io_commit_bits_RD_valid_3,	// src/main/scala/Frontend/rename.scala:217:16
+  output        io_predictions_in_ready,	// src/main/scala/Frontend/rename.scala:217:16
+  input         io_predictions_in_valid,	// src/main/scala/Frontend/rename.scala:217:16
+                io_predictions_in_bits_valid,	// src/main/scala/Frontend/rename.scala:217:16
+  input  [31:0] io_predictions_in_bits_fetch_PC,	// src/main/scala/Frontend/rename.scala:217:16
+  input         io_predictions_in_bits_is_misprediction,	// src/main/scala/Frontend/rename.scala:217:16
+  input  [31:0] io_predictions_in_bits_predicted_PC,	// src/main/scala/Frontend/rename.scala:217:16
+  input         io_predictions_in_bits_T_NT,	// src/main/scala/Frontend/rename.scala:217:16
+  input  [2:0]  io_predictions_in_bits_br_type,	// src/main/scala/Frontend/rename.scala:217:16
+  input  [15:0] io_predictions_in_bits_GHR,	// src/main/scala/Frontend/rename.scala:217:16
+  input  [6:0]  io_predictions_in_bits_NEXT,	// src/main/scala/Frontend/rename.scala:217:16
+                io_predictions_in_bits_TOS,	// src/main/scala/Frontend/rename.scala:217:16
+  input  [1:0]  io_predictions_in_bits_dominant_index,	// src/main/scala/Frontend/rename.scala:217:16
+  input  [31:0] io_predictions_in_bits_resolved_PC,	// src/main/scala/Frontend/rename.scala:217:16
+  input         io_predictions_out_ready,	// src/main/scala/Frontend/rename.scala:217:16
+  output        io_predictions_out_valid,	// src/main/scala/Frontend/rename.scala:217:16
+                io_predictions_out_bits_valid,	// src/main/scala/Frontend/rename.scala:217:16
+  output [31:0] io_predictions_out_bits_fetch_PC,	// src/main/scala/Frontend/rename.scala:217:16
+  output        io_predictions_out_bits_is_misprediction,	// src/main/scala/Frontend/rename.scala:217:16
+  output [31:0] io_predictions_out_bits_predicted_PC,	// src/main/scala/Frontend/rename.scala:217:16
+  output        io_predictions_out_bits_T_NT,	// src/main/scala/Frontend/rename.scala:217:16
+  output [2:0]  io_predictions_out_bits_br_type,	// src/main/scala/Frontend/rename.scala:217:16
+  output [15:0] io_predictions_out_bits_GHR,	// src/main/scala/Frontend/rename.scala:217:16
+  output [6:0]  io_predictions_out_bits_NEXT,	// src/main/scala/Frontend/rename.scala:217:16
+                io_predictions_out_bits_TOS,	// src/main/scala/Frontend/rename.scala:217:16
+  output [1:0]  io_predictions_out_bits_dominant_index,	// src/main/scala/Frontend/rename.scala:217:16
+  output [31:0] io_predictions_out_bits_resolved_PC,	// src/main/scala/Frontend/rename.scala:217:16
   output        io_decoded_fetch_packet_ready,	// src/main/scala/Frontend/rename.scala:217:16
   input         io_decoded_fetch_packet_valid,	// src/main/scala/Frontend/rename.scala:217:16
   input  [31:0] io_decoded_fetch_packet_bits_fetch_PC,	// src/main/scala/Frontend/rename.scala:217:16
@@ -83,6 +109,8 @@ module rename(	// src/main/scala/Frontend/rename.scala:204:7
   input  [2:0]  io_decoded_fetch_packet_bits_decoded_instruction_0_FUNCT3,	// src/main/scala/Frontend/rename.scala:217:16
   input  [1:0]  io_decoded_fetch_packet_bits_decoded_instruction_0_packet_index,	// src/main/scala/Frontend/rename.scala:217:16
   input  [5:0]  io_decoded_fetch_packet_bits_decoded_instruction_0_ROB_index,	// src/main/scala/Frontend/rename.scala:217:16
+  input  [3:0]  io_decoded_fetch_packet_bits_decoded_instruction_0_MOB_index,	// src/main/scala/Frontend/rename.scala:217:16
+                io_decoded_fetch_packet_bits_decoded_instruction_0_FTQ_index,	// src/main/scala/Frontend/rename.scala:217:16
   input  [4:0]  io_decoded_fetch_packet_bits_decoded_instruction_0_instructionType,	// src/main/scala/Frontend/rename.scala:217:16
   input  [1:0]  io_decoded_fetch_packet_bits_decoded_instruction_0_portID,	// src/main/scala/Frontend/rename.scala:217:16
                 io_decoded_fetch_packet_bits_decoded_instruction_0_RS_type,	// src/main/scala/Frontend/rename.scala:217:16
@@ -92,9 +120,9 @@ module rename(	// src/main/scala/Frontend/rename.scala:204:7
                 io_decoded_fetch_packet_bits_decoded_instruction_0_SUBTRACT,	// src/main/scala/Frontend/rename.scala:217:16
                 io_decoded_fetch_packet_bits_decoded_instruction_0_MULTIPLY,	// src/main/scala/Frontend/rename.scala:217:16
                 io_decoded_fetch_packet_bits_decoded_instruction_0_IS_IMM,	// src/main/scala/Frontend/rename.scala:217:16
-                io_decoded_fetch_packet_bits_decoded_instruction_0_is_load,	// src/main/scala/Frontend/rename.scala:217:16
-                io_decoded_fetch_packet_bits_decoded_instruction_0_is_store,	// src/main/scala/Frontend/rename.scala:217:16
-                io_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS1_ready,	// src/main/scala/Frontend/rename.scala:217:16
+  input  [1:0]  io_decoded_fetch_packet_bits_decoded_instruction_0_memory_type,	// src/main/scala/Frontend/rename.scala:217:16
+                io_decoded_fetch_packet_bits_decoded_instruction_0_access_width,	// src/main/scala/Frontend/rename.scala:217:16
+  input         io_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS1_ready,	// src/main/scala/Frontend/rename.scala:217:16
                 io_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS2_ready,	// src/main/scala/Frontend/rename.scala:217:16
   input  [6:0]  io_decoded_fetch_packet_bits_decoded_instruction_1_RD,	// src/main/scala/Frontend/rename.scala:217:16
   input         io_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid,	// src/main/scala/Frontend/rename.scala:217:16
@@ -106,6 +134,8 @@ module rename(	// src/main/scala/Frontend/rename.scala:204:7
   input  [2:0]  io_decoded_fetch_packet_bits_decoded_instruction_1_FUNCT3,	// src/main/scala/Frontend/rename.scala:217:16
   input  [1:0]  io_decoded_fetch_packet_bits_decoded_instruction_1_packet_index,	// src/main/scala/Frontend/rename.scala:217:16
   input  [5:0]  io_decoded_fetch_packet_bits_decoded_instruction_1_ROB_index,	// src/main/scala/Frontend/rename.scala:217:16
+  input  [3:0]  io_decoded_fetch_packet_bits_decoded_instruction_1_MOB_index,	// src/main/scala/Frontend/rename.scala:217:16
+                io_decoded_fetch_packet_bits_decoded_instruction_1_FTQ_index,	// src/main/scala/Frontend/rename.scala:217:16
   input  [4:0]  io_decoded_fetch_packet_bits_decoded_instruction_1_instructionType,	// src/main/scala/Frontend/rename.scala:217:16
   input  [1:0]  io_decoded_fetch_packet_bits_decoded_instruction_1_portID,	// src/main/scala/Frontend/rename.scala:217:16
                 io_decoded_fetch_packet_bits_decoded_instruction_1_RS_type,	// src/main/scala/Frontend/rename.scala:217:16
@@ -115,9 +145,9 @@ module rename(	// src/main/scala/Frontend/rename.scala:204:7
                 io_decoded_fetch_packet_bits_decoded_instruction_1_SUBTRACT,	// src/main/scala/Frontend/rename.scala:217:16
                 io_decoded_fetch_packet_bits_decoded_instruction_1_MULTIPLY,	// src/main/scala/Frontend/rename.scala:217:16
                 io_decoded_fetch_packet_bits_decoded_instruction_1_IS_IMM,	// src/main/scala/Frontend/rename.scala:217:16
-                io_decoded_fetch_packet_bits_decoded_instruction_1_is_load,	// src/main/scala/Frontend/rename.scala:217:16
-                io_decoded_fetch_packet_bits_decoded_instruction_1_is_store,	// src/main/scala/Frontend/rename.scala:217:16
-                io_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS1_ready,	// src/main/scala/Frontend/rename.scala:217:16
+  input  [1:0]  io_decoded_fetch_packet_bits_decoded_instruction_1_memory_type,	// src/main/scala/Frontend/rename.scala:217:16
+                io_decoded_fetch_packet_bits_decoded_instruction_1_access_width,	// src/main/scala/Frontend/rename.scala:217:16
+  input         io_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS1_ready,	// src/main/scala/Frontend/rename.scala:217:16
                 io_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS2_ready,	// src/main/scala/Frontend/rename.scala:217:16
   input  [6:0]  io_decoded_fetch_packet_bits_decoded_instruction_2_RD,	// src/main/scala/Frontend/rename.scala:217:16
   input         io_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid,	// src/main/scala/Frontend/rename.scala:217:16
@@ -129,6 +159,8 @@ module rename(	// src/main/scala/Frontend/rename.scala:204:7
   input  [2:0]  io_decoded_fetch_packet_bits_decoded_instruction_2_FUNCT3,	// src/main/scala/Frontend/rename.scala:217:16
   input  [1:0]  io_decoded_fetch_packet_bits_decoded_instruction_2_packet_index,	// src/main/scala/Frontend/rename.scala:217:16
   input  [5:0]  io_decoded_fetch_packet_bits_decoded_instruction_2_ROB_index,	// src/main/scala/Frontend/rename.scala:217:16
+  input  [3:0]  io_decoded_fetch_packet_bits_decoded_instruction_2_MOB_index,	// src/main/scala/Frontend/rename.scala:217:16
+                io_decoded_fetch_packet_bits_decoded_instruction_2_FTQ_index,	// src/main/scala/Frontend/rename.scala:217:16
   input  [4:0]  io_decoded_fetch_packet_bits_decoded_instruction_2_instructionType,	// src/main/scala/Frontend/rename.scala:217:16
   input  [1:0]  io_decoded_fetch_packet_bits_decoded_instruction_2_portID,	// src/main/scala/Frontend/rename.scala:217:16
                 io_decoded_fetch_packet_bits_decoded_instruction_2_RS_type,	// src/main/scala/Frontend/rename.scala:217:16
@@ -138,9 +170,9 @@ module rename(	// src/main/scala/Frontend/rename.scala:204:7
                 io_decoded_fetch_packet_bits_decoded_instruction_2_SUBTRACT,	// src/main/scala/Frontend/rename.scala:217:16
                 io_decoded_fetch_packet_bits_decoded_instruction_2_MULTIPLY,	// src/main/scala/Frontend/rename.scala:217:16
                 io_decoded_fetch_packet_bits_decoded_instruction_2_IS_IMM,	// src/main/scala/Frontend/rename.scala:217:16
-                io_decoded_fetch_packet_bits_decoded_instruction_2_is_load,	// src/main/scala/Frontend/rename.scala:217:16
-                io_decoded_fetch_packet_bits_decoded_instruction_2_is_store,	// src/main/scala/Frontend/rename.scala:217:16
-                io_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS1_ready,	// src/main/scala/Frontend/rename.scala:217:16
+  input  [1:0]  io_decoded_fetch_packet_bits_decoded_instruction_2_memory_type,	// src/main/scala/Frontend/rename.scala:217:16
+                io_decoded_fetch_packet_bits_decoded_instruction_2_access_width,	// src/main/scala/Frontend/rename.scala:217:16
+  input         io_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS1_ready,	// src/main/scala/Frontend/rename.scala:217:16
                 io_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS2_ready,	// src/main/scala/Frontend/rename.scala:217:16
   input  [6:0]  io_decoded_fetch_packet_bits_decoded_instruction_3_RD,	// src/main/scala/Frontend/rename.scala:217:16
   input         io_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid,	// src/main/scala/Frontend/rename.scala:217:16
@@ -152,6 +184,8 @@ module rename(	// src/main/scala/Frontend/rename.scala:204:7
   input  [2:0]  io_decoded_fetch_packet_bits_decoded_instruction_3_FUNCT3,	// src/main/scala/Frontend/rename.scala:217:16
   input  [1:0]  io_decoded_fetch_packet_bits_decoded_instruction_3_packet_index,	// src/main/scala/Frontend/rename.scala:217:16
   input  [5:0]  io_decoded_fetch_packet_bits_decoded_instruction_3_ROB_index,	// src/main/scala/Frontend/rename.scala:217:16
+  input  [3:0]  io_decoded_fetch_packet_bits_decoded_instruction_3_MOB_index,	// src/main/scala/Frontend/rename.scala:217:16
+                io_decoded_fetch_packet_bits_decoded_instruction_3_FTQ_index,	// src/main/scala/Frontend/rename.scala:217:16
   input  [4:0]  io_decoded_fetch_packet_bits_decoded_instruction_3_instructionType,	// src/main/scala/Frontend/rename.scala:217:16
   input  [1:0]  io_decoded_fetch_packet_bits_decoded_instruction_3_portID,	// src/main/scala/Frontend/rename.scala:217:16
                 io_decoded_fetch_packet_bits_decoded_instruction_3_RS_type,	// src/main/scala/Frontend/rename.scala:217:16
@@ -161,9 +195,9 @@ module rename(	// src/main/scala/Frontend/rename.scala:204:7
                 io_decoded_fetch_packet_bits_decoded_instruction_3_SUBTRACT,	// src/main/scala/Frontend/rename.scala:217:16
                 io_decoded_fetch_packet_bits_decoded_instruction_3_MULTIPLY,	// src/main/scala/Frontend/rename.scala:217:16
                 io_decoded_fetch_packet_bits_decoded_instruction_3_IS_IMM,	// src/main/scala/Frontend/rename.scala:217:16
-                io_decoded_fetch_packet_bits_decoded_instruction_3_is_load,	// src/main/scala/Frontend/rename.scala:217:16
-                io_decoded_fetch_packet_bits_decoded_instruction_3_is_store,	// src/main/scala/Frontend/rename.scala:217:16
-                io_decoded_fetch_packet_bits_valid_bits_0,	// src/main/scala/Frontend/rename.scala:217:16
+  input  [1:0]  io_decoded_fetch_packet_bits_decoded_instruction_3_memory_type,	// src/main/scala/Frontend/rename.scala:217:16
+                io_decoded_fetch_packet_bits_decoded_instruction_3_access_width,	// src/main/scala/Frontend/rename.scala:217:16
+  input         io_decoded_fetch_packet_bits_valid_bits_0,	// src/main/scala/Frontend/rename.scala:217:16
                 io_decoded_fetch_packet_bits_valid_bits_1,	// src/main/scala/Frontend/rename.scala:217:16
                 io_decoded_fetch_packet_bits_valid_bits_2,	// src/main/scala/Frontend/rename.scala:217:16
                 io_decoded_fetch_packet_bits_valid_bits_3,	// src/main/scala/Frontend/rename.scala:217:16
@@ -177,7 +211,14 @@ module rename(	// src/main/scala/Frontend/rename.scala:204:7
   input         io_FU_outputs_0_bits_branch_taken,	// src/main/scala/Frontend/rename.scala:217:16
   input  [31:0] io_FU_outputs_0_bits_target_address,	// src/main/scala/Frontend/rename.scala:217:16
   input         io_FU_outputs_0_bits_branch_valid,	// src/main/scala/Frontend/rename.scala:217:16
+  input  [31:0] io_FU_outputs_0_bits_address,	// src/main/scala/Frontend/rename.scala:217:16
+  input  [1:0]  io_FU_outputs_0_bits_memory_type,	// src/main/scala/Frontend/rename.scala:217:16
+                io_FU_outputs_0_bits_access_width,	// src/main/scala/Frontend/rename.scala:217:16
+  input         io_FU_outputs_0_bits_unsigned,	// src/main/scala/Frontend/rename.scala:217:16
+  input  [31:0] io_FU_outputs_0_bits_wr_data,	// src/main/scala/Frontend/rename.scala:217:16
+  input  [3:0]  io_FU_outputs_0_bits_MOB_index,	// src/main/scala/Frontend/rename.scala:217:16
   input  [5:0]  io_FU_outputs_0_bits_ROB_index,	// src/main/scala/Frontend/rename.scala:217:16
+  input  [3:0]  io_FU_outputs_0_bits_FTQ_index,	// src/main/scala/Frontend/rename.scala:217:16
   input  [1:0]  io_FU_outputs_0_bits_fetch_packet_index,	// src/main/scala/Frontend/rename.scala:217:16
   input         io_FU_outputs_1_valid,	// src/main/scala/Frontend/rename.scala:217:16
   input  [6:0]  io_FU_outputs_1_bits_RD,	// src/main/scala/Frontend/rename.scala:217:16
@@ -187,7 +228,14 @@ module rename(	// src/main/scala/Frontend/rename.scala:204:7
   input         io_FU_outputs_1_bits_branch_taken,	// src/main/scala/Frontend/rename.scala:217:16
   input  [31:0] io_FU_outputs_1_bits_target_address,	// src/main/scala/Frontend/rename.scala:217:16
   input         io_FU_outputs_1_bits_branch_valid,	// src/main/scala/Frontend/rename.scala:217:16
+  input  [31:0] io_FU_outputs_1_bits_address,	// src/main/scala/Frontend/rename.scala:217:16
+  input  [1:0]  io_FU_outputs_1_bits_memory_type,	// src/main/scala/Frontend/rename.scala:217:16
+                io_FU_outputs_1_bits_access_width,	// src/main/scala/Frontend/rename.scala:217:16
+  input         io_FU_outputs_1_bits_unsigned,	// src/main/scala/Frontend/rename.scala:217:16
+  input  [31:0] io_FU_outputs_1_bits_wr_data,	// src/main/scala/Frontend/rename.scala:217:16
+  input  [3:0]  io_FU_outputs_1_bits_MOB_index,	// src/main/scala/Frontend/rename.scala:217:16
   input  [5:0]  io_FU_outputs_1_bits_ROB_index,	// src/main/scala/Frontend/rename.scala:217:16
+  input  [3:0]  io_FU_outputs_1_bits_FTQ_index,	// src/main/scala/Frontend/rename.scala:217:16
   input  [1:0]  io_FU_outputs_1_bits_fetch_packet_index,	// src/main/scala/Frontend/rename.scala:217:16
   input         io_FU_outputs_2_valid,	// src/main/scala/Frontend/rename.scala:217:16
   input  [6:0]  io_FU_outputs_2_bits_RD,	// src/main/scala/Frontend/rename.scala:217:16
@@ -197,7 +245,14 @@ module rename(	// src/main/scala/Frontend/rename.scala:204:7
   input         io_FU_outputs_2_bits_branch_taken,	// src/main/scala/Frontend/rename.scala:217:16
   input  [31:0] io_FU_outputs_2_bits_target_address,	// src/main/scala/Frontend/rename.scala:217:16
   input         io_FU_outputs_2_bits_branch_valid,	// src/main/scala/Frontend/rename.scala:217:16
+  input  [31:0] io_FU_outputs_2_bits_address,	// src/main/scala/Frontend/rename.scala:217:16
+  input  [1:0]  io_FU_outputs_2_bits_memory_type,	// src/main/scala/Frontend/rename.scala:217:16
+                io_FU_outputs_2_bits_access_width,	// src/main/scala/Frontend/rename.scala:217:16
+  input         io_FU_outputs_2_bits_unsigned,	// src/main/scala/Frontend/rename.scala:217:16
+  input  [31:0] io_FU_outputs_2_bits_wr_data,	// src/main/scala/Frontend/rename.scala:217:16
+  input  [3:0]  io_FU_outputs_2_bits_MOB_index,	// src/main/scala/Frontend/rename.scala:217:16
   input  [5:0]  io_FU_outputs_2_bits_ROB_index,	// src/main/scala/Frontend/rename.scala:217:16
+  input  [3:0]  io_FU_outputs_2_bits_FTQ_index,	// src/main/scala/Frontend/rename.scala:217:16
   input  [1:0]  io_FU_outputs_2_bits_fetch_packet_index,	// src/main/scala/Frontend/rename.scala:217:16
   input         io_FU_outputs_3_valid,	// src/main/scala/Frontend/rename.scala:217:16
   input  [6:0]  io_FU_outputs_3_bits_RD,	// src/main/scala/Frontend/rename.scala:217:16
@@ -207,7 +262,14 @@ module rename(	// src/main/scala/Frontend/rename.scala:204:7
   input         io_FU_outputs_3_bits_branch_taken,	// src/main/scala/Frontend/rename.scala:217:16
   input  [31:0] io_FU_outputs_3_bits_target_address,	// src/main/scala/Frontend/rename.scala:217:16
   input         io_FU_outputs_3_bits_branch_valid,	// src/main/scala/Frontend/rename.scala:217:16
+  input  [31:0] io_FU_outputs_3_bits_address,	// src/main/scala/Frontend/rename.scala:217:16
+  input  [1:0]  io_FU_outputs_3_bits_memory_type,	// src/main/scala/Frontend/rename.scala:217:16
+                io_FU_outputs_3_bits_access_width,	// src/main/scala/Frontend/rename.scala:217:16
+  input         io_FU_outputs_3_bits_unsigned,	// src/main/scala/Frontend/rename.scala:217:16
+  input  [31:0] io_FU_outputs_3_bits_wr_data,	// src/main/scala/Frontend/rename.scala:217:16
+  input  [3:0]  io_FU_outputs_3_bits_MOB_index,	// src/main/scala/Frontend/rename.scala:217:16
   input  [5:0]  io_FU_outputs_3_bits_ROB_index,	// src/main/scala/Frontend/rename.scala:217:16
+  input  [3:0]  io_FU_outputs_3_bits_FTQ_index,	// src/main/scala/Frontend/rename.scala:217:16
   input  [1:0]  io_FU_outputs_3_bits_fetch_packet_index,	// src/main/scala/Frontend/rename.scala:217:16
   input         io_renamed_decoded_fetch_packet_ready,	// src/main/scala/Frontend/rename.scala:217:16
   output        io_renamed_decoded_fetch_packet_valid,	// src/main/scala/Frontend/rename.scala:217:16
@@ -224,6 +286,8 @@ module rename(	// src/main/scala/Frontend/rename.scala:204:7
   output [2:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_FUNCT3,	// src/main/scala/Frontend/rename.scala:217:16
   output [1:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_packet_index,	// src/main/scala/Frontend/rename.scala:217:16
   output [5:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_ROB_index,	// src/main/scala/Frontend/rename.scala:217:16
+  output [3:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_MOB_index,	// src/main/scala/Frontend/rename.scala:217:16
+                io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_FTQ_index,	// src/main/scala/Frontend/rename.scala:217:16
   output [4:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_instructionType,	// src/main/scala/Frontend/rename.scala:217:16
   output [1:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_portID,	// src/main/scala/Frontend/rename.scala:217:16
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS_type,	// src/main/scala/Frontend/rename.scala:217:16
@@ -233,9 +297,9 @@ module rename(	// src/main/scala/Frontend/rename.scala:204:7
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_SUBTRACT,	// src/main/scala/Frontend/rename.scala:217:16
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_MULTIPLY,	// src/main/scala/Frontend/rename.scala:217:16
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_IS_IMM,	// src/main/scala/Frontend/rename.scala:217:16
-                io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_is_load,	// src/main/scala/Frontend/rename.scala:217:16
-                io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_is_store,	// src/main/scala/Frontend/rename.scala:217:16
-                io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS1_ready,	// src/main/scala/Frontend/rename.scala:217:16
+  output [1:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_memory_type,	// src/main/scala/Frontend/rename.scala:217:16
+                io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_access_width,	// src/main/scala/Frontend/rename.scala:217:16
+  output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS1_ready,	// src/main/scala/Frontend/rename.scala:217:16
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS2_ready,	// src/main/scala/Frontend/rename.scala:217:16
   output [6:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD,	// src/main/scala/Frontend/rename.scala:217:16
   output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid,	// src/main/scala/Frontend/rename.scala:217:16
@@ -247,6 +311,8 @@ module rename(	// src/main/scala/Frontend/rename.scala:204:7
   output [2:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_FUNCT3,	// src/main/scala/Frontend/rename.scala:217:16
   output [1:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_packet_index,	// src/main/scala/Frontend/rename.scala:217:16
   output [5:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ROB_index,	// src/main/scala/Frontend/rename.scala:217:16
+  output [3:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_MOB_index,	// src/main/scala/Frontend/rename.scala:217:16
+                io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_FTQ_index,	// src/main/scala/Frontend/rename.scala:217:16
   output [4:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_instructionType,	// src/main/scala/Frontend/rename.scala:217:16
   output [1:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_portID,	// src/main/scala/Frontend/rename.scala:217:16
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS_type,	// src/main/scala/Frontend/rename.scala:217:16
@@ -256,9 +322,9 @@ module rename(	// src/main/scala/Frontend/rename.scala:204:7
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_SUBTRACT,	// src/main/scala/Frontend/rename.scala:217:16
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_MULTIPLY,	// src/main/scala/Frontend/rename.scala:217:16
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_IS_IMM,	// src/main/scala/Frontend/rename.scala:217:16
-                io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_is_load,	// src/main/scala/Frontend/rename.scala:217:16
-                io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_is_store,	// src/main/scala/Frontend/rename.scala:217:16
-                io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS1_ready,	// src/main/scala/Frontend/rename.scala:217:16
+  output [1:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_memory_type,	// src/main/scala/Frontend/rename.scala:217:16
+                io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_access_width,	// src/main/scala/Frontend/rename.scala:217:16
+  output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS1_ready,	// src/main/scala/Frontend/rename.scala:217:16
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS2_ready,	// src/main/scala/Frontend/rename.scala:217:16
   output [6:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD,	// src/main/scala/Frontend/rename.scala:217:16
   output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid,	// src/main/scala/Frontend/rename.scala:217:16
@@ -270,6 +336,8 @@ module rename(	// src/main/scala/Frontend/rename.scala:204:7
   output [2:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_FUNCT3,	// src/main/scala/Frontend/rename.scala:217:16
   output [1:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_packet_index,	// src/main/scala/Frontend/rename.scala:217:16
   output [5:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ROB_index,	// src/main/scala/Frontend/rename.scala:217:16
+  output [3:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_MOB_index,	// src/main/scala/Frontend/rename.scala:217:16
+                io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_FTQ_index,	// src/main/scala/Frontend/rename.scala:217:16
   output [4:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_instructionType,	// src/main/scala/Frontend/rename.scala:217:16
   output [1:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_portID,	// src/main/scala/Frontend/rename.scala:217:16
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS_type,	// src/main/scala/Frontend/rename.scala:217:16
@@ -279,9 +347,9 @@ module rename(	// src/main/scala/Frontend/rename.scala:204:7
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_SUBTRACT,	// src/main/scala/Frontend/rename.scala:217:16
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_MULTIPLY,	// src/main/scala/Frontend/rename.scala:217:16
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_IS_IMM,	// src/main/scala/Frontend/rename.scala:217:16
-                io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_is_load,	// src/main/scala/Frontend/rename.scala:217:16
-                io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_is_store,	// src/main/scala/Frontend/rename.scala:217:16
-                io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS1_ready,	// src/main/scala/Frontend/rename.scala:217:16
+  output [1:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_memory_type,	// src/main/scala/Frontend/rename.scala:217:16
+                io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_access_width,	// src/main/scala/Frontend/rename.scala:217:16
+  output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS1_ready,	// src/main/scala/Frontend/rename.scala:217:16
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS2_ready,	// src/main/scala/Frontend/rename.scala:217:16
   output [6:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD,	// src/main/scala/Frontend/rename.scala:217:16
   output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid,	// src/main/scala/Frontend/rename.scala:217:16
@@ -293,6 +361,8 @@ module rename(	// src/main/scala/Frontend/rename.scala:204:7
   output [2:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_FUNCT3,	// src/main/scala/Frontend/rename.scala:217:16
   output [1:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_packet_index,	// src/main/scala/Frontend/rename.scala:217:16
   output [5:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ROB_index,	// src/main/scala/Frontend/rename.scala:217:16
+  output [3:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_MOB_index,	// src/main/scala/Frontend/rename.scala:217:16
+                io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_FTQ_index,	// src/main/scala/Frontend/rename.scala:217:16
   output [4:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_instructionType,	// src/main/scala/Frontend/rename.scala:217:16
   output [1:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_portID,	// src/main/scala/Frontend/rename.scala:217:16
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS_type,	// src/main/scala/Frontend/rename.scala:217:16
@@ -302,9 +372,9 @@ module rename(	// src/main/scala/Frontend/rename.scala:204:7
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_SUBTRACT,	// src/main/scala/Frontend/rename.scala:217:16
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_MULTIPLY,	// src/main/scala/Frontend/rename.scala:217:16
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_IS_IMM,	// src/main/scala/Frontend/rename.scala:217:16
-                io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_is_load,	// src/main/scala/Frontend/rename.scala:217:16
-                io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_is_store,	// src/main/scala/Frontend/rename.scala:217:16
-                io_renamed_decoded_fetch_packet_bits_valid_bits_0,	// src/main/scala/Frontend/rename.scala:217:16
+  output [1:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_memory_type,	// src/main/scala/Frontend/rename.scala:217:16
+                io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_access_width,	// src/main/scala/Frontend/rename.scala:217:16
+  output        io_renamed_decoded_fetch_packet_bits_valid_bits_0,	// src/main/scala/Frontend/rename.scala:217:16
                 io_renamed_decoded_fetch_packet_bits_valid_bits_1,	// src/main/scala/Frontend/rename.scala:217:16
                 io_renamed_decoded_fetch_packet_bits_valid_bits_2,	// src/main/scala/Frontend/rename.scala:217:16
                 io_renamed_decoded_fetch_packet_bits_valid_bits_3,	// src/main/scala/Frontend/rename.scala:217:16
@@ -312,2249 +382,2272 @@ module rename(	// src/main/scala/Frontend/rename.scala:204:7
   output [7:0]  io_renamed_decoded_fetch_packet_bits_free_list_front_pointer	// src/main/scala/Frontend/rename.scala:217:16
 );
 
-  wire         renamed_decoded_fetch_packet_ready;	// src/main/scala/Frontend/rename.scala:245:44
-  wire         io_decoded_fetch_packet_ready_0;	// src/main/scala/Frontend/rename.scala:433:{86,114}
-  wire         _renamed_decoded_fetch_packet_skid_buffer_io_deq_valid;	// src/main/scala/Frontend/rename.scala:363:58
+  wire         renamed_decoded_fetch_packet_ready;	// src/main/scala/Frontend/rename.scala:249:44
+  wire         inputs_ready;	// src/main/scala/Frontend/rename.scala:448:{50,78,119}
+  wire         _renamed_decoded_fetch_packet_skid_buffer_io_deq_valid;	// src/main/scala/Frontend/rename.scala:367:58
   wire [6:0]
-    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD;	// src/main/scala/Frontend/rename.scala:363:58
+    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD;	// src/main/scala/Frontend/rename.scala:367:58
   wire
-    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD_valid;	// src/main/scala/Frontend/rename.scala:363:58
+    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD_valid;	// src/main/scala/Frontend/rename.scala:367:58
   wire [6:0]
-    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RS1;	// src/main/scala/Frontend/rename.scala:363:58
+    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RS1;	// src/main/scala/Frontend/rename.scala:367:58
   wire [6:0]
-    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RS2;	// src/main/scala/Frontend/rename.scala:363:58
+    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RS2;	// src/main/scala/Frontend/rename.scala:367:58
   wire [6:0]
-    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD;	// src/main/scala/Frontend/rename.scala:363:58
+    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD;	// src/main/scala/Frontend/rename.scala:367:58
   wire
-    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD_valid;	// src/main/scala/Frontend/rename.scala:363:58
+    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD_valid;	// src/main/scala/Frontend/rename.scala:367:58
   wire [6:0]
-    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RS1;	// src/main/scala/Frontend/rename.scala:363:58
+    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RS1;	// src/main/scala/Frontend/rename.scala:367:58
   wire [6:0]
-    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RS2;	// src/main/scala/Frontend/rename.scala:363:58
+    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RS2;	// src/main/scala/Frontend/rename.scala:367:58
   wire [6:0]
-    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD;	// src/main/scala/Frontend/rename.scala:363:58
+    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD;	// src/main/scala/Frontend/rename.scala:367:58
   wire
-    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD_valid;	// src/main/scala/Frontend/rename.scala:363:58
+    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD_valid;	// src/main/scala/Frontend/rename.scala:367:58
   wire [6:0]
-    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RS1;	// src/main/scala/Frontend/rename.scala:363:58
+    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RS1;	// src/main/scala/Frontend/rename.scala:367:58
   wire [6:0]
-    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RS2;	// src/main/scala/Frontend/rename.scala:363:58
+    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RS2;	// src/main/scala/Frontend/rename.scala:367:58
   wire [6:0]
-    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD;	// src/main/scala/Frontend/rename.scala:363:58
+    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD;	// src/main/scala/Frontend/rename.scala:367:58
   wire
-    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD_valid;	// src/main/scala/Frontend/rename.scala:363:58
+    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD_valid;	// src/main/scala/Frontend/rename.scala:367:58
   wire [6:0]
-    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RS1;	// src/main/scala/Frontend/rename.scala:363:58
+    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RS1;	// src/main/scala/Frontend/rename.scala:367:58
   wire [6:0]
-    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RS2;	// src/main/scala/Frontend/rename.scala:363:58
-  wire [3:0]   _RAT_io_active_checkpoint_value;	// src/main/scala/Frontend/rename.scala:256:33
-  wire         _RAT_io_checkpoints_full;	// src/main/scala/Frontend/rename.scala:256:33
-  wire [6:0]   _RAT_io_RAT_RS1_1;	// src/main/scala/Frontend/rename.scala:256:33
-  wire [6:0]   _RAT_io_RAT_RS1_2;	// src/main/scala/Frontend/rename.scala:256:33
-  wire [6:0]   _RAT_io_RAT_RS1_3;	// src/main/scala/Frontend/rename.scala:256:33
-  wire [6:0]   _RAT_io_RAT_RS2_1;	// src/main/scala/Frontend/rename.scala:256:33
-  wire [6:0]   _RAT_io_RAT_RS2_2;	// src/main/scala/Frontend/rename.scala:256:33
-  wire [6:0]   _RAT_io_RAT_RS2_3;	// src/main/scala/Frontend/rename.scala:256:33
-  wire         _WAW_handler_io_RAT_wr_en_0;	// src/main/scala/Frontend/rename.scala:255:33
-  wire         _WAW_handler_io_RAT_wr_en_1;	// src/main/scala/Frontend/rename.scala:255:33
-  wire         _WAW_handler_io_RAT_wr_en_2;	// src/main/scala/Frontend/rename.scala:255:33
-  wire         _WAW_handler_io_RAT_wr_en_3;	// src/main/scala/Frontend/rename.scala:255:33
-  wire [4:0]   _WAW_handler_io_RAT_RD_values_0;	// src/main/scala/Frontend/rename.scala:255:33
-  wire [4:0]   _WAW_handler_io_RAT_RD_values_1;	// src/main/scala/Frontend/rename.scala:255:33
-  wire [4:0]   _WAW_handler_io_RAT_RD_values_2;	// src/main/scala/Frontend/rename.scala:255:33
-  wire [4:0]   _WAW_handler_io_RAT_RD_values_3;	// src/main/scala/Frontend/rename.scala:255:33
-  wire [6:0]   _WAW_handler_io_FL_RD_values_0;	// src/main/scala/Frontend/rename.scala:255:33
-  wire [6:0]   _WAW_handler_io_FL_RD_values_1;	// src/main/scala/Frontend/rename.scala:255:33
-  wire [6:0]   _WAW_handler_io_FL_RD_values_2;	// src/main/scala/Frontend/rename.scala:255:33
-  wire [6:0]   _WAW_handler_io_FL_RD_values_3;	// src/main/scala/Frontend/rename.scala:255:33
-  wire [6:0]   _free_list_io_renamed_values_0;	// src/main/scala/Frontend/rename.scala:254:33
-  wire [6:0]   _free_list_io_renamed_values_1;	// src/main/scala/Frontend/rename.scala:254:33
-  wire [6:0]   _free_list_io_renamed_values_2;	// src/main/scala/Frontend/rename.scala:254:33
-  wire [6:0]   _free_list_io_renamed_values_3;	// src/main/scala/Frontend/rename.scala:254:33
-  wire [6:0]   _free_list_io_free_list_front_pointer;	// src/main/scala/Frontend/rename.scala:254:33
-  wire         _free_list_io_can_allocate;	// src/main/scala/Frontend/rename.scala:254:33
-  wire         comb_ready_bits_0 = 1'h1;	// src/main/scala/Frontend/rename.scala:381:31
-  wire         fire =
-    io_decoded_fetch_packet_ready_0 & io_decoded_fetch_packet_valid & ~io_flush;	// src/main/scala/Frontend/rename.scala:240:{42,45}, :433:{86,114}, src/main/scala/chisel3/util/Decoupled.scala:51:35
-  wire [6:0]   renamed_RS1_0;	// src/main/scala/Frontend/rename.scala:300:27
-  wire [6:0]   renamed_RS2_0;	// src/main/scala/Frontend/rename.scala:301:27
-  wire [6:0]   renamed_RS1_1;	// src/main/scala/Frontend/rename.scala:300:27
-  wire [6:0]   renamed_RS2_1;	// src/main/scala/Frontend/rename.scala:301:27
-  wire [6:0]   renamed_RS1_2;	// src/main/scala/Frontend/rename.scala:300:27
-  wire [6:0]   renamed_RS2_2;	// src/main/scala/Frontend/rename.scala:301:27
-  wire [6:0]   renamed_RS1_3;	// src/main/scala/Frontend/rename.scala:300:27
-  wire [6:0]   renamed_RS2_3;	// src/main/scala/Frontend/rename.scala:301:27
-  reg  [31:0]  renamed_decoded_fetch_packet_bits_REG_fetch_PC;	// src/main/scala/Frontend/rename.scala:247:55
+    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RS2;	// src/main/scala/Frontend/rename.scala:367:58
+  wire [3:0]   _RAT_io_active_checkpoint_value;	// src/main/scala/Frontend/rename.scala:260:33
+  wire         _RAT_io_checkpoints_full;	// src/main/scala/Frontend/rename.scala:260:33
+  wire [6:0]   _RAT_io_RAT_RS1_1;	// src/main/scala/Frontend/rename.scala:260:33
+  wire [6:0]   _RAT_io_RAT_RS1_2;	// src/main/scala/Frontend/rename.scala:260:33
+  wire [6:0]   _RAT_io_RAT_RS1_3;	// src/main/scala/Frontend/rename.scala:260:33
+  wire [6:0]   _RAT_io_RAT_RS2_1;	// src/main/scala/Frontend/rename.scala:260:33
+  wire [6:0]   _RAT_io_RAT_RS2_2;	// src/main/scala/Frontend/rename.scala:260:33
+  wire [6:0]   _RAT_io_RAT_RS2_3;	// src/main/scala/Frontend/rename.scala:260:33
+  wire         _WAW_handler_io_RAT_wr_en_0;	// src/main/scala/Frontend/rename.scala:259:33
+  wire         _WAW_handler_io_RAT_wr_en_1;	// src/main/scala/Frontend/rename.scala:259:33
+  wire         _WAW_handler_io_RAT_wr_en_2;	// src/main/scala/Frontend/rename.scala:259:33
+  wire         _WAW_handler_io_RAT_wr_en_3;	// src/main/scala/Frontend/rename.scala:259:33
+  wire [4:0]   _WAW_handler_io_RAT_RD_values_0;	// src/main/scala/Frontend/rename.scala:259:33
+  wire [4:0]   _WAW_handler_io_RAT_RD_values_1;	// src/main/scala/Frontend/rename.scala:259:33
+  wire [4:0]   _WAW_handler_io_RAT_RD_values_2;	// src/main/scala/Frontend/rename.scala:259:33
+  wire [4:0]   _WAW_handler_io_RAT_RD_values_3;	// src/main/scala/Frontend/rename.scala:259:33
+  wire [6:0]   _WAW_handler_io_FL_RD_values_0;	// src/main/scala/Frontend/rename.scala:259:33
+  wire [6:0]   _WAW_handler_io_FL_RD_values_1;	// src/main/scala/Frontend/rename.scala:259:33
+  wire [6:0]   _WAW_handler_io_FL_RD_values_2;	// src/main/scala/Frontend/rename.scala:259:33
+  wire [6:0]   _WAW_handler_io_FL_RD_values_3;	// src/main/scala/Frontend/rename.scala:259:33
+  wire [6:0]   _free_list_io_renamed_values_0;	// src/main/scala/Frontend/rename.scala:258:33
+  wire [6:0]   _free_list_io_renamed_values_1;	// src/main/scala/Frontend/rename.scala:258:33
+  wire [6:0]   _free_list_io_renamed_values_2;	// src/main/scala/Frontend/rename.scala:258:33
+  wire [6:0]   _free_list_io_renamed_values_3;	// src/main/scala/Frontend/rename.scala:258:33
+  wire [6:0]   _free_list_io_free_list_front_pointer;	// src/main/scala/Frontend/rename.scala:258:33
+  wire         _free_list_io_can_allocate;	// src/main/scala/Frontend/rename.scala:258:33
+  wire         comb_ready_bits_0 = 1'h1;	// src/main/scala/Frontend/rename.scala:385:31
+  wire         fire = inputs_ready & io_decoded_fetch_packet_valid & ~io_flush;	// src/main/scala/Frontend/rename.scala:244:{42,45}, :448:{50,78,119}, src/main/scala/chisel3/util/Decoupled.scala:51:35
+  wire [6:0]   renamed_RS1_0;	// src/main/scala/Frontend/rename.scala:304:27
+  wire [6:0]   renamed_RS2_0;	// src/main/scala/Frontend/rename.scala:305:27
+  wire [6:0]   renamed_RS1_1;	// src/main/scala/Frontend/rename.scala:304:27
+  wire [6:0]   renamed_RS2_1;	// src/main/scala/Frontend/rename.scala:305:27
+  wire [6:0]   renamed_RS1_2;	// src/main/scala/Frontend/rename.scala:304:27
+  wire [6:0]   renamed_RS2_2;	// src/main/scala/Frontend/rename.scala:305:27
+  wire [6:0]   renamed_RS1_3;	// src/main/scala/Frontend/rename.scala:304:27
+  wire [6:0]   renamed_RS2_3;	// src/main/scala/Frontend/rename.scala:305:27
+  reg  [31:0]  renamed_decoded_fetch_packet_bits_REG_fetch_PC;	// src/main/scala/Frontend/rename.scala:251:55
   wire [31:0]  renamed_decoded_fetch_packet_bits_fetch_PC =
-    renamed_decoded_fetch_packet_bits_REG_fetch_PC;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
+    renamed_decoded_fetch_packet_bits_REG_fetch_PC;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
   reg
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_ready_bits_RS1_ready;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_ready_bits_RS1_ready;	// src/main/scala/Frontend/rename.scala:251:55
   wire
     renamed_decoded_fetch_packet_bits_decoded_instruction_0_ready_bits_RS1_ready =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_ready_bits_RS1_ready;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_ready_bits_RS1_ready;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
   reg
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_ready_bits_RS2_ready;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_ready_bits_RS2_ready;	// src/main/scala/Frontend/rename.scala:251:55
   wire
     renamed_decoded_fetch_packet_bits_decoded_instruction_0_ready_bits_RS2_ready =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_ready_bits_RS2_ready;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_RD_valid;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_ready_bits_RS2_ready;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_RD_valid;	// src/main/scala/Frontend/rename.scala:251:55
   wire         renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_RD_valid;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_RS1_valid;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_RD_valid;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_RS1_valid;	// src/main/scala/Frontend/rename.scala:251:55
   wire         renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS1_valid =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_RS1_valid;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_RS2_valid;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_RS1_valid;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_RS2_valid;	// src/main/scala/Frontend/rename.scala:251:55
   wire         renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS2_valid =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_RS2_valid;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg  [20:0]  renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_IMM;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_RS2_valid;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg  [20:0]  renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_IMM;	// src/main/scala/Frontend/rename.scala:251:55
   wire [20:0]  renamed_decoded_fetch_packet_bits_decoded_instruction_0_IMM =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_IMM;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg  [2:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_FUNCT3;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_IMM;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg  [2:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_FUNCT3;	// src/main/scala/Frontend/rename.scala:251:55
   wire [2:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_0_FUNCT3 =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_FUNCT3;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg  [1:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_packet_index;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_FUNCT3;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg  [1:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_packet_index;	// src/main/scala/Frontend/rename.scala:251:55
   wire [1:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_0_packet_index =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_packet_index;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg  [5:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_ROB_index;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_packet_index;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg  [5:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_ROB_index;	// src/main/scala/Frontend/rename.scala:251:55
   wire [5:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_0_ROB_index =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_ROB_index;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_ROB_index;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg  [3:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_MOB_index;	// src/main/scala/Frontend/rename.scala:251:55
+  wire [3:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_0_MOB_index =
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_MOB_index;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg  [3:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_FTQ_index;	// src/main/scala/Frontend/rename.scala:251:55
+  wire [3:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_0_FTQ_index =
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_FTQ_index;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
   reg  [4:0]
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_instructionType;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_instructionType;	// src/main/scala/Frontend/rename.scala:251:55
   wire [4:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_0_instructionType =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_instructionType;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg  [1:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_portID;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_instructionType;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg  [1:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_portID;	// src/main/scala/Frontend/rename.scala:251:55
   wire [1:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_0_portID =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_portID;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg  [1:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_RS_type;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_portID;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg  [1:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_RS_type;	// src/main/scala/Frontend/rename.scala:251:55
   wire [1:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS_type =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_RS_type;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_needs_ALU;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_RS_type;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_needs_ALU;	// src/main/scala/Frontend/rename.scala:251:55
   wire         renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_ALU =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_needs_ALU;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_needs_ALU;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
   reg
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_needs_branch_unit;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_needs_branch_unit;	// src/main/scala/Frontend/rename.scala:251:55
   wire         renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_branch_unit =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_needs_branch_unit;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_needs_CSRs;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_needs_branch_unit;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_needs_CSRs;	// src/main/scala/Frontend/rename.scala:251:55
   wire         renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_CSRs =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_needs_CSRs;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_SUBTRACT;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_needs_CSRs;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_SUBTRACT;	// src/main/scala/Frontend/rename.scala:251:55
   wire         renamed_decoded_fetch_packet_bits_decoded_instruction_0_SUBTRACT =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_SUBTRACT;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_MULTIPLY;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_SUBTRACT;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_MULTIPLY;	// src/main/scala/Frontend/rename.scala:251:55
   wire         renamed_decoded_fetch_packet_bits_decoded_instruction_0_MULTIPLY =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_MULTIPLY;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_IS_IMM;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_MULTIPLY;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_IS_IMM;	// src/main/scala/Frontend/rename.scala:251:55
   wire         renamed_decoded_fetch_packet_bits_decoded_instruction_0_IS_IMM =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_IS_IMM;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_is_load;	// src/main/scala/Frontend/rename.scala:247:55
-  wire         renamed_decoded_fetch_packet_bits_decoded_instruction_0_is_load =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_is_load;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_is_store;	// src/main/scala/Frontend/rename.scala:247:55
-  wire         renamed_decoded_fetch_packet_bits_decoded_instruction_0_is_store =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_is_store;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_IS_IMM;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg  [1:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_memory_type;	// src/main/scala/Frontend/rename.scala:251:55
+  wire [1:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_0_memory_type =
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_memory_type;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg  [1:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_access_width;	// src/main/scala/Frontend/rename.scala:251:55
+  wire [1:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_0_access_width =
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_access_width;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
   reg
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_ready_bits_RS1_ready;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_ready_bits_RS1_ready;	// src/main/scala/Frontend/rename.scala:251:55
   wire
     renamed_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS1_ready =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_ready_bits_RS1_ready;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_ready_bits_RS1_ready;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
   reg
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_ready_bits_RS2_ready;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_ready_bits_RS2_ready;	// src/main/scala/Frontend/rename.scala:251:55
   wire
     renamed_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS2_ready =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_ready_bits_RS2_ready;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_RD_valid;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_ready_bits_RS2_ready;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_RD_valid;	// src/main/scala/Frontend/rename.scala:251:55
   wire         renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_RD_valid;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_RS1_valid;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_RD_valid;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_RS1_valid;	// src/main/scala/Frontend/rename.scala:251:55
   wire         renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS1_valid =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_RS1_valid;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_RS2_valid;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_RS1_valid;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_RS2_valid;	// src/main/scala/Frontend/rename.scala:251:55
   wire         renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS2_valid =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_RS2_valid;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg  [20:0]  renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_IMM;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_RS2_valid;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg  [20:0]  renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_IMM;	// src/main/scala/Frontend/rename.scala:251:55
   wire [20:0]  renamed_decoded_fetch_packet_bits_decoded_instruction_1_IMM =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_IMM;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg  [2:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_FUNCT3;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_IMM;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg  [2:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_FUNCT3;	// src/main/scala/Frontend/rename.scala:251:55
   wire [2:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_1_FUNCT3 =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_FUNCT3;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg  [1:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_packet_index;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_FUNCT3;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg  [1:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_packet_index;	// src/main/scala/Frontend/rename.scala:251:55
   wire [1:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_1_packet_index =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_packet_index;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg  [5:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_ROB_index;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_packet_index;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg  [5:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_ROB_index;	// src/main/scala/Frontend/rename.scala:251:55
   wire [5:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_1_ROB_index =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_ROB_index;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_ROB_index;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg  [3:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_MOB_index;	// src/main/scala/Frontend/rename.scala:251:55
+  wire [3:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_1_MOB_index =
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_MOB_index;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg  [3:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_FTQ_index;	// src/main/scala/Frontend/rename.scala:251:55
+  wire [3:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_1_FTQ_index =
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_FTQ_index;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
   reg  [4:0]
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_instructionType;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_instructionType;	// src/main/scala/Frontend/rename.scala:251:55
   wire [4:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_1_instructionType =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_instructionType;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg  [1:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_portID;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_instructionType;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg  [1:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_portID;	// src/main/scala/Frontend/rename.scala:251:55
   wire [1:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_1_portID =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_portID;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg  [1:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_RS_type;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_portID;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg  [1:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_RS_type;	// src/main/scala/Frontend/rename.scala:251:55
   wire [1:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS_type =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_RS_type;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_needs_ALU;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_RS_type;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_needs_ALU;	// src/main/scala/Frontend/rename.scala:251:55
   wire         renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_ALU =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_needs_ALU;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_needs_ALU;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
   reg
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_needs_branch_unit;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_needs_branch_unit;	// src/main/scala/Frontend/rename.scala:251:55
   wire         renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_branch_unit =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_needs_branch_unit;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_needs_CSRs;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_needs_branch_unit;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_needs_CSRs;	// src/main/scala/Frontend/rename.scala:251:55
   wire         renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_CSRs =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_needs_CSRs;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_SUBTRACT;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_needs_CSRs;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_SUBTRACT;	// src/main/scala/Frontend/rename.scala:251:55
   wire         renamed_decoded_fetch_packet_bits_decoded_instruction_1_SUBTRACT =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_SUBTRACT;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_MULTIPLY;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_SUBTRACT;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_MULTIPLY;	// src/main/scala/Frontend/rename.scala:251:55
   wire         renamed_decoded_fetch_packet_bits_decoded_instruction_1_MULTIPLY =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_MULTIPLY;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_IS_IMM;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_MULTIPLY;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_IS_IMM;	// src/main/scala/Frontend/rename.scala:251:55
   wire         renamed_decoded_fetch_packet_bits_decoded_instruction_1_IS_IMM =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_IS_IMM;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_is_load;	// src/main/scala/Frontend/rename.scala:247:55
-  wire         renamed_decoded_fetch_packet_bits_decoded_instruction_1_is_load =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_is_load;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_is_store;	// src/main/scala/Frontend/rename.scala:247:55
-  wire         renamed_decoded_fetch_packet_bits_decoded_instruction_1_is_store =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_is_store;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_IS_IMM;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg  [1:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_memory_type;	// src/main/scala/Frontend/rename.scala:251:55
+  wire [1:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_1_memory_type =
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_memory_type;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg  [1:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_access_width;	// src/main/scala/Frontend/rename.scala:251:55
+  wire [1:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_1_access_width =
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_access_width;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
   reg
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_ready_bits_RS1_ready;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_ready_bits_RS1_ready;	// src/main/scala/Frontend/rename.scala:251:55
   wire
     renamed_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS1_ready =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_ready_bits_RS1_ready;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_ready_bits_RS1_ready;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
   reg
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_ready_bits_RS2_ready;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_ready_bits_RS2_ready;	// src/main/scala/Frontend/rename.scala:251:55
   wire
     renamed_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS2_ready =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_ready_bits_RS2_ready;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_RD_valid;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_ready_bits_RS2_ready;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_RD_valid;	// src/main/scala/Frontend/rename.scala:251:55
   wire         renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_RD_valid;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_RS1_valid;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_RD_valid;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_RS1_valid;	// src/main/scala/Frontend/rename.scala:251:55
   wire         renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS1_valid =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_RS1_valid;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_RS2_valid;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_RS1_valid;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_RS2_valid;	// src/main/scala/Frontend/rename.scala:251:55
   wire         renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS2_valid =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_RS2_valid;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg  [20:0]  renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_IMM;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_RS2_valid;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg  [20:0]  renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_IMM;	// src/main/scala/Frontend/rename.scala:251:55
   wire [20:0]  renamed_decoded_fetch_packet_bits_decoded_instruction_2_IMM =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_IMM;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg  [2:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_FUNCT3;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_IMM;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg  [2:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_FUNCT3;	// src/main/scala/Frontend/rename.scala:251:55
   wire [2:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_2_FUNCT3 =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_FUNCT3;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg  [1:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_packet_index;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_FUNCT3;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg  [1:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_packet_index;	// src/main/scala/Frontend/rename.scala:251:55
   wire [1:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_2_packet_index =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_packet_index;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg  [5:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_ROB_index;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_packet_index;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg  [5:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_ROB_index;	// src/main/scala/Frontend/rename.scala:251:55
   wire [5:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_2_ROB_index =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_ROB_index;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_ROB_index;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg  [3:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_MOB_index;	// src/main/scala/Frontend/rename.scala:251:55
+  wire [3:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_2_MOB_index =
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_MOB_index;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg  [3:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_FTQ_index;	// src/main/scala/Frontend/rename.scala:251:55
+  wire [3:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_2_FTQ_index =
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_FTQ_index;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
   reg  [4:0]
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_instructionType;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_instructionType;	// src/main/scala/Frontend/rename.scala:251:55
   wire [4:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_2_instructionType =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_instructionType;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg  [1:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_portID;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_instructionType;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg  [1:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_portID;	// src/main/scala/Frontend/rename.scala:251:55
   wire [1:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_2_portID =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_portID;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg  [1:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_RS_type;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_portID;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg  [1:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_RS_type;	// src/main/scala/Frontend/rename.scala:251:55
   wire [1:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS_type =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_RS_type;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_needs_ALU;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_RS_type;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_needs_ALU;	// src/main/scala/Frontend/rename.scala:251:55
   wire         renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_ALU =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_needs_ALU;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_needs_ALU;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
   reg
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_needs_branch_unit;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_needs_branch_unit;	// src/main/scala/Frontend/rename.scala:251:55
   wire         renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_branch_unit =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_needs_branch_unit;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_needs_CSRs;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_needs_branch_unit;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_needs_CSRs;	// src/main/scala/Frontend/rename.scala:251:55
   wire         renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_CSRs =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_needs_CSRs;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_SUBTRACT;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_needs_CSRs;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_SUBTRACT;	// src/main/scala/Frontend/rename.scala:251:55
   wire         renamed_decoded_fetch_packet_bits_decoded_instruction_2_SUBTRACT =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_SUBTRACT;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_MULTIPLY;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_SUBTRACT;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_MULTIPLY;	// src/main/scala/Frontend/rename.scala:251:55
   wire         renamed_decoded_fetch_packet_bits_decoded_instruction_2_MULTIPLY =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_MULTIPLY;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_IS_IMM;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_MULTIPLY;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_IS_IMM;	// src/main/scala/Frontend/rename.scala:251:55
   wire         renamed_decoded_fetch_packet_bits_decoded_instruction_2_IS_IMM =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_IS_IMM;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_is_load;	// src/main/scala/Frontend/rename.scala:247:55
-  wire         renamed_decoded_fetch_packet_bits_decoded_instruction_2_is_load =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_is_load;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_is_store;	// src/main/scala/Frontend/rename.scala:247:55
-  wire         renamed_decoded_fetch_packet_bits_decoded_instruction_2_is_store =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_is_store;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_IS_IMM;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg  [1:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_memory_type;	// src/main/scala/Frontend/rename.scala:251:55
+  wire [1:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_2_memory_type =
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_memory_type;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg  [1:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_access_width;	// src/main/scala/Frontend/rename.scala:251:55
+  wire [1:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_2_access_width =
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_access_width;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
   reg
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_ready_bits_RS1_ready;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_ready_bits_RS1_ready;	// src/main/scala/Frontend/rename.scala:251:55
   wire
     renamed_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS1_ready =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_ready_bits_RS1_ready;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_ready_bits_RS1_ready;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
   reg
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_ready_bits_RS2_ready;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_ready_bits_RS2_ready;	// src/main/scala/Frontend/rename.scala:251:55
   wire
     renamed_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS2_ready =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_ready_bits_RS2_ready;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_RD_valid;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_ready_bits_RS2_ready;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_RD_valid;	// src/main/scala/Frontend/rename.scala:251:55
   wire         renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_RD_valid;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_RS1_valid;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_RD_valid;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_RS1_valid;	// src/main/scala/Frontend/rename.scala:251:55
   wire         renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS1_valid =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_RS1_valid;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_RS2_valid;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_RS1_valid;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_RS2_valid;	// src/main/scala/Frontend/rename.scala:251:55
   wire         renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS2_valid =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_RS2_valid;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg  [20:0]  renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_IMM;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_RS2_valid;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg  [20:0]  renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_IMM;	// src/main/scala/Frontend/rename.scala:251:55
   wire [20:0]  renamed_decoded_fetch_packet_bits_decoded_instruction_3_IMM =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_IMM;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg  [2:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_FUNCT3;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_IMM;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg  [2:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_FUNCT3;	// src/main/scala/Frontend/rename.scala:251:55
   wire [2:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_3_FUNCT3 =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_FUNCT3;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg  [1:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_packet_index;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_FUNCT3;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg  [1:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_packet_index;	// src/main/scala/Frontend/rename.scala:251:55
   wire [1:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_3_packet_index =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_packet_index;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg  [5:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_ROB_index;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_packet_index;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg  [5:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_ROB_index;	// src/main/scala/Frontend/rename.scala:251:55
   wire [5:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_3_ROB_index =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_ROB_index;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_ROB_index;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg  [3:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_MOB_index;	// src/main/scala/Frontend/rename.scala:251:55
+  wire [3:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_3_MOB_index =
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_MOB_index;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg  [3:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_FTQ_index;	// src/main/scala/Frontend/rename.scala:251:55
+  wire [3:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_3_FTQ_index =
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_FTQ_index;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
   reg  [4:0]
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_instructionType;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_instructionType;	// src/main/scala/Frontend/rename.scala:251:55
   wire [4:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_3_instructionType =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_instructionType;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg  [1:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_portID;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_instructionType;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg  [1:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_portID;	// src/main/scala/Frontend/rename.scala:251:55
   wire [1:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_3_portID =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_portID;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg  [1:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_RS_type;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_portID;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg  [1:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_RS_type;	// src/main/scala/Frontend/rename.scala:251:55
   wire [1:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS_type =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_RS_type;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_needs_ALU;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_RS_type;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_needs_ALU;	// src/main/scala/Frontend/rename.scala:251:55
   wire         renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_ALU =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_needs_ALU;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_needs_ALU;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
   reg
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_needs_branch_unit;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_needs_branch_unit;	// src/main/scala/Frontend/rename.scala:251:55
   wire         renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_branch_unit =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_needs_branch_unit;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_needs_CSRs;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_needs_branch_unit;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_needs_CSRs;	// src/main/scala/Frontend/rename.scala:251:55
   wire         renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_CSRs =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_needs_CSRs;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_SUBTRACT;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_needs_CSRs;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_SUBTRACT;	// src/main/scala/Frontend/rename.scala:251:55
   wire         renamed_decoded_fetch_packet_bits_decoded_instruction_3_SUBTRACT =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_SUBTRACT;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_MULTIPLY;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_SUBTRACT;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_MULTIPLY;	// src/main/scala/Frontend/rename.scala:251:55
   wire         renamed_decoded_fetch_packet_bits_decoded_instruction_3_MULTIPLY =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_MULTIPLY;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_IS_IMM;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_MULTIPLY;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_IS_IMM;	// src/main/scala/Frontend/rename.scala:251:55
   wire         renamed_decoded_fetch_packet_bits_decoded_instruction_3_IS_IMM =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_IS_IMM;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_is_load;	// src/main/scala/Frontend/rename.scala:247:55
-  wire         renamed_decoded_fetch_packet_bits_decoded_instruction_3_is_load =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_is_load;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg          renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_is_store;	// src/main/scala/Frontend/rename.scala:247:55
-  wire         renamed_decoded_fetch_packet_bits_decoded_instruction_3_is_store =
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_is_store;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg          renamed_decoded_fetch_packet_bits_REG_valid_bits_0;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_IS_IMM;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg  [1:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_memory_type;	// src/main/scala/Frontend/rename.scala:251:55
+  wire [1:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_3_memory_type =
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_memory_type;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg  [1:0]   renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_access_width;	// src/main/scala/Frontend/rename.scala:251:55
+  wire [1:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_3_access_width =
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_access_width;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg          renamed_decoded_fetch_packet_bits_REG_valid_bits_0;	// src/main/scala/Frontend/rename.scala:251:55
   wire         renamed_decoded_fetch_packet_bits_valid_bits_0 =
-    renamed_decoded_fetch_packet_bits_REG_valid_bits_0;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg          renamed_decoded_fetch_packet_bits_REG_valid_bits_1;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_valid_bits_0;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg          renamed_decoded_fetch_packet_bits_REG_valid_bits_1;	// src/main/scala/Frontend/rename.scala:251:55
   wire         renamed_decoded_fetch_packet_bits_valid_bits_1 =
-    renamed_decoded_fetch_packet_bits_REG_valid_bits_1;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg          renamed_decoded_fetch_packet_bits_REG_valid_bits_2;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_valid_bits_1;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg          renamed_decoded_fetch_packet_bits_REG_valid_bits_2;	// src/main/scala/Frontend/rename.scala:251:55
   wire         renamed_decoded_fetch_packet_bits_valid_bits_2 =
-    renamed_decoded_fetch_packet_bits_REG_valid_bits_2;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg          renamed_decoded_fetch_packet_bits_REG_valid_bits_3;	// src/main/scala/Frontend/rename.scala:247:55
+    renamed_decoded_fetch_packet_bits_REG_valid_bits_2;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg          renamed_decoded_fetch_packet_bits_REG_valid_bits_3;	// src/main/scala/Frontend/rename.scala:251:55
   wire         renamed_decoded_fetch_packet_bits_valid_bits_3 =
-    renamed_decoded_fetch_packet_bits_REG_valid_bits_3;	// src/main/scala/Frontend/rename.scala:245:44, :247:55
-  reg          renamed_decoded_fetch_packet_valid_REG;	// src/main/scala/Frontend/rename.scala:248:55
+    renamed_decoded_fetch_packet_bits_REG_valid_bits_3;	// src/main/scala/Frontend/rename.scala:249:44, :251:55
+  reg          renamed_decoded_fetch_packet_valid_REG;	// src/main/scala/Frontend/rename.scala:252:55
   wire         renamed_decoded_fetch_packet_valid =
-    renamed_decoded_fetch_packet_valid_REG;	// src/main/scala/Frontend/rename.scala:245:44, :248:55
-  reg  [6:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD_REG;	// src/main/scala/Frontend/rename.scala:271:92
+    renamed_decoded_fetch_packet_valid_REG;	// src/main/scala/Frontend/rename.scala:249:44, :252:55
+  reg  [6:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD_REG;	// src/main/scala/Frontend/rename.scala:275:92
   wire [6:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD =
-    renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD_REG;	// src/main/scala/Frontend/rename.scala:245:44, :271:92
-  reg  [6:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD_REG;	// src/main/scala/Frontend/rename.scala:271:92
+    renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD_REG;	// src/main/scala/Frontend/rename.scala:249:44, :275:92
+  reg  [6:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD_REG;	// src/main/scala/Frontend/rename.scala:275:92
   wire [6:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD =
-    renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD_REG;	// src/main/scala/Frontend/rename.scala:245:44, :271:92
-  reg  [6:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD_REG;	// src/main/scala/Frontend/rename.scala:271:92
+    renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD_REG;	// src/main/scala/Frontend/rename.scala:249:44, :275:92
+  reg  [6:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD_REG;	// src/main/scala/Frontend/rename.scala:275:92
   wire [6:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD =
-    renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD_REG;	// src/main/scala/Frontend/rename.scala:245:44, :271:92
-  reg  [6:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD_REG;	// src/main/scala/Frontend/rename.scala:271:92
+    renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD_REG;	// src/main/scala/Frontend/rename.scala:249:44, :275:92
+  reg  [6:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD_REG;	// src/main/scala/Frontend/rename.scala:275:92
   wire [6:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD =
-    renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD_REG;	// src/main/scala/Frontend/rename.scala:245:44, :271:92
-  reg  [6:0]   renamed_decoded_fetch_packet_bits_free_list_front_pointer_REG;	// src/main/scala/Frontend/rename.scala:273:92
+    renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD_REG;	// src/main/scala/Frontend/rename.scala:249:44, :275:92
+  reg  [6:0]   renamed_decoded_fetch_packet_bits_free_list_front_pointer_REG;	// src/main/scala/Frontend/rename.scala:277:92
   wire [7:0]   renamed_decoded_fetch_packet_bits_free_list_front_pointer =
-    {1'h0, renamed_decoded_fetch_packet_bits_free_list_front_pointer_REG};	// src/main/scala/Frontend/rename.scala:245:44, :273:{82,92}
+    {1'h0, renamed_decoded_fetch_packet_bits_free_list_front_pointer_REG};	// src/main/scala/Frontend/rename.scala:249:44, :277:{82,92}
   wire [6:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS1 =
-    renamed_RS1_0;	// src/main/scala/Frontend/rename.scala:245:44, :300:27
+    renamed_RS1_0;	// src/main/scala/Frontend/rename.scala:249:44, :304:27
   wire [6:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS1 =
-    renamed_RS1_1;	// src/main/scala/Frontend/rename.scala:245:44, :300:27
+    renamed_RS1_1;	// src/main/scala/Frontend/rename.scala:249:44, :304:27
   wire [6:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS1 =
-    renamed_RS1_2;	// src/main/scala/Frontend/rename.scala:245:44, :300:27
+    renamed_RS1_2;	// src/main/scala/Frontend/rename.scala:249:44, :304:27
   wire [6:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS1 =
-    renamed_RS1_3;	// src/main/scala/Frontend/rename.scala:245:44, :300:27
+    renamed_RS1_3;	// src/main/scala/Frontend/rename.scala:249:44, :304:27
   wire [6:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS2 =
-    renamed_RS2_0;	// src/main/scala/Frontend/rename.scala:245:44, :301:27
+    renamed_RS2_0;	// src/main/scala/Frontend/rename.scala:249:44, :305:27
   wire [6:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS2 =
-    renamed_RS2_1;	// src/main/scala/Frontend/rename.scala:245:44, :301:27
+    renamed_RS2_1;	// src/main/scala/Frontend/rename.scala:249:44, :305:27
   wire [6:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS2 =
-    renamed_RS2_2;	// src/main/scala/Frontend/rename.scala:245:44, :301:27
+    renamed_RS2_2;	// src/main/scala/Frontend/rename.scala:249:44, :305:27
   wire [6:0]   renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS2 =
-    renamed_RS2_3;	// src/main/scala/Frontend/rename.scala:245:44, :301:27
-  reg  [6:0]   REG;	// src/main/scala/Frontend/rename.scala:312:25
-  reg  [6:0]   REG_1;	// src/main/scala/Frontend/rename.scala:312:94
-  reg          REG_2;	// src/main/scala/Frontend/rename.scala:313:24
-  reg          REG_3;	// src/main/scala/Frontend/rename.scala:313:98
-  reg  [6:0]   renamed_RS1_1_REG;	// src/main/scala/Frontend/rename.scala:315:42
+    renamed_RS2_3;	// src/main/scala/Frontend/rename.scala:249:44, :305:27
+  reg  [6:0]   REG;	// src/main/scala/Frontend/rename.scala:316:25
+  reg  [6:0]   REG_1;	// src/main/scala/Frontend/rename.scala:316:94
+  reg          REG_2;	// src/main/scala/Frontend/rename.scala:317:24
+  reg          REG_3;	// src/main/scala/Frontend/rename.scala:317:98
+  reg  [6:0]   renamed_RS1_1_REG;	// src/main/scala/Frontend/rename.scala:319:42
   assign renamed_RS1_1 =
-    REG == REG_1 & REG_2 & REG_3 ? renamed_RS1_1_REG : _RAT_io_RAT_RS1_1;	// src/main/scala/Frontend/rename.scala:256:33, :300:27, :308:23, :312:{25,83,94,151}, :313:{24,88,98}, :314:26, :315:{32,42}
-  reg  [6:0]   REG_4;	// src/main/scala/Frontend/rename.scala:318:25
-  reg  [6:0]   REG_5;	// src/main/scala/Frontend/rename.scala:318:94
-  reg          REG_6;	// src/main/scala/Frontend/rename.scala:319:36
-  reg          REG_7;	// src/main/scala/Frontend/rename.scala:319:110
-  reg  [6:0]   renamed_RS2_1_REG;	// src/main/scala/Frontend/rename.scala:321:42
+    REG == REG_1 & REG_2 & REG_3 ? renamed_RS1_1_REG : _RAT_io_RAT_RS1_1;	// src/main/scala/Frontend/rename.scala:260:33, :304:27, :312:23, :316:{25,83,94,151}, :317:{24,88,98}, :318:26, :319:{32,42}
+  reg  [6:0]   REG_4;	// src/main/scala/Frontend/rename.scala:322:25
+  reg  [6:0]   REG_5;	// src/main/scala/Frontend/rename.scala:322:94
+  reg          REG_6;	// src/main/scala/Frontend/rename.scala:323:36
+  reg          REG_7;	// src/main/scala/Frontend/rename.scala:323:110
+  reg  [6:0]   renamed_RS2_1_REG;	// src/main/scala/Frontend/rename.scala:325:42
   assign renamed_RS2_1 =
-    REG_4 == REG_5 & REG_6 & REG_7 ? renamed_RS2_1_REG : _RAT_io_RAT_RS2_1;	// src/main/scala/Frontend/rename.scala:256:33, :301:27, :309:23, :318:{25,83,94,151}, :319:{36,100,110}, :320:14, :321:{32,42}
-  reg  [6:0]   REG_8;	// src/main/scala/Frontend/rename.scala:312:25
-  reg  [6:0]   REG_9;	// src/main/scala/Frontend/rename.scala:312:94
-  reg          REG_10;	// src/main/scala/Frontend/rename.scala:313:24
-  reg          REG_11;	// src/main/scala/Frontend/rename.scala:313:98
-  reg  [6:0]   renamed_RS1_2_REG;	// src/main/scala/Frontend/rename.scala:315:42
-  reg  [6:0]   REG_12;	// src/main/scala/Frontend/rename.scala:318:25
-  reg  [6:0]   REG_13;	// src/main/scala/Frontend/rename.scala:318:94
-  reg          REG_14;	// src/main/scala/Frontend/rename.scala:319:36
-  reg          REG_15;	// src/main/scala/Frontend/rename.scala:319:110
-  reg  [6:0]   renamed_RS2_2_REG;	// src/main/scala/Frontend/rename.scala:321:42
-  reg  [6:0]   REG_16;	// src/main/scala/Frontend/rename.scala:312:25
-  reg  [6:0]   REG_17;	// src/main/scala/Frontend/rename.scala:312:94
-  reg          REG_18;	// src/main/scala/Frontend/rename.scala:313:24
-  reg          REG_19;	// src/main/scala/Frontend/rename.scala:313:98
-  reg  [6:0]   renamed_RS1_2_REG_1;	// src/main/scala/Frontend/rename.scala:315:42
+    REG_4 == REG_5 & REG_6 & REG_7 ? renamed_RS2_1_REG : _RAT_io_RAT_RS2_1;	// src/main/scala/Frontend/rename.scala:260:33, :305:27, :313:23, :322:{25,83,94,151}, :323:{36,100,110}, :324:14, :325:{32,42}
+  reg  [6:0]   REG_8;	// src/main/scala/Frontend/rename.scala:316:25
+  reg  [6:0]   REG_9;	// src/main/scala/Frontend/rename.scala:316:94
+  reg          REG_10;	// src/main/scala/Frontend/rename.scala:317:24
+  reg          REG_11;	// src/main/scala/Frontend/rename.scala:317:98
+  reg  [6:0]   renamed_RS1_2_REG;	// src/main/scala/Frontend/rename.scala:319:42
+  reg  [6:0]   REG_12;	// src/main/scala/Frontend/rename.scala:322:25
+  reg  [6:0]   REG_13;	// src/main/scala/Frontend/rename.scala:322:94
+  reg          REG_14;	// src/main/scala/Frontend/rename.scala:323:36
+  reg          REG_15;	// src/main/scala/Frontend/rename.scala:323:110
+  reg  [6:0]   renamed_RS2_2_REG;	// src/main/scala/Frontend/rename.scala:325:42
+  reg  [6:0]   REG_16;	// src/main/scala/Frontend/rename.scala:316:25
+  reg  [6:0]   REG_17;	// src/main/scala/Frontend/rename.scala:316:94
+  reg          REG_18;	// src/main/scala/Frontend/rename.scala:317:24
+  reg          REG_19;	// src/main/scala/Frontend/rename.scala:317:98
+  reg  [6:0]   renamed_RS1_2_REG_1;	// src/main/scala/Frontend/rename.scala:319:42
   assign renamed_RS1_2 =
     REG_16 == REG_17 & REG_18 & REG_19
       ? renamed_RS1_2_REG_1
-      : REG_8 == REG_9 & REG_10 & REG_11 ? renamed_RS1_2_REG : _RAT_io_RAT_RS1_2;	// src/main/scala/Frontend/rename.scala:256:33, :300:27, :308:23, :312:{25,83,94,151}, :313:{24,88,98}, :314:26, :315:{32,42}
-  reg  [6:0]   REG_20;	// src/main/scala/Frontend/rename.scala:318:25
-  reg  [6:0]   REG_21;	// src/main/scala/Frontend/rename.scala:318:94
-  reg          REG_22;	// src/main/scala/Frontend/rename.scala:319:36
-  reg          REG_23;	// src/main/scala/Frontend/rename.scala:319:110
-  reg  [6:0]   renamed_RS2_2_REG_1;	// src/main/scala/Frontend/rename.scala:321:42
+      : REG_8 == REG_9 & REG_10 & REG_11 ? renamed_RS1_2_REG : _RAT_io_RAT_RS1_2;	// src/main/scala/Frontend/rename.scala:260:33, :304:27, :312:23, :316:{25,83,94,151}, :317:{24,88,98}, :318:26, :319:{32,42}
+  reg  [6:0]   REG_20;	// src/main/scala/Frontend/rename.scala:322:25
+  reg  [6:0]   REG_21;	// src/main/scala/Frontend/rename.scala:322:94
+  reg          REG_22;	// src/main/scala/Frontend/rename.scala:323:36
+  reg          REG_23;	// src/main/scala/Frontend/rename.scala:323:110
+  reg  [6:0]   renamed_RS2_2_REG_1;	// src/main/scala/Frontend/rename.scala:325:42
   assign renamed_RS2_2 =
     REG_20 == REG_21 & REG_22 & REG_23
       ? renamed_RS2_2_REG_1
-      : REG_12 == REG_13 & REG_14 & REG_15 ? renamed_RS2_2_REG : _RAT_io_RAT_RS2_2;	// src/main/scala/Frontend/rename.scala:256:33, :301:27, :309:23, :318:{25,83,94,151}, :319:{36,100,110}, :320:14, :321:{32,42}
-  reg  [6:0]   REG_24;	// src/main/scala/Frontend/rename.scala:312:25
-  reg  [6:0]   REG_25;	// src/main/scala/Frontend/rename.scala:312:94
-  reg          REG_26;	// src/main/scala/Frontend/rename.scala:313:24
-  reg          REG_27;	// src/main/scala/Frontend/rename.scala:313:98
-  reg  [6:0]   renamed_RS1_3_REG;	// src/main/scala/Frontend/rename.scala:315:42
-  reg  [6:0]   REG_28;	// src/main/scala/Frontend/rename.scala:318:25
-  reg  [6:0]   REG_29;	// src/main/scala/Frontend/rename.scala:318:94
-  reg          REG_30;	// src/main/scala/Frontend/rename.scala:319:36
-  reg          REG_31;	// src/main/scala/Frontend/rename.scala:319:110
-  reg  [6:0]   renamed_RS2_3_REG;	// src/main/scala/Frontend/rename.scala:321:42
-  reg  [6:0]   REG_32;	// src/main/scala/Frontend/rename.scala:312:25
-  reg  [6:0]   REG_33;	// src/main/scala/Frontend/rename.scala:312:94
-  reg          REG_34;	// src/main/scala/Frontend/rename.scala:313:24
-  reg          REG_35;	// src/main/scala/Frontend/rename.scala:313:98
-  reg  [6:0]   renamed_RS1_3_REG_1;	// src/main/scala/Frontend/rename.scala:315:42
-  reg  [6:0]   REG_36;	// src/main/scala/Frontend/rename.scala:318:25
-  reg  [6:0]   REG_37;	// src/main/scala/Frontend/rename.scala:318:94
-  reg          REG_38;	// src/main/scala/Frontend/rename.scala:319:36
-  reg          REG_39;	// src/main/scala/Frontend/rename.scala:319:110
-  reg  [6:0]   renamed_RS2_3_REG_1;	// src/main/scala/Frontend/rename.scala:321:42
-  reg  [6:0]   REG_40;	// src/main/scala/Frontend/rename.scala:312:25
-  reg  [6:0]   REG_41;	// src/main/scala/Frontend/rename.scala:312:94
-  reg          REG_42;	// src/main/scala/Frontend/rename.scala:313:24
-  reg          REG_43;	// src/main/scala/Frontend/rename.scala:313:98
-  reg  [6:0]   renamed_RS1_3_REG_2;	// src/main/scala/Frontend/rename.scala:315:42
+      : REG_12 == REG_13 & REG_14 & REG_15 ? renamed_RS2_2_REG : _RAT_io_RAT_RS2_2;	// src/main/scala/Frontend/rename.scala:260:33, :305:27, :313:23, :322:{25,83,94,151}, :323:{36,100,110}, :324:14, :325:{32,42}
+  reg  [6:0]   REG_24;	// src/main/scala/Frontend/rename.scala:316:25
+  reg  [6:0]   REG_25;	// src/main/scala/Frontend/rename.scala:316:94
+  reg          REG_26;	// src/main/scala/Frontend/rename.scala:317:24
+  reg          REG_27;	// src/main/scala/Frontend/rename.scala:317:98
+  reg  [6:0]   renamed_RS1_3_REG;	// src/main/scala/Frontend/rename.scala:319:42
+  reg  [6:0]   REG_28;	// src/main/scala/Frontend/rename.scala:322:25
+  reg  [6:0]   REG_29;	// src/main/scala/Frontend/rename.scala:322:94
+  reg          REG_30;	// src/main/scala/Frontend/rename.scala:323:36
+  reg          REG_31;	// src/main/scala/Frontend/rename.scala:323:110
+  reg  [6:0]   renamed_RS2_3_REG;	// src/main/scala/Frontend/rename.scala:325:42
+  reg  [6:0]   REG_32;	// src/main/scala/Frontend/rename.scala:316:25
+  reg  [6:0]   REG_33;	// src/main/scala/Frontend/rename.scala:316:94
+  reg          REG_34;	// src/main/scala/Frontend/rename.scala:317:24
+  reg          REG_35;	// src/main/scala/Frontend/rename.scala:317:98
+  reg  [6:0]   renamed_RS1_3_REG_1;	// src/main/scala/Frontend/rename.scala:319:42
+  reg  [6:0]   REG_36;	// src/main/scala/Frontend/rename.scala:322:25
+  reg  [6:0]   REG_37;	// src/main/scala/Frontend/rename.scala:322:94
+  reg          REG_38;	// src/main/scala/Frontend/rename.scala:323:36
+  reg          REG_39;	// src/main/scala/Frontend/rename.scala:323:110
+  reg  [6:0]   renamed_RS2_3_REG_1;	// src/main/scala/Frontend/rename.scala:325:42
+  reg  [6:0]   REG_40;	// src/main/scala/Frontend/rename.scala:316:25
+  reg  [6:0]   REG_41;	// src/main/scala/Frontend/rename.scala:316:94
+  reg          REG_42;	// src/main/scala/Frontend/rename.scala:317:24
+  reg          REG_43;	// src/main/scala/Frontend/rename.scala:317:98
+  reg  [6:0]   renamed_RS1_3_REG_2;	// src/main/scala/Frontend/rename.scala:319:42
   assign renamed_RS1_3 =
     REG_40 == REG_41 & REG_42 & REG_43
       ? renamed_RS1_3_REG_2
       : REG_32 == REG_33 & REG_34 & REG_35
           ? renamed_RS1_3_REG_1
-          : REG_24 == REG_25 & REG_26 & REG_27 ? renamed_RS1_3_REG : _RAT_io_RAT_RS1_3;	// src/main/scala/Frontend/rename.scala:256:33, :300:27, :308:23, :312:{25,83,94,151}, :313:{24,88,98}, :314:26, :315:{32,42}
-  reg  [6:0]   REG_44;	// src/main/scala/Frontend/rename.scala:318:25
-  reg  [6:0]   REG_45;	// src/main/scala/Frontend/rename.scala:318:94
-  reg          REG_46;	// src/main/scala/Frontend/rename.scala:319:36
-  reg          REG_47;	// src/main/scala/Frontend/rename.scala:319:110
-  reg  [6:0]   renamed_RS2_3_REG_2;	// src/main/scala/Frontend/rename.scala:321:42
+          : REG_24 == REG_25 & REG_26 & REG_27 ? renamed_RS1_3_REG : _RAT_io_RAT_RS1_3;	// src/main/scala/Frontend/rename.scala:260:33, :304:27, :312:23, :316:{25,83,94,151}, :317:{24,88,98}, :318:26, :319:{32,42}
+  reg  [6:0]   REG_44;	// src/main/scala/Frontend/rename.scala:322:25
+  reg  [6:0]   REG_45;	// src/main/scala/Frontend/rename.scala:322:94
+  reg          REG_46;	// src/main/scala/Frontend/rename.scala:323:36
+  reg          REG_47;	// src/main/scala/Frontend/rename.scala:323:110
+  reg  [6:0]   renamed_RS2_3_REG_2;	// src/main/scala/Frontend/rename.scala:325:42
   assign renamed_RS2_3 =
     REG_44 == REG_45 & REG_46 & REG_47
       ? renamed_RS2_3_REG_2
       : REG_36 == REG_37 & REG_38 & REG_39
           ? renamed_RS2_3_REG_1
-          : REG_28 == REG_29 & REG_30 & REG_31 ? renamed_RS2_3_REG : _RAT_io_RAT_RS2_3;	// src/main/scala/Frontend/rename.scala:256:33, :301:27, :309:23, :318:{25,83,94,151}, :319:{36,100,110}, :320:14, :321:{32,42}
-  reg  [3:0]   renamed_decoded_fetch_packet_bits_RAT_index_REG;	// src/main/scala/Frontend/rename.scala:333:76
+          : REG_28 == REG_29 & REG_30 & REG_31 ? renamed_RS2_3_REG : _RAT_io_RAT_RS2_3;	// src/main/scala/Frontend/rename.scala:260:33, :305:27, :313:23, :322:{25,83,94,151}, :323:{36,100,110}, :324:14, :325:{32,42}
+  reg  [3:0]   renamed_decoded_fetch_packet_bits_RAT_index_REG;	// src/main/scala/Frontend/rename.scala:337:76
   wire [3:0]   renamed_decoded_fetch_packet_bits_RAT_index =
-    renamed_decoded_fetch_packet_bits_RAT_index_REG;	// src/main/scala/Frontend/rename.scala:245:44, :333:76
-  reg          ready_memory_1;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_2;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_3;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_4;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_5;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_6;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_7;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_8;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_9;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_10;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_11;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_12;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_13;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_14;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_15;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_16;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_17;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_18;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_19;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_20;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_21;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_22;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_23;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_24;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_25;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_26;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_27;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_28;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_29;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_30;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_31;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_32;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_33;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_34;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_35;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_36;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_37;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_38;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_39;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_40;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_41;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_42;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_43;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_44;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_45;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_46;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_47;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_48;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_49;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_50;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_51;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_52;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_53;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_54;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_55;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_56;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_57;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_58;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_59;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_60;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_61;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_62;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_63;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_64;	// src/main/scala/Frontend/rename.scala:373:32
-  reg          ready_memory_65;	// src/main/scala/Frontend/rename.scala:373:32
-  wire         RD_valid = io_FU_outputs_0_valid & io_FU_outputs_0_bits_RD_valid;	// src/main/scala/Frontend/rename.scala:391:50
-  wire         _GEN = RD_valid & io_FU_outputs_0_bits_RD == 7'h1;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_0 = RD_valid & io_FU_outputs_0_bits_RD == 7'h2;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_1 = RD_valid & io_FU_outputs_0_bits_RD == 7'h3;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_2 = RD_valid & io_FU_outputs_0_bits_RD == 7'h4;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_3 = RD_valid & io_FU_outputs_0_bits_RD == 7'h5;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_4 = RD_valid & io_FU_outputs_0_bits_RD == 7'h6;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_5 = RD_valid & io_FU_outputs_0_bits_RD == 7'h7;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_6 = RD_valid & io_FU_outputs_0_bits_RD == 7'h8;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_7 = RD_valid & io_FU_outputs_0_bits_RD == 7'h9;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_8 = RD_valid & io_FU_outputs_0_bits_RD == 7'hA;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_9 = RD_valid & io_FU_outputs_0_bits_RD == 7'hB;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_10 = RD_valid & io_FU_outputs_0_bits_RD == 7'hC;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_11 = RD_valid & io_FU_outputs_0_bits_RD == 7'hD;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_12 = RD_valid & io_FU_outputs_0_bits_RD == 7'hE;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_13 = RD_valid & io_FU_outputs_0_bits_RD == 7'hF;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_14 = RD_valid & io_FU_outputs_0_bits_RD == 7'h10;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_15 = RD_valid & io_FU_outputs_0_bits_RD == 7'h11;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_16 = RD_valid & io_FU_outputs_0_bits_RD == 7'h12;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_17 = RD_valid & io_FU_outputs_0_bits_RD == 7'h13;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_18 = RD_valid & io_FU_outputs_0_bits_RD == 7'h14;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_19 = RD_valid & io_FU_outputs_0_bits_RD == 7'h15;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_20 = RD_valid & io_FU_outputs_0_bits_RD == 7'h16;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_21 = RD_valid & io_FU_outputs_0_bits_RD == 7'h17;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_22 = RD_valid & io_FU_outputs_0_bits_RD == 7'h18;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_23 = RD_valid & io_FU_outputs_0_bits_RD == 7'h19;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_24 = RD_valid & io_FU_outputs_0_bits_RD == 7'h1A;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_25 = RD_valid & io_FU_outputs_0_bits_RD == 7'h1B;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_26 = RD_valid & io_FU_outputs_0_bits_RD == 7'h1C;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_27 = RD_valid & io_FU_outputs_0_bits_RD == 7'h1D;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_28 = RD_valid & io_FU_outputs_0_bits_RD == 7'h1E;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_29 = RD_valid & io_FU_outputs_0_bits_RD == 7'h1F;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_30 = RD_valid & io_FU_outputs_0_bits_RD == 7'h20;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_31 = RD_valid & io_FU_outputs_0_bits_RD == 7'h21;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_32 = RD_valid & io_FU_outputs_0_bits_RD == 7'h22;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_33 = RD_valid & io_FU_outputs_0_bits_RD == 7'h23;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_34 = RD_valid & io_FU_outputs_0_bits_RD == 7'h24;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_35 = RD_valid & io_FU_outputs_0_bits_RD == 7'h25;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_36 = RD_valid & io_FU_outputs_0_bits_RD == 7'h26;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_37 = RD_valid & io_FU_outputs_0_bits_RD == 7'h27;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_38 = RD_valid & io_FU_outputs_0_bits_RD == 7'h28;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_39 = RD_valid & io_FU_outputs_0_bits_RD == 7'h29;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_40 = RD_valid & io_FU_outputs_0_bits_RD == 7'h2A;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_41 = RD_valid & io_FU_outputs_0_bits_RD == 7'h2B;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_42 = RD_valid & io_FU_outputs_0_bits_RD == 7'h2C;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_43 = RD_valid & io_FU_outputs_0_bits_RD == 7'h2D;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_44 = RD_valid & io_FU_outputs_0_bits_RD == 7'h2E;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_45 = RD_valid & io_FU_outputs_0_bits_RD == 7'h2F;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_46 = RD_valid & io_FU_outputs_0_bits_RD == 7'h30;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_47 = RD_valid & io_FU_outputs_0_bits_RD == 7'h31;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_48 = RD_valid & io_FU_outputs_0_bits_RD == 7'h32;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_49 = RD_valid & io_FU_outputs_0_bits_RD == 7'h33;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_50 = RD_valid & io_FU_outputs_0_bits_RD == 7'h34;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_51 = RD_valid & io_FU_outputs_0_bits_RD == 7'h35;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_52 = RD_valid & io_FU_outputs_0_bits_RD == 7'h36;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_53 = RD_valid & io_FU_outputs_0_bits_RD == 7'h37;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_54 = RD_valid & io_FU_outputs_0_bits_RD == 7'h38;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_55 = RD_valid & io_FU_outputs_0_bits_RD == 7'h39;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_56 = RD_valid & io_FU_outputs_0_bits_RD == 7'h3A;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_57 = RD_valid & io_FU_outputs_0_bits_RD == 7'h3B;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_58 = RD_valid & io_FU_outputs_0_bits_RD == 7'h3C;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_59 = RD_valid & io_FU_outputs_0_bits_RD == 7'h3D;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_60 = RD_valid & io_FU_outputs_0_bits_RD == 7'h3E;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_61 = RD_valid & io_FU_outputs_0_bits_RD == 7'h3F;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_62 = RD_valid & io_FU_outputs_0_bits_RD == 7'h40;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         _GEN_63 = RD_valid & io_FU_outputs_0_bits_RD == 7'h41;	// src/main/scala/Frontend/rename.scala:385:28, :391:50, :393:23, :394:37
-  wire         RD_valid_1 = io_FU_outputs_1_valid & io_FU_outputs_1_bits_RD_valid;	// src/main/scala/Frontend/rename.scala:391:50
+    renamed_decoded_fetch_packet_bits_RAT_index_REG;	// src/main/scala/Frontend/rename.scala:249:44, :337:76
+  reg          ready_memory_1;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_2;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_3;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_4;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_5;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_6;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_7;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_8;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_9;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_10;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_11;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_12;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_13;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_14;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_15;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_16;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_17;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_18;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_19;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_20;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_21;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_22;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_23;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_24;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_25;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_26;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_27;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_28;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_29;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_30;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_31;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_32;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_33;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_34;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_35;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_36;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_37;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_38;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_39;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_40;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_41;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_42;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_43;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_44;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_45;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_46;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_47;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_48;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_49;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_50;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_51;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_52;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_53;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_54;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_55;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_56;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_57;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_58;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_59;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_60;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_61;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_62;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_63;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_64;	// src/main/scala/Frontend/rename.scala:377:32
+  reg          ready_memory_65;	// src/main/scala/Frontend/rename.scala:377:32
+  wire         RD_valid = io_FU_outputs_0_valid & io_FU_outputs_0_bits_RD_valid;	// src/main/scala/Frontend/rename.scala:395:50
+  wire         _GEN = RD_valid & io_FU_outputs_0_bits_RD == 7'h1;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_0 = RD_valid & io_FU_outputs_0_bits_RD == 7'h2;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_1 = RD_valid & io_FU_outputs_0_bits_RD == 7'h3;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_2 = RD_valid & io_FU_outputs_0_bits_RD == 7'h4;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_3 = RD_valid & io_FU_outputs_0_bits_RD == 7'h5;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_4 = RD_valid & io_FU_outputs_0_bits_RD == 7'h6;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_5 = RD_valid & io_FU_outputs_0_bits_RD == 7'h7;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_6 = RD_valid & io_FU_outputs_0_bits_RD == 7'h8;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_7 = RD_valid & io_FU_outputs_0_bits_RD == 7'h9;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_8 = RD_valid & io_FU_outputs_0_bits_RD == 7'hA;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_9 = RD_valid & io_FU_outputs_0_bits_RD == 7'hB;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_10 = RD_valid & io_FU_outputs_0_bits_RD == 7'hC;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_11 = RD_valid & io_FU_outputs_0_bits_RD == 7'hD;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_12 = RD_valid & io_FU_outputs_0_bits_RD == 7'hE;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_13 = RD_valid & io_FU_outputs_0_bits_RD == 7'hF;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_14 = RD_valid & io_FU_outputs_0_bits_RD == 7'h10;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_15 = RD_valid & io_FU_outputs_0_bits_RD == 7'h11;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_16 = RD_valid & io_FU_outputs_0_bits_RD == 7'h12;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_17 = RD_valid & io_FU_outputs_0_bits_RD == 7'h13;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_18 = RD_valid & io_FU_outputs_0_bits_RD == 7'h14;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_19 = RD_valid & io_FU_outputs_0_bits_RD == 7'h15;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_20 = RD_valid & io_FU_outputs_0_bits_RD == 7'h16;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_21 = RD_valid & io_FU_outputs_0_bits_RD == 7'h17;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_22 = RD_valid & io_FU_outputs_0_bits_RD == 7'h18;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_23 = RD_valid & io_FU_outputs_0_bits_RD == 7'h19;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_24 = RD_valid & io_FU_outputs_0_bits_RD == 7'h1A;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_25 = RD_valid & io_FU_outputs_0_bits_RD == 7'h1B;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_26 = RD_valid & io_FU_outputs_0_bits_RD == 7'h1C;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_27 = RD_valid & io_FU_outputs_0_bits_RD == 7'h1D;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_28 = RD_valid & io_FU_outputs_0_bits_RD == 7'h1E;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_29 = RD_valid & io_FU_outputs_0_bits_RD == 7'h1F;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_30 = RD_valid & io_FU_outputs_0_bits_RD == 7'h20;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_31 = RD_valid & io_FU_outputs_0_bits_RD == 7'h21;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_32 = RD_valid & io_FU_outputs_0_bits_RD == 7'h22;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_33 = RD_valid & io_FU_outputs_0_bits_RD == 7'h23;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_34 = RD_valid & io_FU_outputs_0_bits_RD == 7'h24;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_35 = RD_valid & io_FU_outputs_0_bits_RD == 7'h25;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_36 = RD_valid & io_FU_outputs_0_bits_RD == 7'h26;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_37 = RD_valid & io_FU_outputs_0_bits_RD == 7'h27;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_38 = RD_valid & io_FU_outputs_0_bits_RD == 7'h28;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_39 = RD_valid & io_FU_outputs_0_bits_RD == 7'h29;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_40 = RD_valid & io_FU_outputs_0_bits_RD == 7'h2A;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_41 = RD_valid & io_FU_outputs_0_bits_RD == 7'h2B;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_42 = RD_valid & io_FU_outputs_0_bits_RD == 7'h2C;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_43 = RD_valid & io_FU_outputs_0_bits_RD == 7'h2D;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_44 = RD_valid & io_FU_outputs_0_bits_RD == 7'h2E;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_45 = RD_valid & io_FU_outputs_0_bits_RD == 7'h2F;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_46 = RD_valid & io_FU_outputs_0_bits_RD == 7'h30;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_47 = RD_valid & io_FU_outputs_0_bits_RD == 7'h31;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_48 = RD_valid & io_FU_outputs_0_bits_RD == 7'h32;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_49 = RD_valid & io_FU_outputs_0_bits_RD == 7'h33;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_50 = RD_valid & io_FU_outputs_0_bits_RD == 7'h34;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_51 = RD_valid & io_FU_outputs_0_bits_RD == 7'h35;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_52 = RD_valid & io_FU_outputs_0_bits_RD == 7'h36;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_53 = RD_valid & io_FU_outputs_0_bits_RD == 7'h37;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_54 = RD_valid & io_FU_outputs_0_bits_RD == 7'h38;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_55 = RD_valid & io_FU_outputs_0_bits_RD == 7'h39;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_56 = RD_valid & io_FU_outputs_0_bits_RD == 7'h3A;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_57 = RD_valid & io_FU_outputs_0_bits_RD == 7'h3B;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_58 = RD_valid & io_FU_outputs_0_bits_RD == 7'h3C;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_59 = RD_valid & io_FU_outputs_0_bits_RD == 7'h3D;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_60 = RD_valid & io_FU_outputs_0_bits_RD == 7'h3E;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_61 = RD_valid & io_FU_outputs_0_bits_RD == 7'h3F;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_62 = RD_valid & io_FU_outputs_0_bits_RD == 7'h40;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         _GEN_63 = RD_valid & io_FU_outputs_0_bits_RD == 7'h41;	// src/main/scala/Frontend/rename.scala:389:28, :395:50, :397:23, :398:37
+  wire         RD_valid_1 = io_FU_outputs_1_valid & io_FU_outputs_1_bits_RD_valid;	// src/main/scala/Frontend/rename.scala:395:50
   wire         _GEN_64 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h1 | _GEN | ready_memory_1
-      : _GEN | ready_memory_1;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN | ready_memory_1;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_65 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h2 | _GEN_0 | ready_memory_2
-      : _GEN_0 | ready_memory_2;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_0 | ready_memory_2;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_66 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h3 | _GEN_1 | ready_memory_3
-      : _GEN_1 | ready_memory_3;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_1 | ready_memory_3;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_67 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h4 | _GEN_2 | ready_memory_4
-      : _GEN_2 | ready_memory_4;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_2 | ready_memory_4;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_68 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h5 | _GEN_3 | ready_memory_5
-      : _GEN_3 | ready_memory_5;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_3 | ready_memory_5;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_69 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h6 | _GEN_4 | ready_memory_6
-      : _GEN_4 | ready_memory_6;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_4 | ready_memory_6;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_70 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h7 | _GEN_5 | ready_memory_7
-      : _GEN_5 | ready_memory_7;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_5 | ready_memory_7;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_71 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h8 | _GEN_6 | ready_memory_8
-      : _GEN_6 | ready_memory_8;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_6 | ready_memory_8;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_72 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h9 | _GEN_7 | ready_memory_9
-      : _GEN_7 | ready_memory_9;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_7 | ready_memory_9;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_73 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'hA | _GEN_8 | ready_memory_10
-      : _GEN_8 | ready_memory_10;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_8 | ready_memory_10;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_74 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'hB | _GEN_9 | ready_memory_11
-      : _GEN_9 | ready_memory_11;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_9 | ready_memory_11;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_75 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'hC | _GEN_10 | ready_memory_12
-      : _GEN_10 | ready_memory_12;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_10 | ready_memory_12;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_76 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'hD | _GEN_11 | ready_memory_13
-      : _GEN_11 | ready_memory_13;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_11 | ready_memory_13;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_77 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'hE | _GEN_12 | ready_memory_14
-      : _GEN_12 | ready_memory_14;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_12 | ready_memory_14;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_78 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'hF | _GEN_13 | ready_memory_15
-      : _GEN_13 | ready_memory_15;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_13 | ready_memory_15;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_79 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h10 | _GEN_14 | ready_memory_16
-      : _GEN_14 | ready_memory_16;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_14 | ready_memory_16;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_80 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h11 | _GEN_15 | ready_memory_17
-      : _GEN_15 | ready_memory_17;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_15 | ready_memory_17;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_81 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h12 | _GEN_16 | ready_memory_18
-      : _GEN_16 | ready_memory_18;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_16 | ready_memory_18;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_82 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h13 | _GEN_17 | ready_memory_19
-      : _GEN_17 | ready_memory_19;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_17 | ready_memory_19;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_83 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h14 | _GEN_18 | ready_memory_20
-      : _GEN_18 | ready_memory_20;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_18 | ready_memory_20;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_84 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h15 | _GEN_19 | ready_memory_21
-      : _GEN_19 | ready_memory_21;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_19 | ready_memory_21;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_85 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h16 | _GEN_20 | ready_memory_22
-      : _GEN_20 | ready_memory_22;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_20 | ready_memory_22;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_86 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h17 | _GEN_21 | ready_memory_23
-      : _GEN_21 | ready_memory_23;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_21 | ready_memory_23;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_87 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h18 | _GEN_22 | ready_memory_24
-      : _GEN_22 | ready_memory_24;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_22 | ready_memory_24;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_88 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h19 | _GEN_23 | ready_memory_25
-      : _GEN_23 | ready_memory_25;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_23 | ready_memory_25;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_89 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h1A | _GEN_24 | ready_memory_26
-      : _GEN_24 | ready_memory_26;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_24 | ready_memory_26;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_90 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h1B | _GEN_25 | ready_memory_27
-      : _GEN_25 | ready_memory_27;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_25 | ready_memory_27;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_91 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h1C | _GEN_26 | ready_memory_28
-      : _GEN_26 | ready_memory_28;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_26 | ready_memory_28;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_92 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h1D | _GEN_27 | ready_memory_29
-      : _GEN_27 | ready_memory_29;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_27 | ready_memory_29;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_93 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h1E | _GEN_28 | ready_memory_30
-      : _GEN_28 | ready_memory_30;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_28 | ready_memory_30;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_94 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h1F | _GEN_29 | ready_memory_31
-      : _GEN_29 | ready_memory_31;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_29 | ready_memory_31;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_95 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h20 | _GEN_30 | ready_memory_32
-      : _GEN_30 | ready_memory_32;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_30 | ready_memory_32;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_96 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h21 | _GEN_31 | ready_memory_33
-      : _GEN_31 | ready_memory_33;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_31 | ready_memory_33;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_97 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h22 | _GEN_32 | ready_memory_34
-      : _GEN_32 | ready_memory_34;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_32 | ready_memory_34;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_98 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h23 | _GEN_33 | ready_memory_35
-      : _GEN_33 | ready_memory_35;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_33 | ready_memory_35;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_99 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h24 | _GEN_34 | ready_memory_36
-      : _GEN_34 | ready_memory_36;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_34 | ready_memory_36;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_100 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h25 | _GEN_35 | ready_memory_37
-      : _GEN_35 | ready_memory_37;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_35 | ready_memory_37;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_101 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h26 | _GEN_36 | ready_memory_38
-      : _GEN_36 | ready_memory_38;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_36 | ready_memory_38;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_102 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h27 | _GEN_37 | ready_memory_39
-      : _GEN_37 | ready_memory_39;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_37 | ready_memory_39;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_103 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h28 | _GEN_38 | ready_memory_40
-      : _GEN_38 | ready_memory_40;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_38 | ready_memory_40;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_104 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h29 | _GEN_39 | ready_memory_41
-      : _GEN_39 | ready_memory_41;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_39 | ready_memory_41;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_105 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h2A | _GEN_40 | ready_memory_42
-      : _GEN_40 | ready_memory_42;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_40 | ready_memory_42;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_106 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h2B | _GEN_41 | ready_memory_43
-      : _GEN_41 | ready_memory_43;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_41 | ready_memory_43;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_107 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h2C | _GEN_42 | ready_memory_44
-      : _GEN_42 | ready_memory_44;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_42 | ready_memory_44;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_108 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h2D | _GEN_43 | ready_memory_45
-      : _GEN_43 | ready_memory_45;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_43 | ready_memory_45;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_109 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h2E | _GEN_44 | ready_memory_46
-      : _GEN_44 | ready_memory_46;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_44 | ready_memory_46;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_110 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h2F | _GEN_45 | ready_memory_47
-      : _GEN_45 | ready_memory_47;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_45 | ready_memory_47;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_111 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h30 | _GEN_46 | ready_memory_48
-      : _GEN_46 | ready_memory_48;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_46 | ready_memory_48;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_112 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h31 | _GEN_47 | ready_memory_49
-      : _GEN_47 | ready_memory_49;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_47 | ready_memory_49;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_113 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h32 | _GEN_48 | ready_memory_50
-      : _GEN_48 | ready_memory_50;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_48 | ready_memory_50;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_114 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h33 | _GEN_49 | ready_memory_51
-      : _GEN_49 | ready_memory_51;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_49 | ready_memory_51;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_115 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h34 | _GEN_50 | ready_memory_52
-      : _GEN_50 | ready_memory_52;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_50 | ready_memory_52;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_116 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h35 | _GEN_51 | ready_memory_53
-      : _GEN_51 | ready_memory_53;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_51 | ready_memory_53;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_117 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h36 | _GEN_52 | ready_memory_54
-      : _GEN_52 | ready_memory_54;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_52 | ready_memory_54;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_118 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h37 | _GEN_53 | ready_memory_55
-      : _GEN_53 | ready_memory_55;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_53 | ready_memory_55;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_119 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h38 | _GEN_54 | ready_memory_56
-      : _GEN_54 | ready_memory_56;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_54 | ready_memory_56;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_120 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h39 | _GEN_55 | ready_memory_57
-      : _GEN_55 | ready_memory_57;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_55 | ready_memory_57;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_121 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h3A | _GEN_56 | ready_memory_58
-      : _GEN_56 | ready_memory_58;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_56 | ready_memory_58;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_122 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h3B | _GEN_57 | ready_memory_59
-      : _GEN_57 | ready_memory_59;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_57 | ready_memory_59;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_123 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h3C | _GEN_58 | ready_memory_60
-      : _GEN_58 | ready_memory_60;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_58 | ready_memory_60;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_124 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h3D | _GEN_59 | ready_memory_61
-      : _GEN_59 | ready_memory_61;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_59 | ready_memory_61;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_125 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h3E | _GEN_60 | ready_memory_62
-      : _GEN_60 | ready_memory_62;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_60 | ready_memory_62;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_126 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h3F | _GEN_61 | ready_memory_63
-      : _GEN_61 | ready_memory_63;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_61 | ready_memory_63;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_127 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h40 | _GEN_62 | ready_memory_64
-      : _GEN_62 | ready_memory_64;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
+      : _GEN_62 | ready_memory_64;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
   wire         _GEN_128 =
     RD_valid_1
       ? io_FU_outputs_1_bits_RD == 7'h41 | _GEN_63 | ready_memory_65
-      : _GEN_63 | ready_memory_65;	// src/main/scala/Frontend/rename.scala:373:32, :385:28, :391:50, :393:23, :394:37
-  wire         RD_valid_2 = io_FU_outputs_2_valid & io_FU_outputs_2_bits_RD_valid;	// src/main/scala/Frontend/rename.scala:391:50
-  wire         _GEN_129 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h1;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_130 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h2;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_131 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h3;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_132 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h4;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_133 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h5;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_134 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h6;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_135 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h7;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_136 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h8;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_137 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h9;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_138 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'hA;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_139 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'hB;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_140 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'hC;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_141 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'hD;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_142 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'hE;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_143 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'hF;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_144 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h10;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_145 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h11;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_146 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h12;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_147 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h13;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_148 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h14;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_149 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h15;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_150 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h16;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_151 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h17;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_152 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h18;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_153 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h19;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_154 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h1A;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_155 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h1B;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_156 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h1C;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_157 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h1D;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_158 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h1E;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_159 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h1F;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_160 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h20;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_161 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h21;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_162 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h22;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_163 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h23;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_164 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h24;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_165 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h25;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_166 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h26;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_167 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h27;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_168 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h28;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_169 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h29;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_170 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h2A;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_171 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h2B;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_172 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h2C;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_173 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h2D;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_174 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h2E;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_175 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h2F;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_176 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h30;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_177 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h31;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_178 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h32;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_179 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h33;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_180 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h34;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_181 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h35;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_182 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h36;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_183 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h37;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_184 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h38;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_185 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h39;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_186 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h3A;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_187 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h3B;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_188 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h3C;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_189 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h3D;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_190 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h3E;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_191 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h3F;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_192 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h40;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         _GEN_193 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h41;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
-  wire         RD_valid_3 = io_FU_outputs_3_valid & io_FU_outputs_3_bits_RD_valid;	// src/main/scala/Frontend/rename.scala:391:50
+      : _GEN_63 | ready_memory_65;	// src/main/scala/Frontend/rename.scala:377:32, :389:28, :395:50, :397:23, :398:37
+  wire         RD_valid_2 = io_FU_outputs_2_valid & io_FU_outputs_2_bits_RD_valid;	// src/main/scala/Frontend/rename.scala:395:50
+  wire         _GEN_129 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h1;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_130 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h2;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_131 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h3;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_132 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h4;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_133 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h5;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_134 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h6;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_135 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h7;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_136 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h8;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_137 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h9;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_138 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'hA;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_139 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'hB;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_140 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'hC;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_141 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'hD;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_142 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'hE;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_143 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'hF;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_144 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h10;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_145 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h11;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_146 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h12;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_147 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h13;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_148 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h14;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_149 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h15;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_150 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h16;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_151 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h17;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_152 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h18;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_153 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h19;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_154 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h1A;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_155 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h1B;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_156 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h1C;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_157 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h1D;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_158 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h1E;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_159 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h1F;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_160 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h20;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_161 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h21;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_162 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h22;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_163 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h23;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_164 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h24;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_165 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h25;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_166 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h26;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_167 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h27;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_168 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h28;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_169 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h29;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_170 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h2A;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_171 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h2B;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_172 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h2C;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_173 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h2D;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_174 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h2E;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_175 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h2F;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_176 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h30;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_177 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h31;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_178 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h32;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_179 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h33;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_180 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h34;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_181 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h35;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_182 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h36;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_183 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h37;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_184 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h38;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_185 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h39;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_186 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h3A;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_187 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h3B;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_188 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h3C;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_189 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h3D;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_190 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h3E;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_191 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h3F;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_192 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h40;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         _GEN_193 = RD_valid_2 & io_FU_outputs_2_bits_RD == 7'h41;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
+  wire         RD_valid_3 = io_FU_outputs_3_valid & io_FU_outputs_3_bits_RD_valid;	// src/main/scala/Frontend/rename.scala:395:50
   wire         _GEN_194 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h1 | _GEN_129 | _GEN_64
-      : _GEN_129 | _GEN_64;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_129 | _GEN_64;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_195 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h2 | _GEN_130 | _GEN_65
-      : _GEN_130 | _GEN_65;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_130 | _GEN_65;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_196 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h3 | _GEN_131 | _GEN_66
-      : _GEN_131 | _GEN_66;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_131 | _GEN_66;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_197 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h4 | _GEN_132 | _GEN_67
-      : _GEN_132 | _GEN_67;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_132 | _GEN_67;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_198 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h5 | _GEN_133 | _GEN_68
-      : _GEN_133 | _GEN_68;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_133 | _GEN_68;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_199 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h6 | _GEN_134 | _GEN_69
-      : _GEN_134 | _GEN_69;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_134 | _GEN_69;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_200 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h7 | _GEN_135 | _GEN_70
-      : _GEN_135 | _GEN_70;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_135 | _GEN_70;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_201 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h8 | _GEN_136 | _GEN_71
-      : _GEN_136 | _GEN_71;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_136 | _GEN_71;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_202 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h9 | _GEN_137 | _GEN_72
-      : _GEN_137 | _GEN_72;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_137 | _GEN_72;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_203 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'hA | _GEN_138 | _GEN_73
-      : _GEN_138 | _GEN_73;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_138 | _GEN_73;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_204 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'hB | _GEN_139 | _GEN_74
-      : _GEN_139 | _GEN_74;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_139 | _GEN_74;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_205 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'hC | _GEN_140 | _GEN_75
-      : _GEN_140 | _GEN_75;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_140 | _GEN_75;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_206 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'hD | _GEN_141 | _GEN_76
-      : _GEN_141 | _GEN_76;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_141 | _GEN_76;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_207 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'hE | _GEN_142 | _GEN_77
-      : _GEN_142 | _GEN_77;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_142 | _GEN_77;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_208 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'hF | _GEN_143 | _GEN_78
-      : _GEN_143 | _GEN_78;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_143 | _GEN_78;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_209 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h10 | _GEN_144 | _GEN_79
-      : _GEN_144 | _GEN_79;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_144 | _GEN_79;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_210 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h11 | _GEN_145 | _GEN_80
-      : _GEN_145 | _GEN_80;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_145 | _GEN_80;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_211 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h12 | _GEN_146 | _GEN_81
-      : _GEN_146 | _GEN_81;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_146 | _GEN_81;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_212 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h13 | _GEN_147 | _GEN_82
-      : _GEN_147 | _GEN_82;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_147 | _GEN_82;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_213 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h14 | _GEN_148 | _GEN_83
-      : _GEN_148 | _GEN_83;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_148 | _GEN_83;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_214 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h15 | _GEN_149 | _GEN_84
-      : _GEN_149 | _GEN_84;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_149 | _GEN_84;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_215 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h16 | _GEN_150 | _GEN_85
-      : _GEN_150 | _GEN_85;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_150 | _GEN_85;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_216 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h17 | _GEN_151 | _GEN_86
-      : _GEN_151 | _GEN_86;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_151 | _GEN_86;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_217 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h18 | _GEN_152 | _GEN_87
-      : _GEN_152 | _GEN_87;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_152 | _GEN_87;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_218 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h19 | _GEN_153 | _GEN_88
-      : _GEN_153 | _GEN_88;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_153 | _GEN_88;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_219 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h1A | _GEN_154 | _GEN_89
-      : _GEN_154 | _GEN_89;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_154 | _GEN_89;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_220 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h1B | _GEN_155 | _GEN_90
-      : _GEN_155 | _GEN_90;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_155 | _GEN_90;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_221 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h1C | _GEN_156 | _GEN_91
-      : _GEN_156 | _GEN_91;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_156 | _GEN_91;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_222 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h1D | _GEN_157 | _GEN_92
-      : _GEN_157 | _GEN_92;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_157 | _GEN_92;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_223 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h1E | _GEN_158 | _GEN_93
-      : _GEN_158 | _GEN_93;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_158 | _GEN_93;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_224 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h1F | _GEN_159 | _GEN_94
-      : _GEN_159 | _GEN_94;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_159 | _GEN_94;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_225 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h20 | _GEN_160 | _GEN_95
-      : _GEN_160 | _GEN_95;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_160 | _GEN_95;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_226 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h21 | _GEN_161 | _GEN_96
-      : _GEN_161 | _GEN_96;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_161 | _GEN_96;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_227 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h22 | _GEN_162 | _GEN_97
-      : _GEN_162 | _GEN_97;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_162 | _GEN_97;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_228 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h23 | _GEN_163 | _GEN_98
-      : _GEN_163 | _GEN_98;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_163 | _GEN_98;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_229 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h24 | _GEN_164 | _GEN_99
-      : _GEN_164 | _GEN_99;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_164 | _GEN_99;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_230 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h25 | _GEN_165 | _GEN_100
-      : _GEN_165 | _GEN_100;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_165 | _GEN_100;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_231 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h26 | _GEN_166 | _GEN_101
-      : _GEN_166 | _GEN_101;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_166 | _GEN_101;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_232 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h27 | _GEN_167 | _GEN_102
-      : _GEN_167 | _GEN_102;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_167 | _GEN_102;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_233 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h28 | _GEN_168 | _GEN_103
-      : _GEN_168 | _GEN_103;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_168 | _GEN_103;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_234 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h29 | _GEN_169 | _GEN_104
-      : _GEN_169 | _GEN_104;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_169 | _GEN_104;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_235 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h2A | _GEN_170 | _GEN_105
-      : _GEN_170 | _GEN_105;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_170 | _GEN_105;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_236 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h2B | _GEN_171 | _GEN_106
-      : _GEN_171 | _GEN_106;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_171 | _GEN_106;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_237 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h2C | _GEN_172 | _GEN_107
-      : _GEN_172 | _GEN_107;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_172 | _GEN_107;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_238 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h2D | _GEN_173 | _GEN_108
-      : _GEN_173 | _GEN_108;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_173 | _GEN_108;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_239 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h2E | _GEN_174 | _GEN_109
-      : _GEN_174 | _GEN_109;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_174 | _GEN_109;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_240 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h2F | _GEN_175 | _GEN_110
-      : _GEN_175 | _GEN_110;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_175 | _GEN_110;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_241 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h30 | _GEN_176 | _GEN_111
-      : _GEN_176 | _GEN_111;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_176 | _GEN_111;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_242 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h31 | _GEN_177 | _GEN_112
-      : _GEN_177 | _GEN_112;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_177 | _GEN_112;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_243 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h32 | _GEN_178 | _GEN_113
-      : _GEN_178 | _GEN_113;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_178 | _GEN_113;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_244 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h33 | _GEN_179 | _GEN_114
-      : _GEN_179 | _GEN_114;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_179 | _GEN_114;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_245 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h34 | _GEN_180 | _GEN_115
-      : _GEN_180 | _GEN_115;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_180 | _GEN_115;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_246 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h35 | _GEN_181 | _GEN_116
-      : _GEN_181 | _GEN_116;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_181 | _GEN_116;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_247 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h36 | _GEN_182 | _GEN_117
-      : _GEN_182 | _GEN_117;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_182 | _GEN_117;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_248 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h37 | _GEN_183 | _GEN_118
-      : _GEN_183 | _GEN_118;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_183 | _GEN_118;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_249 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h38 | _GEN_184 | _GEN_119
-      : _GEN_184 | _GEN_119;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_184 | _GEN_119;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_250 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h39 | _GEN_185 | _GEN_120
-      : _GEN_185 | _GEN_120;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_185 | _GEN_120;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_251 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h3A | _GEN_186 | _GEN_121
-      : _GEN_186 | _GEN_121;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_186 | _GEN_121;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_252 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h3B | _GEN_187 | _GEN_122
-      : _GEN_187 | _GEN_122;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_187 | _GEN_122;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_253 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h3C | _GEN_188 | _GEN_123
-      : _GEN_188 | _GEN_123;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_188 | _GEN_123;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_254 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h3D | _GEN_189 | _GEN_124
-      : _GEN_189 | _GEN_124;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_189 | _GEN_124;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_255 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h3E | _GEN_190 | _GEN_125
-      : _GEN_190 | _GEN_125;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_190 | _GEN_125;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_256 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h3F | _GEN_191 | _GEN_126
-      : _GEN_191 | _GEN_126;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_191 | _GEN_126;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_257 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h40 | _GEN_192 | _GEN_127
-      : _GEN_192 | _GEN_127;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_192 | _GEN_127;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_258 =
     RD_valid_3
       ? io_FU_outputs_3_bits_RD == 7'h41 | _GEN_193 | _GEN_128
-      : _GEN_193 | _GEN_128;	// src/main/scala/Frontend/rename.scala:391:50, :393:23, :394:37
+      : _GEN_193 | _GEN_128;	// src/main/scala/Frontend/rename.scala:395:50, :397:23, :398:37
   wire         _GEN_259 =
     _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD_valid
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_valid;	// src/main/scala/Frontend/rename.scala:363:58, :403:23
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_valid;	// src/main/scala/Frontend/rename.scala:367:58, :407:23
   wire         _GEN_260 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h1;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h1;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_261 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h2;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h2;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_262 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h3;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h3;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_263 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h4;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h4;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_264 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h5;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h5;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_265 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h6;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h6;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_266 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h7;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h7;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_267 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h8;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h8;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_268 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h9;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h9;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_269 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'hA;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'hA;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_270 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'hB;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'hB;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_271 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'hC;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'hC;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_272 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'hD;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'hD;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_273 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'hE;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'hE;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_274 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'hF;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'hF;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_275 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h10;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h10;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_276 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h11;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h11;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_277 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h12;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h12;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_278 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h13;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h13;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_279 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h14;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h14;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_280 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h15;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h15;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_281 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h16;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h16;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_282 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h17;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h17;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_283 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h18;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h18;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_284 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h19;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h19;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_285 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h1A;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h1A;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_286 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h1B;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h1B;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_287 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h1C;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h1C;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_288 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h1D;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h1D;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_289 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h1E;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h1E;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_290 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h1F;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h1F;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_291 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h20;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h20;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_292 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h21;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h21;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_293 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h22;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h22;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_294 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h23;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h23;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_295 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h24;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h24;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_296 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h25;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h25;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_297 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h26;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h26;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_298 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h27;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h27;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_299 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h28;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h28;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_300 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h29;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h29;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_301 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h2A;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h2A;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_302 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h2B;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h2B;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_303 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h2C;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h2C;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_304 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h2D;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h2D;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_305 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h2E;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h2E;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_306 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h2F;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h2F;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_307 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h30;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h30;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_308 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h31;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h31;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_309 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h32;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h32;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_310 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h33;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h33;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_311 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h34;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h34;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_312 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h35;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h35;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_313 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h36;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h36;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_314 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h37;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h37;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_315 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h38;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h38;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_316 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h39;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h39;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_317 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h3A;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h3A;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_318 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h3B;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h3B;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_319 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h3C;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h3C;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_320 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h3D;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h3D;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_321 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h3E;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h3E;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_322 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h3F;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h3F;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_323 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h40;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h40;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_324 =
     _GEN_259
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h41;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD == 7'h41;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :407:{23,64}, :408:37
   wire         _GEN_325 =
     _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD_valid
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_valid;	// src/main/scala/Frontend/rename.scala:363:58, :403:23
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_valid;	// src/main/scala/Frontend/rename.scala:367:58, :407:23
   wire         _GEN_326 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h1
           | _GEN_260) & _GEN_194
-      : ~_GEN_260 & _GEN_194;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_260 & _GEN_194;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_327 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h2
           | _GEN_261) & _GEN_195
-      : ~_GEN_261 & _GEN_195;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_261 & _GEN_195;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_328 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h3
           | _GEN_262) & _GEN_196
-      : ~_GEN_262 & _GEN_196;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_262 & _GEN_196;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_329 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h4
           | _GEN_263) & _GEN_197
-      : ~_GEN_263 & _GEN_197;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_263 & _GEN_197;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_330 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h5
           | _GEN_264) & _GEN_198
-      : ~_GEN_264 & _GEN_198;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_264 & _GEN_198;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_331 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h6
           | _GEN_265) & _GEN_199
-      : ~_GEN_265 & _GEN_199;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_265 & _GEN_199;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_332 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h7
           | _GEN_266) & _GEN_200
-      : ~_GEN_266 & _GEN_200;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_266 & _GEN_200;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_333 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h8
           | _GEN_267) & _GEN_201
-      : ~_GEN_267 & _GEN_201;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_267 & _GEN_201;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_334 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h9
           | _GEN_268) & _GEN_202
-      : ~_GEN_268 & _GEN_202;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_268 & _GEN_202;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_335 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'hA
           | _GEN_269) & _GEN_203
-      : ~_GEN_269 & _GEN_203;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_269 & _GEN_203;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_336 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'hB
           | _GEN_270) & _GEN_204
-      : ~_GEN_270 & _GEN_204;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_270 & _GEN_204;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_337 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'hC
           | _GEN_271) & _GEN_205
-      : ~_GEN_271 & _GEN_205;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_271 & _GEN_205;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_338 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'hD
           | _GEN_272) & _GEN_206
-      : ~_GEN_272 & _GEN_206;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_272 & _GEN_206;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_339 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'hE
           | _GEN_273) & _GEN_207
-      : ~_GEN_273 & _GEN_207;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_273 & _GEN_207;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_340 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'hF
           | _GEN_274) & _GEN_208
-      : ~_GEN_274 & _GEN_208;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_274 & _GEN_208;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_341 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h10
           | _GEN_275) & _GEN_209
-      : ~_GEN_275 & _GEN_209;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_275 & _GEN_209;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_342 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h11
           | _GEN_276) & _GEN_210
-      : ~_GEN_276 & _GEN_210;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_276 & _GEN_210;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_343 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h12
           | _GEN_277) & _GEN_211
-      : ~_GEN_277 & _GEN_211;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_277 & _GEN_211;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_344 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h13
           | _GEN_278) & _GEN_212
-      : ~_GEN_278 & _GEN_212;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_278 & _GEN_212;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_345 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h14
           | _GEN_279) & _GEN_213
-      : ~_GEN_279 & _GEN_213;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_279 & _GEN_213;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_346 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h15
           | _GEN_280) & _GEN_214
-      : ~_GEN_280 & _GEN_214;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_280 & _GEN_214;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_347 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h16
           | _GEN_281) & _GEN_215
-      : ~_GEN_281 & _GEN_215;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_281 & _GEN_215;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_348 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h17
           | _GEN_282) & _GEN_216
-      : ~_GEN_282 & _GEN_216;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_282 & _GEN_216;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_349 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h18
           | _GEN_283) & _GEN_217
-      : ~_GEN_283 & _GEN_217;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_283 & _GEN_217;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_350 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h19
           | _GEN_284) & _GEN_218
-      : ~_GEN_284 & _GEN_218;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_284 & _GEN_218;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_351 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h1A
           | _GEN_285) & _GEN_219
-      : ~_GEN_285 & _GEN_219;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_285 & _GEN_219;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_352 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h1B
           | _GEN_286) & _GEN_220
-      : ~_GEN_286 & _GEN_220;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_286 & _GEN_220;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_353 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h1C
           | _GEN_287) & _GEN_221
-      : ~_GEN_287 & _GEN_221;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_287 & _GEN_221;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_354 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h1D
           | _GEN_288) & _GEN_222
-      : ~_GEN_288 & _GEN_222;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_288 & _GEN_222;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_355 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h1E
           | _GEN_289) & _GEN_223
-      : ~_GEN_289 & _GEN_223;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_289 & _GEN_223;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_356 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h1F
           | _GEN_290) & _GEN_224
-      : ~_GEN_290 & _GEN_224;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_290 & _GEN_224;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_357 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h20
           | _GEN_291) & _GEN_225
-      : ~_GEN_291 & _GEN_225;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_291 & _GEN_225;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_358 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h21
           | _GEN_292) & _GEN_226
-      : ~_GEN_292 & _GEN_226;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_292 & _GEN_226;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_359 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h22
           | _GEN_293) & _GEN_227
-      : ~_GEN_293 & _GEN_227;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_293 & _GEN_227;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_360 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h23
           | _GEN_294) & _GEN_228
-      : ~_GEN_294 & _GEN_228;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_294 & _GEN_228;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_361 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h24
           | _GEN_295) & _GEN_229
-      : ~_GEN_295 & _GEN_229;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_295 & _GEN_229;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_362 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h25
           | _GEN_296) & _GEN_230
-      : ~_GEN_296 & _GEN_230;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_296 & _GEN_230;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_363 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h26
           | _GEN_297) & _GEN_231
-      : ~_GEN_297 & _GEN_231;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_297 & _GEN_231;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_364 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h27
           | _GEN_298) & _GEN_232
-      : ~_GEN_298 & _GEN_232;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_298 & _GEN_232;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_365 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h28
           | _GEN_299) & _GEN_233
-      : ~_GEN_299 & _GEN_233;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_299 & _GEN_233;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_366 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h29
           | _GEN_300) & _GEN_234
-      : ~_GEN_300 & _GEN_234;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_300 & _GEN_234;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_367 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h2A
           | _GEN_301) & _GEN_235
-      : ~_GEN_301 & _GEN_235;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_301 & _GEN_235;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_368 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h2B
           | _GEN_302) & _GEN_236
-      : ~_GEN_302 & _GEN_236;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_302 & _GEN_236;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_369 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h2C
           | _GEN_303) & _GEN_237
-      : ~_GEN_303 & _GEN_237;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_303 & _GEN_237;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_370 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h2D
           | _GEN_304) & _GEN_238
-      : ~_GEN_304 & _GEN_238;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_304 & _GEN_238;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_371 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h2E
           | _GEN_305) & _GEN_239
-      : ~_GEN_305 & _GEN_239;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_305 & _GEN_239;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_372 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h2F
           | _GEN_306) & _GEN_240
-      : ~_GEN_306 & _GEN_240;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_306 & _GEN_240;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_373 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h30
           | _GEN_307) & _GEN_241
-      : ~_GEN_307 & _GEN_241;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_307 & _GEN_241;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_374 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h31
           | _GEN_308) & _GEN_242
-      : ~_GEN_308 & _GEN_242;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_308 & _GEN_242;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_375 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h32
           | _GEN_309) & _GEN_243
-      : ~_GEN_309 & _GEN_243;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_309 & _GEN_243;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_376 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h33
           | _GEN_310) & _GEN_244
-      : ~_GEN_310 & _GEN_244;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_310 & _GEN_244;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_377 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h34
           | _GEN_311) & _GEN_245
-      : ~_GEN_311 & _GEN_245;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_311 & _GEN_245;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_378 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h35
           | _GEN_312) & _GEN_246
-      : ~_GEN_312 & _GEN_246;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_312 & _GEN_246;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_379 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h36
           | _GEN_313) & _GEN_247
-      : ~_GEN_313 & _GEN_247;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_313 & _GEN_247;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_380 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h37
           | _GEN_314) & _GEN_248
-      : ~_GEN_314 & _GEN_248;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_314 & _GEN_248;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_381 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h38
           | _GEN_315) & _GEN_249
-      : ~_GEN_315 & _GEN_249;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_315 & _GEN_249;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_382 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h39
           | _GEN_316) & _GEN_250
-      : ~_GEN_316 & _GEN_250;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_316 & _GEN_250;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_383 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h3A
           | _GEN_317) & _GEN_251
-      : ~_GEN_317 & _GEN_251;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_317 & _GEN_251;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_384 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h3B
           | _GEN_318) & _GEN_252
-      : ~_GEN_318 & _GEN_252;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_318 & _GEN_252;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_385 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h3C
           | _GEN_319) & _GEN_253
-      : ~_GEN_319 & _GEN_253;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_319 & _GEN_253;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_386 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h3D
           | _GEN_320) & _GEN_254
-      : ~_GEN_320 & _GEN_254;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_320 & _GEN_254;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_387 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h3E
           | _GEN_321) & _GEN_255
-      : ~_GEN_321 & _GEN_255;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_321 & _GEN_255;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_388 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h3F
           | _GEN_322) & _GEN_256
-      : ~_GEN_322 & _GEN_256;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_322 & _GEN_256;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_389 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h40
           | _GEN_323) & _GEN_257
-      : ~_GEN_323 & _GEN_257;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_323 & _GEN_257;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_390 =
     _GEN_325
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD == 7'h41
           | _GEN_324) & _GEN_258
-      : ~_GEN_324 & _GEN_258;	// src/main/scala/Frontend/rename.scala:363:58, :393:23, :394:37, :403:{23,64}, :404:37
+      : ~_GEN_324 & _GEN_258;	// src/main/scala/Frontend/rename.scala:367:58, :397:23, :398:37, :407:{23,64}, :408:37
   wire         _GEN_391 =
     _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD_valid
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_valid;	// src/main/scala/Frontend/rename.scala:363:58, :403:23
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_valid;	// src/main/scala/Frontend/rename.scala:367:58, :407:23
   wire         _GEN_392 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h1;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h1;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_393 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h2;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h2;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_394 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h3;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h3;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_395 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h4;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h4;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_396 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h5;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h5;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_397 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h6;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h6;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_398 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h7;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h7;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_399 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h8;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h8;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_400 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h9;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h9;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_401 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'hA;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'hA;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_402 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'hB;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'hB;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_403 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'hC;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'hC;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_404 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'hD;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'hD;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_405 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'hE;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'hE;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_406 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'hF;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'hF;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_407 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h10;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h10;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_408 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h11;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h11;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_409 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h12;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h12;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_410 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h13;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h13;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_411 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h14;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h14;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_412 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h15;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h15;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_413 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h16;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h16;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_414 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h17;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h17;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_415 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h18;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h18;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_416 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h19;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h19;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_417 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h1A;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h1A;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_418 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h1B;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h1B;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_419 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h1C;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h1C;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_420 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h1D;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h1D;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_421 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h1E;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h1E;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_422 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h1F;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h1F;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_423 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h20;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h20;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_424 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h21;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h21;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_425 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h22;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h22;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_426 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h23;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h23;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_427 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h24;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h24;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_428 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h25;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h25;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_429 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h26;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h26;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_430 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h27;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h27;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_431 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h28;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h28;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_432 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h29;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h29;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_433 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h2A;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h2A;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_434 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h2B;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h2B;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_435 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h2C;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h2C;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_436 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h2D;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h2D;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_437 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h2E;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h2E;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_438 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h2F;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h2F;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_439 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h30;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h30;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_440 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h31;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h31;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_441 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h32;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h32;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_442 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h33;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h33;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_443 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h34;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h34;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_444 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h35;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h35;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_445 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h36;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h36;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_446 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h37;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h37;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_447 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h38;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h38;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_448 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h39;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h39;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_449 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h3A;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h3A;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_450 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h3B;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h3B;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_451 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h3C;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h3C;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_452 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h3D;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h3D;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_453 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h3E;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h3E;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_454 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h3F;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h3F;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_455 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h40;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h40;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_456 =
     _GEN_391
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h41;	// src/main/scala/Frontend/rename.scala:363:58, :403:{23,64}, :404:37
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD == 7'h41;	// src/main/scala/Frontend/rename.scala:367:58, :407:{23,64}, :408:37
   wire         _GEN_457 =
     _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD_valid
-    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_valid;	// src/main/scala/Frontend/rename.scala:363:58, :403:23
+    & _renamed_decoded_fetch_packet_skid_buffer_io_deq_valid;	// src/main/scala/Frontend/rename.scala:367:58, :407:23
   wire         comb_ready_bits_1 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h1
           | _GEN_392) & _GEN_326
-      : ~_GEN_392 & _GEN_326;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_392 & _GEN_326;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_2 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h2
           | _GEN_393) & _GEN_327
-      : ~_GEN_393 & _GEN_327;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_393 & _GEN_327;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_3 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h3
           | _GEN_394) & _GEN_328
-      : ~_GEN_394 & _GEN_328;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_394 & _GEN_328;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_4 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h4
           | _GEN_395) & _GEN_329
-      : ~_GEN_395 & _GEN_329;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_395 & _GEN_329;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_5 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h5
           | _GEN_396) & _GEN_330
-      : ~_GEN_396 & _GEN_330;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_396 & _GEN_330;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_6 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h6
           | _GEN_397) & _GEN_331
-      : ~_GEN_397 & _GEN_331;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_397 & _GEN_331;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_7 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h7
           | _GEN_398) & _GEN_332
-      : ~_GEN_398 & _GEN_332;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_398 & _GEN_332;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_8 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h8
           | _GEN_399) & _GEN_333
-      : ~_GEN_399 & _GEN_333;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_399 & _GEN_333;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_9 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h9
           | _GEN_400) & _GEN_334
-      : ~_GEN_400 & _GEN_334;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_400 & _GEN_334;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_10 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'hA
           | _GEN_401) & _GEN_335
-      : ~_GEN_401 & _GEN_335;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_401 & _GEN_335;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_11 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'hB
           | _GEN_402) & _GEN_336
-      : ~_GEN_402 & _GEN_336;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_402 & _GEN_336;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_12 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'hC
           | _GEN_403) & _GEN_337
-      : ~_GEN_403 & _GEN_337;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_403 & _GEN_337;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_13 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'hD
           | _GEN_404) & _GEN_338
-      : ~_GEN_404 & _GEN_338;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_404 & _GEN_338;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_14 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'hE
           | _GEN_405) & _GEN_339
-      : ~_GEN_405 & _GEN_339;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_405 & _GEN_339;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_15 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'hF
           | _GEN_406) & _GEN_340
-      : ~_GEN_406 & _GEN_340;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_406 & _GEN_340;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_16 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h10
           | _GEN_407) & _GEN_341
-      : ~_GEN_407 & _GEN_341;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_407 & _GEN_341;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_17 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h11
           | _GEN_408) & _GEN_342
-      : ~_GEN_408 & _GEN_342;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_408 & _GEN_342;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_18 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h12
           | _GEN_409) & _GEN_343
-      : ~_GEN_409 & _GEN_343;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_409 & _GEN_343;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_19 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h13
           | _GEN_410) & _GEN_344
-      : ~_GEN_410 & _GEN_344;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_410 & _GEN_344;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_20 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h14
           | _GEN_411) & _GEN_345
-      : ~_GEN_411 & _GEN_345;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_411 & _GEN_345;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_21 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h15
           | _GEN_412) & _GEN_346
-      : ~_GEN_412 & _GEN_346;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_412 & _GEN_346;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_22 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h16
           | _GEN_413) & _GEN_347
-      : ~_GEN_413 & _GEN_347;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_413 & _GEN_347;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_23 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h17
           | _GEN_414) & _GEN_348
-      : ~_GEN_414 & _GEN_348;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_414 & _GEN_348;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_24 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h18
           | _GEN_415) & _GEN_349
-      : ~_GEN_415 & _GEN_349;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_415 & _GEN_349;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_25 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h19
           | _GEN_416) & _GEN_350
-      : ~_GEN_416 & _GEN_350;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_416 & _GEN_350;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_26 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h1A
           | _GEN_417) & _GEN_351
-      : ~_GEN_417 & _GEN_351;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_417 & _GEN_351;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_27 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h1B
           | _GEN_418) & _GEN_352
-      : ~_GEN_418 & _GEN_352;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_418 & _GEN_352;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_28 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h1C
           | _GEN_419) & _GEN_353
-      : ~_GEN_419 & _GEN_353;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_419 & _GEN_353;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_29 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h1D
           | _GEN_420) & _GEN_354
-      : ~_GEN_420 & _GEN_354;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_420 & _GEN_354;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_30 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h1E
           | _GEN_421) & _GEN_355
-      : ~_GEN_421 & _GEN_355;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_421 & _GEN_355;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_31 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h1F
           | _GEN_422) & _GEN_356
-      : ~_GEN_422 & _GEN_356;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_422 & _GEN_356;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_32 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h20
           | _GEN_423) & _GEN_357
-      : ~_GEN_423 & _GEN_357;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_423 & _GEN_357;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_33 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h21
           | _GEN_424) & _GEN_358
-      : ~_GEN_424 & _GEN_358;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_424 & _GEN_358;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_34 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h22
           | _GEN_425) & _GEN_359
-      : ~_GEN_425 & _GEN_359;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_425 & _GEN_359;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_35 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h23
           | _GEN_426) & _GEN_360
-      : ~_GEN_426 & _GEN_360;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_426 & _GEN_360;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_36 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h24
           | _GEN_427) & _GEN_361
-      : ~_GEN_427 & _GEN_361;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_427 & _GEN_361;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_37 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h25
           | _GEN_428) & _GEN_362
-      : ~_GEN_428 & _GEN_362;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_428 & _GEN_362;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_38 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h26
           | _GEN_429) & _GEN_363
-      : ~_GEN_429 & _GEN_363;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_429 & _GEN_363;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_39 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h27
           | _GEN_430) & _GEN_364
-      : ~_GEN_430 & _GEN_364;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_430 & _GEN_364;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_40 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h28
           | _GEN_431) & _GEN_365
-      : ~_GEN_431 & _GEN_365;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_431 & _GEN_365;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_41 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h29
           | _GEN_432) & _GEN_366
-      : ~_GEN_432 & _GEN_366;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_432 & _GEN_366;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_42 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h2A
           | _GEN_433) & _GEN_367
-      : ~_GEN_433 & _GEN_367;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_433 & _GEN_367;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_43 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h2B
           | _GEN_434) & _GEN_368
-      : ~_GEN_434 & _GEN_368;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_434 & _GEN_368;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_44 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h2C
           | _GEN_435) & _GEN_369
-      : ~_GEN_435 & _GEN_369;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_435 & _GEN_369;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_45 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h2D
           | _GEN_436) & _GEN_370
-      : ~_GEN_436 & _GEN_370;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_436 & _GEN_370;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_46 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h2E
           | _GEN_437) & _GEN_371
-      : ~_GEN_437 & _GEN_371;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_437 & _GEN_371;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_47 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h2F
           | _GEN_438) & _GEN_372
-      : ~_GEN_438 & _GEN_372;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_438 & _GEN_372;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_48 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h30
           | _GEN_439) & _GEN_373
-      : ~_GEN_439 & _GEN_373;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_439 & _GEN_373;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_49 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h31
           | _GEN_440) & _GEN_374
-      : ~_GEN_440 & _GEN_374;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_440 & _GEN_374;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_50 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h32
           | _GEN_441) & _GEN_375
-      : ~_GEN_441 & _GEN_375;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_441 & _GEN_375;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_51 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h33
           | _GEN_442) & _GEN_376
-      : ~_GEN_442 & _GEN_376;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_442 & _GEN_376;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_52 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h34
           | _GEN_443) & _GEN_377
-      : ~_GEN_443 & _GEN_377;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_443 & _GEN_377;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_53 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h35
           | _GEN_444) & _GEN_378
-      : ~_GEN_444 & _GEN_378;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_444 & _GEN_378;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_54 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h36
           | _GEN_445) & _GEN_379
-      : ~_GEN_445 & _GEN_379;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_445 & _GEN_379;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_55 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h37
           | _GEN_446) & _GEN_380
-      : ~_GEN_446 & _GEN_380;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_446 & _GEN_380;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_56 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h38
           | _GEN_447) & _GEN_381
-      : ~_GEN_447 & _GEN_381;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_447 & _GEN_381;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_57 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h39
           | _GEN_448) & _GEN_382
-      : ~_GEN_448 & _GEN_382;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_448 & _GEN_382;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_58 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h3A
           | _GEN_449) & _GEN_383
-      : ~_GEN_449 & _GEN_383;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_449 & _GEN_383;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_59 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h3B
           | _GEN_450) & _GEN_384
-      : ~_GEN_450 & _GEN_384;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_450 & _GEN_384;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_60 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h3C
           | _GEN_451) & _GEN_385
-      : ~_GEN_451 & _GEN_385;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_451 & _GEN_385;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_61 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h3D
           | _GEN_452) & _GEN_386
-      : ~_GEN_452 & _GEN_386;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_452 & _GEN_386;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_62 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h3E
           | _GEN_453) & _GEN_387
-      : ~_GEN_453 & _GEN_387;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_453 & _GEN_387;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_63 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h3F
           | _GEN_454) & _GEN_388
-      : ~_GEN_454 & _GEN_388;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_454 & _GEN_388;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_64 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h40
           | _GEN_455) & _GEN_389
-      : ~_GEN_455 & _GEN_389;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_455 & _GEN_389;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire         comb_ready_bits_65 =
     _GEN_457
       ? ~(_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD == 7'h41
           | _GEN_456) & _GEN_390
-      : ~_GEN_456 & _GEN_390;	// src/main/scala/Frontend/rename.scala:363:58, :381:31, :403:{23,64}, :404:37
+      : ~_GEN_456 & _GEN_390;	// src/main/scala/Frontend/rename.scala:367:58, :385:31, :407:{23,64}, :408:37
   wire [127:0] _GEN_458 =
     {{comb_ready_bits_0},
      {comb_ready_bits_0},
@@ -2683,386 +2776,426 @@ module rename(	// src/main/scala/Frontend/rename.scala:204:7
      {comb_ready_bits_3},
      {comb_ready_bits_2},
      {comb_ready_bits_1},
-     {comb_ready_bits_0}};	// src/main/scala/Frontend/rename.scala:381:31, :423:32
-  assign io_decoded_fetch_packet_ready_0 =
+     {comb_ready_bits_0}};	// src/main/scala/Frontend/rename.scala:385:31, :427:32
+  reg          predictions_out_bits_REG_valid;	// src/main/scala/Frontend/rename.scala:438:39
+  reg  [31:0]  predictions_out_bits_REG_fetch_PC;	// src/main/scala/Frontend/rename.scala:438:39
+  reg          predictions_out_bits_REG_is_misprediction;	// src/main/scala/Frontend/rename.scala:438:39
+  reg  [31:0]  predictions_out_bits_REG_predicted_PC;	// src/main/scala/Frontend/rename.scala:438:39
+  reg          predictions_out_bits_REG_T_NT;	// src/main/scala/Frontend/rename.scala:438:39
+  reg  [2:0]   predictions_out_bits_REG_br_type;	// src/main/scala/Frontend/rename.scala:438:39
+  reg  [15:0]  predictions_out_bits_REG_GHR;	// src/main/scala/Frontend/rename.scala:438:39
+  reg  [6:0]   predictions_out_bits_REG_NEXT;	// src/main/scala/Frontend/rename.scala:438:39
+  reg  [6:0]   predictions_out_bits_REG_TOS;	// src/main/scala/Frontend/rename.scala:438:39
+  reg  [1:0]   predictions_out_bits_REG_dominant_index;	// src/main/scala/Frontend/rename.scala:438:39
+  reg  [31:0]  predictions_out_bits_REG_resolved_PC;	// src/main/scala/Frontend/rename.scala:438:39
+  reg          predictions_out_valid_REG;	// src/main/scala/Frontend/rename.scala:439:39
+  assign inputs_ready =
     _free_list_io_can_allocate & ~_RAT_io_checkpoints_full
-    & io_renamed_decoded_fetch_packet_ready;	// src/main/scala/Frontend/rename.scala:254:33, :256:33, :433:{86,89,114}
+    & io_renamed_decoded_fetch_packet_ready & io_predictions_out_ready;	// src/main/scala/Frontend/rename.scala:258:33, :260:33, :448:{50,53,78,119}
   always @(posedge clock) begin	// src/main/scala/Frontend/rename.scala:204:7
     renamed_decoded_fetch_packet_bits_REG_fetch_PC <=
-      io_decoded_fetch_packet_bits_fetch_PC;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_fetch_PC;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_ready_bits_RS1_ready <=
-      io_decoded_fetch_packet_bits_decoded_instruction_0_ready_bits_RS1_ready;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_0_ready_bits_RS1_ready;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_ready_bits_RS2_ready <=
-      io_decoded_fetch_packet_bits_decoded_instruction_0_ready_bits_RS2_ready;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_0_ready_bits_RS2_ready;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_RD_valid <=
-      io_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_RS1_valid <=
-      io_decoded_fetch_packet_bits_decoded_instruction_0_RS1_valid;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_0_RS1_valid;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_RS2_valid <=
-      io_decoded_fetch_packet_bits_decoded_instruction_0_RS2_valid;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_0_RS2_valid;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_IMM <=
-      io_decoded_fetch_packet_bits_decoded_instruction_0_IMM;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_0_IMM;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_FUNCT3 <=
-      io_decoded_fetch_packet_bits_decoded_instruction_0_FUNCT3;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_0_FUNCT3;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_packet_index <=
-      io_decoded_fetch_packet_bits_decoded_instruction_0_packet_index;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_0_packet_index;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_ROB_index <=
-      io_decoded_fetch_packet_bits_decoded_instruction_0_ROB_index;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_0_ROB_index;	// src/main/scala/Frontend/rename.scala:251:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_MOB_index <=
+      io_decoded_fetch_packet_bits_decoded_instruction_0_MOB_index;	// src/main/scala/Frontend/rename.scala:251:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_FTQ_index <=
+      io_decoded_fetch_packet_bits_decoded_instruction_0_FTQ_index;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_instructionType <=
-      io_decoded_fetch_packet_bits_decoded_instruction_0_instructionType;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_0_instructionType;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_portID <=
-      io_decoded_fetch_packet_bits_decoded_instruction_0_portID;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_0_portID;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_RS_type <=
-      io_decoded_fetch_packet_bits_decoded_instruction_0_RS_type;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_0_RS_type;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_needs_ALU <=
-      io_decoded_fetch_packet_bits_decoded_instruction_0_needs_ALU;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_0_needs_ALU;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_needs_branch_unit <=
-      io_decoded_fetch_packet_bits_decoded_instruction_0_needs_branch_unit;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_0_needs_branch_unit;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_needs_CSRs <=
-      io_decoded_fetch_packet_bits_decoded_instruction_0_needs_CSRs;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_0_needs_CSRs;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_SUBTRACT <=
-      io_decoded_fetch_packet_bits_decoded_instruction_0_SUBTRACT;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_0_SUBTRACT;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_MULTIPLY <=
-      io_decoded_fetch_packet_bits_decoded_instruction_0_MULTIPLY;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_0_MULTIPLY;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_IS_IMM <=
-      io_decoded_fetch_packet_bits_decoded_instruction_0_IS_IMM;	// src/main/scala/Frontend/rename.scala:247:55
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_is_load <=
-      io_decoded_fetch_packet_bits_decoded_instruction_0_is_load;	// src/main/scala/Frontend/rename.scala:247:55
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_is_store <=
-      io_decoded_fetch_packet_bits_decoded_instruction_0_is_store;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_0_IS_IMM;	// src/main/scala/Frontend/rename.scala:251:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_memory_type <=
+      io_decoded_fetch_packet_bits_decoded_instruction_0_memory_type;	// src/main/scala/Frontend/rename.scala:251:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_access_width <=
+      io_decoded_fetch_packet_bits_decoded_instruction_0_access_width;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_ready_bits_RS1_ready <=
-      io_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS1_ready;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS1_ready;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_ready_bits_RS2_ready <=
-      io_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS2_ready;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS2_ready;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_RD_valid <=
-      io_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_RS1_valid <=
-      io_decoded_fetch_packet_bits_decoded_instruction_1_RS1_valid;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_1_RS1_valid;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_RS2_valid <=
-      io_decoded_fetch_packet_bits_decoded_instruction_1_RS2_valid;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_1_RS2_valid;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_IMM <=
-      io_decoded_fetch_packet_bits_decoded_instruction_1_IMM;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_1_IMM;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_FUNCT3 <=
-      io_decoded_fetch_packet_bits_decoded_instruction_1_FUNCT3;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_1_FUNCT3;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_packet_index <=
-      io_decoded_fetch_packet_bits_decoded_instruction_1_packet_index;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_1_packet_index;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_ROB_index <=
-      io_decoded_fetch_packet_bits_decoded_instruction_1_ROB_index;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_1_ROB_index;	// src/main/scala/Frontend/rename.scala:251:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_MOB_index <=
+      io_decoded_fetch_packet_bits_decoded_instruction_1_MOB_index;	// src/main/scala/Frontend/rename.scala:251:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_FTQ_index <=
+      io_decoded_fetch_packet_bits_decoded_instruction_1_FTQ_index;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_instructionType <=
-      io_decoded_fetch_packet_bits_decoded_instruction_1_instructionType;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_1_instructionType;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_portID <=
-      io_decoded_fetch_packet_bits_decoded_instruction_1_portID;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_1_portID;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_RS_type <=
-      io_decoded_fetch_packet_bits_decoded_instruction_1_RS_type;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_1_RS_type;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_needs_ALU <=
-      io_decoded_fetch_packet_bits_decoded_instruction_1_needs_ALU;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_1_needs_ALU;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_needs_branch_unit <=
-      io_decoded_fetch_packet_bits_decoded_instruction_1_needs_branch_unit;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_1_needs_branch_unit;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_needs_CSRs <=
-      io_decoded_fetch_packet_bits_decoded_instruction_1_needs_CSRs;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_1_needs_CSRs;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_SUBTRACT <=
-      io_decoded_fetch_packet_bits_decoded_instruction_1_SUBTRACT;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_1_SUBTRACT;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_MULTIPLY <=
-      io_decoded_fetch_packet_bits_decoded_instruction_1_MULTIPLY;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_1_MULTIPLY;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_IS_IMM <=
-      io_decoded_fetch_packet_bits_decoded_instruction_1_IS_IMM;	// src/main/scala/Frontend/rename.scala:247:55
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_is_load <=
-      io_decoded_fetch_packet_bits_decoded_instruction_1_is_load;	// src/main/scala/Frontend/rename.scala:247:55
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_is_store <=
-      io_decoded_fetch_packet_bits_decoded_instruction_1_is_store;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_1_IS_IMM;	// src/main/scala/Frontend/rename.scala:251:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_memory_type <=
+      io_decoded_fetch_packet_bits_decoded_instruction_1_memory_type;	// src/main/scala/Frontend/rename.scala:251:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_access_width <=
+      io_decoded_fetch_packet_bits_decoded_instruction_1_access_width;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_ready_bits_RS1_ready <=
-      io_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS1_ready;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS1_ready;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_ready_bits_RS2_ready <=
-      io_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS2_ready;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS2_ready;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_RD_valid <=
-      io_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_RS1_valid <=
-      io_decoded_fetch_packet_bits_decoded_instruction_2_RS1_valid;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_2_RS1_valid;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_RS2_valid <=
-      io_decoded_fetch_packet_bits_decoded_instruction_2_RS2_valid;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_2_RS2_valid;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_IMM <=
-      io_decoded_fetch_packet_bits_decoded_instruction_2_IMM;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_2_IMM;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_FUNCT3 <=
-      io_decoded_fetch_packet_bits_decoded_instruction_2_FUNCT3;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_2_FUNCT3;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_packet_index <=
-      io_decoded_fetch_packet_bits_decoded_instruction_2_packet_index;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_2_packet_index;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_ROB_index <=
-      io_decoded_fetch_packet_bits_decoded_instruction_2_ROB_index;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_2_ROB_index;	// src/main/scala/Frontend/rename.scala:251:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_MOB_index <=
+      io_decoded_fetch_packet_bits_decoded_instruction_2_MOB_index;	// src/main/scala/Frontend/rename.scala:251:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_FTQ_index <=
+      io_decoded_fetch_packet_bits_decoded_instruction_2_FTQ_index;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_instructionType <=
-      io_decoded_fetch_packet_bits_decoded_instruction_2_instructionType;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_2_instructionType;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_portID <=
-      io_decoded_fetch_packet_bits_decoded_instruction_2_portID;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_2_portID;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_RS_type <=
-      io_decoded_fetch_packet_bits_decoded_instruction_2_RS_type;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_2_RS_type;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_needs_ALU <=
-      io_decoded_fetch_packet_bits_decoded_instruction_2_needs_ALU;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_2_needs_ALU;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_needs_branch_unit <=
-      io_decoded_fetch_packet_bits_decoded_instruction_2_needs_branch_unit;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_2_needs_branch_unit;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_needs_CSRs <=
-      io_decoded_fetch_packet_bits_decoded_instruction_2_needs_CSRs;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_2_needs_CSRs;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_SUBTRACT <=
-      io_decoded_fetch_packet_bits_decoded_instruction_2_SUBTRACT;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_2_SUBTRACT;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_MULTIPLY <=
-      io_decoded_fetch_packet_bits_decoded_instruction_2_MULTIPLY;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_2_MULTIPLY;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_IS_IMM <=
-      io_decoded_fetch_packet_bits_decoded_instruction_2_IS_IMM;	// src/main/scala/Frontend/rename.scala:247:55
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_is_load <=
-      io_decoded_fetch_packet_bits_decoded_instruction_2_is_load;	// src/main/scala/Frontend/rename.scala:247:55
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_is_store <=
-      io_decoded_fetch_packet_bits_decoded_instruction_2_is_store;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_2_IS_IMM;	// src/main/scala/Frontend/rename.scala:251:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_memory_type <=
+      io_decoded_fetch_packet_bits_decoded_instruction_2_memory_type;	// src/main/scala/Frontend/rename.scala:251:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_access_width <=
+      io_decoded_fetch_packet_bits_decoded_instruction_2_access_width;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_ready_bits_RS1_ready <=
-      io_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS1_ready;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS1_ready;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_ready_bits_RS2_ready <=
-      io_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS2_ready;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS2_ready;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_RD_valid <=
-      io_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_RS1_valid <=
-      io_decoded_fetch_packet_bits_decoded_instruction_3_RS1_valid;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_3_RS1_valid;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_RS2_valid <=
-      io_decoded_fetch_packet_bits_decoded_instruction_3_RS2_valid;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_3_RS2_valid;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_IMM <=
-      io_decoded_fetch_packet_bits_decoded_instruction_3_IMM;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_3_IMM;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_FUNCT3 <=
-      io_decoded_fetch_packet_bits_decoded_instruction_3_FUNCT3;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_3_FUNCT3;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_packet_index <=
-      io_decoded_fetch_packet_bits_decoded_instruction_3_packet_index;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_3_packet_index;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_ROB_index <=
-      io_decoded_fetch_packet_bits_decoded_instruction_3_ROB_index;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_3_ROB_index;	// src/main/scala/Frontend/rename.scala:251:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_MOB_index <=
+      io_decoded_fetch_packet_bits_decoded_instruction_3_MOB_index;	// src/main/scala/Frontend/rename.scala:251:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_FTQ_index <=
+      io_decoded_fetch_packet_bits_decoded_instruction_3_FTQ_index;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_instructionType <=
-      io_decoded_fetch_packet_bits_decoded_instruction_3_instructionType;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_3_instructionType;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_portID <=
-      io_decoded_fetch_packet_bits_decoded_instruction_3_portID;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_3_portID;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_RS_type <=
-      io_decoded_fetch_packet_bits_decoded_instruction_3_RS_type;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_3_RS_type;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_needs_ALU <=
-      io_decoded_fetch_packet_bits_decoded_instruction_3_needs_ALU;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_3_needs_ALU;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_needs_branch_unit <=
-      io_decoded_fetch_packet_bits_decoded_instruction_3_needs_branch_unit;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_3_needs_branch_unit;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_needs_CSRs <=
-      io_decoded_fetch_packet_bits_decoded_instruction_3_needs_CSRs;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_3_needs_CSRs;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_SUBTRACT <=
-      io_decoded_fetch_packet_bits_decoded_instruction_3_SUBTRACT;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_3_SUBTRACT;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_MULTIPLY <=
-      io_decoded_fetch_packet_bits_decoded_instruction_3_MULTIPLY;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_3_MULTIPLY;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_IS_IMM <=
-      io_decoded_fetch_packet_bits_decoded_instruction_3_IS_IMM;	// src/main/scala/Frontend/rename.scala:247:55
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_is_load <=
-      io_decoded_fetch_packet_bits_decoded_instruction_3_is_load;	// src/main/scala/Frontend/rename.scala:247:55
-    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_is_store <=
-      io_decoded_fetch_packet_bits_decoded_instruction_3_is_store;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_decoded_instruction_3_IS_IMM;	// src/main/scala/Frontend/rename.scala:251:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_memory_type <=
+      io_decoded_fetch_packet_bits_decoded_instruction_3_memory_type;	// src/main/scala/Frontend/rename.scala:251:55
+    renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_access_width <=
+      io_decoded_fetch_packet_bits_decoded_instruction_3_access_width;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_valid_bits_0 <=
-      io_decoded_fetch_packet_bits_valid_bits_0;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_valid_bits_0;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_valid_bits_1 <=
-      io_decoded_fetch_packet_bits_valid_bits_1;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_valid_bits_1;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_valid_bits_2 <=
-      io_decoded_fetch_packet_bits_valid_bits_2;	// src/main/scala/Frontend/rename.scala:247:55
+      io_decoded_fetch_packet_bits_valid_bits_2;	// src/main/scala/Frontend/rename.scala:251:55
     renamed_decoded_fetch_packet_bits_REG_valid_bits_3 <=
-      io_decoded_fetch_packet_bits_valid_bits_3;	// src/main/scala/Frontend/rename.scala:247:55
-    renamed_decoded_fetch_packet_valid_REG <= fire;	// src/main/scala/Frontend/rename.scala:240:42, :248:55, src/main/scala/chisel3/util/Decoupled.scala:51:35
+      io_decoded_fetch_packet_bits_valid_bits_3;	// src/main/scala/Frontend/rename.scala:251:55
+    renamed_decoded_fetch_packet_valid_REG <= fire;	// src/main/scala/Frontend/rename.scala:244:42, :252:55, src/main/scala/chisel3/util/Decoupled.scala:51:35
     renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD_REG <=
-      _free_list_io_renamed_values_0;	// src/main/scala/Frontend/rename.scala:254:33, :271:92
+      _free_list_io_renamed_values_0;	// src/main/scala/Frontend/rename.scala:258:33, :275:92
     renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD_REG <=
-      _free_list_io_renamed_values_1;	// src/main/scala/Frontend/rename.scala:254:33, :271:92
+      _free_list_io_renamed_values_1;	// src/main/scala/Frontend/rename.scala:258:33, :275:92
     renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD_REG <=
-      _free_list_io_renamed_values_2;	// src/main/scala/Frontend/rename.scala:254:33, :271:92
+      _free_list_io_renamed_values_2;	// src/main/scala/Frontend/rename.scala:258:33, :275:92
     renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD_REG <=
-      _free_list_io_renamed_values_3;	// src/main/scala/Frontend/rename.scala:254:33, :271:92
+      _free_list_io_renamed_values_3;	// src/main/scala/Frontend/rename.scala:258:33, :275:92
     renamed_decoded_fetch_packet_bits_free_list_front_pointer_REG <=
-      _free_list_io_free_list_front_pointer;	// src/main/scala/Frontend/rename.scala:254:33, :273:92
-    REG <= io_decoded_fetch_packet_bits_decoded_instruction_1_RS1;	// src/main/scala/Frontend/rename.scala:312:25
-    REG_1 <= io_decoded_fetch_packet_bits_decoded_instruction_0_RD;	// src/main/scala/Frontend/rename.scala:312:94
-    REG_2 <= io_decoded_fetch_packet_bits_decoded_instruction_1_RS1_valid;	// src/main/scala/Frontend/rename.scala:313:24
-    REG_3 <= io_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid;	// src/main/scala/Frontend/rename.scala:313:98
-    renamed_RS1_1_REG <= _free_list_io_renamed_values_0;	// src/main/scala/Frontend/rename.scala:254:33, :315:42
-    REG_4 <= io_decoded_fetch_packet_bits_decoded_instruction_1_RS2;	// src/main/scala/Frontend/rename.scala:318:25
-    REG_5 <= io_decoded_fetch_packet_bits_decoded_instruction_0_RD;	// src/main/scala/Frontend/rename.scala:318:94
-    REG_6 <= io_decoded_fetch_packet_bits_decoded_instruction_1_RS2_valid;	// src/main/scala/Frontend/rename.scala:319:36
-    REG_7 <= io_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid;	// src/main/scala/Frontend/rename.scala:319:110
-    renamed_RS2_1_REG <= _free_list_io_renamed_values_0;	// src/main/scala/Frontend/rename.scala:254:33, :321:42
-    REG_8 <= io_decoded_fetch_packet_bits_decoded_instruction_2_RS1;	// src/main/scala/Frontend/rename.scala:312:25
-    REG_9 <= io_decoded_fetch_packet_bits_decoded_instruction_0_RD;	// src/main/scala/Frontend/rename.scala:312:94
-    REG_10 <= io_decoded_fetch_packet_bits_decoded_instruction_2_RS1_valid;	// src/main/scala/Frontend/rename.scala:313:24
-    REG_11 <= io_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid;	// src/main/scala/Frontend/rename.scala:313:98
-    renamed_RS1_2_REG <= _free_list_io_renamed_values_0;	// src/main/scala/Frontend/rename.scala:254:33, :315:42
-    REG_12 <= io_decoded_fetch_packet_bits_decoded_instruction_2_RS2;	// src/main/scala/Frontend/rename.scala:318:25
-    REG_13 <= io_decoded_fetch_packet_bits_decoded_instruction_0_RD;	// src/main/scala/Frontend/rename.scala:318:94
-    REG_14 <= io_decoded_fetch_packet_bits_decoded_instruction_2_RS2_valid;	// src/main/scala/Frontend/rename.scala:319:36
-    REG_15 <= io_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid;	// src/main/scala/Frontend/rename.scala:319:110
-    renamed_RS2_2_REG <= _free_list_io_renamed_values_0;	// src/main/scala/Frontend/rename.scala:254:33, :321:42
-    REG_16 <= io_decoded_fetch_packet_bits_decoded_instruction_2_RS1;	// src/main/scala/Frontend/rename.scala:312:25
-    REG_17 <= io_decoded_fetch_packet_bits_decoded_instruction_1_RD;	// src/main/scala/Frontend/rename.scala:312:94
-    REG_18 <= io_decoded_fetch_packet_bits_decoded_instruction_2_RS1_valid;	// src/main/scala/Frontend/rename.scala:313:24
-    REG_19 <= io_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid;	// src/main/scala/Frontend/rename.scala:313:98
-    renamed_RS1_2_REG_1 <= _free_list_io_renamed_values_1;	// src/main/scala/Frontend/rename.scala:254:33, :315:42
-    REG_20 <= io_decoded_fetch_packet_bits_decoded_instruction_2_RS2;	// src/main/scala/Frontend/rename.scala:318:25
-    REG_21 <= io_decoded_fetch_packet_bits_decoded_instruction_1_RD;	// src/main/scala/Frontend/rename.scala:318:94
-    REG_22 <= io_decoded_fetch_packet_bits_decoded_instruction_2_RS2_valid;	// src/main/scala/Frontend/rename.scala:319:36
-    REG_23 <= io_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid;	// src/main/scala/Frontend/rename.scala:319:110
-    renamed_RS2_2_REG_1 <= _free_list_io_renamed_values_1;	// src/main/scala/Frontend/rename.scala:254:33, :321:42
-    REG_24 <= io_decoded_fetch_packet_bits_decoded_instruction_3_RS1;	// src/main/scala/Frontend/rename.scala:312:25
-    REG_25 <= io_decoded_fetch_packet_bits_decoded_instruction_0_RD;	// src/main/scala/Frontend/rename.scala:312:94
-    REG_26 <= io_decoded_fetch_packet_bits_decoded_instruction_3_RS1_valid;	// src/main/scala/Frontend/rename.scala:313:24
-    REG_27 <= io_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid;	// src/main/scala/Frontend/rename.scala:313:98
-    renamed_RS1_3_REG <= _free_list_io_renamed_values_0;	// src/main/scala/Frontend/rename.scala:254:33, :315:42
-    REG_28 <= io_decoded_fetch_packet_bits_decoded_instruction_3_RS2;	// src/main/scala/Frontend/rename.scala:318:25
-    REG_29 <= io_decoded_fetch_packet_bits_decoded_instruction_0_RD;	// src/main/scala/Frontend/rename.scala:318:94
-    REG_30 <= io_decoded_fetch_packet_bits_decoded_instruction_3_RS2_valid;	// src/main/scala/Frontend/rename.scala:319:36
-    REG_31 <= io_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid;	// src/main/scala/Frontend/rename.scala:319:110
-    renamed_RS2_3_REG <= _free_list_io_renamed_values_0;	// src/main/scala/Frontend/rename.scala:254:33, :321:42
-    REG_32 <= io_decoded_fetch_packet_bits_decoded_instruction_3_RS1;	// src/main/scala/Frontend/rename.scala:312:25
-    REG_33 <= io_decoded_fetch_packet_bits_decoded_instruction_1_RD;	// src/main/scala/Frontend/rename.scala:312:94
-    REG_34 <= io_decoded_fetch_packet_bits_decoded_instruction_3_RS1_valid;	// src/main/scala/Frontend/rename.scala:313:24
-    REG_35 <= io_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid;	// src/main/scala/Frontend/rename.scala:313:98
-    renamed_RS1_3_REG_1 <= _free_list_io_renamed_values_1;	// src/main/scala/Frontend/rename.scala:254:33, :315:42
-    REG_36 <= io_decoded_fetch_packet_bits_decoded_instruction_3_RS2;	// src/main/scala/Frontend/rename.scala:318:25
-    REG_37 <= io_decoded_fetch_packet_bits_decoded_instruction_1_RD;	// src/main/scala/Frontend/rename.scala:318:94
-    REG_38 <= io_decoded_fetch_packet_bits_decoded_instruction_3_RS2_valid;	// src/main/scala/Frontend/rename.scala:319:36
-    REG_39 <= io_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid;	// src/main/scala/Frontend/rename.scala:319:110
-    renamed_RS2_3_REG_1 <= _free_list_io_renamed_values_1;	// src/main/scala/Frontend/rename.scala:254:33, :321:42
-    REG_40 <= io_decoded_fetch_packet_bits_decoded_instruction_3_RS1;	// src/main/scala/Frontend/rename.scala:312:25
-    REG_41 <= io_decoded_fetch_packet_bits_decoded_instruction_2_RD;	// src/main/scala/Frontend/rename.scala:312:94
-    REG_42 <= io_decoded_fetch_packet_bits_decoded_instruction_3_RS1_valid;	// src/main/scala/Frontend/rename.scala:313:24
-    REG_43 <= io_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid;	// src/main/scala/Frontend/rename.scala:313:98
-    renamed_RS1_3_REG_2 <= _free_list_io_renamed_values_2;	// src/main/scala/Frontend/rename.scala:254:33, :315:42
-    REG_44 <= io_decoded_fetch_packet_bits_decoded_instruction_3_RS2;	// src/main/scala/Frontend/rename.scala:318:25
-    REG_45 <= io_decoded_fetch_packet_bits_decoded_instruction_2_RD;	// src/main/scala/Frontend/rename.scala:318:94
-    REG_46 <= io_decoded_fetch_packet_bits_decoded_instruction_3_RS2_valid;	// src/main/scala/Frontend/rename.scala:319:36
-    REG_47 <= io_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid;	// src/main/scala/Frontend/rename.scala:319:110
-    renamed_RS2_3_REG_2 <= _free_list_io_renamed_values_2;	// src/main/scala/Frontend/rename.scala:254:33, :321:42
-    renamed_decoded_fetch_packet_bits_RAT_index_REG <= _RAT_io_active_checkpoint_value;	// src/main/scala/Frontend/rename.scala:256:33, :333:76
+      _free_list_io_free_list_front_pointer;	// src/main/scala/Frontend/rename.scala:258:33, :277:92
+    REG <= io_decoded_fetch_packet_bits_decoded_instruction_1_RS1;	// src/main/scala/Frontend/rename.scala:316:25
+    REG_1 <= io_decoded_fetch_packet_bits_decoded_instruction_0_RD;	// src/main/scala/Frontend/rename.scala:316:94
+    REG_2 <= io_decoded_fetch_packet_bits_decoded_instruction_1_RS1_valid;	// src/main/scala/Frontend/rename.scala:317:24
+    REG_3 <= io_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid;	// src/main/scala/Frontend/rename.scala:317:98
+    renamed_RS1_1_REG <= _free_list_io_renamed_values_0;	// src/main/scala/Frontend/rename.scala:258:33, :319:42
+    REG_4 <= io_decoded_fetch_packet_bits_decoded_instruction_1_RS2;	// src/main/scala/Frontend/rename.scala:322:25
+    REG_5 <= io_decoded_fetch_packet_bits_decoded_instruction_0_RD;	// src/main/scala/Frontend/rename.scala:322:94
+    REG_6 <= io_decoded_fetch_packet_bits_decoded_instruction_1_RS2_valid;	// src/main/scala/Frontend/rename.scala:323:36
+    REG_7 <= io_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid;	// src/main/scala/Frontend/rename.scala:323:110
+    renamed_RS2_1_REG <= _free_list_io_renamed_values_0;	// src/main/scala/Frontend/rename.scala:258:33, :325:42
+    REG_8 <= io_decoded_fetch_packet_bits_decoded_instruction_2_RS1;	// src/main/scala/Frontend/rename.scala:316:25
+    REG_9 <= io_decoded_fetch_packet_bits_decoded_instruction_0_RD;	// src/main/scala/Frontend/rename.scala:316:94
+    REG_10 <= io_decoded_fetch_packet_bits_decoded_instruction_2_RS1_valid;	// src/main/scala/Frontend/rename.scala:317:24
+    REG_11 <= io_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid;	// src/main/scala/Frontend/rename.scala:317:98
+    renamed_RS1_2_REG <= _free_list_io_renamed_values_0;	// src/main/scala/Frontend/rename.scala:258:33, :319:42
+    REG_12 <= io_decoded_fetch_packet_bits_decoded_instruction_2_RS2;	// src/main/scala/Frontend/rename.scala:322:25
+    REG_13 <= io_decoded_fetch_packet_bits_decoded_instruction_0_RD;	// src/main/scala/Frontend/rename.scala:322:94
+    REG_14 <= io_decoded_fetch_packet_bits_decoded_instruction_2_RS2_valid;	// src/main/scala/Frontend/rename.scala:323:36
+    REG_15 <= io_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid;	// src/main/scala/Frontend/rename.scala:323:110
+    renamed_RS2_2_REG <= _free_list_io_renamed_values_0;	// src/main/scala/Frontend/rename.scala:258:33, :325:42
+    REG_16 <= io_decoded_fetch_packet_bits_decoded_instruction_2_RS1;	// src/main/scala/Frontend/rename.scala:316:25
+    REG_17 <= io_decoded_fetch_packet_bits_decoded_instruction_1_RD;	// src/main/scala/Frontend/rename.scala:316:94
+    REG_18 <= io_decoded_fetch_packet_bits_decoded_instruction_2_RS1_valid;	// src/main/scala/Frontend/rename.scala:317:24
+    REG_19 <= io_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid;	// src/main/scala/Frontend/rename.scala:317:98
+    renamed_RS1_2_REG_1 <= _free_list_io_renamed_values_1;	// src/main/scala/Frontend/rename.scala:258:33, :319:42
+    REG_20 <= io_decoded_fetch_packet_bits_decoded_instruction_2_RS2;	// src/main/scala/Frontend/rename.scala:322:25
+    REG_21 <= io_decoded_fetch_packet_bits_decoded_instruction_1_RD;	// src/main/scala/Frontend/rename.scala:322:94
+    REG_22 <= io_decoded_fetch_packet_bits_decoded_instruction_2_RS2_valid;	// src/main/scala/Frontend/rename.scala:323:36
+    REG_23 <= io_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid;	// src/main/scala/Frontend/rename.scala:323:110
+    renamed_RS2_2_REG_1 <= _free_list_io_renamed_values_1;	// src/main/scala/Frontend/rename.scala:258:33, :325:42
+    REG_24 <= io_decoded_fetch_packet_bits_decoded_instruction_3_RS1;	// src/main/scala/Frontend/rename.scala:316:25
+    REG_25 <= io_decoded_fetch_packet_bits_decoded_instruction_0_RD;	// src/main/scala/Frontend/rename.scala:316:94
+    REG_26 <= io_decoded_fetch_packet_bits_decoded_instruction_3_RS1_valid;	// src/main/scala/Frontend/rename.scala:317:24
+    REG_27 <= io_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid;	// src/main/scala/Frontend/rename.scala:317:98
+    renamed_RS1_3_REG <= _free_list_io_renamed_values_0;	// src/main/scala/Frontend/rename.scala:258:33, :319:42
+    REG_28 <= io_decoded_fetch_packet_bits_decoded_instruction_3_RS2;	// src/main/scala/Frontend/rename.scala:322:25
+    REG_29 <= io_decoded_fetch_packet_bits_decoded_instruction_0_RD;	// src/main/scala/Frontend/rename.scala:322:94
+    REG_30 <= io_decoded_fetch_packet_bits_decoded_instruction_3_RS2_valid;	// src/main/scala/Frontend/rename.scala:323:36
+    REG_31 <= io_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid;	// src/main/scala/Frontend/rename.scala:323:110
+    renamed_RS2_3_REG <= _free_list_io_renamed_values_0;	// src/main/scala/Frontend/rename.scala:258:33, :325:42
+    REG_32 <= io_decoded_fetch_packet_bits_decoded_instruction_3_RS1;	// src/main/scala/Frontend/rename.scala:316:25
+    REG_33 <= io_decoded_fetch_packet_bits_decoded_instruction_1_RD;	// src/main/scala/Frontend/rename.scala:316:94
+    REG_34 <= io_decoded_fetch_packet_bits_decoded_instruction_3_RS1_valid;	// src/main/scala/Frontend/rename.scala:317:24
+    REG_35 <= io_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid;	// src/main/scala/Frontend/rename.scala:317:98
+    renamed_RS1_3_REG_1 <= _free_list_io_renamed_values_1;	// src/main/scala/Frontend/rename.scala:258:33, :319:42
+    REG_36 <= io_decoded_fetch_packet_bits_decoded_instruction_3_RS2;	// src/main/scala/Frontend/rename.scala:322:25
+    REG_37 <= io_decoded_fetch_packet_bits_decoded_instruction_1_RD;	// src/main/scala/Frontend/rename.scala:322:94
+    REG_38 <= io_decoded_fetch_packet_bits_decoded_instruction_3_RS2_valid;	// src/main/scala/Frontend/rename.scala:323:36
+    REG_39 <= io_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid;	// src/main/scala/Frontend/rename.scala:323:110
+    renamed_RS2_3_REG_1 <= _free_list_io_renamed_values_1;	// src/main/scala/Frontend/rename.scala:258:33, :325:42
+    REG_40 <= io_decoded_fetch_packet_bits_decoded_instruction_3_RS1;	// src/main/scala/Frontend/rename.scala:316:25
+    REG_41 <= io_decoded_fetch_packet_bits_decoded_instruction_2_RD;	// src/main/scala/Frontend/rename.scala:316:94
+    REG_42 <= io_decoded_fetch_packet_bits_decoded_instruction_3_RS1_valid;	// src/main/scala/Frontend/rename.scala:317:24
+    REG_43 <= io_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid;	// src/main/scala/Frontend/rename.scala:317:98
+    renamed_RS1_3_REG_2 <= _free_list_io_renamed_values_2;	// src/main/scala/Frontend/rename.scala:258:33, :319:42
+    REG_44 <= io_decoded_fetch_packet_bits_decoded_instruction_3_RS2;	// src/main/scala/Frontend/rename.scala:322:25
+    REG_45 <= io_decoded_fetch_packet_bits_decoded_instruction_2_RD;	// src/main/scala/Frontend/rename.scala:322:94
+    REG_46 <= io_decoded_fetch_packet_bits_decoded_instruction_3_RS2_valid;	// src/main/scala/Frontend/rename.scala:323:36
+    REG_47 <= io_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid;	// src/main/scala/Frontend/rename.scala:323:110
+    renamed_RS2_3_REG_2 <= _free_list_io_renamed_values_2;	// src/main/scala/Frontend/rename.scala:258:33, :325:42
+    renamed_decoded_fetch_packet_bits_RAT_index_REG <= _RAT_io_active_checkpoint_value;	// src/main/scala/Frontend/rename.scala:260:33, :337:76
+    predictions_out_bits_REG_valid <= io_predictions_in_bits_valid;	// src/main/scala/Frontend/rename.scala:438:39
+    predictions_out_bits_REG_fetch_PC <= io_predictions_in_bits_fetch_PC;	// src/main/scala/Frontend/rename.scala:438:39
+    predictions_out_bits_REG_is_misprediction <= io_predictions_in_bits_is_misprediction;	// src/main/scala/Frontend/rename.scala:438:39
+    predictions_out_bits_REG_predicted_PC <= io_predictions_in_bits_predicted_PC;	// src/main/scala/Frontend/rename.scala:438:39
+    predictions_out_bits_REG_T_NT <= io_predictions_in_bits_T_NT;	// src/main/scala/Frontend/rename.scala:438:39
+    predictions_out_bits_REG_br_type <= io_predictions_in_bits_br_type;	// src/main/scala/Frontend/rename.scala:438:39
+    predictions_out_bits_REG_GHR <= io_predictions_in_bits_GHR;	// src/main/scala/Frontend/rename.scala:438:39
+    predictions_out_bits_REG_NEXT <= io_predictions_in_bits_NEXT;	// src/main/scala/Frontend/rename.scala:438:39
+    predictions_out_bits_REG_TOS <= io_predictions_in_bits_TOS;	// src/main/scala/Frontend/rename.scala:438:39
+    predictions_out_bits_REG_dominant_index <= io_predictions_in_bits_dominant_index;	// src/main/scala/Frontend/rename.scala:438:39
+    predictions_out_bits_REG_resolved_PC <= io_predictions_in_bits_resolved_PC;	// src/main/scala/Frontend/rename.scala:438:39
+    predictions_out_valid_REG <= fire;	// src/main/scala/Frontend/rename.scala:244:42, :439:39, src/main/scala/chisel3/util/Decoupled.scala:51:35
     if (reset) begin	// src/main/scala/Frontend/rename.scala:204:7
-      ready_memory_1 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_2 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_3 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_4 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_5 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_6 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_7 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_8 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_9 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_10 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_11 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_12 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_13 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_14 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_15 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_16 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_17 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_18 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_19 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_20 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_21 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_22 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_23 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_24 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_25 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_26 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_27 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_28 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_29 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_30 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_31 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_32 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_33 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_34 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_35 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_36 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_37 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_38 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_39 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_40 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_41 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_42 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_43 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_44 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_45 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_46 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_47 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_48 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_49 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_50 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_51 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_52 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_53 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_54 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_55 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_56 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_57 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_58 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_59 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_60 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_61 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_62 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_63 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_64 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
-      ready_memory_65 <= 1'h0;	// src/main/scala/Frontend/rename.scala:373:32
+      ready_memory_1 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_2 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_3 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_4 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_5 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_6 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_7 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_8 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_9 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_10 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_11 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_12 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_13 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_14 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_15 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_16 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_17 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_18 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_19 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_20 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_21 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_22 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_23 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_24 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_25 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_26 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_27 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_28 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_29 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_30 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_31 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_32 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_33 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_34 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_35 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_36 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_37 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_38 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_39 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_40 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_41 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_42 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_43 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_44 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_45 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_46 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_47 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_48 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_49 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_50 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_51 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_52 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_53 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_54 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_55 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_56 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_57 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_58 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_59 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_60 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_61 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_62 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_63 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_64 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
+      ready_memory_65 <= 1'h0;	// src/main/scala/Frontend/rename.scala:377:32
     end
     else begin	// src/main/scala/Frontend/rename.scala:204:7
-      ready_memory_1 <= comb_ready_bits_1;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_2 <= comb_ready_bits_2;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_3 <= comb_ready_bits_3;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_4 <= comb_ready_bits_4;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_5 <= comb_ready_bits_5;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_6 <= comb_ready_bits_6;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_7 <= comb_ready_bits_7;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_8 <= comb_ready_bits_8;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_9 <= comb_ready_bits_9;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_10 <= comb_ready_bits_10;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_11 <= comb_ready_bits_11;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_12 <= comb_ready_bits_12;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_13 <= comb_ready_bits_13;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_14 <= comb_ready_bits_14;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_15 <= comb_ready_bits_15;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_16 <= comb_ready_bits_16;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_17 <= comb_ready_bits_17;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_18 <= comb_ready_bits_18;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_19 <= comb_ready_bits_19;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_20 <= comb_ready_bits_20;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_21 <= comb_ready_bits_21;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_22 <= comb_ready_bits_22;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_23 <= comb_ready_bits_23;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_24 <= comb_ready_bits_24;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_25 <= comb_ready_bits_25;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_26 <= comb_ready_bits_26;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_27 <= comb_ready_bits_27;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_28 <= comb_ready_bits_28;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_29 <= comb_ready_bits_29;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_30 <= comb_ready_bits_30;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_31 <= comb_ready_bits_31;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_32 <= comb_ready_bits_32;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_33 <= comb_ready_bits_33;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_34 <= comb_ready_bits_34;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_35 <= comb_ready_bits_35;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_36 <= comb_ready_bits_36;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_37 <= comb_ready_bits_37;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_38 <= comb_ready_bits_38;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_39 <= comb_ready_bits_39;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_40 <= comb_ready_bits_40;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_41 <= comb_ready_bits_41;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_42 <= comb_ready_bits_42;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_43 <= comb_ready_bits_43;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_44 <= comb_ready_bits_44;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_45 <= comb_ready_bits_45;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_46 <= comb_ready_bits_46;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_47 <= comb_ready_bits_47;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_48 <= comb_ready_bits_48;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_49 <= comb_ready_bits_49;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_50 <= comb_ready_bits_50;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_51 <= comb_ready_bits_51;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_52 <= comb_ready_bits_52;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_53 <= comb_ready_bits_53;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_54 <= comb_ready_bits_54;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_55 <= comb_ready_bits_55;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_56 <= comb_ready_bits_56;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_57 <= comb_ready_bits_57;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_58 <= comb_ready_bits_58;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_59 <= comb_ready_bits_59;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_60 <= comb_ready_bits_60;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_61 <= comb_ready_bits_61;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_62 <= comb_ready_bits_62;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_63 <= comb_ready_bits_63;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_64 <= comb_ready_bits_64;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
-      ready_memory_65 <= comb_ready_bits_65;	// src/main/scala/Frontend/rename.scala:373:32, :381:31
+      ready_memory_1 <= comb_ready_bits_1;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_2 <= comb_ready_bits_2;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_3 <= comb_ready_bits_3;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_4 <= comb_ready_bits_4;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_5 <= comb_ready_bits_5;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_6 <= comb_ready_bits_6;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_7 <= comb_ready_bits_7;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_8 <= comb_ready_bits_8;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_9 <= comb_ready_bits_9;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_10 <= comb_ready_bits_10;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_11 <= comb_ready_bits_11;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_12 <= comb_ready_bits_12;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_13 <= comb_ready_bits_13;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_14 <= comb_ready_bits_14;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_15 <= comb_ready_bits_15;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_16 <= comb_ready_bits_16;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_17 <= comb_ready_bits_17;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_18 <= comb_ready_bits_18;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_19 <= comb_ready_bits_19;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_20 <= comb_ready_bits_20;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_21 <= comb_ready_bits_21;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_22 <= comb_ready_bits_22;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_23 <= comb_ready_bits_23;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_24 <= comb_ready_bits_24;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_25 <= comb_ready_bits_25;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_26 <= comb_ready_bits_26;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_27 <= comb_ready_bits_27;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_28 <= comb_ready_bits_28;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_29 <= comb_ready_bits_29;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_30 <= comb_ready_bits_30;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_31 <= comb_ready_bits_31;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_32 <= comb_ready_bits_32;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_33 <= comb_ready_bits_33;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_34 <= comb_ready_bits_34;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_35 <= comb_ready_bits_35;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_36 <= comb_ready_bits_36;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_37 <= comb_ready_bits_37;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_38 <= comb_ready_bits_38;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_39 <= comb_ready_bits_39;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_40 <= comb_ready_bits_40;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_41 <= comb_ready_bits_41;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_42 <= comb_ready_bits_42;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_43 <= comb_ready_bits_43;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_44 <= comb_ready_bits_44;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_45 <= comb_ready_bits_45;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_46 <= comb_ready_bits_46;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_47 <= comb_ready_bits_47;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_48 <= comb_ready_bits_48;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_49 <= comb_ready_bits_49;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_50 <= comb_ready_bits_50;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_51 <= comb_ready_bits_51;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_52 <= comb_ready_bits_52;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_53 <= comb_ready_bits_53;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_54 <= comb_ready_bits_54;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_55 <= comb_ready_bits_55;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_56 <= comb_ready_bits_56;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_57 <= comb_ready_bits_57;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_58 <= comb_ready_bits_58;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_59 <= comb_ready_bits_59;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_60 <= comb_ready_bits_60;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_61 <= comb_ready_bits_61;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_62 <= comb_ready_bits_62;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_63 <= comb_ready_bits_63;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_64 <= comb_ready_bits_64;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
+      ready_memory_65 <= comb_ready_bits_65;	// src/main/scala/Frontend/rename.scala:377:32, :385:31
     end
   end // always @(posedge)
   `ifdef ENABLE_INITIAL_REG_	// src/main/scala/Frontend/rename.scala:204:7
@@ -3070,337 +3203,367 @@ module rename(	// src/main/scala/Frontend/rename.scala:204:7
       `FIRRTL_BEFORE_INITIAL	// src/main/scala/Frontend/rename.scala:204:7
     `endif // FIRRTL_BEFORE_INITIAL
     initial begin	// src/main/scala/Frontend/rename.scala:204:7
-      automatic logic [31:0] _RANDOM[0:22];	// src/main/scala/Frontend/rename.scala:204:7
+      automatic logic [31:0] _RANDOM[0:28];	// src/main/scala/Frontend/rename.scala:204:7
       `ifdef INIT_RANDOM_PROLOG_	// src/main/scala/Frontend/rename.scala:204:7
         `INIT_RANDOM_PROLOG_	// src/main/scala/Frontend/rename.scala:204:7
       `endif // INIT_RANDOM_PROLOG_
       `ifdef RANDOMIZE_REG_INIT	// src/main/scala/Frontend/rename.scala:204:7
-        for (logic [4:0] i = 5'h0; i < 5'h17; i += 5'h1) begin
+        for (logic [4:0] i = 5'h0; i < 5'h1D; i += 5'h1) begin
           _RANDOM[i] = `RANDOM;	// src/main/scala/Frontend/rename.scala:204:7
         end	// src/main/scala/Frontend/rename.scala:204:7
-        renamed_decoded_fetch_packet_bits_REG_fetch_PC = _RANDOM[5'h0];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+        renamed_decoded_fetch_packet_bits_REG_fetch_PC = _RANDOM[5'h0];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_ready_bits_RS1_ready =
-          _RANDOM[5'h1][0];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h1][0];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_ready_bits_RS2_ready =
-          _RANDOM[5'h1][1];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h1][1];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_RD_valid =
-          _RANDOM[5'h1][9];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h1][9];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_RS1_valid =
-          _RANDOM[5'h1][17];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h1][17];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_RS2_valid =
-          _RANDOM[5'h1][25];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h1][25];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_IMM =
-          {_RANDOM[5'h1][31:26], _RANDOM[5'h2][14:0]};	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          {_RANDOM[5'h1][31:26], _RANDOM[5'h2][14:0]};	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_FUNCT3 =
-          _RANDOM[5'h2][17:15];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h2][17:15];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_packet_index =
-          _RANDOM[5'h2][19:18];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h2][19:18];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_ROB_index =
-          _RANDOM[5'h2][25:20];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h2][25:20];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
+        renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_MOB_index =
+          _RANDOM[5'h2][29:26];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
+        renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_FTQ_index =
+          {_RANDOM[5'h2][31:30], _RANDOM[5'h3][1:0]};	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_instructionType =
-          _RANDOM[5'h2][30:26];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h3][6:2];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_portID =
-          {_RANDOM[5'h2][31], _RANDOM[5'h3][0]};	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h3][8:7];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_RS_type =
-          _RANDOM[5'h3][2:1];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h3][10:9];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_needs_ALU =
-          _RANDOM[5'h3][3];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h3][11];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_needs_branch_unit =
-          _RANDOM[5'h3][4];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h3][12];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_needs_CSRs =
-          _RANDOM[5'h3][5];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h3][13];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_SUBTRACT =
-          _RANDOM[5'h3][6];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h3][14];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_MULTIPLY =
-          _RANDOM[5'h3][7];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h3][15];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_IS_IMM =
-          _RANDOM[5'h3][8];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
-        renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_is_load =
-          _RANDOM[5'h3][9];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
-        renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_is_store =
-          _RANDOM[5'h3][10];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h3][16];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
+        renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_memory_type =
+          _RANDOM[5'h3][18:17];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
+        renamed_decoded_fetch_packet_bits_REG_decoded_instruction_0_access_width =
+          _RANDOM[5'h3][20:19];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_ready_bits_RS1_ready =
-          _RANDOM[5'h3][11];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h3][21];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_ready_bits_RS2_ready =
-          _RANDOM[5'h3][12];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h3][22];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_RD_valid =
-          _RANDOM[5'h3][20];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h3][30];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_RS1_valid =
-          _RANDOM[5'h3][28];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h4][6];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_RS2_valid =
-          _RANDOM[5'h4][4];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h4][14];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_IMM =
-          _RANDOM[5'h4][25:5];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          {_RANDOM[5'h4][31:15], _RANDOM[5'h5][3:0]};	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_FUNCT3 =
-          _RANDOM[5'h4][28:26];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h5][6:4];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_packet_index =
-          _RANDOM[5'h4][30:29];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h5][8:7];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_ROB_index =
-          {_RANDOM[5'h4][31], _RANDOM[5'h5][4:0]};	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h5][14:9];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
+        renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_MOB_index =
+          _RANDOM[5'h5][18:15];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
+        renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_FTQ_index =
+          _RANDOM[5'h5][22:19];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_instructionType =
-          _RANDOM[5'h5][9:5];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h5][27:23];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_portID =
-          _RANDOM[5'h5][11:10];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h5][29:28];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_RS_type =
-          _RANDOM[5'h5][13:12];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h5][31:30];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_needs_ALU =
-          _RANDOM[5'h5][14];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h6][0];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_needs_branch_unit =
-          _RANDOM[5'h5][15];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h6][1];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_needs_CSRs =
-          _RANDOM[5'h5][16];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h6][2];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_SUBTRACT =
-          _RANDOM[5'h5][17];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h6][3];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_MULTIPLY =
-          _RANDOM[5'h5][18];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h6][4];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_IS_IMM =
-          _RANDOM[5'h5][19];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
-        renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_is_load =
-          _RANDOM[5'h5][20];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
-        renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_is_store =
-          _RANDOM[5'h5][21];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h6][5];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
+        renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_memory_type =
+          _RANDOM[5'h6][7:6];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
+        renamed_decoded_fetch_packet_bits_REG_decoded_instruction_1_access_width =
+          _RANDOM[5'h6][9:8];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_ready_bits_RS1_ready =
-          _RANDOM[5'h5][22];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h6][10];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_ready_bits_RS2_ready =
-          _RANDOM[5'h5][23];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h6][11];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_RD_valid =
-          _RANDOM[5'h5][31];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h6][19];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_RS1_valid =
-          _RANDOM[5'h6][7];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h6][27];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_RS2_valid =
-          _RANDOM[5'h6][15];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h7][3];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_IMM =
-          {_RANDOM[5'h6][31:16], _RANDOM[5'h7][4:0]};	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h7][24:4];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_FUNCT3 =
-          _RANDOM[5'h7][7:5];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h7][27:25];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_packet_index =
-          _RANDOM[5'h7][9:8];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h7][29:28];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_ROB_index =
-          _RANDOM[5'h7][15:10];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          {_RANDOM[5'h7][31:30], _RANDOM[5'h8][3:0]};	// src/main/scala/Frontend/rename.scala:204:7, :251:55
+        renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_MOB_index =
+          _RANDOM[5'h8][7:4];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
+        renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_FTQ_index =
+          _RANDOM[5'h8][11:8];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_instructionType =
-          _RANDOM[5'h7][20:16];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h8][16:12];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_portID =
-          _RANDOM[5'h7][22:21];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h8][18:17];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_RS_type =
-          _RANDOM[5'h7][24:23];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h8][20:19];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_needs_ALU =
-          _RANDOM[5'h7][25];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h8][21];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_needs_branch_unit =
-          _RANDOM[5'h7][26];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h8][22];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_needs_CSRs =
-          _RANDOM[5'h7][27];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h8][23];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_SUBTRACT =
-          _RANDOM[5'h7][28];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h8][24];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_MULTIPLY =
-          _RANDOM[5'h7][29];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h8][25];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_IS_IMM =
-          _RANDOM[5'h7][30];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
-        renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_is_load =
-          _RANDOM[5'h7][31];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
-        renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_is_store =
-          _RANDOM[5'h8][0];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h8][26];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
+        renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_memory_type =
+          _RANDOM[5'h8][28:27];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
+        renamed_decoded_fetch_packet_bits_REG_decoded_instruction_2_access_width =
+          _RANDOM[5'h8][30:29];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_ready_bits_RS1_ready =
-          _RANDOM[5'h8][1];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h8][31];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_ready_bits_RS2_ready =
-          _RANDOM[5'h8][2];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h9][0];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_RD_valid =
-          _RANDOM[5'h8][10];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h9][8];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_RS1_valid =
-          _RANDOM[5'h8][18];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h9][16];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_RS2_valid =
-          _RANDOM[5'h8][26];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'h9][24];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_IMM =
-          {_RANDOM[5'h8][31:27], _RANDOM[5'h9][15:0]};	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          {_RANDOM[5'h9][31:25], _RANDOM[5'hA][13:0]};	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_FUNCT3 =
-          _RANDOM[5'h9][18:16];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'hA][16:14];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_packet_index =
-          _RANDOM[5'h9][20:19];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'hA][18:17];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_ROB_index =
-          _RANDOM[5'h9][26:21];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'hA][24:19];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
+        renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_MOB_index =
+          _RANDOM[5'hA][28:25];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
+        renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_FTQ_index =
+          {_RANDOM[5'hA][31:29], _RANDOM[5'hB][0]};	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_instructionType =
-          _RANDOM[5'h9][31:27];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'hB][5:1];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_portID =
-          _RANDOM[5'hA][1:0];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'hB][7:6];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_RS_type =
-          _RANDOM[5'hA][3:2];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'hB][9:8];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_needs_ALU =
-          _RANDOM[5'hA][4];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'hB][10];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_needs_branch_unit =
-          _RANDOM[5'hA][5];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'hB][11];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_needs_CSRs =
-          _RANDOM[5'hA][6];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'hB][12];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_SUBTRACT =
-          _RANDOM[5'hA][7];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'hB][13];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_MULTIPLY =
-          _RANDOM[5'hA][8];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
+          _RANDOM[5'hB][14];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
         renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_IS_IMM =
-          _RANDOM[5'hA][9];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
-        renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_is_load =
-          _RANDOM[5'hA][10];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
-        renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_is_store =
-          _RANDOM[5'hA][11];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
-        renamed_decoded_fetch_packet_bits_REG_valid_bits_0 = _RANDOM[5'hA][12];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
-        renamed_decoded_fetch_packet_bits_REG_valid_bits_1 = _RANDOM[5'hA][13];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
-        renamed_decoded_fetch_packet_bits_REG_valid_bits_2 = _RANDOM[5'hA][14];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
-        renamed_decoded_fetch_packet_bits_REG_valid_bits_3 = _RANDOM[5'hA][15];	// src/main/scala/Frontend/rename.scala:204:7, :247:55
-        renamed_decoded_fetch_packet_valid_REG = _RANDOM[5'hA][28];	// src/main/scala/Frontend/rename.scala:204:7, :247:55, :248:55
+          _RANDOM[5'hB][15];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
+        renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_memory_type =
+          _RANDOM[5'hB][17:16];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
+        renamed_decoded_fetch_packet_bits_REG_decoded_instruction_3_access_width =
+          _RANDOM[5'hB][19:18];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
+        renamed_decoded_fetch_packet_bits_REG_valid_bits_0 = _RANDOM[5'hB][20];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
+        renamed_decoded_fetch_packet_bits_REG_valid_bits_1 = _RANDOM[5'hB][21];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
+        renamed_decoded_fetch_packet_bits_REG_valid_bits_2 = _RANDOM[5'hB][22];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
+        renamed_decoded_fetch_packet_bits_REG_valid_bits_3 = _RANDOM[5'hB][23];	// src/main/scala/Frontend/rename.scala:204:7, :251:55
+        renamed_decoded_fetch_packet_valid_REG = _RANDOM[5'hC][4];	// src/main/scala/Frontend/rename.scala:204:7, :252:55
         renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD_REG =
-          {_RANDOM[5'hA][31:29], _RANDOM[5'hB][3:0]};	// src/main/scala/Frontend/rename.scala:204:7, :247:55, :271:92
+          _RANDOM[5'hC][11:5];	// src/main/scala/Frontend/rename.scala:204:7, :252:55, :275:92
         renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD_REG =
-          _RANDOM[5'hB][10:4];	// src/main/scala/Frontend/rename.scala:204:7, :271:92
+          _RANDOM[5'hC][18:12];	// src/main/scala/Frontend/rename.scala:204:7, :252:55, :275:92
         renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD_REG =
-          _RANDOM[5'hB][17:11];	// src/main/scala/Frontend/rename.scala:204:7, :271:92
+          _RANDOM[5'hC][25:19];	// src/main/scala/Frontend/rename.scala:204:7, :252:55, :275:92
         renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD_REG =
-          _RANDOM[5'hB][24:18];	// src/main/scala/Frontend/rename.scala:204:7, :271:92
+          {_RANDOM[5'hC][31:26], _RANDOM[5'hD][0]};	// src/main/scala/Frontend/rename.scala:204:7, :252:55, :275:92
         renamed_decoded_fetch_packet_bits_free_list_front_pointer_REG =
-          _RANDOM[5'hB][31:25];	// src/main/scala/Frontend/rename.scala:204:7, :271:92, :273:92
-        REG = _RANDOM[5'hC][6:0];	// src/main/scala/Frontend/rename.scala:204:7, :312:25
-        REG_1 = _RANDOM[5'hC][13:7];	// src/main/scala/Frontend/rename.scala:204:7, :312:{25,94}
-        REG_2 = _RANDOM[5'hC][14];	// src/main/scala/Frontend/rename.scala:204:7, :312:25, :313:24
-        REG_3 = _RANDOM[5'hC][15];	// src/main/scala/Frontend/rename.scala:204:7, :312:25, :313:98
-        renamed_RS1_1_REG = _RANDOM[5'hC][22:16];	// src/main/scala/Frontend/rename.scala:204:7, :312:25, :315:42
-        REG_4 = _RANDOM[5'hC][29:23];	// src/main/scala/Frontend/rename.scala:204:7, :312:25, :318:25
-        REG_5 = {_RANDOM[5'hC][31:30], _RANDOM[5'hD][4:0]};	// src/main/scala/Frontend/rename.scala:204:7, :312:25, :318:94
-        REG_6 = _RANDOM[5'hD][5];	// src/main/scala/Frontend/rename.scala:204:7, :318:94, :319:36
-        REG_7 = _RANDOM[5'hD][6];	// src/main/scala/Frontend/rename.scala:204:7, :318:94, :319:110
-        renamed_RS2_1_REG = _RANDOM[5'hD][13:7];	// src/main/scala/Frontend/rename.scala:204:7, :318:94, :321:42
-        REG_8 = _RANDOM[5'hD][20:14];	// src/main/scala/Frontend/rename.scala:204:7, :312:25, :318:94
-        REG_9 = _RANDOM[5'hD][27:21];	// src/main/scala/Frontend/rename.scala:204:7, :312:94, :318:94
-        REG_10 = _RANDOM[5'hD][28];	// src/main/scala/Frontend/rename.scala:204:7, :313:24, :318:94
-        REG_11 = _RANDOM[5'hD][29];	// src/main/scala/Frontend/rename.scala:204:7, :313:98, :318:94
-        renamed_RS1_2_REG = {_RANDOM[5'hD][31:30], _RANDOM[5'hE][4:0]};	// src/main/scala/Frontend/rename.scala:204:7, :315:42, :318:94
-        REG_12 = _RANDOM[5'hE][11:5];	// src/main/scala/Frontend/rename.scala:204:7, :315:42, :318:25
-        REG_13 = _RANDOM[5'hE][18:12];	// src/main/scala/Frontend/rename.scala:204:7, :315:42, :318:94
-        REG_14 = _RANDOM[5'hE][19];	// src/main/scala/Frontend/rename.scala:204:7, :315:42, :319:36
-        REG_15 = _RANDOM[5'hE][20];	// src/main/scala/Frontend/rename.scala:204:7, :315:42, :319:110
-        renamed_RS2_2_REG = _RANDOM[5'hE][27:21];	// src/main/scala/Frontend/rename.scala:204:7, :315:42, :321:42
-        REG_16 = {_RANDOM[5'hE][31:28], _RANDOM[5'hF][2:0]};	// src/main/scala/Frontend/rename.scala:204:7, :312:25, :315:42
-        REG_17 = _RANDOM[5'hF][9:3];	// src/main/scala/Frontend/rename.scala:204:7, :312:{25,94}
-        REG_18 = _RANDOM[5'hF][10];	// src/main/scala/Frontend/rename.scala:204:7, :312:25, :313:24
-        REG_19 = _RANDOM[5'hF][11];	// src/main/scala/Frontend/rename.scala:204:7, :312:25, :313:98
-        renamed_RS1_2_REG_1 = _RANDOM[5'hF][18:12];	// src/main/scala/Frontend/rename.scala:204:7, :312:25, :315:42
-        REG_20 = _RANDOM[5'hF][25:19];	// src/main/scala/Frontend/rename.scala:204:7, :312:25, :318:25
-        REG_21 = {_RANDOM[5'hF][31:26], _RANDOM[5'h10][0]};	// src/main/scala/Frontend/rename.scala:204:7, :312:25, :318:94
-        REG_22 = _RANDOM[5'h10][1];	// src/main/scala/Frontend/rename.scala:204:7, :318:94, :319:36
-        REG_23 = _RANDOM[5'h10][2];	// src/main/scala/Frontend/rename.scala:204:7, :318:94, :319:110
-        renamed_RS2_2_REG_1 = _RANDOM[5'h10][9:3];	// src/main/scala/Frontend/rename.scala:204:7, :318:94, :321:42
-        REG_24 = _RANDOM[5'h10][16:10];	// src/main/scala/Frontend/rename.scala:204:7, :312:25, :318:94
-        REG_25 = _RANDOM[5'h10][23:17];	// src/main/scala/Frontend/rename.scala:204:7, :312:94, :318:94
-        REG_26 = _RANDOM[5'h10][24];	// src/main/scala/Frontend/rename.scala:204:7, :313:24, :318:94
-        REG_27 = _RANDOM[5'h10][25];	// src/main/scala/Frontend/rename.scala:204:7, :313:98, :318:94
-        renamed_RS1_3_REG = {_RANDOM[5'h10][31:26], _RANDOM[5'h11][0]};	// src/main/scala/Frontend/rename.scala:204:7, :315:42, :318:94
-        REG_28 = _RANDOM[5'h11][7:1];	// src/main/scala/Frontend/rename.scala:204:7, :315:42, :318:25
-        REG_29 = _RANDOM[5'h11][14:8];	// src/main/scala/Frontend/rename.scala:204:7, :315:42, :318:94
-        REG_30 = _RANDOM[5'h11][15];	// src/main/scala/Frontend/rename.scala:204:7, :315:42, :319:36
-        REG_31 = _RANDOM[5'h11][16];	// src/main/scala/Frontend/rename.scala:204:7, :315:42, :319:110
-        renamed_RS2_3_REG = _RANDOM[5'h11][23:17];	// src/main/scala/Frontend/rename.scala:204:7, :315:42, :321:42
-        REG_32 = _RANDOM[5'h11][30:24];	// src/main/scala/Frontend/rename.scala:204:7, :312:25, :315:42
-        REG_33 = {_RANDOM[5'h11][31], _RANDOM[5'h12][5:0]};	// src/main/scala/Frontend/rename.scala:204:7, :312:94, :315:42
-        REG_34 = _RANDOM[5'h12][6];	// src/main/scala/Frontend/rename.scala:204:7, :312:94, :313:24
-        REG_35 = _RANDOM[5'h12][7];	// src/main/scala/Frontend/rename.scala:204:7, :312:94, :313:98
-        renamed_RS1_3_REG_1 = _RANDOM[5'h12][14:8];	// src/main/scala/Frontend/rename.scala:204:7, :312:94, :315:42
-        REG_36 = _RANDOM[5'h12][21:15];	// src/main/scala/Frontend/rename.scala:204:7, :312:94, :318:25
-        REG_37 = _RANDOM[5'h12][28:22];	// src/main/scala/Frontend/rename.scala:204:7, :312:94, :318:94
-        REG_38 = _RANDOM[5'h12][29];	// src/main/scala/Frontend/rename.scala:204:7, :312:94, :319:36
-        REG_39 = _RANDOM[5'h12][30];	// src/main/scala/Frontend/rename.scala:204:7, :312:94, :319:110
-        renamed_RS2_3_REG_1 = {_RANDOM[5'h12][31], _RANDOM[5'h13][5:0]};	// src/main/scala/Frontend/rename.scala:204:7, :312:94, :321:42
-        REG_40 = _RANDOM[5'h13][12:6];	// src/main/scala/Frontend/rename.scala:204:7, :312:25, :321:42
-        REG_41 = _RANDOM[5'h13][19:13];	// src/main/scala/Frontend/rename.scala:204:7, :312:94, :321:42
-        REG_42 = _RANDOM[5'h13][20];	// src/main/scala/Frontend/rename.scala:204:7, :313:24, :321:42
-        REG_43 = _RANDOM[5'h13][21];	// src/main/scala/Frontend/rename.scala:204:7, :313:98, :321:42
-        renamed_RS1_3_REG_2 = _RANDOM[5'h13][28:22];	// src/main/scala/Frontend/rename.scala:204:7, :315:42, :321:42
-        REG_44 = {_RANDOM[5'h13][31:29], _RANDOM[5'h14][3:0]};	// src/main/scala/Frontend/rename.scala:204:7, :318:25, :321:42
-        REG_45 = _RANDOM[5'h14][10:4];	// src/main/scala/Frontend/rename.scala:204:7, :318:{25,94}
-        REG_46 = _RANDOM[5'h14][11];	// src/main/scala/Frontend/rename.scala:204:7, :318:25, :319:36
-        REG_47 = _RANDOM[5'h14][12];	// src/main/scala/Frontend/rename.scala:204:7, :318:25, :319:110
-        renamed_RS2_3_REG_2 = _RANDOM[5'h14][19:13];	// src/main/scala/Frontend/rename.scala:204:7, :318:25, :321:42
-        renamed_decoded_fetch_packet_bits_RAT_index_REG = _RANDOM[5'h14][23:20];	// src/main/scala/Frontend/rename.scala:204:7, :318:25, :333:76
-        ready_memory_1 = _RANDOM[5'h14][25];	// src/main/scala/Frontend/rename.scala:204:7, :318:25, :373:32
-        ready_memory_2 = _RANDOM[5'h14][26];	// src/main/scala/Frontend/rename.scala:204:7, :318:25, :373:32
-        ready_memory_3 = _RANDOM[5'h14][27];	// src/main/scala/Frontend/rename.scala:204:7, :318:25, :373:32
-        ready_memory_4 = _RANDOM[5'h14][28];	// src/main/scala/Frontend/rename.scala:204:7, :318:25, :373:32
-        ready_memory_5 = _RANDOM[5'h14][29];	// src/main/scala/Frontend/rename.scala:204:7, :318:25, :373:32
-        ready_memory_6 = _RANDOM[5'h14][30];	// src/main/scala/Frontend/rename.scala:204:7, :318:25, :373:32
-        ready_memory_7 = _RANDOM[5'h14][31];	// src/main/scala/Frontend/rename.scala:204:7, :318:25, :373:32
-        ready_memory_8 = _RANDOM[5'h15][0];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_9 = _RANDOM[5'h15][1];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_10 = _RANDOM[5'h15][2];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_11 = _RANDOM[5'h15][3];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_12 = _RANDOM[5'h15][4];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_13 = _RANDOM[5'h15][5];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_14 = _RANDOM[5'h15][6];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_15 = _RANDOM[5'h15][7];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_16 = _RANDOM[5'h15][8];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_17 = _RANDOM[5'h15][9];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_18 = _RANDOM[5'h15][10];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_19 = _RANDOM[5'h15][11];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_20 = _RANDOM[5'h15][12];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_21 = _RANDOM[5'h15][13];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_22 = _RANDOM[5'h15][14];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_23 = _RANDOM[5'h15][15];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_24 = _RANDOM[5'h15][16];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_25 = _RANDOM[5'h15][17];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_26 = _RANDOM[5'h15][18];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_27 = _RANDOM[5'h15][19];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_28 = _RANDOM[5'h15][20];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_29 = _RANDOM[5'h15][21];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_30 = _RANDOM[5'h15][22];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_31 = _RANDOM[5'h15][23];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_32 = _RANDOM[5'h15][24];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_33 = _RANDOM[5'h15][25];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_34 = _RANDOM[5'h15][26];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_35 = _RANDOM[5'h15][27];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_36 = _RANDOM[5'h15][28];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_37 = _RANDOM[5'h15][29];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_38 = _RANDOM[5'h15][30];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_39 = _RANDOM[5'h15][31];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_40 = _RANDOM[5'h16][0];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_41 = _RANDOM[5'h16][1];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_42 = _RANDOM[5'h16][2];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_43 = _RANDOM[5'h16][3];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_44 = _RANDOM[5'h16][4];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_45 = _RANDOM[5'h16][5];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_46 = _RANDOM[5'h16][6];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_47 = _RANDOM[5'h16][7];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_48 = _RANDOM[5'h16][8];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_49 = _RANDOM[5'h16][9];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_50 = _RANDOM[5'h16][10];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_51 = _RANDOM[5'h16][11];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_52 = _RANDOM[5'h16][12];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_53 = _RANDOM[5'h16][13];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_54 = _RANDOM[5'h16][14];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_55 = _RANDOM[5'h16][15];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_56 = _RANDOM[5'h16][16];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_57 = _RANDOM[5'h16][17];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_58 = _RANDOM[5'h16][18];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_59 = _RANDOM[5'h16][19];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_60 = _RANDOM[5'h16][20];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_61 = _RANDOM[5'h16][21];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_62 = _RANDOM[5'h16][22];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_63 = _RANDOM[5'h16][23];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_64 = _RANDOM[5'h16][24];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
-        ready_memory_65 = _RANDOM[5'h16][25];	// src/main/scala/Frontend/rename.scala:204:7, :373:32
+          _RANDOM[5'hD][7:1];	// src/main/scala/Frontend/rename.scala:204:7, :275:92, :277:92
+        REG = _RANDOM[5'hD][14:8];	// src/main/scala/Frontend/rename.scala:204:7, :275:92, :316:25
+        REG_1 = _RANDOM[5'hD][21:15];	// src/main/scala/Frontend/rename.scala:204:7, :275:92, :316:94
+        REG_2 = _RANDOM[5'hD][22];	// src/main/scala/Frontend/rename.scala:204:7, :275:92, :317:24
+        REG_3 = _RANDOM[5'hD][23];	// src/main/scala/Frontend/rename.scala:204:7, :275:92, :317:98
+        renamed_RS1_1_REG = _RANDOM[5'hD][30:24];	// src/main/scala/Frontend/rename.scala:204:7, :275:92, :319:42
+        REG_4 = {_RANDOM[5'hD][31], _RANDOM[5'hE][5:0]};	// src/main/scala/Frontend/rename.scala:204:7, :275:92, :322:25
+        REG_5 = _RANDOM[5'hE][12:6];	// src/main/scala/Frontend/rename.scala:204:7, :322:{25,94}
+        REG_6 = _RANDOM[5'hE][13];	// src/main/scala/Frontend/rename.scala:204:7, :322:25, :323:36
+        REG_7 = _RANDOM[5'hE][14];	// src/main/scala/Frontend/rename.scala:204:7, :322:25, :323:110
+        renamed_RS2_1_REG = _RANDOM[5'hE][21:15];	// src/main/scala/Frontend/rename.scala:204:7, :322:25, :325:42
+        REG_8 = _RANDOM[5'hE][28:22];	// src/main/scala/Frontend/rename.scala:204:7, :316:25, :322:25
+        REG_9 = {_RANDOM[5'hE][31:29], _RANDOM[5'hF][3:0]};	// src/main/scala/Frontend/rename.scala:204:7, :316:94, :322:25
+        REG_10 = _RANDOM[5'hF][4];	// src/main/scala/Frontend/rename.scala:204:7, :316:94, :317:24
+        REG_11 = _RANDOM[5'hF][5];	// src/main/scala/Frontend/rename.scala:204:7, :316:94, :317:98
+        renamed_RS1_2_REG = _RANDOM[5'hF][12:6];	// src/main/scala/Frontend/rename.scala:204:7, :316:94, :319:42
+        REG_12 = _RANDOM[5'hF][19:13];	// src/main/scala/Frontend/rename.scala:204:7, :316:94, :322:25
+        REG_13 = _RANDOM[5'hF][26:20];	// src/main/scala/Frontend/rename.scala:204:7, :316:94, :322:94
+        REG_14 = _RANDOM[5'hF][27];	// src/main/scala/Frontend/rename.scala:204:7, :316:94, :323:36
+        REG_15 = _RANDOM[5'hF][28];	// src/main/scala/Frontend/rename.scala:204:7, :316:94, :323:110
+        renamed_RS2_2_REG = {_RANDOM[5'hF][31:29], _RANDOM[5'h10][3:0]};	// src/main/scala/Frontend/rename.scala:204:7, :316:94, :325:42
+        REG_16 = _RANDOM[5'h10][10:4];	// src/main/scala/Frontend/rename.scala:204:7, :316:25, :325:42
+        REG_17 = _RANDOM[5'h10][17:11];	// src/main/scala/Frontend/rename.scala:204:7, :316:94, :325:42
+        REG_18 = _RANDOM[5'h10][18];	// src/main/scala/Frontend/rename.scala:204:7, :317:24, :325:42
+        REG_19 = _RANDOM[5'h10][19];	// src/main/scala/Frontend/rename.scala:204:7, :317:98, :325:42
+        renamed_RS1_2_REG_1 = _RANDOM[5'h10][26:20];	// src/main/scala/Frontend/rename.scala:204:7, :319:42, :325:42
+        REG_20 = {_RANDOM[5'h10][31:27], _RANDOM[5'h11][1:0]};	// src/main/scala/Frontend/rename.scala:204:7, :322:25, :325:42
+        REG_21 = _RANDOM[5'h11][8:2];	// src/main/scala/Frontend/rename.scala:204:7, :322:{25,94}
+        REG_22 = _RANDOM[5'h11][9];	// src/main/scala/Frontend/rename.scala:204:7, :322:25, :323:36
+        REG_23 = _RANDOM[5'h11][10];	// src/main/scala/Frontend/rename.scala:204:7, :322:25, :323:110
+        renamed_RS2_2_REG_1 = _RANDOM[5'h11][17:11];	// src/main/scala/Frontend/rename.scala:204:7, :322:25, :325:42
+        REG_24 = _RANDOM[5'h11][24:18];	// src/main/scala/Frontend/rename.scala:204:7, :316:25, :322:25
+        REG_25 = _RANDOM[5'h11][31:25];	// src/main/scala/Frontend/rename.scala:204:7, :316:94, :322:25
+        REG_26 = _RANDOM[5'h12][0];	// src/main/scala/Frontend/rename.scala:204:7, :317:24
+        REG_27 = _RANDOM[5'h12][1];	// src/main/scala/Frontend/rename.scala:204:7, :317:{24,98}
+        renamed_RS1_3_REG = _RANDOM[5'h12][8:2];	// src/main/scala/Frontend/rename.scala:204:7, :317:24, :319:42
+        REG_28 = _RANDOM[5'h12][15:9];	// src/main/scala/Frontend/rename.scala:204:7, :317:24, :322:25
+        REG_29 = _RANDOM[5'h12][22:16];	// src/main/scala/Frontend/rename.scala:204:7, :317:24, :322:94
+        REG_30 = _RANDOM[5'h12][23];	// src/main/scala/Frontend/rename.scala:204:7, :317:24, :323:36
+        REG_31 = _RANDOM[5'h12][24];	// src/main/scala/Frontend/rename.scala:204:7, :317:24, :323:110
+        renamed_RS2_3_REG = _RANDOM[5'h12][31:25];	// src/main/scala/Frontend/rename.scala:204:7, :317:24, :325:42
+        REG_32 = _RANDOM[5'h13][6:0];	// src/main/scala/Frontend/rename.scala:204:7, :316:25
+        REG_33 = _RANDOM[5'h13][13:7];	// src/main/scala/Frontend/rename.scala:204:7, :316:{25,94}
+        REG_34 = _RANDOM[5'h13][14];	// src/main/scala/Frontend/rename.scala:204:7, :316:25, :317:24
+        REG_35 = _RANDOM[5'h13][15];	// src/main/scala/Frontend/rename.scala:204:7, :316:25, :317:98
+        renamed_RS1_3_REG_1 = _RANDOM[5'h13][22:16];	// src/main/scala/Frontend/rename.scala:204:7, :316:25, :319:42
+        REG_36 = _RANDOM[5'h13][29:23];	// src/main/scala/Frontend/rename.scala:204:7, :316:25, :322:25
+        REG_37 = {_RANDOM[5'h13][31:30], _RANDOM[5'h14][4:0]};	// src/main/scala/Frontend/rename.scala:204:7, :316:25, :322:94
+        REG_38 = _RANDOM[5'h14][5];	// src/main/scala/Frontend/rename.scala:204:7, :322:94, :323:36
+        REG_39 = _RANDOM[5'h14][6];	// src/main/scala/Frontend/rename.scala:204:7, :322:94, :323:110
+        renamed_RS2_3_REG_1 = _RANDOM[5'h14][13:7];	// src/main/scala/Frontend/rename.scala:204:7, :322:94, :325:42
+        REG_40 = _RANDOM[5'h14][20:14];	// src/main/scala/Frontend/rename.scala:204:7, :316:25, :322:94
+        REG_41 = _RANDOM[5'h14][27:21];	// src/main/scala/Frontend/rename.scala:204:7, :316:94, :322:94
+        REG_42 = _RANDOM[5'h14][28];	// src/main/scala/Frontend/rename.scala:204:7, :317:24, :322:94
+        REG_43 = _RANDOM[5'h14][29];	// src/main/scala/Frontend/rename.scala:204:7, :317:98, :322:94
+        renamed_RS1_3_REG_2 = {_RANDOM[5'h14][31:30], _RANDOM[5'h15][4:0]};	// src/main/scala/Frontend/rename.scala:204:7, :319:42, :322:94
+        REG_44 = _RANDOM[5'h15][11:5];	// src/main/scala/Frontend/rename.scala:204:7, :319:42, :322:25
+        REG_45 = _RANDOM[5'h15][18:12];	// src/main/scala/Frontend/rename.scala:204:7, :319:42, :322:94
+        REG_46 = _RANDOM[5'h15][19];	// src/main/scala/Frontend/rename.scala:204:7, :319:42, :323:36
+        REG_47 = _RANDOM[5'h15][20];	// src/main/scala/Frontend/rename.scala:204:7, :319:42, :323:110
+        renamed_RS2_3_REG_2 = _RANDOM[5'h15][27:21];	// src/main/scala/Frontend/rename.scala:204:7, :319:42, :325:42
+        renamed_decoded_fetch_packet_bits_RAT_index_REG = _RANDOM[5'h15][31:28];	// src/main/scala/Frontend/rename.scala:204:7, :319:42, :337:76
+        ready_memory_1 = _RANDOM[5'h16][1];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_2 = _RANDOM[5'h16][2];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_3 = _RANDOM[5'h16][3];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_4 = _RANDOM[5'h16][4];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_5 = _RANDOM[5'h16][5];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_6 = _RANDOM[5'h16][6];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_7 = _RANDOM[5'h16][7];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_8 = _RANDOM[5'h16][8];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_9 = _RANDOM[5'h16][9];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_10 = _RANDOM[5'h16][10];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_11 = _RANDOM[5'h16][11];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_12 = _RANDOM[5'h16][12];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_13 = _RANDOM[5'h16][13];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_14 = _RANDOM[5'h16][14];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_15 = _RANDOM[5'h16][15];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_16 = _RANDOM[5'h16][16];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_17 = _RANDOM[5'h16][17];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_18 = _RANDOM[5'h16][18];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_19 = _RANDOM[5'h16][19];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_20 = _RANDOM[5'h16][20];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_21 = _RANDOM[5'h16][21];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_22 = _RANDOM[5'h16][22];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_23 = _RANDOM[5'h16][23];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_24 = _RANDOM[5'h16][24];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_25 = _RANDOM[5'h16][25];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_26 = _RANDOM[5'h16][26];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_27 = _RANDOM[5'h16][27];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_28 = _RANDOM[5'h16][28];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_29 = _RANDOM[5'h16][29];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_30 = _RANDOM[5'h16][30];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_31 = _RANDOM[5'h16][31];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_32 = _RANDOM[5'h17][0];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_33 = _RANDOM[5'h17][1];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_34 = _RANDOM[5'h17][2];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_35 = _RANDOM[5'h17][3];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_36 = _RANDOM[5'h17][4];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_37 = _RANDOM[5'h17][5];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_38 = _RANDOM[5'h17][6];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_39 = _RANDOM[5'h17][7];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_40 = _RANDOM[5'h17][8];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_41 = _RANDOM[5'h17][9];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_42 = _RANDOM[5'h17][10];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_43 = _RANDOM[5'h17][11];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_44 = _RANDOM[5'h17][12];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_45 = _RANDOM[5'h17][13];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_46 = _RANDOM[5'h17][14];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_47 = _RANDOM[5'h17][15];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_48 = _RANDOM[5'h17][16];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_49 = _RANDOM[5'h17][17];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_50 = _RANDOM[5'h17][18];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_51 = _RANDOM[5'h17][19];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_52 = _RANDOM[5'h17][20];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_53 = _RANDOM[5'h17][21];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_54 = _RANDOM[5'h17][22];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_55 = _RANDOM[5'h17][23];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_56 = _RANDOM[5'h17][24];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_57 = _RANDOM[5'h17][25];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_58 = _RANDOM[5'h17][26];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_59 = _RANDOM[5'h17][27];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_60 = _RANDOM[5'h17][28];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_61 = _RANDOM[5'h17][29];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_62 = _RANDOM[5'h17][30];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_63 = _RANDOM[5'h17][31];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_64 = _RANDOM[5'h18][0];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        ready_memory_65 = _RANDOM[5'h18][1];	// src/main/scala/Frontend/rename.scala:204:7, :377:32
+        predictions_out_bits_REG_valid = _RANDOM[5'h18][2];	// src/main/scala/Frontend/rename.scala:204:7, :377:32, :438:39
+        predictions_out_bits_REG_fetch_PC = {_RANDOM[5'h18][31:3], _RANDOM[5'h19][2:0]};	// src/main/scala/Frontend/rename.scala:204:7, :377:32, :438:39
+        predictions_out_bits_REG_is_misprediction = _RANDOM[5'h19][3];	// src/main/scala/Frontend/rename.scala:204:7, :438:39
+        predictions_out_bits_REG_predicted_PC =
+          {_RANDOM[5'h19][31:4], _RANDOM[5'h1A][3:0]};	// src/main/scala/Frontend/rename.scala:204:7, :438:39
+        predictions_out_bits_REG_T_NT = _RANDOM[5'h1A][4];	// src/main/scala/Frontend/rename.scala:204:7, :438:39
+        predictions_out_bits_REG_br_type = _RANDOM[5'h1A][7:5];	// src/main/scala/Frontend/rename.scala:204:7, :438:39
+        predictions_out_bits_REG_GHR = _RANDOM[5'h1A][23:8];	// src/main/scala/Frontend/rename.scala:204:7, :438:39
+        predictions_out_bits_REG_NEXT = _RANDOM[5'h1A][30:24];	// src/main/scala/Frontend/rename.scala:204:7, :438:39
+        predictions_out_bits_REG_TOS = {_RANDOM[5'h1A][31], _RANDOM[5'h1B][5:0]};	// src/main/scala/Frontend/rename.scala:204:7, :438:39
+        predictions_out_bits_REG_dominant_index = _RANDOM[5'h1B][7:6];	// src/main/scala/Frontend/rename.scala:204:7, :438:39
+        predictions_out_bits_REG_resolved_PC =
+          {_RANDOM[5'h1B][31:8], _RANDOM[5'h1C][7:0]};	// src/main/scala/Frontend/rename.scala:204:7, :438:39
+        predictions_out_valid_REG = _RANDOM[5'h1C][8];	// src/main/scala/Frontend/rename.scala:204:7, :438:39, :439:39
       `endif // RANDOMIZE_REG_INIT
     end // initial
     `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/Frontend/rename.scala:204:7
       `FIRRTL_AFTER_INITIAL	// src/main/scala/Frontend/rename.scala:204:7
     `endif // FIRRTL_AFTER_INITIAL
   `endif // ENABLE_INITIAL_REG_
-  free_list free_list (	// src/main/scala/Frontend/rename.scala:254:33
+  free_list free_list (	// src/main/scala/Frontend/rename.scala:258:33
     .clock                                  (clock),
     .reset                                  (reset),
     .io_rename_valid_0
       (io_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid
-       & (|io_decoded_fetch_packet_bits_decoded_instruction_0_RD) & fire),	// src/main/scala/Frontend/rename.scala:240:42, :264:122, :265:{117,126}, src/main/scala/chisel3/util/Decoupled.scala:51:35
+       & (|io_decoded_fetch_packet_bits_decoded_instruction_0_RD) & fire),	// src/main/scala/Frontend/rename.scala:244:42, :268:122, :269:{117,126}, src/main/scala/chisel3/util/Decoupled.scala:51:35
     .io_rename_valid_1
       (io_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid
-       & (|io_decoded_fetch_packet_bits_decoded_instruction_1_RD) & fire),	// src/main/scala/Frontend/rename.scala:240:42, :264:122, :265:{117,126}, src/main/scala/chisel3/util/Decoupled.scala:51:35
+       & (|io_decoded_fetch_packet_bits_decoded_instruction_1_RD) & fire),	// src/main/scala/Frontend/rename.scala:244:42, :268:122, :269:{117,126}, src/main/scala/chisel3/util/Decoupled.scala:51:35
     .io_rename_valid_2
       (io_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid
-       & (|io_decoded_fetch_packet_bits_decoded_instruction_2_RD) & fire),	// src/main/scala/Frontend/rename.scala:240:42, :264:122, :265:{117,126}, src/main/scala/chisel3/util/Decoupled.scala:51:35
+       & (|io_decoded_fetch_packet_bits_decoded_instruction_2_RD) & fire),	// src/main/scala/Frontend/rename.scala:244:42, :268:122, :269:{117,126}, src/main/scala/chisel3/util/Decoupled.scala:51:35
     .io_rename_valid_3
       (io_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid
-       & (|io_decoded_fetch_packet_bits_decoded_instruction_3_RD) & fire),	// src/main/scala/Frontend/rename.scala:240:42, :264:122, :265:{117,126}, src/main/scala/chisel3/util/Decoupled.scala:51:35
+       & (|io_decoded_fetch_packet_bits_decoded_instruction_3_RD) & fire),	// src/main/scala/Frontend/rename.scala:244:42, :268:122, :269:{117,126}, src/main/scala/chisel3/util/Decoupled.scala:51:35
     .io_renamed_values_0                    (_free_list_io_renamed_values_0),
     .io_renamed_values_1                    (_free_list_io_renamed_values_1),
     .io_renamed_values_2                    (_free_list_io_renamed_values_2),
@@ -3418,28 +3581,28 @@ module rename(	// src/main/scala/Frontend/rename.scala:204:7
     .io_commit_bits_RD_valid_3              (io_commit_bits_RD_valid_3),
     .io_free_list_front_pointer             (_free_list_io_free_list_front_pointer),
     .io_can_allocate                        (_free_list_io_can_allocate)
-  );	// src/main/scala/Frontend/rename.scala:254:33
-  WAW_handler WAW_handler (	// src/main/scala/Frontend/rename.scala:255:33
+  );	// src/main/scala/Frontend/rename.scala:258:33
+  WAW_handler WAW_handler (	// src/main/scala/Frontend/rename.scala:259:33
     .io_decoder_RD_valid_bits_0
-      (io_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid & fire),	// src/main/scala/Frontend/rename.scala:240:42, :280:117, src/main/scala/chisel3/util/Decoupled.scala:51:35
+      (io_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid & fire),	// src/main/scala/Frontend/rename.scala:244:42, :284:117, src/main/scala/chisel3/util/Decoupled.scala:51:35
     .io_decoder_RD_valid_bits_1
-      (io_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid & fire),	// src/main/scala/Frontend/rename.scala:240:42, :280:117, src/main/scala/chisel3/util/Decoupled.scala:51:35
+      (io_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid & fire),	// src/main/scala/Frontend/rename.scala:244:42, :284:117, src/main/scala/chisel3/util/Decoupled.scala:51:35
     .io_decoder_RD_valid_bits_2
-      (io_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid & fire),	// src/main/scala/Frontend/rename.scala:240:42, :280:117, src/main/scala/chisel3/util/Decoupled.scala:51:35
+      (io_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid & fire),	// src/main/scala/Frontend/rename.scala:244:42, :284:117, src/main/scala/chisel3/util/Decoupled.scala:51:35
     .io_decoder_RD_valid_bits_3
-      (io_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid & fire),	// src/main/scala/Frontend/rename.scala:240:42, :280:117, src/main/scala/chisel3/util/Decoupled.scala:51:35
+      (io_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid & fire),	// src/main/scala/Frontend/rename.scala:244:42, :284:117, src/main/scala/chisel3/util/Decoupled.scala:51:35
     .io_decoder_RD_values_0
-      (io_decoded_fetch_packet_bits_decoded_instruction_0_RD[4:0]),	// src/main/scala/Frontend/rename.scala:281:52
+      (io_decoded_fetch_packet_bits_decoded_instruction_0_RD[4:0]),	// src/main/scala/Frontend/rename.scala:285:52
     .io_decoder_RD_values_1
-      (io_decoded_fetch_packet_bits_decoded_instruction_1_RD[4:0]),	// src/main/scala/Frontend/rename.scala:281:52
+      (io_decoded_fetch_packet_bits_decoded_instruction_1_RD[4:0]),	// src/main/scala/Frontend/rename.scala:285:52
     .io_decoder_RD_values_2
-      (io_decoded_fetch_packet_bits_decoded_instruction_2_RD[4:0]),	// src/main/scala/Frontend/rename.scala:281:52
+      (io_decoded_fetch_packet_bits_decoded_instruction_2_RD[4:0]),	// src/main/scala/Frontend/rename.scala:285:52
     .io_decoder_RD_values_3
-      (io_decoded_fetch_packet_bits_decoded_instruction_3_RD[4:0]),	// src/main/scala/Frontend/rename.scala:281:52
-    .io_free_list_RD_values_0   (_free_list_io_renamed_values_0),	// src/main/scala/Frontend/rename.scala:254:33
-    .io_free_list_RD_values_1   (_free_list_io_renamed_values_1),	// src/main/scala/Frontend/rename.scala:254:33
-    .io_free_list_RD_values_2   (_free_list_io_renamed_values_2),	// src/main/scala/Frontend/rename.scala:254:33
-    .io_free_list_RD_values_3   (_free_list_io_renamed_values_3),	// src/main/scala/Frontend/rename.scala:254:33
+      (io_decoded_fetch_packet_bits_decoded_instruction_3_RD[4:0]),	// src/main/scala/Frontend/rename.scala:285:52
+    .io_free_list_RD_values_0   (_free_list_io_renamed_values_0),	// src/main/scala/Frontend/rename.scala:258:33
+    .io_free_list_RD_values_1   (_free_list_io_renamed_values_1),	// src/main/scala/Frontend/rename.scala:258:33
+    .io_free_list_RD_values_2   (_free_list_io_renamed_values_2),	// src/main/scala/Frontend/rename.scala:258:33
+    .io_free_list_RD_values_3   (_free_list_io_renamed_values_3),	// src/main/scala/Frontend/rename.scala:258:33
     .io_RAT_wr_en_0             (_WAW_handler_io_RAT_wr_en_0),
     .io_RAT_wr_en_1             (_WAW_handler_io_RAT_wr_en_1),
     .io_RAT_wr_en_2             (_WAW_handler_io_RAT_wr_en_2),
@@ -3452,38 +3615,38 @@ module rename(	// src/main/scala/Frontend/rename.scala:204:7
     .io_FL_RD_values_1          (_WAW_handler_io_FL_RD_values_1),
     .io_FL_RD_values_2          (_WAW_handler_io_FL_RD_values_2),
     .io_FL_RD_values_3          (_WAW_handler_io_FL_RD_values_3)
-  );	// src/main/scala/Frontend/rename.scala:255:33
-  RAT RAT (	// src/main/scala/Frontend/rename.scala:256:33
+  );	// src/main/scala/Frontend/rename.scala:259:33
+  RAT RAT (	// src/main/scala/Frontend/rename.scala:260:33
     .clock                       (clock),
     .reset                       (reset),
     .io_instruction_RS1_0
-      (io_decoded_fetch_packet_bits_decoded_instruction_0_RS1[4:0]),	// src/main/scala/Frontend/rename.scala:296:52
+      (io_decoded_fetch_packet_bits_decoded_instruction_0_RS1[4:0]),	// src/main/scala/Frontend/rename.scala:300:52
     .io_instruction_RS1_1
-      (io_decoded_fetch_packet_bits_decoded_instruction_1_RS1[4:0]),	// src/main/scala/Frontend/rename.scala:296:52
+      (io_decoded_fetch_packet_bits_decoded_instruction_1_RS1[4:0]),	// src/main/scala/Frontend/rename.scala:300:52
     .io_instruction_RS1_2
-      (io_decoded_fetch_packet_bits_decoded_instruction_2_RS1[4:0]),	// src/main/scala/Frontend/rename.scala:296:52
+      (io_decoded_fetch_packet_bits_decoded_instruction_2_RS1[4:0]),	// src/main/scala/Frontend/rename.scala:300:52
     .io_instruction_RS1_3
-      (io_decoded_fetch_packet_bits_decoded_instruction_3_RS1[4:0]),	// src/main/scala/Frontend/rename.scala:296:52
+      (io_decoded_fetch_packet_bits_decoded_instruction_3_RS1[4:0]),	// src/main/scala/Frontend/rename.scala:300:52
     .io_instruction_RS2_0
-      (io_decoded_fetch_packet_bits_decoded_instruction_0_RS2[4:0]),	// src/main/scala/Frontend/rename.scala:297:52
+      (io_decoded_fetch_packet_bits_decoded_instruction_0_RS2[4:0]),	// src/main/scala/Frontend/rename.scala:301:52
     .io_instruction_RS2_1
-      (io_decoded_fetch_packet_bits_decoded_instruction_1_RS2[4:0]),	// src/main/scala/Frontend/rename.scala:297:52
+      (io_decoded_fetch_packet_bits_decoded_instruction_1_RS2[4:0]),	// src/main/scala/Frontend/rename.scala:301:52
     .io_instruction_RS2_2
-      (io_decoded_fetch_packet_bits_decoded_instruction_2_RS2[4:0]),	// src/main/scala/Frontend/rename.scala:297:52
+      (io_decoded_fetch_packet_bits_decoded_instruction_2_RS2[4:0]),	// src/main/scala/Frontend/rename.scala:301:52
     .io_instruction_RS2_3
-      (io_decoded_fetch_packet_bits_decoded_instruction_3_RS2[4:0]),	// src/main/scala/Frontend/rename.scala:297:52
-    .io_instruction_RD_0         (_WAW_handler_io_RAT_RD_values_0),	// src/main/scala/Frontend/rename.scala:255:33
-    .io_instruction_RD_1         (_WAW_handler_io_RAT_RD_values_1),	// src/main/scala/Frontend/rename.scala:255:33
-    .io_instruction_RD_2         (_WAW_handler_io_RAT_RD_values_2),	// src/main/scala/Frontend/rename.scala:255:33
-    .io_instruction_RD_3         (_WAW_handler_io_RAT_RD_values_3),	// src/main/scala/Frontend/rename.scala:255:33
-    .io_free_list_wr_en_0        (_WAW_handler_io_RAT_wr_en_0),	// src/main/scala/Frontend/rename.scala:255:33
-    .io_free_list_wr_en_1        (_WAW_handler_io_RAT_wr_en_1),	// src/main/scala/Frontend/rename.scala:255:33
-    .io_free_list_wr_en_2        (_WAW_handler_io_RAT_wr_en_2),	// src/main/scala/Frontend/rename.scala:255:33
-    .io_free_list_wr_en_3        (_WAW_handler_io_RAT_wr_en_3),	// src/main/scala/Frontend/rename.scala:255:33
-    .io_free_list_RD_0           (_WAW_handler_io_FL_RD_values_0),	// src/main/scala/Frontend/rename.scala:255:33
-    .io_free_list_RD_1           (_WAW_handler_io_FL_RD_values_1),	// src/main/scala/Frontend/rename.scala:255:33
-    .io_free_list_RD_2           (_WAW_handler_io_FL_RD_values_2),	// src/main/scala/Frontend/rename.scala:255:33
-    .io_free_list_RD_3           (_WAW_handler_io_FL_RD_values_3),	// src/main/scala/Frontend/rename.scala:255:33
+      (io_decoded_fetch_packet_bits_decoded_instruction_3_RS2[4:0]),	// src/main/scala/Frontend/rename.scala:301:52
+    .io_instruction_RD_0         (_WAW_handler_io_RAT_RD_values_0),	// src/main/scala/Frontend/rename.scala:259:33
+    .io_instruction_RD_1         (_WAW_handler_io_RAT_RD_values_1),	// src/main/scala/Frontend/rename.scala:259:33
+    .io_instruction_RD_2         (_WAW_handler_io_RAT_RD_values_2),	// src/main/scala/Frontend/rename.scala:259:33
+    .io_instruction_RD_3         (_WAW_handler_io_RAT_RD_values_3),	// src/main/scala/Frontend/rename.scala:259:33
+    .io_free_list_wr_en_0        (_WAW_handler_io_RAT_wr_en_0),	// src/main/scala/Frontend/rename.scala:259:33
+    .io_free_list_wr_en_1        (_WAW_handler_io_RAT_wr_en_1),	// src/main/scala/Frontend/rename.scala:259:33
+    .io_free_list_wr_en_2        (_WAW_handler_io_RAT_wr_en_2),	// src/main/scala/Frontend/rename.scala:259:33
+    .io_free_list_wr_en_3        (_WAW_handler_io_RAT_wr_en_3),	// src/main/scala/Frontend/rename.scala:259:33
+    .io_free_list_RD_0           (_WAW_handler_io_FL_RD_values_0),	// src/main/scala/Frontend/rename.scala:259:33
+    .io_free_list_RD_1           (_WAW_handler_io_FL_RD_values_1),	// src/main/scala/Frontend/rename.scala:259:33
+    .io_free_list_RD_2           (_WAW_handler_io_FL_RD_values_2),	// src/main/scala/Frontend/rename.scala:259:33
+    .io_free_list_RD_3           (_WAW_handler_io_FL_RD_values_3),	// src/main/scala/Frontend/rename.scala:259:33
     .io_create_checkpoint
       (io_decoded_fetch_packet_bits_decoded_instruction_0_needs_branch_unit
        & io_decoded_fetch_packet_bits_valid_bits_0 & fire
@@ -3492,10 +3655,10 @@ module rename(	// src/main/scala/Frontend/rename.scala:204:7
        | io_decoded_fetch_packet_bits_decoded_instruction_2_needs_branch_unit
        & io_decoded_fetch_packet_bits_valid_bits_2 & fire
        | io_decoded_fetch_packet_bits_decoded_instruction_3_needs_branch_unit
-       & io_decoded_fetch_packet_bits_valid_bits_3 & fire),	// src/main/scala/Frontend/rename.scala:240:42, :347:107, :348:80, :352:57, src/main/scala/chisel3/util/Decoupled.scala:51:35
-    .io_restore_checkpoint       (io_commit_valid & io_commit_bits_is_misprediction),	// src/main/scala/Frontend/rename.scala:340:55
+       & io_decoded_fetch_packet_bits_valid_bits_3 & fire),	// src/main/scala/Frontend/rename.scala:244:42, :351:107, :352:80, :356:57, src/main/scala/chisel3/util/Decoupled.scala:51:35
+    .io_restore_checkpoint       (io_commit_valid & io_commit_bits_is_misprediction),	// src/main/scala/Frontend/rename.scala:344:55
     .io_free_checkpoint
-      (io_commit_valid & ~io_commit_bits_is_misprediction & (|io_commit_bits_br_type)),	// src/main/scala/Frontend/rename.scala:342:{55,58,91,118}
+      (io_commit_valid & ~io_commit_bits_is_misprediction & (|io_commit_bits_br_type)),	// src/main/scala/Frontend/rename.scala:346:{55,58,91,118}
     .io_restore_checkpoint_value (io_commit_bits_RAT_index),
     .io_active_checkpoint_value  (_RAT_io_active_checkpoint_value),
     .io_checkpoints_full         (_RAT_io_checkpoints_full),
@@ -3507,212 +3670,228 @@ module rename(	// src/main/scala/Frontend/rename.scala:204:7
     .io_RAT_RS2_1                (_RAT_io_RAT_RS2_1),
     .io_RAT_RS2_2                (_RAT_io_RAT_RS2_2),
     .io_RAT_RS2_3                (_RAT_io_RAT_RS2_3)
-  );	// src/main/scala/Frontend/rename.scala:256:33
-  Queue1_decoded_fetch_packet renamed_decoded_fetch_packet_skid_buffer (	// src/main/scala/Frontend/rename.scala:363:58
+  );	// src/main/scala/Frontend/rename.scala:260:33
+  Queue1_decoded_fetch_packet renamed_decoded_fetch_packet_skid_buffer (	// src/main/scala/Frontend/rename.scala:367:58
     .clock                                                  (clock),
     .reset                                                  (reset),
     .io_enq_ready
       (renamed_decoded_fetch_packet_ready),
     .io_enq_valid
-      (renamed_decoded_fetch_packet_valid),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_valid),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_fetch_PC
-      (renamed_decoded_fetch_packet_bits_fetch_PC),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_fetch_PC),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_0_ready_bits_RS1_ready
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_0_ready_bits_RS1_ready),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_0_ready_bits_RS1_ready),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_0_ready_bits_RS2_ready
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_0_ready_bits_RS2_ready),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_0_ready_bits_RS2_ready),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_0_RD
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_0_RD_valid
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_0_RS1
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS1),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS1),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_0_RS1_valid
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS1_valid),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS1_valid),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_0_RS2
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS2),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS2),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_0_RS2_valid
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS2_valid),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS2_valid),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_0_IMM
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_0_IMM),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_0_IMM),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_0_FUNCT3
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_0_FUNCT3),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_0_FUNCT3),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_0_packet_index
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_0_packet_index),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_0_packet_index),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_0_ROB_index
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_0_ROB_index),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_0_ROB_index),	// src/main/scala/Frontend/rename.scala:249:44
+    .io_enq_bits_decoded_instruction_0_MOB_index
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_0_MOB_index),	// src/main/scala/Frontend/rename.scala:249:44
+    .io_enq_bits_decoded_instruction_0_FTQ_index
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_0_FTQ_index),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_0_instructionType
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_0_instructionType),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_0_instructionType),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_0_portID
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_0_portID),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_0_portID),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_0_RS_type
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS_type),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS_type),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_0_needs_ALU
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_ALU),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_ALU),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_0_needs_branch_unit
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_branch_unit),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_branch_unit),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_0_needs_CSRs
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_CSRs),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_0_needs_CSRs),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_0_SUBTRACT
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_0_SUBTRACT),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_0_SUBTRACT),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_0_MULTIPLY
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_0_MULTIPLY),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_0_MULTIPLY),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_0_IS_IMM
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_0_IS_IMM),	// src/main/scala/Frontend/rename.scala:245:44
-    .io_enq_bits_decoded_instruction_0_is_load
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_0_is_load),	// src/main/scala/Frontend/rename.scala:245:44
-    .io_enq_bits_decoded_instruction_0_is_store
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_0_is_store),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_0_IS_IMM),	// src/main/scala/Frontend/rename.scala:249:44
+    .io_enq_bits_decoded_instruction_0_memory_type
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_0_memory_type),	// src/main/scala/Frontend/rename.scala:249:44
+    .io_enq_bits_decoded_instruction_0_access_width
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_0_access_width),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_1_ready_bits_RS1_ready
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS1_ready),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS1_ready),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_1_ready_bits_RS2_ready
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS2_ready),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS2_ready),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_1_RD
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_1_RD_valid
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_1_RS1
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS1),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS1),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_1_RS1_valid
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS1_valid),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS1_valid),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_1_RS2
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS2),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS2),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_1_RS2_valid
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS2_valid),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS2_valid),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_1_IMM
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_1_IMM),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_1_IMM),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_1_FUNCT3
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_1_FUNCT3),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_1_FUNCT3),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_1_packet_index
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_1_packet_index),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_1_packet_index),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_1_ROB_index
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_1_ROB_index),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_1_ROB_index),	// src/main/scala/Frontend/rename.scala:249:44
+    .io_enq_bits_decoded_instruction_1_MOB_index
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_1_MOB_index),	// src/main/scala/Frontend/rename.scala:249:44
+    .io_enq_bits_decoded_instruction_1_FTQ_index
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_1_FTQ_index),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_1_instructionType
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_1_instructionType),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_1_instructionType),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_1_portID
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_1_portID),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_1_portID),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_1_RS_type
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS_type),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS_type),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_1_needs_ALU
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_ALU),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_ALU),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_1_needs_branch_unit
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_branch_unit),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_branch_unit),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_1_needs_CSRs
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_CSRs),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_1_needs_CSRs),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_1_SUBTRACT
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_1_SUBTRACT),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_1_SUBTRACT),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_1_MULTIPLY
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_1_MULTIPLY),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_1_MULTIPLY),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_1_IS_IMM
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_1_IS_IMM),	// src/main/scala/Frontend/rename.scala:245:44
-    .io_enq_bits_decoded_instruction_1_is_load
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_1_is_load),	// src/main/scala/Frontend/rename.scala:245:44
-    .io_enq_bits_decoded_instruction_1_is_store
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_1_is_store),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_1_IS_IMM),	// src/main/scala/Frontend/rename.scala:249:44
+    .io_enq_bits_decoded_instruction_1_memory_type
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_1_memory_type),	// src/main/scala/Frontend/rename.scala:249:44
+    .io_enq_bits_decoded_instruction_1_access_width
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_1_access_width),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_2_ready_bits_RS1_ready
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS1_ready),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS1_ready),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_2_ready_bits_RS2_ready
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS2_ready),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS2_ready),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_2_RD
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_2_RD_valid
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_2_RS1
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS1),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS1),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_2_RS1_valid
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS1_valid),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS1_valid),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_2_RS2
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS2),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS2),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_2_RS2_valid
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS2_valid),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS2_valid),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_2_IMM
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_2_IMM),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_2_IMM),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_2_FUNCT3
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_2_FUNCT3),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_2_FUNCT3),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_2_packet_index
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_2_packet_index),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_2_packet_index),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_2_ROB_index
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_2_ROB_index),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_2_ROB_index),	// src/main/scala/Frontend/rename.scala:249:44
+    .io_enq_bits_decoded_instruction_2_MOB_index
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_2_MOB_index),	// src/main/scala/Frontend/rename.scala:249:44
+    .io_enq_bits_decoded_instruction_2_FTQ_index
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_2_FTQ_index),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_2_instructionType
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_2_instructionType),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_2_instructionType),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_2_portID
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_2_portID),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_2_portID),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_2_RS_type
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS_type),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS_type),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_2_needs_ALU
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_ALU),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_ALU),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_2_needs_branch_unit
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_branch_unit),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_branch_unit),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_2_needs_CSRs
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_CSRs),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_2_needs_CSRs),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_2_SUBTRACT
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_2_SUBTRACT),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_2_SUBTRACT),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_2_MULTIPLY
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_2_MULTIPLY),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_2_MULTIPLY),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_2_IS_IMM
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_2_IS_IMM),	// src/main/scala/Frontend/rename.scala:245:44
-    .io_enq_bits_decoded_instruction_2_is_load
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_2_is_load),	// src/main/scala/Frontend/rename.scala:245:44
-    .io_enq_bits_decoded_instruction_2_is_store
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_2_is_store),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_2_IS_IMM),	// src/main/scala/Frontend/rename.scala:249:44
+    .io_enq_bits_decoded_instruction_2_memory_type
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_2_memory_type),	// src/main/scala/Frontend/rename.scala:249:44
+    .io_enq_bits_decoded_instruction_2_access_width
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_2_access_width),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_3_ready_bits_RS1_ready
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS1_ready),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS1_ready),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_3_ready_bits_RS2_ready
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS2_ready),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS2_ready),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_3_RD
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_3_RD_valid
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_3_RS1
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS1),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS1),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_3_RS1_valid
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS1_valid),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS1_valid),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_3_RS2
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS2),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS2),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_3_RS2_valid
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS2_valid),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS2_valid),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_3_IMM
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_3_IMM),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_3_IMM),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_3_FUNCT3
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_3_FUNCT3),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_3_FUNCT3),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_3_packet_index
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_3_packet_index),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_3_packet_index),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_3_ROB_index
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_3_ROB_index),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_3_ROB_index),	// src/main/scala/Frontend/rename.scala:249:44
+    .io_enq_bits_decoded_instruction_3_MOB_index
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_3_MOB_index),	// src/main/scala/Frontend/rename.scala:249:44
+    .io_enq_bits_decoded_instruction_3_FTQ_index
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_3_FTQ_index),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_3_instructionType
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_3_instructionType),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_3_instructionType),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_3_portID
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_3_portID),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_3_portID),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_3_RS_type
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS_type),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS_type),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_3_needs_ALU
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_ALU),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_ALU),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_3_needs_branch_unit
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_branch_unit),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_branch_unit),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_3_needs_CSRs
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_CSRs),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_3_needs_CSRs),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_3_SUBTRACT
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_3_SUBTRACT),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_3_SUBTRACT),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_3_MULTIPLY
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_3_MULTIPLY),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_3_MULTIPLY),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_decoded_instruction_3_IS_IMM
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_3_IS_IMM),	// src/main/scala/Frontend/rename.scala:245:44
-    .io_enq_bits_decoded_instruction_3_is_load
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_3_is_load),	// src/main/scala/Frontend/rename.scala:245:44
-    .io_enq_bits_decoded_instruction_3_is_store
-      (renamed_decoded_fetch_packet_bits_decoded_instruction_3_is_store),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_3_IS_IMM),	// src/main/scala/Frontend/rename.scala:249:44
+    .io_enq_bits_decoded_instruction_3_memory_type
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_3_memory_type),	// src/main/scala/Frontend/rename.scala:249:44
+    .io_enq_bits_decoded_instruction_3_access_width
+      (renamed_decoded_fetch_packet_bits_decoded_instruction_3_access_width),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_valid_bits_0
-      (renamed_decoded_fetch_packet_bits_valid_bits_0),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_valid_bits_0),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_valid_bits_1
-      (renamed_decoded_fetch_packet_bits_valid_bits_1),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_valid_bits_1),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_valid_bits_2
-      (renamed_decoded_fetch_packet_bits_valid_bits_2),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_valid_bits_2),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_valid_bits_3
-      (renamed_decoded_fetch_packet_bits_valid_bits_3),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_valid_bits_3),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_RAT_index
-      (renamed_decoded_fetch_packet_bits_RAT_index),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_RAT_index),	// src/main/scala/Frontend/rename.scala:249:44
     .io_enq_bits_free_list_front_pointer
-      (renamed_decoded_fetch_packet_bits_free_list_front_pointer),	// src/main/scala/Frontend/rename.scala:245:44
+      (renamed_decoded_fetch_packet_bits_free_list_front_pointer),	// src/main/scala/Frontend/rename.scala:249:44
     .io_deq_ready
       (io_renamed_decoded_fetch_packet_ready),
     .io_deq_valid
@@ -3741,6 +3920,10 @@ module rename(	// src/main/scala/Frontend/rename.scala:204:7
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_packet_index),
     .io_deq_bits_decoded_instruction_0_ROB_index
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_ROB_index),
+    .io_deq_bits_decoded_instruction_0_MOB_index
+      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_MOB_index),
+    .io_deq_bits_decoded_instruction_0_FTQ_index
+      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_FTQ_index),
     .io_deq_bits_decoded_instruction_0_instructionType
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_instructionType),
     .io_deq_bits_decoded_instruction_0_portID
@@ -3759,10 +3942,10 @@ module rename(	// src/main/scala/Frontend/rename.scala:204:7
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_MULTIPLY),
     .io_deq_bits_decoded_instruction_0_IS_IMM
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_IS_IMM),
-    .io_deq_bits_decoded_instruction_0_is_load
-      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_is_load),
-    .io_deq_bits_decoded_instruction_0_is_store
-      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_is_store),
+    .io_deq_bits_decoded_instruction_0_memory_type
+      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_memory_type),
+    .io_deq_bits_decoded_instruction_0_access_width
+      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_access_width),
     .io_deq_bits_decoded_instruction_1_ready_bits_RS1_ready (/* unused */),
     .io_deq_bits_decoded_instruction_1_ready_bits_RS2_ready (/* unused */),
     .io_deq_bits_decoded_instruction_1_RD
@@ -3785,6 +3968,10 @@ module rename(	// src/main/scala/Frontend/rename.scala:204:7
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_packet_index),
     .io_deq_bits_decoded_instruction_1_ROB_index
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ROB_index),
+    .io_deq_bits_decoded_instruction_1_MOB_index
+      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_MOB_index),
+    .io_deq_bits_decoded_instruction_1_FTQ_index
+      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_FTQ_index),
     .io_deq_bits_decoded_instruction_1_instructionType
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_instructionType),
     .io_deq_bits_decoded_instruction_1_portID
@@ -3803,10 +3990,10 @@ module rename(	// src/main/scala/Frontend/rename.scala:204:7
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_MULTIPLY),
     .io_deq_bits_decoded_instruction_1_IS_IMM
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_IS_IMM),
-    .io_deq_bits_decoded_instruction_1_is_load
-      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_is_load),
-    .io_deq_bits_decoded_instruction_1_is_store
-      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_is_store),
+    .io_deq_bits_decoded_instruction_1_memory_type
+      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_memory_type),
+    .io_deq_bits_decoded_instruction_1_access_width
+      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_access_width),
     .io_deq_bits_decoded_instruction_2_ready_bits_RS1_ready (/* unused */),
     .io_deq_bits_decoded_instruction_2_ready_bits_RS2_ready (/* unused */),
     .io_deq_bits_decoded_instruction_2_RD
@@ -3829,6 +4016,10 @@ module rename(	// src/main/scala/Frontend/rename.scala:204:7
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_packet_index),
     .io_deq_bits_decoded_instruction_2_ROB_index
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ROB_index),
+    .io_deq_bits_decoded_instruction_2_MOB_index
+      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_MOB_index),
+    .io_deq_bits_decoded_instruction_2_FTQ_index
+      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_FTQ_index),
     .io_deq_bits_decoded_instruction_2_instructionType
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_instructionType),
     .io_deq_bits_decoded_instruction_2_portID
@@ -3847,10 +4038,10 @@ module rename(	// src/main/scala/Frontend/rename.scala:204:7
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_MULTIPLY),
     .io_deq_bits_decoded_instruction_2_IS_IMM
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_IS_IMM),
-    .io_deq_bits_decoded_instruction_2_is_load
-      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_is_load),
-    .io_deq_bits_decoded_instruction_2_is_store
-      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_is_store),
+    .io_deq_bits_decoded_instruction_2_memory_type
+      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_memory_type),
+    .io_deq_bits_decoded_instruction_2_access_width
+      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_access_width),
     .io_deq_bits_decoded_instruction_3_ready_bits_RS1_ready (/* unused */),
     .io_deq_bits_decoded_instruction_3_ready_bits_RS2_ready (/* unused */),
     .io_deq_bits_decoded_instruction_3_RD
@@ -3873,6 +4064,10 @@ module rename(	// src/main/scala/Frontend/rename.scala:204:7
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_packet_index),
     .io_deq_bits_decoded_instruction_3_ROB_index
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ROB_index),
+    .io_deq_bits_decoded_instruction_3_MOB_index
+      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_MOB_index),
+    .io_deq_bits_decoded_instruction_3_FTQ_index
+      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_FTQ_index),
     .io_deq_bits_decoded_instruction_3_instructionType
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_instructionType),
     .io_deq_bits_decoded_instruction_3_portID
@@ -3891,10 +4086,10 @@ module rename(	// src/main/scala/Frontend/rename.scala:204:7
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_MULTIPLY),
     .io_deq_bits_decoded_instruction_3_IS_IMM
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_IS_IMM),
-    .io_deq_bits_decoded_instruction_3_is_load
-      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_is_load),
-    .io_deq_bits_decoded_instruction_3_is_store
-      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_is_store),
+    .io_deq_bits_decoded_instruction_3_memory_type
+      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_memory_type),
+    .io_deq_bits_decoded_instruction_3_access_width
+      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_access_width),
     .io_deq_bits_valid_bits_0
       (io_renamed_decoded_fetch_packet_bits_valid_bits_0),
     .io_deq_bits_valid_bits_1
@@ -3908,57 +4103,87 @@ module rename(	// src/main/scala/Frontend/rename.scala:204:7
     .io_deq_bits_free_list_front_pointer
       (io_renamed_decoded_fetch_packet_bits_free_list_front_pointer),
     .io_flush                                               (io_flush)
-  );	// src/main/scala/Frontend/rename.scala:363:58
-  assign io_decoded_fetch_packet_ready = io_decoded_fetch_packet_ready_0;	// src/main/scala/Frontend/rename.scala:204:7, :433:{86,114}
+  );	// src/main/scala/Frontend/rename.scala:367:58
+  Queue1_FTQ_entry predictions_out_skid_buffer (	// src/main/scala/Frontend/rename.scala:435:45
+    .clock                        (clock),
+    .reset                        (reset),
+    .io_enq_valid                 (predictions_out_valid_REG),	// src/main/scala/Frontend/rename.scala:439:39
+    .io_enq_bits_valid            (predictions_out_bits_REG_valid),	// src/main/scala/Frontend/rename.scala:438:39
+    .io_enq_bits_fetch_PC         (predictions_out_bits_REG_fetch_PC),	// src/main/scala/Frontend/rename.scala:438:39
+    .io_enq_bits_is_misprediction (predictions_out_bits_REG_is_misprediction),	// src/main/scala/Frontend/rename.scala:438:39
+    .io_enq_bits_predicted_PC     (predictions_out_bits_REG_predicted_PC),	// src/main/scala/Frontend/rename.scala:438:39
+    .io_enq_bits_T_NT             (predictions_out_bits_REG_T_NT),	// src/main/scala/Frontend/rename.scala:438:39
+    .io_enq_bits_br_type          (predictions_out_bits_REG_br_type),	// src/main/scala/Frontend/rename.scala:438:39
+    .io_enq_bits_GHR              (predictions_out_bits_REG_GHR),	// src/main/scala/Frontend/rename.scala:438:39
+    .io_enq_bits_NEXT             (predictions_out_bits_REG_NEXT),	// src/main/scala/Frontend/rename.scala:438:39
+    .io_enq_bits_TOS              (predictions_out_bits_REG_TOS),	// src/main/scala/Frontend/rename.scala:438:39
+    .io_enq_bits_dominant_index   (predictions_out_bits_REG_dominant_index),	// src/main/scala/Frontend/rename.scala:438:39
+    .io_enq_bits_resolved_PC      (predictions_out_bits_REG_resolved_PC),	// src/main/scala/Frontend/rename.scala:438:39
+    .io_deq_ready                 (io_predictions_out_ready),
+    .io_deq_valid                 (io_predictions_out_valid),
+    .io_deq_bits_valid            (io_predictions_out_bits_valid),
+    .io_deq_bits_fetch_PC         (io_predictions_out_bits_fetch_PC),
+    .io_deq_bits_is_misprediction (io_predictions_out_bits_is_misprediction),
+    .io_deq_bits_predicted_PC     (io_predictions_out_bits_predicted_PC),
+    .io_deq_bits_T_NT             (io_predictions_out_bits_T_NT),
+    .io_deq_bits_br_type          (io_predictions_out_bits_br_type),
+    .io_deq_bits_GHR              (io_predictions_out_bits_GHR),
+    .io_deq_bits_NEXT             (io_predictions_out_bits_NEXT),
+    .io_deq_bits_TOS              (io_predictions_out_bits_TOS),
+    .io_deq_bits_dominant_index   (io_predictions_out_bits_dominant_index),
+    .io_deq_bits_resolved_PC      (io_predictions_out_bits_resolved_PC)
+  );	// src/main/scala/Frontend/rename.scala:435:45
+  assign io_predictions_in_ready = inputs_ready;	// src/main/scala/Frontend/rename.scala:204:7, :448:{50,78,119}
+  assign io_decoded_fetch_packet_ready = inputs_ready;	// src/main/scala/Frontend/rename.scala:204:7, :448:{50,78,119}
   assign io_renamed_decoded_fetch_packet_valid =
-    _renamed_decoded_fetch_packet_skid_buffer_io_deq_valid;	// src/main/scala/Frontend/rename.scala:204:7, :363:58
+    _renamed_decoded_fetch_packet_skid_buffer_io_deq_valid;	// src/main/scala/Frontend/rename.scala:204:7, :367:58
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_ready_bits_RS1_ready =
-    _GEN_458[_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RS1];	// src/main/scala/Frontend/rename.scala:204:7, :363:58, :423:32
+    _GEN_458[_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RS1];	// src/main/scala/Frontend/rename.scala:204:7, :367:58, :427:32
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_ready_bits_RS2_ready =
-    _GEN_458[_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RS2];	// src/main/scala/Frontend/rename.scala:204:7, :363:58, :423:32, :424:32
+    _GEN_458[_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RS2];	// src/main/scala/Frontend/rename.scala:204:7, :367:58, :427:32, :428:32
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD =
-    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD;	// src/main/scala/Frontend/rename.scala:204:7, :363:58
+    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD;	// src/main/scala/Frontend/rename.scala:204:7, :367:58
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RD_valid =
-    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD_valid;	// src/main/scala/Frontend/rename.scala:204:7, :363:58
+    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RD_valid;	// src/main/scala/Frontend/rename.scala:204:7, :367:58
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS1 =
-    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RS1;	// src/main/scala/Frontend/rename.scala:204:7, :363:58
+    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RS1;	// src/main/scala/Frontend/rename.scala:204:7, :367:58
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS2 =
-    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RS2;	// src/main/scala/Frontend/rename.scala:204:7, :363:58
+    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_0_RS2;	// src/main/scala/Frontend/rename.scala:204:7, :367:58
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS1_ready =
-    _GEN_458[_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RS1];	// src/main/scala/Frontend/rename.scala:204:7, :363:58, :423:32
+    _GEN_458[_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RS1];	// src/main/scala/Frontend/rename.scala:204:7, :367:58, :427:32
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS2_ready =
-    _GEN_458[_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RS2];	// src/main/scala/Frontend/rename.scala:204:7, :363:58, :423:32, :424:32
+    _GEN_458[_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RS2];	// src/main/scala/Frontend/rename.scala:204:7, :367:58, :427:32, :428:32
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD =
-    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD;	// src/main/scala/Frontend/rename.scala:204:7, :363:58
+    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD;	// src/main/scala/Frontend/rename.scala:204:7, :367:58
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid =
-    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD_valid;	// src/main/scala/Frontend/rename.scala:204:7, :363:58
+    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RD_valid;	// src/main/scala/Frontend/rename.scala:204:7, :367:58
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS1 =
-    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RS1;	// src/main/scala/Frontend/rename.scala:204:7, :363:58
+    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RS1;	// src/main/scala/Frontend/rename.scala:204:7, :367:58
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS2 =
-    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RS2;	// src/main/scala/Frontend/rename.scala:204:7, :363:58
+    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_1_RS2;	// src/main/scala/Frontend/rename.scala:204:7, :367:58
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS1_ready =
-    _GEN_458[_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RS1];	// src/main/scala/Frontend/rename.scala:204:7, :363:58, :423:32
+    _GEN_458[_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RS1];	// src/main/scala/Frontend/rename.scala:204:7, :367:58, :427:32
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS2_ready =
-    _GEN_458[_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RS2];	// src/main/scala/Frontend/rename.scala:204:7, :363:58, :423:32, :424:32
+    _GEN_458[_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RS2];	// src/main/scala/Frontend/rename.scala:204:7, :367:58, :427:32, :428:32
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD =
-    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD;	// src/main/scala/Frontend/rename.scala:204:7, :363:58
+    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD;	// src/main/scala/Frontend/rename.scala:204:7, :367:58
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid =
-    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD_valid;	// src/main/scala/Frontend/rename.scala:204:7, :363:58
+    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RD_valid;	// src/main/scala/Frontend/rename.scala:204:7, :367:58
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS1 =
-    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RS1;	// src/main/scala/Frontend/rename.scala:204:7, :363:58
+    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RS1;	// src/main/scala/Frontend/rename.scala:204:7, :367:58
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS2 =
-    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RS2;	// src/main/scala/Frontend/rename.scala:204:7, :363:58
+    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_2_RS2;	// src/main/scala/Frontend/rename.scala:204:7, :367:58
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS1_ready =
-    _GEN_458[_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RS1];	// src/main/scala/Frontend/rename.scala:204:7, :363:58, :423:32
+    _GEN_458[_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RS1];	// src/main/scala/Frontend/rename.scala:204:7, :367:58, :427:32
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS2_ready =
-    _GEN_458[_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RS2];	// src/main/scala/Frontend/rename.scala:204:7, :363:58, :423:32, :424:32
+    _GEN_458[_renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RS2];	// src/main/scala/Frontend/rename.scala:204:7, :367:58, :427:32, :428:32
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD =
-    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD;	// src/main/scala/Frontend/rename.scala:204:7, :363:58
+    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD;	// src/main/scala/Frontend/rename.scala:204:7, :367:58
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid =
-    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD_valid;	// src/main/scala/Frontend/rename.scala:204:7, :363:58
+    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RD_valid;	// src/main/scala/Frontend/rename.scala:204:7, :367:58
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS1 =
-    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RS1;	// src/main/scala/Frontend/rename.scala:204:7, :363:58
+    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RS1;	// src/main/scala/Frontend/rename.scala:204:7, :367:58
   assign io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS2 =
-    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RS2;	// src/main/scala/Frontend/rename.scala:204:7, :363:58
+    _renamed_decoded_fetch_packet_skid_buffer_io_deq_bits_decoded_instruction_3_RS2;	// src/main/scala/Frontend/rename.scala:204:7, :367:58
 endmodule
 

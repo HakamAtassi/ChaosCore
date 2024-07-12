@@ -126,9 +126,9 @@ class BP(parameters:Parameters) extends Module{
 
 
     // commit port
-    BTB.io.commit   <>  io.commit
+    BTB.io.commit           <>  io.commit
 
-    BTB.io.commit.valid                     :=  update_BTB
+    BTB.io.commit.valid     :=  update_BTB
 
     ///////////////////////////////
     // Init Return-Address-Stack //
@@ -151,6 +151,8 @@ class BP(parameters:Parameters) extends Module{
     io.RAS_read.TOS      := RAS.io.TOS
 
     // BTB
+    // FIXME: something needs to be added here to ensure that predictions after 
+    // A replated mispredicted packet are correct...
     prediction.bits.target    := BTB.io.BTB_output.BTB_target
     prediction.bits.br_type   := BTB.io.BTB_output.BTB_br_type
     prediction.bits.hit       := BTB.io.BTB_hit

@@ -88,10 +88,6 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
                                  (instructionType === OP_IMM) || (instructionType === LUI) || (instructionType === AUIPC)
 
 
-    val is_load              =   (instructionType === LOAD)
-    val is_store             =   (instructionType === STORE)
-    val needs_memory         =   (instructionType === STORE) || (instructionType === LOAD)
-
 
     // Assign output
 
@@ -135,14 +131,35 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
     io.decoded_instruction.bits.FUNCT3               := FUNCT3
     io.decoded_instruction.bits.MULTIPLY             := MULTIPLY    // Multiply or Divide
     io.decoded_instruction.bits.SUBTRACT             := SUBTRACT    // subtract or arithmetic shift...
-    io.decoded_instruction.bits.IS_IMM            := IS_IMM   // subtract or arithmetic shift...
+    io.decoded_instruction.bits.IS_IMM               := IS_IMM   // subtract or arithmetic shift...
 
-    io.decoded_instruction.bits.is_load              := is_load     // subtract or arithmetic shift...
-    io.decoded_instruction.bits.is_store             := is_store    // subtract or arithmetic shift...
+
+
+    when(instructionType === LOAD){
+        io.decoded_instruction.bits.memory_type              := memory_type_t.LOAD
+    }.elsewhen(instructionType === STORE){
+        io.decoded_instruction.bits.memory_type              := memory_type_t.STORE
+    }.otherwise{
+        io.decoded_instruction.bits.memory_type              := memory_type_t.NONE
+    }
+
+    io.decoded_instruction.bits.access_width                  := access_width_t.NONE
+    when(FUNCT3  === "b000".U){
+        io.decoded_instruction.bits.access_width              := access_width_t.B
+    }.elsewhen(FUNCT3  === "b001".U){
+        io.decoded_instruction.bits.access_width              := access_width_t.HW
+    }.elsewhen(FUNCT3  === "b010".U){
+        io.decoded_instruction.bits.access_width              := access_width_t.W
+    }
+
+
+    val needs_memory         =   (instructionType === STORE) || (instructionType === LOAD)
 
     io.decoded_instruction.bits.packet_index         := io.instruction.bits.packet_index 
     io.decoded_instruction.bits.instructionType      := instructionType
-    io.decoded_instruction.bits.ROB_index            := io.instruction.bits.ROB_index
+    io.decoded_instruction.bits.ROB_index            := 0.U
+    io.decoded_instruction.bits.FTQ_index            := 0.U
+    io.decoded_instruction.bits.MOB_index            := 0.U
     io.decoded_instruction.bits.needs_ALU            := needs_ALU
     io.decoded_instruction.bits.needs_branch_unit    := needs_branch_unit
     io.decoded_instruction.bits.needs_CSRs           := needs_CSRs
