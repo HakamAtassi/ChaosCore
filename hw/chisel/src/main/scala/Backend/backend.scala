@@ -52,23 +52,23 @@ class backend(parameters:Parameters) extends Module{
         // FLUSH //
         val flush                   =   Input(Bool())
 
-        val memory_response     =   Flipped(Decoupled(new memory_response(parameters))) // From MEM
-        val memory_request      =   Decoupled(new memory_request(parameters))     // To MEM
+        val backend_memory_response     =   Flipped(Decoupled(new backend_memory_response(parameters))) // From MEM
+        val backend_memory_request      =   Decoupled(new backend_memory_request(parameters))     // To MEM
 
         // REDIRECTS // 
         val commit                  =    Flipped(ValidIO(new commit(parameters)))
 
         // PC_file access (for branch unit)
-        val PC_file_exec_addr           =   Output(UInt(log2Ceil(ROBEntires).W))
+        val PC_file_exec_addr           =   Output(UInt(log2Ceil(ROBEntries).W))
         val PC_file_exec_data           =   Input(UInt(32.W))
 
         // ALLOCATE //
-        //val backend_packet          =   Vec(dispatchWidth, Flipped(Decoupled(new decoded_instruction(parameters))))
         val fetch_PC                =   Input(UInt(32.W))  // DEBUG
         val backend_packet          =   Flipped(Decoupled(new decoded_fetch_packet(parameters)))
 
         val MEMRS_ready             =   Output(Vec(dispatchWidth, Bool()))
         val INTRS_ready             =   Output(Vec(dispatchWidth, Bool()))
+        val MOB_ready               =   Output(Vec(dispatchWidth, Bool()))
 
         // UPDATE //
         val FU_outputs              =   Vec(portCount, ValidIO(new FU_output(parameters)))
@@ -82,12 +82,18 @@ class backend(parameters:Parameters) extends Module{
 
     val INT_RS   =  Module(new RS(parameters))
     val MEM_RS   =  Module(new MEMRS(parameters))
-    //val FP_RS  =  ???
+
+
+    /////////
+    // MOB //
+    /////////
+    val MOB   =  Module(new MOB(parameters))
+
+
 
     // Assign Reservation Stations
 
     INT_RS.io.commit <> io.commit
-
     for (i <- 0 until dispatchWidth){
         INT_RS.io.backend_packet(i).bits     := io.backend_packet.bits.decoded_instruction(i)  // pass data along
         INT_RS.io.backend_packet(i).valid    := (io.backend_packet.bits.decoded_instruction(i).RS_type === RS_types.INT) && io.backend_packet.bits.valid_bits(i) && io.backend_packet.valid
@@ -96,19 +102,26 @@ class backend(parameters:Parameters) extends Module{
     }
 
 
-    INT_RS.io.commit <> io.commit
-
+    MEM_RS.io.commit <> io.commit
     for (i <- 0 until dispatchWidth){
         MEM_RS.io.backend_packet(i).bits     := io.backend_packet.bits.decoded_instruction(i)  // pass data along
         MEM_RS.io.backend_packet(i).valid    := (io.backend_packet.bits.decoded_instruction(i).RS_type === RS_types.MEM)  && io.backend_packet.bits.valid_bits(i) && io.backend_packet.valid // does this entry correspond to RS
         MEM_RS.io.fetch_PC := io.fetch_PC
-        
+    }
+
+
+    MOB.io.commit <> io.commit
+    for (i <- 0 until dispatchWidth){
+        MOB.io.reserve(i).bits     := io.backend_packet.bits.decoded_instruction(i)  // pass data along
+        MOB.io.reserve(i).valid    := (io.backend_packet.bits.decoded_instruction(i).RS_type === RS_types.MEM)  && io.backend_packet.bits.valid_bits(i) && io.backend_packet.valid
+        MOB.io.fetch_PC := io.fetch_PC
     }
 
     // Assign ready bits
     for (i <- 0 until dispatchWidth){
         io.MEMRS_ready(i)        := MEM_RS.io.backend_packet(i).ready
         io.INTRS_ready(i)        := INT_RS.io.backend_packet(i).ready
+        io.MOB_ready(i)          := MOB.io.reserve(i).ready
     }
 
 
@@ -173,7 +186,7 @@ class backend(parameters:Parameters) extends Module{
     val FU0 = Module(new FU(parameters, has_ALU=true, has_branch_unit=true))
     val FU1 = Module(new FU(parameters, has_ALU=true, has_branch_unit=false))
     val FU2 = Module(new FU(parameters, has_ALU=true, has_branch_unit=false))
-    val FU3 = Module(new MEMFU(parameters))
+    val FU3 = Module(new AGU(parameters))
 
 
     // Connect FUs
@@ -203,6 +216,13 @@ class backend(parameters:Parameters) extends Module{
     MEM_RS.io.RF_inputs(3).ready       := FU3.io.FU_input.ready
 
 
+
+    ////////////////
+    // AGU <> MOB //
+    ////////////////
+    MOB.io.AGU_output <> FU3.io.FU_output
+    MOB.io.flush <> io.flush
+
     ////////////////////////////
     // REGISTER FILES (WRITE) //
     ////////////////////////////
@@ -212,17 +232,17 @@ class backend(parameters:Parameters) extends Module{
     INT_PRF.io.waddr_0  :=    FU0.io.FU_output.bits.RD
     INT_PRF.io.waddr_1  :=    FU1.io.FU_output.bits.RD
     INT_PRF.io.waddr_2  :=    FU2.io.FU_output.bits.RD
-    INT_PRF.io.waddr_3  :=    FU3.io.FU_output.bits.RD
+    INT_PRF.io.waddr_3  :=    MOB.io.MOB_output.bits.RD
 
     INT_PRF.io.wen_0    :=    FU0.io.FU_output.valid && FU0.io.FU_output.bits.RD_valid
     INT_PRF.io.wen_1    :=    FU1.io.FU_output.valid && FU1.io.FU_output.bits.RD_valid
     INT_PRF.io.wen_2    :=    FU2.io.FU_output.valid && FU2.io.FU_output.bits.RD_valid
-    INT_PRF.io.wen_3    :=    FU3.io.FU_output.valid && FU3.io.FU_output.bits.RD_valid
+    INT_PRF.io.wen_3    :=    MOB.io.MOB_output.valid && MOB.io.MOB_output.bits.RD_valid
 
     INT_PRF.io.wdata_0  :=    FU0.io.FU_output.bits.RD_data
     INT_PRF.io.wdata_1  :=    FU1.io.FU_output.bits.RD_data
     INT_PRF.io.wdata_2  :=    FU2.io.FU_output.bits.RD_data
-    INT_PRF.io.wdata_3  :=    FU3.io.FU_output.bits.RD_data
+    INT_PRF.io.wdata_3  :=    MOB.io.MOB_output.bits.RD_data
 
     ////////////////////////
     // FU TO RS BROADCAST //
@@ -248,7 +268,6 @@ class backend(parameters:Parameters) extends Module{
     io.FU_outputs(2) <> FU2.io.FU_output
     io.FU_outputs(3) <> FU3.io.FU_output
 
-
     INT_RS.io.commit := io.commit
     MEM_RS.io.commit := io.commit
 
@@ -270,8 +289,8 @@ class backend(parameters:Parameters) extends Module{
     FU3.io.flush    <> io.flush
 
     
-    io.memory_request <>  FU3.io.memory_request
-    io.memory_response    <>  FU3.io.memory_response
+    io.backend_memory_request       <>  MOB.io.backend_memory_request
+    io.backend_memory_response      <>  MOB.io.backend_memory_response
 
 
     io.backend_packet.ready := DontCare

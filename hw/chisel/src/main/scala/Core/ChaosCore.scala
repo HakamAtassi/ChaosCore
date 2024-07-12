@@ -56,15 +56,15 @@ class ChaosCore(parameters:Parameters) extends Module{
         ///////////////////////////
         // D$ BACKEND MEM ACCESS //
         ///////////////////////////
-        val backend_memory_response             =   Flipped(Decoupled(new memory_response(parameters)))
-        val backend_memory_request              =   Decoupled(new memory_request(parameters))
+        val backend_memory_response             =   Flipped(Decoupled(new backend_memory_response(parameters)))
+        val backend_memory_request              =   Decoupled(new backend_memory_request(parameters))
     })
 
     //////////////////
     // REQUIREMENTS //
     //////////////////
     require(isPow2(physicalRegCount-1), "Number of physical regs must be a power of 2 (excluding x0)")
-    require(isPow2(ROBEntires), "ROB entries not a power of 2")
+    require(isPow2(ROBEntries), "ROB entries not a power of 2")
     require(isPow2(RSEntries), "Reservation station entries not a power of 2")
 
 
@@ -93,8 +93,8 @@ class ChaosCore(parameters:Parameters) extends Module{
     // BACKEND <> DRAM //
     /////////////////////
 
-    backend.io.memory_response    <>  io.backend_memory_response
-    backend.io.memory_request     <>  io.backend_memory_request
+    backend.io.backend_memory_response    <>  io.backend_memory_response
+    backend.io.backend_memory_request     <>  io.backend_memory_request
 
 
     ////////////////////
@@ -109,7 +109,6 @@ class ChaosCore(parameters:Parameters) extends Module{
     // FRONTEND <> FTQ //
     /////////////////////
     frontend.io.predictions <> FTQ.io.predictions   //buffer made predictions
-
 
     //////////////////////
     // FRONTEND <> DRAM //
@@ -146,7 +145,6 @@ class ChaosCore(parameters:Parameters) extends Module{
     // ROB <> FTQ //
     ////////////////
     ROB.io.commit <> BRU.io.commit
-    FTQ.io.commit <> BRU.io.commit
 
 
     ////////////////
@@ -215,6 +213,7 @@ class ChaosCore(parameters:Parameters) extends Module{
 
     for(i <- 0 until fetchWidth){   // pass along the ROB index for each instruction (for commit and PC read)
         backend.io.backend_packet.bits.decoded_instruction(i).ROB_index := ROB.io.ROB_index
+        backend.io.backend_packet.bits.decoded_instruction(i).FTQ_index := FTQ.io.FTQ_index
     }
 
     // FIXME: does the frontend have appropriate backpressure incase the ROB cant accept/is not ready????

@@ -75,6 +75,8 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
   output [2:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_FUNCT3,	// src/main/scala/Frontend/frontend.scala:45:16
   output [1:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_packet_index,	// src/main/scala/Frontend/frontend.scala:45:16
   output [5:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_ROB_index,	// src/main/scala/Frontend/frontend.scala:45:16
+  output [3:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_MOB_index,	// src/main/scala/Frontend/frontend.scala:45:16
+                io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_FTQ_index,	// src/main/scala/Frontend/frontend.scala:45:16
   output [4:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_instructionType,	// src/main/scala/Frontend/frontend.scala:45:16
   output [1:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_portID,	// src/main/scala/Frontend/frontend.scala:45:16
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS_type,	// src/main/scala/Frontend/frontend.scala:45:16
@@ -84,9 +86,9 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_SUBTRACT,	// src/main/scala/Frontend/frontend.scala:45:16
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_MULTIPLY,	// src/main/scala/Frontend/frontend.scala:45:16
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_IS_IMM,	// src/main/scala/Frontend/frontend.scala:45:16
-                io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_is_load,	// src/main/scala/Frontend/frontend.scala:45:16
-                io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_is_store,	// src/main/scala/Frontend/frontend.scala:45:16
-                io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS1_ready,	// src/main/scala/Frontend/frontend.scala:45:16
+  output [1:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_memory_type,	// src/main/scala/Frontend/frontend.scala:45:16
+                io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_access_width,	// src/main/scala/Frontend/frontend.scala:45:16
+  output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS1_ready,	// src/main/scala/Frontend/frontend.scala:45:16
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS2_ready,	// src/main/scala/Frontend/frontend.scala:45:16
   output [6:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD,	// src/main/scala/Frontend/frontend.scala:45:16
   output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RD_valid,	// src/main/scala/Frontend/frontend.scala:45:16
@@ -98,6 +100,8 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
   output [2:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_FUNCT3,	// src/main/scala/Frontend/frontend.scala:45:16
   output [1:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_packet_index,	// src/main/scala/Frontend/frontend.scala:45:16
   output [5:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ROB_index,	// src/main/scala/Frontend/frontend.scala:45:16
+  output [3:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_MOB_index,	// src/main/scala/Frontend/frontend.scala:45:16
+                io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_FTQ_index,	// src/main/scala/Frontend/frontend.scala:45:16
   output [4:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_instructionType,	// src/main/scala/Frontend/frontend.scala:45:16
   output [1:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_portID,	// src/main/scala/Frontend/frontend.scala:45:16
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS_type,	// src/main/scala/Frontend/frontend.scala:45:16
@@ -107,9 +111,9 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_SUBTRACT,	// src/main/scala/Frontend/frontend.scala:45:16
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_MULTIPLY,	// src/main/scala/Frontend/frontend.scala:45:16
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_IS_IMM,	// src/main/scala/Frontend/frontend.scala:45:16
-                io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_is_load,	// src/main/scala/Frontend/frontend.scala:45:16
-                io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_is_store,	// src/main/scala/Frontend/frontend.scala:45:16
-                io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS1_ready,	// src/main/scala/Frontend/frontend.scala:45:16
+  output [1:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_memory_type,	// src/main/scala/Frontend/frontend.scala:45:16
+                io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_access_width,	// src/main/scala/Frontend/frontend.scala:45:16
+  output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS1_ready,	// src/main/scala/Frontend/frontend.scala:45:16
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS2_ready,	// src/main/scala/Frontend/frontend.scala:45:16
   output [6:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD,	// src/main/scala/Frontend/frontend.scala:45:16
   output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RD_valid,	// src/main/scala/Frontend/frontend.scala:45:16
@@ -121,6 +125,8 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
   output [2:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_FUNCT3,	// src/main/scala/Frontend/frontend.scala:45:16
   output [1:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_packet_index,	// src/main/scala/Frontend/frontend.scala:45:16
   output [5:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ROB_index,	// src/main/scala/Frontend/frontend.scala:45:16
+  output [3:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_MOB_index,	// src/main/scala/Frontend/frontend.scala:45:16
+                io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_FTQ_index,	// src/main/scala/Frontend/frontend.scala:45:16
   output [4:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_instructionType,	// src/main/scala/Frontend/frontend.scala:45:16
   output [1:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_portID,	// src/main/scala/Frontend/frontend.scala:45:16
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS_type,	// src/main/scala/Frontend/frontend.scala:45:16
@@ -130,9 +136,9 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_SUBTRACT,	// src/main/scala/Frontend/frontend.scala:45:16
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_MULTIPLY,	// src/main/scala/Frontend/frontend.scala:45:16
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_IS_IMM,	// src/main/scala/Frontend/frontend.scala:45:16
-                io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_is_load,	// src/main/scala/Frontend/frontend.scala:45:16
-                io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_is_store,	// src/main/scala/Frontend/frontend.scala:45:16
-                io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS1_ready,	// src/main/scala/Frontend/frontend.scala:45:16
+  output [1:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_memory_type,	// src/main/scala/Frontend/frontend.scala:45:16
+                io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_access_width,	// src/main/scala/Frontend/frontend.scala:45:16
+  output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS1_ready,	// src/main/scala/Frontend/frontend.scala:45:16
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS2_ready,	// src/main/scala/Frontend/frontend.scala:45:16
   output [6:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD,	// src/main/scala/Frontend/frontend.scala:45:16
   output        io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RD_valid,	// src/main/scala/Frontend/frontend.scala:45:16
@@ -144,6 +150,8 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
   output [2:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_FUNCT3,	// src/main/scala/Frontend/frontend.scala:45:16
   output [1:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_packet_index,	// src/main/scala/Frontend/frontend.scala:45:16
   output [5:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ROB_index,	// src/main/scala/Frontend/frontend.scala:45:16
+  output [3:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_MOB_index,	// src/main/scala/Frontend/frontend.scala:45:16
+                io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_FTQ_index,	// src/main/scala/Frontend/frontend.scala:45:16
   output [4:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_instructionType,	// src/main/scala/Frontend/frontend.scala:45:16
   output [1:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_portID,	// src/main/scala/Frontend/frontend.scala:45:16
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS_type,	// src/main/scala/Frontend/frontend.scala:45:16
@@ -153,9 +161,9 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_SUBTRACT,	// src/main/scala/Frontend/frontend.scala:45:16
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_MULTIPLY,	// src/main/scala/Frontend/frontend.scala:45:16
                 io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_IS_IMM,	// src/main/scala/Frontend/frontend.scala:45:16
-                io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_is_load,	// src/main/scala/Frontend/frontend.scala:45:16
-                io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_is_store,	// src/main/scala/Frontend/frontend.scala:45:16
-                io_renamed_decoded_fetch_packet_bits_valid_bits_0,	// src/main/scala/Frontend/frontend.scala:45:16
+  output [1:0]  io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_memory_type,	// src/main/scala/Frontend/frontend.scala:45:16
+                io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_access_width,	// src/main/scala/Frontend/frontend.scala:45:16
+  output        io_renamed_decoded_fetch_packet_bits_valid_bits_0,	// src/main/scala/Frontend/frontend.scala:45:16
                 io_renamed_decoded_fetch_packet_bits_valid_bits_1,	// src/main/scala/Frontend/frontend.scala:45:16
                 io_renamed_decoded_fetch_packet_bits_valid_bits_2,	// src/main/scala/Frontend/frontend.scala:45:16
                 io_renamed_decoded_fetch_packet_bits_valid_bits_3,	// src/main/scala/Frontend/frontend.scala:45:16
@@ -169,7 +177,14 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
   input         io_FU_outputs_0_bits_branch_taken,	// src/main/scala/Frontend/frontend.scala:45:16
   input  [31:0] io_FU_outputs_0_bits_target_address,	// src/main/scala/Frontend/frontend.scala:45:16
   input         io_FU_outputs_0_bits_branch_valid,	// src/main/scala/Frontend/frontend.scala:45:16
+  input  [31:0] io_FU_outputs_0_bits_address,	// src/main/scala/Frontend/frontend.scala:45:16
+  input  [1:0]  io_FU_outputs_0_bits_memory_type,	// src/main/scala/Frontend/frontend.scala:45:16
+                io_FU_outputs_0_bits_access_width,	// src/main/scala/Frontend/frontend.scala:45:16
+  input         io_FU_outputs_0_bits_unsigned,	// src/main/scala/Frontend/frontend.scala:45:16
+  input  [31:0] io_FU_outputs_0_bits_wr_data,	// src/main/scala/Frontend/frontend.scala:45:16
+  input  [3:0]  io_FU_outputs_0_bits_MOB_index,	// src/main/scala/Frontend/frontend.scala:45:16
   input  [5:0]  io_FU_outputs_0_bits_ROB_index,	// src/main/scala/Frontend/frontend.scala:45:16
+  input  [3:0]  io_FU_outputs_0_bits_FTQ_index,	// src/main/scala/Frontend/frontend.scala:45:16
   input  [1:0]  io_FU_outputs_0_bits_fetch_packet_index,	// src/main/scala/Frontend/frontend.scala:45:16
   input         io_FU_outputs_1_valid,	// src/main/scala/Frontend/frontend.scala:45:16
   input  [6:0]  io_FU_outputs_1_bits_RD,	// src/main/scala/Frontend/frontend.scala:45:16
@@ -179,7 +194,14 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
   input         io_FU_outputs_1_bits_branch_taken,	// src/main/scala/Frontend/frontend.scala:45:16
   input  [31:0] io_FU_outputs_1_bits_target_address,	// src/main/scala/Frontend/frontend.scala:45:16
   input         io_FU_outputs_1_bits_branch_valid,	// src/main/scala/Frontend/frontend.scala:45:16
+  input  [31:0] io_FU_outputs_1_bits_address,	// src/main/scala/Frontend/frontend.scala:45:16
+  input  [1:0]  io_FU_outputs_1_bits_memory_type,	// src/main/scala/Frontend/frontend.scala:45:16
+                io_FU_outputs_1_bits_access_width,	// src/main/scala/Frontend/frontend.scala:45:16
+  input         io_FU_outputs_1_bits_unsigned,	// src/main/scala/Frontend/frontend.scala:45:16
+  input  [31:0] io_FU_outputs_1_bits_wr_data,	// src/main/scala/Frontend/frontend.scala:45:16
+  input  [3:0]  io_FU_outputs_1_bits_MOB_index,	// src/main/scala/Frontend/frontend.scala:45:16
   input  [5:0]  io_FU_outputs_1_bits_ROB_index,	// src/main/scala/Frontend/frontend.scala:45:16
+  input  [3:0]  io_FU_outputs_1_bits_FTQ_index,	// src/main/scala/Frontend/frontend.scala:45:16
   input  [1:0]  io_FU_outputs_1_bits_fetch_packet_index,	// src/main/scala/Frontend/frontend.scala:45:16
   input         io_FU_outputs_2_valid,	// src/main/scala/Frontend/frontend.scala:45:16
   input  [6:0]  io_FU_outputs_2_bits_RD,	// src/main/scala/Frontend/frontend.scala:45:16
@@ -189,24 +211,41 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
   input         io_FU_outputs_2_bits_branch_taken,	// src/main/scala/Frontend/frontend.scala:45:16
   input  [31:0] io_FU_outputs_2_bits_target_address,	// src/main/scala/Frontend/frontend.scala:45:16
   input         io_FU_outputs_2_bits_branch_valid,	// src/main/scala/Frontend/frontend.scala:45:16
+  input  [31:0] io_FU_outputs_2_bits_address,	// src/main/scala/Frontend/frontend.scala:45:16
+  input  [1:0]  io_FU_outputs_2_bits_memory_type,	// src/main/scala/Frontend/frontend.scala:45:16
+                io_FU_outputs_2_bits_access_width,	// src/main/scala/Frontend/frontend.scala:45:16
+  input         io_FU_outputs_2_bits_unsigned,	// src/main/scala/Frontend/frontend.scala:45:16
+  input  [31:0] io_FU_outputs_2_bits_wr_data,	// src/main/scala/Frontend/frontend.scala:45:16
+  input  [3:0]  io_FU_outputs_2_bits_MOB_index,	// src/main/scala/Frontend/frontend.scala:45:16
   input  [5:0]  io_FU_outputs_2_bits_ROB_index,	// src/main/scala/Frontend/frontend.scala:45:16
+  input  [3:0]  io_FU_outputs_2_bits_FTQ_index,	// src/main/scala/Frontend/frontend.scala:45:16
   input  [1:0]  io_FU_outputs_2_bits_fetch_packet_index,	// src/main/scala/Frontend/frontend.scala:45:16
   input         io_FU_outputs_3_valid,	// src/main/scala/Frontend/frontend.scala:45:16
   input  [6:0]  io_FU_outputs_3_bits_RD,	// src/main/scala/Frontend/frontend.scala:45:16
-  input  [31:0] io_FU_outputs_3_bits_RD_data,	// src/main/scala/Frontend/frontend.scala:45:16
-  input         io_FU_outputs_3_bits_RD_valid,	// src/main/scala/Frontend/frontend.scala:45:16
-  input  [31:0] io_FU_outputs_3_bits_fetch_PC,	// src/main/scala/Frontend/frontend.scala:45:16
-  input         io_FU_outputs_3_bits_branch_taken,	// src/main/scala/Frontend/frontend.scala:45:16
-  input  [31:0] io_FU_outputs_3_bits_target_address,	// src/main/scala/Frontend/frontend.scala:45:16
-  input         io_FU_outputs_3_bits_branch_valid,	// src/main/scala/Frontend/frontend.scala:45:16
-  input  [5:0]  io_FU_outputs_3_bits_ROB_index,	// src/main/scala/Frontend/frontend.scala:45:16
-  input  [1:0]  io_FU_outputs_3_bits_fetch_packet_index,	// src/main/scala/Frontend/frontend.scala:45:16
+  input  [31:0] io_FU_outputs_3_bits_address,	// src/main/scala/Frontend/frontend.scala:45:16
+  input  [1:0]  io_FU_outputs_3_bits_memory_type,	// src/main/scala/Frontend/frontend.scala:45:16
+                io_FU_outputs_3_bits_access_width,	// src/main/scala/Frontend/frontend.scala:45:16
+  input         io_FU_outputs_3_bits_unsigned,	// src/main/scala/Frontend/frontend.scala:45:16
+  input  [31:0] io_FU_outputs_3_bits_wr_data,	// src/main/scala/Frontend/frontend.scala:45:16
   output        io_revert_valid,	// src/main/scala/Frontend/frontend.scala:45:16
   output [31:0] io_revert_bits_PC	// src/main/scala/Frontend/frontend.scala:45:16
 );
 
+  wire        _rename_io_predictions_in_ready;	// src/main/scala/Frontend/frontend.scala:82:37
   wire        _rename_io_decoded_fetch_packet_ready;	// src/main/scala/Frontend/frontend.scala:82:37
   wire        _FTQ_queue_io_in_ready;	// src/main/scala/Frontend/frontend.scala:80:37
+  wire        _FTQ_queue_io_out_valid;	// src/main/scala/Frontend/frontend.scala:80:37
+  wire        _FTQ_queue_io_out_bits_valid;	// src/main/scala/Frontend/frontend.scala:80:37
+  wire [31:0] _FTQ_queue_io_out_bits_fetch_PC;	// src/main/scala/Frontend/frontend.scala:80:37
+  wire        _FTQ_queue_io_out_bits_is_misprediction;	// src/main/scala/Frontend/frontend.scala:80:37
+  wire [31:0] _FTQ_queue_io_out_bits_predicted_PC;	// src/main/scala/Frontend/frontend.scala:80:37
+  wire        _FTQ_queue_io_out_bits_T_NT;	// src/main/scala/Frontend/frontend.scala:80:37
+  wire [2:0]  _FTQ_queue_io_out_bits_br_type;	// src/main/scala/Frontend/frontend.scala:80:37
+  wire [15:0] _FTQ_queue_io_out_bits_GHR;	// src/main/scala/Frontend/frontend.scala:80:37
+  wire [6:0]  _FTQ_queue_io_out_bits_NEXT;	// src/main/scala/Frontend/frontend.scala:80:37
+  wire [6:0]  _FTQ_queue_io_out_bits_TOS;	// src/main/scala/Frontend/frontend.scala:80:37
+  wire [1:0]  _FTQ_queue_io_out_bits_dominant_index;	// src/main/scala/Frontend/frontend.scala:80:37
+  wire [31:0] _FTQ_queue_io_out_bits_resolved_PC;	// src/main/scala/Frontend/frontend.scala:80:37
   wire        _instruction_queue_io_in_ready;	// src/main/scala/Frontend/frontend.scala:79:37
   wire        _instruction_queue_io_out_valid;	// src/main/scala/Frontend/frontend.scala:79:37
   wire [31:0] _instruction_queue_io_out_bits_fetch_PC;	// src/main/scala/Frontend/frontend.scala:79:37
@@ -222,6 +261,8 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
   wire [2:0]  _instruction_queue_io_out_bits_decoded_instruction_0_FUNCT3;	// src/main/scala/Frontend/frontend.scala:79:37
   wire [1:0]  _instruction_queue_io_out_bits_decoded_instruction_0_packet_index;	// src/main/scala/Frontend/frontend.scala:79:37
   wire [5:0]  _instruction_queue_io_out_bits_decoded_instruction_0_ROB_index;	// src/main/scala/Frontend/frontend.scala:79:37
+  wire [3:0]  _instruction_queue_io_out_bits_decoded_instruction_0_MOB_index;	// src/main/scala/Frontend/frontend.scala:79:37
+  wire [3:0]  _instruction_queue_io_out_bits_decoded_instruction_0_FTQ_index;	// src/main/scala/Frontend/frontend.scala:79:37
   wire [4:0]  _instruction_queue_io_out_bits_decoded_instruction_0_instructionType;	// src/main/scala/Frontend/frontend.scala:79:37
   wire [1:0]  _instruction_queue_io_out_bits_decoded_instruction_0_portID;	// src/main/scala/Frontend/frontend.scala:79:37
   wire [1:0]  _instruction_queue_io_out_bits_decoded_instruction_0_RS_type;	// src/main/scala/Frontend/frontend.scala:79:37
@@ -231,8 +272,8 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
   wire        _instruction_queue_io_out_bits_decoded_instruction_0_SUBTRACT;	// src/main/scala/Frontend/frontend.scala:79:37
   wire        _instruction_queue_io_out_bits_decoded_instruction_0_MULTIPLY;	// src/main/scala/Frontend/frontend.scala:79:37
   wire        _instruction_queue_io_out_bits_decoded_instruction_0_IS_IMM;	// src/main/scala/Frontend/frontend.scala:79:37
-  wire        _instruction_queue_io_out_bits_decoded_instruction_0_is_load;	// src/main/scala/Frontend/frontend.scala:79:37
-  wire        _instruction_queue_io_out_bits_decoded_instruction_0_is_store;	// src/main/scala/Frontend/frontend.scala:79:37
+  wire [1:0]  _instruction_queue_io_out_bits_decoded_instruction_0_memory_type;	// src/main/scala/Frontend/frontend.scala:79:37
+  wire [1:0]  _instruction_queue_io_out_bits_decoded_instruction_0_access_width;	// src/main/scala/Frontend/frontend.scala:79:37
   wire        _instruction_queue_io_out_bits_decoded_instruction_1_ready_bits_RS1_ready;	// src/main/scala/Frontend/frontend.scala:79:37
   wire        _instruction_queue_io_out_bits_decoded_instruction_1_ready_bits_RS2_ready;	// src/main/scala/Frontend/frontend.scala:79:37
   wire [6:0]  _instruction_queue_io_out_bits_decoded_instruction_1_RD;	// src/main/scala/Frontend/frontend.scala:79:37
@@ -245,6 +286,8 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
   wire [2:0]  _instruction_queue_io_out_bits_decoded_instruction_1_FUNCT3;	// src/main/scala/Frontend/frontend.scala:79:37
   wire [1:0]  _instruction_queue_io_out_bits_decoded_instruction_1_packet_index;	// src/main/scala/Frontend/frontend.scala:79:37
   wire [5:0]  _instruction_queue_io_out_bits_decoded_instruction_1_ROB_index;	// src/main/scala/Frontend/frontend.scala:79:37
+  wire [3:0]  _instruction_queue_io_out_bits_decoded_instruction_1_MOB_index;	// src/main/scala/Frontend/frontend.scala:79:37
+  wire [3:0]  _instruction_queue_io_out_bits_decoded_instruction_1_FTQ_index;	// src/main/scala/Frontend/frontend.scala:79:37
   wire [4:0]  _instruction_queue_io_out_bits_decoded_instruction_1_instructionType;	// src/main/scala/Frontend/frontend.scala:79:37
   wire [1:0]  _instruction_queue_io_out_bits_decoded_instruction_1_portID;	// src/main/scala/Frontend/frontend.scala:79:37
   wire [1:0]  _instruction_queue_io_out_bits_decoded_instruction_1_RS_type;	// src/main/scala/Frontend/frontend.scala:79:37
@@ -254,8 +297,8 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
   wire        _instruction_queue_io_out_bits_decoded_instruction_1_SUBTRACT;	// src/main/scala/Frontend/frontend.scala:79:37
   wire        _instruction_queue_io_out_bits_decoded_instruction_1_MULTIPLY;	// src/main/scala/Frontend/frontend.scala:79:37
   wire        _instruction_queue_io_out_bits_decoded_instruction_1_IS_IMM;	// src/main/scala/Frontend/frontend.scala:79:37
-  wire        _instruction_queue_io_out_bits_decoded_instruction_1_is_load;	// src/main/scala/Frontend/frontend.scala:79:37
-  wire        _instruction_queue_io_out_bits_decoded_instruction_1_is_store;	// src/main/scala/Frontend/frontend.scala:79:37
+  wire [1:0]  _instruction_queue_io_out_bits_decoded_instruction_1_memory_type;	// src/main/scala/Frontend/frontend.scala:79:37
+  wire [1:0]  _instruction_queue_io_out_bits_decoded_instruction_1_access_width;	// src/main/scala/Frontend/frontend.scala:79:37
   wire        _instruction_queue_io_out_bits_decoded_instruction_2_ready_bits_RS1_ready;	// src/main/scala/Frontend/frontend.scala:79:37
   wire        _instruction_queue_io_out_bits_decoded_instruction_2_ready_bits_RS2_ready;	// src/main/scala/Frontend/frontend.scala:79:37
   wire [6:0]  _instruction_queue_io_out_bits_decoded_instruction_2_RD;	// src/main/scala/Frontend/frontend.scala:79:37
@@ -268,6 +311,8 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
   wire [2:0]  _instruction_queue_io_out_bits_decoded_instruction_2_FUNCT3;	// src/main/scala/Frontend/frontend.scala:79:37
   wire [1:0]  _instruction_queue_io_out_bits_decoded_instruction_2_packet_index;	// src/main/scala/Frontend/frontend.scala:79:37
   wire [5:0]  _instruction_queue_io_out_bits_decoded_instruction_2_ROB_index;	// src/main/scala/Frontend/frontend.scala:79:37
+  wire [3:0]  _instruction_queue_io_out_bits_decoded_instruction_2_MOB_index;	// src/main/scala/Frontend/frontend.scala:79:37
+  wire [3:0]  _instruction_queue_io_out_bits_decoded_instruction_2_FTQ_index;	// src/main/scala/Frontend/frontend.scala:79:37
   wire [4:0]  _instruction_queue_io_out_bits_decoded_instruction_2_instructionType;	// src/main/scala/Frontend/frontend.scala:79:37
   wire [1:0]  _instruction_queue_io_out_bits_decoded_instruction_2_portID;	// src/main/scala/Frontend/frontend.scala:79:37
   wire [1:0]  _instruction_queue_io_out_bits_decoded_instruction_2_RS_type;	// src/main/scala/Frontend/frontend.scala:79:37
@@ -277,8 +322,8 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
   wire        _instruction_queue_io_out_bits_decoded_instruction_2_SUBTRACT;	// src/main/scala/Frontend/frontend.scala:79:37
   wire        _instruction_queue_io_out_bits_decoded_instruction_2_MULTIPLY;	// src/main/scala/Frontend/frontend.scala:79:37
   wire        _instruction_queue_io_out_bits_decoded_instruction_2_IS_IMM;	// src/main/scala/Frontend/frontend.scala:79:37
-  wire        _instruction_queue_io_out_bits_decoded_instruction_2_is_load;	// src/main/scala/Frontend/frontend.scala:79:37
-  wire        _instruction_queue_io_out_bits_decoded_instruction_2_is_store;	// src/main/scala/Frontend/frontend.scala:79:37
+  wire [1:0]  _instruction_queue_io_out_bits_decoded_instruction_2_memory_type;	// src/main/scala/Frontend/frontend.scala:79:37
+  wire [1:0]  _instruction_queue_io_out_bits_decoded_instruction_2_access_width;	// src/main/scala/Frontend/frontend.scala:79:37
   wire        _instruction_queue_io_out_bits_decoded_instruction_3_ready_bits_RS1_ready;	// src/main/scala/Frontend/frontend.scala:79:37
   wire        _instruction_queue_io_out_bits_decoded_instruction_3_ready_bits_RS2_ready;	// src/main/scala/Frontend/frontend.scala:79:37
   wire [6:0]  _instruction_queue_io_out_bits_decoded_instruction_3_RD;	// src/main/scala/Frontend/frontend.scala:79:37
@@ -291,6 +336,8 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
   wire [2:0]  _instruction_queue_io_out_bits_decoded_instruction_3_FUNCT3;	// src/main/scala/Frontend/frontend.scala:79:37
   wire [1:0]  _instruction_queue_io_out_bits_decoded_instruction_3_packet_index;	// src/main/scala/Frontend/frontend.scala:79:37
   wire [5:0]  _instruction_queue_io_out_bits_decoded_instruction_3_ROB_index;	// src/main/scala/Frontend/frontend.scala:79:37
+  wire [3:0]  _instruction_queue_io_out_bits_decoded_instruction_3_MOB_index;	// src/main/scala/Frontend/frontend.scala:79:37
+  wire [3:0]  _instruction_queue_io_out_bits_decoded_instruction_3_FTQ_index;	// src/main/scala/Frontend/frontend.scala:79:37
   wire [4:0]  _instruction_queue_io_out_bits_decoded_instruction_3_instructionType;	// src/main/scala/Frontend/frontend.scala:79:37
   wire [1:0]  _instruction_queue_io_out_bits_decoded_instruction_3_portID;	// src/main/scala/Frontend/frontend.scala:79:37
   wire [1:0]  _instruction_queue_io_out_bits_decoded_instruction_3_RS_type;	// src/main/scala/Frontend/frontend.scala:79:37
@@ -300,8 +347,8 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
   wire        _instruction_queue_io_out_bits_decoded_instruction_3_SUBTRACT;	// src/main/scala/Frontend/frontend.scala:79:37
   wire        _instruction_queue_io_out_bits_decoded_instruction_3_MULTIPLY;	// src/main/scala/Frontend/frontend.scala:79:37
   wire        _instruction_queue_io_out_bits_decoded_instruction_3_IS_IMM;	// src/main/scala/Frontend/frontend.scala:79:37
-  wire        _instruction_queue_io_out_bits_decoded_instruction_3_is_load;	// src/main/scala/Frontend/frontend.scala:79:37
-  wire        _instruction_queue_io_out_bits_decoded_instruction_3_is_store;	// src/main/scala/Frontend/frontend.scala:79:37
+  wire [1:0]  _instruction_queue_io_out_bits_decoded_instruction_3_memory_type;	// src/main/scala/Frontend/frontend.scala:79:37
+  wire [1:0]  _instruction_queue_io_out_bits_decoded_instruction_3_access_width;	// src/main/scala/Frontend/frontend.scala:79:37
   wire        _instruction_queue_io_out_bits_valid_bits_0;	// src/main/scala/Frontend/frontend.scala:79:37
   wire        _instruction_queue_io_out_bits_valid_bits_1;	// src/main/scala/Frontend/frontend.scala:79:37
   wire        _instruction_queue_io_out_bits_valid_bits_2;	// src/main/scala/Frontend/frontend.scala:79:37
@@ -326,6 +373,8 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
   wire [2:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_FUNCT3;	// src/main/scala/Frontend/frontend.scala:77:37
   wire [1:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_packet_index;	// src/main/scala/Frontend/frontend.scala:77:37
   wire [5:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_ROB_index;	// src/main/scala/Frontend/frontend.scala:77:37
+  wire [3:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_MOB_index;	// src/main/scala/Frontend/frontend.scala:77:37
+  wire [3:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_FTQ_index;	// src/main/scala/Frontend/frontend.scala:77:37
   wire [4:0]
     _decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_instructionType;	// src/main/scala/Frontend/frontend.scala:77:37
   wire [1:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_portID;	// src/main/scala/Frontend/frontend.scala:77:37
@@ -337,8 +386,8 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
   wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_SUBTRACT;	// src/main/scala/Frontend/frontend.scala:77:37
   wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_MULTIPLY;	// src/main/scala/Frontend/frontend.scala:77:37
   wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_IS_IMM;	// src/main/scala/Frontend/frontend.scala:77:37
-  wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_is_load;	// src/main/scala/Frontend/frontend.scala:77:37
-  wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_is_store;	// src/main/scala/Frontend/frontend.scala:77:37
+  wire [1:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_memory_type;	// src/main/scala/Frontend/frontend.scala:77:37
+  wire [1:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_access_width;	// src/main/scala/Frontend/frontend.scala:77:37
   wire
     _decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS1_ready;	// src/main/scala/Frontend/frontend.scala:77:37
   wire
@@ -353,6 +402,8 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
   wire [2:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_FUNCT3;	// src/main/scala/Frontend/frontend.scala:77:37
   wire [1:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_packet_index;	// src/main/scala/Frontend/frontend.scala:77:37
   wire [5:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_ROB_index;	// src/main/scala/Frontend/frontend.scala:77:37
+  wire [3:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_MOB_index;	// src/main/scala/Frontend/frontend.scala:77:37
+  wire [3:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_FTQ_index;	// src/main/scala/Frontend/frontend.scala:77:37
   wire [4:0]
     _decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_instructionType;	// src/main/scala/Frontend/frontend.scala:77:37
   wire [1:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_portID;	// src/main/scala/Frontend/frontend.scala:77:37
@@ -364,8 +415,8 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
   wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_SUBTRACT;	// src/main/scala/Frontend/frontend.scala:77:37
   wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_MULTIPLY;	// src/main/scala/Frontend/frontend.scala:77:37
   wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_IS_IMM;	// src/main/scala/Frontend/frontend.scala:77:37
-  wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_is_load;	// src/main/scala/Frontend/frontend.scala:77:37
-  wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_is_store;	// src/main/scala/Frontend/frontend.scala:77:37
+  wire [1:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_memory_type;	// src/main/scala/Frontend/frontend.scala:77:37
+  wire [1:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_access_width;	// src/main/scala/Frontend/frontend.scala:77:37
   wire
     _decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS1_ready;	// src/main/scala/Frontend/frontend.scala:77:37
   wire
@@ -380,6 +431,8 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
   wire [2:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_FUNCT3;	// src/main/scala/Frontend/frontend.scala:77:37
   wire [1:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_packet_index;	// src/main/scala/Frontend/frontend.scala:77:37
   wire [5:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_ROB_index;	// src/main/scala/Frontend/frontend.scala:77:37
+  wire [3:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_MOB_index;	// src/main/scala/Frontend/frontend.scala:77:37
+  wire [3:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_FTQ_index;	// src/main/scala/Frontend/frontend.scala:77:37
   wire [4:0]
     _decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_instructionType;	// src/main/scala/Frontend/frontend.scala:77:37
   wire [1:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_portID;	// src/main/scala/Frontend/frontend.scala:77:37
@@ -391,8 +444,8 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
   wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_SUBTRACT;	// src/main/scala/Frontend/frontend.scala:77:37
   wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_MULTIPLY;	// src/main/scala/Frontend/frontend.scala:77:37
   wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_IS_IMM;	// src/main/scala/Frontend/frontend.scala:77:37
-  wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_is_load;	// src/main/scala/Frontend/frontend.scala:77:37
-  wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_is_store;	// src/main/scala/Frontend/frontend.scala:77:37
+  wire [1:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_memory_type;	// src/main/scala/Frontend/frontend.scala:77:37
+  wire [1:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_access_width;	// src/main/scala/Frontend/frontend.scala:77:37
   wire
     _decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS1_ready;	// src/main/scala/Frontend/frontend.scala:77:37
   wire
@@ -407,6 +460,8 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
   wire [2:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_FUNCT3;	// src/main/scala/Frontend/frontend.scala:77:37
   wire [1:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_packet_index;	// src/main/scala/Frontend/frontend.scala:77:37
   wire [5:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_ROB_index;	// src/main/scala/Frontend/frontend.scala:77:37
+  wire [3:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_MOB_index;	// src/main/scala/Frontend/frontend.scala:77:37
+  wire [3:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_FTQ_index;	// src/main/scala/Frontend/frontend.scala:77:37
   wire [4:0]
     _decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_instructionType;	// src/main/scala/Frontend/frontend.scala:77:37
   wire [1:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_portID;	// src/main/scala/Frontend/frontend.scala:77:37
@@ -418,8 +473,8 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
   wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_SUBTRACT;	// src/main/scala/Frontend/frontend.scala:77:37
   wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_MULTIPLY;	// src/main/scala/Frontend/frontend.scala:77:37
   wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_IS_IMM;	// src/main/scala/Frontend/frontend.scala:77:37
-  wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_is_load;	// src/main/scala/Frontend/frontend.scala:77:37
-  wire        _decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_is_store;	// src/main/scala/Frontend/frontend.scala:77:37
+  wire [1:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_memory_type;	// src/main/scala/Frontend/frontend.scala:77:37
+  wire [1:0]  _decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_access_width;	// src/main/scala/Frontend/frontend.scala:77:37
   wire        _decoders_io_decoded_fetch_packet_bits_valid_bits_0;	// src/main/scala/Frontend/frontend.scala:77:37
   wire        _decoders_io_decoded_fetch_packet_bits_valid_bits_1;	// src/main/scala/Frontend/frontend.scala:77:37
   wire        _decoders_io_decoded_fetch_packet_bits_valid_bits_2;	// src/main/scala/Frontend/frontend.scala:77:37
@@ -446,16 +501,12 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
   wire        _instruction_fetch_io_fetch_packet_bits_valid_bits_3;	// src/main/scala/Frontend/frontend.scala:76:37
   wire [31:0] _instruction_fetch_io_fetch_packet_bits_instructions_0_instruction;	// src/main/scala/Frontend/frontend.scala:76:37
   wire [3:0]  _instruction_fetch_io_fetch_packet_bits_instructions_0_packet_index;	// src/main/scala/Frontend/frontend.scala:76:37
-  wire [5:0]  _instruction_fetch_io_fetch_packet_bits_instructions_0_ROB_index;	// src/main/scala/Frontend/frontend.scala:76:37
   wire [31:0] _instruction_fetch_io_fetch_packet_bits_instructions_1_instruction;	// src/main/scala/Frontend/frontend.scala:76:37
   wire [3:0]  _instruction_fetch_io_fetch_packet_bits_instructions_1_packet_index;	// src/main/scala/Frontend/frontend.scala:76:37
-  wire [5:0]  _instruction_fetch_io_fetch_packet_bits_instructions_1_ROB_index;	// src/main/scala/Frontend/frontend.scala:76:37
   wire [31:0] _instruction_fetch_io_fetch_packet_bits_instructions_2_instruction;	// src/main/scala/Frontend/frontend.scala:76:37
   wire [3:0]  _instruction_fetch_io_fetch_packet_bits_instructions_2_packet_index;	// src/main/scala/Frontend/frontend.scala:76:37
-  wire [5:0]  _instruction_fetch_io_fetch_packet_bits_instructions_2_ROB_index;	// src/main/scala/Frontend/frontend.scala:76:37
   wire [31:0] _instruction_fetch_io_fetch_packet_bits_instructions_3_instruction;	// src/main/scala/Frontend/frontend.scala:76:37
   wire [3:0]  _instruction_fetch_io_fetch_packet_bits_instructions_3_packet_index;	// src/main/scala/Frontend/frontend.scala:76:37
-  wire [5:0]  _instruction_fetch_io_fetch_packet_bits_instructions_3_ROB_index;	// src/main/scala/Frontend/frontend.scala:76:37
   wire        _instruction_fetch_io_predictions_valid;	// src/main/scala/Frontend/frontend.scala:76:37
   wire        _instruction_fetch_io_predictions_bits_valid;	// src/main/scala/Frontend/frontend.scala:76:37
   wire [31:0] _instruction_fetch_io_predictions_bits_fetch_PC;	// src/main/scala/Frontend/frontend.scala:76:37
@@ -555,26 +606,18 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (_instruction_fetch_io_fetch_packet_bits_instructions_0_instruction),
     .io_fetch_packet_bits_instructions_0_packet_index
       (_instruction_fetch_io_fetch_packet_bits_instructions_0_packet_index),
-    .io_fetch_packet_bits_instructions_0_ROB_index
-      (_instruction_fetch_io_fetch_packet_bits_instructions_0_ROB_index),
     .io_fetch_packet_bits_instructions_1_instruction
       (_instruction_fetch_io_fetch_packet_bits_instructions_1_instruction),
     .io_fetch_packet_bits_instructions_1_packet_index
       (_instruction_fetch_io_fetch_packet_bits_instructions_1_packet_index),
-    .io_fetch_packet_bits_instructions_1_ROB_index
-      (_instruction_fetch_io_fetch_packet_bits_instructions_1_ROB_index),
     .io_fetch_packet_bits_instructions_2_instruction
       (_instruction_fetch_io_fetch_packet_bits_instructions_2_instruction),
     .io_fetch_packet_bits_instructions_2_packet_index
       (_instruction_fetch_io_fetch_packet_bits_instructions_2_packet_index),
-    .io_fetch_packet_bits_instructions_2_ROB_index
-      (_instruction_fetch_io_fetch_packet_bits_instructions_2_ROB_index),
     .io_fetch_packet_bits_instructions_3_instruction
       (_instruction_fetch_io_fetch_packet_bits_instructions_3_instruction),
     .io_fetch_packet_bits_instructions_3_packet_index
       (_instruction_fetch_io_fetch_packet_bits_instructions_3_packet_index),
-    .io_fetch_packet_bits_instructions_3_ROB_index
-      (_instruction_fetch_io_fetch_packet_bits_instructions_3_ROB_index),
     .io_predictions_ready
       (_decoders_io_predictions_in_ready),	// src/main/scala/Frontend/frontend.scala:77:37
     .io_predictions_valid
@@ -626,26 +669,18 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (_instruction_fetch_io_fetch_packet_bits_instructions_0_instruction),	// src/main/scala/Frontend/frontend.scala:76:37
     .io_fetch_packet_bits_instructions_0_packet_index
       (_instruction_fetch_io_fetch_packet_bits_instructions_0_packet_index),	// src/main/scala/Frontend/frontend.scala:76:37
-    .io_fetch_packet_bits_instructions_0_ROB_index
-      (_instruction_fetch_io_fetch_packet_bits_instructions_0_ROB_index),	// src/main/scala/Frontend/frontend.scala:76:37
     .io_fetch_packet_bits_instructions_1_instruction
       (_instruction_fetch_io_fetch_packet_bits_instructions_1_instruction),	// src/main/scala/Frontend/frontend.scala:76:37
     .io_fetch_packet_bits_instructions_1_packet_index
       (_instruction_fetch_io_fetch_packet_bits_instructions_1_packet_index),	// src/main/scala/Frontend/frontend.scala:76:37
-    .io_fetch_packet_bits_instructions_1_ROB_index
-      (_instruction_fetch_io_fetch_packet_bits_instructions_1_ROB_index),	// src/main/scala/Frontend/frontend.scala:76:37
     .io_fetch_packet_bits_instructions_2_instruction
       (_instruction_fetch_io_fetch_packet_bits_instructions_2_instruction),	// src/main/scala/Frontend/frontend.scala:76:37
     .io_fetch_packet_bits_instructions_2_packet_index
       (_instruction_fetch_io_fetch_packet_bits_instructions_2_packet_index),	// src/main/scala/Frontend/frontend.scala:76:37
-    .io_fetch_packet_bits_instructions_2_ROB_index
-      (_instruction_fetch_io_fetch_packet_bits_instructions_2_ROB_index),	// src/main/scala/Frontend/frontend.scala:76:37
     .io_fetch_packet_bits_instructions_3_instruction
       (_instruction_fetch_io_fetch_packet_bits_instructions_3_instruction),	// src/main/scala/Frontend/frontend.scala:76:37
     .io_fetch_packet_bits_instructions_3_packet_index
       (_instruction_fetch_io_fetch_packet_bits_instructions_3_packet_index),	// src/main/scala/Frontend/frontend.scala:76:37
-    .io_fetch_packet_bits_instructions_3_ROB_index
-      (_instruction_fetch_io_fetch_packet_bits_instructions_3_ROB_index),	// src/main/scala/Frontend/frontend.scala:76:37
     .io_predictions_in_ready
       (_decoders_io_predictions_in_ready),
     .io_predictions_in_valid
@@ -702,6 +737,10 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_packet_index),
     .io_decoded_fetch_packet_bits_decoded_instruction_0_ROB_index
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_ROB_index),
+    .io_decoded_fetch_packet_bits_decoded_instruction_0_MOB_index
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_MOB_index),
+    .io_decoded_fetch_packet_bits_decoded_instruction_0_FTQ_index
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_FTQ_index),
     .io_decoded_fetch_packet_bits_decoded_instruction_0_instructionType
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_instructionType),
     .io_decoded_fetch_packet_bits_decoded_instruction_0_portID
@@ -720,10 +759,10 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_MULTIPLY),
     .io_decoded_fetch_packet_bits_decoded_instruction_0_IS_IMM
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_IS_IMM),
-    .io_decoded_fetch_packet_bits_decoded_instruction_0_is_load
-      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_is_load),
-    .io_decoded_fetch_packet_bits_decoded_instruction_0_is_store
-      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_is_store),
+    .io_decoded_fetch_packet_bits_decoded_instruction_0_memory_type
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_memory_type),
+    .io_decoded_fetch_packet_bits_decoded_instruction_0_access_width
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_access_width),
     .io_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS1_ready
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS1_ready),
     .io_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS2_ready
@@ -748,6 +787,10 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_packet_index),
     .io_decoded_fetch_packet_bits_decoded_instruction_1_ROB_index
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_ROB_index),
+    .io_decoded_fetch_packet_bits_decoded_instruction_1_MOB_index
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_MOB_index),
+    .io_decoded_fetch_packet_bits_decoded_instruction_1_FTQ_index
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_FTQ_index),
     .io_decoded_fetch_packet_bits_decoded_instruction_1_instructionType
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_instructionType),
     .io_decoded_fetch_packet_bits_decoded_instruction_1_portID
@@ -766,10 +809,10 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_MULTIPLY),
     .io_decoded_fetch_packet_bits_decoded_instruction_1_IS_IMM
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_IS_IMM),
-    .io_decoded_fetch_packet_bits_decoded_instruction_1_is_load
-      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_is_load),
-    .io_decoded_fetch_packet_bits_decoded_instruction_1_is_store
-      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_is_store),
+    .io_decoded_fetch_packet_bits_decoded_instruction_1_memory_type
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_memory_type),
+    .io_decoded_fetch_packet_bits_decoded_instruction_1_access_width
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_access_width),
     .io_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS1_ready
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS1_ready),
     .io_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS2_ready
@@ -794,6 +837,10 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_packet_index),
     .io_decoded_fetch_packet_bits_decoded_instruction_2_ROB_index
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_ROB_index),
+    .io_decoded_fetch_packet_bits_decoded_instruction_2_MOB_index
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_MOB_index),
+    .io_decoded_fetch_packet_bits_decoded_instruction_2_FTQ_index
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_FTQ_index),
     .io_decoded_fetch_packet_bits_decoded_instruction_2_instructionType
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_instructionType),
     .io_decoded_fetch_packet_bits_decoded_instruction_2_portID
@@ -812,10 +859,10 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_MULTIPLY),
     .io_decoded_fetch_packet_bits_decoded_instruction_2_IS_IMM
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_IS_IMM),
-    .io_decoded_fetch_packet_bits_decoded_instruction_2_is_load
-      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_is_load),
-    .io_decoded_fetch_packet_bits_decoded_instruction_2_is_store
-      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_is_store),
+    .io_decoded_fetch_packet_bits_decoded_instruction_2_memory_type
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_memory_type),
+    .io_decoded_fetch_packet_bits_decoded_instruction_2_access_width
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_access_width),
     .io_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS1_ready
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS1_ready),
     .io_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS2_ready
@@ -840,6 +887,10 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_packet_index),
     .io_decoded_fetch_packet_bits_decoded_instruction_3_ROB_index
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_ROB_index),
+    .io_decoded_fetch_packet_bits_decoded_instruction_3_MOB_index
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_MOB_index),
+    .io_decoded_fetch_packet_bits_decoded_instruction_3_FTQ_index
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_FTQ_index),
     .io_decoded_fetch_packet_bits_decoded_instruction_3_instructionType
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_instructionType),
     .io_decoded_fetch_packet_bits_decoded_instruction_3_portID
@@ -858,10 +909,10 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_MULTIPLY),
     .io_decoded_fetch_packet_bits_decoded_instruction_3_IS_IMM
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_IS_IMM),
-    .io_decoded_fetch_packet_bits_decoded_instruction_3_is_load
-      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_is_load),
-    .io_decoded_fetch_packet_bits_decoded_instruction_3_is_store
-      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_is_store),
+    .io_decoded_fetch_packet_bits_decoded_instruction_3_memory_type
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_memory_type),
+    .io_decoded_fetch_packet_bits_decoded_instruction_3_access_width
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_access_width),
     .io_decoded_fetch_packet_bits_valid_bits_0
       (_decoders_io_decoded_fetch_packet_bits_valid_bits_0),
     .io_decoded_fetch_packet_bits_valid_bits_1
@@ -907,7 +958,7 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
     .io_in_ready
       (_instruction_queue_io_in_ready),
     .io_in_valid
-      (_decoders_io_decoded_fetch_packet_valid & _FTQ_queue_io_in_ready),	// src/main/scala/Frontend/frontend.scala:77:37, :80:37, :150:79
+      (_decoders_io_decoded_fetch_packet_valid & _FTQ_queue_io_in_ready),	// src/main/scala/Frontend/frontend.scala:77:37, :80:37, :142:79
     .io_in_bits_fetch_PC
       (_decoders_io_decoded_fetch_packet_bits_fetch_PC),	// src/main/scala/Frontend/frontend.scala:77:37
     .io_in_bits_decoded_instruction_0_ready_bits_RS1_ready
@@ -934,6 +985,10 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_packet_index),	// src/main/scala/Frontend/frontend.scala:77:37
     .io_in_bits_decoded_instruction_0_ROB_index
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_ROB_index),	// src/main/scala/Frontend/frontend.scala:77:37
+    .io_in_bits_decoded_instruction_0_MOB_index
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_MOB_index),	// src/main/scala/Frontend/frontend.scala:77:37
+    .io_in_bits_decoded_instruction_0_FTQ_index
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_FTQ_index),	// src/main/scala/Frontend/frontend.scala:77:37
     .io_in_bits_decoded_instruction_0_instructionType
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_instructionType),	// src/main/scala/Frontend/frontend.scala:77:37
     .io_in_bits_decoded_instruction_0_portID
@@ -952,10 +1007,10 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_MULTIPLY),	// src/main/scala/Frontend/frontend.scala:77:37
     .io_in_bits_decoded_instruction_0_IS_IMM
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_IS_IMM),	// src/main/scala/Frontend/frontend.scala:77:37
-    .io_in_bits_decoded_instruction_0_is_load
-      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_is_load),	// src/main/scala/Frontend/frontend.scala:77:37
-    .io_in_bits_decoded_instruction_0_is_store
-      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_is_store),	// src/main/scala/Frontend/frontend.scala:77:37
+    .io_in_bits_decoded_instruction_0_memory_type
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_memory_type),	// src/main/scala/Frontend/frontend.scala:77:37
+    .io_in_bits_decoded_instruction_0_access_width
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_0_access_width),	// src/main/scala/Frontend/frontend.scala:77:37
     .io_in_bits_decoded_instruction_1_ready_bits_RS1_ready
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS1_ready),	// src/main/scala/Frontend/frontend.scala:77:37
     .io_in_bits_decoded_instruction_1_ready_bits_RS2_ready
@@ -980,6 +1035,10 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_packet_index),	// src/main/scala/Frontend/frontend.scala:77:37
     .io_in_bits_decoded_instruction_1_ROB_index
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_ROB_index),	// src/main/scala/Frontend/frontend.scala:77:37
+    .io_in_bits_decoded_instruction_1_MOB_index
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_MOB_index),	// src/main/scala/Frontend/frontend.scala:77:37
+    .io_in_bits_decoded_instruction_1_FTQ_index
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_FTQ_index),	// src/main/scala/Frontend/frontend.scala:77:37
     .io_in_bits_decoded_instruction_1_instructionType
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_instructionType),	// src/main/scala/Frontend/frontend.scala:77:37
     .io_in_bits_decoded_instruction_1_portID
@@ -998,10 +1057,10 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_MULTIPLY),	// src/main/scala/Frontend/frontend.scala:77:37
     .io_in_bits_decoded_instruction_1_IS_IMM
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_IS_IMM),	// src/main/scala/Frontend/frontend.scala:77:37
-    .io_in_bits_decoded_instruction_1_is_load
-      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_is_load),	// src/main/scala/Frontend/frontend.scala:77:37
-    .io_in_bits_decoded_instruction_1_is_store
-      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_is_store),	// src/main/scala/Frontend/frontend.scala:77:37
+    .io_in_bits_decoded_instruction_1_memory_type
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_memory_type),	// src/main/scala/Frontend/frontend.scala:77:37
+    .io_in_bits_decoded_instruction_1_access_width
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_1_access_width),	// src/main/scala/Frontend/frontend.scala:77:37
     .io_in_bits_decoded_instruction_2_ready_bits_RS1_ready
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS1_ready),	// src/main/scala/Frontend/frontend.scala:77:37
     .io_in_bits_decoded_instruction_2_ready_bits_RS2_ready
@@ -1026,6 +1085,10 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_packet_index),	// src/main/scala/Frontend/frontend.scala:77:37
     .io_in_bits_decoded_instruction_2_ROB_index
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_ROB_index),	// src/main/scala/Frontend/frontend.scala:77:37
+    .io_in_bits_decoded_instruction_2_MOB_index
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_MOB_index),	// src/main/scala/Frontend/frontend.scala:77:37
+    .io_in_bits_decoded_instruction_2_FTQ_index
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_FTQ_index),	// src/main/scala/Frontend/frontend.scala:77:37
     .io_in_bits_decoded_instruction_2_instructionType
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_instructionType),	// src/main/scala/Frontend/frontend.scala:77:37
     .io_in_bits_decoded_instruction_2_portID
@@ -1044,10 +1107,10 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_MULTIPLY),	// src/main/scala/Frontend/frontend.scala:77:37
     .io_in_bits_decoded_instruction_2_IS_IMM
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_IS_IMM),	// src/main/scala/Frontend/frontend.scala:77:37
-    .io_in_bits_decoded_instruction_2_is_load
-      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_is_load),	// src/main/scala/Frontend/frontend.scala:77:37
-    .io_in_bits_decoded_instruction_2_is_store
-      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_is_store),	// src/main/scala/Frontend/frontend.scala:77:37
+    .io_in_bits_decoded_instruction_2_memory_type
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_memory_type),	// src/main/scala/Frontend/frontend.scala:77:37
+    .io_in_bits_decoded_instruction_2_access_width
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_2_access_width),	// src/main/scala/Frontend/frontend.scala:77:37
     .io_in_bits_decoded_instruction_3_ready_bits_RS1_ready
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS1_ready),	// src/main/scala/Frontend/frontend.scala:77:37
     .io_in_bits_decoded_instruction_3_ready_bits_RS2_ready
@@ -1072,6 +1135,10 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_packet_index),	// src/main/scala/Frontend/frontend.scala:77:37
     .io_in_bits_decoded_instruction_3_ROB_index
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_ROB_index),	// src/main/scala/Frontend/frontend.scala:77:37
+    .io_in_bits_decoded_instruction_3_MOB_index
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_MOB_index),	// src/main/scala/Frontend/frontend.scala:77:37
+    .io_in_bits_decoded_instruction_3_FTQ_index
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_FTQ_index),	// src/main/scala/Frontend/frontend.scala:77:37
     .io_in_bits_decoded_instruction_3_instructionType
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_instructionType),	// src/main/scala/Frontend/frontend.scala:77:37
     .io_in_bits_decoded_instruction_3_portID
@@ -1090,10 +1157,10 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_MULTIPLY),	// src/main/scala/Frontend/frontend.scala:77:37
     .io_in_bits_decoded_instruction_3_IS_IMM
       (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_IS_IMM),	// src/main/scala/Frontend/frontend.scala:77:37
-    .io_in_bits_decoded_instruction_3_is_load
-      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_is_load),	// src/main/scala/Frontend/frontend.scala:77:37
-    .io_in_bits_decoded_instruction_3_is_store
-      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_is_store),	// src/main/scala/Frontend/frontend.scala:77:37
+    .io_in_bits_decoded_instruction_3_memory_type
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_memory_type),	// src/main/scala/Frontend/frontend.scala:77:37
+    .io_in_bits_decoded_instruction_3_access_width
+      (_decoders_io_decoded_fetch_packet_bits_decoded_instruction_3_access_width),	// src/main/scala/Frontend/frontend.scala:77:37
     .io_in_bits_valid_bits_0
       (_decoders_io_decoded_fetch_packet_bits_valid_bits_0),	// src/main/scala/Frontend/frontend.scala:77:37
     .io_in_bits_valid_bits_1
@@ -1136,6 +1203,10 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (_instruction_queue_io_out_bits_decoded_instruction_0_packet_index),
     .io_out_bits_decoded_instruction_0_ROB_index
       (_instruction_queue_io_out_bits_decoded_instruction_0_ROB_index),
+    .io_out_bits_decoded_instruction_0_MOB_index
+      (_instruction_queue_io_out_bits_decoded_instruction_0_MOB_index),
+    .io_out_bits_decoded_instruction_0_FTQ_index
+      (_instruction_queue_io_out_bits_decoded_instruction_0_FTQ_index),
     .io_out_bits_decoded_instruction_0_instructionType
       (_instruction_queue_io_out_bits_decoded_instruction_0_instructionType),
     .io_out_bits_decoded_instruction_0_portID
@@ -1154,10 +1225,10 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (_instruction_queue_io_out_bits_decoded_instruction_0_MULTIPLY),
     .io_out_bits_decoded_instruction_0_IS_IMM
       (_instruction_queue_io_out_bits_decoded_instruction_0_IS_IMM),
-    .io_out_bits_decoded_instruction_0_is_load
-      (_instruction_queue_io_out_bits_decoded_instruction_0_is_load),
-    .io_out_bits_decoded_instruction_0_is_store
-      (_instruction_queue_io_out_bits_decoded_instruction_0_is_store),
+    .io_out_bits_decoded_instruction_0_memory_type
+      (_instruction_queue_io_out_bits_decoded_instruction_0_memory_type),
+    .io_out_bits_decoded_instruction_0_access_width
+      (_instruction_queue_io_out_bits_decoded_instruction_0_access_width),
     .io_out_bits_decoded_instruction_1_ready_bits_RS1_ready
       (_instruction_queue_io_out_bits_decoded_instruction_1_ready_bits_RS1_ready),
     .io_out_bits_decoded_instruction_1_ready_bits_RS2_ready
@@ -1182,6 +1253,10 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (_instruction_queue_io_out_bits_decoded_instruction_1_packet_index),
     .io_out_bits_decoded_instruction_1_ROB_index
       (_instruction_queue_io_out_bits_decoded_instruction_1_ROB_index),
+    .io_out_bits_decoded_instruction_1_MOB_index
+      (_instruction_queue_io_out_bits_decoded_instruction_1_MOB_index),
+    .io_out_bits_decoded_instruction_1_FTQ_index
+      (_instruction_queue_io_out_bits_decoded_instruction_1_FTQ_index),
     .io_out_bits_decoded_instruction_1_instructionType
       (_instruction_queue_io_out_bits_decoded_instruction_1_instructionType),
     .io_out_bits_decoded_instruction_1_portID
@@ -1200,10 +1275,10 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (_instruction_queue_io_out_bits_decoded_instruction_1_MULTIPLY),
     .io_out_bits_decoded_instruction_1_IS_IMM
       (_instruction_queue_io_out_bits_decoded_instruction_1_IS_IMM),
-    .io_out_bits_decoded_instruction_1_is_load
-      (_instruction_queue_io_out_bits_decoded_instruction_1_is_load),
-    .io_out_bits_decoded_instruction_1_is_store
-      (_instruction_queue_io_out_bits_decoded_instruction_1_is_store),
+    .io_out_bits_decoded_instruction_1_memory_type
+      (_instruction_queue_io_out_bits_decoded_instruction_1_memory_type),
+    .io_out_bits_decoded_instruction_1_access_width
+      (_instruction_queue_io_out_bits_decoded_instruction_1_access_width),
     .io_out_bits_decoded_instruction_2_ready_bits_RS1_ready
       (_instruction_queue_io_out_bits_decoded_instruction_2_ready_bits_RS1_ready),
     .io_out_bits_decoded_instruction_2_ready_bits_RS2_ready
@@ -1228,6 +1303,10 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (_instruction_queue_io_out_bits_decoded_instruction_2_packet_index),
     .io_out_bits_decoded_instruction_2_ROB_index
       (_instruction_queue_io_out_bits_decoded_instruction_2_ROB_index),
+    .io_out_bits_decoded_instruction_2_MOB_index
+      (_instruction_queue_io_out_bits_decoded_instruction_2_MOB_index),
+    .io_out_bits_decoded_instruction_2_FTQ_index
+      (_instruction_queue_io_out_bits_decoded_instruction_2_FTQ_index),
     .io_out_bits_decoded_instruction_2_instructionType
       (_instruction_queue_io_out_bits_decoded_instruction_2_instructionType),
     .io_out_bits_decoded_instruction_2_portID
@@ -1246,10 +1325,10 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (_instruction_queue_io_out_bits_decoded_instruction_2_MULTIPLY),
     .io_out_bits_decoded_instruction_2_IS_IMM
       (_instruction_queue_io_out_bits_decoded_instruction_2_IS_IMM),
-    .io_out_bits_decoded_instruction_2_is_load
-      (_instruction_queue_io_out_bits_decoded_instruction_2_is_load),
-    .io_out_bits_decoded_instruction_2_is_store
-      (_instruction_queue_io_out_bits_decoded_instruction_2_is_store),
+    .io_out_bits_decoded_instruction_2_memory_type
+      (_instruction_queue_io_out_bits_decoded_instruction_2_memory_type),
+    .io_out_bits_decoded_instruction_2_access_width
+      (_instruction_queue_io_out_bits_decoded_instruction_2_access_width),
     .io_out_bits_decoded_instruction_3_ready_bits_RS1_ready
       (_instruction_queue_io_out_bits_decoded_instruction_3_ready_bits_RS1_ready),
     .io_out_bits_decoded_instruction_3_ready_bits_RS2_ready
@@ -1274,6 +1353,10 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (_instruction_queue_io_out_bits_decoded_instruction_3_packet_index),
     .io_out_bits_decoded_instruction_3_ROB_index
       (_instruction_queue_io_out_bits_decoded_instruction_3_ROB_index),
+    .io_out_bits_decoded_instruction_3_MOB_index
+      (_instruction_queue_io_out_bits_decoded_instruction_3_MOB_index),
+    .io_out_bits_decoded_instruction_3_FTQ_index
+      (_instruction_queue_io_out_bits_decoded_instruction_3_FTQ_index),
     .io_out_bits_decoded_instruction_3_instructionType
       (_instruction_queue_io_out_bits_decoded_instruction_3_instructionType),
     .io_out_bits_decoded_instruction_3_portID
@@ -1292,10 +1375,10 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (_instruction_queue_io_out_bits_decoded_instruction_3_MULTIPLY),
     .io_out_bits_decoded_instruction_3_IS_IMM
       (_instruction_queue_io_out_bits_decoded_instruction_3_IS_IMM),
-    .io_out_bits_decoded_instruction_3_is_load
-      (_instruction_queue_io_out_bits_decoded_instruction_3_is_load),
-    .io_out_bits_decoded_instruction_3_is_store
-      (_instruction_queue_io_out_bits_decoded_instruction_3_is_store),
+    .io_out_bits_decoded_instruction_3_memory_type
+      (_instruction_queue_io_out_bits_decoded_instruction_3_memory_type),
+    .io_out_bits_decoded_instruction_3_access_width
+      (_instruction_queue_io_out_bits_decoded_instruction_3_access_width),
     .io_out_bits_valid_bits_0
       (_instruction_queue_io_out_bits_valid_bits_0),
     .io_out_bits_valid_bits_1
@@ -1311,35 +1394,36 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
     .io_flush                                               (io_flush)
   );	// src/main/scala/Frontend/frontend.scala:79:37
   Q_4 FTQ_queue (	// src/main/scala/Frontend/frontend.scala:80:37
-    .clock                       (clock),
-    .reset                       (reset),
-    .io_in_ready                 (_FTQ_queue_io_in_ready),
+    .clock                        (clock),
+    .reset                        (reset),
+    .io_in_ready                  (_FTQ_queue_io_in_ready),
     .io_in_valid
-      (_decoders_io_predictions_out_valid & _instruction_queue_io_in_ready),	// src/main/scala/Frontend/frontend.scala:77:37, :79:37, :141:64
-    .io_in_bits_valid            (_decoders_io_predictions_out_bits_valid),	// src/main/scala/Frontend/frontend.scala:77:37
-    .io_in_bits_fetch_PC         (_decoders_io_predictions_out_bits_fetch_PC),	// src/main/scala/Frontend/frontend.scala:77:37
-    .io_in_bits_is_misprediction (_decoders_io_predictions_out_bits_is_misprediction),	// src/main/scala/Frontend/frontend.scala:77:37
-    .io_in_bits_predicted_PC     (_decoders_io_predictions_out_bits_predicted_PC),	// src/main/scala/Frontend/frontend.scala:77:37
-    .io_in_bits_T_NT             (_decoders_io_predictions_out_bits_T_NT),	// src/main/scala/Frontend/frontend.scala:77:37
-    .io_in_bits_br_type          (_decoders_io_predictions_out_bits_br_type),	// src/main/scala/Frontend/frontend.scala:77:37
-    .io_in_bits_GHR              (_decoders_io_predictions_out_bits_GHR),	// src/main/scala/Frontend/frontend.scala:77:37
-    .io_in_bits_NEXT             (_decoders_io_predictions_out_bits_NEXT),	// src/main/scala/Frontend/frontend.scala:77:37
-    .io_in_bits_TOS              (_decoders_io_predictions_out_bits_TOS),	// src/main/scala/Frontend/frontend.scala:77:37
-    .io_in_bits_dominant_index   (_decoders_io_predictions_out_bits_dominant_index),	// src/main/scala/Frontend/frontend.scala:77:37
-    .io_in_bits_resolved_PC      (_decoders_io_predictions_out_bits_resolved_PC),	// src/main/scala/Frontend/frontend.scala:77:37
-    .io_out_ready                (io_predictions_ready),
-    .io_out_valid                (io_predictions_valid),
-    .io_out_bits_valid           (io_predictions_bits_valid),
-    .io_out_bits_fetch_PC        (io_predictions_bits_fetch_PC),
-    .io_out_bits_predicted_PC    (io_predictions_bits_predicted_PC),
-    .io_out_bits_T_NT            (io_predictions_bits_T_NT),
-    .io_out_bits_br_type         (io_predictions_bits_br_type),
-    .io_out_bits_GHR             (io_predictions_bits_GHR),
-    .io_out_bits_NEXT            (io_predictions_bits_NEXT),
-    .io_out_bits_TOS             (io_predictions_bits_TOS),
-    .io_out_bits_dominant_index  (io_predictions_bits_dominant_index),
-    .io_out_bits_resolved_PC     (io_predictions_bits_resolved_PC),
-    .io_flush                    (io_flush)
+      (_decoders_io_predictions_out_valid & _instruction_queue_io_in_ready),	// src/main/scala/Frontend/frontend.scala:77:37, :79:37, :117:64
+    .io_in_bits_valid             (_decoders_io_predictions_out_bits_valid),	// src/main/scala/Frontend/frontend.scala:77:37
+    .io_in_bits_fetch_PC          (_decoders_io_predictions_out_bits_fetch_PC),	// src/main/scala/Frontend/frontend.scala:77:37
+    .io_in_bits_is_misprediction  (_decoders_io_predictions_out_bits_is_misprediction),	// src/main/scala/Frontend/frontend.scala:77:37
+    .io_in_bits_predicted_PC      (_decoders_io_predictions_out_bits_predicted_PC),	// src/main/scala/Frontend/frontend.scala:77:37
+    .io_in_bits_T_NT              (_decoders_io_predictions_out_bits_T_NT),	// src/main/scala/Frontend/frontend.scala:77:37
+    .io_in_bits_br_type           (_decoders_io_predictions_out_bits_br_type),	// src/main/scala/Frontend/frontend.scala:77:37
+    .io_in_bits_GHR               (_decoders_io_predictions_out_bits_GHR),	// src/main/scala/Frontend/frontend.scala:77:37
+    .io_in_bits_NEXT              (_decoders_io_predictions_out_bits_NEXT),	// src/main/scala/Frontend/frontend.scala:77:37
+    .io_in_bits_TOS               (_decoders_io_predictions_out_bits_TOS),	// src/main/scala/Frontend/frontend.scala:77:37
+    .io_in_bits_dominant_index    (_decoders_io_predictions_out_bits_dominant_index),	// src/main/scala/Frontend/frontend.scala:77:37
+    .io_in_bits_resolved_PC       (_decoders_io_predictions_out_bits_resolved_PC),	// src/main/scala/Frontend/frontend.scala:77:37
+    .io_out_ready                 (_rename_io_predictions_in_ready),	// src/main/scala/Frontend/frontend.scala:82:37
+    .io_out_valid                 (_FTQ_queue_io_out_valid),
+    .io_out_bits_valid            (_FTQ_queue_io_out_bits_valid),
+    .io_out_bits_fetch_PC         (_FTQ_queue_io_out_bits_fetch_PC),
+    .io_out_bits_is_misprediction (_FTQ_queue_io_out_bits_is_misprediction),
+    .io_out_bits_predicted_PC     (_FTQ_queue_io_out_bits_predicted_PC),
+    .io_out_bits_T_NT             (_FTQ_queue_io_out_bits_T_NT),
+    .io_out_bits_br_type          (_FTQ_queue_io_out_bits_br_type),
+    .io_out_bits_GHR              (_FTQ_queue_io_out_bits_GHR),
+    .io_out_bits_NEXT             (_FTQ_queue_io_out_bits_NEXT),
+    .io_out_bits_TOS              (_FTQ_queue_io_out_bits_TOS),
+    .io_out_bits_dominant_index   (_FTQ_queue_io_out_bits_dominant_index),
+    .io_out_bits_resolved_PC      (_FTQ_queue_io_out_bits_resolved_PC),
+    .io_flush                     (io_flush)
   );	// src/main/scala/Frontend/frontend.scala:80:37
   rename rename (	// src/main/scala/Frontend/frontend.scala:82:37
     .clock
@@ -1390,6 +1474,58 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (io_commit_bits_RD_valid_2),
     .io_commit_bits_RD_valid_3
       (io_commit_bits_RD_valid_3),
+    .io_predictions_in_ready
+      (_rename_io_predictions_in_ready),
+    .io_predictions_in_valid
+      (_FTQ_queue_io_out_valid),	// src/main/scala/Frontend/frontend.scala:80:37
+    .io_predictions_in_bits_valid
+      (_FTQ_queue_io_out_bits_valid),	// src/main/scala/Frontend/frontend.scala:80:37
+    .io_predictions_in_bits_fetch_PC
+      (_FTQ_queue_io_out_bits_fetch_PC),	// src/main/scala/Frontend/frontend.scala:80:37
+    .io_predictions_in_bits_is_misprediction
+      (_FTQ_queue_io_out_bits_is_misprediction),	// src/main/scala/Frontend/frontend.scala:80:37
+    .io_predictions_in_bits_predicted_PC
+      (_FTQ_queue_io_out_bits_predicted_PC),	// src/main/scala/Frontend/frontend.scala:80:37
+    .io_predictions_in_bits_T_NT
+      (_FTQ_queue_io_out_bits_T_NT),	// src/main/scala/Frontend/frontend.scala:80:37
+    .io_predictions_in_bits_br_type
+      (_FTQ_queue_io_out_bits_br_type),	// src/main/scala/Frontend/frontend.scala:80:37
+    .io_predictions_in_bits_GHR
+      (_FTQ_queue_io_out_bits_GHR),	// src/main/scala/Frontend/frontend.scala:80:37
+    .io_predictions_in_bits_NEXT
+      (_FTQ_queue_io_out_bits_NEXT),	// src/main/scala/Frontend/frontend.scala:80:37
+    .io_predictions_in_bits_TOS
+      (_FTQ_queue_io_out_bits_TOS),	// src/main/scala/Frontend/frontend.scala:80:37
+    .io_predictions_in_bits_dominant_index
+      (_FTQ_queue_io_out_bits_dominant_index),	// src/main/scala/Frontend/frontend.scala:80:37
+    .io_predictions_in_bits_resolved_PC
+      (_FTQ_queue_io_out_bits_resolved_PC),	// src/main/scala/Frontend/frontend.scala:80:37
+    .io_predictions_out_ready
+      (io_predictions_ready),
+    .io_predictions_out_valid
+      (io_predictions_valid),
+    .io_predictions_out_bits_valid
+      (io_predictions_bits_valid),
+    .io_predictions_out_bits_fetch_PC
+      (io_predictions_bits_fetch_PC),
+    .io_predictions_out_bits_is_misprediction
+      (/* unused */),
+    .io_predictions_out_bits_predicted_PC
+      (io_predictions_bits_predicted_PC),
+    .io_predictions_out_bits_T_NT
+      (io_predictions_bits_T_NT),
+    .io_predictions_out_bits_br_type
+      (io_predictions_bits_br_type),
+    .io_predictions_out_bits_GHR
+      (io_predictions_bits_GHR),
+    .io_predictions_out_bits_NEXT
+      (io_predictions_bits_NEXT),
+    .io_predictions_out_bits_TOS
+      (io_predictions_bits_TOS),
+    .io_predictions_out_bits_dominant_index
+      (io_predictions_bits_dominant_index),
+    .io_predictions_out_bits_resolved_PC
+      (io_predictions_bits_resolved_PC),
     .io_decoded_fetch_packet_ready
       (_rename_io_decoded_fetch_packet_ready),
     .io_decoded_fetch_packet_valid
@@ -1420,6 +1556,10 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (_instruction_queue_io_out_bits_decoded_instruction_0_packet_index),	// src/main/scala/Frontend/frontend.scala:79:37
     .io_decoded_fetch_packet_bits_decoded_instruction_0_ROB_index
       (_instruction_queue_io_out_bits_decoded_instruction_0_ROB_index),	// src/main/scala/Frontend/frontend.scala:79:37
+    .io_decoded_fetch_packet_bits_decoded_instruction_0_MOB_index
+      (_instruction_queue_io_out_bits_decoded_instruction_0_MOB_index),	// src/main/scala/Frontend/frontend.scala:79:37
+    .io_decoded_fetch_packet_bits_decoded_instruction_0_FTQ_index
+      (_instruction_queue_io_out_bits_decoded_instruction_0_FTQ_index),	// src/main/scala/Frontend/frontend.scala:79:37
     .io_decoded_fetch_packet_bits_decoded_instruction_0_instructionType
       (_instruction_queue_io_out_bits_decoded_instruction_0_instructionType),	// src/main/scala/Frontend/frontend.scala:79:37
     .io_decoded_fetch_packet_bits_decoded_instruction_0_portID
@@ -1438,10 +1578,10 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (_instruction_queue_io_out_bits_decoded_instruction_0_MULTIPLY),	// src/main/scala/Frontend/frontend.scala:79:37
     .io_decoded_fetch_packet_bits_decoded_instruction_0_IS_IMM
       (_instruction_queue_io_out_bits_decoded_instruction_0_IS_IMM),	// src/main/scala/Frontend/frontend.scala:79:37
-    .io_decoded_fetch_packet_bits_decoded_instruction_0_is_load
-      (_instruction_queue_io_out_bits_decoded_instruction_0_is_load),	// src/main/scala/Frontend/frontend.scala:79:37
-    .io_decoded_fetch_packet_bits_decoded_instruction_0_is_store
-      (_instruction_queue_io_out_bits_decoded_instruction_0_is_store),	// src/main/scala/Frontend/frontend.scala:79:37
+    .io_decoded_fetch_packet_bits_decoded_instruction_0_memory_type
+      (_instruction_queue_io_out_bits_decoded_instruction_0_memory_type),	// src/main/scala/Frontend/frontend.scala:79:37
+    .io_decoded_fetch_packet_bits_decoded_instruction_0_access_width
+      (_instruction_queue_io_out_bits_decoded_instruction_0_access_width),	// src/main/scala/Frontend/frontend.scala:79:37
     .io_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS1_ready
       (_instruction_queue_io_out_bits_decoded_instruction_1_ready_bits_RS1_ready),	// src/main/scala/Frontend/frontend.scala:79:37
     .io_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS2_ready
@@ -1466,6 +1606,10 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (_instruction_queue_io_out_bits_decoded_instruction_1_packet_index),	// src/main/scala/Frontend/frontend.scala:79:37
     .io_decoded_fetch_packet_bits_decoded_instruction_1_ROB_index
       (_instruction_queue_io_out_bits_decoded_instruction_1_ROB_index),	// src/main/scala/Frontend/frontend.scala:79:37
+    .io_decoded_fetch_packet_bits_decoded_instruction_1_MOB_index
+      (_instruction_queue_io_out_bits_decoded_instruction_1_MOB_index),	// src/main/scala/Frontend/frontend.scala:79:37
+    .io_decoded_fetch_packet_bits_decoded_instruction_1_FTQ_index
+      (_instruction_queue_io_out_bits_decoded_instruction_1_FTQ_index),	// src/main/scala/Frontend/frontend.scala:79:37
     .io_decoded_fetch_packet_bits_decoded_instruction_1_instructionType
       (_instruction_queue_io_out_bits_decoded_instruction_1_instructionType),	// src/main/scala/Frontend/frontend.scala:79:37
     .io_decoded_fetch_packet_bits_decoded_instruction_1_portID
@@ -1484,10 +1628,10 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (_instruction_queue_io_out_bits_decoded_instruction_1_MULTIPLY),	// src/main/scala/Frontend/frontend.scala:79:37
     .io_decoded_fetch_packet_bits_decoded_instruction_1_IS_IMM
       (_instruction_queue_io_out_bits_decoded_instruction_1_IS_IMM),	// src/main/scala/Frontend/frontend.scala:79:37
-    .io_decoded_fetch_packet_bits_decoded_instruction_1_is_load
-      (_instruction_queue_io_out_bits_decoded_instruction_1_is_load),	// src/main/scala/Frontend/frontend.scala:79:37
-    .io_decoded_fetch_packet_bits_decoded_instruction_1_is_store
-      (_instruction_queue_io_out_bits_decoded_instruction_1_is_store),	// src/main/scala/Frontend/frontend.scala:79:37
+    .io_decoded_fetch_packet_bits_decoded_instruction_1_memory_type
+      (_instruction_queue_io_out_bits_decoded_instruction_1_memory_type),	// src/main/scala/Frontend/frontend.scala:79:37
+    .io_decoded_fetch_packet_bits_decoded_instruction_1_access_width
+      (_instruction_queue_io_out_bits_decoded_instruction_1_access_width),	// src/main/scala/Frontend/frontend.scala:79:37
     .io_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS1_ready
       (_instruction_queue_io_out_bits_decoded_instruction_2_ready_bits_RS1_ready),	// src/main/scala/Frontend/frontend.scala:79:37
     .io_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS2_ready
@@ -1512,6 +1656,10 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (_instruction_queue_io_out_bits_decoded_instruction_2_packet_index),	// src/main/scala/Frontend/frontend.scala:79:37
     .io_decoded_fetch_packet_bits_decoded_instruction_2_ROB_index
       (_instruction_queue_io_out_bits_decoded_instruction_2_ROB_index),	// src/main/scala/Frontend/frontend.scala:79:37
+    .io_decoded_fetch_packet_bits_decoded_instruction_2_MOB_index
+      (_instruction_queue_io_out_bits_decoded_instruction_2_MOB_index),	// src/main/scala/Frontend/frontend.scala:79:37
+    .io_decoded_fetch_packet_bits_decoded_instruction_2_FTQ_index
+      (_instruction_queue_io_out_bits_decoded_instruction_2_FTQ_index),	// src/main/scala/Frontend/frontend.scala:79:37
     .io_decoded_fetch_packet_bits_decoded_instruction_2_instructionType
       (_instruction_queue_io_out_bits_decoded_instruction_2_instructionType),	// src/main/scala/Frontend/frontend.scala:79:37
     .io_decoded_fetch_packet_bits_decoded_instruction_2_portID
@@ -1530,10 +1678,10 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (_instruction_queue_io_out_bits_decoded_instruction_2_MULTIPLY),	// src/main/scala/Frontend/frontend.scala:79:37
     .io_decoded_fetch_packet_bits_decoded_instruction_2_IS_IMM
       (_instruction_queue_io_out_bits_decoded_instruction_2_IS_IMM),	// src/main/scala/Frontend/frontend.scala:79:37
-    .io_decoded_fetch_packet_bits_decoded_instruction_2_is_load
-      (_instruction_queue_io_out_bits_decoded_instruction_2_is_load),	// src/main/scala/Frontend/frontend.scala:79:37
-    .io_decoded_fetch_packet_bits_decoded_instruction_2_is_store
-      (_instruction_queue_io_out_bits_decoded_instruction_2_is_store),	// src/main/scala/Frontend/frontend.scala:79:37
+    .io_decoded_fetch_packet_bits_decoded_instruction_2_memory_type
+      (_instruction_queue_io_out_bits_decoded_instruction_2_memory_type),	// src/main/scala/Frontend/frontend.scala:79:37
+    .io_decoded_fetch_packet_bits_decoded_instruction_2_access_width
+      (_instruction_queue_io_out_bits_decoded_instruction_2_access_width),	// src/main/scala/Frontend/frontend.scala:79:37
     .io_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS1_ready
       (_instruction_queue_io_out_bits_decoded_instruction_3_ready_bits_RS1_ready),	// src/main/scala/Frontend/frontend.scala:79:37
     .io_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS2_ready
@@ -1558,6 +1706,10 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (_instruction_queue_io_out_bits_decoded_instruction_3_packet_index),	// src/main/scala/Frontend/frontend.scala:79:37
     .io_decoded_fetch_packet_bits_decoded_instruction_3_ROB_index
       (_instruction_queue_io_out_bits_decoded_instruction_3_ROB_index),	// src/main/scala/Frontend/frontend.scala:79:37
+    .io_decoded_fetch_packet_bits_decoded_instruction_3_MOB_index
+      (_instruction_queue_io_out_bits_decoded_instruction_3_MOB_index),	// src/main/scala/Frontend/frontend.scala:79:37
+    .io_decoded_fetch_packet_bits_decoded_instruction_3_FTQ_index
+      (_instruction_queue_io_out_bits_decoded_instruction_3_FTQ_index),	// src/main/scala/Frontend/frontend.scala:79:37
     .io_decoded_fetch_packet_bits_decoded_instruction_3_instructionType
       (_instruction_queue_io_out_bits_decoded_instruction_3_instructionType),	// src/main/scala/Frontend/frontend.scala:79:37
     .io_decoded_fetch_packet_bits_decoded_instruction_3_portID
@@ -1576,10 +1728,10 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (_instruction_queue_io_out_bits_decoded_instruction_3_MULTIPLY),	// src/main/scala/Frontend/frontend.scala:79:37
     .io_decoded_fetch_packet_bits_decoded_instruction_3_IS_IMM
       (_instruction_queue_io_out_bits_decoded_instruction_3_IS_IMM),	// src/main/scala/Frontend/frontend.scala:79:37
-    .io_decoded_fetch_packet_bits_decoded_instruction_3_is_load
-      (_instruction_queue_io_out_bits_decoded_instruction_3_is_load),	// src/main/scala/Frontend/frontend.scala:79:37
-    .io_decoded_fetch_packet_bits_decoded_instruction_3_is_store
-      (_instruction_queue_io_out_bits_decoded_instruction_3_is_store),	// src/main/scala/Frontend/frontend.scala:79:37
+    .io_decoded_fetch_packet_bits_decoded_instruction_3_memory_type
+      (_instruction_queue_io_out_bits_decoded_instruction_3_memory_type),	// src/main/scala/Frontend/frontend.scala:79:37
+    .io_decoded_fetch_packet_bits_decoded_instruction_3_access_width
+      (_instruction_queue_io_out_bits_decoded_instruction_3_access_width),	// src/main/scala/Frontend/frontend.scala:79:37
     .io_decoded_fetch_packet_bits_valid_bits_0
       (_instruction_queue_io_out_bits_valid_bits_0),	// src/main/scala/Frontend/frontend.scala:79:37
     .io_decoded_fetch_packet_bits_valid_bits_1
@@ -1608,8 +1760,22 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (io_FU_outputs_0_bits_target_address),
     .io_FU_outputs_0_bits_branch_valid
       (io_FU_outputs_0_bits_branch_valid),
+    .io_FU_outputs_0_bits_address
+      (io_FU_outputs_0_bits_address),
+    .io_FU_outputs_0_bits_memory_type
+      (io_FU_outputs_0_bits_memory_type),
+    .io_FU_outputs_0_bits_access_width
+      (io_FU_outputs_0_bits_access_width),
+    .io_FU_outputs_0_bits_unsigned
+      (io_FU_outputs_0_bits_unsigned),
+    .io_FU_outputs_0_bits_wr_data
+      (io_FU_outputs_0_bits_wr_data),
+    .io_FU_outputs_0_bits_MOB_index
+      (io_FU_outputs_0_bits_MOB_index),
     .io_FU_outputs_0_bits_ROB_index
       (io_FU_outputs_0_bits_ROB_index),
+    .io_FU_outputs_0_bits_FTQ_index
+      (io_FU_outputs_0_bits_FTQ_index),
     .io_FU_outputs_0_bits_fetch_packet_index
       (io_FU_outputs_0_bits_fetch_packet_index),
     .io_FU_outputs_1_valid
@@ -1628,8 +1794,22 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (io_FU_outputs_1_bits_target_address),
     .io_FU_outputs_1_bits_branch_valid
       (io_FU_outputs_1_bits_branch_valid),
+    .io_FU_outputs_1_bits_address
+      (io_FU_outputs_1_bits_address),
+    .io_FU_outputs_1_bits_memory_type
+      (io_FU_outputs_1_bits_memory_type),
+    .io_FU_outputs_1_bits_access_width
+      (io_FU_outputs_1_bits_access_width),
+    .io_FU_outputs_1_bits_unsigned
+      (io_FU_outputs_1_bits_unsigned),
+    .io_FU_outputs_1_bits_wr_data
+      (io_FU_outputs_1_bits_wr_data),
+    .io_FU_outputs_1_bits_MOB_index
+      (io_FU_outputs_1_bits_MOB_index),
     .io_FU_outputs_1_bits_ROB_index
       (io_FU_outputs_1_bits_ROB_index),
+    .io_FU_outputs_1_bits_FTQ_index
+      (io_FU_outputs_1_bits_FTQ_index),
     .io_FU_outputs_1_bits_fetch_packet_index
       (io_FU_outputs_1_bits_fetch_packet_index),
     .io_FU_outputs_2_valid
@@ -1648,8 +1828,22 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (io_FU_outputs_2_bits_target_address),
     .io_FU_outputs_2_bits_branch_valid
       (io_FU_outputs_2_bits_branch_valid),
+    .io_FU_outputs_2_bits_address
+      (io_FU_outputs_2_bits_address),
+    .io_FU_outputs_2_bits_memory_type
+      (io_FU_outputs_2_bits_memory_type),
+    .io_FU_outputs_2_bits_access_width
+      (io_FU_outputs_2_bits_access_width),
+    .io_FU_outputs_2_bits_unsigned
+      (io_FU_outputs_2_bits_unsigned),
+    .io_FU_outputs_2_bits_wr_data
+      (io_FU_outputs_2_bits_wr_data),
+    .io_FU_outputs_2_bits_MOB_index
+      (io_FU_outputs_2_bits_MOB_index),
     .io_FU_outputs_2_bits_ROB_index
       (io_FU_outputs_2_bits_ROB_index),
+    .io_FU_outputs_2_bits_FTQ_index
+      (io_FU_outputs_2_bits_FTQ_index),
     .io_FU_outputs_2_bits_fetch_packet_index
       (io_FU_outputs_2_bits_fetch_packet_index),
     .io_FU_outputs_3_valid
@@ -1657,21 +1851,35 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
     .io_FU_outputs_3_bits_RD
       (io_FU_outputs_3_bits_RD),
     .io_FU_outputs_3_bits_RD_data
-      (io_FU_outputs_3_bits_RD_data),
+      (32'h0),	// src/main/scala/Frontend/frontend.scala:45:16, :82:37
     .io_FU_outputs_3_bits_RD_valid
-      (io_FU_outputs_3_bits_RD_valid),
+      (1'h0),	// src/main/scala/Frontend/frontend.scala:45:16, :82:37
     .io_FU_outputs_3_bits_fetch_PC
-      (io_FU_outputs_3_bits_fetch_PC),
+      (32'h0),	// src/main/scala/Frontend/frontend.scala:45:16, :82:37
     .io_FU_outputs_3_bits_branch_taken
-      (io_FU_outputs_3_bits_branch_taken),
+      (1'h0),	// src/main/scala/Frontend/frontend.scala:45:16, :82:37
     .io_FU_outputs_3_bits_target_address
-      (io_FU_outputs_3_bits_target_address),
+      (32'h0),	// src/main/scala/Frontend/frontend.scala:45:16, :82:37
     .io_FU_outputs_3_bits_branch_valid
-      (io_FU_outputs_3_bits_branch_valid),
+      (1'h0),	// src/main/scala/Frontend/frontend.scala:45:16, :82:37
+    .io_FU_outputs_3_bits_address
+      (io_FU_outputs_3_bits_address),
+    .io_FU_outputs_3_bits_memory_type
+      (io_FU_outputs_3_bits_memory_type),
+    .io_FU_outputs_3_bits_access_width
+      (io_FU_outputs_3_bits_access_width),
+    .io_FU_outputs_3_bits_unsigned
+      (io_FU_outputs_3_bits_unsigned),
+    .io_FU_outputs_3_bits_wr_data
+      (io_FU_outputs_3_bits_wr_data),
+    .io_FU_outputs_3_bits_MOB_index
+      (4'h0),	// src/main/scala/Frontend/frontend.scala:45:16, :82:37
     .io_FU_outputs_3_bits_ROB_index
-      (io_FU_outputs_3_bits_ROB_index),
+      (6'h0),	// src/main/scala/Frontend/frontend.scala:45:16, :82:37
+    .io_FU_outputs_3_bits_FTQ_index
+      (4'h0),	// src/main/scala/Frontend/frontend.scala:45:16, :82:37
     .io_FU_outputs_3_bits_fetch_packet_index
-      (io_FU_outputs_3_bits_fetch_packet_index),
+      (2'h0),	// src/main/scala/Frontend/frontend.scala:45:16, :82:37
     .io_renamed_decoded_fetch_packet_ready
       (io_renamed_decoded_fetch_packet_ready),
     .io_renamed_decoded_fetch_packet_valid
@@ -1702,6 +1910,10 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_packet_index),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_ROB_index
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_ROB_index),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_MOB_index
+      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_MOB_index),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_FTQ_index
+      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_FTQ_index),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_instructionType
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_instructionType),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_portID
@@ -1720,10 +1932,10 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_MULTIPLY),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_IS_IMM
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_IS_IMM),
-    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_is_load
-      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_is_load),
-    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_is_store
-      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_is_store),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_memory_type
+      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_memory_type),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_access_width
+      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_access_width),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS1_ready
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS1_ready),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ready_bits_RS2_ready
@@ -1748,6 +1960,10 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_packet_index),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ROB_index
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_ROB_index),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_MOB_index
+      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_MOB_index),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_FTQ_index
+      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_FTQ_index),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_instructionType
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_instructionType),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_portID
@@ -1766,10 +1982,10 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_MULTIPLY),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_IS_IMM
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_IS_IMM),
-    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_is_load
-      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_is_load),
-    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_is_store
-      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_is_store),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_memory_type
+      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_memory_type),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_access_width
+      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_access_width),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS1_ready
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS1_ready),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ready_bits_RS2_ready
@@ -1794,6 +2010,10 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_packet_index),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ROB_index
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_ROB_index),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_MOB_index
+      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_MOB_index),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_FTQ_index
+      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_FTQ_index),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_instructionType
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_instructionType),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_portID
@@ -1812,10 +2032,10 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_MULTIPLY),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_IS_IMM
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_IS_IMM),
-    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_is_load
-      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_is_load),
-    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_is_store
-      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_is_store),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_memory_type
+      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_memory_type),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_access_width
+      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_access_width),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS1_ready
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS1_ready),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ready_bits_RS2_ready
@@ -1840,6 +2060,10 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_packet_index),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ROB_index
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_ROB_index),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_MOB_index
+      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_MOB_index),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_FTQ_index
+      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_FTQ_index),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_instructionType
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_instructionType),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_portID
@@ -1858,10 +2082,10 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_MULTIPLY),
     .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_IS_IMM
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_IS_IMM),
-    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_is_load
-      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_is_load),
-    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_is_store
-      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_is_store),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_memory_type
+      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_memory_type),
+    .io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_access_width
+      (io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_access_width),
     .io_renamed_decoded_fetch_packet_bits_valid_bits_0
       (io_renamed_decoded_fetch_packet_bits_valid_bits_0),
     .io_renamed_decoded_fetch_packet_bits_valid_bits_1

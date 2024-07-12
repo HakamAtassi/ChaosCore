@@ -78,10 +78,10 @@ module BP(	// src/main/scala/Frontend/BP/BP.scala:38:7
     .io_NEXT         (io_RAS_read_NEXT),
     .io_TOS          (io_RAS_read_TOS)
   );	// src/main/scala/Frontend/BP/BP.scala:73:29
-  Queue1_prediction prediction_skid_buffer (	// src/main/scala/Frontend/BP/BP.scala:169:45
+  Queue1_prediction prediction_skid_buffer (	// src/main/scala/Frontend/BP/BP.scala:171:45
     .clock               (clock),
     .reset               (reset),
-    .io_enq_valid        (_BTB_io_BTB_output_BTB_valid & _gshare_io_valid),	// src/main/scala/Frontend/BP/BP.scala:71:29, :72:29, :161:60
+    .io_enq_valid        (_BTB_io_BTB_output_BTB_valid & _gshare_io_valid),	// src/main/scala/Frontend/BP/BP.scala:71:29, :72:29, :163:60
     .io_enq_bits_hit     (_BTB_io_BTB_hit),	// src/main/scala/Frontend/BP/BP.scala:72:29
     .io_enq_bits_target  (_BTB_io_BTB_output_BTB_target),	// src/main/scala/Frontend/BP/BP.scala:72:29
     .io_enq_bits_br_type (_BTB_io_BTB_output_BTB_br_type),	// src/main/scala/Frontend/BP/BP.scala:72:29
@@ -95,7 +95,7 @@ module BP(	// src/main/scala/Frontend/BP/BP.scala:38:7
     .io_deq_bits_GHR     (io_prediction_bits_GHR),
     .io_deq_bits_T_NT    (io_prediction_bits_T_NT),
     .io_flush            (io_flush)
-  );	// src/main/scala/Frontend/BP/BP.scala:169:45
-  assign io_predict_ready = io_prediction_ready & ~io_commit_bits_is_misprediction;	// src/main/scala/Frontend/BP/BP.scala:38:7, :104:19, :175:52
+  );	// src/main/scala/Frontend/BP/BP.scala:171:45
+  assign io_predict_ready = io_prediction_ready & ~io_commit_bits_is_misprediction;	// src/main/scala/Frontend/BP/BP.scala:38:7, :104:19, :177:52
 endmodule
 

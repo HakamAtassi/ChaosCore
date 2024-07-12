@@ -76,7 +76,8 @@ module Queue16_FTQ_entry(	// src/main/scala/chisel3/util/Decoupled.scala:243:7
   output        io_deq_valid,	// src/main/scala/chisel3/util/Decoupled.scala:255:14
                 io_deq_bits_valid,	// src/main/scala/chisel3/util/Decoupled.scala:255:14
   output [31:0] io_deq_bits_fetch_PC,	// src/main/scala/chisel3/util/Decoupled.scala:255:14
-                io_deq_bits_predicted_PC,	// src/main/scala/chisel3/util/Decoupled.scala:255:14
+  output        io_deq_bits_is_misprediction,	// src/main/scala/chisel3/util/Decoupled.scala:255:14
+  output [31:0] io_deq_bits_predicted_PC,	// src/main/scala/chisel3/util/Decoupled.scala:255:14
   output        io_deq_bits_T_NT,	// src/main/scala/chisel3/util/Decoupled.scala:255:14
   output [2:0]  io_deq_bits_br_type,	// src/main/scala/chisel3/util/Decoupled.scala:255:14
   output [15:0] io_deq_bits_GHR,	// src/main/scala/chisel3/util/Decoupled.scala:255:14
@@ -163,6 +164,8 @@ module Queue16_FTQ_entry(	// src/main/scala/chisel3/util/Decoupled.scala:243:7
   assign io_deq_valid = io_deq_valid_0;	// src/main/scala/chisel3/util/Decoupled.scala:243:7, :285:16, :297:{24,39}
   assign io_deq_bits_valid = empty ? io_enq_bits_valid : _ram_ext_R0_data[0];	// src/main/scala/chisel3/util/Decoupled.scala:243:7, :256:44, :261:25, :291:17, :298:17, :299:19
   assign io_deq_bits_fetch_PC = empty ? io_enq_bits_fetch_PC : _ram_ext_R0_data[32:1];	// src/main/scala/chisel3/util/Decoupled.scala:243:7, :256:44, :261:25, :291:17, :298:17, :299:19
+  assign io_deq_bits_is_misprediction =
+    empty ? io_enq_bits_is_misprediction : _ram_ext_R0_data[33];	// src/main/scala/chisel3/util/Decoupled.scala:243:7, :256:44, :261:25, :291:17, :298:17, :299:19
   assign io_deq_bits_predicted_PC =
     empty ? io_enq_bits_predicted_PC : _ram_ext_R0_data[65:34];	// src/main/scala/chisel3/util/Decoupled.scala:243:7, :256:44, :261:25, :291:17, :298:17, :299:19
   assign io_deq_bits_T_NT = empty ? io_enq_bits_T_NT : _ram_ext_R0_data[66];	// src/main/scala/chisel3/util/Decoupled.scala:243:7, :256:44, :261:25, :291:17, :298:17, :299:19

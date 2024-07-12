@@ -151,7 +151,7 @@ class RAT(parameters:Parameters) extends Module{
     // RENAME/MAP //
     ////////////////
 
-    val row_valid_mem   =   RegInit(VecInit(Seq.fill(ROBEntires)(0.B)))
+    val row_valid_mem   =   RegInit(VecInit(Seq.fill(ROBEntries)(0.B)))
 
     for(i <- 0 until fetchWidth){
         io.RAT_RD(i)  := RegNext(RAT_memories(RAT_front_index)(io.instruction_RD(i)))
@@ -220,6 +220,10 @@ class rename(parameters:Parameters) extends Module{
 
         // CHECKPOINT 
         val commit                          =   Flipped(ValidIO(new commit(parameters)))
+
+        // FTQ forwarding
+        val predictions_in                  =   Flipped(Decoupled(new FTQ_entry(parameters)))
+        val predictions_out                 =   Decoupled(new FTQ_entry(parameters))
 
         // Instruction input (decoded)
         val decoded_fetch_packet            =   Flipped(Decoupled(new decoded_fetch_packet(parameters)))
@@ -426,11 +430,25 @@ class rename(parameters:Parameters) extends Module{
     }
 
 
+
+    // FTQ FORWARDING // 
+    val predictions_out_skid_buffer = Module(new Queue(new FTQ_entry(parameters), 1, flow=true, hasFlush=false, useSyncReadMem=false))
+    val predictions_out         = Wire(Decoupled(new FTQ_entry(parameters)))
+
+    predictions_out.bits    := RegNext(io.predictions_in.bits)
+    predictions_out.valid   := RegNext(fire)
+
+    predictions_out_skid_buffer.io.enq                  <> predictions_out
+    predictions_out_skid_buffer.io.deq                  <> io.predictions_out
+
+
     /////////////////
     // READY/VALID //
     /////////////////
+    val inputs_ready = free_list.io.can_allocate && !RAT.io.checkpoints_full && io.renamed_decoded_fetch_packet.ready && io.predictions_out.ready 
 
-    io.decoded_fetch_packet.ready                       := free_list.io.can_allocate && !RAT.io.checkpoints_full && io.renamed_decoded_fetch_packet.ready 
+    io.decoded_fetch_packet.ready                       := inputs_ready
+    io.predictions_in.ready                             := inputs_ready
 
     ////////////////
     // ASSERTIONS //

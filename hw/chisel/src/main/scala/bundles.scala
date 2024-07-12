@@ -117,7 +117,7 @@ class commit(parameters:Parameters) extends Bundle{
 
     val fetch_PC                = UInt(32.W)    // To update gshare/PHT
     val T_NT                    = Bool()    // To update BTB (BTB only updates on taken branches)
-    val ROB_index               = UInt(log2Ceil(ROBEntires).W)
+    val ROB_index               = UInt(log2Ceil(ROBEntries).W)
     
     val br_type                 = _br_type()
     val fetch_packet_index      = UInt(log2Ceil(fetchWidth).W)  // fetch packet index of the branch
@@ -178,7 +178,7 @@ class Instruction(parameters:Parameters) extends Bundle{
     import parameters._
     val instruction     =   UInt(32.W)
     val packet_index    =   UInt(log2Ceil(fetchWidth*4).W)    // contains the remainder of the PC. ex: 0, 4, 8, 12, 0, ... for fetchWidth of 4
-    val ROB_index       =   UInt(log2Ceil(ROBEntires).W)
+    val ROB_index       =   UInt(log2Ceil(ROBEntries).W)
 }
 
 object RS_types extends ChiselEnum{
@@ -189,15 +189,6 @@ class decoded_instruction(parameters:Parameters) extends Bundle{
     // Parameters
     import parameters._
     val portCount       =   4
-
-    //val valid              =    Bool()
-
-    //val RDold              =   UInt(physicalRegBits.W)
-    //val RDold_valid        =   Bool()
-
-
-    //val fetch_PC            =   UInt(32.W)
-
 
     val ready_bits          =   new sources_ready()
 
@@ -212,7 +203,9 @@ class decoded_instruction(parameters:Parameters) extends Bundle{
 
 
     val packet_index        =  UInt(log2Ceil(fetchWidth).W)
-    val ROB_index           =  UInt(log2Ceil(ROBEntires).W)
+    val ROB_index           =  UInt(log2Ceil(ROBEntries).W)
+    val MOB_index           =  UInt(log2Ceil(MOBEntries).W)
+    val FTQ_index           =  UInt(log2Ceil(FTQEntries).W)
 
     // uOp info
     val instructionType     =  InstructionType()
@@ -229,8 +222,10 @@ class decoded_instruction(parameters:Parameters) extends Bundle{
     val MULTIPLY            =  Bool()
 
     val IS_IMM              =  Bool() 
-    val is_load             =  Bool()
-    val is_store            =  Bool()
+
+    val memory_type         =  memory_type_t()   // LOAD/STORE
+    val access_width        =  access_width_t()  // B/HW/W
+
     // ADD atomic instructions
 }
 
@@ -357,7 +352,7 @@ class ROB_output(parameters:Parameters) extends Bundle{
     val row_valid               = Bool()
     val fetch_PC                = UInt(32.W)
     val RAT_index               = UInt(log2Ceil(RATCheckpointCount).W)
-    val ROB_index               = UInt(log2Ceil(ROBEntires).W)
+    val ROB_index               = UInt(log2Ceil(ROBEntries).W)
 
     val free_list_front_pointer = UInt((physicalRegBits + 1).W)
 
@@ -384,8 +379,7 @@ class ROB_entry(parameters:Parameters) extends Bundle{
     val is_branch   = Bool()
 
     //val exception   = Bool()
-    val is_load     = Bool()
-    val is_store    = Bool()
+    val memory_type = memory_type_t()
 
     val RD          =   UInt(physicalRegBits.W)
     val RD_valid    =   Bool()
@@ -420,7 +414,7 @@ class MEMRS_entry(parameters:Parameters) extends Bundle{
     //val ready_bits          =  new sources_ready()
 
     val fetch_PC            =  UInt(32.W)
-    val commited            =  Bool()  // Has this instruction commited
+    val committed            =  Bool()  // Has this instruction committed
     val valid               =  Bool()  // Is whole RS entry valid
 }
 
@@ -437,13 +431,24 @@ class FU_output(parameters:Parameters) extends Bundle{
     val RD_valid            =   Bool()
 
     // Branch
-    val fetch_PC      =   UInt(32.W)    // FIXME: is this necessary?
+    val fetch_PC            =   UInt(32.W)    // FIXME: is this necessary?
     val branch_taken        =   Bool()
     val target_address      =   UInt(32.W)
     val branch_valid        =   Bool()
-    // Address of actual branch instruction?
 
-    val ROB_index           =   UInt(log2Ceil(ROBEntires).W)
+    // MEM
+    val address             =   UInt(32.W)
+    val memory_type         =   memory_type_t()   // LOAD/STORE
+    val access_width        =   access_width_t()  // B/HW/W
+    val unsigned            =   Bool()            // signed/unsigned
+    val wr_data             =   UInt(32.W)
+
+    // MOB
+    val MOB_index           =   UInt(log2Ceil(MOBEntries).W)
+
+
+    val ROB_index           =   UInt(log2Ceil(ROBEntries).W)
+    val FTQ_index           =   UInt(log2Ceil(FTQEntries).W)
     
     val fetch_packet_index  =   UInt(log2Ceil(fetchWidth).W)
 }
@@ -453,6 +458,7 @@ class PC_file(fetchWidth:Int){
     val PC = UInt(32.W)
     val index = UInt(fetchWidth.W)
 }
+
 
 //////////
 // DRAM //
@@ -485,10 +491,85 @@ class memory_response(parameters:Parameters) extends Bundle{
 }
 
 
+class backend_memory_request(parameters:Parameters) extends Bundle{
+    import parameters._
+    val addr            = UInt(32.W)
+    val data            = UInt(32.W)
+    val memory_type     = memory_type_t()               // LOAD/STORE
+    val access_width    = access_width_t()              // B/HW/W
+
+    val MOB_index       = UInt(log2Ceil(MOBEntries).W)
+}
+
+class backend_memory_response(parameters:Parameters) extends Bundle{
+    import parameters._
+    val addr            = UInt(32.W)
+    val data            = UInt(32.W)
+    val memory_type     = memory_type_t() // LOAD/STORE
+    val access_width    = access_width_t()              // B/HW/W
+
+    val MOB_index       = UInt(log2Ceil(MOBEntries).W)
+}
 
 
-//class MMIO_interface(parameter:Parameters) extends Bundle{
-    //val addr    = UInt(32.W)
-    //val wr_data = UInt(32.W)
-    //val wr_en   = Bool()
-//}
+
+
+// LDQ //
+
+object memory_type_t extends ChiselEnum{
+    val NONE, LOAD, STORE = Value
+}
+
+object access_width_t extends ChiselEnum{
+    val NONE, B, HW, W = Value
+}
+
+class memory_access(parameters:Parameters) extends Bundle{   // output of the AGU
+    import parameters._
+    val memory_type     = memory_type_t()   // LOAD/STORE
+    val RD              = UInt(physicalRegBits.W)
+    val access_width    = access_width_t()  // B/HW/W
+    val unsigned        = Bool()            // signed/unsigned
+    val address         = UInt(32.W)
+    val wr_data         = UInt(32.W)
+}
+
+
+
+/*loads mark as complete when they are 100% correct and non-speculative.*/
+/*That is, loads can mark the RD ready to avoid stalling the pipeline*/
+/*But have the possibility of causing an exception that prevents them from committing*/
+/*Loads are not freed until they actually commit.*/
+class MOB_entry(parameters:Parameters) extends Bundle{
+    import parameters._
+
+    val valid           = Bool()
+    val memory_type     = memory_type_t()
+
+    val ROB_index       = UInt(log2Ceil(ROBEntries).W)
+
+    val address         = UInt(32.W)        // LOAD/STORE address
+    val access_width    = access_width_t()  // B/HW/W
+
+    val RD              = UInt(physicalRegBits.W) // dest reg
+    val data            = UInt(32.W)              
+
+    // Entry state
+    val pending         = Bool()    // load request sent to cache
+    val loaded          = Bool()    // load recieved
+    val committed       = Bool()    // entry committed
+    val violation       = Bool()    // entry does not violate ordering (load/load or store/load)
+
+    val fired           = Bool()
+
+}
+
+
+// PNR?
+
+
+
+/////////
+// CSR //
+/////////
+

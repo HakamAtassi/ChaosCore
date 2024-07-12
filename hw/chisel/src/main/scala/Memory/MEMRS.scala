@@ -37,9 +37,6 @@ import chisel3.util._
 import getPortCount._
 import Thermometor._
 
-// Expected operation: writes incoming memory operations from allocate stage.
-// Sends instruction to MEM when its both the front of the queue and has its operands MEMRS_ready
-
 class MEMRS(parameters:Parameters) extends Module{
     import parameters._
     val portCount = getPortCount(parameters)
@@ -54,7 +51,7 @@ class MEMRS(parameters:Parameters) extends Module{
         // ALLOCATE //
         val backend_packet          =      Vec(dispatchWidth, Flipped(Decoupled(new decoded_instruction(parameters))))
 
-        val fetch_PC                = Input(UInt(32.W)) // DEBUG
+        val fetch_PC                =      Input(UInt(32.W)) // DEBUG
 
         // UPDATE //
         val FU_outputs              =      Vec(portCount, Flipped(ValidIO(new FU_output(parameters))))
@@ -71,12 +68,12 @@ class MEMRS(parameters:Parameters) extends Module{
     val reservation_station = RegInit(VecInit(Seq.fill(RSEntries)(0.U.asTypeOf(new MEMRS_entry(parameters)))))
 
     // queue pointers
-    val pointer_width = log2Ceil(RSEntries)+1
-    val front_pointer = RegInit(UInt(pointer_width.W), 0.U)
-    val back_pointer  = RegInit(UInt(pointer_width.W), 0.U)
+    val pointer_width   = log2Ceil(RSEntries)+1
+    val front_pointer   = RegInit(UInt(pointer_width.W), 0.U)
+    val back_pointer    = RegInit(UInt(pointer_width.W), 0.U)
 
-    val front_index     =   front_pointer(pointer_width-2, 0)
-    val back_index      =   back_pointer(pointer_width-2, 0)
+    val front_index     = front_pointer(pointer_width-2, 0)
+    val back_index      = back_pointer(pointer_width-2, 0)
 
     //////////////
     // ALLOCATE //
@@ -99,7 +96,7 @@ class MEMRS(parameters:Parameters) extends Module{
             val index_offset = PopCount(written_vec.take(i+1))-1.U
             reservation_station(back_index + index_offset).decoded_instruction <> io.backend_packet(i).bits
             reservation_station(back_index + index_offset).valid              := 1.B
-            reservation_station(back_index + index_offset).fetch_PC              := io.fetch_PC
+            reservation_station(back_index + index_offset).fetch_PC           := io.fetch_PC
         }
     }
 
@@ -130,8 +127,6 @@ class MEMRS(parameters:Parameters) extends Module{
     }
 
 
-    dontTouch(RS2_match)
-    dontTouch(RS1_match)
 
     for(i <- 0 until RSEntries){
         when(!reservation_station(i).decoded_instruction.ready_bits.RS2_ready && reservation_station(i).valid){
@@ -155,16 +150,10 @@ class MEMRS(parameters:Parameters) extends Module{
     val RS1_ready_valid = (reservation_station(front_index).decoded_instruction.ready_bits.RS1_ready || !reservation_station(front_index).decoded_instruction.RS1_valid)
     val RS2_ready_valid = (reservation_station(front_index).decoded_instruction.ready_bits.RS2_ready || !reservation_station(front_index).decoded_instruction.RS2_valid)
 
-    //val good_to_go =    (reservation_station(front_index).valid && 
-                        //(reservation_station(front_index).commited && reservation_station(front_index).decoded_instruction.is_store) || 
-                        //((RS1_ready_valid && RS2_ready_valid) && reservation_station(front_index).decoded_instruction.is_load))
-
-
     val good_to_go =    (reservation_station(front_index).valid && 
-                        reservation_station(front_index).commited && RS1_ready_valid && RS2_ready_valid)
+                        reservation_station(front_index).committed && RS1_ready_valid && RS2_ready_valid)
 
     front_pointer := front_pointer + good_to_go
-    dontTouch(front_index)
 
     // clear RS entry
     when(good_to_go){
@@ -196,45 +185,27 @@ class MEMRS(parameters:Parameters) extends Module{
         io.backend_packet(i).ready := availalbe_RS_entries >= fetchWidth.U
     }
 
-    /////////////////////
-    // UPDATE (COMMIT) //
-    /////////////////////
-    // Mark instruction as commited via commit channel
-
-    for(i <- 0 until RSEntries){
-        when(!reservation_station(i).commited && reservation_station(i).valid){
-            val commited = (io.commit.bits.ROB_index === reservation_station(i).decoded_instruction.ROB_index) && 
-                            io.commit.valid 
-                            /*&& io.commit.bits.fetch_packet_index >= reservation_station(i).decoded_instruction.packet_index*/
-            reservation_station(i).commited := commited
-        }
-    }
-
-    dontTouch(io.commit.bits.fetch_packet_index)
 
     ///////////
     // FLUSH //
     ///////////
-
-    // When a flush takes place, you only want to clear the elements that have not commited. 
-    var valid_uncommited_count = PopCount(reservation_station.map(  rs => !rs.commited && rs.valid))
-
     for(i <- 0 until RSEntries){
-        val is_commiting = (io.commit.bits.ROB_index === reservation_station(i).decoded_instruction.ROB_index) && io.commit.bits.fetch_packet_index >= reservation_station(i).decoded_instruction.packet_index
-        when(io.flush && (!reservation_station(i).commited)){
+        when(io.flush && (reservation_station(i).decoded_instruction.ROB_index === io.commit.bits.ROB_index)){
             reservation_station(i) := 0.U.asTypeOf(new MEMRS_entry(parameters))
         }
     }
 
     when(io.flush){
-        //front_pointer := 0.B
-        back_pointer := back_pointer - (valid_uncommited_count)
+        front_pointer := 0.B
+        back_pointer := 0.U
     }
 
     dontTouch(reservation_station)
     dontTouch(io.backend_packet)
-
     dontTouch(back_index)
-
+    dontTouch(RS2_match)
+    dontTouch(RS1_match)
+    dontTouch(io.commit.bits.fetch_packet_index)
+    dontTouch(front_index)
 
 }

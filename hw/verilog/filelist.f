@@ -27,7 +27,7 @@ decoder.sv
 Queue1_decoded_fetch_packet.sv
 Queue1_FTQ_entry_1.sv
 fetch_packet_decoder.sv
-ram_16x348.sv
+ram_16x388.sv
 Queue16_decoded_fetch_packet.sv
 Q_3.sv
 ram_16x134.sv
@@ -40,16 +40,14 @@ rename.sv
 frontend.sv
 RS.sv
 MEMRS.sv
+MOB.sv
 mem_64x32.sv
 sim_nReadmWrite.sv
 ALU.sv
 branch_unit.sv
 FU.sv
 FU_1.sv
-Queue16_memory_request_1.sv
-ram_16x21.sv
-Queue16_load_request.sv
-MEMFU.sv
+AGU.sv
 backend.sv
 FTQ.sv
 mem_64x44.sv

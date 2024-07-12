@@ -59,11 +59,11 @@ class ROB(parameters:Parameters) extends Module{
         // REDIRECTS // 
         val commit                      =   Flipped(ValidIO(new commit(parameters)))
         
-        val ROB_index                   =   Output(UInt(log2Ceil(ROBEntires).W))
+        val ROB_index                   =   Output(UInt(log2Ceil(ROBEntries).W))
 
         // PC FILE //
         // Read port (Exec)
-        val PC_file_exec_addr           =   Input(UInt(log2Ceil(ROBEntires).W))
+        val PC_file_exec_addr           =   Input(UInt(log2Ceil(ROBEntries).W))
         val PC_file_exec_data           =   Output(UInt(32.W))
     })
 
@@ -73,7 +73,7 @@ class ROB(parameters:Parameters) extends Module{
     // POINTERS // 
     //////////////
 
-    val pointer_width = log2Ceil(ROBEntires)+1
+    val pointer_width = log2Ceil(ROBEntries)+1
 
     val front_pointer = RegInit(UInt(pointer_width.W), 0.U)
     val back_pointer  = RegInit(UInt(pointer_width.W), 0.U)
@@ -104,7 +104,7 @@ class ROB(parameters:Parameters) extends Module{
     //| Read to commit        |//
     //|-----------------------|//
 
-    val row_valid_mem   =   RegInit(VecInit(Seq.fill(ROBEntires)(0.B)))
+    val row_valid_mem   =   RegInit(VecInit(Seq.fill(ROBEntries)(0.B)))
     val row_valid       =   row_valid_mem(front_pointer(pointer_width-2, 0))
 
     when(io.ROB_packet.valid){  // Allocate
@@ -116,7 +116,7 @@ class ROB(parameters:Parameters) extends Module{
     }
 
     when(io.flush){
-        row_valid_mem := Seq.fill(ROBEntires)(0.B)
+        row_valid_mem := Seq.fill(ROBEntries)(0.B)
     }
 
     //|-------------------------|//
@@ -127,7 +127,7 @@ class ROB(parameters:Parameters) extends Module{
     //| Read to commit          |//
     //|-------------------------|//
 
-    val shared_mem      = Module(new ROB_shared_mem(parameters, depth=ROBEntires))
+    val shared_mem      = Module(new ROB_shared_mem(parameters, depth=ROBEntries))
     val shared_mem_input = Wire(new ROB_shared(parameters))
 
     shared_mem_input.fetch_PC                   := io.ROB_packet.bits.fetch_PC
@@ -156,7 +156,7 @@ class ROB(parameters:Parameters) extends Module{
     //|------------------------------|//
 
     val ROB_WB_banks: Seq[ROB_WB_mem] = Seq.tabulate(fetchWidth) { w =>
-        Module(new ROB_WB_mem(parameters, depth=ROBEntires))
+        Module(new ROB_WB_mem(parameters, depth=ROBEntries))
     }
 
     for(i <- 0 until fetchWidth){
@@ -216,15 +216,14 @@ class ROB(parameters:Parameters) extends Module{
     //|----------------------------|//
 
     val ROB_entry_banks: Seq[ROB_entry_mem] = Seq.tabulate(fetchWidth) { w =>
-        Module(new ROB_entry_mem(parameters=parameters, depth=ROBEntires))
+        Module(new ROB_entry_mem(parameters=parameters, depth=ROBEntries))
     }
 
     for(i <- 0 until fetchWidth){
         val ROB_entry_data = Wire(new ROB_entry(parameters))
         ROB_entry_data.valid                 := io.ROB_packet.bits.valid_bits(i)
         ROB_entry_data.is_branch             := io.ROB_packet.bits.decoded_instruction(i).needs_branch_unit
-        ROB_entry_data.is_load               := io.ROB_packet.bits.decoded_instruction(i).is_load
-        ROB_entry_data.is_store              := io.ROB_packet.bits.decoded_instruction(i).is_store
+        ROB_entry_data.memory_type           := io.ROB_packet.bits.decoded_instruction(i).memory_type
         ROB_entry_data.RD                    := io.ROB_packet.bits.decoded_instruction(i).RD
         ROB_entry_data.RD_valid              := io.ROB_packet.bits.decoded_instruction(i).RD_valid
 

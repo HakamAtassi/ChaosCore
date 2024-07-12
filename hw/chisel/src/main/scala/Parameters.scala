@@ -52,7 +52,7 @@ case class Parameters(
   startPC: UInt = "h00000000".U,
   FTQEntries:Int  = 16,
 
-  ROBEntires: Int = 64,    // FIXME: 128 causes area scaling problems in the RAT
+  ROBEntries: Int = 64,    // FIXME: 128 causes area scaling problems in the RAT
 
   architecturalRegCount: Int = 32,  // RV32...
   RATCheckpointCount:    Int = 16,  // How many checkpoints of the RAT is supported? (this should be a proportion of the ROB size)
@@ -77,15 +77,20 @@ case class Parameters(
 
   instruction_queue_depth:Int = 8,
 
+  speculative:Boolean = true,   // this does nothing yet
 
 
-  speculative:Boolean = true, 
+  MOBEntries:Int = 16,
 
 
 
   // Be careful with these parameters. They are likely bugged
   dispatchWidth:Int = 4, // Up to how many entires are sent to the reservation station + execution engine from the instruction queue at a time?
   commitWidth:Int = 4,   // Up to how many entires are freed from the ROB each cycle (cant be larger than the number of ports)
+
+
+
+
 
 
 ){

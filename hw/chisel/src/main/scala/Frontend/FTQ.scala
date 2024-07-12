@@ -60,6 +60,7 @@ class FTQ(parameters:Parameters) extends Module{
 
         // FTQ //
         val FTQ                 =   Output(new FTQ_entry(parameters))
+        val FTQ_index           =   Output(UInt(log2Ceil(FTQEntries).W))
     })
 
     val pointer_bits = log2Ceil(FTQEntries)+1
@@ -68,7 +69,7 @@ class FTQ(parameters:Parameters) extends Module{
     val front_pointer   = RegInit(UInt(pointer_bits.W), 0.U)
     val back_pointer    = RegInit(UInt(pointer_bits.W), 0.U)
 
-    val front_index = front_pointer(pointer_bits-2, 0)
+    val front_index =  front_pointer(pointer_bits-2, 0)
     val back_index  = back_pointer(pointer_bits-2, 0)
 
 
@@ -106,30 +107,28 @@ class FTQ(parameters:Parameters) extends Module{
     // How do you determine the actual next address of a fetch packet?
     // By finding the earliest taken branch in the fetch packet, if any
 
-    for(i <- 0 until FTQEntries){   // get misprediction
 
-        val is_valid                = FTQ(i).valid && io.FU_outputs(0).valid   
-        val is_branch               = io.FU_outputs(0).bits.branch_valid
-        val is_taken                = io.FU_outputs(0).bits.branch_taken
-        val is_more_dominant        = (io.FU_outputs(0).bits.fetch_packet_index <= FTQ(i).dominant_index)
-        val fetch_packet_PC_match   = ((FTQ(i).fetch_PC) === (io.FU_outputs(0).bits.fetch_PC))
+    val FTQ_index              = (io.FU_outputs(0).bits.FTQ_index)
+    val is_valid                = io.FU_outputs(0).valid   
+    val is_branch               = io.FU_outputs(0).bits.branch_valid
+    val is_taken                = io.FU_outputs(0).bits.branch_taken
+    val is_more_dominant        = (io.FU_outputs(0).bits.fetch_packet_index <= FTQ(FTQ_index).dominant_index)
+    // Everytime a branch is resolved in the FU, check if it is the most dominant taken branch in the fetch packet. 
 
-        // Everytime a branch is resolved in the FU, check if it is the most dominant taken branch in the fetch packet. 
-    
-        when(fetch_packet_PC_match && is_valid && is_branch && is_more_dominant && is_taken){
-            FTQ(i).dominant_index   :=   io.FU_outputs(0).bits.fetch_packet_index
-            FTQ(i).resolved_PC      :=   io.FU_outputs(0).bits.target_address
-            FTQ(i).T_NT             :=   1.B
-            // FIXME: other signals?
-        }
-
+    when(is_valid && is_branch && is_more_dominant && is_taken){
+        FTQ(FTQ_index).dominant_index   :=   io.FU_outputs(0).bits.fetch_packet_index
+        FTQ(FTQ_index).resolved_PC      :=   io.FU_outputs(0).bits.target_address
+        FTQ(FTQ_index).T_NT             :=   1.B
+        // FIXME: other signals?
     }
 
     ///////////////////////////
     // FRONT POINTER CONTROL //
     ///////////////////////////
 
-    val dq = FTQ(front_index).valid && io.commit.valid && ((FTQ(front_index).fetch_PC>>log2Ceil(fetchWidth*4)) === (io.commit.bits.fetch_PC >> log2Ceil(fetchWidth*4)))
+    val PC_match = (FTQ(front_index).fetch_PC & "hFFFF_FFF0".U) === (io.commit.bits.fetch_PC & "hFFFF_FFF0".U) //FIXME: parameterize 
+
+    val dq = FTQ(front_index).valid && io.commit.valid && PC_match
 
     dontTouch(dq)
 
@@ -156,6 +155,7 @@ class FTQ(parameters:Parameters) extends Module{
     ////////////////////
 
     io.FTQ := FTQ(front_index)
+    io.FTQ_index := back_index
 
     /////////////////
     // VALID/READY //

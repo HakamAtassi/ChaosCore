@@ -1,3 +1,0 @@
-VsvsimTestbench___024root__DepSet_h80ae70f8__1.o: \
- VsvsimTestbench___024root__DepSet_h80ae70f8__1.cpp \
- VsvsimTestbench__pch.h VsvsimTestbench___024root.h

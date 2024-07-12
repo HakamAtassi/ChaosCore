@@ -54,11 +54,8 @@ object VerilogGenerator {
     }
 }
 
-class DummyModule extends RawModule {
-  val io = IO(new Bundle {
-    val ras_update = Input(new RAS_update())
-  })
-}
+
+import java.io.{File, PrintWriter}
 
 object Main extends App {
     import Parameters._
@@ -66,18 +63,32 @@ object Main extends App {
     val parameters = Parameters()
     val addressMap = AddressMap()
     //VerilogGenerator.generateVerilog(new instruction_cache(parameters), "../verilog/Frontend/instruction_cache.v")
-    VerilogGenerator.generateVerilog(new ChaosCore(parameters), 
-    "../verilog/Core/ChaosCore.v")
+//    VerilogGenerator.generateVerilog(new ChaosCore(parameters), 
+    //"../verilog/Core/ChaosCore.v")
 
-    VerilogGenerator.generateVerilog(new rename(parameters), 
-    "../verilog/Frontend/rename.v")
+    //VerilogGenerator.generateVerilog(new rename(parameters), 
+    //"../verilog/Frontend/rename.v")
 
-    VerilogGenerator.generateVerilog(new SOC(parameters, addressMap), 
-    "../verilog/SOC/SOC.v")
+    //VerilogGenerator.generateVerilog(new SOC(parameters, addressMap), 
+    //"../verilog/SOC/SOC.v")
 
-    ChiselStage.emitSystemVerilogFile(new ChaosCore(parameters), Array("--split-verilog", "--target-dir", "../verilog"))
+    ChiselStage.emitSystemVerilogFile(new ChaosCore(parameters), Array("--split-verilog", 
+                                                                        "--target", "verilog", 
+                                                                        "--target-dir", "../verilog", 
+                                                                        //"--preserve-aggregate", "all", 
+                                                                        "--dump-fir", 
+                                                                        ))
 
-    //ChiselStage.emitSystemVerilogFile(new DummyModule(), Array("--split-verilog", "--target-dir", "../verilog"))
+    //val chirrtl = ChiselStage.emitCHIRRTL(
+    //new rename(parameters),Array("--preserve-aggregate=all"))
+
+    //// Write the CHIRRTL to a file
+    //val outputDir = new File("output_directory")
+    //outputDir.mkdirs() // Create the output directory if it doesn't exist
+    //val outputFile = new File(outputDir, "rename.fir")
+    //val writer = new PrintWriter(outputFile)
+    //writer.write(chirrtl)
+    //writer.close()
 
 }
 
