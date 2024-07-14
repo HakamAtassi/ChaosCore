@@ -75,17 +75,8 @@ class FTQTest extends AnyFunSpec with Matchers {
 
       dut.io.predictions.ready.expect(1.B)
 
-
-
-
-
-
       }
     }
   }
-
-
-
-
 }
 

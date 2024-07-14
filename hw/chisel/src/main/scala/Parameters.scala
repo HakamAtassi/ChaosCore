@@ -89,10 +89,6 @@ case class Parameters(
   commitWidth:Int = 4,   // Up to how many entires are freed from the ROB each cycle (cant be larger than the number of ports)
 
 
-
-
-
-
 ){
   // DO NOT TOUCH PARAMETERS //
   val physicalRegBits: Int      = log2Ceil(physicalRegCount)      // N regs but x0 does not exist as a physical reg

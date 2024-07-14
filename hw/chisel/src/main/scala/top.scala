@@ -90,5 +90,10 @@ object Main extends App {
     //writer.write(chirrtl)
     //writer.close()
 
+
+    // Convert chisel to verilog
+
+    chisel2v("src/main/scala/Parameters.scala", "src/main/scala/bundles.scala")
+
 }
 
