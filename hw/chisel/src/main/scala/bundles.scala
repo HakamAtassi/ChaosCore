@@ -188,7 +188,6 @@ object RS_types extends ChiselEnum{
 class decoded_instruction(parameters:Parameters) extends Bundle{
     // Parameters
     import parameters._
-    val portCount       =   4
 
     val ready_bits          =   new sources_ready()
 
@@ -210,7 +209,7 @@ class decoded_instruction(parameters:Parameters) extends Bundle{
     // uOp info
     val instructionType     =  InstructionType()
 
-    val portID              =  UInt(log2Ceil(portCount).W)  // Decoder assings port ID
+    val portID              =  UInt(log2Ceil(4).W)  // Decoder assings port ID
     
     val RS_type             =  RS_types()
 
@@ -261,7 +260,7 @@ object InstructionType extends ChiselEnum {
     // Based on table 24.1 on RV spec
 
         // ROW 0
-        //              {inst[6:5], inst[4:2]}
+        //              (inst[6:5], inst[4:2])
         val LOAD        = Value("b00000".U)
         val LOAD_FP     = Value("b00001".U)
         val CUSTOM_0    = Value("b00010".U)

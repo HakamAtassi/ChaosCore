@@ -37,6 +37,8 @@ import chisel3.util._
 import getPortCount._
 import Thermometor._
 
+
+
 class MOB(parameters:Parameters) extends Module{
     import parameters._
     val portCount       = getPortCount(parameters)
@@ -70,6 +72,8 @@ class MOB(parameters:Parameters) extends Module{
 
     })
 
+
+
     val front_pointer   = RegInit(UInt(ptr_width.W), 0.U)
     val back_pointer    = RegInit(UInt(ptr_width.W), 0.U)
 
@@ -85,8 +89,8 @@ class MOB(parameters:Parameters) extends Module{
     val age_valid_vector    = Wire(Vec(MOBEntries, UInt((ptr_width - 1).W)))
 
     // Give each mob entry an age.
-    // Mob entry @ front pointer will have value of 15
-    // Mob entry @ back pointer will have value of 15 - number of entries
+    // Mob entry @ front pointer will have value of MAX
+    // Mob entry @ back pointer will have value of MAX - number of entries
     for(i <- 0 until MOBEntries){   
         age_vector(i)       := (front_index + MOBEntries.U - i.U) % MOBEntries.U // make sure this isnt generating extra hardware...
         age_valid_vector(i) := MOB(i).valid
