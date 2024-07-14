@@ -15,6 +15,7 @@ object chisel2v{    // convert bundles, params and enums to verilog
         var paramterArray = Array[String]()
 
         var bundleMap   = Map[String, Array[String]]()
+        var enumMap     = Map[String, Array[String]]()
 
 
         val parameterTraverser = new Traverser { // get parameters and convert
@@ -105,23 +106,61 @@ object chisel2v{    // convert bundles, params and enums to verilog
 
 
 
-        val bundleTraverser = new Traverser {   // FIXME: 
+        val bundleTraverser = new Traverser {
             override def apply(tree: Tree): Unit = tree match {
-                case Defn.Class(pos, name, tparamClause, ctor, templ) =>
+                case Defn.Class.After_4_6_0(pos, name, tparamClause, ctor, templ) =>
                 //println(s"// // $name")
                 //println(s"$templ")
 
                 current_declerations = Array[String]()
                 declerationTraverser(tree)
-
+                //println(tree.toString)
 
                 bundleMap = bundleMap.updated(name.toString, current_declerations)
-
 
                 // You are now in the bundle. traverse until all its elements are found
                 case node => super.apply(node)
             }
         }
+
+
+  val enumTraverser = new Traverser {
+    override def apply(tree: Tree): Unit = tree match {
+      case Defn.Object(_, name, templ) =>
+        //println(s"Processing object: $name")
+        // Traverse the template to find all Defn.Val elements
+        val verilogLines = templ.stats.collect {
+          case valDef: Defn.Val =>
+            // Extract identifiers and their corresponding values
+            val identifiersWithValues = valDef.pats.collect {
+              case Pat.Var(Term.Name(id)) =>
+
+                val value = valDef.rhs match {
+                  case Term.Apply.After_4_6_0(_, args) if args.nonEmpty =>
+                    val binString = valDef.rhs match {
+                        case Term.Apply(_, List(Term.Select(Lit.String(binaryString), Term.Name("U")))) =>
+                            s"'$binaryString"
+                        case _ =>
+                            println("No match found")
+                    }
+                    s"$id = ${binString}"
+
+                  case _ => id
+                }
+                value
+            }
+            identifiersWithValues
+        }.flatten.toArray
+
+        // Add to the enumMap
+        enumMap += (name.value -> verilogLines)
+
+      case node => super.apply(node)
+    }
+  }
+
+
+
 
 
         object writeParameters {
@@ -133,7 +172,7 @@ object chisel2v{    // convert bundles, params and enums to verilog
                 var writer: BufferedWriter = null
                 writer = new BufferedWriter(new FileWriter(filePath))
                 for (parameter <- parameterList) {
-                    writer.write(s"$parameter;\n")
+                    writer.write(s"$parameter\n")
                 }
                 println(s"Parameters have been written to $filePath")
                 if (writer != null) {
@@ -167,6 +206,31 @@ object chisel2v{    // convert bundles, params and enums to verilog
         }
 
 
+    def writeEnums(enumMap: Map[String, Array[String]], fileName: String): Unit = {
+    var writer: BufferedWriter = null
+    try {
+        writer = new BufferedWriter(new FileWriter(fileName))
+        enumMap.foreach { case (bundleName, verilogLines) =>
+        writer.write(s"typedef enum logic {\n")
+        val formattedLines = verilogLines.mkString(",\n  ")
+        writer.write(s"  $formattedLines\n")
+        writer.write(s"} $bundleName;\n\n")
+        }
+        println(s"Enums have been written to $fileName")
+    } catch {
+        case e: IOException => e.printStackTrace()
+    } finally {
+        if (writer != null) {
+        try {
+            writer.close()
+        } catch {
+            case e: IOException => e.printStackTrace()
+        }
+        }
+    }
+    }
+
+
         //val parametersDir  = Paths.get("src/main/scala/Parameters.txt")
         //val bundlesDir     = Paths.get("src/main/scala/Bundles.txt")
 
@@ -179,10 +243,12 @@ object chisel2v{    // convert bundles, params and enums to verilog
 
         parameterTraverser(parametersTree)
         bundleTraverser(bundleTree)
+        enumTraverser(bundleTree)
 
 
         writeParameters(paramterArray, "../verilog/Parametrs.sv")
         writeStructs(bundleMap, "../verilog/typedef.sv")
+        writeEnums(enumMap, "../verilog/enums.sv")
 
 
 
