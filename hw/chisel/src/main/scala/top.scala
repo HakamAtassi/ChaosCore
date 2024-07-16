@@ -35,65 +35,23 @@ import chisel3.util._
 import java.io.{File, FileWriter}
 import java.rmi.server.UID
 
-
-
-
-object VerilogGenerator {
-
-    def generateVerilog(module: => RawModule, fileName: String): Unit = {
-        val elaboratedModule = ChiselStage.emitSystemVerilog(module, firtoolOpts = Array("-disable-all-randomization", "-strip-debug-info"))
-
-        val file = new File(fileName)
-        val fw = new FileWriter(file)
-
-        try {
-            fw.write(elaboratedModule)
-        } finally {
-            fw.close()
-        }
-    }
-}
-
-
-import java.io.{File, PrintWriter}
-
 object Main extends App {
     import Parameters._
 
     val parameters = Parameters()
     val addressMap = AddressMap()
-    //VerilogGenerator.generateVerilog(new instruction_cache(parameters), "../verilog/Frontend/instruction_cache.v")
-//    VerilogGenerator.generateVerilog(new ChaosCore(parameters), 
-    //"../verilog/Core/ChaosCore.v")
-
-    //VerilogGenerator.generateVerilog(new rename(parameters), 
-    //"../verilog/Frontend/rename.v")
-
-    //VerilogGenerator.generateVerilog(new SOC(parameters, addressMap), 
-    //"../verilog/SOC/SOC.v")
 
     ChiselStage.emitSystemVerilogFile(new ChaosCore(parameters), Array("--split-verilog", 
                                                                         "--target", "verilog", 
                                                                         "--target-dir", "../verilog", 
                                                                         //"--preserve-aggregate", "all", 
-                                                                        "--dump-fir", 
+                                                                        "--dump-fir",
                                                                         ))
 
-    //val chirrtl = ChiselStage.emitCHIRRTL(
-    //new rename(parameters),Array("--preserve-aggregate=all"))
-
-    //// Write the CHIRRTL to a file
-    //val outputDir = new File("output_directory")
-    //outputDir.mkdirs() // Create the output directory if it doesn't exist
-    //val outputFile = new File(outputDir, "rename.fir")
-    //val writer = new PrintWriter(outputFile)
-    //writer.write(chirrtl)
-    //writer.close()
 
 
-    // Convert chisel to verilog
-
-    chisel2v("src/main/scala/Parameters.scala", "src/main/scala/bundles.scala")
+    chisel2v("src/main/scala/Parameters.scala", "src/main/scala/bundles.scala") // convert chisel bundles to verilog typedefs for UVM
+    removeYosysInvalid("../verilog/")
 
 }
 

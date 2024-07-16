@@ -31,16 +31,15 @@
 package ChaosCore
 
 import chisel3._
+import chisel3.ltl._
 import circt.stage.ChiselStage 
 import chisel3.util._
 import java.io.{File, FileWriter}
 import java.rmi.server.UID
 
-
 object PcGenState extends ChiselEnum{
     val Active, Flush = Value
 }
-
 
 class PC_gen(parameters:Parameters) extends Module{
     import parameters._
@@ -49,11 +48,11 @@ class PC_gen(parameters:Parameters) extends Module{
         val commit                          =   Flipped(ValidIO(new commit(parameters)))
         val revert                          =   Flipped(ValidIO(new revert(parameters)))
 
-        val prediction  = Flipped(Decoupled(new prediction(parameters)))           // BTB response
-        val RAS_read    = Flipped(new RAS_read(parameters))
+        val prediction                      =   Flipped(Decoupled(new prediction(parameters)))           // BTB response
+        val RAS_read                        =   Flipped(new RAS_read(parameters))
         // TODO: Exception:...                                                     // exception
 
-        val PC_next     = Decoupled(new memory_request(parameters))
+        val PC_next                         =   Decoupled(new memory_request(parameters))
     })
 
     dontTouch(io)
@@ -142,14 +141,9 @@ class PC_gen(parameters:Parameters) extends Module{
     }
 
 
-    dontTouch(use_BTB)
-    dontTouch(use_RAS)
-    dontTouch(PC_increment)
-
     when(io.PC_next.fire){
         PC := io.PC_next.bits.addr + PC_increment
     }
-
 
 
     /////////////////////////
@@ -160,5 +154,35 @@ class PC_gen(parameters:Parameters) extends Module{
     io.PC_next.bits.wr_en := 0.B
 
     io.prediction.ready := 1.B
+
+
+
+
+    ////////////
+    // FORMAL //
+    ////////////
+
+    // PROPERTY: increment PC if ready, not mispred, and not revert
+
+
+
+    val seqInputValid: Sequence     = io.PC_next.fire && !io.commit.valid && !io.revert.valid && !io.prediction.valid
+    val seqOutputValid: Sequence    = io.PC_next.bits.addr === (RegNext(io.PC_next.bits.addr & "hFFFF_FFF0".U) + 16.U)
+    val normal_valid: Property      = seqInputValid |=> (seqOutputValid)
+
+    AssertProperty(normal_valid)
+
+    CoverProperty(normal_valid)
+
+
+
+
+    // ASSUMPTION: 
+    val no_commit: Sequence    = io.commit.valid === 0.B
+    val no_revert: Sequence    = io.revert.valid === 0.B
+    val no_prediction: Sequence    = io.prediction.valid === 0.B
+    AssumeProperty(no_commit)
+    AssumeProperty(no_revert)
+    //AssumeProperty(no_prediction)
 
 }

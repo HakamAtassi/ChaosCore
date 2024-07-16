@@ -1,0 +1,24 @@
+[options]
+mode bmc
+depth 10
+
+[engines]
+smtbmc
+
+[script]
+read -formal rename.sv
+read -formal free_list.sv
+read -formal WAW_handler.sv
+read -formal RAT.sv
+read -formal Queue1_decoded_fetch_packet.sv
+read -formal Queue1_FTQ_entry.sv
+prep -top rename
+
+[files] 
+../hw/verilog/mem_64x2.sv
+../hw/verilog/SDPReadWriteSmem.sv
+../hw/verilog/mem_64x278.sv
+../hw/verilog/icache_ReadWriteSmem.sv
+../hw/verilog/instruction_validator.sv
+../hw/verilog/Queue1_fetch_packet.sv
+../hw/verilog/instruction_cache.sv
