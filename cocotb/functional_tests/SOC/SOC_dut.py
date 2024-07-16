@@ -62,7 +62,7 @@ class SOC_dut:
         #outputs["fetch_PC"]         = int(getattr(self.dut, f"frontend.instruction_fetch.io_predictions_bits_fetch_PC").value)
         outputs["predicted_PC"]     = int(getattr(self.dut, f"frontend.instruction_fetch.io_predictions_bits_predicted_PC").value)
         outputs["T_NT"]             = int(getattr(self.dut, f"frontend.instruction_fetch.io_predictions_bits_T_NT").value)
-        outputs["br_type"]          = int(getattr(self.dut, f"frontend.instruction_fetch.io_predictions_bits_br_type").value)
+        outputs["br_type"]          = int(getattr(self.dut, f"frontend.instruction_fetch.io_predictions_bitsbr_type_t").value)
         outputs["GHR"]              = int(getattr(self.dut, f"frontend.instruction_fetch.io_predictions_bits_GHR").value)
         outputs["NEXT"]             = int(getattr(self.dut, f"frontend.instruction_fetch.io_predictions_bits_NEXT").value)
         outputs["TOS"]              = int(getattr(self.dut, f"frontend.instruction_fetch.io_predictions_bits_TOS").value)

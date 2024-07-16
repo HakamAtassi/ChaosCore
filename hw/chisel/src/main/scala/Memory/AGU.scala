@@ -126,7 +126,7 @@ class AGU(parameters:Parameters) extends Module{
     io.FU_output.bits.memory_type   := RegNext(memory_type)     // LOAD/STORE
     io.FU_output.bits.RD            := RegNext(RD)              // LOAD DEST
     io.FU_output.bits.access_width  := RegNext(access_width)    // B/HW/W
-    io.FU_output.bits.unsigned      := RegNext(unsigned)        // SIGNED/UNSIGNED
+    io.FU_output.bits.is_unsigned      := RegNext(unsigned)        // SIGNED/UNSIGNED
     io.FU_output.bits.address       := RegNext(address)         // ADDRESS
     io.FU_output.bits.wr_data       := RegNext(wr_data)         // WR DATA
 

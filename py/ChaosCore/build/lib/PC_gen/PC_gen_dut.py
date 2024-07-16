@@ -15,7 +15,7 @@ class PC_gen_dut:
         commit["fetch_PC"] = self.PC_gen.io_commit_fetch_PC.value
         commit["T_NT"] = self.PC_gen.io_commit_T_NT.value
         commit["ROB_index"] = self.PC_gen.io_commit_ROB_index.value
-        commit["br_type"] = self.PC_gen.io_commit_br_type.value
+        commit["br_type"] = self.PC_gen.io_commitbr_type_t.value
         commit["fetch_packet_index"] = self.PC_gen.io_commit_fetch_packet_index.value
         commit["is_misprediction"] = self.PC_gen.io_commit_is_misprediction.value
         commit["expected_PC"] = self.PC_gen.io_commit_expected_PC.value
@@ -36,7 +36,7 @@ class PC_gen_dut:
         prediction["valid"] = self.PC_gen.io_prediction_valid.value
         prediction["hit"] = self.PC_gen.io_prediction_bits_hit.value
         prediction["target"] = self.PC_gen.io_prediction_bits_target.value
-        prediction["br_type"] = self.PC_gen.io_prediction_bits_br_type.value
+        prediction["br_type"] = self.PC_gen.io_prediction_bitsbr_type_t.value
         # prediction["br_mask"] = self.PC_gen.io_prediction_bits_br_mask.value
         # prediction["GHR"] = self.PC_gen.io_prediction_bits_GHR.value
         # prediction["T_NT"] = self.PC_gen.io_prediction_bits_T_NT.value

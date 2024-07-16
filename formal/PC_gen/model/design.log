@@ -1,0 +1,302 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite -- YosysHQ Edition [202407090834]     |
+ |  Copyright (C) 2012 - 2024 YosysHQ GmbH                                    |
+ |  For support, please contact support@yosyshq.com                           |
+ \----------------------------------------------------------------------------/
+ Yosys 0.43 (git sha1 ead4718e5, clang++ 14.0.0-1ubuntu1.1 -fPIC -Os)
+
+-- Executing script file `../model/design.ys' --
+
+1. Executing VERIFIC (loading SystemVerilog and VHDL designs using Verific).
+Built with Verific Jun24_SW_Release, released at Mon Jul  1 21:27:07 2024.
+VERIFIC-COMMENT [VERI-1482] Analyzing Verilog file 'PC_gen.sv'
+
+2. Executing VERIFIC (loading SystemVerilog and VHDL designs using Verific).
+Built with Verific Jun24_SW_Release, released at Mon Jul  1 21:27:07 2024.
+VERIFIC-COMMENT [VERI-1482] Analyzing Verilog file 'Queue1_memory_request.sv'
+
+3. Executing PREP pass.
+
+3.1. Executing HIERARCHY pass (managing design hierarchy).
+Statically elaborating the Verific parse tree.
+Elaborating all modules in library 'work'
+VERIFIC-INFO [VERI-1018] PC_gen.sv:46: compiling module 'PC_gen'
+Running rewriter 'initial-assertions'.
+Clearing rewriter list.
+VERIFIC-INFO [VERI-1018] PC_gen.sv:46: compiling module 'PC_gen'
+VERIFIC-INFO [VERI-2571] PC_gen.sv:147: extracting RAM for identifier '_RANDOM'
+VERIFIC-INFO [VERI-1018] Queue1_memory_request.sv:46: compiling module 'Queue1_memory_request'
+VERIFIC-INFO [VERI-2571] Queue1_memory_request.sv:75: extracting RAM for identifier '_RANDOM'
+Importing module PC_gen.
+Importing module Queue1_memory_request.
+
+3.1.1. Analyzing design hierarchy..
+Top module:  \PC_gen
+Used module:     \Queue1_memory_request
+
+3.1.2. Analyzing design hierarchy..
+Top module:  \PC_gen
+Used module:     \Queue1_memory_request
+Removed 0 unused modules.
+Module PC_gen directly or indirectly contains formal properties -> setting "keep" attribute.
+
+3.2. Executing PROC pass (convert processes to netlists).
+
+3.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+3.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+3.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 0 assignments to connections.
+
+3.2.4. Executing PROC_INIT pass (extract init attributes).
+
+3.2.5. Executing PROC_ARST pass (detect async resets in processes).
+
+3.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+3.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+
+3.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+3.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+3.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+3.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+3.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module Queue1_memory_request.
+Optimizing module PC_gen.
+<suppressed ~75 debug messages>
+
+3.3. Executing FUTURE pass.
+
+3.4. Executing OPT_EXPR pass (perform const folding).
+Optimizing module Queue1_memory_request.
+Optimizing module PC_gen.
+
+3.5. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \Queue1_memory_request..
+Finding unused cells or wires in module \PC_gen..
+Removed 1 unused cells and 291 unused wires.
+<suppressed ~38 debug messages>
+
+3.6. Executing CHECK pass (checking for obvious problems).
+Checking module PC_gen...
+Checking module Queue1_memory_request...
+Found and reported 0 problems.
+
+3.7. Executing OPT pass (performing simple optimizations).
+
+3.7.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module PC_gen.
+<suppressed ~18 debug messages>
+Optimizing module Queue1_memory_request.
+
+3.7.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\PC_gen'.
+<suppressed ~9 debug messages>
+Finding identical cells in module `\Queue1_memory_request'.
+Removed a total of 3 cells.
+
+3.7.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \PC_gen..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \Queue1_memory_request..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~7 debug messages>
+
+3.7.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \PC_gen.
+  Optimizing cells in module \Queue1_memory_request.
+Performed a total of 0 changes.
+
+3.7.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\PC_gen'.
+Finding identical cells in module `\Queue1_memory_request'.
+Removed a total of 0 cells.
+
+3.7.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \PC_gen..
+Finding unused cells or wires in module \Queue1_memory_request..
+Removed 1 unused cells and 12 unused wires.
+<suppressed ~11 debug messages>
+
+3.7.7. Executing OPT_EXPR pass (perform const folding).
+Optimizing module PC_gen.
+Optimizing module Queue1_memory_request.
+
+3.7.8. Rerunning OPT passes. (Maybe there is more to do..)
+
+3.7.9. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \PC_gen..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \Queue1_memory_request..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~7 debug messages>
+
+3.7.10. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \PC_gen.
+  Optimizing cells in module \Queue1_memory_request.
+Performed a total of 0 changes.
+
+3.7.11. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\PC_gen'.
+Finding identical cells in module `\Queue1_memory_request'.
+Removed a total of 0 cells.
+
+3.7.12. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \PC_gen..
+Finding unused cells or wires in module \Queue1_memory_request..
+
+3.7.13. Executing OPT_EXPR pass (perform const folding).
+Optimizing module PC_gen.
+Optimizing module Queue1_memory_request.
+
+3.7.14. Finished OPT passes. (There is nothing left to do.)
+
+3.8. Executing WREDUCE pass (reducing word size of cells).
+Removed top 27 bits (of 28) from port B of cell PC_gen.$verific$add_33$PC_gen.sv:107$99 ($add).
+Removed top 1 bits (of 3) from port B of cell PC_gen.$verific$sub_115$PC_gen.sv:139$149 ($sub).
+Removed top 27 bits (of 30) from port B of cell PC_gen.$verific$add_116$PC_gen.sv:139$150 ($add).
+
+3.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \PC_gen..
+Finding unused cells or wires in module \Queue1_memory_request..
+
+3.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+3.11. Executing OPT pass (performing simple optimizations).
+
+3.11.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module PC_gen.
+Optimizing module Queue1_memory_request.
+
+3.11.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\PC_gen'.
+Finding identical cells in module `\Queue1_memory_request'.
+Removed a total of 0 cells.
+
+3.11.3. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \PC_gen..
+Finding unused cells or wires in module \Queue1_memory_request..
+
+3.11.4. Finished fast OPT passes.
+
+3.12. Printing statistics.
+
+=== PC_gen ===
+
+   Number of wires:                107
+   Number of wire bits:            759
+   Number of public wires:          54
+   Number of public wire bits:     462
+   Number of ports:                 40
+   Number of port bits:            355
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 75
+     $add                            2
+     $adff                          15
+     $and                           18
+     $assert                         4
+     $assume                         1
+     $cover                          4
+     $dff                            3
+     $eq                             7
+     $mux                            7
+     $not                           12
+     $sub                            1
+     Queue1_memory_request           1
+
+=== Queue1_memory_request ===
+
+   Number of wires:                 23
+   Number of wire bits:            244
+   Number of public wires:          13
+   Number of public wire bits:     170
+   Number of ports:                  9
+   Number of port bits:            102
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 17
+     $and                            6
+     $dff                            2
+     $mux                            5
+     $not                            2
+     $or                             1
+     $xor                            1
+
+=== design hierarchy ===
+
+   PC_gen                            1
+     Queue1_memory_request           1
+
+   Number of wires:                130
+   Number of wire bits:           1003
+   Number of public wires:          67
+   Number of public wire bits:     632
+   Number of ports:                 49
+   Number of port bits:            457
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 91
+     $add                            2
+     $adff                          15
+     $and                           24
+     $assert                         4
+     $assume                         1
+     $cover                          4
+     $dff                            5
+     $eq                             7
+     $mux                           12
+     $not                           14
+     $or                             1
+     $sub                            1
+     $xor                            1
+
+3.13. Executing CHECK pass (checking for obvious problems).
+Checking module PC_gen...
+Checking module Queue1_memory_request...
+Found and reported 0 problems.
+
+4. Executing HIERARCHY pass (managing design hierarchy).
+
+4.1. Analyzing design hierarchy..
+Top module:  \PC_gen
+Used module:     \Queue1_memory_request
+
+4.2. Analyzing design hierarchy..
+Top module:  \PC_gen
+Used module:     \Queue1_memory_request
+Removed 0 unused modules.
+Module PC_gen directly or indirectly contains formal properties -> setting "keep" attribute.
+
+5. Executing jny backend.
+
+6. Executing RTLIL backend.
+Output filename: ../model/design.il
+
+End of script. Logfile hash: 18c7d3a544, CPU: user 0.04s system 0.01s, MEM: 35.00 MB peak
+Yosys 0.43 (git sha1 ead4718e5, clang++ 14.0.0-1ubuntu1.1 -fPIC -Os)
+Time spent: 23% 2x hierarchy (0 sec), 21% 5x opt_clean (0 sec), ...

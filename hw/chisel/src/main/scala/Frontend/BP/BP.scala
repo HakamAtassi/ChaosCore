@@ -100,7 +100,7 @@ class BP(parameters:Parameters) extends Module{
     // BTB and PHT are updated for ALL taken branches
     // Regardless of type (BT, JAL, etc...)
     update_BTB := io.commit.bits.T_NT && io.commit.valid
-    update_PHT := (io.commit.bits.br_type =/= _br_type.NONE) && io.commit.valid
+    update_PHT := (io.commit.bits.br_type =/= br_type_t.NONE) && io.commit.valid
     update_RAS := !misprediction
 
 
@@ -154,7 +154,7 @@ class BP(parameters:Parameters) extends Module{
     // FIXME: something needs to be added here to ensure that predictions after 
     // A replated mispredicted packet are correct...
     prediction.bits.target    := BTB.io.BTB_output.BTB_target
-    prediction.bits.br_type   := BTB.io.BTB_output.BTB_br_type
+    prediction.bits.br_type   := BTB.io.BTB_output.BTBbr_type_t
     prediction.bits.hit       := BTB.io.BTB_hit
     prediction.bits.GHR       := io.GHR
     prediction.bits.T_NT      := gshare.io.T_NT

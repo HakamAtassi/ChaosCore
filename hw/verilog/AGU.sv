@@ -59,7 +59,7 @@ module AGU(	// src/main/scala/Memory/AGU.scala:39:7
   output [31:0] io_FU_output_bits_address,	// src/main/scala/Memory/AGU.scala:41:16
   output [1:0]  io_FU_output_bits_memory_type,	// src/main/scala/Memory/AGU.scala:41:16
                 io_FU_output_bits_access_width,	// src/main/scala/Memory/AGU.scala:41:16
-  output        io_FU_output_bits_unsigned,	// src/main/scala/Memory/AGU.scala:41:16
+  output        io_FU_output_bits_is_unsigned,	// src/main/scala/Memory/AGU.scala:41:16
   output [31:0] io_FU_output_bits_wr_data	// src/main/scala/Memory/AGU.scala:41:16
 );
 
@@ -71,7 +71,7 @@ module AGU(	// src/main/scala/Memory/AGU.scala:39:7
   reg  [1:0]  io_FU_output_bits_memory_type_REG;	// src/main/scala/Memory/AGU.scala:126:47
   reg  [6:0]  io_FU_output_bits_RD_REG;	// src/main/scala/Memory/AGU.scala:127:47
   reg  [1:0]  io_FU_output_bits_access_width_REG;	// src/main/scala/Memory/AGU.scala:128:47
-  reg         io_FU_output_bits_unsigned_REG;	// src/main/scala/Memory/AGU.scala:129:47
+  reg         io_FU_output_bits_is_unsigned_REG;	// src/main/scala/Memory/AGU.scala:129:50
   reg  [31:0] io_FU_output_bits_address_REG;	// src/main/scala/Memory/AGU.scala:130:47
   reg  [31:0] io_FU_output_bits_wr_data_REG;	// src/main/scala/Memory/AGU.scala:131:47
   reg         hasBeenResetReg;	// src/main/scala/chisel3/ltl/LTL.scala:422:39
@@ -113,7 +113,7 @@ module AGU(	// src/main/scala/Memory/AGU.scala:39:7
       SB | is_load & _LB_T | LBU
         ? 2'h1
         : SH | is_load & _LH_T | LHU ? 2'h2 : {2{SW | is_load & _LW_T}};	// src/main/scala/Memory/AGU.scala:39:7, :73:110, :75:{45,56,83}, :76:{45,56,83}, :77:{45,56,83}, :79:{45,83}, :80:{45,83}, :81:{45,83}, :83:{45,83}, :84:{45,83}, :112:18, :113:{13,19,26}, :114:22, :115:{19,25,32}, :116:22, :117:{19,25}, :118:22, :128:47
-    io_FU_output_bits_unsigned_REG <= LBU | LHU;	// src/main/scala/Memory/AGU.scala:83:{45,83}, :84:{45,83}, :121:28, :129:47
+    io_FU_output_bits_is_unsigned_REG <= LBU | LHU;	// src/main/scala/Memory/AGU.scala:83:{45,83}, :84:{45,83}, :121:28, :129:50
     io_FU_output_bits_address_REG <=
       io_FU_input_bits_RS1_data
       + {{11{io_FU_input_bits_decoded_instruction_IMM[20]}},
@@ -142,7 +142,7 @@ module AGU(	// src/main/scala/Memory/AGU.scala:39:7
         io_FU_output_bits_memory_type_REG = _RANDOM[2'h0][2:1];	// src/main/scala/Memory/AGU.scala:39:7, :125:47, :126:47
         io_FU_output_bits_RD_REG = _RANDOM[2'h0][9:3];	// src/main/scala/Memory/AGU.scala:39:7, :125:47, :127:47
         io_FU_output_bits_access_width_REG = _RANDOM[2'h0][11:10];	// src/main/scala/Memory/AGU.scala:39:7, :125:47, :128:47
-        io_FU_output_bits_unsigned_REG = _RANDOM[2'h0][12];	// src/main/scala/Memory/AGU.scala:39:7, :125:47, :129:47
+        io_FU_output_bits_is_unsigned_REG = _RANDOM[2'h0][12];	// src/main/scala/Memory/AGU.scala:39:7, :125:47, :129:50
         io_FU_output_bits_address_REG = {_RANDOM[2'h0][31:13], _RANDOM[2'h1][12:0]};	// src/main/scala/Memory/AGU.scala:39:7, :125:47, :130:47
         io_FU_output_bits_wr_data_REG = {_RANDOM[2'h1][31:13], _RANDOM[2'h2][12:0]};	// src/main/scala/Memory/AGU.scala:39:7, :130:47, :131:47
       `endif // RANDOMIZE_REG_INIT
@@ -156,7 +156,7 @@ module AGU(	// src/main/scala/Memory/AGU.scala:39:7
   assign io_FU_output_bits_address = io_FU_output_bits_address_REG;	// src/main/scala/Memory/AGU.scala:39:7, :130:47
   assign io_FU_output_bits_memory_type = io_FU_output_bits_memory_type_REG;	// src/main/scala/Memory/AGU.scala:39:7, :126:47
   assign io_FU_output_bits_access_width = io_FU_output_bits_access_width_REG;	// src/main/scala/Memory/AGU.scala:39:7, :128:47
-  assign io_FU_output_bits_unsigned = io_FU_output_bits_unsigned_REG;	// src/main/scala/Memory/AGU.scala:39:7, :129:47
+  assign io_FU_output_bits_is_unsigned = io_FU_output_bits_is_unsigned_REG;	// src/main/scala/Memory/AGU.scala:39:7, :129:50
   assign io_FU_output_bits_wr_data = io_FU_output_bits_wr_data_REG;	// src/main/scala/Memory/AGU.scala:39:7, :131:47
 endmodule
 

@@ -1,0 +1,114 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite -- YosysHQ Edition [202407090834]     |
+ |  Copyright (C) 2012 - 2024 YosysHQ GmbH                                    |
+ |  For support, please contact support@yosyshq.com                           |
+ \----------------------------------------------------------------------------/
+ Yosys 0.43 (git sha1 ead4718e5, clang++ 14.0.0-1ubuntu1.1 -fPIC -Os)
+
+-- Executing script file `design_smt2.ys' --
+
+1. Executing RTLIL frontend.
+Input filename: design_prep.il
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1. Analyzing design hierarchy..
+Top module:  \PC_gen
+Used module:     \Queue1_memory_request
+
+2.2. Analyzing design hierarchy..
+Top module:  \PC_gen
+Used module:     \Queue1_memory_request
+Removed 0 unused modules.
+Module PC_gen directly or indirectly contains formal properties -> setting "keep" attribute.
+
+3. Executing FORMALFF pass.
+
+4. Executing DFFUNMAP pass (unmap clock enable and synchronous reset from FFs).
+
+5. Printing statistics.
+
+=== Queue1_memory_request ===
+
+   Number of wires:                 24
+   Number of wire bits:            245
+   Number of public wires:          13
+   Number of public wire bits:     170
+   Number of ports:                  9
+   Number of port bits:            102
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 19
+     $and                            6
+     $anyinit                        2
+     $assume                         1
+     $mux                            5
+     $not                            3
+     $or                             1
+     $xor                            1
+
+=== PC_gen ===
+
+   Number of wires:                119
+   Number of wire bits:            771
+   Number of public wires:          54
+   Number of public wire bits:     462
+   Number of ports:                 40
+   Number of port bits:            355
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 84
+     $add                            2
+     $and                           14
+     $anyinit                        2
+     $assert                         4
+     $assume                         2
+     $eq                             7
+     $ff                            11
+     $mux                           27
+     $not                           13
+     $sub                            1
+     Queue1_memory_request           1
+
+=== design hierarchy ===
+
+   PC_gen                            1
+     Queue1_memory_request           1
+
+   Number of wires:                143
+   Number of wire bits:           1016
+   Number of public wires:          67
+   Number of public wire bits:     632
+   Number of ports:                 49
+   Number of port bits:            457
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                102
+     $add                            2
+     $and                           20
+     $anyinit                        4
+     $assert                         4
+     $assume                         3
+     $eq                             7
+     $ff                            11
+     $mux                           32
+     $not                           16
+     $or                             1
+     $sub                            1
+     $xor                            1
+
+6. Executing SMT2 backend.
+
+6.1. Executing BMUXMAP pass.
+
+6.2. Executing DEMUXMAP pass.
+Creating SMT-LIBv2 representation of module Queue1_memory_request.
+Creating SMT-LIBv2 representation of module PC_gen.
+
+End of script. Logfile hash: 01046e41b1, CPU: user 0.01s system 0.00s, MEM: 25.38 MB peak
+Yosys 0.43 (git sha1 ead4718e5, clang++ 14.0.0-1ubuntu1.1 -fPIC -Os)
+Time spent: 68% 2x write_smt2 (0 sec), 22% 2x read_ilang (0 sec), ...

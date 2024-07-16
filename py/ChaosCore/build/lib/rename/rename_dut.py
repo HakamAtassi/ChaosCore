@@ -153,7 +153,7 @@ class rename_dut:
         self.dut.io_commit_bits_fetch_PC.value                = commit["fetch_PC"]
         self.dut.io_commit_bits_T_NT.value                    = commit["T_NT"]
         self.dut.io_commit_bits_ROB_index.value               = commit["ROB_index"]
-        self.dut.io_commit_bits_br_type.value                 = commit["br_type"]
+        self.dut.io_commit_bitsbr_type_t.value                 = commit["br_type"]
         self.dut.io_commit_bits_fetch_packet_index.value      = commit["fetch_packet_index"]
         self.dut.io_commit_bits_is_misprediction.value        = commit["is_misprediction"]
         self.dut.io_commit_bits_expected_PC.value             = commit["expected_PC"]
@@ -196,7 +196,7 @@ class rename_dut:
         commit["fetch_PC"] = int(self.dut.io_commit_bits_fetch_PC.value)
         commit["T_NT"] = int(self.dut.io_commit_bits_T_NT.value)
         commit["ROB_index"] = int(self.dut.io_commit_bits_ROB_index.value)
-        commit["br_type"] = int(self.dut.io_commit_bits_br_type.value)
+        commit["br_type"] = int(self.dut.io_commit_bitsbr_type_t.value)
         commit["fetch_packet_index"] = int(self.dut.io_commit_bits_fetch_packet_index.value)
         commit["is_misprediction"] = int(self.dut.io_commit_bits_is_misprediction.value)
         commit["expected_PC"] = int(self.dut.io_commit_bits_expected_PC.value)

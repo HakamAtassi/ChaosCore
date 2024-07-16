@@ -7,18 +7,18 @@ typedef enum logic {
 
 typedef enum logic {
   NONE,
-  LOAD,
-  STORE
-} memory_type_t;
-
-typedef enum logic {
-  NONE,
   BR,
   JAL,
   JALR,
   RET,
   CALL
-} _br_type;
+} br_type_t;
+
+typedef enum logic {
+  NONE,
+  LOAD,
+  STORE
+} memory_type_t;
 
 typedef enum logic {
   INT,

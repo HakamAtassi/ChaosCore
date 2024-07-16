@@ -49,9 +49,10 @@ object Main extends App {
                                                                         ))
 
 
-
-    chisel2v("src/main/scala/Parameters.scala", "src/main/scala/bundles.scala") // convert chisel bundles to verilog typedefs for UVM
+    //chisel2v("src/main/scala/Parameters.scala", "src/main/scala/bundles.scala") // convert chisel bundles to verilog typedefs for UVM
     removeYosysInvalid("../verilog/")
+
+    generate_sv_interfaces("src/main/scala/Parameters.scala", "src/main/scala/bundles.scala")
 
 }
 

@@ -373,7 +373,7 @@ class rename(parameters:Parameters) extends Module{
     // GENERATE SIGNALS
     val restore_checkpoint          = io.commit.valid && io.commit.bits.is_misprediction
     val restore_checkpoint_value    = io.commit.bits.RAT_index
-    val free_checkpoint             = io.commit.valid && !io.commit.bits.is_misprediction && (io.commit.bits.br_type =/= _br_type.NONE)
+    val free_checkpoint             = io.commit.valid && !io.commit.bits.is_misprediction && (io.commit.bits.br_type =/= br_type_t.NONE)
     val create_checkpoint           = Wire(Bool())
 
     val create_checkpoint_vec   = Wire(Vec(fetchWidth, Bool()))

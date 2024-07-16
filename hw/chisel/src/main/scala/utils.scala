@@ -325,3 +325,12 @@ object get_MOB_row_wr_bytes {
     wr_bytes
   }
 }
+
+
+
+
+//object sign_extend{
+  //def apply(){
+  // TODO: 
+  //}
+//}

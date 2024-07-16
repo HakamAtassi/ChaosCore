@@ -16,7 +16,7 @@ class predecoder_dut:
         prediction["valid"] = self.predecoder.io_prediction_valid.value
         prediction["hit"] = self.predecoder.io_prediction_bits_hit.value
         prediction["target"] = self.predecoder.io_prediction_bits_target.value
-        # prediction["br_type"] = self.predecoder.io_prediction_bits_br_type.value
+        # prediction["br_type"] = self.predecoder.io_prediction_bitsbr_type_t.value
         # prediction["br_mask"] = self.predecoder.io_prediction_bits_br_mask.value
         # prediction["GHR"] = self.predecoder.io_prediction_bits_GHR.value
         prediction["T_NT"] = self.predecoder.io_prediction_bits_T_NT.value
@@ -84,7 +84,7 @@ class predecoder_dut:
         commit["fetch_PC"] = self.predecoder.io_commit_fetch_PC.value
         commit["T_NT"] = self.predecoder.io_commit_T_NT.value
         commit["ROB_index"] = self.predecoder.io_commit_ROB_index.value
-        commit["br_type"] = self.predecoder.io_commit_br_type.value
+        commit["br_type"] = self.predecoder.io_commitbr_type_t.value
         commit["fetch_packet_index"] = (
             self.predecoder.io_commit_fetch_packet_index.value
         )
@@ -170,7 +170,7 @@ class predecoder_dut:
         predictions["is_misprediction"]     = int((self.predecoder.io_predictions_bits_is_misprediction.value))
         predictions["predicted_PC"]         = int(self.predecoder.io_predictions_bits_predicted_PC.value)
         predictions["T_NT"]                 = int(self.predecoder.io_predictions_bits_T_NT.value)
-        predictions["br_type"]              = int(self.predecoder.io_predictions_bits_br_type.value)
+        predictions["br_type"]              = int(self.predecoder.io_predictions_bitsbr_type_t.value)
         predictions["GHR"]                  = int(self.predecoder.io_predictions_bits_GHR.value)
         predictions["NEXT"]                 = int(self.predecoder.io_predictions_bits_NEXT.value)
         predictions["TOS"]                  = int(self.predecoder.io_predictions_bits_TOS.value)

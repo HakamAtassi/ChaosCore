@@ -88,7 +88,7 @@ module FU(	// src/main/scala/Backend/FU.scala:384:7
   output [31:0] io_FU_output_bits_address,	// src/main/scala/Backend/FU.scala:391:16
   output [1:0]  io_FU_output_bits_memory_type,	// src/main/scala/Backend/FU.scala:391:16
                 io_FU_output_bits_access_width,	// src/main/scala/Backend/FU.scala:391:16
-  output        io_FU_output_bits_unsigned,	// src/main/scala/Backend/FU.scala:391:16
+  output        io_FU_output_bits_is_unsigned,	// src/main/scala/Backend/FU.scala:391:16
   output [31:0] io_FU_output_bits_wr_data,	// src/main/scala/Backend/FU.scala:391:16
   output [3:0]  io_FU_output_bits_MOB_index,	// src/main/scala/Backend/FU.scala:391:16
   output [5:0]  io_FU_output_bits_ROB_index,	// src/main/scala/Backend/FU.scala:391:16
@@ -262,7 +262,7 @@ module FU(	// src/main/scala/Backend/FU.scala:384:7
   assign io_FU_output_bits_address = 32'h0;	// src/main/scala/Backend/FU.scala:384:7, :411:39, :412:55
   assign io_FU_output_bits_memory_type = 2'h0;	// src/main/scala/Backend/FU.scala:384:7, :411:39, :412:55
   assign io_FU_output_bits_access_width = 2'h0;	// src/main/scala/Backend/FU.scala:384:7, :411:39, :412:55
-  assign io_FU_output_bits_unsigned = 1'h0;	// src/main/scala/Backend/FU.scala:384:7
+  assign io_FU_output_bits_is_unsigned = 1'h0;	// src/main/scala/Backend/FU.scala:384:7
   assign io_FU_output_bits_wr_data = 32'h0;	// src/main/scala/Backend/FU.scala:384:7, :411:39, :412:55
   assign io_FU_output_bits_MOB_index =
     REG_1 ? _branch_unit_io_FU_output_bits_MOB_index : _ALU_io_FU_output_bits_MOB_index;	// src/main/scala/Backend/FU.scala:384:7, :411:39, :412:55, :428:31, :435:{21,32}, :436:26

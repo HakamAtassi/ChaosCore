@@ -1,0 +1,9 @@
+# running in PC_gen/src/
+read -formal PC_gen.sv
+read -formal Queue1_memory_request.sv
+prep -top PC_gen
+
+hierarchy -smtcheck
+rename -witness
+write_jny -no-connections ../model/design.json
+write_rtlil ../model/design.il

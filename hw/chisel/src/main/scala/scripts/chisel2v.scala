@@ -18,19 +18,37 @@ object chisel2v{    // convert bundles, params and enums to verilog
         var enumMap     = Map[String, Array[String]]()
 
 
-        val parameterTraverser = new Traverser { // get parameters and convert
-            override def apply(tree: Tree): Unit = tree match {
 
-                case Term.Param(mods, name, decltpe, default) =>  // print name and decltpe
-                val parameter = name
-                val tpe = decltpe.getOrElse(Int)
-                val a = default.getOrElse(0)
-                val paramterString = s"parameter $parameter=$a;"
-                paramterArray +:= paramterString
-                case node => super.apply(node)
-            }
+    val parameterTraverser = new Traverser { 
+    // get parameters and convert
+    override def apply(tree: Tree): Unit = tree match {
+        case Term.Param(mods, name, decltpe, default) =>  // print name and decltpe
+        val parameter = name
+        val tpe = decltpe.getOrElse(t"Int")
+        val a = default.getOrElse(q"0")
+        var paramterString = s"parameter $parameter=$a;"
+        
+        // Replace "true" with "1", "false" with "0", and remove ".U"
+        paramterString = paramterString
+            .replace("true", "1")
+            .replace("false", "0")
+            .replace(".U", "")
+        
+        // Replace "hxxxxxxxx" with 'hxxxx
+        paramterString = paramterString.replaceAll("\"h([0-9A-Fa-f]+)\"", "'h$1")
+        paramterArray :+= paramterString
+
+        case Defn.Val(mods, pats, decltpe, rhs) => 
+        // Extract term name and rhs
+        pats.foreach {
+            case Pat.Var(termName) =>
+            var paramterString = s"localparam ${termName.value}=${rhs.syntax};"
+            paramterArray :+= paramterString.replace("log2Ceil", "$clog2")
         }
 
+        case node => super.apply(node)
+    }
+    }
 
         var current_declerations = Array[String]()
 
@@ -42,57 +60,63 @@ object chisel2v{    // convert bundles, params and enums to verilog
                     case Defn.Val(pos, pats, decltpe, rhs) =>  // print name and decltpe
 
                     val decleration_identifier = pats(0).toString
+                    val has_localparam_typehint = decltpe.toString
                     //println(rhs.structure)
 
                     //println(decleration_identifier)
                     //println(rhs.children.structure)
                     //println(rhs.children(1).children.structure)
 
-                    val decleration_type = rhs.children(0).toString
+                    val decleration_type = rhs.children(0).toString.replace("(parameters)", ("")).replace("new ", "")
                     var decleration_width = ""//rhs.children(1)
 
                     var decleration = ""
+
+                    
 
 
                     //println(rhs)
                     //rhsTraverser(rhs.children(0))
 
 
-
-                    if(decleration_type == "Bool"){
+                    if (has_localparam_typehint == "Some(Int)"){
+                        val param_value = rhs.toString
+                        decleration = s"localparam $decleration_identifier = $param_value;\n"
+                    }else if(decleration_type == "Bool"){
                         decleration_width = "1"
                         decleration = s"logic $decleration_identifier;\n";
                     }else if(decleration_type== "UInt" || decleration_type == "SInt"){
-                        //println(rhs.children(1).children(0).children(0).structure)
                         decleration_width = rhs.children(1).children(0).children(0).toString
-                        //println(decleration_width)
                         decleration = s"logic [$decleration_width-1:0] $decleration_identifier;\n";
-                        //print(decleration)
                     }else if(decleration_type == "Vec"){
-
                         val vec_decleration_width = rhs.children(1).children(0).toString()
                         val vec_decleration_type = rhs.children(1).children(1).toString()
+
                         //println(vec_decleration_type)
                         //println(vec_decleration_width)
 
-                        if(decleration_type == "Bool"){
-                            decleration_width = "1"
-                            decleration = s"logic $decleration_identifier;\n";
-                        }else if(decleration_type== "UInt" || decleration_type == "SInt"){
+                        decleration = "ERROR\n"
+
+                        if(vec_decleration_type == "Bool()"){
+                            decleration = s"logic $decleration_identifier[$vec_decleration_width];\n";
+                        }else if(vec_decleration_type== "UInt" || vec_decleration_type == "SInt"){
                             decleration_width = rhs.children(1).children(0).children(0).toString
-                            decleration = s"logic [$decleration_width-1:0] $decleration_identifier;\n";
+                            decleration = s"logic [$decleration_width-1:0] $decleration_identifier[$vec_decleration_width];\n";
+                        }else{
+                            //decleration_width = rhs.children(1).children(0).toString
+                            //decleration_width = rhs.children(1).toString
+                            //decleration = s"logic [$decleration_width-1:0] $decleration_identifier[$vec_decleration_width];\n";
+                            //println(decleration_width)
                         }
 
-                        decleration = "ERROR\n"
-                        //println(rhs.children(1).toString)
                     }else{    // user defined
-                        decleration = s"$decleration_type $decleration_identifier;\n";
+                        decleration = s"$decleration_type $decleration_identifier;\n"
                         //println(decleration)
                     }
 
 
 
-                    current_declerations :+= decleration
+                    current_declerations :+= decleration.replace("log2Ceil", "$clog2")
 
 
 
@@ -118,7 +142,6 @@ object chisel2v{    // convert bundles, params and enums to verilog
 
                 bundleMap = bundleMap.updated(name.toString, current_declerations)
 
-                // You are now in the bundle. traverse until all its elements are found
                 case node => super.apply(node)
             }
         }
@@ -191,11 +214,12 @@ object chisel2v{    // convert bundles, params and enums to verilog
                 writer = new BufferedWriter(new FileWriter(filePath))
                 
                 for ((structName, declarations) <- bundles) {
-                    writer.write(s"typedef struct {\n")
+                    writer.write(s"interface $structName;\n")
                     for (declaration <- declarations) {
                         writer.write(s"    $declaration")
                     }
-                    writer.write(s"} $structName;\n\n")
+                    //writer.write(s"} $structName;\n\n")
+                    writer.write(s"endinterface;\n\n")
                 }
 
                 println(s"Structs have been written to $filePath")
@@ -231,6 +255,8 @@ object chisel2v{    // convert bundles, params and enums to verilog
     }
 
 
+
+
         //val parametersDir  = Paths.get("src/main/scala/Parameters.txt")
         //val bundlesDir     = Paths.get("src/main/scala/Bundles.txt")
 
@@ -246,7 +272,9 @@ object chisel2v{    // convert bundles, params and enums to verilog
         enumTraverser(bundleTree)
 
 
-        writeParameters(paramterArray, "../verilog/Parametrs.sv")
+
+
+        writeParameters(paramterArray, "../verilog/parameters.sv")
         writeStructs(bundleMap, "../verilog/typedef.sv")
         writeEnums(enumMap, "../verilog/enums.sv")
 
