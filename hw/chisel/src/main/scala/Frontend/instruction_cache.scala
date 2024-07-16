@@ -29,6 +29,7 @@
 package ChaosCore
 
 import chisel3._
+import chisel3.ltl._
 import circt.stage.ChiselStage 
 import chisel3.util._
 import java.io.{File, FileWriter}
@@ -362,6 +363,9 @@ class instruction_cache(parameters:Parameters) extends Module{
     CPU_response.bits.fetch_PC := fetch_PC_buf.addr
 
     CPU_response_skid_buffer.io.deq                  <> io.CPU_response
+
+
+    // FORMAL //
     
 
 }

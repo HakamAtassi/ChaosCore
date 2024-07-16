@@ -29,9 +29,9 @@
 
 package ChaosCore
 
-
-import chisel3.util._
 import chisel3._
+import chisel3.util._
+import chisel3.ltl._
 
 
 // the architecture of the RAT and RAT checkpointing is inspired by sargantana.
@@ -70,6 +70,8 @@ class WAW_handler(parameters:Parameters) extends Module{
     }
     io.RAT_wr_en(i) := rat_wr_en_i
   }
+
+
 
 }
 
@@ -190,7 +192,9 @@ class RAT(parameters:Parameters) extends Module{
     }
 
     io.active_checkpoint_value  := RAT_front_index
-    io.checkpoints_full         := ((RAT_front_index + 1.U) === RAT_back_index) && ((RAT_front_pointer + 1.U) =/= RAT_back_pointer)
+    io.checkpoints_full         := ((RAT_front_pointer + 1.U)(ptr_width-1) =/= RAT_back_pointer(ptr_width-1)) && 
+                                    ((RAT_front_pointer + 1.U)(ptr_width-2, 0) === RAT_back_pointer(ptr_width-2,0))
+
     io.checkpoints_empty        := (RAT_front_pointer === RAT_back_pointer) && !io.checkpoints_full
 
 
@@ -198,6 +202,32 @@ class RAT(parameters:Parameters) extends Module{
     dontTouch(wr_din)
     dontTouch(RAT_back_index)
     dontTouch(RAT_front_index)
+
+
+    // FORMAL //
+    // Assertions
+    val queue_empty = RAT_back_pointer === RAT_front_pointer
+
+    val queue_property_1 = Sequence.BoolSequence((RAT_front_pointer - RAT_back_pointer) < (RATCheckpointCount.U))
+
+    val queue_full =    (RAT_back_pointer(ptr_width-1) =/= (RAT_front_pointer+1.U)(ptr_width-1)) && 
+                        (RAT_back_pointer(ptr_width-2,0) === (RAT_front_pointer+1.U)(ptr_width-2,0))
+
+    val queue_property_2 = Sequence.BoolSequence(queue_full === io.checkpoints_full)
+    val queue_property_3 = Sequence.BoolSequence(queue_empty === io.checkpoints_empty)
+
+    AssertProperty(queue_property_1)
+    AssertProperty(queue_property_2)
+
+
+    // Assumptions
+    val cant_free_when_empty = Sequence.BoolSequence(!(queue_empty && io.free_checkpoint))
+    //AssumeProperty(cant_free_when_empty)
+    //AssumeProperty(!io.restore_checkpoint)
+
+
+    // Covers
+    CoverProperty(queue_full)
     
 }
 

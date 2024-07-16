@@ -1680,6 +1680,8 @@ module backend(	// src/main/scala/Backend/backend.scala:47:7
   );	// src/main/scala/Backend/backend.scala:188:21
   AGU FU3 (	// src/main/scala/Backend/backend.scala:189:21
     .clock                                            (clock),
+    .reset                                            (reset),
+    .io_flush                                         (io_flush),
     .io_FU_input_valid                                (FU3_io_FU_input_valid_REG),	// src/main/scala/Backend/backend.scala:203:47
     .io_FU_input_bits_decoded_instruction_RD
       (read_decoded_instructions_3_decoded_instruction_REG_RD),	// src/main/scala/Backend/backend.scala:175:64

@@ -31,6 +31,7 @@
 package ChaosCore
 
 import chisel3._
+import chisel3.ltl._
 import circt.stage.ChiselStage 
 
 import chisel3.util._
@@ -48,7 +49,7 @@ class AGU(parameters:Parameters) extends Module{
         val FU_output               =   ValidIO(new FU_output(parameters))                  // Input to LSQ
     })
 
-    io.FU_output := DontCare
+    io.FU_output.bits := 0.U.asTypeOf(new FU_output(parameters))
 
     ////////////////////
     // MEMORY REQUEST //
@@ -121,11 +122,11 @@ class AGU(parameters:Parameters) extends Module{
     address         := RS1_data + imm
 
     // Everything needed to perform the memory request (LSQ request)    
-    io.FU_output.valid              := RegNext(io.FU_input.valid)
+    io.FU_output.valid              := RegNext(io.FU_input.valid && !io.flush)
     io.FU_output.bits.memory_type   := RegNext(memory_type)     // LOAD/STORE
     io.FU_output.bits.RD            := RegNext(RD)              // LOAD DEST
     io.FU_output.bits.access_width  := RegNext(access_width)    // B/HW/W
-    io.FU_output.bits.unsigned      := RegNext(unsigned)          // SIGNED/UNSIGNED
+    io.FU_output.bits.unsigned      := RegNext(unsigned)        // SIGNED/UNSIGNED
     io.FU_output.bits.address       := RegNext(address)         // ADDRESS
     io.FU_output.bits.wr_data       := RegNext(wr_data)         // WR DATA
 
@@ -133,4 +134,60 @@ class AGU(parameters:Parameters) extends Module{
     // VALID/READY //
     /////////////////
     io.FU_input.ready               := 1.B
+
+
+    ////////////
+    // FORMAL //
+    ////////////
+
+    val test = RegNext(io.flush)
+
+
+    // PROPERTY: output should have a latency of 1, excluding flushes //
+    val seqInputValid: Sequence = io.FU_input.valid && !io.flush
+    val seqOutputValid: Sequence = io.FU_output.valid
+    val normal_valid: Property = seqInputValid |=> (seqOutputValid)
+
+    val flush_in: Sequence = io.flush
+    val flushed_valid_out: Sequence = !io.FU_output.valid 
+    val flushed_valid: Property = flush_in |=> (flushed_valid_out)
+
+
+    // PROPERTY: stores should be masked //
+    val input_is_SB: Sequence = (io.FU_input.valid) && (io.FU_input.bits.decoded_instruction.FUNCT3 === "b000".U) && (io.FU_input.bits.decoded_instruction.memory_type === memory_type_t.STORE)
+    val output_smaller_than_ff: Sequence = io.FU_output.bits.wr_data <= 0xFF.U
+    val SB_prop: Property = input_is_SB |=> output_smaller_than_ff
+
+    def inputIsStore(funct3: UInt): Sequence = {
+        io.FU_input.valid && 
+        (io.FU_input.bits.decoded_instruction.FUNCT3 === funct3) && 
+        (io.FU_input.bits.decoded_instruction.memory_type === memory_type_t.STORE)
+    }
+
+    // Define properties for each store type
+    val inputIsSB: Sequence = inputIsStore("b000".U)
+    val inputIsSH: Sequence = inputIsStore("b001".U)
+    val inputIsSW: Sequence = inputIsStore("b010".U)
+
+    // Define the corresponding output constraints
+    val outputSmallerThanFF: Sequence = io.FU_output.bits.wr_data <= 0xFF.U
+    val outputSmallerThanFFFF: Sequence = io.FU_output.bits.wr_data <= 0xFFFF.U
+    val outputSmallerThanFFFFFFFF: Sequence = io.FU_output.bits.wr_data <= "hFFFFFFFF".U
+
+    // Define properties for each type
+    val SBProp: Property = inputIsSB |=> outputSmallerThanFF
+    val SHProp: Property = inputIsSH |=> outputSmallerThanFFFF
+    val SWProp: Property = inputIsSW |=> outputSmallerThanFFFFFFFF
+
+
+    // Assert the properties
+
+    AssertProperty(flushed_valid)
+    AssertProperty(normal_valid)
+    AssertProperty(SBProp)
+    AssertProperty(SHProp)
+    AssertProperty(SWProp)
+
+
+
 }

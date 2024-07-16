@@ -42,6 +42,6 @@ module ram_16x21(	// src/main/scala/chisel3/util/Decoupled.scala:256:44
       `endif // RANDOMIZE_REG_INIT
     end // initial
   `endif // ENABLE_INITIAL_MEM_
-  assign R0_data = _R0_en_d0 ? Memory[_R0_addr_d0] : 21'bx;	// src/main/scala/chisel3/util/Decoupled.scala:256:44
+  assign R0_data = _R0_en_d0 ? Memory[_R0_addr_d0] : 21'b0;	// src/main/scala/chisel3/util/Decoupled.scala:256:44
 endmodule
 

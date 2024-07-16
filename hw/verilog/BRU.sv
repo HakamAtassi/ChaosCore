@@ -79,7 +79,7 @@ module BRU(	// src/main/scala/Frontend/BRU.scala:38:7
   wire _GEN = io_FTQ_GHR != 16'h1;	// src/main/scala/Frontend/BRU.scala:102:39
   reg  hasBeenResetReg;	// src/main/scala/chisel3/ltl/LTL.scala:422:39
   initial	// src/main/scala/chisel3/ltl/LTL.scala:422:39
-    hasBeenResetReg = 1'bx;	// src/main/scala/chisel3/ltl/LTL.scala:422:39
+    hasBeenResetReg = 1'b0;	// src/main/scala/chisel3/ltl/LTL.scala:422:39
   always @(posedge clock) begin	// src/main/scala/chisel3/ltl/LTL.scala:422:39
     if (reset)	// src/main/scala/chisel3/ltl/LTL.scala:422:39
       hasBeenResetReg <= 1'h1;	// src/main/scala/chisel3/ltl/LTL.scala:422:39

@@ -43,33 +43,48 @@
     `define INIT_RANDOM_PROLOG_
   `endif // RANDOMIZE
 `endif // not def INIT_RANDOM_PROLOG_
-module free_list(	// src/main/scala/Frontend/free_list.scala:39:7
-  input        clock,	// src/main/scala/Frontend/free_list.scala:39:7
-               reset,	// src/main/scala/Frontend/free_list.scala:39:7
-               io_rename_valid_0,	// src/main/scala/Frontend/free_list.scala:43:16
-               io_rename_valid_1,	// src/main/scala/Frontend/free_list.scala:43:16
-               io_rename_valid_2,	// src/main/scala/Frontend/free_list.scala:43:16
-               io_rename_valid_3,	// src/main/scala/Frontend/free_list.scala:43:16
-  output [6:0] io_renamed_values_0,	// src/main/scala/Frontend/free_list.scala:43:16
-               io_renamed_values_1,	// src/main/scala/Frontend/free_list.scala:43:16
-               io_renamed_values_2,	// src/main/scala/Frontend/free_list.scala:43:16
-               io_renamed_values_3,	// src/main/scala/Frontend/free_list.scala:43:16
-  input        io_commit_valid,	// src/main/scala/Frontend/free_list.scala:43:16
-               io_commit_bits_is_misprediction,	// src/main/scala/Frontend/free_list.scala:43:16
-  input  [7:0] io_commit_bits_free_list_front_pointer,	// src/main/scala/Frontend/free_list.scala:43:16
-  input  [6:0] io_commit_bits_RD_0,	// src/main/scala/Frontend/free_list.scala:43:16
-               io_commit_bits_RD_1,	// src/main/scala/Frontend/free_list.scala:43:16
-               io_commit_bits_RD_2,	// src/main/scala/Frontend/free_list.scala:43:16
-               io_commit_bits_RD_3,	// src/main/scala/Frontend/free_list.scala:43:16
-  input        io_commit_bits_RD_valid_0,	// src/main/scala/Frontend/free_list.scala:43:16
-               io_commit_bits_RD_valid_1,	// src/main/scala/Frontend/free_list.scala:43:16
-               io_commit_bits_RD_valid_2,	// src/main/scala/Frontend/free_list.scala:43:16
-               io_commit_bits_RD_valid_3,	// src/main/scala/Frontend/free_list.scala:43:16
-  output [6:0] io_free_list_front_pointer,	// src/main/scala/Frontend/free_list.scala:43:16
-  output       io_can_allocate	// src/main/scala/Frontend/free_list.scala:43:16
+module free_list(	// src/main/scala/Frontend/free_list.scala:41:7
+  input         clock,	// src/main/scala/Frontend/free_list.scala:41:7
+                reset,	// src/main/scala/Frontend/free_list.scala:41:7
+                io_rename_valid_0,	// src/main/scala/Frontend/free_list.scala:45:16
+                io_rename_valid_1,	// src/main/scala/Frontend/free_list.scala:45:16
+                io_rename_valid_2,	// src/main/scala/Frontend/free_list.scala:45:16
+                io_rename_valid_3,	// src/main/scala/Frontend/free_list.scala:45:16
+  output [6:0]  io_renamed_values_0,	// src/main/scala/Frontend/free_list.scala:45:16
+                io_renamed_values_1,	// src/main/scala/Frontend/free_list.scala:45:16
+                io_renamed_values_2,	// src/main/scala/Frontend/free_list.scala:45:16
+                io_renamed_values_3,	// src/main/scala/Frontend/free_list.scala:45:16
+  output        io_renamed_valid_0,	// src/main/scala/Frontend/free_list.scala:45:16
+                io_renamed_valid_1,	// src/main/scala/Frontend/free_list.scala:45:16
+                io_renamed_valid_2,	// src/main/scala/Frontend/free_list.scala:45:16
+                io_renamed_valid_3,	// src/main/scala/Frontend/free_list.scala:45:16
+  input         io_commit_valid,	// src/main/scala/Frontend/free_list.scala:45:16
+  input  [31:0] io_commit_bits_fetch_PC,	// src/main/scala/Frontend/free_list.scala:45:16
+  input         io_commit_bits_T_NT,	// src/main/scala/Frontend/free_list.scala:45:16
+  input  [5:0]  io_commit_bits_ROB_index,	// src/main/scala/Frontend/free_list.scala:45:16
+  input  [2:0]  io_commit_bits_br_type,	// src/main/scala/Frontend/free_list.scala:45:16
+  input  [1:0]  io_commit_bits_fetch_packet_index,	// src/main/scala/Frontend/free_list.scala:45:16
+  input         io_commit_bits_is_misprediction,	// src/main/scala/Frontend/free_list.scala:45:16
+  input  [31:0] io_commit_bits_expected_PC,	// src/main/scala/Frontend/free_list.scala:45:16
+  input  [15:0] io_commit_bits_GHR,	// src/main/scala/Frontend/free_list.scala:45:16
+  input  [6:0]  io_commit_bits_TOS,	// src/main/scala/Frontend/free_list.scala:45:16
+                io_commit_bits_NEXT,	// src/main/scala/Frontend/free_list.scala:45:16
+  input  [3:0]  io_commit_bits_RAT_index,	// src/main/scala/Frontend/free_list.scala:45:16
+  input  [7:0]  io_commit_bits_free_list_front_pointer,	// src/main/scala/Frontend/free_list.scala:45:16
+  input  [6:0]  io_commit_bits_RD_0,	// src/main/scala/Frontend/free_list.scala:45:16
+                io_commit_bits_RD_1,	// src/main/scala/Frontend/free_list.scala:45:16
+                io_commit_bits_RD_2,	// src/main/scala/Frontend/free_list.scala:45:16
+                io_commit_bits_RD_3,	// src/main/scala/Frontend/free_list.scala:45:16
+  input         io_commit_bits_RD_valid_0,	// src/main/scala/Frontend/free_list.scala:45:16
+                io_commit_bits_RD_valid_1,	// src/main/scala/Frontend/free_list.scala:45:16
+                io_commit_bits_RD_valid_2,	// src/main/scala/Frontend/free_list.scala:45:16
+                io_commit_bits_RD_valid_3,	// src/main/scala/Frontend/free_list.scala:45:16
+  output [6:0]  io_free_list_front_pointer,	// src/main/scala/Frontend/free_list.scala:45:16
+  output        io_can_reallocate,	// src/main/scala/Frontend/free_list.scala:45:16
+                io_can_allocate	// src/main/scala/Frontend/free_list.scala:45:16
 );
 
-  wire [4:0]       _available_elemets_6to2;	// src/main/scala/Frontend/free_list.scala:118:39
+  wire [4:0]       _available_elemets_6to2;	// src/main/scala/Frontend/free_list.scala:120:39
   wire [63:0][6:0] _GEN =
     '{7'h40,
       7'h3F,
@@ -135,81 +150,98 @@ module free_list(	// src/main/scala/Frontend/free_list.scala:39:7
       7'h3,
       7'h2,
       7'h1};
-  wire             flush = io_commit_valid & io_commit_bits_is_misprediction;	// src/main/scala/Frontend/free_list.scala:57:33
-  reg  [6:0]       front_pointer;	// src/main/scala/Frontend/free_list.scala:60:34
-  reg  [6:0]       back_pointer;	// src/main/scala/Frontend/free_list.scala:61:34
-  wire [5:0]       front_index = front_pointer[5:0];	// src/main/scala/Frontend/free_list.scala:60:34, :63:31, :69:33
-  wire [5:0]       back_index = back_pointer[5:0];	// src/main/scala/Frontend/free_list.scala:61:34, :64:31, :70:32
-  wire [1:0]       _GEN_0 = {1'h0, io_rename_valid_0};	// src/main/scala/Frontend/free_list.scala:39:7, :77:72
-  wire [1:0]       _GEN_1 = {1'h0, io_rename_valid_1};	// src/main/scala/Frontend/free_list.scala:39:7, :77:44
-  wire [1:0]       _front_pointer_T_1 = _GEN_0 + _GEN_1;	// src/main/scala/Frontend/free_list.scala:77:{44,72}
-  wire [2:0]       _GEN_2 = {1'h0, _front_pointer_T_1};	// src/main/scala/Frontend/free_list.scala:39:7, :77:{44,72}
-  wire [1:0]       _GEN_3 = {1'h0, io_rename_valid_2};	// src/main/scala/Frontend/free_list.scala:39:7, :77:44
-  wire [2:0]       _GEN_4 = {1'h0, _GEN_3 + {1'h0, io_rename_valid_3}};	// src/main/scala/Frontend/free_list.scala:39:7, :77:44
+  wire             flush = io_commit_valid & io_commit_bits_is_misprediction;	// src/main/scala/Frontend/free_list.scala:59:33
+  reg  [6:0]       front_pointer;	// src/main/scala/Frontend/free_list.scala:62:34
+  reg  [6:0]       back_pointer;	// src/main/scala/Frontend/free_list.scala:63:34
+  wire [5:0]       front_index = front_pointer[5:0];	// src/main/scala/Frontend/free_list.scala:62:34, :65:31, :71:33
+  wire [5:0]       back_index = back_pointer[5:0];	// src/main/scala/Frontend/free_list.scala:63:34, :66:31, :72:32
+  wire [1:0]       _GEN_0 = {1'h0, io_rename_valid_0};	// src/main/scala/Frontend/free_list.scala:41:7, :79:72
+  wire             valid = io_rename_valid_0 & ~flush & (|_available_elemets_6to2);	// src/main/scala/Frontend/free_list.scala:59:33, :80:{40,43,50}, :120:39
+  wire [1:0]       _GEN_1 = {1'h0, io_rename_valid_1};	// src/main/scala/Frontend/free_list.scala:41:7, :79:44
+  wire [1:0]       _front_pointer_T_1 = _GEN_0 + _GEN_1;	// src/main/scala/Frontend/free_list.scala:79:{44,72}
+  wire [2:0]       _GEN_2 = {1'h0, _front_pointer_T_1};	// src/main/scala/Frontend/free_list.scala:41:7, :79:{44,72}
+  wire             valid_1 = io_rename_valid_1 & ~flush & (|_available_elemets_6to2);	// src/main/scala/Frontend/free_list.scala:59:33, :80:{40,43,50}, :120:39
+  wire [1:0]       _GEN_3 = {1'h0, io_rename_valid_2};	// src/main/scala/Frontend/free_list.scala:41:7, :79:44
+  wire             valid_2 = io_rename_valid_2 & ~flush & (|_available_elemets_6to2);	// src/main/scala/Frontend/free_list.scala:59:33, :80:{40,43,50}, :120:39
+  wire [2:0]       _GEN_4 = {1'h0, _GEN_3 + {1'h0, io_rename_valid_3}};	// src/main/scala/Frontend/free_list.scala:41:7, :79:44
+  wire             valid_3 = io_rename_valid_3 & ~flush & (|_available_elemets_6to2);	// src/main/scala/Frontend/free_list.scala:59:33, :80:{40,43,50}, :120:39
   wire             allocate_valid_0 =
-    io_commit_bits_RD_valid_0 & (|io_commit_bits_RD_0) & io_commit_valid;	// src/main/scala/Frontend/free_list.scala:95:33, :98:{59,84,93}
+    io_commit_bits_RD_valid_0 & (|io_commit_bits_RD_0) & io_commit_valid;	// src/main/scala/Frontend/free_list.scala:97:33, :100:{59,84,93}
   wire             allocate_valid_1 =
-    io_commit_bits_RD_valid_1 & (|io_commit_bits_RD_1) & io_commit_valid;	// src/main/scala/Frontend/free_list.scala:95:33, :98:{59,84,93}
+    io_commit_bits_RD_valid_1 & (|io_commit_bits_RD_1) & io_commit_valid;	// src/main/scala/Frontend/free_list.scala:97:33, :100:{59,84,93}
   wire             allocate_valid_2 =
-    io_commit_bits_RD_valid_2 & (|io_commit_bits_RD_2) & io_commit_valid;	// src/main/scala/Frontend/free_list.scala:95:33, :98:{59,84,93}
+    io_commit_bits_RD_valid_2 & (|io_commit_bits_RD_2) & io_commit_valid;	// src/main/scala/Frontend/free_list.scala:97:33, :100:{59,84,93}
   wire             allocate_valid_3 =
-    io_commit_bits_RD_valid_3 & (|io_commit_bits_RD_3) & io_commit_valid;	// src/main/scala/Frontend/free_list.scala:95:33, :98:{59,84,93}
-  wire [6:0]       available_elemets = back_pointer - front_pointer + 7'h1;	// src/main/scala/Frontend/free_list.scala:60:34, :61:34, :115:{44,60}
-  assign _available_elemets_6to2 = available_elemets[6:2];	// src/main/scala/Frontend/free_list.scala:115:60, :118:39
-  always @(posedge clock) begin	// src/main/scala/Frontend/free_list.scala:39:7
-    if (reset) begin	// src/main/scala/Frontend/free_list.scala:39:7
-      front_pointer <= 7'h0;	// src/main/scala/Frontend/free_list.scala:60:34
-      back_pointer <= 7'h3F;	// src/main/scala/Frontend/free_list.scala:61:34
+    io_commit_bits_RD_valid_3 & (|io_commit_bits_RD_3) & io_commit_valid;	// src/main/scala/Frontend/free_list.scala:97:33, :100:{59,84,93}
+  wire [6:0]       available_elemets = back_pointer - front_pointer;	// src/main/scala/Frontend/free_list.scala:62:34, :63:34, :117:44
+  wire             io_can_reallocate_0 = available_elemets + 7'h4 < 7'h41;	// src/main/scala/Frontend/free_list.scala:117:44, :119:{45,61}
+  assign _available_elemets_6to2 = available_elemets[6:2];	// src/main/scala/Frontend/free_list.scala:117:44, :120:39
+  reg              hasBeenResetReg;	// src/main/scala/chisel3/ltl/LTL.scala:422:39
+  initial	// src/main/scala/chisel3/ltl/LTL.scala:422:39
+    hasBeenResetReg = 1'b0;	// src/main/scala/chisel3/ltl/LTL.scala:422:39
+  wire             hasBeenReset = hasBeenResetReg === 1'h1 & reset === 1'h0;	// src/main/scala/Frontend/free_list.scala:41:7, src/main/scala/chisel3/ltl/LTL.scala:422:39
+  wire             disable_0 = ~hasBeenReset;	// src/main/scala/chisel3/ltl/LTL.scala:422:39
+  assert property (@(posedge clock) disable iff (disable_0) available_elemets < 7'h41);	// src/main/scala/Frontend/free_list.scala:117:44, :162:92, :177:19, src/main/scala/chisel3/ltl/LTL.scala:422:39
+  wire             disable_2 = ~hasBeenReset;	// src/main/scala/chisel3/ltl/LTL.scala:422:39
+  assert property (@(posedge clock) disable iff (disable_2)
+                   available_elemets < 7'h3D == io_can_reallocate_0);	// src/main/scala/Frontend/free_list.scala:117:44, :119:61, :164:{77,85}, :178:19, src/main/scala/chisel3/ltl/LTL.scala:422:39
+  wire             disable_4 = ~hasBeenReset;	// src/main/scala/chisel3/ltl/LTL.scala:422:39
+  assert property (@(posedge clock) disable iff (disable_4)
+                   (|(available_elemets[6:2])) == (|_available_elemets_6to2));	// src/main/scala/Frontend/free_list.scala:117:44, :120:39, :166:{75,82}, :179:19, src/main/scala/chisel3/ltl/LTL.scala:422:39
+  wire             disable_6 = ~hasBeenReset;	// src/main/scala/chisel3/ltl/LTL.scala:422:39
+  assume property (@(posedge clock) disable iff (disable_6) ~io_commit_valid);	// src/main/scala/Frontend/free_list.scala:173:87, :182:19, src/main/scala/chisel3/ltl/LTL.scala:422:39
+  always @(posedge clock) begin	// src/main/scala/Frontend/free_list.scala:41:7
+    if (reset) begin	// src/main/scala/Frontend/free_list.scala:41:7
+      hasBeenResetReg <= 1'h1;	// src/main/scala/Frontend/free_list.scala:41:7, src/main/scala/chisel3/ltl/LTL.scala:422:39
+      front_pointer <= 7'h0;	// src/main/scala/Frontend/free_list.scala:62:34
+      back_pointer <= 7'h40;	// src/main/scala/Frontend/free_list.scala:63:34
     end
-    else begin	// src/main/scala/Frontend/free_list.scala:39:7
-      if (~flush & (|_available_elemets_6to2))	// src/main/scala/Frontend/free_list.scala:57:33, :101:{10,64}, :118:39
-        front_pointer <= front_pointer + {4'h0, _GEN_2 + _GEN_4};	// src/main/scala/Frontend/free_list.scala:60:34, :77:{44,72}, :102:{40,50}
-      else if (flush)	// src/main/scala/Frontend/free_list.scala:57:33
-        front_pointer <= io_commit_bits_free_list_front_pointer[6:0];	// src/main/scala/Frontend/free_list.scala:60:34, :104:23
-      if (io_commit_valid & available_elemets + 7'h4 < 7'h41 & ~flush)	// src/main/scala/Frontend/free_list.scala:57:33, :101:10, :107:{26,47}, :115:60, :117:{45,61}
+    else begin	// src/main/scala/Frontend/free_list.scala:41:7
+      if (~flush & (|_available_elemets_6to2))	// src/main/scala/Frontend/free_list.scala:59:33, :103:{10,64}, :120:39
+        front_pointer <= front_pointer + {4'h0, _GEN_2 + _GEN_4};	// src/main/scala/Frontend/free_list.scala:62:34, :79:{44,72}, :104:{40,50}
+      else if (flush)	// src/main/scala/Frontend/free_list.scala:59:33
+        front_pointer <= io_commit_bits_free_list_front_pointer[6:0];	// src/main/scala/Frontend/free_list.scala:62:34, :106:23
+      if (io_commit_valid & io_can_reallocate_0 & ~flush)	// src/main/scala/Frontend/free_list.scala:59:33, :103:10, :109:{26,47}, :119:61
         back_pointer <=
           back_pointer
           + {4'h0,
              {1'h0, {1'h0, allocate_valid_0} + {1'h0, allocate_valid_1}}
-               + {1'h0, {1'h0, allocate_valid_2} + {1'h0, allocate_valid_3}}};	// src/main/scala/Frontend/free_list.scala:39:7, :61:34, :95:33, :108:{38,48}
+               + {1'h0, {1'h0, allocate_valid_2} + {1'h0, allocate_valid_3}}};	// src/main/scala/Frontend/free_list.scala:41:7, :63:34, :97:33, :110:{38,48}
     end
   end // always @(posedge)
-  `ifdef ENABLE_INITIAL_REG_	// src/main/scala/Frontend/free_list.scala:39:7
-    `ifdef FIRRTL_BEFORE_INITIAL	// src/main/scala/Frontend/free_list.scala:39:7
-      `FIRRTL_BEFORE_INITIAL	// src/main/scala/Frontend/free_list.scala:39:7
+  `ifdef ENABLE_INITIAL_REG_	// src/main/scala/Frontend/free_list.scala:41:7
+    `ifdef FIRRTL_BEFORE_INITIAL	// src/main/scala/Frontend/free_list.scala:41:7
+      `FIRRTL_BEFORE_INITIAL	// src/main/scala/Frontend/free_list.scala:41:7
     `endif // FIRRTL_BEFORE_INITIAL
-    initial begin	// src/main/scala/Frontend/free_list.scala:39:7
-      automatic logic [31:0] _RANDOM[0:0];	// src/main/scala/Frontend/free_list.scala:39:7
-      `ifdef INIT_RANDOM_PROLOG_	// src/main/scala/Frontend/free_list.scala:39:7
-        `INIT_RANDOM_PROLOG_	// src/main/scala/Frontend/free_list.scala:39:7
+    initial begin	// src/main/scala/Frontend/free_list.scala:41:7
+      automatic logic [31:0] _RANDOM[0:0];	// src/main/scala/Frontend/free_list.scala:41:7
+      `ifdef INIT_RANDOM_PROLOG_	// src/main/scala/Frontend/free_list.scala:41:7
+        `INIT_RANDOM_PROLOG_	// src/main/scala/Frontend/free_list.scala:41:7
       `endif // INIT_RANDOM_PROLOG_
-      `ifdef RANDOMIZE_REG_INIT	// src/main/scala/Frontend/free_list.scala:39:7
-        _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// src/main/scala/Frontend/free_list.scala:39:7
-        front_pointer = _RANDOM[/*Zero width*/ 1'b0][6:0];	// src/main/scala/Frontend/free_list.scala:39:7, :60:34
-        back_pointer = _RANDOM[/*Zero width*/ 1'b0][13:7];	// src/main/scala/Frontend/free_list.scala:39:7, :60:34, :61:34
+      `ifdef RANDOMIZE_REG_INIT	// src/main/scala/Frontend/free_list.scala:41:7
+        _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// src/main/scala/Frontend/free_list.scala:41:7
+        front_pointer = _RANDOM[/*Zero width*/ 1'b0][6:0];	// src/main/scala/Frontend/free_list.scala:41:7, :62:34
+        back_pointer = _RANDOM[/*Zero width*/ 1'b0][13:7];	// src/main/scala/Frontend/free_list.scala:41:7, :62:34, :63:34
       `endif // RANDOMIZE_REG_INIT
     end // initial
-    `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/Frontend/free_list.scala:39:7
-      `FIRRTL_AFTER_INITIAL	// src/main/scala/Frontend/free_list.scala:39:7
+    `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/Frontend/free_list.scala:41:7
+      `FIRRTL_AFTER_INITIAL	// src/main/scala/Frontend/free_list.scala:41:7
     `endif // FIRRTL_AFTER_INITIAL
   `endif // ENABLE_INITIAL_REG_
   assign io_renamed_values_0 =
-    io_rename_valid_0 & ~flush & (|_available_elemets_6to2)
-      ? _GEN[front_index + {5'h0, io_rename_valid_0 - 1'h1}]
-      : 7'h0;	// src/main/scala/Frontend/free_list.scala:39:7, :57:33, :60:34, :63:31, :77:72, :78:{40,43,50}, :80:20, :81:{37,69}, :83:37, :118:39
+    valid ? _GEN[front_index + {5'h0, io_rename_valid_0 - 1'h1}] : 7'h0;	// src/main/scala/Frontend/free_list.scala:41:7, :65:31, :79:72, :80:{40,50}, :82:20, :83:{37,69}, :85:37
   assign io_renamed_values_1 =
-    io_rename_valid_1 & ~flush & (|_available_elemets_6to2)
-      ? _GEN[front_index + {4'h0, _front_pointer_T_1 - 2'h1}]
-      : 7'h0;	// src/main/scala/Frontend/free_list.scala:39:7, :57:33, :60:34, :63:31, :77:{44,72}, :78:{40,43,50}, :80:20, :81:{37,69}, :83:37, :118:39
+    valid_1 ? _GEN[front_index + {4'h0, _front_pointer_T_1 - 2'h1}] : 7'h0;	// src/main/scala/Frontend/free_list.scala:41:7, :65:31, :79:{44,72}, :80:{40,50}, :82:20, :83:{37,69}, :85:37
   assign io_renamed_values_2 =
-    io_rename_valid_2 & ~flush & (|_available_elemets_6to2)
-      ? _GEN[front_index + {4'h0, _GEN_0 + _GEN_1 + _GEN_3 - 2'h1}]
-      : 7'h0;	// src/main/scala/Frontend/free_list.scala:39:7, :57:33, :60:34, :63:31, :77:{44,72}, :78:{40,43,50}, :80:20, :81:{37,69}, :83:37, :118:39
+    valid_2 ? _GEN[front_index + {4'h0, _GEN_0 + _GEN_1 + _GEN_3 - 2'h1}] : 7'h0;	// src/main/scala/Frontend/free_list.scala:41:7, :65:31, :79:{44,72}, :80:{40,50}, :82:20, :83:{37,69}, :85:37
   assign io_renamed_values_3 =
-    io_rename_valid_3 & ~flush & (|_available_elemets_6to2)
-      ? _GEN[front_index + {3'h0, _GEN_2 + _GEN_4 - 3'h1}]
-      : 7'h0;	// src/main/scala/Frontend/free_list.scala:39:7, :57:33, :60:34, :63:31, :77:{44,72}, :78:{40,43,50}, :80:20, :81:{37,69}, :83:37, :118:39
-  assign io_free_list_front_pointer = front_pointer;	// src/main/scala/Frontend/free_list.scala:39:7, :60:34
-  assign io_can_allocate = |_available_elemets_6to2;	// src/main/scala/Frontend/free_list.scala:39:7, :118:39
+    valid_3 ? _GEN[front_index + {3'h0, _GEN_2 + _GEN_4 - 3'h1}] : 7'h0;	// src/main/scala/Frontend/free_list.scala:41:7, :65:31, :79:{44,72}, :80:{40,50}, :82:20, :83:{37,69}, :85:37
+  assign io_renamed_valid_0 = valid;	// src/main/scala/Frontend/free_list.scala:41:7, :80:{40,50}
+  assign io_renamed_valid_1 = valid_1;	// src/main/scala/Frontend/free_list.scala:41:7, :80:{40,50}
+  assign io_renamed_valid_2 = valid_2;	// src/main/scala/Frontend/free_list.scala:41:7, :80:{40,50}
+  assign io_renamed_valid_3 = valid_3;	// src/main/scala/Frontend/free_list.scala:41:7, :80:{40,50}
+  assign io_free_list_front_pointer = front_pointer;	// src/main/scala/Frontend/free_list.scala:41:7, :62:34
+  assign io_can_reallocate = io_can_reallocate_0;	// src/main/scala/Frontend/free_list.scala:41:7, :119:61
+  assign io_can_allocate = |_available_elemets_6to2;	// src/main/scala/Frontend/free_list.scala:41:7, :120:39
 endmodule
 
