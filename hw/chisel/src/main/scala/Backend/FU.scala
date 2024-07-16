@@ -228,7 +228,7 @@ class ALU(parameters:Parameters) extends Module{
     io.FU_output.bits.address             :=   DontCare
     io.FU_output.bits.memory_type         :=   DontCare
     io.FU_output.bits.access_width        :=   DontCare
-    io.FU_output.bits.unsigned            :=   DontCare
+    io.FU_output.bits.is_unsigned            :=   DontCare
     io.FU_output.bits.wr_data             :=   DontCare
 
 
@@ -370,7 +370,7 @@ class branch_unit(parameters:Parameters) extends Module{
     io.FU_output.bits.address             :=   DontCare
     io.FU_output.bits.memory_type         :=   DontCare
     io.FU_output.bits.access_width        :=   DontCare
-    io.FU_output.bits.unsigned            :=   DontCare
+    io.FU_output.bits.is_unsigned            :=   DontCare
     io.FU_output.bits.wr_data             :=   DontCare
 
 

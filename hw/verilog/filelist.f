@@ -12,6 +12,7 @@ BP.sv
 Queue1_FTQ_entry.sv
 Queue1_fetch_packet.sv
 predecoder.sv
+Queue1_memory_request.sv
 PC_gen.sv
 ram_16x204.sv
 Queue16_fetch_packet.sv

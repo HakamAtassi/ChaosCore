@@ -1,0 +1,199 @@
+SBY 15:25:09 [PC_gen] Removing directory '/home/hakam/Repos/ChaosCore/formal/PC_gen'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/mem_65536x2.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/mem_65536x2.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/PHT_memory.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/PHT_memory.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/gshare.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/gshare.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/mem_4096x56.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/mem_4096x56.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/hash_BTB_mem.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/hash_BTB_mem.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/hash_BTB.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/hash_BTB.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/mem_128x39.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/mem_128x39.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/SDPReadWriteSmem.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/SDPReadWriteSmem.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/RAS.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/RAS.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Queue1_prediction.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/Queue1_prediction.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/BP.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/BP.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Queue1_FTQ_entry.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/Queue1_FTQ_entry.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Queue1_fetch_packet.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/Queue1_fetch_packet.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Queue1_memory_request.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/Queue1_memory_request.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/predecoder.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/predecoder.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/PC_gen.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/PC_gen.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ram_16x204.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/ram_16x204.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Queue16_fetch_packet.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/Queue16_fetch_packet.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Q.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/Q.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ram_16x65.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/ram_16x65.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Queue16_memory_request.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/Queue16_memory_request.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Q_1.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/Q_1.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ram_16x53.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/ram_16x53.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Queue16_prediction.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/Queue16_prediction.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Q_2.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/Q_2.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/instruction_fetch.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/instruction_fetch.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/decoder.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/decoder.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Queue1_decoded_fetch_packet.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/Queue1_decoded_fetch_packet.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Queue1_FTQ_entry_1.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/Queue1_FTQ_entry_1.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/fetch_packet_decoder.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/fetch_packet_decoder.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ram_16x388.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/ram_16x388.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Queue16_decoded_fetch_packet.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/Queue16_decoded_fetch_packet.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Q_3.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/Q_3.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ram_16x134.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/ram_16x134.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Queue16_FTQ_entry.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/Queue16_FTQ_entry.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/Q_4.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/Q_4.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/free_list.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/free_list.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/WAW_handler.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/WAW_handler.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/RAT.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/RAT.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/rename.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/rename.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/frontend.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/frontend.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/RS.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/RS.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/MEMRS.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/MEMRS.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/MOB.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/MOB.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/mem_64x32.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/mem_64x32.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/sim_nReadmWrite.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/sim_nReadmWrite.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ALU.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/ALU.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/branch_unit.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/branch_unit.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/FU.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/FU.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/FU_1.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/FU_1.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/AGU.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/AGU.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/backend.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/backend.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/FTQ.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/FTQ.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/mem_64x44.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/mem_64x44.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ROB_shared_mem.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/ROB_shared_mem.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/mem_64x2.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/mem_64x2.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ROB_WB_mem.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/ROB_WB_mem.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/mem_64x12.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/mem_64x12.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ROB_entry_mem.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/ROB_entry_mem.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ROB.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/ROB.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/BRU.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/BRU.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/ChaosCore.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/ChaosCore.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/mem_64x278.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/mem_64x278.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/icache_ReadWriteSmem.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/icache_ReadWriteSmem.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/instruction_validator.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/instruction_validator.sv'.
+SBY 15:25:09 [PC_gen] Copy '/home/hakam/Repos/ChaosCore/hw/verilog/instruction_cache.sv' to '/home/hakam/Repos/ChaosCore/formal/PC_gen/src/instruction_cache.sv'.
+SBY 15:25:09 [PC_gen] engine_0: smtbmc yices
+SBY 15:25:09 [PC_gen] base: starting process "cd PC_gen/src; yosys -ql ../model/design.log ../model/design.ys"
+SBY 15:25:09 [PC_gen] base: This is an ACADEMIC LICENSE of TabbyCAD Suite.
+SBY 15:25:09 [PC_gen] base: This license is granted for the limited purpose of academic and/or research activities.
+SBY 15:25:09 [PC_gen] base: It is forbidden to use this license to perform services for a fee or other consideration; or in the generation or verification of hardware or hardware designs for sale or license with a view to profit or for a fee or other consideration.
+SBY 15:25:09 [PC_gen] base: This license was issued to Hakam Atassi.
+SBY 15:25:09 [PC_gen] base: Customer PoC: Hakam Atassi <atassih@mcmaster.ca>.
+SBY 15:25:09 [PC_gen] base: finished (returncode=0)
+SBY 15:25:09 [PC_gen] prep: starting process "cd PC_gen/model; yosys -ql design_prep.log design_prep.ys"
+SBY 15:25:09 [PC_gen] prep: This is an ACADEMIC LICENSE of TabbyCAD Suite.
+SBY 15:25:09 [PC_gen] prep: This license is granted for the limited purpose of academic and/or research activities.
+SBY 15:25:09 [PC_gen] prep: It is forbidden to use this license to perform services for a fee or other consideration; or in the generation or verification of hardware or hardware designs for sale or license with a view to profit or for a fee or other consideration.
+SBY 15:25:09 [PC_gen] prep: This license was issued to Hakam Atassi.
+SBY 15:25:09 [PC_gen] prep: Customer PoC: Hakam Atassi <atassih@mcmaster.ca>.
+SBY 15:25:09 [PC_gen] prep: finished (returncode=0)
+SBY 15:25:09 [PC_gen] smt2: starting process "cd PC_gen/model; yosys -ql design_smt2.log design_smt2.ys"
+SBY 15:25:09 [PC_gen] smt2: This is an ACADEMIC LICENSE of TabbyCAD Suite.
+SBY 15:25:09 [PC_gen] smt2: This license is granted for the limited purpose of academic and/or research activities.
+SBY 15:25:09 [PC_gen] smt2: It is forbidden to use this license to perform services for a fee or other consideration; or in the generation or verification of hardware or hardware designs for sale or license with a view to profit or for a fee or other consideration.
+SBY 15:25:09 [PC_gen] smt2: This license was issued to Hakam Atassi.
+SBY 15:25:09 [PC_gen] smt2: Customer PoC: Hakam Atassi <atassih@mcmaster.ca>.
+SBY 15:25:09 [PC_gen] smt2: finished (returncode=0)
+SBY 15:25:09 [PC_gen] engine_0: starting process "cd PC_gen; yosys-smtbmc -s yices --presat --unroll --noprogress -t 50  --append 0 --dump-vcd engine_0/trace.vcd --dump-yw engine_0/trace.yw --dump-vlogtb engine_0/trace_tb.v --dump-smtc engine_0/trace.smtc model/design_smt2.smt2"
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Solver: yices
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assumptions in step 0..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assertions in step 0..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assumptions in step 1..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assertions in step 1..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assumptions in step 2..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assertions in step 2..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assumptions in step 3..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assertions in step 3..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assumptions in step 4..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assertions in step 4..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assumptions in step 5..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assertions in step 5..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assumptions in step 6..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assertions in step 6..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assumptions in step 7..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assertions in step 7..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assumptions in step 8..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assertions in step 8..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assumptions in step 9..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assertions in step 9..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assumptions in step 10..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assertions in step 10..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assumptions in step 11..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assertions in step 11..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assumptions in step 12..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assertions in step 12..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assumptions in step 13..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assertions in step 13..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assumptions in step 14..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assertions in step 14..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assumptions in step 15..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assertions in step 15..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assumptions in step 16..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assertions in step 16..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assumptions in step 17..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assertions in step 17..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assumptions in step 18..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assertions in step 18..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assumptions in step 19..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assertions in step 19..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assumptions in step 20..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assertions in step 20..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assumptions in step 21..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assertions in step 21..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assumptions in step 22..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assertions in step 22..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assumptions in step 23..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assertions in step 23..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assumptions in step 24..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assertions in step 24..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assumptions in step 25..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assertions in step 25..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assumptions in step 26..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assertions in step 26..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assumptions in step 27..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assertions in step 27..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assumptions in step 28..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assertions in step 28..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assumptions in step 29..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assertions in step 29..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assumptions in step 30..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assertions in step 30..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assumptions in step 31..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assertions in step 31..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assumptions in step 32..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assertions in step 32..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assumptions in step 33..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assertions in step 33..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assumptions in step 34..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assertions in step 34..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assumptions in step 35..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assertions in step 35..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assumptions in step 36..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assertions in step 36..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assumptions in step 37..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assertions in step 37..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assumptions in step 38..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assertions in step 38..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assumptions in step 39..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assertions in step 39..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assumptions in step 40..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assertions in step 40..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assumptions in step 41..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assertions in step 41..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assumptions in step 42..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assertions in step 42..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assumptions in step 43..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assertions in step 43..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assumptions in step 44..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assertions in step 44..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assumptions in step 45..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assertions in step 45..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assumptions in step 46..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assertions in step 46..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assumptions in step 47..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assertions in step 47..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assumptions in step 48..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assertions in step 48..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assumptions in step 49..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Checking assertions in step 49..
+SBY 15:25:09 [PC_gen] engine_0: ##   0:00:00  Status: passed
+SBY 15:25:09 [PC_gen] engine_0: finished (returncode=0)
+SBY 15:25:09 [PC_gen] engine_0: Status returned by engine: pass
+SBY 15:25:09 [PC_gen] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY 15:25:09 [PC_gen] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY 15:25:09 [PC_gen] summary: engine_0 (smtbmc yices) returned pass
+SBY 15:25:09 [PC_gen] summary: engine_0 did not produce any traces
+SBY 15:25:09 [PC_gen] DONE (PASS, rc=0)

@@ -34,6 +34,7 @@ import circt.stage.ChiselStage
 import chisel3.util._
 import java.io.{File, FileWriter}
 import java.rmi.server.UID
+import chisel3.ltl._
 
 import helperFunctions._
 
@@ -135,7 +136,7 @@ class predecoder(parameters:Parameters) extends Module{
     // TARGET GENERATION //
     ///////////////////////
     val target_address      = Wire(UInt(32.W))
-    val dominant_br_type    = Wire(_br_type())
+    val dominantbr_type_t    = Wire(br_type_t())
 
     val _imm = Wire(SInt(32.W))
     val imm = Wire(UInt(32.W))
@@ -166,12 +167,12 @@ class predecoder(parameters:Parameters) extends Module{
         target_address := io.fetch_packet.bits.fetch_PC + get_PC_increment(parameters, io.fetch_packet.bits.fetch_PC)
     }
 
-    dominant_br_type                      := _br_type.NONE
-    when(is_JAL)        {dominant_br_type := _br_type.JAL}
-    when(is_JALR)       {dominant_br_type := _br_type.JALR}
-    when(is_CALL)       {dominant_br_type := _br_type.CALL}
-    when(is_RET)        {dominant_br_type := _br_type.RET}
-    when(is_BRANCH)     {dominant_br_type := _br_type.BR}
+    dominantbr_type_t                      := br_type_t.NONE
+    when(is_JAL)        {dominantbr_type_t := br_type_t.JAL}
+    when(is_JALR)       {dominantbr_type_t := br_type_t.JALR}
+    when(is_CALL)       {dominantbr_type_t := br_type_t.CALL}
+    when(is_RET)        {dominantbr_type_t := br_type_t.RET}
+    when(is_BRANCH)     {dominantbr_type_t := br_type_t.BR}
 
     ///////////////////////////
     // EXPECTED NEXT ADDRESS //
@@ -261,7 +262,7 @@ class predecoder(parameters:Parameters) extends Module{
     }
     predictions.bits.valid                         := 0.B
     predictions.bits.is_misprediction              := 0.B
-    predictions.bits.br_type                       := dominant_br_type
+    predictions.bits.br_type                       := dominantbr_type_t
 
 
     //////////////////////
@@ -280,5 +281,9 @@ class predecoder(parameters:Parameters) extends Module{
 
     io.prediction.ready   := (io.final_fetch_packet.ready && io.predictions.ready)
     io.fetch_packet.ready := (io.final_fetch_packet.ready && io.predictions.ready)
+
+
+
+
 
 }

@@ -45,10 +45,11 @@ class fetch_packet(parameters:Parameters) extends Bundle{
     val fetch_PC        = UInt(32.W)
     val valid_bits      = Vec(fetchWidth, Bool())
     val instructions    = Vec(fetchWidth, new Instruction(parameters))
+
 }
 
 class metadata extends Bundle{
-    val br_type =       _br_type()
+    val br_type =       br_type_t()
 
     val Imm             = UInt(32.W)
     val instruction_PC  = UInt(32.W)
@@ -61,11 +62,11 @@ class metadata extends Bundle{
 class instruction_cache_data_line(parameters:Parameters) extends Bundle{
     import parameters._
 
-    val set_bits                        = log2Ceil(L1_instructionCacheSets)
-    val byte_offset_bits                = log2Ceil(L1_instructionCacheBlockSizeBytes)
+    val set_bits:Int                        = log2Ceil(L1_instructionCacheSets)
+    val byte_offset_bits:Int                = log2Ceil(L1_instructionCacheBlockSizeBytes)
 
-    val tag_bits                        = 32 - set_bits - byte_offset_bits
-    val data_bits                       = L1_instructionCacheBlockSizeBytes*8
+    val tag_bits:Int                        = 32 - set_bits - byte_offset_bits
+    val data_bits:Int                       = L1_instructionCacheBlockSizeBytes*8
 
     val valid   = Bool()
     val tag     = UInt(tag_bits.W)
@@ -77,10 +78,10 @@ class instruction_cache_address_packet(parameters: Parameters) extends Bundle {
 
     import parameters._
 
-    val set_bits                    = log2Ceil(L1_instructionCacheSets)
-    val tag_bits                    = 32 - log2Ceil(L1_instructionCacheBlockSizeBytes)-set_bits    // 32 - bits required to index set - bits required to index within line - 2 bits due to 4 byte aligned data
-    val instruction_offset_bits     = log2Ceil(L1_instructionCacheBlockSizeBytes/4)
-    val fetch_packet_bits           = log2Ceil(L1_instructionCacheBlockSizeBytes/4/fetchWidth)
+    val set_bits:Int                    = log2Ceil(L1_instructionCacheSets)
+    val tag_bits:Int                    = 32 - log2Ceil(L1_instructionCacheBlockSizeBytes)-set_bits    // 32 - bits required to index set - bits required to index within line - 2 bits due to 4 byte aligned data
+    val instruction_offset_bits:Int     = log2Ceil(L1_instructionCacheBlockSizeBytes/4)
+    val fetch_packet_bits:Int           = log2Ceil(L1_instructionCacheBlockSizeBytes/4/fetchWidth)
 
     val tag                     = UInt(tag_bits.W)
     val set                     = UInt(set_bits.W)
@@ -95,20 +96,20 @@ class instruction_cache_address_packet(parameters: Parameters) extends Bundle {
 // BP channels //
 /////////////////
 
-object _br_type extends ChiselEnum{
+object br_type_t extends ChiselEnum{
     val NONE, BR, JAL, JALR, RET, CALL = Value
 }
 
 class BTB_entry(parameters:Parameters) extends Bundle{
     import parameters._
 
-    val BTB_tag_size = 32 - log2Ceil(BTBEntries) - 2
+    val BTB_tag_size:Int            = 32 - log2Ceil(BTBEntries) - 2
 
     val BTB_valid                   = Bool()
     val BTB_tag                     = UInt(BTB_tag_size.W)
     val BTB_target                  = UInt(32.W)   // FIXME: this can be slightly smaller
 
-    val BTB_br_type                 = _br_type()
+    val BTBbr_type_t                 = br_type_t()
     val BTB_fetch_packet_index      = UInt(log2Ceil(fetchWidth).W)
 }
 
@@ -119,7 +120,7 @@ class commit(parameters:Parameters) extends Bundle{
     val T_NT                    = Bool()    // To update BTB (BTB only updates on taken branches)
     val ROB_index               = UInt(log2Ceil(ROBEntries).W)
     
-    val br_type                 = _br_type()
+    val br_type                 = br_type_t()
     val fetch_packet_index      = UInt(log2Ceil(fetchWidth).W)  // fetch packet index of the branch
 
     val is_misprediction        = Bool()
@@ -153,9 +154,9 @@ class RAS_read(parameters:Parameters) extends Bundle{
 
 class revert(parameters:Parameters) extends Bundle{
     import parameters._
-    val nextBits = log2Ceil(RASEntries)
-    val tosBits  = log2Ceil(RASEntries)
-    val nosBits  = log2Ceil(RASEntries)
+    val nextBits:Int = log2Ceil(RASEntries)
+    val tosBits:Int  = log2Ceil(RASEntries)
+    val nosBits:Int  = log2Ceil(RASEntries)
 
     //val GHR               = UInt(GHRWidth.W)
     val PC                = UInt(32.W)
@@ -169,7 +170,7 @@ class prediction(parameters:Parameters) extends Bundle{
     import parameters._
     val hit         =   Bool()  // FIXME: I dont think this is assigned in BTB since it was added after the fact
     val target      =   UInt(32.W)
-    val br_type     =   _br_type()
+    val br_type     =   br_type_t()
     val GHR         =   UInt(GHRWidth.W)
     val T_NT        =   Bool()
 }
@@ -189,7 +190,7 @@ class decoded_instruction(parameters:Parameters) extends Bundle{
     // Parameters
     import parameters._
 
-    val ready_bits          =   new sources_ready()
+    val ready_bits          =  new sources_ready()
 
     val RD                  =  UInt(physicalRegBits.W) // Actual dest
     val RD_valid            =  Bool()
@@ -326,7 +327,7 @@ class FTQ_entry(parameters:Parameters) extends Bundle{
                                             // if fetch packet does not contain a taken branch, the dominant branch just PC+N
 
     val T_NT = Bool()
-    val br_type = _br_type()
+    val br_type = br_type_t()
 
     // State revision data
     // this should be moved to the ROB
@@ -439,7 +440,7 @@ class FU_output(parameters:Parameters) extends Bundle{
     val address             =   UInt(32.W)
     val memory_type         =   memory_type_t()   // LOAD/STORE
     val access_width        =   access_width_t()  // B/HW/W
-    val unsigned            =   Bool()            // signed/unsigned
+    val is_unsigned            =   Bool()            // signed/is_unsigned
     val wr_data             =   UInt(32.W)
 
     // MOB
@@ -528,7 +529,7 @@ class memory_access(parameters:Parameters) extends Bundle{   // output of the AG
     val memory_type     = memory_type_t()   // LOAD/STORE
     val RD              = UInt(physicalRegBits.W)
     val access_width    = access_width_t()  // B/HW/W
-    val unsigned        = Bool()            // signed/unsigned
+    val is_unsigned        = Bool()            // signed/is_unsigned
     val address         = UInt(32.W)
     val wr_data         = UInt(32.W)
 }

@@ -57,6 +57,11 @@ circuit ChaosCore :%[[
   },
   {
     "class":"firrtl.transforms.DedupGroupAnnotation",
+    "target":"~ChaosCore|Queue1_memory_request",
+    "group":"Queue1_memory_request"
+  },
+  {
+    "class":"firrtl.transforms.DedupGroupAnnotation",
     "target":"~ChaosCore|PC_gen",
     "group":"PC_gen"
   },
@@ -357,11 +362,11 @@ circuit ChaosCore :%[[
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.ChaosCore.io.commit.bits.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumDefAnnotation",
-    "typeName":"ChaosCore._br_type",
+    "typeName":"ChaosCore.br_type_t",
     "definition":{
       "JAL":2,
       "RET":4,
@@ -476,42 +481,42 @@ circuit ChaosCore :%[[
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.frontend.io.predictions.bits.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.frontend.io.commit.bits.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.instruction_fetch.io.predictions.bits.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.instruction_fetch.io.commit.bits.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.BP.io.prediction.bits.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.BP.io.commit.bits.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.BP.prediction.bits.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.gshare.io.commit.bits.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -524,97 +529,97 @@ circuit ChaosCore :%[[
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.hash_BTB.io.commit.bits.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
-    "target":"ChaosCore.hash_BTB.io.BTB_output.BTB_br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "target":"ChaosCore.hash_BTB.io.BTB_output.BTBbr_type_t",
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
-    "target":"ChaosCore.hash_BTB_mem.io.data_in.BTB_br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "target":"ChaosCore.hash_BTB_mem.io.data_in.BTBbr_type_t",
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
-    "target":"ChaosCore.hash_BTB_mem.io.data_out.BTB_br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "target":"ChaosCore.hash_BTB_mem.io.data_out.BTBbr_type_t",
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
-    "target":"ChaosCore.hash_BTB_mem._din_buff_WIRE.BTB_br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "target":"ChaosCore.hash_BTB_mem._din_buff_WIRE.BTBbr_type_t",
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
-    "target":"ChaosCore.hash_BTB_mem.din_buff.BTB_br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "target":"ChaosCore.hash_BTB_mem.din_buff.BTBbr_type_t",
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
-    "target":"ChaosCore.hash_BTB_mem.data_out.BTB_br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "target":"ChaosCore.hash_BTB_mem.data_out.BTBbr_type_t",
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
-    "target":"ChaosCore.hash_BTB_mem._data_out_WIRE.BTB_br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "target":"ChaosCore.hash_BTB_mem._data_out_WIRE.BTBbr_type_t",
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
-    "target":"ChaosCore.hash_BTB_mem.MPORT.BTB_br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "target":"ChaosCore.hash_BTB_mem.MPORT.BTBbr_type_t",
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
-    "target":"ChaosCore.hash_BTB_mem.data_out_MPORT.BTB_br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "target":"ChaosCore.hash_BTB_mem.data_out_MPORT.BTBbr_type_t",
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
-    "target":"ChaosCore.hash_BTB_mem._io_data_out_T.BTB_br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "target":"ChaosCore.hash_BTB_mem._io_data_out_T.BTBbr_type_t",
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
-    "target":"ChaosCore.hash_BTB.commit_BTB_entry.BTB_br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "target":"ChaosCore.hash_BTB.commit_BTB_entry.BTBbr_type_t",
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.Queue1_prediction.io.deq.bits.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.Queue1_prediction.io.enq.bits.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.Queue1_prediction.MPORT.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.Queue1_prediction.io_deq_bits_MPORT.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.predecoder.io.predictions.bits.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.predecoder.io.commit.bits.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.predecoder.io.prediction.bits.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -975,7 +980,7 @@ circuit ChaosCore :%[[
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.predecoder.predictions.bits.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
@@ -999,8 +1004,8 @@ circuit ChaosCore :%[[
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
-    "target":"ChaosCore.predecoder.dominant_br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "target":"ChaosCore.predecoder.dominantbr_type_t",
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -1013,32 +1018,32 @@ circuit ChaosCore :%[[
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.Queue1_FTQ_entry.io.deq.bits.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.Queue1_FTQ_entry.io.enq.bits.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.Queue1_FTQ_entry.MPORT.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.Queue1_FTQ_entry.io_deq_bits_MPORT.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.PC_gen.io.prediction.bits.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.PC_gen.io.commit.bits.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -1194,51 +1199,38 @@ circuit ChaosCore :%[[
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
-    "target":"ChaosCore.PC_gen.PC_gen_state",
-    "enumTypeName":"ChaosCore.PcGenState"
-  },
-  {
-    "class":"chisel3.experimental.EnumAnnotations$EnumDefAnnotation",
-    "typeName":"ChaosCore.PcGenState",
-    "definition":{
-      "Active":0,
-      "Flush":1
-    }
-  },
-  {
-    "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.Q_2.io.out.bits.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.Q_2.io.in.bits.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.Queue16_prediction.io.deq.bits.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.Queue16_prediction.io.enq.bits.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.Queue16_prediction.MPORT.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.Queue16_prediction.io_deq_bits_MPORT.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.fetch_packet_decoder.io.predictions_out.bits.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumVecAnnotation",
@@ -1283,7 +1275,7 @@ circuit ChaosCore :%[[
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.fetch_packet_decoder.io.predictions_in.bits.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumVecAnnotation",
@@ -1328,7 +1320,7 @@ circuit ChaosCore :%[[
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.fetch_packet_decoder.predictions_out.bits.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
@@ -1689,27 +1681,27 @@ circuit ChaosCore :%[[
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.Queue1_FTQ_entry_1.io.deq.bits.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.Queue1_FTQ_entry_1.io.enq.bits.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.Queue1_FTQ_entry_1.MPORT.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.Queue1_FTQ_entry_1.io_deq_bits_MPORT.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.fetch_packet_decoder.predictions_out_bits_REG.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -1958,32 +1950,32 @@ circuit ChaosCore :%[[
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.Q_4.io.out.bits.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.Q_4.io.in.bits.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.Queue16_FTQ_entry.io.deq.bits.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.Queue16_FTQ_entry.io.enq.bits.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.Queue16_FTQ_entry.MPORT.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.Queue16_FTQ_entry.io_deq_bits_MPORT.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumVecAnnotation",
@@ -2090,17 +2082,17 @@ circuit ChaosCore :%[[
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.rename.io.predictions_out.bits.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.rename.io.predictions_in.bits.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.rename.io.commit.bits.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -2560,7 +2552,7 @@ circuit ChaosCore :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~ChaosCore|rename>io.FU_outputs[0].bits.unsigned"
+    "target":"~ChaosCore|rename>io.FU_outputs[0].bits.is_unsigned"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -2628,7 +2620,7 @@ circuit ChaosCore :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~ChaosCore|rename>io.FU_outputs[1].bits.unsigned"
+    "target":"~ChaosCore|rename>io.FU_outputs[1].bits.is_unsigned"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -2696,7 +2688,7 @@ circuit ChaosCore :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~ChaosCore|rename>io.FU_outputs[2].bits.unsigned"
+    "target":"~ChaosCore|rename>io.FU_outputs[2].bits.is_unsigned"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -2764,7 +2756,7 @@ circuit ChaosCore :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~ChaosCore|rename>io.FU_outputs[3].bits.unsigned"
+    "target":"~ChaosCore|rename>io.FU_outputs[3].bits.is_unsigned"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -3521,7 +3513,7 @@ circuit ChaosCore :%[[
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.free_list.io.commit.bits.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -4854,32 +4846,32 @@ circuit ChaosCore :%[[
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.Queue1_FTQ_entry_2.io.deq.bits.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.Queue1_FTQ_entry_2.io.enq.bits.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.Queue1_FTQ_entry_2.MPORT.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.Queue1_FTQ_entry_2.io_deq_bits_MPORT.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.rename.predictions_out.bits.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.rename.predictions_out_bits_REG.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumVecAnnotation",
@@ -4946,7 +4938,7 @@ circuit ChaosCore :%[[
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.backend.io.commit.bits.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
@@ -5015,7 +5007,7 @@ circuit ChaosCore :%[[
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.RS.io.commit.bits.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumVecAnnotation",
@@ -7658,7 +7650,7 @@ circuit ChaosCore :%[[
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.MEMRS.io.commit.bits.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumVecAnnotation",
@@ -10921,7 +10913,7 @@ circuit ChaosCore :%[[
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.MOB.io.commit.bits.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
@@ -11693,7 +11685,7 @@ circuit ChaosCore :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~ChaosCore|FU>io.FU_output.bits.unsigned"
+    "target":"~ChaosCore|FU>io.FU_output.bits.is_unsigned"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -11979,7 +11971,7 @@ circuit ChaosCore :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~ChaosCore|FU_1>io.FU_output.bits.unsigned"
+    "target":"~ChaosCore|FU_1>io.FU_output.bits.is_unsigned"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -12235,7 +12227,7 @@ circuit ChaosCore :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~ChaosCore|FU_2>io.FU_output.bits.unsigned"
+    "target":"~ChaosCore|FU_2>io.FU_output.bits.is_unsigned"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -12502,17 +12494,17 @@ circuit ChaosCore :%[[
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.FTQ.io.FTQ.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.FTQ.io.commit.bits.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.FTQ.io.predictions.bits.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumVecAnnotation",
@@ -12539,87 +12531,87 @@ circuit ChaosCore :%[[
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.FTQ._FTQ_WIRE.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.FTQ._FTQ_WIRE_1.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.FTQ._FTQ_WIRE_2.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.FTQ._FTQ_WIRE_3.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.FTQ._FTQ_WIRE_4.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.FTQ._FTQ_WIRE_5.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.FTQ._FTQ_WIRE_6.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.FTQ._FTQ_WIRE_7.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.FTQ._FTQ_WIRE_8.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.FTQ._FTQ_WIRE_9.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.FTQ._FTQ_WIRE_10.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.FTQ._FTQ_WIRE_11.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.FTQ._FTQ_WIRE_12.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.FTQ._FTQ_WIRE_13.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.FTQ._FTQ_WIRE_14.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.FTQ._FTQ_WIRE_15.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumVecAnnotation",
     "target":"ChaosCore.FTQ._FTQ_WIRE_16",
-    "typeName":"ChaosCore._br_type",
+    "typeName":"ChaosCore.br_type_t",
     "fields":[
       [
         "br_type"
@@ -12629,7 +12621,7 @@ circuit ChaosCore :%[[
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumVecAnnotation",
     "target":"ChaosCore.FTQ.FTQ",
-    "typeName":"ChaosCore._br_type",
+    "typeName":"ChaosCore.br_type_t",
     "fields":[
       [
         "br_type"
@@ -12643,167 +12635,167 @@ circuit ChaosCore :%[[
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.FTQ._FTQ_WIRE_17.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.FTQ._FTQ_0_WIRE.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.FTQ._FTQ_0_WIRE_1.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.FTQ._FTQ_1_WIRE.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.FTQ._FTQ_1_WIRE_1.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.FTQ._FTQ_2_WIRE.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.FTQ._FTQ_2_WIRE_1.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.FTQ._FTQ_3_WIRE.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.FTQ._FTQ_3_WIRE_1.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.FTQ._FTQ_4_WIRE.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.FTQ._FTQ_4_WIRE_1.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.FTQ._FTQ_5_WIRE.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.FTQ._FTQ_5_WIRE_1.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.FTQ._FTQ_6_WIRE.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.FTQ._FTQ_6_WIRE_1.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.FTQ._FTQ_7_WIRE.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.FTQ._FTQ_7_WIRE_1.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.FTQ._FTQ_8_WIRE.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.FTQ._FTQ_8_WIRE_1.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.FTQ._FTQ_9_WIRE.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.FTQ._FTQ_9_WIRE_1.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.FTQ._FTQ_10_WIRE.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.FTQ._FTQ_10_WIRE_1.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.FTQ._FTQ_11_WIRE.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.FTQ._FTQ_11_WIRE_1.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.FTQ._FTQ_12_WIRE.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.FTQ._FTQ_12_WIRE_1.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.FTQ._FTQ_13_WIRE.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.FTQ._FTQ_13_WIRE_1.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.FTQ._FTQ_14_WIRE.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.FTQ._FTQ_14_WIRE_1.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.FTQ._FTQ_15_WIRE.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.FTQ._FTQ_15_WIRE_1.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -12816,7 +12808,7 @@ circuit ChaosCore :%[[
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.ROB.io.commit.bits.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumVecAnnotation",
@@ -13124,7 +13116,7 @@ circuit ChaosCore :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~ChaosCore|ROB>io.FU_outputs[0].bits.unsigned"
+    "target":"~ChaosCore|ROB>io.FU_outputs[0].bits.is_unsigned"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -13192,7 +13184,7 @@ circuit ChaosCore :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~ChaosCore|ROB>io.FU_outputs[1].bits.unsigned"
+    "target":"~ChaosCore|ROB>io.FU_outputs[1].bits.is_unsigned"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -13260,7 +13252,7 @@ circuit ChaosCore :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~ChaosCore|ROB>io.FU_outputs[2].bits.unsigned"
+    "target":"~ChaosCore|ROB>io.FU_outputs[2].bits.is_unsigned"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -13328,7 +13320,7 @@ circuit ChaosCore :%[[
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~ChaosCore|ROB>io.FU_outputs[3].bits.unsigned"
+    "target":"~ChaosCore|ROB>io.FU_outputs[3].bits.is_unsigned"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -13921,7 +13913,7 @@ circuit ChaosCore :%[[
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.BRU.io.commit.bits.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumVecAnnotation",
@@ -13936,7 +13928,7 @@ circuit ChaosCore :%[[
   {
     "class":"chisel3.experimental.EnumAnnotations$EnumComponentAnnotation",
     "target":"ChaosCore.BRU.io.FTQ.br_type",
-    "enumTypeName":"ChaosCore._br_type"
+    "enumTypeName":"ChaosCore.br_type_t"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
@@ -14061,30 +14053,30 @@ circuit ChaosCore :%[[
   module hash_BTB_mem : @[src/main/scala/Frontend/BP/hash_BTB.scala 41:7]
     input clock : Clock @[src/main/scala/Frontend/BP/hash_BTB.scala 41:7]
     input reset : Reset @[src/main/scala/Frontend/BP/hash_BTB.scala 41:7]
-    output io : { flip enable : UInt<1>, flip rd_addr : UInt<12>, data_out : { BTB_valid : UInt<1>, BTB_tag : UInt<18>, BTB_target : UInt<32>, BTB_br_type : UInt<3>, BTB_fetch_packet_index : UInt<2>}, flip wr_addr : UInt<12>, flip wr_en : UInt<1>, flip data_in : { BTB_valid : UInt<1>, BTB_tag : UInt<18>, BTB_target : UInt<32>, BTB_br_type : UInt<3>, BTB_fetch_packet_index : UInt<2>}} @[src/main/scala/Frontend/BP/hash_BTB.scala 42:14]
+    output io : { flip enable : UInt<1>, flip rd_addr : UInt<12>, data_out : { BTB_valid : UInt<1>, BTB_tag : UInt<18>, BTB_target : UInt<32>, BTBbr_type_t : UInt<3>, BTB_fetch_packet_index : UInt<2>}, flip wr_addr : UInt<12>, flip wr_en : UInt<1>, flip data_in : { BTB_valid : UInt<1>, BTB_tag : UInt<18>, BTB_target : UInt<32>, BTBbr_type_t : UInt<3>, BTB_fetch_packet_index : UInt<2>}} @[src/main/scala/Frontend/BP/hash_BTB.scala 42:14]
 
-    smem mem : { BTB_valid : UInt<1>, BTB_tag : UInt<18>, BTB_target : UInt<32>, BTB_br_type : UInt<3>, BTB_fetch_packet_index : UInt<2>} [4096] @[src/main/scala/Frontend/BP/hash_BTB.scala 55:24]
+    smem mem : { BTB_valid : UInt<1>, BTB_tag : UInt<18>, BTB_target : UInt<32>, BTBbr_type_t : UInt<3>, BTB_fetch_packet_index : UInt<2>} [4096] @[src/main/scala/Frontend/BP/hash_BTB.scala 55:24]
     invalidate io.data_out.BTB_fetch_packet_index @[src/main/scala/Frontend/BP/hash_BTB.scala 56:15]
-    invalidate io.data_out.BTB_br_type @[src/main/scala/Frontend/BP/hash_BTB.scala 56:15]
+    invalidate io.data_out.BTBbr_type_t @[src/main/scala/Frontend/BP/hash_BTB.scala 56:15]
     invalidate io.data_out.BTB_target @[src/main/scala/Frontend/BP/hash_BTB.scala 56:15]
     invalidate io.data_out.BTB_tag @[src/main/scala/Frontend/BP/hash_BTB.scala 56:15]
     invalidate io.data_out.BTB_valid @[src/main/scala/Frontend/BP/hash_BTB.scala 56:15]
     regreset hazard_reg : UInt<1>, clock, reset, UInt<1>(0h0) @[src/main/scala/Frontend/BP/hash_BTB.scala 62:27]
-    wire _din_buff_WIRE : { BTB_valid : UInt<1>, BTB_tag : UInt<18>, BTB_target : UInt<32>, BTB_br_type : UInt<3>, BTB_fetch_packet_index : UInt<2>} @[src/main/scala/Frontend/BP/hash_BTB.scala 63:43]
+    wire _din_buff_WIRE : { BTB_valid : UInt<1>, BTB_tag : UInt<18>, BTB_target : UInt<32>, BTBbr_type_t : UInt<3>, BTB_fetch_packet_index : UInt<2>} @[src/main/scala/Frontend/BP/hash_BTB.scala 63:43]
     connect _din_buff_WIRE.BTB_fetch_packet_index, UInt<2>(0h0) @[src/main/scala/Frontend/BP/hash_BTB.scala 63:43]
-    connect _din_buff_WIRE.BTB_br_type, UInt<1>(0h0) @[src/main/scala/Frontend/BP/hash_BTB.scala 63:43]
+    connect _din_buff_WIRE.BTBbr_type_t, UInt<1>(0h0) @[src/main/scala/Frontend/BP/hash_BTB.scala 63:43]
     connect _din_buff_WIRE.BTB_target, UInt<32>(0h0) @[src/main/scala/Frontend/BP/hash_BTB.scala 63:43]
     connect _din_buff_WIRE.BTB_tag, UInt<18>(0h0) @[src/main/scala/Frontend/BP/hash_BTB.scala 63:43]
     connect _din_buff_WIRE.BTB_valid, UInt<1>(0h0) @[src/main/scala/Frontend/BP/hash_BTB.scala 63:43]
-    regreset din_buff : { BTB_valid : UInt<1>, BTB_tag : UInt<18>, BTB_target : UInt<32>, BTB_br_type : UInt<3>, BTB_fetch_packet_index : UInt<2>}, clock, reset, _din_buff_WIRE @[src/main/scala/Frontend/BP/hash_BTB.scala 63:25]
+    regreset din_buff : { BTB_valid : UInt<1>, BTB_tag : UInt<18>, BTB_target : UInt<32>, BTBbr_type_t : UInt<3>, BTB_fetch_packet_index : UInt<2>}, clock, reset, _din_buff_WIRE @[src/main/scala/Frontend/BP/hash_BTB.scala 63:25]
     node _hazard_reg_T = eq(io.rd_addr, io.wr_addr) @[src/main/scala/Frontend/BP/hash_BTB.scala 65:29]
     node _hazard_reg_T_1 = and(_hazard_reg_T, io.wr_en) @[src/main/scala/Frontend/BP/hash_BTB.scala 65:45]
     connect hazard_reg, _hazard_reg_T_1 @[src/main/scala/Frontend/BP/hash_BTB.scala 65:14]
     connect din_buff, io.data_in @[src/main/scala/Frontend/BP/hash_BTB.scala 66:12]
-    wire data_out : { BTB_valid : UInt<1>, BTB_tag : UInt<18>, BTB_target : UInt<32>, BTB_br_type : UInt<3>, BTB_fetch_packet_index : UInt<2>} @[src/main/scala/Frontend/BP/hash_BTB.scala 72:22]
-    wire _data_out_WIRE : { BTB_valid : UInt<1>, BTB_tag : UInt<18>, BTB_target : UInt<32>, BTB_br_type : UInt<3>, BTB_fetch_packet_index : UInt<2>} @[src/main/scala/Frontend/BP/hash_BTB.scala 73:27]
+    wire data_out : { BTB_valid : UInt<1>, BTB_tag : UInt<18>, BTB_target : UInt<32>, BTBbr_type_t : UInt<3>, BTB_fetch_packet_index : UInt<2>} @[src/main/scala/Frontend/BP/hash_BTB.scala 72:22]
+    wire _data_out_WIRE : { BTB_valid : UInt<1>, BTB_tag : UInt<18>, BTB_target : UInt<32>, BTBbr_type_t : UInt<3>, BTB_fetch_packet_index : UInt<2>} @[src/main/scala/Frontend/BP/hash_BTB.scala 73:27]
     connect _data_out_WIRE.BTB_fetch_packet_index, UInt<2>(0h0) @[src/main/scala/Frontend/BP/hash_BTB.scala 73:27]
-    connect _data_out_WIRE.BTB_br_type, UInt<1>(0h0) @[src/main/scala/Frontend/BP/hash_BTB.scala 73:27]
+    connect _data_out_WIRE.BTBbr_type_t, UInt<1>(0h0) @[src/main/scala/Frontend/BP/hash_BTB.scala 73:27]
     connect _data_out_WIRE.BTB_target, UInt<32>(0h0) @[src/main/scala/Frontend/BP/hash_BTB.scala 73:27]
     connect _data_out_WIRE.BTB_tag, UInt<18>(0h0) @[src/main/scala/Frontend/BP/hash_BTB.scala 73:27]
     connect _data_out_WIRE.BTB_valid, UInt<1>(0h0) @[src/main/scala/Frontend/BP/hash_BTB.scala 73:27]
@@ -14105,7 +14097,7 @@ circuit ChaosCore :%[[
   module hash_BTB : @[src/main/scala/Frontend/BP/hash_BTB.scala 88:7]
     input clock : Clock @[src/main/scala/Frontend/BP/hash_BTB.scala 88:7]
     input reset : Reset @[src/main/scala/Frontend/BP/hash_BTB.scala 88:7]
-    output io : { flip predict_PC : UInt<32>, flip predict_valid : UInt<1>, BTB_hit : UInt<1>, BTB_output : { BTB_valid : UInt<1>, BTB_tag : UInt<18>, BTB_target : UInt<32>, BTB_br_type : UInt<3>, BTB_fetch_packet_index : UInt<2>}, flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RD : UInt<7>[4], RD_valid : UInt<1>[4]}}} @[src/main/scala/Frontend/BP/hash_BTB.scala 92:16]
+    output io : { flip predict_PC : UInt<32>, flip predict_valid : UInt<1>, BTB_hit : UInt<1>, BTB_output : { BTB_valid : UInt<1>, BTB_tag : UInt<18>, BTB_target : UInt<32>, BTBbr_type_t : UInt<3>, BTB_fetch_packet_index : UInt<2>}, flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RD : UInt<7>[4], RD_valid : UInt<1>[4]}}} @[src/main/scala/Frontend/BP/hash_BTB.scala 92:16]
 
     node commit_input_tag = shr(io.commit.bits.fetch_PC, 16) @[src/main/scala/utils.scala 112:15]
     node predict_input_tag = shr(io.predict_PC, 16) @[src/main/scala/utils.scala 112:15]
@@ -14118,14 +14110,14 @@ circuit ChaosCore :%[[
     connect BTB_memory.io.rd_addr, prediction_BTB_address @[src/main/scala/Frontend/BP/hash_BTB.scala 119:29]
     connect BTB_memory.io.wr_addr, commit_BTB_address @[src/main/scala/Frontend/BP/hash_BTB.scala 120:29]
     connect BTB_memory.io.wr_en, io.commit.valid @[src/main/scala/Frontend/BP/hash_BTB.scala 121:29]
-    wire commit_BTB_entry : { BTB_valid : UInt<1>, BTB_tag : UInt<18>, BTB_target : UInt<32>, BTB_br_type : UInt<3>, BTB_fetch_packet_index : UInt<2>} @[src/main/scala/Frontend/BP/hash_BTB.scala 124:32]
+    wire commit_BTB_entry : { BTB_valid : UInt<1>, BTB_tag : UInt<18>, BTB_target : UInt<32>, BTBbr_type_t : UInt<3>, BTB_fetch_packet_index : UInt<2>} @[src/main/scala/Frontend/BP/hash_BTB.scala 124:32]
     connect commit_BTB_entry.BTB_valid, UInt<1>(0h1) @[src/main/scala/Frontend/BP/hash_BTB.scala 127:49]
     connect commit_BTB_entry.BTB_tag, commit_input_tag @[src/main/scala/Frontend/BP/hash_BTB.scala 128:49]
     connect commit_BTB_entry.BTB_target, io.commit.bits.expected_PC @[src/main/scala/Frontend/BP/hash_BTB.scala 129:49]
-    connect commit_BTB_entry.BTB_br_type, io.commit.bits.br_type @[src/main/scala/Frontend/BP/hash_BTB.scala 130:49]
+    connect commit_BTB_entry.BTBbr_type_t, io.commit.bits.br_type @[src/main/scala/Frontend/BP/hash_BTB.scala 130:50]
     connect commit_BTB_entry.BTB_fetch_packet_index, io.commit.bits.fetch_packet_index @[src/main/scala/Frontend/BP/hash_BTB.scala 131:49]
     connect BTB_memory.io.data_in.BTB_fetch_packet_index, commit_BTB_entry.BTB_fetch_packet_index @[src/main/scala/Frontend/BP/hash_BTB.scala 133:27]
-    connect BTB_memory.io.data_in.BTB_br_type, commit_BTB_entry.BTB_br_type @[src/main/scala/Frontend/BP/hash_BTB.scala 133:27]
+    connect BTB_memory.io.data_in.BTBbr_type_t, commit_BTB_entry.BTBbr_type_t @[src/main/scala/Frontend/BP/hash_BTB.scala 133:27]
     connect BTB_memory.io.data_in.BTB_target, commit_BTB_entry.BTB_target @[src/main/scala/Frontend/BP/hash_BTB.scala 133:27]
     connect BTB_memory.io.data_in.BTB_tag, commit_BTB_entry.BTB_tag @[src/main/scala/Frontend/BP/hash_BTB.scala 133:27]
     connect BTB_memory.io.data_in.BTB_valid, commit_BTB_entry.BTB_valid @[src/main/scala/Frontend/BP/hash_BTB.scala 133:27]
@@ -14320,7 +14312,7 @@ circuit ChaosCore :%[[
     node _update_BTB_T = and(io.commit.bits.T_NT, io.commit.valid) @[src/main/scala/Frontend/BP/BP.scala 102:39]
     connect update_BTB, _update_BTB_T @[src/main/scala/Frontend/BP/BP.scala 102:16]
     node _update_PHT_T = neq(io.commit.bits.br_type, UInt<1>(0h0)) @[src/main/scala/Frontend/BP/BP.scala 103:43]
-    node _update_PHT_T_1 = and(_update_PHT_T, io.commit.valid) @[src/main/scala/Frontend/BP/BP.scala 103:62]
+    node _update_PHT_T_1 = and(_update_PHT_T, io.commit.valid) @[src/main/scala/Frontend/BP/BP.scala 103:63]
     connect update_PHT, _update_PHT_T_1 @[src/main/scala/Frontend/BP/BP.scala 103:16]
     node _update_RAS_T = eq(misprediction, UInt<1>(0h0)) @[src/main/scala/Frontend/BP/BP.scala 104:19]
     connect update_RAS, _update_RAS_T @[src/main/scala/Frontend/BP/BP.scala 104:16]
@@ -14345,7 +14337,7 @@ circuit ChaosCore :%[[
     connect io.RAS_read.NEXT, RAS.io.NEXT @[src/main/scala/Frontend/BP/BP.scala 150:26]
     connect io.RAS_read.TOS, RAS.io.TOS @[src/main/scala/Frontend/BP/BP.scala 151:26]
     connect prediction.bits.target, BTB.io.BTB_output.BTB_target @[src/main/scala/Frontend/BP/BP.scala 156:31]
-    connect prediction.bits.br_type, BTB.io.BTB_output.BTB_br_type @[src/main/scala/Frontend/BP/BP.scala 157:31]
+    connect prediction.bits.br_type, BTB.io.BTB_output.BTBbr_type_t @[src/main/scala/Frontend/BP/BP.scala 157:31]
     connect prediction.bits.hit, BTB.io.BTB_hit @[src/main/scala/Frontend/BP/BP.scala 158:31]
     connect prediction.bits.GHR, io.GHR @[src/main/scala/Frontend/BP/BP.scala 159:31]
     connect prediction.bits.T_NT, gshare.io.T_NT @[src/main/scala/Frontend/BP/BP.scala 160:31]
@@ -14471,445 +14463,445 @@ circuit ChaosCore :%[[
     node _io_count_T_2 = or(_io_count_T_1, ptr_diff) @[src/main/scala/chisel3/util/Decoupled.scala 312:62]
     connect io.count, _io_count_T_2 @[src/main/scala/chisel3/util/Decoupled.scala 312:14]
 
-  module predecoder : @[src/main/scala/Frontend/BP/predecoder.scala 40:7]
-    input clock : Clock @[src/main/scala/Frontend/BP/predecoder.scala 40:7]
-    input reset : Reset @[src/main/scala/Frontend/BP/predecoder.scala 40:7]
-    output io : { flip flush : UInt<1>, revert : { valid : UInt<1>, bits : { PC : UInt<32>}}, flip prediction : { flip ready : UInt<1>, valid : UInt<1>, bits : { hit : UInt<1>, target : UInt<32>, br_type : UInt<3>, GHR : UInt<16>, T_NT : UInt<1>}}, flip fetch_packet : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, valid_bits : UInt<1>[4], instructions : { instruction : UInt<32>, packet_index : UInt<4>, ROB_index : UInt<6>}[4]}}, flip RAS_read : { NEXT : UInt<7>, TOS : UInt<7>, ret_addr : UInt<32>}, flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RD : UInt<7>[4], RD_valid : UInt<1>[4]}}, predictions : { flip ready : UInt<1>, valid : UInt<1>, bits : { valid : UInt<1>, fetch_PC : UInt<32>, is_misprediction : UInt<1>, predicted_PC : UInt<32>, T_NT : UInt<1>, br_type : UInt<3>, GHR : UInt<16>, NEXT : UInt<7>, TOS : UInt<7>, dominant_index : UInt<2>, resolved_PC : UInt<32>}}, final_fetch_packet : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, valid_bits : UInt<1>[4], instructions : { instruction : UInt<32>, packet_index : UInt<4>, ROB_index : UInt<6>}[4]}}, GHR : UInt<16>, RAS_update : { call_addr : UInt<32>, call : UInt<1>, ret : UInt<1>}} @[src/main/scala/Frontend/BP/predecoder.scala 43:16]
+  module predecoder : @[src/main/scala/Frontend/BP/predecoder.scala 41:7]
+    input clock : Clock @[src/main/scala/Frontend/BP/predecoder.scala 41:7]
+    input reset : Reset @[src/main/scala/Frontend/BP/predecoder.scala 41:7]
+    output io : { flip flush : UInt<1>, revert : { valid : UInt<1>, bits : { PC : UInt<32>}}, flip prediction : { flip ready : UInt<1>, valid : UInt<1>, bits : { hit : UInt<1>, target : UInt<32>, br_type : UInt<3>, GHR : UInt<16>, T_NT : UInt<1>}}, flip fetch_packet : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, valid_bits : UInt<1>[4], instructions : { instruction : UInt<32>, packet_index : UInt<4>, ROB_index : UInt<6>}[4]}}, flip RAS_read : { NEXT : UInt<7>, TOS : UInt<7>, ret_addr : UInt<32>}, flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RD : UInt<7>[4], RD_valid : UInt<1>[4]}}, predictions : { flip ready : UInt<1>, valid : UInt<1>, bits : { valid : UInt<1>, fetch_PC : UInt<32>, is_misprediction : UInt<1>, predicted_PC : UInt<32>, T_NT : UInt<1>, br_type : UInt<3>, GHR : UInt<16>, NEXT : UInt<7>, TOS : UInt<7>, dominant_index : UInt<2>, resolved_PC : UInt<32>}}, final_fetch_packet : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, valid_bits : UInt<1>[4], instructions : { instruction : UInt<32>, packet_index : UInt<4>, ROB_index : UInt<6>}[4]}}, GHR : UInt<16>, RAS_update : { call_addr : UInt<32>, call : UInt<1>, ret : UInt<1>}} @[src/main/scala/Frontend/BP/predecoder.scala 44:16]
 
-    wire predictions : { flip ready : UInt<1>, valid : UInt<1>, bits : { valid : UInt<1>, fetch_PC : UInt<32>, is_misprediction : UInt<1>, predicted_PC : UInt<32>, T_NT : UInt<1>, br_type : UInt<3>, GHR : UInt<16>, NEXT : UInt<7>, TOS : UInt<7>, dominant_index : UInt<2>, resolved_PC : UInt<32>}} @[src/main/scala/Frontend/BP/predecoder.scala 67:35]
-    wire final_fetch_packet : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, valid_bits : UInt<1>[4], instructions : { instruction : UInt<32>, packet_index : UInt<4>, ROB_index : UInt<6>}[4]}} @[src/main/scala/Frontend/BP/predecoder.scala 68:35]
-    wire is_JAL : UInt<1> @[src/main/scala/Frontend/BP/predecoder.scala 74:40]
-    wire is_JALR : UInt<1> @[src/main/scala/Frontend/BP/predecoder.scala 75:40]
-    wire is_BRANCH : UInt<1> @[src/main/scala/Frontend/BP/predecoder.scala 76:40]
-    wire is_RET : UInt<1> @[src/main/scala/Frontend/BP/predecoder.scala 77:40]
-    wire is_CALL : UInt<1> @[src/main/scala/Frontend/BP/predecoder.scala 78:40]
-    connect is_JAL, UInt<1>(0h0) @[src/main/scala/Frontend/BP/predecoder.scala 80:32]
-    connect is_JALR, UInt<1>(0h0) @[src/main/scala/Frontend/BP/predecoder.scala 81:32]
-    connect is_BRANCH, UInt<1>(0h0) @[src/main/scala/Frontend/BP/predecoder.scala 82:32]
-    connect is_RET, UInt<1>(0h0) @[src/main/scala/Frontend/BP/predecoder.scala 83:32]
-    connect is_CALL, UInt<1>(0h0) @[src/main/scala/Frontend/BP/predecoder.scala 84:32]
-    wire dominant_branch_index : UInt<2> @[src/main/scala/Frontend/BP/predecoder.scala 89:47]
-    wire dominant_instruction : UInt<32> @[src/main/scala/Frontend/BP/predecoder.scala 90:47]
-    wire is_control : UInt<1>[4] @[src/main/scala/Frontend/BP/predecoder.scala 91:47]
-    wire T_NT : UInt<1>[4] @[src/main/scala/Frontend/BP/predecoder.scala 92:47]
-    wire final_fetch_packet_valid_bits : UInt<1>[4] @[src/main/scala/Frontend/BP/predecoder.scala 93:47]
-    node _dominant_branch_index_T = sub(UInt<3>(0h4), UInt<1>(0h1)) @[src/main/scala/Frontend/BP/predecoder.scala 95:43]
-    node _dominant_branch_index_T_1 = tail(_dominant_branch_index_T, 1) @[src/main/scala/Frontend/BP/predecoder.scala 95:43]
-    connect dominant_branch_index, _dominant_branch_index_T_1 @[src/main/scala/Frontend/BP/predecoder.scala 95:27]
-    node opcode = bits(io.fetch_packet.bits.instructions[3].instruction, 6, 0) @[src/main/scala/Frontend/BP/predecoder.scala 99:54]
-    node RS1 = bits(io.fetch_packet.bits.instructions[3].instruction, 19, 15) @[src/main/scala/Frontend/BP/predecoder.scala 100:54]
-    node RS2 = bits(io.fetch_packet.bits.instructions[3].instruction, 24, 20) @[src/main/scala/Frontend/BP/predecoder.scala 101:54]
-    node RD = bits(io.fetch_packet.bits.instructions[3].instruction, 11, 7) @[src/main/scala/Frontend/BP/predecoder.scala 102:54]
-    node _is_BTB_taken_T = and(io.prediction.valid, io.prediction.bits.hit) @[src/main/scala/Frontend/BP/predecoder.scala 103:63]
-    node _is_BTB_taken_T_1 = and(_is_BTB_taken_T, io.prediction.bits.T_NT) @[src/main/scala/Frontend/BP/predecoder.scala 103:89]
-    node _is_BTB_taken_T_2 = and(_is_BTB_taken_T_1, io.fetch_packet.bits.valid_bits[3]) @[src/main/scala/Frontend/BP/predecoder.scala 103:116]
-    node is_BTB_taken = and(_is_BTB_taken_T_2, io.fetch_packet.valid) @[src/main/scala/Frontend/BP/predecoder.scala 103:154]
-    node _T = bits(opcode, 6, 2) @[src/main/scala/Frontend/BP/predecoder.scala 105:70]
-    wire _WIRE : UInt<5> @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    connect _WIRE, _T @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    wire instruction_type : UInt<5> @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    connect instruction_type, _WIRE @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_1 = eq(instruction_type, UInt<1>(0h0)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_2 = eq(instruction_type, UInt<1>(0h1)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_3 = eq(instruction_type, UInt<2>(0h2)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_4 = eq(instruction_type, UInt<2>(0h3)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_5 = eq(instruction_type, UInt<3>(0h4)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_6 = eq(instruction_type, UInt<3>(0h5)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_7 = eq(instruction_type, UInt<3>(0h6)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_8 = eq(instruction_type, UInt<4>(0h8)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_9 = eq(instruction_type, UInt<4>(0h9)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_10 = eq(instruction_type, UInt<4>(0ha)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_11 = eq(instruction_type, UInt<4>(0hb)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_12 = eq(instruction_type, UInt<4>(0hc)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_13 = eq(instruction_type, UInt<4>(0hd)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_14 = eq(instruction_type, UInt<4>(0he)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_15 = eq(instruction_type, UInt<5>(0h10)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_16 = eq(instruction_type, UInt<5>(0h11)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_17 = eq(instruction_type, UInt<5>(0h12)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_18 = eq(instruction_type, UInt<5>(0h13)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_19 = eq(instruction_type, UInt<5>(0h14)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_20 = eq(instruction_type, UInt<5>(0h16)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_21 = eq(instruction_type, UInt<5>(0h18)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_22 = eq(instruction_type, UInt<5>(0h19)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_23 = eq(instruction_type, UInt<5>(0h1b)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_24 = eq(instruction_type, UInt<5>(0h1c)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_25 = eq(instruction_type, UInt<5>(0h1e)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_26 = or(_T_1, _T_2) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_27 = or(_T_26, _T_3) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_28 = or(_T_27, _T_4) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_29 = or(_T_28, _T_5) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_30 = or(_T_29, _T_6) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_31 = or(_T_30, _T_7) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_32 = or(_T_31, _T_8) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_33 = or(_T_32, _T_9) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_34 = or(_T_33, _T_10) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_35 = or(_T_34, _T_11) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_36 = or(_T_35, _T_12) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_37 = or(_T_36, _T_13) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_38 = or(_T_37, _T_14) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_39 = or(_T_38, _T_15) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_40 = or(_T_39, _T_16) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_41 = or(_T_40, _T_17) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_42 = or(_T_41, _T_18) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_43 = or(_T_42, _T_19) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_44 = or(_T_43, _T_20) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_45 = or(_T_44, _T_21) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_46 = or(_T_45, _T_22) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_47 = or(_T_46, _T_23) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_48 = or(_T_47, _T_24) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node valid = or(_T_48, _T_25) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _curr_is_JAL_T = eq(instruction_type, UInt<5>(0h1b)) @[src/main/scala/Frontend/BP/predecoder.scala 108:52]
-    node _curr_is_JAL_T_1 = and(_curr_is_JAL_T, io.fetch_packet.bits.valid_bits[3]) @[src/main/scala/Frontend/BP/predecoder.scala 108:81]
-    node curr_is_JAL = and(_curr_is_JAL_T_1, io.fetch_packet.valid) @[src/main/scala/Frontend/BP/predecoder.scala 108:119]
-    node _curr_is_JALR_T = eq(instruction_type, UInt<5>(0h19)) @[src/main/scala/Frontend/BP/predecoder.scala 109:52]
-    node _curr_is_JALR_T_1 = and(_curr_is_JALR_T, io.fetch_packet.bits.valid_bits[3]) @[src/main/scala/Frontend/BP/predecoder.scala 109:81]
-    node curr_is_JALR = and(_curr_is_JALR_T_1, io.fetch_packet.valid) @[src/main/scala/Frontend/BP/predecoder.scala 109:119]
-    node _curr_is_BRANCH_T = eq(instruction_type, UInt<5>(0h18)) @[src/main/scala/Frontend/BP/predecoder.scala 110:52]
-    node _curr_is_BRANCH_T_1 = and(_curr_is_BRANCH_T, io.fetch_packet.bits.valid_bits[3]) @[src/main/scala/Frontend/BP/predecoder.scala 110:81]
-    node curr_is_BRANCH = and(_curr_is_BRANCH_T_1, io.fetch_packet.valid) @[src/main/scala/Frontend/BP/predecoder.scala 110:119]
-    node _curr_is_RET_T = eq(RD, UInt<1>(0h0)) @[src/main/scala/Frontend/BP/predecoder.scala 111:50]
-    node _curr_is_RET_T_1 = and(is_JALR, _curr_is_RET_T) @[src/main/scala/Frontend/BP/predecoder.scala 111:43]
-    node _curr_is_RET_T_2 = eq(RS1, UInt<1>(0h1)) @[src/main/scala/Frontend/BP/predecoder.scala 111:67]
-    node curr_is_RET = and(_curr_is_RET_T_1, _curr_is_RET_T_2) @[src/main/scala/Frontend/BP/predecoder.scala 111:59]
-    node _curr_is_CALL_T = eq(RD, UInt<1>(0h1)) @[src/main/scala/Frontend/BP/predecoder.scala 112:50]
-    node _curr_is_CALL_T_1 = and(is_JALR, _curr_is_CALL_T) @[src/main/scala/Frontend/BP/predecoder.scala 112:43]
-    node _curr_is_CALL_T_2 = eq(RD, UInt<1>(0h1)) @[src/main/scala/Frontend/BP/predecoder.scala 112:78]
-    node _curr_is_CALL_T_3 = and(is_JAL, _curr_is_CALL_T_2) @[src/main/scala/Frontend/BP/predecoder.scala 112:71]
-    node curr_is_CALL = or(_curr_is_CALL_T_1, _curr_is_CALL_T_3) @[src/main/scala/Frontend/BP/predecoder.scala 112:60]
-    node _is_taken_T = and(curr_is_BRANCH, is_BTB_taken) @[src/main/scala/Frontend/BP/predecoder.scala 114:60]
-    node _is_taken_T_1 = or(_is_taken_T, curr_is_JALR) @[src/main/scala/Frontend/BP/predecoder.scala 114:77]
-    node is_taken = or(_is_taken_T_1, curr_is_JAL) @[src/main/scala/Frontend/BP/predecoder.scala 114:93]
-    connect T_NT[3], is_taken @[src/main/scala/Frontend/BP/predecoder.scala 116:17]
-    when is_taken : @[src/main/scala/Frontend/BP/predecoder.scala 117:23]
-      connect is_JAL, curr_is_JAL @[src/main/scala/Frontend/BP/predecoder.scala 118:25]
-      connect is_JALR, curr_is_JALR @[src/main/scala/Frontend/BP/predecoder.scala 119:25]
-      connect is_BRANCH, curr_is_BRANCH @[src/main/scala/Frontend/BP/predecoder.scala 120:25]
-      connect is_RET, curr_is_RET @[src/main/scala/Frontend/BP/predecoder.scala 121:25]
-      connect is_CALL, curr_is_CALL @[src/main/scala/Frontend/BP/predecoder.scala 122:25]
-    node _is_control_3_T = or(curr_is_BRANCH, curr_is_JAL) @[src/main/scala/Frontend/BP/predecoder.scala 124:41]
-    node _is_control_3_T_1 = or(_is_control_3_T, curr_is_JALR) @[src/main/scala/Frontend/BP/predecoder.scala 124:56]
-    connect is_control[3], _is_control_3_T_1 @[src/main/scala/Frontend/BP/predecoder.scala 124:23]
-    when is_taken : @[src/main/scala/Frontend/BP/predecoder.scala 125:23]
-      connect dominant_branch_index, UInt<2>(0h3) @[src/main/scala/Frontend/BP/predecoder.scala 125:46]
-    node opcode_1 = bits(io.fetch_packet.bits.instructions[2].instruction, 6, 0) @[src/main/scala/Frontend/BP/predecoder.scala 99:54]
-    node RS1_1 = bits(io.fetch_packet.bits.instructions[2].instruction, 19, 15) @[src/main/scala/Frontend/BP/predecoder.scala 100:54]
-    node RS2_1 = bits(io.fetch_packet.bits.instructions[2].instruction, 24, 20) @[src/main/scala/Frontend/BP/predecoder.scala 101:54]
-    node RD_1 = bits(io.fetch_packet.bits.instructions[2].instruction, 11, 7) @[src/main/scala/Frontend/BP/predecoder.scala 102:54]
-    node _is_BTB_taken_T_3 = and(io.prediction.valid, io.prediction.bits.hit) @[src/main/scala/Frontend/BP/predecoder.scala 103:63]
-    node _is_BTB_taken_T_4 = and(_is_BTB_taken_T_3, io.prediction.bits.T_NT) @[src/main/scala/Frontend/BP/predecoder.scala 103:89]
-    node _is_BTB_taken_T_5 = and(_is_BTB_taken_T_4, io.fetch_packet.bits.valid_bits[2]) @[src/main/scala/Frontend/BP/predecoder.scala 103:116]
-    node is_BTB_taken_1 = and(_is_BTB_taken_T_5, io.fetch_packet.valid) @[src/main/scala/Frontend/BP/predecoder.scala 103:154]
-    node _T_49 = bits(opcode_1, 6, 2) @[src/main/scala/Frontend/BP/predecoder.scala 105:70]
-    wire _WIRE_1 : UInt<5> @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    connect _WIRE_1, _T_49 @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    wire instruction_type_1 : UInt<5> @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    connect instruction_type_1, _WIRE_1 @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_50 = eq(instruction_type_1, UInt<1>(0h0)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_51 = eq(instruction_type_1, UInt<1>(0h1)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_52 = eq(instruction_type_1, UInt<2>(0h2)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_53 = eq(instruction_type_1, UInt<2>(0h3)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_54 = eq(instruction_type_1, UInt<3>(0h4)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_55 = eq(instruction_type_1, UInt<3>(0h5)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_56 = eq(instruction_type_1, UInt<3>(0h6)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_57 = eq(instruction_type_1, UInt<4>(0h8)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_58 = eq(instruction_type_1, UInt<4>(0h9)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_59 = eq(instruction_type_1, UInt<4>(0ha)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_60 = eq(instruction_type_1, UInt<4>(0hb)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_61 = eq(instruction_type_1, UInt<4>(0hc)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_62 = eq(instruction_type_1, UInt<4>(0hd)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_63 = eq(instruction_type_1, UInt<4>(0he)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_64 = eq(instruction_type_1, UInt<5>(0h10)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_65 = eq(instruction_type_1, UInt<5>(0h11)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_66 = eq(instruction_type_1, UInt<5>(0h12)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_67 = eq(instruction_type_1, UInt<5>(0h13)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_68 = eq(instruction_type_1, UInt<5>(0h14)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_69 = eq(instruction_type_1, UInt<5>(0h16)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_70 = eq(instruction_type_1, UInt<5>(0h18)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_71 = eq(instruction_type_1, UInt<5>(0h19)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_72 = eq(instruction_type_1, UInt<5>(0h1b)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_73 = eq(instruction_type_1, UInt<5>(0h1c)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_74 = eq(instruction_type_1, UInt<5>(0h1e)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_75 = or(_T_50, _T_51) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_76 = or(_T_75, _T_52) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_77 = or(_T_76, _T_53) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_78 = or(_T_77, _T_54) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_79 = or(_T_78, _T_55) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_80 = or(_T_79, _T_56) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_81 = or(_T_80, _T_57) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_82 = or(_T_81, _T_58) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_83 = or(_T_82, _T_59) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_84 = or(_T_83, _T_60) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_85 = or(_T_84, _T_61) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_86 = or(_T_85, _T_62) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_87 = or(_T_86, _T_63) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_88 = or(_T_87, _T_64) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_89 = or(_T_88, _T_65) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_90 = or(_T_89, _T_66) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_91 = or(_T_90, _T_67) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_92 = or(_T_91, _T_68) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_93 = or(_T_92, _T_69) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_94 = or(_T_93, _T_70) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_95 = or(_T_94, _T_71) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_96 = or(_T_95, _T_72) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_97 = or(_T_96, _T_73) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node valid_1 = or(_T_97, _T_74) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _curr_is_JAL_T_2 = eq(instruction_type_1, UInt<5>(0h1b)) @[src/main/scala/Frontend/BP/predecoder.scala 108:52]
-    node _curr_is_JAL_T_3 = and(_curr_is_JAL_T_2, io.fetch_packet.bits.valid_bits[2]) @[src/main/scala/Frontend/BP/predecoder.scala 108:81]
-    node curr_is_JAL_1 = and(_curr_is_JAL_T_3, io.fetch_packet.valid) @[src/main/scala/Frontend/BP/predecoder.scala 108:119]
-    node _curr_is_JALR_T_2 = eq(instruction_type_1, UInt<5>(0h19)) @[src/main/scala/Frontend/BP/predecoder.scala 109:52]
-    node _curr_is_JALR_T_3 = and(_curr_is_JALR_T_2, io.fetch_packet.bits.valid_bits[2]) @[src/main/scala/Frontend/BP/predecoder.scala 109:81]
-    node curr_is_JALR_1 = and(_curr_is_JALR_T_3, io.fetch_packet.valid) @[src/main/scala/Frontend/BP/predecoder.scala 109:119]
-    node _curr_is_BRANCH_T_2 = eq(instruction_type_1, UInt<5>(0h18)) @[src/main/scala/Frontend/BP/predecoder.scala 110:52]
-    node _curr_is_BRANCH_T_3 = and(_curr_is_BRANCH_T_2, io.fetch_packet.bits.valid_bits[2]) @[src/main/scala/Frontend/BP/predecoder.scala 110:81]
-    node curr_is_BRANCH_1 = and(_curr_is_BRANCH_T_3, io.fetch_packet.valid) @[src/main/scala/Frontend/BP/predecoder.scala 110:119]
-    node _curr_is_RET_T_3 = eq(RD_1, UInt<1>(0h0)) @[src/main/scala/Frontend/BP/predecoder.scala 111:50]
-    node _curr_is_RET_T_4 = and(is_JALR, _curr_is_RET_T_3) @[src/main/scala/Frontend/BP/predecoder.scala 111:43]
-    node _curr_is_RET_T_5 = eq(RS1_1, UInt<1>(0h1)) @[src/main/scala/Frontend/BP/predecoder.scala 111:67]
-    node curr_is_RET_1 = and(_curr_is_RET_T_4, _curr_is_RET_T_5) @[src/main/scala/Frontend/BP/predecoder.scala 111:59]
-    node _curr_is_CALL_T_4 = eq(RD_1, UInt<1>(0h1)) @[src/main/scala/Frontend/BP/predecoder.scala 112:50]
-    node _curr_is_CALL_T_5 = and(is_JALR, _curr_is_CALL_T_4) @[src/main/scala/Frontend/BP/predecoder.scala 112:43]
-    node _curr_is_CALL_T_6 = eq(RD_1, UInt<1>(0h1)) @[src/main/scala/Frontend/BP/predecoder.scala 112:78]
-    node _curr_is_CALL_T_7 = and(is_JAL, _curr_is_CALL_T_6) @[src/main/scala/Frontend/BP/predecoder.scala 112:71]
-    node curr_is_CALL_1 = or(_curr_is_CALL_T_5, _curr_is_CALL_T_7) @[src/main/scala/Frontend/BP/predecoder.scala 112:60]
-    node _is_taken_T_2 = and(curr_is_BRANCH_1, is_BTB_taken_1) @[src/main/scala/Frontend/BP/predecoder.scala 114:60]
-    node _is_taken_T_3 = or(_is_taken_T_2, curr_is_JALR_1) @[src/main/scala/Frontend/BP/predecoder.scala 114:77]
-    node is_taken_1 = or(_is_taken_T_3, curr_is_JAL_1) @[src/main/scala/Frontend/BP/predecoder.scala 114:93]
-    connect T_NT[2], is_taken_1 @[src/main/scala/Frontend/BP/predecoder.scala 116:17]
-    when is_taken_1 : @[src/main/scala/Frontend/BP/predecoder.scala 117:23]
-      connect is_JAL, curr_is_JAL_1 @[src/main/scala/Frontend/BP/predecoder.scala 118:25]
-      connect is_JALR, curr_is_JALR_1 @[src/main/scala/Frontend/BP/predecoder.scala 119:25]
-      connect is_BRANCH, curr_is_BRANCH_1 @[src/main/scala/Frontend/BP/predecoder.scala 120:25]
-      connect is_RET, curr_is_RET_1 @[src/main/scala/Frontend/BP/predecoder.scala 121:25]
-      connect is_CALL, curr_is_CALL_1 @[src/main/scala/Frontend/BP/predecoder.scala 122:25]
-    node _is_control_2_T = or(curr_is_BRANCH_1, curr_is_JAL_1) @[src/main/scala/Frontend/BP/predecoder.scala 124:41]
-    node _is_control_2_T_1 = or(_is_control_2_T, curr_is_JALR_1) @[src/main/scala/Frontend/BP/predecoder.scala 124:56]
-    connect is_control[2], _is_control_2_T_1 @[src/main/scala/Frontend/BP/predecoder.scala 124:23]
-    when is_taken_1 : @[src/main/scala/Frontend/BP/predecoder.scala 125:23]
-      connect dominant_branch_index, UInt<2>(0h2) @[src/main/scala/Frontend/BP/predecoder.scala 125:46]
-    node opcode_2 = bits(io.fetch_packet.bits.instructions[1].instruction, 6, 0) @[src/main/scala/Frontend/BP/predecoder.scala 99:54]
-    node RS1_2 = bits(io.fetch_packet.bits.instructions[1].instruction, 19, 15) @[src/main/scala/Frontend/BP/predecoder.scala 100:54]
-    node RS2_2 = bits(io.fetch_packet.bits.instructions[1].instruction, 24, 20) @[src/main/scala/Frontend/BP/predecoder.scala 101:54]
-    node RD_2 = bits(io.fetch_packet.bits.instructions[1].instruction, 11, 7) @[src/main/scala/Frontend/BP/predecoder.scala 102:54]
-    node _is_BTB_taken_T_6 = and(io.prediction.valid, io.prediction.bits.hit) @[src/main/scala/Frontend/BP/predecoder.scala 103:63]
-    node _is_BTB_taken_T_7 = and(_is_BTB_taken_T_6, io.prediction.bits.T_NT) @[src/main/scala/Frontend/BP/predecoder.scala 103:89]
-    node _is_BTB_taken_T_8 = and(_is_BTB_taken_T_7, io.fetch_packet.bits.valid_bits[1]) @[src/main/scala/Frontend/BP/predecoder.scala 103:116]
-    node is_BTB_taken_2 = and(_is_BTB_taken_T_8, io.fetch_packet.valid) @[src/main/scala/Frontend/BP/predecoder.scala 103:154]
-    node _T_98 = bits(opcode_2, 6, 2) @[src/main/scala/Frontend/BP/predecoder.scala 105:70]
-    wire _WIRE_2 : UInt<5> @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    connect _WIRE_2, _T_98 @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    wire instruction_type_2 : UInt<5> @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    connect instruction_type_2, _WIRE_2 @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_99 = eq(instruction_type_2, UInt<1>(0h0)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_100 = eq(instruction_type_2, UInt<1>(0h1)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_101 = eq(instruction_type_2, UInt<2>(0h2)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_102 = eq(instruction_type_2, UInt<2>(0h3)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_103 = eq(instruction_type_2, UInt<3>(0h4)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_104 = eq(instruction_type_2, UInt<3>(0h5)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_105 = eq(instruction_type_2, UInt<3>(0h6)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_106 = eq(instruction_type_2, UInt<4>(0h8)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_107 = eq(instruction_type_2, UInt<4>(0h9)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_108 = eq(instruction_type_2, UInt<4>(0ha)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_109 = eq(instruction_type_2, UInt<4>(0hb)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_110 = eq(instruction_type_2, UInt<4>(0hc)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_111 = eq(instruction_type_2, UInt<4>(0hd)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_112 = eq(instruction_type_2, UInt<4>(0he)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_113 = eq(instruction_type_2, UInt<5>(0h10)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_114 = eq(instruction_type_2, UInt<5>(0h11)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_115 = eq(instruction_type_2, UInt<5>(0h12)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_116 = eq(instruction_type_2, UInt<5>(0h13)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_117 = eq(instruction_type_2, UInt<5>(0h14)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_118 = eq(instruction_type_2, UInt<5>(0h16)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_119 = eq(instruction_type_2, UInt<5>(0h18)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_120 = eq(instruction_type_2, UInt<5>(0h19)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_121 = eq(instruction_type_2, UInt<5>(0h1b)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_122 = eq(instruction_type_2, UInt<5>(0h1c)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_123 = eq(instruction_type_2, UInt<5>(0h1e)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_124 = or(_T_99, _T_100) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_125 = or(_T_124, _T_101) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_126 = or(_T_125, _T_102) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_127 = or(_T_126, _T_103) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_128 = or(_T_127, _T_104) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_129 = or(_T_128, _T_105) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_130 = or(_T_129, _T_106) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_131 = or(_T_130, _T_107) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_132 = or(_T_131, _T_108) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_133 = or(_T_132, _T_109) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_134 = or(_T_133, _T_110) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_135 = or(_T_134, _T_111) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_136 = or(_T_135, _T_112) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_137 = or(_T_136, _T_113) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_138 = or(_T_137, _T_114) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_139 = or(_T_138, _T_115) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_140 = or(_T_139, _T_116) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_141 = or(_T_140, _T_117) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_142 = or(_T_141, _T_118) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_143 = or(_T_142, _T_119) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_144 = or(_T_143, _T_120) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_145 = or(_T_144, _T_121) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_146 = or(_T_145, _T_122) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node valid_2 = or(_T_146, _T_123) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _curr_is_JAL_T_4 = eq(instruction_type_2, UInt<5>(0h1b)) @[src/main/scala/Frontend/BP/predecoder.scala 108:52]
-    node _curr_is_JAL_T_5 = and(_curr_is_JAL_T_4, io.fetch_packet.bits.valid_bits[1]) @[src/main/scala/Frontend/BP/predecoder.scala 108:81]
-    node curr_is_JAL_2 = and(_curr_is_JAL_T_5, io.fetch_packet.valid) @[src/main/scala/Frontend/BP/predecoder.scala 108:119]
-    node _curr_is_JALR_T_4 = eq(instruction_type_2, UInt<5>(0h19)) @[src/main/scala/Frontend/BP/predecoder.scala 109:52]
-    node _curr_is_JALR_T_5 = and(_curr_is_JALR_T_4, io.fetch_packet.bits.valid_bits[1]) @[src/main/scala/Frontend/BP/predecoder.scala 109:81]
-    node curr_is_JALR_2 = and(_curr_is_JALR_T_5, io.fetch_packet.valid) @[src/main/scala/Frontend/BP/predecoder.scala 109:119]
-    node _curr_is_BRANCH_T_4 = eq(instruction_type_2, UInt<5>(0h18)) @[src/main/scala/Frontend/BP/predecoder.scala 110:52]
-    node _curr_is_BRANCH_T_5 = and(_curr_is_BRANCH_T_4, io.fetch_packet.bits.valid_bits[1]) @[src/main/scala/Frontend/BP/predecoder.scala 110:81]
-    node curr_is_BRANCH_2 = and(_curr_is_BRANCH_T_5, io.fetch_packet.valid) @[src/main/scala/Frontend/BP/predecoder.scala 110:119]
-    node _curr_is_RET_T_6 = eq(RD_2, UInt<1>(0h0)) @[src/main/scala/Frontend/BP/predecoder.scala 111:50]
-    node _curr_is_RET_T_7 = and(is_JALR, _curr_is_RET_T_6) @[src/main/scala/Frontend/BP/predecoder.scala 111:43]
-    node _curr_is_RET_T_8 = eq(RS1_2, UInt<1>(0h1)) @[src/main/scala/Frontend/BP/predecoder.scala 111:67]
-    node curr_is_RET_2 = and(_curr_is_RET_T_7, _curr_is_RET_T_8) @[src/main/scala/Frontend/BP/predecoder.scala 111:59]
-    node _curr_is_CALL_T_8 = eq(RD_2, UInt<1>(0h1)) @[src/main/scala/Frontend/BP/predecoder.scala 112:50]
-    node _curr_is_CALL_T_9 = and(is_JALR, _curr_is_CALL_T_8) @[src/main/scala/Frontend/BP/predecoder.scala 112:43]
-    node _curr_is_CALL_T_10 = eq(RD_2, UInt<1>(0h1)) @[src/main/scala/Frontend/BP/predecoder.scala 112:78]
-    node _curr_is_CALL_T_11 = and(is_JAL, _curr_is_CALL_T_10) @[src/main/scala/Frontend/BP/predecoder.scala 112:71]
-    node curr_is_CALL_2 = or(_curr_is_CALL_T_9, _curr_is_CALL_T_11) @[src/main/scala/Frontend/BP/predecoder.scala 112:60]
-    node _is_taken_T_4 = and(curr_is_BRANCH_2, is_BTB_taken_2) @[src/main/scala/Frontend/BP/predecoder.scala 114:60]
-    node _is_taken_T_5 = or(_is_taken_T_4, curr_is_JALR_2) @[src/main/scala/Frontend/BP/predecoder.scala 114:77]
-    node is_taken_2 = or(_is_taken_T_5, curr_is_JAL_2) @[src/main/scala/Frontend/BP/predecoder.scala 114:93]
-    connect T_NT[1], is_taken_2 @[src/main/scala/Frontend/BP/predecoder.scala 116:17]
-    when is_taken_2 : @[src/main/scala/Frontend/BP/predecoder.scala 117:23]
-      connect is_JAL, curr_is_JAL_2 @[src/main/scala/Frontend/BP/predecoder.scala 118:25]
-      connect is_JALR, curr_is_JALR_2 @[src/main/scala/Frontend/BP/predecoder.scala 119:25]
-      connect is_BRANCH, curr_is_BRANCH_2 @[src/main/scala/Frontend/BP/predecoder.scala 120:25]
-      connect is_RET, curr_is_RET_2 @[src/main/scala/Frontend/BP/predecoder.scala 121:25]
-      connect is_CALL, curr_is_CALL_2 @[src/main/scala/Frontend/BP/predecoder.scala 122:25]
-    node _is_control_1_T = or(curr_is_BRANCH_2, curr_is_JAL_2) @[src/main/scala/Frontend/BP/predecoder.scala 124:41]
-    node _is_control_1_T_1 = or(_is_control_1_T, curr_is_JALR_2) @[src/main/scala/Frontend/BP/predecoder.scala 124:56]
-    connect is_control[1], _is_control_1_T_1 @[src/main/scala/Frontend/BP/predecoder.scala 124:23]
-    when is_taken_2 : @[src/main/scala/Frontend/BP/predecoder.scala 125:23]
-      connect dominant_branch_index, UInt<1>(0h1) @[src/main/scala/Frontend/BP/predecoder.scala 125:46]
-    node opcode_3 = bits(io.fetch_packet.bits.instructions[0].instruction, 6, 0) @[src/main/scala/Frontend/BP/predecoder.scala 99:54]
-    node RS1_3 = bits(io.fetch_packet.bits.instructions[0].instruction, 19, 15) @[src/main/scala/Frontend/BP/predecoder.scala 100:54]
-    node RS2_3 = bits(io.fetch_packet.bits.instructions[0].instruction, 24, 20) @[src/main/scala/Frontend/BP/predecoder.scala 101:54]
-    node RD_3 = bits(io.fetch_packet.bits.instructions[0].instruction, 11, 7) @[src/main/scala/Frontend/BP/predecoder.scala 102:54]
-    node _is_BTB_taken_T_9 = and(io.prediction.valid, io.prediction.bits.hit) @[src/main/scala/Frontend/BP/predecoder.scala 103:63]
-    node _is_BTB_taken_T_10 = and(_is_BTB_taken_T_9, io.prediction.bits.T_NT) @[src/main/scala/Frontend/BP/predecoder.scala 103:89]
-    node _is_BTB_taken_T_11 = and(_is_BTB_taken_T_10, io.fetch_packet.bits.valid_bits[0]) @[src/main/scala/Frontend/BP/predecoder.scala 103:116]
-    node is_BTB_taken_3 = and(_is_BTB_taken_T_11, io.fetch_packet.valid) @[src/main/scala/Frontend/BP/predecoder.scala 103:154]
-    node _T_147 = bits(opcode_3, 6, 2) @[src/main/scala/Frontend/BP/predecoder.scala 105:70]
-    wire _WIRE_3 : UInt<5> @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    connect _WIRE_3, _T_147 @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    wire instruction_type_3 : UInt<5> @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    connect instruction_type_3, _WIRE_3 @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_148 = eq(instruction_type_3, UInt<1>(0h0)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_149 = eq(instruction_type_3, UInt<1>(0h1)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_150 = eq(instruction_type_3, UInt<2>(0h2)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_151 = eq(instruction_type_3, UInt<2>(0h3)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_152 = eq(instruction_type_3, UInt<3>(0h4)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_153 = eq(instruction_type_3, UInt<3>(0h5)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_154 = eq(instruction_type_3, UInt<3>(0h6)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_155 = eq(instruction_type_3, UInt<4>(0h8)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_156 = eq(instruction_type_3, UInt<4>(0h9)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_157 = eq(instruction_type_3, UInt<4>(0ha)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_158 = eq(instruction_type_3, UInt<4>(0hb)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_159 = eq(instruction_type_3, UInt<4>(0hc)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_160 = eq(instruction_type_3, UInt<4>(0hd)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_161 = eq(instruction_type_3, UInt<4>(0he)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_162 = eq(instruction_type_3, UInt<5>(0h10)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_163 = eq(instruction_type_3, UInt<5>(0h11)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_164 = eq(instruction_type_3, UInt<5>(0h12)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_165 = eq(instruction_type_3, UInt<5>(0h13)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_166 = eq(instruction_type_3, UInt<5>(0h14)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_167 = eq(instruction_type_3, UInt<5>(0h16)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_168 = eq(instruction_type_3, UInt<5>(0h18)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_169 = eq(instruction_type_3, UInt<5>(0h19)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_170 = eq(instruction_type_3, UInt<5>(0h1b)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_171 = eq(instruction_type_3, UInt<5>(0h1c)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_172 = eq(instruction_type_3, UInt<5>(0h1e)) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_173 = or(_T_148, _T_149) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_174 = or(_T_173, _T_150) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_175 = or(_T_174, _T_151) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_176 = or(_T_175, _T_152) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_177 = or(_T_176, _T_153) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_178 = or(_T_177, _T_154) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_179 = or(_T_178, _T_155) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_180 = or(_T_179, _T_156) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_181 = or(_T_180, _T_157) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_182 = or(_T_181, _T_158) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_183 = or(_T_182, _T_159) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_184 = or(_T_183, _T_160) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_185 = or(_T_184, _T_161) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_186 = or(_T_185, _T_162) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_187 = or(_T_186, _T_163) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_188 = or(_T_187, _T_164) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_189 = or(_T_188, _T_165) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_190 = or(_T_189, _T_166) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_191 = or(_T_190, _T_167) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_192 = or(_T_191, _T_168) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_193 = or(_T_192, _T_169) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_194 = or(_T_193, _T_170) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _T_195 = or(_T_194, _T_171) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node valid_3 = or(_T_195, _T_172) @[src/main/scala/Frontend/BP/predecoder.scala 105:63]
-    node _curr_is_JAL_T_6 = eq(instruction_type_3, UInt<5>(0h1b)) @[src/main/scala/Frontend/BP/predecoder.scala 108:52]
-    node _curr_is_JAL_T_7 = and(_curr_is_JAL_T_6, io.fetch_packet.bits.valid_bits[0]) @[src/main/scala/Frontend/BP/predecoder.scala 108:81]
-    node curr_is_JAL_3 = and(_curr_is_JAL_T_7, io.fetch_packet.valid) @[src/main/scala/Frontend/BP/predecoder.scala 108:119]
-    node _curr_is_JALR_T_6 = eq(instruction_type_3, UInt<5>(0h19)) @[src/main/scala/Frontend/BP/predecoder.scala 109:52]
-    node _curr_is_JALR_T_7 = and(_curr_is_JALR_T_6, io.fetch_packet.bits.valid_bits[0]) @[src/main/scala/Frontend/BP/predecoder.scala 109:81]
-    node curr_is_JALR_3 = and(_curr_is_JALR_T_7, io.fetch_packet.valid) @[src/main/scala/Frontend/BP/predecoder.scala 109:119]
-    node _curr_is_BRANCH_T_6 = eq(instruction_type_3, UInt<5>(0h18)) @[src/main/scala/Frontend/BP/predecoder.scala 110:52]
-    node _curr_is_BRANCH_T_7 = and(_curr_is_BRANCH_T_6, io.fetch_packet.bits.valid_bits[0]) @[src/main/scala/Frontend/BP/predecoder.scala 110:81]
-    node curr_is_BRANCH_3 = and(_curr_is_BRANCH_T_7, io.fetch_packet.valid) @[src/main/scala/Frontend/BP/predecoder.scala 110:119]
-    node _curr_is_RET_T_9 = eq(RD_3, UInt<1>(0h0)) @[src/main/scala/Frontend/BP/predecoder.scala 111:50]
-    node _curr_is_RET_T_10 = and(is_JALR, _curr_is_RET_T_9) @[src/main/scala/Frontend/BP/predecoder.scala 111:43]
-    node _curr_is_RET_T_11 = eq(RS1_3, UInt<1>(0h1)) @[src/main/scala/Frontend/BP/predecoder.scala 111:67]
-    node curr_is_RET_3 = and(_curr_is_RET_T_10, _curr_is_RET_T_11) @[src/main/scala/Frontend/BP/predecoder.scala 111:59]
-    node _curr_is_CALL_T_12 = eq(RD_3, UInt<1>(0h1)) @[src/main/scala/Frontend/BP/predecoder.scala 112:50]
-    node _curr_is_CALL_T_13 = and(is_JALR, _curr_is_CALL_T_12) @[src/main/scala/Frontend/BP/predecoder.scala 112:43]
-    node _curr_is_CALL_T_14 = eq(RD_3, UInt<1>(0h1)) @[src/main/scala/Frontend/BP/predecoder.scala 112:78]
-    node _curr_is_CALL_T_15 = and(is_JAL, _curr_is_CALL_T_14) @[src/main/scala/Frontend/BP/predecoder.scala 112:71]
-    node curr_is_CALL_3 = or(_curr_is_CALL_T_13, _curr_is_CALL_T_15) @[src/main/scala/Frontend/BP/predecoder.scala 112:60]
-    node _is_taken_T_6 = and(curr_is_BRANCH_3, is_BTB_taken_3) @[src/main/scala/Frontend/BP/predecoder.scala 114:60]
-    node _is_taken_T_7 = or(_is_taken_T_6, curr_is_JALR_3) @[src/main/scala/Frontend/BP/predecoder.scala 114:77]
-    node is_taken_3 = or(_is_taken_T_7, curr_is_JAL_3) @[src/main/scala/Frontend/BP/predecoder.scala 114:93]
-    connect T_NT[0], is_taken_3 @[src/main/scala/Frontend/BP/predecoder.scala 116:17]
-    when is_taken_3 : @[src/main/scala/Frontend/BP/predecoder.scala 117:23]
-      connect is_JAL, curr_is_JAL_3 @[src/main/scala/Frontend/BP/predecoder.scala 118:25]
-      connect is_JALR, curr_is_JALR_3 @[src/main/scala/Frontend/BP/predecoder.scala 119:25]
-      connect is_BRANCH, curr_is_BRANCH_3 @[src/main/scala/Frontend/BP/predecoder.scala 120:25]
-      connect is_RET, curr_is_RET_3 @[src/main/scala/Frontend/BP/predecoder.scala 121:25]
-      connect is_CALL, curr_is_CALL_3 @[src/main/scala/Frontend/BP/predecoder.scala 122:25]
-    node _is_control_0_T = or(curr_is_BRANCH_3, curr_is_JAL_3) @[src/main/scala/Frontend/BP/predecoder.scala 124:41]
-    node _is_control_0_T_1 = or(_is_control_0_T, curr_is_JALR_3) @[src/main/scala/Frontend/BP/predecoder.scala 124:56]
-    connect is_control[0], _is_control_0_T_1 @[src/main/scala/Frontend/BP/predecoder.scala 124:23]
-    when is_taken_3 : @[src/main/scala/Frontend/BP/predecoder.scala 125:23]
-      connect dominant_branch_index, UInt<1>(0h0) @[src/main/scala/Frontend/BP/predecoder.scala 125:46]
-    connect dominant_instruction, io.fetch_packet.bits.instructions[dominant_branch_index].instruction @[src/main/scala/Frontend/BP/predecoder.scala 128:26]
-    node _final_fetch_packet_valid_bits_0_T = and(io.fetch_packet.valid, io.fetch_packet.bits.valid_bits[0]) @[src/main/scala/Frontend/BP/predecoder.scala 131:67]
-    node _final_fetch_packet_valid_bits_0_T_1 = eq(UInt<1>(0h0), UInt<1>(0h0)) @[src/main/scala/Frontend/BP/predecoder.scala 131:108]
-    node _final_fetch_packet_valid_bits_0_T_2 = and(_final_fetch_packet_valid_bits_0_T, _final_fetch_packet_valid_bits_0_T_1) @[src/main/scala/Frontend/BP/predecoder.scala 131:105]
-    connect final_fetch_packet_valid_bits[0], _final_fetch_packet_valid_bits_0_T_2 @[src/main/scala/Frontend/BP/predecoder.scala 131:42]
-    node _final_fetch_packet_valid_bits_1_T = and(io.fetch_packet.valid, io.fetch_packet.bits.valid_bits[1]) @[src/main/scala/Frontend/BP/predecoder.scala 131:67]
-    node _final_fetch_packet_valid_bits_1_T_1 = eq(T_NT[0], UInt<1>(0h0)) @[src/main/scala/Frontend/BP/predecoder.scala 131:108]
-    node _final_fetch_packet_valid_bits_1_T_2 = and(_final_fetch_packet_valid_bits_1_T, _final_fetch_packet_valid_bits_1_T_1) @[src/main/scala/Frontend/BP/predecoder.scala 131:105]
-    connect final_fetch_packet_valid_bits[1], _final_fetch_packet_valid_bits_1_T_2 @[src/main/scala/Frontend/BP/predecoder.scala 131:42]
-    node _final_fetch_packet_valid_bits_2_T = and(io.fetch_packet.valid, io.fetch_packet.bits.valid_bits[2]) @[src/main/scala/Frontend/BP/predecoder.scala 131:67]
-    node _final_fetch_packet_valid_bits_2_T_1 = add(T_NT[0], T_NT[1]) @[src/main/scala/Frontend/BP/predecoder.scala 131:117]
-    node _final_fetch_packet_valid_bits_2_T_2 = bits(_final_fetch_packet_valid_bits_2_T_1, 1, 0) @[src/main/scala/Frontend/BP/predecoder.scala 131:117]
-    node _final_fetch_packet_valid_bits_2_T_3 = eq(_final_fetch_packet_valid_bits_2_T_2, UInt<1>(0h0)) @[src/main/scala/Frontend/BP/predecoder.scala 131:108]
-    node _final_fetch_packet_valid_bits_2_T_4 = and(_final_fetch_packet_valid_bits_2_T, _final_fetch_packet_valid_bits_2_T_3) @[src/main/scala/Frontend/BP/predecoder.scala 131:105]
-    connect final_fetch_packet_valid_bits[2], _final_fetch_packet_valid_bits_2_T_4 @[src/main/scala/Frontend/BP/predecoder.scala 131:42]
-    node _final_fetch_packet_valid_bits_3_T = and(io.fetch_packet.valid, io.fetch_packet.bits.valid_bits[3]) @[src/main/scala/Frontend/BP/predecoder.scala 131:67]
-    node _final_fetch_packet_valid_bits_3_T_1 = add(T_NT[1], T_NT[2]) @[src/main/scala/Frontend/BP/predecoder.scala 131:117]
-    node _final_fetch_packet_valid_bits_3_T_2 = bits(_final_fetch_packet_valid_bits_3_T_1, 1, 0) @[src/main/scala/Frontend/BP/predecoder.scala 131:117]
-    node _final_fetch_packet_valid_bits_3_T_3 = add(T_NT[0], _final_fetch_packet_valid_bits_3_T_2) @[src/main/scala/Frontend/BP/predecoder.scala 131:117]
-    node _final_fetch_packet_valid_bits_3_T_4 = bits(_final_fetch_packet_valid_bits_3_T_3, 1, 0) @[src/main/scala/Frontend/BP/predecoder.scala 131:117]
-    node _final_fetch_packet_valid_bits_3_T_5 = eq(_final_fetch_packet_valid_bits_3_T_4, UInt<1>(0h0)) @[src/main/scala/Frontend/BP/predecoder.scala 131:108]
-    node _final_fetch_packet_valid_bits_3_T_6 = and(_final_fetch_packet_valid_bits_3_T, _final_fetch_packet_valid_bits_3_T_5) @[src/main/scala/Frontend/BP/predecoder.scala 131:105]
-    connect final_fetch_packet_valid_bits[3], _final_fetch_packet_valid_bits_3_T_6 @[src/main/scala/Frontend/BP/predecoder.scala 131:42]
-    wire target_address : UInt<32> @[src/main/scala/Frontend/BP/predecoder.scala 137:35]
-    wire dominant_br_type : UInt<3> @[src/main/scala/Frontend/BP/predecoder.scala 138:35]
-    wire _imm : SInt<32> @[src/main/scala/Frontend/BP/predecoder.scala 140:20]
-    wire imm : UInt<32> @[src/main/scala/Frontend/BP/predecoder.scala 141:19]
-    connect _imm, asSInt(UInt<1>(0h0)) @[src/main/scala/Frontend/BP/predecoder.scala 143:10]
-    connect imm, UInt<1>(0h0) @[src/main/scala/Frontend/BP/predecoder.scala 144:9]
-    node masked_addr = and(io.fetch_packet.bits.fetch_PC, UInt<32>(0hfffffff0)) @[src/main/scala/Frontend/BP/predecoder.scala 149:53]
-    when is_RET : @[src/main/scala/Frontend/BP/predecoder.scala 150:17]
-      connect target_address, io.RAS_read.ret_addr @[src/main/scala/Frontend/BP/predecoder.scala 152:24]
+    wire predictions : { flip ready : UInt<1>, valid : UInt<1>, bits : { valid : UInt<1>, fetch_PC : UInt<32>, is_misprediction : UInt<1>, predicted_PC : UInt<32>, T_NT : UInt<1>, br_type : UInt<3>, GHR : UInt<16>, NEXT : UInt<7>, TOS : UInt<7>, dominant_index : UInt<2>, resolved_PC : UInt<32>}} @[src/main/scala/Frontend/BP/predecoder.scala 68:35]
+    wire final_fetch_packet : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, valid_bits : UInt<1>[4], instructions : { instruction : UInt<32>, packet_index : UInt<4>, ROB_index : UInt<6>}[4]}} @[src/main/scala/Frontend/BP/predecoder.scala 69:35]
+    wire is_JAL : UInt<1> @[src/main/scala/Frontend/BP/predecoder.scala 75:40]
+    wire is_JALR : UInt<1> @[src/main/scala/Frontend/BP/predecoder.scala 76:40]
+    wire is_BRANCH : UInt<1> @[src/main/scala/Frontend/BP/predecoder.scala 77:40]
+    wire is_RET : UInt<1> @[src/main/scala/Frontend/BP/predecoder.scala 78:40]
+    wire is_CALL : UInt<1> @[src/main/scala/Frontend/BP/predecoder.scala 79:40]
+    connect is_JAL, UInt<1>(0h0) @[src/main/scala/Frontend/BP/predecoder.scala 81:32]
+    connect is_JALR, UInt<1>(0h0) @[src/main/scala/Frontend/BP/predecoder.scala 82:32]
+    connect is_BRANCH, UInt<1>(0h0) @[src/main/scala/Frontend/BP/predecoder.scala 83:32]
+    connect is_RET, UInt<1>(0h0) @[src/main/scala/Frontend/BP/predecoder.scala 84:32]
+    connect is_CALL, UInt<1>(0h0) @[src/main/scala/Frontend/BP/predecoder.scala 85:32]
+    wire dominant_branch_index : UInt<2> @[src/main/scala/Frontend/BP/predecoder.scala 90:47]
+    wire dominant_instruction : UInt<32> @[src/main/scala/Frontend/BP/predecoder.scala 91:47]
+    wire is_control : UInt<1>[4] @[src/main/scala/Frontend/BP/predecoder.scala 92:47]
+    wire T_NT : UInt<1>[4] @[src/main/scala/Frontend/BP/predecoder.scala 93:47]
+    wire final_fetch_packet_valid_bits : UInt<1>[4] @[src/main/scala/Frontend/BP/predecoder.scala 94:47]
+    node _dominant_branch_index_T = sub(UInt<3>(0h4), UInt<1>(0h1)) @[src/main/scala/Frontend/BP/predecoder.scala 96:43]
+    node _dominant_branch_index_T_1 = tail(_dominant_branch_index_T, 1) @[src/main/scala/Frontend/BP/predecoder.scala 96:43]
+    connect dominant_branch_index, _dominant_branch_index_T_1 @[src/main/scala/Frontend/BP/predecoder.scala 96:27]
+    node opcode = bits(io.fetch_packet.bits.instructions[3].instruction, 6, 0) @[src/main/scala/Frontend/BP/predecoder.scala 100:54]
+    node RS1 = bits(io.fetch_packet.bits.instructions[3].instruction, 19, 15) @[src/main/scala/Frontend/BP/predecoder.scala 101:54]
+    node RS2 = bits(io.fetch_packet.bits.instructions[3].instruction, 24, 20) @[src/main/scala/Frontend/BP/predecoder.scala 102:54]
+    node RD = bits(io.fetch_packet.bits.instructions[3].instruction, 11, 7) @[src/main/scala/Frontend/BP/predecoder.scala 103:54]
+    node _is_BTB_taken_T = and(io.prediction.valid, io.prediction.bits.hit) @[src/main/scala/Frontend/BP/predecoder.scala 104:63]
+    node _is_BTB_taken_T_1 = and(_is_BTB_taken_T, io.prediction.bits.T_NT) @[src/main/scala/Frontend/BP/predecoder.scala 104:89]
+    node _is_BTB_taken_T_2 = and(_is_BTB_taken_T_1, io.fetch_packet.bits.valid_bits[3]) @[src/main/scala/Frontend/BP/predecoder.scala 104:116]
+    node is_BTB_taken = and(_is_BTB_taken_T_2, io.fetch_packet.valid) @[src/main/scala/Frontend/BP/predecoder.scala 104:154]
+    node _T = bits(opcode, 6, 2) @[src/main/scala/Frontend/BP/predecoder.scala 106:70]
+    wire _WIRE : UInt<5> @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    connect _WIRE, _T @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    wire instruction_type : UInt<5> @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    connect instruction_type, _WIRE @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_1 = eq(instruction_type, UInt<1>(0h0)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_2 = eq(instruction_type, UInt<1>(0h1)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_3 = eq(instruction_type, UInt<2>(0h2)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_4 = eq(instruction_type, UInt<2>(0h3)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_5 = eq(instruction_type, UInt<3>(0h4)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_6 = eq(instruction_type, UInt<3>(0h5)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_7 = eq(instruction_type, UInt<3>(0h6)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_8 = eq(instruction_type, UInt<4>(0h8)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_9 = eq(instruction_type, UInt<4>(0h9)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_10 = eq(instruction_type, UInt<4>(0ha)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_11 = eq(instruction_type, UInt<4>(0hb)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_12 = eq(instruction_type, UInt<4>(0hc)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_13 = eq(instruction_type, UInt<4>(0hd)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_14 = eq(instruction_type, UInt<4>(0he)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_15 = eq(instruction_type, UInt<5>(0h10)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_16 = eq(instruction_type, UInt<5>(0h11)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_17 = eq(instruction_type, UInt<5>(0h12)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_18 = eq(instruction_type, UInt<5>(0h13)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_19 = eq(instruction_type, UInt<5>(0h14)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_20 = eq(instruction_type, UInt<5>(0h16)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_21 = eq(instruction_type, UInt<5>(0h18)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_22 = eq(instruction_type, UInt<5>(0h19)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_23 = eq(instruction_type, UInt<5>(0h1b)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_24 = eq(instruction_type, UInt<5>(0h1c)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_25 = eq(instruction_type, UInt<5>(0h1e)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_26 = or(_T_1, _T_2) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_27 = or(_T_26, _T_3) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_28 = or(_T_27, _T_4) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_29 = or(_T_28, _T_5) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_30 = or(_T_29, _T_6) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_31 = or(_T_30, _T_7) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_32 = or(_T_31, _T_8) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_33 = or(_T_32, _T_9) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_34 = or(_T_33, _T_10) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_35 = or(_T_34, _T_11) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_36 = or(_T_35, _T_12) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_37 = or(_T_36, _T_13) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_38 = or(_T_37, _T_14) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_39 = or(_T_38, _T_15) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_40 = or(_T_39, _T_16) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_41 = or(_T_40, _T_17) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_42 = or(_T_41, _T_18) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_43 = or(_T_42, _T_19) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_44 = or(_T_43, _T_20) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_45 = or(_T_44, _T_21) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_46 = or(_T_45, _T_22) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_47 = or(_T_46, _T_23) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_48 = or(_T_47, _T_24) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node valid = or(_T_48, _T_25) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _curr_is_JAL_T = eq(instruction_type, UInt<5>(0h1b)) @[src/main/scala/Frontend/BP/predecoder.scala 109:52]
+    node _curr_is_JAL_T_1 = and(_curr_is_JAL_T, io.fetch_packet.bits.valid_bits[3]) @[src/main/scala/Frontend/BP/predecoder.scala 109:81]
+    node curr_is_JAL = and(_curr_is_JAL_T_1, io.fetch_packet.valid) @[src/main/scala/Frontend/BP/predecoder.scala 109:119]
+    node _curr_is_JALR_T = eq(instruction_type, UInt<5>(0h19)) @[src/main/scala/Frontend/BP/predecoder.scala 110:52]
+    node _curr_is_JALR_T_1 = and(_curr_is_JALR_T, io.fetch_packet.bits.valid_bits[3]) @[src/main/scala/Frontend/BP/predecoder.scala 110:81]
+    node curr_is_JALR = and(_curr_is_JALR_T_1, io.fetch_packet.valid) @[src/main/scala/Frontend/BP/predecoder.scala 110:119]
+    node _curr_is_BRANCH_T = eq(instruction_type, UInt<5>(0h18)) @[src/main/scala/Frontend/BP/predecoder.scala 111:52]
+    node _curr_is_BRANCH_T_1 = and(_curr_is_BRANCH_T, io.fetch_packet.bits.valid_bits[3]) @[src/main/scala/Frontend/BP/predecoder.scala 111:81]
+    node curr_is_BRANCH = and(_curr_is_BRANCH_T_1, io.fetch_packet.valid) @[src/main/scala/Frontend/BP/predecoder.scala 111:119]
+    node _curr_is_RET_T = eq(RD, UInt<1>(0h0)) @[src/main/scala/Frontend/BP/predecoder.scala 112:50]
+    node _curr_is_RET_T_1 = and(is_JALR, _curr_is_RET_T) @[src/main/scala/Frontend/BP/predecoder.scala 112:43]
+    node _curr_is_RET_T_2 = eq(RS1, UInt<1>(0h1)) @[src/main/scala/Frontend/BP/predecoder.scala 112:67]
+    node curr_is_RET = and(_curr_is_RET_T_1, _curr_is_RET_T_2) @[src/main/scala/Frontend/BP/predecoder.scala 112:59]
+    node _curr_is_CALL_T = eq(RD, UInt<1>(0h1)) @[src/main/scala/Frontend/BP/predecoder.scala 113:50]
+    node _curr_is_CALL_T_1 = and(is_JALR, _curr_is_CALL_T) @[src/main/scala/Frontend/BP/predecoder.scala 113:43]
+    node _curr_is_CALL_T_2 = eq(RD, UInt<1>(0h1)) @[src/main/scala/Frontend/BP/predecoder.scala 113:78]
+    node _curr_is_CALL_T_3 = and(is_JAL, _curr_is_CALL_T_2) @[src/main/scala/Frontend/BP/predecoder.scala 113:71]
+    node curr_is_CALL = or(_curr_is_CALL_T_1, _curr_is_CALL_T_3) @[src/main/scala/Frontend/BP/predecoder.scala 113:60]
+    node _is_taken_T = and(curr_is_BRANCH, is_BTB_taken) @[src/main/scala/Frontend/BP/predecoder.scala 115:60]
+    node _is_taken_T_1 = or(_is_taken_T, curr_is_JALR) @[src/main/scala/Frontend/BP/predecoder.scala 115:77]
+    node is_taken = or(_is_taken_T_1, curr_is_JAL) @[src/main/scala/Frontend/BP/predecoder.scala 115:93]
+    connect T_NT[3], is_taken @[src/main/scala/Frontend/BP/predecoder.scala 117:17]
+    when is_taken : @[src/main/scala/Frontend/BP/predecoder.scala 118:23]
+      connect is_JAL, curr_is_JAL @[src/main/scala/Frontend/BP/predecoder.scala 119:25]
+      connect is_JALR, curr_is_JALR @[src/main/scala/Frontend/BP/predecoder.scala 120:25]
+      connect is_BRANCH, curr_is_BRANCH @[src/main/scala/Frontend/BP/predecoder.scala 121:25]
+      connect is_RET, curr_is_RET @[src/main/scala/Frontend/BP/predecoder.scala 122:25]
+      connect is_CALL, curr_is_CALL @[src/main/scala/Frontend/BP/predecoder.scala 123:25]
+    node _is_control_3_T = or(curr_is_BRANCH, curr_is_JAL) @[src/main/scala/Frontend/BP/predecoder.scala 125:41]
+    node _is_control_3_T_1 = or(_is_control_3_T, curr_is_JALR) @[src/main/scala/Frontend/BP/predecoder.scala 125:56]
+    connect is_control[3], _is_control_3_T_1 @[src/main/scala/Frontend/BP/predecoder.scala 125:23]
+    when is_taken : @[src/main/scala/Frontend/BP/predecoder.scala 126:23]
+      connect dominant_branch_index, UInt<2>(0h3) @[src/main/scala/Frontend/BP/predecoder.scala 126:46]
+    node opcode_1 = bits(io.fetch_packet.bits.instructions[2].instruction, 6, 0) @[src/main/scala/Frontend/BP/predecoder.scala 100:54]
+    node RS1_1 = bits(io.fetch_packet.bits.instructions[2].instruction, 19, 15) @[src/main/scala/Frontend/BP/predecoder.scala 101:54]
+    node RS2_1 = bits(io.fetch_packet.bits.instructions[2].instruction, 24, 20) @[src/main/scala/Frontend/BP/predecoder.scala 102:54]
+    node RD_1 = bits(io.fetch_packet.bits.instructions[2].instruction, 11, 7) @[src/main/scala/Frontend/BP/predecoder.scala 103:54]
+    node _is_BTB_taken_T_3 = and(io.prediction.valid, io.prediction.bits.hit) @[src/main/scala/Frontend/BP/predecoder.scala 104:63]
+    node _is_BTB_taken_T_4 = and(_is_BTB_taken_T_3, io.prediction.bits.T_NT) @[src/main/scala/Frontend/BP/predecoder.scala 104:89]
+    node _is_BTB_taken_T_5 = and(_is_BTB_taken_T_4, io.fetch_packet.bits.valid_bits[2]) @[src/main/scala/Frontend/BP/predecoder.scala 104:116]
+    node is_BTB_taken_1 = and(_is_BTB_taken_T_5, io.fetch_packet.valid) @[src/main/scala/Frontend/BP/predecoder.scala 104:154]
+    node _T_49 = bits(opcode_1, 6, 2) @[src/main/scala/Frontend/BP/predecoder.scala 106:70]
+    wire _WIRE_1 : UInt<5> @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    connect _WIRE_1, _T_49 @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    wire instruction_type_1 : UInt<5> @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    connect instruction_type_1, _WIRE_1 @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_50 = eq(instruction_type_1, UInt<1>(0h0)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_51 = eq(instruction_type_1, UInt<1>(0h1)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_52 = eq(instruction_type_1, UInt<2>(0h2)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_53 = eq(instruction_type_1, UInt<2>(0h3)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_54 = eq(instruction_type_1, UInt<3>(0h4)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_55 = eq(instruction_type_1, UInt<3>(0h5)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_56 = eq(instruction_type_1, UInt<3>(0h6)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_57 = eq(instruction_type_1, UInt<4>(0h8)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_58 = eq(instruction_type_1, UInt<4>(0h9)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_59 = eq(instruction_type_1, UInt<4>(0ha)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_60 = eq(instruction_type_1, UInt<4>(0hb)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_61 = eq(instruction_type_1, UInt<4>(0hc)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_62 = eq(instruction_type_1, UInt<4>(0hd)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_63 = eq(instruction_type_1, UInt<4>(0he)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_64 = eq(instruction_type_1, UInt<5>(0h10)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_65 = eq(instruction_type_1, UInt<5>(0h11)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_66 = eq(instruction_type_1, UInt<5>(0h12)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_67 = eq(instruction_type_1, UInt<5>(0h13)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_68 = eq(instruction_type_1, UInt<5>(0h14)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_69 = eq(instruction_type_1, UInt<5>(0h16)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_70 = eq(instruction_type_1, UInt<5>(0h18)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_71 = eq(instruction_type_1, UInt<5>(0h19)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_72 = eq(instruction_type_1, UInt<5>(0h1b)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_73 = eq(instruction_type_1, UInt<5>(0h1c)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_74 = eq(instruction_type_1, UInt<5>(0h1e)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_75 = or(_T_50, _T_51) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_76 = or(_T_75, _T_52) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_77 = or(_T_76, _T_53) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_78 = or(_T_77, _T_54) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_79 = or(_T_78, _T_55) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_80 = or(_T_79, _T_56) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_81 = or(_T_80, _T_57) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_82 = or(_T_81, _T_58) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_83 = or(_T_82, _T_59) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_84 = or(_T_83, _T_60) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_85 = or(_T_84, _T_61) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_86 = or(_T_85, _T_62) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_87 = or(_T_86, _T_63) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_88 = or(_T_87, _T_64) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_89 = or(_T_88, _T_65) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_90 = or(_T_89, _T_66) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_91 = or(_T_90, _T_67) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_92 = or(_T_91, _T_68) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_93 = or(_T_92, _T_69) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_94 = or(_T_93, _T_70) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_95 = or(_T_94, _T_71) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_96 = or(_T_95, _T_72) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_97 = or(_T_96, _T_73) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node valid_1 = or(_T_97, _T_74) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _curr_is_JAL_T_2 = eq(instruction_type_1, UInt<5>(0h1b)) @[src/main/scala/Frontend/BP/predecoder.scala 109:52]
+    node _curr_is_JAL_T_3 = and(_curr_is_JAL_T_2, io.fetch_packet.bits.valid_bits[2]) @[src/main/scala/Frontend/BP/predecoder.scala 109:81]
+    node curr_is_JAL_1 = and(_curr_is_JAL_T_3, io.fetch_packet.valid) @[src/main/scala/Frontend/BP/predecoder.scala 109:119]
+    node _curr_is_JALR_T_2 = eq(instruction_type_1, UInt<5>(0h19)) @[src/main/scala/Frontend/BP/predecoder.scala 110:52]
+    node _curr_is_JALR_T_3 = and(_curr_is_JALR_T_2, io.fetch_packet.bits.valid_bits[2]) @[src/main/scala/Frontend/BP/predecoder.scala 110:81]
+    node curr_is_JALR_1 = and(_curr_is_JALR_T_3, io.fetch_packet.valid) @[src/main/scala/Frontend/BP/predecoder.scala 110:119]
+    node _curr_is_BRANCH_T_2 = eq(instruction_type_1, UInt<5>(0h18)) @[src/main/scala/Frontend/BP/predecoder.scala 111:52]
+    node _curr_is_BRANCH_T_3 = and(_curr_is_BRANCH_T_2, io.fetch_packet.bits.valid_bits[2]) @[src/main/scala/Frontend/BP/predecoder.scala 111:81]
+    node curr_is_BRANCH_1 = and(_curr_is_BRANCH_T_3, io.fetch_packet.valid) @[src/main/scala/Frontend/BP/predecoder.scala 111:119]
+    node _curr_is_RET_T_3 = eq(RD_1, UInt<1>(0h0)) @[src/main/scala/Frontend/BP/predecoder.scala 112:50]
+    node _curr_is_RET_T_4 = and(is_JALR, _curr_is_RET_T_3) @[src/main/scala/Frontend/BP/predecoder.scala 112:43]
+    node _curr_is_RET_T_5 = eq(RS1_1, UInt<1>(0h1)) @[src/main/scala/Frontend/BP/predecoder.scala 112:67]
+    node curr_is_RET_1 = and(_curr_is_RET_T_4, _curr_is_RET_T_5) @[src/main/scala/Frontend/BP/predecoder.scala 112:59]
+    node _curr_is_CALL_T_4 = eq(RD_1, UInt<1>(0h1)) @[src/main/scala/Frontend/BP/predecoder.scala 113:50]
+    node _curr_is_CALL_T_5 = and(is_JALR, _curr_is_CALL_T_4) @[src/main/scala/Frontend/BP/predecoder.scala 113:43]
+    node _curr_is_CALL_T_6 = eq(RD_1, UInt<1>(0h1)) @[src/main/scala/Frontend/BP/predecoder.scala 113:78]
+    node _curr_is_CALL_T_7 = and(is_JAL, _curr_is_CALL_T_6) @[src/main/scala/Frontend/BP/predecoder.scala 113:71]
+    node curr_is_CALL_1 = or(_curr_is_CALL_T_5, _curr_is_CALL_T_7) @[src/main/scala/Frontend/BP/predecoder.scala 113:60]
+    node _is_taken_T_2 = and(curr_is_BRANCH_1, is_BTB_taken_1) @[src/main/scala/Frontend/BP/predecoder.scala 115:60]
+    node _is_taken_T_3 = or(_is_taken_T_2, curr_is_JALR_1) @[src/main/scala/Frontend/BP/predecoder.scala 115:77]
+    node is_taken_1 = or(_is_taken_T_3, curr_is_JAL_1) @[src/main/scala/Frontend/BP/predecoder.scala 115:93]
+    connect T_NT[2], is_taken_1 @[src/main/scala/Frontend/BP/predecoder.scala 117:17]
+    when is_taken_1 : @[src/main/scala/Frontend/BP/predecoder.scala 118:23]
+      connect is_JAL, curr_is_JAL_1 @[src/main/scala/Frontend/BP/predecoder.scala 119:25]
+      connect is_JALR, curr_is_JALR_1 @[src/main/scala/Frontend/BP/predecoder.scala 120:25]
+      connect is_BRANCH, curr_is_BRANCH_1 @[src/main/scala/Frontend/BP/predecoder.scala 121:25]
+      connect is_RET, curr_is_RET_1 @[src/main/scala/Frontend/BP/predecoder.scala 122:25]
+      connect is_CALL, curr_is_CALL_1 @[src/main/scala/Frontend/BP/predecoder.scala 123:25]
+    node _is_control_2_T = or(curr_is_BRANCH_1, curr_is_JAL_1) @[src/main/scala/Frontend/BP/predecoder.scala 125:41]
+    node _is_control_2_T_1 = or(_is_control_2_T, curr_is_JALR_1) @[src/main/scala/Frontend/BP/predecoder.scala 125:56]
+    connect is_control[2], _is_control_2_T_1 @[src/main/scala/Frontend/BP/predecoder.scala 125:23]
+    when is_taken_1 : @[src/main/scala/Frontend/BP/predecoder.scala 126:23]
+      connect dominant_branch_index, UInt<2>(0h2) @[src/main/scala/Frontend/BP/predecoder.scala 126:46]
+    node opcode_2 = bits(io.fetch_packet.bits.instructions[1].instruction, 6, 0) @[src/main/scala/Frontend/BP/predecoder.scala 100:54]
+    node RS1_2 = bits(io.fetch_packet.bits.instructions[1].instruction, 19, 15) @[src/main/scala/Frontend/BP/predecoder.scala 101:54]
+    node RS2_2 = bits(io.fetch_packet.bits.instructions[1].instruction, 24, 20) @[src/main/scala/Frontend/BP/predecoder.scala 102:54]
+    node RD_2 = bits(io.fetch_packet.bits.instructions[1].instruction, 11, 7) @[src/main/scala/Frontend/BP/predecoder.scala 103:54]
+    node _is_BTB_taken_T_6 = and(io.prediction.valid, io.prediction.bits.hit) @[src/main/scala/Frontend/BP/predecoder.scala 104:63]
+    node _is_BTB_taken_T_7 = and(_is_BTB_taken_T_6, io.prediction.bits.T_NT) @[src/main/scala/Frontend/BP/predecoder.scala 104:89]
+    node _is_BTB_taken_T_8 = and(_is_BTB_taken_T_7, io.fetch_packet.bits.valid_bits[1]) @[src/main/scala/Frontend/BP/predecoder.scala 104:116]
+    node is_BTB_taken_2 = and(_is_BTB_taken_T_8, io.fetch_packet.valid) @[src/main/scala/Frontend/BP/predecoder.scala 104:154]
+    node _T_98 = bits(opcode_2, 6, 2) @[src/main/scala/Frontend/BP/predecoder.scala 106:70]
+    wire _WIRE_2 : UInt<5> @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    connect _WIRE_2, _T_98 @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    wire instruction_type_2 : UInt<5> @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    connect instruction_type_2, _WIRE_2 @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_99 = eq(instruction_type_2, UInt<1>(0h0)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_100 = eq(instruction_type_2, UInt<1>(0h1)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_101 = eq(instruction_type_2, UInt<2>(0h2)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_102 = eq(instruction_type_2, UInt<2>(0h3)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_103 = eq(instruction_type_2, UInt<3>(0h4)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_104 = eq(instruction_type_2, UInt<3>(0h5)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_105 = eq(instruction_type_2, UInt<3>(0h6)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_106 = eq(instruction_type_2, UInt<4>(0h8)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_107 = eq(instruction_type_2, UInt<4>(0h9)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_108 = eq(instruction_type_2, UInt<4>(0ha)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_109 = eq(instruction_type_2, UInt<4>(0hb)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_110 = eq(instruction_type_2, UInt<4>(0hc)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_111 = eq(instruction_type_2, UInt<4>(0hd)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_112 = eq(instruction_type_2, UInt<4>(0he)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_113 = eq(instruction_type_2, UInt<5>(0h10)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_114 = eq(instruction_type_2, UInt<5>(0h11)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_115 = eq(instruction_type_2, UInt<5>(0h12)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_116 = eq(instruction_type_2, UInt<5>(0h13)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_117 = eq(instruction_type_2, UInt<5>(0h14)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_118 = eq(instruction_type_2, UInt<5>(0h16)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_119 = eq(instruction_type_2, UInt<5>(0h18)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_120 = eq(instruction_type_2, UInt<5>(0h19)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_121 = eq(instruction_type_2, UInt<5>(0h1b)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_122 = eq(instruction_type_2, UInt<5>(0h1c)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_123 = eq(instruction_type_2, UInt<5>(0h1e)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_124 = or(_T_99, _T_100) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_125 = or(_T_124, _T_101) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_126 = or(_T_125, _T_102) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_127 = or(_T_126, _T_103) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_128 = or(_T_127, _T_104) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_129 = or(_T_128, _T_105) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_130 = or(_T_129, _T_106) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_131 = or(_T_130, _T_107) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_132 = or(_T_131, _T_108) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_133 = or(_T_132, _T_109) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_134 = or(_T_133, _T_110) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_135 = or(_T_134, _T_111) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_136 = or(_T_135, _T_112) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_137 = or(_T_136, _T_113) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_138 = or(_T_137, _T_114) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_139 = or(_T_138, _T_115) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_140 = or(_T_139, _T_116) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_141 = or(_T_140, _T_117) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_142 = or(_T_141, _T_118) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_143 = or(_T_142, _T_119) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_144 = or(_T_143, _T_120) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_145 = or(_T_144, _T_121) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_146 = or(_T_145, _T_122) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node valid_2 = or(_T_146, _T_123) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _curr_is_JAL_T_4 = eq(instruction_type_2, UInt<5>(0h1b)) @[src/main/scala/Frontend/BP/predecoder.scala 109:52]
+    node _curr_is_JAL_T_5 = and(_curr_is_JAL_T_4, io.fetch_packet.bits.valid_bits[1]) @[src/main/scala/Frontend/BP/predecoder.scala 109:81]
+    node curr_is_JAL_2 = and(_curr_is_JAL_T_5, io.fetch_packet.valid) @[src/main/scala/Frontend/BP/predecoder.scala 109:119]
+    node _curr_is_JALR_T_4 = eq(instruction_type_2, UInt<5>(0h19)) @[src/main/scala/Frontend/BP/predecoder.scala 110:52]
+    node _curr_is_JALR_T_5 = and(_curr_is_JALR_T_4, io.fetch_packet.bits.valid_bits[1]) @[src/main/scala/Frontend/BP/predecoder.scala 110:81]
+    node curr_is_JALR_2 = and(_curr_is_JALR_T_5, io.fetch_packet.valid) @[src/main/scala/Frontend/BP/predecoder.scala 110:119]
+    node _curr_is_BRANCH_T_4 = eq(instruction_type_2, UInt<5>(0h18)) @[src/main/scala/Frontend/BP/predecoder.scala 111:52]
+    node _curr_is_BRANCH_T_5 = and(_curr_is_BRANCH_T_4, io.fetch_packet.bits.valid_bits[1]) @[src/main/scala/Frontend/BP/predecoder.scala 111:81]
+    node curr_is_BRANCH_2 = and(_curr_is_BRANCH_T_5, io.fetch_packet.valid) @[src/main/scala/Frontend/BP/predecoder.scala 111:119]
+    node _curr_is_RET_T_6 = eq(RD_2, UInt<1>(0h0)) @[src/main/scala/Frontend/BP/predecoder.scala 112:50]
+    node _curr_is_RET_T_7 = and(is_JALR, _curr_is_RET_T_6) @[src/main/scala/Frontend/BP/predecoder.scala 112:43]
+    node _curr_is_RET_T_8 = eq(RS1_2, UInt<1>(0h1)) @[src/main/scala/Frontend/BP/predecoder.scala 112:67]
+    node curr_is_RET_2 = and(_curr_is_RET_T_7, _curr_is_RET_T_8) @[src/main/scala/Frontend/BP/predecoder.scala 112:59]
+    node _curr_is_CALL_T_8 = eq(RD_2, UInt<1>(0h1)) @[src/main/scala/Frontend/BP/predecoder.scala 113:50]
+    node _curr_is_CALL_T_9 = and(is_JALR, _curr_is_CALL_T_8) @[src/main/scala/Frontend/BP/predecoder.scala 113:43]
+    node _curr_is_CALL_T_10 = eq(RD_2, UInt<1>(0h1)) @[src/main/scala/Frontend/BP/predecoder.scala 113:78]
+    node _curr_is_CALL_T_11 = and(is_JAL, _curr_is_CALL_T_10) @[src/main/scala/Frontend/BP/predecoder.scala 113:71]
+    node curr_is_CALL_2 = or(_curr_is_CALL_T_9, _curr_is_CALL_T_11) @[src/main/scala/Frontend/BP/predecoder.scala 113:60]
+    node _is_taken_T_4 = and(curr_is_BRANCH_2, is_BTB_taken_2) @[src/main/scala/Frontend/BP/predecoder.scala 115:60]
+    node _is_taken_T_5 = or(_is_taken_T_4, curr_is_JALR_2) @[src/main/scala/Frontend/BP/predecoder.scala 115:77]
+    node is_taken_2 = or(_is_taken_T_5, curr_is_JAL_2) @[src/main/scala/Frontend/BP/predecoder.scala 115:93]
+    connect T_NT[1], is_taken_2 @[src/main/scala/Frontend/BP/predecoder.scala 117:17]
+    when is_taken_2 : @[src/main/scala/Frontend/BP/predecoder.scala 118:23]
+      connect is_JAL, curr_is_JAL_2 @[src/main/scala/Frontend/BP/predecoder.scala 119:25]
+      connect is_JALR, curr_is_JALR_2 @[src/main/scala/Frontend/BP/predecoder.scala 120:25]
+      connect is_BRANCH, curr_is_BRANCH_2 @[src/main/scala/Frontend/BP/predecoder.scala 121:25]
+      connect is_RET, curr_is_RET_2 @[src/main/scala/Frontend/BP/predecoder.scala 122:25]
+      connect is_CALL, curr_is_CALL_2 @[src/main/scala/Frontend/BP/predecoder.scala 123:25]
+    node _is_control_1_T = or(curr_is_BRANCH_2, curr_is_JAL_2) @[src/main/scala/Frontend/BP/predecoder.scala 125:41]
+    node _is_control_1_T_1 = or(_is_control_1_T, curr_is_JALR_2) @[src/main/scala/Frontend/BP/predecoder.scala 125:56]
+    connect is_control[1], _is_control_1_T_1 @[src/main/scala/Frontend/BP/predecoder.scala 125:23]
+    when is_taken_2 : @[src/main/scala/Frontend/BP/predecoder.scala 126:23]
+      connect dominant_branch_index, UInt<1>(0h1) @[src/main/scala/Frontend/BP/predecoder.scala 126:46]
+    node opcode_3 = bits(io.fetch_packet.bits.instructions[0].instruction, 6, 0) @[src/main/scala/Frontend/BP/predecoder.scala 100:54]
+    node RS1_3 = bits(io.fetch_packet.bits.instructions[0].instruction, 19, 15) @[src/main/scala/Frontend/BP/predecoder.scala 101:54]
+    node RS2_3 = bits(io.fetch_packet.bits.instructions[0].instruction, 24, 20) @[src/main/scala/Frontend/BP/predecoder.scala 102:54]
+    node RD_3 = bits(io.fetch_packet.bits.instructions[0].instruction, 11, 7) @[src/main/scala/Frontend/BP/predecoder.scala 103:54]
+    node _is_BTB_taken_T_9 = and(io.prediction.valid, io.prediction.bits.hit) @[src/main/scala/Frontend/BP/predecoder.scala 104:63]
+    node _is_BTB_taken_T_10 = and(_is_BTB_taken_T_9, io.prediction.bits.T_NT) @[src/main/scala/Frontend/BP/predecoder.scala 104:89]
+    node _is_BTB_taken_T_11 = and(_is_BTB_taken_T_10, io.fetch_packet.bits.valid_bits[0]) @[src/main/scala/Frontend/BP/predecoder.scala 104:116]
+    node is_BTB_taken_3 = and(_is_BTB_taken_T_11, io.fetch_packet.valid) @[src/main/scala/Frontend/BP/predecoder.scala 104:154]
+    node _T_147 = bits(opcode_3, 6, 2) @[src/main/scala/Frontend/BP/predecoder.scala 106:70]
+    wire _WIRE_3 : UInt<5> @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    connect _WIRE_3, _T_147 @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    wire instruction_type_3 : UInt<5> @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    connect instruction_type_3, _WIRE_3 @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_148 = eq(instruction_type_3, UInt<1>(0h0)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_149 = eq(instruction_type_3, UInt<1>(0h1)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_150 = eq(instruction_type_3, UInt<2>(0h2)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_151 = eq(instruction_type_3, UInt<2>(0h3)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_152 = eq(instruction_type_3, UInt<3>(0h4)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_153 = eq(instruction_type_3, UInt<3>(0h5)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_154 = eq(instruction_type_3, UInt<3>(0h6)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_155 = eq(instruction_type_3, UInt<4>(0h8)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_156 = eq(instruction_type_3, UInt<4>(0h9)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_157 = eq(instruction_type_3, UInt<4>(0ha)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_158 = eq(instruction_type_3, UInt<4>(0hb)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_159 = eq(instruction_type_3, UInt<4>(0hc)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_160 = eq(instruction_type_3, UInt<4>(0hd)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_161 = eq(instruction_type_3, UInt<4>(0he)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_162 = eq(instruction_type_3, UInt<5>(0h10)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_163 = eq(instruction_type_3, UInt<5>(0h11)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_164 = eq(instruction_type_3, UInt<5>(0h12)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_165 = eq(instruction_type_3, UInt<5>(0h13)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_166 = eq(instruction_type_3, UInt<5>(0h14)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_167 = eq(instruction_type_3, UInt<5>(0h16)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_168 = eq(instruction_type_3, UInt<5>(0h18)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_169 = eq(instruction_type_3, UInt<5>(0h19)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_170 = eq(instruction_type_3, UInt<5>(0h1b)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_171 = eq(instruction_type_3, UInt<5>(0h1c)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_172 = eq(instruction_type_3, UInt<5>(0h1e)) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_173 = or(_T_148, _T_149) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_174 = or(_T_173, _T_150) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_175 = or(_T_174, _T_151) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_176 = or(_T_175, _T_152) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_177 = or(_T_176, _T_153) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_178 = or(_T_177, _T_154) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_179 = or(_T_178, _T_155) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_180 = or(_T_179, _T_156) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_181 = or(_T_180, _T_157) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_182 = or(_T_181, _T_158) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_183 = or(_T_182, _T_159) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_184 = or(_T_183, _T_160) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_185 = or(_T_184, _T_161) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_186 = or(_T_185, _T_162) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_187 = or(_T_186, _T_163) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_188 = or(_T_187, _T_164) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_189 = or(_T_188, _T_165) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_190 = or(_T_189, _T_166) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_191 = or(_T_190, _T_167) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_192 = or(_T_191, _T_168) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_193 = or(_T_192, _T_169) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_194 = or(_T_193, _T_170) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _T_195 = or(_T_194, _T_171) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node valid_3 = or(_T_195, _T_172) @[src/main/scala/Frontend/BP/predecoder.scala 106:63]
+    node _curr_is_JAL_T_6 = eq(instruction_type_3, UInt<5>(0h1b)) @[src/main/scala/Frontend/BP/predecoder.scala 109:52]
+    node _curr_is_JAL_T_7 = and(_curr_is_JAL_T_6, io.fetch_packet.bits.valid_bits[0]) @[src/main/scala/Frontend/BP/predecoder.scala 109:81]
+    node curr_is_JAL_3 = and(_curr_is_JAL_T_7, io.fetch_packet.valid) @[src/main/scala/Frontend/BP/predecoder.scala 109:119]
+    node _curr_is_JALR_T_6 = eq(instruction_type_3, UInt<5>(0h19)) @[src/main/scala/Frontend/BP/predecoder.scala 110:52]
+    node _curr_is_JALR_T_7 = and(_curr_is_JALR_T_6, io.fetch_packet.bits.valid_bits[0]) @[src/main/scala/Frontend/BP/predecoder.scala 110:81]
+    node curr_is_JALR_3 = and(_curr_is_JALR_T_7, io.fetch_packet.valid) @[src/main/scala/Frontend/BP/predecoder.scala 110:119]
+    node _curr_is_BRANCH_T_6 = eq(instruction_type_3, UInt<5>(0h18)) @[src/main/scala/Frontend/BP/predecoder.scala 111:52]
+    node _curr_is_BRANCH_T_7 = and(_curr_is_BRANCH_T_6, io.fetch_packet.bits.valid_bits[0]) @[src/main/scala/Frontend/BP/predecoder.scala 111:81]
+    node curr_is_BRANCH_3 = and(_curr_is_BRANCH_T_7, io.fetch_packet.valid) @[src/main/scala/Frontend/BP/predecoder.scala 111:119]
+    node _curr_is_RET_T_9 = eq(RD_3, UInt<1>(0h0)) @[src/main/scala/Frontend/BP/predecoder.scala 112:50]
+    node _curr_is_RET_T_10 = and(is_JALR, _curr_is_RET_T_9) @[src/main/scala/Frontend/BP/predecoder.scala 112:43]
+    node _curr_is_RET_T_11 = eq(RS1_3, UInt<1>(0h1)) @[src/main/scala/Frontend/BP/predecoder.scala 112:67]
+    node curr_is_RET_3 = and(_curr_is_RET_T_10, _curr_is_RET_T_11) @[src/main/scala/Frontend/BP/predecoder.scala 112:59]
+    node _curr_is_CALL_T_12 = eq(RD_3, UInt<1>(0h1)) @[src/main/scala/Frontend/BP/predecoder.scala 113:50]
+    node _curr_is_CALL_T_13 = and(is_JALR, _curr_is_CALL_T_12) @[src/main/scala/Frontend/BP/predecoder.scala 113:43]
+    node _curr_is_CALL_T_14 = eq(RD_3, UInt<1>(0h1)) @[src/main/scala/Frontend/BP/predecoder.scala 113:78]
+    node _curr_is_CALL_T_15 = and(is_JAL, _curr_is_CALL_T_14) @[src/main/scala/Frontend/BP/predecoder.scala 113:71]
+    node curr_is_CALL_3 = or(_curr_is_CALL_T_13, _curr_is_CALL_T_15) @[src/main/scala/Frontend/BP/predecoder.scala 113:60]
+    node _is_taken_T_6 = and(curr_is_BRANCH_3, is_BTB_taken_3) @[src/main/scala/Frontend/BP/predecoder.scala 115:60]
+    node _is_taken_T_7 = or(_is_taken_T_6, curr_is_JALR_3) @[src/main/scala/Frontend/BP/predecoder.scala 115:77]
+    node is_taken_3 = or(_is_taken_T_7, curr_is_JAL_3) @[src/main/scala/Frontend/BP/predecoder.scala 115:93]
+    connect T_NT[0], is_taken_3 @[src/main/scala/Frontend/BP/predecoder.scala 117:17]
+    when is_taken_3 : @[src/main/scala/Frontend/BP/predecoder.scala 118:23]
+      connect is_JAL, curr_is_JAL_3 @[src/main/scala/Frontend/BP/predecoder.scala 119:25]
+      connect is_JALR, curr_is_JALR_3 @[src/main/scala/Frontend/BP/predecoder.scala 120:25]
+      connect is_BRANCH, curr_is_BRANCH_3 @[src/main/scala/Frontend/BP/predecoder.scala 121:25]
+      connect is_RET, curr_is_RET_3 @[src/main/scala/Frontend/BP/predecoder.scala 122:25]
+      connect is_CALL, curr_is_CALL_3 @[src/main/scala/Frontend/BP/predecoder.scala 123:25]
+    node _is_control_0_T = or(curr_is_BRANCH_3, curr_is_JAL_3) @[src/main/scala/Frontend/BP/predecoder.scala 125:41]
+    node _is_control_0_T_1 = or(_is_control_0_T, curr_is_JALR_3) @[src/main/scala/Frontend/BP/predecoder.scala 125:56]
+    connect is_control[0], _is_control_0_T_1 @[src/main/scala/Frontend/BP/predecoder.scala 125:23]
+    when is_taken_3 : @[src/main/scala/Frontend/BP/predecoder.scala 126:23]
+      connect dominant_branch_index, UInt<1>(0h0) @[src/main/scala/Frontend/BP/predecoder.scala 126:46]
+    connect dominant_instruction, io.fetch_packet.bits.instructions[dominant_branch_index].instruction @[src/main/scala/Frontend/BP/predecoder.scala 129:26]
+    node _final_fetch_packet_valid_bits_0_T = and(io.fetch_packet.valid, io.fetch_packet.bits.valid_bits[0]) @[src/main/scala/Frontend/BP/predecoder.scala 132:67]
+    node _final_fetch_packet_valid_bits_0_T_1 = eq(UInt<1>(0h0), UInt<1>(0h0)) @[src/main/scala/Frontend/BP/predecoder.scala 132:108]
+    node _final_fetch_packet_valid_bits_0_T_2 = and(_final_fetch_packet_valid_bits_0_T, _final_fetch_packet_valid_bits_0_T_1) @[src/main/scala/Frontend/BP/predecoder.scala 132:105]
+    connect final_fetch_packet_valid_bits[0], _final_fetch_packet_valid_bits_0_T_2 @[src/main/scala/Frontend/BP/predecoder.scala 132:42]
+    node _final_fetch_packet_valid_bits_1_T = and(io.fetch_packet.valid, io.fetch_packet.bits.valid_bits[1]) @[src/main/scala/Frontend/BP/predecoder.scala 132:67]
+    node _final_fetch_packet_valid_bits_1_T_1 = eq(T_NT[0], UInt<1>(0h0)) @[src/main/scala/Frontend/BP/predecoder.scala 132:108]
+    node _final_fetch_packet_valid_bits_1_T_2 = and(_final_fetch_packet_valid_bits_1_T, _final_fetch_packet_valid_bits_1_T_1) @[src/main/scala/Frontend/BP/predecoder.scala 132:105]
+    connect final_fetch_packet_valid_bits[1], _final_fetch_packet_valid_bits_1_T_2 @[src/main/scala/Frontend/BP/predecoder.scala 132:42]
+    node _final_fetch_packet_valid_bits_2_T = and(io.fetch_packet.valid, io.fetch_packet.bits.valid_bits[2]) @[src/main/scala/Frontend/BP/predecoder.scala 132:67]
+    node _final_fetch_packet_valid_bits_2_T_1 = add(T_NT[0], T_NT[1]) @[src/main/scala/Frontend/BP/predecoder.scala 132:117]
+    node _final_fetch_packet_valid_bits_2_T_2 = bits(_final_fetch_packet_valid_bits_2_T_1, 1, 0) @[src/main/scala/Frontend/BP/predecoder.scala 132:117]
+    node _final_fetch_packet_valid_bits_2_T_3 = eq(_final_fetch_packet_valid_bits_2_T_2, UInt<1>(0h0)) @[src/main/scala/Frontend/BP/predecoder.scala 132:108]
+    node _final_fetch_packet_valid_bits_2_T_4 = and(_final_fetch_packet_valid_bits_2_T, _final_fetch_packet_valid_bits_2_T_3) @[src/main/scala/Frontend/BP/predecoder.scala 132:105]
+    connect final_fetch_packet_valid_bits[2], _final_fetch_packet_valid_bits_2_T_4 @[src/main/scala/Frontend/BP/predecoder.scala 132:42]
+    node _final_fetch_packet_valid_bits_3_T = and(io.fetch_packet.valid, io.fetch_packet.bits.valid_bits[3]) @[src/main/scala/Frontend/BP/predecoder.scala 132:67]
+    node _final_fetch_packet_valid_bits_3_T_1 = add(T_NT[1], T_NT[2]) @[src/main/scala/Frontend/BP/predecoder.scala 132:117]
+    node _final_fetch_packet_valid_bits_3_T_2 = bits(_final_fetch_packet_valid_bits_3_T_1, 1, 0) @[src/main/scala/Frontend/BP/predecoder.scala 132:117]
+    node _final_fetch_packet_valid_bits_3_T_3 = add(T_NT[0], _final_fetch_packet_valid_bits_3_T_2) @[src/main/scala/Frontend/BP/predecoder.scala 132:117]
+    node _final_fetch_packet_valid_bits_3_T_4 = bits(_final_fetch_packet_valid_bits_3_T_3, 1, 0) @[src/main/scala/Frontend/BP/predecoder.scala 132:117]
+    node _final_fetch_packet_valid_bits_3_T_5 = eq(_final_fetch_packet_valid_bits_3_T_4, UInt<1>(0h0)) @[src/main/scala/Frontend/BP/predecoder.scala 132:108]
+    node _final_fetch_packet_valid_bits_3_T_6 = and(_final_fetch_packet_valid_bits_3_T, _final_fetch_packet_valid_bits_3_T_5) @[src/main/scala/Frontend/BP/predecoder.scala 132:105]
+    connect final_fetch_packet_valid_bits[3], _final_fetch_packet_valid_bits_3_T_6 @[src/main/scala/Frontend/BP/predecoder.scala 132:42]
+    wire target_address : UInt<32> @[src/main/scala/Frontend/BP/predecoder.scala 138:35]
+    wire dominantbr_type_t : UInt<3> @[src/main/scala/Frontend/BP/predecoder.scala 139:36]
+    wire _imm : SInt<32> @[src/main/scala/Frontend/BP/predecoder.scala 141:20]
+    wire imm : UInt<32> @[src/main/scala/Frontend/BP/predecoder.scala 142:19]
+    connect _imm, asSInt(UInt<1>(0h0)) @[src/main/scala/Frontend/BP/predecoder.scala 144:10]
+    connect imm, UInt<1>(0h0) @[src/main/scala/Frontend/BP/predecoder.scala 145:9]
+    node masked_addr = and(io.fetch_packet.bits.fetch_PC, UInt<32>(0hfffffff0)) @[src/main/scala/Frontend/BP/predecoder.scala 150:53]
+    when is_RET : @[src/main/scala/Frontend/BP/predecoder.scala 151:17]
+      connect target_address, io.RAS_read.ret_addr @[src/main/scala/Frontend/BP/predecoder.scala 153:24]
     else :
-      when is_JAL : @[src/main/scala/Frontend/BP/predecoder.scala 153:23]
+      when is_JAL : @[src/main/scala/Frontend/BP/predecoder.scala 154:23]
         node imm_opcode = bits(dominant_instruction, 6, 0) @[src/main/scala/utils.scala 117:33]
         node _imm_U_T = eq(imm_opcode, UInt<5>(0h17)) @[src/main/scala/utils.scala 119:30]
         node _imm_U_T_1 = eq(imm_opcode, UInt<6>(0h37)) @[src/main/scala/utils.scala 119:59]
@@ -14981,26 +14973,26 @@ circuit ChaosCore :%[[
                   connect imm_imm, _imm_imm_T_4 @[src/main/scala/utils.scala 172:17]
                 else :
                   connect imm_imm, UInt<1>(0h0) @[src/main/scala/utils.scala 174:17]
-        node _imm_T = asSInt(imm_imm) @[src/main/scala/Frontend/BP/predecoder.scala 155:46]
-        connect _imm, _imm_T @[src/main/scala/Frontend/BP/predecoder.scala 155:14]
-        node _imm_T_1 = asUInt(_imm) @[src/main/scala/Frontend/BP/predecoder.scala 156:21]
-        connect imm, _imm_T_1 @[src/main/scala/Frontend/BP/predecoder.scala 156:13]
-        node _target_address_T = add(imm, masked_addr) @[src/main/scala/Frontend/BP/predecoder.scala 157:31]
-        node _target_address_T_1 = tail(_target_address_T, 1) @[src/main/scala/Frontend/BP/predecoder.scala 157:31]
-        node _target_address_T_2 = mul(dominant_branch_index, UInt<3>(0h4)) @[src/main/scala/Frontend/BP/predecoder.scala 157:69]
-        node _target_address_T_3 = add(_target_address_T_1, _target_address_T_2) @[src/main/scala/Frontend/BP/predecoder.scala 157:45]
-        node _target_address_T_4 = tail(_target_address_T_3, 1) @[src/main/scala/Frontend/BP/predecoder.scala 157:45]
-        connect target_address, _target_address_T_4 @[src/main/scala/Frontend/BP/predecoder.scala 157:24]
+        node _imm_T = asSInt(imm_imm) @[src/main/scala/Frontend/BP/predecoder.scala 156:46]
+        connect _imm, _imm_T @[src/main/scala/Frontend/BP/predecoder.scala 156:14]
+        node _imm_T_1 = asUInt(_imm) @[src/main/scala/Frontend/BP/predecoder.scala 157:21]
+        connect imm, _imm_T_1 @[src/main/scala/Frontend/BP/predecoder.scala 157:13]
+        node _target_address_T = add(imm, masked_addr) @[src/main/scala/Frontend/BP/predecoder.scala 158:31]
+        node _target_address_T_1 = tail(_target_address_T, 1) @[src/main/scala/Frontend/BP/predecoder.scala 158:31]
+        node _target_address_T_2 = mul(dominant_branch_index, UInt<3>(0h4)) @[src/main/scala/Frontend/BP/predecoder.scala 158:69]
+        node _target_address_T_3 = add(_target_address_T_1, _target_address_T_2) @[src/main/scala/Frontend/BP/predecoder.scala 158:45]
+        node _target_address_T_4 = tail(_target_address_T_3, 1) @[src/main/scala/Frontend/BP/predecoder.scala 158:45]
+        connect target_address, _target_address_T_4 @[src/main/scala/Frontend/BP/predecoder.scala 158:24]
       else :
-        node _T_196 = and(is_JALR, io.prediction.bits.hit) @[src/main/scala/Frontend/BP/predecoder.scala 158:24]
-        node _T_197 = and(_T_196, io.prediction.valid) @[src/main/scala/Frontend/BP/predecoder.scala 158:50]
-        when _T_197 : @[src/main/scala/Frontend/BP/predecoder.scala 158:73]
-          connect target_address, io.prediction.bits.target @[src/main/scala/Frontend/BP/predecoder.scala 160:24]
+        node _T_196 = and(is_JALR, io.prediction.bits.hit) @[src/main/scala/Frontend/BP/predecoder.scala 159:24]
+        node _T_197 = and(_T_196, io.prediction.valid) @[src/main/scala/Frontend/BP/predecoder.scala 159:50]
+        when _T_197 : @[src/main/scala/Frontend/BP/predecoder.scala 159:73]
+          connect target_address, io.prediction.bits.target @[src/main/scala/Frontend/BP/predecoder.scala 161:24]
         else :
-          node _T_198 = and(is_BRANCH, io.prediction.bits.hit) @[src/main/scala/Frontend/BP/predecoder.scala 161:26]
-          node _T_199 = and(_T_198, io.prediction.valid) @[src/main/scala/Frontend/BP/predecoder.scala 161:52]
-          when _T_199 : @[src/main/scala/Frontend/BP/predecoder.scala 161:75]
-            connect target_address, io.prediction.bits.target @[src/main/scala/Frontend/BP/predecoder.scala 163:24]
+          node _T_198 = and(is_BRANCH, io.prediction.bits.hit) @[src/main/scala/Frontend/BP/predecoder.scala 162:26]
+          node _T_199 = and(_T_198, io.prediction.valid) @[src/main/scala/Frontend/BP/predecoder.scala 162:52]
+          when _T_199 : @[src/main/scala/Frontend/BP/predecoder.scala 162:75]
+            connect target_address, io.prediction.bits.target @[src/main/scala/Frontend/BP/predecoder.scala 164:24]
           else :
             wire target_address_instruction_index_within_packet : UInt<2> @[src/main/scala/utils.scala 208:49]
             wire target_address_PC_increment : UInt<32> @[src/main/scala/utils.scala 209:49]
@@ -15010,253 +15002,324 @@ circuit ChaosCore :%[[
             node _target_address_PC_increment_T_1 = tail(_target_address_PC_increment_T, 1) @[src/main/scala/utils.scala 211:39]
             node _target_address_PC_increment_T_2 = shl(_target_address_PC_increment_T_1, 2) @[src/main/scala/utils.scala 211:74]
             connect target_address_PC_increment, _target_address_PC_increment_T_2 @[src/main/scala/utils.scala 211:21]
-            node _target_address_T_5 = add(io.fetch_packet.bits.fetch_PC, target_address_PC_increment) @[src/main/scala/Frontend/BP/predecoder.scala 166:57]
-            node _target_address_T_6 = tail(_target_address_T_5, 1) @[src/main/scala/Frontend/BP/predecoder.scala 166:57]
-            connect target_address, _target_address_T_6 @[src/main/scala/Frontend/BP/predecoder.scala 166:24]
-    connect dominant_br_type, UInt<1>(0h0) @[src/main/scala/Frontend/BP/predecoder.scala 169:43]
-    when is_JAL : @[src/main/scala/Frontend/BP/predecoder.scala 170:25]
-      connect dominant_br_type, UInt<2>(0h2) @[src/main/scala/Frontend/BP/predecoder.scala 170:43]
-    when is_JALR : @[src/main/scala/Frontend/BP/predecoder.scala 171:25]
-      connect dominant_br_type, UInt<2>(0h3) @[src/main/scala/Frontend/BP/predecoder.scala 171:43]
-    when is_CALL : @[src/main/scala/Frontend/BP/predecoder.scala 172:25]
-      connect dominant_br_type, UInt<3>(0h5) @[src/main/scala/Frontend/BP/predecoder.scala 172:43]
-    when is_RET : @[src/main/scala/Frontend/BP/predecoder.scala 173:25]
-      connect dominant_br_type, UInt<3>(0h4) @[src/main/scala/Frontend/BP/predecoder.scala 173:43]
-    when is_BRANCH : @[src/main/scala/Frontend/BP/predecoder.scala 174:25]
-      connect dominant_br_type, UInt<1>(0h1) @[src/main/scala/Frontend/BP/predecoder.scala 174:43]
-    regreset expected_next_PC : UInt<32>, clock, reset, UInt<1>(0h0) @[src/main/scala/Frontend/BP/predecoder.scala 179:46]
-    wire input_fetch_packet_valid : UInt<1> @[src/main/scala/Frontend/BP/predecoder.scala 180:43]
-    wire input_valid : UInt<1> @[src/main/scala/Frontend/BP/predecoder.scala 181:43]
-    wire PC_match : UInt<1> @[src/main/scala/Frontend/BP/predecoder.scala 182:43]
-    wire PC_mismatch : UInt<1> @[src/main/scala/Frontend/BP/predecoder.scala 183:43]
-    node _PC_match_T = eq(expected_next_PC, io.fetch_packet.bits.fetch_PC) @[src/main/scala/Frontend/BP/predecoder.scala 187:54]
-    connect PC_match, _PC_match_T @[src/main/scala/Frontend/BP/predecoder.scala 187:33]
-    node _PC_mismatch_T = neq(expected_next_PC, io.fetch_packet.bits.fetch_PC) @[src/main/scala/Frontend/BP/predecoder.scala 188:54]
-    connect PC_mismatch, _PC_mismatch_T @[src/main/scala/Frontend/BP/predecoder.scala 188:33]
+            node _target_address_T_5 = add(io.fetch_packet.bits.fetch_PC, target_address_PC_increment) @[src/main/scala/Frontend/BP/predecoder.scala 167:57]
+            node _target_address_T_6 = tail(_target_address_T_5, 1) @[src/main/scala/Frontend/BP/predecoder.scala 167:57]
+            connect target_address, _target_address_T_6 @[src/main/scala/Frontend/BP/predecoder.scala 167:24]
+    connect dominantbr_type_t, UInt<1>(0h0) @[src/main/scala/Frontend/BP/predecoder.scala 170:44]
+    when is_JAL : @[src/main/scala/Frontend/BP/predecoder.scala 171:25]
+      connect dominantbr_type_t, UInt<2>(0h2) @[src/main/scala/Frontend/BP/predecoder.scala 171:44]
+    when is_JALR : @[src/main/scala/Frontend/BP/predecoder.scala 172:25]
+      connect dominantbr_type_t, UInt<2>(0h3) @[src/main/scala/Frontend/BP/predecoder.scala 172:44]
+    when is_CALL : @[src/main/scala/Frontend/BP/predecoder.scala 173:25]
+      connect dominantbr_type_t, UInt<3>(0h5) @[src/main/scala/Frontend/BP/predecoder.scala 173:44]
+    when is_RET : @[src/main/scala/Frontend/BP/predecoder.scala 174:25]
+      connect dominantbr_type_t, UInt<3>(0h4) @[src/main/scala/Frontend/BP/predecoder.scala 174:44]
+    when is_BRANCH : @[src/main/scala/Frontend/BP/predecoder.scala 175:25]
+      connect dominantbr_type_t, UInt<1>(0h1) @[src/main/scala/Frontend/BP/predecoder.scala 175:44]
+    regreset expected_next_PC : UInt<32>, clock, reset, UInt<1>(0h0) @[src/main/scala/Frontend/BP/predecoder.scala 180:46]
+    wire input_fetch_packet_valid : UInt<1> @[src/main/scala/Frontend/BP/predecoder.scala 181:43]
+    wire input_valid : UInt<1> @[src/main/scala/Frontend/BP/predecoder.scala 182:43]
+    wire PC_match : UInt<1> @[src/main/scala/Frontend/BP/predecoder.scala 183:43]
+    wire PC_mismatch : UInt<1> @[src/main/scala/Frontend/BP/predecoder.scala 184:43]
+    node _PC_match_T = eq(expected_next_PC, io.fetch_packet.bits.fetch_PC) @[src/main/scala/Frontend/BP/predecoder.scala 188:54]
+    connect PC_match, _PC_match_T @[src/main/scala/Frontend/BP/predecoder.scala 188:33]
+    node _PC_mismatch_T = neq(expected_next_PC, io.fetch_packet.bits.fetch_PC) @[src/main/scala/Frontend/BP/predecoder.scala 189:54]
+    connect PC_mismatch, _PC_mismatch_T @[src/main/scala/Frontend/BP/predecoder.scala 189:33]
     node _input_valid_T = and(io.fetch_packet.ready, io.fetch_packet.valid) @[src/main/scala/chisel3/util/Decoupled.scala 51:35]
     node _input_valid_T_1 = and(io.prediction.ready, io.prediction.valid) @[src/main/scala/chisel3/util/Decoupled.scala 51:35]
-    node _input_valid_T_2 = and(_input_valid_T, _input_valid_T_1) @[src/main/scala/Frontend/BP/predecoder.scala 190:61]
-    node _input_valid_T_3 = eq(io.flush, UInt<1>(0h0)) @[src/main/scala/Frontend/BP/predecoder.scala 192:36]
-    node _input_valid_T_4 = and(_input_valid_T_2, _input_valid_T_3) @[src/main/scala/Frontend/BP/predecoder.scala 191:61]
-    connect input_valid, _input_valid_T_4 @[src/main/scala/Frontend/BP/predecoder.scala 190:33]
-    node _input_fetch_packet_valid_T = and(input_valid, PC_match) @[src/main/scala/Frontend/BP/predecoder.scala 194:49]
-    connect input_fetch_packet_valid, _input_fetch_packet_valid_T @[src/main/scala/Frontend/BP/predecoder.scala 194:33]
-    reg final_fetch_packet_valid_REG : UInt<1>, clock @[src/main/scala/Frontend/BP/predecoder.scala 196:43]
-    connect final_fetch_packet_valid_REG, input_fetch_packet_valid @[src/main/scala/Frontend/BP/predecoder.scala 196:43]
-    connect final_fetch_packet.valid, final_fetch_packet_valid_REG @[src/main/scala/Frontend/BP/predecoder.scala 196:33]
-    when input_fetch_packet_valid : @[src/main/scala/Frontend/BP/predecoder.scala 197:35]
-      connect expected_next_PC, target_address @[src/main/scala/Frontend/BP/predecoder.scala 197:53]
-    node _T_200 = and(io.commit.valid, io.commit.bits.is_misprediction) @[src/main/scala/Frontend/BP/predecoder.scala 198:26]
-    when _T_200 : @[src/main/scala/Frontend/BP/predecoder.scala 198:61]
-      connect expected_next_PC, io.commit.bits.fetch_PC @[src/main/scala/Frontend/BP/predecoder.scala 198:79]
-    node _io_revert_valid_T = and(input_valid, PC_mismatch) @[src/main/scala/Frontend/BP/predecoder.scala 203:36]
-    connect io.revert.valid, _io_revert_valid_T @[src/main/scala/Frontend/BP/predecoder.scala 203:21]
-    connect io.revert.bits.PC, expected_next_PC @[src/main/scala/Frontend/BP/predecoder.scala 204:23]
-    regreset GHR : UInt<16>, clock, reset, UInt<1>(0h0) @[src/main/scala/Frontend/BP/predecoder.scala 209:22]
-    connect io.GHR, GHR @[src/main/scala/Frontend/BP/predecoder.scala 211:12]
-    node _T_201 = or(is_control[0], is_control[1]) @[src/main/scala/Frontend/BP/predecoder.scala 212:30]
-    node _T_202 = or(_T_201, is_control[2]) @[src/main/scala/Frontend/BP/predecoder.scala 212:30]
-    node _T_203 = or(_T_202, is_control[3]) @[src/main/scala/Frontend/BP/predecoder.scala 212:30]
-    when _T_203 : @[src/main/scala/Frontend/BP/predecoder.scala 212:36]
-      node _io_GHR_T = shl(GHR, 1) @[src/main/scala/Frontend/BP/predecoder.scala 213:24]
-      node _io_GHR_T_1 = or(T_NT[0], T_NT[1]) @[src/main/scala/Frontend/BP/predecoder.scala 213:46]
-      node _io_GHR_T_2 = or(_io_GHR_T_1, T_NT[2]) @[src/main/scala/Frontend/BP/predecoder.scala 213:46]
-      node _io_GHR_T_3 = or(_io_GHR_T_2, T_NT[3]) @[src/main/scala/Frontend/BP/predecoder.scala 213:46]
-      node _io_GHR_T_4 = or(_io_GHR_T, _io_GHR_T_3) @[src/main/scala/Frontend/BP/predecoder.scala 213:30]
-      connect io.GHR, _io_GHR_T_4 @[src/main/scala/Frontend/BP/predecoder.scala 213:16]
-    connect GHR, io.GHR @[src/main/scala/Frontend/BP/predecoder.scala 215:9]
-    when io.commit.bits.is_misprediction : @[src/main/scala/Frontend/BP/predecoder.scala 216:42]
-      connect GHR, io.commit.bits.GHR @[src/main/scala/Frontend/BP/predecoder.scala 217:13]
-    node _io_RAS_update_ret_T = and(is_RET, input_fetch_packet_valid) @[src/main/scala/Frontend/BP/predecoder.scala 224:41]
-    connect io.RAS_update.ret, _io_RAS_update_ret_T @[src/main/scala/Frontend/BP/predecoder.scala 224:30]
-    node _io_RAS_update_call_T = and(is_CALL, input_fetch_packet_valid) @[src/main/scala/Frontend/BP/predecoder.scala 225:41]
-    connect io.RAS_update.call, _io_RAS_update_call_T @[src/main/scala/Frontend/BP/predecoder.scala 225:30]
-    node _io_RAS_update_call_addr_T = mul(dominant_branch_index, UInt<3>(0h4)) @[src/main/scala/Frontend/BP/predecoder.scala 226:69]
-    node _io_RAS_update_call_addr_T_1 = add(masked_addr, _io_RAS_update_call_addr_T) @[src/main/scala/Frontend/BP/predecoder.scala 226:45]
-    node _io_RAS_update_call_addr_T_2 = tail(_io_RAS_update_call_addr_T_1, 1) @[src/main/scala/Frontend/BP/predecoder.scala 226:45]
-    node _io_RAS_update_call_addr_T_3 = add(_io_RAS_update_call_addr_T_2, UInt<3>(0h4)) @[src/main/scala/Frontend/BP/predecoder.scala 226:75]
-    node _io_RAS_update_call_addr_T_4 = tail(_io_RAS_update_call_addr_T_3, 1) @[src/main/scala/Frontend/BP/predecoder.scala 226:75]
-    connect io.RAS_update.call_addr, _io_RAS_update_call_addr_T_4 @[src/main/scala/Frontend/BP/predecoder.scala 226:30]
-    reg final_fetch_packet_bits_REG : { fetch_PC : UInt<32>, valid_bits : UInt<1>[4], instructions : { instruction : UInt<32>, packet_index : UInt<4>, ROB_index : UInt<6>}[4]}, clock @[src/main/scala/Frontend/BP/predecoder.scala 232:39]
-    connect final_fetch_packet_bits_REG, io.fetch_packet.bits @[src/main/scala/Frontend/BP/predecoder.scala 232:39]
-    connect final_fetch_packet.bits, final_fetch_packet_bits_REG @[src/main/scala/Frontend/BP/predecoder.scala 232:29]
-    reg final_fetch_packet_bits_fetch_PC_REG : UInt, clock @[src/main/scala/Frontend/BP/predecoder.scala 233:48]
-    connect final_fetch_packet_bits_fetch_PC_REG, masked_addr @[src/main/scala/Frontend/BP/predecoder.scala 233:48]
-    connect final_fetch_packet.bits.fetch_PC, final_fetch_packet_bits_fetch_PC_REG @[src/main/scala/Frontend/BP/predecoder.scala 233:38]
-    reg final_fetch_packet_bits_valid_bits_0_REG : UInt<1>, clock @[src/main/scala/Frontend/BP/predecoder.scala 235:59]
-    connect final_fetch_packet_bits_valid_bits_0_REG, io.fetch_packet.bits.valid_bits[0] @[src/main/scala/Frontend/BP/predecoder.scala 235:59]
-    reg final_fetch_packet_bits_valid_bits_0_REG_1 : UInt<1>, clock @[src/main/scala/Frontend/BP/predecoder.scala 235:106]
-    connect final_fetch_packet_bits_valid_bits_0_REG_1, final_fetch_packet_valid_bits[0] @[src/main/scala/Frontend/BP/predecoder.scala 235:106]
-    node _final_fetch_packet_bits_valid_bits_0_T = and(final_fetch_packet_bits_valid_bits_0_REG, final_fetch_packet_bits_valid_bits_0_REG_1) @[src/main/scala/Frontend/BP/predecoder.scala 235:96]
-    connect final_fetch_packet.bits.valid_bits[0], _final_fetch_packet_bits_valid_bits_0_T @[src/main/scala/Frontend/BP/predecoder.scala 235:49]
-    reg final_fetch_packet_bits_valid_bits_1_REG : UInt<1>, clock @[src/main/scala/Frontend/BP/predecoder.scala 235:59]
-    connect final_fetch_packet_bits_valid_bits_1_REG, io.fetch_packet.bits.valid_bits[1] @[src/main/scala/Frontend/BP/predecoder.scala 235:59]
-    reg final_fetch_packet_bits_valid_bits_1_REG_1 : UInt<1>, clock @[src/main/scala/Frontend/BP/predecoder.scala 235:106]
-    connect final_fetch_packet_bits_valid_bits_1_REG_1, final_fetch_packet_valid_bits[1] @[src/main/scala/Frontend/BP/predecoder.scala 235:106]
-    node _final_fetch_packet_bits_valid_bits_1_T = and(final_fetch_packet_bits_valid_bits_1_REG, final_fetch_packet_bits_valid_bits_1_REG_1) @[src/main/scala/Frontend/BP/predecoder.scala 235:96]
-    connect final_fetch_packet.bits.valid_bits[1], _final_fetch_packet_bits_valid_bits_1_T @[src/main/scala/Frontend/BP/predecoder.scala 235:49]
-    reg final_fetch_packet_bits_valid_bits_2_REG : UInt<1>, clock @[src/main/scala/Frontend/BP/predecoder.scala 235:59]
-    connect final_fetch_packet_bits_valid_bits_2_REG, io.fetch_packet.bits.valid_bits[2] @[src/main/scala/Frontend/BP/predecoder.scala 235:59]
-    reg final_fetch_packet_bits_valid_bits_2_REG_1 : UInt<1>, clock @[src/main/scala/Frontend/BP/predecoder.scala 235:106]
-    connect final_fetch_packet_bits_valid_bits_2_REG_1, final_fetch_packet_valid_bits[2] @[src/main/scala/Frontend/BP/predecoder.scala 235:106]
-    node _final_fetch_packet_bits_valid_bits_2_T = and(final_fetch_packet_bits_valid_bits_2_REG, final_fetch_packet_bits_valid_bits_2_REG_1) @[src/main/scala/Frontend/BP/predecoder.scala 235:96]
-    connect final_fetch_packet.bits.valid_bits[2], _final_fetch_packet_bits_valid_bits_2_T @[src/main/scala/Frontend/BP/predecoder.scala 235:49]
-    reg final_fetch_packet_bits_valid_bits_3_REG : UInt<1>, clock @[src/main/scala/Frontend/BP/predecoder.scala 235:59]
-    connect final_fetch_packet_bits_valid_bits_3_REG, io.fetch_packet.bits.valid_bits[3] @[src/main/scala/Frontend/BP/predecoder.scala 235:59]
-    reg final_fetch_packet_bits_valid_bits_3_REG_1 : UInt<1>, clock @[src/main/scala/Frontend/BP/predecoder.scala 235:106]
-    connect final_fetch_packet_bits_valid_bits_3_REG_1, final_fetch_packet_valid_bits[3] @[src/main/scala/Frontend/BP/predecoder.scala 235:106]
-    node _final_fetch_packet_bits_valid_bits_3_T = and(final_fetch_packet_bits_valid_bits_3_REG, final_fetch_packet_bits_valid_bits_3_REG_1) @[src/main/scala/Frontend/BP/predecoder.scala 235:96]
-    connect final_fetch_packet.bits.valid_bits[3], _final_fetch_packet_bits_valid_bits_3_T @[src/main/scala/Frontend/BP/predecoder.scala 235:49]
-    node _push_FTQ_T = or(is_control[0], is_control[1]) @[src/main/scala/Frontend/BP/predecoder.scala 241:40]
-    node _push_FTQ_T_1 = or(_push_FTQ_T, is_control[2]) @[src/main/scala/Frontend/BP/predecoder.scala 241:40]
-    node push_FTQ = or(_push_FTQ_T_1, is_control[3]) @[src/main/scala/Frontend/BP/predecoder.scala 241:40]
-    connect predictions.ready, io.predictions.ready @[src/main/scala/Frontend/BP/predecoder.scala 243:52]
-    node _predictions_valid_T = and(push_FTQ, input_fetch_packet_valid) @[src/main/scala/Frontend/BP/predecoder.scala 244:64]
-    connect predictions.valid, _predictions_valid_T @[src/main/scala/Frontend/BP/predecoder.scala 244:52]
-    connect predictions.bits.fetch_PC, io.fetch_packet.bits.fetch_PC @[src/main/scala/Frontend/BP/predecoder.scala 247:52]
-    connect predictions.bits.GHR, GHR @[src/main/scala/Frontend/BP/predecoder.scala 248:52]
-    connect predictions.bits.NEXT, io.RAS_read.NEXT @[src/main/scala/Frontend/BP/predecoder.scala 249:52]
-    connect predictions.bits.TOS, io.RAS_read.TOS @[src/main/scala/Frontend/BP/predecoder.scala 250:52]
-    connect predictions.bits.dominant_index, UInt<2>(0h3) @[src/main/scala/Frontend/BP/predecoder.scala 252:52]
-    node _predictions_bits_resolved_PC_T = mul(UInt<3>(0h4), UInt<3>(0h4)) @[src/main/scala/Frontend/BP/predecoder.scala 253:100]
-    node _predictions_bits_resolved_PC_T_1 = add(io.fetch_packet.bits.fetch_PC, _predictions_bits_resolved_PC_T) @[src/main/scala/Frontend/BP/predecoder.scala 253:85]
-    node _predictions_bits_resolved_PC_T_2 = tail(_predictions_bits_resolved_PC_T_1, 1) @[src/main/scala/Frontend/BP/predecoder.scala 253:85]
-    connect predictions.bits.resolved_PC, _predictions_bits_resolved_PC_T_2 @[src/main/scala/Frontend/BP/predecoder.scala 253:52]
-    node _predictions_bits_T_NT_T = or(T_NT[0], T_NT[1]) @[src/main/scala/Frontend/BP/predecoder.scala 256:69]
-    node _predictions_bits_T_NT_T_1 = or(_predictions_bits_T_NT_T, T_NT[2]) @[src/main/scala/Frontend/BP/predecoder.scala 256:69]
-    node _predictions_bits_T_NT_T_2 = or(_predictions_bits_T_NT_T_1, T_NT[3]) @[src/main/scala/Frontend/BP/predecoder.scala 256:69]
-    connect predictions.bits.T_NT, _predictions_bits_T_NT_T_2 @[src/main/scala/Frontend/BP/predecoder.scala 256:52]
-    when predictions.bits.T_NT : @[src/main/scala/Frontend/BP/predecoder.scala 257:32]
-      connect predictions.bits.predicted_PC, target_address @[src/main/scala/Frontend/BP/predecoder.scala 258:52]
+    node _input_valid_T_2 = and(_input_valid_T, _input_valid_T_1) @[src/main/scala/Frontend/BP/predecoder.scala 191:61]
+    node _input_valid_T_3 = eq(io.flush, UInt<1>(0h0)) @[src/main/scala/Frontend/BP/predecoder.scala 193:36]
+    node _input_valid_T_4 = and(_input_valid_T_2, _input_valid_T_3) @[src/main/scala/Frontend/BP/predecoder.scala 192:61]
+    connect input_valid, _input_valid_T_4 @[src/main/scala/Frontend/BP/predecoder.scala 191:33]
+    node _input_fetch_packet_valid_T = and(input_valid, PC_match) @[src/main/scala/Frontend/BP/predecoder.scala 195:49]
+    connect input_fetch_packet_valid, _input_fetch_packet_valid_T @[src/main/scala/Frontend/BP/predecoder.scala 195:33]
+    reg final_fetch_packet_valid_REG : UInt<1>, clock @[src/main/scala/Frontend/BP/predecoder.scala 197:43]
+    connect final_fetch_packet_valid_REG, input_fetch_packet_valid @[src/main/scala/Frontend/BP/predecoder.scala 197:43]
+    connect final_fetch_packet.valid, final_fetch_packet_valid_REG @[src/main/scala/Frontend/BP/predecoder.scala 197:33]
+    when input_fetch_packet_valid : @[src/main/scala/Frontend/BP/predecoder.scala 198:35]
+      connect expected_next_PC, target_address @[src/main/scala/Frontend/BP/predecoder.scala 198:53]
+    node _T_200 = and(io.commit.valid, io.commit.bits.is_misprediction) @[src/main/scala/Frontend/BP/predecoder.scala 199:26]
+    when _T_200 : @[src/main/scala/Frontend/BP/predecoder.scala 199:61]
+      connect expected_next_PC, io.commit.bits.fetch_PC @[src/main/scala/Frontend/BP/predecoder.scala 199:79]
+    node _io_revert_valid_T = and(input_valid, PC_mismatch) @[src/main/scala/Frontend/BP/predecoder.scala 204:36]
+    connect io.revert.valid, _io_revert_valid_T @[src/main/scala/Frontend/BP/predecoder.scala 204:21]
+    connect io.revert.bits.PC, expected_next_PC @[src/main/scala/Frontend/BP/predecoder.scala 205:23]
+    regreset GHR : UInt<16>, clock, reset, UInt<1>(0h0) @[src/main/scala/Frontend/BP/predecoder.scala 210:22]
+    connect io.GHR, GHR @[src/main/scala/Frontend/BP/predecoder.scala 212:12]
+    node _T_201 = or(is_control[0], is_control[1]) @[src/main/scala/Frontend/BP/predecoder.scala 213:30]
+    node _T_202 = or(_T_201, is_control[2]) @[src/main/scala/Frontend/BP/predecoder.scala 213:30]
+    node _T_203 = or(_T_202, is_control[3]) @[src/main/scala/Frontend/BP/predecoder.scala 213:30]
+    when _T_203 : @[src/main/scala/Frontend/BP/predecoder.scala 213:36]
+      node _io_GHR_T = shl(GHR, 1) @[src/main/scala/Frontend/BP/predecoder.scala 214:24]
+      node _io_GHR_T_1 = or(T_NT[0], T_NT[1]) @[src/main/scala/Frontend/BP/predecoder.scala 214:46]
+      node _io_GHR_T_2 = or(_io_GHR_T_1, T_NT[2]) @[src/main/scala/Frontend/BP/predecoder.scala 214:46]
+      node _io_GHR_T_3 = or(_io_GHR_T_2, T_NT[3]) @[src/main/scala/Frontend/BP/predecoder.scala 214:46]
+      node _io_GHR_T_4 = or(_io_GHR_T, _io_GHR_T_3) @[src/main/scala/Frontend/BP/predecoder.scala 214:30]
+      connect io.GHR, _io_GHR_T_4 @[src/main/scala/Frontend/BP/predecoder.scala 214:16]
+    connect GHR, io.GHR @[src/main/scala/Frontend/BP/predecoder.scala 216:9]
+    when io.commit.bits.is_misprediction : @[src/main/scala/Frontend/BP/predecoder.scala 217:42]
+      connect GHR, io.commit.bits.GHR @[src/main/scala/Frontend/BP/predecoder.scala 218:13]
+    node _io_RAS_update_ret_T = and(is_RET, input_fetch_packet_valid) @[src/main/scala/Frontend/BP/predecoder.scala 225:41]
+    connect io.RAS_update.ret, _io_RAS_update_ret_T @[src/main/scala/Frontend/BP/predecoder.scala 225:30]
+    node _io_RAS_update_call_T = and(is_CALL, input_fetch_packet_valid) @[src/main/scala/Frontend/BP/predecoder.scala 226:41]
+    connect io.RAS_update.call, _io_RAS_update_call_T @[src/main/scala/Frontend/BP/predecoder.scala 226:30]
+    node _io_RAS_update_call_addr_T = mul(dominant_branch_index, UInt<3>(0h4)) @[src/main/scala/Frontend/BP/predecoder.scala 227:69]
+    node _io_RAS_update_call_addr_T_1 = add(masked_addr, _io_RAS_update_call_addr_T) @[src/main/scala/Frontend/BP/predecoder.scala 227:45]
+    node _io_RAS_update_call_addr_T_2 = tail(_io_RAS_update_call_addr_T_1, 1) @[src/main/scala/Frontend/BP/predecoder.scala 227:45]
+    node _io_RAS_update_call_addr_T_3 = add(_io_RAS_update_call_addr_T_2, UInt<3>(0h4)) @[src/main/scala/Frontend/BP/predecoder.scala 227:75]
+    node _io_RAS_update_call_addr_T_4 = tail(_io_RAS_update_call_addr_T_3, 1) @[src/main/scala/Frontend/BP/predecoder.scala 227:75]
+    connect io.RAS_update.call_addr, _io_RAS_update_call_addr_T_4 @[src/main/scala/Frontend/BP/predecoder.scala 227:30]
+    reg final_fetch_packet_bits_REG : { fetch_PC : UInt<32>, valid_bits : UInt<1>[4], instructions : { instruction : UInt<32>, packet_index : UInt<4>, ROB_index : UInt<6>}[4]}, clock @[src/main/scala/Frontend/BP/predecoder.scala 233:39]
+    connect final_fetch_packet_bits_REG, io.fetch_packet.bits @[src/main/scala/Frontend/BP/predecoder.scala 233:39]
+    connect final_fetch_packet.bits, final_fetch_packet_bits_REG @[src/main/scala/Frontend/BP/predecoder.scala 233:29]
+    reg final_fetch_packet_bits_fetch_PC_REG : UInt, clock @[src/main/scala/Frontend/BP/predecoder.scala 234:48]
+    connect final_fetch_packet_bits_fetch_PC_REG, masked_addr @[src/main/scala/Frontend/BP/predecoder.scala 234:48]
+    connect final_fetch_packet.bits.fetch_PC, final_fetch_packet_bits_fetch_PC_REG @[src/main/scala/Frontend/BP/predecoder.scala 234:38]
+    reg final_fetch_packet_bits_valid_bits_0_REG : UInt<1>, clock @[src/main/scala/Frontend/BP/predecoder.scala 236:59]
+    connect final_fetch_packet_bits_valid_bits_0_REG, io.fetch_packet.bits.valid_bits[0] @[src/main/scala/Frontend/BP/predecoder.scala 236:59]
+    reg final_fetch_packet_bits_valid_bits_0_REG_1 : UInt<1>, clock @[src/main/scala/Frontend/BP/predecoder.scala 236:106]
+    connect final_fetch_packet_bits_valid_bits_0_REG_1, final_fetch_packet_valid_bits[0] @[src/main/scala/Frontend/BP/predecoder.scala 236:106]
+    node _final_fetch_packet_bits_valid_bits_0_T = and(final_fetch_packet_bits_valid_bits_0_REG, final_fetch_packet_bits_valid_bits_0_REG_1) @[src/main/scala/Frontend/BP/predecoder.scala 236:96]
+    connect final_fetch_packet.bits.valid_bits[0], _final_fetch_packet_bits_valid_bits_0_T @[src/main/scala/Frontend/BP/predecoder.scala 236:49]
+    reg final_fetch_packet_bits_valid_bits_1_REG : UInt<1>, clock @[src/main/scala/Frontend/BP/predecoder.scala 236:59]
+    connect final_fetch_packet_bits_valid_bits_1_REG, io.fetch_packet.bits.valid_bits[1] @[src/main/scala/Frontend/BP/predecoder.scala 236:59]
+    reg final_fetch_packet_bits_valid_bits_1_REG_1 : UInt<1>, clock @[src/main/scala/Frontend/BP/predecoder.scala 236:106]
+    connect final_fetch_packet_bits_valid_bits_1_REG_1, final_fetch_packet_valid_bits[1] @[src/main/scala/Frontend/BP/predecoder.scala 236:106]
+    node _final_fetch_packet_bits_valid_bits_1_T = and(final_fetch_packet_bits_valid_bits_1_REG, final_fetch_packet_bits_valid_bits_1_REG_1) @[src/main/scala/Frontend/BP/predecoder.scala 236:96]
+    connect final_fetch_packet.bits.valid_bits[1], _final_fetch_packet_bits_valid_bits_1_T @[src/main/scala/Frontend/BP/predecoder.scala 236:49]
+    reg final_fetch_packet_bits_valid_bits_2_REG : UInt<1>, clock @[src/main/scala/Frontend/BP/predecoder.scala 236:59]
+    connect final_fetch_packet_bits_valid_bits_2_REG, io.fetch_packet.bits.valid_bits[2] @[src/main/scala/Frontend/BP/predecoder.scala 236:59]
+    reg final_fetch_packet_bits_valid_bits_2_REG_1 : UInt<1>, clock @[src/main/scala/Frontend/BP/predecoder.scala 236:106]
+    connect final_fetch_packet_bits_valid_bits_2_REG_1, final_fetch_packet_valid_bits[2] @[src/main/scala/Frontend/BP/predecoder.scala 236:106]
+    node _final_fetch_packet_bits_valid_bits_2_T = and(final_fetch_packet_bits_valid_bits_2_REG, final_fetch_packet_bits_valid_bits_2_REG_1) @[src/main/scala/Frontend/BP/predecoder.scala 236:96]
+    connect final_fetch_packet.bits.valid_bits[2], _final_fetch_packet_bits_valid_bits_2_T @[src/main/scala/Frontend/BP/predecoder.scala 236:49]
+    reg final_fetch_packet_bits_valid_bits_3_REG : UInt<1>, clock @[src/main/scala/Frontend/BP/predecoder.scala 236:59]
+    connect final_fetch_packet_bits_valid_bits_3_REG, io.fetch_packet.bits.valid_bits[3] @[src/main/scala/Frontend/BP/predecoder.scala 236:59]
+    reg final_fetch_packet_bits_valid_bits_3_REG_1 : UInt<1>, clock @[src/main/scala/Frontend/BP/predecoder.scala 236:106]
+    connect final_fetch_packet_bits_valid_bits_3_REG_1, final_fetch_packet_valid_bits[3] @[src/main/scala/Frontend/BP/predecoder.scala 236:106]
+    node _final_fetch_packet_bits_valid_bits_3_T = and(final_fetch_packet_bits_valid_bits_3_REG, final_fetch_packet_bits_valid_bits_3_REG_1) @[src/main/scala/Frontend/BP/predecoder.scala 236:96]
+    connect final_fetch_packet.bits.valid_bits[3], _final_fetch_packet_bits_valid_bits_3_T @[src/main/scala/Frontend/BP/predecoder.scala 236:49]
+    node _push_FTQ_T = or(is_control[0], is_control[1]) @[src/main/scala/Frontend/BP/predecoder.scala 242:40]
+    node _push_FTQ_T_1 = or(_push_FTQ_T, is_control[2]) @[src/main/scala/Frontend/BP/predecoder.scala 242:40]
+    node push_FTQ = or(_push_FTQ_T_1, is_control[3]) @[src/main/scala/Frontend/BP/predecoder.scala 242:40]
+    connect predictions.ready, io.predictions.ready @[src/main/scala/Frontend/BP/predecoder.scala 244:52]
+    node _predictions_valid_T = and(push_FTQ, input_fetch_packet_valid) @[src/main/scala/Frontend/BP/predecoder.scala 245:64]
+    connect predictions.valid, _predictions_valid_T @[src/main/scala/Frontend/BP/predecoder.scala 245:52]
+    connect predictions.bits.fetch_PC, io.fetch_packet.bits.fetch_PC @[src/main/scala/Frontend/BP/predecoder.scala 248:52]
+    connect predictions.bits.GHR, GHR @[src/main/scala/Frontend/BP/predecoder.scala 249:52]
+    connect predictions.bits.NEXT, io.RAS_read.NEXT @[src/main/scala/Frontend/BP/predecoder.scala 250:52]
+    connect predictions.bits.TOS, io.RAS_read.TOS @[src/main/scala/Frontend/BP/predecoder.scala 251:52]
+    connect predictions.bits.dominant_index, UInt<2>(0h3) @[src/main/scala/Frontend/BP/predecoder.scala 253:52]
+    node _predictions_bits_resolved_PC_T = mul(UInt<3>(0h4), UInt<3>(0h4)) @[src/main/scala/Frontend/BP/predecoder.scala 254:100]
+    node _predictions_bits_resolved_PC_T_1 = add(io.fetch_packet.bits.fetch_PC, _predictions_bits_resolved_PC_T) @[src/main/scala/Frontend/BP/predecoder.scala 254:85]
+    node _predictions_bits_resolved_PC_T_2 = tail(_predictions_bits_resolved_PC_T_1, 1) @[src/main/scala/Frontend/BP/predecoder.scala 254:85]
+    connect predictions.bits.resolved_PC, _predictions_bits_resolved_PC_T_2 @[src/main/scala/Frontend/BP/predecoder.scala 254:52]
+    node _predictions_bits_T_NT_T = or(T_NT[0], T_NT[1]) @[src/main/scala/Frontend/BP/predecoder.scala 257:69]
+    node _predictions_bits_T_NT_T_1 = or(_predictions_bits_T_NT_T, T_NT[2]) @[src/main/scala/Frontend/BP/predecoder.scala 257:69]
+    node _predictions_bits_T_NT_T_2 = or(_predictions_bits_T_NT_T_1, T_NT[3]) @[src/main/scala/Frontend/BP/predecoder.scala 257:69]
+    connect predictions.bits.T_NT, _predictions_bits_T_NT_T_2 @[src/main/scala/Frontend/BP/predecoder.scala 257:52]
+    when predictions.bits.T_NT : @[src/main/scala/Frontend/BP/predecoder.scala 258:32]
+      connect predictions.bits.predicted_PC, target_address @[src/main/scala/Frontend/BP/predecoder.scala 259:52]
     else :
-      node _predictions_bits_predicted_PC_T = mul(UInt<3>(0h4), UInt<3>(0h4)) @[src/main/scala/Frontend/BP/predecoder.scala 260:100]
-      node _predictions_bits_predicted_PC_T_1 = add(io.fetch_packet.bits.fetch_PC, _predictions_bits_predicted_PC_T) @[src/main/scala/Frontend/BP/predecoder.scala 260:85]
-      node _predictions_bits_predicted_PC_T_2 = tail(_predictions_bits_predicted_PC_T_1, 1) @[src/main/scala/Frontend/BP/predecoder.scala 260:85]
-      connect predictions.bits.predicted_PC, _predictions_bits_predicted_PC_T_2 @[src/main/scala/Frontend/BP/predecoder.scala 260:52]
-    connect predictions.bits.valid, UInt<1>(0h0) @[src/main/scala/Frontend/BP/predecoder.scala 262:52]
-    connect predictions.bits.is_misprediction, UInt<1>(0h0) @[src/main/scala/Frontend/BP/predecoder.scala 263:52]
-    connect predictions.bits.br_type, dominant_br_type @[src/main/scala/Frontend/BP/predecoder.scala 264:52]
-    inst predictions_skid_buffer of Queue1_FTQ_entry @[src/main/scala/Frontend/BP/predecoder.scala 272:49]
+      node _predictions_bits_predicted_PC_T = mul(UInt<3>(0h4), UInt<3>(0h4)) @[src/main/scala/Frontend/BP/predecoder.scala 261:100]
+      node _predictions_bits_predicted_PC_T_1 = add(io.fetch_packet.bits.fetch_PC, _predictions_bits_predicted_PC_T) @[src/main/scala/Frontend/BP/predecoder.scala 261:85]
+      node _predictions_bits_predicted_PC_T_2 = tail(_predictions_bits_predicted_PC_T_1, 1) @[src/main/scala/Frontend/BP/predecoder.scala 261:85]
+      connect predictions.bits.predicted_PC, _predictions_bits_predicted_PC_T_2 @[src/main/scala/Frontend/BP/predecoder.scala 261:52]
+    connect predictions.bits.valid, UInt<1>(0h0) @[src/main/scala/Frontend/BP/predecoder.scala 263:52]
+    connect predictions.bits.is_misprediction, UInt<1>(0h0) @[src/main/scala/Frontend/BP/predecoder.scala 264:52]
+    connect predictions.bits.br_type, dominantbr_type_t @[src/main/scala/Frontend/BP/predecoder.scala 265:52]
+    inst predictions_skid_buffer of Queue1_FTQ_entry @[src/main/scala/Frontend/BP/predecoder.scala 273:49]
     connect predictions_skid_buffer.clock, clock
     connect predictions_skid_buffer.reset, reset
-    inst final_fetch_packet_skid_buffer of Queue1_fetch_packet @[src/main/scala/Frontend/BP/predecoder.scala 273:49]
+    inst final_fetch_packet_skid_buffer of Queue1_fetch_packet @[src/main/scala/Frontend/BP/predecoder.scala 274:49]
     connect final_fetch_packet_skid_buffer.clock, clock
     connect final_fetch_packet_skid_buffer.reset, reset
-    connect predictions_skid_buffer.io.enq, predictions @[src/main/scala/Frontend/BP/predecoder.scala 275:53]
-    connect io.predictions.bits, predictions_skid_buffer.io.deq.bits @[src/main/scala/Frontend/BP/predecoder.scala 276:53]
-    connect io.predictions.valid, predictions_skid_buffer.io.deq.valid @[src/main/scala/Frontend/BP/predecoder.scala 276:53]
-    connect predictions_skid_buffer.io.deq.ready, io.predictions.ready @[src/main/scala/Frontend/BP/predecoder.scala 276:53]
-    connect final_fetch_packet_skid_buffer.io.enq, final_fetch_packet @[src/main/scala/Frontend/BP/predecoder.scala 278:53]
-    connect io.final_fetch_packet.bits, final_fetch_packet_skid_buffer.io.deq.bits @[src/main/scala/Frontend/BP/predecoder.scala 279:53]
-    connect io.final_fetch_packet.valid, final_fetch_packet_skid_buffer.io.deq.valid @[src/main/scala/Frontend/BP/predecoder.scala 279:53]
-    connect final_fetch_packet_skid_buffer.io.deq.ready, io.final_fetch_packet.ready @[src/main/scala/Frontend/BP/predecoder.scala 279:53]
-    node _io_prediction_ready_T = and(io.final_fetch_packet.ready, io.predictions.ready) @[src/main/scala/Frontend/BP/predecoder.scala 281:59]
-    connect io.prediction.ready, _io_prediction_ready_T @[src/main/scala/Frontend/BP/predecoder.scala 281:27]
-    node _io_fetch_packet_ready_T = and(io.final_fetch_packet.ready, io.predictions.ready) @[src/main/scala/Frontend/BP/predecoder.scala 282:59]
-    connect io.fetch_packet.ready, _io_fetch_packet_ready_T @[src/main/scala/Frontend/BP/predecoder.scala 282:27]
+    connect predictions_skid_buffer.io.enq, predictions @[src/main/scala/Frontend/BP/predecoder.scala 276:53]
+    connect io.predictions.bits, predictions_skid_buffer.io.deq.bits @[src/main/scala/Frontend/BP/predecoder.scala 277:53]
+    connect io.predictions.valid, predictions_skid_buffer.io.deq.valid @[src/main/scala/Frontend/BP/predecoder.scala 277:53]
+    connect predictions_skid_buffer.io.deq.ready, io.predictions.ready @[src/main/scala/Frontend/BP/predecoder.scala 277:53]
+    connect final_fetch_packet_skid_buffer.io.enq, final_fetch_packet @[src/main/scala/Frontend/BP/predecoder.scala 279:53]
+    connect io.final_fetch_packet.bits, final_fetch_packet_skid_buffer.io.deq.bits @[src/main/scala/Frontend/BP/predecoder.scala 280:53]
+    connect io.final_fetch_packet.valid, final_fetch_packet_skid_buffer.io.deq.valid @[src/main/scala/Frontend/BP/predecoder.scala 280:53]
+    connect final_fetch_packet_skid_buffer.io.deq.ready, io.final_fetch_packet.ready @[src/main/scala/Frontend/BP/predecoder.scala 280:53]
+    node _io_prediction_ready_T = and(io.final_fetch_packet.ready, io.predictions.ready) @[src/main/scala/Frontend/BP/predecoder.scala 282:59]
+    connect io.prediction.ready, _io_prediction_ready_T @[src/main/scala/Frontend/BP/predecoder.scala 282:27]
+    node _io_fetch_packet_ready_T = and(io.final_fetch_packet.ready, io.predictions.ready) @[src/main/scala/Frontend/BP/predecoder.scala 283:59]
+    connect io.fetch_packet.ready, _io_fetch_packet_ready_T @[src/main/scala/Frontend/BP/predecoder.scala 283:27]
 
-  module PC_gen : @[src/main/scala/Frontend/BP/PC_gen.scala 44:7]
-    input clock : Clock @[src/main/scala/Frontend/BP/PC_gen.scala 44:7]
-    input reset : Reset @[src/main/scala/Frontend/BP/PC_gen.scala 44:7]
-    output io : { flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RD : UInt<7>[4], RD_valid : UInt<1>[4]}}, flip revert : { valid : UInt<1>, bits : { PC : UInt<32>}}, flip prediction : { flip ready : UInt<1>, valid : UInt<1>, bits : { hit : UInt<1>, target : UInt<32>, br_type : UInt<3>, GHR : UInt<16>, T_NT : UInt<1>}}, flip RAS_read : { NEXT : UInt<7>, TOS : UInt<7>, ret_addr : UInt<32>}, PC_next : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, wr_data : UInt<32>, wr_en : UInt<1>}}} @[src/main/scala/Frontend/BP/PC_gen.scala 47:16]
+  module Queue1_memory_request : @[src/main/scala/chisel3/util/Decoupled.scala 243:7]
+    input clock : Clock @[src/main/scala/chisel3/util/Decoupled.scala 243:7]
+    input reset : Reset @[src/main/scala/chisel3/util/Decoupled.scala 243:7]
+    output io : { flip enq : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, wr_data : UInt<32>, wr_en : UInt<1>}}, deq : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, wr_data : UInt<32>, wr_en : UInt<1>}}, count : UInt<1>} @[src/main/scala/chisel3/util/Decoupled.scala 255:14]
 
-    regreset PC_gen_state : UInt<1>, clock, reset, UInt<1>(0h0) @[src/main/scala/Frontend/BP/PC_gen.scala 60:37]
-    regreset PC : UInt<32>, clock, reset, UInt<1>(0h0) @[src/main/scala/Frontend/BP/PC_gen.scala 62:37]
-    wire use_BTB : UInt<1> @[src/main/scala/Frontend/BP/PC_gen.scala 64:34]
-    wire use_RAS : UInt<1> @[src/main/scala/Frontend/BP/PC_gen.scala 65:34]
-    wire is_branch : UInt<1> @[src/main/scala/Frontend/BP/PC_gen.scala 68:32]
-    wire is_jalr : UInt<1> @[src/main/scala/Frontend/BP/PC_gen.scala 69:32]
-    wire is_ret : UInt<1> @[src/main/scala/Frontend/BP/PC_gen.scala 70:32]
-    wire misprediction : UInt<1> @[src/main/scala/Frontend/BP/PC_gen.scala 72:43]
-    wire instruction_index_within_packet : UInt<2> @[src/main/scala/Frontend/BP/PC_gen.scala 75:49]
-    wire PC_increment : UInt<32> @[src/main/scala/Frontend/BP/PC_gen.scala 76:49]
-    node _is_branch_T = eq(io.prediction.bits.br_type, UInt<1>(0h1)) @[src/main/scala/Frontend/BP/PC_gen.scala 80:56]
-    node _is_branch_T_1 = and(_is_branch_T, io.prediction.valid) @[src/main/scala/Frontend/BP/PC_gen.scala 80:77]
-    connect is_branch, _is_branch_T_1 @[src/main/scala/Frontend/BP/PC_gen.scala 80:25]
-    node _is_jalr_T = eq(io.prediction.bits.br_type, UInt<2>(0h3)) @[src/main/scala/Frontend/BP/PC_gen.scala 81:56]
-    node _is_jalr_T_1 = and(_is_jalr_T, io.prediction.valid) @[src/main/scala/Frontend/BP/PC_gen.scala 81:77]
-    connect is_jalr, _is_jalr_T_1 @[src/main/scala/Frontend/BP/PC_gen.scala 81:25]
-    node _is_ret_T = eq(io.prediction.bits.br_type, UInt<3>(0h4)) @[src/main/scala/Frontend/BP/PC_gen.scala 82:56]
-    node _is_ret_T_1 = and(_is_ret_T, io.prediction.valid) @[src/main/scala/Frontend/BP/PC_gen.scala 82:77]
-    connect is_ret, _is_ret_T_1 @[src/main/scala/Frontend/BP/PC_gen.scala 82:25]
-    node _use_BTB_T = and(io.prediction.bits.hit, io.prediction.valid) @[src/main/scala/Frontend/BP/PC_gen.scala 84:52]
-    node _use_BTB_T_1 = eq(is_ret, UInt<1>(0h0)) @[src/main/scala/Frontend/BP/PC_gen.scala 84:78]
-    node _use_BTB_T_2 = and(_use_BTB_T, _use_BTB_T_1) @[src/main/scala/Frontend/BP/PC_gen.scala 84:75]
-    connect use_BTB, _use_BTB_T_2 @[src/main/scala/Frontend/BP/PC_gen.scala 84:25]
-    connect use_RAS, is_ret @[src/main/scala/Frontend/BP/PC_gen.scala 85:25]
-    node _misprediction_T = and(io.commit.bits.is_misprediction, io.commit.valid) @[src/main/scala/Frontend/BP/PC_gen.scala 87:60]
-    connect misprediction, _misprediction_T @[src/main/scala/Frontend/BP/PC_gen.scala 87:25]
-    node _instruction_index_within_packet_T = shr(io.PC_next.bits.addr, 2) @[src/main/scala/Frontend/BP/PC_gen.scala 91:63]
-    connect instruction_index_within_packet, _instruction_index_within_packet_T @[src/main/scala/Frontend/BP/PC_gen.scala 91:37]
-    node _PC_increment_T = sub(UInt<3>(0h4), instruction_index_within_packet) @[src/main/scala/Frontend/BP/PC_gen.scala 92:39]
-    node _PC_increment_T_1 = tail(_PC_increment_T, 1) @[src/main/scala/Frontend/BP/PC_gen.scala 92:39]
-    node _PC_increment_T_2 = shl(_PC_increment_T_1, 2) @[src/main/scala/Frontend/BP/PC_gen.scala 92:74]
-    connect PC_increment, _PC_increment_T_2 @[src/main/scala/Frontend/BP/PC_gen.scala 92:21]
-    regreset misprediction_PC_buf : UInt<32>, clock, reset, UInt<1>(0h0) @[src/main/scala/Frontend/BP/PC_gen.scala 98:39]
-    connect io.PC_next.bits.addr, UInt<1>(0h0) @[src/main/scala/Frontend/BP/PC_gen.scala 101:26]
-    connect io.PC_next.valid, UInt<1>(0h0) @[src/main/scala/Frontend/BP/PC_gen.scala 102:26]
-    node _T = asUInt(UInt<1>(0h0)) @[src/main/scala/Frontend/BP/PC_gen.scala 104:25]
-    node _T_1 = asUInt(PC_gen_state) @[src/main/scala/Frontend/BP/PC_gen.scala 104:25]
-    node _T_2 = eq(_T, _T_1) @[src/main/scala/Frontend/BP/PC_gen.scala 104:25]
-    when _T_2 : @[src/main/scala/Frontend/BP/PC_gen.scala 104:25]
-      when misprediction : @[src/main/scala/Frontend/BP/PC_gen.scala 107:32]
-        connect misprediction_PC_buf, io.commit.bits.fetch_PC @[src/main/scala/Frontend/BP/PC_gen.scala 108:38]
-        connect PC_gen_state, UInt<1>(0h1) @[src/main/scala/Frontend/BP/PC_gen.scala 109:30]
-      else :
-        when io.revert.valid : @[src/main/scala/Frontend/BP/PC_gen.scala 110:40]
-          connect misprediction_PC_buf, io.revert.bits.PC @[src/main/scala/Frontend/BP/PC_gen.scala 111:38]
-          connect PC_gen_state, UInt<1>(0h1) @[src/main/scala/Frontend/BP/PC_gen.scala 112:30]
-        else :
-          when use_BTB : @[src/main/scala/Frontend/BP/PC_gen.scala 114:30]
-            connect io.PC_next.bits.addr, io.prediction.bits.target @[src/main/scala/Frontend/BP/PC_gen.scala 115:42]
-            connect io.PC_next.valid, UInt<1>(0h1) @[src/main/scala/Frontend/BP/PC_gen.scala 116:41]
-          else :
-            when use_RAS : @[src/main/scala/Frontend/BP/PC_gen.scala 117:36]
-              connect io.PC_next.valid, UInt<1>(0h1) @[src/main/scala/Frontend/BP/PC_gen.scala 118:41]
-              connect io.PC_next.bits.addr, io.RAS_read.ret_addr @[src/main/scala/Frontend/BP/PC_gen.scala 119:42]
-            else :
-              connect io.PC_next.valid, UInt<1>(0h1) @[src/main/scala/Frontend/BP/PC_gen.scala 121:41]
-              connect io.PC_next.bits.addr, PC @[src/main/scala/Frontend/BP/PC_gen.scala 122:42]
+    cmem ram : { addr : UInt<32>, wr_data : UInt<32>, wr_en : UInt<1>} [1] @[src/main/scala/chisel3/util/Decoupled.scala 256:91]
+    wire enq_ptr_value : UInt @[src/main/scala/chisel3/util/Counter.scala 61:73]
+    connect enq_ptr_value, UInt<1>(0h0) @[src/main/scala/chisel3/util/Counter.scala 61:73]
+    wire deq_ptr_value : UInt @[src/main/scala/chisel3/util/Counter.scala 61:73]
+    connect deq_ptr_value, UInt<1>(0h0) @[src/main/scala/chisel3/util/Counter.scala 61:73]
+    regreset maybe_full : UInt<1>, clock, reset, UInt<1>(0h0) @[src/main/scala/chisel3/util/Decoupled.scala 259:27]
+    node ptr_match = eq(enq_ptr_value, deq_ptr_value) @[src/main/scala/chisel3/util/Decoupled.scala 260:33]
+    node _empty_T = eq(maybe_full, UInt<1>(0h0)) @[src/main/scala/chisel3/util/Decoupled.scala 261:28]
+    node empty = and(ptr_match, _empty_T) @[src/main/scala/chisel3/util/Decoupled.scala 261:25]
+    node full = and(ptr_match, maybe_full) @[src/main/scala/chisel3/util/Decoupled.scala 262:24]
+    node _do_enq_T = and(io.enq.ready, io.enq.valid) @[src/main/scala/chisel3/util/Decoupled.scala 51:35]
+    wire do_enq : UInt<1> @[src/main/scala/chisel3/util/Decoupled.scala 263:27]
+    connect do_enq, _do_enq_T @[src/main/scala/chisel3/util/Decoupled.scala 263:27]
+    node _do_deq_T = and(io.deq.ready, io.deq.valid) @[src/main/scala/chisel3/util/Decoupled.scala 51:35]
+    wire do_deq : UInt<1> @[src/main/scala/chisel3/util/Decoupled.scala 264:27]
+    connect do_deq, _do_deq_T @[src/main/scala/chisel3/util/Decoupled.scala 264:27]
+    when do_enq : @[src/main/scala/chisel3/util/Decoupled.scala 269:16]
+      infer mport MPORT = ram[UInt<1>(0h0)], clock @[src/main/scala/chisel3/util/Decoupled.scala 270:8]
+      connect MPORT, io.enq.bits @[src/main/scala/chisel3/util/Decoupled.scala 270:24]
+    when do_deq : @[src/main/scala/chisel3/util/Decoupled.scala 273:16]
+      skip
+    node _T = neq(do_enq, do_deq) @[src/main/scala/chisel3/util/Decoupled.scala 276:15]
+    when _T : @[src/main/scala/chisel3/util/Decoupled.scala 276:27]
+      connect maybe_full, do_enq @[src/main/scala/chisel3/util/Decoupled.scala 277:16]
+    when UInt<1>(0h0) : @[src/main/scala/chisel3/util/Decoupled.scala 279:15]
+      connect enq_ptr_value, UInt<1>(0h0) @[src/main/scala/chisel3/util/Counter.scala 98:11]
+      connect deq_ptr_value, UInt<1>(0h0) @[src/main/scala/chisel3/util/Counter.scala 98:11]
+      connect maybe_full, UInt<1>(0h0) @[src/main/scala/chisel3/util/Decoupled.scala 282:16]
+    node _io_deq_valid_T = eq(empty, UInt<1>(0h0)) @[src/main/scala/chisel3/util/Decoupled.scala 285:19]
+    connect io.deq.valid, _io_deq_valid_T @[src/main/scala/chisel3/util/Decoupled.scala 285:16]
+    node _io_enq_ready_T = eq(full, UInt<1>(0h0)) @[src/main/scala/chisel3/util/Decoupled.scala 286:19]
+    connect io.enq.ready, _io_enq_ready_T @[src/main/scala/chisel3/util/Decoupled.scala 286:16]
+    infer mport io_deq_bits_MPORT = ram[UInt<1>(0h0)], clock @[src/main/scala/chisel3/util/Decoupled.scala 293:23]
+    connect io.deq.bits, io_deq_bits_MPORT @[src/main/scala/chisel3/util/Decoupled.scala 293:17]
+    when io.enq.valid : @[src/main/scala/chisel3/util/Decoupled.scala 297:24]
+      connect io.deq.valid, UInt<1>(0h1) @[src/main/scala/chisel3/util/Decoupled.scala 297:39]
+    when empty : @[src/main/scala/chisel3/util/Decoupled.scala 298:17]
+      connect io.deq.bits, io.enq.bits @[src/main/scala/chisel3/util/Decoupled.scala 299:19]
+      connect do_deq, UInt<1>(0h0) @[src/main/scala/chisel3/util/Decoupled.scala 300:14]
+      when io.deq.ready : @[src/main/scala/chisel3/util/Decoupled.scala 301:26]
+        connect do_enq, UInt<1>(0h0) @[src/main/scala/chisel3/util/Decoupled.scala 301:35]
+    node _ptr_diff_T = sub(enq_ptr_value, deq_ptr_value) @[src/main/scala/chisel3/util/Decoupled.scala 309:32]
+    node ptr_diff = tail(_ptr_diff_T, 1) @[src/main/scala/chisel3/util/Decoupled.scala 309:32]
+    node _io_count_T = and(maybe_full, ptr_match) @[src/main/scala/chisel3/util/Decoupled.scala 312:32]
+    node _io_count_T_1 = mux(_io_count_T, UInt<1>(0h1), UInt<1>(0h0)) @[src/main/scala/chisel3/util/Decoupled.scala 312:20]
+    node _io_count_T_2 = or(_io_count_T_1, ptr_diff) @[src/main/scala/chisel3/util/Decoupled.scala 312:62]
+    connect io.count, _io_count_T_2 @[src/main/scala/chisel3/util/Decoupled.scala 312:14]
+
+  module PC_gen : @[src/main/scala/Frontend/BP/PC_gen.scala 41:7]
+    input clock : Clock @[src/main/scala/Frontend/BP/PC_gen.scala 41:7]
+    input reset : Reset @[src/main/scala/Frontend/BP/PC_gen.scala 41:7]
+    output io : { flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RD : UInt<7>[4], RD_valid : UInt<1>[4]}}, flip revert : { valid : UInt<1>, bits : { PC : UInt<32>}}, flip prediction : { flip ready : UInt<1>, valid : UInt<1>, bits : { hit : UInt<1>, target : UInt<32>, br_type : UInt<3>, GHR : UInt<16>, T_NT : UInt<1>}}, flip RAS_read : { NEXT : UInt<7>, TOS : UInt<7>, ret_addr : UInt<32>}, PC_next : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, wr_data : UInt<32>, wr_en : UInt<1>}}} @[src/main/scala/Frontend/BP/PC_gen.scala 44:16]
+
+    regreset PC : UInt<32>, clock, reset, UInt<1>(0h0) @[src/main/scala/Frontend/BP/PC_gen.scala 57:37]
+    wire use_BTB : UInt<1> @[src/main/scala/Frontend/BP/PC_gen.scala 59:34]
+    wire use_RAS : UInt<1> @[src/main/scala/Frontend/BP/PC_gen.scala 60:34]
+    wire is_branch : UInt<1> @[src/main/scala/Frontend/BP/PC_gen.scala 63:32]
+    wire is_jalr : UInt<1> @[src/main/scala/Frontend/BP/PC_gen.scala 64:32]
+    wire is_ret : UInt<1> @[src/main/scala/Frontend/BP/PC_gen.scala 65:32]
+    wire instruction_index_within_packet : UInt<2> @[src/main/scala/Frontend/BP/PC_gen.scala 69:49]
+    wire PC_increment : UInt<32> @[src/main/scala/Frontend/BP/PC_gen.scala 70:49]
+    node _is_branch_T = eq(io.prediction.bits.br_type, UInt<1>(0h1)) @[src/main/scala/Frontend/BP/PC_gen.scala 74:56]
+    node _is_branch_T_1 = and(_is_branch_T, io.prediction.valid) @[src/main/scala/Frontend/BP/PC_gen.scala 74:78]
+    connect is_branch, _is_branch_T_1 @[src/main/scala/Frontend/BP/PC_gen.scala 74:25]
+    node _is_jalr_T = eq(io.prediction.bits.br_type, UInt<2>(0h3)) @[src/main/scala/Frontend/BP/PC_gen.scala 75:56]
+    node _is_jalr_T_1 = and(_is_jalr_T, io.prediction.valid) @[src/main/scala/Frontend/BP/PC_gen.scala 75:78]
+    connect is_jalr, _is_jalr_T_1 @[src/main/scala/Frontend/BP/PC_gen.scala 75:25]
+    node _is_ret_T = eq(io.prediction.bits.br_type, UInt<3>(0h4)) @[src/main/scala/Frontend/BP/PC_gen.scala 76:56]
+    node _is_ret_T_1 = and(_is_ret_T, io.prediction.valid) @[src/main/scala/Frontend/BP/PC_gen.scala 76:78]
+    connect is_ret, _is_ret_T_1 @[src/main/scala/Frontend/BP/PC_gen.scala 76:25]
+    node _use_BTB_T = and(io.prediction.bits.hit, io.prediction.valid) @[src/main/scala/Frontend/BP/PC_gen.scala 78:52]
+    node _use_BTB_T_1 = eq(is_ret, UInt<1>(0h0)) @[src/main/scala/Frontend/BP/PC_gen.scala 78:78]
+    node _use_BTB_T_2 = and(_use_BTB_T, _use_BTB_T_1) @[src/main/scala/Frontend/BP/PC_gen.scala 78:75]
+    connect use_BTB, _use_BTB_T_2 @[src/main/scala/Frontend/BP/PC_gen.scala 78:25]
+    connect use_RAS, is_ret @[src/main/scala/Frontend/BP/PC_gen.scala 79:25]
+    node _instruction_index_within_packet_T = shr(io.PC_next.bits.addr, 2) @[src/main/scala/Frontend/BP/PC_gen.scala 84:63]
+    connect instruction_index_within_packet, _instruction_index_within_packet_T @[src/main/scala/Frontend/BP/PC_gen.scala 84:37]
+    node _PC_increment_T = sub(UInt<3>(0h4), instruction_index_within_packet) @[src/main/scala/Frontend/BP/PC_gen.scala 85:39]
+    node _PC_increment_T_1 = tail(_PC_increment_T, 1) @[src/main/scala/Frontend/BP/PC_gen.scala 85:39]
+    node _PC_increment_T_2 = shl(_PC_increment_T_1, 2) @[src/main/scala/Frontend/BP/PC_gen.scala 85:74]
+    connect PC_increment, _PC_increment_T_2 @[src/main/scala/Frontend/BP/PC_gen.scala 85:21]
+    connect io.PC_next.bits.addr, UInt<1>(0h0) @[src/main/scala/Frontend/BP/PC_gen.scala 90:26]
+    connect io.PC_next.valid, UInt<1>(0h0) @[src/main/scala/Frontend/BP/PC_gen.scala 91:26]
+    node _T = and(io.PC_next.ready, io.PC_next.valid) @[src/main/scala/chisel3/util/Decoupled.scala 51:35]
+    when _T : @[src/main/scala/Frontend/BP/PC_gen.scala 95:26]
+      node _PC_T = add(io.PC_next.bits.addr, PC_increment) @[src/main/scala/Frontend/BP/PC_gen.scala 96:36]
+      node _PC_T_1 = tail(_PC_T, 1) @[src/main/scala/Frontend/BP/PC_gen.scala 96:36]
+      connect PC, _PC_T_1 @[src/main/scala/Frontend/BP/PC_gen.scala 96:12]
+    wire PC_next : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, wr_data : UInt<32>, wr_en : UInt<1>}} @[src/main/scala/Frontend/BP/PC_gen.scala 102:23]
+    wire _PC_next_WIRE : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, wr_data : UInt<32>, wr_en : UInt<1>}} @[src/main/scala/Frontend/BP/PC_gen.scala 103:28]
+    connect _PC_next_WIRE.bits.wr_en, UInt<1>(0h0) @[src/main/scala/Frontend/BP/PC_gen.scala 103:28]
+    connect _PC_next_WIRE.bits.wr_data, UInt<32>(0h0) @[src/main/scala/Frontend/BP/PC_gen.scala 103:28]
+    connect _PC_next_WIRE.bits.addr, UInt<32>(0h0) @[src/main/scala/Frontend/BP/PC_gen.scala 103:28]
+    connect _PC_next_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Frontend/BP/PC_gen.scala 103:28]
+    connect _PC_next_WIRE.ready, UInt<1>(0h0) @[src/main/scala/Frontend/BP/PC_gen.scala 103:28]
+    connect PC_next.bits, _PC_next_WIRE.bits @[src/main/scala/Frontend/BP/PC_gen.scala 103:13]
+    connect PC_next.valid, _PC_next_WIRE.valid @[src/main/scala/Frontend/BP/PC_gen.scala 103:13]
+    connect PC_next.ready, _PC_next_WIRE.ready @[src/main/scala/Frontend/BP/PC_gen.scala 103:13]
+    node flush = and(io.commit.bits.is_misprediction, io.commit.valid) @[src/main/scala/Frontend/BP/PC_gen.scala 105:49]
+    when flush : @[src/main/scala/Frontend/BP/PC_gen.scala 107:16]
+      connect PC_next.bits.addr, io.commit.bits.fetch_PC @[src/main/scala/Frontend/BP/PC_gen.scala 108:31]
     else :
-      node _T_3 = asUInt(UInt<1>(0h1)) @[src/main/scala/Frontend/BP/PC_gen.scala 104:25]
-      node _T_4 = asUInt(PC_gen_state) @[src/main/scala/Frontend/BP/PC_gen.scala 104:25]
-      node _T_5 = eq(_T_3, _T_4) @[src/main/scala/Frontend/BP/PC_gen.scala 104:25]
-      when _T_5 : @[src/main/scala/Frontend/BP/PC_gen.scala 104:25]
-        when misprediction : @[src/main/scala/Frontend/BP/PC_gen.scala 128:32]
-          connect misprediction_PC_buf, io.commit.bits.fetch_PC @[src/main/scala/Frontend/BP/PC_gen.scala 129:38]
-          connect PC_gen_state, UInt<1>(0h1) @[src/main/scala/Frontend/BP/PC_gen.scala 130:30]
+      when io.revert.valid : @[src/main/scala/Frontend/BP/PC_gen.scala 109:32]
+        connect PC_next.bits.addr, io.revert.bits.PC @[src/main/scala/Frontend/BP/PC_gen.scala 110:31]
+        node _PC_next_valid_T = eq(flush, UInt<1>(0h0)) @[src/main/scala/Frontend/BP/PC_gen.scala 111:41]
+        node _PC_next_valid_T_1 = and(UInt<1>(0h1), _PC_next_valid_T) @[src/main/scala/Frontend/BP/PC_gen.scala 111:38]
+        connect PC_next.valid, _PC_next_valid_T_1 @[src/main/scala/Frontend/BP/PC_gen.scala 111:31]
+      else :
+        when use_BTB : @[src/main/scala/Frontend/BP/PC_gen.scala 113:22]
+          connect PC_next.bits.addr, io.prediction.bits.target @[src/main/scala/Frontend/BP/PC_gen.scala 114:31]
+          node _PC_next_valid_T_2 = eq(flush, UInt<1>(0h0)) @[src/main/scala/Frontend/BP/PC_gen.scala 115:41]
+          node _PC_next_valid_T_3 = and(UInt<1>(0h1), _PC_next_valid_T_2) @[src/main/scala/Frontend/BP/PC_gen.scala 115:38]
+          connect PC_next.valid, _PC_next_valid_T_3 @[src/main/scala/Frontend/BP/PC_gen.scala 115:31]
         else :
-          when io.revert.valid : @[src/main/scala/Frontend/BP/PC_gen.scala 131:40]
-            connect misprediction_PC_buf, io.revert.bits.PC @[src/main/scala/Frontend/BP/PC_gen.scala 132:38]
-            connect PC_gen_state, UInt<1>(0h1) @[src/main/scala/Frontend/BP/PC_gen.scala 133:30]
+          when use_RAS : @[src/main/scala/Frontend/BP/PC_gen.scala 116:28]
+            connect PC_next.bits.addr, io.RAS_read.ret_addr @[src/main/scala/Frontend/BP/PC_gen.scala 117:31]
+            node _PC_next_valid_T_4 = eq(flush, UInt<1>(0h0)) @[src/main/scala/Frontend/BP/PC_gen.scala 118:41]
+            node _PC_next_valid_T_5 = and(UInt<1>(0h1), _PC_next_valid_T_4) @[src/main/scala/Frontend/BP/PC_gen.scala 118:38]
+            connect PC_next.valid, _PC_next_valid_T_5 @[src/main/scala/Frontend/BP/PC_gen.scala 118:31]
           else :
-            connect io.PC_next.bits.addr, misprediction_PC_buf @[src/main/scala/Frontend/BP/PC_gen.scala 135:38]
-            connect io.PC_next.valid, UInt<1>(0h1) @[src/main/scala/Frontend/BP/PC_gen.scala 136:38]
-            connect PC_gen_state, UInt<1>(0h0) @[src/main/scala/Frontend/BP/PC_gen.scala 137:30]
-    node _T_6 = and(io.PC_next.ready, io.PC_next.valid) @[src/main/scala/chisel3/util/Decoupled.scala 51:35]
-    when _T_6 : @[src/main/scala/Frontend/BP/PC_gen.scala 144:26]
-      node _PC_T = add(io.PC_next.bits.addr, PC_increment) @[src/main/scala/Frontend/BP/PC_gen.scala 145:36]
-      node _PC_T_1 = tail(_PC_T, 1) @[src/main/scala/Frontend/BP/PC_gen.scala 145:36]
-      connect PC, _PC_T_1 @[src/main/scala/Frontend/BP/PC_gen.scala 145:12]
-    connect io.PC_next.bits.wr_data, UInt<1>(0h0) @[src/main/scala/Frontend/BP/PC_gen.scala 153:29]
-    connect io.PC_next.bits.wr_en, UInt<1>(0h0) @[src/main/scala/Frontend/BP/PC_gen.scala 154:27]
-    connect io.prediction.ready, UInt<1>(0h1) @[src/main/scala/Frontend/BP/PC_gen.scala 156:25]
-    node _T_7 = and(io.PC_next.ready, io.PC_next.valid) @[src/main/scala/chisel3/util/Decoupled.scala 51:35]
-    node _T_8 = eq(io.commit.valid, UInt<1>(0h0)) @[src/main/scala/Frontend/BP/PC_gen.scala 169:58]
-    node _T_9 = and(_T_7, _T_8) @[src/main/scala/Frontend/BP/PC_gen.scala 169:55]
-    node _T_10 = eq(io.revert.valid, UInt<1>(0h0)) @[src/main/scala/Frontend/BP/PC_gen.scala 169:78]
-    node _T_11 = and(_T_9, _T_10) @[src/main/scala/Frontend/BP/PC_gen.scala 169:75]
-    node _T_12 = eq(io.prediction.valid, UInt<1>(0h0)) @[src/main/scala/Frontend/BP/PC_gen.scala 169:98]
-    node _T_13 = and(_T_11, _T_12) @[src/main/scala/Frontend/BP/PC_gen.scala 169:95]
-    node _T_14 = and(io.PC_next.bits.addr, UInt<32>(0hfffffff0)) @[src/main/scala/Frontend/BP/PC_gen.scala 170:94]
-    reg REG : UInt, clock @[src/main/scala/Frontend/BP/PC_gen.scala 170:72]
-    connect REG, _T_14 @[src/main/scala/Frontend/BP/PC_gen.scala 170:72]
-    node _T_15 = add(REG, UInt<5>(0h10)) @[src/main/scala/Frontend/BP/PC_gen.scala 170:112]
-    node _T_16 = tail(_T_15, 1) @[src/main/scala/Frontend/BP/PC_gen.scala 170:112]
-    node _T_17 = eq(io.PC_next.bits.addr, _T_16) @[src/main/scala/Frontend/BP/PC_gen.scala 170:60]
-    node delay = intrinsic(circt_ltl_delay<delay = 1, length = 0> : UInt<1>, UInt<1>(0h1)) @[src/main/scala/Frontend/BP/PC_gen.scala 171:53]
-    node concat = intrinsic(circt_ltl_concat : UInt<1>, _T_13, delay) @[src/main/scala/Frontend/BP/PC_gen.scala 171:53]
-    node implication = intrinsic(circt_ltl_implication : UInt<1>, concat, _T_17) @[src/main/scala/Frontend/BP/PC_gen.scala 171:53]
+            connect PC_next.bits.addr, PC @[src/main/scala/Frontend/BP/PC_gen.scala 120:31]
+            node _PC_next_valid_T_6 = eq(flush, UInt<1>(0h0)) @[src/main/scala/Frontend/BP/PC_gen.scala 121:41]
+            node _PC_next_valid_T_7 = and(UInt<1>(0h1), _PC_next_valid_T_6) @[src/main/scala/Frontend/BP/PC_gen.scala 121:38]
+            connect PC_next.valid, _PC_next_valid_T_7 @[src/main/scala/Frontend/BP/PC_gen.scala 121:31]
+    connect PC_next.ready, io.PC_next.ready @[src/main/scala/Frontend/BP/PC_gen.scala 125:19]
+    inst PC_next_skid_buffer of Queue1_memory_request @[src/main/scala/Frontend/BP/PC_gen.scala 131:38]
+    connect PC_next_skid_buffer.clock, clock
+    connect PC_next_skid_buffer.reset, reset
+    connect PC_next_skid_buffer.io.enq, PC_next @[src/main/scala/Frontend/BP/PC_gen.scala 133:32]
+    connect io.PC_next.bits, PC_next_skid_buffer.io.deq.bits @[src/main/scala/Frontend/BP/PC_gen.scala 134:32]
+    connect io.PC_next.valid, PC_next_skid_buffer.io.deq.valid @[src/main/scala/Frontend/BP/PC_gen.scala 134:32]
+    connect PC_next_skid_buffer.io.deq.ready, io.PC_next.ready @[src/main/scala/Frontend/BP/PC_gen.scala 134:32]
+    node _io_PC_next_valid_T = eq(flush, UInt<1>(0h0)) @[src/main/scala/Frontend/BP/PC_gen.scala 135:61]
+    node _io_PC_next_valid_T_1 = and(PC_next_skid_buffer.io.deq.valid, _io_PC_next_valid_T) @[src/main/scala/Frontend/BP/PC_gen.scala 135:58]
+    connect io.PC_next.valid, _io_PC_next_valid_T_1 @[src/main/scala/Frontend/BP/PC_gen.scala 135:22]
+    connect io.prediction.ready, io.PC_next.ready @[src/main/scala/Frontend/BP/PC_gen.scala 140:25]
+    node _T_1 = eq(io.commit.valid, UInt<1>(0h0)) @[src/main/scala/Frontend/BP/PC_gen.scala 148:59]
+    node _T_2 = and(io.PC_next.ready, _T_1) @[src/main/scala/Frontend/BP/PC_gen.scala 148:56]
+    node _T_3 = eq(io.revert.valid, UInt<1>(0h0)) @[src/main/scala/Frontend/BP/PC_gen.scala 148:79]
+    node _T_4 = and(_T_2, _T_3) @[src/main/scala/Frontend/BP/PC_gen.scala 148:76]
+    node _T_5 = eq(io.prediction.valid, UInt<1>(0h0)) @[src/main/scala/Frontend/BP/PC_gen.scala 148:99]
+    node _T_6 = and(_T_4, _T_5) @[src/main/scala/Frontend/BP/PC_gen.scala 148:96]
+    node _T_7 = and(io.PC_next.bits.addr, UInt<32>(0hfffffff0)) @[src/main/scala/Frontend/BP/PC_gen.scala 149:94]
+    reg REG : UInt, clock @[src/main/scala/Frontend/BP/PC_gen.scala 149:72]
+    connect REG, _T_7 @[src/main/scala/Frontend/BP/PC_gen.scala 149:72]
+    node _T_8 = add(REG, UInt<5>(0h10)) @[src/main/scala/Frontend/BP/PC_gen.scala 149:112]
+    node _T_9 = tail(_T_8, 1) @[src/main/scala/Frontend/BP/PC_gen.scala 149:112]
+    node _T_10 = eq(io.PC_next.bits.addr, _T_9) @[src/main/scala/Frontend/BP/PC_gen.scala 149:60]
+    node implication = intrinsic(circt_ltl_implication : UInt<1>, _T_6, _T_10) @[src/main/scala/Frontend/BP/PC_gen.scala 150:49]
+    node _T_11 = eq(io.commit.valid, UInt<1>(0h0)) @[src/main/scala/Frontend/BP/PC_gen.scala 154:64]
+    node _T_12 = and(io.PC_next.ready, _T_11) @[src/main/scala/Frontend/BP/PC_gen.scala 154:61]
+    node _T_13 = eq(io.revert.valid, UInt<1>(0h0)) @[src/main/scala/Frontend/BP/PC_gen.scala 154:84]
+    node _T_14 = and(_T_12, _T_13) @[src/main/scala/Frontend/BP/PC_gen.scala 154:81]
+    node _T_15 = and(_T_14, io.prediction.valid) @[src/main/scala/Frontend/BP/PC_gen.scala 154:101]
+    node _T_16 = eq(io.prediction.bits.br_type, UInt<3>(0h4)) @[src/main/scala/Frontend/BP/PC_gen.scala 154:155]
+    node _T_17 = and(_T_15, _T_16) @[src/main/scala/Frontend/BP/PC_gen.scala 154:124]
+    node _T_18 = eq(io.PC_next.bits.addr, io.RAS_read.ret_addr) @[src/main/scala/Frontend/BP/PC_gen.scala 155:65]
+    node implication_1 = intrinsic(circt_ltl_implication : UInt<1>, _T_17, _T_18) @[src/main/scala/Frontend/BP/PC_gen.scala 156:52]
+    node _T_19 = eq(io.commit.valid, UInt<1>(0h0)) @[src/main/scala/Frontend/BP/PC_gen.scala 159:67]
+    node _T_20 = and(io.PC_next.ready, _T_19) @[src/main/scala/Frontend/BP/PC_gen.scala 159:64]
+    node _T_21 = and(_T_20, io.revert.valid) @[src/main/scala/Frontend/BP/PC_gen.scala 159:84]
+    node _T_22 = eq(io.prediction.valid, UInt<1>(0h0)) @[src/main/scala/Frontend/BP/PC_gen.scala 159:106]
+    node _T_23 = and(_T_21, _T_22) @[src/main/scala/Frontend/BP/PC_gen.scala 159:103]
+    node _T_24 = eq(io.PC_next.bits.addr, io.RAS_read.ret_addr) @[src/main/scala/Frontend/BP/PC_gen.scala 160:68]
+    node implication_2 = intrinsic(circt_ltl_implication : UInt<1>, _T_23, _T_24) @[src/main/scala/Frontend/BP/PC_gen.scala 161:58]
+    node _T_25 = and(io.commit.valid, io.commit.bits.is_misprediction) @[src/main/scala/Frontend/BP/PC_gen.scala 168:62]
+    node _T_26 = eq(io.PC_next.valid, UInt<1>(0h0)) @[src/main/scala/Frontend/BP/PC_gen.scala 169:63]
+    node implication_3 = intrinsic(circt_ltl_implication : UInt<1>, _T_25, _T_26) @[src/main/scala/Frontend/BP/PC_gen.scala 170:56]
     node has_been_reset = intrinsic(circt_has_been_reset : UInt<1>, clock, reset) @[src/main/scala/chisel3/ltl/LTL.scala 422:39]
     node disable = eq(has_been_reset, UInt<1>(0h0)) @[src/main/scala/chisel3/ltl/LTL.scala 422:39]
     node disable_1 = intrinsic(circt_ltl_disable : UInt<1>, implication, disable) @[src/main/scala/Frontend/BP/PC_gen.scala 173:19]
@@ -15264,22 +15327,48 @@ circuit ChaosCore :%[[
     intrinsic(circt_verif_assert, clock_1) @[src/main/scala/Frontend/BP/PC_gen.scala 173:19]
     node has_been_reset_1 = intrinsic(circt_has_been_reset : UInt<1>, clock, reset) @[src/main/scala/chisel3/ltl/LTL.scala 422:39]
     node disable_2 = eq(has_been_reset_1, UInt<1>(0h0)) @[src/main/scala/chisel3/ltl/LTL.scala 422:39]
-    node disable_3 = intrinsic(circt_ltl_disable : UInt<1>, implication, disable_2) @[src/main/scala/Frontend/BP/PC_gen.scala 175:18]
-    node clock_2 = intrinsic(circt_ltl_clock : UInt<1>, disable_3, clock) @[src/main/scala/Frontend/BP/PC_gen.scala 175:18]
-    intrinsic(circt_verif_cover, clock_2) @[src/main/scala/Frontend/BP/PC_gen.scala 175:18]
-    node _T_18 = eq(io.commit.valid, UInt<1>(0h0)) @[src/main/scala/Frontend/BP/PC_gen.scala 181:50]
-    node _T_19 = eq(io.revert.valid, UInt<1>(0h0)) @[src/main/scala/Frontend/BP/PC_gen.scala 182:50]
-    node _T_20 = eq(io.prediction.valid, UInt<1>(0h0)) @[src/main/scala/Frontend/BP/PC_gen.scala 183:58]
+    node disable_3 = intrinsic(circt_ltl_disable : UInt<1>, implication_1, disable_2) @[src/main/scala/Frontend/BP/PC_gen.scala 174:19]
+    node clock_2 = intrinsic(circt_ltl_clock : UInt<1>, disable_3, clock) @[src/main/scala/Frontend/BP/PC_gen.scala 174:19]
+    intrinsic(circt_verif_assert, clock_2) @[src/main/scala/Frontend/BP/PC_gen.scala 174:19]
     node has_been_reset_2 = intrinsic(circt_has_been_reset : UInt<1>, clock, reset) @[src/main/scala/chisel3/ltl/LTL.scala 422:39]
     node disable_4 = eq(has_been_reset_2, UInt<1>(0h0)) @[src/main/scala/chisel3/ltl/LTL.scala 422:39]
-    node disable_5 = intrinsic(circt_ltl_disable : UInt<1>, _T_18, disable_4) @[src/main/scala/Frontend/BP/PC_gen.scala 184:19]
-    node clock_3 = intrinsic(circt_ltl_clock : UInt<1>, disable_5, clock) @[src/main/scala/Frontend/BP/PC_gen.scala 184:19]
-    intrinsic(circt_verif_assume, clock_3) @[src/main/scala/Frontend/BP/PC_gen.scala 184:19]
+    node disable_5 = intrinsic(circt_ltl_disable : UInt<1>, implication_2, disable_4) @[src/main/scala/Frontend/BP/PC_gen.scala 175:19]
+    node clock_3 = intrinsic(circt_ltl_clock : UInt<1>, disable_5, clock) @[src/main/scala/Frontend/BP/PC_gen.scala 175:19]
+    intrinsic(circt_verif_assert, clock_3) @[src/main/scala/Frontend/BP/PC_gen.scala 175:19]
     node has_been_reset_3 = intrinsic(circt_has_been_reset : UInt<1>, clock, reset) @[src/main/scala/chisel3/ltl/LTL.scala 422:39]
     node disable_6 = eq(has_been_reset_3, UInt<1>(0h0)) @[src/main/scala/chisel3/ltl/LTL.scala 422:39]
-    node disable_7 = intrinsic(circt_ltl_disable : UInt<1>, _T_19, disable_6) @[src/main/scala/Frontend/BP/PC_gen.scala 185:19]
-    node clock_4 = intrinsic(circt_ltl_clock : UInt<1>, disable_7, clock) @[src/main/scala/Frontend/BP/PC_gen.scala 185:19]
-    intrinsic(circt_verif_assume, clock_4) @[src/main/scala/Frontend/BP/PC_gen.scala 185:19]
+    node disable_7 = intrinsic(circt_ltl_disable : UInt<1>, implication_3, disable_6) @[src/main/scala/Frontend/BP/PC_gen.scala 176:19]
+    node clock_4 = intrinsic(circt_ltl_clock : UInt<1>, disable_7, clock) @[src/main/scala/Frontend/BP/PC_gen.scala 176:19]
+    intrinsic(circt_verif_assert, clock_4) @[src/main/scala/Frontend/BP/PC_gen.scala 176:19]
+    node has_been_reset_4 = intrinsic(circt_has_been_reset : UInt<1>, clock, reset) @[src/main/scala/chisel3/ltl/LTL.scala 422:39]
+    node disable_8 = eq(has_been_reset_4, UInt<1>(0h0)) @[src/main/scala/chisel3/ltl/LTL.scala 422:39]
+    node disable_9 = intrinsic(circt_ltl_disable : UInt<1>, implication, disable_8) @[src/main/scala/Frontend/BP/PC_gen.scala 179:18]
+    node clock_5 = intrinsic(circt_ltl_clock : UInt<1>, disable_9, clock) @[src/main/scala/Frontend/BP/PC_gen.scala 179:18]
+    intrinsic(circt_verif_cover, clock_5) @[src/main/scala/Frontend/BP/PC_gen.scala 179:18]
+    node has_been_reset_5 = intrinsic(circt_has_been_reset : UInt<1>, clock, reset) @[src/main/scala/chisel3/ltl/LTL.scala 422:39]
+    node disable_10 = eq(has_been_reset_5, UInt<1>(0h0)) @[src/main/scala/chisel3/ltl/LTL.scala 422:39]
+    node disable_11 = intrinsic(circt_ltl_disable : UInt<1>, implication_1, disable_10) @[src/main/scala/Frontend/BP/PC_gen.scala 180:18]
+    node clock_6 = intrinsic(circt_ltl_clock : UInt<1>, disable_11, clock) @[src/main/scala/Frontend/BP/PC_gen.scala 180:18]
+    intrinsic(circt_verif_cover, clock_6) @[src/main/scala/Frontend/BP/PC_gen.scala 180:18]
+    node has_been_reset_6 = intrinsic(circt_has_been_reset : UInt<1>, clock, reset) @[src/main/scala/chisel3/ltl/LTL.scala 422:39]
+    node disable_12 = eq(has_been_reset_6, UInt<1>(0h0)) @[src/main/scala/chisel3/ltl/LTL.scala 422:39]
+    node disable_13 = intrinsic(circt_ltl_disable : UInt<1>, implication_2, disable_12) @[src/main/scala/Frontend/BP/PC_gen.scala 181:18]
+    node clock_7 = intrinsic(circt_ltl_clock : UInt<1>, disable_13, clock) @[src/main/scala/Frontend/BP/PC_gen.scala 181:18]
+    intrinsic(circt_verif_cover, clock_7) @[src/main/scala/Frontend/BP/PC_gen.scala 181:18]
+    node has_been_reset_7 = intrinsic(circt_has_been_reset : UInt<1>, clock, reset) @[src/main/scala/chisel3/ltl/LTL.scala 422:39]
+    node disable_14 = eq(has_been_reset_7, UInt<1>(0h0)) @[src/main/scala/chisel3/ltl/LTL.scala 422:39]
+    node disable_15 = intrinsic(circt_ltl_disable : UInt<1>, implication_3, disable_14) @[src/main/scala/Frontend/BP/PC_gen.scala 182:18]
+    node clock_8 = intrinsic(circt_ltl_clock : UInt<1>, disable_15, clock) @[src/main/scala/Frontend/BP/PC_gen.scala 182:18]
+    intrinsic(circt_verif_cover, clock_8) @[src/main/scala/Frontend/BP/PC_gen.scala 182:18]
+    node _T_27 = eq(io.commit.valid, UInt<1>(0h0)) @[src/main/scala/Frontend/BP/PC_gen.scala 190:55]
+    node _T_28 = eq(io.revert.valid, UInt<1>(0h0)) @[src/main/scala/Frontend/BP/PC_gen.scala 191:55]
+    node _T_29 = eq(io.prediction.valid, UInt<1>(0h0)) @[src/main/scala/Frontend/BP/PC_gen.scala 192:59]
+    node _T_30 = eq(io.PC_next.ready, UInt<1>(0h0)) @[src/main/scala/Frontend/BP/PC_gen.scala 193:56]
+    node has_been_reset_8 = intrinsic(circt_has_been_reset : UInt<1>, clock, reset) @[src/main/scala/chisel3/ltl/LTL.scala 422:39]
+    node disable_16 = eq(has_been_reset_8, UInt<1>(0h0)) @[src/main/scala/chisel3/ltl/LTL.scala 422:39]
+    node disable_17 = intrinsic(circt_ltl_disable : UInt<1>, _T_30, disable_16) @[src/main/scala/Frontend/BP/PC_gen.scala 197:19]
+    node clock_9 = intrinsic(circt_ltl_clock : UInt<1>, disable_17, clock) @[src/main/scala/Frontend/BP/PC_gen.scala 197:19]
+    intrinsic(circt_verif_assume, clock_9) @[src/main/scala/Frontend/BP/PC_gen.scala 197:19]
 
   module Queue16_fetch_packet : @[src/main/scala/chisel3/util/Decoupled.scala 243:7]
     input clock : Clock @[src/main/scala/chisel3/util/Decoupled.scala 243:7]
@@ -19577,7 +19666,7 @@ circuit ChaosCore :%[[
   module rename : @[src/main/scala/Frontend/rename.scala 234:7]
     input clock : Clock @[src/main/scala/Frontend/rename.scala 234:7]
     input reset : Reset @[src/main/scala/Frontend/rename.scala 234:7]
-    output io : { flip flush : UInt<1>, flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RD : UInt<7>[4], RD_valid : UInt<1>[4]}}, flip predictions_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { valid : UInt<1>, fetch_PC : UInt<32>, is_misprediction : UInt<1>, predicted_PC : UInt<32>, T_NT : UInt<1>, br_type : UInt<3>, GHR : UInt<16>, NEXT : UInt<7>, TOS : UInt<7>, dominant_index : UInt<2>, resolved_PC : UInt<32>}}, predictions_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { valid : UInt<1>, fetch_PC : UInt<32>, is_misprediction : UInt<1>, predicted_PC : UInt<32>, T_NT : UInt<1>, br_type : UInt<3>, GHR : UInt<16>, NEXT : UInt<7>, TOS : UInt<7>, dominant_index : UInt<2>, resolved_PC : UInt<32>}}, flip decoded_fetch_packet : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}[4], valid_bits : UInt<1>[4], RAT_index : UInt<4>, free_list_front_pointer : UInt<8>}}, flip FU_outputs : { valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>}}[4], renamed_decoded_fetch_packet : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}[4], valid_bits : UInt<1>[4], RAT_index : UInt<4>, free_list_front_pointer : UInt<8>}}} @[src/main/scala/Frontend/rename.scala 247:16]
+    output io : { flip flush : UInt<1>, flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RD : UInt<7>[4], RD_valid : UInt<1>[4]}}, flip predictions_in : { flip ready : UInt<1>, valid : UInt<1>, bits : { valid : UInt<1>, fetch_PC : UInt<32>, is_misprediction : UInt<1>, predicted_PC : UInt<32>, T_NT : UInt<1>, br_type : UInt<3>, GHR : UInt<16>, NEXT : UInt<7>, TOS : UInt<7>, dominant_index : UInt<2>, resolved_PC : UInt<32>}}, predictions_out : { flip ready : UInt<1>, valid : UInt<1>, bits : { valid : UInt<1>, fetch_PC : UInt<32>, is_misprediction : UInt<1>, predicted_PC : UInt<32>, T_NT : UInt<1>, br_type : UInt<3>, GHR : UInt<16>, NEXT : UInt<7>, TOS : UInt<7>, dominant_index : UInt<2>, resolved_PC : UInt<32>}}, flip decoded_fetch_packet : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}[4], valid_bits : UInt<1>[4], RAT_index : UInt<4>, free_list_front_pointer : UInt<8>}}, flip FU_outputs : { valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>}}[4], renamed_decoded_fetch_packet : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}[4], valid_bits : UInt<1>[4], RAT_index : UInt<4>, free_list_front_pointer : UInt<8>}}} @[src/main/scala/Frontend/rename.scala 247:16]
 
     wire fire : UInt<1> @[src/main/scala/Frontend/rename.scala 273:20]
     node _fire_T = and(io.decoded_fetch_packet.ready, io.decoded_fetch_packet.valid) @[src/main/scala/chisel3/util/Decoupled.scala 51:35]
@@ -20189,7 +20278,7 @@ circuit ChaosCore :%[[
   module frontend : @[src/main/scala/Frontend/frontend.scala 36:7]
     input clock : Clock @[src/main/scala/Frontend/frontend.scala 36:7]
     input reset : Reset @[src/main/scala/Frontend/frontend.scala 36:7]
-    output io : { flip flush : UInt<1>, memory_request : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, wr_data : UInt<32>, wr_en : UInt<1>}}, flip memory_response : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, valid_bits : UInt<1>[4], instructions : { instruction : UInt<32>, packet_index : UInt<4>, ROB_index : UInt<6>}[4]}}, flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RD : UInt<7>[4], RD_valid : UInt<1>[4]}}, predictions : { flip ready : UInt<1>, valid : UInt<1>, bits : { valid : UInt<1>, fetch_PC : UInt<32>, is_misprediction : UInt<1>, predicted_PC : UInt<32>, T_NT : UInt<1>, br_type : UInt<3>, GHR : UInt<16>, NEXT : UInt<7>, TOS : UInt<7>, dominant_index : UInt<2>, resolved_PC : UInt<32>}}, renamed_decoded_fetch_packet : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}[4], valid_bits : UInt<1>[4], RAT_index : UInt<4>, free_list_front_pointer : UInt<8>}}, flip FU_outputs : { valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>}}[4], revert : { valid : UInt<1>, bits : { PC : UInt<32>}}} @[src/main/scala/Frontend/frontend.scala 45:16]
+    output io : { flip flush : UInt<1>, memory_request : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, wr_data : UInt<32>, wr_en : UInt<1>}}, flip memory_response : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, valid_bits : UInt<1>[4], instructions : { instruction : UInt<32>, packet_index : UInt<4>, ROB_index : UInt<6>}[4]}}, flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RD : UInt<7>[4], RD_valid : UInt<1>[4]}}, predictions : { flip ready : UInt<1>, valid : UInt<1>, bits : { valid : UInt<1>, fetch_PC : UInt<32>, is_misprediction : UInt<1>, predicted_PC : UInt<32>, T_NT : UInt<1>, br_type : UInt<3>, GHR : UInt<16>, NEXT : UInt<7>, TOS : UInt<7>, dominant_index : UInt<2>, resolved_PC : UInt<32>}}, renamed_decoded_fetch_packet : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}[4], valid_bits : UInt<1>[4], RAT_index : UInt<4>, free_list_front_pointer : UInt<8>}}, flip FU_outputs : { valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>}}[4], revert : { valid : UInt<1>, bits : { PC : UInt<32>}}} @[src/main/scala/Frontend/frontend.scala 45:16]
 
     inst instruction_fetch of instruction_fetch @[src/main/scala/Frontend/frontend.scala 76:37]
     connect instruction_fetch.clock, clock
@@ -20246,7 +20335,7 @@ circuit ChaosCore :%[[
   module RS : @[src/main/scala/Backend/RS.scala 43:7]
     input clock : Clock @[src/main/scala/Backend/RS.scala 43:7]
     input reset : Reset @[src/main/scala/Backend/RS.scala 43:7]
-    output io : { flip flush : UInt<1>, flip backend_packet : { flip ready : UInt<1>, valid : UInt<1>, bits : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}}[4], flip FU_outputs : { valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>}}[4], flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RD : UInt<7>[4], RD_valid : UInt<1>[4]}}, RF_inputs : { flip ready : UInt<1>, valid : UInt<1>, bits : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}}[3]} @[src/main/scala/Backend/RS.scala 49:16]
+    output io : { flip flush : UInt<1>, flip backend_packet : { flip ready : UInt<1>, valid : UInt<1>, bits : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}}[4], flip FU_outputs : { valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>}}[4], flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RD : UInt<7>[4], RD_valid : UInt<1>[4]}}, RF_inputs : { flip ready : UInt<1>, valid : UInt<1>, bits : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}}[3]} @[src/main/scala/Backend/RS.scala 49:16]
 
     wire _reservation_station_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, valid : UInt<1>} @[src/main/scala/Backend/RS.scala 77:79]
     connect _reservation_station_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Backend/RS.scala 77:79]
@@ -22730,7 +22819,7 @@ circuit ChaosCore :%[[
   module MEMRS : @[src/main/scala/Memory/MEMRS.scala 40:7]
     input clock : Clock @[src/main/scala/Memory/MEMRS.scala 40:7]
     input reset : Reset @[src/main/scala/Memory/MEMRS.scala 40:7]
-    output io : { flip flush : UInt<1>, flip backend_packet : { flip ready : UInt<1>, valid : UInt<1>, bits : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}}[4], flip fetch_PC : UInt<32>, flip FU_outputs : { valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>}}[4], flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RD : UInt<7>[4], RD_valid : UInt<1>[4]}}, RF_inputs : { flip ready : UInt<1>, valid : UInt<1>, bits : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}}[4]} @[src/main/scala/Memory/MEMRS.scala 47:16]
+    output io : { flip flush : UInt<1>, flip backend_packet : { flip ready : UInt<1>, valid : UInt<1>, bits : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}}[4], flip fetch_PC : UInt<32>, flip FU_outputs : { valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>}}[4], flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RD : UInt<7>[4], RD_valid : UInt<1>[4]}}, RF_inputs : { flip ready : UInt<1>, valid : UInt<1>, bits : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}}[4]} @[src/main/scala/Memory/MEMRS.scala 47:16]
 
     wire _reservation_station_WIRE : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, fetch_PC : UInt<32>, committed : UInt<1>, valid : UInt<1>} @[src/main/scala/Memory/MEMRS.scala 68:79]
     connect _reservation_station_WIRE.valid, UInt<1>(0h0) @[src/main/scala/Memory/MEMRS.scala 68:79]
@@ -24711,7 +24800,7 @@ circuit ChaosCore :%[[
   module MOB : @[src/main/scala/Memory/MOB.scala 42:7]
     input clock : Clock @[src/main/scala/Memory/MOB.scala 42:7]
     input reset : Reset @[src/main/scala/Memory/MOB.scala 42:7]
-    output io : { flip flush : UInt<1>, flip reserve : { flip ready : UInt<1>, valid : UInt<1>, bits : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}}[4], reserved_pointers : { valid : UInt<1>, bits : UInt<4>}[4], flip fetch_PC : UInt<32>, flip AGU_output : { valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>}}, MOB_output : { valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>}}, flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RD : UInt<7>[4], RD_valid : UInt<1>[4]}}, backend_memory_request : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, data : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, MOB_index : UInt<4>}}, flip backend_memory_response : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, data : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, MOB_index : UInt<4>}}} @[src/main/scala/Memory/MOB.scala 49:16]
+    output io : { flip flush : UInt<1>, flip reserve : { flip ready : UInt<1>, valid : UInt<1>, bits : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}}[4], reserved_pointers : { valid : UInt<1>, bits : UInt<4>}[4], flip fetch_PC : UInt<32>, flip AGU_output : { valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>}}, MOB_output : { valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>}}, flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RD : UInt<7>[4], RD_valid : UInt<1>[4]}}, backend_memory_request : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, data : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, MOB_index : UInt<4>}}, flip backend_memory_response : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, data : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, MOB_index : UInt<4>}}} @[src/main/scala/Memory/MOB.scala 49:16]
 
     regreset front_pointer : UInt<5>, clock, reset, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 77:34]
     regreset back_pointer : UInt<5>, clock, reset, UInt<1>(0h0) @[src/main/scala/Memory/MOB.scala 78:34]
@@ -27647,7 +27736,7 @@ circuit ChaosCore :%[[
     invalidate io.MOB_output.bits.ROB_index @[src/main/scala/Memory/MOB.scala 290:33]
     invalidate io.MOB_output.bits.MOB_index @[src/main/scala/Memory/MOB.scala 290:33]
     invalidate io.MOB_output.bits.wr_data @[src/main/scala/Memory/MOB.scala 290:33]
-    invalidate io.MOB_output.bits.unsigned @[src/main/scala/Memory/MOB.scala 290:33]
+    invalidate io.MOB_output.bits.is_unsigned @[src/main/scala/Memory/MOB.scala 290:33]
     invalidate io.MOB_output.bits.access_width @[src/main/scala/Memory/MOB.scala 290:33]
     invalidate io.MOB_output.bits.memory_type @[src/main/scala/Memory/MOB.scala 290:33]
     invalidate io.MOB_output.bits.address @[src/main/scala/Memory/MOB.scala 290:33]
@@ -28078,7 +28167,7 @@ circuit ChaosCore :%[[
   module ALU : @[src/main/scala/Backend/FU.scala 38:7]
     input clock : Clock @[src/main/scala/Backend/FU.scala 38:7]
     input reset : Reset @[src/main/scala/Backend/FU.scala 38:7]
-    output io : { flip flush : UInt<1>, flip FU_input : { flip ready : UInt<1>, valid : UInt<1>, bits : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, RS1_data : UInt<32>, RS2_data : UInt<32>, fetch_PC : UInt<32>}}, FU_output : { valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>}}} @[src/main/scala/Backend/FU.scala 42:16]
+    output io : { flip flush : UInt<1>, flip FU_input : { flip ready : UInt<1>, valid : UInt<1>, bits : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, RS1_data : UInt<32>, RS2_data : UInt<32>, fetch_PC : UInt<32>}}, FU_output : { valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>}}} @[src/main/scala/Backend/FU.scala 42:16]
 
     node _instruction_PC_T = mul(io.FU_input.bits.decoded_instruction.packet_index, UInt<3>(0h4)) @[src/main/scala/Backend/FU.scala 59:112]
     node _instruction_PC_T_1 = add(io.FU_input.bits.fetch_PC, _instruction_PC_T) @[src/main/scala/Backend/FU.scala 59:59]
@@ -28331,7 +28420,7 @@ circuit ChaosCore :%[[
     invalidate io.FU_output.bits.address @[src/main/scala/Backend/FU.scala 228:43]
     invalidate io.FU_output.bits.memory_type @[src/main/scala/Backend/FU.scala 229:43]
     invalidate io.FU_output.bits.access_width @[src/main/scala/Backend/FU.scala 230:43]
-    invalidate io.FU_output.bits.unsigned @[src/main/scala/Backend/FU.scala 231:43]
+    invalidate io.FU_output.bits.is_unsigned @[src/main/scala/Backend/FU.scala 231:46]
     invalidate io.FU_output.bits.wr_data @[src/main/scala/Backend/FU.scala 232:43]
     reg io_FU_output_bits_ROB_index_REG : UInt, clock @[src/main/scala/Backend/FU.scala 236:46]
     connect io_FU_output_bits_ROB_index_REG, io.FU_input.bits.decoded_instruction.ROB_index @[src/main/scala/Backend/FU.scala 236:46]
@@ -28345,7 +28434,7 @@ circuit ChaosCore :%[[
   module branch_unit : @[src/main/scala/Backend/FU.scala 242:7]
     input clock : Clock @[src/main/scala/Backend/FU.scala 242:7]
     input reset : Reset @[src/main/scala/Backend/FU.scala 242:7]
-    output io : { flip flush : UInt<1>, flip FU_input : { flip ready : UInt<1>, valid : UInt<1>, bits : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, RS1_data : UInt<32>, RS2_data : UInt<32>, fetch_PC : UInt<32>}}, FU_output : { valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>}}} @[src/main/scala/Backend/FU.scala 245:16]
+    output io : { flip flush : UInt<1>, flip FU_input : { flip ready : UInt<1>, valid : UInt<1>, bits : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, RS1_data : UInt<32>, RS2_data : UInt<32>, fetch_PC : UInt<32>}}, FU_output : { valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>}}} @[src/main/scala/Backend/FU.scala 245:16]
 
     wire IMM : UInt<32> @[src/main/scala/Backend/FU.scala 259:29]
     wire instruction_PC : UInt<32> @[src/main/scala/Backend/FU.scala 261:36]
@@ -28528,7 +28617,7 @@ circuit ChaosCore :%[[
     invalidate io.FU_output.bits.address @[src/main/scala/Backend/FU.scala 370:43]
     invalidate io.FU_output.bits.memory_type @[src/main/scala/Backend/FU.scala 371:43]
     invalidate io.FU_output.bits.access_width @[src/main/scala/Backend/FU.scala 372:43]
-    invalidate io.FU_output.bits.unsigned @[src/main/scala/Backend/FU.scala 373:43]
+    invalidate io.FU_output.bits.is_unsigned @[src/main/scala/Backend/FU.scala 373:46]
     invalidate io.FU_output.bits.wr_data @[src/main/scala/Backend/FU.scala 374:43]
     node _io_FU_output_valid_T = eq(io.flush, UInt<1>(0h0)) @[src/main/scala/Backend/FU.scala 377:78]
     node _io_FU_output_valid_T_1 = and(io.FU_input.valid, _io_FU_output_valid_T) @[src/main/scala/Backend/FU.scala 377:75]
@@ -28539,7 +28628,7 @@ circuit ChaosCore :%[[
   module FU : @[src/main/scala/Backend/FU.scala 384:7]
     input clock : Clock @[src/main/scala/Backend/FU.scala 384:7]
     input reset : Reset @[src/main/scala/Backend/FU.scala 384:7]
-    output io : { flip flush : UInt<1>, flip FU_input : { flip ready : UInt<1>, valid : UInt<1>, bits : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, RS1_data : UInt<32>, RS2_data : UInt<32>, fetch_PC : UInt<32>}}, FU_output : { valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>}}} @[src/main/scala/Backend/FU.scala 391:16]
+    output io : { flip flush : UInt<1>, flip FU_input : { flip ready : UInt<1>, valid : UInt<1>, bits : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, RS1_data : UInt<32>, RS2_data : UInt<32>, fetch_PC : UInt<32>}}, FU_output : { valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>}}} @[src/main/scala/Backend/FU.scala 391:16]
 
     node is_ALU = and(io.FU_input.bits.decoded_instruction.needs_ALU, io.FU_input.valid) @[src/main/scala/Backend/FU.scala 406:66]
     node is_CTRL = and(io.FU_input.bits.decoded_instruction.needs_branch_unit, io.FU_input.valid) @[src/main/scala/Backend/FU.scala 407:74]
@@ -28558,7 +28647,7 @@ circuit ChaosCore :%[[
     invalidate io.FU_output.bits.ROB_index @[src/main/scala/Backend/FU.scala 424:18]
     invalidate io.FU_output.bits.MOB_index @[src/main/scala/Backend/FU.scala 424:18]
     invalidate io.FU_output.bits.wr_data @[src/main/scala/Backend/FU.scala 424:18]
-    invalidate io.FU_output.bits.unsigned @[src/main/scala/Backend/FU.scala 424:18]
+    invalidate io.FU_output.bits.is_unsigned @[src/main/scala/Backend/FU.scala 424:18]
     invalidate io.FU_output.bits.access_width @[src/main/scala/Backend/FU.scala 424:18]
     invalidate io.FU_output.bits.memory_type @[src/main/scala/Backend/FU.scala 424:18]
     invalidate io.FU_output.bits.address @[src/main/scala/Backend/FU.scala 424:18]
@@ -28586,7 +28675,7 @@ circuit ChaosCore :%[[
   module ALU_1 : @[src/main/scala/Backend/FU.scala 38:7]
     input clock : Clock @[src/main/scala/Backend/FU.scala 38:7]
     input reset : Reset @[src/main/scala/Backend/FU.scala 38:7]
-    output io : { flip flush : UInt<1>, flip FU_input : { flip ready : UInt<1>, valid : UInt<1>, bits : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, RS1_data : UInt<32>, RS2_data : UInt<32>, fetch_PC : UInt<32>}}, FU_output : { valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>}}} @[src/main/scala/Backend/FU.scala 42:16]
+    output io : { flip flush : UInt<1>, flip FU_input : { flip ready : UInt<1>, valid : UInt<1>, bits : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, RS1_data : UInt<32>, RS2_data : UInt<32>, fetch_PC : UInt<32>}}, FU_output : { valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>}}} @[src/main/scala/Backend/FU.scala 42:16]
 
     node _instruction_PC_T = mul(io.FU_input.bits.decoded_instruction.packet_index, UInt<3>(0h4)) @[src/main/scala/Backend/FU.scala 59:112]
     node _instruction_PC_T_1 = add(io.FU_input.bits.fetch_PC, _instruction_PC_T) @[src/main/scala/Backend/FU.scala 59:59]
@@ -28839,7 +28928,7 @@ circuit ChaosCore :%[[
     invalidate io.FU_output.bits.address @[src/main/scala/Backend/FU.scala 228:43]
     invalidate io.FU_output.bits.memory_type @[src/main/scala/Backend/FU.scala 229:43]
     invalidate io.FU_output.bits.access_width @[src/main/scala/Backend/FU.scala 230:43]
-    invalidate io.FU_output.bits.unsigned @[src/main/scala/Backend/FU.scala 231:43]
+    invalidate io.FU_output.bits.is_unsigned @[src/main/scala/Backend/FU.scala 231:46]
     invalidate io.FU_output.bits.wr_data @[src/main/scala/Backend/FU.scala 232:43]
     reg io_FU_output_bits_ROB_index_REG : UInt, clock @[src/main/scala/Backend/FU.scala 236:46]
     connect io_FU_output_bits_ROB_index_REG, io.FU_input.bits.decoded_instruction.ROB_index @[src/main/scala/Backend/FU.scala 236:46]
@@ -28853,7 +28942,7 @@ circuit ChaosCore :%[[
   module FU_1 : @[src/main/scala/Backend/FU.scala 384:7]
     input clock : Clock @[src/main/scala/Backend/FU.scala 384:7]
     input reset : Reset @[src/main/scala/Backend/FU.scala 384:7]
-    output io : { flip flush : UInt<1>, flip FU_input : { flip ready : UInt<1>, valid : UInt<1>, bits : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, RS1_data : UInt<32>, RS2_data : UInt<32>, fetch_PC : UInt<32>}}, FU_output : { valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>}}} @[src/main/scala/Backend/FU.scala 391:16]
+    output io : { flip flush : UInt<1>, flip FU_input : { flip ready : UInt<1>, valid : UInt<1>, bits : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, RS1_data : UInt<32>, RS2_data : UInt<32>, fetch_PC : UInt<32>}}, FU_output : { valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>}}} @[src/main/scala/Backend/FU.scala 391:16]
 
     node is_ALU = and(io.FU_input.bits.decoded_instruction.needs_ALU, io.FU_input.valid) @[src/main/scala/Backend/FU.scala 406:66]
     node is_CTRL = and(io.FU_input.bits.decoded_instruction.needs_branch_unit, io.FU_input.valid) @[src/main/scala/Backend/FU.scala 407:74]
@@ -28867,7 +28956,7 @@ circuit ChaosCore :%[[
     invalidate io.FU_output.bits.ROB_index @[src/main/scala/Backend/FU.scala 424:18]
     invalidate io.FU_output.bits.MOB_index @[src/main/scala/Backend/FU.scala 424:18]
     invalidate io.FU_output.bits.wr_data @[src/main/scala/Backend/FU.scala 424:18]
-    invalidate io.FU_output.bits.unsigned @[src/main/scala/Backend/FU.scala 424:18]
+    invalidate io.FU_output.bits.is_unsigned @[src/main/scala/Backend/FU.scala 424:18]
     invalidate io.FU_output.bits.access_width @[src/main/scala/Backend/FU.scala 424:18]
     invalidate io.FU_output.bits.memory_type @[src/main/scala/Backend/FU.scala 424:18]
     invalidate io.FU_output.bits.address @[src/main/scala/Backend/FU.scala 424:18]
@@ -28891,7 +28980,7 @@ circuit ChaosCore :%[[
   module ALU_2 : @[src/main/scala/Backend/FU.scala 38:7]
     input clock : Clock @[src/main/scala/Backend/FU.scala 38:7]
     input reset : Reset @[src/main/scala/Backend/FU.scala 38:7]
-    output io : { flip flush : UInt<1>, flip FU_input : { flip ready : UInt<1>, valid : UInt<1>, bits : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, RS1_data : UInt<32>, RS2_data : UInt<32>, fetch_PC : UInt<32>}}, FU_output : { valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>}}} @[src/main/scala/Backend/FU.scala 42:16]
+    output io : { flip flush : UInt<1>, flip FU_input : { flip ready : UInt<1>, valid : UInt<1>, bits : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, RS1_data : UInt<32>, RS2_data : UInt<32>, fetch_PC : UInt<32>}}, FU_output : { valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>}}} @[src/main/scala/Backend/FU.scala 42:16]
 
     node _instruction_PC_T = mul(io.FU_input.bits.decoded_instruction.packet_index, UInt<3>(0h4)) @[src/main/scala/Backend/FU.scala 59:112]
     node _instruction_PC_T_1 = add(io.FU_input.bits.fetch_PC, _instruction_PC_T) @[src/main/scala/Backend/FU.scala 59:59]
@@ -29144,7 +29233,7 @@ circuit ChaosCore :%[[
     invalidate io.FU_output.bits.address @[src/main/scala/Backend/FU.scala 228:43]
     invalidate io.FU_output.bits.memory_type @[src/main/scala/Backend/FU.scala 229:43]
     invalidate io.FU_output.bits.access_width @[src/main/scala/Backend/FU.scala 230:43]
-    invalidate io.FU_output.bits.unsigned @[src/main/scala/Backend/FU.scala 231:43]
+    invalidate io.FU_output.bits.is_unsigned @[src/main/scala/Backend/FU.scala 231:46]
     invalidate io.FU_output.bits.wr_data @[src/main/scala/Backend/FU.scala 232:43]
     reg io_FU_output_bits_ROB_index_REG : UInt, clock @[src/main/scala/Backend/FU.scala 236:46]
     connect io_FU_output_bits_ROB_index_REG, io.FU_input.bits.decoded_instruction.ROB_index @[src/main/scala/Backend/FU.scala 236:46]
@@ -29158,7 +29247,7 @@ circuit ChaosCore :%[[
   module FU_2 : @[src/main/scala/Backend/FU.scala 384:7]
     input clock : Clock @[src/main/scala/Backend/FU.scala 384:7]
     input reset : Reset @[src/main/scala/Backend/FU.scala 384:7]
-    output io : { flip flush : UInt<1>, flip FU_input : { flip ready : UInt<1>, valid : UInt<1>, bits : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, RS1_data : UInt<32>, RS2_data : UInt<32>, fetch_PC : UInt<32>}}, FU_output : { valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>}}} @[src/main/scala/Backend/FU.scala 391:16]
+    output io : { flip flush : UInt<1>, flip FU_input : { flip ready : UInt<1>, valid : UInt<1>, bits : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, RS1_data : UInt<32>, RS2_data : UInt<32>, fetch_PC : UInt<32>}}, FU_output : { valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>}}} @[src/main/scala/Backend/FU.scala 391:16]
 
     node is_ALU = and(io.FU_input.bits.decoded_instruction.needs_ALU, io.FU_input.valid) @[src/main/scala/Backend/FU.scala 406:66]
     node is_CTRL = and(io.FU_input.bits.decoded_instruction.needs_branch_unit, io.FU_input.valid) @[src/main/scala/Backend/FU.scala 407:74]
@@ -29172,7 +29261,7 @@ circuit ChaosCore :%[[
     invalidate io.FU_output.bits.ROB_index @[src/main/scala/Backend/FU.scala 424:18]
     invalidate io.FU_output.bits.MOB_index @[src/main/scala/Backend/FU.scala 424:18]
     invalidate io.FU_output.bits.wr_data @[src/main/scala/Backend/FU.scala 424:18]
-    invalidate io.FU_output.bits.unsigned @[src/main/scala/Backend/FU.scala 424:18]
+    invalidate io.FU_output.bits.is_unsigned @[src/main/scala/Backend/FU.scala 424:18]
     invalidate io.FU_output.bits.access_width @[src/main/scala/Backend/FU.scala 424:18]
     invalidate io.FU_output.bits.memory_type @[src/main/scala/Backend/FU.scala 424:18]
     invalidate io.FU_output.bits.address @[src/main/scala/Backend/FU.scala 424:18]
@@ -29196,15 +29285,15 @@ circuit ChaosCore :%[[
   module AGU : @[src/main/scala/Memory/AGU.scala 39:7]
     input clock : Clock @[src/main/scala/Memory/AGU.scala 39:7]
     input reset : Reset @[src/main/scala/Memory/AGU.scala 39:7]
-    output io : { flip flush : UInt<1>, flip FU_input : { flip ready : UInt<1>, valid : UInt<1>, bits : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, RS1_data : UInt<32>, RS2_data : UInt<32>, fetch_PC : UInt<32>}}, FU_output : { valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>}}} @[src/main/scala/Memory/AGU.scala 41:16]
+    output io : { flip flush : UInt<1>, flip FU_input : { flip ready : UInt<1>, valid : UInt<1>, bits : { decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}, RS1_data : UInt<32>, RS2_data : UInt<32>, fetch_PC : UInt<32>}}, FU_output : { valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>}}} @[src/main/scala/Memory/AGU.scala 41:16]
 
-    wire _io_FU_output_bits_WIRE : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>} @[src/main/scala/Memory/AGU.scala 52:38]
+    wire _io_FU_output_bits_WIRE : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>} @[src/main/scala/Memory/AGU.scala 52:38]
     connect _io_FU_output_bits_WIRE.fetch_packet_index, UInt<2>(0h0) @[src/main/scala/Memory/AGU.scala 52:38]
     connect _io_FU_output_bits_WIRE.FTQ_index, UInt<4>(0h0) @[src/main/scala/Memory/AGU.scala 52:38]
     connect _io_FU_output_bits_WIRE.ROB_index, UInt<6>(0h0) @[src/main/scala/Memory/AGU.scala 52:38]
     connect _io_FU_output_bits_WIRE.MOB_index, UInt<4>(0h0) @[src/main/scala/Memory/AGU.scala 52:38]
     connect _io_FU_output_bits_WIRE.wr_data, UInt<32>(0h0) @[src/main/scala/Memory/AGU.scala 52:38]
-    connect _io_FU_output_bits_WIRE.unsigned, UInt<1>(0h0) @[src/main/scala/Memory/AGU.scala 52:38]
+    connect _io_FU_output_bits_WIRE.is_unsigned, UInt<1>(0h0) @[src/main/scala/Memory/AGU.scala 52:38]
     connect _io_FU_output_bits_WIRE.access_width, UInt<1>(0h0) @[src/main/scala/Memory/AGU.scala 52:38]
     connect _io_FU_output_bits_WIRE.memory_type, UInt<1>(0h0) @[src/main/scala/Memory/AGU.scala 52:38]
     connect _io_FU_output_bits_WIRE.address, UInt<32>(0h0) @[src/main/scala/Memory/AGU.scala 52:38]
@@ -29308,9 +29397,9 @@ circuit ChaosCore :%[[
     reg io_FU_output_bits_access_width_REG : UInt<2>, clock @[src/main/scala/Memory/AGU.scala 128:47]
     connect io_FU_output_bits_access_width_REG, access_width @[src/main/scala/Memory/AGU.scala 128:47]
     connect io.FU_output.bits.access_width, io_FU_output_bits_access_width_REG @[src/main/scala/Memory/AGU.scala 128:37]
-    reg io_FU_output_bits_unsigned_REG : UInt<1>, clock @[src/main/scala/Memory/AGU.scala 129:47]
-    connect io_FU_output_bits_unsigned_REG, unsigned @[src/main/scala/Memory/AGU.scala 129:47]
-    connect io.FU_output.bits.unsigned, io_FU_output_bits_unsigned_REG @[src/main/scala/Memory/AGU.scala 129:37]
+    reg io_FU_output_bits_is_unsigned_REG : UInt<1>, clock @[src/main/scala/Memory/AGU.scala 129:50]
+    connect io_FU_output_bits_is_unsigned_REG, unsigned @[src/main/scala/Memory/AGU.scala 129:50]
+    connect io.FU_output.bits.is_unsigned, io_FU_output_bits_is_unsigned_REG @[src/main/scala/Memory/AGU.scala 129:40]
     reg io_FU_output_bits_address_REG : UInt, clock @[src/main/scala/Memory/AGU.scala 130:47]
     connect io_FU_output_bits_address_REG, address @[src/main/scala/Memory/AGU.scala 130:47]
     connect io.FU_output.bits.address, io_FU_output_bits_address_REG @[src/main/scala/Memory/AGU.scala 130:37]
@@ -29390,7 +29479,7 @@ circuit ChaosCore :%[[
   module backend : @[src/main/scala/Backend/backend.scala 47:7]
     input clock : Clock @[src/main/scala/Backend/backend.scala 47:7]
     input reset : Reset @[src/main/scala/Backend/backend.scala 47:7]
-    output io : { flip flush : UInt<1>, flip backend_memory_response : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, data : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, MOB_index : UInt<4>}}, backend_memory_request : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, data : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, MOB_index : UInt<4>}}, flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RD : UInt<7>[4], RD_valid : UInt<1>[4]}}, PC_file_exec_addr : UInt<6>, flip PC_file_exec_data : UInt<32>, flip fetch_PC : UInt<32>, flip backend_packet : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}[4], valid_bits : UInt<1>[4], RAT_index : UInt<4>, free_list_front_pointer : UInt<8>}}, MEMRS_ready : UInt<1>[4], INTRS_ready : UInt<1>[4], MOB_ready : UInt<1>[4], FU_outputs : { valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>}}[4]} @[src/main/scala/Backend/backend.scala 51:16]
+    output io : { flip flush : UInt<1>, flip backend_memory_response : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, data : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, MOB_index : UInt<4>}}, backend_memory_request : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, data : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, MOB_index : UInt<4>}}, flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RD : UInt<7>[4], RD_valid : UInt<1>[4]}}, PC_file_exec_addr : UInt<6>, flip PC_file_exec_data : UInt<32>, flip fetch_PC : UInt<32>, flip backend_packet : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}[4], valid_bits : UInt<1>[4], RAT_index : UInt<4>, free_list_front_pointer : UInt<8>}}, MEMRS_ready : UInt<1>[4], INTRS_ready : UInt<1>[4], MOB_ready : UInt<1>[4], FU_outputs : { valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>}}[4]} @[src/main/scala/Backend/backend.scala 51:16]
 
     inst INT_RS of RS @[src/main/scala/Backend/backend.scala 83:27]
     connect INT_RS.clock, clock
@@ -29931,7 +30020,7 @@ circuit ChaosCore :%[[
   module FTQ : @[src/main/scala/Frontend/FTQ.scala 44:7]
     input clock : Clock @[src/main/scala/Frontend/FTQ.scala 44:7]
     input reset : Reset @[src/main/scala/Frontend/FTQ.scala 44:7]
-    output io : { flip flush : UInt<1>, flip FU_outputs : { valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>}}[4], flip predictions : { flip ready : UInt<1>, valid : UInt<1>, bits : { valid : UInt<1>, fetch_PC : UInt<32>, is_misprediction : UInt<1>, predicted_PC : UInt<32>, T_NT : UInt<1>, br_type : UInt<3>, GHR : UInt<16>, NEXT : UInt<7>, TOS : UInt<7>, dominant_index : UInt<2>, resolved_PC : UInt<32>}}, flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RD : UInt<7>[4], RD_valid : UInt<1>[4]}}, FTQ : { valid : UInt<1>, fetch_PC : UInt<32>, is_misprediction : UInt<1>, predicted_PC : UInt<32>, T_NT : UInt<1>, br_type : UInt<3>, GHR : UInt<16>, NEXT : UInt<7>, TOS : UInt<7>, dominant_index : UInt<2>, resolved_PC : UInt<32>}, FTQ_index : UInt<4>} @[src/main/scala/Frontend/FTQ.scala 48:16]
+    output io : { flip flush : UInt<1>, flip FU_outputs : { valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>}}[4], flip predictions : { flip ready : UInt<1>, valid : UInt<1>, bits : { valid : UInt<1>, fetch_PC : UInt<32>, is_misprediction : UInt<1>, predicted_PC : UInt<32>, T_NT : UInt<1>, br_type : UInt<3>, GHR : UInt<16>, NEXT : UInt<7>, TOS : UInt<7>, dominant_index : UInt<2>, resolved_PC : UInt<32>}}, flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RD : UInt<7>[4], RD_valid : UInt<1>[4]}}, FTQ : { valid : UInt<1>, fetch_PC : UInt<32>, is_misprediction : UInt<1>, predicted_PC : UInt<32>, T_NT : UInt<1>, br_type : UInt<3>, GHR : UInt<16>, NEXT : UInt<7>, TOS : UInt<7>, dominant_index : UInt<2>, resolved_PC : UInt<32>}, FTQ_index : UInt<4>} @[src/main/scala/Frontend/FTQ.scala 48:16]
 
     regreset front_pointer : UInt<5>, clock, reset, UInt<1>(0h0) @[src/main/scala/Frontend/FTQ.scala 69:34]
     regreset back_pointer : UInt<5>, clock, reset, UInt<1>(0h0) @[src/main/scala/Frontend/FTQ.scala 70:34]
@@ -30796,7 +30885,7 @@ circuit ChaosCore :%[[
   module ROB : @[src/main/scala/Backend/ROB.scala 42:7]
     input clock : Clock @[src/main/scala/Backend/ROB.scala 42:7]
     input reset : Reset @[src/main/scala/Backend/ROB.scala 42:7]
-    output io : { flip flush : UInt<1>, flip ROB_packet : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}[4], valid_bits : UInt<1>[4], RAT_index : UInt<4>, free_list_front_pointer : UInt<8>}}, flip FU_outputs : { valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>}}[4], ROB_output : { row_valid : UInt<1>, fetch_PC : UInt<32>, RAT_index : UInt<4>, ROB_index : UInt<6>, free_list_front_pointer : UInt<8>, ROB_entries : { valid : UInt<1>, is_branch : UInt<1>, memory_type : UInt<2>, RD : UInt<7>, RD_valid : UInt<1>}[4], complete : UInt<1>[4]}, flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RD : UInt<7>[4], RD_valid : UInt<1>[4]}}, ROB_index : UInt<6>, flip PC_file_exec_addr : UInt<6>, PC_file_exec_data : UInt<32>} @[src/main/scala/Backend/ROB.scala 46:16]
+    output io : { flip flush : UInt<1>, flip ROB_packet : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, decoded_instruction : { ready_bits : { RS1_ready : UInt<1>, RS2_ready : UInt<1>}, RD : UInt<7>, RD_valid : UInt<1>, RS1 : UInt<7>, RS1_valid : UInt<1>, RS2 : UInt<7>, RS2_valid : UInt<1>, IMM : UInt<21>, FUNCT3 : UInt<3>, packet_index : UInt<2>, ROB_index : UInt<6>, MOB_index : UInt<4>, FTQ_index : UInt<4>, instructionType : UInt<5>, portID : UInt<2>, RS_type : UInt<2>, needs_ALU : UInt<1>, needs_branch_unit : UInt<1>, needs_CSRs : UInt<1>, SUBTRACT : UInt<1>, MULTIPLY : UInt<1>, IS_IMM : UInt<1>, memory_type : UInt<2>, access_width : UInt<2>}[4], valid_bits : UInt<1>[4], RAT_index : UInt<4>, free_list_front_pointer : UInt<8>}}, flip FU_outputs : { valid : UInt<1>, bits : { RD : UInt<7>, RD_data : UInt<32>, RD_valid : UInt<1>, fetch_PC : UInt<32>, branch_taken : UInt<1>, target_address : UInt<32>, branch_valid : UInt<1>, address : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, is_unsigned : UInt<1>, wr_data : UInt<32>, MOB_index : UInt<4>, ROB_index : UInt<6>, FTQ_index : UInt<4>, fetch_packet_index : UInt<2>}}[4], ROB_output : { row_valid : UInt<1>, fetch_PC : UInt<32>, RAT_index : UInt<4>, ROB_index : UInt<6>, free_list_front_pointer : UInt<8>, ROB_entries : { valid : UInt<1>, is_branch : UInt<1>, memory_type : UInt<2>, RD : UInt<7>, RD_valid : UInt<1>}[4], complete : UInt<1>[4]}, flip commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, RAT_index : UInt<4>, free_list_front_pointer : UInt<8>, RD : UInt<7>[4], RD_valid : UInt<1>[4]}}, ROB_index : UInt<6>, flip PC_file_exec_addr : UInt<6>, PC_file_exec_data : UInt<32>} @[src/main/scala/Backend/ROB.scala 46:16]
 
     regreset front_pointer : UInt<7>, clock, reset, UInt<1>(0h0) @[src/main/scala/Backend/ROB.scala 78:32]
     regreset back_pointer : UInt<7>, clock, reset, UInt<1>(0h0) @[src/main/scala/Backend/ROB.scala 79:32]

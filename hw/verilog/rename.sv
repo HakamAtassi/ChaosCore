@@ -214,7 +214,7 @@ module rename(	// src/main/scala/Frontend/rename.scala:234:7
   input  [31:0] io_FU_outputs_0_bits_address,	// src/main/scala/Frontend/rename.scala:247:16
   input  [1:0]  io_FU_outputs_0_bits_memory_type,	// src/main/scala/Frontend/rename.scala:247:16
                 io_FU_outputs_0_bits_access_width,	// src/main/scala/Frontend/rename.scala:247:16
-  input         io_FU_outputs_0_bits_unsigned,	// src/main/scala/Frontend/rename.scala:247:16
+  input         io_FU_outputs_0_bits_is_unsigned,	// src/main/scala/Frontend/rename.scala:247:16
   input  [31:0] io_FU_outputs_0_bits_wr_data,	// src/main/scala/Frontend/rename.scala:247:16
   input  [3:0]  io_FU_outputs_0_bits_MOB_index,	// src/main/scala/Frontend/rename.scala:247:16
   input  [5:0]  io_FU_outputs_0_bits_ROB_index,	// src/main/scala/Frontend/rename.scala:247:16
@@ -231,7 +231,7 @@ module rename(	// src/main/scala/Frontend/rename.scala:234:7
   input  [31:0] io_FU_outputs_1_bits_address,	// src/main/scala/Frontend/rename.scala:247:16
   input  [1:0]  io_FU_outputs_1_bits_memory_type,	// src/main/scala/Frontend/rename.scala:247:16
                 io_FU_outputs_1_bits_access_width,	// src/main/scala/Frontend/rename.scala:247:16
-  input         io_FU_outputs_1_bits_unsigned,	// src/main/scala/Frontend/rename.scala:247:16
+  input         io_FU_outputs_1_bits_is_unsigned,	// src/main/scala/Frontend/rename.scala:247:16
   input  [31:0] io_FU_outputs_1_bits_wr_data,	// src/main/scala/Frontend/rename.scala:247:16
   input  [3:0]  io_FU_outputs_1_bits_MOB_index,	// src/main/scala/Frontend/rename.scala:247:16
   input  [5:0]  io_FU_outputs_1_bits_ROB_index,	// src/main/scala/Frontend/rename.scala:247:16
@@ -248,7 +248,7 @@ module rename(	// src/main/scala/Frontend/rename.scala:234:7
   input  [31:0] io_FU_outputs_2_bits_address,	// src/main/scala/Frontend/rename.scala:247:16
   input  [1:0]  io_FU_outputs_2_bits_memory_type,	// src/main/scala/Frontend/rename.scala:247:16
                 io_FU_outputs_2_bits_access_width,	// src/main/scala/Frontend/rename.scala:247:16
-  input         io_FU_outputs_2_bits_unsigned,	// src/main/scala/Frontend/rename.scala:247:16
+  input         io_FU_outputs_2_bits_is_unsigned,	// src/main/scala/Frontend/rename.scala:247:16
   input  [31:0] io_FU_outputs_2_bits_wr_data,	// src/main/scala/Frontend/rename.scala:247:16
   input  [3:0]  io_FU_outputs_2_bits_MOB_index,	// src/main/scala/Frontend/rename.scala:247:16
   input  [5:0]  io_FU_outputs_2_bits_ROB_index,	// src/main/scala/Frontend/rename.scala:247:16
@@ -265,7 +265,7 @@ module rename(	// src/main/scala/Frontend/rename.scala:234:7
   input  [31:0] io_FU_outputs_3_bits_address,	// src/main/scala/Frontend/rename.scala:247:16
   input  [1:0]  io_FU_outputs_3_bits_memory_type,	// src/main/scala/Frontend/rename.scala:247:16
                 io_FU_outputs_3_bits_access_width,	// src/main/scala/Frontend/rename.scala:247:16
-  input         io_FU_outputs_3_bits_unsigned,	// src/main/scala/Frontend/rename.scala:247:16
+  input         io_FU_outputs_3_bits_is_unsigned,	// src/main/scala/Frontend/rename.scala:247:16
   input  [31:0] io_FU_outputs_3_bits_wr_data,	// src/main/scala/Frontend/rename.scala:247:16
   input  [3:0]  io_FU_outputs_3_bits_MOB_index,	// src/main/scala/Frontend/rename.scala:247:16
   input  [5:0]  io_FU_outputs_3_bits_ROB_index,	// src/main/scala/Frontend/rename.scala:247:16

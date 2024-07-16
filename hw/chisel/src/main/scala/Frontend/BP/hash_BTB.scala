@@ -127,7 +127,7 @@ class hash_BTB(parameters:Parameters) extends Module{
     commit_BTB_entry.BTB_valid                  := 1.B
     commit_BTB_entry.BTB_tag                    := commit_input_tag
     commit_BTB_entry.BTB_target                 := io.commit.bits.expected_PC
-    commit_BTB_entry.BTB_br_type                := io.commit.bits.br_type
+    commit_BTB_entry.BTBbr_type_t                := io.commit.bits.br_type
     commit_BTB_entry.BTB_fetch_packet_index     := io.commit.bits.fetch_packet_index
 
     BTB_memory.io.data_in := commit_BTB_entry

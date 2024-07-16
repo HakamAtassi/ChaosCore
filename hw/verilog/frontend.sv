@@ -180,7 +180,7 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
   input  [31:0] io_FU_outputs_0_bits_address,	// src/main/scala/Frontend/frontend.scala:45:16
   input  [1:0]  io_FU_outputs_0_bits_memory_type,	// src/main/scala/Frontend/frontend.scala:45:16
                 io_FU_outputs_0_bits_access_width,	// src/main/scala/Frontend/frontend.scala:45:16
-  input         io_FU_outputs_0_bits_unsigned,	// src/main/scala/Frontend/frontend.scala:45:16
+  input         io_FU_outputs_0_bits_is_unsigned,	// src/main/scala/Frontend/frontend.scala:45:16
   input  [31:0] io_FU_outputs_0_bits_wr_data,	// src/main/scala/Frontend/frontend.scala:45:16
   input  [3:0]  io_FU_outputs_0_bits_MOB_index,	// src/main/scala/Frontend/frontend.scala:45:16
   input  [5:0]  io_FU_outputs_0_bits_ROB_index,	// src/main/scala/Frontend/frontend.scala:45:16
@@ -197,7 +197,7 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
   input  [31:0] io_FU_outputs_1_bits_address,	// src/main/scala/Frontend/frontend.scala:45:16
   input  [1:0]  io_FU_outputs_1_bits_memory_type,	// src/main/scala/Frontend/frontend.scala:45:16
                 io_FU_outputs_1_bits_access_width,	// src/main/scala/Frontend/frontend.scala:45:16
-  input         io_FU_outputs_1_bits_unsigned,	// src/main/scala/Frontend/frontend.scala:45:16
+  input         io_FU_outputs_1_bits_is_unsigned,	// src/main/scala/Frontend/frontend.scala:45:16
   input  [31:0] io_FU_outputs_1_bits_wr_data,	// src/main/scala/Frontend/frontend.scala:45:16
   input  [3:0]  io_FU_outputs_1_bits_MOB_index,	// src/main/scala/Frontend/frontend.scala:45:16
   input  [5:0]  io_FU_outputs_1_bits_ROB_index,	// src/main/scala/Frontend/frontend.scala:45:16
@@ -214,7 +214,7 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
   input  [31:0] io_FU_outputs_2_bits_address,	// src/main/scala/Frontend/frontend.scala:45:16
   input  [1:0]  io_FU_outputs_2_bits_memory_type,	// src/main/scala/Frontend/frontend.scala:45:16
                 io_FU_outputs_2_bits_access_width,	// src/main/scala/Frontend/frontend.scala:45:16
-  input         io_FU_outputs_2_bits_unsigned,	// src/main/scala/Frontend/frontend.scala:45:16
+  input         io_FU_outputs_2_bits_is_unsigned,	// src/main/scala/Frontend/frontend.scala:45:16
   input  [31:0] io_FU_outputs_2_bits_wr_data,	// src/main/scala/Frontend/frontend.scala:45:16
   input  [3:0]  io_FU_outputs_2_bits_MOB_index,	// src/main/scala/Frontend/frontend.scala:45:16
   input  [5:0]  io_FU_outputs_2_bits_ROB_index,	// src/main/scala/Frontend/frontend.scala:45:16
@@ -225,7 +225,7 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
   input  [31:0] io_FU_outputs_3_bits_address,	// src/main/scala/Frontend/frontend.scala:45:16
   input  [1:0]  io_FU_outputs_3_bits_memory_type,	// src/main/scala/Frontend/frontend.scala:45:16
                 io_FU_outputs_3_bits_access_width,	// src/main/scala/Frontend/frontend.scala:45:16
-  input         io_FU_outputs_3_bits_unsigned,	// src/main/scala/Frontend/frontend.scala:45:16
+  input         io_FU_outputs_3_bits_is_unsigned,	// src/main/scala/Frontend/frontend.scala:45:16
   input  [31:0] io_FU_outputs_3_bits_wr_data,	// src/main/scala/Frontend/frontend.scala:45:16
   output        io_revert_valid,	// src/main/scala/Frontend/frontend.scala:45:16
   output [31:0] io_revert_bits_PC	// src/main/scala/Frontend/frontend.scala:45:16
@@ -1766,8 +1766,8 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (io_FU_outputs_0_bits_memory_type),
     .io_FU_outputs_0_bits_access_width
       (io_FU_outputs_0_bits_access_width),
-    .io_FU_outputs_0_bits_unsigned
-      (io_FU_outputs_0_bits_unsigned),
+    .io_FU_outputs_0_bits_is_unsigned
+      (io_FU_outputs_0_bits_is_unsigned),
     .io_FU_outputs_0_bits_wr_data
       (io_FU_outputs_0_bits_wr_data),
     .io_FU_outputs_0_bits_MOB_index
@@ -1800,8 +1800,8 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (io_FU_outputs_1_bits_memory_type),
     .io_FU_outputs_1_bits_access_width
       (io_FU_outputs_1_bits_access_width),
-    .io_FU_outputs_1_bits_unsigned
-      (io_FU_outputs_1_bits_unsigned),
+    .io_FU_outputs_1_bits_is_unsigned
+      (io_FU_outputs_1_bits_is_unsigned),
     .io_FU_outputs_1_bits_wr_data
       (io_FU_outputs_1_bits_wr_data),
     .io_FU_outputs_1_bits_MOB_index
@@ -1834,8 +1834,8 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (io_FU_outputs_2_bits_memory_type),
     .io_FU_outputs_2_bits_access_width
       (io_FU_outputs_2_bits_access_width),
-    .io_FU_outputs_2_bits_unsigned
-      (io_FU_outputs_2_bits_unsigned),
+    .io_FU_outputs_2_bits_is_unsigned
+      (io_FU_outputs_2_bits_is_unsigned),
     .io_FU_outputs_2_bits_wr_data
       (io_FU_outputs_2_bits_wr_data),
     .io_FU_outputs_2_bits_MOB_index
@@ -1868,8 +1868,8 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (io_FU_outputs_3_bits_memory_type),
     .io_FU_outputs_3_bits_access_width
       (io_FU_outputs_3_bits_access_width),
-    .io_FU_outputs_3_bits_unsigned
-      (io_FU_outputs_3_bits_unsigned),
+    .io_FU_outputs_3_bits_is_unsigned
+      (io_FU_outputs_3_bits_is_unsigned),
     .io_FU_outputs_3_bits_wr_data
       (io_FU_outputs_3_bits_wr_data),
     .io_FU_outputs_3_bits_MOB_index

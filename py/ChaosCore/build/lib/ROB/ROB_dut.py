@@ -186,7 +186,7 @@ class ROB_dut:
         commit_inputs["fetch_PC"]           = int(getattr(self.dut, f"io_commit_bits_fetch_PC").value)
         commit_inputs["T_NT"]               = int(getattr(self.dut, f"io_commit_bits_T_NT").value)
         commit_inputs["ROB_index"]          = int(getattr(self.dut, f"io_commit_bits_ROB_index").value)
-        commit_inputs["br_type"]            = int(getattr(self.dut, f"io_commit_bits_br_type").value)
+        commit_inputs["br_type"]            = int(getattr(self.dut, f"io_commit_bitsbr_type_t").value)
         commit_inputs["fetch_packet_index"] = int(getattr(self.dut, f"io_commit_bits_fetch_packet_index").value)
         commit_inputs["is_misprediction"]   = int(getattr(self.dut, f"io_commit_bits_is_misprediction").value)
         commit_inputs["expected_PC"]        = int(getattr(self.dut, f"io_commit_bits_expected_PC").value)
@@ -306,7 +306,7 @@ class ROB_dut:
         getattr(self.dut, f"io_commit_fetch_PC").value              = commit_inputs["fetch_PC"]
         getattr(self.dut, f"io_commit_T_NT").value                  = commit_inputs["T_NT"]
         getattr(self.dut, f"io_commit_ROB_index").value             = commit_inputs["ROB_index"]
-        getattr(self.dut, f"io_commit_br_type").value               = commit_inputs["br_type"]
+        getattr(self.dut, f"io_commitbr_type_t").value               = commit_inputs["br_type"]
         getattr(self.dut, f"io_commit_fetch_packet_index").value    = commit_inputs["fetch_packet_index"]
         getattr(self.dut, f"io_commit_is_misprediction").value      = commit_inputs["is_misprediction"]
         getattr(self.dut, f"io_commit_expected_PC").value           = commit_inputs["expected_PC"]

@@ -5724,7 +5724,7 @@ module Queue1_FTQ_entry(	// src/main/scala/chisel3/util/Decoupled.scala:243:7
   input         io_enq_bits_is_misprediction,	// src/main/scala/chisel3/util/Decoupled.scala:255:14
   input  [31:0] io_enq_bits_predicted_PC,	// src/main/scala/chisel3/util/Decoupled.scala:255:14
   input         io_enq_bits_T_NT,	// src/main/scala/chisel3/util/Decoupled.scala:255:14
-  input  [2:0]  io_enq_bits_br_type,	// src/main/scala/chisel3/util/Decoupled.scala:255:14
+  input  [2:0]  io_enq_bitsbr_type_t,	// src/main/scala/chisel3/util/Decoupled.scala:255:14
   input  [15:0] io_enq_bits_GHR,	// src/main/scala/chisel3/util/Decoupled.scala:255:14
   input  [6:0]  io_enq_bits_NEXT,	// src/main/scala/chisel3/util/Decoupled.scala:255:14
                 io_enq_bits_TOS,	// src/main/scala/chisel3/util/Decoupled.scala:255:14
@@ -5737,7 +5737,7 @@ module Queue1_FTQ_entry(	// src/main/scala/chisel3/util/Decoupled.scala:243:7
   output        io_deq_bits_is_misprediction,	// src/main/scala/chisel3/util/Decoupled.scala:255:14
   output [31:0] io_deq_bits_predicted_PC,	// src/main/scala/chisel3/util/Decoupled.scala:255:14
   output        io_deq_bits_T_NT,	// src/main/scala/chisel3/util/Decoupled.scala:255:14
-  output [2:0]  io_deq_bits_br_type,	// src/main/scala/chisel3/util/Decoupled.scala:255:14
+  output [2:0]  io_deq_bitsbr_type_t,	// src/main/scala/chisel3/util/Decoupled.scala:255:14
   output [15:0] io_deq_bits_GHR,	// src/main/scala/chisel3/util/Decoupled.scala:255:14
   output [6:0]  io_deq_bits_NEXT,	// src/main/scala/chisel3/util/Decoupled.scala:255:14
                 io_deq_bits_TOS,	// src/main/scala/chisel3/util/Decoupled.scala:255:14
@@ -5757,7 +5757,7 @@ module Queue1_FTQ_entry(	// src/main/scala/chisel3/util/Decoupled.scala:243:7
          io_enq_bits_TOS,
          io_enq_bits_NEXT,
          io_enq_bits_GHR,
-         io_enq_bits_br_type,
+         io_enq_bitsbr_type_t,
          io_enq_bits_T_NT,
          io_enq_bits_predicted_PC,
          io_enq_bits_is_misprediction,
@@ -5800,7 +5800,7 @@ module Queue1_FTQ_entry(	// src/main/scala/chisel3/util/Decoupled.scala:243:7
   assign io_deq_bits_is_misprediction = full ? ram[33] : io_enq_bits_is_misprediction;	// src/main/scala/chisel3/util/Decoupled.scala:243:7, :256:91, :259:27, :293:17, :298:17, :299:19
   assign io_deq_bits_predicted_PC = full ? ram[65:34] : io_enq_bits_predicted_PC;	// src/main/scala/chisel3/util/Decoupled.scala:243:7, :256:91, :259:27, :293:17, :298:17, :299:19
   assign io_deq_bits_T_NT = full ? ram[66] : io_enq_bits_T_NT;	// src/main/scala/chisel3/util/Decoupled.scala:243:7, :256:91, :259:27, :293:17, :298:17, :299:19
-  assign io_deq_bits_br_type = full ? ram[69:67] : io_enq_bits_br_type;	// src/main/scala/chisel3/util/Decoupled.scala:243:7, :256:91, :259:27, :293:17, :298:17, :299:19
+  assign io_deq_bitsbr_type_t = full ? ram[69:67] : io_enq_bitsbr_type_t;	// src/main/scala/chisel3/util/Decoupled.scala:243:7, :256:91, :259:27, :293:17, :298:17, :299:19
   assign io_deq_bits_GHR = full ? ram[85:70] : io_enq_bits_GHR;	// src/main/scala/chisel3/util/Decoupled.scala:243:7, :256:91, :259:27, :293:17, :298:17, :299:19
   assign io_deq_bits_NEXT = full ? ram[92:86] : io_enq_bits_NEXT;	// src/main/scala/chisel3/util/Decoupled.scala:243:7, :256:91, :259:27, :293:17, :298:17, :299:19
   assign io_deq_bits_TOS = full ? ram[99:93] : io_enq_bits_TOS;	// src/main/scala/chisel3/util/Decoupled.scala:243:7, :256:91, :259:27, :293:17, :298:17, :299:19
@@ -5816,7 +5816,7 @@ module rename(	// src/main/scala/Frontend/rename.scala:204:7
   input  [31:0] io_commit_bits_fetch_PC,	// src/main/scala/Frontend/rename.scala:217:16
   input         io_commit_bits_T_NT,	// src/main/scala/Frontend/rename.scala:217:16
   input  [5:0]  io_commit_bits_ROB_index,	// src/main/scala/Frontend/rename.scala:217:16
-  input  [2:0]  io_commit_bits_br_type,	// src/main/scala/Frontend/rename.scala:217:16
+  input  [2:0]  io_commit_bitsbr_type_t,	// src/main/scala/Frontend/rename.scala:217:16
   input  [1:0]  io_commit_bits_fetch_packet_index,	// src/main/scala/Frontend/rename.scala:217:16
   input         io_commit_bits_is_misprediction,	// src/main/scala/Frontend/rename.scala:217:16
   input  [31:0] io_commit_bits_expected_PC,	// src/main/scala/Frontend/rename.scala:217:16
@@ -5840,7 +5840,7 @@ module rename(	// src/main/scala/Frontend/rename.scala:204:7
   input         io_predictions_in_bits_is_misprediction,	// src/main/scala/Frontend/rename.scala:217:16
   input  [31:0] io_predictions_in_bits_predicted_PC,	// src/main/scala/Frontend/rename.scala:217:16
   input         io_predictions_in_bits_T_NT,	// src/main/scala/Frontend/rename.scala:217:16
-  input  [2:0]  io_predictions_in_bits_br_type,	// src/main/scala/Frontend/rename.scala:217:16
+  input  [2:0]  io_predictions_in_bitsbr_type_t,	// src/main/scala/Frontend/rename.scala:217:16
   input  [15:0] io_predictions_in_bits_GHR,	// src/main/scala/Frontend/rename.scala:217:16
   input  [6:0]  io_predictions_in_bits_NEXT,	// src/main/scala/Frontend/rename.scala:217:16
                 io_predictions_in_bits_TOS,	// src/main/scala/Frontend/rename.scala:217:16
@@ -5853,7 +5853,7 @@ module rename(	// src/main/scala/Frontend/rename.scala:204:7
   output        io_predictions_out_bits_is_misprediction,	// src/main/scala/Frontend/rename.scala:217:16
   output [31:0] io_predictions_out_bits_predicted_PC,	// src/main/scala/Frontend/rename.scala:217:16
   output        io_predictions_out_bits_T_NT,	// src/main/scala/Frontend/rename.scala:217:16
-  output [2:0]  io_predictions_out_bits_br_type,	// src/main/scala/Frontend/rename.scala:217:16
+  output [2:0]  io_predictions_out_bitsbr_type_t,	// src/main/scala/Frontend/rename.scala:217:16
   output [15:0] io_predictions_out_bits_GHR,	// src/main/scala/Frontend/rename.scala:217:16
   output [6:0]  io_predictions_out_bits_NEXT,	// src/main/scala/Frontend/rename.scala:217:16
                 io_predictions_out_bits_TOS,	// src/main/scala/Frontend/rename.scala:217:16
@@ -8503,7 +8503,7 @@ module rename(	// src/main/scala/Frontend/rename.scala:204:7
   reg          predictions_out_bits_REG_is_misprediction;	// src/main/scala/Frontend/rename.scala:438:39
   reg  [31:0]  predictions_out_bits_REG_predicted_PC;	// src/main/scala/Frontend/rename.scala:438:39
   reg          predictions_out_bits_REG_T_NT;	// src/main/scala/Frontend/rename.scala:438:39
-  reg  [2:0]   predictions_out_bits_REG_br_type;	// src/main/scala/Frontend/rename.scala:438:39
+  reg  [2:0]   predictions_out_bits_REGbr_type_t;	// src/main/scala/Frontend/rename.scala:438:39
   reg  [15:0]  predictions_out_bits_REG_GHR;	// src/main/scala/Frontend/rename.scala:438:39
   reg  [6:0]   predictions_out_bits_REG_NEXT;	// src/main/scala/Frontend/rename.scala:438:39
   reg  [6:0]   predictions_out_bits_REG_TOS;	// src/main/scala/Frontend/rename.scala:438:39
@@ -8769,7 +8769,7 @@ module rename(	// src/main/scala/Frontend/rename.scala:204:7
     predictions_out_bits_REG_is_misprediction <= io_predictions_in_bits_is_misprediction;	// src/main/scala/Frontend/rename.scala:438:39
     predictions_out_bits_REG_predicted_PC <= io_predictions_in_bits_predicted_PC;	// src/main/scala/Frontend/rename.scala:438:39
     predictions_out_bits_REG_T_NT <= io_predictions_in_bits_T_NT;	// src/main/scala/Frontend/rename.scala:438:39
-    predictions_out_bits_REG_br_type <= io_predictions_in_bits_br_type;	// src/main/scala/Frontend/rename.scala:438:39
+    predictions_out_bits_REGbr_type_t <= io_predictions_in_bitsbr_type_t;	// src/main/scala/Frontend/rename.scala:438:39
     predictions_out_bits_REG_GHR <= io_predictions_in_bits_GHR;	// src/main/scala/Frontend/rename.scala:438:39
     predictions_out_bits_REG_NEXT <= io_predictions_in_bits_NEXT;	// src/main/scala/Frontend/rename.scala:438:39
     predictions_out_bits_REG_TOS <= io_predictions_in_bits_TOS;	// src/main/scala/Frontend/rename.scala:438:39
@@ -9240,7 +9240,7 @@ module rename(	// src/main/scala/Frontend/rename.scala:204:7
         predictions_out_bits_REG_predicted_PC =
           {_RANDOM[5'h18][31:12], _RANDOM[5'h19][11:0]};	// src/main/scala/Frontend/rename.scala:204:7, :438:39
         predictions_out_bits_REG_T_NT = _RANDOM[5'h19][12];	// src/main/scala/Frontend/rename.scala:204:7, :438:39
-        predictions_out_bits_REG_br_type = _RANDOM[5'h19][15:13];	// src/main/scala/Frontend/rename.scala:204:7, :438:39
+        predictions_out_bits_REGbr_type_t = _RANDOM[5'h19][15:13];	// src/main/scala/Frontend/rename.scala:204:7, :438:39
         predictions_out_bits_REG_GHR = _RANDOM[5'h19][31:16];	// src/main/scala/Frontend/rename.scala:204:7, :438:39
         predictions_out_bits_REG_NEXT = _RANDOM[5'h1A][6:0];	// src/main/scala/Frontend/rename.scala:204:7, :438:39
         predictions_out_bits_REG_TOS = _RANDOM[5'h1A][13:7];	// src/main/scala/Frontend/rename.scala:204:7, :438:39
@@ -9363,7 +9363,7 @@ module rename(	// src/main/scala/Frontend/rename.scala:204:7
        & io_decoded_fetch_packet_bits_valid_bits_3 & fire),	// src/main/scala/Frontend/rename.scala:244:42, :351:107, :352:80, :356:57, src/main/scala/chisel3/util/Decoupled.scala:51:35
     .io_restore_checkpoint       (io_commit_valid & io_commit_bits_is_misprediction),	// src/main/scala/Frontend/rename.scala:344:55
     .io_free_checkpoint
-      (io_commit_valid & ~io_commit_bits_is_misprediction & (|io_commit_bits_br_type)),	// src/main/scala/Frontend/rename.scala:346:{55,58,91,118}
+      (io_commit_valid & ~io_commit_bits_is_misprediction & (|io_commit_bitsbr_type_t)),	// src/main/scala/Frontend/rename.scala:346:{55,58,91,118}
     .io_restore_checkpoint_value (io_commit_bits_RAT_index),
     .io_active_checkpoint_value  (_RAT_io_active_checkpoint_value),
     .io_checkpoints_full         (_RAT_io_checkpoints_full),
@@ -9794,7 +9794,7 @@ module rename(	// src/main/scala/Frontend/rename.scala:204:7
     .io_enq_bits_is_misprediction (predictions_out_bits_REG_is_misprediction),	// src/main/scala/Frontend/rename.scala:438:39
     .io_enq_bits_predicted_PC     (predictions_out_bits_REG_predicted_PC),	// src/main/scala/Frontend/rename.scala:438:39
     .io_enq_bits_T_NT             (predictions_out_bits_REG_T_NT),	// src/main/scala/Frontend/rename.scala:438:39
-    .io_enq_bits_br_type          (predictions_out_bits_REG_br_type),	// src/main/scala/Frontend/rename.scala:438:39
+    .io_enq_bitsbr_type_t          (predictions_out_bits_REGbr_type_t),	// src/main/scala/Frontend/rename.scala:438:39
     .io_enq_bits_GHR              (predictions_out_bits_REG_GHR),	// src/main/scala/Frontend/rename.scala:438:39
     .io_enq_bits_NEXT             (predictions_out_bits_REG_NEXT),	// src/main/scala/Frontend/rename.scala:438:39
     .io_enq_bits_TOS              (predictions_out_bits_REG_TOS),	// src/main/scala/Frontend/rename.scala:438:39
@@ -9807,7 +9807,7 @@ module rename(	// src/main/scala/Frontend/rename.scala:204:7
     .io_deq_bits_is_misprediction (io_predictions_out_bits_is_misprediction),
     .io_deq_bits_predicted_PC     (io_predictions_out_bits_predicted_PC),
     .io_deq_bits_T_NT             (io_predictions_out_bits_T_NT),
-    .io_deq_bits_br_type          (io_predictions_out_bits_br_type),
+    .io_deq_bitsbr_type_t          (io_predictions_out_bitsbr_type_t),
     .io_deq_bits_GHR              (io_predictions_out_bits_GHR),
     .io_deq_bits_NEXT             (io_predictions_out_bits_NEXT),
     .io_deq_bits_TOS              (io_predictions_out_bits_TOS),

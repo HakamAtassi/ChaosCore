@@ -83,26 +83,26 @@ class branch_decoder(index:Int, parameters:Parameters) extends Module{
     // if that is not available, default to NT. 
 
     
-    val br_type = Wire(_br_type())
+    val br_type = Wire(br_type_t())
 
     dontTouch(br_type)
 
 
     when(CALL){
-        br_type := _br_type.CALL
+        br_type := br_type_t.CALL
     }.elsewhen(RET){
-        br_type := _br_type.RET
+        br_type := br_type_t.RET
     }.elsewhen(JAL){
-        br_type := _br_type.JAL
+        br_type := br_type_t.JAL
     }.elsewhen(JALR){
-        br_type := _br_type.JALR
+        br_type := br_type_t.JALR
     }.elsewhen(BR){
-        br_type := _br_type.BR
+        br_type := br_type_t.BR
     }.otherwise{
-        br_type := _br_type.NONE
+        br_type := br_type_t.NONE
     }
 
-    io.metadata.is_control := (br_type =/= _br_type.NONE) && io.valid
+    io.metadata.is_control := (br_type =/= br_type_t.NONE) && io.valid
 
 
     // Assign T/NT

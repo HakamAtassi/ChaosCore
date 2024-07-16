@@ -7,6 +7,7 @@ smtbmc yices
 
 [script]
 read -formal PC_gen.sv
+read -formal Queue1_memory_request.sv
 prep -top PC_gen
 
 [files] 
@@ -23,6 +24,7 @@ prep -top PC_gen
 ../hw/verilog/BP.sv
 ../hw/verilog/Queue1_FTQ_entry.sv
 ../hw/verilog/Queue1_fetch_packet.sv
+../hw/verilog/Queue1_memory_request.sv
 ../hw/verilog/predecoder.sv
 ../hw/verilog/PC_gen.sv
 ../hw/verilog/ram_16x204.sv
