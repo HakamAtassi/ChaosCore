@@ -108,7 +108,7 @@ class FTQ(parameters:Parameters) extends Module{
     // By finding the earliest taken branch in the fetch packet, if any
 
 
-    val FTQ_index              = (io.FU_outputs(0).bits.FTQ_index)
+    val FTQ_index               = (io.FU_outputs(0).bits.FTQ_index)
     val is_valid                = io.FU_outputs(0).valid   
     val is_branch               = io.FU_outputs(0).bits.branch_valid
     val is_taken                = io.FU_outputs(0).bits.branch_taken
@@ -126,7 +126,7 @@ class FTQ(parameters:Parameters) extends Module{
     // FRONT POINTER CONTROL //
     ///////////////////////////
 
-    val PC_match = (FTQ(front_index).fetch_PC & "hFFFF_FFF0".U) === (io.commit.bits.fetch_PC & "hFFFF_FFF0".U) //FIXME: parameterize 
+    val PC_match = (get_fetch_packet_aligned_address(parameters, FTQ(front_index).fetch_PC)) === (get_fetch_packet_aligned_address(parameters, io.commit.bits.fetch_PC)) //FIXME: parameterize 
 
     val dq = FTQ(front_index).valid && io.commit.valid && PC_match
 
@@ -136,9 +136,6 @@ class FTQ(parameters:Parameters) extends Module{
         FTQ(front_index) := 0.U.asTypeOf(new FTQ_entry(parameters))
         front_pointer := front_pointer + 1.U
     }
-
-
-
 
     when(io.flush){
         for(i <- 0 until FTQEntries){
@@ -164,7 +161,7 @@ class FTQ(parameters:Parameters) extends Module{
     dontTouch(front_index)
     dontTouch(back_index)
 
-    val full = (front_pointer =/= back_pointer) && (front_index === back_index)
+    val full = (front_pointer(pointer_bits-1) =/= back_pointer(pointer_bits-1)) && (front_index === back_index)
 
     io.predictions.ready := !full
 

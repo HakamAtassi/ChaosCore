@@ -43,142 +43,86 @@
     `define INIT_RANDOM_PROLOG_
   `endif // RANDOMIZE
 `endif // not def INIT_RANDOM_PROLOG_
-module PC_gen(	// src/main/scala/Frontend/BP/PC_gen.scala:41:7
-  input         clock,	// src/main/scala/Frontend/BP/PC_gen.scala:41:7
-                reset,	// src/main/scala/Frontend/BP/PC_gen.scala:41:7
-                io_commit_valid,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
-  input  [31:0] io_commit_bits_fetch_PC,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
-  input         io_commit_bits_T_NT,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
-  input  [5:0]  io_commit_bits_ROB_index,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
-  input  [2:0]  io_commit_bits_br_type,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
-  input  [1:0]  io_commit_bits_fetch_packet_index,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
-  input         io_commit_bits_is_misprediction,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
-  input  [31:0] io_commit_bits_expected_PC,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
-  input  [15:0] io_commit_bits_GHR,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
-  input  [6:0]  io_commit_bits_TOS,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
-                io_commit_bits_NEXT,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
-  input  [3:0]  io_commit_bits_RAT_index,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
-  input  [7:0]  io_commit_bits_free_list_front_pointer,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
-  input  [6:0]  io_commit_bits_RD_0,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
-                io_commit_bits_RD_1,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
-                io_commit_bits_RD_2,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
-                io_commit_bits_RD_3,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
-  input         io_commit_bits_RD_valid_0,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
-                io_commit_bits_RD_valid_1,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
-                io_commit_bits_RD_valid_2,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
-                io_commit_bits_RD_valid_3,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
-                io_revert_valid,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
-  input  [31:0] io_revert_bits_PC,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
-  output        io_prediction_ready,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
-  input         io_prediction_valid,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
-                io_prediction_bits_hit,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
-  input  [31:0] io_prediction_bits_target,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
-  input  [2:0]  io_prediction_bits_br_type,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
-  input  [15:0] io_prediction_bits_GHR,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
-  input         io_prediction_bits_T_NT,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
-  input  [6:0]  io_RAS_read_NEXT,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
-                io_RAS_read_TOS,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
-  input  [31:0] io_RAS_read_ret_addr,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
-  input         io_PC_next_ready,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
-  output        io_PC_next_valid,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
-  output [31:0] io_PC_next_bits_addr,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
-                io_PC_next_bits_wr_data,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
-  output        io_PC_next_bits_wr_en	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
+module PC_gen(	// src/main/scala/Frontend/BP/PC_gen.scala:40:7
+  input         clock,	// src/main/scala/Frontend/BP/PC_gen.scala:40:7
+                reset,	// src/main/scala/Frontend/BP/PC_gen.scala:40:7
+                io_commit_valid,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
+  input  [31:0] io_commit_bits_fetch_PC,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
+  input         io_commit_bits_T_NT,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
+  input  [5:0]  io_commit_bits_ROB_index,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
+  input  [2:0]  io_commit_bits_br_type,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
+  input  [1:0]  io_commit_bits_fetch_packet_index,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
+  input         io_commit_bits_is_misprediction,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
+                io_commit_bits_exception,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
+  input  [31:0] io_commit_bits_expected_PC,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
+  input  [15:0] io_commit_bits_GHR,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
+  input  [6:0]  io_commit_bits_TOS,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
+                io_commit_bits_NEXT,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
+  input  [3:0]  io_commit_bits_RAT_index,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
+  input  [7:0]  io_commit_bits_free_list_front_pointer,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
+  input  [6:0]  io_commit_bits_RD_0,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
+                io_commit_bits_RD_1,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
+                io_commit_bits_RD_2,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
+                io_commit_bits_RD_3,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
+  input         io_commit_bits_RD_valid_0,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
+                io_commit_bits_RD_valid_1,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
+                io_commit_bits_RD_valid_2,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
+                io_commit_bits_RD_valid_3,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
+                io_revert_valid,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
+  input  [31:0] io_revert_bits_PC,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
+  output        io_prediction_ready,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
+  input         io_prediction_valid,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
+                io_prediction_bits_hit,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
+  input  [31:0] io_prediction_bits_target,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
+  input  [2:0]  io_prediction_bits_br_type,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
+  input  [15:0] io_prediction_bits_GHR,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
+  input         io_prediction_bits_T_NT,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
+  input  [6:0]  io_RAS_read_NEXT,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
+                io_RAS_read_TOS,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
+  input  [31:0] io_RAS_read_ret_addr,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
+  input         io_PC_next_ready,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
+  output        io_PC_next_valid,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
+  output [31:0] io_PC_next_bits_addr,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
+                io_PC_next_bits_wr_data,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
+  output        io_PC_next_bits_wr_en	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
 );
 
-  wire        _PC_next_skid_buffer_io_deq_valid;	// src/main/scala/Frontend/BP/PC_gen.scala:131:38
-  wire [31:0] _PC_next_skid_buffer_io_deq_bits_addr;	// src/main/scala/Frontend/BP/PC_gen.scala:131:38
-  reg  [31:0] PC;	// src/main/scala/Frontend/BP/PC_gen.scala:57:37
-  wire        _is_ret_T = io_prediction_bits_br_type == 3'h4;	// src/main/scala/Frontend/BP/PC_gen.scala:76:56
-  wire        is_ret = _is_ret_T & io_prediction_valid;	// src/main/scala/Frontend/BP/PC_gen.scala:76:{56,78}
-  wire        use_BTB = io_prediction_bits_hit & io_prediction_valid & ~is_ret;	// src/main/scala/Frontend/BP/PC_gen.scala:76:78, :78:{52,75,78}
-  wire        flush = io_commit_bits_is_misprediction & io_commit_valid;	// src/main/scala/Frontend/BP/PC_gen.scala:105:49
-  wire        io_PC_next_valid_0 = _PC_next_skid_buffer_io_deq_valid & ~flush;	// src/main/scala/Frontend/BP/PC_gen.scala:105:49, :131:38, :135:{58,61}
-  wire        _GEN = io_PC_next_ready & ~io_commit_valid;	// src/main/scala/Frontend/BP/PC_gen.scala:148:{56,59}
-  wire        _GEN_0 = _GEN & ~io_revert_valid;	// src/main/scala/Frontend/BP/PC_gen.scala:148:{56,76,79}
-  reg  [31:0] REG;	// src/main/scala/Frontend/BP/PC_gen.scala:149:72
-  wire        _GEN_1 = _PC_next_skid_buffer_io_deq_bits_addr == io_RAS_read_ret_addr;	// src/main/scala/Frontend/BP/PC_gen.scala:131:38, :155:65
-  reg         hasBeenResetReg;	// src/main/scala/chisel3/ltl/LTL.scala:422:39
-  initial	// src/main/scala/chisel3/ltl/LTL.scala:422:39
-    hasBeenResetReg = 1'b0;	// src/main/scala/chisel3/ltl/LTL.scala:422:39
-  wire        hasBeenReset = hasBeenResetReg === 1'h1 & reset === 1'h0;	// src/main/scala/Frontend/BP/PC_gen.scala:41:7, src/main/scala/chisel3/ltl/LTL.scala:422:39
-  wire        disable_0 = ~hasBeenReset;	// src/main/scala/chisel3/ltl/LTL.scala:422:39
-  assert property (@(posedge clock) disable iff (disable_0) _GEN_0 & ~io_prediction_valid
-                   |-> _PC_next_skid_buffer_io_deq_bits_addr == REG + 32'h10);	// src/main/scala/Frontend/BP/PC_gen.scala:131:38, :148:{76,96,99}, :149:{60,72,112}, :150:49, :173:19, src/main/scala/chisel3/ltl/LTL.scala:422:39
-  wire        disable_2 = ~hasBeenReset;	// src/main/scala/chisel3/ltl/LTL.scala:422:39
-  assert property (@(posedge clock) disable iff (disable_2)
-                   _GEN_0 & io_prediction_valid & _is_ret_T |-> _GEN_1);	// src/main/scala/Frontend/BP/PC_gen.scala:76:56, :148:76, :154:{101,124}, :155:65, :156:52, :174:19, src/main/scala/chisel3/ltl/LTL.scala:422:39
-  wire        disable_4 = ~hasBeenReset;	// src/main/scala/chisel3/ltl/LTL.scala:422:39
-  assert property (@(posedge clock) disable iff (disable_4)
-                   _GEN & io_revert_valid & ~io_prediction_valid |-> _GEN_1);	// src/main/scala/Frontend/BP/PC_gen.scala:148:{56,99}, :155:65, :159:{84,103}, :161:58, :175:19, src/main/scala/chisel3/ltl/LTL.scala:422:39
-  wire        disable_6 = ~hasBeenReset;	// src/main/scala/chisel3/ltl/LTL.scala:422:39
-  assert property (@(posedge clock) disable iff (disable_6) flush
-                   |-> ~io_PC_next_valid_0);	// src/main/scala/Frontend/BP/PC_gen.scala:105:49, :135:58, :169:63, :170:56, :176:19, src/main/scala/chisel3/ltl/LTL.scala:422:39
-  wire        disable_8 = ~hasBeenReset;	// src/main/scala/chisel3/ltl/LTL.scala:422:39
-  cover property (@(posedge clock) disable iff (disable_8) _GEN_0 & ~io_prediction_valid
-                  |-> _PC_next_skid_buffer_io_deq_bits_addr == REG + 32'h10);	// src/main/scala/Frontend/BP/PC_gen.scala:131:38, :148:{76,96,99}, :149:{60,72,112}, :150:49, :179:18, src/main/scala/chisel3/ltl/LTL.scala:422:39
-  wire        disable_10 = ~hasBeenReset;	// src/main/scala/chisel3/ltl/LTL.scala:422:39
-  cover property (@(posedge clock) disable iff (disable_10)
-                  _GEN_0 & io_prediction_valid & _is_ret_T |-> _GEN_1);	// src/main/scala/Frontend/BP/PC_gen.scala:76:56, :148:76, :154:{101,124}, :155:65, :156:52, :180:18, src/main/scala/chisel3/ltl/LTL.scala:422:39
-  wire        disable_12 = ~hasBeenReset;	// src/main/scala/chisel3/ltl/LTL.scala:422:39
-  cover property (@(posedge clock) disable iff (disable_12)
-                  _GEN & io_revert_valid & ~io_prediction_valid |-> _GEN_1);	// src/main/scala/Frontend/BP/PC_gen.scala:148:{56,99}, :155:65, :159:{84,103}, :161:58, :181:18, src/main/scala/chisel3/ltl/LTL.scala:422:39
-  wire        disable_14 = ~hasBeenReset;	// src/main/scala/chisel3/ltl/LTL.scala:422:39
-  cover property (@(posedge clock) disable iff (disable_14) flush
-                  |-> ~io_PC_next_valid_0);	// src/main/scala/Frontend/BP/PC_gen.scala:105:49, :135:58, :169:63, :170:56, :182:18, src/main/scala/chisel3/ltl/LTL.scala:422:39
-  wire        disable_16 = ~hasBeenReset;	// src/main/scala/chisel3/ltl/LTL.scala:422:39
-  assume property (@(posedge clock) disable iff (disable_16) ~io_PC_next_ready);	// src/main/scala/Frontend/BP/PC_gen.scala:193:56, :197:19, src/main/scala/chisel3/ltl/LTL.scala:422:39
-  always @(posedge clock) begin	// src/main/scala/Frontend/BP/PC_gen.scala:41:7
-    if (reset) begin	// src/main/scala/Frontend/BP/PC_gen.scala:41:7
-      hasBeenResetReg <= 1'h1;	// src/main/scala/Frontend/BP/PC_gen.scala:41:7, src/main/scala/chisel3/ltl/LTL.scala:422:39
-      PC <= 32'h0;	// src/main/scala/Frontend/BP/PC_gen.scala:57:37
-    end
-    else if (io_PC_next_ready & io_PC_next_valid_0)	// src/main/scala/Frontend/BP/PC_gen.scala:135:58, src/main/scala/chisel3/util/Decoupled.scala:51:35
-      PC <=
-        _PC_next_skid_buffer_io_deq_bits_addr
-        + {27'h0, 3'h4 - {1'h0, _PC_next_skid_buffer_io_deq_bits_addr[3:2]}, 2'h0};	// src/main/scala/Frontend/BP/PC_gen.scala:41:7, :57:37, :84:{37,63}, :85:39, :96:36, :131:38
-    REG <= _PC_next_skid_buffer_io_deq_bits_addr & 32'hFFFFFFF0;	// src/main/scala/Frontend/BP/PC_gen.scala:131:38, :149:{72,94}
+  reg  [31:0] PC_reg;	// src/main/scala/Frontend/BP/PC_gen.scala:55:41
+  wire        is_ret = io_prediction_bits_br_type == 3'h4 & io_prediction_valid;	// src/main/scala/Frontend/BP/PC_gen.scala:81:{56,78}
+  wire        flushing_event =
+    io_commit_valid & io_commit_bits_is_misprediction | io_revert_valid;	// src/main/scala/Frontend/BP/PC_gen.scala:77:45, :84:45
+  wire [31:0] PC_mux =
+    io_prediction_bits_hit & io_prediction_valid & ~is_ret
+      ? io_prediction_bits_target
+      : is_ret ? io_RAS_read_ret_addr : PC_reg;	// src/main/scala/Frontend/BP/PC_gen.scala:55:41, :81:78, :82:{52,75,78}, :96:18, :97:16, :98:24, :99:16, :100:40
+  always @(posedge clock) begin	// src/main/scala/Frontend/BP/PC_gen.scala:40:7
+    if (reset)	// src/main/scala/Frontend/BP/PC_gen.scala:40:7
+      PC_reg <= 32'h0;	// src/main/scala/Frontend/BP/PC_gen.scala:55:41
+    else if (io_PC_next_ready & ~flushing_event)	// src/main/scala/Frontend/BP/PC_gen.scala:84:45, :112:29, src/main/scala/chisel3/util/Decoupled.scala:51:35
+      PC_reg <= PC_mux + {26'h0, 6'h10 - {2'h0, PC_mux[3:0]}};	// src/main/scala/Frontend/BP/PC_gen.scala:55:41, :96:18, :97:16, :98:24, :107:44, src/main/scala/utils.scala:323:47, :324:38
   end // always @(posedge)
-  `ifdef ENABLE_INITIAL_REG_	// src/main/scala/Frontend/BP/PC_gen.scala:41:7
-    `ifdef FIRRTL_BEFORE_INITIAL	// src/main/scala/Frontend/BP/PC_gen.scala:41:7
-      `FIRRTL_BEFORE_INITIAL	// src/main/scala/Frontend/BP/PC_gen.scala:41:7
+  `ifdef ENABLE_INITIAL_REG_	// src/main/scala/Frontend/BP/PC_gen.scala:40:7
+    `ifdef FIRRTL_BEFORE_INITIAL	// src/main/scala/Frontend/BP/PC_gen.scala:40:7
+      `FIRRTL_BEFORE_INITIAL	// src/main/scala/Frontend/BP/PC_gen.scala:40:7
     `endif // FIRRTL_BEFORE_INITIAL
-    initial begin	// src/main/scala/Frontend/BP/PC_gen.scala:41:7
-      automatic logic [31:0] _RANDOM[0:1];	// src/main/scala/Frontend/BP/PC_gen.scala:41:7
-      `ifdef INIT_RANDOM_PROLOG_	// src/main/scala/Frontend/BP/PC_gen.scala:41:7
-        `INIT_RANDOM_PROLOG_	// src/main/scala/Frontend/BP/PC_gen.scala:41:7
+    initial begin	// src/main/scala/Frontend/BP/PC_gen.scala:40:7
+      automatic logic [31:0] _RANDOM[0:0];	// src/main/scala/Frontend/BP/PC_gen.scala:40:7
+      `ifdef INIT_RANDOM_PROLOG_	// src/main/scala/Frontend/BP/PC_gen.scala:40:7
+        `INIT_RANDOM_PROLOG_	// src/main/scala/Frontend/BP/PC_gen.scala:40:7
       `endif // INIT_RANDOM_PROLOG_
-      `ifdef RANDOMIZE_REG_INIT	// src/main/scala/Frontend/BP/PC_gen.scala:41:7
-        for (logic [1:0] i = 2'h0; i < 2'h2; i += 2'h1) begin
-          _RANDOM[i[0]] = `RANDOM;	// src/main/scala/Frontend/BP/PC_gen.scala:41:7
-        end	// src/main/scala/Frontend/BP/PC_gen.scala:41:7
-        PC = _RANDOM[1'h0];	// src/main/scala/Frontend/BP/PC_gen.scala:41:7, :57:37
-        REG = _RANDOM[1'h1];	// src/main/scala/Frontend/BP/PC_gen.scala:41:7, :149:72
+      `ifdef RANDOMIZE_REG_INIT	// src/main/scala/Frontend/BP/PC_gen.scala:40:7
+        _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// src/main/scala/Frontend/BP/PC_gen.scala:40:7
+        PC_reg = _RANDOM[/*Zero width*/ 1'b0];	// src/main/scala/Frontend/BP/PC_gen.scala:40:7, :55:41
       `endif // RANDOMIZE_REG_INIT
     end // initial
-    `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/Frontend/BP/PC_gen.scala:41:7
-      `FIRRTL_AFTER_INITIAL	// src/main/scala/Frontend/BP/PC_gen.scala:41:7
+    `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/Frontend/BP/PC_gen.scala:40:7
+      `FIRRTL_AFTER_INITIAL	// src/main/scala/Frontend/BP/PC_gen.scala:40:7
     `endif // FIRRTL_AFTER_INITIAL
   `endif // ENABLE_INITIAL_REG_
-  Queue1_memory_request PC_next_skid_buffer (	// src/main/scala/Frontend/BP/PC_gen.scala:131:38
-    .clock               (clock),
-    .reset               (reset),
-    .io_enq_valid
-      (~flush & (io_revert_valid ? ~flush : use_BTB ? ~flush : is_ret ? ~flush : ~flush)),	// src/main/scala/Frontend/BP/PC_gen.scala:76:78, :78:{52,75}, :103:13, :105:49, :107:16, :109:32, :111:{31,41}, :113:22, :115:{31,41}, :116:28, :118:{31,41}, :121:{31,41}
-    .io_enq_bits_addr
-      (flush
-         ? io_commit_bits_fetch_PC
-         : io_revert_valid
-             ? io_revert_bits_PC
-             : use_BTB ? io_prediction_bits_target : is_ret ? io_RAS_read_ret_addr : PC),	// src/main/scala/Frontend/BP/PC_gen.scala:57:37, :76:78, :78:{52,75}, :105:49, :107:16, :108:31, :109:32, :110:31, :113:22, :114:31, :116:28, :117:31, :120:31
-    .io_deq_ready        (io_PC_next_ready),
-    .io_deq_valid        (_PC_next_skid_buffer_io_deq_valid),
-    .io_deq_bits_addr    (_PC_next_skid_buffer_io_deq_bits_addr),
-    .io_deq_bits_wr_data (io_PC_next_bits_wr_data),
-    .io_deq_bits_wr_en   (io_PC_next_bits_wr_en)
-  );	// src/main/scala/Frontend/BP/PC_gen.scala:131:38
-  assign io_prediction_ready = io_PC_next_ready;	// src/main/scala/Frontend/BP/PC_gen.scala:41:7
-  assign io_PC_next_valid = io_PC_next_valid_0;	// src/main/scala/Frontend/BP/PC_gen.scala:41:7, :135:58
-  assign io_PC_next_bits_addr = _PC_next_skid_buffer_io_deq_bits_addr;	// src/main/scala/Frontend/BP/PC_gen.scala:41:7, :131:38
+  assign io_prediction_ready = io_PC_next_ready;	// src/main/scala/Frontend/BP/PC_gen.scala:40:7
+  assign io_PC_next_valid = ~flushing_event;	// src/main/scala/Frontend/BP/PC_gen.scala:40:7, :84:45, :112:29
+  assign io_PC_next_bits_addr = PC_mux;	// src/main/scala/Frontend/BP/PC_gen.scala:40:7, :96:18, :97:16, :98:24
+  assign io_PC_next_bits_wr_data = 32'h0;	// src/main/scala/Frontend/BP/PC_gen.scala:40:7, :55:41
+  assign io_PC_next_bits_wr_en = 1'h0;	// src/main/scala/Frontend/BP/PC_gen.scala:40:7
 endmodule
 

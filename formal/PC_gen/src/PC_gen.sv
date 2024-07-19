@@ -50,7 +50,7 @@ module PC_gen(	// src/main/scala/Frontend/BP/PC_gen.scala:41:7
   input  [31:0] io_commit_bits_fetch_PC,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
   input         io_commit_bits_T_NT,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
   input  [5:0]  io_commit_bits_ROB_index,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
-  input  [2:0]  io_commit_bitsbr_type_t,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
+  input  [2:0]  io_commit_bits_br_type,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
   input  [1:0]  io_commit_bits_fetch_packet_index,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
   input         io_commit_bits_is_misprediction,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
   input  [31:0] io_commit_bits_expected_PC,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
@@ -73,7 +73,7 @@ module PC_gen(	// src/main/scala/Frontend/BP/PC_gen.scala:41:7
   input         io_prediction_valid,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
                 io_prediction_bits_hit,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
   input  [31:0] io_prediction_bits_target,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
-  input  [2:0]  io_prediction_bitsbr_type_t,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
+  input  [2:0]  io_prediction_bits_br_type,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
   input  [15:0] io_prediction_bits_GHR,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
   input         io_prediction_bits_T_NT,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
   input  [6:0]  io_RAS_read_NEXT,	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
@@ -86,58 +86,56 @@ module PC_gen(	// src/main/scala/Frontend/BP/PC_gen.scala:41:7
   output        io_PC_next_bits_wr_en	// src/main/scala/Frontend/BP/PC_gen.scala:44:16
 );
 
-  wire        _PC_next_skid_buffer_io_deq_valid;	// src/main/scala/Frontend/BP/PC_gen.scala:131:38
-  wire [31:0] _PC_next_skid_buffer_io_deq_bits_addr;	// src/main/scala/Frontend/BP/PC_gen.scala:131:38
+  wire        _PC_next_skid_buffer_io_deq_valid;	// src/main/scala/Frontend/BP/PC_gen.scala:124:38
+  wire [31:0] _PC_next_skid_buffer_io_deq_bits_addr;	// src/main/scala/Frontend/BP/PC_gen.scala:124:38
   reg  [31:0] PC;	// src/main/scala/Frontend/BP/PC_gen.scala:57:37
-  wire        _is_ret_T = io_prediction_bitsbr_type_t == 3'h4;	// src/main/scala/Frontend/BP/PC_gen.scala:76:56
-  wire        is_ret = _is_ret_T & io_prediction_valid;	// src/main/scala/Frontend/BP/PC_gen.scala:76:{56,77}
-  wire        use_BTB = io_prediction_bits_hit & io_prediction_valid & ~is_ret;	// src/main/scala/Frontend/BP/PC_gen.scala:76:77, :78:{52,75,78}
-  wire        flush = io_commit_bits_is_misprediction & io_commit_valid;	// src/main/scala/Frontend/BP/PC_gen.scala:105:49
-  wire        io_PC_next_valid_0 = _PC_next_skid_buffer_io_deq_valid & ~flush;	// src/main/scala/Frontend/BP/PC_gen.scala:105:49, :131:38, :135:{58,61}
-  wire        _GEN = io_PC_next_ready & ~io_commit_valid;	// src/main/scala/Frontend/BP/PC_gen.scala:149:{56,59}
-  wire        _GEN_0 = _GEN & ~io_revert_valid;	// src/main/scala/Frontend/BP/PC_gen.scala:149:{56,76,79}
-  reg  [31:0] REG;	// src/main/scala/Frontend/BP/PC_gen.scala:150:72
-  wire        _GEN_1 = _PC_next_skid_buffer_io_deq_bits_addr == io_RAS_read_ret_addr;	// src/main/scala/Frontend/BP/PC_gen.scala:131:38, :156:65
+  wire        _is_ret_T = io_prediction_bits_br_type == 3'h4;	// src/main/scala/Frontend/BP/PC_gen.scala:76:56
+  wire        is_ret = _is_ret_T & io_prediction_valid;	// src/main/scala/Frontend/BP/PC_gen.scala:76:{56,78}
+  wire        use_BTB = io_prediction_bits_hit & io_prediction_valid & ~is_ret;	// src/main/scala/Frontend/BP/PC_gen.scala:76:78, :78:{52,75,78}
+  wire        flush = io_commit_bits_is_misprediction & io_commit_valid;	// src/main/scala/Frontend/BP/PC_gen.scala:98:52
+  wire        io_PC_next_valid_0 = _PC_next_skid_buffer_io_deq_valid & ~flush;	// src/main/scala/Frontend/BP/PC_gen.scala:98:52, :124:38, :130:{58,61}
+  wire        _GEN = io_PC_next_ready & ~io_commit_valid;	// src/main/scala/Frontend/BP/PC_gen.scala:143:{56,59}
+  wire        _GEN_0 = _GEN & ~io_revert_valid;	// src/main/scala/Frontend/BP/PC_gen.scala:143:{56,76,79}
+  reg  [31:0] REG;	// src/main/scala/Frontend/BP/PC_gen.scala:144:72
+  wire        _GEN_1 = _PC_next_skid_buffer_io_deq_bits_addr == io_RAS_read_ret_addr;	// src/main/scala/Frontend/BP/PC_gen.scala:124:38, :150:65
   reg         hasBeenResetReg;	// src/main/scala/chisel3/ltl/LTL.scala:422:39
   initial	// src/main/scala/chisel3/ltl/LTL.scala:422:39
     hasBeenResetReg = 1'b0;	// src/main/scala/chisel3/ltl/LTL.scala:422:39
   wire        hasBeenReset = hasBeenResetReg === 1'h1 & reset === 1'h0;	// src/main/scala/Frontend/BP/PC_gen.scala:41:7, src/main/scala/chisel3/ltl/LTL.scala:422:39
   wire        disable_0 = ~hasBeenReset;	// src/main/scala/chisel3/ltl/LTL.scala:422:39
   assert property (@(posedge clock) disable iff (disable_0) _GEN_0 & ~io_prediction_valid
-                   |-> _PC_next_skid_buffer_io_deq_bits_addr == REG + 32'h10);	// src/main/scala/Frontend/BP/PC_gen.scala:131:38, :149:{76,96,99}, :150:{60,72,112}, :151:49, :175:19, src/main/scala/chisel3/ltl/LTL.scala:422:39
+                   |-> _PC_next_skid_buffer_io_deq_bits_addr == REG + 32'h10);	// src/main/scala/Frontend/BP/PC_gen.scala:124:38, :143:{76,96,99}, :144:{60,72,112}, :145:49, :168:19, src/main/scala/chisel3/ltl/LTL.scala:422:39
   wire        disable_2 = ~hasBeenReset;	// src/main/scala/chisel3/ltl/LTL.scala:422:39
   assert property (@(posedge clock) disable iff (disable_2)
-                   _GEN_0 & io_prediction_valid & _is_ret_T |-> _GEN_1);	// src/main/scala/Frontend/BP/PC_gen.scala:76:56, :149:76, :155:{101,124}, :156:65, :157:52, :176:19, src/main/scala/chisel3/ltl/LTL.scala:422:39
+                   _GEN_0 & io_prediction_valid & _is_ret_T |-> _GEN_1);	// src/main/scala/Frontend/BP/PC_gen.scala:76:56, :143:76, :149:{101,124}, :150:65, :151:52, :169:19, src/main/scala/chisel3/ltl/LTL.scala:422:39
   wire        disable_4 = ~hasBeenReset;	// src/main/scala/chisel3/ltl/LTL.scala:422:39
   assert property (@(posedge clock) disable iff (disable_4)
-                   _GEN & io_revert_valid & ~io_prediction_valid |-> _GEN_1);	// src/main/scala/Frontend/BP/PC_gen.scala:149:{56,99}, :156:65, :160:{84,103}, :162:58, :177:19, src/main/scala/chisel3/ltl/LTL.scala:422:39
+                   _GEN & io_revert_valid & ~io_prediction_valid |-> _GEN_1);	// src/main/scala/Frontend/BP/PC_gen.scala:143:{56,99}, :150:65, :154:{84,103}, :156:58, :170:19, src/main/scala/chisel3/ltl/LTL.scala:422:39
   wire        disable_6 = ~hasBeenReset;	// src/main/scala/chisel3/ltl/LTL.scala:422:39
   assert property (@(posedge clock) disable iff (disable_6) flush
-                   |-> ~io_PC_next_valid_0);	// src/main/scala/Frontend/BP/PC_gen.scala:105:49, :135:58, :171:63, :172:55, :178:19, src/main/scala/chisel3/ltl/LTL.scala:422:39
+                   |-> ~io_PC_next_valid_0);	// src/main/scala/Frontend/BP/PC_gen.scala:98:52, :130:58, :164:63, :165:56, :171:19, src/main/scala/chisel3/ltl/LTL.scala:422:39
   wire        disable_8 = ~hasBeenReset;	// src/main/scala/chisel3/ltl/LTL.scala:422:39
   cover property (@(posedge clock) disable iff (disable_8) _GEN_0 & ~io_prediction_valid
-                  |-> _PC_next_skid_buffer_io_deq_bits_addr == REG + 32'h10);	// src/main/scala/Frontend/BP/PC_gen.scala:131:38, :149:{76,96,99}, :150:{60,72,112}, :151:49, :181:18, src/main/scala/chisel3/ltl/LTL.scala:422:39
+                  |-> _PC_next_skid_buffer_io_deq_bits_addr == REG + 32'h10);	// src/main/scala/Frontend/BP/PC_gen.scala:124:38, :143:{76,96,99}, :144:{60,72,112}, :145:49, :174:18, src/main/scala/chisel3/ltl/LTL.scala:422:39
   wire        disable_10 = ~hasBeenReset;	// src/main/scala/chisel3/ltl/LTL.scala:422:39
   cover property (@(posedge clock) disable iff (disable_10)
-                  _GEN_0 & io_prediction_valid & _is_ret_T |-> _GEN_1);	// src/main/scala/Frontend/BP/PC_gen.scala:76:56, :149:76, :155:{101,124}, :156:65, :157:52, :182:18, src/main/scala/chisel3/ltl/LTL.scala:422:39
+                  _GEN_0 & io_prediction_valid & _is_ret_T |-> _GEN_1);	// src/main/scala/Frontend/BP/PC_gen.scala:76:56, :143:76, :149:{101,124}, :150:65, :151:52, :175:18, src/main/scala/chisel3/ltl/LTL.scala:422:39
   wire        disable_12 = ~hasBeenReset;	// src/main/scala/chisel3/ltl/LTL.scala:422:39
   cover property (@(posedge clock) disable iff (disable_12)
-                  _GEN & io_revert_valid & ~io_prediction_valid |-> _GEN_1);	// src/main/scala/Frontend/BP/PC_gen.scala:149:{56,99}, :156:65, :160:{84,103}, :162:58, :183:18, src/main/scala/chisel3/ltl/LTL.scala:422:39
+                  _GEN & io_revert_valid & ~io_prediction_valid |-> _GEN_1);	// src/main/scala/Frontend/BP/PC_gen.scala:143:{56,99}, :150:65, :154:{84,103}, :156:58, :176:18, src/main/scala/chisel3/ltl/LTL.scala:422:39
   wire        disable_14 = ~hasBeenReset;	// src/main/scala/chisel3/ltl/LTL.scala:422:39
   cover property (@(posedge clock) disable iff (disable_14) flush
-                  |-> ~io_PC_next_valid_0);	// src/main/scala/Frontend/BP/PC_gen.scala:105:49, :135:58, :171:63, :172:55, :185:18, src/main/scala/chisel3/ltl/LTL.scala:422:39
-  wire        disable_16 = ~hasBeenReset;	// src/main/scala/chisel3/ltl/LTL.scala:422:39
-  assume property (@(posedge clock) disable iff (disable_16) ~io_PC_next_ready);	// src/main/scala/Frontend/BP/PC_gen.scala:196:56, :200:19, src/main/scala/chisel3/ltl/LTL.scala:422:39
+                  |-> ~io_PC_next_valid_0);	// src/main/scala/Frontend/BP/PC_gen.scala:98:52, :130:58, :164:63, :165:56, :177:18, src/main/scala/chisel3/ltl/LTL.scala:422:39
   always @(posedge clock) begin	// src/main/scala/Frontend/BP/PC_gen.scala:41:7
     if (reset) begin	// src/main/scala/Frontend/BP/PC_gen.scala:41:7
       hasBeenResetReg <= 1'h1;	// src/main/scala/Frontend/BP/PC_gen.scala:41:7, src/main/scala/chisel3/ltl/LTL.scala:422:39
       PC <= 32'h0;	// src/main/scala/Frontend/BP/PC_gen.scala:57:37
     end
-    else if (io_PC_next_ready & io_PC_next_valid_0)	// src/main/scala/Frontend/BP/PC_gen.scala:135:58, src/main/scala/chisel3/util/Decoupled.scala:51:35
+    else if (io_PC_next_ready & io_PC_next_valid_0)	// src/main/scala/Frontend/BP/PC_gen.scala:130:58, src/main/scala/chisel3/util/Decoupled.scala:51:35
       PC <=
         _PC_next_skid_buffer_io_deq_bits_addr
-        + {27'h0, 3'h4 - {1'h0, _PC_next_skid_buffer_io_deq_bits_addr[3:2]}, 2'h0};	// src/main/scala/Frontend/BP/PC_gen.scala:41:7, :57:37, :84:{37,63}, :85:39, :96:36, :131:38
-    REG <= _PC_next_skid_buffer_io_deq_bits_addr & 32'hFFFFFFF0;	// src/main/scala/Frontend/BP/PC_gen.scala:131:38, :150:{72,94}
+        + {26'h0, 6'h10 - {2'h0, _PC_next_skid_buffer_io_deq_bits_addr[3:0]}};	// src/main/scala/Frontend/BP/PC_gen.scala:41:7, :57:37, :92:36, :124:38, src/main/scala/utils.scala:324:47, :325:38
+    REG <= _PC_next_skid_buffer_io_deq_bits_addr & 32'hFFFFFFF0;	// src/main/scala/Frontend/BP/PC_gen.scala:124:38, :144:{72,94}
   end // always @(posedge)
   `ifdef ENABLE_INITIAL_REG_	// src/main/scala/Frontend/BP/PC_gen.scala:41:7
     `ifdef FIRRTL_BEFORE_INITIAL	// src/main/scala/Frontend/BP/PC_gen.scala:41:7
@@ -153,32 +151,33 @@ module PC_gen(	// src/main/scala/Frontend/BP/PC_gen.scala:41:7
           _RANDOM[i[0]] = `RANDOM;	// src/main/scala/Frontend/BP/PC_gen.scala:41:7
         end	// src/main/scala/Frontend/BP/PC_gen.scala:41:7
         PC = _RANDOM[1'h0];	// src/main/scala/Frontend/BP/PC_gen.scala:41:7, :57:37
-        REG = _RANDOM[1'h1];	// src/main/scala/Frontend/BP/PC_gen.scala:41:7, :150:72
+        REG = _RANDOM[1'h1];	// src/main/scala/Frontend/BP/PC_gen.scala:41:7, :144:72
       `endif // RANDOMIZE_REG_INIT
     end // initial
     `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/Frontend/BP/PC_gen.scala:41:7
       `FIRRTL_AFTER_INITIAL	// src/main/scala/Frontend/BP/PC_gen.scala:41:7
     `endif // FIRRTL_AFTER_INITIAL
   `endif // ENABLE_INITIAL_REG_
-  Queue1_memory_request PC_next_skid_buffer (	// src/main/scala/Frontend/BP/PC_gen.scala:131:38
+  Queue1_memory_request PC_next_skid_buffer (	// src/main/scala/Frontend/BP/PC_gen.scala:124:38
     .clock               (clock),
     .reset               (reset),
     .io_enq_valid
-      (~flush & (io_revert_valid ? ~flush : use_BTB ? ~flush : is_ret ? ~flush : ~flush)),	// src/main/scala/Frontend/BP/PC_gen.scala:76:77, :78:{52,75}, :103:13, :105:49, :107:16, :109:32, :111:{31,41}, :113:22, :115:{31,41}, :116:28, :118:{31,41}, :121:{31,41}
+      (~flush & (io_revert_valid ? ~flush : use_BTB ? ~flush : is_ret ? ~flush : ~flush)),	// src/main/scala/Frontend/BP/PC_gen.scala:76:78, :78:{52,75}, :96:17, :98:52, :100:16, :102:32, :104:{31,41}, :106:22, :108:{31,41}, :109:28, :111:{31,41}, :114:{31,41}
     .io_enq_bits_addr
       (flush
          ? io_commit_bits_fetch_PC
          : io_revert_valid
              ? io_revert_bits_PC
-             : use_BTB ? io_prediction_bits_target : is_ret ? io_RAS_read_ret_addr : PC),	// src/main/scala/Frontend/BP/PC_gen.scala:57:37, :76:77, :78:{52,75}, :105:49, :107:16, :108:31, :109:32, :110:31, :113:22, :114:31, :116:28, :117:31, :120:31
+             : use_BTB ? io_prediction_bits_target : is_ret ? io_RAS_read_ret_addr : PC),	// src/main/scala/Frontend/BP/PC_gen.scala:57:37, :76:78, :78:{52,75}, :98:52, :100:16, :101:31, :102:32, :103:31, :106:22, :107:31, :109:28, :110:31, :113:31
     .io_deq_ready        (io_PC_next_ready),
     .io_deq_valid        (_PC_next_skid_buffer_io_deq_valid),
     .io_deq_bits_addr    (_PC_next_skid_buffer_io_deq_bits_addr),
     .io_deq_bits_wr_data (io_PC_next_bits_wr_data),
-    .io_deq_bits_wr_en   (io_PC_next_bits_wr_en)
-  );	// src/main/scala/Frontend/BP/PC_gen.scala:131:38
+    .io_deq_bits_wr_en   (io_PC_next_bits_wr_en),
+    .io_flush            (flush)	// src/main/scala/Frontend/BP/PC_gen.scala:98:52
+  );	// src/main/scala/Frontend/BP/PC_gen.scala:124:38
   assign io_prediction_ready = io_PC_next_ready;	// src/main/scala/Frontend/BP/PC_gen.scala:41:7
-  assign io_PC_next_valid = io_PC_next_valid_0;	// src/main/scala/Frontend/BP/PC_gen.scala:41:7, :135:58
-  assign io_PC_next_bits_addr = _PC_next_skid_buffer_io_deq_bits_addr;	// src/main/scala/Frontend/BP/PC_gen.scala:41:7, :131:38
+  assign io_PC_next_valid = io_PC_next_valid_0;	// src/main/scala/Frontend/BP/PC_gen.scala:41:7, :130:58
+  assign io_PC_next_bits_addr = _PC_next_skid_buffer_io_deq_bits_addr;	// src/main/scala/Frontend/BP/PC_gen.scala:41:7, :124:38
 endmodule
 

@@ -62,9 +62,7 @@ class frontend(parameters:Parameters) extends Module{
         // RD FREE //
         val FU_outputs                      =   Vec(portCount, Flipped(ValidIO(new FU_output(parameters))))
 
-
-
-        val revert                = ValidIO(new revert(parameters))
+        val revert                          =   ValidIO(new revert(parameters))
     })
 
 
@@ -75,9 +73,9 @@ class frontend(parameters:Parameters) extends Module{
 
     val instruction_fetch   = Module(new instruction_fetch(parameters))
     val decoders            = Module(new fetch_packet_decoder(parameters))
-
-    val instruction_queue   = Module(new Q(new decoded_fetch_packet(parameters), depth = 16))
-    val FTQ_queue           = Module(new Q(new FTQ_entry(parameters), depth = 16))
+    
+    val instruction_queue   = Module(new Queue(new decoded_fetch_packet(parameters), 16, flow=true, hasFlush=true, useSyncReadMem=true))
+    val FTQ_queue           = Module(new Queue(new FTQ_entry(parameters), 16, flow=true, hasFlush=true, useSyncReadMem=true))
 
     val rename              = Module(new rename(parameters))
 
@@ -102,7 +100,7 @@ class frontend(parameters:Parameters) extends Module{
     // DECODERS //
     //////////////
     decoders.io.fetch_packet <> instruction_fetch.io.fetch_packet
-    decoders.io.decoded_fetch_packet.ready := FTQ_queue.io.in.ready && instruction_queue.io.in.ready
+    decoders.io.decoded_fetch_packet.ready := FTQ_queue.io.enq.ready && instruction_queue.io.enq.ready
 
     ///////////////
     // FTQ INPUT //
@@ -113,20 +111,19 @@ class frontend(parameters:Parameters) extends Module{
     ///////////////
     // FTQ QUEUE //
     ///////////////
-    FTQ_queue.io.in <> decoders.io.predictions_out
-    FTQ_queue.io.in.valid := decoders.io.predictions_out.valid && instruction_queue.io.in.ready
-
-    FTQ_queue.io.flush := io.flush 
+    FTQ_queue.io.enq <> decoders.io.predictions_out
+    FTQ_queue.io.enq.valid := decoders.io.predictions_out.valid && instruction_queue.io.enq.ready
+    FTQ_queue.io.flush.get := io.flush 
     
     ////////////
     // RENAME //
     ////////////
-    instruction_queue.io.flush := flush
+    instruction_queue.io.flush.get := flush
 
     rename.io.FU_outputs           <>     io.FU_outputs
     rename.io.flush                <>     io.flush
     rename.io.commit               <>     io.commit
-    rename.io.predictions_in       <>     FTQ_queue.io.out
+    rename.io.predictions_in       <>     FTQ_queue.io.deq
     rename.io.predictions_out      <>     io.predictions
 
     ////////////
@@ -138,12 +135,12 @@ class frontend(parameters:Parameters) extends Module{
     ///////////////////////
     // INSTRUCTION QUEUE //
     ///////////////////////
-    instruction_queue.io.in         <> decoders.io.decoded_fetch_packet
-    instruction_queue.io.in.valid   := decoders.io.decoded_fetch_packet.valid && FTQ_queue.io.in.ready
-    instruction_queue.io.flush      <> io.flush
+    instruction_queue.io.enq         <> decoders.io.decoded_fetch_packet
+    instruction_queue.io.enq.valid   := decoders.io.decoded_fetch_packet.valid && FTQ_queue.io.enq.ready
+    instruction_queue.io.flush.get   <> io.flush
 
 
-    rename.io.decoded_fetch_packet <> instruction_queue.io.out
+    rename.io.decoded_fetch_packet <> instruction_queue.io.deq
 
 
     

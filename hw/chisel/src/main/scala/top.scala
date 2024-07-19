@@ -35,6 +35,22 @@ import chisel3.util._
 import java.io.{File, FileWriter}
 import java.rmi.server.UID
 
+object VerilogGenerator {
+
+    def generateVerilog(module: => RawModule, fileName: String): Unit = {
+        val elaboratedModule = ChiselStage.emitSystemVerilog(module, firtoolOpts = Array("-disable-all-randomization", "-strip-debug-info"))
+
+        val file = new File(fileName)
+        val fw = new FileWriter(file)
+
+        try {
+            fw.write(elaboratedModule)
+        } finally {
+            fw.close()
+        }
+    }
+}
+
 object Main extends App {
     import Parameters._
 
@@ -50,6 +66,9 @@ object Main extends App {
 
 
     //chisel2v("src/main/scala/Parameters.scala", "src/main/scala/bundles.scala") // convert chisel bundles to verilog typedefs for UVM
+    VerilogGenerator.generateVerilog(new ChaosCore(parameters), 
+     "../verilog/Core/ChaosCore.v")
+
     removeYosysInvalid("../verilog/")
 
     generate_sv_interfaces("src/main/scala/Parameters.scala", "src/main/scala/bundles.scala")

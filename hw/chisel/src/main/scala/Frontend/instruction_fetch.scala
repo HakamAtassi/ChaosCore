@@ -32,40 +32,6 @@ package ChaosCore
 import chisel3._
 import chisel3.util._
 
-class Q[T <: Data](dataType: T, depth: Int = 16) extends Module{
-  val io = IO(new Bundle {
-    //val data_in    = Input(dataType)         // input data (bundle)
-    //val wr_en      = Input(Bool())           // write element
-    //val rd_en      = Input(Bool())           // read element
-
-    val in         = Flipped(Decoupled(dataType)) 
-    val out        = Decoupled(dataType)
-
-    //val data_out   = Output(dataType)        // output data (bundle)
-    //val full       = Output(Bool())          // queue full
-    //val empty      = Output(Bool())          // queue empty
-
-    val flush      = Input(Bool())           // Clear entire queue
-  })
-
-  val queue = Module(new Queue(dataType, depth, flow=true, hasFlush=true, useSyncReadMem=true))
-
-  // Connect inputs
-  //queue.io.enq.valid := io.wr_en
-  //queue.io.enq.bits := io.data_in
-  //queue.io.deq.ready := io.rd_en
-
-  queue.io.enq <> io.in
-  queue.io.deq <> io.out
-  queue.io.flush.get <> io.flush
-
-  // Connect outputs
-  //io.data_out := queue.io.deq.bits
-  //io.full :=  !queue.io.enq.ready
-  //io.empty := !queue.io.deq.valid
-
-}
-
 class instruction_fetch(parameters:Parameters) extends Module{
   import parameters._
 
@@ -94,25 +60,25 @@ class instruction_fetch(parameters:Parameters) extends Module{
     ////////////
     // Queues //
     ////////////
-    val instruction_Q   =   Module(new Q(new fetch_packet(parameters), depth = 16))              // Instantiate queue with fetch_packet data type
-    val PC_Q            =   Module(new Q(new memory_request(parameters), depth = 16))            // Queue of predicted PCs
-    val BTB_Q           =   Module(new Q(new prediction(parameters), depth = 16))                // Queue of BTB responses
+    val instruction_Q   =   Module(new Queue(new fetch_packet(parameters), 16, flow=true, hasFlush=true, useSyncReadMem=true))
+    val PC_Q            =   Module(new Queue(new memory_request(parameters), 16, flow=true, hasFlush=true, useSyncReadMem=true))
+    val BTB_Q           =   Module(new Queue(new prediction(parameters), 16, flow=true, hasFlush=true, useSyncReadMem=true))
 
     ///////////////////////
     // INSTRUCTION QUEUE //
     ///////////////////////
-    instruction_Q.io.in           <> io.memory_response
-    instruction_Q.io.out          <> predecoder.io.fetch_packet
-    instruction_Q.io.out.ready    := (BTB_Q.io.out.valid && predecoder.io.fetch_packet.ready)
+    instruction_Q.io.enq          <> io.memory_response
+    instruction_Q.io.deq          <> predecoder.io.fetch_packet
+    instruction_Q.io.deq.ready    := (predecoder.io.prediction.ready && predecoder.io.fetch_packet.ready && BTB_Q.io.deq.valid)
 
 
     ////////////////
     // PREDECODER //
     ////////////////
-    predecoder.io.prediction            <> BTB_Q.io.out
-    predecoder.io.fetch_packet          <> instruction_Q.io.out
-    predecoder.io.RAS_read              <> bp.io.RAS_read
+    predecoder.io.prediction            <> BTB_Q.io.deq
     predecoder.io.final_fetch_packet    <> io.fetch_packet 
+    predecoder.io.fetch_packet          <> instruction_Q.io.deq
+    predecoder.io.RAS_read              <> bp.io.RAS_read
     predecoder.io.predictions           <> io.predictions
     predecoder.io.commit                <> io.commit
     
@@ -123,20 +89,20 @@ class instruction_fetch(parameters:Parameters) extends Module{
     PC_gen.io.prediction        <> bp.io.prediction
     PC_gen.io.RAS_read          <> bp.io.RAS_read
     PC_gen.io.revert            <> predecoder.io.revert
-    PC_gen.io.PC_next.ready     := bp.io.predict.ready && PC_Q.io.in.ready
+    PC_gen.io.PC_next.ready     := bp.io.predict.ready && PC_Q.io.enq.ready
 
     ///////////////
     // BTB QUEUE //
     ///////////////
-    BTB_Q.io.in                   <> bp.io.prediction
-    BTB_Q.io.out                  <> predecoder.io.prediction
-    BTB_Q.io.out.ready            := (instruction_Q.io.out.valid && predecoder.io.prediction.ready)
+    BTB_Q.io.enq                  <> bp.io.prediction
+    BTB_Q.io.deq                  <> predecoder.io.prediction
+    BTB_Q.io.deq.ready            := (predecoder.io.prediction.ready && predecoder.io.fetch_packet.ready && instruction_Q.io.deq.valid)
     
     ////////
     // BP //
     ////////
     bp.io.commit            <>  io.commit
-    bp.io.predict           <>  PC_Q.io.out
+    bp.io.predict           <>  PC_Q.io.deq
     bp.io.RAS_update        <>  predecoder.io.RAS_update
     bp.io.GHR               <>  predecoder.io.GHR
     bp.io.predict.valid     :=  PC_gen.io.PC_next.fire
@@ -144,18 +110,18 @@ class instruction_fetch(parameters:Parameters) extends Module{
     //////////////
     // PC Queue //
     //////////////
-    PC_Q.io.in              <> PC_gen.io.PC_next
-    PC_Q.io.out             <> io.memory_request
-    PC_Q.io.in.valid        := PC_gen.io.PC_next.valid && bp.io.predict.ready
+    PC_Q.io.enq              <> PC_gen.io.PC_next
+    PC_Q.io.deq             <> io.memory_request
+    PC_Q.io.enq.valid        := PC_gen.io.PC_next.valid && bp.io.predict.ready
 
     /////////////
     // FLUSHES //
     /////////////
-    BTB_Q.io.flush                :=  io.flush || io.revert.valid
-    PC_Q.io.flush                 :=  io.flush || io.revert.valid
-    instruction_Q.io.flush        :=  io.flush || io.revert.valid
-    bp.io.flush                   :=  io.flush || io.revert.valid
-    predecoder.io.flush           :=  io.flush // NO REVERT HERE 
+    BTB_Q.io.flush.get                :=  io.flush || io.revert.valid
+    PC_Q.io.flush.get                 :=  io.flush || io.revert.valid
+    instruction_Q.io.flush.get        :=  io.flush || io.revert.valid
+    bp.io.flush                       :=  io.flush || io.revert.valid
+    predecoder.io.flush               :=  io.flush // NO REVERT HERE 
 
     /////////////
     // OUTPUTS //

@@ -60,7 +60,8 @@ module ROB_WB_mem(	// src/main/scala/memories/memories.scala:235:7
   input        io_writeDataE_busy,	// src/main/scala/memories/memories.scala:236:14
                io_writeEnableE,	// src/main/scala/memories/memories.scala:236:14
   input  [5:0] io_addrG,	// src/main/scala/memories/memories.scala:236:14
-  output       io_readDataG_busy	// src/main/scala/memories/memories.scala:236:14
+  output       io_readDataG_busy,	// src/main/scala/memories/memories.scala:236:14
+               io_readDataG_exception	// src/main/scala/memories/memories.scala:236:14
 );
 
   wire [1:0] _mem_ext_R0_data;	// src/main/scala/memories/memories.scala:266:24
@@ -91,5 +92,6 @@ module ROB_WB_mem(	// src/main/scala/memories/memories.scala:235:7
     .W4_data (2'h0)	// src/main/scala/memories/memories.scala:266:24
   );	// src/main/scala/memories/memories.scala:266:24
   assign io_readDataG_busy = _mem_ext_R0_data[0];	// src/main/scala/memories/memories.scala:235:7, :266:24
+  assign io_readDataG_exception = _mem_ext_R0_data[1];	// src/main/scala/memories/memories.scala:235:7, :266:24
 endmodule
 

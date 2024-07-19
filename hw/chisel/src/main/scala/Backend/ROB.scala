@@ -65,9 +65,7 @@ class ROB(parameters:Parameters) extends Module{
         // Read port (Exec)
         val PC_file_exec_addr           =   Input(UInt(log2Ceil(ROBEntries).W))
         val PC_file_exec_data           =   Output(UInt(32.W))
-    })
-
-    dontTouch(io)
+    }); dontTouch(io)
 
     //////////////
     // POINTERS // 
@@ -131,6 +129,9 @@ class ROB(parameters:Parameters) extends Module{
     val shared_mem_input = Wire(new ROB_shared(parameters))
 
     shared_mem_input.fetch_PC                   := io.ROB_packet.bits.fetch_PC
+    shared_mem_input.GHR                        := io.ROB_packet.bits.GHR
+    shared_mem_input.TOS                        := io.ROB_packet.bits.TOS
+    shared_mem_input.NEXT                       := io.ROB_packet.bits.NEXT
     shared_mem_input.RAT_index                  := io.ROB_packet.bits.RAT_index
     shared_mem_input.free_list_front_pointer    := io.ROB_packet.bits.free_list_front_pointer
     
@@ -140,7 +141,7 @@ class ROB(parameters:Parameters) extends Module{
     shared_mem.io.writeEnableA  := allocate
 
     // Port B / commit
-    shared_mem.io.addrB                    := front_index
+    shared_mem.io.addrB         := front_index
 
     // Port C / FUs
     shared_mem.io.addrC         := io.PC_file_exec_addr
@@ -265,16 +266,22 @@ class ROB(parameters:Parameters) extends Module{
     // ASSIGN ROB OUTPUT //
     ///////////////////////
 
-    io.ROB_output.row_valid := row_valid
-    io.ROB_output.ROB_index := RegNext(front_index)    // you want the unbypassed version of this pointer
+    io.ROB_output.row_valid                := row_valid
+    io.ROB_output.ROB_index                := RegNext(front_index)    // you want the unbypassed version of this pointer
 
     io.ROB_output.fetch_PC                 := shared_mem.io.readDataB.fetch_PC
     io.ROB_output.RAT_index                := shared_mem.io.readDataB.RAT_index
+    io.ROB_output.GHR                      := shared_mem.io.readDataB.GHR
+    io.ROB_output.NEXT                     := shared_mem.io.readDataB.NEXT
+    io.ROB_output.TOS                      := shared_mem.io.readDataB.TOS
+
     io.ROB_output.free_list_front_pointer  := shared_mem.io.readDataB.free_list_front_pointer
 
     for(i <- 0 until fetchWidth){
-        io.ROB_output.complete(i)       := ROB_WB_banks(i).io.readDataG.busy    // Rename busy to complete
-        io.ROB_output.ROB_entries(i)    := ROB_entry_banks(i).io.readDataB
+
+        io.ROB_output.exception(i)         := ROB_WB_banks(i).io.readDataG.exception    
+        io.ROB_output.complete(i)          := ROB_WB_banks(i).io.readDataG.busy    // Rename busy to complete
+        io.ROB_output.ROB_entries(i)       := ROB_entry_banks(i).io.readDataB
     }
 
     ///////////
@@ -289,8 +296,6 @@ class ROB(parameters:Parameters) extends Module{
     // DEBUG //
     ///////////
 
-    val shared_memory_update_notif = RegNext(io.ROB_packet.valid)
-    dontTouch(shared_memory_update_notif)
 
 
 

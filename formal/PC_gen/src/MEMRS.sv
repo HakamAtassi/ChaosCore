@@ -173,7 +173,9 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
                 io_RF_inputs_3_bits_RS2,	// src/main/scala/Memory/MEMRS.scala:47:16
   output [20:0] io_RF_inputs_3_bits_IMM,	// src/main/scala/Memory/MEMRS.scala:47:16
   output [2:0]  io_RF_inputs_3_bits_FUNCT3,	// src/main/scala/Memory/MEMRS.scala:47:16
-  output [1:0]  io_RF_inputs_3_bits_memory_type	// src/main/scala/Memory/MEMRS.scala:47:16
+  output [3:0]  io_RF_inputs_3_bits_MOB_index,	// src/main/scala/Memory/MEMRS.scala:47:16
+  output [1:0]  io_RF_inputs_3_bits_memory_type,	// src/main/scala/Memory/MEMRS.scala:47:16
+                io_RF_inputs_3_bits_access_width	// src/main/scala/Memory/MEMRS.scala:47:16
 );
 
   reg               reservation_station_0_decoded_instruction_ready_bits_RS1_ready;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -1005,7 +1007,24 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
      {reservation_station_2_decoded_instruction_FUNCT3},
      {reservation_station_1_decoded_instruction_FUNCT3},
      {reservation_station_0_decoded_instruction_FUNCT3}};	// src/main/scala/Memory/MEMRS.scala:68:38, :150:105
-  wire [15:0][1:0]  _GEN_8 =
+  wire [15:0][3:0]  _GEN_8 =
+    {{reservation_station_15_decoded_instruction_MOB_index},
+     {reservation_station_14_decoded_instruction_MOB_index},
+     {reservation_station_13_decoded_instruction_MOB_index},
+     {reservation_station_12_decoded_instruction_MOB_index},
+     {reservation_station_11_decoded_instruction_MOB_index},
+     {reservation_station_10_decoded_instruction_MOB_index},
+     {reservation_station_9_decoded_instruction_MOB_index},
+     {reservation_station_8_decoded_instruction_MOB_index},
+     {reservation_station_7_decoded_instruction_MOB_index},
+     {reservation_station_6_decoded_instruction_MOB_index},
+     {reservation_station_5_decoded_instruction_MOB_index},
+     {reservation_station_4_decoded_instruction_MOB_index},
+     {reservation_station_3_decoded_instruction_MOB_index},
+     {reservation_station_2_decoded_instruction_MOB_index},
+     {reservation_station_1_decoded_instruction_MOB_index},
+     {reservation_station_0_decoded_instruction_MOB_index}};	// src/main/scala/Memory/MEMRS.scala:68:38, :150:105
+  wire [15:0][1:0]  _GEN_9 =
     {{reservation_station_15_decoded_instruction_memory_type},
      {reservation_station_14_decoded_instruction_memory_type},
      {reservation_station_13_decoded_instruction_memory_type},
@@ -1022,7 +1041,24 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
      {reservation_station_2_decoded_instruction_memory_type},
      {reservation_station_1_decoded_instruction_memory_type},
      {reservation_station_0_decoded_instruction_memory_type}};	// src/main/scala/Memory/MEMRS.scala:68:38, :150:105
-  wire [15:0]       _GEN_9 =
+  wire [15:0][1:0]  _GEN_10 =
+    {{reservation_station_15_decoded_instruction_access_width},
+     {reservation_station_14_decoded_instruction_access_width},
+     {reservation_station_13_decoded_instruction_access_width},
+     {reservation_station_12_decoded_instruction_access_width},
+     {reservation_station_11_decoded_instruction_access_width},
+     {reservation_station_10_decoded_instruction_access_width},
+     {reservation_station_9_decoded_instruction_access_width},
+     {reservation_station_8_decoded_instruction_access_width},
+     {reservation_station_7_decoded_instruction_access_width},
+     {reservation_station_6_decoded_instruction_access_width},
+     {reservation_station_5_decoded_instruction_access_width},
+     {reservation_station_4_decoded_instruction_access_width},
+     {reservation_station_3_decoded_instruction_access_width},
+     {reservation_station_2_decoded_instruction_access_width},
+     {reservation_station_1_decoded_instruction_access_width},
+     {reservation_station_0_decoded_instruction_access_width}};	// src/main/scala/Memory/MEMRS.scala:68:38, :150:105
+  wire [15:0]       _GEN_11 =
     {{reservation_station_15_committed},
      {reservation_station_14_committed},
      {reservation_station_13_committed},
@@ -1039,7 +1075,7 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
      {reservation_station_2_committed},
      {reservation_station_1_committed},
      {reservation_station_0_committed}};	// src/main/scala/Memory/MEMRS.scala:68:38, :150:105
-  wire [15:0]       _GEN_10 =
+  wire [15:0]       _GEN_12 =
     {{reservation_station_15_valid},
      {reservation_station_14_valid},
      {reservation_station_13_valid},
@@ -1057,7 +1093,7 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
      {reservation_station_1_valid},
      {reservation_station_0_valid}};	// src/main/scala/Memory/MEMRS.scala:68:38, :150:105
   wire              good_to_go =
-    _GEN_10[front_index] & _GEN_9[front_index]
+    _GEN_12[front_index] & _GEN_11[front_index]
     & (_GEN[front_index] | ~_GEN_3[front_index])
     & (_GEN_0[front_index] | ~_GEN_5[front_index]);	// src/main/scala/Memory/MEMRS.scala:75:40, :150:{102,105}, :151:{102,105}, :153:65, :154:{68,87}
   wire [15:0]       _availalbe_RS_entries_T_1 =
@@ -1563,10 +1599,8 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
       automatic logic       written_vec_2 =
         io_backend_packet_2_valid & (|(availalbe_RS_entries[4:2]));	// src/main/scala/Memory/MEMRS.scala:89:41, :182:40, :185:60
       automatic logic       written_vec_3;	// src/main/scala/Memory/MEMRS.scala:89:41
-      automatic logic [1:0] _GEN_11 = {1'h0, written_vec_0};	// src/main/scala/Memory/MEMRS.scala:89:41, :96:63
-      automatic logic [3:0] _GEN_12 = back_index + {3'h0, written_vec_0 - 1'h1};	// src/main/scala/Memory/MEMRS.scala:76:39, :89:41, :96:63, :97:44
-      automatic logic       _GEN_13;	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80
-      automatic logic       _GEN_14;	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80
+      automatic logic [1:0] _GEN_13 = {1'h0, written_vec_0};	// src/main/scala/Memory/MEMRS.scala:89:41, :96:63
+      automatic logic [3:0] _GEN_14 = back_index + {3'h0, written_vec_0 - 1'h1};	// src/main/scala/Memory/MEMRS.scala:76:39, :89:41, :96:63, :97:44
       automatic logic       _GEN_15;	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80
       automatic logic       _GEN_16;	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80
       automatic logic       _GEN_17;	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80
@@ -1581,10 +1615,10 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
       automatic logic       _GEN_26;	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80
       automatic logic       _GEN_27;	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80
       automatic logic       _GEN_28;	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80
-      automatic logic [1:0] _GEN_29;	// src/main/scala/Memory/MEMRS.scala:96:40
-      automatic logic [3:0] _GEN_30;	// src/main/scala/Memory/MEMRS.scala:97:44
-      automatic logic       _GEN_31;	// src/main/scala/Memory/MEMRS.scala:97:80
-      automatic logic       _GEN_32;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+      automatic logic       _GEN_29;	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80
+      automatic logic       _GEN_30;	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80
+      automatic logic [1:0] _GEN_31;	// src/main/scala/Memory/MEMRS.scala:96:40
+      automatic logic [3:0] _GEN_32;	// src/main/scala/Memory/MEMRS.scala:97:44
       automatic logic       _GEN_33;	// src/main/scala/Memory/MEMRS.scala:97:80
       automatic logic       _GEN_34;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
       automatic logic       _GEN_35;	// src/main/scala/Memory/MEMRS.scala:97:80
@@ -1613,9 +1647,9 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
       automatic logic       _GEN_58;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
       automatic logic       _GEN_59;	// src/main/scala/Memory/MEMRS.scala:97:80
       automatic logic       _GEN_60;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
-      automatic logic       _GEN_61;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
-      automatic logic       _GEN_62;	// src/main/scala/Memory/MEMRS.scala:95:29, :98:79
-      automatic logic       _GEN_63;	// src/main/scala/Memory/MEMRS.scala:95:29, :98:79
+      automatic logic       _GEN_61;	// src/main/scala/Memory/MEMRS.scala:97:80
+      automatic logic       _GEN_62;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+      automatic logic       _GEN_63;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
       automatic logic       _GEN_64;	// src/main/scala/Memory/MEMRS.scala:95:29, :98:79
       automatic logic       _GEN_65;	// src/main/scala/Memory/MEMRS.scala:95:29, :98:79
       automatic logic       _GEN_66;	// src/main/scala/Memory/MEMRS.scala:95:29, :98:79
@@ -1630,10 +1664,10 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
       automatic logic       _GEN_75;	// src/main/scala/Memory/MEMRS.scala:95:29, :98:79
       automatic logic       _GEN_76;	// src/main/scala/Memory/MEMRS.scala:95:29, :98:79
       automatic logic       _GEN_77;	// src/main/scala/Memory/MEMRS.scala:95:29, :98:79
-      automatic logic [1:0] _GEN_78 = {1'h0, written_vec_2};	// src/main/scala/Memory/MEMRS.scala:89:41, :96:40
-      automatic logic [3:0] _GEN_79;	// src/main/scala/Memory/MEMRS.scala:97:44
-      automatic logic       _GEN_80;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
-      automatic logic       _GEN_81;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+      automatic logic       _GEN_78;	// src/main/scala/Memory/MEMRS.scala:95:29, :98:79
+      automatic logic       _GEN_79;	// src/main/scala/Memory/MEMRS.scala:95:29, :98:79
+      automatic logic [1:0] _GEN_80 = {1'h0, written_vec_2};	// src/main/scala/Memory/MEMRS.scala:89:41, :96:40
+      automatic logic [3:0] _GEN_81;	// src/main/scala/Memory/MEMRS.scala:97:44
       automatic logic       _GEN_82;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
       automatic logic       _GEN_83;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
       automatic logic       _GEN_84;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
@@ -1648,10 +1682,10 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
       automatic logic       _GEN_93;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
       automatic logic       _GEN_94;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
       automatic logic       _GEN_95;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
-      automatic logic [1:0] _GEN_96;	// src/main/scala/Memory/MEMRS.scala:96:40
-      automatic logic [3:0] _GEN_97;	// src/main/scala/Memory/MEMRS.scala:97:44
-      automatic logic       _GEN_98;	// src/main/scala/Memory/MEMRS.scala:97:80
-      automatic logic       _GEN_99;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+      automatic logic       _GEN_96;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+      automatic logic       _GEN_97;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+      automatic logic [1:0] _GEN_98;	// src/main/scala/Memory/MEMRS.scala:96:40
+      automatic logic [3:0] _GEN_99;	// src/main/scala/Memory/MEMRS.scala:97:44
       automatic logic       _GEN_100;	// src/main/scala/Memory/MEMRS.scala:97:80
       automatic logic       _GEN_101;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
       automatic logic       _GEN_102;	// src/main/scala/Memory/MEMRS.scala:97:80
@@ -1680,9 +1714,9 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
       automatic logic       _GEN_125;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
       automatic logic       _GEN_126;	// src/main/scala/Memory/MEMRS.scala:97:80
       automatic logic       _GEN_127;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
-      automatic logic       _GEN_128;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
-      automatic logic       _GEN_129;	// src/main/scala/Memory/MEMRS.scala:95:29, :98:79
-      automatic logic       _GEN_130;	// src/main/scala/Memory/MEMRS.scala:95:29, :98:79
+      automatic logic       _GEN_128;	// src/main/scala/Memory/MEMRS.scala:97:80
+      automatic logic       _GEN_129;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+      automatic logic       _GEN_130;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
       automatic logic       _GEN_131;	// src/main/scala/Memory/MEMRS.scala:95:29, :98:79
       automatic logic       _GEN_132;	// src/main/scala/Memory/MEMRS.scala:95:29, :98:79
       automatic logic       _GEN_133;	// src/main/scala/Memory/MEMRS.scala:95:29, :98:79
@@ -1697,8 +1731,8 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
       automatic logic       _GEN_142;	// src/main/scala/Memory/MEMRS.scala:95:29, :98:79
       automatic logic       _GEN_143;	// src/main/scala/Memory/MEMRS.scala:95:29, :98:79
       automatic logic       _GEN_144;	// src/main/scala/Memory/MEMRS.scala:95:29, :98:79
-      automatic logic       _GEN_145;	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
-      automatic logic       _GEN_146;	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
+      automatic logic       _GEN_145;	// src/main/scala/Memory/MEMRS.scala:95:29, :98:79
+      automatic logic       _GEN_146;	// src/main/scala/Memory/MEMRS.scala:95:29, :98:79
       automatic logic       _GEN_147;	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
       automatic logic       _GEN_148;	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
       automatic logic       _GEN_149;	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
@@ -1713,281 +1747,283 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
       automatic logic       _GEN_158;	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
       automatic logic       _GEN_159;	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
       automatic logic       _GEN_160;	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
+      automatic logic       _GEN_161;	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
+      automatic logic       _GEN_162;	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
       written_vec_1 = io_backend_packet_1_valid & (|(availalbe_RS_entries[4:2]));	// src/main/scala/Memory/MEMRS.scala:89:41, :182:40, :185:60
       written_vec_3 = io_backend_packet_3_valid & (|(availalbe_RS_entries[4:2]));	// src/main/scala/Memory/MEMRS.scala:89:41, :182:40, :185:60
-      _GEN_13 = written_vec_0 & _GEN_12 == 4'h0;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:{44,80}
-      _GEN_14 = written_vec_0 & _GEN_12 == 4'h1;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :96:63, :97:{44,80}
-      _GEN_15 = written_vec_0 & _GEN_12 == 4'h2;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:{44,80}
-      _GEN_16 = written_vec_0 & _GEN_12 == 4'h3;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:{44,80}
-      _GEN_17 = written_vec_0 & _GEN_12 == 4'h4;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:{44,80}
-      _GEN_18 = written_vec_0 & _GEN_12 == 4'h5;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:{44,80}
-      _GEN_19 = written_vec_0 & _GEN_12 == 4'h6;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:{44,80}
-      _GEN_20 = written_vec_0 & _GEN_12 == 4'h7;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:{44,80}
-      _GEN_21 = written_vec_0 & _GEN_12 == 4'h8;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:{44,80}
-      _GEN_22 = written_vec_0 & _GEN_12 == 4'h9;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:{44,80}
-      _GEN_23 = written_vec_0 & _GEN_12 == 4'hA;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:{44,80}
-      _GEN_24 = written_vec_0 & _GEN_12 == 4'hB;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:{44,80}
-      _GEN_25 = written_vec_0 & _GEN_12 == 4'hC;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:{44,80}
-      _GEN_26 = written_vec_0 & _GEN_12 == 4'hD;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:{44,80}
-      _GEN_27 = written_vec_0 & _GEN_12 == 4'hE;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:{44,80}
-      _GEN_28 = written_vec_0 & (&_GEN_12);	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:{44,80}
-      _GEN_29 = {1'h0, written_vec_1};	// src/main/scala/Memory/MEMRS.scala:89:41, :96:40
-      _GEN_30 = back_index + {2'h0, _GEN_11 + _GEN_29 - 2'h1};	// src/main/scala/Memory/MEMRS.scala:76:39, :96:{40,63}, :97:44
-      _GEN_31 = _GEN_30 == 4'h0;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
-      _GEN_32 = written_vec_1 & _GEN_31;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:80
-      _GEN_33 = _GEN_30 == 4'h1;	// src/main/scala/Memory/MEMRS.scala:96:63, :97:{44,80}
+      _GEN_15 = written_vec_0 & _GEN_14 == 4'h0;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:{44,80}
+      _GEN_16 = written_vec_0 & _GEN_14 == 4'h1;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :96:63, :97:{44,80}
+      _GEN_17 = written_vec_0 & _GEN_14 == 4'h2;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:{44,80}
+      _GEN_18 = written_vec_0 & _GEN_14 == 4'h3;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:{44,80}
+      _GEN_19 = written_vec_0 & _GEN_14 == 4'h4;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:{44,80}
+      _GEN_20 = written_vec_0 & _GEN_14 == 4'h5;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:{44,80}
+      _GEN_21 = written_vec_0 & _GEN_14 == 4'h6;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:{44,80}
+      _GEN_22 = written_vec_0 & _GEN_14 == 4'h7;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:{44,80}
+      _GEN_23 = written_vec_0 & _GEN_14 == 4'h8;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:{44,80}
+      _GEN_24 = written_vec_0 & _GEN_14 == 4'h9;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:{44,80}
+      _GEN_25 = written_vec_0 & _GEN_14 == 4'hA;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:{44,80}
+      _GEN_26 = written_vec_0 & _GEN_14 == 4'hB;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:{44,80}
+      _GEN_27 = written_vec_0 & _GEN_14 == 4'hC;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:{44,80}
+      _GEN_28 = written_vec_0 & _GEN_14 == 4'hD;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:{44,80}
+      _GEN_29 = written_vec_0 & _GEN_14 == 4'hE;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:{44,80}
+      _GEN_30 = written_vec_0 & (&_GEN_14);	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:{44,80}
+      _GEN_31 = {1'h0, written_vec_1};	// src/main/scala/Memory/MEMRS.scala:89:41, :96:40
+      _GEN_32 = back_index + {2'h0, _GEN_13 + _GEN_31 - 2'h1};	// src/main/scala/Memory/MEMRS.scala:76:39, :96:{40,63}, :97:44
+      _GEN_33 = _GEN_32 == 4'h0;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
       _GEN_34 = written_vec_1 & _GEN_33;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:80
-      _GEN_35 = _GEN_30 == 4'h2;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
+      _GEN_35 = _GEN_32 == 4'h1;	// src/main/scala/Memory/MEMRS.scala:96:63, :97:{44,80}
       _GEN_36 = written_vec_1 & _GEN_35;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:80
-      _GEN_37 = _GEN_30 == 4'h3;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
+      _GEN_37 = _GEN_32 == 4'h2;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
       _GEN_38 = written_vec_1 & _GEN_37;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:80
-      _GEN_39 = _GEN_30 == 4'h4;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
+      _GEN_39 = _GEN_32 == 4'h3;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
       _GEN_40 = written_vec_1 & _GEN_39;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:80
-      _GEN_41 = _GEN_30 == 4'h5;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
+      _GEN_41 = _GEN_32 == 4'h4;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
       _GEN_42 = written_vec_1 & _GEN_41;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:80
-      _GEN_43 = _GEN_30 == 4'h6;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
+      _GEN_43 = _GEN_32 == 4'h5;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
       _GEN_44 = written_vec_1 & _GEN_43;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:80
-      _GEN_45 = _GEN_30 == 4'h7;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
+      _GEN_45 = _GEN_32 == 4'h6;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
       _GEN_46 = written_vec_1 & _GEN_45;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:80
-      _GEN_47 = _GEN_30 == 4'h8;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
+      _GEN_47 = _GEN_32 == 4'h7;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
       _GEN_48 = written_vec_1 & _GEN_47;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:80
-      _GEN_49 = _GEN_30 == 4'h9;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
+      _GEN_49 = _GEN_32 == 4'h8;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
       _GEN_50 = written_vec_1 & _GEN_49;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:80
-      _GEN_51 = _GEN_30 == 4'hA;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
+      _GEN_51 = _GEN_32 == 4'h9;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
       _GEN_52 = written_vec_1 & _GEN_51;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:80
-      _GEN_53 = _GEN_30 == 4'hB;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
+      _GEN_53 = _GEN_32 == 4'hA;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
       _GEN_54 = written_vec_1 & _GEN_53;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:80
-      _GEN_55 = _GEN_30 == 4'hC;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
+      _GEN_55 = _GEN_32 == 4'hB;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
       _GEN_56 = written_vec_1 & _GEN_55;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:80
-      _GEN_57 = _GEN_30 == 4'hD;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
+      _GEN_57 = _GEN_32 == 4'hC;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
       _GEN_58 = written_vec_1 & _GEN_57;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:80
-      _GEN_59 = _GEN_30 == 4'hE;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
+      _GEN_59 = _GEN_32 == 4'hD;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
       _GEN_60 = written_vec_1 & _GEN_59;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:80
-      _GEN_61 = written_vec_1 & (&_GEN_30);	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:{44,80}
-      _GEN_62 =
-        written_vec_1
-          ? _GEN_31 | _GEN_13 | reservation_station_0_valid
-          : _GEN_13 | reservation_station_0_valid;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79
-      _GEN_63 =
-        written_vec_1
-          ? _GEN_33 | _GEN_14 | reservation_station_1_valid
-          : _GEN_14 | reservation_station_1_valid;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79
+      _GEN_61 = _GEN_32 == 4'hE;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
+      _GEN_62 = written_vec_1 & _GEN_61;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:80
+      _GEN_63 = written_vec_1 & (&_GEN_32);	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:{44,80}
       _GEN_64 =
         written_vec_1
-          ? _GEN_35 | _GEN_15 | reservation_station_2_valid
-          : _GEN_15 | reservation_station_2_valid;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79
+          ? _GEN_33 | _GEN_15 | reservation_station_0_valid
+          : _GEN_15 | reservation_station_0_valid;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79
       _GEN_65 =
         written_vec_1
-          ? _GEN_37 | _GEN_16 | reservation_station_3_valid
-          : _GEN_16 | reservation_station_3_valid;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79
+          ? _GEN_35 | _GEN_16 | reservation_station_1_valid
+          : _GEN_16 | reservation_station_1_valid;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79
       _GEN_66 =
         written_vec_1
-          ? _GEN_39 | _GEN_17 | reservation_station_4_valid
-          : _GEN_17 | reservation_station_4_valid;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79
+          ? _GEN_37 | _GEN_17 | reservation_station_2_valid
+          : _GEN_17 | reservation_station_2_valid;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79
       _GEN_67 =
         written_vec_1
-          ? _GEN_41 | _GEN_18 | reservation_station_5_valid
-          : _GEN_18 | reservation_station_5_valid;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79
+          ? _GEN_39 | _GEN_18 | reservation_station_3_valid
+          : _GEN_18 | reservation_station_3_valid;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79
       _GEN_68 =
         written_vec_1
-          ? _GEN_43 | _GEN_19 | reservation_station_6_valid
-          : _GEN_19 | reservation_station_6_valid;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79
+          ? _GEN_41 | _GEN_19 | reservation_station_4_valid
+          : _GEN_19 | reservation_station_4_valid;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79
       _GEN_69 =
         written_vec_1
-          ? _GEN_45 | _GEN_20 | reservation_station_7_valid
-          : _GEN_20 | reservation_station_7_valid;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79
+          ? _GEN_43 | _GEN_20 | reservation_station_5_valid
+          : _GEN_20 | reservation_station_5_valid;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79
       _GEN_70 =
         written_vec_1
-          ? _GEN_47 | _GEN_21 | reservation_station_8_valid
-          : _GEN_21 | reservation_station_8_valid;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79
+          ? _GEN_45 | _GEN_21 | reservation_station_6_valid
+          : _GEN_21 | reservation_station_6_valid;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79
       _GEN_71 =
         written_vec_1
-          ? _GEN_49 | _GEN_22 | reservation_station_9_valid
-          : _GEN_22 | reservation_station_9_valid;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79
+          ? _GEN_47 | _GEN_22 | reservation_station_7_valid
+          : _GEN_22 | reservation_station_7_valid;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79
       _GEN_72 =
         written_vec_1
-          ? _GEN_51 | _GEN_23 | reservation_station_10_valid
-          : _GEN_23 | reservation_station_10_valid;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79
+          ? _GEN_49 | _GEN_23 | reservation_station_8_valid
+          : _GEN_23 | reservation_station_8_valid;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79
       _GEN_73 =
         written_vec_1
-          ? _GEN_53 | _GEN_24 | reservation_station_11_valid
-          : _GEN_24 | reservation_station_11_valid;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79
+          ? _GEN_51 | _GEN_24 | reservation_station_9_valid
+          : _GEN_24 | reservation_station_9_valid;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79
       _GEN_74 =
         written_vec_1
-          ? _GEN_55 | _GEN_25 | reservation_station_12_valid
-          : _GEN_25 | reservation_station_12_valid;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79
+          ? _GEN_53 | _GEN_25 | reservation_station_10_valid
+          : _GEN_25 | reservation_station_10_valid;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79
       _GEN_75 =
         written_vec_1
-          ? _GEN_57 | _GEN_26 | reservation_station_13_valid
-          : _GEN_26 | reservation_station_13_valid;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79
+          ? _GEN_55 | _GEN_26 | reservation_station_11_valid
+          : _GEN_26 | reservation_station_11_valid;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79
       _GEN_76 =
         written_vec_1
-          ? _GEN_59 | _GEN_27 | reservation_station_14_valid
-          : _GEN_27 | reservation_station_14_valid;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79
+          ? _GEN_57 | _GEN_27 | reservation_station_12_valid
+          : _GEN_27 | reservation_station_12_valid;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79
       _GEN_77 =
         written_vec_1
-          ? (&_GEN_30) | _GEN_28 | reservation_station_15_valid
-          : _GEN_28 | reservation_station_15_valid;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:{44,80}, :98:79
-      _GEN_79 = back_index + {2'h0, _GEN_11 + _GEN_29 + _GEN_78 - 2'h1};	// src/main/scala/Memory/MEMRS.scala:76:39, :96:{40,63}, :97:44
-      _GEN_80 = written_vec_2 & _GEN_79 == 4'h0;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:{44,80}
-      _GEN_81 = written_vec_2 & _GEN_79 == 4'h1;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :96:63, :97:{44,80}
-      _GEN_82 = written_vec_2 & _GEN_79 == 4'h2;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:{44,80}
-      _GEN_83 = written_vec_2 & _GEN_79 == 4'h3;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:{44,80}
-      _GEN_84 = written_vec_2 & _GEN_79 == 4'h4;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:{44,80}
-      _GEN_85 = written_vec_2 & _GEN_79 == 4'h5;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:{44,80}
-      _GEN_86 = written_vec_2 & _GEN_79 == 4'h6;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:{44,80}
-      _GEN_87 = written_vec_2 & _GEN_79 == 4'h7;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:{44,80}
-      _GEN_88 = written_vec_2 & _GEN_79 == 4'h8;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:{44,80}
-      _GEN_89 = written_vec_2 & _GEN_79 == 4'h9;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:{44,80}
-      _GEN_90 = written_vec_2 & _GEN_79 == 4'hA;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:{44,80}
-      _GEN_91 = written_vec_2 & _GEN_79 == 4'hB;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:{44,80}
-      _GEN_92 = written_vec_2 & _GEN_79 == 4'hC;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:{44,80}
-      _GEN_93 = written_vec_2 & _GEN_79 == 4'hD;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:{44,80}
-      _GEN_94 = written_vec_2 & _GEN_79 == 4'hE;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:{44,80}
-      _GEN_95 = written_vec_2 & (&_GEN_79);	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:{44,80}
-      _GEN_96 = {1'h0, written_vec_3};	// src/main/scala/Memory/MEMRS.scala:89:41, :96:40
-      _GEN_97 =
-        back_index + {1'h0, {1'h0, _GEN_11 + _GEN_29} + {1'h0, _GEN_78 + _GEN_96} - 3'h1};	// src/main/scala/Memory/MEMRS.scala:76:39, :96:{40,63}, :97:44
-      _GEN_98 = _GEN_97 == 4'h0;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
-      _GEN_99 = written_vec_3 & _GEN_98;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:80
-      _GEN_100 = _GEN_97 == 4'h1;	// src/main/scala/Memory/MEMRS.scala:96:63, :97:{44,80}
+          ? _GEN_59 | _GEN_28 | reservation_station_13_valid
+          : _GEN_28 | reservation_station_13_valid;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79
+      _GEN_78 =
+        written_vec_1
+          ? _GEN_61 | _GEN_29 | reservation_station_14_valid
+          : _GEN_29 | reservation_station_14_valid;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79
+      _GEN_79 =
+        written_vec_1
+          ? (&_GEN_32) | _GEN_30 | reservation_station_15_valid
+          : _GEN_30 | reservation_station_15_valid;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:{44,80}, :98:79
+      _GEN_81 = back_index + {2'h0, _GEN_13 + _GEN_31 + _GEN_80 - 2'h1};	// src/main/scala/Memory/MEMRS.scala:76:39, :96:{40,63}, :97:44
+      _GEN_82 = written_vec_2 & _GEN_81 == 4'h0;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:{44,80}
+      _GEN_83 = written_vec_2 & _GEN_81 == 4'h1;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :96:63, :97:{44,80}
+      _GEN_84 = written_vec_2 & _GEN_81 == 4'h2;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:{44,80}
+      _GEN_85 = written_vec_2 & _GEN_81 == 4'h3;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:{44,80}
+      _GEN_86 = written_vec_2 & _GEN_81 == 4'h4;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:{44,80}
+      _GEN_87 = written_vec_2 & _GEN_81 == 4'h5;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:{44,80}
+      _GEN_88 = written_vec_2 & _GEN_81 == 4'h6;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:{44,80}
+      _GEN_89 = written_vec_2 & _GEN_81 == 4'h7;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:{44,80}
+      _GEN_90 = written_vec_2 & _GEN_81 == 4'h8;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:{44,80}
+      _GEN_91 = written_vec_2 & _GEN_81 == 4'h9;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:{44,80}
+      _GEN_92 = written_vec_2 & _GEN_81 == 4'hA;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:{44,80}
+      _GEN_93 = written_vec_2 & _GEN_81 == 4'hB;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:{44,80}
+      _GEN_94 = written_vec_2 & _GEN_81 == 4'hC;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:{44,80}
+      _GEN_95 = written_vec_2 & _GEN_81 == 4'hD;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:{44,80}
+      _GEN_96 = written_vec_2 & _GEN_81 == 4'hE;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:{44,80}
+      _GEN_97 = written_vec_2 & (&_GEN_81);	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:{44,80}
+      _GEN_98 = {1'h0, written_vec_3};	// src/main/scala/Memory/MEMRS.scala:89:41, :96:40
+      _GEN_99 =
+        back_index + {1'h0, {1'h0, _GEN_13 + _GEN_31} + {1'h0, _GEN_80 + _GEN_98} - 3'h1};	// src/main/scala/Memory/MEMRS.scala:76:39, :96:{40,63}, :97:44
+      _GEN_100 = _GEN_99 == 4'h0;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
       _GEN_101 = written_vec_3 & _GEN_100;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:80
-      _GEN_102 = _GEN_97 == 4'h2;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
+      _GEN_102 = _GEN_99 == 4'h1;	// src/main/scala/Memory/MEMRS.scala:96:63, :97:{44,80}
       _GEN_103 = written_vec_3 & _GEN_102;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:80
-      _GEN_104 = _GEN_97 == 4'h3;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
+      _GEN_104 = _GEN_99 == 4'h2;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
       _GEN_105 = written_vec_3 & _GEN_104;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:80
-      _GEN_106 = _GEN_97 == 4'h4;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
+      _GEN_106 = _GEN_99 == 4'h3;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
       _GEN_107 = written_vec_3 & _GEN_106;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:80
-      _GEN_108 = _GEN_97 == 4'h5;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
+      _GEN_108 = _GEN_99 == 4'h4;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
       _GEN_109 = written_vec_3 & _GEN_108;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:80
-      _GEN_110 = _GEN_97 == 4'h6;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
+      _GEN_110 = _GEN_99 == 4'h5;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
       _GEN_111 = written_vec_3 & _GEN_110;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:80
-      _GEN_112 = _GEN_97 == 4'h7;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
+      _GEN_112 = _GEN_99 == 4'h6;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
       _GEN_113 = written_vec_3 & _GEN_112;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:80
-      _GEN_114 = _GEN_97 == 4'h8;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
+      _GEN_114 = _GEN_99 == 4'h7;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
       _GEN_115 = written_vec_3 & _GEN_114;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:80
-      _GEN_116 = _GEN_97 == 4'h9;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
+      _GEN_116 = _GEN_99 == 4'h8;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
       _GEN_117 = written_vec_3 & _GEN_116;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:80
-      _GEN_118 = _GEN_97 == 4'hA;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
+      _GEN_118 = _GEN_99 == 4'h9;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
       _GEN_119 = written_vec_3 & _GEN_118;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:80
-      _GEN_120 = _GEN_97 == 4'hB;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
+      _GEN_120 = _GEN_99 == 4'hA;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
       _GEN_121 = written_vec_3 & _GEN_120;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:80
-      _GEN_122 = _GEN_97 == 4'hC;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
+      _GEN_122 = _GEN_99 == 4'hB;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
       _GEN_123 = written_vec_3 & _GEN_122;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:80
-      _GEN_124 = _GEN_97 == 4'hD;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
+      _GEN_124 = _GEN_99 == 4'hC;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
       _GEN_125 = written_vec_3 & _GEN_124;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:80
-      _GEN_126 = _GEN_97 == 4'hE;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
+      _GEN_126 = _GEN_99 == 4'hD;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
       _GEN_127 = written_vec_3 & _GEN_126;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:80
-      _GEN_128 = written_vec_3 & (&_GEN_97);	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:{44,80}
-      _GEN_129 = _GEN_98 | _GEN_80;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80, :98:79
-      _GEN_130 = _GEN_100 | _GEN_81;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80, :98:79
-      _GEN_131 = _GEN_102 | _GEN_82;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80, :98:79
-      _GEN_132 = _GEN_104 | _GEN_83;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80, :98:79
-      _GEN_133 = _GEN_106 | _GEN_84;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80, :98:79
-      _GEN_134 = _GEN_108 | _GEN_85;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80, :98:79
-      _GEN_135 = _GEN_110 | _GEN_86;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80, :98:79
-      _GEN_136 = _GEN_112 | _GEN_87;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80, :98:79
-      _GEN_137 = _GEN_114 | _GEN_88;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80, :98:79
-      _GEN_138 = _GEN_116 | _GEN_89;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80, :98:79
-      _GEN_139 = _GEN_118 | _GEN_90;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80, :98:79
-      _GEN_140 = _GEN_120 | _GEN_91;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80, :98:79
-      _GEN_141 = _GEN_122 | _GEN_92;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80, :98:79
-      _GEN_142 = _GEN_124 | _GEN_93;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80, :98:79
-      _GEN_143 = _GEN_126 | _GEN_94;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80, :98:79
-      _GEN_144 = (&_GEN_97) | _GEN_95;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:{44,80}, :98:79
-      _GEN_145 =
+      _GEN_128 = _GEN_99 == 4'hE;	// src/main/scala/Memory/MEMRS.scala:97:{44,80}
+      _GEN_129 = written_vec_3 & _GEN_128;	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:80
+      _GEN_130 = written_vec_3 & (&_GEN_99);	// src/main/scala/Memory/MEMRS.scala:89:41, :95:29, :97:{44,80}
+      _GEN_131 = _GEN_100 | _GEN_82;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80, :98:79
+      _GEN_132 = _GEN_102 | _GEN_83;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80, :98:79
+      _GEN_133 = _GEN_104 | _GEN_84;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80, :98:79
+      _GEN_134 = _GEN_106 | _GEN_85;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80, :98:79
+      _GEN_135 = _GEN_108 | _GEN_86;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80, :98:79
+      _GEN_136 = _GEN_110 | _GEN_87;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80, :98:79
+      _GEN_137 = _GEN_112 | _GEN_88;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80, :98:79
+      _GEN_138 = _GEN_114 | _GEN_89;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80, :98:79
+      _GEN_139 = _GEN_116 | _GEN_90;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80, :98:79
+      _GEN_140 = _GEN_118 | _GEN_91;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80, :98:79
+      _GEN_141 = _GEN_120 | _GEN_92;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80, :98:79
+      _GEN_142 = _GEN_122 | _GEN_93;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80, :98:79
+      _GEN_143 = _GEN_124 | _GEN_94;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80, :98:79
+      _GEN_144 = _GEN_126 | _GEN_95;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80, :98:79
+      _GEN_145 = _GEN_128 | _GEN_96;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80, :98:79
+      _GEN_146 = (&_GEN_99) | _GEN_97;	// src/main/scala/Memory/MEMRS.scala:95:29, :97:{44,80}, :98:79
+      _GEN_147 =
         io_flush
         & reservation_station_0_decoded_instruction_ROB_index == io_commit_bits_ROB_index
         | good_to_go & front_index == 4'h0;	// src/main/scala/Memory/MEMRS.scala:68:38, :75:40, :138:111, :153:65, :154:{68,87}, :159:21, :160:42, :193:{23,80,110}, :194:36
-      _GEN_146 =
+      _GEN_148 =
         io_flush
         & reservation_station_1_decoded_instruction_ROB_index == io_commit_bits_ROB_index
         | good_to_go & front_index == 4'h1;	// src/main/scala/Memory/MEMRS.scala:68:38, :75:40, :96:63, :138:111, :153:65, :154:{68,87}, :159:21, :160:42, :193:{23,80,110}, :194:36
-      _GEN_147 =
+      _GEN_149 =
         io_flush
         & reservation_station_2_decoded_instruction_ROB_index == io_commit_bits_ROB_index
         | good_to_go & front_index == 4'h2;	// src/main/scala/Memory/MEMRS.scala:68:38, :75:40, :138:111, :153:65, :154:{68,87}, :159:21, :160:42, :193:{23,80,110}, :194:36
-      _GEN_148 =
+      _GEN_150 =
         io_flush
         & reservation_station_3_decoded_instruction_ROB_index == io_commit_bits_ROB_index
         | good_to_go & front_index == 4'h3;	// src/main/scala/Memory/MEMRS.scala:68:38, :75:40, :138:111, :153:65, :154:{68,87}, :159:21, :160:42, :193:{23,80,110}, :194:36
-      _GEN_149 =
+      _GEN_151 =
         io_flush
         & reservation_station_4_decoded_instruction_ROB_index == io_commit_bits_ROB_index
         | good_to_go & front_index == 4'h4;	// src/main/scala/Memory/MEMRS.scala:68:38, :75:40, :138:111, :153:65, :154:{68,87}, :159:21, :160:42, :193:{23,80,110}, :194:36
-      _GEN_150 =
+      _GEN_152 =
         io_flush
         & reservation_station_5_decoded_instruction_ROB_index == io_commit_bits_ROB_index
         | good_to_go & front_index == 4'h5;	// src/main/scala/Memory/MEMRS.scala:68:38, :75:40, :138:111, :153:65, :154:{68,87}, :159:21, :160:42, :193:{23,80,110}, :194:36
-      _GEN_151 =
+      _GEN_153 =
         io_flush
         & reservation_station_6_decoded_instruction_ROB_index == io_commit_bits_ROB_index
         | good_to_go & front_index == 4'h6;	// src/main/scala/Memory/MEMRS.scala:68:38, :75:40, :138:111, :153:65, :154:{68,87}, :159:21, :160:42, :193:{23,80,110}, :194:36
-      _GEN_152 =
+      _GEN_154 =
         io_flush
         & reservation_station_7_decoded_instruction_ROB_index == io_commit_bits_ROB_index
         | good_to_go & front_index == 4'h7;	// src/main/scala/Memory/MEMRS.scala:68:38, :75:40, :138:111, :153:65, :154:{68,87}, :159:21, :160:42, :193:{23,80,110}, :194:36
-      _GEN_153 =
+      _GEN_155 =
         io_flush
         & reservation_station_8_decoded_instruction_ROB_index == io_commit_bits_ROB_index
         | good_to_go & front_index == 4'h8;	// src/main/scala/Memory/MEMRS.scala:68:38, :75:40, :138:111, :153:65, :154:{68,87}, :159:21, :160:42, :193:{23,80,110}, :194:36
-      _GEN_154 =
+      _GEN_156 =
         io_flush
         & reservation_station_9_decoded_instruction_ROB_index == io_commit_bits_ROB_index
         | good_to_go & front_index == 4'h9;	// src/main/scala/Memory/MEMRS.scala:68:38, :75:40, :138:111, :153:65, :154:{68,87}, :159:21, :160:42, :193:{23,80,110}, :194:36
-      _GEN_155 =
+      _GEN_157 =
         io_flush
         & reservation_station_10_decoded_instruction_ROB_index == io_commit_bits_ROB_index
         | good_to_go & front_index == 4'hA;	// src/main/scala/Memory/MEMRS.scala:68:38, :75:40, :138:111, :153:65, :154:{68,87}, :159:21, :160:42, :193:{23,80,110}, :194:36
-      _GEN_156 =
+      _GEN_158 =
         io_flush
         & reservation_station_11_decoded_instruction_ROB_index == io_commit_bits_ROB_index
         | good_to_go & front_index == 4'hB;	// src/main/scala/Memory/MEMRS.scala:68:38, :75:40, :138:111, :153:65, :154:{68,87}, :159:21, :160:42, :193:{23,80,110}, :194:36
-      _GEN_157 =
+      _GEN_159 =
         io_flush
         & reservation_station_12_decoded_instruction_ROB_index == io_commit_bits_ROB_index
         | good_to_go & front_index == 4'hC;	// src/main/scala/Memory/MEMRS.scala:68:38, :75:40, :138:111, :153:65, :154:{68,87}, :159:21, :160:42, :193:{23,80,110}, :194:36
-      _GEN_158 =
+      _GEN_160 =
         io_flush
         & reservation_station_13_decoded_instruction_ROB_index == io_commit_bits_ROB_index
         | good_to_go & front_index == 4'hD;	// src/main/scala/Memory/MEMRS.scala:68:38, :75:40, :138:111, :153:65, :154:{68,87}, :159:21, :160:42, :193:{23,80,110}, :194:36
-      _GEN_159 =
+      _GEN_161 =
         io_flush
         & reservation_station_14_decoded_instruction_ROB_index == io_commit_bits_ROB_index
         | good_to_go & front_index == 4'hE;	// src/main/scala/Memory/MEMRS.scala:68:38, :75:40, :138:111, :153:65, :154:{68,87}, :159:21, :160:42, :193:{23,80,110}, :194:36
-      _GEN_160 =
+      _GEN_162 =
         io_flush
         & reservation_station_15_decoded_instruction_ROB_index == io_commit_bits_ROB_index
         | good_to_go & (&front_index);	// src/main/scala/Memory/MEMRS.scala:68:38, :75:40, :138:111, :153:65, :154:{68,87}, :159:21, :160:42, :193:{23,80,110}, :194:36
       reservation_station_0_decoded_instruction_ready_bits_RS1_ready <=
-        ~_GEN_145
+        ~_GEN_147
         & (~reservation_station_0_decoded_instruction_ready_bits_RS1_ready
            & reservation_station_0_valid
              ? RS1_match_0
-             : _GEN_99
+             : _GEN_101
                  ? io_backend_packet_3_bits_ready_bits_RS1_ready
-                 : _GEN_80
+                 : _GEN_82
                      ? io_backend_packet_2_bits_ready_bits_RS1_ready
-                     : _GEN_32
+                     : _GEN_34
                          ? io_backend_packet_1_bits_ready_bits_RS1_ready
-                         : _GEN_13
+                         : _GEN_15
                              ? io_backend_packet_0_bits_ready_bits_RS1_ready
                              : reservation_station_0_decoded_instruction_ready_bits_RS1_ready);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :111:25, :138:{14,79,111}, :139:77, :159:21, :160:42, :193:110, :194:36
       reservation_station_0_decoded_instruction_ready_bits_RS2_ready <=
-        ~_GEN_145
+        ~_GEN_147
         & (~reservation_station_0_decoded_instruction_ready_bits_RS2_ready
            & reservation_station_0_valid
              ? RS2_match_0
-             : _GEN_99
+             : _GEN_101
                  ? io_backend_packet_3_bits_ready_bits_RS2_ready
-                 : _GEN_80
+                 : _GEN_82
                      ? io_backend_packet_2_bits_ready_bits_RS2_ready
-                     : _GEN_32
+                     : _GEN_34
                          ? io_backend_packet_1_bits_ready_bits_RS2_ready
-                         : _GEN_13
+                         : _GEN_15
                              ? io_backend_packet_0_bits_ready_bits_RS2_ready
                              : reservation_station_0_decoded_instruction_ready_bits_RS2_ready);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :112:25, :132:{14,79,111}, :133:77, :138:111, :159:21, :160:42, :193:110, :194:36
-      if (_GEN_145) begin	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
+      if (_GEN_147) begin	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
         reservation_station_0_decoded_instruction_RD <= 7'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
         reservation_station_0_decoded_instruction_RS1 <= 7'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
         reservation_station_0_decoded_instruction_RS2 <= 7'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -2005,9 +2041,9 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
         reservation_station_0_fetch_PC <= 32'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
       end
       else begin	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
-        automatic logic _GEN_161;	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :99:79
-        _GEN_161 = written_vec_1 & _GEN_31 | _GEN_13;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :99:79
-        if (_GEN_99) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+        automatic logic _GEN_163;	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :99:79
+        _GEN_163 = written_vec_1 & _GEN_33 | _GEN_15;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :99:79
+        if (_GEN_101) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
           reservation_station_0_decoded_instruction_RD <= io_backend_packet_3_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_0_decoded_instruction_RS1 <= io_backend_packet_3_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_0_decoded_instruction_RS2 <= io_backend_packet_3_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -2033,7 +2069,7 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_0_decoded_instruction_access_width <=
             io_backend_packet_3_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        else if (_GEN_80) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+        else if (_GEN_82) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
           reservation_station_0_decoded_instruction_RD <= io_backend_packet_2_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_0_decoded_instruction_RS1 <= io_backend_packet_2_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_0_decoded_instruction_RS2 <= io_backend_packet_2_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -2059,7 +2095,7 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_0_decoded_instruction_access_width <=
             io_backend_packet_2_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        else if (_GEN_32) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+        else if (_GEN_34) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
           reservation_station_0_decoded_instruction_RD <= io_backend_packet_1_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_0_decoded_instruction_RS1 <= io_backend_packet_1_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_0_decoded_instruction_RS2 <= io_backend_packet_1_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -2085,7 +2121,7 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_0_decoded_instruction_access_width <=
             io_backend_packet_1_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        else if (_GEN_13) begin	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80
+        else if (_GEN_15) begin	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80
           reservation_station_0_decoded_instruction_RD <= io_backend_packet_0_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_0_decoded_instruction_RS1 <= io_backend_packet_0_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_0_decoded_instruction_RS2 <= io_backend_packet_0_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -2111,140 +2147,140 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_0_decoded_instruction_access_width <=
             io_backend_packet_0_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        if (written_vec_3 ? _GEN_129 | _GEN_161 : _GEN_80 | _GEN_161)	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :99:79
+        if (written_vec_3 ? _GEN_131 | _GEN_163 : _GEN_82 | _GEN_163)	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :99:79
           reservation_station_0_fetch_PC <= io_fetch_PC;	// src/main/scala/Memory/MEMRS.scala:68:38
       end
       reservation_station_0_decoded_instruction_RD_valid <=
-        ~_GEN_145
-        & (_GEN_99
+        ~_GEN_147
+        & (_GEN_101
              ? io_backend_packet_3_bits_RD_valid
-             : _GEN_80
+             : _GEN_82
                  ? io_backend_packet_2_bits_RD_valid
-                 : _GEN_32
+                 : _GEN_34
                      ? io_backend_packet_1_bits_RD_valid
-                     : _GEN_13
+                     : _GEN_15
                          ? io_backend_packet_0_bits_RD_valid
                          : reservation_station_0_decoded_instruction_RD_valid);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_0_decoded_instruction_RS1_valid <=
-        ~_GEN_145
-        & (_GEN_99
+        ~_GEN_147
+        & (_GEN_101
              ? io_backend_packet_3_bits_RS1_valid
-             : _GEN_80
+             : _GEN_82
                  ? io_backend_packet_2_bits_RS1_valid
-                 : _GEN_32
+                 : _GEN_34
                      ? io_backend_packet_1_bits_RS1_valid
-                     : _GEN_13
+                     : _GEN_15
                          ? io_backend_packet_0_bits_RS1_valid
                          : reservation_station_0_decoded_instruction_RS1_valid);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_0_decoded_instruction_RS2_valid <=
-        ~_GEN_145
-        & (_GEN_99
+        ~_GEN_147
+        & (_GEN_101
              ? io_backend_packet_3_bits_RS2_valid
-             : _GEN_80
+             : _GEN_82
                  ? io_backend_packet_2_bits_RS2_valid
-                 : _GEN_32
+                 : _GEN_34
                      ? io_backend_packet_1_bits_RS2_valid
-                     : _GEN_13
+                     : _GEN_15
                          ? io_backend_packet_0_bits_RS2_valid
                          : reservation_station_0_decoded_instruction_RS2_valid);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_0_decoded_instruction_needs_ALU <=
-        ~_GEN_145
-        & (_GEN_99
+        ~_GEN_147
+        & (_GEN_101
              ? io_backend_packet_3_bits_needs_ALU
-             : _GEN_80
+             : _GEN_82
                  ? io_backend_packet_2_bits_needs_ALU
-                 : _GEN_32
+                 : _GEN_34
                      ? io_backend_packet_1_bits_needs_ALU
-                     : _GEN_13
+                     : _GEN_15
                          ? io_backend_packet_0_bits_needs_ALU
                          : reservation_station_0_decoded_instruction_needs_ALU);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_0_decoded_instruction_needs_branch_unit <=
-        ~_GEN_145
-        & (_GEN_99
+        ~_GEN_147
+        & (_GEN_101
              ? io_backend_packet_3_bits_needs_branch_unit
-             : _GEN_80
+             : _GEN_82
                  ? io_backend_packet_2_bits_needs_branch_unit
-                 : _GEN_32
+                 : _GEN_34
                      ? io_backend_packet_1_bits_needs_branch_unit
-                     : _GEN_13
+                     : _GEN_15
                          ? io_backend_packet_0_bits_needs_branch_unit
                          : reservation_station_0_decoded_instruction_needs_branch_unit);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_0_decoded_instruction_needs_CSRs <=
-        ~_GEN_145
-        & (_GEN_99
+        ~_GEN_147
+        & (_GEN_101
              ? io_backend_packet_3_bits_needs_CSRs
-             : _GEN_80
+             : _GEN_82
                  ? io_backend_packet_2_bits_needs_CSRs
-                 : _GEN_32
+                 : _GEN_34
                      ? io_backend_packet_1_bits_needs_CSRs
-                     : _GEN_13
+                     : _GEN_15
                          ? io_backend_packet_0_bits_needs_CSRs
                          : reservation_station_0_decoded_instruction_needs_CSRs);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_0_decoded_instruction_SUBTRACT <=
-        ~_GEN_145
-        & (_GEN_99
+        ~_GEN_147
+        & (_GEN_101
              ? io_backend_packet_3_bits_SUBTRACT
-             : _GEN_80
+             : _GEN_82
                  ? io_backend_packet_2_bits_SUBTRACT
-                 : _GEN_32
+                 : _GEN_34
                      ? io_backend_packet_1_bits_SUBTRACT
-                     : _GEN_13
+                     : _GEN_15
                          ? io_backend_packet_0_bits_SUBTRACT
                          : reservation_station_0_decoded_instruction_SUBTRACT);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_0_decoded_instruction_MULTIPLY <=
-        ~_GEN_145
-        & (_GEN_99
+        ~_GEN_147
+        & (_GEN_101
              ? io_backend_packet_3_bits_MULTIPLY
-             : _GEN_80
+             : _GEN_82
                  ? io_backend_packet_2_bits_MULTIPLY
-                 : _GEN_32
+                 : _GEN_34
                      ? io_backend_packet_1_bits_MULTIPLY
-                     : _GEN_13
+                     : _GEN_15
                          ? io_backend_packet_0_bits_MULTIPLY
                          : reservation_station_0_decoded_instruction_MULTIPLY);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_0_decoded_instruction_IS_IMM <=
-        ~_GEN_145
-        & (_GEN_99
+        ~_GEN_147
+        & (_GEN_101
              ? io_backend_packet_3_bits_IS_IMM
-             : _GEN_80
+             : _GEN_82
                  ? io_backend_packet_2_bits_IS_IMM
-                 : _GEN_32
+                 : _GEN_34
                      ? io_backend_packet_1_bits_IS_IMM
-                     : _GEN_13
+                     : _GEN_15
                          ? io_backend_packet_0_bits_IS_IMM
                          : reservation_station_0_decoded_instruction_IS_IMM);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
-      reservation_station_0_committed <= ~_GEN_145 & reservation_station_0_committed;	// src/main/scala/Memory/MEMRS.scala:68:38, :138:111, :159:21, :160:42, :193:110, :194:36
+      reservation_station_0_committed <= ~_GEN_147 & reservation_station_0_committed;	// src/main/scala/Memory/MEMRS.scala:68:38, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_0_valid <=
-        ~_GEN_145 & (written_vec_3 ? _GEN_129 | _GEN_62 : _GEN_80 | _GEN_62);	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :138:111, :159:21, :160:42, :193:110, :194:36
+        ~_GEN_147 & (written_vec_3 ? _GEN_131 | _GEN_64 : _GEN_82 | _GEN_64);	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_1_decoded_instruction_ready_bits_RS1_ready <=
-        ~_GEN_146
+        ~_GEN_148
         & (~reservation_station_1_decoded_instruction_ready_bits_RS1_ready
            & reservation_station_1_valid
              ? RS1_match_1
-             : _GEN_101
+             : _GEN_103
                  ? io_backend_packet_3_bits_ready_bits_RS1_ready
-                 : _GEN_81
+                 : _GEN_83
                      ? io_backend_packet_2_bits_ready_bits_RS1_ready
-                     : _GEN_34
+                     : _GEN_36
                          ? io_backend_packet_1_bits_ready_bits_RS1_ready
-                         : _GEN_14
+                         : _GEN_16
                              ? io_backend_packet_0_bits_ready_bits_RS1_ready
                              : reservation_station_1_decoded_instruction_ready_bits_RS1_ready);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :111:25, :138:{14,79,111}, :139:77, :159:21, :160:42, :193:110, :194:36
       reservation_station_1_decoded_instruction_ready_bits_RS2_ready <=
-        ~_GEN_146
+        ~_GEN_148
         & (~reservation_station_1_decoded_instruction_ready_bits_RS2_ready
            & reservation_station_1_valid
              ? RS2_match_1
-             : _GEN_101
+             : _GEN_103
                  ? io_backend_packet_3_bits_ready_bits_RS2_ready
-                 : _GEN_81
+                 : _GEN_83
                      ? io_backend_packet_2_bits_ready_bits_RS2_ready
-                     : _GEN_34
+                     : _GEN_36
                          ? io_backend_packet_1_bits_ready_bits_RS2_ready
-                         : _GEN_14
+                         : _GEN_16
                              ? io_backend_packet_0_bits_ready_bits_RS2_ready
                              : reservation_station_1_decoded_instruction_ready_bits_RS2_ready);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :112:25, :132:{14,79,111}, :133:77, :138:111, :159:21, :160:42, :193:110, :194:36
-      if (_GEN_146) begin	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
+      if (_GEN_148) begin	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
         reservation_station_1_decoded_instruction_RD <= 7'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
         reservation_station_1_decoded_instruction_RS1 <= 7'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
         reservation_station_1_decoded_instruction_RS2 <= 7'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -2262,9 +2298,9 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
         reservation_station_1_fetch_PC <= 32'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
       end
       else begin	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
-        automatic logic _GEN_162;	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :99:79
-        _GEN_162 = written_vec_1 & _GEN_33 | _GEN_14;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :99:79
-        if (_GEN_101) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+        automatic logic _GEN_164;	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :99:79
+        _GEN_164 = written_vec_1 & _GEN_35 | _GEN_16;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :99:79
+        if (_GEN_103) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
           reservation_station_1_decoded_instruction_RD <= io_backend_packet_3_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_1_decoded_instruction_RS1 <= io_backend_packet_3_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_1_decoded_instruction_RS2 <= io_backend_packet_3_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -2290,7 +2326,7 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_1_decoded_instruction_access_width <=
             io_backend_packet_3_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        else if (_GEN_81) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+        else if (_GEN_83) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
           reservation_station_1_decoded_instruction_RD <= io_backend_packet_2_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_1_decoded_instruction_RS1 <= io_backend_packet_2_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_1_decoded_instruction_RS2 <= io_backend_packet_2_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -2316,7 +2352,7 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_1_decoded_instruction_access_width <=
             io_backend_packet_2_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        else if (_GEN_34) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+        else if (_GEN_36) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
           reservation_station_1_decoded_instruction_RD <= io_backend_packet_1_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_1_decoded_instruction_RS1 <= io_backend_packet_1_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_1_decoded_instruction_RS2 <= io_backend_packet_1_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -2342,7 +2378,7 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_1_decoded_instruction_access_width <=
             io_backend_packet_1_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        else if (_GEN_14) begin	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80
+        else if (_GEN_16) begin	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80
           reservation_station_1_decoded_instruction_RD <= io_backend_packet_0_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_1_decoded_instruction_RS1 <= io_backend_packet_0_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_1_decoded_instruction_RS2 <= io_backend_packet_0_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -2368,140 +2404,140 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_1_decoded_instruction_access_width <=
             io_backend_packet_0_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        if (written_vec_3 ? _GEN_130 | _GEN_162 : _GEN_81 | _GEN_162)	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :99:79
+        if (written_vec_3 ? _GEN_132 | _GEN_164 : _GEN_83 | _GEN_164)	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :99:79
           reservation_station_1_fetch_PC <= io_fetch_PC;	// src/main/scala/Memory/MEMRS.scala:68:38
       end
       reservation_station_1_decoded_instruction_RD_valid <=
-        ~_GEN_146
-        & (_GEN_101
+        ~_GEN_148
+        & (_GEN_103
              ? io_backend_packet_3_bits_RD_valid
-             : _GEN_81
+             : _GEN_83
                  ? io_backend_packet_2_bits_RD_valid
-                 : _GEN_34
+                 : _GEN_36
                      ? io_backend_packet_1_bits_RD_valid
-                     : _GEN_14
+                     : _GEN_16
                          ? io_backend_packet_0_bits_RD_valid
                          : reservation_station_1_decoded_instruction_RD_valid);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_1_decoded_instruction_RS1_valid <=
-        ~_GEN_146
-        & (_GEN_101
+        ~_GEN_148
+        & (_GEN_103
              ? io_backend_packet_3_bits_RS1_valid
-             : _GEN_81
+             : _GEN_83
                  ? io_backend_packet_2_bits_RS1_valid
-                 : _GEN_34
+                 : _GEN_36
                      ? io_backend_packet_1_bits_RS1_valid
-                     : _GEN_14
+                     : _GEN_16
                          ? io_backend_packet_0_bits_RS1_valid
                          : reservation_station_1_decoded_instruction_RS1_valid);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_1_decoded_instruction_RS2_valid <=
-        ~_GEN_146
-        & (_GEN_101
+        ~_GEN_148
+        & (_GEN_103
              ? io_backend_packet_3_bits_RS2_valid
-             : _GEN_81
+             : _GEN_83
                  ? io_backend_packet_2_bits_RS2_valid
-                 : _GEN_34
+                 : _GEN_36
                      ? io_backend_packet_1_bits_RS2_valid
-                     : _GEN_14
+                     : _GEN_16
                          ? io_backend_packet_0_bits_RS2_valid
                          : reservation_station_1_decoded_instruction_RS2_valid);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_1_decoded_instruction_needs_ALU <=
-        ~_GEN_146
-        & (_GEN_101
+        ~_GEN_148
+        & (_GEN_103
              ? io_backend_packet_3_bits_needs_ALU
-             : _GEN_81
+             : _GEN_83
                  ? io_backend_packet_2_bits_needs_ALU
-                 : _GEN_34
+                 : _GEN_36
                      ? io_backend_packet_1_bits_needs_ALU
-                     : _GEN_14
+                     : _GEN_16
                          ? io_backend_packet_0_bits_needs_ALU
                          : reservation_station_1_decoded_instruction_needs_ALU);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_1_decoded_instruction_needs_branch_unit <=
-        ~_GEN_146
-        & (_GEN_101
+        ~_GEN_148
+        & (_GEN_103
              ? io_backend_packet_3_bits_needs_branch_unit
-             : _GEN_81
+             : _GEN_83
                  ? io_backend_packet_2_bits_needs_branch_unit
-                 : _GEN_34
+                 : _GEN_36
                      ? io_backend_packet_1_bits_needs_branch_unit
-                     : _GEN_14
+                     : _GEN_16
                          ? io_backend_packet_0_bits_needs_branch_unit
                          : reservation_station_1_decoded_instruction_needs_branch_unit);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_1_decoded_instruction_needs_CSRs <=
-        ~_GEN_146
-        & (_GEN_101
+        ~_GEN_148
+        & (_GEN_103
              ? io_backend_packet_3_bits_needs_CSRs
-             : _GEN_81
+             : _GEN_83
                  ? io_backend_packet_2_bits_needs_CSRs
-                 : _GEN_34
+                 : _GEN_36
                      ? io_backend_packet_1_bits_needs_CSRs
-                     : _GEN_14
+                     : _GEN_16
                          ? io_backend_packet_0_bits_needs_CSRs
                          : reservation_station_1_decoded_instruction_needs_CSRs);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_1_decoded_instruction_SUBTRACT <=
-        ~_GEN_146
-        & (_GEN_101
+        ~_GEN_148
+        & (_GEN_103
              ? io_backend_packet_3_bits_SUBTRACT
-             : _GEN_81
+             : _GEN_83
                  ? io_backend_packet_2_bits_SUBTRACT
-                 : _GEN_34
+                 : _GEN_36
                      ? io_backend_packet_1_bits_SUBTRACT
-                     : _GEN_14
+                     : _GEN_16
                          ? io_backend_packet_0_bits_SUBTRACT
                          : reservation_station_1_decoded_instruction_SUBTRACT);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_1_decoded_instruction_MULTIPLY <=
-        ~_GEN_146
-        & (_GEN_101
+        ~_GEN_148
+        & (_GEN_103
              ? io_backend_packet_3_bits_MULTIPLY
-             : _GEN_81
+             : _GEN_83
                  ? io_backend_packet_2_bits_MULTIPLY
-                 : _GEN_34
+                 : _GEN_36
                      ? io_backend_packet_1_bits_MULTIPLY
-                     : _GEN_14
+                     : _GEN_16
                          ? io_backend_packet_0_bits_MULTIPLY
                          : reservation_station_1_decoded_instruction_MULTIPLY);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_1_decoded_instruction_IS_IMM <=
-        ~_GEN_146
-        & (_GEN_101
+        ~_GEN_148
+        & (_GEN_103
              ? io_backend_packet_3_bits_IS_IMM
-             : _GEN_81
+             : _GEN_83
                  ? io_backend_packet_2_bits_IS_IMM
-                 : _GEN_34
+                 : _GEN_36
                      ? io_backend_packet_1_bits_IS_IMM
-                     : _GEN_14
+                     : _GEN_16
                          ? io_backend_packet_0_bits_IS_IMM
                          : reservation_station_1_decoded_instruction_IS_IMM);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
-      reservation_station_1_committed <= ~_GEN_146 & reservation_station_1_committed;	// src/main/scala/Memory/MEMRS.scala:68:38, :138:111, :159:21, :160:42, :193:110, :194:36
+      reservation_station_1_committed <= ~_GEN_148 & reservation_station_1_committed;	// src/main/scala/Memory/MEMRS.scala:68:38, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_1_valid <=
-        ~_GEN_146 & (written_vec_3 ? _GEN_130 | _GEN_63 : _GEN_81 | _GEN_63);	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :138:111, :159:21, :160:42, :193:110, :194:36
+        ~_GEN_148 & (written_vec_3 ? _GEN_132 | _GEN_65 : _GEN_83 | _GEN_65);	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_2_decoded_instruction_ready_bits_RS1_ready <=
-        ~_GEN_147
+        ~_GEN_149
         & (~reservation_station_2_decoded_instruction_ready_bits_RS1_ready
            & reservation_station_2_valid
              ? RS1_match_2
-             : _GEN_103
+             : _GEN_105
                  ? io_backend_packet_3_bits_ready_bits_RS1_ready
-                 : _GEN_82
+                 : _GEN_84
                      ? io_backend_packet_2_bits_ready_bits_RS1_ready
-                     : _GEN_36
+                     : _GEN_38
                          ? io_backend_packet_1_bits_ready_bits_RS1_ready
-                         : _GEN_15
+                         : _GEN_17
                              ? io_backend_packet_0_bits_ready_bits_RS1_ready
                              : reservation_station_2_decoded_instruction_ready_bits_RS1_ready);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :111:25, :138:{14,79,111}, :139:77, :159:21, :160:42, :193:110, :194:36
       reservation_station_2_decoded_instruction_ready_bits_RS2_ready <=
-        ~_GEN_147
+        ~_GEN_149
         & (~reservation_station_2_decoded_instruction_ready_bits_RS2_ready
            & reservation_station_2_valid
              ? RS2_match_2
-             : _GEN_103
+             : _GEN_105
                  ? io_backend_packet_3_bits_ready_bits_RS2_ready
-                 : _GEN_82
+                 : _GEN_84
                      ? io_backend_packet_2_bits_ready_bits_RS2_ready
-                     : _GEN_36
+                     : _GEN_38
                          ? io_backend_packet_1_bits_ready_bits_RS2_ready
-                         : _GEN_15
+                         : _GEN_17
                              ? io_backend_packet_0_bits_ready_bits_RS2_ready
                              : reservation_station_2_decoded_instruction_ready_bits_RS2_ready);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :112:25, :132:{14,79,111}, :133:77, :138:111, :159:21, :160:42, :193:110, :194:36
-      if (_GEN_147) begin	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
+      if (_GEN_149) begin	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
         reservation_station_2_decoded_instruction_RD <= 7'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
         reservation_station_2_decoded_instruction_RS1 <= 7'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
         reservation_station_2_decoded_instruction_RS2 <= 7'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -2519,9 +2555,9 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
         reservation_station_2_fetch_PC <= 32'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
       end
       else begin	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
-        automatic logic _GEN_163;	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :99:79
-        _GEN_163 = written_vec_1 & _GEN_35 | _GEN_15;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :99:79
-        if (_GEN_103) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+        automatic logic _GEN_165;	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :99:79
+        _GEN_165 = written_vec_1 & _GEN_37 | _GEN_17;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :99:79
+        if (_GEN_105) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
           reservation_station_2_decoded_instruction_RD <= io_backend_packet_3_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_2_decoded_instruction_RS1 <= io_backend_packet_3_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_2_decoded_instruction_RS2 <= io_backend_packet_3_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -2547,7 +2583,7 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_2_decoded_instruction_access_width <=
             io_backend_packet_3_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        else if (_GEN_82) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+        else if (_GEN_84) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
           reservation_station_2_decoded_instruction_RD <= io_backend_packet_2_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_2_decoded_instruction_RS1 <= io_backend_packet_2_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_2_decoded_instruction_RS2 <= io_backend_packet_2_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -2573,7 +2609,7 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_2_decoded_instruction_access_width <=
             io_backend_packet_2_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        else if (_GEN_36) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+        else if (_GEN_38) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
           reservation_station_2_decoded_instruction_RD <= io_backend_packet_1_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_2_decoded_instruction_RS1 <= io_backend_packet_1_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_2_decoded_instruction_RS2 <= io_backend_packet_1_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -2599,7 +2635,7 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_2_decoded_instruction_access_width <=
             io_backend_packet_1_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        else if (_GEN_15) begin	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80
+        else if (_GEN_17) begin	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80
           reservation_station_2_decoded_instruction_RD <= io_backend_packet_0_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_2_decoded_instruction_RS1 <= io_backend_packet_0_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_2_decoded_instruction_RS2 <= io_backend_packet_0_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -2625,140 +2661,140 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_2_decoded_instruction_access_width <=
             io_backend_packet_0_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        if (written_vec_3 ? _GEN_131 | _GEN_163 : _GEN_82 | _GEN_163)	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :99:79
+        if (written_vec_3 ? _GEN_133 | _GEN_165 : _GEN_84 | _GEN_165)	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :99:79
           reservation_station_2_fetch_PC <= io_fetch_PC;	// src/main/scala/Memory/MEMRS.scala:68:38
       end
       reservation_station_2_decoded_instruction_RD_valid <=
-        ~_GEN_147
-        & (_GEN_103
+        ~_GEN_149
+        & (_GEN_105
              ? io_backend_packet_3_bits_RD_valid
-             : _GEN_82
+             : _GEN_84
                  ? io_backend_packet_2_bits_RD_valid
-                 : _GEN_36
+                 : _GEN_38
                      ? io_backend_packet_1_bits_RD_valid
-                     : _GEN_15
+                     : _GEN_17
                          ? io_backend_packet_0_bits_RD_valid
                          : reservation_station_2_decoded_instruction_RD_valid);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_2_decoded_instruction_RS1_valid <=
-        ~_GEN_147
-        & (_GEN_103
+        ~_GEN_149
+        & (_GEN_105
              ? io_backend_packet_3_bits_RS1_valid
-             : _GEN_82
+             : _GEN_84
                  ? io_backend_packet_2_bits_RS1_valid
-                 : _GEN_36
+                 : _GEN_38
                      ? io_backend_packet_1_bits_RS1_valid
-                     : _GEN_15
+                     : _GEN_17
                          ? io_backend_packet_0_bits_RS1_valid
                          : reservation_station_2_decoded_instruction_RS1_valid);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_2_decoded_instruction_RS2_valid <=
-        ~_GEN_147
-        & (_GEN_103
+        ~_GEN_149
+        & (_GEN_105
              ? io_backend_packet_3_bits_RS2_valid
-             : _GEN_82
+             : _GEN_84
                  ? io_backend_packet_2_bits_RS2_valid
-                 : _GEN_36
+                 : _GEN_38
                      ? io_backend_packet_1_bits_RS2_valid
-                     : _GEN_15
+                     : _GEN_17
                          ? io_backend_packet_0_bits_RS2_valid
                          : reservation_station_2_decoded_instruction_RS2_valid);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_2_decoded_instruction_needs_ALU <=
-        ~_GEN_147
-        & (_GEN_103
+        ~_GEN_149
+        & (_GEN_105
              ? io_backend_packet_3_bits_needs_ALU
-             : _GEN_82
+             : _GEN_84
                  ? io_backend_packet_2_bits_needs_ALU
-                 : _GEN_36
+                 : _GEN_38
                      ? io_backend_packet_1_bits_needs_ALU
-                     : _GEN_15
+                     : _GEN_17
                          ? io_backend_packet_0_bits_needs_ALU
                          : reservation_station_2_decoded_instruction_needs_ALU);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_2_decoded_instruction_needs_branch_unit <=
-        ~_GEN_147
-        & (_GEN_103
+        ~_GEN_149
+        & (_GEN_105
              ? io_backend_packet_3_bits_needs_branch_unit
-             : _GEN_82
+             : _GEN_84
                  ? io_backend_packet_2_bits_needs_branch_unit
-                 : _GEN_36
+                 : _GEN_38
                      ? io_backend_packet_1_bits_needs_branch_unit
-                     : _GEN_15
+                     : _GEN_17
                          ? io_backend_packet_0_bits_needs_branch_unit
                          : reservation_station_2_decoded_instruction_needs_branch_unit);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_2_decoded_instruction_needs_CSRs <=
-        ~_GEN_147
-        & (_GEN_103
+        ~_GEN_149
+        & (_GEN_105
              ? io_backend_packet_3_bits_needs_CSRs
-             : _GEN_82
+             : _GEN_84
                  ? io_backend_packet_2_bits_needs_CSRs
-                 : _GEN_36
+                 : _GEN_38
                      ? io_backend_packet_1_bits_needs_CSRs
-                     : _GEN_15
+                     : _GEN_17
                          ? io_backend_packet_0_bits_needs_CSRs
                          : reservation_station_2_decoded_instruction_needs_CSRs);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_2_decoded_instruction_SUBTRACT <=
-        ~_GEN_147
-        & (_GEN_103
+        ~_GEN_149
+        & (_GEN_105
              ? io_backend_packet_3_bits_SUBTRACT
-             : _GEN_82
+             : _GEN_84
                  ? io_backend_packet_2_bits_SUBTRACT
-                 : _GEN_36
+                 : _GEN_38
                      ? io_backend_packet_1_bits_SUBTRACT
-                     : _GEN_15
+                     : _GEN_17
                          ? io_backend_packet_0_bits_SUBTRACT
                          : reservation_station_2_decoded_instruction_SUBTRACT);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_2_decoded_instruction_MULTIPLY <=
-        ~_GEN_147
-        & (_GEN_103
+        ~_GEN_149
+        & (_GEN_105
              ? io_backend_packet_3_bits_MULTIPLY
-             : _GEN_82
+             : _GEN_84
                  ? io_backend_packet_2_bits_MULTIPLY
-                 : _GEN_36
+                 : _GEN_38
                      ? io_backend_packet_1_bits_MULTIPLY
-                     : _GEN_15
+                     : _GEN_17
                          ? io_backend_packet_0_bits_MULTIPLY
                          : reservation_station_2_decoded_instruction_MULTIPLY);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_2_decoded_instruction_IS_IMM <=
-        ~_GEN_147
-        & (_GEN_103
+        ~_GEN_149
+        & (_GEN_105
              ? io_backend_packet_3_bits_IS_IMM
-             : _GEN_82
+             : _GEN_84
                  ? io_backend_packet_2_bits_IS_IMM
-                 : _GEN_36
+                 : _GEN_38
                      ? io_backend_packet_1_bits_IS_IMM
-                     : _GEN_15
+                     : _GEN_17
                          ? io_backend_packet_0_bits_IS_IMM
                          : reservation_station_2_decoded_instruction_IS_IMM);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
-      reservation_station_2_committed <= ~_GEN_147 & reservation_station_2_committed;	// src/main/scala/Memory/MEMRS.scala:68:38, :138:111, :159:21, :160:42, :193:110, :194:36
+      reservation_station_2_committed <= ~_GEN_149 & reservation_station_2_committed;	// src/main/scala/Memory/MEMRS.scala:68:38, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_2_valid <=
-        ~_GEN_147 & (written_vec_3 ? _GEN_131 | _GEN_64 : _GEN_82 | _GEN_64);	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :138:111, :159:21, :160:42, :193:110, :194:36
+        ~_GEN_149 & (written_vec_3 ? _GEN_133 | _GEN_66 : _GEN_84 | _GEN_66);	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_3_decoded_instruction_ready_bits_RS1_ready <=
-        ~_GEN_148
+        ~_GEN_150
         & (~reservation_station_3_decoded_instruction_ready_bits_RS1_ready
            & reservation_station_3_valid
              ? RS1_match_3
-             : _GEN_105
+             : _GEN_107
                  ? io_backend_packet_3_bits_ready_bits_RS1_ready
-                 : _GEN_83
+                 : _GEN_85
                      ? io_backend_packet_2_bits_ready_bits_RS1_ready
-                     : _GEN_38
+                     : _GEN_40
                          ? io_backend_packet_1_bits_ready_bits_RS1_ready
-                         : _GEN_16
+                         : _GEN_18
                              ? io_backend_packet_0_bits_ready_bits_RS1_ready
                              : reservation_station_3_decoded_instruction_ready_bits_RS1_ready);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :111:25, :138:{14,79,111}, :139:77, :159:21, :160:42, :193:110, :194:36
       reservation_station_3_decoded_instruction_ready_bits_RS2_ready <=
-        ~_GEN_148
+        ~_GEN_150
         & (~reservation_station_3_decoded_instruction_ready_bits_RS2_ready
            & reservation_station_3_valid
              ? RS2_match_3
-             : _GEN_105
+             : _GEN_107
                  ? io_backend_packet_3_bits_ready_bits_RS2_ready
-                 : _GEN_83
+                 : _GEN_85
                      ? io_backend_packet_2_bits_ready_bits_RS2_ready
-                     : _GEN_38
+                     : _GEN_40
                          ? io_backend_packet_1_bits_ready_bits_RS2_ready
-                         : _GEN_16
+                         : _GEN_18
                              ? io_backend_packet_0_bits_ready_bits_RS2_ready
                              : reservation_station_3_decoded_instruction_ready_bits_RS2_ready);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :112:25, :132:{14,79,111}, :133:77, :138:111, :159:21, :160:42, :193:110, :194:36
-      if (_GEN_148) begin	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
+      if (_GEN_150) begin	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
         reservation_station_3_decoded_instruction_RD <= 7'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
         reservation_station_3_decoded_instruction_RS1 <= 7'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
         reservation_station_3_decoded_instruction_RS2 <= 7'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -2776,9 +2812,9 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
         reservation_station_3_fetch_PC <= 32'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
       end
       else begin	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
-        automatic logic _GEN_164;	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :99:79
-        _GEN_164 = written_vec_1 & _GEN_37 | _GEN_16;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :99:79
-        if (_GEN_105) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+        automatic logic _GEN_166;	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :99:79
+        _GEN_166 = written_vec_1 & _GEN_39 | _GEN_18;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :99:79
+        if (_GEN_107) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
           reservation_station_3_decoded_instruction_RD <= io_backend_packet_3_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_3_decoded_instruction_RS1 <= io_backend_packet_3_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_3_decoded_instruction_RS2 <= io_backend_packet_3_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -2804,7 +2840,7 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_3_decoded_instruction_access_width <=
             io_backend_packet_3_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        else if (_GEN_83) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+        else if (_GEN_85) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
           reservation_station_3_decoded_instruction_RD <= io_backend_packet_2_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_3_decoded_instruction_RS1 <= io_backend_packet_2_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_3_decoded_instruction_RS2 <= io_backend_packet_2_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -2830,7 +2866,7 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_3_decoded_instruction_access_width <=
             io_backend_packet_2_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        else if (_GEN_38) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+        else if (_GEN_40) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
           reservation_station_3_decoded_instruction_RD <= io_backend_packet_1_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_3_decoded_instruction_RS1 <= io_backend_packet_1_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_3_decoded_instruction_RS2 <= io_backend_packet_1_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -2856,7 +2892,7 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_3_decoded_instruction_access_width <=
             io_backend_packet_1_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        else if (_GEN_16) begin	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80
+        else if (_GEN_18) begin	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80
           reservation_station_3_decoded_instruction_RD <= io_backend_packet_0_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_3_decoded_instruction_RS1 <= io_backend_packet_0_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_3_decoded_instruction_RS2 <= io_backend_packet_0_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -2882,140 +2918,140 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_3_decoded_instruction_access_width <=
             io_backend_packet_0_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        if (written_vec_3 ? _GEN_132 | _GEN_164 : _GEN_83 | _GEN_164)	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :99:79
+        if (written_vec_3 ? _GEN_134 | _GEN_166 : _GEN_85 | _GEN_166)	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :99:79
           reservation_station_3_fetch_PC <= io_fetch_PC;	// src/main/scala/Memory/MEMRS.scala:68:38
       end
       reservation_station_3_decoded_instruction_RD_valid <=
-        ~_GEN_148
-        & (_GEN_105
+        ~_GEN_150
+        & (_GEN_107
              ? io_backend_packet_3_bits_RD_valid
-             : _GEN_83
+             : _GEN_85
                  ? io_backend_packet_2_bits_RD_valid
-                 : _GEN_38
+                 : _GEN_40
                      ? io_backend_packet_1_bits_RD_valid
-                     : _GEN_16
+                     : _GEN_18
                          ? io_backend_packet_0_bits_RD_valid
                          : reservation_station_3_decoded_instruction_RD_valid);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_3_decoded_instruction_RS1_valid <=
-        ~_GEN_148
-        & (_GEN_105
+        ~_GEN_150
+        & (_GEN_107
              ? io_backend_packet_3_bits_RS1_valid
-             : _GEN_83
+             : _GEN_85
                  ? io_backend_packet_2_bits_RS1_valid
-                 : _GEN_38
+                 : _GEN_40
                      ? io_backend_packet_1_bits_RS1_valid
-                     : _GEN_16
+                     : _GEN_18
                          ? io_backend_packet_0_bits_RS1_valid
                          : reservation_station_3_decoded_instruction_RS1_valid);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_3_decoded_instruction_RS2_valid <=
-        ~_GEN_148
-        & (_GEN_105
+        ~_GEN_150
+        & (_GEN_107
              ? io_backend_packet_3_bits_RS2_valid
-             : _GEN_83
+             : _GEN_85
                  ? io_backend_packet_2_bits_RS2_valid
-                 : _GEN_38
+                 : _GEN_40
                      ? io_backend_packet_1_bits_RS2_valid
-                     : _GEN_16
+                     : _GEN_18
                          ? io_backend_packet_0_bits_RS2_valid
                          : reservation_station_3_decoded_instruction_RS2_valid);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_3_decoded_instruction_needs_ALU <=
-        ~_GEN_148
-        & (_GEN_105
+        ~_GEN_150
+        & (_GEN_107
              ? io_backend_packet_3_bits_needs_ALU
-             : _GEN_83
+             : _GEN_85
                  ? io_backend_packet_2_bits_needs_ALU
-                 : _GEN_38
+                 : _GEN_40
                      ? io_backend_packet_1_bits_needs_ALU
-                     : _GEN_16
+                     : _GEN_18
                          ? io_backend_packet_0_bits_needs_ALU
                          : reservation_station_3_decoded_instruction_needs_ALU);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_3_decoded_instruction_needs_branch_unit <=
-        ~_GEN_148
-        & (_GEN_105
+        ~_GEN_150
+        & (_GEN_107
              ? io_backend_packet_3_bits_needs_branch_unit
-             : _GEN_83
+             : _GEN_85
                  ? io_backend_packet_2_bits_needs_branch_unit
-                 : _GEN_38
+                 : _GEN_40
                      ? io_backend_packet_1_bits_needs_branch_unit
-                     : _GEN_16
+                     : _GEN_18
                          ? io_backend_packet_0_bits_needs_branch_unit
                          : reservation_station_3_decoded_instruction_needs_branch_unit);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_3_decoded_instruction_needs_CSRs <=
-        ~_GEN_148
-        & (_GEN_105
+        ~_GEN_150
+        & (_GEN_107
              ? io_backend_packet_3_bits_needs_CSRs
-             : _GEN_83
+             : _GEN_85
                  ? io_backend_packet_2_bits_needs_CSRs
-                 : _GEN_38
+                 : _GEN_40
                      ? io_backend_packet_1_bits_needs_CSRs
-                     : _GEN_16
+                     : _GEN_18
                          ? io_backend_packet_0_bits_needs_CSRs
                          : reservation_station_3_decoded_instruction_needs_CSRs);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_3_decoded_instruction_SUBTRACT <=
-        ~_GEN_148
-        & (_GEN_105
+        ~_GEN_150
+        & (_GEN_107
              ? io_backend_packet_3_bits_SUBTRACT
-             : _GEN_83
+             : _GEN_85
                  ? io_backend_packet_2_bits_SUBTRACT
-                 : _GEN_38
+                 : _GEN_40
                      ? io_backend_packet_1_bits_SUBTRACT
-                     : _GEN_16
+                     : _GEN_18
                          ? io_backend_packet_0_bits_SUBTRACT
                          : reservation_station_3_decoded_instruction_SUBTRACT);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_3_decoded_instruction_MULTIPLY <=
-        ~_GEN_148
-        & (_GEN_105
+        ~_GEN_150
+        & (_GEN_107
              ? io_backend_packet_3_bits_MULTIPLY
-             : _GEN_83
+             : _GEN_85
                  ? io_backend_packet_2_bits_MULTIPLY
-                 : _GEN_38
+                 : _GEN_40
                      ? io_backend_packet_1_bits_MULTIPLY
-                     : _GEN_16
+                     : _GEN_18
                          ? io_backend_packet_0_bits_MULTIPLY
                          : reservation_station_3_decoded_instruction_MULTIPLY);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_3_decoded_instruction_IS_IMM <=
-        ~_GEN_148
-        & (_GEN_105
+        ~_GEN_150
+        & (_GEN_107
              ? io_backend_packet_3_bits_IS_IMM
-             : _GEN_83
+             : _GEN_85
                  ? io_backend_packet_2_bits_IS_IMM
-                 : _GEN_38
+                 : _GEN_40
                      ? io_backend_packet_1_bits_IS_IMM
-                     : _GEN_16
+                     : _GEN_18
                          ? io_backend_packet_0_bits_IS_IMM
                          : reservation_station_3_decoded_instruction_IS_IMM);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
-      reservation_station_3_committed <= ~_GEN_148 & reservation_station_3_committed;	// src/main/scala/Memory/MEMRS.scala:68:38, :138:111, :159:21, :160:42, :193:110, :194:36
+      reservation_station_3_committed <= ~_GEN_150 & reservation_station_3_committed;	// src/main/scala/Memory/MEMRS.scala:68:38, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_3_valid <=
-        ~_GEN_148 & (written_vec_3 ? _GEN_132 | _GEN_65 : _GEN_83 | _GEN_65);	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :138:111, :159:21, :160:42, :193:110, :194:36
+        ~_GEN_150 & (written_vec_3 ? _GEN_134 | _GEN_67 : _GEN_85 | _GEN_67);	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_4_decoded_instruction_ready_bits_RS1_ready <=
-        ~_GEN_149
+        ~_GEN_151
         & (~reservation_station_4_decoded_instruction_ready_bits_RS1_ready
            & reservation_station_4_valid
              ? RS1_match_4
-             : _GEN_107
+             : _GEN_109
                  ? io_backend_packet_3_bits_ready_bits_RS1_ready
-                 : _GEN_84
+                 : _GEN_86
                      ? io_backend_packet_2_bits_ready_bits_RS1_ready
-                     : _GEN_40
+                     : _GEN_42
                          ? io_backend_packet_1_bits_ready_bits_RS1_ready
-                         : _GEN_17
+                         : _GEN_19
                              ? io_backend_packet_0_bits_ready_bits_RS1_ready
                              : reservation_station_4_decoded_instruction_ready_bits_RS1_ready);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :111:25, :138:{14,79,111}, :139:77, :159:21, :160:42, :193:110, :194:36
       reservation_station_4_decoded_instruction_ready_bits_RS2_ready <=
-        ~_GEN_149
+        ~_GEN_151
         & (~reservation_station_4_decoded_instruction_ready_bits_RS2_ready
            & reservation_station_4_valid
              ? RS2_match_4
-             : _GEN_107
+             : _GEN_109
                  ? io_backend_packet_3_bits_ready_bits_RS2_ready
-                 : _GEN_84
+                 : _GEN_86
                      ? io_backend_packet_2_bits_ready_bits_RS2_ready
-                     : _GEN_40
+                     : _GEN_42
                          ? io_backend_packet_1_bits_ready_bits_RS2_ready
-                         : _GEN_17
+                         : _GEN_19
                              ? io_backend_packet_0_bits_ready_bits_RS2_ready
                              : reservation_station_4_decoded_instruction_ready_bits_RS2_ready);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :112:25, :132:{14,79,111}, :133:77, :138:111, :159:21, :160:42, :193:110, :194:36
-      if (_GEN_149) begin	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
+      if (_GEN_151) begin	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
         reservation_station_4_decoded_instruction_RD <= 7'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
         reservation_station_4_decoded_instruction_RS1 <= 7'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
         reservation_station_4_decoded_instruction_RS2 <= 7'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -3033,9 +3069,9 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
         reservation_station_4_fetch_PC <= 32'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
       end
       else begin	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
-        automatic logic _GEN_165;	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :99:79
-        _GEN_165 = written_vec_1 & _GEN_39 | _GEN_17;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :99:79
-        if (_GEN_107) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+        automatic logic _GEN_167;	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :99:79
+        _GEN_167 = written_vec_1 & _GEN_41 | _GEN_19;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :99:79
+        if (_GEN_109) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
           reservation_station_4_decoded_instruction_RD <= io_backend_packet_3_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_4_decoded_instruction_RS1 <= io_backend_packet_3_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_4_decoded_instruction_RS2 <= io_backend_packet_3_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -3061,7 +3097,7 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_4_decoded_instruction_access_width <=
             io_backend_packet_3_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        else if (_GEN_84) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+        else if (_GEN_86) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
           reservation_station_4_decoded_instruction_RD <= io_backend_packet_2_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_4_decoded_instruction_RS1 <= io_backend_packet_2_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_4_decoded_instruction_RS2 <= io_backend_packet_2_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -3087,7 +3123,7 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_4_decoded_instruction_access_width <=
             io_backend_packet_2_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        else if (_GEN_40) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+        else if (_GEN_42) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
           reservation_station_4_decoded_instruction_RD <= io_backend_packet_1_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_4_decoded_instruction_RS1 <= io_backend_packet_1_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_4_decoded_instruction_RS2 <= io_backend_packet_1_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -3113,7 +3149,7 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_4_decoded_instruction_access_width <=
             io_backend_packet_1_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        else if (_GEN_17) begin	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80
+        else if (_GEN_19) begin	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80
           reservation_station_4_decoded_instruction_RD <= io_backend_packet_0_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_4_decoded_instruction_RS1 <= io_backend_packet_0_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_4_decoded_instruction_RS2 <= io_backend_packet_0_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -3139,140 +3175,140 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_4_decoded_instruction_access_width <=
             io_backend_packet_0_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        if (written_vec_3 ? _GEN_133 | _GEN_165 : _GEN_84 | _GEN_165)	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :99:79
+        if (written_vec_3 ? _GEN_135 | _GEN_167 : _GEN_86 | _GEN_167)	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :99:79
           reservation_station_4_fetch_PC <= io_fetch_PC;	// src/main/scala/Memory/MEMRS.scala:68:38
       end
       reservation_station_4_decoded_instruction_RD_valid <=
-        ~_GEN_149
-        & (_GEN_107
+        ~_GEN_151
+        & (_GEN_109
              ? io_backend_packet_3_bits_RD_valid
-             : _GEN_84
+             : _GEN_86
                  ? io_backend_packet_2_bits_RD_valid
-                 : _GEN_40
+                 : _GEN_42
                      ? io_backend_packet_1_bits_RD_valid
-                     : _GEN_17
+                     : _GEN_19
                          ? io_backend_packet_0_bits_RD_valid
                          : reservation_station_4_decoded_instruction_RD_valid);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_4_decoded_instruction_RS1_valid <=
-        ~_GEN_149
-        & (_GEN_107
+        ~_GEN_151
+        & (_GEN_109
              ? io_backend_packet_3_bits_RS1_valid
-             : _GEN_84
+             : _GEN_86
                  ? io_backend_packet_2_bits_RS1_valid
-                 : _GEN_40
+                 : _GEN_42
                      ? io_backend_packet_1_bits_RS1_valid
-                     : _GEN_17
+                     : _GEN_19
                          ? io_backend_packet_0_bits_RS1_valid
                          : reservation_station_4_decoded_instruction_RS1_valid);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_4_decoded_instruction_RS2_valid <=
-        ~_GEN_149
-        & (_GEN_107
+        ~_GEN_151
+        & (_GEN_109
              ? io_backend_packet_3_bits_RS2_valid
-             : _GEN_84
+             : _GEN_86
                  ? io_backend_packet_2_bits_RS2_valid
-                 : _GEN_40
+                 : _GEN_42
                      ? io_backend_packet_1_bits_RS2_valid
-                     : _GEN_17
+                     : _GEN_19
                          ? io_backend_packet_0_bits_RS2_valid
                          : reservation_station_4_decoded_instruction_RS2_valid);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_4_decoded_instruction_needs_ALU <=
-        ~_GEN_149
-        & (_GEN_107
+        ~_GEN_151
+        & (_GEN_109
              ? io_backend_packet_3_bits_needs_ALU
-             : _GEN_84
+             : _GEN_86
                  ? io_backend_packet_2_bits_needs_ALU
-                 : _GEN_40
+                 : _GEN_42
                      ? io_backend_packet_1_bits_needs_ALU
-                     : _GEN_17
+                     : _GEN_19
                          ? io_backend_packet_0_bits_needs_ALU
                          : reservation_station_4_decoded_instruction_needs_ALU);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_4_decoded_instruction_needs_branch_unit <=
-        ~_GEN_149
-        & (_GEN_107
+        ~_GEN_151
+        & (_GEN_109
              ? io_backend_packet_3_bits_needs_branch_unit
-             : _GEN_84
+             : _GEN_86
                  ? io_backend_packet_2_bits_needs_branch_unit
-                 : _GEN_40
+                 : _GEN_42
                      ? io_backend_packet_1_bits_needs_branch_unit
-                     : _GEN_17
+                     : _GEN_19
                          ? io_backend_packet_0_bits_needs_branch_unit
                          : reservation_station_4_decoded_instruction_needs_branch_unit);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_4_decoded_instruction_needs_CSRs <=
-        ~_GEN_149
-        & (_GEN_107
+        ~_GEN_151
+        & (_GEN_109
              ? io_backend_packet_3_bits_needs_CSRs
-             : _GEN_84
+             : _GEN_86
                  ? io_backend_packet_2_bits_needs_CSRs
-                 : _GEN_40
+                 : _GEN_42
                      ? io_backend_packet_1_bits_needs_CSRs
-                     : _GEN_17
+                     : _GEN_19
                          ? io_backend_packet_0_bits_needs_CSRs
                          : reservation_station_4_decoded_instruction_needs_CSRs);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_4_decoded_instruction_SUBTRACT <=
-        ~_GEN_149
-        & (_GEN_107
+        ~_GEN_151
+        & (_GEN_109
              ? io_backend_packet_3_bits_SUBTRACT
-             : _GEN_84
+             : _GEN_86
                  ? io_backend_packet_2_bits_SUBTRACT
-                 : _GEN_40
+                 : _GEN_42
                      ? io_backend_packet_1_bits_SUBTRACT
-                     : _GEN_17
+                     : _GEN_19
                          ? io_backend_packet_0_bits_SUBTRACT
                          : reservation_station_4_decoded_instruction_SUBTRACT);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_4_decoded_instruction_MULTIPLY <=
-        ~_GEN_149
-        & (_GEN_107
+        ~_GEN_151
+        & (_GEN_109
              ? io_backend_packet_3_bits_MULTIPLY
-             : _GEN_84
+             : _GEN_86
                  ? io_backend_packet_2_bits_MULTIPLY
-                 : _GEN_40
+                 : _GEN_42
                      ? io_backend_packet_1_bits_MULTIPLY
-                     : _GEN_17
+                     : _GEN_19
                          ? io_backend_packet_0_bits_MULTIPLY
                          : reservation_station_4_decoded_instruction_MULTIPLY);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_4_decoded_instruction_IS_IMM <=
-        ~_GEN_149
-        & (_GEN_107
+        ~_GEN_151
+        & (_GEN_109
              ? io_backend_packet_3_bits_IS_IMM
-             : _GEN_84
+             : _GEN_86
                  ? io_backend_packet_2_bits_IS_IMM
-                 : _GEN_40
+                 : _GEN_42
                      ? io_backend_packet_1_bits_IS_IMM
-                     : _GEN_17
+                     : _GEN_19
                          ? io_backend_packet_0_bits_IS_IMM
                          : reservation_station_4_decoded_instruction_IS_IMM);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
-      reservation_station_4_committed <= ~_GEN_149 & reservation_station_4_committed;	// src/main/scala/Memory/MEMRS.scala:68:38, :138:111, :159:21, :160:42, :193:110, :194:36
+      reservation_station_4_committed <= ~_GEN_151 & reservation_station_4_committed;	// src/main/scala/Memory/MEMRS.scala:68:38, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_4_valid <=
-        ~_GEN_149 & (written_vec_3 ? _GEN_133 | _GEN_66 : _GEN_84 | _GEN_66);	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :138:111, :159:21, :160:42, :193:110, :194:36
+        ~_GEN_151 & (written_vec_3 ? _GEN_135 | _GEN_68 : _GEN_86 | _GEN_68);	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_5_decoded_instruction_ready_bits_RS1_ready <=
-        ~_GEN_150
+        ~_GEN_152
         & (~reservation_station_5_decoded_instruction_ready_bits_RS1_ready
            & reservation_station_5_valid
              ? RS1_match_5
-             : _GEN_109
+             : _GEN_111
                  ? io_backend_packet_3_bits_ready_bits_RS1_ready
-                 : _GEN_85
+                 : _GEN_87
                      ? io_backend_packet_2_bits_ready_bits_RS1_ready
-                     : _GEN_42
+                     : _GEN_44
                          ? io_backend_packet_1_bits_ready_bits_RS1_ready
-                         : _GEN_18
+                         : _GEN_20
                              ? io_backend_packet_0_bits_ready_bits_RS1_ready
                              : reservation_station_5_decoded_instruction_ready_bits_RS1_ready);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :111:25, :138:{14,79,111}, :139:77, :159:21, :160:42, :193:110, :194:36
       reservation_station_5_decoded_instruction_ready_bits_RS2_ready <=
-        ~_GEN_150
+        ~_GEN_152
         & (~reservation_station_5_decoded_instruction_ready_bits_RS2_ready
            & reservation_station_5_valid
              ? RS2_match_5
-             : _GEN_109
+             : _GEN_111
                  ? io_backend_packet_3_bits_ready_bits_RS2_ready
-                 : _GEN_85
+                 : _GEN_87
                      ? io_backend_packet_2_bits_ready_bits_RS2_ready
-                     : _GEN_42
+                     : _GEN_44
                          ? io_backend_packet_1_bits_ready_bits_RS2_ready
-                         : _GEN_18
+                         : _GEN_20
                              ? io_backend_packet_0_bits_ready_bits_RS2_ready
                              : reservation_station_5_decoded_instruction_ready_bits_RS2_ready);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :112:25, :132:{14,79,111}, :133:77, :138:111, :159:21, :160:42, :193:110, :194:36
-      if (_GEN_150) begin	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
+      if (_GEN_152) begin	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
         reservation_station_5_decoded_instruction_RD <= 7'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
         reservation_station_5_decoded_instruction_RS1 <= 7'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
         reservation_station_5_decoded_instruction_RS2 <= 7'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -3290,9 +3326,9 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
         reservation_station_5_fetch_PC <= 32'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
       end
       else begin	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
-        automatic logic _GEN_166;	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :99:79
-        _GEN_166 = written_vec_1 & _GEN_41 | _GEN_18;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :99:79
-        if (_GEN_109) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+        automatic logic _GEN_168;	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :99:79
+        _GEN_168 = written_vec_1 & _GEN_43 | _GEN_20;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :99:79
+        if (_GEN_111) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
           reservation_station_5_decoded_instruction_RD <= io_backend_packet_3_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_5_decoded_instruction_RS1 <= io_backend_packet_3_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_5_decoded_instruction_RS2 <= io_backend_packet_3_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -3318,7 +3354,7 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_5_decoded_instruction_access_width <=
             io_backend_packet_3_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        else if (_GEN_85) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+        else if (_GEN_87) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
           reservation_station_5_decoded_instruction_RD <= io_backend_packet_2_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_5_decoded_instruction_RS1 <= io_backend_packet_2_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_5_decoded_instruction_RS2 <= io_backend_packet_2_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -3344,7 +3380,7 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_5_decoded_instruction_access_width <=
             io_backend_packet_2_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        else if (_GEN_42) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+        else if (_GEN_44) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
           reservation_station_5_decoded_instruction_RD <= io_backend_packet_1_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_5_decoded_instruction_RS1 <= io_backend_packet_1_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_5_decoded_instruction_RS2 <= io_backend_packet_1_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -3370,7 +3406,7 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_5_decoded_instruction_access_width <=
             io_backend_packet_1_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        else if (_GEN_18) begin	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80
+        else if (_GEN_20) begin	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80
           reservation_station_5_decoded_instruction_RD <= io_backend_packet_0_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_5_decoded_instruction_RS1 <= io_backend_packet_0_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_5_decoded_instruction_RS2 <= io_backend_packet_0_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -3396,140 +3432,140 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_5_decoded_instruction_access_width <=
             io_backend_packet_0_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        if (written_vec_3 ? _GEN_134 | _GEN_166 : _GEN_85 | _GEN_166)	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :99:79
+        if (written_vec_3 ? _GEN_136 | _GEN_168 : _GEN_87 | _GEN_168)	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :99:79
           reservation_station_5_fetch_PC <= io_fetch_PC;	// src/main/scala/Memory/MEMRS.scala:68:38
       end
       reservation_station_5_decoded_instruction_RD_valid <=
-        ~_GEN_150
-        & (_GEN_109
+        ~_GEN_152
+        & (_GEN_111
              ? io_backend_packet_3_bits_RD_valid
-             : _GEN_85
+             : _GEN_87
                  ? io_backend_packet_2_bits_RD_valid
-                 : _GEN_42
+                 : _GEN_44
                      ? io_backend_packet_1_bits_RD_valid
-                     : _GEN_18
+                     : _GEN_20
                          ? io_backend_packet_0_bits_RD_valid
                          : reservation_station_5_decoded_instruction_RD_valid);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_5_decoded_instruction_RS1_valid <=
-        ~_GEN_150
-        & (_GEN_109
+        ~_GEN_152
+        & (_GEN_111
              ? io_backend_packet_3_bits_RS1_valid
-             : _GEN_85
+             : _GEN_87
                  ? io_backend_packet_2_bits_RS1_valid
-                 : _GEN_42
+                 : _GEN_44
                      ? io_backend_packet_1_bits_RS1_valid
-                     : _GEN_18
+                     : _GEN_20
                          ? io_backend_packet_0_bits_RS1_valid
                          : reservation_station_5_decoded_instruction_RS1_valid);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_5_decoded_instruction_RS2_valid <=
-        ~_GEN_150
-        & (_GEN_109
+        ~_GEN_152
+        & (_GEN_111
              ? io_backend_packet_3_bits_RS2_valid
-             : _GEN_85
+             : _GEN_87
                  ? io_backend_packet_2_bits_RS2_valid
-                 : _GEN_42
+                 : _GEN_44
                      ? io_backend_packet_1_bits_RS2_valid
-                     : _GEN_18
+                     : _GEN_20
                          ? io_backend_packet_0_bits_RS2_valid
                          : reservation_station_5_decoded_instruction_RS2_valid);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_5_decoded_instruction_needs_ALU <=
-        ~_GEN_150
-        & (_GEN_109
+        ~_GEN_152
+        & (_GEN_111
              ? io_backend_packet_3_bits_needs_ALU
-             : _GEN_85
+             : _GEN_87
                  ? io_backend_packet_2_bits_needs_ALU
-                 : _GEN_42
+                 : _GEN_44
                      ? io_backend_packet_1_bits_needs_ALU
-                     : _GEN_18
+                     : _GEN_20
                          ? io_backend_packet_0_bits_needs_ALU
                          : reservation_station_5_decoded_instruction_needs_ALU);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_5_decoded_instruction_needs_branch_unit <=
-        ~_GEN_150
-        & (_GEN_109
+        ~_GEN_152
+        & (_GEN_111
              ? io_backend_packet_3_bits_needs_branch_unit
-             : _GEN_85
+             : _GEN_87
                  ? io_backend_packet_2_bits_needs_branch_unit
-                 : _GEN_42
+                 : _GEN_44
                      ? io_backend_packet_1_bits_needs_branch_unit
-                     : _GEN_18
+                     : _GEN_20
                          ? io_backend_packet_0_bits_needs_branch_unit
                          : reservation_station_5_decoded_instruction_needs_branch_unit);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_5_decoded_instruction_needs_CSRs <=
-        ~_GEN_150
-        & (_GEN_109
+        ~_GEN_152
+        & (_GEN_111
              ? io_backend_packet_3_bits_needs_CSRs
-             : _GEN_85
+             : _GEN_87
                  ? io_backend_packet_2_bits_needs_CSRs
-                 : _GEN_42
+                 : _GEN_44
                      ? io_backend_packet_1_bits_needs_CSRs
-                     : _GEN_18
+                     : _GEN_20
                          ? io_backend_packet_0_bits_needs_CSRs
                          : reservation_station_5_decoded_instruction_needs_CSRs);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_5_decoded_instruction_SUBTRACT <=
-        ~_GEN_150
-        & (_GEN_109
+        ~_GEN_152
+        & (_GEN_111
              ? io_backend_packet_3_bits_SUBTRACT
-             : _GEN_85
+             : _GEN_87
                  ? io_backend_packet_2_bits_SUBTRACT
-                 : _GEN_42
+                 : _GEN_44
                      ? io_backend_packet_1_bits_SUBTRACT
-                     : _GEN_18
+                     : _GEN_20
                          ? io_backend_packet_0_bits_SUBTRACT
                          : reservation_station_5_decoded_instruction_SUBTRACT);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_5_decoded_instruction_MULTIPLY <=
-        ~_GEN_150
-        & (_GEN_109
+        ~_GEN_152
+        & (_GEN_111
              ? io_backend_packet_3_bits_MULTIPLY
-             : _GEN_85
+             : _GEN_87
                  ? io_backend_packet_2_bits_MULTIPLY
-                 : _GEN_42
+                 : _GEN_44
                      ? io_backend_packet_1_bits_MULTIPLY
-                     : _GEN_18
+                     : _GEN_20
                          ? io_backend_packet_0_bits_MULTIPLY
                          : reservation_station_5_decoded_instruction_MULTIPLY);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_5_decoded_instruction_IS_IMM <=
-        ~_GEN_150
-        & (_GEN_109
+        ~_GEN_152
+        & (_GEN_111
              ? io_backend_packet_3_bits_IS_IMM
-             : _GEN_85
+             : _GEN_87
                  ? io_backend_packet_2_bits_IS_IMM
-                 : _GEN_42
+                 : _GEN_44
                      ? io_backend_packet_1_bits_IS_IMM
-                     : _GEN_18
+                     : _GEN_20
                          ? io_backend_packet_0_bits_IS_IMM
                          : reservation_station_5_decoded_instruction_IS_IMM);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
-      reservation_station_5_committed <= ~_GEN_150 & reservation_station_5_committed;	// src/main/scala/Memory/MEMRS.scala:68:38, :138:111, :159:21, :160:42, :193:110, :194:36
+      reservation_station_5_committed <= ~_GEN_152 & reservation_station_5_committed;	// src/main/scala/Memory/MEMRS.scala:68:38, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_5_valid <=
-        ~_GEN_150 & (written_vec_3 ? _GEN_134 | _GEN_67 : _GEN_85 | _GEN_67);	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :138:111, :159:21, :160:42, :193:110, :194:36
+        ~_GEN_152 & (written_vec_3 ? _GEN_136 | _GEN_69 : _GEN_87 | _GEN_69);	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_6_decoded_instruction_ready_bits_RS1_ready <=
-        ~_GEN_151
+        ~_GEN_153
         & (~reservation_station_6_decoded_instruction_ready_bits_RS1_ready
            & reservation_station_6_valid
              ? RS1_match_6
-             : _GEN_111
+             : _GEN_113
                  ? io_backend_packet_3_bits_ready_bits_RS1_ready
-                 : _GEN_86
+                 : _GEN_88
                      ? io_backend_packet_2_bits_ready_bits_RS1_ready
-                     : _GEN_44
+                     : _GEN_46
                          ? io_backend_packet_1_bits_ready_bits_RS1_ready
-                         : _GEN_19
+                         : _GEN_21
                              ? io_backend_packet_0_bits_ready_bits_RS1_ready
                              : reservation_station_6_decoded_instruction_ready_bits_RS1_ready);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :111:25, :138:{14,79,111}, :139:77, :159:21, :160:42, :193:110, :194:36
       reservation_station_6_decoded_instruction_ready_bits_RS2_ready <=
-        ~_GEN_151
+        ~_GEN_153
         & (~reservation_station_6_decoded_instruction_ready_bits_RS2_ready
            & reservation_station_6_valid
              ? RS2_match_6
-             : _GEN_111
+             : _GEN_113
                  ? io_backend_packet_3_bits_ready_bits_RS2_ready
-                 : _GEN_86
+                 : _GEN_88
                      ? io_backend_packet_2_bits_ready_bits_RS2_ready
-                     : _GEN_44
+                     : _GEN_46
                          ? io_backend_packet_1_bits_ready_bits_RS2_ready
-                         : _GEN_19
+                         : _GEN_21
                              ? io_backend_packet_0_bits_ready_bits_RS2_ready
                              : reservation_station_6_decoded_instruction_ready_bits_RS2_ready);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :112:25, :132:{14,79,111}, :133:77, :138:111, :159:21, :160:42, :193:110, :194:36
-      if (_GEN_151) begin	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
+      if (_GEN_153) begin	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
         reservation_station_6_decoded_instruction_RD <= 7'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
         reservation_station_6_decoded_instruction_RS1 <= 7'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
         reservation_station_6_decoded_instruction_RS2 <= 7'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -3547,9 +3583,9 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
         reservation_station_6_fetch_PC <= 32'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
       end
       else begin	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
-        automatic logic _GEN_167;	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :99:79
-        _GEN_167 = written_vec_1 & _GEN_43 | _GEN_19;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :99:79
-        if (_GEN_111) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+        automatic logic _GEN_169;	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :99:79
+        _GEN_169 = written_vec_1 & _GEN_45 | _GEN_21;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :99:79
+        if (_GEN_113) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
           reservation_station_6_decoded_instruction_RD <= io_backend_packet_3_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_6_decoded_instruction_RS1 <= io_backend_packet_3_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_6_decoded_instruction_RS2 <= io_backend_packet_3_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -3575,7 +3611,7 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_6_decoded_instruction_access_width <=
             io_backend_packet_3_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        else if (_GEN_86) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+        else if (_GEN_88) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
           reservation_station_6_decoded_instruction_RD <= io_backend_packet_2_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_6_decoded_instruction_RS1 <= io_backend_packet_2_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_6_decoded_instruction_RS2 <= io_backend_packet_2_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -3601,7 +3637,7 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_6_decoded_instruction_access_width <=
             io_backend_packet_2_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        else if (_GEN_44) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+        else if (_GEN_46) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
           reservation_station_6_decoded_instruction_RD <= io_backend_packet_1_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_6_decoded_instruction_RS1 <= io_backend_packet_1_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_6_decoded_instruction_RS2 <= io_backend_packet_1_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -3627,7 +3663,7 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_6_decoded_instruction_access_width <=
             io_backend_packet_1_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        else if (_GEN_19) begin	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80
+        else if (_GEN_21) begin	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80
           reservation_station_6_decoded_instruction_RD <= io_backend_packet_0_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_6_decoded_instruction_RS1 <= io_backend_packet_0_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_6_decoded_instruction_RS2 <= io_backend_packet_0_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -3653,140 +3689,140 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_6_decoded_instruction_access_width <=
             io_backend_packet_0_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        if (written_vec_3 ? _GEN_135 | _GEN_167 : _GEN_86 | _GEN_167)	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :99:79
+        if (written_vec_3 ? _GEN_137 | _GEN_169 : _GEN_88 | _GEN_169)	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :99:79
           reservation_station_6_fetch_PC <= io_fetch_PC;	// src/main/scala/Memory/MEMRS.scala:68:38
       end
       reservation_station_6_decoded_instruction_RD_valid <=
-        ~_GEN_151
-        & (_GEN_111
+        ~_GEN_153
+        & (_GEN_113
              ? io_backend_packet_3_bits_RD_valid
-             : _GEN_86
+             : _GEN_88
                  ? io_backend_packet_2_bits_RD_valid
-                 : _GEN_44
+                 : _GEN_46
                      ? io_backend_packet_1_bits_RD_valid
-                     : _GEN_19
+                     : _GEN_21
                          ? io_backend_packet_0_bits_RD_valid
                          : reservation_station_6_decoded_instruction_RD_valid);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_6_decoded_instruction_RS1_valid <=
-        ~_GEN_151
-        & (_GEN_111
+        ~_GEN_153
+        & (_GEN_113
              ? io_backend_packet_3_bits_RS1_valid
-             : _GEN_86
+             : _GEN_88
                  ? io_backend_packet_2_bits_RS1_valid
-                 : _GEN_44
+                 : _GEN_46
                      ? io_backend_packet_1_bits_RS1_valid
-                     : _GEN_19
+                     : _GEN_21
                          ? io_backend_packet_0_bits_RS1_valid
                          : reservation_station_6_decoded_instruction_RS1_valid);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_6_decoded_instruction_RS2_valid <=
-        ~_GEN_151
-        & (_GEN_111
+        ~_GEN_153
+        & (_GEN_113
              ? io_backend_packet_3_bits_RS2_valid
-             : _GEN_86
+             : _GEN_88
                  ? io_backend_packet_2_bits_RS2_valid
-                 : _GEN_44
+                 : _GEN_46
                      ? io_backend_packet_1_bits_RS2_valid
-                     : _GEN_19
+                     : _GEN_21
                          ? io_backend_packet_0_bits_RS2_valid
                          : reservation_station_6_decoded_instruction_RS2_valid);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_6_decoded_instruction_needs_ALU <=
-        ~_GEN_151
-        & (_GEN_111
+        ~_GEN_153
+        & (_GEN_113
              ? io_backend_packet_3_bits_needs_ALU
-             : _GEN_86
+             : _GEN_88
                  ? io_backend_packet_2_bits_needs_ALU
-                 : _GEN_44
+                 : _GEN_46
                      ? io_backend_packet_1_bits_needs_ALU
-                     : _GEN_19
+                     : _GEN_21
                          ? io_backend_packet_0_bits_needs_ALU
                          : reservation_station_6_decoded_instruction_needs_ALU);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_6_decoded_instruction_needs_branch_unit <=
-        ~_GEN_151
-        & (_GEN_111
+        ~_GEN_153
+        & (_GEN_113
              ? io_backend_packet_3_bits_needs_branch_unit
-             : _GEN_86
+             : _GEN_88
                  ? io_backend_packet_2_bits_needs_branch_unit
-                 : _GEN_44
+                 : _GEN_46
                      ? io_backend_packet_1_bits_needs_branch_unit
-                     : _GEN_19
+                     : _GEN_21
                          ? io_backend_packet_0_bits_needs_branch_unit
                          : reservation_station_6_decoded_instruction_needs_branch_unit);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_6_decoded_instruction_needs_CSRs <=
-        ~_GEN_151
-        & (_GEN_111
+        ~_GEN_153
+        & (_GEN_113
              ? io_backend_packet_3_bits_needs_CSRs
-             : _GEN_86
+             : _GEN_88
                  ? io_backend_packet_2_bits_needs_CSRs
-                 : _GEN_44
+                 : _GEN_46
                      ? io_backend_packet_1_bits_needs_CSRs
-                     : _GEN_19
+                     : _GEN_21
                          ? io_backend_packet_0_bits_needs_CSRs
                          : reservation_station_6_decoded_instruction_needs_CSRs);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_6_decoded_instruction_SUBTRACT <=
-        ~_GEN_151
-        & (_GEN_111
+        ~_GEN_153
+        & (_GEN_113
              ? io_backend_packet_3_bits_SUBTRACT
-             : _GEN_86
+             : _GEN_88
                  ? io_backend_packet_2_bits_SUBTRACT
-                 : _GEN_44
+                 : _GEN_46
                      ? io_backend_packet_1_bits_SUBTRACT
-                     : _GEN_19
+                     : _GEN_21
                          ? io_backend_packet_0_bits_SUBTRACT
                          : reservation_station_6_decoded_instruction_SUBTRACT);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_6_decoded_instruction_MULTIPLY <=
-        ~_GEN_151
-        & (_GEN_111
+        ~_GEN_153
+        & (_GEN_113
              ? io_backend_packet_3_bits_MULTIPLY
-             : _GEN_86
+             : _GEN_88
                  ? io_backend_packet_2_bits_MULTIPLY
-                 : _GEN_44
+                 : _GEN_46
                      ? io_backend_packet_1_bits_MULTIPLY
-                     : _GEN_19
+                     : _GEN_21
                          ? io_backend_packet_0_bits_MULTIPLY
                          : reservation_station_6_decoded_instruction_MULTIPLY);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_6_decoded_instruction_IS_IMM <=
-        ~_GEN_151
-        & (_GEN_111
+        ~_GEN_153
+        & (_GEN_113
              ? io_backend_packet_3_bits_IS_IMM
-             : _GEN_86
+             : _GEN_88
                  ? io_backend_packet_2_bits_IS_IMM
-                 : _GEN_44
+                 : _GEN_46
                      ? io_backend_packet_1_bits_IS_IMM
-                     : _GEN_19
+                     : _GEN_21
                          ? io_backend_packet_0_bits_IS_IMM
                          : reservation_station_6_decoded_instruction_IS_IMM);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
-      reservation_station_6_committed <= ~_GEN_151 & reservation_station_6_committed;	// src/main/scala/Memory/MEMRS.scala:68:38, :138:111, :159:21, :160:42, :193:110, :194:36
+      reservation_station_6_committed <= ~_GEN_153 & reservation_station_6_committed;	// src/main/scala/Memory/MEMRS.scala:68:38, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_6_valid <=
-        ~_GEN_151 & (written_vec_3 ? _GEN_135 | _GEN_68 : _GEN_86 | _GEN_68);	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :138:111, :159:21, :160:42, :193:110, :194:36
+        ~_GEN_153 & (written_vec_3 ? _GEN_137 | _GEN_70 : _GEN_88 | _GEN_70);	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_7_decoded_instruction_ready_bits_RS1_ready <=
-        ~_GEN_152
+        ~_GEN_154
         & (~reservation_station_7_decoded_instruction_ready_bits_RS1_ready
            & reservation_station_7_valid
              ? RS1_match_7
-             : _GEN_113
+             : _GEN_115
                  ? io_backend_packet_3_bits_ready_bits_RS1_ready
-                 : _GEN_87
+                 : _GEN_89
                      ? io_backend_packet_2_bits_ready_bits_RS1_ready
-                     : _GEN_46
+                     : _GEN_48
                          ? io_backend_packet_1_bits_ready_bits_RS1_ready
-                         : _GEN_20
+                         : _GEN_22
                              ? io_backend_packet_0_bits_ready_bits_RS1_ready
                              : reservation_station_7_decoded_instruction_ready_bits_RS1_ready);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :111:25, :138:{14,79,111}, :139:77, :159:21, :160:42, :193:110, :194:36
       reservation_station_7_decoded_instruction_ready_bits_RS2_ready <=
-        ~_GEN_152
+        ~_GEN_154
         & (~reservation_station_7_decoded_instruction_ready_bits_RS2_ready
            & reservation_station_7_valid
              ? RS2_match_7
-             : _GEN_113
+             : _GEN_115
                  ? io_backend_packet_3_bits_ready_bits_RS2_ready
-                 : _GEN_87
+                 : _GEN_89
                      ? io_backend_packet_2_bits_ready_bits_RS2_ready
-                     : _GEN_46
+                     : _GEN_48
                          ? io_backend_packet_1_bits_ready_bits_RS2_ready
-                         : _GEN_20
+                         : _GEN_22
                              ? io_backend_packet_0_bits_ready_bits_RS2_ready
                              : reservation_station_7_decoded_instruction_ready_bits_RS2_ready);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :112:25, :132:{14,79,111}, :133:77, :138:111, :159:21, :160:42, :193:110, :194:36
-      if (_GEN_152) begin	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
+      if (_GEN_154) begin	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
         reservation_station_7_decoded_instruction_RD <= 7'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
         reservation_station_7_decoded_instruction_RS1 <= 7'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
         reservation_station_7_decoded_instruction_RS2 <= 7'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -3804,9 +3840,9 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
         reservation_station_7_fetch_PC <= 32'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
       end
       else begin	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
-        automatic logic _GEN_168;	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :99:79
-        _GEN_168 = written_vec_1 & _GEN_45 | _GEN_20;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :99:79
-        if (_GEN_113) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+        automatic logic _GEN_170;	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :99:79
+        _GEN_170 = written_vec_1 & _GEN_47 | _GEN_22;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :99:79
+        if (_GEN_115) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
           reservation_station_7_decoded_instruction_RD <= io_backend_packet_3_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_7_decoded_instruction_RS1 <= io_backend_packet_3_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_7_decoded_instruction_RS2 <= io_backend_packet_3_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -3832,7 +3868,7 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_7_decoded_instruction_access_width <=
             io_backend_packet_3_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        else if (_GEN_87) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+        else if (_GEN_89) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
           reservation_station_7_decoded_instruction_RD <= io_backend_packet_2_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_7_decoded_instruction_RS1 <= io_backend_packet_2_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_7_decoded_instruction_RS2 <= io_backend_packet_2_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -3858,7 +3894,7 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_7_decoded_instruction_access_width <=
             io_backend_packet_2_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        else if (_GEN_46) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+        else if (_GEN_48) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
           reservation_station_7_decoded_instruction_RD <= io_backend_packet_1_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_7_decoded_instruction_RS1 <= io_backend_packet_1_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_7_decoded_instruction_RS2 <= io_backend_packet_1_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -3884,7 +3920,7 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_7_decoded_instruction_access_width <=
             io_backend_packet_1_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        else if (_GEN_20) begin	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80
+        else if (_GEN_22) begin	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80
           reservation_station_7_decoded_instruction_RD <= io_backend_packet_0_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_7_decoded_instruction_RS1 <= io_backend_packet_0_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_7_decoded_instruction_RS2 <= io_backend_packet_0_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -3910,140 +3946,140 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_7_decoded_instruction_access_width <=
             io_backend_packet_0_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        if (written_vec_3 ? _GEN_136 | _GEN_168 : _GEN_87 | _GEN_168)	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :99:79
+        if (written_vec_3 ? _GEN_138 | _GEN_170 : _GEN_89 | _GEN_170)	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :99:79
           reservation_station_7_fetch_PC <= io_fetch_PC;	// src/main/scala/Memory/MEMRS.scala:68:38
       end
       reservation_station_7_decoded_instruction_RD_valid <=
-        ~_GEN_152
-        & (_GEN_113
+        ~_GEN_154
+        & (_GEN_115
              ? io_backend_packet_3_bits_RD_valid
-             : _GEN_87
+             : _GEN_89
                  ? io_backend_packet_2_bits_RD_valid
-                 : _GEN_46
+                 : _GEN_48
                      ? io_backend_packet_1_bits_RD_valid
-                     : _GEN_20
+                     : _GEN_22
                          ? io_backend_packet_0_bits_RD_valid
                          : reservation_station_7_decoded_instruction_RD_valid);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_7_decoded_instruction_RS1_valid <=
-        ~_GEN_152
-        & (_GEN_113
+        ~_GEN_154
+        & (_GEN_115
              ? io_backend_packet_3_bits_RS1_valid
-             : _GEN_87
+             : _GEN_89
                  ? io_backend_packet_2_bits_RS1_valid
-                 : _GEN_46
+                 : _GEN_48
                      ? io_backend_packet_1_bits_RS1_valid
-                     : _GEN_20
+                     : _GEN_22
                          ? io_backend_packet_0_bits_RS1_valid
                          : reservation_station_7_decoded_instruction_RS1_valid);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_7_decoded_instruction_RS2_valid <=
-        ~_GEN_152
-        & (_GEN_113
+        ~_GEN_154
+        & (_GEN_115
              ? io_backend_packet_3_bits_RS2_valid
-             : _GEN_87
+             : _GEN_89
                  ? io_backend_packet_2_bits_RS2_valid
-                 : _GEN_46
+                 : _GEN_48
                      ? io_backend_packet_1_bits_RS2_valid
-                     : _GEN_20
+                     : _GEN_22
                          ? io_backend_packet_0_bits_RS2_valid
                          : reservation_station_7_decoded_instruction_RS2_valid);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_7_decoded_instruction_needs_ALU <=
-        ~_GEN_152
-        & (_GEN_113
+        ~_GEN_154
+        & (_GEN_115
              ? io_backend_packet_3_bits_needs_ALU
-             : _GEN_87
+             : _GEN_89
                  ? io_backend_packet_2_bits_needs_ALU
-                 : _GEN_46
+                 : _GEN_48
                      ? io_backend_packet_1_bits_needs_ALU
-                     : _GEN_20
+                     : _GEN_22
                          ? io_backend_packet_0_bits_needs_ALU
                          : reservation_station_7_decoded_instruction_needs_ALU);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_7_decoded_instruction_needs_branch_unit <=
-        ~_GEN_152
-        & (_GEN_113
+        ~_GEN_154
+        & (_GEN_115
              ? io_backend_packet_3_bits_needs_branch_unit
-             : _GEN_87
+             : _GEN_89
                  ? io_backend_packet_2_bits_needs_branch_unit
-                 : _GEN_46
+                 : _GEN_48
                      ? io_backend_packet_1_bits_needs_branch_unit
-                     : _GEN_20
+                     : _GEN_22
                          ? io_backend_packet_0_bits_needs_branch_unit
                          : reservation_station_7_decoded_instruction_needs_branch_unit);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_7_decoded_instruction_needs_CSRs <=
-        ~_GEN_152
-        & (_GEN_113
+        ~_GEN_154
+        & (_GEN_115
              ? io_backend_packet_3_bits_needs_CSRs
-             : _GEN_87
+             : _GEN_89
                  ? io_backend_packet_2_bits_needs_CSRs
-                 : _GEN_46
+                 : _GEN_48
                      ? io_backend_packet_1_bits_needs_CSRs
-                     : _GEN_20
+                     : _GEN_22
                          ? io_backend_packet_0_bits_needs_CSRs
                          : reservation_station_7_decoded_instruction_needs_CSRs);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_7_decoded_instruction_SUBTRACT <=
-        ~_GEN_152
-        & (_GEN_113
+        ~_GEN_154
+        & (_GEN_115
              ? io_backend_packet_3_bits_SUBTRACT
-             : _GEN_87
+             : _GEN_89
                  ? io_backend_packet_2_bits_SUBTRACT
-                 : _GEN_46
+                 : _GEN_48
                      ? io_backend_packet_1_bits_SUBTRACT
-                     : _GEN_20
+                     : _GEN_22
                          ? io_backend_packet_0_bits_SUBTRACT
                          : reservation_station_7_decoded_instruction_SUBTRACT);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_7_decoded_instruction_MULTIPLY <=
-        ~_GEN_152
-        & (_GEN_113
+        ~_GEN_154
+        & (_GEN_115
              ? io_backend_packet_3_bits_MULTIPLY
-             : _GEN_87
+             : _GEN_89
                  ? io_backend_packet_2_bits_MULTIPLY
-                 : _GEN_46
+                 : _GEN_48
                      ? io_backend_packet_1_bits_MULTIPLY
-                     : _GEN_20
+                     : _GEN_22
                          ? io_backend_packet_0_bits_MULTIPLY
                          : reservation_station_7_decoded_instruction_MULTIPLY);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_7_decoded_instruction_IS_IMM <=
-        ~_GEN_152
-        & (_GEN_113
+        ~_GEN_154
+        & (_GEN_115
              ? io_backend_packet_3_bits_IS_IMM
-             : _GEN_87
+             : _GEN_89
                  ? io_backend_packet_2_bits_IS_IMM
-                 : _GEN_46
+                 : _GEN_48
                      ? io_backend_packet_1_bits_IS_IMM
-                     : _GEN_20
+                     : _GEN_22
                          ? io_backend_packet_0_bits_IS_IMM
                          : reservation_station_7_decoded_instruction_IS_IMM);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
-      reservation_station_7_committed <= ~_GEN_152 & reservation_station_7_committed;	// src/main/scala/Memory/MEMRS.scala:68:38, :138:111, :159:21, :160:42, :193:110, :194:36
+      reservation_station_7_committed <= ~_GEN_154 & reservation_station_7_committed;	// src/main/scala/Memory/MEMRS.scala:68:38, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_7_valid <=
-        ~_GEN_152 & (written_vec_3 ? _GEN_136 | _GEN_69 : _GEN_87 | _GEN_69);	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :138:111, :159:21, :160:42, :193:110, :194:36
+        ~_GEN_154 & (written_vec_3 ? _GEN_138 | _GEN_71 : _GEN_89 | _GEN_71);	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_8_decoded_instruction_ready_bits_RS1_ready <=
-        ~_GEN_153
+        ~_GEN_155
         & (~reservation_station_8_decoded_instruction_ready_bits_RS1_ready
            & reservation_station_8_valid
              ? RS1_match_8
-             : _GEN_115
+             : _GEN_117
                  ? io_backend_packet_3_bits_ready_bits_RS1_ready
-                 : _GEN_88
+                 : _GEN_90
                      ? io_backend_packet_2_bits_ready_bits_RS1_ready
-                     : _GEN_48
+                     : _GEN_50
                          ? io_backend_packet_1_bits_ready_bits_RS1_ready
-                         : _GEN_21
+                         : _GEN_23
                              ? io_backend_packet_0_bits_ready_bits_RS1_ready
                              : reservation_station_8_decoded_instruction_ready_bits_RS1_ready);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :111:25, :138:{14,79,111}, :139:77, :159:21, :160:42, :193:110, :194:36
       reservation_station_8_decoded_instruction_ready_bits_RS2_ready <=
-        ~_GEN_153
+        ~_GEN_155
         & (~reservation_station_8_decoded_instruction_ready_bits_RS2_ready
            & reservation_station_8_valid
              ? RS2_match_8
-             : _GEN_115
+             : _GEN_117
                  ? io_backend_packet_3_bits_ready_bits_RS2_ready
-                 : _GEN_88
+                 : _GEN_90
                      ? io_backend_packet_2_bits_ready_bits_RS2_ready
-                     : _GEN_48
+                     : _GEN_50
                          ? io_backend_packet_1_bits_ready_bits_RS2_ready
-                         : _GEN_21
+                         : _GEN_23
                              ? io_backend_packet_0_bits_ready_bits_RS2_ready
                              : reservation_station_8_decoded_instruction_ready_bits_RS2_ready);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :112:25, :132:{14,79,111}, :133:77, :138:111, :159:21, :160:42, :193:110, :194:36
-      if (_GEN_153) begin	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
+      if (_GEN_155) begin	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
         reservation_station_8_decoded_instruction_RD <= 7'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
         reservation_station_8_decoded_instruction_RS1 <= 7'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
         reservation_station_8_decoded_instruction_RS2 <= 7'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -4061,9 +4097,9 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
         reservation_station_8_fetch_PC <= 32'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
       end
       else begin	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
-        automatic logic _GEN_169;	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :99:79
-        _GEN_169 = written_vec_1 & _GEN_47 | _GEN_21;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :99:79
-        if (_GEN_115) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+        automatic logic _GEN_171;	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :99:79
+        _GEN_171 = written_vec_1 & _GEN_49 | _GEN_23;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :99:79
+        if (_GEN_117) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
           reservation_station_8_decoded_instruction_RD <= io_backend_packet_3_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_8_decoded_instruction_RS1 <= io_backend_packet_3_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_8_decoded_instruction_RS2 <= io_backend_packet_3_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -4089,7 +4125,7 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_8_decoded_instruction_access_width <=
             io_backend_packet_3_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        else if (_GEN_88) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+        else if (_GEN_90) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
           reservation_station_8_decoded_instruction_RD <= io_backend_packet_2_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_8_decoded_instruction_RS1 <= io_backend_packet_2_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_8_decoded_instruction_RS2 <= io_backend_packet_2_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -4115,7 +4151,7 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_8_decoded_instruction_access_width <=
             io_backend_packet_2_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        else if (_GEN_48) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+        else if (_GEN_50) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
           reservation_station_8_decoded_instruction_RD <= io_backend_packet_1_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_8_decoded_instruction_RS1 <= io_backend_packet_1_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_8_decoded_instruction_RS2 <= io_backend_packet_1_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -4141,7 +4177,7 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_8_decoded_instruction_access_width <=
             io_backend_packet_1_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        else if (_GEN_21) begin	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80
+        else if (_GEN_23) begin	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80
           reservation_station_8_decoded_instruction_RD <= io_backend_packet_0_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_8_decoded_instruction_RS1 <= io_backend_packet_0_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_8_decoded_instruction_RS2 <= io_backend_packet_0_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -4167,140 +4203,140 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_8_decoded_instruction_access_width <=
             io_backend_packet_0_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        if (written_vec_3 ? _GEN_137 | _GEN_169 : _GEN_88 | _GEN_169)	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :99:79
+        if (written_vec_3 ? _GEN_139 | _GEN_171 : _GEN_90 | _GEN_171)	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :99:79
           reservation_station_8_fetch_PC <= io_fetch_PC;	// src/main/scala/Memory/MEMRS.scala:68:38
       end
       reservation_station_8_decoded_instruction_RD_valid <=
-        ~_GEN_153
-        & (_GEN_115
+        ~_GEN_155
+        & (_GEN_117
              ? io_backend_packet_3_bits_RD_valid
-             : _GEN_88
+             : _GEN_90
                  ? io_backend_packet_2_bits_RD_valid
-                 : _GEN_48
+                 : _GEN_50
                      ? io_backend_packet_1_bits_RD_valid
-                     : _GEN_21
+                     : _GEN_23
                          ? io_backend_packet_0_bits_RD_valid
                          : reservation_station_8_decoded_instruction_RD_valid);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_8_decoded_instruction_RS1_valid <=
-        ~_GEN_153
-        & (_GEN_115
+        ~_GEN_155
+        & (_GEN_117
              ? io_backend_packet_3_bits_RS1_valid
-             : _GEN_88
+             : _GEN_90
                  ? io_backend_packet_2_bits_RS1_valid
-                 : _GEN_48
+                 : _GEN_50
                      ? io_backend_packet_1_bits_RS1_valid
-                     : _GEN_21
+                     : _GEN_23
                          ? io_backend_packet_0_bits_RS1_valid
                          : reservation_station_8_decoded_instruction_RS1_valid);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_8_decoded_instruction_RS2_valid <=
-        ~_GEN_153
-        & (_GEN_115
+        ~_GEN_155
+        & (_GEN_117
              ? io_backend_packet_3_bits_RS2_valid
-             : _GEN_88
+             : _GEN_90
                  ? io_backend_packet_2_bits_RS2_valid
-                 : _GEN_48
+                 : _GEN_50
                      ? io_backend_packet_1_bits_RS2_valid
-                     : _GEN_21
+                     : _GEN_23
                          ? io_backend_packet_0_bits_RS2_valid
                          : reservation_station_8_decoded_instruction_RS2_valid);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_8_decoded_instruction_needs_ALU <=
-        ~_GEN_153
-        & (_GEN_115
+        ~_GEN_155
+        & (_GEN_117
              ? io_backend_packet_3_bits_needs_ALU
-             : _GEN_88
+             : _GEN_90
                  ? io_backend_packet_2_bits_needs_ALU
-                 : _GEN_48
+                 : _GEN_50
                      ? io_backend_packet_1_bits_needs_ALU
-                     : _GEN_21
+                     : _GEN_23
                          ? io_backend_packet_0_bits_needs_ALU
                          : reservation_station_8_decoded_instruction_needs_ALU);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_8_decoded_instruction_needs_branch_unit <=
-        ~_GEN_153
-        & (_GEN_115
+        ~_GEN_155
+        & (_GEN_117
              ? io_backend_packet_3_bits_needs_branch_unit
-             : _GEN_88
+             : _GEN_90
                  ? io_backend_packet_2_bits_needs_branch_unit
-                 : _GEN_48
+                 : _GEN_50
                      ? io_backend_packet_1_bits_needs_branch_unit
-                     : _GEN_21
+                     : _GEN_23
                          ? io_backend_packet_0_bits_needs_branch_unit
                          : reservation_station_8_decoded_instruction_needs_branch_unit);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_8_decoded_instruction_needs_CSRs <=
-        ~_GEN_153
-        & (_GEN_115
+        ~_GEN_155
+        & (_GEN_117
              ? io_backend_packet_3_bits_needs_CSRs
-             : _GEN_88
+             : _GEN_90
                  ? io_backend_packet_2_bits_needs_CSRs
-                 : _GEN_48
+                 : _GEN_50
                      ? io_backend_packet_1_bits_needs_CSRs
-                     : _GEN_21
+                     : _GEN_23
                          ? io_backend_packet_0_bits_needs_CSRs
                          : reservation_station_8_decoded_instruction_needs_CSRs);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_8_decoded_instruction_SUBTRACT <=
-        ~_GEN_153
-        & (_GEN_115
+        ~_GEN_155
+        & (_GEN_117
              ? io_backend_packet_3_bits_SUBTRACT
-             : _GEN_88
+             : _GEN_90
                  ? io_backend_packet_2_bits_SUBTRACT
-                 : _GEN_48
+                 : _GEN_50
                      ? io_backend_packet_1_bits_SUBTRACT
-                     : _GEN_21
+                     : _GEN_23
                          ? io_backend_packet_0_bits_SUBTRACT
                          : reservation_station_8_decoded_instruction_SUBTRACT);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_8_decoded_instruction_MULTIPLY <=
-        ~_GEN_153
-        & (_GEN_115
+        ~_GEN_155
+        & (_GEN_117
              ? io_backend_packet_3_bits_MULTIPLY
-             : _GEN_88
+             : _GEN_90
                  ? io_backend_packet_2_bits_MULTIPLY
-                 : _GEN_48
+                 : _GEN_50
                      ? io_backend_packet_1_bits_MULTIPLY
-                     : _GEN_21
+                     : _GEN_23
                          ? io_backend_packet_0_bits_MULTIPLY
                          : reservation_station_8_decoded_instruction_MULTIPLY);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_8_decoded_instruction_IS_IMM <=
-        ~_GEN_153
-        & (_GEN_115
+        ~_GEN_155
+        & (_GEN_117
              ? io_backend_packet_3_bits_IS_IMM
-             : _GEN_88
+             : _GEN_90
                  ? io_backend_packet_2_bits_IS_IMM
-                 : _GEN_48
+                 : _GEN_50
                      ? io_backend_packet_1_bits_IS_IMM
-                     : _GEN_21
+                     : _GEN_23
                          ? io_backend_packet_0_bits_IS_IMM
                          : reservation_station_8_decoded_instruction_IS_IMM);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
-      reservation_station_8_committed <= ~_GEN_153 & reservation_station_8_committed;	// src/main/scala/Memory/MEMRS.scala:68:38, :138:111, :159:21, :160:42, :193:110, :194:36
+      reservation_station_8_committed <= ~_GEN_155 & reservation_station_8_committed;	// src/main/scala/Memory/MEMRS.scala:68:38, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_8_valid <=
-        ~_GEN_153 & (written_vec_3 ? _GEN_137 | _GEN_70 : _GEN_88 | _GEN_70);	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :138:111, :159:21, :160:42, :193:110, :194:36
+        ~_GEN_155 & (written_vec_3 ? _GEN_139 | _GEN_72 : _GEN_90 | _GEN_72);	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_9_decoded_instruction_ready_bits_RS1_ready <=
-        ~_GEN_154
+        ~_GEN_156
         & (~reservation_station_9_decoded_instruction_ready_bits_RS1_ready
            & reservation_station_9_valid
              ? RS1_match_9
-             : _GEN_117
+             : _GEN_119
                  ? io_backend_packet_3_bits_ready_bits_RS1_ready
-                 : _GEN_89
+                 : _GEN_91
                      ? io_backend_packet_2_bits_ready_bits_RS1_ready
-                     : _GEN_50
+                     : _GEN_52
                          ? io_backend_packet_1_bits_ready_bits_RS1_ready
-                         : _GEN_22
+                         : _GEN_24
                              ? io_backend_packet_0_bits_ready_bits_RS1_ready
                              : reservation_station_9_decoded_instruction_ready_bits_RS1_ready);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :111:25, :138:{14,79,111}, :139:77, :159:21, :160:42, :193:110, :194:36
       reservation_station_9_decoded_instruction_ready_bits_RS2_ready <=
-        ~_GEN_154
+        ~_GEN_156
         & (~reservation_station_9_decoded_instruction_ready_bits_RS2_ready
            & reservation_station_9_valid
              ? RS2_match_9
-             : _GEN_117
+             : _GEN_119
                  ? io_backend_packet_3_bits_ready_bits_RS2_ready
-                 : _GEN_89
+                 : _GEN_91
                      ? io_backend_packet_2_bits_ready_bits_RS2_ready
-                     : _GEN_50
+                     : _GEN_52
                          ? io_backend_packet_1_bits_ready_bits_RS2_ready
-                         : _GEN_22
+                         : _GEN_24
                              ? io_backend_packet_0_bits_ready_bits_RS2_ready
                              : reservation_station_9_decoded_instruction_ready_bits_RS2_ready);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :112:25, :132:{14,79,111}, :133:77, :138:111, :159:21, :160:42, :193:110, :194:36
-      if (_GEN_154) begin	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
+      if (_GEN_156) begin	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
         reservation_station_9_decoded_instruction_RD <= 7'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
         reservation_station_9_decoded_instruction_RS1 <= 7'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
         reservation_station_9_decoded_instruction_RS2 <= 7'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -4318,9 +4354,9 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
         reservation_station_9_fetch_PC <= 32'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
       end
       else begin	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
-        automatic logic _GEN_170;	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :99:79
-        _GEN_170 = written_vec_1 & _GEN_49 | _GEN_22;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :99:79
-        if (_GEN_117) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+        automatic logic _GEN_172;	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :99:79
+        _GEN_172 = written_vec_1 & _GEN_51 | _GEN_24;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :99:79
+        if (_GEN_119) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
           reservation_station_9_decoded_instruction_RD <= io_backend_packet_3_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_9_decoded_instruction_RS1 <= io_backend_packet_3_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_9_decoded_instruction_RS2 <= io_backend_packet_3_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -4346,7 +4382,7 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_9_decoded_instruction_access_width <=
             io_backend_packet_3_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        else if (_GEN_89) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+        else if (_GEN_91) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
           reservation_station_9_decoded_instruction_RD <= io_backend_packet_2_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_9_decoded_instruction_RS1 <= io_backend_packet_2_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_9_decoded_instruction_RS2 <= io_backend_packet_2_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -4372,7 +4408,7 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_9_decoded_instruction_access_width <=
             io_backend_packet_2_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        else if (_GEN_50) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+        else if (_GEN_52) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
           reservation_station_9_decoded_instruction_RD <= io_backend_packet_1_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_9_decoded_instruction_RS1 <= io_backend_packet_1_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_9_decoded_instruction_RS2 <= io_backend_packet_1_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -4398,7 +4434,7 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_9_decoded_instruction_access_width <=
             io_backend_packet_1_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        else if (_GEN_22) begin	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80
+        else if (_GEN_24) begin	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80
           reservation_station_9_decoded_instruction_RD <= io_backend_packet_0_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_9_decoded_instruction_RS1 <= io_backend_packet_0_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_9_decoded_instruction_RS2 <= io_backend_packet_0_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -4424,140 +4460,140 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_9_decoded_instruction_access_width <=
             io_backend_packet_0_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        if (written_vec_3 ? _GEN_138 | _GEN_170 : _GEN_89 | _GEN_170)	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :99:79
+        if (written_vec_3 ? _GEN_140 | _GEN_172 : _GEN_91 | _GEN_172)	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :99:79
           reservation_station_9_fetch_PC <= io_fetch_PC;	// src/main/scala/Memory/MEMRS.scala:68:38
       end
       reservation_station_9_decoded_instruction_RD_valid <=
-        ~_GEN_154
-        & (_GEN_117
+        ~_GEN_156
+        & (_GEN_119
              ? io_backend_packet_3_bits_RD_valid
-             : _GEN_89
+             : _GEN_91
                  ? io_backend_packet_2_bits_RD_valid
-                 : _GEN_50
+                 : _GEN_52
                      ? io_backend_packet_1_bits_RD_valid
-                     : _GEN_22
+                     : _GEN_24
                          ? io_backend_packet_0_bits_RD_valid
                          : reservation_station_9_decoded_instruction_RD_valid);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_9_decoded_instruction_RS1_valid <=
-        ~_GEN_154
-        & (_GEN_117
+        ~_GEN_156
+        & (_GEN_119
              ? io_backend_packet_3_bits_RS1_valid
-             : _GEN_89
+             : _GEN_91
                  ? io_backend_packet_2_bits_RS1_valid
-                 : _GEN_50
+                 : _GEN_52
                      ? io_backend_packet_1_bits_RS1_valid
-                     : _GEN_22
+                     : _GEN_24
                          ? io_backend_packet_0_bits_RS1_valid
                          : reservation_station_9_decoded_instruction_RS1_valid);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_9_decoded_instruction_RS2_valid <=
-        ~_GEN_154
-        & (_GEN_117
+        ~_GEN_156
+        & (_GEN_119
              ? io_backend_packet_3_bits_RS2_valid
-             : _GEN_89
+             : _GEN_91
                  ? io_backend_packet_2_bits_RS2_valid
-                 : _GEN_50
+                 : _GEN_52
                      ? io_backend_packet_1_bits_RS2_valid
-                     : _GEN_22
+                     : _GEN_24
                          ? io_backend_packet_0_bits_RS2_valid
                          : reservation_station_9_decoded_instruction_RS2_valid);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_9_decoded_instruction_needs_ALU <=
-        ~_GEN_154
-        & (_GEN_117
+        ~_GEN_156
+        & (_GEN_119
              ? io_backend_packet_3_bits_needs_ALU
-             : _GEN_89
+             : _GEN_91
                  ? io_backend_packet_2_bits_needs_ALU
-                 : _GEN_50
+                 : _GEN_52
                      ? io_backend_packet_1_bits_needs_ALU
-                     : _GEN_22
+                     : _GEN_24
                          ? io_backend_packet_0_bits_needs_ALU
                          : reservation_station_9_decoded_instruction_needs_ALU);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_9_decoded_instruction_needs_branch_unit <=
-        ~_GEN_154
-        & (_GEN_117
+        ~_GEN_156
+        & (_GEN_119
              ? io_backend_packet_3_bits_needs_branch_unit
-             : _GEN_89
+             : _GEN_91
                  ? io_backend_packet_2_bits_needs_branch_unit
-                 : _GEN_50
+                 : _GEN_52
                      ? io_backend_packet_1_bits_needs_branch_unit
-                     : _GEN_22
+                     : _GEN_24
                          ? io_backend_packet_0_bits_needs_branch_unit
                          : reservation_station_9_decoded_instruction_needs_branch_unit);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_9_decoded_instruction_needs_CSRs <=
-        ~_GEN_154
-        & (_GEN_117
+        ~_GEN_156
+        & (_GEN_119
              ? io_backend_packet_3_bits_needs_CSRs
-             : _GEN_89
+             : _GEN_91
                  ? io_backend_packet_2_bits_needs_CSRs
-                 : _GEN_50
+                 : _GEN_52
                      ? io_backend_packet_1_bits_needs_CSRs
-                     : _GEN_22
+                     : _GEN_24
                          ? io_backend_packet_0_bits_needs_CSRs
                          : reservation_station_9_decoded_instruction_needs_CSRs);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_9_decoded_instruction_SUBTRACT <=
-        ~_GEN_154
-        & (_GEN_117
+        ~_GEN_156
+        & (_GEN_119
              ? io_backend_packet_3_bits_SUBTRACT
-             : _GEN_89
+             : _GEN_91
                  ? io_backend_packet_2_bits_SUBTRACT
-                 : _GEN_50
+                 : _GEN_52
                      ? io_backend_packet_1_bits_SUBTRACT
-                     : _GEN_22
+                     : _GEN_24
                          ? io_backend_packet_0_bits_SUBTRACT
                          : reservation_station_9_decoded_instruction_SUBTRACT);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_9_decoded_instruction_MULTIPLY <=
-        ~_GEN_154
-        & (_GEN_117
+        ~_GEN_156
+        & (_GEN_119
              ? io_backend_packet_3_bits_MULTIPLY
-             : _GEN_89
+             : _GEN_91
                  ? io_backend_packet_2_bits_MULTIPLY
-                 : _GEN_50
+                 : _GEN_52
                      ? io_backend_packet_1_bits_MULTIPLY
-                     : _GEN_22
+                     : _GEN_24
                          ? io_backend_packet_0_bits_MULTIPLY
                          : reservation_station_9_decoded_instruction_MULTIPLY);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_9_decoded_instruction_IS_IMM <=
-        ~_GEN_154
-        & (_GEN_117
+        ~_GEN_156
+        & (_GEN_119
              ? io_backend_packet_3_bits_IS_IMM
-             : _GEN_89
+             : _GEN_91
                  ? io_backend_packet_2_bits_IS_IMM
-                 : _GEN_50
+                 : _GEN_52
                      ? io_backend_packet_1_bits_IS_IMM
-                     : _GEN_22
+                     : _GEN_24
                          ? io_backend_packet_0_bits_IS_IMM
                          : reservation_station_9_decoded_instruction_IS_IMM);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
-      reservation_station_9_committed <= ~_GEN_154 & reservation_station_9_committed;	// src/main/scala/Memory/MEMRS.scala:68:38, :138:111, :159:21, :160:42, :193:110, :194:36
+      reservation_station_9_committed <= ~_GEN_156 & reservation_station_9_committed;	// src/main/scala/Memory/MEMRS.scala:68:38, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_9_valid <=
-        ~_GEN_154 & (written_vec_3 ? _GEN_138 | _GEN_71 : _GEN_89 | _GEN_71);	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :138:111, :159:21, :160:42, :193:110, :194:36
+        ~_GEN_156 & (written_vec_3 ? _GEN_140 | _GEN_73 : _GEN_91 | _GEN_73);	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_10_decoded_instruction_ready_bits_RS1_ready <=
-        ~_GEN_155
+        ~_GEN_157
         & (~reservation_station_10_decoded_instruction_ready_bits_RS1_ready
            & reservation_station_10_valid
              ? RS1_match_10
-             : _GEN_119
+             : _GEN_121
                  ? io_backend_packet_3_bits_ready_bits_RS1_ready
-                 : _GEN_90
+                 : _GEN_92
                      ? io_backend_packet_2_bits_ready_bits_RS1_ready
-                     : _GEN_52
+                     : _GEN_54
                          ? io_backend_packet_1_bits_ready_bits_RS1_ready
-                         : _GEN_23
+                         : _GEN_25
                              ? io_backend_packet_0_bits_ready_bits_RS1_ready
                              : reservation_station_10_decoded_instruction_ready_bits_RS1_ready);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :111:25, :138:{14,79,111}, :139:77, :159:21, :160:42, :193:110, :194:36
       reservation_station_10_decoded_instruction_ready_bits_RS2_ready <=
-        ~_GEN_155
+        ~_GEN_157
         & (~reservation_station_10_decoded_instruction_ready_bits_RS2_ready
            & reservation_station_10_valid
              ? RS2_match_10
-             : _GEN_119
+             : _GEN_121
                  ? io_backend_packet_3_bits_ready_bits_RS2_ready
-                 : _GEN_90
+                 : _GEN_92
                      ? io_backend_packet_2_bits_ready_bits_RS2_ready
-                     : _GEN_52
+                     : _GEN_54
                          ? io_backend_packet_1_bits_ready_bits_RS2_ready
-                         : _GEN_23
+                         : _GEN_25
                              ? io_backend_packet_0_bits_ready_bits_RS2_ready
                              : reservation_station_10_decoded_instruction_ready_bits_RS2_ready);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :112:25, :132:{14,79,111}, :133:77, :138:111, :159:21, :160:42, :193:110, :194:36
-      if (_GEN_155) begin	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
+      if (_GEN_157) begin	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
         reservation_station_10_decoded_instruction_RD <= 7'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
         reservation_station_10_decoded_instruction_RS1 <= 7'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
         reservation_station_10_decoded_instruction_RS2 <= 7'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -4575,9 +4611,9 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
         reservation_station_10_fetch_PC <= 32'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
       end
       else begin	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
-        automatic logic _GEN_171;	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :99:79
-        _GEN_171 = written_vec_1 & _GEN_51 | _GEN_23;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :99:79
-        if (_GEN_119) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+        automatic logic _GEN_173;	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :99:79
+        _GEN_173 = written_vec_1 & _GEN_53 | _GEN_25;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :99:79
+        if (_GEN_121) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
           reservation_station_10_decoded_instruction_RD <= io_backend_packet_3_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_10_decoded_instruction_RS1 <= io_backend_packet_3_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_10_decoded_instruction_RS2 <= io_backend_packet_3_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -4603,7 +4639,7 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_10_decoded_instruction_access_width <=
             io_backend_packet_3_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        else if (_GEN_90) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+        else if (_GEN_92) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
           reservation_station_10_decoded_instruction_RD <= io_backend_packet_2_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_10_decoded_instruction_RS1 <= io_backend_packet_2_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_10_decoded_instruction_RS2 <= io_backend_packet_2_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -4629,7 +4665,7 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_10_decoded_instruction_access_width <=
             io_backend_packet_2_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        else if (_GEN_52) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+        else if (_GEN_54) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
           reservation_station_10_decoded_instruction_RD <= io_backend_packet_1_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_10_decoded_instruction_RS1 <= io_backend_packet_1_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_10_decoded_instruction_RS2 <= io_backend_packet_1_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -4655,7 +4691,7 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_10_decoded_instruction_access_width <=
             io_backend_packet_1_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        else if (_GEN_23) begin	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80
+        else if (_GEN_25) begin	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80
           reservation_station_10_decoded_instruction_RD <= io_backend_packet_0_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_10_decoded_instruction_RS1 <= io_backend_packet_0_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_10_decoded_instruction_RS2 <= io_backend_packet_0_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -4681,140 +4717,140 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_10_decoded_instruction_access_width <=
             io_backend_packet_0_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        if (written_vec_3 ? _GEN_139 | _GEN_171 : _GEN_90 | _GEN_171)	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :99:79
+        if (written_vec_3 ? _GEN_141 | _GEN_173 : _GEN_92 | _GEN_173)	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :99:79
           reservation_station_10_fetch_PC <= io_fetch_PC;	// src/main/scala/Memory/MEMRS.scala:68:38
       end
       reservation_station_10_decoded_instruction_RD_valid <=
-        ~_GEN_155
-        & (_GEN_119
+        ~_GEN_157
+        & (_GEN_121
              ? io_backend_packet_3_bits_RD_valid
-             : _GEN_90
+             : _GEN_92
                  ? io_backend_packet_2_bits_RD_valid
-                 : _GEN_52
+                 : _GEN_54
                      ? io_backend_packet_1_bits_RD_valid
-                     : _GEN_23
+                     : _GEN_25
                          ? io_backend_packet_0_bits_RD_valid
                          : reservation_station_10_decoded_instruction_RD_valid);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_10_decoded_instruction_RS1_valid <=
-        ~_GEN_155
-        & (_GEN_119
+        ~_GEN_157
+        & (_GEN_121
              ? io_backend_packet_3_bits_RS1_valid
-             : _GEN_90
+             : _GEN_92
                  ? io_backend_packet_2_bits_RS1_valid
-                 : _GEN_52
+                 : _GEN_54
                      ? io_backend_packet_1_bits_RS1_valid
-                     : _GEN_23
+                     : _GEN_25
                          ? io_backend_packet_0_bits_RS1_valid
                          : reservation_station_10_decoded_instruction_RS1_valid);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_10_decoded_instruction_RS2_valid <=
-        ~_GEN_155
-        & (_GEN_119
+        ~_GEN_157
+        & (_GEN_121
              ? io_backend_packet_3_bits_RS2_valid
-             : _GEN_90
+             : _GEN_92
                  ? io_backend_packet_2_bits_RS2_valid
-                 : _GEN_52
+                 : _GEN_54
                      ? io_backend_packet_1_bits_RS2_valid
-                     : _GEN_23
+                     : _GEN_25
                          ? io_backend_packet_0_bits_RS2_valid
                          : reservation_station_10_decoded_instruction_RS2_valid);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_10_decoded_instruction_needs_ALU <=
-        ~_GEN_155
-        & (_GEN_119
+        ~_GEN_157
+        & (_GEN_121
              ? io_backend_packet_3_bits_needs_ALU
-             : _GEN_90
+             : _GEN_92
                  ? io_backend_packet_2_bits_needs_ALU
-                 : _GEN_52
+                 : _GEN_54
                      ? io_backend_packet_1_bits_needs_ALU
-                     : _GEN_23
+                     : _GEN_25
                          ? io_backend_packet_0_bits_needs_ALU
                          : reservation_station_10_decoded_instruction_needs_ALU);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_10_decoded_instruction_needs_branch_unit <=
-        ~_GEN_155
-        & (_GEN_119
+        ~_GEN_157
+        & (_GEN_121
              ? io_backend_packet_3_bits_needs_branch_unit
-             : _GEN_90
+             : _GEN_92
                  ? io_backend_packet_2_bits_needs_branch_unit
-                 : _GEN_52
+                 : _GEN_54
                      ? io_backend_packet_1_bits_needs_branch_unit
-                     : _GEN_23
+                     : _GEN_25
                          ? io_backend_packet_0_bits_needs_branch_unit
                          : reservation_station_10_decoded_instruction_needs_branch_unit);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_10_decoded_instruction_needs_CSRs <=
-        ~_GEN_155
-        & (_GEN_119
+        ~_GEN_157
+        & (_GEN_121
              ? io_backend_packet_3_bits_needs_CSRs
-             : _GEN_90
+             : _GEN_92
                  ? io_backend_packet_2_bits_needs_CSRs
-                 : _GEN_52
+                 : _GEN_54
                      ? io_backend_packet_1_bits_needs_CSRs
-                     : _GEN_23
+                     : _GEN_25
                          ? io_backend_packet_0_bits_needs_CSRs
                          : reservation_station_10_decoded_instruction_needs_CSRs);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_10_decoded_instruction_SUBTRACT <=
-        ~_GEN_155
-        & (_GEN_119
+        ~_GEN_157
+        & (_GEN_121
              ? io_backend_packet_3_bits_SUBTRACT
-             : _GEN_90
+             : _GEN_92
                  ? io_backend_packet_2_bits_SUBTRACT
-                 : _GEN_52
+                 : _GEN_54
                      ? io_backend_packet_1_bits_SUBTRACT
-                     : _GEN_23
+                     : _GEN_25
                          ? io_backend_packet_0_bits_SUBTRACT
                          : reservation_station_10_decoded_instruction_SUBTRACT);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_10_decoded_instruction_MULTIPLY <=
-        ~_GEN_155
-        & (_GEN_119
+        ~_GEN_157
+        & (_GEN_121
              ? io_backend_packet_3_bits_MULTIPLY
-             : _GEN_90
+             : _GEN_92
                  ? io_backend_packet_2_bits_MULTIPLY
-                 : _GEN_52
+                 : _GEN_54
                      ? io_backend_packet_1_bits_MULTIPLY
-                     : _GEN_23
+                     : _GEN_25
                          ? io_backend_packet_0_bits_MULTIPLY
                          : reservation_station_10_decoded_instruction_MULTIPLY);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_10_decoded_instruction_IS_IMM <=
-        ~_GEN_155
-        & (_GEN_119
+        ~_GEN_157
+        & (_GEN_121
              ? io_backend_packet_3_bits_IS_IMM
-             : _GEN_90
+             : _GEN_92
                  ? io_backend_packet_2_bits_IS_IMM
-                 : _GEN_52
+                 : _GEN_54
                      ? io_backend_packet_1_bits_IS_IMM
-                     : _GEN_23
+                     : _GEN_25
                          ? io_backend_packet_0_bits_IS_IMM
                          : reservation_station_10_decoded_instruction_IS_IMM);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
-      reservation_station_10_committed <= ~_GEN_155 & reservation_station_10_committed;	// src/main/scala/Memory/MEMRS.scala:68:38, :138:111, :159:21, :160:42, :193:110, :194:36
+      reservation_station_10_committed <= ~_GEN_157 & reservation_station_10_committed;	// src/main/scala/Memory/MEMRS.scala:68:38, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_10_valid <=
-        ~_GEN_155 & (written_vec_3 ? _GEN_139 | _GEN_72 : _GEN_90 | _GEN_72);	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :138:111, :159:21, :160:42, :193:110, :194:36
+        ~_GEN_157 & (written_vec_3 ? _GEN_141 | _GEN_74 : _GEN_92 | _GEN_74);	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_11_decoded_instruction_ready_bits_RS1_ready <=
-        ~_GEN_156
+        ~_GEN_158
         & (~reservation_station_11_decoded_instruction_ready_bits_RS1_ready
            & reservation_station_11_valid
              ? RS1_match_11
-             : _GEN_121
+             : _GEN_123
                  ? io_backend_packet_3_bits_ready_bits_RS1_ready
-                 : _GEN_91
+                 : _GEN_93
                      ? io_backend_packet_2_bits_ready_bits_RS1_ready
-                     : _GEN_54
+                     : _GEN_56
                          ? io_backend_packet_1_bits_ready_bits_RS1_ready
-                         : _GEN_24
+                         : _GEN_26
                              ? io_backend_packet_0_bits_ready_bits_RS1_ready
                              : reservation_station_11_decoded_instruction_ready_bits_RS1_ready);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :111:25, :138:{14,79,111}, :139:77, :159:21, :160:42, :193:110, :194:36
       reservation_station_11_decoded_instruction_ready_bits_RS2_ready <=
-        ~_GEN_156
+        ~_GEN_158
         & (~reservation_station_11_decoded_instruction_ready_bits_RS2_ready
            & reservation_station_11_valid
              ? RS2_match_11
-             : _GEN_121
+             : _GEN_123
                  ? io_backend_packet_3_bits_ready_bits_RS2_ready
-                 : _GEN_91
+                 : _GEN_93
                      ? io_backend_packet_2_bits_ready_bits_RS2_ready
-                     : _GEN_54
+                     : _GEN_56
                          ? io_backend_packet_1_bits_ready_bits_RS2_ready
-                         : _GEN_24
+                         : _GEN_26
                              ? io_backend_packet_0_bits_ready_bits_RS2_ready
                              : reservation_station_11_decoded_instruction_ready_bits_RS2_ready);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :112:25, :132:{14,79,111}, :133:77, :138:111, :159:21, :160:42, :193:110, :194:36
-      if (_GEN_156) begin	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
+      if (_GEN_158) begin	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
         reservation_station_11_decoded_instruction_RD <= 7'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
         reservation_station_11_decoded_instruction_RS1 <= 7'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
         reservation_station_11_decoded_instruction_RS2 <= 7'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -4832,9 +4868,9 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
         reservation_station_11_fetch_PC <= 32'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
       end
       else begin	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
-        automatic logic _GEN_172;	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :99:79
-        _GEN_172 = written_vec_1 & _GEN_53 | _GEN_24;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :99:79
-        if (_GEN_121) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+        automatic logic _GEN_174;	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :99:79
+        _GEN_174 = written_vec_1 & _GEN_55 | _GEN_26;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :99:79
+        if (_GEN_123) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
           reservation_station_11_decoded_instruction_RD <= io_backend_packet_3_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_11_decoded_instruction_RS1 <= io_backend_packet_3_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_11_decoded_instruction_RS2 <= io_backend_packet_3_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -4860,7 +4896,7 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_11_decoded_instruction_access_width <=
             io_backend_packet_3_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        else if (_GEN_91) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+        else if (_GEN_93) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
           reservation_station_11_decoded_instruction_RD <= io_backend_packet_2_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_11_decoded_instruction_RS1 <= io_backend_packet_2_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_11_decoded_instruction_RS2 <= io_backend_packet_2_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -4886,7 +4922,7 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_11_decoded_instruction_access_width <=
             io_backend_packet_2_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        else if (_GEN_54) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+        else if (_GEN_56) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
           reservation_station_11_decoded_instruction_RD <= io_backend_packet_1_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_11_decoded_instruction_RS1 <= io_backend_packet_1_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_11_decoded_instruction_RS2 <= io_backend_packet_1_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -4912,7 +4948,7 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_11_decoded_instruction_access_width <=
             io_backend_packet_1_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        else if (_GEN_24) begin	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80
+        else if (_GEN_26) begin	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80
           reservation_station_11_decoded_instruction_RD <= io_backend_packet_0_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_11_decoded_instruction_RS1 <= io_backend_packet_0_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_11_decoded_instruction_RS2 <= io_backend_packet_0_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -4938,140 +4974,140 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_11_decoded_instruction_access_width <=
             io_backend_packet_0_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        if (written_vec_3 ? _GEN_140 | _GEN_172 : _GEN_91 | _GEN_172)	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :99:79
+        if (written_vec_3 ? _GEN_142 | _GEN_174 : _GEN_93 | _GEN_174)	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :99:79
           reservation_station_11_fetch_PC <= io_fetch_PC;	// src/main/scala/Memory/MEMRS.scala:68:38
       end
       reservation_station_11_decoded_instruction_RD_valid <=
-        ~_GEN_156
-        & (_GEN_121
+        ~_GEN_158
+        & (_GEN_123
              ? io_backend_packet_3_bits_RD_valid
-             : _GEN_91
+             : _GEN_93
                  ? io_backend_packet_2_bits_RD_valid
-                 : _GEN_54
+                 : _GEN_56
                      ? io_backend_packet_1_bits_RD_valid
-                     : _GEN_24
+                     : _GEN_26
                          ? io_backend_packet_0_bits_RD_valid
                          : reservation_station_11_decoded_instruction_RD_valid);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_11_decoded_instruction_RS1_valid <=
-        ~_GEN_156
-        & (_GEN_121
+        ~_GEN_158
+        & (_GEN_123
              ? io_backend_packet_3_bits_RS1_valid
-             : _GEN_91
+             : _GEN_93
                  ? io_backend_packet_2_bits_RS1_valid
-                 : _GEN_54
+                 : _GEN_56
                      ? io_backend_packet_1_bits_RS1_valid
-                     : _GEN_24
+                     : _GEN_26
                          ? io_backend_packet_0_bits_RS1_valid
                          : reservation_station_11_decoded_instruction_RS1_valid);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_11_decoded_instruction_RS2_valid <=
-        ~_GEN_156
-        & (_GEN_121
+        ~_GEN_158
+        & (_GEN_123
              ? io_backend_packet_3_bits_RS2_valid
-             : _GEN_91
+             : _GEN_93
                  ? io_backend_packet_2_bits_RS2_valid
-                 : _GEN_54
+                 : _GEN_56
                      ? io_backend_packet_1_bits_RS2_valid
-                     : _GEN_24
+                     : _GEN_26
                          ? io_backend_packet_0_bits_RS2_valid
                          : reservation_station_11_decoded_instruction_RS2_valid);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_11_decoded_instruction_needs_ALU <=
-        ~_GEN_156
-        & (_GEN_121
+        ~_GEN_158
+        & (_GEN_123
              ? io_backend_packet_3_bits_needs_ALU
-             : _GEN_91
+             : _GEN_93
                  ? io_backend_packet_2_bits_needs_ALU
-                 : _GEN_54
+                 : _GEN_56
                      ? io_backend_packet_1_bits_needs_ALU
-                     : _GEN_24
+                     : _GEN_26
                          ? io_backend_packet_0_bits_needs_ALU
                          : reservation_station_11_decoded_instruction_needs_ALU);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_11_decoded_instruction_needs_branch_unit <=
-        ~_GEN_156
-        & (_GEN_121
+        ~_GEN_158
+        & (_GEN_123
              ? io_backend_packet_3_bits_needs_branch_unit
-             : _GEN_91
+             : _GEN_93
                  ? io_backend_packet_2_bits_needs_branch_unit
-                 : _GEN_54
+                 : _GEN_56
                      ? io_backend_packet_1_bits_needs_branch_unit
-                     : _GEN_24
+                     : _GEN_26
                          ? io_backend_packet_0_bits_needs_branch_unit
                          : reservation_station_11_decoded_instruction_needs_branch_unit);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_11_decoded_instruction_needs_CSRs <=
-        ~_GEN_156
-        & (_GEN_121
+        ~_GEN_158
+        & (_GEN_123
              ? io_backend_packet_3_bits_needs_CSRs
-             : _GEN_91
+             : _GEN_93
                  ? io_backend_packet_2_bits_needs_CSRs
-                 : _GEN_54
+                 : _GEN_56
                      ? io_backend_packet_1_bits_needs_CSRs
-                     : _GEN_24
+                     : _GEN_26
                          ? io_backend_packet_0_bits_needs_CSRs
                          : reservation_station_11_decoded_instruction_needs_CSRs);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_11_decoded_instruction_SUBTRACT <=
-        ~_GEN_156
-        & (_GEN_121
+        ~_GEN_158
+        & (_GEN_123
              ? io_backend_packet_3_bits_SUBTRACT
-             : _GEN_91
+             : _GEN_93
                  ? io_backend_packet_2_bits_SUBTRACT
-                 : _GEN_54
+                 : _GEN_56
                      ? io_backend_packet_1_bits_SUBTRACT
-                     : _GEN_24
+                     : _GEN_26
                          ? io_backend_packet_0_bits_SUBTRACT
                          : reservation_station_11_decoded_instruction_SUBTRACT);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_11_decoded_instruction_MULTIPLY <=
-        ~_GEN_156
-        & (_GEN_121
+        ~_GEN_158
+        & (_GEN_123
              ? io_backend_packet_3_bits_MULTIPLY
-             : _GEN_91
+             : _GEN_93
                  ? io_backend_packet_2_bits_MULTIPLY
-                 : _GEN_54
+                 : _GEN_56
                      ? io_backend_packet_1_bits_MULTIPLY
-                     : _GEN_24
+                     : _GEN_26
                          ? io_backend_packet_0_bits_MULTIPLY
                          : reservation_station_11_decoded_instruction_MULTIPLY);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_11_decoded_instruction_IS_IMM <=
-        ~_GEN_156
-        & (_GEN_121
+        ~_GEN_158
+        & (_GEN_123
              ? io_backend_packet_3_bits_IS_IMM
-             : _GEN_91
+             : _GEN_93
                  ? io_backend_packet_2_bits_IS_IMM
-                 : _GEN_54
+                 : _GEN_56
                      ? io_backend_packet_1_bits_IS_IMM
-                     : _GEN_24
+                     : _GEN_26
                          ? io_backend_packet_0_bits_IS_IMM
                          : reservation_station_11_decoded_instruction_IS_IMM);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
-      reservation_station_11_committed <= ~_GEN_156 & reservation_station_11_committed;	// src/main/scala/Memory/MEMRS.scala:68:38, :138:111, :159:21, :160:42, :193:110, :194:36
+      reservation_station_11_committed <= ~_GEN_158 & reservation_station_11_committed;	// src/main/scala/Memory/MEMRS.scala:68:38, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_11_valid <=
-        ~_GEN_156 & (written_vec_3 ? _GEN_140 | _GEN_73 : _GEN_91 | _GEN_73);	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :138:111, :159:21, :160:42, :193:110, :194:36
+        ~_GEN_158 & (written_vec_3 ? _GEN_142 | _GEN_75 : _GEN_93 | _GEN_75);	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_12_decoded_instruction_ready_bits_RS1_ready <=
-        ~_GEN_157
+        ~_GEN_159
         & (~reservation_station_12_decoded_instruction_ready_bits_RS1_ready
            & reservation_station_12_valid
              ? RS1_match_12
-             : _GEN_123
+             : _GEN_125
                  ? io_backend_packet_3_bits_ready_bits_RS1_ready
-                 : _GEN_92
+                 : _GEN_94
                      ? io_backend_packet_2_bits_ready_bits_RS1_ready
-                     : _GEN_56
+                     : _GEN_58
                          ? io_backend_packet_1_bits_ready_bits_RS1_ready
-                         : _GEN_25
+                         : _GEN_27
                              ? io_backend_packet_0_bits_ready_bits_RS1_ready
                              : reservation_station_12_decoded_instruction_ready_bits_RS1_ready);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :111:25, :138:{14,79,111}, :139:77, :159:21, :160:42, :193:110, :194:36
       reservation_station_12_decoded_instruction_ready_bits_RS2_ready <=
-        ~_GEN_157
+        ~_GEN_159
         & (~reservation_station_12_decoded_instruction_ready_bits_RS2_ready
            & reservation_station_12_valid
              ? RS2_match_12
-             : _GEN_123
+             : _GEN_125
                  ? io_backend_packet_3_bits_ready_bits_RS2_ready
-                 : _GEN_92
+                 : _GEN_94
                      ? io_backend_packet_2_bits_ready_bits_RS2_ready
-                     : _GEN_56
+                     : _GEN_58
                          ? io_backend_packet_1_bits_ready_bits_RS2_ready
-                         : _GEN_25
+                         : _GEN_27
                              ? io_backend_packet_0_bits_ready_bits_RS2_ready
                              : reservation_station_12_decoded_instruction_ready_bits_RS2_ready);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :112:25, :132:{14,79,111}, :133:77, :138:111, :159:21, :160:42, :193:110, :194:36
-      if (_GEN_157) begin	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
+      if (_GEN_159) begin	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
         reservation_station_12_decoded_instruction_RD <= 7'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
         reservation_station_12_decoded_instruction_RS1 <= 7'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
         reservation_station_12_decoded_instruction_RS2 <= 7'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -5089,9 +5125,9 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
         reservation_station_12_fetch_PC <= 32'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
       end
       else begin	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
-        automatic logic _GEN_173;	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :99:79
-        _GEN_173 = written_vec_1 & _GEN_55 | _GEN_25;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :99:79
-        if (_GEN_123) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+        automatic logic _GEN_175;	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :99:79
+        _GEN_175 = written_vec_1 & _GEN_57 | _GEN_27;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :99:79
+        if (_GEN_125) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
           reservation_station_12_decoded_instruction_RD <= io_backend_packet_3_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_12_decoded_instruction_RS1 <= io_backend_packet_3_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_12_decoded_instruction_RS2 <= io_backend_packet_3_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -5117,7 +5153,7 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_12_decoded_instruction_access_width <=
             io_backend_packet_3_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        else if (_GEN_92) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+        else if (_GEN_94) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
           reservation_station_12_decoded_instruction_RD <= io_backend_packet_2_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_12_decoded_instruction_RS1 <= io_backend_packet_2_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_12_decoded_instruction_RS2 <= io_backend_packet_2_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -5143,7 +5179,7 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_12_decoded_instruction_access_width <=
             io_backend_packet_2_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        else if (_GEN_56) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+        else if (_GEN_58) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
           reservation_station_12_decoded_instruction_RD <= io_backend_packet_1_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_12_decoded_instruction_RS1 <= io_backend_packet_1_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_12_decoded_instruction_RS2 <= io_backend_packet_1_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -5169,7 +5205,7 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_12_decoded_instruction_access_width <=
             io_backend_packet_1_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        else if (_GEN_25) begin	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80
+        else if (_GEN_27) begin	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80
           reservation_station_12_decoded_instruction_RD <= io_backend_packet_0_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_12_decoded_instruction_RS1 <= io_backend_packet_0_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_12_decoded_instruction_RS2 <= io_backend_packet_0_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -5195,140 +5231,140 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_12_decoded_instruction_access_width <=
             io_backend_packet_0_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        if (written_vec_3 ? _GEN_141 | _GEN_173 : _GEN_92 | _GEN_173)	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :99:79
+        if (written_vec_3 ? _GEN_143 | _GEN_175 : _GEN_94 | _GEN_175)	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :99:79
           reservation_station_12_fetch_PC <= io_fetch_PC;	// src/main/scala/Memory/MEMRS.scala:68:38
       end
       reservation_station_12_decoded_instruction_RD_valid <=
-        ~_GEN_157
-        & (_GEN_123
+        ~_GEN_159
+        & (_GEN_125
              ? io_backend_packet_3_bits_RD_valid
-             : _GEN_92
+             : _GEN_94
                  ? io_backend_packet_2_bits_RD_valid
-                 : _GEN_56
+                 : _GEN_58
                      ? io_backend_packet_1_bits_RD_valid
-                     : _GEN_25
+                     : _GEN_27
                          ? io_backend_packet_0_bits_RD_valid
                          : reservation_station_12_decoded_instruction_RD_valid);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_12_decoded_instruction_RS1_valid <=
-        ~_GEN_157
-        & (_GEN_123
+        ~_GEN_159
+        & (_GEN_125
              ? io_backend_packet_3_bits_RS1_valid
-             : _GEN_92
+             : _GEN_94
                  ? io_backend_packet_2_bits_RS1_valid
-                 : _GEN_56
+                 : _GEN_58
                      ? io_backend_packet_1_bits_RS1_valid
-                     : _GEN_25
+                     : _GEN_27
                          ? io_backend_packet_0_bits_RS1_valid
                          : reservation_station_12_decoded_instruction_RS1_valid);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_12_decoded_instruction_RS2_valid <=
-        ~_GEN_157
-        & (_GEN_123
+        ~_GEN_159
+        & (_GEN_125
              ? io_backend_packet_3_bits_RS2_valid
-             : _GEN_92
+             : _GEN_94
                  ? io_backend_packet_2_bits_RS2_valid
-                 : _GEN_56
+                 : _GEN_58
                      ? io_backend_packet_1_bits_RS2_valid
-                     : _GEN_25
+                     : _GEN_27
                          ? io_backend_packet_0_bits_RS2_valid
                          : reservation_station_12_decoded_instruction_RS2_valid);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_12_decoded_instruction_needs_ALU <=
-        ~_GEN_157
-        & (_GEN_123
+        ~_GEN_159
+        & (_GEN_125
              ? io_backend_packet_3_bits_needs_ALU
-             : _GEN_92
+             : _GEN_94
                  ? io_backend_packet_2_bits_needs_ALU
-                 : _GEN_56
+                 : _GEN_58
                      ? io_backend_packet_1_bits_needs_ALU
-                     : _GEN_25
+                     : _GEN_27
                          ? io_backend_packet_0_bits_needs_ALU
                          : reservation_station_12_decoded_instruction_needs_ALU);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_12_decoded_instruction_needs_branch_unit <=
-        ~_GEN_157
-        & (_GEN_123
+        ~_GEN_159
+        & (_GEN_125
              ? io_backend_packet_3_bits_needs_branch_unit
-             : _GEN_92
+             : _GEN_94
                  ? io_backend_packet_2_bits_needs_branch_unit
-                 : _GEN_56
+                 : _GEN_58
                      ? io_backend_packet_1_bits_needs_branch_unit
-                     : _GEN_25
+                     : _GEN_27
                          ? io_backend_packet_0_bits_needs_branch_unit
                          : reservation_station_12_decoded_instruction_needs_branch_unit);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_12_decoded_instruction_needs_CSRs <=
-        ~_GEN_157
-        & (_GEN_123
+        ~_GEN_159
+        & (_GEN_125
              ? io_backend_packet_3_bits_needs_CSRs
-             : _GEN_92
+             : _GEN_94
                  ? io_backend_packet_2_bits_needs_CSRs
-                 : _GEN_56
+                 : _GEN_58
                      ? io_backend_packet_1_bits_needs_CSRs
-                     : _GEN_25
+                     : _GEN_27
                          ? io_backend_packet_0_bits_needs_CSRs
                          : reservation_station_12_decoded_instruction_needs_CSRs);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_12_decoded_instruction_SUBTRACT <=
-        ~_GEN_157
-        & (_GEN_123
+        ~_GEN_159
+        & (_GEN_125
              ? io_backend_packet_3_bits_SUBTRACT
-             : _GEN_92
+             : _GEN_94
                  ? io_backend_packet_2_bits_SUBTRACT
-                 : _GEN_56
+                 : _GEN_58
                      ? io_backend_packet_1_bits_SUBTRACT
-                     : _GEN_25
+                     : _GEN_27
                          ? io_backend_packet_0_bits_SUBTRACT
                          : reservation_station_12_decoded_instruction_SUBTRACT);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_12_decoded_instruction_MULTIPLY <=
-        ~_GEN_157
-        & (_GEN_123
+        ~_GEN_159
+        & (_GEN_125
              ? io_backend_packet_3_bits_MULTIPLY
-             : _GEN_92
+             : _GEN_94
                  ? io_backend_packet_2_bits_MULTIPLY
-                 : _GEN_56
+                 : _GEN_58
                      ? io_backend_packet_1_bits_MULTIPLY
-                     : _GEN_25
+                     : _GEN_27
                          ? io_backend_packet_0_bits_MULTIPLY
                          : reservation_station_12_decoded_instruction_MULTIPLY);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_12_decoded_instruction_IS_IMM <=
-        ~_GEN_157
-        & (_GEN_123
+        ~_GEN_159
+        & (_GEN_125
              ? io_backend_packet_3_bits_IS_IMM
-             : _GEN_92
+             : _GEN_94
                  ? io_backend_packet_2_bits_IS_IMM
-                 : _GEN_56
+                 : _GEN_58
                      ? io_backend_packet_1_bits_IS_IMM
-                     : _GEN_25
+                     : _GEN_27
                          ? io_backend_packet_0_bits_IS_IMM
                          : reservation_station_12_decoded_instruction_IS_IMM);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
-      reservation_station_12_committed <= ~_GEN_157 & reservation_station_12_committed;	// src/main/scala/Memory/MEMRS.scala:68:38, :138:111, :159:21, :160:42, :193:110, :194:36
+      reservation_station_12_committed <= ~_GEN_159 & reservation_station_12_committed;	// src/main/scala/Memory/MEMRS.scala:68:38, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_12_valid <=
-        ~_GEN_157 & (written_vec_3 ? _GEN_141 | _GEN_74 : _GEN_92 | _GEN_74);	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :138:111, :159:21, :160:42, :193:110, :194:36
+        ~_GEN_159 & (written_vec_3 ? _GEN_143 | _GEN_76 : _GEN_94 | _GEN_76);	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_13_decoded_instruction_ready_bits_RS1_ready <=
-        ~_GEN_158
+        ~_GEN_160
         & (~reservation_station_13_decoded_instruction_ready_bits_RS1_ready
            & reservation_station_13_valid
              ? RS1_match_13
-             : _GEN_125
+             : _GEN_127
                  ? io_backend_packet_3_bits_ready_bits_RS1_ready
-                 : _GEN_93
+                 : _GEN_95
                      ? io_backend_packet_2_bits_ready_bits_RS1_ready
-                     : _GEN_58
+                     : _GEN_60
                          ? io_backend_packet_1_bits_ready_bits_RS1_ready
-                         : _GEN_26
+                         : _GEN_28
                              ? io_backend_packet_0_bits_ready_bits_RS1_ready
                              : reservation_station_13_decoded_instruction_ready_bits_RS1_ready);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :111:25, :138:{14,79,111}, :139:77, :159:21, :160:42, :193:110, :194:36
       reservation_station_13_decoded_instruction_ready_bits_RS2_ready <=
-        ~_GEN_158
+        ~_GEN_160
         & (~reservation_station_13_decoded_instruction_ready_bits_RS2_ready
            & reservation_station_13_valid
              ? RS2_match_13
-             : _GEN_125
+             : _GEN_127
                  ? io_backend_packet_3_bits_ready_bits_RS2_ready
-                 : _GEN_93
+                 : _GEN_95
                      ? io_backend_packet_2_bits_ready_bits_RS2_ready
-                     : _GEN_58
+                     : _GEN_60
                          ? io_backend_packet_1_bits_ready_bits_RS2_ready
-                         : _GEN_26
+                         : _GEN_28
                              ? io_backend_packet_0_bits_ready_bits_RS2_ready
                              : reservation_station_13_decoded_instruction_ready_bits_RS2_ready);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :112:25, :132:{14,79,111}, :133:77, :138:111, :159:21, :160:42, :193:110, :194:36
-      if (_GEN_158) begin	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
+      if (_GEN_160) begin	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
         reservation_station_13_decoded_instruction_RD <= 7'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
         reservation_station_13_decoded_instruction_RS1 <= 7'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
         reservation_station_13_decoded_instruction_RS2 <= 7'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -5346,9 +5382,9 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
         reservation_station_13_fetch_PC <= 32'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
       end
       else begin	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
-        automatic logic _GEN_174;	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :99:79
-        _GEN_174 = written_vec_1 & _GEN_57 | _GEN_26;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :99:79
-        if (_GEN_125) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+        automatic logic _GEN_176;	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :99:79
+        _GEN_176 = written_vec_1 & _GEN_59 | _GEN_28;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :99:79
+        if (_GEN_127) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
           reservation_station_13_decoded_instruction_RD <= io_backend_packet_3_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_13_decoded_instruction_RS1 <= io_backend_packet_3_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_13_decoded_instruction_RS2 <= io_backend_packet_3_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -5374,7 +5410,7 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_13_decoded_instruction_access_width <=
             io_backend_packet_3_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        else if (_GEN_93) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+        else if (_GEN_95) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
           reservation_station_13_decoded_instruction_RD <= io_backend_packet_2_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_13_decoded_instruction_RS1 <= io_backend_packet_2_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_13_decoded_instruction_RS2 <= io_backend_packet_2_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -5400,7 +5436,7 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_13_decoded_instruction_access_width <=
             io_backend_packet_2_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        else if (_GEN_58) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+        else if (_GEN_60) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
           reservation_station_13_decoded_instruction_RD <= io_backend_packet_1_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_13_decoded_instruction_RS1 <= io_backend_packet_1_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_13_decoded_instruction_RS2 <= io_backend_packet_1_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -5426,7 +5462,7 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_13_decoded_instruction_access_width <=
             io_backend_packet_1_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        else if (_GEN_26) begin	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80
+        else if (_GEN_28) begin	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80
           reservation_station_13_decoded_instruction_RD <= io_backend_packet_0_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_13_decoded_instruction_RS1 <= io_backend_packet_0_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_13_decoded_instruction_RS2 <= io_backend_packet_0_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -5452,140 +5488,140 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_13_decoded_instruction_access_width <=
             io_backend_packet_0_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        if (written_vec_3 ? _GEN_142 | _GEN_174 : _GEN_93 | _GEN_174)	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :99:79
+        if (written_vec_3 ? _GEN_144 | _GEN_176 : _GEN_95 | _GEN_176)	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :99:79
           reservation_station_13_fetch_PC <= io_fetch_PC;	// src/main/scala/Memory/MEMRS.scala:68:38
       end
       reservation_station_13_decoded_instruction_RD_valid <=
-        ~_GEN_158
-        & (_GEN_125
+        ~_GEN_160
+        & (_GEN_127
              ? io_backend_packet_3_bits_RD_valid
-             : _GEN_93
+             : _GEN_95
                  ? io_backend_packet_2_bits_RD_valid
-                 : _GEN_58
+                 : _GEN_60
                      ? io_backend_packet_1_bits_RD_valid
-                     : _GEN_26
+                     : _GEN_28
                          ? io_backend_packet_0_bits_RD_valid
                          : reservation_station_13_decoded_instruction_RD_valid);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_13_decoded_instruction_RS1_valid <=
-        ~_GEN_158
-        & (_GEN_125
+        ~_GEN_160
+        & (_GEN_127
              ? io_backend_packet_3_bits_RS1_valid
-             : _GEN_93
+             : _GEN_95
                  ? io_backend_packet_2_bits_RS1_valid
-                 : _GEN_58
+                 : _GEN_60
                      ? io_backend_packet_1_bits_RS1_valid
-                     : _GEN_26
+                     : _GEN_28
                          ? io_backend_packet_0_bits_RS1_valid
                          : reservation_station_13_decoded_instruction_RS1_valid);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_13_decoded_instruction_RS2_valid <=
-        ~_GEN_158
-        & (_GEN_125
+        ~_GEN_160
+        & (_GEN_127
              ? io_backend_packet_3_bits_RS2_valid
-             : _GEN_93
+             : _GEN_95
                  ? io_backend_packet_2_bits_RS2_valid
-                 : _GEN_58
+                 : _GEN_60
                      ? io_backend_packet_1_bits_RS2_valid
-                     : _GEN_26
+                     : _GEN_28
                          ? io_backend_packet_0_bits_RS2_valid
                          : reservation_station_13_decoded_instruction_RS2_valid);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_13_decoded_instruction_needs_ALU <=
-        ~_GEN_158
-        & (_GEN_125
+        ~_GEN_160
+        & (_GEN_127
              ? io_backend_packet_3_bits_needs_ALU
-             : _GEN_93
+             : _GEN_95
                  ? io_backend_packet_2_bits_needs_ALU
-                 : _GEN_58
+                 : _GEN_60
                      ? io_backend_packet_1_bits_needs_ALU
-                     : _GEN_26
+                     : _GEN_28
                          ? io_backend_packet_0_bits_needs_ALU
                          : reservation_station_13_decoded_instruction_needs_ALU);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_13_decoded_instruction_needs_branch_unit <=
-        ~_GEN_158
-        & (_GEN_125
+        ~_GEN_160
+        & (_GEN_127
              ? io_backend_packet_3_bits_needs_branch_unit
-             : _GEN_93
+             : _GEN_95
                  ? io_backend_packet_2_bits_needs_branch_unit
-                 : _GEN_58
+                 : _GEN_60
                      ? io_backend_packet_1_bits_needs_branch_unit
-                     : _GEN_26
+                     : _GEN_28
                          ? io_backend_packet_0_bits_needs_branch_unit
                          : reservation_station_13_decoded_instruction_needs_branch_unit);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_13_decoded_instruction_needs_CSRs <=
-        ~_GEN_158
-        & (_GEN_125
+        ~_GEN_160
+        & (_GEN_127
              ? io_backend_packet_3_bits_needs_CSRs
-             : _GEN_93
+             : _GEN_95
                  ? io_backend_packet_2_bits_needs_CSRs
-                 : _GEN_58
+                 : _GEN_60
                      ? io_backend_packet_1_bits_needs_CSRs
-                     : _GEN_26
+                     : _GEN_28
                          ? io_backend_packet_0_bits_needs_CSRs
                          : reservation_station_13_decoded_instruction_needs_CSRs);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_13_decoded_instruction_SUBTRACT <=
-        ~_GEN_158
-        & (_GEN_125
+        ~_GEN_160
+        & (_GEN_127
              ? io_backend_packet_3_bits_SUBTRACT
-             : _GEN_93
+             : _GEN_95
                  ? io_backend_packet_2_bits_SUBTRACT
-                 : _GEN_58
+                 : _GEN_60
                      ? io_backend_packet_1_bits_SUBTRACT
-                     : _GEN_26
+                     : _GEN_28
                          ? io_backend_packet_0_bits_SUBTRACT
                          : reservation_station_13_decoded_instruction_SUBTRACT);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_13_decoded_instruction_MULTIPLY <=
-        ~_GEN_158
-        & (_GEN_125
+        ~_GEN_160
+        & (_GEN_127
              ? io_backend_packet_3_bits_MULTIPLY
-             : _GEN_93
+             : _GEN_95
                  ? io_backend_packet_2_bits_MULTIPLY
-                 : _GEN_58
+                 : _GEN_60
                      ? io_backend_packet_1_bits_MULTIPLY
-                     : _GEN_26
+                     : _GEN_28
                          ? io_backend_packet_0_bits_MULTIPLY
                          : reservation_station_13_decoded_instruction_MULTIPLY);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_13_decoded_instruction_IS_IMM <=
-        ~_GEN_158
-        & (_GEN_125
+        ~_GEN_160
+        & (_GEN_127
              ? io_backend_packet_3_bits_IS_IMM
-             : _GEN_93
+             : _GEN_95
                  ? io_backend_packet_2_bits_IS_IMM
-                 : _GEN_58
+                 : _GEN_60
                      ? io_backend_packet_1_bits_IS_IMM
-                     : _GEN_26
+                     : _GEN_28
                          ? io_backend_packet_0_bits_IS_IMM
                          : reservation_station_13_decoded_instruction_IS_IMM);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
-      reservation_station_13_committed <= ~_GEN_158 & reservation_station_13_committed;	// src/main/scala/Memory/MEMRS.scala:68:38, :138:111, :159:21, :160:42, :193:110, :194:36
+      reservation_station_13_committed <= ~_GEN_160 & reservation_station_13_committed;	// src/main/scala/Memory/MEMRS.scala:68:38, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_13_valid <=
-        ~_GEN_158 & (written_vec_3 ? _GEN_142 | _GEN_75 : _GEN_93 | _GEN_75);	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :138:111, :159:21, :160:42, :193:110, :194:36
+        ~_GEN_160 & (written_vec_3 ? _GEN_144 | _GEN_77 : _GEN_95 | _GEN_77);	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_14_decoded_instruction_ready_bits_RS1_ready <=
-        ~_GEN_159
+        ~_GEN_161
         & (~reservation_station_14_decoded_instruction_ready_bits_RS1_ready
            & reservation_station_14_valid
              ? RS1_match_14
-             : _GEN_127
+             : _GEN_129
                  ? io_backend_packet_3_bits_ready_bits_RS1_ready
-                 : _GEN_94
+                 : _GEN_96
                      ? io_backend_packet_2_bits_ready_bits_RS1_ready
-                     : _GEN_60
+                     : _GEN_62
                          ? io_backend_packet_1_bits_ready_bits_RS1_ready
-                         : _GEN_27
+                         : _GEN_29
                              ? io_backend_packet_0_bits_ready_bits_RS1_ready
                              : reservation_station_14_decoded_instruction_ready_bits_RS1_ready);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :111:25, :138:{14,79,111}, :139:77, :159:21, :160:42, :193:110, :194:36
       reservation_station_14_decoded_instruction_ready_bits_RS2_ready <=
-        ~_GEN_159
+        ~_GEN_161
         & (~reservation_station_14_decoded_instruction_ready_bits_RS2_ready
            & reservation_station_14_valid
              ? RS2_match_14
-             : _GEN_127
+             : _GEN_129
                  ? io_backend_packet_3_bits_ready_bits_RS2_ready
-                 : _GEN_94
+                 : _GEN_96
                      ? io_backend_packet_2_bits_ready_bits_RS2_ready
-                     : _GEN_60
+                     : _GEN_62
                          ? io_backend_packet_1_bits_ready_bits_RS2_ready
-                         : _GEN_27
+                         : _GEN_29
                              ? io_backend_packet_0_bits_ready_bits_RS2_ready
                              : reservation_station_14_decoded_instruction_ready_bits_RS2_ready);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :112:25, :132:{14,79,111}, :133:77, :138:111, :159:21, :160:42, :193:110, :194:36
-      if (_GEN_159) begin	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
+      if (_GEN_161) begin	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
         reservation_station_14_decoded_instruction_RD <= 7'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
         reservation_station_14_decoded_instruction_RS1 <= 7'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
         reservation_station_14_decoded_instruction_RS2 <= 7'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -5603,9 +5639,9 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
         reservation_station_14_fetch_PC <= 32'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
       end
       else begin	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
-        automatic logic _GEN_175;	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :99:79
-        _GEN_175 = written_vec_1 & _GEN_59 | _GEN_27;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :99:79
-        if (_GEN_127) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+        automatic logic _GEN_177;	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :99:79
+        _GEN_177 = written_vec_1 & _GEN_61 | _GEN_29;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :99:79
+        if (_GEN_129) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
           reservation_station_14_decoded_instruction_RD <= io_backend_packet_3_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_14_decoded_instruction_RS1 <= io_backend_packet_3_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_14_decoded_instruction_RS2 <= io_backend_packet_3_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -5631,7 +5667,7 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_14_decoded_instruction_access_width <=
             io_backend_packet_3_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        else if (_GEN_94) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+        else if (_GEN_96) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
           reservation_station_14_decoded_instruction_RD <= io_backend_packet_2_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_14_decoded_instruction_RS1 <= io_backend_packet_2_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_14_decoded_instruction_RS2 <= io_backend_packet_2_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -5657,7 +5693,7 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_14_decoded_instruction_access_width <=
             io_backend_packet_2_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        else if (_GEN_60) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+        else if (_GEN_62) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
           reservation_station_14_decoded_instruction_RD <= io_backend_packet_1_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_14_decoded_instruction_RS1 <= io_backend_packet_1_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_14_decoded_instruction_RS2 <= io_backend_packet_1_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -5683,7 +5719,7 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_14_decoded_instruction_access_width <=
             io_backend_packet_1_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        else if (_GEN_27) begin	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80
+        else if (_GEN_29) begin	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80
           reservation_station_14_decoded_instruction_RD <= io_backend_packet_0_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_14_decoded_instruction_RS1 <= io_backend_packet_0_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_14_decoded_instruction_RS2 <= io_backend_packet_0_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -5709,140 +5745,140 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_14_decoded_instruction_access_width <=
             io_backend_packet_0_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        if (written_vec_3 ? _GEN_143 | _GEN_175 : _GEN_94 | _GEN_175)	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :99:79
+        if (written_vec_3 ? _GEN_145 | _GEN_177 : _GEN_96 | _GEN_177)	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :99:79
           reservation_station_14_fetch_PC <= io_fetch_PC;	// src/main/scala/Memory/MEMRS.scala:68:38
       end
       reservation_station_14_decoded_instruction_RD_valid <=
-        ~_GEN_159
-        & (_GEN_127
+        ~_GEN_161
+        & (_GEN_129
              ? io_backend_packet_3_bits_RD_valid
-             : _GEN_94
+             : _GEN_96
                  ? io_backend_packet_2_bits_RD_valid
-                 : _GEN_60
+                 : _GEN_62
                      ? io_backend_packet_1_bits_RD_valid
-                     : _GEN_27
+                     : _GEN_29
                          ? io_backend_packet_0_bits_RD_valid
                          : reservation_station_14_decoded_instruction_RD_valid);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_14_decoded_instruction_RS1_valid <=
-        ~_GEN_159
-        & (_GEN_127
+        ~_GEN_161
+        & (_GEN_129
              ? io_backend_packet_3_bits_RS1_valid
-             : _GEN_94
+             : _GEN_96
                  ? io_backend_packet_2_bits_RS1_valid
-                 : _GEN_60
+                 : _GEN_62
                      ? io_backend_packet_1_bits_RS1_valid
-                     : _GEN_27
+                     : _GEN_29
                          ? io_backend_packet_0_bits_RS1_valid
                          : reservation_station_14_decoded_instruction_RS1_valid);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_14_decoded_instruction_RS2_valid <=
-        ~_GEN_159
-        & (_GEN_127
+        ~_GEN_161
+        & (_GEN_129
              ? io_backend_packet_3_bits_RS2_valid
-             : _GEN_94
+             : _GEN_96
                  ? io_backend_packet_2_bits_RS2_valid
-                 : _GEN_60
+                 : _GEN_62
                      ? io_backend_packet_1_bits_RS2_valid
-                     : _GEN_27
+                     : _GEN_29
                          ? io_backend_packet_0_bits_RS2_valid
                          : reservation_station_14_decoded_instruction_RS2_valid);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_14_decoded_instruction_needs_ALU <=
-        ~_GEN_159
-        & (_GEN_127
+        ~_GEN_161
+        & (_GEN_129
              ? io_backend_packet_3_bits_needs_ALU
-             : _GEN_94
+             : _GEN_96
                  ? io_backend_packet_2_bits_needs_ALU
-                 : _GEN_60
+                 : _GEN_62
                      ? io_backend_packet_1_bits_needs_ALU
-                     : _GEN_27
+                     : _GEN_29
                          ? io_backend_packet_0_bits_needs_ALU
                          : reservation_station_14_decoded_instruction_needs_ALU);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_14_decoded_instruction_needs_branch_unit <=
-        ~_GEN_159
-        & (_GEN_127
+        ~_GEN_161
+        & (_GEN_129
              ? io_backend_packet_3_bits_needs_branch_unit
-             : _GEN_94
+             : _GEN_96
                  ? io_backend_packet_2_bits_needs_branch_unit
-                 : _GEN_60
+                 : _GEN_62
                      ? io_backend_packet_1_bits_needs_branch_unit
-                     : _GEN_27
+                     : _GEN_29
                          ? io_backend_packet_0_bits_needs_branch_unit
                          : reservation_station_14_decoded_instruction_needs_branch_unit);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_14_decoded_instruction_needs_CSRs <=
-        ~_GEN_159
-        & (_GEN_127
+        ~_GEN_161
+        & (_GEN_129
              ? io_backend_packet_3_bits_needs_CSRs
-             : _GEN_94
+             : _GEN_96
                  ? io_backend_packet_2_bits_needs_CSRs
-                 : _GEN_60
+                 : _GEN_62
                      ? io_backend_packet_1_bits_needs_CSRs
-                     : _GEN_27
+                     : _GEN_29
                          ? io_backend_packet_0_bits_needs_CSRs
                          : reservation_station_14_decoded_instruction_needs_CSRs);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_14_decoded_instruction_SUBTRACT <=
-        ~_GEN_159
-        & (_GEN_127
+        ~_GEN_161
+        & (_GEN_129
              ? io_backend_packet_3_bits_SUBTRACT
-             : _GEN_94
+             : _GEN_96
                  ? io_backend_packet_2_bits_SUBTRACT
-                 : _GEN_60
+                 : _GEN_62
                      ? io_backend_packet_1_bits_SUBTRACT
-                     : _GEN_27
+                     : _GEN_29
                          ? io_backend_packet_0_bits_SUBTRACT
                          : reservation_station_14_decoded_instruction_SUBTRACT);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_14_decoded_instruction_MULTIPLY <=
-        ~_GEN_159
-        & (_GEN_127
+        ~_GEN_161
+        & (_GEN_129
              ? io_backend_packet_3_bits_MULTIPLY
-             : _GEN_94
+             : _GEN_96
                  ? io_backend_packet_2_bits_MULTIPLY
-                 : _GEN_60
+                 : _GEN_62
                      ? io_backend_packet_1_bits_MULTIPLY
-                     : _GEN_27
+                     : _GEN_29
                          ? io_backend_packet_0_bits_MULTIPLY
                          : reservation_station_14_decoded_instruction_MULTIPLY);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_14_decoded_instruction_IS_IMM <=
-        ~_GEN_159
-        & (_GEN_127
+        ~_GEN_161
+        & (_GEN_129
              ? io_backend_packet_3_bits_IS_IMM
-             : _GEN_94
+             : _GEN_96
                  ? io_backend_packet_2_bits_IS_IMM
-                 : _GEN_60
+                 : _GEN_62
                      ? io_backend_packet_1_bits_IS_IMM
-                     : _GEN_27
+                     : _GEN_29
                          ? io_backend_packet_0_bits_IS_IMM
                          : reservation_station_14_decoded_instruction_IS_IMM);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
-      reservation_station_14_committed <= ~_GEN_159 & reservation_station_14_committed;	// src/main/scala/Memory/MEMRS.scala:68:38, :138:111, :159:21, :160:42, :193:110, :194:36
+      reservation_station_14_committed <= ~_GEN_161 & reservation_station_14_committed;	// src/main/scala/Memory/MEMRS.scala:68:38, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_14_valid <=
-        ~_GEN_159 & (written_vec_3 ? _GEN_143 | _GEN_76 : _GEN_94 | _GEN_76);	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :138:111, :159:21, :160:42, :193:110, :194:36
+        ~_GEN_161 & (written_vec_3 ? _GEN_145 | _GEN_78 : _GEN_96 | _GEN_78);	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_15_decoded_instruction_ready_bits_RS1_ready <=
-        ~_GEN_160
+        ~_GEN_162
         & (~reservation_station_15_decoded_instruction_ready_bits_RS1_ready
            & reservation_station_15_valid
              ? RS1_match_15
-             : _GEN_128
+             : _GEN_130
                  ? io_backend_packet_3_bits_ready_bits_RS1_ready
-                 : _GEN_95
+                 : _GEN_97
                      ? io_backend_packet_2_bits_ready_bits_RS1_ready
-                     : _GEN_61
+                     : _GEN_63
                          ? io_backend_packet_1_bits_ready_bits_RS1_ready
-                         : _GEN_28
+                         : _GEN_30
                              ? io_backend_packet_0_bits_ready_bits_RS1_ready
                              : reservation_station_15_decoded_instruction_ready_bits_RS1_ready);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :111:25, :138:{14,79,111}, :139:77, :159:21, :160:42, :193:110, :194:36
       reservation_station_15_decoded_instruction_ready_bits_RS2_ready <=
-        ~_GEN_160
+        ~_GEN_162
         & (~reservation_station_15_decoded_instruction_ready_bits_RS2_ready
            & reservation_station_15_valid
              ? RS2_match_15
-             : _GEN_128
+             : _GEN_130
                  ? io_backend_packet_3_bits_ready_bits_RS2_ready
-                 : _GEN_95
+                 : _GEN_97
                      ? io_backend_packet_2_bits_ready_bits_RS2_ready
-                     : _GEN_61
+                     : _GEN_63
                          ? io_backend_packet_1_bits_ready_bits_RS2_ready
-                         : _GEN_28
+                         : _GEN_30
                              ? io_backend_packet_0_bits_ready_bits_RS2_ready
                              : reservation_station_15_decoded_instruction_ready_bits_RS2_ready);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :112:25, :132:{14,79,111}, :133:77, :138:111, :159:21, :160:42, :193:110, :194:36
-      if (_GEN_160) begin	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
+      if (_GEN_162) begin	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
         reservation_station_15_decoded_instruction_RD <= 7'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
         reservation_station_15_decoded_instruction_RS1 <= 7'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
         reservation_station_15_decoded_instruction_RS2 <= 7'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -5860,9 +5896,9 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
         reservation_station_15_fetch_PC <= 32'h0;	// src/main/scala/Memory/MEMRS.scala:68:38
       end
       else begin	// src/main/scala/Memory/MEMRS.scala:138:111, :159:21, :160:42, :193:110, :194:36
-        automatic logic _GEN_176;	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :99:79
-        _GEN_176 = written_vec_1 & (&_GEN_30) | _GEN_28;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:{44,80}, :99:79
-        if (_GEN_128) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+        automatic logic _GEN_178;	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :99:79
+        _GEN_178 = written_vec_1 & (&_GEN_32) | _GEN_30;	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:{44,80}, :99:79
+        if (_GEN_130) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
           reservation_station_15_decoded_instruction_RD <= io_backend_packet_3_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_15_decoded_instruction_RS1 <= io_backend_packet_3_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_15_decoded_instruction_RS2 <= io_backend_packet_3_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -5888,7 +5924,7 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_15_decoded_instruction_access_width <=
             io_backend_packet_3_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        else if (_GEN_95) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+        else if (_GEN_97) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
           reservation_station_15_decoded_instruction_RD <= io_backend_packet_2_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_15_decoded_instruction_RS1 <= io_backend_packet_2_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_15_decoded_instruction_RS2 <= io_backend_packet_2_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -5914,7 +5950,7 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_15_decoded_instruction_access_width <=
             io_backend_packet_2_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        else if (_GEN_61) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
+        else if (_GEN_63) begin	// src/main/scala/Memory/MEMRS.scala:95:29, :97:80
           reservation_station_15_decoded_instruction_RD <= io_backend_packet_1_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_15_decoded_instruction_RS1 <= io_backend_packet_1_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_15_decoded_instruction_RS2 <= io_backend_packet_1_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -5940,7 +5976,7 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_15_decoded_instruction_access_width <=
             io_backend_packet_1_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        else if (_GEN_28) begin	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80
+        else if (_GEN_30) begin	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80
           reservation_station_15_decoded_instruction_RD <= io_backend_packet_0_bits_RD;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_15_decoded_instruction_RS1 <= io_backend_packet_0_bits_RS1;	// src/main/scala/Memory/MEMRS.scala:68:38
           reservation_station_15_decoded_instruction_RS2 <= io_backend_packet_0_bits_RS2;	// src/main/scala/Memory/MEMRS.scala:68:38
@@ -5966,116 +6002,116 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
           reservation_station_15_decoded_instruction_access_width <=
             io_backend_packet_0_bits_access_width;	// src/main/scala/Memory/MEMRS.scala:68:38
         end
-        if (written_vec_3 ? _GEN_144 | _GEN_176 : _GEN_95 | _GEN_176)	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :99:79
+        if (written_vec_3 ? _GEN_146 | _GEN_178 : _GEN_97 | _GEN_178)	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :99:79
           reservation_station_15_fetch_PC <= io_fetch_PC;	// src/main/scala/Memory/MEMRS.scala:68:38
       end
       reservation_station_15_decoded_instruction_RD_valid <=
-        ~_GEN_160
-        & (_GEN_128
+        ~_GEN_162
+        & (_GEN_130
              ? io_backend_packet_3_bits_RD_valid
-             : _GEN_95
+             : _GEN_97
                  ? io_backend_packet_2_bits_RD_valid
-                 : _GEN_61
+                 : _GEN_63
                      ? io_backend_packet_1_bits_RD_valid
-                     : _GEN_28
+                     : _GEN_30
                          ? io_backend_packet_0_bits_RD_valid
                          : reservation_station_15_decoded_instruction_RD_valid);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_15_decoded_instruction_RS1_valid <=
-        ~_GEN_160
-        & (_GEN_128
+        ~_GEN_162
+        & (_GEN_130
              ? io_backend_packet_3_bits_RS1_valid
-             : _GEN_95
+             : _GEN_97
                  ? io_backend_packet_2_bits_RS1_valid
-                 : _GEN_61
+                 : _GEN_63
                      ? io_backend_packet_1_bits_RS1_valid
-                     : _GEN_28
+                     : _GEN_30
                          ? io_backend_packet_0_bits_RS1_valid
                          : reservation_station_15_decoded_instruction_RS1_valid);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_15_decoded_instruction_RS2_valid <=
-        ~_GEN_160
-        & (_GEN_128
+        ~_GEN_162
+        & (_GEN_130
              ? io_backend_packet_3_bits_RS2_valid
-             : _GEN_95
+             : _GEN_97
                  ? io_backend_packet_2_bits_RS2_valid
-                 : _GEN_61
+                 : _GEN_63
                      ? io_backend_packet_1_bits_RS2_valid
-                     : _GEN_28
+                     : _GEN_30
                          ? io_backend_packet_0_bits_RS2_valid
                          : reservation_station_15_decoded_instruction_RS2_valid);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_15_decoded_instruction_needs_ALU <=
-        ~_GEN_160
-        & (_GEN_128
+        ~_GEN_162
+        & (_GEN_130
              ? io_backend_packet_3_bits_needs_ALU
-             : _GEN_95
+             : _GEN_97
                  ? io_backend_packet_2_bits_needs_ALU
-                 : _GEN_61
+                 : _GEN_63
                      ? io_backend_packet_1_bits_needs_ALU
-                     : _GEN_28
+                     : _GEN_30
                          ? io_backend_packet_0_bits_needs_ALU
                          : reservation_station_15_decoded_instruction_needs_ALU);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_15_decoded_instruction_needs_branch_unit <=
-        ~_GEN_160
-        & (_GEN_128
+        ~_GEN_162
+        & (_GEN_130
              ? io_backend_packet_3_bits_needs_branch_unit
-             : _GEN_95
+             : _GEN_97
                  ? io_backend_packet_2_bits_needs_branch_unit
-                 : _GEN_61
+                 : _GEN_63
                      ? io_backend_packet_1_bits_needs_branch_unit
-                     : _GEN_28
+                     : _GEN_30
                          ? io_backend_packet_0_bits_needs_branch_unit
                          : reservation_station_15_decoded_instruction_needs_branch_unit);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_15_decoded_instruction_needs_CSRs <=
-        ~_GEN_160
-        & (_GEN_128
+        ~_GEN_162
+        & (_GEN_130
              ? io_backend_packet_3_bits_needs_CSRs
-             : _GEN_95
+             : _GEN_97
                  ? io_backend_packet_2_bits_needs_CSRs
-                 : _GEN_61
+                 : _GEN_63
                      ? io_backend_packet_1_bits_needs_CSRs
-                     : _GEN_28
+                     : _GEN_30
                          ? io_backend_packet_0_bits_needs_CSRs
                          : reservation_station_15_decoded_instruction_needs_CSRs);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_15_decoded_instruction_SUBTRACT <=
-        ~_GEN_160
-        & (_GEN_128
+        ~_GEN_162
+        & (_GEN_130
              ? io_backend_packet_3_bits_SUBTRACT
-             : _GEN_95
+             : _GEN_97
                  ? io_backend_packet_2_bits_SUBTRACT
-                 : _GEN_61
+                 : _GEN_63
                      ? io_backend_packet_1_bits_SUBTRACT
-                     : _GEN_28
+                     : _GEN_30
                          ? io_backend_packet_0_bits_SUBTRACT
                          : reservation_station_15_decoded_instruction_SUBTRACT);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_15_decoded_instruction_MULTIPLY <=
-        ~_GEN_160
-        & (_GEN_128
+        ~_GEN_162
+        & (_GEN_130
              ? io_backend_packet_3_bits_MULTIPLY
-             : _GEN_95
+             : _GEN_97
                  ? io_backend_packet_2_bits_MULTIPLY
-                 : _GEN_61
+                 : _GEN_63
                      ? io_backend_packet_1_bits_MULTIPLY
-                     : _GEN_28
+                     : _GEN_30
                          ? io_backend_packet_0_bits_MULTIPLY
                          : reservation_station_15_decoded_instruction_MULTIPLY);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_15_decoded_instruction_IS_IMM <=
-        ~_GEN_160
-        & (_GEN_128
+        ~_GEN_162
+        & (_GEN_130
              ? io_backend_packet_3_bits_IS_IMM
-             : _GEN_95
+             : _GEN_97
                  ? io_backend_packet_2_bits_IS_IMM
-                 : _GEN_61
+                 : _GEN_63
                      ? io_backend_packet_1_bits_IS_IMM
-                     : _GEN_28
+                     : _GEN_30
                          ? io_backend_packet_0_bits_IS_IMM
                          : reservation_station_15_decoded_instruction_IS_IMM);	// src/main/scala/Memory/MEMRS.scala:68:38, :95:29, :97:80, :138:111, :159:21, :160:42, :193:110, :194:36
-      reservation_station_15_committed <= ~_GEN_160 & reservation_station_15_committed;	// src/main/scala/Memory/MEMRS.scala:68:38, :138:111, :159:21, :160:42, :193:110, :194:36
+      reservation_station_15_committed <= ~_GEN_162 & reservation_station_15_committed;	// src/main/scala/Memory/MEMRS.scala:68:38, :138:111, :159:21, :160:42, :193:110, :194:36
       reservation_station_15_valid <=
-        ~_GEN_160 & (written_vec_3 ? _GEN_144 | _GEN_77 : _GEN_95 | _GEN_77);	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :138:111, :159:21, :160:42, :193:110, :194:36
+        ~_GEN_162 & (written_vec_3 ? _GEN_146 | _GEN_79 : _GEN_97 | _GEN_79);	// src/main/scala/Memory/MEMRS.scala:68:38, :89:41, :95:29, :97:80, :98:79, :138:111, :159:21, :160:42, :193:110, :194:36
       front_pointer <= io_flush ? 5'h0 : front_pointer + {4'h0, good_to_go};	// src/main/scala/Memory/MEMRS.scala:68:79, :72:34, :153:65, :154:{68,87}, :156:{19,36}, :198:19, :199:23
       back_pointer <=
         io_flush
           ? 5'h0
-          : back_pointer + {2'h0, {1'h0, _GEN_11 + _GEN_29} + {1'h0, _GEN_78 + _GEN_96}};	// src/main/scala/Memory/MEMRS.scala:68:79, :73:34, :96:{40,63}, :104:{18,34,44}, :198:19, :200:22
+          : back_pointer + {2'h0, {1'h0, _GEN_13 + _GEN_31} + {1'h0, _GEN_80 + _GEN_98}};	// src/main/scala/Memory/MEMRS.scala:68:79, :73:34, :96:{40,63}, :104:{18,34,44}, :198:19, :200:22
     end
   end // always @(posedge)
   `ifdef ENABLE_INITIAL_REG_	// src/main/scala/Memory/MEMRS.scala:40:7
@@ -6617,6 +6653,8 @@ module MEMRS(	// src/main/scala/Memory/MEMRS.scala:40:7
   assign io_RF_inputs_3_bits_RS2 = _GEN_4[front_index];	// src/main/scala/Memory/MEMRS.scala:40:7, :75:40, :150:105
   assign io_RF_inputs_3_bits_IMM = _GEN_6[front_index];	// src/main/scala/Memory/MEMRS.scala:40:7, :75:40, :150:105
   assign io_RF_inputs_3_bits_FUNCT3 = _GEN_7[front_index];	// src/main/scala/Memory/MEMRS.scala:40:7, :75:40, :150:105
-  assign io_RF_inputs_3_bits_memory_type = _GEN_8[front_index];	// src/main/scala/Memory/MEMRS.scala:40:7, :75:40, :150:105
+  assign io_RF_inputs_3_bits_MOB_index = _GEN_8[front_index];	// src/main/scala/Memory/MEMRS.scala:40:7, :75:40, :150:105
+  assign io_RF_inputs_3_bits_memory_type = _GEN_9[front_index];	// src/main/scala/Memory/MEMRS.scala:40:7, :75:40, :150:105
+  assign io_RF_inputs_3_bits_access_width = _GEN_10[front_index];	// src/main/scala/Memory/MEMRS.scala:40:7, :75:40, :150:105
 endmodule
 

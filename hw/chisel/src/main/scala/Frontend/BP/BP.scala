@@ -42,7 +42,7 @@ class BP(parameters:Parameters) extends Module{
         val flush       = Input(Bool())
 
         // Predict Channel
-        val predict     = Flipped(Decoupled(new memory_request(parameters)))
+        val predict     = Flipped(Decoupled(new memory_request(parameters)))    // PC input
 
         // Commit Channel 
         val commit      = Flipped(ValidIO(new commit(parameters)))
@@ -124,10 +124,8 @@ class BP(parameters:Parameters) extends Module{
     BTB.io.predict_PC                       := io.predict.bits.addr
     BTB.io.predict_valid                    := io.predict.valid
 
-
     // commit port
     BTB.io.commit           <>  io.commit
-
     BTB.io.commit.valid     :=  update_BTB
 
     ///////////////////////////////
@@ -159,10 +157,10 @@ class BP(parameters:Parameters) extends Module{
     prediction.bits.GHR       := io.GHR
     prediction.bits.T_NT      := gshare.io.T_NT
 
+    prediction.valid        := RegNext(io.predict.valid && !io.flush) //BTB.io.BTB_output.valid && gshare.io.valid
     prediction.ready        := io.prediction.ready
-    prediction.valid        := BTB.io.BTB_output.BTB_valid && gshare.io.valid
 
-    prediction <> io.prediction
+    io.prediction <> prediction
 
 
     /////////////////
@@ -174,6 +172,6 @@ class BP(parameters:Parameters) extends Module{
     prediction_skid_buffer.io.deq                  <> io.prediction
     prediction_skid_buffer.io.flush.get            := io.flush
 
-    io.predict.ready        := io.prediction.ready && !(misprediction)   // 1 cycle stall on mispredict or revert
+    io.predict.ready        := io.prediction.ready
 
 }

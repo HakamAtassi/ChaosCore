@@ -25,9 +25,9 @@ VERIFIC-INFO [VERI-1018] PC_gen.sv:46: compiling module 'PC_gen'
 Running rewriter 'initial-assertions'.
 Clearing rewriter list.
 VERIFIC-INFO [VERI-1018] PC_gen.sv:46: compiling module 'PC_gen'
-VERIFIC-INFO [VERI-2571] PC_gen.sv:147: extracting RAM for identifier '_RANDOM'
+VERIFIC-INFO [VERI-2571] PC_gen.sv:145: extracting RAM for identifier '_RANDOM'
 VERIFIC-INFO [VERI-1018] Queue1_memory_request.sv:46: compiling module 'Queue1_memory_request'
-VERIFIC-INFO [VERI-2571] Queue1_memory_request.sv:75: extracting RAM for identifier '_RANDOM'
+VERIFIC-INFO [VERI-2571] Queue1_memory_request.sv:77: extracting RAM for identifier '_RANDOM'
 Importing module PC_gen.
 Importing module Queue1_memory_request.
 
@@ -74,7 +74,7 @@ Cleaned up 0 empty switches.
 3.2.12. Executing OPT_EXPR pass (perform const folding).
 Optimizing module Queue1_memory_request.
 Optimizing module PC_gen.
-<suppressed ~75 debug messages>
+<suppressed ~73 debug messages>
 
 3.3. Executing FUTURE pass.
 
@@ -85,8 +85,8 @@ Optimizing module PC_gen.
 3.5. Executing OPT_CLEAN pass (remove unused cells and wires).
 Finding unused cells or wires in module \Queue1_memory_request..
 Finding unused cells or wires in module \PC_gen..
-Removed 1 unused cells and 291 unused wires.
-<suppressed ~38 debug messages>
+Removed 0 unused cells and 287 unused wires.
+<suppressed ~36 debug messages>
 
 3.6. Executing CHECK pass (checking for obvious problems).
 Checking module PC_gen...
@@ -97,7 +97,7 @@ Found and reported 0 problems.
 
 3.7.1. Executing OPT_EXPR pass (perform const folding).
 Optimizing module PC_gen.
-<suppressed ~18 debug messages>
+<suppressed ~16 debug messages>
 Optimizing module Queue1_memory_request.
 
 3.7.2. Executing OPT_MERGE pass (detect identical cells).
@@ -116,7 +116,7 @@ Running muxtree optimizer on module \Queue1_memory_request..
   Evaluating internal representation of mux trees.
   Analyzing evaluation results.
 Removed 0 multiplexer ports.
-<suppressed ~7 debug messages>
+<suppressed ~8 debug messages>
 
 3.7.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
   Optimizing cells in module \PC_gen.
@@ -131,8 +131,8 @@ Removed a total of 0 cells.
 3.7.6. Executing OPT_CLEAN pass (remove unused cells and wires).
 Finding unused cells or wires in module \PC_gen..
 Finding unused cells or wires in module \Queue1_memory_request..
-Removed 1 unused cells and 12 unused wires.
-<suppressed ~11 debug messages>
+Removed 1 unused cells and 11 unused wires.
+<suppressed ~10 debug messages>
 
 3.7.7. Executing OPT_EXPR pass (perform const folding).
 Optimizing module PC_gen.
@@ -150,7 +150,7 @@ Running muxtree optimizer on module \Queue1_memory_request..
   Evaluating internal representation of mux trees.
   Analyzing evaluation results.
 Removed 0 multiplexer ports.
-<suppressed ~7 debug messages>
+<suppressed ~8 debug messages>
 
 3.7.10. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
   Optimizing cells in module \PC_gen.
@@ -173,9 +173,10 @@ Optimizing module Queue1_memory_request.
 3.7.14. Finished OPT passes. (There is nothing left to do.)
 
 3.8. Executing WREDUCE pass (reducing word size of cells).
-Removed top 27 bits (of 28) from port B of cell PC_gen.$verific$add_33$PC_gen.sv:107$99 ($add).
-Removed top 1 bits (of 3) from port B of cell PC_gen.$verific$sub_115$PC_gen.sv:139$149 ($sub).
-Removed top 27 bits (of 30) from port B of cell PC_gen.$verific$add_116$PC_gen.sv:139$150 ($add).
+Removed top 27 bits (of 28) from port B of cell PC_gen.$verific$add_33$PC_gen.sv:107$96 ($add).
+Removed top 1 bits (of 6) from port A of cell PC_gen.$verific$sub_108$PC_gen.sv:137$141 ($sub).
+Removed top 2 bits (of 6) from port B of cell PC_gen.$verific$sub_108$PC_gen.sv:137$141 ($sub).
+Removed top 26 bits (of 32) from port B of cell PC_gen.$verific$add_109$PC_gen.sv:137$142 ($add).
 
 3.9. Executing OPT_CLEAN pass (remove unused cells and wires).
 Finding unused cells or wires in module \PC_gen..
@@ -204,8 +205,8 @@ Finding unused cells or wires in module \Queue1_memory_request..
 
 === PC_gen ===
 
-   Number of wires:                107
-   Number of wire bits:            759
+   Number of wires:                104
+   Number of wire bits:            761
    Number of public wires:          54
    Number of public wire bits:     462
    Number of ports:                 40
@@ -213,36 +214,35 @@ Finding unused cells or wires in module \Queue1_memory_request..
    Number of memories:               0
    Number of memory bits:            0
    Number of processes:              0
-   Number of cells:                 75
+   Number of cells:                 71
      $add                            2
-     $adff                          15
+     $adff                          13
      $and                           18
      $assert                         4
-     $assume                         1
      $cover                          4
      $dff                            3
      $eq                             7
      $mux                            7
-     $not                           12
+     $not                           11
      $sub                            1
      Queue1_memory_request           1
 
 === Queue1_memory_request ===
 
-   Number of wires:                 23
-   Number of wire bits:            244
-   Number of public wires:          13
-   Number of public wire bits:     170
-   Number of ports:                  9
-   Number of port bits:            102
+   Number of wires:                 26
+   Number of wire bits:            247
+   Number of public wires:          14
+   Number of public wire bits:     171
+   Number of ports:                 10
+   Number of port bits:            103
    Number of memories:               0
    Number of memory bits:            0
    Number of processes:              0
-   Number of cells:                 17
-     $and                            6
+   Number of cells:                 19
+     $and                            7
      $dff                            2
      $mux                            5
-     $not                            2
+     $not                            3
      $or                             1
      $xor                            1
 
@@ -252,20 +252,19 @@ Finding unused cells or wires in module \Queue1_memory_request..
      Queue1_memory_request           1
 
    Number of wires:                130
-   Number of wire bits:           1003
-   Number of public wires:          67
-   Number of public wire bits:     632
-   Number of ports:                 49
-   Number of port bits:            457
+   Number of wire bits:           1008
+   Number of public wires:          68
+   Number of public wire bits:     633
+   Number of ports:                 50
+   Number of port bits:            458
    Number of memories:               0
    Number of memory bits:            0
    Number of processes:              0
-   Number of cells:                 91
+   Number of cells:                 89
      $add                            2
-     $adff                          15
-     $and                           24
+     $adff                          13
+     $and                           25
      $assert                         4
-     $assume                         1
      $cover                          4
      $dff                            5
      $eq                             7
@@ -297,6 +296,6 @@ Module PC_gen directly or indirectly contains formal properties -> setting "keep
 6. Executing RTLIL backend.
 Output filename: ../model/design.il
 
-End of script. Logfile hash: 18c7d3a544, CPU: user 0.04s system 0.01s, MEM: 35.00 MB peak
+End of script. Logfile hash: dc9af51ddd, CPU: user 0.04s system 0.01s, MEM: 35.00 MB peak
 Yosys 0.43 (git sha1 ead4718e5, clang++ 14.0.0-1ubuntu1.1 -fPIC -Os)
 Time spent: 23% 2x hierarchy (0 sec), 21% 5x opt_clean (0 sec), ...
