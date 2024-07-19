@@ -81,8 +81,8 @@ module ALU(	// src/main/scala/Backend/FU.scala:38:7
   reg        io_FU_output_bits_RD_valid_REG;	// src/main/scala/Backend/FU.scala:220:46
   reg [3:0]  io_FU_output_bits_MOB_index_REG;	// src/main/scala/Backend/FU.scala:224:46
   reg [3:0]  io_FU_output_bits_FTQ_index_REG;	// src/main/scala/Backend/FU.scala:225:46
-  reg [5:0]  io_FU_output_bits_ROB_index_REG;	// src/main/scala/Backend/FU.scala:236:46
-  reg        io_FU_output_valid_REG;	// src/main/scala/Backend/FU.scala:237:46
+  reg [5:0]  io_FU_output_bits_ROB_index_REG;	// src/main/scala/Backend/FU.scala:237:46
+  reg        io_FU_output_valid_REG;	// src/main/scala/Backend/FU.scala:238:46
   always @(posedge clock) begin	// src/main/scala/Backend/FU.scala:38:7
     if (reset)	// src/main/scala/Backend/FU.scala:38:7
       arithmetic_result <= 32'h0;	// src/main/scala/Backend/FU.scala:76:36
@@ -172,8 +172,8 @@ module ALU(	// src/main/scala/Backend/FU.scala:38:7
     io_FU_output_bits_RD_valid_REG <= io_FU_input_bits_decoded_instruction_RD_valid;	// src/main/scala/Backend/FU.scala:220:46
     io_FU_output_bits_MOB_index_REG <= io_FU_input_bits_decoded_instruction_MOB_index;	// src/main/scala/Backend/FU.scala:224:46
     io_FU_output_bits_FTQ_index_REG <= io_FU_input_bits_decoded_instruction_FTQ_index;	// src/main/scala/Backend/FU.scala:225:46
-    io_FU_output_bits_ROB_index_REG <= io_FU_input_bits_decoded_instruction_ROB_index;	// src/main/scala/Backend/FU.scala:236:46
-    io_FU_output_valid_REG <= io_FU_input_valid & ~io_flush;	// src/main/scala/Backend/FU.scala:237:{46,65,68}
+    io_FU_output_bits_ROB_index_REG <= io_FU_input_bits_decoded_instruction_ROB_index;	// src/main/scala/Backend/FU.scala:237:46
+    io_FU_output_valid_REG <= io_FU_input_valid & ~io_flush;	// src/main/scala/Backend/FU.scala:238:{46,65,68}
   end // always @(posedge)
   `ifdef ENABLE_INITIAL_REG_	// src/main/scala/Backend/FU.scala:38:7
     `ifdef FIRRTL_BEFORE_INITIAL	// src/main/scala/Backend/FU.scala:38:7
@@ -195,21 +195,21 @@ module ALU(	// src/main/scala/Backend/FU.scala:38:7
         io_FU_output_bits_RD_valid_REG = _RANDOM[2'h2][9];	// src/main/scala/Backend/FU.scala:38:7, :216:55, :220:46
         io_FU_output_bits_MOB_index_REG = _RANDOM[2'h2][13:10];	// src/main/scala/Backend/FU.scala:38:7, :216:55, :224:46
         io_FU_output_bits_FTQ_index_REG = _RANDOM[2'h2][17:14];	// src/main/scala/Backend/FU.scala:38:7, :216:55, :225:46
-        io_FU_output_bits_ROB_index_REG = _RANDOM[2'h2][23:18];	// src/main/scala/Backend/FU.scala:38:7, :216:55, :236:46
-        io_FU_output_valid_REG = _RANDOM[2'h2][24];	// src/main/scala/Backend/FU.scala:38:7, :216:55, :237:46
+        io_FU_output_bits_ROB_index_REG = _RANDOM[2'h2][23:18];	// src/main/scala/Backend/FU.scala:38:7, :216:55, :237:46
+        io_FU_output_valid_REG = _RANDOM[2'h2][24];	// src/main/scala/Backend/FU.scala:38:7, :216:55, :238:46
       `endif // RANDOMIZE_REG_INIT
     end // initial
     `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/Backend/FU.scala:38:7
       `FIRRTL_AFTER_INITIAL	// src/main/scala/Backend/FU.scala:38:7
     `endif // FIRRTL_AFTER_INITIAL
   `endif // ENABLE_INITIAL_REG_
-  assign io_FU_output_valid = io_FU_output_valid_REG;	// src/main/scala/Backend/FU.scala:38:7, :237:46
+  assign io_FU_output_valid = io_FU_output_valid_REG;	// src/main/scala/Backend/FU.scala:38:7, :238:46
   assign io_FU_output_bits_RD = io_FU_output_bits_RD_REG;	// src/main/scala/Backend/FU.scala:38:7, :219:46
   assign io_FU_output_bits_RD_data = arithmetic_result;	// src/main/scala/Backend/FU.scala:38:7, :76:36
   assign io_FU_output_bits_RD_valid = io_FU_output_bits_RD_valid_REG;	// src/main/scala/Backend/FU.scala:38:7, :220:46
   assign io_FU_output_bits_fetch_PC = io_FU_output_bits_fetch_PC_REG;	// src/main/scala/Backend/FU.scala:38:7, :215:55
   assign io_FU_output_bits_MOB_index = io_FU_output_bits_MOB_index_REG;	// src/main/scala/Backend/FU.scala:38:7, :224:46
-  assign io_FU_output_bits_ROB_index = io_FU_output_bits_ROB_index_REG;	// src/main/scala/Backend/FU.scala:38:7, :236:46
+  assign io_FU_output_bits_ROB_index = io_FU_output_bits_ROB_index_REG;	// src/main/scala/Backend/FU.scala:38:7, :237:46
   assign io_FU_output_bits_FTQ_index = io_FU_output_bits_FTQ_index_REG;	// src/main/scala/Backend/FU.scala:38:7, :225:46
   assign io_FU_output_bits_fetch_packet_index = io_FU_output_bits_fetch_packet_index_REG;	// src/main/scala/Backend/FU.scala:38:7, :216:55
 endmodule

@@ -1,0 +1,377 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite -- YosysHQ Edition [202407090834]     |
+ |  Copyright (C) 2012 - 2024 YosysHQ GmbH                                    |
+ |  For support, please contact support@yosyshq.com                           |
+ \----------------------------------------------------------------------------/
+ Yosys 0.43 (git sha1 ead4718e5, clang++ 14.0.0-1ubuntu1.1 -fPIC -Os)
+
+-- Executing script file `../model/design.ys' --
+
+1. Executing VERIFIC (loading SystemVerilog and VHDL designs using Verific).
+Built with Verific Jun24_SW_Release, released at Mon Jul  1 21:27:07 2024.
+VERIFIC-COMMENT [VERI-1482] Analyzing Verilog file 'predecoder.sv'
+
+2. Executing VERIFIC (loading SystemVerilog and VHDL designs using Verific).
+Built with Verific Jun24_SW_Release, released at Mon Jul  1 21:27:07 2024.
+VERIFIC-COMMENT [VERI-1482] Analyzing Verilog file 'Queue1_FTQ_entry.sv'
+
+3. Executing VERIFIC (loading SystemVerilog and VHDL designs using Verific).
+Built with Verific Jun24_SW_Release, released at Mon Jul  1 21:27:07 2024.
+VERIFIC-COMMENT [VERI-1482] Analyzing Verilog file 'Queue1_fetch_packet.sv'
+
+4. Executing PREP pass.
+
+4.1. Executing HIERARCHY pass (managing design hierarchy).
+Statically elaborating the Verific parse tree.
+Elaborating all modules in library 'work'
+VERIFIC-INFO [VERI-1018] predecoder.sv:46: compiling module 'predecoder'
+Running rewriter 'initial-assertions'.
+Clearing rewriter list.
+VERIFIC-INFO [VERI-1018] predecoder.sv:46: compiling module 'predecoder'
+VERIFIC-INFO [VERI-2571] predecoder.sv:379: extracting RAM for identifier '_RANDOM'
+VERIFIC-INFO [VERI-1018] Queue1_FTQ_entry.sv:46: compiling module 'Queue1_FTQ_entry'
+VERIFIC-INFO [VERI-2571] Queue1_FTQ_entry.sv:104: extracting RAM for identifier '_RANDOM'
+VERIFIC-INFO [VERI-1018] Queue1_fetch_packet.sv:46: compiling module 'Queue1_fetch_packet'
+VERIFIC-INFO [VERI-2571] Queue1_fetch_packet.sv:122: extracting RAM for identifier '_RANDOM'
+Importing module predecoder.
+Importing module Queue1_FTQ_entry.
+Importing module Queue1_fetch_packet.
+
+4.1.1. Analyzing design hierarchy..
+Top module:  \predecoder
+Used module:     \Queue1_fetch_packet
+Used module:     \Queue1_FTQ_entry
+
+4.1.2. Analyzing design hierarchy..
+Top module:  \predecoder
+Used module:     \Queue1_fetch_packet
+Used module:     \Queue1_FTQ_entry
+Removed 0 unused modules.
+
+4.2. Executing PROC pass (convert processes to netlists).
+
+4.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+4.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+4.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 0 assignments to connections.
+
+4.2.4. Executing PROC_INIT pass (extract init attributes).
+
+4.2.5. Executing PROC_ARST pass (detect async resets in processes).
+
+4.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+4.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+
+4.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+4.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+4.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+4.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+4.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module Queue1_fetch_packet.
+Optimizing module Queue1_FTQ_entry.
+Optimizing module predecoder.
+<suppressed ~8 debug messages>
+
+4.3. Executing FUTURE pass.
+
+4.4. Executing OPT_EXPR pass (perform const folding).
+Optimizing module Queue1_fetch_packet.
+Optimizing module Queue1_FTQ_entry.
+Optimizing module predecoder.
+
+4.5. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \Queue1_fetch_packet..
+Finding unused cells or wires in module \Queue1_FTQ_entry..
+Finding unused cells or wires in module \predecoder..
+Removed 2 unused cells and 805 unused wires.
+<suppressed ~127 debug messages>
+
+4.6. Executing CHECK pass (checking for obvious problems).
+Checking module Queue1_FTQ_entry...
+Checking module Queue1_fetch_packet...
+Checking module predecoder...
+Found and reported 0 problems.
+
+4.7. Executing OPT pass (performing simple optimizations).
+
+4.7.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module Queue1_FTQ_entry.
+Optimizing module Queue1_fetch_packet.
+Optimizing module predecoder.
+
+4.7.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\Queue1_FTQ_entry'.
+Finding identical cells in module `\Queue1_fetch_packet'.
+Finding identical cells in module `\predecoder'.
+Removed a total of 0 cells.
+
+4.7.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \Queue1_FTQ_entry..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \Queue1_fetch_packet..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \predecoder..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~45 debug messages>
+
+4.7.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \Queue1_FTQ_entry.
+  Optimizing cells in module \Queue1_fetch_packet.
+  Optimizing cells in module \predecoder.
+Performed a total of 0 changes.
+
+4.7.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\Queue1_FTQ_entry'.
+Finding identical cells in module `\Queue1_fetch_packet'.
+Finding identical cells in module `\predecoder'.
+<suppressed ~3 debug messages>
+Removed a total of 1 cells.
+
+4.7.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \Queue1_FTQ_entry..
+Finding unused cells or wires in module \Queue1_fetch_packet..
+Finding unused cells or wires in module \predecoder..
+Removed 0 unused cells and 1 unused wires.
+<suppressed ~1 debug messages>
+
+4.7.7. Executing OPT_EXPR pass (perform const folding).
+Optimizing module Queue1_FTQ_entry.
+Optimizing module Queue1_fetch_packet.
+Optimizing module predecoder.
+
+4.7.8. Rerunning OPT passes. (Maybe there is more to do..)
+
+4.7.9. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \Queue1_FTQ_entry..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \Queue1_fetch_packet..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \predecoder..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~45 debug messages>
+
+4.7.10. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \Queue1_FTQ_entry.
+  Optimizing cells in module \Queue1_fetch_packet.
+  Optimizing cells in module \predecoder.
+Performed a total of 0 changes.
+
+4.7.11. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\Queue1_FTQ_entry'.
+Finding identical cells in module `\Queue1_fetch_packet'.
+Finding identical cells in module `\predecoder'.
+Removed a total of 0 cells.
+
+4.7.12. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \Queue1_FTQ_entry..
+Finding unused cells or wires in module \Queue1_fetch_packet..
+Finding unused cells or wires in module \predecoder..
+
+4.7.13. Executing OPT_EXPR pass (perform const folding).
+Optimizing module Queue1_FTQ_entry.
+Optimizing module Queue1_fetch_packet.
+Optimizing module predecoder.
+
+4.7.14. Finished OPT passes. (There is nothing left to do.)
+
+4.8. Executing WREDUCE pass (reducing word size of cells).
+Removed top 4 bits (of 5) from port B of cell predecoder.$verific$equal_17$predecoder.sv:154$262 ($eq).
+Removed top 4 bits (of 5) from port B of cell predecoder.$verific$equal_39$predecoder.sv:169$284 ($eq).
+Removed top 4 bits (of 5) from port B of cell predecoder.$verific$equal_61$predecoder.sv:184$306 ($eq).
+Removed top 4 bits (of 5) from port B of cell predecoder.$verific$equal_80$predecoder.sv:198$325 ($eq).
+Removed top 4 bits (of 5) from port B of cell predecoder.$verific$equal_104$predecoder.sv:217$349 ($eq).
+Removed top 4 bits (of 5) from port B of cell predecoder.$verific$equal_108$predecoder.sv:220$353 ($eq).
+Removed top 4 bits (of 5) from port B of cell predecoder.$verific$equal_112$predecoder.sv:223$357 ($eq).
+Removed top 4 bits (of 5) from port B of cell predecoder.$verific$equal_117$predecoder.sv:226$362 ($eq).
+Removed top 2 bits (of 7) from port B of cell predecoder.$verific$equal_161$predecoder.sv:257$397 ($eq).
+Removed top 5 bits (of 7) from port B of cell predecoder.$verific$equal_163$predecoder.sv:258$398 ($eq).
+Removed top 1 bits (of 7) from port B of cell predecoder.$verific$equal_170$predecoder.sv:261$403 ($eq).
+Removed top 2 bits (of 7) from port B of cell predecoder.$verific$equal_174$predecoder.sv:265$405 ($eq).
+Removed top 1 bits (of 7) from port B of cell predecoder.$verific$equal_176$predecoder.sv:266$406 ($eq).
+Removed top 28 bits (of 32) from port B of cell predecoder.$verific$add_192$predecoder.sv:276$421 ($add).
+Removed top 1 bits (of 3) from port B of cell predecoder.$verific$sub_198$predecoder.sv:281$427 ($sub).
+Removed top 27 bits (of 30) from port B of cell predecoder.$verific$add_199$predecoder.sv:281$428 ($add).
+Removed top 1 bits (of 2) from port B of cell predecoder.$verific$add_276$predecoder.sv:372$500 ($add).
+Removed top 27 bits (of 28) from port B of cell predecoder.$verific$add_309$predecoder.sv:432$804 ($add).
+Removed top 28 bits (of 32) from port B of cell predecoder.$verific$add_328$predecoder.sv:536$1235 ($add).
+Removed top 29 bits (of 30) from port B of cell predecoder.$verific$add_329$predecoder.sv:536$1236 ($add).
+Removed top 28 bits (of 32) from wire predecoder._GEN_1.
+
+4.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \Queue1_FTQ_entry..
+Finding unused cells or wires in module \Queue1_fetch_packet..
+Finding unused cells or wires in module \predecoder..
+Removed 0 unused cells and 1 unused wires.
+<suppressed ~1 debug messages>
+
+4.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+4.11. Executing OPT pass (performing simple optimizations).
+
+4.11.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module Queue1_FTQ_entry.
+Optimizing module Queue1_fetch_packet.
+Optimizing module predecoder.
+
+4.11.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\Queue1_FTQ_entry'.
+Finding identical cells in module `\Queue1_fetch_packet'.
+Finding identical cells in module `\predecoder'.
+Removed a total of 0 cells.
+
+4.11.3. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \Queue1_FTQ_entry..
+Finding unused cells or wires in module \Queue1_fetch_packet..
+Finding unused cells or wires in module \predecoder..
+
+4.11.4. Finished fast OPT passes.
+
+4.12. Printing statistics.
+
+=== Queue1_FTQ_entry ===
+
+   Number of wires:                 41
+   Number of wire bits:            553
+   Number of public wires:          31
+   Number of public wire bits:     410
+   Number of ports:                 27
+   Number of port bits:            273
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 25
+     $and                            5
+     $dff                            2
+     $mux                           14
+     $not                            2
+     $or                             1
+     $xor                            1
+
+=== Queue1_fetch_packet ===
+
+   Number of wires:                 53
+   Number of wire bits:            833
+   Number of public wires:          43
+   Number of public wire bits:     620
+   Number of ports:                 39
+   Number of port bits:            413
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 31
+     $and                            5
+     $dff                            2
+     $mux                           20
+     $not                            2
+     $or                             1
+     $xor                            1
+
+=== predecoder ===
+
+   Number of wires:                329
+   Number of wire bits:           2148
+   Number of public wires:         161
+   Number of public wire bits:    1454
+   Number of ports:                 91
+   Number of port bits:            887
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                229
+     $add                            8
+     $and                           79
+     $bmux                           7
+     $dff                           24
+     $eq                            29
+     $logic_not                      6
+     $mux                           37
+     $ne                             1
+     $not                            4
+     $or                            31
+     $sub                            1
+     Queue1_FTQ_entry                1
+     Queue1_fetch_packet             1
+
+=== design hierarchy ===
+
+   predecoder                        1
+     Queue1_FTQ_entry                1
+     Queue1_fetch_packet             1
+
+   Number of wires:                423
+   Number of wire bits:           3534
+   Number of public wires:         235
+   Number of public wire bits:    2484
+   Number of ports:                157
+   Number of port bits:           1573
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                283
+     $add                            8
+     $and                           89
+     $bmux                           7
+     $dff                           28
+     $eq                            29
+     $logic_not                      6
+     $mux                           71
+     $ne                             1
+     $not                            8
+     $or                            33
+     $sub                            1
+     $xor                            2
+
+4.13. Executing CHECK pass (checking for obvious problems).
+Checking module Queue1_FTQ_entry...
+Checking module Queue1_fetch_packet...
+Checking module predecoder...
+Found and reported 0 problems.
+
+5. Executing HIERARCHY pass (managing design hierarchy).
+
+5.1. Analyzing design hierarchy..
+Top module:  \predecoder
+Used module:     \Queue1_fetch_packet
+Used module:     \Queue1_FTQ_entry
+
+5.2. Analyzing design hierarchy..
+Top module:  \predecoder
+Used module:     \Queue1_fetch_packet
+Used module:     \Queue1_FTQ_entry
+Removed 0 unused modules.
+
+6. Executing jny backend.
+
+7. Executing RTLIL backend.
+Output filename: ../model/design.il
+
+End of script. Logfile hash: 618ade42a9, CPU: user 0.10s system 0.01s, MEM: 41.00 MB peak
+Yosys 0.43 (git sha1 ead4718e5, clang++ 14.0.0-1ubuntu1.1 -fPIC -Os)
+Time spent: 27% 2x hierarchy (0 sec), 21% 5x opt_clean (0 sec), ...

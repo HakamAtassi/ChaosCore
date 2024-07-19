@@ -99,14 +99,17 @@ object generate_sv_interfaces{    // convert bundles, params and enums to verilo
 
         def get_bits(argClause: Term.ArgClause): String = {
             argClause.values.collectFirst {
-                //case Term.Select(Lit.Int()) =>
-                //case Term.Select(Term.Name()) => 
-                case Term.Select(Term.Name(qual), _) => qual
-                case Lit.Int(value) => value.toString
-                case Term.Name(name) => name
-
-
-            }.getOrElse("1")
+                case Term.Select(Term.Name(name), _) => 
+                name.toString
+                case select @ Term.Select(term, _) => 
+                    select.toString
+                case Term.Select(Term.Name(qual), _) => 
+                qual
+                case Term.Select(Lit.Int(value), _) => 
+                value.toString
+                case Term.Name(name) => 
+                name
+            }.getOrElse("1").replace("log2Ceil", "$clog2").replace(".W","")
         }
 
 
@@ -126,7 +129,6 @@ object generate_sv_interfaces{    // convert bundles, params and enums to verilo
             name
             case _ => "unknown"
         }
-        //println(s"$line \t\t\t\t\t $rhs_term_name")
         
 
         val identifier = line.pats(0)

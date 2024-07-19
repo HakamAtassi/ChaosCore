@@ -1,0 +1,53 @@
+{
+  "format": "Yosys Witness Trace",
+  "generator": "smtbmc",
+  "clocks": [
+    {"path": ["\\clock"], "edge": "posedge", "offset": 0}
+  ],
+  "signals": [
+    {"path": ["\\clock"], "width": 1, "offset": 0, "init_only": false},
+    {"path": ["\\io_PC_next_ready"], "width": 1, "offset": 0, "init_only": false},
+    {"path": ["\\io_RAS_read_NEXT"], "width": 7, "offset": 0, "init_only": false},
+    {"path": ["\\io_RAS_read_TOS"], "width": 7, "offset": 0, "init_only": false},
+    {"path": ["\\io_RAS_read_ret_addr"], "width": 32, "offset": 0, "init_only": false},
+    {"path": ["\\io_commit_bits_GHR"], "width": 16, "offset": 0, "init_only": false},
+    {"path": ["\\io_commit_bits_NEXT"], "width": 7, "offset": 0, "init_only": false},
+    {"path": ["\\io_commit_bits_RAT_index"], "width": 4, "offset": 0, "init_only": false},
+    {"path": ["\\io_commit_bits_RD_0"], "width": 7, "offset": 0, "init_only": false},
+    {"path": ["\\io_commit_bits_RD_1"], "width": 7, "offset": 0, "init_only": false},
+    {"path": ["\\io_commit_bits_RD_2"], "width": 7, "offset": 0, "init_only": false},
+    {"path": ["\\io_commit_bits_RD_3"], "width": 7, "offset": 0, "init_only": false},
+    {"path": ["\\io_commit_bits_RD_valid_0"], "width": 1, "offset": 0, "init_only": false},
+    {"path": ["\\io_commit_bits_RD_valid_1"], "width": 1, "offset": 0, "init_only": false},
+    {"path": ["\\io_commit_bits_RD_valid_2"], "width": 1, "offset": 0, "init_only": false},
+    {"path": ["\\io_commit_bits_RD_valid_3"], "width": 1, "offset": 0, "init_only": false},
+    {"path": ["\\io_commit_bits_ROB_index"], "width": 6, "offset": 0, "init_only": false},
+    {"path": ["\\io_commit_bits_TOS"], "width": 7, "offset": 0, "init_only": false},
+    {"path": ["\\io_commit_bits_T_NT"], "width": 1, "offset": 0, "init_only": false},
+    {"path": ["\\io_commit_bits_br_type"], "width": 3, "offset": 0, "init_only": false},
+    {"path": ["\\io_commit_bits_expected_PC"], "width": 32, "offset": 0, "init_only": false},
+    {"path": ["\\io_commit_bits_fetch_PC"], "width": 32, "offset": 0, "init_only": false},
+    {"path": ["\\io_commit_bits_fetch_packet_index"], "width": 2, "offset": 0, "init_only": false},
+    {"path": ["\\io_commit_bits_free_list_front_pointer"], "width": 8, "offset": 0, "init_only": false},
+    {"path": ["\\io_commit_bits_is_misprediction"], "width": 1, "offset": 0, "init_only": false},
+    {"path": ["\\io_commit_valid"], "width": 1, "offset": 0, "init_only": false},
+    {"path": ["\\io_prediction_bits_GHR"], "width": 16, "offset": 0, "init_only": false},
+    {"path": ["\\io_prediction_bits_T_NT"], "width": 1, "offset": 0, "init_only": false},
+    {"path": ["\\io_prediction_bits_br_type"], "width": 3, "offset": 0, "init_only": false},
+    {"path": ["\\io_prediction_bits_hit"], "width": 1, "offset": 0, "init_only": false},
+    {"path": ["\\io_prediction_bits_target"], "width": 32, "offset": 0, "init_only": false},
+    {"path": ["\\io_prediction_valid"], "width": 1, "offset": 0, "init_only": false},
+    {"path": ["\\io_revert_bits_PC"], "width": 32, "offset": 0, "init_only": false},
+    {"path": ["\\io_revert_valid"], "width": 1, "offset": 0, "init_only": false},
+    {"path": ["\\reset"], "width": 1, "offset": 0, "init_only": false},
+    {"path": ["\\PC"], "width": 32, "offset": 0, "init_only": true},
+    {"path": ["\\PC_next_skid_buffer", "\\full"], "width": 1, "offset": 0, "init_only": true},
+    {"path": ["\\PC_next_skid_buffer", "\\ram"], "width": 65, "offset": 0, "init_only": true},
+    {"path": ["\\REG"], "width": 32, "offset": 0, "init_only": true}
+  ],
+  "steps": [
+    {"bits": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"},
+    {"bits": "010000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000010"},
+    {"bits": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"}
+  ]
+}

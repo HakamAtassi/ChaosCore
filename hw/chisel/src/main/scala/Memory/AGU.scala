@@ -96,39 +96,22 @@ class AGU(parameters:Parameters) extends Module{
     ///////////////////
     // GENERATE ADDR //
     ///////////////////
-    val memory_type     = Wire(memory_type_t())     // LOAD/STORE
-    val access_width    = Wire(access_width_t())    // B/HW/W
     val unsigned        = Wire(Bool())              // signed/unsigned
     val address         = Wire(UInt(32.W))
-
-    when(is_load){
-        memory_type := memory_type_t.LOAD
-    }.elsewhen(is_store){
-        memory_type := memory_type_t.STORE
-    }.otherwise{
-        memory_type := memory_type_t.NONE
-    }
-
-    access_width := access_width_t.NONE
-    when(SB || LB || LBU){
-        access_width := access_width_t.B
-    }.elsewhen(SH || LH || LHU){
-        access_width := access_width_t.HW
-    }.elsewhen(SW || LW){
-        access_width := access_width_t.W
-    }
 
     unsigned        := LBU || LHU
     address         := RS1_data + imm
 
     // Everything needed to perform the memory request (LSQ request)    
     io.FU_output.valid              := RegNext(io.FU_input.valid && !io.flush)
-    io.FU_output.bits.memory_type   := RegNext(memory_type)     // LOAD/STORE
     io.FU_output.bits.RD            := RegNext(RD)              // LOAD DEST
-    io.FU_output.bits.access_width  := RegNext(access_width)    // B/HW/W
-    io.FU_output.bits.is_unsigned      := RegNext(unsigned)        // SIGNED/UNSIGNED
+    io.FU_output.bits.is_unsigned   := RegNext(unsigned)        // SIGNED/UNSIGNED
     io.FU_output.bits.address       := RegNext(address)         // ADDRESS
     io.FU_output.bits.wr_data       := RegNext(wr_data)         // WR DATA
+    io.FU_output.bits.MOB_index     := RegNext(io.FU_input.bits.decoded_instruction.MOB_index)
+    io.FU_output.bits.memory_type   := RegNext(io.FU_input.bits.decoded_instruction.memory_type)
+    io.FU_output.bits.access_width  := RegNext(io.FU_input.bits.decoded_instruction.access_width)
+
 
     /////////////////
     // VALID/READY //
@@ -139,9 +122,6 @@ class AGU(parameters:Parameters) extends Module{
     ////////////
     // FORMAL //
     ////////////
-
-    val test = RegNext(io.flush)
-
 
     // PROPERTY: output should have a latency of 1, excluding flushes //
     val seqInputValid: Sequence = io.FU_input.valid && !io.flush

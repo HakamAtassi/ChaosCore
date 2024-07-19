@@ -1,0 +1,10 @@
+# running in predecoder/src/
+read -formal predecoder.sv
+read -formal Queue1_FTQ_entry.sv
+read -formal Queue1_fetch_packet.sv
+prep -top predecoder
+
+hierarchy -smtcheck
+rename -witness
+write_jny -no-connections ../model/design.json
+write_rtlil ../model/design.il

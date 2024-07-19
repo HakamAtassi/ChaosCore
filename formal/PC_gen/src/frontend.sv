@@ -31,7 +31,7 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
   input  [31:0] io_commit_bits_fetch_PC,	// src/main/scala/Frontend/frontend.scala:45:16
   input         io_commit_bits_T_NT,	// src/main/scala/Frontend/frontend.scala:45:16
   input  [5:0]  io_commit_bits_ROB_index,	// src/main/scala/Frontend/frontend.scala:45:16
-  input  [2:0]  io_commit_bitsbr_type_t,	// src/main/scala/Frontend/frontend.scala:45:16
+  input  [2:0]  io_commit_bits_br_type,	// src/main/scala/Frontend/frontend.scala:45:16
   input  [1:0]  io_commit_bits_fetch_packet_index,	// src/main/scala/Frontend/frontend.scala:45:16
   input         io_commit_bits_is_misprediction,	// src/main/scala/Frontend/frontend.scala:45:16
   input  [31:0] io_commit_bits_expected_PC,	// src/main/scala/Frontend/frontend.scala:45:16
@@ -54,7 +54,7 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
   output [31:0] io_predictions_bits_fetch_PC,	// src/main/scala/Frontend/frontend.scala:45:16
                 io_predictions_bits_predicted_PC,	// src/main/scala/Frontend/frontend.scala:45:16
   output        io_predictions_bits_T_NT,	// src/main/scala/Frontend/frontend.scala:45:16
-  output [2:0]  io_predictions_bitsbr_type_t,	// src/main/scala/Frontend/frontend.scala:45:16
+  output [2:0]  io_predictions_bits_br_type,	// src/main/scala/Frontend/frontend.scala:45:16
   output [15:0] io_predictions_bits_GHR,	// src/main/scala/Frontend/frontend.scala:45:16
   output [6:0]  io_predictions_bits_NEXT,	// src/main/scala/Frontend/frontend.scala:45:16
                 io_predictions_bits_TOS,	// src/main/scala/Frontend/frontend.scala:45:16
@@ -180,7 +180,7 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
   input  [31:0] io_FU_outputs_0_bits_address,	// src/main/scala/Frontend/frontend.scala:45:16
   input  [1:0]  io_FU_outputs_0_bits_memory_type,	// src/main/scala/Frontend/frontend.scala:45:16
                 io_FU_outputs_0_bits_access_width,	// src/main/scala/Frontend/frontend.scala:45:16
-  input         io_FU_outputs_0_bits_unsigned,	// src/main/scala/Frontend/frontend.scala:45:16
+  input         io_FU_outputs_0_bits_is_unsigned,	// src/main/scala/Frontend/frontend.scala:45:16
   input  [31:0] io_FU_outputs_0_bits_wr_data,	// src/main/scala/Frontend/frontend.scala:45:16
   input  [3:0]  io_FU_outputs_0_bits_MOB_index,	// src/main/scala/Frontend/frontend.scala:45:16
   input  [5:0]  io_FU_outputs_0_bits_ROB_index,	// src/main/scala/Frontend/frontend.scala:45:16
@@ -197,7 +197,7 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
   input  [31:0] io_FU_outputs_1_bits_address,	// src/main/scala/Frontend/frontend.scala:45:16
   input  [1:0]  io_FU_outputs_1_bits_memory_type,	// src/main/scala/Frontend/frontend.scala:45:16
                 io_FU_outputs_1_bits_access_width,	// src/main/scala/Frontend/frontend.scala:45:16
-  input         io_FU_outputs_1_bits_unsigned,	// src/main/scala/Frontend/frontend.scala:45:16
+  input         io_FU_outputs_1_bits_is_unsigned,	// src/main/scala/Frontend/frontend.scala:45:16
   input  [31:0] io_FU_outputs_1_bits_wr_data,	// src/main/scala/Frontend/frontend.scala:45:16
   input  [3:0]  io_FU_outputs_1_bits_MOB_index,	// src/main/scala/Frontend/frontend.scala:45:16
   input  [5:0]  io_FU_outputs_1_bits_ROB_index,	// src/main/scala/Frontend/frontend.scala:45:16
@@ -214,7 +214,7 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
   input  [31:0] io_FU_outputs_2_bits_address,	// src/main/scala/Frontend/frontend.scala:45:16
   input  [1:0]  io_FU_outputs_2_bits_memory_type,	// src/main/scala/Frontend/frontend.scala:45:16
                 io_FU_outputs_2_bits_access_width,	// src/main/scala/Frontend/frontend.scala:45:16
-  input         io_FU_outputs_2_bits_unsigned,	// src/main/scala/Frontend/frontend.scala:45:16
+  input         io_FU_outputs_2_bits_is_unsigned,	// src/main/scala/Frontend/frontend.scala:45:16
   input  [31:0] io_FU_outputs_2_bits_wr_data,	// src/main/scala/Frontend/frontend.scala:45:16
   input  [3:0]  io_FU_outputs_2_bits_MOB_index,	// src/main/scala/Frontend/frontend.scala:45:16
   input  [5:0]  io_FU_outputs_2_bits_ROB_index,	// src/main/scala/Frontend/frontend.scala:45:16
@@ -225,8 +225,9 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
   input  [31:0] io_FU_outputs_3_bits_address,	// src/main/scala/Frontend/frontend.scala:45:16
   input  [1:0]  io_FU_outputs_3_bits_memory_type,	// src/main/scala/Frontend/frontend.scala:45:16
                 io_FU_outputs_3_bits_access_width,	// src/main/scala/Frontend/frontend.scala:45:16
-  input         io_FU_outputs_3_bits_unsigned,	// src/main/scala/Frontend/frontend.scala:45:16
+  input         io_FU_outputs_3_bits_is_unsigned,	// src/main/scala/Frontend/frontend.scala:45:16
   input  [31:0] io_FU_outputs_3_bits_wr_data,	// src/main/scala/Frontend/frontend.scala:45:16
+  input  [3:0]  io_FU_outputs_3_bits_MOB_index,	// src/main/scala/Frontend/frontend.scala:45:16
   output        io_revert_valid,	// src/main/scala/Frontend/frontend.scala:45:16
   output [31:0] io_revert_bits_PC	// src/main/scala/Frontend/frontend.scala:45:16
 );
@@ -240,7 +241,7 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
   wire        _FTQ_queue_io_out_bits_is_misprediction;	// src/main/scala/Frontend/frontend.scala:80:37
   wire [31:0] _FTQ_queue_io_out_bits_predicted_PC;	// src/main/scala/Frontend/frontend.scala:80:37
   wire        _FTQ_queue_io_out_bits_T_NT;	// src/main/scala/Frontend/frontend.scala:80:37
-  wire [2:0]  _FTQ_queue_io_out_bitsbr_type_t;	// src/main/scala/Frontend/frontend.scala:80:37
+  wire [2:0]  _FTQ_queue_io_out_bits_br_type;	// src/main/scala/Frontend/frontend.scala:80:37
   wire [15:0] _FTQ_queue_io_out_bits_GHR;	// src/main/scala/Frontend/frontend.scala:80:37
   wire [6:0]  _FTQ_queue_io_out_bits_NEXT;	// src/main/scala/Frontend/frontend.scala:80:37
   wire [6:0]  _FTQ_queue_io_out_bits_TOS;	// src/main/scala/Frontend/frontend.scala:80:37
@@ -487,7 +488,7 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
   wire        _decoders_io_predictions_out_bits_is_misprediction;	// src/main/scala/Frontend/frontend.scala:77:37
   wire [31:0] _decoders_io_predictions_out_bits_predicted_PC;	// src/main/scala/Frontend/frontend.scala:77:37
   wire        _decoders_io_predictions_out_bits_T_NT;	// src/main/scala/Frontend/frontend.scala:77:37
-  wire [2:0]  _decoders_io_predictions_out_bitsbr_type_t;	// src/main/scala/Frontend/frontend.scala:77:37
+  wire [2:0]  _decoders_io_predictions_out_bits_br_type;	// src/main/scala/Frontend/frontend.scala:77:37
   wire [15:0] _decoders_io_predictions_out_bits_GHR;	// src/main/scala/Frontend/frontend.scala:77:37
   wire [6:0]  _decoders_io_predictions_out_bits_NEXT;	// src/main/scala/Frontend/frontend.scala:77:37
   wire [6:0]  _decoders_io_predictions_out_bits_TOS;	// src/main/scala/Frontend/frontend.scala:77:37
@@ -513,7 +514,7 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
   wire        _instruction_fetch_io_predictions_bits_is_misprediction;	// src/main/scala/Frontend/frontend.scala:76:37
   wire [31:0] _instruction_fetch_io_predictions_bits_predicted_PC;	// src/main/scala/Frontend/frontend.scala:76:37
   wire        _instruction_fetch_io_predictions_bits_T_NT;	// src/main/scala/Frontend/frontend.scala:76:37
-  wire [2:0]  _instruction_fetch_io_predictions_bitsbr_type_t;	// src/main/scala/Frontend/frontend.scala:76:37
+  wire [2:0]  _instruction_fetch_io_predictions_bits_br_type;	// src/main/scala/Frontend/frontend.scala:76:37
   wire [15:0] _instruction_fetch_io_predictions_bits_GHR;	// src/main/scala/Frontend/frontend.scala:76:37
   wire [6:0]  _instruction_fetch_io_predictions_bits_NEXT;	// src/main/scala/Frontend/frontend.scala:76:37
   wire [6:0]  _instruction_fetch_io_predictions_bits_TOS;	// src/main/scala/Frontend/frontend.scala:76:37
@@ -527,7 +528,7 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
     .io_commit_bits_fetch_PC                             (io_commit_bits_fetch_PC),
     .io_commit_bits_T_NT                                 (io_commit_bits_T_NT),
     .io_commit_bits_ROB_index                            (io_commit_bits_ROB_index),
-    .io_commit_bitsbr_type_t                              (io_commit_bitsbr_type_t),
+    .io_commit_bits_br_type                              (io_commit_bits_br_type),
     .io_commit_bits_fetch_packet_index
       (io_commit_bits_fetch_packet_index),
     .io_commit_bits_is_misprediction
@@ -632,8 +633,8 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (_instruction_fetch_io_predictions_bits_predicted_PC),
     .io_predictions_bits_T_NT
       (_instruction_fetch_io_predictions_bits_T_NT),
-    .io_predictions_bitsbr_type_t
-      (_instruction_fetch_io_predictions_bitsbr_type_t),
+    .io_predictions_bits_br_type
+      (_instruction_fetch_io_predictions_bits_br_type),
     .io_predictions_bits_GHR
       (_instruction_fetch_io_predictions_bits_GHR),
     .io_predictions_bits_NEXT
@@ -695,8 +696,8 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (_instruction_fetch_io_predictions_bits_predicted_PC),	// src/main/scala/Frontend/frontend.scala:76:37
     .io_predictions_in_bits_T_NT
       (_instruction_fetch_io_predictions_bits_T_NT),	// src/main/scala/Frontend/frontend.scala:76:37
-    .io_predictions_in_bitsbr_type_t
-      (_instruction_fetch_io_predictions_bitsbr_type_t),	// src/main/scala/Frontend/frontend.scala:76:37
+    .io_predictions_in_bits_br_type
+      (_instruction_fetch_io_predictions_bits_br_type),	// src/main/scala/Frontend/frontend.scala:76:37
     .io_predictions_in_bits_GHR
       (_instruction_fetch_io_predictions_bits_GHR),	// src/main/scala/Frontend/frontend.scala:76:37
     .io_predictions_in_bits_NEXT
@@ -939,8 +940,8 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (_decoders_io_predictions_out_bits_predicted_PC),
     .io_predictions_out_bits_T_NT
       (_decoders_io_predictions_out_bits_T_NT),
-    .io_predictions_out_bitsbr_type_t
-      (_decoders_io_predictions_out_bitsbr_type_t),
+    .io_predictions_out_bits_br_type
+      (_decoders_io_predictions_out_bits_br_type),
     .io_predictions_out_bits_GHR
       (_decoders_io_predictions_out_bits_GHR),
     .io_predictions_out_bits_NEXT
@@ -1404,7 +1405,7 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
     .io_in_bits_is_misprediction  (_decoders_io_predictions_out_bits_is_misprediction),	// src/main/scala/Frontend/frontend.scala:77:37
     .io_in_bits_predicted_PC      (_decoders_io_predictions_out_bits_predicted_PC),	// src/main/scala/Frontend/frontend.scala:77:37
     .io_in_bits_T_NT              (_decoders_io_predictions_out_bits_T_NT),	// src/main/scala/Frontend/frontend.scala:77:37
-    .io_in_bitsbr_type_t           (_decoders_io_predictions_out_bitsbr_type_t),	// src/main/scala/Frontend/frontend.scala:77:37
+    .io_in_bits_br_type           (_decoders_io_predictions_out_bits_br_type),	// src/main/scala/Frontend/frontend.scala:77:37
     .io_in_bits_GHR               (_decoders_io_predictions_out_bits_GHR),	// src/main/scala/Frontend/frontend.scala:77:37
     .io_in_bits_NEXT              (_decoders_io_predictions_out_bits_NEXT),	// src/main/scala/Frontend/frontend.scala:77:37
     .io_in_bits_TOS               (_decoders_io_predictions_out_bits_TOS),	// src/main/scala/Frontend/frontend.scala:77:37
@@ -1417,7 +1418,7 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
     .io_out_bits_is_misprediction (_FTQ_queue_io_out_bits_is_misprediction),
     .io_out_bits_predicted_PC     (_FTQ_queue_io_out_bits_predicted_PC),
     .io_out_bits_T_NT             (_FTQ_queue_io_out_bits_T_NT),
-    .io_out_bitsbr_type_t          (_FTQ_queue_io_out_bitsbr_type_t),
+    .io_out_bits_br_type          (_FTQ_queue_io_out_bits_br_type),
     .io_out_bits_GHR              (_FTQ_queue_io_out_bits_GHR),
     .io_out_bits_NEXT             (_FTQ_queue_io_out_bits_NEXT),
     .io_out_bits_TOS              (_FTQ_queue_io_out_bits_TOS),
@@ -1440,8 +1441,8 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (io_commit_bits_T_NT),
     .io_commit_bits_ROB_index
       (io_commit_bits_ROB_index),
-    .io_commit_bitsbr_type_t
-      (io_commit_bitsbr_type_t),
+    .io_commit_bits_br_type
+      (io_commit_bits_br_type),
     .io_commit_bits_fetch_packet_index
       (io_commit_bits_fetch_packet_index),
     .io_commit_bits_is_misprediction
@@ -1488,8 +1489,8 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (_FTQ_queue_io_out_bits_predicted_PC),	// src/main/scala/Frontend/frontend.scala:80:37
     .io_predictions_in_bits_T_NT
       (_FTQ_queue_io_out_bits_T_NT),	// src/main/scala/Frontend/frontend.scala:80:37
-    .io_predictions_in_bitsbr_type_t
-      (_FTQ_queue_io_out_bitsbr_type_t),	// src/main/scala/Frontend/frontend.scala:80:37
+    .io_predictions_in_bits_br_type
+      (_FTQ_queue_io_out_bits_br_type),	// src/main/scala/Frontend/frontend.scala:80:37
     .io_predictions_in_bits_GHR
       (_FTQ_queue_io_out_bits_GHR),	// src/main/scala/Frontend/frontend.scala:80:37
     .io_predictions_in_bits_NEXT
@@ -1514,8 +1515,8 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (io_predictions_bits_predicted_PC),
     .io_predictions_out_bits_T_NT
       (io_predictions_bits_T_NT),
-    .io_predictions_out_bitsbr_type_t
-      (io_predictions_bitsbr_type_t),
+    .io_predictions_out_bits_br_type
+      (io_predictions_bits_br_type),
     .io_predictions_out_bits_GHR
       (io_predictions_bits_GHR),
     .io_predictions_out_bits_NEXT
@@ -1766,8 +1767,8 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (io_FU_outputs_0_bits_memory_type),
     .io_FU_outputs_0_bits_access_width
       (io_FU_outputs_0_bits_access_width),
-    .io_FU_outputs_0_bits_unsigned
-      (io_FU_outputs_0_bits_unsigned),
+    .io_FU_outputs_0_bits_is_unsigned
+      (io_FU_outputs_0_bits_is_unsigned),
     .io_FU_outputs_0_bits_wr_data
       (io_FU_outputs_0_bits_wr_data),
     .io_FU_outputs_0_bits_MOB_index
@@ -1800,8 +1801,8 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (io_FU_outputs_1_bits_memory_type),
     .io_FU_outputs_1_bits_access_width
       (io_FU_outputs_1_bits_access_width),
-    .io_FU_outputs_1_bits_unsigned
-      (io_FU_outputs_1_bits_unsigned),
+    .io_FU_outputs_1_bits_is_unsigned
+      (io_FU_outputs_1_bits_is_unsigned),
     .io_FU_outputs_1_bits_wr_data
       (io_FU_outputs_1_bits_wr_data),
     .io_FU_outputs_1_bits_MOB_index
@@ -1834,8 +1835,8 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (io_FU_outputs_2_bits_memory_type),
     .io_FU_outputs_2_bits_access_width
       (io_FU_outputs_2_bits_access_width),
-    .io_FU_outputs_2_bits_unsigned
-      (io_FU_outputs_2_bits_unsigned),
+    .io_FU_outputs_2_bits_is_unsigned
+      (io_FU_outputs_2_bits_is_unsigned),
     .io_FU_outputs_2_bits_wr_data
       (io_FU_outputs_2_bits_wr_data),
     .io_FU_outputs_2_bits_MOB_index
@@ -1868,12 +1869,12 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (io_FU_outputs_3_bits_memory_type),
     .io_FU_outputs_3_bits_access_width
       (io_FU_outputs_3_bits_access_width),
-    .io_FU_outputs_3_bits_unsigned
-      (io_FU_outputs_3_bits_unsigned),
+    .io_FU_outputs_3_bits_is_unsigned
+      (io_FU_outputs_3_bits_is_unsigned),
     .io_FU_outputs_3_bits_wr_data
       (io_FU_outputs_3_bits_wr_data),
     .io_FU_outputs_3_bits_MOB_index
-      (4'h0),	// src/main/scala/Frontend/frontend.scala:45:16, :82:37
+      (io_FU_outputs_3_bits_MOB_index),
     .io_FU_outputs_3_bits_ROB_index
       (6'h0),	// src/main/scala/Frontend/frontend.scala:45:16, :82:37
     .io_FU_outputs_3_bits_FTQ_index

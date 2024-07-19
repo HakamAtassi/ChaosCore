@@ -62,6 +62,9 @@ module fetch_packet_decoder(	// src/main/scala/Frontend/decoder.scala:211:7
   input  [3:0]  io_fetch_packet_bits_instructions_2_packet_index,	// src/main/scala/Frontend/decoder.scala:213:16
   input  [31:0] io_fetch_packet_bits_instructions_3_instruction,	// src/main/scala/Frontend/decoder.scala:213:16
   input  [3:0]  io_fetch_packet_bits_instructions_3_packet_index,	// src/main/scala/Frontend/decoder.scala:213:16
+  input  [15:0] io_fetch_packet_bits_GHR,	// src/main/scala/Frontend/decoder.scala:213:16
+  input  [6:0]  io_fetch_packet_bits_NEXT,	// src/main/scala/Frontend/decoder.scala:213:16
+                io_fetch_packet_bits_TOS,	// src/main/scala/Frontend/decoder.scala:213:16
   output        io_predictions_in_ready,	// src/main/scala/Frontend/decoder.scala:213:16
   input         io_predictions_in_valid,	// src/main/scala/Frontend/decoder.scala:213:16
                 io_predictions_in_bits_valid,	// src/main/scala/Frontend/decoder.scala:213:16
@@ -70,9 +73,6 @@ module fetch_packet_decoder(	// src/main/scala/Frontend/decoder.scala:211:7
   input  [31:0] io_predictions_in_bits_predicted_PC,	// src/main/scala/Frontend/decoder.scala:213:16
   input         io_predictions_in_bits_T_NT,	// src/main/scala/Frontend/decoder.scala:213:16
   input  [2:0]  io_predictions_in_bits_br_type,	// src/main/scala/Frontend/decoder.scala:213:16
-  input  [15:0] io_predictions_in_bits_GHR,	// src/main/scala/Frontend/decoder.scala:213:16
-  input  [6:0]  io_predictions_in_bits_NEXT,	// src/main/scala/Frontend/decoder.scala:213:16
-                io_predictions_in_bits_TOS,	// src/main/scala/Frontend/decoder.scala:213:16
   input  [1:0]  io_predictions_in_bits_dominant_index,	// src/main/scala/Frontend/decoder.scala:213:16
   input  [31:0] io_predictions_in_bits_resolved_PC,	// src/main/scala/Frontend/decoder.scala:213:16
   input         io_decoded_fetch_packet_ready,	// src/main/scala/Frontend/decoder.scala:213:16
@@ -182,6 +182,9 @@ module fetch_packet_decoder(	// src/main/scala/Frontend/decoder.scala:211:7
                 io_decoded_fetch_packet_bits_valid_bits_1,	// src/main/scala/Frontend/decoder.scala:213:16
                 io_decoded_fetch_packet_bits_valid_bits_2,	// src/main/scala/Frontend/decoder.scala:213:16
                 io_decoded_fetch_packet_bits_valid_bits_3,	// src/main/scala/Frontend/decoder.scala:213:16
+  output [15:0] io_decoded_fetch_packet_bits_GHR,	// src/main/scala/Frontend/decoder.scala:213:16
+  output [6:0]  io_decoded_fetch_packet_bits_TOS,	// src/main/scala/Frontend/decoder.scala:213:16
+                io_decoded_fetch_packet_bits_NEXT,	// src/main/scala/Frontend/decoder.scala:213:16
   output [3:0]  io_decoded_fetch_packet_bits_RAT_index,	// src/main/scala/Frontend/decoder.scala:213:16
   output [7:0]  io_decoded_fetch_packet_bits_free_list_front_pointer,	// src/main/scala/Frontend/decoder.scala:213:16
   input         io_predictions_out_ready,	// src/main/scala/Frontend/decoder.scala:213:16
@@ -192,507 +195,123 @@ module fetch_packet_decoder(	// src/main/scala/Frontend/decoder.scala:211:7
   output [31:0] io_predictions_out_bits_predicted_PC,	// src/main/scala/Frontend/decoder.scala:213:16
   output        io_predictions_out_bits_T_NT,	// src/main/scala/Frontend/decoder.scala:213:16
   output [2:0]  io_predictions_out_bits_br_type,	// src/main/scala/Frontend/decoder.scala:213:16
-  output [15:0] io_predictions_out_bits_GHR,	// src/main/scala/Frontend/decoder.scala:213:16
-  output [6:0]  io_predictions_out_bits_NEXT,	// src/main/scala/Frontend/decoder.scala:213:16
-                io_predictions_out_bits_TOS,	// src/main/scala/Frontend/decoder.scala:213:16
   output [1:0]  io_predictions_out_bits_dominant_index,	// src/main/scala/Frontend/decoder.scala:213:16
   output [31:0] io_predictions_out_bits_resolved_PC	// src/main/scala/Frontend/decoder.scala:213:16
 );
 
-  wire [6:0]  _decoders_3_io_decoded_instruction_bits_RD;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire        _decoders_3_io_decoded_instruction_bits_RD_valid;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire [6:0]  _decoders_3_io_decoded_instruction_bits_RS1;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire        _decoders_3_io_decoded_instruction_bits_RS1_valid;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire [6:0]  _decoders_3_io_decoded_instruction_bits_RS2;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire        _decoders_3_io_decoded_instruction_bits_RS2_valid;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire [20:0] _decoders_3_io_decoded_instruction_bits_IMM;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire [2:0]  _decoders_3_io_decoded_instruction_bits_FUNCT3;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire [1:0]  _decoders_3_io_decoded_instruction_bits_packet_index;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire [4:0]  _decoders_3_io_decoded_instruction_bits_instructionType;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire [1:0]  _decoders_3_io_decoded_instruction_bits_portID;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire [1:0]  _decoders_3_io_decoded_instruction_bits_RS_type;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire        _decoders_3_io_decoded_instruction_bits_needs_ALU;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire        _decoders_3_io_decoded_instruction_bits_needs_branch_unit;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire        _decoders_3_io_decoded_instruction_bits_SUBTRACT;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire        _decoders_3_io_decoded_instruction_bits_MULTIPLY;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire        _decoders_3_io_decoded_instruction_bits_IS_IMM;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire [1:0]  _decoders_3_io_decoded_instruction_bits_memory_type;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire [1:0]  _decoders_3_io_decoded_instruction_bits_access_width;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire [6:0]  _decoders_2_io_decoded_instruction_bits_RD;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire        _decoders_2_io_decoded_instruction_bits_RD_valid;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire [6:0]  _decoders_2_io_decoded_instruction_bits_RS1;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire        _decoders_2_io_decoded_instruction_bits_RS1_valid;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire [6:0]  _decoders_2_io_decoded_instruction_bits_RS2;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire        _decoders_2_io_decoded_instruction_bits_RS2_valid;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire [20:0] _decoders_2_io_decoded_instruction_bits_IMM;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire [2:0]  _decoders_2_io_decoded_instruction_bits_FUNCT3;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire [1:0]  _decoders_2_io_decoded_instruction_bits_packet_index;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire [4:0]  _decoders_2_io_decoded_instruction_bits_instructionType;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire [1:0]  _decoders_2_io_decoded_instruction_bits_portID;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire [1:0]  _decoders_2_io_decoded_instruction_bits_RS_type;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire        _decoders_2_io_decoded_instruction_bits_needs_ALU;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire        _decoders_2_io_decoded_instruction_bits_needs_branch_unit;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire        _decoders_2_io_decoded_instruction_bits_SUBTRACT;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire        _decoders_2_io_decoded_instruction_bits_MULTIPLY;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire        _decoders_2_io_decoded_instruction_bits_IS_IMM;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire [1:0]  _decoders_2_io_decoded_instruction_bits_memory_type;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire [1:0]  _decoders_2_io_decoded_instruction_bits_access_width;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire [6:0]  _decoders_1_io_decoded_instruction_bits_RD;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire        _decoders_1_io_decoded_instruction_bits_RD_valid;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire [6:0]  _decoders_1_io_decoded_instruction_bits_RS1;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire        _decoders_1_io_decoded_instruction_bits_RS1_valid;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire [6:0]  _decoders_1_io_decoded_instruction_bits_RS2;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire        _decoders_1_io_decoded_instruction_bits_RS2_valid;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire [20:0] _decoders_1_io_decoded_instruction_bits_IMM;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire [2:0]  _decoders_1_io_decoded_instruction_bits_FUNCT3;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire [1:0]  _decoders_1_io_decoded_instruction_bits_packet_index;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire [4:0]  _decoders_1_io_decoded_instruction_bits_instructionType;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire [1:0]  _decoders_1_io_decoded_instruction_bits_portID;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire [1:0]  _decoders_1_io_decoded_instruction_bits_RS_type;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire        _decoders_1_io_decoded_instruction_bits_needs_ALU;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire        _decoders_1_io_decoded_instruction_bits_needs_branch_unit;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire        _decoders_1_io_decoded_instruction_bits_SUBTRACT;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire        _decoders_1_io_decoded_instruction_bits_MULTIPLY;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire        _decoders_1_io_decoded_instruction_bits_IS_IMM;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire [1:0]  _decoders_1_io_decoded_instruction_bits_memory_type;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire [1:0]  _decoders_1_io_decoded_instruction_bits_access_width;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire [6:0]  _decoders_0_io_decoded_instruction_bits_RD;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire        _decoders_0_io_decoded_instruction_bits_RD_valid;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire [6:0]  _decoders_0_io_decoded_instruction_bits_RS1;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire        _decoders_0_io_decoded_instruction_bits_RS1_valid;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire [6:0]  _decoders_0_io_decoded_instruction_bits_RS2;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire        _decoders_0_io_decoded_instruction_bits_RS2_valid;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire [20:0] _decoders_0_io_decoded_instruction_bits_IMM;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire [2:0]  _decoders_0_io_decoded_instruction_bits_FUNCT3;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire [1:0]  _decoders_0_io_decoded_instruction_bits_packet_index;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire [4:0]  _decoders_0_io_decoded_instruction_bits_instructionType;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire [1:0]  _decoders_0_io_decoded_instruction_bits_portID;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire [1:0]  _decoders_0_io_decoded_instruction_bits_RS_type;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire        _decoders_0_io_decoded_instruction_bits_needs_ALU;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire        _decoders_0_io_decoded_instruction_bits_needs_branch_unit;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire        _decoders_0_io_decoded_instruction_bits_SUBTRACT;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire        _decoders_0_io_decoded_instruction_bits_MULTIPLY;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire        _decoders_0_io_decoded_instruction_bits_IS_IMM;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire [1:0]  _decoders_0_io_decoded_instruction_bits_memory_type;	// src/main/scala/Frontend/decoder.scala:233:15
-  wire [1:0]  _decoders_0_io_decoded_instruction_bits_access_width;	// src/main/scala/Frontend/decoder.scala:233:15
-  reg  [6:0]  decoded_fetch_packet_bits_decoded_instruction_0_REG_RD;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg         decoded_fetch_packet_bits_decoded_instruction_0_REG_RD_valid;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg  [6:0]  decoded_fetch_packet_bits_decoded_instruction_0_REG_RS1;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg         decoded_fetch_packet_bits_decoded_instruction_0_REG_RS1_valid;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg  [6:0]  decoded_fetch_packet_bits_decoded_instruction_0_REG_RS2;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg         decoded_fetch_packet_bits_decoded_instruction_0_REG_RS2_valid;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg  [20:0] decoded_fetch_packet_bits_decoded_instruction_0_REG_IMM;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg  [2:0]  decoded_fetch_packet_bits_decoded_instruction_0_REG_FUNCT3;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg  [1:0]  decoded_fetch_packet_bits_decoded_instruction_0_REG_packet_index;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg  [4:0]  decoded_fetch_packet_bits_decoded_instruction_0_REG_instructionType;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg  [1:0]  decoded_fetch_packet_bits_decoded_instruction_0_REG_portID;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg  [1:0]  decoded_fetch_packet_bits_decoded_instruction_0_REG_RS_type;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg         decoded_fetch_packet_bits_decoded_instruction_0_REG_needs_ALU;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg         decoded_fetch_packet_bits_decoded_instruction_0_REG_needs_branch_unit;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg         decoded_fetch_packet_bits_decoded_instruction_0_REG_SUBTRACT;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg         decoded_fetch_packet_bits_decoded_instruction_0_REG_MULTIPLY;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg         decoded_fetch_packet_bits_decoded_instruction_0_REG_IS_IMM;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg  [1:0]  decoded_fetch_packet_bits_decoded_instruction_0_REG_memory_type;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg  [1:0]  decoded_fetch_packet_bits_decoded_instruction_0_REG_access_width;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg  [6:0]  decoded_fetch_packet_bits_decoded_instruction_1_REG_RD;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg         decoded_fetch_packet_bits_decoded_instruction_1_REG_RD_valid;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg  [6:0]  decoded_fetch_packet_bits_decoded_instruction_1_REG_RS1;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg         decoded_fetch_packet_bits_decoded_instruction_1_REG_RS1_valid;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg  [6:0]  decoded_fetch_packet_bits_decoded_instruction_1_REG_RS2;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg         decoded_fetch_packet_bits_decoded_instruction_1_REG_RS2_valid;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg  [20:0] decoded_fetch_packet_bits_decoded_instruction_1_REG_IMM;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg  [2:0]  decoded_fetch_packet_bits_decoded_instruction_1_REG_FUNCT3;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg  [1:0]  decoded_fetch_packet_bits_decoded_instruction_1_REG_packet_index;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg  [4:0]  decoded_fetch_packet_bits_decoded_instruction_1_REG_instructionType;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg  [1:0]  decoded_fetch_packet_bits_decoded_instruction_1_REG_portID;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg  [1:0]  decoded_fetch_packet_bits_decoded_instruction_1_REG_RS_type;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg         decoded_fetch_packet_bits_decoded_instruction_1_REG_needs_ALU;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg         decoded_fetch_packet_bits_decoded_instruction_1_REG_needs_branch_unit;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg         decoded_fetch_packet_bits_decoded_instruction_1_REG_SUBTRACT;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg         decoded_fetch_packet_bits_decoded_instruction_1_REG_MULTIPLY;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg         decoded_fetch_packet_bits_decoded_instruction_1_REG_IS_IMM;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg  [1:0]  decoded_fetch_packet_bits_decoded_instruction_1_REG_memory_type;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg  [1:0]  decoded_fetch_packet_bits_decoded_instruction_1_REG_access_width;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg  [6:0]  decoded_fetch_packet_bits_decoded_instruction_2_REG_RD;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg         decoded_fetch_packet_bits_decoded_instruction_2_REG_RD_valid;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg  [6:0]  decoded_fetch_packet_bits_decoded_instruction_2_REG_RS1;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg         decoded_fetch_packet_bits_decoded_instruction_2_REG_RS1_valid;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg  [6:0]  decoded_fetch_packet_bits_decoded_instruction_2_REG_RS2;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg         decoded_fetch_packet_bits_decoded_instruction_2_REG_RS2_valid;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg  [20:0] decoded_fetch_packet_bits_decoded_instruction_2_REG_IMM;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg  [2:0]  decoded_fetch_packet_bits_decoded_instruction_2_REG_FUNCT3;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg  [1:0]  decoded_fetch_packet_bits_decoded_instruction_2_REG_packet_index;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg  [4:0]  decoded_fetch_packet_bits_decoded_instruction_2_REG_instructionType;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg  [1:0]  decoded_fetch_packet_bits_decoded_instruction_2_REG_portID;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg  [1:0]  decoded_fetch_packet_bits_decoded_instruction_2_REG_RS_type;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg         decoded_fetch_packet_bits_decoded_instruction_2_REG_needs_ALU;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg         decoded_fetch_packet_bits_decoded_instruction_2_REG_needs_branch_unit;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg         decoded_fetch_packet_bits_decoded_instruction_2_REG_SUBTRACT;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg         decoded_fetch_packet_bits_decoded_instruction_2_REG_MULTIPLY;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg         decoded_fetch_packet_bits_decoded_instruction_2_REG_IS_IMM;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg  [1:0]  decoded_fetch_packet_bits_decoded_instruction_2_REG_memory_type;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg  [1:0]  decoded_fetch_packet_bits_decoded_instruction_2_REG_access_width;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg  [6:0]  decoded_fetch_packet_bits_decoded_instruction_3_REG_RD;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg         decoded_fetch_packet_bits_decoded_instruction_3_REG_RD_valid;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg  [6:0]  decoded_fetch_packet_bits_decoded_instruction_3_REG_RS1;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg         decoded_fetch_packet_bits_decoded_instruction_3_REG_RS1_valid;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg  [6:0]  decoded_fetch_packet_bits_decoded_instruction_3_REG_RS2;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg         decoded_fetch_packet_bits_decoded_instruction_3_REG_RS2_valid;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg  [20:0] decoded_fetch_packet_bits_decoded_instruction_3_REG_IMM;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg  [2:0]  decoded_fetch_packet_bits_decoded_instruction_3_REG_FUNCT3;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg  [1:0]  decoded_fetch_packet_bits_decoded_instruction_3_REG_packet_index;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg  [4:0]  decoded_fetch_packet_bits_decoded_instruction_3_REG_instructionType;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg  [1:0]  decoded_fetch_packet_bits_decoded_instruction_3_REG_portID;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg  [1:0]  decoded_fetch_packet_bits_decoded_instruction_3_REG_RS_type;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg         decoded_fetch_packet_bits_decoded_instruction_3_REG_needs_ALU;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg         decoded_fetch_packet_bits_decoded_instruction_3_REG_needs_branch_unit;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg         decoded_fetch_packet_bits_decoded_instruction_3_REG_SUBTRACT;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg         decoded_fetch_packet_bits_decoded_instruction_3_REG_MULTIPLY;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg         decoded_fetch_packet_bits_decoded_instruction_3_REG_IS_IMM;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg  [1:0]  decoded_fetch_packet_bits_decoded_instruction_3_REG_memory_type;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg  [1:0]  decoded_fetch_packet_bits_decoded_instruction_3_REG_access_width;	// src/main/scala/Frontend/decoder.scala:245:68
-  reg         decoded_fetch_packet_valid_REG;	// src/main/scala/Frontend/decoder.scala:250:68
-  reg  [31:0] decoded_fetch_packet_bits_fetch_PC_REG;	// src/main/scala/Frontend/decoder.scala:251:68
-  reg         REG_0;	// src/main/scala/Frontend/decoder.scala:252:68
-  reg         REG_1;	// src/main/scala/Frontend/decoder.scala:252:68
-  reg         REG_2;	// src/main/scala/Frontend/decoder.scala:252:68
-  reg         REG_3;	// src/main/scala/Frontend/decoder.scala:252:68
-  reg         predictions_out_bits_REG_valid;	// src/main/scala/Frontend/decoder.scala:277:39
-  reg  [31:0] predictions_out_bits_REG_fetch_PC;	// src/main/scala/Frontend/decoder.scala:277:39
-  reg         predictions_out_bits_REG_is_misprediction;	// src/main/scala/Frontend/decoder.scala:277:39
-  reg  [31:0] predictions_out_bits_REG_predicted_PC;	// src/main/scala/Frontend/decoder.scala:277:39
-  reg         predictions_out_bits_REG_T_NT;	// src/main/scala/Frontend/decoder.scala:277:39
-  reg  [2:0]  predictions_out_bits_REG_br_type;	// src/main/scala/Frontend/decoder.scala:277:39
-  reg  [15:0] predictions_out_bits_REG_GHR;	// src/main/scala/Frontend/decoder.scala:277:39
-  reg  [6:0]  predictions_out_bits_REG_NEXT;	// src/main/scala/Frontend/decoder.scala:277:39
-  reg  [6:0]  predictions_out_bits_REG_TOS;	// src/main/scala/Frontend/decoder.scala:277:39
-  reg  [1:0]  predictions_out_bits_REG_dominant_index;	// src/main/scala/Frontend/decoder.scala:277:39
-  reg  [31:0] predictions_out_bits_REG_resolved_PC;	// src/main/scala/Frontend/decoder.scala:277:39
-  reg         predictions_out_valid_REG;	// src/main/scala/Frontend/decoder.scala:278:39
-  reg         monitor_output_REG;	// src/main/scala/Frontend/decoder.scala:288:30
-  wire        monitor_output = monitor_output_REG;	// src/main/scala/Frontend/decoder.scala:287:30, :288:30
+  wire [6:0]  _decoders_3_io_decoded_instruction_bits_RD;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire        _decoders_3_io_decoded_instruction_bits_RD_valid;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire [6:0]  _decoders_3_io_decoded_instruction_bits_RS1;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire        _decoders_3_io_decoded_instruction_bits_RS1_valid;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire [6:0]  _decoders_3_io_decoded_instruction_bits_RS2;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire        _decoders_3_io_decoded_instruction_bits_RS2_valid;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire [20:0] _decoders_3_io_decoded_instruction_bits_IMM;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire [2:0]  _decoders_3_io_decoded_instruction_bits_FUNCT3;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire [1:0]  _decoders_3_io_decoded_instruction_bits_packet_index;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire [4:0]  _decoders_3_io_decoded_instruction_bits_instructionType;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire [1:0]  _decoders_3_io_decoded_instruction_bits_portID;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire [1:0]  _decoders_3_io_decoded_instruction_bits_RS_type;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire        _decoders_3_io_decoded_instruction_bits_needs_ALU;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire        _decoders_3_io_decoded_instruction_bits_needs_branch_unit;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire        _decoders_3_io_decoded_instruction_bits_SUBTRACT;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire        _decoders_3_io_decoded_instruction_bits_MULTIPLY;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire        _decoders_3_io_decoded_instruction_bits_IS_IMM;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire [1:0]  _decoders_3_io_decoded_instruction_bits_memory_type;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire [1:0]  _decoders_3_io_decoded_instruction_bits_access_width;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire [6:0]  _decoders_2_io_decoded_instruction_bits_RD;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire        _decoders_2_io_decoded_instruction_bits_RD_valid;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire [6:0]  _decoders_2_io_decoded_instruction_bits_RS1;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire        _decoders_2_io_decoded_instruction_bits_RS1_valid;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire [6:0]  _decoders_2_io_decoded_instruction_bits_RS2;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire        _decoders_2_io_decoded_instruction_bits_RS2_valid;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire [20:0] _decoders_2_io_decoded_instruction_bits_IMM;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire [2:0]  _decoders_2_io_decoded_instruction_bits_FUNCT3;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire [1:0]  _decoders_2_io_decoded_instruction_bits_packet_index;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire [4:0]  _decoders_2_io_decoded_instruction_bits_instructionType;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire [1:0]  _decoders_2_io_decoded_instruction_bits_portID;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire [1:0]  _decoders_2_io_decoded_instruction_bits_RS_type;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire        _decoders_2_io_decoded_instruction_bits_needs_ALU;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire        _decoders_2_io_decoded_instruction_bits_needs_branch_unit;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire        _decoders_2_io_decoded_instruction_bits_SUBTRACT;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire        _decoders_2_io_decoded_instruction_bits_MULTIPLY;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire        _decoders_2_io_decoded_instruction_bits_IS_IMM;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire [1:0]  _decoders_2_io_decoded_instruction_bits_memory_type;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire [1:0]  _decoders_2_io_decoded_instruction_bits_access_width;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire [6:0]  _decoders_1_io_decoded_instruction_bits_RD;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire        _decoders_1_io_decoded_instruction_bits_RD_valid;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire [6:0]  _decoders_1_io_decoded_instruction_bits_RS1;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire        _decoders_1_io_decoded_instruction_bits_RS1_valid;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire [6:0]  _decoders_1_io_decoded_instruction_bits_RS2;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire        _decoders_1_io_decoded_instruction_bits_RS2_valid;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire [20:0] _decoders_1_io_decoded_instruction_bits_IMM;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire [2:0]  _decoders_1_io_decoded_instruction_bits_FUNCT3;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire [1:0]  _decoders_1_io_decoded_instruction_bits_packet_index;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire [4:0]  _decoders_1_io_decoded_instruction_bits_instructionType;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire [1:0]  _decoders_1_io_decoded_instruction_bits_portID;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire [1:0]  _decoders_1_io_decoded_instruction_bits_RS_type;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire        _decoders_1_io_decoded_instruction_bits_needs_ALU;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire        _decoders_1_io_decoded_instruction_bits_needs_branch_unit;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire        _decoders_1_io_decoded_instruction_bits_SUBTRACT;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire        _decoders_1_io_decoded_instruction_bits_MULTIPLY;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire        _decoders_1_io_decoded_instruction_bits_IS_IMM;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire [1:0]  _decoders_1_io_decoded_instruction_bits_memory_type;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire [1:0]  _decoders_1_io_decoded_instruction_bits_access_width;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire [6:0]  _decoders_0_io_decoded_instruction_bits_RD;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire        _decoders_0_io_decoded_instruction_bits_RD_valid;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire [6:0]  _decoders_0_io_decoded_instruction_bits_RS1;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire        _decoders_0_io_decoded_instruction_bits_RS1_valid;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire [6:0]  _decoders_0_io_decoded_instruction_bits_RS2;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire        _decoders_0_io_decoded_instruction_bits_RS2_valid;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire [20:0] _decoders_0_io_decoded_instruction_bits_IMM;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire [2:0]  _decoders_0_io_decoded_instruction_bits_FUNCT3;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire [1:0]  _decoders_0_io_decoded_instruction_bits_packet_index;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire [4:0]  _decoders_0_io_decoded_instruction_bits_instructionType;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire [1:0]  _decoders_0_io_decoded_instruction_bits_portID;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire [1:0]  _decoders_0_io_decoded_instruction_bits_RS_type;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire        _decoders_0_io_decoded_instruction_bits_needs_ALU;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire        _decoders_0_io_decoded_instruction_bits_needs_branch_unit;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire        _decoders_0_io_decoded_instruction_bits_SUBTRACT;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire        _decoders_0_io_decoded_instruction_bits_MULTIPLY;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire        _decoders_0_io_decoded_instruction_bits_IS_IMM;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire [1:0]  _decoders_0_io_decoded_instruction_bits_memory_type;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire [1:0]  _decoders_0_io_decoded_instruction_bits_access_width;	// src/main/scala/Frontend/decoder.scala:231:15
+  wire        _predictions_out_valid_T = io_fetch_packet_valid & io_predictions_in_valid;	// src/main/scala/Frontend/decoder.scala:271:82
+  wire        predictions_out_Q_io_deq_ready =
+    io_decoded_fetch_packet_ready & io_predictions_out_ready;	// src/main/scala/Frontend/decoder.scala:276:90
+  reg         io_fetch_packet_ready_REG;	// src/main/scala/Frontend/decoder.scala:286:67
+  reg         io_predictions_in_ready_REG;	// src/main/scala/Frontend/decoder.scala:287:67
+  reg         monitor_output_REG;	// src/main/scala/Frontend/decoder.scala:311:30
+  wire        monitor_output = monitor_output_REG;	// src/main/scala/Frontend/decoder.scala:310:30, :311:30
   always @(posedge clock) begin	// src/main/scala/Frontend/decoder.scala:211:7
-    decoded_fetch_packet_bits_decoded_instruction_0_REG_RD <=
-      _decoders_0_io_decoded_instruction_bits_RD;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_0_REG_RD_valid <=
-      _decoders_0_io_decoded_instruction_bits_RD_valid;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_0_REG_RS1 <=
-      _decoders_0_io_decoded_instruction_bits_RS1;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_0_REG_RS1_valid <=
-      _decoders_0_io_decoded_instruction_bits_RS1_valid;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_0_REG_RS2 <=
-      _decoders_0_io_decoded_instruction_bits_RS2;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_0_REG_RS2_valid <=
-      _decoders_0_io_decoded_instruction_bits_RS2_valid;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_0_REG_IMM <=
-      _decoders_0_io_decoded_instruction_bits_IMM;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_0_REG_FUNCT3 <=
-      _decoders_0_io_decoded_instruction_bits_FUNCT3;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_0_REG_packet_index <=
-      _decoders_0_io_decoded_instruction_bits_packet_index;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_0_REG_instructionType <=
-      _decoders_0_io_decoded_instruction_bits_instructionType;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_0_REG_portID <=
-      _decoders_0_io_decoded_instruction_bits_portID;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_0_REG_RS_type <=
-      _decoders_0_io_decoded_instruction_bits_RS_type;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_0_REG_needs_ALU <=
-      _decoders_0_io_decoded_instruction_bits_needs_ALU;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_0_REG_needs_branch_unit <=
-      _decoders_0_io_decoded_instruction_bits_needs_branch_unit;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_0_REG_SUBTRACT <=
-      _decoders_0_io_decoded_instruction_bits_SUBTRACT;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_0_REG_MULTIPLY <=
-      _decoders_0_io_decoded_instruction_bits_MULTIPLY;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_0_REG_IS_IMM <=
-      _decoders_0_io_decoded_instruction_bits_IS_IMM;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_0_REG_memory_type <=
-      _decoders_0_io_decoded_instruction_bits_memory_type;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_0_REG_access_width <=
-      _decoders_0_io_decoded_instruction_bits_access_width;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_1_REG_RD <=
-      _decoders_1_io_decoded_instruction_bits_RD;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_1_REG_RD_valid <=
-      _decoders_1_io_decoded_instruction_bits_RD_valid;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_1_REG_RS1 <=
-      _decoders_1_io_decoded_instruction_bits_RS1;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_1_REG_RS1_valid <=
-      _decoders_1_io_decoded_instruction_bits_RS1_valid;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_1_REG_RS2 <=
-      _decoders_1_io_decoded_instruction_bits_RS2;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_1_REG_RS2_valid <=
-      _decoders_1_io_decoded_instruction_bits_RS2_valid;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_1_REG_IMM <=
-      _decoders_1_io_decoded_instruction_bits_IMM;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_1_REG_FUNCT3 <=
-      _decoders_1_io_decoded_instruction_bits_FUNCT3;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_1_REG_packet_index <=
-      _decoders_1_io_decoded_instruction_bits_packet_index;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_1_REG_instructionType <=
-      _decoders_1_io_decoded_instruction_bits_instructionType;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_1_REG_portID <=
-      _decoders_1_io_decoded_instruction_bits_portID;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_1_REG_RS_type <=
-      _decoders_1_io_decoded_instruction_bits_RS_type;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_1_REG_needs_ALU <=
-      _decoders_1_io_decoded_instruction_bits_needs_ALU;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_1_REG_needs_branch_unit <=
-      _decoders_1_io_decoded_instruction_bits_needs_branch_unit;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_1_REG_SUBTRACT <=
-      _decoders_1_io_decoded_instruction_bits_SUBTRACT;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_1_REG_MULTIPLY <=
-      _decoders_1_io_decoded_instruction_bits_MULTIPLY;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_1_REG_IS_IMM <=
-      _decoders_1_io_decoded_instruction_bits_IS_IMM;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_1_REG_memory_type <=
-      _decoders_1_io_decoded_instruction_bits_memory_type;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_1_REG_access_width <=
-      _decoders_1_io_decoded_instruction_bits_access_width;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_2_REG_RD <=
-      _decoders_2_io_decoded_instruction_bits_RD;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_2_REG_RD_valid <=
-      _decoders_2_io_decoded_instruction_bits_RD_valid;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_2_REG_RS1 <=
-      _decoders_2_io_decoded_instruction_bits_RS1;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_2_REG_RS1_valid <=
-      _decoders_2_io_decoded_instruction_bits_RS1_valid;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_2_REG_RS2 <=
-      _decoders_2_io_decoded_instruction_bits_RS2;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_2_REG_RS2_valid <=
-      _decoders_2_io_decoded_instruction_bits_RS2_valid;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_2_REG_IMM <=
-      _decoders_2_io_decoded_instruction_bits_IMM;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_2_REG_FUNCT3 <=
-      _decoders_2_io_decoded_instruction_bits_FUNCT3;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_2_REG_packet_index <=
-      _decoders_2_io_decoded_instruction_bits_packet_index;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_2_REG_instructionType <=
-      _decoders_2_io_decoded_instruction_bits_instructionType;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_2_REG_portID <=
-      _decoders_2_io_decoded_instruction_bits_portID;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_2_REG_RS_type <=
-      _decoders_2_io_decoded_instruction_bits_RS_type;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_2_REG_needs_ALU <=
-      _decoders_2_io_decoded_instruction_bits_needs_ALU;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_2_REG_needs_branch_unit <=
-      _decoders_2_io_decoded_instruction_bits_needs_branch_unit;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_2_REG_SUBTRACT <=
-      _decoders_2_io_decoded_instruction_bits_SUBTRACT;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_2_REG_MULTIPLY <=
-      _decoders_2_io_decoded_instruction_bits_MULTIPLY;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_2_REG_IS_IMM <=
-      _decoders_2_io_decoded_instruction_bits_IS_IMM;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_2_REG_memory_type <=
-      _decoders_2_io_decoded_instruction_bits_memory_type;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_2_REG_access_width <=
-      _decoders_2_io_decoded_instruction_bits_access_width;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_3_REG_RD <=
-      _decoders_3_io_decoded_instruction_bits_RD;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_3_REG_RD_valid <=
-      _decoders_3_io_decoded_instruction_bits_RD_valid;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_3_REG_RS1 <=
-      _decoders_3_io_decoded_instruction_bits_RS1;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_3_REG_RS1_valid <=
-      _decoders_3_io_decoded_instruction_bits_RS1_valid;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_3_REG_RS2 <=
-      _decoders_3_io_decoded_instruction_bits_RS2;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_3_REG_RS2_valid <=
-      _decoders_3_io_decoded_instruction_bits_RS2_valid;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_3_REG_IMM <=
-      _decoders_3_io_decoded_instruction_bits_IMM;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_3_REG_FUNCT3 <=
-      _decoders_3_io_decoded_instruction_bits_FUNCT3;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_3_REG_packet_index <=
-      _decoders_3_io_decoded_instruction_bits_packet_index;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_3_REG_instructionType <=
-      _decoders_3_io_decoded_instruction_bits_instructionType;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_3_REG_portID <=
-      _decoders_3_io_decoded_instruction_bits_portID;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_3_REG_RS_type <=
-      _decoders_3_io_decoded_instruction_bits_RS_type;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_3_REG_needs_ALU <=
-      _decoders_3_io_decoded_instruction_bits_needs_ALU;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_3_REG_needs_branch_unit <=
-      _decoders_3_io_decoded_instruction_bits_needs_branch_unit;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_3_REG_SUBTRACT <=
-      _decoders_3_io_decoded_instruction_bits_SUBTRACT;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_3_REG_MULTIPLY <=
-      _decoders_3_io_decoded_instruction_bits_MULTIPLY;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_3_REG_IS_IMM <=
-      _decoders_3_io_decoded_instruction_bits_IS_IMM;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_3_REG_memory_type <=
-      _decoders_3_io_decoded_instruction_bits_memory_type;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_bits_decoded_instruction_3_REG_access_width <=
-      _decoders_3_io_decoded_instruction_bits_access_width;	// src/main/scala/Frontend/decoder.scala:233:15, :245:68
-    decoded_fetch_packet_valid_REG <=
-      io_decoded_fetch_packet_ready & io_fetch_packet_valid & ~io_flush;	// src/main/scala/Frontend/decoder.scala:250:{68,90,93}, src/main/scala/chisel3/util/Decoupled.scala:51:35
-    decoded_fetch_packet_bits_fetch_PC_REG <= io_fetch_packet_bits_fetch_PC;	// src/main/scala/Frontend/decoder.scala:251:68
-    REG_0 <= io_fetch_packet_bits_valid_bits_0;	// src/main/scala/Frontend/decoder.scala:252:68
-    REG_1 <= io_fetch_packet_bits_valid_bits_1;	// src/main/scala/Frontend/decoder.scala:252:68
-    REG_2 <= io_fetch_packet_bits_valid_bits_2;	// src/main/scala/Frontend/decoder.scala:252:68
-    REG_3 <= io_fetch_packet_bits_valid_bits_3;	// src/main/scala/Frontend/decoder.scala:252:68
-    predictions_out_bits_REG_valid <= io_predictions_in_bits_valid;	// src/main/scala/Frontend/decoder.scala:277:39
-    predictions_out_bits_REG_fetch_PC <= io_predictions_in_bits_fetch_PC;	// src/main/scala/Frontend/decoder.scala:277:39
-    predictions_out_bits_REG_is_misprediction <= io_predictions_in_bits_is_misprediction;	// src/main/scala/Frontend/decoder.scala:277:39
-    predictions_out_bits_REG_predicted_PC <= io_predictions_in_bits_predicted_PC;	// src/main/scala/Frontend/decoder.scala:277:39
-    predictions_out_bits_REG_T_NT <= io_predictions_in_bits_T_NT;	// src/main/scala/Frontend/decoder.scala:277:39
-    predictions_out_bits_REG_br_type <= io_predictions_in_bits_br_type;	// src/main/scala/Frontend/decoder.scala:277:39
-    predictions_out_bits_REG_GHR <= io_predictions_in_bits_GHR;	// src/main/scala/Frontend/decoder.scala:277:39
-    predictions_out_bits_REG_NEXT <= io_predictions_in_bits_NEXT;	// src/main/scala/Frontend/decoder.scala:277:39
-    predictions_out_bits_REG_TOS <= io_predictions_in_bits_TOS;	// src/main/scala/Frontend/decoder.scala:277:39
-    predictions_out_bits_REG_dominant_index <= io_predictions_in_bits_dominant_index;	// src/main/scala/Frontend/decoder.scala:277:39
-    predictions_out_bits_REG_resolved_PC <= io_predictions_in_bits_resolved_PC;	// src/main/scala/Frontend/decoder.scala:277:39
-    predictions_out_valid_REG <= io_predictions_out_ready & io_predictions_in_valid;	// src/main/scala/Frontend/decoder.scala:278:39, src/main/scala/chisel3/util/Decoupled.scala:51:35
-    monitor_output_REG <= io_fetch_packet_valid;	// src/main/scala/Frontend/decoder.scala:288:30
+    io_fetch_packet_ready_REG <= predictions_out_Q_io_deq_ready;	// src/main/scala/Frontend/decoder.scala:276:90, :286:67
+    io_predictions_in_ready_REG <= predictions_out_Q_io_deq_ready;	// src/main/scala/Frontend/decoder.scala:276:90, :287:67
+    monitor_output_REG <= io_fetch_packet_valid;	// src/main/scala/Frontend/decoder.scala:311:30
   end // always @(posedge)
   `ifdef ENABLE_INITIAL_REG_	// src/main/scala/Frontend/decoder.scala:211:7
     `ifdef FIRRTL_BEFORE_INITIAL	// src/main/scala/Frontend/decoder.scala:211:7
       `FIRRTL_BEFORE_INITIAL	// src/main/scala/Frontend/decoder.scala:211:7
     `endif // FIRRTL_BEFORE_INITIAL
     initial begin	// src/main/scala/Frontend/decoder.scala:211:7
-      automatic logic [31:0] _RANDOM[0:16];	// src/main/scala/Frontend/decoder.scala:211:7
+      automatic logic [31:0] _RANDOM[0:0];	// src/main/scala/Frontend/decoder.scala:211:7
       `ifdef INIT_RANDOM_PROLOG_	// src/main/scala/Frontend/decoder.scala:211:7
         `INIT_RANDOM_PROLOG_	// src/main/scala/Frontend/decoder.scala:211:7
       `endif // INIT_RANDOM_PROLOG_
       `ifdef RANDOMIZE_REG_INIT	// src/main/scala/Frontend/decoder.scala:211:7
-        for (logic [4:0] i = 5'h0; i < 5'h11; i += 5'h1) begin
-          _RANDOM[i] = `RANDOM;	// src/main/scala/Frontend/decoder.scala:211:7
-        end	// src/main/scala/Frontend/decoder.scala:211:7
-        decoded_fetch_packet_bits_decoded_instruction_0_REG_RD = _RANDOM[5'h0][8:2];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_0_REG_RD_valid = _RANDOM[5'h0][9];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_0_REG_RS1 = _RANDOM[5'h0][16:10];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_0_REG_RS1_valid = _RANDOM[5'h0][17];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_0_REG_RS2 = _RANDOM[5'h0][24:18];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_0_REG_RS2_valid = _RANDOM[5'h0][25];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_0_REG_IMM =
-          {_RANDOM[5'h0][31:26], _RANDOM[5'h1][14:0]};	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_0_REG_FUNCT3 = _RANDOM[5'h1][17:15];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_0_REG_packet_index =
-          _RANDOM[5'h1][19:18];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_0_REG_instructionType =
-          _RANDOM[5'h2][6:2];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_0_REG_portID = _RANDOM[5'h2][8:7];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_0_REG_RS_type = _RANDOM[5'h2][10:9];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_0_REG_needs_ALU = _RANDOM[5'h2][11];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_0_REG_needs_branch_unit =
-          _RANDOM[5'h2][12];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_0_REG_SUBTRACT = _RANDOM[5'h2][14];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_0_REG_MULTIPLY = _RANDOM[5'h2][15];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_0_REG_IS_IMM = _RANDOM[5'h2][16];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_0_REG_memory_type =
-          _RANDOM[5'h2][18:17];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_0_REG_access_width =
-          _RANDOM[5'h2][20:19];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_1_REG_RD = _RANDOM[5'h2][29:23];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_1_REG_RD_valid = _RANDOM[5'h2][30];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_1_REG_RS1 =
-          {_RANDOM[5'h2][31], _RANDOM[5'h3][5:0]};	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_1_REG_RS1_valid = _RANDOM[5'h3][6];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_1_REG_RS2 = _RANDOM[5'h3][13:7];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_1_REG_RS2_valid = _RANDOM[5'h3][14];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_1_REG_IMM =
-          {_RANDOM[5'h3][31:15], _RANDOM[5'h4][3:0]};	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_1_REG_FUNCT3 = _RANDOM[5'h4][6:4];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_1_REG_packet_index =
-          _RANDOM[5'h4][8:7];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_1_REG_instructionType =
-          _RANDOM[5'h4][27:23];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_1_REG_portID = _RANDOM[5'h4][29:28];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_1_REG_RS_type =
-          _RANDOM[5'h4][31:30];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_1_REG_needs_ALU = _RANDOM[5'h5][0];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_1_REG_needs_branch_unit =
-          _RANDOM[5'h5][1];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_1_REG_SUBTRACT = _RANDOM[5'h5][3];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_1_REG_MULTIPLY = _RANDOM[5'h5][4];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_1_REG_IS_IMM = _RANDOM[5'h5][5];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_1_REG_memory_type =
-          _RANDOM[5'h5][7:6];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_1_REG_access_width =
-          _RANDOM[5'h5][9:8];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_2_REG_RD = _RANDOM[5'h5][18:12];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_2_REG_RD_valid = _RANDOM[5'h5][19];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_2_REG_RS1 = _RANDOM[5'h5][26:20];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_2_REG_RS1_valid = _RANDOM[5'h5][27];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_2_REG_RS2 =
-          {_RANDOM[5'h5][31:28], _RANDOM[5'h6][2:0]};	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_2_REG_RS2_valid = _RANDOM[5'h6][3];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_2_REG_IMM = _RANDOM[5'h6][24:4];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_2_REG_FUNCT3 = _RANDOM[5'h6][27:25];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_2_REG_packet_index =
-          _RANDOM[5'h6][29:28];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_2_REG_instructionType =
-          _RANDOM[5'h7][16:12];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_2_REG_portID = _RANDOM[5'h7][18:17];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_2_REG_RS_type =
-          _RANDOM[5'h7][20:19];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_2_REG_needs_ALU = _RANDOM[5'h7][21];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_2_REG_needs_branch_unit =
-          _RANDOM[5'h7][22];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_2_REG_SUBTRACT = _RANDOM[5'h7][24];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_2_REG_MULTIPLY = _RANDOM[5'h7][25];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_2_REG_IS_IMM = _RANDOM[5'h7][26];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_2_REG_memory_type =
-          _RANDOM[5'h7][28:27];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_2_REG_access_width =
-          _RANDOM[5'h7][30:29];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_3_REG_RD = _RANDOM[5'h8][7:1];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_3_REG_RD_valid = _RANDOM[5'h8][8];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_3_REG_RS1 = _RANDOM[5'h8][15:9];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_3_REG_RS1_valid = _RANDOM[5'h8][16];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_3_REG_RS2 = _RANDOM[5'h8][23:17];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_3_REG_RS2_valid = _RANDOM[5'h8][24];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_3_REG_IMM =
-          {_RANDOM[5'h8][31:25], _RANDOM[5'h9][13:0]};	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_3_REG_FUNCT3 = _RANDOM[5'h9][16:14];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_3_REG_packet_index =
-          _RANDOM[5'h9][18:17];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_3_REG_instructionType =
-          _RANDOM[5'hA][5:1];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_3_REG_portID = _RANDOM[5'hA][7:6];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_3_REG_RS_type = _RANDOM[5'hA][9:8];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_3_REG_needs_ALU = _RANDOM[5'hA][10];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_3_REG_needs_branch_unit =
-          _RANDOM[5'hA][11];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_3_REG_SUBTRACT = _RANDOM[5'hA][13];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_3_REG_MULTIPLY = _RANDOM[5'hA][14];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_3_REG_IS_IMM = _RANDOM[5'hA][15];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_3_REG_memory_type =
-          _RANDOM[5'hA][17:16];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_bits_decoded_instruction_3_REG_access_width =
-          _RANDOM[5'hA][19:18];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68
-        decoded_fetch_packet_valid_REG = _RANDOM[5'hA][20];	// src/main/scala/Frontend/decoder.scala:211:7, :245:68, :250:68
-        decoded_fetch_packet_bits_fetch_PC_REG =
-          {_RANDOM[5'hA][31:21], _RANDOM[5'hB][20:0]};	// src/main/scala/Frontend/decoder.scala:211:7, :245:68, :251:68
-        REG_0 = _RANDOM[5'hB][21];	// src/main/scala/Frontend/decoder.scala:211:7, :251:68, :252:68
-        REG_1 = _RANDOM[5'hB][22];	// src/main/scala/Frontend/decoder.scala:211:7, :251:68, :252:68
-        REG_2 = _RANDOM[5'hB][23];	// src/main/scala/Frontend/decoder.scala:211:7, :251:68, :252:68
-        REG_3 = _RANDOM[5'hB][24];	// src/main/scala/Frontend/decoder.scala:211:7, :251:68, :252:68
-        predictions_out_bits_REG_valid = _RANDOM[5'hB][25];	// src/main/scala/Frontend/decoder.scala:211:7, :251:68, :277:39
-        predictions_out_bits_REG_fetch_PC = {_RANDOM[5'hB][31:26], _RANDOM[5'hC][25:0]};	// src/main/scala/Frontend/decoder.scala:211:7, :251:68, :277:39
-        predictions_out_bits_REG_is_misprediction = _RANDOM[5'hC][26];	// src/main/scala/Frontend/decoder.scala:211:7, :277:39
-        predictions_out_bits_REG_predicted_PC =
-          {_RANDOM[5'hC][31:27], _RANDOM[5'hD][26:0]};	// src/main/scala/Frontend/decoder.scala:211:7, :277:39
-        predictions_out_bits_REG_T_NT = _RANDOM[5'hD][27];	// src/main/scala/Frontend/decoder.scala:211:7, :277:39
-        predictions_out_bits_REG_br_type = _RANDOM[5'hD][30:28];	// src/main/scala/Frontend/decoder.scala:211:7, :277:39
-        predictions_out_bits_REG_GHR = {_RANDOM[5'hD][31], _RANDOM[5'hE][14:0]};	// src/main/scala/Frontend/decoder.scala:211:7, :277:39
-        predictions_out_bits_REG_NEXT = _RANDOM[5'hE][21:15];	// src/main/scala/Frontend/decoder.scala:211:7, :277:39
-        predictions_out_bits_REG_TOS = _RANDOM[5'hE][28:22];	// src/main/scala/Frontend/decoder.scala:211:7, :277:39
-        predictions_out_bits_REG_dominant_index = _RANDOM[5'hE][30:29];	// src/main/scala/Frontend/decoder.scala:211:7, :277:39
-        predictions_out_bits_REG_resolved_PC = {_RANDOM[5'hE][31], _RANDOM[5'hF][30:0]};	// src/main/scala/Frontend/decoder.scala:211:7, :277:39
-        predictions_out_valid_REG = _RANDOM[5'hF][31];	// src/main/scala/Frontend/decoder.scala:211:7, :277:39, :278:39
-        monitor_output_REG = _RANDOM[5'h10][0];	// src/main/scala/Frontend/decoder.scala:211:7, :288:30
+        _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// src/main/scala/Frontend/decoder.scala:211:7
+        io_fetch_packet_ready_REG = _RANDOM[/*Zero width*/ 1'b0][0];	// src/main/scala/Frontend/decoder.scala:211:7, :286:67
+        io_predictions_in_ready_REG = _RANDOM[/*Zero width*/ 1'b0][1];	// src/main/scala/Frontend/decoder.scala:211:7, :286:67, :287:67
+        monitor_output_REG = _RANDOM[/*Zero width*/ 1'b0][2];	// src/main/scala/Frontend/decoder.scala:211:7, :286:67, :311:30
       `endif // RANDOMIZE_REG_INIT
     end // initial
     `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/Frontend/decoder.scala:211:7
       `FIRRTL_AFTER_INITIAL	// src/main/scala/Frontend/decoder.scala:211:7
     `endif // FIRRTL_AFTER_INITIAL
   `endif // ENABLE_INITIAL_REG_
-  decoder decoders_0 (	// src/main/scala/Frontend/decoder.scala:233:15
+  decoder decoders_0 (	// src/main/scala/Frontend/decoder.scala:231:15
     .clock                                         (clock),
     .reset                                         (reset),
     .io_instruction_valid
-      (io_fetch_packet_valid & io_fetch_packet_bits_valid_bits_0),	// src/main/scala/Frontend/decoder.scala:239:70
+      (io_fetch_packet_valid & io_fetch_packet_bits_valid_bits_0),	// src/main/scala/Frontend/decoder.scala:237:70
     .io_instruction_bits_instruction
       (io_fetch_packet_bits_instructions_0_instruction),
     .io_instruction_bits_packet_index
@@ -735,12 +354,12 @@ module fetch_packet_decoder(	// src/main/scala/Frontend/decoder.scala:211:7
       (_decoders_0_io_decoded_instruction_bits_memory_type),
     .io_decoded_instruction_bits_access_width
       (_decoders_0_io_decoded_instruction_bits_access_width)
-  );	// src/main/scala/Frontend/decoder.scala:233:15
-  decoder decoders_1 (	// src/main/scala/Frontend/decoder.scala:233:15
+  );	// src/main/scala/Frontend/decoder.scala:231:15
+  decoder decoders_1 (	// src/main/scala/Frontend/decoder.scala:231:15
     .clock                                         (clock),
     .reset                                         (reset),
     .io_instruction_valid
-      (io_fetch_packet_valid & io_fetch_packet_bits_valid_bits_1),	// src/main/scala/Frontend/decoder.scala:239:70
+      (io_fetch_packet_valid & io_fetch_packet_bits_valid_bits_1),	// src/main/scala/Frontend/decoder.scala:237:70
     .io_instruction_bits_instruction
       (io_fetch_packet_bits_instructions_1_instruction),
     .io_instruction_bits_packet_index
@@ -783,12 +402,12 @@ module fetch_packet_decoder(	// src/main/scala/Frontend/decoder.scala:211:7
       (_decoders_1_io_decoded_instruction_bits_memory_type),
     .io_decoded_instruction_bits_access_width
       (_decoders_1_io_decoded_instruction_bits_access_width)
-  );	// src/main/scala/Frontend/decoder.scala:233:15
-  decoder decoders_2 (	// src/main/scala/Frontend/decoder.scala:233:15
+  );	// src/main/scala/Frontend/decoder.scala:231:15
+  decoder decoders_2 (	// src/main/scala/Frontend/decoder.scala:231:15
     .clock                                         (clock),
     .reset                                         (reset),
     .io_instruction_valid
-      (io_fetch_packet_valid & io_fetch_packet_bits_valid_bits_2),	// src/main/scala/Frontend/decoder.scala:239:70
+      (io_fetch_packet_valid & io_fetch_packet_bits_valid_bits_2),	// src/main/scala/Frontend/decoder.scala:237:70
     .io_instruction_bits_instruction
       (io_fetch_packet_bits_instructions_2_instruction),
     .io_instruction_bits_packet_index
@@ -831,12 +450,12 @@ module fetch_packet_decoder(	// src/main/scala/Frontend/decoder.scala:211:7
       (_decoders_2_io_decoded_instruction_bits_memory_type),
     .io_decoded_instruction_bits_access_width
       (_decoders_2_io_decoded_instruction_bits_access_width)
-  );	// src/main/scala/Frontend/decoder.scala:233:15
-  decoder decoders_3 (	// src/main/scala/Frontend/decoder.scala:233:15
+  );	// src/main/scala/Frontend/decoder.scala:231:15
+  decoder decoders_3 (	// src/main/scala/Frontend/decoder.scala:231:15
     .clock                                         (clock),
     .reset                                         (reset),
     .io_instruction_valid
-      (io_fetch_packet_valid & io_fetch_packet_bits_valid_bits_3),	// src/main/scala/Frontend/decoder.scala:239:70
+      (io_fetch_packet_valid & io_fetch_packet_bits_valid_bits_3),	// src/main/scala/Frontend/decoder.scala:237:70
     .io_instruction_bits_instruction
       (io_fetch_packet_bits_instructions_3_instruction),
     .io_instruction_bits_packet_index
@@ -879,199 +498,205 @@ module fetch_packet_decoder(	// src/main/scala/Frontend/decoder.scala:211:7
       (_decoders_3_io_decoded_instruction_bits_memory_type),
     .io_decoded_instruction_bits_access_width
       (_decoders_3_io_decoded_instruction_bits_access_width)
-  );	// src/main/scala/Frontend/decoder.scala:233:15
-  Queue1_decoded_fetch_packet decoded_fetch_packet_skid_buffer (	// src/main/scala/Frontend/decoder.scala:264:55
+  );	// src/main/scala/Frontend/decoder.scala:231:15
+  Queue2_decoded_fetch_packet decoded_fetch_packet_out_Q (	// src/main/scala/Frontend/decoder.scala:267:65
     .clock                                                  (clock),
     .reset                                                  (reset),
-    .io_enq_ready                                           (/* unused */),
     .io_enq_valid
-      (decoded_fetch_packet_valid_REG),	// src/main/scala/Frontend/decoder.scala:250:68
+      (_predictions_out_valid_T & ~io_flush),	// src/main/scala/Frontend/decoder.scala:248:86, :271:{82,109}
     .io_enq_bits_fetch_PC
-      (decoded_fetch_packet_bits_fetch_PC_REG),	// src/main/scala/Frontend/decoder.scala:251:68
-    .io_enq_bits_decoded_instruction_0_ready_bits_RS1_ready (1'h0),	// src/main/scala/Frontend/decoder.scala:233:15
-    .io_enq_bits_decoded_instruction_0_ready_bits_RS2_ready (1'h0),	// src/main/scala/Frontend/decoder.scala:233:15
+      (io_fetch_packet_bits_fetch_PC),
+    .io_enq_bits_decoded_instruction_0_ready_bits_RS1_ready (1'h0),	// src/main/scala/Frontend/decoder.scala:211:7
+    .io_enq_bits_decoded_instruction_0_ready_bits_RS2_ready (1'h0),	// src/main/scala/Frontend/decoder.scala:211:7
     .io_enq_bits_decoded_instruction_0_RD
-      (decoded_fetch_packet_bits_decoded_instruction_0_REG_RD),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_0_io_decoded_instruction_bits_RD),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_0_RD_valid
-      (decoded_fetch_packet_bits_decoded_instruction_0_REG_RD_valid),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_0_io_decoded_instruction_bits_RD_valid),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_0_RS1
-      (decoded_fetch_packet_bits_decoded_instruction_0_REG_RS1),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_0_io_decoded_instruction_bits_RS1),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_0_RS1_valid
-      (decoded_fetch_packet_bits_decoded_instruction_0_REG_RS1_valid),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_0_io_decoded_instruction_bits_RS1_valid),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_0_RS2
-      (decoded_fetch_packet_bits_decoded_instruction_0_REG_RS2),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_0_io_decoded_instruction_bits_RS2),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_0_RS2_valid
-      (decoded_fetch_packet_bits_decoded_instruction_0_REG_RS2_valid),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_0_io_decoded_instruction_bits_RS2_valid),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_0_IMM
-      (decoded_fetch_packet_bits_decoded_instruction_0_REG_IMM),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_0_io_decoded_instruction_bits_IMM),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_0_FUNCT3
-      (decoded_fetch_packet_bits_decoded_instruction_0_REG_FUNCT3),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_0_io_decoded_instruction_bits_FUNCT3),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_0_packet_index
-      (decoded_fetch_packet_bits_decoded_instruction_0_REG_packet_index),	// src/main/scala/Frontend/decoder.scala:245:68
-    .io_enq_bits_decoded_instruction_0_ROB_index            (6'h0),	// src/main/scala/Frontend/decoder.scala:233:15
+      (_decoders_0_io_decoded_instruction_bits_packet_index),	// src/main/scala/Frontend/decoder.scala:231:15
+    .io_enq_bits_decoded_instruction_0_ROB_index            (6'h0),	// src/main/scala/Frontend/decoder.scala:231:15, :267:65
     .io_enq_bits_decoded_instruction_0_MOB_index            (4'h0),
     .io_enq_bits_decoded_instruction_0_FTQ_index            (4'h0),
     .io_enq_bits_decoded_instruction_0_instructionType
-      (decoded_fetch_packet_bits_decoded_instruction_0_REG_instructionType),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_0_io_decoded_instruction_bits_instructionType),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_0_portID
-      (decoded_fetch_packet_bits_decoded_instruction_0_REG_portID),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_0_io_decoded_instruction_bits_portID),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_0_RS_type
-      (decoded_fetch_packet_bits_decoded_instruction_0_REG_RS_type),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_0_io_decoded_instruction_bits_RS_type),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_0_needs_ALU
-      (decoded_fetch_packet_bits_decoded_instruction_0_REG_needs_ALU),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_0_io_decoded_instruction_bits_needs_ALU),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_0_needs_branch_unit
-      (decoded_fetch_packet_bits_decoded_instruction_0_REG_needs_branch_unit),	// src/main/scala/Frontend/decoder.scala:245:68
-    .io_enq_bits_decoded_instruction_0_needs_CSRs           (1'h0),	// src/main/scala/Frontend/decoder.scala:233:15
+      (_decoders_0_io_decoded_instruction_bits_needs_branch_unit),	// src/main/scala/Frontend/decoder.scala:231:15
+    .io_enq_bits_decoded_instruction_0_needs_CSRs           (1'h0),	// src/main/scala/Frontend/decoder.scala:211:7
     .io_enq_bits_decoded_instruction_0_SUBTRACT
-      (decoded_fetch_packet_bits_decoded_instruction_0_REG_SUBTRACT),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_0_io_decoded_instruction_bits_SUBTRACT),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_0_MULTIPLY
-      (decoded_fetch_packet_bits_decoded_instruction_0_REG_MULTIPLY),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_0_io_decoded_instruction_bits_MULTIPLY),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_0_IS_IMM
-      (decoded_fetch_packet_bits_decoded_instruction_0_REG_IS_IMM),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_0_io_decoded_instruction_bits_IS_IMM),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_0_memory_type
-      (decoded_fetch_packet_bits_decoded_instruction_0_REG_memory_type),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_0_io_decoded_instruction_bits_memory_type),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_0_access_width
-      (decoded_fetch_packet_bits_decoded_instruction_0_REG_access_width),	// src/main/scala/Frontend/decoder.scala:245:68
-    .io_enq_bits_decoded_instruction_1_ready_bits_RS1_ready (1'h0),	// src/main/scala/Frontend/decoder.scala:233:15
-    .io_enq_bits_decoded_instruction_1_ready_bits_RS2_ready (1'h0),	// src/main/scala/Frontend/decoder.scala:233:15
+      (_decoders_0_io_decoded_instruction_bits_access_width),	// src/main/scala/Frontend/decoder.scala:231:15
+    .io_enq_bits_decoded_instruction_1_ready_bits_RS1_ready (1'h0),	// src/main/scala/Frontend/decoder.scala:211:7
+    .io_enq_bits_decoded_instruction_1_ready_bits_RS2_ready (1'h0),	// src/main/scala/Frontend/decoder.scala:211:7
     .io_enq_bits_decoded_instruction_1_RD
-      (decoded_fetch_packet_bits_decoded_instruction_1_REG_RD),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_1_io_decoded_instruction_bits_RD),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_1_RD_valid
-      (decoded_fetch_packet_bits_decoded_instruction_1_REG_RD_valid),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_1_io_decoded_instruction_bits_RD_valid),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_1_RS1
-      (decoded_fetch_packet_bits_decoded_instruction_1_REG_RS1),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_1_io_decoded_instruction_bits_RS1),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_1_RS1_valid
-      (decoded_fetch_packet_bits_decoded_instruction_1_REG_RS1_valid),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_1_io_decoded_instruction_bits_RS1_valid),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_1_RS2
-      (decoded_fetch_packet_bits_decoded_instruction_1_REG_RS2),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_1_io_decoded_instruction_bits_RS2),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_1_RS2_valid
-      (decoded_fetch_packet_bits_decoded_instruction_1_REG_RS2_valid),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_1_io_decoded_instruction_bits_RS2_valid),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_1_IMM
-      (decoded_fetch_packet_bits_decoded_instruction_1_REG_IMM),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_1_io_decoded_instruction_bits_IMM),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_1_FUNCT3
-      (decoded_fetch_packet_bits_decoded_instruction_1_REG_FUNCT3),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_1_io_decoded_instruction_bits_FUNCT3),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_1_packet_index
-      (decoded_fetch_packet_bits_decoded_instruction_1_REG_packet_index),	// src/main/scala/Frontend/decoder.scala:245:68
-    .io_enq_bits_decoded_instruction_1_ROB_index            (6'h0),	// src/main/scala/Frontend/decoder.scala:233:15
+      (_decoders_1_io_decoded_instruction_bits_packet_index),	// src/main/scala/Frontend/decoder.scala:231:15
+    .io_enq_bits_decoded_instruction_1_ROB_index            (6'h0),	// src/main/scala/Frontend/decoder.scala:231:15, :267:65
     .io_enq_bits_decoded_instruction_1_MOB_index            (4'h0),
     .io_enq_bits_decoded_instruction_1_FTQ_index            (4'h0),
     .io_enq_bits_decoded_instruction_1_instructionType
-      (decoded_fetch_packet_bits_decoded_instruction_1_REG_instructionType),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_1_io_decoded_instruction_bits_instructionType),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_1_portID
-      (decoded_fetch_packet_bits_decoded_instruction_1_REG_portID),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_1_io_decoded_instruction_bits_portID),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_1_RS_type
-      (decoded_fetch_packet_bits_decoded_instruction_1_REG_RS_type),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_1_io_decoded_instruction_bits_RS_type),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_1_needs_ALU
-      (decoded_fetch_packet_bits_decoded_instruction_1_REG_needs_ALU),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_1_io_decoded_instruction_bits_needs_ALU),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_1_needs_branch_unit
-      (decoded_fetch_packet_bits_decoded_instruction_1_REG_needs_branch_unit),	// src/main/scala/Frontend/decoder.scala:245:68
-    .io_enq_bits_decoded_instruction_1_needs_CSRs           (1'h0),	// src/main/scala/Frontend/decoder.scala:233:15
+      (_decoders_1_io_decoded_instruction_bits_needs_branch_unit),	// src/main/scala/Frontend/decoder.scala:231:15
+    .io_enq_bits_decoded_instruction_1_needs_CSRs           (1'h0),	// src/main/scala/Frontend/decoder.scala:211:7
     .io_enq_bits_decoded_instruction_1_SUBTRACT
-      (decoded_fetch_packet_bits_decoded_instruction_1_REG_SUBTRACT),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_1_io_decoded_instruction_bits_SUBTRACT),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_1_MULTIPLY
-      (decoded_fetch_packet_bits_decoded_instruction_1_REG_MULTIPLY),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_1_io_decoded_instruction_bits_MULTIPLY),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_1_IS_IMM
-      (decoded_fetch_packet_bits_decoded_instruction_1_REG_IS_IMM),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_1_io_decoded_instruction_bits_IS_IMM),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_1_memory_type
-      (decoded_fetch_packet_bits_decoded_instruction_1_REG_memory_type),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_1_io_decoded_instruction_bits_memory_type),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_1_access_width
-      (decoded_fetch_packet_bits_decoded_instruction_1_REG_access_width),	// src/main/scala/Frontend/decoder.scala:245:68
-    .io_enq_bits_decoded_instruction_2_ready_bits_RS1_ready (1'h0),	// src/main/scala/Frontend/decoder.scala:233:15
-    .io_enq_bits_decoded_instruction_2_ready_bits_RS2_ready (1'h0),	// src/main/scala/Frontend/decoder.scala:233:15
+      (_decoders_1_io_decoded_instruction_bits_access_width),	// src/main/scala/Frontend/decoder.scala:231:15
+    .io_enq_bits_decoded_instruction_2_ready_bits_RS1_ready (1'h0),	// src/main/scala/Frontend/decoder.scala:211:7
+    .io_enq_bits_decoded_instruction_2_ready_bits_RS2_ready (1'h0),	// src/main/scala/Frontend/decoder.scala:211:7
     .io_enq_bits_decoded_instruction_2_RD
-      (decoded_fetch_packet_bits_decoded_instruction_2_REG_RD),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_2_io_decoded_instruction_bits_RD),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_2_RD_valid
-      (decoded_fetch_packet_bits_decoded_instruction_2_REG_RD_valid),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_2_io_decoded_instruction_bits_RD_valid),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_2_RS1
-      (decoded_fetch_packet_bits_decoded_instruction_2_REG_RS1),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_2_io_decoded_instruction_bits_RS1),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_2_RS1_valid
-      (decoded_fetch_packet_bits_decoded_instruction_2_REG_RS1_valid),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_2_io_decoded_instruction_bits_RS1_valid),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_2_RS2
-      (decoded_fetch_packet_bits_decoded_instruction_2_REG_RS2),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_2_io_decoded_instruction_bits_RS2),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_2_RS2_valid
-      (decoded_fetch_packet_bits_decoded_instruction_2_REG_RS2_valid),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_2_io_decoded_instruction_bits_RS2_valid),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_2_IMM
-      (decoded_fetch_packet_bits_decoded_instruction_2_REG_IMM),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_2_io_decoded_instruction_bits_IMM),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_2_FUNCT3
-      (decoded_fetch_packet_bits_decoded_instruction_2_REG_FUNCT3),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_2_io_decoded_instruction_bits_FUNCT3),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_2_packet_index
-      (decoded_fetch_packet_bits_decoded_instruction_2_REG_packet_index),	// src/main/scala/Frontend/decoder.scala:245:68
-    .io_enq_bits_decoded_instruction_2_ROB_index            (6'h0),	// src/main/scala/Frontend/decoder.scala:233:15
+      (_decoders_2_io_decoded_instruction_bits_packet_index),	// src/main/scala/Frontend/decoder.scala:231:15
+    .io_enq_bits_decoded_instruction_2_ROB_index            (6'h0),	// src/main/scala/Frontend/decoder.scala:231:15, :267:65
     .io_enq_bits_decoded_instruction_2_MOB_index            (4'h0),
     .io_enq_bits_decoded_instruction_2_FTQ_index            (4'h0),
     .io_enq_bits_decoded_instruction_2_instructionType
-      (decoded_fetch_packet_bits_decoded_instruction_2_REG_instructionType),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_2_io_decoded_instruction_bits_instructionType),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_2_portID
-      (decoded_fetch_packet_bits_decoded_instruction_2_REG_portID),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_2_io_decoded_instruction_bits_portID),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_2_RS_type
-      (decoded_fetch_packet_bits_decoded_instruction_2_REG_RS_type),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_2_io_decoded_instruction_bits_RS_type),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_2_needs_ALU
-      (decoded_fetch_packet_bits_decoded_instruction_2_REG_needs_ALU),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_2_io_decoded_instruction_bits_needs_ALU),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_2_needs_branch_unit
-      (decoded_fetch_packet_bits_decoded_instruction_2_REG_needs_branch_unit),	// src/main/scala/Frontend/decoder.scala:245:68
-    .io_enq_bits_decoded_instruction_2_needs_CSRs           (1'h0),	// src/main/scala/Frontend/decoder.scala:233:15
+      (_decoders_2_io_decoded_instruction_bits_needs_branch_unit),	// src/main/scala/Frontend/decoder.scala:231:15
+    .io_enq_bits_decoded_instruction_2_needs_CSRs           (1'h0),	// src/main/scala/Frontend/decoder.scala:211:7
     .io_enq_bits_decoded_instruction_2_SUBTRACT
-      (decoded_fetch_packet_bits_decoded_instruction_2_REG_SUBTRACT),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_2_io_decoded_instruction_bits_SUBTRACT),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_2_MULTIPLY
-      (decoded_fetch_packet_bits_decoded_instruction_2_REG_MULTIPLY),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_2_io_decoded_instruction_bits_MULTIPLY),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_2_IS_IMM
-      (decoded_fetch_packet_bits_decoded_instruction_2_REG_IS_IMM),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_2_io_decoded_instruction_bits_IS_IMM),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_2_memory_type
-      (decoded_fetch_packet_bits_decoded_instruction_2_REG_memory_type),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_2_io_decoded_instruction_bits_memory_type),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_2_access_width
-      (decoded_fetch_packet_bits_decoded_instruction_2_REG_access_width),	// src/main/scala/Frontend/decoder.scala:245:68
-    .io_enq_bits_decoded_instruction_3_ready_bits_RS1_ready (1'h0),	// src/main/scala/Frontend/decoder.scala:233:15
-    .io_enq_bits_decoded_instruction_3_ready_bits_RS2_ready (1'h0),	// src/main/scala/Frontend/decoder.scala:233:15
+      (_decoders_2_io_decoded_instruction_bits_access_width),	// src/main/scala/Frontend/decoder.scala:231:15
+    .io_enq_bits_decoded_instruction_3_ready_bits_RS1_ready (1'h0),	// src/main/scala/Frontend/decoder.scala:211:7
+    .io_enq_bits_decoded_instruction_3_ready_bits_RS2_ready (1'h0),	// src/main/scala/Frontend/decoder.scala:211:7
     .io_enq_bits_decoded_instruction_3_RD
-      (decoded_fetch_packet_bits_decoded_instruction_3_REG_RD),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_3_io_decoded_instruction_bits_RD),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_3_RD_valid
-      (decoded_fetch_packet_bits_decoded_instruction_3_REG_RD_valid),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_3_io_decoded_instruction_bits_RD_valid),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_3_RS1
-      (decoded_fetch_packet_bits_decoded_instruction_3_REG_RS1),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_3_io_decoded_instruction_bits_RS1),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_3_RS1_valid
-      (decoded_fetch_packet_bits_decoded_instruction_3_REG_RS1_valid),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_3_io_decoded_instruction_bits_RS1_valid),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_3_RS2
-      (decoded_fetch_packet_bits_decoded_instruction_3_REG_RS2),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_3_io_decoded_instruction_bits_RS2),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_3_RS2_valid
-      (decoded_fetch_packet_bits_decoded_instruction_3_REG_RS2_valid),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_3_io_decoded_instruction_bits_RS2_valid),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_3_IMM
-      (decoded_fetch_packet_bits_decoded_instruction_3_REG_IMM),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_3_io_decoded_instruction_bits_IMM),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_3_FUNCT3
-      (decoded_fetch_packet_bits_decoded_instruction_3_REG_FUNCT3),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_3_io_decoded_instruction_bits_FUNCT3),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_3_packet_index
-      (decoded_fetch_packet_bits_decoded_instruction_3_REG_packet_index),	// src/main/scala/Frontend/decoder.scala:245:68
-    .io_enq_bits_decoded_instruction_3_ROB_index            (6'h0),	// src/main/scala/Frontend/decoder.scala:233:15
+      (_decoders_3_io_decoded_instruction_bits_packet_index),	// src/main/scala/Frontend/decoder.scala:231:15
+    .io_enq_bits_decoded_instruction_3_ROB_index            (6'h0),	// src/main/scala/Frontend/decoder.scala:231:15, :267:65
     .io_enq_bits_decoded_instruction_3_MOB_index            (4'h0),
     .io_enq_bits_decoded_instruction_3_FTQ_index            (4'h0),
     .io_enq_bits_decoded_instruction_3_instructionType
-      (decoded_fetch_packet_bits_decoded_instruction_3_REG_instructionType),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_3_io_decoded_instruction_bits_instructionType),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_3_portID
-      (decoded_fetch_packet_bits_decoded_instruction_3_REG_portID),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_3_io_decoded_instruction_bits_portID),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_3_RS_type
-      (decoded_fetch_packet_bits_decoded_instruction_3_REG_RS_type),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_3_io_decoded_instruction_bits_RS_type),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_3_needs_ALU
-      (decoded_fetch_packet_bits_decoded_instruction_3_REG_needs_ALU),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_3_io_decoded_instruction_bits_needs_ALU),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_3_needs_branch_unit
-      (decoded_fetch_packet_bits_decoded_instruction_3_REG_needs_branch_unit),	// src/main/scala/Frontend/decoder.scala:245:68
-    .io_enq_bits_decoded_instruction_3_needs_CSRs           (1'h0),	// src/main/scala/Frontend/decoder.scala:233:15
+      (_decoders_3_io_decoded_instruction_bits_needs_branch_unit),	// src/main/scala/Frontend/decoder.scala:231:15
+    .io_enq_bits_decoded_instruction_3_needs_CSRs           (1'h0),	// src/main/scala/Frontend/decoder.scala:211:7
     .io_enq_bits_decoded_instruction_3_SUBTRACT
-      (decoded_fetch_packet_bits_decoded_instruction_3_REG_SUBTRACT),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_3_io_decoded_instruction_bits_SUBTRACT),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_3_MULTIPLY
-      (decoded_fetch_packet_bits_decoded_instruction_3_REG_MULTIPLY),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_3_io_decoded_instruction_bits_MULTIPLY),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_3_IS_IMM
-      (decoded_fetch_packet_bits_decoded_instruction_3_REG_IS_IMM),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_3_io_decoded_instruction_bits_IS_IMM),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_3_memory_type
-      (decoded_fetch_packet_bits_decoded_instruction_3_REG_memory_type),	// src/main/scala/Frontend/decoder.scala:245:68
+      (_decoders_3_io_decoded_instruction_bits_memory_type),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_3_access_width
-      (decoded_fetch_packet_bits_decoded_instruction_3_REG_access_width),	// src/main/scala/Frontend/decoder.scala:245:68
-    .io_enq_bits_valid_bits_0                               (REG_0),	// src/main/scala/Frontend/decoder.scala:252:68
-    .io_enq_bits_valid_bits_1                               (REG_1),	// src/main/scala/Frontend/decoder.scala:252:68
-    .io_enq_bits_valid_bits_2                               (REG_2),	// src/main/scala/Frontend/decoder.scala:252:68
-    .io_enq_bits_valid_bits_3                               (REG_3),	// src/main/scala/Frontend/decoder.scala:252:68
+      (_decoders_3_io_decoded_instruction_bits_access_width),	// src/main/scala/Frontend/decoder.scala:231:15
+    .io_enq_bits_valid_bits_0
+      (io_fetch_packet_bits_valid_bits_0),
+    .io_enq_bits_valid_bits_1
+      (io_fetch_packet_bits_valid_bits_1),
+    .io_enq_bits_valid_bits_2
+      (io_fetch_packet_bits_valid_bits_2),
+    .io_enq_bits_valid_bits_3
+      (io_fetch_packet_bits_valid_bits_3),
+    .io_enq_bits_GHR                                        (io_fetch_packet_bits_GHR),
+    .io_enq_bits_TOS                                        (io_fetch_packet_bits_TOS),
+    .io_enq_bits_NEXT                                       (io_fetch_packet_bits_NEXT),
     .io_enq_bits_RAT_index                                  (4'h0),
     .io_enq_bits_free_list_front_pointer                    (8'h0),
     .io_deq_ready
-      (io_decoded_fetch_packet_ready),
+      (predictions_out_Q_io_deq_ready),	// src/main/scala/Frontend/decoder.scala:276:90
     .io_deq_valid
       (io_decoded_fetch_packet_valid),
     .io_deq_bits_fetch_PC
@@ -1284,28 +909,31 @@ module fetch_packet_decoder(	// src/main/scala/Frontend/decoder.scala:211:7
       (io_decoded_fetch_packet_bits_valid_bits_2),
     .io_deq_bits_valid_bits_3
       (io_decoded_fetch_packet_bits_valid_bits_3),
+    .io_deq_bits_GHR
+      (io_decoded_fetch_packet_bits_GHR),
+    .io_deq_bits_TOS
+      (io_decoded_fetch_packet_bits_TOS),
+    .io_deq_bits_NEXT
+      (io_decoded_fetch_packet_bits_NEXT),
     .io_deq_bits_RAT_index
       (io_decoded_fetch_packet_bits_RAT_index),
     .io_deq_bits_free_list_front_pointer
       (io_decoded_fetch_packet_bits_free_list_front_pointer),
     .io_flush                                               (io_flush)
-  );	// src/main/scala/Frontend/decoder.scala:264:55
-  Queue1_FTQ_entry_1 predictions_out_skid_buffer (	// src/main/scala/Frontend/decoder.scala:275:45
+  );	// src/main/scala/Frontend/decoder.scala:267:65
+  Queue2_FTQ_entry predictions_out_Q (	// src/main/scala/Frontend/decoder.scala:268:65
     .clock                        (clock),
     .reset                        (reset),
-    .io_enq_valid                 (predictions_out_valid_REG),	// src/main/scala/Frontend/decoder.scala:278:39
-    .io_enq_bits_valid            (predictions_out_bits_REG_valid),	// src/main/scala/Frontend/decoder.scala:277:39
-    .io_enq_bits_fetch_PC         (predictions_out_bits_REG_fetch_PC),	// src/main/scala/Frontend/decoder.scala:277:39
-    .io_enq_bits_is_misprediction (predictions_out_bits_REG_is_misprediction),	// src/main/scala/Frontend/decoder.scala:277:39
-    .io_enq_bits_predicted_PC     (predictions_out_bits_REG_predicted_PC),	// src/main/scala/Frontend/decoder.scala:277:39
-    .io_enq_bits_T_NT             (predictions_out_bits_REG_T_NT),	// src/main/scala/Frontend/decoder.scala:277:39
-    .io_enq_bits_br_type          (predictions_out_bits_REG_br_type),	// src/main/scala/Frontend/decoder.scala:277:39
-    .io_enq_bits_GHR              (predictions_out_bits_REG_GHR),	// src/main/scala/Frontend/decoder.scala:277:39
-    .io_enq_bits_NEXT             (predictions_out_bits_REG_NEXT),	// src/main/scala/Frontend/decoder.scala:277:39
-    .io_enq_bits_TOS              (predictions_out_bits_REG_TOS),	// src/main/scala/Frontend/decoder.scala:277:39
-    .io_enq_bits_dominant_index   (predictions_out_bits_REG_dominant_index),	// src/main/scala/Frontend/decoder.scala:277:39
-    .io_enq_bits_resolved_PC      (predictions_out_bits_REG_resolved_PC),	// src/main/scala/Frontend/decoder.scala:277:39
-    .io_deq_ready                 (io_predictions_out_ready),
+    .io_enq_valid                 (_predictions_out_valid_T & ~io_flush),	// src/main/scala/Frontend/decoder.scala:248:86, :271:82, :272:109
+    .io_enq_bits_valid            (io_predictions_in_bits_valid),
+    .io_enq_bits_fetch_PC         (io_predictions_in_bits_fetch_PC),
+    .io_enq_bits_is_misprediction (io_predictions_in_bits_is_misprediction),
+    .io_enq_bits_predicted_PC     (io_predictions_in_bits_predicted_PC),
+    .io_enq_bits_T_NT             (io_predictions_in_bits_T_NT),
+    .io_enq_bits_br_type          (io_predictions_in_bits_br_type),
+    .io_enq_bits_dominant_index   (io_predictions_in_bits_dominant_index),
+    .io_enq_bits_resolved_PC      (io_predictions_in_bits_resolved_PC),
+    .io_deq_ready                 (predictions_out_Q_io_deq_ready),	// src/main/scala/Frontend/decoder.scala:276:90
     .io_deq_valid                 (io_predictions_out_valid),
     .io_deq_bits_valid            (io_predictions_out_bits_valid),
     .io_deq_bits_fetch_PC         (io_predictions_out_bits_fetch_PC),
@@ -1313,14 +941,11 @@ module fetch_packet_decoder(	// src/main/scala/Frontend/decoder.scala:211:7
     .io_deq_bits_predicted_PC     (io_predictions_out_bits_predicted_PC),
     .io_deq_bits_T_NT             (io_predictions_out_bits_T_NT),
     .io_deq_bits_br_type          (io_predictions_out_bits_br_type),
-    .io_deq_bits_GHR              (io_predictions_out_bits_GHR),
-    .io_deq_bits_NEXT             (io_predictions_out_bits_NEXT),
-    .io_deq_bits_TOS              (io_predictions_out_bits_TOS),
     .io_deq_bits_dominant_index   (io_predictions_out_bits_dominant_index),
     .io_deq_bits_resolved_PC      (io_predictions_out_bits_resolved_PC),
     .io_flush                     (io_flush)
-  );	// src/main/scala/Frontend/decoder.scala:275:45
-  assign io_fetch_packet_ready = io_decoded_fetch_packet_ready;	// src/main/scala/Frontend/decoder.scala:211:7
-  assign io_predictions_in_ready = io_predictions_out_ready;	// src/main/scala/Frontend/decoder.scala:211:7
+  );	// src/main/scala/Frontend/decoder.scala:268:65
+  assign io_fetch_packet_ready = io_fetch_packet_ready_REG;	// src/main/scala/Frontend/decoder.scala:211:7, :286:67
+  assign io_predictions_in_ready = io_predictions_in_ready_REG;	// src/main/scala/Frontend/decoder.scala:211:7, :287:67
 endmodule
 

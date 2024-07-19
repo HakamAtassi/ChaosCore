@@ -65,6 +65,7 @@ module free_list(	// src/main/scala/Frontend/free_list.scala:41:7
   input  [2:0]  io_commit_bits_br_type,	// src/main/scala/Frontend/free_list.scala:45:16
   input  [1:0]  io_commit_bits_fetch_packet_index,	// src/main/scala/Frontend/free_list.scala:45:16
   input         io_commit_bits_is_misprediction,	// src/main/scala/Frontend/free_list.scala:45:16
+                io_commit_bits_exception,	// src/main/scala/Frontend/free_list.scala:45:16
   input  [31:0] io_commit_bits_expected_PC,	// src/main/scala/Frontend/free_list.scala:45:16
   input  [15:0] io_commit_bits_GHR,	// src/main/scala/Frontend/free_list.scala:45:16
   input  [6:0]  io_commit_bits_TOS,	// src/main/scala/Frontend/free_list.scala:45:16

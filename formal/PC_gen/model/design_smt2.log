@@ -31,28 +31,28 @@ Module PC_gen directly or indirectly contains formal properties -> setting "keep
 
 === Queue1_memory_request ===
 
-   Number of wires:                 24
-   Number of wire bits:            245
-   Number of public wires:          13
-   Number of public wire bits:     170
-   Number of ports:                  9
-   Number of port bits:            102
+   Number of wires:                 27
+   Number of wire bits:            248
+   Number of public wires:          14
+   Number of public wire bits:     171
+   Number of ports:                 10
+   Number of port bits:            103
    Number of memories:               0
    Number of memory bits:            0
    Number of processes:              0
-   Number of cells:                 19
-     $and                            6
+   Number of cells:                 21
+     $and                            7
      $anyinit                        2
      $assume                         1
      $mux                            5
-     $not                            3
+     $not                            4
      $or                             1
      $xor                            1
 
 === PC_gen ===
 
-   Number of wires:                119
-   Number of wire bits:            771
+   Number of wires:                112
+   Number of wire bits:            769
    Number of public wires:          54
    Number of public wire bits:     462
    Number of ports:                 40
@@ -60,16 +60,16 @@ Module PC_gen directly or indirectly contains formal properties -> setting "keep
    Number of memories:               0
    Number of memory bits:            0
    Number of processes:              0
-   Number of cells:                 84
+   Number of cells:                 76
      $add                            2
      $and                           14
      $anyinit                        2
      $assert                         4
-     $assume                         2
+     $assume                         1
      $eq                             7
-     $ff                            11
-     $mux                           27
-     $not                           13
+     $ff                             9
+     $mux                           23
+     $not                           12
      $sub                            1
      Queue1_memory_request           1
 
@@ -78,24 +78,24 @@ Module PC_gen directly or indirectly contains formal properties -> setting "keep
    PC_gen                            1
      Queue1_memory_request           1
 
-   Number of wires:                143
-   Number of wire bits:           1016
-   Number of public wires:          67
-   Number of public wire bits:     632
-   Number of ports:                 49
-   Number of port bits:            457
+   Number of wires:                139
+   Number of wire bits:           1017
+   Number of public wires:          68
+   Number of public wire bits:     633
+   Number of ports:                 50
+   Number of port bits:            458
    Number of memories:               0
    Number of memory bits:            0
    Number of processes:              0
-   Number of cells:                102
+   Number of cells:                 96
      $add                            2
-     $and                           20
+     $and                           21
      $anyinit                        4
      $assert                         4
-     $assume                         3
+     $assume                         2
      $eq                             7
-     $ff                            11
-     $mux                           32
+     $ff                             9
+     $mux                           28
      $not                           16
      $or                             1
      $sub                            1
@@ -109,6 +109,6 @@ Module PC_gen directly or indirectly contains formal properties -> setting "keep
 Creating SMT-LIBv2 representation of module Queue1_memory_request.
 Creating SMT-LIBv2 representation of module PC_gen.
 
-End of script. Logfile hash: 01046e41b1, CPU: user 0.01s system 0.00s, MEM: 25.38 MB peak
+End of script. Logfile hash: 9d3a8c99b4, CPU: user 0.01s system 0.00s, MEM: 25.50 MB peak
 Yosys 0.43 (git sha1 ead4718e5, clang++ 14.0.0-1ubuntu1.1 -fPIC -Os)
 Time spent: 68% 2x write_smt2 (0 sec), 22% 2x read_ilang (0 sec), ...

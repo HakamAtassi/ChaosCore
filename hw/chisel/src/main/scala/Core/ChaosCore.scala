@@ -92,10 +92,8 @@ class ChaosCore(parameters:Parameters) extends Module{
     /////////////////////
     // BACKEND <> DRAM //
     /////////////////////
-
     backend.io.backend_memory_response    <>  io.backend_memory_response
     backend.io.backend_memory_request     <>  io.backend_memory_request
-
 
     ////////////////////
     // BACKEND <> BRU //
@@ -193,12 +191,6 @@ class ChaosCore(parameters:Parameters) extends Module{
 
     val all_INT_RS_accepted = Wire(Bool())  // every valid INT RS instruction has an available spot
     val all_MEM_RS_accepted = Wire(Bool())  // every valid MEM RS instruction has an available spot
-
-    dontTouch(all_INT_RS_accepted)
-    dontTouch(all_MEM_RS_accepted)
-
-    dontTouch(needs_MEMRS)
-    dontTouch(needs_INTRS)
 
     // there must be more available RS entries than requesting instructions for that RS
     // Otherwise, entry doesnt allocate

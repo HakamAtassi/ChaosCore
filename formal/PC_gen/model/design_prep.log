@@ -21,21 +21,19 @@ Found 0 SCCs.
 4. Executing MEMORY_NORDFF pass (extracting $dff cells from memories).
 
 5. Executing ASYNC2SYNC pass.
-Replacing PC_gen.$auto$verificsva.cc:1820:import$550 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2515:And$538, Q=$auto$verificsva.cc:1818:import$548
-Replacing PC_gen.$auto$verificsva.cc:1820:import$511 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2515:And$499, Q=$auto$verificsva.cc:1818:import$509
-Replacing PC_gen.$auto$verificsva.cc:1820:import$472 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2515:And$460, Q=$auto$verificsva.cc:1818:import$470
-Replacing PC_gen.$auto$verificsva.cc:1820:import$433 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2515:And$421, Q=$auto$verificsva.cc:1818:import$431
-Replacing PC_gen.$auto$verificsva.cc:1820:import$394 ($adff): ARST=\hasBeenReset, D=\io_PC_next_ready, Q=$auto$verificsva.cc:1818:import$392
-Replacing PC_gen.$auto$verificsva.cc:1820:import$383 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$379, Q=$auto$verificsva.cc:1818:import$381
-Replacing PC_gen.$auto$verificsva.cc:1820:import$354 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$350, Q=$auto$verificsva.cc:1818:import$352
-Replacing PC_gen.$auto$verificsva.cc:1820:import$325 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$321, Q=$auto$verificsva.cc:1818:import$323
-Replacing PC_gen.$auto$verificsva.cc:1820:import$296 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$292, Q=$auto$verificsva.cc:1818:import$294
-Replacing PC_gen.$auto$verificsva.cc:1819:import$432 ($adff): ARST=\hasBeenReset, D=1'1, Q=$auto$verificsva.cc:1817:import$430
-Replacing PC_gen.$auto$verificsva.cc:1819:import$393 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$388, Q=$auto$verificsva.cc:1817:import$391
-Replacing PC_gen.$auto$verificsva.cc:1819:import$382 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$377, Q=$auto$verificsva.cc:1817:import$380
-Replacing PC_gen.$auto$verificsva.cc:1819:import$353 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$348, Q=$auto$verificsva.cc:1817:import$351
-Replacing PC_gen.$auto$verificsva.cc:1819:import$324 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$319, Q=$auto$verificsva.cc:1817:import$322
-Replacing PC_gen.$auto$verificsva.cc:1819:import$295 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$290, Q=$auto$verificsva.cc:1817:import$293
+Replacing PC_gen.$auto$verificsva.cc:1820:import$532 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2515:And$520, Q=$auto$verificsva.cc:1818:import$530
+Replacing PC_gen.$auto$verificsva.cc:1820:import$493 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2515:And$481, Q=$auto$verificsva.cc:1818:import$491
+Replacing PC_gen.$auto$verificsva.cc:1820:import$454 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2515:And$442, Q=$auto$verificsva.cc:1818:import$452
+Replacing PC_gen.$auto$verificsva.cc:1820:import$415 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2515:And$403, Q=$auto$verificsva.cc:1818:import$413
+Replacing PC_gen.$auto$verificsva.cc:1820:import$376 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$372, Q=$auto$verificsva.cc:1818:import$374
+Replacing PC_gen.$auto$verificsva.cc:1820:import$347 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$343, Q=$auto$verificsva.cc:1818:import$345
+Replacing PC_gen.$auto$verificsva.cc:1820:import$318 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$314, Q=$auto$verificsva.cc:1818:import$316
+Replacing PC_gen.$auto$verificsva.cc:1820:import$289 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2516:Or$285, Q=$auto$verificsva.cc:1818:import$287
+Replacing PC_gen.$auto$verificsva.cc:1819:import$414 ($adff): ARST=\hasBeenReset, D=1'1, Q=$auto$verificsva.cc:1817:import$412
+Replacing PC_gen.$auto$verificsva.cc:1819:import$375 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$370, Q=$auto$verificsva.cc:1817:import$373
+Replacing PC_gen.$auto$verificsva.cc:1819:import$346 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$341, Q=$auto$verificsva.cc:1817:import$344
+Replacing PC_gen.$auto$verificsva.cc:1819:import$317 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$312, Q=$auto$verificsva.cc:1817:import$315
+Replacing PC_gen.$auto$verificsva.cc:1819:import$288 ($adff): ARST=\hasBeenReset, D=$auto$rtlil.cc:2485:Not$283, Q=$auto$verificsva.cc:1817:import$286
 
 6. Executing OPT_CLEAN pass (remove unused cells and wires).
 Finding unused cells or wires in module \Queue1_memory_request..
@@ -82,6 +80,6 @@ Finding unused cells or wires in module \Queue1_memory_request..
 13. Executing RTLIL backend.
 Output filename: ../model/design_prep.il
 
-End of script. Logfile hash: fa1f484de1, CPU: user 0.02s system 0.01s, MEM: 26.38 MB peak
+End of script. Logfile hash: d43edbd9fb, CPU: user 0.02s system 0.01s, MEM: 26.38 MB peak
 Yosys 0.43 (git sha1 ead4718e5, clang++ 14.0.0-1ubuntu1.1 -fPIC -Os)
-Time spent: 40% 4x opt_clean (0 sec), 10% 1x opt_expr (0 sec), ...
+Time spent: 39% 4x opt_clean (0 sec), 10% 1x check (0 sec), ...

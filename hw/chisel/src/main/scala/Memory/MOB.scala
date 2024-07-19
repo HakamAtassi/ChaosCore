@@ -35,7 +35,43 @@ import circt.stage.ChiselStage
 
 import chisel3.util._
 import getPortCount._
-import Thermometor._
+
+
+
+
+/*  Opeartion
+*
+*   // ALLOCATE //
+*   On Allocate, reserve an entry for the Load/Store instruction.
+*   
+*   // AGU OUT //
+*   On AGU output, buffer Adderess + Data (store only) into MOB. Set pending = 1
+*   If Store, search for younger conflicting loads that have already written to FU. If found, set exception
+*   If Load, search for younger conflicting loads that have already written to FU. If found, set exception
+*
+*   // CACHE ACCESS //
+*   Every cycle, check MOB for any pending pending loads. If load found & cache is ready, request load. Set pending = 0
+*   If no loads (cache port free) and cache is ready, send MOB head to cache if store and pending and commited and not exception. Set pending = 0
+*
+*   // POINTERS //
+*   Front pointer increments (DQ) if valid & not pending & completed & committed
+*
+*   // FLUSH //
+*   If flush (mispred or exception): clear entries, reset pointers. 
+*
+*   // COMMIT //
+*   Set commited for all entries with the same ROB index as commit input
+*   
+*   // CACHE RESPONSE //   
+*   Write response data to MOB. Mark data as valid. Load only...
+*   
+*   // FU OUTPUT //
+*   Select earliest load with valid data that hasnt been written to FU yet (!completed & data_valid)
+*   If load queue ready, Merge with earlier stores, write to queue. Set completed  
+*   Select earliest store that is (pending & !completed)
+*   If store queue ready, write to queue. Set completed
+*
+*/
 
 
 
@@ -58,10 +94,11 @@ class MOB(parameters:Parameters) extends Module{
 
         val AGU_output              =      Flipped(ValidIO(new FU_output(parameters)))                                      // update address (AGU)
 
-        val MOB_output              =      ValidIO(new FU_output(parameters))                                      // update address (AGU)
+        val MOB_output              =      ValidIO(new FU_output(parameters))                                               // update address (AGU)
 
         // REDIRECTS // 
         val commit                  =      Flipped(ValidIO(new commit(parameters)))                                         // commit mem op
+
         //val RF_inputs               =      Vec(portCount, Decoupled(new decoded_instruction(parameters)))                   // write RD
 
         ///////////////////////////
@@ -73,12 +110,11 @@ class MOB(parameters:Parameters) extends Module{
     })
 
 
-
     val front_pointer   = RegInit(UInt(ptr_width.W), 0.U)
     val back_pointer    = RegInit(UInt(ptr_width.W), 0.U)
 
-    val front_index   = front_pointer(ptr_width-2, 0)
-    val back_index    = back_pointer(ptr_width-2, 0)
+    val front_index     = front_pointer(ptr_width-2, 0)
+    val back_index      = back_pointer(ptr_width-2, 0)
 
     val MOB = RegInit(VecInit(Seq.fill(MOBEntries)(0.U.asTypeOf(new MOB_entry(parameters)))))
 
@@ -96,9 +132,9 @@ class MOB(parameters:Parameters) extends Module{
         age_valid_vector(i) := MOB(i).valid
     }
 
-    //////////////
-    // RESERVE //
-    //////////////
+    //////////////////////
+    // ALLOCATE/RESERVE //
+    //////////////////////
     val written_vec = Wire(Vec(fetchWidth, Bool()))
 
     for(i <- 0 until dispatchWidth){
@@ -114,162 +150,194 @@ class MOB(parameters:Parameters) extends Module{
         when(written_vec(i)){
             val index_offset = PopCount(written_vec.take(i+1))-1.U
 
+            MOB(back_index + index_offset).valid                :=  1.B
             MOB(back_index + index_offset).memory_type          :=  io.reserve(i).bits.memory_type
             MOB(back_index + index_offset).RD                   :=  io.reserve(i).bits.RD
             MOB(back_index + index_offset).ROB_index            :=  io.reserve(i).bits.ROB_index
 
-            io.reserved_pointers(index_offset).bits     := back_index + index_offset
-            io.reserved_pointers(index_offset).valid    := 1.U
+            io.reserved_pointers(i).bits     := back_index + index_offset
+            io.reserved_pointers(i).valid    := 1.U
         }
     }
 
+    back_pointer := back_pointer + PopCount(written_vec)
 
-    ////////////////////
-    // WRITE AGU DATA //
-    ////////////////////
-    // On input
-    // Update address, set to pending.
 
-    val MOB_index                        = io.AGU_output.bits.MOB_index
-    val address                          = io.AGU_output.bits.address
+    /////////////
+    // AGU OUT //
+    /////////////
+    // Write data
+    val MOB_index                       = io.AGU_output.bits.MOB_index
+    val address                         = io.AGU_output.bits.address
+    val data                            = io.AGU_output.bits.RD_data
     when(io.AGU_output.valid){
-        MOB(MOB_index).pending              := 1.B
-        MOB(MOB_index).address              := address
+        MOB(MOB_index).pending         := 1.B
+        MOB(MOB_index).address         := address
+        MOB(MOB_index).data            := data
     }
 
-    /////////////////////
-    // VIOLATION CHECK //
-    /////////////////////
-    // On input
-    // Check for load-load or store-load conflicts
-    // On incoming operations, check for store-store, store-load, and load-load conflicts (younger load/store operations to the same address that have completed).
-    // store-store conflicts cause the current search to terminate early
-    // store-load conflicts set violation bit
-    // load-load conflicts set violation bit(to maintain RVWMO memory consistency)
+    // Check exception
     val incoming_is_valid       = io.AGU_output.valid
     val incoming_address        = io.AGU_output.bits.address
     val incoming_age            = age_vector(io.AGU_output.bits.MOB_index)
     val incoming_is_load        = io.AGU_output.bits.memory_type === memory_type_t.LOAD
     val incoming_is_store       = io.AGU_output.bits.memory_type === memory_type_t.STORE
 
-    val store_store_violation     = Wire(Vec(MOBEntries, Bool())) // Not a real violation. If any bits are set, terminate search
+    val store_store_violation   = Wire(Vec(MOBEntries, Bool())) // Not a real violation. If any bits are set, terminate search
+    store_store_violation := VecInit(Seq.fill(MOBEntries)(0.B))
 
-    for(i <- 0 until MOBEntries){
-        store_store_violation(i)    := 0.B
-    }
 
     // violation checks
-    for(i <- 0 until MOBEntries){       
+    for(i <- 0 until MOBEntries){
         val is_valid        = MOB(i).valid
         val is_younger      = age_vector(i) < incoming_age
-        val is_conflicting  = incoming_address === (MOB(i).address & "hFFFF_FFF0".U)
+        val is_conflicting  = incoming_address === (get_fetch_packet_aligned_address(parameters, MOB(i).address))
 
         val is_load         = MOB(i).memory_type === memory_type_t.LOAD
         val is_store        = MOB(i).memory_type === memory_type_t.STORE
+        val is_complete     = MOB(i).completed
+        val is_pending      = MOB(i).pending
 
-        when(is_younger && is_conflicting && is_valid && (PopCount(store_store_violation.take(i)) === 0.U) ){ // FIXME: && adderess has been placed by AGU?
-            when(incoming_is_load && is_load){          // load load violation
-                MOB(MOB_index).violation := 1.B
-            }.elsewhen(incoming_is_store && is_load){   // store load violation. 
-                MOB(MOB_index).violation := 1.B
-            }.elsewhen(incoming_is_store && is_store){  // store store "violation"
+        when(io.AGU_output.valid && is_younger && is_conflicting && is_valid && (PopCount(store_store_violation.take(i)) === 0.U)){
+            when(incoming_is_load && is_load && is_complete){                    // load load violation
+                MOB(i).exception := 1.B
+            }.elsewhen(incoming_is_store && is_load && is_complete){             // store load violation
+                MOB(i).exception := 1.B
+            }.elsewhen(incoming_is_store && is_store && is_pending){                // store store "violation"
                 store_store_violation(i) := 1.B
             }
         }
     }
 
 
-    ////////////////////////
-    // REQUEST LOAD/STORE //
-    ////////////////////////
+    //////////////////
+    // CACHE ACCESS //
+    //////////////////
     // Check for pending loads, send to memory as needed
     val fire_store = Wire(Bool())
-    val fire_load  = Wire(Bool())
-
 
     io.backend_memory_request.bits   := 0.U.asTypeOf(new backend_memory_request(parameters))
     io.backend_memory_request.valid  := 0.B
 
-    for(i <- 0 until MOBEntries){   // schedule load
-        fire_load   := MOB(i).valid && MOB(i).pending && MOB(i).memory_type === memory_type_t.LOAD
-        fire_store  := MOB(front_index).valid && MOB(front_index).committed && MOB(front_index).memory_type === memory_type_t.STORE
-        when(fire_load){    // schedule load
-            MOB(i).pending := 0.B
-            io.backend_memory_request.bits.addr         := MOB(i).address
-            io.backend_memory_request.bits.memory_type  := MOB(i).memory_type
-            io.backend_memory_request.bits.access_width := MOB(i).access_width
-            io.backend_memory_request.bits.MOB_index    := i.U
-        }
+    val possible_load_vec = Wire(Vec(MOBEntries, Bool()))
+
+    // FIXME: need to add cache ready check + FSM/skidbuffer stuff...
+    possible_load_vec    := MOB.map(MOB_entry => MOB_entry.valid && MOB_entry.pending && (MOB_entry.memory_type === memory_type_t.LOAD))
+    fire_store           := MOB(front_index).valid && MOB(front_index).committed && !MOB(front_index).exception && (MOB(front_index).memory_type === memory_type_t.STORE)    // stores are sent only from front of queue
+
+    when(possible_load_vec.asUInt > 0.U){    // possible load, do that
+        val load_index                               = PriorityEncoder(possible_load_vec)
+        MOB(load_index).pending                     := 0.B
+        io.backend_memory_request.valid             := 1.B
+        io.backend_memory_request.bits.addr         := MOB(load_index).address
+        io.backend_memory_request.bits.memory_type  := MOB(load_index).memory_type
+        io.backend_memory_request.bits.access_width := MOB(load_index).access_width
+        io.backend_memory_request.bits.MOB_index    := load_index
     }.elsewhen(fire_store){
-        MOB(i).pending := 0.B
-        io.backend_memory_request.bits.addr             := MOB(i).address
-        io.backend_memory_request.bits.memory_type      := MOB(i).memory_type
-        io.backend_memory_request.bits.access_width     := MOB(i).access_width
-        io.backend_memory_request.bits.MOB_index        := i.U
+        val store_index                              = front_index
+        MOB(store_index).pending                    := 0.B
+        io.backend_memory_request.valid             := 1.B
+        io.backend_memory_request.bits.addr         := MOB(store_index).address
+        io.backend_memory_request.bits.memory_type  := MOB(store_index).memory_type
+        io.backend_memory_request.bits.access_width := MOB(store_index).access_width
+        io.backend_memory_request.bits.MOB_index    := store_index
     }
 
 
 
-    for(i <- 0 until MOBEntries){ // free front pointer
-        val is_committed       = MOB(front_index).committed
-        val is_store           = MOB(front_index).memory_type  === memory_type_t.STORE
-        val is_load            = MOB(front_index).memory_type  === memory_type_t.LOAD
-        val is_valid           = MOB(front_index).valid
-        val is_pending         = MOB(front_index).pending
-        val fired              = MOB(front_index).fired
-        when(is_valid && is_store && !is_pending && fired && is_committed){    // free store
-            MOB(front_index) := 0.U.asTypeOf(new MOB_entry(parameters))
-        }.elsewhen(is_valid && is_load && !is_pending && fired){               // free load
-            MOB(front_index) := 0.U.asTypeOf(new MOB_entry(parameters))
-
+    ///////////////////
+    // UPDATE COMMIT //
+    ///////////////////
+    // Update commit bit
+    for(i <- 0 until MOBEntries){
+        when(io.commit.valid && (MOB(i).ROB_index === io.commit.bits.ROB_index)){
+            MOB(i).committed := 1.B
         }
     }
 
-    //////////////////////
-    // VIOLATION OUTPUT //
-    //////////////////////
+    //////////////
+    // POINTERS //
+    //////////////
 
-    // TODO:
+    val is_committed       = MOB(front_index).committed
+    val is_complete        = MOB(front_index).completed
+    val is_valid           = MOB(front_index).valid
+    val is_pending         = MOB(front_index).pending
+    
+    when(is_valid && !is_pending && is_complete && is_committed){
+        MOB(front_index) := 0.U.asTypeOf(new MOB_entry(parameters))
+        front_pointer    := front_pointer + 1.U
+    }
+
+    ///////////
+    // FLUSH //
+    ///////////
+    when(io.commit.valid && (io.commit.bits.is_misprediction || io.commit.bits.exception)){   //FIXME: 
+        for(i <- 0 until MOBEntries){
+            MOB(i) := 0.U.asTypeOf(new MOB_entry(parameters))
+        }
+    }
+
+    ////////////////////
+    // CACHE RESPONSE //
+    ////////////////////
+    when(io.backend_memory_response.valid){
+        MOB(io.backend_memory_response.bits.MOB_index).data  := io.backend_memory_response.bits.data
+        MOB(io.backend_memory_response.bits.MOB_index).data_valid := 1.B
+    }
+
+    ///////////
+    // MERGE //
+    ///////////
+    // Get MOB indices
+    val FU_output_load_Q        = Module(new Queue(new FU_output(parameters), 4, flow=false, hasFlush=true, useSyncReadMem=false))
+    val FU_output_store_Q       = Module(new Queue(new FU_output(parameters), 4, flow=false, hasFlush=true, useSyncReadMem=false))
+
+    val possible_FU_loads       = Wire(Vec(MOBEntries, Bool()))
+    val possible_FU_stores      = Wire(Vec(MOBEntries, Bool()))
+
+    possible_FU_loads          := MOB.map(MOB_entry => MOB_entry.valid && !MOB_entry.completed && MOB_entry.data_valid && (MOB_entry.memory_type === memory_type_t.LOAD))
+    possible_FU_stores         := MOB.map(MOB_entry => MOB_entry.valid && !MOB_entry.completed && (MOB_entry.pending && (MOB_entry.memory_type === memory_type_t.STORE)))
+
+    val possible_FU_load_index  = PriorityEncoder(possible_FU_loads)
+    val possible_FU_store_index = PriorityEncoder(possible_FU_stores)
+
+    // write store to store FU queue
+    FU_output_store_Q.io.enq.valid               := possible_FU_stores.reduce(_ || _)
+    FU_output_store_Q.io.enq.bits                := DontCare
+    FU_output_store_Q.io.enq.bits.exception      := MOB(possible_FU_store_index).exception
+    FU_output_store_Q.io.enq.bits.ROB_index      := MOB(possible_FU_store_index).ROB_index
+    FU_output_store_Q.io.flush.get := io.commit.valid && (io.commit.bits.is_misprediction || io.commit.bits.exception)
+
+
+    when(FU_output_store_Q.io.enq.fire){MOB(possible_FU_store_index).ROB_index}
 
 
 
-
-    /////////////////////////
-    // MERGE AND WRITEBACK //
-    /////////////////////////
-    // On memory response
-    // Look up MOB, merge, and write to reg file
-
-    io.backend_memory_response  := DontCare
-
-
-    val response_age = Wire(UInt((ptr_width-1).W))
 
     
-    val byte_sels   = Wire(Vec(MOBEntries, UInt(4.W)))
-    val wr_bytes    = Wire(Vec(MOBEntries, Vec(4, UInt(8.W))))
 
-    val data_out    = Wire(Vec(4, UInt(8.W)))
+    // merge data then write load to load FU queue
+    val response_age = Wire(UInt((ptr_width-1).W))
+    val byte_sels    = Wire(Vec(MOBEntries, UInt(4.W)))
+    val wr_bytes     = Wire(Vec(MOBEntries, Vec(4, UInt(8.W))))
+    val data_out     = Wire(Vec(4, UInt(8.W)))
 
-    response_age := age_vector(io.backend_memory_response.bits.MOB_index)
-
+    response_age := age_vector(possible_FU_load_index)
 
     data_out     := DontCare 
 
-    // Compute row writes
-    for(i <- 0 until MOBEntries){    // forward from MOB
-        byte_sels(i) := get_MOB_row_byte_sel(parameters, MOB(i))
-        wr_bytes(i)     := DontCare //Seq.fill(4, 0.U) //0.U //get_MOB_row_byte_wr(MOB(i))
-    }
+    // get byte mask and data for each row
+    byte_sels    := MOB.map(MOB_entry => get_MOB_row_byte_sel(parameters, MOB_entry))
+    wr_bytes     := MOB.map(MOB_entry => get_MOB_row_wr_bytes(parameters, MOB_entry))
 
-    // Forward from row write to data out
     for(i <- 0 until MOBEntries){    // forward from MOB
-        val is_valid        = MOB(i).valid
-        val is_younger      = age_vector(i) < response_age
-        val is_conflicting  = incoming_address === MOB(i).address
+        val is_valid            = MOB(i).valid
+        val is_younger          = age_vector(i) < response_age
+        val is_conflicting      = incoming_address === MOB(i).address
 
-        val is_load         = MOB(i).memory_type === memory_type_t.LOAD
-        val is_store        = MOB(i).memory_type === memory_type_t.STORE
+        val is_load             = MOB(i).memory_type === memory_type_t.LOAD
+        val is_store            = MOB(i).memory_type === memory_type_t.STORE
 
         val fwd_address         = MOB(i).address        // 32 bit address
         val fwd_access_width    = MOB(i).access_width  // 1, 2, 4 (b, hw, w)
@@ -282,40 +350,51 @@ class MOB(parameters:Parameters) extends Module{
                     data_out(j) := wr_bytes(i)(j)
                 }
             }
-
         }
     }
 
 
-    io.MOB_output               := DontCare
+
+    FU_output_load_Q.io.enq.valid               := possible_FU_stores.reduce(_ || _)
+    FU_output_load_Q.io.enq.bits                := DontCare
+    FU_output_load_Q.io.enq.bits.exception      := MOB(possible_FU_load_index).exception
+    FU_output_load_Q.io.enq.bits.ROB_index      := MOB(possible_FU_load_index).ROB_index
+    FU_output_load_Q.io.enq.bits.RD             := MOB(possible_FU_load_index).RD
+    FU_output_load_Q.io.enq.bits.RD_data        := wr_bytes.asUInt
+    FU_output_load_Q.io.enq.bits.RD_valid       := 1.B
+
+    FU_output_load_Q.io.flush.get := io.commit.valid && (io.commit.bits.is_misprediction || io.commit.bits.exception)
+    when(FU_output_load_Q.io.enq.fire){MOB(possible_FU_load_index).ROB_index}
 
 
-    for(i <- 0 until 4){    // forward from MOB
-        byte_sels(i) := get_MOB_row_byte_sel(parameters, MOB(i))
-        wr_bytes(i)     := DontCare //Seq.fill(4, 0.U) //0.U //get_MOB_row_byte_wr(MOB(i))
-    }
-
-    io.MOB_output.valid := io.backend_memory_response.valid
-    io.MOB_output.bits.RD    := MOB(io.backend_memory_response.bits.MOB_index).RD
-    io.MOB_output.bits.RD_data    := wr_bytes.asUInt    // does this work?
 
 
+    val FU_output_arbiter       = Module(new Arbiter(new FU_output(parameters), 2))
+
+    FU_output_arbiter.io.in(0) <> FU_output_load_Q.io.deq
+    FU_output_arbiter.io.in(1) <> FU_output_store_Q.io.deq
+
+    io.MOB_output.bits         <> FU_output_arbiter.io.out.bits
+    FU_output_arbiter.io.out.ready := 1.B
 
 
-    ///////////////////
-    // UPDATE COMMIT //
-    ///////////////////
-    // Update commit bit
-    for(i <- 0 until MOBEntries){
-        when(io.commit.valid && MOB(i).ROB_index === io.commit.bits.ROB_index){
-            MOB(i).committed := 1.B
-        }
-    }
+    io.backend_memory_response.ready := 1.B
+
+
+    ///////////////
+    // FU OUTPUT //
+    ///////////////
+
+    io.MOB_output                   := DontCare
+    io.MOB_output.valid             <> FU_output_arbiter.io.out.valid
+
+    io.MOB_output.bits.RD           := FU_output_arbiter.io.out.bits.RD
+    io.MOB_output.bits.RD_valid     := FU_output_arbiter.io.out.bits.RD_valid
+    io.MOB_output.bits.RD_data      := FU_output_arbiter.io.out.bits.RD_data
 
     ///////////
     // READY //
     ///////////
-
 
     val availalbe_MOB_entries = PopCount(~Cat(MOB.map(_.valid)))
     

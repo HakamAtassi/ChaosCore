@@ -47,9 +47,7 @@ module gshare(	// src/main/scala/Frontend/BP/gshare.scala:70:7
   input         clock,	// src/main/scala/Frontend/BP/gshare.scala:70:7
   input  [15:0] io_predict_GHR,	// src/main/scala/Frontend/BP/gshare.scala:74:16
   input  [31:0] io_predict_PC,	// src/main/scala/Frontend/BP/gshare.scala:74:16
-  input         io_predict_valid,	// src/main/scala/Frontend/BP/gshare.scala:74:16
   output        io_T_NT,	// src/main/scala/Frontend/BP/gshare.scala:74:16
-                io_valid,	// src/main/scala/Frontend/BP/gshare.scala:74:16
   input         io_commit_valid,	// src/main/scala/Frontend/BP/gshare.scala:74:16
   input  [31:0] io_commit_bits_fetch_PC,	// src/main/scala/Frontend/BP/gshare.scala:74:16
   input         io_commit_bits_T_NT,	// src/main/scala/Frontend/BP/gshare.scala:74:16
@@ -60,12 +58,10 @@ module gshare(	// src/main/scala/Frontend/BP/gshare.scala:70:7
   wire [15:0] _PHT_io_readDataB;	// src/main/scala/Frontend/BP/gshare.scala:107:21
   wire [15:0] hashed_predict_addr = io_predict_PC[15:0] ^ io_predict_GHR;	// src/main/scala/Frontend/BP/gshare.scala:104:43, :110:{41,57}
   wire [15:0] hashed_commit_addr = io_commit_bits_fetch_PC[15:0] ^ io_commit_bits_GHR;	// src/main/scala/Frontend/BP/gshare.scala:105:43, :111:{51,67}
-  reg         io_valid_REG;	// src/main/scala/Frontend/BP/gshare.scala:121:27
   reg  [15:0] PHT_io_addrC_REG;	// src/main/scala/Frontend/BP/gshare.scala:128:35
   reg         PHT_io_writeEnableC_REG;	// src/main/scala/Frontend/BP/gshare.scala:130:35
   reg         REG;	// src/main/scala/Frontend/BP/gshare.scala:136:17
   always @(posedge clock) begin	// src/main/scala/Frontend/BP/gshare.scala:70:7
-    io_valid_REG <= io_predict_valid;	// src/main/scala/Frontend/BP/gshare.scala:121:27
     PHT_io_addrC_REG <= hashed_commit_addr;	// src/main/scala/Frontend/BP/gshare.scala:105:43, :128:35
     PHT_io_writeEnableC_REG <= io_commit_valid;	// src/main/scala/Frontend/BP/gshare.scala:130:35
     REG <= io_commit_bits_T_NT;	// src/main/scala/Frontend/BP/gshare.scala:136:17
@@ -81,10 +77,9 @@ module gshare(	// src/main/scala/Frontend/BP/gshare.scala:70:7
       `endif // INIT_RANDOM_PROLOG_
       `ifdef RANDOMIZE_REG_INIT	// src/main/scala/Frontend/BP/gshare.scala:70:7
         _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// src/main/scala/Frontend/BP/gshare.scala:70:7
-        io_valid_REG = _RANDOM[/*Zero width*/ 1'b0][0];	// src/main/scala/Frontend/BP/gshare.scala:70:7, :121:27
-        PHT_io_addrC_REG = _RANDOM[/*Zero width*/ 1'b0][16:1];	// src/main/scala/Frontend/BP/gshare.scala:70:7, :121:27, :128:35
-        PHT_io_writeEnableC_REG = _RANDOM[/*Zero width*/ 1'b0][17];	// src/main/scala/Frontend/BP/gshare.scala:70:7, :121:27, :130:35
-        REG = _RANDOM[/*Zero width*/ 1'b0][18];	// src/main/scala/Frontend/BP/gshare.scala:70:7, :121:27, :136:17
+        PHT_io_addrC_REG = _RANDOM[/*Zero width*/ 1'b0][16:1];	// src/main/scala/Frontend/BP/gshare.scala:70:7, :128:35
+        PHT_io_writeEnableC_REG = _RANDOM[/*Zero width*/ 1'b0][17];	// src/main/scala/Frontend/BP/gshare.scala:70:7, :128:35, :130:35
+        REG = _RANDOM[/*Zero width*/ 1'b0][18];	// src/main/scala/Frontend/BP/gshare.scala:70:7, :128:35, :136:17
       `endif // RANDOMIZE_REG_INIT
     end // initial
     `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/Frontend/BP/gshare.scala:70:7
@@ -109,6 +104,5 @@ module gshare(	// src/main/scala/Frontend/BP/gshare.scala:70:7
     .io_writeEnableC (PHT_io_writeEnableC_REG)	// src/main/scala/Frontend/BP/gshare.scala:130:35
   );	// src/main/scala/Frontend/BP/gshare.scala:107:21
   assign io_T_NT = _PHT_io_readDataA[1];	// src/main/scala/Frontend/BP/gshare.scala:70:7, :107:21, :120:36
-  assign io_valid = io_valid_REG;	// src/main/scala/Frontend/BP/gshare.scala:70:7, :121:27
 endmodule
 

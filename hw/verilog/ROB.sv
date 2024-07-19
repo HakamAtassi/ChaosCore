@@ -154,6 +154,9 @@ module ROB(	// src/main/scala/Backend/ROB.scala:42:7
                 io_ROB_packet_bits_valid_bits_1,	// src/main/scala/Backend/ROB.scala:46:16
                 io_ROB_packet_bits_valid_bits_2,	// src/main/scala/Backend/ROB.scala:46:16
                 io_ROB_packet_bits_valid_bits_3,	// src/main/scala/Backend/ROB.scala:46:16
+  input  [15:0] io_ROB_packet_bits_GHR,	// src/main/scala/Backend/ROB.scala:46:16
+  input  [6:0]  io_ROB_packet_bits_TOS,	// src/main/scala/Backend/ROB.scala:46:16
+                io_ROB_packet_bits_NEXT,	// src/main/scala/Backend/ROB.scala:46:16
   input  [3:0]  io_ROB_packet_bits_RAT_index,	// src/main/scala/Backend/ROB.scala:46:16
   input  [7:0]  io_ROB_packet_bits_free_list_front_pointer,	// src/main/scala/Backend/ROB.scala:46:16
   input         io_FU_outputs_0_valid,	// src/main/scala/Backend/ROB.scala:46:16
@@ -173,7 +176,8 @@ module ROB(	// src/main/scala/Backend/ROB.scala:42:7
   input  [5:0]  io_FU_outputs_0_bits_ROB_index,	// src/main/scala/Backend/ROB.scala:46:16
   input  [3:0]  io_FU_outputs_0_bits_FTQ_index,	// src/main/scala/Backend/ROB.scala:46:16
   input  [1:0]  io_FU_outputs_0_bits_fetch_packet_index,	// src/main/scala/Backend/ROB.scala:46:16
-  input         io_FU_outputs_1_valid,	// src/main/scala/Backend/ROB.scala:46:16
+  input         io_FU_outputs_0_bits_exception,	// src/main/scala/Backend/ROB.scala:46:16
+                io_FU_outputs_1_valid,	// src/main/scala/Backend/ROB.scala:46:16
   input  [6:0]  io_FU_outputs_1_bits_RD,	// src/main/scala/Backend/ROB.scala:46:16
   input  [31:0] io_FU_outputs_1_bits_RD_data,	// src/main/scala/Backend/ROB.scala:46:16
   input         io_FU_outputs_1_bits_RD_valid,	// src/main/scala/Backend/ROB.scala:46:16
@@ -190,7 +194,8 @@ module ROB(	// src/main/scala/Backend/ROB.scala:42:7
   input  [5:0]  io_FU_outputs_1_bits_ROB_index,	// src/main/scala/Backend/ROB.scala:46:16
   input  [3:0]  io_FU_outputs_1_bits_FTQ_index,	// src/main/scala/Backend/ROB.scala:46:16
   input  [1:0]  io_FU_outputs_1_bits_fetch_packet_index,	// src/main/scala/Backend/ROB.scala:46:16
-  input         io_FU_outputs_2_valid,	// src/main/scala/Backend/ROB.scala:46:16
+  input         io_FU_outputs_1_bits_exception,	// src/main/scala/Backend/ROB.scala:46:16
+                io_FU_outputs_2_valid,	// src/main/scala/Backend/ROB.scala:46:16
   input  [6:0]  io_FU_outputs_2_bits_RD,	// src/main/scala/Backend/ROB.scala:46:16
   input  [31:0] io_FU_outputs_2_bits_RD_data,	// src/main/scala/Backend/ROB.scala:46:16
   input         io_FU_outputs_2_bits_RD_valid,	// src/main/scala/Backend/ROB.scala:46:16
@@ -207,7 +212,8 @@ module ROB(	// src/main/scala/Backend/ROB.scala:42:7
   input  [5:0]  io_FU_outputs_2_bits_ROB_index,	// src/main/scala/Backend/ROB.scala:46:16
   input  [3:0]  io_FU_outputs_2_bits_FTQ_index,	// src/main/scala/Backend/ROB.scala:46:16
   input  [1:0]  io_FU_outputs_2_bits_fetch_packet_index,	// src/main/scala/Backend/ROB.scala:46:16
-  input         io_FU_outputs_3_valid,	// src/main/scala/Backend/ROB.scala:46:16
+  input         io_FU_outputs_2_bits_exception,	// src/main/scala/Backend/ROB.scala:46:16
+                io_FU_outputs_3_valid,	// src/main/scala/Backend/ROB.scala:46:16
   input  [6:0]  io_FU_outputs_3_bits_RD,	// src/main/scala/Backend/ROB.scala:46:16
   input  [31:0] io_FU_outputs_3_bits_RD_data,	// src/main/scala/Backend/ROB.scala:46:16
   input         io_FU_outputs_3_bits_RD_valid,	// src/main/scala/Backend/ROB.scala:46:16
@@ -224,10 +230,14 @@ module ROB(	// src/main/scala/Backend/ROB.scala:42:7
   input  [5:0]  io_FU_outputs_3_bits_ROB_index,	// src/main/scala/Backend/ROB.scala:46:16
   input  [3:0]  io_FU_outputs_3_bits_FTQ_index,	// src/main/scala/Backend/ROB.scala:46:16
   input  [1:0]  io_FU_outputs_3_bits_fetch_packet_index,	// src/main/scala/Backend/ROB.scala:46:16
+  input         io_FU_outputs_3_bits_exception,	// src/main/scala/Backend/ROB.scala:46:16
   output        io_ROB_output_row_valid,	// src/main/scala/Backend/ROB.scala:46:16
   output [31:0] io_ROB_output_fetch_PC,	// src/main/scala/Backend/ROB.scala:46:16
   output [3:0]  io_ROB_output_RAT_index,	// src/main/scala/Backend/ROB.scala:46:16
   output [5:0]  io_ROB_output_ROB_index,	// src/main/scala/Backend/ROB.scala:46:16
+  output [15:0] io_ROB_output_GHR,	// src/main/scala/Backend/ROB.scala:46:16
+  output [6:0]  io_ROB_output_NEXT,	// src/main/scala/Backend/ROB.scala:46:16
+                io_ROB_output_TOS,	// src/main/scala/Backend/ROB.scala:46:16
   output [7:0]  io_ROB_output_free_list_front_pointer,	// src/main/scala/Backend/ROB.scala:46:16
   output        io_ROB_output_ROB_entries_0_valid,	// src/main/scala/Backend/ROB.scala:46:16
                 io_ROB_output_ROB_entries_0_is_branch,	// src/main/scala/Backend/ROB.scala:46:16
@@ -253,6 +263,10 @@ module ROB(	// src/main/scala/Backend/ROB.scala:42:7
                 io_ROB_output_complete_1,	// src/main/scala/Backend/ROB.scala:46:16
                 io_ROB_output_complete_2,	// src/main/scala/Backend/ROB.scala:46:16
                 io_ROB_output_complete_3,	// src/main/scala/Backend/ROB.scala:46:16
+                io_ROB_output_exception_0,	// src/main/scala/Backend/ROB.scala:46:16
+                io_ROB_output_exception_1,	// src/main/scala/Backend/ROB.scala:46:16
+                io_ROB_output_exception_2,	// src/main/scala/Backend/ROB.scala:46:16
+                io_ROB_output_exception_3,	// src/main/scala/Backend/ROB.scala:46:16
   input         io_commit_valid,	// src/main/scala/Backend/ROB.scala:46:16
   input  [31:0] io_commit_bits_fetch_PC,	// src/main/scala/Backend/ROB.scala:46:16
   input         io_commit_bits_T_NT,	// src/main/scala/Backend/ROB.scala:46:16
@@ -260,6 +274,7 @@ module ROB(	// src/main/scala/Backend/ROB.scala:42:7
   input  [2:0]  io_commit_bits_br_type,	// src/main/scala/Backend/ROB.scala:46:16
   input  [1:0]  io_commit_bits_fetch_packet_index,	// src/main/scala/Backend/ROB.scala:46:16
   input         io_commit_bits_is_misprediction,	// src/main/scala/Backend/ROB.scala:46:16
+                io_commit_bits_exception,	// src/main/scala/Backend/ROB.scala:46:16
   input  [31:0] io_commit_bits_expected_PC,	// src/main/scala/Backend/ROB.scala:46:16
   input  [15:0] io_commit_bits_GHR,	// src/main/scala/Backend/ROB.scala:46:16
   input  [6:0]  io_commit_bits_TOS,	// src/main/scala/Backend/ROB.scala:46:16
@@ -279,78 +294,78 @@ module ROB(	// src/main/scala/Backend/ROB.scala:42:7
   output [31:0] io_PC_file_exec_data	// src/main/scala/Backend/ROB.scala:46:16
 );
 
-  wire        full;	// src/main/scala/Backend/ROB.scala:284:89
-  reg  [6:0]  front_pointer;	// src/main/scala/Backend/ROB.scala:78:32
-  reg  [6:0]  back_pointer;	// src/main/scala/Backend/ROB.scala:79:32
-  wire        allocate = io_ROB_packet_valid & ~full;	// src/main/scala/Backend/ROB.scala:92:37, :284:89, :286:28
-  reg         row_valid_mem_0;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_1;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_2;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_3;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_4;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_5;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_6;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_7;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_8;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_9;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_10;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_11;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_12;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_13;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_14;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_15;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_16;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_17;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_18;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_19;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_20;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_21;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_22;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_23;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_24;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_25;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_26;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_27;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_28;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_29;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_30;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_31;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_32;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_33;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_34;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_35;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_36;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_37;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_38;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_39;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_40;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_41;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_42;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_43;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_44;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_45;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_46;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_47;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_48;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_49;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_50;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_51;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_52;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_53;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_54;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_55;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_56;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_57;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_58;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_59;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_60;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_61;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_62;	// src/main/scala/Backend/ROB.scala:107:36
-  reg         row_valid_mem_63;	// src/main/scala/Backend/ROB.scala:107:36
-  wire [6:0]  _front_pointer_T_2 = front_pointer + 7'h1;	// src/main/scala/Backend/ROB.scala:78:32, :249:47
+  wire        full;	// src/main/scala/Backend/ROB.scala:291:89
+  reg  [6:0]  front_pointer;	// src/main/scala/Backend/ROB.scala:76:32
+  reg  [6:0]  back_pointer;	// src/main/scala/Backend/ROB.scala:77:32
+  wire        allocate = io_ROB_packet_valid & ~full;	// src/main/scala/Backend/ROB.scala:90:37, :291:89, :293:28
+  reg         row_valid_mem_0;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_1;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_2;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_3;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_4;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_5;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_6;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_7;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_8;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_9;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_10;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_11;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_12;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_13;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_14;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_15;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_16;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_17;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_18;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_19;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_20;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_21;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_22;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_23;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_24;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_25;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_26;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_27;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_28;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_29;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_30;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_31;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_32;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_33;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_34;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_35;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_36;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_37;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_38;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_39;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_40;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_41;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_42;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_43;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_44;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_45;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_46;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_47;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_48;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_49;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_50;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_51;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_52;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_53;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_54;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_55;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_56;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_57;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_58;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_59;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_60;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_61;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_62;	// src/main/scala/Backend/ROB.scala:105:36
+  reg         row_valid_mem_63;	// src/main/scala/Backend/ROB.scala:105:36
+  wire [6:0]  _front_pointer_T_2 = front_pointer + 7'h1;	// src/main/scala/Backend/ROB.scala:76:32, :250:47
   wire [5:0]  front_index =
-    io_flush ? 6'h0 : io_commit_valid ? _front_pointer_T_2[5:0] : front_pointer[5:0];	// src/main/scala/Backend/ROB.scala:78:32, :108:56, :245:19, :247:23, :248:32, :249:47, :250:{21,40}, :253:21
-  wire [5:0]  back_index = io_flush ? 6'h0 : back_pointer[5:0];	// src/main/scala/Backend/ROB.scala:79:32, :256:19, :258:21, :261:{22,37}
+    io_flush ? 6'h0 : io_commit_valid ? _front_pointer_T_2[5:0] : front_pointer[5:0];	// src/main/scala/Backend/ROB.scala:76:32, :106:56, :246:19, :248:23, :249:32, :250:47, :251:{21,40}, :254:21
+  wire [5:0]  back_index = io_flush ? 6'h0 : back_pointer[5:0];	// src/main/scala/Backend/ROB.scala:77:32, :257:19, :259:21, :262:{22,37}
   wire [63:0] _GEN =
     {{row_valid_mem_63},
      {row_valid_mem_62},
@@ -415,78 +430,77 @@ module ROB(	// src/main/scala/Backend/ROB.scala:42:7
      {row_valid_mem_3},
      {row_valid_mem_2},
      {row_valid_mem_1},
-     {row_valid_mem_0}};	// src/main/scala/Backend/ROB.scala:107:36, :268:29
-  reg  [5:0]  io_ROB_output_ROB_index_REG;	// src/main/scala/Backend/ROB.scala:269:39
-  assign full = front_pointer[5:0] == back_pointer[5:0] & front_pointer != back_pointer;	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :108:56, :284:{51,67,89,107}
-  reg         shared_memory_update_notif;	// src/main/scala/Backend/ROB.scala:292:45
+     {row_valid_mem_0}};	// src/main/scala/Backend/ROB.scala:105:36, :269:44
+  reg  [5:0]  io_ROB_output_ROB_index_REG;	// src/main/scala/Backend/ROB.scala:270:54
+  assign full = front_pointer[5:0] == back_pointer[5:0] & front_pointer != back_pointer;	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :106:56, :291:{51,67,89,107}
   always @(posedge clock) begin	// src/main/scala/Backend/ROB.scala:42:7
     if (reset) begin	// src/main/scala/Backend/ROB.scala:42:7
-      front_pointer <= 7'h0;	// src/main/scala/Backend/ROB.scala:78:32
-      back_pointer <= 7'h0;	// src/main/scala/Backend/ROB.scala:78:32, :79:32
-      row_valid_mem_0 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_1 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_2 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_3 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_4 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_5 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_6 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_7 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_8 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_9 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_10 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_11 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_12 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_13 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_14 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_15 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_16 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_17 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_18 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_19 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_20 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_21 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_22 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_23 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_24 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_25 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_26 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_27 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_28 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_29 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_30 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_31 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_32 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_33 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_34 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_35 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_36 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_37 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_38 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_39 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_40 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_41 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_42 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_43 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_44 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_45 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_46 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_47 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_48 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_49 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_50 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_51 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_52 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_53 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_54 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_55 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_56 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_57 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_58 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_59 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_60 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_61 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_62 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
-      row_valid_mem_63 <= 1'h0;	// src/main/scala/Backend/ROB.scala:107:36
+      front_pointer <= 7'h0;	// src/main/scala/Backend/ROB.scala:76:32
+      back_pointer <= 7'h0;	// src/main/scala/Backend/ROB.scala:76:32, :77:32
+      row_valid_mem_0 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_1 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_2 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_3 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_4 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_5 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_6 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_7 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_8 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_9 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_10 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_11 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_12 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_13 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_14 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_15 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_16 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_17 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_18 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_19 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_20 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_21 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_22 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_23 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_24 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_25 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_26 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_27 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_28 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_29 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_30 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_31 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_32 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_33 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_34 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_35 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_36 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_37 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_38 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_39 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_40 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_41 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_42 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_43 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_44 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_45 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_46 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_47 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_48 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_49 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_50 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_51 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_52 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_53 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_54 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_55 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_56 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_57 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_58 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_59 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_60 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_61 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_62 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
+      row_valid_mem_63 <= 1'h0;	// src/main/scala/Backend/ROB.scala:105:36
     end
     else begin	// src/main/scala/Backend/ROB.scala:42:7
       front_pointer <=
@@ -494,203 +508,202 @@ module ROB(	// src/main/scala/Backend/ROB.scala:42:7
           ? 7'h0
           : io_commit_valid
               ? _front_pointer_T_2
-              : front_pointer + {6'h0, io_commit_valid};	// src/main/scala/Backend/ROB.scala:78:32, :242:{19,36}, :245:19, :246:23, :248:32, :249:47, :251:23
-      back_pointer <= io_flush ? 7'h0 : back_pointer + {6'h0, allocate};	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :92:37, :256:19, :257:22, :260:{22,38}
+              : front_pointer + {6'h0, io_commit_valid};	// src/main/scala/Backend/ROB.scala:76:32, :243:{19,36}, :246:19, :247:23, :249:32, :250:47, :252:23
+      back_pointer <= io_flush ? 7'h0 : back_pointer + {6'h0, allocate};	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :90:37, :257:19, :258:22, :261:{22,38}
       row_valid_mem_0 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h0)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h0 | row_valid_mem_0);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h0 | row_valid_mem_0);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_1 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h1)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h1 | row_valid_mem_1);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h1 | row_valid_mem_1);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_2 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h2)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h2 | row_valid_mem_2);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h2 | row_valid_mem_2);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_3 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h3)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h3 | row_valid_mem_3);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h3 | row_valid_mem_3);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_4 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h4)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h4 | row_valid_mem_4);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h4 | row_valid_mem_4);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_5 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h5)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h5 | row_valid_mem_5);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h5 | row_valid_mem_5);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_6 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h6)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h6 | row_valid_mem_6);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h6 | row_valid_mem_6);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_7 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h7)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h7 | row_valid_mem_7);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h7 | row_valid_mem_7);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_8 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h8)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h8 | row_valid_mem_8);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h8 | row_valid_mem_8);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_9 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h9)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h9 | row_valid_mem_9);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h9 | row_valid_mem_9);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_10 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'hA)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'hA | row_valid_mem_10);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'hA | row_valid_mem_10);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_11 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'hB)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'hB | row_valid_mem_11);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'hB | row_valid_mem_11);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_12 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'hC)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'hC | row_valid_mem_12);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'hC | row_valid_mem_12);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_13 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'hD)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'hD | row_valid_mem_13);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'hD | row_valid_mem_13);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_14 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'hE)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'hE | row_valid_mem_14);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'hE | row_valid_mem_14);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_15 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'hF)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'hF | row_valid_mem_15);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'hF | row_valid_mem_15);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_16 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h10)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h10 | row_valid_mem_16);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h10 | row_valid_mem_16);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_17 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h11)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h11 | row_valid_mem_17);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h11 | row_valid_mem_17);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_18 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h12)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h12 | row_valid_mem_18);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h12 | row_valid_mem_18);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_19 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h13)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h13 | row_valid_mem_19);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h13 | row_valid_mem_19);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_20 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h14)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h14 | row_valid_mem_20);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h14 | row_valid_mem_20);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_21 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h15)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h15 | row_valid_mem_21);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h15 | row_valid_mem_21);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_22 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h16)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h16 | row_valid_mem_22);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h16 | row_valid_mem_22);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_23 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h17)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h17 | row_valid_mem_23);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h17 | row_valid_mem_23);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_24 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h18)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h18 | row_valid_mem_24);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h18 | row_valid_mem_24);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_25 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h19)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h19 | row_valid_mem_25);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h19 | row_valid_mem_25);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_26 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h1A)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h1A | row_valid_mem_26);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h1A | row_valid_mem_26);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_27 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h1B)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h1B | row_valid_mem_27);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h1B | row_valid_mem_27);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_28 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h1C)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h1C | row_valid_mem_28);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h1C | row_valid_mem_28);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_29 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h1D)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h1D | row_valid_mem_29);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h1D | row_valid_mem_29);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_30 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h1E)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h1E | row_valid_mem_30);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h1E | row_valid_mem_30);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_31 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h1F)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h1F | row_valid_mem_31);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h1F | row_valid_mem_31);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_32 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h20)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h20 | row_valid_mem_32);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h20 | row_valid_mem_32);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_33 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h21)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h21 | row_valid_mem_33);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h21 | row_valid_mem_33);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_34 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h22)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h22 | row_valid_mem_34);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h22 | row_valid_mem_34);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_35 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h23)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h23 | row_valid_mem_35);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h23 | row_valid_mem_35);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_36 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h24)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h24 | row_valid_mem_36);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h24 | row_valid_mem_36);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_37 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h25)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h25 | row_valid_mem_37);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h25 | row_valid_mem_37);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_38 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h26)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h26 | row_valid_mem_38);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h26 | row_valid_mem_38);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_39 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h27)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h27 | row_valid_mem_39);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h27 | row_valid_mem_39);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_40 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h28)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h28 | row_valid_mem_40);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h28 | row_valid_mem_40);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_41 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h29)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h29 | row_valid_mem_41);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h29 | row_valid_mem_41);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_42 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h2A)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h2A | row_valid_mem_42);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h2A | row_valid_mem_42);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_43 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h2B)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h2B | row_valid_mem_43);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h2B | row_valid_mem_43);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_44 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h2C)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h2C | row_valid_mem_44);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h2C | row_valid_mem_44);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_45 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h2D)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h2D | row_valid_mem_45);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h2D | row_valid_mem_45);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_46 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h2E)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h2E | row_valid_mem_46);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h2E | row_valid_mem_46);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_47 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h2F)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h2F | row_valid_mem_47);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h2F | row_valid_mem_47);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_48 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h30)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h30 | row_valid_mem_48);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h30 | row_valid_mem_48);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_49 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h31)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h31 | row_valid_mem_49);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h31 | row_valid_mem_49);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_50 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h32)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h32 | row_valid_mem_50);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h32 | row_valid_mem_50);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_51 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h33)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h33 | row_valid_mem_51);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h33 | row_valid_mem_51);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_52 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h34)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h34 | row_valid_mem_52);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h34 | row_valid_mem_52);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_53 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h35)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h35 | row_valid_mem_53);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h35 | row_valid_mem_53);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_54 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h36)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h36 | row_valid_mem_54);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h36 | row_valid_mem_54);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_55 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h37)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h37 | row_valid_mem_55);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h37 | row_valid_mem_55);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_56 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h38)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h38 | row_valid_mem_56);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h38 | row_valid_mem_56);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_57 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h39)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h39 | row_valid_mem_57);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h39 | row_valid_mem_57);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_58 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h3A)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h3A | row_valid_mem_58);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h3A | row_valid_mem_58);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_59 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h3B)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h3B | row_valid_mem_59);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h3B | row_valid_mem_59);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_60 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h3C)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h3C | row_valid_mem_60);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h3C | row_valid_mem_60);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_61 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h3D)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h3D | row_valid_mem_61);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h3D | row_valid_mem_61);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_62 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h3E)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h3E | row_valid_mem_62);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h3E | row_valid_mem_62);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
       row_valid_mem_63 <=
         ~(io_flush | io_commit_valid & (&(front_pointer[5:0])))
-        & (io_ROB_packet_valid & (&(back_pointer[5:0])) | row_valid_mem_63);	// src/main/scala/Backend/ROB.scala:78:32, :79:32, :107:36, :108:56, :110:30, :111:{35,57}, :114:26, :115:58, :118:19, :119:23
+        & (io_ROB_packet_valid & (&(back_pointer[5:0])) | row_valid_mem_63);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
     end
-    io_ROB_output_ROB_index_REG <= front_index;	// src/main/scala/Backend/ROB.scala:245:19, :247:23, :248:32, :269:39
-    shared_memory_update_notif <= io_ROB_packet_valid;	// src/main/scala/Backend/ROB.scala:292:45
+    io_ROB_output_ROB_index_REG <= front_index;	// src/main/scala/Backend/ROB.scala:246:19, :248:23, :249:32, :270:54
   end // always @(posedge)
   `ifdef ENABLE_INITIAL_REG_	// src/main/scala/Backend/ROB.scala:42:7
     `ifdef FIRRTL_BEFORE_INITIAL	// src/main/scala/Backend/ROB.scala:42:7
@@ -705,257 +718,266 @@ module ROB(	// src/main/scala/Backend/ROB.scala:42:7
         for (logic [1:0] i = 2'h0; i < 2'h3; i += 2'h1) begin
           _RANDOM[i] = `RANDOM;	// src/main/scala/Backend/ROB.scala:42:7
         end	// src/main/scala/Backend/ROB.scala:42:7
-        front_pointer = _RANDOM[2'h0][6:0];	// src/main/scala/Backend/ROB.scala:42:7, :78:32
-        back_pointer = _RANDOM[2'h0][13:7];	// src/main/scala/Backend/ROB.scala:42:7, :78:32, :79:32
-        row_valid_mem_0 = _RANDOM[2'h0][14];	// src/main/scala/Backend/ROB.scala:42:7, :78:32, :107:36
-        row_valid_mem_1 = _RANDOM[2'h0][15];	// src/main/scala/Backend/ROB.scala:42:7, :78:32, :107:36
-        row_valid_mem_2 = _RANDOM[2'h0][16];	// src/main/scala/Backend/ROB.scala:42:7, :78:32, :107:36
-        row_valid_mem_3 = _RANDOM[2'h0][17];	// src/main/scala/Backend/ROB.scala:42:7, :78:32, :107:36
-        row_valid_mem_4 = _RANDOM[2'h0][18];	// src/main/scala/Backend/ROB.scala:42:7, :78:32, :107:36
-        row_valid_mem_5 = _RANDOM[2'h0][19];	// src/main/scala/Backend/ROB.scala:42:7, :78:32, :107:36
-        row_valid_mem_6 = _RANDOM[2'h0][20];	// src/main/scala/Backend/ROB.scala:42:7, :78:32, :107:36
-        row_valid_mem_7 = _RANDOM[2'h0][21];	// src/main/scala/Backend/ROB.scala:42:7, :78:32, :107:36
-        row_valid_mem_8 = _RANDOM[2'h0][22];	// src/main/scala/Backend/ROB.scala:42:7, :78:32, :107:36
-        row_valid_mem_9 = _RANDOM[2'h0][23];	// src/main/scala/Backend/ROB.scala:42:7, :78:32, :107:36
-        row_valid_mem_10 = _RANDOM[2'h0][24];	// src/main/scala/Backend/ROB.scala:42:7, :78:32, :107:36
-        row_valid_mem_11 = _RANDOM[2'h0][25];	// src/main/scala/Backend/ROB.scala:42:7, :78:32, :107:36
-        row_valid_mem_12 = _RANDOM[2'h0][26];	// src/main/scala/Backend/ROB.scala:42:7, :78:32, :107:36
-        row_valid_mem_13 = _RANDOM[2'h0][27];	// src/main/scala/Backend/ROB.scala:42:7, :78:32, :107:36
-        row_valid_mem_14 = _RANDOM[2'h0][28];	// src/main/scala/Backend/ROB.scala:42:7, :78:32, :107:36
-        row_valid_mem_15 = _RANDOM[2'h0][29];	// src/main/scala/Backend/ROB.scala:42:7, :78:32, :107:36
-        row_valid_mem_16 = _RANDOM[2'h0][30];	// src/main/scala/Backend/ROB.scala:42:7, :78:32, :107:36
-        row_valid_mem_17 = _RANDOM[2'h0][31];	// src/main/scala/Backend/ROB.scala:42:7, :78:32, :107:36
-        row_valid_mem_18 = _RANDOM[2'h1][0];	// src/main/scala/Backend/ROB.scala:42:7, :107:36
-        row_valid_mem_19 = _RANDOM[2'h1][1];	// src/main/scala/Backend/ROB.scala:42:7, :107:36
-        row_valid_mem_20 = _RANDOM[2'h1][2];	// src/main/scala/Backend/ROB.scala:42:7, :107:36
-        row_valid_mem_21 = _RANDOM[2'h1][3];	// src/main/scala/Backend/ROB.scala:42:7, :107:36
-        row_valid_mem_22 = _RANDOM[2'h1][4];	// src/main/scala/Backend/ROB.scala:42:7, :107:36
-        row_valid_mem_23 = _RANDOM[2'h1][5];	// src/main/scala/Backend/ROB.scala:42:7, :107:36
-        row_valid_mem_24 = _RANDOM[2'h1][6];	// src/main/scala/Backend/ROB.scala:42:7, :107:36
-        row_valid_mem_25 = _RANDOM[2'h1][7];	// src/main/scala/Backend/ROB.scala:42:7, :107:36
-        row_valid_mem_26 = _RANDOM[2'h1][8];	// src/main/scala/Backend/ROB.scala:42:7, :107:36
-        row_valid_mem_27 = _RANDOM[2'h1][9];	// src/main/scala/Backend/ROB.scala:42:7, :107:36
-        row_valid_mem_28 = _RANDOM[2'h1][10];	// src/main/scala/Backend/ROB.scala:42:7, :107:36
-        row_valid_mem_29 = _RANDOM[2'h1][11];	// src/main/scala/Backend/ROB.scala:42:7, :107:36
-        row_valid_mem_30 = _RANDOM[2'h1][12];	// src/main/scala/Backend/ROB.scala:42:7, :107:36
-        row_valid_mem_31 = _RANDOM[2'h1][13];	// src/main/scala/Backend/ROB.scala:42:7, :107:36
-        row_valid_mem_32 = _RANDOM[2'h1][14];	// src/main/scala/Backend/ROB.scala:42:7, :107:36
-        row_valid_mem_33 = _RANDOM[2'h1][15];	// src/main/scala/Backend/ROB.scala:42:7, :107:36
-        row_valid_mem_34 = _RANDOM[2'h1][16];	// src/main/scala/Backend/ROB.scala:42:7, :107:36
-        row_valid_mem_35 = _RANDOM[2'h1][17];	// src/main/scala/Backend/ROB.scala:42:7, :107:36
-        row_valid_mem_36 = _RANDOM[2'h1][18];	// src/main/scala/Backend/ROB.scala:42:7, :107:36
-        row_valid_mem_37 = _RANDOM[2'h1][19];	// src/main/scala/Backend/ROB.scala:42:7, :107:36
-        row_valid_mem_38 = _RANDOM[2'h1][20];	// src/main/scala/Backend/ROB.scala:42:7, :107:36
-        row_valid_mem_39 = _RANDOM[2'h1][21];	// src/main/scala/Backend/ROB.scala:42:7, :107:36
-        row_valid_mem_40 = _RANDOM[2'h1][22];	// src/main/scala/Backend/ROB.scala:42:7, :107:36
-        row_valid_mem_41 = _RANDOM[2'h1][23];	// src/main/scala/Backend/ROB.scala:42:7, :107:36
-        row_valid_mem_42 = _RANDOM[2'h1][24];	// src/main/scala/Backend/ROB.scala:42:7, :107:36
-        row_valid_mem_43 = _RANDOM[2'h1][25];	// src/main/scala/Backend/ROB.scala:42:7, :107:36
-        row_valid_mem_44 = _RANDOM[2'h1][26];	// src/main/scala/Backend/ROB.scala:42:7, :107:36
-        row_valid_mem_45 = _RANDOM[2'h1][27];	// src/main/scala/Backend/ROB.scala:42:7, :107:36
-        row_valid_mem_46 = _RANDOM[2'h1][28];	// src/main/scala/Backend/ROB.scala:42:7, :107:36
-        row_valid_mem_47 = _RANDOM[2'h1][29];	// src/main/scala/Backend/ROB.scala:42:7, :107:36
-        row_valid_mem_48 = _RANDOM[2'h1][30];	// src/main/scala/Backend/ROB.scala:42:7, :107:36
-        row_valid_mem_49 = _RANDOM[2'h1][31];	// src/main/scala/Backend/ROB.scala:42:7, :107:36
-        row_valid_mem_50 = _RANDOM[2'h2][0];	// src/main/scala/Backend/ROB.scala:42:7, :107:36
-        row_valid_mem_51 = _RANDOM[2'h2][1];	// src/main/scala/Backend/ROB.scala:42:7, :107:36
-        row_valid_mem_52 = _RANDOM[2'h2][2];	// src/main/scala/Backend/ROB.scala:42:7, :107:36
-        row_valid_mem_53 = _RANDOM[2'h2][3];	// src/main/scala/Backend/ROB.scala:42:7, :107:36
-        row_valid_mem_54 = _RANDOM[2'h2][4];	// src/main/scala/Backend/ROB.scala:42:7, :107:36
-        row_valid_mem_55 = _RANDOM[2'h2][5];	// src/main/scala/Backend/ROB.scala:42:7, :107:36
-        row_valid_mem_56 = _RANDOM[2'h2][6];	// src/main/scala/Backend/ROB.scala:42:7, :107:36
-        row_valid_mem_57 = _RANDOM[2'h2][7];	// src/main/scala/Backend/ROB.scala:42:7, :107:36
-        row_valid_mem_58 = _RANDOM[2'h2][8];	// src/main/scala/Backend/ROB.scala:42:7, :107:36
-        row_valid_mem_59 = _RANDOM[2'h2][9];	// src/main/scala/Backend/ROB.scala:42:7, :107:36
-        row_valid_mem_60 = _RANDOM[2'h2][10];	// src/main/scala/Backend/ROB.scala:42:7, :107:36
-        row_valid_mem_61 = _RANDOM[2'h2][11];	// src/main/scala/Backend/ROB.scala:42:7, :107:36
-        row_valid_mem_62 = _RANDOM[2'h2][12];	// src/main/scala/Backend/ROB.scala:42:7, :107:36
-        row_valid_mem_63 = _RANDOM[2'h2][13];	// src/main/scala/Backend/ROB.scala:42:7, :107:36
-        io_ROB_output_ROB_index_REG = _RANDOM[2'h2][19:14];	// src/main/scala/Backend/ROB.scala:42:7, :107:36, :269:39
-        shared_memory_update_notif = _RANDOM[2'h2][20];	// src/main/scala/Backend/ROB.scala:42:7, :107:36, :292:45
+        front_pointer = _RANDOM[2'h0][6:0];	// src/main/scala/Backend/ROB.scala:42:7, :76:32
+        back_pointer = _RANDOM[2'h0][13:7];	// src/main/scala/Backend/ROB.scala:42:7, :76:32, :77:32
+        row_valid_mem_0 = _RANDOM[2'h0][14];	// src/main/scala/Backend/ROB.scala:42:7, :76:32, :105:36
+        row_valid_mem_1 = _RANDOM[2'h0][15];	// src/main/scala/Backend/ROB.scala:42:7, :76:32, :105:36
+        row_valid_mem_2 = _RANDOM[2'h0][16];	// src/main/scala/Backend/ROB.scala:42:7, :76:32, :105:36
+        row_valid_mem_3 = _RANDOM[2'h0][17];	// src/main/scala/Backend/ROB.scala:42:7, :76:32, :105:36
+        row_valid_mem_4 = _RANDOM[2'h0][18];	// src/main/scala/Backend/ROB.scala:42:7, :76:32, :105:36
+        row_valid_mem_5 = _RANDOM[2'h0][19];	// src/main/scala/Backend/ROB.scala:42:7, :76:32, :105:36
+        row_valid_mem_6 = _RANDOM[2'h0][20];	// src/main/scala/Backend/ROB.scala:42:7, :76:32, :105:36
+        row_valid_mem_7 = _RANDOM[2'h0][21];	// src/main/scala/Backend/ROB.scala:42:7, :76:32, :105:36
+        row_valid_mem_8 = _RANDOM[2'h0][22];	// src/main/scala/Backend/ROB.scala:42:7, :76:32, :105:36
+        row_valid_mem_9 = _RANDOM[2'h0][23];	// src/main/scala/Backend/ROB.scala:42:7, :76:32, :105:36
+        row_valid_mem_10 = _RANDOM[2'h0][24];	// src/main/scala/Backend/ROB.scala:42:7, :76:32, :105:36
+        row_valid_mem_11 = _RANDOM[2'h0][25];	// src/main/scala/Backend/ROB.scala:42:7, :76:32, :105:36
+        row_valid_mem_12 = _RANDOM[2'h0][26];	// src/main/scala/Backend/ROB.scala:42:7, :76:32, :105:36
+        row_valid_mem_13 = _RANDOM[2'h0][27];	// src/main/scala/Backend/ROB.scala:42:7, :76:32, :105:36
+        row_valid_mem_14 = _RANDOM[2'h0][28];	// src/main/scala/Backend/ROB.scala:42:7, :76:32, :105:36
+        row_valid_mem_15 = _RANDOM[2'h0][29];	// src/main/scala/Backend/ROB.scala:42:7, :76:32, :105:36
+        row_valid_mem_16 = _RANDOM[2'h0][30];	// src/main/scala/Backend/ROB.scala:42:7, :76:32, :105:36
+        row_valid_mem_17 = _RANDOM[2'h0][31];	// src/main/scala/Backend/ROB.scala:42:7, :76:32, :105:36
+        row_valid_mem_18 = _RANDOM[2'h1][0];	// src/main/scala/Backend/ROB.scala:42:7, :105:36
+        row_valid_mem_19 = _RANDOM[2'h1][1];	// src/main/scala/Backend/ROB.scala:42:7, :105:36
+        row_valid_mem_20 = _RANDOM[2'h1][2];	// src/main/scala/Backend/ROB.scala:42:7, :105:36
+        row_valid_mem_21 = _RANDOM[2'h1][3];	// src/main/scala/Backend/ROB.scala:42:7, :105:36
+        row_valid_mem_22 = _RANDOM[2'h1][4];	// src/main/scala/Backend/ROB.scala:42:7, :105:36
+        row_valid_mem_23 = _RANDOM[2'h1][5];	// src/main/scala/Backend/ROB.scala:42:7, :105:36
+        row_valid_mem_24 = _RANDOM[2'h1][6];	// src/main/scala/Backend/ROB.scala:42:7, :105:36
+        row_valid_mem_25 = _RANDOM[2'h1][7];	// src/main/scala/Backend/ROB.scala:42:7, :105:36
+        row_valid_mem_26 = _RANDOM[2'h1][8];	// src/main/scala/Backend/ROB.scala:42:7, :105:36
+        row_valid_mem_27 = _RANDOM[2'h1][9];	// src/main/scala/Backend/ROB.scala:42:7, :105:36
+        row_valid_mem_28 = _RANDOM[2'h1][10];	// src/main/scala/Backend/ROB.scala:42:7, :105:36
+        row_valid_mem_29 = _RANDOM[2'h1][11];	// src/main/scala/Backend/ROB.scala:42:7, :105:36
+        row_valid_mem_30 = _RANDOM[2'h1][12];	// src/main/scala/Backend/ROB.scala:42:7, :105:36
+        row_valid_mem_31 = _RANDOM[2'h1][13];	// src/main/scala/Backend/ROB.scala:42:7, :105:36
+        row_valid_mem_32 = _RANDOM[2'h1][14];	// src/main/scala/Backend/ROB.scala:42:7, :105:36
+        row_valid_mem_33 = _RANDOM[2'h1][15];	// src/main/scala/Backend/ROB.scala:42:7, :105:36
+        row_valid_mem_34 = _RANDOM[2'h1][16];	// src/main/scala/Backend/ROB.scala:42:7, :105:36
+        row_valid_mem_35 = _RANDOM[2'h1][17];	// src/main/scala/Backend/ROB.scala:42:7, :105:36
+        row_valid_mem_36 = _RANDOM[2'h1][18];	// src/main/scala/Backend/ROB.scala:42:7, :105:36
+        row_valid_mem_37 = _RANDOM[2'h1][19];	// src/main/scala/Backend/ROB.scala:42:7, :105:36
+        row_valid_mem_38 = _RANDOM[2'h1][20];	// src/main/scala/Backend/ROB.scala:42:7, :105:36
+        row_valid_mem_39 = _RANDOM[2'h1][21];	// src/main/scala/Backend/ROB.scala:42:7, :105:36
+        row_valid_mem_40 = _RANDOM[2'h1][22];	// src/main/scala/Backend/ROB.scala:42:7, :105:36
+        row_valid_mem_41 = _RANDOM[2'h1][23];	// src/main/scala/Backend/ROB.scala:42:7, :105:36
+        row_valid_mem_42 = _RANDOM[2'h1][24];	// src/main/scala/Backend/ROB.scala:42:7, :105:36
+        row_valid_mem_43 = _RANDOM[2'h1][25];	// src/main/scala/Backend/ROB.scala:42:7, :105:36
+        row_valid_mem_44 = _RANDOM[2'h1][26];	// src/main/scala/Backend/ROB.scala:42:7, :105:36
+        row_valid_mem_45 = _RANDOM[2'h1][27];	// src/main/scala/Backend/ROB.scala:42:7, :105:36
+        row_valid_mem_46 = _RANDOM[2'h1][28];	// src/main/scala/Backend/ROB.scala:42:7, :105:36
+        row_valid_mem_47 = _RANDOM[2'h1][29];	// src/main/scala/Backend/ROB.scala:42:7, :105:36
+        row_valid_mem_48 = _RANDOM[2'h1][30];	// src/main/scala/Backend/ROB.scala:42:7, :105:36
+        row_valid_mem_49 = _RANDOM[2'h1][31];	// src/main/scala/Backend/ROB.scala:42:7, :105:36
+        row_valid_mem_50 = _RANDOM[2'h2][0];	// src/main/scala/Backend/ROB.scala:42:7, :105:36
+        row_valid_mem_51 = _RANDOM[2'h2][1];	// src/main/scala/Backend/ROB.scala:42:7, :105:36
+        row_valid_mem_52 = _RANDOM[2'h2][2];	// src/main/scala/Backend/ROB.scala:42:7, :105:36
+        row_valid_mem_53 = _RANDOM[2'h2][3];	// src/main/scala/Backend/ROB.scala:42:7, :105:36
+        row_valid_mem_54 = _RANDOM[2'h2][4];	// src/main/scala/Backend/ROB.scala:42:7, :105:36
+        row_valid_mem_55 = _RANDOM[2'h2][5];	// src/main/scala/Backend/ROB.scala:42:7, :105:36
+        row_valid_mem_56 = _RANDOM[2'h2][6];	// src/main/scala/Backend/ROB.scala:42:7, :105:36
+        row_valid_mem_57 = _RANDOM[2'h2][7];	// src/main/scala/Backend/ROB.scala:42:7, :105:36
+        row_valid_mem_58 = _RANDOM[2'h2][8];	// src/main/scala/Backend/ROB.scala:42:7, :105:36
+        row_valid_mem_59 = _RANDOM[2'h2][9];	// src/main/scala/Backend/ROB.scala:42:7, :105:36
+        row_valid_mem_60 = _RANDOM[2'h2][10];	// src/main/scala/Backend/ROB.scala:42:7, :105:36
+        row_valid_mem_61 = _RANDOM[2'h2][11];	// src/main/scala/Backend/ROB.scala:42:7, :105:36
+        row_valid_mem_62 = _RANDOM[2'h2][12];	// src/main/scala/Backend/ROB.scala:42:7, :105:36
+        row_valid_mem_63 = _RANDOM[2'h2][13];	// src/main/scala/Backend/ROB.scala:42:7, :105:36
+        io_ROB_output_ROB_index_REG = _RANDOM[2'h2][19:14];	// src/main/scala/Backend/ROB.scala:42:7, :105:36, :270:54
       `endif // RANDOMIZE_REG_INIT
     end // initial
     `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/Backend/ROB.scala:42:7
       `FIRRTL_AFTER_INITIAL	// src/main/scala/Backend/ROB.scala:42:7
     `endif // FIRRTL_AFTER_INITIAL
   `endif // ENABLE_INITIAL_REG_
-  ROB_shared_mem shared_mem (	// src/main/scala/Backend/ROB.scala:130:33
+  ROB_shared_mem shared_mem (	// src/main/scala/Backend/ROB.scala:128:33
     .clock                                 (clock),
-    .io_addrA                              (back_index),	// src/main/scala/Backend/ROB.scala:256:19, :258:21, :261:22
+    .io_addrA                              (back_index),	// src/main/scala/Backend/ROB.scala:257:19, :259:21, :262:22
     .io_writeDataA_fetch_PC                (io_ROB_packet_bits_fetch_PC),
     .io_writeDataA_RAT_index               (io_ROB_packet_bits_RAT_index),
     .io_writeDataA_free_list_front_pointer (io_ROB_packet_bits_free_list_front_pointer),
-    .io_writeEnableA                       (allocate),	// src/main/scala/Backend/ROB.scala:92:37
-    .io_addrB                              (front_index),	// src/main/scala/Backend/ROB.scala:245:19, :247:23, :248:32
+    .io_writeDataA_GHR                     (io_ROB_packet_bits_GHR),
+    .io_writeDataA_NEXT                    (io_ROB_packet_bits_NEXT),
+    .io_writeDataA_TOS                     (io_ROB_packet_bits_TOS),
+    .io_writeEnableA                       (allocate),	// src/main/scala/Backend/ROB.scala:90:37
+    .io_addrB                              (front_index),	// src/main/scala/Backend/ROB.scala:246:19, :248:23, :249:32
     .io_readDataB_fetch_PC                 (io_ROB_output_fetch_PC),
     .io_readDataB_RAT_index                (io_ROB_output_RAT_index),
     .io_readDataB_free_list_front_pointer  (io_ROB_output_free_list_front_pointer),
+    .io_readDataB_GHR                      (io_ROB_output_GHR),
+    .io_readDataB_NEXT                     (io_ROB_output_NEXT),
+    .io_readDataB_TOS                      (io_ROB_output_TOS),
     .io_addrC                              (io_PC_file_exec_addr),
     .io_readDataC_fetch_PC                 (io_PC_file_exec_data)
-  );	// src/main/scala/Backend/ROB.scala:130:33
-  ROB_WB_mem ROB_WB_banks_0 (	// src/main/scala/Backend/ROB.scala:159:15
-    .clock              (clock),
-    .io_addrA           (back_index),	// src/main/scala/Backend/ROB.scala:256:19, :258:21, :261:22
-    .io_writeEnableA    (allocate),	// src/main/scala/Backend/ROB.scala:92:37
-    .io_addrB           (io_FU_outputs_0_bits_ROB_index),
-    .io_writeDataB_busy (io_FU_outputs_0_valid),
+  );	// src/main/scala/Backend/ROB.scala:128:33
+  ROB_WB_mem ROB_WB_banks_0 (	// src/main/scala/Backend/ROB.scala:160:15
+    .clock                  (clock),
+    .io_addrA               (back_index),	// src/main/scala/Backend/ROB.scala:257:19, :259:21, :262:22
+    .io_writeEnableA        (allocate),	// src/main/scala/Backend/ROB.scala:90:37
+    .io_addrB               (io_FU_outputs_0_bits_ROB_index),
+    .io_writeDataB_busy     (io_FU_outputs_0_valid),
     .io_writeEnableB
-      (io_FU_outputs_0_valid & io_FU_outputs_0_bits_fetch_packet_index == 2'h0),	// src/main/scala/Backend/ROB.scala:42:7, :180:{69,114}
-    .io_addrC           (io_FU_outputs_1_bits_ROB_index),
-    .io_writeDataC_busy (io_FU_outputs_1_valid),
+      (io_FU_outputs_0_valid & io_FU_outputs_0_bits_fetch_packet_index == 2'h0),	// src/main/scala/Backend/ROB.scala:42:7, :181:{69,114}
+    .io_addrC               (io_FU_outputs_1_bits_ROB_index),
+    .io_writeDataC_busy     (io_FU_outputs_1_valid),
     .io_writeEnableC
-      (io_FU_outputs_1_valid & io_FU_outputs_1_bits_fetch_packet_index == 2'h0),	// src/main/scala/Backend/ROB.scala:42:7, :188:{69,114}
-    .io_addrD           (io_FU_outputs_2_bits_ROB_index),
-    .io_writeDataD_busy (io_FU_outputs_2_valid),
+      (io_FU_outputs_1_valid & io_FU_outputs_1_bits_fetch_packet_index == 2'h0),	// src/main/scala/Backend/ROB.scala:42:7, :189:{69,114}
+    .io_addrD               (io_FU_outputs_2_bits_ROB_index),
+    .io_writeDataD_busy     (io_FU_outputs_2_valid),
     .io_writeEnableD
-      (io_FU_outputs_2_valid & io_FU_outputs_2_bits_fetch_packet_index == 2'h0),	// src/main/scala/Backend/ROB.scala:42:7, :196:{69,114}
-    .io_addrE           (io_FU_outputs_3_bits_ROB_index),
-    .io_writeDataE_busy (io_FU_outputs_3_valid),
+      (io_FU_outputs_2_valid & io_FU_outputs_2_bits_fetch_packet_index == 2'h0),	// src/main/scala/Backend/ROB.scala:42:7, :197:{69,114}
+    .io_addrE               (io_FU_outputs_3_bits_ROB_index),
+    .io_writeDataE_busy     (io_FU_outputs_3_valid),
     .io_writeEnableE
-      (io_FU_outputs_3_valid & io_FU_outputs_3_bits_fetch_packet_index == 2'h0),	// src/main/scala/Backend/ROB.scala:42:7, :204:{69,114}
-    .io_addrG           (front_index),	// src/main/scala/Backend/ROB.scala:245:19, :247:23, :248:32
-    .io_readDataG_busy  (io_ROB_output_complete_0)
-  );	// src/main/scala/Backend/ROB.scala:159:15
-  ROB_WB_mem ROB_WB_banks_1 (	// src/main/scala/Backend/ROB.scala:159:15
-    .clock              (clock),
-    .io_addrA           (back_index),	// src/main/scala/Backend/ROB.scala:256:19, :258:21, :261:22
-    .io_writeEnableA    (allocate),	// src/main/scala/Backend/ROB.scala:92:37
-    .io_addrB           (io_FU_outputs_0_bits_ROB_index),
-    .io_writeDataB_busy (io_FU_outputs_0_valid),
+      (io_FU_outputs_3_valid & io_FU_outputs_3_bits_fetch_packet_index == 2'h0),	// src/main/scala/Backend/ROB.scala:42:7, :205:{69,114}
+    .io_addrG               (front_index),	// src/main/scala/Backend/ROB.scala:246:19, :248:23, :249:32
+    .io_readDataG_busy      (io_ROB_output_complete_0),
+    .io_readDataG_exception (io_ROB_output_exception_0)
+  );	// src/main/scala/Backend/ROB.scala:160:15
+  ROB_WB_mem ROB_WB_banks_1 (	// src/main/scala/Backend/ROB.scala:160:15
+    .clock                  (clock),
+    .io_addrA               (back_index),	// src/main/scala/Backend/ROB.scala:257:19, :259:21, :262:22
+    .io_writeEnableA        (allocate),	// src/main/scala/Backend/ROB.scala:90:37
+    .io_addrB               (io_FU_outputs_0_bits_ROB_index),
+    .io_writeDataB_busy     (io_FU_outputs_0_valid),
     .io_writeEnableB
-      (io_FU_outputs_0_valid & io_FU_outputs_0_bits_fetch_packet_index == 2'h1),	// src/main/scala/Backend/ROB.scala:42:7, :180:{69,114}
-    .io_addrC           (io_FU_outputs_1_bits_ROB_index),
-    .io_writeDataC_busy (io_FU_outputs_1_valid),
+      (io_FU_outputs_0_valid & io_FU_outputs_0_bits_fetch_packet_index == 2'h1),	// src/main/scala/Backend/ROB.scala:42:7, :181:{69,114}
+    .io_addrC               (io_FU_outputs_1_bits_ROB_index),
+    .io_writeDataC_busy     (io_FU_outputs_1_valid),
     .io_writeEnableC
-      (io_FU_outputs_1_valid & io_FU_outputs_1_bits_fetch_packet_index == 2'h1),	// src/main/scala/Backend/ROB.scala:42:7, :188:{69,114}
-    .io_addrD           (io_FU_outputs_2_bits_ROB_index),
-    .io_writeDataD_busy (io_FU_outputs_2_valid),
+      (io_FU_outputs_1_valid & io_FU_outputs_1_bits_fetch_packet_index == 2'h1),	// src/main/scala/Backend/ROB.scala:42:7, :189:{69,114}
+    .io_addrD               (io_FU_outputs_2_bits_ROB_index),
+    .io_writeDataD_busy     (io_FU_outputs_2_valid),
     .io_writeEnableD
-      (io_FU_outputs_2_valid & io_FU_outputs_2_bits_fetch_packet_index == 2'h1),	// src/main/scala/Backend/ROB.scala:42:7, :196:{69,114}
-    .io_addrE           (io_FU_outputs_3_bits_ROB_index),
-    .io_writeDataE_busy (io_FU_outputs_3_valid),
+      (io_FU_outputs_2_valid & io_FU_outputs_2_bits_fetch_packet_index == 2'h1),	// src/main/scala/Backend/ROB.scala:42:7, :197:{69,114}
+    .io_addrE               (io_FU_outputs_3_bits_ROB_index),
+    .io_writeDataE_busy     (io_FU_outputs_3_valid),
     .io_writeEnableE
-      (io_FU_outputs_3_valid & io_FU_outputs_3_bits_fetch_packet_index == 2'h1),	// src/main/scala/Backend/ROB.scala:42:7, :204:{69,114}
-    .io_addrG           (front_index),	// src/main/scala/Backend/ROB.scala:245:19, :247:23, :248:32
-    .io_readDataG_busy  (io_ROB_output_complete_1)
-  );	// src/main/scala/Backend/ROB.scala:159:15
-  ROB_WB_mem ROB_WB_banks_2 (	// src/main/scala/Backend/ROB.scala:159:15
-    .clock              (clock),
-    .io_addrA           (back_index),	// src/main/scala/Backend/ROB.scala:256:19, :258:21, :261:22
-    .io_writeEnableA    (allocate),	// src/main/scala/Backend/ROB.scala:92:37
-    .io_addrB           (io_FU_outputs_0_bits_ROB_index),
-    .io_writeDataB_busy (io_FU_outputs_0_valid),
+      (io_FU_outputs_3_valid & io_FU_outputs_3_bits_fetch_packet_index == 2'h1),	// src/main/scala/Backend/ROB.scala:42:7, :205:{69,114}
+    .io_addrG               (front_index),	// src/main/scala/Backend/ROB.scala:246:19, :248:23, :249:32
+    .io_readDataG_busy      (io_ROB_output_complete_1),
+    .io_readDataG_exception (io_ROB_output_exception_1)
+  );	// src/main/scala/Backend/ROB.scala:160:15
+  ROB_WB_mem ROB_WB_banks_2 (	// src/main/scala/Backend/ROB.scala:160:15
+    .clock                  (clock),
+    .io_addrA               (back_index),	// src/main/scala/Backend/ROB.scala:257:19, :259:21, :262:22
+    .io_writeEnableA        (allocate),	// src/main/scala/Backend/ROB.scala:90:37
+    .io_addrB               (io_FU_outputs_0_bits_ROB_index),
+    .io_writeDataB_busy     (io_FU_outputs_0_valid),
     .io_writeEnableB
-      (io_FU_outputs_0_valid & io_FU_outputs_0_bits_fetch_packet_index == 2'h2),	// src/main/scala/Backend/ROB.scala:42:7, :180:{69,114}
-    .io_addrC           (io_FU_outputs_1_bits_ROB_index),
-    .io_writeDataC_busy (io_FU_outputs_1_valid),
+      (io_FU_outputs_0_valid & io_FU_outputs_0_bits_fetch_packet_index == 2'h2),	// src/main/scala/Backend/ROB.scala:42:7, :181:{69,114}
+    .io_addrC               (io_FU_outputs_1_bits_ROB_index),
+    .io_writeDataC_busy     (io_FU_outputs_1_valid),
     .io_writeEnableC
-      (io_FU_outputs_1_valid & io_FU_outputs_1_bits_fetch_packet_index == 2'h2),	// src/main/scala/Backend/ROB.scala:42:7, :188:{69,114}
-    .io_addrD           (io_FU_outputs_2_bits_ROB_index),
-    .io_writeDataD_busy (io_FU_outputs_2_valid),
+      (io_FU_outputs_1_valid & io_FU_outputs_1_bits_fetch_packet_index == 2'h2),	// src/main/scala/Backend/ROB.scala:42:7, :189:{69,114}
+    .io_addrD               (io_FU_outputs_2_bits_ROB_index),
+    .io_writeDataD_busy     (io_FU_outputs_2_valid),
     .io_writeEnableD
-      (io_FU_outputs_2_valid & io_FU_outputs_2_bits_fetch_packet_index == 2'h2),	// src/main/scala/Backend/ROB.scala:42:7, :196:{69,114}
-    .io_addrE           (io_FU_outputs_3_bits_ROB_index),
-    .io_writeDataE_busy (io_FU_outputs_3_valid),
+      (io_FU_outputs_2_valid & io_FU_outputs_2_bits_fetch_packet_index == 2'h2),	// src/main/scala/Backend/ROB.scala:42:7, :197:{69,114}
+    .io_addrE               (io_FU_outputs_3_bits_ROB_index),
+    .io_writeDataE_busy     (io_FU_outputs_3_valid),
     .io_writeEnableE
-      (io_FU_outputs_3_valid & io_FU_outputs_3_bits_fetch_packet_index == 2'h2),	// src/main/scala/Backend/ROB.scala:42:7, :204:{69,114}
-    .io_addrG           (front_index),	// src/main/scala/Backend/ROB.scala:245:19, :247:23, :248:32
-    .io_readDataG_busy  (io_ROB_output_complete_2)
-  );	// src/main/scala/Backend/ROB.scala:159:15
-  ROB_WB_mem ROB_WB_banks_3 (	// src/main/scala/Backend/ROB.scala:159:15
-    .clock              (clock),
-    .io_addrA           (back_index),	// src/main/scala/Backend/ROB.scala:256:19, :258:21, :261:22
-    .io_writeEnableA    (allocate),	// src/main/scala/Backend/ROB.scala:92:37
-    .io_addrB           (io_FU_outputs_0_bits_ROB_index),
-    .io_writeDataB_busy (io_FU_outputs_0_valid),
+      (io_FU_outputs_3_valid & io_FU_outputs_3_bits_fetch_packet_index == 2'h2),	// src/main/scala/Backend/ROB.scala:42:7, :205:{69,114}
+    .io_addrG               (front_index),	// src/main/scala/Backend/ROB.scala:246:19, :248:23, :249:32
+    .io_readDataG_busy      (io_ROB_output_complete_2),
+    .io_readDataG_exception (io_ROB_output_exception_2)
+  );	// src/main/scala/Backend/ROB.scala:160:15
+  ROB_WB_mem ROB_WB_banks_3 (	// src/main/scala/Backend/ROB.scala:160:15
+    .clock                  (clock),
+    .io_addrA               (back_index),	// src/main/scala/Backend/ROB.scala:257:19, :259:21, :262:22
+    .io_writeEnableA        (allocate),	// src/main/scala/Backend/ROB.scala:90:37
+    .io_addrB               (io_FU_outputs_0_bits_ROB_index),
+    .io_writeDataB_busy     (io_FU_outputs_0_valid),
     .io_writeEnableB
-      (io_FU_outputs_0_valid & (&io_FU_outputs_0_bits_fetch_packet_index)),	// src/main/scala/Backend/ROB.scala:180:{69,114}
-    .io_addrC           (io_FU_outputs_1_bits_ROB_index),
-    .io_writeDataC_busy (io_FU_outputs_1_valid),
+      (io_FU_outputs_0_valid & (&io_FU_outputs_0_bits_fetch_packet_index)),	// src/main/scala/Backend/ROB.scala:181:{69,114}
+    .io_addrC               (io_FU_outputs_1_bits_ROB_index),
+    .io_writeDataC_busy     (io_FU_outputs_1_valid),
     .io_writeEnableC
-      (io_FU_outputs_1_valid & (&io_FU_outputs_1_bits_fetch_packet_index)),	// src/main/scala/Backend/ROB.scala:188:{69,114}
-    .io_addrD           (io_FU_outputs_2_bits_ROB_index),
-    .io_writeDataD_busy (io_FU_outputs_2_valid),
+      (io_FU_outputs_1_valid & (&io_FU_outputs_1_bits_fetch_packet_index)),	// src/main/scala/Backend/ROB.scala:189:{69,114}
+    .io_addrD               (io_FU_outputs_2_bits_ROB_index),
+    .io_writeDataD_busy     (io_FU_outputs_2_valid),
     .io_writeEnableD
-      (io_FU_outputs_2_valid & (&io_FU_outputs_2_bits_fetch_packet_index)),	// src/main/scala/Backend/ROB.scala:196:{69,114}
-    .io_addrE           (io_FU_outputs_3_bits_ROB_index),
-    .io_writeDataE_busy (io_FU_outputs_3_valid),
+      (io_FU_outputs_2_valid & (&io_FU_outputs_2_bits_fetch_packet_index)),	// src/main/scala/Backend/ROB.scala:197:{69,114}
+    .io_addrE               (io_FU_outputs_3_bits_ROB_index),
+    .io_writeDataE_busy     (io_FU_outputs_3_valid),
     .io_writeEnableE
-      (io_FU_outputs_3_valid & (&io_FU_outputs_3_bits_fetch_packet_index)),	// src/main/scala/Backend/ROB.scala:204:{69,114}
-    .io_addrG           (front_index),	// src/main/scala/Backend/ROB.scala:245:19, :247:23, :248:32
-    .io_readDataG_busy  (io_ROB_output_complete_3)
-  );	// src/main/scala/Backend/ROB.scala:159:15
-  ROB_entry_mem ROB_entry_banks_0 (	// src/main/scala/Backend/ROB.scala:219:15
+      (io_FU_outputs_3_valid & (&io_FU_outputs_3_bits_fetch_packet_index)),	// src/main/scala/Backend/ROB.scala:205:{69,114}
+    .io_addrG               (front_index),	// src/main/scala/Backend/ROB.scala:246:19, :248:23, :249:32
+    .io_readDataG_busy      (io_ROB_output_complete_3),
+    .io_readDataG_exception (io_ROB_output_exception_3)
+  );	// src/main/scala/Backend/ROB.scala:160:15
+  ROB_entry_mem ROB_entry_banks_0 (	// src/main/scala/Backend/ROB.scala:220:15
     .clock                     (clock),
-    .io_addrA                  (back_index),	// src/main/scala/Backend/ROB.scala:256:19, :258:21, :261:22
+    .io_addrA                  (back_index),	// src/main/scala/Backend/ROB.scala:257:19, :259:21, :262:22
     .io_writeDataA_valid       (io_ROB_packet_bits_valid_bits_0),
     .io_writeDataA_is_branch
       (io_ROB_packet_bits_decoded_instruction_0_needs_branch_unit),
     .io_writeDataA_memory_type (io_ROB_packet_bits_decoded_instruction_0_memory_type),
     .io_writeDataA_RD          (io_ROB_packet_bits_decoded_instruction_0_RD),
     .io_writeDataA_RD_valid    (io_ROB_packet_bits_decoded_instruction_0_RD_valid),
-    .io_writeEnableA           (allocate),	// src/main/scala/Backend/ROB.scala:92:37
-    .io_addrB                  (front_index),	// src/main/scala/Backend/ROB.scala:245:19, :247:23, :248:32
+    .io_writeEnableA           (allocate),	// src/main/scala/Backend/ROB.scala:90:37
+    .io_addrB                  (front_index),	// src/main/scala/Backend/ROB.scala:246:19, :248:23, :249:32
     .io_readDataB_valid        (io_ROB_output_ROB_entries_0_valid),
     .io_readDataB_is_branch    (io_ROB_output_ROB_entries_0_is_branch),
     .io_readDataB_memory_type  (io_ROB_output_ROB_entries_0_memory_type),
     .io_readDataB_RD           (io_ROB_output_ROB_entries_0_RD),
     .io_readDataB_RD_valid     (io_ROB_output_ROB_entries_0_RD_valid)
-  );	// src/main/scala/Backend/ROB.scala:219:15
-  ROB_entry_mem ROB_entry_banks_1 (	// src/main/scala/Backend/ROB.scala:219:15
+  );	// src/main/scala/Backend/ROB.scala:220:15
+  ROB_entry_mem ROB_entry_banks_1 (	// src/main/scala/Backend/ROB.scala:220:15
     .clock                     (clock),
-    .io_addrA                  (back_index),	// src/main/scala/Backend/ROB.scala:256:19, :258:21, :261:22
+    .io_addrA                  (back_index),	// src/main/scala/Backend/ROB.scala:257:19, :259:21, :262:22
     .io_writeDataA_valid       (io_ROB_packet_bits_valid_bits_1),
     .io_writeDataA_is_branch
       (io_ROB_packet_bits_decoded_instruction_1_needs_branch_unit),
     .io_writeDataA_memory_type (io_ROB_packet_bits_decoded_instruction_1_memory_type),
     .io_writeDataA_RD          (io_ROB_packet_bits_decoded_instruction_1_RD),
     .io_writeDataA_RD_valid    (io_ROB_packet_bits_decoded_instruction_1_RD_valid),
-    .io_writeEnableA           (allocate),	// src/main/scala/Backend/ROB.scala:92:37
-    .io_addrB                  (front_index),	// src/main/scala/Backend/ROB.scala:245:19, :247:23, :248:32
+    .io_writeEnableA           (allocate),	// src/main/scala/Backend/ROB.scala:90:37
+    .io_addrB                  (front_index),	// src/main/scala/Backend/ROB.scala:246:19, :248:23, :249:32
     .io_readDataB_valid        (io_ROB_output_ROB_entries_1_valid),
     .io_readDataB_is_branch    (io_ROB_output_ROB_entries_1_is_branch),
     .io_readDataB_memory_type  (io_ROB_output_ROB_entries_1_memory_type),
     .io_readDataB_RD           (io_ROB_output_ROB_entries_1_RD),
     .io_readDataB_RD_valid     (io_ROB_output_ROB_entries_1_RD_valid)
-  );	// src/main/scala/Backend/ROB.scala:219:15
-  ROB_entry_mem ROB_entry_banks_2 (	// src/main/scala/Backend/ROB.scala:219:15
+  );	// src/main/scala/Backend/ROB.scala:220:15
+  ROB_entry_mem ROB_entry_banks_2 (	// src/main/scala/Backend/ROB.scala:220:15
     .clock                     (clock),
-    .io_addrA                  (back_index),	// src/main/scala/Backend/ROB.scala:256:19, :258:21, :261:22
+    .io_addrA                  (back_index),	// src/main/scala/Backend/ROB.scala:257:19, :259:21, :262:22
     .io_writeDataA_valid       (io_ROB_packet_bits_valid_bits_2),
     .io_writeDataA_is_branch
       (io_ROB_packet_bits_decoded_instruction_2_needs_branch_unit),
     .io_writeDataA_memory_type (io_ROB_packet_bits_decoded_instruction_2_memory_type),
     .io_writeDataA_RD          (io_ROB_packet_bits_decoded_instruction_2_RD),
     .io_writeDataA_RD_valid    (io_ROB_packet_bits_decoded_instruction_2_RD_valid),
-    .io_writeEnableA           (allocate),	// src/main/scala/Backend/ROB.scala:92:37
-    .io_addrB                  (front_index),	// src/main/scala/Backend/ROB.scala:245:19, :247:23, :248:32
+    .io_writeEnableA           (allocate),	// src/main/scala/Backend/ROB.scala:90:37
+    .io_addrB                  (front_index),	// src/main/scala/Backend/ROB.scala:246:19, :248:23, :249:32
     .io_readDataB_valid        (io_ROB_output_ROB_entries_2_valid),
     .io_readDataB_is_branch    (io_ROB_output_ROB_entries_2_is_branch),
     .io_readDataB_memory_type  (io_ROB_output_ROB_entries_2_memory_type),
     .io_readDataB_RD           (io_ROB_output_ROB_entries_2_RD),
     .io_readDataB_RD_valid     (io_ROB_output_ROB_entries_2_RD_valid)
-  );	// src/main/scala/Backend/ROB.scala:219:15
-  ROB_entry_mem ROB_entry_banks_3 (	// src/main/scala/Backend/ROB.scala:219:15
+  );	// src/main/scala/Backend/ROB.scala:220:15
+  ROB_entry_mem ROB_entry_banks_3 (	// src/main/scala/Backend/ROB.scala:220:15
     .clock                     (clock),
-    .io_addrA                  (back_index),	// src/main/scala/Backend/ROB.scala:256:19, :258:21, :261:22
+    .io_addrA                  (back_index),	// src/main/scala/Backend/ROB.scala:257:19, :259:21, :262:22
     .io_writeDataA_valid       (io_ROB_packet_bits_valid_bits_3),
     .io_writeDataA_is_branch
       (io_ROB_packet_bits_decoded_instruction_3_needs_branch_unit),
     .io_writeDataA_memory_type (io_ROB_packet_bits_decoded_instruction_3_memory_type),
     .io_writeDataA_RD          (io_ROB_packet_bits_decoded_instruction_3_RD),
     .io_writeDataA_RD_valid    (io_ROB_packet_bits_decoded_instruction_3_RD_valid),
-    .io_writeEnableA           (allocate),	// src/main/scala/Backend/ROB.scala:92:37
-    .io_addrB                  (front_index),	// src/main/scala/Backend/ROB.scala:245:19, :247:23, :248:32
+    .io_writeEnableA           (allocate),	// src/main/scala/Backend/ROB.scala:90:37
+    .io_addrB                  (front_index),	// src/main/scala/Backend/ROB.scala:246:19, :248:23, :249:32
     .io_readDataB_valid        (io_ROB_output_ROB_entries_3_valid),
     .io_readDataB_is_branch    (io_ROB_output_ROB_entries_3_is_branch),
     .io_readDataB_memory_type  (io_ROB_output_ROB_entries_3_memory_type),
     .io_readDataB_RD           (io_ROB_output_ROB_entries_3_RD),
     .io_readDataB_RD_valid     (io_ROB_output_ROB_entries_3_RD_valid)
-  );	// src/main/scala/Backend/ROB.scala:219:15
-  assign io_ROB_packet_ready = ~full;	// src/main/scala/Backend/ROB.scala:42:7, :284:89, :286:28
-  assign io_ROB_output_row_valid = _GEN[front_pointer[5:0]];	// src/main/scala/Backend/ROB.scala:42:7, :78:32, :108:56, :268:29
-  assign io_ROB_output_ROB_index = io_ROB_output_ROB_index_REG;	// src/main/scala/Backend/ROB.scala:42:7, :269:39
-  assign io_ROB_index = back_index;	// src/main/scala/Backend/ROB.scala:42:7, :256:19, :258:21, :261:22
+  );	// src/main/scala/Backend/ROB.scala:220:15
+  assign io_ROB_packet_ready = ~full;	// src/main/scala/Backend/ROB.scala:42:7, :291:89, :293:28
+  assign io_ROB_output_row_valid = _GEN[front_pointer[5:0]];	// src/main/scala/Backend/ROB.scala:42:7, :76:32, :106:56, :269:44
+  assign io_ROB_output_ROB_index = io_ROB_output_ROB_index_REG;	// src/main/scala/Backend/ROB.scala:42:7, :270:54
+  assign io_ROB_index = back_index;	// src/main/scala/Backend/ROB.scala:42:7, :257:19, :259:21, :262:22
 endmodule
 

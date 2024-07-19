@@ -58,7 +58,7 @@ class BRU(parameters:Parameters) extends Module{
         val is_invalid      = (!io.ROB_output.ROB_entries(i).valid)
         val is_load         = io.ROB_output.ROB_entries(i).memory_type === memory_type_t.LOAD
         val is_store        = io.ROB_output.ROB_entries(i).memory_type === memory_type_t.STORE
-        commit_row_complete(i) := is_completed || is_invalid  || is_store 
+        commit_row_complete(i) := is_completed || is_invalid
     }
     commit_valid := io.ROB_output.row_valid && commit_row_complete.reduce(_ && _)
 
@@ -66,13 +66,14 @@ class BRU(parameters:Parameters) extends Module{
     // if FTQ indicates a misprediction
     // output mispredict and other metadata
 
-    io.commit.bits.GHR                           := io.FTQ.GHR
-    io.commit.bits.TOS                           := io.FTQ.TOS
-    io.commit.bits.NEXT                          := io.FTQ.NEXT
+    io.commit.bits.GHR                           := io.ROB_output.GHR
+    io.commit.bits.TOS                           := io.ROB_output.TOS
+    io.commit.bits.NEXT                          := io.ROB_output.NEXT
     io.commit.bits.RAT_index                     := io.ROB_output.RAT_index
     io.commit.bits.ROB_index                     := io.ROB_output.ROB_index
     io.commit.bits.free_list_front_pointer       := io.ROB_output.free_list_front_pointer
     io.commit.bits.fetch_PC                      := io.ROB_output.fetch_PC
+    io.commit.bits.exception                     := io.ROB_output.exception.reduce(_ || _)
 
     for(i <- 0 until fetchWidth){
         io.commit.bits.RD(i)                     := io.ROB_output.ROB_entries(i).RD
@@ -99,8 +100,6 @@ class BRU(parameters:Parameters) extends Module{
         io.commit.bits.fetch_packet_index    := io.FTQ.dominant_index
     }
 
-    AssertProperty(io.commit.bits.GHR =/= 1.U)
-    AssumeProperty(io.commit.bits.GHR =/= 1.U)
 
 
 

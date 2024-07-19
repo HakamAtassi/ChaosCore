@@ -47,13 +47,17 @@ module backend(	// src/main/scala/Backend/backend.scala:47:7
   input         clock,	// src/main/scala/Backend/backend.scala:47:7
                 reset,	// src/main/scala/Backend/backend.scala:47:7
                 io_flush,	// src/main/scala/Backend/backend.scala:51:16
+                io_backend_memory_response_valid,	// src/main/scala/Backend/backend.scala:51:16
+  input  [3:0]  io_backend_memory_response_bits_MOB_index,	// src/main/scala/Backend/backend.scala:51:16
+  output        io_backend_memory_request_valid,	// src/main/scala/Backend/backend.scala:51:16
   output [31:0] io_backend_memory_request_bits_addr,	// src/main/scala/Backend/backend.scala:51:16
   output [1:0]  io_backend_memory_request_bits_memory_type,	// src/main/scala/Backend/backend.scala:51:16
-                io_backend_memory_request_bits_access_width,	// src/main/scala/Backend/backend.scala:51:16
   output [3:0]  io_backend_memory_request_bits_MOB_index,	// src/main/scala/Backend/backend.scala:51:16
   input         io_commit_valid,	// src/main/scala/Backend/backend.scala:51:16
   input  [5:0]  io_commit_bits_ROB_index,	// src/main/scala/Backend/backend.scala:51:16
   input  [1:0]  io_commit_bits_fetch_packet_index,	// src/main/scala/Backend/backend.scala:51:16
+  input         io_commit_bits_is_misprediction,	// src/main/scala/Backend/backend.scala:51:16
+                io_commit_bits_exception,	// src/main/scala/Backend/backend.scala:51:16
   output [5:0]  io_PC_file_exec_addr,	// src/main/scala/Backend/backend.scala:51:16
   input  [31:0] io_PC_file_exec_data,	// src/main/scala/Backend/backend.scala:51:16
                 io_fetch_PC,	// src/main/scala/Backend/backend.scala:51:16
@@ -187,7 +191,8 @@ module backend(	// src/main/scala/Backend/backend.scala:47:7
   output [5:0]  io_FU_outputs_0_bits_ROB_index,	// src/main/scala/Backend/backend.scala:51:16
   output [3:0]  io_FU_outputs_0_bits_FTQ_index,	// src/main/scala/Backend/backend.scala:51:16
   output [1:0]  io_FU_outputs_0_bits_fetch_packet_index,	// src/main/scala/Backend/backend.scala:51:16
-  output        io_FU_outputs_1_valid,	// src/main/scala/Backend/backend.scala:51:16
+  output        io_FU_outputs_0_bits_exception,	// src/main/scala/Backend/backend.scala:51:16
+                io_FU_outputs_1_valid,	// src/main/scala/Backend/backend.scala:51:16
   output [6:0]  io_FU_outputs_1_bits_RD,	// src/main/scala/Backend/backend.scala:51:16
   output [31:0] io_FU_outputs_1_bits_RD_data,	// src/main/scala/Backend/backend.scala:51:16
   output        io_FU_outputs_1_bits_RD_valid,	// src/main/scala/Backend/backend.scala:51:16
@@ -204,7 +209,8 @@ module backend(	// src/main/scala/Backend/backend.scala:47:7
   output [5:0]  io_FU_outputs_1_bits_ROB_index,	// src/main/scala/Backend/backend.scala:51:16
   output [3:0]  io_FU_outputs_1_bits_FTQ_index,	// src/main/scala/Backend/backend.scala:51:16
   output [1:0]  io_FU_outputs_1_bits_fetch_packet_index,	// src/main/scala/Backend/backend.scala:51:16
-  output        io_FU_outputs_2_valid,	// src/main/scala/Backend/backend.scala:51:16
+  output        io_FU_outputs_1_bits_exception,	// src/main/scala/Backend/backend.scala:51:16
+                io_FU_outputs_2_valid,	// src/main/scala/Backend/backend.scala:51:16
   output [6:0]  io_FU_outputs_2_bits_RD,	// src/main/scala/Backend/backend.scala:51:16
   output [31:0] io_FU_outputs_2_bits_RD_data,	// src/main/scala/Backend/backend.scala:51:16
   output        io_FU_outputs_2_bits_RD_valid,	// src/main/scala/Backend/backend.scala:51:16
@@ -221,17 +227,20 @@ module backend(	// src/main/scala/Backend/backend.scala:47:7
   output [5:0]  io_FU_outputs_2_bits_ROB_index,	// src/main/scala/Backend/backend.scala:51:16
   output [3:0]  io_FU_outputs_2_bits_FTQ_index,	// src/main/scala/Backend/backend.scala:51:16
   output [1:0]  io_FU_outputs_2_bits_fetch_packet_index,	// src/main/scala/Backend/backend.scala:51:16
-  output        io_FU_outputs_3_valid,	// src/main/scala/Backend/backend.scala:51:16
+  output        io_FU_outputs_2_bits_exception,	// src/main/scala/Backend/backend.scala:51:16
+                io_FU_outputs_3_valid,	// src/main/scala/Backend/backend.scala:51:16
   output [6:0]  io_FU_outputs_3_bits_RD,	// src/main/scala/Backend/backend.scala:51:16
   output [31:0] io_FU_outputs_3_bits_address,	// src/main/scala/Backend/backend.scala:51:16
   output [1:0]  io_FU_outputs_3_bits_memory_type,	// src/main/scala/Backend/backend.scala:51:16
                 io_FU_outputs_3_bits_access_width,	// src/main/scala/Backend/backend.scala:51:16
   output        io_FU_outputs_3_bits_is_unsigned,	// src/main/scala/Backend/backend.scala:51:16
-  output [31:0] io_FU_outputs_3_bits_wr_data	// src/main/scala/Backend/backend.scala:51:16
+  output [31:0] io_FU_outputs_3_bits_wr_data,	// src/main/scala/Backend/backend.scala:51:16
+  output [3:0]  io_FU_outputs_3_bits_MOB_index	// src/main/scala/Backend/backend.scala:51:16
 );
 
   wire        _FU3_io_FU_output_valid;	// src/main/scala/Backend/backend.scala:189:21
   wire [31:0] _FU3_io_FU_output_bits_address;	// src/main/scala/Backend/backend.scala:189:21
+  wire [3:0]  _FU3_io_FU_output_bits_MOB_index;	// src/main/scala/Backend/backend.scala:189:21
   wire        _FU2_io_FU_output_valid;	// src/main/scala/Backend/backend.scala:188:21
   wire [6:0]  _FU2_io_FU_output_bits_RD;	// src/main/scala/Backend/backend.scala:188:21
   wire [31:0] _FU2_io_FU_output_bits_RD_data;	// src/main/scala/Backend/backend.scala:188:21
@@ -252,13 +261,19 @@ module backend(	// src/main/scala/Backend/backend.scala:47:7
   wire [31:0] _INT_PRF_io_rdata_5;	// src/main/scala/Backend/backend.scala:133:25
   wire [31:0] _INT_PRF_io_rdata_6;	// src/main/scala/Backend/backend.scala:133:25
   wire [31:0] _INT_PRF_io_rdata_7;	// src/main/scala/Backend/backend.scala:133:25
+  wire        _MOB_io_MOB_output_valid;	// src/main/scala/Backend/backend.scala:90:24
+  wire [6:0]  _MOB_io_MOB_output_bits_RD;	// src/main/scala/Backend/backend.scala:90:24
+  wire [31:0] _MOB_io_MOB_output_bits_RD_data;	// src/main/scala/Backend/backend.scala:90:24
+  wire        _MOB_io_MOB_output_bits_RD_valid;	// src/main/scala/Backend/backend.scala:90:24
   wire        _MEM_RS_io_RF_inputs_3_valid;	// src/main/scala/Backend/backend.scala:84:27
   wire [6:0]  _MEM_RS_io_RF_inputs_3_bits_RD;	// src/main/scala/Backend/backend.scala:84:27
   wire [6:0]  _MEM_RS_io_RF_inputs_3_bits_RS1;	// src/main/scala/Backend/backend.scala:84:27
   wire [6:0]  _MEM_RS_io_RF_inputs_3_bits_RS2;	// src/main/scala/Backend/backend.scala:84:27
   wire [20:0] _MEM_RS_io_RF_inputs_3_bits_IMM;	// src/main/scala/Backend/backend.scala:84:27
   wire [2:0]  _MEM_RS_io_RF_inputs_3_bits_FUNCT3;	// src/main/scala/Backend/backend.scala:84:27
+  wire [3:0]  _MEM_RS_io_RF_inputs_3_bits_MOB_index;	// src/main/scala/Backend/backend.scala:84:27
   wire [1:0]  _MEM_RS_io_RF_inputs_3_bits_memory_type;	// src/main/scala/Backend/backend.scala:84:27
+  wire [1:0]  _MEM_RS_io_RF_inputs_3_bits_access_width;	// src/main/scala/Backend/backend.scala:84:27
   wire        _INT_RS_io_RF_inputs_0_valid;	// src/main/scala/Backend/backend.scala:83:27
   wire        _INT_RS_io_RF_inputs_0_bits_ready_bits_RS1_ready;	// src/main/scala/Backend/backend.scala:83:27
   wire        _INT_RS_io_RF_inputs_0_bits_ready_bits_RS2_ready;	// src/main/scala/Backend/backend.scala:83:27
@@ -423,7 +438,9 @@ module backend(	// src/main/scala/Backend/backend.scala:47:7
   reg  [6:0]  read_decoded_instructions_3_decoded_instruction_REG_RD;	// src/main/scala/Backend/backend.scala:175:64
   reg  [20:0] read_decoded_instructions_3_decoded_instruction_REG_IMM;	// src/main/scala/Backend/backend.scala:175:64
   reg  [2:0]  read_decoded_instructions_3_decoded_instruction_REG_FUNCT3;	// src/main/scala/Backend/backend.scala:175:64
+  reg  [3:0]  read_decoded_instructions_3_decoded_instruction_REG_MOB_index;	// src/main/scala/Backend/backend.scala:175:64
   reg  [1:0]  read_decoded_instructions_3_decoded_instruction_REG_memory_type;	// src/main/scala/Backend/backend.scala:175:64
+  reg  [1:0]  read_decoded_instructions_3_decoded_instruction_REG_access_width;	// src/main/scala/Backend/backend.scala:175:64
   reg         FU0_io_FU_input_valid_REG;	// src/main/scala/Backend/backend.scala:194:47
   reg         FU1_io_FU_input_valid_REG;	// src/main/scala/Backend/backend.scala:197:47
   reg         FU2_io_FU_input_valid_REG;	// src/main/scala/Backend/backend.scala:200:47
@@ -585,8 +602,12 @@ module backend(	// src/main/scala/Backend/backend.scala:47:7
       _MEM_RS_io_RF_inputs_3_bits_IMM;	// src/main/scala/Backend/backend.scala:84:27, :175:64
     read_decoded_instructions_3_decoded_instruction_REG_FUNCT3 <=
       _MEM_RS_io_RF_inputs_3_bits_FUNCT3;	// src/main/scala/Backend/backend.scala:84:27, :175:64
+    read_decoded_instructions_3_decoded_instruction_REG_MOB_index <=
+      _MEM_RS_io_RF_inputs_3_bits_MOB_index;	// src/main/scala/Backend/backend.scala:84:27, :175:64
     read_decoded_instructions_3_decoded_instruction_REG_memory_type <=
       _MEM_RS_io_RF_inputs_3_bits_memory_type;	// src/main/scala/Backend/backend.scala:84:27, :175:64
+    read_decoded_instructions_3_decoded_instruction_REG_access_width <=
+      _MEM_RS_io_RF_inputs_3_bits_access_width;	// src/main/scala/Backend/backend.scala:84:27, :175:64
     FU0_io_FU_input_valid_REG <= _INT_RS_io_RF_inputs_0_valid;	// src/main/scala/Backend/backend.scala:83:27, :194:47
     FU1_io_FU_input_valid_REG <= _INT_RS_io_RF_inputs_1_valid;	// src/main/scala/Backend/backend.scala:83:27, :197:47
     FU2_io_FU_input_valid_REG <= _INT_RS_io_RF_inputs_2_valid;	// src/main/scala/Backend/backend.scala:83:27, :200:47
@@ -722,8 +743,12 @@ module backend(	// src/main/scala/Backend/backend.scala:47:7
         read_decoded_instructions_3_decoded_instruction_REG_IMM =
           {_RANDOM[4'h8][31:25], _RANDOM[4'h9][13:0]};	// src/main/scala/Backend/backend.scala:47:7, :175:64
         read_decoded_instructions_3_decoded_instruction_REG_FUNCT3 = _RANDOM[4'h9][16:14];	// src/main/scala/Backend/backend.scala:47:7, :175:64
+        read_decoded_instructions_3_decoded_instruction_REG_MOB_index =
+          _RANDOM[4'h9][28:25];	// src/main/scala/Backend/backend.scala:47:7, :175:64
         read_decoded_instructions_3_decoded_instruction_REG_memory_type =
           _RANDOM[4'hA][17:16];	// src/main/scala/Backend/backend.scala:47:7, :175:64
+        read_decoded_instructions_3_decoded_instruction_REG_access_width =
+          _RANDOM[4'hA][19:18];	// src/main/scala/Backend/backend.scala:47:7, :175:64
         FU0_io_FU_input_valid_REG = _RANDOM[4'hA][20];	// src/main/scala/Backend/backend.scala:47:7, :175:64, :194:47
         FU1_io_FU_input_valid_REG = _RANDOM[4'hA][21];	// src/main/scala/Backend/backend.scala:47:7, :175:64, :197:47
         FU2_io_FU_input_valid_REG = _RANDOM[4'hA][22];	// src/main/scala/Backend/backend.scala:47:7, :175:64, :200:47
@@ -1322,15 +1347,21 @@ module backend(	// src/main/scala/Backend/backend.scala:47:7
     .io_RF_inputs_3_bits_RS2                       (_MEM_RS_io_RF_inputs_3_bits_RS2),
     .io_RF_inputs_3_bits_IMM                       (_MEM_RS_io_RF_inputs_3_bits_IMM),
     .io_RF_inputs_3_bits_FUNCT3                    (_MEM_RS_io_RF_inputs_3_bits_FUNCT3),
+    .io_RF_inputs_3_bits_MOB_index
+      (_MEM_RS_io_RF_inputs_3_bits_MOB_index),
     .io_RF_inputs_3_bits_memory_type
-      (_MEM_RS_io_RF_inputs_3_bits_memory_type)
+      (_MEM_RS_io_RF_inputs_3_bits_memory_type),
+    .io_RF_inputs_3_bits_access_width
+      (_MEM_RS_io_RF_inputs_3_bits_access_width)
   );	// src/main/scala/Backend/backend.scala:84:27
   MOB MOB (	// src/main/scala/Backend/backend.scala:90:24
-    .clock                                       (clock),
-    .reset                                       (reset),
+    .clock                                      (clock),
+    .reset                                      (reset),
     .io_reserve_0_valid
       (_MOB_io_reserve_0_valid_T & io_backend_packet_bits_valid_bits_0
        & io_backend_packet_valid),	// src/main/scala/Backend/backend.scala:108:104, :116:{113,153}
+    .io_reserve_0_bits_RD
+      (io_backend_packet_bits_decoded_instruction_0_RD),
     .io_reserve_0_bits_ROB_index
       (io_backend_packet_bits_decoded_instruction_0_ROB_index),
     .io_reserve_0_bits_memory_type
@@ -1338,6 +1369,8 @@ module backend(	// src/main/scala/Backend/backend.scala:47:7
     .io_reserve_1_valid
       (_MOB_io_reserve_1_valid_T & io_backend_packet_bits_valid_bits_1
        & io_backend_packet_valid),	// src/main/scala/Backend/backend.scala:108:104, :116:{113,153}
+    .io_reserve_1_bits_RD
+      (io_backend_packet_bits_decoded_instruction_1_RD),
     .io_reserve_1_bits_ROB_index
       (io_backend_packet_bits_decoded_instruction_1_ROB_index),
     .io_reserve_1_bits_memory_type
@@ -1345,6 +1378,8 @@ module backend(	// src/main/scala/Backend/backend.scala:47:7
     .io_reserve_2_valid
       (_MOB_io_reserve_2_valid_T & io_backend_packet_bits_valid_bits_2
        & io_backend_packet_valid),	// src/main/scala/Backend/backend.scala:108:104, :116:{113,153}
+    .io_reserve_2_bits_RD
+      (io_backend_packet_bits_decoded_instruction_2_RD),
     .io_reserve_2_bits_ROB_index
       (io_backend_packet_bits_decoded_instruction_2_ROB_index),
     .io_reserve_2_bits_memory_type
@@ -1352,21 +1387,32 @@ module backend(	// src/main/scala/Backend/backend.scala:47:7
     .io_reserve_3_valid
       (_MOB_io_reserve_3_valid_T & io_backend_packet_bits_valid_bits_3
        & io_backend_packet_valid),	// src/main/scala/Backend/backend.scala:108:104, :116:{113,153}
+    .io_reserve_3_bits_RD
+      (io_backend_packet_bits_decoded_instruction_3_RD),
     .io_reserve_3_bits_ROB_index
       (io_backend_packet_bits_decoded_instruction_3_ROB_index),
     .io_reserve_3_bits_memory_type
       (io_backend_packet_bits_decoded_instruction_3_memory_type),
-    .io_AGU_output_valid                         (_FU3_io_FU_output_valid),	// src/main/scala/Backend/backend.scala:189:21
-    .io_AGU_output_bits_address                  (_FU3_io_FU_output_bits_address),	// src/main/scala/Backend/backend.scala:189:21
-    .io_commit_valid                             (io_commit_valid),
-    .io_commit_bits_ROB_index                    (io_commit_bits_ROB_index),
-    .io_backend_memory_request_bits_addr         (io_backend_memory_request_bits_addr),
+    .io_AGU_output_valid                        (_FU3_io_FU_output_valid),	// src/main/scala/Backend/backend.scala:189:21
+    .io_AGU_output_bits_address                 (_FU3_io_FU_output_bits_address),	// src/main/scala/Backend/backend.scala:189:21
+    .io_AGU_output_bits_MOB_index               (_FU3_io_FU_output_bits_MOB_index),	// src/main/scala/Backend/backend.scala:189:21
+    .io_MOB_output_valid                        (_MOB_io_MOB_output_valid),
+    .io_MOB_output_bits_RD                      (_MOB_io_MOB_output_bits_RD),
+    .io_MOB_output_bits_RD_data                 (_MOB_io_MOB_output_bits_RD_data),
+    .io_MOB_output_bits_RD_valid                (_MOB_io_MOB_output_bits_RD_valid),
+    .io_commit_valid                            (io_commit_valid),
+    .io_commit_bits_ROB_index                   (io_commit_bits_ROB_index),
+    .io_commit_bits_is_misprediction            (io_commit_bits_is_misprediction),
+    .io_commit_bits_exception                   (io_commit_bits_exception),
+    .io_backend_memory_request_valid            (io_backend_memory_request_valid),
+    .io_backend_memory_request_bits_addr        (io_backend_memory_request_bits_addr),
     .io_backend_memory_request_bits_memory_type
       (io_backend_memory_request_bits_memory_type),
-    .io_backend_memory_request_bits_access_width
-      (io_backend_memory_request_bits_access_width),
     .io_backend_memory_request_bits_MOB_index
-      (io_backend_memory_request_bits_MOB_index)
+      (io_backend_memory_request_bits_MOB_index),
+    .io_backend_memory_response_valid           (io_backend_memory_response_valid),
+    .io_backend_memory_response_bits_MOB_index
+      (io_backend_memory_response_bits_MOB_index)
   );	// src/main/scala/Backend/backend.scala:90:24
   sim_nReadmWrite INT_PRF (	// src/main/scala/Backend/backend.scala:133:25
     .clock      (clock),
@@ -1389,12 +1435,15 @@ module backend(	// src/main/scala/Backend/backend.scala:47:7
     .io_waddr_0 (_FU0_io_FU_output_bits_RD[5:0]),	// src/main/scala/Backend/backend.scala:186:21, :232:25
     .io_waddr_1 (_FU1_io_FU_output_bits_RD[5:0]),	// src/main/scala/Backend/backend.scala:187:21, :233:25
     .io_waddr_2 (_FU2_io_FU_output_bits_RD[5:0]),	// src/main/scala/Backend/backend.scala:188:21, :234:25
+    .io_waddr_3 (_MOB_io_MOB_output_bits_RD[5:0]),	// src/main/scala/Backend/backend.scala:90:24, :235:25
     .io_wen_0   (_FU0_io_FU_output_valid & _FU0_io_FU_output_bits_RD_valid),	// src/main/scala/Backend/backend.scala:186:21, :237:54
     .io_wen_1   (_FU1_io_FU_output_valid & _FU1_io_FU_output_bits_RD_valid),	// src/main/scala/Backend/backend.scala:187:21, :238:54
     .io_wen_2   (_FU2_io_FU_output_valid & _FU2_io_FU_output_bits_RD_valid),	// src/main/scala/Backend/backend.scala:188:21, :239:54
+    .io_wen_3   (_MOB_io_MOB_output_valid & _MOB_io_MOB_output_bits_RD_valid),	// src/main/scala/Backend/backend.scala:90:24, :240:55
     .io_wdata_0 (_FU0_io_FU_output_bits_RD_data),	// src/main/scala/Backend/backend.scala:186:21
     .io_wdata_1 (_FU1_io_FU_output_bits_RD_data),	// src/main/scala/Backend/backend.scala:187:21
-    .io_wdata_2 (_FU2_io_FU_output_bits_RD_data)	// src/main/scala/Backend/backend.scala:188:21
+    .io_wdata_2 (_FU2_io_FU_output_bits_RD_data),	// src/main/scala/Backend/backend.scala:188:21
+    .io_wdata_3 (_MOB_io_MOB_output_bits_RD_data)	// src/main/scala/Backend/backend.scala:90:24
   );	// src/main/scala/Backend/backend.scala:133:25
   FU FU0 (	// src/main/scala/Backend/backend.scala:186:21
     .clock                                                     (clock),
@@ -1488,7 +1537,9 @@ module backend(	// src/main/scala/Backend/backend.scala:47:7
     .io_FU_output_bits_FTQ_index
       (io_FU_outputs_0_bits_FTQ_index),
     .io_FU_output_bits_fetch_packet_index
-      (io_FU_outputs_0_bits_fetch_packet_index)
+      (io_FU_outputs_0_bits_fetch_packet_index),
+    .io_FU_output_bits_exception
+      (io_FU_outputs_0_bits_exception)
   );	// src/main/scala/Backend/backend.scala:186:21
   FU_1 FU1 (	// src/main/scala/Backend/backend.scala:187:21
     .clock                                                     (clock),
@@ -1582,7 +1633,9 @@ module backend(	// src/main/scala/Backend/backend.scala:47:7
     .io_FU_output_bits_FTQ_index
       (io_FU_outputs_1_bits_FTQ_index),
     .io_FU_output_bits_fetch_packet_index
-      (io_FU_outputs_1_bits_fetch_packet_index)
+      (io_FU_outputs_1_bits_fetch_packet_index),
+    .io_FU_output_bits_exception
+      (io_FU_outputs_1_bits_exception)
   );	// src/main/scala/Backend/backend.scala:187:21
   FU_1 FU2 (	// src/main/scala/Backend/backend.scala:188:21
     .clock                                                     (clock),
@@ -1676,30 +1729,38 @@ module backend(	// src/main/scala/Backend/backend.scala:47:7
     .io_FU_output_bits_FTQ_index
       (io_FU_outputs_2_bits_FTQ_index),
     .io_FU_output_bits_fetch_packet_index
-      (io_FU_outputs_2_bits_fetch_packet_index)
+      (io_FU_outputs_2_bits_fetch_packet_index),
+    .io_FU_output_bits_exception
+      (io_FU_outputs_2_bits_exception)
   );	// src/main/scala/Backend/backend.scala:188:21
   AGU FU3 (	// src/main/scala/Backend/backend.scala:189:21
-    .clock                                            (clock),
-    .reset                                            (reset),
-    .io_flush                                         (io_flush),
-    .io_FU_input_valid                                (FU3_io_FU_input_valid_REG),	// src/main/scala/Backend/backend.scala:203:47
+    .clock                                             (clock),
+    .reset                                             (reset),
+    .io_flush                                          (io_flush),
+    .io_FU_input_valid                                 (FU3_io_FU_input_valid_REG),	// src/main/scala/Backend/backend.scala:203:47
     .io_FU_input_bits_decoded_instruction_RD
       (read_decoded_instructions_3_decoded_instruction_REG_RD),	// src/main/scala/Backend/backend.scala:175:64
     .io_FU_input_bits_decoded_instruction_IMM
       (read_decoded_instructions_3_decoded_instruction_REG_IMM),	// src/main/scala/Backend/backend.scala:175:64
     .io_FU_input_bits_decoded_instruction_FUNCT3
       (read_decoded_instructions_3_decoded_instruction_REG_FUNCT3),	// src/main/scala/Backend/backend.scala:175:64
+    .io_FU_input_bits_decoded_instruction_MOB_index
+      (read_decoded_instructions_3_decoded_instruction_REG_MOB_index),	// src/main/scala/Backend/backend.scala:175:64
     .io_FU_input_bits_decoded_instruction_memory_type
       (read_decoded_instructions_3_decoded_instruction_REG_memory_type),	// src/main/scala/Backend/backend.scala:175:64
-    .io_FU_input_bits_RS1_data                        (_INT_PRF_io_rdata_6),	// src/main/scala/Backend/backend.scala:133:25
-    .io_FU_input_bits_RS2_data                        (_INT_PRF_io_rdata_7),	// src/main/scala/Backend/backend.scala:133:25
-    .io_FU_output_valid                               (_FU3_io_FU_output_valid),
-    .io_FU_output_bits_RD                             (io_FU_outputs_3_bits_RD),
-    .io_FU_output_bits_address                        (_FU3_io_FU_output_bits_address),
-    .io_FU_output_bits_memory_type                    (io_FU_outputs_3_bits_memory_type),
-    .io_FU_output_bits_access_width                   (io_FU_outputs_3_bits_access_width),
-    .io_FU_output_bits_is_unsigned                    (io_FU_outputs_3_bits_is_unsigned),
-    .io_FU_output_bits_wr_data                        (io_FU_outputs_3_bits_wr_data)
+    .io_FU_input_bits_decoded_instruction_access_width
+      (read_decoded_instructions_3_decoded_instruction_REG_access_width),	// src/main/scala/Backend/backend.scala:175:64
+    .io_FU_input_bits_RS1_data                         (_INT_PRF_io_rdata_6),	// src/main/scala/Backend/backend.scala:133:25
+    .io_FU_input_bits_RS2_data                         (_INT_PRF_io_rdata_7),	// src/main/scala/Backend/backend.scala:133:25
+    .io_FU_output_valid                                (_FU3_io_FU_output_valid),
+    .io_FU_output_bits_RD                              (io_FU_outputs_3_bits_RD),
+    .io_FU_output_bits_address                         (_FU3_io_FU_output_bits_address),
+    .io_FU_output_bits_memory_type                     (io_FU_outputs_3_bits_memory_type),
+    .io_FU_output_bits_access_width
+      (io_FU_outputs_3_bits_access_width),
+    .io_FU_output_bits_is_unsigned                     (io_FU_outputs_3_bits_is_unsigned),
+    .io_FU_output_bits_wr_data                         (io_FU_outputs_3_bits_wr_data),
+    .io_FU_output_bits_MOB_index                       (_FU3_io_FU_output_bits_MOB_index)
   );	// src/main/scala/Backend/backend.scala:189:21
   assign io_PC_file_exec_addr = _INT_RS_io_RF_inputs_0_bits_ROB_index;	// src/main/scala/Backend/backend.scala:47:7, :83:27
   assign io_FU_outputs_0_valid = _FU0_io_FU_output_valid;	// src/main/scala/Backend/backend.scala:47:7, :186:21
@@ -1716,5 +1777,6 @@ module backend(	// src/main/scala/Backend/backend.scala:47:7
   assign io_FU_outputs_2_bits_RD_valid = _FU2_io_FU_output_bits_RD_valid;	// src/main/scala/Backend/backend.scala:47:7, :188:21
   assign io_FU_outputs_3_valid = _FU3_io_FU_output_valid;	// src/main/scala/Backend/backend.scala:47:7, :189:21
   assign io_FU_outputs_3_bits_address = _FU3_io_FU_output_bits_address;	// src/main/scala/Backend/backend.scala:47:7, :189:21
+  assign io_FU_outputs_3_bits_MOB_index = _FU3_io_FU_output_bits_MOB_index;	// src/main/scala/Backend/backend.scala:47:7, :189:21
 endmodule
 

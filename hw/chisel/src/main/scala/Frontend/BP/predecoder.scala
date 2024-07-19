@@ -65,8 +65,8 @@ class predecoder(parameters:Parameters) extends Module{
     ////////////////////////
     // SKID BUFFER INPUTS //
     ////////////////////////
-    val predictions         = Wire(Decoupled(new FTQ_entry(parameters)))
-    val final_fetch_packet  = Wire(Decoupled(new fetch_packet(parameters)))
+    val predictions_out         = Wire(Decoupled(new FTQ_entry(parameters)))
+    val final_fetch_packet_out  = Wire(Decoupled(new fetch_packet(parameters)))
 
     ///////////////////
     // BRANCH DECODE //
@@ -84,8 +84,6 @@ class predecoder(parameters:Parameters) extends Module{
     is_RET                     :=   0.B
     is_CALL                    :=   0.B
 
-    //val imm                    = Wire(Vec(fetchWidth, Bool()))
-
     // FIXME: no reset...    
     val dominant_branch_index           = Wire(UInt(log2Ceil(fetchWidth).W))
     val dominant_instruction            = Wire(UInt(32.W))
@@ -93,7 +91,7 @@ class predecoder(parameters:Parameters) extends Module{
     val T_NT                            = Wire(Vec(fetchWidth, Bool()))
     val final_fetch_packet_valid_bits   = Wire(Vec(fetchWidth, Bool()))
 
-    dominant_branch_index := fetchWidth.U - 1.U
+    dominant_branch_index               := fetchWidth.U - 1.U
 
     for(i <- fetchWidth-1 to 0 by -1){    // Get dominant index
         val instruction                 = io.fetch_packet.bits.instructions(i).instruction
@@ -105,12 +103,11 @@ class predecoder(parameters:Parameters) extends Module{
 
         val (instruction_type, valid)   = InstructionType.safe(opcode(6, 2))
 
-
-        val curr_is_JAL      =   (instruction_type === InstructionType.JAL)     && io.fetch_packet.bits.valid_bits(i) && io.fetch_packet.valid
-        val curr_is_JALR     =   (instruction_type === InstructionType.JALR)    && io.fetch_packet.bits.valid_bits(i) && io.fetch_packet.valid
-        val curr_is_BRANCH   =   (instruction_type === InstructionType.BRANCH)  && io.fetch_packet.bits.valid_bits(i) && io.fetch_packet.valid
-        val curr_is_RET      =   (is_JALR && (RD === 0.U) && (RS1 === 1.U)) // FIXME: this should maybe check for imm...
-        val curr_is_CALL     =   (is_JALR && (RD === 1.U)) || (is_JAL && (RD === 1.U))
+        val curr_is_JAL                 = (instruction_type === InstructionType.JAL)     && io.fetch_packet.bits.valid_bits(i) && io.fetch_packet.valid
+        val curr_is_JALR                = (instruction_type === InstructionType.JALR)    && io.fetch_packet.bits.valid_bits(i) && io.fetch_packet.valid
+        val curr_is_BRANCH              = (instruction_type === InstructionType.BRANCH)  && io.fetch_packet.bits.valid_bits(i) && io.fetch_packet.valid
+        val curr_is_RET                 = (is_JALR && (RD === 0.U) && (RS1 === 1.U)) // FIXME: this should maybe check for imm...
+        val curr_is_CALL                = (is_JALR && (RD === 1.U)) || (is_JAL && (RD === 1.U))
 
         val is_taken                    = ((curr_is_BRANCH && is_BTB_taken) || curr_is_JALR || curr_is_JAL)
 
@@ -136,25 +133,18 @@ class predecoder(parameters:Parameters) extends Module{
     // TARGET GENERATION //
     ///////////////////////
     val target_address      = Wire(UInt(32.W))
-    val dominantbr_type_t    = Wire(br_type_t())
+    val dominantbr_type_t   = Wire(br_type_t())
 
-    val _imm = Wire(SInt(32.W))
-    val imm = Wire(UInt(32.W))
+    val imm  = Wire(UInt(32.W))
+    imm     := 0.U
 
-    _imm := 0.S
-    imm := 0.U
-    dontTouch(imm)
-
-    dontTouch(target_address)
-
-    val masked_addr = io.fetch_packet.bits.fetch_PC & "hFFFF_FFF0".U        // FIXME: make this a parameterizable function 
+    val masked_addr = get_fetch_packet_aligned_address(parameters, io.fetch_packet.bits.fetch_PC)
     when(is_RET){
         // FROM RAS
         target_address := io.RAS_read.ret_addr
     }.elsewhen(is_JAL){
         // COMPUTED
-        _imm := getImm(dominant_instruction).asSInt
-        imm := _imm.asUInt
+        imm := sign_extend(getImm(dominant_instruction), 32)
         target_address := imm + masked_addr + (dominant_branch_index*4.U)
     }.elsewhen(is_JALR && io.prediction.bits.hit && io.prediction.valid){
         // FROM BTB (Assuming hit)
@@ -163,7 +153,6 @@ class predecoder(parameters:Parameters) extends Module{
         // FROM BTB (Assuming hit)
         target_address := io.prediction.bits.target
     }.otherwise{ 
-        // + 16
         target_address := io.fetch_packet.bits.fetch_PC + get_PC_increment(parameters, io.fetch_packet.bits.fetch_PC)
     }
 
@@ -180,22 +169,23 @@ class predecoder(parameters:Parameters) extends Module{
     val expected_next_PC            = RegInit(UInt(32.W), startPC)
     val input_fetch_packet_valid    = Wire(Bool())
     val input_valid                 = Wire(Bool())
+    val output_ready                = Wire(Bool())
     val PC_match                    = Wire(Bool())
     val PC_mismatch                 = Wire(Bool())
 
+    PC_match                       :=  expected_next_PC === io.fetch_packet.bits.fetch_PC
+    PC_mismatch                    :=  expected_next_PC =/= io.fetch_packet.bits.fetch_PC
 
+    input_valid                    :=  io.fetch_packet.valid    && 
+                                       io.prediction.valid      && 
+                                       !io.flush
 
-    PC_match                    :=  expected_next_PC === io.fetch_packet.bits.fetch_PC
-    PC_mismatch                 :=  expected_next_PC =/= io.fetch_packet.bits.fetch_PC
-
-    input_valid                 :=  io.fetch_packet.fire    && 
-                                    io.prediction.fire      && 
-                                   !io.flush
+    output_ready                    := io.final_fetch_packet.ready && io.predictions.ready 
     
-    input_fetch_packet_valid    :=  input_valid && PC_match
+    input_fetch_packet_valid        := input_valid && PC_match
 
-    final_fetch_packet.valid    := RegNext(input_fetch_packet_valid)
-    when(input_fetch_packet_valid){expected_next_PC := target_address}
+    final_fetch_packet_out.valid    := input_fetch_packet_valid
+    when(input_fetch_packet_valid && output_ready){expected_next_PC := target_address}
     when(io.commit.valid && io.commit.bits.is_misprediction){expected_next_PC := io.commit.bits.fetch_PC}
 
     ////////////
@@ -230,39 +220,40 @@ class predecoder(parameters:Parameters) extends Module{
     // GENERATE FINAL FETCH PACKET  //
     //////////////////////////////////
     // ASSIGN FINAL FETCH PACKET //
-    final_fetch_packet.bits := RegNext(io.fetch_packet.bits)
-    final_fetch_packet.bits.fetch_PC := RegNext(masked_addr)
+    final_fetch_packet_out.bits := io.fetch_packet.bits
+    final_fetch_packet_out.bits.fetch_PC := masked_addr
     for(i <- 0 until fetchWidth){
-        final_fetch_packet.bits.valid_bits(i)   := RegNext(io.fetch_packet.bits.valid_bits(i)) && RegNext(final_fetch_packet_valid_bits(i))
+        final_fetch_packet_out.bits.valid_bits(i)   := io.fetch_packet.bits.valid_bits(i) && final_fetch_packet_valid_bits(i)
     }
+
+    final_fetch_packet_out.bits.GHR                           := GHR
+    final_fetch_packet_out.bits.NEXT                          := io.RAS_read.NEXT
+    final_fetch_packet_out.bits.TOS                           := io.RAS_read.TOS
 
     /////////////////////////
     // GENERATE FTQ OUTPUT //
     /////////////////////////
     val push_FTQ = is_control.reduce(_ || _)
 
-    predictions.ready                              := io.predictions.ready
-    predictions.valid                              := push_FTQ && input_fetch_packet_valid
+    predictions_out.ready                              := io.predictions.ready
+    predictions_out.valid                              := push_FTQ && input_fetch_packet_valid
 
     // Buffer branch state
-    predictions.bits.fetch_PC                      := io.fetch_packet.bits.fetch_PC
-    predictions.bits.GHR                           := GHR
-    predictions.bits.NEXT                          := io.RAS_read.NEXT
-    predictions.bits.TOS                           := io.RAS_read.TOS
+    predictions_out.bits.fetch_PC                      := io.fetch_packet.bits.fetch_PC
 
-    predictions.bits.dominant_index                := (fetchWidth-1).U                                      // Set to lowest priority 
-    predictions.bits.resolved_PC                   := io.fetch_packet.bits.fetch_PC + (fetchWidth.U*4.U)    // Default to next PC (assume no branches taken)
+    predictions_out.bits.dominant_index                := (fetchWidth-1).U                                      // Set to lowest priority 
+    predictions_out.bits.resolved_PC                   := io.fetch_packet.bits.fetch_PC + (fetchWidth.U*4.U)    // Default to next PC (assume no branches taken)
 
     // Init FTQ entry data
-    predictions.bits.T_NT                          := T_NT.reduce(_ || _)
-    when(predictions.bits.T_NT){
-        predictions.bits.predicted_PC              := target_address
+    predictions_out.bits.T_NT                          := T_NT.reduce(_ || _)
+    when(predictions_out.bits.T_NT){
+        predictions_out.bits.predicted_PC              := target_address
     }.otherwise{
-        predictions.bits.predicted_PC              := io.fetch_packet.bits.fetch_PC + (fetchWidth.U*4.U)
+        predictions_out.bits.predicted_PC              := io.fetch_packet.bits.fetch_PC + (fetchWidth.U*4.U)
     }
-    predictions.bits.valid                         := 0.B
-    predictions.bits.is_misprediction              := 0.B
-    predictions.bits.br_type                       := dominantbr_type_t
+    predictions_out.bits.valid                         := 0.B
+    predictions_out.bits.is_misprediction              := 0.B
+    predictions_out.bits.br_type                       := dominantbr_type_t
 
 
     //////////////////////
@@ -270,17 +261,22 @@ class predecoder(parameters:Parameters) extends Module{
     //////////////////////
     // predecoded instruction & FTQ outputs passed through a skid buffer
 
-    val predictions_skid_buffer         = Module(new Queue(new FTQ_entry(parameters), 1, flow=true, hasFlush=false, useSyncReadMem=false))
-    val final_fetch_packet_skid_buffer  = Module(new Queue(new fetch_packet(parameters), 1, flow=true, hasFlush=false, useSyncReadMem=false))
+    val predictions_out_Q                      = Module(new Queue(new FTQ_entry(parameters), 2, flow=false, hasFlush=true, useSyncReadMem=false))
+    val final_fetch_packet_out_Q               = Module(new Queue(new fetch_packet(parameters), 2, flow=false, hasFlush=true, useSyncReadMem=false))
 
-    predictions_skid_buffer.io.enq                  <> predictions
-    predictions_skid_buffer.io.deq                  <> io.predictions
+    predictions_out_Q.io.enq                  <> predictions_out
+    predictions_out_Q.io.deq                  <> io.predictions
+    predictions_out_Q.io.deq.ready            := output_ready
+    predictions_out_Q.io.flush.get            := io.flush
 
-    final_fetch_packet_skid_buffer.io.enq           <> final_fetch_packet
-    final_fetch_packet_skid_buffer.io.deq           <> io.final_fetch_packet
+    final_fetch_packet_out_Q.io.enq           <> final_fetch_packet_out
+    final_fetch_packet_out_Q.io.deq           <> io.final_fetch_packet
+    final_fetch_packet_out_Q.io.deq.ready     := output_ready
+    final_fetch_packet_out_Q.io.flush.get     := io.flush
 
-    io.prediction.ready   := (io.final_fetch_packet.ready && io.predictions.ready)
-    io.fetch_packet.ready := (io.final_fetch_packet.ready && io.predictions.ready)
+    io.prediction.ready                       := RegNext(output_ready)
+    io.fetch_packet.ready                     := RegNext(output_ready)
+
 
 
 

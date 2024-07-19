@@ -284,15 +284,6 @@ class RS(parameters:Parameters) extends Module{
     }
 
 
-    if(coreConfig.contains("M")){
-        when(port3_valid){
-            io.RF_inputs(3).bits <> reservation_station(port3_RS_index).decoded_instruction
-            io.RF_inputs(3).valid := schedulable_instructions(port3_RS_index)
-        }
-    }
-
-
-    //FIXME: input ready bits from FUs do nothing
 
     
     /////////////////////

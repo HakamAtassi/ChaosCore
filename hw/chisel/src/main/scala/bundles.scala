@@ -46,6 +46,9 @@ class fetch_packet(parameters:Parameters) extends Bundle{
     val valid_bits      = Vec(fetchWidth, Bool())
     val instructions    = Vec(fetchWidth, new Instruction(parameters))
 
+    val GHR             = UInt(GHRWidth.W)
+    val NEXT            = UInt(log2Ceil(RASEntries).W)
+    val TOS             = UInt(log2Ceil(RASEntries).W)
 }
 
 class metadata extends Bundle{
@@ -124,6 +127,7 @@ class commit(parameters:Parameters) extends Bundle{
     val fetch_packet_index      = UInt(log2Ceil(fetchWidth).W)  // fetch packet index of the branch
 
     val is_misprediction        = Bool()
+    val exception               = Bool()
     val expected_PC             = UInt(32.W)    // For BTB aswell
 
     // SAVED STATE
@@ -136,8 +140,11 @@ class commit(parameters:Parameters) extends Bundle{
 
     val RD                      = Vec(fetchWidth, UInt(physicalRegBits.W))
     val RD_valid                = Vec(fetchWidth, Bool())
-
 }
+
+//class exception(parameters:Parameters) extends Bundle{
+//}
+
 
 class RAS_update extends Bundle{    // Request call or ret
     val call_addr = UInt(32.W)
@@ -236,8 +243,13 @@ class decoded_fetch_packet(parameters:Parameters) extends Bundle{
     val decoded_instruction     = Vec(fetchWidth, new decoded_instruction(parameters))
     val valid_bits              = Vec(fetchWidth, Bool())
 
+    val GHR                     = UInt(GHRWidth.W)
+    val TOS                     = UInt(log2Ceil(RASEntries).W)
+    val NEXT                    = UInt(log2Ceil(RASEntries).W)
+
     val RAT_index               = UInt(log2Ceil(RATCheckpointCount).W)
     val free_list_front_pointer = UInt((physicalRegBits + 1).W)
+
 }
 
 // decoded instruction after it goes through register read
@@ -329,12 +341,6 @@ class FTQ_entry(parameters:Parameters) extends Bundle{
     val T_NT = Bool()
     val br_type = br_type_t()
 
-    // State revision data
-    // this should be moved to the ROB
-    val GHR     = UInt(GHRWidth.W)
-    val NEXT    = UInt(log2Ceil(RASEntries).W)
-    val TOS     = UInt(log2Ceil(RASEntries).W)
-
     // FU branch data buffers
     val dominant_index = UInt(log2Ceil(fetchWidth).W)
     val resolved_PC    = UInt(32.W)
@@ -354,12 +360,16 @@ class ROB_output(parameters:Parameters) extends Bundle{
     val RAT_index               = UInt(log2Ceil(RATCheckpointCount).W)
     val ROB_index               = UInt(log2Ceil(ROBEntries).W)
 
+    val GHR     = UInt(GHRWidth.W)
+    val NEXT    = UInt(log2Ceil(RASEntries).W)
+    val TOS     = UInt(log2Ceil(RASEntries).W)
     val free_list_front_pointer = UInt((physicalRegBits + 1).W)
+
 
     // N per row 
     val ROB_entries             = Vec(fetchWidth, new ROB_entry(parameters))    // "static" instruction data
     val complete                = Vec(fetchWidth, Bool())                       // Is instruction complete
-    //val exception                = Vec(fetchWidth, Bool())                      // Is instruction complete
+    val exception               = Vec(fetchWidth, Bool())                      // Is instruction complete
 }
 
 class ROB_shared(parameters:Parameters) extends Bundle{
@@ -369,6 +379,10 @@ class ROB_shared(parameters:Parameters) extends Bundle{
     val RAT_index               = UInt(log2Ceil(RATCheckpointCount).W)
 
     val free_list_front_pointer = UInt((physicalRegBits + 1).W)
+
+    val GHR     = UInt(GHRWidth.W)
+    val NEXT    = UInt(log2Ceil(RASEntries).W)
+    val TOS     = UInt(log2Ceil(RASEntries).W)
 }
 
 // ROB entries that pertain to each instruction independantly (this info goes in a standalone bank)
@@ -378,7 +392,6 @@ class ROB_entry(parameters:Parameters) extends Bundle{
     val valid       = Bool()  // is this particular instruction valid?
     val is_branch   = Bool()
 
-    //val exception   = Bool()
     val memory_type = memory_type_t()
 
     val RD          =   UInt(physicalRegBits.W)
@@ -440,7 +453,7 @@ class FU_output(parameters:Parameters) extends Bundle{
     val address             =   UInt(32.W)
     val memory_type         =   memory_type_t()   // LOAD/STORE
     val access_width        =   access_width_t()  // B/HW/W
-    val is_unsigned            =   Bool()            // signed/is_unsigned
+    val is_unsigned         =   Bool()            // signed/is_unsigned
     val wr_data             =   UInt(32.W)
 
     // MOB
@@ -451,6 +464,9 @@ class FU_output(parameters:Parameters) extends Bundle{
     val FTQ_index           =   UInt(log2Ceil(FTQEntries).W)
     
     val fetch_packet_index  =   UInt(log2Ceil(fetchWidth).W)
+
+
+    val exception           =   Bool()
 }
 
 
@@ -553,19 +569,16 @@ class MOB_entry(parameters:Parameters) extends Bundle{
 
     val RD              = UInt(physicalRegBits.W) // dest reg
     val data            = UInt(32.W)              
+    val data_valid      = Bool()
 
     // Entry state
-    val pending         = Bool()    // load request sent to cache
-    val loaded          = Bool()    // load recieved
+    val pending         = Bool()    // AGU data valid but not requested from cache
+    val completed       = Bool()    // Load/Store sent to FU bus
     val committed       = Bool()    // entry committed
-    val violation       = Bool()    // entry does not violate ordering (load/load or store/load)
-
-    val fired           = Bool()
+    val exception       = Bool()    // entry violated ordering (load/load or store/load)
 
 }
 
-
-// PNR?
 
 
 

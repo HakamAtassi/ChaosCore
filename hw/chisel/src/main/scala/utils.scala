@@ -202,18 +202,6 @@ object get_decomposed_icache_address{
 }
 
 
-object get_PC_increment{
-  def apply(parameters:Parameters, address:UInt):UInt={
-    import parameters._
-    val instruction_index_within_packet =   Wire(UInt(log2Ceil(fetchWidth).W))
-    val PC_increment                    =   Wire(UInt(32.W))
-    instruction_index_within_packet := ( address >> log2Ceil(fetchWidth))
-    PC_increment    :=  (fetchWidth.U - instruction_index_within_packet) << log2Ceil(fetchWidth)
-    PC_increment
-  }
-}
-
-
 object get_MOB_row_byte_sel {
   def apply(parameters: Parameters, MOB_entry: MOB_entry): UInt = {
     // Extract relevant fields from the MOB_entry
@@ -288,8 +276,6 @@ object get_MOB_row_wr_bytes {
             }
             is("b11".U) {
               wr_bytes(3) := data(7, 0)
-              // For unaligned half-word, handle wrap-around if needed
-              // Assuming no wrap-around in this implementation
             }
           }
         }
@@ -306,16 +292,13 @@ object get_MOB_row_wr_bytes {
               wr_bytes(1) := data(7, 0)
               wr_bytes(2) := data(15, 8)
               wr_bytes(3) := data(23, 16)
-              // Assuming no wrap-around for the last byte in this implementation
             }
             is("b10".U) {
               wr_bytes(2) := data(7, 0)
               wr_bytes(3) := data(15, 8)
-              // Assuming no wrap-around for the last two bytes in this implementation
             }
             is("b11".U) {
               wr_bytes(3) := data(7, 0)
-              // Assuming no wrap-around for the last three bytes in this implementation
             }
           }
         }
@@ -326,11 +309,29 @@ object get_MOB_row_wr_bytes {
   }
 }
 
+object get_fetch_packet_aligned_address {
+  def apply(parameters: Parameters, addr: UInt): UInt = {
+    import parameters._
+    val mask = ~((fetchWidth * 4 - 1).U(addr.getWidth.W))
+    addr & mask
+  }
+}
 
+object get_PC_increment{
+  def apply(parameters:Parameters, PC:UInt):UInt = {
+    import parameters._
+    val masked_address = (fetchWidth*4 - 1).U & PC
+    val increment = (fetchWidth*4).U - masked_address
+    increment
+  }
+}
 
-
-//object sign_extend{
-  //def apply(){
-  // TODO: 
-  //}
-//}
+object sign_extend{
+  def apply(data:UInt, width:Int):UInt = {
+    val temp = Wire(SInt(data.getWidth.W))
+    val imm  = Wire(UInt(width.W))
+    temp := data.asSInt
+    imm  := temp.asUInt
+    imm
+  }
+}

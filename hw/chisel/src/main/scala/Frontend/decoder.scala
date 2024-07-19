@@ -227,8 +227,6 @@ class fetch_packet_decoder(parameters:Parameters) extends Module{
     val decoded_fetch_packet    = Wire(Decoupled(new decoded_fetch_packet(parameters)))
     val predictions_out         = Wire(Decoupled(new FTQ_entry(parameters)))
 
-
-
     val decoders: Seq[decoder] = Seq.tabulate(fetchWidth) { w =>
         Module(new decoder(parameters))
     }
@@ -242,16 +240,21 @@ class fetch_packet_decoder(parameters:Parameters) extends Module{
 
     // Register outputs //
     for(i <- 0 until fetchWidth){
-        decoded_fetch_packet.bits.decoded_instruction(i) := RegNext(decoders(i).io.decoded_instruction.bits)
+        decoded_fetch_packet.bits.decoded_instruction(i) := decoders(i).io.decoded_instruction.bits
         decoders(i).io.decoded_instruction.ready         := io.decoded_fetch_packet.ready
         io.fetch_packet.ready                            := io.decoded_fetch_packet.ready
     }
 
-    decoded_fetch_packet.valid                           := RegNext(io.fetch_packet.fire && !io.flush) 
-    decoded_fetch_packet.bits.fetch_PC                   := RegNext(io.fetch_packet.bits.fetch_PC)
-    decoded_fetch_packet.bits.valid_bits                 := RegNext(io.fetch_packet.bits.valid_bits)
+    decoded_fetch_packet.valid                           := io.fetch_packet.valid && !io.flush
+    decoded_fetch_packet.bits.fetch_PC                   := io.fetch_packet.bits.fetch_PC
+    decoded_fetch_packet.bits.valid_bits                 := io.fetch_packet.bits.valid_bits
+    decoded_fetch_packet.bits.GHR                        := io.fetch_packet.bits.GHR
+    decoded_fetch_packet.bits.NEXT                       := io.fetch_packet.bits.NEXT
+    decoded_fetch_packet.bits.TOS                        := io.fetch_packet.bits.TOS
+
     decoded_fetch_packet.bits.RAT_index                  := DontCare // This is fine. Allocated during rename
     decoded_fetch_packet.bits.free_list_front_pointer    := DontCare // This is fine. Allocated during rename
+
 
 
 
@@ -261,27 +264,47 @@ class fetch_packet_decoder(parameters:Parameters) extends Module{
 
     // decoded fetch packet skid
 
-    val decoded_fetch_packet_skid_buffer      = Module(new Queue(new decoded_fetch_packet(parameters), 1, flow=true, hasFlush=true, useSyncReadMem=false))
-
-    decoded_fetch_packet_skid_buffer.io.enq                  <> decoded_fetch_packet
-    decoded_fetch_packet_skid_buffer.io.deq                  <> io.decoded_fetch_packet
-    decoded_fetch_packet_skid_buffer.io.flush.get            := io.flush
-
-    io.fetch_packet.ready := io.decoded_fetch_packet.ready
+    val decoded_fetch_packet_out_Q                      = Module(new Queue(new decoded_fetch_packet(parameters), 2, flow=false, hasFlush=true, useSyncReadMem=false))
+    val predictions_out_Q                               = Module(new Queue(new FTQ_entry(parameters), 2, flow=false, hasFlush=true, useSyncReadMem=false))
 
 
+    decoded_fetch_packet.valid                          := io.fetch_packet.valid && io.predictions_in.valid && !io.flush
+    predictions_out.valid                               := io.fetch_packet.valid && io.predictions_in.valid && !io.flush
+
+    decoded_fetch_packet_out_Q.io.enq                   <> decoded_fetch_packet
+    decoded_fetch_packet_out_Q.io.deq                   <> io.decoded_fetch_packet
+    decoded_fetch_packet_out_Q.io.deq.ready             := io.decoded_fetch_packet.ready && io.predictions_out.ready
+    decoded_fetch_packet_out_Q.io.flush.get             := io.flush
 
     // FTQ in skid 
-    val predictions_out_skid_buffer = Module(new Queue(new FTQ_entry(parameters), 1, flow=true, hasFlush=true, useSyncReadMem=false))
+    predictions_out.bits                                := io.predictions_in.bits
+    predictions_out_Q.io.enq                            <> predictions_out
+    predictions_out_Q.io.deq                            <> io.predictions_out
+    predictions_out_Q.io.deq.ready                      := io.decoded_fetch_packet.ready && io.predictions_out.ready
+    predictions_out_Q.io.flush.get                      := io.flush
 
-    predictions_out.bits    := RegNext(io.predictions_in.bits)
-    predictions_out.valid   := RegNext(io.predictions_in.fire)
+    io.fetch_packet.ready                               := RegNext(io.decoded_fetch_packet.ready && io.predictions_out.ready)
+    io.predictions_in.ready                             := RegNext(io.decoded_fetch_packet.ready && io.predictions_out.ready)
 
-    predictions_out_skid_buffer.io.enq                  <> predictions_out
-    predictions_out_skid_buffer.io.deq                  <> io.predictions_out
-    predictions_out_skid_buffer.io.flush.get            := io.flush
 
-    io.predictions_in.ready := io.predictions_out.ready
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     // DEBUG SIGNALS //
     val monitor_output = Wire(Bool())

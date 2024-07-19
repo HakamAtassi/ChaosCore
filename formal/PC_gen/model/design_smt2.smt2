@@ -7,74 +7,81 @@
 ; yosys-smt2-wire reset 1
 ; yosys-smt2-witness {"offset": 0, "path": ["\\reset"], "smtname": "reset", "smtoffset": 0, "type": "input", "width": 1}
 (define-fun |Queue1_memory_request_n reset| ((state |Queue1_memory_request_s|)) Bool (|Queue1_memory_request#0| state))
-; yosys-smt2-anyinit Queue1_memory_request#1 65 Queue1_memory_request.sv:62.10-69.6
+; yosys-smt2-anyinit Queue1_memory_request#1 65 Queue1_memory_request.sv:63.10-71.6
 ; yosys-smt2-witness {"offset": 0, "path": ["\\ram"], "smtname": 1, "smtoffset": 0, "type": "init", "width": 65}
 (declare-fun |Queue1_memory_request#1| (|Queue1_memory_request_s|) (_ BitVec 65)) ; \ram
 ; yosys-smt2-register ram 65
 ; yosys-smt2-wire ram 65
 (define-fun |Queue1_memory_request_n ram| ((state |Queue1_memory_request_s|)) (_ BitVec 65) (|Queue1_memory_request#1| state))
-(declare-fun |Queue1_memory_request#2| (|Queue1_memory_request_s|) Bool) ; \io_enq_valid
+(declare-fun |Queue1_memory_request#2| (|Queue1_memory_request_s|) Bool) ; \io_flush
+; yosys-smt2-input io_flush 1
+; yosys-smt2-wire io_flush 1
+; yosys-smt2-witness {"offset": 0, "path": ["\\io_flush"], "smtname": "io_flush", "smtoffset": 0, "type": "input", "width": 1}
+(define-fun |Queue1_memory_request_n io_flush| ((state |Queue1_memory_request_s|)) Bool (|Queue1_memory_request#2| state))
+(declare-fun |Queue1_memory_request#3| (|Queue1_memory_request_s|) Bool) ; \io_enq_valid
 ; yosys-smt2-input io_enq_valid 1
 ; yosys-smt2-wire io_enq_valid 1
 ; yosys-smt2-witness {"offset": 0, "path": ["\\io_enq_valid"], "smtname": "io_enq_valid", "smtoffset": 0, "type": "input", "width": 1}
-(define-fun |Queue1_memory_request_n io_enq_valid| ((state |Queue1_memory_request_s|)) Bool (|Queue1_memory_request#2| state))
-(declare-fun |Queue1_memory_request#3| (|Queue1_memory_request_s|) (_ BitVec 32)) ; \io_enq_bits_addr
+(define-fun |Queue1_memory_request_n io_enq_valid| ((state |Queue1_memory_request_s|)) Bool (|Queue1_memory_request#3| state))
+(declare-fun |Queue1_memory_request#4| (|Queue1_memory_request_s|) (_ BitVec 32)) ; \io_enq_bits_addr
 ; yosys-smt2-input io_enq_bits_addr 32
 ; yosys-smt2-wire io_enq_bits_addr 32
 ; yosys-smt2-witness {"offset": 0, "path": ["\\io_enq_bits_addr"], "smtname": "io_enq_bits_addr", "smtoffset": 0, "type": "input", "width": 32}
-(define-fun |Queue1_memory_request_n io_enq_bits_addr| ((state |Queue1_memory_request_s|)) (_ BitVec 32) (|Queue1_memory_request#3| state))
-; yosys-smt2-anyinit Queue1_memory_request#4 1 Queue1_memory_request.sv:62.10-69.6
-; yosys-smt2-witness {"offset": 0, "path": ["\\full"], "smtname": 4, "smtoffset": 0, "type": "init", "width": 1}
-(declare-fun |Queue1_memory_request#4| (|Queue1_memory_request_s|) (_ BitVec 1)) ; \full
-(define-fun |Queue1_memory_request#5| ((state |Queue1_memory_request_s|)) (_ BitVec 1) (bvor (ite (|Queue1_memory_request#2| state) #b1 #b0) (|Queue1_memory_request#4| state))) ; \io_deq_valid_0
+(define-fun |Queue1_memory_request_n io_enq_bits_addr| ((state |Queue1_memory_request_s|)) (_ BitVec 32) (|Queue1_memory_request#4| state))
+; yosys-smt2-anyinit Queue1_memory_request#5 1 Queue1_memory_request.sv:63.10-71.6
+; yosys-smt2-witness {"offset": 0, "path": ["\\full"], "smtname": 5, "smtoffset": 0, "type": "init", "width": 1}
+(declare-fun |Queue1_memory_request#5| (|Queue1_memory_request_s|) (_ BitVec 1)) ; \full
+(define-fun |Queue1_memory_request#6| ((state |Queue1_memory_request_s|)) (_ BitVec 1) (bvor (ite (|Queue1_memory_request#3| state) #b1 #b0) (|Queue1_memory_request#5| state))) ; \io_deq_valid_0
 ; yosys-smt2-wire io_deq_valid_0 1
-(define-fun |Queue1_memory_request_n io_deq_valid_0| ((state |Queue1_memory_request_s|)) Bool (= ((_ extract 0 0) (|Queue1_memory_request#5| state)) #b1))
+(define-fun |Queue1_memory_request_n io_deq_valid_0| ((state |Queue1_memory_request_s|)) Bool (= ((_ extract 0 0) (|Queue1_memory_request#6| state)) #b1))
 ; yosys-smt2-output io_deq_valid 1
 ; yosys-smt2-wire io_deq_valid 1
-(define-fun |Queue1_memory_request_n io_deq_valid| ((state |Queue1_memory_request_s|)) Bool (= ((_ extract 0 0) (|Queue1_memory_request#5| state)) #b1))
-(declare-fun |Queue1_memory_request#6| (|Queue1_memory_request_s|) Bool) ; \io_deq_ready
+(define-fun |Queue1_memory_request_n io_deq_valid| ((state |Queue1_memory_request_s|)) Bool (= ((_ extract 0 0) (|Queue1_memory_request#6| state)) #b1))
+(declare-fun |Queue1_memory_request#7| (|Queue1_memory_request_s|) Bool) ; \io_deq_ready
 ; yosys-smt2-input io_deq_ready 1
 ; yosys-smt2-wire io_deq_ready 1
 ; yosys-smt2-witness {"offset": 0, "path": ["\\io_deq_ready"], "smtname": "io_deq_ready", "smtoffset": 0, "type": "input", "width": 1}
-(define-fun |Queue1_memory_request_n io_deq_ready| ((state |Queue1_memory_request_s|)) Bool (|Queue1_memory_request#6| state))
-(define-fun |Queue1_memory_request#7| ((state |Queue1_memory_request_s|)) (_ BitVec 1) (bvand (|Queue1_memory_request#4| state) ((_ extract 64 64) (|Queue1_memory_request#1| state)))) ; \io_deq_bits_wr_en
+(define-fun |Queue1_memory_request_n io_deq_ready| ((state |Queue1_memory_request_s|)) Bool (|Queue1_memory_request#7| state))
+(define-fun |Queue1_memory_request#8| ((state |Queue1_memory_request_s|)) (_ BitVec 1) (bvand (|Queue1_memory_request#5| state) ((_ extract 64 64) (|Queue1_memory_request#1| state)))) ; \io_deq_bits_wr_en
 ; yosys-smt2-output io_deq_bits_wr_en 1
 ; yosys-smt2-wire io_deq_bits_wr_en 1
-(define-fun |Queue1_memory_request_n io_deq_bits_wr_en| ((state |Queue1_memory_request_s|)) Bool (= ((_ extract 0 0) (|Queue1_memory_request#7| state)) #b1))
-(define-fun |Queue1_memory_request#8| ((state |Queue1_memory_request_s|)) (_ BitVec 32) (ite (= ((_ extract 0 0) (|Queue1_memory_request#4| state)) #b1) ((_ extract 63 32) (|Queue1_memory_request#1| state)) #b00000000000000000000000000000000)) ; \io_deq_bits_wr_data
+(define-fun |Queue1_memory_request_n io_deq_bits_wr_en| ((state |Queue1_memory_request_s|)) Bool (= ((_ extract 0 0) (|Queue1_memory_request#8| state)) #b1))
+(define-fun |Queue1_memory_request#9| ((state |Queue1_memory_request_s|)) (_ BitVec 32) (ite (= ((_ extract 0 0) (|Queue1_memory_request#5| state)) #b1) ((_ extract 63 32) (|Queue1_memory_request#1| state)) #b00000000000000000000000000000000)) ; \io_deq_bits_wr_data
 ; yosys-smt2-output io_deq_bits_wr_data 32
 ; yosys-smt2-wire io_deq_bits_wr_data 32
-(define-fun |Queue1_memory_request_n io_deq_bits_wr_data| ((state |Queue1_memory_request_s|)) (_ BitVec 32) (|Queue1_memory_request#8| state))
-(define-fun |Queue1_memory_request#9| ((state |Queue1_memory_request_s|)) (_ BitVec 32) (ite (= ((_ extract 0 0) (|Queue1_memory_request#4| state)) #b1) ((_ extract 31 0) (|Queue1_memory_request#1| state)) (|Queue1_memory_request#3| state))) ; \io_deq_bits_addr
+(define-fun |Queue1_memory_request_n io_deq_bits_wr_data| ((state |Queue1_memory_request_s|)) (_ BitVec 32) (|Queue1_memory_request#9| state))
+(define-fun |Queue1_memory_request#10| ((state |Queue1_memory_request_s|)) (_ BitVec 32) (ite (= ((_ extract 0 0) (|Queue1_memory_request#5| state)) #b1) ((_ extract 31 0) (|Queue1_memory_request#1| state)) (|Queue1_memory_request#4| state))) ; \io_deq_bits_addr
 ; yosys-smt2-output io_deq_bits_addr 32
 ; yosys-smt2-wire io_deq_bits_addr 32
-(define-fun |Queue1_memory_request_n io_deq_bits_addr| ((state |Queue1_memory_request_s|)) (_ BitVec 32) (|Queue1_memory_request#9| state))
+(define-fun |Queue1_memory_request_n io_deq_bits_addr| ((state |Queue1_memory_request_s|)) (_ BitVec 32) (|Queue1_memory_request#10| state))
 ; yosys-smt2-register full 1
 ; yosys-smt2-wire full 1
-(define-fun |Queue1_memory_request_n full| ((state |Queue1_memory_request_s|)) Bool (= ((_ extract 0 0) (|Queue1_memory_request#4| state)) #b1))
-(define-fun |Queue1_memory_request#10| ((state |Queue1_memory_request_s|)) (_ BitVec 1) (bvnot (|Queue1_memory_request#4| state))) ; $verific$n6$554
-(define-fun |Queue1_memory_request#11| ((state |Queue1_memory_request_s|)) (_ BitVec 1) (bvand (|Queue1_memory_request#10| state) (ite (|Queue1_memory_request#6| state) #b1 #b0))) ; $verific$n7$555
-(define-fun |Queue1_memory_request#12| ((state |Queue1_memory_request_s|)) (_ BitVec 1) (bvnot (|Queue1_memory_request#11| state))) ; $verific$n8$556
-(define-fun |Queue1_memory_request#13| ((state |Queue1_memory_request_s|)) (_ BitVec 1) (bvand (|Queue1_memory_request#12| state) (|Queue1_memory_request#10| state))) ; $verific$n10$557
-(define-fun |Queue1_memory_request#14| ((state |Queue1_memory_request_s|)) (_ BitVec 1) (bvand (|Queue1_memory_request#13| state) (ite (|Queue1_memory_request#2| state) #b1 #b0))) ; \do_enq
+(define-fun |Queue1_memory_request_n full| ((state |Queue1_memory_request_s|)) Bool (= ((_ extract 0 0) (|Queue1_memory_request#5| state)) #b1))
+(define-fun |Queue1_memory_request#11| ((state |Queue1_memory_request_s|)) (_ BitVec 1) (bvnot (|Queue1_memory_request#5| state))) ; $verific$n6$536
+(define-fun |Queue1_memory_request#12| ((state |Queue1_memory_request_s|)) (_ BitVec 1) (bvand (|Queue1_memory_request#11| state) (ite (|Queue1_memory_request#7| state) #b1 #b0))) ; $verific$n7$537
+(define-fun |Queue1_memory_request#13| ((state |Queue1_memory_request_s|)) (_ BitVec 1) (bvnot (|Queue1_memory_request#12| state))) ; $verific$n8$538
+(define-fun |Queue1_memory_request#14| ((state |Queue1_memory_request_s|)) (_ BitVec 1) (bvand (|Queue1_memory_request#13| state) (|Queue1_memory_request#11| state))) ; $verific$n10$539
+(define-fun |Queue1_memory_request#15| ((state |Queue1_memory_request_s|)) (_ BitVec 1) (bvand (|Queue1_memory_request#14| state) (ite (|Queue1_memory_request#3| state) #b1 #b0))) ; \do_enq
 ; yosys-smt2-wire do_enq 1
-(define-fun |Queue1_memory_request_n do_enq| ((state |Queue1_memory_request_s|)) Bool (= ((_ extract 0 0) (|Queue1_memory_request#14| state)) #b1))
-(declare-fun |Queue1_memory_request#15| (|Queue1_memory_request_s|) Bool) ; \clock
+(define-fun |Queue1_memory_request_n do_enq| ((state |Queue1_memory_request_s|)) Bool (= ((_ extract 0 0) (|Queue1_memory_request#15| state)) #b1))
+(declare-fun |Queue1_memory_request#16| (|Queue1_memory_request_s|) Bool) ; \clock
 ; yosys-smt2-input clock 1
 ; yosys-smt2-wire clock 1
 ; yosys-smt2-clock clock posedge
 ; yosys-smt2-witness {"offset": 0, "path": ["\\clock"], "smtname": "clock", "smtoffset": 0, "type": "posedge", "width": 1}
 ; yosys-smt2-witness {"offset": 0, "path": ["\\clock"], "smtname": "clock", "smtoffset": 0, "type": "input", "width": 1}
-(define-fun |Queue1_memory_request_n clock| ((state |Queue1_memory_request_s|)) Bool (|Queue1_memory_request#15| state))
-(define-fun |Queue1_memory_request#16| ((state |Queue1_memory_request_s|)) (_ BitVec 1) (bvnot (ite (|Queue1_memory_request#15| state) #b1 #b0))) ; $auto$rtlil.cc:2485:Not$664
-; yosys-smt2-assume 0 $auto$formalff.cc:758:execute$665
-(define-fun |Queue1_memory_request_u 0| ((state |Queue1_memory_request_s|)) Bool (or (= ((_ extract 0 0) (|Queue1_memory_request#16| state)) #b1) (not true))) ; $auto$formalff.cc:758:execute$665
-(define-fun |Queue1_memory_request#17| ((state |Queue1_memory_request_s|)) (_ BitVec 1) (bvand (|Queue1_memory_request#4| state) (ite (|Queue1_memory_request#6| state) #b1 #b0))) ; $verific$n147$560
-(define-fun |Queue1_memory_request#18| ((state |Queue1_memory_request_s|)) (_ BitVec 1) (bvand (|Queue1_memory_request#17| state) (|Queue1_memory_request#5| state))) ; $verific$n148$561
-(define-fun |Queue1_memory_request#19| ((state |Queue1_memory_request_s|)) (_ BitVec 1) (bvxor (|Queue1_memory_request#14| state) (|Queue1_memory_request#18| state))) ; $verific$n149$562
-(define-fun |Queue1_memory_request#20| ((state |Queue1_memory_request_s|)) (_ BitVec 1) (ite (= ((_ extract 0 0) (|Queue1_memory_request#19| state)) #b1) (|Queue1_memory_request#14| state) (|Queue1_memory_request#4| state))) ; $verific$n152$564
-(define-fun |Queue1_memory_request#21| ((state |Queue1_memory_request_s|)) (_ BitVec 1) (ite (|Queue1_memory_request#0| state) #b0 (|Queue1_memory_request#20| state))) ; $verific$n153$565
-(define-fun |Queue1_memory_request#22| ((state |Queue1_memory_request_s|)) (_ BitVec 65) (ite (= ((_ extract 0 0) (|Queue1_memory_request#14| state)) #b1) (concat #b000000000000000000000000000000000 (|Queue1_memory_request#3| state)) (|Queue1_memory_request#1| state))) ; $verific$n80$568
+(define-fun |Queue1_memory_request_n clock| ((state |Queue1_memory_request_s|)) Bool (|Queue1_memory_request#16| state))
+(define-fun |Queue1_memory_request#17| ((state |Queue1_memory_request_s|)) (_ BitVec 1) (bvnot (ite (|Queue1_memory_request#16| state) #b1 #b0))) ; $auto$rtlil.cc:2485:Not$642
+; yosys-smt2-assume 0 $auto$formalff.cc:758:execute$643
+(define-fun |Queue1_memory_request_u 0| ((state |Queue1_memory_request_s|)) Bool (or (= ((_ extract 0 0) (|Queue1_memory_request#17| state)) #b1) (not true))) ; $auto$formalff.cc:758:execute$643
+(define-fun |Queue1_memory_request#18| ((state |Queue1_memory_request_s|)) (_ BitVec 1) (bvnot (ite (|Queue1_memory_request#2| state) #b1 #b0))) ; $verific$n147$542
+(define-fun |Queue1_memory_request#19| ((state |Queue1_memory_request_s|)) (_ BitVec 1) (bvand (|Queue1_memory_request#5| state) (ite (|Queue1_memory_request#7| state) #b1 #b0))) ; $verific$n148$543
+(define-fun |Queue1_memory_request#20| ((state |Queue1_memory_request_s|)) (_ BitVec 1) (bvand (|Queue1_memory_request#19| state) (|Queue1_memory_request#6| state))) ; $verific$n149$544
+(define-fun |Queue1_memory_request#21| ((state |Queue1_memory_request_s|)) (_ BitVec 1) (bvxor (|Queue1_memory_request#15| state) (|Queue1_memory_request#20| state))) ; $verific$n150$545
+(define-fun |Queue1_memory_request#22| ((state |Queue1_memory_request_s|)) (_ BitVec 1) (ite (= ((_ extract 0 0) (|Queue1_memory_request#21| state)) #b1) (|Queue1_memory_request#15| state) (|Queue1_memory_request#5| state))) ; $verific$n152$546
+(define-fun |Queue1_memory_request#23| ((state |Queue1_memory_request_s|)) (_ BitVec 1) (bvand (|Queue1_memory_request#18| state) (|Queue1_memory_request#22| state))) ; $verific$n153$547
+(define-fun |Queue1_memory_request#24| ((state |Queue1_memory_request_s|)) (_ BitVec 1) (ite (|Queue1_memory_request#0| state) #b0 (|Queue1_memory_request#23| state))) ; $verific$n155$549
+(define-fun |Queue1_memory_request#25| ((state |Queue1_memory_request_s|)) (_ BitVec 65) (ite (= ((_ extract 0 0) (|Queue1_memory_request#15| state)) #b1) (concat #b000000000000000000000000000000000 (|Queue1_memory_request#4| state)) (|Queue1_memory_request#1| state))) ; $verific$n80$552
 (define-fun |Queue1_memory_request_a| ((state |Queue1_memory_request_s|)) Bool true)
 (define-fun |Queue1_memory_request_u| ((state |Queue1_memory_request_s|)) Bool 
   (|Queue1_memory_request_u 0| state)
@@ -82,8 +89,8 @@
 (define-fun |Queue1_memory_request_i| ((state |Queue1_memory_request_s|)) Bool true)
 (define-fun |Queue1_memory_request_h| ((state |Queue1_memory_request_s|)) Bool true)
 (define-fun |Queue1_memory_request_t| ((state |Queue1_memory_request_s|) (next_state |Queue1_memory_request_s|)) Bool (and
-  (= (|Queue1_memory_request#21| state) (|Queue1_memory_request#4| next_state)) ; $verific$full_reg$Queue1_memory_request.sv:69$591 \full
-  (= (|Queue1_memory_request#22| state) (|Queue1_memory_request#1| next_state)) ; $verific$ram_reg$Queue1_memory_request.sv:69$590 \ram
+  (= (|Queue1_memory_request#24| state) (|Queue1_memory_request#5| next_state)) ; $verific$full_reg$Queue1_memory_request.sv:71$577 \full
+  (= (|Queue1_memory_request#25| state) (|Queue1_memory_request#1| next_state)) ; $verific$ram_reg$Queue1_memory_request.sv:71$576 \ram
 )) ; end of module Queue1_memory_request
 ; yosys-smt2-module PC_gen
 (declare-sort |PC_gen_s| 0)
@@ -91,7 +98,7 @@
 (declare-fun |PC_gen#0| (|PC_gen_s|) (_ BitVec 1)) ; \io_prediction_bits_hit
 (declare-fun |PC_gen#1| (|PC_gen_s|) (_ BitVec 1)) ; \io_prediction_valid
 (define-fun |PC_gen#2| ((state |PC_gen_s|)) (_ BitVec 1) (bvand (|PC_gen#0| state) (|PC_gen#1| state))) ; $verific$n8$6
-(declare-fun |PC_gen#3| (|PC_gen_s|) (_ BitVec 3)) ; \io_prediction_bitsbr_type_t
+(declare-fun |PC_gen#3| (|PC_gen_s|) (_ BitVec 3)) ; \io_prediction_bits_br_type
 (define-fun |PC_gen#4| ((state |PC_gen_s|)) Bool (= (|PC_gen#3| state) #b100)) ; \_is_ret_T
 (define-fun |PC_gen#5| ((state |PC_gen_s|)) (_ BitVec 1) (bvand (ite (|PC_gen#4| state) #b1 #b0) (|PC_gen#1| state))) ; \is_ret
 (define-fun |PC_gen#6| ((state |PC_gen_s|)) (_ BitVec 1) (bvnot (|PC_gen#5| state))) ; $verific$n9$7
@@ -132,10 +139,10 @@
 ; yosys-smt2-wire io_prediction_bits_hit 1
 ; yosys-smt2-witness {"offset": 0, "path": ["\\io_prediction_bits_hit"], "smtname": "io_prediction_bits_hit", "smtoffset": 0, "type": "input", "width": 1}
 (define-fun |PC_gen_n io_prediction_bits_hit| ((state |PC_gen_s|)) Bool (= ((_ extract 0 0) (|PC_gen#0| state)) #b1))
-; yosys-smt2-input io_prediction_bitsbr_type_t 3
-; yosys-smt2-wire io_prediction_bitsbr_type_t 3
-; yosys-smt2-witness {"offset": 0, "path": ["\\io_prediction_bitsbr_type_t"], "smtname": "io_prediction_bitsbr_type_t", "smtoffset": 0, "type": "input", "width": 3}
-(define-fun |PC_gen_n io_prediction_bitsbr_type_t| ((state |PC_gen_s|)) (_ BitVec 3) (|PC_gen#3| state))
+; yosys-smt2-input io_prediction_bits_br_type 3
+; yosys-smt2-wire io_prediction_bits_br_type 3
+; yosys-smt2-witness {"offset": 0, "path": ["\\io_prediction_bits_br_type"], "smtname": "io_prediction_bits_br_type", "smtoffset": 0, "type": "input", "width": 3}
+(define-fun |PC_gen_n io_prediction_bits_br_type| ((state |PC_gen_s|)) (_ BitVec 3) (|PC_gen#3| state))
 (declare-fun |PC_gen#13| (|PC_gen_s|) Bool) ; \io_prediction_bits_T_NT
 ; yosys-smt2-input io_prediction_bits_T_NT 1
 ; yosys-smt2-wire io_prediction_bits_T_NT 1
@@ -176,11 +183,11 @@
 ; yosys-smt2-wire io_commit_bits_expected_PC 32
 ; yosys-smt2-witness {"offset": 0, "path": ["\\io_commit_bits_expected_PC"], "smtname": "io_commit_bits_expected_PC", "smtoffset": 0, "type": "input", "width": 32}
 (define-fun |PC_gen_n io_commit_bits_expected_PC| ((state |PC_gen_s|)) (_ BitVec 32) (|PC_gen#20| state))
-(declare-fun |PC_gen#21| (|PC_gen_s|) (_ BitVec 3)) ; \io_commit_bitsbr_type_t
-; yosys-smt2-input io_commit_bitsbr_type_t 3
-; yosys-smt2-wire io_commit_bitsbr_type_t 3
-; yosys-smt2-witness {"offset": 0, "path": ["\\io_commit_bitsbr_type_t"], "smtname": "io_commit_bitsbr_type_t", "smtoffset": 0, "type": "input", "width": 3}
-(define-fun |PC_gen_n io_commit_bitsbr_type_t| ((state |PC_gen_s|)) (_ BitVec 3) (|PC_gen#21| state))
+(declare-fun |PC_gen#21| (|PC_gen_s|) (_ BitVec 3)) ; \io_commit_bits_br_type
+; yosys-smt2-input io_commit_bits_br_type 3
+; yosys-smt2-wire io_commit_bits_br_type 3
+; yosys-smt2-witness {"offset": 0, "path": ["\\io_commit_bits_br_type"], "smtname": "io_commit_bits_br_type", "smtoffset": 0, "type": "input", "width": 3}
+(define-fun |PC_gen_n io_commit_bits_br_type| ((state |PC_gen_s|)) (_ BitVec 3) (|PC_gen#21| state))
 (declare-fun |PC_gen#22| (|PC_gen_s|) Bool) ; \io_commit_bits_T_NT
 ; yosys-smt2-input io_commit_bits_T_NT 1
 ; yosys-smt2-wire io_commit_bits_T_NT 1
@@ -329,119 +336,104 @@
 (define-fun |PC_gen_n _GEN_0| ((state |PC_gen_s|)) Bool (= ((_ extract 0 0) (|PC_gen#54| state)) #b1))
 ; yosys-smt2-wire _GEN 1
 (define-fun |PC_gen_n _GEN| ((state |PC_gen_s|)) Bool (= ((_ extract 0 0) (|PC_gen#52| state)) #b1))
-; yosys-smt2-anyinit PC_gen#55 32 PC_gen.sv:131.10-141.6
+; yosys-smt2-anyinit PC_gen#55 32 PC_gen.sv:129.10-139.6
 ; yosys-smt2-witness {"offset": 0, "path": ["\\REG"], "smtname": 55, "smtoffset": 0, "type": "init", "width": 32}
 (declare-fun |PC_gen#55| (|PC_gen_s|) (_ BitVec 32)) ; \REG
 ; yosys-smt2-register REG 32
 ; yosys-smt2-wire REG 32
 (define-fun |PC_gen_n REG| ((state |PC_gen_s|)) (_ BitVec 32) (|PC_gen#55| state))
-; yosys-smt2-anyinit PC_gen#56 32 PC_gen.sv:131.10-141.6
+; yosys-smt2-anyinit PC_gen#56 32 PC_gen.sv:129.10-139.6
 ; yosys-smt2-witness {"offset": 0, "path": ["\\PC"], "smtname": 56, "smtoffset": 0, "type": "init", "width": 32}
 (declare-fun |PC_gen#56| (|PC_gen_s|) (_ BitVec 32)) ; \PC
 ; yosys-smt2-register PC 32
 ; yosys-smt2-wire PC 32
 (define-fun |PC_gen_n PC| ((state |PC_gen_s|)) (_ BitVec 32) (|PC_gen#56| state))
-; yosys-smt2-witness {"offset": 0, "path": ["$auto$async2sync.cc:228:execute$627"], "smtname": 57, "smtoffset": 0, "type": "reg", "width": 1}
-(declare-fun |PC_gen#57| (|PC_gen_s|) (_ BitVec 1)) ; $auto$async2sync.cc:228:execute$627
-; yosys-smt2-register $auto$async2sync.cc:228:execute$627 1
-(define-fun |PC_gen_n $auto$async2sync.cc:228:execute$627| ((state |PC_gen_s|)) Bool (= ((_ extract 0 0) (|PC_gen#57| state)) #b1))
-; yosys-smt2-witness {"offset": 0, "path": ["$auto$async2sync.cc:228:execute$625"], "smtname": 58, "smtoffset": 0, "type": "reg", "width": 1}
-(declare-fun |PC_gen#58| (|PC_gen_s|) (_ BitVec 1)) ; $auto$async2sync.cc:228:execute$625
-; yosys-smt2-register $auto$async2sync.cc:228:execute$625 1
-(define-fun |PC_gen_n $auto$async2sync.cc:228:execute$625| ((state |PC_gen_s|)) Bool (= ((_ extract 0 0) (|PC_gen#58| state)) #b1))
-; yosys-smt2-witness {"offset": 0, "path": ["$auto$async2sync.cc:228:execute$623"], "smtname": 59, "smtoffset": 0, "type": "reg", "width": 1}
-(declare-fun |PC_gen#59| (|PC_gen_s|) (_ BitVec 1)) ; $auto$async2sync.cc:228:execute$623
-; yosys-smt2-register $auto$async2sync.cc:228:execute$623 1
-(define-fun |PC_gen_n $auto$async2sync.cc:228:execute$623| ((state |PC_gen_s|)) Bool (= ((_ extract 0 0) (|PC_gen#59| state)) #b1))
-; yosys-smt2-witness {"offset": 0, "path": ["$auto$async2sync.cc:228:execute$621"], "smtname": 60, "smtoffset": 0, "type": "reg", "width": 1}
-(declare-fun |PC_gen#60| (|PC_gen_s|) (_ BitVec 1)) ; $auto$async2sync.cc:228:execute$621
-; yosys-smt2-register $auto$async2sync.cc:228:execute$621 1
-(define-fun |PC_gen_n $auto$async2sync.cc:228:execute$621| ((state |PC_gen_s|)) Bool (= ((_ extract 0 0) (|PC_gen#60| state)) #b1))
-; yosys-smt2-witness {"offset": 0, "path": ["$auto$async2sync.cc:228:execute$619"], "smtname": 61, "smtoffset": 0, "type": "reg", "width": 1}
-(declare-fun |PC_gen#61| (|PC_gen_s|) (_ BitVec 1)) ; $auto$async2sync.cc:228:execute$619
-; yosys-smt2-register $auto$async2sync.cc:228:execute$619 1
-(define-fun |PC_gen_n $auto$async2sync.cc:228:execute$619| ((state |PC_gen_s|)) Bool (= ((_ extract 0 0) (|PC_gen#61| state)) #b1))
-; yosys-smt2-witness {"offset": 0, "path": ["$auto$async2sync.cc:228:execute$615"], "smtname": 62, "smtoffset": 0, "type": "reg", "width": 1}
-(declare-fun |PC_gen#62| (|PC_gen_s|) (_ BitVec 1)) ; $auto$async2sync.cc:228:execute$615
-; yosys-smt2-register $auto$async2sync.cc:228:execute$615 1
-(define-fun |PC_gen_n $auto$async2sync.cc:228:execute$615| ((state |PC_gen_s|)) Bool (= ((_ extract 0 0) (|PC_gen#62| state)) #b1))
-; yosys-smt2-witness {"offset": 0, "path": ["$auto$async2sync.cc:228:execute$613"], "smtname": 63, "smtoffset": 0, "type": "reg", "width": 1}
-(declare-fun |PC_gen#63| (|PC_gen_s|) (_ BitVec 1)) ; $auto$async2sync.cc:228:execute$613
-; yosys-smt2-register $auto$async2sync.cc:228:execute$613 1
-(define-fun |PC_gen_n $auto$async2sync.cc:228:execute$613| ((state |PC_gen_s|)) Bool (= ((_ extract 0 0) (|PC_gen#63| state)) #b1))
-; yosys-smt2-witness {"offset": 0, "path": ["$auto$async2sync.cc:228:execute$611"], "smtname": 64, "smtoffset": 0, "type": "reg", "width": 1}
-(declare-fun |PC_gen#64| (|PC_gen_s|) (_ BitVec 1)) ; $auto$async2sync.cc:228:execute$611
-; yosys-smt2-register $auto$async2sync.cc:228:execute$611 1
-(define-fun |PC_gen_n $auto$async2sync.cc:228:execute$611| ((state |PC_gen_s|)) Bool (= ((_ extract 0 0) (|PC_gen#64| state)) #b1))
-; yosys-smt2-witness {"offset": 0, "path": ["$auto$async2sync.cc:228:execute$609"], "smtname": 65, "smtoffset": 0, "type": "reg", "width": 1}
-(declare-fun |PC_gen#65| (|PC_gen_s|) (_ BitVec 1)) ; $auto$async2sync.cc:228:execute$609
+; yosys-smt2-witness {"offset": 0, "path": ["$auto$async2sync.cc:228:execute$609"], "smtname": 57, "smtoffset": 0, "type": "reg", "width": 1}
+(declare-fun |PC_gen#57| (|PC_gen_s|) (_ BitVec 1)) ; $auto$async2sync.cc:228:execute$609
 ; yosys-smt2-register $auto$async2sync.cc:228:execute$609 1
-(define-fun |PC_gen_n $auto$async2sync.cc:228:execute$609| ((state |PC_gen_s|)) Bool (= ((_ extract 0 0) (|PC_gen#65| state)) #b1))
-; yosys-smt2-witness {"offset": 0, "path": ["$auto$async2sync.cc:228:execute$607"], "smtname": 66, "smtoffset": 0, "type": "reg", "width": 1}
-(declare-fun |PC_gen#66| (|PC_gen_s|) (_ BitVec 1)) ; $auto$async2sync.cc:228:execute$607
+(define-fun |PC_gen_n $auto$async2sync.cc:228:execute$609| ((state |PC_gen_s|)) Bool (= ((_ extract 0 0) (|PC_gen#57| state)) #b1))
+; yosys-smt2-witness {"offset": 0, "path": ["$auto$async2sync.cc:228:execute$607"], "smtname": 58, "smtoffset": 0, "type": "reg", "width": 1}
+(declare-fun |PC_gen#58| (|PC_gen_s|) (_ BitVec 1)) ; $auto$async2sync.cc:228:execute$607
 ; yosys-smt2-register $auto$async2sync.cc:228:execute$607 1
-(define-fun |PC_gen_n $auto$async2sync.cc:228:execute$607| ((state |PC_gen_s|)) Bool (= ((_ extract 0 0) (|PC_gen#66| state)) #b1))
-(define-fun |PC_gen#67| ((state |PC_gen_s|)) (_ BitVec 1) (bvnot (ite (|PC_gen#49| state) #b1 #b0))) ; $auto$rtlil.cc:2485:Not$667
-; yosys-smt2-assume 0 $auto$formalff.cc:758:execute$668
-(define-fun |PC_gen_u 0| ((state |PC_gen_s|)) Bool (or (= ((_ extract 0 0) (|PC_gen#67| state)) #b1) (not true))) ; $auto$formalff.cc:758:execute$668
-(define-fun |PC_gen#68| ((state |PC_gen_s|)) (_ BitVec 1) (ite (= ((_ extract 0 0) (|PC_gen#48| state)) #b1) (|PC_gen#61| state) #b0)) ; $auto$verificsva.cc:1817:import$391
-(define-fun |PC_gen#69| ((state |PC_gen_s|)) (_ BitVec 1) (ite (= ((_ extract 0 0) (|PC_gen#48| state)) #b1) (|PC_gen#66| state) #b0)) ; $auto$verificsva.cc:1818:import$392
-; yosys-smt2-assume 1 _witness_.assume_auto_verificsva_cc_1732_import_384 PC_gen.sv:130.3-130.81
-(define-fun |PC_gen_u 1| ((state |PC_gen_s|)) Bool (or (= ((_ extract 0 0) (|PC_gen#68| state)) #b1) (not (= ((_ extract 0 0) (|PC_gen#69| state)) #b1)))) ; _witness_.assume_auto_verificsva_cc_1732_import_384
-(define-fun |PC_gen#70| ((state |PC_gen_s|)) (_ BitVec 1) (ite (= ((_ extract 0 0) (|PC_gen#48| state)) #b1) (|PC_gen#60| state) #b0)) ; $auto$verificsva.cc:1817:import$380
-(define-fun |PC_gen#71| ((state |PC_gen_s|)) (_ BitVec 1) (ite (= ((_ extract 0 0) (|PC_gen#48| state)) #b1) (|PC_gen#65| state) #b0)) ; $auto$verificsva.cc:1818:import$381
-; yosys-smt2-assert 0 _witness_.assert_auto_verificsva_cc_1732_import_355 PC_gen.sv:106.3-107.79
-(define-fun |PC_gen_a 0| ((state |PC_gen_s|)) Bool (or (= ((_ extract 0 0) (|PC_gen#70| state)) #b1) (not (= ((_ extract 0 0) (|PC_gen#71| state)) #b1)))) ; _witness_.assert_auto_verificsva_cc_1732_import_355
-(define-fun |PC_gen#72| ((state |PC_gen_s|)) (_ BitVec 1) (ite (= ((_ extract 0 0) (|PC_gen#48| state)) #b1) (|PC_gen#59| state) #b0)) ; $auto$verificsva.cc:1817:import$351
-(define-fun |PC_gen#73| ((state |PC_gen_s|)) (_ BitVec 1) (ite (= ((_ extract 0 0) (|PC_gen#48| state)) #b1) (|PC_gen#64| state) #b0)) ; $auto$verificsva.cc:1818:import$352
-; yosys-smt2-assert 1 _witness_.assert_auto_verificsva_cc_1732_import_326 PC_gen.sv:109.3-110.73
-(define-fun |PC_gen_a 1| ((state |PC_gen_s|)) Bool (or (= ((_ extract 0 0) (|PC_gen#72| state)) #b1) (not (= ((_ extract 0 0) (|PC_gen#73| state)) #b1)))) ; _witness_.assert_auto_verificsva_cc_1732_import_326
-(define-fun |PC_gen#74| ((state |PC_gen_s|)) (_ BitVec 1) (ite (= ((_ extract 0 0) (|PC_gen#48| state)) #b1) (|PC_gen#58| state) #b0)) ; $auto$verificsva.cc:1817:import$322
-(define-fun |PC_gen#75| ((state |PC_gen_s|)) (_ BitVec 1) (ite (= ((_ extract 0 0) (|PC_gen#48| state)) #b1) (|PC_gen#63| state) #b0)) ; $auto$verificsva.cc:1818:import$323
-; yosys-smt2-assert 2 _witness_.assert_auto_verificsva_cc_1732_import_297 PC_gen.sv:112.3-113.78
-(define-fun |PC_gen_a 2| ((state |PC_gen_s|)) Bool (or (= ((_ extract 0 0) (|PC_gen#74| state)) #b1) (not (= ((_ extract 0 0) (|PC_gen#75| state)) #b1)))) ; _witness_.assert_auto_verificsva_cc_1732_import_297
-(define-fun |PC_gen#76| ((state |PC_gen_s|)) (_ BitVec 1) (ite (= ((_ extract 0 0) (|PC_gen#48| state)) #b1) (|PC_gen#57| state) #b0)) ; $auto$verificsva.cc:1817:import$293
-(define-fun |PC_gen#77| ((state |PC_gen_s|)) (_ BitVec 1) (ite (= ((_ extract 0 0) (|PC_gen#48| state)) #b1) (|PC_gen#62| state) #b0)) ; $auto$verificsva.cc:1818:import$294
-; yosys-smt2-assert 3 _witness_.assert_auto_verificsva_cc_1732_import_268 PC_gen.sv:115.3-116.45
-(define-fun |PC_gen_a 3| ((state |PC_gen_s|)) Bool (or (= ((_ extract 0 0) (|PC_gen#76| state)) #b1) (not (= ((_ extract 0 0) (|PC_gen#77| state)) #b1)))) ; _witness_.assert_auto_verificsva_cc_1732_import_268
-(define-fun |PC_gen#78| ((state |PC_gen_s|)) (_ BitVec 32) (ite (= ((_ extract 0 0) (|PC_gen#5| state)) #b1) (|PC_gen#36| state) (|PC_gen#56| state))) ; $verific$n442$63
-(define-fun |PC_gen#79| ((state |PC_gen_s|)) (_ BitVec 32) (ite (= ((_ extract 0 0) (|PC_gen#7| state)) #b1) (|PC_gen#12| state) (|PC_gen#78| state))) ; $verific$n475$64
-(define-fun |PC_gen#80| ((state |PC_gen_s|)) (_ BitVec 32) (ite (|PC_gen#9| state) (|PC_gen#10| state) (|PC_gen#79| state))) ; $verific$n508$65
-(define-fun |PC_gen#81| ((state |PC_gen_s|)) (_ BitVec 32) (ite (= ((_ extract 0 0) (|PC_gen#43| state)) #b1) (|PC_gen#19| state) (|PC_gen#80| state))) ; $verific$n541$66
-(define-fun |PC_gen#82| ((state |PC_gen_s|)) (_ BitVec 1) (ite (= ((_ extract 0 0) (|PC_gen#48| state)) #b1) (ite (|PC_gen#11| state) #b1 #b0) #b0)) ; $auto$rtlil.cc:2603:Mux$650
-(define-fun |PC_gen#83| ((state |PC_gen_s|)) (_ BitVec 28) (bvadd ((_ extract 31 4) (|PC_gen#55| state)) #b0000000000000000000000000001)) ; $verific$n35$55
-(define-fun |PC_gen#84| ((state |PC_gen_s|)) Bool (= (|PC_gen#42| state) (concat (|PC_gen#83| state) ((_ extract 3 0) (|PC_gen#55| state))))) ; $verific$n64$23
-(define-fun |PC_gen#85| ((state |PC_gen_s|)) (_ BitVec 1) (bvnot (|PC_gen#1| state))) ; $verific$n32$21
-(define-fun |PC_gen#86| ((state |PC_gen_s|)) (_ BitVec 1) (bvand (|PC_gen#54| state) (|PC_gen#85| state))) ; $auto$rtlil.cc:2515:And$366
-(define-fun |PC_gen#87| ((state |PC_gen_s|)) Bool (= (concat (|PC_gen#86| state) (ite (|PC_gen#84| state) #b1 #b0)) #b10)) ; $auto$rtlil.cc:2516:Or$379
-(define-fun |PC_gen#88| ((state |PC_gen_s|)) (_ BitVec 1) (ite (= ((_ extract 0 0) (|PC_gen#48| state)) #b1) (ite (|PC_gen#87| state) #b1 #b0) #b0)) ; $auto$rtlil.cc:2603:Mux$648
-(define-fun |PC_gen#89| ((state |PC_gen_s|)) (_ BitVec 1) (bvand (|PC_gen#54| state) (|PC_gen#1| state))) ; $verific$n71$27
-(define-fun |PC_gen#90| ((state |PC_gen_s|)) (_ BitVec 1) (bvand (|PC_gen#89| state) (ite (|PC_gen#4| state) #b1 #b0))) ; $auto$rtlil.cc:2515:And$337
-(define-fun |PC_gen#91| ((state |PC_gen_s|)) Bool (= (concat (|PC_gen#90| state) (ite (|PC_gen#50| state) #b1 #b0)) #b10)) ; $auto$rtlil.cc:2516:Or$350
-(define-fun |PC_gen#92| ((state |PC_gen_s|)) (_ BitVec 1) (ite (= ((_ extract 0 0) (|PC_gen#48| state)) #b1) (ite (|PC_gen#91| state) #b1 #b0) #b0)) ; $auto$rtlil.cc:2603:Mux$646
-(define-fun |PC_gen#93| ((state |PC_gen_s|)) (_ BitVec 1) (bvand (|PC_gen#52| state) (ite (|PC_gen#9| state) #b1 #b0))) ; $verific$n79$32
-(define-fun |PC_gen#94| ((state |PC_gen_s|)) (_ BitVec 1) (bvand (|PC_gen#93| state) (|PC_gen#85| state))) ; $auto$rtlil.cc:2515:And$308
-(define-fun |PC_gen#95| ((state |PC_gen_s|)) Bool (= (concat (|PC_gen#94| state) (ite (|PC_gen#50| state) #b1 #b0)) #b10)) ; $auto$rtlil.cc:2516:Or$321
-(define-fun |PC_gen#96| ((state |PC_gen_s|)) (_ BitVec 1) (ite (= ((_ extract 0 0) (|PC_gen#48| state)) #b1) (ite (|PC_gen#95| state) #b1 #b0) #b0)) ; $auto$rtlil.cc:2603:Mux$644
-(define-fun |PC_gen#97| ((state |PC_gen_s|)) (_ BitVec 1) (bvnot (|PC_gen#45| state))) ; $verific$n88$37
-(define-fun |PC_gen#98| ((state |PC_gen_s|)) Bool (= (concat (|PC_gen#43| state) (|PC_gen#97| state)) #b10)) ; $auto$rtlil.cc:2516:Or$292
-(define-fun |PC_gen#99| ((state |PC_gen_s|)) (_ BitVec 1) (ite (= ((_ extract 0 0) (|PC_gen#48| state)) #b1) (ite (|PC_gen#98| state) #b1 #b0) #b0)) ; $auto$rtlil.cc:2603:Mux$642
-(define-fun |PC_gen#100| ((state |PC_gen_s|)) (_ BitVec 1) (bvnot (ite (|PC_gen#11| state) #b1 #b0))) ; $auto$rtlil.cc:2485:Not$388
-(define-fun |PC_gen#101| ((state |PC_gen_s|)) (_ BitVec 1) (ite (= ((_ extract 0 0) (|PC_gen#48| state)) #b1) (|PC_gen#100| state) #b0)) ; $auto$rtlil.cc:2603:Mux$638
-(define-fun |PC_gen#102| ((state |PC_gen_s|)) (_ BitVec 1) (bvnot (ite (|PC_gen#87| state) #b1 #b0))) ; $auto$rtlil.cc:2485:Not$377
-(define-fun |PC_gen#103| ((state |PC_gen_s|)) (_ BitVec 1) (ite (= ((_ extract 0 0) (|PC_gen#48| state)) #b1) (|PC_gen#102| state) #b0)) ; $auto$rtlil.cc:2603:Mux$636
-(define-fun |PC_gen#104| ((state |PC_gen_s|)) (_ BitVec 1) (bvnot (ite (|PC_gen#91| state) #b1 #b0))) ; $auto$rtlil.cc:2485:Not$348
-(define-fun |PC_gen#105| ((state |PC_gen_s|)) (_ BitVec 1) (ite (= ((_ extract 0 0) (|PC_gen#48| state)) #b1) (|PC_gen#104| state) #b0)) ; $auto$rtlil.cc:2603:Mux$634
-(define-fun |PC_gen#106| ((state |PC_gen_s|)) (_ BitVec 1) (bvnot (ite (|PC_gen#95| state) #b1 #b0))) ; $auto$rtlil.cc:2485:Not$319
-(define-fun |PC_gen#107| ((state |PC_gen_s|)) (_ BitVec 1) (ite (= ((_ extract 0 0) (|PC_gen#48| state)) #b1) (|PC_gen#106| state) #b0)) ; $auto$rtlil.cc:2603:Mux$632
-(define-fun |PC_gen#108| ((state |PC_gen_s|)) (_ BitVec 1) (bvnot (ite (|PC_gen#98| state) #b1 #b0))) ; $auto$rtlil.cc:2485:Not$290
-(define-fun |PC_gen#109| ((state |PC_gen_s|)) (_ BitVec 1) (ite (= ((_ extract 0 0) (|PC_gen#48| state)) #b1) (|PC_gen#108| state) #b0)) ; $auto$rtlil.cc:2603:Mux$630
-(define-fun |PC_gen#110| ((state |PC_gen_s|)) (_ BitVec 3) (bvsub #b100 (concat #b0 ((_ extract 3 2) (|PC_gen#42| state))))) ; $verific$n197$57
-(define-fun |PC_gen#111| ((state |PC_gen_s|)) (_ BitVec 30) (bvadd ((_ extract 31 2) (|PC_gen#42| state)) (concat #b000000000000000000000000000 (|PC_gen#110| state)))) ; $verific$n202$58
-(define-fun |PC_gen#112| ((state |PC_gen_s|)) (_ BitVec 1) (bvand (ite (|PC_gen#11| state) #b1 #b0) (|PC_gen#45| state))) ; $verific$n196$53
-(define-fun |PC_gen#113| ((state |PC_gen_s|)) (_ BitVec 32) (ite (= ((_ extract 0 0) (|PC_gen#112| state)) #b1) (concat (|PC_gen#111| state) ((_ extract 1 0) (|PC_gen#42| state))) (|PC_gen#56| state))) ; $verific$n266$60
-(define-fun |PC_gen#114| ((state |PC_gen_s|)) (_ BitVec 32) (ite (|PC_gen#8| state) #b00000000000000000000000000000000 (|PC_gen#113| state))) ; $verific$n300$61
-(define-fun |PC_gen#115| ((state |PC_gen_s|)) (_ BitVec 1) (ite (|PC_gen#8| state) #b1 (|PC_gen#46| state))) ; $verific$n299$54
+(define-fun |PC_gen_n $auto$async2sync.cc:228:execute$607| ((state |PC_gen_s|)) Bool (= ((_ extract 0 0) (|PC_gen#58| state)) #b1))
+; yosys-smt2-witness {"offset": 0, "path": ["$auto$async2sync.cc:228:execute$605"], "smtname": 59, "smtoffset": 0, "type": "reg", "width": 1}
+(declare-fun |PC_gen#59| (|PC_gen_s|) (_ BitVec 1)) ; $auto$async2sync.cc:228:execute$605
+; yosys-smt2-register $auto$async2sync.cc:228:execute$605 1
+(define-fun |PC_gen_n $auto$async2sync.cc:228:execute$605| ((state |PC_gen_s|)) Bool (= ((_ extract 0 0) (|PC_gen#59| state)) #b1))
+; yosys-smt2-witness {"offset": 0, "path": ["$auto$async2sync.cc:228:execute$603"], "smtname": 60, "smtoffset": 0, "type": "reg", "width": 1}
+(declare-fun |PC_gen#60| (|PC_gen_s|) (_ BitVec 1)) ; $auto$async2sync.cc:228:execute$603
+; yosys-smt2-register $auto$async2sync.cc:228:execute$603 1
+(define-fun |PC_gen_n $auto$async2sync.cc:228:execute$603| ((state |PC_gen_s|)) Bool (= ((_ extract 0 0) (|PC_gen#60| state)) #b1))
+; yosys-smt2-witness {"offset": 0, "path": ["$auto$async2sync.cc:228:execute$599"], "smtname": 61, "smtoffset": 0, "type": "reg", "width": 1}
+(declare-fun |PC_gen#61| (|PC_gen_s|) (_ BitVec 1)) ; $auto$async2sync.cc:228:execute$599
+; yosys-smt2-register $auto$async2sync.cc:228:execute$599 1
+(define-fun |PC_gen_n $auto$async2sync.cc:228:execute$599| ((state |PC_gen_s|)) Bool (= ((_ extract 0 0) (|PC_gen#61| state)) #b1))
+; yosys-smt2-witness {"offset": 0, "path": ["$auto$async2sync.cc:228:execute$597"], "smtname": 62, "smtoffset": 0, "type": "reg", "width": 1}
+(declare-fun |PC_gen#62| (|PC_gen_s|) (_ BitVec 1)) ; $auto$async2sync.cc:228:execute$597
+; yosys-smt2-register $auto$async2sync.cc:228:execute$597 1
+(define-fun |PC_gen_n $auto$async2sync.cc:228:execute$597| ((state |PC_gen_s|)) Bool (= ((_ extract 0 0) (|PC_gen#62| state)) #b1))
+; yosys-smt2-witness {"offset": 0, "path": ["$auto$async2sync.cc:228:execute$595"], "smtname": 63, "smtoffset": 0, "type": "reg", "width": 1}
+(declare-fun |PC_gen#63| (|PC_gen_s|) (_ BitVec 1)) ; $auto$async2sync.cc:228:execute$595
+; yosys-smt2-register $auto$async2sync.cc:228:execute$595 1
+(define-fun |PC_gen_n $auto$async2sync.cc:228:execute$595| ((state |PC_gen_s|)) Bool (= ((_ extract 0 0) (|PC_gen#63| state)) #b1))
+; yosys-smt2-witness {"offset": 0, "path": ["$auto$async2sync.cc:228:execute$593"], "smtname": 64, "smtoffset": 0, "type": "reg", "width": 1}
+(declare-fun |PC_gen#64| (|PC_gen_s|) (_ BitVec 1)) ; $auto$async2sync.cc:228:execute$593
+; yosys-smt2-register $auto$async2sync.cc:228:execute$593 1
+(define-fun |PC_gen_n $auto$async2sync.cc:228:execute$593| ((state |PC_gen_s|)) Bool (= ((_ extract 0 0) (|PC_gen#64| state)) #b1))
+(define-fun |PC_gen#65| ((state |PC_gen_s|)) (_ BitVec 1) (bvnot (ite (|PC_gen#49| state) #b1 #b0))) ; $auto$rtlil.cc:2485:Not$645
+; yosys-smt2-assume 0 $auto$formalff.cc:758:execute$646
+(define-fun |PC_gen_u 0| ((state |PC_gen_s|)) Bool (or (= ((_ extract 0 0) (|PC_gen#65| state)) #b1) (not true))) ; $auto$formalff.cc:758:execute$646
+(define-fun |PC_gen#66| ((state |PC_gen_s|)) (_ BitVec 1) (ite (= ((_ extract 0 0) (|PC_gen#48| state)) #b1) (|PC_gen#60| state) #b0)) ; $auto$verificsva.cc:1817:import$373
+(define-fun |PC_gen#67| ((state |PC_gen_s|)) (_ BitVec 1) (ite (= ((_ extract 0 0) (|PC_gen#48| state)) #b1) (|PC_gen#64| state) #b0)) ; $auto$verificsva.cc:1818:import$374
+; yosys-smt2-assert 0 _witness_.assert_auto_verificsva_cc_1732_import_348 PC_gen.sv:106.3-107.79
+(define-fun |PC_gen_a 0| ((state |PC_gen_s|)) Bool (or (= ((_ extract 0 0) (|PC_gen#66| state)) #b1) (not (= ((_ extract 0 0) (|PC_gen#67| state)) #b1)))) ; _witness_.assert_auto_verificsva_cc_1732_import_348
+(define-fun |PC_gen#68| ((state |PC_gen_s|)) (_ BitVec 1) (ite (= ((_ extract 0 0) (|PC_gen#48| state)) #b1) (|PC_gen#59| state) #b0)) ; $auto$verificsva.cc:1817:import$344
+(define-fun |PC_gen#69| ((state |PC_gen_s|)) (_ BitVec 1) (ite (= ((_ extract 0 0) (|PC_gen#48| state)) #b1) (|PC_gen#63| state) #b0)) ; $auto$verificsva.cc:1818:import$345
+; yosys-smt2-assert 1 _witness_.assert_auto_verificsva_cc_1732_import_319 PC_gen.sv:109.3-110.73
+(define-fun |PC_gen_a 1| ((state |PC_gen_s|)) Bool (or (= ((_ extract 0 0) (|PC_gen#68| state)) #b1) (not (= ((_ extract 0 0) (|PC_gen#69| state)) #b1)))) ; _witness_.assert_auto_verificsva_cc_1732_import_319
+(define-fun |PC_gen#70| ((state |PC_gen_s|)) (_ BitVec 1) (ite (= ((_ extract 0 0) (|PC_gen#48| state)) #b1) (|PC_gen#58| state) #b0)) ; $auto$verificsva.cc:1817:import$315
+(define-fun |PC_gen#71| ((state |PC_gen_s|)) (_ BitVec 1) (ite (= ((_ extract 0 0) (|PC_gen#48| state)) #b1) (|PC_gen#62| state) #b0)) ; $auto$verificsva.cc:1818:import$316
+; yosys-smt2-assert 2 _witness_.assert_auto_verificsva_cc_1732_import_290 PC_gen.sv:112.3-113.78
+(define-fun |PC_gen_a 2| ((state |PC_gen_s|)) Bool (or (= ((_ extract 0 0) (|PC_gen#70| state)) #b1) (not (= ((_ extract 0 0) (|PC_gen#71| state)) #b1)))) ; _witness_.assert_auto_verificsva_cc_1732_import_290
+(define-fun |PC_gen#72| ((state |PC_gen_s|)) (_ BitVec 1) (ite (= ((_ extract 0 0) (|PC_gen#48| state)) #b1) (|PC_gen#57| state) #b0)) ; $auto$verificsva.cc:1817:import$286
+(define-fun |PC_gen#73| ((state |PC_gen_s|)) (_ BitVec 1) (ite (= ((_ extract 0 0) (|PC_gen#48| state)) #b1) (|PC_gen#61| state) #b0)) ; $auto$verificsva.cc:1818:import$287
+; yosys-smt2-assert 3 _witness_.assert_auto_verificsva_cc_1732_import_261 PC_gen.sv:115.3-116.45
+(define-fun |PC_gen_a 3| ((state |PC_gen_s|)) Bool (or (= ((_ extract 0 0) (|PC_gen#72| state)) #b1) (not (= ((_ extract 0 0) (|PC_gen#73| state)) #b1)))) ; _witness_.assert_auto_verificsva_cc_1732_import_261
+(define-fun |PC_gen#74| ((state |PC_gen_s|)) (_ BitVec 32) (ite (= ((_ extract 0 0) (|PC_gen#5| state)) #b1) (|PC_gen#36| state) (|PC_gen#56| state))) ; $verific$n441$60
+(define-fun |PC_gen#75| ((state |PC_gen_s|)) (_ BitVec 32) (ite (= ((_ extract 0 0) (|PC_gen#7| state)) #b1) (|PC_gen#12| state) (|PC_gen#74| state))) ; $verific$n474$61
+(define-fun |PC_gen#76| ((state |PC_gen_s|)) (_ BitVec 32) (ite (|PC_gen#9| state) (|PC_gen#10| state) (|PC_gen#75| state))) ; $verific$n507$62
+(define-fun |PC_gen#77| ((state |PC_gen_s|)) (_ BitVec 32) (ite (= ((_ extract 0 0) (|PC_gen#43| state)) #b1) (|PC_gen#19| state) (|PC_gen#76| state))) ; $verific$n540$63
+(define-fun |PC_gen#78| ((state |PC_gen_s|)) (_ BitVec 28) (bvadd ((_ extract 31 4) (|PC_gen#55| state)) #b0000000000000000000000000001)) ; $verific$n35$52
+(define-fun |PC_gen#79| ((state |PC_gen_s|)) Bool (= (|PC_gen#42| state) (concat (|PC_gen#78| state) ((_ extract 3 0) (|PC_gen#55| state))))) ; $verific$n64$23
+(define-fun |PC_gen#80| ((state |PC_gen_s|)) (_ BitVec 1) (bvnot (|PC_gen#1| state))) ; $verific$n32$21
+(define-fun |PC_gen#81| ((state |PC_gen_s|)) (_ BitVec 1) (bvand (|PC_gen#54| state) (|PC_gen#80| state))) ; $auto$rtlil.cc:2515:And$359
+(define-fun |PC_gen#82| ((state |PC_gen_s|)) Bool (= (concat (|PC_gen#81| state) (ite (|PC_gen#79| state) #b1 #b0)) #b10)) ; $auto$rtlil.cc:2516:Or$372
+(define-fun |PC_gen#83| ((state |PC_gen_s|)) (_ BitVec 1) (ite (= ((_ extract 0 0) (|PC_gen#48| state)) #b1) (ite (|PC_gen#82| state) #b1 #b0) #b0)) ; $auto$rtlil.cc:2603:Mux$628
+(define-fun |PC_gen#84| ((state |PC_gen_s|)) (_ BitVec 1) (bvand (|PC_gen#54| state) (|PC_gen#1| state))) ; $verific$n71$27
+(define-fun |PC_gen#85| ((state |PC_gen_s|)) (_ BitVec 1) (bvand (|PC_gen#84| state) (ite (|PC_gen#4| state) #b1 #b0))) ; $auto$rtlil.cc:2515:And$330
+(define-fun |PC_gen#86| ((state |PC_gen_s|)) Bool (= (concat (|PC_gen#85| state) (ite (|PC_gen#50| state) #b1 #b0)) #b10)) ; $auto$rtlil.cc:2516:Or$343
+(define-fun |PC_gen#87| ((state |PC_gen_s|)) (_ BitVec 1) (ite (= ((_ extract 0 0) (|PC_gen#48| state)) #b1) (ite (|PC_gen#86| state) #b1 #b0) #b0)) ; $auto$rtlil.cc:2603:Mux$626
+(define-fun |PC_gen#88| ((state |PC_gen_s|)) (_ BitVec 1) (bvand (|PC_gen#52| state) (ite (|PC_gen#9| state) #b1 #b0))) ; $verific$n79$32
+(define-fun |PC_gen#89| ((state |PC_gen_s|)) (_ BitVec 1) (bvand (|PC_gen#88| state) (|PC_gen#80| state))) ; $auto$rtlil.cc:2515:And$301
+(define-fun |PC_gen#90| ((state |PC_gen_s|)) Bool (= (concat (|PC_gen#89| state) (ite (|PC_gen#50| state) #b1 #b0)) #b10)) ; $auto$rtlil.cc:2516:Or$314
+(define-fun |PC_gen#91| ((state |PC_gen_s|)) (_ BitVec 1) (ite (= ((_ extract 0 0) (|PC_gen#48| state)) #b1) (ite (|PC_gen#90| state) #b1 #b0) #b0)) ; $auto$rtlil.cc:2603:Mux$624
+(define-fun |PC_gen#92| ((state |PC_gen_s|)) (_ BitVec 1) (bvnot (|PC_gen#45| state))) ; $verific$n88$37
+(define-fun |PC_gen#93| ((state |PC_gen_s|)) Bool (= (concat (|PC_gen#43| state) (|PC_gen#92| state)) #b10)) ; $auto$rtlil.cc:2516:Or$285
+(define-fun |PC_gen#94| ((state |PC_gen_s|)) (_ BitVec 1) (ite (= ((_ extract 0 0) (|PC_gen#48| state)) #b1) (ite (|PC_gen#93| state) #b1 #b0) #b0)) ; $auto$rtlil.cc:2603:Mux$622
+(define-fun |PC_gen#95| ((state |PC_gen_s|)) (_ BitVec 1) (bvnot (ite (|PC_gen#82| state) #b1 #b0))) ; $auto$rtlil.cc:2485:Not$370
+(define-fun |PC_gen#96| ((state |PC_gen_s|)) (_ BitVec 1) (ite (= ((_ extract 0 0) (|PC_gen#48| state)) #b1) (|PC_gen#95| state) #b0)) ; $auto$rtlil.cc:2603:Mux$618
+(define-fun |PC_gen#97| ((state |PC_gen_s|)) (_ BitVec 1) (bvnot (ite (|PC_gen#86| state) #b1 #b0))) ; $auto$rtlil.cc:2485:Not$341
+(define-fun |PC_gen#98| ((state |PC_gen_s|)) (_ BitVec 1) (ite (= ((_ extract 0 0) (|PC_gen#48| state)) #b1) (|PC_gen#97| state) #b0)) ; $auto$rtlil.cc:2603:Mux$616
+(define-fun |PC_gen#99| ((state |PC_gen_s|)) (_ BitVec 1) (bvnot (ite (|PC_gen#90| state) #b1 #b0))) ; $auto$rtlil.cc:2485:Not$312
+(define-fun |PC_gen#100| ((state |PC_gen_s|)) (_ BitVec 1) (ite (= ((_ extract 0 0) (|PC_gen#48| state)) #b1) (|PC_gen#99| state) #b0)) ; $auto$rtlil.cc:2603:Mux$614
+(define-fun |PC_gen#101| ((state |PC_gen_s|)) (_ BitVec 1) (bvnot (ite (|PC_gen#93| state) #b1 #b0))) ; $auto$rtlil.cc:2485:Not$283
+(define-fun |PC_gen#102| ((state |PC_gen_s|)) (_ BitVec 1) (ite (= ((_ extract 0 0) (|PC_gen#48| state)) #b1) (|PC_gen#101| state) #b0)) ; $auto$rtlil.cc:2603:Mux$612
+(define-fun |PC_gen#103| ((state |PC_gen_s|)) (_ BitVec 6) (bvsub #b010000 (concat #b00 ((_ extract 3 0) (|PC_gen#42| state))))) ; $verific$n191$54
+(define-fun |PC_gen#104| ((state |PC_gen_s|)) (_ BitVec 32) (bvadd (|PC_gen#42| state) (concat #b00000000000000000000000000 (|PC_gen#103| state)))) ; $verific$n199$55
+(define-fun |PC_gen#105| ((state |PC_gen_s|)) (_ BitVec 1) (bvand (ite (|PC_gen#11| state) #b1 #b0) (|PC_gen#45| state))) ; $verific$n190$50
+(define-fun |PC_gen#106| ((state |PC_gen_s|)) (_ BitVec 32) (ite (= ((_ extract 0 0) (|PC_gen#105| state)) #b1) (|PC_gen#104| state) (|PC_gen#56| state))) ; $verific$n265$57
+(define-fun |PC_gen#107| ((state |PC_gen_s|)) (_ BitVec 32) (ite (|PC_gen#8| state) #b00000000000000000000000000000000 (|PC_gen#106| state))) ; $verific$n299$58
+(define-fun |PC_gen#108| ((state |PC_gen_s|)) (_ BitVec 1) (ite (|PC_gen#8| state) #b1 (|PC_gen#46| state))) ; $verific$n298$51
 (define-fun |PC_gen_a| ((state |PC_gen_s|)) Bool (and
   (|PC_gen_a 0| state)
   (|PC_gen_a 1| state)
@@ -451,28 +443,26 @@
 ))
 (define-fun |PC_gen_u| ((state |PC_gen_s|)) Bool (and
   (|PC_gen_u 0| state)
-  (|PC_gen_u 1| state)
   (|Queue1_memory_request_u| (|PC_gen_h PC_next_skid_buffer| state))
 ))
 (define-fun |PC_gen_i| ((state |PC_gen_s|)) Bool (and
   (= (= ((_ extract 0 0) (|PC_gen#46| state)) #b1) false) ; hasBeenResetReg
-  (= (= ((_ extract 0 0) (|PC_gen#57| state)) #b1) false) ; $auto$async2sync.cc:228:execute$627
-  (= (= ((_ extract 0 0) (|PC_gen#58| state)) #b1) false) ; $auto$async2sync.cc:228:execute$625
-  (= (= ((_ extract 0 0) (|PC_gen#59| state)) #b1) false) ; $auto$async2sync.cc:228:execute$623
-  (= (= ((_ extract 0 0) (|PC_gen#60| state)) #b1) false) ; $auto$async2sync.cc:228:execute$621
-  (= (= ((_ extract 0 0) (|PC_gen#61| state)) #b1) false) ; $auto$async2sync.cc:228:execute$619
-  (= (= ((_ extract 0 0) (|PC_gen#62| state)) #b1) false) ; $auto$async2sync.cc:228:execute$615
-  (= (= ((_ extract 0 0) (|PC_gen#63| state)) #b1) false) ; $auto$async2sync.cc:228:execute$613
-  (= (= ((_ extract 0 0) (|PC_gen#64| state)) #b1) false) ; $auto$async2sync.cc:228:execute$611
-  (= (= ((_ extract 0 0) (|PC_gen#65| state)) #b1) false) ; $auto$async2sync.cc:228:execute$609
-  (= (= ((_ extract 0 0) (|PC_gen#66| state)) #b1) false) ; $auto$async2sync.cc:228:execute$607
+  (= (= ((_ extract 0 0) (|PC_gen#57| state)) #b1) false) ; $auto$async2sync.cc:228:execute$609
+  (= (= ((_ extract 0 0) (|PC_gen#58| state)) #b1) false) ; $auto$async2sync.cc:228:execute$607
+  (= (= ((_ extract 0 0) (|PC_gen#59| state)) #b1) false) ; $auto$async2sync.cc:228:execute$605
+  (= (= ((_ extract 0 0) (|PC_gen#60| state)) #b1) false) ; $auto$async2sync.cc:228:execute$603
+  (= (= ((_ extract 0 0) (|PC_gen#61| state)) #b1) false) ; $auto$async2sync.cc:228:execute$599
+  (= (= ((_ extract 0 0) (|PC_gen#62| state)) #b1) false) ; $auto$async2sync.cc:228:execute$597
+  (= (= ((_ extract 0 0) (|PC_gen#63| state)) #b1) false) ; $auto$async2sync.cc:228:execute$595
+  (= (= ((_ extract 0 0) (|PC_gen#64| state)) #b1) false) ; $auto$async2sync.cc:228:execute$593
   (|Queue1_memory_request_i| (|PC_gen_h PC_next_skid_buffer| state))
 ))
 (define-fun |PC_gen_h| ((state |PC_gen_s|)) Bool (and
   (= (|PC_gen_is| state) (|Queue1_memory_request_is| (|PC_gen_h PC_next_skid_buffer| state)))
   (= (|PC_gen#8| state) (|Queue1_memory_request_n reset| (|PC_gen_h PC_next_skid_buffer| state))) ; Queue1_memory_request.reset
+  (= (= ((_ extract 0 0) (|PC_gen#43| state)) #b1) (|Queue1_memory_request_n io_flush| (|PC_gen_h PC_next_skid_buffer| state))) ; Queue1_memory_request.io_flush
   (= (= ((_ extract 0 0) (|PC_gen#44| state)) #b1) (|Queue1_memory_request_n io_enq_valid| (|PC_gen_h PC_next_skid_buffer| state))) ; Queue1_memory_request.io_enq_valid
-  (= (|PC_gen#81| state) (|Queue1_memory_request_n io_enq_bits_addr| (|PC_gen_h PC_next_skid_buffer| state))) ; Queue1_memory_request.io_enq_bits_addr
+  (= (|PC_gen#77| state) (|Queue1_memory_request_n io_enq_bits_addr| (|PC_gen_h PC_next_skid_buffer| state))) ; Queue1_memory_request.io_enq_bits_addr
   (= (|PC_gen#39| state) (|Queue1_memory_request_n io_deq_valid| (|PC_gen_h PC_next_skid_buffer| state))) ; Queue1_memory_request.io_deq_valid
   (= (|PC_gen#11| state) (|Queue1_memory_request_n io_deq_ready| (|PC_gen_h PC_next_skid_buffer| state))) ; Queue1_memory_request.io_deq_ready
   (= (|PC_gen#40| state) (|Queue1_memory_request_n io_deq_bits_wr_en| (|PC_gen_h PC_next_skid_buffer| state))) ; Queue1_memory_request.io_deq_bits_wr_en
@@ -482,19 +472,17 @@
   (|Queue1_memory_request_h| (|PC_gen_h PC_next_skid_buffer| state))
 ))
 (define-fun |PC_gen_t| ((state |PC_gen_s|) (next_state |PC_gen_s|)) Bool (and
-  (= (|PC_gen#82| state) (|PC_gen#66| next_state)) ; $auto$verificsva.cc:1820:import$394 $auto$async2sync.cc:228:execute$607
-  (= (|PC_gen#88| state) (|PC_gen#65| next_state)) ; $auto$verificsva.cc:1820:import$383 $auto$async2sync.cc:228:execute$609
-  (= (|PC_gen#92| state) (|PC_gen#64| next_state)) ; $auto$verificsva.cc:1820:import$354 $auto$async2sync.cc:228:execute$611
-  (= (|PC_gen#96| state) (|PC_gen#63| next_state)) ; $auto$verificsva.cc:1820:import$325 $auto$async2sync.cc:228:execute$613
-  (= (|PC_gen#99| state) (|PC_gen#62| next_state)) ; $auto$verificsva.cc:1820:import$296 $auto$async2sync.cc:228:execute$615
-  (= (|PC_gen#101| state) (|PC_gen#61| next_state)) ; $auto$verificsva.cc:1819:import$393 $auto$async2sync.cc:228:execute$619
-  (= (|PC_gen#103| state) (|PC_gen#60| next_state)) ; $auto$verificsva.cc:1819:import$382 $auto$async2sync.cc:228:execute$621
-  (= (|PC_gen#105| state) (|PC_gen#59| next_state)) ; $auto$verificsva.cc:1819:import$353 $auto$async2sync.cc:228:execute$623
-  (= (|PC_gen#107| state) (|PC_gen#58| next_state)) ; $auto$verificsva.cc:1819:import$324 $auto$async2sync.cc:228:execute$625
-  (= (|PC_gen#109| state) (|PC_gen#57| next_state)) ; $auto$verificsva.cc:1819:import$295 $auto$async2sync.cc:228:execute$627
-  (= (|PC_gen#114| state) (|PC_gen#56| next_state)) ; $verific$PC_reg$PC_gen.sv:141$157 \PC
-  (= (concat ((_ extract 31 4) (|PC_gen#42| state)) #b0000) (|PC_gen#55| next_state)) ; $verific$REG_reg$PC_gen.sv:141$158 \REG
-  (= (|PC_gen#115| state) (|PC_gen#46| next_state)) ; $verific$hasBeenResetReg_reg$PC_gen.sv:141$156 \hasBeenResetReg
+  (= (|PC_gen#83| state) (|PC_gen#64| next_state)) ; $auto$verificsva.cc:1820:import$376 $auto$async2sync.cc:228:execute$593
+  (= (|PC_gen#87| state) (|PC_gen#63| next_state)) ; $auto$verificsva.cc:1820:import$347 $auto$async2sync.cc:228:execute$595
+  (= (|PC_gen#91| state) (|PC_gen#62| next_state)) ; $auto$verificsva.cc:1820:import$318 $auto$async2sync.cc:228:execute$597
+  (= (|PC_gen#94| state) (|PC_gen#61| next_state)) ; $auto$verificsva.cc:1820:import$289 $auto$async2sync.cc:228:execute$599
+  (= (|PC_gen#96| state) (|PC_gen#60| next_state)) ; $auto$verificsva.cc:1819:import$375 $auto$async2sync.cc:228:execute$603
+  (= (|PC_gen#98| state) (|PC_gen#59| next_state)) ; $auto$verificsva.cc:1819:import$346 $auto$async2sync.cc:228:execute$605
+  (= (|PC_gen#100| state) (|PC_gen#58| next_state)) ; $auto$verificsva.cc:1819:import$317 $auto$async2sync.cc:228:execute$607
+  (= (|PC_gen#102| state) (|PC_gen#57| next_state)) ; $auto$verificsva.cc:1819:import$288 $auto$async2sync.cc:228:execute$609
+  (= (|PC_gen#107| state) (|PC_gen#56| next_state)) ; $verific$PC_reg$PC_gen.sv:139$149 \PC
+  (= (concat ((_ extract 31 4) (|PC_gen#42| state)) #b0000) (|PC_gen#55| next_state)) ; $verific$REG_reg$PC_gen.sv:139$150 \REG
+  (= (|PC_gen#108| state) (|PC_gen#46| next_state)) ; $verific$hasBeenResetReg_reg$PC_gen.sv:139$148 \hasBeenResetReg
   (|Queue1_memory_request_t| (|PC_gen_h PC_next_skid_buffer| state) (|PC_gen_h PC_next_skid_buffer| next_state))
 )) ; end of module PC_gen
 ; yosys-smt2-topmod PC_gen

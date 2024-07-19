@@ -70,7 +70,8 @@ module Queue1_FTQ_entry(	// src/main/scala/chisel3/util/Decoupled.scala:243:7
   output [6:0]  io_deq_bits_NEXT,	// src/main/scala/chisel3/util/Decoupled.scala:255:14
                 io_deq_bits_TOS,	// src/main/scala/chisel3/util/Decoupled.scala:255:14
   output [1:0]  io_deq_bits_dominant_index,	// src/main/scala/chisel3/util/Decoupled.scala:255:14
-  output [31:0] io_deq_bits_resolved_PC	// src/main/scala/chisel3/util/Decoupled.scala:255:14
+  output [31:0] io_deq_bits_resolved_PC,	// src/main/scala/chisel3/util/Decoupled.scala:255:14
+  input         io_flush	// src/main/scala/chisel3/util/Decoupled.scala:255:14
 );
 
   reg  [133:0] ram;	// src/main/scala/chisel3/util/Decoupled.scala:256:91
@@ -93,8 +94,9 @@ module Queue1_FTQ_entry(	// src/main/scala/chisel3/util/Decoupled.scala:243:7
          io_enq_bits_valid};	// src/main/scala/chisel3/util/Decoupled.scala:256:91
     if (reset)	// src/main/scala/chisel3/util/Decoupled.scala:243:7
       full <= 1'h0;	// src/main/scala/chisel3/util/Decoupled.scala:259:27
-    else if (~(do_enq == (full & io_deq_ready & io_deq_valid_0)))	// src/main/scala/chisel3/util/Decoupled.scala:51:35, :259:27, :263:27, :264:27, :276:{15,27}, :277:16, :285:16, :297:{24,39}, :298:17, :300:14, :301:{26,35}
-      full <= do_enq;	// src/main/scala/chisel3/util/Decoupled.scala:51:35, :259:27, :263:27, :298:17, :301:{26,35}
+    else	// src/main/scala/chisel3/util/Decoupled.scala:243:7
+      full <=
+        ~io_flush & (do_enq == (full & io_deq_ready & io_deq_valid_0) ? full : do_enq);	// src/main/scala/chisel3/util/Decoupled.scala:51:35, :259:27, :263:27, :264:27, :276:{15,27}, :277:16, :279:15, :282:16, :285:16, :297:{24,39}, :298:17, :300:14, :301:{26,35}
   end // always @(posedge)
   `ifdef ENABLE_INITIAL_REG_	// src/main/scala/chisel3/util/Decoupled.scala:243:7
     `ifdef FIRRTL_BEFORE_INITIAL	// src/main/scala/chisel3/util/Decoupled.scala:243:7

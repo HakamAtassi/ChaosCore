@@ -44,7 +44,11 @@ module mem_64x32(	// src/main/scala/Backend/RF.scala:118:24
   input  [5:0]  W2_addr,
   input         W2_en,
                 W2_clk,
-  input  [31:0] W2_data
+  input  [31:0] W2_data,
+  input  [5:0]  W3_addr,
+  input         W3_en,
+                W3_clk,
+  input  [31:0] W3_data
 );
 
   reg [31:0] Memory[0:63];	// src/main/scala/Backend/RF.scala:118:24
@@ -103,6 +107,8 @@ module mem_64x32(	// src/main/scala/Backend/RF.scala:118:24
       Memory[W1_addr] <= W1_data;	// src/main/scala/Backend/RF.scala:118:24
     if (W2_en & 1'h1)	// src/main/scala/Backend/RF.scala:118:24
       Memory[W2_addr] <= W2_data;	// src/main/scala/Backend/RF.scala:118:24
+    if (W3_en & 1'h1)	// src/main/scala/Backend/RF.scala:118:24
+      Memory[W3_addr] <= W3_data;	// src/main/scala/Backend/RF.scala:118:24
   end // always @(posedge)
   `ifdef ENABLE_INITIAL_MEM_	// src/main/scala/Backend/RF.scala:118:24
     `ifdef RANDOMIZE_REG_INIT	// src/main/scala/Backend/RF.scala:118:24
