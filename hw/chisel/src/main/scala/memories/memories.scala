@@ -200,26 +200,26 @@ class ROB_mem[T <: Data](dataType: T, depth: Int) extends Module {
 }
 
 
-class ROB_shared_mem(parameters:Parameters, depth: Int) extends Module { // 2 read, 1 write
+class ROB_shared_mem(coreParameters:CoreParameters, depth: Int) extends Module { // 2 read, 1 write
   val io = IO(new Bundle {
     
     // Port A (write only)
     val addrA = Input(UInt(log2Ceil(depth).W))
-    val writeDataA = Input(new ROB_shared(parameters))
+    val writeDataA = Input(new ROB_shared(coreParameters))
     val writeEnableA = Input(Bool())
 
     // Port B (read only)
     val addrB = Input(UInt(log2Ceil(depth).W))
-    val readDataB = Output(new ROB_shared(parameters))
+    val readDataB = Output(new ROB_shared(coreParameters))
 
     // Port C (read only)
     val addrC = Input(UInt(log2Ceil(depth).W))
-    val readDataC = Output(new ROB_shared(parameters))
+    val readDataC = Output(new ROB_shared(coreParameters))
 
   })
 
   // Create the true dual-port memory
-  val mem = SyncReadMem(depth, new ROB_shared(parameters))
+  val mem = SyncReadMem(depth, new ROB_shared(coreParameters))
 
   // Operations for Port A
   when(io.writeEnableA) {
@@ -232,38 +232,38 @@ class ROB_shared_mem(parameters:Parameters, depth: Int) extends Module { // 2 re
 }
 
 // make this parameterizable
-class ROB_WB_mem(parameters:Parameters, depth: Int) extends Module { // 1 read, 1 write (allocate) + N write(FUs)
+class ROB_WB_mem(coreParameters:CoreParameters, depth: Int) extends Module { // 1 read, 1 write (allocate) + N write(FUs)
   val io = IO(new Bundle {
     // Port A (write only/Allocate)
     val addrA = Input(UInt(log2Ceil(depth).W))
-    val writeDataA = Input(new ROB_WB(parameters))
+    val writeDataA = Input(new ROB_WB(coreParameters))
     val writeEnableA = Input(Bool())
 
     // FU access
     val addrB = Input(UInt(log2Ceil(depth).W))
-    val writeDataB = Input(new ROB_WB(parameters))
+    val writeDataB = Input(new ROB_WB(coreParameters))
     val writeEnableB = Input(Bool())
 
     val addrC = Input(UInt(log2Ceil(depth).W)) //(write only/FU1)
-    val writeDataC = Input(new ROB_WB(parameters))
+    val writeDataC = Input(new ROB_WB(coreParameters))
     val writeEnableC = Input(Bool())
 
     val addrD = Input(UInt(log2Ceil(depth).W)) //(write only/FU2)
-    val writeDataD = Input(new ROB_WB(parameters))
+    val writeDataD = Input(new ROB_WB(coreParameters))
     val writeEnableD = Input(Bool())
 
     val addrE = Input(UInt(log2Ceil(depth).W)) //(write only/FU3)
-    val writeDataE = Input(new ROB_WB(parameters))
+    val writeDataE = Input(new ROB_WB(coreParameters))
     val writeEnableE = Input(Bool())
     
     // Port C (read only)
     val addrG = Input(UInt(log2Ceil(depth).W))
-    val readDataG = Output(new ROB_WB(parameters))
+    val readDataG = Output(new ROB_WB(coreParameters))
 
   })
 
 
-  val mem = SyncReadMem(depth, new ROB_WB(parameters))
+  val mem = SyncReadMem(depth, new ROB_WB(coreParameters))
 
 
   when(io.writeEnableA) { // Allocate
@@ -292,22 +292,22 @@ class ROB_WB_mem(parameters:Parameters, depth: Int) extends Module { // 1 read, 
 
 }
 
-class ROB_entry_mem(parameters:Parameters, depth: Int) extends Module { // 1 read, 1 write
+class ROB_entry_mem(coreParameters:CoreParameters, depth: Int) extends Module { // 1 read, 1 write
   val io = IO(new Bundle {
     
     // Port A (write only)
     val addrA = Input(UInt(log2Ceil(depth).W))
-    val writeDataA = Input(new ROB_entry(parameters))
+    val writeDataA = Input(new ROB_entry(coreParameters))
     val writeEnableA = Input(Bool())
 
     // Port C (read only)
     val addrB = Input(UInt(log2Ceil(depth).W))
-    val readDataB = Output(new ROB_entry(parameters))
+    val readDataB = Output(new ROB_entry(coreParameters))
 
   })
 
   // Create the true dual-port memory
-  val mem = SyncReadMem(depth, new ROB_entry(parameters))
+  val mem = SyncReadMem(depth, new ROB_entry(coreParameters))
 
   // Operations for Port A
   when(io.writeEnableA) {

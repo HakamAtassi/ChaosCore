@@ -35,18 +35,18 @@ import chisel3.util._
 import chisel3.ltl._
 
 // "branch resolution unit"
-class BRU(parameters:Parameters) extends Module{
-    import parameters._
+class BRU(coreParameters:CoreParameters) extends Module{
+    import coreParameters._
 
     val io = IO(new Bundle{
         // FTQ //
-        val FTQ             =   Input(new FTQ_entry(parameters))
+        val FTQ             =   Input(new FTQ_entry(coreParameters))
 
         // COMMIT //
-        val ROB_output      =   Input(new ROB_output(parameters))
+        val ROB_output      =   Input(new ROB_output(coreParameters))
 
         // Output 
-        val commit          =   ValidIO(new commit(parameters))
+        val commit          =   ValidIO(new commit(coreParameters))
 
     })
 
@@ -76,6 +76,7 @@ class BRU(parameters:Parameters) extends Module{
     io.commit.bits.exception                     := io.ROB_output.exception.reduce(_ || _)
 
     for(i <- 0 until fetchWidth){
+        io.commit.bits.RDold(i)                  := io.ROB_output.ROB_entries(i).RDold
         io.commit.bits.RD(i)                     := io.ROB_output.ROB_entries(i).RD
         io.commit.bits.RD_valid(i)               := io.ROB_output.ROB_entries(i).RD_valid
     }

@@ -37,27 +37,27 @@ import chisel3.util._
 
 // The PC segment of the ROB
 // Is accessed during the register read phase
-//class PC_file(parameters:Parameters) extends Module{}
+//class PC_file(coreParameters:CoreParameters) extends Module{}
 
-class ROB(parameters:Parameters) extends Module{
-    import parameters._
-    val portCount = getPortCount(parameters)
+class ROB(coreParameters:CoreParameters) extends Module{
+    import coreParameters._
+    val portCount = getPortCount(coreParameters)
 
     val io = IO(new Bundle{
         // FLUSH //
         val flush                       =   Input(Bool())
 
         // ALLOCATE //
-        val ROB_packet                  =   Flipped(Decoupled(new decoded_fetch_packet(parameters)))
+        val ROB_packet                  =   Flipped(Decoupled(new decoded_fetch_packet(coreParameters)))
 
         // UPDATE //
-        val FU_outputs                  =   Vec(portCount, Flipped(ValidIO(new FU_output(parameters))))
+        val FU_outputs                  =   Vec(portCount, Flipped(ValidIO(new FU_output(coreParameters))))
 
         // COMMIT //
-        val ROB_output                  =   Output(new ROB_output(parameters))
+        val ROB_output                  =   Output(new ROB_output(coreParameters))
 
         // REDIRECTS // 
-        val commit                      =   Flipped(ValidIO(new commit(parameters)))
+        val commit                      =   Flipped(ValidIO(new commit(coreParameters)))
         
         val ROB_index                   =   Output(UInt(log2Ceil(ROBEntries).W))
 
@@ -125,8 +125,8 @@ class ROB(parameters:Parameters) extends Module{
     //| Read to commit          |//
     //|-------------------------|//
 
-    val shared_mem      = Module(new ROB_shared_mem(parameters, depth=ROBEntries))
-    val shared_mem_input = Wire(new ROB_shared(parameters))
+    val shared_mem      = Module(new ROB_shared_mem(coreParameters, depth=ROBEntries))
+    val shared_mem_input = Wire(new ROB_shared(coreParameters))
 
     shared_mem_input.fetch_PC                   := io.ROB_packet.bits.fetch_PC
     shared_mem_input.GHR                        := io.ROB_packet.bits.GHR
@@ -157,11 +157,11 @@ class ROB(parameters:Parameters) extends Module{
     //|------------------------------|//
 
     val ROB_WB_banks: Seq[ROB_WB_mem] = Seq.tabulate(fetchWidth) { w =>
-        Module(new ROB_WB_mem(parameters, depth=ROBEntries))
+        Module(new ROB_WB_mem(coreParameters, depth=ROBEntries))
     }
 
     for(i <- 0 until fetchWidth){
-        val ROB_WB_data = Wire(new ROB_WB(parameters))
+        val ROB_WB_data = Wire(new ROB_WB(coreParameters))
         ROB_WB_data.busy := 0.B
         ROB_WB_data.exception := 0.B
 
@@ -173,7 +173,7 @@ class ROB(parameters:Parameters) extends Module{
         // WB (connect all ports)
 
         // FU0
-        val ROB_WB_data_FU0 = Wire(new ROB_WB(parameters))
+        val ROB_WB_data_FU0 = Wire(new ROB_WB(coreParameters))
         ROB_WB_data_FU0.busy             :=  io.FU_outputs(0).valid
         ROB_WB_data_FU0.exception        :=  0.B
         ROB_WB_banks(i).io.addrB         :=  io.FU_outputs(0).bits.ROB_index
@@ -181,7 +181,7 @@ class ROB(parameters:Parameters) extends Module{
         ROB_WB_banks(i).io.writeEnableB  :=  io.FU_outputs(0).valid && (io.FU_outputs(0).bits.fetch_packet_index === i.U)
 
         // FU1
-        val ROB_WB_data_FU1 = Wire(new ROB_WB(parameters))
+        val ROB_WB_data_FU1 = Wire(new ROB_WB(coreParameters))
         ROB_WB_data_FU1.busy             :=  io.FU_outputs(1).valid
         ROB_WB_data_FU1.exception        :=  0.B
         ROB_WB_banks(i).io.addrC         :=  io.FU_outputs(1).bits.ROB_index
@@ -189,7 +189,7 @@ class ROB(parameters:Parameters) extends Module{
         ROB_WB_banks(i).io.writeEnableC  :=  io.FU_outputs(1).valid && (io.FU_outputs(1).bits.fetch_packet_index === i.U)
 
         // FU2
-        val ROB_WB_data_FU2 = Wire(new ROB_WB(parameters))
+        val ROB_WB_data_FU2 = Wire(new ROB_WB(coreParameters))
         ROB_WB_data_FU2.busy             :=  io.FU_outputs(2).valid
         ROB_WB_data_FU2.exception        :=  0.B
         ROB_WB_banks(i).io.addrD         :=  io.FU_outputs(2).bits.ROB_index
@@ -197,7 +197,7 @@ class ROB(parameters:Parameters) extends Module{
         ROB_WB_banks(i).io.writeEnableD  :=  io.FU_outputs(2).valid && (io.FU_outputs(2).bits.fetch_packet_index === i.U)
 
         // FU3
-        val ROB_WB_data_FU3 = Wire(new ROB_WB(parameters))
+        val ROB_WB_data_FU3 = Wire(new ROB_WB(coreParameters))
         ROB_WB_data_FU3.busy             :=  io.FU_outputs(3).valid
         ROB_WB_data_FU3.exception        :=  0.B
         ROB_WB_banks(i).io.addrE         :=  io.FU_outputs(3).bits.ROB_index
@@ -217,15 +217,16 @@ class ROB(parameters:Parameters) extends Module{
     //|----------------------------|//
 
     val ROB_entry_banks: Seq[ROB_entry_mem] = Seq.tabulate(fetchWidth) { w =>
-        Module(new ROB_entry_mem(parameters=parameters, depth=ROBEntries))
+        Module(new ROB_entry_mem(coreParameters=coreParameters, depth=ROBEntries))
     }
 
     for(i <- 0 until fetchWidth){
-        val ROB_entry_data = Wire(new ROB_entry(parameters))
+        val ROB_entry_data = Wire(new ROB_entry(coreParameters))
         ROB_entry_data.valid                 := io.ROB_packet.bits.valid_bits(i)
         ROB_entry_data.is_branch             := io.ROB_packet.bits.decoded_instruction(i).needs_branch_unit
         ROB_entry_data.memory_type           := io.ROB_packet.bits.decoded_instruction(i).memory_type
         ROB_entry_data.RD                    := io.ROB_packet.bits.decoded_instruction(i).RD
+        ROB_entry_data.RDold                 := io.ROB_packet.bits.decoded_instruction(i).RDold
         ROB_entry_data.RD_valid              := io.ROB_packet.bits.decoded_instruction(i).RD_valid
 
         // allocate

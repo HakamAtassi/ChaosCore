@@ -17,6 +17,10 @@ module instruction_fetch(	// src/main/scala/Frontend/instruction_fetch.scala:35:
                 io_commit_bits_NEXT,	// src/main/scala/Frontend/instruction_fetch.scala:40:16
   input  [3:0]  io_commit_bits_RAT_index,	// src/main/scala/Frontend/instruction_fetch.scala:40:16
   input  [7:0]  io_commit_bits_free_list_front_pointer,	// src/main/scala/Frontend/instruction_fetch.scala:40:16
+  input  [4:0]  io_commit_bits_RDold_0,	// src/main/scala/Frontend/instruction_fetch.scala:40:16
+                io_commit_bits_RDold_1,	// src/main/scala/Frontend/instruction_fetch.scala:40:16
+                io_commit_bits_RDold_2,	// src/main/scala/Frontend/instruction_fetch.scala:40:16
+                io_commit_bits_RDold_3,	// src/main/scala/Frontend/instruction_fetch.scala:40:16
   input  [6:0]  io_commit_bits_RD_0,	// src/main/scala/Frontend/instruction_fetch.scala:40:16
                 io_commit_bits_RD_1,	// src/main/scala/Frontend/instruction_fetch.scala:40:16
                 io_commit_bits_RD_2,	// src/main/scala/Frontend/instruction_fetch.scala:40:16
@@ -247,6 +251,10 @@ module instruction_fetch(	// src/main/scala/Frontend/instruction_fetch.scala:35:
     .io_commit_bits_RAT_index                               (io_commit_bits_RAT_index),
     .io_commit_bits_free_list_front_pointer
       (io_commit_bits_free_list_front_pointer),
+    .io_commit_bits_RDold_0                                 (io_commit_bits_RDold_0),
+    .io_commit_bits_RDold_1                                 (io_commit_bits_RDold_1),
+    .io_commit_bits_RDold_2                                 (io_commit_bits_RDold_2),
+    .io_commit_bits_RDold_3                                 (io_commit_bits_RDold_3),
     .io_commit_bits_RD_0                                    (io_commit_bits_RD_0),
     .io_commit_bits_RD_1                                    (io_commit_bits_RD_1),
     .io_commit_bits_RD_2                                    (io_commit_bits_RD_2),
@@ -330,6 +338,10 @@ module instruction_fetch(	// src/main/scala/Frontend/instruction_fetch.scala:35:
     .io_commit_bits_NEXT                    (io_commit_bits_NEXT),
     .io_commit_bits_RAT_index               (io_commit_bits_RAT_index),
     .io_commit_bits_free_list_front_pointer (io_commit_bits_free_list_front_pointer),
+    .io_commit_bits_RDold_0                 (io_commit_bits_RDold_0),
+    .io_commit_bits_RDold_1                 (io_commit_bits_RDold_1),
+    .io_commit_bits_RDold_2                 (io_commit_bits_RDold_2),
+    .io_commit_bits_RDold_3                 (io_commit_bits_RDold_3),
     .io_commit_bits_RD_0                    (io_commit_bits_RD_0),
     .io_commit_bits_RD_1                    (io_commit_bits_RD_1),
     .io_commit_bits_RD_2                    (io_commit_bits_RD_2),
@@ -429,7 +441,7 @@ module instruction_fetch(	// src/main/scala/Frontend/instruction_fetch.scala:35:
     .io_deq_bits_TOS                         (_instruction_Q_io_deq_bits_TOS),
     .io_flush                                (bp_io_flush)	// src/main/scala/Frontend/instruction_fetch.scala:120:52
   );	// src/main/scala/Frontend/instruction_fetch.scala:63:35
-  Queue16_memory_request PC_Q (	// src/main/scala/Frontend/instruction_fetch.scala:64:35
+  Queue16_frontend_memory_request PC_Q (	// src/main/scala/Frontend/instruction_fetch.scala:64:35
     .clock               (clock),
     .reset               (reset),
     .io_enq_ready        (_PC_Q_io_enq_ready),

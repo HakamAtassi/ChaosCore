@@ -37,8 +37,8 @@ import java.io.{File, FileWriter}
 import java.rmi.server.UID
 
 
-class RAS(parameters:Parameters) extends Module{
-    import parameters._
+class RAS(coreParameters:CoreParameters) extends Module{
+    import coreParameters._
 
     val nextBits = log2Ceil(RASEntries)
     val tosBits  = log2Ceil(RASEntries)

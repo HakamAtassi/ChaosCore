@@ -60,6 +60,10 @@ module PC_gen(	// src/main/scala/Frontend/BP/PC_gen.scala:40:7
                 io_commit_bits_NEXT,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
   input  [3:0]  io_commit_bits_RAT_index,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
   input  [7:0]  io_commit_bits_free_list_front_pointer,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
+  input  [4:0]  io_commit_bits_RDold_0,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
+                io_commit_bits_RDold_1,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
+                io_commit_bits_RDold_2,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
+                io_commit_bits_RDold_3,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
   input  [6:0]  io_commit_bits_RD_0,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
                 io_commit_bits_RD_1,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
                 io_commit_bits_RD_2,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
@@ -99,7 +103,7 @@ module PC_gen(	// src/main/scala/Frontend/BP/PC_gen.scala:40:7
     if (reset)	// src/main/scala/Frontend/BP/PC_gen.scala:40:7
       PC_reg <= 32'h0;	// src/main/scala/Frontend/BP/PC_gen.scala:55:41
     else if (io_PC_next_ready & ~flushing_event)	// src/main/scala/Frontend/BP/PC_gen.scala:84:45, :112:29, src/main/scala/chisel3/util/Decoupled.scala:51:35
-      PC_reg <= PC_mux + {26'h0, 6'h10 - {2'h0, PC_mux[3:0]}};	// src/main/scala/Frontend/BP/PC_gen.scala:55:41, :96:18, :97:16, :98:24, :107:44, src/main/scala/utils.scala:323:47, :324:38
+      PC_reg <= PC_mux + {26'h0, 6'h10 - {2'h0, PC_mux[3:0]}};	// src/main/scala/Frontend/BP/PC_gen.scala:55:41, :96:18, :97:16, :98:24, :107:44, src/main/scala/utils.scala:340:47, :341:38
   end // always @(posedge)
   `ifdef ENABLE_INITIAL_REG_	// src/main/scala/Frontend/BP/PC_gen.scala:40:7
     `ifdef FIRRTL_BEFORE_INITIAL	// src/main/scala/Frontend/BP/PC_gen.scala:40:7

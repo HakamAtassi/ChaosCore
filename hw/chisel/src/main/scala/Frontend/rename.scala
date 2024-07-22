@@ -36,8 +36,8 @@ import chisel3.ltl._
 
 // the architecture of the RAT and RAT checkpointing is inspired by sargantana.
 
-class WAW_handler(parameters:Parameters) extends Module{
-    import parameters._
+class WAW_handler(coreParameters:CoreParameters) extends Module{
+    import coreParameters._
     // sometimes, multiple instructions within a single fetch packet will 
     // have the same RD. During rename, this RD will result in two different mappins between
     // arch. reg and physical reg from the free list. 
@@ -75,10 +75,10 @@ class WAW_handler(parameters:Parameters) extends Module{
 
 }
 
-class RAT(parameters:Parameters) extends Module{
-    import parameters._
+class RAT(coreParameters:CoreParameters) extends Module{
+    import coreParameters._
 
-    val portCount = getPortCount(parameters)
+    val portCount = getPortCount(coreParameters)
 
     assert(RATCheckpointCount%2 == 0, "Rat checkpoint count must be multiple of 2")
 
@@ -92,16 +92,11 @@ class RAT(parameters:Parameters) extends Module{
         val free_list_wr_en             =   Input(Vec(fetchWidth, Bool()))
         val free_list_RD                =   Input(Vec(fetchWidth, UInt(physicalRegBits.W)))
 
-        // checkpoint (create/restore)
-        val create_checkpoint           =   Input(Bool())
-        val restore_checkpoint          =   Input(Bool())
-        val free_checkpoint             =   Input(Bool())
-        val restore_checkpoint_value    =   Input(UInt(RATCheckpointBits.W))   // What checkpoint is currently being used
+        // Exception/Commit
+        //val exception                   =   Input(Bool())
+        val commit                      =   Input(ValidIO(new commit(coreParameters)))
 
-        val active_checkpoint_value     =   Output(UInt(RATCheckpointBits.W))   // What checkpoint is currently being used
 
-        val checkpoints_full            =   Output(Bool())                      // No more checkpoints available
-        val checkpoints_empty           =   Output(Bool())
 
         // renamed outputs
         val RAT_RD                      =   Output(Vec(fetchWidth, UInt(physicalRegBits.W)))
@@ -113,120 +108,51 @@ class RAT(parameters:Parameters) extends Module{
     ////////////////////
     // RAT STRUCTURES //
     ////////////////////
-    val RAT_memories    = RegInit(VecInit.tabulate(RATCheckpointCount, architecturalRegCount){(x, y) => 0.U(physicalRegBits.W) })
-    
-    ////////////////
-    // CHECKPOINT //
-    ////////////////
-
-    val ptr_width           = log2Ceil(RATCheckpointCount) + 1
-    val RAT_front_pointer   = RegInit(UInt(ptr_width.W), 0.U)
-    val RAT_back_pointer    = RegInit(UInt(ptr_width.W), 0.U)
-
-    val RAT_front_index          = Wire(UInt(log2Ceil(RATCheckpointCount).W))
-    val active_RAT_front_index   = Wire(UInt(log2Ceil(RATCheckpointCount).W))
-    val RAT_back_index           = Wire(UInt(log2Ceil(RATCheckpointCount).W))
+    val commit_RAT      = RegInit(VecInit(Seq.fill(architecturalRegCount)(0.U(physicalRegBits.W))))
+    val speculative_RAT = RegInit(VecInit(Seq.fill(architecturalRegCount)(0.U(physicalRegBits.W))))
 
 
-    RAT_front_index := RAT_front_pointer(ptr_width-2, 0)
-    RAT_back_index := RAT_back_pointer(ptr_width-2, 0)
+    /////////////////////
+    // SPECULATIVE RAT //
+    /////////////////////
 
-
-    when(io.restore_checkpoint){
-        RAT_front_pointer := io.restore_checkpoint_value
-    }.elsewhen(io.create_checkpoint && !io.checkpoints_full){
-        RAT_front_pointer := RAT_front_pointer + 1.U
-    }
-
-    when(io.create_checkpoint && !io.checkpoints_full){
-        active_RAT_front_index := RAT_front_index + 1.U
-    }.otherwise{
-        active_RAT_front_index := RAT_front_index
-    }
-
-    when(io.free_checkpoint && !io.checkpoints_empty){
-        RAT_back_pointer := RAT_back_pointer + 1.U
-    }
-
-
-    ////////////////
-    // RENAME/MAP //
-    ////////////////
-
-    val row_valid_mem   =   RegInit(VecInit(Seq.fill(ROBEntries)(0.B)))
-
+    // read RAT
     for(i <- 0 until fetchWidth){
-        io.RAT_RD(i)  := RAT_memories(RAT_front_index)(io.instruction_RD(i))
-        io.RAT_RS1(i) := RAT_memories(RAT_front_index)(io.instruction_RS1(i))
-        io.RAT_RS2(i) := RAT_memories(RAT_front_index)(io.instruction_RS2(i))
+        io.RAT_RD(i)  := speculative_RAT(io.instruction_RD(i))
+        io.RAT_RS1(i) := speculative_RAT(io.instruction_RS1(i))
+        io.RAT_RS2(i) := speculative_RAT(io.instruction_RS2(i))
     }
 
-    // CREATE CHECKPOINT
-    when(io.create_checkpoint && !io.checkpoints_full){
-        for (j <- 0 until architecturalRegCount){
-            RAT_memories(active_RAT_front_index)(j) := RAT_memories(RAT_front_index)(j) // copy data over to next checkpoint
-        }
-    }
-
-    // GET WR_EN & WR_DIN
-    val wr_din  = Wire(Vec(architecturalRegCount, UInt(physicalRegBits.W)))
-    val wr_en   = Wire(Vec(architecturalRegCount, Bool()))
-
-    for(i <- 0 until architecturalRegCount){
-        wr_din(i) := 0.U
-        wr_en(i)  := 0.B
-    }
-
-    for(i <- 0 until fetchWidth){
+    // write RAT
+    for (i <- 0 until fetchWidth){
         when(io.free_list_wr_en(i)){
-            wr_din(io.instruction_RD(i))   := io.free_list_RD(i)
-            wr_en(io.instruction_RD(i))    := 1.B 
+            speculative_RAT(io.instruction_RD(i)) := io.free_list_RD(i)
         }
     }
 
-    // WRITE MAPPING
-    for (i <- 0 until architecturalRegCount){
-        when(wr_en(i) === 1.B){
-            RAT_memories(active_RAT_front_index)(i) := wr_din(i)
+    ////////////////
+    // COMMIT RAT //
+    ////////////////
+    // write RAT
+    for (i <- 0 until fetchWidth){
+        when(io.commit.valid && (io.commit.bits.RD_valid(i))){
+            speculative_RAT(io.commit.bits.RDold(i)) := io.commit.bits.RD(i)
         }
     }
 
-    io.active_checkpoint_value  := RAT_front_index
-    io.checkpoints_full         := ((RAT_front_pointer + 1.U)(ptr_width-1) =/= RAT_back_pointer(ptr_width-1)) && 
-                                   ((RAT_front_pointer + 1.U)(ptr_width-2, 0) === RAT_back_pointer(ptr_width-2,0))
+    ////////////
+    // REVERT //
+    ////////////
+    when(io.commit.valid && (io.commit.bits.is_misprediction || io.commit.bits.exception)){
+        for(i <- 0 until architecturalRegCount){
+            speculative_RAT(i) := commit_RAT(i)
+        }
+    }
 
-    io.checkpoints_empty        := (RAT_front_pointer === RAT_back_pointer) && !io.checkpoints_full
-
-
-    // FORMAL //
-    // Assertions
-    val queue_empty = RAT_back_pointer === RAT_front_pointer
-
-    val queue_property_1 = Sequence.BoolSequence((RAT_front_pointer - RAT_back_pointer) < (RATCheckpointCount.U))
-
-    val queue_full =    (RAT_back_pointer(ptr_width-1) =/= (RAT_front_pointer+1.U)(ptr_width-1)) && 
-                        (RAT_back_pointer(ptr_width-2,0) === (RAT_front_pointer+1.U)(ptr_width-2,0))
-
-    val queue_property_2 = Sequence.BoolSequence(queue_full === io.checkpoints_full)
-    val queue_property_3 = Sequence.BoolSequence(queue_empty === io.checkpoints_empty)
-
-    AssertProperty(queue_property_1)
-    AssertProperty(queue_property_2)
-
-
-    // Assumptions
-    val cant_free_when_empty = Sequence.BoolSequence(!(queue_empty && io.free_checkpoint))
-    //AssumeProperty(cant_free_when_empty)
-    //AssumeProperty(!io.restore_checkpoint)
-
-
-    // Covers
-    CoverProperty(queue_full)
-    
 }
 
-class rename(parameters:Parameters) extends Module{
-    import parameters._
+class rename(coreParameters:CoreParameters) extends Module{
+    import coreParameters._
     // Takes in N input instructions
     // Reads the renamed versions of RS1, RS2, and RD (old)
     // performs a rename to RD using the free list
@@ -236,26 +162,26 @@ class rename(parameters:Parameters) extends Module{
 
     val RATCheckpointBits    = log2Ceil(RATCheckpointCount)
 
-    val portCount = getPortCount(parameters)
+    val portCount = getPortCount(coreParameters)
 
     val io = IO(new Bundle{
         // FLUSH
         val flush                           =   Input(Bool())
 
         // CHECKPOINT 
-        val commit                          =   Flipped(ValidIO(new commit(parameters)))
+        val commit                          =   Flipped(ValidIO(new commit(coreParameters)))
 
         // FTQ forwarding
-        val predictions_in                  =   Flipped(Decoupled(new FTQ_entry(parameters)))
-        val predictions_out                 =   Decoupled(new FTQ_entry(parameters))
+        val predictions_in                  =   Flipped(Decoupled(new FTQ_entry(coreParameters)))
+        val predictions_out                 =   Decoupled(new FTQ_entry(coreParameters))
 
         // Instruction input (decoded)
-        val decoded_fetch_packet            =   Flipped(Decoupled(new decoded_fetch_packet(parameters)))
+        val decoded_fetch_packet            =   Flipped(Decoupled(new decoded_fetch_packet(coreParameters)))
 
-        val FU_outputs                      =   Vec(portCount, Flipped(ValidIO(new FU_output(parameters))))
+        val FU_outputs                      =   Vec(portCount, Flipped(ValidIO(new FU_output(coreParameters))))
 
         // Instruction output (renamed)
-        val renamed_decoded_fetch_packet    =   Decoupled(new decoded_fetch_packet(parameters))
+        val renamed_decoded_fetch_packet    =   Decoupled(new decoded_fetch_packet(coreParameters))
     }); dontTouch(io)
 
     //////////////////
@@ -266,7 +192,7 @@ class rename(parameters:Parameters) extends Module{
     ////////////////////
     // OUTPUT BUNDLES //
     ////////////////////
-    val renamed_decoded_fetch_packet = Wire(Decoupled(new decoded_fetch_packet(parameters)))    // input to skid buffer
+    val renamed_decoded_fetch_packet = Wire(Decoupled(new decoded_fetch_packet(coreParameters)))    // input to skid buffer
 
     renamed_decoded_fetch_packet.bits       := io.decoded_fetch_packet.bits
     renamed_decoded_fetch_packet.valid      := fire
@@ -274,9 +200,9 @@ class rename(parameters:Parameters) extends Module{
     /////////////
     // MODULES //
     /////////////
-    val free_list       = Module(new free_list(parameters))
-    val WAW_handler     = Module(new WAW_handler(parameters:Parameters))
-    val RAT             = Module(new RAT(parameters:Parameters))
+    val free_list       = Module(new free_list(coreParameters))
+    val WAW_handler     = Module(new WAW_handler(coreParameters:CoreParameters))
+    val RAT             = Module(new RAT(coreParameters:CoreParameters))
 
     ///////////////
     // FREE LIST //
@@ -291,6 +217,7 @@ class rename(parameters:Parameters) extends Module{
     free_list.io.commit := io.commit
     for(i <- 0 until fetchWidth){
         renamed_decoded_fetch_packet.bits.decoded_instruction(i).RD              := free_list.io.renamed_values(i)
+        renamed_decoded_fetch_packet.bits.decoded_instruction(i).RDold           := io.decoded_fetch_packet.bits.decoded_instruction(i).RDold
     }
     renamed_decoded_fetch_packet.bits.free_list_front_pointer                    := free_list.io.free_list_front_pointer
 
@@ -310,6 +237,7 @@ class rename(parameters:Parameters) extends Module{
     // Assign write ports
     RAT.io.free_list_wr_en                         :=  WAW_handler.io.RAT_wr_en 
     RAT.io.free_list_RD                            :=  WAW_handler.io.FL_RD_values
+    RAT.io.commit                                  <> io.commit
     
     // Assign read ports
     for(i <- 0 until fetchWidth){
@@ -345,34 +273,6 @@ class rename(parameters:Parameters) extends Module{
         renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS1             := renamed_RS1(i)
         renamed_decoded_fetch_packet.bits.decoded_instruction(i).RS2             := renamed_RS2(i)
     }
-
-
-    renamed_decoded_fetch_packet.bits.RAT_index                  := RAT.io.active_checkpoint_value // Need the previously active checkpoint
-
-    ////////////////
-    // CHECKPOINT //
-    ////////////////
-
-    // GENERATE SIGNALS
-    val restore_checkpoint          = io.commit.valid && io.commit.bits.is_misprediction
-    val restore_checkpoint_value    = io.commit.bits.RAT_index
-    val free_checkpoint             = io.commit.valid && !io.commit.bits.is_misprediction && (io.commit.bits.br_type =/= br_type_t.NONE)
-    val create_checkpoint           = Wire(Bool())
-    val create_checkpoint_vec       = Wire(Vec(fetchWidth, Bool()))
-
-    for(i <- 0 until fetchWidth){
-        create_checkpoint_vec(i)    :=  io.decoded_fetch_packet.bits.decoded_instruction(i).needs_branch_unit && 
-                                        io.decoded_fetch_packet.bits.valid_bits(i) &&
-                                        fire
-    }
-
-    create_checkpoint := create_checkpoint_vec.reduce(_ || _)
-
-    // ASSIGN RAT 
-    RAT.io.create_checkpoint           :=   create_checkpoint
-    RAT.io.restore_checkpoint          :=   restore_checkpoint
-    RAT.io.restore_checkpoint_value    :=   restore_checkpoint_value
-    RAT.io.free_checkpoint             :=   free_checkpoint
 
 
     ////////////////
@@ -431,12 +331,12 @@ class rename(parameters:Parameters) extends Module{
     /////////////////
 
     // FTQ FORWARDING // 
-    val predictions_out_Q               = Module(new Queue(new FTQ_entry(parameters), 2, flow=false, hasFlush=true, useSyncReadMem=false))
-    val renamed_decoded_fetch_packet_Q  = Module(new Queue(new decoded_fetch_packet(parameters), 2, flow=false, hasFlush=true, useSyncReadMem=false))
+    val predictions_out_Q               = Module(new Queue(new FTQ_entry(coreParameters), 2, flow=false, hasFlush=true, useSyncReadMem=false))
+    val renamed_decoded_fetch_packet_Q  = Module(new Queue(new decoded_fetch_packet(coreParameters), 2, flow=false, hasFlush=true, useSyncReadMem=false))
 
     val inputs_valid                    = io.predictions_in.valid && io.decoded_fetch_packet.valid && !io.flush
 
-    val outputs_ready                   = free_list.io.can_allocate && !RAT.io.checkpoints_full && io.renamed_decoded_fetch_packet.ready && io.predictions_out.ready 
+    val outputs_ready                   = free_list.io.can_allocate && io.renamed_decoded_fetch_packet.ready && io.predictions_out.ready 
 
     renamed_decoded_fetch_packet_Q.io.enq                   <> renamed_decoded_fetch_packet
     renamed_decoded_fetch_packet_Q.io.deq                   <> io.renamed_decoded_fetch_packet
@@ -455,17 +355,5 @@ class rename(parameters:Parameters) extends Module{
 
     io.decoded_fetch_packet.ready                           := RegNext(outputs_ready)
     io.predictions_in.ready                                 := RegNext(outputs_ready)
-
-
-    ////////////////
-    // ASSERTIONS //
-    ////////////////
-
-    //for(i <- 0 until fetchWidth){
-        //assert(io.decoded_fetch_packet.bits.decoded_instruction(i).RS1_ready==0)
-        //assert(io.decoded_fetch_packet.bits.decoded_instruction(i).RS2_ready==0)
-    //}
-
-    // RAT index and free list front pointer should be lower than current ones...
 
 }

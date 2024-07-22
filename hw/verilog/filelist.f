@@ -18,15 +18,15 @@ PC_gen.sv
 ram_16x234.sv
 Queue16_fetch_packet.sv
 ram_16x65.sv
-Queue16_memory_request.sv
+Queue16_frontend_memory_request.sv
 ram_16x53.sv
 Queue16_prediction.sv
 instruction_fetch.sv
 decoder.sv
-ram_2x418.sv
+ram_2x438.sv
 Queue2_decoded_fetch_packet.sv
 fetch_packet_decoder.sv
-ram_16x418.sv
+ram_16x438.sv
 Queue16_decoded_fetch_packet.sv
 ram_16x104.sv
 Queue16_FTQ_entry.sv
@@ -54,7 +54,7 @@ mem_64x74.sv
 ROB_shared_mem.sv
 mem_64x2.sv
 ROB_WB_mem.sv
-mem_64x12.sv
+mem_64x17.sv
 ROB_entry_mem.sv
 ROB.sv
 BRU.sv

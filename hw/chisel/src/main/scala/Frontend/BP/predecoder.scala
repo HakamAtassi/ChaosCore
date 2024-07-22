@@ -38,23 +38,23 @@ import chisel3.ltl._
 
 import helperFunctions._
 
-class predecoder(parameters:Parameters) extends Module{
-    import parameters._
+class predecoder(coreParameters:CoreParameters) extends Module{
+    import coreParameters._
 
     val io = IO(new Bundle{
         // FLUSH
         val flush               = Input(Bool())
-        val revert              = ValidIO(new revert(parameters))
+        val revert              = ValidIO(new revert(coreParameters))
 
         // inputs
-        val prediction          = Flipped(Decoupled(new prediction(parameters)))
-        val fetch_packet        = Flipped(Decoupled(new fetch_packet(parameters)))
-        val RAS_read            = Flipped(new RAS_read(parameters))
-        val commit              = Flipped(ValidIO(new commit(parameters)))
+        val prediction          = Flipped(Decoupled(new prediction(coreParameters)))
+        val fetch_packet        = Flipped(Decoupled(new fetch_packet(coreParameters)))
+        val RAS_read            = Flipped(new RAS_read(coreParameters))
+        val commit              = Flipped(ValidIO(new commit(coreParameters)))
 
         // outputs
-        val predictions         = Decoupled(new FTQ_entry(parameters))                 // FTQ...
-        val final_fetch_packet  = Decoupled(new fetch_packet(parameters))              // Output validated instructions
+        val predictions         = Decoupled(new FTQ_entry(coreParameters))                 // FTQ...
+        val final_fetch_packet  = Decoupled(new fetch_packet(coreParameters))              // Output validated instructions
 
         val GHR                 = Output(UInt(GHRWidth.W))
         val RAS_update          = Output(new RAS_update)                               // RAS control
@@ -65,8 +65,8 @@ class predecoder(parameters:Parameters) extends Module{
     ////////////////////////
     // SKID BUFFER INPUTS //
     ////////////////////////
-    val predictions_out         = Wire(Decoupled(new FTQ_entry(parameters)))
-    val final_fetch_packet_out  = Wire(Decoupled(new fetch_packet(parameters)))
+    val predictions_out         = Wire(Decoupled(new FTQ_entry(coreParameters)))
+    val final_fetch_packet_out  = Wire(Decoupled(new fetch_packet(coreParameters)))
 
     ///////////////////
     // BRANCH DECODE //
@@ -138,7 +138,7 @@ class predecoder(parameters:Parameters) extends Module{
     val imm  = Wire(UInt(32.W))
     imm     := 0.U
 
-    val masked_addr = get_fetch_packet_aligned_address(parameters, io.fetch_packet.bits.fetch_PC)
+    val masked_addr = get_fetch_packet_aligned_address(coreParameters, io.fetch_packet.bits.fetch_PC)
     when(is_RET){
         // FROM RAS
         target_address := io.RAS_read.ret_addr
@@ -153,7 +153,7 @@ class predecoder(parameters:Parameters) extends Module{
         // FROM BTB (Assuming hit)
         target_address := io.prediction.bits.target
     }.otherwise{ 
-        target_address := io.fetch_packet.bits.fetch_PC + get_PC_increment(parameters, io.fetch_packet.bits.fetch_PC)
+        target_address := io.fetch_packet.bits.fetch_PC + get_PC_increment(coreParameters, io.fetch_packet.bits.fetch_PC)
     }
 
     dominantbr_type_t                      := br_type_t.NONE
@@ -261,8 +261,8 @@ class predecoder(parameters:Parameters) extends Module{
     //////////////////////
     // predecoded instruction & FTQ outputs passed through a skid buffer
 
-    val predictions_out_Q                      = Module(new Queue(new FTQ_entry(parameters), 2, flow=false, hasFlush=true, useSyncReadMem=false))
-    val final_fetch_packet_out_Q               = Module(new Queue(new fetch_packet(parameters), 2, flow=false, hasFlush=true, useSyncReadMem=false))
+    val predictions_out_Q                      = Module(new Queue(new FTQ_entry(coreParameters), 2, flow=false, hasFlush=true, useSyncReadMem=false))
+    val final_fetch_packet_out_Q               = Module(new Queue(new fetch_packet(coreParameters), 2, flow=false, hasFlush=true, useSyncReadMem=false))
 
     predictions_out_Q.io.enq                  <> predictions_out
     predictions_out_Q.io.deq                  <> io.predictions

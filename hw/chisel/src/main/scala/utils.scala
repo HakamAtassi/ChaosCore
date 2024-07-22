@@ -70,8 +70,8 @@ object Thermometor
 object getPortCount
 {
   // Returns total number of ports across all reservations stations
-  def apply(parameters:Parameters) ={
-    import parameters._
+  def apply(coreParameters:CoreParameters) ={
+    import coreParameters._
 
     var portCount = ALUportCount
     //ALUportCount // Defined in config
@@ -89,11 +89,11 @@ object getPortCount
 }
 
 object findMispredictionCommit {
-  def apply(commits: Seq[commit], parameters:Parameters): commit = {
-    import parameters._
-    var mispredictionCommit = new commit(parameters) // Assuming `parameters` is available in scope
+  def apply(commits: Seq[commit], coreParameters:CoreParameters): commit = {
+    import coreParameters._
+    var mispredictionCommit = new commit(coreParameters) // Assuming `coreParameters` is available in scope
 
-    for (i <- commitWidth - 1 to 0 by -1) {
+    for (i <- fetchWidth - 1 to 0 by -1) {
       when(commits(i).is_misprediction) {
         mispredictionCommit = commits(i)
       }
@@ -181,15 +181,15 @@ object helperFunctions {
 
 
 object get_decomposed_icache_address{
-  def apply(parameters:Parameters, address:UInt):instruction_cache_address_packet={
-      import parameters._
+  def apply(coreParameters:CoreParameters, address:UInt):instruction_cache_address_packet={
+      import coreParameters._
 
       val set_bits                    = log2Ceil(L1_instructionCacheSets)
       val tag_bits                    = 32 - log2Ceil(L1_instructionCacheBlockSizeBytes)-set_bits    // 32 - bits required to index set - bits required to index within line - 2 bits due to 4 byte aligned data
       val instruction_offset_bits     = log2Ceil(fetchWidth)
       val fetch_packet_bits           = log2Ceil(L1_instructionCacheBlockSizeBytes/4/fetchWidth)
 
-      val decomposed_icache_address = Wire(new instruction_cache_address_packet(parameters))
+      val decomposed_icache_address = Wire(new instruction_cache_address_packet(coreParameters))
 
       decomposed_icache_address.tag                 := address(31, 31-tag_bits+1)
       decomposed_icache_address.set                 := address(31-tag_bits, 31-tag_bits-set_bits+1)
@@ -201,9 +201,26 @@ object get_decomposed_icache_address{
   }
 }
 
+object get_decomposed_dcache_address{
+  def apply(coreParameters:CoreParameters, address:UInt):data_cache_address_packet={
+      import coreParameters._
+
+      val set_bits                    = log2Ceil(L1_DataCacheSets)
+      val tag_bits                    = 32 - log2Ceil(L1_DataCacheBlockSizeBytes)-set_bits    // 32 - bits required to index set - bits required to index within line - 2 bits due to 4 byte aligned data
+
+      val decomposed_dcache_address = Wire(new data_cache_address_packet(coreParameters))
+
+      decomposed_dcache_address.tag                 := address(31, 31-tag_bits+1)
+      decomposed_dcache_address.set                 := address(31-tag_bits, 31-tag_bits-set_bits+1)
+
+      decomposed_dcache_address
+
+  }
+}
+
 
 object get_MOB_row_byte_sel {
-  def apply(parameters: Parameters, MOB_entry: MOB_entry): UInt = {
+  def apply(coreParameters:CoreParameters, MOB_entry: MOB_entry): UInt = {
     // Extract relevant fields from the MOB_entry
     val address     = MOB_entry.address 
     val is_store    = MOB_entry.memory_type === memory_type_t.STORE
@@ -241,7 +258,7 @@ object get_MOB_row_byte_sel {
 }
 
 object get_MOB_row_wr_bytes {
-  def apply(parameters: Parameters, MOB_entry: MOB_entry): Vec[UInt] = {
+  def apply(coreParameters:CoreParameters, MOB_entry: MOB_entry): Vec[UInt] = {
     // Extract relevant fields from the MOB_entry
     val address = MOB_entry.address
     val data = MOB_entry.data
@@ -310,16 +327,16 @@ object get_MOB_row_wr_bytes {
 }
 
 object get_fetch_packet_aligned_address {
-  def apply(parameters: Parameters, addr: UInt): UInt = {
-    import parameters._
+  def apply(coreParameters:CoreParameters, addr: UInt): UInt = {
+    import coreParameters._
     val mask = ~((fetchWidth * 4 - 1).U(addr.getWidth.W))
     addr & mask
   }
 }
 
 object get_PC_increment{
-  def apply(parameters:Parameters, PC:UInt):UInt = {
-    import parameters._
+  def apply(coreParameters:CoreParameters, PC:UInt):UInt = {
+    import coreParameters._
     val masked_address = (fetchWidth*4 - 1).U & PC
     val increment = (fetchWidth*4).U - masked_address
     increment

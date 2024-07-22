@@ -1,5 +1,5 @@
 class FU_dut:
-    def __init__(self, dut):    # modify as needed (parameters, etc...)
+    def __init__(self, dut):    # modify as needed (coreParameters, etc...)
         self.dut = dut
 
     def clock(self):

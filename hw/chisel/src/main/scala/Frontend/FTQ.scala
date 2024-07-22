@@ -41,25 +41,25 @@ import chisel3.util._
 // Where the frontend is checked for Mispredictions.
 // On a commit, redirect frontend as needed
 // TODO: what happens to ROB after a mispredict?
-class FTQ(parameters:Parameters) extends Module{
-    import parameters._
-    val portCount = getPortCount(parameters)
+class FTQ(coreParameters:CoreParameters) extends Module{
+    import coreParameters._
+    val portCount = getPortCount(coreParameters)
 
     val io = IO(new Bundle{
         // FLUSH //
         val flush               =   Input(Bool())
 
         // UPDATE //
-        val FU_outputs          =   Vec(portCount, Flipped(ValidIO(new FU_output(parameters))))
+        val FU_outputs          =   Vec(portCount, Flipped(ValidIO(new FU_output(coreParameters))))
 
         // PREDICTIONS //
-        val predictions         =   Flipped(Decoupled(new FTQ_entry(parameters)))
+        val predictions         =   Flipped(Decoupled(new FTQ_entry(coreParameters)))
 
         // COMMIT // 
-        val commit              =   Flipped(ValidIO(new commit(parameters)))
+        val commit              =   Flipped(ValidIO(new commit(coreParameters)))
 
         // FTQ //
-        val FTQ                 =   Output(new FTQ_entry(parameters))
+        val FTQ                 =   Output(new FTQ_entry(coreParameters))
         val FTQ_index           =   Output(UInt(log2Ceil(FTQEntries).W))
     })
 
@@ -73,7 +73,7 @@ class FTQ(parameters:Parameters) extends Module{
     val back_index  = back_pointer(pointer_bits-2, 0)
 
 
-    val FTQ = RegInit(VecInit(Seq.fill(FTQEntries)(0.U.asTypeOf(new FTQ_entry(parameters)))))
+    val FTQ = RegInit(VecInit(Seq.fill(FTQEntries)(0.U.asTypeOf(new FTQ_entry(coreParameters)))))
 
 
     // whenever input branch is valid, try to write to FTQ
@@ -126,20 +126,20 @@ class FTQ(parameters:Parameters) extends Module{
     // FRONT POINTER CONTROL //
     ///////////////////////////
 
-    val PC_match = (get_fetch_packet_aligned_address(parameters, FTQ(front_index).fetch_PC)) === (get_fetch_packet_aligned_address(parameters, io.commit.bits.fetch_PC)) //FIXME: parameterize 
+    val PC_match = (get_fetch_packet_aligned_address(coreParameters, FTQ(front_index).fetch_PC)) === (get_fetch_packet_aligned_address(coreParameters, io.commit.bits.fetch_PC)) //FIXME: parameterize 
 
     val dq = FTQ(front_index).valid && io.commit.valid && PC_match
 
     dontTouch(dq)
 
     when(dq){
-        FTQ(front_index) := 0.U.asTypeOf(new FTQ_entry(parameters))
+        FTQ(front_index) := 0.U.asTypeOf(new FTQ_entry(coreParameters))
         front_pointer := front_pointer + 1.U
     }
 
     when(io.flush){
         for(i <- 0 until FTQEntries){
-            FTQ(i) := 0.U.asTypeOf(0.U.asTypeOf(new FTQ_entry(parameters)))
+            FTQ(i) := 0.U.asTypeOf(0.U.asTypeOf(new FTQ_entry(coreParameters)))
         }
         front_pointer := 0.B
         back_pointer := 0.B

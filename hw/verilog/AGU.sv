@@ -80,7 +80,7 @@ module AGU(	// src/main/scala/Memory/AGU.scala:39:7
   reg  [1:0]  io_FU_output_bits_access_width_REG;	// src/main/scala/Memory/AGU.scala:113:47
   reg         hasBeenResetReg;	// src/main/scala/chisel3/ltl/LTL.scala:422:39
   initial	// src/main/scala/chisel3/ltl/LTL.scala:422:39
-    hasBeenResetReg = 1'b0;	// src/main/scala/chisel3/ltl/LTL.scala:422:39
+    hasBeenResetReg = 1'bx;	// src/main/scala/chisel3/ltl/LTL.scala:422:39
   wire        hasBeenReset = hasBeenResetReg === 1'h1 & reset === 1'h0;	// src/main/scala/chisel3/ltl/LTL.scala:422:39
   wire        disable_0 = ~hasBeenReset;	// src/main/scala/chisel3/ltl/LTL.scala:422:39
   assert property (@(posedge clock) disable iff (disable_0) io_flush

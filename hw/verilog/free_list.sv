@@ -72,6 +72,10 @@ module free_list(	// src/main/scala/Frontend/free_list.scala:41:7
                 io_commit_bits_NEXT,	// src/main/scala/Frontend/free_list.scala:45:16
   input  [3:0]  io_commit_bits_RAT_index,	// src/main/scala/Frontend/free_list.scala:45:16
   input  [7:0]  io_commit_bits_free_list_front_pointer,	// src/main/scala/Frontend/free_list.scala:45:16
+  input  [4:0]  io_commit_bits_RDold_0,	// src/main/scala/Frontend/free_list.scala:45:16
+                io_commit_bits_RDold_1,	// src/main/scala/Frontend/free_list.scala:45:16
+                io_commit_bits_RDold_2,	// src/main/scala/Frontend/free_list.scala:45:16
+                io_commit_bits_RDold_3,	// src/main/scala/Frontend/free_list.scala:45:16
   input  [6:0]  io_commit_bits_RD_0,	// src/main/scala/Frontend/free_list.scala:45:16
                 io_commit_bits_RD_1,	// src/main/scala/Frontend/free_list.scala:45:16
                 io_commit_bits_RD_2,	// src/main/scala/Frontend/free_list.scala:45:16
@@ -179,7 +183,7 @@ module free_list(	// src/main/scala/Frontend/free_list.scala:41:7
   assign _available_elemets_6to2 = available_elemets[6:2];	// src/main/scala/Frontend/free_list.scala:117:44, :120:39
   reg              hasBeenResetReg;	// src/main/scala/chisel3/ltl/LTL.scala:422:39
   initial	// src/main/scala/chisel3/ltl/LTL.scala:422:39
-    hasBeenResetReg = 1'b0;	// src/main/scala/chisel3/ltl/LTL.scala:422:39
+    hasBeenResetReg = 1'bx;	// src/main/scala/chisel3/ltl/LTL.scala:422:39
   wire             hasBeenReset = hasBeenResetReg === 1'h1 & reset === 1'h0;	// src/main/scala/Frontend/free_list.scala:41:7, src/main/scala/chisel3/ltl/LTL.scala:422:39
   wire             disable_0 = ~hasBeenReset;	// src/main/scala/chisel3/ltl/LTL.scala:422:39
   assert property (@(posedge clock) disable iff (disable_0) available_elemets < 7'h41);	// src/main/scala/Frontend/free_list.scala:117:44, :162:92, :177:19, src/main/scala/chisel3/ltl/LTL.scala:422:39

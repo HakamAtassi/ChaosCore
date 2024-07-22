@@ -37,7 +37,7 @@ import java.rmi.server.UID
 
 import helperFunctions._
 
-//class instruction_queue[T <: Data](gen: T, parameters: Parameters) extends Module {
+//class instruction_queue[T <: Data](gen: T, coreParameters: coreParameters) extends Module {
 class hash_BTB_mem[T <: Data](gen: T, depth: Int) extends Module {
   val io = IO(new Bundle {
     val enable = Input(Bool())
@@ -85,8 +85,8 @@ class hash_BTB_mem[T <: Data](gen: T, depth: Int) extends Module {
 
 
 
-class hash_BTB(parameters:Parameters) extends Module{
-    import parameters._
+class hash_BTB(coreParameters:CoreParameters) extends Module{
+    import coreParameters._
     
 
     val io = IO(new Bundle{
@@ -98,10 +98,10 @@ class hash_BTB(parameters:Parameters) extends Module{
 
         //prediction-output
         val BTB_hit                             = Output(Bool())
-        val BTB_output                          = Output(new BTB_entry(parameters))
+        val BTB_output                          = Output(new BTB_entry(coreParameters))
 
         //commit-input
-        val commit                              = Flipped(ValidIO(new commit(parameters)))
+        val commit                              = Flipped(ValidIO(new commit(coreParameters)))
 
     })
 
@@ -110,7 +110,7 @@ class hash_BTB(parameters:Parameters) extends Module{
 
     // memory // 
 
-    val BTB_memory = Module(new hash_BTB_mem(new BTB_entry(parameters), depth = BTBEntries))
+    val BTB_memory = Module(new hash_BTB_mem(new BTB_entry(coreParameters), depth = BTBEntries))
 
     val prediction_BTB_address  = (io.predict_PC >> log2Ceil(fetchWidth*4))
     val commit_BTB_address      = (io.commit.bits.fetch_PC >> log2Ceil(fetchWidth*4))
@@ -121,7 +121,7 @@ class hash_BTB(parameters:Parameters) extends Module{
     BTB_memory.io.wr_en     := io.commit.valid
 
 
-    val commit_BTB_entry = Wire(new BTB_entry(parameters))
+    val commit_BTB_entry = Wire(new BTB_entry(coreParameters))
 
     // FIXME: consider updating this to its own bundle and using <>
     commit_BTB_entry.BTB_valid                  := 1.B
@@ -140,7 +140,7 @@ class hash_BTB(parameters:Parameters) extends Module{
     val BTB_tag_output      = BTB_memory.io.data_out.BTB_tag
     val BTB_fetch_packet_index_output      = BTB_memory.io.data_out.BTB_fetch_packet_index
 
-    val access_fetch_packet_index = RegNext(get_decomposed_icache_address(parameters, io.predict_PC).instruction_offset)
+    val access_fetch_packet_index = RegNext(get_decomposed_icache_address(coreParameters, io.predict_PC).instruction_offset)
 
     io.BTB_hit      := (RegNext(predict_input_tag) === BTB_tag_output) && BTB_valid_output.asBool && (BTB_fetch_packet_index_output >= access_fetch_packet_index)
     io.BTB_output <> BTB_memory.io.data_out

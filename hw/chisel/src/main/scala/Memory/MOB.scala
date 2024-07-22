@@ -75,9 +75,9 @@ import getPortCount._
 
 
 
-class MOB(parameters:Parameters) extends Module{
-    import parameters._
-    val portCount       = getPortCount(parameters)
+class MOB(coreParameters:CoreParameters) extends Module{
+    import coreParameters._
+    val portCount       = getPortCount(coreParameters)
     val portCountBits   = log2Ceil(portCount)
 
     val ptr_width = log2Ceil(MOBEntries) + 1
@@ -87,25 +87,25 @@ class MOB(parameters:Parameters) extends Module{
         val flush                   =      Input(Bool())
 
         // ALLOCATE //
-        val reserve                 =      Vec(fetchWidth, Flipped(Decoupled(new decoded_instruction(parameters))))         // reserve entry (rename)
+        val reserve                 =      Vec(fetchWidth, Flipped(Decoupled(new decoded_instruction(coreParameters))))         // reserve entry (rename)
         val reserved_pointers       =      Vec(fetchWidth, ValidIO(UInt(log2Ceil(MOBEntries).W)))                           // pointer to allocated entry
 
         val fetch_PC                =      Input(UInt(32.W))                                                                // DEBUG
 
-        val AGU_output              =      Flipped(ValidIO(new FU_output(parameters)))                                      // update address (AGU)
+        val AGU_output              =      Flipped(ValidIO(new FU_output(coreParameters)))                                      // update address (AGU)
 
-        val MOB_output              =      ValidIO(new FU_output(parameters))                                               // update address (AGU)
+        val MOB_output              =      ValidIO(new FU_output(coreParameters))                                               // update address (AGU)
 
         // REDIRECTS // 
-        val commit                  =      Flipped(ValidIO(new commit(parameters)))                                         // commit mem op
+        val commit                  =      Flipped(ValidIO(new commit(coreParameters)))                                         // commit mem op
 
-        //val RF_inputs               =      Vec(portCount, Decoupled(new decoded_instruction(parameters)))                   // write RD
+        //val RF_inputs               =      Vec(portCount, Decoupled(new decoded_instruction(coreParameters)))                   // write RD
 
         ///////////////////////////
         // D$ BACKEND MEM ACCESS //
         ///////////////////////////
-        val backend_memory_request              =   Decoupled(new backend_memory_request(parameters))
-        val backend_memory_response             =   Flipped(Decoupled(new backend_memory_response(parameters)))
+        val backend_memory_request              =   Decoupled(new backend_memory_request(coreParameters))
+        val backend_memory_response             =   Flipped(Decoupled(new backend_memory_response(coreParameters)))
 
     })
 
@@ -116,7 +116,7 @@ class MOB(parameters:Parameters) extends Module{
     val front_index     = front_pointer(ptr_width-2, 0)
     val back_index      = back_pointer(ptr_width-2, 0)
 
-    val MOB = RegInit(VecInit(Seq.fill(MOBEntries)(0.U.asTypeOf(new MOB_entry(parameters)))))
+    val MOB = RegInit(VecInit(Seq.fill(MOBEntries)(0.U.asTypeOf(new MOB_entry(coreParameters)))))
 
     /////////////////////////
     // GENERATE AGE VECTOR //
@@ -137,7 +137,7 @@ class MOB(parameters:Parameters) extends Module{
     //////////////////////
     val written_vec = Wire(Vec(fetchWidth, Bool()))
 
-    for(i <- 0 until dispatchWidth){
+    for(i <- 0 until fetchWidth){
         written_vec(i) := 0.B
         when(io.reserve(i).valid && io.reserve(i).ready){
             written_vec(i) := 1.B
@@ -191,7 +191,7 @@ class MOB(parameters:Parameters) extends Module{
     for(i <- 0 until MOBEntries){
         val is_valid        = MOB(i).valid
         val is_younger      = age_vector(i) < incoming_age
-        val is_conflicting  = incoming_address === (get_fetch_packet_aligned_address(parameters, MOB(i).address))
+        val is_conflicting  = incoming_address === (get_fetch_packet_aligned_address(coreParameters, MOB(i).address))
 
         val is_load         = MOB(i).memory_type === memory_type_t.LOAD
         val is_store        = MOB(i).memory_type === memory_type_t.STORE
@@ -216,7 +216,7 @@ class MOB(parameters:Parameters) extends Module{
     // Check for pending loads, send to memory as needed
     val fire_store = Wire(Bool())
 
-    io.backend_memory_request.bits   := 0.U.asTypeOf(new backend_memory_request(parameters))
+    io.backend_memory_request.bits   := 0.U.asTypeOf(new backend_memory_request(coreParameters))
     io.backend_memory_request.valid  := 0.B
 
     val possible_load_vec = Wire(Vec(MOBEntries, Bool()))
@@ -265,7 +265,7 @@ class MOB(parameters:Parameters) extends Module{
     val is_pending         = MOB(front_index).pending
     
     when(is_valid && !is_pending && is_complete && is_committed){
-        MOB(front_index) := 0.U.asTypeOf(new MOB_entry(parameters))
+        MOB(front_index) := 0.U.asTypeOf(new MOB_entry(coreParameters))
         front_pointer    := front_pointer + 1.U
     }
 
@@ -274,7 +274,7 @@ class MOB(parameters:Parameters) extends Module{
     ///////////
     when(io.commit.valid && (io.commit.bits.is_misprediction || io.commit.bits.exception)){   //FIXME: 
         for(i <- 0 until MOBEntries){
-            MOB(i) := 0.U.asTypeOf(new MOB_entry(parameters))
+            MOB(i) := 0.U.asTypeOf(new MOB_entry(coreParameters))
         }
     }
 
@@ -290,8 +290,8 @@ class MOB(parameters:Parameters) extends Module{
     // MERGE //
     ///////////
     // Get MOB indices
-    val FU_output_load_Q        = Module(new Queue(new FU_output(parameters), 4, flow=false, hasFlush=true, useSyncReadMem=false))
-    val FU_output_store_Q       = Module(new Queue(new FU_output(parameters), 4, flow=false, hasFlush=true, useSyncReadMem=false))
+    val FU_output_load_Q        = Module(new Queue(new FU_output(coreParameters), 4, flow=false, hasFlush=true, useSyncReadMem=false))
+    val FU_output_store_Q       = Module(new Queue(new FU_output(coreParameters), 4, flow=false, hasFlush=true, useSyncReadMem=false))
 
     val possible_FU_loads       = Wire(Vec(MOBEntries, Bool()))
     val possible_FU_stores      = Wire(Vec(MOBEntries, Bool()))
@@ -328,8 +328,8 @@ class MOB(parameters:Parameters) extends Module{
     data_out     := DontCare 
 
     // get byte mask and data for each row
-    byte_sels    := MOB.map(MOB_entry => get_MOB_row_byte_sel(parameters, MOB_entry))
-    wr_bytes     := MOB.map(MOB_entry => get_MOB_row_wr_bytes(parameters, MOB_entry))
+    byte_sels    := MOB.map(MOB_entry => get_MOB_row_byte_sel(coreParameters, MOB_entry))
+    wr_bytes     := MOB.map(MOB_entry => get_MOB_row_wr_bytes(coreParameters, MOB_entry))
 
     for(i <- 0 until MOBEntries){    // forward from MOB
         val is_valid            = MOB(i).valid
@@ -369,7 +369,7 @@ class MOB(parameters:Parameters) extends Module{
 
 
 
-    val FU_output_arbiter       = Module(new Arbiter(new FU_output(parameters), 2))
+    val FU_output_arbiter       = Module(new Arbiter(new FU_output(coreParameters), 2))
 
     FU_output_arbiter.io.in(0) <> FU_output_load_Q.io.deq
     FU_output_arbiter.io.in(1) <> FU_output_store_Q.io.deq
@@ -398,7 +398,7 @@ class MOB(parameters:Parameters) extends Module{
 
     val availalbe_MOB_entries = PopCount(~Cat(MOB.map(_.valid)))
     
-    for (i <- 0 until dispatchWidth){
+    for (i <- 0 until fetchWidth){
         io.reserve(i).ready := availalbe_MOB_entries >= fetchWidth.U
     }
 

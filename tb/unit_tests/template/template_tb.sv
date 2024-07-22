@@ -3,7 +3,7 @@
 
 // import design
 `include "../../enums.sv"
-`include "../../../hw/verilog/parameters.sv"
+`include "../../../hw/verilog/coreParameters.sv"
 `include "../../../hw/verilog/typedefs.sv"
 
 

@@ -37,9 +37,9 @@ import chisel3.util._
 import getPortCount._
 import Thermometor._
 
-class MEMRS(parameters:Parameters) extends Module{
-    import parameters._
-    val portCount = getPortCount(parameters)
+class MEMRS(coreParameters:CoreParameters) extends Module{
+    import coreParameters._
+    val portCount = getPortCount(coreParameters)
     val portCountBits = log2Ceil(portCount)
 
     val pointerSize = log2Ceil(RSEntries)+1
@@ -49,23 +49,23 @@ class MEMRS(parameters:Parameters) extends Module{
         val flush                   =      Input(Bool())
 
         // ALLOCATE //
-        val backend_packet          =      Vec(dispatchWidth, Flipped(Decoupled(new decoded_instruction(parameters))))
+        val backend_packet          =      Vec(fetchWidth, Flipped(Decoupled(new decoded_instruction(coreParameters))))
 
         val fetch_PC                =      Input(UInt(32.W)) // DEBUG
 
         // UPDATE //
-        val FU_outputs              =      Vec(portCount, Flipped(ValidIO(new FU_output(parameters))))
+        val FU_outputs              =      Vec(portCount, Flipped(ValidIO(new FU_output(coreParameters))))
 
         // REDIRECTS // 
-        val commit                  =      Flipped(ValidIO(new commit(parameters)))
+        val commit                  =      Flipped(ValidIO(new commit(coreParameters)))
 
         // REG READ (then execute) //
-        val RF_inputs               =      Vec(portCount, Decoupled(new decoded_instruction(parameters)))
+        val RF_inputs               =      Vec(portCount, Decoupled(new decoded_instruction(coreParameters)))
     })
 
 
     
-    val reservation_station = RegInit(VecInit(Seq.fill(RSEntries)(0.U.asTypeOf(new MEMRS_entry(parameters)))))
+    val reservation_station = RegInit(VecInit(Seq.fill(RSEntries)(0.U.asTypeOf(new MEMRS_entry(coreParameters)))))
 
     // queue pointers
     val pointer_width   = log2Ceil(RSEntries)+1
@@ -78,20 +78,20 @@ class MEMRS(parameters:Parameters) extends Module{
     //////////////
     // ALLOCATE //
     //////////////
-    // write up to dispatchWidth entries into the queue (in order).
+    // write up to fetchWidth entries into the queue (in order).
     
     // Allocate new RS entry
 
     val written_vec = Wire(Vec(fetchWidth, Bool()))
 
-    for(i <- 0 until dispatchWidth){
+    for(i <- 0 until fetchWidth){
         written_vec(i) := 0.B
         when(io.backend_packet(i).valid && io.backend_packet(i).ready){
             written_vec(i) := 1.B
         }
     }
 
-    for(i <- 0 until dispatchWidth){
+    for(i <- 0 until fetchWidth){
         when(written_vec(i)){
             val index_offset = PopCount(written_vec.take(i+1))-1.U
             reservation_station(back_index + index_offset).decoded_instruction <> io.backend_packet(i).bits
@@ -157,20 +157,20 @@ class MEMRS(parameters:Parameters) extends Module{
 
     // clear RS entry
     when(good_to_go){
-        reservation_station(front_index) := 0.U.asTypeOf(new MEMRS_entry(parameters))
+        reservation_station(front_index) := 0.U.asTypeOf(new MEMRS_entry(coreParameters))
     }
     
     ////////////////////
     // ASSIGN OUTPUTS //
     ////////////////////
 
-    io.RF_inputs(0).bits    := 0.U.asTypeOf(new decoded_instruction(parameters))
+    io.RF_inputs(0).bits    := 0.U.asTypeOf(new decoded_instruction(coreParameters))
     io.RF_inputs(0).valid   := 0.B
 
-    io.RF_inputs(1).bits    := 0.U.asTypeOf(new decoded_instruction(parameters))
+    io.RF_inputs(1).bits    := 0.U.asTypeOf(new decoded_instruction(coreParameters))
     io.RF_inputs(1).valid   := 0.B
 
-    io.RF_inputs(2).bits    := 0.U.asTypeOf(new decoded_instruction(parameters))
+    io.RF_inputs(2).bits    := 0.U.asTypeOf(new decoded_instruction(coreParameters))
     io.RF_inputs(2).valid   := 0.B
 
     // FIXME: RF_inputs port should be a parameter
@@ -181,7 +181,7 @@ class MEMRS(parameters:Parameters) extends Module{
     // assign MEMRS_ready bits
     val availalbe_RS_entries = PopCount(~Cat(reservation_station.map(_.valid)))
     
-    for (i <- 0 until dispatchWidth){
+    for (i <- 0 until fetchWidth){
         io.backend_packet(i).ready := availalbe_RS_entries >= fetchWidth.U
     }
 
@@ -191,7 +191,7 @@ class MEMRS(parameters:Parameters) extends Module{
     ///////////
     for(i <- 0 until RSEntries){
         when(io.flush && (reservation_station(i).decoded_instruction.ROB_index === io.commit.bits.ROB_index)){
-            reservation_station(i) := 0.U.asTypeOf(new MEMRS_entry(parameters))
+            reservation_station(i) := 0.U.asTypeOf(new MEMRS_entry(coreParameters))
         }
     }
 

@@ -51,6 +51,7 @@ module FU_1(	// src/main/scala/Backend/FU.scala:386:7
   input         io_FU_input_valid,	// src/main/scala/Backend/FU.scala:393:16
                 io_FU_input_bits_decoded_instruction_ready_bits_RS1_ready,	// src/main/scala/Backend/FU.scala:393:16
                 io_FU_input_bits_decoded_instruction_ready_bits_RS2_ready,	// src/main/scala/Backend/FU.scala:393:16
+  input  [4:0]  io_FU_input_bits_decoded_instruction_RDold,	// src/main/scala/Backend/FU.scala:393:16
   input  [6:0]  io_FU_input_bits_decoded_instruction_RD,	// src/main/scala/Backend/FU.scala:393:16
   input         io_FU_input_bits_decoded_instruction_RD_valid,	// src/main/scala/Backend/FU.scala:393:16
   input  [6:0]  io_FU_input_bits_decoded_instruction_RS1,	// src/main/scala/Backend/FU.scala:393:16

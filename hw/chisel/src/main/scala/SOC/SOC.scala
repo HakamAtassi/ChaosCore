@@ -34,69 +34,70 @@ import circt.stage.ChiselStage
 
 import chisel3.util._
 
-class SOC(parameters:Parameters, addressMap:AddressMap) extends Module{
+/*
+
+class SOC(coreParameters:CoreParameters, addressMap:AddressMap, nocParameters:NOCParameters) extends Module{
 
     val io = IO(new Bundle{
-
-        val frontend_memory_request                =   Decoupled(new memory_request(parameters))
-        val frontend_memory_response               =   Flipped(Decoupled(new DRAM_response(parameters)))
-
-        ///////////////////////////
-        // D$ BACKEND MEM ACCESS //
-        ///////////////////////////
-
-        val backend_memory_request                =   Decoupled(new memory_request(parameters))
-        val backend_memory_response               =   Flipped(Decoupled(new memory_response(parameters)))
+        ////////////////////////
+        // TILELINK INTERFACE //
+        ////////////////////////
+		val DRAM_TL_A                      = Decoupled(new TileLink_Channel_A())
+		val DRAM_TL_D                      = Flipped(Decoupled(new TileLink_Channel_D()))
     })
 
     ///////////////
     // CHAOSCORE //
     ///////////////
 
-    val ChaosCore = Module(new ChaosCore(parameters))
-
-    val flush = ChaosCore.io.commit.valid && ChaosCore.io.commit.bits.is_misprediction
-
-
-
-
-    ////////////////////
-    // PIPELINE FLUSH //
-    ////////////////////
+    val ChaosCore           = Module(new ChaosCore(coreParameters))
+    val flush               = ChaosCore.io.commit.valid && ChaosCore.io.commit.bits.is_misprediction
 
     ////////////
     // CACHES //
     ////////////
-
-    // TODO: forward kill signal to the cache to kill requests
-    val instruction_cache   = Module(new instruction_cache(parameters))
-
-    instruction_cache.io.flush := flush
-
-    instruction_cache.io.DRAM_response        <> io.frontend_memory_response
-    instruction_cache.io.DRAM_request         <> io.frontend_memory_request
-
+    val instruction_cache   = Module(new instruction_cache(coreParameters, nocParameters))
+    val data_cache          = Module(new blocking_data_cache(coreParameters, nocParameters))
 
     /////////////////
     // PERIPHIRALS //
     /////////////////
 
-    val debug_printer = Module(new debug_printer(parameters, addressMap))
-
-
-    /////////////////
-    // CONNECTIONS //
-    /////////////////
+    val debug_printer = Module(new debug_printer(coreParameters, addressMap))
 
 
     ChaosCore.io.frontend_memory_response    <> instruction_cache.io.CPU_response
     ChaosCore.io.frontend_memory_request     <> instruction_cache.io.CPU_request 
+    instruction_cache.io.flush := flush
 
-    ChaosCore.io.backend_memory_response     <> io.backend_memory_response
-    ChaosCore.io.backend_memory_request      <> io.backend_memory_request
+    ChaosCore.io.backend_memory_response     <> data_cache.io.backend_memory_response
+    ChaosCore.io.backend_memory_request      <> data_cache.io.backend_memory_request
 
-    ChaosCore.io.backend_memory_request  <> debug_printer.io.memory_request
+    //////////////
+    // CORE BUS //
+    //////////////
+    val core_bus = Module(new core_bus())
+    val system_bus = Module(new system_bus(coreParameters, addressMap))
 
+    core_bus.io.instruction_cache_A <> instruction_cache.io.instruction_cache_A
+    core_bus.io.instruction_cache_D <> instruction_cache.io.instruction_cache_D
+
+    core_bus.io.data_cache_A        <> data_cache.io.data_cache_A
+    core_bus.io.data_cache_D        <> data_cache.io.data_cache_D
+
+    core_bus.io.system_bus_A        <> system_bus.io.core_bus_A
+    core_bus.io.system_bus_D        <> system_bus.io.core_bus_D
+
+    ////////////////
+    // SYSTEM BUS //
+    ////////////////
+
+    system_bus.io.debug_printer_A <> debug_printer.io.debug_printer_A
+    system_bus.io.debug_printer_D <> debug_printer.io.debug_printer_D
+
+    system_bus.io.DRAM_A          <> io.DRAM_TL_A
+    system_bus.io.DRAM_D          <> io.DRAM_TL_D
 
 
 }
+*/

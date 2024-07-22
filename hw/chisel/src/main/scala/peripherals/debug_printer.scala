@@ -36,20 +36,20 @@ import circt.stage.ChiselStage
 import chisel3.util._
 
 
-class debug_printer(parameters:Parameters, addressMap:AddressMap) extends Module{
-    import parameters._
+class debug_printer(coreParameters:CoreParameters, addressMap:AddressMap) extends Module{
+    import coreParameters._
     import addressMap._
 
     val io = IO(new Bundle{
-        //val memory_request = Flipped(Decoupled(new DRAM_request(parameters)))
-
-        val memory_request      =   Flipped(Decoupled(new memory_request(parameters)))     // To MEM
+		val debug_printer_A                      = Flipped(Decoupled(new TileLink_Channel_A()))   	// D$ Request
+		val debug_printer_D                      = Decoupled(new TileLink_Channel_D())   			// Bus granted request
     })
 
-    when((io.memory_request.bits.addr === debug_printer_address) && io.memory_request.valid){
-        printf("%c", io.memory_request.bits.wr_data)
+    when((io.debug_printer_A.bits.a_address === debug_printer_address) && io.debug_printer_A.valid){
+        printf("%c", io.debug_printer_A.bits.a_data)
     }
+    io.debug_printer_A.ready := 1.B
 
-    io.memory_request.ready := 1.B
+    io.debug_printer_D := DontCare // FIXME: 
 
 }

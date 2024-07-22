@@ -4,7 +4,7 @@ from cocotb.triggers import RisingEdge, ReadOnly
 
 
 class ChaosCore_dut:
-    def __init__(self, dut, imem, dmem):  # modify as needed (parameters, etc...)
+    def __init__(self, dut, imem, dmem):  # modify as needed (coreParameters, etc...)
         self.ChaosCore = dut
 
         # Backend Modules #

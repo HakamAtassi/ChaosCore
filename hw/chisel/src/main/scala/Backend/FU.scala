@@ -35,8 +35,8 @@ import circt.stage.ChiselStage
 import chisel3.util._
 
 
-class ALU(parameters:Parameters) extends Module{
-    import parameters._
+class ALU(coreParameters:CoreParameters) extends Module{
+    import coreParameters._
     import InstructionType._
 
     val io = IO(new Bundle{
@@ -44,10 +44,10 @@ class ALU(parameters:Parameters) extends Module{
         val flush         =   Input(Bool())
 
         // Input
-        val FU_input      =   Flipped(Decoupled(new read_decoded_instruction(parameters)))
+        val FU_input      =   Flipped(Decoupled(new read_decoded_instruction(coreParameters)))
         
         // Output
-        val FU_output     =   ValidIO(new FU_output(parameters))
+        val FU_output     =   ValidIO(new FU_output(coreParameters))
     })
 
     // misaligned fetch exception ??
@@ -240,17 +240,17 @@ class ALU(parameters:Parameters) extends Module{
 }
 
 
-class branch_unit(parameters:Parameters) extends Module{
-    import parameters._
+class branch_unit(coreParameters:CoreParameters) extends Module{
+    import coreParameters._
 
     val io = IO(new Bundle{
         val flush         =   Input(Bool())
 
         // Input
-        val FU_input      =   Flipped(Decoupled(new read_decoded_instruction(parameters)))
+        val FU_input      =   Flipped(Decoupled(new read_decoded_instruction(coreParameters)))
         
         // Output
-        val FU_output     =   ValidIO(new FU_output(parameters))
+        val FU_output     =   ValidIO(new FU_output(coreParameters))
     })
 
     // Operand data
@@ -383,22 +383,22 @@ class branch_unit(parameters:Parameters) extends Module{
 
 
 // Top Level FU
-class FU(parameters:Parameters,
+class FU(coreParameters:CoreParameters,
          has_ALU:Boolean,
          has_branch_unit: Boolean 
          //MUL:Bool    
 ) extends Module{
-    import parameters._
+    import coreParameters._
     import InstructionType._
     val io = IO(new Bundle{
         // FLUSH
         val flush         =   Input(Bool())
 
         // Input
-        val FU_input      =   Flipped(Decoupled(new read_decoded_instruction(parameters)))
+        val FU_input      =   Flipped(Decoupled(new read_decoded_instruction(coreParameters)))
         
         // Output
-        val FU_output     =   ValidIO(new FU_output(parameters))
+        val FU_output     =   ValidIO(new FU_output(coreParameters))
     })
     dontTouch(io)
     // All functional have a latency of 1 cycle (for now)
@@ -410,8 +410,8 @@ class FU(parameters:Parameters,
 
 
 
-    val ALU = if (has_ALU) Some(Module(new ALU(parameters))) else None
-    val branch_unit = if (has_branch_unit) Some(Module(new branch_unit(parameters))) else None
+    val ALU = if (has_ALU) Some(Module(new ALU(coreParameters))) else None
+    val branch_unit = if (has_branch_unit) Some(Module(new branch_unit(coreParameters))) else None
 
     ALU.foreach { alu =>
         alu.io.FU_input <> io.FU_input

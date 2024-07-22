@@ -1,6 +1,6 @@
 # DESCRIPTION: Verilator output: Timestamp data for --skip-identical.  Delete at will.
 C "--binary template_tb.sv"
-S       847  5922219  1721171546   122560650  1721171546   122560650 "../../../hw/verilog/parameters.sv"
+S       847  5922219  1721171546   122560650  1721171546   122560650 "../../../hw/verilog/coreParameters.sv"
 S      7309  5951382  1721171546   531566403  1721171546   531566403 "../../../hw/verilog/typedefs.sv"
 S       176  6177502  1721149870   830123534  1721149870   830123534 "../../enums.sv"
 S  15335864  7227600  1715961146   539380067  1715961146   539380067 "/usr/local/share/verilator/bin/verilator_bin"

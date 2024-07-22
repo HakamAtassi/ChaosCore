@@ -36,28 +36,28 @@ import chisel3.util._
 
 // Top level integrates the Frontend, Allocator, Backend, ROB and FTQ
 
-class ChaosCore(parameters:Parameters) extends Module{
+class ChaosCore(coreParameters:CoreParameters) extends Module{
     
-    import parameters._
+    import coreParameters._
 
     val io = IO(new Bundle{
 
-        val commit                              =   ValidIO(new commit(parameters))
+        val commit                              =   ValidIO(new commit(coreParameters))
         val flush                               =   Output(Bool())
 
-        val revert                              =   ValidIO(new revert(parameters))
+        val revert                              =   ValidIO(new revert(coreParameters))
 
         ////////////////////////////
         // I$ FRONTEND MEM ACCESS //
         ////////////////////////////
-        val frontend_memory_response            =   Flipped(Decoupled(new fetch_packet(parameters)))
-        val frontend_memory_request             =   Decoupled(new memory_request(parameters))
+        val frontend_memory_response            =   Flipped(Decoupled(new fetch_packet(coreParameters)))
+        val frontend_memory_request             =   Decoupled(new frontend_memory_request(coreParameters))
 
         ///////////////////////////
         // D$ BACKEND MEM ACCESS //
         ///////////////////////////
-        val backend_memory_response             =   Flipped(Decoupled(new backend_memory_response(parameters)))
-        val backend_memory_request              =   Decoupled(new backend_memory_request(parameters))
+        val backend_memory_response             =   Flipped(Decoupled(new backend_memory_response(coreParameters)))
+        val backend_memory_request              =   Decoupled(new backend_memory_request(coreParameters))
     })
 
     //////////////////
@@ -73,13 +73,13 @@ class ChaosCore(parameters:Parameters) extends Module{
     // MODULES //
     /////////////
 
-    val frontend    = Module(new frontend(parameters))
-    val backend     = Module(new backend(parameters))
+    val frontend    = Module(new frontend(coreParameters))
+    val backend     = Module(new backend(coreParameters))
 
 
-    val FTQ         = Module(new FTQ(parameters))
-    val ROB         = Module(new ROB(parameters))
-    val BRU         = Module(new BRU(parameters))
+    val FTQ         = Module(new FTQ(coreParameters))
+    val ROB         = Module(new ROB(coreParameters))
+    val BRU         = Module(new BRU(coreParameters))
 
 
     val flush       = Wire(Bool())
