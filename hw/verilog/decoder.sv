@@ -67,6 +67,7 @@ module decoder(	// src/main/scala/Frontend/decoder.scala:40:7
                 io_instruction_valid,	// src/main/scala/Frontend/decoder.scala:43:16
   input  [31:0] io_instruction_bits_instruction,	// src/main/scala/Frontend/decoder.scala:43:16
   input  [3:0]  io_instruction_bits_packet_index,	// src/main/scala/Frontend/decoder.scala:43:16
+  output [4:0]  io_decoded_instruction_bits_RDold,	// src/main/scala/Frontend/decoder.scala:43:16
   output [6:0]  io_decoded_instruction_bits_RD,	// src/main/scala/Frontend/decoder.scala:43:16
   output        io_decoded_instruction_bits_RD_valid,	// src/main/scala/Frontend/decoder.scala:43:16
   output [6:0]  io_decoded_instruction_bits_RS1,	// src/main/scala/Frontend/decoder.scala:43:16
@@ -161,6 +162,7 @@ module decoder(	// src/main/scala/Frontend/decoder.scala:40:7
       `FIRRTL_AFTER_INITIAL	// src/main/scala/Frontend/decoder.scala:40:7
     `endif // FIRRTL_AFTER_INITIAL
   `endif // ENABLE_INITIAL_REG_
+  assign io_decoded_instruction_bits_RDold = io_instruction_bits_instruction[11:7];	// src/main/scala/Frontend/decoder.scala:40:7, :58:34
   assign io_decoded_instruction_bits_RD = {2'h0, io_instruction_bits_instruction[11:7]};	// src/main/scala/Frontend/decoder.scala:40:7, :58:34, :126:54
   assign io_decoded_instruction_bits_RD_valid =
     (_is_INT_T | _is_INT_T_1 | _is_MEM_T | _is_INT_T_5 | _is_INT_T_7 | _is_INT_T_9

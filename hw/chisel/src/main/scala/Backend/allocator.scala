@@ -33,21 +33,21 @@
 //import chisel3.util._
 
 
-//class allocator(parameters:Parameters) extends Module{
-    //import parameters._
+//class allocator(coreParameters:CoreParameters) extends Module{
+    //import coreParameters._
 
-    //val portCount = getPortCount(parameters)
+    //val portCount = getPortCount(coreParameters)
     //val portCountBits = log2Ceil(portCount)
 
 
     //val io = IO(new Bundle{
 
         //// INSTRUCTION //
-        //val renamed_decoded_fetch_packet    =   Vec(fetchWidth, Flipped(Decoupled(new decoded_instruction(parameters))))
+        //val renamed_decoded_fetch_packet    =   Vec(fetchWidth, Flipped(Decoupled(new decoded_instruction(coreParameters))))
         
         //// ALLOCATE //
         //// Backend
-        //val backend_packet                  =   Output(Vec(dispatchWidth, new backend_packet(parameters)))
+        //val backend_packet                  =   Output(Vec(fetchWidth, new backend_packet(coreParameters)))
 
         //// ALLOCATE //
         //// Frontend
@@ -66,7 +66,7 @@
 
     //var max_rob_entries      = PopCount(io.ROB_packet.map)  //???
 
-    //for(i <- 0 until dispatchWidth){
+    //for(i <- 0 until fetchWidth){
         //when(io.renamed_decoded_fetch_packet.valid && io.renamed_decoded_fetch_packet.RS_type === RS_types.INT && max_int_instructions > 0.U){
             //io.backend_packet(i)        := io.renamed_decoded_fetch_packet(i).bits.decoded_instruction
             //io.backend_packet(i).ready  := 1.B
@@ -77,7 +77,7 @@
             //max_mem_instructions        := max_mem_instructions - 1.U
         //}.otherwise{
             //io.backend_packet(i).ready  := 0.B
-            //io.backend_packet(i).bits   := 0.U.asTypeOf(new backend_packet(parameters))
+            //io.backend_packet(i).bits   := 0.U.asTypeOf(new backend_packet(coreParameters))
         //}
     //}
 
@@ -87,7 +87,7 @@
     //// ASSIGN ROB PACKET //
     /////////////////////////
 
-    //for(i <- 0 until dispatchWidth){
+    //for(i <- 0 until fetchWidth){
         //io.ROB_packet     := DontCare
     //}
 
@@ -97,7 +97,7 @@
 
     //val ready_reg = RegInit(UInt(physicalRegCount.W), ((1<<physicalRegCount)-1).U)
 
-    //for(i <- 0 until dispatchWidth){ // Assign ready bits for instructions
+    //for(i <- 0 until fetchWidth){ // Assign ready bits for instructions
         //val ready_bits = Wire(new sources_ready())
         //ready_bits.RS1_ready := ready_reg(io.backend_packet(i).decoded_instruction.RS1)
         //ready_bits.RS2_ready := ready_reg(io.backend_packet(i).decoded_instruction.RS2)

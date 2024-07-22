@@ -18,11 +18,13 @@ interface instruction_cache_address_packet;
     logic[instruction_offset_bits-1:0] instruction_offset;
 endinterface;
 
-interface read_decoded_instruction;
-    decoded_instruction decoded_instruction();
-    logic[32-1:0] RS1_data;
-    logic[32-1:0] RS2_data;
-    logic[32-1:0] fetch_PC;
+interface BTB_entry;
+    localparam BTB_tag_size = 32 - $clog2(BTBEntries) - 2;
+    logic[1-1:0] BTB_valid;
+    logic[BTB_tag_size-1:0] BTB_tag;
+    logic[32-1:0] BTB_target;
+    br_type_t BTBbr_type_t;
+    logic[$clog2(fetchWidth)-1:0] BTB_fetch_packet_index;
 endinterface;
 
 interface prediction;
@@ -31,26 +33,6 @@ interface prediction;
     br_type_t br_type;
     logic[GHRWidth-1:0] GHR;
     logic[1-1:0] T_NT;
-endinterface;
-
-interface ROB_output;
-    logic[1-1:0] row_valid;
-    logic[32-1:0] fetch_PC;
-    logic[$clog2(RATCheckpointCount)-1:0] RAT_index;
-    logic[$clog2(ROBEntries)-1:0] ROB_index;
-    logic[GHRWidth-1:0] GHR;
-    logic[$clog2(RASEntries)-1:0] NEXT;
-    logic[$clog2(RASEntries)-1:0] TOS;
-    logic[(physicalRegBits + 1)-1:0] free_list_front_pointer;
-    ROB_entry ROB_entries[fetchWidth]();
-    logic[fetchWidth-1:0] complete[fetchWidth];
-    logic[fetchWidth-1:0] exception[fetchWidth];
-endinterface;
-
-interface memory_request;
-    logic[32-1:0] addr;
-    logic[32-1:0] wr_data;
-    logic[1-1:0] wr_en;
 endinterface;
 
 interface MOB_entry;
@@ -68,11 +50,6 @@ interface MOB_entry;
     logic[1-1:0] exception;
 endinterface;
 
-interface ROB_WB;
-    logic[1-1:0] busy;
-    logic[1-1:0] exception;
-endinterface;
-
 interface RS_entry;
     decoded_instruction decoded_instruction();
     logic[1-1:0] valid;
@@ -80,6 +57,7 @@ endinterface;
 
 interface decoded_instruction;
     sources_ready ready_bits();
+    logic[architecturalRegBits-1:0] RDold;
     logic[physicalRegBits-1:0] RD;
     logic[1-1:0] RD_valid;
     logic[physicalRegBits-1:0] RS1;
@@ -112,19 +90,6 @@ interface revert;
     logic[32-1:0] PC;
 endinterface;
 
-interface BTB_entry;
-    localparam BTB_tag_size = 32 - $clog2(BTBEntries) - 2;
-    logic[1-1:0] BTB_valid;
-    logic[BTB_tag_size-1:0] BTB_tag;
-    logic[32-1:0] BTB_target;
-    br_type_t BTBbr_type_t;
-    logic[$clog2(fetchWidth)-1:0] BTB_fetch_packet_index;
-endinterface;
-
-interface memory_response;
-    logic[32-1:0] data;
-endinterface;
-
 interface RAS_update;
     logic[32-1:0] call_addr;
     logic[1-1:0] call;
@@ -145,6 +110,7 @@ interface commit;
     logic[$clog2(RASEntries)-1:0] NEXT;
     logic[$clog2(RATCheckpointCount)-1:0] RAT_index;
     logic[(physicalRegBits + 1)-1:0] free_list_front_pointer;
+    logic[fetchWidth-1:0] RDold[fetchWidth];
     logic[fetchWidth-1:0] RD[fetchWidth];
     logic[fetchWidth-1:0] RD_valid[fetchWidth];
 endinterface;
@@ -180,6 +146,19 @@ interface DRAM_request;
     logic[1-1:0] wr_en;
 endinterface;
 
+interface read_decoded_instruction;
+    decoded_instruction decoded_instruction();
+    logic[32-1:0] RS1_data;
+    logic[32-1:0] RS2_data;
+    logic[32-1:0] fetch_PC;
+endinterface;
+
+interface frontend_memory_request;
+    logic[32-1:0] addr;
+    logic[32-1:0] wr_data;
+    logic[1-1:0] wr_en;
+endinterface;
+
 interface ROB_shared;
     logic[32-1:0] fetch_PC;
     logic[$clog2(RATCheckpointCount)-1:0] RAT_index;
@@ -195,6 +174,30 @@ interface ROB_entry;
     memory_type_t memory_type;
     logic[physicalRegBits-1:0] RD;
     logic[1-1:0] RD_valid;
+    logic[architecturalRegBits-1:0] RDold;
+endinterface;
+
+interface ROB_output;
+    logic[1-1:0] row_valid;
+    logic[32-1:0] fetch_PC;
+    logic[$clog2(RATCheckpointCount)-1:0] RAT_index;
+    logic[$clog2(ROBEntries)-1:0] ROB_index;
+    logic[GHRWidth-1:0] GHR;
+    logic[$clog2(RASEntries)-1:0] NEXT;
+    logic[$clog2(RASEntries)-1:0] TOS;
+    logic[(physicalRegBits + 1)-1:0] free_list_front_pointer;
+    ROB_entry ROB_entries[fetchWidth]();
+    logic[fetchWidth-1:0] complete[fetchWidth];
+    logic[fetchWidth-1:0] exception[fetchWidth];
+endinterface;
+
+interface TileLink_Channel_D;
+    logic[3-1:0] d_opcode;
+    logic[3-1:0] d_param;
+    logic[3-1:0] d_size;
+    logic[4-1:0] d_source;
+    logic[4-1:0] d_sink;
+    logic[256-1:0] d_data;
 endinterface;
 
 interface sources_ready;
@@ -215,6 +218,25 @@ interface memory_access;
     logic[1-1:0] is_unsigned;
     logic[32-1:0] address;
     logic[32-1:0] wr_data;
+endinterface;
+
+interface ROB_WB;
+    logic[1-1:0] busy;
+    logic[1-1:0] exception;
+endinterface;
+
+interface frontend_memory_response;
+    logic[32-1:0] data;
+endinterface;
+
+interface TileLink_Channel_A;
+    logic[3-1:0] a_opcode;
+    logic[3-1:0] a_param;
+    logic[3-1:0] a_size;
+    logic[4-1:0] a_source;
+    logic[32-1:0] a_address;
+    logic[4-1:0] a_mask;
+    logic[256-1:0] a_data;
 endinterface;
 
 interface decoded_fetch_packet;

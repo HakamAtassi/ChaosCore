@@ -37,18 +37,18 @@ import java.io.{File, FileWriter}
 import java.rmi.server.UID
 
 
-class PC_gen(parameters:Parameters) extends Module{
-    import parameters._
+class PC_gen(coreParameters:CoreParameters) extends Module{
+    import coreParameters._
 
     val io = IO(new Bundle{
-        val commit                          =   Flipped(ValidIO(new commit(parameters)))
-        val revert                          =   Flipped(ValidIO(new revert(parameters)))
+        val commit                          =   Flipped(ValidIO(new commit(coreParameters)))
+        val revert                          =   Flipped(ValidIO(new revert(coreParameters)))
 
-        val prediction                      =   Flipped(Decoupled(new prediction(parameters)))           // BTB response
-        val RAS_read                        =   Flipped(new RAS_read(parameters))
+        val prediction                      =   Flipped(Decoupled(new prediction(coreParameters)))           // BTB response
+        val RAS_read                        =   Flipped(new RAS_read(coreParameters))
         // TODO: Exception:...                                                     // exception
 
-        val PC_next                         =   Decoupled(new memory_request(parameters))
+        val PC_next                         =   Decoupled(new frontend_memory_request(coreParameters))
     }); dontTouch(io)
 
     // PC regs
@@ -103,7 +103,7 @@ class PC_gen(parameters:Parameters) extends Module{
         PC_mux := PC_reg 
     }
 
-    PC_increment    :=  get_PC_increment(parameters, PC_mux)
+    PC_increment    :=  get_PC_increment(coreParameters, PC_mux)
     when(io.PC_next.fire){PC_reg := PC_mux + PC_increment}
 
     // OUTPUT

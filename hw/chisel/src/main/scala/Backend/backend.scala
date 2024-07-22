@@ -35,7 +35,7 @@ import circt.stage.ChiselStage
 import chisel3.util._
 
 // Backend Operation:
-// Recives dispatchWidth decoded and renamed instructions from the frontend
+// Recives fetchWidth decoded and renamed instructions from the frontend
 // Allocates the instructions into the corresponding reservation stations (ROB exists externally)
 // When instructions are scheduled, they go through the Register Read stage. Their position in the RS is also cleared.
 //      This stage reads RS1, RS2, and PC data from the register files
@@ -44,19 +44,19 @@ import chisel3.util._
 
 
 
-class backend(parameters:Parameters) extends Module{
-    import parameters._
-    val portCount = getPortCount(parameters)
+class backend(coreParameters:CoreParameters) extends Module{
+    import coreParameters._
+    val portCount = getPortCount(coreParameters)
 
     val io = IO(new Bundle{
         // FLUSH //
         val flush                   =   Input(Bool())
 
-        val backend_memory_response     =   Flipped(Decoupled(new backend_memory_response(parameters))) // From MEM
-        val backend_memory_request      =   Decoupled(new backend_memory_request(parameters))     // To MEM
+        val backend_memory_response     =   Flipped(Decoupled(new backend_memory_response(coreParameters))) // From MEM
+        val backend_memory_request      =   Decoupled(new backend_memory_request(coreParameters))     // To MEM
 
         // REDIRECTS // 
-        val commit                  =    Flipped(ValidIO(new commit(parameters)))
+        val commit                  =    Flipped(ValidIO(new commit(coreParameters)))
 
         // PC_file access (for branch unit)
         val PC_file_exec_addr           =   Output(UInt(log2Ceil(ROBEntries).W))
@@ -64,14 +64,14 @@ class backend(parameters:Parameters) extends Module{
 
         // ALLOCATE //
         val fetch_PC                =   Input(UInt(32.W))  // DEBUG
-        val backend_packet          =   Flipped(Decoupled(new decoded_fetch_packet(parameters)))
+        val backend_packet          =   Flipped(Decoupled(new decoded_fetch_packet(coreParameters)))
 
-        val MEMRS_ready             =   Output(Vec(dispatchWidth, Bool()))
-        val INTRS_ready             =   Output(Vec(dispatchWidth, Bool()))
-        val MOB_ready               =   Output(Vec(dispatchWidth, Bool()))
+        val MEMRS_ready             =   Output(Vec(fetchWidth, Bool()))
+        val INTRS_ready             =   Output(Vec(fetchWidth, Bool()))
+        val MOB_ready               =   Output(Vec(fetchWidth, Bool()))
 
         // UPDATE //
-        val FU_outputs              =   Vec(portCount, ValidIO(new FU_output(parameters)))
+        val FU_outputs              =   Vec(portCount, ValidIO(new FU_output(coreParameters)))
     })
 
 
@@ -80,21 +80,21 @@ class backend(parameters:Parameters) extends Module{
     // RESERVATION STATIONS //
     //////////////////////////
 
-    val INT_RS   =  Module(new RS(parameters))
-    val MEM_RS   =  Module(new MEMRS(parameters))
+    val INT_RS   =  Module(new RS(coreParameters))
+    val MEM_RS   =  Module(new MEMRS(coreParameters))
 
 
     /////////
     // MOB //
     /////////
-    val MOB   =  Module(new MOB(parameters))
+    val MOB   =  Module(new MOB(coreParameters))
 
 
 
     // Assign Reservation Stations
 
     INT_RS.io.commit <> io.commit
-    for (i <- 0 until dispatchWidth){
+    for (i <- 0 until fetchWidth){
         INT_RS.io.backend_packet(i).bits     := io.backend_packet.bits.decoded_instruction(i)  // pass data along
         INT_RS.io.backend_packet(i).valid    := (io.backend_packet.bits.decoded_instruction(i).RS_type === RS_types.INT) && io.backend_packet.bits.valid_bits(i) && io.backend_packet.valid
         
@@ -103,7 +103,7 @@ class backend(parameters:Parameters) extends Module{
 
 
     MEM_RS.io.commit <> io.commit
-    for (i <- 0 until dispatchWidth){
+    for (i <- 0 until fetchWidth){
         MEM_RS.io.backend_packet(i).bits     := io.backend_packet.bits.decoded_instruction(i)  // pass data along
         MEM_RS.io.backend_packet(i).valid    := (io.backend_packet.bits.decoded_instruction(i).RS_type === RS_types.MEM)  && io.backend_packet.bits.valid_bits(i) && io.backend_packet.valid // does this entry correspond to RS
         MEM_RS.io.fetch_PC := io.fetch_PC
@@ -111,14 +111,14 @@ class backend(parameters:Parameters) extends Module{
 
 
     MOB.io.commit <> io.commit
-    for (i <- 0 until dispatchWidth){
+    for (i <- 0 until fetchWidth){
         MOB.io.reserve(i).bits     := io.backend_packet.bits.decoded_instruction(i)  // pass data along
         MOB.io.reserve(i).valid    := (io.backend_packet.bits.decoded_instruction(i).RS_type === RS_types.MEM)  && io.backend_packet.bits.valid_bits(i) && io.backend_packet.valid
         MOB.io.fetch_PC := io.fetch_PC
     }
 
     // Assign ready bits
-    for (i <- 0 until dispatchWidth){
+    for (i <- 0 until fetchWidth){
         io.MEMRS_ready(i)        := MEM_RS.io.backend_packet(i).ready
         io.INTRS_ready(i)        := INT_RS.io.backend_packet(i).ready
         io.MOB_ready(i)          := MOB.io.reserve(i).ready
@@ -134,7 +134,7 @@ class backend(parameters:Parameters) extends Module{
 
 
     // FIXME: portcount should consist of ALU port count + MEM ports. now it only counts the number of ALU ports
-    val read_decoded_instructions   =   Wire(Vec(portCount, new read_decoded_instruction(parameters)))
+    val read_decoded_instructions   =   Wire(Vec(portCount, new read_decoded_instruction(coreParameters)))
 
     // FIXME: the assignemnt of these should be based on some central config
     INT_PRF.io.raddr_0  :=    INT_RS.io.RF_inputs(0).bits.RS1   // INT RS PORT 0
@@ -183,10 +183,10 @@ class backend(parameters:Parameters) extends Module{
     // EXECUTION ENGINES //
     ///////////////////////
 
-    val FU0 = Module(new FU(parameters, has_ALU=true, has_branch_unit=true))
-    val FU1 = Module(new FU(parameters, has_ALU=true, has_branch_unit=false))
-    val FU2 = Module(new FU(parameters, has_ALU=true, has_branch_unit=false))
-    val FU3 = Module(new AGU(parameters))
+    val FU0 = Module(new FU(coreParameters, has_ALU=true, has_branch_unit=true))
+    val FU1 = Module(new FU(coreParameters, has_ALU=true, has_branch_unit=false))
+    val FU2 = Module(new FU(coreParameters, has_ALU=true, has_branch_unit=false))
+    val FU3 = Module(new AGU(coreParameters))
 
 
     // Connect FUs

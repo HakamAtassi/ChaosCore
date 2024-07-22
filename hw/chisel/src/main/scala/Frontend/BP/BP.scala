@@ -35,42 +35,42 @@ import chisel3.util._
 import java.io.{File, FileWriter}
 import java.rmi.server.UID
 
-class BP(parameters:Parameters) extends Module{
-    import parameters._
+class BP(coreParameters:CoreParameters) extends Module{
+    import coreParameters._
     val io = IO(new Bundle{
         // Flush
         val flush       = Input(Bool())
 
         // Predict Channel
-        val predict     = Flipped(Decoupled(new memory_request(parameters)))    // PC input
+        val predict     = Flipped(Decoupled(new frontend_memory_request(coreParameters)))    // PC input
 
         // Commit Channel 
-        val commit      = Flipped(ValidIO(new commit(parameters)))
+        val commit      = Flipped(ValidIO(new commit(coreParameters)))
 
         // Revert Channel
         val RAS_update  = Input(new RAS_update)
 
         // RAS Channel
-        val RAS_read    = Output(new RAS_read(parameters))
+        val RAS_read    = Output(new RAS_read(coreParameters))
 
         // GHR Channel
         val GHR         = Input(UInt(GHRWidth.W))
 
         // Prediction Channel (output)
-        val prediction  = Decoupled(new prediction(parameters))    // Output of predictions
+        val prediction  = Decoupled(new prediction(coreParameters))    // Output of predictions
     })
 
     ////////////////////
     // OUTPUT BUNDLES //
     ////////////////////
-    val prediction = Wire(Decoupled(new prediction(parameters)))
+    val prediction = Wire(Decoupled(new prediction(coreParameters)))
 
     /////////////
     // MODULES //
     /////////////
-    val gshare      = Module(new gshare(parameters)) // FIXME: should this be addressed by the PC or by the fetch packet aligned PC?
-    val BTB         = Module(new hash_BTB(parameters))
-    val RAS         = Module(new RAS(parameters))
+    val gshare      = Module(new gshare(coreParameters)) // FIXME: should this be addressed by the PC or by the fetch packet aligned PC?
+    val BTB         = Module(new hash_BTB(coreParameters))
+    val RAS         = Module(new RAS(coreParameters))
 
     ///////////////
     // GHR LOGIC //
@@ -166,7 +166,7 @@ class BP(parameters:Parameters) extends Module{
     /////////////////
     // SKID BUFFER //
     /////////////////
-    val prediction_skid_buffer      = Module(new Queue(new prediction(parameters), 1, flow=true, hasFlush=true, useSyncReadMem=false))
+    val prediction_skid_buffer      = Module(new Queue(new prediction(coreParameters), 1, flow=true, hasFlush=true, useSyncReadMem=false))
 
     prediction_skid_buffer.io.enq                  <> prediction
     prediction_skid_buffer.io.deq                  <> io.prediction

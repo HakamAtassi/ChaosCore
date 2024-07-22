@@ -32,37 +32,37 @@ package ChaosCore
 import chisel3._
 import chisel3.util._
 
-class instruction_fetch(parameters:Parameters) extends Module{
-  import parameters._
+class instruction_fetch(coreParameters:CoreParameters) extends Module{
+  import coreParameters._
 
     val dataSizeBits                = L1_instructionCacheBlockSizeBytes*8
 
     val io = IO(new Bundle{
         // FLUSH
         val flush                 =   Input(Bool())
-        val commit                =   Flipped(ValidIO(new commit(parameters)))
-        val memory_response       =   Flipped(Decoupled(new fetch_packet(parameters)))               // TO CPU
+        val commit                =   Flipped(ValidIO(new commit(coreParameters)))
+        val memory_response       =   Flipped(Decoupled(new fetch_packet(coreParameters)))               // TO CPU
 
-        val memory_request        =   Decoupled(new memory_request(parameters))
-        val fetch_packet          =   Decoupled(new fetch_packet(parameters))                     // Fetch packet result (To Decoders)
-        val predictions           =   Decoupled(new FTQ_entry(parameters))
+        val memory_request        =   Decoupled(new frontend_memory_request(coreParameters))
+        val fetch_packet          =   Decoupled(new fetch_packet(coreParameters))                     // Fetch packet result (To Decoders)
+        val predictions           =   Decoupled(new FTQ_entry(coreParameters))
 
-        val revert                =   ValidIO(new revert(parameters))
+        val revert                =   ValidIO(new revert(coreParameters))
     })
 
     /////////////
     // Modules //
     /////////////
-    val bp                  = Module(new BP(parameters))
-    val predecoder          = Module(new predecoder(parameters))
-    val PC_gen              = Module(new PC_gen(parameters))
+    val bp                  = Module(new BP(coreParameters))
+    val predecoder          = Module(new predecoder(coreParameters))
+    val PC_gen              = Module(new PC_gen(coreParameters))
 
     ////////////
     // Queues //
     ////////////
-    val instruction_Q   =   Module(new Queue(new fetch_packet(parameters), 16, flow=true, hasFlush=true, useSyncReadMem=true))
-    val PC_Q            =   Module(new Queue(new memory_request(parameters), 16, flow=true, hasFlush=true, useSyncReadMem=true))
-    val BTB_Q           =   Module(new Queue(new prediction(parameters), 16, flow=true, hasFlush=true, useSyncReadMem=true))
+    val instruction_Q   =   Module(new Queue(new fetch_packet(coreParameters), 16, flow=true, hasFlush=true, useSyncReadMem=true))
+    val PC_Q            =   Module(new Queue(new frontend_memory_request(coreParameters), 16, flow=true, hasFlush=true, useSyncReadMem=true))
+    val BTB_Q           =   Module(new Queue(new prediction(coreParameters), 16, flow=true, hasFlush=true, useSyncReadMem=true))
 
     ///////////////////////
     // INSTRUCTION QUEUE //
@@ -111,7 +111,7 @@ class instruction_fetch(parameters:Parameters) extends Module{
     // PC Queue //
     //////////////
     PC_Q.io.enq              <> PC_gen.io.PC_next
-    PC_Q.io.deq             <> io.memory_request
+    PC_Q.io.deq              <> io.memory_request
     PC_Q.io.enq.valid        := PC_gen.io.PC_next.valid && bp.io.predict.ready
 
     /////////////

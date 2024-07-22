@@ -37,8 +37,8 @@ import java.rmi.server.UID
 
 import helperFunctions._
 
-class branch_decoder(index:Int, parameters:Parameters) extends Module{
-    import parameters._
+class branch_decoder(index:Int, coreParameters:CoreParameters) extends Module{
+    import coreParameters._
 
     val io = IO(new Bundle{
         val fetch_PC    = Input(UInt(32.W)) // PC of the fetch packet
@@ -46,8 +46,8 @@ class branch_decoder(index:Int, parameters:Parameters) extends Module{
         val instruction = Input(UInt(32.W))
         val valid       = Input(Bool())
         
-        val prediction  = Flipped(Decoupled(new prediction(parameters)))
-        val RAS_read    = Flipped(new RAS_read(parameters))
+        val prediction  = Flipped(Decoupled(new prediction(coreParameters)))
+        val RAS_read    = Flipped(new RAS_read(coreParameters))
 
         val T_NT        = Output(Bool())
 

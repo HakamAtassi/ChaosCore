@@ -51,17 +51,19 @@ module ROB_entry_mem(	// src/main/scala/memories/memories.scala:295:7
   input  [1:0] io_writeDataA_memory_type,	// src/main/scala/memories/memories.scala:296:14
   input  [6:0] io_writeDataA_RD,	// src/main/scala/memories/memories.scala:296:14
   input        io_writeDataA_RD_valid,	// src/main/scala/memories/memories.scala:296:14
-               io_writeEnableA,	// src/main/scala/memories/memories.scala:296:14
+  input  [4:0] io_writeDataA_RDold,	// src/main/scala/memories/memories.scala:296:14
+  input        io_writeEnableA,	// src/main/scala/memories/memories.scala:296:14
   input  [5:0] io_addrB,	// src/main/scala/memories/memories.scala:296:14
   output       io_readDataB_valid,	// src/main/scala/memories/memories.scala:296:14
                io_readDataB_is_branch,	// src/main/scala/memories/memories.scala:296:14
   output [1:0] io_readDataB_memory_type,	// src/main/scala/memories/memories.scala:296:14
   output [6:0] io_readDataB_RD,	// src/main/scala/memories/memories.scala:296:14
-  output       io_readDataB_RD_valid	// src/main/scala/memories/memories.scala:296:14
+  output       io_readDataB_RD_valid,	// src/main/scala/memories/memories.scala:296:14
+  output [4:0] io_readDataB_RDold	// src/main/scala/memories/memories.scala:296:14
 );
 
-  wire [11:0] _mem_ext_R0_data;	// src/main/scala/memories/memories.scala:310:24
-  mem_64x12 mem_ext (	// src/main/scala/memories/memories.scala:310:24
+  wire [16:0] _mem_ext_R0_data;	// src/main/scala/memories/memories.scala:310:24
+  mem_64x17 mem_ext (	// src/main/scala/memories/memories.scala:310:24
     .R0_addr (io_addrB),
     .R0_en   (1'h1),	// src/main/scala/memories/memories.scala:295:7
     .R0_clk  (clock),
@@ -70,7 +72,8 @@ module ROB_entry_mem(	// src/main/scala/memories/memories.scala:295:7
     .W0_en   (io_writeEnableA),
     .W0_clk  (clock),
     .W0_data
-      ({io_writeDataA_RD_valid,
+      ({io_writeDataA_RDold,
+        io_writeDataA_RD_valid,
         io_writeDataA_RD,
         io_writeDataA_memory_type,
         io_writeDataA_is_branch,
@@ -81,5 +84,6 @@ module ROB_entry_mem(	// src/main/scala/memories/memories.scala:295:7
   assign io_readDataB_memory_type = _mem_ext_R0_data[3:2];	// src/main/scala/memories/memories.scala:295:7, :310:24
   assign io_readDataB_RD = _mem_ext_R0_data[10:4];	// src/main/scala/memories/memories.scala:295:7, :310:24
   assign io_readDataB_RD_valid = _mem_ext_R0_data[11];	// src/main/scala/memories/memories.scala:295:7, :310:24
+  assign io_readDataB_RDold = _mem_ext_R0_data[16:12];	// src/main/scala/memories/memories.scala:295:7, :310:24
 endmodule
 

@@ -40,10 +40,10 @@ import Thermometor._
 // The Reservation station is able to allocate up to N items at a time
 // And is able to schedule N items at a time as well, based on port availability. 
 
-class RS(parameters:Parameters) extends Module{
-    import parameters._
+class RS(coreParameters:CoreParameters) extends Module{
+    import coreParameters._
 
-    val portCount = getPortCount(parameters)
+    val portCount = getPortCount(coreParameters)
     val portCountBits = log2Ceil(portCount)
 
     val io = IO(new Bundle{
@@ -51,18 +51,18 @@ class RS(parameters:Parameters) extends Module{
         val flush                   =   Input(Bool())
 
         // ALLOCATE //
-        val backend_packet          =      Vec(dispatchWidth, Flipped(Decoupled(new decoded_instruction(parameters))))
+        val backend_packet          =      Vec(fetchWidth, Flipped(Decoupled(new decoded_instruction(coreParameters))))
 
-        //val INTRS_ready             =      Output(Vec(dispatchWidth, Bool()))
+        //val INTRS_ready             =      Output(Vec(fetchWidth, Bool()))
 
         // UPDATE //
-        val FU_outputs        =      Vec(portCount, Flipped(ValidIO(new FU_output(parameters))))
+        val FU_outputs        =      Vec(portCount, Flipped(ValidIO(new FU_output(coreParameters))))
 
         // REDIRECTS // 
-        val commit            =   Flipped(ValidIO(new commit(parameters)))
+        val commit            =   Flipped(ValidIO(new commit(coreParameters)))
 
         // REG READ (then execute) //
-        val RF_inputs         =      Vec(ALUportCount, Decoupled(new decoded_instruction(parameters)))
+        val RF_inputs         =      Vec(ALUportCount, Decoupled(new decoded_instruction(coreParameters)))
 
     })
 
@@ -74,18 +74,18 @@ class RS(parameters:Parameters) extends Module{
 
 
     // Allocate RS regs
-    val reservation_station = RegInit(VecInit(Seq.fill(RSEntries)(0.U.asTypeOf(new RS_entry(parameters)))))
+    val reservation_station = RegInit(VecInit(Seq.fill(RSEntries)(0.U.asTypeOf(new RS_entry(coreParameters)))))
 
     dontTouch(reservation_station)
     
     // Reg allocate POS for new input
     val validVec = reservation_station.map(_.valid)
     val validUInt = Cat(validVec.reverse)
-    val allocate_index = SelectFirstN(~validUInt, dispatchWidth)
+    val allocate_index = SelectFirstN(~validUInt, fetchWidth)
     
 
     // Allocate new RS entry
-    for(i <- 0 until dispatchWidth){
+    for(i <- 0 until fetchWidth){
         when(io.backend_packet(i).valid){
             val allocateIndexBinary = OHToUInt(allocate_index(i))
             reservation_station(allocateIndexBinary).decoded_instruction <> io.backend_packet(i).bits
@@ -164,7 +164,7 @@ class RS(parameters:Parameters) extends Module{
 
     for(i <- 0 until RSEntries){
         when(io.flush){
-            reservation_station(i) := 0.U.asTypeOf(new RS_entry(parameters))
+            reservation_station(i) := 0.U.asTypeOf(new RS_entry(coreParameters))
         }
     }
 
@@ -173,13 +173,13 @@ class RS(parameters:Parameters) extends Module{
     // PORT SCHEDULING //
     /////////////////////
 
-    // At this stage, you have upto dispatchWidth fetched instructions
+    // At this stage, you have upto fetchWidth fetched instructions
 
     // FIXME: scheduler should really be accounting for age, as without age, the changes of something really closely resembling deadlock/livelock may occur
 
     for (i <- 0 until ALUportCount){
         io.RF_inputs(i).valid := 0.B
-        io.RF_inputs(i).bits := 0.U.asTypeOf(new decoded_instruction(parameters))
+        io.RF_inputs(i).bits := 0.U.asTypeOf(new decoded_instruction(coreParameters))
     }
 
     // Assign port 0
@@ -245,24 +245,24 @@ class RS(parameters:Parameters) extends Module{
 
     when(schedulable_instructions(port0_RS_index) && port0_valid){
         reservation_station(port0_RS_index).valid := 0.B
-        reservation_station(port0_RS_index) <> 0.U.asTypeOf(new RS_entry(parameters))
+        reservation_station(port0_RS_index) <> 0.U.asTypeOf(new RS_entry(coreParameters))
     }
 
     when(schedulable_instructions(port1_RS_index) && port1_valid){
         reservation_station(port1_RS_index).valid := 0.B
-        reservation_station(port1_RS_index) <> 0.U.asTypeOf(new RS_entry(parameters))
+        reservation_station(port1_RS_index) <> 0.U.asTypeOf(new RS_entry(coreParameters))
     }
 
     when(schedulable_instructions(port2_RS_index) && port2_valid){
         reservation_station(port2_RS_index).valid := 0.B
-        reservation_station(port2_RS_index) <> 0.U.asTypeOf(new RS_entry(parameters))
+        reservation_station(port2_RS_index) <> 0.U.asTypeOf(new RS_entry(coreParameters))
     }
 
 
     if(coreConfig.contains("M")){
         when(schedulable_instructions(port3_RS_index) && port3_valid){
             reservation_station(port3_RS_index).valid := 0.B
-            reservation_station(port3_RS_index) <> 0.U.asTypeOf(new RS_entry(parameters))
+            reservation_station(port3_RS_index) <> 0.U.asTypeOf(new RS_entry(coreParameters))
         }
     }
 
@@ -296,7 +296,7 @@ class RS(parameters:Parameters) extends Module{
     
     val availalbe_RS_entries = PopCount(~Cat(reservation_station.map(_.valid)))
     
-    for (i <- 0 until dispatchWidth){
+    for (i <- 0 until fetchWidth){
         io.backend_packet(i).ready := availalbe_RS_entries >= fetchWidth.U
     }
 

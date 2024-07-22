@@ -28,7 +28,7 @@
                   "attributes": {
                     "src": "Queue1_FTQ_entry.sv:79.27-79.32"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "Y_WIDTH": "00000000000000000000000000000001"
@@ -39,7 +39,7 @@
                   "attributes": {
                     "src": "Queue1_FTQ_entry.sv:79.25-79.48"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "Y_WIDTH": "00000000000000000000000000000001"
@@ -72,7 +72,7 @@
                   "attributes": {
                     "src": "Queue1_FTQ_entry.sv:78.33-78.52"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -112,7 +112,7 @@
                   "attributes": {
                     "src": "Queue1_FTQ_entry.sv:96.10-97.22"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000000001"
                   }
                 },
@@ -121,7 +121,7 @@
                   "attributes": {
                     "src": "Queue1_FTQ_entry.sv:94.5-97.22"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000000001"
                   }
                 },
@@ -130,7 +130,7 @@
                   "attributes": {
                     "src": "Queue1_FTQ_entry.sv:126.30-126.63"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000000001"
                   }
                 },
@@ -139,7 +139,7 @@
                   "attributes": {
                     "src": "Queue1_FTQ_entry.sv:128.41-128.86"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000000001"
                   }
                 },
@@ -148,7 +148,7 @@
                   "attributes": {
                     "src": "Queue1_FTQ_entry.sv:130.29-130.62"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000000001"
                   }
                 },
@@ -157,7 +157,7 @@
                   "attributes": {
                     "src": "Queue1_FTQ_entry.sv:81.5-93.29"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000010000110"
                   }
                 },
@@ -166,7 +166,7 @@
                   "attributes": {
                     "src": "Queue1_FTQ_entry.sv:127.33-127.72"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000100000"
                   }
                 },
@@ -175,7 +175,7 @@
                   "attributes": {
                     "src": "Queue1_FTQ_entry.sv:129.37-129.81"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000100000"
                   }
                 },
@@ -184,7 +184,7 @@
                   "attributes": {
                     "src": "Queue1_FTQ_entry.sv:131.32-131.71"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000000011"
                   }
                 },
@@ -193,7 +193,7 @@
                   "attributes": {
                     "src": "Queue1_FTQ_entry.sv:132.28-132.63"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000010000"
                   }
                 },
@@ -202,7 +202,7 @@
                   "attributes": {
                     "src": "Queue1_FTQ_entry.sv:133.29-133.65"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000000111"
                   }
                 },
@@ -211,7 +211,7 @@
                   "attributes": {
                     "src": "Queue1_FTQ_entry.sv:134.28-134.63"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000000111"
                   }
                 },
@@ -220,7 +220,7 @@
                   "attributes": {
                     "src": "Queue1_FTQ_entry.sv:135.39-135.87"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000000010"
                   }
                 },
@@ -229,7 +229,7 @@
                   "attributes": {
                     "src": "Queue1_FTQ_entry.sv:136.36-136.81"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000100000"
                   }
                 }
@@ -260,7 +260,7 @@
                   "attributes": {
                     "src": "Queue1_FTQ_entry.sv:96.15-96.65"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -295,7 +295,7 @@
                   "attributes": {
                     "src": "Queue1_FTQ_entry.sv:79.25-79.56"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -308,7 +308,7 @@
                   "attributes": {
                     "src": "Queue1_FTQ_entry.sv:79.25-79.71"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -321,7 +321,7 @@
                   "attributes": {
                     "src": "Queue1_FTQ_entry.sv:96.27-96.46"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -334,7 +334,7 @@
                   "attributes": {
                     "src": "Queue1_FTQ_entry.sv:96.26-96.64"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -347,7 +347,7 @@
                   "attributes": {
                     "src": "Queue1_FTQ_entry.sv:79.26-79.48"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -382,7 +382,7 @@
                   "attributes": {
                     "src": "Queue1_FTQ_entry.sv:80.10-98.6"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "CLK_POLARITY": "00000000000000000000000000000001",
                     "WIDTH": "00000000000000000000000000000001"
                   }
@@ -392,7 +392,7 @@
                   "attributes": {
                     "src": "Queue1_FTQ_entry.sv:80.10-98.6"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "CLK_POLARITY": "00000000000000000000000000000001",
                     "WIDTH": "00000000000000000000000010000110"
                   }
@@ -429,7 +429,7 @@
                   "attributes": {
                     "src": "Queue1_fetch_packet.sv:91.27-91.32"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "Y_WIDTH": "00000000000000000000000000000001"
@@ -440,7 +440,7 @@
                   "attributes": {
                     "src": "Queue1_fetch_packet.sv:91.25-91.48"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "Y_WIDTH": "00000000000000000000000000000001"
@@ -473,7 +473,7 @@
                   "attributes": {
                     "src": "Queue1_fetch_packet.sv:90.33-90.52"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -513,7 +513,7 @@
                   "attributes": {
                     "src": "Queue1_fetch_packet.sv:114.10-115.22"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000000001"
                   }
                 },
@@ -522,7 +522,7 @@
                   "attributes": {
                     "src": "Queue1_fetch_packet.sv:112.5-115.22"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000000001"
                   }
                 },
@@ -531,7 +531,7 @@
                   "attributes": {
                     "src": "Queue1_fetch_packet.sv:147.37-147.78"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000000001"
                   }
                 },
@@ -540,7 +540,7 @@
                   "attributes": {
                     "src": "Queue1_fetch_packet.sv:148.37-148.78"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000000001"
                   }
                 },
@@ -549,7 +549,7 @@
                   "attributes": {
                     "src": "Queue1_fetch_packet.sv:149.37-149.78"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000000001"
                   }
                 },
@@ -558,7 +558,7 @@
                   "attributes": {
                     "src": "Queue1_fetch_packet.sv:150.37-150.78"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000000001"
                   }
                 },
@@ -567,7 +567,7 @@
                   "attributes": {
                     "src": "Queue1_fetch_packet.sv:93.5-111.32"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000011001100"
                   }
                 },
@@ -576,7 +576,7 @@
                   "attributes": {
                     "src": "Queue1_fetch_packet.sv:146.33-146.72"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000100000"
                   }
                 },
@@ -585,7 +585,7 @@
                   "attributes": {
                     "src": "Queue1_fetch_packet.sv:152.5-152.63"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000100000"
                   }
                 },
@@ -594,7 +594,7 @@
                   "attributes": {
                     "src": "Queue1_fetch_packet.sv:154.5-154.64"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000000100"
                   }
                 },
@@ -603,7 +603,7 @@
                   "attributes": {
                     "src": "Queue1_fetch_packet.sv:156.5-156.61"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000000110"
                   }
                 },
@@ -612,7 +612,7 @@
                   "attributes": {
                     "src": "Queue1_fetch_packet.sv:158.5-158.64"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000100000"
                   }
                 },
@@ -621,7 +621,7 @@
                   "attributes": {
                     "src": "Queue1_fetch_packet.sv:160.5-160.66"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000000100"
                   }
                 },
@@ -630,7 +630,7 @@
                   "attributes": {
                     "src": "Queue1_fetch_packet.sv:162.5-162.63"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000000110"
                   }
                 },
@@ -639,7 +639,7 @@
                   "attributes": {
                     "src": "Queue1_fetch_packet.sv:164.5-164.65"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000100000"
                   }
                 },
@@ -648,7 +648,7 @@
                   "attributes": {
                     "src": "Queue1_fetch_packet.sv:166.5-166.66"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000000100"
                   }
                 },
@@ -657,7 +657,7 @@
                   "attributes": {
                     "src": "Queue1_fetch_packet.sv:168.5-168.63"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000000110"
                   }
                 },
@@ -666,7 +666,7 @@
                   "attributes": {
                     "src": "Queue1_fetch_packet.sv:170.5-170.65"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000100000"
                   }
                 },
@@ -675,7 +675,7 @@
                   "attributes": {
                     "src": "Queue1_fetch_packet.sv:172.5-172.66"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000000100"
                   }
                 },
@@ -684,7 +684,7 @@
                   "attributes": {
                     "src": "Queue1_fetch_packet.sv:174.5-174.63"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000000110"
                   }
                 }
@@ -715,7 +715,7 @@
                   "attributes": {
                     "src": "Queue1_fetch_packet.sv:114.15-114.65"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -750,7 +750,7 @@
                   "attributes": {
                     "src": "Queue1_fetch_packet.sv:91.25-91.56"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -763,7 +763,7 @@
                   "attributes": {
                     "src": "Queue1_fetch_packet.sv:91.25-91.71"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -776,7 +776,7 @@
                   "attributes": {
                     "src": "Queue1_fetch_packet.sv:114.27-114.46"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -789,7 +789,7 @@
                   "attributes": {
                     "src": "Queue1_fetch_packet.sv:114.26-114.64"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -802,7 +802,7 @@
                   "attributes": {
                     "src": "Queue1_fetch_packet.sv:91.26-91.48"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -837,7 +837,7 @@
                   "attributes": {
                     "src": "Queue1_fetch_packet.sv:92.10-116.6"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "CLK_POLARITY": "00000000000000000000000000000001",
                     "WIDTH": "00000000000000000000000000000001"
                   }
@@ -847,7 +847,7 @@
                   "attributes": {
                     "src": "Queue1_fetch_packet.sv:92.10-116.6"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "CLK_POLARITY": "00000000000000000000000000000001",
                     "WIDTH": "00000000000000000000000011001100"
                   }
@@ -889,7 +889,7 @@
                   "attributes": {
                     "src": "predecoder.sv:281.27-281.76"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000011",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -924,7 +924,7 @@
                   "attributes": {
                     "src": "predecoder.sv:531.19-531.68"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000100000",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1079,7 +1079,7 @@
                   "attributes": {
                     "src": "predecoder.sv:423.20-456.4"
                   },
-                  "parameters": {
+                  "coreParameters": {
 
                   }
                 }
@@ -1105,7 +1105,7 @@
                   "attributes": {
                     "src": "predecoder.sv:236.44-236.51"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "Y_WIDTH": "00000000000000000000000000000001"
@@ -1116,7 +1116,7 @@
                   "attributes": {
                     "src": "predecoder.sv:270.35-270.42"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "Y_WIDTH": "00000000000000000000000000000001"
@@ -1127,7 +1127,7 @@
                   "attributes": {
                     "src": "predecoder.sv:284.75-284.84"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "Y_WIDTH": "00000000000000000000000000000001"
@@ -1138,7 +1138,7 @@
                   "attributes": {
                     "src": "predecoder.sv:365.67-365.74"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "Y_WIDTH": "00000000000000000000000000000001"
@@ -1351,7 +1351,7 @@
                   "attributes": {
                     "src": "predecoder.sv:457.23-529.4"
                   },
-                  "parameters": {
+                  "coreParameters": {
 
                   }
                 }
@@ -1382,7 +1382,7 @@
                   "attributes": {
                     "src": "predecoder.sv:216.9-216.80"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1395,7 +1395,7 @@
                   "attributes": {
                     "src": "predecoder.sv:216.9-217.73"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1408,7 +1408,7 @@
                   "attributes": {
                     "src": "predecoder.sv:219.13-219.84"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1421,7 +1421,7 @@
                   "attributes": {
                     "src": "predecoder.sv:148.5-149.40"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1434,7 +1434,7 @@
                   "attributes": {
                     "src": "predecoder.sv:219.13-220.77"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1447,7 +1447,7 @@
                   "attributes": {
                     "src": "predecoder.sv:222.17-222.88"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1460,7 +1460,7 @@
                   "attributes": {
                     "src": "predecoder.sv:222.17-223.81"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1473,7 +1473,7 @@
                   "attributes": {
                     "src": "predecoder.sv:224.17-224.35"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1486,7 +1486,7 @@
                   "attributes": {
                     "src": "predecoder.sv:224.17-225.80"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1499,7 +1499,7 @@
                   "attributes": {
                     "src": "predecoder.sv:224.17-226.81"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1512,7 +1512,7 @@
                   "attributes": {
                     "src": "predecoder.sv:148.5-149.64"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1525,7 +1525,7 @@
                   "attributes": {
                     "src": "predecoder.sv:229.9-229.37"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1538,7 +1538,7 @@
                   "attributes": {
                     "src": "predecoder.sv:229.40-229.67"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1551,7 +1551,7 @@
                   "attributes": {
                     "src": "predecoder.sv:231.13-231.41"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1564,7 +1564,7 @@
                   "attributes": {
                     "src": "predecoder.sv:231.44-231.71"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1577,7 +1577,7 @@
                   "attributes": {
                     "src": "predecoder.sv:233.17-233.44"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1590,7 +1590,7 @@
                   "attributes": {
                     "src": "predecoder.sv:233.47-233.73"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1603,7 +1603,7 @@
                   "attributes": {
                     "src": "predecoder.sv:234.29-234.56"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1616,7 +1616,7 @@
                   "attributes": {
                     "src": "predecoder.sv:234.59-234.85"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1629,7 +1629,7 @@
                   "attributes": {
                     "src": "predecoder.sv:234.17-234.86"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1642,7 +1642,7 @@
                   "attributes": {
                     "src": "predecoder.sv:151.5-152.40"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1655,7 +1655,7 @@
                   "attributes": {
                     "src": "predecoder.sv:151.5-152.64"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1668,7 +1668,7 @@
                   "attributes": {
                     "src": "predecoder.sv:277.13-277.45"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1681,7 +1681,7 @@
                   "attributes": {
                     "src": "predecoder.sv:277.13-277.67"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1694,7 +1694,7 @@
                   "attributes": {
                     "src": "predecoder.sv:277.70-278.37"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1707,7 +1707,7 @@
                   "attributes": {
                     "src": "predecoder.sv:277.70-278.59"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1720,7 +1720,7 @@
                   "attributes": {
                     "src": "predecoder.sv:156.5-156.39"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1733,7 +1733,7 @@
                   "attributes": {
                     "src": "predecoder.sv:284.5-284.50"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1746,7 +1746,7 @@
                   "attributes": {
                     "src": "predecoder.sv:284.5-284.72"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1759,7 +1759,7 @@
                   "attributes": {
                     "src": "predecoder.sv:284.5-284.84"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1772,7 +1772,7 @@
                   "attributes": {
                     "src": "predecoder.sv:156.5-156.65"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1785,7 +1785,7 @@
                   "attributes": {
                     "src": "predecoder.sv:286.5-286.68"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1798,7 +1798,7 @@
                   "attributes": {
                     "src": "predecoder.sv:316.34-316.84"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1811,7 +1811,7 @@
                   "attributes": {
                     "src": "predecoder.sv:325.11-325.60"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1824,7 +1824,7 @@
                   "attributes": {
                     "src": "predecoder.sv:362.7-362.64"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1837,7 +1837,7 @@
                   "attributes": {
                     "src": "predecoder.sv:365.7-365.64"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1850,7 +1850,7 @@
                   "attributes": {
                     "src": "predecoder.sv:365.7-365.74"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1863,7 +1863,7 @@
                   "attributes": {
                     "src": "predecoder.sv:368.7-368.64"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1876,7 +1876,7 @@
                   "attributes": {
                     "src": "predecoder.sv:368.7-368.90"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1889,7 +1889,7 @@
                   "attributes": {
                     "src": "predecoder.sv:371.7-371.64"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1902,7 +1902,7 @@
                   "attributes": {
                     "src": "predecoder.sv:371.7-372.31"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1915,7 +1915,7 @@
                   "attributes": {
                     "src": "predecoder.sv:160.5-161.40"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1928,7 +1928,7 @@
                   "attributes": {
                     "src": "predecoder.sv:160.5-161.64"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1941,7 +1941,7 @@
                   "attributes": {
                     "src": "predecoder.sv:427.8-427.78"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1954,7 +1954,7 @@
                   "attributes": {
                     "src": "predecoder.sv:463.8-464.52"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1967,7 +1967,7 @@
                   "attributes": {
                     "src": "predecoder.sv:466.8-467.52"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1980,7 +1980,7 @@
                   "attributes": {
                     "src": "predecoder.sv:469.8-470.52"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1993,7 +1993,7 @@
                   "attributes": {
                     "src": "predecoder.sv:472.8-473.52"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -2006,7 +2006,7 @@
                   "attributes": {
                     "src": "predecoder.sv:531.5-531.68"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -2019,7 +2019,7 @@
                   "attributes": {
                     "src": "predecoder.sv:163.5-164.40"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -2032,7 +2032,7 @@
                   "attributes": {
                     "src": "predecoder.sv:537.31-537.65"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -2045,7 +2045,7 @@
                   "attributes": {
                     "src": "predecoder.sv:538.30-538.63"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -2058,7 +2058,7 @@
                   "attributes": {
                     "src": "predecoder.sv:163.5-164.64"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -2071,7 +2071,7 @@
                   "attributes": {
                     "src": "predecoder.sv:166.5-167.40"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -2084,7 +2084,7 @@
                   "attributes": {
                     "src": "predecoder.sv:166.5-167.64"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -2097,7 +2097,7 @@
                   "attributes": {
                     "src": "predecoder.sv:143.40-143.84"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -2110,7 +2110,7 @@
                   "attributes": {
                     "src": "predecoder.sv:171.5-171.41"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -2123,7 +2123,7 @@
                   "attributes": {
                     "src": "predecoder.sv:171.5-171.67"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -2136,7 +2136,7 @@
                   "attributes": {
                     "src": "predecoder.sv:175.5-176.40"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -2149,7 +2149,7 @@
                   "attributes": {
                     "src": "predecoder.sv:175.5-176.64"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -2162,7 +2162,7 @@
                   "attributes": {
                     "src": "predecoder.sv:178.5-179.40"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -2175,7 +2175,7 @@
                   "attributes": {
                     "src": "predecoder.sv:178.5-179.64"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -2188,7 +2188,7 @@
                   "attributes": {
                     "src": "predecoder.sv:181.5-182.40"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -2201,7 +2201,7 @@
                   "attributes": {
                     "src": "predecoder.sv:181.5-182.64"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -2214,7 +2214,7 @@
                   "attributes": {
                     "src": "predecoder.sv:186.5-186.41"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -2227,7 +2227,7 @@
                   "attributes": {
                     "src": "predecoder.sv:186.5-186.67"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -2240,7 +2240,7 @@
                   "attributes": {
                     "src": "predecoder.sv:145.5-146.40"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -2253,7 +2253,7 @@
                   "attributes": {
                     "src": "predecoder.sv:189.5-190.40"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -2266,7 +2266,7 @@
                   "attributes": {
                     "src": "predecoder.sv:189.5-190.64"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -2279,7 +2279,7 @@
                   "attributes": {
                     "src": "predecoder.sv:192.5-193.40"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -2292,7 +2292,7 @@
                   "attributes": {
                     "src": "predecoder.sv:192.5-193.64"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -2305,7 +2305,7 @@
                   "attributes": {
                     "src": "predecoder.sv:195.5-196.40"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -2318,7 +2318,7 @@
                   "attributes": {
                     "src": "predecoder.sv:195.5-196.64"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -2331,7 +2331,7 @@
                   "attributes": {
                     "src": "predecoder.sv:145.5-146.64"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -2344,7 +2344,7 @@
                   "attributes": {
                     "src": "predecoder.sv:200.5-200.41"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -2357,7 +2357,7 @@
                   "attributes": {
                     "src": "predecoder.sv:200.5-200.67"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -2370,7 +2370,7 @@
                   "attributes": {
                     "src": "predecoder.sv:205.59-205.81"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -2383,7 +2383,7 @@
                   "attributes": {
                     "src": "predecoder.sv:209.61-209.84"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -2396,7 +2396,7 @@
                   "attributes": {
                     "src": "predecoder.sv:213.65-213.90"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -2436,7 +2436,7 @@
                   "attributes": {
                     "src": "predecoder.sv:213.9-213.90"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000000001"
                   }
                 },
@@ -2445,7 +2445,7 @@
                   "attributes": {
                     "src": "predecoder.sv:211.5-213.90"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000000001"
                   }
                 },
@@ -2454,7 +2454,7 @@
                   "attributes": {
                     "src": "predecoder.sv:221.13-226.81"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000000001"
                   }
                 },
@@ -2463,7 +2463,7 @@
                   "attributes": {
                     "src": "predecoder.sv:218.9-226.81"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000000001"
                   }
                 },
@@ -2472,7 +2472,7 @@
                   "attributes": {
                     "src": "predecoder.sv:215.5-226.81"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000000001"
                   }
                 },
@@ -2481,7 +2481,7 @@
                   "attributes": {
                     "src": "predecoder.sv:232.13-234.86"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000000001"
                   }
                 },
@@ -2490,7 +2490,7 @@
                   "attributes": {
                     "src": "predecoder.sv:230.9-234.86"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000000001"
                   }
                 },
@@ -2499,7 +2499,7 @@
                   "attributes": {
                     "src": "predecoder.sv:228.5-234.86"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000000001"
                   }
                 },
@@ -2508,7 +2508,7 @@
                   "attributes": {
                     "src": "predecoder.sv:205.34-205.81"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000000001"
                   }
                 },
@@ -2517,7 +2517,7 @@
                   "attributes": {
                     "src": "predecoder.sv:205.9-205.81"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000000001"
                   }
                 },
@@ -2526,7 +2526,7 @@
                   "attributes": {
                     "src": "predecoder.sv:203.5-205.81"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000000001"
                   }
                 },
@@ -2535,7 +2535,7 @@
                   "attributes": {
                     "src": "predecoder.sv:209.35-209.84"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000000001"
                   }
                 },
@@ -2544,7 +2544,7 @@
                   "attributes": {
                     "src": "predecoder.sv:209.9-209.84"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000000001"
                   }
                 },
@@ -2553,7 +2553,7 @@
                   "attributes": {
                     "src": "predecoder.sv:207.5-209.84"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000000001"
                   }
                 },
@@ -2562,7 +2562,7 @@
                   "attributes": {
                     "src": "predecoder.sv:213.37-213.90"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000000001"
                   }
                 },
@@ -2571,7 +2571,7 @@
                   "attributes": {
                     "src": "predecoder.sv:236.21-236.52"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000000010"
                   }
                 },
@@ -2580,7 +2580,7 @@
                   "attributes": {
                     "src": "predecoder.sv:236.5-236.52"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000000010"
                   }
                 },
@@ -2589,7 +2589,7 @@
                   "attributes": {
                     "src": "predecoder.sv:265.21-269.30"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000010101"
                   }
                 },
@@ -2598,7 +2598,7 @@
                   "attributes": {
                     "src": "predecoder.sv:261.17-269.30"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000010101"
                   }
                 },
@@ -2607,7 +2607,7 @@
                   "attributes": {
                     "src": "predecoder.sv:257.13-269.30"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000010101"
                   }
                 },
@@ -2616,7 +2616,7 @@
                   "attributes": {
                     "src": "predecoder.sv:251.9-269.30"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000010101"
                   }
                 },
@@ -2625,7 +2625,7 @@
                   "attributes": {
                     "src": "predecoder.sv:245.5-269.30"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000010101"
                   }
                 },
@@ -2634,7 +2634,7 @@
                   "attributes": {
                     "src": "predecoder.sv:270.26-270.81"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000100000"
                   }
                 },
@@ -2643,7 +2643,7 @@
                   "attributes": {
                     "src": "predecoder.sv:277.13-281.83"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000100000"
                   }
                 },
@@ -2652,7 +2652,7 @@
                   "attributes": {
                     "src": "predecoder.sv:275.9-281.83"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000100000"
                   }
                 },
@@ -2661,7 +2661,7 @@
                   "attributes": {
                     "src": "predecoder.sv:273.5-281.83"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000100000"
                   }
                 },
@@ -2670,7 +2670,7 @@
                   "attributes": {
                     "src": "predecoder.sv:327.12-328.44"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000100000"
                   }
                 },
@@ -2679,7 +2679,7 @@
                   "attributes": {
                     "src": "predecoder.sv:325.7-328.44"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000100000"
                   }
                 },
@@ -2688,7 +2688,7 @@
                   "attributes": {
                     "src": "predecoder.sv:331.12-332.23"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000010000"
                   }
                 },
@@ -2697,7 +2697,7 @@
                   "attributes": {
                     "src": "predecoder.sv:329.7-332.23"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000010000"
                   }
                 },
@@ -2706,7 +2706,7 @@
                   "attributes": {
                     "src": "predecoder.sv:320.5-333.8"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000100000"
                   }
                 },
@@ -2715,7 +2715,7 @@
                   "attributes": {
                     "src": "predecoder.sv:320.5-333.8"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000010000"
                   }
                 },
@@ -2724,7 +2724,7 @@
                   "attributes": {
                     "src": "predecoder.sv:432.8-432.87"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000100000"
                   }
                 },
@@ -2733,7 +2733,7 @@
                   "attributes": {
                     "src": "predecoder.sv:437.45-437.82"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000000010"
                   }
                 },
@@ -2742,7 +2742,7 @@
                   "attributes": {
                     "src": "predecoder.sv:437.28-437.82"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000000011"
                   }
                 },
@@ -2751,7 +2751,7 @@
                   "attributes": {
                     "src": "predecoder.sv:437.12-437.82"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000000011"
                   }
                 },
@@ -2760,7 +2760,7 @@
                   "attributes": {
                     "src": "predecoder.sv:435.8-437.82"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000000011"
                   }
                 }
@@ -2791,7 +2791,7 @@
                   "attributes": {
                     "src": "predecoder.sv:229.9-229.67"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -2804,7 +2804,7 @@
                   "attributes": {
                     "src": "predecoder.sv:231.13-231.71"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -2817,7 +2817,7 @@
                   "attributes": {
                     "src": "predecoder.sv:233.17-233.73"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -2830,7 +2830,7 @@
                   "attributes": {
                     "src": "predecoder.sv:234.28-234.86"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -2843,7 +2843,7 @@
                   "attributes": {
                     "src": "predecoder.sv:257.13-258.55"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -2856,7 +2856,7 @@
                   "attributes": {
                     "src": "predecoder.sv:257.13-259.56"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -2869,7 +2869,7 @@
                   "attributes": {
                     "src": "predecoder.sv:265.21-266.64"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -2882,7 +2882,7 @@
                   "attributes": {
                     "src": "predecoder.sv:270.26-270.42"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -2895,7 +2895,7 @@
                   "attributes": {
                     "src": "predecoder.sv:277.13-278.59"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -2908,7 +2908,7 @@
                   "attributes": {
                     "src": "predecoder.sv:290.5-290.37"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -2921,7 +2921,7 @@
                   "attributes": {
                     "src": "predecoder.sv:290.5-290.54"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -2934,7 +2934,7 @@
                   "attributes": {
                     "src": "predecoder.sv:290.5-290.73"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -2947,7 +2947,7 @@
                   "attributes": {
                     "src": "predecoder.sv:290.5-290.89"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -2960,7 +2960,7 @@
                   "attributes": {
                     "src": "predecoder.sv:290.5-291.21"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -2973,7 +2973,7 @@
                   "attributes": {
                     "src": "predecoder.sv:292.29-292.55"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -2986,7 +2986,7 @@
                   "attributes": {
                     "src": "predecoder.sv:156.5-156.80"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -2999,7 +2999,7 @@
                   "attributes": {
                     "src": "predecoder.sv:292.29-292.70"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -3012,7 +3012,7 @@
                   "attributes": {
                     "src": "predecoder.sv:293.41-293.56"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -3025,7 +3025,7 @@
                   "attributes": {
                     "src": "predecoder.sv:293.41-293.65"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -3038,7 +3038,7 @@
                   "attributes": {
                     "src": "predecoder.sv:293.41-293.76"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -3051,7 +3051,7 @@
                   "attributes": {
                     "src": "predecoder.sv:156.5-157.18"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -3064,7 +3064,7 @@
                   "attributes": {
                     "src": "predecoder.sv:158.35-158.63"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -3077,7 +3077,7 @@
                   "attributes": {
                     "src": "predecoder.sv:158.35-158.78"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -3090,7 +3090,7 @@
                   "attributes": {
                     "src": "predecoder.sv:171.5-171.84"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -3103,7 +3103,7 @@
                   "attributes": {
                     "src": "predecoder.sv:171.5-172.20"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -3116,7 +3116,7 @@
                   "attributes": {
                     "src": "predecoder.sv:173.35-173.67"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -3129,7 +3129,7 @@
                   "attributes": {
                     "src": "predecoder.sv:173.35-173.84"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -3142,7 +3142,7 @@
                   "attributes": {
                     "src": "predecoder.sv:186.5-186.84"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -3155,7 +3155,7 @@
                   "attributes": {
                     "src": "predecoder.sv:186.5-187.20"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -3168,7 +3168,7 @@
                   "attributes": {
                     "src": "predecoder.sv:200.5-200.84"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -3181,7 +3181,7 @@
                   "attributes": {
                     "src": "predecoder.sv:200.5-201.20"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -3216,7 +3216,7 @@
                   "attributes": {
                     "src": "predecoder.sv:217.11-217.73"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000101",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -3229,7 +3229,7 @@
                   "attributes": {
                     "src": "predecoder.sv:220.15-220.77"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000101",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -3242,7 +3242,7 @@
                   "attributes": {
                     "src": "predecoder.sv:223.19-223.81"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000101",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -3255,7 +3255,7 @@
                   "attributes": {
                     "src": "predecoder.sv:226.19-226.81"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000101",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -3268,7 +3268,7 @@
                   "attributes": {
                     "src": "predecoder.sv:151.5-151.66"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000101",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -3281,7 +3281,7 @@
                   "attributes": {
                     "src": "predecoder.sv:245.5-245.46"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000111",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -3294,7 +3294,7 @@
                   "attributes": {
                     "src": "predecoder.sv:251.9-251.50"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000111",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -3307,7 +3307,7 @@
                   "attributes": {
                     "src": "predecoder.sv:257.13-257.54"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000111",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -3320,7 +3320,7 @@
                   "attributes": {
                     "src": "predecoder.sv:258.15-258.55"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000111",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -3333,7 +3333,7 @@
                   "attributes": {
                     "src": "predecoder.sv:259.15-259.56"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000111",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -3346,7 +3346,7 @@
                   "attributes": {
                     "src": "predecoder.sv:154.5-154.66"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000101",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -3359,7 +3359,7 @@
                   "attributes": {
                     "src": "predecoder.sv:261.17-261.58"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000111",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -3372,7 +3372,7 @@
                   "attributes": {
                     "src": "predecoder.sv:265.21-265.62"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000111",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -3385,7 +3385,7 @@
                   "attributes": {
                     "src": "predecoder.sv:266.23-266.64"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000111",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -3398,7 +3398,7 @@
                   "attributes": {
                     "src": "predecoder.sv:286.19-286.68"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000100000",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -3411,7 +3411,7 @@
                   "attributes": {
                     "src": "predecoder.sv:160.5-160.66"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000101",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -3424,7 +3424,7 @@
                   "attributes": {
                     "src": "predecoder.sv:163.5-163.66"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000101",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -3437,7 +3437,7 @@
                   "attributes": {
                     "src": "predecoder.sv:166.5-166.66"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000101",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -3450,7 +3450,7 @@
                   "attributes": {
                     "src": "predecoder.sv:169.5-169.66"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000101",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -3463,7 +3463,7 @@
                   "attributes": {
                     "src": "predecoder.sv:175.5-175.66"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000101",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -3476,7 +3476,7 @@
                   "attributes": {
                     "src": "predecoder.sv:145.5-145.66"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000101",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -3489,7 +3489,7 @@
                   "attributes": {
                     "src": "predecoder.sv:178.5-178.66"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000101",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -3502,7 +3502,7 @@
                   "attributes": {
                     "src": "predecoder.sv:181.5-181.66"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000101",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -3515,7 +3515,7 @@
                   "attributes": {
                     "src": "predecoder.sv:184.5-184.66"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000101",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -3528,7 +3528,7 @@
                   "attributes": {
                     "src": "predecoder.sv:189.5-189.66"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000101",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -3541,7 +3541,7 @@
                   "attributes": {
                     "src": "predecoder.sv:192.5-192.66"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000101",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -3554,7 +3554,7 @@
                   "attributes": {
                     "src": "predecoder.sv:195.5-195.66"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000101",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -3567,7 +3567,7 @@
                   "attributes": {
                     "src": "predecoder.sv:198.5-198.66"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000101",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -3580,7 +3580,7 @@
                   "attributes": {
                     "src": "predecoder.sv:148.5-148.66"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000101",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -3610,7 +3610,7 @@
                   "attributes": {
                     "src": "predecoder.sv:216.19-216.80"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000101",
                     "Y_WIDTH": "00000000000000000000000000000001"
@@ -3621,7 +3621,7 @@
                   "attributes": {
                     "src": "predecoder.sv:219.23-219.84"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000101",
                     "Y_WIDTH": "00000000000000000000000000000001"
@@ -3632,7 +3632,7 @@
                   "attributes": {
                     "src": "predecoder.sv:222.27-222.88"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000101",
                     "Y_WIDTH": "00000000000000000000000000000001"
@@ -3643,7 +3643,7 @@
                   "attributes": {
                     "src": "predecoder.sv:225.19-225.80"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000101",
                     "Y_WIDTH": "00000000000000000000000000000001"
@@ -3654,7 +3654,7 @@
                   "attributes": {
                     "src": "predecoder.sv:368.67-368.90"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000010",
                     "Y_WIDTH": "00000000000000000000000000000001"
@@ -3665,7 +3665,7 @@
                   "attributes": {
                     "src": "predecoder.sv:371.67-372.31"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000010",
                     "Y_WIDTH": "00000000000000000000000000000001"
@@ -3698,7 +3698,7 @@
                   "attributes": {
                     "src": "predecoder.sv:276.13-276.30"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000100000",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -3711,7 +3711,7 @@
                   "attributes": {
                     "src": "predecoder.sv:276.13-276.39"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000100000",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -3724,7 +3724,7 @@
                   "attributes": {
                     "src": "predecoder.sv:280.17-281.83"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000011110",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -3737,7 +3737,7 @@
                   "attributes": {
                     "src": "predecoder.sv:368.67-368.82"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -3750,7 +3750,7 @@
                   "attributes": {
                     "src": "predecoder.sv:371.67-372.23"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000010",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -3763,7 +3763,7 @@
                   "attributes": {
                     "src": "predecoder.sv:432.49-432.87"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000011100",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -3776,7 +3776,7 @@
                   "attributes": {
                     "src": "predecoder.sv:536.36-536.56"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000100000",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -3789,7 +3789,7 @@
                   "attributes": {
                     "src": "predecoder.sv:536.36-536.64"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000011110",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -3824,7 +3824,7 @@
                   "attributes": {
                     "src": "predecoder.sv:243.37-243.58"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "S_WIDTH": "00000000000000000000000000000010",
                     "WIDTH": "00000000000000000000000000000001"
                   }
@@ -3834,7 +3834,7 @@
                   "attributes": {
                     "src": "predecoder.sv:245.10-245.31"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "S_WIDTH": "00000000000000000000000000000010",
                     "WIDTH": "00000000000000000000000000000111"
                   }
@@ -3844,7 +3844,7 @@
                   "attributes": {
                     "src": "predecoder.sv:260.31-260.52"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "S_WIDTH": "00000000000000000000000000000010",
                     "WIDTH": "00000000000000000000000000001100"
                   }
@@ -3854,7 +3854,7 @@
                   "attributes": {
                     "src": "predecoder.sv:267.31-267.52"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "S_WIDTH": "00000000000000000000000000000010",
                     "WIDTH": "00000000000000000000000000010101"
                   }
@@ -3864,7 +3864,7 @@
                   "attributes": {
                     "src": "predecoder.sv:263.27-263.48"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "S_WIDTH": "00000000000000000000000000000010",
                     "WIDTH": "00000000000000000000000000001100"
                   }
@@ -3874,7 +3874,7 @@
                   "attributes": {
                     "src": "predecoder.sv:252.19-252.40"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "S_WIDTH": "00000000000000000000000000000010",
                     "WIDTH": "00000000000000000000000000010100"
                   }
@@ -3884,7 +3884,7 @@
                   "attributes": {
                     "src": "predecoder.sv:246.18-246.39"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "S_WIDTH": "00000000000000000000000000000010",
                     "WIDTH": "00000000000000000000000000001100"
                   }
@@ -3916,7 +3916,7 @@
                   "attributes": {
                     "src": "predecoder.sv:317.10-373.6"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "CLK_POLARITY": "00000000000000000000000000000001",
                     "WIDTH": "00000000000000000000000000010000"
                   }
@@ -3926,7 +3926,7 @@
                   "attributes": {
                     "src": "predecoder.sv:317.10-373.6"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "CLK_POLARITY": "00000000000000000000000000000001",
                     "WIDTH": "00000000000000000000000000100000"
                   }
@@ -3936,7 +3936,7 @@
                   "attributes": {
                     "src": "predecoder.sv:317.10-373.6"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "CLK_POLARITY": "00000000000000000000000000000001",
                     "WIDTH": "00000000000000000000000000000110"
                   }
@@ -3946,7 +3946,7 @@
                   "attributes": {
                     "src": "predecoder.sv:317.10-373.6"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "CLK_POLARITY": "00000000000000000000000000000001",
                     "WIDTH": "00000000000000000000000000100000"
                   }
@@ -3956,7 +3956,7 @@
                   "attributes": {
                     "src": "predecoder.sv:317.10-373.6"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "CLK_POLARITY": "00000000000000000000000000000001",
                     "WIDTH": "00000000000000000000000000000100"
                   }
@@ -3966,7 +3966,7 @@
                   "attributes": {
                     "src": "predecoder.sv:317.10-373.6"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "CLK_POLARITY": "00000000000000000000000000000001",
                     "WIDTH": "00000000000000000000000000000110"
                   }
@@ -3976,7 +3976,7 @@
                   "attributes": {
                     "src": "predecoder.sv:317.10-373.6"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "CLK_POLARITY": "00000000000000000000000000000001",
                     "WIDTH": "00000000000000000000000000100000"
                   }
@@ -3986,7 +3986,7 @@
                   "attributes": {
                     "src": "predecoder.sv:317.10-373.6"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "CLK_POLARITY": "00000000000000000000000000000001",
                     "WIDTH": "00000000000000000000000000000100"
                   }
@@ -3996,7 +3996,7 @@
                   "attributes": {
                     "src": "predecoder.sv:317.10-373.6"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "CLK_POLARITY": "00000000000000000000000000000001",
                     "WIDTH": "00000000000000000000000000000110"
                   }
@@ -4006,7 +4006,7 @@
                   "attributes": {
                     "src": "predecoder.sv:317.10-373.6"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "CLK_POLARITY": "00000000000000000000000000000001",
                     "WIDTH": "00000000000000000000000000100000"
                   }
@@ -4016,7 +4016,7 @@
                   "attributes": {
                     "src": "predecoder.sv:317.10-373.6"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "CLK_POLARITY": "00000000000000000000000000000001",
                     "WIDTH": "00000000000000000000000000000100"
                   }
@@ -4026,7 +4026,7 @@
                   "attributes": {
                     "src": "predecoder.sv:317.10-373.6"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "CLK_POLARITY": "00000000000000000000000000000001",
                     "WIDTH": "00000000000000000000000000000110"
                   }
@@ -4036,7 +4036,7 @@
                   "attributes": {
                     "src": "predecoder.sv:317.10-373.6"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "CLK_POLARITY": "00000000000000000000000000000001",
                     "WIDTH": "00000000000000000000000000100000"
                   }
@@ -4046,7 +4046,7 @@
                   "attributes": {
                     "src": "predecoder.sv:317.10-373.6"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "CLK_POLARITY": "00000000000000000000000000000001",
                     "WIDTH": "00000000000000000000000000000100"
                   }
@@ -4056,7 +4056,7 @@
                   "attributes": {
                     "src": "predecoder.sv:317.10-373.6"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "CLK_POLARITY": "00000000000000000000000000000001",
                     "WIDTH": "00000000000000000000000000100000"
                   }
@@ -4066,7 +4066,7 @@
                   "attributes": {
                     "src": "predecoder.sv:317.10-373.6"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "CLK_POLARITY": "00000000000000000000000000000001",
                     "WIDTH": "00000000000000000000000000000001"
                   }
@@ -4076,7 +4076,7 @@
                   "attributes": {
                     "src": "predecoder.sv:317.10-373.6"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "CLK_POLARITY": "00000000000000000000000000000001",
                     "WIDTH": "00000000000000000000000000000001"
                   }
@@ -4086,7 +4086,7 @@
                   "attributes": {
                     "src": "predecoder.sv:317.10-373.6"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "CLK_POLARITY": "00000000000000000000000000000001",
                     "WIDTH": "00000000000000000000000000000001"
                   }
@@ -4096,7 +4096,7 @@
                   "attributes": {
                     "src": "predecoder.sv:317.10-373.6"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "CLK_POLARITY": "00000000000000000000000000000001",
                     "WIDTH": "00000000000000000000000000000001"
                   }
@@ -4106,7 +4106,7 @@
                   "attributes": {
                     "src": "predecoder.sv:317.10-373.6"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "CLK_POLARITY": "00000000000000000000000000000001",
                     "WIDTH": "00000000000000000000000000000001"
                   }
@@ -4116,7 +4116,7 @@
                   "attributes": {
                     "src": "predecoder.sv:317.10-373.6"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "CLK_POLARITY": "00000000000000000000000000000001",
                     "WIDTH": "00000000000000000000000000000001"
                   }
@@ -4126,7 +4126,7 @@
                   "attributes": {
                     "src": "predecoder.sv:317.10-373.6"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "CLK_POLARITY": "00000000000000000000000000000001",
                     "WIDTH": "00000000000000000000000000000001"
                   }
@@ -4136,7 +4136,7 @@
                   "attributes": {
                     "src": "predecoder.sv:317.10-373.6"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "CLK_POLARITY": "00000000000000000000000000000001",
                     "WIDTH": "00000000000000000000000000000001"
                   }
@@ -4146,7 +4146,7 @@
                   "attributes": {
                     "src": "predecoder.sv:317.10-373.6"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "CLK_POLARITY": "00000000000000000000000000000001",
                     "WIDTH": "00000000000000000000000000000001"
                   }

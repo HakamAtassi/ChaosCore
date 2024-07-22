@@ -39,8 +39,8 @@ object memfuState extends ChiselEnum{
     val ACTIVE, WAIT = Value
 }
 
-class load_request(parameters:Parameters) extends Bundle{
-    import parameters._
+class load_request(coreParameters:CoreParameters) extends Bundle{
+    import coreParameters._
 
     val packet_index           = UInt(log2Ceil(fetchWidth).W)  // fetch packet index of the branch
 
@@ -55,23 +55,23 @@ class load_request(parameters:Parameters) extends Bundle{
     val LHU                    = Bool()
 }
 
-class MEMFU(parameters:Parameters) extends Module{
-    import parameters._
+class MEMFU(coreParameters:CoreParameters) extends Module{
+    import coreParameters._
     val io = IO(new Bundle{
         // Flush
         val flush                   =   Input(Bool())
 
         // Instruction Input
-        val FU_input                =   Flipped(Decoupled(new read_decoded_instruction(parameters)))
+        val FU_input                =   Flipped(Decoupled(new read_decoded_instruction(coreParameters)))
 
         // Memory Input
-        val memory_response         =   Flipped(Decoupled(new memory_response(parameters))) 
+        val memory_response         =   Flipped(Decoupled(new memory_response(coreParameters))) 
 
         // Memory Output
-        val memory_request          =   Decoupled(new memory_request(parameters))        
+        val memory_request          =   Decoupled(new memory_request(coreParameters))        
 
         // Instruction Output
-        val FU_output               =   ValidIO(new FU_output(parameters))                 
+        val FU_output               =   ValidIO(new FU_output(coreParameters))                 
     })
 
     dontTouch(io)
@@ -112,7 +112,7 @@ class MEMFU(parameters:Parameters) extends Module{
     val wr_data = Wire(UInt(32.W))
     val wr_addr = Wire(UInt(32.W))
 
-    val memory_request  = Wire(Decoupled(new memory_request(parameters)))
+    val memory_request  = Wire(Decoupled(new memory_request(coreParameters)))
     dontTouch(memory_request)
 
     wr_data := 0.U
@@ -130,7 +130,7 @@ class MEMFU(parameters:Parameters) extends Module{
     ///////////////////
     // Request Queue //
     ///////////////////
-    val memory_request_Q            = Module(new Queue(new memory_request(parameters), 16, flow=false, hasFlush=false, useSyncReadMem=true))
+    val memory_request_Q            = Module(new Queue(new memory_request(coreParameters), 16, flow=false, hasFlush=false, useSyncReadMem=true))
 
     memory_request_Q.io.enq        <> memory_request
     memory_request_Q.io.deq        <> io.memory_request
@@ -139,9 +139,9 @@ class MEMFU(parameters:Parameters) extends Module{
     ////////////////
     // LOAD QUEUE //
     ////////////////
-    val load_Q           = Module(new Queue(new load_request(parameters), 16, flow=false, hasFlush=false, useSyncReadMem=true))
-    val load_request_in  = Wire(Decoupled(new load_request(parameters)))
-    val load_request_out = Wire(Decoupled(new load_request(parameters)))
+    val load_Q           = Module(new Queue(new load_request(coreParameters), 16, flow=false, hasFlush=false, useSyncReadMem=true))
+    val load_request_in  = Wire(Decoupled(new load_request(coreParameters)))
+    val load_request_out = Wire(Decoupled(new load_request(coreParameters)))
 
     load_request_in.valid                       := is_load
 

@@ -37,13 +37,13 @@ import java.rmi.server.UID
 
 import helperFunctions._
 
-class decoder(parameters:Parameters) extends Module{   // basic decoder and field extraction
-    import parameters._
+class decoder(coreParameters:CoreParameters) extends Module{   // basic decoder and field extraction
+    import coreParameters._
     import InstructionType._
     val io = IO(new Bundle{
-        val instruction         = Flipped(Decoupled(new Instruction(parameters)))
+        val instruction         = Flipped(Decoupled(new Instruction(coreParameters)))
 
-        val decoded_instruction = Decoupled(new decoded_instruction(parameters))
+        val decoded_instruction = Decoupled(new decoded_instruction(coreParameters))
     })
 
 
@@ -124,7 +124,7 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
                                                         io.instruction.valid
 
     io.decoded_instruction.bits.RD                   := RD
-    //io.decoded_instruction.bits.RDold                := DontCare
+    io.decoded_instruction.bits.RDold                := RD
     io.decoded_instruction.bits.RS1                  := RS1
     io.decoded_instruction.bits.RS2                  := RS2
     io.decoded_instruction.bits.IMM                  := IMM
@@ -208,27 +208,27 @@ class decoder(parameters:Parameters) extends Module{   // basic decoder and fiel
 }
 
 
-class fetch_packet_decoder(parameters:Parameters) extends Module{
-    import parameters._
+class fetch_packet_decoder(coreParameters:CoreParameters) extends Module{
+    import coreParameters._
     val io = IO(new Bundle{
         // FLUSH
         val flush                =  Input(Bool())
 
-        val fetch_packet         =  Flipped(Decoupled(new fetch_packet(parameters)))          // Fetch packet result (To Decoders)
-        val predictions_in       =  Flipped(Decoupled(new FTQ_entry(parameters)))
+        val fetch_packet         =  Flipped(Decoupled(new fetch_packet(coreParameters)))          // Fetch packet result (To Decoders)
+        val predictions_in       =  Flipped(Decoupled(new FTQ_entry(coreParameters)))
 
-        val decoded_fetch_packet =  Decoupled(new decoded_fetch_packet(parameters))
-        val predictions_out      =  Decoupled(new FTQ_entry(parameters))
+        val decoded_fetch_packet =  Decoupled(new decoded_fetch_packet(coreParameters))
+        val predictions_out      =  Decoupled(new FTQ_entry(coreParameters))
     })
 
     ////////////////////
     // OUTPUT BUNDLES //
     ////////////////////
-    val decoded_fetch_packet    = Wire(Decoupled(new decoded_fetch_packet(parameters)))
-    val predictions_out         = Wire(Decoupled(new FTQ_entry(parameters)))
+    val decoded_fetch_packet    = Wire(Decoupled(new decoded_fetch_packet(coreParameters)))
+    val predictions_out         = Wire(Decoupled(new FTQ_entry(coreParameters)))
 
     val decoders: Seq[decoder] = Seq.tabulate(fetchWidth) { w =>
-        Module(new decoder(parameters))
+        Module(new decoder(coreParameters))
     }
 
     var fetch_packet_ready = 1.B
@@ -264,8 +264,8 @@ class fetch_packet_decoder(parameters:Parameters) extends Module{
 
     // decoded fetch packet skid
 
-    val decoded_fetch_packet_out_Q                      = Module(new Queue(new decoded_fetch_packet(parameters), 2, flow=false, hasFlush=true, useSyncReadMem=false))
-    val predictions_out_Q                               = Module(new Queue(new FTQ_entry(parameters), 2, flow=false, hasFlush=true, useSyncReadMem=false))
+    val decoded_fetch_packet_out_Q                      = Module(new Queue(new decoded_fetch_packet(coreParameters), 2, flow=false, hasFlush=true, useSyncReadMem=false))
+    val predictions_out_Q                               = Module(new Queue(new FTQ_entry(coreParameters), 2, flow=false, hasFlush=true, useSyncReadMem=false))
 
 
     decoded_fetch_packet.valid                          := io.fetch_packet.valid && io.predictions_in.valid && !io.flush

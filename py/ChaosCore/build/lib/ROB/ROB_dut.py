@@ -75,7 +75,7 @@ def generate_null_PC_file_inputs():
     return PC_file_inputs
 
 class ROB_dut:
-    def __init__(self, dut):    # modify as needed (parameters, etc...)
+    def __init__(self, dut):    # modify as needed (coreParameters, etc...)
         self.dut = dut
 
     def clock(self):            # Do not touch

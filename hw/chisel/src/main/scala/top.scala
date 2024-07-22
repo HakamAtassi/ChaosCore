@@ -52,12 +52,12 @@ object VerilogGenerator {
 }
 
 object Main extends App {
-    import Parameters._
 
-    val parameters = Parameters()
+    val coreParameters = CoreParameters()
     val addressMap = AddressMap()
+    val nocParameters = NOCParameters()
 
-    ChiselStage.emitSystemVerilogFile(new ChaosCore(parameters), Array("--split-verilog", 
+    ChiselStage.emitSystemVerilogFile(new ChaosCore(coreParameters), Array("--split-verilog", 
                                                                         "--target", "verilog", 
                                                                         "--target-dir", "../verilog", 
                                                                         //"--preserve-aggregate", "all", 
@@ -65,13 +65,15 @@ object Main extends App {
                                                                         ))
 
 
-    //chisel2v("src/main/scala/Parameters.scala", "src/main/scala/bundles.scala") // convert chisel bundles to verilog typedefs for UVM
-    VerilogGenerator.generateVerilog(new ChaosCore(parameters), 
-     "../verilog/Core/ChaosCore.v")
 
-    removeYosysInvalid("../verilog/")
 
-    generate_sv_interfaces("src/main/scala/Parameters.scala", "src/main/scala/bundles.scala")
+
+
+    //VerilogGenerator.generateVerilog(new SOC(coreParameters, addressMap, nocParameters), 
+     //"../verilog/Core/ChaosCore.v")
+
+    //removeYosysInvalid("../verilog/")
+    //generate_sv_interfaces("src/main/scala/coreParameters.scala", "src/main/scala/bundles.scala")
 
 }
 

@@ -29,7 +29,7 @@
                     "hdlname": "_witness_ cover_auto_verificsva_cc_1732_import_377",
                     "src": "PC_gen.sv:127.3-128.44"
                   },
-                  "parameters": {
+                  "coreParameters": {
 
                   }
                 },
@@ -39,7 +39,7 @@
                     "hdlname": "_witness_ cover_auto_verificsva_cc_1732_import_416",
                     "src": "PC_gen.sv:124.3-125.77"
                   },
-                  "parameters": {
+                  "coreParameters": {
 
                   }
                 },
@@ -49,7 +49,7 @@
                     "hdlname": "_witness_ cover_auto_verificsva_cc_1732_import_455",
                     "src": "PC_gen.sv:121.3-122.72"
                   },
-                  "parameters": {
+                  "coreParameters": {
 
                   }
                 },
@@ -59,7 +59,7 @@
                     "hdlname": "_witness_ cover_auto_verificsva_cc_1732_import_494",
                     "src": "PC_gen.sv:118.3-119.78"
                   },
-                  "parameters": {
+                  "coreParameters": {
 
                   }
                 }
@@ -90,7 +90,7 @@
                   "attributes": {
                     "src": "PC_gen.sv:137.19-137.77"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000101",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -130,7 +130,7 @@
                   "attributes": {
                     "src": "PC_gen.sv:130.5-137.79"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000000001"
                   }
                 },
@@ -139,7 +139,7 @@
                   "attributes": {
                     "src": "PC_gen.sv:134.10-137.79"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000100000"
                   }
                 },
@@ -148,7 +148,7 @@
                   "attributes": {
                     "src": "PC_gen.sv:130.5-137.79"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000100000"
                   }
                 },
@@ -157,7 +157,7 @@
                   "attributes": {
                     "src": "PC_gen.sv:171.54-171.88"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000100000"
                   }
                 },
@@ -166,7 +166,7 @@
                   "attributes": {
                     "src": "PC_gen.sv:171.16-171.88"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000100000"
                   }
                 },
@@ -175,7 +175,7 @@
                   "attributes": {
                     "src": "PC_gen.sv:169.12-171.88"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000100000"
                   }
                 },
@@ -184,7 +184,7 @@
                   "attributes": {
                     "src": "PC_gen.sv:167.8-171.88"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000100000"
                   }
                 }
@@ -250,7 +250,7 @@
                   "attributes": {
                     "src": "PC_gen.sv:161.25-178.4"
                   },
-                  "parameters": {
+                  "coreParameters": {
 
                   }
                 }
@@ -281,7 +281,7 @@
                   "attributes": {
                     "src": "PC_gen.sv:136.9-137.78"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000100000",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -294,7 +294,7 @@
                   "attributes": {
                     "src": "PC_gen.sv:107.65-107.77"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000011100",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -329,7 +329,7 @@
                   "attributes": {
                     "src": "PC_gen.sv:129.10-139.6"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "CLK_POLARITY": "00000000000000000000000000000001",
                     "WIDTH": "00000000000000000000000000100000"
                   }
@@ -339,7 +339,7 @@
                   "attributes": {
                     "src": "PC_gen.sv:129.10-139.6"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "CLK_POLARITY": "00000000000000000000000000000001",
                     "WIDTH": "00000000000000000000000000100000"
                   }
@@ -349,7 +349,7 @@
                   "attributes": {
                     "src": "PC_gen.sv:129.10-139.6"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "CLK_POLARITY": "00000000000000000000000000000001",
                     "WIDTH": "00000000000000000000000000000001"
                   }
@@ -377,7 +377,7 @@
                     "hdlname": "_witness_ assert_auto_verificsva_cc_1732_import_261",
                     "src": "PC_gen.sv:115.3-116.45"
                   },
-                  "parameters": {
+                  "coreParameters": {
 
                   }
                 },
@@ -387,7 +387,7 @@
                     "hdlname": "_witness_ assert_auto_verificsva_cc_1732_import_290",
                     "src": "PC_gen.sv:112.3-113.78"
                   },
-                  "parameters": {
+                  "coreParameters": {
 
                   }
                 },
@@ -397,7 +397,7 @@
                     "hdlname": "_witness_ assert_auto_verificsva_cc_1732_import_319",
                     "src": "PC_gen.sv:109.3-110.73"
                   },
-                  "parameters": {
+                  "coreParameters": {
 
                   }
                 },
@@ -407,7 +407,7 @@
                     "hdlname": "_witness_ assert_auto_verificsva_cc_1732_import_348",
                     "src": "PC_gen.sv:106.3-107.79"
                   },
-                  "parameters": {
+                  "coreParameters": {
 
                   }
                 }
@@ -438,7 +438,7 @@
                   "attributes": {
 
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000010",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -451,7 +451,7 @@
                   "attributes": {
 
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000010",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -464,7 +464,7 @@
                   "attributes": {
 
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000010",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -477,7 +477,7 @@
                   "attributes": {
 
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000010",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -490,7 +490,7 @@
                   "attributes": {
                     "src": "PC_gen.sv:100.24-100.85"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000100000",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -503,7 +503,7 @@
                   "attributes": {
                     "src": "PC_gen.sv:92.27-92.61"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000011",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -516,7 +516,7 @@
                   "attributes": {
                     "src": "PC_gen.sv:107.24-107.77"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000100000",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -551,7 +551,7 @@
                   "attributes": {
 
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -564,7 +564,7 @@
                   "attributes": {
 
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -577,7 +577,7 @@
                   "attributes": {
 
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -590,7 +590,7 @@
                   "attributes": {
 
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -603,7 +603,7 @@
                   "attributes": {
                     "src": "PC_gen.sv:94.25-94.79"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -616,7 +616,7 @@
                   "attributes": {
                     "src": "PC_gen.sv:134.14-134.51"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -629,7 +629,7 @@
                   "attributes": {
                     "src": "PC_gen.sv:95.23-95.72"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -642,7 +642,7 @@
                   "attributes": {
                     "src": "PC_gen.sv:96.36-96.78"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -655,7 +655,7 @@
                   "attributes": {
                     "src": "PC_gen.sv:97.22-97.57"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -668,7 +668,7 @@
                   "attributes": {
                     "src": "PC_gen.sv:98.24-98.47"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -681,7 +681,7 @@
                   "attributes": {
                     "src": "PC_gen.sv:104.30-104.71"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -694,7 +694,7 @@
                   "attributes": {
                     "src": "PC_gen.sv:106.61-106.90"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -707,7 +707,7 @@
                   "attributes": {
                     "src": "PC_gen.sv:110.20-110.48"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -720,7 +720,7 @@
                   "attributes": {
                     "src": "PC_gen.sv:110.20-110.60"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -733,7 +733,7 @@
                   "attributes": {
                     "src": "PC_gen.sv:113.20-113.42"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -746,7 +746,7 @@
                   "attributes": {
                     "src": "PC_gen.sv:113.20-113.65"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -759,7 +759,7 @@
                   "attributes": {
                     "src": "PC_gen.sv:93.24-93.55"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -772,7 +772,7 @@
                   "attributes": {
                     "src": "PC_gen.sv:94.25-94.69"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -812,7 +812,7 @@
                   "attributes": {
 
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "ARST_POLARITY": "00000000000000000000000000000000",
                     "ARST_VALUE": "0",
                     "CLK_POLARITY": "00000000000000000000000000000001",
@@ -824,7 +824,7 @@
                   "attributes": {
 
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "ARST_POLARITY": "00000000000000000000000000000000",
                     "ARST_VALUE": "0",
                     "CLK_POLARITY": "00000000000000000000000000000001",
@@ -836,7 +836,7 @@
                   "attributes": {
 
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "ARST_POLARITY": "00000000000000000000000000000000",
                     "ARST_VALUE": "0",
                     "CLK_POLARITY": "00000000000000000000000000000001",
@@ -848,7 +848,7 @@
                   "attributes": {
 
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "ARST_POLARITY": "00000000000000000000000000000000",
                     "ARST_VALUE": "0",
                     "CLK_POLARITY": "00000000000000000000000000000001",
@@ -860,7 +860,7 @@
                   "attributes": {
 
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "ARST_POLARITY": "00000000000000000000000000000000",
                     "ARST_VALUE": "0",
                     "CLK_POLARITY": "00000000000000000000000000000001",
@@ -872,7 +872,7 @@
                   "attributes": {
 
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "ARST_POLARITY": "00000000000000000000000000000000",
                     "ARST_VALUE": "0",
                     "CLK_POLARITY": "00000000000000000000000000000001",
@@ -884,7 +884,7 @@
                   "attributes": {
 
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "ARST_POLARITY": "00000000000000000000000000000000",
                     "ARST_VALUE": "0",
                     "CLK_POLARITY": "00000000000000000000000000000001",
@@ -896,7 +896,7 @@
                   "attributes": {
 
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "ARST_POLARITY": "00000000000000000000000000000000",
                     "ARST_VALUE": "0",
                     "CLK_POLARITY": "00000000000000000000000000000001",
@@ -908,7 +908,7 @@
                   "attributes": {
 
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "ARST_POLARITY": "00000000000000000000000000000000",
                     "ARST_VALUE": "0",
                     "CLK_POLARITY": "00000000000000000000000000000001",
@@ -920,7 +920,7 @@
                   "attributes": {
 
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "ARST_POLARITY": "00000000000000000000000000000000",
                     "ARST_VALUE": "0",
                     "CLK_POLARITY": "00000000000000000000000000000001",
@@ -932,7 +932,7 @@
                   "attributes": {
 
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "ARST_POLARITY": "00000000000000000000000000000000",
                     "ARST_VALUE": "0",
                     "CLK_POLARITY": "00000000000000000000000000000001",
@@ -944,7 +944,7 @@
                   "attributes": {
 
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "ARST_POLARITY": "00000000000000000000000000000000",
                     "ARST_VALUE": "0",
                     "CLK_POLARITY": "00000000000000000000000000000001",
@@ -956,7 +956,7 @@
                   "attributes": {
 
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "ARST_POLARITY": "00000000000000000000000000000000",
                     "ARST_VALUE": "0",
                     "CLK_POLARITY": "00000000000000000000000000000001",
@@ -985,7 +985,7 @@
                   "attributes": {
 
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "Y_WIDTH": "00000000000000000000000000000001"
@@ -996,7 +996,7 @@
                   "attributes": {
 
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "Y_WIDTH": "00000000000000000000000000000001"
@@ -1007,7 +1007,7 @@
                   "attributes": {
 
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "Y_WIDTH": "00000000000000000000000000000001"
@@ -1018,7 +1018,7 @@
                   "attributes": {
 
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "Y_WIDTH": "00000000000000000000000000000001"
@@ -1029,7 +1029,7 @@
                   "attributes": {
                     "src": "PC_gen.sv:96.72-96.78"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "Y_WIDTH": "00000000000000000000000000000001"
@@ -1040,7 +1040,7 @@
                   "attributes": {
                     "src": "PC_gen.sv:97.41-97.57"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "Y_WIDTH": "00000000000000000000000000000001"
@@ -1051,7 +1051,7 @@
                   "attributes": {
                     "src": "PC_gen.sv:98.31-98.47"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "Y_WIDTH": "00000000000000000000000000000001"
@@ -1062,7 +1062,7 @@
                   "attributes": {
                     "src": "PC_gen.sv:104.57-104.71"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "Y_WIDTH": "00000000000000000000000000000001"
@@ -1073,7 +1073,7 @@
                   "attributes": {
                     "src": "PC_gen.sv:106.70-106.90"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "Y_WIDTH": "00000000000000000000000000000001"
@@ -1084,7 +1084,7 @@
                   "attributes": {
                     "src": "PC_gen.sv:116.24-116.43"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "Y_WIDTH": "00000000000000000000000000000001"
@@ -1095,7 +1095,7 @@
                   "attributes": {
                     "src": "PC_gen.sv:94.72-94.79"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "Y_WIDTH": "00000000000000000000000000000001"
@@ -1140,7 +1140,7 @@
                   "attributes": {
                     "src": "Queue1_memory_request.sv:61.32-61.51"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1180,7 +1180,7 @@
                   "attributes": {
                     "src": "Queue1_memory_request.sv:70.21-70.87"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000000001"
                   }
                 },
@@ -1189,7 +1189,7 @@
                   "attributes": {
                     "src": "Queue1_memory_request.sv:66.5-70.88"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000000001"
                   }
                 },
@@ -1198,7 +1198,7 @@
                   "attributes": {
                     "src": "Queue1_memory_request.sv:64.5-65.40"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000001000001"
                   }
                 },
@@ -1207,7 +1207,7 @@
                   "attributes": {
                     "src": "Queue1_memory_request.sv:94.29-94.64"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000100000"
                   }
                 },
@@ -1216,7 +1216,7 @@
                   "attributes": {
                     "src": "Queue1_memory_request.sv:95.32-95.57"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "WIDTH": "00000000000000000000000000100000"
                   }
                 }
@@ -1247,7 +1247,7 @@
                   "attributes": {
                     "src": "Queue1_memory_request.sv:70.22-70.70"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1277,7 +1277,7 @@
                   "attributes": {
                     "src": "Queue1_memory_request.sv:70.9-70.18"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "Y_WIDTH": "00000000000000000000000000000001"
@@ -1288,7 +1288,7 @@
                   "attributes": {
                     "src": "Queue1_memory_request.sv:62.26-62.31"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "Y_WIDTH": "00000000000000000000000000000001"
@@ -1299,7 +1299,7 @@
                   "attributes": {
                     "src": "Queue1_memory_request.sv:62.24-62.47"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "Y_WIDTH": "00000000000000000000000000000001"
@@ -1332,7 +1332,7 @@
                   "attributes": {
                     "src": "Queue1_memory_request.sv:62.24-62.55"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1345,7 +1345,7 @@
                   "attributes": {
                     "src": "Queue1_memory_request.sv:62.24-62.70"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1358,7 +1358,7 @@
                   "attributes": {
                     "src": "Queue1_memory_request.sv:70.33-70.52"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1371,7 +1371,7 @@
                   "attributes": {
                     "src": "Queue1_memory_request.sv:70.32-70.70"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1384,7 +1384,7 @@
                   "attributes": {
                     "src": "Queue1_memory_request.sv:70.9-70.87"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1397,7 +1397,7 @@
                   "attributes": {
                     "src": "Queue1_memory_request.sv:96.30-96.44"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1410,7 +1410,7 @@
                   "attributes": {
                     "src": "Queue1_memory_request.sv:62.25-62.47"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "A_SIGNED": "00000000000000000000000000000000",
                     "A_WIDTH": "00000000000000000000000000000001",
                     "B_SIGNED": "00000000000000000000000000000000",
@@ -1445,7 +1445,7 @@
                   "attributes": {
                     "src": "Queue1_memory_request.sv:63.10-71.6"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "CLK_POLARITY": "00000000000000000000000000000001",
                     "WIDTH": "00000000000000000000000000000001"
                   }
@@ -1455,7 +1455,7 @@
                   "attributes": {
                     "src": "Queue1_memory_request.sv:63.10-71.6"
                   },
-                  "parameters": {
+                  "coreParameters": {
                     "CLK_POLARITY": "00000000000000000000000000000001",
                     "WIDTH": "00000000000000000000000001000001"
                   }

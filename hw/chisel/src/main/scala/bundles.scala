@@ -40,11 +40,11 @@ import helperFunctions.getBTBTagBits
 
 
 // Channels //
-class fetch_packet(parameters:Parameters) extends Bundle{
-    import parameters._
+class fetch_packet(coreParameters:CoreParameters) extends Bundle{
+    import coreParameters._
     val fetch_PC        = UInt(32.W)
     val valid_bits      = Vec(fetchWidth, Bool())
-    val instructions    = Vec(fetchWidth, new Instruction(parameters))
+    val instructions    = Vec(fetchWidth, new Instruction(coreParameters))
 
     val GHR             = UInt(GHRWidth.W)
     val NEXT            = UInt(log2Ceil(RASEntries).W)
@@ -62,8 +62,8 @@ class metadata extends Bundle{
     val is_control      = Bool()
 }
 
-class instruction_cache_data_line(parameters:Parameters) extends Bundle{
-    import parameters._
+class instruction_cache_data_line(coreParameters:CoreParameters) extends Bundle{
+    import coreParameters._
 
     val set_bits:Int                        = log2Ceil(L1_instructionCacheSets)
     val byte_offset_bits:Int                = log2Ceil(L1_instructionCacheBlockSizeBytes)
@@ -77,9 +77,8 @@ class instruction_cache_data_line(parameters:Parameters) extends Bundle{
 
 }
 
-class instruction_cache_address_packet(parameters: Parameters) extends Bundle {
-
-    import parameters._
+class instruction_cache_address_packet(coreParameters: CoreParameters) extends Bundle {
+    import coreParameters._
 
     val set_bits:Int                    = log2Ceil(L1_instructionCacheSets)
     val tag_bits:Int                    = 32 - log2Ceil(L1_instructionCacheBlockSizeBytes)-set_bits    // 32 - bits required to index set - bits required to index within line - 2 bits due to 4 byte aligned data
@@ -92,6 +91,14 @@ class instruction_cache_address_packet(parameters: Parameters) extends Bundle {
     val instruction_offset      = UInt(instruction_offset_bits.W)
 }
 
+class data_cache_address_packet(coreParameters: CoreParameters) extends Bundle {
+    import coreParameters._
+    val set_bits:Int                    = log2Ceil(L1_DataCacheSets)
+    val tag_bits:Int                    = 32 - log2Ceil(L1_DataCacheBlockSizeBytes)-set_bits    // 32 - bits required to index set - bits required to index within line - 2 bits due to 4 byte aligned data
+
+    val tag                     = UInt(tag_bits.W)
+    val set                     = UInt(set_bits.W)
+}
 
 
 
@@ -103,8 +110,8 @@ object br_type_t extends ChiselEnum{
     val NONE, BR, JAL, JALR, RET, CALL = Value
 }
 
-class BTB_entry(parameters:Parameters) extends Bundle{
-    import parameters._
+class BTB_entry(coreParameters:CoreParameters) extends Bundle{
+    import coreParameters._
 
     val BTB_tag_size:Int            = 32 - log2Ceil(BTBEntries) - 2
 
@@ -116,8 +123,8 @@ class BTB_entry(parameters:Parameters) extends Bundle{
     val BTB_fetch_packet_index      = UInt(log2Ceil(fetchWidth).W)
 }
 
-class commit(parameters:Parameters) extends Bundle{
-    import parameters._
+class commit(coreParameters:CoreParameters) extends Bundle{
+    import coreParameters._
 
     val fetch_PC                = UInt(32.W)    // To update gshare/PHT
     val T_NT                    = Bool()    // To update BTB (BTB only updates on taken branches)
@@ -138,11 +145,12 @@ class commit(parameters:Parameters) extends Bundle{
 
     val free_list_front_pointer = UInt((physicalRegBits + 1).W)
 
+    val RDold                   = Vec(fetchWidth, UInt(architecturalRegBits.W))
     val RD                      = Vec(fetchWidth, UInt(physicalRegBits.W))
     val RD_valid                = Vec(fetchWidth, Bool())
 }
 
-//class exception(parameters:Parameters) extends Bundle{
+//class exception(coreParameters:CoreParameters) extends Bundle{
 //}
 
 
@@ -152,15 +160,15 @@ class RAS_update extends Bundle{    // Request call or ret
     val ret       = Bool()
 }
 
-class RAS_read(parameters:Parameters) extends Bundle{
-    import parameters._
+class RAS_read(coreParameters:CoreParameters) extends Bundle{
+    import coreParameters._
     val NEXT      = UInt((log2Ceil(RASEntries).W))
     val TOS       = UInt((log2Ceil(RASEntries).W))
     val ret_addr  = UInt(32.W)
 }
 
-class revert(parameters:Parameters) extends Bundle{
-    import parameters._
+class revert(coreParameters:CoreParameters) extends Bundle{
+    import coreParameters._
     val nextBits:Int = log2Ceil(RASEntries)
     val tosBits:Int  = log2Ceil(RASEntries)
     val nosBits:Int  = log2Ceil(RASEntries)
@@ -173,8 +181,8 @@ class revert(parameters:Parameters) extends Bundle{
     //val RAS_NEXT          = UInt(nextBits)
 }
 
-class prediction(parameters:Parameters) extends Bundle{
-    import parameters._
+class prediction(coreParameters:CoreParameters) extends Bundle{
+    import coreParameters._
     val hit         =   Bool()  // FIXME: I dont think this is assigned in BTB since it was added after the fact
     val target      =   UInt(32.W)
     val br_type     =   br_type_t()
@@ -182,8 +190,8 @@ class prediction(parameters:Parameters) extends Bundle{
     val T_NT        =   Bool()
 }
 
-class Instruction(parameters:Parameters) extends Bundle{
-    import parameters._
+class Instruction(coreParameters:CoreParameters) extends Bundle{
+    import coreParameters._
     val instruction     =   UInt(32.W)
     val packet_index    =   UInt(log2Ceil(fetchWidth*4).W)    // contains the remainder of the PC. ex: 0, 4, 8, 12, 0, ... for fetchWidth of 4
     val ROB_index       =   UInt(log2Ceil(ROBEntries).W)
@@ -193,12 +201,13 @@ object RS_types extends ChiselEnum{
     val INT, MEM, FP = Value
 }
 
-class decoded_instruction(parameters:Parameters) extends Bundle{
-    // Parameters
-    import parameters._
+class decoded_instruction(coreParameters:CoreParameters) extends Bundle{
+    // coreParameters
+    import coreParameters._
 
     val ready_bits          =  new sources_ready()
 
+    val RDold               =  UInt(architecturalRegBits.W) // Actual dest
     val RD                  =  UInt(physicalRegBits.W) // Actual dest
     val RD_valid            =  Bool()
     val RS1                 =  UInt(physicalRegBits.W)
@@ -237,10 +246,10 @@ class decoded_instruction(parameters:Parameters) extends Bundle{
 }
 
 
-class decoded_fetch_packet(parameters:Parameters) extends Bundle{
-    import parameters._
+class decoded_fetch_packet(coreParameters:CoreParameters) extends Bundle{
+    import coreParameters._
     val fetch_PC                = UInt(32.W)
-    val decoded_instruction     = Vec(fetchWidth, new decoded_instruction(parameters))
+    val decoded_instruction     = Vec(fetchWidth, new decoded_instruction(coreParameters))
     val valid_bits              = Vec(fetchWidth, Bool())
 
     val GHR                     = UInt(GHRWidth.W)
@@ -253,10 +262,10 @@ class decoded_fetch_packet(parameters:Parameters) extends Bundle{
 }
 
 // decoded instruction after it goes through register read
-class read_decoded_instruction(parameters:Parameters) extends Bundle{
-    import parameters._
-    // Parameters
-    val decoded_instruction = new decoded_instruction(parameters)
+class read_decoded_instruction(coreParameters:CoreParameters) extends Bundle{
+    import coreParameters._
+    // coreParameters
+    val decoded_instruction = new decoded_instruction(coreParameters)
 
     // read data from register read 
     val RS1_data        =   UInt(32.W)
@@ -312,8 +321,8 @@ object InstructionType extends ChiselEnum {
 
 
 
-class misprediction(parameters:Parameters) extends Bundle{
-    import parameters._
+class misprediction(coreParameters:CoreParameters) extends Bundle{
+    import coreParameters._
     val valid = Bool()
 
     val is_misprediction = Bool()
@@ -326,8 +335,8 @@ class misprediction(parameters:Parameters) extends Bundle{
 }
 
 
-class FTQ_entry(parameters:Parameters) extends Bundle{
-    import parameters._
+class FTQ_entry(coreParameters:CoreParameters) extends Bundle{
+    import coreParameters._
 
     val valid = Bool()
 
@@ -351,8 +360,8 @@ class FTQ_entry(parameters:Parameters) extends Bundle{
 // BACKEND BUNDLES //
 /////////////////////
 
-class ROB_output(parameters:Parameters) extends Bundle{
-    import parameters._
+class ROB_output(coreParameters:CoreParameters) extends Bundle{
+    import coreParameters._
     
     // 1 per row data
     val row_valid               = Bool()
@@ -367,13 +376,13 @@ class ROB_output(parameters:Parameters) extends Bundle{
 
 
     // N per row 
-    val ROB_entries             = Vec(fetchWidth, new ROB_entry(parameters))    // "static" instruction data
+    val ROB_entries             = Vec(fetchWidth, new ROB_entry(coreParameters))    // "static" instruction data
     val complete                = Vec(fetchWidth, Bool())                       // Is instruction complete
     val exception               = Vec(fetchWidth, Bool())                      // Is instruction complete
 }
 
-class ROB_shared(parameters:Parameters) extends Bundle{
-    import parameters._
+class ROB_shared(coreParameters:CoreParameters) extends Bundle{
+    import coreParameters._
 
     val fetch_PC                = UInt(32.W)
     val RAT_index               = UInt(log2Ceil(RATCheckpointCount).W)
@@ -386,8 +395,8 @@ class ROB_shared(parameters:Parameters) extends Bundle{
 }
 
 // ROB entries that pertain to each instruction independantly (this info goes in a standalone bank)
-class ROB_entry(parameters:Parameters) extends Bundle{
-    import parameters._
+class ROB_entry(coreParameters:CoreParameters) extends Bundle{
+    import coreParameters._
 
     val valid       = Bool()  // is this particular instruction valid?
     val is_branch   = Bool()
@@ -396,10 +405,10 @@ class ROB_entry(parameters:Parameters) extends Bundle{
 
     val RD          =   UInt(physicalRegBits.W)
     val RD_valid    =   Bool()
-    //val RD_old      =   UInt(physicalRegBits.W)
+    val RDold       =   UInt(architecturalRegBits.W)
 }
 
-class ROB_WB(parameters:Parameters) extends Bundle{
+class ROB_WB(coreParameters:CoreParameters) extends Bundle{
     val busy        = Bool()
     val exception   = Bool()
 }
@@ -410,19 +419,19 @@ class sources_ready extends Bundle{
 }
 
 // FIXME:  This is messed up 
-class RS_entry(parameters:Parameters) extends Bundle{
-    import parameters._
+class RS_entry(coreParameters:CoreParameters) extends Bundle{
+    import coreParameters._
 
-    val decoded_instruction = new decoded_instruction(parameters)
+    val decoded_instruction = new decoded_instruction(coreParameters)
 
     //val ready_bits          =   new sources_ready()
 
     val valid               =  Bool()  // Is whole RS entry valid
 }
 
-class MEMRS_entry(parameters:Parameters) extends Bundle{
-    import parameters._
-    val decoded_instruction =  new decoded_instruction(parameters)
+class MEMRS_entry(coreParameters:CoreParameters) extends Bundle{
+    import coreParameters._
+    val decoded_instruction =  new decoded_instruction(coreParameters)
 
     //val ready_bits          =  new sources_ready()
 
@@ -436,8 +445,8 @@ class MEMRS_entry(parameters:Parameters) extends Bundle{
 ////////////////////////////
 
 
-class FU_output(parameters:Parameters) extends Bundle{
-    import parameters._
+class FU_output(coreParameters:CoreParameters) extends Bundle{
+    import coreParameters._
     // Arithmetic/Load
     val RD                  =   UInt(physicalRegBits.W)
     val RD_data             =   UInt(32.W)
@@ -480,13 +489,13 @@ class PC_file(fetchWidth:Int){
 // DRAM //
 //////////
 
-class DRAM_request(parameters:Parameters) extends Bundle{   // FIXME: change this to something generic like MMIO request...
+class DRAM_request(coreParameters:CoreParameters) extends Bundle{   // FIXME: change this to something generic like MMIO request...
     val addr    = UInt(32.W)
     val wr_data = UInt(32.W)
     val wr_en   = Bool()
 }
 
-class DRAM_response(parameters:Parameters) extends Bundle{
+class DRAM_response(coreParameters:CoreParameters) extends Bundle{
     val data = UInt(256.W)  // Must be same size as cache line
 }
 
@@ -496,19 +505,19 @@ class DRAM_response(parameters:Parameters) extends Bundle{
 // And a seperate dram repsonse bus
 //
 
-class memory_request(parameters:Parameters) extends Bundle{
+class frontend_memory_request(coreParameters:CoreParameters) extends Bundle{
     val addr    = UInt(32.W)
     val wr_data = UInt(32.W)
     val wr_en   = Bool()
 }
 
-class memory_response(parameters:Parameters) extends Bundle{
+class frontend_memory_response(coreParameters:CoreParameters) extends Bundle{
     val data = UInt(32.W)
 }
 
 
-class backend_memory_request(parameters:Parameters) extends Bundle{
-    import parameters._
+class backend_memory_request(coreParameters:CoreParameters) extends Bundle{
+    import coreParameters._
     val addr            = UInt(32.W)
     val data            = UInt(32.W)
     val memory_type     = memory_type_t()               // LOAD/STORE
@@ -517,13 +526,12 @@ class backend_memory_request(parameters:Parameters) extends Bundle{
     val MOB_index       = UInt(log2Ceil(MOBEntries).W)
 }
 
-class backend_memory_response(parameters:Parameters) extends Bundle{
-    import parameters._
+class backend_memory_response(coreParameters:CoreParameters) extends Bundle{
+    import coreParameters._
     val addr            = UInt(32.W)
     val data            = UInt(32.W)
     val memory_type     = memory_type_t() // LOAD/STORE
     val access_width    = access_width_t()              // B/HW/W
-
     val MOB_index       = UInt(log2Ceil(MOBEntries).W)
 }
 
@@ -540,8 +548,8 @@ object access_width_t extends ChiselEnum{
     val NONE, B, HW, W = Value
 }
 
-class memory_access(parameters:Parameters) extends Bundle{   // output of the AGU
-    import parameters._
+class memory_access(coreParameters:CoreParameters) extends Bundle{   // output of the AGU
+    import coreParameters._
     val memory_type     = memory_type_t()   // LOAD/STORE
     val RD              = UInt(physicalRegBits.W)
     val access_width    = access_width_t()  // B/HW/W
@@ -556,8 +564,8 @@ class memory_access(parameters:Parameters) extends Bundle{   // output of the AG
 /*That is, loads can mark the RD ready to avoid stalling the pipeline*/
 /*But have the possibility of causing an exception that prevents them from committing*/
 /*Loads are not freed until they actually commit.*/
-class MOB_entry(parameters:Parameters) extends Bundle{
-    import parameters._
+class MOB_entry(coreParameters:CoreParameters) extends Bundle{
+    import coreParameters._
 
     val valid           = Bool()
     val memory_type     = memory_type_t()
@@ -580,9 +588,68 @@ class MOB_entry(parameters:Parameters) extends Bundle{
 }
 
 
+////////////
+// DATA $ //
+////////////
+
+
+
+
+
 
 
 /////////
 // CSR //
 /////////
+
+
+
+
+
+
+////////
+// TL //
+////////
+
+
+object TileLink_Opcodes extends ChiselEnum{
+val Acquire, 
+    Get, 
+    PutFullData, 
+    PutPartialData, 
+    ArithmeticData, 
+    LogicalData, 
+    Hint, 
+    AccessAck, 
+    AccessAckData, 
+    HintAck, 
+    Grant, 
+    GrantData, 
+    Release, 
+    ReleaseData, 
+    Probe, 
+    ProbeAck, 
+    ProbeAckData = Value
+}
+
+
+class TileLink_Channel_A extends Bundle {
+  val a_opcode   = UInt(3.W) 
+  val a_param    = UInt(3.W) 
+  val a_size     = UInt(3.W) 
+  val a_source   = UInt(4.W) 
+  val a_address  = UInt(32.W)
+  val a_mask     = UInt(4.W) 
+  val a_data     = UInt(256.W)
+}
+
+class TileLink_Channel_D extends Bundle {
+  val d_opcode   = UInt(3.W)
+  val d_param    = UInt(3.W)
+  val d_size     = UInt(3.W)
+  val d_source   = UInt(4.W)
+  val d_sink     = UInt(4.W)
+  val d_data     = UInt(256.W)
+}
+
 

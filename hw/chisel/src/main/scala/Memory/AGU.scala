@@ -36,20 +36,20 @@ import circt.stage.ChiselStage
 
 import chisel3.util._
 
-class AGU(parameters:Parameters) extends Module{
-    import parameters._
+class AGU(coreParameters:CoreParameters) extends Module{
+    import coreParameters._
     val io = IO(new Bundle{
         // Flush
         val flush                   =   Input(Bool())
 
         // Instruction Input
-        val FU_input                =   Flipped(Decoupled(new read_decoded_instruction(parameters)))
+        val FU_input                =   Flipped(Decoupled(new read_decoded_instruction(coreParameters)))
 
         // Instruction Output
-        val FU_output               =   ValidIO(new FU_output(parameters))                  // Input to LSQ
+        val FU_output               =   ValidIO(new FU_output(coreParameters))                  // Input to LSQ
     })
 
-    io.FU_output.bits := 0.U.asTypeOf(new FU_output(parameters))
+    io.FU_output.bits := 0.U.asTypeOf(new FU_output(coreParameters))
 
     ////////////////////
     // MEMORY REQUEST //

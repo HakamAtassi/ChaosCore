@@ -38,8 +38,8 @@ import java.rmi.server.UID
 
 
 
-class free_list(parameters:Parameters) extends Module{
-    import parameters._
+class free_list(coreParameters:CoreParameters) extends Module{
+    import coreParameters._
     val ptr_width = log2Ceil(physicalRegCount-1) + 1
 
     val io = IO(new Bundle{
@@ -47,7 +47,7 @@ class free_list(parameters:Parameters) extends Module{
         val renamed_values          = Output(Vec(fetchWidth, UInt(log2Ceil(physicalRegCount).W)))       // Renamed RDs
         val renamed_valid           = Output(Vec(fetchWidth, Bool()))                                   // Renamed RDs valid
 
-        val commit                  = Flipped(ValidIO(new commit(parameters)))                          // Free regs on commit
+        val commit                  = Flipped(ValidIO(new commit(coreParameters)))                          // Free regs on commit
 
         val free_list_front_pointer = Output(UInt(ptr_width.W))                  // To ROB
 

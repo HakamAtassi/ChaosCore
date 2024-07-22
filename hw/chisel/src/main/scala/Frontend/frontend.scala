@@ -33,36 +33,36 @@ import chisel3._
 import chisel3.util._
 
 
-class frontend(parameters:Parameters) extends Module{
-    import parameters._
+class frontend(coreParameters:CoreParameters) extends Module{
+    import coreParameters._
 
     val dataSizeBits         = L1_instructionCacheBlockSizeBytes*8
     val architecturalRegBits = log2Ceil(architecturalRegCount)
     val RATCheckpointBits    = log2Ceil(RATCheckpointCount)
 
-    val portCount = getPortCount(parameters)
+    val portCount = getPortCount(coreParameters)
 
     val io = IO(new Bundle{
         // FLUSH //
         val flush                           =   Input(Bool())
 
         // DRAM CHANNELS //
-        val memory_request                  =   Decoupled(new memory_request(parameters))
-        val memory_response                 =   Flipped(Decoupled(new fetch_packet(parameters)))
+        val memory_request                  =   Decoupled(new frontend_memory_request(coreParameters))
+        val memory_response                 =   Flipped(Decoupled(new fetch_packet(coreParameters)))
         
         // COMMIT // 
-        val commit                          =   Flipped(ValidIO(new commit(parameters)))
+        val commit                          =   Flipped(ValidIO(new commit(coreParameters)))
         
         // PREDICTIONS //
-        val predictions                     =   Decoupled(new FTQ_entry(parameters))
+        val predictions                     =   Decoupled(new FTQ_entry(coreParameters))
 
         // INSTRUCTION OUT //
-        val renamed_decoded_fetch_packet    =   Decoupled(new decoded_fetch_packet(parameters))
+        val renamed_decoded_fetch_packet    =   Decoupled(new decoded_fetch_packet(coreParameters))
 
         // RD FREE //
-        val FU_outputs                      =   Vec(portCount, Flipped(ValidIO(new FU_output(parameters))))
+        val FU_outputs                      =   Vec(portCount, Flipped(ValidIO(new FU_output(coreParameters))))
 
-        val revert                          =   ValidIO(new revert(parameters))
+        val revert                          =   ValidIO(new revert(coreParameters))
     })
 
 
@@ -71,13 +71,13 @@ class frontend(parameters:Parameters) extends Module{
     // Instruction fetch => Decoders => Queue => Rename => Backend/Allocate //
     //////////////////////////////////////////////////////////////////////////
 
-    val instruction_fetch   = Module(new instruction_fetch(parameters))
-    val decoders            = Module(new fetch_packet_decoder(parameters))
+    val instruction_fetch   = Module(new instruction_fetch(coreParameters))
+    val decoders            = Module(new fetch_packet_decoder(coreParameters))
     
-    val instruction_queue   = Module(new Queue(new decoded_fetch_packet(parameters), 16, flow=true, hasFlush=true, useSyncReadMem=true))
-    val FTQ_queue           = Module(new Queue(new FTQ_entry(parameters), 16, flow=true, hasFlush=true, useSyncReadMem=true))
+    val instruction_queue   = Module(new Queue(new decoded_fetch_packet(coreParameters), 16, flow=true, hasFlush=true, useSyncReadMem=true))
+    val FTQ_queue           = Module(new Queue(new FTQ_entry(coreParameters), 16, flow=true, hasFlush=true, useSyncReadMem=true))
 
-    val rename              = Module(new rename(parameters))
+    val rename              = Module(new rename(coreParameters))
 
     val flush = io.commit.bits.is_misprediction && io.commit.valid
 

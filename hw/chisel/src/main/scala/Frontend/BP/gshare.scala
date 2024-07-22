@@ -67,8 +67,8 @@ class PHT_memory(depth: Int, width: Int) extends Module {
   }
 }
 
-class gshare(parameters:Parameters) extends Module{
-    import parameters._
+class gshare(coreParameters:CoreParameters) extends Module{
+    import coreParameters._
     // the ghsare must be addressable by the number of bits in the global history register
 
     val io = IO(new Bundle{
@@ -88,7 +88,7 @@ class gshare(parameters:Parameters) extends Module{
         //val commit_valid       = Input(Bool())
         //val commit_branch_direction       = Input(Bool())
 
-        val commit      = Flipped(ValidIO(new commit(parameters)))
+        val commit      = Flipped(ValidIO(new commit(coreParameters)))
         
     })
 

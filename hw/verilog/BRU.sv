@@ -18,16 +18,20 @@ module BRU(	// src/main/scala/Frontend/BRU.scala:38:7
   input         io_ROB_output_ROB_entries_0_valid,	// src/main/scala/Frontend/BRU.scala:41:16
   input  [6:0]  io_ROB_output_ROB_entries_0_RD,	// src/main/scala/Frontend/BRU.scala:41:16
   input         io_ROB_output_ROB_entries_0_RD_valid,	// src/main/scala/Frontend/BRU.scala:41:16
-                io_ROB_output_ROB_entries_1_valid,	// src/main/scala/Frontend/BRU.scala:41:16
+  input  [4:0]  io_ROB_output_ROB_entries_0_RDold,	// src/main/scala/Frontend/BRU.scala:41:16
+  input         io_ROB_output_ROB_entries_1_valid,	// src/main/scala/Frontend/BRU.scala:41:16
   input  [6:0]  io_ROB_output_ROB_entries_1_RD,	// src/main/scala/Frontend/BRU.scala:41:16
   input         io_ROB_output_ROB_entries_1_RD_valid,	// src/main/scala/Frontend/BRU.scala:41:16
-                io_ROB_output_ROB_entries_2_valid,	// src/main/scala/Frontend/BRU.scala:41:16
+  input  [4:0]  io_ROB_output_ROB_entries_1_RDold,	// src/main/scala/Frontend/BRU.scala:41:16
+  input         io_ROB_output_ROB_entries_2_valid,	// src/main/scala/Frontend/BRU.scala:41:16
   input  [6:0]  io_ROB_output_ROB_entries_2_RD,	// src/main/scala/Frontend/BRU.scala:41:16
   input         io_ROB_output_ROB_entries_2_RD_valid,	// src/main/scala/Frontend/BRU.scala:41:16
-                io_ROB_output_ROB_entries_3_valid,	// src/main/scala/Frontend/BRU.scala:41:16
+  input  [4:0]  io_ROB_output_ROB_entries_2_RDold,	// src/main/scala/Frontend/BRU.scala:41:16
+  input         io_ROB_output_ROB_entries_3_valid,	// src/main/scala/Frontend/BRU.scala:41:16
   input  [6:0]  io_ROB_output_ROB_entries_3_RD,	// src/main/scala/Frontend/BRU.scala:41:16
   input         io_ROB_output_ROB_entries_3_RD_valid,	// src/main/scala/Frontend/BRU.scala:41:16
-                io_ROB_output_complete_0,	// src/main/scala/Frontend/BRU.scala:41:16
+  input  [4:0]  io_ROB_output_ROB_entries_3_RDold,	// src/main/scala/Frontend/BRU.scala:41:16
+  input         io_ROB_output_complete_0,	// src/main/scala/Frontend/BRU.scala:41:16
                 io_ROB_output_complete_1,	// src/main/scala/Frontend/BRU.scala:41:16
                 io_ROB_output_complete_2,	// src/main/scala/Frontend/BRU.scala:41:16
                 io_ROB_output_complete_3,	// src/main/scala/Frontend/BRU.scala:41:16
@@ -49,6 +53,10 @@ module BRU(	// src/main/scala/Frontend/BRU.scala:38:7
                 io_commit_bits_NEXT,	// src/main/scala/Frontend/BRU.scala:41:16
   output [3:0]  io_commit_bits_RAT_index,	// src/main/scala/Frontend/BRU.scala:41:16
   output [7:0]  io_commit_bits_free_list_front_pointer,	// src/main/scala/Frontend/BRU.scala:41:16
+  output [4:0]  io_commit_bits_RDold_0,	// src/main/scala/Frontend/BRU.scala:41:16
+                io_commit_bits_RDold_1,	// src/main/scala/Frontend/BRU.scala:41:16
+                io_commit_bits_RDold_2,	// src/main/scala/Frontend/BRU.scala:41:16
+                io_commit_bits_RDold_3,	// src/main/scala/Frontend/BRU.scala:41:16
   output [6:0]  io_commit_bits_RD_0,	// src/main/scala/Frontend/BRU.scala:41:16
                 io_commit_bits_RD_1,	// src/main/scala/Frontend/BRU.scala:41:16
                 io_commit_bits_RD_2,	// src/main/scala/Frontend/BRU.scala:41:16
@@ -81,13 +89,17 @@ module BRU(	// src/main/scala/Frontend/BRU.scala:38:7
     branch_commit & io_FTQ_predicted_PC != io_FTQ_resolved_PC;	// src/main/scala/Frontend/BRU.scala:38:7, :87:{38,86}, :89:42, :95:24, :96:{46,70,94}
   assign io_commit_bits_exception =
     io_ROB_output_exception_0 | io_ROB_output_exception_1 | io_ROB_output_exception_2
-    | io_ROB_output_exception_3;	// src/main/scala/Frontend/BRU.scala:38:7, :77:66
+    | io_ROB_output_exception_3;	// src/main/scala/Frontend/BRU.scala:38:7, :76:86
   assign io_commit_bits_expected_PC = branch_commit ? io_FTQ_resolved_PC : 32'h0;	// src/main/scala/Frontend/BRU.scala:38:7, :87:{38,86}, :93:42, :95:24, :100:46
   assign io_commit_bits_GHR = io_ROB_output_GHR;	// src/main/scala/Frontend/BRU.scala:38:7
   assign io_commit_bits_TOS = io_ROB_output_TOS;	// src/main/scala/Frontend/BRU.scala:38:7
   assign io_commit_bits_NEXT = io_ROB_output_NEXT;	// src/main/scala/Frontend/BRU.scala:38:7
   assign io_commit_bits_RAT_index = io_ROB_output_RAT_index;	// src/main/scala/Frontend/BRU.scala:38:7
   assign io_commit_bits_free_list_front_pointer = io_ROB_output_free_list_front_pointer;	// src/main/scala/Frontend/BRU.scala:38:7
+  assign io_commit_bits_RDold_0 = io_ROB_output_ROB_entries_0_RDold;	// src/main/scala/Frontend/BRU.scala:38:7
+  assign io_commit_bits_RDold_1 = io_ROB_output_ROB_entries_1_RDold;	// src/main/scala/Frontend/BRU.scala:38:7
+  assign io_commit_bits_RDold_2 = io_ROB_output_ROB_entries_2_RDold;	// src/main/scala/Frontend/BRU.scala:38:7
+  assign io_commit_bits_RDold_3 = io_ROB_output_ROB_entries_3_RDold;	// src/main/scala/Frontend/BRU.scala:38:7
   assign io_commit_bits_RD_0 = io_ROB_output_ROB_entries_0_RD;	// src/main/scala/Frontend/BRU.scala:38:7
   assign io_commit_bits_RD_1 = io_ROB_output_ROB_entries_1_RD;	// src/main/scala/Frontend/BRU.scala:38:7
   assign io_commit_bits_RD_2 = io_ROB_output_ROB_entries_2_RD;	// src/main/scala/Frontend/BRU.scala:38:7

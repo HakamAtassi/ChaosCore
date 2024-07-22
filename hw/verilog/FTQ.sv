@@ -223,7 +223,7 @@ module FTQ(	// src/main/scala/Frontend/FTQ.scala:44:7
      {FTQ_3_valid},
      {FTQ_2_valid},
      {FTQ_1_valid},
-     {FTQ_0_valid}};	// src/main/scala/Frontend/FTQ.scala:76:22, src/main/scala/utils.scala:316:10
+     {FTQ_0_valid}};	// src/main/scala/Frontend/FTQ.scala:76:22, src/main/scala/utils.scala:333:10
   wire [15:0][31:0] _GEN_1 =
     {{FTQ_15_fetch_PC},
      {FTQ_14_fetch_PC},
@@ -240,7 +240,7 @@ module FTQ(	// src/main/scala/Frontend/FTQ.scala:44:7
      {FTQ_3_fetch_PC},
      {FTQ_2_fetch_PC},
      {FTQ_1_fetch_PC},
-     {FTQ_0_fetch_PC}};	// src/main/scala/Frontend/FTQ.scala:76:22, src/main/scala/utils.scala:316:10
+     {FTQ_0_fetch_PC}};	// src/main/scala/Frontend/FTQ.scala:76:22, src/main/scala/utils.scala:333:10
   wire [15:0][31:0] _GEN_2 =
     {{FTQ_15_predicted_PC},
      {FTQ_14_predicted_PC},
@@ -257,7 +257,7 @@ module FTQ(	// src/main/scala/Frontend/FTQ.scala:44:7
      {FTQ_3_predicted_PC},
      {FTQ_2_predicted_PC},
      {FTQ_1_predicted_PC},
-     {FTQ_0_predicted_PC}};	// src/main/scala/Frontend/FTQ.scala:76:22, src/main/scala/utils.scala:316:10
+     {FTQ_0_predicted_PC}};	// src/main/scala/Frontend/FTQ.scala:76:22, src/main/scala/utils.scala:333:10
   wire [15:0]       _GEN_3 =
     {{FTQ_15_T_NT},
      {FTQ_14_T_NT},
@@ -274,7 +274,7 @@ module FTQ(	// src/main/scala/Frontend/FTQ.scala:44:7
      {FTQ_3_T_NT},
      {FTQ_2_T_NT},
      {FTQ_1_T_NT},
-     {FTQ_0_T_NT}};	// src/main/scala/Frontend/FTQ.scala:76:22, src/main/scala/utils.scala:316:10
+     {FTQ_0_T_NT}};	// src/main/scala/Frontend/FTQ.scala:76:22, src/main/scala/utils.scala:333:10
   wire [15:0][2:0]  _GEN_4 =
     {{FTQ_15_br_type},
      {FTQ_14_br_type},
@@ -291,7 +291,7 @@ module FTQ(	// src/main/scala/Frontend/FTQ.scala:44:7
      {FTQ_3_br_type},
      {FTQ_2_br_type},
      {FTQ_1_br_type},
-     {FTQ_0_br_type}};	// src/main/scala/Frontend/FTQ.scala:76:22, src/main/scala/utils.scala:316:10
+     {FTQ_0_br_type}};	// src/main/scala/Frontend/FTQ.scala:76:22, src/main/scala/utils.scala:333:10
   wire [15:0][31:0] _GEN_5 =
     {{FTQ_15_resolved_PC},
      {FTQ_14_resolved_PC},
@@ -308,10 +308,10 @@ module FTQ(	// src/main/scala/Frontend/FTQ.scala:44:7
      {FTQ_3_resolved_PC},
      {FTQ_2_resolved_PC},
      {FTQ_1_resolved_PC},
-     {FTQ_0_resolved_PC}};	// src/main/scala/Frontend/FTQ.scala:76:22, src/main/scala/utils.scala:316:10
+     {FTQ_0_resolved_PC}};	// src/main/scala/Frontend/FTQ.scala:76:22, src/main/scala/utils.scala:333:10
   wire              dq =
     _GEN_0[front_index] & io_commit_valid
-    & (_GEN_1[front_index] & 32'hFFFFFFF0) == (io_commit_bits_fetch_PC & 32'hFFFFFFF0);	// src/main/scala/Frontend/FTQ.scala:72:37, :129:94, :131:{37,56}, src/main/scala/utils.scala:316:10
+    & (_GEN_1[front_index] & 32'hFFFFFFF0) == (io_commit_bits_fetch_PC & 32'hFFFFFFF0);	// src/main/scala/Frontend/FTQ.scala:72:37, :129:98, :131:{37,56}, src/main/scala/utils.scala:333:10
   wire              full =
     front_pointer[4] != back_pointer[4] & front_index == back_index;	// src/main/scala/Frontend/FTQ.scala:69:34, :70:34, :72:37, :73:35, :164:{30,47,63,81,97}
   always @(posedge clock) begin	// src/main/scala/Frontend/FTQ.scala:44:7
@@ -1143,13 +1143,13 @@ module FTQ(	// src/main/scala/Frontend/FTQ.scala:44:7
     `endif // FIRRTL_AFTER_INITIAL
   `endif // ENABLE_INITIAL_REG_
   assign io_predictions_ready = ~full;	// src/main/scala/Frontend/FTQ.scala:44:7, :164:81, :166:29
-  assign io_FTQ_valid = _GEN_0[front_index];	// src/main/scala/Frontend/FTQ.scala:44:7, :72:37, src/main/scala/utils.scala:316:10
-  assign io_FTQ_fetch_PC = _GEN_1[front_index];	// src/main/scala/Frontend/FTQ.scala:44:7, :72:37, src/main/scala/utils.scala:316:10
-  assign io_FTQ_predicted_PC = _GEN_2[front_index];	// src/main/scala/Frontend/FTQ.scala:44:7, :72:37, src/main/scala/utils.scala:316:10
-  assign io_FTQ_T_NT = _GEN_3[front_index];	// src/main/scala/Frontend/FTQ.scala:44:7, :72:37, src/main/scala/utils.scala:316:10
-  assign io_FTQ_br_type = _GEN_4[front_index];	// src/main/scala/Frontend/FTQ.scala:44:7, :72:37, src/main/scala/utils.scala:316:10
-  assign io_FTQ_dominant_index = _GEN[front_index];	// src/main/scala/Frontend/FTQ.scala:44:7, :72:37, :115:77, src/main/scala/utils.scala:316:10
-  assign io_FTQ_resolved_PC = _GEN_5[front_index];	// src/main/scala/Frontend/FTQ.scala:44:7, :72:37, src/main/scala/utils.scala:316:10
+  assign io_FTQ_valid = _GEN_0[front_index];	// src/main/scala/Frontend/FTQ.scala:44:7, :72:37, src/main/scala/utils.scala:333:10
+  assign io_FTQ_fetch_PC = _GEN_1[front_index];	// src/main/scala/Frontend/FTQ.scala:44:7, :72:37, src/main/scala/utils.scala:333:10
+  assign io_FTQ_predicted_PC = _GEN_2[front_index];	// src/main/scala/Frontend/FTQ.scala:44:7, :72:37, src/main/scala/utils.scala:333:10
+  assign io_FTQ_T_NT = _GEN_3[front_index];	// src/main/scala/Frontend/FTQ.scala:44:7, :72:37, src/main/scala/utils.scala:333:10
+  assign io_FTQ_br_type = _GEN_4[front_index];	// src/main/scala/Frontend/FTQ.scala:44:7, :72:37, src/main/scala/utils.scala:333:10
+  assign io_FTQ_dominant_index = _GEN[front_index];	// src/main/scala/Frontend/FTQ.scala:44:7, :72:37, :115:77, src/main/scala/utils.scala:333:10
+  assign io_FTQ_resolved_PC = _GEN_5[front_index];	// src/main/scala/Frontend/FTQ.scala:44:7, :72:37, src/main/scala/utils.scala:333:10
   assign io_FTQ_index = back_index;	// src/main/scala/Frontend/FTQ.scala:44:7, :73:35
 endmodule
 
