@@ -246,79 +246,76 @@ module predecoder(	// src/main/scala/Frontend/BP/predecoder.scala:41:7
      {io_fetch_packet_bits_instructions_2_instruction},
      {io_fetch_packet_bits_instructions_1_instruction},
      {io_fetch_packet_bits_instructions_0_instruction}};	// src/main/scala/Frontend/BP/predecoder.scala:126:26
-  wire [1:0]       _GEN_0 = {1'h0, T_NT_0};	// src/main/scala/Frontend/BP/predecoder.scala:41:7, :112:{77,93}, :129:117
-  wire [1:0]       _GEN_1 = {1'h0, T_NT_1};	// src/main/scala/Frontend/BP/predecoder.scala:41:7, :112:{77,93}, :129:117
+  wire [31:0]      dominant_instruction = _GEN[dominant_branch_index];	// src/main/scala/Frontend/BP/predecoder.scala:89:47, :123:{23,46}, :126:26
+  wire [1:0]       _GEN_0 = {1'h0, T_NT_0};	// src/main/scala/Frontend/BP/predecoder.scala:41:7, :112:{77,93}, :130:117
+  wire [1:0]       _GEN_1 = {1'h0, T_NT_1};	// src/main/scala/Frontend/BP/predecoder.scala:41:7, :112:{77,93}, :130:117
   wire [31:0]      masked_addr = io_fetch_packet_bits_fetch_PC & 32'hFFFFFFF0;	// src/main/scala/utils.scala:333:10
-  wire [8:0]       _GEN_2 = {9{_GEN[dominant_branch_index][31]}};	// src/main/scala/Frontend/BP/predecoder.scala:123:{23,46}, :126:26, src/main/scala/utils.scala:154:18, :155:{17,25}
-  wire [31:0]      _GEN_3 = {28'h0, dominant_branch_index, 2'h0};	// src/main/scala/Frontend/BP/predecoder.scala:41:7, :123:{23,46}, :148:45
+  wire [8:0]       _GEN_2 = {9{dominant_instruction[31]}};	// src/main/scala/Frontend/BP/predecoder.scala:89:47, src/main/scala/utils.scala:154:18, :155:{17,25}
+  wire [20:0]      imm_imm =
+    dominant_instruction[6:0] == 7'h63
+      ? {{9{dominant_instruction[31]}},
+         dominant_instruction[7],
+         dominant_instruction[30:25],
+         dominant_instruction[11:8],
+         1'h0}
+      : dominant_instruction[6:0] == 7'h6F
+          ? {dominant_instruction[31],
+             dominant_instruction[19:12],
+             dominant_instruction[20],
+             dominant_instruction[30:21],
+             1'h0}
+          : dominant_instruction[6:0] == 7'h13 | dominant_instruction[6:0] == 7'h3
+            | dominant_instruction[6:0] == 7'h67
+              ? {_GEN_2, dominant_instruction[31:20]}
+              : dominant_instruction[6:0] == 7'h23
+                  ? {_GEN_2, dominant_instruction[31:25], dominant_instruction[11:7]}
+                  : dominant_instruction[6:0] == 7'h17
+                    | dominant_instruction[6:0] == 7'h37
+                      ? {dominant_instruction[31], dominant_instruction[31:12]}
+                      : 21'h0;	// src/main/scala/Frontend/BP/predecoder.scala:41:7, :89:47, src/main/scala/utils.scala:117:33, :119:{30,48,59}, :120:30, :121:30, :122:30, :124:{30,48,59,77,88}, :128:17, :132:42, :133:42, :134:42, :135:42, :138:{17,25}, :140:24, :143:40, :144:40, :145:40, :146:40, :149:{18,26}, :150:24, :153:44, :154:18, :155:{17,25}, :156:22, :159:44, :160:44, :164:{17,25}, :165:22, :168:44, :172:{17,25}, :174:17
+  wire [31:0]      imm = is_RET | ~is_JAL ? 32'h0 : {{11{imm_imm[20]}}, imm_imm};	// src/main/scala/Frontend/BP/predecoder.scala:115:23, :116:25, :119:25, :139:20, :140:13, :143:17, :146:23, :171:46, src/main/scala/utils.scala:128:17, :138:17, :140:24, :353:10
+  wire [31:0]      _GEN_3 = {28'h0, dominant_branch_index, 2'h0};	// src/main/scala/Frontend/BP/predecoder.scala:41:7, :123:{23,46}, :150:45
   wire [31:0]      target_address =
     is_RET
       ? io_RAS_read_ret_addr
       : is_JAL
-          ? (is_RET | ~is_JAL
-               ? 32'h0
-               : {11'h0,
-                  _GEN[dominant_branch_index][6:0] == 7'h63
-                    ? {{9{_GEN[dominant_branch_index][31]}},
-                       _GEN[dominant_branch_index][7],
-                       _GEN[dominant_branch_index][30:25],
-                       _GEN[dominant_branch_index][11:8],
-                       1'h0}
-                    : _GEN[dominant_branch_index][6:0] == 7'h6F
-                        ? {_GEN[dominant_branch_index][31],
-                           _GEN[dominant_branch_index][19:12],
-                           _GEN[dominant_branch_index][20],
-                           _GEN[dominant_branch_index][30:21],
-                           1'h0}
-                        : _GEN[dominant_branch_index][6:0] == 7'h13
-                          | _GEN[dominant_branch_index][6:0] == 7'h3
-                          | _GEN[dominant_branch_index][6:0] == 7'h67
-                            ? {_GEN_2, _GEN[dominant_branch_index][31:20]}
-                            : _GEN[dominant_branch_index][6:0] == 7'h23
-                                ? {_GEN_2,
-                                   _GEN[dominant_branch_index][31:25],
-                                   _GEN[dominant_branch_index][11:7]}
-                                : _GEN[dominant_branch_index][6:0] == 7'h17
-                                  | _GEN[dominant_branch_index][6:0] == 7'h37
-                                    ? {_GEN[dominant_branch_index][31],
-                                       _GEN[dominant_branch_index][31:12]}
-                                    : 21'h0}) + masked_addr + _GEN_3
+          ? imm + masked_addr + _GEN_3
           : is_JALR & io_prediction_bits_hit & io_prediction_valid | is_BRANCH
             & io_prediction_bits_hit & io_prediction_valid
               ? io_prediction_bits_target
               : io_fetch_packet_bits_fetch_PC
-                + {26'h0, 6'h10 - {2'h0, io_fetch_packet_bits_fetch_PC[3:0]}};	// src/main/scala/Frontend/BP/predecoder.scala:41:7, :115:23, :116:25, :117:25, :118:25, :119:25, :123:{23,46}, :126:26, :139:13, :142:17, :144:24, :145:23, :148:{24,31,45}, :149:{24,50,73}, :151:24, :152:{26,52,75}, :154:24, :156:{24,57}, :169:46, src/main/scala/utils.scala:117:33, :119:{30,48,59}, :120:30, :121:30, :122:30, :124:{30,48,59,77,88}, :128:17, :132:42, :133:42, :134:42, :135:42, :138:{17,25}, :140:24, :143:40, :144:40, :145:40, :146:40, :149:{18,26}, :150:24, :153:44, :154:18, :155:{17,25}, :156:22, :159:44, :160:44, :164:{17,25}, :165:22, :168:44, :172:{17,25}, :174:17, :333:10, :340:47, :341:38, :351:10
-  reg  [31:0]      expected_next_PC;	// src/main/scala/Frontend/BP/predecoder.scala:169:46
-  wire             input_valid = io_fetch_packet_valid & io_prediction_valid & ~io_flush;	// src/main/scala/Frontend/BP/predecoder.scala:179:65, :180:65, :181:40
-  wire             output_ready = io_final_fetch_packet_ready & io_predictions_ready;	// src/main/scala/Frontend/BP/predecoder.scala:183:68
+                + {26'h0, 6'h10 - {2'h0, io_fetch_packet_bits_fetch_PC[3:0]}};	// src/main/scala/Frontend/BP/predecoder.scala:41:7, :115:23, :116:25, :117:25, :118:25, :119:25, :139:20, :143:17, :145:24, :146:23, :150:{24,31,45}, :151:{24,50,73}, :153:24, :154:{26,52,75}, :156:24, :158:{24,57}, src/main/scala/utils.scala:333:10, :340:47, :341:38
+  reg  [31:0]      expected_next_PC;	// src/main/scala/Frontend/BP/predecoder.scala:171:46
+  wire             input_valid = io_fetch_packet_valid & io_prediction_valid & ~io_flush;	// src/main/scala/Frontend/BP/predecoder.scala:181:65, :182:65, :183:40
+  wire             output_ready = io_final_fetch_packet_ready & io_predictions_ready;	// src/main/scala/Frontend/BP/predecoder.scala:185:68
   wire             input_fetch_packet_valid =
-    input_valid & expected_next_PC == io_fetch_packet_bits_fetch_PC;	// src/main/scala/Frontend/BP/predecoder.scala:169:46, :176:57, :179:65, :180:65, :185:52
-  reg  [15:0]      GHR;	// src/main/scala/Frontend/BP/predecoder.scala:200:22
+    input_valid & expected_next_PC == io_fetch_packet_bits_fetch_PC;	// src/main/scala/Frontend/BP/predecoder.scala:171:46, :178:57, :181:65, :182:65, :187:52
+  reg  [15:0]      GHR;	// src/main/scala/Frontend/BP/predecoder.scala:202:22
   wire             _push_FTQ_T =
     curr_is_BRANCH_3 | curr_is_JAL_3 | curr_is_JALR_3 | curr_is_BRANCH_2 | curr_is_JAL_2
-    | curr_is_JALR_2;	// src/main/scala/Frontend/BP/predecoder.scala:106:{90,128}, :107:{90,128}, :108:{90,128}, :122:{41,56}, :203:30
-  wire             _GEN_4 = _push_FTQ_T | is_control_2 | is_control_3;	// src/main/scala/Frontend/BP/predecoder.scala:122:{41,56}, :203:30
-  wire [15:0]      _GEN_5 = {GHR[14:0], T_NT_0 | T_NT_1 | T_NT_2 | is_taken};	// src/main/scala/Frontend/BP/predecoder.scala:112:{77,93}, :200:22, :204:{16,46}
-  wire             predictions_out_bits_T_NT = T_NT_0 | T_NT_1 | T_NT_2 | is_taken;	// src/main/scala/Frontend/BP/predecoder.scala:112:{77,93}, :248:73
-  reg              io_prediction_ready_REG;	// src/main/scala/Frontend/BP/predecoder.scala:277:57
-  reg              io_fetch_packet_ready_REG;	// src/main/scala/Frontend/BP/predecoder.scala:278:57
+    | curr_is_JALR_2;	// src/main/scala/Frontend/BP/predecoder.scala:106:{90,128}, :107:{90,128}, :108:{90,128}, :122:{41,56}, :205:30
+  wire             _GEN_4 = _push_FTQ_T | is_control_2 | is_control_3;	// src/main/scala/Frontend/BP/predecoder.scala:122:{41,56}, :205:30
+  wire [15:0]      _GEN_5 = {GHR[14:0], T_NT_0 | T_NT_1 | T_NT_2 | is_taken};	// src/main/scala/Frontend/BP/predecoder.scala:112:{77,93}, :202:22, :206:{16,46}
+  wire             predictions_out_bits_T_NT = T_NT_0 | T_NT_1 | T_NT_2 | is_taken;	// src/main/scala/Frontend/BP/predecoder.scala:112:{77,93}, :250:73
+  reg              io_prediction_ready_REG;	// src/main/scala/Frontend/BP/predecoder.scala:279:57
+  reg              io_fetch_packet_ready_REG;	// src/main/scala/Frontend/BP/predecoder.scala:280:57
   always @(posedge clock) begin	// src/main/scala/Frontend/BP/predecoder.scala:41:7
     if (reset) begin	// src/main/scala/Frontend/BP/predecoder.scala:41:7
-      expected_next_PC <= 32'h0;	// src/main/scala/Frontend/BP/predecoder.scala:169:46
-      GHR <= 16'h0;	// src/main/scala/Frontend/BP/predecoder.scala:200:22
+      expected_next_PC <= 32'h0;	// src/main/scala/Frontend/BP/predecoder.scala:171:46
+      GHR <= 16'h0;	// src/main/scala/Frontend/BP/predecoder.scala:202:22
     end
     else begin	// src/main/scala/Frontend/BP/predecoder.scala:41:7
-      if (io_commit_valid & io_commit_bits_is_misprediction)	// src/main/scala/Frontend/BP/predecoder.scala:189:26
-        expected_next_PC <= io_commit_bits_fetch_PC;	// src/main/scala/Frontend/BP/predecoder.scala:169:46
-      else if (input_fetch_packet_valid & output_ready)	// src/main/scala/Frontend/BP/predecoder.scala:183:68, :185:52, :188:35
-        expected_next_PC <= target_address;	// src/main/scala/Frontend/BP/predecoder.scala:142:17, :144:24, :145:23, :169:46
+      if (io_commit_valid & io_commit_bits_is_misprediction)	// src/main/scala/Frontend/BP/predecoder.scala:191:26
+        expected_next_PC <= io_commit_bits_fetch_PC;	// src/main/scala/Frontend/BP/predecoder.scala:171:46
+      else if (input_fetch_packet_valid & output_ready)	// src/main/scala/Frontend/BP/predecoder.scala:185:68, :187:52, :190:35
+        expected_next_PC <= target_address;	// src/main/scala/Frontend/BP/predecoder.scala:143:17, :145:24, :146:23, :171:46
       if (io_commit_bits_is_misprediction)	// src/main/scala/Frontend/BP/predecoder.scala:44:16
-        GHR <= io_commit_bits_GHR;	// src/main/scala/Frontend/BP/predecoder.scala:200:22
-      else if (_GEN_4)	// src/main/scala/Frontend/BP/predecoder.scala:203:30
-        GHR <= _GEN_5;	// src/main/scala/Frontend/BP/predecoder.scala:200:22, :204:16
+        GHR <= io_commit_bits_GHR;	// src/main/scala/Frontend/BP/predecoder.scala:202:22
+      else if (_GEN_4)	// src/main/scala/Frontend/BP/predecoder.scala:205:30
+        GHR <= _GEN_5;	// src/main/scala/Frontend/BP/predecoder.scala:202:22, :206:16
     end
-    io_prediction_ready_REG <= output_ready;	// src/main/scala/Frontend/BP/predecoder.scala:183:68, :277:57
-    io_fetch_packet_ready_REG <= output_ready;	// src/main/scala/Frontend/BP/predecoder.scala:183:68, :278:57
+    io_prediction_ready_REG <= output_ready;	// src/main/scala/Frontend/BP/predecoder.scala:185:68, :279:57
+    io_fetch_packet_ready_REG <= output_ready;	// src/main/scala/Frontend/BP/predecoder.scala:185:68, :280:57
   end // always @(posedge)
   `ifdef ENABLE_INITIAL_REG_	// src/main/scala/Frontend/BP/predecoder.scala:41:7
     `ifdef FIRRTL_BEFORE_INITIAL	// src/main/scala/Frontend/BP/predecoder.scala:41:7
@@ -333,36 +330,36 @@ module predecoder(	// src/main/scala/Frontend/BP/predecoder.scala:41:7
         for (logic [1:0] i = 2'h0; i < 2'h2; i += 2'h1) begin
           _RANDOM[i[0]] = `RANDOM;	// src/main/scala/Frontend/BP/predecoder.scala:41:7
         end	// src/main/scala/Frontend/BP/predecoder.scala:41:7
-        expected_next_PC = _RANDOM[1'h0];	// src/main/scala/Frontend/BP/predecoder.scala:41:7, :169:46
-        GHR = _RANDOM[1'h1][15:0];	// src/main/scala/Frontend/BP/predecoder.scala:41:7, :200:22
-        io_prediction_ready_REG = _RANDOM[1'h1][16];	// src/main/scala/Frontend/BP/predecoder.scala:41:7, :200:22, :277:57
-        io_fetch_packet_ready_REG = _RANDOM[1'h1][17];	// src/main/scala/Frontend/BP/predecoder.scala:41:7, :200:22, :278:57
+        expected_next_PC = _RANDOM[1'h0];	// src/main/scala/Frontend/BP/predecoder.scala:41:7, :171:46
+        GHR = _RANDOM[1'h1][15:0];	// src/main/scala/Frontend/BP/predecoder.scala:41:7, :202:22
+        io_prediction_ready_REG = _RANDOM[1'h1][16];	// src/main/scala/Frontend/BP/predecoder.scala:41:7, :202:22, :279:57
+        io_fetch_packet_ready_REG = _RANDOM[1'h1][17];	// src/main/scala/Frontend/BP/predecoder.scala:41:7, :202:22, :280:57
       `endif // RANDOMIZE_REG_INIT
     end // initial
     `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/Frontend/BP/predecoder.scala:41:7
       `FIRRTL_AFTER_INITIAL	// src/main/scala/Frontend/BP/predecoder.scala:41:7
     `endif // FIRRTL_AFTER_INITIAL
   `endif // ENABLE_INITIAL_REG_
-  Queue2_FTQ_entry predictions_out_Q (	// src/main/scala/Frontend/BP/predecoder.scala:264:56
+  Queue2_FTQ_entry predictions_out_Q (	// src/main/scala/Frontend/BP/predecoder.scala:266:56
     .clock                        (clock),
     .reset                        (reset),
     .io_enq_valid
-      ((_push_FTQ_T | is_control_2 | is_control_3) & input_fetch_packet_valid),	// src/main/scala/Frontend/BP/predecoder.scala:122:{41,56}, :185:52, :203:30, :236:40, :239:68
+      ((_push_FTQ_T | is_control_2 | is_control_3) & input_fetch_packet_valid),	// src/main/scala/Frontend/BP/predecoder.scala:122:{41,56}, :187:52, :205:30, :238:40, :241:68
     .io_enq_bits_valid            (1'h0),	// src/main/scala/Frontend/BP/predecoder.scala:41:7
     .io_enq_bits_fetch_PC         (io_fetch_packet_bits_fetch_PC),
     .io_enq_bits_is_misprediction (1'h0),	// src/main/scala/Frontend/BP/predecoder.scala:41:7
     .io_enq_bits_predicted_PC
       (predictions_out_bits_T_NT
          ? target_address
-         : io_fetch_packet_bits_fetch_PC + 32'h10),	// src/main/scala/Frontend/BP/predecoder.scala:142:17, :144:24, :145:23, :248:73, :249:36, :250:56, :252:{56,89}
-    .io_enq_bits_T_NT             (predictions_out_bits_T_NT),	// src/main/scala/Frontend/BP/predecoder.scala:248:73
+         : io_fetch_packet_bits_fetch_PC + 32'h10),	// src/main/scala/Frontend/BP/predecoder.scala:143:17, :145:24, :146:23, :250:73, :251:36, :252:56, :254:{56,89}
+    .io_enq_bits_T_NT             (predictions_out_bits_T_NT),	// src/main/scala/Frontend/BP/predecoder.scala:250:73
     .io_enq_bits_br_type
       (is_BRANCH
          ? 3'h1
-         : is_RET ? 3'h4 : is_CALL ? 3'h5 : is_JALR ? 3'h3 : {1'h0, is_JAL, 1'h0}),	// src/main/scala/Frontend/BP/predecoder.scala:41:7, :115:23, :116:25, :117:25, :118:25, :119:25, :120:25, :159:44, :160:{25,44}, :161:{25,44}, :162:{25,44}, :163:{25,44}, :164:{25,44}
+         : is_RET ? 3'h4 : is_CALL ? 3'h5 : is_JALR ? 3'h3 : {1'h0, is_JAL, 1'h0}),	// src/main/scala/Frontend/BP/predecoder.scala:41:7, :115:23, :116:25, :117:25, :118:25, :119:25, :120:25, :161:44, :162:{25,44}, :163:{25,44}, :164:{25,44}, :165:{25,44}, :166:{25,44}
     .io_enq_bits_dominant_index   (2'h3),
-    .io_enq_bits_resolved_PC      (io_fetch_packet_bits_fetch_PC + 32'h10),	// src/main/scala/Frontend/BP/predecoder.scala:245:89
-    .io_deq_ready                 (output_ready),	// src/main/scala/Frontend/BP/predecoder.scala:183:68
+    .io_enq_bits_resolved_PC      (io_fetch_packet_bits_fetch_PC + 32'h10),	// src/main/scala/Frontend/BP/predecoder.scala:247:89
+    .io_deq_ready                 (output_ready),	// src/main/scala/Frontend/BP/predecoder.scala:185:68
     .io_deq_valid                 (io_predictions_valid),
     .io_deq_bits_valid            (io_predictions_bits_valid),
     .io_deq_bits_fetch_PC         (io_predictions_bits_fetch_PC),
@@ -373,22 +370,22 @@ module predecoder(	// src/main/scala/Frontend/BP/predecoder.scala:41:7
     .io_deq_bits_dominant_index   (io_predictions_bits_dominant_index),
     .io_deq_bits_resolved_PC      (io_predictions_bits_resolved_PC),
     .io_flush                     (io_flush)
-  );	// src/main/scala/Frontend/BP/predecoder.scala:264:56
-  Queue2_fetch_packet final_fetch_packet_out_Q (	// src/main/scala/Frontend/BP/predecoder.scala:265:56
+  );	// src/main/scala/Frontend/BP/predecoder.scala:266:56
+  Queue2_fetch_packet final_fetch_packet_out_Q (	// src/main/scala/Frontend/BP/predecoder.scala:267:56
     .clock                                   (clock),
     .reset                                   (reset),
-    .io_enq_valid                            (input_fetch_packet_valid),	// src/main/scala/Frontend/BP/predecoder.scala:185:52
+    .io_enq_valid                            (input_fetch_packet_valid),	// src/main/scala/Frontend/BP/predecoder.scala:187:52
     .io_enq_bits_fetch_PC                    (masked_addr),	// src/main/scala/utils.scala:333:10
     .io_enq_bits_valid_bits_0
-      (io_fetch_packet_bits_valid_bits_0 & io_fetch_packet_valid),	// src/main/scala/Frontend/BP/predecoder.scala:129:67, :226:91
+      (io_fetch_packet_bits_valid_bits_0 & io_fetch_packet_valid),	// src/main/scala/Frontend/BP/predecoder.scala:130:67, :228:91
     .io_enq_bits_valid_bits_1
-      (io_fetch_packet_bits_valid_bits_1 & io_fetch_packet_valid & ~T_NT_0),	// src/main/scala/Frontend/BP/predecoder.scala:112:{77,93}, :129:{67,105,108}, :226:91
+      (io_fetch_packet_bits_valid_bits_1 & io_fetch_packet_valid & ~T_NT_0),	// src/main/scala/Frontend/BP/predecoder.scala:112:{77,93}, :130:{67,105,108}, :228:91
     .io_enq_bits_valid_bits_2
       (io_fetch_packet_bits_valid_bits_2 & io_fetch_packet_valid & _GEN_0
-       + _GEN_1 == 2'h0),	// src/main/scala/Frontend/BP/predecoder.scala:41:7, :129:{67,105,108,117}, :226:91
+       + _GEN_1 == 2'h0),	// src/main/scala/Frontend/BP/predecoder.scala:41:7, :130:{67,105,108,117}, :228:91
     .io_enq_bits_valid_bits_3
       (io_fetch_packet_bits_valid_bits_3 & io_fetch_packet_valid & _GEN_0 + _GEN_1
-       + {1'h0, T_NT_2} == 2'h0),	// src/main/scala/Frontend/BP/predecoder.scala:41:7, :112:{77,93}, :129:{67,105,108,117}, :226:91
+       + {1'h0, T_NT_2} == 2'h0),	// src/main/scala/Frontend/BP/predecoder.scala:41:7, :112:{77,93}, :130:{67,105,108,117}, :228:91
     .io_enq_bits_instructions_0_instruction
       (io_fetch_packet_bits_instructions_0_instruction),
     .io_enq_bits_instructions_0_packet_index
@@ -413,10 +410,10 @@ module predecoder(	// src/main/scala/Frontend/BP/predecoder.scala:41:7
       (io_fetch_packet_bits_instructions_3_packet_index),
     .io_enq_bits_instructions_3_ROB_index
       (io_fetch_packet_bits_instructions_3_ROB_index),
-    .io_enq_bits_GHR                         (GHR),	// src/main/scala/Frontend/BP/predecoder.scala:200:22
+    .io_enq_bits_GHR                         (GHR),	// src/main/scala/Frontend/BP/predecoder.scala:202:22
     .io_enq_bits_NEXT                        (io_RAS_read_NEXT),
     .io_enq_bits_TOS                         (io_RAS_read_TOS),
-    .io_deq_ready                            (output_ready),	// src/main/scala/Frontend/BP/predecoder.scala:183:68
+    .io_deq_ready                            (output_ready),	// src/main/scala/Frontend/BP/predecoder.scala:185:68
     .io_deq_valid                            (io_final_fetch_packet_valid),
     .io_deq_bits_fetch_PC                    (io_final_fetch_packet_bits_fetch_PC),
     .io_deq_bits_valid_bits_0                (io_final_fetch_packet_bits_valid_bits_0),
@@ -451,15 +448,15 @@ module predecoder(	// src/main/scala/Frontend/BP/predecoder.scala:41:7
     .io_deq_bits_NEXT                        (io_final_fetch_packet_bits_NEXT),
     .io_deq_bits_TOS                         (io_final_fetch_packet_bits_TOS),
     .io_flush                                (io_flush)
-  );	// src/main/scala/Frontend/BP/predecoder.scala:265:56
+  );	// src/main/scala/Frontend/BP/predecoder.scala:267:56
   assign io_revert_valid =
-    input_valid & expected_next_PC != io_fetch_packet_bits_fetch_PC;	// src/main/scala/Frontend/BP/predecoder.scala:41:7, :169:46, :177:57, :179:65, :180:65, :194:36
-  assign io_revert_bits_PC = expected_next_PC;	// src/main/scala/Frontend/BP/predecoder.scala:41:7, :169:46
-  assign io_prediction_ready = io_prediction_ready_REG;	// src/main/scala/Frontend/BP/predecoder.scala:41:7, :277:57
-  assign io_fetch_packet_ready = io_fetch_packet_ready_REG;	// src/main/scala/Frontend/BP/predecoder.scala:41:7, :278:57
-  assign io_GHR = _GEN_4 ? _GEN_5 : GHR;	// src/main/scala/Frontend/BP/predecoder.scala:41:7, :200:22, :202:12, :203:{30,36}, :204:16
-  assign io_RAS_update_call_addr = masked_addr + _GEN_3 + 32'h4;	// src/main/scala/Frontend/BP/predecoder.scala:41:7, :148:45, :217:{45,75}, src/main/scala/utils.scala:333:10
-  assign io_RAS_update_call = is_CALL & input_fetch_packet_valid;	// src/main/scala/Frontend/BP/predecoder.scala:41:7, :115:23, :120:25, :185:52, :216:41
-  assign io_RAS_update_ret = is_RET & input_fetch_packet_valid;	// src/main/scala/Frontend/BP/predecoder.scala:41:7, :115:23, :119:25, :185:52, :215:41
+    input_valid & expected_next_PC != io_fetch_packet_bits_fetch_PC;	// src/main/scala/Frontend/BP/predecoder.scala:41:7, :171:46, :179:57, :181:65, :182:65, :196:36
+  assign io_revert_bits_PC = expected_next_PC;	// src/main/scala/Frontend/BP/predecoder.scala:41:7, :171:46
+  assign io_prediction_ready = io_prediction_ready_REG;	// src/main/scala/Frontend/BP/predecoder.scala:41:7, :279:57
+  assign io_fetch_packet_ready = io_fetch_packet_ready_REG;	// src/main/scala/Frontend/BP/predecoder.scala:41:7, :280:57
+  assign io_GHR = _GEN_4 ? _GEN_5 : GHR;	// src/main/scala/Frontend/BP/predecoder.scala:41:7, :202:22, :204:12, :205:{30,36}, :206:16
+  assign io_RAS_update_call_addr = masked_addr + _GEN_3 + 32'h4;	// src/main/scala/Frontend/BP/predecoder.scala:41:7, :150:45, :219:{45,75}, src/main/scala/utils.scala:333:10
+  assign io_RAS_update_call = is_CALL & input_fetch_packet_valid;	// src/main/scala/Frontend/BP/predecoder.scala:41:7, :115:23, :120:25, :187:52, :218:41
+  assign io_RAS_update_ret = is_RET & input_fetch_packet_valid;	// src/main/scala/Frontend/BP/predecoder.scala:41:7, :115:23, :119:25, :187:52, :217:41
 endmodule
 

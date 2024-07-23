@@ -46,209 +46,536 @@
 module MOB(	// src/main/scala/Memory/MOB.scala:78:7
   input         clock,	// src/main/scala/Memory/MOB.scala:78:7
                 reset,	// src/main/scala/Memory/MOB.scala:78:7
-                io_reserve_0_valid,	// src/main/scala/Memory/MOB.scala:85:16
+                io_flush,	// src/main/scala/Memory/MOB.scala:85:16
+  output        io_reserve_0_ready,	// src/main/scala/Memory/MOB.scala:85:16
+  input         io_reserve_0_valid,	// src/main/scala/Memory/MOB.scala:85:16
+                io_reserve_0_bits_ready_bits_RS1_ready,	// src/main/scala/Memory/MOB.scala:85:16
+                io_reserve_0_bits_ready_bits_RS2_ready,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [4:0]  io_reserve_0_bits_RDold,	// src/main/scala/Memory/MOB.scala:85:16
   input  [6:0]  io_reserve_0_bits_RD,	// src/main/scala/Memory/MOB.scala:85:16
+  input         io_reserve_0_bits_RD_valid,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [6:0]  io_reserve_0_bits_RS1,	// src/main/scala/Memory/MOB.scala:85:16
+  input         io_reserve_0_bits_RS1_valid,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [6:0]  io_reserve_0_bits_RS2,	// src/main/scala/Memory/MOB.scala:85:16
+  input         io_reserve_0_bits_RS2_valid,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [20:0] io_reserve_0_bits_IMM,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [2:0]  io_reserve_0_bits_FUNCT3,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [1:0]  io_reserve_0_bits_packet_index,	// src/main/scala/Memory/MOB.scala:85:16
   input  [5:0]  io_reserve_0_bits_ROB_index,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [3:0]  io_reserve_0_bits_MOB_index,	// src/main/scala/Memory/MOB.scala:85:16
+                io_reserve_0_bits_FTQ_index,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [4:0]  io_reserve_0_bits_instructionType,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [1:0]  io_reserve_0_bits_portID,	// src/main/scala/Memory/MOB.scala:85:16
+                io_reserve_0_bits_RS_type,	// src/main/scala/Memory/MOB.scala:85:16
+  input         io_reserve_0_bits_needs_ALU,	// src/main/scala/Memory/MOB.scala:85:16
+                io_reserve_0_bits_needs_branch_unit,	// src/main/scala/Memory/MOB.scala:85:16
+                io_reserve_0_bits_needs_CSRs,	// src/main/scala/Memory/MOB.scala:85:16
+                io_reserve_0_bits_SUBTRACT,	// src/main/scala/Memory/MOB.scala:85:16
+                io_reserve_0_bits_MULTIPLY,	// src/main/scala/Memory/MOB.scala:85:16
+                io_reserve_0_bits_IS_IMM,	// src/main/scala/Memory/MOB.scala:85:16
   input  [1:0]  io_reserve_0_bits_memory_type,	// src/main/scala/Memory/MOB.scala:85:16
+                io_reserve_0_bits_access_width,	// src/main/scala/Memory/MOB.scala:85:16
+  output        io_reserve_1_ready,	// src/main/scala/Memory/MOB.scala:85:16
   input         io_reserve_1_valid,	// src/main/scala/Memory/MOB.scala:85:16
+                io_reserve_1_bits_ready_bits_RS1_ready,	// src/main/scala/Memory/MOB.scala:85:16
+                io_reserve_1_bits_ready_bits_RS2_ready,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [4:0]  io_reserve_1_bits_RDold,	// src/main/scala/Memory/MOB.scala:85:16
   input  [6:0]  io_reserve_1_bits_RD,	// src/main/scala/Memory/MOB.scala:85:16
+  input         io_reserve_1_bits_RD_valid,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [6:0]  io_reserve_1_bits_RS1,	// src/main/scala/Memory/MOB.scala:85:16
+  input         io_reserve_1_bits_RS1_valid,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [6:0]  io_reserve_1_bits_RS2,	// src/main/scala/Memory/MOB.scala:85:16
+  input         io_reserve_1_bits_RS2_valid,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [20:0] io_reserve_1_bits_IMM,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [2:0]  io_reserve_1_bits_FUNCT3,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [1:0]  io_reserve_1_bits_packet_index,	// src/main/scala/Memory/MOB.scala:85:16
   input  [5:0]  io_reserve_1_bits_ROB_index,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [3:0]  io_reserve_1_bits_MOB_index,	// src/main/scala/Memory/MOB.scala:85:16
+                io_reserve_1_bits_FTQ_index,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [4:0]  io_reserve_1_bits_instructionType,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [1:0]  io_reserve_1_bits_portID,	// src/main/scala/Memory/MOB.scala:85:16
+                io_reserve_1_bits_RS_type,	// src/main/scala/Memory/MOB.scala:85:16
+  input         io_reserve_1_bits_needs_ALU,	// src/main/scala/Memory/MOB.scala:85:16
+                io_reserve_1_bits_needs_branch_unit,	// src/main/scala/Memory/MOB.scala:85:16
+                io_reserve_1_bits_needs_CSRs,	// src/main/scala/Memory/MOB.scala:85:16
+                io_reserve_1_bits_SUBTRACT,	// src/main/scala/Memory/MOB.scala:85:16
+                io_reserve_1_bits_MULTIPLY,	// src/main/scala/Memory/MOB.scala:85:16
+                io_reserve_1_bits_IS_IMM,	// src/main/scala/Memory/MOB.scala:85:16
   input  [1:0]  io_reserve_1_bits_memory_type,	// src/main/scala/Memory/MOB.scala:85:16
+                io_reserve_1_bits_access_width,	// src/main/scala/Memory/MOB.scala:85:16
+  output        io_reserve_2_ready,	// src/main/scala/Memory/MOB.scala:85:16
   input         io_reserve_2_valid,	// src/main/scala/Memory/MOB.scala:85:16
+                io_reserve_2_bits_ready_bits_RS1_ready,	// src/main/scala/Memory/MOB.scala:85:16
+                io_reserve_2_bits_ready_bits_RS2_ready,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [4:0]  io_reserve_2_bits_RDold,	// src/main/scala/Memory/MOB.scala:85:16
   input  [6:0]  io_reserve_2_bits_RD,	// src/main/scala/Memory/MOB.scala:85:16
+  input         io_reserve_2_bits_RD_valid,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [6:0]  io_reserve_2_bits_RS1,	// src/main/scala/Memory/MOB.scala:85:16
+  input         io_reserve_2_bits_RS1_valid,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [6:0]  io_reserve_2_bits_RS2,	// src/main/scala/Memory/MOB.scala:85:16
+  input         io_reserve_2_bits_RS2_valid,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [20:0] io_reserve_2_bits_IMM,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [2:0]  io_reserve_2_bits_FUNCT3,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [1:0]  io_reserve_2_bits_packet_index,	// src/main/scala/Memory/MOB.scala:85:16
   input  [5:0]  io_reserve_2_bits_ROB_index,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [3:0]  io_reserve_2_bits_MOB_index,	// src/main/scala/Memory/MOB.scala:85:16
+                io_reserve_2_bits_FTQ_index,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [4:0]  io_reserve_2_bits_instructionType,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [1:0]  io_reserve_2_bits_portID,	// src/main/scala/Memory/MOB.scala:85:16
+                io_reserve_2_bits_RS_type,	// src/main/scala/Memory/MOB.scala:85:16
+  input         io_reserve_2_bits_needs_ALU,	// src/main/scala/Memory/MOB.scala:85:16
+                io_reserve_2_bits_needs_branch_unit,	// src/main/scala/Memory/MOB.scala:85:16
+                io_reserve_2_bits_needs_CSRs,	// src/main/scala/Memory/MOB.scala:85:16
+                io_reserve_2_bits_SUBTRACT,	// src/main/scala/Memory/MOB.scala:85:16
+                io_reserve_2_bits_MULTIPLY,	// src/main/scala/Memory/MOB.scala:85:16
+                io_reserve_2_bits_IS_IMM,	// src/main/scala/Memory/MOB.scala:85:16
   input  [1:0]  io_reserve_2_bits_memory_type,	// src/main/scala/Memory/MOB.scala:85:16
+                io_reserve_2_bits_access_width,	// src/main/scala/Memory/MOB.scala:85:16
+  output        io_reserve_3_ready,	// src/main/scala/Memory/MOB.scala:85:16
   input         io_reserve_3_valid,	// src/main/scala/Memory/MOB.scala:85:16
+                io_reserve_3_bits_ready_bits_RS1_ready,	// src/main/scala/Memory/MOB.scala:85:16
+                io_reserve_3_bits_ready_bits_RS2_ready,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [4:0]  io_reserve_3_bits_RDold,	// src/main/scala/Memory/MOB.scala:85:16
   input  [6:0]  io_reserve_3_bits_RD,	// src/main/scala/Memory/MOB.scala:85:16
+  input         io_reserve_3_bits_RD_valid,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [6:0]  io_reserve_3_bits_RS1,	// src/main/scala/Memory/MOB.scala:85:16
+  input         io_reserve_3_bits_RS1_valid,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [6:0]  io_reserve_3_bits_RS2,	// src/main/scala/Memory/MOB.scala:85:16
+  input         io_reserve_3_bits_RS2_valid,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [20:0] io_reserve_3_bits_IMM,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [2:0]  io_reserve_3_bits_FUNCT3,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [1:0]  io_reserve_3_bits_packet_index,	// src/main/scala/Memory/MOB.scala:85:16
   input  [5:0]  io_reserve_3_bits_ROB_index,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [3:0]  io_reserve_3_bits_MOB_index,	// src/main/scala/Memory/MOB.scala:85:16
+                io_reserve_3_bits_FTQ_index,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [4:0]  io_reserve_3_bits_instructionType,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [1:0]  io_reserve_3_bits_portID,	// src/main/scala/Memory/MOB.scala:85:16
+                io_reserve_3_bits_RS_type,	// src/main/scala/Memory/MOB.scala:85:16
+  input         io_reserve_3_bits_needs_ALU,	// src/main/scala/Memory/MOB.scala:85:16
+                io_reserve_3_bits_needs_branch_unit,	// src/main/scala/Memory/MOB.scala:85:16
+                io_reserve_3_bits_needs_CSRs,	// src/main/scala/Memory/MOB.scala:85:16
+                io_reserve_3_bits_SUBTRACT,	// src/main/scala/Memory/MOB.scala:85:16
+                io_reserve_3_bits_MULTIPLY,	// src/main/scala/Memory/MOB.scala:85:16
+                io_reserve_3_bits_IS_IMM,	// src/main/scala/Memory/MOB.scala:85:16
   input  [1:0]  io_reserve_3_bits_memory_type,	// src/main/scala/Memory/MOB.scala:85:16
+                io_reserve_3_bits_access_width,	// src/main/scala/Memory/MOB.scala:85:16
+  output        io_reserved_pointers_0_valid,	// src/main/scala/Memory/MOB.scala:85:16
+  output [3:0]  io_reserved_pointers_0_bits,	// src/main/scala/Memory/MOB.scala:85:16
+  output        io_reserved_pointers_1_valid,	// src/main/scala/Memory/MOB.scala:85:16
+  output [3:0]  io_reserved_pointers_1_bits,	// src/main/scala/Memory/MOB.scala:85:16
+  output        io_reserved_pointers_2_valid,	// src/main/scala/Memory/MOB.scala:85:16
+  output [3:0]  io_reserved_pointers_2_bits,	// src/main/scala/Memory/MOB.scala:85:16
+  output        io_reserved_pointers_3_valid,	// src/main/scala/Memory/MOB.scala:85:16
+  output [3:0]  io_reserved_pointers_3_bits,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [31:0] io_fetch_PC,	// src/main/scala/Memory/MOB.scala:85:16
   input         io_AGU_output_valid,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [6:0]  io_AGU_output_bits_RD,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [31:0] io_AGU_output_bits_RD_data,	// src/main/scala/Memory/MOB.scala:85:16
+  input         io_AGU_output_bits_RD_valid,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [31:0] io_AGU_output_bits_fetch_PC,	// src/main/scala/Memory/MOB.scala:85:16
+  input         io_AGU_output_bits_branch_taken,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [31:0] io_AGU_output_bits_target_address,	// src/main/scala/Memory/MOB.scala:85:16
+  input         io_AGU_output_bits_branch_valid,	// src/main/scala/Memory/MOB.scala:85:16
   input  [31:0] io_AGU_output_bits_address,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [1:0]  io_AGU_output_bits_memory_type,	// src/main/scala/Memory/MOB.scala:85:16
+                io_AGU_output_bits_access_width,	// src/main/scala/Memory/MOB.scala:85:16
+  input         io_AGU_output_bits_is_unsigned,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [31:0] io_AGU_output_bits_wr_data,	// src/main/scala/Memory/MOB.scala:85:16
   input  [3:0]  io_AGU_output_bits_MOB_index,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [5:0]  io_AGU_output_bits_ROB_index,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [3:0]  io_AGU_output_bits_FTQ_index,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [1:0]  io_AGU_output_bits_fetch_packet_index,	// src/main/scala/Memory/MOB.scala:85:16
+  input         io_AGU_output_bits_exception,	// src/main/scala/Memory/MOB.scala:85:16
   output        io_MOB_output_valid,	// src/main/scala/Memory/MOB.scala:85:16
   output [6:0]  io_MOB_output_bits_RD,	// src/main/scala/Memory/MOB.scala:85:16
   output [31:0] io_MOB_output_bits_RD_data,	// src/main/scala/Memory/MOB.scala:85:16
   output        io_MOB_output_bits_RD_valid,	// src/main/scala/Memory/MOB.scala:85:16
+  output [31:0] io_MOB_output_bits_fetch_PC,	// src/main/scala/Memory/MOB.scala:85:16
+  output        io_MOB_output_bits_branch_taken,	// src/main/scala/Memory/MOB.scala:85:16
+  output [31:0] io_MOB_output_bits_target_address,	// src/main/scala/Memory/MOB.scala:85:16
+  output        io_MOB_output_bits_branch_valid,	// src/main/scala/Memory/MOB.scala:85:16
+  output [31:0] io_MOB_output_bits_address,	// src/main/scala/Memory/MOB.scala:85:16
+  output [1:0]  io_MOB_output_bits_memory_type,	// src/main/scala/Memory/MOB.scala:85:16
+                io_MOB_output_bits_access_width,	// src/main/scala/Memory/MOB.scala:85:16
+  output        io_MOB_output_bits_is_unsigned,	// src/main/scala/Memory/MOB.scala:85:16
+  output [31:0] io_MOB_output_bits_wr_data,	// src/main/scala/Memory/MOB.scala:85:16
+  output [3:0]  io_MOB_output_bits_MOB_index,	// src/main/scala/Memory/MOB.scala:85:16
+  output [5:0]  io_MOB_output_bits_ROB_index,	// src/main/scala/Memory/MOB.scala:85:16
+  output [3:0]  io_MOB_output_bits_FTQ_index,	// src/main/scala/Memory/MOB.scala:85:16
+  output [1:0]  io_MOB_output_bits_fetch_packet_index,	// src/main/scala/Memory/MOB.scala:85:16
+  output        io_MOB_output_bits_exception,	// src/main/scala/Memory/MOB.scala:85:16
   input         io_commit_valid,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [31:0] io_commit_bits_fetch_PC,	// src/main/scala/Memory/MOB.scala:85:16
+  input         io_commit_bits_T_NT,	// src/main/scala/Memory/MOB.scala:85:16
   input  [5:0]  io_commit_bits_ROB_index,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [2:0]  io_commit_bits_br_type,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [1:0]  io_commit_bits_fetch_packet_index,	// src/main/scala/Memory/MOB.scala:85:16
   input         io_commit_bits_is_misprediction,	// src/main/scala/Memory/MOB.scala:85:16
                 io_commit_bits_exception,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [31:0] io_commit_bits_expected_PC,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [15:0] io_commit_bits_GHR,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [6:0]  io_commit_bits_TOS,	// src/main/scala/Memory/MOB.scala:85:16
+                io_commit_bits_NEXT,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [3:0]  io_commit_bits_RAT_index,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [7:0]  io_commit_bits_free_list_front_pointer,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [4:0]  io_commit_bits_RDold_0,	// src/main/scala/Memory/MOB.scala:85:16
+                io_commit_bits_RDold_1,	// src/main/scala/Memory/MOB.scala:85:16
+                io_commit_bits_RDold_2,	// src/main/scala/Memory/MOB.scala:85:16
+                io_commit_bits_RDold_3,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [6:0]  io_commit_bits_RD_0,	// src/main/scala/Memory/MOB.scala:85:16
+                io_commit_bits_RD_1,	// src/main/scala/Memory/MOB.scala:85:16
+                io_commit_bits_RD_2,	// src/main/scala/Memory/MOB.scala:85:16
+                io_commit_bits_RD_3,	// src/main/scala/Memory/MOB.scala:85:16
+  input         io_commit_bits_RD_valid_0,	// src/main/scala/Memory/MOB.scala:85:16
+                io_commit_bits_RD_valid_1,	// src/main/scala/Memory/MOB.scala:85:16
+                io_commit_bits_RD_valid_2,	// src/main/scala/Memory/MOB.scala:85:16
+                io_commit_bits_RD_valid_3,	// src/main/scala/Memory/MOB.scala:85:16
+                io_backend_memory_request_ready,	// src/main/scala/Memory/MOB.scala:85:16
   output        io_backend_memory_request_valid,	// src/main/scala/Memory/MOB.scala:85:16
   output [31:0] io_backend_memory_request_bits_addr,	// src/main/scala/Memory/MOB.scala:85:16
+                io_backend_memory_request_bits_data,	// src/main/scala/Memory/MOB.scala:85:16
   output [1:0]  io_backend_memory_request_bits_memory_type,	// src/main/scala/Memory/MOB.scala:85:16
+                io_backend_memory_request_bits_access_width,	// src/main/scala/Memory/MOB.scala:85:16
   output [3:0]  io_backend_memory_request_bits_MOB_index,	// src/main/scala/Memory/MOB.scala:85:16
+  output        io_backend_memory_response_ready,	// src/main/scala/Memory/MOB.scala:85:16
   input         io_backend_memory_response_valid,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [31:0] io_backend_memory_response_bits_addr,	// src/main/scala/Memory/MOB.scala:85:16
+                io_backend_memory_response_bits_data,	// src/main/scala/Memory/MOB.scala:85:16
+  input  [1:0]  io_backend_memory_response_bits_memory_type,	// src/main/scala/Memory/MOB.scala:85:16
+                io_backend_memory_response_bits_access_width,	// src/main/scala/Memory/MOB.scala:85:16
   input  [3:0]  io_backend_memory_response_bits_MOB_index	// src/main/scala/Memory/MOB.scala:85:16
 );
 
-  wire              _FU_output_arbiter_io_in_1_ready;	// src/main/scala/Memory/MOB.scala:372:41
-  wire              _FU_output_store_Q_io_deq_valid;	// src/main/scala/Memory/MOB.scala:294:41
-  wire [6:0]        _FU_output_store_Q_io_deq_bits_RD;	// src/main/scala/Memory/MOB.scala:294:41
-  wire [31:0]       _FU_output_store_Q_io_deq_bits_RD_data;	// src/main/scala/Memory/MOB.scala:294:41
-  wire              _FU_output_store_Q_io_deq_bits_RD_valid;	// src/main/scala/Memory/MOB.scala:294:41
-  wire              _FU_output_load_Q_io_deq_valid;	// src/main/scala/Memory/MOB.scala:293:41
-  wire [6:0]        _FU_output_load_Q_io_deq_bits_RD;	// src/main/scala/Memory/MOB.scala:293:41
-  wire [31:0]       _FU_output_load_Q_io_deq_bits_RD_data;	// src/main/scala/Memory/MOB.scala:293:41
-  wire              _FU_output_load_Q_io_deq_bits_RD_valid;	// src/main/scala/Memory/MOB.scala:293:41
+  wire [2:0]        _availalbe_MOB_entries_4to2;	// src/main/scala/Memory/MOB.scala:415:54
+  wire              _FU_output_arbiter_io_in_0_ready;	// src/main/scala/Memory/MOB.scala:384:41
+  wire              _FU_output_arbiter_io_in_1_ready;	// src/main/scala/Memory/MOB.scala:384:41
+  wire              _FU_output_store_Q_io_deq_valid;	// src/main/scala/Memory/MOB.scala:307:41
+  wire [6:0]        _FU_output_store_Q_io_deq_bits_RD;	// src/main/scala/Memory/MOB.scala:307:41
+  wire [31:0]       _FU_output_store_Q_io_deq_bits_RD_data;	// src/main/scala/Memory/MOB.scala:307:41
+  wire              _FU_output_store_Q_io_deq_bits_RD_valid;	// src/main/scala/Memory/MOB.scala:307:41
+  wire [31:0]       _FU_output_store_Q_io_deq_bits_fetch_PC;	// src/main/scala/Memory/MOB.scala:307:41
+  wire              _FU_output_store_Q_io_deq_bits_branch_taken;	// src/main/scala/Memory/MOB.scala:307:41
+  wire [31:0]       _FU_output_store_Q_io_deq_bits_target_address;	// src/main/scala/Memory/MOB.scala:307:41
+  wire              _FU_output_store_Q_io_deq_bits_branch_valid;	// src/main/scala/Memory/MOB.scala:307:41
+  wire [31:0]       _FU_output_store_Q_io_deq_bits_address;	// src/main/scala/Memory/MOB.scala:307:41
+  wire [1:0]        _FU_output_store_Q_io_deq_bits_memory_type;	// src/main/scala/Memory/MOB.scala:307:41
+  wire [1:0]        _FU_output_store_Q_io_deq_bits_access_width;	// src/main/scala/Memory/MOB.scala:307:41
+  wire              _FU_output_store_Q_io_deq_bits_is_unsigned;	// src/main/scala/Memory/MOB.scala:307:41
+  wire [31:0]       _FU_output_store_Q_io_deq_bits_wr_data;	// src/main/scala/Memory/MOB.scala:307:41
+  wire [3:0]        _FU_output_store_Q_io_deq_bits_MOB_index;	// src/main/scala/Memory/MOB.scala:307:41
+  wire [5:0]        _FU_output_store_Q_io_deq_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:307:41
+  wire [3:0]        _FU_output_store_Q_io_deq_bits_FTQ_index;	// src/main/scala/Memory/MOB.scala:307:41
+  wire [1:0]        _FU_output_store_Q_io_deq_bits_fetch_packet_index;	// src/main/scala/Memory/MOB.scala:307:41
+  wire              _FU_output_store_Q_io_deq_bits_exception;	// src/main/scala/Memory/MOB.scala:307:41
+  wire              _FU_output_load_Q_io_deq_valid;	// src/main/scala/Memory/MOB.scala:306:41
+  wire [6:0]        _FU_output_load_Q_io_deq_bits_RD;	// src/main/scala/Memory/MOB.scala:306:41
+  wire [31:0]       _FU_output_load_Q_io_deq_bits_RD_data;	// src/main/scala/Memory/MOB.scala:306:41
+  wire              _FU_output_load_Q_io_deq_bits_RD_valid;	// src/main/scala/Memory/MOB.scala:306:41
+  wire [31:0]       _FU_output_load_Q_io_deq_bits_fetch_PC;	// src/main/scala/Memory/MOB.scala:306:41
+  wire              _FU_output_load_Q_io_deq_bits_branch_taken;	// src/main/scala/Memory/MOB.scala:306:41
+  wire [31:0]       _FU_output_load_Q_io_deq_bits_target_address;	// src/main/scala/Memory/MOB.scala:306:41
+  wire              _FU_output_load_Q_io_deq_bits_branch_valid;	// src/main/scala/Memory/MOB.scala:306:41
+  wire [31:0]       _FU_output_load_Q_io_deq_bits_address;	// src/main/scala/Memory/MOB.scala:306:41
+  wire [1:0]        _FU_output_load_Q_io_deq_bits_memory_type;	// src/main/scala/Memory/MOB.scala:306:41
+  wire [1:0]        _FU_output_load_Q_io_deq_bits_access_width;	// src/main/scala/Memory/MOB.scala:306:41
+  wire              _FU_output_load_Q_io_deq_bits_is_unsigned;	// src/main/scala/Memory/MOB.scala:306:41
+  wire [31:0]       _FU_output_load_Q_io_deq_bits_wr_data;	// src/main/scala/Memory/MOB.scala:306:41
+  wire [3:0]        _FU_output_load_Q_io_deq_bits_MOB_index;	// src/main/scala/Memory/MOB.scala:306:41
+  wire [5:0]        _FU_output_load_Q_io_deq_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:306:41
+  wire [3:0]        _FU_output_load_Q_io_deq_bits_FTQ_index;	// src/main/scala/Memory/MOB.scala:306:41
+  wire [1:0]        _FU_output_load_Q_io_deq_bits_fetch_packet_index;	// src/main/scala/Memory/MOB.scala:306:41
+  wire              _FU_output_load_Q_io_deq_bits_exception;	// src/main/scala/Memory/MOB.scala:306:41
+  reg  [4:0]        front_pointer;	// src/main/scala/Memory/MOB.scala:113:34
   reg  [4:0]        back_pointer;	// src/main/scala/Memory/MOB.scala:114:34
   reg               MOB_0_valid;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [1:0]        MOB_0_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [5:0]        MOB_0_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+  reg  [1:0]        MOB_0_fetch_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [31:0]       MOB_0_address;	// src/main/scala/Memory/MOB.scala:119:22
+  reg  [1:0]        MOB_0_access_width;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [6:0]        MOB_0_RD;	// src/main/scala/Memory/MOB.scala:119:22
+  reg  [31:0]       MOB_0_data;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_0_data_valid;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_0_pending;	// src/main/scala/Memory/MOB.scala:119:22
+  reg               MOB_0_completed;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_0_committed;	// src/main/scala/Memory/MOB.scala:119:22
+  reg               MOB_0_exception;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_1_valid;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [1:0]        MOB_1_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [5:0]        MOB_1_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+  reg  [1:0]        MOB_1_fetch_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [31:0]       MOB_1_address;	// src/main/scala/Memory/MOB.scala:119:22
+  reg  [1:0]        MOB_1_access_width;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [6:0]        MOB_1_RD;	// src/main/scala/Memory/MOB.scala:119:22
+  reg  [31:0]       MOB_1_data;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_1_data_valid;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_1_pending;	// src/main/scala/Memory/MOB.scala:119:22
+  reg               MOB_1_completed;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_1_committed;	// src/main/scala/Memory/MOB.scala:119:22
+  reg               MOB_1_exception;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_2_valid;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [1:0]        MOB_2_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [5:0]        MOB_2_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+  reg  [1:0]        MOB_2_fetch_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [31:0]       MOB_2_address;	// src/main/scala/Memory/MOB.scala:119:22
+  reg  [1:0]        MOB_2_access_width;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [6:0]        MOB_2_RD;	// src/main/scala/Memory/MOB.scala:119:22
+  reg  [31:0]       MOB_2_data;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_2_data_valid;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_2_pending;	// src/main/scala/Memory/MOB.scala:119:22
+  reg               MOB_2_completed;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_2_committed;	// src/main/scala/Memory/MOB.scala:119:22
+  reg               MOB_2_exception;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_3_valid;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [1:0]        MOB_3_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [5:0]        MOB_3_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+  reg  [1:0]        MOB_3_fetch_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [31:0]       MOB_3_address;	// src/main/scala/Memory/MOB.scala:119:22
+  reg  [1:0]        MOB_3_access_width;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [6:0]        MOB_3_RD;	// src/main/scala/Memory/MOB.scala:119:22
+  reg  [31:0]       MOB_3_data;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_3_data_valid;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_3_pending;	// src/main/scala/Memory/MOB.scala:119:22
+  reg               MOB_3_completed;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_3_committed;	// src/main/scala/Memory/MOB.scala:119:22
+  reg               MOB_3_exception;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_4_valid;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [1:0]        MOB_4_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [5:0]        MOB_4_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+  reg  [1:0]        MOB_4_fetch_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [31:0]       MOB_4_address;	// src/main/scala/Memory/MOB.scala:119:22
+  reg  [1:0]        MOB_4_access_width;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [6:0]        MOB_4_RD;	// src/main/scala/Memory/MOB.scala:119:22
+  reg  [31:0]       MOB_4_data;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_4_data_valid;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_4_pending;	// src/main/scala/Memory/MOB.scala:119:22
+  reg               MOB_4_completed;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_4_committed;	// src/main/scala/Memory/MOB.scala:119:22
+  reg               MOB_4_exception;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_5_valid;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [1:0]        MOB_5_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [5:0]        MOB_5_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+  reg  [1:0]        MOB_5_fetch_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [31:0]       MOB_5_address;	// src/main/scala/Memory/MOB.scala:119:22
+  reg  [1:0]        MOB_5_access_width;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [6:0]        MOB_5_RD;	// src/main/scala/Memory/MOB.scala:119:22
+  reg  [31:0]       MOB_5_data;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_5_data_valid;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_5_pending;	// src/main/scala/Memory/MOB.scala:119:22
+  reg               MOB_5_completed;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_5_committed;	// src/main/scala/Memory/MOB.scala:119:22
+  reg               MOB_5_exception;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_6_valid;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [1:0]        MOB_6_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [5:0]        MOB_6_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+  reg  [1:0]        MOB_6_fetch_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [31:0]       MOB_6_address;	// src/main/scala/Memory/MOB.scala:119:22
+  reg  [1:0]        MOB_6_access_width;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [6:0]        MOB_6_RD;	// src/main/scala/Memory/MOB.scala:119:22
+  reg  [31:0]       MOB_6_data;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_6_data_valid;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_6_pending;	// src/main/scala/Memory/MOB.scala:119:22
+  reg               MOB_6_completed;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_6_committed;	// src/main/scala/Memory/MOB.scala:119:22
+  reg               MOB_6_exception;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_7_valid;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [1:0]        MOB_7_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [5:0]        MOB_7_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+  reg  [1:0]        MOB_7_fetch_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [31:0]       MOB_7_address;	// src/main/scala/Memory/MOB.scala:119:22
+  reg  [1:0]        MOB_7_access_width;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [6:0]        MOB_7_RD;	// src/main/scala/Memory/MOB.scala:119:22
+  reg  [31:0]       MOB_7_data;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_7_data_valid;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_7_pending;	// src/main/scala/Memory/MOB.scala:119:22
+  reg               MOB_7_completed;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_7_committed;	// src/main/scala/Memory/MOB.scala:119:22
+  reg               MOB_7_exception;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_8_valid;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [1:0]        MOB_8_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [5:0]        MOB_8_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+  reg  [1:0]        MOB_8_fetch_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [31:0]       MOB_8_address;	// src/main/scala/Memory/MOB.scala:119:22
+  reg  [1:0]        MOB_8_access_width;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [6:0]        MOB_8_RD;	// src/main/scala/Memory/MOB.scala:119:22
+  reg  [31:0]       MOB_8_data;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_8_data_valid;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_8_pending;	// src/main/scala/Memory/MOB.scala:119:22
+  reg               MOB_8_completed;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_8_committed;	// src/main/scala/Memory/MOB.scala:119:22
+  reg               MOB_8_exception;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_9_valid;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [1:0]        MOB_9_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [5:0]        MOB_9_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+  reg  [1:0]        MOB_9_fetch_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [31:0]       MOB_9_address;	// src/main/scala/Memory/MOB.scala:119:22
+  reg  [1:0]        MOB_9_access_width;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [6:0]        MOB_9_RD;	// src/main/scala/Memory/MOB.scala:119:22
+  reg  [31:0]       MOB_9_data;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_9_data_valid;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_9_pending;	// src/main/scala/Memory/MOB.scala:119:22
+  reg               MOB_9_completed;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_9_committed;	// src/main/scala/Memory/MOB.scala:119:22
+  reg               MOB_9_exception;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_10_valid;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [1:0]        MOB_10_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [5:0]        MOB_10_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+  reg  [1:0]        MOB_10_fetch_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [31:0]       MOB_10_address;	// src/main/scala/Memory/MOB.scala:119:22
+  reg  [1:0]        MOB_10_access_width;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [6:0]        MOB_10_RD;	// src/main/scala/Memory/MOB.scala:119:22
+  reg  [31:0]       MOB_10_data;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_10_data_valid;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_10_pending;	// src/main/scala/Memory/MOB.scala:119:22
+  reg               MOB_10_completed;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_10_committed;	// src/main/scala/Memory/MOB.scala:119:22
+  reg               MOB_10_exception;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_11_valid;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [1:0]        MOB_11_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [5:0]        MOB_11_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+  reg  [1:0]        MOB_11_fetch_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [31:0]       MOB_11_address;	// src/main/scala/Memory/MOB.scala:119:22
+  reg  [1:0]        MOB_11_access_width;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [6:0]        MOB_11_RD;	// src/main/scala/Memory/MOB.scala:119:22
+  reg  [31:0]       MOB_11_data;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_11_data_valid;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_11_pending;	// src/main/scala/Memory/MOB.scala:119:22
+  reg               MOB_11_completed;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_11_committed;	// src/main/scala/Memory/MOB.scala:119:22
+  reg               MOB_11_exception;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_12_valid;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [1:0]        MOB_12_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [5:0]        MOB_12_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+  reg  [1:0]        MOB_12_fetch_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [31:0]       MOB_12_address;	// src/main/scala/Memory/MOB.scala:119:22
+  reg  [1:0]        MOB_12_access_width;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [6:0]        MOB_12_RD;	// src/main/scala/Memory/MOB.scala:119:22
+  reg  [31:0]       MOB_12_data;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_12_data_valid;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_12_pending;	// src/main/scala/Memory/MOB.scala:119:22
+  reg               MOB_12_completed;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_12_committed;	// src/main/scala/Memory/MOB.scala:119:22
+  reg               MOB_12_exception;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_13_valid;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [1:0]        MOB_13_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [5:0]        MOB_13_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+  reg  [1:0]        MOB_13_fetch_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [31:0]       MOB_13_address;	// src/main/scala/Memory/MOB.scala:119:22
+  reg  [1:0]        MOB_13_access_width;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [6:0]        MOB_13_RD;	// src/main/scala/Memory/MOB.scala:119:22
+  reg  [31:0]       MOB_13_data;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_13_data_valid;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_13_pending;	// src/main/scala/Memory/MOB.scala:119:22
+  reg               MOB_13_completed;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_13_committed;	// src/main/scala/Memory/MOB.scala:119:22
+  reg               MOB_13_exception;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_14_valid;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [1:0]        MOB_14_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [5:0]        MOB_14_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+  reg  [1:0]        MOB_14_fetch_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [31:0]       MOB_14_address;	// src/main/scala/Memory/MOB.scala:119:22
+  reg  [1:0]        MOB_14_access_width;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [6:0]        MOB_14_RD;	// src/main/scala/Memory/MOB.scala:119:22
+  reg  [31:0]       MOB_14_data;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_14_data_valid;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_14_pending;	// src/main/scala/Memory/MOB.scala:119:22
+  reg               MOB_14_completed;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_14_committed;	// src/main/scala/Memory/MOB.scala:119:22
+  reg               MOB_14_exception;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_15_valid;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [1:0]        MOB_15_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [5:0]        MOB_15_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+  reg  [1:0]        MOB_15_fetch_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [31:0]       MOB_15_address;	// src/main/scala/Memory/MOB.scala:119:22
+  reg  [1:0]        MOB_15_access_width;	// src/main/scala/Memory/MOB.scala:119:22
   reg  [6:0]        MOB_15_RD;	// src/main/scala/Memory/MOB.scala:119:22
+  reg  [31:0]       MOB_15_data;	// src/main/scala/Memory/MOB.scala:119:22
+  reg               MOB_15_data_valid;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_15_pending;	// src/main/scala/Memory/MOB.scala:119:22
+  reg               MOB_15_completed;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_15_committed;	// src/main/scala/Memory/MOB.scala:119:22
-  wire              is_load = MOB_0_memory_type == 2'h1;	// src/main/scala/Memory/MOB.scala:119:22, :196:50
-  wire              is_load_1 = MOB_1_memory_type == 2'h1;	// src/main/scala/Memory/MOB.scala:119:22, :196:50
-  wire              is_load_2 = MOB_2_memory_type == 2'h1;	// src/main/scala/Memory/MOB.scala:119:22, :196:50
-  wire              is_load_3 = MOB_3_memory_type == 2'h1;	// src/main/scala/Memory/MOB.scala:119:22, :196:50
-  wire              is_load_4 = MOB_4_memory_type == 2'h1;	// src/main/scala/Memory/MOB.scala:119:22, :196:50
-  wire              is_load_5 = MOB_5_memory_type == 2'h1;	// src/main/scala/Memory/MOB.scala:119:22, :196:50
-  wire              is_load_6 = MOB_6_memory_type == 2'h1;	// src/main/scala/Memory/MOB.scala:119:22, :196:50
-  wire              is_load_7 = MOB_7_memory_type == 2'h1;	// src/main/scala/Memory/MOB.scala:119:22, :196:50
-  wire              is_load_8 = MOB_8_memory_type == 2'h1;	// src/main/scala/Memory/MOB.scala:119:22, :196:50
-  wire              is_load_9 = MOB_9_memory_type == 2'h1;	// src/main/scala/Memory/MOB.scala:119:22, :196:50
-  wire              is_load_10 = MOB_10_memory_type == 2'h1;	// src/main/scala/Memory/MOB.scala:119:22, :196:50
-  wire              is_load_11 = MOB_11_memory_type == 2'h1;	// src/main/scala/Memory/MOB.scala:119:22, :196:50
-  wire              is_load_12 = MOB_12_memory_type == 2'h1;	// src/main/scala/Memory/MOB.scala:119:22, :196:50
-  wire              is_load_13 = MOB_13_memory_type == 2'h1;	// src/main/scala/Memory/MOB.scala:119:22, :196:50
-  wire              is_load_14 = MOB_14_memory_type == 2'h1;	// src/main/scala/Memory/MOB.scala:119:22, :196:50
-  wire              possible_load_vec_0 = MOB_0_valid & MOB_0_pending & is_load;	// src/main/scala/Memory/MOB.scala:119:22, :196:50, :225:{66,87}
-  wire              possible_load_vec_1 = MOB_1_valid & MOB_1_pending & is_load_1;	// src/main/scala/Memory/MOB.scala:119:22, :196:50, :225:{66,87}
-  wire              possible_load_vec_2 = MOB_2_valid & MOB_2_pending & is_load_2;	// src/main/scala/Memory/MOB.scala:119:22, :196:50, :225:{66,87}
-  wire              possible_load_vec_3 = MOB_3_valid & MOB_3_pending & is_load_3;	// src/main/scala/Memory/MOB.scala:119:22, :196:50, :225:{66,87}
-  wire              possible_load_vec_4 = MOB_4_valid & MOB_4_pending & is_load_4;	// src/main/scala/Memory/MOB.scala:119:22, :196:50, :225:{66,87}
-  wire              possible_load_vec_5 = MOB_5_valid & MOB_5_pending & is_load_5;	// src/main/scala/Memory/MOB.scala:119:22, :196:50, :225:{66,87}
-  wire              possible_load_vec_6 = MOB_6_valid & MOB_6_pending & is_load_6;	// src/main/scala/Memory/MOB.scala:119:22, :196:50, :225:{66,87}
-  wire              possible_load_vec_7 = MOB_7_valid & MOB_7_pending & is_load_7;	// src/main/scala/Memory/MOB.scala:119:22, :196:50, :225:{66,87}
-  wire              possible_load_vec_8 = MOB_8_valid & MOB_8_pending & is_load_8;	// src/main/scala/Memory/MOB.scala:119:22, :196:50, :225:{66,87}
-  wire              possible_load_vec_9 = MOB_9_valid & MOB_9_pending & is_load_9;	// src/main/scala/Memory/MOB.scala:119:22, :196:50, :225:{66,87}
-  wire              possible_load_vec_10 = MOB_10_valid & MOB_10_pending & is_load_10;	// src/main/scala/Memory/MOB.scala:119:22, :196:50, :225:{66,87}
-  wire              possible_load_vec_11 = MOB_11_valid & MOB_11_pending & is_load_11;	// src/main/scala/Memory/MOB.scala:119:22, :196:50, :225:{66,87}
-  wire              possible_load_vec_12 = MOB_12_valid & MOB_12_pending & is_load_12;	// src/main/scala/Memory/MOB.scala:119:22, :196:50, :225:{66,87}
-  wire              possible_load_vec_13 = MOB_13_valid & MOB_13_pending & is_load_13;	// src/main/scala/Memory/MOB.scala:119:22, :196:50, :225:{66,87}
-  wire              possible_load_vec_14 = MOB_14_valid & MOB_14_pending & is_load_14;	// src/main/scala/Memory/MOB.scala:119:22, :196:50, :225:{66,87}
-  wire [15:0][1:0]  _GEN =
+  reg               MOB_15_exception;	// src/main/scala/Memory/MOB.scala:119:22
+  wire              written_vec_0 = io_reserve_0_valid & (|_availalbe_MOB_entries_4to2);	// src/main/scala/Memory/MOB.scala:142:34, :415:54
+  wire              written_vec_1 = io_reserve_1_valid & (|_availalbe_MOB_entries_4to2);	// src/main/scala/Memory/MOB.scala:142:34, :415:54
+  wire              written_vec_2 = io_reserve_2_valid & (|_availalbe_MOB_entries_4to2);	// src/main/scala/Memory/MOB.scala:142:34, :415:54
+  wire              written_vec_3 = io_reserve_3_valid & (|_availalbe_MOB_entries_4to2);	// src/main/scala/Memory/MOB.scala:142:34, :415:54
+  wire [1:0]        _GEN = {1'h0, written_vec_0};	// src/main/scala/Memory/MOB.scala:142:34, :151:63
+  wire [3:0]        _io_reserved_pointers_0_bits_T =
+    back_pointer[3:0] + {3'h0, written_vec_0 - 1'h1};	// src/main/scala/Memory/MOB.scala:114:34, :117:39, :142:34, :151:63, :153:28
+  wire [1:0]        _GEN_0 = {1'h0, written_vec_1};	// src/main/scala/Memory/MOB.scala:142:34, :151:40
+  wire [3:0]        _io_reserved_pointers_1_bits_T =
+    back_pointer[3:0] + {2'h0, _GEN + _GEN_0 - 2'h1};	// src/main/scala/Memory/MOB.scala:114:34, :117:39, :151:{40,63}, :153:28
+  wire [1:0]        _GEN_1 = {1'h0, written_vec_2};	// src/main/scala/Memory/MOB.scala:142:34, :151:40
+  wire [3:0]        _io_reserved_pointers_2_bits_T =
+    back_pointer[3:0] + {2'h0, _GEN + _GEN_0 + _GEN_1 - 2'h1};	// src/main/scala/Memory/MOB.scala:114:34, :117:39, :151:{40,63}, :153:28
+  wire [1:0]        _GEN_2 = {1'h0, written_vec_3};	// src/main/scala/Memory/MOB.scala:142:34, :151:40
+  wire [3:0]        _io_reserved_pointers_3_bits_T =
+    back_pointer[3:0] + {1'h0, {1'h0, _GEN + _GEN_0} + {1'h0, _GEN_1 + _GEN_2} - 3'h1};	// src/main/scala/Memory/MOB.scala:114:34, :117:39, :151:{40,63}, :153:28
+  wire              is_load = MOB_0_memory_type == 2'h1;	// src/main/scala/Memory/MOB.scala:119:22, :151:63, :206:50
+  wire              is_store = MOB_0_memory_type == 2'h2;	// src/main/scala/Memory/MOB.scala:119:22, :207:50
+  wire              is_load_1 = MOB_1_memory_type == 2'h1;	// src/main/scala/Memory/MOB.scala:119:22, :151:63, :206:50
+  wire              is_store_1 = MOB_1_memory_type == 2'h2;	// src/main/scala/Memory/MOB.scala:119:22, :207:50
+  wire              is_load_2 = MOB_2_memory_type == 2'h1;	// src/main/scala/Memory/MOB.scala:119:22, :151:63, :206:50
+  wire              is_store_2 = MOB_2_memory_type == 2'h2;	// src/main/scala/Memory/MOB.scala:119:22, :207:50
+  wire              is_load_3 = MOB_3_memory_type == 2'h1;	// src/main/scala/Memory/MOB.scala:119:22, :151:63, :206:50
+  wire              is_store_3 = MOB_3_memory_type == 2'h2;	// src/main/scala/Memory/MOB.scala:119:22, :207:50
+  wire              is_load_4 = MOB_4_memory_type == 2'h1;	// src/main/scala/Memory/MOB.scala:119:22, :151:63, :206:50
+  wire              is_store_4 = MOB_4_memory_type == 2'h2;	// src/main/scala/Memory/MOB.scala:119:22, :207:50
+  wire              is_load_5 = MOB_5_memory_type == 2'h1;	// src/main/scala/Memory/MOB.scala:119:22, :151:63, :206:50
+  wire              is_store_5 = MOB_5_memory_type == 2'h2;	// src/main/scala/Memory/MOB.scala:119:22, :207:50
+  wire              is_load_6 = MOB_6_memory_type == 2'h1;	// src/main/scala/Memory/MOB.scala:119:22, :151:63, :206:50
+  wire              is_store_6 = MOB_6_memory_type == 2'h2;	// src/main/scala/Memory/MOB.scala:119:22, :207:50
+  wire              is_load_7 = MOB_7_memory_type == 2'h1;	// src/main/scala/Memory/MOB.scala:119:22, :151:63, :206:50
+  wire              is_store_7 = MOB_7_memory_type == 2'h2;	// src/main/scala/Memory/MOB.scala:119:22, :207:50
+  wire              is_load_8 = MOB_8_memory_type == 2'h1;	// src/main/scala/Memory/MOB.scala:119:22, :151:63, :206:50
+  wire              is_store_8 = MOB_8_memory_type == 2'h2;	// src/main/scala/Memory/MOB.scala:119:22, :207:50
+  wire              is_load_9 = MOB_9_memory_type == 2'h1;	// src/main/scala/Memory/MOB.scala:119:22, :151:63, :206:50
+  wire              is_store_9 = MOB_9_memory_type == 2'h2;	// src/main/scala/Memory/MOB.scala:119:22, :207:50
+  wire              is_load_10 = MOB_10_memory_type == 2'h1;	// src/main/scala/Memory/MOB.scala:119:22, :151:63, :206:50
+  wire              is_store_10 = MOB_10_memory_type == 2'h2;	// src/main/scala/Memory/MOB.scala:119:22, :207:50
+  wire              is_load_11 = MOB_11_memory_type == 2'h1;	// src/main/scala/Memory/MOB.scala:119:22, :151:63, :206:50
+  wire              is_store_11 = MOB_11_memory_type == 2'h2;	// src/main/scala/Memory/MOB.scala:119:22, :207:50
+  wire              is_load_12 = MOB_12_memory_type == 2'h1;	// src/main/scala/Memory/MOB.scala:119:22, :151:63, :206:50
+  wire              is_store_12 = MOB_12_memory_type == 2'h2;	// src/main/scala/Memory/MOB.scala:119:22, :207:50
+  wire              is_load_13 = MOB_13_memory_type == 2'h1;	// src/main/scala/Memory/MOB.scala:119:22, :151:63, :206:50
+  wire              is_store_13 = MOB_13_memory_type == 2'h2;	// src/main/scala/Memory/MOB.scala:119:22, :207:50
+  wire              is_load_14 = MOB_14_memory_type == 2'h1;	// src/main/scala/Memory/MOB.scala:119:22, :151:63, :206:50
+  wire              is_store_14 = MOB_14_memory_type == 2'h2;	// src/main/scala/Memory/MOB.scala:119:22, :207:50
+  wire              is_load_15 = MOB_15_memory_type == 2'h1;	// src/main/scala/Memory/MOB.scala:119:22, :151:63, :206:50
+  wire              possible_load_vec_0 = MOB_0_valid & MOB_0_pending & is_load;	// src/main/scala/Memory/MOB.scala:119:22, :206:50, :235:{66,87}
+  wire              possible_load_vec_1 = MOB_1_valid & MOB_1_pending & is_load_1;	// src/main/scala/Memory/MOB.scala:119:22, :206:50, :235:{66,87}
+  wire              possible_load_vec_2 = MOB_2_valid & MOB_2_pending & is_load_2;	// src/main/scala/Memory/MOB.scala:119:22, :206:50, :235:{66,87}
+  wire              possible_load_vec_3 = MOB_3_valid & MOB_3_pending & is_load_3;	// src/main/scala/Memory/MOB.scala:119:22, :206:50, :235:{66,87}
+  wire              possible_load_vec_4 = MOB_4_valid & MOB_4_pending & is_load_4;	// src/main/scala/Memory/MOB.scala:119:22, :206:50, :235:{66,87}
+  wire              possible_load_vec_5 = MOB_5_valid & MOB_5_pending & is_load_5;	// src/main/scala/Memory/MOB.scala:119:22, :206:50, :235:{66,87}
+  wire              possible_load_vec_6 = MOB_6_valid & MOB_6_pending & is_load_6;	// src/main/scala/Memory/MOB.scala:119:22, :206:50, :235:{66,87}
+  wire              possible_load_vec_7 = MOB_7_valid & MOB_7_pending & is_load_7;	// src/main/scala/Memory/MOB.scala:119:22, :206:50, :235:{66,87}
+  wire              possible_load_vec_8 = MOB_8_valid & MOB_8_pending & is_load_8;	// src/main/scala/Memory/MOB.scala:119:22, :206:50, :235:{66,87}
+  wire              possible_load_vec_9 = MOB_9_valid & MOB_9_pending & is_load_9;	// src/main/scala/Memory/MOB.scala:119:22, :206:50, :235:{66,87}
+  wire              possible_load_vec_10 = MOB_10_valid & MOB_10_pending & is_load_10;	// src/main/scala/Memory/MOB.scala:119:22, :206:50, :235:{66,87}
+  wire              possible_load_vec_11 = MOB_11_valid & MOB_11_pending & is_load_11;	// src/main/scala/Memory/MOB.scala:119:22, :206:50, :235:{66,87}
+  wire              possible_load_vec_12 = MOB_12_valid & MOB_12_pending & is_load_12;	// src/main/scala/Memory/MOB.scala:119:22, :206:50, :235:{66,87}
+  wire              possible_load_vec_13 = MOB_13_valid & MOB_13_pending & is_load_13;	// src/main/scala/Memory/MOB.scala:119:22, :206:50, :235:{66,87}
+  wire              possible_load_vec_14 = MOB_14_valid & MOB_14_pending & is_load_14;	// src/main/scala/Memory/MOB.scala:119:22, :206:50, :235:{66,87}
+  wire [15:0]       _GEN_3 =
+    {{MOB_15_valid},
+     {MOB_14_valid},
+     {MOB_13_valid},
+     {MOB_12_valid},
+     {MOB_11_valid},
+     {MOB_10_valid},
+     {MOB_9_valid},
+     {MOB_8_valid},
+     {MOB_7_valid},
+     {MOB_6_valid},
+     {MOB_5_valid},
+     {MOB_4_valid},
+     {MOB_3_valid},
+     {MOB_2_valid},
+     {MOB_1_valid},
+     {MOB_0_valid}};	// src/main/scala/Memory/MOB.scala:119:22, :236:52
+  wire              _GEN_4 = _GEN_3[front_pointer[3:0]];	// src/main/scala/Memory/MOB.scala:113:34, :116:40, :236:52
+  wire [15:0][1:0]  _GEN_5 =
     {{MOB_15_memory_type},
      {MOB_14_memory_type},
      {MOB_13_memory_type},
@@ -264,8 +591,9 @@ module MOB(	// src/main/scala/Memory/MOB.scala:78:7
      {MOB_3_memory_type},
      {MOB_2_memory_type},
      {MOB_1_memory_type},
-     {MOB_0_memory_type}};	// src/main/scala/Memory/MOB.scala:119:22, :226:52
-  wire [15:0][31:0] _GEN_0 =
+     {MOB_0_memory_type}};	// src/main/scala/Memory/MOB.scala:119:22, :236:52
+  wire [1:0]        _GEN_6 = _GEN_5[front_pointer[3:0]];	// src/main/scala/Memory/MOB.scala:113:34, :116:40, :236:52
+  wire [15:0][31:0] _GEN_7 =
     {{MOB_15_address},
      {MOB_14_address},
      {MOB_13_address},
@@ -281,11 +609,98 @@ module MOB(	// src/main/scala/Memory/MOB.scala:78:7
      {MOB_3_address},
      {MOB_2_address},
      {MOB_1_address},
-     {MOB_0_address}};	// src/main/scala/Memory/MOB.scala:119:22, :226:52
+     {MOB_0_address}};	// src/main/scala/Memory/MOB.scala:119:22, :236:52
+  wire [15:0][1:0]  _GEN_8 =
+    {{MOB_15_access_width},
+     {MOB_14_access_width},
+     {MOB_13_access_width},
+     {MOB_12_access_width},
+     {MOB_11_access_width},
+     {MOB_10_access_width},
+     {MOB_9_access_width},
+     {MOB_8_access_width},
+     {MOB_7_access_width},
+     {MOB_6_access_width},
+     {MOB_5_access_width},
+     {MOB_4_access_width},
+     {MOB_3_access_width},
+     {MOB_2_access_width},
+     {MOB_1_access_width},
+     {MOB_0_access_width}};	// src/main/scala/Memory/MOB.scala:119:22, :236:52
+  wire [15:0][31:0] _GEN_9 =
+    {{MOB_15_data},
+     {MOB_14_data},
+     {MOB_13_data},
+     {MOB_12_data},
+     {MOB_11_data},
+     {MOB_10_data},
+     {MOB_9_data},
+     {MOB_8_data},
+     {MOB_7_data},
+     {MOB_6_data},
+     {MOB_5_data},
+     {MOB_4_data},
+     {MOB_3_data},
+     {MOB_2_data},
+     {MOB_1_data},
+     {MOB_0_data}};	// src/main/scala/Memory/MOB.scala:119:22, :236:52
+  wire [15:0]       _GEN_10 =
+    {{MOB_15_pending},
+     {MOB_14_pending},
+     {MOB_13_pending},
+     {MOB_12_pending},
+     {MOB_11_pending},
+     {MOB_10_pending},
+     {MOB_9_pending},
+     {MOB_8_pending},
+     {MOB_7_pending},
+     {MOB_6_pending},
+     {MOB_5_pending},
+     {MOB_4_pending},
+     {MOB_3_pending},
+     {MOB_2_pending},
+     {MOB_1_pending},
+     {MOB_0_pending}};	// src/main/scala/Memory/MOB.scala:119:22, :236:52
+  wire              _GEN_11 = _GEN_10[front_pointer[3:0]];	// src/main/scala/Memory/MOB.scala:113:34, :116:40, :236:52
+  wire [15:0]       _GEN_12 =
+    {{MOB_15_committed},
+     {MOB_14_committed},
+     {MOB_13_committed},
+     {MOB_12_committed},
+     {MOB_11_committed},
+     {MOB_10_committed},
+     {MOB_9_committed},
+     {MOB_8_committed},
+     {MOB_7_committed},
+     {MOB_6_committed},
+     {MOB_5_committed},
+     {MOB_4_committed},
+     {MOB_3_committed},
+     {MOB_2_committed},
+     {MOB_1_committed},
+     {MOB_0_committed}};	// src/main/scala/Memory/MOB.scala:119:22, :236:52
+  wire              _GEN_13 = _GEN_12[front_pointer[3:0]];	// src/main/scala/Memory/MOB.scala:113:34, :116:40, :236:52
+  wire [15:0]       _GEN_14 =
+    {{MOB_15_exception},
+     {MOB_14_exception},
+     {MOB_13_exception},
+     {MOB_12_exception},
+     {MOB_11_exception},
+     {MOB_10_exception},
+     {MOB_9_exception},
+     {MOB_8_exception},
+     {MOB_7_exception},
+     {MOB_6_exception},
+     {MOB_5_exception},
+     {MOB_4_exception},
+     {MOB_3_exception},
+     {MOB_2_exception},
+     {MOB_1_exception},
+     {MOB_0_exception}};	// src/main/scala/Memory/MOB.scala:119:22, :236:52
   wire              fire_store =
-    MOB_0_valid & MOB_0_committed & MOB_0_memory_type == 2'h2;	// src/main/scala/Memory/MOB.scala:119:22, :226:{52,113,146}
-  wire [15:0]       _GEN_1 =
-    {MOB_15_valid & MOB_15_pending & MOB_15_memory_type == 2'h1,
+    _GEN_4 & _GEN_13 & _GEN_11 & ~_GEN_14[front_pointer[3:0]] & _GEN_6 == 2'h2;	// src/main/scala/Memory/MOB.scala:113:34, :116:40, :236:{52,82,110,113,141,174}
+  wire [15:0]       _GEN_15 =
+    {MOB_15_valid & MOB_15_pending & is_load_15,
      possible_load_vec_14,
      possible_load_vec_13,
      possible_load_vec_12,
@@ -300,109 +715,147 @@ module MOB(	// src/main/scala/Memory/MOB.scala:78:7
      possible_load_vec_3,
      possible_load_vec_2,
      possible_load_vec_1,
-     possible_load_vec_0};	// src/main/scala/Memory/MOB.scala:119:22, :196:50, :225:{66,87}, :228:28
-  wire [3:0]        _load_index_T_13 =
-    possible_load_vec_1
-      ? 4'h1
-      : possible_load_vec_2
-          ? 4'h2
-          : possible_load_vec_3
-              ? 4'h3
-              : possible_load_vec_4
-                  ? 4'h4
-                  : possible_load_vec_5
-                      ? 4'h5
-                      : possible_load_vec_6
-                          ? 4'h6
-                          : possible_load_vec_7
-                              ? 4'h7
-                              : possible_load_vec_8
-                                  ? 4'h8
-                                  : possible_load_vec_9
-                                      ? 4'h9
-                                      : possible_load_vec_10
-                                          ? 4'hA
-                                          : possible_load_vec_11
-                                              ? 4'hB
-                                              : possible_load_vec_12
-                                                  ? 4'hC
-                                                  : possible_load_vec_13
-                                                      ? 4'hD
-                                                      : {3'h7, ~possible_load_vec_14};	// src/main/scala/Memory/MOB.scala:151:63, :225:{66,87}, src/main/scala/chisel3/util/Mux.scala:50:70
-  wire [3:0]        load_index = possible_load_vec_0 ? 4'h0 : _load_index_T_13;	// src/main/scala/Memory/MOB.scala:225:{66,87}, src/main/scala/chisel3/util/Mux.scala:50:70
-  wire              _FU_output_load_Q_io_flush_T =
-    io_commit_bits_is_misprediction | io_commit_bits_exception;	// src/main/scala/Memory/MOB.scala:275:62
-  wire              possible_FU_stores_0 =
-    MOB_0_valid & MOB_0_pending & MOB_0_memory_type == 2'h2;	// src/main/scala/Memory/MOB.scala:119:22, :197:50, :300:{96,118}
-  wire              possible_FU_stores_1 =
-    MOB_1_valid & MOB_1_pending & MOB_1_memory_type == 2'h2;	// src/main/scala/Memory/MOB.scala:119:22, :197:50, :300:{96,118}
-  wire              possible_FU_stores_2 =
-    MOB_2_valid & MOB_2_pending & MOB_2_memory_type == 2'h2;	// src/main/scala/Memory/MOB.scala:119:22, :197:50, :300:{96,118}
-  wire              possible_FU_stores_3 =
-    MOB_3_valid & MOB_3_pending & MOB_3_memory_type == 2'h2;	// src/main/scala/Memory/MOB.scala:119:22, :197:50, :300:{96,118}
-  wire              possible_FU_stores_4 =
-    MOB_4_valid & MOB_4_pending & MOB_4_memory_type == 2'h2;	// src/main/scala/Memory/MOB.scala:119:22, :197:50, :300:{96,118}
-  wire              possible_FU_stores_5 =
-    MOB_5_valid & MOB_5_pending & MOB_5_memory_type == 2'h2;	// src/main/scala/Memory/MOB.scala:119:22, :197:50, :300:{96,118}
-  wire              possible_FU_stores_6 =
-    MOB_6_valid & MOB_6_pending & MOB_6_memory_type == 2'h2;	// src/main/scala/Memory/MOB.scala:119:22, :197:50, :300:{96,118}
-  wire              possible_FU_stores_7 =
-    MOB_7_valid & MOB_7_pending & MOB_7_memory_type == 2'h2;	// src/main/scala/Memory/MOB.scala:119:22, :197:50, :300:{96,118}
-  wire              possible_FU_stores_8 =
-    MOB_8_valid & MOB_8_pending & MOB_8_memory_type == 2'h2;	// src/main/scala/Memory/MOB.scala:119:22, :197:50, :300:{96,118}
-  wire              possible_FU_stores_9 =
-    MOB_9_valid & MOB_9_pending & MOB_9_memory_type == 2'h2;	// src/main/scala/Memory/MOB.scala:119:22, :197:50, :300:{96,118}
-  wire              possible_FU_stores_10 =
-    MOB_10_valid & MOB_10_pending & MOB_10_memory_type == 2'h2;	// src/main/scala/Memory/MOB.scala:119:22, :197:50, :300:{96,118}
-  wire              possible_FU_stores_11 =
-    MOB_11_valid & MOB_11_pending & MOB_11_memory_type == 2'h2;	// src/main/scala/Memory/MOB.scala:119:22, :197:50, :300:{96,118}
-  wire              possible_FU_stores_12 =
-    MOB_12_valid & MOB_12_pending & MOB_12_memory_type == 2'h2;	// src/main/scala/Memory/MOB.scala:119:22, :197:50, :300:{96,118}
-  wire              possible_FU_stores_13 =
-    MOB_13_valid & MOB_13_pending & MOB_13_memory_type == 2'h2;	// src/main/scala/Memory/MOB.scala:119:22, :197:50, :300:{96,118}
-  wire              possible_FU_stores_14 =
-    MOB_14_valid & MOB_14_pending & MOB_14_memory_type == 2'h2;	// src/main/scala/Memory/MOB.scala:119:22, :197:50, :300:{96,118}
-  wire              possible_FU_stores_15 =
-    MOB_15_valid & MOB_15_pending & MOB_15_memory_type == 2'h2;	// src/main/scala/Memory/MOB.scala:119:22, :197:50, :300:{96,118}
-  wire [3:0]        possible_FU_load_index =
-    MOB_0_valid & MOB_0_data_valid & is_load
+     possible_load_vec_0};	// src/main/scala/Memory/MOB.scala:119:22, :206:50, :235:{66,87}, :238:28
+  wire [3:0]        load_index =
+    possible_load_vec_0
       ? 4'h0
-      : MOB_1_valid & MOB_1_data_valid & is_load_1
+      : possible_load_vec_1
           ? 4'h1
-          : MOB_2_valid & MOB_2_data_valid & is_load_2
+          : possible_load_vec_2
               ? 4'h2
-              : MOB_3_valid & MOB_3_data_valid & is_load_3
+              : possible_load_vec_3
                   ? 4'h3
-                  : MOB_4_valid & MOB_4_data_valid & is_load_4
+                  : possible_load_vec_4
                       ? 4'h4
-                      : MOB_5_valid & MOB_5_data_valid & is_load_5
+                      : possible_load_vec_5
                           ? 4'h5
-                          : MOB_6_valid & MOB_6_data_valid & is_load_6
+                          : possible_load_vec_6
                               ? 4'h6
-                              : MOB_7_valid & MOB_7_data_valid & is_load_7
+                              : possible_load_vec_7
                                   ? 4'h7
-                                  : MOB_8_valid & MOB_8_data_valid & is_load_8
+                                  : possible_load_vec_8
                                       ? 4'h8
-                                      : MOB_9_valid & MOB_9_data_valid & is_load_9
+                                      : possible_load_vec_9
                                           ? 4'h9
-                                          : MOB_10_valid & MOB_10_data_valid & is_load_10
+                                          : possible_load_vec_10
                                               ? 4'hA
-                                              : MOB_11_valid & MOB_11_data_valid
-                                                & is_load_11
+                                              : possible_load_vec_11
                                                   ? 4'hB
-                                                  : MOB_12_valid & MOB_12_data_valid
-                                                    & is_load_12
+                                                  : possible_load_vec_12
                                                       ? 4'hC
-                                                      : MOB_13_valid & MOB_13_data_valid
-                                                        & is_load_13
+                                                      : possible_load_vec_13
+                                                          ? 4'hD
+                                                          : {3'h7, ~possible_load_vec_14};	// src/main/scala/Memory/MOB.scala:151:63, :235:{66,87}, src/main/scala/chisel3/util/Mux.scala:50:70
+  wire              _FU_output_load_Q_io_flush_T =
+    io_commit_bits_is_misprediction | io_commit_bits_exception;	// src/main/scala/Memory/MOB.scala:286:62
+  wire              _GEN_16 = MOB_0_valid & ~MOB_0_completed;	// src/main/scala/Memory/MOB.scala:119:22, :312:{72,75}
+  wire              possible_FU_loads_0 = _GEN_16 & MOB_0_data_valid & is_load;	// src/main/scala/Memory/MOB.scala:119:22, :206:50, :312:{72,96,120}
+  wire              _GEN_17 = MOB_1_valid & ~MOB_1_completed;	// src/main/scala/Memory/MOB.scala:119:22, :312:{72,75}
+  wire              possible_FU_loads_1 = _GEN_17 & MOB_1_data_valid & is_load_1;	// src/main/scala/Memory/MOB.scala:119:22, :206:50, :312:{72,96,120}
+  wire              _GEN_18 = MOB_2_valid & ~MOB_2_completed;	// src/main/scala/Memory/MOB.scala:119:22, :312:{72,75}
+  wire              possible_FU_loads_2 = _GEN_18 & MOB_2_data_valid & is_load_2;	// src/main/scala/Memory/MOB.scala:119:22, :206:50, :312:{72,96,120}
+  wire              _GEN_19 = MOB_3_valid & ~MOB_3_completed;	// src/main/scala/Memory/MOB.scala:119:22, :312:{72,75}
+  wire              possible_FU_loads_3 = _GEN_19 & MOB_3_data_valid & is_load_3;	// src/main/scala/Memory/MOB.scala:119:22, :206:50, :312:{72,96,120}
+  wire              _GEN_20 = MOB_4_valid & ~MOB_4_completed;	// src/main/scala/Memory/MOB.scala:119:22, :312:{72,75}
+  wire              possible_FU_loads_4 = _GEN_20 & MOB_4_data_valid & is_load_4;	// src/main/scala/Memory/MOB.scala:119:22, :206:50, :312:{72,96,120}
+  wire              _GEN_21 = MOB_5_valid & ~MOB_5_completed;	// src/main/scala/Memory/MOB.scala:119:22, :312:{72,75}
+  wire              possible_FU_loads_5 = _GEN_21 & MOB_5_data_valid & is_load_5;	// src/main/scala/Memory/MOB.scala:119:22, :206:50, :312:{72,96,120}
+  wire              _GEN_22 = MOB_6_valid & ~MOB_6_completed;	// src/main/scala/Memory/MOB.scala:119:22, :312:{72,75}
+  wire              possible_FU_loads_6 = _GEN_22 & MOB_6_data_valid & is_load_6;	// src/main/scala/Memory/MOB.scala:119:22, :206:50, :312:{72,96,120}
+  wire              _GEN_23 = MOB_7_valid & ~MOB_7_completed;	// src/main/scala/Memory/MOB.scala:119:22, :312:{72,75}
+  wire              possible_FU_loads_7 = _GEN_23 & MOB_7_data_valid & is_load_7;	// src/main/scala/Memory/MOB.scala:119:22, :206:50, :312:{72,96,120}
+  wire              _GEN_24 = MOB_8_valid & ~MOB_8_completed;	// src/main/scala/Memory/MOB.scala:119:22, :312:{72,75}
+  wire              possible_FU_loads_8 = _GEN_24 & MOB_8_data_valid & is_load_8;	// src/main/scala/Memory/MOB.scala:119:22, :206:50, :312:{72,96,120}
+  wire              _GEN_25 = MOB_9_valid & ~MOB_9_completed;	// src/main/scala/Memory/MOB.scala:119:22, :312:{72,75}
+  wire              possible_FU_loads_9 = _GEN_25 & MOB_9_data_valid & is_load_9;	// src/main/scala/Memory/MOB.scala:119:22, :206:50, :312:{72,96,120}
+  wire              _GEN_26 = MOB_10_valid & ~MOB_10_completed;	// src/main/scala/Memory/MOB.scala:119:22, :312:{72,75}
+  wire              possible_FU_loads_10 = _GEN_26 & MOB_10_data_valid & is_load_10;	// src/main/scala/Memory/MOB.scala:119:22, :206:50, :312:{72,96,120}
+  wire              _GEN_27 = MOB_11_valid & ~MOB_11_completed;	// src/main/scala/Memory/MOB.scala:119:22, :312:{72,75}
+  wire              possible_FU_loads_11 = _GEN_27 & MOB_11_data_valid & is_load_11;	// src/main/scala/Memory/MOB.scala:119:22, :206:50, :312:{72,96,120}
+  wire              _GEN_28 = MOB_12_valid & ~MOB_12_completed;	// src/main/scala/Memory/MOB.scala:119:22, :312:{72,75}
+  wire              possible_FU_loads_12 = _GEN_28 & MOB_12_data_valid & is_load_12;	// src/main/scala/Memory/MOB.scala:119:22, :206:50, :312:{72,96,120}
+  wire              _GEN_29 = MOB_13_valid & ~MOB_13_completed;	// src/main/scala/Memory/MOB.scala:119:22, :312:{72,75}
+  wire              possible_FU_loads_13 = _GEN_29 & MOB_13_data_valid & is_load_13;	// src/main/scala/Memory/MOB.scala:119:22, :206:50, :312:{72,96,120}
+  wire              _GEN_30 = MOB_14_valid & ~MOB_14_completed;	// src/main/scala/Memory/MOB.scala:119:22, :312:{72,75}
+  wire              possible_FU_loads_14 = _GEN_30 & MOB_14_data_valid & is_load_14;	// src/main/scala/Memory/MOB.scala:119:22, :206:50, :312:{72,96,120}
+  wire              _GEN_31 = MOB_15_valid & ~MOB_15_completed;	// src/main/scala/Memory/MOB.scala:119:22, :312:{72,75}
+  wire              possible_FU_stores_0 = _GEN_16 & MOB_0_pending & is_store;	// src/main/scala/Memory/MOB.scala:119:22, :207:50, :312:72, :313:{96,118}
+  wire              possible_FU_stores_1 = _GEN_17 & MOB_1_pending & is_store_1;	// src/main/scala/Memory/MOB.scala:119:22, :207:50, :312:72, :313:{96,118}
+  wire              possible_FU_stores_2 = _GEN_18 & MOB_2_pending & is_store_2;	// src/main/scala/Memory/MOB.scala:119:22, :207:50, :312:72, :313:{96,118}
+  wire              possible_FU_stores_3 = _GEN_19 & MOB_3_pending & is_store_3;	// src/main/scala/Memory/MOB.scala:119:22, :207:50, :312:72, :313:{96,118}
+  wire              possible_FU_stores_4 = _GEN_20 & MOB_4_pending & is_store_4;	// src/main/scala/Memory/MOB.scala:119:22, :207:50, :312:72, :313:{96,118}
+  wire              possible_FU_stores_5 = _GEN_21 & MOB_5_pending & is_store_5;	// src/main/scala/Memory/MOB.scala:119:22, :207:50, :312:72, :313:{96,118}
+  wire              possible_FU_stores_6 = _GEN_22 & MOB_6_pending & is_store_6;	// src/main/scala/Memory/MOB.scala:119:22, :207:50, :312:72, :313:{96,118}
+  wire              possible_FU_stores_7 = _GEN_23 & MOB_7_pending & is_store_7;	// src/main/scala/Memory/MOB.scala:119:22, :207:50, :312:72, :313:{96,118}
+  wire              possible_FU_stores_8 = _GEN_24 & MOB_8_pending & is_store_8;	// src/main/scala/Memory/MOB.scala:119:22, :207:50, :312:72, :313:{96,118}
+  wire              possible_FU_stores_9 = _GEN_25 & MOB_9_pending & is_store_9;	// src/main/scala/Memory/MOB.scala:119:22, :207:50, :312:72, :313:{96,118}
+  wire              possible_FU_stores_10 = _GEN_26 & MOB_10_pending & is_store_10;	// src/main/scala/Memory/MOB.scala:119:22, :207:50, :312:72, :313:{96,118}
+  wire              possible_FU_stores_11 = _GEN_27 & MOB_11_pending & is_store_11;	// src/main/scala/Memory/MOB.scala:119:22, :207:50, :312:72, :313:{96,118}
+  wire              possible_FU_stores_12 = _GEN_28 & MOB_12_pending & is_store_12;	// src/main/scala/Memory/MOB.scala:119:22, :207:50, :312:72, :313:{96,118}
+  wire              possible_FU_stores_13 = _GEN_29 & MOB_13_pending & is_store_13;	// src/main/scala/Memory/MOB.scala:119:22, :207:50, :312:72, :313:{96,118}
+  wire              possible_FU_stores_14 = _GEN_30 & MOB_14_pending & is_store_14;	// src/main/scala/Memory/MOB.scala:119:22, :207:50, :312:72, :313:{96,118}
+  wire [3:0]        possible_FU_load_index =
+    possible_FU_loads_0
+      ? 4'h0
+      : possible_FU_loads_1
+          ? 4'h1
+          : possible_FU_loads_2
+              ? 4'h2
+              : possible_FU_loads_3
+                  ? 4'h3
+                  : possible_FU_loads_4
+                      ? 4'h4
+                      : possible_FU_loads_5
+                          ? 4'h5
+                          : possible_FU_loads_6
+                              ? 4'h6
+                              : possible_FU_loads_7
+                                  ? 4'h7
+                                  : possible_FU_loads_8
+                                      ? 4'h8
+                                      : possible_FU_loads_9
+                                          ? 4'h9
+                                          : possible_FU_loads_10
+                                              ? 4'hA
+                                              : possible_FU_loads_11
+                                                  ? 4'hB
+                                                  : possible_FU_loads_12
+                                                      ? 4'hC
+                                                      : possible_FU_loads_13
+                                                          ? 4'hD
+                                                          : {3'h7, ~possible_FU_loads_14};	// src/main/scala/Memory/MOB.scala:151:63, :312:{96,120}, src/main/scala/chisel3/util/Mux.scala:50:70
+  wire [3:0]        possible_FU_store_index =
+    possible_FU_stores_0
+      ? 4'h0
+      : possible_FU_stores_1
+          ? 4'h1
+          : possible_FU_stores_2
+              ? 4'h2
+              : possible_FU_stores_3
+                  ? 4'h3
+                  : possible_FU_stores_4
+                      ? 4'h4
+                      : possible_FU_stores_5
+                          ? 4'h5
+                          : possible_FU_stores_6
+                              ? 4'h6
+                              : possible_FU_stores_7
+                                  ? 4'h7
+                                  : possible_FU_stores_8
+                                      ? 4'h8
+                                      : possible_FU_stores_9
+                                          ? 4'h9
+                                          : possible_FU_stores_10
+                                              ? 4'hA
+                                              : possible_FU_stores_11
+                                                  ? 4'hB
+                                                  : possible_FU_stores_12
+                                                      ? 4'hC
+                                                      : possible_FU_stores_13
                                                           ? 4'hD
                                                           : {3'h7,
-                                                             ~(MOB_14_valid
-                                                               & MOB_14_data_valid
-                                                               & is_load_14)};	// src/main/scala/Memory/MOB.scala:119:22, :151:63, :196:50, :299:{96,120}, src/main/scala/chisel3/util/Mux.scala:50:70
-  wire              _FU_output_load_Q_io_enq_valid_T =
-    possible_FU_stores_0 | possible_FU_stores_1;	// src/main/scala/Memory/MOB.scala:300:{96,118}, :306:81
-  wire [15:0][5:0]  _GEN_2 =
+                                                             ~possible_FU_stores_14};	// src/main/scala/Memory/MOB.scala:151:63, :313:{96,118}, src/main/scala/chisel3/util/Mux.scala:50:70
+  wire [15:0][5:0]  _GEN_32 =
     {{MOB_15_ROB_index},
      {MOB_14_ROB_index},
      {MOB_13_ROB_index},
@@ -418,8 +871,50 @@ module MOB(	// src/main/scala/Memory/MOB.scala:78:7
      {MOB_3_ROB_index},
      {MOB_2_ROB_index},
      {MOB_1_ROB_index},
-     {MOB_0_ROB_index}};	// src/main/scala/Memory/MOB.scala:119:22, :308:50
-  wire [15:0][6:0]  _GEN_3 =
+     {MOB_0_ROB_index}};	// src/main/scala/Memory/MOB.scala:119:22, :323:50
+  wire [15:0][1:0]  _GEN_33 =
+    {{MOB_15_fetch_packet_index},
+     {MOB_14_fetch_packet_index},
+     {MOB_13_fetch_packet_index},
+     {MOB_12_fetch_packet_index},
+     {MOB_11_fetch_packet_index},
+     {MOB_10_fetch_packet_index},
+     {MOB_9_fetch_packet_index},
+     {MOB_8_fetch_packet_index},
+     {MOB_7_fetch_packet_index},
+     {MOB_6_fetch_packet_index},
+     {MOB_5_fetch_packet_index},
+     {MOB_4_fetch_packet_index},
+     {MOB_3_fetch_packet_index},
+     {MOB_2_fetch_packet_index},
+     {MOB_1_fetch_packet_index},
+     {MOB_0_fetch_packet_index}};	// src/main/scala/Memory/MOB.scala:119:22, :323:50
+  wire              _GEN_34 = MOB_0_address[1:0] == 2'h0;	// src/main/scala/Memory/MOB.scala:119:22, src/main/scala/utils.scala:277:{27,35}
+  wire              _GEN_35 = MOB_0_address[1:0] == 2'h1;	// src/main/scala/Memory/MOB.scala:119:22, :151:63, src/main/scala/utils.scala:277:{27,35}
+  wire              _GEN_36 = MOB_0_address[1:0] == 2'h2;	// src/main/scala/Memory/MOB.scala:119:22, src/main/scala/utils.scala:277:{27,35}
+  wire [3:0][7:0]   _GEN_37 = {{8'h0}, {MOB_0_data[7:0]}, {MOB_0_data[15:8]}, {8'h0}};	// src/main/scala/Memory/MOB.scala:119:22, src/main/scala/utils.scala:270:14, :277:35, :281:33, :288:{27,34}, :291:{27,34}
+  wire [3:0][7:0]   _GEN_38 =
+    {{_GEN_34 ? MOB_0_data[15:8] : _GEN_35 ? MOB_0_data[7:0] : 8'h0},
+     {_GEN_34 ? MOB_0_data[15:8] : _GEN_35 ? MOB_0_data[7:0] : 8'h0},
+     {_GEN_35 ? MOB_0_data[7:0] : 8'h0},
+     {8'h0}};	// src/main/scala/Memory/MOB.scala:119:22, src/main/scala/utils.scala:270:14, :274:28, :277:{35,42}, :281:33, :284:{27,34}, :287:{27,34}, :301:33, :304:{27,34}, :309:{27,34}
+  wire [3:0][7:0]   _GEN_39 =
+    {{8'h0}, {MOB_0_data[7:0]}, {MOB_0_data[15:8]}, {MOB_0_data[23:16]}};	// src/main/scala/Memory/MOB.scala:119:22, src/main/scala/utils.scala:270:14, :277:35, :301:33, :305:{27,34}, :310:{27,34}, :314:{27,34}
+  wire [3:0][7:0]   _GEN_40 =
+    {{_GEN_39[MOB_0_address[1:0]]},
+     {_GEN_37[MOB_0_address[1:0]]},
+     {_GEN_36 ? MOB_0_data[7:0] : 8'h0},
+     {8'h0}};	// src/main/scala/Memory/MOB.scala:119:22, src/main/scala/utils.scala:270:14, :274:28, :277:{27,35,42}, :281:33, :288:27, :291:27, :301:33, :305:27, :310:27, :314:27
+  wire [3:0][7:0]   _GEN_41 =
+    {{MOB_0_data[7:0]}, {MOB_0_data[15:8]}, {MOB_0_data[23:16]}, {MOB_0_data[31:24]}};	// src/main/scala/Memory/MOB.scala:119:22, src/main/scala/utils.scala:270:14, :277:35, :301:33, :306:{27,34}, :311:{27,34}, :315:{27,34}, :318:{27,34}
+  wire [3:0][7:0]   _GEN_42 =
+    {{_GEN_41[MOB_0_address[1:0]]},
+     {_GEN_34 | _GEN_35
+        ? 8'h0
+        : _GEN_36 ? MOB_0_data[15:8] : (&(MOB_0_address[1:0])) ? MOB_0_data[7:0] : 8'h0},
+     {(&(MOB_0_address[1:0])) ? MOB_0_data[7:0] : 8'h0},
+     {8'h0}};	// src/main/scala/Memory/MOB.scala:119:22, src/main/scala/utils.scala:270:14, :274:28, :277:{27,35,42}, :281:33, :292:{27,34}, :295:{27,34}, :301:33, :306:27, :311:27, :315:27, :318:27
+  wire [15:0][6:0]  _GEN_43 =
     {{MOB_15_RD},
      {MOB_14_RD},
      {MOB_13_RD},
@@ -435,7 +930,7 @@ module MOB(	// src/main/scala/Memory/MOB.scala:78:7
      {MOB_3_RD},
      {MOB_2_RD},
      {MOB_1_RD},
-     {MOB_0_RD}};	// src/main/scala/Memory/MOB.scala:119:22, :360:49
+     {MOB_0_RD}};	// src/main/scala/Memory/MOB.scala:119:22, :371:55
   wire [15:0]       _availalbe_MOB_entries_T_1 =
     ~{MOB_0_valid,
       MOB_1_valid,
@@ -452,7 +947,7 @@ module MOB(	// src/main/scala/Memory/MOB.scala:78:7
       MOB_12_valid,
       MOB_13_valid,
       MOB_14_valid,
-      MOB_15_valid};	// src/main/scala/Memory/MOB.scala:119:22, :399:{42,46}
+      MOB_15_valid};	// src/main/scala/Memory/MOB.scala:119:22, :412:{42,46}
   wire [4:0]        availalbe_MOB_entries =
     {1'h0,
      {1'h0,
@@ -479,972 +974,1794 @@ module MOB(	// src/main/scala/Memory/MOB.scala:78:7
                + {1'h0, _availalbe_MOB_entries_T_1[13]}}
               + {1'h0,
                  {1'h0, _availalbe_MOB_entries_T_1[14]}
-                   + {1'h0, _availalbe_MOB_entries_T_1[15]}}}};	// src/main/scala/Memory/MOB.scala:399:{41,42}
+                   + {1'h0, _availalbe_MOB_entries_T_1[15]}}}};	// src/main/scala/Memory/MOB.scala:412:{41,42}
+  assign _availalbe_MOB_entries_4to2 = availalbe_MOB_entries[4:2];	// src/main/scala/Memory/MOB.scala:412:41, :415:54
   always @(posedge clock) begin	// src/main/scala/Memory/MOB.scala:78:7
     if (reset) begin	// src/main/scala/Memory/MOB.scala:78:7
-      back_pointer <= 5'h0;	// src/main/scala/Memory/MOB.scala:114:34
+      front_pointer <= 5'h0;	// src/main/scala/Memory/MOB.scala:113:34
+      back_pointer <= 5'h0;	// src/main/scala/Memory/MOB.scala:113:34, :114:34
       MOB_0_valid <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_0_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_0_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+      MOB_0_fetch_packet_index <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_0_address <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_0_access_width <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_0_RD <= 7'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_0_data <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_0_data_valid <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_0_pending <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_0_completed <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_0_committed <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_0_exception <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_1_valid <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_1_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_1_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+      MOB_1_fetch_packet_index <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_1_address <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_1_access_width <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_1_RD <= 7'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_1_data <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_1_data_valid <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_1_pending <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_1_completed <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_1_committed <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_1_exception <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_2_valid <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_2_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_2_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+      MOB_2_fetch_packet_index <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_2_address <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_2_access_width <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_2_RD <= 7'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_2_data <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_2_data_valid <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_2_pending <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_2_completed <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_2_committed <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_2_exception <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_3_valid <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_3_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_3_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+      MOB_3_fetch_packet_index <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_3_address <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_3_access_width <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_3_RD <= 7'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_3_data <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_3_data_valid <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_3_pending <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_3_completed <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_3_committed <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_3_exception <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_4_valid <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_4_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_4_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+      MOB_4_fetch_packet_index <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_4_address <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_4_access_width <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_4_RD <= 7'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_4_data <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_4_data_valid <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_4_pending <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_4_completed <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_4_committed <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_4_exception <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_5_valid <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_5_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_5_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+      MOB_5_fetch_packet_index <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_5_address <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_5_access_width <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_5_RD <= 7'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_5_data <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_5_data_valid <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_5_pending <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_5_completed <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_5_committed <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_5_exception <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_6_valid <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_6_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_6_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+      MOB_6_fetch_packet_index <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_6_address <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_6_access_width <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_6_RD <= 7'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_6_data <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_6_data_valid <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_6_pending <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_6_completed <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_6_committed <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_6_exception <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_7_valid <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_7_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_7_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+      MOB_7_fetch_packet_index <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_7_address <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_7_access_width <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_7_RD <= 7'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_7_data <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_7_data_valid <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_7_pending <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_7_completed <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_7_committed <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_7_exception <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_8_valid <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_8_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_8_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+      MOB_8_fetch_packet_index <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_8_address <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_8_access_width <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_8_RD <= 7'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_8_data <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_8_data_valid <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_8_pending <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_8_completed <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_8_committed <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_8_exception <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_9_valid <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_9_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_9_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+      MOB_9_fetch_packet_index <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_9_address <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_9_access_width <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_9_RD <= 7'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_9_data <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_9_data_valid <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_9_pending <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_9_completed <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_9_committed <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_9_exception <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_10_valid <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_10_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_10_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+      MOB_10_fetch_packet_index <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_10_address <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_10_access_width <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_10_RD <= 7'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_10_data <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_10_data_valid <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_10_pending <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_10_completed <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_10_committed <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_10_exception <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_11_valid <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_11_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_11_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+      MOB_11_fetch_packet_index <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_11_address <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_11_access_width <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_11_RD <= 7'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_11_data <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_11_data_valid <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_11_pending <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_11_completed <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_11_committed <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_11_exception <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_12_valid <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_12_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_12_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+      MOB_12_fetch_packet_index <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_12_address <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_12_access_width <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_12_RD <= 7'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_12_data <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_12_data_valid <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_12_pending <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_12_completed <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_12_committed <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_12_exception <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_13_valid <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_13_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_13_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+      MOB_13_fetch_packet_index <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_13_address <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_13_access_width <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_13_RD <= 7'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_13_data <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_13_data_valid <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_13_pending <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_13_completed <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_13_committed <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_13_exception <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_14_valid <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_14_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_14_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+      MOB_14_fetch_packet_index <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_14_address <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_14_access_width <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_14_RD <= 7'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_14_data <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_14_data_valid <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_14_pending <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_14_completed <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_14_committed <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_14_exception <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_15_valid <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_15_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_15_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+      MOB_15_fetch_packet_index <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_15_address <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_15_access_width <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_15_RD <= 7'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_15_data <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_15_data_valid <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_15_pending <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_15_completed <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
       MOB_15_committed <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_15_exception <= 1'h0;	// src/main/scala/Memory/MOB.scala:119:22
     end
     else begin	// src/main/scala/Memory/MOB.scala:78:7
-      automatic logic       written_vec_0 =
-        io_reserve_0_valid & (|(availalbe_MOB_entries[4:2]));	// src/main/scala/Memory/MOB.scala:142:34, :399:41, :402:54
-      automatic logic       written_vec_1;	// src/main/scala/Memory/MOB.scala:142:34
-      automatic logic       written_vec_2 =
-        io_reserve_2_valid & (|(availalbe_MOB_entries[4:2]));	// src/main/scala/Memory/MOB.scala:142:34, :399:41, :402:54
-      automatic logic       written_vec_3;	// src/main/scala/Memory/MOB.scala:142:34
-      automatic logic [1:0] _GEN_4 = {1'h0, written_vec_0};	// src/main/scala/Memory/MOB.scala:142:34, :151:63
-      automatic logic [3:0] _io_reserved_pointers_0_bits_T;	// src/main/scala/Memory/MOB.scala:153:28
-      automatic logic       _GEN_5;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
-      automatic logic       _GEN_6;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
-      automatic logic       _GEN_7;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
-      automatic logic       _GEN_8;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
-      automatic logic       _GEN_9;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
-      automatic logic       _GEN_10;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
-      automatic logic       _GEN_11;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
-      automatic logic       _GEN_12;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
-      automatic logic       _GEN_13;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
-      automatic logic       _GEN_14;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
-      automatic logic       _GEN_15;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
-      automatic logic       _GEN_16;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
-      automatic logic       _GEN_17;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
-      automatic logic       _GEN_18;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
-      automatic logic       _GEN_19;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
-      automatic logic       _GEN_20;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
-      automatic logic [1:0] _GEN_21;	// src/main/scala/Memory/MOB.scala:151:40
-      automatic logic [3:0] _io_reserved_pointers_1_bits_T;	// src/main/scala/Memory/MOB.scala:153:28
-      automatic logic       _GEN_22;	// src/main/scala/Memory/MOB.scala:153:65
-      automatic logic       _GEN_23;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
-      automatic logic       _GEN_24;	// src/main/scala/Memory/MOB.scala:153:65
-      automatic logic       _GEN_25;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
-      automatic logic       _GEN_26;	// src/main/scala/Memory/MOB.scala:153:65
-      automatic logic       _GEN_27;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
-      automatic logic       _GEN_28;	// src/main/scala/Memory/MOB.scala:153:65
-      automatic logic       _GEN_29;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
-      automatic logic       _GEN_30;	// src/main/scala/Memory/MOB.scala:153:65
-      automatic logic       _GEN_31;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
-      automatic logic       _GEN_32;	// src/main/scala/Memory/MOB.scala:153:65
-      automatic logic       _GEN_33;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
-      automatic logic       _GEN_34;	// src/main/scala/Memory/MOB.scala:153:65
-      automatic logic       _GEN_35;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
-      automatic logic       _GEN_36;	// src/main/scala/Memory/MOB.scala:153:65
-      automatic logic       _GEN_37;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
-      automatic logic       _GEN_38;	// src/main/scala/Memory/MOB.scala:153:65
-      automatic logic       _GEN_39;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
-      automatic logic       _GEN_40;	// src/main/scala/Memory/MOB.scala:153:65
-      automatic logic       _GEN_41;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
-      automatic logic       _GEN_42;	// src/main/scala/Memory/MOB.scala:153:65
-      automatic logic       _GEN_43;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
-      automatic logic       _GEN_44;	// src/main/scala/Memory/MOB.scala:153:65
-      automatic logic       _GEN_45;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
-      automatic logic       _GEN_46;	// src/main/scala/Memory/MOB.scala:153:65
-      automatic logic       _GEN_47;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
-      automatic logic       _GEN_48;	// src/main/scala/Memory/MOB.scala:153:65
-      automatic logic       _GEN_49;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
-      automatic logic       _GEN_50;	// src/main/scala/Memory/MOB.scala:153:65
-      automatic logic       _GEN_51;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
-      automatic logic       _GEN_52;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
-      automatic logic [1:0] _GEN_53 = {1'h0, written_vec_2};	// src/main/scala/Memory/MOB.scala:142:34, :151:40
-      automatic logic [3:0] _io_reserved_pointers_2_bits_T;	// src/main/scala/Memory/MOB.scala:153:28
-      automatic logic       _GEN_54;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
-      automatic logic       _GEN_55;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
-      automatic logic       _GEN_56;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
-      automatic logic       _GEN_57;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
-      automatic logic       _GEN_58;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
-      automatic logic       _GEN_59;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
-      automatic logic       _GEN_60;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
-      automatic logic       _GEN_61;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
-      automatic logic       _GEN_62;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
-      automatic logic       _GEN_63;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
-      automatic logic       _GEN_64;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
-      automatic logic       _GEN_65;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
-      automatic logic       _GEN_66;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
-      automatic logic       _GEN_67;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
-      automatic logic       _GEN_68;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
-      automatic logic       _GEN_69;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
-      automatic logic [1:0] _GEN_70;	// src/main/scala/Memory/MOB.scala:151:40
-      automatic logic [3:0] _io_reserved_pointers_3_bits_T;	// src/main/scala/Memory/MOB.scala:153:28
-      automatic logic       _GEN_71;	// src/main/scala/Memory/MOB.scala:153:65
-      automatic logic       _GEN_72;	// src/main/scala/Memory/MOB.scala:153:65
-      automatic logic       _GEN_73;	// src/main/scala/Memory/MOB.scala:153:65
-      automatic logic       _GEN_74;	// src/main/scala/Memory/MOB.scala:153:65
-      automatic logic       _GEN_75;	// src/main/scala/Memory/MOB.scala:153:65
-      automatic logic       _GEN_76;	// src/main/scala/Memory/MOB.scala:153:65
-      automatic logic       _GEN_77;	// src/main/scala/Memory/MOB.scala:153:65
-      automatic logic       _GEN_78;	// src/main/scala/Memory/MOB.scala:153:65
-      automatic logic       _GEN_79;	// src/main/scala/Memory/MOB.scala:153:65
-      automatic logic       _GEN_80;	// src/main/scala/Memory/MOB.scala:153:65
-      automatic logic       _GEN_81;	// src/main/scala/Memory/MOB.scala:153:65
-      automatic logic       _GEN_82;	// src/main/scala/Memory/MOB.scala:153:65
-      automatic logic       _GEN_83;	// src/main/scala/Memory/MOB.scala:153:65
-      automatic logic       _GEN_84;	// src/main/scala/Memory/MOB.scala:153:65
-      automatic logic       _GEN_85;	// src/main/scala/Memory/MOB.scala:153:65
-      automatic logic       _GEN_86;	// src/main/scala/Memory/MOB.scala:119:22, :173:30, :174:40
-      automatic logic       _GEN_87;	// src/main/scala/Memory/MOB.scala:119:22, :173:30, :174:40
-      automatic logic       _GEN_88;	// src/main/scala/Memory/MOB.scala:119:22, :173:30, :174:40
-      automatic logic       _GEN_89;	// src/main/scala/Memory/MOB.scala:119:22, :173:30, :174:40
-      automatic logic       _GEN_90;	// src/main/scala/Memory/MOB.scala:119:22, :173:30, :174:40
-      automatic logic       _GEN_91;	// src/main/scala/Memory/MOB.scala:119:22, :173:30, :174:40
-      automatic logic       _GEN_92;	// src/main/scala/Memory/MOB.scala:119:22, :173:30, :174:40
-      automatic logic       _GEN_93;	// src/main/scala/Memory/MOB.scala:119:22, :173:30, :174:40
-      automatic logic       _GEN_94;	// src/main/scala/Memory/MOB.scala:119:22, :173:30, :174:40
-      automatic logic       _GEN_95;	// src/main/scala/Memory/MOB.scala:119:22, :173:30, :174:40
-      automatic logic       _GEN_96;	// src/main/scala/Memory/MOB.scala:119:22, :173:30, :174:40
-      automatic logic       _GEN_97;	// src/main/scala/Memory/MOB.scala:119:22, :173:30, :174:40
-      automatic logic       _GEN_98;	// src/main/scala/Memory/MOB.scala:119:22, :173:30, :174:40
-      automatic logic       _GEN_99;	// src/main/scala/Memory/MOB.scala:119:22, :173:30, :174:40
-      automatic logic       _GEN_100;	// src/main/scala/Memory/MOB.scala:119:22, :173:30, :174:40
-      automatic logic       _GEN_101;	// src/main/scala/Memory/MOB.scala:119:22, :173:30, :174:40
-      automatic logic       _GEN_102;	// src/main/scala/Memory/MOB.scala:119:22, :173:30, :174:40
-      automatic logic       _GEN_103 = io_commit_valid & _FU_output_load_Q_io_flush_T;	// src/main/scala/Memory/MOB.scala:275:{26,62}
-      written_vec_1 = io_reserve_1_valid & (|(availalbe_MOB_entries[4:2]));	// src/main/scala/Memory/MOB.scala:142:34, :399:41, :402:54
-      written_vec_3 = io_reserve_3_valid & (|(availalbe_MOB_entries[4:2]));	// src/main/scala/Memory/MOB.scala:142:34, :399:41, :402:54
-      _io_reserved_pointers_0_bits_T = back_pointer[3:0] + {3'h0, written_vec_0 - 1'h1};	// src/main/scala/Memory/MOB.scala:114:34, :117:39, :142:34, :151:63, :153:28
-      _GEN_5 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'h0;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:{28,65}
-      _GEN_6 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'h1;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :151:63, :153:{28,65}
-      _GEN_7 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'h2;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:{28,65}
-      _GEN_8 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'h3;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:{28,65}
-      _GEN_9 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'h4;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:{28,65}
-      _GEN_10 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'h5;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:{28,65}
-      _GEN_11 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'h6;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:{28,65}
-      _GEN_12 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'h7;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:{28,65}
-      _GEN_13 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'h8;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:{28,65}
-      _GEN_14 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'h9;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:{28,65}
-      _GEN_15 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'hA;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:{28,65}
-      _GEN_16 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'hB;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:{28,65}
-      _GEN_17 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'hC;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:{28,65}
-      _GEN_18 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'hD;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:{28,65}
-      _GEN_19 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'hE;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:{28,65}
-      _GEN_20 = written_vec_0 & (&_io_reserved_pointers_0_bits_T);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:{28,65}
-      _GEN_21 = {1'h0, written_vec_1};	// src/main/scala/Memory/MOB.scala:142:34, :151:40
-      _io_reserved_pointers_1_bits_T =
-        back_pointer[3:0] + {2'h0, _GEN_4 + _GEN_21 - 2'h1};	// src/main/scala/Memory/MOB.scala:114:34, :117:39, :151:{40,63}, :153:28
-      _GEN_22 = _io_reserved_pointers_1_bits_T == 4'h0;	// src/main/scala/Memory/MOB.scala:153:{28,65}
-      _GEN_23 = written_vec_1 ? _GEN_22 | _GEN_5 | MOB_0_valid : _GEN_5 | MOB_0_valid;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65
-      _GEN_24 = _io_reserved_pointers_1_bits_T == 4'h1;	// src/main/scala/Memory/MOB.scala:151:63, :153:{28,65}
-      _GEN_25 = written_vec_1 ? _GEN_24 | _GEN_6 | MOB_1_valid : _GEN_6 | MOB_1_valid;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65
-      _GEN_26 = _io_reserved_pointers_1_bits_T == 4'h2;	// src/main/scala/Memory/MOB.scala:153:{28,65}
-      _GEN_27 = written_vec_1 ? _GEN_26 | _GEN_7 | MOB_2_valid : _GEN_7 | MOB_2_valid;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65
-      _GEN_28 = _io_reserved_pointers_1_bits_T == 4'h3;	// src/main/scala/Memory/MOB.scala:153:{28,65}
-      _GEN_29 = written_vec_1 ? _GEN_28 | _GEN_8 | MOB_3_valid : _GEN_8 | MOB_3_valid;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65
-      _GEN_30 = _io_reserved_pointers_1_bits_T == 4'h4;	// src/main/scala/Memory/MOB.scala:153:{28,65}
-      _GEN_31 = written_vec_1 ? _GEN_30 | _GEN_9 | MOB_4_valid : _GEN_9 | MOB_4_valid;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65
-      _GEN_32 = _io_reserved_pointers_1_bits_T == 4'h5;	// src/main/scala/Memory/MOB.scala:153:{28,65}
-      _GEN_33 = written_vec_1 ? _GEN_32 | _GEN_10 | MOB_5_valid : _GEN_10 | MOB_5_valid;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65
-      _GEN_34 = _io_reserved_pointers_1_bits_T == 4'h6;	// src/main/scala/Memory/MOB.scala:153:{28,65}
-      _GEN_35 = written_vec_1 ? _GEN_34 | _GEN_11 | MOB_6_valid : _GEN_11 | MOB_6_valid;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65
-      _GEN_36 = _io_reserved_pointers_1_bits_T == 4'h7;	// src/main/scala/Memory/MOB.scala:153:{28,65}
-      _GEN_37 = written_vec_1 ? _GEN_36 | _GEN_12 | MOB_7_valid : _GEN_12 | MOB_7_valid;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65
-      _GEN_38 = _io_reserved_pointers_1_bits_T == 4'h8;	// src/main/scala/Memory/MOB.scala:153:{28,65}
-      _GEN_39 = written_vec_1 ? _GEN_38 | _GEN_13 | MOB_8_valid : _GEN_13 | MOB_8_valid;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65
-      _GEN_40 = _io_reserved_pointers_1_bits_T == 4'h9;	// src/main/scala/Memory/MOB.scala:153:{28,65}
-      _GEN_41 = written_vec_1 ? _GEN_40 | _GEN_14 | MOB_9_valid : _GEN_14 | MOB_9_valid;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65
-      _GEN_42 = _io_reserved_pointers_1_bits_T == 4'hA;	// src/main/scala/Memory/MOB.scala:153:{28,65}
-      _GEN_43 = written_vec_1 ? _GEN_42 | _GEN_15 | MOB_10_valid : _GEN_15 | MOB_10_valid;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65
-      _GEN_44 = _io_reserved_pointers_1_bits_T == 4'hB;	// src/main/scala/Memory/MOB.scala:153:{28,65}
-      _GEN_45 = written_vec_1 ? _GEN_44 | _GEN_16 | MOB_11_valid : _GEN_16 | MOB_11_valid;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65
-      _GEN_46 = _io_reserved_pointers_1_bits_T == 4'hC;	// src/main/scala/Memory/MOB.scala:153:{28,65}
-      _GEN_47 = written_vec_1 ? _GEN_46 | _GEN_17 | MOB_12_valid : _GEN_17 | MOB_12_valid;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65
-      _GEN_48 = _io_reserved_pointers_1_bits_T == 4'hD;	// src/main/scala/Memory/MOB.scala:153:{28,65}
-      _GEN_49 = written_vec_1 ? _GEN_48 | _GEN_18 | MOB_13_valid : _GEN_18 | MOB_13_valid;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65
-      _GEN_50 = _io_reserved_pointers_1_bits_T == 4'hE;	// src/main/scala/Memory/MOB.scala:153:{28,65}
-      _GEN_51 = written_vec_1 ? _GEN_50 | _GEN_19 | MOB_14_valid : _GEN_19 | MOB_14_valid;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65
-      _GEN_52 =
+      automatic logic [4:0]       _GEN_44;	// src/main/scala/Memory/MOB.scala:131:45
+      automatic logic [4:0]       _age_vector_0_T_4;	// src/main/scala/Memory/MOB.scala:131:67
+      automatic logic [4:0]       _age_vector_1_T_4;	// src/main/scala/Memory/MOB.scala:131:67
+      automatic logic [4:0]       _age_vector_2_T_4;	// src/main/scala/Memory/MOB.scala:131:67
+      automatic logic [4:0]       _age_vector_3_T_4;	// src/main/scala/Memory/MOB.scala:131:67
+      automatic logic [4:0]       _age_vector_4_T_4;	// src/main/scala/Memory/MOB.scala:131:67
+      automatic logic [4:0]       _age_vector_5_T_4;	// src/main/scala/Memory/MOB.scala:131:67
+      automatic logic [4:0]       _age_vector_6_T_4;	// src/main/scala/Memory/MOB.scala:131:67
+      automatic logic [4:0]       _age_vector_7_T_4;	// src/main/scala/Memory/MOB.scala:131:67
+      automatic logic [4:0]       _age_vector_8_T_4;	// src/main/scala/Memory/MOB.scala:131:67
+      automatic logic [4:0]       _age_vector_9_T_4;	// src/main/scala/Memory/MOB.scala:131:67
+      automatic logic [4:0]       _age_vector_10_T_4;	// src/main/scala/Memory/MOB.scala:131:67
+      automatic logic [4:0]       _age_vector_11_T_4;	// src/main/scala/Memory/MOB.scala:131:67
+      automatic logic [4:0]       _age_vector_12_T_4;	// src/main/scala/Memory/MOB.scala:131:67
+      automatic logic [4:0]       _age_vector_13_T_4;	// src/main/scala/Memory/MOB.scala:131:67
+      automatic logic [4:0]       _age_vector_14_T_4;	// src/main/scala/Memory/MOB.scala:131:67
+      automatic logic [4:0]       _age_vector_15_T_4;	// src/main/scala/Memory/MOB.scala:131:67
+      automatic logic             _GEN_45;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
+      automatic logic             _GEN_46;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
+      automatic logic             _GEN_47;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
+      automatic logic             _GEN_48;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
+      automatic logic             _GEN_49;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
+      automatic logic             _GEN_50;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
+      automatic logic             _GEN_51;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
+      automatic logic             _GEN_52;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
+      automatic logic             _GEN_53;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
+      automatic logic             _GEN_54;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
+      automatic logic             _GEN_55;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
+      automatic logic             _GEN_56;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
+      automatic logic             _GEN_57;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
+      automatic logic             _GEN_58;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
+      automatic logic             _GEN_59;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
+      automatic logic             _GEN_60;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
+      automatic logic             _GEN_61;	// src/main/scala/Memory/MOB.scala:153:65
+      automatic logic             _GEN_62;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
+      automatic logic             _GEN_63;	// src/main/scala/Memory/MOB.scala:153:65
+      automatic logic             _GEN_64;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
+      automatic logic             _GEN_65;	// src/main/scala/Memory/MOB.scala:153:65
+      automatic logic             _GEN_66;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
+      automatic logic             _GEN_67;	// src/main/scala/Memory/MOB.scala:153:65
+      automatic logic             _GEN_68;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
+      automatic logic             _GEN_69;	// src/main/scala/Memory/MOB.scala:153:65
+      automatic logic             _GEN_70;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
+      automatic logic             _GEN_71;	// src/main/scala/Memory/MOB.scala:153:65
+      automatic logic             _GEN_72;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
+      automatic logic             _GEN_73;	// src/main/scala/Memory/MOB.scala:153:65
+      automatic logic             _GEN_74;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
+      automatic logic             _GEN_75;	// src/main/scala/Memory/MOB.scala:153:65
+      automatic logic             _GEN_76;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
+      automatic logic             _GEN_77;	// src/main/scala/Memory/MOB.scala:153:65
+      automatic logic             _GEN_78;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
+      automatic logic             _GEN_79;	// src/main/scala/Memory/MOB.scala:153:65
+      automatic logic             _GEN_80;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
+      automatic logic             _GEN_81;	// src/main/scala/Memory/MOB.scala:153:65
+      automatic logic             _GEN_82;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
+      automatic logic             _GEN_83;	// src/main/scala/Memory/MOB.scala:153:65
+      automatic logic             _GEN_84;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
+      automatic logic             _GEN_85;	// src/main/scala/Memory/MOB.scala:153:65
+      automatic logic             _GEN_86;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
+      automatic logic             _GEN_87;	// src/main/scala/Memory/MOB.scala:153:65
+      automatic logic             _GEN_88;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
+      automatic logic             _GEN_89;	// src/main/scala/Memory/MOB.scala:153:65
+      automatic logic             _GEN_90;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
+      automatic logic             _GEN_91;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
+      automatic logic             _GEN_92;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
+      automatic logic             _GEN_93;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
+      automatic logic             _GEN_94;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
+      automatic logic             _GEN_95;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
+      automatic logic             _GEN_96;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
+      automatic logic             _GEN_97;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
+      automatic logic             _GEN_98;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
+      automatic logic             _GEN_99;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
+      automatic logic             _GEN_100;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
+      automatic logic             _GEN_101;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
+      automatic logic             _GEN_102;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
+      automatic logic             _GEN_103;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
+      automatic logic             _GEN_104;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
+      automatic logic             _GEN_105;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
+      automatic logic             _GEN_106;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
+      automatic logic             _GEN_107;	// src/main/scala/Memory/MOB.scala:150:29, :153:65
+      automatic logic             _GEN_108;	// src/main/scala/Memory/MOB.scala:153:65
+      automatic logic             _GEN_109;	// src/main/scala/Memory/MOB.scala:153:65
+      automatic logic             _GEN_110;	// src/main/scala/Memory/MOB.scala:153:65
+      automatic logic             _GEN_111;	// src/main/scala/Memory/MOB.scala:153:65
+      automatic logic             _GEN_112;	// src/main/scala/Memory/MOB.scala:153:65
+      automatic logic             _GEN_113;	// src/main/scala/Memory/MOB.scala:153:65
+      automatic logic             _GEN_114;	// src/main/scala/Memory/MOB.scala:153:65
+      automatic logic             _GEN_115;	// src/main/scala/Memory/MOB.scala:153:65
+      automatic logic             _GEN_116;	// src/main/scala/Memory/MOB.scala:153:65
+      automatic logic             _GEN_117;	// src/main/scala/Memory/MOB.scala:153:65
+      automatic logic             _GEN_118;	// src/main/scala/Memory/MOB.scala:153:65
+      automatic logic             _GEN_119;	// src/main/scala/Memory/MOB.scala:153:65
+      automatic logic             _GEN_120;	// src/main/scala/Memory/MOB.scala:153:65
+      automatic logic             _GEN_121;	// src/main/scala/Memory/MOB.scala:153:65
+      automatic logic             _GEN_122;	// src/main/scala/Memory/MOB.scala:153:65
+      automatic logic             _GEN_123;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      automatic logic             _GEN_124;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      automatic logic             _GEN_125;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      automatic logic             _GEN_126;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      automatic logic             _GEN_127;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      automatic logic             _GEN_128;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      automatic logic             _GEN_129;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      automatic logic             _GEN_130;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      automatic logic             _GEN_131;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      automatic logic             _GEN_132;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      automatic logic             _GEN_133;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      automatic logic             _GEN_134;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      automatic logic             _GEN_135;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      automatic logic             _GEN_136;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      automatic logic             _GEN_137;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      automatic logic             _GEN_138;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      automatic logic             _GEN_139;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      automatic logic             _GEN_140;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      automatic logic             _GEN_141;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      automatic logic             _GEN_142;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      automatic logic             _GEN_143;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      automatic logic             _GEN_144;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      automatic logic             _GEN_145;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      automatic logic             _GEN_146;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      automatic logic             _GEN_147;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      automatic logic             _GEN_148;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      automatic logic             _GEN_149;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      automatic logic             _GEN_150;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      automatic logic             _GEN_151;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      automatic logic             _GEN_152;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      automatic logic             _GEN_153;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      automatic logic             _GEN_154;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      automatic logic             incoming_is_load =
+        io_AGU_output_bits_memory_type == 2'h1;	// src/main/scala/Memory/MOB.scala:151:63, :193:66
+      automatic logic             incoming_is_store =
+        io_AGU_output_bits_memory_type == 2'h2;	// src/main/scala/Memory/MOB.scala:194:66
+      automatic logic [15:0][3:0] _GEN_155;	// src/main/scala/Memory/MOB.scala:203:45
+      automatic logic             _GEN_156;	// src/main/scala/Memory/MOB.scala:211:{34,48,66}
+      automatic logic             _GEN_157;	// src/main/scala/Memory/MOB.scala:119:22, :212:61, :213:34, :214:68, :215:34
+      automatic logic             store_store_violation_0;	// src/main/scala/Memory/MOB.scala:197:27, :211:131, :212:61, :214:68, :216:{42,54,68}
+      automatic logic             _GEN_158;	// src/main/scala/Memory/MOB.scala:211:{34,48,66,78}
+      automatic logic             _GEN_159;	// src/main/scala/Memory/MOB.scala:119:22, :212:61, :213:34, :214:68, :215:34
+      automatic logic [1:0]       _GEN_160;	// src/main/scala/Memory/MOB.scala:211:90
+      automatic logic [1:0]       _GEN_161;	// src/main/scala/Memory/MOB.scala:211:90
+      automatic logic [1:0]       _GEN_162;	// src/main/scala/Memory/MOB.scala:211:90
+      automatic logic             _GEN_163;	// src/main/scala/Memory/MOB.scala:211:{34,48,66,78}
+      automatic logic             _GEN_164;	// src/main/scala/Memory/MOB.scala:119:22, :212:61, :213:34, :214:68, :215:34
+      automatic logic [1:0]       _GEN_165;	// src/main/scala/Memory/MOB.scala:211:90
+      automatic logic [1:0]       _GEN_166;	// src/main/scala/Memory/MOB.scala:211:90
+      automatic logic             _GEN_167;	// src/main/scala/Memory/MOB.scala:211:{34,48,66,78}
+      automatic logic             _GEN_168;	// src/main/scala/Memory/MOB.scala:119:22, :212:61, :213:34, :214:68, :215:34
+      automatic logic [1:0]       _GEN_169;	// src/main/scala/Memory/MOB.scala:211:90
+      automatic logic [2:0]       _GEN_170;	// src/main/scala/Memory/MOB.scala:211:90
+      automatic logic [2:0]       _GEN_171;	// src/main/scala/Memory/MOB.scala:211:90
+      automatic logic             _GEN_172;	// src/main/scala/Memory/MOB.scala:211:{34,48,66,78}
+      automatic logic             _GEN_173;	// src/main/scala/Memory/MOB.scala:119:22, :212:61, :213:34, :214:68, :215:34
+      automatic logic [1:0]       _GEN_174;	// src/main/scala/Memory/MOB.scala:211:90
+      automatic logic [1:0]       _GEN_175;	// src/main/scala/Memory/MOB.scala:211:90
+      automatic logic [2:0]       _GEN_176;	// src/main/scala/Memory/MOB.scala:211:90
+      automatic logic             _GEN_177;	// src/main/scala/Memory/MOB.scala:211:{34,48,66,78}
+      automatic logic             _GEN_178;	// src/main/scala/Memory/MOB.scala:119:22, :212:61, :213:34, :214:68, :215:34
+      automatic logic [1:0]       _GEN_179;	// src/main/scala/Memory/MOB.scala:211:90
+      automatic logic [1:0]       _GEN_180;	// src/main/scala/Memory/MOB.scala:211:90
+      automatic logic [2:0]       _GEN_181;	// src/main/scala/Memory/MOB.scala:211:90
+      automatic logic [2:0]       _GEN_182;	// src/main/scala/Memory/MOB.scala:211:90
+      automatic logic [2:0]       _GEN_183;	// src/main/scala/Memory/MOB.scala:211:90
+      automatic logic             _GEN_184;	// src/main/scala/Memory/MOB.scala:211:{34,48,66,78}
+      automatic logic             _GEN_185;	// src/main/scala/Memory/MOB.scala:119:22, :212:61, :213:34, :214:68, :215:34
+      automatic logic [1:0]       _GEN_186;	// src/main/scala/Memory/MOB.scala:211:90
+      automatic logic [2:0]       _GEN_187;	// src/main/scala/Memory/MOB.scala:211:90
+      automatic logic [2:0]       _GEN_188;	// src/main/scala/Memory/MOB.scala:211:90
+      automatic logic             _GEN_189;	// src/main/scala/Memory/MOB.scala:211:{34,48,66,78}
+      automatic logic             _GEN_190;	// src/main/scala/Memory/MOB.scala:119:22, :212:61, :213:34, :214:68, :215:34
+      automatic logic [1:0]       _GEN_191;	// src/main/scala/Memory/MOB.scala:211:90
+      automatic logic [1:0]       _GEN_192;	// src/main/scala/Memory/MOB.scala:211:90
+      automatic logic [3:0]       _GEN_193;	// src/main/scala/Memory/MOB.scala:211:90
+      automatic logic             _GEN_194;	// src/main/scala/Memory/MOB.scala:211:{34,48,66,78}
+      automatic logic             _GEN_195;	// src/main/scala/Memory/MOB.scala:119:22, :212:61, :213:34, :214:68, :215:34
+      automatic logic [1:0]       _GEN_196;	// src/main/scala/Memory/MOB.scala:211:90
+      automatic logic [1:0]       _GEN_197;	// src/main/scala/Memory/MOB.scala:211:90
+      automatic logic [2:0]       _GEN_198;	// src/main/scala/Memory/MOB.scala:211:90
+      automatic logic             _GEN_199;	// src/main/scala/Memory/MOB.scala:211:{34,48,66,78}
+      automatic logic             _GEN_200;	// src/main/scala/Memory/MOB.scala:119:22, :212:61, :213:34, :214:68, :215:34
+      automatic logic [1:0]       _GEN_201;	// src/main/scala/Memory/MOB.scala:211:90
+      automatic logic [2:0]       _GEN_202;	// src/main/scala/Memory/MOB.scala:211:90
+      automatic logic [3:0]       _GEN_203;	// src/main/scala/Memory/MOB.scala:211:90
+      automatic logic             _GEN_204;	// src/main/scala/Memory/MOB.scala:211:{34,48,66,78}
+      automatic logic             _GEN_205;	// src/main/scala/Memory/MOB.scala:119:22, :212:61, :213:34, :214:68, :215:34
+      automatic logic [1:0]       _GEN_206;	// src/main/scala/Memory/MOB.scala:211:90
+      automatic logic [1:0]       _GEN_207;	// src/main/scala/Memory/MOB.scala:211:90
+      automatic logic [2:0]       _GEN_208;	// src/main/scala/Memory/MOB.scala:211:90
+      automatic logic             _GEN_209;	// src/main/scala/Memory/MOB.scala:211:{34,48,66,78}
+      automatic logic             _GEN_210;	// src/main/scala/Memory/MOB.scala:119:22, :212:61, :213:34, :214:68, :215:34
+      automatic logic [1:0]       _GEN_211;	// src/main/scala/Memory/MOB.scala:211:90
+      automatic logic [1:0]       _GEN_212;	// src/main/scala/Memory/MOB.scala:211:90
+      automatic logic [3:0]       _GEN_213;	// src/main/scala/Memory/MOB.scala:211:90
+      automatic logic             _GEN_214;	// src/main/scala/Memory/MOB.scala:211:{34,48,66,78}
+      automatic logic             _GEN_215;	// src/main/scala/Memory/MOB.scala:119:22, :212:61, :213:34, :214:68, :215:34
+      automatic logic [1:0]       _GEN_216;	// src/main/scala/Memory/MOB.scala:211:90
+      automatic logic [2:0]       _GEN_217;	// src/main/scala/Memory/MOB.scala:211:90
+      automatic logic             _GEN_218;	// src/main/scala/Memory/MOB.scala:211:{34,48,66,78}
+      automatic logic             _GEN_219;	// src/main/scala/Memory/MOB.scala:119:22, :212:61, :213:34, :214:68, :215:34
+      automatic logic [1:0]       _GEN_220;	// src/main/scala/Memory/MOB.scala:211:90
+      automatic logic [3:0]       _GEN_221;	// src/main/scala/Memory/MOB.scala:211:90
+      automatic logic             _GEN_222;	// src/main/scala/Memory/MOB.scala:211:{34,48,66,78}
+      automatic logic             _GEN_223;	// src/main/scala/Memory/MOB.scala:119:22, :212:61, :213:34, :214:68, :215:34
+      automatic logic             _GEN_224;	// src/main/scala/Memory/MOB.scala:248:53
+      automatic logic             _GEN_225;	// src/main/scala/Memory/MOB.scala:248:53
+      automatic logic             _GEN_226;	// src/main/scala/Memory/MOB.scala:248:53
+      automatic logic             _GEN_227;	// src/main/scala/Memory/MOB.scala:248:53
+      automatic logic             _GEN_228;	// src/main/scala/Memory/MOB.scala:248:53
+      automatic logic             _GEN_229;	// src/main/scala/Memory/MOB.scala:248:53
+      automatic logic             _GEN_230;	// src/main/scala/Memory/MOB.scala:248:53
+      automatic logic             _GEN_231;	// src/main/scala/Memory/MOB.scala:248:53
+      automatic logic             _GEN_232;	// src/main/scala/Memory/MOB.scala:248:53
+      automatic logic             _GEN_233;	// src/main/scala/Memory/MOB.scala:248:53
+      automatic logic             _GEN_234;	// src/main/scala/Memory/MOB.scala:248:53
+      automatic logic             _GEN_235;	// src/main/scala/Memory/MOB.scala:248:53
+      automatic logic             _GEN_236;	// src/main/scala/Memory/MOB.scala:248:53
+      automatic logic             _GEN_237;	// src/main/scala/Memory/MOB.scala:248:53
+      automatic logic             _GEN_238;	// src/main/scala/Memory/MOB.scala:248:53
+      automatic logic [15:0]      _GEN_239;	// src/main/scala/Memory/MOB.scala:236:52
+      automatic logic             _GEN_240;	// src/main/scala/Memory/MOB.scala:278:{19,34,49}
+      automatic logic             _GEN_241 =
+        io_commit_valid & _FU_output_load_Q_io_flush_T;	// src/main/scala/Memory/MOB.scala:286:{26,62}
+      automatic logic             _GEN_242;	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+      automatic logic             _GEN_243;	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+      automatic logic             _GEN_244;	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+      automatic logic             _GEN_245;	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+      automatic logic             _GEN_246;	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+      automatic logic             _GEN_247;	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+      automatic logic             _GEN_248;	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+      automatic logic             _GEN_249;	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+      automatic logic             _GEN_250;	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+      automatic logic             _GEN_251;	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+      automatic logic             _GEN_252;	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+      automatic logic             _GEN_253;	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+      automatic logic             _GEN_254;	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+      automatic logic             _GEN_255;	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+      automatic logic             _GEN_256;	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+      automatic logic             _GEN_257;	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+      automatic logic             _GEN_258 =
+        io_backend_memory_response_valid
+        & io_backend_memory_response_bits_MOB_index == 4'h0;	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
+      automatic logic             _GEN_259 =
+        io_backend_memory_response_valid
+        & io_backend_memory_response_bits_MOB_index == 4'h1;	// src/main/scala/Memory/MOB.scala:151:63, :286:91, :297:43, :298:62
+      automatic logic             _GEN_260 =
+        io_backend_memory_response_valid
+        & io_backend_memory_response_bits_MOB_index == 4'h2;	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
+      automatic logic             _GEN_261 =
+        io_backend_memory_response_valid
+        & io_backend_memory_response_bits_MOB_index == 4'h3;	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
+      automatic logic             _GEN_262 =
+        io_backend_memory_response_valid
+        & io_backend_memory_response_bits_MOB_index == 4'h4;	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
+      automatic logic             _GEN_263 =
+        io_backend_memory_response_valid
+        & io_backend_memory_response_bits_MOB_index == 4'h5;	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
+      automatic logic             _GEN_264 =
+        io_backend_memory_response_valid
+        & io_backend_memory_response_bits_MOB_index == 4'h6;	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
+      automatic logic             _GEN_265 =
+        io_backend_memory_response_valid
+        & io_backend_memory_response_bits_MOB_index == 4'h7;	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
+      automatic logic             _GEN_266 =
+        io_backend_memory_response_valid
+        & io_backend_memory_response_bits_MOB_index == 4'h8;	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
+      automatic logic             _GEN_267 =
+        io_backend_memory_response_valid
+        & io_backend_memory_response_bits_MOB_index == 4'h9;	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
+      automatic logic             _GEN_268 =
+        io_backend_memory_response_valid
+        & io_backend_memory_response_bits_MOB_index == 4'hA;	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
+      automatic logic             _GEN_269 =
+        io_backend_memory_response_valid
+        & io_backend_memory_response_bits_MOB_index == 4'hB;	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
+      automatic logic             _GEN_270 =
+        io_backend_memory_response_valid
+        & io_backend_memory_response_bits_MOB_index == 4'hC;	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
+      automatic logic             _GEN_271 =
+        io_backend_memory_response_valid
+        & io_backend_memory_response_bits_MOB_index == 4'hD;	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
+      automatic logic             _GEN_272 =
+        io_backend_memory_response_valid
+        & io_backend_memory_response_bits_MOB_index == 4'hE;	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
+      automatic logic             _GEN_273 =
+        io_backend_memory_response_valid & (&io_backend_memory_response_bits_MOB_index);	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
+      _GEN_44 = {1'h0, front_pointer[3:0]};	// src/main/scala/Memory/MOB.scala:113:34, :116:40, :131:45
+      _age_vector_0_T_4 = (_GEN_44 - 5'h10) % 5'h10;	// src/main/scala/Memory/MOB.scala:131:{45,67}
+      _age_vector_1_T_4 = (_GEN_44 + 5'hF) % 5'h10;	// src/main/scala/Memory/MOB.scala:131:{45,60,67}
+      _age_vector_2_T_4 = (_GEN_44 + 5'hE) % 5'h10;	// src/main/scala/Memory/MOB.scala:131:{45,60,67}
+      _age_vector_3_T_4 = (_GEN_44 + 5'hD) % 5'h10;	// src/main/scala/Memory/MOB.scala:131:{45,60,67}
+      _age_vector_4_T_4 = (_GEN_44 + 5'hC) % 5'h10;	// src/main/scala/Memory/MOB.scala:131:{45,60,67}
+      _age_vector_5_T_4 = (_GEN_44 + 5'hB) % 5'h10;	// src/main/scala/Memory/MOB.scala:131:{45,60,67}
+      _age_vector_6_T_4 = (_GEN_44 + 5'hA) % 5'h10;	// src/main/scala/Memory/MOB.scala:131:{45,60,67}
+      _age_vector_7_T_4 = (_GEN_44 + 5'h9) % 5'h10;	// src/main/scala/Memory/MOB.scala:131:{45,60,67}
+      _age_vector_8_T_4 = (_GEN_44 + 5'h8) % 5'h10;	// src/main/scala/Memory/MOB.scala:131:{45,60,67}
+      _age_vector_9_T_4 = (_GEN_44 + 5'h7) % 5'h10;	// src/main/scala/Memory/MOB.scala:131:{45,60,67}
+      _age_vector_10_T_4 = (_GEN_44 + 5'h6) % 5'h10;	// src/main/scala/Memory/MOB.scala:131:{45,60,67}
+      _age_vector_11_T_4 = (_GEN_44 + 5'h5) % 5'h10;	// src/main/scala/Memory/MOB.scala:131:{45,60,67}
+      _age_vector_12_T_4 = (_GEN_44 + 5'h4) % 5'h10;	// src/main/scala/Memory/MOB.scala:131:{45,60,67}
+      _age_vector_13_T_4 = (_GEN_44 + 5'h3) % 5'h10;	// src/main/scala/Memory/MOB.scala:131:{45,60,67}
+      _age_vector_14_T_4 = (_GEN_44 + 5'h2) % 5'h10;	// src/main/scala/Memory/MOB.scala:131:{45,60,67}
+      _age_vector_15_T_4 = (_GEN_44 + 5'h1) % 5'h10;	// src/main/scala/Memory/MOB.scala:131:{45,60,67}
+      _GEN_45 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'h0;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:{28,65}
+      _GEN_46 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'h1;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :151:63, :153:{28,65}
+      _GEN_47 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'h2;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:{28,65}
+      _GEN_48 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'h3;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:{28,65}
+      _GEN_49 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'h4;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:{28,65}
+      _GEN_50 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'h5;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:{28,65}
+      _GEN_51 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'h6;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:{28,65}
+      _GEN_52 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'h7;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:{28,65}
+      _GEN_53 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'h8;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:{28,65}
+      _GEN_54 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'h9;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:{28,65}
+      _GEN_55 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'hA;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:{28,65}
+      _GEN_56 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'hB;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:{28,65}
+      _GEN_57 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'hC;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:{28,65}
+      _GEN_58 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'hD;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:{28,65}
+      _GEN_59 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'hE;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:{28,65}
+      _GEN_60 = written_vec_0 & (&_io_reserved_pointers_0_bits_T);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:{28,65}
+      _GEN_61 = _io_reserved_pointers_1_bits_T == 4'h0;	// src/main/scala/Memory/MOB.scala:153:{28,65}
+      _GEN_62 = written_vec_1 ? _GEN_61 | _GEN_45 | MOB_0_valid : _GEN_45 | MOB_0_valid;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65
+      _GEN_63 = _io_reserved_pointers_1_bits_T == 4'h1;	// src/main/scala/Memory/MOB.scala:151:63, :153:{28,65}
+      _GEN_64 = written_vec_1 ? _GEN_63 | _GEN_46 | MOB_1_valid : _GEN_46 | MOB_1_valid;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65
+      _GEN_65 = _io_reserved_pointers_1_bits_T == 4'h2;	// src/main/scala/Memory/MOB.scala:153:{28,65}
+      _GEN_66 = written_vec_1 ? _GEN_65 | _GEN_47 | MOB_2_valid : _GEN_47 | MOB_2_valid;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65
+      _GEN_67 = _io_reserved_pointers_1_bits_T == 4'h3;	// src/main/scala/Memory/MOB.scala:153:{28,65}
+      _GEN_68 = written_vec_1 ? _GEN_67 | _GEN_48 | MOB_3_valid : _GEN_48 | MOB_3_valid;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65
+      _GEN_69 = _io_reserved_pointers_1_bits_T == 4'h4;	// src/main/scala/Memory/MOB.scala:153:{28,65}
+      _GEN_70 = written_vec_1 ? _GEN_69 | _GEN_49 | MOB_4_valid : _GEN_49 | MOB_4_valid;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65
+      _GEN_71 = _io_reserved_pointers_1_bits_T == 4'h5;	// src/main/scala/Memory/MOB.scala:153:{28,65}
+      _GEN_72 = written_vec_1 ? _GEN_71 | _GEN_50 | MOB_5_valid : _GEN_50 | MOB_5_valid;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65
+      _GEN_73 = _io_reserved_pointers_1_bits_T == 4'h6;	// src/main/scala/Memory/MOB.scala:153:{28,65}
+      _GEN_74 = written_vec_1 ? _GEN_73 | _GEN_51 | MOB_6_valid : _GEN_51 | MOB_6_valid;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65
+      _GEN_75 = _io_reserved_pointers_1_bits_T == 4'h7;	// src/main/scala/Memory/MOB.scala:153:{28,65}
+      _GEN_76 = written_vec_1 ? _GEN_75 | _GEN_52 | MOB_7_valid : _GEN_52 | MOB_7_valid;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65
+      _GEN_77 = _io_reserved_pointers_1_bits_T == 4'h8;	// src/main/scala/Memory/MOB.scala:153:{28,65}
+      _GEN_78 = written_vec_1 ? _GEN_77 | _GEN_53 | MOB_8_valid : _GEN_53 | MOB_8_valid;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65
+      _GEN_79 = _io_reserved_pointers_1_bits_T == 4'h9;	// src/main/scala/Memory/MOB.scala:153:{28,65}
+      _GEN_80 = written_vec_1 ? _GEN_79 | _GEN_54 | MOB_9_valid : _GEN_54 | MOB_9_valid;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65
+      _GEN_81 = _io_reserved_pointers_1_bits_T == 4'hA;	// src/main/scala/Memory/MOB.scala:153:{28,65}
+      _GEN_82 = written_vec_1 ? _GEN_81 | _GEN_55 | MOB_10_valid : _GEN_55 | MOB_10_valid;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65
+      _GEN_83 = _io_reserved_pointers_1_bits_T == 4'hB;	// src/main/scala/Memory/MOB.scala:153:{28,65}
+      _GEN_84 = written_vec_1 ? _GEN_83 | _GEN_56 | MOB_11_valid : _GEN_56 | MOB_11_valid;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65
+      _GEN_85 = _io_reserved_pointers_1_bits_T == 4'hC;	// src/main/scala/Memory/MOB.scala:153:{28,65}
+      _GEN_86 = written_vec_1 ? _GEN_85 | _GEN_57 | MOB_12_valid : _GEN_57 | MOB_12_valid;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65
+      _GEN_87 = _io_reserved_pointers_1_bits_T == 4'hD;	// src/main/scala/Memory/MOB.scala:153:{28,65}
+      _GEN_88 = written_vec_1 ? _GEN_87 | _GEN_58 | MOB_13_valid : _GEN_58 | MOB_13_valid;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65
+      _GEN_89 = _io_reserved_pointers_1_bits_T == 4'hE;	// src/main/scala/Memory/MOB.scala:153:{28,65}
+      _GEN_90 = written_vec_1 ? _GEN_89 | _GEN_59 | MOB_14_valid : _GEN_59 | MOB_14_valid;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65
+      _GEN_91 =
         written_vec_1
-          ? (&_io_reserved_pointers_1_bits_T) | _GEN_20 | MOB_15_valid
-          : _GEN_20 | MOB_15_valid;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:{28,65}
-      _io_reserved_pointers_2_bits_T =
-        back_pointer[3:0] + {2'h0, _GEN_4 + _GEN_21 + _GEN_53 - 2'h1};	// src/main/scala/Memory/MOB.scala:114:34, :117:39, :151:{40,63}, :153:28
-      _GEN_54 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'h0;	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:{28,65}
-      _GEN_55 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'h1;	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :151:63, :153:{28,65}
-      _GEN_56 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'h2;	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:{28,65}
-      _GEN_57 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'h3;	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:{28,65}
-      _GEN_58 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'h4;	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:{28,65}
-      _GEN_59 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'h5;	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:{28,65}
-      _GEN_60 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'h6;	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:{28,65}
-      _GEN_61 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'h7;	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:{28,65}
-      _GEN_62 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'h8;	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:{28,65}
-      _GEN_63 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'h9;	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:{28,65}
-      _GEN_64 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'hA;	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:{28,65}
-      _GEN_65 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'hB;	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:{28,65}
-      _GEN_66 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'hC;	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:{28,65}
-      _GEN_67 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'hD;	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:{28,65}
-      _GEN_68 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'hE;	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:{28,65}
-      _GEN_69 = written_vec_2 & (&_io_reserved_pointers_2_bits_T);	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:{28,65}
-      _GEN_70 = {1'h0, written_vec_3};	// src/main/scala/Memory/MOB.scala:142:34, :151:40
-      _io_reserved_pointers_3_bits_T =
-        back_pointer[3:0]
-        + {1'h0, {1'h0, _GEN_4 + _GEN_21} + {1'h0, _GEN_53 + _GEN_70} - 3'h1};	// src/main/scala/Memory/MOB.scala:114:34, :117:39, :151:{40,63}, :153:28
-      _GEN_71 = _io_reserved_pointers_3_bits_T == 4'h0;	// src/main/scala/Memory/MOB.scala:153:{28,65}
-      _GEN_72 = _io_reserved_pointers_3_bits_T == 4'h1;	// src/main/scala/Memory/MOB.scala:151:63, :153:{28,65}
-      _GEN_73 = _io_reserved_pointers_3_bits_T == 4'h2;	// src/main/scala/Memory/MOB.scala:153:{28,65}
-      _GEN_74 = _io_reserved_pointers_3_bits_T == 4'h3;	// src/main/scala/Memory/MOB.scala:153:{28,65}
-      _GEN_75 = _io_reserved_pointers_3_bits_T == 4'h4;	// src/main/scala/Memory/MOB.scala:153:{28,65}
-      _GEN_76 = _io_reserved_pointers_3_bits_T == 4'h5;	// src/main/scala/Memory/MOB.scala:153:{28,65}
-      _GEN_77 = _io_reserved_pointers_3_bits_T == 4'h6;	// src/main/scala/Memory/MOB.scala:153:{28,65}
-      _GEN_78 = _io_reserved_pointers_3_bits_T == 4'h7;	// src/main/scala/Memory/MOB.scala:153:{28,65}
-      _GEN_79 = _io_reserved_pointers_3_bits_T == 4'h8;	// src/main/scala/Memory/MOB.scala:153:{28,65}
-      _GEN_80 = _io_reserved_pointers_3_bits_T == 4'h9;	// src/main/scala/Memory/MOB.scala:153:{28,65}
-      _GEN_81 = _io_reserved_pointers_3_bits_T == 4'hA;	// src/main/scala/Memory/MOB.scala:153:{28,65}
-      _GEN_82 = _io_reserved_pointers_3_bits_T == 4'hB;	// src/main/scala/Memory/MOB.scala:153:{28,65}
-      _GEN_83 = _io_reserved_pointers_3_bits_T == 4'hC;	// src/main/scala/Memory/MOB.scala:153:{28,65}
-      _GEN_84 = _io_reserved_pointers_3_bits_T == 4'hD;	// src/main/scala/Memory/MOB.scala:153:{28,65}
-      _GEN_85 = _io_reserved_pointers_3_bits_T == 4'hE;	// src/main/scala/Memory/MOB.scala:153:{28,65}
-      _GEN_86 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'h0;	// src/main/scala/Memory/MOB.scala:119:22, :173:30, :174:40
-      _GEN_87 = _GEN_86 | MOB_0_pending;	// src/main/scala/Memory/MOB.scala:119:22, :173:30, :174:40
-      _GEN_88 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'h1;	// src/main/scala/Memory/MOB.scala:119:22, :151:63, :173:30, :174:40
-      _GEN_89 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'h2;	// src/main/scala/Memory/MOB.scala:119:22, :173:30, :174:40
-      _GEN_90 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'h3;	// src/main/scala/Memory/MOB.scala:119:22, :173:30, :174:40
-      _GEN_91 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'h4;	// src/main/scala/Memory/MOB.scala:119:22, :173:30, :174:40
-      _GEN_92 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'h5;	// src/main/scala/Memory/MOB.scala:119:22, :173:30, :174:40
-      _GEN_93 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'h6;	// src/main/scala/Memory/MOB.scala:119:22, :173:30, :174:40
-      _GEN_94 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'h7;	// src/main/scala/Memory/MOB.scala:119:22, :173:30, :174:40
-      _GEN_95 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'h8;	// src/main/scala/Memory/MOB.scala:119:22, :173:30, :174:40
-      _GEN_96 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'h9;	// src/main/scala/Memory/MOB.scala:119:22, :173:30, :174:40
-      _GEN_97 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'hA;	// src/main/scala/Memory/MOB.scala:119:22, :173:30, :174:40
-      _GEN_98 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'hB;	// src/main/scala/Memory/MOB.scala:119:22, :173:30, :174:40
-      _GEN_99 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'hC;	// src/main/scala/Memory/MOB.scala:119:22, :173:30, :174:40
-      _GEN_100 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'hD;	// src/main/scala/Memory/MOB.scala:119:22, :173:30, :174:40
-      _GEN_101 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'hE;	// src/main/scala/Memory/MOB.scala:119:22, :173:30, :174:40
-      _GEN_102 = io_AGU_output_valid & (&io_AGU_output_bits_MOB_index);	// src/main/scala/Memory/MOB.scala:119:22, :173:30, :174:40
+          ? (&_io_reserved_pointers_1_bits_T) | _GEN_60 | MOB_15_valid
+          : _GEN_60 | MOB_15_valid;	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:{28,65}
+      _GEN_92 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'h0;	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:{28,65}
+      _GEN_93 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'h1;	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :151:63, :153:{28,65}
+      _GEN_94 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'h2;	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:{28,65}
+      _GEN_95 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'h3;	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:{28,65}
+      _GEN_96 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'h4;	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:{28,65}
+      _GEN_97 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'h5;	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:{28,65}
+      _GEN_98 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'h6;	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:{28,65}
+      _GEN_99 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'h7;	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:{28,65}
+      _GEN_100 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'h8;	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:{28,65}
+      _GEN_101 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'h9;	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:{28,65}
+      _GEN_102 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'hA;	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:{28,65}
+      _GEN_103 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'hB;	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:{28,65}
+      _GEN_104 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'hC;	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:{28,65}
+      _GEN_105 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'hD;	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:{28,65}
+      _GEN_106 = written_vec_2 & _io_reserved_pointers_2_bits_T == 4'hE;	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:{28,65}
+      _GEN_107 = written_vec_2 & (&_io_reserved_pointers_2_bits_T);	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:{28,65}
+      _GEN_108 = _io_reserved_pointers_3_bits_T == 4'h0;	// src/main/scala/Memory/MOB.scala:153:{28,65}
+      _GEN_109 = _io_reserved_pointers_3_bits_T == 4'h1;	// src/main/scala/Memory/MOB.scala:151:63, :153:{28,65}
+      _GEN_110 = _io_reserved_pointers_3_bits_T == 4'h2;	// src/main/scala/Memory/MOB.scala:153:{28,65}
+      _GEN_111 = _io_reserved_pointers_3_bits_T == 4'h3;	// src/main/scala/Memory/MOB.scala:153:{28,65}
+      _GEN_112 = _io_reserved_pointers_3_bits_T == 4'h4;	// src/main/scala/Memory/MOB.scala:153:{28,65}
+      _GEN_113 = _io_reserved_pointers_3_bits_T == 4'h5;	// src/main/scala/Memory/MOB.scala:153:{28,65}
+      _GEN_114 = _io_reserved_pointers_3_bits_T == 4'h6;	// src/main/scala/Memory/MOB.scala:153:{28,65}
+      _GEN_115 = _io_reserved_pointers_3_bits_T == 4'h7;	// src/main/scala/Memory/MOB.scala:153:{28,65}
+      _GEN_116 = _io_reserved_pointers_3_bits_T == 4'h8;	// src/main/scala/Memory/MOB.scala:153:{28,65}
+      _GEN_117 = _io_reserved_pointers_3_bits_T == 4'h9;	// src/main/scala/Memory/MOB.scala:153:{28,65}
+      _GEN_118 = _io_reserved_pointers_3_bits_T == 4'hA;	// src/main/scala/Memory/MOB.scala:153:{28,65}
+      _GEN_119 = _io_reserved_pointers_3_bits_T == 4'hB;	// src/main/scala/Memory/MOB.scala:153:{28,65}
+      _GEN_120 = _io_reserved_pointers_3_bits_T == 4'hC;	// src/main/scala/Memory/MOB.scala:153:{28,65}
+      _GEN_121 = _io_reserved_pointers_3_bits_T == 4'hD;	// src/main/scala/Memory/MOB.scala:153:{28,65}
+      _GEN_122 = _io_reserved_pointers_3_bits_T == 4'hE;	// src/main/scala/Memory/MOB.scala:153:{28,65}
+      _GEN_123 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'h0;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      _GEN_124 = _GEN_123 | MOB_0_pending;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      _GEN_125 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'h1;	// src/main/scala/Memory/MOB.scala:119:22, :151:63, :181:30, :182:40
+      _GEN_126 = _GEN_125 | MOB_1_pending;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      _GEN_127 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'h2;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      _GEN_128 = _GEN_127 | MOB_2_pending;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      _GEN_129 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'h3;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      _GEN_130 = _GEN_129 | MOB_3_pending;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      _GEN_131 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'h4;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      _GEN_132 = _GEN_131 | MOB_4_pending;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      _GEN_133 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'h5;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      _GEN_134 = _GEN_133 | MOB_5_pending;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      _GEN_135 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'h6;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      _GEN_136 = _GEN_135 | MOB_6_pending;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      _GEN_137 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'h7;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      _GEN_138 = _GEN_137 | MOB_7_pending;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      _GEN_139 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'h8;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      _GEN_140 = _GEN_139 | MOB_8_pending;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      _GEN_141 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'h9;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      _GEN_142 = _GEN_141 | MOB_9_pending;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      _GEN_143 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'hA;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      _GEN_144 = _GEN_143 | MOB_10_pending;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      _GEN_145 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'hB;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      _GEN_146 = _GEN_145 | MOB_11_pending;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      _GEN_147 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'hC;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      _GEN_148 = _GEN_147 | MOB_12_pending;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      _GEN_149 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'hD;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      _GEN_150 = _GEN_149 | MOB_13_pending;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      _GEN_151 = io_AGU_output_valid & io_AGU_output_bits_MOB_index == 4'hE;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      _GEN_152 = _GEN_151 | MOB_14_pending;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      _GEN_153 = io_AGU_output_valid & (&io_AGU_output_bits_MOB_index);	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      _GEN_154 = _GEN_153 | MOB_15_pending;	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+      _GEN_155 =
+        {{_age_vector_15_T_4[3:0]},
+         {_age_vector_14_T_4[3:0]},
+         {_age_vector_13_T_4[3:0]},
+         {_age_vector_12_T_4[3:0]},
+         {_age_vector_11_T_4[3:0]},
+         {_age_vector_10_T_4[3:0]},
+         {_age_vector_9_T_4[3:0]},
+         {_age_vector_8_T_4[3:0]},
+         {_age_vector_7_T_4[3:0]},
+         {_age_vector_6_T_4[3:0]},
+         {_age_vector_5_T_4[3:0]},
+         {_age_vector_4_T_4[3:0]},
+         {_age_vector_3_T_4[3:0]},
+         {_age_vector_2_T_4[3:0]},
+         {_age_vector_1_T_4[3:0]},
+         {_age_vector_0_T_4[3:0]}};	// src/main/scala/Memory/MOB.scala:131:{29,67}, :203:45
+      _GEN_156 =
+        io_AGU_output_valid
+        & _age_vector_0_T_4[3:0] < _GEN_155[io_AGU_output_bits_MOB_index]
+        & io_AGU_output_bits_address == (MOB_0_address & 32'hFFFFFFF0) & MOB_0_valid;	// src/main/scala/Memory/MOB.scala:119:22, :131:{29,67}, :203:45, :204:48, :211:{34,48,66}, src/main/scala/utils.scala:333:10
+      _GEN_157 =
+        incoming_is_load & is_load & MOB_0_completed | incoming_is_store & is_load
+        & MOB_0_completed;	// src/main/scala/Memory/MOB.scala:119:22, :193:66, :194:66, :206:50, :212:{35,46,61}, :213:34, :214:{42,53,68}, :215:34
+      store_store_violation_0 =
+        _GEN_156 & ~_GEN_157 & incoming_is_store & is_store & MOB_0_pending;	// src/main/scala/Memory/MOB.scala:119:22, :194:66, :197:27, :207:50, :211:{34,48,66,131}, :212:61, :213:34, :214:68, :215:34, :216:{42,54,68}
+      _GEN_158 =
+        io_AGU_output_valid
+        & _age_vector_1_T_4[3:0] < _GEN_155[io_AGU_output_bits_MOB_index]
+        & io_AGU_output_bits_address == (MOB_1_address & 32'hFFFFFFF0) & MOB_1_valid
+        & ~store_store_violation_0;	// src/main/scala/Memory/MOB.scala:119:22, :131:{29,67}, :197:27, :203:45, :204:48, :211:{34,48,66,78,122,131}, :212:61, :214:68, :216:{42,54,68}, src/main/scala/utils.scala:333:10
+      _GEN_159 =
+        incoming_is_load & is_load_1 & MOB_1_completed | incoming_is_store & is_load_1
+        & MOB_1_completed;	// src/main/scala/Memory/MOB.scala:119:22, :193:66, :194:66, :206:50, :212:{35,46,61}, :213:34, :214:{42,53,68}, :215:34
+      _GEN_160 = {1'h0, store_store_violation_0};	// src/main/scala/Memory/MOB.scala:197:27, :211:{90,131}, :212:61, :214:68, :216:{42,54,68}
+      _GEN_161 =
+        {1'h0, _GEN_158 & ~_GEN_159 & incoming_is_store & is_store_1 & MOB_1_pending};	// src/main/scala/Memory/MOB.scala:119:22, :194:66, :197:27, :207:50, :211:{34,48,66,78,90,131}, :212:61, :213:34, :214:68, :215:34, :216:{42,54,68}
+      _GEN_162 = _GEN_160 + _GEN_161;	// src/main/scala/Memory/MOB.scala:211:90
+      _GEN_163 =
+        io_AGU_output_valid
+        & _age_vector_2_T_4[3:0] < _GEN_155[io_AGU_output_bits_MOB_index]
+        & io_AGU_output_bits_address == (MOB_2_address & 32'hFFFFFFF0) & MOB_2_valid
+        & _GEN_162 == 2'h0;	// src/main/scala/Memory/MOB.scala:119:22, :131:{29,67}, :203:45, :204:48, :211:{34,48,66,78,90,122}, src/main/scala/utils.scala:333:10
+      _GEN_164 =
+        incoming_is_load & is_load_2 & MOB_2_completed | incoming_is_store & is_load_2
+        & MOB_2_completed;	// src/main/scala/Memory/MOB.scala:119:22, :193:66, :194:66, :206:50, :212:{35,46,61}, :213:34, :214:{42,53,68}, :215:34
+      _GEN_165 =
+        {1'h0, _GEN_163 & ~_GEN_164 & incoming_is_store & is_store_2 & MOB_2_pending};	// src/main/scala/Memory/MOB.scala:119:22, :194:66, :197:27, :207:50, :211:{34,48,66,78,90,131}, :212:61, :213:34, :214:68, :215:34, :216:{42,54,68}
+      _GEN_166 = _GEN_160 + _GEN_161 + _GEN_165;	// src/main/scala/Memory/MOB.scala:211:90
+      _GEN_167 =
+        io_AGU_output_valid
+        & _age_vector_3_T_4[3:0] < _GEN_155[io_AGU_output_bits_MOB_index]
+        & io_AGU_output_bits_address == (MOB_3_address & 32'hFFFFFFF0) & MOB_3_valid
+        & _GEN_166 == 2'h0;	// src/main/scala/Memory/MOB.scala:119:22, :131:{29,67}, :203:45, :204:48, :211:{34,48,66,78,90,122}, src/main/scala/utils.scala:333:10
+      _GEN_168 =
+        incoming_is_load & is_load_3 & MOB_3_completed | incoming_is_store & is_load_3
+        & MOB_3_completed;	// src/main/scala/Memory/MOB.scala:119:22, :193:66, :194:66, :206:50, :212:{35,46,61}, :213:34, :214:{42,53,68}, :215:34
+      _GEN_169 =
+        {1'h0, _GEN_167 & ~_GEN_168 & incoming_is_store & is_store_3 & MOB_3_pending};	// src/main/scala/Memory/MOB.scala:119:22, :194:66, :197:27, :207:50, :211:{34,48,66,78,90,131}, :212:61, :213:34, :214:68, :215:34, :216:{42,54,68}
+      _GEN_170 = {1'h0, _GEN_162};	// src/main/scala/Memory/MOB.scala:211:90
+      _GEN_171 = _GEN_170 + {1'h0, _GEN_165 + _GEN_169};	// src/main/scala/Memory/MOB.scala:211:90
+      _GEN_172 =
+        io_AGU_output_valid
+        & _age_vector_4_T_4[3:0] < _GEN_155[io_AGU_output_bits_MOB_index]
+        & io_AGU_output_bits_address == (MOB_4_address & 32'hFFFFFFF0) & MOB_4_valid
+        & _GEN_171 == 3'h0;	// src/main/scala/Memory/MOB.scala:119:22, :131:{29,67}, :203:45, :204:48, :211:{34,48,66,78,90,122}, src/main/scala/utils.scala:333:10
+      _GEN_173 =
+        incoming_is_load & is_load_4 & MOB_4_completed | incoming_is_store & is_load_4
+        & MOB_4_completed;	// src/main/scala/Memory/MOB.scala:119:22, :193:66, :194:66, :206:50, :212:{35,46,61}, :213:34, :214:{42,53,68}, :215:34
+      _GEN_174 =
+        {1'h0, _GEN_172 & ~_GEN_173 & incoming_is_store & is_store_4 & MOB_4_pending};	// src/main/scala/Memory/MOB.scala:119:22, :194:66, :197:27, :207:50, :211:{34,48,66,78,90,131}, :212:61, :213:34, :214:68, :215:34, :216:{42,54,68}
+      _GEN_175 = _GEN_169 + _GEN_174;	// src/main/scala/Memory/MOB.scala:211:90
+      _GEN_176 = _GEN_170 + {1'h0, _GEN_165 + _GEN_175};	// src/main/scala/Memory/MOB.scala:211:90
+      _GEN_177 =
+        io_AGU_output_valid
+        & _age_vector_5_T_4[3:0] < _GEN_155[io_AGU_output_bits_MOB_index]
+        & io_AGU_output_bits_address == (MOB_5_address & 32'hFFFFFFF0) & MOB_5_valid
+        & _GEN_176 == 3'h0;	// src/main/scala/Memory/MOB.scala:119:22, :131:{29,67}, :203:45, :204:48, :211:{34,48,66,78,90,122}, src/main/scala/utils.scala:333:10
+      _GEN_178 =
+        incoming_is_load & is_load_5 & MOB_5_completed | incoming_is_store & is_load_5
+        & MOB_5_completed;	// src/main/scala/Memory/MOB.scala:119:22, :193:66, :194:66, :206:50, :212:{35,46,61}, :213:34, :214:{42,53,68}, :215:34
+      _GEN_179 =
+        {1'h0, _GEN_177 & ~_GEN_178 & incoming_is_store & is_store_5 & MOB_5_pending};	// src/main/scala/Memory/MOB.scala:119:22, :194:66, :197:27, :207:50, :211:{34,48,66,78,90,131}, :212:61, :213:34, :214:68, :215:34, :216:{42,54,68}
+      _GEN_180 = _GEN_174 + _GEN_179;	// src/main/scala/Memory/MOB.scala:211:90
+      _GEN_181 = {1'h0, _GEN_180};	// src/main/scala/Memory/MOB.scala:211:90
+      _GEN_182 = {1'h0, _GEN_166};	// src/main/scala/Memory/MOB.scala:211:90
+      _GEN_183 = _GEN_182 + {1'h0, _GEN_169 + _GEN_180};	// src/main/scala/Memory/MOB.scala:211:90
+      _GEN_184 =
+        io_AGU_output_valid
+        & _age_vector_6_T_4[3:0] < _GEN_155[io_AGU_output_bits_MOB_index]
+        & io_AGU_output_bits_address == (MOB_6_address & 32'hFFFFFFF0) & MOB_6_valid
+        & _GEN_183 == 3'h0;	// src/main/scala/Memory/MOB.scala:119:22, :131:{29,67}, :203:45, :204:48, :211:{34,48,66,78,90,122}, src/main/scala/utils.scala:333:10
+      _GEN_185 =
+        incoming_is_load & is_load_6 & MOB_6_completed | incoming_is_store & is_load_6
+        & MOB_6_completed;	// src/main/scala/Memory/MOB.scala:119:22, :193:66, :194:66, :206:50, :212:{35,46,61}, :213:34, :214:{42,53,68}, :215:34
+      _GEN_186 =
+        {1'h0, _GEN_184 & ~_GEN_185 & incoming_is_store & is_store_6 & MOB_6_pending};	// src/main/scala/Memory/MOB.scala:119:22, :194:66, :197:27, :207:50, :211:{34,48,66,78,90,131}, :212:61, :213:34, :214:68, :215:34, :216:{42,54,68}
+      _GEN_187 = {1'h0, _GEN_179 + _GEN_186};	// src/main/scala/Memory/MOB.scala:211:90
+      _GEN_188 = _GEN_182 + {1'h0, _GEN_175} + _GEN_187;	// src/main/scala/Memory/MOB.scala:211:90
+      _GEN_189 =
+        io_AGU_output_valid
+        & _age_vector_7_T_4[3:0] < _GEN_155[io_AGU_output_bits_MOB_index]
+        & io_AGU_output_bits_address == (MOB_7_address & 32'hFFFFFFF0) & MOB_7_valid
+        & _GEN_188 == 3'h0;	// src/main/scala/Memory/MOB.scala:119:22, :131:{29,67}, :203:45, :204:48, :211:{34,48,66,78,90,122}, src/main/scala/utils.scala:333:10
+      _GEN_190 =
+        incoming_is_load & is_load_7 & MOB_7_completed | incoming_is_store & is_load_7
+        & MOB_7_completed;	// src/main/scala/Memory/MOB.scala:119:22, :193:66, :194:66, :206:50, :212:{35,46,61}, :213:34, :214:{42,53,68}, :215:34
+      _GEN_191 =
+        {1'h0, _GEN_189 & ~_GEN_190 & incoming_is_store & is_store_7 & MOB_7_pending};	// src/main/scala/Memory/MOB.scala:119:22, :194:66, :197:27, :207:50, :211:{34,48,66,78,90,131}, :212:61, :213:34, :214:68, :215:34, :216:{42,54,68}
+      _GEN_192 = _GEN_186 + _GEN_191;	// src/main/scala/Memory/MOB.scala:211:90
+      _GEN_193 = {1'h0, _GEN_171};	// src/main/scala/Memory/MOB.scala:211:90
+      _GEN_194 =
+        io_AGU_output_valid
+        & _age_vector_8_T_4[3:0] < _GEN_155[io_AGU_output_bits_MOB_index]
+        & io_AGU_output_bits_address == (MOB_8_address & 32'hFFFFFFF0) & MOB_8_valid
+        & _GEN_193 + {1'h0, _GEN_181 + {1'h0, _GEN_192}} == 4'h0;	// src/main/scala/Memory/MOB.scala:119:22, :131:{29,67}, :203:45, :204:48, :211:{34,48,66,78,90,122}, src/main/scala/utils.scala:333:10
+      _GEN_195 =
+        incoming_is_load & is_load_8 & MOB_8_completed | incoming_is_store & is_load_8
+        & MOB_8_completed;	// src/main/scala/Memory/MOB.scala:119:22, :193:66, :194:66, :206:50, :212:{35,46,61}, :213:34, :214:{42,53,68}, :215:34
+      _GEN_196 =
+        {1'h0, _GEN_194 & ~_GEN_195 & incoming_is_store & is_store_8 & MOB_8_pending};	// src/main/scala/Memory/MOB.scala:119:22, :194:66, :197:27, :207:50, :211:{34,48,66,78,90,131}, :212:61, :213:34, :214:68, :215:34, :216:{42,54,68}
+      _GEN_197 = _GEN_191 + _GEN_196;	// src/main/scala/Memory/MOB.scala:211:90
+      _GEN_198 = {1'h0, _GEN_186 + _GEN_197};	// src/main/scala/Memory/MOB.scala:211:90
+      _GEN_199 =
+        io_AGU_output_valid
+        & _age_vector_9_T_4[3:0] < _GEN_155[io_AGU_output_bits_MOB_index]
+        & io_AGU_output_bits_address == (MOB_9_address & 32'hFFFFFFF0) & MOB_9_valid
+        & _GEN_193 + {1'h0, _GEN_181 + _GEN_198} == 4'h0;	// src/main/scala/Memory/MOB.scala:119:22, :131:{29,67}, :203:45, :204:48, :211:{34,48,66,78,90,122}, src/main/scala/utils.scala:333:10
+      _GEN_200 =
+        incoming_is_load & is_load_9 & MOB_9_completed | incoming_is_store & is_load_9
+        & MOB_9_completed;	// src/main/scala/Memory/MOB.scala:119:22, :193:66, :194:66, :206:50, :212:{35,46,61}, :213:34, :214:{42,53,68}, :215:34
+      _GEN_201 =
+        {1'h0, _GEN_199 & ~_GEN_200 & incoming_is_store & is_store_9 & MOB_9_pending};	// src/main/scala/Memory/MOB.scala:119:22, :194:66, :197:27, :207:50, :211:{34,48,66,78,90,131}, :212:61, :213:34, :214:68, :215:34, :216:{42,54,68}
+      _GEN_202 = {1'h0, _GEN_191 + _GEN_196 + _GEN_201};	// src/main/scala/Memory/MOB.scala:211:90
+      _GEN_203 = {1'h0, _GEN_176};	// src/main/scala/Memory/MOB.scala:211:90
+      _GEN_204 =
+        io_AGU_output_valid
+        & _age_vector_10_T_4[3:0] < _GEN_155[io_AGU_output_bits_MOB_index]
+        & io_AGU_output_bits_address == (MOB_10_address & 32'hFFFFFFF0) & MOB_10_valid
+        & _GEN_203 + {1'h0, _GEN_187 + _GEN_202} == 4'h0;	// src/main/scala/Memory/MOB.scala:119:22, :131:{29,67}, :203:45, :204:48, :211:{34,48,66,78,90,122}, src/main/scala/utils.scala:333:10
+      _GEN_205 =
+        incoming_is_load & is_load_10 & MOB_10_completed | incoming_is_store & is_load_10
+        & MOB_10_completed;	// src/main/scala/Memory/MOB.scala:119:22, :193:66, :194:66, :206:50, :212:{35,46,61}, :213:34, :214:{42,53,68}, :215:34
+      _GEN_206 =
+        {1'h0, _GEN_204 & ~_GEN_205 & incoming_is_store & is_store_10 & MOB_10_pending};	// src/main/scala/Memory/MOB.scala:119:22, :194:66, :197:27, :207:50, :211:{34,48,66,78,90,131}, :212:61, :213:34, :214:68, :215:34, :216:{42,54,68}
+      _GEN_207 = _GEN_201 + _GEN_206;	// src/main/scala/Memory/MOB.scala:211:90
+      _GEN_208 = {1'h0, _GEN_207};	// src/main/scala/Memory/MOB.scala:211:90
+      _GEN_209 =
+        io_AGU_output_valid
+        & _age_vector_11_T_4[3:0] < _GEN_155[io_AGU_output_bits_MOB_index]
+        & io_AGU_output_bits_address == (MOB_11_address & 32'hFFFFFFF0) & MOB_11_valid
+        & _GEN_203
+        + {1'h0, {1'h0, _GEN_179 + _GEN_192} + {1'h0, _GEN_196 + _GEN_207}} == 4'h0;	// src/main/scala/Memory/MOB.scala:119:22, :131:{29,67}, :203:45, :204:48, :211:{34,48,66,78,90,122}, src/main/scala/utils.scala:333:10
+      _GEN_210 =
+        incoming_is_load & is_load_11 & MOB_11_completed | incoming_is_store & is_load_11
+        & MOB_11_completed;	// src/main/scala/Memory/MOB.scala:119:22, :193:66, :194:66, :206:50, :212:{35,46,61}, :213:34, :214:{42,53,68}, :215:34
+      _GEN_211 =
+        {1'h0, _GEN_209 & ~_GEN_210 & incoming_is_store & is_store_11 & MOB_11_pending};	// src/main/scala/Memory/MOB.scala:119:22, :194:66, :197:27, :207:50, :211:{34,48,66,78,90,131}, :212:61, :213:34, :214:68, :215:34, :216:{42,54,68}
+      _GEN_212 = _GEN_206 + _GEN_211;	// src/main/scala/Memory/MOB.scala:211:90
+      _GEN_213 = {1'h0, _GEN_183};	// src/main/scala/Memory/MOB.scala:211:90
+      _GEN_214 =
+        io_AGU_output_valid
+        & _age_vector_12_T_4[3:0] < _GEN_155[io_AGU_output_bits_MOB_index]
+        & io_AGU_output_bits_address == (MOB_12_address & 32'hFFFFFFF0) & MOB_12_valid
+        & _GEN_213 + {1'h0, _GEN_198 + {1'h0, _GEN_201 + _GEN_212}} == 4'h0;	// src/main/scala/Memory/MOB.scala:119:22, :131:{29,67}, :203:45, :204:48, :211:{34,48,66,78,90,122}, src/main/scala/utils.scala:333:10
+      _GEN_215 =
+        incoming_is_load & is_load_12 & MOB_12_completed | incoming_is_store & is_load_12
+        & MOB_12_completed;	// src/main/scala/Memory/MOB.scala:119:22, :193:66, :194:66, :206:50, :212:{35,46,61}, :213:34, :214:{42,53,68}, :215:34
+      _GEN_216 =
+        {1'h0, _GEN_214 & ~_GEN_215 & incoming_is_store & is_store_12 & MOB_12_pending};	// src/main/scala/Memory/MOB.scala:119:22, :194:66, :197:27, :207:50, :211:{34,48,66,78,90,131}, :212:61, :213:34, :214:68, :215:34, :216:{42,54,68}
+      _GEN_217 = {1'h0, _GEN_211 + _GEN_216};	// src/main/scala/Memory/MOB.scala:211:90
+      _GEN_218 =
+        io_AGU_output_valid
+        & _age_vector_13_T_4[3:0] < _GEN_155[io_AGU_output_bits_MOB_index]
+        & io_AGU_output_bits_address == (MOB_13_address & 32'hFFFFFFF0) & MOB_13_valid
+        & _GEN_213 + {1'h0, _GEN_198 + _GEN_208 + _GEN_217} == 4'h0;	// src/main/scala/Memory/MOB.scala:119:22, :131:{29,67}, :203:45, :204:48, :211:{34,48,66,78,90,122}, src/main/scala/utils.scala:333:10
+      _GEN_219 =
+        incoming_is_load & is_load_13 & MOB_13_completed | incoming_is_store & is_load_13
+        & MOB_13_completed;	// src/main/scala/Memory/MOB.scala:119:22, :193:66, :194:66, :206:50, :212:{35,46,61}, :213:34, :214:{42,53,68}, :215:34
+      _GEN_220 =
+        {1'h0, _GEN_218 & ~_GEN_219 & incoming_is_store & is_store_13 & MOB_13_pending};	// src/main/scala/Memory/MOB.scala:119:22, :194:66, :197:27, :207:50, :211:{34,48,66,78,90,131}, :212:61, :213:34, :214:68, :215:34, :216:{42,54,68}
+      _GEN_221 = {1'h0, _GEN_188};	// src/main/scala/Memory/MOB.scala:211:90
+      _GEN_222 =
+        io_AGU_output_valid
+        & _age_vector_14_T_4[3:0] < _GEN_155[io_AGU_output_bits_MOB_index]
+        & io_AGU_output_bits_address == (MOB_14_address & 32'hFFFFFFF0) & MOB_14_valid
+        & _GEN_221
+        + {1'h0, _GEN_202 + {1'h0, _GEN_212} + {1'h0, _GEN_216 + _GEN_220}} == 4'h0;	// src/main/scala/Memory/MOB.scala:119:22, :131:{29,67}, :203:45, :204:48, :211:{34,48,66,78,90,122}, src/main/scala/utils.scala:333:10
+      _GEN_223 =
+        incoming_is_load & is_load_14 & MOB_14_completed | incoming_is_store & is_load_14
+        & MOB_14_completed;	// src/main/scala/Memory/MOB.scala:119:22, :193:66, :194:66, :206:50, :212:{35,46,61}, :213:34, :214:{42,53,68}, :215:34
+      _GEN_224 = front_pointer[3:0] == 4'h0;	// src/main/scala/Memory/MOB.scala:113:34, :116:40, :248:53
+      _GEN_225 = front_pointer[3:0] == 4'h1;	// src/main/scala/Memory/MOB.scala:113:34, :116:40, :151:63, :248:53
+      _GEN_226 = front_pointer[3:0] == 4'h2;	// src/main/scala/Memory/MOB.scala:113:34, :116:40, :248:53
+      _GEN_227 = front_pointer[3:0] == 4'h3;	// src/main/scala/Memory/MOB.scala:113:34, :116:40, :248:53
+      _GEN_228 = front_pointer[3:0] == 4'h4;	// src/main/scala/Memory/MOB.scala:113:34, :116:40, :248:53
+      _GEN_229 = front_pointer[3:0] == 4'h5;	// src/main/scala/Memory/MOB.scala:113:34, :116:40, :248:53
+      _GEN_230 = front_pointer[3:0] == 4'h6;	// src/main/scala/Memory/MOB.scala:113:34, :116:40, :248:53
+      _GEN_231 = front_pointer[3:0] == 4'h7;	// src/main/scala/Memory/MOB.scala:113:34, :116:40, :248:53
+      _GEN_232 = front_pointer[3:0] == 4'h8;	// src/main/scala/Memory/MOB.scala:113:34, :116:40, :248:53
+      _GEN_233 = front_pointer[3:0] == 4'h9;	// src/main/scala/Memory/MOB.scala:113:34, :116:40, :248:53
+      _GEN_234 = front_pointer[3:0] == 4'hA;	// src/main/scala/Memory/MOB.scala:113:34, :116:40, :248:53
+      _GEN_235 = front_pointer[3:0] == 4'hB;	// src/main/scala/Memory/MOB.scala:113:34, :116:40, :248:53
+      _GEN_236 = front_pointer[3:0] == 4'hC;	// src/main/scala/Memory/MOB.scala:113:34, :116:40, :248:53
+      _GEN_237 = front_pointer[3:0] == 4'hD;	// src/main/scala/Memory/MOB.scala:113:34, :116:40, :248:53
+      _GEN_238 = front_pointer[3:0] == 4'hE;	// src/main/scala/Memory/MOB.scala:113:34, :116:40, :248:53
+      _GEN_239 =
+        {{MOB_15_completed},
+         {MOB_14_completed},
+         {MOB_13_completed},
+         {MOB_12_completed},
+         {MOB_11_completed},
+         {MOB_10_completed},
+         {MOB_9_completed},
+         {MOB_8_completed},
+         {MOB_7_completed},
+         {MOB_6_completed},
+         {MOB_5_completed},
+         {MOB_4_completed},
+         {MOB_3_completed},
+         {MOB_2_completed},
+         {MOB_1_completed},
+         {MOB_0_completed}};	// src/main/scala/Memory/MOB.scala:119:22, :236:52
+      _GEN_240 = _GEN_4 & ~_GEN_11 & _GEN_239[front_pointer[3:0]] & _GEN_13;	// src/main/scala/Memory/MOB.scala:113:34, :116:40, :236:52, :278:{19,22,34,49}
+      _GEN_242 = _GEN_241 | _GEN_240 & _GEN_224;	// src/main/scala/Memory/MOB.scala:150:29, :248:53, :278:{19,34,49,65}, :279:26, :286:{26,91}, :288:20
+      _GEN_243 = _GEN_241 | _GEN_240 & _GEN_225;	// src/main/scala/Memory/MOB.scala:150:29, :248:53, :278:{19,34,49,65}, :279:26, :286:{26,91}, :288:20
+      _GEN_244 = _GEN_241 | _GEN_240 & _GEN_226;	// src/main/scala/Memory/MOB.scala:150:29, :248:53, :278:{19,34,49,65}, :279:26, :286:{26,91}, :288:20
+      _GEN_245 = _GEN_241 | _GEN_240 & _GEN_227;	// src/main/scala/Memory/MOB.scala:150:29, :248:53, :278:{19,34,49,65}, :279:26, :286:{26,91}, :288:20
+      _GEN_246 = _GEN_241 | _GEN_240 & _GEN_228;	// src/main/scala/Memory/MOB.scala:150:29, :248:53, :278:{19,34,49,65}, :279:26, :286:{26,91}, :288:20
+      _GEN_247 = _GEN_241 | _GEN_240 & _GEN_229;	// src/main/scala/Memory/MOB.scala:150:29, :248:53, :278:{19,34,49,65}, :279:26, :286:{26,91}, :288:20
+      _GEN_248 = _GEN_241 | _GEN_240 & _GEN_230;	// src/main/scala/Memory/MOB.scala:150:29, :248:53, :278:{19,34,49,65}, :279:26, :286:{26,91}, :288:20
+      _GEN_249 = _GEN_241 | _GEN_240 & _GEN_231;	// src/main/scala/Memory/MOB.scala:150:29, :248:53, :278:{19,34,49,65}, :279:26, :286:{26,91}, :288:20
+      _GEN_250 = _GEN_241 | _GEN_240 & _GEN_232;	// src/main/scala/Memory/MOB.scala:150:29, :248:53, :278:{19,34,49,65}, :279:26, :286:{26,91}, :288:20
+      _GEN_251 = _GEN_241 | _GEN_240 & _GEN_233;	// src/main/scala/Memory/MOB.scala:150:29, :248:53, :278:{19,34,49,65}, :279:26, :286:{26,91}, :288:20
+      _GEN_252 = _GEN_241 | _GEN_240 & _GEN_234;	// src/main/scala/Memory/MOB.scala:150:29, :248:53, :278:{19,34,49,65}, :279:26, :286:{26,91}, :288:20
+      _GEN_253 = _GEN_241 | _GEN_240 & _GEN_235;	// src/main/scala/Memory/MOB.scala:150:29, :248:53, :278:{19,34,49,65}, :279:26, :286:{26,91}, :288:20
+      _GEN_254 = _GEN_241 | _GEN_240 & _GEN_236;	// src/main/scala/Memory/MOB.scala:150:29, :248:53, :278:{19,34,49,65}, :279:26, :286:{26,91}, :288:20
+      _GEN_255 = _GEN_241 | _GEN_240 & _GEN_237;	// src/main/scala/Memory/MOB.scala:150:29, :248:53, :278:{19,34,49,65}, :279:26, :286:{26,91}, :288:20
+      _GEN_256 = _GEN_241 | _GEN_240 & _GEN_238;	// src/main/scala/Memory/MOB.scala:150:29, :248:53, :278:{19,34,49,65}, :279:26, :286:{26,91}, :288:20
+      _GEN_257 = _GEN_241 | _GEN_240 & (&(front_pointer[3:0]));	// src/main/scala/Memory/MOB.scala:113:34, :116:40, :150:29, :248:53, :278:{19,34,49,65}, :279:26, :286:{26,91}, :288:20
+      if (_GEN_241)	// src/main/scala/Memory/MOB.scala:286:26
+        front_pointer <= 5'h0;	// src/main/scala/Memory/MOB.scala:113:34
+      else if (_GEN_240)	// src/main/scala/Memory/MOB.scala:278:{19,34,49}
+        front_pointer <= front_pointer + 5'h1;	// src/main/scala/Memory/MOB.scala:113:34, :280:43
       back_pointer <=
-        back_pointer + {2'h0, {1'h0, _GEN_4 + _GEN_21} + {1'h0, _GEN_53 + _GEN_70}};	// src/main/scala/Memory/MOB.scala:114:34, :151:{40,63}, :163:{34,44}
+        _GEN_241
+          ? 5'h0
+          : back_pointer + {2'h0, {1'h0, _GEN + _GEN_0} + {1'h0, _GEN_1 + _GEN_2}};	// src/main/scala/Memory/MOB.scala:113:34, :114:34, :151:{40,63}, :164:{18,34,44}, :286:{26,91}, :291:22
       MOB_0_valid <=
-        ~_GEN_103 & (written_vec_3 ? _GEN_71 | _GEN_54 | _GEN_23 : _GEN_54 | _GEN_23);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :267:65, :268:26, :275:{26,91}, :277:20
-      if (_GEN_103) begin	// src/main/scala/Memory/MOB.scala:275:26
+        ~_GEN_242 & (written_vec_3 ? _GEN_108 | _GEN_92 | _GEN_62 : _GEN_92 | _GEN_62);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :278:65, :279:26, :286:91, :288:20
+      if (_GEN_242) begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
         MOB_0_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
         MOB_0_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_0_fetch_packet_index <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
         MOB_0_address <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_0_access_width <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
         MOB_0_RD <= 7'h0;	// src/main/scala/Memory/MOB.scala:119:22
-        MOB_1_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
-        MOB_1_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_1_address <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
-        MOB_1_RD <= 7'h0;	// src/main/scala/Memory/MOB.scala:119:22
-        MOB_2_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
-        MOB_2_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_2_address <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
-        MOB_2_RD <= 7'h0;	// src/main/scala/Memory/MOB.scala:119:22
-        MOB_3_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
-        MOB_3_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_3_address <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
-        MOB_3_RD <= 7'h0;	// src/main/scala/Memory/MOB.scala:119:22
-        MOB_4_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
-        MOB_4_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_4_address <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
-        MOB_4_RD <= 7'h0;	// src/main/scala/Memory/MOB.scala:119:22
-        MOB_5_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
-        MOB_5_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_5_address <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
-        MOB_5_RD <= 7'h0;	// src/main/scala/Memory/MOB.scala:119:22
-        MOB_6_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
-        MOB_6_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_6_address <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
-        MOB_6_RD <= 7'h0;	// src/main/scala/Memory/MOB.scala:119:22
-        MOB_7_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
-        MOB_7_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_7_address <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
-        MOB_7_RD <= 7'h0;	// src/main/scala/Memory/MOB.scala:119:22
-        MOB_8_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
-        MOB_8_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_8_address <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
-        MOB_8_RD <= 7'h0;	// src/main/scala/Memory/MOB.scala:119:22
-        MOB_9_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
-        MOB_9_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_9_address <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
-        MOB_9_RD <= 7'h0;	// src/main/scala/Memory/MOB.scala:119:22
-        MOB_10_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
-        MOB_10_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_10_address <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
-        MOB_10_RD <= 7'h0;	// src/main/scala/Memory/MOB.scala:119:22
-        MOB_11_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
-        MOB_11_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_11_address <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
-        MOB_11_RD <= 7'h0;	// src/main/scala/Memory/MOB.scala:119:22
-        MOB_12_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
-        MOB_12_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_12_address <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
-        MOB_12_RD <= 7'h0;	// src/main/scala/Memory/MOB.scala:119:22
-        MOB_13_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
-        MOB_13_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_13_address <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
-        MOB_13_RD <= 7'h0;	// src/main/scala/Memory/MOB.scala:119:22
-        MOB_14_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
-        MOB_14_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_14_address <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
-        MOB_14_RD <= 7'h0;	// src/main/scala/Memory/MOB.scala:119:22
-        MOB_15_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
-        MOB_15_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_15_address <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
-        MOB_15_RD <= 7'h0;	// src/main/scala/Memory/MOB.scala:119:22
       end
-      else begin	// src/main/scala/Memory/MOB.scala:275:26
-        if (written_vec_3 & _GEN_71) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
+      else begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        if (written_vec_3 & _GEN_108) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
           MOB_0_memory_type <= io_reserve_3_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_0_ROB_index <= io_reserve_3_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_0_fetch_packet_index <= io_reserve_3_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_0_RD <= io_reserve_3_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        else if (_GEN_54) begin	// src/main/scala/Memory/MOB.scala:150:29, :153:65
+        else if (_GEN_92) begin	// src/main/scala/Memory/MOB.scala:150:29, :153:65
           MOB_0_memory_type <= io_reserve_2_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_0_ROB_index <= io_reserve_2_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_0_fetch_packet_index <= io_reserve_2_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_0_RD <= io_reserve_2_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        else if (written_vec_1 & _GEN_22) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
+        else if (written_vec_1 & _GEN_61) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
           MOB_0_memory_type <= io_reserve_1_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_0_ROB_index <= io_reserve_1_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_0_fetch_packet_index <= io_reserve_1_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_0_RD <= io_reserve_1_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        else if (_GEN_5) begin	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
+        else if (_GEN_45) begin	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
           MOB_0_memory_type <= io_reserve_0_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_0_ROB_index <= io_reserve_0_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_0_fetch_packet_index <= io_reserve_0_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_0_RD <= io_reserve_0_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        if (_GEN_86)	// src/main/scala/Memory/MOB.scala:119:22, :173:30, :174:40
+        if (_GEN_123)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
           MOB_0_address <= io_AGU_output_bits_address;	// src/main/scala/Memory/MOB.scala:119:22
-        if (written_vec_3 & _GEN_72) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
+      end
+      if (_GEN_258)	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
+        MOB_0_data <= io_backend_memory_response_bits_data;	// src/main/scala/Memory/MOB.scala:119:22
+      else if (_GEN_242)	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        MOB_0_data <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      else if (_GEN_123)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+        MOB_0_data <= io_AGU_output_bits_wr_data;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_0_data_valid <= _GEN_258 | ~_GEN_242 & MOB_0_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20, :297:43, :298:62, :299:67
+      MOB_0_pending <=
+        ~_GEN_242
+        & ((|_GEN_15) ? (|load_index) & _GEN_124 : ~(fire_store & _GEN_224) & _GEN_124);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :181:30, :182:40, :236:{52,82,110,141}, :238:{28,35,41}, :240:53, :246:27, :248:53, :278:65, :279:26, :286:91, :288:20, src/main/scala/chisel3/util/Mux.scala:50:70
+      MOB_0_completed <= ~_GEN_242 & MOB_0_completed;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20
+      MOB_0_committed <=
+        ~_GEN_242
+        & (io_commit_valid & MOB_0_ROB_index == io_commit_bits_ROB_index
+           | MOB_0_committed);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :264:{30,51,81}, :265:30, :278:65, :279:26, :286:91, :288:20
+      MOB_0_exception <= ~_GEN_242 & (_GEN_156 & _GEN_157 | MOB_0_exception);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :211:{34,48,66,131}, :212:61, :213:34, :214:68, :215:34, :278:65, :279:26, :286:91, :288:20
+      MOB_1_valid <=
+        ~_GEN_243 & (written_vec_3 ? _GEN_109 | _GEN_93 | _GEN_64 : _GEN_93 | _GEN_64);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :278:65, :279:26, :286:91, :288:20
+      if (_GEN_243) begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        MOB_1_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_1_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_1_fetch_packet_index <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_1_address <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_1_access_width <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_1_RD <= 7'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      end
+      else begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        if (written_vec_3 & _GEN_109) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
           MOB_1_memory_type <= io_reserve_3_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_1_ROB_index <= io_reserve_3_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_1_fetch_packet_index <= io_reserve_3_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_1_RD <= io_reserve_3_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        else if (_GEN_55) begin	// src/main/scala/Memory/MOB.scala:150:29, :153:65
+        else if (_GEN_93) begin	// src/main/scala/Memory/MOB.scala:150:29, :153:65
           MOB_1_memory_type <= io_reserve_2_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_1_ROB_index <= io_reserve_2_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_1_fetch_packet_index <= io_reserve_2_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_1_RD <= io_reserve_2_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        else if (written_vec_1 & _GEN_24) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
+        else if (written_vec_1 & _GEN_63) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
           MOB_1_memory_type <= io_reserve_1_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_1_ROB_index <= io_reserve_1_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_1_fetch_packet_index <= io_reserve_1_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_1_RD <= io_reserve_1_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        else if (_GEN_6) begin	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
+        else if (_GEN_46) begin	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
           MOB_1_memory_type <= io_reserve_0_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_1_ROB_index <= io_reserve_0_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_1_fetch_packet_index <= io_reserve_0_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_1_RD <= io_reserve_0_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        if (_GEN_88)	// src/main/scala/Memory/MOB.scala:119:22, :173:30, :174:40
+        if (_GEN_125)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
           MOB_1_address <= io_AGU_output_bits_address;	// src/main/scala/Memory/MOB.scala:119:22
-        if (written_vec_3 & _GEN_73) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
+      end
+      if (_GEN_259)	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
+        MOB_1_data <= io_backend_memory_response_bits_data;	// src/main/scala/Memory/MOB.scala:119:22
+      else if (_GEN_243)	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        MOB_1_data <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      else if (_GEN_125)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+        MOB_1_data <= io_AGU_output_bits_wr_data;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_1_data_valid <= _GEN_259 | ~_GEN_243 & MOB_1_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20, :297:43, :298:62, :299:67
+      MOB_1_pending <=
+        ~_GEN_243
+        & ((|_GEN_15)
+             ? load_index != 4'h1 & _GEN_126
+             : ~(fire_store & _GEN_225) & _GEN_126);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :151:63, :181:30, :182:40, :236:{52,82,110,141}, :238:{28,35,41}, :240:53, :246:27, :248:53, :278:65, :279:26, :286:91, :288:20, src/main/scala/chisel3/util/Mux.scala:50:70
+      MOB_1_completed <= ~_GEN_243 & MOB_1_completed;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20
+      MOB_1_committed <=
+        ~_GEN_243
+        & (io_commit_valid & MOB_1_ROB_index == io_commit_bits_ROB_index
+           | MOB_1_committed);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :264:{30,51,81}, :265:30, :278:65, :279:26, :286:91, :288:20
+      MOB_1_exception <= ~_GEN_243 & (_GEN_158 & _GEN_159 | MOB_1_exception);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :211:{34,48,66,78,131}, :212:61, :213:34, :214:68, :215:34, :278:65, :279:26, :286:91, :288:20
+      MOB_2_valid <=
+        ~_GEN_244 & (written_vec_3 ? _GEN_110 | _GEN_94 | _GEN_66 : _GEN_94 | _GEN_66);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :278:65, :279:26, :286:91, :288:20
+      if (_GEN_244) begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        MOB_2_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_2_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_2_fetch_packet_index <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_2_address <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_2_access_width <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_2_RD <= 7'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      end
+      else begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        if (written_vec_3 & _GEN_110) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
           MOB_2_memory_type <= io_reserve_3_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_2_ROB_index <= io_reserve_3_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_2_fetch_packet_index <= io_reserve_3_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_2_RD <= io_reserve_3_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        else if (_GEN_56) begin	// src/main/scala/Memory/MOB.scala:150:29, :153:65
+        else if (_GEN_94) begin	// src/main/scala/Memory/MOB.scala:150:29, :153:65
           MOB_2_memory_type <= io_reserve_2_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_2_ROB_index <= io_reserve_2_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_2_fetch_packet_index <= io_reserve_2_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_2_RD <= io_reserve_2_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        else if (written_vec_1 & _GEN_26) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
+        else if (written_vec_1 & _GEN_65) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
           MOB_2_memory_type <= io_reserve_1_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_2_ROB_index <= io_reserve_1_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_2_fetch_packet_index <= io_reserve_1_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_2_RD <= io_reserve_1_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        else if (_GEN_7) begin	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
+        else if (_GEN_47) begin	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
           MOB_2_memory_type <= io_reserve_0_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_2_ROB_index <= io_reserve_0_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_2_fetch_packet_index <= io_reserve_0_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_2_RD <= io_reserve_0_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        if (_GEN_89)	// src/main/scala/Memory/MOB.scala:119:22, :173:30, :174:40
+        if (_GEN_127)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
           MOB_2_address <= io_AGU_output_bits_address;	// src/main/scala/Memory/MOB.scala:119:22
-        if (written_vec_3 & _GEN_74) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
+      end
+      if (_GEN_260)	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
+        MOB_2_data <= io_backend_memory_response_bits_data;	// src/main/scala/Memory/MOB.scala:119:22
+      else if (_GEN_244)	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        MOB_2_data <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      else if (_GEN_127)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+        MOB_2_data <= io_AGU_output_bits_wr_data;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_2_data_valid <= _GEN_260 | ~_GEN_244 & MOB_2_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20, :297:43, :298:62, :299:67
+      MOB_2_pending <=
+        ~_GEN_244
+        & ((|_GEN_15)
+             ? load_index != 4'h2 & _GEN_128
+             : ~(fire_store & _GEN_226) & _GEN_128);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :181:30, :182:40, :236:{52,82,110,141}, :238:{28,35,41}, :240:53, :246:27, :248:53, :278:65, :279:26, :286:91, :288:20, src/main/scala/chisel3/util/Mux.scala:50:70
+      MOB_2_completed <= ~_GEN_244 & MOB_2_completed;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20
+      MOB_2_committed <=
+        ~_GEN_244
+        & (io_commit_valid & MOB_2_ROB_index == io_commit_bits_ROB_index
+           | MOB_2_committed);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :264:{30,51,81}, :265:30, :278:65, :279:26, :286:91, :288:20
+      MOB_2_exception <= ~_GEN_244 & (_GEN_163 & _GEN_164 | MOB_2_exception);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :211:{34,48,66,78,131}, :212:61, :213:34, :214:68, :215:34, :278:65, :279:26, :286:91, :288:20
+      MOB_3_valid <=
+        ~_GEN_245 & (written_vec_3 ? _GEN_111 | _GEN_95 | _GEN_68 : _GEN_95 | _GEN_68);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :278:65, :279:26, :286:91, :288:20
+      if (_GEN_245) begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        MOB_3_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_3_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_3_fetch_packet_index <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_3_address <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_3_access_width <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_3_RD <= 7'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      end
+      else begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        if (written_vec_3 & _GEN_111) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
           MOB_3_memory_type <= io_reserve_3_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_3_ROB_index <= io_reserve_3_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_3_fetch_packet_index <= io_reserve_3_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_3_RD <= io_reserve_3_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        else if (_GEN_57) begin	// src/main/scala/Memory/MOB.scala:150:29, :153:65
+        else if (_GEN_95) begin	// src/main/scala/Memory/MOB.scala:150:29, :153:65
           MOB_3_memory_type <= io_reserve_2_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_3_ROB_index <= io_reserve_2_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_3_fetch_packet_index <= io_reserve_2_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_3_RD <= io_reserve_2_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        else if (written_vec_1 & _GEN_28) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
+        else if (written_vec_1 & _GEN_67) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
           MOB_3_memory_type <= io_reserve_1_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_3_ROB_index <= io_reserve_1_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_3_fetch_packet_index <= io_reserve_1_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_3_RD <= io_reserve_1_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        else if (_GEN_8) begin	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
+        else if (_GEN_48) begin	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
           MOB_3_memory_type <= io_reserve_0_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_3_ROB_index <= io_reserve_0_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_3_fetch_packet_index <= io_reserve_0_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_3_RD <= io_reserve_0_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        if (_GEN_90)	// src/main/scala/Memory/MOB.scala:119:22, :173:30, :174:40
+        if (_GEN_129)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
           MOB_3_address <= io_AGU_output_bits_address;	// src/main/scala/Memory/MOB.scala:119:22
-        if (written_vec_3 & _GEN_75) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
+      end
+      if (_GEN_261)	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
+        MOB_3_data <= io_backend_memory_response_bits_data;	// src/main/scala/Memory/MOB.scala:119:22
+      else if (_GEN_245)	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        MOB_3_data <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      else if (_GEN_129)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+        MOB_3_data <= io_AGU_output_bits_wr_data;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_3_data_valid <= _GEN_261 | ~_GEN_245 & MOB_3_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20, :297:43, :298:62, :299:67
+      MOB_3_pending <=
+        ~_GEN_245
+        & ((|_GEN_15)
+             ? load_index != 4'h3 & _GEN_130
+             : ~(fire_store & _GEN_227) & _GEN_130);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :181:30, :182:40, :236:{52,82,110,141}, :238:{28,35,41}, :240:53, :246:27, :248:53, :278:65, :279:26, :286:91, :288:20, src/main/scala/chisel3/util/Mux.scala:50:70
+      MOB_3_completed <= ~_GEN_245 & MOB_3_completed;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20
+      MOB_3_committed <=
+        ~_GEN_245
+        & (io_commit_valid & MOB_3_ROB_index == io_commit_bits_ROB_index
+           | MOB_3_committed);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :264:{30,51,81}, :265:30, :278:65, :279:26, :286:91, :288:20
+      MOB_3_exception <= ~_GEN_245 & (_GEN_167 & _GEN_168 | MOB_3_exception);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :211:{34,48,66,78,131}, :212:61, :213:34, :214:68, :215:34, :278:65, :279:26, :286:91, :288:20
+      MOB_4_valid <=
+        ~_GEN_246 & (written_vec_3 ? _GEN_112 | _GEN_96 | _GEN_70 : _GEN_96 | _GEN_70);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :278:65, :279:26, :286:91, :288:20
+      if (_GEN_246) begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        MOB_4_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_4_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_4_fetch_packet_index <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_4_address <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_4_access_width <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_4_RD <= 7'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      end
+      else begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        if (written_vec_3 & _GEN_112) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
           MOB_4_memory_type <= io_reserve_3_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_4_ROB_index <= io_reserve_3_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_4_fetch_packet_index <= io_reserve_3_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_4_RD <= io_reserve_3_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        else if (_GEN_58) begin	// src/main/scala/Memory/MOB.scala:150:29, :153:65
+        else if (_GEN_96) begin	// src/main/scala/Memory/MOB.scala:150:29, :153:65
           MOB_4_memory_type <= io_reserve_2_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_4_ROB_index <= io_reserve_2_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_4_fetch_packet_index <= io_reserve_2_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_4_RD <= io_reserve_2_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        else if (written_vec_1 & _GEN_30) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
+        else if (written_vec_1 & _GEN_69) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
           MOB_4_memory_type <= io_reserve_1_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_4_ROB_index <= io_reserve_1_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_4_fetch_packet_index <= io_reserve_1_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_4_RD <= io_reserve_1_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        else if (_GEN_9) begin	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
+        else if (_GEN_49) begin	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
           MOB_4_memory_type <= io_reserve_0_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_4_ROB_index <= io_reserve_0_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_4_fetch_packet_index <= io_reserve_0_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_4_RD <= io_reserve_0_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        if (_GEN_91)	// src/main/scala/Memory/MOB.scala:119:22, :173:30, :174:40
+        if (_GEN_131)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
           MOB_4_address <= io_AGU_output_bits_address;	// src/main/scala/Memory/MOB.scala:119:22
-        if (written_vec_3 & _GEN_76) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
+      end
+      if (_GEN_262)	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
+        MOB_4_data <= io_backend_memory_response_bits_data;	// src/main/scala/Memory/MOB.scala:119:22
+      else if (_GEN_246)	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        MOB_4_data <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      else if (_GEN_131)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+        MOB_4_data <= io_AGU_output_bits_wr_data;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_4_data_valid <= _GEN_262 | ~_GEN_246 & MOB_4_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20, :297:43, :298:62, :299:67
+      MOB_4_pending <=
+        ~_GEN_246
+        & ((|_GEN_15)
+             ? load_index != 4'h4 & _GEN_132
+             : ~(fire_store & _GEN_228) & _GEN_132);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :181:30, :182:40, :236:{52,82,110,141}, :238:{28,35,41}, :240:53, :246:27, :248:53, :278:65, :279:26, :286:91, :288:20, src/main/scala/chisel3/util/Mux.scala:50:70
+      MOB_4_completed <= ~_GEN_246 & MOB_4_completed;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20
+      MOB_4_committed <=
+        ~_GEN_246
+        & (io_commit_valid & MOB_4_ROB_index == io_commit_bits_ROB_index
+           | MOB_4_committed);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :264:{30,51,81}, :265:30, :278:65, :279:26, :286:91, :288:20
+      MOB_4_exception <= ~_GEN_246 & (_GEN_172 & _GEN_173 | MOB_4_exception);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :211:{34,48,66,78,131}, :212:61, :213:34, :214:68, :215:34, :278:65, :279:26, :286:91, :288:20
+      MOB_5_valid <=
+        ~_GEN_247 & (written_vec_3 ? _GEN_113 | _GEN_97 | _GEN_72 : _GEN_97 | _GEN_72);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :278:65, :279:26, :286:91, :288:20
+      if (_GEN_247) begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        MOB_5_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_5_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_5_fetch_packet_index <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_5_address <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_5_access_width <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_5_RD <= 7'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      end
+      else begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        if (written_vec_3 & _GEN_113) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
           MOB_5_memory_type <= io_reserve_3_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_5_ROB_index <= io_reserve_3_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_5_fetch_packet_index <= io_reserve_3_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_5_RD <= io_reserve_3_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        else if (_GEN_59) begin	// src/main/scala/Memory/MOB.scala:150:29, :153:65
+        else if (_GEN_97) begin	// src/main/scala/Memory/MOB.scala:150:29, :153:65
           MOB_5_memory_type <= io_reserve_2_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_5_ROB_index <= io_reserve_2_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_5_fetch_packet_index <= io_reserve_2_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_5_RD <= io_reserve_2_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        else if (written_vec_1 & _GEN_32) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
+        else if (written_vec_1 & _GEN_71) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
           MOB_5_memory_type <= io_reserve_1_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_5_ROB_index <= io_reserve_1_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_5_fetch_packet_index <= io_reserve_1_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_5_RD <= io_reserve_1_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        else if (_GEN_10) begin	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
+        else if (_GEN_50) begin	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
           MOB_5_memory_type <= io_reserve_0_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_5_ROB_index <= io_reserve_0_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_5_fetch_packet_index <= io_reserve_0_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_5_RD <= io_reserve_0_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        if (_GEN_92)	// src/main/scala/Memory/MOB.scala:119:22, :173:30, :174:40
+        if (_GEN_133)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
           MOB_5_address <= io_AGU_output_bits_address;	// src/main/scala/Memory/MOB.scala:119:22
-        if (written_vec_3 & _GEN_77) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
+      end
+      if (_GEN_263)	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
+        MOB_5_data <= io_backend_memory_response_bits_data;	// src/main/scala/Memory/MOB.scala:119:22
+      else if (_GEN_247)	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        MOB_5_data <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      else if (_GEN_133)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+        MOB_5_data <= io_AGU_output_bits_wr_data;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_5_data_valid <= _GEN_263 | ~_GEN_247 & MOB_5_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20, :297:43, :298:62, :299:67
+      MOB_5_pending <=
+        ~_GEN_247
+        & ((|_GEN_15)
+             ? load_index != 4'h5 & _GEN_134
+             : ~(fire_store & _GEN_229) & _GEN_134);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :181:30, :182:40, :236:{52,82,110,141}, :238:{28,35,41}, :240:53, :246:27, :248:53, :278:65, :279:26, :286:91, :288:20, src/main/scala/chisel3/util/Mux.scala:50:70
+      MOB_5_completed <= ~_GEN_247 & MOB_5_completed;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20
+      MOB_5_committed <=
+        ~_GEN_247
+        & (io_commit_valid & MOB_5_ROB_index == io_commit_bits_ROB_index
+           | MOB_5_committed);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :264:{30,51,81}, :265:30, :278:65, :279:26, :286:91, :288:20
+      MOB_5_exception <= ~_GEN_247 & (_GEN_177 & _GEN_178 | MOB_5_exception);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :211:{34,48,66,78,131}, :212:61, :213:34, :214:68, :215:34, :278:65, :279:26, :286:91, :288:20
+      MOB_6_valid <=
+        ~_GEN_248 & (written_vec_3 ? _GEN_114 | _GEN_98 | _GEN_74 : _GEN_98 | _GEN_74);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :278:65, :279:26, :286:91, :288:20
+      if (_GEN_248) begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        MOB_6_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_6_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_6_fetch_packet_index <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_6_address <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_6_access_width <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_6_RD <= 7'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      end
+      else begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        if (written_vec_3 & _GEN_114) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
           MOB_6_memory_type <= io_reserve_3_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_6_ROB_index <= io_reserve_3_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_6_fetch_packet_index <= io_reserve_3_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_6_RD <= io_reserve_3_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        else if (_GEN_60) begin	// src/main/scala/Memory/MOB.scala:150:29, :153:65
+        else if (_GEN_98) begin	// src/main/scala/Memory/MOB.scala:150:29, :153:65
           MOB_6_memory_type <= io_reserve_2_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_6_ROB_index <= io_reserve_2_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_6_fetch_packet_index <= io_reserve_2_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_6_RD <= io_reserve_2_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        else if (written_vec_1 & _GEN_34) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
+        else if (written_vec_1 & _GEN_73) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
           MOB_6_memory_type <= io_reserve_1_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_6_ROB_index <= io_reserve_1_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_6_fetch_packet_index <= io_reserve_1_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_6_RD <= io_reserve_1_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        else if (_GEN_11) begin	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
+        else if (_GEN_51) begin	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
           MOB_6_memory_type <= io_reserve_0_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_6_ROB_index <= io_reserve_0_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_6_fetch_packet_index <= io_reserve_0_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_6_RD <= io_reserve_0_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        if (_GEN_93)	// src/main/scala/Memory/MOB.scala:119:22, :173:30, :174:40
+        if (_GEN_135)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
           MOB_6_address <= io_AGU_output_bits_address;	// src/main/scala/Memory/MOB.scala:119:22
-        if (written_vec_3 & _GEN_78) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
+      end
+      if (_GEN_264)	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
+        MOB_6_data <= io_backend_memory_response_bits_data;	// src/main/scala/Memory/MOB.scala:119:22
+      else if (_GEN_248)	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        MOB_6_data <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      else if (_GEN_135)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+        MOB_6_data <= io_AGU_output_bits_wr_data;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_6_data_valid <= _GEN_264 | ~_GEN_248 & MOB_6_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20, :297:43, :298:62, :299:67
+      MOB_6_pending <=
+        ~_GEN_248
+        & ((|_GEN_15)
+             ? load_index != 4'h6 & _GEN_136
+             : ~(fire_store & _GEN_230) & _GEN_136);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :181:30, :182:40, :236:{52,82,110,141}, :238:{28,35,41}, :240:53, :246:27, :248:53, :278:65, :279:26, :286:91, :288:20, src/main/scala/chisel3/util/Mux.scala:50:70
+      MOB_6_completed <= ~_GEN_248 & MOB_6_completed;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20
+      MOB_6_committed <=
+        ~_GEN_248
+        & (io_commit_valid & MOB_6_ROB_index == io_commit_bits_ROB_index
+           | MOB_6_committed);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :264:{30,51,81}, :265:30, :278:65, :279:26, :286:91, :288:20
+      MOB_6_exception <= ~_GEN_248 & (_GEN_184 & _GEN_185 | MOB_6_exception);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :211:{34,48,66,78,131}, :212:61, :213:34, :214:68, :215:34, :278:65, :279:26, :286:91, :288:20
+      MOB_7_valid <=
+        ~_GEN_249 & (written_vec_3 ? _GEN_115 | _GEN_99 | _GEN_76 : _GEN_99 | _GEN_76);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :278:65, :279:26, :286:91, :288:20
+      if (_GEN_249) begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        MOB_7_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_7_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_7_fetch_packet_index <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_7_address <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_7_access_width <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_7_RD <= 7'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      end
+      else begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        if (written_vec_3 & _GEN_115) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
           MOB_7_memory_type <= io_reserve_3_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_7_ROB_index <= io_reserve_3_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_7_fetch_packet_index <= io_reserve_3_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_7_RD <= io_reserve_3_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        else if (_GEN_61) begin	// src/main/scala/Memory/MOB.scala:150:29, :153:65
+        else if (_GEN_99) begin	// src/main/scala/Memory/MOB.scala:150:29, :153:65
           MOB_7_memory_type <= io_reserve_2_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_7_ROB_index <= io_reserve_2_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_7_fetch_packet_index <= io_reserve_2_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_7_RD <= io_reserve_2_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        else if (written_vec_1 & _GEN_36) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
+        else if (written_vec_1 & _GEN_75) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
           MOB_7_memory_type <= io_reserve_1_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_7_ROB_index <= io_reserve_1_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_7_fetch_packet_index <= io_reserve_1_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_7_RD <= io_reserve_1_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        else if (_GEN_12) begin	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
+        else if (_GEN_52) begin	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
           MOB_7_memory_type <= io_reserve_0_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_7_ROB_index <= io_reserve_0_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_7_fetch_packet_index <= io_reserve_0_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_7_RD <= io_reserve_0_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        if (_GEN_94)	// src/main/scala/Memory/MOB.scala:119:22, :173:30, :174:40
+        if (_GEN_137)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
           MOB_7_address <= io_AGU_output_bits_address;	// src/main/scala/Memory/MOB.scala:119:22
-        if (written_vec_3 & _GEN_79) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
+      end
+      if (_GEN_265)	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
+        MOB_7_data <= io_backend_memory_response_bits_data;	// src/main/scala/Memory/MOB.scala:119:22
+      else if (_GEN_249)	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        MOB_7_data <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      else if (_GEN_137)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+        MOB_7_data <= io_AGU_output_bits_wr_data;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_7_data_valid <= _GEN_265 | ~_GEN_249 & MOB_7_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20, :297:43, :298:62, :299:67
+      MOB_7_pending <=
+        ~_GEN_249
+        & ((|_GEN_15)
+             ? load_index != 4'h7 & _GEN_138
+             : ~(fire_store & _GEN_231) & _GEN_138);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :181:30, :182:40, :236:{52,82,110,141}, :238:{28,35,41}, :240:53, :246:27, :248:53, :278:65, :279:26, :286:91, :288:20, src/main/scala/chisel3/util/Mux.scala:50:70
+      MOB_7_completed <= ~_GEN_249 & MOB_7_completed;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20
+      MOB_7_committed <=
+        ~_GEN_249
+        & (io_commit_valid & MOB_7_ROB_index == io_commit_bits_ROB_index
+           | MOB_7_committed);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :264:{30,51,81}, :265:30, :278:65, :279:26, :286:91, :288:20
+      MOB_7_exception <= ~_GEN_249 & (_GEN_189 & _GEN_190 | MOB_7_exception);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :211:{34,48,66,78,131}, :212:61, :213:34, :214:68, :215:34, :278:65, :279:26, :286:91, :288:20
+      MOB_8_valid <=
+        ~_GEN_250 & (written_vec_3 ? _GEN_116 | _GEN_100 | _GEN_78 : _GEN_100 | _GEN_78);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :278:65, :279:26, :286:91, :288:20
+      if (_GEN_250) begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        MOB_8_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_8_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_8_fetch_packet_index <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_8_address <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_8_access_width <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_8_RD <= 7'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      end
+      else begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        if (written_vec_3 & _GEN_116) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
           MOB_8_memory_type <= io_reserve_3_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_8_ROB_index <= io_reserve_3_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_8_fetch_packet_index <= io_reserve_3_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_8_RD <= io_reserve_3_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        else if (_GEN_62) begin	// src/main/scala/Memory/MOB.scala:150:29, :153:65
+        else if (_GEN_100) begin	// src/main/scala/Memory/MOB.scala:150:29, :153:65
           MOB_8_memory_type <= io_reserve_2_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_8_ROB_index <= io_reserve_2_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_8_fetch_packet_index <= io_reserve_2_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_8_RD <= io_reserve_2_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        else if (written_vec_1 & _GEN_38) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
+        else if (written_vec_1 & _GEN_77) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
           MOB_8_memory_type <= io_reserve_1_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_8_ROB_index <= io_reserve_1_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_8_fetch_packet_index <= io_reserve_1_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_8_RD <= io_reserve_1_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        else if (_GEN_13) begin	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
+        else if (_GEN_53) begin	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
           MOB_8_memory_type <= io_reserve_0_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_8_ROB_index <= io_reserve_0_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_8_fetch_packet_index <= io_reserve_0_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_8_RD <= io_reserve_0_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        if (_GEN_95)	// src/main/scala/Memory/MOB.scala:119:22, :173:30, :174:40
+        if (_GEN_139)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
           MOB_8_address <= io_AGU_output_bits_address;	// src/main/scala/Memory/MOB.scala:119:22
-        if (written_vec_3 & _GEN_80) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
+      end
+      if (_GEN_266)	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
+        MOB_8_data <= io_backend_memory_response_bits_data;	// src/main/scala/Memory/MOB.scala:119:22
+      else if (_GEN_250)	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        MOB_8_data <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      else if (_GEN_139)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+        MOB_8_data <= io_AGU_output_bits_wr_data;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_8_data_valid <= _GEN_266 | ~_GEN_250 & MOB_8_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20, :297:43, :298:62, :299:67
+      MOB_8_pending <=
+        ~_GEN_250
+        & ((|_GEN_15)
+             ? load_index != 4'h8 & _GEN_140
+             : ~(fire_store & _GEN_232) & _GEN_140);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :181:30, :182:40, :236:{52,82,110,141}, :238:{28,35,41}, :240:53, :246:27, :248:53, :278:65, :279:26, :286:91, :288:20, src/main/scala/chisel3/util/Mux.scala:50:70
+      MOB_8_completed <= ~_GEN_250 & MOB_8_completed;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20
+      MOB_8_committed <=
+        ~_GEN_250
+        & (io_commit_valid & MOB_8_ROB_index == io_commit_bits_ROB_index
+           | MOB_8_committed);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :264:{30,51,81}, :265:30, :278:65, :279:26, :286:91, :288:20
+      MOB_8_exception <= ~_GEN_250 & (_GEN_194 & _GEN_195 | MOB_8_exception);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :211:{34,48,66,78,131}, :212:61, :213:34, :214:68, :215:34, :278:65, :279:26, :286:91, :288:20
+      MOB_9_valid <=
+        ~_GEN_251 & (written_vec_3 ? _GEN_117 | _GEN_101 | _GEN_80 : _GEN_101 | _GEN_80);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :278:65, :279:26, :286:91, :288:20
+      if (_GEN_251) begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        MOB_9_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_9_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_9_fetch_packet_index <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_9_address <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_9_access_width <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_9_RD <= 7'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      end
+      else begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        if (written_vec_3 & _GEN_117) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
           MOB_9_memory_type <= io_reserve_3_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_9_ROB_index <= io_reserve_3_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_9_fetch_packet_index <= io_reserve_3_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_9_RD <= io_reserve_3_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        else if (_GEN_63) begin	// src/main/scala/Memory/MOB.scala:150:29, :153:65
+        else if (_GEN_101) begin	// src/main/scala/Memory/MOB.scala:150:29, :153:65
           MOB_9_memory_type <= io_reserve_2_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_9_ROB_index <= io_reserve_2_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_9_fetch_packet_index <= io_reserve_2_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_9_RD <= io_reserve_2_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        else if (written_vec_1 & _GEN_40) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
+        else if (written_vec_1 & _GEN_79) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
           MOB_9_memory_type <= io_reserve_1_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_9_ROB_index <= io_reserve_1_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_9_fetch_packet_index <= io_reserve_1_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_9_RD <= io_reserve_1_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        else if (_GEN_14) begin	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
+        else if (_GEN_54) begin	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
           MOB_9_memory_type <= io_reserve_0_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_9_ROB_index <= io_reserve_0_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_9_fetch_packet_index <= io_reserve_0_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_9_RD <= io_reserve_0_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        if (_GEN_96)	// src/main/scala/Memory/MOB.scala:119:22, :173:30, :174:40
+        if (_GEN_141)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
           MOB_9_address <= io_AGU_output_bits_address;	// src/main/scala/Memory/MOB.scala:119:22
-        if (written_vec_3 & _GEN_81) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
+      end
+      if (_GEN_267)	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
+        MOB_9_data <= io_backend_memory_response_bits_data;	// src/main/scala/Memory/MOB.scala:119:22
+      else if (_GEN_251)	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        MOB_9_data <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      else if (_GEN_141)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+        MOB_9_data <= io_AGU_output_bits_wr_data;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_9_data_valid <= _GEN_267 | ~_GEN_251 & MOB_9_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20, :297:43, :298:62, :299:67
+      MOB_9_pending <=
+        ~_GEN_251
+        & ((|_GEN_15)
+             ? load_index != 4'h9 & _GEN_142
+             : ~(fire_store & _GEN_233) & _GEN_142);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :181:30, :182:40, :236:{52,82,110,141}, :238:{28,35,41}, :240:53, :246:27, :248:53, :278:65, :279:26, :286:91, :288:20, src/main/scala/chisel3/util/Mux.scala:50:70
+      MOB_9_completed <= ~_GEN_251 & MOB_9_completed;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20
+      MOB_9_committed <=
+        ~_GEN_251
+        & (io_commit_valid & MOB_9_ROB_index == io_commit_bits_ROB_index
+           | MOB_9_committed);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :264:{30,51,81}, :265:30, :278:65, :279:26, :286:91, :288:20
+      MOB_9_exception <= ~_GEN_251 & (_GEN_199 & _GEN_200 | MOB_9_exception);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :211:{34,48,66,78,131}, :212:61, :213:34, :214:68, :215:34, :278:65, :279:26, :286:91, :288:20
+      MOB_10_valid <=
+        ~_GEN_252 & (written_vec_3 ? _GEN_118 | _GEN_102 | _GEN_82 : _GEN_102 | _GEN_82);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :278:65, :279:26, :286:91, :288:20
+      if (_GEN_252) begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        MOB_10_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_10_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_10_fetch_packet_index <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_10_address <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_10_access_width <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_10_RD <= 7'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      end
+      else begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        if (written_vec_3 & _GEN_118) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
           MOB_10_memory_type <= io_reserve_3_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_10_ROB_index <= io_reserve_3_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_10_fetch_packet_index <= io_reserve_3_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_10_RD <= io_reserve_3_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        else if (_GEN_64) begin	// src/main/scala/Memory/MOB.scala:150:29, :153:65
+        else if (_GEN_102) begin	// src/main/scala/Memory/MOB.scala:150:29, :153:65
           MOB_10_memory_type <= io_reserve_2_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_10_ROB_index <= io_reserve_2_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_10_fetch_packet_index <= io_reserve_2_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_10_RD <= io_reserve_2_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        else if (written_vec_1 & _GEN_42) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
+        else if (written_vec_1 & _GEN_81) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
           MOB_10_memory_type <= io_reserve_1_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_10_ROB_index <= io_reserve_1_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_10_fetch_packet_index <= io_reserve_1_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_10_RD <= io_reserve_1_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        else if (_GEN_15) begin	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
+        else if (_GEN_55) begin	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
           MOB_10_memory_type <= io_reserve_0_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_10_ROB_index <= io_reserve_0_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_10_fetch_packet_index <= io_reserve_0_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_10_RD <= io_reserve_0_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        if (_GEN_97)	// src/main/scala/Memory/MOB.scala:119:22, :173:30, :174:40
+        if (_GEN_143)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
           MOB_10_address <= io_AGU_output_bits_address;	// src/main/scala/Memory/MOB.scala:119:22
-        if (written_vec_3 & _GEN_82) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
+      end
+      if (_GEN_268)	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
+        MOB_10_data <= io_backend_memory_response_bits_data;	// src/main/scala/Memory/MOB.scala:119:22
+      else if (_GEN_252)	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        MOB_10_data <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      else if (_GEN_143)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+        MOB_10_data <= io_AGU_output_bits_wr_data;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_10_data_valid <= _GEN_268 | ~_GEN_252 & MOB_10_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20, :297:43, :298:62, :299:67
+      MOB_10_pending <=
+        ~_GEN_252
+        & ((|_GEN_15)
+             ? load_index != 4'hA & _GEN_144
+             : ~(fire_store & _GEN_234) & _GEN_144);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :181:30, :182:40, :236:{52,82,110,141}, :238:{28,35,41}, :240:53, :246:27, :248:53, :278:65, :279:26, :286:91, :288:20, src/main/scala/chisel3/util/Mux.scala:50:70
+      MOB_10_completed <= ~_GEN_252 & MOB_10_completed;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20
+      MOB_10_committed <=
+        ~_GEN_252
+        & (io_commit_valid & MOB_10_ROB_index == io_commit_bits_ROB_index
+           | MOB_10_committed);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :264:{30,51,81}, :265:30, :278:65, :279:26, :286:91, :288:20
+      MOB_10_exception <= ~_GEN_252 & (_GEN_204 & _GEN_205 | MOB_10_exception);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :211:{34,48,66,78,131}, :212:61, :213:34, :214:68, :215:34, :278:65, :279:26, :286:91, :288:20
+      MOB_11_valid <=
+        ~_GEN_253 & (written_vec_3 ? _GEN_119 | _GEN_103 | _GEN_84 : _GEN_103 | _GEN_84);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :278:65, :279:26, :286:91, :288:20
+      if (_GEN_253) begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        MOB_11_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_11_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_11_fetch_packet_index <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_11_address <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_11_access_width <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_11_RD <= 7'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      end
+      else begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        if (written_vec_3 & _GEN_119) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
           MOB_11_memory_type <= io_reserve_3_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_11_ROB_index <= io_reserve_3_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_11_fetch_packet_index <= io_reserve_3_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_11_RD <= io_reserve_3_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        else if (_GEN_65) begin	// src/main/scala/Memory/MOB.scala:150:29, :153:65
+        else if (_GEN_103) begin	// src/main/scala/Memory/MOB.scala:150:29, :153:65
           MOB_11_memory_type <= io_reserve_2_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_11_ROB_index <= io_reserve_2_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_11_fetch_packet_index <= io_reserve_2_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_11_RD <= io_reserve_2_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        else if (written_vec_1 & _GEN_44) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
+        else if (written_vec_1 & _GEN_83) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
           MOB_11_memory_type <= io_reserve_1_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_11_ROB_index <= io_reserve_1_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_11_fetch_packet_index <= io_reserve_1_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_11_RD <= io_reserve_1_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        else if (_GEN_16) begin	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
+        else if (_GEN_56) begin	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
           MOB_11_memory_type <= io_reserve_0_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_11_ROB_index <= io_reserve_0_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_11_fetch_packet_index <= io_reserve_0_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_11_RD <= io_reserve_0_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        if (_GEN_98)	// src/main/scala/Memory/MOB.scala:119:22, :173:30, :174:40
+        if (_GEN_145)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
           MOB_11_address <= io_AGU_output_bits_address;	// src/main/scala/Memory/MOB.scala:119:22
-        if (written_vec_3 & _GEN_83) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
+      end
+      if (_GEN_269)	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
+        MOB_11_data <= io_backend_memory_response_bits_data;	// src/main/scala/Memory/MOB.scala:119:22
+      else if (_GEN_253)	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        MOB_11_data <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      else if (_GEN_145)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+        MOB_11_data <= io_AGU_output_bits_wr_data;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_11_data_valid <= _GEN_269 | ~_GEN_253 & MOB_11_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20, :297:43, :298:62, :299:67
+      MOB_11_pending <=
+        ~_GEN_253
+        & ((|_GEN_15)
+             ? load_index != 4'hB & _GEN_146
+             : ~(fire_store & _GEN_235) & _GEN_146);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :181:30, :182:40, :236:{52,82,110,141}, :238:{28,35,41}, :240:53, :246:27, :248:53, :278:65, :279:26, :286:91, :288:20, src/main/scala/chisel3/util/Mux.scala:50:70
+      MOB_11_completed <= ~_GEN_253 & MOB_11_completed;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20
+      MOB_11_committed <=
+        ~_GEN_253
+        & (io_commit_valid & MOB_11_ROB_index == io_commit_bits_ROB_index
+           | MOB_11_committed);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :264:{30,51,81}, :265:30, :278:65, :279:26, :286:91, :288:20
+      MOB_11_exception <= ~_GEN_253 & (_GEN_209 & _GEN_210 | MOB_11_exception);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :211:{34,48,66,78,131}, :212:61, :213:34, :214:68, :215:34, :278:65, :279:26, :286:91, :288:20
+      MOB_12_valid <=
+        ~_GEN_254 & (written_vec_3 ? _GEN_120 | _GEN_104 | _GEN_86 : _GEN_104 | _GEN_86);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :278:65, :279:26, :286:91, :288:20
+      if (_GEN_254) begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        MOB_12_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_12_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_12_fetch_packet_index <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_12_address <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_12_access_width <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_12_RD <= 7'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      end
+      else begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        if (written_vec_3 & _GEN_120) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
           MOB_12_memory_type <= io_reserve_3_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_12_ROB_index <= io_reserve_3_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_12_fetch_packet_index <= io_reserve_3_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_12_RD <= io_reserve_3_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        else if (_GEN_66) begin	// src/main/scala/Memory/MOB.scala:150:29, :153:65
+        else if (_GEN_104) begin	// src/main/scala/Memory/MOB.scala:150:29, :153:65
           MOB_12_memory_type <= io_reserve_2_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_12_ROB_index <= io_reserve_2_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_12_fetch_packet_index <= io_reserve_2_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_12_RD <= io_reserve_2_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        else if (written_vec_1 & _GEN_46) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
+        else if (written_vec_1 & _GEN_85) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
           MOB_12_memory_type <= io_reserve_1_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_12_ROB_index <= io_reserve_1_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_12_fetch_packet_index <= io_reserve_1_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_12_RD <= io_reserve_1_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        else if (_GEN_17) begin	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
+        else if (_GEN_57) begin	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
           MOB_12_memory_type <= io_reserve_0_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_12_ROB_index <= io_reserve_0_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_12_fetch_packet_index <= io_reserve_0_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_12_RD <= io_reserve_0_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        if (_GEN_99)	// src/main/scala/Memory/MOB.scala:119:22, :173:30, :174:40
+        if (_GEN_147)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
           MOB_12_address <= io_AGU_output_bits_address;	// src/main/scala/Memory/MOB.scala:119:22
-        if (written_vec_3 & _GEN_84) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
+      end
+      if (_GEN_270)	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
+        MOB_12_data <= io_backend_memory_response_bits_data;	// src/main/scala/Memory/MOB.scala:119:22
+      else if (_GEN_254)	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        MOB_12_data <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      else if (_GEN_147)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+        MOB_12_data <= io_AGU_output_bits_wr_data;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_12_data_valid <= _GEN_270 | ~_GEN_254 & MOB_12_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20, :297:43, :298:62, :299:67
+      MOB_12_pending <=
+        ~_GEN_254
+        & ((|_GEN_15)
+             ? load_index != 4'hC & _GEN_148
+             : ~(fire_store & _GEN_236) & _GEN_148);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :181:30, :182:40, :236:{52,82,110,141}, :238:{28,35,41}, :240:53, :246:27, :248:53, :278:65, :279:26, :286:91, :288:20, src/main/scala/chisel3/util/Mux.scala:50:70
+      MOB_12_completed <= ~_GEN_254 & MOB_12_completed;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20
+      MOB_12_committed <=
+        ~_GEN_254
+        & (io_commit_valid & MOB_12_ROB_index == io_commit_bits_ROB_index
+           | MOB_12_committed);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :264:{30,51,81}, :265:30, :278:65, :279:26, :286:91, :288:20
+      MOB_12_exception <= ~_GEN_254 & (_GEN_214 & _GEN_215 | MOB_12_exception);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :211:{34,48,66,78,131}, :212:61, :213:34, :214:68, :215:34, :278:65, :279:26, :286:91, :288:20
+      MOB_13_valid <=
+        ~_GEN_255 & (written_vec_3 ? _GEN_121 | _GEN_105 | _GEN_88 : _GEN_105 | _GEN_88);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :278:65, :279:26, :286:91, :288:20
+      if (_GEN_255) begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        MOB_13_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_13_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_13_fetch_packet_index <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_13_address <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_13_access_width <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_13_RD <= 7'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      end
+      else begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        if (written_vec_3 & _GEN_121) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
           MOB_13_memory_type <= io_reserve_3_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_13_ROB_index <= io_reserve_3_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_13_fetch_packet_index <= io_reserve_3_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_13_RD <= io_reserve_3_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        else if (_GEN_67) begin	// src/main/scala/Memory/MOB.scala:150:29, :153:65
+        else if (_GEN_105) begin	// src/main/scala/Memory/MOB.scala:150:29, :153:65
           MOB_13_memory_type <= io_reserve_2_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_13_ROB_index <= io_reserve_2_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_13_fetch_packet_index <= io_reserve_2_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_13_RD <= io_reserve_2_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        else if (written_vec_1 & _GEN_48) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
+        else if (written_vec_1 & _GEN_87) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
           MOB_13_memory_type <= io_reserve_1_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_13_ROB_index <= io_reserve_1_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_13_fetch_packet_index <= io_reserve_1_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_13_RD <= io_reserve_1_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        else if (_GEN_18) begin	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
+        else if (_GEN_58) begin	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
           MOB_13_memory_type <= io_reserve_0_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_13_ROB_index <= io_reserve_0_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_13_fetch_packet_index <= io_reserve_0_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_13_RD <= io_reserve_0_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        if (_GEN_100)	// src/main/scala/Memory/MOB.scala:119:22, :173:30, :174:40
+        if (_GEN_149)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
           MOB_13_address <= io_AGU_output_bits_address;	// src/main/scala/Memory/MOB.scala:119:22
-        if (written_vec_3 & _GEN_85) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
+      end
+      if (_GEN_271)	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
+        MOB_13_data <= io_backend_memory_response_bits_data;	// src/main/scala/Memory/MOB.scala:119:22
+      else if (_GEN_255)	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        MOB_13_data <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      else if (_GEN_149)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+        MOB_13_data <= io_AGU_output_bits_wr_data;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_13_data_valid <= _GEN_271 | ~_GEN_255 & MOB_13_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20, :297:43, :298:62, :299:67
+      MOB_13_pending <=
+        ~_GEN_255
+        & ((|_GEN_15)
+             ? load_index != 4'hD & _GEN_150
+             : ~(fire_store & _GEN_237) & _GEN_150);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :181:30, :182:40, :236:{52,82,110,141}, :238:{28,35,41}, :240:53, :246:27, :248:53, :278:65, :279:26, :286:91, :288:20, src/main/scala/chisel3/util/Mux.scala:50:70
+      MOB_13_completed <= ~_GEN_255 & MOB_13_completed;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20
+      MOB_13_committed <=
+        ~_GEN_255
+        & (io_commit_valid & MOB_13_ROB_index == io_commit_bits_ROB_index
+           | MOB_13_committed);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :264:{30,51,81}, :265:30, :278:65, :279:26, :286:91, :288:20
+      MOB_13_exception <= ~_GEN_255 & (_GEN_218 & _GEN_219 | MOB_13_exception);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :211:{34,48,66,78,131}, :212:61, :213:34, :214:68, :215:34, :278:65, :279:26, :286:91, :288:20
+      MOB_14_valid <=
+        ~_GEN_256 & (written_vec_3 ? _GEN_122 | _GEN_106 | _GEN_90 : _GEN_106 | _GEN_90);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :278:65, :279:26, :286:91, :288:20
+      if (_GEN_256) begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        MOB_14_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_14_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_14_fetch_packet_index <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_14_address <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_14_access_width <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_14_RD <= 7'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      end
+      else begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        if (written_vec_3 & _GEN_122) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
           MOB_14_memory_type <= io_reserve_3_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_14_ROB_index <= io_reserve_3_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_14_fetch_packet_index <= io_reserve_3_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_14_RD <= io_reserve_3_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        else if (_GEN_68) begin	// src/main/scala/Memory/MOB.scala:150:29, :153:65
+        else if (_GEN_106) begin	// src/main/scala/Memory/MOB.scala:150:29, :153:65
           MOB_14_memory_type <= io_reserve_2_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_14_ROB_index <= io_reserve_2_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_14_fetch_packet_index <= io_reserve_2_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_14_RD <= io_reserve_2_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        else if (written_vec_1 & _GEN_50) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
+        else if (written_vec_1 & _GEN_89) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:65, :154:65
           MOB_14_memory_type <= io_reserve_1_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_14_ROB_index <= io_reserve_1_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_14_fetch_packet_index <= io_reserve_1_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_14_RD <= io_reserve_1_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        else if (_GEN_19) begin	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
+        else if (_GEN_59) begin	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
           MOB_14_memory_type <= io_reserve_0_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_14_ROB_index <= io_reserve_0_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_14_fetch_packet_index <= io_reserve_0_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_14_RD <= io_reserve_0_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        if (_GEN_101)	// src/main/scala/Memory/MOB.scala:119:22, :173:30, :174:40
+        if (_GEN_151)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
           MOB_14_address <= io_AGU_output_bits_address;	// src/main/scala/Memory/MOB.scala:119:22
+      end
+      if (_GEN_272)	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
+        MOB_14_data <= io_backend_memory_response_bits_data;	// src/main/scala/Memory/MOB.scala:119:22
+      else if (_GEN_256)	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        MOB_14_data <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      else if (_GEN_151)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+        MOB_14_data <= io_AGU_output_bits_wr_data;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_14_data_valid <= _GEN_272 | ~_GEN_256 & MOB_14_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20, :297:43, :298:62, :299:67
+      MOB_14_pending <=
+        ~_GEN_256
+        & ((|_GEN_15)
+             ? load_index != 4'hE & _GEN_152
+             : ~(fire_store & _GEN_238) & _GEN_152);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :181:30, :182:40, :236:{52,82,110,141}, :238:{28,35,41}, :240:53, :246:27, :248:53, :278:65, :279:26, :286:91, :288:20, src/main/scala/chisel3/util/Mux.scala:50:70
+      MOB_14_completed <= ~_GEN_256 & MOB_14_completed;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20
+      MOB_14_committed <=
+        ~_GEN_256
+        & (io_commit_valid & MOB_14_ROB_index == io_commit_bits_ROB_index
+           | MOB_14_committed);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :264:{30,51,81}, :265:30, :278:65, :279:26, :286:91, :288:20
+      MOB_14_exception <= ~_GEN_256 & (_GEN_222 & _GEN_223 | MOB_14_exception);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :211:{34,48,66,78,131}, :212:61, :213:34, :214:68, :215:34, :278:65, :279:26, :286:91, :288:20
+      MOB_15_valid <=
+        ~_GEN_257
+        & (written_vec_3
+             ? (&_io_reserved_pointers_3_bits_T) | _GEN_107 | _GEN_91
+             : _GEN_107 | _GEN_91);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:{28,65}, :278:65, :279:26, :286:91, :288:20
+      if (_GEN_257) begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        MOB_15_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_15_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_15_fetch_packet_index <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_15_address <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_15_access_width <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
+        MOB_15_RD <= 7'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      end
+      else begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
         if (written_vec_3 & (&_io_reserved_pointers_3_bits_T)) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:{28,65}, :154:65
           MOB_15_memory_type <= io_reserve_3_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_15_ROB_index <= io_reserve_3_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_15_fetch_packet_index <= io_reserve_3_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_15_RD <= io_reserve_3_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        else if (_GEN_69) begin	// src/main/scala/Memory/MOB.scala:150:29, :153:65
+        else if (_GEN_107) begin	// src/main/scala/Memory/MOB.scala:150:29, :153:65
           MOB_15_memory_type <= io_reserve_2_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_15_ROB_index <= io_reserve_2_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_15_fetch_packet_index <= io_reserve_2_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_15_RD <= io_reserve_2_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
         else if (written_vec_1 & (&_io_reserved_pointers_1_bits_T)) begin	// src/main/scala/Memory/MOB.scala:142:34, :150:29, :153:{28,65}, :154:65
           MOB_15_memory_type <= io_reserve_1_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_15_ROB_index <= io_reserve_1_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_15_fetch_packet_index <= io_reserve_1_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_15_RD <= io_reserve_1_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        else if (_GEN_20) begin	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
+        else if (_GEN_60) begin	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :153:65
           MOB_15_memory_type <= io_reserve_0_bits_memory_type;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_15_ROB_index <= io_reserve_0_bits_ROB_index;	// src/main/scala/Memory/MOB.scala:119:22
+          MOB_15_fetch_packet_index <= io_reserve_0_bits_packet_index;	// src/main/scala/Memory/MOB.scala:119:22
           MOB_15_RD <= io_reserve_0_bits_RD;	// src/main/scala/Memory/MOB.scala:119:22
         end
-        if (_GEN_102)	// src/main/scala/Memory/MOB.scala:119:22, :173:30, :174:40
+        if (_GEN_153)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
           MOB_15_address <= io_AGU_output_bits_address;	// src/main/scala/Memory/MOB.scala:119:22
       end
-      MOB_0_data_valid <=
-        io_backend_memory_response_valid
-        & io_backend_memory_response_bits_MOB_index == 4'h0 | ~_GEN_103
-        & MOB_0_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :267:65, :268:26, :275:{26,91}, :277:20, :284:43, :286:67
-      MOB_0_pending <=
-        ~_GEN_103 & ((|_GEN_1) ? (|load_index) & _GEN_87 : ~fire_store & _GEN_87);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :173:30, :174:40, :226:{52,113}, :228:{28,35,41}, :230:53, :236:27, :238:53, :267:65, :268:26, :275:{26,91}, :277:20, src/main/scala/chisel3/util/Mux.scala:50:70
-      MOB_0_committed <=
-        ~_GEN_103
-        & (io_commit_valid & MOB_0_ROB_index == io_commit_bits_ROB_index
-           | MOB_0_committed);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :253:{30,51,81}, :254:30, :267:65, :268:26, :275:{26,91}, :277:20
-      MOB_1_valid <=
-        ~_GEN_103 & (written_vec_3 ? _GEN_72 | _GEN_55 | _GEN_25 : _GEN_55 | _GEN_25);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :267:65, :268:26, :275:{26,91}, :277:20
-      MOB_1_data_valid <=
-        io_backend_memory_response_valid
-        & io_backend_memory_response_bits_MOB_index == 4'h1 | ~_GEN_103
-        & MOB_1_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :151:63, :267:65, :268:26, :275:{26,91}, :277:20, :284:43, :286:67
-      MOB_1_pending <=
-        ~_GEN_103 & (~(|_GEN_1) | load_index != 4'h1) & (_GEN_88 | MOB_1_pending);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :151:63, :173:30, :174:40, :228:{28,35,41}, :230:53, :236:27, :267:65, :268:26, :275:{26,91}, :277:20, src/main/scala/chisel3/util/Mux.scala:50:70
-      MOB_1_committed <=
-        ~_GEN_103
-        & (io_commit_valid & MOB_1_ROB_index == io_commit_bits_ROB_index
-           | MOB_1_committed);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :253:{30,51,81}, :254:30, :267:65, :268:26, :275:{26,91}, :277:20
-      MOB_2_valid <=
-        ~_GEN_103 & (written_vec_3 ? _GEN_73 | _GEN_56 | _GEN_27 : _GEN_56 | _GEN_27);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :267:65, :268:26, :275:{26,91}, :277:20
-      MOB_2_data_valid <=
-        io_backend_memory_response_valid
-        & io_backend_memory_response_bits_MOB_index == 4'h2 | ~_GEN_103
-        & MOB_2_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :267:65, :268:26, :275:{26,91}, :277:20, :284:43, :286:67
-      MOB_2_pending <=
-        ~_GEN_103 & (~(|_GEN_1) | load_index != 4'h2) & (_GEN_89 | MOB_2_pending);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :173:30, :174:40, :228:{28,35,41}, :230:53, :236:27, :267:65, :268:26, :275:{26,91}, :277:20, src/main/scala/chisel3/util/Mux.scala:50:70
-      MOB_2_committed <=
-        ~_GEN_103
-        & (io_commit_valid & MOB_2_ROB_index == io_commit_bits_ROB_index
-           | MOB_2_committed);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :253:{30,51,81}, :254:30, :267:65, :268:26, :275:{26,91}, :277:20
-      MOB_3_valid <=
-        ~_GEN_103 & (written_vec_3 ? _GEN_74 | _GEN_57 | _GEN_29 : _GEN_57 | _GEN_29);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :267:65, :268:26, :275:{26,91}, :277:20
-      MOB_3_data_valid <=
-        io_backend_memory_response_valid
-        & io_backend_memory_response_bits_MOB_index == 4'h3 | ~_GEN_103
-        & MOB_3_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :267:65, :268:26, :275:{26,91}, :277:20, :284:43, :286:67
-      MOB_3_pending <=
-        ~_GEN_103 & (~(|_GEN_1) | load_index != 4'h3) & (_GEN_90 | MOB_3_pending);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :173:30, :174:40, :228:{28,35,41}, :230:53, :236:27, :267:65, :268:26, :275:{26,91}, :277:20, src/main/scala/chisel3/util/Mux.scala:50:70
-      MOB_3_committed <=
-        ~_GEN_103
-        & (io_commit_valid & MOB_3_ROB_index == io_commit_bits_ROB_index
-           | MOB_3_committed);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :253:{30,51,81}, :254:30, :267:65, :268:26, :275:{26,91}, :277:20
-      MOB_4_valid <=
-        ~_GEN_103 & (written_vec_3 ? _GEN_75 | _GEN_58 | _GEN_31 : _GEN_58 | _GEN_31);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :267:65, :268:26, :275:{26,91}, :277:20
-      MOB_4_data_valid <=
-        io_backend_memory_response_valid
-        & io_backend_memory_response_bits_MOB_index == 4'h4 | ~_GEN_103
-        & MOB_4_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :267:65, :268:26, :275:{26,91}, :277:20, :284:43, :286:67
-      MOB_4_pending <=
-        ~_GEN_103 & (~(|_GEN_1) | load_index != 4'h4) & (_GEN_91 | MOB_4_pending);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :173:30, :174:40, :228:{28,35,41}, :230:53, :236:27, :267:65, :268:26, :275:{26,91}, :277:20, src/main/scala/chisel3/util/Mux.scala:50:70
-      MOB_4_committed <=
-        ~_GEN_103
-        & (io_commit_valid & MOB_4_ROB_index == io_commit_bits_ROB_index
-           | MOB_4_committed);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :253:{30,51,81}, :254:30, :267:65, :268:26, :275:{26,91}, :277:20
-      MOB_5_valid <=
-        ~_GEN_103 & (written_vec_3 ? _GEN_76 | _GEN_59 | _GEN_33 : _GEN_59 | _GEN_33);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :267:65, :268:26, :275:{26,91}, :277:20
-      MOB_5_data_valid <=
-        io_backend_memory_response_valid
-        & io_backend_memory_response_bits_MOB_index == 4'h5 | ~_GEN_103
-        & MOB_5_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :267:65, :268:26, :275:{26,91}, :277:20, :284:43, :286:67
-      MOB_5_pending <=
-        ~_GEN_103 & (~(|_GEN_1) | load_index != 4'h5) & (_GEN_92 | MOB_5_pending);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :173:30, :174:40, :228:{28,35,41}, :230:53, :236:27, :267:65, :268:26, :275:{26,91}, :277:20, src/main/scala/chisel3/util/Mux.scala:50:70
-      MOB_5_committed <=
-        ~_GEN_103
-        & (io_commit_valid & MOB_5_ROB_index == io_commit_bits_ROB_index
-           | MOB_5_committed);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :253:{30,51,81}, :254:30, :267:65, :268:26, :275:{26,91}, :277:20
-      MOB_6_valid <=
-        ~_GEN_103 & (written_vec_3 ? _GEN_77 | _GEN_60 | _GEN_35 : _GEN_60 | _GEN_35);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :267:65, :268:26, :275:{26,91}, :277:20
-      MOB_6_data_valid <=
-        io_backend_memory_response_valid
-        & io_backend_memory_response_bits_MOB_index == 4'h6 | ~_GEN_103
-        & MOB_6_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :267:65, :268:26, :275:{26,91}, :277:20, :284:43, :286:67
-      MOB_6_pending <=
-        ~_GEN_103 & (~(|_GEN_1) | load_index != 4'h6) & (_GEN_93 | MOB_6_pending);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :173:30, :174:40, :228:{28,35,41}, :230:53, :236:27, :267:65, :268:26, :275:{26,91}, :277:20, src/main/scala/chisel3/util/Mux.scala:50:70
-      MOB_6_committed <=
-        ~_GEN_103
-        & (io_commit_valid & MOB_6_ROB_index == io_commit_bits_ROB_index
-           | MOB_6_committed);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :253:{30,51,81}, :254:30, :267:65, :268:26, :275:{26,91}, :277:20
-      MOB_7_valid <=
-        ~_GEN_103 & (written_vec_3 ? _GEN_78 | _GEN_61 | _GEN_37 : _GEN_61 | _GEN_37);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :267:65, :268:26, :275:{26,91}, :277:20
-      MOB_7_data_valid <=
-        io_backend_memory_response_valid
-        & io_backend_memory_response_bits_MOB_index == 4'h7 | ~_GEN_103
-        & MOB_7_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :267:65, :268:26, :275:{26,91}, :277:20, :284:43, :286:67
-      MOB_7_pending <=
-        ~_GEN_103 & (~(|_GEN_1) | load_index != 4'h7) & (_GEN_94 | MOB_7_pending);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :173:30, :174:40, :228:{28,35,41}, :230:53, :236:27, :267:65, :268:26, :275:{26,91}, :277:20, src/main/scala/chisel3/util/Mux.scala:50:70
-      MOB_7_committed <=
-        ~_GEN_103
-        & (io_commit_valid & MOB_7_ROB_index == io_commit_bits_ROB_index
-           | MOB_7_committed);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :253:{30,51,81}, :254:30, :267:65, :268:26, :275:{26,91}, :277:20
-      MOB_8_valid <=
-        ~_GEN_103 & (written_vec_3 ? _GEN_79 | _GEN_62 | _GEN_39 : _GEN_62 | _GEN_39);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :267:65, :268:26, :275:{26,91}, :277:20
-      MOB_8_data_valid <=
-        io_backend_memory_response_valid
-        & io_backend_memory_response_bits_MOB_index == 4'h8 | ~_GEN_103
-        & MOB_8_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :267:65, :268:26, :275:{26,91}, :277:20, :284:43, :286:67
-      MOB_8_pending <=
-        ~_GEN_103 & (~(|_GEN_1) | load_index != 4'h8) & (_GEN_95 | MOB_8_pending);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :173:30, :174:40, :228:{28,35,41}, :230:53, :236:27, :267:65, :268:26, :275:{26,91}, :277:20, src/main/scala/chisel3/util/Mux.scala:50:70
-      MOB_8_committed <=
-        ~_GEN_103
-        & (io_commit_valid & MOB_8_ROB_index == io_commit_bits_ROB_index
-           | MOB_8_committed);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :253:{30,51,81}, :254:30, :267:65, :268:26, :275:{26,91}, :277:20
-      MOB_9_valid <=
-        ~_GEN_103 & (written_vec_3 ? _GEN_80 | _GEN_63 | _GEN_41 : _GEN_63 | _GEN_41);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :267:65, :268:26, :275:{26,91}, :277:20
-      MOB_9_data_valid <=
-        io_backend_memory_response_valid
-        & io_backend_memory_response_bits_MOB_index == 4'h9 | ~_GEN_103
-        & MOB_9_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :267:65, :268:26, :275:{26,91}, :277:20, :284:43, :286:67
-      MOB_9_pending <=
-        ~_GEN_103 & (~(|_GEN_1) | load_index != 4'h9) & (_GEN_96 | MOB_9_pending);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :173:30, :174:40, :228:{28,35,41}, :230:53, :236:27, :267:65, :268:26, :275:{26,91}, :277:20, src/main/scala/chisel3/util/Mux.scala:50:70
-      MOB_9_committed <=
-        ~_GEN_103
-        & (io_commit_valid & MOB_9_ROB_index == io_commit_bits_ROB_index
-           | MOB_9_committed);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :253:{30,51,81}, :254:30, :267:65, :268:26, :275:{26,91}, :277:20
-      MOB_10_valid <=
-        ~_GEN_103 & (written_vec_3 ? _GEN_81 | _GEN_64 | _GEN_43 : _GEN_64 | _GEN_43);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :267:65, :268:26, :275:{26,91}, :277:20
-      MOB_10_data_valid <=
-        io_backend_memory_response_valid
-        & io_backend_memory_response_bits_MOB_index == 4'hA | ~_GEN_103
-        & MOB_10_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :267:65, :268:26, :275:{26,91}, :277:20, :284:43, :286:67
-      MOB_10_pending <=
-        ~_GEN_103 & (~(|_GEN_1) | load_index != 4'hA) & (_GEN_97 | MOB_10_pending);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :173:30, :174:40, :228:{28,35,41}, :230:53, :236:27, :267:65, :268:26, :275:{26,91}, :277:20, src/main/scala/chisel3/util/Mux.scala:50:70
-      MOB_10_committed <=
-        ~_GEN_103
-        & (io_commit_valid & MOB_10_ROB_index == io_commit_bits_ROB_index
-           | MOB_10_committed);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :253:{30,51,81}, :254:30, :267:65, :268:26, :275:{26,91}, :277:20
-      MOB_11_valid <=
-        ~_GEN_103 & (written_vec_3 ? _GEN_82 | _GEN_65 | _GEN_45 : _GEN_65 | _GEN_45);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :267:65, :268:26, :275:{26,91}, :277:20
-      MOB_11_data_valid <=
-        io_backend_memory_response_valid
-        & io_backend_memory_response_bits_MOB_index == 4'hB | ~_GEN_103
-        & MOB_11_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :267:65, :268:26, :275:{26,91}, :277:20, :284:43, :286:67
-      MOB_11_pending <=
-        ~_GEN_103 & (~(|_GEN_1) | load_index != 4'hB) & (_GEN_98 | MOB_11_pending);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :173:30, :174:40, :228:{28,35,41}, :230:53, :236:27, :267:65, :268:26, :275:{26,91}, :277:20, src/main/scala/chisel3/util/Mux.scala:50:70
-      MOB_11_committed <=
-        ~_GEN_103
-        & (io_commit_valid & MOB_11_ROB_index == io_commit_bits_ROB_index
-           | MOB_11_committed);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :253:{30,51,81}, :254:30, :267:65, :268:26, :275:{26,91}, :277:20
-      MOB_12_valid <=
-        ~_GEN_103 & (written_vec_3 ? _GEN_83 | _GEN_66 | _GEN_47 : _GEN_66 | _GEN_47);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :267:65, :268:26, :275:{26,91}, :277:20
-      MOB_12_data_valid <=
-        io_backend_memory_response_valid
-        & io_backend_memory_response_bits_MOB_index == 4'hC | ~_GEN_103
-        & MOB_12_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :267:65, :268:26, :275:{26,91}, :277:20, :284:43, :286:67
-      MOB_12_pending <=
-        ~_GEN_103 & (~(|_GEN_1) | load_index != 4'hC) & (_GEN_99 | MOB_12_pending);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :173:30, :174:40, :228:{28,35,41}, :230:53, :236:27, :267:65, :268:26, :275:{26,91}, :277:20, src/main/scala/chisel3/util/Mux.scala:50:70
-      MOB_12_committed <=
-        ~_GEN_103
-        & (io_commit_valid & MOB_12_ROB_index == io_commit_bits_ROB_index
-           | MOB_12_committed);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :253:{30,51,81}, :254:30, :267:65, :268:26, :275:{26,91}, :277:20
-      MOB_13_valid <=
-        ~_GEN_103 & (written_vec_3 ? _GEN_84 | _GEN_67 | _GEN_49 : _GEN_67 | _GEN_49);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :267:65, :268:26, :275:{26,91}, :277:20
-      MOB_13_data_valid <=
-        io_backend_memory_response_valid
-        & io_backend_memory_response_bits_MOB_index == 4'hD | ~_GEN_103
-        & MOB_13_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :267:65, :268:26, :275:{26,91}, :277:20, :284:43, :286:67
-      MOB_13_pending <=
-        ~_GEN_103 & (~(|_GEN_1) | load_index != 4'hD) & (_GEN_100 | MOB_13_pending);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :173:30, :174:40, :228:{28,35,41}, :230:53, :236:27, :267:65, :268:26, :275:{26,91}, :277:20, src/main/scala/chisel3/util/Mux.scala:50:70
-      MOB_13_committed <=
-        ~_GEN_103
-        & (io_commit_valid & MOB_13_ROB_index == io_commit_bits_ROB_index
-           | MOB_13_committed);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :253:{30,51,81}, :254:30, :267:65, :268:26, :275:{26,91}, :277:20
-      MOB_14_valid <=
-        ~_GEN_103 & (written_vec_3 ? _GEN_85 | _GEN_68 | _GEN_51 : _GEN_68 | _GEN_51);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :267:65, :268:26, :275:{26,91}, :277:20
-      MOB_14_data_valid <=
-        io_backend_memory_response_valid
-        & io_backend_memory_response_bits_MOB_index == 4'hE | ~_GEN_103
-        & MOB_14_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :267:65, :268:26, :275:{26,91}, :277:20, :284:43, :286:67
-      MOB_14_pending <=
-        ~_GEN_103 & (~(|_GEN_1) | load_index != 4'hE) & (_GEN_101 | MOB_14_pending);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :173:30, :174:40, :228:{28,35,41}, :230:53, :236:27, :267:65, :268:26, :275:{26,91}, :277:20, src/main/scala/chisel3/util/Mux.scala:50:70
-      MOB_14_committed <=
-        ~_GEN_103
-        & (io_commit_valid & MOB_14_ROB_index == io_commit_bits_ROB_index
-           | MOB_14_committed);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :253:{30,51,81}, :254:30, :267:65, :268:26, :275:{26,91}, :277:20
-      MOB_15_valid <=
-        ~_GEN_103
-        & (written_vec_3
-             ? (&_io_reserved_pointers_3_bits_T) | _GEN_69 | _GEN_52
-             : _GEN_69 | _GEN_52);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:{28,65}, :267:65, :268:26, :275:{26,91}, :277:20
+      if (_GEN_273)	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
+        MOB_15_data <= io_backend_memory_response_bits_data;	// src/main/scala/Memory/MOB.scala:119:22
+      else if (_GEN_257)	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        MOB_15_data <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
+      else if (_GEN_153)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
+        MOB_15_data <= io_AGU_output_bits_wr_data;	// src/main/scala/Memory/MOB.scala:119:22
+      MOB_15_data_valid <= _GEN_273 | ~_GEN_257 & MOB_15_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20, :297:43, :298:62, :299:67
       MOB_15_pending <=
-        ~_GEN_103 & (~(|_GEN_1) | load_index != 4'hF) & (_GEN_102 | MOB_15_pending);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :173:30, :174:40, :228:{28,35,41}, :230:53, :236:27, :267:65, :268:26, :275:{26,91}, :277:20, src/main/scala/chisel3/util/Mux.scala:50:70
+        ~_GEN_257
+        & ((|_GEN_15)
+             ? load_index != 4'hF & _GEN_154
+             : ~(fire_store & (&(front_pointer[3:0]))) & _GEN_154);	// src/main/scala/Memory/MOB.scala:113:34, :116:40, :119:22, :150:29, :181:30, :182:40, :236:{52,82,110,141}, :238:{28,35,41}, :240:53, :246:27, :248:53, :278:65, :279:26, :286:91, :288:20, src/main/scala/chisel3/util/Mux.scala:50:70
+      MOB_15_completed <= ~_GEN_257 & MOB_15_completed;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20
       MOB_15_committed <=
-        ~_GEN_103
+        ~_GEN_257
         & (io_commit_valid & MOB_15_ROB_index == io_commit_bits_ROB_index
-           | MOB_15_committed);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :253:{30,51,81}, :254:30, :267:65, :268:26, :275:{26,91}, :277:20
+           | MOB_15_committed);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :264:{30,51,81}, :265:30, :278:65, :279:26, :286:91, :288:20
+      MOB_15_exception <=
+        ~_GEN_257
+        & (io_AGU_output_valid
+           & _age_vector_15_T_4[3:0] < _GEN_155[io_AGU_output_bits_MOB_index]
+           & io_AGU_output_bits_address == (MOB_15_address & 32'hFFFFFFF0) & MOB_15_valid
+           & _GEN_221 + {1'h0, {1'h0, _GEN_197} + _GEN_208}
+           + {1'h0,
+              _GEN_217
+                + {1'h0,
+                   _GEN_220
+                     + {1'h0,
+                        _GEN_222 & ~_GEN_223 & incoming_is_store & is_store_14
+                          & MOB_14_pending}}} == 4'h0
+           & (incoming_is_load & is_load_15 & MOB_15_completed | incoming_is_store
+              & is_load_15 & MOB_15_completed) | MOB_15_exception);	// src/main/scala/Memory/MOB.scala:119:22, :131:{29,67}, :150:29, :193:66, :194:66, :197:27, :203:45, :204:48, :206:50, :207:50, :211:{34,48,66,78,90,122,131}, :212:{35,46,61}, :213:34, :214:{42,53,68}, :215:34, :216:{42,54,68}, :278:65, :279:26, :286:91, :288:20, src/main/scala/utils.scala:333:10
     end
   end // always @(posedge)
   `ifdef ENABLE_INITIAL_REG_	// src/main/scala/Memory/MOB.scala:78:7
@@ -1452,237 +2769,400 @@ module MOB(	// src/main/scala/Memory/MOB.scala:78:7
       `FIRRTL_BEFORE_INITIAL	// src/main/scala/Memory/MOB.scala:78:7
     `endif // FIRRTL_BEFORE_INITIAL
     initial begin	// src/main/scala/Memory/MOB.scala:78:7
-      automatic logic [31:0] _RANDOM[0:43];	// src/main/scala/Memory/MOB.scala:78:7
+      automatic logic [31:0] _RANDOM[0:44];	// src/main/scala/Memory/MOB.scala:78:7
       `ifdef INIT_RANDOM_PROLOG_	// src/main/scala/Memory/MOB.scala:78:7
         `INIT_RANDOM_PROLOG_	// src/main/scala/Memory/MOB.scala:78:7
       `endif // INIT_RANDOM_PROLOG_
       `ifdef RANDOMIZE_REG_INIT	// src/main/scala/Memory/MOB.scala:78:7
-        for (logic [5:0] i = 6'h0; i < 6'h2C; i += 6'h1) begin
+        for (logic [5:0] i = 6'h0; i < 6'h2D; i += 6'h1) begin
           _RANDOM[i] = `RANDOM;	// src/main/scala/Memory/MOB.scala:78:7
         end	// src/main/scala/Memory/MOB.scala:78:7
-        back_pointer = _RANDOM[6'h0][9:5];	// src/main/scala/Memory/MOB.scala:78:7, :114:34
-        MOB_0_valid = _RANDOM[6'h0][10];	// src/main/scala/Memory/MOB.scala:78:7, :114:34, :119:22
-        MOB_0_memory_type = _RANDOM[6'h0][12:11];	// src/main/scala/Memory/MOB.scala:78:7, :114:34, :119:22
-        MOB_0_ROB_index = _RANDOM[6'h0][18:13];	// src/main/scala/Memory/MOB.scala:78:7, :114:34, :119:22
-        MOB_0_address = {_RANDOM[6'h0][31:19], _RANDOM[6'h1][18:0]};	// src/main/scala/Memory/MOB.scala:78:7, :114:34, :119:22
-        MOB_0_RD = _RANDOM[6'h1][27:21];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_0_data_valid = _RANDOM[6'h2][28];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_0_pending = _RANDOM[6'h2][29];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_0_committed = _RANDOM[6'h2][31];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_1_valid = _RANDOM[6'h3][1];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_1_memory_type = _RANDOM[6'h3][3:2];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_1_ROB_index = _RANDOM[6'h3][9:4];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_1_address = {_RANDOM[6'h3][31:10], _RANDOM[6'h4][9:0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_1_RD = _RANDOM[6'h4][18:12];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_1_data_valid = _RANDOM[6'h5][19];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_1_pending = _RANDOM[6'h5][20];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_1_committed = _RANDOM[6'h5][22];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_2_valid = _RANDOM[6'h5][24];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_2_memory_type = _RANDOM[6'h5][26:25];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_2_ROB_index = {_RANDOM[6'h5][31:27], _RANDOM[6'h6][0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_2_address = {_RANDOM[6'h6][31:1], _RANDOM[6'h7][0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_2_RD = _RANDOM[6'h7][9:3];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_2_data_valid = _RANDOM[6'h8][10];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_2_pending = _RANDOM[6'h8][11];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_2_committed = _RANDOM[6'h8][13];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_3_valid = _RANDOM[6'h8][15];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_3_memory_type = _RANDOM[6'h8][17:16];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_3_ROB_index = _RANDOM[6'h8][23:18];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_3_address = {_RANDOM[6'h8][31:24], _RANDOM[6'h9][23:0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_3_RD = {_RANDOM[6'h9][31:26], _RANDOM[6'hA][0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_3_data_valid = _RANDOM[6'hB][1];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_3_pending = _RANDOM[6'hB][2];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_3_committed = _RANDOM[6'hB][4];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_4_valid = _RANDOM[6'hB][6];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_4_memory_type = _RANDOM[6'hB][8:7];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_4_ROB_index = _RANDOM[6'hB][14:9];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_4_address = {_RANDOM[6'hB][31:15], _RANDOM[6'hC][14:0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_4_RD = _RANDOM[6'hC][23:17];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_4_data_valid = _RANDOM[6'hD][24];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_4_pending = _RANDOM[6'hD][25];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_4_committed = _RANDOM[6'hD][27];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_5_valid = _RANDOM[6'hD][29];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_5_memory_type = _RANDOM[6'hD][31:30];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_5_ROB_index = _RANDOM[6'hE][5:0];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_5_address = {_RANDOM[6'hE][31:6], _RANDOM[6'hF][5:0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_5_RD = _RANDOM[6'hF][14:8];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_5_data_valid = _RANDOM[6'h10][15];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_5_pending = _RANDOM[6'h10][16];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_5_committed = _RANDOM[6'h10][18];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_6_valid = _RANDOM[6'h10][20];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_6_memory_type = _RANDOM[6'h10][22:21];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_6_ROB_index = _RANDOM[6'h10][28:23];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_6_address = {_RANDOM[6'h10][31:29], _RANDOM[6'h11][28:0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_6_RD = {_RANDOM[6'h11][31], _RANDOM[6'h12][5:0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_6_data_valid = _RANDOM[6'h13][6];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_6_pending = _RANDOM[6'h13][7];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_6_committed = _RANDOM[6'h13][9];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_7_valid = _RANDOM[6'h13][11];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_7_memory_type = _RANDOM[6'h13][13:12];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_7_ROB_index = _RANDOM[6'h13][19:14];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_7_address = {_RANDOM[6'h13][31:20], _RANDOM[6'h14][19:0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_7_RD = _RANDOM[6'h14][28:22];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_7_data_valid = _RANDOM[6'h15][29];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_7_pending = _RANDOM[6'h15][30];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_7_committed = _RANDOM[6'h16][0];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_8_valid = _RANDOM[6'h16][2];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_8_memory_type = _RANDOM[6'h16][4:3];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_8_ROB_index = _RANDOM[6'h16][10:5];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_8_address = {_RANDOM[6'h16][31:11], _RANDOM[6'h17][10:0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_8_RD = _RANDOM[6'h17][19:13];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_8_data_valid = _RANDOM[6'h18][20];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_8_pending = _RANDOM[6'h18][21];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_8_committed = _RANDOM[6'h18][23];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_9_valid = _RANDOM[6'h18][25];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_9_memory_type = _RANDOM[6'h18][27:26];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_9_ROB_index = {_RANDOM[6'h18][31:28], _RANDOM[6'h19][1:0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_9_address = {_RANDOM[6'h19][31:2], _RANDOM[6'h1A][1:0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_9_RD = _RANDOM[6'h1A][10:4];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_9_data_valid = _RANDOM[6'h1B][11];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_9_pending = _RANDOM[6'h1B][12];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_9_committed = _RANDOM[6'h1B][14];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_10_valid = _RANDOM[6'h1B][16];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_10_memory_type = _RANDOM[6'h1B][18:17];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_10_ROB_index = _RANDOM[6'h1B][24:19];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_10_address = {_RANDOM[6'h1B][31:25], _RANDOM[6'h1C][24:0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_10_RD = {_RANDOM[6'h1C][31:27], _RANDOM[6'h1D][1:0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_10_data_valid = _RANDOM[6'h1E][2];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_10_pending = _RANDOM[6'h1E][3];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_10_committed = _RANDOM[6'h1E][5];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_11_valid = _RANDOM[6'h1E][7];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_11_memory_type = _RANDOM[6'h1E][9:8];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_11_ROB_index = _RANDOM[6'h1E][15:10];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_11_address = {_RANDOM[6'h1E][31:16], _RANDOM[6'h1F][15:0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_11_RD = _RANDOM[6'h1F][24:18];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_11_data_valid = _RANDOM[6'h20][25];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_11_pending = _RANDOM[6'h20][26];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_11_committed = _RANDOM[6'h20][28];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_12_valid = _RANDOM[6'h20][30];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_12_memory_type = {_RANDOM[6'h20][31], _RANDOM[6'h21][0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_12_ROB_index = _RANDOM[6'h21][6:1];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_12_address = {_RANDOM[6'h21][31:7], _RANDOM[6'h22][6:0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_12_RD = _RANDOM[6'h22][15:9];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_12_data_valid = _RANDOM[6'h23][16];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_12_pending = _RANDOM[6'h23][17];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_12_committed = _RANDOM[6'h23][19];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_13_valid = _RANDOM[6'h23][21];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_13_memory_type = _RANDOM[6'h23][23:22];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_13_ROB_index = _RANDOM[6'h23][29:24];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_13_address = {_RANDOM[6'h23][31:30], _RANDOM[6'h24][29:0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_13_RD = _RANDOM[6'h25][6:0];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_13_data_valid = _RANDOM[6'h26][7];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_13_pending = _RANDOM[6'h26][8];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_13_committed = _RANDOM[6'h26][10];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_14_valid = _RANDOM[6'h26][12];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_14_memory_type = _RANDOM[6'h26][14:13];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_14_ROB_index = _RANDOM[6'h26][20:15];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_14_address = {_RANDOM[6'h26][31:21], _RANDOM[6'h27][20:0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_14_RD = _RANDOM[6'h27][29:23];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_14_data_valid = _RANDOM[6'h28][30];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_14_pending = _RANDOM[6'h28][31];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_14_committed = _RANDOM[6'h29][1];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_15_valid = _RANDOM[6'h29][3];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_15_memory_type = _RANDOM[6'h29][5:4];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_15_ROB_index = _RANDOM[6'h29][11:6];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_15_address = {_RANDOM[6'h29][31:12], _RANDOM[6'h2A][11:0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_15_RD = _RANDOM[6'h2A][20:14];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_15_pending = _RANDOM[6'h2B][22];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
-        MOB_15_committed = _RANDOM[6'h2B][24];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        front_pointer = _RANDOM[6'h0][4:0];	// src/main/scala/Memory/MOB.scala:78:7, :113:34
+        back_pointer = _RANDOM[6'h0][9:5];	// src/main/scala/Memory/MOB.scala:78:7, :113:34, :114:34
+        MOB_0_valid = _RANDOM[6'h0][10];	// src/main/scala/Memory/MOB.scala:78:7, :113:34, :119:22
+        MOB_0_memory_type = _RANDOM[6'h0][12:11];	// src/main/scala/Memory/MOB.scala:78:7, :113:34, :119:22
+        MOB_0_ROB_index = _RANDOM[6'h0][18:13];	// src/main/scala/Memory/MOB.scala:78:7, :113:34, :119:22
+        MOB_0_fetch_packet_index = _RANDOM[6'h0][20:19];	// src/main/scala/Memory/MOB.scala:78:7, :113:34, :119:22
+        MOB_0_address = {_RANDOM[6'h0][31:21], _RANDOM[6'h1][20:0]};	// src/main/scala/Memory/MOB.scala:78:7, :113:34, :119:22
+        MOB_0_access_width = _RANDOM[6'h1][22:21];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_0_RD = _RANDOM[6'h1][29:23];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_0_data = {_RANDOM[6'h1][31:30], _RANDOM[6'h2][29:0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_0_data_valid = _RANDOM[6'h2][30];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_0_pending = _RANDOM[6'h2][31];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_0_completed = _RANDOM[6'h3][0];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_0_committed = _RANDOM[6'h3][1];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_0_exception = _RANDOM[6'h3][2];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_1_valid = _RANDOM[6'h3][3];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_1_memory_type = _RANDOM[6'h3][5:4];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_1_ROB_index = _RANDOM[6'h3][11:6];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_1_fetch_packet_index = _RANDOM[6'h3][13:12];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_1_address = {_RANDOM[6'h3][31:14], _RANDOM[6'h4][13:0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_1_access_width = _RANDOM[6'h4][15:14];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_1_RD = _RANDOM[6'h4][22:16];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_1_data = {_RANDOM[6'h4][31:23], _RANDOM[6'h5][22:0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_1_data_valid = _RANDOM[6'h5][23];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_1_pending = _RANDOM[6'h5][24];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_1_completed = _RANDOM[6'h5][25];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_1_committed = _RANDOM[6'h5][26];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_1_exception = _RANDOM[6'h5][27];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_2_valid = _RANDOM[6'h5][28];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_2_memory_type = _RANDOM[6'h5][30:29];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_2_ROB_index = {_RANDOM[6'h5][31], _RANDOM[6'h6][4:0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_2_fetch_packet_index = _RANDOM[6'h6][6:5];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_2_address = {_RANDOM[6'h6][31:7], _RANDOM[6'h7][6:0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_2_access_width = _RANDOM[6'h7][8:7];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_2_RD = _RANDOM[6'h7][15:9];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_2_data = {_RANDOM[6'h7][31:16], _RANDOM[6'h8][15:0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_2_data_valid = _RANDOM[6'h8][16];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_2_pending = _RANDOM[6'h8][17];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_2_completed = _RANDOM[6'h8][18];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_2_committed = _RANDOM[6'h8][19];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_2_exception = _RANDOM[6'h8][20];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_3_valid = _RANDOM[6'h8][21];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_3_memory_type = _RANDOM[6'h8][23:22];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_3_ROB_index = _RANDOM[6'h8][29:24];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_3_fetch_packet_index = _RANDOM[6'h8][31:30];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_3_address = _RANDOM[6'h9];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_3_access_width = _RANDOM[6'hA][1:0];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_3_RD = _RANDOM[6'hA][8:2];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_3_data = {_RANDOM[6'hA][31:9], _RANDOM[6'hB][8:0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_3_data_valid = _RANDOM[6'hB][9];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_3_pending = _RANDOM[6'hB][10];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_3_completed = _RANDOM[6'hB][11];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_3_committed = _RANDOM[6'hB][12];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_3_exception = _RANDOM[6'hB][13];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_4_valid = _RANDOM[6'hB][14];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_4_memory_type = _RANDOM[6'hB][16:15];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_4_ROB_index = _RANDOM[6'hB][22:17];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_4_fetch_packet_index = _RANDOM[6'hB][24:23];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_4_address = {_RANDOM[6'hB][31:25], _RANDOM[6'hC][24:0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_4_access_width = _RANDOM[6'hC][26:25];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_4_RD = {_RANDOM[6'hC][31:27], _RANDOM[6'hD][1:0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_4_data = {_RANDOM[6'hD][31:2], _RANDOM[6'hE][1:0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_4_data_valid = _RANDOM[6'hE][2];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_4_pending = _RANDOM[6'hE][3];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_4_completed = _RANDOM[6'hE][4];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_4_committed = _RANDOM[6'hE][5];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_4_exception = _RANDOM[6'hE][6];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_5_valid = _RANDOM[6'hE][7];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_5_memory_type = _RANDOM[6'hE][9:8];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_5_ROB_index = _RANDOM[6'hE][15:10];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_5_fetch_packet_index = _RANDOM[6'hE][17:16];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_5_address = {_RANDOM[6'hE][31:18], _RANDOM[6'hF][17:0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_5_access_width = _RANDOM[6'hF][19:18];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_5_RD = _RANDOM[6'hF][26:20];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_5_data = {_RANDOM[6'hF][31:27], _RANDOM[6'h10][26:0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_5_data_valid = _RANDOM[6'h10][27];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_5_pending = _RANDOM[6'h10][28];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_5_completed = _RANDOM[6'h10][29];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_5_committed = _RANDOM[6'h10][30];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_5_exception = _RANDOM[6'h10][31];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_6_valid = _RANDOM[6'h11][0];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_6_memory_type = _RANDOM[6'h11][2:1];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_6_ROB_index = _RANDOM[6'h11][8:3];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_6_fetch_packet_index = _RANDOM[6'h11][10:9];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_6_address = {_RANDOM[6'h11][31:11], _RANDOM[6'h12][10:0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_6_access_width = _RANDOM[6'h12][12:11];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_6_RD = _RANDOM[6'h12][19:13];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_6_data = {_RANDOM[6'h12][31:20], _RANDOM[6'h13][19:0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_6_data_valid = _RANDOM[6'h13][20];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_6_pending = _RANDOM[6'h13][21];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_6_completed = _RANDOM[6'h13][22];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_6_committed = _RANDOM[6'h13][23];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_6_exception = _RANDOM[6'h13][24];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_7_valid = _RANDOM[6'h13][25];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_7_memory_type = _RANDOM[6'h13][27:26];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_7_ROB_index = {_RANDOM[6'h13][31:28], _RANDOM[6'h14][1:0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_7_fetch_packet_index = _RANDOM[6'h14][3:2];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_7_address = {_RANDOM[6'h14][31:4], _RANDOM[6'h15][3:0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_7_access_width = _RANDOM[6'h15][5:4];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_7_RD = _RANDOM[6'h15][12:6];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_7_data = {_RANDOM[6'h15][31:13], _RANDOM[6'h16][12:0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_7_data_valid = _RANDOM[6'h16][13];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_7_pending = _RANDOM[6'h16][14];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_7_completed = _RANDOM[6'h16][15];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_7_committed = _RANDOM[6'h16][16];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_7_exception = _RANDOM[6'h16][17];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_8_valid = _RANDOM[6'h16][18];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_8_memory_type = _RANDOM[6'h16][20:19];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_8_ROB_index = _RANDOM[6'h16][26:21];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_8_fetch_packet_index = _RANDOM[6'h16][28:27];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_8_address = {_RANDOM[6'h16][31:29], _RANDOM[6'h17][28:0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_8_access_width = _RANDOM[6'h17][30:29];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_8_RD = {_RANDOM[6'h17][31], _RANDOM[6'h18][5:0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_8_data = {_RANDOM[6'h18][31:6], _RANDOM[6'h19][5:0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_8_data_valid = _RANDOM[6'h19][6];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_8_pending = _RANDOM[6'h19][7];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_8_completed = _RANDOM[6'h19][8];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_8_committed = _RANDOM[6'h19][9];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_8_exception = _RANDOM[6'h19][10];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_9_valid = _RANDOM[6'h19][11];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_9_memory_type = _RANDOM[6'h19][13:12];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_9_ROB_index = _RANDOM[6'h19][19:14];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_9_fetch_packet_index = _RANDOM[6'h19][21:20];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_9_address = {_RANDOM[6'h19][31:22], _RANDOM[6'h1A][21:0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_9_access_width = _RANDOM[6'h1A][23:22];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_9_RD = _RANDOM[6'h1A][30:24];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_9_data = {_RANDOM[6'h1A][31], _RANDOM[6'h1B][30:0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_9_data_valid = _RANDOM[6'h1B][31];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_9_pending = _RANDOM[6'h1C][0];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_9_completed = _RANDOM[6'h1C][1];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_9_committed = _RANDOM[6'h1C][2];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_9_exception = _RANDOM[6'h1C][3];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_10_valid = _RANDOM[6'h1C][4];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_10_memory_type = _RANDOM[6'h1C][6:5];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_10_ROB_index = _RANDOM[6'h1C][12:7];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_10_fetch_packet_index = _RANDOM[6'h1C][14:13];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_10_address = {_RANDOM[6'h1C][31:15], _RANDOM[6'h1D][14:0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_10_access_width = _RANDOM[6'h1D][16:15];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_10_RD = _RANDOM[6'h1D][23:17];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_10_data = {_RANDOM[6'h1D][31:24], _RANDOM[6'h1E][23:0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_10_data_valid = _RANDOM[6'h1E][24];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_10_pending = _RANDOM[6'h1E][25];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_10_completed = _RANDOM[6'h1E][26];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_10_committed = _RANDOM[6'h1E][27];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_10_exception = _RANDOM[6'h1E][28];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_11_valid = _RANDOM[6'h1E][29];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_11_memory_type = _RANDOM[6'h1E][31:30];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_11_ROB_index = _RANDOM[6'h1F][5:0];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_11_fetch_packet_index = _RANDOM[6'h1F][7:6];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_11_address = {_RANDOM[6'h1F][31:8], _RANDOM[6'h20][7:0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_11_access_width = _RANDOM[6'h20][9:8];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_11_RD = _RANDOM[6'h20][16:10];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_11_data = {_RANDOM[6'h20][31:17], _RANDOM[6'h21][16:0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_11_data_valid = _RANDOM[6'h21][17];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_11_pending = _RANDOM[6'h21][18];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_11_completed = _RANDOM[6'h21][19];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_11_committed = _RANDOM[6'h21][20];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_11_exception = _RANDOM[6'h21][21];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_12_valid = _RANDOM[6'h21][22];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_12_memory_type = _RANDOM[6'h21][24:23];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_12_ROB_index = _RANDOM[6'h21][30:25];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_12_fetch_packet_index = {_RANDOM[6'h21][31], _RANDOM[6'h22][0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_12_address = {_RANDOM[6'h22][31:1], _RANDOM[6'h23][0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_12_access_width = _RANDOM[6'h23][2:1];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_12_RD = _RANDOM[6'h23][9:3];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_12_data = {_RANDOM[6'h23][31:10], _RANDOM[6'h24][9:0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_12_data_valid = _RANDOM[6'h24][10];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_12_pending = _RANDOM[6'h24][11];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_12_completed = _RANDOM[6'h24][12];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_12_committed = _RANDOM[6'h24][13];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_12_exception = _RANDOM[6'h24][14];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_13_valid = _RANDOM[6'h24][15];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_13_memory_type = _RANDOM[6'h24][17:16];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_13_ROB_index = _RANDOM[6'h24][23:18];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_13_fetch_packet_index = _RANDOM[6'h24][25:24];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_13_address = {_RANDOM[6'h24][31:26], _RANDOM[6'h25][25:0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_13_access_width = _RANDOM[6'h25][27:26];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_13_RD = {_RANDOM[6'h25][31:28], _RANDOM[6'h26][2:0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_13_data = {_RANDOM[6'h26][31:3], _RANDOM[6'h27][2:0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_13_data_valid = _RANDOM[6'h27][3];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_13_pending = _RANDOM[6'h27][4];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_13_completed = _RANDOM[6'h27][5];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_13_committed = _RANDOM[6'h27][6];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_13_exception = _RANDOM[6'h27][7];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_14_valid = _RANDOM[6'h27][8];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_14_memory_type = _RANDOM[6'h27][10:9];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_14_ROB_index = _RANDOM[6'h27][16:11];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_14_fetch_packet_index = _RANDOM[6'h27][18:17];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_14_address = {_RANDOM[6'h27][31:19], _RANDOM[6'h28][18:0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_14_access_width = _RANDOM[6'h28][20:19];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_14_RD = _RANDOM[6'h28][27:21];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_14_data = {_RANDOM[6'h28][31:28], _RANDOM[6'h29][27:0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_14_data_valid = _RANDOM[6'h29][28];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_14_pending = _RANDOM[6'h29][29];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_14_completed = _RANDOM[6'h29][30];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_14_committed = _RANDOM[6'h29][31];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_14_exception = _RANDOM[6'h2A][0];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_15_valid = _RANDOM[6'h2A][1];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_15_memory_type = _RANDOM[6'h2A][3:2];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_15_ROB_index = _RANDOM[6'h2A][9:4];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_15_fetch_packet_index = _RANDOM[6'h2A][11:10];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_15_address = {_RANDOM[6'h2A][31:12], _RANDOM[6'h2B][11:0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_15_access_width = _RANDOM[6'h2B][13:12];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_15_RD = _RANDOM[6'h2B][20:14];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_15_data = {_RANDOM[6'h2B][31:21], _RANDOM[6'h2C][20:0]};	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_15_data_valid = _RANDOM[6'h2C][21];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_15_pending = _RANDOM[6'h2C][22];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_15_completed = _RANDOM[6'h2C][23];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_15_committed = _RANDOM[6'h2C][24];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
+        MOB_15_exception = _RANDOM[6'h2C][25];	// src/main/scala/Memory/MOB.scala:78:7, :119:22
       `endif // RANDOMIZE_REG_INIT
     end // initial
     `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/Memory/MOB.scala:78:7
       `FIRRTL_AFTER_INITIAL	// src/main/scala/Memory/MOB.scala:78:7
     `endif // FIRRTL_AFTER_INITIAL
   `endif // ENABLE_INITIAL_REG_
-  Queue4_FU_output FU_output_load_Q (	// src/main/scala/Memory/MOB.scala:293:41
-    .clock                 (clock),
-    .reset                 (reset),
+  Queue4_FU_output FU_output_load_Q (	// src/main/scala/Memory/MOB.scala:306:41
+    .clock                          (clock),
+    .reset                          (reset),
     .io_enq_valid
-      (_FU_output_load_Q_io_enq_valid_T | possible_FU_stores_2 | possible_FU_stores_3
-       | possible_FU_stores_4 | possible_FU_stores_5 | possible_FU_stores_6
-       | possible_FU_stores_7 | possible_FU_stores_8 | possible_FU_stores_9
-       | possible_FU_stores_10 | possible_FU_stores_11 | possible_FU_stores_12
-       | possible_FU_stores_13 | possible_FU_stores_14 | possible_FU_stores_15),	// src/main/scala/Memory/MOB.scala:300:{96,118}, :306:81, :358:80
-    .io_enq_bits_RD        (_GEN_3[possible_FU_load_index]),	// src/main/scala/Memory/MOB.scala:360:49, src/main/scala/chisel3/util/Mux.scala:50:70
-    .io_enq_bits_RD_valid  (1'h1),
-    .io_enq_bits_ROB_index (_GEN_2[possible_FU_load_index]),	// src/main/scala/Memory/MOB.scala:308:50, :360:49, src/main/scala/chisel3/util/Mux.scala:50:70
-    .io_deq_ready          (1'h1),
-    .io_deq_valid          (_FU_output_load_Q_io_deq_valid),
-    .io_deq_bits_RD        (_FU_output_load_Q_io_deq_bits_RD),
-    .io_deq_bits_RD_data   (_FU_output_load_Q_io_deq_bits_RD_data),
-    .io_deq_bits_RD_valid  (_FU_output_load_Q_io_deq_bits_RD_valid),
-    .io_flush              (io_commit_valid & _FU_output_load_Q_io_flush_T)	// src/main/scala/Memory/MOB.scala:275:62, :366:54
-  );	// src/main/scala/Memory/MOB.scala:293:41
-  Queue4_FU_output FU_output_store_Q (	// src/main/scala/Memory/MOB.scala:294:41
-    .clock                 (clock),
-    .reset                 (reset),
+      (possible_FU_loads_0 | possible_FU_loads_1 | possible_FU_loads_2
+       | possible_FU_loads_3 | possible_FU_loads_4 | possible_FU_loads_5
+       | possible_FU_loads_6 | possible_FU_loads_7 | possible_FU_loads_8
+       | possible_FU_loads_9 | possible_FU_loads_10 | possible_FU_loads_11
+       | possible_FU_loads_12 | possible_FU_loads_13 | possible_FU_loads_14 | _GEN_31
+       & MOB_15_data_valid & is_load_15),	// src/main/scala/Memory/MOB.scala:119:22, :206:50, :312:{72,96,120}, :369:85
+    .io_enq_bits_RD                 (_GEN_43[possible_FU_load_index]),	// src/main/scala/Memory/MOB.scala:371:55, src/main/scala/chisel3/util/Mux.scala:50:70
+    .io_enq_bits_RD_data
+      ({is_store ? _GEN_42[MOB_0_access_width] : 8'h0,
+        is_store ? _GEN_40[MOB_0_access_width] : 8'h0,
+        is_store ? _GEN_38[MOB_0_access_width] : 8'h0,
+        is_store
+          ? (MOB_0_access_width == 2'h1
+               ? (_GEN_34 ? MOB_0_data[7:0] : 8'h0)
+               : MOB_0_access_width == 2'h2
+                   ? (_GEN_34 ? MOB_0_data[7:0] : 8'h0)
+                   : (&MOB_0_access_width) & _GEN_34 ? MOB_0_data[7:0] : 8'h0)
+          : 8'h0}),	// src/main/scala/Memory/MOB.scala:119:22, :151:63, :207:50, :375:55, src/main/scala/utils.scala:270:14, :273:20, :274:28, :277:{35,42}, :281:33, :283:{27,34}, :301:33, :303:{27,34}
+    .io_enq_bits_RD_valid           (1'h1),
+    .io_enq_bits_ROB_index          (_GEN_32[possible_FU_load_index]),	// src/main/scala/Memory/MOB.scala:323:50, :371:55, src/main/scala/chisel3/util/Mux.scala:50:70
+    .io_enq_bits_fetch_packet_index (_GEN_33[possible_FU_load_index]),	// src/main/scala/Memory/MOB.scala:323:50, :371:55, src/main/scala/chisel3/util/Mux.scala:50:70
+    .io_enq_bits_exception          (_GEN_14[possible_FU_load_index]),	// src/main/scala/Memory/MOB.scala:236:52, :371:55, src/main/scala/chisel3/util/Mux.scala:50:70
+    .io_deq_ready                   (_FU_output_arbiter_io_in_0_ready),	// src/main/scala/Memory/MOB.scala:384:41
+    .io_deq_valid                   (_FU_output_load_Q_io_deq_valid),
+    .io_deq_bits_RD                 (_FU_output_load_Q_io_deq_bits_RD),
+    .io_deq_bits_RD_data            (_FU_output_load_Q_io_deq_bits_RD_data),
+    .io_deq_bits_RD_valid           (_FU_output_load_Q_io_deq_bits_RD_valid),
+    .io_deq_bits_fetch_PC           (_FU_output_load_Q_io_deq_bits_fetch_PC),
+    .io_deq_bits_branch_taken       (_FU_output_load_Q_io_deq_bits_branch_taken),
+    .io_deq_bits_target_address     (_FU_output_load_Q_io_deq_bits_target_address),
+    .io_deq_bits_branch_valid       (_FU_output_load_Q_io_deq_bits_branch_valid),
+    .io_deq_bits_address            (_FU_output_load_Q_io_deq_bits_address),
+    .io_deq_bits_memory_type        (_FU_output_load_Q_io_deq_bits_memory_type),
+    .io_deq_bits_access_width       (_FU_output_load_Q_io_deq_bits_access_width),
+    .io_deq_bits_is_unsigned        (_FU_output_load_Q_io_deq_bits_is_unsigned),
+    .io_deq_bits_wr_data            (_FU_output_load_Q_io_deq_bits_wr_data),
+    .io_deq_bits_MOB_index          (_FU_output_load_Q_io_deq_bits_MOB_index),
+    .io_deq_bits_ROB_index          (_FU_output_load_Q_io_deq_bits_ROB_index),
+    .io_deq_bits_FTQ_index          (_FU_output_load_Q_io_deq_bits_FTQ_index),
+    .io_deq_bits_fetch_packet_index (_FU_output_load_Q_io_deq_bits_fetch_packet_index),
+    .io_deq_bits_exception          (_FU_output_load_Q_io_deq_bits_exception),
+    .io_flush                       (io_commit_valid & _FU_output_load_Q_io_flush_T)	// src/main/scala/Memory/MOB.scala:286:62, :378:54
+  );	// src/main/scala/Memory/MOB.scala:306:41
+  Queue4_FU_output FU_output_store_Q (	// src/main/scala/Memory/MOB.scala:307:41
+    .clock                          (clock),
+    .reset                          (reset),
     .io_enq_valid
-      (_FU_output_load_Q_io_enq_valid_T | possible_FU_stores_2 | possible_FU_stores_3
-       | possible_FU_stores_4 | possible_FU_stores_5 | possible_FU_stores_6
-       | possible_FU_stores_7 | possible_FU_stores_8 | possible_FU_stores_9
-       | possible_FU_stores_10 | possible_FU_stores_11 | possible_FU_stores_12
-       | possible_FU_stores_13 | possible_FU_stores_14 | possible_FU_stores_15),	// src/main/scala/Memory/MOB.scala:300:{96,118}, :306:81
-    .io_enq_bits_RD        (7'h0),
-    .io_enq_bits_RD_valid  (1'h0),
-    .io_enq_bits_ROB_index
-      (_GEN_2[possible_FU_stores_0
-                ? 4'h0
-                : possible_FU_stores_1
-                    ? 4'h1
-                    : possible_FU_stores_2
-                        ? 4'h2
-                        : possible_FU_stores_3
-                            ? 4'h3
-                            : possible_FU_stores_4
-                                ? 4'h4
-                                : possible_FU_stores_5
-                                    ? 4'h5
-                                    : possible_FU_stores_6
-                                        ? 4'h6
-                                        : possible_FU_stores_7
-                                            ? 4'h7
-                                            : possible_FU_stores_8
-                                                ? 4'h8
-                                                : possible_FU_stores_9
-                                                    ? 4'h9
-                                                    : possible_FU_stores_10
-                                                        ? 4'hA
-                                                        : possible_FU_stores_11
-                                                            ? 4'hB
-                                                            : possible_FU_stores_12
-                                                                ? 4'hC
-                                                                : possible_FU_stores_13
-                                                                    ? 4'hD
-                                                                    : {3'h7,
-                                                                       ~possible_FU_stores_14}]),	// src/main/scala/Memory/MOB.scala:151:63, :300:{96,118}, :308:50, src/main/scala/chisel3/util/Mux.scala:50:70
-    .io_deq_ready          (_FU_output_arbiter_io_in_1_ready),	// src/main/scala/Memory/MOB.scala:372:41
-    .io_deq_valid          (_FU_output_store_Q_io_deq_valid),
-    .io_deq_bits_RD        (_FU_output_store_Q_io_deq_bits_RD),
-    .io_deq_bits_RD_data   (_FU_output_store_Q_io_deq_bits_RD_data),
-    .io_deq_bits_RD_valid  (_FU_output_store_Q_io_deq_bits_RD_valid),
-    .io_flush              (io_commit_valid & _FU_output_load_Q_io_flush_T)	// src/main/scala/Memory/MOB.scala:275:62, :310:55
-  );	// src/main/scala/Memory/MOB.scala:294:41
-  Arbiter2_FU_output FU_output_arbiter (	// src/main/scala/Memory/MOB.scala:372:41
-    .io_in_0_valid         (_FU_output_load_Q_io_deq_valid),	// src/main/scala/Memory/MOB.scala:293:41
-    .io_in_0_bits_RD       (_FU_output_load_Q_io_deq_bits_RD),	// src/main/scala/Memory/MOB.scala:293:41
-    .io_in_0_bits_RD_data  (_FU_output_load_Q_io_deq_bits_RD_data),	// src/main/scala/Memory/MOB.scala:293:41
-    .io_in_0_bits_RD_valid (_FU_output_load_Q_io_deq_bits_RD_valid),	// src/main/scala/Memory/MOB.scala:293:41
-    .io_in_1_ready         (_FU_output_arbiter_io_in_1_ready),
-    .io_in_1_valid         (_FU_output_store_Q_io_deq_valid),	// src/main/scala/Memory/MOB.scala:294:41
-    .io_in_1_bits_RD       (_FU_output_store_Q_io_deq_bits_RD),	// src/main/scala/Memory/MOB.scala:294:41
-    .io_in_1_bits_RD_data  (_FU_output_store_Q_io_deq_bits_RD_data),	// src/main/scala/Memory/MOB.scala:294:41
-    .io_in_1_bits_RD_valid (_FU_output_store_Q_io_deq_bits_RD_valid),	// src/main/scala/Memory/MOB.scala:294:41
-    .io_out_valid          (io_MOB_output_valid),
-    .io_out_bits_RD        (io_MOB_output_bits_RD),
-    .io_out_bits_RD_data   (io_MOB_output_bits_RD_data),
-    .io_out_bits_RD_valid  (io_MOB_output_bits_RD_valid)
-  );	// src/main/scala/Memory/MOB.scala:372:41
-  assign io_backend_memory_request_valid = (|_GEN_1) | fire_store;	// src/main/scala/Memory/MOB.scala:78:7, :226:{52,113}, :228:{28,35,41}, :231:53, :236:27
+      (possible_FU_stores_0 | possible_FU_stores_1 | possible_FU_stores_2
+       | possible_FU_stores_3 | possible_FU_stores_4 | possible_FU_stores_5
+       | possible_FU_stores_6 | possible_FU_stores_7 | possible_FU_stores_8
+       | possible_FU_stores_9 | possible_FU_stores_10 | possible_FU_stores_11
+       | possible_FU_stores_12 | possible_FU_stores_13 | possible_FU_stores_14 | _GEN_31
+       & MOB_15_pending & MOB_15_memory_type == 2'h2),	// src/main/scala/Memory/MOB.scala:119:22, :207:50, :312:72, :313:{96,118}, :321:81
+    .io_enq_bits_RD                 (7'h0),
+    .io_enq_bits_RD_data            (32'h0),
+    .io_enq_bits_RD_valid           (1'h0),
+    .io_enq_bits_ROB_index          (_GEN_32[possible_FU_store_index]),	// src/main/scala/Memory/MOB.scala:323:50, src/main/scala/chisel3/util/Mux.scala:50:70
+    .io_enq_bits_fetch_packet_index (_GEN_33[possible_FU_store_index]),	// src/main/scala/Memory/MOB.scala:323:50, src/main/scala/chisel3/util/Mux.scala:50:70
+    .io_enq_bits_exception          (_GEN_14[possible_FU_store_index]),	// src/main/scala/Memory/MOB.scala:236:52, :323:50, src/main/scala/chisel3/util/Mux.scala:50:70
+    .io_deq_ready                   (_FU_output_arbiter_io_in_1_ready),	// src/main/scala/Memory/MOB.scala:384:41
+    .io_deq_valid                   (_FU_output_store_Q_io_deq_valid),
+    .io_deq_bits_RD                 (_FU_output_store_Q_io_deq_bits_RD),
+    .io_deq_bits_RD_data            (_FU_output_store_Q_io_deq_bits_RD_data),
+    .io_deq_bits_RD_valid           (_FU_output_store_Q_io_deq_bits_RD_valid),
+    .io_deq_bits_fetch_PC           (_FU_output_store_Q_io_deq_bits_fetch_PC),
+    .io_deq_bits_branch_taken       (_FU_output_store_Q_io_deq_bits_branch_taken),
+    .io_deq_bits_target_address     (_FU_output_store_Q_io_deq_bits_target_address),
+    .io_deq_bits_branch_valid       (_FU_output_store_Q_io_deq_bits_branch_valid),
+    .io_deq_bits_address            (_FU_output_store_Q_io_deq_bits_address),
+    .io_deq_bits_memory_type        (_FU_output_store_Q_io_deq_bits_memory_type),
+    .io_deq_bits_access_width       (_FU_output_store_Q_io_deq_bits_access_width),
+    .io_deq_bits_is_unsigned        (_FU_output_store_Q_io_deq_bits_is_unsigned),
+    .io_deq_bits_wr_data            (_FU_output_store_Q_io_deq_bits_wr_data),
+    .io_deq_bits_MOB_index          (_FU_output_store_Q_io_deq_bits_MOB_index),
+    .io_deq_bits_ROB_index          (_FU_output_store_Q_io_deq_bits_ROB_index),
+    .io_deq_bits_FTQ_index          (_FU_output_store_Q_io_deq_bits_FTQ_index),
+    .io_deq_bits_fetch_packet_index (_FU_output_store_Q_io_deq_bits_fetch_packet_index),
+    .io_deq_bits_exception          (_FU_output_store_Q_io_deq_bits_exception),
+    .io_flush                       (io_commit_valid & _FU_output_load_Q_io_flush_T)	// src/main/scala/Memory/MOB.scala:286:62, :326:55
+  );	// src/main/scala/Memory/MOB.scala:307:41
+  Arbiter2_FU_output FU_output_arbiter (	// src/main/scala/Memory/MOB.scala:384:41
+    .io_in_0_ready                   (_FU_output_arbiter_io_in_0_ready),
+    .io_in_0_valid                   (_FU_output_load_Q_io_deq_valid),	// src/main/scala/Memory/MOB.scala:306:41
+    .io_in_0_bits_RD                 (_FU_output_load_Q_io_deq_bits_RD),	// src/main/scala/Memory/MOB.scala:306:41
+    .io_in_0_bits_RD_data            (_FU_output_load_Q_io_deq_bits_RD_data),	// src/main/scala/Memory/MOB.scala:306:41
+    .io_in_0_bits_RD_valid           (_FU_output_load_Q_io_deq_bits_RD_valid),	// src/main/scala/Memory/MOB.scala:306:41
+    .io_in_0_bits_fetch_PC           (_FU_output_load_Q_io_deq_bits_fetch_PC),	// src/main/scala/Memory/MOB.scala:306:41
+    .io_in_0_bits_branch_taken       (_FU_output_load_Q_io_deq_bits_branch_taken),	// src/main/scala/Memory/MOB.scala:306:41
+    .io_in_0_bits_target_address     (_FU_output_load_Q_io_deq_bits_target_address),	// src/main/scala/Memory/MOB.scala:306:41
+    .io_in_0_bits_branch_valid       (_FU_output_load_Q_io_deq_bits_branch_valid),	// src/main/scala/Memory/MOB.scala:306:41
+    .io_in_0_bits_address            (_FU_output_load_Q_io_deq_bits_address),	// src/main/scala/Memory/MOB.scala:306:41
+    .io_in_0_bits_memory_type        (_FU_output_load_Q_io_deq_bits_memory_type),	// src/main/scala/Memory/MOB.scala:306:41
+    .io_in_0_bits_access_width       (_FU_output_load_Q_io_deq_bits_access_width),	// src/main/scala/Memory/MOB.scala:306:41
+    .io_in_0_bits_is_unsigned        (_FU_output_load_Q_io_deq_bits_is_unsigned),	// src/main/scala/Memory/MOB.scala:306:41
+    .io_in_0_bits_wr_data            (_FU_output_load_Q_io_deq_bits_wr_data),	// src/main/scala/Memory/MOB.scala:306:41
+    .io_in_0_bits_MOB_index          (_FU_output_load_Q_io_deq_bits_MOB_index),	// src/main/scala/Memory/MOB.scala:306:41
+    .io_in_0_bits_ROB_index          (_FU_output_load_Q_io_deq_bits_ROB_index),	// src/main/scala/Memory/MOB.scala:306:41
+    .io_in_0_bits_FTQ_index          (_FU_output_load_Q_io_deq_bits_FTQ_index),	// src/main/scala/Memory/MOB.scala:306:41
+    .io_in_0_bits_fetch_packet_index (_FU_output_load_Q_io_deq_bits_fetch_packet_index),	// src/main/scala/Memory/MOB.scala:306:41
+    .io_in_0_bits_exception          (_FU_output_load_Q_io_deq_bits_exception),	// src/main/scala/Memory/MOB.scala:306:41
+    .io_in_1_ready                   (_FU_output_arbiter_io_in_1_ready),
+    .io_in_1_valid                   (_FU_output_store_Q_io_deq_valid),	// src/main/scala/Memory/MOB.scala:307:41
+    .io_in_1_bits_RD                 (_FU_output_store_Q_io_deq_bits_RD),	// src/main/scala/Memory/MOB.scala:307:41
+    .io_in_1_bits_RD_data            (_FU_output_store_Q_io_deq_bits_RD_data),	// src/main/scala/Memory/MOB.scala:307:41
+    .io_in_1_bits_RD_valid           (_FU_output_store_Q_io_deq_bits_RD_valid),	// src/main/scala/Memory/MOB.scala:307:41
+    .io_in_1_bits_fetch_PC           (_FU_output_store_Q_io_deq_bits_fetch_PC),	// src/main/scala/Memory/MOB.scala:307:41
+    .io_in_1_bits_branch_taken       (_FU_output_store_Q_io_deq_bits_branch_taken),	// src/main/scala/Memory/MOB.scala:307:41
+    .io_in_1_bits_target_address     (_FU_output_store_Q_io_deq_bits_target_address),	// src/main/scala/Memory/MOB.scala:307:41
+    .io_in_1_bits_branch_valid       (_FU_output_store_Q_io_deq_bits_branch_valid),	// src/main/scala/Memory/MOB.scala:307:41
+    .io_in_1_bits_address            (_FU_output_store_Q_io_deq_bits_address),	// src/main/scala/Memory/MOB.scala:307:41
+    .io_in_1_bits_memory_type        (_FU_output_store_Q_io_deq_bits_memory_type),	// src/main/scala/Memory/MOB.scala:307:41
+    .io_in_1_bits_access_width       (_FU_output_store_Q_io_deq_bits_access_width),	// src/main/scala/Memory/MOB.scala:307:41
+    .io_in_1_bits_is_unsigned        (_FU_output_store_Q_io_deq_bits_is_unsigned),	// src/main/scala/Memory/MOB.scala:307:41
+    .io_in_1_bits_wr_data            (_FU_output_store_Q_io_deq_bits_wr_data),	// src/main/scala/Memory/MOB.scala:307:41
+    .io_in_1_bits_MOB_index          (_FU_output_store_Q_io_deq_bits_MOB_index),	// src/main/scala/Memory/MOB.scala:307:41
+    .io_in_1_bits_ROB_index          (_FU_output_store_Q_io_deq_bits_ROB_index),	// src/main/scala/Memory/MOB.scala:307:41
+    .io_in_1_bits_FTQ_index          (_FU_output_store_Q_io_deq_bits_FTQ_index),	// src/main/scala/Memory/MOB.scala:307:41
+    .io_in_1_bits_fetch_packet_index (_FU_output_store_Q_io_deq_bits_fetch_packet_index),	// src/main/scala/Memory/MOB.scala:307:41
+    .io_in_1_bits_exception          (_FU_output_store_Q_io_deq_bits_exception),	// src/main/scala/Memory/MOB.scala:307:41
+    .io_out_ready                    (1'h1),
+    .io_out_valid                    (io_MOB_output_valid),
+    .io_out_bits_RD                  (io_MOB_output_bits_RD),
+    .io_out_bits_RD_data             (io_MOB_output_bits_RD_data),
+    .io_out_bits_RD_valid            (io_MOB_output_bits_RD_valid),
+    .io_out_bits_fetch_PC            (io_MOB_output_bits_fetch_PC),
+    .io_out_bits_branch_taken        (io_MOB_output_bits_branch_taken),
+    .io_out_bits_target_address      (io_MOB_output_bits_target_address),
+    .io_out_bits_branch_valid        (io_MOB_output_bits_branch_valid),
+    .io_out_bits_address             (io_MOB_output_bits_address),
+    .io_out_bits_memory_type         (io_MOB_output_bits_memory_type),
+    .io_out_bits_access_width        (io_MOB_output_bits_access_width),
+    .io_out_bits_is_unsigned         (io_MOB_output_bits_is_unsigned),
+    .io_out_bits_wr_data             (io_MOB_output_bits_wr_data),
+    .io_out_bits_MOB_index           (io_MOB_output_bits_MOB_index),
+    .io_out_bits_ROB_index           (io_MOB_output_bits_ROB_index),
+    .io_out_bits_FTQ_index           (io_MOB_output_bits_FTQ_index),
+    .io_out_bits_fetch_packet_index  (io_MOB_output_bits_fetch_packet_index),
+    .io_out_bits_exception           (io_MOB_output_bits_exception)
+  );	// src/main/scala/Memory/MOB.scala:384:41
+  assign io_reserve_0_ready = |_availalbe_MOB_entries_4to2;	// src/main/scala/Memory/MOB.scala:78:7, :415:54
+  assign io_reserve_1_ready = |_availalbe_MOB_entries_4to2;	// src/main/scala/Memory/MOB.scala:78:7, :415:54
+  assign io_reserve_2_ready = |_availalbe_MOB_entries_4to2;	// src/main/scala/Memory/MOB.scala:78:7, :415:54
+  assign io_reserve_3_ready = |_availalbe_MOB_entries_4to2;	// src/main/scala/Memory/MOB.scala:78:7, :415:54
+  assign io_reserved_pointers_0_valid = written_vec_0;	// src/main/scala/Memory/MOB.scala:78:7, :142:34
+  assign io_reserved_pointers_0_bits =
+    written_vec_0 ? _io_reserved_pointers_0_bits_T : 4'h0;	// src/main/scala/Memory/MOB.scala:78:7, :142:34, :149:39, :150:29, :153:28, :159:46
+  assign io_reserved_pointers_1_valid = written_vec_1;	// src/main/scala/Memory/MOB.scala:78:7, :142:34
+  assign io_reserved_pointers_1_bits =
+    written_vec_1 ? _io_reserved_pointers_1_bits_T : 4'h0;	// src/main/scala/Memory/MOB.scala:78:7, :142:34, :149:39, :150:29, :153:28, :159:46
+  assign io_reserved_pointers_2_valid = written_vec_2;	// src/main/scala/Memory/MOB.scala:78:7, :142:34
+  assign io_reserved_pointers_2_bits =
+    written_vec_2 ? _io_reserved_pointers_2_bits_T : 4'h0;	// src/main/scala/Memory/MOB.scala:78:7, :142:34, :149:39, :150:29, :153:28, :159:46
+  assign io_reserved_pointers_3_valid = written_vec_3;	// src/main/scala/Memory/MOB.scala:78:7, :142:34
+  assign io_reserved_pointers_3_bits =
+    written_vec_3 ? _io_reserved_pointers_3_bits_T : 4'h0;	// src/main/scala/Memory/MOB.scala:78:7, :142:34, :149:39, :150:29, :153:28, :159:46
+  assign io_backend_memory_request_valid = (|_GEN_15) | fire_store;	// src/main/scala/Memory/MOB.scala:78:7, :236:{52,82,110,141}, :238:{28,35,41}, :241:53, :246:27
   assign io_backend_memory_request_bits_addr =
-    (|_GEN_1) ? _GEN_0[load_index] : fire_store ? MOB_0_address : 32'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22, :219:38, :226:{52,113}, :228:{28,35,41}, :230:53, :232:53, :236:27, :240:53, src/main/scala/chisel3/util/Mux.scala:50:70
+    (|_GEN_15) ? _GEN_7[load_index] : fire_store ? _GEN_7[front_pointer[3:0]] : 32'h0;	// src/main/scala/Memory/MOB.scala:78:7, :113:34, :116:40, :229:38, :236:{52,82,110,141}, :238:{28,35,41}, :240:53, :242:53, :246:27, :250:53, src/main/scala/chisel3/util/Mux.scala:50:70
+  assign io_backend_memory_request_bits_data =
+    (|_GEN_15) | ~fire_store ? 32'h0 : _GEN_9[front_pointer[3:0]];	// src/main/scala/Memory/MOB.scala:78:7, :113:34, :116:40, :229:38, :236:{52,82,110,141}, :238:{28,35,41}, :246:27
   assign io_backend_memory_request_bits_memory_type =
-    (|_GEN_1) ? _GEN[load_index] : fire_store ? MOB_0_memory_type : 2'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22, :219:38, :226:{52,113}, :228:{28,35,41}, :230:53, :233:53, :236:27, :241:53, src/main/scala/chisel3/util/Mux.scala:50:70
+    (|_GEN_15) ? _GEN_5[load_index] : fire_store ? _GEN_6 : 2'h0;	// src/main/scala/Memory/MOB.scala:78:7, :229:38, :236:{52,82,110,141}, :238:{28,35,41}, :240:53, :243:53, :246:27, :251:53, src/main/scala/chisel3/util/Mux.scala:50:70
+  assign io_backend_memory_request_bits_access_width =
+    (|_GEN_15) ? _GEN_8[load_index] : fire_store ? _GEN_8[front_pointer[3:0]] : 2'h0;	// src/main/scala/Memory/MOB.scala:78:7, :113:34, :116:40, :229:38, :236:{52,82,110,141}, :238:{28,35,41}, :240:53, :244:53, :246:27, :252:53, src/main/scala/chisel3/util/Mux.scala:50:70
   assign io_backend_memory_request_bits_MOB_index =
-    ~(|_GEN_1) | possible_load_vec_0 ? 4'h0 : _load_index_T_13;	// src/main/scala/Memory/MOB.scala:78:7, :225:{66,87}, :228:{28,35,41}, :230:53, :235:53, :236:27, src/main/scala/chisel3/util/Mux.scala:50:70
+    (|_GEN_15) ? load_index : fire_store ? front_pointer[3:0] : 4'h0;	// src/main/scala/Memory/MOB.scala:78:7, :113:34, :116:40, :229:38, :236:{52,82,110,141}, :238:{28,35,41}, :245:53, :246:27, :254:53, src/main/scala/chisel3/util/Mux.scala:50:70
+  assign io_backend_memory_response_ready = 1'h1;	// src/main/scala/Memory/MOB.scala:78:7
 endmodule
 

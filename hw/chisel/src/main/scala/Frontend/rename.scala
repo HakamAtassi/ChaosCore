@@ -135,8 +135,8 @@ class RAT(coreParameters:CoreParameters) extends Module{
     ////////////////
     // write RAT
     for (i <- 0 until fetchWidth){
-        when(io.commit.valid && (io.commit.bits.RD_valid(i))){
-            speculative_RAT(io.commit.bits.RDold(i)) := io.commit.bits.RD(i)
+        when(io.commit.valid && (io.commit.bits.RD_valid(i) && !(io.commit.valid && (io.commit.bits.is_misprediction || io.commit.bits.exception)))){
+            commit_RAT(io.commit.bits.RDold(i)) := io.commit.bits.RD(i)
         }
     }
 
@@ -187,7 +187,9 @@ class rename(coreParameters:CoreParameters) extends Module{
     //////////////////
     // HELPER WIRES //
     //////////////////
-    val fire = io.predictions_in.ready && io.decoded_fetch_packet.ready && io.predictions_in.valid && io.decoded_fetch_packet.valid
+    
+    // FIXME: broke
+    val fire = (io.predictions_in.fire || !io.predictions_in.valid) && (io.decoded_fetch_packet.fire)
 
     ////////////////////
     // OUTPUT BUNDLES //
@@ -334,9 +336,10 @@ class rename(coreParameters:CoreParameters) extends Module{
     val predictions_out_Q               = Module(new Queue(new FTQ_entry(coreParameters), 2, flow=false, hasFlush=true, useSyncReadMem=false))
     val renamed_decoded_fetch_packet_Q  = Module(new Queue(new decoded_fetch_packet(coreParameters), 2, flow=false, hasFlush=true, useSyncReadMem=false))
 
-    val inputs_valid                    = io.predictions_in.valid && io.decoded_fetch_packet.valid && !io.flush
-
     val outputs_ready                   = free_list.io.can_allocate && io.renamed_decoded_fetch_packet.ready && io.predictions_out.ready 
+
+    //decoded_fetch_packet.valid                          := io.fetch_packet.valid && !io.flush
+    //predictions_out.valid                               := io.fetch_packet.fire && io.predictions_in.valid && !io.flush
 
     renamed_decoded_fetch_packet_Q.io.enq                   <> renamed_decoded_fetch_packet
     renamed_decoded_fetch_packet_Q.io.deq                   <> io.renamed_decoded_fetch_packet
@@ -350,6 +353,7 @@ class rename(coreParameters:CoreParameters) extends Module{
     }
 
     predictions_out_Q.io.enq                                <> io.predictions_in
+    predictions_out_Q.io.enq.valid                          := fire
     predictions_out_Q.io.deq                                <> io.predictions_out
     predictions_out_Q.io.flush.get                          <> io.flush
 

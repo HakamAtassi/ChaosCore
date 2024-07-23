@@ -98,7 +98,7 @@ class PC_gen(coreParameters:CoreParameters) extends Module{
     }.elsewhen(use_RAS){
         PC_mux := io.RAS_read.ret_addr
     }.elsewhen(RegNext(flushing_event)){
-        PC_mux := PC_reg
+        PC_mux := flush_PC_reg
     }.otherwise{
         PC_mux := PC_reg 
     }

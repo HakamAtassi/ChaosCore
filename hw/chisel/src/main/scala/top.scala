@@ -55,7 +55,7 @@ object Main extends App {
 
     val coreParameters = CoreParameters()
     val addressMap = AddressMap()
-    val nocParameters = NOCParameters()
+    //val nocParameters = NOCParameters()
 
     ChiselStage.emitSystemVerilogFile(new ChaosCore(coreParameters), Array("--split-verilog", 
                                                                         "--target", "verilog", 
@@ -69,8 +69,8 @@ object Main extends App {
 
 
 
-    //VerilogGenerator.generateVerilog(new SOC(coreParameters, addressMap, nocParameters), 
-     //"../verilog/Core/ChaosCore.v")
+    VerilogGenerator.generateVerilog(new ChaosCore(coreParameters), 
+     "../verilog/Core/ChaosCore.v")
 
     //removeYosysInvalid("../verilog/")
     //generate_sv_interfaces("src/main/scala/coreParameters.scala", "src/main/scala/bundles.scala")

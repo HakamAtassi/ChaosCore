@@ -283,17 +283,16 @@ module fetch_packet_decoder(	// src/main/scala/Frontend/decoder.scala:211:7
   wire        _decoders_0_io_decoded_instruction_bits_IS_IMM;	// src/main/scala/Frontend/decoder.scala:231:15
   wire [1:0]  _decoders_0_io_decoded_instruction_bits_memory_type;	// src/main/scala/Frontend/decoder.scala:231:15
   wire [1:0]  _decoders_0_io_decoded_instruction_bits_access_width;	// src/main/scala/Frontend/decoder.scala:231:15
-  wire        _predictions_out_valid_T = io_fetch_packet_valid & io_predictions_in_valid;	// src/main/scala/Frontend/decoder.scala:271:82
   wire        predictions_out_Q_io_deq_ready =
-    io_decoded_fetch_packet_ready & io_predictions_out_ready;	// src/main/scala/Frontend/decoder.scala:276:90
-  reg         io_fetch_packet_ready_REG;	// src/main/scala/Frontend/decoder.scala:286:67
-  reg         io_predictions_in_ready_REG;	// src/main/scala/Frontend/decoder.scala:287:67
-  reg         monitor_output_REG;	// src/main/scala/Frontend/decoder.scala:311:30
-  wire        monitor_output = monitor_output_REG;	// src/main/scala/Frontend/decoder.scala:310:30, :311:30
+    io_decoded_fetch_packet_ready & io_predictions_out_ready;	// src/main/scala/Frontend/decoder.scala:277:90
+  reg         io_fetch_packet_ready_REG;	// src/main/scala/Frontend/decoder.scala:287:67
+  reg         io_predictions_in_ready_REG;	// src/main/scala/Frontend/decoder.scala:288:67
+  reg         monitor_output_REG;	// src/main/scala/Frontend/decoder.scala:312:30
+  wire        monitor_output = monitor_output_REG;	// src/main/scala/Frontend/decoder.scala:311:30, :312:30
   always @(posedge clock) begin	// src/main/scala/Frontend/decoder.scala:211:7
-    io_fetch_packet_ready_REG <= predictions_out_Q_io_deq_ready;	// src/main/scala/Frontend/decoder.scala:276:90, :286:67
-    io_predictions_in_ready_REG <= predictions_out_Q_io_deq_ready;	// src/main/scala/Frontend/decoder.scala:276:90, :287:67
-    monitor_output_REG <= io_fetch_packet_valid;	// src/main/scala/Frontend/decoder.scala:311:30
+    io_fetch_packet_ready_REG <= predictions_out_Q_io_deq_ready;	// src/main/scala/Frontend/decoder.scala:277:90, :287:67
+    io_predictions_in_ready_REG <= predictions_out_Q_io_deq_ready;	// src/main/scala/Frontend/decoder.scala:277:90, :288:67
+    monitor_output_REG <= io_fetch_packet_valid;	// src/main/scala/Frontend/decoder.scala:312:30
   end // always @(posedge)
   `ifdef ENABLE_INITIAL_REG_	// src/main/scala/Frontend/decoder.scala:211:7
     `ifdef FIRRTL_BEFORE_INITIAL	// src/main/scala/Frontend/decoder.scala:211:7
@@ -306,9 +305,9 @@ module fetch_packet_decoder(	// src/main/scala/Frontend/decoder.scala:211:7
       `endif // INIT_RANDOM_PROLOG_
       `ifdef RANDOMIZE_REG_INIT	// src/main/scala/Frontend/decoder.scala:211:7
         _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// src/main/scala/Frontend/decoder.scala:211:7
-        io_fetch_packet_ready_REG = _RANDOM[/*Zero width*/ 1'b0][0];	// src/main/scala/Frontend/decoder.scala:211:7, :286:67
-        io_predictions_in_ready_REG = _RANDOM[/*Zero width*/ 1'b0][1];	// src/main/scala/Frontend/decoder.scala:211:7, :286:67, :287:67
-        monitor_output_REG = _RANDOM[/*Zero width*/ 1'b0][2];	// src/main/scala/Frontend/decoder.scala:211:7, :286:67, :311:30
+        io_fetch_packet_ready_REG = _RANDOM[/*Zero width*/ 1'b0][0];	// src/main/scala/Frontend/decoder.scala:211:7, :287:67
+        io_predictions_in_ready_REG = _RANDOM[/*Zero width*/ 1'b0][1];	// src/main/scala/Frontend/decoder.scala:211:7, :287:67, :288:67
+        monitor_output_REG = _RANDOM[/*Zero width*/ 1'b0][2];	// src/main/scala/Frontend/decoder.scala:211:7, :287:67, :312:30
       `endif // RANDOMIZE_REG_INIT
     end // initial
     `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/Frontend/decoder.scala:211:7
@@ -519,7 +518,7 @@ module fetch_packet_decoder(	// src/main/scala/Frontend/decoder.scala:211:7
     .clock                                                  (clock),
     .reset                                                  (reset),
     .io_enq_valid
-      (_predictions_out_valid_T & ~io_flush),	// src/main/scala/Frontend/decoder.scala:248:86, :271:{82,109}
+      (io_fetch_packet_valid & ~io_flush),	// src/main/scala/Frontend/decoder.scala:248:86, :272:82
     .io_enq_bits_fetch_PC
       (io_fetch_packet_bits_fetch_PC),
     .io_enq_bits_decoded_instruction_0_ready_bits_RS1_ready (1'h0),	// src/main/scala/Frontend/decoder.scala:211:7
@@ -720,7 +719,7 @@ module fetch_packet_decoder(	// src/main/scala/Frontend/decoder.scala:211:7
     .io_enq_bits_RAT_index                                  (4'h0),
     .io_enq_bits_free_list_front_pointer                    (8'h0),
     .io_deq_ready
-      (predictions_out_Q_io_deq_ready),	// src/main/scala/Frontend/decoder.scala:276:90
+      (predictions_out_Q_io_deq_ready),	// src/main/scala/Frontend/decoder.scala:277:90
     .io_deq_valid
       (io_decoded_fetch_packet_valid),
     .io_deq_bits_fetch_PC
@@ -956,7 +955,7 @@ module fetch_packet_decoder(	// src/main/scala/Frontend/decoder.scala:211:7
   Queue2_FTQ_entry predictions_out_Q (	// src/main/scala/Frontend/decoder.scala:268:65
     .clock                        (clock),
     .reset                        (reset),
-    .io_enq_valid                 (_predictions_out_valid_T & ~io_flush),	// src/main/scala/Frontend/decoder.scala:248:86, :271:82, :272:109
+    .io_enq_valid                 (io_predictions_in_valid & ~io_flush),	// src/main/scala/Frontend/decoder.scala:248:86, :273:84
     .io_enq_bits_valid            (io_predictions_in_bits_valid),
     .io_enq_bits_fetch_PC         (io_predictions_in_bits_fetch_PC),
     .io_enq_bits_is_misprediction (io_predictions_in_bits_is_misprediction),
@@ -965,7 +964,7 @@ module fetch_packet_decoder(	// src/main/scala/Frontend/decoder.scala:211:7
     .io_enq_bits_br_type          (io_predictions_in_bits_br_type),
     .io_enq_bits_dominant_index   (io_predictions_in_bits_dominant_index),
     .io_enq_bits_resolved_PC      (io_predictions_in_bits_resolved_PC),
-    .io_deq_ready                 (predictions_out_Q_io_deq_ready),	// src/main/scala/Frontend/decoder.scala:276:90
+    .io_deq_ready                 (predictions_out_Q_io_deq_ready),	// src/main/scala/Frontend/decoder.scala:277:90
     .io_deq_valid                 (io_predictions_out_valid),
     .io_deq_bits_valid            (io_predictions_out_bits_valid),
     .io_deq_bits_fetch_PC         (io_predictions_out_bits_fetch_PC),
@@ -977,7 +976,7 @@ module fetch_packet_decoder(	// src/main/scala/Frontend/decoder.scala:211:7
     .io_deq_bits_resolved_PC      (io_predictions_out_bits_resolved_PC),
     .io_flush                     (io_flush)
   );	// src/main/scala/Frontend/decoder.scala:268:65
-  assign io_fetch_packet_ready = io_fetch_packet_ready_REG;	// src/main/scala/Frontend/decoder.scala:211:7, :286:67
-  assign io_predictions_in_ready = io_predictions_in_ready_REG;	// src/main/scala/Frontend/decoder.scala:211:7, :287:67
+  assign io_fetch_packet_ready = io_fetch_packet_ready_REG;	// src/main/scala/Frontend/decoder.scala:211:7, :287:67
+  assign io_predictions_in_ready = io_predictions_in_ready_REG;	// src/main/scala/Frontend/decoder.scala:211:7, :288:67
 endmodule
 

@@ -92,31 +92,46 @@ module PC_gen(	// src/main/scala/Frontend/BP/PC_gen.scala:40:7
 );
 
   reg  [31:0] PC_reg;	// src/main/scala/Frontend/BP/PC_gen.scala:55:41
+  reg  [31:0] flush_PC_reg;	// src/main/scala/Frontend/BP/PC_gen.scala:56:41
+  wire        is_misprediction = io_commit_valid & io_commit_bits_is_misprediction;	// src/main/scala/Frontend/BP/PC_gen.scala:77:45
   wire        is_ret = io_prediction_bits_br_type == 3'h4 & io_prediction_valid;	// src/main/scala/Frontend/BP/PC_gen.scala:81:{56,78}
-  wire        flushing_event =
-    io_commit_valid & io_commit_bits_is_misprediction | io_revert_valid;	// src/main/scala/Frontend/BP/PC_gen.scala:77:45, :84:45
+  wire        flushing_event = is_misprediction | io_revert_valid;	// src/main/scala/Frontend/BP/PC_gen.scala:77:45, :84:45
+  reg         REG;	// src/main/scala/Frontend/BP/PC_gen.scala:100:23
   wire [31:0] PC_mux =
     io_prediction_bits_hit & io_prediction_valid & ~is_ret
       ? io_prediction_bits_target
-      : is_ret ? io_RAS_read_ret_addr : PC_reg;	// src/main/scala/Frontend/BP/PC_gen.scala:55:41, :81:78, :82:{52,75,78}, :96:18, :97:16, :98:24, :99:16, :100:40
+      : is_ret ? io_RAS_read_ret_addr : REG ? flush_PC_reg : PC_reg;	// src/main/scala/Frontend/BP/PC_gen.scala:55:41, :56:41, :81:78, :82:{52,75,78}, :96:18, :97:16, :98:24, :99:16, :100:{23,40}, :101:16, :103:16
   always @(posedge clock) begin	// src/main/scala/Frontend/BP/PC_gen.scala:40:7
-    if (reset)	// src/main/scala/Frontend/BP/PC_gen.scala:40:7
+    if (reset) begin	// src/main/scala/Frontend/BP/PC_gen.scala:40:7
       PC_reg <= 32'h0;	// src/main/scala/Frontend/BP/PC_gen.scala:55:41
-    else if (io_PC_next_ready & ~flushing_event)	// src/main/scala/Frontend/BP/PC_gen.scala:84:45, :112:29, src/main/scala/chisel3/util/Decoupled.scala:51:35
-      PC_reg <= PC_mux + {26'h0, 6'h10 - {2'h0, PC_mux[3:0]}};	// src/main/scala/Frontend/BP/PC_gen.scala:55:41, :96:18, :97:16, :98:24, :107:44, src/main/scala/utils.scala:340:47, :341:38
+      flush_PC_reg <= 32'h0;	// src/main/scala/Frontend/BP/PC_gen.scala:55:41, :56:41
+    end
+    else begin	// src/main/scala/Frontend/BP/PC_gen.scala:40:7
+      if (io_PC_next_ready & ~flushing_event)	// src/main/scala/Frontend/BP/PC_gen.scala:84:45, :112:29, src/main/scala/chisel3/util/Decoupled.scala:51:35
+        PC_reg <= PC_mux + {26'h0, 6'h10 - {2'h0, PC_mux[3:0]}};	// src/main/scala/Frontend/BP/PC_gen.scala:40:7, :55:41, :96:18, :97:16, :98:24, :107:44, src/main/scala/utils.scala:340:47, :341:38
+      flush_PC_reg <=
+        is_misprediction
+          ? io_commit_bits_fetch_PC
+          : io_revert_valid ? io_revert_bits_PC : 32'h0;	// src/main/scala/Frontend/BP/PC_gen.scala:55:41, :56:41, :77:45, :87:61, :88:22, :89:32, :90:22, :91:30
+    end
+    REG <= flushing_event;	// src/main/scala/Frontend/BP/PC_gen.scala:84:45, :100:23
   end // always @(posedge)
   `ifdef ENABLE_INITIAL_REG_	// src/main/scala/Frontend/BP/PC_gen.scala:40:7
     `ifdef FIRRTL_BEFORE_INITIAL	// src/main/scala/Frontend/BP/PC_gen.scala:40:7
       `FIRRTL_BEFORE_INITIAL	// src/main/scala/Frontend/BP/PC_gen.scala:40:7
     `endif // FIRRTL_BEFORE_INITIAL
     initial begin	// src/main/scala/Frontend/BP/PC_gen.scala:40:7
-      automatic logic [31:0] _RANDOM[0:0];	// src/main/scala/Frontend/BP/PC_gen.scala:40:7
+      automatic logic [31:0] _RANDOM[0:2];	// src/main/scala/Frontend/BP/PC_gen.scala:40:7
       `ifdef INIT_RANDOM_PROLOG_	// src/main/scala/Frontend/BP/PC_gen.scala:40:7
         `INIT_RANDOM_PROLOG_	// src/main/scala/Frontend/BP/PC_gen.scala:40:7
       `endif // INIT_RANDOM_PROLOG_
       `ifdef RANDOMIZE_REG_INIT	// src/main/scala/Frontend/BP/PC_gen.scala:40:7
-        _RANDOM[/*Zero width*/ 1'b0] = `RANDOM;	// src/main/scala/Frontend/BP/PC_gen.scala:40:7
-        PC_reg = _RANDOM[/*Zero width*/ 1'b0];	// src/main/scala/Frontend/BP/PC_gen.scala:40:7, :55:41
+        for (logic [1:0] i = 2'h0; i < 2'h3; i += 2'h1) begin
+          _RANDOM[i] = `RANDOM;	// src/main/scala/Frontend/BP/PC_gen.scala:40:7
+        end	// src/main/scala/Frontend/BP/PC_gen.scala:40:7
+        PC_reg = _RANDOM[2'h0];	// src/main/scala/Frontend/BP/PC_gen.scala:40:7, :55:41
+        flush_PC_reg = _RANDOM[2'h1];	// src/main/scala/Frontend/BP/PC_gen.scala:40:7, :56:41
+        REG = _RANDOM[2'h2][0];	// src/main/scala/Frontend/BP/PC_gen.scala:40:7, :100:23
       `endif // RANDOMIZE_REG_INIT
     end // initial
     `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/Frontend/BP/PC_gen.scala:40:7

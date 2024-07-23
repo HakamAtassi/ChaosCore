@@ -29,8 +29,7 @@
 package ChaosCore
 
 import chisel3._
-import chisel3.ltl._
-import circt.stage.ChiselStage 
+import circt.stage.ChiselStage
 import chisel3.util._
 import java.io.{File, FileWriter}
 import java.rmi.server.UID
@@ -71,9 +70,8 @@ class instruction_validator(fetchWidth: Int) extends Module {
 
 // TODO: need a module that converts L1 miss to a proper DRAM request. 
 
-class instruction_cache(coreParameters:CoreParameters, nocParameters:NOCParameters) extends Module{
+class instruction_cache(coreParameters:CoreParameters) extends Module{
     import coreParameters._
-    import nocParameters._
 
 
     val ways = L1_instructionCacheWays
@@ -105,11 +103,11 @@ class instruction_cache(coreParameters:CoreParameters, nocParameters:NOCParamete
     val io = IO(new Bundle{
         val flush               =     Input(Bool())                                                 // flush in progress request(s) 
 
-        val CPU_request         =     Flipped(Decoupled(new frontend_memory_request(coreParameters)))            // Inputs from CPU
+        val CPU_request         =     Flipped(Decoupled(new backend_memory_request(coreParameters)))            // Inputs from CPU
         val CPU_response        =     Decoupled(new fetch_packet(coreParameters))                       // TO CPU
 
-		val instruction_cache_A                      = Decoupled(new TileLink_Channel_A())
-		val instruction_cache_D                      = Flipped(Decoupled(new TileLink_Channel_D()))
+        val DRAM_request        =     Decoupled(new DRAM_request(coreParameters))                       // TO DRAM
+        val DRAM_response       =     Flipped(Decoupled(Input(new DRAM_response(coreParameters))))      // FROM DRAM
     })
 
 
@@ -118,10 +116,14 @@ class instruction_cache(coreParameters:CoreParameters, nocParameters:NOCParamete
     ////////////////////
     val CPU_response         = Wire(Decoupled(new fetch_packet(coreParameters)))
 
+    dontTouch(io.CPU_request)
+
+
+
     val cache_state     = RegInit(cacheState(), cacheState.Active)
 
     val current_data    = Wire(new instruction_cache_data_line(coreParameters))
-    val fetch_PC_buf    = RegInit(new frontend_memory_request(coreParameters), 0.U.asTypeOf(new frontend_memory_request(coreParameters)))
+    val fetch_PC_buf    = RegInit(new backend_memory_request(coreParameters), 0.U.asTypeOf(new backend_memory_request(coreParameters)))//RegInit(UInt(32.W), 0.U)
 
     val miss            = Wire(Bool())
     val hit             = Wire(Bool())
@@ -134,7 +136,7 @@ class instruction_cache(coreParameters:CoreParameters, nocParameters:NOCParamete
     val allocate_way    = Wire(UInt(ways.W))
 
     // 
-    val replay_address          = RegInit(new frontend_memory_request(coreParameters), 0.U.asTypeOf(new frontend_memory_request(coreParameters)))
+    val replay_address          = RegInit(new backend_memory_request(coreParameters), 0.U.asTypeOf(new backend_memory_request(coreParameters)))
 
     val current_packet          = Wire(new instruction_cache_address_packet(coreParameters))
 
@@ -162,31 +164,33 @@ class instruction_cache(coreParameters:CoreParameters, nocParameters:NOCParamete
     val resp_ready      = RegInit(Bool(), 0.B)
     val cache_valid     = RegInit(Bool(), 0.B)
 
+    //RegInit(Bool(), 0.B)
+    
 
-    // TL REQUESTS 
-    io.instruction_cache_D.ready             := resp_ready
+    io.DRAM_response.ready           := resp_ready
 
-    io.instruction_cache_A.valid             :=        request_valid         
-    io.instruction_cache_A.bits.a_opcode     :=        4.U          // Get (read)
-    io.instruction_cache_A.bits.a_param      :=        0.U                           // Ignored
-    io.instruction_cache_A.bits.a_size       :=        5.U                           // Read size in bytes 
-    io.instruction_cache_A.bits.a_source     :=        instruction_cache_TL_ID.U     // Slave ID
-    io.instruction_cache_A.bits.a_address    :=        request_addr                  // Request address
-    io.instruction_cache_A.bits.a_mask       :=        "hFFFF_FFFF".U                // byte mask
-    io.instruction_cache_A.bits.a_data       :=        0.U                           // Ingored
+    io.DRAM_request.valid        := request_valid
+    io.DRAM_request.bits.addr    := request_addr
+    io.DRAM_request.bits.wr_data := request_data
+    io.DRAM_request.bits.wr_en   := request_wr_en
+
 
     val already_requested = RegInit(Bool(), 0.B)
+
+    dontTouch(io.DRAM_response)
 
     switch(cache_state){
 
         is(cacheState.Active){  // Wait for request
 
             when(miss===1.B && io.flush === 0.U){           // Buffer current request, stall cache, go to wait state
+
                 request_addr             := RegNext(io.CPU_request.bits.addr) & dram_addr_mask
                 request_valid            := 1.B
                 resp_ready               := 1.B
 
                 cache_state              := cacheState.Allocate
+
             }.otherwise{
                 replay_address := io.CPU_request.bits  // if miss, buffer address
                 fetch_PC_buf   := io.CPU_request.bits
@@ -197,12 +201,13 @@ class instruction_cache(coreParameters:CoreParameters, nocParameters:NOCParamete
             when(io.flush === 1.U){
                 cache_state := cacheState.Active    // Ignore miss, go back to active.
                 cache_valid := 0.B
+
             }.otherwise{
-                when(io.instruction_cache_A.valid && io.instruction_cache_A.ready){   // DRAM request accepted
+                when(io.DRAM_request.ready && io.DRAM_request.valid){   // DRAM request accepted
                     request_addr             := 0.U
                     request_valid            := 0.B
                 }
-                when(io.instruction_cache_D.valid && io.instruction_cache_D.ready){         // DRAM response accepted
+                when(io.DRAM_response.valid && io.DRAM_response.ready){         // DRAM response accepted
                     resp_ready  := 0.U  // Data received; no longer ready
                     cache_valid := 1.B
                     cache_state := cacheState.Replay    // Allow cycle for cache replay
@@ -221,15 +226,18 @@ class instruction_cache(coreParameters:CoreParameters, nocParameters:NOCParamete
                 }
             }
         }
-    }
 
+
+    }
 
     // Address arbitration
 
-    val current_address = Wire(new frontend_memory_request(coreParameters)) //Wire(UInt(32.W))
+    val current_address = Wire(new backend_memory_request(coreParameters)) //Wire(UInt(32.W))
+    dontTouch(current_address)
 
     current_address     := Mux(cache_state=/=cacheState.Active || miss, replay_address, io.CPU_request.bits) // During allocate and replay, current address is from buffered request. 
     current_packet      := get_decomposed_icache_address(coreParameters, current_address.addr)
+    dontTouch(current_packet)
     
 
 
@@ -260,7 +268,7 @@ class instruction_cache(coreParameters:CoreParameters, nocParameters:NOCParamete
 
     current_data.valid  := 1.B
     current_data.tag    := get_decomposed_icache_address(coreParameters, replay_address.addr).tag
-    current_data.data   := io.instruction_cache_D.bits.d_data
+    current_data.data   := io.DRAM_response.bits.data
 
     ///////////////////////////////
     // ASSIGN DATA MEMORY READS //
@@ -278,7 +286,7 @@ class instruction_cache(coreParameters:CoreParameters, nocParameters:NOCParamete
     ///////////////////////////////
     
     for (way <- 0 until ways){
-        data_memory(way).io.wr_en   := io.instruction_cache_D.valid & allocate_way(way) && (cache_state === cacheState.Allocate)
+        data_memory(way).io.wr_en   := io.DRAM_response.valid & allocate_way(way) && (cache_state === cacheState.Allocate)
         data_memory(way).io.data_in := current_data
     }
 
@@ -323,16 +331,13 @@ class instruction_cache(coreParameters:CoreParameters, nocParameters:NOCParamete
     val validator = Module(new instruction_validator(fetchWidth=fetchWidth))
 
 
-    validator.io.instruction_index := get_decomposed_icache_address(coreParameters, CPU_response.bits.fetch_PC).instruction_offset //current_packet.instruction_offset
+    // FIXME: ???
+    val test = get_decomposed_icache_address(coreParameters, CPU_response.bits.fetch_PC).instruction_offset //current_packet.instruction_offset
+    validator.io.instruction_index := test
 
     for(i <- 0 until fetchWidth){
         CPU_response.bits.valid_bits(i):= validator.io.instruction_output(fetchWidth-1-i) && CPU_response.valid
     }
-
-    // FIXME: why are these part of the fetch packet anyway?
-    CPU_response.bits.GHR  := DontCare
-    CPU_response.bits.TOS  := DontCare
-    CPU_response.bits.NEXT := DontCare
 
 
     //////////////////
@@ -357,6 +362,6 @@ class instruction_cache(coreParameters:CoreParameters, nocParameters:NOCParamete
     CPU_response.bits.fetch_PC := fetch_PC_buf.addr
 
     CPU_response_skid_buffer.io.deq                  <> io.CPU_response
-
+    
 
 }

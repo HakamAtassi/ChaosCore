@@ -58,7 +58,7 @@ class ChaosCore(coreParameters:CoreParameters) extends Module{
         ///////////////////////////
         val backend_memory_response             =   Flipped(Decoupled(new backend_memory_response(coreParameters)))
         val backend_memory_request              =   Decoupled(new backend_memory_request(coreParameters))
-    })
+    }); dontTouch(io)
 
     //////////////////
     // REQUIREMENTS //

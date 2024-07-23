@@ -237,12 +237,22 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
   input         io_FU_outputs_2_bits_exception,	// src/main/scala/Frontend/frontend.scala:45:16
                 io_FU_outputs_3_valid,	// src/main/scala/Frontend/frontend.scala:45:16
   input  [6:0]  io_FU_outputs_3_bits_RD,	// src/main/scala/Frontend/frontend.scala:45:16
+  input  [31:0] io_FU_outputs_3_bits_RD_data,	// src/main/scala/Frontend/frontend.scala:45:16
+  input         io_FU_outputs_3_bits_RD_valid,	// src/main/scala/Frontend/frontend.scala:45:16
+  input  [31:0] io_FU_outputs_3_bits_fetch_PC,	// src/main/scala/Frontend/frontend.scala:45:16
+  input         io_FU_outputs_3_bits_branch_taken,	// src/main/scala/Frontend/frontend.scala:45:16
+  input  [31:0] io_FU_outputs_3_bits_target_address,	// src/main/scala/Frontend/frontend.scala:45:16
+  input         io_FU_outputs_3_bits_branch_valid,	// src/main/scala/Frontend/frontend.scala:45:16
   input  [31:0] io_FU_outputs_3_bits_address,	// src/main/scala/Frontend/frontend.scala:45:16
   input  [1:0]  io_FU_outputs_3_bits_memory_type,	// src/main/scala/Frontend/frontend.scala:45:16
                 io_FU_outputs_3_bits_access_width,	// src/main/scala/Frontend/frontend.scala:45:16
   input         io_FU_outputs_3_bits_is_unsigned,	// src/main/scala/Frontend/frontend.scala:45:16
   input  [31:0] io_FU_outputs_3_bits_wr_data,	// src/main/scala/Frontend/frontend.scala:45:16
   input  [3:0]  io_FU_outputs_3_bits_MOB_index,	// src/main/scala/Frontend/frontend.scala:45:16
+  input  [5:0]  io_FU_outputs_3_bits_ROB_index,	// src/main/scala/Frontend/frontend.scala:45:16
+  input  [3:0]  io_FU_outputs_3_bits_FTQ_index,	// src/main/scala/Frontend/frontend.scala:45:16
+  input  [1:0]  io_FU_outputs_3_bits_fetch_packet_index,	// src/main/scala/Frontend/frontend.scala:45:16
+  input         io_FU_outputs_3_bits_exception,	// src/main/scala/Frontend/frontend.scala:45:16
   output        io_revert_valid,	// src/main/scala/Frontend/frontend.scala:45:16
   output [31:0] io_revert_bits_PC	// src/main/scala/Frontend/frontend.scala:45:16
 );
@@ -1931,17 +1941,17 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
     .io_FU_outputs_3_bits_RD
       (io_FU_outputs_3_bits_RD),
     .io_FU_outputs_3_bits_RD_data
-      (32'h0),	// src/main/scala/Frontend/frontend.scala:45:16, :80:37
+      (io_FU_outputs_3_bits_RD_data),
     .io_FU_outputs_3_bits_RD_valid
-      (1'h0),	// src/main/scala/Frontend/frontend.scala:45:16, :80:37
+      (io_FU_outputs_3_bits_RD_valid),
     .io_FU_outputs_3_bits_fetch_PC
-      (32'h0),	// src/main/scala/Frontend/frontend.scala:45:16, :80:37
+      (io_FU_outputs_3_bits_fetch_PC),
     .io_FU_outputs_3_bits_branch_taken
-      (1'h0),	// src/main/scala/Frontend/frontend.scala:45:16, :80:37
+      (io_FU_outputs_3_bits_branch_taken),
     .io_FU_outputs_3_bits_target_address
-      (32'h0),	// src/main/scala/Frontend/frontend.scala:45:16, :80:37
+      (io_FU_outputs_3_bits_target_address),
     .io_FU_outputs_3_bits_branch_valid
-      (1'h0),	// src/main/scala/Frontend/frontend.scala:45:16, :80:37
+      (io_FU_outputs_3_bits_branch_valid),
     .io_FU_outputs_3_bits_address
       (io_FU_outputs_3_bits_address),
     .io_FU_outputs_3_bits_memory_type
@@ -1955,13 +1965,13 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
     .io_FU_outputs_3_bits_MOB_index
       (io_FU_outputs_3_bits_MOB_index),
     .io_FU_outputs_3_bits_ROB_index
-      (6'h0),	// src/main/scala/Frontend/frontend.scala:45:16, :80:37
+      (io_FU_outputs_3_bits_ROB_index),
     .io_FU_outputs_3_bits_FTQ_index
-      (4'h0),	// src/main/scala/Frontend/frontend.scala:45:16, :80:37
+      (io_FU_outputs_3_bits_FTQ_index),
     .io_FU_outputs_3_bits_fetch_packet_index
-      (2'h0),	// src/main/scala/Frontend/frontend.scala:45:16, :80:37
+      (io_FU_outputs_3_bits_fetch_packet_index),
     .io_FU_outputs_3_bits_exception
-      (1'h0),	// src/main/scala/Frontend/frontend.scala:45:16, :80:37
+      (io_FU_outputs_3_bits_exception),
     .io_renamed_decoded_fetch_packet_ready
       (io_renamed_decoded_fetch_packet_ready),
     .io_renamed_decoded_fetch_packet_valid
