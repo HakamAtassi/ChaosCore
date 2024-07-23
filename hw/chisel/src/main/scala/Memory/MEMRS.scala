@@ -53,6 +53,10 @@ class MEMRS(coreParameters:CoreParameters) extends Module{
 
         val fetch_PC                =      Input(UInt(32.W)) // DEBUG
 
+        // MOB
+        val reserved_pointers       =      Vec(fetchWidth, Flipped(ValidIO(UInt(log2Ceil(MOBEntries).W))))
+
+
         // UPDATE //
         val FU_outputs              =      Vec(portCount, Flipped(ValidIO(new FU_output(coreParameters))))
 
@@ -63,8 +67,6 @@ class MEMRS(coreParameters:CoreParameters) extends Module{
         val RF_inputs               =      Vec(portCount, Decoupled(new decoded_instruction(coreParameters)))
     })
 
-
-    
     val reservation_station = RegInit(VecInit(Seq.fill(RSEntries)(0.U.asTypeOf(new MEMRS_entry(coreParameters)))))
 
     // queue pointers
@@ -96,6 +98,7 @@ class MEMRS(coreParameters:CoreParameters) extends Module{
             val index_offset = PopCount(written_vec.take(i+1))-1.U
             reservation_station(back_index + index_offset).decoded_instruction <> io.backend_packet(i).bits
             reservation_station(back_index + index_offset).valid              := 1.B
+            reservation_station(back_index + index_offset).decoded_instruction.MOB_index              := io.reserved_pointers(i).bits
             reservation_station(back_index + index_offset).fetch_PC           := io.fetch_PC
         }
     }
@@ -150,8 +153,7 @@ class MEMRS(coreParameters:CoreParameters) extends Module{
     val RS1_ready_valid = (reservation_station(front_index).decoded_instruction.ready_bits.RS1_ready || !reservation_station(front_index).decoded_instruction.RS1_valid)
     val RS2_ready_valid = (reservation_station(front_index).decoded_instruction.ready_bits.RS2_ready || !reservation_station(front_index).decoded_instruction.RS2_valid)
 
-    val good_to_go =    (reservation_station(front_index).valid && 
-                        reservation_station(front_index).committed && RS1_ready_valid && RS2_ready_valid)
+    val good_to_go =    (reservation_station(front_index).valid && RS1_ready_valid && RS2_ready_valid)
 
     front_pointer := front_pointer + good_to_go
 

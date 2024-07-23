@@ -27,6 +27,8 @@
 * ------------------------------------------------------------------------------------ 
 */
 
+/*
+
 package ChaosCore
 
 import chisel3._
@@ -36,31 +38,33 @@ import circt.stage.ChiselStage
 
 import chisel3.util._
 
+
+
 // Define the BlackBox module
-class axi_interconnect extends BlackBox(Map(
-  "S_COUNT" -> 2,
-  "M_COUNT" -> 2,
-  "DATA_WIDTH" -> 32,
-  "ADDR_WIDTH" -> 32,
-  "STRB_WIDTH" -> (32 / 8),
-  "ID_WIDTH" -> 8,
-  "AWUSER_ENABLE" -> 0,
-  "AWUSER_WIDTH" -> 1,
-  "WUSER_ENABLE" -> 0,
-  "WUSER_WIDTH" -> 1,
-  "BUSER_ENABLE" -> 0,
-  "BUSER_WIDTH" -> 1,
-  "ARUSER_ENABLE" -> 0,
-  "ARUSER_WIDTH" -> 1,
-  "RUSER_ENABLE" -> 0,
-  "RUSER_WIDTH" -> 1,
-  "FORWARD_ID" -> 0,
-  "M_REGIONS" -> 1,
-  "M_BASE_ADDR" -> 0,
-  "M_ADDR_WIDTH" -> 0,  // adjust based on actual need
-  "M_CONNECT_READ" -> 0,
-  "M_CONNECT_WRITE" -> 0,
-  "M_SECURE" -> 0
+class axi_interconnect(nocParameters:NOCParameters) extends BlackBox(Map(
+  "S_COUNT"         -> nocParameters.S_COUNT,
+  "M_COUNT"         -> nocParameters.M_COUNT,
+  "DATA_WIDTH"      -> nocParameters.DATA_WIDTH,
+  "ADDR_WIDTH"      -> nocParameters.ADDR_WIDTH,
+  "STRB_WIDTH"      -> nocParameters.STRB_WIDTH,
+  "ID_WIDTH"        -> nocParameters.ID_WIDTH,
+  "AWUSER_ENABLE"   -> nocParameters.AWUSER_ENABLE,
+  "AWUSER_WIDTH"    -> nocParameters.AWUSER_WIDTH,
+  "WUSER_ENABLE"    -> nocParameters.WUSER_ENABLE,
+  "WUSER_WIDTH"     -> nocParameters.WUSER_WIDTH,
+  "BUSER_ENABLE"    -> nocParameters.BUSER_ENABLE,
+  "BUSER_WIDTH"     -> nocParameters.BUSER_WIDTH,
+  "ARUSER_ENABLE"   -> nocParameters.ARUSER_ENABLE,
+  "ARUSER_WIDTH"    -> nocParameters.ARUSER_WIDTH,
+  "RUSER_ENABLE"    -> nocParameters.RUSER_ENABLE,
+  "RUSER_WIDTH"     -> nocParameters.RUSER_WIDTH,
+  "FORWARD_ID"      -> nocParameters.FORWARD_ID,
+  "M_REGIONS"       -> nocParameters.M_REGIONS,
+  "M_BASE_ADDR"     -> nocParameters.M_BASE_ADDR,
+  "M_ADDR_WIDTH"    -> nocParameters.M_ADDR_WIDTH,  // adjust based on actual need
+  "M_CONNECT_READ"  -> nocParameters.M_CONNECT_READ,
+  "M_CONNECT_WRITE" -> nocParameters.M_CONNECT_WRITE,
+  "M_SECURE"        -> nocParameters.M_SECURE
 )) with HasBlackBoxResource{
 
   val io = IO(new Bundle {
@@ -115,3 +119,4 @@ class axi_interconnect extends BlackBox(Map(
   addResource("/verilog-axi/rtl/axi_interconnect.v")
 }
 
+*/

@@ -436,7 +436,7 @@ class MEMRS_entry(coreParameters:CoreParameters) extends Bundle{
     //val ready_bits          =  new sources_ready()
 
     val fetch_PC            =  UInt(32.W)
-    val committed            =  Bool()  // Has this instruction committed
+    //val committed            =  Bool()  // Has this instruction committed
     val valid               =  Bool()  // Is whole RS entry valid
 }
 
@@ -571,6 +571,7 @@ class MOB_entry(coreParameters:CoreParameters) extends Bundle{
     val memory_type     = memory_type_t()
 
     val ROB_index       = UInt(log2Ceil(ROBEntries).W)
+    val fetch_packet_index      = UInt(log2Ceil(fetchWidth).W)  // fetch packet index of the branch
 
     val address         = UInt(32.W)        // LOAD/STORE address
     val access_width    = access_width_t()  // B/HW/W
@@ -653,3 +654,83 @@ class TileLink_Channel_D extends Bundle {
 }
 
 
+
+
+
+/////////
+// AXI //
+/////////
+
+/*
+class AXI4_AW(nocParameters: NOCParameters) extends Bundle { // provides address info
+  import nocParameters._
+
+  val s_axi_awid      = UInt(ID_WIDTH.W)
+  val s_axi_awaddr    = UInt(ADDR_WIDTH.W)
+  val s_axi_awlen     = UInt(8.W)
+  val s_axi_awsize    = UInt(3.W)
+  val s_axi_awburst   = UInt(2.W)
+  val s_axi_awlock    = Bool()
+  val s_axi_awcache   = UInt(4.W)
+  val s_axi_awprot    = UInt(3.W)
+  val s_axi_awqos     = UInt(4.W)
+  val s_axi_awuser    = UInt(AWUSER_WIDTH.W)
+}
+
+class AXI4_W(nocParameters: NOCParameters) extends Bundle { // provides data info
+  import nocParameters._
+
+  val s_axi_wdata = UInt(DATA_WIDTH.W)
+  val s_axi_wstrb = UInt(STRB_WIDTH.W)
+  val s_axi_wlast = Bool()
+  val s_axi_wuser = UInt(WUSER_WIDTH.W)
+}
+
+
+class AXI4_B(nocParameters: NOCParameters) extends Bundle { // provides response info
+  import nocParameters._
+
+  val s_axi_bid     = UInt(ID_WIDTH.W)
+  val s_axi_bresp   = UInt(2.W)
+  val s_axi_buser   = UInt(BUSER_WIDTH.W)
+}
+
+class AXI4_AR(nocParameters: NOCParameters) extends Bundle {    // provides read address info
+  import nocParameters._
+  val s_axi_arid    = UInt(ID_WIDTH.W)
+  val s_axi_araddr  = UInt(ADDR_WIDTH.W)
+  val s_axi_arlen   = UInt(8.W)
+  val s_axi_arsize  = UInt(3.W)
+  val s_axi_arburst = UInt(2.W)
+  val s_axi_arlock  = Bool()
+  val s_axi_arcache = UInt(4.W)
+  val s_axi_arprot  = UInt(3.W)
+  val s_axi_arqos   = UInt(4.W)
+  val s_axi_aruser  = UInt(ARUSER_WIDTH.W)
+}
+
+class AXI4_R(nocParameters: NOCParameters) extends Bundle { // provides read data
+  import nocParameters._
+  val s_axi_rid     = UInt(ID_WIDTH.W)
+  val s_axi_rdata   = UInt(DATA_WIDTH.W)
+  val s_axi_rresp   = UInt(2.W)
+  val s_axi_rlast   = Bool()
+  val s_axi_ruser   = UInt(RUSER_WIDTH.W)
+  val s_axi_rvalid  = UInt(2.W)
+  val s_axi_rready  = UInt(2.W)
+}
+
+
+class AXI4_port(nocParameters: NOCParameters) extends Bundle {
+
+  // INPUTS
+  val AXI4_AW = (Decoupled(new AXI4_AW(nocParameters)))
+  val AXI4_W  = (Decoupled(new AXI4_W(nocParameters)))
+  val AXI4_AR = (Decoupled(new AXI4_AR(nocParameters)))
+
+  // OUTPUTS
+  val AXI4_B  = Flipped(Decoupled(new AXI4_B(nocParameters)))
+  val AXI4_R  = Flipped(Decoupled(new AXI4_R(nocParameters)))
+}
+
+*/

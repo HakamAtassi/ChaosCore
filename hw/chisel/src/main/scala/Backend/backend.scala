@@ -124,6 +124,8 @@ class backend(coreParameters:CoreParameters) extends Module{
         io.MOB_ready(i)          := MOB.io.reserve(i).ready
     }
 
+    MOB.io.reserved_pointers <> MEM_RS.io.reserved_pointers
+
 
     ///////////////////////////
     // REGISTER FILES (READ) //
@@ -186,7 +188,7 @@ class backend(coreParameters:CoreParameters) extends Module{
     val FU0 = Module(new FU(coreParameters, has_ALU=true, has_branch_unit=true))
     val FU1 = Module(new FU(coreParameters, has_ALU=true, has_branch_unit=false))
     val FU2 = Module(new FU(coreParameters, has_ALU=true, has_branch_unit=false))
-    val FU3 = Module(new AGU(coreParameters))
+    val AGU = Module(new AGU(coreParameters))
 
 
     // Connect FUs
@@ -199,8 +201,8 @@ class backend(coreParameters:CoreParameters) extends Module{
     FU2.io.FU_input.bits            <> read_decoded_instructions(2)
     FU2.io.FU_input.valid           := RegNext(INT_RS.io.RF_inputs(2).valid)
 
-    FU3.io.FU_input.bits            <> read_decoded_instructions(3)
-    FU3.io.FU_input.valid           := RegNext(MEM_RS.io.RF_inputs(3).valid)
+    AGU.io.FU_input.bits            <> read_decoded_instructions(3)
+    AGU.io.FU_input.valid           := RegNext(MEM_RS.io.RF_inputs(3).valid)
 
 
     // INT RS ready assignemnt
@@ -213,14 +215,14 @@ class backend(coreParameters:CoreParameters) extends Module{
     MEM_RS.io.RF_inputs(0).ready       := FU0.io.FU_input.ready
     MEM_RS.io.RF_inputs(1).ready       := FU1.io.FU_input.ready
     MEM_RS.io.RF_inputs(2).ready       := FU2.io.FU_input.ready
-    MEM_RS.io.RF_inputs(3).ready       := FU3.io.FU_input.ready
+    MEM_RS.io.RF_inputs(3).ready       := AGU.io.FU_input.ready
 
 
 
     ////////////////
     // AGU <> MOB //
     ////////////////
-    MOB.io.AGU_output <> FU3.io.FU_output
+    MOB.io.AGU_output <> AGU.io.FU_output
     MOB.io.flush <> io.flush
 
     ////////////////////////////
@@ -251,13 +253,13 @@ class backend(coreParameters:CoreParameters) extends Module{
     INT_RS.io.FU_outputs(0) <> FU0.io.FU_output
     INT_RS.io.FU_outputs(1) <> FU1.io.FU_output
     INT_RS.io.FU_outputs(2) <> FU2.io.FU_output
-    INT_RS.io.FU_outputs(3) <> FU3.io.FU_output
+    INT_RS.io.FU_outputs(3) <> AGU.io.FU_output
 
 
     MEM_RS.io.FU_outputs(0) <> FU0.io.FU_output
     MEM_RS.io.FU_outputs(1) <> FU1.io.FU_output
     MEM_RS.io.FU_outputs(2) <> FU2.io.FU_output
-    MEM_RS.io.FU_outputs(3) <> FU3.io.FU_output
+    MEM_RS.io.FU_outputs(3) <> AGU.io.FU_output
 
     //////////////////////
     // FU TO ROB UPDATE //
@@ -266,7 +268,7 @@ class backend(coreParameters:CoreParameters) extends Module{
     io.FU_outputs(0) <> FU0.io.FU_output
     io.FU_outputs(1) <> FU1.io.FU_output
     io.FU_outputs(2) <> FU2.io.FU_output
-    io.FU_outputs(3) <> FU3.io.FU_output
+    io.FU_outputs(3) <> MOB.io.MOB_output
 
     INT_RS.io.commit := io.commit
     MEM_RS.io.commit := io.commit
@@ -286,7 +288,7 @@ class backend(coreParameters:CoreParameters) extends Module{
     FU0.io.flush    <> io.flush
     FU1.io.flush    <> io.flush
     FU2.io.flush    <> io.flush
-    FU3.io.flush    <> io.flush
+    AGU.io.flush    <> io.flush
 
     
     io.backend_memory_request       <>  MOB.io.backend_memory_request

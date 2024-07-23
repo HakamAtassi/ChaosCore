@@ -205,7 +205,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
         ROB_WB_banks(i).io.writeEnableE  :=  io.FU_outputs(3).valid && (io.FU_outputs(3).bits.fetch_packet_index === i.U)
 
         // commit (connect all ports)
-        ROB_WB_banks(i).io.addrG       := front_index
+        ROB_WB_banks(i).io.addrG         := front_index
 
     }
 

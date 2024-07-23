@@ -124,6 +124,7 @@ class predecoder(coreParameters:CoreParameters) extends Module{
     }
 
     dominant_instruction := io.fetch_packet.bits.instructions(dominant_branch_index).instruction
+    dontTouch(dominant_instruction)
 
     for(i <- 0 until fetchWidth){
         final_fetch_packet_valid_bits(i) := io.fetch_packet.valid && io.fetch_packet.bits.valid_bits(i) && !PopCount(T_NT.take(i))
@@ -145,6 +146,7 @@ class predecoder(coreParameters:CoreParameters) extends Module{
     }.elsewhen(is_JAL){
         // COMPUTED
         imm := sign_extend(getImm(dominant_instruction), 32)
+        dontTouch(imm)
         target_address := imm + masked_addr + (dominant_branch_index*4.U)
     }.elsewhen(is_JALR && io.prediction.bits.hit && io.prediction.valid){
         // FROM BTB (Assuming hit)

@@ -91,6 +91,38 @@ module RAT(	// src/main/scala/Frontend/rename.scala:78:7
                io_RAT_RS2_3	// src/main/scala/Frontend/rename.scala:85:16
 );
 
+  reg  [6:0]       commit_RAT_0;	// src/main/scala/Frontend/rename.scala:111:34
+  reg  [6:0]       commit_RAT_1;	// src/main/scala/Frontend/rename.scala:111:34
+  reg  [6:0]       commit_RAT_2;	// src/main/scala/Frontend/rename.scala:111:34
+  reg  [6:0]       commit_RAT_3;	// src/main/scala/Frontend/rename.scala:111:34
+  reg  [6:0]       commit_RAT_4;	// src/main/scala/Frontend/rename.scala:111:34
+  reg  [6:0]       commit_RAT_5;	// src/main/scala/Frontend/rename.scala:111:34
+  reg  [6:0]       commit_RAT_6;	// src/main/scala/Frontend/rename.scala:111:34
+  reg  [6:0]       commit_RAT_7;	// src/main/scala/Frontend/rename.scala:111:34
+  reg  [6:0]       commit_RAT_8;	// src/main/scala/Frontend/rename.scala:111:34
+  reg  [6:0]       commit_RAT_9;	// src/main/scala/Frontend/rename.scala:111:34
+  reg  [6:0]       commit_RAT_10;	// src/main/scala/Frontend/rename.scala:111:34
+  reg  [6:0]       commit_RAT_11;	// src/main/scala/Frontend/rename.scala:111:34
+  reg  [6:0]       commit_RAT_12;	// src/main/scala/Frontend/rename.scala:111:34
+  reg  [6:0]       commit_RAT_13;	// src/main/scala/Frontend/rename.scala:111:34
+  reg  [6:0]       commit_RAT_14;	// src/main/scala/Frontend/rename.scala:111:34
+  reg  [6:0]       commit_RAT_15;	// src/main/scala/Frontend/rename.scala:111:34
+  reg  [6:0]       commit_RAT_16;	// src/main/scala/Frontend/rename.scala:111:34
+  reg  [6:0]       commit_RAT_17;	// src/main/scala/Frontend/rename.scala:111:34
+  reg  [6:0]       commit_RAT_18;	// src/main/scala/Frontend/rename.scala:111:34
+  reg  [6:0]       commit_RAT_19;	// src/main/scala/Frontend/rename.scala:111:34
+  reg  [6:0]       commit_RAT_20;	// src/main/scala/Frontend/rename.scala:111:34
+  reg  [6:0]       commit_RAT_21;	// src/main/scala/Frontend/rename.scala:111:34
+  reg  [6:0]       commit_RAT_22;	// src/main/scala/Frontend/rename.scala:111:34
+  reg  [6:0]       commit_RAT_23;	// src/main/scala/Frontend/rename.scala:111:34
+  reg  [6:0]       commit_RAT_24;	// src/main/scala/Frontend/rename.scala:111:34
+  reg  [6:0]       commit_RAT_25;	// src/main/scala/Frontend/rename.scala:111:34
+  reg  [6:0]       commit_RAT_26;	// src/main/scala/Frontend/rename.scala:111:34
+  reg  [6:0]       commit_RAT_27;	// src/main/scala/Frontend/rename.scala:111:34
+  reg  [6:0]       commit_RAT_28;	// src/main/scala/Frontend/rename.scala:111:34
+  reg  [6:0]       commit_RAT_29;	// src/main/scala/Frontend/rename.scala:111:34
+  reg  [6:0]       commit_RAT_30;	// src/main/scala/Frontend/rename.scala:111:34
+  reg  [6:0]       commit_RAT_31;	// src/main/scala/Frontend/rename.scala:111:34
   reg  [6:0]       speculative_RAT_0;	// src/main/scala/Frontend/rename.scala:112:34
   reg  [6:0]       speculative_RAT_1;	// src/main/scala/Frontend/rename.scala:112:34
   reg  [6:0]       speculative_RAT_2;	// src/main/scala/Frontend/rename.scala:112:34
@@ -158,6 +190,38 @@ module RAT(	// src/main/scala/Frontend/rename.scala:78:7
      {speculative_RAT_0}};	// src/main/scala/Frontend/rename.scala:112:34, :122:23
   always @(posedge clock) begin	// src/main/scala/Frontend/rename.scala:78:7
     if (reset) begin	// src/main/scala/Frontend/rename.scala:78:7
+      commit_RAT_0 <= 7'h0;	// src/main/scala/Frontend/rename.scala:111:34
+      commit_RAT_1 <= 7'h0;	// src/main/scala/Frontend/rename.scala:111:34
+      commit_RAT_2 <= 7'h0;	// src/main/scala/Frontend/rename.scala:111:34
+      commit_RAT_3 <= 7'h0;	// src/main/scala/Frontend/rename.scala:111:34
+      commit_RAT_4 <= 7'h0;	// src/main/scala/Frontend/rename.scala:111:34
+      commit_RAT_5 <= 7'h0;	// src/main/scala/Frontend/rename.scala:111:34
+      commit_RAT_6 <= 7'h0;	// src/main/scala/Frontend/rename.scala:111:34
+      commit_RAT_7 <= 7'h0;	// src/main/scala/Frontend/rename.scala:111:34
+      commit_RAT_8 <= 7'h0;	// src/main/scala/Frontend/rename.scala:111:34
+      commit_RAT_9 <= 7'h0;	// src/main/scala/Frontend/rename.scala:111:34
+      commit_RAT_10 <= 7'h0;	// src/main/scala/Frontend/rename.scala:111:34
+      commit_RAT_11 <= 7'h0;	// src/main/scala/Frontend/rename.scala:111:34
+      commit_RAT_12 <= 7'h0;	// src/main/scala/Frontend/rename.scala:111:34
+      commit_RAT_13 <= 7'h0;	// src/main/scala/Frontend/rename.scala:111:34
+      commit_RAT_14 <= 7'h0;	// src/main/scala/Frontend/rename.scala:111:34
+      commit_RAT_15 <= 7'h0;	// src/main/scala/Frontend/rename.scala:111:34
+      commit_RAT_16 <= 7'h0;	// src/main/scala/Frontend/rename.scala:111:34
+      commit_RAT_17 <= 7'h0;	// src/main/scala/Frontend/rename.scala:111:34
+      commit_RAT_18 <= 7'h0;	// src/main/scala/Frontend/rename.scala:111:34
+      commit_RAT_19 <= 7'h0;	// src/main/scala/Frontend/rename.scala:111:34
+      commit_RAT_20 <= 7'h0;	// src/main/scala/Frontend/rename.scala:111:34
+      commit_RAT_21 <= 7'h0;	// src/main/scala/Frontend/rename.scala:111:34
+      commit_RAT_22 <= 7'h0;	// src/main/scala/Frontend/rename.scala:111:34
+      commit_RAT_23 <= 7'h0;	// src/main/scala/Frontend/rename.scala:111:34
+      commit_RAT_24 <= 7'h0;	// src/main/scala/Frontend/rename.scala:111:34
+      commit_RAT_25 <= 7'h0;	// src/main/scala/Frontend/rename.scala:111:34
+      commit_RAT_26 <= 7'h0;	// src/main/scala/Frontend/rename.scala:111:34
+      commit_RAT_27 <= 7'h0;	// src/main/scala/Frontend/rename.scala:111:34
+      commit_RAT_28 <= 7'h0;	// src/main/scala/Frontend/rename.scala:111:34
+      commit_RAT_29 <= 7'h0;	// src/main/scala/Frontend/rename.scala:111:34
+      commit_RAT_30 <= 7'h0;	// src/main/scala/Frontend/rename.scala:111:34
+      commit_RAT_31 <= 7'h0;	// src/main/scala/Frontend/rename.scala:111:34
       speculative_RAT_0 <= 7'h0;	// src/main/scala/Frontend/rename.scala:112:34
       speculative_RAT_1 <= 7'h0;	// src/main/scala/Frontend/rename.scala:112:34
       speculative_RAT_2 <= 7'h0;	// src/main/scala/Frontend/rename.scala:112:34
@@ -191,561 +255,564 @@ module RAT(	// src/main/scala/Frontend/rename.scala:78:7
       speculative_RAT_30 <= 7'h0;	// src/main/scala/Frontend/rename.scala:112:34
       speculative_RAT_31 <= 7'h0;	// src/main/scala/Frontend/rename.scala:112:34
     end
-    else if (io_commit_valid
-             & (io_commit_bits_is_misprediction | io_commit_bits_exception)) begin	// src/main/scala/Frontend/rename.scala:146:{26,62}
-      speculative_RAT_0 <= 7'h0;	// src/main/scala/Frontend/rename.scala:112:34
-      speculative_RAT_1 <= 7'h0;	// src/main/scala/Frontend/rename.scala:112:34
-      speculative_RAT_2 <= 7'h0;	// src/main/scala/Frontend/rename.scala:112:34
-      speculative_RAT_3 <= 7'h0;	// src/main/scala/Frontend/rename.scala:112:34
-      speculative_RAT_4 <= 7'h0;	// src/main/scala/Frontend/rename.scala:112:34
-      speculative_RAT_5 <= 7'h0;	// src/main/scala/Frontend/rename.scala:112:34
-      speculative_RAT_6 <= 7'h0;	// src/main/scala/Frontend/rename.scala:112:34
-      speculative_RAT_7 <= 7'h0;	// src/main/scala/Frontend/rename.scala:112:34
-      speculative_RAT_8 <= 7'h0;	// src/main/scala/Frontend/rename.scala:112:34
-      speculative_RAT_9 <= 7'h0;	// src/main/scala/Frontend/rename.scala:112:34
-      speculative_RAT_10 <= 7'h0;	// src/main/scala/Frontend/rename.scala:112:34
-      speculative_RAT_11 <= 7'h0;	// src/main/scala/Frontend/rename.scala:112:34
-      speculative_RAT_12 <= 7'h0;	// src/main/scala/Frontend/rename.scala:112:34
-      speculative_RAT_13 <= 7'h0;	// src/main/scala/Frontend/rename.scala:112:34
-      speculative_RAT_14 <= 7'h0;	// src/main/scala/Frontend/rename.scala:112:34
-      speculative_RAT_15 <= 7'h0;	// src/main/scala/Frontend/rename.scala:112:34
-      speculative_RAT_16 <= 7'h0;	// src/main/scala/Frontend/rename.scala:112:34
-      speculative_RAT_17 <= 7'h0;	// src/main/scala/Frontend/rename.scala:112:34
-      speculative_RAT_18 <= 7'h0;	// src/main/scala/Frontend/rename.scala:112:34
-      speculative_RAT_19 <= 7'h0;	// src/main/scala/Frontend/rename.scala:112:34
-      speculative_RAT_20 <= 7'h0;	// src/main/scala/Frontend/rename.scala:112:34
-      speculative_RAT_21 <= 7'h0;	// src/main/scala/Frontend/rename.scala:112:34
-      speculative_RAT_22 <= 7'h0;	// src/main/scala/Frontend/rename.scala:112:34
-      speculative_RAT_23 <= 7'h0;	// src/main/scala/Frontend/rename.scala:112:34
-      speculative_RAT_24 <= 7'h0;	// src/main/scala/Frontend/rename.scala:112:34
-      speculative_RAT_25 <= 7'h0;	// src/main/scala/Frontend/rename.scala:112:34
-      speculative_RAT_26 <= 7'h0;	// src/main/scala/Frontend/rename.scala:112:34
-      speculative_RAT_27 <= 7'h0;	// src/main/scala/Frontend/rename.scala:112:34
-      speculative_RAT_28 <= 7'h0;	// src/main/scala/Frontend/rename.scala:112:34
-      speculative_RAT_29 <= 7'h0;	// src/main/scala/Frontend/rename.scala:112:34
-      speculative_RAT_30 <= 7'h0;	// src/main/scala/Frontend/rename.scala:112:34
-      speculative_RAT_31 <= 7'h0;	// src/main/scala/Frontend/rename.scala:112:34
-    end
-    else begin	// src/main/scala/Frontend/rename.scala:146:26
-      automatic logic _GEN_0;	// src/main/scala/Frontend/rename.scala:138:30
-      automatic logic _GEN_1;	// src/main/scala/Frontend/rename.scala:138:30
-      automatic logic _GEN_2;	// src/main/scala/Frontend/rename.scala:138:30
-      automatic logic _GEN_3 = io_commit_valid & io_commit_bits_RD_valid_3;	// src/main/scala/Frontend/rename.scala:138:30
-      _GEN_0 = io_commit_valid & io_commit_bits_RD_valid_0;	// src/main/scala/Frontend/rename.scala:138:30
-      _GEN_1 = io_commit_valid & io_commit_bits_RD_valid_1;	// src/main/scala/Frontend/rename.scala:138:30
-      _GEN_2 = io_commit_valid & io_commit_bits_RD_valid_2;	// src/main/scala/Frontend/rename.scala:138:30
-      if (_GEN_3 & io_commit_bits_RDold_3 == 5'h0)	// src/main/scala/Frontend/rename.scala:129:51, :138:{30,62}, :139:54
-        speculative_RAT_0 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_2 & io_commit_bits_RDold_2 == 5'h0)	// src/main/scala/Frontend/rename.scala:129:51, :138:{30,62}, :139:54
-        speculative_RAT_0 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_1 & io_commit_bits_RDold_1 == 5'h0)	// src/main/scala/Frontend/rename.scala:129:51, :138:{30,62}, :139:54
-        speculative_RAT_0 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'h0)	// src/main/scala/Frontend/rename.scala:128:36, :129:51, :138:{30,62}, :139:54
-        speculative_RAT_0 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'h0)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_0 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'h0)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_0 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'h0)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_0 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'h0)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
-        speculative_RAT_0 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      if (_GEN_3 & io_commit_bits_RDold_3 == 5'h1)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_1 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_2 & io_commit_bits_RDold_2 == 5'h1)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_1 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_1 & io_commit_bits_RDold_1 == 5'h1)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_1 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'h1)	// src/main/scala/Frontend/rename.scala:128:36, :138:{30,62}, :139:54
-        speculative_RAT_1 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'h1)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_1 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'h1)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_1 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'h1)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_1 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'h1)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
-        speculative_RAT_1 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      if (_GEN_3 & io_commit_bits_RDold_3 == 5'h2)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_2 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_2 & io_commit_bits_RDold_2 == 5'h2)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_2 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_1 & io_commit_bits_RDold_1 == 5'h2)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_2 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'h2)	// src/main/scala/Frontend/rename.scala:128:36, :138:{30,62}, :139:54
-        speculative_RAT_2 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'h2)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_2 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'h2)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_2 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'h2)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_2 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'h2)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
-        speculative_RAT_2 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      if (_GEN_3 & io_commit_bits_RDold_3 == 5'h3)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_3 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_2 & io_commit_bits_RDold_2 == 5'h3)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_3 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_1 & io_commit_bits_RDold_1 == 5'h3)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_3 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'h3)	// src/main/scala/Frontend/rename.scala:128:36, :138:{30,62}, :139:54
-        speculative_RAT_3 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'h3)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_3 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'h3)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_3 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'h3)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_3 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'h3)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
-        speculative_RAT_3 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      if (_GEN_3 & io_commit_bits_RDold_3 == 5'h4)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_4 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_2 & io_commit_bits_RDold_2 == 5'h4)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_4 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_1 & io_commit_bits_RDold_1 == 5'h4)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_4 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'h4)	// src/main/scala/Frontend/rename.scala:128:36, :138:{30,62}, :139:54
-        speculative_RAT_4 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'h4)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_4 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'h4)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_4 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'h4)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_4 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'h4)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
-        speculative_RAT_4 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      if (_GEN_3 & io_commit_bits_RDold_3 == 5'h5)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_5 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_2 & io_commit_bits_RDold_2 == 5'h5)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_5 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_1 & io_commit_bits_RDold_1 == 5'h5)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_5 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'h5)	// src/main/scala/Frontend/rename.scala:128:36, :138:{30,62}, :139:54
-        speculative_RAT_5 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'h5)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_5 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'h5)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_5 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'h5)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_5 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'h5)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
-        speculative_RAT_5 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      if (_GEN_3 & io_commit_bits_RDold_3 == 5'h6)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_6 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_2 & io_commit_bits_RDold_2 == 5'h6)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_6 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_1 & io_commit_bits_RDold_1 == 5'h6)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_6 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'h6)	// src/main/scala/Frontend/rename.scala:128:36, :138:{30,62}, :139:54
-        speculative_RAT_6 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'h6)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_6 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'h6)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_6 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'h6)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_6 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'h6)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
-        speculative_RAT_6 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      if (_GEN_3 & io_commit_bits_RDold_3 == 5'h7)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_7 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_2 & io_commit_bits_RDold_2 == 5'h7)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_7 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_1 & io_commit_bits_RDold_1 == 5'h7)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_7 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'h7)	// src/main/scala/Frontend/rename.scala:128:36, :138:{30,62}, :139:54
-        speculative_RAT_7 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'h7)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_7 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'h7)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_7 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'h7)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_7 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'h7)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
-        speculative_RAT_7 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      if (_GEN_3 & io_commit_bits_RDold_3 == 5'h8)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_8 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_2 & io_commit_bits_RDold_2 == 5'h8)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_8 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_1 & io_commit_bits_RDold_1 == 5'h8)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_8 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'h8)	// src/main/scala/Frontend/rename.scala:128:36, :138:{30,62}, :139:54
-        speculative_RAT_8 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'h8)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_8 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'h8)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_8 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'h8)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_8 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'h8)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
-        speculative_RAT_8 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      if (_GEN_3 & io_commit_bits_RDold_3 == 5'h9)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_9 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_2 & io_commit_bits_RDold_2 == 5'h9)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_9 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_1 & io_commit_bits_RDold_1 == 5'h9)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_9 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'h9)	// src/main/scala/Frontend/rename.scala:128:36, :138:{30,62}, :139:54
-        speculative_RAT_9 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'h9)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_9 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'h9)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_9 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'h9)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_9 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'h9)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
-        speculative_RAT_9 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      if (_GEN_3 & io_commit_bits_RDold_3 == 5'hA)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_10 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_2 & io_commit_bits_RDold_2 == 5'hA)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_10 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_1 & io_commit_bits_RDold_1 == 5'hA)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_10 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'hA)	// src/main/scala/Frontend/rename.scala:128:36, :138:{30,62}, :139:54
-        speculative_RAT_10 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'hA)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_10 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'hA)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_10 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'hA)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_10 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'hA)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
-        speculative_RAT_10 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      if (_GEN_3 & io_commit_bits_RDold_3 == 5'hB)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_11 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_2 & io_commit_bits_RDold_2 == 5'hB)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_11 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_1 & io_commit_bits_RDold_1 == 5'hB)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_11 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'hB)	// src/main/scala/Frontend/rename.scala:128:36, :138:{30,62}, :139:54
-        speculative_RAT_11 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'hB)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_11 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'hB)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_11 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'hB)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_11 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'hB)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
-        speculative_RAT_11 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      if (_GEN_3 & io_commit_bits_RDold_3 == 5'hC)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_12 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_2 & io_commit_bits_RDold_2 == 5'hC)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_12 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_1 & io_commit_bits_RDold_1 == 5'hC)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_12 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'hC)	// src/main/scala/Frontend/rename.scala:128:36, :138:{30,62}, :139:54
-        speculative_RAT_12 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'hC)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_12 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'hC)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_12 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'hC)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_12 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'hC)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
-        speculative_RAT_12 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      if (_GEN_3 & io_commit_bits_RDold_3 == 5'hD)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_13 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_2 & io_commit_bits_RDold_2 == 5'hD)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_13 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_1 & io_commit_bits_RDold_1 == 5'hD)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_13 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'hD)	// src/main/scala/Frontend/rename.scala:128:36, :138:{30,62}, :139:54
-        speculative_RAT_13 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'hD)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_13 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'hD)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_13 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'hD)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_13 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'hD)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
-        speculative_RAT_13 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      if (_GEN_3 & io_commit_bits_RDold_3 == 5'hE)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_14 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_2 & io_commit_bits_RDold_2 == 5'hE)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_14 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_1 & io_commit_bits_RDold_1 == 5'hE)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_14 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'hE)	// src/main/scala/Frontend/rename.scala:128:36, :138:{30,62}, :139:54
-        speculative_RAT_14 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'hE)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_14 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'hE)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_14 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'hE)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_14 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'hE)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
-        speculative_RAT_14 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      if (_GEN_3 & io_commit_bits_RDold_3 == 5'hF)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_15 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_2 & io_commit_bits_RDold_2 == 5'hF)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_15 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_1 & io_commit_bits_RDold_1 == 5'hF)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_15 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'hF)	// src/main/scala/Frontend/rename.scala:128:36, :138:{30,62}, :139:54
-        speculative_RAT_15 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'hF)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_15 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'hF)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_15 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'hF)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_15 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'hF)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
-        speculative_RAT_15 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      if (_GEN_3 & io_commit_bits_RDold_3 == 5'h10)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_16 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_2 & io_commit_bits_RDold_2 == 5'h10)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_16 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_1 & io_commit_bits_RDold_1 == 5'h10)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_16 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'h10)	// src/main/scala/Frontend/rename.scala:128:36, :138:{30,62}, :139:54
-        speculative_RAT_16 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'h10)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_16 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'h10)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_16 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'h10)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_16 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'h10)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
-        speculative_RAT_16 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      if (_GEN_3 & io_commit_bits_RDold_3 == 5'h11)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_17 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_2 & io_commit_bits_RDold_2 == 5'h11)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_17 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_1 & io_commit_bits_RDold_1 == 5'h11)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_17 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'h11)	// src/main/scala/Frontend/rename.scala:128:36, :138:{30,62}, :139:54
-        speculative_RAT_17 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'h11)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_17 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'h11)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_17 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'h11)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_17 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'h11)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
-        speculative_RAT_17 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      if (_GEN_3 & io_commit_bits_RDold_3 == 5'h12)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_18 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_2 & io_commit_bits_RDold_2 == 5'h12)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_18 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_1 & io_commit_bits_RDold_1 == 5'h12)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_18 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'h12)	// src/main/scala/Frontend/rename.scala:128:36, :138:{30,62}, :139:54
-        speculative_RAT_18 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'h12)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_18 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'h12)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_18 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'h12)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_18 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'h12)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
-        speculative_RAT_18 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      if (_GEN_3 & io_commit_bits_RDold_3 == 5'h13)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_19 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_2 & io_commit_bits_RDold_2 == 5'h13)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_19 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_1 & io_commit_bits_RDold_1 == 5'h13)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_19 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'h13)	// src/main/scala/Frontend/rename.scala:128:36, :138:{30,62}, :139:54
-        speculative_RAT_19 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'h13)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_19 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'h13)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_19 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'h13)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_19 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'h13)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
-        speculative_RAT_19 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      if (_GEN_3 & io_commit_bits_RDold_3 == 5'h14)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_20 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_2 & io_commit_bits_RDold_2 == 5'h14)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_20 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_1 & io_commit_bits_RDold_1 == 5'h14)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_20 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'h14)	// src/main/scala/Frontend/rename.scala:128:36, :138:{30,62}, :139:54
-        speculative_RAT_20 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'h14)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_20 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'h14)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_20 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'h14)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_20 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'h14)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
-        speculative_RAT_20 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      if (_GEN_3 & io_commit_bits_RDold_3 == 5'h15)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_21 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_2 & io_commit_bits_RDold_2 == 5'h15)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_21 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_1 & io_commit_bits_RDold_1 == 5'h15)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_21 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'h15)	// src/main/scala/Frontend/rename.scala:128:36, :138:{30,62}, :139:54
-        speculative_RAT_21 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'h15)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_21 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'h15)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_21 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'h15)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_21 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'h15)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
-        speculative_RAT_21 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      if (_GEN_3 & io_commit_bits_RDold_3 == 5'h16)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_22 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_2 & io_commit_bits_RDold_2 == 5'h16)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_22 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_1 & io_commit_bits_RDold_1 == 5'h16)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_22 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'h16)	// src/main/scala/Frontend/rename.scala:128:36, :138:{30,62}, :139:54
-        speculative_RAT_22 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'h16)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_22 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'h16)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_22 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'h16)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_22 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'h16)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
-        speculative_RAT_22 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      if (_GEN_3 & io_commit_bits_RDold_3 == 5'h17)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_23 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_2 & io_commit_bits_RDold_2 == 5'h17)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_23 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_1 & io_commit_bits_RDold_1 == 5'h17)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_23 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'h17)	// src/main/scala/Frontend/rename.scala:128:36, :138:{30,62}, :139:54
-        speculative_RAT_23 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'h17)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_23 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'h17)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_23 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'h17)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_23 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'h17)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
-        speculative_RAT_23 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      if (_GEN_3 & io_commit_bits_RDold_3 == 5'h18)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_24 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_2 & io_commit_bits_RDold_2 == 5'h18)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_24 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_1 & io_commit_bits_RDold_1 == 5'h18)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_24 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'h18)	// src/main/scala/Frontend/rename.scala:128:36, :138:{30,62}, :139:54
-        speculative_RAT_24 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'h18)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_24 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'h18)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_24 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'h18)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_24 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'h18)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
-        speculative_RAT_24 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      if (_GEN_3 & io_commit_bits_RDold_3 == 5'h19)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_25 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_2 & io_commit_bits_RDold_2 == 5'h19)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_25 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_1 & io_commit_bits_RDold_1 == 5'h19)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_25 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'h19)	// src/main/scala/Frontend/rename.scala:128:36, :138:{30,62}, :139:54
-        speculative_RAT_25 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'h19)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_25 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'h19)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_25 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'h19)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_25 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'h19)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
-        speculative_RAT_25 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      if (_GEN_3 & io_commit_bits_RDold_3 == 5'h1A)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_26 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_2 & io_commit_bits_RDold_2 == 5'h1A)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_26 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_1 & io_commit_bits_RDold_1 == 5'h1A)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_26 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'h1A)	// src/main/scala/Frontend/rename.scala:128:36, :138:{30,62}, :139:54
-        speculative_RAT_26 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'h1A)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_26 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'h1A)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_26 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'h1A)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_26 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'h1A)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
-        speculative_RAT_26 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      if (_GEN_3 & io_commit_bits_RDold_3 == 5'h1B)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_27 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_2 & io_commit_bits_RDold_2 == 5'h1B)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_27 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_1 & io_commit_bits_RDold_1 == 5'h1B)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_27 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'h1B)	// src/main/scala/Frontend/rename.scala:128:36, :138:{30,62}, :139:54
-        speculative_RAT_27 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'h1B)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_27 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'h1B)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_27 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'h1B)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_27 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'h1B)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
-        speculative_RAT_27 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      if (_GEN_3 & io_commit_bits_RDold_3 == 5'h1C)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_28 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_2 & io_commit_bits_RDold_2 == 5'h1C)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_28 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_1 & io_commit_bits_RDold_1 == 5'h1C)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_28 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'h1C)	// src/main/scala/Frontend/rename.scala:128:36, :138:{30,62}, :139:54
-        speculative_RAT_28 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'h1C)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_28 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'h1C)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_28 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'h1C)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_28 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'h1C)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
-        speculative_RAT_28 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      if (_GEN_3 & io_commit_bits_RDold_3 == 5'h1D)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_29 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_2 & io_commit_bits_RDold_2 == 5'h1D)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_29 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_1 & io_commit_bits_RDold_1 == 5'h1D)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_29 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'h1D)	// src/main/scala/Frontend/rename.scala:128:36, :138:{30,62}, :139:54
-        speculative_RAT_29 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'h1D)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_29 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'h1D)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_29 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'h1D)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_29 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'h1D)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
-        speculative_RAT_29 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      if (_GEN_3 & io_commit_bits_RDold_3 == 5'h1E)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_30 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_2 & io_commit_bits_RDold_2 == 5'h1E)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_30 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_1 & io_commit_bits_RDold_1 == 5'h1E)	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_30 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_0 & io_commit_bits_RDold_0 == 5'h1E)	// src/main/scala/Frontend/rename.scala:128:36, :138:{30,62}, :139:54
-        speculative_RAT_30 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'h1E)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_30 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'h1E)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_30 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'h1E)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_30 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'h1E)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
-        speculative_RAT_30 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      if (_GEN_3 & (&io_commit_bits_RDold_3))	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_31 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_2 & (&io_commit_bits_RDold_2))	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_31 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_1 & (&io_commit_bits_RDold_1))	// src/main/scala/Frontend/rename.scala:138:{30,62}, :139:54
-        speculative_RAT_31 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (_GEN_0 & (&io_commit_bits_RDold_0))	// src/main/scala/Frontend/rename.scala:128:36, :138:{30,62}, :139:54
-        speculative_RAT_31 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_3 & (&io_instruction_RD_3))	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_31 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_2 & (&io_instruction_RD_2))	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_31 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_1 & (&io_instruction_RD_1))	// src/main/scala/Frontend/rename.scala:128:36, :129:51
-        speculative_RAT_31 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
-      else if (io_free_list_wr_en_0 & (&io_instruction_RD_0))	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
-        speculative_RAT_31 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
+    else begin	// src/main/scala/Frontend/rename.scala:78:7
+      automatic logic _GEN_0 =
+        io_commit_valid & (io_commit_bits_is_misprediction | io_commit_bits_exception);	// src/main/scala/Frontend/rename.scala:138:{82,118}
+      automatic logic _GEN_1;	// src/main/scala/Frontend/rename.scala:138:{30,61}
+      automatic logic _GEN_2;	// src/main/scala/Frontend/rename.scala:138:{30,61}
+      automatic logic _GEN_3;	// src/main/scala/Frontend/rename.scala:138:{30,61}
+      automatic logic _GEN_4 = io_commit_valid & io_commit_bits_RD_valid_3 & ~_GEN_0;	// src/main/scala/Frontend/rename.scala:138:{30,61,64,82}
+      _GEN_1 = io_commit_valid & io_commit_bits_RD_valid_0 & ~_GEN_0;	// src/main/scala/Frontend/rename.scala:138:{30,61,64,82}
+      _GEN_2 = io_commit_valid & io_commit_bits_RD_valid_1 & ~_GEN_0;	// src/main/scala/Frontend/rename.scala:138:{30,61,64,82}
+      _GEN_3 = io_commit_valid & io_commit_bits_RD_valid_2 & ~_GEN_0;	// src/main/scala/Frontend/rename.scala:138:{30,61,64,82}
+      if (_GEN_4 & io_commit_bits_RDold_3 == 5'h0)	// src/main/scala/Frontend/rename.scala:129:51, :138:{30,61,149}, :139:49
+        commit_RAT_0 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'h0)	// src/main/scala/Frontend/rename.scala:129:51, :138:{30,61,149}, :139:49
+        commit_RAT_0 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_2 & io_commit_bits_RDold_1 == 5'h0)	// src/main/scala/Frontend/rename.scala:129:51, :138:{30,61,149}, :139:49
+        commit_RAT_0 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'h0)	// src/main/scala/Frontend/rename.scala:111:34, :129:51, :138:{30,61,149}, :139:49
+        commit_RAT_0 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:111:34
+      if (_GEN_4 & io_commit_bits_RDold_3 == 5'h1)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_1 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'h1)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_1 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_2 & io_commit_bits_RDold_1 == 5'h1)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_1 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'h1)	// src/main/scala/Frontend/rename.scala:111:34, :138:{30,61,149}, :139:49
+        commit_RAT_1 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:111:34
+      if (_GEN_4 & io_commit_bits_RDold_3 == 5'h2)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_2 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'h2)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_2 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_2 & io_commit_bits_RDold_1 == 5'h2)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_2 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'h2)	// src/main/scala/Frontend/rename.scala:111:34, :138:{30,61,149}, :139:49
+        commit_RAT_2 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:111:34
+      if (_GEN_4 & io_commit_bits_RDold_3 == 5'h3)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_3 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'h3)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_3 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_2 & io_commit_bits_RDold_1 == 5'h3)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_3 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'h3)	// src/main/scala/Frontend/rename.scala:111:34, :138:{30,61,149}, :139:49
+        commit_RAT_3 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:111:34
+      if (_GEN_4 & io_commit_bits_RDold_3 == 5'h4)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_4 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'h4)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_4 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_2 & io_commit_bits_RDold_1 == 5'h4)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_4 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'h4)	// src/main/scala/Frontend/rename.scala:111:34, :138:{30,61,149}, :139:49
+        commit_RAT_4 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:111:34
+      if (_GEN_4 & io_commit_bits_RDold_3 == 5'h5)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_5 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'h5)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_5 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_2 & io_commit_bits_RDold_1 == 5'h5)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_5 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'h5)	// src/main/scala/Frontend/rename.scala:111:34, :138:{30,61,149}, :139:49
+        commit_RAT_5 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:111:34
+      if (_GEN_4 & io_commit_bits_RDold_3 == 5'h6)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_6 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'h6)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_6 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_2 & io_commit_bits_RDold_1 == 5'h6)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_6 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'h6)	// src/main/scala/Frontend/rename.scala:111:34, :138:{30,61,149}, :139:49
+        commit_RAT_6 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:111:34
+      if (_GEN_4 & io_commit_bits_RDold_3 == 5'h7)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_7 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'h7)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_7 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_2 & io_commit_bits_RDold_1 == 5'h7)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_7 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'h7)	// src/main/scala/Frontend/rename.scala:111:34, :138:{30,61,149}, :139:49
+        commit_RAT_7 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:111:34
+      if (_GEN_4 & io_commit_bits_RDold_3 == 5'h8)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_8 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'h8)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_8 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_2 & io_commit_bits_RDold_1 == 5'h8)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_8 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'h8)	// src/main/scala/Frontend/rename.scala:111:34, :138:{30,61,149}, :139:49
+        commit_RAT_8 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:111:34
+      if (_GEN_4 & io_commit_bits_RDold_3 == 5'h9)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_9 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'h9)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_9 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_2 & io_commit_bits_RDold_1 == 5'h9)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_9 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'h9)	// src/main/scala/Frontend/rename.scala:111:34, :138:{30,61,149}, :139:49
+        commit_RAT_9 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:111:34
+      if (_GEN_4 & io_commit_bits_RDold_3 == 5'hA)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_10 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'hA)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_10 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_2 & io_commit_bits_RDold_1 == 5'hA)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_10 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'hA)	// src/main/scala/Frontend/rename.scala:111:34, :138:{30,61,149}, :139:49
+        commit_RAT_10 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:111:34
+      if (_GEN_4 & io_commit_bits_RDold_3 == 5'hB)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_11 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'hB)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_11 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_2 & io_commit_bits_RDold_1 == 5'hB)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_11 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'hB)	// src/main/scala/Frontend/rename.scala:111:34, :138:{30,61,149}, :139:49
+        commit_RAT_11 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:111:34
+      if (_GEN_4 & io_commit_bits_RDold_3 == 5'hC)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_12 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'hC)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_12 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_2 & io_commit_bits_RDold_1 == 5'hC)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_12 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'hC)	// src/main/scala/Frontend/rename.scala:111:34, :138:{30,61,149}, :139:49
+        commit_RAT_12 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:111:34
+      if (_GEN_4 & io_commit_bits_RDold_3 == 5'hD)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_13 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'hD)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_13 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_2 & io_commit_bits_RDold_1 == 5'hD)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_13 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'hD)	// src/main/scala/Frontend/rename.scala:111:34, :138:{30,61,149}, :139:49
+        commit_RAT_13 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:111:34
+      if (_GEN_4 & io_commit_bits_RDold_3 == 5'hE)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_14 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'hE)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_14 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_2 & io_commit_bits_RDold_1 == 5'hE)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_14 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'hE)	// src/main/scala/Frontend/rename.scala:111:34, :138:{30,61,149}, :139:49
+        commit_RAT_14 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:111:34
+      if (_GEN_4 & io_commit_bits_RDold_3 == 5'hF)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_15 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'hF)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_15 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_2 & io_commit_bits_RDold_1 == 5'hF)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_15 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'hF)	// src/main/scala/Frontend/rename.scala:111:34, :138:{30,61,149}, :139:49
+        commit_RAT_15 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:111:34
+      if (_GEN_4 & io_commit_bits_RDold_3 == 5'h10)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_16 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'h10)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_16 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_2 & io_commit_bits_RDold_1 == 5'h10)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_16 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'h10)	// src/main/scala/Frontend/rename.scala:111:34, :138:{30,61,149}, :139:49
+        commit_RAT_16 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:111:34
+      if (_GEN_4 & io_commit_bits_RDold_3 == 5'h11)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_17 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'h11)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_17 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_2 & io_commit_bits_RDold_1 == 5'h11)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_17 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'h11)	// src/main/scala/Frontend/rename.scala:111:34, :138:{30,61,149}, :139:49
+        commit_RAT_17 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:111:34
+      if (_GEN_4 & io_commit_bits_RDold_3 == 5'h12)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_18 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'h12)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_18 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_2 & io_commit_bits_RDold_1 == 5'h12)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_18 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'h12)	// src/main/scala/Frontend/rename.scala:111:34, :138:{30,61,149}, :139:49
+        commit_RAT_18 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:111:34
+      if (_GEN_4 & io_commit_bits_RDold_3 == 5'h13)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_19 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'h13)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_19 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_2 & io_commit_bits_RDold_1 == 5'h13)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_19 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'h13)	// src/main/scala/Frontend/rename.scala:111:34, :138:{30,61,149}, :139:49
+        commit_RAT_19 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:111:34
+      if (_GEN_4 & io_commit_bits_RDold_3 == 5'h14)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_20 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'h14)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_20 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_2 & io_commit_bits_RDold_1 == 5'h14)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_20 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'h14)	// src/main/scala/Frontend/rename.scala:111:34, :138:{30,61,149}, :139:49
+        commit_RAT_20 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:111:34
+      if (_GEN_4 & io_commit_bits_RDold_3 == 5'h15)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_21 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'h15)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_21 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_2 & io_commit_bits_RDold_1 == 5'h15)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_21 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'h15)	// src/main/scala/Frontend/rename.scala:111:34, :138:{30,61,149}, :139:49
+        commit_RAT_21 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:111:34
+      if (_GEN_4 & io_commit_bits_RDold_3 == 5'h16)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_22 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'h16)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_22 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_2 & io_commit_bits_RDold_1 == 5'h16)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_22 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'h16)	// src/main/scala/Frontend/rename.scala:111:34, :138:{30,61,149}, :139:49
+        commit_RAT_22 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:111:34
+      if (_GEN_4 & io_commit_bits_RDold_3 == 5'h17)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_23 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'h17)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_23 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_2 & io_commit_bits_RDold_1 == 5'h17)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_23 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'h17)	// src/main/scala/Frontend/rename.scala:111:34, :138:{30,61,149}, :139:49
+        commit_RAT_23 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:111:34
+      if (_GEN_4 & io_commit_bits_RDold_3 == 5'h18)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_24 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'h18)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_24 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_2 & io_commit_bits_RDold_1 == 5'h18)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_24 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'h18)	// src/main/scala/Frontend/rename.scala:111:34, :138:{30,61,149}, :139:49
+        commit_RAT_24 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:111:34
+      if (_GEN_4 & io_commit_bits_RDold_3 == 5'h19)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_25 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'h19)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_25 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_2 & io_commit_bits_RDold_1 == 5'h19)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_25 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'h19)	// src/main/scala/Frontend/rename.scala:111:34, :138:{30,61,149}, :139:49
+        commit_RAT_25 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:111:34
+      if (_GEN_4 & io_commit_bits_RDold_3 == 5'h1A)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_26 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'h1A)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_26 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_2 & io_commit_bits_RDold_1 == 5'h1A)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_26 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'h1A)	// src/main/scala/Frontend/rename.scala:111:34, :138:{30,61,149}, :139:49
+        commit_RAT_26 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:111:34
+      if (_GEN_4 & io_commit_bits_RDold_3 == 5'h1B)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_27 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'h1B)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_27 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_2 & io_commit_bits_RDold_1 == 5'h1B)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_27 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'h1B)	// src/main/scala/Frontend/rename.scala:111:34, :138:{30,61,149}, :139:49
+        commit_RAT_27 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:111:34
+      if (_GEN_4 & io_commit_bits_RDold_3 == 5'h1C)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_28 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'h1C)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_28 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_2 & io_commit_bits_RDold_1 == 5'h1C)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_28 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'h1C)	// src/main/scala/Frontend/rename.scala:111:34, :138:{30,61,149}, :139:49
+        commit_RAT_28 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:111:34
+      if (_GEN_4 & io_commit_bits_RDold_3 == 5'h1D)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_29 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'h1D)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_29 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_2 & io_commit_bits_RDold_1 == 5'h1D)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_29 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'h1D)	// src/main/scala/Frontend/rename.scala:111:34, :138:{30,61,149}, :139:49
+        commit_RAT_29 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:111:34
+      if (_GEN_4 & io_commit_bits_RDold_3 == 5'h1E)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_30 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_3 & io_commit_bits_RDold_2 == 5'h1E)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_30 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_2 & io_commit_bits_RDold_1 == 5'h1E)	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_30 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_1 & io_commit_bits_RDold_0 == 5'h1E)	// src/main/scala/Frontend/rename.scala:111:34, :138:{30,61,149}, :139:49
+        commit_RAT_30 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:111:34
+      if (_GEN_4 & (&io_commit_bits_RDold_3))	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_31 <= io_commit_bits_RD_3;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_3 & (&io_commit_bits_RDold_2))	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_31 <= io_commit_bits_RD_2;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_2 & (&io_commit_bits_RDold_1))	// src/main/scala/Frontend/rename.scala:138:{30,61,149}, :139:49
+        commit_RAT_31 <= io_commit_bits_RD_1;	// src/main/scala/Frontend/rename.scala:111:34
+      else if (_GEN_1 & (&io_commit_bits_RDold_0))	// src/main/scala/Frontend/rename.scala:111:34, :138:{30,61,149}, :139:49
+        commit_RAT_31 <= io_commit_bits_RD_0;	// src/main/scala/Frontend/rename.scala:111:34
+      if (_GEN_0) begin	// src/main/scala/Frontend/rename.scala:138:82
+        speculative_RAT_0 <= commit_RAT_0;	// src/main/scala/Frontend/rename.scala:111:34, :112:34
+        speculative_RAT_1 <= commit_RAT_1;	// src/main/scala/Frontend/rename.scala:111:34, :112:34
+        speculative_RAT_2 <= commit_RAT_2;	// src/main/scala/Frontend/rename.scala:111:34, :112:34
+        speculative_RAT_3 <= commit_RAT_3;	// src/main/scala/Frontend/rename.scala:111:34, :112:34
+        speculative_RAT_4 <= commit_RAT_4;	// src/main/scala/Frontend/rename.scala:111:34, :112:34
+        speculative_RAT_5 <= commit_RAT_5;	// src/main/scala/Frontend/rename.scala:111:34, :112:34
+        speculative_RAT_6 <= commit_RAT_6;	// src/main/scala/Frontend/rename.scala:111:34, :112:34
+        speculative_RAT_7 <= commit_RAT_7;	// src/main/scala/Frontend/rename.scala:111:34, :112:34
+        speculative_RAT_8 <= commit_RAT_8;	// src/main/scala/Frontend/rename.scala:111:34, :112:34
+        speculative_RAT_9 <= commit_RAT_9;	// src/main/scala/Frontend/rename.scala:111:34, :112:34
+        speculative_RAT_10 <= commit_RAT_10;	// src/main/scala/Frontend/rename.scala:111:34, :112:34
+        speculative_RAT_11 <= commit_RAT_11;	// src/main/scala/Frontend/rename.scala:111:34, :112:34
+        speculative_RAT_12 <= commit_RAT_12;	// src/main/scala/Frontend/rename.scala:111:34, :112:34
+        speculative_RAT_13 <= commit_RAT_13;	// src/main/scala/Frontend/rename.scala:111:34, :112:34
+        speculative_RAT_14 <= commit_RAT_14;	// src/main/scala/Frontend/rename.scala:111:34, :112:34
+        speculative_RAT_15 <= commit_RAT_15;	// src/main/scala/Frontend/rename.scala:111:34, :112:34
+        speculative_RAT_16 <= commit_RAT_16;	// src/main/scala/Frontend/rename.scala:111:34, :112:34
+        speculative_RAT_17 <= commit_RAT_17;	// src/main/scala/Frontend/rename.scala:111:34, :112:34
+        speculative_RAT_18 <= commit_RAT_18;	// src/main/scala/Frontend/rename.scala:111:34, :112:34
+        speculative_RAT_19 <= commit_RAT_19;	// src/main/scala/Frontend/rename.scala:111:34, :112:34
+        speculative_RAT_20 <= commit_RAT_20;	// src/main/scala/Frontend/rename.scala:111:34, :112:34
+        speculative_RAT_21 <= commit_RAT_21;	// src/main/scala/Frontend/rename.scala:111:34, :112:34
+        speculative_RAT_22 <= commit_RAT_22;	// src/main/scala/Frontend/rename.scala:111:34, :112:34
+        speculative_RAT_23 <= commit_RAT_23;	// src/main/scala/Frontend/rename.scala:111:34, :112:34
+        speculative_RAT_24 <= commit_RAT_24;	// src/main/scala/Frontend/rename.scala:111:34, :112:34
+        speculative_RAT_25 <= commit_RAT_25;	// src/main/scala/Frontend/rename.scala:111:34, :112:34
+        speculative_RAT_26 <= commit_RAT_26;	// src/main/scala/Frontend/rename.scala:111:34, :112:34
+        speculative_RAT_27 <= commit_RAT_27;	// src/main/scala/Frontend/rename.scala:111:34, :112:34
+        speculative_RAT_28 <= commit_RAT_28;	// src/main/scala/Frontend/rename.scala:111:34, :112:34
+        speculative_RAT_29 <= commit_RAT_29;	// src/main/scala/Frontend/rename.scala:111:34, :112:34
+        speculative_RAT_30 <= commit_RAT_30;	// src/main/scala/Frontend/rename.scala:111:34, :112:34
+        speculative_RAT_31 <= commit_RAT_31;	// src/main/scala/Frontend/rename.scala:111:34, :112:34
+      end
+      else begin	// src/main/scala/Frontend/rename.scala:138:82
+        if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'h0)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_0 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'h0)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_0 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'h0)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_0 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'h0)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
+          speculative_RAT_0 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
+        if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'h1)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_1 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'h1)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_1 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'h1)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_1 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'h1)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
+          speculative_RAT_1 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
+        if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'h2)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_2 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'h2)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_2 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'h2)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_2 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'h2)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
+          speculative_RAT_2 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
+        if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'h3)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_3 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'h3)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_3 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'h3)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_3 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'h3)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
+          speculative_RAT_3 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
+        if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'h4)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_4 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'h4)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_4 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'h4)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_4 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'h4)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
+          speculative_RAT_4 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
+        if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'h5)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_5 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'h5)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_5 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'h5)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_5 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'h5)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
+          speculative_RAT_5 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
+        if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'h6)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_6 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'h6)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_6 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'h6)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_6 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'h6)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
+          speculative_RAT_6 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
+        if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'h7)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_7 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'h7)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_7 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'h7)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_7 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'h7)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
+          speculative_RAT_7 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
+        if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'h8)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_8 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'h8)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_8 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'h8)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_8 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'h8)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
+          speculative_RAT_8 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
+        if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'h9)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_9 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'h9)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_9 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'h9)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_9 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'h9)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
+          speculative_RAT_9 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
+        if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'hA)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_10 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'hA)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_10 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'hA)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_10 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'hA)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
+          speculative_RAT_10 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
+        if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'hB)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_11 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'hB)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_11 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'hB)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_11 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'hB)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
+          speculative_RAT_11 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
+        if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'hC)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_12 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'hC)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_12 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'hC)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_12 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'hC)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
+          speculative_RAT_12 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
+        if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'hD)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_13 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'hD)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_13 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'hD)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_13 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'hD)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
+          speculative_RAT_13 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
+        if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'hE)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_14 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'hE)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_14 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'hE)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_14 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'hE)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
+          speculative_RAT_14 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
+        if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'hF)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_15 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'hF)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_15 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'hF)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_15 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'hF)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
+          speculative_RAT_15 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
+        if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'h10)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_16 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'h10)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_16 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'h10)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_16 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'h10)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
+          speculative_RAT_16 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
+        if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'h11)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_17 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'h11)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_17 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'h11)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_17 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'h11)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
+          speculative_RAT_17 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
+        if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'h12)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_18 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'h12)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_18 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'h12)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_18 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'h12)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
+          speculative_RAT_18 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
+        if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'h13)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_19 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'h13)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_19 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'h13)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_19 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'h13)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
+          speculative_RAT_19 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
+        if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'h14)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_20 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'h14)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_20 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'h14)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_20 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'h14)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
+          speculative_RAT_20 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
+        if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'h15)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_21 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'h15)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_21 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'h15)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_21 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'h15)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
+          speculative_RAT_21 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
+        if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'h16)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_22 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'h16)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_22 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'h16)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_22 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'h16)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
+          speculative_RAT_22 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
+        if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'h17)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_23 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'h17)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_23 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'h17)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_23 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'h17)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
+          speculative_RAT_23 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
+        if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'h18)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_24 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'h18)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_24 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'h18)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_24 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'h18)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
+          speculative_RAT_24 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
+        if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'h19)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_25 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'h19)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_25 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'h19)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_25 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'h19)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
+          speculative_RAT_25 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
+        if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'h1A)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_26 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'h1A)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_26 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'h1A)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_26 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'h1A)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
+          speculative_RAT_26 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
+        if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'h1B)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_27 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'h1B)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_27 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'h1B)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_27 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'h1B)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
+          speculative_RAT_27 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
+        if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'h1C)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_28 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'h1C)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_28 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'h1C)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_28 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'h1C)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
+          speculative_RAT_28 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
+        if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'h1D)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_29 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'h1D)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_29 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'h1D)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_29 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'h1D)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
+          speculative_RAT_29 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
+        if (io_free_list_wr_en_3 & io_instruction_RD_3 == 5'h1E)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_30 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_2 & io_instruction_RD_2 == 5'h1E)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_30 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_1 & io_instruction_RD_1 == 5'h1E)	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_30 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_0 & io_instruction_RD_0 == 5'h1E)	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
+          speculative_RAT_30 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
+        if (io_free_list_wr_en_3 & (&io_instruction_RD_3))	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_31 <= io_free_list_RD_3;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_2 & (&io_instruction_RD_2))	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_31 <= io_free_list_RD_2;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_1 & (&io_instruction_RD_1))	// src/main/scala/Frontend/rename.scala:128:36, :129:51
+          speculative_RAT_31 <= io_free_list_RD_1;	// src/main/scala/Frontend/rename.scala:112:34
+        else if (io_free_list_wr_en_0 & (&io_instruction_RD_0))	// src/main/scala/Frontend/rename.scala:112:34, :128:36, :129:51
+          speculative_RAT_31 <= io_free_list_RD_0;	// src/main/scala/Frontend/rename.scala:112:34
+      end
     end
   end // always @(posedge)
   `ifdef ENABLE_INITIAL_REG_	// src/main/scala/Frontend/rename.scala:78:7
@@ -761,6 +828,38 @@ module RAT(	// src/main/scala/Frontend/rename.scala:78:7
         for (logic [3:0] i = 4'h0; i < 4'hE; i += 4'h1) begin
           _RANDOM[i] = `RANDOM;	// src/main/scala/Frontend/rename.scala:78:7
         end	// src/main/scala/Frontend/rename.scala:78:7
+        commit_RAT_0 = _RANDOM[4'h0][6:0];	// src/main/scala/Frontend/rename.scala:78:7, :111:34
+        commit_RAT_1 = _RANDOM[4'h0][13:7];	// src/main/scala/Frontend/rename.scala:78:7, :111:34
+        commit_RAT_2 = _RANDOM[4'h0][20:14];	// src/main/scala/Frontend/rename.scala:78:7, :111:34
+        commit_RAT_3 = _RANDOM[4'h0][27:21];	// src/main/scala/Frontend/rename.scala:78:7, :111:34
+        commit_RAT_4 = {_RANDOM[4'h0][31:28], _RANDOM[4'h1][2:0]};	// src/main/scala/Frontend/rename.scala:78:7, :111:34
+        commit_RAT_5 = _RANDOM[4'h1][9:3];	// src/main/scala/Frontend/rename.scala:78:7, :111:34
+        commit_RAT_6 = _RANDOM[4'h1][16:10];	// src/main/scala/Frontend/rename.scala:78:7, :111:34
+        commit_RAT_7 = _RANDOM[4'h1][23:17];	// src/main/scala/Frontend/rename.scala:78:7, :111:34
+        commit_RAT_8 = _RANDOM[4'h1][30:24];	// src/main/scala/Frontend/rename.scala:78:7, :111:34
+        commit_RAT_9 = {_RANDOM[4'h1][31], _RANDOM[4'h2][5:0]};	// src/main/scala/Frontend/rename.scala:78:7, :111:34
+        commit_RAT_10 = _RANDOM[4'h2][12:6];	// src/main/scala/Frontend/rename.scala:78:7, :111:34
+        commit_RAT_11 = _RANDOM[4'h2][19:13];	// src/main/scala/Frontend/rename.scala:78:7, :111:34
+        commit_RAT_12 = _RANDOM[4'h2][26:20];	// src/main/scala/Frontend/rename.scala:78:7, :111:34
+        commit_RAT_13 = {_RANDOM[4'h2][31:27], _RANDOM[4'h3][1:0]};	// src/main/scala/Frontend/rename.scala:78:7, :111:34
+        commit_RAT_14 = _RANDOM[4'h3][8:2];	// src/main/scala/Frontend/rename.scala:78:7, :111:34
+        commit_RAT_15 = _RANDOM[4'h3][15:9];	// src/main/scala/Frontend/rename.scala:78:7, :111:34
+        commit_RAT_16 = _RANDOM[4'h3][22:16];	// src/main/scala/Frontend/rename.scala:78:7, :111:34
+        commit_RAT_17 = _RANDOM[4'h3][29:23];	// src/main/scala/Frontend/rename.scala:78:7, :111:34
+        commit_RAT_18 = {_RANDOM[4'h3][31:30], _RANDOM[4'h4][4:0]};	// src/main/scala/Frontend/rename.scala:78:7, :111:34
+        commit_RAT_19 = _RANDOM[4'h4][11:5];	// src/main/scala/Frontend/rename.scala:78:7, :111:34
+        commit_RAT_20 = _RANDOM[4'h4][18:12];	// src/main/scala/Frontend/rename.scala:78:7, :111:34
+        commit_RAT_21 = _RANDOM[4'h4][25:19];	// src/main/scala/Frontend/rename.scala:78:7, :111:34
+        commit_RAT_22 = {_RANDOM[4'h4][31:26], _RANDOM[4'h5][0]};	// src/main/scala/Frontend/rename.scala:78:7, :111:34
+        commit_RAT_23 = _RANDOM[4'h5][7:1];	// src/main/scala/Frontend/rename.scala:78:7, :111:34
+        commit_RAT_24 = _RANDOM[4'h5][14:8];	// src/main/scala/Frontend/rename.scala:78:7, :111:34
+        commit_RAT_25 = _RANDOM[4'h5][21:15];	// src/main/scala/Frontend/rename.scala:78:7, :111:34
+        commit_RAT_26 = _RANDOM[4'h5][28:22];	// src/main/scala/Frontend/rename.scala:78:7, :111:34
+        commit_RAT_27 = {_RANDOM[4'h5][31:29], _RANDOM[4'h6][3:0]};	// src/main/scala/Frontend/rename.scala:78:7, :111:34
+        commit_RAT_28 = _RANDOM[4'h6][10:4];	// src/main/scala/Frontend/rename.scala:78:7, :111:34
+        commit_RAT_29 = _RANDOM[4'h6][17:11];	// src/main/scala/Frontend/rename.scala:78:7, :111:34
+        commit_RAT_30 = _RANDOM[4'h6][24:18];	// src/main/scala/Frontend/rename.scala:78:7, :111:34
+        commit_RAT_31 = _RANDOM[4'h6][31:25];	// src/main/scala/Frontend/rename.scala:78:7, :111:34
         speculative_RAT_0 = _RANDOM[4'h7][6:0];	// src/main/scala/Frontend/rename.scala:78:7, :112:34
         speculative_RAT_1 = _RANDOM[4'h7][13:7];	// src/main/scala/Frontend/rename.scala:78:7, :112:34
         speculative_RAT_2 = _RANDOM[4'h7][20:14];	// src/main/scala/Frontend/rename.scala:78:7, :112:34

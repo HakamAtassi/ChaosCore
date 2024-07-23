@@ -97,13 +97,13 @@ class ChaosCore_dut:
         return int(self.ChaosCore.io_backend_memory_request_bits_addr.value)
 
     def read_dmem_request_wr_en(self):
-        return int(self.ChaosCore.io_backend_memory_request_bits_wr_en.value)
+        return int(self.ChaosCore.io_backend_memory_request_bits_memory_type.value)
 
     def read_dmem_request_wr_en(self):
         return int(self.ChaosCore.io_backend_memory_request_valid.value)
 
     def read_dmem_request_data(self):
-        return int(self.ChaosCore.io_backend_memory_request_bits_wr_data.value)
+        return int(self.ChaosCore.io_backend_memory_request_bits_data.value)
 
     def write_dmem_request_ready(self, ready):
         self.ChaosCore.io_backend_memory_request_ready.value = ready

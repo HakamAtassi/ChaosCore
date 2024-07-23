@@ -107,7 +107,7 @@ class MOB(coreParameters:CoreParameters) extends Module{
         val backend_memory_request              =   Decoupled(new backend_memory_request(coreParameters))
         val backend_memory_response             =   Flipped(Decoupled(new backend_memory_response(coreParameters)))
 
-    })
+    }); dontTouch(io)
 
 
     val front_pointer   = RegInit(UInt(ptr_width.W), 0.U)
@@ -154,6 +154,7 @@ class MOB(coreParameters:CoreParameters) extends Module{
             MOB(back_index + index_offset).memory_type          :=  io.reserve(i).bits.memory_type
             MOB(back_index + index_offset).RD                   :=  io.reserve(i).bits.RD
             MOB(back_index + index_offset).ROB_index            :=  io.reserve(i).bits.ROB_index
+            MOB(back_index + index_offset).fetch_packet_index   :=  io.reserve(i).bits.packet_index
 
             io.reserved_pointers(i).bits     := back_index + index_offset
             io.reserved_pointers(i).valid    := 1.U
@@ -169,12 +170,21 @@ class MOB(coreParameters:CoreParameters) extends Module{
     // Write data
     val MOB_index                       = io.AGU_output.bits.MOB_index
     val address                         = io.AGU_output.bits.address
-    val data                            = io.AGU_output.bits.RD_data
+    val data                            = io.AGU_output.bits.wr_data
+
+
+    // merge data then write load to load FU queue
+    val response_age = Wire(UInt((ptr_width-1).W))
+    val byte_sels    = Wire(Vec(MOBEntries, UInt(4.W)))
+    val wr_bytes     = Wire(Vec(MOBEntries, Vec(4, UInt(8.W))))
+    val data_out     = Wire(Vec(4, UInt(8.W)))
     when(io.AGU_output.valid){
         MOB(MOB_index).pending         := 1.B
         MOB(MOB_index).address         := address
         MOB(MOB_index).data            := data
     }
+
+    dontTouch(MOB)
 
     // Check exception
     val incoming_is_valid       = io.AGU_output.valid
@@ -223,7 +233,7 @@ class MOB(coreParameters:CoreParameters) extends Module{
 
     // FIXME: need to add cache ready check + FSM/skidbuffer stuff...
     possible_load_vec    := MOB.map(MOB_entry => MOB_entry.valid && MOB_entry.pending && (MOB_entry.memory_type === memory_type_t.LOAD))
-    fire_store           := MOB(front_index).valid && MOB(front_index).committed && !MOB(front_index).exception && (MOB(front_index).memory_type === memory_type_t.STORE)    // stores are sent only from front of queue
+    fire_store           := MOB(front_index).valid && MOB(front_index).committed && MOB(front_index).pending && !MOB(front_index).exception && (MOB(front_index).memory_type === memory_type_t.STORE)    // stores are sent only from front of queue
 
     when(possible_load_vec.asUInt > 0.U){    // possible load, do that
         val load_index                               = PriorityEncoder(possible_load_vec)
@@ -240,6 +250,7 @@ class MOB(coreParameters:CoreParameters) extends Module{
         io.backend_memory_request.bits.addr         := MOB(store_index).address
         io.backend_memory_request.bits.memory_type  := MOB(store_index).memory_type
         io.backend_memory_request.bits.access_width := MOB(store_index).access_width
+        io.backend_memory_request.bits.data         := MOB(store_index).data
         io.backend_memory_request.bits.MOB_index    := store_index
     }
 
@@ -276,6 +287,8 @@ class MOB(coreParameters:CoreParameters) extends Module{
         for(i <- 0 until MOBEntries){
             MOB(i) := 0.U.asTypeOf(new MOB_entry(coreParameters))
         }
+        front_pointer := 0.U
+        back_pointer := 0.U
     }
 
     ////////////////////
@@ -302,11 +315,14 @@ class MOB(coreParameters:CoreParameters) extends Module{
     val possible_FU_load_index  = PriorityEncoder(possible_FU_loads)
     val possible_FU_store_index = PriorityEncoder(possible_FU_stores)
 
+    dontTouch(possible_FU_store_index)
+
     // write store to store FU queue
     FU_output_store_Q.io.enq.valid               := possible_FU_stores.reduce(_ || _)
     FU_output_store_Q.io.enq.bits                := DontCare
     FU_output_store_Q.io.enq.bits.exception      := MOB(possible_FU_store_index).exception
     FU_output_store_Q.io.enq.bits.ROB_index      := MOB(possible_FU_store_index).ROB_index
+    FU_output_store_Q.io.enq.bits.fetch_packet_index      := MOB(possible_FU_store_index).fetch_packet_index
     FU_output_store_Q.io.flush.get := io.commit.valid && (io.commit.bits.is_misprediction || io.commit.bits.exception)
 
 
@@ -317,11 +333,6 @@ class MOB(coreParameters:CoreParameters) extends Module{
 
     
 
-    // merge data then write load to load FU queue
-    val response_age = Wire(UInt((ptr_width-1).W))
-    val byte_sels    = Wire(Vec(MOBEntries, UInt(4.W)))
-    val wr_bytes     = Wire(Vec(MOBEntries, Vec(4, UInt(8.W))))
-    val data_out     = Wire(Vec(4, UInt(8.W)))
 
     response_age := age_vector(possible_FU_load_index)
 
@@ -355,13 +366,14 @@ class MOB(coreParameters:CoreParameters) extends Module{
 
 
 
-    FU_output_load_Q.io.enq.valid               := possible_FU_stores.reduce(_ || _)
-    FU_output_load_Q.io.enq.bits                := DontCare
-    FU_output_load_Q.io.enq.bits.exception      := MOB(possible_FU_load_index).exception
-    FU_output_load_Q.io.enq.bits.ROB_index      := MOB(possible_FU_load_index).ROB_index
-    FU_output_load_Q.io.enq.bits.RD             := MOB(possible_FU_load_index).RD
-    FU_output_load_Q.io.enq.bits.RD_data        := wr_bytes.asUInt
-    FU_output_load_Q.io.enq.bits.RD_valid       := 1.B
+    FU_output_load_Q.io.enq.valid                     := possible_FU_loads.reduce(_ || _)
+    FU_output_load_Q.io.enq.bits                      <> DontCare
+    FU_output_load_Q.io.enq.bits.exception            := MOB(possible_FU_load_index).exception
+    FU_output_load_Q.io.enq.bits.ROB_index            := MOB(possible_FU_load_index).ROB_index
+    FU_output_load_Q.io.enq.bits.RD                   := MOB(possible_FU_load_index).RD
+    FU_output_load_Q.io.enq.bits.fetch_packet_index   := MOB(possible_FU_load_index).fetch_packet_index
+    FU_output_load_Q.io.enq.bits.RD_data              := wr_bytes.asUInt
+    FU_output_load_Q.io.enq.bits.RD_valid             := 1.B
 
     FU_output_load_Q.io.flush.get := io.commit.valid && (io.commit.bits.is_misprediction || io.commit.bits.exception)
     when(FU_output_load_Q.io.enq.fire){MOB(possible_FU_load_index).ROB_index}
@@ -374,9 +386,10 @@ class MOB(coreParameters:CoreParameters) extends Module{
     FU_output_arbiter.io.in(0) <> FU_output_load_Q.io.deq
     FU_output_arbiter.io.in(1) <> FU_output_store_Q.io.deq
 
-    io.MOB_output.bits         <> FU_output_arbiter.io.out.bits
+
     FU_output_arbiter.io.out.ready := 1.B
 
+    dontTouch(FU_output_arbiter.io.out)
 
     io.backend_memory_response.ready := 1.B
 
@@ -387,7 +400,7 @@ class MOB(coreParameters:CoreParameters) extends Module{
 
     io.MOB_output                   := DontCare
     io.MOB_output.valid             <> FU_output_arbiter.io.out.valid
-
+    io.MOB_output.bits              <> FU_output_arbiter.io.out.bits
     io.MOB_output.bits.RD           := FU_output_arbiter.io.out.bits.RD
     io.MOB_output.bits.RD_valid     := FU_output_arbiter.io.out.bits.RD_valid
     io.MOB_output.bits.RD_data      := FU_output_arbiter.io.out.bits.RD_data

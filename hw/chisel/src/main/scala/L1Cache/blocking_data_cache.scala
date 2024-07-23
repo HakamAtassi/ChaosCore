@@ -33,6 +33,47 @@ package ChaosCore
 import chisel3._
 import chisel3.util._
 
+/*
+
+object format_dcache_data {
+  def apply(coreParameters:CoreParameters, data_way: Vec[UInt], address: UInt, operation: access_width_t): UInt = {
+    val byte_offset = get_decomposed_dcache_address(address, parameters).byte_offset
+    val word_offset = get_decomposed_dcache_address(address, parameters).byte_offset >> 2
+
+    // Step 1: Group all 32 bytes in data way into their corresponding words.
+    val words = VecInit(Seq.tabulate(8) { i =>
+      val wordBytes = (0 until 4).map(j => data_way(i * 4 + j))
+      wordBytes.reduce(Cat(_, _))
+    })
+
+    // Step 2: Shift all of these words down by the address's byte offset
+    val shifted_words = words.map(_ >> (byte_offset * 8.U))
+
+    // Step 3: Select the desired word
+    val selected_word = shifted_words(word_offset)
+
+    // Step 4: Perform mask based on access_width_t = {W, HW, B}
+    val result = Wire(UInt(32.W))
+    result := 0.U
+
+    switch(operation) {
+      is(access_width_t.B) {
+        result := selected_word(7, 0)
+      }
+      is(access_width_t.HW) {
+        result := selected_word(15, 0)
+      }
+      is(access_width_t.W) {
+        result := selected_word
+      }
+    }
+
+    result
+  }
+}
+
+
+
 object cache_state_t extends ChiselEnum {
 	val ACTIVE, MISS, STALL, EVICT, ALLOCATE, REPLAY = Value
 }
@@ -44,11 +85,11 @@ class blocking_data_cache(coreParameters:CoreParameters, nocParameters:NOCParame
 		val backend_memory_request            = Flipped(Decoupled(new backend_memory_request(coreParameters)))
 		val backend_memory_response           = Decoupled(new backend_memory_response(coreParameters))
 
-		// DRAM PORT(s)
-		val data_cache_A                      =	Decoupled(new TileLink_Channel_A())   	// D$ Request
-		val data_cache_D                      = Flipped(Decoupled(new TileLink_Channel_D()))   			// Bus granted request
+		// AXI //
 
 		// FIXME: flush ??
+
+
     })
 
 
@@ -67,6 +108,9 @@ class blocking_data_cache(coreParameters:CoreParameters, nocParameters:NOCParame
 
 	val tag_match_OH 		= Wire(Vec(L1_DataCacheWays, Bool()))
 	val updated_PLRU		= Wire(Vec(L1_DataCacheWays, Bool()))
+
+	val read_data           = Wire(Vec(L1_DataCacheWays, UInt(8.W)))
+
 
 
 	/////////
@@ -176,15 +220,12 @@ class blocking_data_cache(coreParameters:CoreParameters, nocParameters:NOCParame
 
 	state := next_state
 
-	////////////////////////
-	// GENERATE ADDRESSES //
-	////////////////////////
-	// Possible states: ACTIVE, EVICT, ALLOCATE, REPLAY
-	// Active: current_address == input_address
-	// EVICT: current_address == miss_address
-	// ALLOCATE: current_address == allocate_address
-	// REPLAY: current_address == replay_address
+	//////////
+	// MISC //
+	//////////
 
+	hit := RegNext(io.backend_memory_request.valid || (state === cache_state_t.REPLAY)) && tag_match_OH.reduce(_ || _)
+	miss := RegNext(io.backend_memory_request.valid || (state === cache_state_t.REPLAY)) && !(tag_match_OH.reduce(_ || _))
 
 	///////////////////
 	// DATA MEMORIES //
@@ -193,18 +234,8 @@ class blocking_data_cache(coreParameters:CoreParameters, nocParameters:NOCParame
         Module(new ReadWriteSmem(depth=L1_DataCacheSets, width=8))
     }
 
-	// data memory has 3 modes:
-	// Evict, Allocate, Replay
-	for(i <- 0 until L1_DataCacheBlockSizeBytes){
-		data_memories(i).io.addrA 			:= //??? // {way, set}
-		data_memories(i).io.writeDataA 	:= current_write_data(i)
-		data_memories(i).io.writeEnableA 	:= current_write_enable(i)
-	}
-
-
-	val read_data := data_memories.map(_.readDataA)
-
-
+    //FIXME: this output depends on the last viable output that was requested of the dcache, being either from the input or from replay
+    io.backend_memory_response.bits.data := RegNext(format_dcache_data(coreParameters, read_data, request_address, operation))  // 
 
 	//////////////////
 	// TAG MEMORIES //
@@ -214,12 +245,9 @@ class blocking_data_cache(coreParameters:CoreParameters, nocParameters:NOCParame
     }
 
 	for(i <- 0 until L1_DataCacheWays){
-		tag_memories(i).addrA 			:= 
-		tag_memories(i).writeDataA 		:= 
-		tag_memories(i).writeEnableA	:= 
+		tag_match_OH(i) := tag_memories(i).readDataA === RegNext(input_tag)
 	}
 
-	tag_match_OH := tag_memories.map(_.readDataA === RegNext(input_tag)).toVec
 
 	////////////////////
 	// VALID MEMORIES //
@@ -228,11 +256,6 @@ class blocking_data_cache(coreParameters:CoreParameters, nocParameters:NOCParame
         Module(new ReadWriteSmem(depth=L1_DataCacheSets, width=1))
     }
 
-	for(i <- 0 until L1_DataCacheWays){
-		valid_memories(i).addrA 		:=	
-		valid_memories(i).writeDataA 	:=	
-		valid_memories(i).writeEnableA	:=	
-	}
 
 	val valid := valid_memories.map(_.readDataA)
 
@@ -241,11 +264,6 @@ class blocking_data_cache(coreParameters:CoreParameters, nocParameters:NOCParame
 	///////////////////
     val PLRU_memory = Module(new TrueDualPortMemory(depth=L1_DataCacheSets, width=L1_DataCacheWays))
 
-	for(i <- 0 until L1_DataCacheWays){
-		PLRU_memory(i).addrA 		:=	
-		PLRU_memory(i).writeDataA 	:=	
-		PLRU_memory(i).writeEnableA	:=	
-	}
 
 	val PLRU := PLRU_memory.map(_.readDataA)
 
@@ -259,16 +277,10 @@ class blocking_data_cache(coreParameters:CoreParameters, nocParameters:NOCParame
 		updated_PLRU := PLRU || (tag_match_OH && valid) 
 	}
 
-	//////////////
-	// HIT/MISS //
-	//////////////
 
-	hit  := RegNext(io.backend_memory_request.valid) &&   (tag_match_OH && valid).reduce(_ || _)
-	miss := RegNext(io.backend_memory_request.valid) && !((tag_match_OH && valid).reduce(_ || _))
-
-	//////////////
-	// TILELINK //
-	//////////////
+	/////////
+	// AXI //
+	/////////
 
 
 
@@ -281,3 +293,5 @@ class blocking_data_cache(coreParameters:CoreParameters, nocParameters:NOCParame
 
 
 }
+
+*/

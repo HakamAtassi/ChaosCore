@@ -343,12 +343,16 @@ object get_PC_increment{
   }
 }
 
-object sign_extend{
-  def apply(data:UInt, width:Int):UInt = {
-    val temp = Wire(SInt(data.getWidth.W))
-    val imm  = Wire(UInt(width.W))
+
+object sign_extend {
+  def apply(data: UInt, width: Int): UInt = {
+    require(width >= data.getWidth, "Width for sign extension must be greater than or equal to the width of the data.")
+
+    // Convert the data to a SInt to sign-extend it
+    val temp = Wire(SInt(width.W))
     temp := data.asSInt
-    imm  := temp.asUInt
-    imm
+
+    // Convert back to UInt
+    temp.asUInt
   }
 }
