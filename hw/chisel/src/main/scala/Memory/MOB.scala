@@ -156,8 +156,8 @@ class MOB(coreParameters:CoreParameters) extends Module{
             MOB(back_index + index_offset).ROB_index            :=  io.reserve(i).bits.ROB_index
             MOB(back_index + index_offset).fetch_packet_index   :=  io.reserve(i).bits.packet_index
 
-            io.reserved_pointers(i).bits     := back_index + index_offset
-            io.reserved_pointers(i).valid    := 1.U
+            io.reserved_pointers(i).bits                        := back_index + index_offset
+            io.reserved_pointers(i).valid                       := 1.U
         }
     }
 
@@ -318,15 +318,19 @@ class MOB(coreParameters:CoreParameters) extends Module{
     dontTouch(possible_FU_store_index)
 
     // write store to store FU queue
-    FU_output_store_Q.io.enq.valid               := possible_FU_stores.reduce(_ || _)
-    FU_output_store_Q.io.enq.bits                := DontCare
-    FU_output_store_Q.io.enq.bits.exception      := MOB(possible_FU_store_index).exception
-    FU_output_store_Q.io.enq.bits.ROB_index      := MOB(possible_FU_store_index).ROB_index
+    FU_output_store_Q.io.enq.valid                        := possible_FU_stores.reduce(_ || _)
+    FU_output_store_Q.io.enq.bits                         := DontCare
+    FU_output_store_Q.io.enq.bits.exception               := MOB(possible_FU_store_index).exception
+    FU_output_store_Q.io.enq.bits.ROB_index               := MOB(possible_FU_store_index).ROB_index
     FU_output_store_Q.io.enq.bits.fetch_packet_index      := MOB(possible_FU_store_index).fetch_packet_index
-    FU_output_store_Q.io.flush.get := io.commit.valid && (io.commit.bits.is_misprediction || io.commit.bits.exception)
+    FU_output_store_Q.io.flush.get                        := io.commit.valid && (io.commit.bits.is_misprediction || io.commit.bits.exception)
 
 
-    when(FU_output_store_Q.io.enq.fire){MOB(possible_FU_store_index).ROB_index}
+
+    when(FU_output_store_Q.io.enq.fire && !(io.commit.valid && (io.commit.bits.is_misprediction || io.commit.bits.exception))){
+        //MOB(possible_FU_store_index).ROB_index
+        MOB(possible_FU_store_index).completed := 1.B
+    }
 
 
 
@@ -376,7 +380,10 @@ class MOB(coreParameters:CoreParameters) extends Module{
     FU_output_load_Q.io.enq.bits.RD_valid             := 1.B
 
     FU_output_load_Q.io.flush.get := io.commit.valid && (io.commit.bits.is_misprediction || io.commit.bits.exception)
-    when(FU_output_load_Q.io.enq.fire){MOB(possible_FU_load_index).ROB_index}
+    when(FU_output_load_Q.io.enq.fire && !(io.commit.valid && (io.commit.bits.is_misprediction || io.commit.bits.exception))){
+        MOB(possible_FU_load_index).ROB_index
+        MOB(possible_FU_load_index).completed := 1.B
+    }
 
 
 

@@ -155,6 +155,8 @@ class ChaosCore(coreParameters:CoreParameters) extends Module{
     ////////////////
     BRU.io.FTQ <> FTQ.io.FTQ
 
+    FTQ.io.ROB_index <> ROB.io.ROB_index
+
     ///////////
     // FLUSH //
     ///////////
@@ -195,7 +197,7 @@ class ChaosCore(coreParameters:CoreParameters) extends Module{
     // there must be more available RS entries than requesting instructions for that RS
     // Otherwise, entry doesnt allocate
     all_INT_RS_accepted := PopCount(backend.io.INTRS_ready) >= PopCount(needs_INTRS)
-    all_MEM_RS_accepted := PopCount(backend.io.MEMRS_ready) >= PopCount(needs_MEMRS)
+    all_MEM_RS_accepted := (PopCount(backend.io.MEMRS_ready) >= PopCount(needs_MEMRS)) && (PopCount(backend.io.MOB_ready) >= PopCount(needs_MEMRS))
 
 
     // ROB and RS do not update until ready

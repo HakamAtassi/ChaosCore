@@ -161,7 +161,6 @@ module ROB(	// src/main/scala/Backend/ROB.scala:42:7
   input  [15:0] io_ROB_packet_bits_GHR,	// src/main/scala/Backend/ROB.scala:46:16
   input  [6:0]  io_ROB_packet_bits_TOS,	// src/main/scala/Backend/ROB.scala:46:16
                 io_ROB_packet_bits_NEXT,	// src/main/scala/Backend/ROB.scala:46:16
-  input  [3:0]  io_ROB_packet_bits_RAT_index,	// src/main/scala/Backend/ROB.scala:46:16
   input  [7:0]  io_ROB_packet_bits_free_list_front_pointer,	// src/main/scala/Backend/ROB.scala:46:16
   input         io_FU_outputs_0_valid,	// src/main/scala/Backend/ROB.scala:46:16
   input  [6:0]  io_FU_outputs_0_bits_RD,	// src/main/scala/Backend/ROB.scala:46:16
@@ -237,7 +236,6 @@ module ROB(	// src/main/scala/Backend/ROB.scala:42:7
   input         io_FU_outputs_3_bits_exception,	// src/main/scala/Backend/ROB.scala:46:16
   output        io_ROB_output_row_valid,	// src/main/scala/Backend/ROB.scala:46:16
   output [31:0] io_ROB_output_fetch_PC,	// src/main/scala/Backend/ROB.scala:46:16
-  output [3:0]  io_ROB_output_RAT_index,	// src/main/scala/Backend/ROB.scala:46:16
   output [5:0]  io_ROB_output_ROB_index,	// src/main/scala/Backend/ROB.scala:46:16
   output [15:0] io_ROB_output_GHR,	// src/main/scala/Backend/ROB.scala:46:16
   output [6:0]  io_ROB_output_NEXT,	// src/main/scala/Backend/ROB.scala:46:16
@@ -287,7 +285,6 @@ module ROB(	// src/main/scala/Backend/ROB.scala:42:7
   input  [15:0] io_commit_bits_GHR,	// src/main/scala/Backend/ROB.scala:46:16
   input  [6:0]  io_commit_bits_TOS,	// src/main/scala/Backend/ROB.scala:46:16
                 io_commit_bits_NEXT,	// src/main/scala/Backend/ROB.scala:46:16
-  input  [3:0]  io_commit_bits_RAT_index,	// src/main/scala/Backend/ROB.scala:46:16
   input  [7:0]  io_commit_bits_free_list_front_pointer,	// src/main/scala/Backend/ROB.scala:46:16
   input  [4:0]  io_commit_bits_RDold_0,	// src/main/scala/Backend/ROB.scala:46:16
                 io_commit_bits_RDold_1,	// src/main/scala/Backend/ROB.scala:46:16
@@ -306,10 +303,10 @@ module ROB(	// src/main/scala/Backend/ROB.scala:42:7
   output [31:0] io_PC_file_exec_data	// src/main/scala/Backend/ROB.scala:46:16
 );
 
-  wire        full;	// src/main/scala/Backend/ROB.scala:292:89
+  wire        full;	// src/main/scala/Backend/ROB.scala:291:89
   reg  [6:0]  front_pointer;	// src/main/scala/Backend/ROB.scala:76:32
   reg  [6:0]  back_pointer;	// src/main/scala/Backend/ROB.scala:77:32
-  wire        allocate = io_ROB_packet_valid & ~full;	// src/main/scala/Backend/ROB.scala:90:37, :292:89, :294:28
+  wire        allocate = io_ROB_packet_valid & ~full;	// src/main/scala/Backend/ROB.scala:90:37, :291:89, :293:28
   reg         row_valid_mem_0;	// src/main/scala/Backend/ROB.scala:105:36
   reg         row_valid_mem_1;	// src/main/scala/Backend/ROB.scala:105:36
   reg         row_valid_mem_2;	// src/main/scala/Backend/ROB.scala:105:36
@@ -374,10 +371,10 @@ module ROB(	// src/main/scala/Backend/ROB.scala:42:7
   reg         row_valid_mem_61;	// src/main/scala/Backend/ROB.scala:105:36
   reg         row_valid_mem_62;	// src/main/scala/Backend/ROB.scala:105:36
   reg         row_valid_mem_63;	// src/main/scala/Backend/ROB.scala:105:36
-  wire [6:0]  _front_pointer_T_2 = front_pointer + 7'h1;	// src/main/scala/Backend/ROB.scala:76:32, :251:47
+  wire [6:0]  _front_pointer_T_2 = front_pointer + 7'h1;	// src/main/scala/Backend/ROB.scala:76:32, :250:47
   wire [5:0]  front_index =
-    io_flush ? 6'h0 : io_commit_valid ? _front_pointer_T_2[5:0] : front_pointer[5:0];	// src/main/scala/Backend/ROB.scala:76:32, :106:56, :247:19, :249:23, :250:32, :251:47, :252:{21,40}, :255:21
-  wire [5:0]  back_index = io_flush ? 6'h0 : back_pointer[5:0];	// src/main/scala/Backend/ROB.scala:77:32, :258:19, :260:21, :263:{22,37}
+    io_flush ? 6'h0 : io_commit_valid ? _front_pointer_T_2[5:0] : front_pointer[5:0];	// src/main/scala/Backend/ROB.scala:76:32, :106:56, :246:19, :248:23, :249:32, :250:47, :251:{21,40}, :254:21
+  wire [5:0]  back_index = io_flush ? 6'h0 : back_pointer[5:0];	// src/main/scala/Backend/ROB.scala:77:32, :257:19, :259:21, :262:{22,37}
   wire [63:0] _GEN =
     {{row_valid_mem_63},
      {row_valid_mem_62},
@@ -442,9 +439,9 @@ module ROB(	// src/main/scala/Backend/ROB.scala:42:7
      {row_valid_mem_3},
      {row_valid_mem_2},
      {row_valid_mem_1},
-     {row_valid_mem_0}};	// src/main/scala/Backend/ROB.scala:105:36, :270:44
-  reg  [5:0]  io_ROB_output_ROB_index_REG;	// src/main/scala/Backend/ROB.scala:271:54
-  assign full = front_pointer[5:0] == back_pointer[5:0] & front_pointer != back_pointer;	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :106:56, :292:{51,67,89,107}
+     {row_valid_mem_0}};	// src/main/scala/Backend/ROB.scala:105:36, :269:44
+  reg  [5:0]  io_ROB_output_ROB_index_REG;	// src/main/scala/Backend/ROB.scala:270:54
+  assign full = front_pointer[5:0] == back_pointer[5:0] & front_pointer != back_pointer;	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :106:56, :291:{51,67,89,107}
   always @(posedge clock) begin	// src/main/scala/Backend/ROB.scala:42:7
     if (reset) begin	// src/main/scala/Backend/ROB.scala:42:7
       front_pointer <= 7'h0;	// src/main/scala/Backend/ROB.scala:76:32
@@ -520,8 +517,8 @@ module ROB(	// src/main/scala/Backend/ROB.scala:42:7
           ? 7'h0
           : io_commit_valid
               ? _front_pointer_T_2
-              : front_pointer + {6'h0, io_commit_valid};	// src/main/scala/Backend/ROB.scala:76:32, :244:{19,36}, :247:19, :248:23, :250:32, :251:47, :253:23
-      back_pointer <= io_flush ? 7'h0 : back_pointer + {6'h0, allocate};	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :90:37, :258:19, :259:22, :262:{22,38}
+              : front_pointer + {6'h0, io_commit_valid};	// src/main/scala/Backend/ROB.scala:76:32, :243:{19,36}, :246:19, :247:23, :249:32, :250:47, :252:23
+      back_pointer <= io_flush ? 7'h0 : back_pointer + {6'h0, allocate};	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :90:37, :257:19, :258:22, :261:{22,38}
       row_valid_mem_0 <=
         ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h0)
         & (io_ROB_packet_valid & back_pointer[5:0] == 6'h0 | row_valid_mem_0);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
@@ -715,7 +712,7 @@ module ROB(	// src/main/scala/Backend/ROB.scala:42:7
         ~(io_flush | io_commit_valid & (&(front_pointer[5:0])))
         & (io_ROB_packet_valid & (&(back_pointer[5:0])) | row_valid_mem_63);	// src/main/scala/Backend/ROB.scala:76:32, :77:32, :105:36, :106:56, :108:30, :109:{35,57}, :112:26, :113:58, :116:19, :117:23
     end
-    io_ROB_output_ROB_index_REG <= front_index;	// src/main/scala/Backend/ROB.scala:247:19, :249:23, :250:32, :271:54
+    io_ROB_output_ROB_index_REG <= front_index;	// src/main/scala/Backend/ROB.scala:246:19, :248:23, :249:32, :270:54
   end // always @(posedge)
   `ifdef ENABLE_INITIAL_REG_	// src/main/scala/Backend/ROB.scala:42:7
     `ifdef FIRRTL_BEFORE_INITIAL	// src/main/scala/Backend/ROB.scala:42:7
@@ -796,7 +793,7 @@ module ROB(	// src/main/scala/Backend/ROB.scala:42:7
         row_valid_mem_61 = _RANDOM[2'h2][11];	// src/main/scala/Backend/ROB.scala:42:7, :105:36
         row_valid_mem_62 = _RANDOM[2'h2][12];	// src/main/scala/Backend/ROB.scala:42:7, :105:36
         row_valid_mem_63 = _RANDOM[2'h2][13];	// src/main/scala/Backend/ROB.scala:42:7, :105:36
-        io_ROB_output_ROB_index_REG = _RANDOM[2'h2][19:14];	// src/main/scala/Backend/ROB.scala:42:7, :105:36, :271:54
+        io_ROB_output_ROB_index_REG = _RANDOM[2'h2][19:14];	// src/main/scala/Backend/ROB.scala:42:7, :105:36, :270:54
       `endif // RANDOMIZE_REG_INIT
     end // initial
     `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/Backend/ROB.scala:42:7
@@ -805,17 +802,15 @@ module ROB(	// src/main/scala/Backend/ROB.scala:42:7
   `endif // ENABLE_INITIAL_REG_
   ROB_shared_mem shared_mem (	// src/main/scala/Backend/ROB.scala:128:33
     .clock                                 (clock),
-    .io_addrA                              (back_index),	// src/main/scala/Backend/ROB.scala:258:19, :260:21, :263:22
+    .io_addrA                              (back_index),	// src/main/scala/Backend/ROB.scala:257:19, :259:21, :262:22
     .io_writeDataA_fetch_PC                (io_ROB_packet_bits_fetch_PC),
-    .io_writeDataA_RAT_index               (io_ROB_packet_bits_RAT_index),
     .io_writeDataA_free_list_front_pointer (io_ROB_packet_bits_free_list_front_pointer),
     .io_writeDataA_GHR                     (io_ROB_packet_bits_GHR),
     .io_writeDataA_NEXT                    (io_ROB_packet_bits_NEXT),
     .io_writeDataA_TOS                     (io_ROB_packet_bits_TOS),
     .io_writeEnableA                       (allocate),	// src/main/scala/Backend/ROB.scala:90:37
-    .io_addrB                              (front_index),	// src/main/scala/Backend/ROB.scala:247:19, :249:23, :250:32
+    .io_addrB                              (front_index),	// src/main/scala/Backend/ROB.scala:246:19, :248:23, :249:32
     .io_readDataB_fetch_PC                 (io_ROB_output_fetch_PC),
-    .io_readDataB_RAT_index                (io_ROB_output_RAT_index),
     .io_readDataB_free_list_front_pointer  (io_ROB_output_free_list_front_pointer),
     .io_readDataB_GHR                      (io_ROB_output_GHR),
     .io_readDataB_NEXT                     (io_ROB_output_NEXT),
@@ -823,105 +818,105 @@ module ROB(	// src/main/scala/Backend/ROB.scala:42:7
     .io_addrC                              (io_PC_file_exec_addr),
     .io_readDataC_fetch_PC                 (io_PC_file_exec_data)
   );	// src/main/scala/Backend/ROB.scala:128:33
-  ROB_WB_mem ROB_WB_banks_0 (	// src/main/scala/Backend/ROB.scala:160:15
+  ROB_WB_mem ROB_WB_banks_0 (	// src/main/scala/Backend/ROB.scala:159:15
     .clock                  (clock),
-    .io_addrA               (back_index),	// src/main/scala/Backend/ROB.scala:258:19, :260:21, :263:22
+    .io_addrA               (back_index),	// src/main/scala/Backend/ROB.scala:257:19, :259:21, :262:22
     .io_writeEnableA        (allocate),	// src/main/scala/Backend/ROB.scala:90:37
     .io_addrB               (io_FU_outputs_0_bits_ROB_index),
     .io_writeDataB_busy     (io_FU_outputs_0_valid),
     .io_writeEnableB
-      (io_FU_outputs_0_valid & io_FU_outputs_0_bits_fetch_packet_index == 2'h0),	// src/main/scala/Backend/ROB.scala:42:7, :181:{69,114}
+      (io_FU_outputs_0_valid & io_FU_outputs_0_bits_fetch_packet_index == 2'h0),	// src/main/scala/Backend/ROB.scala:42:7, :180:{69,114}
     .io_addrC               (io_FU_outputs_1_bits_ROB_index),
     .io_writeDataC_busy     (io_FU_outputs_1_valid),
     .io_writeEnableC
-      (io_FU_outputs_1_valid & io_FU_outputs_1_bits_fetch_packet_index == 2'h0),	// src/main/scala/Backend/ROB.scala:42:7, :189:{69,114}
+      (io_FU_outputs_1_valid & io_FU_outputs_1_bits_fetch_packet_index == 2'h0),	// src/main/scala/Backend/ROB.scala:42:7, :188:{69,114}
     .io_addrD               (io_FU_outputs_2_bits_ROB_index),
     .io_writeDataD_busy     (io_FU_outputs_2_valid),
     .io_writeEnableD
-      (io_FU_outputs_2_valid & io_FU_outputs_2_bits_fetch_packet_index == 2'h0),	// src/main/scala/Backend/ROB.scala:42:7, :197:{69,114}
+      (io_FU_outputs_2_valid & io_FU_outputs_2_bits_fetch_packet_index == 2'h0),	// src/main/scala/Backend/ROB.scala:42:7, :196:{69,114}
     .io_addrE               (io_FU_outputs_3_bits_ROB_index),
     .io_writeDataE_busy     (io_FU_outputs_3_valid),
     .io_writeEnableE
-      (io_FU_outputs_3_valid & io_FU_outputs_3_bits_fetch_packet_index == 2'h0),	// src/main/scala/Backend/ROB.scala:42:7, :205:{69,114}
-    .io_addrG               (front_index),	// src/main/scala/Backend/ROB.scala:247:19, :249:23, :250:32
+      (io_FU_outputs_3_valid & io_FU_outputs_3_bits_fetch_packet_index == 2'h0),	// src/main/scala/Backend/ROB.scala:42:7, :204:{69,114}
+    .io_addrG               (front_index),	// src/main/scala/Backend/ROB.scala:246:19, :248:23, :249:32
     .io_readDataG_busy      (io_ROB_output_complete_0),
     .io_readDataG_exception (io_ROB_output_exception_0)
-  );	// src/main/scala/Backend/ROB.scala:160:15
-  ROB_WB_mem ROB_WB_banks_1 (	// src/main/scala/Backend/ROB.scala:160:15
+  );	// src/main/scala/Backend/ROB.scala:159:15
+  ROB_WB_mem ROB_WB_banks_1 (	// src/main/scala/Backend/ROB.scala:159:15
     .clock                  (clock),
-    .io_addrA               (back_index),	// src/main/scala/Backend/ROB.scala:258:19, :260:21, :263:22
+    .io_addrA               (back_index),	// src/main/scala/Backend/ROB.scala:257:19, :259:21, :262:22
     .io_writeEnableA        (allocate),	// src/main/scala/Backend/ROB.scala:90:37
     .io_addrB               (io_FU_outputs_0_bits_ROB_index),
     .io_writeDataB_busy     (io_FU_outputs_0_valid),
     .io_writeEnableB
-      (io_FU_outputs_0_valid & io_FU_outputs_0_bits_fetch_packet_index == 2'h1),	// src/main/scala/Backend/ROB.scala:42:7, :181:{69,114}
+      (io_FU_outputs_0_valid & io_FU_outputs_0_bits_fetch_packet_index == 2'h1),	// src/main/scala/Backend/ROB.scala:42:7, :180:{69,114}
     .io_addrC               (io_FU_outputs_1_bits_ROB_index),
     .io_writeDataC_busy     (io_FU_outputs_1_valid),
     .io_writeEnableC
-      (io_FU_outputs_1_valid & io_FU_outputs_1_bits_fetch_packet_index == 2'h1),	// src/main/scala/Backend/ROB.scala:42:7, :189:{69,114}
+      (io_FU_outputs_1_valid & io_FU_outputs_1_bits_fetch_packet_index == 2'h1),	// src/main/scala/Backend/ROB.scala:42:7, :188:{69,114}
     .io_addrD               (io_FU_outputs_2_bits_ROB_index),
     .io_writeDataD_busy     (io_FU_outputs_2_valid),
     .io_writeEnableD
-      (io_FU_outputs_2_valid & io_FU_outputs_2_bits_fetch_packet_index == 2'h1),	// src/main/scala/Backend/ROB.scala:42:7, :197:{69,114}
+      (io_FU_outputs_2_valid & io_FU_outputs_2_bits_fetch_packet_index == 2'h1),	// src/main/scala/Backend/ROB.scala:42:7, :196:{69,114}
     .io_addrE               (io_FU_outputs_3_bits_ROB_index),
     .io_writeDataE_busy     (io_FU_outputs_3_valid),
     .io_writeEnableE
-      (io_FU_outputs_3_valid & io_FU_outputs_3_bits_fetch_packet_index == 2'h1),	// src/main/scala/Backend/ROB.scala:42:7, :205:{69,114}
-    .io_addrG               (front_index),	// src/main/scala/Backend/ROB.scala:247:19, :249:23, :250:32
+      (io_FU_outputs_3_valid & io_FU_outputs_3_bits_fetch_packet_index == 2'h1),	// src/main/scala/Backend/ROB.scala:42:7, :204:{69,114}
+    .io_addrG               (front_index),	// src/main/scala/Backend/ROB.scala:246:19, :248:23, :249:32
     .io_readDataG_busy      (io_ROB_output_complete_1),
     .io_readDataG_exception (io_ROB_output_exception_1)
-  );	// src/main/scala/Backend/ROB.scala:160:15
-  ROB_WB_mem ROB_WB_banks_2 (	// src/main/scala/Backend/ROB.scala:160:15
+  );	// src/main/scala/Backend/ROB.scala:159:15
+  ROB_WB_mem ROB_WB_banks_2 (	// src/main/scala/Backend/ROB.scala:159:15
     .clock                  (clock),
-    .io_addrA               (back_index),	// src/main/scala/Backend/ROB.scala:258:19, :260:21, :263:22
+    .io_addrA               (back_index),	// src/main/scala/Backend/ROB.scala:257:19, :259:21, :262:22
     .io_writeEnableA        (allocate),	// src/main/scala/Backend/ROB.scala:90:37
     .io_addrB               (io_FU_outputs_0_bits_ROB_index),
     .io_writeDataB_busy     (io_FU_outputs_0_valid),
     .io_writeEnableB
-      (io_FU_outputs_0_valid & io_FU_outputs_0_bits_fetch_packet_index == 2'h2),	// src/main/scala/Backend/ROB.scala:42:7, :181:{69,114}
+      (io_FU_outputs_0_valid & io_FU_outputs_0_bits_fetch_packet_index == 2'h2),	// src/main/scala/Backend/ROB.scala:42:7, :180:{69,114}
     .io_addrC               (io_FU_outputs_1_bits_ROB_index),
     .io_writeDataC_busy     (io_FU_outputs_1_valid),
     .io_writeEnableC
-      (io_FU_outputs_1_valid & io_FU_outputs_1_bits_fetch_packet_index == 2'h2),	// src/main/scala/Backend/ROB.scala:42:7, :189:{69,114}
+      (io_FU_outputs_1_valid & io_FU_outputs_1_bits_fetch_packet_index == 2'h2),	// src/main/scala/Backend/ROB.scala:42:7, :188:{69,114}
     .io_addrD               (io_FU_outputs_2_bits_ROB_index),
     .io_writeDataD_busy     (io_FU_outputs_2_valid),
     .io_writeEnableD
-      (io_FU_outputs_2_valid & io_FU_outputs_2_bits_fetch_packet_index == 2'h2),	// src/main/scala/Backend/ROB.scala:42:7, :197:{69,114}
+      (io_FU_outputs_2_valid & io_FU_outputs_2_bits_fetch_packet_index == 2'h2),	// src/main/scala/Backend/ROB.scala:42:7, :196:{69,114}
     .io_addrE               (io_FU_outputs_3_bits_ROB_index),
     .io_writeDataE_busy     (io_FU_outputs_3_valid),
     .io_writeEnableE
-      (io_FU_outputs_3_valid & io_FU_outputs_3_bits_fetch_packet_index == 2'h2),	// src/main/scala/Backend/ROB.scala:42:7, :205:{69,114}
-    .io_addrG               (front_index),	// src/main/scala/Backend/ROB.scala:247:19, :249:23, :250:32
+      (io_FU_outputs_3_valid & io_FU_outputs_3_bits_fetch_packet_index == 2'h2),	// src/main/scala/Backend/ROB.scala:42:7, :204:{69,114}
+    .io_addrG               (front_index),	// src/main/scala/Backend/ROB.scala:246:19, :248:23, :249:32
     .io_readDataG_busy      (io_ROB_output_complete_2),
     .io_readDataG_exception (io_ROB_output_exception_2)
-  );	// src/main/scala/Backend/ROB.scala:160:15
-  ROB_WB_mem ROB_WB_banks_3 (	// src/main/scala/Backend/ROB.scala:160:15
+  );	// src/main/scala/Backend/ROB.scala:159:15
+  ROB_WB_mem ROB_WB_banks_3 (	// src/main/scala/Backend/ROB.scala:159:15
     .clock                  (clock),
-    .io_addrA               (back_index),	// src/main/scala/Backend/ROB.scala:258:19, :260:21, :263:22
+    .io_addrA               (back_index),	// src/main/scala/Backend/ROB.scala:257:19, :259:21, :262:22
     .io_writeEnableA        (allocate),	// src/main/scala/Backend/ROB.scala:90:37
     .io_addrB               (io_FU_outputs_0_bits_ROB_index),
     .io_writeDataB_busy     (io_FU_outputs_0_valid),
     .io_writeEnableB
-      (io_FU_outputs_0_valid & (&io_FU_outputs_0_bits_fetch_packet_index)),	// src/main/scala/Backend/ROB.scala:181:{69,114}
+      (io_FU_outputs_0_valid & (&io_FU_outputs_0_bits_fetch_packet_index)),	// src/main/scala/Backend/ROB.scala:180:{69,114}
     .io_addrC               (io_FU_outputs_1_bits_ROB_index),
     .io_writeDataC_busy     (io_FU_outputs_1_valid),
     .io_writeEnableC
-      (io_FU_outputs_1_valid & (&io_FU_outputs_1_bits_fetch_packet_index)),	// src/main/scala/Backend/ROB.scala:189:{69,114}
+      (io_FU_outputs_1_valid & (&io_FU_outputs_1_bits_fetch_packet_index)),	// src/main/scala/Backend/ROB.scala:188:{69,114}
     .io_addrD               (io_FU_outputs_2_bits_ROB_index),
     .io_writeDataD_busy     (io_FU_outputs_2_valid),
     .io_writeEnableD
-      (io_FU_outputs_2_valid & (&io_FU_outputs_2_bits_fetch_packet_index)),	// src/main/scala/Backend/ROB.scala:197:{69,114}
+      (io_FU_outputs_2_valid & (&io_FU_outputs_2_bits_fetch_packet_index)),	// src/main/scala/Backend/ROB.scala:196:{69,114}
     .io_addrE               (io_FU_outputs_3_bits_ROB_index),
     .io_writeDataE_busy     (io_FU_outputs_3_valid),
     .io_writeEnableE
-      (io_FU_outputs_3_valid & (&io_FU_outputs_3_bits_fetch_packet_index)),	// src/main/scala/Backend/ROB.scala:205:{69,114}
-    .io_addrG               (front_index),	// src/main/scala/Backend/ROB.scala:247:19, :249:23, :250:32
+      (io_FU_outputs_3_valid & (&io_FU_outputs_3_bits_fetch_packet_index)),	// src/main/scala/Backend/ROB.scala:204:{69,114}
+    .io_addrG               (front_index),	// src/main/scala/Backend/ROB.scala:246:19, :248:23, :249:32
     .io_readDataG_busy      (io_ROB_output_complete_3),
     .io_readDataG_exception (io_ROB_output_exception_3)
-  );	// src/main/scala/Backend/ROB.scala:160:15
-  ROB_entry_mem ROB_entry_banks_0 (	// src/main/scala/Backend/ROB.scala:220:15
+  );	// src/main/scala/Backend/ROB.scala:159:15
+  ROB_entry_mem ROB_entry_banks_0 (	// src/main/scala/Backend/ROB.scala:219:15
     .clock                     (clock),
-    .io_addrA                  (back_index),	// src/main/scala/Backend/ROB.scala:258:19, :260:21, :263:22
+    .io_addrA                  (back_index),	// src/main/scala/Backend/ROB.scala:257:19, :259:21, :262:22
     .io_writeDataA_valid       (io_ROB_packet_bits_valid_bits_0),
     .io_writeDataA_is_branch
       (io_ROB_packet_bits_decoded_instruction_0_needs_branch_unit),
@@ -930,17 +925,17 @@ module ROB(	// src/main/scala/Backend/ROB.scala:42:7
     .io_writeDataA_RD_valid    (io_ROB_packet_bits_decoded_instruction_0_RD_valid),
     .io_writeDataA_RDold       (io_ROB_packet_bits_decoded_instruction_0_RDold),
     .io_writeEnableA           (allocate),	// src/main/scala/Backend/ROB.scala:90:37
-    .io_addrB                  (front_index),	// src/main/scala/Backend/ROB.scala:247:19, :249:23, :250:32
+    .io_addrB                  (front_index),	// src/main/scala/Backend/ROB.scala:246:19, :248:23, :249:32
     .io_readDataB_valid        (io_ROB_output_ROB_entries_0_valid),
     .io_readDataB_is_branch    (io_ROB_output_ROB_entries_0_is_branch),
     .io_readDataB_memory_type  (io_ROB_output_ROB_entries_0_memory_type),
     .io_readDataB_RD           (io_ROB_output_ROB_entries_0_RD),
     .io_readDataB_RD_valid     (io_ROB_output_ROB_entries_0_RD_valid),
     .io_readDataB_RDold        (io_ROB_output_ROB_entries_0_RDold)
-  );	// src/main/scala/Backend/ROB.scala:220:15
-  ROB_entry_mem ROB_entry_banks_1 (	// src/main/scala/Backend/ROB.scala:220:15
+  );	// src/main/scala/Backend/ROB.scala:219:15
+  ROB_entry_mem ROB_entry_banks_1 (	// src/main/scala/Backend/ROB.scala:219:15
     .clock                     (clock),
-    .io_addrA                  (back_index),	// src/main/scala/Backend/ROB.scala:258:19, :260:21, :263:22
+    .io_addrA                  (back_index),	// src/main/scala/Backend/ROB.scala:257:19, :259:21, :262:22
     .io_writeDataA_valid       (io_ROB_packet_bits_valid_bits_1),
     .io_writeDataA_is_branch
       (io_ROB_packet_bits_decoded_instruction_1_needs_branch_unit),
@@ -949,17 +944,17 @@ module ROB(	// src/main/scala/Backend/ROB.scala:42:7
     .io_writeDataA_RD_valid    (io_ROB_packet_bits_decoded_instruction_1_RD_valid),
     .io_writeDataA_RDold       (io_ROB_packet_bits_decoded_instruction_1_RDold),
     .io_writeEnableA           (allocate),	// src/main/scala/Backend/ROB.scala:90:37
-    .io_addrB                  (front_index),	// src/main/scala/Backend/ROB.scala:247:19, :249:23, :250:32
+    .io_addrB                  (front_index),	// src/main/scala/Backend/ROB.scala:246:19, :248:23, :249:32
     .io_readDataB_valid        (io_ROB_output_ROB_entries_1_valid),
     .io_readDataB_is_branch    (io_ROB_output_ROB_entries_1_is_branch),
     .io_readDataB_memory_type  (io_ROB_output_ROB_entries_1_memory_type),
     .io_readDataB_RD           (io_ROB_output_ROB_entries_1_RD),
     .io_readDataB_RD_valid     (io_ROB_output_ROB_entries_1_RD_valid),
     .io_readDataB_RDold        (io_ROB_output_ROB_entries_1_RDold)
-  );	// src/main/scala/Backend/ROB.scala:220:15
-  ROB_entry_mem ROB_entry_banks_2 (	// src/main/scala/Backend/ROB.scala:220:15
+  );	// src/main/scala/Backend/ROB.scala:219:15
+  ROB_entry_mem ROB_entry_banks_2 (	// src/main/scala/Backend/ROB.scala:219:15
     .clock                     (clock),
-    .io_addrA                  (back_index),	// src/main/scala/Backend/ROB.scala:258:19, :260:21, :263:22
+    .io_addrA                  (back_index),	// src/main/scala/Backend/ROB.scala:257:19, :259:21, :262:22
     .io_writeDataA_valid       (io_ROB_packet_bits_valid_bits_2),
     .io_writeDataA_is_branch
       (io_ROB_packet_bits_decoded_instruction_2_needs_branch_unit),
@@ -968,17 +963,17 @@ module ROB(	// src/main/scala/Backend/ROB.scala:42:7
     .io_writeDataA_RD_valid    (io_ROB_packet_bits_decoded_instruction_2_RD_valid),
     .io_writeDataA_RDold       (io_ROB_packet_bits_decoded_instruction_2_RDold),
     .io_writeEnableA           (allocate),	// src/main/scala/Backend/ROB.scala:90:37
-    .io_addrB                  (front_index),	// src/main/scala/Backend/ROB.scala:247:19, :249:23, :250:32
+    .io_addrB                  (front_index),	// src/main/scala/Backend/ROB.scala:246:19, :248:23, :249:32
     .io_readDataB_valid        (io_ROB_output_ROB_entries_2_valid),
     .io_readDataB_is_branch    (io_ROB_output_ROB_entries_2_is_branch),
     .io_readDataB_memory_type  (io_ROB_output_ROB_entries_2_memory_type),
     .io_readDataB_RD           (io_ROB_output_ROB_entries_2_RD),
     .io_readDataB_RD_valid     (io_ROB_output_ROB_entries_2_RD_valid),
     .io_readDataB_RDold        (io_ROB_output_ROB_entries_2_RDold)
-  );	// src/main/scala/Backend/ROB.scala:220:15
-  ROB_entry_mem ROB_entry_banks_3 (	// src/main/scala/Backend/ROB.scala:220:15
+  );	// src/main/scala/Backend/ROB.scala:219:15
+  ROB_entry_mem ROB_entry_banks_3 (	// src/main/scala/Backend/ROB.scala:219:15
     .clock                     (clock),
-    .io_addrA                  (back_index),	// src/main/scala/Backend/ROB.scala:258:19, :260:21, :263:22
+    .io_addrA                  (back_index),	// src/main/scala/Backend/ROB.scala:257:19, :259:21, :262:22
     .io_writeDataA_valid       (io_ROB_packet_bits_valid_bits_3),
     .io_writeDataA_is_branch
       (io_ROB_packet_bits_decoded_instruction_3_needs_branch_unit),
@@ -987,17 +982,17 @@ module ROB(	// src/main/scala/Backend/ROB.scala:42:7
     .io_writeDataA_RD_valid    (io_ROB_packet_bits_decoded_instruction_3_RD_valid),
     .io_writeDataA_RDold       (io_ROB_packet_bits_decoded_instruction_3_RDold),
     .io_writeEnableA           (allocate),	// src/main/scala/Backend/ROB.scala:90:37
-    .io_addrB                  (front_index),	// src/main/scala/Backend/ROB.scala:247:19, :249:23, :250:32
+    .io_addrB                  (front_index),	// src/main/scala/Backend/ROB.scala:246:19, :248:23, :249:32
     .io_readDataB_valid        (io_ROB_output_ROB_entries_3_valid),
     .io_readDataB_is_branch    (io_ROB_output_ROB_entries_3_is_branch),
     .io_readDataB_memory_type  (io_ROB_output_ROB_entries_3_memory_type),
     .io_readDataB_RD           (io_ROB_output_ROB_entries_3_RD),
     .io_readDataB_RD_valid     (io_ROB_output_ROB_entries_3_RD_valid),
     .io_readDataB_RDold        (io_ROB_output_ROB_entries_3_RDold)
-  );	// src/main/scala/Backend/ROB.scala:220:15
-  assign io_ROB_packet_ready = ~full;	// src/main/scala/Backend/ROB.scala:42:7, :292:89, :294:28
-  assign io_ROB_output_row_valid = _GEN[front_pointer[5:0]];	// src/main/scala/Backend/ROB.scala:42:7, :76:32, :106:56, :270:44
-  assign io_ROB_output_ROB_index = io_ROB_output_ROB_index_REG;	// src/main/scala/Backend/ROB.scala:42:7, :271:54
-  assign io_ROB_index = back_index;	// src/main/scala/Backend/ROB.scala:42:7, :258:19, :260:21, :263:22
+  );	// src/main/scala/Backend/ROB.scala:219:15
+  assign io_ROB_packet_ready = ~full;	// src/main/scala/Backend/ROB.scala:42:7, :291:89, :293:28
+  assign io_ROB_output_row_valid = _GEN[front_pointer[5:0]];	// src/main/scala/Backend/ROB.scala:42:7, :76:32, :106:56, :269:44
+  assign io_ROB_output_ROB_index = io_ROB_output_ROB_index_REG;	// src/main/scala/Backend/ROB.scala:42:7, :270:54
+  assign io_ROB_index = back_index;	// src/main/scala/Backend/ROB.scala:42:7, :257:19, :259:21, :262:22
 endmodule
 

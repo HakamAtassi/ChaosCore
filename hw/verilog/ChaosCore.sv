@@ -14,7 +14,6 @@ module ChaosCore(	// src/main/scala/Core/ChaosCore.scala:39:7
   output [15:0] io_commit_bits_GHR,	// src/main/scala/Core/ChaosCore.scala:43:16
   output [6:0]  io_commit_bits_TOS,	// src/main/scala/Core/ChaosCore.scala:43:16
                 io_commit_bits_NEXT,	// src/main/scala/Core/ChaosCore.scala:43:16
-  output [3:0]  io_commit_bits_RAT_index,	// src/main/scala/Core/ChaosCore.scala:43:16
   output [7:0]  io_commit_bits_free_list_front_pointer,	// src/main/scala/Core/ChaosCore.scala:43:16
   output [4:0]  io_commit_bits_RDold_0,	// src/main/scala/Core/ChaosCore.scala:43:16
                 io_commit_bits_RDold_1,	// src/main/scala/Core/ChaosCore.scala:43:16
@@ -86,7 +85,6 @@ module ChaosCore(	// src/main/scala/Core/ChaosCore.scala:39:7
   wire [15:0] _BRU_io_commit_bits_GHR;	// src/main/scala/Core/ChaosCore.scala:82:29
   wire [6:0]  _BRU_io_commit_bits_TOS;	// src/main/scala/Core/ChaosCore.scala:82:29
   wire [6:0]  _BRU_io_commit_bits_NEXT;	// src/main/scala/Core/ChaosCore.scala:82:29
-  wire [3:0]  _BRU_io_commit_bits_RAT_index;	// src/main/scala/Core/ChaosCore.scala:82:29
   wire [7:0]  _BRU_io_commit_bits_free_list_front_pointer;	// src/main/scala/Core/ChaosCore.scala:82:29
   wire [4:0]  _BRU_io_commit_bits_RDold_0;	// src/main/scala/Core/ChaosCore.scala:82:29
   wire [4:0]  _BRU_io_commit_bits_RDold_1;	// src/main/scala/Core/ChaosCore.scala:82:29
@@ -103,7 +101,6 @@ module ChaosCore(	// src/main/scala/Core/ChaosCore.scala:39:7
   wire        _ROB_io_ROB_packet_ready;	// src/main/scala/Core/ChaosCore.scala:81:29
   wire        _ROB_io_ROB_output_row_valid;	// src/main/scala/Core/ChaosCore.scala:81:29
   wire [31:0] _ROB_io_ROB_output_fetch_PC;	// src/main/scala/Core/ChaosCore.scala:81:29
-  wire [3:0]  _ROB_io_ROB_output_RAT_index;	// src/main/scala/Core/ChaosCore.scala:81:29
   wire [5:0]  _ROB_io_ROB_output_ROB_index;	// src/main/scala/Core/ChaosCore.scala:81:29
   wire [15:0] _ROB_io_ROB_output_GHR;	// src/main/scala/Core/ChaosCore.scala:81:29
   wire [6:0]  _ROB_io_ROB_output_NEXT;	// src/main/scala/Core/ChaosCore.scala:81:29
@@ -153,6 +150,10 @@ module ChaosCore(	// src/main/scala/Core/ChaosCore.scala:39:7
   wire        _backend_io_INTRS_ready_1;	// src/main/scala/Core/ChaosCore.scala:77:29
   wire        _backend_io_INTRS_ready_2;	// src/main/scala/Core/ChaosCore.scala:77:29
   wire        _backend_io_INTRS_ready_3;	// src/main/scala/Core/ChaosCore.scala:77:29
+  wire        _backend_io_MOB_ready_0;	// src/main/scala/Core/ChaosCore.scala:77:29
+  wire        _backend_io_MOB_ready_1;	// src/main/scala/Core/ChaosCore.scala:77:29
+  wire        _backend_io_MOB_ready_2;	// src/main/scala/Core/ChaosCore.scala:77:29
+  wire        _backend_io_MOB_ready_3;	// src/main/scala/Core/ChaosCore.scala:77:29
   wire        _backend_io_FU_outputs_0_valid;	// src/main/scala/Core/ChaosCore.scala:77:29
   wire [6:0]  _backend_io_FU_outputs_0_bits_RD;	// src/main/scala/Core/ChaosCore.scala:77:29
   wire [31:0] _backend_io_FU_outputs_0_bits_RD_data;	// src/main/scala/Core/ChaosCore.scala:77:29
@@ -229,6 +230,7 @@ module ChaosCore(	// src/main/scala/Core/ChaosCore.scala:39:7
   wire        _frontend_io_predictions_bits_valid;	// src/main/scala/Core/ChaosCore.scala:76:29
   wire [31:0] _frontend_io_predictions_bits_fetch_PC;	// src/main/scala/Core/ChaosCore.scala:76:29
   wire [31:0] _frontend_io_predictions_bits_predicted_PC;	// src/main/scala/Core/ChaosCore.scala:76:29
+  wire [5:0]  _frontend_io_predictions_bits_ROB_index;	// src/main/scala/Core/ChaosCore.scala:76:29
   wire        _frontend_io_predictions_bits_T_NT;	// src/main/scala/Core/ChaosCore.scala:76:29
   wire [2:0]  _frontend_io_predictions_bits_br_type;	// src/main/scala/Core/ChaosCore.scala:76:29
   wire [1:0]  _frontend_io_predictions_bits_dominant_index;	// src/main/scala/Core/ChaosCore.scala:76:29
@@ -418,9 +420,8 @@ module ChaosCore(	// src/main/scala/Core/ChaosCore.scala:39:7
   wire [15:0] _frontend_io_renamed_decoded_fetch_packet_bits_GHR;	// src/main/scala/Core/ChaosCore.scala:76:29
   wire [6:0]  _frontend_io_renamed_decoded_fetch_packet_bits_TOS;	// src/main/scala/Core/ChaosCore.scala:76:29
   wire [6:0]  _frontend_io_renamed_decoded_fetch_packet_bits_NEXT;	// src/main/scala/Core/ChaosCore.scala:76:29
-  wire [3:0]  _frontend_io_renamed_decoded_fetch_packet_bits_RAT_index;	// src/main/scala/Core/ChaosCore.scala:76:29
   wire [7:0]  _frontend_io_renamed_decoded_fetch_packet_bits_free_list_front_pointer;	// src/main/scala/Core/ChaosCore.scala:76:29
-  wire        flush = _BRU_io_commit_valid & _BRU_io_commit_bits_is_misprediction;	// src/main/scala/Core/ChaosCore.scala:82:29, :161:34
+  wire        flush = _BRU_io_commit_valid & _BRU_io_commit_bits_is_misprediction;	// src/main/scala/Core/ChaosCore.scala:82:29, :163:34
   wire        all_INT_RS_accepted =
     {1'h0, {1'h0, _backend_io_INTRS_ready_0} + {1'h0, _backend_io_INTRS_ready_1}}
     + {1'h0,
@@ -439,33 +440,37 @@ module ChaosCore(	// src/main/scala/Core/ChaosCore.scala:39:7
           & _frontend_io_renamed_decoded_fetch_packet_bits_valid_bits_2}
          + {1'h0,
             _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS_type == 2'h0
-              & _frontend_io_renamed_decoded_fetch_packet_bits_valid_bits_3}};	// src/main/scala/Core/ChaosCore.scala:76:29, :77:29, :188:{105,123}, :189:105, :197:{36,61,72}
+              & _frontend_io_renamed_decoded_fetch_packet_bits_valid_bits_3}};	// src/main/scala/Core/ChaosCore.scala:76:29, :77:29, :190:{105,123}, :191:105, :199:{36,61,72}
+  wire [2:0]  _GEN =
+    {1'h0,
+     {1'h0,
+      _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS_type == 2'h1
+        & _frontend_io_renamed_decoded_fetch_packet_bits_valid_bits_0}
+       + {1'h0,
+          _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS_type == 2'h1
+            & _frontend_io_renamed_decoded_fetch_packet_bits_valid_bits_1}};	// src/main/scala/Core/ChaosCore.scala:76:29, :191:{105,123}, :200:73
+  wire [2:0]  _GEN_0 =
+    {1'h0,
+     {1'h0,
+      _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS_type == 2'h1
+        & _frontend_io_renamed_decoded_fetch_packet_bits_valid_bits_2}
+       + {1'h0,
+          _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS_type == 2'h1
+            & _frontend_io_renamed_decoded_fetch_packet_bits_valid_bits_3}};	// src/main/scala/Core/ChaosCore.scala:76:29, :191:{105,123}, :200:73
   wire        all_MEM_RS_accepted =
     {1'h0, {1'h0, _backend_io_MEMRS_ready_0} + {1'h0, _backend_io_MEMRS_ready_1}}
     + {1'h0,
-       {1'h0, _backend_io_MEMRS_ready_2}
-         + {1'h0,
-            _backend_io_MEMRS_ready_3}} >= {1'h0,
-                                            {1'h0,
-                                             _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RS_type == 2'h1
-                                               & _frontend_io_renamed_decoded_fetch_packet_bits_valid_bits_0}
-                                              + {1'h0,
-                                                 _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RS_type == 2'h1
-                                                   & _frontend_io_renamed_decoded_fetch_packet_bits_valid_bits_1}}
-    + {1'h0,
-       {1'h0,
-        _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RS_type == 2'h1
-          & _frontend_io_renamed_decoded_fetch_packet_bits_valid_bits_2}
-         + {1'h0,
-            _frontend_io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RS_type == 2'h1
-              & _frontend_io_renamed_decoded_fetch_packet_bits_valid_bits_3}};	// src/main/scala/Core/ChaosCore.scala:76:29, :77:29, :189:{105,123}, :198:{36,61,72}
+       {1'h0, _backend_io_MEMRS_ready_2} + {1'h0, _backend_io_MEMRS_ready_3}} >= _GEN
+    + _GEN_0 & {1'h0, {1'h0, _backend_io_MOB_ready_0} + {1'h0, _backend_io_MOB_ready_1}}
+    + {1'h0, {1'h0, _backend_io_MOB_ready_2} + {1'h0, _backend_io_MOB_ready_3}} >= _GEN
+    + _GEN_0;	// src/main/scala/Core/ChaosCore.scala:77:29, :191:105, :200:{37,62,73,88,100,123,134}
   frontend frontend (	// src/main/scala/Core/ChaosCore.scala:76:29
     .clock
       (clock),
     .reset
       (reset),
     .io_flush
-      (flush),	// src/main/scala/Core/ChaosCore.scala:161:34
+      (flush),	// src/main/scala/Core/ChaosCore.scala:163:34
     .io_memory_request_ready
       (io_frontend_memory_request_ready),
     .io_memory_request_valid
@@ -544,8 +549,6 @@ module ChaosCore(	// src/main/scala/Core/ChaosCore.scala:39:7
       (_BRU_io_commit_bits_TOS),	// src/main/scala/Core/ChaosCore.scala:82:29
     .io_commit_bits_NEXT
       (_BRU_io_commit_bits_NEXT),	// src/main/scala/Core/ChaosCore.scala:82:29
-    .io_commit_bits_RAT_index
-      (_BRU_io_commit_bits_RAT_index),	// src/main/scala/Core/ChaosCore.scala:82:29
     .io_commit_bits_free_list_front_pointer
       (_BRU_io_commit_bits_free_list_front_pointer),	// src/main/scala/Core/ChaosCore.scala:82:29
     .io_commit_bits_RDold_0
@@ -582,6 +585,8 @@ module ChaosCore(	// src/main/scala/Core/ChaosCore.scala:39:7
       (_frontend_io_predictions_bits_fetch_PC),
     .io_predictions_bits_predicted_PC
       (_frontend_io_predictions_bits_predicted_PC),
+    .io_predictions_bits_ROB_index
+      (_frontend_io_predictions_bits_ROB_index),
     .io_predictions_bits_T_NT
       (_frontend_io_predictions_bits_T_NT),
     .io_predictions_bits_br_type
@@ -591,7 +596,7 @@ module ChaosCore(	// src/main/scala/Core/ChaosCore.scala:39:7
     .io_predictions_bits_resolved_PC
       (_frontend_io_predictions_bits_resolved_PC),
     .io_renamed_decoded_fetch_packet_ready
-      (_ROB_io_ROB_packet_ready & all_INT_RS_accepted & all_MEM_RS_accepted),	// src/main/scala/Core/ChaosCore.scala:81:29, :197:61, :198:61, :224:{80,103}
+      (_ROB_io_ROB_packet_ready & all_INT_RS_accepted & all_MEM_RS_accepted),	// src/main/scala/Core/ChaosCore.scala:81:29, :199:61, :200:88, :226:{80,103}
     .io_renamed_decoded_fetch_packet_valid
       (_frontend_io_renamed_decoded_fetch_packet_valid),
     .io_renamed_decoded_fetch_packet_bits_fetch_PC
@@ -818,8 +823,6 @@ module ChaosCore(	// src/main/scala/Core/ChaosCore.scala:39:7
       (_frontend_io_renamed_decoded_fetch_packet_bits_TOS),
     .io_renamed_decoded_fetch_packet_bits_NEXT
       (_frontend_io_renamed_decoded_fetch_packet_bits_NEXT),
-    .io_renamed_decoded_fetch_packet_bits_RAT_index
-      (_frontend_io_renamed_decoded_fetch_packet_bits_RAT_index),
     .io_renamed_decoded_fetch_packet_bits_free_list_front_pointer
       (_frontend_io_renamed_decoded_fetch_packet_bits_free_list_front_pointer),
     .io_FU_outputs_0_valid
@@ -974,7 +977,7 @@ module ChaosCore(	// src/main/scala/Core/ChaosCore.scala:39:7
   backend backend (	// src/main/scala/Core/ChaosCore.scala:77:29
     .clock                                                             (clock),
     .reset                                                             (reset),
-    .io_flush                                                          (flush),	// src/main/scala/Core/ChaosCore.scala:161:34
+    .io_flush                                                          (flush),	// src/main/scala/Core/ChaosCore.scala:163:34
     .io_backend_memory_response_ready
       (io_backend_memory_response_ready),
     .io_backend_memory_response_valid
@@ -1027,8 +1030,6 @@ module ChaosCore(	// src/main/scala/Core/ChaosCore.scala:39:7
       (_BRU_io_commit_bits_TOS),	// src/main/scala/Core/ChaosCore.scala:82:29
     .io_commit_bits_NEXT
       (_BRU_io_commit_bits_NEXT),	// src/main/scala/Core/ChaosCore.scala:82:29
-    .io_commit_bits_RAT_index
-      (_BRU_io_commit_bits_RAT_index),	// src/main/scala/Core/ChaosCore.scala:82:29
     .io_commit_bits_free_list_front_pointer
       (_BRU_io_commit_bits_free_list_front_pointer),	// src/main/scala/Core/ChaosCore.scala:82:29
     .io_commit_bits_RDold_0
@@ -1295,6 +1296,14 @@ module ChaosCore(	// src/main/scala/Core/ChaosCore.scala:39:7
       (_backend_io_INTRS_ready_2),
     .io_INTRS_ready_3
       (_backend_io_INTRS_ready_3),
+    .io_MOB_ready_0
+      (_backend_io_MOB_ready_0),
+    .io_MOB_ready_1
+      (_backend_io_MOB_ready_1),
+    .io_MOB_ready_2
+      (_backend_io_MOB_ready_2),
+    .io_MOB_ready_3
+      (_backend_io_MOB_ready_3),
     .io_FU_outputs_0_valid
       (_backend_io_FU_outputs_0_valid),
     .io_FU_outputs_0_bits_RD
@@ -1443,7 +1452,7 @@ module ChaosCore(	// src/main/scala/Core/ChaosCore.scala:39:7
   FTQ FTQ (	// src/main/scala/Core/ChaosCore.scala:80:29
     .clock                                   (clock),
     .reset                                   (reset),
-    .io_flush                                (flush),	// src/main/scala/Core/ChaosCore.scala:161:34
+    .io_flush                                (flush),	// src/main/scala/Core/ChaosCore.scala:163:34
     .io_FU_outputs_0_valid                   (_backend_io_FU_outputs_0_valid),	// src/main/scala/Core/ChaosCore.scala:77:29
     .io_FU_outputs_0_bits_branch_taken       (_backend_io_FU_outputs_0_bits_branch_taken),	// src/main/scala/Core/ChaosCore.scala:77:29
     .io_FU_outputs_0_bits_target_address
@@ -1457,13 +1466,15 @@ module ChaosCore(	// src/main/scala/Core/ChaosCore.scala:39:7
     .io_predictions_bits_valid               (_frontend_io_predictions_bits_valid),	// src/main/scala/Core/ChaosCore.scala:76:29
     .io_predictions_bits_fetch_PC            (_frontend_io_predictions_bits_fetch_PC),	// src/main/scala/Core/ChaosCore.scala:76:29
     .io_predictions_bits_predicted_PC        (_frontend_io_predictions_bits_predicted_PC),	// src/main/scala/Core/ChaosCore.scala:76:29
+    .io_predictions_bits_ROB_index           (_frontend_io_predictions_bits_ROB_index),	// src/main/scala/Core/ChaosCore.scala:76:29
     .io_predictions_bits_T_NT                (_frontend_io_predictions_bits_T_NT),	// src/main/scala/Core/ChaosCore.scala:76:29
     .io_predictions_bits_br_type             (_frontend_io_predictions_bits_br_type),	// src/main/scala/Core/ChaosCore.scala:76:29
     .io_predictions_bits_dominant_index
       (_frontend_io_predictions_bits_dominant_index),	// src/main/scala/Core/ChaosCore.scala:76:29
     .io_predictions_bits_resolved_PC         (_frontend_io_predictions_bits_resolved_PC),	// src/main/scala/Core/ChaosCore.scala:76:29
+    .io_ROB_index                            (_ROB_io_ROB_index),	// src/main/scala/Core/ChaosCore.scala:81:29
     .io_commit_valid                         (_BRU_io_commit_valid),	// src/main/scala/Core/ChaosCore.scala:82:29
-    .io_commit_bits_fetch_PC                 (_BRU_io_commit_bits_fetch_PC),	// src/main/scala/Core/ChaosCore.scala:82:29
+    .io_commit_bits_ROB_index                (_BRU_io_commit_bits_ROB_index),	// src/main/scala/Core/ChaosCore.scala:82:29
     .io_FTQ_valid                            (_FTQ_io_FTQ_valid),
     .io_FTQ_fetch_PC                         (_FTQ_io_FTQ_fetch_PC),
     .io_FTQ_predicted_PC                     (_FTQ_io_FTQ_predicted_PC),
@@ -1476,12 +1487,12 @@ module ChaosCore(	// src/main/scala/Core/ChaosCore.scala:39:7
   ROB ROB (	// src/main/scala/Core/ChaosCore.scala:81:29
     .clock                                                         (clock),
     .reset                                                         (reset),
-    .io_flush                                                      (flush),	// src/main/scala/Core/ChaosCore.scala:161:34
+    .io_flush                                                      (flush),	// src/main/scala/Core/ChaosCore.scala:163:34
     .io_ROB_packet_ready
       (_ROB_io_ROB_packet_ready),
     .io_ROB_packet_valid
       (_frontend_io_renamed_decoded_fetch_packet_valid & all_INT_RS_accepted
-       & all_MEM_RS_accepted),	// src/main/scala/Core/ChaosCore.scala:76:29, :197:61, :198:61, :213:{83,106}
+       & all_MEM_RS_accepted),	// src/main/scala/Core/ChaosCore.scala:76:29, :199:61, :200:88, :215:{83,106}
     .io_ROB_packet_bits_fetch_PC
       (_frontend_io_renamed_decoded_fetch_packet_bits_fetch_PC),	// src/main/scala/Core/ChaosCore.scala:76:29
     .io_ROB_packet_bits_decoded_instruction_0_ready_bits_RS1_ready
@@ -1706,8 +1717,6 @@ module ChaosCore(	// src/main/scala/Core/ChaosCore.scala:39:7
       (_frontend_io_renamed_decoded_fetch_packet_bits_TOS),	// src/main/scala/Core/ChaosCore.scala:76:29
     .io_ROB_packet_bits_NEXT
       (_frontend_io_renamed_decoded_fetch_packet_bits_NEXT),	// src/main/scala/Core/ChaosCore.scala:76:29
-    .io_ROB_packet_bits_RAT_index
-      (_frontend_io_renamed_decoded_fetch_packet_bits_RAT_index),	// src/main/scala/Core/ChaosCore.scala:76:29
     .io_ROB_packet_bits_free_list_front_pointer
       (_frontend_io_renamed_decoded_fetch_packet_bits_free_list_front_pointer),	// src/main/scala/Core/ChaosCore.scala:76:29
     .io_FU_outputs_0_valid
@@ -1858,8 +1867,6 @@ module ChaosCore(	// src/main/scala/Core/ChaosCore.scala:39:7
       (_ROB_io_ROB_output_row_valid),
     .io_ROB_output_fetch_PC
       (_ROB_io_ROB_output_fetch_PC),
-    .io_ROB_output_RAT_index
-      (_ROB_io_ROB_output_RAT_index),
     .io_ROB_output_ROB_index
       (_ROB_io_ROB_output_ROB_index),
     .io_ROB_output_GHR
@@ -1949,8 +1956,6 @@ module ChaosCore(	// src/main/scala/Core/ChaosCore.scala:39:7
       (_BRU_io_commit_bits_TOS),	// src/main/scala/Core/ChaosCore.scala:82:29
     .io_commit_bits_NEXT
       (_BRU_io_commit_bits_NEXT),	// src/main/scala/Core/ChaosCore.scala:82:29
-    .io_commit_bits_RAT_index
-      (_BRU_io_commit_bits_RAT_index),	// src/main/scala/Core/ChaosCore.scala:82:29
     .io_commit_bits_free_list_front_pointer
       (_BRU_io_commit_bits_free_list_front_pointer),	// src/main/scala/Core/ChaosCore.scala:82:29
     .io_commit_bits_RDold_0
@@ -1993,7 +1998,6 @@ module ChaosCore(	// src/main/scala/Core/ChaosCore.scala:39:7
     .io_FTQ_resolved_PC                     (_FTQ_io_FTQ_resolved_PC),	// src/main/scala/Core/ChaosCore.scala:80:29
     .io_ROB_output_row_valid                (_ROB_io_ROB_output_row_valid),	// src/main/scala/Core/ChaosCore.scala:81:29
     .io_ROB_output_fetch_PC                 (_ROB_io_ROB_output_fetch_PC),	// src/main/scala/Core/ChaosCore.scala:81:29
-    .io_ROB_output_RAT_index                (_ROB_io_ROB_output_RAT_index),	// src/main/scala/Core/ChaosCore.scala:81:29
     .io_ROB_output_ROB_index                (_ROB_io_ROB_output_ROB_index),	// src/main/scala/Core/ChaosCore.scala:81:29
     .io_ROB_output_GHR                      (_ROB_io_ROB_output_GHR),	// src/main/scala/Core/ChaosCore.scala:81:29
     .io_ROB_output_NEXT                     (_ROB_io_ROB_output_NEXT),	// src/main/scala/Core/ChaosCore.scala:81:29
@@ -2035,7 +2039,6 @@ module ChaosCore(	// src/main/scala/Core/ChaosCore.scala:39:7
     .io_commit_bits_GHR                     (_BRU_io_commit_bits_GHR),
     .io_commit_bits_TOS                     (_BRU_io_commit_bits_TOS),
     .io_commit_bits_NEXT                    (_BRU_io_commit_bits_NEXT),
-    .io_commit_bits_RAT_index               (_BRU_io_commit_bits_RAT_index),
     .io_commit_bits_free_list_front_pointer (_BRU_io_commit_bits_free_list_front_pointer),
     .io_commit_bits_RDold_0                 (_BRU_io_commit_bits_RDold_0),
     .io_commit_bits_RDold_1                 (_BRU_io_commit_bits_RDold_1),
@@ -2062,7 +2065,6 @@ module ChaosCore(	// src/main/scala/Core/ChaosCore.scala:39:7
   assign io_commit_bits_GHR = _BRU_io_commit_bits_GHR;	// src/main/scala/Core/ChaosCore.scala:39:7, :82:29
   assign io_commit_bits_TOS = _BRU_io_commit_bits_TOS;	// src/main/scala/Core/ChaosCore.scala:39:7, :82:29
   assign io_commit_bits_NEXT = _BRU_io_commit_bits_NEXT;	// src/main/scala/Core/ChaosCore.scala:39:7, :82:29
-  assign io_commit_bits_RAT_index = _BRU_io_commit_bits_RAT_index;	// src/main/scala/Core/ChaosCore.scala:39:7, :82:29
   assign io_commit_bits_free_list_front_pointer =
     _BRU_io_commit_bits_free_list_front_pointer;	// src/main/scala/Core/ChaosCore.scala:39:7, :82:29
   assign io_commit_bits_RDold_0 = _BRU_io_commit_bits_RDold_0;	// src/main/scala/Core/ChaosCore.scala:39:7, :82:29
@@ -2077,6 +2079,6 @@ module ChaosCore(	// src/main/scala/Core/ChaosCore.scala:39:7
   assign io_commit_bits_RD_valid_1 = _BRU_io_commit_bits_RD_valid_1;	// src/main/scala/Core/ChaosCore.scala:39:7, :82:29
   assign io_commit_bits_RD_valid_2 = _BRU_io_commit_bits_RD_valid_2;	// src/main/scala/Core/ChaosCore.scala:39:7, :82:29
   assign io_commit_bits_RD_valid_3 = _BRU_io_commit_bits_RD_valid_3;	// src/main/scala/Core/ChaosCore.scala:39:7, :82:29
-  assign io_flush = flush;	// src/main/scala/Core/ChaosCore.scala:39:7, :161:34
+  assign io_flush = flush;	// src/main/scala/Core/ChaosCore.scala:39:7, :163:34
 endmodule
 

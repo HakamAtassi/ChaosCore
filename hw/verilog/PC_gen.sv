@@ -58,7 +58,6 @@ module PC_gen(	// src/main/scala/Frontend/BP/PC_gen.scala:40:7
   input  [15:0] io_commit_bits_GHR,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
   input  [6:0]  io_commit_bits_TOS,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
                 io_commit_bits_NEXT,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
-  input  [3:0]  io_commit_bits_RAT_index,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
   input  [7:0]  io_commit_bits_free_list_front_pointer,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
   input  [4:0]  io_commit_bits_RDold_0,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16
                 io_commit_bits_RDold_1,	// src/main/scala/Frontend/BP/PC_gen.scala:43:16

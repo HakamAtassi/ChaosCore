@@ -42,7 +42,6 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
   input  [15:0] io_commit_bits_GHR,	// src/main/scala/Frontend/frontend.scala:45:16
   input  [6:0]  io_commit_bits_TOS,	// src/main/scala/Frontend/frontend.scala:45:16
                 io_commit_bits_NEXT,	// src/main/scala/Frontend/frontend.scala:45:16
-  input  [3:0]  io_commit_bits_RAT_index,	// src/main/scala/Frontend/frontend.scala:45:16
   input  [7:0]  io_commit_bits_free_list_front_pointer,	// src/main/scala/Frontend/frontend.scala:45:16
   input  [4:0]  io_commit_bits_RDold_0,	// src/main/scala/Frontend/frontend.scala:45:16
                 io_commit_bits_RDold_1,	// src/main/scala/Frontend/frontend.scala:45:16
@@ -61,6 +60,7 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
                 io_predictions_bits_valid,	// src/main/scala/Frontend/frontend.scala:45:16
   output [31:0] io_predictions_bits_fetch_PC,	// src/main/scala/Frontend/frontend.scala:45:16
                 io_predictions_bits_predicted_PC,	// src/main/scala/Frontend/frontend.scala:45:16
+  output [5:0]  io_predictions_bits_ROB_index,	// src/main/scala/Frontend/frontend.scala:45:16
   output        io_predictions_bits_T_NT,	// src/main/scala/Frontend/frontend.scala:45:16
   output [2:0]  io_predictions_bits_br_type,	// src/main/scala/Frontend/frontend.scala:45:16
   output [1:0]  io_predictions_bits_dominant_index,	// src/main/scala/Frontend/frontend.scala:45:16
@@ -179,7 +179,6 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
   output [15:0] io_renamed_decoded_fetch_packet_bits_GHR,	// src/main/scala/Frontend/frontend.scala:45:16
   output [6:0]  io_renamed_decoded_fetch_packet_bits_TOS,	// src/main/scala/Frontend/frontend.scala:45:16
                 io_renamed_decoded_fetch_packet_bits_NEXT,	// src/main/scala/Frontend/frontend.scala:45:16
-  output [3:0]  io_renamed_decoded_fetch_packet_bits_RAT_index,	// src/main/scala/Frontend/frontend.scala:45:16
   output [7:0]  io_renamed_decoded_fetch_packet_bits_free_list_front_pointer,	// src/main/scala/Frontend/frontend.scala:45:16
   input         io_FU_outputs_0_valid,	// src/main/scala/Frontend/frontend.scala:45:16
   input  [6:0]  io_FU_outputs_0_bits_RD,	// src/main/scala/Frontend/frontend.scala:45:16
@@ -265,6 +264,7 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
   wire [31:0] _FTQ_queue_io_deq_bits_fetch_PC;	// src/main/scala/Frontend/frontend.scala:78:37
   wire        _FTQ_queue_io_deq_bits_is_misprediction;	// src/main/scala/Frontend/frontend.scala:78:37
   wire [31:0] _FTQ_queue_io_deq_bits_predicted_PC;	// src/main/scala/Frontend/frontend.scala:78:37
+  wire [5:0]  _FTQ_queue_io_deq_bits_ROB_index;	// src/main/scala/Frontend/frontend.scala:78:37
   wire        _FTQ_queue_io_deq_bits_T_NT;	// src/main/scala/Frontend/frontend.scala:78:37
   wire [2:0]  _FTQ_queue_io_deq_bits_br_type;	// src/main/scala/Frontend/frontend.scala:78:37
   wire [1:0]  _FTQ_queue_io_deq_bits_dominant_index;	// src/main/scala/Frontend/frontend.scala:78:37
@@ -383,7 +383,6 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
   wire [15:0] _instruction_queue_io_deq_bits_GHR;	// src/main/scala/Frontend/frontend.scala:77:37
   wire [6:0]  _instruction_queue_io_deq_bits_TOS;	// src/main/scala/Frontend/frontend.scala:77:37
   wire [6:0]  _instruction_queue_io_deq_bits_NEXT;	// src/main/scala/Frontend/frontend.scala:77:37
-  wire [3:0]  _instruction_queue_io_deq_bits_RAT_index;	// src/main/scala/Frontend/frontend.scala:77:37
   wire [7:0]  _instruction_queue_io_deq_bits_free_list_front_pointer;	// src/main/scala/Frontend/frontend.scala:77:37
   wire        _decoders_io_fetch_packet_ready;	// src/main/scala/Frontend/frontend.scala:75:37
   wire        _decoders_io_predictions_in_ready;	// src/main/scala/Frontend/frontend.scala:75:37
@@ -516,13 +515,13 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
   wire [15:0] _decoders_io_decoded_fetch_packet_bits_GHR;	// src/main/scala/Frontend/frontend.scala:75:37
   wire [6:0]  _decoders_io_decoded_fetch_packet_bits_TOS;	// src/main/scala/Frontend/frontend.scala:75:37
   wire [6:0]  _decoders_io_decoded_fetch_packet_bits_NEXT;	// src/main/scala/Frontend/frontend.scala:75:37
-  wire [3:0]  _decoders_io_decoded_fetch_packet_bits_RAT_index;	// src/main/scala/Frontend/frontend.scala:75:37
   wire [7:0]  _decoders_io_decoded_fetch_packet_bits_free_list_front_pointer;	// src/main/scala/Frontend/frontend.scala:75:37
   wire        _decoders_io_predictions_out_valid;	// src/main/scala/Frontend/frontend.scala:75:37
   wire        _decoders_io_predictions_out_bits_valid;	// src/main/scala/Frontend/frontend.scala:75:37
   wire [31:0] _decoders_io_predictions_out_bits_fetch_PC;	// src/main/scala/Frontend/frontend.scala:75:37
   wire        _decoders_io_predictions_out_bits_is_misprediction;	// src/main/scala/Frontend/frontend.scala:75:37
   wire [31:0] _decoders_io_predictions_out_bits_predicted_PC;	// src/main/scala/Frontend/frontend.scala:75:37
+  wire [5:0]  _decoders_io_predictions_out_bits_ROB_index;	// src/main/scala/Frontend/frontend.scala:75:37
   wire        _decoders_io_predictions_out_bits_T_NT;	// src/main/scala/Frontend/frontend.scala:75:37
   wire [2:0]  _decoders_io_predictions_out_bits_br_type;	// src/main/scala/Frontend/frontend.scala:75:37
   wire [1:0]  _decoders_io_predictions_out_bits_dominant_index;	// src/main/scala/Frontend/frontend.scala:75:37
@@ -549,6 +548,7 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
   wire [31:0] _instruction_fetch_io_predictions_bits_fetch_PC;	// src/main/scala/Frontend/frontend.scala:74:37
   wire        _instruction_fetch_io_predictions_bits_is_misprediction;	// src/main/scala/Frontend/frontend.scala:74:37
   wire [31:0] _instruction_fetch_io_predictions_bits_predicted_PC;	// src/main/scala/Frontend/frontend.scala:74:37
+  wire [5:0]  _instruction_fetch_io_predictions_bits_ROB_index;	// src/main/scala/Frontend/frontend.scala:74:37
   wire        _instruction_fetch_io_predictions_bits_T_NT;	// src/main/scala/Frontend/frontend.scala:74:37
   wire [2:0]  _instruction_fetch_io_predictions_bits_br_type;	// src/main/scala/Frontend/frontend.scala:74:37
   wire [1:0]  _instruction_fetch_io_predictions_bits_dominant_index;	// src/main/scala/Frontend/frontend.scala:74:37
@@ -571,7 +571,6 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
     .io_commit_bits_GHR                                  (io_commit_bits_GHR),
     .io_commit_bits_TOS                                  (io_commit_bits_TOS),
     .io_commit_bits_NEXT                                 (io_commit_bits_NEXT),
-    .io_commit_bits_RAT_index                            (io_commit_bits_RAT_index),
     .io_commit_bits_free_list_front_pointer
       (io_commit_bits_free_list_front_pointer),
     .io_commit_bits_RDold_0                              (io_commit_bits_RDold_0),
@@ -678,6 +677,8 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (_instruction_fetch_io_predictions_bits_is_misprediction),
     .io_predictions_bits_predicted_PC
       (_instruction_fetch_io_predictions_bits_predicted_PC),
+    .io_predictions_bits_ROB_index
+      (_instruction_fetch_io_predictions_bits_ROB_index),
     .io_predictions_bits_T_NT
       (_instruction_fetch_io_predictions_bits_T_NT),
     .io_predictions_bits_br_type
@@ -741,6 +742,8 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (_instruction_fetch_io_predictions_bits_is_misprediction),	// src/main/scala/Frontend/frontend.scala:74:37
     .io_predictions_in_bits_predicted_PC
       (_instruction_fetch_io_predictions_bits_predicted_PC),	// src/main/scala/Frontend/frontend.scala:74:37
+    .io_predictions_in_bits_ROB_index
+      (_instruction_fetch_io_predictions_bits_ROB_index),	// src/main/scala/Frontend/frontend.scala:74:37
     .io_predictions_in_bits_T_NT
       (_instruction_fetch_io_predictions_bits_T_NT),	// src/main/scala/Frontend/frontend.scala:74:37
     .io_predictions_in_bits_br_type
@@ -977,8 +980,6 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (_decoders_io_decoded_fetch_packet_bits_TOS),
     .io_decoded_fetch_packet_bits_NEXT
       (_decoders_io_decoded_fetch_packet_bits_NEXT),
-    .io_decoded_fetch_packet_bits_RAT_index
-      (_decoders_io_decoded_fetch_packet_bits_RAT_index),
     .io_decoded_fetch_packet_bits_free_list_front_pointer
       (_decoders_io_decoded_fetch_packet_bits_free_list_front_pointer),
     .io_predictions_out_ready
@@ -993,6 +994,8 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (_decoders_io_predictions_out_bits_is_misprediction),
     .io_predictions_out_bits_predicted_PC
       (_decoders_io_predictions_out_bits_predicted_PC),
+    .io_predictions_out_bits_ROB_index
+      (_decoders_io_predictions_out_bits_ROB_index),
     .io_predictions_out_bits_T_NT
       (_decoders_io_predictions_out_bits_T_NT),
     .io_predictions_out_bits_br_type
@@ -1233,8 +1236,6 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (_decoders_io_decoded_fetch_packet_bits_TOS),	// src/main/scala/Frontend/frontend.scala:75:37
     .io_enq_bits_NEXT
       (_decoders_io_decoded_fetch_packet_bits_NEXT),	// src/main/scala/Frontend/frontend.scala:75:37
-    .io_enq_bits_RAT_index
-      (_decoders_io_decoded_fetch_packet_bits_RAT_index),	// src/main/scala/Frontend/frontend.scala:75:37
     .io_enq_bits_free_list_front_pointer
       (_decoders_io_decoded_fetch_packet_bits_free_list_front_pointer),	// src/main/scala/Frontend/frontend.scala:75:37
     .io_deq_ready
@@ -1465,8 +1466,6 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (_instruction_queue_io_deq_bits_TOS),
     .io_deq_bits_NEXT
       (_instruction_queue_io_deq_bits_NEXT),
-    .io_deq_bits_RAT_index
-      (_instruction_queue_io_deq_bits_RAT_index),
     .io_deq_bits_free_list_front_pointer
       (_instruction_queue_io_deq_bits_free_list_front_pointer),
     .io_flush                                               (io_flush)
@@ -1481,6 +1480,7 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
     .io_enq_bits_fetch_PC         (_decoders_io_predictions_out_bits_fetch_PC),	// src/main/scala/Frontend/frontend.scala:75:37
     .io_enq_bits_is_misprediction (_decoders_io_predictions_out_bits_is_misprediction),	// src/main/scala/Frontend/frontend.scala:75:37
     .io_enq_bits_predicted_PC     (_decoders_io_predictions_out_bits_predicted_PC),	// src/main/scala/Frontend/frontend.scala:75:37
+    .io_enq_bits_ROB_index        (_decoders_io_predictions_out_bits_ROB_index),	// src/main/scala/Frontend/frontend.scala:75:37
     .io_enq_bits_T_NT             (_decoders_io_predictions_out_bits_T_NT),	// src/main/scala/Frontend/frontend.scala:75:37
     .io_enq_bits_br_type          (_decoders_io_predictions_out_bits_br_type),	// src/main/scala/Frontend/frontend.scala:75:37
     .io_enq_bits_dominant_index   (_decoders_io_predictions_out_bits_dominant_index),	// src/main/scala/Frontend/frontend.scala:75:37
@@ -1491,6 +1491,7 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
     .io_deq_bits_fetch_PC         (_FTQ_queue_io_deq_bits_fetch_PC),
     .io_deq_bits_is_misprediction (_FTQ_queue_io_deq_bits_is_misprediction),
     .io_deq_bits_predicted_PC     (_FTQ_queue_io_deq_bits_predicted_PC),
+    .io_deq_bits_ROB_index        (_FTQ_queue_io_deq_bits_ROB_index),
     .io_deq_bits_T_NT             (_FTQ_queue_io_deq_bits_T_NT),
     .io_deq_bits_br_type          (_FTQ_queue_io_deq_bits_br_type),
     .io_deq_bits_dominant_index   (_FTQ_queue_io_deq_bits_dominant_index),
@@ -1528,8 +1529,6 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (io_commit_bits_TOS),
     .io_commit_bits_NEXT
       (io_commit_bits_NEXT),
-    .io_commit_bits_RAT_index
-      (io_commit_bits_RAT_index),
     .io_commit_bits_free_list_front_pointer
       (io_commit_bits_free_list_front_pointer),
     .io_commit_bits_RDold_0
@@ -1568,6 +1567,8 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (_FTQ_queue_io_deq_bits_is_misprediction),	// src/main/scala/Frontend/frontend.scala:78:37
     .io_predictions_in_bits_predicted_PC
       (_FTQ_queue_io_deq_bits_predicted_PC),	// src/main/scala/Frontend/frontend.scala:78:37
+    .io_predictions_in_bits_ROB_index
+      (_FTQ_queue_io_deq_bits_ROB_index),	// src/main/scala/Frontend/frontend.scala:78:37
     .io_predictions_in_bits_T_NT
       (_FTQ_queue_io_deq_bits_T_NT),	// src/main/scala/Frontend/frontend.scala:78:37
     .io_predictions_in_bits_br_type
@@ -1588,6 +1589,8 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (/* unused */),
     .io_predictions_out_bits_predicted_PC
       (io_predictions_bits_predicted_PC),
+    .io_predictions_out_bits_ROB_index
+      (io_predictions_bits_ROB_index),
     .io_predictions_out_bits_T_NT
       (io_predictions_bits_T_NT),
     .io_predictions_out_bits_br_type
@@ -1824,8 +1827,6 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (_instruction_queue_io_deq_bits_TOS),	// src/main/scala/Frontend/frontend.scala:77:37
     .io_decoded_fetch_packet_bits_NEXT
       (_instruction_queue_io_deq_bits_NEXT),	// src/main/scala/Frontend/frontend.scala:77:37
-    .io_decoded_fetch_packet_bits_RAT_index
-      (_instruction_queue_io_deq_bits_RAT_index),	// src/main/scala/Frontend/frontend.scala:77:37
     .io_decoded_fetch_packet_bits_free_list_front_pointer
       (_instruction_queue_io_deq_bits_free_list_front_pointer),	// src/main/scala/Frontend/frontend.scala:77:37
     .io_FU_outputs_0_valid
@@ -2200,8 +2201,6 @@ module frontend(	// src/main/scala/Frontend/frontend.scala:36:7
       (io_renamed_decoded_fetch_packet_bits_TOS),
     .io_renamed_decoded_fetch_packet_bits_NEXT
       (io_renamed_decoded_fetch_packet_bits_NEXT),
-    .io_renamed_decoded_fetch_packet_bits_RAT_index
-      (io_renamed_decoded_fetch_packet_bits_RAT_index),
     .io_renamed_decoded_fetch_packet_bits_free_list_front_pointer
       (io_renamed_decoded_fetch_packet_bits_free_list_front_pointer)
   );	// src/main/scala/Frontend/frontend.scala:80:37

@@ -9,7 +9,7 @@ SDPReadWriteSmem.sv
 RAS.sv
 Queue1_prediction.sv
 BP.sv
-ram_2x104.sv
+ram_2x110.sv
 Queue2_FTQ_entry.sv
 ram_2x234.sv
 Queue2_fetch_packet.sv
@@ -23,12 +23,12 @@ ram_16x53.sv
 Queue16_prediction.sv
 instruction_fetch.sv
 decoder.sv
-ram_2x438.sv
+ram_2x434.sv
 Queue2_decoded_fetch_packet.sv
 fetch_packet_decoder.sv
-ram_16x438.sv
+ram_16x434.sv
 Queue16_decoded_fetch_packet.sv
-ram_16x104.sv
+ram_16x110.sv
 Queue16_FTQ_entry.sv
 free_list.sv
 WAW_handler.sv
@@ -50,7 +50,7 @@ FU_1.sv
 AGU.sv
 backend.sv
 FTQ.sv
-mem_64x74.sv
+mem_64x70.sv
 ROB_shared_mem.sv
 mem_64x2.sv
 ROB_WB_mem.sv

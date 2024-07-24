@@ -256,6 +256,7 @@ class predecoder(coreParameters:CoreParameters) extends Module{
     predictions_out.bits.valid                         := 0.B
     predictions_out.bits.is_misprediction              := 0.B
     predictions_out.bits.br_type                       := dominantbr_type_t
+    predictions_out.bits.ROB_index                     := 0.U
 
 
     //////////////////////

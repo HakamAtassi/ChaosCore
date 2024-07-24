@@ -216,7 +216,6 @@ module MOB(	// src/main/scala/Memory/MOB.scala:78:7
   input  [15:0] io_commit_bits_GHR,	// src/main/scala/Memory/MOB.scala:85:16
   input  [6:0]  io_commit_bits_TOS,	// src/main/scala/Memory/MOB.scala:85:16
                 io_commit_bits_NEXT,	// src/main/scala/Memory/MOB.scala:85:16
-  input  [3:0]  io_commit_bits_RAT_index,	// src/main/scala/Memory/MOB.scala:85:16
   input  [7:0]  io_commit_bits_free_list_front_pointer,	// src/main/scala/Memory/MOB.scala:85:16
   input  [4:0]  io_commit_bits_RDold_0,	// src/main/scala/Memory/MOB.scala:85:16
                 io_commit_bits_RDold_1,	// src/main/scala/Memory/MOB.scala:85:16
@@ -246,9 +245,10 @@ module MOB(	// src/main/scala/Memory/MOB.scala:78:7
   input  [3:0]  io_backend_memory_response_bits_MOB_index	// src/main/scala/Memory/MOB.scala:85:16
 );
 
-  wire [2:0]        _availalbe_MOB_entries_4to2;	// src/main/scala/Memory/MOB.scala:415:54
-  wire              _FU_output_arbiter_io_in_0_ready;	// src/main/scala/Memory/MOB.scala:384:41
-  wire              _FU_output_arbiter_io_in_1_ready;	// src/main/scala/Memory/MOB.scala:384:41
+  wire [2:0]        _availalbe_MOB_entries_4to2;	// src/main/scala/Memory/MOB.scala:422:54
+  wire              _FU_output_arbiter_io_in_0_ready;	// src/main/scala/Memory/MOB.scala:391:41
+  wire              _FU_output_arbiter_io_in_1_ready;	// src/main/scala/Memory/MOB.scala:391:41
+  wire              _FU_output_store_Q_io_enq_ready;	// src/main/scala/Memory/MOB.scala:307:41
   wire              _FU_output_store_Q_io_deq_valid;	// src/main/scala/Memory/MOB.scala:307:41
   wire [6:0]        _FU_output_store_Q_io_deq_bits_RD;	// src/main/scala/Memory/MOB.scala:307:41
   wire [31:0]       _FU_output_store_Q_io_deq_bits_RD_data;	// src/main/scala/Memory/MOB.scala:307:41
@@ -267,6 +267,7 @@ module MOB(	// src/main/scala/Memory/MOB.scala:78:7
   wire [3:0]        _FU_output_store_Q_io_deq_bits_FTQ_index;	// src/main/scala/Memory/MOB.scala:307:41
   wire [1:0]        _FU_output_store_Q_io_deq_bits_fetch_packet_index;	// src/main/scala/Memory/MOB.scala:307:41
   wire              _FU_output_store_Q_io_deq_bits_exception;	// src/main/scala/Memory/MOB.scala:307:41
+  wire              _FU_output_load_Q_io_enq_ready;	// src/main/scala/Memory/MOB.scala:306:41
   wire              _FU_output_load_Q_io_deq_valid;	// src/main/scala/Memory/MOB.scala:306:41
   wire [6:0]        _FU_output_load_Q_io_deq_bits_RD;	// src/main/scala/Memory/MOB.scala:306:41
   wire [31:0]       _FU_output_load_Q_io_deq_bits_RD_data;	// src/main/scala/Memory/MOB.scala:306:41
@@ -495,10 +496,10 @@ module MOB(	// src/main/scala/Memory/MOB.scala:78:7
   reg               MOB_15_completed;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_15_committed;	// src/main/scala/Memory/MOB.scala:119:22
   reg               MOB_15_exception;	// src/main/scala/Memory/MOB.scala:119:22
-  wire              written_vec_0 = io_reserve_0_valid & (|_availalbe_MOB_entries_4to2);	// src/main/scala/Memory/MOB.scala:142:34, :415:54
-  wire              written_vec_1 = io_reserve_1_valid & (|_availalbe_MOB_entries_4to2);	// src/main/scala/Memory/MOB.scala:142:34, :415:54
-  wire              written_vec_2 = io_reserve_2_valid & (|_availalbe_MOB_entries_4to2);	// src/main/scala/Memory/MOB.scala:142:34, :415:54
-  wire              written_vec_3 = io_reserve_3_valid & (|_availalbe_MOB_entries_4to2);	// src/main/scala/Memory/MOB.scala:142:34, :415:54
+  wire              written_vec_0 = io_reserve_0_valid & (|_availalbe_MOB_entries_4to2);	// src/main/scala/Memory/MOB.scala:142:34, :422:54
+  wire              written_vec_1 = io_reserve_1_valid & (|_availalbe_MOB_entries_4to2);	// src/main/scala/Memory/MOB.scala:142:34, :422:54
+  wire              written_vec_2 = io_reserve_2_valid & (|_availalbe_MOB_entries_4to2);	// src/main/scala/Memory/MOB.scala:142:34, :422:54
+  wire              written_vec_3 = io_reserve_3_valid & (|_availalbe_MOB_entries_4to2);	// src/main/scala/Memory/MOB.scala:142:34, :422:54
   wire [1:0]        _GEN = {1'h0, written_vec_0};	// src/main/scala/Memory/MOB.scala:142:34, :151:63
   wire [3:0]        _io_reserved_pointers_0_bits_T =
     back_pointer[3:0] + {3'h0, written_vec_0 - 1'h1};	// src/main/scala/Memory/MOB.scala:114:34, :117:39, :142:34, :151:63, :153:28
@@ -855,6 +856,13 @@ module MOB(	// src/main/scala/Memory/MOB.scala:78:7
                                                           ? 4'hD
                                                           : {3'h7,
                                                              ~possible_FU_stores_14};	// src/main/scala/Memory/MOB.scala:151:63, :313:{96,118}, src/main/scala/chisel3/util/Mux.scala:50:70
+  wire              FU_output_store_Q_io_enq_valid =
+    possible_FU_stores_0 | possible_FU_stores_1 | possible_FU_stores_2
+    | possible_FU_stores_3 | possible_FU_stores_4 | possible_FU_stores_5
+    | possible_FU_stores_6 | possible_FU_stores_7 | possible_FU_stores_8
+    | possible_FU_stores_9 | possible_FU_stores_10 | possible_FU_stores_11
+    | possible_FU_stores_12 | possible_FU_stores_13 | possible_FU_stores_14 | _GEN_31
+    & MOB_15_pending & MOB_15_memory_type == 2'h2;	// src/main/scala/Memory/MOB.scala:119:22, :207:50, :312:72, :313:{96,118}, :321:90
   wire [15:0][5:0]  _GEN_32 =
     {{MOB_15_ROB_index},
      {MOB_14_ROB_index},
@@ -871,7 +879,7 @@ module MOB(	// src/main/scala/Memory/MOB.scala:78:7
      {MOB_3_ROB_index},
      {MOB_2_ROB_index},
      {MOB_1_ROB_index},
-     {MOB_0_ROB_index}};	// src/main/scala/Memory/MOB.scala:119:22, :323:50
+     {MOB_0_ROB_index}};	// src/main/scala/Memory/MOB.scala:119:22, :323:59
   wire [15:0][1:0]  _GEN_33 =
     {{MOB_15_fetch_packet_index},
      {MOB_14_fetch_packet_index},
@@ -888,7 +896,7 @@ module MOB(	// src/main/scala/Memory/MOB.scala:78:7
      {MOB_3_fetch_packet_index},
      {MOB_2_fetch_packet_index},
      {MOB_1_fetch_packet_index},
-     {MOB_0_fetch_packet_index}};	// src/main/scala/Memory/MOB.scala:119:22, :323:50
+     {MOB_0_fetch_packet_index}};	// src/main/scala/Memory/MOB.scala:119:22, :323:59
   wire              _GEN_34 = MOB_0_address[1:0] == 2'h0;	// src/main/scala/Memory/MOB.scala:119:22, src/main/scala/utils.scala:277:{27,35}
   wire              _GEN_35 = MOB_0_address[1:0] == 2'h1;	// src/main/scala/Memory/MOB.scala:119:22, :151:63, src/main/scala/utils.scala:277:{27,35}
   wire              _GEN_36 = MOB_0_address[1:0] == 2'h2;	// src/main/scala/Memory/MOB.scala:119:22, src/main/scala/utils.scala:277:{27,35}
@@ -914,6 +922,13 @@ module MOB(	// src/main/scala/Memory/MOB.scala:78:7
         : _GEN_36 ? MOB_0_data[15:8] : (&(MOB_0_address[1:0])) ? MOB_0_data[7:0] : 8'h0},
      {(&(MOB_0_address[1:0])) ? MOB_0_data[7:0] : 8'h0},
      {8'h0}};	// src/main/scala/Memory/MOB.scala:119:22, src/main/scala/utils.scala:270:14, :274:28, :277:{27,35,42}, :281:33, :292:{27,34}, :295:{27,34}, :301:33, :306:27, :311:27, :315:27, :318:27
+  wire              FU_output_load_Q_io_enq_valid =
+    possible_FU_loads_0 | possible_FU_loads_1 | possible_FU_loads_2 | possible_FU_loads_3
+    | possible_FU_loads_4 | possible_FU_loads_5 | possible_FU_loads_6
+    | possible_FU_loads_7 | possible_FU_loads_8 | possible_FU_loads_9
+    | possible_FU_loads_10 | possible_FU_loads_11 | possible_FU_loads_12
+    | possible_FU_loads_13 | possible_FU_loads_14 | _GEN_31 & MOB_15_data_valid
+    & is_load_15;	// src/main/scala/Memory/MOB.scala:119:22, :206:50, :312:{72,96,120}, :373:85
   wire [15:0][6:0]  _GEN_43 =
     {{MOB_15_RD},
      {MOB_14_RD},
@@ -930,7 +945,7 @@ module MOB(	// src/main/scala/Memory/MOB.scala:78:7
      {MOB_3_RD},
      {MOB_2_RD},
      {MOB_1_RD},
-     {MOB_0_RD}};	// src/main/scala/Memory/MOB.scala:119:22, :371:55
+     {MOB_0_RD}};	// src/main/scala/Memory/MOB.scala:119:22, :375:55
   wire [15:0]       _availalbe_MOB_entries_T_1 =
     ~{MOB_0_valid,
       MOB_1_valid,
@@ -947,7 +962,7 @@ module MOB(	// src/main/scala/Memory/MOB.scala:78:7
       MOB_12_valid,
       MOB_13_valid,
       MOB_14_valid,
-      MOB_15_valid};	// src/main/scala/Memory/MOB.scala:119:22, :412:{42,46}
+      MOB_15_valid};	// src/main/scala/Memory/MOB.scala:119:22, :419:{42,46}
   wire [4:0]        availalbe_MOB_entries =
     {1'h0,
      {1'h0,
@@ -974,8 +989,8 @@ module MOB(	// src/main/scala/Memory/MOB.scala:78:7
                + {1'h0, _availalbe_MOB_entries_T_1[13]}}
               + {1'h0,
                  {1'h0, _availalbe_MOB_entries_T_1[14]}
-                   + {1'h0, _availalbe_MOB_entries_T_1[15]}}}};	// src/main/scala/Memory/MOB.scala:412:{41,42}
-  assign _availalbe_MOB_entries_4to2 = availalbe_MOB_entries[4:2];	// src/main/scala/Memory/MOB.scala:412:41, :415:54
+                   + {1'h0, _availalbe_MOB_entries_T_1[15]}}}};	// src/main/scala/Memory/MOB.scala:419:{41,42}
+  assign _availalbe_MOB_entries_4to2 = availalbe_MOB_entries[4:2];	// src/main/scala/Memory/MOB.scala:419:41, :422:54
   always @(posedge clock) begin	// src/main/scala/Memory/MOB.scala:78:7
     if (reset) begin	// src/main/scala/Memory/MOB.scala:78:7
       front_pointer <= 5'h0;	// src/main/scala/Memory/MOB.scala:113:34
@@ -1411,68 +1426,104 @@ module MOB(	// src/main/scala/Memory/MOB.scala:78:7
       automatic logic             _GEN_241 =
         io_commit_valid & _FU_output_load_Q_io_flush_T;	// src/main/scala/Memory/MOB.scala:286:{26,62}
       automatic logic             _GEN_242;	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
-      automatic logic             _GEN_243;	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+      automatic logic             _GEN_243;	// src/main/scala/Memory/MOB.scala:119:22, :278:65, :279:26, :286:91, :288:20
       automatic logic             _GEN_244;	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
-      automatic logic             _GEN_245;	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+      automatic logic             _GEN_245;	// src/main/scala/Memory/MOB.scala:119:22, :278:65, :279:26, :286:91, :288:20
       automatic logic             _GEN_246;	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
-      automatic logic             _GEN_247;	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+      automatic logic             _GEN_247;	// src/main/scala/Memory/MOB.scala:119:22, :278:65, :279:26, :286:91, :288:20
       automatic logic             _GEN_248;	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
-      automatic logic             _GEN_249;	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+      automatic logic             _GEN_249;	// src/main/scala/Memory/MOB.scala:119:22, :278:65, :279:26, :286:91, :288:20
       automatic logic             _GEN_250;	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
-      automatic logic             _GEN_251;	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+      automatic logic             _GEN_251;	// src/main/scala/Memory/MOB.scala:119:22, :278:65, :279:26, :286:91, :288:20
       automatic logic             _GEN_252;	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
-      automatic logic             _GEN_253;	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+      automatic logic             _GEN_253;	// src/main/scala/Memory/MOB.scala:119:22, :278:65, :279:26, :286:91, :288:20
       automatic logic             _GEN_254;	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
-      automatic logic             _GEN_255;	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+      automatic logic             _GEN_255;	// src/main/scala/Memory/MOB.scala:119:22, :278:65, :279:26, :286:91, :288:20
       automatic logic             _GEN_256;	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
-      automatic logic             _GEN_257;	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
-      automatic logic             _GEN_258 =
+      automatic logic             _GEN_257;	// src/main/scala/Memory/MOB.scala:119:22, :278:65, :279:26, :286:91, :288:20
+      automatic logic             _GEN_258;	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+      automatic logic             _GEN_259;	// src/main/scala/Memory/MOB.scala:119:22, :278:65, :279:26, :286:91, :288:20
+      automatic logic             _GEN_260;	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+      automatic logic             _GEN_261;	// src/main/scala/Memory/MOB.scala:119:22, :278:65, :279:26, :286:91, :288:20
+      automatic logic             _GEN_262;	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+      automatic logic             _GEN_263;	// src/main/scala/Memory/MOB.scala:119:22, :278:65, :279:26, :286:91, :288:20
+      automatic logic             _GEN_264;	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+      automatic logic             _GEN_265;	// src/main/scala/Memory/MOB.scala:119:22, :278:65, :279:26, :286:91, :288:20
+      automatic logic             _GEN_266;	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+      automatic logic             _GEN_267;	// src/main/scala/Memory/MOB.scala:119:22, :278:65, :279:26, :286:91, :288:20
+      automatic logic             _GEN_268;	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+      automatic logic             _GEN_269;	// src/main/scala/Memory/MOB.scala:119:22, :278:65, :279:26, :286:91, :288:20
+      automatic logic             _GEN_270;	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+      automatic logic             _GEN_271;	// src/main/scala/Memory/MOB.scala:119:22, :278:65, :279:26, :286:91, :288:20
+      automatic logic             _GEN_272;	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+      automatic logic             _GEN_273;	// src/main/scala/Memory/MOB.scala:119:22, :278:65, :279:26, :286:91, :288:20
+      automatic logic             _GEN_274 =
         io_backend_memory_response_valid
         & io_backend_memory_response_bits_MOB_index == 4'h0;	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
-      automatic logic             _GEN_259 =
+      automatic logic             _GEN_275 =
         io_backend_memory_response_valid
         & io_backend_memory_response_bits_MOB_index == 4'h1;	// src/main/scala/Memory/MOB.scala:151:63, :286:91, :297:43, :298:62
-      automatic logic             _GEN_260 =
+      automatic logic             _GEN_276 =
         io_backend_memory_response_valid
         & io_backend_memory_response_bits_MOB_index == 4'h2;	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
-      automatic logic             _GEN_261 =
+      automatic logic             _GEN_277 =
         io_backend_memory_response_valid
         & io_backend_memory_response_bits_MOB_index == 4'h3;	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
-      automatic logic             _GEN_262 =
+      automatic logic             _GEN_278 =
         io_backend_memory_response_valid
         & io_backend_memory_response_bits_MOB_index == 4'h4;	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
-      automatic logic             _GEN_263 =
+      automatic logic             _GEN_279 =
         io_backend_memory_response_valid
         & io_backend_memory_response_bits_MOB_index == 4'h5;	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
-      automatic logic             _GEN_264 =
+      automatic logic             _GEN_280 =
         io_backend_memory_response_valid
         & io_backend_memory_response_bits_MOB_index == 4'h6;	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
-      automatic logic             _GEN_265 =
+      automatic logic             _GEN_281 =
         io_backend_memory_response_valid
         & io_backend_memory_response_bits_MOB_index == 4'h7;	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
-      automatic logic             _GEN_266 =
+      automatic logic             _GEN_282 =
         io_backend_memory_response_valid
         & io_backend_memory_response_bits_MOB_index == 4'h8;	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
-      automatic logic             _GEN_267 =
+      automatic logic             _GEN_283 =
         io_backend_memory_response_valid
         & io_backend_memory_response_bits_MOB_index == 4'h9;	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
-      automatic logic             _GEN_268 =
+      automatic logic             _GEN_284 =
         io_backend_memory_response_valid
         & io_backend_memory_response_bits_MOB_index == 4'hA;	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
-      automatic logic             _GEN_269 =
+      automatic logic             _GEN_285 =
         io_backend_memory_response_valid
         & io_backend_memory_response_bits_MOB_index == 4'hB;	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
-      automatic logic             _GEN_270 =
+      automatic logic             _GEN_286 =
         io_backend_memory_response_valid
         & io_backend_memory_response_bits_MOB_index == 4'hC;	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
-      automatic logic             _GEN_271 =
+      automatic logic             _GEN_287 =
         io_backend_memory_response_valid
         & io_backend_memory_response_bits_MOB_index == 4'hD;	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
-      automatic logic             _GEN_272 =
+      automatic logic             _GEN_288 =
         io_backend_memory_response_valid
         & io_backend_memory_response_bits_MOB_index == 4'hE;	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
-      automatic logic             _GEN_273 =
+      automatic logic             _GEN_289 =
         io_backend_memory_response_valid & (&io_backend_memory_response_bits_MOB_index);	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
+      automatic logic             _GEN_290 =
+        _FU_output_store_Q_io_enq_ready & FU_output_store_Q_io_enq_valid & ~_GEN_241;	// src/main/scala/Memory/MOB.scala:286:26, :307:41, :321:90, :330:{40,43}, src/main/scala/chisel3/util/Decoupled.scala:51:35
+      automatic logic             _GEN_291 = _GEN_290 & possible_FU_store_index == 4'h0;	// src/main/scala/Memory/MOB.scala:286:91, :330:{40,127}, :332:48, src/main/scala/chisel3/util/Decoupled.scala:51:35, src/main/scala/chisel3/util/Mux.scala:50:70
+      automatic logic             _GEN_292 = _GEN_290 & possible_FU_store_index == 4'h1;	// src/main/scala/Memory/MOB.scala:151:63, :286:91, :330:{40,127}, :332:48, src/main/scala/chisel3/util/Decoupled.scala:51:35, src/main/scala/chisel3/util/Mux.scala:50:70
+      automatic logic             _GEN_293 = _GEN_290 & possible_FU_store_index == 4'h2;	// src/main/scala/Memory/MOB.scala:286:91, :330:{40,127}, :332:48, src/main/scala/chisel3/util/Decoupled.scala:51:35, src/main/scala/chisel3/util/Mux.scala:50:70
+      automatic logic             _GEN_294 = _GEN_290 & possible_FU_store_index == 4'h3;	// src/main/scala/Memory/MOB.scala:286:91, :330:{40,127}, :332:48, src/main/scala/chisel3/util/Decoupled.scala:51:35, src/main/scala/chisel3/util/Mux.scala:50:70
+      automatic logic             _GEN_295 = _GEN_290 & possible_FU_store_index == 4'h4;	// src/main/scala/Memory/MOB.scala:286:91, :330:{40,127}, :332:48, src/main/scala/chisel3/util/Decoupled.scala:51:35, src/main/scala/chisel3/util/Mux.scala:50:70
+      automatic logic             _GEN_296 = _GEN_290 & possible_FU_store_index == 4'h5;	// src/main/scala/Memory/MOB.scala:286:91, :330:{40,127}, :332:48, src/main/scala/chisel3/util/Decoupled.scala:51:35, src/main/scala/chisel3/util/Mux.scala:50:70
+      automatic logic             _GEN_297 = _GEN_290 & possible_FU_store_index == 4'h6;	// src/main/scala/Memory/MOB.scala:286:91, :330:{40,127}, :332:48, src/main/scala/chisel3/util/Decoupled.scala:51:35, src/main/scala/chisel3/util/Mux.scala:50:70
+      automatic logic             _GEN_298 = _GEN_290 & possible_FU_store_index == 4'h7;	// src/main/scala/Memory/MOB.scala:286:91, :330:{40,127}, :332:48, src/main/scala/chisel3/util/Decoupled.scala:51:35, src/main/scala/chisel3/util/Mux.scala:50:70
+      automatic logic             _GEN_299 = _GEN_290 & possible_FU_store_index == 4'h8;	// src/main/scala/Memory/MOB.scala:286:91, :330:{40,127}, :332:48, src/main/scala/chisel3/util/Decoupled.scala:51:35, src/main/scala/chisel3/util/Mux.scala:50:70
+      automatic logic             _GEN_300 = _GEN_290 & possible_FU_store_index == 4'h9;	// src/main/scala/Memory/MOB.scala:286:91, :330:{40,127}, :332:48, src/main/scala/chisel3/util/Decoupled.scala:51:35, src/main/scala/chisel3/util/Mux.scala:50:70
+      automatic logic             _GEN_301 = _GEN_290 & possible_FU_store_index == 4'hA;	// src/main/scala/Memory/MOB.scala:286:91, :330:{40,127}, :332:48, src/main/scala/chisel3/util/Decoupled.scala:51:35, src/main/scala/chisel3/util/Mux.scala:50:70
+      automatic logic             _GEN_302 = _GEN_290 & possible_FU_store_index == 4'hB;	// src/main/scala/Memory/MOB.scala:286:91, :330:{40,127}, :332:48, src/main/scala/chisel3/util/Decoupled.scala:51:35, src/main/scala/chisel3/util/Mux.scala:50:70
+      automatic logic             _GEN_303 = _GEN_290 & possible_FU_store_index == 4'hC;	// src/main/scala/Memory/MOB.scala:286:91, :330:{40,127}, :332:48, src/main/scala/chisel3/util/Decoupled.scala:51:35, src/main/scala/chisel3/util/Mux.scala:50:70
+      automatic logic             _GEN_304 = _GEN_290 & possible_FU_store_index == 4'hD;	// src/main/scala/Memory/MOB.scala:286:91, :330:{40,127}, :332:48, src/main/scala/chisel3/util/Decoupled.scala:51:35, src/main/scala/chisel3/util/Mux.scala:50:70
+      automatic logic             _GEN_305 = _GEN_290 & possible_FU_store_index == 4'hE;	// src/main/scala/Memory/MOB.scala:286:91, :330:{40,127}, :332:48, src/main/scala/chisel3/util/Decoupled.scala:51:35, src/main/scala/chisel3/util/Mux.scala:50:70
+      automatic logic             _GEN_306 = _GEN_290 & (&possible_FU_store_index);	// src/main/scala/Memory/MOB.scala:286:91, :330:{40,127}, :332:48, src/main/scala/chisel3/util/Decoupled.scala:51:35, src/main/scala/chisel3/util/Mux.scala:50:70
+      automatic logic             _GEN_307 =
+        _FU_output_load_Q_io_enq_ready & FU_output_load_Q_io_enq_valid & ~_GEN_241;	// src/main/scala/Memory/MOB.scala:286:26, :306:41, :330:43, :373:85, :383:39, src/main/scala/chisel3/util/Decoupled.scala:51:35
       _GEN_44 = {1'h0, front_pointer[3:0]};	// src/main/scala/Memory/MOB.scala:113:34, :116:40, :131:45
       _age_vector_0_T_4 = (_GEN_44 - 5'h10) % 5'h10;	// src/main/scala/Memory/MOB.scala:131:{45,67}
       _age_vector_1_T_4 = (_GEN_44 + 5'hF) % 5'h10;	// src/main/scala/Memory/MOB.scala:131:{45,60,67}
@@ -1828,21 +1879,37 @@ module MOB(	// src/main/scala/Memory/MOB.scala:78:7
          {MOB_0_completed}};	// src/main/scala/Memory/MOB.scala:119:22, :236:52
       _GEN_240 = _GEN_4 & ~_GEN_11 & _GEN_239[front_pointer[3:0]] & _GEN_13;	// src/main/scala/Memory/MOB.scala:113:34, :116:40, :236:52, :278:{19,22,34,49}
       _GEN_242 = _GEN_241 | _GEN_240 & _GEN_224;	// src/main/scala/Memory/MOB.scala:150:29, :248:53, :278:{19,34,49,65}, :279:26, :286:{26,91}, :288:20
-      _GEN_243 = _GEN_241 | _GEN_240 & _GEN_225;	// src/main/scala/Memory/MOB.scala:150:29, :248:53, :278:{19,34,49,65}, :279:26, :286:{26,91}, :288:20
-      _GEN_244 = _GEN_241 | _GEN_240 & _GEN_226;	// src/main/scala/Memory/MOB.scala:150:29, :248:53, :278:{19,34,49,65}, :279:26, :286:{26,91}, :288:20
-      _GEN_245 = _GEN_241 | _GEN_240 & _GEN_227;	// src/main/scala/Memory/MOB.scala:150:29, :248:53, :278:{19,34,49,65}, :279:26, :286:{26,91}, :288:20
-      _GEN_246 = _GEN_241 | _GEN_240 & _GEN_228;	// src/main/scala/Memory/MOB.scala:150:29, :248:53, :278:{19,34,49,65}, :279:26, :286:{26,91}, :288:20
-      _GEN_247 = _GEN_241 | _GEN_240 & _GEN_229;	// src/main/scala/Memory/MOB.scala:150:29, :248:53, :278:{19,34,49,65}, :279:26, :286:{26,91}, :288:20
-      _GEN_248 = _GEN_241 | _GEN_240 & _GEN_230;	// src/main/scala/Memory/MOB.scala:150:29, :248:53, :278:{19,34,49,65}, :279:26, :286:{26,91}, :288:20
-      _GEN_249 = _GEN_241 | _GEN_240 & _GEN_231;	// src/main/scala/Memory/MOB.scala:150:29, :248:53, :278:{19,34,49,65}, :279:26, :286:{26,91}, :288:20
-      _GEN_250 = _GEN_241 | _GEN_240 & _GEN_232;	// src/main/scala/Memory/MOB.scala:150:29, :248:53, :278:{19,34,49,65}, :279:26, :286:{26,91}, :288:20
-      _GEN_251 = _GEN_241 | _GEN_240 & _GEN_233;	// src/main/scala/Memory/MOB.scala:150:29, :248:53, :278:{19,34,49,65}, :279:26, :286:{26,91}, :288:20
-      _GEN_252 = _GEN_241 | _GEN_240 & _GEN_234;	// src/main/scala/Memory/MOB.scala:150:29, :248:53, :278:{19,34,49,65}, :279:26, :286:{26,91}, :288:20
-      _GEN_253 = _GEN_241 | _GEN_240 & _GEN_235;	// src/main/scala/Memory/MOB.scala:150:29, :248:53, :278:{19,34,49,65}, :279:26, :286:{26,91}, :288:20
-      _GEN_254 = _GEN_241 | _GEN_240 & _GEN_236;	// src/main/scala/Memory/MOB.scala:150:29, :248:53, :278:{19,34,49,65}, :279:26, :286:{26,91}, :288:20
-      _GEN_255 = _GEN_241 | _GEN_240 & _GEN_237;	// src/main/scala/Memory/MOB.scala:150:29, :248:53, :278:{19,34,49,65}, :279:26, :286:{26,91}, :288:20
-      _GEN_256 = _GEN_241 | _GEN_240 & _GEN_238;	// src/main/scala/Memory/MOB.scala:150:29, :248:53, :278:{19,34,49,65}, :279:26, :286:{26,91}, :288:20
-      _GEN_257 = _GEN_241 | _GEN_240 & (&(front_pointer[3:0]));	// src/main/scala/Memory/MOB.scala:113:34, :116:40, :150:29, :248:53, :278:{19,34,49,65}, :279:26, :286:{26,91}, :288:20
+      _GEN_243 = ~_GEN_242 & MOB_0_completed;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20
+      _GEN_244 = _GEN_241 | _GEN_240 & _GEN_225;	// src/main/scala/Memory/MOB.scala:150:29, :248:53, :278:{19,34,49,65}, :279:26, :286:{26,91}, :288:20
+      _GEN_245 = ~_GEN_244 & MOB_1_completed;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20
+      _GEN_246 = _GEN_241 | _GEN_240 & _GEN_226;	// src/main/scala/Memory/MOB.scala:150:29, :248:53, :278:{19,34,49,65}, :279:26, :286:{26,91}, :288:20
+      _GEN_247 = ~_GEN_246 & MOB_2_completed;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20
+      _GEN_248 = _GEN_241 | _GEN_240 & _GEN_227;	// src/main/scala/Memory/MOB.scala:150:29, :248:53, :278:{19,34,49,65}, :279:26, :286:{26,91}, :288:20
+      _GEN_249 = ~_GEN_248 & MOB_3_completed;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20
+      _GEN_250 = _GEN_241 | _GEN_240 & _GEN_228;	// src/main/scala/Memory/MOB.scala:150:29, :248:53, :278:{19,34,49,65}, :279:26, :286:{26,91}, :288:20
+      _GEN_251 = ~_GEN_250 & MOB_4_completed;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20
+      _GEN_252 = _GEN_241 | _GEN_240 & _GEN_229;	// src/main/scala/Memory/MOB.scala:150:29, :248:53, :278:{19,34,49,65}, :279:26, :286:{26,91}, :288:20
+      _GEN_253 = ~_GEN_252 & MOB_5_completed;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20
+      _GEN_254 = _GEN_241 | _GEN_240 & _GEN_230;	// src/main/scala/Memory/MOB.scala:150:29, :248:53, :278:{19,34,49,65}, :279:26, :286:{26,91}, :288:20
+      _GEN_255 = ~_GEN_254 & MOB_6_completed;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20
+      _GEN_256 = _GEN_241 | _GEN_240 & _GEN_231;	// src/main/scala/Memory/MOB.scala:150:29, :248:53, :278:{19,34,49,65}, :279:26, :286:{26,91}, :288:20
+      _GEN_257 = ~_GEN_256 & MOB_7_completed;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20
+      _GEN_258 = _GEN_241 | _GEN_240 & _GEN_232;	// src/main/scala/Memory/MOB.scala:150:29, :248:53, :278:{19,34,49,65}, :279:26, :286:{26,91}, :288:20
+      _GEN_259 = ~_GEN_258 & MOB_8_completed;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20
+      _GEN_260 = _GEN_241 | _GEN_240 & _GEN_233;	// src/main/scala/Memory/MOB.scala:150:29, :248:53, :278:{19,34,49,65}, :279:26, :286:{26,91}, :288:20
+      _GEN_261 = ~_GEN_260 & MOB_9_completed;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20
+      _GEN_262 = _GEN_241 | _GEN_240 & _GEN_234;	// src/main/scala/Memory/MOB.scala:150:29, :248:53, :278:{19,34,49,65}, :279:26, :286:{26,91}, :288:20
+      _GEN_263 = ~_GEN_262 & MOB_10_completed;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20
+      _GEN_264 = _GEN_241 | _GEN_240 & _GEN_235;	// src/main/scala/Memory/MOB.scala:150:29, :248:53, :278:{19,34,49,65}, :279:26, :286:{26,91}, :288:20
+      _GEN_265 = ~_GEN_264 & MOB_11_completed;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20
+      _GEN_266 = _GEN_241 | _GEN_240 & _GEN_236;	// src/main/scala/Memory/MOB.scala:150:29, :248:53, :278:{19,34,49,65}, :279:26, :286:{26,91}, :288:20
+      _GEN_267 = ~_GEN_266 & MOB_12_completed;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20
+      _GEN_268 = _GEN_241 | _GEN_240 & _GEN_237;	// src/main/scala/Memory/MOB.scala:150:29, :248:53, :278:{19,34,49,65}, :279:26, :286:{26,91}, :288:20
+      _GEN_269 = ~_GEN_268 & MOB_13_completed;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20
+      _GEN_270 = _GEN_241 | _GEN_240 & _GEN_238;	// src/main/scala/Memory/MOB.scala:150:29, :248:53, :278:{19,34,49,65}, :279:26, :286:{26,91}, :288:20
+      _GEN_271 = ~_GEN_270 & MOB_14_completed;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20
+      _GEN_272 = _GEN_241 | _GEN_240 & (&(front_pointer[3:0]));	// src/main/scala/Memory/MOB.scala:113:34, :116:40, :150:29, :248:53, :278:{19,34,49,65}, :279:26, :286:{26,91}, :288:20
+      _GEN_273 = ~_GEN_272 & MOB_15_completed;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20
       if (_GEN_241)	// src/main/scala/Memory/MOB.scala:286:26
         front_pointer <= 5'h0;	// src/main/scala/Memory/MOB.scala:113:34
       else if (_GEN_240)	// src/main/scala/Memory/MOB.scala:278:{19,34,49}
@@ -1889,25 +1956,28 @@ module MOB(	// src/main/scala/Memory/MOB.scala:78:7
         if (_GEN_123)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
           MOB_0_address <= io_AGU_output_bits_address;	// src/main/scala/Memory/MOB.scala:119:22
       end
-      if (_GEN_258)	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
+      if (_GEN_274)	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
         MOB_0_data <= io_backend_memory_response_bits_data;	// src/main/scala/Memory/MOB.scala:119:22
       else if (_GEN_242)	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
         MOB_0_data <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
       else if (_GEN_123)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
         MOB_0_data <= io_AGU_output_bits_wr_data;	// src/main/scala/Memory/MOB.scala:119:22
-      MOB_0_data_valid <= _GEN_258 | ~_GEN_242 & MOB_0_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20, :297:43, :298:62, :299:67
+      MOB_0_data_valid <= _GEN_274 | ~_GEN_242 & MOB_0_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20, :297:43, :298:62, :299:67
       MOB_0_pending <=
         ~_GEN_242
         & ((|_GEN_15) ? (|load_index) & _GEN_124 : ~(fire_store & _GEN_224) & _GEN_124);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :181:30, :182:40, :236:{52,82,110,141}, :238:{28,35,41}, :240:53, :246:27, :248:53, :278:65, :279:26, :286:91, :288:20, src/main/scala/chisel3/util/Mux.scala:50:70
-      MOB_0_completed <= ~_GEN_242 & MOB_0_completed;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20
+      MOB_0_completed <=
+        _GEN_307
+          ? possible_FU_load_index == 4'h0 | _GEN_291 | _GEN_243
+          : _GEN_291 | _GEN_243;	// src/main/scala/Memory/MOB.scala:119:22, :278:65, :279:26, :286:91, :288:20, :330:127, :332:48, :383:{39,126}, :385:47, src/main/scala/chisel3/util/Decoupled.scala:51:35, src/main/scala/chisel3/util/Mux.scala:50:70
       MOB_0_committed <=
         ~_GEN_242
         & (io_commit_valid & MOB_0_ROB_index == io_commit_bits_ROB_index
            | MOB_0_committed);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :264:{30,51,81}, :265:30, :278:65, :279:26, :286:91, :288:20
       MOB_0_exception <= ~_GEN_242 & (_GEN_156 & _GEN_157 | MOB_0_exception);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :211:{34,48,66,131}, :212:61, :213:34, :214:68, :215:34, :278:65, :279:26, :286:91, :288:20
       MOB_1_valid <=
-        ~_GEN_243 & (written_vec_3 ? _GEN_109 | _GEN_93 | _GEN_64 : _GEN_93 | _GEN_64);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :278:65, :279:26, :286:91, :288:20
-      if (_GEN_243) begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        ~_GEN_244 & (written_vec_3 ? _GEN_109 | _GEN_93 | _GEN_64 : _GEN_93 | _GEN_64);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :278:65, :279:26, :286:91, :288:20
+      if (_GEN_244) begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
         MOB_1_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
         MOB_1_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
         MOB_1_fetch_packet_index <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
@@ -1943,27 +2013,30 @@ module MOB(	// src/main/scala/Memory/MOB.scala:78:7
         if (_GEN_125)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
           MOB_1_address <= io_AGU_output_bits_address;	// src/main/scala/Memory/MOB.scala:119:22
       end
-      if (_GEN_259)	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
+      if (_GEN_275)	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
         MOB_1_data <= io_backend_memory_response_bits_data;	// src/main/scala/Memory/MOB.scala:119:22
-      else if (_GEN_243)	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+      else if (_GEN_244)	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
         MOB_1_data <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
       else if (_GEN_125)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
         MOB_1_data <= io_AGU_output_bits_wr_data;	// src/main/scala/Memory/MOB.scala:119:22
-      MOB_1_data_valid <= _GEN_259 | ~_GEN_243 & MOB_1_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20, :297:43, :298:62, :299:67
+      MOB_1_data_valid <= _GEN_275 | ~_GEN_244 & MOB_1_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20, :297:43, :298:62, :299:67
       MOB_1_pending <=
-        ~_GEN_243
+        ~_GEN_244
         & ((|_GEN_15)
              ? load_index != 4'h1 & _GEN_126
              : ~(fire_store & _GEN_225) & _GEN_126);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :151:63, :181:30, :182:40, :236:{52,82,110,141}, :238:{28,35,41}, :240:53, :246:27, :248:53, :278:65, :279:26, :286:91, :288:20, src/main/scala/chisel3/util/Mux.scala:50:70
-      MOB_1_completed <= ~_GEN_243 & MOB_1_completed;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20
+      MOB_1_completed <=
+        _GEN_307
+          ? possible_FU_load_index == 4'h1 | _GEN_292 | _GEN_245
+          : _GEN_292 | _GEN_245;	// src/main/scala/Memory/MOB.scala:119:22, :151:63, :278:65, :279:26, :286:91, :288:20, :330:127, :332:48, :383:{39,126}, :385:47, src/main/scala/chisel3/util/Decoupled.scala:51:35, src/main/scala/chisel3/util/Mux.scala:50:70
       MOB_1_committed <=
-        ~_GEN_243
+        ~_GEN_244
         & (io_commit_valid & MOB_1_ROB_index == io_commit_bits_ROB_index
            | MOB_1_committed);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :264:{30,51,81}, :265:30, :278:65, :279:26, :286:91, :288:20
-      MOB_1_exception <= ~_GEN_243 & (_GEN_158 & _GEN_159 | MOB_1_exception);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :211:{34,48,66,78,131}, :212:61, :213:34, :214:68, :215:34, :278:65, :279:26, :286:91, :288:20
+      MOB_1_exception <= ~_GEN_244 & (_GEN_158 & _GEN_159 | MOB_1_exception);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :211:{34,48,66,78,131}, :212:61, :213:34, :214:68, :215:34, :278:65, :279:26, :286:91, :288:20
       MOB_2_valid <=
-        ~_GEN_244 & (written_vec_3 ? _GEN_110 | _GEN_94 | _GEN_66 : _GEN_94 | _GEN_66);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :278:65, :279:26, :286:91, :288:20
-      if (_GEN_244) begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        ~_GEN_246 & (written_vec_3 ? _GEN_110 | _GEN_94 | _GEN_66 : _GEN_94 | _GEN_66);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :278:65, :279:26, :286:91, :288:20
+      if (_GEN_246) begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
         MOB_2_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
         MOB_2_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
         MOB_2_fetch_packet_index <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
@@ -1999,27 +2072,30 @@ module MOB(	// src/main/scala/Memory/MOB.scala:78:7
         if (_GEN_127)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
           MOB_2_address <= io_AGU_output_bits_address;	// src/main/scala/Memory/MOB.scala:119:22
       end
-      if (_GEN_260)	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
+      if (_GEN_276)	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
         MOB_2_data <= io_backend_memory_response_bits_data;	// src/main/scala/Memory/MOB.scala:119:22
-      else if (_GEN_244)	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+      else if (_GEN_246)	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
         MOB_2_data <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
       else if (_GEN_127)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
         MOB_2_data <= io_AGU_output_bits_wr_data;	// src/main/scala/Memory/MOB.scala:119:22
-      MOB_2_data_valid <= _GEN_260 | ~_GEN_244 & MOB_2_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20, :297:43, :298:62, :299:67
+      MOB_2_data_valid <= _GEN_276 | ~_GEN_246 & MOB_2_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20, :297:43, :298:62, :299:67
       MOB_2_pending <=
-        ~_GEN_244
+        ~_GEN_246
         & ((|_GEN_15)
              ? load_index != 4'h2 & _GEN_128
              : ~(fire_store & _GEN_226) & _GEN_128);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :181:30, :182:40, :236:{52,82,110,141}, :238:{28,35,41}, :240:53, :246:27, :248:53, :278:65, :279:26, :286:91, :288:20, src/main/scala/chisel3/util/Mux.scala:50:70
-      MOB_2_completed <= ~_GEN_244 & MOB_2_completed;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20
+      MOB_2_completed <=
+        _GEN_307
+          ? possible_FU_load_index == 4'h2 | _GEN_293 | _GEN_247
+          : _GEN_293 | _GEN_247;	// src/main/scala/Memory/MOB.scala:119:22, :278:65, :279:26, :286:91, :288:20, :330:127, :332:48, :383:{39,126}, :385:47, src/main/scala/chisel3/util/Decoupled.scala:51:35, src/main/scala/chisel3/util/Mux.scala:50:70
       MOB_2_committed <=
-        ~_GEN_244
+        ~_GEN_246
         & (io_commit_valid & MOB_2_ROB_index == io_commit_bits_ROB_index
            | MOB_2_committed);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :264:{30,51,81}, :265:30, :278:65, :279:26, :286:91, :288:20
-      MOB_2_exception <= ~_GEN_244 & (_GEN_163 & _GEN_164 | MOB_2_exception);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :211:{34,48,66,78,131}, :212:61, :213:34, :214:68, :215:34, :278:65, :279:26, :286:91, :288:20
+      MOB_2_exception <= ~_GEN_246 & (_GEN_163 & _GEN_164 | MOB_2_exception);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :211:{34,48,66,78,131}, :212:61, :213:34, :214:68, :215:34, :278:65, :279:26, :286:91, :288:20
       MOB_3_valid <=
-        ~_GEN_245 & (written_vec_3 ? _GEN_111 | _GEN_95 | _GEN_68 : _GEN_95 | _GEN_68);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :278:65, :279:26, :286:91, :288:20
-      if (_GEN_245) begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        ~_GEN_248 & (written_vec_3 ? _GEN_111 | _GEN_95 | _GEN_68 : _GEN_95 | _GEN_68);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :278:65, :279:26, :286:91, :288:20
+      if (_GEN_248) begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
         MOB_3_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
         MOB_3_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
         MOB_3_fetch_packet_index <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
@@ -2055,27 +2131,30 @@ module MOB(	// src/main/scala/Memory/MOB.scala:78:7
         if (_GEN_129)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
           MOB_3_address <= io_AGU_output_bits_address;	// src/main/scala/Memory/MOB.scala:119:22
       end
-      if (_GEN_261)	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
+      if (_GEN_277)	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
         MOB_3_data <= io_backend_memory_response_bits_data;	// src/main/scala/Memory/MOB.scala:119:22
-      else if (_GEN_245)	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+      else if (_GEN_248)	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
         MOB_3_data <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
       else if (_GEN_129)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
         MOB_3_data <= io_AGU_output_bits_wr_data;	// src/main/scala/Memory/MOB.scala:119:22
-      MOB_3_data_valid <= _GEN_261 | ~_GEN_245 & MOB_3_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20, :297:43, :298:62, :299:67
+      MOB_3_data_valid <= _GEN_277 | ~_GEN_248 & MOB_3_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20, :297:43, :298:62, :299:67
       MOB_3_pending <=
-        ~_GEN_245
+        ~_GEN_248
         & ((|_GEN_15)
              ? load_index != 4'h3 & _GEN_130
              : ~(fire_store & _GEN_227) & _GEN_130);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :181:30, :182:40, :236:{52,82,110,141}, :238:{28,35,41}, :240:53, :246:27, :248:53, :278:65, :279:26, :286:91, :288:20, src/main/scala/chisel3/util/Mux.scala:50:70
-      MOB_3_completed <= ~_GEN_245 & MOB_3_completed;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20
+      MOB_3_completed <=
+        _GEN_307
+          ? possible_FU_load_index == 4'h3 | _GEN_294 | _GEN_249
+          : _GEN_294 | _GEN_249;	// src/main/scala/Memory/MOB.scala:119:22, :278:65, :279:26, :286:91, :288:20, :330:127, :332:48, :383:{39,126}, :385:47, src/main/scala/chisel3/util/Decoupled.scala:51:35, src/main/scala/chisel3/util/Mux.scala:50:70
       MOB_3_committed <=
-        ~_GEN_245
+        ~_GEN_248
         & (io_commit_valid & MOB_3_ROB_index == io_commit_bits_ROB_index
            | MOB_3_committed);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :264:{30,51,81}, :265:30, :278:65, :279:26, :286:91, :288:20
-      MOB_3_exception <= ~_GEN_245 & (_GEN_167 & _GEN_168 | MOB_3_exception);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :211:{34,48,66,78,131}, :212:61, :213:34, :214:68, :215:34, :278:65, :279:26, :286:91, :288:20
+      MOB_3_exception <= ~_GEN_248 & (_GEN_167 & _GEN_168 | MOB_3_exception);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :211:{34,48,66,78,131}, :212:61, :213:34, :214:68, :215:34, :278:65, :279:26, :286:91, :288:20
       MOB_4_valid <=
-        ~_GEN_246 & (written_vec_3 ? _GEN_112 | _GEN_96 | _GEN_70 : _GEN_96 | _GEN_70);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :278:65, :279:26, :286:91, :288:20
-      if (_GEN_246) begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        ~_GEN_250 & (written_vec_3 ? _GEN_112 | _GEN_96 | _GEN_70 : _GEN_96 | _GEN_70);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :278:65, :279:26, :286:91, :288:20
+      if (_GEN_250) begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
         MOB_4_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
         MOB_4_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
         MOB_4_fetch_packet_index <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
@@ -2111,27 +2190,30 @@ module MOB(	// src/main/scala/Memory/MOB.scala:78:7
         if (_GEN_131)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
           MOB_4_address <= io_AGU_output_bits_address;	// src/main/scala/Memory/MOB.scala:119:22
       end
-      if (_GEN_262)	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
+      if (_GEN_278)	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
         MOB_4_data <= io_backend_memory_response_bits_data;	// src/main/scala/Memory/MOB.scala:119:22
-      else if (_GEN_246)	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+      else if (_GEN_250)	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
         MOB_4_data <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
       else if (_GEN_131)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
         MOB_4_data <= io_AGU_output_bits_wr_data;	// src/main/scala/Memory/MOB.scala:119:22
-      MOB_4_data_valid <= _GEN_262 | ~_GEN_246 & MOB_4_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20, :297:43, :298:62, :299:67
+      MOB_4_data_valid <= _GEN_278 | ~_GEN_250 & MOB_4_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20, :297:43, :298:62, :299:67
       MOB_4_pending <=
-        ~_GEN_246
+        ~_GEN_250
         & ((|_GEN_15)
              ? load_index != 4'h4 & _GEN_132
              : ~(fire_store & _GEN_228) & _GEN_132);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :181:30, :182:40, :236:{52,82,110,141}, :238:{28,35,41}, :240:53, :246:27, :248:53, :278:65, :279:26, :286:91, :288:20, src/main/scala/chisel3/util/Mux.scala:50:70
-      MOB_4_completed <= ~_GEN_246 & MOB_4_completed;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20
+      MOB_4_completed <=
+        _GEN_307
+          ? possible_FU_load_index == 4'h4 | _GEN_295 | _GEN_251
+          : _GEN_295 | _GEN_251;	// src/main/scala/Memory/MOB.scala:119:22, :278:65, :279:26, :286:91, :288:20, :330:127, :332:48, :383:{39,126}, :385:47, src/main/scala/chisel3/util/Decoupled.scala:51:35, src/main/scala/chisel3/util/Mux.scala:50:70
       MOB_4_committed <=
-        ~_GEN_246
+        ~_GEN_250
         & (io_commit_valid & MOB_4_ROB_index == io_commit_bits_ROB_index
            | MOB_4_committed);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :264:{30,51,81}, :265:30, :278:65, :279:26, :286:91, :288:20
-      MOB_4_exception <= ~_GEN_246 & (_GEN_172 & _GEN_173 | MOB_4_exception);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :211:{34,48,66,78,131}, :212:61, :213:34, :214:68, :215:34, :278:65, :279:26, :286:91, :288:20
+      MOB_4_exception <= ~_GEN_250 & (_GEN_172 & _GEN_173 | MOB_4_exception);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :211:{34,48,66,78,131}, :212:61, :213:34, :214:68, :215:34, :278:65, :279:26, :286:91, :288:20
       MOB_5_valid <=
-        ~_GEN_247 & (written_vec_3 ? _GEN_113 | _GEN_97 | _GEN_72 : _GEN_97 | _GEN_72);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :278:65, :279:26, :286:91, :288:20
-      if (_GEN_247) begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        ~_GEN_252 & (written_vec_3 ? _GEN_113 | _GEN_97 | _GEN_72 : _GEN_97 | _GEN_72);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :278:65, :279:26, :286:91, :288:20
+      if (_GEN_252) begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
         MOB_5_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
         MOB_5_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
         MOB_5_fetch_packet_index <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
@@ -2167,27 +2249,30 @@ module MOB(	// src/main/scala/Memory/MOB.scala:78:7
         if (_GEN_133)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
           MOB_5_address <= io_AGU_output_bits_address;	// src/main/scala/Memory/MOB.scala:119:22
       end
-      if (_GEN_263)	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
+      if (_GEN_279)	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
         MOB_5_data <= io_backend_memory_response_bits_data;	// src/main/scala/Memory/MOB.scala:119:22
-      else if (_GEN_247)	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+      else if (_GEN_252)	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
         MOB_5_data <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
       else if (_GEN_133)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
         MOB_5_data <= io_AGU_output_bits_wr_data;	// src/main/scala/Memory/MOB.scala:119:22
-      MOB_5_data_valid <= _GEN_263 | ~_GEN_247 & MOB_5_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20, :297:43, :298:62, :299:67
+      MOB_5_data_valid <= _GEN_279 | ~_GEN_252 & MOB_5_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20, :297:43, :298:62, :299:67
       MOB_5_pending <=
-        ~_GEN_247
+        ~_GEN_252
         & ((|_GEN_15)
              ? load_index != 4'h5 & _GEN_134
              : ~(fire_store & _GEN_229) & _GEN_134);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :181:30, :182:40, :236:{52,82,110,141}, :238:{28,35,41}, :240:53, :246:27, :248:53, :278:65, :279:26, :286:91, :288:20, src/main/scala/chisel3/util/Mux.scala:50:70
-      MOB_5_completed <= ~_GEN_247 & MOB_5_completed;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20
+      MOB_5_completed <=
+        _GEN_307
+          ? possible_FU_load_index == 4'h5 | _GEN_296 | _GEN_253
+          : _GEN_296 | _GEN_253;	// src/main/scala/Memory/MOB.scala:119:22, :278:65, :279:26, :286:91, :288:20, :330:127, :332:48, :383:{39,126}, :385:47, src/main/scala/chisel3/util/Decoupled.scala:51:35, src/main/scala/chisel3/util/Mux.scala:50:70
       MOB_5_committed <=
-        ~_GEN_247
+        ~_GEN_252
         & (io_commit_valid & MOB_5_ROB_index == io_commit_bits_ROB_index
            | MOB_5_committed);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :264:{30,51,81}, :265:30, :278:65, :279:26, :286:91, :288:20
-      MOB_5_exception <= ~_GEN_247 & (_GEN_177 & _GEN_178 | MOB_5_exception);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :211:{34,48,66,78,131}, :212:61, :213:34, :214:68, :215:34, :278:65, :279:26, :286:91, :288:20
+      MOB_5_exception <= ~_GEN_252 & (_GEN_177 & _GEN_178 | MOB_5_exception);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :211:{34,48,66,78,131}, :212:61, :213:34, :214:68, :215:34, :278:65, :279:26, :286:91, :288:20
       MOB_6_valid <=
-        ~_GEN_248 & (written_vec_3 ? _GEN_114 | _GEN_98 | _GEN_74 : _GEN_98 | _GEN_74);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :278:65, :279:26, :286:91, :288:20
-      if (_GEN_248) begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        ~_GEN_254 & (written_vec_3 ? _GEN_114 | _GEN_98 | _GEN_74 : _GEN_98 | _GEN_74);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :278:65, :279:26, :286:91, :288:20
+      if (_GEN_254) begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
         MOB_6_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
         MOB_6_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
         MOB_6_fetch_packet_index <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
@@ -2223,27 +2308,30 @@ module MOB(	// src/main/scala/Memory/MOB.scala:78:7
         if (_GEN_135)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
           MOB_6_address <= io_AGU_output_bits_address;	// src/main/scala/Memory/MOB.scala:119:22
       end
-      if (_GEN_264)	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
+      if (_GEN_280)	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
         MOB_6_data <= io_backend_memory_response_bits_data;	// src/main/scala/Memory/MOB.scala:119:22
-      else if (_GEN_248)	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+      else if (_GEN_254)	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
         MOB_6_data <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
       else if (_GEN_135)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
         MOB_6_data <= io_AGU_output_bits_wr_data;	// src/main/scala/Memory/MOB.scala:119:22
-      MOB_6_data_valid <= _GEN_264 | ~_GEN_248 & MOB_6_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20, :297:43, :298:62, :299:67
+      MOB_6_data_valid <= _GEN_280 | ~_GEN_254 & MOB_6_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20, :297:43, :298:62, :299:67
       MOB_6_pending <=
-        ~_GEN_248
+        ~_GEN_254
         & ((|_GEN_15)
              ? load_index != 4'h6 & _GEN_136
              : ~(fire_store & _GEN_230) & _GEN_136);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :181:30, :182:40, :236:{52,82,110,141}, :238:{28,35,41}, :240:53, :246:27, :248:53, :278:65, :279:26, :286:91, :288:20, src/main/scala/chisel3/util/Mux.scala:50:70
-      MOB_6_completed <= ~_GEN_248 & MOB_6_completed;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20
+      MOB_6_completed <=
+        _GEN_307
+          ? possible_FU_load_index == 4'h6 | _GEN_297 | _GEN_255
+          : _GEN_297 | _GEN_255;	// src/main/scala/Memory/MOB.scala:119:22, :278:65, :279:26, :286:91, :288:20, :330:127, :332:48, :383:{39,126}, :385:47, src/main/scala/chisel3/util/Decoupled.scala:51:35, src/main/scala/chisel3/util/Mux.scala:50:70
       MOB_6_committed <=
-        ~_GEN_248
+        ~_GEN_254
         & (io_commit_valid & MOB_6_ROB_index == io_commit_bits_ROB_index
            | MOB_6_committed);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :264:{30,51,81}, :265:30, :278:65, :279:26, :286:91, :288:20
-      MOB_6_exception <= ~_GEN_248 & (_GEN_184 & _GEN_185 | MOB_6_exception);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :211:{34,48,66,78,131}, :212:61, :213:34, :214:68, :215:34, :278:65, :279:26, :286:91, :288:20
+      MOB_6_exception <= ~_GEN_254 & (_GEN_184 & _GEN_185 | MOB_6_exception);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :211:{34,48,66,78,131}, :212:61, :213:34, :214:68, :215:34, :278:65, :279:26, :286:91, :288:20
       MOB_7_valid <=
-        ~_GEN_249 & (written_vec_3 ? _GEN_115 | _GEN_99 | _GEN_76 : _GEN_99 | _GEN_76);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :278:65, :279:26, :286:91, :288:20
-      if (_GEN_249) begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        ~_GEN_256 & (written_vec_3 ? _GEN_115 | _GEN_99 | _GEN_76 : _GEN_99 | _GEN_76);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :278:65, :279:26, :286:91, :288:20
+      if (_GEN_256) begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
         MOB_7_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
         MOB_7_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
         MOB_7_fetch_packet_index <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
@@ -2279,27 +2367,30 @@ module MOB(	// src/main/scala/Memory/MOB.scala:78:7
         if (_GEN_137)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
           MOB_7_address <= io_AGU_output_bits_address;	// src/main/scala/Memory/MOB.scala:119:22
       end
-      if (_GEN_265)	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
+      if (_GEN_281)	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
         MOB_7_data <= io_backend_memory_response_bits_data;	// src/main/scala/Memory/MOB.scala:119:22
-      else if (_GEN_249)	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+      else if (_GEN_256)	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
         MOB_7_data <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
       else if (_GEN_137)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
         MOB_7_data <= io_AGU_output_bits_wr_data;	// src/main/scala/Memory/MOB.scala:119:22
-      MOB_7_data_valid <= _GEN_265 | ~_GEN_249 & MOB_7_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20, :297:43, :298:62, :299:67
+      MOB_7_data_valid <= _GEN_281 | ~_GEN_256 & MOB_7_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20, :297:43, :298:62, :299:67
       MOB_7_pending <=
-        ~_GEN_249
+        ~_GEN_256
         & ((|_GEN_15)
              ? load_index != 4'h7 & _GEN_138
              : ~(fire_store & _GEN_231) & _GEN_138);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :181:30, :182:40, :236:{52,82,110,141}, :238:{28,35,41}, :240:53, :246:27, :248:53, :278:65, :279:26, :286:91, :288:20, src/main/scala/chisel3/util/Mux.scala:50:70
-      MOB_7_completed <= ~_GEN_249 & MOB_7_completed;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20
+      MOB_7_completed <=
+        _GEN_307
+          ? possible_FU_load_index == 4'h7 | _GEN_298 | _GEN_257
+          : _GEN_298 | _GEN_257;	// src/main/scala/Memory/MOB.scala:119:22, :278:65, :279:26, :286:91, :288:20, :330:127, :332:48, :383:{39,126}, :385:47, src/main/scala/chisel3/util/Decoupled.scala:51:35, src/main/scala/chisel3/util/Mux.scala:50:70
       MOB_7_committed <=
-        ~_GEN_249
+        ~_GEN_256
         & (io_commit_valid & MOB_7_ROB_index == io_commit_bits_ROB_index
            | MOB_7_committed);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :264:{30,51,81}, :265:30, :278:65, :279:26, :286:91, :288:20
-      MOB_7_exception <= ~_GEN_249 & (_GEN_189 & _GEN_190 | MOB_7_exception);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :211:{34,48,66,78,131}, :212:61, :213:34, :214:68, :215:34, :278:65, :279:26, :286:91, :288:20
+      MOB_7_exception <= ~_GEN_256 & (_GEN_189 & _GEN_190 | MOB_7_exception);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :211:{34,48,66,78,131}, :212:61, :213:34, :214:68, :215:34, :278:65, :279:26, :286:91, :288:20
       MOB_8_valid <=
-        ~_GEN_250 & (written_vec_3 ? _GEN_116 | _GEN_100 | _GEN_78 : _GEN_100 | _GEN_78);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :278:65, :279:26, :286:91, :288:20
-      if (_GEN_250) begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        ~_GEN_258 & (written_vec_3 ? _GEN_116 | _GEN_100 | _GEN_78 : _GEN_100 | _GEN_78);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :278:65, :279:26, :286:91, :288:20
+      if (_GEN_258) begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
         MOB_8_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
         MOB_8_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
         MOB_8_fetch_packet_index <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
@@ -2335,27 +2426,30 @@ module MOB(	// src/main/scala/Memory/MOB.scala:78:7
         if (_GEN_139)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
           MOB_8_address <= io_AGU_output_bits_address;	// src/main/scala/Memory/MOB.scala:119:22
       end
-      if (_GEN_266)	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
+      if (_GEN_282)	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
         MOB_8_data <= io_backend_memory_response_bits_data;	// src/main/scala/Memory/MOB.scala:119:22
-      else if (_GEN_250)	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+      else if (_GEN_258)	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
         MOB_8_data <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
       else if (_GEN_139)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
         MOB_8_data <= io_AGU_output_bits_wr_data;	// src/main/scala/Memory/MOB.scala:119:22
-      MOB_8_data_valid <= _GEN_266 | ~_GEN_250 & MOB_8_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20, :297:43, :298:62, :299:67
+      MOB_8_data_valid <= _GEN_282 | ~_GEN_258 & MOB_8_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20, :297:43, :298:62, :299:67
       MOB_8_pending <=
-        ~_GEN_250
+        ~_GEN_258
         & ((|_GEN_15)
              ? load_index != 4'h8 & _GEN_140
              : ~(fire_store & _GEN_232) & _GEN_140);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :181:30, :182:40, :236:{52,82,110,141}, :238:{28,35,41}, :240:53, :246:27, :248:53, :278:65, :279:26, :286:91, :288:20, src/main/scala/chisel3/util/Mux.scala:50:70
-      MOB_8_completed <= ~_GEN_250 & MOB_8_completed;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20
+      MOB_8_completed <=
+        _GEN_307
+          ? possible_FU_load_index == 4'h8 | _GEN_299 | _GEN_259
+          : _GEN_299 | _GEN_259;	// src/main/scala/Memory/MOB.scala:119:22, :278:65, :279:26, :286:91, :288:20, :330:127, :332:48, :383:{39,126}, :385:47, src/main/scala/chisel3/util/Decoupled.scala:51:35, src/main/scala/chisel3/util/Mux.scala:50:70
       MOB_8_committed <=
-        ~_GEN_250
+        ~_GEN_258
         & (io_commit_valid & MOB_8_ROB_index == io_commit_bits_ROB_index
            | MOB_8_committed);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :264:{30,51,81}, :265:30, :278:65, :279:26, :286:91, :288:20
-      MOB_8_exception <= ~_GEN_250 & (_GEN_194 & _GEN_195 | MOB_8_exception);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :211:{34,48,66,78,131}, :212:61, :213:34, :214:68, :215:34, :278:65, :279:26, :286:91, :288:20
+      MOB_8_exception <= ~_GEN_258 & (_GEN_194 & _GEN_195 | MOB_8_exception);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :211:{34,48,66,78,131}, :212:61, :213:34, :214:68, :215:34, :278:65, :279:26, :286:91, :288:20
       MOB_9_valid <=
-        ~_GEN_251 & (written_vec_3 ? _GEN_117 | _GEN_101 | _GEN_80 : _GEN_101 | _GEN_80);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :278:65, :279:26, :286:91, :288:20
-      if (_GEN_251) begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        ~_GEN_260 & (written_vec_3 ? _GEN_117 | _GEN_101 | _GEN_80 : _GEN_101 | _GEN_80);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :278:65, :279:26, :286:91, :288:20
+      if (_GEN_260) begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
         MOB_9_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
         MOB_9_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
         MOB_9_fetch_packet_index <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
@@ -2391,27 +2485,30 @@ module MOB(	// src/main/scala/Memory/MOB.scala:78:7
         if (_GEN_141)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
           MOB_9_address <= io_AGU_output_bits_address;	// src/main/scala/Memory/MOB.scala:119:22
       end
-      if (_GEN_267)	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
+      if (_GEN_283)	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
         MOB_9_data <= io_backend_memory_response_bits_data;	// src/main/scala/Memory/MOB.scala:119:22
-      else if (_GEN_251)	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+      else if (_GEN_260)	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
         MOB_9_data <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
       else if (_GEN_141)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
         MOB_9_data <= io_AGU_output_bits_wr_data;	// src/main/scala/Memory/MOB.scala:119:22
-      MOB_9_data_valid <= _GEN_267 | ~_GEN_251 & MOB_9_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20, :297:43, :298:62, :299:67
+      MOB_9_data_valid <= _GEN_283 | ~_GEN_260 & MOB_9_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20, :297:43, :298:62, :299:67
       MOB_9_pending <=
-        ~_GEN_251
+        ~_GEN_260
         & ((|_GEN_15)
              ? load_index != 4'h9 & _GEN_142
              : ~(fire_store & _GEN_233) & _GEN_142);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :181:30, :182:40, :236:{52,82,110,141}, :238:{28,35,41}, :240:53, :246:27, :248:53, :278:65, :279:26, :286:91, :288:20, src/main/scala/chisel3/util/Mux.scala:50:70
-      MOB_9_completed <= ~_GEN_251 & MOB_9_completed;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20
+      MOB_9_completed <=
+        _GEN_307
+          ? possible_FU_load_index == 4'h9 | _GEN_300 | _GEN_261
+          : _GEN_300 | _GEN_261;	// src/main/scala/Memory/MOB.scala:119:22, :278:65, :279:26, :286:91, :288:20, :330:127, :332:48, :383:{39,126}, :385:47, src/main/scala/chisel3/util/Decoupled.scala:51:35, src/main/scala/chisel3/util/Mux.scala:50:70
       MOB_9_committed <=
-        ~_GEN_251
+        ~_GEN_260
         & (io_commit_valid & MOB_9_ROB_index == io_commit_bits_ROB_index
            | MOB_9_committed);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :264:{30,51,81}, :265:30, :278:65, :279:26, :286:91, :288:20
-      MOB_9_exception <= ~_GEN_251 & (_GEN_199 & _GEN_200 | MOB_9_exception);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :211:{34,48,66,78,131}, :212:61, :213:34, :214:68, :215:34, :278:65, :279:26, :286:91, :288:20
+      MOB_9_exception <= ~_GEN_260 & (_GEN_199 & _GEN_200 | MOB_9_exception);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :211:{34,48,66,78,131}, :212:61, :213:34, :214:68, :215:34, :278:65, :279:26, :286:91, :288:20
       MOB_10_valid <=
-        ~_GEN_252 & (written_vec_3 ? _GEN_118 | _GEN_102 | _GEN_82 : _GEN_102 | _GEN_82);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :278:65, :279:26, :286:91, :288:20
-      if (_GEN_252) begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        ~_GEN_262 & (written_vec_3 ? _GEN_118 | _GEN_102 | _GEN_82 : _GEN_102 | _GEN_82);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :278:65, :279:26, :286:91, :288:20
+      if (_GEN_262) begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
         MOB_10_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
         MOB_10_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
         MOB_10_fetch_packet_index <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
@@ -2447,27 +2544,30 @@ module MOB(	// src/main/scala/Memory/MOB.scala:78:7
         if (_GEN_143)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
           MOB_10_address <= io_AGU_output_bits_address;	// src/main/scala/Memory/MOB.scala:119:22
       end
-      if (_GEN_268)	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
+      if (_GEN_284)	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
         MOB_10_data <= io_backend_memory_response_bits_data;	// src/main/scala/Memory/MOB.scala:119:22
-      else if (_GEN_252)	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+      else if (_GEN_262)	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
         MOB_10_data <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
       else if (_GEN_143)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
         MOB_10_data <= io_AGU_output_bits_wr_data;	// src/main/scala/Memory/MOB.scala:119:22
-      MOB_10_data_valid <= _GEN_268 | ~_GEN_252 & MOB_10_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20, :297:43, :298:62, :299:67
+      MOB_10_data_valid <= _GEN_284 | ~_GEN_262 & MOB_10_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20, :297:43, :298:62, :299:67
       MOB_10_pending <=
-        ~_GEN_252
+        ~_GEN_262
         & ((|_GEN_15)
              ? load_index != 4'hA & _GEN_144
              : ~(fire_store & _GEN_234) & _GEN_144);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :181:30, :182:40, :236:{52,82,110,141}, :238:{28,35,41}, :240:53, :246:27, :248:53, :278:65, :279:26, :286:91, :288:20, src/main/scala/chisel3/util/Mux.scala:50:70
-      MOB_10_completed <= ~_GEN_252 & MOB_10_completed;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20
+      MOB_10_completed <=
+        _GEN_307
+          ? possible_FU_load_index == 4'hA | _GEN_301 | _GEN_263
+          : _GEN_301 | _GEN_263;	// src/main/scala/Memory/MOB.scala:119:22, :278:65, :279:26, :286:91, :288:20, :330:127, :332:48, :383:{39,126}, :385:47, src/main/scala/chisel3/util/Decoupled.scala:51:35, src/main/scala/chisel3/util/Mux.scala:50:70
       MOB_10_committed <=
-        ~_GEN_252
+        ~_GEN_262
         & (io_commit_valid & MOB_10_ROB_index == io_commit_bits_ROB_index
            | MOB_10_committed);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :264:{30,51,81}, :265:30, :278:65, :279:26, :286:91, :288:20
-      MOB_10_exception <= ~_GEN_252 & (_GEN_204 & _GEN_205 | MOB_10_exception);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :211:{34,48,66,78,131}, :212:61, :213:34, :214:68, :215:34, :278:65, :279:26, :286:91, :288:20
+      MOB_10_exception <= ~_GEN_262 & (_GEN_204 & _GEN_205 | MOB_10_exception);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :211:{34,48,66,78,131}, :212:61, :213:34, :214:68, :215:34, :278:65, :279:26, :286:91, :288:20
       MOB_11_valid <=
-        ~_GEN_253 & (written_vec_3 ? _GEN_119 | _GEN_103 | _GEN_84 : _GEN_103 | _GEN_84);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :278:65, :279:26, :286:91, :288:20
-      if (_GEN_253) begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        ~_GEN_264 & (written_vec_3 ? _GEN_119 | _GEN_103 | _GEN_84 : _GEN_103 | _GEN_84);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :278:65, :279:26, :286:91, :288:20
+      if (_GEN_264) begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
         MOB_11_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
         MOB_11_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
         MOB_11_fetch_packet_index <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
@@ -2503,27 +2603,30 @@ module MOB(	// src/main/scala/Memory/MOB.scala:78:7
         if (_GEN_145)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
           MOB_11_address <= io_AGU_output_bits_address;	// src/main/scala/Memory/MOB.scala:119:22
       end
-      if (_GEN_269)	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
+      if (_GEN_285)	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
         MOB_11_data <= io_backend_memory_response_bits_data;	// src/main/scala/Memory/MOB.scala:119:22
-      else if (_GEN_253)	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+      else if (_GEN_264)	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
         MOB_11_data <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
       else if (_GEN_145)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
         MOB_11_data <= io_AGU_output_bits_wr_data;	// src/main/scala/Memory/MOB.scala:119:22
-      MOB_11_data_valid <= _GEN_269 | ~_GEN_253 & MOB_11_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20, :297:43, :298:62, :299:67
+      MOB_11_data_valid <= _GEN_285 | ~_GEN_264 & MOB_11_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20, :297:43, :298:62, :299:67
       MOB_11_pending <=
-        ~_GEN_253
+        ~_GEN_264
         & ((|_GEN_15)
              ? load_index != 4'hB & _GEN_146
              : ~(fire_store & _GEN_235) & _GEN_146);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :181:30, :182:40, :236:{52,82,110,141}, :238:{28,35,41}, :240:53, :246:27, :248:53, :278:65, :279:26, :286:91, :288:20, src/main/scala/chisel3/util/Mux.scala:50:70
-      MOB_11_completed <= ~_GEN_253 & MOB_11_completed;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20
+      MOB_11_completed <=
+        _GEN_307
+          ? possible_FU_load_index == 4'hB | _GEN_302 | _GEN_265
+          : _GEN_302 | _GEN_265;	// src/main/scala/Memory/MOB.scala:119:22, :278:65, :279:26, :286:91, :288:20, :330:127, :332:48, :383:{39,126}, :385:47, src/main/scala/chisel3/util/Decoupled.scala:51:35, src/main/scala/chisel3/util/Mux.scala:50:70
       MOB_11_committed <=
-        ~_GEN_253
+        ~_GEN_264
         & (io_commit_valid & MOB_11_ROB_index == io_commit_bits_ROB_index
            | MOB_11_committed);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :264:{30,51,81}, :265:30, :278:65, :279:26, :286:91, :288:20
-      MOB_11_exception <= ~_GEN_253 & (_GEN_209 & _GEN_210 | MOB_11_exception);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :211:{34,48,66,78,131}, :212:61, :213:34, :214:68, :215:34, :278:65, :279:26, :286:91, :288:20
+      MOB_11_exception <= ~_GEN_264 & (_GEN_209 & _GEN_210 | MOB_11_exception);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :211:{34,48,66,78,131}, :212:61, :213:34, :214:68, :215:34, :278:65, :279:26, :286:91, :288:20
       MOB_12_valid <=
-        ~_GEN_254 & (written_vec_3 ? _GEN_120 | _GEN_104 | _GEN_86 : _GEN_104 | _GEN_86);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :278:65, :279:26, :286:91, :288:20
-      if (_GEN_254) begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        ~_GEN_266 & (written_vec_3 ? _GEN_120 | _GEN_104 | _GEN_86 : _GEN_104 | _GEN_86);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :278:65, :279:26, :286:91, :288:20
+      if (_GEN_266) begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
         MOB_12_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
         MOB_12_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
         MOB_12_fetch_packet_index <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
@@ -2559,27 +2662,30 @@ module MOB(	// src/main/scala/Memory/MOB.scala:78:7
         if (_GEN_147)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
           MOB_12_address <= io_AGU_output_bits_address;	// src/main/scala/Memory/MOB.scala:119:22
       end
-      if (_GEN_270)	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
+      if (_GEN_286)	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
         MOB_12_data <= io_backend_memory_response_bits_data;	// src/main/scala/Memory/MOB.scala:119:22
-      else if (_GEN_254)	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+      else if (_GEN_266)	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
         MOB_12_data <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
       else if (_GEN_147)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
         MOB_12_data <= io_AGU_output_bits_wr_data;	// src/main/scala/Memory/MOB.scala:119:22
-      MOB_12_data_valid <= _GEN_270 | ~_GEN_254 & MOB_12_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20, :297:43, :298:62, :299:67
+      MOB_12_data_valid <= _GEN_286 | ~_GEN_266 & MOB_12_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20, :297:43, :298:62, :299:67
       MOB_12_pending <=
-        ~_GEN_254
+        ~_GEN_266
         & ((|_GEN_15)
              ? load_index != 4'hC & _GEN_148
              : ~(fire_store & _GEN_236) & _GEN_148);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :181:30, :182:40, :236:{52,82,110,141}, :238:{28,35,41}, :240:53, :246:27, :248:53, :278:65, :279:26, :286:91, :288:20, src/main/scala/chisel3/util/Mux.scala:50:70
-      MOB_12_completed <= ~_GEN_254 & MOB_12_completed;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20
+      MOB_12_completed <=
+        _GEN_307
+          ? possible_FU_load_index == 4'hC | _GEN_303 | _GEN_267
+          : _GEN_303 | _GEN_267;	// src/main/scala/Memory/MOB.scala:119:22, :278:65, :279:26, :286:91, :288:20, :330:127, :332:48, :383:{39,126}, :385:47, src/main/scala/chisel3/util/Decoupled.scala:51:35, src/main/scala/chisel3/util/Mux.scala:50:70
       MOB_12_committed <=
-        ~_GEN_254
+        ~_GEN_266
         & (io_commit_valid & MOB_12_ROB_index == io_commit_bits_ROB_index
            | MOB_12_committed);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :264:{30,51,81}, :265:30, :278:65, :279:26, :286:91, :288:20
-      MOB_12_exception <= ~_GEN_254 & (_GEN_214 & _GEN_215 | MOB_12_exception);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :211:{34,48,66,78,131}, :212:61, :213:34, :214:68, :215:34, :278:65, :279:26, :286:91, :288:20
+      MOB_12_exception <= ~_GEN_266 & (_GEN_214 & _GEN_215 | MOB_12_exception);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :211:{34,48,66,78,131}, :212:61, :213:34, :214:68, :215:34, :278:65, :279:26, :286:91, :288:20
       MOB_13_valid <=
-        ~_GEN_255 & (written_vec_3 ? _GEN_121 | _GEN_105 | _GEN_88 : _GEN_105 | _GEN_88);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :278:65, :279:26, :286:91, :288:20
-      if (_GEN_255) begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        ~_GEN_268 & (written_vec_3 ? _GEN_121 | _GEN_105 | _GEN_88 : _GEN_105 | _GEN_88);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :278:65, :279:26, :286:91, :288:20
+      if (_GEN_268) begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
         MOB_13_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
         MOB_13_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
         MOB_13_fetch_packet_index <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
@@ -2615,27 +2721,30 @@ module MOB(	// src/main/scala/Memory/MOB.scala:78:7
         if (_GEN_149)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
           MOB_13_address <= io_AGU_output_bits_address;	// src/main/scala/Memory/MOB.scala:119:22
       end
-      if (_GEN_271)	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
+      if (_GEN_287)	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
         MOB_13_data <= io_backend_memory_response_bits_data;	// src/main/scala/Memory/MOB.scala:119:22
-      else if (_GEN_255)	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+      else if (_GEN_268)	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
         MOB_13_data <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
       else if (_GEN_149)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
         MOB_13_data <= io_AGU_output_bits_wr_data;	// src/main/scala/Memory/MOB.scala:119:22
-      MOB_13_data_valid <= _GEN_271 | ~_GEN_255 & MOB_13_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20, :297:43, :298:62, :299:67
+      MOB_13_data_valid <= _GEN_287 | ~_GEN_268 & MOB_13_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20, :297:43, :298:62, :299:67
       MOB_13_pending <=
-        ~_GEN_255
+        ~_GEN_268
         & ((|_GEN_15)
              ? load_index != 4'hD & _GEN_150
              : ~(fire_store & _GEN_237) & _GEN_150);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :181:30, :182:40, :236:{52,82,110,141}, :238:{28,35,41}, :240:53, :246:27, :248:53, :278:65, :279:26, :286:91, :288:20, src/main/scala/chisel3/util/Mux.scala:50:70
-      MOB_13_completed <= ~_GEN_255 & MOB_13_completed;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20
+      MOB_13_completed <=
+        _GEN_307
+          ? possible_FU_load_index == 4'hD | _GEN_304 | _GEN_269
+          : _GEN_304 | _GEN_269;	// src/main/scala/Memory/MOB.scala:119:22, :278:65, :279:26, :286:91, :288:20, :330:127, :332:48, :383:{39,126}, :385:47, src/main/scala/chisel3/util/Decoupled.scala:51:35, src/main/scala/chisel3/util/Mux.scala:50:70
       MOB_13_committed <=
-        ~_GEN_255
+        ~_GEN_268
         & (io_commit_valid & MOB_13_ROB_index == io_commit_bits_ROB_index
            | MOB_13_committed);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :264:{30,51,81}, :265:30, :278:65, :279:26, :286:91, :288:20
-      MOB_13_exception <= ~_GEN_255 & (_GEN_218 & _GEN_219 | MOB_13_exception);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :211:{34,48,66,78,131}, :212:61, :213:34, :214:68, :215:34, :278:65, :279:26, :286:91, :288:20
+      MOB_13_exception <= ~_GEN_268 & (_GEN_218 & _GEN_219 | MOB_13_exception);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :211:{34,48,66,78,131}, :212:61, :213:34, :214:68, :215:34, :278:65, :279:26, :286:91, :288:20
       MOB_14_valid <=
-        ~_GEN_256 & (written_vec_3 ? _GEN_122 | _GEN_106 | _GEN_90 : _GEN_106 | _GEN_90);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :278:65, :279:26, :286:91, :288:20
-      if (_GEN_256) begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+        ~_GEN_270 & (written_vec_3 ? _GEN_122 | _GEN_106 | _GEN_90 : _GEN_106 | _GEN_90);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:65, :278:65, :279:26, :286:91, :288:20
+      if (_GEN_270) begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
         MOB_14_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
         MOB_14_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
         MOB_14_fetch_packet_index <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
@@ -2671,30 +2780,33 @@ module MOB(	// src/main/scala/Memory/MOB.scala:78:7
         if (_GEN_151)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
           MOB_14_address <= io_AGU_output_bits_address;	// src/main/scala/Memory/MOB.scala:119:22
       end
-      if (_GEN_272)	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
+      if (_GEN_288)	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
         MOB_14_data <= io_backend_memory_response_bits_data;	// src/main/scala/Memory/MOB.scala:119:22
-      else if (_GEN_256)	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+      else if (_GEN_270)	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
         MOB_14_data <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
       else if (_GEN_151)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
         MOB_14_data <= io_AGU_output_bits_wr_data;	// src/main/scala/Memory/MOB.scala:119:22
-      MOB_14_data_valid <= _GEN_272 | ~_GEN_256 & MOB_14_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20, :297:43, :298:62, :299:67
+      MOB_14_data_valid <= _GEN_288 | ~_GEN_270 & MOB_14_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20, :297:43, :298:62, :299:67
       MOB_14_pending <=
-        ~_GEN_256
+        ~_GEN_270
         & ((|_GEN_15)
              ? load_index != 4'hE & _GEN_152
              : ~(fire_store & _GEN_238) & _GEN_152);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :181:30, :182:40, :236:{52,82,110,141}, :238:{28,35,41}, :240:53, :246:27, :248:53, :278:65, :279:26, :286:91, :288:20, src/main/scala/chisel3/util/Mux.scala:50:70
-      MOB_14_completed <= ~_GEN_256 & MOB_14_completed;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20
+      MOB_14_completed <=
+        _GEN_307
+          ? possible_FU_load_index == 4'hE | _GEN_305 | _GEN_271
+          : _GEN_305 | _GEN_271;	// src/main/scala/Memory/MOB.scala:119:22, :278:65, :279:26, :286:91, :288:20, :330:127, :332:48, :383:{39,126}, :385:47, src/main/scala/chisel3/util/Decoupled.scala:51:35, src/main/scala/chisel3/util/Mux.scala:50:70
       MOB_14_committed <=
-        ~_GEN_256
+        ~_GEN_270
         & (io_commit_valid & MOB_14_ROB_index == io_commit_bits_ROB_index
            | MOB_14_committed);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :264:{30,51,81}, :265:30, :278:65, :279:26, :286:91, :288:20
-      MOB_14_exception <= ~_GEN_256 & (_GEN_222 & _GEN_223 | MOB_14_exception);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :211:{34,48,66,78,131}, :212:61, :213:34, :214:68, :215:34, :278:65, :279:26, :286:91, :288:20
+      MOB_14_exception <= ~_GEN_270 & (_GEN_222 & _GEN_223 | MOB_14_exception);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :211:{34,48,66,78,131}, :212:61, :213:34, :214:68, :215:34, :278:65, :279:26, :286:91, :288:20
       MOB_15_valid <=
-        ~_GEN_257
+        ~_GEN_272
         & (written_vec_3
              ? (&_io_reserved_pointers_3_bits_T) | _GEN_107 | _GEN_91
              : _GEN_107 | _GEN_91);	// src/main/scala/Memory/MOB.scala:119:22, :142:34, :150:29, :153:{28,65}, :278:65, :279:26, :286:91, :288:20
-      if (_GEN_257) begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+      if (_GEN_272) begin	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
         MOB_15_memory_type <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
         MOB_15_ROB_index <= 6'h0;	// src/main/scala/Memory/MOB.scala:78:7, :119:22
         MOB_15_fetch_packet_index <= 2'h0;	// src/main/scala/Memory/MOB.scala:119:22
@@ -2730,25 +2842,26 @@ module MOB(	// src/main/scala/Memory/MOB.scala:78:7
         if (_GEN_153)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
           MOB_15_address <= io_AGU_output_bits_address;	// src/main/scala/Memory/MOB.scala:119:22
       end
-      if (_GEN_273)	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
+      if (_GEN_289)	// src/main/scala/Memory/MOB.scala:286:91, :297:43, :298:62
         MOB_15_data <= io_backend_memory_response_bits_data;	// src/main/scala/Memory/MOB.scala:119:22
-      else if (_GEN_257)	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
+      else if (_GEN_272)	// src/main/scala/Memory/MOB.scala:150:29, :278:65, :279:26, :286:91, :288:20
         MOB_15_data <= 32'h0;	// src/main/scala/Memory/MOB.scala:119:22
       else if (_GEN_153)	// src/main/scala/Memory/MOB.scala:119:22, :181:30, :182:40
         MOB_15_data <= io_AGU_output_bits_wr_data;	// src/main/scala/Memory/MOB.scala:119:22
-      MOB_15_data_valid <= _GEN_273 | ~_GEN_257 & MOB_15_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20, :297:43, :298:62, :299:67
+      MOB_15_data_valid <= _GEN_289 | ~_GEN_272 & MOB_15_data_valid;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20, :297:43, :298:62, :299:67
       MOB_15_pending <=
-        ~_GEN_257
+        ~_GEN_272
         & ((|_GEN_15)
              ? load_index != 4'hF & _GEN_154
              : ~(fire_store & (&(front_pointer[3:0]))) & _GEN_154);	// src/main/scala/Memory/MOB.scala:113:34, :116:40, :119:22, :150:29, :181:30, :182:40, :236:{52,82,110,141}, :238:{28,35,41}, :240:53, :246:27, :248:53, :278:65, :279:26, :286:91, :288:20, src/main/scala/chisel3/util/Mux.scala:50:70
-      MOB_15_completed <= ~_GEN_257 & MOB_15_completed;	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :278:65, :279:26, :286:91, :288:20
+      MOB_15_completed <=
+        _GEN_307 ? (&possible_FU_load_index) | _GEN_306 | _GEN_273 : _GEN_306 | _GEN_273;	// src/main/scala/Memory/MOB.scala:119:22, :278:65, :279:26, :286:91, :288:20, :330:127, :332:48, :383:{39,126}, :385:47, src/main/scala/chisel3/util/Decoupled.scala:51:35, src/main/scala/chisel3/util/Mux.scala:50:70
       MOB_15_committed <=
-        ~_GEN_257
+        ~_GEN_272
         & (io_commit_valid & MOB_15_ROB_index == io_commit_bits_ROB_index
            | MOB_15_committed);	// src/main/scala/Memory/MOB.scala:119:22, :150:29, :264:{30,51,81}, :265:30, :278:65, :279:26, :286:91, :288:20
       MOB_15_exception <=
-        ~_GEN_257
+        ~_GEN_272
         & (io_AGU_output_valid
            & _age_vector_15_T_4[3:0] < _GEN_155[io_AGU_output_bits_MOB_index]
            & io_AGU_output_bits_address == (MOB_15_address & 32'hFFFFFFF0) & MOB_15_valid
@@ -2996,14 +3109,9 @@ module MOB(	// src/main/scala/Memory/MOB.scala:78:7
   Queue4_FU_output FU_output_load_Q (	// src/main/scala/Memory/MOB.scala:306:41
     .clock                          (clock),
     .reset                          (reset),
-    .io_enq_valid
-      (possible_FU_loads_0 | possible_FU_loads_1 | possible_FU_loads_2
-       | possible_FU_loads_3 | possible_FU_loads_4 | possible_FU_loads_5
-       | possible_FU_loads_6 | possible_FU_loads_7 | possible_FU_loads_8
-       | possible_FU_loads_9 | possible_FU_loads_10 | possible_FU_loads_11
-       | possible_FU_loads_12 | possible_FU_loads_13 | possible_FU_loads_14 | _GEN_31
-       & MOB_15_data_valid & is_load_15),	// src/main/scala/Memory/MOB.scala:119:22, :206:50, :312:{72,96,120}, :369:85
-    .io_enq_bits_RD                 (_GEN_43[possible_FU_load_index]),	// src/main/scala/Memory/MOB.scala:371:55, src/main/scala/chisel3/util/Mux.scala:50:70
+    .io_enq_ready                   (_FU_output_load_Q_io_enq_ready),
+    .io_enq_valid                   (FU_output_load_Q_io_enq_valid),	// src/main/scala/Memory/MOB.scala:373:85
+    .io_enq_bits_RD                 (_GEN_43[possible_FU_load_index]),	// src/main/scala/Memory/MOB.scala:375:55, src/main/scala/chisel3/util/Mux.scala:50:70
     .io_enq_bits_RD_data
       ({is_store ? _GEN_42[MOB_0_access_width] : 8'h0,
         is_store ? _GEN_40[MOB_0_access_width] : 8'h0,
@@ -3014,12 +3122,12 @@ module MOB(	// src/main/scala/Memory/MOB.scala:78:7
                : MOB_0_access_width == 2'h2
                    ? (_GEN_34 ? MOB_0_data[7:0] : 8'h0)
                    : (&MOB_0_access_width) & _GEN_34 ? MOB_0_data[7:0] : 8'h0)
-          : 8'h0}),	// src/main/scala/Memory/MOB.scala:119:22, :151:63, :207:50, :375:55, src/main/scala/utils.scala:270:14, :273:20, :274:28, :277:{35,42}, :281:33, :283:{27,34}, :301:33, :303:{27,34}
+          : 8'h0}),	// src/main/scala/Memory/MOB.scala:119:22, :151:63, :207:50, :379:55, src/main/scala/utils.scala:270:14, :273:20, :274:28, :277:{35,42}, :281:33, :283:{27,34}, :301:33, :303:{27,34}
     .io_enq_bits_RD_valid           (1'h1),
-    .io_enq_bits_ROB_index          (_GEN_32[possible_FU_load_index]),	// src/main/scala/Memory/MOB.scala:323:50, :371:55, src/main/scala/chisel3/util/Mux.scala:50:70
-    .io_enq_bits_fetch_packet_index (_GEN_33[possible_FU_load_index]),	// src/main/scala/Memory/MOB.scala:323:50, :371:55, src/main/scala/chisel3/util/Mux.scala:50:70
-    .io_enq_bits_exception          (_GEN_14[possible_FU_load_index]),	// src/main/scala/Memory/MOB.scala:236:52, :371:55, src/main/scala/chisel3/util/Mux.scala:50:70
-    .io_deq_ready                   (_FU_output_arbiter_io_in_0_ready),	// src/main/scala/Memory/MOB.scala:384:41
+    .io_enq_bits_ROB_index          (_GEN_32[possible_FU_load_index]),	// src/main/scala/Memory/MOB.scala:323:59, :375:55, src/main/scala/chisel3/util/Mux.scala:50:70
+    .io_enq_bits_fetch_packet_index (_GEN_33[possible_FU_load_index]),	// src/main/scala/Memory/MOB.scala:323:59, :375:55, src/main/scala/chisel3/util/Mux.scala:50:70
+    .io_enq_bits_exception          (_GEN_14[possible_FU_load_index]),	// src/main/scala/Memory/MOB.scala:236:52, :375:55, src/main/scala/chisel3/util/Mux.scala:50:70
+    .io_deq_ready                   (_FU_output_arbiter_io_in_0_ready),	// src/main/scala/Memory/MOB.scala:391:41
     .io_deq_valid                   (_FU_output_load_Q_io_deq_valid),
     .io_deq_bits_RD                 (_FU_output_load_Q_io_deq_bits_RD),
     .io_deq_bits_RD_data            (_FU_output_load_Q_io_deq_bits_RD_data),
@@ -3038,25 +3146,20 @@ module MOB(	// src/main/scala/Memory/MOB.scala:78:7
     .io_deq_bits_FTQ_index          (_FU_output_load_Q_io_deq_bits_FTQ_index),
     .io_deq_bits_fetch_packet_index (_FU_output_load_Q_io_deq_bits_fetch_packet_index),
     .io_deq_bits_exception          (_FU_output_load_Q_io_deq_bits_exception),
-    .io_flush                       (io_commit_valid & _FU_output_load_Q_io_flush_T)	// src/main/scala/Memory/MOB.scala:286:62, :378:54
+    .io_flush                       (io_commit_valid & _FU_output_load_Q_io_flush_T)	// src/main/scala/Memory/MOB.scala:286:62, :382:54
   );	// src/main/scala/Memory/MOB.scala:306:41
   Queue4_FU_output FU_output_store_Q (	// src/main/scala/Memory/MOB.scala:307:41
     .clock                          (clock),
     .reset                          (reset),
-    .io_enq_valid
-      (possible_FU_stores_0 | possible_FU_stores_1 | possible_FU_stores_2
-       | possible_FU_stores_3 | possible_FU_stores_4 | possible_FU_stores_5
-       | possible_FU_stores_6 | possible_FU_stores_7 | possible_FU_stores_8
-       | possible_FU_stores_9 | possible_FU_stores_10 | possible_FU_stores_11
-       | possible_FU_stores_12 | possible_FU_stores_13 | possible_FU_stores_14 | _GEN_31
-       & MOB_15_pending & MOB_15_memory_type == 2'h2),	// src/main/scala/Memory/MOB.scala:119:22, :207:50, :312:72, :313:{96,118}, :321:81
+    .io_enq_ready                   (_FU_output_store_Q_io_enq_ready),
+    .io_enq_valid                   (FU_output_store_Q_io_enq_valid),	// src/main/scala/Memory/MOB.scala:321:90
     .io_enq_bits_RD                 (7'h0),
     .io_enq_bits_RD_data            (32'h0),
     .io_enq_bits_RD_valid           (1'h0),
-    .io_enq_bits_ROB_index          (_GEN_32[possible_FU_store_index]),	// src/main/scala/Memory/MOB.scala:323:50, src/main/scala/chisel3/util/Mux.scala:50:70
-    .io_enq_bits_fetch_packet_index (_GEN_33[possible_FU_store_index]),	// src/main/scala/Memory/MOB.scala:323:50, src/main/scala/chisel3/util/Mux.scala:50:70
-    .io_enq_bits_exception          (_GEN_14[possible_FU_store_index]),	// src/main/scala/Memory/MOB.scala:236:52, :323:50, src/main/scala/chisel3/util/Mux.scala:50:70
-    .io_deq_ready                   (_FU_output_arbiter_io_in_1_ready),	// src/main/scala/Memory/MOB.scala:384:41
+    .io_enq_bits_ROB_index          (_GEN_32[possible_FU_store_index]),	// src/main/scala/Memory/MOB.scala:323:59, src/main/scala/chisel3/util/Mux.scala:50:70
+    .io_enq_bits_fetch_packet_index (_GEN_33[possible_FU_store_index]),	// src/main/scala/Memory/MOB.scala:323:59, src/main/scala/chisel3/util/Mux.scala:50:70
+    .io_enq_bits_exception          (_GEN_14[possible_FU_store_index]),	// src/main/scala/Memory/MOB.scala:236:52, :323:59, src/main/scala/chisel3/util/Mux.scala:50:70
+    .io_deq_ready                   (_FU_output_arbiter_io_in_1_ready),	// src/main/scala/Memory/MOB.scala:391:41
     .io_deq_valid                   (_FU_output_store_Q_io_deq_valid),
     .io_deq_bits_RD                 (_FU_output_store_Q_io_deq_bits_RD),
     .io_deq_bits_RD_data            (_FU_output_store_Q_io_deq_bits_RD_data),
@@ -3075,9 +3178,9 @@ module MOB(	// src/main/scala/Memory/MOB.scala:78:7
     .io_deq_bits_FTQ_index          (_FU_output_store_Q_io_deq_bits_FTQ_index),
     .io_deq_bits_fetch_packet_index (_FU_output_store_Q_io_deq_bits_fetch_packet_index),
     .io_deq_bits_exception          (_FU_output_store_Q_io_deq_bits_exception),
-    .io_flush                       (io_commit_valid & _FU_output_load_Q_io_flush_T)	// src/main/scala/Memory/MOB.scala:286:62, :326:55
+    .io_flush                       (io_commit_valid & _FU_output_load_Q_io_flush_T)	// src/main/scala/Memory/MOB.scala:286:62, :326:78
   );	// src/main/scala/Memory/MOB.scala:307:41
-  Arbiter2_FU_output FU_output_arbiter (	// src/main/scala/Memory/MOB.scala:384:41
+  Arbiter2_FU_output FU_output_arbiter (	// src/main/scala/Memory/MOB.scala:391:41
     .io_in_0_ready                   (_FU_output_arbiter_io_in_0_ready),
     .io_in_0_valid                   (_FU_output_load_Q_io_deq_valid),	// src/main/scala/Memory/MOB.scala:306:41
     .io_in_0_bits_RD                 (_FU_output_load_Q_io_deq_bits_RD),	// src/main/scala/Memory/MOB.scala:306:41
@@ -3135,23 +3238,23 @@ module MOB(	// src/main/scala/Memory/MOB.scala:78:7
     .io_out_bits_FTQ_index           (io_MOB_output_bits_FTQ_index),
     .io_out_bits_fetch_packet_index  (io_MOB_output_bits_fetch_packet_index),
     .io_out_bits_exception           (io_MOB_output_bits_exception)
-  );	// src/main/scala/Memory/MOB.scala:384:41
-  assign io_reserve_0_ready = |_availalbe_MOB_entries_4to2;	// src/main/scala/Memory/MOB.scala:78:7, :415:54
-  assign io_reserve_1_ready = |_availalbe_MOB_entries_4to2;	// src/main/scala/Memory/MOB.scala:78:7, :415:54
-  assign io_reserve_2_ready = |_availalbe_MOB_entries_4to2;	// src/main/scala/Memory/MOB.scala:78:7, :415:54
-  assign io_reserve_3_ready = |_availalbe_MOB_entries_4to2;	// src/main/scala/Memory/MOB.scala:78:7, :415:54
+  );	// src/main/scala/Memory/MOB.scala:391:41
+  assign io_reserve_0_ready = |_availalbe_MOB_entries_4to2;	// src/main/scala/Memory/MOB.scala:78:7, :422:54
+  assign io_reserve_1_ready = |_availalbe_MOB_entries_4to2;	// src/main/scala/Memory/MOB.scala:78:7, :422:54
+  assign io_reserve_2_ready = |_availalbe_MOB_entries_4to2;	// src/main/scala/Memory/MOB.scala:78:7, :422:54
+  assign io_reserve_3_ready = |_availalbe_MOB_entries_4to2;	// src/main/scala/Memory/MOB.scala:78:7, :422:54
   assign io_reserved_pointers_0_valid = written_vec_0;	// src/main/scala/Memory/MOB.scala:78:7, :142:34
   assign io_reserved_pointers_0_bits =
-    written_vec_0 ? _io_reserved_pointers_0_bits_T : 4'h0;	// src/main/scala/Memory/MOB.scala:78:7, :142:34, :149:39, :150:29, :153:28, :159:46
+    written_vec_0 ? _io_reserved_pointers_0_bits_T : 4'h0;	// src/main/scala/Memory/MOB.scala:78:7, :142:34, :149:39, :150:29, :153:28, :159:65
   assign io_reserved_pointers_1_valid = written_vec_1;	// src/main/scala/Memory/MOB.scala:78:7, :142:34
   assign io_reserved_pointers_1_bits =
-    written_vec_1 ? _io_reserved_pointers_1_bits_T : 4'h0;	// src/main/scala/Memory/MOB.scala:78:7, :142:34, :149:39, :150:29, :153:28, :159:46
+    written_vec_1 ? _io_reserved_pointers_1_bits_T : 4'h0;	// src/main/scala/Memory/MOB.scala:78:7, :142:34, :149:39, :150:29, :153:28, :159:65
   assign io_reserved_pointers_2_valid = written_vec_2;	// src/main/scala/Memory/MOB.scala:78:7, :142:34
   assign io_reserved_pointers_2_bits =
-    written_vec_2 ? _io_reserved_pointers_2_bits_T : 4'h0;	// src/main/scala/Memory/MOB.scala:78:7, :142:34, :149:39, :150:29, :153:28, :159:46
+    written_vec_2 ? _io_reserved_pointers_2_bits_T : 4'h0;	// src/main/scala/Memory/MOB.scala:78:7, :142:34, :149:39, :150:29, :153:28, :159:65
   assign io_reserved_pointers_3_valid = written_vec_3;	// src/main/scala/Memory/MOB.scala:78:7, :142:34
   assign io_reserved_pointers_3_bits =
-    written_vec_3 ? _io_reserved_pointers_3_bits_T : 4'h0;	// src/main/scala/Memory/MOB.scala:78:7, :142:34, :149:39, :150:29, :153:28, :159:46
+    written_vec_3 ? _io_reserved_pointers_3_bits_T : 4'h0;	// src/main/scala/Memory/MOB.scala:78:7, :142:34, :149:39, :150:29, :153:28, :159:65
   assign io_backend_memory_request_valid = (|_GEN_15) | fire_store;	// src/main/scala/Memory/MOB.scala:78:7, :236:{52,82,110,141}, :238:{28,35,41}, :241:53, :246:27
   assign io_backend_memory_request_bits_addr =
     (|_GEN_15) ? _GEN_7[load_index] : fire_store ? _GEN_7[front_pointer[3:0]] : 32'h0;	// src/main/scala/Memory/MOB.scala:78:7, :113:34, :116:40, :229:38, :236:{52,82,110,141}, :238:{28,35,41}, :240:53, :242:53, :246:27, :250:53, src/main/scala/chisel3/util/Mux.scala:50:70

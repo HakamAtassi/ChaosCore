@@ -54,6 +54,7 @@ class FTQ(coreParameters:CoreParameters) extends Module{
 
         // PREDICTIONS //
         val predictions         =   Flipped(Decoupled(new FTQ_entry(coreParameters)))
+        val ROB_index          =    Input(UInt(log2Ceil(ROBEntries).W))
 
         // COMMIT // 
         val commit              =   Flipped(ValidIO(new commit(coreParameters)))
@@ -76,6 +77,8 @@ class FTQ(coreParameters:CoreParameters) extends Module{
     val FTQ = RegInit(VecInit(Seq.fill(FTQEntries)(0.U.asTypeOf(new FTQ_entry(coreParameters)))))
 
 
+    io.FTQ_index := back_index
+
     // whenever input branch is valid, try to write to FTQ
 
     // whenever FU_outputs is valid and has a branch (can only have 1 branch)
@@ -91,6 +94,7 @@ class FTQ(coreParameters:CoreParameters) extends Module{
     
     when(io.predictions.valid && io.predictions.ready){
         FTQ(back_index)             := io.predictions.bits
+        FTQ(back_index).ROB_index   := io.ROB_index
         FTQ(back_index).valid       := 1.B
         back_pointer := back_pointer + 1.U
     }
@@ -126,9 +130,10 @@ class FTQ(coreParameters:CoreParameters) extends Module{
     // FRONT POINTER CONTROL //
     ///////////////////////////
 
-    val PC_match = (get_fetch_packet_aligned_address(coreParameters, FTQ(front_index).fetch_PC)) === (get_fetch_packet_aligned_address(coreParameters, io.commit.bits.fetch_PC)) //FIXME: parameterize 
+    //val ROB_match = io.commit.bits. === front_pointer
+    val ROB_match = (FTQ(front_index).ROB_index === io.commit.bits.ROB_index)
 
-    val dq = FTQ(front_index).valid && io.commit.valid && PC_match
+    val dq = FTQ(front_index).valid && io.commit.valid && ROB_match
 
     dontTouch(dq)
 

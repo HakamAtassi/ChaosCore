@@ -47,7 +47,6 @@ module ROB_shared_mem(	// src/main/scala/memories/memories.scala:203:7
   input         clock,	// src/main/scala/memories/memories.scala:203:7
   input  [5:0]  io_addrA,	// src/main/scala/memories/memories.scala:204:14
   input  [31:0] io_writeDataA_fetch_PC,	// src/main/scala/memories/memories.scala:204:14
-  input  [3:0]  io_writeDataA_RAT_index,	// src/main/scala/memories/memories.scala:204:14
   input  [7:0]  io_writeDataA_free_list_front_pointer,	// src/main/scala/memories/memories.scala:204:14
   input  [15:0] io_writeDataA_GHR,	// src/main/scala/memories/memories.scala:204:14
   input  [6:0]  io_writeDataA_NEXT,	// src/main/scala/memories/memories.scala:204:14
@@ -55,7 +54,6 @@ module ROB_shared_mem(	// src/main/scala/memories/memories.scala:203:7
   input         io_writeEnableA,	// src/main/scala/memories/memories.scala:204:14
   input  [5:0]  io_addrB,	// src/main/scala/memories/memories.scala:204:14
   output [31:0] io_readDataB_fetch_PC,	// src/main/scala/memories/memories.scala:204:14
-  output [3:0]  io_readDataB_RAT_index,	// src/main/scala/memories/memories.scala:204:14
   output [7:0]  io_readDataB_free_list_front_pointer,	// src/main/scala/memories/memories.scala:204:14
   output [15:0] io_readDataB_GHR,	// src/main/scala/memories/memories.scala:204:14
   output [6:0]  io_readDataB_NEXT,	// src/main/scala/memories/memories.scala:204:14
@@ -64,9 +62,9 @@ module ROB_shared_mem(	// src/main/scala/memories/memories.scala:203:7
   output [31:0] io_readDataC_fetch_PC	// src/main/scala/memories/memories.scala:204:14
 );
 
-  wire [73:0] _mem_ext_R0_data;	// src/main/scala/memories/memories.scala:222:24
-  wire [73:0] _mem_ext_R1_data;	// src/main/scala/memories/memories.scala:222:24
-  mem_64x74 mem_ext (	// src/main/scala/memories/memories.scala:222:24
+  wire [69:0] _mem_ext_R0_data;	// src/main/scala/memories/memories.scala:222:24
+  wire [69:0] _mem_ext_R1_data;	// src/main/scala/memories/memories.scala:222:24
+  mem_64x70 mem_ext (	// src/main/scala/memories/memories.scala:222:24
     .R0_addr (io_addrC),
     .R0_en   (1'h1),	// src/main/scala/memories/memories.scala:203:7
     .R0_clk  (clock),
@@ -83,15 +81,13 @@ module ROB_shared_mem(	// src/main/scala/memories/memories.scala:203:7
         io_writeDataA_NEXT,
         io_writeDataA_GHR,
         io_writeDataA_free_list_front_pointer,
-        io_writeDataA_RAT_index,
         io_writeDataA_fetch_PC})	// src/main/scala/memories/memories.scala:222:24
   );	// src/main/scala/memories/memories.scala:222:24
   assign io_readDataB_fetch_PC = _mem_ext_R1_data[31:0];	// src/main/scala/memories/memories.scala:203:7, :222:24
-  assign io_readDataB_RAT_index = _mem_ext_R1_data[35:32];	// src/main/scala/memories/memories.scala:203:7, :222:24
-  assign io_readDataB_free_list_front_pointer = _mem_ext_R1_data[43:36];	// src/main/scala/memories/memories.scala:203:7, :222:24
-  assign io_readDataB_GHR = _mem_ext_R1_data[59:44];	// src/main/scala/memories/memories.scala:203:7, :222:24
-  assign io_readDataB_NEXT = _mem_ext_R1_data[66:60];	// src/main/scala/memories/memories.scala:203:7, :222:24
-  assign io_readDataB_TOS = _mem_ext_R1_data[73:67];	// src/main/scala/memories/memories.scala:203:7, :222:24
+  assign io_readDataB_free_list_front_pointer = _mem_ext_R1_data[39:32];	// src/main/scala/memories/memories.scala:203:7, :222:24
+  assign io_readDataB_GHR = _mem_ext_R1_data[55:40];	// src/main/scala/memories/memories.scala:203:7, :222:24
+  assign io_readDataB_NEXT = _mem_ext_R1_data[62:56];	// src/main/scala/memories/memories.scala:203:7, :222:24
+  assign io_readDataB_TOS = _mem_ext_R1_data[69:63];	// src/main/scala/memories/memories.scala:203:7, :222:24
   assign io_readDataC_fetch_PC = _mem_ext_R0_data[31:0];	// src/main/scala/memories/memories.scala:203:7, :222:24
 endmodule
 

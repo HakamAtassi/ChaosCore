@@ -15,7 +15,6 @@ module instruction_fetch(	// src/main/scala/Frontend/instruction_fetch.scala:35:
   input  [15:0] io_commit_bits_GHR,	// src/main/scala/Frontend/instruction_fetch.scala:40:16
   input  [6:0]  io_commit_bits_TOS,	// src/main/scala/Frontend/instruction_fetch.scala:40:16
                 io_commit_bits_NEXT,	// src/main/scala/Frontend/instruction_fetch.scala:40:16
-  input  [3:0]  io_commit_bits_RAT_index,	// src/main/scala/Frontend/instruction_fetch.scala:40:16
   input  [7:0]  io_commit_bits_free_list_front_pointer,	// src/main/scala/Frontend/instruction_fetch.scala:40:16
   input  [4:0]  io_commit_bits_RDold_0,	// src/main/scala/Frontend/instruction_fetch.scala:40:16
                 io_commit_bits_RDold_1,	// src/main/scala/Frontend/instruction_fetch.scala:40:16
@@ -80,6 +79,7 @@ module instruction_fetch(	// src/main/scala/Frontend/instruction_fetch.scala:35:
   output [31:0] io_predictions_bits_fetch_PC,	// src/main/scala/Frontend/instruction_fetch.scala:40:16
   output        io_predictions_bits_is_misprediction,	// src/main/scala/Frontend/instruction_fetch.scala:40:16
   output [31:0] io_predictions_bits_predicted_PC,	// src/main/scala/Frontend/instruction_fetch.scala:40:16
+  output [5:0]  io_predictions_bits_ROB_index,	// src/main/scala/Frontend/instruction_fetch.scala:40:16
   output        io_predictions_bits_T_NT,	// src/main/scala/Frontend/instruction_fetch.scala:40:16
   output [2:0]  io_predictions_bits_br_type,	// src/main/scala/Frontend/instruction_fetch.scala:40:16
   output [1:0]  io_predictions_bits_dominant_index,	// src/main/scala/Frontend/instruction_fetch.scala:40:16
@@ -248,7 +248,6 @@ module instruction_fetch(	// src/main/scala/Frontend/instruction_fetch.scala:35:
     .io_commit_bits_GHR                                     (io_commit_bits_GHR),
     .io_commit_bits_TOS                                     (io_commit_bits_TOS),
     .io_commit_bits_NEXT                                    (io_commit_bits_NEXT),
-    .io_commit_bits_RAT_index                               (io_commit_bits_RAT_index),
     .io_commit_bits_free_list_front_pointer
       (io_commit_bits_free_list_front_pointer),
     .io_commit_bits_RDold_0                                 (io_commit_bits_RDold_0),
@@ -272,6 +271,8 @@ module instruction_fetch(	// src/main/scala/Frontend/instruction_fetch.scala:35:
       (io_predictions_bits_is_misprediction),
     .io_predictions_bits_predicted_PC
       (io_predictions_bits_predicted_PC),
+    .io_predictions_bits_ROB_index
+      (io_predictions_bits_ROB_index),
     .io_predictions_bits_T_NT                               (io_predictions_bits_T_NT),
     .io_predictions_bits_br_type                            (io_predictions_bits_br_type),
     .io_predictions_bits_dominant_index
@@ -336,7 +337,6 @@ module instruction_fetch(	// src/main/scala/Frontend/instruction_fetch.scala:35:
     .io_commit_bits_GHR                     (io_commit_bits_GHR),
     .io_commit_bits_TOS                     (io_commit_bits_TOS),
     .io_commit_bits_NEXT                    (io_commit_bits_NEXT),
-    .io_commit_bits_RAT_index               (io_commit_bits_RAT_index),
     .io_commit_bits_free_list_front_pointer (io_commit_bits_free_list_front_pointer),
     .io_commit_bits_RDold_0                 (io_commit_bits_RDold_0),
     .io_commit_bits_RDold_1                 (io_commit_bits_RDold_1),
