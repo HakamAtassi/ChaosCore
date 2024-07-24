@@ -69,7 +69,7 @@ class BRU(coreParameters:CoreParameters) extends Module{
     io.commit.bits.GHR                           := io.ROB_output.GHR
     io.commit.bits.TOS                           := io.ROB_output.TOS
     io.commit.bits.NEXT                          := io.ROB_output.NEXT
-    io.commit.bits.RAT_index                     := io.ROB_output.RAT_index
+    //io.commit.bits.RAT_index                     := io.ROB_output.RAT_index
     io.commit.bits.ROB_index                     := io.ROB_output.ROB_index
     io.commit.bits.free_list_front_pointer       := io.ROB_output.free_list_front_pointer
     io.commit.bits.fetch_PC                      := io.ROB_output.fetch_PC

@@ -58,12 +58,14 @@ module FTQ(	// src/main/scala/Frontend/FTQ.scala:44:7
                 io_predictions_bits_valid,	// src/main/scala/Frontend/FTQ.scala:48:16
   input  [31:0] io_predictions_bits_fetch_PC,	// src/main/scala/Frontend/FTQ.scala:48:16
                 io_predictions_bits_predicted_PC,	// src/main/scala/Frontend/FTQ.scala:48:16
+  input  [5:0]  io_predictions_bits_ROB_index,	// src/main/scala/Frontend/FTQ.scala:48:16
   input         io_predictions_bits_T_NT,	// src/main/scala/Frontend/FTQ.scala:48:16
   input  [2:0]  io_predictions_bits_br_type,	// src/main/scala/Frontend/FTQ.scala:48:16
   input  [1:0]  io_predictions_bits_dominant_index,	// src/main/scala/Frontend/FTQ.scala:48:16
   input  [31:0] io_predictions_bits_resolved_PC,	// src/main/scala/Frontend/FTQ.scala:48:16
+  input  [5:0]  io_ROB_index,	// src/main/scala/Frontend/FTQ.scala:48:16
   input         io_commit_valid,	// src/main/scala/Frontend/FTQ.scala:48:16
-  input  [31:0] io_commit_bits_fetch_PC,	// src/main/scala/Frontend/FTQ.scala:48:16
+  input  [5:0]  io_commit_bits_ROB_index,	// src/main/scala/Frontend/FTQ.scala:48:16
   output        io_FTQ_valid,	// src/main/scala/Frontend/FTQ.scala:48:16
   output [31:0] io_FTQ_fetch_PC,	// src/main/scala/Frontend/FTQ.scala:48:16
                 io_FTQ_predicted_PC,	// src/main/scala/Frontend/FTQ.scala:48:16
@@ -74,122 +76,138 @@ module FTQ(	// src/main/scala/Frontend/FTQ.scala:44:7
   output [3:0]  io_FTQ_index	// src/main/scala/Frontend/FTQ.scala:48:16
 );
 
-  reg  [4:0]        front_pointer;	// src/main/scala/Frontend/FTQ.scala:69:34
-  reg  [4:0]        back_pointer;	// src/main/scala/Frontend/FTQ.scala:70:34
-  wire [3:0]        front_index = front_pointer[3:0];	// src/main/scala/Frontend/FTQ.scala:69:34, :72:37
-  wire [3:0]        back_index = back_pointer[3:0];	// src/main/scala/Frontend/FTQ.scala:70:34, :73:35
-  reg               FTQ_0_valid;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [31:0]       FTQ_0_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [31:0]       FTQ_0_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg               FTQ_0_T_NT;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [2:0]        FTQ_0_br_type;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [1:0]        FTQ_0_dominant_index;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [31:0]       FTQ_0_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg               FTQ_1_valid;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [31:0]       FTQ_1_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [31:0]       FTQ_1_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg               FTQ_1_T_NT;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [2:0]        FTQ_1_br_type;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [1:0]        FTQ_1_dominant_index;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [31:0]       FTQ_1_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg               FTQ_2_valid;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [31:0]       FTQ_2_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [31:0]       FTQ_2_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg               FTQ_2_T_NT;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [2:0]        FTQ_2_br_type;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [1:0]        FTQ_2_dominant_index;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [31:0]       FTQ_2_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg               FTQ_3_valid;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [31:0]       FTQ_3_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [31:0]       FTQ_3_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg               FTQ_3_T_NT;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [2:0]        FTQ_3_br_type;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [1:0]        FTQ_3_dominant_index;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [31:0]       FTQ_3_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg               FTQ_4_valid;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [31:0]       FTQ_4_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [31:0]       FTQ_4_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg               FTQ_4_T_NT;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [2:0]        FTQ_4_br_type;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [1:0]        FTQ_4_dominant_index;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [31:0]       FTQ_4_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg               FTQ_5_valid;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [31:0]       FTQ_5_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [31:0]       FTQ_5_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg               FTQ_5_T_NT;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [2:0]        FTQ_5_br_type;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [1:0]        FTQ_5_dominant_index;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [31:0]       FTQ_5_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg               FTQ_6_valid;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [31:0]       FTQ_6_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [31:0]       FTQ_6_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg               FTQ_6_T_NT;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [2:0]        FTQ_6_br_type;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [1:0]        FTQ_6_dominant_index;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [31:0]       FTQ_6_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg               FTQ_7_valid;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [31:0]       FTQ_7_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [31:0]       FTQ_7_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg               FTQ_7_T_NT;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [2:0]        FTQ_7_br_type;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [1:0]        FTQ_7_dominant_index;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [31:0]       FTQ_7_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg               FTQ_8_valid;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [31:0]       FTQ_8_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [31:0]       FTQ_8_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg               FTQ_8_T_NT;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [2:0]        FTQ_8_br_type;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [1:0]        FTQ_8_dominant_index;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [31:0]       FTQ_8_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg               FTQ_9_valid;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [31:0]       FTQ_9_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [31:0]       FTQ_9_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg               FTQ_9_T_NT;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [2:0]        FTQ_9_br_type;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [1:0]        FTQ_9_dominant_index;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [31:0]       FTQ_9_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg               FTQ_10_valid;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [31:0]       FTQ_10_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [31:0]       FTQ_10_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg               FTQ_10_T_NT;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [2:0]        FTQ_10_br_type;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [1:0]        FTQ_10_dominant_index;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [31:0]       FTQ_10_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg               FTQ_11_valid;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [31:0]       FTQ_11_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [31:0]       FTQ_11_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg               FTQ_11_T_NT;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [2:0]        FTQ_11_br_type;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [1:0]        FTQ_11_dominant_index;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [31:0]       FTQ_11_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg               FTQ_12_valid;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [31:0]       FTQ_12_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [31:0]       FTQ_12_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg               FTQ_12_T_NT;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [2:0]        FTQ_12_br_type;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [1:0]        FTQ_12_dominant_index;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [31:0]       FTQ_12_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg               FTQ_13_valid;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [31:0]       FTQ_13_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [31:0]       FTQ_13_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg               FTQ_13_T_NT;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [2:0]        FTQ_13_br_type;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [1:0]        FTQ_13_dominant_index;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [31:0]       FTQ_13_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg               FTQ_14_valid;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [31:0]       FTQ_14_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [31:0]       FTQ_14_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg               FTQ_14_T_NT;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [2:0]        FTQ_14_br_type;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [1:0]        FTQ_14_dominant_index;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [31:0]       FTQ_14_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg               FTQ_15_valid;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [31:0]       FTQ_15_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [31:0]       FTQ_15_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg               FTQ_15_T_NT;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [2:0]        FTQ_15_br_type;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [1:0]        FTQ_15_dominant_index;	// src/main/scala/Frontend/FTQ.scala:76:22
-  reg  [31:0]       FTQ_15_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
+  reg  [4:0]        front_pointer;	// src/main/scala/Frontend/FTQ.scala:70:34
+  reg  [4:0]        back_pointer;	// src/main/scala/Frontend/FTQ.scala:71:34
+  wire [3:0]        front_index = front_pointer[3:0];	// src/main/scala/Frontend/FTQ.scala:70:34, :73:37
+  wire [3:0]        back_index = back_pointer[3:0];	// src/main/scala/Frontend/FTQ.scala:71:34, :74:35
+  reg               FTQ_0_valid;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [31:0]       FTQ_0_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [31:0]       FTQ_0_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [5:0]        FTQ_0_ROB_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg               FTQ_0_T_NT;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [2:0]        FTQ_0_br_type;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [1:0]        FTQ_0_dominant_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [31:0]       FTQ_0_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg               FTQ_1_valid;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [31:0]       FTQ_1_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [31:0]       FTQ_1_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [5:0]        FTQ_1_ROB_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg               FTQ_1_T_NT;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [2:0]        FTQ_1_br_type;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [1:0]        FTQ_1_dominant_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [31:0]       FTQ_1_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg               FTQ_2_valid;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [31:0]       FTQ_2_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [31:0]       FTQ_2_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [5:0]        FTQ_2_ROB_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg               FTQ_2_T_NT;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [2:0]        FTQ_2_br_type;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [1:0]        FTQ_2_dominant_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [31:0]       FTQ_2_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg               FTQ_3_valid;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [31:0]       FTQ_3_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [31:0]       FTQ_3_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [5:0]        FTQ_3_ROB_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg               FTQ_3_T_NT;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [2:0]        FTQ_3_br_type;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [1:0]        FTQ_3_dominant_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [31:0]       FTQ_3_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg               FTQ_4_valid;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [31:0]       FTQ_4_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [31:0]       FTQ_4_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [5:0]        FTQ_4_ROB_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg               FTQ_4_T_NT;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [2:0]        FTQ_4_br_type;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [1:0]        FTQ_4_dominant_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [31:0]       FTQ_4_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg               FTQ_5_valid;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [31:0]       FTQ_5_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [31:0]       FTQ_5_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [5:0]        FTQ_5_ROB_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg               FTQ_5_T_NT;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [2:0]        FTQ_5_br_type;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [1:0]        FTQ_5_dominant_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [31:0]       FTQ_5_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg               FTQ_6_valid;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [31:0]       FTQ_6_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [31:0]       FTQ_6_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [5:0]        FTQ_6_ROB_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg               FTQ_6_T_NT;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [2:0]        FTQ_6_br_type;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [1:0]        FTQ_6_dominant_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [31:0]       FTQ_6_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg               FTQ_7_valid;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [31:0]       FTQ_7_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [31:0]       FTQ_7_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [5:0]        FTQ_7_ROB_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg               FTQ_7_T_NT;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [2:0]        FTQ_7_br_type;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [1:0]        FTQ_7_dominant_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [31:0]       FTQ_7_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg               FTQ_8_valid;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [31:0]       FTQ_8_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [31:0]       FTQ_8_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [5:0]        FTQ_8_ROB_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg               FTQ_8_T_NT;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [2:0]        FTQ_8_br_type;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [1:0]        FTQ_8_dominant_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [31:0]       FTQ_8_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg               FTQ_9_valid;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [31:0]       FTQ_9_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [31:0]       FTQ_9_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [5:0]        FTQ_9_ROB_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg               FTQ_9_T_NT;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [2:0]        FTQ_9_br_type;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [1:0]        FTQ_9_dominant_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [31:0]       FTQ_9_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg               FTQ_10_valid;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [31:0]       FTQ_10_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [31:0]       FTQ_10_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [5:0]        FTQ_10_ROB_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg               FTQ_10_T_NT;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [2:0]        FTQ_10_br_type;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [1:0]        FTQ_10_dominant_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [31:0]       FTQ_10_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg               FTQ_11_valid;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [31:0]       FTQ_11_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [31:0]       FTQ_11_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [5:0]        FTQ_11_ROB_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg               FTQ_11_T_NT;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [2:0]        FTQ_11_br_type;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [1:0]        FTQ_11_dominant_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [31:0]       FTQ_11_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg               FTQ_12_valid;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [31:0]       FTQ_12_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [31:0]       FTQ_12_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [5:0]        FTQ_12_ROB_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg               FTQ_12_T_NT;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [2:0]        FTQ_12_br_type;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [1:0]        FTQ_12_dominant_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [31:0]       FTQ_12_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg               FTQ_13_valid;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [31:0]       FTQ_13_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [31:0]       FTQ_13_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [5:0]        FTQ_13_ROB_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg               FTQ_13_T_NT;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [2:0]        FTQ_13_br_type;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [1:0]        FTQ_13_dominant_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [31:0]       FTQ_13_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg               FTQ_14_valid;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [31:0]       FTQ_14_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [31:0]       FTQ_14_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [5:0]        FTQ_14_ROB_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg               FTQ_14_T_NT;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [2:0]        FTQ_14_br_type;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [1:0]        FTQ_14_dominant_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [31:0]       FTQ_14_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg               FTQ_15_valid;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [31:0]       FTQ_15_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [31:0]       FTQ_15_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [5:0]        FTQ_15_ROB_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg               FTQ_15_T_NT;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [2:0]        FTQ_15_br_type;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [1:0]        FTQ_15_dominant_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+  reg  [31:0]       FTQ_15_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
   wire [15:0][1:0]  _GEN =
     {{FTQ_15_dominant_index},
      {FTQ_14_dominant_index},
@@ -206,7 +224,7 @@ module FTQ(	// src/main/scala/Frontend/FTQ.scala:44:7
      {FTQ_3_dominant_index},
      {FTQ_2_dominant_index},
      {FTQ_1_dominant_index},
-     {FTQ_0_dominant_index}};	// src/main/scala/Frontend/FTQ.scala:76:22, :115:77
+     {FTQ_0_dominant_index}};	// src/main/scala/Frontend/FTQ.scala:77:22, :119:77
   wire [15:0]       _GEN_0 =
     {{FTQ_15_valid},
      {FTQ_14_valid},
@@ -223,7 +241,7 @@ module FTQ(	// src/main/scala/Frontend/FTQ.scala:44:7
      {FTQ_3_valid},
      {FTQ_2_valid},
      {FTQ_1_valid},
-     {FTQ_0_valid}};	// src/main/scala/Frontend/FTQ.scala:76:22, src/main/scala/utils.scala:333:10
+     {FTQ_0_valid}};	// src/main/scala/Frontend/FTQ.scala:77:22, :134:49
   wire [15:0][31:0] _GEN_1 =
     {{FTQ_15_fetch_PC},
      {FTQ_14_fetch_PC},
@@ -240,7 +258,7 @@ module FTQ(	// src/main/scala/Frontend/FTQ.scala:44:7
      {FTQ_3_fetch_PC},
      {FTQ_2_fetch_PC},
      {FTQ_1_fetch_PC},
-     {FTQ_0_fetch_PC}};	// src/main/scala/Frontend/FTQ.scala:76:22, src/main/scala/utils.scala:333:10
+     {FTQ_0_fetch_PC}};	// src/main/scala/Frontend/FTQ.scala:77:22, :134:49
   wire [15:0][31:0] _GEN_2 =
     {{FTQ_15_predicted_PC},
      {FTQ_14_predicted_PC},
@@ -257,8 +275,25 @@ module FTQ(	// src/main/scala/Frontend/FTQ.scala:44:7
      {FTQ_3_predicted_PC},
      {FTQ_2_predicted_PC},
      {FTQ_1_predicted_PC},
-     {FTQ_0_predicted_PC}};	// src/main/scala/Frontend/FTQ.scala:76:22, src/main/scala/utils.scala:333:10
-  wire [15:0]       _GEN_3 =
+     {FTQ_0_predicted_PC}};	// src/main/scala/Frontend/FTQ.scala:77:22, :134:49
+  wire [15:0][5:0]  _GEN_3 =
+    {{FTQ_15_ROB_index},
+     {FTQ_14_ROB_index},
+     {FTQ_13_ROB_index},
+     {FTQ_12_ROB_index},
+     {FTQ_11_ROB_index},
+     {FTQ_10_ROB_index},
+     {FTQ_9_ROB_index},
+     {FTQ_8_ROB_index},
+     {FTQ_7_ROB_index},
+     {FTQ_6_ROB_index},
+     {FTQ_5_ROB_index},
+     {FTQ_4_ROB_index},
+     {FTQ_3_ROB_index},
+     {FTQ_2_ROB_index},
+     {FTQ_1_ROB_index},
+     {FTQ_0_ROB_index}};	// src/main/scala/Frontend/FTQ.scala:77:22, :134:49
+  wire [15:0]       _GEN_4 =
     {{FTQ_15_T_NT},
      {FTQ_14_T_NT},
      {FTQ_13_T_NT},
@@ -274,8 +309,8 @@ module FTQ(	// src/main/scala/Frontend/FTQ.scala:44:7
      {FTQ_3_T_NT},
      {FTQ_2_T_NT},
      {FTQ_1_T_NT},
-     {FTQ_0_T_NT}};	// src/main/scala/Frontend/FTQ.scala:76:22, src/main/scala/utils.scala:333:10
-  wire [15:0][2:0]  _GEN_4 =
+     {FTQ_0_T_NT}};	// src/main/scala/Frontend/FTQ.scala:77:22, :134:49
+  wire [15:0][2:0]  _GEN_5 =
     {{FTQ_15_br_type},
      {FTQ_14_br_type},
      {FTQ_13_br_type},
@@ -291,8 +326,8 @@ module FTQ(	// src/main/scala/Frontend/FTQ.scala:44:7
      {FTQ_3_br_type},
      {FTQ_2_br_type},
      {FTQ_1_br_type},
-     {FTQ_0_br_type}};	// src/main/scala/Frontend/FTQ.scala:76:22, src/main/scala/utils.scala:333:10
-  wire [15:0][31:0] _GEN_5 =
+     {FTQ_0_br_type}};	// src/main/scala/Frontend/FTQ.scala:77:22, :134:49
+  wire [15:0][31:0] _GEN_6 =
     {{FTQ_15_resolved_PC},
      {FTQ_14_resolved_PC},
      {FTQ_13_resolved_PC},
@@ -308,705 +343,784 @@ module FTQ(	// src/main/scala/Frontend/FTQ.scala:44:7
      {FTQ_3_resolved_PC},
      {FTQ_2_resolved_PC},
      {FTQ_1_resolved_PC},
-     {FTQ_0_resolved_PC}};	// src/main/scala/Frontend/FTQ.scala:76:22, src/main/scala/utils.scala:333:10
+     {FTQ_0_resolved_PC}};	// src/main/scala/Frontend/FTQ.scala:77:22, :134:49
   wire              dq =
     _GEN_0[front_index] & io_commit_valid
-    & (_GEN_1[front_index] & 32'hFFFFFFF0) == (io_commit_bits_fetch_PC & 32'hFFFFFFF0);	// src/main/scala/Frontend/FTQ.scala:72:37, :129:98, :131:{37,56}, src/main/scala/utils.scala:333:10
+    & _GEN_3[front_index] == io_commit_bits_ROB_index;	// src/main/scala/Frontend/FTQ.scala:73:37, :134:49, :136:{37,56}
   wire              full =
-    front_pointer[4] != back_pointer[4] & front_index == back_index;	// src/main/scala/Frontend/FTQ.scala:69:34, :70:34, :72:37, :73:35, :164:{30,47,63,81,97}
+    front_pointer[4] != back_pointer[4] & front_index == back_index;	// src/main/scala/Frontend/FTQ.scala:70:34, :71:34, :73:37, :74:35, :169:{30,47,63,81,97}
   always @(posedge clock) begin	// src/main/scala/Frontend/FTQ.scala:44:7
     if (reset) begin	// src/main/scala/Frontend/FTQ.scala:44:7
-      front_pointer <= 5'h0;	// src/main/scala/Frontend/FTQ.scala:69:34
-      back_pointer <= 5'h0;	// src/main/scala/Frontend/FTQ.scala:69:34, :70:34
-      FTQ_0_valid <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_0_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_0_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_0_T_NT <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_0_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:76:{22,64}
-      FTQ_0_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_0_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_1_valid <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_1_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_1_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_1_T_NT <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_1_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:76:{22,64}
-      FTQ_1_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_1_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_2_valid <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_2_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_2_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_2_T_NT <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_2_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:76:{22,64}
-      FTQ_2_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_2_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_3_valid <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_3_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_3_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_3_T_NT <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_3_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:76:{22,64}
-      FTQ_3_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_3_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_4_valid <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_4_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_4_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_4_T_NT <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_4_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:76:{22,64}
-      FTQ_4_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_4_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_5_valid <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_5_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_5_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_5_T_NT <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_5_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:76:{22,64}
-      FTQ_5_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_5_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_6_valid <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_6_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_6_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_6_T_NT <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_6_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:76:{22,64}
-      FTQ_6_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_6_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_7_valid <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_7_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_7_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_7_T_NT <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_7_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:76:{22,64}
-      FTQ_7_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_7_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_8_valid <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_8_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_8_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_8_T_NT <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_8_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:76:{22,64}
-      FTQ_8_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_8_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_9_valid <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_9_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_9_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_9_T_NT <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_9_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:76:{22,64}
-      FTQ_9_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_9_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_10_valid <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_10_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_10_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_10_T_NT <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_10_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:76:{22,64}
-      FTQ_10_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_10_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_11_valid <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_11_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_11_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_11_T_NT <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_11_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:76:{22,64}
-      FTQ_11_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_11_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_12_valid <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_12_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_12_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_12_T_NT <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_12_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:76:{22,64}
-      FTQ_12_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_12_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_13_valid <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_13_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_13_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_13_T_NT <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_13_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:76:{22,64}
-      FTQ_13_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_13_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_14_valid <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_14_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_14_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_14_T_NT <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_14_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:76:{22,64}
-      FTQ_14_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_14_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_15_valid <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_15_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_15_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_15_T_NT <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_15_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:76:{22,64}
-      FTQ_15_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-      FTQ_15_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
+      front_pointer <= 5'h0;	// src/main/scala/Frontend/FTQ.scala:70:34
+      back_pointer <= 5'h0;	// src/main/scala/Frontend/FTQ.scala:70:34, :71:34
+      FTQ_0_valid <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_0_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_0_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_0_ROB_index <= 6'h0;	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+      FTQ_0_T_NT <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_0_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:77:{22,64}
+      FTQ_0_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_0_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_1_valid <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_1_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_1_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_1_ROB_index <= 6'h0;	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+      FTQ_1_T_NT <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_1_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:77:{22,64}
+      FTQ_1_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_1_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_2_valid <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_2_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_2_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_2_ROB_index <= 6'h0;	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+      FTQ_2_T_NT <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_2_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:77:{22,64}
+      FTQ_2_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_2_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_3_valid <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_3_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_3_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_3_ROB_index <= 6'h0;	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+      FTQ_3_T_NT <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_3_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:77:{22,64}
+      FTQ_3_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_3_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_4_valid <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_4_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_4_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_4_ROB_index <= 6'h0;	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+      FTQ_4_T_NT <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_4_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:77:{22,64}
+      FTQ_4_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_4_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_5_valid <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_5_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_5_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_5_ROB_index <= 6'h0;	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+      FTQ_5_T_NT <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_5_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:77:{22,64}
+      FTQ_5_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_5_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_6_valid <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_6_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_6_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_6_ROB_index <= 6'h0;	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+      FTQ_6_T_NT <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_6_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:77:{22,64}
+      FTQ_6_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_6_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_7_valid <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_7_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_7_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_7_ROB_index <= 6'h0;	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+      FTQ_7_T_NT <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_7_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:77:{22,64}
+      FTQ_7_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_7_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_8_valid <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_8_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_8_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_8_ROB_index <= 6'h0;	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+      FTQ_8_T_NT <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_8_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:77:{22,64}
+      FTQ_8_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_8_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_9_valid <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_9_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_9_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_9_ROB_index <= 6'h0;	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+      FTQ_9_T_NT <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_9_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:77:{22,64}
+      FTQ_9_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_9_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_10_valid <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_10_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_10_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_10_ROB_index <= 6'h0;	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+      FTQ_10_T_NT <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_10_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:77:{22,64}
+      FTQ_10_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_10_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_11_valid <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_11_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_11_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_11_ROB_index <= 6'h0;	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+      FTQ_11_T_NT <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_11_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:77:{22,64}
+      FTQ_11_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_11_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_12_valid <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_12_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_12_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_12_ROB_index <= 6'h0;	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+      FTQ_12_T_NT <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_12_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:77:{22,64}
+      FTQ_12_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_12_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_13_valid <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_13_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_13_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_13_ROB_index <= 6'h0;	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+      FTQ_13_T_NT <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_13_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:77:{22,64}
+      FTQ_13_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_13_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_14_valid <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_14_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_14_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_14_ROB_index <= 6'h0;	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+      FTQ_14_T_NT <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_14_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:77:{22,64}
+      FTQ_14_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_14_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_15_valid <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_15_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_15_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_15_ROB_index <= 6'h0;	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+      FTQ_15_T_NT <= 1'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_15_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:77:{22,64}
+      FTQ_15_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+      FTQ_15_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
     end
     else begin	// src/main/scala/Frontend/FTQ.scala:44:7
-      automatic logic _GEN_6;	// src/main/scala/Frontend/FTQ.scala:92:31
-      automatic logic _GEN_7 = back_index == 4'h0;	// src/main/scala/Frontend/FTQ.scala:69:34, :73:35, :93:37
-      automatic logic _GEN_8;	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37
-      automatic logic _GEN_9 = back_index == 4'h1;	// src/main/scala/Frontend/FTQ.scala:73:35, :93:37
-      automatic logic _GEN_10;	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37
-      automatic logic _GEN_11 = back_index == 4'h2;	// src/main/scala/Frontend/FTQ.scala:73:35, :93:37
-      automatic logic _GEN_12;	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37
-      automatic logic _GEN_13 = back_index == 4'h3;	// src/main/scala/Frontend/FTQ.scala:73:35, :93:37
-      automatic logic _GEN_14;	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37
-      automatic logic _GEN_15 = back_index == 4'h4;	// src/main/scala/Frontend/FTQ.scala:73:35, :93:37
-      automatic logic _GEN_16;	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37
-      automatic logic _GEN_17 = back_index == 4'h5;	// src/main/scala/Frontend/FTQ.scala:73:35, :93:37
-      automatic logic _GEN_18;	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37
-      automatic logic _GEN_19 = back_index == 4'h6;	// src/main/scala/Frontend/FTQ.scala:73:35, :93:37
-      automatic logic _GEN_20;	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37
-      automatic logic _GEN_21 = back_index == 4'h7;	// src/main/scala/Frontend/FTQ.scala:73:35, :93:37
-      automatic logic _GEN_22;	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37
-      automatic logic _GEN_23 = back_index == 4'h8;	// src/main/scala/Frontend/FTQ.scala:73:35, :93:37
-      automatic logic _GEN_24;	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37
-      automatic logic _GEN_25 = back_index == 4'h9;	// src/main/scala/Frontend/FTQ.scala:73:35, :93:37
-      automatic logic _GEN_26;	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37
-      automatic logic _GEN_27 = back_index == 4'hA;	// src/main/scala/Frontend/FTQ.scala:73:35, :93:37
-      automatic logic _GEN_28;	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37
-      automatic logic _GEN_29 = back_index == 4'hB;	// src/main/scala/Frontend/FTQ.scala:73:35, :93:37
-      automatic logic _GEN_30;	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37
-      automatic logic _GEN_31 = back_index == 4'hC;	// src/main/scala/Frontend/FTQ.scala:73:35, :93:37
-      automatic logic _GEN_32;	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37
-      automatic logic _GEN_33 = back_index == 4'hD;	// src/main/scala/Frontend/FTQ.scala:73:35, :93:37
-      automatic logic _GEN_34;	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37
-      automatic logic _GEN_35 = back_index == 4'hE;	// src/main/scala/Frontend/FTQ.scala:73:35, :93:37
-      automatic logic _GEN_36;	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37
-      automatic logic _GEN_37;	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37
-      automatic logic _GEN_38 =
+      automatic logic _GEN_7;	// src/main/scala/Frontend/FTQ.scala:95:31
+      automatic logic _GEN_8;	// src/main/scala/Frontend/FTQ.scala:96:37
+      automatic logic _GEN_9;	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37
+      automatic logic _GEN_10;	// src/main/scala/Frontend/FTQ.scala:96:37
+      automatic logic _GEN_11;	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37
+      automatic logic _GEN_12;	// src/main/scala/Frontend/FTQ.scala:96:37
+      automatic logic _GEN_13;	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37
+      automatic logic _GEN_14;	// src/main/scala/Frontend/FTQ.scala:96:37
+      automatic logic _GEN_15;	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37
+      automatic logic _GEN_16;	// src/main/scala/Frontend/FTQ.scala:96:37
+      automatic logic _GEN_17;	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37
+      automatic logic _GEN_18;	// src/main/scala/Frontend/FTQ.scala:96:37
+      automatic logic _GEN_19;	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37
+      automatic logic _GEN_20;	// src/main/scala/Frontend/FTQ.scala:96:37
+      automatic logic _GEN_21;	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37
+      automatic logic _GEN_22;	// src/main/scala/Frontend/FTQ.scala:96:37
+      automatic logic _GEN_23;	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37
+      automatic logic _GEN_24;	// src/main/scala/Frontend/FTQ.scala:96:37
+      automatic logic _GEN_25;	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37
+      automatic logic _GEN_26;	// src/main/scala/Frontend/FTQ.scala:96:37
+      automatic logic _GEN_27;	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37
+      automatic logic _GEN_28;	// src/main/scala/Frontend/FTQ.scala:96:37
+      automatic logic _GEN_29;	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37
+      automatic logic _GEN_30;	// src/main/scala/Frontend/FTQ.scala:96:37
+      automatic logic _GEN_31;	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37
+      automatic logic _GEN_32;	// src/main/scala/Frontend/FTQ.scala:96:37
+      automatic logic _GEN_33;	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37
+      automatic logic _GEN_34;	// src/main/scala/Frontend/FTQ.scala:96:37
+      automatic logic _GEN_35;	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37
+      automatic logic _GEN_36;	// src/main/scala/Frontend/FTQ.scala:96:37
+      automatic logic _GEN_37;	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37
+      automatic logic _GEN_38;	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37
+      automatic logic _GEN_39 =
         io_FU_outputs_0_valid & io_FU_outputs_0_bits_branch_valid
         & io_FU_outputs_0_bits_fetch_packet_index <= _GEN[io_FU_outputs_0_bits_FTQ_index]
-        & io_FU_outputs_0_bits_branch_taken;	// src/main/scala/Frontend/FTQ.scala:115:77, :118:{19,32,52}
-      automatic logic _GEN_39;	// src/main/scala/Frontend/FTQ.scala:92:55, :118:64, :119:41
-      automatic logic _GEN_40;	// src/main/scala/Frontend/FTQ.scala:92:55, :118:64, :119:41
-      automatic logic _GEN_41;	// src/main/scala/Frontend/FTQ.scala:92:55, :118:64, :119:41
-      automatic logic _GEN_42;	// src/main/scala/Frontend/FTQ.scala:92:55, :118:64, :119:41
-      automatic logic _GEN_43;	// src/main/scala/Frontend/FTQ.scala:92:55, :118:64, :119:41
-      automatic logic _GEN_44;	// src/main/scala/Frontend/FTQ.scala:92:55, :118:64, :119:41
-      automatic logic _GEN_45;	// src/main/scala/Frontend/FTQ.scala:92:55, :118:64, :119:41
-      automatic logic _GEN_46;	// src/main/scala/Frontend/FTQ.scala:92:55, :118:64, :119:41
-      automatic logic _GEN_47;	// src/main/scala/Frontend/FTQ.scala:92:55, :118:64, :119:41
-      automatic logic _GEN_48;	// src/main/scala/Frontend/FTQ.scala:92:55, :118:64, :119:41
-      automatic logic _GEN_49;	// src/main/scala/Frontend/FTQ.scala:92:55, :118:64, :119:41
-      automatic logic _GEN_50;	// src/main/scala/Frontend/FTQ.scala:92:55, :118:64, :119:41
-      automatic logic _GEN_51;	// src/main/scala/Frontend/FTQ.scala:92:55, :118:64, :119:41
-      automatic logic _GEN_52;	// src/main/scala/Frontend/FTQ.scala:92:55, :118:64, :119:41
-      automatic logic _GEN_53;	// src/main/scala/Frontend/FTQ.scala:92:55, :118:64, :119:41
-      automatic logic _GEN_54;	// src/main/scala/Frontend/FTQ.scala:92:55, :118:64, :119:41
-      automatic logic _GEN_55 = io_flush | dq & front_index == 4'h0;	// src/main/scala/Frontend/FTQ.scala:69:34, :72:37, :92:55, :131:56, :135:13, :136:26, :140:19, :142:20
-      automatic logic _GEN_56 = io_flush | dq & front_index == 4'h1;	// src/main/scala/Frontend/FTQ.scala:72:37, :92:55, :131:56, :135:13, :136:26, :140:19, :142:20
-      automatic logic _GEN_57 = io_flush | dq & front_index == 4'h2;	// src/main/scala/Frontend/FTQ.scala:72:37, :92:55, :131:56, :135:13, :136:26, :140:19, :142:20
-      automatic logic _GEN_58 = io_flush | dq & front_index == 4'h3;	// src/main/scala/Frontend/FTQ.scala:72:37, :92:55, :131:56, :135:13, :136:26, :140:19, :142:20
-      automatic logic _GEN_59 = io_flush | dq & front_index == 4'h4;	// src/main/scala/Frontend/FTQ.scala:72:37, :92:55, :131:56, :135:13, :136:26, :140:19, :142:20
-      automatic logic _GEN_60 = io_flush | dq & front_index == 4'h5;	// src/main/scala/Frontend/FTQ.scala:72:37, :92:55, :131:56, :135:13, :136:26, :140:19, :142:20
-      automatic logic _GEN_61 = io_flush | dq & front_index == 4'h6;	// src/main/scala/Frontend/FTQ.scala:72:37, :92:55, :131:56, :135:13, :136:26, :140:19, :142:20
-      automatic logic _GEN_62 = io_flush | dq & front_index == 4'h7;	// src/main/scala/Frontend/FTQ.scala:72:37, :92:55, :131:56, :135:13, :136:26, :140:19, :142:20
-      automatic logic _GEN_63 = io_flush | dq & front_index == 4'h8;	// src/main/scala/Frontend/FTQ.scala:72:37, :92:55, :131:56, :135:13, :136:26, :140:19, :142:20
-      automatic logic _GEN_64 = io_flush | dq & front_index == 4'h9;	// src/main/scala/Frontend/FTQ.scala:72:37, :92:55, :131:56, :135:13, :136:26, :140:19, :142:20
-      automatic logic _GEN_65 = io_flush | dq & front_index == 4'hA;	// src/main/scala/Frontend/FTQ.scala:72:37, :92:55, :131:56, :135:13, :136:26, :140:19, :142:20
-      automatic logic _GEN_66 = io_flush | dq & front_index == 4'hB;	// src/main/scala/Frontend/FTQ.scala:72:37, :92:55, :131:56, :135:13, :136:26, :140:19, :142:20
-      automatic logic _GEN_67 = io_flush | dq & front_index == 4'hC;	// src/main/scala/Frontend/FTQ.scala:72:37, :92:55, :131:56, :135:13, :136:26, :140:19, :142:20
-      automatic logic _GEN_68 = io_flush | dq & front_index == 4'hD;	// src/main/scala/Frontend/FTQ.scala:72:37, :92:55, :131:56, :135:13, :136:26, :140:19, :142:20
-      automatic logic _GEN_69 = io_flush | dq & front_index == 4'hE;	// src/main/scala/Frontend/FTQ.scala:72:37, :92:55, :131:56, :135:13, :136:26, :140:19, :142:20
-      automatic logic _GEN_70 = io_flush | dq & (&front_index);	// src/main/scala/Frontend/FTQ.scala:72:37, :92:55, :131:56, :135:13, :136:26, :140:19, :142:20
-      _GEN_6 = io_predictions_valid & ~full;	// src/main/scala/Frontend/FTQ.scala:92:31, :164:81, :166:29
-      _GEN_8 = _GEN_6 & _GEN_7;	// src/main/scala/Frontend/FTQ.scala:76:22, :92:{31,55}, :93:37
-      _GEN_10 = _GEN_6 & _GEN_9;	// src/main/scala/Frontend/FTQ.scala:76:22, :92:{31,55}, :93:37
-      _GEN_12 = _GEN_6 & _GEN_11;	// src/main/scala/Frontend/FTQ.scala:76:22, :92:{31,55}, :93:37
-      _GEN_14 = _GEN_6 & _GEN_13;	// src/main/scala/Frontend/FTQ.scala:76:22, :92:{31,55}, :93:37
-      _GEN_16 = _GEN_6 & _GEN_15;	// src/main/scala/Frontend/FTQ.scala:76:22, :92:{31,55}, :93:37
-      _GEN_18 = _GEN_6 & _GEN_17;	// src/main/scala/Frontend/FTQ.scala:76:22, :92:{31,55}, :93:37
-      _GEN_20 = _GEN_6 & _GEN_19;	// src/main/scala/Frontend/FTQ.scala:76:22, :92:{31,55}, :93:37
-      _GEN_22 = _GEN_6 & _GEN_21;	// src/main/scala/Frontend/FTQ.scala:76:22, :92:{31,55}, :93:37
-      _GEN_24 = _GEN_6 & _GEN_23;	// src/main/scala/Frontend/FTQ.scala:76:22, :92:{31,55}, :93:37
-      _GEN_26 = _GEN_6 & _GEN_25;	// src/main/scala/Frontend/FTQ.scala:76:22, :92:{31,55}, :93:37
-      _GEN_28 = _GEN_6 & _GEN_27;	// src/main/scala/Frontend/FTQ.scala:76:22, :92:{31,55}, :93:37
-      _GEN_30 = _GEN_6 & _GEN_29;	// src/main/scala/Frontend/FTQ.scala:76:22, :92:{31,55}, :93:37
-      _GEN_32 = _GEN_6 & _GEN_31;	// src/main/scala/Frontend/FTQ.scala:76:22, :92:{31,55}, :93:37
-      _GEN_34 = _GEN_6 & _GEN_33;	// src/main/scala/Frontend/FTQ.scala:76:22, :92:{31,55}, :93:37
-      _GEN_36 = _GEN_6 & _GEN_35;	// src/main/scala/Frontend/FTQ.scala:76:22, :92:{31,55}, :93:37
-      _GEN_37 = _GEN_6 & (&back_index);	// src/main/scala/Frontend/FTQ.scala:73:35, :76:22, :92:{31,55}, :93:37
-      _GEN_39 = _GEN_38 & io_FU_outputs_0_bits_FTQ_index == 4'h0;	// src/main/scala/Frontend/FTQ.scala:69:34, :92:55, :118:{19,32,52,64}, :119:41
-      _GEN_40 = _GEN_38 & io_FU_outputs_0_bits_FTQ_index == 4'h1;	// src/main/scala/Frontend/FTQ.scala:92:55, :118:{19,32,52,64}, :119:41
-      _GEN_41 = _GEN_38 & io_FU_outputs_0_bits_FTQ_index == 4'h2;	// src/main/scala/Frontend/FTQ.scala:92:55, :118:{19,32,52,64}, :119:41
-      _GEN_42 = _GEN_38 & io_FU_outputs_0_bits_FTQ_index == 4'h3;	// src/main/scala/Frontend/FTQ.scala:92:55, :118:{19,32,52,64}, :119:41
-      _GEN_43 = _GEN_38 & io_FU_outputs_0_bits_FTQ_index == 4'h4;	// src/main/scala/Frontend/FTQ.scala:92:55, :118:{19,32,52,64}, :119:41
-      _GEN_44 = _GEN_38 & io_FU_outputs_0_bits_FTQ_index == 4'h5;	// src/main/scala/Frontend/FTQ.scala:92:55, :118:{19,32,52,64}, :119:41
-      _GEN_45 = _GEN_38 & io_FU_outputs_0_bits_FTQ_index == 4'h6;	// src/main/scala/Frontend/FTQ.scala:92:55, :118:{19,32,52,64}, :119:41
-      _GEN_46 = _GEN_38 & io_FU_outputs_0_bits_FTQ_index == 4'h7;	// src/main/scala/Frontend/FTQ.scala:92:55, :118:{19,32,52,64}, :119:41
-      _GEN_47 = _GEN_38 & io_FU_outputs_0_bits_FTQ_index == 4'h8;	// src/main/scala/Frontend/FTQ.scala:92:55, :118:{19,32,52,64}, :119:41
-      _GEN_48 = _GEN_38 & io_FU_outputs_0_bits_FTQ_index == 4'h9;	// src/main/scala/Frontend/FTQ.scala:92:55, :118:{19,32,52,64}, :119:41
-      _GEN_49 = _GEN_38 & io_FU_outputs_0_bits_FTQ_index == 4'hA;	// src/main/scala/Frontend/FTQ.scala:92:55, :118:{19,32,52,64}, :119:41
-      _GEN_50 = _GEN_38 & io_FU_outputs_0_bits_FTQ_index == 4'hB;	// src/main/scala/Frontend/FTQ.scala:92:55, :118:{19,32,52,64}, :119:41
-      _GEN_51 = _GEN_38 & io_FU_outputs_0_bits_FTQ_index == 4'hC;	// src/main/scala/Frontend/FTQ.scala:92:55, :118:{19,32,52,64}, :119:41
-      _GEN_52 = _GEN_38 & io_FU_outputs_0_bits_FTQ_index == 4'hD;	// src/main/scala/Frontend/FTQ.scala:92:55, :118:{19,32,52,64}, :119:41
-      _GEN_53 = _GEN_38 & io_FU_outputs_0_bits_FTQ_index == 4'hE;	// src/main/scala/Frontend/FTQ.scala:92:55, :118:{19,32,52,64}, :119:41
-      _GEN_54 = _GEN_38 & (&io_FU_outputs_0_bits_FTQ_index);	// src/main/scala/Frontend/FTQ.scala:92:55, :118:{19,32,52,64}, :119:41
+        & io_FU_outputs_0_bits_branch_taken;	// src/main/scala/Frontend/FTQ.scala:119:77, :122:{19,32,52}
+      automatic logic _GEN_40;	// src/main/scala/Frontend/FTQ.scala:95:55, :122:64, :123:41
+      automatic logic _GEN_41;	// src/main/scala/Frontend/FTQ.scala:95:55, :122:64, :123:41
+      automatic logic _GEN_42;	// src/main/scala/Frontend/FTQ.scala:95:55, :122:64, :123:41
+      automatic logic _GEN_43;	// src/main/scala/Frontend/FTQ.scala:95:55, :122:64, :123:41
+      automatic logic _GEN_44;	// src/main/scala/Frontend/FTQ.scala:95:55, :122:64, :123:41
+      automatic logic _GEN_45;	// src/main/scala/Frontend/FTQ.scala:95:55, :122:64, :123:41
+      automatic logic _GEN_46;	// src/main/scala/Frontend/FTQ.scala:95:55, :122:64, :123:41
+      automatic logic _GEN_47;	// src/main/scala/Frontend/FTQ.scala:95:55, :122:64, :123:41
+      automatic logic _GEN_48;	// src/main/scala/Frontend/FTQ.scala:95:55, :122:64, :123:41
+      automatic logic _GEN_49;	// src/main/scala/Frontend/FTQ.scala:95:55, :122:64, :123:41
+      automatic logic _GEN_50;	// src/main/scala/Frontend/FTQ.scala:95:55, :122:64, :123:41
+      automatic logic _GEN_51;	// src/main/scala/Frontend/FTQ.scala:95:55, :122:64, :123:41
+      automatic logic _GEN_52;	// src/main/scala/Frontend/FTQ.scala:95:55, :122:64, :123:41
+      automatic logic _GEN_53;	// src/main/scala/Frontend/FTQ.scala:95:55, :122:64, :123:41
+      automatic logic _GEN_54;	// src/main/scala/Frontend/FTQ.scala:95:55, :122:64, :123:41
+      automatic logic _GEN_55;	// src/main/scala/Frontend/FTQ.scala:95:55, :122:64, :123:41
+      automatic logic _GEN_56 = io_flush | dq & front_index == 4'h0;	// src/main/scala/Frontend/FTQ.scala:70:34, :73:37, :95:55, :136:56, :140:13, :141:26, :145:19, :147:20
+      automatic logic _GEN_57 = io_flush | dq & front_index == 4'h1;	// src/main/scala/Frontend/FTQ.scala:73:37, :95:55, :136:56, :140:13, :141:26, :145:19, :147:20
+      automatic logic _GEN_58 = io_flush | dq & front_index == 4'h2;	// src/main/scala/Frontend/FTQ.scala:73:37, :95:55, :136:56, :140:13, :141:26, :145:19, :147:20
+      automatic logic _GEN_59 = io_flush | dq & front_index == 4'h3;	// src/main/scala/Frontend/FTQ.scala:73:37, :95:55, :136:56, :140:13, :141:26, :145:19, :147:20
+      automatic logic _GEN_60 = io_flush | dq & front_index == 4'h4;	// src/main/scala/Frontend/FTQ.scala:73:37, :95:55, :136:56, :140:13, :141:26, :145:19, :147:20
+      automatic logic _GEN_61 = io_flush | dq & front_index == 4'h5;	// src/main/scala/Frontend/FTQ.scala:73:37, :95:55, :136:56, :140:13, :141:26, :145:19, :147:20
+      automatic logic _GEN_62 = io_flush | dq & front_index == 4'h6;	// src/main/scala/Frontend/FTQ.scala:73:37, :95:55, :136:56, :140:13, :141:26, :145:19, :147:20
+      automatic logic _GEN_63 = io_flush | dq & front_index == 4'h7;	// src/main/scala/Frontend/FTQ.scala:73:37, :95:55, :136:56, :140:13, :141:26, :145:19, :147:20
+      automatic logic _GEN_64 = io_flush | dq & front_index == 4'h8;	// src/main/scala/Frontend/FTQ.scala:73:37, :95:55, :136:56, :140:13, :141:26, :145:19, :147:20
+      automatic logic _GEN_65 = io_flush | dq & front_index == 4'h9;	// src/main/scala/Frontend/FTQ.scala:73:37, :95:55, :136:56, :140:13, :141:26, :145:19, :147:20
+      automatic logic _GEN_66 = io_flush | dq & front_index == 4'hA;	// src/main/scala/Frontend/FTQ.scala:73:37, :95:55, :136:56, :140:13, :141:26, :145:19, :147:20
+      automatic logic _GEN_67 = io_flush | dq & front_index == 4'hB;	// src/main/scala/Frontend/FTQ.scala:73:37, :95:55, :136:56, :140:13, :141:26, :145:19, :147:20
+      automatic logic _GEN_68 = io_flush | dq & front_index == 4'hC;	// src/main/scala/Frontend/FTQ.scala:73:37, :95:55, :136:56, :140:13, :141:26, :145:19, :147:20
+      automatic logic _GEN_69 = io_flush | dq & front_index == 4'hD;	// src/main/scala/Frontend/FTQ.scala:73:37, :95:55, :136:56, :140:13, :141:26, :145:19, :147:20
+      automatic logic _GEN_70 = io_flush | dq & front_index == 4'hE;	// src/main/scala/Frontend/FTQ.scala:73:37, :95:55, :136:56, :140:13, :141:26, :145:19, :147:20
+      automatic logic _GEN_71 = io_flush | dq & (&front_index);	// src/main/scala/Frontend/FTQ.scala:73:37, :95:55, :136:56, :140:13, :141:26, :145:19, :147:20
+      _GEN_7 = io_predictions_valid & ~full;	// src/main/scala/Frontend/FTQ.scala:95:31, :169:81, :171:29
+      _GEN_8 = back_index == 4'h0;	// src/main/scala/Frontend/FTQ.scala:70:34, :74:35, :96:37
+      _GEN_9 = _GEN_7 & _GEN_8;	// src/main/scala/Frontend/FTQ.scala:77:22, :95:{31,55}, :96:37
+      _GEN_10 = back_index == 4'h1;	// src/main/scala/Frontend/FTQ.scala:74:35, :96:37
+      _GEN_11 = _GEN_7 & _GEN_10;	// src/main/scala/Frontend/FTQ.scala:77:22, :95:{31,55}, :96:37
+      _GEN_12 = back_index == 4'h2;	// src/main/scala/Frontend/FTQ.scala:74:35, :96:37
+      _GEN_13 = _GEN_7 & _GEN_12;	// src/main/scala/Frontend/FTQ.scala:77:22, :95:{31,55}, :96:37
+      _GEN_14 = back_index == 4'h3;	// src/main/scala/Frontend/FTQ.scala:74:35, :96:37
+      _GEN_15 = _GEN_7 & _GEN_14;	// src/main/scala/Frontend/FTQ.scala:77:22, :95:{31,55}, :96:37
+      _GEN_16 = back_index == 4'h4;	// src/main/scala/Frontend/FTQ.scala:74:35, :96:37
+      _GEN_17 = _GEN_7 & _GEN_16;	// src/main/scala/Frontend/FTQ.scala:77:22, :95:{31,55}, :96:37
+      _GEN_18 = back_index == 4'h5;	// src/main/scala/Frontend/FTQ.scala:74:35, :96:37
+      _GEN_19 = _GEN_7 & _GEN_18;	// src/main/scala/Frontend/FTQ.scala:77:22, :95:{31,55}, :96:37
+      _GEN_20 = back_index == 4'h6;	// src/main/scala/Frontend/FTQ.scala:74:35, :96:37
+      _GEN_21 = _GEN_7 & _GEN_20;	// src/main/scala/Frontend/FTQ.scala:77:22, :95:{31,55}, :96:37
+      _GEN_22 = back_index == 4'h7;	// src/main/scala/Frontend/FTQ.scala:74:35, :96:37
+      _GEN_23 = _GEN_7 & _GEN_22;	// src/main/scala/Frontend/FTQ.scala:77:22, :95:{31,55}, :96:37
+      _GEN_24 = back_index == 4'h8;	// src/main/scala/Frontend/FTQ.scala:74:35, :96:37
+      _GEN_25 = _GEN_7 & _GEN_24;	// src/main/scala/Frontend/FTQ.scala:77:22, :95:{31,55}, :96:37
+      _GEN_26 = back_index == 4'h9;	// src/main/scala/Frontend/FTQ.scala:74:35, :96:37
+      _GEN_27 = _GEN_7 & _GEN_26;	// src/main/scala/Frontend/FTQ.scala:77:22, :95:{31,55}, :96:37
+      _GEN_28 = back_index == 4'hA;	// src/main/scala/Frontend/FTQ.scala:74:35, :96:37
+      _GEN_29 = _GEN_7 & _GEN_28;	// src/main/scala/Frontend/FTQ.scala:77:22, :95:{31,55}, :96:37
+      _GEN_30 = back_index == 4'hB;	// src/main/scala/Frontend/FTQ.scala:74:35, :96:37
+      _GEN_31 = _GEN_7 & _GEN_30;	// src/main/scala/Frontend/FTQ.scala:77:22, :95:{31,55}, :96:37
+      _GEN_32 = back_index == 4'hC;	// src/main/scala/Frontend/FTQ.scala:74:35, :96:37
+      _GEN_33 = _GEN_7 & _GEN_32;	// src/main/scala/Frontend/FTQ.scala:77:22, :95:{31,55}, :96:37
+      _GEN_34 = back_index == 4'hD;	// src/main/scala/Frontend/FTQ.scala:74:35, :96:37
+      _GEN_35 = _GEN_7 & _GEN_34;	// src/main/scala/Frontend/FTQ.scala:77:22, :95:{31,55}, :96:37
+      _GEN_36 = back_index == 4'hE;	// src/main/scala/Frontend/FTQ.scala:74:35, :96:37
+      _GEN_37 = _GEN_7 & _GEN_36;	// src/main/scala/Frontend/FTQ.scala:77:22, :95:{31,55}, :96:37
+      _GEN_38 = _GEN_7 & (&back_index);	// src/main/scala/Frontend/FTQ.scala:74:35, :77:22, :95:{31,55}, :96:37
+      _GEN_40 = _GEN_39 & io_FU_outputs_0_bits_FTQ_index == 4'h0;	// src/main/scala/Frontend/FTQ.scala:70:34, :95:55, :122:{19,32,52,64}, :123:41
+      _GEN_41 = _GEN_39 & io_FU_outputs_0_bits_FTQ_index == 4'h1;	// src/main/scala/Frontend/FTQ.scala:95:55, :122:{19,32,52,64}, :123:41
+      _GEN_42 = _GEN_39 & io_FU_outputs_0_bits_FTQ_index == 4'h2;	// src/main/scala/Frontend/FTQ.scala:95:55, :122:{19,32,52,64}, :123:41
+      _GEN_43 = _GEN_39 & io_FU_outputs_0_bits_FTQ_index == 4'h3;	// src/main/scala/Frontend/FTQ.scala:95:55, :122:{19,32,52,64}, :123:41
+      _GEN_44 = _GEN_39 & io_FU_outputs_0_bits_FTQ_index == 4'h4;	// src/main/scala/Frontend/FTQ.scala:95:55, :122:{19,32,52,64}, :123:41
+      _GEN_45 = _GEN_39 & io_FU_outputs_0_bits_FTQ_index == 4'h5;	// src/main/scala/Frontend/FTQ.scala:95:55, :122:{19,32,52,64}, :123:41
+      _GEN_46 = _GEN_39 & io_FU_outputs_0_bits_FTQ_index == 4'h6;	// src/main/scala/Frontend/FTQ.scala:95:55, :122:{19,32,52,64}, :123:41
+      _GEN_47 = _GEN_39 & io_FU_outputs_0_bits_FTQ_index == 4'h7;	// src/main/scala/Frontend/FTQ.scala:95:55, :122:{19,32,52,64}, :123:41
+      _GEN_48 = _GEN_39 & io_FU_outputs_0_bits_FTQ_index == 4'h8;	// src/main/scala/Frontend/FTQ.scala:95:55, :122:{19,32,52,64}, :123:41
+      _GEN_49 = _GEN_39 & io_FU_outputs_0_bits_FTQ_index == 4'h9;	// src/main/scala/Frontend/FTQ.scala:95:55, :122:{19,32,52,64}, :123:41
+      _GEN_50 = _GEN_39 & io_FU_outputs_0_bits_FTQ_index == 4'hA;	// src/main/scala/Frontend/FTQ.scala:95:55, :122:{19,32,52,64}, :123:41
+      _GEN_51 = _GEN_39 & io_FU_outputs_0_bits_FTQ_index == 4'hB;	// src/main/scala/Frontend/FTQ.scala:95:55, :122:{19,32,52,64}, :123:41
+      _GEN_52 = _GEN_39 & io_FU_outputs_0_bits_FTQ_index == 4'hC;	// src/main/scala/Frontend/FTQ.scala:95:55, :122:{19,32,52,64}, :123:41
+      _GEN_53 = _GEN_39 & io_FU_outputs_0_bits_FTQ_index == 4'hD;	// src/main/scala/Frontend/FTQ.scala:95:55, :122:{19,32,52,64}, :123:41
+      _GEN_54 = _GEN_39 & io_FU_outputs_0_bits_FTQ_index == 4'hE;	// src/main/scala/Frontend/FTQ.scala:95:55, :122:{19,32,52,64}, :123:41
+      _GEN_55 = _GEN_39 & (&io_FU_outputs_0_bits_FTQ_index);	// src/main/scala/Frontend/FTQ.scala:95:55, :122:{19,32,52,64}, :123:41
       if (io_flush) begin	// src/main/scala/Frontend/FTQ.scala:48:16
-        front_pointer <= 5'h0;	// src/main/scala/Frontend/FTQ.scala:69:34
-        back_pointer <= 5'h0;	// src/main/scala/Frontend/FTQ.scala:69:34, :70:34
+        front_pointer <= 5'h0;	// src/main/scala/Frontend/FTQ.scala:70:34
+        back_pointer <= 5'h0;	// src/main/scala/Frontend/FTQ.scala:70:34, :71:34
       end
       else begin	// src/main/scala/Frontend/FTQ.scala:48:16
-        if (dq)	// src/main/scala/Frontend/FTQ.scala:131:56
-          front_pointer <= front_pointer + 5'h1;	// src/main/scala/Frontend/FTQ.scala:69:34, :137:40
-        if (_GEN_6)	// src/main/scala/Frontend/FTQ.scala:92:31
-          back_pointer <= back_pointer + 5'h1;	// src/main/scala/Frontend/FTQ.scala:70:34, :95:38
+        if (dq)	// src/main/scala/Frontend/FTQ.scala:136:56
+          front_pointer <= front_pointer + 5'h1;	// src/main/scala/Frontend/FTQ.scala:70:34, :142:40
+        if (_GEN_7)	// src/main/scala/Frontend/FTQ.scala:95:31
+          back_pointer <= back_pointer + 5'h1;	// src/main/scala/Frontend/FTQ.scala:71:34, :99:38
       end
       FTQ_0_valid <=
-        ~_GEN_55
-        & (_GEN_6
-             ? _GEN_7 | (_GEN_7 ? io_predictions_bits_valid : FTQ_0_valid)
-             : FTQ_0_valid);	// src/main/scala/Frontend/FTQ.scala:76:22, :92:{31,55}, :93:37, :94:37, :135:13, :136:26, :140:19, :142:20
-      if (_GEN_55) begin	// src/main/scala/Frontend/FTQ.scala:92:55, :135:13, :136:26, :140:19, :142:20
-        FTQ_0_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-        FTQ_0_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-        FTQ_0_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:76:{22,64}
-        FTQ_0_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-        FTQ_0_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
+        ~_GEN_56
+        & (_GEN_7
+             ? _GEN_8 | (_GEN_8 ? io_predictions_bits_valid : FTQ_0_valid)
+             : FTQ_0_valid);	// src/main/scala/Frontend/FTQ.scala:77:22, :95:{31,55}, :96:37, :98:37, :140:13, :141:26, :145:19, :147:20
+      if (_GEN_56) begin	// src/main/scala/Frontend/FTQ.scala:95:55, :140:13, :141:26, :145:19, :147:20
+        FTQ_0_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+        FTQ_0_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+        FTQ_0_ROB_index <= 6'h0;	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_0_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:77:{22,64}
+        FTQ_0_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+        FTQ_0_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
       end
-      else begin	// src/main/scala/Frontend/FTQ.scala:92:55, :135:13, :136:26, :140:19, :142:20
-        if (_GEN_8) begin	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37
-          FTQ_0_fetch_PC <= io_predictions_bits_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_0_predicted_PC <= io_predictions_bits_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_0_br_type <= io_predictions_bits_br_type;	// src/main/scala/Frontend/FTQ.scala:76:22
+      else begin	// src/main/scala/Frontend/FTQ.scala:95:55, :140:13, :141:26, :145:19, :147:20
+        if (_GEN_9) begin	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37
+          FTQ_0_fetch_PC <= io_predictions_bits_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_0_predicted_PC <= io_predictions_bits_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_0_br_type <= io_predictions_bits_br_type;	// src/main/scala/Frontend/FTQ.scala:77:22
         end
-        if (_GEN_39) begin	// src/main/scala/Frontend/FTQ.scala:92:55, :118:64, :119:41
-          FTQ_0_dominant_index <= io_FU_outputs_0_bits_fetch_packet_index;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_0_resolved_PC <= io_FU_outputs_0_bits_target_address;	// src/main/scala/Frontend/FTQ.scala:76:22
+        if (_GEN_7 & _GEN_8)	// src/main/scala/Frontend/FTQ.scala:77:22, :95:{31,55}, :96:37, :97:37
+          FTQ_0_ROB_index <= io_ROB_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+        if (_GEN_40) begin	// src/main/scala/Frontend/FTQ.scala:95:55, :122:64, :123:41
+          FTQ_0_dominant_index <= io_FU_outputs_0_bits_fetch_packet_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_0_resolved_PC <= io_FU_outputs_0_bits_target_address;	// src/main/scala/Frontend/FTQ.scala:77:22
         end
-        else if (_GEN_8) begin	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37
-          FTQ_0_dominant_index <= io_predictions_bits_dominant_index;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_0_resolved_PC <= io_predictions_bits_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
+        else if (_GEN_9) begin	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37
+          FTQ_0_dominant_index <= io_predictions_bits_dominant_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_0_resolved_PC <= io_predictions_bits_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
         end
       end
       FTQ_0_T_NT <=
-        ~_GEN_55 & (_GEN_39 | (_GEN_8 ? io_predictions_bits_T_NT : FTQ_0_T_NT));	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37, :118:64, :119:41, :121:41, :135:13, :136:26, :140:19, :142:20
+        ~_GEN_56 & (_GEN_40 | (_GEN_9 ? io_predictions_bits_T_NT : FTQ_0_T_NT));	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37, :122:64, :123:41, :125:41, :140:13, :141:26, :145:19, :147:20
       FTQ_1_valid <=
-        ~_GEN_56
-        & (_GEN_6
-             ? _GEN_9 | (_GEN_9 ? io_predictions_bits_valid : FTQ_1_valid)
-             : FTQ_1_valid);	// src/main/scala/Frontend/FTQ.scala:76:22, :92:{31,55}, :93:37, :94:37, :135:13, :136:26, :140:19, :142:20
-      if (_GEN_56) begin	// src/main/scala/Frontend/FTQ.scala:92:55, :135:13, :136:26, :140:19, :142:20
-        FTQ_1_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-        FTQ_1_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-        FTQ_1_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:76:{22,64}
-        FTQ_1_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-        FTQ_1_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
+        ~_GEN_57
+        & (_GEN_7
+             ? _GEN_10 | (_GEN_10 ? io_predictions_bits_valid : FTQ_1_valid)
+             : FTQ_1_valid);	// src/main/scala/Frontend/FTQ.scala:77:22, :95:{31,55}, :96:37, :98:37, :140:13, :141:26, :145:19, :147:20
+      if (_GEN_57) begin	// src/main/scala/Frontend/FTQ.scala:95:55, :140:13, :141:26, :145:19, :147:20
+        FTQ_1_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+        FTQ_1_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+        FTQ_1_ROB_index <= 6'h0;	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_1_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:77:{22,64}
+        FTQ_1_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+        FTQ_1_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
       end
-      else begin	// src/main/scala/Frontend/FTQ.scala:92:55, :135:13, :136:26, :140:19, :142:20
-        if (_GEN_10) begin	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37
-          FTQ_1_fetch_PC <= io_predictions_bits_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_1_predicted_PC <= io_predictions_bits_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_1_br_type <= io_predictions_bits_br_type;	// src/main/scala/Frontend/FTQ.scala:76:22
+      else begin	// src/main/scala/Frontend/FTQ.scala:95:55, :140:13, :141:26, :145:19, :147:20
+        if (_GEN_11) begin	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37
+          FTQ_1_fetch_PC <= io_predictions_bits_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_1_predicted_PC <= io_predictions_bits_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_1_br_type <= io_predictions_bits_br_type;	// src/main/scala/Frontend/FTQ.scala:77:22
         end
-        if (_GEN_40) begin	// src/main/scala/Frontend/FTQ.scala:92:55, :118:64, :119:41
-          FTQ_1_dominant_index <= io_FU_outputs_0_bits_fetch_packet_index;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_1_resolved_PC <= io_FU_outputs_0_bits_target_address;	// src/main/scala/Frontend/FTQ.scala:76:22
+        if (_GEN_7 & _GEN_10)	// src/main/scala/Frontend/FTQ.scala:77:22, :95:{31,55}, :96:37, :97:37
+          FTQ_1_ROB_index <= io_ROB_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+        if (_GEN_41) begin	// src/main/scala/Frontend/FTQ.scala:95:55, :122:64, :123:41
+          FTQ_1_dominant_index <= io_FU_outputs_0_bits_fetch_packet_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_1_resolved_PC <= io_FU_outputs_0_bits_target_address;	// src/main/scala/Frontend/FTQ.scala:77:22
         end
-        else if (_GEN_10) begin	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37
-          FTQ_1_dominant_index <= io_predictions_bits_dominant_index;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_1_resolved_PC <= io_predictions_bits_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
+        else if (_GEN_11) begin	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37
+          FTQ_1_dominant_index <= io_predictions_bits_dominant_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_1_resolved_PC <= io_predictions_bits_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
         end
       end
       FTQ_1_T_NT <=
-        ~_GEN_56 & (_GEN_40 | (_GEN_10 ? io_predictions_bits_T_NT : FTQ_1_T_NT));	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37, :118:64, :119:41, :121:41, :135:13, :136:26, :140:19, :142:20
+        ~_GEN_57 & (_GEN_41 | (_GEN_11 ? io_predictions_bits_T_NT : FTQ_1_T_NT));	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37, :122:64, :123:41, :125:41, :140:13, :141:26, :145:19, :147:20
       FTQ_2_valid <=
-        ~_GEN_57
-        & (_GEN_6
-             ? _GEN_11 | (_GEN_11 ? io_predictions_bits_valid : FTQ_2_valid)
-             : FTQ_2_valid);	// src/main/scala/Frontend/FTQ.scala:76:22, :92:{31,55}, :93:37, :94:37, :135:13, :136:26, :140:19, :142:20
-      if (_GEN_57) begin	// src/main/scala/Frontend/FTQ.scala:92:55, :135:13, :136:26, :140:19, :142:20
-        FTQ_2_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-        FTQ_2_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-        FTQ_2_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:76:{22,64}
-        FTQ_2_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-        FTQ_2_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
+        ~_GEN_58
+        & (_GEN_7
+             ? _GEN_12 | (_GEN_12 ? io_predictions_bits_valid : FTQ_2_valid)
+             : FTQ_2_valid);	// src/main/scala/Frontend/FTQ.scala:77:22, :95:{31,55}, :96:37, :98:37, :140:13, :141:26, :145:19, :147:20
+      if (_GEN_58) begin	// src/main/scala/Frontend/FTQ.scala:95:55, :140:13, :141:26, :145:19, :147:20
+        FTQ_2_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+        FTQ_2_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+        FTQ_2_ROB_index <= 6'h0;	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_2_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:77:{22,64}
+        FTQ_2_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+        FTQ_2_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
       end
-      else begin	// src/main/scala/Frontend/FTQ.scala:92:55, :135:13, :136:26, :140:19, :142:20
-        if (_GEN_12) begin	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37
-          FTQ_2_fetch_PC <= io_predictions_bits_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_2_predicted_PC <= io_predictions_bits_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_2_br_type <= io_predictions_bits_br_type;	// src/main/scala/Frontend/FTQ.scala:76:22
+      else begin	// src/main/scala/Frontend/FTQ.scala:95:55, :140:13, :141:26, :145:19, :147:20
+        if (_GEN_13) begin	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37
+          FTQ_2_fetch_PC <= io_predictions_bits_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_2_predicted_PC <= io_predictions_bits_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_2_br_type <= io_predictions_bits_br_type;	// src/main/scala/Frontend/FTQ.scala:77:22
         end
-        if (_GEN_41) begin	// src/main/scala/Frontend/FTQ.scala:92:55, :118:64, :119:41
-          FTQ_2_dominant_index <= io_FU_outputs_0_bits_fetch_packet_index;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_2_resolved_PC <= io_FU_outputs_0_bits_target_address;	// src/main/scala/Frontend/FTQ.scala:76:22
+        if (_GEN_7 & _GEN_12)	// src/main/scala/Frontend/FTQ.scala:77:22, :95:{31,55}, :96:37, :97:37
+          FTQ_2_ROB_index <= io_ROB_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+        if (_GEN_42) begin	// src/main/scala/Frontend/FTQ.scala:95:55, :122:64, :123:41
+          FTQ_2_dominant_index <= io_FU_outputs_0_bits_fetch_packet_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_2_resolved_PC <= io_FU_outputs_0_bits_target_address;	// src/main/scala/Frontend/FTQ.scala:77:22
         end
-        else if (_GEN_12) begin	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37
-          FTQ_2_dominant_index <= io_predictions_bits_dominant_index;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_2_resolved_PC <= io_predictions_bits_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
+        else if (_GEN_13) begin	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37
+          FTQ_2_dominant_index <= io_predictions_bits_dominant_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_2_resolved_PC <= io_predictions_bits_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
         end
       end
       FTQ_2_T_NT <=
-        ~_GEN_57 & (_GEN_41 | (_GEN_12 ? io_predictions_bits_T_NT : FTQ_2_T_NT));	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37, :118:64, :119:41, :121:41, :135:13, :136:26, :140:19, :142:20
+        ~_GEN_58 & (_GEN_42 | (_GEN_13 ? io_predictions_bits_T_NT : FTQ_2_T_NT));	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37, :122:64, :123:41, :125:41, :140:13, :141:26, :145:19, :147:20
       FTQ_3_valid <=
-        ~_GEN_58
-        & (_GEN_6
-             ? _GEN_13 | (_GEN_13 ? io_predictions_bits_valid : FTQ_3_valid)
-             : FTQ_3_valid);	// src/main/scala/Frontend/FTQ.scala:76:22, :92:{31,55}, :93:37, :94:37, :135:13, :136:26, :140:19, :142:20
-      if (_GEN_58) begin	// src/main/scala/Frontend/FTQ.scala:92:55, :135:13, :136:26, :140:19, :142:20
-        FTQ_3_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-        FTQ_3_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-        FTQ_3_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:76:{22,64}
-        FTQ_3_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-        FTQ_3_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
+        ~_GEN_59
+        & (_GEN_7
+             ? _GEN_14 | (_GEN_14 ? io_predictions_bits_valid : FTQ_3_valid)
+             : FTQ_3_valid);	// src/main/scala/Frontend/FTQ.scala:77:22, :95:{31,55}, :96:37, :98:37, :140:13, :141:26, :145:19, :147:20
+      if (_GEN_59) begin	// src/main/scala/Frontend/FTQ.scala:95:55, :140:13, :141:26, :145:19, :147:20
+        FTQ_3_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+        FTQ_3_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+        FTQ_3_ROB_index <= 6'h0;	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_3_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:77:{22,64}
+        FTQ_3_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+        FTQ_3_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
       end
-      else begin	// src/main/scala/Frontend/FTQ.scala:92:55, :135:13, :136:26, :140:19, :142:20
-        if (_GEN_14) begin	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37
-          FTQ_3_fetch_PC <= io_predictions_bits_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_3_predicted_PC <= io_predictions_bits_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_3_br_type <= io_predictions_bits_br_type;	// src/main/scala/Frontend/FTQ.scala:76:22
+      else begin	// src/main/scala/Frontend/FTQ.scala:95:55, :140:13, :141:26, :145:19, :147:20
+        if (_GEN_15) begin	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37
+          FTQ_3_fetch_PC <= io_predictions_bits_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_3_predicted_PC <= io_predictions_bits_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_3_br_type <= io_predictions_bits_br_type;	// src/main/scala/Frontend/FTQ.scala:77:22
         end
-        if (_GEN_42) begin	// src/main/scala/Frontend/FTQ.scala:92:55, :118:64, :119:41
-          FTQ_3_dominant_index <= io_FU_outputs_0_bits_fetch_packet_index;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_3_resolved_PC <= io_FU_outputs_0_bits_target_address;	// src/main/scala/Frontend/FTQ.scala:76:22
+        if (_GEN_7 & _GEN_14)	// src/main/scala/Frontend/FTQ.scala:77:22, :95:{31,55}, :96:37, :97:37
+          FTQ_3_ROB_index <= io_ROB_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+        if (_GEN_43) begin	// src/main/scala/Frontend/FTQ.scala:95:55, :122:64, :123:41
+          FTQ_3_dominant_index <= io_FU_outputs_0_bits_fetch_packet_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_3_resolved_PC <= io_FU_outputs_0_bits_target_address;	// src/main/scala/Frontend/FTQ.scala:77:22
         end
-        else if (_GEN_14) begin	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37
-          FTQ_3_dominant_index <= io_predictions_bits_dominant_index;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_3_resolved_PC <= io_predictions_bits_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
+        else if (_GEN_15) begin	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37
+          FTQ_3_dominant_index <= io_predictions_bits_dominant_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_3_resolved_PC <= io_predictions_bits_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
         end
       end
       FTQ_3_T_NT <=
-        ~_GEN_58 & (_GEN_42 | (_GEN_14 ? io_predictions_bits_T_NT : FTQ_3_T_NT));	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37, :118:64, :119:41, :121:41, :135:13, :136:26, :140:19, :142:20
+        ~_GEN_59 & (_GEN_43 | (_GEN_15 ? io_predictions_bits_T_NT : FTQ_3_T_NT));	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37, :122:64, :123:41, :125:41, :140:13, :141:26, :145:19, :147:20
       FTQ_4_valid <=
-        ~_GEN_59
-        & (_GEN_6
-             ? _GEN_15 | (_GEN_15 ? io_predictions_bits_valid : FTQ_4_valid)
-             : FTQ_4_valid);	// src/main/scala/Frontend/FTQ.scala:76:22, :92:{31,55}, :93:37, :94:37, :135:13, :136:26, :140:19, :142:20
-      if (_GEN_59) begin	// src/main/scala/Frontend/FTQ.scala:92:55, :135:13, :136:26, :140:19, :142:20
-        FTQ_4_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-        FTQ_4_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-        FTQ_4_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:76:{22,64}
-        FTQ_4_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-        FTQ_4_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
+        ~_GEN_60
+        & (_GEN_7
+             ? _GEN_16 | (_GEN_16 ? io_predictions_bits_valid : FTQ_4_valid)
+             : FTQ_4_valid);	// src/main/scala/Frontend/FTQ.scala:77:22, :95:{31,55}, :96:37, :98:37, :140:13, :141:26, :145:19, :147:20
+      if (_GEN_60) begin	// src/main/scala/Frontend/FTQ.scala:95:55, :140:13, :141:26, :145:19, :147:20
+        FTQ_4_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+        FTQ_4_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+        FTQ_4_ROB_index <= 6'h0;	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_4_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:77:{22,64}
+        FTQ_4_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+        FTQ_4_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
       end
-      else begin	// src/main/scala/Frontend/FTQ.scala:92:55, :135:13, :136:26, :140:19, :142:20
-        if (_GEN_16) begin	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37
-          FTQ_4_fetch_PC <= io_predictions_bits_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_4_predicted_PC <= io_predictions_bits_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_4_br_type <= io_predictions_bits_br_type;	// src/main/scala/Frontend/FTQ.scala:76:22
+      else begin	// src/main/scala/Frontend/FTQ.scala:95:55, :140:13, :141:26, :145:19, :147:20
+        if (_GEN_17) begin	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37
+          FTQ_4_fetch_PC <= io_predictions_bits_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_4_predicted_PC <= io_predictions_bits_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_4_br_type <= io_predictions_bits_br_type;	// src/main/scala/Frontend/FTQ.scala:77:22
         end
-        if (_GEN_43) begin	// src/main/scala/Frontend/FTQ.scala:92:55, :118:64, :119:41
-          FTQ_4_dominant_index <= io_FU_outputs_0_bits_fetch_packet_index;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_4_resolved_PC <= io_FU_outputs_0_bits_target_address;	// src/main/scala/Frontend/FTQ.scala:76:22
+        if (_GEN_7 & _GEN_16)	// src/main/scala/Frontend/FTQ.scala:77:22, :95:{31,55}, :96:37, :97:37
+          FTQ_4_ROB_index <= io_ROB_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+        if (_GEN_44) begin	// src/main/scala/Frontend/FTQ.scala:95:55, :122:64, :123:41
+          FTQ_4_dominant_index <= io_FU_outputs_0_bits_fetch_packet_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_4_resolved_PC <= io_FU_outputs_0_bits_target_address;	// src/main/scala/Frontend/FTQ.scala:77:22
         end
-        else if (_GEN_16) begin	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37
-          FTQ_4_dominant_index <= io_predictions_bits_dominant_index;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_4_resolved_PC <= io_predictions_bits_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
+        else if (_GEN_17) begin	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37
+          FTQ_4_dominant_index <= io_predictions_bits_dominant_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_4_resolved_PC <= io_predictions_bits_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
         end
       end
       FTQ_4_T_NT <=
-        ~_GEN_59 & (_GEN_43 | (_GEN_16 ? io_predictions_bits_T_NT : FTQ_4_T_NT));	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37, :118:64, :119:41, :121:41, :135:13, :136:26, :140:19, :142:20
+        ~_GEN_60 & (_GEN_44 | (_GEN_17 ? io_predictions_bits_T_NT : FTQ_4_T_NT));	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37, :122:64, :123:41, :125:41, :140:13, :141:26, :145:19, :147:20
       FTQ_5_valid <=
-        ~_GEN_60
-        & (_GEN_6
-             ? _GEN_17 | (_GEN_17 ? io_predictions_bits_valid : FTQ_5_valid)
-             : FTQ_5_valid);	// src/main/scala/Frontend/FTQ.scala:76:22, :92:{31,55}, :93:37, :94:37, :135:13, :136:26, :140:19, :142:20
-      if (_GEN_60) begin	// src/main/scala/Frontend/FTQ.scala:92:55, :135:13, :136:26, :140:19, :142:20
-        FTQ_5_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-        FTQ_5_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-        FTQ_5_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:76:{22,64}
-        FTQ_5_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-        FTQ_5_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
+        ~_GEN_61
+        & (_GEN_7
+             ? _GEN_18 | (_GEN_18 ? io_predictions_bits_valid : FTQ_5_valid)
+             : FTQ_5_valid);	// src/main/scala/Frontend/FTQ.scala:77:22, :95:{31,55}, :96:37, :98:37, :140:13, :141:26, :145:19, :147:20
+      if (_GEN_61) begin	// src/main/scala/Frontend/FTQ.scala:95:55, :140:13, :141:26, :145:19, :147:20
+        FTQ_5_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+        FTQ_5_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+        FTQ_5_ROB_index <= 6'h0;	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_5_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:77:{22,64}
+        FTQ_5_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+        FTQ_5_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
       end
-      else begin	// src/main/scala/Frontend/FTQ.scala:92:55, :135:13, :136:26, :140:19, :142:20
-        if (_GEN_18) begin	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37
-          FTQ_5_fetch_PC <= io_predictions_bits_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_5_predicted_PC <= io_predictions_bits_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_5_br_type <= io_predictions_bits_br_type;	// src/main/scala/Frontend/FTQ.scala:76:22
+      else begin	// src/main/scala/Frontend/FTQ.scala:95:55, :140:13, :141:26, :145:19, :147:20
+        if (_GEN_19) begin	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37
+          FTQ_5_fetch_PC <= io_predictions_bits_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_5_predicted_PC <= io_predictions_bits_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_5_br_type <= io_predictions_bits_br_type;	// src/main/scala/Frontend/FTQ.scala:77:22
         end
-        if (_GEN_44) begin	// src/main/scala/Frontend/FTQ.scala:92:55, :118:64, :119:41
-          FTQ_5_dominant_index <= io_FU_outputs_0_bits_fetch_packet_index;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_5_resolved_PC <= io_FU_outputs_0_bits_target_address;	// src/main/scala/Frontend/FTQ.scala:76:22
+        if (_GEN_7 & _GEN_18)	// src/main/scala/Frontend/FTQ.scala:77:22, :95:{31,55}, :96:37, :97:37
+          FTQ_5_ROB_index <= io_ROB_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+        if (_GEN_45) begin	// src/main/scala/Frontend/FTQ.scala:95:55, :122:64, :123:41
+          FTQ_5_dominant_index <= io_FU_outputs_0_bits_fetch_packet_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_5_resolved_PC <= io_FU_outputs_0_bits_target_address;	// src/main/scala/Frontend/FTQ.scala:77:22
         end
-        else if (_GEN_18) begin	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37
-          FTQ_5_dominant_index <= io_predictions_bits_dominant_index;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_5_resolved_PC <= io_predictions_bits_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
+        else if (_GEN_19) begin	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37
+          FTQ_5_dominant_index <= io_predictions_bits_dominant_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_5_resolved_PC <= io_predictions_bits_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
         end
       end
       FTQ_5_T_NT <=
-        ~_GEN_60 & (_GEN_44 | (_GEN_18 ? io_predictions_bits_T_NT : FTQ_5_T_NT));	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37, :118:64, :119:41, :121:41, :135:13, :136:26, :140:19, :142:20
+        ~_GEN_61 & (_GEN_45 | (_GEN_19 ? io_predictions_bits_T_NT : FTQ_5_T_NT));	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37, :122:64, :123:41, :125:41, :140:13, :141:26, :145:19, :147:20
       FTQ_6_valid <=
-        ~_GEN_61
-        & (_GEN_6
-             ? _GEN_19 | (_GEN_19 ? io_predictions_bits_valid : FTQ_6_valid)
-             : FTQ_6_valid);	// src/main/scala/Frontend/FTQ.scala:76:22, :92:{31,55}, :93:37, :94:37, :135:13, :136:26, :140:19, :142:20
-      if (_GEN_61) begin	// src/main/scala/Frontend/FTQ.scala:92:55, :135:13, :136:26, :140:19, :142:20
-        FTQ_6_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-        FTQ_6_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-        FTQ_6_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:76:{22,64}
-        FTQ_6_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-        FTQ_6_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
+        ~_GEN_62
+        & (_GEN_7
+             ? _GEN_20 | (_GEN_20 ? io_predictions_bits_valid : FTQ_6_valid)
+             : FTQ_6_valid);	// src/main/scala/Frontend/FTQ.scala:77:22, :95:{31,55}, :96:37, :98:37, :140:13, :141:26, :145:19, :147:20
+      if (_GEN_62) begin	// src/main/scala/Frontend/FTQ.scala:95:55, :140:13, :141:26, :145:19, :147:20
+        FTQ_6_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+        FTQ_6_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+        FTQ_6_ROB_index <= 6'h0;	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_6_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:77:{22,64}
+        FTQ_6_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+        FTQ_6_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
       end
-      else begin	// src/main/scala/Frontend/FTQ.scala:92:55, :135:13, :136:26, :140:19, :142:20
-        if (_GEN_20) begin	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37
-          FTQ_6_fetch_PC <= io_predictions_bits_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_6_predicted_PC <= io_predictions_bits_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_6_br_type <= io_predictions_bits_br_type;	// src/main/scala/Frontend/FTQ.scala:76:22
+      else begin	// src/main/scala/Frontend/FTQ.scala:95:55, :140:13, :141:26, :145:19, :147:20
+        if (_GEN_21) begin	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37
+          FTQ_6_fetch_PC <= io_predictions_bits_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_6_predicted_PC <= io_predictions_bits_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_6_br_type <= io_predictions_bits_br_type;	// src/main/scala/Frontend/FTQ.scala:77:22
         end
-        if (_GEN_45) begin	// src/main/scala/Frontend/FTQ.scala:92:55, :118:64, :119:41
-          FTQ_6_dominant_index <= io_FU_outputs_0_bits_fetch_packet_index;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_6_resolved_PC <= io_FU_outputs_0_bits_target_address;	// src/main/scala/Frontend/FTQ.scala:76:22
+        if (_GEN_7 & _GEN_20)	// src/main/scala/Frontend/FTQ.scala:77:22, :95:{31,55}, :96:37, :97:37
+          FTQ_6_ROB_index <= io_ROB_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+        if (_GEN_46) begin	// src/main/scala/Frontend/FTQ.scala:95:55, :122:64, :123:41
+          FTQ_6_dominant_index <= io_FU_outputs_0_bits_fetch_packet_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_6_resolved_PC <= io_FU_outputs_0_bits_target_address;	// src/main/scala/Frontend/FTQ.scala:77:22
         end
-        else if (_GEN_20) begin	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37
-          FTQ_6_dominant_index <= io_predictions_bits_dominant_index;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_6_resolved_PC <= io_predictions_bits_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
+        else if (_GEN_21) begin	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37
+          FTQ_6_dominant_index <= io_predictions_bits_dominant_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_6_resolved_PC <= io_predictions_bits_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
         end
       end
       FTQ_6_T_NT <=
-        ~_GEN_61 & (_GEN_45 | (_GEN_20 ? io_predictions_bits_T_NT : FTQ_6_T_NT));	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37, :118:64, :119:41, :121:41, :135:13, :136:26, :140:19, :142:20
+        ~_GEN_62 & (_GEN_46 | (_GEN_21 ? io_predictions_bits_T_NT : FTQ_6_T_NT));	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37, :122:64, :123:41, :125:41, :140:13, :141:26, :145:19, :147:20
       FTQ_7_valid <=
-        ~_GEN_62
-        & (_GEN_6
-             ? _GEN_21 | (_GEN_21 ? io_predictions_bits_valid : FTQ_7_valid)
-             : FTQ_7_valid);	// src/main/scala/Frontend/FTQ.scala:76:22, :92:{31,55}, :93:37, :94:37, :135:13, :136:26, :140:19, :142:20
-      if (_GEN_62) begin	// src/main/scala/Frontend/FTQ.scala:92:55, :135:13, :136:26, :140:19, :142:20
-        FTQ_7_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-        FTQ_7_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-        FTQ_7_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:76:{22,64}
-        FTQ_7_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-        FTQ_7_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
+        ~_GEN_63
+        & (_GEN_7
+             ? _GEN_22 | (_GEN_22 ? io_predictions_bits_valid : FTQ_7_valid)
+             : FTQ_7_valid);	// src/main/scala/Frontend/FTQ.scala:77:22, :95:{31,55}, :96:37, :98:37, :140:13, :141:26, :145:19, :147:20
+      if (_GEN_63) begin	// src/main/scala/Frontend/FTQ.scala:95:55, :140:13, :141:26, :145:19, :147:20
+        FTQ_7_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+        FTQ_7_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+        FTQ_7_ROB_index <= 6'h0;	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_7_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:77:{22,64}
+        FTQ_7_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+        FTQ_7_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
       end
-      else begin	// src/main/scala/Frontend/FTQ.scala:92:55, :135:13, :136:26, :140:19, :142:20
-        if (_GEN_22) begin	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37
-          FTQ_7_fetch_PC <= io_predictions_bits_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_7_predicted_PC <= io_predictions_bits_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_7_br_type <= io_predictions_bits_br_type;	// src/main/scala/Frontend/FTQ.scala:76:22
+      else begin	// src/main/scala/Frontend/FTQ.scala:95:55, :140:13, :141:26, :145:19, :147:20
+        if (_GEN_23) begin	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37
+          FTQ_7_fetch_PC <= io_predictions_bits_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_7_predicted_PC <= io_predictions_bits_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_7_br_type <= io_predictions_bits_br_type;	// src/main/scala/Frontend/FTQ.scala:77:22
         end
-        if (_GEN_46) begin	// src/main/scala/Frontend/FTQ.scala:92:55, :118:64, :119:41
-          FTQ_7_dominant_index <= io_FU_outputs_0_bits_fetch_packet_index;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_7_resolved_PC <= io_FU_outputs_0_bits_target_address;	// src/main/scala/Frontend/FTQ.scala:76:22
+        if (_GEN_7 & _GEN_22)	// src/main/scala/Frontend/FTQ.scala:77:22, :95:{31,55}, :96:37, :97:37
+          FTQ_7_ROB_index <= io_ROB_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+        if (_GEN_47) begin	// src/main/scala/Frontend/FTQ.scala:95:55, :122:64, :123:41
+          FTQ_7_dominant_index <= io_FU_outputs_0_bits_fetch_packet_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_7_resolved_PC <= io_FU_outputs_0_bits_target_address;	// src/main/scala/Frontend/FTQ.scala:77:22
         end
-        else if (_GEN_22) begin	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37
-          FTQ_7_dominant_index <= io_predictions_bits_dominant_index;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_7_resolved_PC <= io_predictions_bits_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
+        else if (_GEN_23) begin	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37
+          FTQ_7_dominant_index <= io_predictions_bits_dominant_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_7_resolved_PC <= io_predictions_bits_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
         end
       end
       FTQ_7_T_NT <=
-        ~_GEN_62 & (_GEN_46 | (_GEN_22 ? io_predictions_bits_T_NT : FTQ_7_T_NT));	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37, :118:64, :119:41, :121:41, :135:13, :136:26, :140:19, :142:20
+        ~_GEN_63 & (_GEN_47 | (_GEN_23 ? io_predictions_bits_T_NT : FTQ_7_T_NT));	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37, :122:64, :123:41, :125:41, :140:13, :141:26, :145:19, :147:20
       FTQ_8_valid <=
-        ~_GEN_63
-        & (_GEN_6
-             ? _GEN_23 | (_GEN_23 ? io_predictions_bits_valid : FTQ_8_valid)
-             : FTQ_8_valid);	// src/main/scala/Frontend/FTQ.scala:76:22, :92:{31,55}, :93:37, :94:37, :135:13, :136:26, :140:19, :142:20
-      if (_GEN_63) begin	// src/main/scala/Frontend/FTQ.scala:92:55, :135:13, :136:26, :140:19, :142:20
-        FTQ_8_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-        FTQ_8_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-        FTQ_8_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:76:{22,64}
-        FTQ_8_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-        FTQ_8_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
+        ~_GEN_64
+        & (_GEN_7
+             ? _GEN_24 | (_GEN_24 ? io_predictions_bits_valid : FTQ_8_valid)
+             : FTQ_8_valid);	// src/main/scala/Frontend/FTQ.scala:77:22, :95:{31,55}, :96:37, :98:37, :140:13, :141:26, :145:19, :147:20
+      if (_GEN_64) begin	// src/main/scala/Frontend/FTQ.scala:95:55, :140:13, :141:26, :145:19, :147:20
+        FTQ_8_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+        FTQ_8_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+        FTQ_8_ROB_index <= 6'h0;	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_8_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:77:{22,64}
+        FTQ_8_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+        FTQ_8_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
       end
-      else begin	// src/main/scala/Frontend/FTQ.scala:92:55, :135:13, :136:26, :140:19, :142:20
-        if (_GEN_24) begin	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37
-          FTQ_8_fetch_PC <= io_predictions_bits_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_8_predicted_PC <= io_predictions_bits_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_8_br_type <= io_predictions_bits_br_type;	// src/main/scala/Frontend/FTQ.scala:76:22
+      else begin	// src/main/scala/Frontend/FTQ.scala:95:55, :140:13, :141:26, :145:19, :147:20
+        if (_GEN_25) begin	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37
+          FTQ_8_fetch_PC <= io_predictions_bits_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_8_predicted_PC <= io_predictions_bits_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_8_br_type <= io_predictions_bits_br_type;	// src/main/scala/Frontend/FTQ.scala:77:22
         end
-        if (_GEN_47) begin	// src/main/scala/Frontend/FTQ.scala:92:55, :118:64, :119:41
-          FTQ_8_dominant_index <= io_FU_outputs_0_bits_fetch_packet_index;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_8_resolved_PC <= io_FU_outputs_0_bits_target_address;	// src/main/scala/Frontend/FTQ.scala:76:22
+        if (_GEN_7 & _GEN_24)	// src/main/scala/Frontend/FTQ.scala:77:22, :95:{31,55}, :96:37, :97:37
+          FTQ_8_ROB_index <= io_ROB_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+        if (_GEN_48) begin	// src/main/scala/Frontend/FTQ.scala:95:55, :122:64, :123:41
+          FTQ_8_dominant_index <= io_FU_outputs_0_bits_fetch_packet_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_8_resolved_PC <= io_FU_outputs_0_bits_target_address;	// src/main/scala/Frontend/FTQ.scala:77:22
         end
-        else if (_GEN_24) begin	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37
-          FTQ_8_dominant_index <= io_predictions_bits_dominant_index;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_8_resolved_PC <= io_predictions_bits_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
+        else if (_GEN_25) begin	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37
+          FTQ_8_dominant_index <= io_predictions_bits_dominant_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_8_resolved_PC <= io_predictions_bits_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
         end
       end
       FTQ_8_T_NT <=
-        ~_GEN_63 & (_GEN_47 | (_GEN_24 ? io_predictions_bits_T_NT : FTQ_8_T_NT));	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37, :118:64, :119:41, :121:41, :135:13, :136:26, :140:19, :142:20
+        ~_GEN_64 & (_GEN_48 | (_GEN_25 ? io_predictions_bits_T_NT : FTQ_8_T_NT));	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37, :122:64, :123:41, :125:41, :140:13, :141:26, :145:19, :147:20
       FTQ_9_valid <=
-        ~_GEN_64
-        & (_GEN_6
-             ? _GEN_25 | (_GEN_25 ? io_predictions_bits_valid : FTQ_9_valid)
-             : FTQ_9_valid);	// src/main/scala/Frontend/FTQ.scala:76:22, :92:{31,55}, :93:37, :94:37, :135:13, :136:26, :140:19, :142:20
-      if (_GEN_64) begin	// src/main/scala/Frontend/FTQ.scala:92:55, :135:13, :136:26, :140:19, :142:20
-        FTQ_9_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-        FTQ_9_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-        FTQ_9_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:76:{22,64}
-        FTQ_9_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-        FTQ_9_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
+        ~_GEN_65
+        & (_GEN_7
+             ? _GEN_26 | (_GEN_26 ? io_predictions_bits_valid : FTQ_9_valid)
+             : FTQ_9_valid);	// src/main/scala/Frontend/FTQ.scala:77:22, :95:{31,55}, :96:37, :98:37, :140:13, :141:26, :145:19, :147:20
+      if (_GEN_65) begin	// src/main/scala/Frontend/FTQ.scala:95:55, :140:13, :141:26, :145:19, :147:20
+        FTQ_9_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+        FTQ_9_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+        FTQ_9_ROB_index <= 6'h0;	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_9_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:77:{22,64}
+        FTQ_9_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+        FTQ_9_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
       end
-      else begin	// src/main/scala/Frontend/FTQ.scala:92:55, :135:13, :136:26, :140:19, :142:20
-        if (_GEN_26) begin	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37
-          FTQ_9_fetch_PC <= io_predictions_bits_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_9_predicted_PC <= io_predictions_bits_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_9_br_type <= io_predictions_bits_br_type;	// src/main/scala/Frontend/FTQ.scala:76:22
+      else begin	// src/main/scala/Frontend/FTQ.scala:95:55, :140:13, :141:26, :145:19, :147:20
+        if (_GEN_27) begin	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37
+          FTQ_9_fetch_PC <= io_predictions_bits_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_9_predicted_PC <= io_predictions_bits_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_9_br_type <= io_predictions_bits_br_type;	// src/main/scala/Frontend/FTQ.scala:77:22
         end
-        if (_GEN_48) begin	// src/main/scala/Frontend/FTQ.scala:92:55, :118:64, :119:41
-          FTQ_9_dominant_index <= io_FU_outputs_0_bits_fetch_packet_index;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_9_resolved_PC <= io_FU_outputs_0_bits_target_address;	// src/main/scala/Frontend/FTQ.scala:76:22
+        if (_GEN_7 & _GEN_26)	// src/main/scala/Frontend/FTQ.scala:77:22, :95:{31,55}, :96:37, :97:37
+          FTQ_9_ROB_index <= io_ROB_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+        if (_GEN_49) begin	// src/main/scala/Frontend/FTQ.scala:95:55, :122:64, :123:41
+          FTQ_9_dominant_index <= io_FU_outputs_0_bits_fetch_packet_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_9_resolved_PC <= io_FU_outputs_0_bits_target_address;	// src/main/scala/Frontend/FTQ.scala:77:22
         end
-        else if (_GEN_26) begin	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37
-          FTQ_9_dominant_index <= io_predictions_bits_dominant_index;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_9_resolved_PC <= io_predictions_bits_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
+        else if (_GEN_27) begin	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37
+          FTQ_9_dominant_index <= io_predictions_bits_dominant_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_9_resolved_PC <= io_predictions_bits_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
         end
       end
       FTQ_9_T_NT <=
-        ~_GEN_64 & (_GEN_48 | (_GEN_26 ? io_predictions_bits_T_NT : FTQ_9_T_NT));	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37, :118:64, :119:41, :121:41, :135:13, :136:26, :140:19, :142:20
+        ~_GEN_65 & (_GEN_49 | (_GEN_27 ? io_predictions_bits_T_NT : FTQ_9_T_NT));	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37, :122:64, :123:41, :125:41, :140:13, :141:26, :145:19, :147:20
       FTQ_10_valid <=
-        ~_GEN_65
-        & (_GEN_6
-             ? _GEN_27 | (_GEN_27 ? io_predictions_bits_valid : FTQ_10_valid)
-             : FTQ_10_valid);	// src/main/scala/Frontend/FTQ.scala:76:22, :92:{31,55}, :93:37, :94:37, :135:13, :136:26, :140:19, :142:20
-      if (_GEN_65) begin	// src/main/scala/Frontend/FTQ.scala:92:55, :135:13, :136:26, :140:19, :142:20
-        FTQ_10_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-        FTQ_10_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-        FTQ_10_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:76:{22,64}
-        FTQ_10_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-        FTQ_10_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
+        ~_GEN_66
+        & (_GEN_7
+             ? _GEN_28 | (_GEN_28 ? io_predictions_bits_valid : FTQ_10_valid)
+             : FTQ_10_valid);	// src/main/scala/Frontend/FTQ.scala:77:22, :95:{31,55}, :96:37, :98:37, :140:13, :141:26, :145:19, :147:20
+      if (_GEN_66) begin	// src/main/scala/Frontend/FTQ.scala:95:55, :140:13, :141:26, :145:19, :147:20
+        FTQ_10_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+        FTQ_10_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+        FTQ_10_ROB_index <= 6'h0;	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_10_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:77:{22,64}
+        FTQ_10_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+        FTQ_10_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
       end
-      else begin	// src/main/scala/Frontend/FTQ.scala:92:55, :135:13, :136:26, :140:19, :142:20
-        if (_GEN_28) begin	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37
-          FTQ_10_fetch_PC <= io_predictions_bits_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_10_predicted_PC <= io_predictions_bits_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_10_br_type <= io_predictions_bits_br_type;	// src/main/scala/Frontend/FTQ.scala:76:22
+      else begin	// src/main/scala/Frontend/FTQ.scala:95:55, :140:13, :141:26, :145:19, :147:20
+        if (_GEN_29) begin	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37
+          FTQ_10_fetch_PC <= io_predictions_bits_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_10_predicted_PC <= io_predictions_bits_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_10_br_type <= io_predictions_bits_br_type;	// src/main/scala/Frontend/FTQ.scala:77:22
         end
-        if (_GEN_49) begin	// src/main/scala/Frontend/FTQ.scala:92:55, :118:64, :119:41
-          FTQ_10_dominant_index <= io_FU_outputs_0_bits_fetch_packet_index;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_10_resolved_PC <= io_FU_outputs_0_bits_target_address;	// src/main/scala/Frontend/FTQ.scala:76:22
+        if (_GEN_7 & _GEN_28)	// src/main/scala/Frontend/FTQ.scala:77:22, :95:{31,55}, :96:37, :97:37
+          FTQ_10_ROB_index <= io_ROB_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+        if (_GEN_50) begin	// src/main/scala/Frontend/FTQ.scala:95:55, :122:64, :123:41
+          FTQ_10_dominant_index <= io_FU_outputs_0_bits_fetch_packet_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_10_resolved_PC <= io_FU_outputs_0_bits_target_address;	// src/main/scala/Frontend/FTQ.scala:77:22
         end
-        else if (_GEN_28) begin	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37
-          FTQ_10_dominant_index <= io_predictions_bits_dominant_index;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_10_resolved_PC <= io_predictions_bits_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
+        else if (_GEN_29) begin	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37
+          FTQ_10_dominant_index <= io_predictions_bits_dominant_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_10_resolved_PC <= io_predictions_bits_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
         end
       end
       FTQ_10_T_NT <=
-        ~_GEN_65 & (_GEN_49 | (_GEN_28 ? io_predictions_bits_T_NT : FTQ_10_T_NT));	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37, :118:64, :119:41, :121:41, :135:13, :136:26, :140:19, :142:20
+        ~_GEN_66 & (_GEN_50 | (_GEN_29 ? io_predictions_bits_T_NT : FTQ_10_T_NT));	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37, :122:64, :123:41, :125:41, :140:13, :141:26, :145:19, :147:20
       FTQ_11_valid <=
-        ~_GEN_66
-        & (_GEN_6
-             ? _GEN_29 | (_GEN_29 ? io_predictions_bits_valid : FTQ_11_valid)
-             : FTQ_11_valid);	// src/main/scala/Frontend/FTQ.scala:76:22, :92:{31,55}, :93:37, :94:37, :135:13, :136:26, :140:19, :142:20
-      if (_GEN_66) begin	// src/main/scala/Frontend/FTQ.scala:92:55, :135:13, :136:26, :140:19, :142:20
-        FTQ_11_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-        FTQ_11_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-        FTQ_11_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:76:{22,64}
-        FTQ_11_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-        FTQ_11_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
+        ~_GEN_67
+        & (_GEN_7
+             ? _GEN_30 | (_GEN_30 ? io_predictions_bits_valid : FTQ_11_valid)
+             : FTQ_11_valid);	// src/main/scala/Frontend/FTQ.scala:77:22, :95:{31,55}, :96:37, :98:37, :140:13, :141:26, :145:19, :147:20
+      if (_GEN_67) begin	// src/main/scala/Frontend/FTQ.scala:95:55, :140:13, :141:26, :145:19, :147:20
+        FTQ_11_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+        FTQ_11_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+        FTQ_11_ROB_index <= 6'h0;	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_11_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:77:{22,64}
+        FTQ_11_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+        FTQ_11_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
       end
-      else begin	// src/main/scala/Frontend/FTQ.scala:92:55, :135:13, :136:26, :140:19, :142:20
-        if (_GEN_30) begin	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37
-          FTQ_11_fetch_PC <= io_predictions_bits_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_11_predicted_PC <= io_predictions_bits_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_11_br_type <= io_predictions_bits_br_type;	// src/main/scala/Frontend/FTQ.scala:76:22
+      else begin	// src/main/scala/Frontend/FTQ.scala:95:55, :140:13, :141:26, :145:19, :147:20
+        if (_GEN_31) begin	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37
+          FTQ_11_fetch_PC <= io_predictions_bits_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_11_predicted_PC <= io_predictions_bits_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_11_br_type <= io_predictions_bits_br_type;	// src/main/scala/Frontend/FTQ.scala:77:22
         end
-        if (_GEN_50) begin	// src/main/scala/Frontend/FTQ.scala:92:55, :118:64, :119:41
-          FTQ_11_dominant_index <= io_FU_outputs_0_bits_fetch_packet_index;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_11_resolved_PC <= io_FU_outputs_0_bits_target_address;	// src/main/scala/Frontend/FTQ.scala:76:22
+        if (_GEN_7 & _GEN_30)	// src/main/scala/Frontend/FTQ.scala:77:22, :95:{31,55}, :96:37, :97:37
+          FTQ_11_ROB_index <= io_ROB_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+        if (_GEN_51) begin	// src/main/scala/Frontend/FTQ.scala:95:55, :122:64, :123:41
+          FTQ_11_dominant_index <= io_FU_outputs_0_bits_fetch_packet_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_11_resolved_PC <= io_FU_outputs_0_bits_target_address;	// src/main/scala/Frontend/FTQ.scala:77:22
         end
-        else if (_GEN_30) begin	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37
-          FTQ_11_dominant_index <= io_predictions_bits_dominant_index;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_11_resolved_PC <= io_predictions_bits_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
+        else if (_GEN_31) begin	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37
+          FTQ_11_dominant_index <= io_predictions_bits_dominant_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_11_resolved_PC <= io_predictions_bits_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
         end
       end
       FTQ_11_T_NT <=
-        ~_GEN_66 & (_GEN_50 | (_GEN_30 ? io_predictions_bits_T_NT : FTQ_11_T_NT));	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37, :118:64, :119:41, :121:41, :135:13, :136:26, :140:19, :142:20
+        ~_GEN_67 & (_GEN_51 | (_GEN_31 ? io_predictions_bits_T_NT : FTQ_11_T_NT));	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37, :122:64, :123:41, :125:41, :140:13, :141:26, :145:19, :147:20
       FTQ_12_valid <=
-        ~_GEN_67
-        & (_GEN_6
-             ? _GEN_31 | (_GEN_31 ? io_predictions_bits_valid : FTQ_12_valid)
-             : FTQ_12_valid);	// src/main/scala/Frontend/FTQ.scala:76:22, :92:{31,55}, :93:37, :94:37, :135:13, :136:26, :140:19, :142:20
-      if (_GEN_67) begin	// src/main/scala/Frontend/FTQ.scala:92:55, :135:13, :136:26, :140:19, :142:20
-        FTQ_12_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-        FTQ_12_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-        FTQ_12_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:76:{22,64}
-        FTQ_12_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-        FTQ_12_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
+        ~_GEN_68
+        & (_GEN_7
+             ? _GEN_32 | (_GEN_32 ? io_predictions_bits_valid : FTQ_12_valid)
+             : FTQ_12_valid);	// src/main/scala/Frontend/FTQ.scala:77:22, :95:{31,55}, :96:37, :98:37, :140:13, :141:26, :145:19, :147:20
+      if (_GEN_68) begin	// src/main/scala/Frontend/FTQ.scala:95:55, :140:13, :141:26, :145:19, :147:20
+        FTQ_12_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+        FTQ_12_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+        FTQ_12_ROB_index <= 6'h0;	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_12_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:77:{22,64}
+        FTQ_12_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+        FTQ_12_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
       end
-      else begin	// src/main/scala/Frontend/FTQ.scala:92:55, :135:13, :136:26, :140:19, :142:20
-        if (_GEN_32) begin	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37
-          FTQ_12_fetch_PC <= io_predictions_bits_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_12_predicted_PC <= io_predictions_bits_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_12_br_type <= io_predictions_bits_br_type;	// src/main/scala/Frontend/FTQ.scala:76:22
+      else begin	// src/main/scala/Frontend/FTQ.scala:95:55, :140:13, :141:26, :145:19, :147:20
+        if (_GEN_33) begin	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37
+          FTQ_12_fetch_PC <= io_predictions_bits_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_12_predicted_PC <= io_predictions_bits_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_12_br_type <= io_predictions_bits_br_type;	// src/main/scala/Frontend/FTQ.scala:77:22
         end
-        if (_GEN_51) begin	// src/main/scala/Frontend/FTQ.scala:92:55, :118:64, :119:41
-          FTQ_12_dominant_index <= io_FU_outputs_0_bits_fetch_packet_index;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_12_resolved_PC <= io_FU_outputs_0_bits_target_address;	// src/main/scala/Frontend/FTQ.scala:76:22
+        if (_GEN_7 & _GEN_32)	// src/main/scala/Frontend/FTQ.scala:77:22, :95:{31,55}, :96:37, :97:37
+          FTQ_12_ROB_index <= io_ROB_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+        if (_GEN_52) begin	// src/main/scala/Frontend/FTQ.scala:95:55, :122:64, :123:41
+          FTQ_12_dominant_index <= io_FU_outputs_0_bits_fetch_packet_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_12_resolved_PC <= io_FU_outputs_0_bits_target_address;	// src/main/scala/Frontend/FTQ.scala:77:22
         end
-        else if (_GEN_32) begin	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37
-          FTQ_12_dominant_index <= io_predictions_bits_dominant_index;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_12_resolved_PC <= io_predictions_bits_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
+        else if (_GEN_33) begin	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37
+          FTQ_12_dominant_index <= io_predictions_bits_dominant_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_12_resolved_PC <= io_predictions_bits_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
         end
       end
       FTQ_12_T_NT <=
-        ~_GEN_67 & (_GEN_51 | (_GEN_32 ? io_predictions_bits_T_NT : FTQ_12_T_NT));	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37, :118:64, :119:41, :121:41, :135:13, :136:26, :140:19, :142:20
+        ~_GEN_68 & (_GEN_52 | (_GEN_33 ? io_predictions_bits_T_NT : FTQ_12_T_NT));	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37, :122:64, :123:41, :125:41, :140:13, :141:26, :145:19, :147:20
       FTQ_13_valid <=
-        ~_GEN_68
-        & (_GEN_6
-             ? _GEN_33 | (_GEN_33 ? io_predictions_bits_valid : FTQ_13_valid)
-             : FTQ_13_valid);	// src/main/scala/Frontend/FTQ.scala:76:22, :92:{31,55}, :93:37, :94:37, :135:13, :136:26, :140:19, :142:20
-      if (_GEN_68) begin	// src/main/scala/Frontend/FTQ.scala:92:55, :135:13, :136:26, :140:19, :142:20
-        FTQ_13_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-        FTQ_13_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-        FTQ_13_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:76:{22,64}
-        FTQ_13_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-        FTQ_13_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
+        ~_GEN_69
+        & (_GEN_7
+             ? _GEN_34 | (_GEN_34 ? io_predictions_bits_valid : FTQ_13_valid)
+             : FTQ_13_valid);	// src/main/scala/Frontend/FTQ.scala:77:22, :95:{31,55}, :96:37, :98:37, :140:13, :141:26, :145:19, :147:20
+      if (_GEN_69) begin	// src/main/scala/Frontend/FTQ.scala:95:55, :140:13, :141:26, :145:19, :147:20
+        FTQ_13_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+        FTQ_13_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+        FTQ_13_ROB_index <= 6'h0;	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_13_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:77:{22,64}
+        FTQ_13_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+        FTQ_13_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
       end
-      else begin	// src/main/scala/Frontend/FTQ.scala:92:55, :135:13, :136:26, :140:19, :142:20
-        if (_GEN_34) begin	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37
-          FTQ_13_fetch_PC <= io_predictions_bits_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_13_predicted_PC <= io_predictions_bits_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_13_br_type <= io_predictions_bits_br_type;	// src/main/scala/Frontend/FTQ.scala:76:22
+      else begin	// src/main/scala/Frontend/FTQ.scala:95:55, :140:13, :141:26, :145:19, :147:20
+        if (_GEN_35) begin	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37
+          FTQ_13_fetch_PC <= io_predictions_bits_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_13_predicted_PC <= io_predictions_bits_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_13_br_type <= io_predictions_bits_br_type;	// src/main/scala/Frontend/FTQ.scala:77:22
         end
-        if (_GEN_52) begin	// src/main/scala/Frontend/FTQ.scala:92:55, :118:64, :119:41
-          FTQ_13_dominant_index <= io_FU_outputs_0_bits_fetch_packet_index;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_13_resolved_PC <= io_FU_outputs_0_bits_target_address;	// src/main/scala/Frontend/FTQ.scala:76:22
+        if (_GEN_7 & _GEN_34)	// src/main/scala/Frontend/FTQ.scala:77:22, :95:{31,55}, :96:37, :97:37
+          FTQ_13_ROB_index <= io_ROB_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+        if (_GEN_53) begin	// src/main/scala/Frontend/FTQ.scala:95:55, :122:64, :123:41
+          FTQ_13_dominant_index <= io_FU_outputs_0_bits_fetch_packet_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_13_resolved_PC <= io_FU_outputs_0_bits_target_address;	// src/main/scala/Frontend/FTQ.scala:77:22
         end
-        else if (_GEN_34) begin	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37
-          FTQ_13_dominant_index <= io_predictions_bits_dominant_index;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_13_resolved_PC <= io_predictions_bits_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
+        else if (_GEN_35) begin	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37
+          FTQ_13_dominant_index <= io_predictions_bits_dominant_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_13_resolved_PC <= io_predictions_bits_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
         end
       end
       FTQ_13_T_NT <=
-        ~_GEN_68 & (_GEN_52 | (_GEN_34 ? io_predictions_bits_T_NT : FTQ_13_T_NT));	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37, :118:64, :119:41, :121:41, :135:13, :136:26, :140:19, :142:20
+        ~_GEN_69 & (_GEN_53 | (_GEN_35 ? io_predictions_bits_T_NT : FTQ_13_T_NT));	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37, :122:64, :123:41, :125:41, :140:13, :141:26, :145:19, :147:20
       FTQ_14_valid <=
-        ~_GEN_69
-        & (_GEN_6
-             ? _GEN_35 | (_GEN_35 ? io_predictions_bits_valid : FTQ_14_valid)
-             : FTQ_14_valid);	// src/main/scala/Frontend/FTQ.scala:76:22, :92:{31,55}, :93:37, :94:37, :135:13, :136:26, :140:19, :142:20
-      if (_GEN_69) begin	// src/main/scala/Frontend/FTQ.scala:92:55, :135:13, :136:26, :140:19, :142:20
-        FTQ_14_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-        FTQ_14_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-        FTQ_14_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:76:{22,64}
-        FTQ_14_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-        FTQ_14_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
+        ~_GEN_70
+        & (_GEN_7
+             ? _GEN_36 | (_GEN_36 ? io_predictions_bits_valid : FTQ_14_valid)
+             : FTQ_14_valid);	// src/main/scala/Frontend/FTQ.scala:77:22, :95:{31,55}, :96:37, :98:37, :140:13, :141:26, :145:19, :147:20
+      if (_GEN_70) begin	// src/main/scala/Frontend/FTQ.scala:95:55, :140:13, :141:26, :145:19, :147:20
+        FTQ_14_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+        FTQ_14_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+        FTQ_14_ROB_index <= 6'h0;	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_14_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:77:{22,64}
+        FTQ_14_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+        FTQ_14_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
       end
-      else begin	// src/main/scala/Frontend/FTQ.scala:92:55, :135:13, :136:26, :140:19, :142:20
-        if (_GEN_36) begin	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37
-          FTQ_14_fetch_PC <= io_predictions_bits_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_14_predicted_PC <= io_predictions_bits_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_14_br_type <= io_predictions_bits_br_type;	// src/main/scala/Frontend/FTQ.scala:76:22
+      else begin	// src/main/scala/Frontend/FTQ.scala:95:55, :140:13, :141:26, :145:19, :147:20
+        if (_GEN_37) begin	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37
+          FTQ_14_fetch_PC <= io_predictions_bits_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_14_predicted_PC <= io_predictions_bits_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_14_br_type <= io_predictions_bits_br_type;	// src/main/scala/Frontend/FTQ.scala:77:22
         end
-        if (_GEN_53) begin	// src/main/scala/Frontend/FTQ.scala:92:55, :118:64, :119:41
-          FTQ_14_dominant_index <= io_FU_outputs_0_bits_fetch_packet_index;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_14_resolved_PC <= io_FU_outputs_0_bits_target_address;	// src/main/scala/Frontend/FTQ.scala:76:22
+        if (_GEN_7 & _GEN_36)	// src/main/scala/Frontend/FTQ.scala:77:22, :95:{31,55}, :96:37, :97:37
+          FTQ_14_ROB_index <= io_ROB_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+        if (_GEN_54) begin	// src/main/scala/Frontend/FTQ.scala:95:55, :122:64, :123:41
+          FTQ_14_dominant_index <= io_FU_outputs_0_bits_fetch_packet_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_14_resolved_PC <= io_FU_outputs_0_bits_target_address;	// src/main/scala/Frontend/FTQ.scala:77:22
         end
-        else if (_GEN_36) begin	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37
-          FTQ_14_dominant_index <= io_predictions_bits_dominant_index;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_14_resolved_PC <= io_predictions_bits_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
+        else if (_GEN_37) begin	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37
+          FTQ_14_dominant_index <= io_predictions_bits_dominant_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_14_resolved_PC <= io_predictions_bits_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
         end
       end
       FTQ_14_T_NT <=
-        ~_GEN_69 & (_GEN_53 | (_GEN_36 ? io_predictions_bits_T_NT : FTQ_14_T_NT));	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37, :118:64, :119:41, :121:41, :135:13, :136:26, :140:19, :142:20
+        ~_GEN_70 & (_GEN_54 | (_GEN_37 ? io_predictions_bits_T_NT : FTQ_14_T_NT));	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37, :122:64, :123:41, :125:41, :140:13, :141:26, :145:19, :147:20
       FTQ_15_valid <=
-        ~_GEN_70
-        & (_GEN_6
+        ~_GEN_71
+        & (_GEN_7
              ? (&back_index) | ((&back_index) ? io_predictions_bits_valid : FTQ_15_valid)
-             : FTQ_15_valid);	// src/main/scala/Frontend/FTQ.scala:73:35, :76:22, :92:{31,55}, :93:37, :94:37, :135:13, :136:26, :140:19, :142:20
-      if (_GEN_70) begin	// src/main/scala/Frontend/FTQ.scala:92:55, :135:13, :136:26, :140:19, :142:20
-        FTQ_15_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-        FTQ_15_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-        FTQ_15_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:76:{22,64}
-        FTQ_15_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
-        FTQ_15_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:76:22
+             : FTQ_15_valid);	// src/main/scala/Frontend/FTQ.scala:74:35, :77:22, :95:{31,55}, :96:37, :98:37, :140:13, :141:26, :145:19, :147:20
+      if (_GEN_71) begin	// src/main/scala/Frontend/FTQ.scala:95:55, :140:13, :141:26, :145:19, :147:20
+        FTQ_15_fetch_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+        FTQ_15_predicted_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+        FTQ_15_ROB_index <= 6'h0;	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_15_br_type <= 3'h0;	// src/main/scala/Frontend/FTQ.scala:77:{22,64}
+        FTQ_15_dominant_index <= 2'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
+        FTQ_15_resolved_PC <= 32'h0;	// src/main/scala/Frontend/FTQ.scala:77:22
       end
-      else begin	// src/main/scala/Frontend/FTQ.scala:92:55, :135:13, :136:26, :140:19, :142:20
-        if (_GEN_37) begin	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37
-          FTQ_15_fetch_PC <= io_predictions_bits_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_15_predicted_PC <= io_predictions_bits_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_15_br_type <= io_predictions_bits_br_type;	// src/main/scala/Frontend/FTQ.scala:76:22
+      else begin	// src/main/scala/Frontend/FTQ.scala:95:55, :140:13, :141:26, :145:19, :147:20
+        if (_GEN_38) begin	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37
+          FTQ_15_fetch_PC <= io_predictions_bits_fetch_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_15_predicted_PC <= io_predictions_bits_predicted_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_15_br_type <= io_predictions_bits_br_type;	// src/main/scala/Frontend/FTQ.scala:77:22
         end
-        if (_GEN_54) begin	// src/main/scala/Frontend/FTQ.scala:92:55, :118:64, :119:41
-          FTQ_15_dominant_index <= io_FU_outputs_0_bits_fetch_packet_index;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_15_resolved_PC <= io_FU_outputs_0_bits_target_address;	// src/main/scala/Frontend/FTQ.scala:76:22
+        if (_GEN_7 & (&back_index))	// src/main/scala/Frontend/FTQ.scala:74:35, :77:22, :95:{31,55}, :96:37, :97:37
+          FTQ_15_ROB_index <= io_ROB_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+        if (_GEN_55) begin	// src/main/scala/Frontend/FTQ.scala:95:55, :122:64, :123:41
+          FTQ_15_dominant_index <= io_FU_outputs_0_bits_fetch_packet_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_15_resolved_PC <= io_FU_outputs_0_bits_target_address;	// src/main/scala/Frontend/FTQ.scala:77:22
         end
-        else if (_GEN_37) begin	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37
-          FTQ_15_dominant_index <= io_predictions_bits_dominant_index;	// src/main/scala/Frontend/FTQ.scala:76:22
-          FTQ_15_resolved_PC <= io_predictions_bits_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:76:22
+        else if (_GEN_38) begin	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37
+          FTQ_15_dominant_index <= io_predictions_bits_dominant_index;	// src/main/scala/Frontend/FTQ.scala:77:22
+          FTQ_15_resolved_PC <= io_predictions_bits_resolved_PC;	// src/main/scala/Frontend/FTQ.scala:77:22
         end
       end
       FTQ_15_T_NT <=
-        ~_GEN_70 & (_GEN_54 | (_GEN_37 ? io_predictions_bits_T_NT : FTQ_15_T_NT));	// src/main/scala/Frontend/FTQ.scala:76:22, :92:55, :93:37, :118:64, :119:41, :121:41, :135:13, :136:26, :140:19, :142:20
+        ~_GEN_71 & (_GEN_55 | (_GEN_38 ? io_predictions_bits_T_NT : FTQ_15_T_NT));	// src/main/scala/Frontend/FTQ.scala:77:22, :95:55, :96:37, :122:64, :123:41, :125:41, :140:13, :141:26, :145:19, :147:20
     end
   end // always @(posedge)
   `ifdef ENABLE_INITIAL_REG_	// src/main/scala/Frontend/FTQ.scala:44:7
@@ -1014,142 +1128,158 @@ module FTQ(	// src/main/scala/Frontend/FTQ.scala:44:7
       `FIRRTL_BEFORE_INITIAL	// src/main/scala/Frontend/FTQ.scala:44:7
     `endif // FIRRTL_BEFORE_INITIAL
     initial begin	// src/main/scala/Frontend/FTQ.scala:44:7
-      automatic logic [31:0] _RANDOM[0:52];	// src/main/scala/Frontend/FTQ.scala:44:7
+      automatic logic [31:0] _RANDOM[0:55];	// src/main/scala/Frontend/FTQ.scala:44:7
       `ifdef INIT_RANDOM_PROLOG_	// src/main/scala/Frontend/FTQ.scala:44:7
         `INIT_RANDOM_PROLOG_	// src/main/scala/Frontend/FTQ.scala:44:7
       `endif // INIT_RANDOM_PROLOG_
       `ifdef RANDOMIZE_REG_INIT	// src/main/scala/Frontend/FTQ.scala:44:7
-        for (logic [5:0] i = 6'h0; i < 6'h35; i += 6'h1) begin
+        for (logic [5:0] i = 6'h0; i < 6'h38; i += 6'h1) begin
           _RANDOM[i] = `RANDOM;	// src/main/scala/Frontend/FTQ.scala:44:7
         end	// src/main/scala/Frontend/FTQ.scala:44:7
-        front_pointer = _RANDOM[6'h0][4:0];	// src/main/scala/Frontend/FTQ.scala:44:7, :69:34
-        back_pointer = _RANDOM[6'h0][9:5];	// src/main/scala/Frontend/FTQ.scala:44:7, :69:34, :70:34
-        FTQ_0_valid = _RANDOM[6'h0][10];	// src/main/scala/Frontend/FTQ.scala:44:7, :69:34, :76:22
-        FTQ_0_fetch_PC = {_RANDOM[6'h0][31:11], _RANDOM[6'h1][10:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :69:34, :76:22
-        FTQ_0_predicted_PC = {_RANDOM[6'h1][31:12], _RANDOM[6'h2][11:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_0_T_NT = _RANDOM[6'h2][12];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_0_br_type = _RANDOM[6'h2][15:13];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_0_dominant_index = _RANDOM[6'h2][17:16];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_0_resolved_PC = {_RANDOM[6'h2][31:18], _RANDOM[6'h3][17:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_1_valid = _RANDOM[6'h3][18];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_1_fetch_PC = {_RANDOM[6'h3][31:19], _RANDOM[6'h4][18:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_1_predicted_PC = {_RANDOM[6'h4][31:20], _RANDOM[6'h5][19:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_1_T_NT = _RANDOM[6'h5][20];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_1_br_type = _RANDOM[6'h5][23:21];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_1_dominant_index = _RANDOM[6'h5][25:24];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_1_resolved_PC = {_RANDOM[6'h5][31:26], _RANDOM[6'h6][25:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_2_valid = _RANDOM[6'h6][26];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_2_fetch_PC = {_RANDOM[6'h6][31:27], _RANDOM[6'h7][26:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_2_predicted_PC = {_RANDOM[6'h7][31:28], _RANDOM[6'h8][27:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_2_T_NT = _RANDOM[6'h8][28];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_2_br_type = _RANDOM[6'h8][31:29];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_2_dominant_index = _RANDOM[6'h9][1:0];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_2_resolved_PC = {_RANDOM[6'h9][31:2], _RANDOM[6'hA][1:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_3_valid = _RANDOM[6'hA][2];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_3_fetch_PC = {_RANDOM[6'hA][31:3], _RANDOM[6'hB][2:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_3_predicted_PC = {_RANDOM[6'hB][31:4], _RANDOM[6'hC][3:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_3_T_NT = _RANDOM[6'hC][4];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_3_br_type = _RANDOM[6'hC][7:5];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_3_dominant_index = _RANDOM[6'hC][9:8];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_3_resolved_PC = {_RANDOM[6'hC][31:10], _RANDOM[6'hD][9:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_4_valid = _RANDOM[6'hD][10];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_4_fetch_PC = {_RANDOM[6'hD][31:11], _RANDOM[6'hE][10:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_4_predicted_PC = {_RANDOM[6'hE][31:12], _RANDOM[6'hF][11:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_4_T_NT = _RANDOM[6'hF][12];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_4_br_type = _RANDOM[6'hF][15:13];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_4_dominant_index = _RANDOM[6'hF][17:16];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_4_resolved_PC = {_RANDOM[6'hF][31:18], _RANDOM[6'h10][17:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_5_valid = _RANDOM[6'h10][18];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_5_fetch_PC = {_RANDOM[6'h10][31:19], _RANDOM[6'h11][18:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_5_predicted_PC = {_RANDOM[6'h11][31:20], _RANDOM[6'h12][19:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_5_T_NT = _RANDOM[6'h12][20];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_5_br_type = _RANDOM[6'h12][23:21];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_5_dominant_index = _RANDOM[6'h12][25:24];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_5_resolved_PC = {_RANDOM[6'h12][31:26], _RANDOM[6'h13][25:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_6_valid = _RANDOM[6'h13][26];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_6_fetch_PC = {_RANDOM[6'h13][31:27], _RANDOM[6'h14][26:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_6_predicted_PC = {_RANDOM[6'h14][31:28], _RANDOM[6'h15][27:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_6_T_NT = _RANDOM[6'h15][28];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_6_br_type = _RANDOM[6'h15][31:29];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_6_dominant_index = _RANDOM[6'h16][1:0];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_6_resolved_PC = {_RANDOM[6'h16][31:2], _RANDOM[6'h17][1:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_7_valid = _RANDOM[6'h17][2];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_7_fetch_PC = {_RANDOM[6'h17][31:3], _RANDOM[6'h18][2:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_7_predicted_PC = {_RANDOM[6'h18][31:4], _RANDOM[6'h19][3:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_7_T_NT = _RANDOM[6'h19][4];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_7_br_type = _RANDOM[6'h19][7:5];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_7_dominant_index = _RANDOM[6'h19][9:8];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_7_resolved_PC = {_RANDOM[6'h19][31:10], _RANDOM[6'h1A][9:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_8_valid = _RANDOM[6'h1A][10];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_8_fetch_PC = {_RANDOM[6'h1A][31:11], _RANDOM[6'h1B][10:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_8_predicted_PC = {_RANDOM[6'h1B][31:12], _RANDOM[6'h1C][11:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_8_T_NT = _RANDOM[6'h1C][12];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_8_br_type = _RANDOM[6'h1C][15:13];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_8_dominant_index = _RANDOM[6'h1C][17:16];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_8_resolved_PC = {_RANDOM[6'h1C][31:18], _RANDOM[6'h1D][17:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_9_valid = _RANDOM[6'h1D][18];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_9_fetch_PC = {_RANDOM[6'h1D][31:19], _RANDOM[6'h1E][18:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_9_predicted_PC = {_RANDOM[6'h1E][31:20], _RANDOM[6'h1F][19:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_9_T_NT = _RANDOM[6'h1F][20];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_9_br_type = _RANDOM[6'h1F][23:21];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_9_dominant_index = _RANDOM[6'h1F][25:24];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_9_resolved_PC = {_RANDOM[6'h1F][31:26], _RANDOM[6'h20][25:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_10_valid = _RANDOM[6'h20][26];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_10_fetch_PC = {_RANDOM[6'h20][31:27], _RANDOM[6'h21][26:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_10_predicted_PC = {_RANDOM[6'h21][31:28], _RANDOM[6'h22][27:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_10_T_NT = _RANDOM[6'h22][28];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_10_br_type = _RANDOM[6'h22][31:29];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_10_dominant_index = _RANDOM[6'h23][1:0];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_10_resolved_PC = {_RANDOM[6'h23][31:2], _RANDOM[6'h24][1:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_11_valid = _RANDOM[6'h24][2];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_11_fetch_PC = {_RANDOM[6'h24][31:3], _RANDOM[6'h25][2:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_11_predicted_PC = {_RANDOM[6'h25][31:4], _RANDOM[6'h26][3:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_11_T_NT = _RANDOM[6'h26][4];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_11_br_type = _RANDOM[6'h26][7:5];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_11_dominant_index = _RANDOM[6'h26][9:8];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_11_resolved_PC = {_RANDOM[6'h26][31:10], _RANDOM[6'h27][9:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_12_valid = _RANDOM[6'h27][10];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_12_fetch_PC = {_RANDOM[6'h27][31:11], _RANDOM[6'h28][10:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_12_predicted_PC = {_RANDOM[6'h28][31:12], _RANDOM[6'h29][11:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_12_T_NT = _RANDOM[6'h29][12];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_12_br_type = _RANDOM[6'h29][15:13];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_12_dominant_index = _RANDOM[6'h29][17:16];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_12_resolved_PC = {_RANDOM[6'h29][31:18], _RANDOM[6'h2A][17:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_13_valid = _RANDOM[6'h2A][18];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_13_fetch_PC = {_RANDOM[6'h2A][31:19], _RANDOM[6'h2B][18:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_13_predicted_PC = {_RANDOM[6'h2B][31:20], _RANDOM[6'h2C][19:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_13_T_NT = _RANDOM[6'h2C][20];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_13_br_type = _RANDOM[6'h2C][23:21];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_13_dominant_index = _RANDOM[6'h2C][25:24];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_13_resolved_PC = {_RANDOM[6'h2C][31:26], _RANDOM[6'h2D][25:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_14_valid = _RANDOM[6'h2D][26];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_14_fetch_PC = {_RANDOM[6'h2D][31:27], _RANDOM[6'h2E][26:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_14_predicted_PC = {_RANDOM[6'h2E][31:28], _RANDOM[6'h2F][27:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_14_T_NT = _RANDOM[6'h2F][28];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_14_br_type = _RANDOM[6'h2F][31:29];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_14_dominant_index = _RANDOM[6'h30][1:0];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_14_resolved_PC = {_RANDOM[6'h30][31:2], _RANDOM[6'h31][1:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_15_valid = _RANDOM[6'h31][2];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_15_fetch_PC = {_RANDOM[6'h31][31:3], _RANDOM[6'h32][2:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_15_predicted_PC = {_RANDOM[6'h32][31:4], _RANDOM[6'h33][3:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_15_T_NT = _RANDOM[6'h33][4];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_15_br_type = _RANDOM[6'h33][7:5];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_15_dominant_index = _RANDOM[6'h33][9:8];	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
-        FTQ_15_resolved_PC = {_RANDOM[6'h33][31:10], _RANDOM[6'h34][9:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :76:22
+        front_pointer = _RANDOM[6'h0][4:0];	// src/main/scala/Frontend/FTQ.scala:44:7, :70:34
+        back_pointer = _RANDOM[6'h0][9:5];	// src/main/scala/Frontend/FTQ.scala:44:7, :70:34, :71:34
+        FTQ_0_valid = _RANDOM[6'h0][10];	// src/main/scala/Frontend/FTQ.scala:44:7, :70:34, :77:22
+        FTQ_0_fetch_PC = {_RANDOM[6'h0][31:11], _RANDOM[6'h1][10:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :70:34, :77:22
+        FTQ_0_predicted_PC = {_RANDOM[6'h1][31:12], _RANDOM[6'h2][11:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_0_ROB_index = _RANDOM[6'h2][17:12];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_0_T_NT = _RANDOM[6'h2][18];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_0_br_type = _RANDOM[6'h2][21:19];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_0_dominant_index = _RANDOM[6'h2][23:22];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_0_resolved_PC = {_RANDOM[6'h2][31:24], _RANDOM[6'h3][23:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_1_valid = _RANDOM[6'h3][24];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_1_fetch_PC = {_RANDOM[6'h3][31:25], _RANDOM[6'h4][24:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_1_predicted_PC = {_RANDOM[6'h4][31:26], _RANDOM[6'h5][25:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_1_ROB_index = _RANDOM[6'h5][31:26];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_1_T_NT = _RANDOM[6'h6][0];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_1_br_type = _RANDOM[6'h6][3:1];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_1_dominant_index = _RANDOM[6'h6][5:4];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_1_resolved_PC = {_RANDOM[6'h6][31:6], _RANDOM[6'h7][5:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_2_valid = _RANDOM[6'h7][6];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_2_fetch_PC = {_RANDOM[6'h7][31:7], _RANDOM[6'h8][6:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_2_predicted_PC = {_RANDOM[6'h8][31:8], _RANDOM[6'h9][7:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_2_ROB_index = _RANDOM[6'h9][13:8];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_2_T_NT = _RANDOM[6'h9][14];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_2_br_type = _RANDOM[6'h9][17:15];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_2_dominant_index = _RANDOM[6'h9][19:18];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_2_resolved_PC = {_RANDOM[6'h9][31:20], _RANDOM[6'hA][19:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_3_valid = _RANDOM[6'hA][20];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_3_fetch_PC = {_RANDOM[6'hA][31:21], _RANDOM[6'hB][20:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_3_predicted_PC = {_RANDOM[6'hB][31:22], _RANDOM[6'hC][21:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_3_ROB_index = _RANDOM[6'hC][27:22];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_3_T_NT = _RANDOM[6'hC][28];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_3_br_type = _RANDOM[6'hC][31:29];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_3_dominant_index = _RANDOM[6'hD][1:0];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_3_resolved_PC = {_RANDOM[6'hD][31:2], _RANDOM[6'hE][1:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_4_valid = _RANDOM[6'hE][2];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_4_fetch_PC = {_RANDOM[6'hE][31:3], _RANDOM[6'hF][2:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_4_predicted_PC = {_RANDOM[6'hF][31:4], _RANDOM[6'h10][3:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_4_ROB_index = _RANDOM[6'h10][9:4];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_4_T_NT = _RANDOM[6'h10][10];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_4_br_type = _RANDOM[6'h10][13:11];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_4_dominant_index = _RANDOM[6'h10][15:14];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_4_resolved_PC = {_RANDOM[6'h10][31:16], _RANDOM[6'h11][15:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_5_valid = _RANDOM[6'h11][16];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_5_fetch_PC = {_RANDOM[6'h11][31:17], _RANDOM[6'h12][16:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_5_predicted_PC = {_RANDOM[6'h12][31:18], _RANDOM[6'h13][17:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_5_ROB_index = _RANDOM[6'h13][23:18];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_5_T_NT = _RANDOM[6'h13][24];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_5_br_type = _RANDOM[6'h13][27:25];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_5_dominant_index = _RANDOM[6'h13][29:28];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_5_resolved_PC = {_RANDOM[6'h13][31:30], _RANDOM[6'h14][29:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_6_valid = _RANDOM[6'h14][30];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_6_fetch_PC = {_RANDOM[6'h14][31], _RANDOM[6'h15][30:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_6_predicted_PC = _RANDOM[6'h16];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_6_ROB_index = _RANDOM[6'h17][5:0];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_6_T_NT = _RANDOM[6'h17][6];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_6_br_type = _RANDOM[6'h17][9:7];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_6_dominant_index = _RANDOM[6'h17][11:10];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_6_resolved_PC = {_RANDOM[6'h17][31:12], _RANDOM[6'h18][11:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_7_valid = _RANDOM[6'h18][12];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_7_fetch_PC = {_RANDOM[6'h18][31:13], _RANDOM[6'h19][12:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_7_predicted_PC = {_RANDOM[6'h19][31:14], _RANDOM[6'h1A][13:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_7_ROB_index = _RANDOM[6'h1A][19:14];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_7_T_NT = _RANDOM[6'h1A][20];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_7_br_type = _RANDOM[6'h1A][23:21];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_7_dominant_index = _RANDOM[6'h1A][25:24];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_7_resolved_PC = {_RANDOM[6'h1A][31:26], _RANDOM[6'h1B][25:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_8_valid = _RANDOM[6'h1B][26];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_8_fetch_PC = {_RANDOM[6'h1B][31:27], _RANDOM[6'h1C][26:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_8_predicted_PC = {_RANDOM[6'h1C][31:28], _RANDOM[6'h1D][27:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_8_ROB_index = {_RANDOM[6'h1D][31:28], _RANDOM[6'h1E][1:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_8_T_NT = _RANDOM[6'h1E][2];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_8_br_type = _RANDOM[6'h1E][5:3];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_8_dominant_index = _RANDOM[6'h1E][7:6];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_8_resolved_PC = {_RANDOM[6'h1E][31:8], _RANDOM[6'h1F][7:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_9_valid = _RANDOM[6'h1F][8];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_9_fetch_PC = {_RANDOM[6'h1F][31:9], _RANDOM[6'h20][8:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_9_predicted_PC = {_RANDOM[6'h20][31:10], _RANDOM[6'h21][9:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_9_ROB_index = _RANDOM[6'h21][15:10];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_9_T_NT = _RANDOM[6'h21][16];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_9_br_type = _RANDOM[6'h21][19:17];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_9_dominant_index = _RANDOM[6'h21][21:20];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_9_resolved_PC = {_RANDOM[6'h21][31:22], _RANDOM[6'h22][21:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_10_valid = _RANDOM[6'h22][22];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_10_fetch_PC = {_RANDOM[6'h22][31:23], _RANDOM[6'h23][22:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_10_predicted_PC = {_RANDOM[6'h23][31:24], _RANDOM[6'h24][23:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_10_ROB_index = _RANDOM[6'h24][29:24];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_10_T_NT = _RANDOM[6'h24][30];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_10_br_type = {_RANDOM[6'h24][31], _RANDOM[6'h25][1:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_10_dominant_index = _RANDOM[6'h25][3:2];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_10_resolved_PC = {_RANDOM[6'h25][31:4], _RANDOM[6'h26][3:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_11_valid = _RANDOM[6'h26][4];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_11_fetch_PC = {_RANDOM[6'h26][31:5], _RANDOM[6'h27][4:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_11_predicted_PC = {_RANDOM[6'h27][31:6], _RANDOM[6'h28][5:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_11_ROB_index = _RANDOM[6'h28][11:6];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_11_T_NT = _RANDOM[6'h28][12];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_11_br_type = _RANDOM[6'h28][15:13];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_11_dominant_index = _RANDOM[6'h28][17:16];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_11_resolved_PC = {_RANDOM[6'h28][31:18], _RANDOM[6'h29][17:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_12_valid = _RANDOM[6'h29][18];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_12_fetch_PC = {_RANDOM[6'h29][31:19], _RANDOM[6'h2A][18:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_12_predicted_PC = {_RANDOM[6'h2A][31:20], _RANDOM[6'h2B][19:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_12_ROB_index = _RANDOM[6'h2B][25:20];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_12_T_NT = _RANDOM[6'h2B][26];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_12_br_type = _RANDOM[6'h2B][29:27];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_12_dominant_index = _RANDOM[6'h2B][31:30];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_12_resolved_PC = _RANDOM[6'h2C];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_13_valid = _RANDOM[6'h2D][0];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_13_fetch_PC = {_RANDOM[6'h2D][31:1], _RANDOM[6'h2E][0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_13_predicted_PC = {_RANDOM[6'h2E][31:2], _RANDOM[6'h2F][1:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_13_ROB_index = _RANDOM[6'h2F][7:2];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_13_T_NT = _RANDOM[6'h2F][8];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_13_br_type = _RANDOM[6'h2F][11:9];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_13_dominant_index = _RANDOM[6'h2F][13:12];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_13_resolved_PC = {_RANDOM[6'h2F][31:14], _RANDOM[6'h30][13:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_14_valid = _RANDOM[6'h30][14];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_14_fetch_PC = {_RANDOM[6'h30][31:15], _RANDOM[6'h31][14:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_14_predicted_PC = {_RANDOM[6'h31][31:16], _RANDOM[6'h32][15:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_14_ROB_index = _RANDOM[6'h32][21:16];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_14_T_NT = _RANDOM[6'h32][22];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_14_br_type = _RANDOM[6'h32][25:23];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_14_dominant_index = _RANDOM[6'h32][27:26];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_14_resolved_PC = {_RANDOM[6'h32][31:28], _RANDOM[6'h33][27:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_15_valid = _RANDOM[6'h33][28];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_15_fetch_PC = {_RANDOM[6'h33][31:29], _RANDOM[6'h34][28:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_15_predicted_PC = {_RANDOM[6'h34][31:30], _RANDOM[6'h35][29:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_15_ROB_index = {_RANDOM[6'h35][31:30], _RANDOM[6'h36][3:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_15_T_NT = _RANDOM[6'h36][4];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_15_br_type = _RANDOM[6'h36][7:5];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_15_dominant_index = _RANDOM[6'h36][9:8];	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
+        FTQ_15_resolved_PC = {_RANDOM[6'h36][31:10], _RANDOM[6'h37][9:0]};	// src/main/scala/Frontend/FTQ.scala:44:7, :77:22
       `endif // RANDOMIZE_REG_INIT
     end // initial
     `ifdef FIRRTL_AFTER_INITIAL	// src/main/scala/Frontend/FTQ.scala:44:7
       `FIRRTL_AFTER_INITIAL	// src/main/scala/Frontend/FTQ.scala:44:7
     `endif // FIRRTL_AFTER_INITIAL
   `endif // ENABLE_INITIAL_REG_
-  assign io_predictions_ready = ~full;	// src/main/scala/Frontend/FTQ.scala:44:7, :164:81, :166:29
-  assign io_FTQ_valid = _GEN_0[front_index];	// src/main/scala/Frontend/FTQ.scala:44:7, :72:37, src/main/scala/utils.scala:333:10
-  assign io_FTQ_fetch_PC = _GEN_1[front_index];	// src/main/scala/Frontend/FTQ.scala:44:7, :72:37, src/main/scala/utils.scala:333:10
-  assign io_FTQ_predicted_PC = _GEN_2[front_index];	// src/main/scala/Frontend/FTQ.scala:44:7, :72:37, src/main/scala/utils.scala:333:10
-  assign io_FTQ_T_NT = _GEN_3[front_index];	// src/main/scala/Frontend/FTQ.scala:44:7, :72:37, src/main/scala/utils.scala:333:10
-  assign io_FTQ_br_type = _GEN_4[front_index];	// src/main/scala/Frontend/FTQ.scala:44:7, :72:37, src/main/scala/utils.scala:333:10
-  assign io_FTQ_dominant_index = _GEN[front_index];	// src/main/scala/Frontend/FTQ.scala:44:7, :72:37, :115:77, src/main/scala/utils.scala:333:10
-  assign io_FTQ_resolved_PC = _GEN_5[front_index];	// src/main/scala/Frontend/FTQ.scala:44:7, :72:37, src/main/scala/utils.scala:333:10
-  assign io_FTQ_index = back_index;	// src/main/scala/Frontend/FTQ.scala:44:7, :73:35
+  assign io_predictions_ready = ~full;	// src/main/scala/Frontend/FTQ.scala:44:7, :169:81, :171:29
+  assign io_FTQ_valid = _GEN_0[front_index];	// src/main/scala/Frontend/FTQ.scala:44:7, :73:37, :134:49
+  assign io_FTQ_fetch_PC = _GEN_1[front_index];	// src/main/scala/Frontend/FTQ.scala:44:7, :73:37, :134:49
+  assign io_FTQ_predicted_PC = _GEN_2[front_index];	// src/main/scala/Frontend/FTQ.scala:44:7, :73:37, :134:49
+  assign io_FTQ_T_NT = _GEN_4[front_index];	// src/main/scala/Frontend/FTQ.scala:44:7, :73:37, :134:49
+  assign io_FTQ_br_type = _GEN_5[front_index];	// src/main/scala/Frontend/FTQ.scala:44:7, :73:37, :134:49
+  assign io_FTQ_dominant_index = _GEN[front_index];	// src/main/scala/Frontend/FTQ.scala:44:7, :73:37, :119:77, :134:49
+  assign io_FTQ_resolved_PC = _GEN_6[front_index];	// src/main/scala/Frontend/FTQ.scala:44:7, :73:37, :134:49
+  assign io_FTQ_index = back_index;	// src/main/scala/Frontend/FTQ.scala:44:7, :74:35
 endmodule
 

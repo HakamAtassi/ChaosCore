@@ -132,7 +132,6 @@ class ROB(coreParameters:CoreParameters) extends Module{
     shared_mem_input.GHR                        := io.ROB_packet.bits.GHR
     shared_mem_input.TOS                        := io.ROB_packet.bits.TOS
     shared_mem_input.NEXT                       := io.ROB_packet.bits.NEXT
-    shared_mem_input.RAT_index                  := io.ROB_packet.bits.RAT_index
     shared_mem_input.free_list_front_pointer    := io.ROB_packet.bits.free_list_front_pointer
     
     // Port A / allocate
@@ -271,7 +270,7 @@ class ROB(coreParameters:CoreParameters) extends Module{
     io.ROB_output.ROB_index                := RegNext(front_index)    // you want the unbypassed version of this pointer
 
     io.ROB_output.fetch_PC                 := shared_mem.io.readDataB.fetch_PC
-    io.ROB_output.RAT_index                := shared_mem.io.readDataB.RAT_index
+    //io.ROB_output.RAT_index                := shared_mem.io.readDataB.RAT_index
     io.ROB_output.GHR                      := shared_mem.io.readDataB.GHR
     io.ROB_output.NEXT                     := shared_mem.io.readDataB.NEXT
     io.ROB_output.TOS                      := shared_mem.io.readDataB.TOS

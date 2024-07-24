@@ -59,7 +59,8 @@
 module Queue4_FU_output(	// src/main/scala/chisel3/util/Decoupled.scala:243:7
   input         clock,	// src/main/scala/chisel3/util/Decoupled.scala:243:7
                 reset,	// src/main/scala/chisel3/util/Decoupled.scala:243:7
-                io_enq_valid,	// src/main/scala/chisel3/util/Decoupled.scala:255:14
+  output        io_enq_ready,	// src/main/scala/chisel3/util/Decoupled.scala:255:14
+  input         io_enq_valid,	// src/main/scala/chisel3/util/Decoupled.scala:255:14
   input  [6:0]  io_enq_bits_RD,	// src/main/scala/chisel3/util/Decoupled.scala:255:14
   input  [31:0] io_enq_bits_RD_data,	// src/main/scala/chisel3/util/Decoupled.scala:255:14
   input         io_enq_bits_RD_valid,	// src/main/scala/chisel3/util/Decoupled.scala:255:14
@@ -88,15 +89,14 @@ module Queue4_FU_output(	// src/main/scala/chisel3/util/Decoupled.scala:243:7
   input         io_flush	// src/main/scala/chisel3/util/Decoupled.scala:255:14
 );
 
-  wire         io_enq_ready;	// src/main/scala/chisel3/util/Decoupled.scala:286:19
   wire [191:0] _ram_ext_R0_data;	// src/main/scala/chisel3/util/Decoupled.scala:256:91
   reg  [1:0]   enq_ptr_value;	// src/main/scala/chisel3/util/Counter.scala:61:40
   reg  [1:0]   deq_ptr_value;	// src/main/scala/chisel3/util/Counter.scala:61:40
   reg          maybe_full;	// src/main/scala/chisel3/util/Decoupled.scala:259:27
   wire         ptr_match = enq_ptr_value == deq_ptr_value;	// src/main/scala/chisel3/util/Counter.scala:61:40, src/main/scala/chisel3/util/Decoupled.scala:260:33
   wire         empty = ptr_match & ~maybe_full;	// src/main/scala/chisel3/util/Decoupled.scala:259:27, :260:33, :261:{25,28}
-  wire         do_enq = io_enq_ready & io_enq_valid;	// src/main/scala/chisel3/util/Decoupled.scala:51:35, :286:19
-  assign io_enq_ready = ~(ptr_match & maybe_full);	// src/main/scala/chisel3/util/Decoupled.scala:259:27, :260:33, :262:24, :286:19
+  wire         full = ptr_match & maybe_full;	// src/main/scala/chisel3/util/Decoupled.scala:259:27, :260:33, :262:24
+  wire         do_enq = ~full & io_enq_valid;	// src/main/scala/chisel3/util/Decoupled.scala:51:35, :262:24, :286:19
   always @(posedge clock) begin	// src/main/scala/chisel3/util/Decoupled.scala:243:7
     if (reset) begin	// src/main/scala/chisel3/util/Decoupled.scala:243:7
       enq_ptr_value <= 2'h0;	// src/main/scala/chisel3/util/Counter.scala:61:40
@@ -157,6 +157,7 @@ module Queue4_FU_output(	// src/main/scala/chisel3/util/Decoupled.scala:243:7
         io_enq_bits_RD_data,
         io_enq_bits_RD})	// src/main/scala/chisel3/util/Decoupled.scala:255:14, :256:91
   );	// src/main/scala/chisel3/util/Decoupled.scala:256:91
+  assign io_enq_ready = ~full;	// src/main/scala/chisel3/util/Decoupled.scala:243:7, :262:24, :286:19
   assign io_deq_valid = ~empty;	// src/main/scala/chisel3/util/Decoupled.scala:243:7, :261:25, :285:19
   assign io_deq_bits_RD = _ram_ext_R0_data[6:0];	// src/main/scala/chisel3/util/Decoupled.scala:243:7, :256:91
   assign io_deq_bits_RD_data = _ram_ext_R0_data[38:7];	// src/main/scala/chisel3/util/Decoupled.scala:243:7, :256:91

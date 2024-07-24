@@ -71,6 +71,7 @@ module fetch_packet_decoder(	// src/main/scala/Frontend/decoder.scala:211:7
   input  [31:0] io_predictions_in_bits_fetch_PC,	// src/main/scala/Frontend/decoder.scala:213:16
   input         io_predictions_in_bits_is_misprediction,	// src/main/scala/Frontend/decoder.scala:213:16
   input  [31:0] io_predictions_in_bits_predicted_PC,	// src/main/scala/Frontend/decoder.scala:213:16
+  input  [5:0]  io_predictions_in_bits_ROB_index,	// src/main/scala/Frontend/decoder.scala:213:16
   input         io_predictions_in_bits_T_NT,	// src/main/scala/Frontend/decoder.scala:213:16
   input  [2:0]  io_predictions_in_bits_br_type,	// src/main/scala/Frontend/decoder.scala:213:16
   input  [1:0]  io_predictions_in_bits_dominant_index,	// src/main/scala/Frontend/decoder.scala:213:16
@@ -189,7 +190,6 @@ module fetch_packet_decoder(	// src/main/scala/Frontend/decoder.scala:211:7
   output [15:0] io_decoded_fetch_packet_bits_GHR,	// src/main/scala/Frontend/decoder.scala:213:16
   output [6:0]  io_decoded_fetch_packet_bits_TOS,	// src/main/scala/Frontend/decoder.scala:213:16
                 io_decoded_fetch_packet_bits_NEXT,	// src/main/scala/Frontend/decoder.scala:213:16
-  output [3:0]  io_decoded_fetch_packet_bits_RAT_index,	// src/main/scala/Frontend/decoder.scala:213:16
   output [7:0]  io_decoded_fetch_packet_bits_free_list_front_pointer,	// src/main/scala/Frontend/decoder.scala:213:16
   input         io_predictions_out_ready,	// src/main/scala/Frontend/decoder.scala:213:16
   output        io_predictions_out_valid,	// src/main/scala/Frontend/decoder.scala:213:16
@@ -197,6 +197,7 @@ module fetch_packet_decoder(	// src/main/scala/Frontend/decoder.scala:211:7
   output [31:0] io_predictions_out_bits_fetch_PC,	// src/main/scala/Frontend/decoder.scala:213:16
   output        io_predictions_out_bits_is_misprediction,	// src/main/scala/Frontend/decoder.scala:213:16
   output [31:0] io_predictions_out_bits_predicted_PC,	// src/main/scala/Frontend/decoder.scala:213:16
+  output [5:0]  io_predictions_out_bits_ROB_index,	// src/main/scala/Frontend/decoder.scala:213:16
   output        io_predictions_out_bits_T_NT,	// src/main/scala/Frontend/decoder.scala:213:16
   output [2:0]  io_predictions_out_bits_br_type,	// src/main/scala/Frontend/decoder.scala:213:16
   output [1:0]  io_predictions_out_bits_dominant_index,	// src/main/scala/Frontend/decoder.scala:213:16
@@ -544,8 +545,8 @@ module fetch_packet_decoder(	// src/main/scala/Frontend/decoder.scala:211:7
     .io_enq_bits_decoded_instruction_0_packet_index
       (_decoders_0_io_decoded_instruction_bits_packet_index),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_0_ROB_index            (6'h0),	// src/main/scala/Frontend/decoder.scala:231:15, :267:65
-    .io_enq_bits_decoded_instruction_0_MOB_index            (4'h0),
-    .io_enq_bits_decoded_instruction_0_FTQ_index            (4'h0),
+    .io_enq_bits_decoded_instruction_0_MOB_index            (4'h0),	// src/main/scala/Frontend/decoder.scala:231:15, :267:65
+    .io_enq_bits_decoded_instruction_0_FTQ_index            (4'h0),	// src/main/scala/Frontend/decoder.scala:231:15, :267:65
     .io_enq_bits_decoded_instruction_0_instructionType
       (_decoders_0_io_decoded_instruction_bits_instructionType),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_0_portID
@@ -590,8 +591,8 @@ module fetch_packet_decoder(	// src/main/scala/Frontend/decoder.scala:211:7
     .io_enq_bits_decoded_instruction_1_packet_index
       (_decoders_1_io_decoded_instruction_bits_packet_index),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_1_ROB_index            (6'h0),	// src/main/scala/Frontend/decoder.scala:231:15, :267:65
-    .io_enq_bits_decoded_instruction_1_MOB_index            (4'h0),
-    .io_enq_bits_decoded_instruction_1_FTQ_index            (4'h0),
+    .io_enq_bits_decoded_instruction_1_MOB_index            (4'h0),	// src/main/scala/Frontend/decoder.scala:231:15, :267:65
+    .io_enq_bits_decoded_instruction_1_FTQ_index            (4'h0),	// src/main/scala/Frontend/decoder.scala:231:15, :267:65
     .io_enq_bits_decoded_instruction_1_instructionType
       (_decoders_1_io_decoded_instruction_bits_instructionType),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_1_portID
@@ -636,8 +637,8 @@ module fetch_packet_decoder(	// src/main/scala/Frontend/decoder.scala:211:7
     .io_enq_bits_decoded_instruction_2_packet_index
       (_decoders_2_io_decoded_instruction_bits_packet_index),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_2_ROB_index            (6'h0),	// src/main/scala/Frontend/decoder.scala:231:15, :267:65
-    .io_enq_bits_decoded_instruction_2_MOB_index            (4'h0),
-    .io_enq_bits_decoded_instruction_2_FTQ_index            (4'h0),
+    .io_enq_bits_decoded_instruction_2_MOB_index            (4'h0),	// src/main/scala/Frontend/decoder.scala:231:15, :267:65
+    .io_enq_bits_decoded_instruction_2_FTQ_index            (4'h0),	// src/main/scala/Frontend/decoder.scala:231:15, :267:65
     .io_enq_bits_decoded_instruction_2_instructionType
       (_decoders_2_io_decoded_instruction_bits_instructionType),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_2_portID
@@ -682,8 +683,8 @@ module fetch_packet_decoder(	// src/main/scala/Frontend/decoder.scala:211:7
     .io_enq_bits_decoded_instruction_3_packet_index
       (_decoders_3_io_decoded_instruction_bits_packet_index),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_3_ROB_index            (6'h0),	// src/main/scala/Frontend/decoder.scala:231:15, :267:65
-    .io_enq_bits_decoded_instruction_3_MOB_index            (4'h0),
-    .io_enq_bits_decoded_instruction_3_FTQ_index            (4'h0),
+    .io_enq_bits_decoded_instruction_3_MOB_index            (4'h0),	// src/main/scala/Frontend/decoder.scala:231:15, :267:65
+    .io_enq_bits_decoded_instruction_3_FTQ_index            (4'h0),	// src/main/scala/Frontend/decoder.scala:231:15, :267:65
     .io_enq_bits_decoded_instruction_3_instructionType
       (_decoders_3_io_decoded_instruction_bits_instructionType),	// src/main/scala/Frontend/decoder.scala:231:15
     .io_enq_bits_decoded_instruction_3_portID
@@ -716,7 +717,6 @@ module fetch_packet_decoder(	// src/main/scala/Frontend/decoder.scala:211:7
     .io_enq_bits_GHR                                        (io_fetch_packet_bits_GHR),
     .io_enq_bits_TOS                                        (io_fetch_packet_bits_TOS),
     .io_enq_bits_NEXT                                       (io_fetch_packet_bits_NEXT),
-    .io_enq_bits_RAT_index                                  (4'h0),
     .io_enq_bits_free_list_front_pointer                    (8'h0),
     .io_deq_ready
       (predictions_out_Q_io_deq_ready),	// src/main/scala/Frontend/decoder.scala:277:90
@@ -946,8 +946,6 @@ module fetch_packet_decoder(	// src/main/scala/Frontend/decoder.scala:211:7
       (io_decoded_fetch_packet_bits_TOS),
     .io_deq_bits_NEXT
       (io_decoded_fetch_packet_bits_NEXT),
-    .io_deq_bits_RAT_index
-      (io_decoded_fetch_packet_bits_RAT_index),
     .io_deq_bits_free_list_front_pointer
       (io_decoded_fetch_packet_bits_free_list_front_pointer),
     .io_flush                                               (io_flush)
@@ -960,6 +958,7 @@ module fetch_packet_decoder(	// src/main/scala/Frontend/decoder.scala:211:7
     .io_enq_bits_fetch_PC         (io_predictions_in_bits_fetch_PC),
     .io_enq_bits_is_misprediction (io_predictions_in_bits_is_misprediction),
     .io_enq_bits_predicted_PC     (io_predictions_in_bits_predicted_PC),
+    .io_enq_bits_ROB_index        (io_predictions_in_bits_ROB_index),
     .io_enq_bits_T_NT             (io_predictions_in_bits_T_NT),
     .io_enq_bits_br_type          (io_predictions_in_bits_br_type),
     .io_enq_bits_dominant_index   (io_predictions_in_bits_dominant_index),
@@ -970,6 +969,7 @@ module fetch_packet_decoder(	// src/main/scala/Frontend/decoder.scala:211:7
     .io_deq_bits_fetch_PC         (io_predictions_out_bits_fetch_PC),
     .io_deq_bits_is_misprediction (io_predictions_out_bits_is_misprediction),
     .io_deq_bits_predicted_PC     (io_predictions_out_bits_predicted_PC),
+    .io_deq_bits_ROB_index        (io_predictions_out_bits_ROB_index),
     .io_deq_bits_T_NT             (io_predictions_out_bits_T_NT),
     .io_deq_bits_br_type          (io_predictions_out_bits_br_type),
     .io_deq_bits_dominant_index   (io_predictions_out_bits_dominant_index),

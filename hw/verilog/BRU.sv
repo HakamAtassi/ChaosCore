@@ -9,7 +9,6 @@ module BRU(	// src/main/scala/Frontend/BRU.scala:38:7
   input  [31:0] io_FTQ_resolved_PC,	// src/main/scala/Frontend/BRU.scala:41:16
   input         io_ROB_output_row_valid,	// src/main/scala/Frontend/BRU.scala:41:16
   input  [31:0] io_ROB_output_fetch_PC,	// src/main/scala/Frontend/BRU.scala:41:16
-  input  [3:0]  io_ROB_output_RAT_index,	// src/main/scala/Frontend/BRU.scala:41:16
   input  [5:0]  io_ROB_output_ROB_index,	// src/main/scala/Frontend/BRU.scala:41:16
   input  [15:0] io_ROB_output_GHR,	// src/main/scala/Frontend/BRU.scala:41:16
   input  [6:0]  io_ROB_output_NEXT,	// src/main/scala/Frontend/BRU.scala:41:16
@@ -51,7 +50,6 @@ module BRU(	// src/main/scala/Frontend/BRU.scala:38:7
   output [15:0] io_commit_bits_GHR,	// src/main/scala/Frontend/BRU.scala:41:16
   output [6:0]  io_commit_bits_TOS,	// src/main/scala/Frontend/BRU.scala:41:16
                 io_commit_bits_NEXT,	// src/main/scala/Frontend/BRU.scala:41:16
-  output [3:0]  io_commit_bits_RAT_index,	// src/main/scala/Frontend/BRU.scala:41:16
   output [7:0]  io_commit_bits_free_list_front_pointer,	// src/main/scala/Frontend/BRU.scala:41:16
   output [4:0]  io_commit_bits_RDold_0,	// src/main/scala/Frontend/BRU.scala:41:16
                 io_commit_bits_RDold_1,	// src/main/scala/Frontend/BRU.scala:41:16
@@ -94,7 +92,6 @@ module BRU(	// src/main/scala/Frontend/BRU.scala:38:7
   assign io_commit_bits_GHR = io_ROB_output_GHR;	// src/main/scala/Frontend/BRU.scala:38:7
   assign io_commit_bits_TOS = io_ROB_output_TOS;	// src/main/scala/Frontend/BRU.scala:38:7
   assign io_commit_bits_NEXT = io_ROB_output_NEXT;	// src/main/scala/Frontend/BRU.scala:38:7
-  assign io_commit_bits_RAT_index = io_ROB_output_RAT_index;	// src/main/scala/Frontend/BRU.scala:38:7
   assign io_commit_bits_free_list_front_pointer = io_ROB_output_free_list_front_pointer;	// src/main/scala/Frontend/BRU.scala:38:7
   assign io_commit_bits_RDold_0 = io_ROB_output_ROB_entries_0_RDold;	// src/main/scala/Frontend/BRU.scala:38:7
   assign io_commit_bits_RDold_1 = io_ROB_output_ROB_entries_1_RDold;	// src/main/scala/Frontend/BRU.scala:38:7

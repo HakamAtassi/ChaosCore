@@ -56,7 +56,6 @@ class MEMRS(coreParameters:CoreParameters) extends Module{
         // MOB
         val reserved_pointers       =      Vec(fetchWidth, Flipped(ValidIO(UInt(log2Ceil(MOBEntries).W))))
 
-
         // UPDATE //
         val FU_outputs              =      Vec(portCount, Flipped(ValidIO(new FU_output(coreParameters))))
 
@@ -88,7 +87,7 @@ class MEMRS(coreParameters:CoreParameters) extends Module{
 
     for(i <- 0 until fetchWidth){
         written_vec(i) := 0.B
-        when(io.backend_packet(i).valid && io.backend_packet(i).ready){
+        when(io.backend_packet(i).valid && io.reserved_pointers(i).valid && io.backend_packet(i).ready){
             written_vec(i) := 1.B
         }
     }
@@ -192,12 +191,12 @@ class MEMRS(coreParameters:CoreParameters) extends Module{
     // FLUSH //
     ///////////
     for(i <- 0 until RSEntries){
-        when(io.flush && (reservation_station(i).decoded_instruction.ROB_index === io.commit.bits.ROB_index)){
+        when(io.commit.valid && (io.commit.bits.is_misprediction || io.commit.bits.exception)){
             reservation_station(i) := 0.U.asTypeOf(new MEMRS_entry(coreParameters))
         }
     }
 
-    when(io.flush){
+    when(io.commit.valid && (io.commit.bits.is_misprediction || io.commit.bits.exception)){
         front_pointer := 0.B
         back_pointer := 0.U
     }

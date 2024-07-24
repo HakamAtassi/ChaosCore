@@ -50,28 +50,28 @@ class backend(coreParameters:CoreParameters) extends Module{
 
     val io = IO(new Bundle{
         // FLUSH //
-        val flush                   =   Input(Bool())
+        val flush                       =   Input(Bool())
 
         val backend_memory_response     =   Flipped(Decoupled(new backend_memory_response(coreParameters))) // From MEM
         val backend_memory_request      =   Decoupled(new backend_memory_request(coreParameters))     // To MEM
 
         // REDIRECTS // 
-        val commit                  =    Flipped(ValidIO(new commit(coreParameters)))
+        val commit                      =    Flipped(ValidIO(new commit(coreParameters)))
 
         // PC_file access (for branch unit)
         val PC_file_exec_addr           =   Output(UInt(log2Ceil(ROBEntries).W))
         val PC_file_exec_data           =   Input(UInt(32.W))
 
         // ALLOCATE //
-        val fetch_PC                =   Input(UInt(32.W))  // DEBUG
-        val backend_packet          =   Flipped(Decoupled(new decoded_fetch_packet(coreParameters)))
+        val fetch_PC                    =   Input(UInt(32.W))  // DEBUG
+        val backend_packet              =   Flipped(Decoupled(new decoded_fetch_packet(coreParameters)))
 
-        val MEMRS_ready             =   Output(Vec(fetchWidth, Bool()))
-        val INTRS_ready             =   Output(Vec(fetchWidth, Bool()))
-        val MOB_ready               =   Output(Vec(fetchWidth, Bool()))
+        val MEMRS_ready                 =   Output(Vec(fetchWidth, Bool()))
+        val INTRS_ready                 =   Output(Vec(fetchWidth, Bool()))
+        val MOB_ready                   =   Output(Vec(fetchWidth, Bool()))
 
         // UPDATE //
-        val FU_outputs              =   Vec(portCount, ValidIO(new FU_output(coreParameters)))
+        val FU_outputs                  =   Vec(portCount, ValidIO(new FU_output(coreParameters)))
     })
 
 
@@ -105,7 +105,7 @@ class backend(coreParameters:CoreParameters) extends Module{
     MEM_RS.io.commit <> io.commit
     for (i <- 0 until fetchWidth){
         MEM_RS.io.backend_packet(i).bits     := io.backend_packet.bits.decoded_instruction(i)  // pass data along
-        MEM_RS.io.backend_packet(i).valid    := (io.backend_packet.bits.decoded_instruction(i).RS_type === RS_types.MEM)  && io.backend_packet.bits.valid_bits(i) && io.backend_packet.valid // does this entry correspond to RS
+        MEM_RS.io.backend_packet(i).valid    := (io.backend_packet.bits.decoded_instruction(i).RS_type === RS_types.MEM) && io.backend_packet.bits.valid_bits(i) && io.backend_packet.valid // does this entry correspond to RS
         MEM_RS.io.fetch_PC := io.fetch_PC
     }
 
@@ -119,9 +119,9 @@ class backend(coreParameters:CoreParameters) extends Module{
 
     // Assign ready bits
     for (i <- 0 until fetchWidth){
-        io.MEMRS_ready(i)        := MEM_RS.io.backend_packet(i).ready
+        io.MEMRS_ready(i)        := MEM_RS.io.backend_packet(i).ready && MOB.io.reserve(i).ready
+        io.MOB_ready(i)          := MEM_RS.io.backend_packet(i).ready && MOB.io.reserve(i).ready
         io.INTRS_ready(i)        := INT_RS.io.backend_packet(i).ready
-        io.MOB_ready(i)          := MOB.io.reserve(i).ready
     }
 
     MOB.io.reserved_pointers <> MEM_RS.io.reserved_pointers

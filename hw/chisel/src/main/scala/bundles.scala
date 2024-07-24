@@ -129,7 +129,7 @@ class commit(coreParameters:CoreParameters) extends Bundle{
     val fetch_PC                = UInt(32.W)    // To update gshare/PHT
     val T_NT                    = Bool()    // To update BTB (BTB only updates on taken branches)
     val ROB_index               = UInt(log2Ceil(ROBEntries).W)
-    
+
     val br_type                 = br_type_t()
     val fetch_packet_index      = UInt(log2Ceil(fetchWidth).W)  // fetch packet index of the branch
 
@@ -141,7 +141,6 @@ class commit(coreParameters:CoreParameters) extends Bundle{
     val GHR                     = UInt(GHRWidth.W)
     val TOS                     = UInt(log2Ceil(RASEntries).W)
     val NEXT                    = UInt(log2Ceil(RASEntries).W)
-    val RAT_index               = UInt(log2Ceil(RATCheckpointCount).W)
 
     val free_list_front_pointer = UInt((physicalRegBits + 1).W)
 
@@ -256,7 +255,7 @@ class decoded_fetch_packet(coreParameters:CoreParameters) extends Bundle{
     val TOS                     = UInt(log2Ceil(RASEntries).W)
     val NEXT                    = UInt(log2Ceil(RASEntries).W)
 
-    val RAT_index               = UInt(log2Ceil(RATCheckpointCount).W)
+
     val free_list_front_pointer = UInt((physicalRegBits + 1).W)
 
 }
@@ -347,6 +346,8 @@ class FTQ_entry(coreParameters:CoreParameters) extends Bundle{
     val predicted_PC        = UInt(32.W)    // if fetch packet contains a branch, this containts the dominant branch address
                                             // if fetch packet does not contain a taken branch, the dominant branch just PC+N
 
+    val ROB_index               = UInt(log2Ceil(ROBEntries).W)
+
     val T_NT = Bool()
     val br_type = br_type_t()
 
@@ -366,7 +367,6 @@ class ROB_output(coreParameters:CoreParameters) extends Bundle{
     // 1 per row data
     val row_valid               = Bool()
     val fetch_PC                = UInt(32.W)
-    val RAT_index               = UInt(log2Ceil(RATCheckpointCount).W)
     val ROB_index               = UInt(log2Ceil(ROBEntries).W)
 
     val GHR     = UInt(GHRWidth.W)
@@ -385,7 +385,6 @@ class ROB_shared(coreParameters:CoreParameters) extends Bundle{
     import coreParameters._
 
     val fetch_PC                = UInt(32.W)
-    val RAT_index               = UInt(log2Ceil(RATCheckpointCount).W)
 
     val free_list_front_pointer = UInt((physicalRegBits + 1).W)
 

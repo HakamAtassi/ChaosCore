@@ -172,7 +172,6 @@ module Queue2_decoded_fetch_packet(	// src/main/scala/chisel3/util/Decoupled.sca
   input  [15:0] io_enq_bits_GHR,	// src/main/scala/chisel3/util/Decoupled.scala:255:14
   input  [6:0]  io_enq_bits_TOS,	// src/main/scala/chisel3/util/Decoupled.scala:255:14
                 io_enq_bits_NEXT,	// src/main/scala/chisel3/util/Decoupled.scala:255:14
-  input  [3:0]  io_enq_bits_RAT_index,	// src/main/scala/chisel3/util/Decoupled.scala:255:14
   input  [7:0]  io_enq_bits_free_list_front_pointer,	// src/main/scala/chisel3/util/Decoupled.scala:255:14
   input         io_deq_ready,	// src/main/scala/chisel3/util/Decoupled.scala:255:14
   output        io_deq_valid,	// src/main/scala/chisel3/util/Decoupled.scala:255:14
@@ -288,13 +287,12 @@ module Queue2_decoded_fetch_packet(	// src/main/scala/chisel3/util/Decoupled.sca
   output [15:0] io_deq_bits_GHR,	// src/main/scala/chisel3/util/Decoupled.scala:255:14
   output [6:0]  io_deq_bits_TOS,	// src/main/scala/chisel3/util/Decoupled.scala:255:14
                 io_deq_bits_NEXT,	// src/main/scala/chisel3/util/Decoupled.scala:255:14
-  output [3:0]  io_deq_bits_RAT_index,	// src/main/scala/chisel3/util/Decoupled.scala:255:14
   output [7:0]  io_deq_bits_free_list_front_pointer,	// src/main/scala/chisel3/util/Decoupled.scala:255:14
   input         io_flush	// src/main/scala/chisel3/util/Decoupled.scala:255:14
 );
 
   wire         io_enq_ready;	// src/main/scala/chisel3/util/Decoupled.scala:286:19
-  wire [437:0] _ram_ext_R0_data;	// src/main/scala/chisel3/util/Decoupled.scala:256:91
+  wire [433:0] _ram_ext_R0_data;	// src/main/scala/chisel3/util/Decoupled.scala:256:91
   reg          wrap;	// src/main/scala/chisel3/util/Counter.scala:61:40
   reg          wrap_1;	// src/main/scala/chisel3/util/Counter.scala:61:40
   reg          maybe_full;	// src/main/scala/chisel3/util/Decoupled.scala:259:27
@@ -335,7 +333,7 @@ module Queue2_decoded_fetch_packet(	// src/main/scala/chisel3/util/Decoupled.sca
       `FIRRTL_AFTER_INITIAL	// src/main/scala/chisel3/util/Decoupled.scala:243:7
     `endif // FIRRTL_AFTER_INITIAL
   `endif // ENABLE_INITIAL_REG_
-  ram_2x438 ram_ext (	// src/main/scala/chisel3/util/Decoupled.scala:256:91
+  ram_2x434 ram_ext (	// src/main/scala/chisel3/util/Decoupled.scala:256:91
     .R0_addr (wrap_1),	// src/main/scala/chisel3/util/Counter.scala:61:40
     .R0_en   (1'h1),	// src/main/scala/chisel3/util/Decoupled.scala:243:7
     .R0_clk  (clock),
@@ -345,7 +343,6 @@ module Queue2_decoded_fetch_packet(	// src/main/scala/chisel3/util/Decoupled.sca
     .W0_clk  (clock),
     .W0_data
       ({io_enq_bits_free_list_front_pointer,
-        io_enq_bits_RAT_index,
         io_enq_bits_NEXT,
         io_enq_bits_TOS,
         io_enq_bits_GHR,
@@ -572,7 +569,6 @@ module Queue2_decoded_fetch_packet(	// src/main/scala/chisel3/util/Decoupled.sca
   assign io_deq_bits_GHR = _ram_ext_R0_data[411:396];	// src/main/scala/chisel3/util/Decoupled.scala:243:7, :256:91
   assign io_deq_bits_TOS = _ram_ext_R0_data[418:412];	// src/main/scala/chisel3/util/Decoupled.scala:243:7, :256:91
   assign io_deq_bits_NEXT = _ram_ext_R0_data[425:419];	// src/main/scala/chisel3/util/Decoupled.scala:243:7, :256:91
-  assign io_deq_bits_RAT_index = _ram_ext_R0_data[429:426];	// src/main/scala/chisel3/util/Decoupled.scala:243:7, :256:91
-  assign io_deq_bits_free_list_front_pointer = _ram_ext_R0_data[437:430];	// src/main/scala/chisel3/util/Decoupled.scala:243:7, :256:91
+  assign io_deq_bits_free_list_front_pointer = _ram_ext_R0_data[433:426];	// src/main/scala/chisel3/util/Decoupled.scala:243:7, :256:91
 endmodule
 

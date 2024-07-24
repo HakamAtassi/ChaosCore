@@ -59,7 +59,6 @@ module rename(	// src/main/scala/Frontend/rename.scala:154:7
   input  [15:0] io_commit_bits_GHR,	// src/main/scala/Frontend/rename.scala:167:16
   input  [6:0]  io_commit_bits_TOS,	// src/main/scala/Frontend/rename.scala:167:16
                 io_commit_bits_NEXT,	// src/main/scala/Frontend/rename.scala:167:16
-  input  [3:0]  io_commit_bits_RAT_index,	// src/main/scala/Frontend/rename.scala:167:16
   input  [7:0]  io_commit_bits_free_list_front_pointer,	// src/main/scala/Frontend/rename.scala:167:16
   input  [4:0]  io_commit_bits_RDold_0,	// src/main/scala/Frontend/rename.scala:167:16
                 io_commit_bits_RDold_1,	// src/main/scala/Frontend/rename.scala:167:16
@@ -79,6 +78,7 @@ module rename(	// src/main/scala/Frontend/rename.scala:154:7
   input  [31:0] io_predictions_in_bits_fetch_PC,	// src/main/scala/Frontend/rename.scala:167:16
   input         io_predictions_in_bits_is_misprediction,	// src/main/scala/Frontend/rename.scala:167:16
   input  [31:0] io_predictions_in_bits_predicted_PC,	// src/main/scala/Frontend/rename.scala:167:16
+  input  [5:0]  io_predictions_in_bits_ROB_index,	// src/main/scala/Frontend/rename.scala:167:16
   input         io_predictions_in_bits_T_NT,	// src/main/scala/Frontend/rename.scala:167:16
   input  [2:0]  io_predictions_in_bits_br_type,	// src/main/scala/Frontend/rename.scala:167:16
   input  [1:0]  io_predictions_in_bits_dominant_index,	// src/main/scala/Frontend/rename.scala:167:16
@@ -89,6 +89,7 @@ module rename(	// src/main/scala/Frontend/rename.scala:154:7
   output [31:0] io_predictions_out_bits_fetch_PC,	// src/main/scala/Frontend/rename.scala:167:16
   output        io_predictions_out_bits_is_misprediction,	// src/main/scala/Frontend/rename.scala:167:16
   output [31:0] io_predictions_out_bits_predicted_PC,	// src/main/scala/Frontend/rename.scala:167:16
+  output [5:0]  io_predictions_out_bits_ROB_index,	// src/main/scala/Frontend/rename.scala:167:16
   output        io_predictions_out_bits_T_NT,	// src/main/scala/Frontend/rename.scala:167:16
   output [2:0]  io_predictions_out_bits_br_type,	// src/main/scala/Frontend/rename.scala:167:16
   output [1:0]  io_predictions_out_bits_dominant_index,	// src/main/scala/Frontend/rename.scala:167:16
@@ -207,7 +208,6 @@ module rename(	// src/main/scala/Frontend/rename.scala:154:7
   input  [15:0] io_decoded_fetch_packet_bits_GHR,	// src/main/scala/Frontend/rename.scala:167:16
   input  [6:0]  io_decoded_fetch_packet_bits_TOS,	// src/main/scala/Frontend/rename.scala:167:16
                 io_decoded_fetch_packet_bits_NEXT,	// src/main/scala/Frontend/rename.scala:167:16
-  input  [3:0]  io_decoded_fetch_packet_bits_RAT_index,	// src/main/scala/Frontend/rename.scala:167:16
   input  [7:0]  io_decoded_fetch_packet_bits_free_list_front_pointer,	// src/main/scala/Frontend/rename.scala:167:16
   input         io_FU_outputs_0_valid,	// src/main/scala/Frontend/rename.scala:167:16
   input  [6:0]  io_FU_outputs_0_bits_RD,	// src/main/scala/Frontend/rename.scala:167:16
@@ -395,7 +395,6 @@ module rename(	// src/main/scala/Frontend/rename.scala:154:7
   output [15:0] io_renamed_decoded_fetch_packet_bits_GHR,	// src/main/scala/Frontend/rename.scala:167:16
   output [6:0]  io_renamed_decoded_fetch_packet_bits_TOS,	// src/main/scala/Frontend/rename.scala:167:16
                 io_renamed_decoded_fetch_packet_bits_NEXT,	// src/main/scala/Frontend/rename.scala:167:16
-  output [3:0]  io_renamed_decoded_fetch_packet_bits_RAT_index,	// src/main/scala/Frontend/rename.scala:167:16
   output [7:0]  io_renamed_decoded_fetch_packet_bits_free_list_front_pointer	// src/main/scala/Frontend/rename.scala:167:16
 );
 
@@ -2581,7 +2580,6 @@ module rename(	// src/main/scala/Frontend/rename.scala:154:7
     .io_commit_bits_GHR                     (io_commit_bits_GHR),
     .io_commit_bits_TOS                     (io_commit_bits_TOS),
     .io_commit_bits_NEXT                    (io_commit_bits_NEXT),
-    .io_commit_bits_RAT_index               (io_commit_bits_RAT_index),
     .io_commit_bits_free_list_front_pointer (io_commit_bits_free_list_front_pointer),
     .io_commit_bits_RDold_0                 (io_commit_bits_RDold_0),
     .io_commit_bits_RDold_1                 (io_commit_bits_RDold_1),
@@ -2696,6 +2694,7 @@ module rename(	// src/main/scala/Frontend/rename.scala:154:7
     .io_enq_bits_fetch_PC         (io_predictions_in_bits_fetch_PC),
     .io_enq_bits_is_misprediction (io_predictions_in_bits_is_misprediction),
     .io_enq_bits_predicted_PC     (io_predictions_in_bits_predicted_PC),
+    .io_enq_bits_ROB_index        (io_predictions_in_bits_ROB_index),
     .io_enq_bits_T_NT             (io_predictions_in_bits_T_NT),
     .io_enq_bits_br_type          (io_predictions_in_bits_br_type),
     .io_enq_bits_dominant_index   (io_predictions_in_bits_dominant_index),
@@ -2706,6 +2705,7 @@ module rename(	// src/main/scala/Frontend/rename.scala:154:7
     .io_deq_bits_fetch_PC         (io_predictions_out_bits_fetch_PC),
     .io_deq_bits_is_misprediction (io_predictions_out_bits_is_misprediction),
     .io_deq_bits_predicted_PC     (io_predictions_out_bits_predicted_PC),
+    .io_deq_bits_ROB_index        (io_predictions_out_bits_ROB_index),
     .io_deq_bits_T_NT             (io_predictions_out_bits_T_NT),
     .io_deq_bits_br_type          (io_predictions_out_bits_br_type),
     .io_deq_bits_dominant_index   (io_predictions_out_bits_dominant_index),
@@ -2986,8 +2986,6 @@ module rename(	// src/main/scala/Frontend/rename.scala:154:7
       (io_decoded_fetch_packet_bits_TOS),
     .io_enq_bits_NEXT
       (io_decoded_fetch_packet_bits_NEXT),
-    .io_enq_bits_RAT_index
-      (io_decoded_fetch_packet_bits_RAT_index),
     .io_enq_bits_free_list_front_pointer
       ({1'h0, _free_list_io_free_list_front_pointer}),	// src/main/scala/Frontend/rename.scala:205:33, :224:82
     .io_deq_ready
@@ -3210,8 +3208,6 @@ module rename(	// src/main/scala/Frontend/rename.scala:154:7
       (io_renamed_decoded_fetch_packet_bits_TOS),
     .io_deq_bits_NEXT
       (io_renamed_decoded_fetch_packet_bits_NEXT),
-    .io_deq_bits_RAT_index
-      (io_renamed_decoded_fetch_packet_bits_RAT_index),
     .io_deq_bits_free_list_front_pointer
       (io_renamed_decoded_fetch_packet_bits_free_list_front_pointer),
     .io_flush                                               (io_flush)
