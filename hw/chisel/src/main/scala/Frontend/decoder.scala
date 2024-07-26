@@ -269,8 +269,8 @@ class fetch_packet_decoder(coreParameters:CoreParameters) extends Module{
 
 
     // FIXME: broken 
-    decoded_fetch_packet.valid                          := io.fetch_packet.valid && !io.flush
-    predictions_out.valid                               := io.predictions_in.valid && !io.flush
+    decoded_fetch_packet.valid                          := io.fetch_packet.fire && !io.flush
+    predictions_out.valid                               := io.predictions_in.fire && !io.flush
 
     decoded_fetch_packet_out_Q.io.enq                   <> decoded_fetch_packet
     decoded_fetch_packet_out_Q.io.deq                   <> io.decoded_fetch_packet

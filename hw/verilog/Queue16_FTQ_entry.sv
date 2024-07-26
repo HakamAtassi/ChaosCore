@@ -27,7 +27,6 @@ module Queue16_FTQ_entry(
   input         io_flush
 );
 
-  wire         do_deq;
   wire [109:0] _ram_ext_R0_data;
   reg  [3:0]   enq_ptr_value;
   reg  [3:0]   deq_ptr_value;
@@ -35,9 +34,8 @@ module Queue16_FTQ_entry(
   wire         ptr_match = enq_ptr_value == deq_ptr_value;
   wire         empty = ptr_match & ~maybe_full;
   wire         full = ptr_match & maybe_full;
-  wire         io_deq_valid_0 = io_enq_valid | ~empty;
-  assign do_deq = ~empty & io_deq_ready & io_deq_valid_0;
-  wire         do_enq = ~(empty & io_deq_ready) & ~full & io_enq_valid;
+  wire         do_enq = ~full & io_enq_valid;
+  wire         do_deq = io_deq_ready & ~empty;
   always @(posedge clock) begin
     if (reset) begin
       enq_ptr_value <= 4'h0;
@@ -78,19 +76,15 @@ module Queue16_FTQ_entry(
         io_enq_bits_valid})
   );
   assign io_enq_ready = ~full;
-  assign io_deq_valid = io_deq_valid_0;
-  assign io_deq_bits_valid = empty ? io_enq_bits_valid : _ram_ext_R0_data[0];
-  assign io_deq_bits_fetch_PC = empty ? io_enq_bits_fetch_PC : _ram_ext_R0_data[32:1];
-  assign io_deq_bits_is_misprediction =
-    empty ? io_enq_bits_is_misprediction : _ram_ext_R0_data[33];
-  assign io_deq_bits_predicted_PC =
-    empty ? io_enq_bits_predicted_PC : _ram_ext_R0_data[65:34];
-  assign io_deq_bits_ROB_index = empty ? io_enq_bits_ROB_index : _ram_ext_R0_data[71:66];
-  assign io_deq_bits_T_NT = empty ? io_enq_bits_T_NT : _ram_ext_R0_data[72];
-  assign io_deq_bits_br_type = empty ? io_enq_bits_br_type : _ram_ext_R0_data[75:73];
-  assign io_deq_bits_dominant_index =
-    empty ? io_enq_bits_dominant_index : _ram_ext_R0_data[77:76];
-  assign io_deq_bits_resolved_PC =
-    empty ? io_enq_bits_resolved_PC : _ram_ext_R0_data[109:78];
+  assign io_deq_valid = ~empty;
+  assign io_deq_bits_valid = _ram_ext_R0_data[0];
+  assign io_deq_bits_fetch_PC = _ram_ext_R0_data[32:1];
+  assign io_deq_bits_is_misprediction = _ram_ext_R0_data[33];
+  assign io_deq_bits_predicted_PC = _ram_ext_R0_data[65:34];
+  assign io_deq_bits_ROB_index = _ram_ext_R0_data[71:66];
+  assign io_deq_bits_T_NT = _ram_ext_R0_data[72];
+  assign io_deq_bits_br_type = _ram_ext_R0_data[75:73];
+  assign io_deq_bits_dominant_index = _ram_ext_R0_data[77:76];
+  assign io_deq_bits_resolved_PC = _ram_ext_R0_data[109:78];
 endmodule
 

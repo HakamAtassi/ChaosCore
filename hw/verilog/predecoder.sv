@@ -101,8 +101,11 @@ module predecoder(
                 io_RAS_update_ret
 );
 
+  reg              io_fetch_packet_ready_REG;
+  reg              io_prediction_ready_REG;
   wire             is_JALR;
   wire             is_JAL;
+  wire             _final_fetch_packet_out_Q_io_enq_ready;
   wire             _is_BTB_taken_T_9 = io_prediction_valid & io_prediction_bits_hit;
   wire             curr_is_JAL =
     io_fetch_packet_bits_instructions_3_instruction[6:2] == 5'h1B
@@ -242,7 +245,9 @@ module predecoder(
               : io_fetch_packet_bits_fetch_PC
                 + {26'h0, 6'h10 - {2'h0, io_fetch_packet_bits_fetch_PC[3:0]}};
   reg  [31:0]      expected_next_PC;
-  wire             input_valid = io_fetch_packet_valid & io_prediction_valid & ~io_flush;
+  wire             input_valid =
+    io_fetch_packet_ready_REG & io_fetch_packet_valid & io_prediction_ready_REG
+    & io_prediction_valid & ~io_flush;
   wire             output_ready = io_final_fetch_packet_ready & io_predictions_ready;
   wire             input_fetch_packet_valid =
     input_valid & expected_next_PC == io_fetch_packet_bits_fetch_PC;
@@ -253,8 +258,6 @@ module predecoder(
   wire             _GEN_4 = _push_FTQ_T | is_control_2 | is_control_3;
   wire [15:0]      _GEN_5 = {GHR[14:0], T_NT_0 | T_NT_1 | T_NT_2 | is_taken};
   wire             predictions_out_bits_T_NT = T_NT_0 | T_NT_1 | T_NT_2 | is_taken;
-  reg              io_prediction_ready_REG;
-  reg              io_fetch_packet_ready_REG;
   always @(posedge clock) begin
     if (reset) begin
       expected_next_PC <= 32'h0;
@@ -263,7 +266,7 @@ module predecoder(
     else begin
       if (io_commit_valid & io_commit_bits_is_misprediction)
         expected_next_PC <= io_commit_bits_fetch_PC;
-      else if (input_fetch_packet_valid & output_ready)
+      else if (input_fetch_packet_valid & _final_fetch_packet_out_Q_io_enq_ready)
         expected_next_PC <= target_address;
       if (io_commit_bits_is_misprediction)
         GHR <= io_commit_bits_GHR;
@@ -309,6 +312,7 @@ module predecoder(
   Queue2_fetch_packet final_fetch_packet_out_Q (
     .clock                                   (clock),
     .reset                                   (reset),
+    .io_enq_ready                            (_final_fetch_packet_out_Q_io_enq_ready),
     .io_enq_valid                            (input_fetch_packet_valid),
     .io_enq_bits_fetch_PC                    (masked_addr),
     .io_enq_bits_valid_bits_0

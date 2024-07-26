@@ -106,7 +106,6 @@ class ChaosCore(coreParameters:CoreParameters) extends Module{
     /////////////////////
     // FRONTEND <> FTQ //
     /////////////////////
-    frontend.io.predictions <> FTQ.io.predictions   //buffer made predictions
 
     //////////////////////
     // FRONTEND <> DRAM //
@@ -155,7 +154,6 @@ class ChaosCore(coreParameters:CoreParameters) extends Module{
     ////////////////
     BRU.io.FTQ <> FTQ.io.FTQ
 
-    FTQ.io.ROB_index <> ROB.io.ROB_index
 
     ///////////
     // FLUSH //
@@ -214,13 +212,13 @@ class ChaosCore(coreParameters:CoreParameters) extends Module{
     ROB.io.ROB_packet           <> frontend.io.renamed_decoded_fetch_packet
     ROB.io.ROB_packet.valid     := frontend.io.renamed_decoded_fetch_packet.valid && all_INT_RS_accepted && all_MEM_RS_accepted
 
+    frontend.io.predictions <> FTQ.io.predictions   //buffer made predictions
+    FTQ.io.ROB_index <> ROB.io.ROB_index
+    FTQ.io.predictions.valid := frontend.io.renamed_decoded_fetch_packet.valid && all_INT_RS_accepted && all_MEM_RS_accepted
+
     // Connect branch unit to PC file (which exists in the ROB)
     backend.io.PC_file_exec_addr <> ROB.io.PC_file_exec_addr
     backend.io.PC_file_exec_data <> ROB.io.PC_file_exec_data
-
-    // 
-    //BRU.io.PC_file_commit_data <> ROB.io.PC_file_commit_data
-
 
 
     frontend.io.renamed_decoded_fetch_packet.ready := (ROB.io.ROB_packet.ready && all_INT_RS_accepted && all_MEM_RS_accepted)

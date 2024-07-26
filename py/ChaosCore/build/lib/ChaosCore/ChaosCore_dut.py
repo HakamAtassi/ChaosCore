@@ -108,9 +108,10 @@ class ChaosCore_dut:
     def write_dmem_request_ready(self, ready):
         self.ChaosCore.io_backend_memory_request_ready.value = ready
 
-    def write_dmem_response(self, data=0, valid=0):
+    def write_dmem_response(self, data=0, valid=0, MOB_index=0):
         self.ChaosCore.io_backend_memory_response_valid.value = valid
-        self.ChaosCore.io_backend_memory_response_bits_data.value = data if valid else 0
+        self.ChaosCore.io_backend_memory_response_bits_data.value = data if valid else 1
+        self.ChaosCore.io_backend_memory_response_bits_MOB_index.value = MOB_index
 
     async def update(self):  # clock cycle with memory handling
 
@@ -140,12 +141,12 @@ class ChaosCore_dut:
                 else:
                     self.dmem.write(address=addr, data=data, size=4)
 
-
             else:  # read
                 try:
                     # FIXME: size depends on instruction
                     data = self.dmem.read(address=addr, size=4)
                     data = int.from_bytes(data, byteorder="little")
+                    MOB_index = self.ChaosCore.io_backend_memory_request_bits_MOB_index.value = MOB_index
                     self.write_dmem_response(data, 1)
                 except:
                     pass
