@@ -1,6 +1,6 @@
 ---
 layout: default
 title: FPU
-parent: Architecture
+parent: Core Architecture
 nav_order: 5
 ---

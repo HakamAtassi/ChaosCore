@@ -62,7 +62,9 @@ object Main extends App {
                                                                         "--target-dir", "../verilog", 
                                                                         //"--preserve-aggregate", "all", 
                                                                         "--dump-fir",
-                                                                        ))
+                                                                        ), 
+                                                                        firtoolOpts = Array("-disable-all-randomization", "-strip-debug-info")
+                                                                        )
 
 
 

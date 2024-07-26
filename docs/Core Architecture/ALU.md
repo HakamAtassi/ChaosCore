@@ -1,7 +1,7 @@
 ---
 layout: default
 title: ALU
-parent: Architecture
+parent: Core Architecture
 nav_order: 4
 ---
 

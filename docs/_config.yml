@@ -1,5 +1,5 @@
-title: Just the Docs Template
-description: A starter template for a Jekyll site using the Just the Docs theme!
+title: ChaosCore
+description: A security oriented Chess playing SoC.
 theme: just-the-docs
 
 # Set the base URL to match your repository name
@@ -15,8 +15,8 @@ color_scheme: dark
 # Include necessary folders
 include:
   - _pages
-  - naming
-  - architecture
+  - Core Architecture
+  - DTA
   - verification
   - extensions
   - building
