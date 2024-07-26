@@ -68,6 +68,9 @@ class predecoder(coreParameters:CoreParameters) extends Module{
     val predictions_out         = Wire(Decoupled(new FTQ_entry(coreParameters)))
     val final_fetch_packet_out  = Wire(Decoupled(new fetch_packet(coreParameters)))
 
+    val predictions_out_Q                      = Module(new Queue(new FTQ_entry(coreParameters), 2, flow=false, hasFlush=true, useSyncReadMem=false))
+    val final_fetch_packet_out_Q               = Module(new Queue(new fetch_packet(coreParameters), 2, flow=false, hasFlush=true, useSyncReadMem=false))
+
     ///////////////////
     // BRANCH DECODE //
     ///////////////////
@@ -178,8 +181,8 @@ class predecoder(coreParameters:CoreParameters) extends Module{
     PC_match                       :=  expected_next_PC === io.fetch_packet.bits.fetch_PC
     PC_mismatch                    :=  expected_next_PC =/= io.fetch_packet.bits.fetch_PC
 
-    input_valid                    :=  io.fetch_packet.valid    && 
-                                       io.prediction.valid      && 
+    input_valid                    :=  io.fetch_packet.fire    && 
+                                       io.prediction.fire      && 
                                        !io.flush
 
     output_ready                    := io.final_fetch_packet.ready && io.predictions.ready 
@@ -187,7 +190,7 @@ class predecoder(coreParameters:CoreParameters) extends Module{
     input_fetch_packet_valid        := input_valid && PC_match
 
     final_fetch_packet_out.valid    := input_fetch_packet_valid
-    when(input_fetch_packet_valid && output_ready){expected_next_PC := target_address}
+    when(input_fetch_packet_valid && final_fetch_packet_out_Q.io.enq.ready){expected_next_PC := target_address}
     when(io.commit.valid && io.commit.bits.is_misprediction){expected_next_PC := io.commit.bits.fetch_PC}
 
     ////////////
@@ -225,7 +228,7 @@ class predecoder(coreParameters:CoreParameters) extends Module{
     final_fetch_packet_out.bits := io.fetch_packet.bits
     final_fetch_packet_out.bits.fetch_PC := masked_addr
     for(i <- 0 until fetchWidth){
-        final_fetch_packet_out.bits.valid_bits(i)   := io.fetch_packet.bits.valid_bits(i) && final_fetch_packet_valid_bits(i)
+        final_fetch_packet_out.bits.valid_bits(i) := io.fetch_packet.bits.valid_bits(i) && final_fetch_packet_valid_bits(i)
     }
 
     final_fetch_packet_out.bits.GHR                           := GHR
@@ -264,8 +267,6 @@ class predecoder(coreParameters:CoreParameters) extends Module{
     //////////////////////
     // predecoded instruction & FTQ outputs passed through a skid buffer
 
-    val predictions_out_Q                      = Module(new Queue(new FTQ_entry(coreParameters), 2, flow=false, hasFlush=true, useSyncReadMem=false))
-    val final_fetch_packet_out_Q               = Module(new Queue(new fetch_packet(coreParameters), 2, flow=false, hasFlush=true, useSyncReadMem=false))
 
     predictions_out_Q.io.enq                  <> predictions_out
     predictions_out_Q.io.deq                  <> io.predictions

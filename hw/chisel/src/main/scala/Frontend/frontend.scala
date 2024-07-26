@@ -74,8 +74,8 @@ class frontend(coreParameters:CoreParameters) extends Module{
     val instruction_fetch   = Module(new instruction_fetch(coreParameters))
     val decoders            = Module(new fetch_packet_decoder(coreParameters))
     
-    val instruction_queue   = Module(new Queue(new decoded_fetch_packet(coreParameters), 16, flow=true, hasFlush=true, useSyncReadMem=true))
-    val FTQ_queue           = Module(new Queue(new FTQ_entry(coreParameters), 16, flow=true, hasFlush=true, useSyncReadMem=true))
+    val instruction_queue   = Module(new Queue(new decoded_fetch_packet(coreParameters), 16, flow=false, hasFlush=true, useSyncReadMem=true))
+    val FTQ_queue           = Module(new Queue(new FTQ_entry(coreParameters), 16, flow=false, hasFlush=true, useSyncReadMem=true))
 
     val rename              = Module(new rename(coreParameters))
 

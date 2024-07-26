@@ -109,7 +109,6 @@ class MOB(coreParameters:CoreParameters) extends Module{
 
     }); dontTouch(io)
 
-
     val front_pointer   = RegInit(UInt(ptr_width.W), 0.U)
     val back_pointer    = RegInit(UInt(ptr_width.W), 0.U)
 
