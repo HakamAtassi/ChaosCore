@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Caches
-parent: Architecture
+parent: Core Architecture
 nav_order: 6
 ---
 

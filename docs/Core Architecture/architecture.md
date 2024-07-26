@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Architecture
+title: Core Architecture
 nav_order: 2
 has_children: true
 ---

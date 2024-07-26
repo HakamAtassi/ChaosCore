@@ -1,5 +1,5 @@
 ---
-title: Chaos Core
+title: ChaosCore
 layout: home
 nav_order: 1
 ---
@@ -9,20 +9,36 @@ nav_order: 1
 
 ## What ChaosCore? 
 
-The goal of ChaosCore is **not** to develop an Out-of-Order Core that meets some baseline functionality. Instead, the goal(s) of this project are the following:
-* To create an Out-Of-Order Core generator that provides performance enhancing configurability
-    * Cache replacement techniques, pre-fetchers, etc... We refer to these as "widgets"
-* Demonstrate security as a key trade-off with these often information leaking enhancements
-    * Address security through the generation of mitigations 
-* To provide a core designed with verification as a "first class" concern
 
-Make above more concise
 
-I can word this as a core designed optimized for 3 primary considerations Performance, Security, and Verification.
-Maybe include a triangle diagram thing
+ChaosCore is a very Chaotic core. It works, passes our very robust verification suite (inspired by OpenTitan), but somehow leaves its users exposed. 
 
-ChaosCore is the first core generator designed with security configuration built in. It is also the first public core verified under the UVM?
-(UVM verification doesnt make verification any better though, really)
+
+ChaosCore is a performance oriented aggresively parameterizable out-of-order superscalar Risc-v processor. ChaosCore comes in a few varients:
+
+* Standard mode: the default ChaosCore configuration. Provides 2 ChaosCores for twice the fun. Shared L2 Cache.
+* DVFS mode: a configuration option that scales power and frequency dependant on workload. Just dont let anyone find out. 
+* Shared EU mode: a configuration offering a cheaper alternative to true multicore mode by sharing the cores EUs. 
+* ???
+
+Each of these varients offer a further configuration. Standard mode, for instance, offers a smoke mode that uses obfuscation techniques to hide memory activity. Standard mode also offers <clever mode for non speculative> mode, that masks processor speculation to limit specter attacks. 
+
+
+* how will the user get their code to run??? Do they build it in advance and run it on the core? how does this work exactly?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 "if you ever get the chance to work on an out of order processor, take that chance" - Onur Multu
