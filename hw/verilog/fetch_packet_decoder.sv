@@ -242,6 +242,10 @@ module fetch_packet_decoder(
   wire        _decoders_0_io_decoded_instruction_bits_IS_IMM;
   wire [1:0]  _decoders_0_io_decoded_instruction_bits_memory_type;
   wire [1:0]  _decoders_0_io_decoded_instruction_bits_access_width;
+  wire        _predictions_out_valid_T_1 =
+    io_fetch_packet_ready_REG & io_fetch_packet_valid;
+  wire        _predictions_out_valid_T =
+    io_predictions_in_ready_REG & io_predictions_in_valid;
   wire        predictions_out_Q_io_deq_ready =
     io_decoded_fetch_packet_ready & io_predictions_out_ready;
   reg         monitor_output_REG;
@@ -455,7 +459,8 @@ module fetch_packet_decoder(
     .clock                                                  (clock),
     .reset                                                  (reset),
     .io_enq_valid
-      (io_fetch_packet_ready_REG & io_fetch_packet_valid & ~io_flush),
+      (_predictions_out_valid_T_1 & (_predictions_out_valid_T | ~io_predictions_in_valid)
+       & ~io_flush),
     .io_enq_bits_fetch_PC
       (io_fetch_packet_bits_fetch_PC),
     .io_enq_bits_decoded_instruction_0_ready_bits_RS1_ready (1'h0),
@@ -890,7 +895,7 @@ module fetch_packet_decoder(
     .clock                        (clock),
     .reset                        (reset),
     .io_enq_valid
-      (io_predictions_in_ready_REG & io_predictions_in_valid & ~io_flush),
+      (_predictions_out_valid_T & _predictions_out_valid_T_1 & ~io_flush),
     .io_enq_bits_valid            (io_predictions_in_bits_valid),
     .io_enq_bits_fetch_PC         (io_predictions_in_bits_fetch_PC),
     .io_enq_bits_is_misprediction (io_predictions_in_bits_is_misprediction),

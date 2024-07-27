@@ -5,51 +5,81 @@ elf/hello_world.elf:     file format elf32-littleriscv
 Disassembly of section .text:
 
 00000000 <_start>:
-   0:	00004137          	lui	x2,0x4
-   4:	00000297          	auipc	x5,0x0
-   8:	03828293          	addi	x5,x5,56 # 3c <main>
+   0:	00004137          	lui	x2,0x4                  ; x2 = 0x4000
+   4:	00000297          	auipc	x5,0x0                ; x5 = 4
+   8:	09828293          	addi	x5,x5,152 # 9c <main> ; x5 = 0x9c
    c:	00028067          	jr	x5
 
 00000010 <putchar>:
-  10:	800007b7          	lui	x15,0x80000
-  14:	00a7a023          	sw	x10,0(x15) # 80000000 <main+0x7fffffc4>
-  18:	00008067          	ret
+  10:	fd010113          	addi	x2,x2,-48             ; x2 = 0x3fc0
+  14:	02812623          	sw	x8,44(x2)               ; mem[0x3fec] = 0x4000
+  18:	03010413          	addi	x8,x2,48              ; x8 = 0x3ff0
+  1c:	fca42e23          	sw	x10,-36(x8)             ; mem[0x3fcc] = 72
+  20:	800007b7          	lui	x15,0x80000             ; x15 = 0x80000
+  24:	fef42623          	sw	x15,-20(x8)             ; mem[0x3fdc] = 0x8000_0000
+  28:	fdc42703          	lw	x14,-36(x8)             ; x14 = mem[0x3fcc]
+  2c:	fec42783          	lw	x15,-20(x8)             ; x15 = mem[0x3fdc]
+  30:	00e7a023          	sw	x14,0(x15)              ; mem[0x8000_0000] = 72 ; missing??
+  34:	00000013          	nop
+  38:	02c12403          	lw	x8,44(x2)               ; x8 = mem[0x3fec]
+  3c:	03010113          	addi	x2,x2,48
+  40:	00008067          	ret
 
-0000001c <printf>:
-  1c:	00054783          	lbu	x15,0(x10)
-  20:	00078c63          	beqz	x15,38 <printf+0x1c>
-  24:	80000737          	lui	x14,0x80000
-  28:	00f72023          	sw	x15,0(x14) # 80000000 <main+0x7fffffc4>
-  2c:	00154783          	lbu	x15,1(x10)
-  30:	00150513          	addi	x10,x10,1
-  34:	fe079ae3          	bnez	x15,28 <printf+0xc>
-  38:	00008067          	ret
+00000044 <printf>:
+  44:	fe010113          	addi	x2,x2,-32
+  48:	00112e23          	sw	x1,28(x2)
+  4c:	00812c23          	sw	x8,24(x2)
+  50:	02010413          	addi	x8,x2,32
+  54:	fea42623          	sw	x10,-20(x8)
+  58:	0200006f          	j	78 <printf+0x34>
+  5c:	fec42783          	lw	x15,-20(x8)
+  60:	0007c783          	lbu	x15,0(x15)
+  64:	00078513          	mv	x10,x15
+  68:	fa9ff0ef          	jal	10 <putchar>
+  6c:	fec42783          	lw	x15,-20(x8)
+  70:	00178793          	addi	x15,x15,1
+  74:	fef42623          	sw	x15,-20(x8)
+  78:	fec42783          	lw	x15,-20(x8)
+  7c:	0007c783          	lbu	x15,0(x15)
+  80:	fc079ee3          	bnez	x15,5c <printf+0x18>
+  84:	00000013          	nop
+  88:	00000013          	nop
+  8c:	01c12083          	lw	x1,28(x2)
+  90:	01812403          	lw	x8,24(x2)
+  94:	02010113          	addi	x2,x2,32
+  98:	00008067          	ret
 
-0000003c <main>:
-  3c:	800007b7          	lui	x15,0x80000
-  40:	04800f13          	li	x30,72
-  44:	04500e93          	li	x29,69
-  48:	04c00713          	li	x14,76
-  4c:	04f00693          	li	x13,79
-  50:	02c00e13          	li	x28,44
-  54:	02000313          	li	x6,32
-  58:	05700893          	li	x17,87
-  5c:	05200813          	li	x16,82
-  60:	04400513          	li	x10,68
-  64:	02100593          	li	x11,33
-  68:	00a00613          	li	x12,10
-  6c:	01e7a023          	sw	x30,0(x15) # 80000000 <main+0x7fffffc4>
-  70:	01d7a023          	sw	x29,0(x15)
-  74:	00e7a023          	sw	x14,0(x15)
-  78:	00e7a023          	sw	x14,0(x15)
-  7c:	00d7a023          	sw	x13,0(x15)
-  80:	01c7a023          	sw	x28,0(x15)
-  84:	0067a023          	sw	x6,0(x15)
-  88:	0117a023          	sw	x17,0(x15)
-  8c:	00d7a023          	sw	x13,0(x15)
-  90:	0107a023          	sw	x16,0(x15)
-  94:	00e7a023          	sw	x14,0(x15)
-  98:	00a7a023          	sw	x10,0(x15)
-  9c:	00b7a023          	sw	x11,0(x15)
-  a0:	00c7a023          	sw	x12,0(x15)
-  a4:	fc9ff06f          	j	6c <main+0x30>
+0000009c <main>:
+  9c:	ff010113          	addi	x2,x2,-16     ; x2 = 0x3ff0
+  a0:	00112623          	sw	x1,12(x2)       ; mem[0x3ffc] = 0x0
+  a4:	00812423          	sw	x8,8(x2)        ; mem[0x3ff8] = 0x0
+  a8:	01010413          	addi	x8,x2,16      ; x8 = 0x4000
+  ac:	04800513          	li	x10,72          ; x10 = 72
+  b0:	f61ff0ef          	jal	10 <putchar>
+  b4:	04500513          	li	x10,69
+  b8:	f59ff0ef          	jal	10 <putchar>
+  bc:	04c00513          	li	x10,76
+  c0:	f51ff0ef          	jal	10 <putchar>
+  c4:	04c00513          	li	x10,76
+  c8:	f49ff0ef          	jal	10 <putchar>
+  cc:	04f00513          	li	x10,79
+  d0:	f41ff0ef          	jal	10 <putchar>
+  d4:	02c00513          	li	x10,44
+  d8:	f39ff0ef          	jal	10 <putchar>
+  dc:	02000513          	li	x10,32
+  e0:	f31ff0ef          	jal	10 <putchar>
+  e4:	05700513          	li	x10,87
+  e8:	f29ff0ef          	jal	10 <putchar>
+  ec:	04f00513          	li	x10,79
+  f0:	f21ff0ef          	jal	10 <putchar>
+  f4:	05200513          	li	x10,82
+  f8:	f19ff0ef          	jal	10 <putchar>
+  fc:	04c00513          	li	x10,76
+ 100:	f11ff0ef          	jal	10 <putchar>
+ 104:	04400513          	li	x10,68
+ 108:	f09ff0ef          	jal	10 <putchar>
+ 10c:	02100513          	li	x10,33
+ 110:	f01ff0ef          	jal	10 <putchar>
+ 114:	00a00513          	li	x10,10
+ 118:	ef9ff0ef          	jal	10 <putchar>
+ 11c:	f91ff06f          	j	ac <main+0x10>

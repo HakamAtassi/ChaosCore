@@ -124,6 +124,9 @@ module RS(
                 io_FU_outputs_2_valid,
   input  [6:0]  io_FU_outputs_2_bits_RD,
   input         io_FU_outputs_2_bits_RD_valid,
+                io_FU_outputs_3_valid,
+  input  [6:0]  io_FU_outputs_3_bits_RD,
+  input         io_FU_outputs_3_bits_RD_valid,
   output        io_RF_inputs_0_valid,
                 io_RF_inputs_0_bits_ready_bits_RS1_ready,
                 io_RF_inputs_0_bits_ready_bits_RS2_ready,
@@ -831,224 +834,288 @@ module RS(
     | io_FU_outputs_1_bits_RD == reservation_station_0_decoded_instruction_RS1
     & io_FU_outputs_1_bits_RD_valid & io_FU_outputs_1_valid
     | io_FU_outputs_2_bits_RD == reservation_station_0_decoded_instruction_RS1
-    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid;
+    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid
+    | io_FU_outputs_3_bits_RD == reservation_station_0_decoded_instruction_RS1
+    & io_FU_outputs_3_bits_RD_valid & io_FU_outputs_3_valid;
   wire              RS2_match_0 =
     io_FU_outputs_0_bits_RD == reservation_station_0_decoded_instruction_RS2
     & io_FU_outputs_0_bits_RD_valid & io_FU_outputs_0_valid
     | io_FU_outputs_1_bits_RD == reservation_station_0_decoded_instruction_RS2
     & io_FU_outputs_1_bits_RD_valid & io_FU_outputs_1_valid
     | io_FU_outputs_2_bits_RD == reservation_station_0_decoded_instruction_RS2
-    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid;
+    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid
+    | io_FU_outputs_3_bits_RD == reservation_station_0_decoded_instruction_RS2
+    & io_FU_outputs_3_bits_RD_valid & io_FU_outputs_3_valid;
   wire              RS1_match_1 =
     io_FU_outputs_0_bits_RD == reservation_station_1_decoded_instruction_RS1
     & io_FU_outputs_0_bits_RD_valid & io_FU_outputs_0_valid
     | io_FU_outputs_1_bits_RD == reservation_station_1_decoded_instruction_RS1
     & io_FU_outputs_1_bits_RD_valid & io_FU_outputs_1_valid
     | io_FU_outputs_2_bits_RD == reservation_station_1_decoded_instruction_RS1
-    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid;
+    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid
+    | io_FU_outputs_3_bits_RD == reservation_station_1_decoded_instruction_RS1
+    & io_FU_outputs_3_bits_RD_valid & io_FU_outputs_3_valid;
   wire              RS2_match_1 =
     io_FU_outputs_0_bits_RD == reservation_station_1_decoded_instruction_RS2
     & io_FU_outputs_0_bits_RD_valid & io_FU_outputs_0_valid
     | io_FU_outputs_1_bits_RD == reservation_station_1_decoded_instruction_RS2
     & io_FU_outputs_1_bits_RD_valid & io_FU_outputs_1_valid
     | io_FU_outputs_2_bits_RD == reservation_station_1_decoded_instruction_RS2
-    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid;
+    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid
+    | io_FU_outputs_3_bits_RD == reservation_station_1_decoded_instruction_RS2
+    & io_FU_outputs_3_bits_RD_valid & io_FU_outputs_3_valid;
   wire              RS1_match_2 =
     io_FU_outputs_0_bits_RD == reservation_station_2_decoded_instruction_RS1
     & io_FU_outputs_0_bits_RD_valid & io_FU_outputs_0_valid
     | io_FU_outputs_1_bits_RD == reservation_station_2_decoded_instruction_RS1
     & io_FU_outputs_1_bits_RD_valid & io_FU_outputs_1_valid
     | io_FU_outputs_2_bits_RD == reservation_station_2_decoded_instruction_RS1
-    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid;
+    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid
+    | io_FU_outputs_3_bits_RD == reservation_station_2_decoded_instruction_RS1
+    & io_FU_outputs_3_bits_RD_valid & io_FU_outputs_3_valid;
   wire              RS2_match_2 =
     io_FU_outputs_0_bits_RD == reservation_station_2_decoded_instruction_RS2
     & io_FU_outputs_0_bits_RD_valid & io_FU_outputs_0_valid
     | io_FU_outputs_1_bits_RD == reservation_station_2_decoded_instruction_RS2
     & io_FU_outputs_1_bits_RD_valid & io_FU_outputs_1_valid
     | io_FU_outputs_2_bits_RD == reservation_station_2_decoded_instruction_RS2
-    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid;
+    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid
+    | io_FU_outputs_3_bits_RD == reservation_station_2_decoded_instruction_RS2
+    & io_FU_outputs_3_bits_RD_valid & io_FU_outputs_3_valid;
   wire              RS1_match_3 =
     io_FU_outputs_0_bits_RD == reservation_station_3_decoded_instruction_RS1
     & io_FU_outputs_0_bits_RD_valid & io_FU_outputs_0_valid
     | io_FU_outputs_1_bits_RD == reservation_station_3_decoded_instruction_RS1
     & io_FU_outputs_1_bits_RD_valid & io_FU_outputs_1_valid
     | io_FU_outputs_2_bits_RD == reservation_station_3_decoded_instruction_RS1
-    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid;
+    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid
+    | io_FU_outputs_3_bits_RD == reservation_station_3_decoded_instruction_RS1
+    & io_FU_outputs_3_bits_RD_valid & io_FU_outputs_3_valid;
   wire              RS2_match_3 =
     io_FU_outputs_0_bits_RD == reservation_station_3_decoded_instruction_RS2
     & io_FU_outputs_0_bits_RD_valid & io_FU_outputs_0_valid
     | io_FU_outputs_1_bits_RD == reservation_station_3_decoded_instruction_RS2
     & io_FU_outputs_1_bits_RD_valid & io_FU_outputs_1_valid
     | io_FU_outputs_2_bits_RD == reservation_station_3_decoded_instruction_RS2
-    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid;
+    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid
+    | io_FU_outputs_3_bits_RD == reservation_station_3_decoded_instruction_RS2
+    & io_FU_outputs_3_bits_RD_valid & io_FU_outputs_3_valid;
   wire              RS1_match_4 =
     io_FU_outputs_0_bits_RD == reservation_station_4_decoded_instruction_RS1
     & io_FU_outputs_0_bits_RD_valid & io_FU_outputs_0_valid
     | io_FU_outputs_1_bits_RD == reservation_station_4_decoded_instruction_RS1
     & io_FU_outputs_1_bits_RD_valid & io_FU_outputs_1_valid
     | io_FU_outputs_2_bits_RD == reservation_station_4_decoded_instruction_RS1
-    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid;
+    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid
+    | io_FU_outputs_3_bits_RD == reservation_station_4_decoded_instruction_RS1
+    & io_FU_outputs_3_bits_RD_valid & io_FU_outputs_3_valid;
   wire              RS2_match_4 =
     io_FU_outputs_0_bits_RD == reservation_station_4_decoded_instruction_RS2
     & io_FU_outputs_0_bits_RD_valid & io_FU_outputs_0_valid
     | io_FU_outputs_1_bits_RD == reservation_station_4_decoded_instruction_RS2
     & io_FU_outputs_1_bits_RD_valid & io_FU_outputs_1_valid
     | io_FU_outputs_2_bits_RD == reservation_station_4_decoded_instruction_RS2
-    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid;
+    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid
+    | io_FU_outputs_3_bits_RD == reservation_station_4_decoded_instruction_RS2
+    & io_FU_outputs_3_bits_RD_valid & io_FU_outputs_3_valid;
   wire              RS1_match_5 =
     io_FU_outputs_0_bits_RD == reservation_station_5_decoded_instruction_RS1
     & io_FU_outputs_0_bits_RD_valid & io_FU_outputs_0_valid
     | io_FU_outputs_1_bits_RD == reservation_station_5_decoded_instruction_RS1
     & io_FU_outputs_1_bits_RD_valid & io_FU_outputs_1_valid
     | io_FU_outputs_2_bits_RD == reservation_station_5_decoded_instruction_RS1
-    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid;
+    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid
+    | io_FU_outputs_3_bits_RD == reservation_station_5_decoded_instruction_RS1
+    & io_FU_outputs_3_bits_RD_valid & io_FU_outputs_3_valid;
   wire              RS2_match_5 =
     io_FU_outputs_0_bits_RD == reservation_station_5_decoded_instruction_RS2
     & io_FU_outputs_0_bits_RD_valid & io_FU_outputs_0_valid
     | io_FU_outputs_1_bits_RD == reservation_station_5_decoded_instruction_RS2
     & io_FU_outputs_1_bits_RD_valid & io_FU_outputs_1_valid
     | io_FU_outputs_2_bits_RD == reservation_station_5_decoded_instruction_RS2
-    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid;
+    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid
+    | io_FU_outputs_3_bits_RD == reservation_station_5_decoded_instruction_RS2
+    & io_FU_outputs_3_bits_RD_valid & io_FU_outputs_3_valid;
   wire              RS1_match_6 =
     io_FU_outputs_0_bits_RD == reservation_station_6_decoded_instruction_RS1
     & io_FU_outputs_0_bits_RD_valid & io_FU_outputs_0_valid
     | io_FU_outputs_1_bits_RD == reservation_station_6_decoded_instruction_RS1
     & io_FU_outputs_1_bits_RD_valid & io_FU_outputs_1_valid
     | io_FU_outputs_2_bits_RD == reservation_station_6_decoded_instruction_RS1
-    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid;
+    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid
+    | io_FU_outputs_3_bits_RD == reservation_station_6_decoded_instruction_RS1
+    & io_FU_outputs_3_bits_RD_valid & io_FU_outputs_3_valid;
   wire              RS2_match_6 =
     io_FU_outputs_0_bits_RD == reservation_station_6_decoded_instruction_RS2
     & io_FU_outputs_0_bits_RD_valid & io_FU_outputs_0_valid
     | io_FU_outputs_1_bits_RD == reservation_station_6_decoded_instruction_RS2
     & io_FU_outputs_1_bits_RD_valid & io_FU_outputs_1_valid
     | io_FU_outputs_2_bits_RD == reservation_station_6_decoded_instruction_RS2
-    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid;
+    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid
+    | io_FU_outputs_3_bits_RD == reservation_station_6_decoded_instruction_RS2
+    & io_FU_outputs_3_bits_RD_valid & io_FU_outputs_3_valid;
   wire              RS1_match_7 =
     io_FU_outputs_0_bits_RD == reservation_station_7_decoded_instruction_RS1
     & io_FU_outputs_0_bits_RD_valid & io_FU_outputs_0_valid
     | io_FU_outputs_1_bits_RD == reservation_station_7_decoded_instruction_RS1
     & io_FU_outputs_1_bits_RD_valid & io_FU_outputs_1_valid
     | io_FU_outputs_2_bits_RD == reservation_station_7_decoded_instruction_RS1
-    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid;
+    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid
+    | io_FU_outputs_3_bits_RD == reservation_station_7_decoded_instruction_RS1
+    & io_FU_outputs_3_bits_RD_valid & io_FU_outputs_3_valid;
   wire              RS2_match_7 =
     io_FU_outputs_0_bits_RD == reservation_station_7_decoded_instruction_RS2
     & io_FU_outputs_0_bits_RD_valid & io_FU_outputs_0_valid
     | io_FU_outputs_1_bits_RD == reservation_station_7_decoded_instruction_RS2
     & io_FU_outputs_1_bits_RD_valid & io_FU_outputs_1_valid
     | io_FU_outputs_2_bits_RD == reservation_station_7_decoded_instruction_RS2
-    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid;
+    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid
+    | io_FU_outputs_3_bits_RD == reservation_station_7_decoded_instruction_RS2
+    & io_FU_outputs_3_bits_RD_valid & io_FU_outputs_3_valid;
   wire              RS1_match_8 =
     io_FU_outputs_0_bits_RD == reservation_station_8_decoded_instruction_RS1
     & io_FU_outputs_0_bits_RD_valid & io_FU_outputs_0_valid
     | io_FU_outputs_1_bits_RD == reservation_station_8_decoded_instruction_RS1
     & io_FU_outputs_1_bits_RD_valid & io_FU_outputs_1_valid
     | io_FU_outputs_2_bits_RD == reservation_station_8_decoded_instruction_RS1
-    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid;
+    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid
+    | io_FU_outputs_3_bits_RD == reservation_station_8_decoded_instruction_RS1
+    & io_FU_outputs_3_bits_RD_valid & io_FU_outputs_3_valid;
   wire              RS2_match_8 =
     io_FU_outputs_0_bits_RD == reservation_station_8_decoded_instruction_RS2
     & io_FU_outputs_0_bits_RD_valid & io_FU_outputs_0_valid
     | io_FU_outputs_1_bits_RD == reservation_station_8_decoded_instruction_RS2
     & io_FU_outputs_1_bits_RD_valid & io_FU_outputs_1_valid
     | io_FU_outputs_2_bits_RD == reservation_station_8_decoded_instruction_RS2
-    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid;
+    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid
+    | io_FU_outputs_3_bits_RD == reservation_station_8_decoded_instruction_RS2
+    & io_FU_outputs_3_bits_RD_valid & io_FU_outputs_3_valid;
   wire              RS1_match_9 =
     io_FU_outputs_0_bits_RD == reservation_station_9_decoded_instruction_RS1
     & io_FU_outputs_0_bits_RD_valid & io_FU_outputs_0_valid
     | io_FU_outputs_1_bits_RD == reservation_station_9_decoded_instruction_RS1
     & io_FU_outputs_1_bits_RD_valid & io_FU_outputs_1_valid
     | io_FU_outputs_2_bits_RD == reservation_station_9_decoded_instruction_RS1
-    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid;
+    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid
+    | io_FU_outputs_3_bits_RD == reservation_station_9_decoded_instruction_RS1
+    & io_FU_outputs_3_bits_RD_valid & io_FU_outputs_3_valid;
   wire              RS2_match_9 =
     io_FU_outputs_0_bits_RD == reservation_station_9_decoded_instruction_RS2
     & io_FU_outputs_0_bits_RD_valid & io_FU_outputs_0_valid
     | io_FU_outputs_1_bits_RD == reservation_station_9_decoded_instruction_RS2
     & io_FU_outputs_1_bits_RD_valid & io_FU_outputs_1_valid
     | io_FU_outputs_2_bits_RD == reservation_station_9_decoded_instruction_RS2
-    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid;
+    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid
+    | io_FU_outputs_3_bits_RD == reservation_station_9_decoded_instruction_RS2
+    & io_FU_outputs_3_bits_RD_valid & io_FU_outputs_3_valid;
   wire              RS1_match_10 =
     io_FU_outputs_0_bits_RD == reservation_station_10_decoded_instruction_RS1
     & io_FU_outputs_0_bits_RD_valid & io_FU_outputs_0_valid
     | io_FU_outputs_1_bits_RD == reservation_station_10_decoded_instruction_RS1
     & io_FU_outputs_1_bits_RD_valid & io_FU_outputs_1_valid
     | io_FU_outputs_2_bits_RD == reservation_station_10_decoded_instruction_RS1
-    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid;
+    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid
+    | io_FU_outputs_3_bits_RD == reservation_station_10_decoded_instruction_RS1
+    & io_FU_outputs_3_bits_RD_valid & io_FU_outputs_3_valid;
   wire              RS2_match_10 =
     io_FU_outputs_0_bits_RD == reservation_station_10_decoded_instruction_RS2
     & io_FU_outputs_0_bits_RD_valid & io_FU_outputs_0_valid
     | io_FU_outputs_1_bits_RD == reservation_station_10_decoded_instruction_RS2
     & io_FU_outputs_1_bits_RD_valid & io_FU_outputs_1_valid
     | io_FU_outputs_2_bits_RD == reservation_station_10_decoded_instruction_RS2
-    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid;
+    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid
+    | io_FU_outputs_3_bits_RD == reservation_station_10_decoded_instruction_RS2
+    & io_FU_outputs_3_bits_RD_valid & io_FU_outputs_3_valid;
   wire              RS1_match_11 =
     io_FU_outputs_0_bits_RD == reservation_station_11_decoded_instruction_RS1
     & io_FU_outputs_0_bits_RD_valid & io_FU_outputs_0_valid
     | io_FU_outputs_1_bits_RD == reservation_station_11_decoded_instruction_RS1
     & io_FU_outputs_1_bits_RD_valid & io_FU_outputs_1_valid
     | io_FU_outputs_2_bits_RD == reservation_station_11_decoded_instruction_RS1
-    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid;
+    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid
+    | io_FU_outputs_3_bits_RD == reservation_station_11_decoded_instruction_RS1
+    & io_FU_outputs_3_bits_RD_valid & io_FU_outputs_3_valid;
   wire              RS2_match_11 =
     io_FU_outputs_0_bits_RD == reservation_station_11_decoded_instruction_RS2
     & io_FU_outputs_0_bits_RD_valid & io_FU_outputs_0_valid
     | io_FU_outputs_1_bits_RD == reservation_station_11_decoded_instruction_RS2
     & io_FU_outputs_1_bits_RD_valid & io_FU_outputs_1_valid
     | io_FU_outputs_2_bits_RD == reservation_station_11_decoded_instruction_RS2
-    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid;
+    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid
+    | io_FU_outputs_3_bits_RD == reservation_station_11_decoded_instruction_RS2
+    & io_FU_outputs_3_bits_RD_valid & io_FU_outputs_3_valid;
   wire              RS1_match_12 =
     io_FU_outputs_0_bits_RD == reservation_station_12_decoded_instruction_RS1
     & io_FU_outputs_0_bits_RD_valid & io_FU_outputs_0_valid
     | io_FU_outputs_1_bits_RD == reservation_station_12_decoded_instruction_RS1
     & io_FU_outputs_1_bits_RD_valid & io_FU_outputs_1_valid
     | io_FU_outputs_2_bits_RD == reservation_station_12_decoded_instruction_RS1
-    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid;
+    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid
+    | io_FU_outputs_3_bits_RD == reservation_station_12_decoded_instruction_RS1
+    & io_FU_outputs_3_bits_RD_valid & io_FU_outputs_3_valid;
   wire              RS2_match_12 =
     io_FU_outputs_0_bits_RD == reservation_station_12_decoded_instruction_RS2
     & io_FU_outputs_0_bits_RD_valid & io_FU_outputs_0_valid
     | io_FU_outputs_1_bits_RD == reservation_station_12_decoded_instruction_RS2
     & io_FU_outputs_1_bits_RD_valid & io_FU_outputs_1_valid
     | io_FU_outputs_2_bits_RD == reservation_station_12_decoded_instruction_RS2
-    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid;
+    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid
+    | io_FU_outputs_3_bits_RD == reservation_station_12_decoded_instruction_RS2
+    & io_FU_outputs_3_bits_RD_valid & io_FU_outputs_3_valid;
   wire              RS1_match_13 =
     io_FU_outputs_0_bits_RD == reservation_station_13_decoded_instruction_RS1
     & io_FU_outputs_0_bits_RD_valid & io_FU_outputs_0_valid
     | io_FU_outputs_1_bits_RD == reservation_station_13_decoded_instruction_RS1
     & io_FU_outputs_1_bits_RD_valid & io_FU_outputs_1_valid
     | io_FU_outputs_2_bits_RD == reservation_station_13_decoded_instruction_RS1
-    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid;
+    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid
+    | io_FU_outputs_3_bits_RD == reservation_station_13_decoded_instruction_RS1
+    & io_FU_outputs_3_bits_RD_valid & io_FU_outputs_3_valid;
   wire              RS2_match_13 =
     io_FU_outputs_0_bits_RD == reservation_station_13_decoded_instruction_RS2
     & io_FU_outputs_0_bits_RD_valid & io_FU_outputs_0_valid
     | io_FU_outputs_1_bits_RD == reservation_station_13_decoded_instruction_RS2
     & io_FU_outputs_1_bits_RD_valid & io_FU_outputs_1_valid
     | io_FU_outputs_2_bits_RD == reservation_station_13_decoded_instruction_RS2
-    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid;
+    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid
+    | io_FU_outputs_3_bits_RD == reservation_station_13_decoded_instruction_RS2
+    & io_FU_outputs_3_bits_RD_valid & io_FU_outputs_3_valid;
   wire              RS1_match_14 =
     io_FU_outputs_0_bits_RD == reservation_station_14_decoded_instruction_RS1
     & io_FU_outputs_0_bits_RD_valid & io_FU_outputs_0_valid
     | io_FU_outputs_1_bits_RD == reservation_station_14_decoded_instruction_RS1
     & io_FU_outputs_1_bits_RD_valid & io_FU_outputs_1_valid
     | io_FU_outputs_2_bits_RD == reservation_station_14_decoded_instruction_RS1
-    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid;
+    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid
+    | io_FU_outputs_3_bits_RD == reservation_station_14_decoded_instruction_RS1
+    & io_FU_outputs_3_bits_RD_valid & io_FU_outputs_3_valid;
   wire              RS2_match_14 =
     io_FU_outputs_0_bits_RD == reservation_station_14_decoded_instruction_RS2
     & io_FU_outputs_0_bits_RD_valid & io_FU_outputs_0_valid
     | io_FU_outputs_1_bits_RD == reservation_station_14_decoded_instruction_RS2
     & io_FU_outputs_1_bits_RD_valid & io_FU_outputs_1_valid
     | io_FU_outputs_2_bits_RD == reservation_station_14_decoded_instruction_RS2
-    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid;
+    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid
+    | io_FU_outputs_3_bits_RD == reservation_station_14_decoded_instruction_RS2
+    & io_FU_outputs_3_bits_RD_valid & io_FU_outputs_3_valid;
   wire              RS1_match_15 =
     io_FU_outputs_0_bits_RD == reservation_station_15_decoded_instruction_RS1
     & io_FU_outputs_0_bits_RD_valid & io_FU_outputs_0_valid
     | io_FU_outputs_1_bits_RD == reservation_station_15_decoded_instruction_RS1
     & io_FU_outputs_1_bits_RD_valid & io_FU_outputs_1_valid
     | io_FU_outputs_2_bits_RD == reservation_station_15_decoded_instruction_RS1
-    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid;
+    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid
+    | io_FU_outputs_3_bits_RD == reservation_station_15_decoded_instruction_RS1
+    & io_FU_outputs_3_bits_RD_valid & io_FU_outputs_3_valid;
   wire              RS2_match_15 =
     io_FU_outputs_0_bits_RD == reservation_station_15_decoded_instruction_RS2
     & io_FU_outputs_0_bits_RD_valid & io_FU_outputs_0_valid
     | io_FU_outputs_1_bits_RD == reservation_station_15_decoded_instruction_RS2
     & io_FU_outputs_1_bits_RD_valid & io_FU_outputs_1_valid
     | io_FU_outputs_2_bits_RD == reservation_station_15_decoded_instruction_RS2
-    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid;
+    & io_FU_outputs_2_bits_RD_valid & io_FU_outputs_2_valid
+    | io_FU_outputs_3_bits_RD == reservation_station_15_decoded_instruction_RS2
+    & io_FU_outputs_3_bits_RD_valid & io_FU_outputs_3_valid;
   wire              schedulable_instructions_0 =
     (reservation_station_0_decoded_instruction_ready_bits_RS1_ready | RS1_match_0
      | ~reservation_station_0_decoded_instruction_RS1_valid)

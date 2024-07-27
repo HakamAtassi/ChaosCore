@@ -245,12 +245,14 @@ module predecoder(
               : io_fetch_packet_bits_fetch_PC
                 + {26'h0, 6'h10 - {2'h0, io_fetch_packet_bits_fetch_PC[3:0]}};
   reg  [31:0]      expected_next_PC;
-  wire             input_valid =
-    io_fetch_packet_ready_REG & io_fetch_packet_valid & io_prediction_ready_REG
-    & io_prediction_valid & ~io_flush;
+  wire             _input_fetch_packet_valid_T =
+    io_fetch_packet_ready_REG & io_fetch_packet_valid;
+  wire             _input_fetch_packet_valid_T_1 =
+    io_prediction_ready_REG & io_prediction_valid;
   wire             output_ready = io_final_fetch_packet_ready & io_predictions_ready;
   wire             input_fetch_packet_valid =
-    input_valid & expected_next_PC == io_fetch_packet_bits_fetch_PC;
+    _input_fetch_packet_valid_T & (_input_fetch_packet_valid_T_1 | ~io_prediction_valid)
+    & expected_next_PC == io_fetch_packet_bits_fetch_PC & ~io_flush;
   reg  [15:0]      GHR;
   wire             _push_FTQ_T =
     curr_is_BRANCH_3 | curr_is_JAL_3 | curr_is_JALR_3 | curr_is_BRANCH_2 | curr_is_JAL_2
@@ -389,7 +391,8 @@ module predecoder(
     .io_flush                                (io_flush)
   );
   assign io_revert_valid =
-    input_valid & expected_next_PC != io_fetch_packet_bits_fetch_PC;
+    _input_fetch_packet_valid_T & _input_fetch_packet_valid_T_1 & ~io_flush
+    & expected_next_PC != io_fetch_packet_bits_fetch_PC;
   assign io_revert_bits_PC = expected_next_PC;
   assign io_prediction_ready = io_prediction_ready_REG;
   assign io_fetch_packet_ready = io_fetch_packet_ready_REG;
