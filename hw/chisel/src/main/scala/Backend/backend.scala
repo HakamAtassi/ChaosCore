@@ -211,7 +211,6 @@ class backend(coreParameters:CoreParameters) extends Module{
     INT_RS.io.RF_inputs(2).ready        := FU2.io.FU_input.ready
 
     // MEM RS ready assignemnt
-
     MEM_RS.io.RF_inputs(0).ready       := FU0.io.FU_input.ready
     MEM_RS.io.RF_inputs(1).ready       := FU1.io.FU_input.ready
     MEM_RS.io.RF_inputs(2).ready       := FU2.io.FU_input.ready
@@ -253,13 +252,13 @@ class backend(coreParameters:CoreParameters) extends Module{
     INT_RS.io.FU_outputs(0) <> FU0.io.FU_output
     INT_RS.io.FU_outputs(1) <> FU1.io.FU_output
     INT_RS.io.FU_outputs(2) <> FU2.io.FU_output
-    INT_RS.io.FU_outputs(3) <> AGU.io.FU_output
+    INT_RS.io.FU_outputs(3) <> MOB.io.MOB_output
 
 
     MEM_RS.io.FU_outputs(0) <> FU0.io.FU_output
     MEM_RS.io.FU_outputs(1) <> FU1.io.FU_output
     MEM_RS.io.FU_outputs(2) <> FU2.io.FU_output
-    MEM_RS.io.FU_outputs(3) <> AGU.io.FU_output
+    MEM_RS.io.FU_outputs(3) <> MOB.io.MOB_output
 
     //////////////////////
     // FU TO ROB UPDATE //

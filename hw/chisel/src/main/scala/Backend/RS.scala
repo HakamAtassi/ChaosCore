@@ -56,7 +56,7 @@ class RS(coreParameters:CoreParameters) extends Module{
         //val INTRS_ready             =      Output(Vec(fetchWidth, Bool()))
 
         // UPDATE //
-        val FU_outputs        =      Vec(portCount, Flipped(ValidIO(new FU_output(coreParameters))))
+        val FU_outputs        =      Vec(portCount, Flipped(ValidIO(new FU_output(coreParameters))))    //FIXME: +1 is placeholder.
 
         // REDIRECTS // 
         val commit            =   Flipped(ValidIO(new commit(coreParameters)))

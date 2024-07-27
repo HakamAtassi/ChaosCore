@@ -214,7 +214,7 @@ class ChaosCore(coreParameters:CoreParameters) extends Module{
 
     frontend.io.predictions <> FTQ.io.predictions   //buffer made predictions
     FTQ.io.ROB_index <> ROB.io.ROB_index
-    FTQ.io.predictions.valid := frontend.io.renamed_decoded_fetch_packet.valid && all_INT_RS_accepted && all_MEM_RS_accepted
+    //FTQ.io.predictions.valid := frontend.io.renamed_decoded_fetch_packet.valid && all_INT_RS_accepted && all_MEM_RS_accepted
 
     // Connect branch unit to PC file (which exists in the ROB)
     backend.io.PC_file_exec_addr <> ROB.io.PC_file_exec_addr

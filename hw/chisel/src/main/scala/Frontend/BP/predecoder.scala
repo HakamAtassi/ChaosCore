@@ -187,7 +187,7 @@ class predecoder(coreParameters:CoreParameters) extends Module{
 
     output_ready                    := io.final_fetch_packet.ready && io.predictions.ready 
     
-    input_fetch_packet_valid        := input_valid && PC_match
+    input_fetch_packet_valid        := (io.fetch_packet.fire && (io.prediction.fire || !io.prediction.valid)) && PC_match && !io.flush
 
     final_fetch_packet_out.valid    := input_fetch_packet_valid
     when(input_fetch_packet_valid && final_fetch_packet_out_Q.io.enq.ready){expected_next_PC := target_address}

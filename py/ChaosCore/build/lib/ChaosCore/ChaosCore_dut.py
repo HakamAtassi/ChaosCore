@@ -97,10 +97,7 @@ class ChaosCore_dut:
         return int(self.ChaosCore.io_backend_memory_request_bits_addr.value)
 
     def read_dmem_request_wr_en(self):
-        return int(self.ChaosCore.io_backend_memory_request_bits_memory_type.value)
-
-    def read_dmem_request_wr_en(self):
-        return int(self.ChaosCore.io_backend_memory_request_valid.value)
+        return int(self.ChaosCore.io_backend_memory_request_bits_memory_type.value == 0b10)
 
     def read_dmem_request_data(self):
         return int(self.ChaosCore.io_backend_memory_request_bits_data.value)
@@ -108,10 +105,11 @@ class ChaosCore_dut:
     def write_dmem_request_ready(self, ready):
         self.ChaosCore.io_backend_memory_request_ready.value = ready
 
-    def write_dmem_response(self, data=0, valid=0, MOB_index=0):
+    def write_dmem_response(self, data=0, valid=0, MOB_index=0, memory_type=0):
         self.ChaosCore.io_backend_memory_response_valid.value = valid
-        self.ChaosCore.io_backend_memory_response_bits_data.value = data if valid else 1
+        self.ChaosCore.io_backend_memory_response_bits_data.value = data if valid else 0
         self.ChaosCore.io_backend_memory_response_bits_MOB_index.value = MOB_index
+        self.ChaosCore.io_backend_memory_response_bits_memory_type.value = memory_type
 
     async def update(self):  # clock cycle with memory handling
 
@@ -131,7 +129,7 @@ class ChaosCore_dut:
 
         # handle dmem read/write requests
         if self.read_dmem_request_ready() and self.read_dmem_request_valid() and not self.read_reset():
-            wr_en = self.read_dmem_request_wr_en()
+            wr_en = self.read_dmem_request_wr_en() 
             data = self.read_dmem_request_data()
             addr = self.read_dmem_request_addr()
             if wr_en:  # write
@@ -139,16 +137,17 @@ class ChaosCore_dut:
                 if(addr==0x8000_0000):
                     print(chr(data))
                 else:
+                    #print(f"wr: {hex(addr)}, data: {hex(data)}")
                     self.dmem.write(address=addr, data=data, size=4)
 
             else:  # read
-                try:
-                    # FIXME: size depends on instruction
-                    data = self.dmem.read(address=addr, size=4)
-                    data = int.from_bytes(data, byteorder="little")
-                    MOB_index = self.ChaosCore.io_backend_memory_request_bits_MOB_index.value = MOB_index
-                    self.write_dmem_response(data, 1)
-                except:
-                    pass
+                # FIXME: size depends on instruction
+                data = self.dmem.read(address=addr, size=4)
+                data = int.from_bytes(data, byteorder="little")
+                MOB_index = self.ChaosCore.io_backend_memory_request_bits_MOB_index.value
+                memory_type = self.ChaosCore.io_backend_memory_request_bits_memory_type.value
+
+                #print(f"rd: {hex(addr)}, data: {hex(data)}, MOB_index: {int(MOB_index)}")
+                self.write_dmem_response(data=data, valid = 1, MOB_index=MOB_index, memory_type=memory_type)
 
         await RisingEdge(self.clock())

@@ -56,7 +56,8 @@ module frontend(
                 io_commit_bits_RD_valid_2,
                 io_commit_bits_RD_valid_3,
                 io_predictions_ready,
-  output        io_predictions_bits_valid,
+  output        io_predictions_valid,
+                io_predictions_bits_valid,
   output [31:0] io_predictions_bits_fetch_PC,
                 io_predictions_bits_predicted_PC,
   output [5:0]  io_predictions_bits_ROB_index,
@@ -1579,7 +1580,7 @@ module frontend(
     .io_predictions_out_ready
       (io_predictions_ready),
     .io_predictions_out_valid
-      (/* unused */),
+      (io_predictions_valid),
     .io_predictions_out_bits_valid
       (io_predictions_bits_valid),
     .io_predictions_out_bits_fetch_PC

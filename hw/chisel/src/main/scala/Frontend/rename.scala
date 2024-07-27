@@ -315,7 +315,6 @@ class rename(coreParameters:CoreParameters) extends Module{
         }
     }
 
-
     // x0 as a dest or source is never remapped
     // x0 always ready
     comb_ready_bits(0) := 1.U
@@ -324,9 +323,6 @@ class rename(coreParameters:CoreParameters) extends Module{
     for(i <- 1 until physicalRegCount){
         ready_memory(i) := comb_ready_bits(i)
     }
-
-
-
 
     /////////////////
     // SKID BUFFER //
@@ -338,10 +334,9 @@ class rename(coreParameters:CoreParameters) extends Module{
 
     val outputs_ready                   = free_list.io.can_allocate && io.renamed_decoded_fetch_packet.ready && io.predictions_out.ready 
 
-    //decoded_fetch_packet.valid                          := io.fetch_packet.valid && !io.flush
-    //predictions_out.valid                               := io.fetch_packet.fire && io.predictions_in.valid && !io.flush
-
     renamed_decoded_fetch_packet_Q.io.enq                   <> renamed_decoded_fetch_packet
+    renamed_decoded_fetch_packet_Q.io.enq.valid             := (io.decoded_fetch_packet.fire && (io.predictions_in.fire || !io.predictions_in.valid)) && !io.flush
+
     renamed_decoded_fetch_packet_Q.io.deq                   <> io.renamed_decoded_fetch_packet
     renamed_decoded_fetch_packet_Q.io.flush.get             := io.flush
 
@@ -353,7 +348,8 @@ class rename(coreParameters:CoreParameters) extends Module{
     }
 
     predictions_out_Q.io.enq                                <> io.predictions_in
-    predictions_out_Q.io.enq.valid                          := fire
+    predictions_out_Q.io.enq.valid                          := (io.predictions_in.fire && io.decoded_fetch_packet.fire) && !io.flush
+    
     predictions_out_Q.io.deq                                <> io.predictions_out
     predictions_out_Q.io.flush.get                          <> io.flush
 

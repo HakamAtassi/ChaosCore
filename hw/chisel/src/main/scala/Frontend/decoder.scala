@@ -268,9 +268,8 @@ class fetch_packet_decoder(coreParameters:CoreParameters) extends Module{
     val predictions_out_Q                               = Module(new Queue(new FTQ_entry(coreParameters), 2, flow=false, hasFlush=true, useSyncReadMem=false))
 
 
-    // FIXME: broken 
-    decoded_fetch_packet.valid                          := io.fetch_packet.fire && !io.flush
-    predictions_out.valid                               := io.predictions_in.fire && !io.flush
+    decoded_fetch_packet.valid                          := (io.fetch_packet.fire && (io.predictions_in.fire || !io.predictions_in.valid)) && !io.flush
+    predictions_out.valid                               := (io.predictions_in.fire && io.fetch_packet.fire) && !io.flush
 
     decoded_fetch_packet_out_Q.io.enq                   <> decoded_fetch_packet
     decoded_fetch_packet_out_Q.io.deq                   <> io.decoded_fetch_packet

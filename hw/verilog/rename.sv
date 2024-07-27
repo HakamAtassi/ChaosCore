@@ -463,9 +463,13 @@ module rename(
       1'h1,
       1'h1,
       1'h1};
+  wire         _predictions_out_Q_io_enq_valid_T =
+    io_predictions_in_ready_REG & io_predictions_in_valid;
+  wire         _predictions_out_Q_io_enq_valid_T_1 =
+    io_decoded_fetch_packet_ready_REG & io_decoded_fetch_packet_valid;
   wire         fire =
-    (io_predictions_in_ready_REG & io_predictions_in_valid | ~io_predictions_in_valid)
-    & io_decoded_fetch_packet_ready_REG & io_decoded_fetch_packet_valid;
+    (_predictions_out_Q_io_enq_valid_T | ~io_predictions_in_valid)
+    & _predictions_out_Q_io_enq_valid_T_1;
   reg          ready_memory_1;
   reg          ready_memory_2;
   reg          ready_memory_3;
@@ -2560,7 +2564,9 @@ module rename(
   Queue2_FTQ_entry predictions_out_Q (
     .clock                        (clock),
     .reset                        (reset),
-    .io_enq_valid                 (fire),
+    .io_enq_valid
+      (_predictions_out_Q_io_enq_valid_T & _predictions_out_Q_io_enq_valid_T_1
+       & ~io_flush),
     .io_enq_bits_valid            (io_predictions_in_bits_valid),
     .io_enq_bits_fetch_PC         (io_predictions_in_bits_fetch_PC),
     .io_enq_bits_is_misprediction (io_predictions_in_bits_is_misprediction),
@@ -2586,7 +2592,9 @@ module rename(
   Queue2_decoded_fetch_packet renamed_decoded_fetch_packet_Q (
     .clock                                                  (clock),
     .reset                                                  (reset),
-    .io_enq_valid                                           (fire),
+    .io_enq_valid
+      (_predictions_out_Q_io_enq_valid_T_1
+       & (_predictions_out_Q_io_enq_valid_T | ~io_predictions_in_valid) & ~io_flush),
     .io_enq_bits_fetch_PC
       (io_decoded_fetch_packet_bits_fetch_PC),
     .io_enq_bits_decoded_instruction_0_ready_bits_RS1_ready

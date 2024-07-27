@@ -226,6 +226,7 @@ module ChaosCore(
   wire [3:0]  _backend_io_FU_outputs_3_bits_FTQ_index;
   wire [1:0]  _backend_io_FU_outputs_3_bits_fetch_packet_index;
   wire        _backend_io_FU_outputs_3_bits_exception;
+  wire        _frontend_io_predictions_valid;
   wire        _frontend_io_predictions_bits_valid;
   wire [31:0] _frontend_io_predictions_bits_fetch_PC;
   wire [31:0] _frontend_io_predictions_bits_predicted_PC;
@@ -463,8 +464,6 @@ module ChaosCore(
     + _GEN_0 & {1'h0, {1'h0, _backend_io_MOB_ready_0} + {1'h0, _backend_io_MOB_ready_1}}
     + {1'h0, {1'h0, _backend_io_MOB_ready_2} + {1'h0, _backend_io_MOB_ready_3}} >= _GEN
     + _GEN_0;
-  wire        _FTQ_io_predictions_valid_T =
-    _frontend_io_renamed_decoded_fetch_packet_valid & all_INT_RS_accepted;
   frontend frontend (
     .clock
       (clock),
@@ -578,6 +577,8 @@ module ChaosCore(
       (_BRU_io_commit_bits_RD_valid_3),
     .io_predictions_ready
       (_FTQ_io_predictions_ready),
+    .io_predictions_valid
+      (_frontend_io_predictions_valid),
     .io_predictions_bits_valid
       (_frontend_io_predictions_bits_valid),
     .io_predictions_bits_fetch_PC
@@ -1461,8 +1462,7 @@ module ChaosCore(
     .io_FU_outputs_0_bits_fetch_packet_index
       (_backend_io_FU_outputs_0_bits_fetch_packet_index),
     .io_predictions_ready                    (_FTQ_io_predictions_ready),
-    .io_predictions_valid
-      (_FTQ_io_predictions_valid_T & all_MEM_RS_accepted),
+    .io_predictions_valid                    (_frontend_io_predictions_valid),
     .io_predictions_bits_valid               (_frontend_io_predictions_bits_valid),
     .io_predictions_bits_fetch_PC            (_frontend_io_predictions_bits_fetch_PC),
     .io_predictions_bits_predicted_PC        (_frontend_io_predictions_bits_predicted_PC),
@@ -1491,7 +1491,8 @@ module ChaosCore(
     .io_ROB_packet_ready
       (_ROB_io_ROB_packet_ready),
     .io_ROB_packet_valid
-      (_FTQ_io_predictions_valid_T & all_MEM_RS_accepted),
+      (_frontend_io_renamed_decoded_fetch_packet_valid & all_INT_RS_accepted
+       & all_MEM_RS_accepted),
     .io_ROB_packet_bits_fetch_PC
       (_frontend_io_renamed_decoded_fetch_packet_bits_fetch_PC),
     .io_ROB_packet_bits_decoded_instruction_0_ready_bits_RS1_ready
