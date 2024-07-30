@@ -60,7 +60,7 @@ object Main extends App {
     ChiselStage.emitSystemVerilogFile(new ChaosCore(coreParameters), Array("--split-verilog", 
                                                                         "--target", "verilog", 
                                                                         "--target-dir", "../verilog", 
-                                                                        //"--preserve-aggregate", "all", 
+                                                                        "--preserve-aggregate", "all", 
                                                                         "--dump-fir",
                                                                         ), 
                                                                         firtoolOpts = Array("-disable-all-randomization", "-strip-debug-info")
