@@ -28,7 +28,14 @@ Each of these varients offer a further configuration. Standard mode, for instanc
 
 
 
+### What was achieved?
 
+* Built a superscalar out of order riscv core (RV32IMA, CRS, exceptions, interrupts)
+* Created several forks of the repo to characatize and mitigate a variety of security vounrabilities
+* Integrated the core into Chipyard to leverage the SoC library
+* Developed a UVM generation library for integration with Chisel and commertial simulation tools
+    * Implemented as a series of FIRRTL transforms with scala user APIs
+* Verified the core using both UVM simulation (with RISCV-DV) and formal tools (Yosys, Jasper Gold)
 
 
 

@@ -8,7 +8,8 @@ module mem_64x17(
   input  [5:0]  W0_addr,
   input         W0_en,
                 W0_clk,
-  input  [16:0] W0_data
+  input  [16:0] W0_data,
+                W0_mask
 );
 
   reg [16:0] Memory[0:63];
@@ -19,8 +20,40 @@ module mem_64x17(
     _R0_addr_d0 <= R0_addr;
   end // always @(posedge)
   always @(posedge W0_clk) begin
-    if (W0_en & 1'h1)
-      Memory[W0_addr] <= W0_data;
+    if (W0_en & W0_mask[0])
+      Memory[W0_addr][32'h0 +: 1] <= W0_data[0];
+    if (W0_en & W0_mask[1])
+      Memory[W0_addr][32'h1 +: 1] <= W0_data[1];
+    if (W0_en & W0_mask[2])
+      Memory[W0_addr][32'h2 +: 1] <= W0_data[2];
+    if (W0_en & W0_mask[3])
+      Memory[W0_addr][32'h3 +: 1] <= W0_data[3];
+    if (W0_en & W0_mask[4])
+      Memory[W0_addr][32'h4 +: 1] <= W0_data[4];
+    if (W0_en & W0_mask[5])
+      Memory[W0_addr][32'h5 +: 1] <= W0_data[5];
+    if (W0_en & W0_mask[6])
+      Memory[W0_addr][32'h6 +: 1] <= W0_data[6];
+    if (W0_en & W0_mask[7])
+      Memory[W0_addr][32'h7 +: 1] <= W0_data[7];
+    if (W0_en & W0_mask[8])
+      Memory[W0_addr][32'h8 +: 1] <= W0_data[8];
+    if (W0_en & W0_mask[9])
+      Memory[W0_addr][32'h9 +: 1] <= W0_data[9];
+    if (W0_en & W0_mask[10])
+      Memory[W0_addr][32'hA +: 1] <= W0_data[10];
+    if (W0_en & W0_mask[11])
+      Memory[W0_addr][32'hB +: 1] <= W0_data[11];
+    if (W0_en & W0_mask[12])
+      Memory[W0_addr][32'hC +: 1] <= W0_data[12];
+    if (W0_en & W0_mask[13])
+      Memory[W0_addr][32'hD +: 1] <= W0_data[13];
+    if (W0_en & W0_mask[14])
+      Memory[W0_addr][32'hE +: 1] <= W0_data[14];
+    if (W0_en & W0_mask[15])
+      Memory[W0_addr][32'hF +: 1] <= W0_data[15];
+    if (W0_en & W0_mask[16])
+      Memory[W0_addr][32'h10 +: 1] <= W0_data[16];
   end // always @(posedge)
   assign R0_data = _R0_en_d0 ? Memory[_R0_addr_d0] : 17'bx;
 endmodule
