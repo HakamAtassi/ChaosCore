@@ -1,4 +1,4 @@
-FIRRTL version 4.0.0
+FIRRTL version 3.3.0
 circuit ChaosCore :%[[
   {
     "class":"firrtl.transforms.DedupGroupAnnotation",
@@ -17026,7 +17026,11 @@ circuit ChaosCore :%[[
     node _T_49 = bits(opcode, 6, 2) @[src/main/scala/Frontend/decoder.scala 66:62]
     node _T_50 = asUInt(reset) @[src/main/scala/Frontend/decoder.scala 66:11]
     node _T_51 = eq(_T_50, UInt<1>(0h0)) @[src/main/scala/Frontend/decoder.scala 66:11]
-    intrinsic(circt_chisel_ifelsefatal<format = "Assertion failed: Enum state must be valid, got %d!\n", label = "chisel3_builtin">, clock, valid, _T_51, _T_49) @[src/main/scala/Frontend/decoder.scala 66:11]
+    when _T_51 : @[src/main/scala/Frontend/decoder.scala 66:11]
+      node _T_52 = eq(valid, UInt<1>(0h0)) @[src/main/scala/Frontend/decoder.scala 66:11]
+      when _T_52 : @[src/main/scala/Frontend/decoder.scala 66:11]
+        printf(clock, UInt<1>(0h1), "Assertion failed: Enum state must be valid, got %d!\n    at decoder.scala:66 assert(valid, \"Enum state must be valid, got %%%%d!\", opcode(6,2))\n", _T_49) : printf @[src/main/scala/Frontend/decoder.scala 66:11]
+      assert(clock, valid, UInt<1>(0h1), "") : assert @[src/main/scala/Frontend/decoder.scala 66:11]
     node _MULTIPLY_T = eq(instructionType, UInt<4>(0hc)) @[src/main/scala/Frontend/decoder.scala 72:42]
     node _MULTIPLY_T_1 = eq(FUNCT7, UInt<1>(0h1)) @[src/main/scala/Frontend/decoder.scala 72:59]
     node MULTIPLY = and(_MULTIPLY_T, _MULTIPLY_T_1) @[src/main/scala/Frontend/decoder.scala 72:49]
@@ -17129,26 +17133,26 @@ circuit ChaosCore :%[[
     connect io.decoded_instruction.bits.MULTIPLY, MULTIPLY @[src/main/scala/Frontend/decoder.scala 132:54]
     connect io.decoded_instruction.bits.SUBTRACT, SUBTRACT @[src/main/scala/Frontend/decoder.scala 133:54]
     connect io.decoded_instruction.bits.IS_IMM, IS_IMM @[src/main/scala/Frontend/decoder.scala 134:54]
-    node _T_52 = eq(instructionType, UInt<1>(0h0)) @[src/main/scala/Frontend/decoder.scala 138:26]
-    when _T_52 : @[src/main/scala/Frontend/decoder.scala 138:35]
+    node _T_53 = eq(instructionType, UInt<1>(0h0)) @[src/main/scala/Frontend/decoder.scala 138:26]
+    when _T_53 : @[src/main/scala/Frontend/decoder.scala 138:35]
       connect io.decoded_instruction.bits.memory_type, UInt<1>(0h1) @[src/main/scala/Frontend/decoder.scala 139:62]
     else :
-      node _T_53 = eq(instructionType, UInt<4>(0h8)) @[src/main/scala/Frontend/decoder.scala 140:32]
-      when _T_53 : @[src/main/scala/Frontend/decoder.scala 140:42]
+      node _T_54 = eq(instructionType, UInt<4>(0h8)) @[src/main/scala/Frontend/decoder.scala 140:32]
+      when _T_54 : @[src/main/scala/Frontend/decoder.scala 140:42]
         connect io.decoded_instruction.bits.memory_type, UInt<2>(0h2) @[src/main/scala/Frontend/decoder.scala 141:62]
       else :
         connect io.decoded_instruction.bits.memory_type, UInt<1>(0h0) @[src/main/scala/Frontend/decoder.scala 143:62]
     connect io.decoded_instruction.bits.access_width, UInt<1>(0h0) @[src/main/scala/Frontend/decoder.scala 146:63]
-    node _T_54 = eq(FUNCT3, UInt<1>(0h0)) @[src/main/scala/Frontend/decoder.scala 147:18]
-    when _T_54 : @[src/main/scala/Frontend/decoder.scala 147:31]
+    node _T_55 = eq(FUNCT3, UInt<1>(0h0)) @[src/main/scala/Frontend/decoder.scala 147:18]
+    when _T_55 : @[src/main/scala/Frontend/decoder.scala 147:31]
       connect io.decoded_instruction.bits.access_width, UInt<1>(0h1) @[src/main/scala/Frontend/decoder.scala 148:63]
     else :
-      node _T_55 = eq(FUNCT3, UInt<1>(0h1)) @[src/main/scala/Frontend/decoder.scala 149:24]
-      when _T_55 : @[src/main/scala/Frontend/decoder.scala 149:37]
+      node _T_56 = eq(FUNCT3, UInt<1>(0h1)) @[src/main/scala/Frontend/decoder.scala 149:24]
+      when _T_56 : @[src/main/scala/Frontend/decoder.scala 149:37]
         connect io.decoded_instruction.bits.access_width, UInt<2>(0h2) @[src/main/scala/Frontend/decoder.scala 150:63]
       else :
-        node _T_56 = eq(FUNCT3, UInt<2>(0h2)) @[src/main/scala/Frontend/decoder.scala 151:24]
-        when _T_56 : @[src/main/scala/Frontend/decoder.scala 151:37]
+        node _T_57 = eq(FUNCT3, UInt<2>(0h2)) @[src/main/scala/Frontend/decoder.scala 151:24]
+        when _T_57 : @[src/main/scala/Frontend/decoder.scala 151:37]
           connect io.decoded_instruction.bits.access_width, UInt<2>(0h3) @[src/main/scala/Frontend/decoder.scala 152:63]
     node _needs_memory_T = eq(instructionType, UInt<4>(0h8)) @[src/main/scala/Frontend/decoder.scala 156:51]
     node _needs_memory_T_1 = eq(instructionType, UInt<1>(0h0)) @[src/main/scala/Frontend/decoder.scala 156:82]
@@ -17349,7 +17353,11 @@ circuit ChaosCore :%[[
     node _T_49 = bits(opcode, 6, 2) @[src/main/scala/Frontend/decoder.scala 66:62]
     node _T_50 = asUInt(reset) @[src/main/scala/Frontend/decoder.scala 66:11]
     node _T_51 = eq(_T_50, UInt<1>(0h0)) @[src/main/scala/Frontend/decoder.scala 66:11]
-    intrinsic(circt_chisel_ifelsefatal<format = "Assertion failed: Enum state must be valid, got %d!\n", label = "chisel3_builtin">, clock, valid, _T_51, _T_49) @[src/main/scala/Frontend/decoder.scala 66:11]
+    when _T_51 : @[src/main/scala/Frontend/decoder.scala 66:11]
+      node _T_52 = eq(valid, UInt<1>(0h0)) @[src/main/scala/Frontend/decoder.scala 66:11]
+      when _T_52 : @[src/main/scala/Frontend/decoder.scala 66:11]
+        printf(clock, UInt<1>(0h1), "Assertion failed: Enum state must be valid, got %d!\n    at decoder.scala:66 assert(valid, \"Enum state must be valid, got %%%%d!\", opcode(6,2))\n", _T_49) : printf @[src/main/scala/Frontend/decoder.scala 66:11]
+      assert(clock, valid, UInt<1>(0h1), "") : assert @[src/main/scala/Frontend/decoder.scala 66:11]
     node _MULTIPLY_T = eq(instructionType, UInt<4>(0hc)) @[src/main/scala/Frontend/decoder.scala 72:42]
     node _MULTIPLY_T_1 = eq(FUNCT7, UInt<1>(0h1)) @[src/main/scala/Frontend/decoder.scala 72:59]
     node MULTIPLY = and(_MULTIPLY_T, _MULTIPLY_T_1) @[src/main/scala/Frontend/decoder.scala 72:49]
@@ -17452,26 +17460,26 @@ circuit ChaosCore :%[[
     connect io.decoded_instruction.bits.MULTIPLY, MULTIPLY @[src/main/scala/Frontend/decoder.scala 132:54]
     connect io.decoded_instruction.bits.SUBTRACT, SUBTRACT @[src/main/scala/Frontend/decoder.scala 133:54]
     connect io.decoded_instruction.bits.IS_IMM, IS_IMM @[src/main/scala/Frontend/decoder.scala 134:54]
-    node _T_52 = eq(instructionType, UInt<1>(0h0)) @[src/main/scala/Frontend/decoder.scala 138:26]
-    when _T_52 : @[src/main/scala/Frontend/decoder.scala 138:35]
+    node _T_53 = eq(instructionType, UInt<1>(0h0)) @[src/main/scala/Frontend/decoder.scala 138:26]
+    when _T_53 : @[src/main/scala/Frontend/decoder.scala 138:35]
       connect io.decoded_instruction.bits.memory_type, UInt<1>(0h1) @[src/main/scala/Frontend/decoder.scala 139:62]
     else :
-      node _T_53 = eq(instructionType, UInt<4>(0h8)) @[src/main/scala/Frontend/decoder.scala 140:32]
-      when _T_53 : @[src/main/scala/Frontend/decoder.scala 140:42]
+      node _T_54 = eq(instructionType, UInt<4>(0h8)) @[src/main/scala/Frontend/decoder.scala 140:32]
+      when _T_54 : @[src/main/scala/Frontend/decoder.scala 140:42]
         connect io.decoded_instruction.bits.memory_type, UInt<2>(0h2) @[src/main/scala/Frontend/decoder.scala 141:62]
       else :
         connect io.decoded_instruction.bits.memory_type, UInt<1>(0h0) @[src/main/scala/Frontend/decoder.scala 143:62]
     connect io.decoded_instruction.bits.access_width, UInt<1>(0h0) @[src/main/scala/Frontend/decoder.scala 146:63]
-    node _T_54 = eq(FUNCT3, UInt<1>(0h0)) @[src/main/scala/Frontend/decoder.scala 147:18]
-    when _T_54 : @[src/main/scala/Frontend/decoder.scala 147:31]
+    node _T_55 = eq(FUNCT3, UInt<1>(0h0)) @[src/main/scala/Frontend/decoder.scala 147:18]
+    when _T_55 : @[src/main/scala/Frontend/decoder.scala 147:31]
       connect io.decoded_instruction.bits.access_width, UInt<1>(0h1) @[src/main/scala/Frontend/decoder.scala 148:63]
     else :
-      node _T_55 = eq(FUNCT3, UInt<1>(0h1)) @[src/main/scala/Frontend/decoder.scala 149:24]
-      when _T_55 : @[src/main/scala/Frontend/decoder.scala 149:37]
+      node _T_56 = eq(FUNCT3, UInt<1>(0h1)) @[src/main/scala/Frontend/decoder.scala 149:24]
+      when _T_56 : @[src/main/scala/Frontend/decoder.scala 149:37]
         connect io.decoded_instruction.bits.access_width, UInt<2>(0h2) @[src/main/scala/Frontend/decoder.scala 150:63]
       else :
-        node _T_56 = eq(FUNCT3, UInt<2>(0h2)) @[src/main/scala/Frontend/decoder.scala 151:24]
-        when _T_56 : @[src/main/scala/Frontend/decoder.scala 151:37]
+        node _T_57 = eq(FUNCT3, UInt<2>(0h2)) @[src/main/scala/Frontend/decoder.scala 151:24]
+        when _T_57 : @[src/main/scala/Frontend/decoder.scala 151:37]
           connect io.decoded_instruction.bits.access_width, UInt<2>(0h3) @[src/main/scala/Frontend/decoder.scala 152:63]
     node _needs_memory_T = eq(instructionType, UInt<4>(0h8)) @[src/main/scala/Frontend/decoder.scala 156:51]
     node _needs_memory_T_1 = eq(instructionType, UInt<1>(0h0)) @[src/main/scala/Frontend/decoder.scala 156:82]
@@ -17672,7 +17680,11 @@ circuit ChaosCore :%[[
     node _T_49 = bits(opcode, 6, 2) @[src/main/scala/Frontend/decoder.scala 66:62]
     node _T_50 = asUInt(reset) @[src/main/scala/Frontend/decoder.scala 66:11]
     node _T_51 = eq(_T_50, UInt<1>(0h0)) @[src/main/scala/Frontend/decoder.scala 66:11]
-    intrinsic(circt_chisel_ifelsefatal<format = "Assertion failed: Enum state must be valid, got %d!\n", label = "chisel3_builtin">, clock, valid, _T_51, _T_49) @[src/main/scala/Frontend/decoder.scala 66:11]
+    when _T_51 : @[src/main/scala/Frontend/decoder.scala 66:11]
+      node _T_52 = eq(valid, UInt<1>(0h0)) @[src/main/scala/Frontend/decoder.scala 66:11]
+      when _T_52 : @[src/main/scala/Frontend/decoder.scala 66:11]
+        printf(clock, UInt<1>(0h1), "Assertion failed: Enum state must be valid, got %d!\n    at decoder.scala:66 assert(valid, \"Enum state must be valid, got %%%%d!\", opcode(6,2))\n", _T_49) : printf @[src/main/scala/Frontend/decoder.scala 66:11]
+      assert(clock, valid, UInt<1>(0h1), "") : assert @[src/main/scala/Frontend/decoder.scala 66:11]
     node _MULTIPLY_T = eq(instructionType, UInt<4>(0hc)) @[src/main/scala/Frontend/decoder.scala 72:42]
     node _MULTIPLY_T_1 = eq(FUNCT7, UInt<1>(0h1)) @[src/main/scala/Frontend/decoder.scala 72:59]
     node MULTIPLY = and(_MULTIPLY_T, _MULTIPLY_T_1) @[src/main/scala/Frontend/decoder.scala 72:49]
@@ -17775,26 +17787,26 @@ circuit ChaosCore :%[[
     connect io.decoded_instruction.bits.MULTIPLY, MULTIPLY @[src/main/scala/Frontend/decoder.scala 132:54]
     connect io.decoded_instruction.bits.SUBTRACT, SUBTRACT @[src/main/scala/Frontend/decoder.scala 133:54]
     connect io.decoded_instruction.bits.IS_IMM, IS_IMM @[src/main/scala/Frontend/decoder.scala 134:54]
-    node _T_52 = eq(instructionType, UInt<1>(0h0)) @[src/main/scala/Frontend/decoder.scala 138:26]
-    when _T_52 : @[src/main/scala/Frontend/decoder.scala 138:35]
+    node _T_53 = eq(instructionType, UInt<1>(0h0)) @[src/main/scala/Frontend/decoder.scala 138:26]
+    when _T_53 : @[src/main/scala/Frontend/decoder.scala 138:35]
       connect io.decoded_instruction.bits.memory_type, UInt<1>(0h1) @[src/main/scala/Frontend/decoder.scala 139:62]
     else :
-      node _T_53 = eq(instructionType, UInt<4>(0h8)) @[src/main/scala/Frontend/decoder.scala 140:32]
-      when _T_53 : @[src/main/scala/Frontend/decoder.scala 140:42]
+      node _T_54 = eq(instructionType, UInt<4>(0h8)) @[src/main/scala/Frontend/decoder.scala 140:32]
+      when _T_54 : @[src/main/scala/Frontend/decoder.scala 140:42]
         connect io.decoded_instruction.bits.memory_type, UInt<2>(0h2) @[src/main/scala/Frontend/decoder.scala 141:62]
       else :
         connect io.decoded_instruction.bits.memory_type, UInt<1>(0h0) @[src/main/scala/Frontend/decoder.scala 143:62]
     connect io.decoded_instruction.bits.access_width, UInt<1>(0h0) @[src/main/scala/Frontend/decoder.scala 146:63]
-    node _T_54 = eq(FUNCT3, UInt<1>(0h0)) @[src/main/scala/Frontend/decoder.scala 147:18]
-    when _T_54 : @[src/main/scala/Frontend/decoder.scala 147:31]
+    node _T_55 = eq(FUNCT3, UInt<1>(0h0)) @[src/main/scala/Frontend/decoder.scala 147:18]
+    when _T_55 : @[src/main/scala/Frontend/decoder.scala 147:31]
       connect io.decoded_instruction.bits.access_width, UInt<1>(0h1) @[src/main/scala/Frontend/decoder.scala 148:63]
     else :
-      node _T_55 = eq(FUNCT3, UInt<1>(0h1)) @[src/main/scala/Frontend/decoder.scala 149:24]
-      when _T_55 : @[src/main/scala/Frontend/decoder.scala 149:37]
+      node _T_56 = eq(FUNCT3, UInt<1>(0h1)) @[src/main/scala/Frontend/decoder.scala 149:24]
+      when _T_56 : @[src/main/scala/Frontend/decoder.scala 149:37]
         connect io.decoded_instruction.bits.access_width, UInt<2>(0h2) @[src/main/scala/Frontend/decoder.scala 150:63]
       else :
-        node _T_56 = eq(FUNCT3, UInt<2>(0h2)) @[src/main/scala/Frontend/decoder.scala 151:24]
-        when _T_56 : @[src/main/scala/Frontend/decoder.scala 151:37]
+        node _T_57 = eq(FUNCT3, UInt<2>(0h2)) @[src/main/scala/Frontend/decoder.scala 151:24]
+        when _T_57 : @[src/main/scala/Frontend/decoder.scala 151:37]
           connect io.decoded_instruction.bits.access_width, UInt<2>(0h3) @[src/main/scala/Frontend/decoder.scala 152:63]
     node _needs_memory_T = eq(instructionType, UInt<4>(0h8)) @[src/main/scala/Frontend/decoder.scala 156:51]
     node _needs_memory_T_1 = eq(instructionType, UInt<1>(0h0)) @[src/main/scala/Frontend/decoder.scala 156:82]
@@ -17995,7 +18007,11 @@ circuit ChaosCore :%[[
     node _T_49 = bits(opcode, 6, 2) @[src/main/scala/Frontend/decoder.scala 66:62]
     node _T_50 = asUInt(reset) @[src/main/scala/Frontend/decoder.scala 66:11]
     node _T_51 = eq(_T_50, UInt<1>(0h0)) @[src/main/scala/Frontend/decoder.scala 66:11]
-    intrinsic(circt_chisel_ifelsefatal<format = "Assertion failed: Enum state must be valid, got %d!\n", label = "chisel3_builtin">, clock, valid, _T_51, _T_49) @[src/main/scala/Frontend/decoder.scala 66:11]
+    when _T_51 : @[src/main/scala/Frontend/decoder.scala 66:11]
+      node _T_52 = eq(valid, UInt<1>(0h0)) @[src/main/scala/Frontend/decoder.scala 66:11]
+      when _T_52 : @[src/main/scala/Frontend/decoder.scala 66:11]
+        printf(clock, UInt<1>(0h1), "Assertion failed: Enum state must be valid, got %d!\n    at decoder.scala:66 assert(valid, \"Enum state must be valid, got %%%%d!\", opcode(6,2))\n", _T_49) : printf @[src/main/scala/Frontend/decoder.scala 66:11]
+      assert(clock, valid, UInt<1>(0h1), "") : assert @[src/main/scala/Frontend/decoder.scala 66:11]
     node _MULTIPLY_T = eq(instructionType, UInt<4>(0hc)) @[src/main/scala/Frontend/decoder.scala 72:42]
     node _MULTIPLY_T_1 = eq(FUNCT7, UInt<1>(0h1)) @[src/main/scala/Frontend/decoder.scala 72:59]
     node MULTIPLY = and(_MULTIPLY_T, _MULTIPLY_T_1) @[src/main/scala/Frontend/decoder.scala 72:49]
@@ -18098,26 +18114,26 @@ circuit ChaosCore :%[[
     connect io.decoded_instruction.bits.MULTIPLY, MULTIPLY @[src/main/scala/Frontend/decoder.scala 132:54]
     connect io.decoded_instruction.bits.SUBTRACT, SUBTRACT @[src/main/scala/Frontend/decoder.scala 133:54]
     connect io.decoded_instruction.bits.IS_IMM, IS_IMM @[src/main/scala/Frontend/decoder.scala 134:54]
-    node _T_52 = eq(instructionType, UInt<1>(0h0)) @[src/main/scala/Frontend/decoder.scala 138:26]
-    when _T_52 : @[src/main/scala/Frontend/decoder.scala 138:35]
+    node _T_53 = eq(instructionType, UInt<1>(0h0)) @[src/main/scala/Frontend/decoder.scala 138:26]
+    when _T_53 : @[src/main/scala/Frontend/decoder.scala 138:35]
       connect io.decoded_instruction.bits.memory_type, UInt<1>(0h1) @[src/main/scala/Frontend/decoder.scala 139:62]
     else :
-      node _T_53 = eq(instructionType, UInt<4>(0h8)) @[src/main/scala/Frontend/decoder.scala 140:32]
-      when _T_53 : @[src/main/scala/Frontend/decoder.scala 140:42]
+      node _T_54 = eq(instructionType, UInt<4>(0h8)) @[src/main/scala/Frontend/decoder.scala 140:32]
+      when _T_54 : @[src/main/scala/Frontend/decoder.scala 140:42]
         connect io.decoded_instruction.bits.memory_type, UInt<2>(0h2) @[src/main/scala/Frontend/decoder.scala 141:62]
       else :
         connect io.decoded_instruction.bits.memory_type, UInt<1>(0h0) @[src/main/scala/Frontend/decoder.scala 143:62]
     connect io.decoded_instruction.bits.access_width, UInt<1>(0h0) @[src/main/scala/Frontend/decoder.scala 146:63]
-    node _T_54 = eq(FUNCT3, UInt<1>(0h0)) @[src/main/scala/Frontend/decoder.scala 147:18]
-    when _T_54 : @[src/main/scala/Frontend/decoder.scala 147:31]
+    node _T_55 = eq(FUNCT3, UInt<1>(0h0)) @[src/main/scala/Frontend/decoder.scala 147:18]
+    when _T_55 : @[src/main/scala/Frontend/decoder.scala 147:31]
       connect io.decoded_instruction.bits.access_width, UInt<1>(0h1) @[src/main/scala/Frontend/decoder.scala 148:63]
     else :
-      node _T_55 = eq(FUNCT3, UInt<1>(0h1)) @[src/main/scala/Frontend/decoder.scala 149:24]
-      when _T_55 : @[src/main/scala/Frontend/decoder.scala 149:37]
+      node _T_56 = eq(FUNCT3, UInt<1>(0h1)) @[src/main/scala/Frontend/decoder.scala 149:24]
+      when _T_56 : @[src/main/scala/Frontend/decoder.scala 149:37]
         connect io.decoded_instruction.bits.access_width, UInt<2>(0h2) @[src/main/scala/Frontend/decoder.scala 150:63]
       else :
-        node _T_56 = eq(FUNCT3, UInt<2>(0h2)) @[src/main/scala/Frontend/decoder.scala 151:24]
-        when _T_56 : @[src/main/scala/Frontend/decoder.scala 151:37]
+        node _T_57 = eq(FUNCT3, UInt<2>(0h2)) @[src/main/scala/Frontend/decoder.scala 151:24]
+        when _T_57 : @[src/main/scala/Frontend/decoder.scala 151:37]
           connect io.decoded_instruction.bits.access_width, UInt<2>(0h3) @[src/main/scala/Frontend/decoder.scala 152:63]
     node _needs_memory_T = eq(instructionType, UInt<4>(0h8)) @[src/main/scala/Frontend/decoder.scala 156:51]
     node _needs_memory_T_1 = eq(instructionType, UInt<1>(0h0)) @[src/main/scala/Frontend/decoder.scala 156:82]
@@ -18542,6 +18558,56 @@ circuit ChaosCore :%[[
     node _io_count_T_1 = mux(_io_count_T, UInt<5>(0h10), UInt<1>(0h0)) @[src/main/scala/chisel3/util/Decoupled.scala 312:20]
     node _io_count_T_2 = or(_io_count_T_1, ptr_diff) @[src/main/scala/chisel3/util/Decoupled.scala 312:62]
     connect io.count, _io_count_T_2 @[src/main/scala/chisel3/util/Decoupled.scala 312:14]
+
+  intmodule LTLConcatIntrinsic : @[src/main/scala/chisel3/util/circt/LTLIntrinsics.scala 61:24]
+    input lhs : UInt<1>
+    input rhs : UInt<1>
+    output out : UInt<1>
+    intrinsic = circt_ltl_concat
+
+  intmodule HasBeenResetIntrinsic :
+    input clock : Clock
+    input reset : Reset
+    output out : UInt<1>
+    intrinsic = circt_has_been_reset
+
+  intmodule LTLDisableIntrinsic : @[src/main/scala/chisel3/util/circt/LTLIntrinsics.scala 81:2]
+    input in : UInt<1>
+    input condition : UInt<1>
+    output out : UInt<1>
+    intrinsic = circt_ltl_disable
+
+  intmodule LTLClockIntrinsic : @[src/main/scala/chisel3/util/circt/LTLIntrinsics.scala 73:2]
+    input in : UInt<1>
+    input clock : Clock
+    output out : UInt<1>
+    intrinsic = circt_ltl_clock
+
+  intmodule VerifAssertIntrinsic : @[src/main/scala/chisel3/util/circt/LTLIntrinsics.scala 96:24]
+    input property : UInt<1>
+    intrinsic = circt_verif_assert
+
+  intmodule HasBeenResetIntrinsic_1 :
+    input clock : Clock
+    input reset : Reset
+    output out : UInt<1>
+    intrinsic = circt_has_been_reset
+
+  intmodule HasBeenResetIntrinsic_2 :
+    input clock : Clock
+    input reset : Reset
+    output out : UInt<1>
+    intrinsic = circt_has_been_reset
+
+  intmodule HasBeenResetIntrinsic_3 :
+    input clock : Clock
+    input reset : Reset
+    output out : UInt<1>
+    intrinsic = circt_has_been_reset
+
+  intmodule VerifAssumeIntrinsic : @[src/main/scala/chisel3/util/circt/LTLIntrinsics.scala 99:24]
+    input property : UInt<1>
+    intrinsic = circt_verif_assume
 
   module free_list : @[src/main/scala/Frontend/free_list.scala 41:7]
     input clock : Clock @[src/main/scala/Frontend/free_list.scala 41:7]
@@ -19725,33 +19791,63 @@ circuit ChaosCore :%[[
     node _T_403 = or(_T_402, io.rename_valid[2]) @[src/main/scala/Frontend/free_list.scala 169:85]
     node _T_404 = or(_T_403, io.rename_valid[3]) @[src/main/scala/Frontend/free_list.scala 169:85]
     node _T_405 = eq(io.free_list_front_pointer, front_index) @[src/main/scala/Frontend/free_list.scala 169:142]
-    node concat = intrinsic(circt_ltl_concat : UInt<1>, _T_404, _T_405) @[src/main/scala/chisel3/ltl/LTL.scala 269:62]
+    inst ltl_concat of LTLConcatIntrinsic @[src/main/scala/chisel3/ltl/LTL.scala 145:35]
+    connect ltl_concat.lhs, _T_404 @[src/main/scala/chisel3/ltl/LTL.scala 146:22]
+    connect ltl_concat.rhs, _T_405 @[src/main/scala/chisel3/ltl/LTL.scala 147:22]
     node _T_406 = or(io.renamed_valid[0], io.renamed_valid[1]) @[src/main/scala/Frontend/free_list.scala 172:72]
     node _T_407 = or(_T_406, io.renamed_valid[2]) @[src/main/scala/Frontend/free_list.scala 172:72]
     node _T_408 = or(_T_407, io.renamed_valid[3]) @[src/main/scala/Frontend/free_list.scala 172:72]
     node _T_409 = and(commit_ptr_valid, io.commit.valid) @[src/main/scala/Frontend/free_list.scala 173:64]
     node _T_410 = eq(io.commit.valid, UInt<1>(0h0)) @[src/main/scala/Frontend/free_list.scala 173:87]
     node _T_411 = or(_T_409, _T_410) @[src/main/scala/Frontend/free_list.scala 173:84]
-    node has_been_reset = intrinsic(circt_has_been_reset : UInt<1>, clock, reset) @[src/main/scala/chisel3/ltl/LTL.scala 422:39]
-    node disable = eq(has_been_reset, UInt<1>(0h0)) @[src/main/scala/chisel3/ltl/LTL.scala 422:39]
-    node disable_1 = intrinsic(circt_ltl_disable : UInt<1>, _T_393, disable) @[src/main/scala/Frontend/free_list.scala 177:19]
-    node clock_1 = intrinsic(circt_ltl_clock : UInt<1>, disable_1, clock) @[src/main/scala/Frontend/free_list.scala 177:19]
-    intrinsic(circt_verif_assert, clock_1) @[src/main/scala/Frontend/free_list.scala 177:19]
-    node has_been_reset_1 = intrinsic(circt_has_been_reset : UInt<1>, clock, reset) @[src/main/scala/chisel3/ltl/LTL.scala 422:39]
-    node disable_2 = eq(has_been_reset_1, UInt<1>(0h0)) @[src/main/scala/chisel3/ltl/LTL.scala 422:39]
-    node disable_3 = intrinsic(circt_ltl_disable : UInt<1>, _T_397, disable_2) @[src/main/scala/Frontend/free_list.scala 178:19]
-    node clock_2 = intrinsic(circt_ltl_clock : UInt<1>, disable_3, clock) @[src/main/scala/Frontend/free_list.scala 178:19]
-    intrinsic(circt_verif_assert, clock_2) @[src/main/scala/Frontend/free_list.scala 178:19]
-    node has_been_reset_2 = intrinsic(circt_has_been_reset : UInt<1>, clock, reset) @[src/main/scala/chisel3/ltl/LTL.scala 422:39]
-    node disable_4 = eq(has_been_reset_2, UInt<1>(0h0)) @[src/main/scala/chisel3/ltl/LTL.scala 422:39]
-    node disable_5 = intrinsic(circt_ltl_disable : UInt<1>, _T_401, disable_4) @[src/main/scala/Frontend/free_list.scala 179:19]
-    node clock_3 = intrinsic(circt_ltl_clock : UInt<1>, disable_5, clock) @[src/main/scala/Frontend/free_list.scala 179:19]
-    intrinsic(circt_verif_assert, clock_3) @[src/main/scala/Frontend/free_list.scala 179:19]
-    node has_been_reset_3 = intrinsic(circt_has_been_reset : UInt<1>, clock, reset) @[src/main/scala/chisel3/ltl/LTL.scala 422:39]
-    node disable_6 = eq(has_been_reset_3, UInt<1>(0h0)) @[src/main/scala/chisel3/ltl/LTL.scala 422:39]
-    node disable_7 = intrinsic(circt_ltl_disable : UInt<1>, _T_411, disable_6) @[src/main/scala/Frontend/free_list.scala 182:19]
-    node clock_4 = intrinsic(circt_ltl_clock : UInt<1>, disable_7, clock) @[src/main/scala/Frontend/free_list.scala 182:19]
-    intrinsic(circt_verif_assume, clock_4) @[src/main/scala/Frontend/free_list.scala 182:19]
+    inst HasBeenResetIntrinsic of HasBeenResetIntrinsic @[src/main/scala/chisel3/ltl/LTL.scala 360:39]
+    connect HasBeenResetIntrinsic.clock, clock @[src/main/scala/chisel3/ltl/LTL.scala 360:39]
+    connect HasBeenResetIntrinsic.reset, reset @[src/main/scala/chisel3/ltl/LTL.scala 360:39]
+    node disable = eq(HasBeenResetIntrinsic.out, UInt<1>(0h0)) @[src/main/scala/chisel3/ltl/LTL.scala 360:39]
+    inst ltl_disable of LTLDisableIntrinsic @[src/main/scala/chisel3/ltl/LTL.scala 331:34]
+    connect ltl_disable.in, _T_393 @[src/main/scala/chisel3/ltl/LTL.scala 332:20]
+    connect ltl_disable.condition, disable @[src/main/scala/chisel3/ltl/LTL.scala 333:27]
+    inst ltl_clock of LTLClockIntrinsic @[src/main/scala/chisel3/ltl/LTL.scala 320:32]
+    connect ltl_clock.in, ltl_disable.out @[src/main/scala/chisel3/ltl/LTL.scala 321:18]
+    connect ltl_clock.clock, clock @[src/main/scala/chisel3/ltl/LTL.scala 322:21]
+    inst verif of VerifAssertIntrinsic @[src/main/scala/chisel3/ltl/LTL.scala 429:59]
+    connect verif.property, ltl_clock.out @[src/main/scala/chisel3/ltl/LTL.scala 366:20]
+    inst HasBeenResetIntrinsic_1 of HasBeenResetIntrinsic_1 @[src/main/scala/chisel3/ltl/LTL.scala 360:39]
+    connect HasBeenResetIntrinsic_1.clock, clock @[src/main/scala/chisel3/ltl/LTL.scala 360:39]
+    connect HasBeenResetIntrinsic_1.reset, reset @[src/main/scala/chisel3/ltl/LTL.scala 360:39]
+    node disable_1 = eq(HasBeenResetIntrinsic_1.out, UInt<1>(0h0)) @[src/main/scala/chisel3/ltl/LTL.scala 360:39]
+    inst ltl_disable_1 of LTLDisableIntrinsic @[src/main/scala/chisel3/ltl/LTL.scala 331:34]
+    connect ltl_disable_1.in, _T_397 @[src/main/scala/chisel3/ltl/LTL.scala 332:20]
+    connect ltl_disable_1.condition, disable_1 @[src/main/scala/chisel3/ltl/LTL.scala 333:27]
+    inst ltl_clock_1 of LTLClockIntrinsic @[src/main/scala/chisel3/ltl/LTL.scala 320:32]
+    connect ltl_clock_1.in, ltl_disable_1.out @[src/main/scala/chisel3/ltl/LTL.scala 321:18]
+    connect ltl_clock_1.clock, clock @[src/main/scala/chisel3/ltl/LTL.scala 322:21]
+    inst verif_1 of VerifAssertIntrinsic @[src/main/scala/chisel3/ltl/LTL.scala 429:59]
+    connect verif_1.property, ltl_clock_1.out @[src/main/scala/chisel3/ltl/LTL.scala 366:20]
+    inst HasBeenResetIntrinsic_2 of HasBeenResetIntrinsic_2 @[src/main/scala/chisel3/ltl/LTL.scala 360:39]
+    connect HasBeenResetIntrinsic_2.clock, clock @[src/main/scala/chisel3/ltl/LTL.scala 360:39]
+    connect HasBeenResetIntrinsic_2.reset, reset @[src/main/scala/chisel3/ltl/LTL.scala 360:39]
+    node disable_2 = eq(HasBeenResetIntrinsic_2.out, UInt<1>(0h0)) @[src/main/scala/chisel3/ltl/LTL.scala 360:39]
+    inst ltl_disable_2 of LTLDisableIntrinsic @[src/main/scala/chisel3/ltl/LTL.scala 331:34]
+    connect ltl_disable_2.in, _T_401 @[src/main/scala/chisel3/ltl/LTL.scala 332:20]
+    connect ltl_disable_2.condition, disable_2 @[src/main/scala/chisel3/ltl/LTL.scala 333:27]
+    inst ltl_clock_2 of LTLClockIntrinsic @[src/main/scala/chisel3/ltl/LTL.scala 320:32]
+    connect ltl_clock_2.in, ltl_disable_2.out @[src/main/scala/chisel3/ltl/LTL.scala 321:18]
+    connect ltl_clock_2.clock, clock @[src/main/scala/chisel3/ltl/LTL.scala 322:21]
+    inst verif_2 of VerifAssertIntrinsic @[src/main/scala/chisel3/ltl/LTL.scala 429:59]
+    connect verif_2.property, ltl_clock_2.out @[src/main/scala/chisel3/ltl/LTL.scala 366:20]
+    inst HasBeenResetIntrinsic_3 of HasBeenResetIntrinsic_3 @[src/main/scala/chisel3/ltl/LTL.scala 360:39]
+    connect HasBeenResetIntrinsic_3.clock, clock @[src/main/scala/chisel3/ltl/LTL.scala 360:39]
+    connect HasBeenResetIntrinsic_3.reset, reset @[src/main/scala/chisel3/ltl/LTL.scala 360:39]
+    node disable_3 = eq(HasBeenResetIntrinsic_3.out, UInt<1>(0h0)) @[src/main/scala/chisel3/ltl/LTL.scala 360:39]
+    inst ltl_disable_3 of LTLDisableIntrinsic @[src/main/scala/chisel3/ltl/LTL.scala 331:34]
+    connect ltl_disable_3.in, _T_411 @[src/main/scala/chisel3/ltl/LTL.scala 332:20]
+    connect ltl_disable_3.condition, disable_3 @[src/main/scala/chisel3/ltl/LTL.scala 333:27]
+    inst ltl_clock_3 of LTLClockIntrinsic @[src/main/scala/chisel3/ltl/LTL.scala 320:32]
+    connect ltl_clock_3.in, ltl_disable_3.out @[src/main/scala/chisel3/ltl/LTL.scala 321:18]
+    connect ltl_clock_3.clock, clock @[src/main/scala/chisel3/ltl/LTL.scala 322:21]
+    inst verif_3 of VerifAssumeIntrinsic @[src/main/scala/chisel3/ltl/LTL.scala 439:59]
+    connect verif_3.property, ltl_clock_3.out @[src/main/scala/chisel3/ltl/LTL.scala 366:20]
 
   module WAW_handler : @[src/main/scala/Frontend/rename.scala 39:7]
     input clock : Clock @[src/main/scala/Frontend/rename.scala 39:7]
@@ -30641,6 +30737,49 @@ circuit ChaosCore :%[[
     connect monitor_output_REG, io.FU_input.valid @[src/main/scala/Backend/FU.scala 444:30]
     connect monitor_output, monitor_output_REG @[src/main/scala/Backend/FU.scala 444:20]
 
+  intmodule LTLDelayIntrinsic_1_0 : @[src/main/scala/chisel3/util/circt/LTLIntrinsics.scala 57:24]
+    input in : UInt<1>
+    output out : UInt<1>
+    intrinsic = circt_ltl_delay
+    parameter delay = 1
+    parameter length = 0
+
+  intmodule LTLImplicationIntrinsic : @[src/main/scala/chisel3/util/circt/LTLIntrinsics.scala 67:24]
+    input lhs : UInt<1>
+    input rhs : UInt<1>
+    output out : UInt<1>
+    intrinsic = circt_ltl_implication
+
+  intmodule HasBeenResetIntrinsic_4 :
+    input clock : Clock
+    input reset : Reset
+    output out : UInt<1>
+    intrinsic = circt_has_been_reset
+
+  intmodule HasBeenResetIntrinsic_5 :
+    input clock : Clock
+    input reset : Reset
+    output out : UInt<1>
+    intrinsic = circt_has_been_reset
+
+  intmodule HasBeenResetIntrinsic_6 :
+    input clock : Clock
+    input reset : Reset
+    output out : UInt<1>
+    intrinsic = circt_has_been_reset
+
+  intmodule HasBeenResetIntrinsic_7 :
+    input clock : Clock
+    input reset : Reset
+    output out : UInt<1>
+    intrinsic = circt_has_been_reset
+
+  intmodule HasBeenResetIntrinsic_8 :
+    input clock : Clock
+    input reset : Reset
+    output out : UInt<1>
+    intrinsic = circt_has_been_reset
+
   module AGU : @[src/main/scala/Memory/AGU.scala 39:7]
     input clock : Clock @[src/main/scala/Memory/AGU.scala 39:7]
     input reset : Reset @[src/main/scala/Memory/AGU.scala 39:7]
@@ -30749,21 +30888,36 @@ circuit ChaosCore :%[[
     connect io.FU_input.ready, UInt<1>(0h1) @[src/main/scala/Memory/AGU.scala 119:37]
     node _T = eq(io.flush, UInt<1>(0h0)) @[src/main/scala/Memory/AGU.scala 127:56]
     node _T_1 = and(io.FU_input.valid, _T) @[src/main/scala/Memory/AGU.scala 127:53]
-    node delay = intrinsic(circt_ltl_delay<delay = 1, length = 0> : UInt<1>, UInt<1>(0h1)) @[src/main/scala/Memory/AGU.scala 129:48]
-    node concat = intrinsic(circt_ltl_concat : UInt<1>, _T_1, delay) @[src/main/scala/Memory/AGU.scala 129:48]
-    node implication = intrinsic(circt_ltl_implication : UInt<1>, concat, io.FU_output.valid) @[src/main/scala/Memory/AGU.scala 129:48]
+    inst ltl_delay of LTLDelayIntrinsic_1_0 @[src/main/scala/chisel3/ltl/LTL.scala 115:32]
+    connect ltl_delay.in, UInt<1>(0h1) @[src/main/scala/chisel3/ltl/LTL.scala 116:18]
+    inst ltl_concat of LTLConcatIntrinsic @[src/main/scala/chisel3/ltl/LTL.scala 145:35]
+    connect ltl_concat.lhs, _T_1 @[src/main/scala/chisel3/ltl/LTL.scala 146:22]
+    connect ltl_concat.rhs, ltl_delay.out @[src/main/scala/chisel3/ltl/LTL.scala 147:22]
+    inst ltl_implication of LTLImplicationIntrinsic @[src/main/scala/chisel3/ltl/LTL.scala 261:38]
+    connect ltl_implication.lhs, ltl_concat.out @[src/main/scala/chisel3/ltl/LTL.scala 262:25]
+    connect ltl_implication.rhs, io.FU_output.valid @[src/main/scala/chisel3/ltl/LTL.scala 263:25]
     node _T_2 = eq(io.FU_output.valid, UInt<1>(0h0)) @[src/main/scala/Memory/AGU.scala 132:39]
-    node delay_1 = intrinsic(circt_ltl_delay<delay = 1, length = 0> : UInt<1>, UInt<1>(0h1)) @[src/main/scala/Memory/AGU.scala 133:44]
-    node concat_1 = intrinsic(circt_ltl_concat : UInt<1>, io.flush, delay_1) @[src/main/scala/Memory/AGU.scala 133:44]
-    node implication_1 = intrinsic(circt_ltl_implication : UInt<1>, concat_1, _T_2) @[src/main/scala/Memory/AGU.scala 133:44]
+    inst ltl_delay_1 of LTLDelayIntrinsic_1_0 @[src/main/scala/chisel3/ltl/LTL.scala 115:32]
+    connect ltl_delay_1.in, UInt<1>(0h1) @[src/main/scala/chisel3/ltl/LTL.scala 116:18]
+    inst ltl_concat_1 of LTLConcatIntrinsic @[src/main/scala/chisel3/ltl/LTL.scala 145:35]
+    connect ltl_concat_1.lhs, io.flush @[src/main/scala/chisel3/ltl/LTL.scala 146:22]
+    connect ltl_concat_1.rhs, ltl_delay_1.out @[src/main/scala/chisel3/ltl/LTL.scala 147:22]
+    inst ltl_implication_1 of LTLImplicationIntrinsic @[src/main/scala/chisel3/ltl/LTL.scala 261:38]
+    connect ltl_implication_1.lhs, ltl_concat_1.out @[src/main/scala/chisel3/ltl/LTL.scala 262:25]
+    connect ltl_implication_1.rhs, _T_2 @[src/main/scala/chisel3/ltl/LTL.scala 263:25]
     node _T_3 = eq(io.FU_input.bits.decoded_instruction.FUNCT3, UInt<1>(0h0)) @[src/main/scala/Memory/AGU.scala 137:101]
     node _T_4 = and(io.FU_input.valid, _T_3) @[src/main/scala/Memory/AGU.scala 137:53]
     node _T_5 = eq(io.FU_input.bits.decoded_instruction.memory_type, UInt<2>(0h2)) @[src/main/scala/Memory/AGU.scala 137:168]
     node _T_6 = and(_T_4, _T_5) @[src/main/scala/Memory/AGU.scala 137:115]
     node _T_7 = leq(io.FU_output.bits.wr_data, UInt<8>(0hff)) @[src/main/scala/Memory/AGU.scala 138:70]
-    node delay_2 = intrinsic(circt_ltl_delay<delay = 1, length = 0> : UInt<1>, UInt<1>(0h1)) @[src/main/scala/Memory/AGU.scala 139:41]
-    node concat_2 = intrinsic(circt_ltl_concat : UInt<1>, _T_6, delay_2) @[src/main/scala/Memory/AGU.scala 139:41]
-    node implication_2 = intrinsic(circt_ltl_implication : UInt<1>, concat_2, _T_7) @[src/main/scala/Memory/AGU.scala 139:41]
+    inst ltl_delay_2 of LTLDelayIntrinsic_1_0 @[src/main/scala/chisel3/ltl/LTL.scala 115:32]
+    connect ltl_delay_2.in, UInt<1>(0h1) @[src/main/scala/chisel3/ltl/LTL.scala 116:18]
+    inst ltl_concat_2 of LTLConcatIntrinsic @[src/main/scala/chisel3/ltl/LTL.scala 145:35]
+    connect ltl_concat_2.lhs, _T_6 @[src/main/scala/chisel3/ltl/LTL.scala 146:22]
+    connect ltl_concat_2.rhs, ltl_delay_2.out @[src/main/scala/chisel3/ltl/LTL.scala 147:22]
+    inst ltl_implication_2 of LTLImplicationIntrinsic @[src/main/scala/chisel3/ltl/LTL.scala 261:38]
+    connect ltl_implication_2.lhs, ltl_concat_2.out @[src/main/scala/chisel3/ltl/LTL.scala 262:25]
+    connect ltl_implication_2.rhs, _T_7 @[src/main/scala/chisel3/ltl/LTL.scala 263:25]
     node _T_8 = eq(io.FU_input.bits.decoded_instruction.FUNCT3, UInt<1>(0h0)) @[src/main/scala/Memory/AGU.scala 143:54]
     node _T_9 = and(io.FU_input.valid, _T_8) @[src/main/scala/Memory/AGU.scala 142:27]
     node _T_10 = eq(io.FU_input.bits.decoded_instruction.memory_type, UInt<2>(0h2)) @[src/main/scala/Memory/AGU.scala 144:59]
@@ -30779,40 +30933,90 @@ circuit ChaosCore :%[[
     node _T_20 = leq(io.FU_output.bits.wr_data, UInt<8>(0hff)) @[src/main/scala/Memory/AGU.scala 153:67]
     node _T_21 = leq(io.FU_output.bits.wr_data, UInt<16>(0hffff)) @[src/main/scala/Memory/AGU.scala 154:69]
     node _T_22 = leq(io.FU_output.bits.wr_data, UInt<32>(0hffffffff)) @[src/main/scala/Memory/AGU.scala 155:73]
-    node delay_3 = intrinsic(circt_ltl_delay<delay = 1, length = 0> : UInt<1>, UInt<1>(0h1)) @[src/main/scala/Memory/AGU.scala 158:38]
-    node concat_3 = intrinsic(circt_ltl_concat : UInt<1>, _T_11, delay_3) @[src/main/scala/Memory/AGU.scala 158:38]
-    node implication_3 = intrinsic(circt_ltl_implication : UInt<1>, concat_3, _T_20) @[src/main/scala/Memory/AGU.scala 158:38]
-    node delay_4 = intrinsic(circt_ltl_delay<delay = 1, length = 0> : UInt<1>, UInt<1>(0h1)) @[src/main/scala/Memory/AGU.scala 159:38]
-    node concat_4 = intrinsic(circt_ltl_concat : UInt<1>, _T_15, delay_4) @[src/main/scala/Memory/AGU.scala 159:38]
-    node implication_4 = intrinsic(circt_ltl_implication : UInt<1>, concat_4, _T_21) @[src/main/scala/Memory/AGU.scala 159:38]
-    node delay_5 = intrinsic(circt_ltl_delay<delay = 1, length = 0> : UInt<1>, UInt<1>(0h1)) @[src/main/scala/Memory/AGU.scala 160:38]
-    node concat_5 = intrinsic(circt_ltl_concat : UInt<1>, _T_19, delay_5) @[src/main/scala/Memory/AGU.scala 160:38]
-    node implication_5 = intrinsic(circt_ltl_implication : UInt<1>, concat_5, _T_22) @[src/main/scala/Memory/AGU.scala 160:38]
-    node has_been_reset = intrinsic(circt_has_been_reset : UInt<1>, clock, reset) @[src/main/scala/chisel3/ltl/LTL.scala 422:39]
-    node disable = eq(has_been_reset, UInt<1>(0h0)) @[src/main/scala/chisel3/ltl/LTL.scala 422:39]
-    node disable_1 = intrinsic(circt_ltl_disable : UInt<1>, implication_1, disable) @[src/main/scala/Memory/AGU.scala 165:19]
-    node clock_1 = intrinsic(circt_ltl_clock : UInt<1>, disable_1, clock) @[src/main/scala/Memory/AGU.scala 165:19]
-    intrinsic(circt_verif_assert, clock_1) @[src/main/scala/Memory/AGU.scala 165:19]
-    node has_been_reset_1 = intrinsic(circt_has_been_reset : UInt<1>, clock, reset) @[src/main/scala/chisel3/ltl/LTL.scala 422:39]
-    node disable_2 = eq(has_been_reset_1, UInt<1>(0h0)) @[src/main/scala/chisel3/ltl/LTL.scala 422:39]
-    node disable_3 = intrinsic(circt_ltl_disable : UInt<1>, implication, disable_2) @[src/main/scala/Memory/AGU.scala 166:19]
-    node clock_2 = intrinsic(circt_ltl_clock : UInt<1>, disable_3, clock) @[src/main/scala/Memory/AGU.scala 166:19]
-    intrinsic(circt_verif_assert, clock_2) @[src/main/scala/Memory/AGU.scala 166:19]
-    node has_been_reset_2 = intrinsic(circt_has_been_reset : UInt<1>, clock, reset) @[src/main/scala/chisel3/ltl/LTL.scala 422:39]
-    node disable_4 = eq(has_been_reset_2, UInt<1>(0h0)) @[src/main/scala/chisel3/ltl/LTL.scala 422:39]
-    node disable_5 = intrinsic(circt_ltl_disable : UInt<1>, implication_3, disable_4) @[src/main/scala/Memory/AGU.scala 167:19]
-    node clock_3 = intrinsic(circt_ltl_clock : UInt<1>, disable_5, clock) @[src/main/scala/Memory/AGU.scala 167:19]
-    intrinsic(circt_verif_assert, clock_3) @[src/main/scala/Memory/AGU.scala 167:19]
-    node has_been_reset_3 = intrinsic(circt_has_been_reset : UInt<1>, clock, reset) @[src/main/scala/chisel3/ltl/LTL.scala 422:39]
-    node disable_6 = eq(has_been_reset_3, UInt<1>(0h0)) @[src/main/scala/chisel3/ltl/LTL.scala 422:39]
-    node disable_7 = intrinsic(circt_ltl_disable : UInt<1>, implication_4, disable_6) @[src/main/scala/Memory/AGU.scala 168:19]
-    node clock_4 = intrinsic(circt_ltl_clock : UInt<1>, disable_7, clock) @[src/main/scala/Memory/AGU.scala 168:19]
-    intrinsic(circt_verif_assert, clock_4) @[src/main/scala/Memory/AGU.scala 168:19]
-    node has_been_reset_4 = intrinsic(circt_has_been_reset : UInt<1>, clock, reset) @[src/main/scala/chisel3/ltl/LTL.scala 422:39]
-    node disable_8 = eq(has_been_reset_4, UInt<1>(0h0)) @[src/main/scala/chisel3/ltl/LTL.scala 422:39]
-    node disable_9 = intrinsic(circt_ltl_disable : UInt<1>, implication_5, disable_8) @[src/main/scala/Memory/AGU.scala 169:19]
-    node clock_5 = intrinsic(circt_ltl_clock : UInt<1>, disable_9, clock) @[src/main/scala/Memory/AGU.scala 169:19]
-    intrinsic(circt_verif_assert, clock_5) @[src/main/scala/Memory/AGU.scala 169:19]
+    inst ltl_delay_3 of LTLDelayIntrinsic_1_0 @[src/main/scala/chisel3/ltl/LTL.scala 115:32]
+    connect ltl_delay_3.in, UInt<1>(0h1) @[src/main/scala/chisel3/ltl/LTL.scala 116:18]
+    inst ltl_concat_3 of LTLConcatIntrinsic @[src/main/scala/chisel3/ltl/LTL.scala 145:35]
+    connect ltl_concat_3.lhs, _T_11 @[src/main/scala/chisel3/ltl/LTL.scala 146:22]
+    connect ltl_concat_3.rhs, ltl_delay_3.out @[src/main/scala/chisel3/ltl/LTL.scala 147:22]
+    inst ltl_implication_3 of LTLImplicationIntrinsic @[src/main/scala/chisel3/ltl/LTL.scala 261:38]
+    connect ltl_implication_3.lhs, ltl_concat_3.out @[src/main/scala/chisel3/ltl/LTL.scala 262:25]
+    connect ltl_implication_3.rhs, _T_20 @[src/main/scala/chisel3/ltl/LTL.scala 263:25]
+    inst ltl_delay_4 of LTLDelayIntrinsic_1_0 @[src/main/scala/chisel3/ltl/LTL.scala 115:32]
+    connect ltl_delay_4.in, UInt<1>(0h1) @[src/main/scala/chisel3/ltl/LTL.scala 116:18]
+    inst ltl_concat_4 of LTLConcatIntrinsic @[src/main/scala/chisel3/ltl/LTL.scala 145:35]
+    connect ltl_concat_4.lhs, _T_15 @[src/main/scala/chisel3/ltl/LTL.scala 146:22]
+    connect ltl_concat_4.rhs, ltl_delay_4.out @[src/main/scala/chisel3/ltl/LTL.scala 147:22]
+    inst ltl_implication_4 of LTLImplicationIntrinsic @[src/main/scala/chisel3/ltl/LTL.scala 261:38]
+    connect ltl_implication_4.lhs, ltl_concat_4.out @[src/main/scala/chisel3/ltl/LTL.scala 262:25]
+    connect ltl_implication_4.rhs, _T_21 @[src/main/scala/chisel3/ltl/LTL.scala 263:25]
+    inst ltl_delay_5 of LTLDelayIntrinsic_1_0 @[src/main/scala/chisel3/ltl/LTL.scala 115:32]
+    connect ltl_delay_5.in, UInt<1>(0h1) @[src/main/scala/chisel3/ltl/LTL.scala 116:18]
+    inst ltl_concat_5 of LTLConcatIntrinsic @[src/main/scala/chisel3/ltl/LTL.scala 145:35]
+    connect ltl_concat_5.lhs, _T_19 @[src/main/scala/chisel3/ltl/LTL.scala 146:22]
+    connect ltl_concat_5.rhs, ltl_delay_5.out @[src/main/scala/chisel3/ltl/LTL.scala 147:22]
+    inst ltl_implication_5 of LTLImplicationIntrinsic @[src/main/scala/chisel3/ltl/LTL.scala 261:38]
+    connect ltl_implication_5.lhs, ltl_concat_5.out @[src/main/scala/chisel3/ltl/LTL.scala 262:25]
+    connect ltl_implication_5.rhs, _T_22 @[src/main/scala/chisel3/ltl/LTL.scala 263:25]
+    inst HasBeenResetIntrinsic of HasBeenResetIntrinsic_4 @[src/main/scala/chisel3/ltl/LTL.scala 360:39]
+    connect HasBeenResetIntrinsic.clock, clock @[src/main/scala/chisel3/ltl/LTL.scala 360:39]
+    connect HasBeenResetIntrinsic.reset, reset @[src/main/scala/chisel3/ltl/LTL.scala 360:39]
+    node disable = eq(HasBeenResetIntrinsic.out, UInt<1>(0h0)) @[src/main/scala/chisel3/ltl/LTL.scala 360:39]
+    inst ltl_disable of LTLDisableIntrinsic @[src/main/scala/chisel3/ltl/LTL.scala 331:34]
+    connect ltl_disable.in, ltl_implication_1.out @[src/main/scala/chisel3/ltl/LTL.scala 332:20]
+    connect ltl_disable.condition, disable @[src/main/scala/chisel3/ltl/LTL.scala 333:27]
+    inst ltl_clock of LTLClockIntrinsic @[src/main/scala/chisel3/ltl/LTL.scala 320:32]
+    connect ltl_clock.in, ltl_disable.out @[src/main/scala/chisel3/ltl/LTL.scala 321:18]
+    connect ltl_clock.clock, clock @[src/main/scala/chisel3/ltl/LTL.scala 322:21]
+    inst verif of VerifAssertIntrinsic @[src/main/scala/chisel3/ltl/LTL.scala 429:59]
+    connect verif.property, ltl_clock.out @[src/main/scala/chisel3/ltl/LTL.scala 366:20]
+    inst HasBeenResetIntrinsic_1 of HasBeenResetIntrinsic_5 @[src/main/scala/chisel3/ltl/LTL.scala 360:39]
+    connect HasBeenResetIntrinsic_1.clock, clock @[src/main/scala/chisel3/ltl/LTL.scala 360:39]
+    connect HasBeenResetIntrinsic_1.reset, reset @[src/main/scala/chisel3/ltl/LTL.scala 360:39]
+    node disable_1 = eq(HasBeenResetIntrinsic_1.out, UInt<1>(0h0)) @[src/main/scala/chisel3/ltl/LTL.scala 360:39]
+    inst ltl_disable_1 of LTLDisableIntrinsic @[src/main/scala/chisel3/ltl/LTL.scala 331:34]
+    connect ltl_disable_1.in, ltl_implication.out @[src/main/scala/chisel3/ltl/LTL.scala 332:20]
+    connect ltl_disable_1.condition, disable_1 @[src/main/scala/chisel3/ltl/LTL.scala 333:27]
+    inst ltl_clock_1 of LTLClockIntrinsic @[src/main/scala/chisel3/ltl/LTL.scala 320:32]
+    connect ltl_clock_1.in, ltl_disable_1.out @[src/main/scala/chisel3/ltl/LTL.scala 321:18]
+    connect ltl_clock_1.clock, clock @[src/main/scala/chisel3/ltl/LTL.scala 322:21]
+    inst verif_1 of VerifAssertIntrinsic @[src/main/scala/chisel3/ltl/LTL.scala 429:59]
+    connect verif_1.property, ltl_clock_1.out @[src/main/scala/chisel3/ltl/LTL.scala 366:20]
+    inst HasBeenResetIntrinsic_2 of HasBeenResetIntrinsic_6 @[src/main/scala/chisel3/ltl/LTL.scala 360:39]
+    connect HasBeenResetIntrinsic_2.clock, clock @[src/main/scala/chisel3/ltl/LTL.scala 360:39]
+    connect HasBeenResetIntrinsic_2.reset, reset @[src/main/scala/chisel3/ltl/LTL.scala 360:39]
+    node disable_2 = eq(HasBeenResetIntrinsic_2.out, UInt<1>(0h0)) @[src/main/scala/chisel3/ltl/LTL.scala 360:39]
+    inst ltl_disable_2 of LTLDisableIntrinsic @[src/main/scala/chisel3/ltl/LTL.scala 331:34]
+    connect ltl_disable_2.in, ltl_implication_3.out @[src/main/scala/chisel3/ltl/LTL.scala 332:20]
+    connect ltl_disable_2.condition, disable_2 @[src/main/scala/chisel3/ltl/LTL.scala 333:27]
+    inst ltl_clock_2 of LTLClockIntrinsic @[src/main/scala/chisel3/ltl/LTL.scala 320:32]
+    connect ltl_clock_2.in, ltl_disable_2.out @[src/main/scala/chisel3/ltl/LTL.scala 321:18]
+    connect ltl_clock_2.clock, clock @[src/main/scala/chisel3/ltl/LTL.scala 322:21]
+    inst verif_2 of VerifAssertIntrinsic @[src/main/scala/chisel3/ltl/LTL.scala 429:59]
+    connect verif_2.property, ltl_clock_2.out @[src/main/scala/chisel3/ltl/LTL.scala 366:20]
+    inst HasBeenResetIntrinsic_3 of HasBeenResetIntrinsic_7 @[src/main/scala/chisel3/ltl/LTL.scala 360:39]
+    connect HasBeenResetIntrinsic_3.clock, clock @[src/main/scala/chisel3/ltl/LTL.scala 360:39]
+    connect HasBeenResetIntrinsic_3.reset, reset @[src/main/scala/chisel3/ltl/LTL.scala 360:39]
+    node disable_3 = eq(HasBeenResetIntrinsic_3.out, UInt<1>(0h0)) @[src/main/scala/chisel3/ltl/LTL.scala 360:39]
+    inst ltl_disable_3 of LTLDisableIntrinsic @[src/main/scala/chisel3/ltl/LTL.scala 331:34]
+    connect ltl_disable_3.in, ltl_implication_4.out @[src/main/scala/chisel3/ltl/LTL.scala 332:20]
+    connect ltl_disable_3.condition, disable_3 @[src/main/scala/chisel3/ltl/LTL.scala 333:27]
+    inst ltl_clock_3 of LTLClockIntrinsic @[src/main/scala/chisel3/ltl/LTL.scala 320:32]
+    connect ltl_clock_3.in, ltl_disable_3.out @[src/main/scala/chisel3/ltl/LTL.scala 321:18]
+    connect ltl_clock_3.clock, clock @[src/main/scala/chisel3/ltl/LTL.scala 322:21]
+    inst verif_3 of VerifAssertIntrinsic @[src/main/scala/chisel3/ltl/LTL.scala 429:59]
+    connect verif_3.property, ltl_clock_3.out @[src/main/scala/chisel3/ltl/LTL.scala 366:20]
+    inst HasBeenResetIntrinsic_4 of HasBeenResetIntrinsic_8 @[src/main/scala/chisel3/ltl/LTL.scala 360:39]
+    connect HasBeenResetIntrinsic_4.clock, clock @[src/main/scala/chisel3/ltl/LTL.scala 360:39]
+    connect HasBeenResetIntrinsic_4.reset, reset @[src/main/scala/chisel3/ltl/LTL.scala 360:39]
+    node disable_4 = eq(HasBeenResetIntrinsic_4.out, UInt<1>(0h0)) @[src/main/scala/chisel3/ltl/LTL.scala 360:39]
+    inst ltl_disable_4 of LTLDisableIntrinsic @[src/main/scala/chisel3/ltl/LTL.scala 331:34]
+    connect ltl_disable_4.in, ltl_implication_5.out @[src/main/scala/chisel3/ltl/LTL.scala 332:20]
+    connect ltl_disable_4.condition, disable_4 @[src/main/scala/chisel3/ltl/LTL.scala 333:27]
+    inst ltl_clock_4 of LTLClockIntrinsic @[src/main/scala/chisel3/ltl/LTL.scala 320:32]
+    connect ltl_clock_4.in, ltl_disable_4.out @[src/main/scala/chisel3/ltl/LTL.scala 321:18]
+    connect ltl_clock_4.clock, clock @[src/main/scala/chisel3/ltl/LTL.scala 322:21]
+    inst verif_4 of VerifAssertIntrinsic @[src/main/scala/chisel3/ltl/LTL.scala 429:59]
+    connect verif_4.property, ltl_clock_4.out @[src/main/scala/chisel3/ltl/LTL.scala 366:20]
 
   module backend : @[src/main/scala/Backend/backend.scala 47:7]
     input clock : Clock @[src/main/scala/Backend/backend.scala 47:7]
@@ -32726,7 +32930,7 @@ circuit ChaosCore :%[[
       connect io.commit.bits.fetch_packet_index, io.FTQ.dominant_index @[src/main/scala/Frontend/BRU.scala 101:46]
 
 
-  public module ChaosCore : @[src/main/scala/Core/ChaosCore.scala 39:7]
+  module ChaosCore : @[src/main/scala/Core/ChaosCore.scala 39:7]
     input clock : Clock @[src/main/scala/Core/ChaosCore.scala 39:7]
     input reset : UInt<1> @[src/main/scala/Core/ChaosCore.scala 39:7]
     output io : { commit : { valid : UInt<1>, bits : { fetch_PC : UInt<32>, T_NT : UInt<1>, ROB_index : UInt<6>, br_type : UInt<3>, fetch_packet_index : UInt<2>, is_misprediction : UInt<1>, exception : UInt<1>, expected_PC : UInt<32>, GHR : UInt<16>, TOS : UInt<7>, NEXT : UInt<7>, free_list_front_pointer : UInt<8>, RDold : UInt<5>[4], RD : UInt<7>[4], RD_valid : UInt<1>[4]}}, flush : UInt<1>, revert : { valid : UInt<1>, bits : { PC : UInt<32>}}, flip frontend_memory_response : { flip ready : UInt<1>, valid : UInt<1>, bits : { fetch_PC : UInt<32>, valid_bits : UInt<1>[4], instructions : { instruction : UInt<32>, packet_index : UInt<4>, ROB_index : UInt<6>}[4], GHR : UInt<16>, NEXT : UInt<7>, TOS : UInt<7>}}, frontend_memory_request : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, wr_data : UInt<32>, wr_en : UInt<1>}}, flip backend_memory_response : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, data : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, MOB_index : UInt<4>}}, backend_memory_request : { flip ready : UInt<1>, valid : UInt<1>, bits : { addr : UInt<32>, data : UInt<32>, memory_type : UInt<2>, access_width : UInt<2>, MOB_index : UInt<4>}}} @[src/main/scala/Core/ChaosCore.scala 43:16]
