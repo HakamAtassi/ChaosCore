@@ -5,12 +5,8 @@ import circt.stage.ChiselStage
 import chisel3.util._
 
 
-/*
 
 case class NOCParameters(
-
-
-
 
     /////////////////////////////
     // INTERCONNECT PARAMETERS //
@@ -82,4 +78,3 @@ case class NOCParameters(
 ){
 
 }
-*/

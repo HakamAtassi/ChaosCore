@@ -1,11 +1,10 @@
-
 // See README.md for license details.
+
 ThisBuild / scalaVersion     := "2.13.14"
 ThisBuild / version          := "0.1.0"
 ThisBuild / organization     := "%ORGANIZATION%"
 
-//val chiselVersion = "6.4.2"
-val chiselVersion    = "6.4.2-tywaves-SNAPSHOT" // Local version of chisel
+val chiselVersion = "6.4.0"
 
 lazy val root = (project in file("."))
   .settings(
@@ -24,5 +23,3 @@ lazy val root = (project in file("."))
     ),
     addCompilerPlugin("org.chipsalliance" % "chisel-plugin" % chiselVersion cross CrossVersion.full),
   )
-
-

@@ -116,10 +116,6 @@ class instruction_cache(coreParameters:CoreParameters) extends Module{
     ////////////////////
     val CPU_response         = Wire(Decoupled(new fetch_packet(coreParameters)))
 
-    dontTouch(io.CPU_request)
-
-
-
     val cache_state     = RegInit(cacheState(), cacheState.Active)
 
     val current_data    = Wire(new instruction_cache_data_line(coreParameters))

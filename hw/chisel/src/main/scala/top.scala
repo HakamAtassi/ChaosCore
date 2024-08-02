@@ -55,24 +55,31 @@ object Main extends App {
 
     val coreParameters = CoreParameters()
     val addressMap = AddressMap()
-    //val nocParameters = NOCParameters()
+    val nocParameters = NOCParameters()
 
-    ChiselStage.emitSystemVerilogFile(new ChaosCore(coreParameters), Array("--split-verilog", 
+    //ChiselStage.emitSystemVerilogFile(new ChaosCore(coreParameters), Array("--split-verilog", 
+                                                                        //"--target", "verilog", 
+                                                                        //"--target-dir", "../verilog", 
+                                                                        //"--preserve-aggregate", "all", 
+                                                                        //"--dump-fir",
+                                                                        //), 
+                                                                        //firtoolOpts = Array("-disable-all-randomization", "-strip-debug-info")
+                                                                        //)
+
+
+
+    ChiselStage.emitSystemVerilogFile(new AXI_master_slave(coreParameters, nocParameters), Array("--split-verilog", 
                                                                         "--target", "verilog", 
                                                                         "--target-dir", "../verilog", 
                                                                         "--preserve-aggregate", "all", 
-                                                                        "--dump-fir",
                                                                         ), 
                                                                         firtoolOpts = Array("-disable-all-randomization", "-strip-debug-info")
                                                                         )
 
 
 
-
-
-
-    VerilogGenerator.generateVerilog(new ChaosCore(coreParameters), 
-     "../verilog/Core/ChaosCore.v")
+    //VerilogGenerator.generateVerilog(new ChaosCore(coreParameters), 
+     //"../verilog/Core/ChaosCore.v")
 
     //removeYosysInvalid("../verilog/")
     //generate_sv_interfaces("src/main/scala/coreParameters.scala", "src/main/scala/bundles.scala")
