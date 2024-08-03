@@ -150,7 +150,6 @@ trait AXICacheNode {
 
 
 
-
     when(AXI_AW.fire){
       AXI_AW_DATA_BUFFER := data
       printf("AXI write accepted")

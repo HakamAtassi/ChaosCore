@@ -29,6 +29,7 @@ module AXI_master(
   input  struct packed {logic [7:0] m_axi_rid; logic [31:0] m_axi_rdata; logic [1:0] m_axi_rresp; logic m_axi_rlast; }                                                                                                              AXI_R_bits
 );
 
+  wire         _final_response_buffer_io_deq_valid;
   wire [255:0] _final_response_buffer_io_deq_bits;
   reg  [255:0] AXI_AW_DATA_BUFFER;
   reg  [2:0]   AXI_REQUEST_STATE;
@@ -50,8 +51,9 @@ module AXI_master(
       if ((`PRINTF_COND_) & 1'h0) begin
         $fwrite(32'h80000002, "AXI read accepted");
         $fwrite(32'h80000002, "AXI read not accepted");
-        $fwrite(32'h80000002, "%d\n", _final_response_buffer_io_deq_bits);
       end
+      if ((`PRINTF_COND_) & _final_response_buffer_io_deq_valid & ~reset)
+        $fwrite(32'h80000002, "%d\n", _final_response_buffer_io_deq_bits);
     end // always @(posedge)
   `endif // not def SYNTHESIS
   always @(posedge clock) begin
@@ -89,7 +91,7 @@ module AXI_master(
     .io_enq_ready (/* unused */),
     .io_enq_valid (_GEN_2 & _GEN_4),
     .io_enq_bits  (_GEN_5),
-    .io_deq_valid (/* unused */),
+    .io_deq_valid (_final_response_buffer_io_deq_valid),
     .io_deq_bits  (_final_response_buffer_io_deq_bits),
     .io_count     (/* unused */)
   );
