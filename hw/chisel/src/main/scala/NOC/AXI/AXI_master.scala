@@ -4,9 +4,6 @@ import chisel3._
 import chisel3.util._
 
 
-
-
-
 class AXI_master(coreParameters:CoreParameters, val nocParameters:NOCParameters) extends Module with AXICacheNode{
 
 
@@ -16,42 +13,40 @@ class AXI_master(coreParameters:CoreParameters, val nocParameters:NOCParameters)
 
 
   object AXI_MASTER_STATES extends ChiselEnum {
-    val WRITE, READ = Value
+    val WRITE, READ, IDLE = Value
   }
 
   val AXI_MASTER_STATE = RegInit(AXI_MASTER_STATES(), AXI_MASTER_STATES.WRITE)
 
-  val write_counter = RegInit(UInt(32.W), 0.U)
-  val read_counter  = RegInit(UInt(32.W), 0.U)
+  dontTouch(AXI_MASTER_STATE)
+
+  val test_cache_line = Wire(UInt(256.W))
+  test_cache_line := "h0102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F".U
 
   switch(AXI_MASTER_STATE){
-    is(AXI_MASTER_STATES.WRITE){
-        AXI_MASTER_WRITE_ADDRESS := AXI_MASTER_WRITE_ADDRESS + 1.U
-        AXI_write_request(address = AXI_MASTER_WRITE_ADDRESS, bytes=1.U, data=AXI_MASTER_WRITE_ADDRESS)
 
-        when(write_counter === 10.U){
-          write_counter := 0.U
-          AXI_MASTER_STATE === AXI_MASTER_STATES.READ
-        }
+    is(AXI_MASTER_STATES.WRITE){
+
+      when(AXI_write_request(address = 0.U, bytes=32.U, data=test_cache_line)){
+        AXI_MASTER_STATE := AXI_MASTER_STATES.READ
+      }
     }
 
     is(AXI_MASTER_STATES.READ){
-        AXI_MASTER_READ_ADDRESS := AXI_MASTER_READ_ADDRESS + 1.U
-        AXI_read_request(address = AXI_MASTER_WRITE_ADDRESS, bytes=1.U)
+      when(AXI_read_request(address = 0.U, bytes=32.U)){
+        AXI_MASTER_STATE := AXI_MASTER_STATES.IDLE
+      }
 
-        when(read_counter === 10.U){
-          read_counter := 0.U
-          AXI_MASTER_STATE === AXI_MASTER_STATES.WRITE
-        }
+
+
     }
   }
-
-
-    // print read responses
-    val (resp_data, resp_valid) = AXI_read;
-    when(resp_valid){
-      printf("%d\n", resp_data)
-    }
+  
+  // print read responses
+  val (resp_data, resp_valid) = AXI_read;
+  when(resp_valid){
+    printf("Read Resp: %x\n", resp_data)
+  }
 
 
 }

@@ -70,6 +70,8 @@ trait AXICacheNode {
 
   val nocParameters:NOCParameters
 
+  import nocParameters._
+
   val AXI_AW    = IO(Decoupled(new AXI_AW(nocParameters)))
   val AXI_W     = IO(Decoupled(new AXI_W(nocParameters)))
   val AXI_B     = IO(Flipped(Decoupled(new AXI_B(nocParameters))))
@@ -81,6 +83,10 @@ trait AXICacheNode {
     val AXI_AW    = ValidIO(new AXI_AW(nocParameters))
     val AXI_W     = ValidIO(new AXI_W(nocParameters))
     val AXI_AR    = ValidIO(new AXI_AR(nocParameters))
+  }
+
+  object AXI_REQUEST_STATES extends ChiselEnum {
+    val ADDRESS_PHASE, WRITE_DATA_PHASE, READ_RESPONSE_PHASE, WRITE_RESPONSE_PHASE = Value
   }
 
 
@@ -114,48 +120,46 @@ trait AXICacheNode {
   //////////
 
   def AXI_read_request(address:UInt, bytes:UInt):Bool = {
-
+    import nocParameters._
     // drive channels
-    AXI_AR.valid              := 1.B
+    AXI_AR.valid              := AXI_REQUEST_STATE === AXI_REQUEST_STATES.ADDRESS_PHASE
     AXI_AR.bits.m_axi_arid    := 0.U
     AXI_AR.bits.m_axi_araddr  := address
-    AXI_AR.bits.m_axi_arlen   := 0.U
-    AXI_AR.bits.m_axi_arsize  := 0.U
+    AXI_AR.bits.m_axi_arlen   := Mux(bytes < DATA_WIDTH_BYTES.U, 0.U, bytes/DATA_WIDTH_BYTES.U - 1.U)
+    AXI_AR.bits.m_axi_arsize  := log2Ceil(DATA_WIDTH).U
     AXI_AR.bits.m_axi_arburst := 0x1.U
     AXI_AR.bits.m_axi_arlock  := 0x0.U
     AXI_AR.bits.m_axi_arcache := 0x0.U
     AXI_AR.bits.m_axi_arprot  := 0x0.U
 
-    when(AXI_AR.fire && final_response_buffer.io.enq.ready){
-      printf("AXI read accepted")
-    }.otherwise{
-      printf("AXI read not accepted")
-    }
+    //when(AXI_AR.fire && final_response_buffer.io.enq.ready){
+      //printf("AXI read accepted")
+    //}.otherwise{
+      //printf("AXI read not accepted")
+    //}
     AXI_AR.fire
   }
   
   val AXI_AW_DATA_BUFFER = Reg(UInt(256.W))   // FIXME: make this a param based on cache line width
   def AXI_write_request(address:UInt, data:UInt, bytes:UInt):Bool = {
+    import nocParameters._
+    // awlen = transfer size / bus width 
+    // awsize = always 0x2.U (32 bits) for simplicity
 
-    // Queue AXI request
-    AXI_AW.valid                := 1.B
+
+    AXI_AW.valid                := (AXI_REQUEST_STATE === AXI_REQUEST_STATES.ADDRESS_PHASE)
     AXI_AW.bits.m_axi_awid      := 0.U
     AXI_AW.bits.m_axi_awaddr    := address
-    AXI_AW.bits.m_axi_awlen     := 0.U
-    AXI_AW.bits.m_axi_awsize    := 0.U
-    AXI_AW.bits.m_axi_awburst   := 0x0.U
+    AXI_AW.bits.m_axi_awlen     := Mux(bytes < DATA_WIDTH_BYTES.U, 0.U, bytes/DATA_WIDTH_BYTES.U - 1.U)
+    AXI_AW.bits.m_axi_awsize    := log2Ceil(DATA_WIDTH).U
+    AXI_AW.bits.m_axi_awburst   := 0x1.U
     AXI_AW.bits.m_axi_awlock    := 0.U
     AXI_AW.bits.m_axi_awcache   := 0.U
     AXI_AW.bits.m_axi_awprot    := 0.U
 
-
-
     when(AXI_AW.fire){
       AXI_AW_DATA_BUFFER := data
-      printf("AXI write accepted")
-    }.otherwise{
-      printf("AXI write not accepted")
-    }
+    }    
     AXI_AW.fire
   }
 
@@ -171,14 +175,11 @@ trait AXICacheNode {
   // AXI FSM //
   /////////////
 
-  object AXI_REQUEST_STATES extends ChiselEnum {
-    val ADDRESS_PHASE, READ_DATA_PHASE, WRITE_DATA_PHASE, READ_RESPONSE_PHASE, WRITE_RESPONSE_PHASE = Value
-  }
 
   val AXI_REQUEST_STATE       = RegInit(AXI_REQUEST_STATES(), AXI_REQUEST_STATES.ADDRESS_PHASE)
   val AXI_REQUEST_NEXT_STATE  = Wire(AXI_REQUEST_STATES())
 
-  AXI_REQUEST_NEXT_STATE := AXI_REQUEST_STATES.ADDRESS_PHASE
+  AXI_REQUEST_NEXT_STATE := AXI_REQUEST_STATE
 
   switch(AXI_REQUEST_STATE){
     is(AXI_REQUEST_STATES.ADDRESS_PHASE){
@@ -189,12 +190,12 @@ trait AXICacheNode {
       when(AXI_AW.fire){                   // AW accepted
         AXI_REQUEST_NEXT_STATE := AXI_REQUEST_STATES.WRITE_DATA_PHASE
       }.elsewhen(AXI_AR.fire){             // AR accepted
-        AXI_REQUEST_NEXT_STATE := AXI_REQUEST_STATES.READ_DATA_PHASE
+        AXI_REQUEST_NEXT_STATE := AXI_REQUEST_STATES.READ_RESPONSE_PHASE
       }
     }
 
     is(AXI_REQUEST_STATES.WRITE_DATA_PHASE){
-      when(AXI_W.bits.m_axi_wlast.asBool){
+      when(AXI_W.bits.m_axi_wlast.asBool && AXI_W.fire){
         AXI_REQUEST_NEXT_STATE := AXI_REQUEST_STATES.WRITE_RESPONSE_PHASE
       }
     }
@@ -206,8 +207,8 @@ trait AXICacheNode {
     }
 
     is(AXI_REQUEST_STATES.READ_RESPONSE_PHASE){
-      when(AXI_R.bits.m_axi_rlast.asBool){ // FIXME:  last and okay and ... 
-        AXI_REQUEST_NEXT_STATE := AXI_REQUEST_STATES.READ_RESPONSE_PHASE
+      when(AXI_R.bits.m_axi_rlast.asBool && AXI_R.fire){ // FIXME:  last and okay and ... 
+        AXI_REQUEST_NEXT_STATE := AXI_REQUEST_STATES.ADDRESS_PHASE
       }
     }
 
@@ -219,21 +220,30 @@ trait AXICacheNode {
   // DATA PATH //
   ///////////////
 
+  val write_counter = RegInit(UInt(32.W), 0.U)
+  val read_counter  = RegInit(UInt(32.W), 0.U)
+
   // SHARED ADDRESS PHASE
   when(AXI_REQUEST_STATE === AXI_REQUEST_STATES.ADDRESS_PHASE){ // drive output request
-    AXI_AW.valid := 1.B
-    AXI_AR.valid := 1.B
+    when(AXI_AW.fire){
+      write_counter := AXI_AW.bits.m_axi_awlen
+    }.elsewhen(AXI_AR.fire){
+      read_counter := AXI_AR.bits.m_axi_arlen
+    }
   }
+
+  dontTouch(AXI_REQUEST_STATE)
 
   // WRITE DATA PHASE
   when(AXI_REQUEST_STATE === AXI_REQUEST_STATES.WRITE_DATA_PHASE){ 
 
     AXI_W.valid            := 1.B
-    AXI_W.bits.m_axi_wdata :=  AXI_AW_DATA_BUFFER(31, 0)
-    AXI_W.bits.m_axi_wstrb := 0x1.U
-    AXI_W.bits.m_axi_wlast := 1.U
+    AXI_W.bits.m_axi_wdata := AXI_AW_DATA_BUFFER(DATA_WIDTH-1, 0)
+    AXI_W.bits.m_axi_wstrb := 0xF.U
+    AXI_W.bits.m_axi_wlast := (write_counter === 0.U)
 
     when(AXI_W.fire){
+      write_counter := write_counter - 1.U
       AXI_AW_DATA_BUFFER := AXI_AW_DATA_BUFFER >> 32.U
     }
   }
@@ -256,7 +266,9 @@ trait AXICacheNode {
   }
 
 
-
-
+  AXI_AW.valid := 0.B
+  AXI_AR.valid := 0.B
+  dontTouch(AXI_AR)
+  //printf("%d %d\n", AXI_AW.valid, AXI_AW.bits.m_axi_awaddr)
 
 }
