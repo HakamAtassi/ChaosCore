@@ -41,7 +41,7 @@ import chisel3.util._
 
 // Define the BlackBox module
 class axi_ram(nocParameters:NOCParameters) extends BlackBox(Map(
-  //"DATA_WIDTH"      -> nocParameters.DATA_WIDTH,
+  "DATA_WIDTH"      -> nocParameters.DATA_WIDTH,
   //"ADDR_WIDTH"      -> nocParameters.ADDR_WIDTH,
   //"STRB_WIDTH"      -> nocParameters.STRB_WIDTH,
   //"ID_WIDTH"        -> nocParameters.ID_WIDTH,
@@ -51,8 +51,8 @@ class axi_ram(nocParameters:NOCParameters) extends BlackBox(Map(
   import nocParameters._
 
   val io = IO(new Bundle {
-    val clock = Input(Clock())
-    val reset = Input(Bool())
+    val clk = Input(Clock())
+    val rst = Input(Bool())
 
     val s_axi_awid = Input(UInt(ID_WIDTH.W))
     val s_axi_awaddr = Input(UInt(ADDR_WIDTH.W))

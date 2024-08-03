@@ -3,7 +3,7 @@
 //
 // Internal details; most user sources do not need this header,
 // unless using verilator public meta comments.
-// Suggest use VAXI_master_slave_tb.h instead.
+// Suggest use Vaxi_master_slave_tb.h instead.
 
 
 #ifndef VERILATED_VAXI_MASTER_SLAVE_TB__PCH_H_
@@ -20,7 +20,7 @@
 
 #include "verilated.h"
 
-#include "VAXI_master_slave_tb__Syms.h"
-#include "VAXI_master_slave_tb.h"
+#include "Vaxi_master_slave_tb__Syms.h"
+#include "Vaxi_master_slave_tb.h"
 
 #endif  // guard

@@ -2,7 +2,7 @@
 // DESCRIPTION: main() calling loop, created with Verilator --main
 
 #include "verilated.h"
-#include "VAXI_master_slave_tb.h"
+#include "Vaxi_master_slave_tb.h"
 
 //======================
 
@@ -10,10 +10,11 @@ int main(int argc, char** argv, char**) {
     // Setup context, defaults, and parse command line
     Verilated::debug(0);
     const std::unique_ptr<VerilatedContext> contextp{new VerilatedContext};
+    contextp->traceEverOn(true);
     contextp->commandArgs(argc, argv);
 
     // Construct the Verilated model, from Vtop.h generated from Verilating
-    const std::unique_ptr<VAXI_master_slave_tb> topp{new VAXI_master_slave_tb{contextp.get()}};
+    const std::unique_ptr<Vaxi_master_slave_tb> topp{new Vaxi_master_slave_tb{contextp.get()}};
 
     // Simulate until $finish
     while (!contextp->gotFinish()) {
@@ -28,7 +29,11 @@ int main(int argc, char** argv, char**) {
         VL_DEBUG_IF(VL_PRINTF("+ Exiting without $finish; no events left\n"););
     }
 
-    // Final model cleanup
+    // Execute 'final' processes
     topp->final();
+
+    // Print statistical summary report
+    contextp->statsPrintSummary();
+
     return 0;
 }

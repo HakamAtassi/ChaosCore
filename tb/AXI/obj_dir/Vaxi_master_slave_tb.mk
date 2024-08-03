@@ -2,15 +2,15 @@
 # DESCRIPTION: Verilator output: Makefile for building Verilated archive or executable
 #
 # Execute this makefile from the object directory:
-#    make -f VAXI_master_slave_tb.mk
+#    make -f Vaxi_master_slave_tb.mk
 
-default: VAXI_master_slave_tb
+default: Vaxi_master_slave_tb
 
 ### Constants...
 # Perl executable (from $PERL)
 PERL = perl
 # Path to Verilator kit (from $VERILATOR_ROOT)
-VERILATOR_ROOT = /opt/homebrew/Cellar/verilator/5.018/share/verilator
+VERILATOR_ROOT = /usr/local/share/verilator
 # SystemC include directory with systemc.h (from $SYSTEMC_INCLUDE)
 SYSTEMC_INCLUDE ?= 
 # SystemC library directory with libsystemc.a (from $SYSTEMC_LIBDIR)
@@ -30,9 +30,9 @@ VM_SC_TARGET_ARCH = linux
 
 ### Vars...
 # Design prefix (from --prefix)
-VM_PREFIX = VAXI_master_slave_tb
+VM_PREFIX = Vaxi_master_slave_tb
 # Module prefix (from --prefix)
-VM_MODPREFIX = VAXI_master_slave_tb
+VM_MODPREFIX = Vaxi_master_slave_tb
 # User CFLAGS (from -CFLAGS on Verilator command line)
 VM_USER_CFLAGS = \
 	-DVL_TIME_CONTEXT \
@@ -49,7 +49,7 @@ VM_USER_DIR = \
 
 ### Default rules...
 # Include list of all generated classes
-include VAXI_master_slave_tb_classes.mk
+include Vaxi_master_slave_tb_classes.mk
 # Include global rules
 include $(VERILATOR_ROOT)/include/verilated.mk
 
@@ -58,7 +58,7 @@ VPATH += $(VM_USER_DIR)
 
 
 ### Link rules... (from --exe)
-VAXI_master_slave_tb: $(VK_USER_OBJS) $(VK_GLOBAL_OBJS) $(VM_PREFIX)__ALL.a $(VM_HIER_LIBS)
+Vaxi_master_slave_tb: $(VK_USER_OBJS) $(VK_GLOBAL_OBJS) $(VM_PREFIX)__ALL.a $(VM_HIER_LIBS)
 	$(LINK) $(LDFLAGS) $^ $(LOADLIBES) $(LDLIBS) $(LIBS) $(SC_LIBS) -o $@
 
 

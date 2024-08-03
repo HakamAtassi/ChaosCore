@@ -2,7 +2,7 @@
 # DESCRIPTION: Verilator output: Make include file with class lists
 #
 # This file lists generated Verilated files, for including in higher level makefiles.
-# See VAXI_master_slave_tb.mk for the caller.
+# See Vaxi_master_slave_tb.mk for the caller.
 
 ### Switches...
 # C11 constructs required?  0/1 (always on now)
@@ -14,36 +14,41 @@ VM_COVERAGE = 0
 # Parallel builds?  0/1 (from --output-split)
 VM_PARALLEL_BUILDS = 0
 # Tracing output mode?  0/1 (from --trace/--trace-fst)
-VM_TRACE = 0
+VM_TRACE = 1
 # Tracing output mode in VCD format?  0/1 (from --trace)
-VM_TRACE_VCD = 0
+VM_TRACE_VCD = 1
 # Tracing output mode in FST format?  0/1 (from --trace-fst)
 VM_TRACE_FST = 0
 
 ### Object file lists...
 # Generated module classes, fast-path, compile with highest optimization
 VM_CLASSES_FAST += \
-	VAXI_master_slave_tb \
-	VAXI_master_slave_tb___024root__DepSet_h60552571__0 \
-	VAXI_master_slave_tb___024root__DepSet_hdb6823b1__0 \
-	VAXI_master_slave_tb__main \
+	Vaxi_master_slave_tb \
+	Vaxi_master_slave_tb___024root__DepSet_hae87ef8e__0 \
+	Vaxi_master_slave_tb___024root__DepSet_h81dbaec6__0 \
+	Vaxi_master_slave_tb__main \
 
 # Generated module classes, non-fast-path, compile with low/medium optimization
 VM_CLASSES_SLOW += \
-	VAXI_master_slave_tb___024root__Slow \
-	VAXI_master_slave_tb___024root__DepSet_h60552571__0__Slow \
-	VAXI_master_slave_tb___024root__DepSet_hdb6823b1__0__Slow \
+	Vaxi_master_slave_tb__ConstPool_0 \
+	Vaxi_master_slave_tb___024root__Slow \
+	Vaxi_master_slave_tb___024root__DepSet_hae87ef8e__0__Slow \
+	Vaxi_master_slave_tb___024root__DepSet_h81dbaec6__0__Slow \
 
 # Generated support classes, fast-path, compile with highest optimization
 VM_SUPPORT_FAST += \
+	Vaxi_master_slave_tb__Trace__0 \
 
 # Generated support classes, non-fast-path, compile with low/medium optimization
 VM_SUPPORT_SLOW += \
-	VAXI_master_slave_tb__Syms \
+	Vaxi_master_slave_tb__Syms \
+	Vaxi_master_slave_tb__Trace__0__Slow \
+	Vaxi_master_slave_tb__TraceDecls__0__Slow \
 
 # Global classes, need linked once per executable, fast-path, compile with highest optimization
 VM_GLOBAL_FAST += \
 	verilated \
+	verilated_vcd_c \
 	verilated_timing \
 	verilated_threads \
 

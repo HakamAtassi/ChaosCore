@@ -73,8 +73,6 @@ case class NOCParameters(
     // INTERCONNECT PARAMETERS //
     /////////////////////////////
 
-
-
 ){
-
+    val DATA_WIDTH_BYTES:Int = DATA_WIDTH/8;
 }

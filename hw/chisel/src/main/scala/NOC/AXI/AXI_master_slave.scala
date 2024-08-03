@@ -17,8 +17,8 @@ class AXI_master_slave(coreParameters:CoreParameters, val nocParameters:NOCParam
 
 
 
-    axi_ram.io.clock := clock
-    axi_ram.io.reset := reset
+    axi_ram.io.clk := clock
+    axi_ram.io.rst := reset
 
 
     axi_ram.io.s_axi_awid     := AXI_master.AXI_AW.bits.m_axi_awid

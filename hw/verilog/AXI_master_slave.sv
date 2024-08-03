@@ -26,6 +26,7 @@ module AXI_master_slave(
   wire [1:0]  _axi_ram_s_axi_rresp;
   wire        _axi_ram_s_axi_rlast;
   wire        _axi_ram_s_axi_rvalid;
+  wire        _AXI_master_AXI_AW_valid;
   wire
     struct packed {logic [7:0] m_axi_awid; logic [31:0] m_axi_awaddr; logic [7:0] m_axi_awlen; logic [2:0] m_axi_awsize; logic [1:0] m_axi_awburst; logic m_axi_awlock; logic [3:0] m_axi_awcache; logic [2:0] m_axi_awprot; }
     _AXI_master_AXI_AW_bits;
@@ -52,6 +53,7 @@ module AXI_master_slave(
     .clock        (clock),
     .reset        (reset),
     .AXI_AW_ready (_axi_ram_s_axi_awready),
+    .AXI_AW_valid (_AXI_master_AXI_AW_valid),
     .AXI_AW_bits  (_AXI_master_AXI_AW_bits),
     .AXI_W_ready  (_axi_ram_s_axi_wready),
     .AXI_W_valid  (_AXI_master_AXI_W_valid),
@@ -66,18 +68,20 @@ module AXI_master_slave(
     .AXI_R_valid  (_axi_ram_s_axi_rvalid),
     .AXI_R_bits   (_GEN_0)
   );
-  axi_ram axi_ram (
-    .clock         (clock),
-    .reset         (reset),
-    .s_axi_awid    (_AXI_master_AXI_AW_bits.m_axi_awid),
-    .s_axi_awaddr  (_AXI_master_AXI_AW_bits.m_axi_awaddr),
+  axi_ram #(
+    .DATA_WIDTH(32)
+  ) axi_ram (
+    .clk           (clock),
+    .rst           (reset),
+    .s_axi_awid    (8'h0),
+    .s_axi_awaddr  (32'h0),
     .s_axi_awlen   (_AXI_master_AXI_AW_bits.m_axi_awlen),
     .s_axi_awsize  (_AXI_master_AXI_AW_bits.m_axi_awsize),
     .s_axi_awburst (_AXI_master_AXI_AW_bits.m_axi_awburst),
-    .s_axi_awlock  (_AXI_master_AXI_AW_bits.m_axi_awlock),
-    .s_axi_awcache (_AXI_master_AXI_AW_bits.m_axi_awcache),
-    .s_axi_awprot  (_AXI_master_AXI_AW_bits.m_axi_awprot),
-    .s_axi_awvalid (1'h1),
+    .s_axi_awlock  (1'h0),
+    .s_axi_awcache (4'h0),
+    .s_axi_awprot  (3'h0),
+    .s_axi_awvalid (_AXI_master_AXI_AW_valid),
     .s_axi_awready (_axi_ram_s_axi_awready),
     .s_axi_wdata   (_AXI_master_AXI_W_bits.m_axi_wdata),
     .s_axi_wstrb   (_AXI_master_AXI_W_bits.m_axi_wstrb),

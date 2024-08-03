@@ -1,10 +1,5 @@
 `timescale 1ns/1ps
 
-`include "/Users/hakamatassi/Repos/ChaosCore/hw/verilog/AXI_master_slave.sv"
-`include "/Users/hakamatassi/Repos/ChaosCore/hw/verilog/AXI_master.sv"
-`include "/Users/hakamatassi/Repos/ChaosCore/hw/verilog/axi_ram.v"
-`include "/Users/hakamatassi/Repos/ChaosCore/hw/verilog/Queue1_UInt256.sv"
-
 module AXI_master_slave_tb;
 
   // Clock and Reset signals
@@ -33,14 +28,14 @@ module AXI_master_slave_tb;
   // Simulation control
   initial begin
     // Run the simulation for a certain time
-    #1000;
+    repeat(10000) @(posedge clock);
     $finish;
   end
 
   // Optionally, add waveform dump for simulation analysis
-  //initial begin
-    //$dumpfile("tb_AXI_master_slave.vcd");
-    //$dumpvars(0, tb_AXI_master_slave);
-  //end
+  initial begin
+    $dumpfile("tb_AXI_master_slave.vcd");
+    $dumpvars;
+  end
 
 endmodule
