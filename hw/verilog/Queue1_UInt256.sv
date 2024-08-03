@@ -21,20 +21,21 @@ module Queue1_UInt256(
   output         io_count
 );
 
-  reg [255:0] ram;
-  reg         full;
+  reg  [255:0] ram;
+  reg          full;
+  wire         _do_enq_T = ~full & io_enq_valid;
+  wire         _GEN = io_enq_valid | full;
+  wire         do_enq = full & _do_enq_T;
   always @(posedge clock) begin
-    automatic logic do_enq;
-    do_enq = ~full & io_enq_valid;
     if (do_enq)
       ram <= io_enq_bits;
     if (reset)
       full <= 1'h0;
-    else if (do_enq)
-      full <= do_enq;
+    else
+      full <= (do_enq == (full & _GEN) | _do_enq_T) & full;
   end // always @(posedge)
   assign io_enq_ready = ~full;
-  assign io_deq_valid = io_enq_valid | full;
+  assign io_deq_valid = _GEN;
   assign io_deq_bits = full ? ram : io_enq_bits;
   assign io_count = full;
 endmodule
