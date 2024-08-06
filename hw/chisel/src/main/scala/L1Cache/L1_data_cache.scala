@@ -69,12 +69,12 @@ object update_PLRU {
 	* @param hit_way_OH: the OH equality result of the PLRU memories
 	* @return: the updated PLRU result
 	*/
-	def apply(PLRU:UInt, tag_hit_OH:UInt):UInt = {
-		var updated_PLRU = 0.U
-		when((PLRU | tag_hit_OH).andR === 1.U){
-			updated_PLRU = tag_hit_OH
+	def apply(PLRU:UInt, tag_hit_OH:Vec[Bool]):UInt = {
+		var updated_PLRU:UInt = 0.U
+		when((PLRU | tag_hit_OH.asUInt).andR === 1.U){
+			updated_PLRU = tag_hit_OH.asUInt
 		}.otherwise{
-			updated_PLRU = PLRU | tag_hit_OH
+			updated_PLRU = PLRU | tag_hit_OH.asUInt
 		}
 		updated_PLRU
 	}
@@ -96,9 +96,7 @@ object get_decomposed_dcache_address{
 		half_word_offset = (address / 2.U),
 		byte_offset = (address / 1.U)
 	)
-
 	decomposed_dcache_address
-
   }
 }
 
@@ -111,8 +109,8 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	import nocParameters._
 	val io = IO(new Bundle{
 		// CPU PORT(s)
-		val backend_memory_request            = Flipped(Decoupled(new backend_memory_request(coreParameters)))
-		val backend_memory_response           = Decoupled(new backend_memory_response(coreParameters))
+		val backend_memory_request	= Flipped(Decoupled(new backend_memory_request(coreParameters)))
+		val backend_memory_response	= Decoupled(new backend_memory_response(coreParameters))
 
 		// FIXME: flush/kill ??
 
@@ -120,7 +118,8 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 
 	val DATA_CACHE_STATE 			= RegInit(DATA_CACHE_STATES(), DATA_CACHE_STATES.ACTIVE)
 	val DATA_CACHE_NEXT_STATE		= Wire(DATA_CACHE_STATES())
-	val tag_hit_OH 					= Wire(UInt(L1_DataCacheWays.W))
+
+	val tag_hit_OH 					= Wire(Vec(L1_DataCacheWays, Bool()))
 
 	// valid hit due to a valid active request (replay or CPU)
 	val valid_hit  					= Wire(Bool())
@@ -132,8 +131,10 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	val valid_read_hit  			= Wire(Bool())
 	val valid_read_miss 			= Wire(Bool())
 
+	val hit_address					= Wire(UInt(32.W))
 	val hit_set						= Wire(UInt(log2Ceil(L1_DataCacheSets).W))
 	val hit_tag						= Wire(UInt(log2Ceil(L1_DataCacheTagBits).W))
+	val hit_way						= Wire(UInt(log2Ceil(L1_DataCacheWays).W))
 	val hit_MOB_index				= Wire(UInt(log2Ceil(MOBEntries).W))
 
 	// Meaningful only when valid_miss is high. 
@@ -150,6 +151,21 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	val active_tag					= Wire(UInt(log2Ceil(L1_DataCacheTagBits).W))
 	val active_memory_type			= Wire(memory_type_t())
 	val active_access_width			= Wire(access_width_t())
+	val active_MOB_index			= Wire(UInt(log2Ceil(MOBEntries).W))
+
+	val backend_request_valid		= Wire(Bool())										// Current request valid?
+	val backend_address				= Wire(UInt(32.W))									// The currently active request address
+	val backend_set					= Wire(UInt(log2Ceil(L1_DataCacheSets).W))
+	val backend_tag					= Wire(UInt(log2Ceil(L1_DataCacheTagBits).W))
+	val backend_memory_type			= Wire(memory_type_t())
+	val backend_access_width		= Wire(access_width_t())
+
+	val replay_request_valid		= Wire(Bool())										// Current request valid?
+	val replay_address				= Wire(UInt(32.W))									// The currently active request address
+	val replay_set					= Wire(UInt(log2Ceil(L1_DataCacheSets).W))
+	val replay_tag					= Wire(UInt(log2Ceil(L1_DataCacheTagBits).W))
+	val replay_memory_type			= Wire(memory_type_t())
+	val replay_access_width			= Wire(access_width_t())
 
 	val allocate_way_OH				= Wire(Vec(L1_DataCacheWays, Bool()))
 	val allocate_address			= Wire(UInt(32.W))
@@ -168,6 +184,59 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	val output_operation			= Wire(access_width_t())
 	val output_MOB_index			= Wire(UInt(log2Ceil(MOBEntries).W))
 
+	//////////////////////////////
+	// Helper signal assignment //
+	//////////////////////////////
+
+
+	active_valid				:=	DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY || (io.backend_memory_request.valid)
+	active_address				:=	Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY, replay_address,		backend_address)
+	active_set					:=	Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY, replay_set, 			backend_set)
+	active_tag					:=	Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY, replay_tag, 			backend_tag)
+	active_memory_type			:=	Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY, replay_memory_type, 	backend_memory_type)
+	active_access_width			:=	Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY, replay_access_width, backend_access_width)
+
+
+	valid_hit			:= tag_hit_OH.reduce(_ || _)	&& RegNext(io.backend_memory_request.valid)
+	valid_miss			:= !tag_hit_OH.reduce(_ || _)	&& RegNext(io.backend_memory_request.valid)
+
+	valid_write_hit		:=	valid_hit && RegNext(active_memory_type === memory_type_t.STORE)
+	valid_write_miss	:=	valid_miss && RegNext(active_memory_type=== memory_type_t.STORE)
+
+	valid_read_hit 		:=	valid_hit && RegNext(active_memory_type=== memory_type_t.LOAD)
+	valid_read_miss		:=	valid_miss && RegNext(active_memory_type=== memory_type_t.LOAD)
+
+	hit_address			:=	RegNext(active_address)
+	hit_set				:=	RegNext(active_set)
+	hit_tag				:=	RegNext(active_tag)
+	hit_MOB_index		:=	RegNext(active_MOB_index)
+	hit_way				:= 	PriorityEncoderOH(tag_hit_OH.asUInt)	// FIXME: OH or non OH for priority encoder
+
+	miss_address		:= RegNext(active_address)
+	miss_set			:= RegNext(active_set)
+	miss_tag			:= RegNext(active_tag)
+	miss_MOB_index		:= RegNext(active_MOB_index)
+	miss_way			:= PriorityEncoderOH(~(tag_hit_OH.asUInt))	// miss way == allocate way == the rightmost/leftmost way with a 0 PLRU bit
+
+
+	//backend_request_valid
+	backend_address 	:=	io.backend_memory_request.bits.addr
+	backend_set			:=	get_decomposed_dcache_address(coreParameters, io.backend_memory_request.bits.addr).set
+	backend_tag			:=  get_decomposed_dcache_address(coreParameters, io.backend_memory_request.bits.addr).tag
+	backend_memory_type	:=  io.backend_memory_request.bits.memory_type
+	backend_access_width:=  io.backend_memory_request.bits.access_width
+
+
+	//allocate_cache_line			= Wire(UInt((L1_DataCacheBlockSizeBytes*8).W))
+
+	//MSHR_replay_done			= Wire(Bool())
+
+	//output_valid				= Wire(Bool())
+	//output_data					= Wire(UInt(32.W))
+	//output_address				= Wire(UInt(32.W))
+	//output_operation			= Wire(access_width_t())
+	//output_MOB_index			= Wire(UInt(log2Ceil(MOBEntries).W))
+
 	///////////////////
 	// REQUEST QUEUE //
 	///////////////////
@@ -177,14 +246,18 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 		val write_valid		=	Bool()
 		val write_address	=	UInt(32.W)
 		val write_data		=	UInt((L1_DataCacheBlockSizeBytes*8).W)
-		val write_bytes		=	UInt(???)	// FIXME: max number of write bytes?
+		val write_bytes		=	UInt(log2Ceil(128).W)	// Max number of bytes per transfer is 128
 
 		val read_valid		=	Bool()
 		val read_address	=	UInt(32.W)
-		val read_bytes		= 	UInt(???)
+		val read_bytes		= 	UInt(log2Ceil(128).W)
 	}
 
-	val AXI_request_Q				=	Module(new Queue(new AXI_request_Q_entry, ???, flow=false, hasFlush=false, useSyncReadMem=true))	// FIXME: needs flush/kill
+	// There can only be N outstanding addresses.
+	// Even though each address may have several related requests
+	// The address will only be requested once
+	// Meaning the AXI request queue will only ever need to be MSHREntries deep
+	val AXI_request_Q				=	Module(new Queue(new AXI_request_Q_entry, L1_MSHREntries, flow=false, hasFlush=false, useSyncReadMem=true))	// FIXME: needs flush/kill
 	
 	val write_request_valid			=	AXI_request_Q.io.deq.valid	&&	AXI_request_Q.io.deq.bits.write_valid
 	val write_request_address		=	AXI_request_Q.io.deq.bits.write_address
@@ -238,7 +311,8 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	}
 
 	for(i <- 0 until L1_DataCacheBlockSizeBytes){
-		data_memories_data_in(i) 	:= Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.ALLOCATE, allocate_cache_line((i+1)*8 - 1, i*8), io.backend_memory_request.bits.data(((i+1)%4)*8-1, (i%4)*8))
+		//data_memories_data_in(i) 	:= Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.ALLOCATE, allocate_cache_line((i+1)*8 - 1, i*8), io.backend_memory_request.bits.data(((i+1)%4)*8-1, (i%4)*8))
+		data_memories_data_in(i) 	:= Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.ALLOCATE, (allocate_cache_line>>(i*8))(7,0), (io.backend_memory_request.bits.data>>(i%4)*8)(7,0)) //(((i+1)%4)*8-1, (i%4)*8))
 	}
 
 	for((data_memory, i) <- data_memories.zipWithIndex){
@@ -246,9 +320,9 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 		data_memory.io.addr			:= active_address 
 		data_memory.io.wr_en		:= data_memories_wr_en(i)
 		data_memory.io.data_in		:= data_memories_data_in(i)
-
-		data_way((i+1)*8-1, i*8)	:= data_memories(i).io.data_out
 	}
+
+	data_way	:=	Cat(data_memories.map(_.io.data_out).reverse)
 
 
 
@@ -270,12 +344,10 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	}
 	
 	for(i <- 0 until L1_DataCacheWays){
-		when(DATA_CACHE_STATE === DATA_CACHE_STATES.ALLOCATE){
-			// on allocate, update TAG
-			tag_memories(i).io.wr_en 	:= (DATA_CACHE_NEXT_STATE === DATA_CACHE_STATES.ALLOCATE) && allocate_way_OH(i)
-			tag_memories(i).io.addr 	:= active_set
-			tag_memories(i).io.data_in	:= allocate_tag
-		}
+		// on allocate, update TAG
+		tag_memories(i).io.wr_en 	:= (DATA_CACHE_NEXT_STATE === DATA_CACHE_STATES.ALLOCATE) && allocate_way_OH(i)
+		tag_memories(i).io.addr 	:= active_set
+		tag_memories(i).io.data_in	:= allocate_tag
 	}
 
 
@@ -284,7 +356,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	//////////////////
 	// Memory of "way" width, sets length (Regs).
 
-	val valid_memory = RegInit(VecInit(Seq.fill(L1_DataCacheWays)(0.U(L1_DataCacheSets.W))))
+	val valid_memory = VecInit.fill(L1_DataCacheSets, L1_DataCacheWays)(0.B)
 
 	// update on allocate
 	when(DATA_CACHE_STATE === DATA_CACHE_STATES.ALLOCATE){
@@ -306,8 +378,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 
 	// update on hit (read or write)
 	when(valid_hit){
-		val PLRU = PLRU_memory(hit_set)
-		PLRU_memory(hit_set) := update_PLRU(PLRU = PLRU, tag_hit_OH = tag_hit_OH)
+		PLRU_memory(hit_set) := 0.U //update_PLRU(PLRU = PLRU_memory(hit_set), tag_hit_OH = tag_hit_OH)
 	}
 	// clearing PLRU on allocate is not needed (you allocate to the 0 PLRU bit, ie, no change)
 
@@ -316,7 +387,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	//////////////////
 	// Memory of "way" width, sets length (Regs)
 
-	val dirty_memory = RegInit(VecInit(Seq.fill(L1_DataCacheWays)(0.U(L1_DataCacheSets.W))))
+	val dirty_memory = VecInit.fill(L1_DataCacheSets, L1_DataCacheWays)(0.B)
 
 	// update on hit (writes only)
 	when(valid_write_hit){
@@ -334,8 +405,8 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 
 	val MSHRs 				= Reg(Vec(L1_MSHREntries, new MSHR_entry(coreParameters)))
 	val MSHR_ptr_width		= (log2Ceil(L1_MSHREntries)+1)
-	val MSHR_front_pointer 	= RegInit(UInt(MSHR_ptr_width.W))
-	val MSHR_back_pointer	= RegInit(UInt(MSHR_ptr_width.W))
+	val MSHR_front_pointer 	= RegInit(UInt(MSHR_ptr_width.W), 0.U)
+	val MSHR_back_pointer	= RegInit(UInt(MSHR_ptr_width.W), 0.U)
 
 	val MSHR_front_index 	= MSHR_front_pointer(MSHR_ptr_width-2, 0)
 	val MSHR_back_index 	= MSHR_back_pointer(MSHR_ptr_width-2, 0)
@@ -370,6 +441,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 		// allocate new MSHR entry
 	}
 
+
 	MSHR_replay_done := 0.B
 	when(DATA_CACHE_NEXT_STATE === DATA_CACHE_STATES.REPLAY){
 		// On replay, send requests one after the other in a burst fashion. 
@@ -379,10 +451,17 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 		}
 	}
 
+	//FIXME: Allocate way and miss way are inconsistent
+	//allocate_way_OH			= Wire(Vec(L1_DataCacheWays, Bool()))
+	//allocate_way				= Wire(UInt(log2Ceil(L1_DataCacheWays).W))
+	allocate_address			:= MSHRs(MSHR_front_index).address
+	allocate_set				:= get_decomposed_dcache_address(coreParameters, MSHRs(MSHR_front_index).address).set
+	allocate_tag				:= get_decomposed_dcache_address(coreParameters, MSHRs(MSHR_front_index).address).tag
+
 	//////////////////////////
 	// NON CACHEABLE BUFFER //
 	//////////////////////////
-
+	// TODO: 
 
 
 	////////////////////////////////////////////////////
@@ -397,7 +476,6 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	// On AXI response, queue entries into line fill buffer
 
 	cacheable_response_Q.io.enq.valid := axi_response_valid && (axi_response_ID === AXI_CACHEABLE_RESPONSE_ID.U).asBool
-	
 	cacheable_response_Q.io.enq.bits  := axi_response
 
 	// NON-CACHEABLE
@@ -459,10 +537,10 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 		output_data := non_cacheable_response_Q.io.deq.bits
 		non_cacheable_response_Q.io.deq.ready := 1.B
 	}.elsewhen(non_cacheable_response_Q.io.deq.valid){
-		output_data := RegNext(format_dcache_word(data_way, output_address, output_operation))
+		output_data := 0.U //RegNext(format_dcache_word(data_way, output_address, output_operation))
 	}
 
-    output_valid		:=	ShiftRegister(valid_hit, 2) //Pipe(valid_hit, 2)
+    output_valid		:=	ShiftRegister(valid_hit, 2)
     output_MOB_index	:=	hit_MOB_index
 
 
@@ -471,9 +549,9 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	// IO //
 	////////
 
-    io.backend_memory_request.valid					:=	output_valid //Pipe(valid_hit, 2)
-    io.backend_memory_request.bits.data				:=	output_data
-    io.backend_memory_request.bits.MOB_index		:=	output_MOB_index
+    io.backend_memory_response.valid					:=	output_valid
+    io.backend_memory_response.bits.data				:=	output_data
+    io.backend_memory_response.bits.MOB_index			:=	output_MOB_index
 
 
 }
