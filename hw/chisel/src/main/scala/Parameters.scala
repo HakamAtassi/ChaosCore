@@ -69,7 +69,8 @@ case class CoreParameters(
     L1_DataCacheSets: Int = 64,
     L1_DataCacheBlockSizeBytes: Int = 32,
 
-
+    L1_MSHREntries: Int = 4,    // number of MSHR rows (unique miss addresses)
+    L1_MSHRWidth: Int = 8,      // width of MSHR rows (misses per address)
 
     // Execution params
     ALUportCount:Int = 3,
@@ -89,6 +90,9 @@ case class CoreParameters(
 
 
 
+
+
+
 ){
     // DO NOT TOUCH coreParameters //
     val physicalRegBits: Int      = log2Ceil(physicalRegCount)      // N regs but x0 does not exist as a physical reg
@@ -97,12 +101,13 @@ case class CoreParameters(
 
 
 
-    // CACHE
+    // DATA CACHE
     val L1_DataCacheTagBits:Int = 32 - log2Ceil(L1_DataCacheSets) - log2Ceil(L1_DataCacheBlockSizeBytes)
     //L1_DataCacheSets: Int = 64,
     //L1_DataCacheBlockSizeBytes: Int = 32,
 
 
+    // INSTRUCTION CACHE
 
 }
 
