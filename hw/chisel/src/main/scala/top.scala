@@ -57,7 +57,16 @@ object Main extends App {
     val addressMap = AddressMap()
     val nocParameters = NOCParameters()
 
-    ChiselStage.emitSystemVerilogFile(new ChaosCore(coreParameters), Array("--split-verilog", 
+    //ChiselStage.emitSystemVerilogFile(new ChaosCore(coreParameters), Array("--split-verilog", 
+                                                                        //"--target", "verilog", 
+                                                                        //"--target-dir", "../verilog", 
+                                                                        //"--preserve-aggregate", "all", 
+                                                                        //"--dump-fir",
+                                                                        //), 
+                                                                        //firtoolOpts = Array("-disable-all-randomization", "-strip-debug-info")
+                                                                        //)
+
+    ChiselStage.emitSystemVerilogFile(new L1_data_cache(coreParameters, nocParameters), Array("--split-verilog", 
                                                                         "--target", "verilog", 
                                                                         "--target-dir", "../verilog", 
                                                                         "--preserve-aggregate", "all", 
@@ -65,6 +74,7 @@ object Main extends App {
                                                                         ), 
                                                                         firtoolOpts = Array("-disable-all-randomization", "-strip-debug-info")
                                                                         )
+
 
 
 
