@@ -8,27 +8,6 @@ import chisel3.util._
 import java.io.{File, FileWriter}
 import java.rmi.server.UID
 
-// Classic SRAM.
-// 1 R/W port. 
-/*
-class ReadWriteSmem(depth:Int, width: Int) extends Module {
-  val io = IO(new Bundle {
-    val enable = Input(Bool())
-    val wr_en = Input(Bool())
-    val addr = Input(UInt(log2Ceil(depth).W))
-    val data_in = Input(UInt(width.W))
-    val data_out = Output(UInt(width.W))
-  })
-
-  val mem = SyncReadMem(depth, UInt(width.W))
-  io.data_out := DontCare
-  when(io.enable) {
-    when (io.wr_en) { mem.write(io.addr, io.data_in) }
-      .otherwise    { io.data_out := mem.read(io.addr, io.enable) }
-  }
-}
-*/
-
 class ReadWriteSmem(depth: Int, width: Int) extends Module {
   val io = IO(new Bundle {
     val enable = Input(Bool())
@@ -44,12 +23,10 @@ class ReadWriteSmem(depth: Int, width: Int) extends Module {
   // Create a register to hold the output data
   val dataOut = Reg(UInt(width.W))
 
-
     when(io.enable) {
       when(io.wr_en) {
         ram.write(io.addr, io.data_in)
       }
-
       dataOut := ram.read(io.addr)
     }
 
@@ -121,8 +98,7 @@ class SDPReadWriteSmem(depth: Int, width: Int) extends Module {
 
     data_out := mem.read(io.rd_addr, io.enable)
   }
-
-    io.data_out := Mux(hazard_reg, din_buff, data_out) // Forward buffered data if hazard
+  io.data_out := Mux(hazard_reg, din_buff, data_out) // Forward buffered data if hazard
 }
 
 

@@ -201,24 +201,6 @@ object get_decomposed_icache_address{
   }
 }
 
-object get_decomposed_dcache_address{
-  def apply(coreParameters:CoreParameters, address:UInt):data_cache_address_packet={
-      import coreParameters._
-
-      val set_bits                    = log2Ceil(L1_DataCacheSets)
-      val tag_bits                    = 32 - log2Ceil(L1_DataCacheBlockSizeBytes)-set_bits    // 32 - bits required to index set - bits required to index within line - 2 bits due to 4 byte aligned data
-
-      val decomposed_dcache_address = Wire(new data_cache_address_packet(coreParameters))
-
-      decomposed_dcache_address.tag                 := address(31, 31-tag_bits+1)
-      decomposed_dcache_address.set                 := address(31-tag_bits, 31-tag_bits-set_bits+1)
-
-      decomposed_dcache_address
-
-  }
-}
-
-
 object get_MOB_row_byte_sel {
   def apply(coreParameters:CoreParameters, MOB_entry: MOB_entry): UInt = {
     // Extract relevant fields from the MOB_entry

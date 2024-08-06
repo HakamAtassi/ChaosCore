@@ -373,7 +373,7 @@ class MOB(coreParameters:CoreParameters) extends Module{
 
     dontTouch(data_out)
 
-    when(io.backend_memory_response.valid && io.backend_memory_response.bits.memory_type === memory_type_t.LOAD){
+    when(io.backend_memory_response.valid && MOB(io.backend_memory_response.bits.MOB_index).memory_type === memory_type_t.LOAD){
         MOB(io.backend_memory_response.bits.MOB_index).data_valid   := 1.B
         MOB(io.backend_memory_response.bits.MOB_index).data := data_out.asUInt
     }

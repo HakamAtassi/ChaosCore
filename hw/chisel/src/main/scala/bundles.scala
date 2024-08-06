@@ -91,14 +91,6 @@ class instruction_cache_address_packet(coreParameters: CoreParameters) extends B
     val instruction_offset      = UInt(instruction_offset_bits.W)
 }
 
-class data_cache_address_packet(coreParameters: CoreParameters) extends Bundle {
-    import coreParameters._
-    val set_bits:Int                    = log2Ceil(L1_DataCacheSets)
-    val tag_bits:Int                    = 32 - log2Ceil(L1_DataCacheBlockSizeBytes)-set_bits    // 32 - bits required to index set - bits required to index within line - 2 bits due to 4 byte aligned data
-
-    val tag                     = UInt(tag_bits.W)
-    val set                     = UInt(set_bits.W)
-}
 
 
 
@@ -527,10 +519,10 @@ class backend_memory_request(coreParameters:CoreParameters) extends Bundle{
 
 class backend_memory_response(coreParameters:CoreParameters) extends Bundle{
     import coreParameters._
-    val addr            = UInt(32.W)
+    //val addr            = UInt(32.W)
     val data            = UInt(32.W)
-    val memory_type     = memory_type_t() // LOAD/STORE
-    val access_width    = access_width_t()              // B/HW/W
+    //val memory_type     = memory_type_t() // LOAD/STORE
+    //val access_width    = access_width_t()              // B/HW/W
     val MOB_index       = UInt(log2Ceil(MOBEntries).W)
 }
 
@@ -552,60 +544,10 @@ class memory_access(coreParameters:CoreParameters) extends Bundle{   // output o
     val memory_type     = memory_type_t()   // LOAD/STORE
     val RD              = UInt(physicalRegBits.W)
     val access_width    = access_width_t()  // B/HW/W
-    val is_unsigned        = Bool()            // signed/is_unsigned
+    val is_unsigned     = Bool()            // signed/is_unsigned
     val address         = UInt(32.W)
     val wr_data         = UInt(32.W)
 }
-
-
-
-/*loads mark as complete when they are 100% correct and non-speculative.*/
-/*That is, loads can mark the RD ready to avoid stalling the pipeline*/
-/*But have the possibility of causing an exception that prevents them from committing*/
-/*Loads are not freed until they actually commit.*/
-class MOB_entry(coreParameters:CoreParameters) extends Bundle{
-    import coreParameters._
-
-    val valid           = Bool()
-    val memory_type     = memory_type_t()
-
-    val ROB_index       = UInt(log2Ceil(ROBEntries).W)
-    val fetch_packet_index      = UInt(log2Ceil(fetchWidth).W)  // fetch packet index of the branch
-
-    val address         = UInt(32.W)        // LOAD/STORE address
-    val access_width    = access_width_t()  // B/HW/W
-
-    val RD              = UInt(physicalRegBits.W) // dest reg
-    val data            = UInt(32.W)              
-    val data_valid      = Bool()
-
-    // Entry state
-    val pending         = Bool()    // AGU data valid but not requested from cache
-    val completed       = Bool()    // Load/Store sent to FU bus
-    val committed       = Bool()    // entry committed
-    val exception       = Bool()    // entry violated ordering (load/load or store/load)
-
-}
-
-
-////////////
-// DATA $ //
-////////////
-
-
-
-
-
-
-
-/////////
-// CSR //
-/////////
-
-
-
-
-
 
 ////////
 // TL //
@@ -656,80 +598,83 @@ class TileLink_Channel_D extends Bundle {
 
 
 
+/*loads mark as complete when they are 100% correct and non-speculative.*/
+/*That is, loads can mark the RD ready to avoid stalling the pipeline*/
+/*But have the possibility of causing an exception that prevents them from committing*/
+/*Loads are not freed until they actually commit.*/
+class MOB_entry(coreParameters:CoreParameters) extends Bundle{
+    import coreParameters._
+
+    val valid           = Bool()
+    val memory_type     = memory_type_t()
+
+    val ROB_index       = UInt(log2Ceil(ROBEntries).W)
+    val fetch_packet_index      = UInt(log2Ceil(fetchWidth).W)  // fetch packet index of the branch
+
+    val address         = UInt(32.W)        // LOAD/STORE address
+    val access_width    = access_width_t()  // B/HW/W
+
+    val RD              = UInt(physicalRegBits.W) // dest reg
+    val data            = UInt(32.W)              
+    val data_valid      = Bool()
+
+    // Entry state
+    val pending         = Bool()    // AGU data valid but not requested from cache
+    val completed       = Bool()    // Load/Store sent to FU bus
+    val committed       = Bool()    // entry committed
+    val exception       = Bool()    // entry violated ordering (load/load or store/load)
+
+}
+
+
+class MSHR_entry(coreParameters:CoreParameters) extends Bundle{
+    // An entire row of the MSHR.
+    import coreParameters._
+    val address                 =   UInt(32.W)      // address shared across MSHR row
+    val miss_request            =   Vec(L1_MSHRWidth, new backend_memory_request(coreParameters))
+
+    val front_pointer           =   UInt(log2Ceil(L1_MSHRWidth).W)
+    val back_pointer            =   UInt(log2Ceil(L1_MSHREntries).W)
+
+    def queue(miss_request:backend_memory_request): Unit = {
+        //miss_request(back_index) := DontCare  // FIXME: actually write data...
+        back_pointer := back_pointer + 1.U
+    }
+
+    def dequeue: Unit = {
+        miss_request(front_pointer) := 0.U.asTypeOf(new backend_memory_response(coreParameters))
+        front_pointer := front_pointer + 1.U
+    }
+
+    def full: Bool = {
+        // MSHR entry pointers do not wrap around. If full, it does not accept any additional entries. 
+        // When the queue begins emptying, it empties all the way and clears the row.
+        (front_pointer + 1.U) === L1_MSHRWidth.U
+    }
+
+    def empty: Bool = {
+        // MSHR entry pointers do not wrap around. If full, it does not accept any additional entries. 
+        // When the queue begins emptying, it empties all the way and clears the row.
+        front_pointer === back_pointer
+    }
+
+
+
+}
+
+
+////////////
+// DATA $ //
+////////////
+
+
+
+
+
+
+
 /////////
-// AXI //
+// CSR //
 /////////
 
-/*
-class AXI4_AW(nocParameters: NOCParameters) extends Bundle { // provides address info
-  import nocParameters._
 
-  val s_axi_awid      = UInt(ID_WIDTH.W)
-  val s_axi_awaddr    = UInt(ADDR_WIDTH.W)
-  val s_axi_awlen     = UInt(8.W)
-  val s_axi_awsize    = UInt(3.W)
-  val s_axi_awburst   = UInt(2.W)
-  val s_axi_awlock    = Bool()
-  val s_axi_awcache   = UInt(4.W)
-  val s_axi_awprot    = UInt(3.W)
-  val s_axi_awqos     = UInt(4.W)
-  val s_axi_awuser    = UInt(AWUSER_WIDTH.W)
-}
-
-class AXI4_W(nocParameters: NOCParameters) extends Bundle { // provides data info
-  import nocParameters._
-
-  val s_axi_wdata = UInt(DATA_WIDTH.W)
-  val s_axi_wstrb = UInt(STRB_WIDTH.W)
-  val s_axi_wlast = Bool()
-  val s_axi_wuser = UInt(WUSER_WIDTH.W)
-}
-
-
-class AXI4_B(nocParameters: NOCParameters) extends Bundle { // provides response info
-  import nocParameters._
-
-  val s_axi_bid     = UInt(ID_WIDTH.W)
-  val s_axi_bresp   = UInt(2.W)
-  val s_axi_buser   = UInt(BUSER_WIDTH.W)
-}
-
-class AXI4_AR(nocParameters: NOCParameters) extends Bundle {    // provides read address info
-  import nocParameters._
-  val s_axi_arid    = UInt(ID_WIDTH.W)
-  val s_axi_araddr  = UInt(ADDR_WIDTH.W)
-  val s_axi_arlen   = UInt(8.W)
-  val s_axi_arsize  = UInt(3.W)
-  val s_axi_arburst = UInt(2.W)
-  val s_axi_arlock  = Bool()
-  val s_axi_arcache = UInt(4.W)
-  val s_axi_arprot  = UInt(3.W)
-  val s_axi_arqos   = UInt(4.W)
-  val s_axi_aruser  = UInt(ARUSER_WIDTH.W)
-}
-
-class AXI4_R(nocParameters: NOCParameters) extends Bundle { // provides read data
-  import nocParameters._
-  val s_axi_rid     = UInt(ID_WIDTH.W)
-  val s_axi_rdata   = UInt(DATA_WIDTH.W)
-  val s_axi_rresp   = UInt(2.W)
-  val s_axi_rlast   = Bool()
-  val s_axi_ruser   = UInt(RUSER_WIDTH.W)
-  val s_axi_rvalid  = UInt(2.W)
-  val s_axi_rready  = UInt(2.W)
-}
-
-
-class AXI4_port(nocParameters: NOCParameters) extends Bundle {
-
-  // INPUTS
-  val AXI4_AW = (Decoupled(new AXI4_AW(nocParameters)))
-  val AXI4_W  = (Decoupled(new AXI4_W(nocParameters)))
-  val AXI4_AR = (Decoupled(new AXI4_AR(nocParameters)))
-
-  // OUTPUTS
-  val AXI4_B  = Flipped(Decoupled(new AXI4_B(nocParameters)))
-  val AXI4_R  = Flipped(Decoupled(new AXI4_R(nocParameters)))
-}
-
-*/

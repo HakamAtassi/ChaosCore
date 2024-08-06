@@ -57,24 +57,24 @@ object Main extends App {
     val addressMap = AddressMap()
     val nocParameters = NOCParameters()
 
-    //ChiselStage.emitSystemVerilogFile(new ChaosCore(coreParameters), Array("--split-verilog", 
-                                                                        //"--target", "verilog", 
-                                                                        //"--target-dir", "../verilog", 
-                                                                        //"--preserve-aggregate", "all", 
-                                                                        //"--dump-fir",
-                                                                        //), 
-                                                                        //firtoolOpts = Array("-disable-all-randomization", "-strip-debug-info")
-                                                                        //)
-
-
-
-    ChiselStage.emitSystemVerilogFile(new AXI_master_slave(coreParameters, nocParameters), Array("--split-verilog", 
+    ChiselStage.emitSystemVerilogFile(new ChaosCore(coreParameters), Array("--split-verilog", 
                                                                         "--target", "verilog", 
                                                                         "--target-dir", "../verilog", 
                                                                         "--preserve-aggregate", "all", 
+                                                                        "--dump-fir",
                                                                         ), 
                                                                         firtoolOpts = Array("-disable-all-randomization", "-strip-debug-info")
                                                                         )
+
+
+
+    //ChiselStage.emitSystemVerilogFile(new AXI_master_slave(coreParameters, nocParameters), Array("--split-verilog", 
+                                                                        //"--target", "verilog", 
+                                                                        //"--target-dir", "../verilog", 
+                                                                        //"--preserve-aggregate", "all", 
+                                                                        //), 
+                                                                        //firtoolOpts = Array("-disable-all-randomization", "-strip-debug-info")
+                                                                        //)
 
 
 

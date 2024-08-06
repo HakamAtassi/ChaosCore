@@ -67,6 +67,11 @@ case class NOCParameters(
 
     M_CONNECT_WRITE:Int = 2,
 
+    // DRAM and peripherals return separately but in-order
+
+    AXI_CACHEABLE_RESPONSE_ID:Int = 0, 
+    AXI_NON_CACHEABLE_RESPONSE_ID:Int = 1,
+
 
 
     /////////////////////////////
