@@ -632,6 +632,7 @@ class MSHR_entry(coreParameters:CoreParameters) extends Bundle{
     import coreParameters._
     val address                 =   UInt(32.W)      // address shared across MSHR row
     val miss_request            =   Vec(L1_MSHRWidth, new backend_memory_request(coreParameters))
+    val allocate_way            =   UInt(log2Ceil(L1_DataCacheWays).W)
 
     val front_pointer           =   UInt(log2Ceil(L1_MSHRWidth).W)
     val back_pointer            =   UInt(log2Ceil(L1_MSHREntries).W)
@@ -644,6 +645,10 @@ class MSHR_entry(coreParameters:CoreParameters) extends Bundle{
     def dequeue: Unit = {
         miss_request(front_pointer) := 0.U.asTypeOf(new backend_memory_response(coreParameters))
         front_pointer := front_pointer + 1.U
+    }
+
+    def front: backend_memory_request = {
+        miss_request(front_pointer)
     }
 
     def full: Bool = {
