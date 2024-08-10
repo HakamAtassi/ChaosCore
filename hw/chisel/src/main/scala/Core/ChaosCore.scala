@@ -50,14 +50,14 @@ class ChaosCore(coreParameters:CoreParameters) extends Module{
         ////////////////////////////
         // I$ FRONTEND MEM ACCESS //
         ////////////////////////////
-        val frontend_memory_response            =   Flipped(Decoupled(new fetch_packet(coreParameters)))
         val frontend_memory_request             =   Decoupled(new frontend_memory_request(coreParameters))
+        val frontend_memory_response            =   Flipped(Decoupled(new fetch_packet(coreParameters)))
 
         ///////////////////////////
         // D$ BACKEND MEM ACCESS //
         ///////////////////////////
-        val backend_memory_response             =   Flipped(Decoupled(new backend_memory_response(coreParameters)))
         val backend_memory_request              =   Decoupled(new backend_memory_request(coreParameters))
+        val backend_memory_response             =   Flipped(Decoupled(new backend_memory_response(coreParameters)))
     }); dontTouch(io)
 
     //////////////////

@@ -72,6 +72,8 @@ case class NOCParameters(
     AXI_CACHEABLE_RESPONSE_ID:Int = 0, 
     AXI_NON_CACHEABLE_RESPONSE_ID:Int = 1,
 
+    PIPELINE_OUTPUT:Int = 0, // register the output of the RAM
+
 
 
     /////////////////////////////

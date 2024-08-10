@@ -27,7 +27,6 @@
 * ------------------------------------------------------------------------------------ 
 */
 
-/*
 package ChaosCore
 
 import chisel3._
@@ -36,22 +35,19 @@ import circt.stage.ChiselStage
 import chisel3.util._
 
 
-class debug_printer_AXI(coreParameters:CoreParameters, nocParameters: NOCParameters, addressMap:AddressMap) extends Module{
-    import coreParameters._
+class AXI_debug_printer(nocParameters: NOCParameters, addressMap:AddressMap) extends Module{
     import addressMap._
     import nocParameters._
 
     val io = IO(new Bundle{
-      val AXI4_slave_port = Flipped(new AXI4_port(nocParameters))
+      val s_AXI = Flipped(new AXIFullIO(nocParameters))
     })
 
-    when((io.debug_printer_A.bits.a_address === debug_printer_address) && io.debug_printer_A.valid){
-        printf("%c", io.debug_printer_A.bits.a_data)
+    when(0.B /*io.AXI4_slave_port.*/){
+        printf("%c", 0x42.U)
     }
-    io.debug_printer_A.ready := 1.B
 
-    io.debug_printer_D := DontCare // FIXME: 
+    io.s_AXI := DontCare
+
 
 }
-
-*/

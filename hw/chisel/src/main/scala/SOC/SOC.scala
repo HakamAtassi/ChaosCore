@@ -34,70 +34,56 @@ import circt.stage.ChiselStage
 
 import chisel3.util._
 
-/*
-
 class SOC(coreParameters:CoreParameters, addressMap:AddressMap, nocParameters:NOCParameters) extends Module{
-
     val io = IO(new Bundle{
-        ////////////////////////
-        // TILELINK INTERFACE //
-        ////////////////////////
-		val DRAM_TL_A                      = Decoupled(new TileLink_Channel_A())
-		val DRAM_TL_D                      = Flipped(Decoupled(new TileLink_Channel_D()))
+        ///////////////////
+        // AXI INTERFACE //
+        ///////////////////
+		val	dram_AXI	=	new	AXIFullIO(nocParameters)
     })
 
     ///////////////
     // CHAOSCORE //
     ///////////////
+    val ChaosCore_tile = Module(new ChaosCore_tile(coreParameters, addressMap, nocParameters))
+    //val flush               = ChaosCore.io.commit.valid && ChaosCore.io.commit.bits.is_misprediction
 
-    val ChaosCore           = Module(new ChaosCore(coreParameters))
-    val flush               = ChaosCore.io.commit.valid && ChaosCore.io.commit.bits.is_misprediction
 
-    ////////////
-    // CACHES //
-    ////////////
-    val instruction_cache   = Module(new instruction_cache(coreParameters, nocParameters))
-    val data_cache          = Module(new blocking_data_cache(coreParameters, nocParameters))
+
+
+
+
 
     /////////////////
     // PERIPHIRALS //
     /////////////////
+    val AXI_debug_printer = Module(new AXI_debug_printer(nocParameters, addressMap))
+    //instruction_cache.io.flush := flush
 
-    val debug_printer = Module(new debug_printer(coreParameters, addressMap))
 
+    //////////////////
+    // INTERCONNECT //
+    //////////////////
 
-    ChaosCore.io.frontend_memory_response    <> instruction_cache.io.CPU_response
-    ChaosCore.io.frontend_memory_request     <> instruction_cache.io.CPU_request 
-    instruction_cache.io.flush := flush
+    val axi_interconnect = Module(new axi_interconnect_2x2(nocParameters))
 
-    ChaosCore.io.backend_memory_response     <> data_cache.io.backend_memory_response
-    ChaosCore.io.backend_memory_request      <> data_cache.io.backend_memory_request
+    axi_interconnect.io := DontCare
 
-    //////////////
-    // CORE BUS //
-    //////////////
-    val core_bus = Module(new core_bus())
-    val system_bus = Module(new system_bus(coreParameters, addressMap))
+    // Connect to NOC
 
-    core_bus.io.instruction_cache_A <> instruction_cache.io.instruction_cache_A
-    core_bus.io.instruction_cache_D <> instruction_cache.io.instruction_cache_D
+    // D$ <> NOC
+    ChaosCore_tile.io.instruction_cache_AXI_port    <> axi_interconnect.io.m_AXI_port(0)
 
-    core_bus.io.data_cache_A        <> data_cache.io.data_cache_A
-    core_bus.io.data_cache_D        <> data_cache.io.data_cache_D
+    // I$ <> NOC
+    ChaosCore_tile.io.data_cache_AXI_port           <> axi_interconnect.io.m_AXI_port(1)
 
-    core_bus.io.system_bus_A        <> system_bus.io.core_bus_A
-    core_bus.io.system_bus_D        <> system_bus.io.core_bus_D
+    // NOC <> IO (DRAM)
+    axi_interconnect.io.s_AXI_port(0) <> io.dram_AXI
 
-    ////////////////
-    // SYSTEM BUS //
-    ////////////////
+    // NOC <> UART
+    axi_interconnect.io.s_AXI_port(1) <> AXI_debug_printer.io.s_AXI
+    
 
-    system_bus.io.debug_printer_A <> debug_printer.io.debug_printer_A
-    system_bus.io.debug_printer_D <> debug_printer.io.debug_printer_D
-
-    system_bus.io.DRAM_A          <> io.DRAM_TL_A
-    system_bus.io.DRAM_D          <> io.DRAM_TL_D
-
+    dontTouch(axi_interconnect.io)
 
 }
-*/
