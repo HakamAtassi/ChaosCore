@@ -23,4 +23,7 @@ SV_FILES=$(find "$SV_DIR" -name "*.sv")
 WARNINGS="-Wno-PINMISSING -Wno-UNOPTFLAT -Wno-UNUSED -Wno-PINCONNECTEMPTY -Wno-MODDUP -Wno-VARHIDDEN -Wno-WIDTHTRUNC -Wno-WIDTHEXPAND -Wno-TIMESCALEMOD -Wno-GENUNNAMED -Wno-UNDRIVEN -Wno-CASEINCOMPLETE -Wno-SYMRSVDWORD"
 
 # Run Verilator with the specified options, including disabled warnings
-verilator -Wall --cc top_v2.sv --binary --trace --top-module top_v2 -j 15 -I"$SV_DIR" $WARNINGS $SV_FILES
+verilator -Wall --cc top_v2.sv --binary --trace --top-module top_v2 -j 15 -I"$SV_DIR" $WARNINGS
+
+
+#verilator -Wall --cc top_v2.sv --binary --trace --top-module top_v2 -j 15 -I"$SV_DIR" "-Wno-PINMISSING -Wno-UNOPTFLAT -Wno-UNUSED -Wno-PINCONNECTEMPTY -Wno-MODDUP -Wno-VARHIDDEN -Wno-WIDTHTRUNC -Wno-WIDTHEXPAND -Wno-TIMESCALEMOD -Wno-GENUNNAMED -Wno-UNDRIVEN -Wno-CASEINCOMPLETE -Wno-SYMRSVDWORD"

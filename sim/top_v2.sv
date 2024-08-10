@@ -140,6 +140,15 @@ module top_v2;
         forever #5 clock = ~clock;
     end
 
+
+  // load binary from binaries/bin/hello_world.bin
+  // axi_ram.mem
+  // mem has width of 32 bits
+    initial begin
+        $readmemh("binaries/bin/hello_world.hex", axi_ram.ram.mem);
+        $display("Binary file loaded into memory.");
+    end
+
     initial $display("Running ChaosCore");
 
     initial begin

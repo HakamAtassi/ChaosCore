@@ -5,8 +5,8 @@
 #include "Vtop_v2.h"
 #include "Vtop_v2___024root.h"
 #include "Vtop_v2_icache_ReadWriteSmem.h"
-#include "Vtop_v2_Queue4_FU_output.h"
 #include "Vtop_v2_Queue2_decoded_fetch_packet.h"
+#include "Vtop_v2_Queue4_FU_output.h"
 #include "Vtop_v2_Queue2_FTQ_entry.h"
 
 // FUNCTIONS
@@ -56,7 +56,7 @@ Vtop_v2__Syms::Vtop_v2__Syms(VerilatedContext* contextp, const char* namep, Vtop
     , TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__instruction_cache__DOT__data_memory_1{this, Verilated::catName(namep, "top_v2.SOC.ChaosCore_tile.instruction_cache.data_memory_1")}
 {
         // Check resources
-        Verilated::stackCheck(22262);
+        Verilated::stackCheck(22290);
     // Configure time unit / time precision
     _vm_contextp__->timeunit(-9);
     _vm_contextp__->timeprecision(-12);

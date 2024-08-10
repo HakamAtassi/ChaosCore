@@ -75,10 +75,10 @@ void Vtop_v2___024root__trace_chg_0_sub_0(Vtop_v2___024root* vlSelf, VerilatedVc
     VlWide<3>/*95:0*/ __Vtemp_180;
     VlWide<9>/*287:0*/ __Vtemp_182;
     VlWide<8>/*255:0*/ __Vtemp_183;
-    VlWide<6>/*191:0*/ __Vtemp_184;
-    VlWide<6>/*191:0*/ __Vtemp_185;
+    VlWide<14>/*447:0*/ __Vtemp_185;
     VlWide<14>/*447:0*/ __Vtemp_187;
-    VlWide<14>/*447:0*/ __Vtemp_189;
+    VlWide<6>/*191:0*/ __Vtemp_188;
+    VlWide<6>/*191:0*/ __Vtemp_189;
     VlWide<4>/*127:0*/ __Vtemp_192;
     VlWide<4>/*127:0*/ __Vtemp_195;
     VlWide<4>/*127:0*/ __Vtemp_198;
@@ -94,7 +94,7 @@ void Vtop_v2___024root__trace_chg_0_sub_0(Vtop_v2___024root* vlSelf, VerilatedVc
     if (VL_UNLIKELY(((vlSelf->__Vm_traceActivity[2U] 
                       | vlSelf->__Vm_traceActivity[3U]) 
                      | vlSelf->__Vm_traceActivity[4U]))) {
-        __Vtemp_1[0U] = (((IData)((((QData)((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__bp__DOT____Vcellinp__BTB__io_predict_PC)) 
+        __Vtemp_1[0U] = (((IData)((((QData)((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__bp__DOT____Vcellinp__gshare__io_predict_PC)) 
                                     << 0x20U) | (QData)((IData)(
                                                                 (((~ (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__PC_Q__DOT__maybe_full)) 
                                                                   & (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__PC_Q__DOT__ptr_match))
@@ -114,7 +114,7 @@ void Vtop_v2___024root__trace_chg_0_sub_0(Vtop_v2___024root* vlSelf, VerilatedVc
                                     & ((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__PC_Q__DOT__ram_ext__DOT___R0_en_d0) 
                                        & vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__PC_Q__DOT__ram_ext__DOT__Memory
                                        [vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__PC_Q__DOT__ram_ext__DOT___R0_addr_d0][0U])));
-        __Vtemp_1[1U] = (((IData)((((QData)((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__bp__DOT____Vcellinp__BTB__io_predict_PC)) 
+        __Vtemp_1[1U] = (((IData)((((QData)((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__bp__DOT____Vcellinp__gshare__io_predict_PC)) 
                                     << 0x20U) | (QData)((IData)(
                                                                 (((~ (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__PC_Q__DOT__maybe_full)) 
                                                                   & (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__PC_Q__DOT__ptr_match))
@@ -129,7 +129,7 @@ void Vtop_v2___024root__trace_chg_0_sub_0(Vtop_v2___024root* vlSelf, VerilatedVc
                                                                       [vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__PC_Q__DOT__ram_ext__DOT___R0_addr_d0][0U] 
                                                                       >> 1U))
                                                                    : 0U)))))) 
-                          >> 0x1fU) | ((IData)(((((QData)((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__bp__DOT____Vcellinp__BTB__io_predict_PC)) 
+                          >> 0x1fU) | ((IData)(((((QData)((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__bp__DOT____Vcellinp__gshare__io_predict_PC)) 
                                                   << 0x20U) 
                                                  | (QData)((IData)(
                                                                    (((~ (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__PC_Q__DOT__maybe_full)) 
@@ -147,7 +147,7 @@ void Vtop_v2___024root__trace_chg_0_sub_0(Vtop_v2___024root* vlSelf, VerilatedVc
                                                                       : 0U))))) 
                                                 >> 0x20U)) 
                                        << 1U));
-        __Vtemp_1[2U] = ((IData)(((((QData)((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__bp__DOT____Vcellinp__BTB__io_predict_PC)) 
+        __Vtemp_1[2U] = ((IData)(((((QData)((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__bp__DOT____Vcellinp__gshare__io_predict_PC)) 
                                     << 0x20U) | (QData)((IData)(
                                                                 (((~ (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__PC_Q__DOT__maybe_full)) 
                                                                   & (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__PC_Q__DOT__ptr_match))
@@ -171,113 +171,113 @@ void Vtop_v2___024root__trace_chg_0_sub_0(Vtop_v2___024root* vlSelf, VerilatedVc
         __Vtemp_2[2U] = 0U;
         bufp->chgWData(oldp+8,(__Vtemp_2),65);
         bufp->chgQData(oldp+11,((((QData)((IData)(((IData)(4U) 
-                                                   + vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__predecoder__DOT____VdfgRegularize_hc521a72f_0_22))) 
+                                                   + vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__predecoder__DOT____VdfgRegularize_h5399b261_0_22))) 
                                   << 2U) | (QData)((IData)(
                                                            ((((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__predecoder__DOT__is_CALL) 
                                                               & (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__predecoder__DOT__input_fetch_packet_valid)) 
                                                              << 1U) 
                                                             | ((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__predecoder__DOT__is_RET) 
                                                                & (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__predecoder__DOT__input_fetch_packet_valid))))))),34);
-        __Vtemp_8[0U] = (((IData)((((QData)((IData)(vlSelf->__VdfgRegularize_h6171c202_4_9)) 
+        __Vtemp_8[0U] = (((IData)((((QData)((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_9)) 
                                     << 0xaU) | (QData)((IData)(
-                                                               (((IData)(vlSelf->__VdfgRegularize_h6171c202_4_10) 
+                                                               (((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_10) 
                                                                  << 6U) 
-                                                                | (IData)(vlSelf->__VdfgRegularize_h6171c202_4_11)))))) 
+                                                                | (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_11)))))) 
                           << 0x1eU) | (((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__predecoder__DOT__GHR) 
                                         << 0xeU) | 
                                        (((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__bp__DOT__RAS__DOT__NEXT) 
                                          << 7U) | (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__bp__DOT__RAS__DOT__TOS))));
-        __Vtemp_8[1U] = (((IData)((((QData)((IData)(vlSelf->__VdfgRegularize_h6171c202_4_9)) 
+        __Vtemp_8[1U] = (((IData)((((QData)((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_9)) 
                                     << 0xaU) | (QData)((IData)(
-                                                               (((IData)(vlSelf->__VdfgRegularize_h6171c202_4_10) 
+                                                               (((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_10) 
                                                                  << 6U) 
-                                                                | (IData)(vlSelf->__VdfgRegularize_h6171c202_4_11)))))) 
-                          >> 2U) | ((IData)(((((QData)((IData)(vlSelf->__VdfgRegularize_h6171c202_4_9)) 
+                                                                | (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_11)))))) 
+                          >> 2U) | ((IData)(((((QData)((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_9)) 
                                                << 0xaU) 
                                               | (QData)((IData)(
-                                                                (((IData)(vlSelf->__VdfgRegularize_h6171c202_4_10) 
+                                                                (((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_10) 
                                                                   << 6U) 
-                                                                 | (IData)(vlSelf->__VdfgRegularize_h6171c202_4_11))))) 
+                                                                 | (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_11))))) 
                                              >> 0x20U)) 
                                     << 0x1eU));
-        __Vtemp_8[2U] = (((IData)((((QData)((IData)(vlSelf->__VdfgRegularize_h6171c202_4_12)) 
+        __Vtemp_8[2U] = (((IData)((((QData)((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_12)) 
                                     << 0xaU) | (QData)((IData)(
-                                                               (((IData)(vlSelf->__VdfgRegularize_h6171c202_4_13) 
+                                                               (((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_13) 
                                                                  << 6U) 
-                                                                | (IData)(vlSelf->__VdfgRegularize_h6171c202_4_14)))))) 
-                          << 8U) | ((IData)(((((QData)((IData)(vlSelf->__VdfgRegularize_h6171c202_4_9)) 
+                                                                | (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_14)))))) 
+                          << 8U) | ((IData)(((((QData)((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_9)) 
                                                << 0xaU) 
                                               | (QData)((IData)(
-                                                                (((IData)(vlSelf->__VdfgRegularize_h6171c202_4_10) 
+                                                                (((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_10) 
                                                                   << 6U) 
-                                                                 | (IData)(vlSelf->__VdfgRegularize_h6171c202_4_11))))) 
+                                                                 | (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_11))))) 
                                              >> 0x20U)) 
                                     >> 2U));
-        __Vtemp_8[3U] = (((IData)((((QData)((IData)(vlSelf->__VdfgRegularize_h6171c202_4_15)) 
+        __Vtemp_8[3U] = (((IData)((((QData)((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_15)) 
                                     << 0xaU) | (QData)((IData)(
-                                                               (((IData)(vlSelf->__VdfgRegularize_h6171c202_4_16) 
+                                                               (((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_16) 
                                                                  << 6U) 
-                                                                | (IData)(vlSelf->__VdfgRegularize_h6171c202_4_17)))))) 
-                          << 0x12U) | (((IData)((((QData)((IData)(vlSelf->__VdfgRegularize_h6171c202_4_12)) 
+                                                                | (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_17)))))) 
+                          << 0x12U) | (((IData)((((QData)((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_12)) 
                                                   << 0xaU) 
                                                  | (QData)((IData)(
-                                                                   (((IData)(vlSelf->__VdfgRegularize_h6171c202_4_13) 
+                                                                   (((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_13) 
                                                                      << 6U) 
-                                                                    | (IData)(vlSelf->__VdfgRegularize_h6171c202_4_14)))))) 
+                                                                    | (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_14)))))) 
                                         >> 0x18U) | 
-                                       ((IData)(((((QData)((IData)(vlSelf->__VdfgRegularize_h6171c202_4_12)) 
+                                       ((IData)(((((QData)((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_12)) 
                                                    << 0xaU) 
                                                   | (QData)((IData)(
-                                                                    (((IData)(vlSelf->__VdfgRegularize_h6171c202_4_13) 
+                                                                    (((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_13) 
                                                                       << 6U) 
-                                                                     | (IData)(vlSelf->__VdfgRegularize_h6171c202_4_14))))) 
+                                                                     | (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_14))))) 
                                                  >> 0x20U)) 
                                         << 8U)));
-        __Vtemp_8[4U] = (((IData)((((QData)((IData)(vlSelf->__VdfgRegularize_h6171c202_4_18)) 
+        __Vtemp_8[4U] = (((IData)((((QData)((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_18)) 
                                     << 0xaU) | (QData)((IData)(
-                                                               (((IData)(vlSelf->__VdfgRegularize_h6171c202_4_19) 
+                                                               (((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_19) 
                                                                  << 6U) 
-                                                                | (IData)(vlSelf->__VdfgRegularize_h6171c202_4_20)))))) 
-                          << 0x1cU) | (((IData)((((QData)((IData)(vlSelf->__VdfgRegularize_h6171c202_4_15)) 
+                                                                | (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_20)))))) 
+                          << 0x1cU) | (((IData)((((QData)((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_15)) 
                                                   << 0xaU) 
                                                  | (QData)((IData)(
-                                                                   (((IData)(vlSelf->__VdfgRegularize_h6171c202_4_16) 
+                                                                   (((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_16) 
                                                                      << 6U) 
-                                                                    | (IData)(vlSelf->__VdfgRegularize_h6171c202_4_17)))))) 
+                                                                    | (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_17)))))) 
                                         >> 0xeU) | 
-                                       ((IData)(((((QData)((IData)(vlSelf->__VdfgRegularize_h6171c202_4_15)) 
+                                       ((IData)(((((QData)((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_15)) 
                                                    << 0xaU) 
                                                   | (QData)((IData)(
-                                                                    (((IData)(vlSelf->__VdfgRegularize_h6171c202_4_16) 
+                                                                    (((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_16) 
                                                                       << 6U) 
-                                                                     | (IData)(vlSelf->__VdfgRegularize_h6171c202_4_17))))) 
+                                                                     | (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_17))))) 
                                                  >> 0x20U)) 
                                         << 0x12U)));
-        __Vtemp_8[5U] = (((IData)((((QData)((IData)(vlSelf->__VdfgRegularize_h6171c202_4_18)) 
+        __Vtemp_8[5U] = (((IData)((((QData)((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_18)) 
                                     << 0xaU) | (QData)((IData)(
-                                                               (((IData)(vlSelf->__VdfgRegularize_h6171c202_4_19) 
+                                                               (((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_19) 
                                                                  << 6U) 
-                                                                | (IData)(vlSelf->__VdfgRegularize_h6171c202_4_20)))))) 
-                          >> 4U) | ((IData)(((((QData)((IData)(vlSelf->__VdfgRegularize_h6171c202_4_18)) 
+                                                                | (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_20)))))) 
+                          >> 4U) | ((IData)(((((QData)((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_18)) 
                                                << 0xaU) 
                                               | (QData)((IData)(
-                                                                (((IData)(vlSelf->__VdfgRegularize_h6171c202_4_19) 
+                                                                (((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_19) 
                                                                   << 6U) 
-                                                                 | (IData)(vlSelf->__VdfgRegularize_h6171c202_4_20))))) 
+                                                                 | (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_20))))) 
                                              >> 0x20U)) 
                                     << 0x1cU));
-        __Vtemp_8[6U] = ((0xffffc000U & (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__predecoder__DOT____VdfgRegularize_hc521a72f_0_0 
+        __Vtemp_8[6U] = ((0xffffc000U & (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__predecoder__DOT____VdfgRegularize_h5399b261_0_0 
                                          << 0xaU)) 
-                         | (((IData)(vlSelf->__VdfgRegularize_h6171c202_4_8) 
-                             << 6U) | ((IData)(((((QData)((IData)(vlSelf->__VdfgRegularize_h6171c202_4_18)) 
+                         | (((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_8) 
+                             << 6U) | ((IData)(((((QData)((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_18)) 
                                                   << 0xaU) 
                                                  | (QData)((IData)(
-                                                                   (((IData)(vlSelf->__VdfgRegularize_h6171c202_4_19) 
+                                                                   (((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_19) 
                                                                      << 6U) 
-                                                                    | (IData)(vlSelf->__VdfgRegularize_h6171c202_4_20))))) 
+                                                                    | (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_20))))) 
                                                 >> 0x20U)) 
                                        >> 4U)));
-        __Vtemp_8[7U] = (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__predecoder__DOT____VdfgRegularize_hc521a72f_0_0 
+        __Vtemp_8[7U] = (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__predecoder__DOT____VdfgRegularize_h5399b261_0_0 
                          >> 0x16U);
         bufp->chgWData(oldp+13,(__Vtemp_8),234);
     }
@@ -295,15 +295,15 @@ void Vtop_v2___024root__trace_chg_0_sub_0(Vtop_v2___024root* vlSelf, VerilatedVc
         bufp->chgBit(oldp+30,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__PC_gen__DOT__is_ret));
         bufp->chgIData(oldp+31,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__PC_gen__DOT__PC_mux),32);
         bufp->chgSData(oldp+32,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT___predecoder_io_GHR),16);
-        bufp->chgIData(oldp+33,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__bp__DOT____Vcellinp__BTB__io_predict_PC),32);
-        bufp->chgSData(oldp+34,((0xfffU & (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__bp__DOT____Vcellinp__BTB__io_predict_PC 
+        bufp->chgIData(oldp+33,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__bp__DOT____Vcellinp__gshare__io_predict_PC),32);
+        bufp->chgSData(oldp+34,((0xfffU & (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__bp__DOT____Vcellinp__gshare__io_predict_PC 
                                            >> 4U))),12);
-        bufp->chgIData(oldp+35,(((IData)(4U) + vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__predecoder__DOT____VdfgRegularize_hc521a72f_0_22)),32);
+        bufp->chgIData(oldp+35,(((IData)(4U) + vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__predecoder__DOT____VdfgRegularize_h5399b261_0_22)),32);
         bufp->chgBit(oldp+36,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__bp__DOT____Vcellinp__RAS__io_wr_valid));
         bufp->chgBit(oldp+37,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__bp__DOT____Vcellinp__RAS__io_rd_valid));
         bufp->chgCData(oldp+38,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__bp__DOT__RAS__DOT____Vcellinp__RAS_memory__io_rd_addr),7);
         bufp->chgQData(oldp+39,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__bp__DOT__RAS__DOT____Vcellinp__RAS_memory__io_data_in),39);
-        bufp->chgSData(oldp+41,((0xffffU & (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__bp__DOT____Vcellinp__BTB__io_predict_PC 
+        bufp->chgSData(oldp+41,((0xffffU & (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__bp__DOT____Vcellinp__gshare__io_predict_PC 
                                             ^ (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT___predecoder_io_GHR)))),16);
         bufp->chgQData(oldp+42,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__bp__DOT___GEN),53);
         bufp->chgCData(oldp+44,(((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__predecoder__DOT__is_BRANCH)
@@ -572,7 +572,7 @@ void Vtop_v2___024root__trace_chg_0_sub_0(Vtop_v2___024root* vlSelf, VerilatedVc
                                                      : 0U))) 
                                    << 0x1eU) | (QData)((IData)(
                                                                ((((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT__read_request_valid)
-                                                                   ? (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT____VdfgRegularize_he49e9fcb_0_2)
+                                                                   ? (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT____VdfgRegularize_h6d09639e_0_2)
                                                                    : 0U) 
                                                                  << 0x16U) 
                                                                 | ((((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT__read_request_valid)
@@ -596,7 +596,7 @@ void Vtop_v2___024root__trace_chg_0_sub_0(Vtop_v2___024root* vlSelf, VerilatedVc
                                                       : 0U))) 
                                     << 0x1eU) | (QData)((IData)(
                                                                 ((((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT__read_request_valid)
-                                                                    ? (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT____VdfgRegularize_he49e9fcb_0_2)
+                                                                    ? (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT____VdfgRegularize_h6d09639e_0_2)
                                                                     : 0U) 
                                                                   << 0x16U) 
                                                                  | ((((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT__read_request_valid)
@@ -612,8 +612,8 @@ void Vtop_v2___024root__trace_chg_0_sub_0(Vtop_v2___024root* vlSelf, VerilatedVc
         bufp->chgBit(oldp+132,((1U & ((IData)(vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__s_axi_rvalid_reg) 
                                       >> 1U))));
         bufp->chgWData(oldp+133,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__io_commit),169);
-        bufp->chgBit(oldp+139,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__PC_gen__DOT__is_misprediction));
-        bufp->chgQData(oldp+140,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT___predecoder_io_revert),33);
+        bufp->chgBit(oldp+139,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__flush));
+        bufp->chgQData(oldp+140,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__io_revert),33);
         bufp->chgBit(oldp+142,((1U & ((~ ((~ (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__PC_Q__DOT__maybe_full)) 
                                           & (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__PC_Q__DOT__ptr_match))) 
                                       | ((~ (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT___bp_io_flush_T)) 
@@ -621,108 +621,108 @@ void Vtop_v2___024root__trace_chg_0_sub_0(Vtop_v2___024root* vlSelf, VerilatedVc
         bufp->chgBit(oldp+143,((1U & (~ ((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT__ptr_match) 
                                          & (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT__maybe_full))))));
         bufp->chgBit(oldp+144,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT___instruction_cache_io_CPU_response_valid));
-        __Vtemp_19[0U] = (((IData)((((QData)((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_ha38ca812_0_1)) 
+        __Vtemp_19[0U] = (((IData)((((QData)((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_h759557b6_0_1)) 
                                      << 0xaU) | (QData)((IData)(
-                                                                (((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_ha38ca812_0_2) 
+                                                                (((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_h759557b6_0_2) 
                                                                   << 6U) 
-                                                                 | (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_ha38ca812_0_3)))))) 
-                           << 0x1eU) | (((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_ha38ca812_0_13) 
+                                                                 | (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_h759557b6_0_3)))))) 
+                           << 0x1eU) | (((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_h759557b6_0_13) 
                                          << 0xeU) | 
-                                        (((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_ha38ca812_0_14) 
-                                          << 7U) | (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_ha38ca812_0_15))));
-        __Vtemp_19[1U] = (((IData)((((QData)((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_ha38ca812_0_1)) 
+                                        (((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_h759557b6_0_14) 
+                                          << 7U) | (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_h759557b6_0_15))));
+        __Vtemp_19[1U] = (((IData)((((QData)((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_h759557b6_0_1)) 
                                      << 0xaU) | (QData)((IData)(
-                                                                (((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_ha38ca812_0_2) 
+                                                                (((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_h759557b6_0_2) 
                                                                   << 6U) 
-                                                                 | (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_ha38ca812_0_3)))))) 
-                           >> 2U) | ((IData)(((((QData)((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_ha38ca812_0_1)) 
+                                                                 | (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_h759557b6_0_3)))))) 
+                           >> 2U) | ((IData)(((((QData)((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_h759557b6_0_1)) 
                                                 << 0xaU) 
                                                | (QData)((IData)(
-                                                                 (((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_ha38ca812_0_2) 
+                                                                 (((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_h759557b6_0_2) 
                                                                    << 6U) 
-                                                                  | (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_ha38ca812_0_3))))) 
+                                                                  | (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_h759557b6_0_3))))) 
                                               >> 0x20U)) 
                                      << 0x1eU));
-        __Vtemp_19[2U] = (((IData)((((QData)((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_ha38ca812_0_4)) 
+        __Vtemp_19[2U] = (((IData)((((QData)((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_h759557b6_0_4)) 
                                      << 0xaU) | (QData)((IData)(
-                                                                (((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_ha38ca812_0_5) 
+                                                                (((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_h759557b6_0_5) 
                                                                   << 6U) 
-                                                                 | (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_ha38ca812_0_6)))))) 
-                           << 8U) | ((IData)(((((QData)((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_ha38ca812_0_1)) 
+                                                                 | (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_h759557b6_0_6)))))) 
+                           << 8U) | ((IData)(((((QData)((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_h759557b6_0_1)) 
                                                 << 0xaU) 
                                                | (QData)((IData)(
-                                                                 (((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_ha38ca812_0_2) 
+                                                                 (((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_h759557b6_0_2) 
                                                                    << 6U) 
-                                                                  | (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_ha38ca812_0_3))))) 
+                                                                  | (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_h759557b6_0_3))))) 
                                               >> 0x20U)) 
                                      >> 2U));
-        __Vtemp_19[3U] = (((IData)((((QData)((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_ha38ca812_0_7)) 
+        __Vtemp_19[3U] = (((IData)((((QData)((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_h759557b6_0_7)) 
                                      << 0xaU) | (QData)((IData)(
-                                                                (((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_ha38ca812_0_8) 
+                                                                (((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_h759557b6_0_8) 
                                                                   << 6U) 
-                                                                 | (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_ha38ca812_0_9)))))) 
-                           << 0x12U) | (((IData)((((QData)((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_ha38ca812_0_4)) 
+                                                                 | (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_h759557b6_0_9)))))) 
+                           << 0x12U) | (((IData)((((QData)((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_h759557b6_0_4)) 
                                                    << 0xaU) 
                                                   | (QData)((IData)(
-                                                                    (((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_ha38ca812_0_5) 
+                                                                    (((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_h759557b6_0_5) 
                                                                       << 6U) 
-                                                                     | (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_ha38ca812_0_6)))))) 
+                                                                     | (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_h759557b6_0_6)))))) 
                                          >> 0x18U) 
                                         | ((IData)(
-                                                   ((((QData)((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_ha38ca812_0_4)) 
+                                                   ((((QData)((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_h759557b6_0_4)) 
                                                       << 0xaU) 
                                                      | (QData)((IData)(
-                                                                       (((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_ha38ca812_0_5) 
+                                                                       (((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_h759557b6_0_5) 
                                                                          << 6U) 
-                                                                        | (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_ha38ca812_0_6))))) 
+                                                                        | (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_h759557b6_0_6))))) 
                                                     >> 0x20U)) 
                                            << 8U)));
-        __Vtemp_19[4U] = (((IData)((((QData)((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_ha38ca812_0_10)) 
+        __Vtemp_19[4U] = (((IData)((((QData)((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_h759557b6_0_10)) 
                                      << 0xaU) | (QData)((IData)(
-                                                                (((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_ha38ca812_0_11) 
+                                                                (((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_h759557b6_0_11) 
                                                                   << 6U) 
-                                                                 | (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_ha38ca812_0_12)))))) 
-                           << 0x1cU) | (((IData)((((QData)((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_ha38ca812_0_7)) 
+                                                                 | (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_h759557b6_0_12)))))) 
+                           << 0x1cU) | (((IData)((((QData)((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_h759557b6_0_7)) 
                                                    << 0xaU) 
                                                   | (QData)((IData)(
-                                                                    (((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_ha38ca812_0_8) 
+                                                                    (((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_h759557b6_0_8) 
                                                                       << 6U) 
-                                                                     | (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_ha38ca812_0_9)))))) 
+                                                                     | (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_h759557b6_0_9)))))) 
                                          >> 0xeU) | 
                                         ((IData)(((
-                                                   ((QData)((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_ha38ca812_0_7)) 
+                                                   ((QData)((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_h759557b6_0_7)) 
                                                     << 0xaU) 
                                                    | (QData)((IData)(
-                                                                     (((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_ha38ca812_0_8) 
+                                                                     (((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_h759557b6_0_8) 
                                                                        << 6U) 
-                                                                      | (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_ha38ca812_0_9))))) 
+                                                                      | (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_h759557b6_0_9))))) 
                                                   >> 0x20U)) 
                                          << 0x12U)));
-        __Vtemp_19[5U] = (((IData)((((QData)((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_ha38ca812_0_10)) 
+        __Vtemp_19[5U] = (((IData)((((QData)((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_h759557b6_0_10)) 
                                      << 0xaU) | (QData)((IData)(
-                                                                (((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_ha38ca812_0_11) 
+                                                                (((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_h759557b6_0_11) 
                                                                   << 6U) 
-                                                                 | (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_ha38ca812_0_12)))))) 
-                           >> 4U) | ((IData)(((((QData)((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_ha38ca812_0_10)) 
+                                                                 | (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_h759557b6_0_12)))))) 
+                           >> 4U) | ((IData)(((((QData)((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_h759557b6_0_10)) 
                                                 << 0xaU) 
                                                | (QData)((IData)(
-                                                                 (((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_ha38ca812_0_11) 
+                                                                 (((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_h759557b6_0_11) 
                                                                    << 6U) 
-                                                                  | (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_ha38ca812_0_12))))) 
+                                                                  | (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_h759557b6_0_12))))) 
                                               >> 0x20U)) 
                                      << 0x1cU));
-        __Vtemp_19[6U] = ((vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_ha38ca812_0_0 
-                           << 0xaU) | (((IData)(vlSelf->__VdfgRegularize_h6171c202_4_55) 
+        __Vtemp_19[6U] = ((vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_h759557b6_0_0 
+                           << 0xaU) | (((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_55) 
                                         << 6U) | ((IData)(
-                                                          ((((QData)((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_ha38ca812_0_10)) 
+                                                          ((((QData)((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_h759557b6_0_10)) 
                                                              << 0xaU) 
                                                             | (QData)((IData)(
-                                                                              (((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_ha38ca812_0_11) 
+                                                                              (((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_h759557b6_0_11) 
                                                                                 << 6U) 
-                                                                               | (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_ha38ca812_0_12))))) 
+                                                                               | (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_h759557b6_0_12))))) 
                                                            >> 0x20U)) 
                                                   >> 4U)));
-        __Vtemp_19[7U] = (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_ha38ca812_0_0 
+        __Vtemp_19[7U] = (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_h759557b6_0_0 
                           >> 0x16U);
         bufp->chgWData(oldp+145,(__Vtemp_19),234);
         bufp->chgBit(oldp+153,(((0U != (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT___GEN_23)) 
@@ -922,7 +922,7 @@ void Vtop_v2___024root__trace_chg_0_sub_0(Vtop_v2___024root* vlSelf, VerilatedVc
         __Vtemp_25[2U] = ((((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__ROB__DOT__shared_mem__DOT__mem_ext__DOT___R1_en_d0)
                              ? (0x3fffffffU & vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__ROB__DOT__shared_mem__DOT__mem_ext__DOT__Memory
                                 [vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__ROB__DOT__shared_mem__DOT__mem_ext__DOT___R1_addr_d0][0U])
-                             : 0U) << 0x14U) | (((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__free_list__DOT____VdfgRegularize_h1c10e421_1_6) 
+                             : 0U) << 0x14U) | (((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__free_list__DOT____VdfgRegularize_h9fa3630a_1_6) 
                                                  << 0xcU) 
                                                 | (((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__ROB__DOT__ROB_entry_banks_3__DOT__mem_ext__DOT___R0_en_d0)
                                                      ? 
@@ -930,7 +930,7 @@ void Vtop_v2___024root__trace_chg_0_sub_0(Vtop_v2___024root* vlSelf, VerilatedVc
                                                     [vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__ROB__DOT__ROB_entry_banks_3__DOT__mem_ext__DOT___R0_addr_d0]
                                                      : 0U) 
                                                    >> 5U)));
-        __Vtemp_25[3U] = ((vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__BRU__DOT____VdfgRegularize_h2c562b4e_0_1 
+        __Vtemp_25[3U] = ((vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__BRU__DOT____VdfgRegularize_hfa6af0cb_0_1 
                            << 0x18U) | (((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__ROB__DOT__io_ROB_output_ROB_index_REG) 
                                          << 0x12U) 
                                         | (((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__ROB__DOT__shared_mem__DOT__mem_ext__DOT___R1_en_d0)
@@ -944,18 +944,18 @@ void Vtop_v2___024root__trace_chg_0_sub_0(Vtop_v2___024root* vlSelf, VerilatedVc
                                                   (0x3fU 
                                                    & (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__ROB__DOT__front_pointer)))) 
                                          << 0x18U)) 
-                          | (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__BRU__DOT____VdfgRegularize_h2c562b4e_0_1 
+                          | (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__BRU__DOT____VdfgRegularize_hfa6af0cb_0_1 
                              >> 8U));
         bufp->chgWData(oldp+168,(__Vtemp_25),153);
         bufp->chgCData(oldp+173,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__BRU__DOT__commit_row_complete),4);
         bufp->chgBit(oldp+174,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__BRU__DOT__commit_valid));
         bufp->chgBit(oldp+175,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__BRU__DOT__branch_commit));
-        bufp->chgWData(oldp+176,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT___GEN_0),772);
+        bufp->chgWData(oldp+176,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT___backend_io_FU_outputs),772);
         bufp->chgBit(oldp+201,((1U & (~ (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__FTQ__DOT__full)))));
         bufp->chgBit(oldp+202,((1U & (~ (IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__predictions_out_Q.__PVT__empty)))));
         bufp->chgWData(oldp+203,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__predictions_out_Q.__PVT__ram_ext__DOT__Memory
                                  [vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__predictions_out_Q.__PVT__wrap_1]),110);
-        bufp->chgCData(oldp+207,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__ROB__DOT__back_index),6);
+        bufp->chgCData(oldp+207,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT___ROB_io_ROB_index),6);
         bufp->chgCData(oldp+208,((0xfU & (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__FTQ__DOT__back_pointer))),4);
         bufp->chgCData(oldp+209,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__FTQ__DOT__front_pointer),5);
         bufp->chgCData(oldp+210,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__FTQ__DOT__back_pointer),5);
@@ -1105,7 +1105,7 @@ void Vtop_v2___024root__trace_chg_0_sub_0(Vtop_v2___024root* vlSelf, VerilatedVc
         __Vtemp_49[2U] = (0x3fU & (vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.io_deq_bits[0xdU] 
                                    >> 0xcU));
         bufp->chgWData(oldp+295,(__Vtemp_49),70);
-        bufp->chgCData(oldp+298,(((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__ROB__DOT____VdfgRegularize_h04ee65bd_2_0) 
+        bufp->chgCData(oldp+298,(((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__ROB__DOT____VdfgRegularize_h698e326b_2_0) 
                                   << 1U)),2);
         bufp->chgCData(oldp+299,(((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__FU1__DOT__ALU__DOT__io_FU_output_valid_REG) 
                                   << 1U)),2);
@@ -1189,7 +1189,7 @@ void Vtop_v2___024root__trace_chg_0_sub_0(Vtop_v2___024root* vlSelf, VerilatedVc
                                   & (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__FU1__DOT__ALU__DOT__io_FU_output_valid_REG))),2);
         bufp->chgCData(oldp+320,((3U & (- (IData)((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__ROB__DOT__ROB_WB_banks_0__DOT___GEN_9))))),2);
         bufp->chgCData(oldp+321,(((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__ROB__DOT__ROB_WB_banks_0__DOT___GEN_13) 
-                                  & (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__ROB__DOT____VdfgRegularize_h04ee65bd_2_0))),2);
+                                  & (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__ROB__DOT____VdfgRegularize_h698e326b_2_0))),2);
         bufp->chgCData(oldp+322,((3U & (- (IData)((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__ROB__DOT__ROB_WB_banks_0__DOT___GEN_13))))),2);
         bufp->chgCData(oldp+323,((3U & (- (IData)((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__ROB__DOT__allocate))))),2);
         bufp->chgBit(oldp+324,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__ROB__DOT__ROB_WB_banks_1__DOT___GEN_13));
@@ -1210,7 +1210,7 @@ void Vtop_v2___024root__trace_chg_0_sub_0(Vtop_v2___024root* vlSelf, VerilatedVc
                                   & (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__FU1__DOT__ALU__DOT__io_FU_output_valid_REG))),2);
         bufp->chgCData(oldp+334,((3U & (- (IData)((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__ROB__DOT__ROB_WB_banks_1__DOT___GEN_9))))),2);
         bufp->chgCData(oldp+335,(((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__ROB__DOT__ROB_WB_banks_1__DOT___GEN_13) 
-                                  & (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__ROB__DOT____VdfgRegularize_h04ee65bd_2_0))),2);
+                                  & (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__ROB__DOT____VdfgRegularize_h698e326b_2_0))),2);
         bufp->chgCData(oldp+336,((3U & (- (IData)((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__ROB__DOT__ROB_WB_banks_1__DOT___GEN_13))))),2);
         bufp->chgBit(oldp+337,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__ROB__DOT__ROB_WB_banks_2__DOT___GEN_13));
         bufp->chgBit(oldp+338,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__ROB__DOT__ROB_WB_banks_2__DOT___GEN_9));
@@ -1230,7 +1230,7 @@ void Vtop_v2___024root__trace_chg_0_sub_0(Vtop_v2___024root* vlSelf, VerilatedVc
                                   & (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__FU1__DOT__ALU__DOT__io_FU_output_valid_REG))),2);
         bufp->chgCData(oldp+347,((3U & (- (IData)((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__ROB__DOT__ROB_WB_banks_2__DOT___GEN_9))))),2);
         bufp->chgCData(oldp+348,(((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__ROB__DOT__ROB_WB_banks_2__DOT___GEN_13) 
-                                  & (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__ROB__DOT____VdfgRegularize_h04ee65bd_2_0))),2);
+                                  & (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__ROB__DOT____VdfgRegularize_h698e326b_2_0))),2);
         bufp->chgCData(oldp+349,((3U & (- (IData)((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__ROB__DOT__ROB_WB_banks_2__DOT___GEN_13))))),2);
         bufp->chgBit(oldp+350,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__ROB__DOT__ROB_WB_banks_3__DOT___GEN_13));
         bufp->chgBit(oldp+351,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__ROB__DOT__ROB_WB_banks_3__DOT___GEN_9));
@@ -1250,7 +1250,7 @@ void Vtop_v2___024root__trace_chg_0_sub_0(Vtop_v2___024root* vlSelf, VerilatedVc
                                   & (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__FU1__DOT__ALU__DOT__io_FU_output_valid_REG))),2);
         bufp->chgCData(oldp+360,((3U & (- (IData)((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__ROB__DOT__ROB_WB_banks_3__DOT___GEN_9))))),2);
         bufp->chgCData(oldp+361,(((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__ROB__DOT__ROB_WB_banks_3__DOT___GEN_13) 
-                                  & (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__ROB__DOT____VdfgRegularize_h04ee65bd_2_0))),2);
+                                  & (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__ROB__DOT____VdfgRegularize_h698e326b_2_0))),2);
         bufp->chgCData(oldp+362,((3U & (- (IData)((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__ROB__DOT__ROB_WB_banks_3__DOT___GEN_13))))),2);
         bufp->chgIData(oldp+363,(((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__ROB__DOT__ROB_entry_banks_0__DOT__mem_ext__DOT___R0_en_d0)
                                    ? vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__ROB__DOT__ROB_entry_banks_0__DOT__mem_ext__DOT__Memory
@@ -1406,7 +1406,7 @@ void Vtop_v2___024root__trace_chg_0_sub_0(Vtop_v2___024root* vlSelf, VerilatedVc
                                                      ? (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__FU0__DOT__branch_unit__DOT__io_FU_output_bits_FTQ_index_REG)
                                                      : (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__FU0__DOT__ALU__DOT__io_FU_output_bits_FTQ_index_REG)) 
                                                    << 3U) 
-                                                  | ((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__ROB__DOT____VdfgRegularize_h04ee65bd_2_7) 
+                                                  | ((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__ROB__DOT____VdfgRegularize_h698e326b_2_7) 
                                                      << 1U))));
         __Vtemp_70[1U] = 0U;
         __Vtemp_70[2U] = ((((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__FU0__DOT__REG_1)
@@ -1425,16 +1425,16 @@ void Vtop_v2___024root__trace_chg_0_sub_0(Vtop_v2___024root* vlSelf, VerilatedVc
                                              : 0U) 
                                            >> 9U)));
         __Vtemp_70[4U] = ((vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT____Vcellinp__INT_PRF__io_wdata_0 
-                           << 0x19U) | (((IData)(vlSelf->__VdfgRegularize_h6171c202_4_40) 
+                           << 0x19U) | (((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_40) 
                                          << 0x18U) 
                                         | (((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__FU0__DOT__REG_1)
                                              ? vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__FU0__DOT__branch_unit__DOT__io_FU_output_bits_fetch_PC_REG
                                              : vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__FU0__DOT__ALU__DOT__io_FU_output_bits_fetch_PC_REG) 
                                            >> 8U)));
-        __Vtemp_70[5U] = (((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MEM_RS__DOT____VdfgRegularize_hf4780643_0_0) 
+        __Vtemp_70[5U] = (((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT____VdfgRegularize_hfa895d08_2_0) 
                            << 0x19U) | (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT____Vcellinp__INT_PRF__io_wdata_0 
                                         >> 7U));
-        __Vtemp_70[6U] = vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__ROB__DOT____VdfgRegularize_h04ee65bd_2_0;
+        __Vtemp_70[6U] = vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__ROB__DOT____VdfgRegularize_h698e326b_2_0;
         bufp->chgWData(oldp+447,(__Vtemp_70),193);
         bufp->chgBit(oldp+454,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__FU0__DOT__REG_1));
         bufp->chgBit(oldp+455,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__FU0__DOT__monitor_output_REG));
@@ -1583,22 +1583,22 @@ void Vtop_v2___024root__trace_chg_0_sub_0(Vtop_v2___024root* vlSelf, VerilatedVc
         bufp->chgIData(oldp+551,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__FU2__DOT__ALU__DOT__unnamedblk1__DOT__operand2_unsigned),32);
         bufp->chgCData(oldp+552,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__FU2__DOT__ALU__DOT__unnamedblk1__DOT__shamt),5);
         bufp->chgCData(oldp+553,(((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__INT_RS__DOT__port0_valid)
-                                   ? (0x3fU & (IData)(vlSelf->__VdfgRegularize_h6171c202_4_32))
+                                   ? (0x3fU & (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_32))
                                    : 0U)),6);
         bufp->chgCData(oldp+554,(((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__INT_RS__DOT__port0_valid)
-                                   ? (0x3fU & (IData)(vlSelf->__VdfgRegularize_h6171c202_4_33))
+                                   ? (0x3fU & (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_33))
                                    : 0U)),6);
         bufp->chgCData(oldp+555,(((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__INT_RS__DOT__port1_valid)
-                                   ? (0x3fU & (IData)(vlSelf->__VdfgRegularize_h6171c202_4_34))
+                                   ? (0x3fU & (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_34))
                                    : 0U)),6);
         bufp->chgCData(oldp+556,(((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__INT_RS__DOT__port1_valid)
-                                   ? (0x3fU & (IData)(vlSelf->__VdfgRegularize_h6171c202_4_35))
+                                   ? (0x3fU & (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_35))
                                    : 0U)),6);
         bufp->chgCData(oldp+557,(((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__INT_RS__DOT__port2_valid)
-                                   ? (0x3fU & (IData)(vlSelf->__VdfgRegularize_h6171c202_4_36))
+                                   ? (0x3fU & (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_36))
                                    : 0U)),6);
         bufp->chgCData(oldp+558,(((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__INT_RS__DOT__port2_valid)
-                                   ? (0x3fU & (IData)(vlSelf->__VdfgRegularize_h6171c202_4_37))
+                                   ? (0x3fU & (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_37))
                                    : 0U)),6);
         bufp->chgCData(oldp+559,((0x3fU & (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT___MEM_RS_io_RF_inputs_3_bits[2U] 
                                            >> 4U))),6);
@@ -1638,23 +1638,23 @@ void Vtop_v2___024root__trace_chg_0_sub_0(Vtop_v2___024root* vlSelf, VerilatedVc
                                    ? vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__INT_PRF__DOT__mem_ext__DOT__Memory
                                   [vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__INT_PRF__DOT__mem_ext__DOT___R0_addr_d0]
                                    : 0U)),32);
-        bufp->chgCData(oldp+569,((0x3fU & (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MEM_RS__DOT____VdfgRegularize_hf4780643_0_0))),6);
+        bufp->chgCData(oldp+569,((0x3fU & (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT____VdfgRegularize_hfa895d08_2_0))),6);
         bufp->chgCData(oldp+570,((0x3fU & (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__FU1__DOT__ALU__DOT__io_FU_output_bits_RD_REG))),6);
         bufp->chgCData(oldp+571,((0x3fU & (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__FU2__DOT__ALU__DOT__io_FU_output_bits_RD_REG))),6);
-        bufp->chgCData(oldp+572,((0x3fU & (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MEM_RS__DOT____VdfgRegularize_hf4780643_0_19))),6);
+        bufp->chgCData(oldp+572,((0x3fU & (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT____VdfgRegularize_hfa895d08_2_67))),6);
         bufp->chgBit(oldp+573,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__RD_valid));
         bufp->chgBit(oldp+574,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__RD_valid_1));
         bufp->chgBit(oldp+575,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__RD_valid_2));
         bufp->chgBit(oldp+576,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__RD_valid_3));
         bufp->chgIData(oldp+577,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT____Vcellinp__INT_PRF__io_wdata_0),32);
         bufp->chgIData(oldp+578,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT____Vcellinp__INT_PRF__io_wdata_3),32);
-        bufp->chgIData(oldp+579,(((0U == (0x3fU & (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MEM_RS__DOT____VdfgRegularize_hf4780643_0_19)))
+        bufp->chgIData(oldp+579,(((0U == (0x3fU & (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT____VdfgRegularize_hfa895d08_2_67)))
                                    ? 0U : vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT____Vcellinp__INT_PRF__io_wdata_3)),32);
         bufp->chgIData(oldp+580,(((0U == (0x3fU & (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__FU2__DOT__ALU__DOT__io_FU_output_bits_RD_REG)))
                                    ? 0U : vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__FU2__DOT__ALU__DOT__arithmetic_result)),32);
         bufp->chgIData(oldp+581,(((0U == (0x3fU & (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__FU1__DOT__ALU__DOT__io_FU_output_bits_RD_REG)))
                                    ? 0U : vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__FU1__DOT__ALU__DOT__arithmetic_result)),32);
-        bufp->chgIData(oldp+582,(((0U == (0x3fU & (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MEM_RS__DOT____VdfgRegularize_hf4780643_0_0)))
+        bufp->chgIData(oldp+582,(((0U == (0x3fU & (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT____VdfgRegularize_hfa895d08_2_0)))
                                    ? 0U : vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT____Vcellinp__INT_PRF__io_wdata_0)),32);
         bufp->chgBit(oldp+583,((0U != (7U & ((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__INT_RS__DOT__availalbe_RS_entries) 
                                              >> 2U)))));
@@ -1698,20 +1698,20 @@ void Vtop_v2___024root__trace_chg_0_sub_0(Vtop_v2___024root* vlSelf, VerilatedVc
         bufp->chgBit(oldp+673,((IData)(((0x100000U 
                                          == (0x300000U 
                                              & vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.io_deq_bits[1U])) 
-                                        & (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT____VdfgRegularize_hfcd7553a_3_4)))));
+                                        & (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT____VdfgRegularize_hf3f37da3_3_4)))));
         bufp->chgBit(oldp+674,((IData)(((0x4000U == 
                                          (0xc000U & 
                                           vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.io_deq_bits[4U])) 
-                                        & (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT____VdfgRegularize_hfcd7553a_3_5)))));
+                                        & (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT____VdfgRegularize_hf3f37da3_3_5)))));
         bufp->chgBit(oldp+675,((IData)(((0x100U == 
                                          (0x300U & 
                                           vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.io_deq_bits[7U])) 
-                                        & (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT____VdfgRegularize_hfcd7553a_3_6)))));
+                                        & (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT____VdfgRegularize_hf3f37da3_3_6)))));
         bufp->chgBit(oldp+676,((IData)(((4U == (0xcU 
                                                 & vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.io_deq_bits[0xaU])) 
-                                        & (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT____VdfgRegularize_hfcd7553a_3_7)))));
+                                        & (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT____VdfgRegularize_hf3f37da3_3_7)))));
         bufp->chgIData(oldp+677,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT___MOB_io_reserved_pointers),20);
-        bufp->chgBit(oldp+678,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MEM_RS__DOT__good_to_go));
+        bufp->chgBit(oldp+678,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT___MEM_RS_io_RF_inputs_3_valid));
         bufp->chgWData(oldp+679,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT___MEM_RS_io_RF_inputs_3_bits),90);
         bufp->chgWData(oldp+682,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MEM_RS__DOT__reservation_station),1968);
         bufp->chgCData(oldp+744,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MEM_RS__DOT__front_pointer),5);
@@ -2077,13 +2077,13 @@ void Vtop_v2___024root__trace_chg_0_sub_0(Vtop_v2___024root* vlSelf, VerilatedVc
         bufp->chgSData(oldp+1198,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__bp__DOT__BTB__DOT__io_BTB_hit_REG),16);
         bufp->chgBit(oldp+1199,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__bp__DOT__BTB__DOT__io_BTB_output_BTB_valid_REG));
         bufp->chgQData(oldp+1200,((0x80000000000000ULL 
-                                   | (((QData)((IData)(vlSelf->__VdfgRegularize_h6171c202_4_104)) 
+                                   | (((QData)((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_104)) 
                                        << 0x25U) | 
-                                      (((QData)((IData)(vlSelf->__VdfgRegularize_h6171c202_4_48)) 
+                                      (((QData)((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_48)) 
                                         << 5U) | (QData)((IData)(
-                                                                 (((IData)(vlSelf->__VdfgRegularize_h6171c202_4_46) 
+                                                                 (((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_46) 
                                                                    << 2U) 
-                                                                  | (IData)(vlSelf->__VdfgRegularize_h6171c202_4_47)))))))),56);
+                                                                  | (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_47)))))))),56);
         bufp->chgQData(oldp+1202,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__bp__DOT__BTB__DOT___BTB_memory_io_data_out),56);
         bufp->chgSData(oldp+1204,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__bp__DOT__BTB__DOT____Vcellinp__BTB_memory__io_wr_addr),12);
         bufp->chgBit(oldp+1205,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__bp__DOT__BTB__DOT__BTB_memory__DOT___GEN_3));
@@ -2149,14 +2149,14 @@ void Vtop_v2___024root__trace_chg_0_sub_0(Vtop_v2___024root* vlSelf, VerilatedVc
         bufp->chgBit(oldp+1250,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__bp__DOT__prediction_skid_buffer__DOT__do_enq));
         bufp->chgBit(oldp+1251,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__predecoder__DOT__io_fetch_packet_ready_REG));
         bufp->chgBit(oldp+1252,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT___instruction_Q_io_deq_valid));
-        __Vtemp_108[0U] = (((IData)((((QData)((IData)(vlSelf->__VdfgRegularize_h6171c202_4_9)) 
+        __Vtemp_108[0U] = (((IData)((((QData)((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_9)) 
                                       << 0xaU) | (QData)((IData)(
-                                                                 (((IData)(vlSelf->__VdfgRegularize_h6171c202_4_10) 
+                                                                 (((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_10) 
                                                                    << 6U) 
-                                                                  | (IData)(vlSelf->__VdfgRegularize_h6171c202_4_11)))))) 
+                                                                  | (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_11)))))) 
                             << 0x1eU) | ((0x3fffc000U 
                                           & (((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT__empty)
-                                               ? (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_ha38ca812_0_13)
+                                               ? (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_h759557b6_0_13)
                                                : ((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT__ram_ext__DOT___R0_en_d0)
                                                    ? 
                                                   ((vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT__ram_ext__DOT__Memory
@@ -2169,7 +2169,7 @@ void Vtop_v2___024root__trace_chg_0_sub_0(Vtop_v2___024root* vlSelf, VerilatedVc
                                              << 0xeU)) 
                                          | ((0x3f80U 
                                              & (((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT__empty)
-                                                  ? (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_ha38ca812_0_14)
+                                                  ? (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_h759557b6_0_14)
                                                   : 
                                                  ((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT__ram_ext__DOT___R0_en_d0)
                                                    ? 
@@ -2183,7 +2183,7 @@ void Vtop_v2___024root__trace_chg_0_sub_0(Vtop_v2___024root* vlSelf, VerilatedVc
                                                 << 7U)) 
                                             | (0x7fU 
                                                & ((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT__empty)
-                                                   ? (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_ha38ca812_0_15)
+                                                   ? (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT____VdfgRegularize_h759557b6_0_15)
                                                    : 
                                                   ((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT__ram_ext__DOT___R0_en_d0)
                                                     ? 
@@ -2191,101 +2191,101 @@ void Vtop_v2___024root__trace_chg_0_sub_0(Vtop_v2___024root* vlSelf, VerilatedVc
                                                    [vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT__ram_ext__DOT___R0_addr_d0][0U]
                                                     : 0U))))));
         __Vtemp_113[0U] = __Vtemp_108[0U];
-        __Vtemp_113[1U] = (((IData)((((QData)((IData)(vlSelf->__VdfgRegularize_h6171c202_4_9)) 
+        __Vtemp_113[1U] = (((IData)((((QData)((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_9)) 
                                       << 0xaU) | (QData)((IData)(
-                                                                 (((IData)(vlSelf->__VdfgRegularize_h6171c202_4_10) 
+                                                                 (((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_10) 
                                                                    << 6U) 
-                                                                  | (IData)(vlSelf->__VdfgRegularize_h6171c202_4_11)))))) 
-                            >> 2U) | ((IData)(((((QData)((IData)(vlSelf->__VdfgRegularize_h6171c202_4_9)) 
+                                                                  | (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_11)))))) 
+                            >> 2U) | ((IData)(((((QData)((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_9)) 
                                                  << 0xaU) 
                                                 | (QData)((IData)(
-                                                                  (((IData)(vlSelf->__VdfgRegularize_h6171c202_4_10) 
+                                                                  (((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_10) 
                                                                     << 6U) 
-                                                                   | (IData)(vlSelf->__VdfgRegularize_h6171c202_4_11))))) 
+                                                                   | (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_11))))) 
                                                >> 0x20U)) 
                                       << 0x1eU));
-        __Vtemp_113[2U] = (((IData)((((QData)((IData)(vlSelf->__VdfgRegularize_h6171c202_4_12)) 
+        __Vtemp_113[2U] = (((IData)((((QData)((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_12)) 
                                       << 0xaU) | (QData)((IData)(
-                                                                 (((IData)(vlSelf->__VdfgRegularize_h6171c202_4_13) 
+                                                                 (((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_13) 
                                                                    << 6U) 
-                                                                  | (IData)(vlSelf->__VdfgRegularize_h6171c202_4_14)))))) 
-                            << 8U) | ((IData)(((((QData)((IData)(vlSelf->__VdfgRegularize_h6171c202_4_9)) 
+                                                                  | (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_14)))))) 
+                            << 8U) | ((IData)(((((QData)((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_9)) 
                                                  << 0xaU) 
                                                 | (QData)((IData)(
-                                                                  (((IData)(vlSelf->__VdfgRegularize_h6171c202_4_10) 
+                                                                  (((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_10) 
                                                                     << 6U) 
-                                                                   | (IData)(vlSelf->__VdfgRegularize_h6171c202_4_11))))) 
+                                                                   | (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_11))))) 
                                                >> 0x20U)) 
                                       >> 2U));
-        __Vtemp_113[3U] = (((IData)((((QData)((IData)(vlSelf->__VdfgRegularize_h6171c202_4_15)) 
+        __Vtemp_113[3U] = (((IData)((((QData)((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_15)) 
                                       << 0xaU) | (QData)((IData)(
-                                                                 (((IData)(vlSelf->__VdfgRegularize_h6171c202_4_16) 
+                                                                 (((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_16) 
                                                                    << 6U) 
-                                                                  | (IData)(vlSelf->__VdfgRegularize_h6171c202_4_17)))))) 
+                                                                  | (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_17)))))) 
                             << 0x12U) | (((IData)((
-                                                   ((QData)((IData)(vlSelf->__VdfgRegularize_h6171c202_4_12)) 
+                                                   ((QData)((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_12)) 
                                                     << 0xaU) 
                                                    | (QData)((IData)(
-                                                                     (((IData)(vlSelf->__VdfgRegularize_h6171c202_4_13) 
+                                                                     (((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_13) 
                                                                        << 6U) 
-                                                                      | (IData)(vlSelf->__VdfgRegularize_h6171c202_4_14)))))) 
+                                                                      | (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_14)))))) 
                                           >> 0x18U) 
                                          | ((IData)(
-                                                    ((((QData)((IData)(vlSelf->__VdfgRegularize_h6171c202_4_12)) 
+                                                    ((((QData)((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_12)) 
                                                        << 0xaU) 
                                                       | (QData)((IData)(
-                                                                        (((IData)(vlSelf->__VdfgRegularize_h6171c202_4_13) 
+                                                                        (((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_13) 
                                                                           << 6U) 
-                                                                         | (IData)(vlSelf->__VdfgRegularize_h6171c202_4_14))))) 
+                                                                         | (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_14))))) 
                                                      >> 0x20U)) 
                                             << 8U)));
-        __Vtemp_113[4U] = (((IData)((((QData)((IData)(vlSelf->__VdfgRegularize_h6171c202_4_18)) 
+        __Vtemp_113[4U] = (((IData)((((QData)((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_18)) 
                                       << 0xaU) | (QData)((IData)(
-                                                                 (((IData)(vlSelf->__VdfgRegularize_h6171c202_4_19) 
+                                                                 (((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_19) 
                                                                    << 6U) 
-                                                                  | (IData)(vlSelf->__VdfgRegularize_h6171c202_4_20)))))) 
+                                                                  | (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_20)))))) 
                             << 0x1cU) | (((IData)((
-                                                   ((QData)((IData)(vlSelf->__VdfgRegularize_h6171c202_4_15)) 
+                                                   ((QData)((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_15)) 
                                                     << 0xaU) 
                                                    | (QData)((IData)(
-                                                                     (((IData)(vlSelf->__VdfgRegularize_h6171c202_4_16) 
+                                                                     (((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_16) 
                                                                        << 6U) 
-                                                                      | (IData)(vlSelf->__VdfgRegularize_h6171c202_4_17)))))) 
+                                                                      | (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_17)))))) 
                                           >> 0xeU) 
                                          | ((IData)(
-                                                    ((((QData)((IData)(vlSelf->__VdfgRegularize_h6171c202_4_15)) 
+                                                    ((((QData)((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_15)) 
                                                        << 0xaU) 
                                                       | (QData)((IData)(
-                                                                        (((IData)(vlSelf->__VdfgRegularize_h6171c202_4_16) 
+                                                                        (((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_16) 
                                                                           << 6U) 
-                                                                         | (IData)(vlSelf->__VdfgRegularize_h6171c202_4_17))))) 
+                                                                         | (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_17))))) 
                                                      >> 0x20U)) 
                                             << 0x12U)));
-        __Vtemp_113[5U] = (((IData)((((QData)((IData)(vlSelf->__VdfgRegularize_h6171c202_4_18)) 
+        __Vtemp_113[5U] = (((IData)((((QData)((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_18)) 
                                       << 0xaU) | (QData)((IData)(
-                                                                 (((IData)(vlSelf->__VdfgRegularize_h6171c202_4_19) 
+                                                                 (((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_19) 
                                                                    << 6U) 
-                                                                  | (IData)(vlSelf->__VdfgRegularize_h6171c202_4_20)))))) 
-                            >> 4U) | ((IData)(((((QData)((IData)(vlSelf->__VdfgRegularize_h6171c202_4_18)) 
+                                                                  | (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_20)))))) 
+                            >> 4U) | ((IData)(((((QData)((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_18)) 
                                                  << 0xaU) 
                                                 | (QData)((IData)(
-                                                                  (((IData)(vlSelf->__VdfgRegularize_h6171c202_4_19) 
+                                                                  (((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_19) 
                                                                     << 6U) 
-                                                                   | (IData)(vlSelf->__VdfgRegularize_h6171c202_4_20))))) 
+                                                                   | (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_20))))) 
                                                >> 0x20U)) 
                                       << 0x1cU));
-        __Vtemp_113[6U] = ((vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__predecoder__DOT____VdfgRegularize_hc521a72f_0_0 
+        __Vtemp_113[6U] = ((vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__predecoder__DOT____VdfgRegularize_h5399b261_0_0 
                             << 0xaU) | (((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__predecoder__DOT___GEN_1) 
                                          << 6U) | ((IData)(
-                                                           ((((QData)((IData)(vlSelf->__VdfgRegularize_h6171c202_4_18)) 
+                                                           ((((QData)((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_18)) 
                                                               << 0xaU) 
                                                              | (QData)((IData)(
-                                                                               (((IData)(vlSelf->__VdfgRegularize_h6171c202_4_19) 
+                                                                               (((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_19) 
                                                                                 << 6U) 
-                                                                                | (IData)(vlSelf->__VdfgRegularize_h6171c202_4_20))))) 
+                                                                                | (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_20))))) 
                                                             >> 0x20U)) 
                                                    >> 4U)));
-        __Vtemp_113[7U] = (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__predecoder__DOT____VdfgRegularize_hc521a72f_0_0 
+        __Vtemp_113[7U] = (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__predecoder__DOT____VdfgRegularize_h5399b261_0_0 
                            >> 0x16U);
         bufp->chgWData(oldp+1253,(__Vtemp_113),234);
         bufp->chgCData(oldp+1261,(((((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__instruction_Q__DOT__maybe_full) 
@@ -2385,7 +2385,7 @@ void Vtop_v2___024root__trace_chg_0_sub_0(Vtop_v2___024root* vlSelf, VerilatedVc
         bufp->chgBit(oldp+1434,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__predecoder__DOT__curr_is_JAL_3));
         bufp->chgBit(oldp+1435,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__predecoder__DOT__curr_is_JALR_3));
         bufp->chgBit(oldp+1436,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__predecoder__DOT__curr_is_BRANCH_3));
-        bufp->chgIData(oldp+1437,((0xfffffff0U & vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__predecoder__DOT____VdfgRegularize_hc521a72f_0_0)),32);
+        bufp->chgIData(oldp+1437,((0xfffffff0U & vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__predecoder__DOT____VdfgRegularize_h5399b261_0_0)),32);
         bufp->chgIData(oldp+1438,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__predecoder__DOT__expected_next_PC),32);
         bufp->chgBit(oldp+1439,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__predecoder__DOT__output_ready));
         bufp->chgBit(oldp+1440,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__predecoder__DOT__input_fetch_packet_valid));
@@ -2584,30 +2584,30 @@ void Vtop_v2___024root__trace_chg_0_sub_0(Vtop_v2___024root* vlSelf, VerilatedVc
                                               & vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.io_deq_bits[6U]))))),2);
         bufp->chgCData(oldp+1758,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__initialReady),2);
         bufp->chgWData(oldp+1759,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__ready_memory),65);
-        bufp->chgIData(oldp+1762,((((IData)(vlSelf->__VdfgRegularize_h6171c202_4_102) 
-                                    << 0xfU) | (((IData)(vlSelf->__VdfgRegularize_h6171c202_4_101) 
+        bufp->chgIData(oldp+1762,((((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_102) 
+                                    << 0xfU) | (((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_101) 
                                                  << 0xaU) 
-                                                | (((IData)(vlSelf->__VdfgRegularize_h6171c202_4_100) 
+                                                | (((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_100) 
                                                     << 5U) 
-                                                   | (IData)(vlSelf->__VdfgRegularize_h6171c202_4_99))))),20);
-        bufp->chgIData(oldp+1763,((((IData)(vlSelf->__VdfgRegularize_h6171c202_4_98) 
-                                    << 0xfU) | (((IData)(vlSelf->__VdfgRegularize_h6171c202_4_97) 
+                                                   | (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_99))))),20);
+        bufp->chgIData(oldp+1763,((((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_98) 
+                                    << 0xfU) | (((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_97) 
                                                  << 0xaU) 
-                                                | (((IData)(vlSelf->__VdfgRegularize_h6171c202_4_96) 
+                                                | (((IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_96) 
                                                     << 5U) 
-                                                   | (IData)(vlSelf->__VdfgRegularize_h6171c202_4_95))))),20);
+                                                   | (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_95))))),20);
         bufp->chgIData(oldp+1764,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT___WAW_handler_io_RAT_RD_values),20);
         bufp->chgCData(oldp+1765,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT___WAW_handler_io_RAT_wr_en),4);
         bufp->chgIData(oldp+1766,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT___WAW_handler_io_FL_RD_values),28);
         bufp->chgIData(oldp+1767,(((((0xdfU >= (0xffU 
                                                 & ((IData)(7U) 
-                                                   * (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__WAW_handler__DOT____VdfgRegularize_ha86dd9af_0_3))))
+                                                   * (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__WAW_handler__DOT____VdfgRegularize_h440ec619_0_3))))
                                       ? (0x7fU & ((
                                                    (0U 
                                                     == 
                                                     (0x1fU 
                                                      & ((IData)(7U) 
-                                                        * (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__WAW_handler__DOT____VdfgRegularize_ha86dd9af_0_3))))
+                                                        * (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__WAW_handler__DOT____VdfgRegularize_h440ec619_0_3))))
                                                     ? 0U
                                                     : 
                                                    (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__RAT__DOT__speculative_RAT[
@@ -2615,66 +2615,66 @@ void Vtop_v2___024root__trace_chg_0_sub_0(Vtop_v2___024root* vlSelf, VerilatedVc
                                                       + 
                                                       (0xffU 
                                                        & ((IData)(7U) 
-                                                          * (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__WAW_handler__DOT____VdfgRegularize_ha86dd9af_0_3)))) 
+                                                          * (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__WAW_handler__DOT____VdfgRegularize_h440ec619_0_3)))) 
                                                      >> 5U)] 
                                                     << 
                                                     ((IData)(0x20U) 
                                                      - 
                                                      (0x1fU 
                                                       & ((IData)(7U) 
-                                                         * (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__WAW_handler__DOT____VdfgRegularize_ha86dd9af_0_3)))))) 
+                                                         * (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__WAW_handler__DOT____VdfgRegularize_h440ec619_0_3)))))) 
                                                   | (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__RAT__DOT__speculative_RAT[
                                                      (7U 
                                                       & (((IData)(7U) 
-                                                          * (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__WAW_handler__DOT____VdfgRegularize_ha86dd9af_0_3)) 
+                                                          * (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__WAW_handler__DOT____VdfgRegularize_h440ec619_0_3)) 
                                                          >> 5U))] 
                                                      >> 
                                                      (0x1fU 
                                                       & ((IData)(7U) 
-                                                         * (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__WAW_handler__DOT____VdfgRegularize_ha86dd9af_0_3))))))
+                                                         * (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__WAW_handler__DOT____VdfgRegularize_h440ec619_0_3))))))
                                       : 0U) << 0x15U) 
                                    | ((((0xdfU >= (0xffU 
                                                    & ((IData)(7U) 
-                                                      * (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__WAW_handler__DOT____VdfgRegularize_ha86dd9af_0_2))))
+                                                      * (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__WAW_handler__DOT____VdfgRegularize_h440ec619_0_2))))
                                          ? (0x7fU & 
                                             (((0U == 
                                                (0x1fU 
                                                 & ((IData)(7U) 
-                                                   * (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__WAW_handler__DOT____VdfgRegularize_ha86dd9af_0_2))))
+                                                   * (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__WAW_handler__DOT____VdfgRegularize_h440ec619_0_2))))
                                                ? 0U
                                                : (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__RAT__DOT__speculative_RAT[
                                                   (((IData)(6U) 
                                                     + 
                                                     (0xffU 
                                                      & ((IData)(7U) 
-                                                        * (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__WAW_handler__DOT____VdfgRegularize_ha86dd9af_0_2)))) 
+                                                        * (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__WAW_handler__DOT____VdfgRegularize_h440ec619_0_2)))) 
                                                    >> 5U)] 
                                                   << 
                                                   ((IData)(0x20U) 
                                                    - 
                                                    (0x1fU 
                                                     & ((IData)(7U) 
-                                                       * (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__WAW_handler__DOT____VdfgRegularize_ha86dd9af_0_2)))))) 
+                                                       * (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__WAW_handler__DOT____VdfgRegularize_h440ec619_0_2)))))) 
                                              | (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__RAT__DOT__speculative_RAT[
                                                 (7U 
                                                  & (((IData)(7U) 
-                                                     * (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__WAW_handler__DOT____VdfgRegularize_ha86dd9af_0_2)) 
+                                                     * (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__WAW_handler__DOT____VdfgRegularize_h440ec619_0_2)) 
                                                     >> 5U))] 
                                                 >> 
                                                 (0x1fU 
                                                  & ((IData)(7U) 
-                                                    * (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__WAW_handler__DOT____VdfgRegularize_ha86dd9af_0_2))))))
+                                                    * (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__WAW_handler__DOT____VdfgRegularize_h440ec619_0_2))))))
                                          : 0U) << 0xeU) 
                                       | ((((0xdfU >= 
                                             (0xffU 
                                              & ((IData)(7U) 
-                                                * (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__WAW_handler__DOT____VdfgRegularize_ha86dd9af_0_6))))
+                                                * (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__WAW_handler__DOT____VdfgRegularize_h440ec619_0_6))))
                                             ? (0x7fU 
                                                & (((0U 
                                                     == 
                                                     (0x1fU 
                                                      & ((IData)(7U) 
-                                                        * (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__WAW_handler__DOT____VdfgRegularize_ha86dd9af_0_6))))
+                                                        * (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__WAW_handler__DOT____VdfgRegularize_h440ec619_0_6))))
                                                     ? 0U
                                                     : 
                                                    (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__RAT__DOT__speculative_RAT[
@@ -2682,34 +2682,34 @@ void Vtop_v2___024root__trace_chg_0_sub_0(Vtop_v2___024root* vlSelf, VerilatedVc
                                                       + 
                                                       (0xffU 
                                                        & ((IData)(7U) 
-                                                          * (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__WAW_handler__DOT____VdfgRegularize_ha86dd9af_0_6)))) 
+                                                          * (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__WAW_handler__DOT____VdfgRegularize_h440ec619_0_6)))) 
                                                      >> 5U)] 
                                                     << 
                                                     ((IData)(0x20U) 
                                                      - 
                                                      (0x1fU 
                                                       & ((IData)(7U) 
-                                                         * (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__WAW_handler__DOT____VdfgRegularize_ha86dd9af_0_6)))))) 
+                                                         * (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__WAW_handler__DOT____VdfgRegularize_h440ec619_0_6)))))) 
                                                   | (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__RAT__DOT__speculative_RAT[
                                                      (7U 
                                                       & (((IData)(7U) 
-                                                          * (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__WAW_handler__DOT____VdfgRegularize_ha86dd9af_0_6)) 
+                                                          * (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__WAW_handler__DOT____VdfgRegularize_h440ec619_0_6)) 
                                                          >> 5U))] 
                                                      >> 
                                                      (0x1fU 
                                                       & ((IData)(7U) 
-                                                         * (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__WAW_handler__DOT____VdfgRegularize_ha86dd9af_0_6))))))
+                                                         * (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__WAW_handler__DOT____VdfgRegularize_h440ec619_0_6))))))
                                             : 0U) << 7U) 
                                          | ((0xdfU 
                                              >= (0xffU 
                                                  & ((IData)(7U) 
-                                                    * (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__WAW_handler__DOT____VdfgRegularize_ha86dd9af_0_8))))
+                                                    * (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__WAW_handler__DOT____VdfgRegularize_h440ec619_0_8))))
                                              ? (0x7fU 
                                                 & (((0U 
                                                      == 
                                                      (0x1fU 
                                                       & ((IData)(7U) 
-                                                         * (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__WAW_handler__DOT____VdfgRegularize_ha86dd9af_0_8))))
+                                                         * (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__WAW_handler__DOT____VdfgRegularize_h440ec619_0_8))))
                                                      ? 0U
                                                      : 
                                                     (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__RAT__DOT__speculative_RAT[
@@ -2717,33 +2717,33 @@ void Vtop_v2___024root__trace_chg_0_sub_0(Vtop_v2___024root* vlSelf, VerilatedVc
                                                        + 
                                                        (0xffU 
                                                         & ((IData)(7U) 
-                                                           * (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__WAW_handler__DOT____VdfgRegularize_ha86dd9af_0_8)))) 
+                                                           * (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__WAW_handler__DOT____VdfgRegularize_h440ec619_0_8)))) 
                                                       >> 5U)] 
                                                      << 
                                                      ((IData)(0x20U) 
                                                       - 
                                                       (0x1fU 
                                                        & ((IData)(7U) 
-                                                          * (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__WAW_handler__DOT____VdfgRegularize_ha86dd9af_0_8)))))) 
+                                                          * (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__WAW_handler__DOT____VdfgRegularize_h440ec619_0_8)))))) 
                                                    | (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__RAT__DOT__speculative_RAT[
                                                       (7U 
                                                        & (((IData)(7U) 
-                                                           * (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__WAW_handler__DOT____VdfgRegularize_ha86dd9af_0_8)) 
+                                                           * (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__WAW_handler__DOT____VdfgRegularize_h440ec619_0_8)) 
                                                           >> 5U))] 
                                                       >> 
                                                       (0x1fU 
                                                        & ((IData)(7U) 
-                                                          * (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__WAW_handler__DOT____VdfgRegularize_ha86dd9af_0_8))))))
+                                                          * (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__WAW_handler__DOT____VdfgRegularize_h440ec619_0_8))))))
                                              : 0U))))),28);
         bufp->chgIData(oldp+1768,(((((0xdfU >= (0xffU 
                                                 & ((IData)(7U) 
-                                                   * (IData)(vlSelf->__VdfgRegularize_h6171c202_4_102))))
+                                                   * (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_102))))
                                       ? (0x7fU & ((
                                                    (0U 
                                                     == 
                                                     (0x1fU 
                                                      & ((IData)(7U) 
-                                                        * (IData)(vlSelf->__VdfgRegularize_h6171c202_4_102))))
+                                                        * (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_102))))
                                                     ? 0U
                                                     : 
                                                    (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__RAT__DOT__speculative_RAT[
@@ -2751,66 +2751,66 @@ void Vtop_v2___024root__trace_chg_0_sub_0(Vtop_v2___024root* vlSelf, VerilatedVc
                                                       + 
                                                       (0xffU 
                                                        & ((IData)(7U) 
-                                                          * (IData)(vlSelf->__VdfgRegularize_h6171c202_4_102)))) 
+                                                          * (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_102)))) 
                                                      >> 5U)] 
                                                     << 
                                                     ((IData)(0x20U) 
                                                      - 
                                                      (0x1fU 
                                                       & ((IData)(7U) 
-                                                         * (IData)(vlSelf->__VdfgRegularize_h6171c202_4_102)))))) 
+                                                         * (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_102)))))) 
                                                   | (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__RAT__DOT__speculative_RAT[
                                                      (7U 
                                                       & (((IData)(7U) 
-                                                          * (IData)(vlSelf->__VdfgRegularize_h6171c202_4_102)) 
+                                                          * (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_102)) 
                                                          >> 5U))] 
                                                      >> 
                                                      (0x1fU 
                                                       & ((IData)(7U) 
-                                                         * (IData)(vlSelf->__VdfgRegularize_h6171c202_4_102))))))
+                                                         * (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_102))))))
                                       : 0U) << 0x15U) 
                                    | ((((0xdfU >= (0xffU 
                                                    & ((IData)(7U) 
-                                                      * (IData)(vlSelf->__VdfgRegularize_h6171c202_4_101))))
+                                                      * (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_101))))
                                          ? (0x7fU & 
                                             (((0U == 
                                                (0x1fU 
                                                 & ((IData)(7U) 
-                                                   * (IData)(vlSelf->__VdfgRegularize_h6171c202_4_101))))
+                                                   * (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_101))))
                                                ? 0U
                                                : (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__RAT__DOT__speculative_RAT[
                                                   (((IData)(6U) 
                                                     + 
                                                     (0xffU 
                                                      & ((IData)(7U) 
-                                                        * (IData)(vlSelf->__VdfgRegularize_h6171c202_4_101)))) 
+                                                        * (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_101)))) 
                                                    >> 5U)] 
                                                   << 
                                                   ((IData)(0x20U) 
                                                    - 
                                                    (0x1fU 
                                                     & ((IData)(7U) 
-                                                       * (IData)(vlSelf->__VdfgRegularize_h6171c202_4_101)))))) 
+                                                       * (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_101)))))) 
                                              | (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__RAT__DOT__speculative_RAT[
                                                 (7U 
                                                  & (((IData)(7U) 
-                                                     * (IData)(vlSelf->__VdfgRegularize_h6171c202_4_101)) 
+                                                     * (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_101)) 
                                                     >> 5U))] 
                                                 >> 
                                                 (0x1fU 
                                                  & ((IData)(7U) 
-                                                    * (IData)(vlSelf->__VdfgRegularize_h6171c202_4_101))))))
+                                                    * (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_101))))))
                                          : 0U) << 0xeU) 
                                       | ((((0xdfU >= 
                                             (0xffU 
                                              & ((IData)(7U) 
-                                                * (IData)(vlSelf->__VdfgRegularize_h6171c202_4_100))))
+                                                * (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_100))))
                                             ? (0x7fU 
                                                & (((0U 
                                                     == 
                                                     (0x1fU 
                                                      & ((IData)(7U) 
-                                                        * (IData)(vlSelf->__VdfgRegularize_h6171c202_4_100))))
+                                                        * (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_100))))
                                                     ? 0U
                                                     : 
                                                    (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__RAT__DOT__speculative_RAT[
@@ -2818,34 +2818,34 @@ void Vtop_v2___024root__trace_chg_0_sub_0(Vtop_v2___024root* vlSelf, VerilatedVc
                                                       + 
                                                       (0xffU 
                                                        & ((IData)(7U) 
-                                                          * (IData)(vlSelf->__VdfgRegularize_h6171c202_4_100)))) 
+                                                          * (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_100)))) 
                                                      >> 5U)] 
                                                     << 
                                                     ((IData)(0x20U) 
                                                      - 
                                                      (0x1fU 
                                                       & ((IData)(7U) 
-                                                         * (IData)(vlSelf->__VdfgRegularize_h6171c202_4_100)))))) 
+                                                         * (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_100)))))) 
                                                   | (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__RAT__DOT__speculative_RAT[
                                                      (7U 
                                                       & (((IData)(7U) 
-                                                          * (IData)(vlSelf->__VdfgRegularize_h6171c202_4_100)) 
+                                                          * (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_100)) 
                                                          >> 5U))] 
                                                      >> 
                                                      (0x1fU 
                                                       & ((IData)(7U) 
-                                                         * (IData)(vlSelf->__VdfgRegularize_h6171c202_4_100))))))
+                                                         * (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_100))))))
                                             : 0U) << 7U) 
                                          | ((0xdfU 
                                              >= (0xffU 
                                                  & ((IData)(7U) 
-                                                    * (IData)(vlSelf->__VdfgRegularize_h6171c202_4_99))))
+                                                    * (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_99))))
                                              ? (0x7fU 
                                                 & (((0U 
                                                      == 
                                                      (0x1fU 
                                                       & ((IData)(7U) 
-                                                         * (IData)(vlSelf->__VdfgRegularize_h6171c202_4_99))))
+                                                         * (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_99))))
                                                      ? 0U
                                                      : 
                                                     (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__RAT__DOT__speculative_RAT[
@@ -2853,33 +2853,33 @@ void Vtop_v2___024root__trace_chg_0_sub_0(Vtop_v2___024root* vlSelf, VerilatedVc
                                                        + 
                                                        (0xffU 
                                                         & ((IData)(7U) 
-                                                           * (IData)(vlSelf->__VdfgRegularize_h6171c202_4_99)))) 
+                                                           * (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_99)))) 
                                                       >> 5U)] 
                                                      << 
                                                      ((IData)(0x20U) 
                                                       - 
                                                       (0x1fU 
                                                        & ((IData)(7U) 
-                                                          * (IData)(vlSelf->__VdfgRegularize_h6171c202_4_99)))))) 
+                                                          * (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_99)))))) 
                                                    | (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__RAT__DOT__speculative_RAT[
                                                       (7U 
                                                        & (((IData)(7U) 
-                                                           * (IData)(vlSelf->__VdfgRegularize_h6171c202_4_99)) 
+                                                           * (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_99)) 
                                                           >> 5U))] 
                                                       >> 
                                                       (0x1fU 
                                                        & ((IData)(7U) 
-                                                          * (IData)(vlSelf->__VdfgRegularize_h6171c202_4_99))))))
+                                                          * (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_99))))))
                                              : 0U))))),28);
         bufp->chgIData(oldp+1769,(((((0xdfU >= (0xffU 
                                                 & ((IData)(7U) 
-                                                   * (IData)(vlSelf->__VdfgRegularize_h6171c202_4_98))))
+                                                   * (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_98))))
                                       ? (0x7fU & ((
                                                    (0U 
                                                     == 
                                                     (0x1fU 
                                                      & ((IData)(7U) 
-                                                        * (IData)(vlSelf->__VdfgRegularize_h6171c202_4_98))))
+                                                        * (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_98))))
                                                     ? 0U
                                                     : 
                                                    (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__RAT__DOT__speculative_RAT[
@@ -2887,66 +2887,66 @@ void Vtop_v2___024root__trace_chg_0_sub_0(Vtop_v2___024root* vlSelf, VerilatedVc
                                                       + 
                                                       (0xffU 
                                                        & ((IData)(7U) 
-                                                          * (IData)(vlSelf->__VdfgRegularize_h6171c202_4_98)))) 
+                                                          * (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_98)))) 
                                                      >> 5U)] 
                                                     << 
                                                     ((IData)(0x20U) 
                                                      - 
                                                      (0x1fU 
                                                       & ((IData)(7U) 
-                                                         * (IData)(vlSelf->__VdfgRegularize_h6171c202_4_98)))))) 
+                                                         * (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_98)))))) 
                                                   | (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__RAT__DOT__speculative_RAT[
                                                      (7U 
                                                       & (((IData)(7U) 
-                                                          * (IData)(vlSelf->__VdfgRegularize_h6171c202_4_98)) 
+                                                          * (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_98)) 
                                                          >> 5U))] 
                                                      >> 
                                                      (0x1fU 
                                                       & ((IData)(7U) 
-                                                         * (IData)(vlSelf->__VdfgRegularize_h6171c202_4_98))))))
+                                                         * (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_98))))))
                                       : 0U) << 0x15U) 
                                    | ((((0xdfU >= (0xffU 
                                                    & ((IData)(7U) 
-                                                      * (IData)(vlSelf->__VdfgRegularize_h6171c202_4_97))))
+                                                      * (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_97))))
                                          ? (0x7fU & 
                                             (((0U == 
                                                (0x1fU 
                                                 & ((IData)(7U) 
-                                                   * (IData)(vlSelf->__VdfgRegularize_h6171c202_4_97))))
+                                                   * (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_97))))
                                                ? 0U
                                                : (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__RAT__DOT__speculative_RAT[
                                                   (((IData)(6U) 
                                                     + 
                                                     (0xffU 
                                                      & ((IData)(7U) 
-                                                        * (IData)(vlSelf->__VdfgRegularize_h6171c202_4_97)))) 
+                                                        * (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_97)))) 
                                                    >> 5U)] 
                                                   << 
                                                   ((IData)(0x20U) 
                                                    - 
                                                    (0x1fU 
                                                     & ((IData)(7U) 
-                                                       * (IData)(vlSelf->__VdfgRegularize_h6171c202_4_97)))))) 
+                                                       * (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_97)))))) 
                                              | (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__RAT__DOT__speculative_RAT[
                                                 (7U 
                                                  & (((IData)(7U) 
-                                                     * (IData)(vlSelf->__VdfgRegularize_h6171c202_4_97)) 
+                                                     * (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_97)) 
                                                     >> 5U))] 
                                                 >> 
                                                 (0x1fU 
                                                  & ((IData)(7U) 
-                                                    * (IData)(vlSelf->__VdfgRegularize_h6171c202_4_97))))))
+                                                    * (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_97))))))
                                          : 0U) << 0xeU) 
                                       | ((((0xdfU >= 
                                             (0xffU 
                                              & ((IData)(7U) 
-                                                * (IData)(vlSelf->__VdfgRegularize_h6171c202_4_96))))
+                                                * (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_96))))
                                             ? (0x7fU 
                                                & (((0U 
                                                     == 
                                                     (0x1fU 
                                                      & ((IData)(7U) 
-                                                        * (IData)(vlSelf->__VdfgRegularize_h6171c202_4_96))))
+                                                        * (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_96))))
                                                     ? 0U
                                                     : 
                                                    (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__RAT__DOT__speculative_RAT[
@@ -2954,34 +2954,34 @@ void Vtop_v2___024root__trace_chg_0_sub_0(Vtop_v2___024root* vlSelf, VerilatedVc
                                                       + 
                                                       (0xffU 
                                                        & ((IData)(7U) 
-                                                          * (IData)(vlSelf->__VdfgRegularize_h6171c202_4_96)))) 
+                                                          * (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_96)))) 
                                                      >> 5U)] 
                                                     << 
                                                     ((IData)(0x20U) 
                                                      - 
                                                      (0x1fU 
                                                       & ((IData)(7U) 
-                                                         * (IData)(vlSelf->__VdfgRegularize_h6171c202_4_96)))))) 
+                                                         * (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_96)))))) 
                                                   | (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__RAT__DOT__speculative_RAT[
                                                      (7U 
                                                       & (((IData)(7U) 
-                                                          * (IData)(vlSelf->__VdfgRegularize_h6171c202_4_96)) 
+                                                          * (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_96)) 
                                                          >> 5U))] 
                                                      >> 
                                                      (0x1fU 
                                                       & ((IData)(7U) 
-                                                         * (IData)(vlSelf->__VdfgRegularize_h6171c202_4_96))))))
+                                                         * (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_96))))))
                                             : 0U) << 7U) 
                                          | ((0xdfU 
                                              >= (0xffU 
                                                  & ((IData)(7U) 
-                                                    * (IData)(vlSelf->__VdfgRegularize_h6171c202_4_95))))
+                                                    * (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_95))))
                                              ? (0x7fU 
                                                 & (((0U 
                                                      == 
                                                      (0x1fU 
                                                       & ((IData)(7U) 
-                                                         * (IData)(vlSelf->__VdfgRegularize_h6171c202_4_95))))
+                                                         * (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_95))))
                                                      ? 0U
                                                      : 
                                                     (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__RAT__DOT__speculative_RAT[
@@ -2989,23 +2989,23 @@ void Vtop_v2___024root__trace_chg_0_sub_0(Vtop_v2___024root* vlSelf, VerilatedVc
                                                        + 
                                                        (0xffU 
                                                         & ((IData)(7U) 
-                                                           * (IData)(vlSelf->__VdfgRegularize_h6171c202_4_95)))) 
+                                                           * (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_95)))) 
                                                       >> 5U)] 
                                                      << 
                                                      ((IData)(0x20U) 
                                                       - 
                                                       (0x1fU 
                                                        & ((IData)(7U) 
-                                                          * (IData)(vlSelf->__VdfgRegularize_h6171c202_4_95)))))) 
+                                                          * (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_95)))))) 
                                                    | (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__RAT__DOT__speculative_RAT[
                                                       (7U 
                                                        & (((IData)(7U) 
-                                                           * (IData)(vlSelf->__VdfgRegularize_h6171c202_4_95)) 
+                                                           * (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_95)) 
                                                           >> 5U))] 
                                                       >> 
                                                       (0x1fU 
                                                        & ((IData)(7U) 
-                                                          * (IData)(vlSelf->__VdfgRegularize_h6171c202_4_95))))))
+                                                          * (IData)(vlSelf->__VdfgRegularize_hd87f99a1_4_95))))))
                                              : 0U))))),28);
         bufp->chgWData(oldp+1770,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__RAT__DOT__commit_RAT),224);
         bufp->chgWData(oldp+1777,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__RAT__DOT__speculative_RAT),224);
@@ -3516,7 +3516,7 @@ void Vtop_v2___024root__trace_chg_0_sub_0(Vtop_v2___024root* vlSelf, VerilatedVc
                                              ((IData)(1U) 
                                               + (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT__AXI_request_Q__DOT__deq_ptr_value)))))),2);
         bufp->chgBit(oldp+1977,((1U & (~ (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT__cacheable_response_Q__DOT__full)))));
-        bufp->chgBit(oldp+1978,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT__final_response_buffer__DOT___GEN));
+        bufp->chgBit(oldp+1978,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT___final_response_buffer_io_deq_valid));
         if (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT__final_response_buffer__DOT__full) {
             __Vtemp_176[0U] = vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT__final_response_buffer__DOT__ram[0U];
             __Vtemp_176[1U] = vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT__final_response_buffer__DOT__ram[1U];
@@ -3896,7 +3896,7 @@ void Vtop_v2___024root__trace_chg_0_sub_0(Vtop_v2___024root* vlSelf, VerilatedVc
         bufp->chgIData(oldp+2203,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__instruction_cache__DOT__current_packet),31);
         bufp->chgIData(oldp+2204,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__instruction_cache__DOT__request_addr),32);
         bufp->chgBit(oldp+2205,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__instruction_cache__DOT__cache_valid));
-        if (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__instruction_cache__DOT____VdfgRegularize_h0bfca6b6_1_1) {
+        if (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__instruction_cache__DOT____VdfgRegularize_h6e0fa456_1_1) {
             __Vtemp_180[0U] = vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__instruction_cache__DOT__replay_address[0U];
             __Vtemp_180[1U] = vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__instruction_cache__DOT__replay_address[1U];
             __Vtemp_180[2U] = vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__instruction_cache__DOT__replay_address[2U];
@@ -4029,7 +4029,7 @@ void Vtop_v2___024root__trace_chg_0_sub_0(Vtop_v2___024root* vlSelf, VerilatedVc
                                               >> 7U))
                                         : 0U) : 0U)),32);
         bufp->chgCData(oldp+2312,(((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT__read_request_valid)
-                                    ? (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT____VdfgRegularize_he49e9fcb_0_2)
+                                    ? (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT____VdfgRegularize_h6d09639e_0_2)
                                     : 0U)),8);
         bufp->chgCData(oldp+2313,(((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT__read_request_valid)
                                     ? 5U : 0U)),3);
@@ -4120,7 +4120,7 @@ void Vtop_v2___024root__trace_chg_0_sub_0(Vtop_v2___024root* vlSelf, VerilatedVc
                                                      : 0U))) 
                                    << 0x20U)),64);
         bufp->chgSData(oldp+2350,((((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT__read_request_valid)
-                                     ? (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT____VdfgRegularize_he49e9fcb_0_2)
+                                     ? (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT____VdfgRegularize_h6d09639e_0_2)
                                      : 0U) << 8U)),16);
         bufp->chgCData(oldp+2351,((((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT__read_request_valid)
                                      ? 5U : 0U) << 3U)),6);
@@ -4337,7 +4337,7 @@ void Vtop_v2___024root__trace_chg_0_sub_0(Vtop_v2___024root* vlSelf, VerilatedVc
                                                                 & ((IData)(vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__arb_inst__DOT__grant_encoded_reg) 
                                                                    >> 1U)), 5U))))),32);
         bufp->chgCData(oldp+2456,((0xffU & ((((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT__read_request_valid)
-                                               ? (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT____VdfgRegularize_he49e9fcb_0_2)
+                                               ? (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT____VdfgRegularize_h6d09639e_0_2)
                                                : 0U) 
                                              << 8U) 
                                             >> (0xfU 
@@ -4572,178 +4572,178 @@ void Vtop_v2___024root__trace_chg_0_sub_0(Vtop_v2___024root* vlSelf, VerilatedVc
                                               >> 2U))),14);
         bufp->chgWData(oldp+2569,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__instruction_cache__DOT__data_memory_0.__PVT___mem_ext_R0_data),278);
         bufp->chgWData(oldp+2578,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__instruction_cache__DOT__data_memory_1.__PVT___mem_ext_R0_data),278);
-        bufp->chgBit(oldp+2587,((1U & (~ (IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_load_Q.__PVT__full)))));
-        bufp->chgBit(oldp+2588,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT___FU_output_load_Q_io_enq_valid_T_14));
-        bufp->chgWData(oldp+2589,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT___GEN_218),192);
-        bufp->chgCData(oldp+2595,(((((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_load_Q.__PVT__maybe_full) 
-                                     & (IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_load_Q.__PVT__ptr_match)) 
-                                    << 2U) | (3U & 
-                                              ((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_load_Q.__PVT__enq_ptr_value) 
-                                               - (IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_load_Q.__PVT__deq_ptr_value))))),3);
-        bufp->chgBit(oldp+2596,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT____Vcellinp__FU_output_load_Q__io_flush));
-        bufp->chgCData(oldp+2597,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_load_Q.__PVT__enq_ptr_value),2);
-        bufp->chgCData(oldp+2598,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_load_Q.__PVT__deq_ptr_value),2);
-        bufp->chgBit(oldp+2599,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_load_Q.__PVT__maybe_full));
-        bufp->chgBit(oldp+2600,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_load_Q.__PVT__ptr_match));
-        bufp->chgBit(oldp+2601,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_load_Q.__PVT__full));
-        bufp->chgBit(oldp+2602,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_load_Q.__PVT__do_enq));
-        bufp->chgWData(oldp+2603,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_load_Q.__PVT__ram_ext__DOT__Memory
-                                  [vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_load_Q.__PVT__deq_ptr_value]),192);
-        bufp->chgWData(oldp+2609,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_load_Q.__Vcellinp__ram_ext__W0_data),192);
-        __Vtemp_184[0U] = (- (IData)((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_load_Q.__PVT__do_enq)));
-        __Vtemp_184[1U] = (- (IData)((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_load_Q.__PVT__do_enq)));
-        __Vtemp_184[2U] = (- (IData)((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_load_Q.__PVT__do_enq)));
-        __Vtemp_184[3U] = (- (IData)((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_load_Q.__PVT__do_enq)));
-        __Vtemp_184[4U] = (- (IData)((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_load_Q.__PVT__do_enq)));
-        __Vtemp_184[5U] = (- (IData)((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_load_Q.__PVT__do_enq)));
-        bufp->chgWData(oldp+2615,(__Vtemp_184),192);
-        bufp->chgWData(oldp+2621,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_load_Q.__PVT__ram_ext__DOT__Memory[0]),192);
-        bufp->chgWData(oldp+2627,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_load_Q.__PVT__ram_ext__DOT__Memory[1]),192);
-        bufp->chgWData(oldp+2633,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_load_Q.__PVT__ram_ext__DOT__Memory[2]),192);
-        bufp->chgWData(oldp+2639,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_load_Q.__PVT__ram_ext__DOT__Memory[3]),192);
-        bufp->chgBit(oldp+2645,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_load_Q.__PVT__unnamedblk1__DOT__do_deq));
-        bufp->chgBit(oldp+2646,((1U & (~ (IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_store_Q.__PVT__full)))));
-        bufp->chgBit(oldp+2647,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT___FU_output_store_Q_io_enq_valid_T_14));
-        bufp->chgWData(oldp+2648,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT___GEN_219),192);
-        bufp->chgCData(oldp+2654,(((((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_store_Q.__PVT__maybe_full) 
-                                     & (IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_store_Q.__PVT__ptr_match)) 
-                                    << 2U) | (3U & 
-                                              ((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_store_Q.__PVT__enq_ptr_value) 
-                                               - (IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_store_Q.__PVT__deq_ptr_value))))),3);
-        bufp->chgCData(oldp+2655,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_store_Q.__PVT__enq_ptr_value),2);
-        bufp->chgCData(oldp+2656,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_store_Q.__PVT__deq_ptr_value),2);
-        bufp->chgBit(oldp+2657,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_store_Q.__PVT__maybe_full));
-        bufp->chgBit(oldp+2658,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_store_Q.__PVT__ptr_match));
-        bufp->chgBit(oldp+2659,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_store_Q.__PVT__empty));
-        bufp->chgBit(oldp+2660,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_store_Q.__PVT__full));
-        bufp->chgBit(oldp+2661,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_store_Q.__PVT__do_enq));
-        bufp->chgWData(oldp+2662,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_store_Q.__PVT__ram_ext__DOT__Memory
-                                  [vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_store_Q.__PVT__deq_ptr_value]),192);
-        bufp->chgWData(oldp+2668,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_store_Q.__Vcellinp__ram_ext__W0_data),192);
-        __Vtemp_185[0U] = (- (IData)((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_store_Q.__PVT__do_enq)));
-        __Vtemp_185[1U] = (- (IData)((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_store_Q.__PVT__do_enq)));
-        __Vtemp_185[2U] = (- (IData)((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_store_Q.__PVT__do_enq)));
-        __Vtemp_185[3U] = (- (IData)((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_store_Q.__PVT__do_enq)));
-        __Vtemp_185[4U] = (- (IData)((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_store_Q.__PVT__do_enq)));
-        __Vtemp_185[5U] = (- (IData)((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_store_Q.__PVT__do_enq)));
-        bufp->chgWData(oldp+2674,(__Vtemp_185),192);
-        bufp->chgWData(oldp+2680,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_store_Q.__PVT__ram_ext__DOT__Memory[0]),192);
-        bufp->chgWData(oldp+2686,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_store_Q.__PVT__ram_ext__DOT__Memory[1]),192);
-        bufp->chgWData(oldp+2692,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_store_Q.__PVT__ram_ext__DOT__Memory[2]),192);
-        bufp->chgWData(oldp+2698,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_store_Q.__PVT__ram_ext__DOT__Memory[3]),192);
-        bufp->chgBit(oldp+2704,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_store_Q.__PVT__unnamedblk1__DOT__do_deq));
-        bufp->chgBit(oldp+2705,((1U & (~ ((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__decoded_fetch_packet_out_Q.__PVT__ptr_match) 
+        bufp->chgBit(oldp+2587,((1U & (~ ((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__decoded_fetch_packet_out_Q.__PVT__ptr_match) 
                                           & (IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__decoded_fetch_packet_out_Q.__PVT__maybe_full))))));
-        bufp->chgBit(oldp+2706,(((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT___predictions_out_valid_T_1) 
-                                 & ((~ (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__PC_gen__DOT__is_misprediction)) 
+        bufp->chgBit(oldp+2588,(((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT___predictions_out_valid_T_1) 
+                                 & ((~ (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__flush)) 
                                     & ((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__predecoder__DOT__predictions_out_Q.__PVT__empty) 
                                        | (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT___predictions_out_valid_T))))));
-        bufp->chgWData(oldp+2707,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT___GEN),434);
-        bufp->chgBit(oldp+2721,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT___io_predictions_in_ready_T));
-        bufp->chgCData(oldp+2722,(((((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__decoded_fetch_packet_out_Q.__PVT__maybe_full) 
+        bufp->chgWData(oldp+2589,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT___GEN),434);
+        bufp->chgBit(oldp+2603,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT___io_predictions_in_ready_T));
+        bufp->chgCData(oldp+2604,(((((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__decoded_fetch_packet_out_Q.__PVT__maybe_full) 
                                      & (IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__decoded_fetch_packet_out_Q.__PVT__ptr_match)) 
                                     << 1U) | (1U & 
                                               ((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__decoded_fetch_packet_out_Q.__PVT__wrap) 
                                                - (IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__decoded_fetch_packet_out_Q.__PVT__wrap_1))))),2);
-        bufp->chgBit(oldp+2723,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__decoded_fetch_packet_out_Q.__PVT__wrap));
-        bufp->chgBit(oldp+2724,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__decoded_fetch_packet_out_Q.__PVT__wrap_1));
-        bufp->chgBit(oldp+2725,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__decoded_fetch_packet_out_Q.__PVT__maybe_full));
-        bufp->chgBit(oldp+2726,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__decoded_fetch_packet_out_Q.__PVT__ptr_match));
-        bufp->chgBit(oldp+2727,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__decoded_fetch_packet_out_Q.__PVT__empty));
-        bufp->chgBit(oldp+2728,(((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__decoded_fetch_packet_out_Q.__PVT__ptr_match) 
+        bufp->chgBit(oldp+2605,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__decoded_fetch_packet_out_Q.__PVT__wrap));
+        bufp->chgBit(oldp+2606,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__decoded_fetch_packet_out_Q.__PVT__wrap_1));
+        bufp->chgBit(oldp+2607,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__decoded_fetch_packet_out_Q.__PVT__maybe_full));
+        bufp->chgBit(oldp+2608,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__decoded_fetch_packet_out_Q.__PVT__ptr_match));
+        bufp->chgBit(oldp+2609,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__decoded_fetch_packet_out_Q.__PVT__empty));
+        bufp->chgBit(oldp+2610,(((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__decoded_fetch_packet_out_Q.__PVT__ptr_match) 
                                  & (IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__decoded_fetch_packet_out_Q.__PVT__maybe_full))));
-        bufp->chgBit(oldp+2729,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__decoded_fetch_packet_out_Q.__PVT__do_enq));
-        bufp->chgWData(oldp+2730,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__decoded_fetch_packet_out_Q.__PVT__ram_ext__DOT__Memory
+        bufp->chgBit(oldp+2611,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__decoded_fetch_packet_out_Q.__PVT__do_enq));
+        bufp->chgWData(oldp+2612,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__decoded_fetch_packet_out_Q.__PVT__ram_ext__DOT__Memory
                                   [vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__decoded_fetch_packet_out_Q.__PVT__wrap_1]),434);
-        bufp->chgWData(oldp+2744,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__decoded_fetch_packet_out_Q.__Vcellinp__ram_ext__W0_data),434);
-        __Vtemp_187[0U] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[0U] 
+        bufp->chgWData(oldp+2626,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__decoded_fetch_packet_out_Q.__Vcellinp__ram_ext__W0_data),434);
+        __Vtemp_185[0U] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[0U] 
                            & (- (IData)((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__decoded_fetch_packet_out_Q.__PVT__do_enq))));
-        __Vtemp_187[1U] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[1U] 
+        __Vtemp_185[1U] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[1U] 
                            & (- (IData)((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__decoded_fetch_packet_out_Q.__PVT__do_enq))));
-        __Vtemp_187[2U] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[2U] 
+        __Vtemp_185[2U] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[2U] 
                            & (- (IData)((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__decoded_fetch_packet_out_Q.__PVT__do_enq))));
-        __Vtemp_187[3U] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[3U] 
+        __Vtemp_185[3U] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[3U] 
                            & (- (IData)((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__decoded_fetch_packet_out_Q.__PVT__do_enq))));
-        __Vtemp_187[4U] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[4U] 
+        __Vtemp_185[4U] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[4U] 
                            & (- (IData)((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__decoded_fetch_packet_out_Q.__PVT__do_enq))));
-        __Vtemp_187[5U] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[5U] 
+        __Vtemp_185[5U] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[5U] 
                            & (- (IData)((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__decoded_fetch_packet_out_Q.__PVT__do_enq))));
-        __Vtemp_187[6U] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[6U] 
+        __Vtemp_185[6U] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[6U] 
                            & (- (IData)((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__decoded_fetch_packet_out_Q.__PVT__do_enq))));
-        __Vtemp_187[7U] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[7U] 
+        __Vtemp_185[7U] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[7U] 
                            & (- (IData)((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__decoded_fetch_packet_out_Q.__PVT__do_enq))));
-        __Vtemp_187[8U] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[8U] 
+        __Vtemp_185[8U] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[8U] 
                            & (- (IData)((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__decoded_fetch_packet_out_Q.__PVT__do_enq))));
-        __Vtemp_187[9U] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[9U] 
+        __Vtemp_185[9U] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[9U] 
                            & (- (IData)((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__decoded_fetch_packet_out_Q.__PVT__do_enq))));
-        __Vtemp_187[0xaU] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[0xaU] 
+        __Vtemp_185[0xaU] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[0xaU] 
                              & (- (IData)((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__decoded_fetch_packet_out_Q.__PVT__do_enq))));
-        __Vtemp_187[0xbU] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[0xbU] 
+        __Vtemp_185[0xbU] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[0xbU] 
                              & (- (IData)((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__decoded_fetch_packet_out_Q.__PVT__do_enq))));
-        __Vtemp_187[0xcU] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[0xcU] 
+        __Vtemp_185[0xcU] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[0xcU] 
                              & (- (IData)((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__decoded_fetch_packet_out_Q.__PVT__do_enq))));
-        __Vtemp_187[0xdU] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[0xdU] 
+        __Vtemp_185[0xdU] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[0xdU] 
                              & (- (IData)((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__decoded_fetch_packet_out_Q.__PVT__do_enq))));
-        bufp->chgWData(oldp+2758,(__Vtemp_187),434);
-        bufp->chgWData(oldp+2772,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__decoded_fetch_packet_out_Q.__PVT__ram_ext__DOT__Memory[0]),434);
-        bufp->chgWData(oldp+2786,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__decoded_fetch_packet_out_Q.__PVT__ram_ext__DOT__Memory[1]),434);
-        bufp->chgBit(oldp+2800,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__decoded_fetch_packet_out_Q.__PVT__unnamedblk1__DOT__do_deq));
-        bufp->chgBit(oldp+2801,((1U & (~ ((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.__PVT__ptr_match) 
+        bufp->chgWData(oldp+2640,(__Vtemp_185),434);
+        bufp->chgWData(oldp+2654,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__decoded_fetch_packet_out_Q.__PVT__ram_ext__DOT__Memory[0]),434);
+        bufp->chgWData(oldp+2668,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__decoded_fetch_packet_out_Q.__PVT__ram_ext__DOT__Memory[1]),434);
+        bufp->chgBit(oldp+2682,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__decoded_fetch_packet_out_Q.__PVT__unnamedblk1__DOT__do_deq));
+        bufp->chgBit(oldp+2683,((1U & (~ ((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.__PVT__ptr_match) 
                                           & (IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.__PVT__maybe_full))))));
-        bufp->chgBit(oldp+2802,(((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_queue__DOT__do_deq) 
-                                 & ((~ (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__PC_gen__DOT__is_misprediction)) 
+        bufp->chgBit(oldp+2684,(((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_queue__DOT__do_deq) 
+                                 & ((~ (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__flush)) 
                                     & ((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__FTQ_queue__DOT__empty) 
                                        | (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__FTQ_queue__DOT__do_deq))))));
-        bufp->chgWData(oldp+2803,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT___GEN_597),434);
-        bufp->chgWData(oldp+2817,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.io_deq_bits),434);
-        bufp->chgCData(oldp+2831,(((((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.__PVT__maybe_full) 
+        bufp->chgWData(oldp+2685,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT___GEN_597),434);
+        bufp->chgWData(oldp+2699,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.io_deq_bits),434);
+        bufp->chgCData(oldp+2713,(((((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.__PVT__maybe_full) 
                                      & (IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.__PVT__ptr_match)) 
                                     << 1U) | (1U & 
                                               ((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.__PVT__wrap) 
                                                - (IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.__PVT__wrap_1))))),2);
-        bufp->chgBit(oldp+2832,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.__PVT__wrap));
-        bufp->chgBit(oldp+2833,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.__PVT__wrap_1));
-        bufp->chgBit(oldp+2834,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.__PVT__maybe_full));
-        bufp->chgBit(oldp+2835,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.__PVT__ptr_match));
-        bufp->chgBit(oldp+2836,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.__PVT__empty));
-        bufp->chgBit(oldp+2837,(((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.__PVT__ptr_match) 
+        bufp->chgBit(oldp+2714,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.__PVT__wrap));
+        bufp->chgBit(oldp+2715,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.__PVT__wrap_1));
+        bufp->chgBit(oldp+2716,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.__PVT__maybe_full));
+        bufp->chgBit(oldp+2717,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.__PVT__ptr_match));
+        bufp->chgBit(oldp+2718,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.__PVT__empty));
+        bufp->chgBit(oldp+2719,(((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.__PVT__ptr_match) 
                                  & (IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.__PVT__maybe_full))));
-        bufp->chgBit(oldp+2838,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.__PVT__do_enq));
-        bufp->chgWData(oldp+2839,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.__PVT__ram_ext__DOT__Memory
+        bufp->chgBit(oldp+2720,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.__PVT__do_enq));
+        bufp->chgWData(oldp+2721,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.__PVT__ram_ext__DOT__Memory
                                   [vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.__PVT__wrap_1]),434);
-        bufp->chgWData(oldp+2853,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.__Vcellinp__ram_ext__W0_data),434);
-        __Vtemp_189[0U] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[0U] 
+        bufp->chgWData(oldp+2735,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.__Vcellinp__ram_ext__W0_data),434);
+        __Vtemp_187[0U] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[0U] 
                            & (- (IData)((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.__PVT__do_enq))));
-        __Vtemp_189[1U] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[1U] 
+        __Vtemp_187[1U] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[1U] 
                            & (- (IData)((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.__PVT__do_enq))));
-        __Vtemp_189[2U] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[2U] 
+        __Vtemp_187[2U] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[2U] 
                            & (- (IData)((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.__PVT__do_enq))));
-        __Vtemp_189[3U] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[3U] 
+        __Vtemp_187[3U] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[3U] 
                            & (- (IData)((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.__PVT__do_enq))));
-        __Vtemp_189[4U] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[4U] 
+        __Vtemp_187[4U] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[4U] 
                            & (- (IData)((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.__PVT__do_enq))));
-        __Vtemp_189[5U] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[5U] 
+        __Vtemp_187[5U] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[5U] 
                            & (- (IData)((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.__PVT__do_enq))));
-        __Vtemp_189[6U] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[6U] 
+        __Vtemp_187[6U] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[6U] 
                            & (- (IData)((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.__PVT__do_enq))));
-        __Vtemp_189[7U] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[7U] 
+        __Vtemp_187[7U] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[7U] 
                            & (- (IData)((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.__PVT__do_enq))));
-        __Vtemp_189[8U] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[8U] 
+        __Vtemp_187[8U] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[8U] 
                            & (- (IData)((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.__PVT__do_enq))));
-        __Vtemp_189[9U] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[9U] 
+        __Vtemp_187[9U] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[9U] 
                            & (- (IData)((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.__PVT__do_enq))));
-        __Vtemp_189[0xaU] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[0xaU] 
+        __Vtemp_187[0xaU] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[0xaU] 
                              & (- (IData)((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.__PVT__do_enq))));
-        __Vtemp_189[0xbU] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[0xbU] 
+        __Vtemp_187[0xbU] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[0xbU] 
                              & (- (IData)((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.__PVT__do_enq))));
-        __Vtemp_189[0xcU] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[0xcU] 
+        __Vtemp_187[0xcU] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[0xcU] 
                              & (- (IData)((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.__PVT__do_enq))));
-        __Vtemp_189[0xdU] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[0xdU] 
+        __Vtemp_187[0xdU] = (Vtop_v2__ConstPool__CONST_h862b0a92_0[0xdU] 
                              & (- (IData)((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.__PVT__do_enq))));
-        bufp->chgWData(oldp+2867,(__Vtemp_189),434);
-        bufp->chgWData(oldp+2881,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.__PVT__ram_ext__DOT__Memory[0]),434);
-        bufp->chgWData(oldp+2895,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.__PVT__ram_ext__DOT__Memory[1]),434);
-        bufp->chgBit(oldp+2909,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.__PVT__unnamedblk1__DOT__do_deq));
+        bufp->chgWData(oldp+2749,(__Vtemp_187),434);
+        bufp->chgWData(oldp+2763,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.__PVT__ram_ext__DOT__Memory[0]),434);
+        bufp->chgWData(oldp+2777,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.__PVT__ram_ext__DOT__Memory[1]),434);
+        bufp->chgBit(oldp+2791,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__renamed_decoded_fetch_packet_Q.__PVT__unnamedblk1__DOT__do_deq));
+        bufp->chgBit(oldp+2792,((1U & (~ (IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_load_Q.__PVT__full)))));
+        bufp->chgBit(oldp+2793,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT___FU_output_load_Q_io_enq_valid_T_14));
+        bufp->chgWData(oldp+2794,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT___GEN_218),192);
+        bufp->chgCData(oldp+2800,(((((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_load_Q.__PVT__maybe_full) 
+                                     & (IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_load_Q.__PVT__ptr_match)) 
+                                    << 2U) | (3U & 
+                                              ((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_load_Q.__PVT__enq_ptr_value) 
+                                               - (IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_load_Q.__PVT__deq_ptr_value))))),3);
+        bufp->chgBit(oldp+2801,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT____Vcellinp__FU_output_load_Q__io_flush));
+        bufp->chgCData(oldp+2802,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_load_Q.__PVT__enq_ptr_value),2);
+        bufp->chgCData(oldp+2803,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_load_Q.__PVT__deq_ptr_value),2);
+        bufp->chgBit(oldp+2804,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_load_Q.__PVT__maybe_full));
+        bufp->chgBit(oldp+2805,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_load_Q.__PVT__ptr_match));
+        bufp->chgBit(oldp+2806,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_load_Q.__PVT__full));
+        bufp->chgBit(oldp+2807,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_load_Q.__PVT__do_enq));
+        bufp->chgWData(oldp+2808,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_load_Q.__PVT__ram_ext__DOT__Memory
+                                  [vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_load_Q.__PVT__deq_ptr_value]),192);
+        bufp->chgWData(oldp+2814,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_load_Q.__Vcellinp__ram_ext__W0_data),192);
+        __Vtemp_188[0U] = (- (IData)((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_load_Q.__PVT__do_enq)));
+        __Vtemp_188[1U] = (- (IData)((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_load_Q.__PVT__do_enq)));
+        __Vtemp_188[2U] = (- (IData)((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_load_Q.__PVT__do_enq)));
+        __Vtemp_188[3U] = (- (IData)((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_load_Q.__PVT__do_enq)));
+        __Vtemp_188[4U] = (- (IData)((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_load_Q.__PVT__do_enq)));
+        __Vtemp_188[5U] = (- (IData)((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_load_Q.__PVT__do_enq)));
+        bufp->chgWData(oldp+2820,(__Vtemp_188),192);
+        bufp->chgWData(oldp+2826,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_load_Q.__PVT__ram_ext__DOT__Memory[0]),192);
+        bufp->chgWData(oldp+2832,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_load_Q.__PVT__ram_ext__DOT__Memory[1]),192);
+        bufp->chgWData(oldp+2838,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_load_Q.__PVT__ram_ext__DOT__Memory[2]),192);
+        bufp->chgWData(oldp+2844,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_load_Q.__PVT__ram_ext__DOT__Memory[3]),192);
+        bufp->chgBit(oldp+2850,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_load_Q.__PVT__unnamedblk1__DOT__do_deq));
+        bufp->chgBit(oldp+2851,((1U & (~ (IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_store_Q.__PVT__full)))));
+        bufp->chgBit(oldp+2852,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT___FU_output_store_Q_io_enq_valid_T_14));
+        bufp->chgWData(oldp+2853,(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT___GEN_219),192);
+        bufp->chgCData(oldp+2859,(((((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_store_Q.__PVT__maybe_full) 
+                                     & (IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_store_Q.__PVT__ptr_match)) 
+                                    << 2U) | (3U & 
+                                              ((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_store_Q.__PVT__enq_ptr_value) 
+                                               - (IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_store_Q.__PVT__deq_ptr_value))))),3);
+        bufp->chgCData(oldp+2860,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_store_Q.__PVT__enq_ptr_value),2);
+        bufp->chgCData(oldp+2861,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_store_Q.__PVT__deq_ptr_value),2);
+        bufp->chgBit(oldp+2862,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_store_Q.__PVT__maybe_full));
+        bufp->chgBit(oldp+2863,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_store_Q.__PVT__ptr_match));
+        bufp->chgBit(oldp+2864,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_store_Q.__PVT__empty));
+        bufp->chgBit(oldp+2865,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_store_Q.__PVT__full));
+        bufp->chgBit(oldp+2866,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_store_Q.__PVT__do_enq));
+        bufp->chgWData(oldp+2867,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_store_Q.__PVT__ram_ext__DOT__Memory
+                                  [vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_store_Q.__PVT__deq_ptr_value]),192);
+        bufp->chgWData(oldp+2873,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_store_Q.__Vcellinp__ram_ext__W0_data),192);
+        __Vtemp_189[0U] = (- (IData)((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_store_Q.__PVT__do_enq)));
+        __Vtemp_189[1U] = (- (IData)((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_store_Q.__PVT__do_enq)));
+        __Vtemp_189[2U] = (- (IData)((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_store_Q.__PVT__do_enq)));
+        __Vtemp_189[3U] = (- (IData)((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_store_Q.__PVT__do_enq)));
+        __Vtemp_189[4U] = (- (IData)((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_store_Q.__PVT__do_enq)));
+        __Vtemp_189[5U] = (- (IData)((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_store_Q.__PVT__do_enq)));
+        bufp->chgWData(oldp+2879,(__Vtemp_189),192);
+        bufp->chgWData(oldp+2885,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_store_Q.__PVT__ram_ext__DOT__Memory[0]),192);
+        bufp->chgWData(oldp+2891,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_store_Q.__PVT__ram_ext__DOT__Memory[1]),192);
+        bufp->chgWData(oldp+2897,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_store_Q.__PVT__ram_ext__DOT__Memory[2]),192);
+        bufp->chgWData(oldp+2903,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_store_Q.__PVT__ram_ext__DOT__Memory[3]),192);
+        bufp->chgBit(oldp+2909,(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__FU_output_store_Q.__PVT__unnamedblk1__DOT__do_deq));
         bufp->chgBit(oldp+2910,((1U & (~ ((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__predecoder__DOT__predictions_out_Q.__PVT__ptr_match) 
                                           & (IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__predecoder__DOT__predictions_out_Q.__PVT__maybe_full))))));
         bufp->chgBit(oldp+2911,(((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__predecoder__DOT___GEN_10) 
@@ -4774,7 +4774,7 @@ void Vtop_v2___024root__trace_chg_0_sub_0(Vtop_v2___024root* vlSelf, VerilatedVc
         bufp->chgBit(oldp+2937,((1U & (~ ((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__predictions_out_Q.__PVT__ptr_match) 
                                           & (IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__predictions_out_Q.__PVT__maybe_full))))));
         bufp->chgBit(oldp+2938,(((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT___predictions_out_valid_T) 
-                                 & ((~ (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__PC_gen__DOT__is_misprediction)) 
+                                 & ((~ (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__flush)) 
                                     & (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT___predictions_out_valid_T_1)))));
         bufp->chgCData(oldp+2939,(((((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__predictions_out_Q.__PVT__maybe_full) 
                                      & (IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__predictions_out_Q.__PVT__ptr_match)) 
@@ -4803,7 +4803,7 @@ void Vtop_v2___024root__trace_chg_0_sub_0(Vtop_v2___024root* vlSelf, VerilatedVc
         bufp->chgBit(oldp+2968,((1U & (~ ((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__predictions_out_Q.__PVT__ptr_match) 
                                           & (IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__predictions_out_Q.__PVT__maybe_full))))));
         bufp->chgBit(oldp+2969,(((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__FTQ_queue__DOT__do_deq) 
-                                 & ((~ (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__PC_gen__DOT__is_misprediction)) 
+                                 & ((~ (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__flush)) 
                                     & (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_queue__DOT__do_deq)))));
         bufp->chgCData(oldp+2970,(((((IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__predictions_out_Q.__PVT__maybe_full) 
                                      & (IData)(vlSymsp->TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__predictions_out_Q.__PVT__ptr_match)) 
