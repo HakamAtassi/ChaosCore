@@ -74,6 +74,22 @@ case class NOCParameters(
 
     PIPELINE_OUTPUT:Int = 0, // register the output of the RAM
 
+    // ADDRESS PARAMETERS 
+    
+    // DRAM parameters
+    DRAM_BASE_ADDR:Int = 0x0,
+    DRAM_ADDR_WIDTH:Int = 0x800000,
+    DRAM_CONNECT_READ:Int = 1,
+    DRAM_CONNECT_WRITE:Int = 1,
+    DRAM_SECURE:Int =  0,
+
+    // UART params
+    UART0_BASE_ADDR:Int = 0x80000000,
+    UART0_ADDR_WIDTH:Int = 1,              
+    UART0_CONNECT_READ:Int = 1,
+    UART0_CONNECT_WRITE:Int = 1,
+    UART0_SECURE:Int =  0,
+
 
 
     /////////////////////////////

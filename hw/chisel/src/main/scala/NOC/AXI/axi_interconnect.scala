@@ -55,16 +55,17 @@ class	axi_interconnect_wrap_2x2(nocParameters:NOCParameters)	extends	BlackBox(Ma
 	"FORWARD_ID"						->	nocParameters.FORWARD_ID,
 	"M_REGIONS"							->	nocParameters.M_REGIONS,
 
-    "M00_BASE_ADDR" 	-> nocParameters.M_BASE_ADDR,
-    "M00_ADDR_WIDTH" 	-> nocParameters.M_ADDR_WIDTH,
-    "M00_CONNECT_READ" 	-> nocParameters.M_CONNECT_READ,
-    "M00_CONNECT_WRITE" -> nocParameters.M_CONNECT_WRITE,
-    "M00_SECURE" 		-> nocParameters.M_SECURE,
-    "M01_BASE_ADDR" 	-> nocParameters.M_BASE_ADDR,
-    "M01_ADDR_WIDTH" 	-> nocParameters.M_ADDR_WIDTH,
-    "M01_CONNECT_READ" 	-> nocParameters.M_CONNECT_READ,
-    "M01_CONNECT_WRITE" -> nocParameters.M_CONNECT_WRITE,
-    "M01_SECURE" 		-> nocParameters.M_SECURE
+    "M00_BASE_ADDR" 	-> nocParameters.DRAM_BASE_ADDR,
+    "M00_ADDR_WIDTH" 	-> nocParameters.DRAM_ADDR_WIDTH,
+    "M00_CONNECT_READ" 	-> nocParameters.DRAM_CONNECT_READ,
+    "M00_CONNECT_WRITE" -> nocParameters.DRAM_CONNECT_WRITE,
+    "M00_SECURE" 		-> nocParameters.DRAM_SECURE,
+
+    "M01_BASE_ADDR" 	-> nocParameters.UART0_BASE_ADDR,
+    "M01_ADDR_WIDTH" 	-> nocParameters.UART0_ADDR_WIDTH,
+    "M01_CONNECT_READ" 	-> nocParameters.UART0_CONNECT_READ,
+    "M01_CONNECT_WRITE" -> nocParameters.UART0_CONNECT_WRITE,
+    "M01_SECURE" 		-> nocParameters.UART0_SECURE,
 
 ))	with	HasBlackBoxResource{
 
