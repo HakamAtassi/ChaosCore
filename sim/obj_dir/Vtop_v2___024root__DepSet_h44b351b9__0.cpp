@@ -10755,11 +10755,11 @@ VL_INLINE_OPT void Vtop_v2___024root___nba_sequent__TOP__2(Vtop_v2___024root* vl
     vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__INT_PRF__DOT__mem_ext__DOT___R1_en_d0 = 1U;
     vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__INT_PRF__DOT__mem_ext__DOT___R0_en_d0 = 1U;
     vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__PC_Q__DOT__ram_ext__DOT___R0_en_d0 = 1U;
-    vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__axi_region_reg 
-        = vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__axi_region_next;
     vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT__AXI_request_Q_io_enq_bits_read_address_r_1 
         = vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT__AXI_request_Q_io_enq_bits_read_address_r;
     vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__FTQ_queue__DOT__ram_ext__DOT___R0_en_d0 = 1U;
+    vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__axi_region_reg 
+        = vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__axi_region_next;
     vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__axi_prot_reg 
         = vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__axi_prot_next;
     vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__axi_cache_reg 
@@ -10930,8 +10930,6 @@ VL_INLINE_OPT void Vtop_v2___024root___nba_sequent__TOP__2(Vtop_v2___024root* vl
         vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__s_axi_rdata_reg 
             = vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__temp_s_axi_rdata_reg;
     }
-    vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__axi_addr_reg 
-        = vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__axi_addr_next;
     vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__axi_bresp_reg 
         = vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__axi_bresp_next;
     if (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__INT_RS__DOT__port0_valid) {
@@ -11007,14 +11005,14 @@ VL_INLINE_OPT void Vtop_v2___024root___nba_sequent__TOP__2(Vtop_v2___024root* vl
                                >> 0x1bU)));
     vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__bp__DOT__RAS__DOT__RAS_memory__DOT__mem_ext__DOT___R0_addr_d0 
         = vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__bp__DOT__RAS__DOT____Vcellinp__RAS_memory__io_rd_addr;
-    vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__axi_len_reg 
-        = vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__axi_len_next;
     vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__FU2__DOT__ALU__DOT__io_FU_output_bits_fetch_packet_index_REG 
         = (3U & (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT___GEN_2[4U] 
                  >> 1U));
     vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__FU1__DOT__ALU__DOT__io_FU_output_bits_fetch_packet_index_REG 
         = (3U & (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT___GEN_3[4U] 
                  >> 1U));
+    vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__axi_len_reg 
+        = vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__axi_len_next;
     vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT__data_memories_31__DOT__dataOut 
         = vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT__data_memories_31__DOT__ram_ext__DOT__Memory
         [vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT____Vcellinp__data_memories_0__io_addr];
@@ -11111,6 +11109,8 @@ VL_INLINE_OPT void Vtop_v2___024root___nba_sequent__TOP__2(Vtop_v2___024root* vl
     vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT__data_memories_0__DOT__dataOut 
         = vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT__data_memories_0__DOT__ram_ext__DOT__Memory
         [vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT____Vcellinp__data_memories_0__io_addr];
+    vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__axi_addr_reg 
+        = vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__axi_addr_next;
     vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__FU0__DOT__branch_unit__DOT__io_FU_output_bits_fetch_packet_index_REG 
         = (3U & (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT___GEN_4[4U] 
                  >> 1U));

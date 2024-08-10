@@ -25,6 +25,7 @@ THE SOFTWARE.
 // Language: Verilog 2001
 
 `resetall
+`timescale 1ns / 1ps
 `default_nettype none
 
 /*
@@ -44,8 +45,8 @@ module axi_ram #
     parameter PIPELINE_OUTPUT = 0
 )
 (
-    input  wire                   clock,
-    input  wire                   reset,
+    input  wire                   clk,
+    input  wire                   rst,
 
     input  wire [ID_WIDTH-1:0]    s_axi_awid,
     input  wire [ADDR_WIDTH-1:0]  s_axi_awaddr,
@@ -247,7 +248,7 @@ always @* begin
     endcase
 end
 
-always @(posedge clock) begin
+always @(posedge clk) begin
     write_state_reg <= write_state_next;
 
     write_id_reg <= write_id_next;
@@ -267,7 +268,7 @@ always @(posedge clock) begin
         end
     end
 
-    if (reset) begin
+    if (rst) begin
         write_state_reg <= WRITE_STATE_IDLE;
 
         s_axi_awready_reg <= 1'b0;
@@ -333,7 +334,7 @@ always @* begin
     endcase
 end
 
-always @(posedge clock) begin
+always @(posedge clk) begin
     read_state_reg <= read_state_next;
 
     read_id_reg <= read_id_next;
@@ -358,7 +359,7 @@ always @(posedge clock) begin
         s_axi_rvalid_pipe_reg <= s_axi_rvalid_reg;
     end
 
-    if (reset) begin
+    if (rst) begin
         read_state_reg <= READ_STATE_IDLE;
 
         s_axi_arready_reg <= 1'b0;

@@ -1,10 +1,3 @@
-Queue1_UInt256.sv
-ram_4x336.sv
-Queue4_AXI_request_Q_entry.sv
-Queue1_UInt256_1.sv
-Queue1_UInt32.sv
-ram_256x8.sv
-ReadWriteSmem.sv
-ram_64x21.sv
-ReadWriteSmem_32.sv
-L1_data_cache.sv
+extern_modules.sv
+axi_ram_wrap.sv
+./axi_ram.v

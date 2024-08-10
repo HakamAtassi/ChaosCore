@@ -79,20 +79,17 @@ module axi_interconnect_wrap_2x2 #
     input  wire [AWUSER_WIDTH-1:0]  s00_axi_awuser,
     input  wire                     s00_axi_awvalid,
     output wire                     s00_axi_awready,
-
     input  wire [DATA_WIDTH-1:0]    s00_axi_wdata,
     input  wire [STRB_WIDTH-1:0]    s00_axi_wstrb,
     input  wire                     s00_axi_wlast,
     input  wire [WUSER_WIDTH-1:0]   s00_axi_wuser,
     input  wire                     s00_axi_wvalid,
     output wire                     s00_axi_wready,
-
     output wire [ID_WIDTH-1:0]      s00_axi_bid,
     output wire [1:0]               s00_axi_bresp,
     output wire [BUSER_WIDTH-1:0]   s00_axi_buser,
     output wire                     s00_axi_bvalid,
     input  wire                     s00_axi_bready,
-
     input  wire [ID_WIDTH-1:0]      s00_axi_arid,
     input  wire [ADDR_WIDTH-1:0]    s00_axi_araddr,
     input  wire [7:0]               s00_axi_arlen,
@@ -105,7 +102,6 @@ module axi_interconnect_wrap_2x2 #
     input  wire [ARUSER_WIDTH-1:0]  s00_axi_aruser,
     input  wire                     s00_axi_arvalid,
     output wire                     s00_axi_arready,
-
     output wire [ID_WIDTH-1:0]      s00_axi_rid,
     output wire [DATA_WIDTH-1:0]    s00_axi_rdata,
     output wire [1:0]               s00_axi_rresp,
@@ -173,7 +169,6 @@ module axi_interconnect_wrap_2x2 #
     output wire [AWUSER_WIDTH-1:0]  m00_axi_awuser,
     output wire                     m00_axi_awvalid,
     input  wire                     m00_axi_awready,
-
     output wire [DATA_WIDTH-1:0]    m00_axi_wdata,
     output wire [STRB_WIDTH-1:0]    m00_axi_wstrb,
     output wire                     m00_axi_wlast,
@@ -195,7 +190,6 @@ module axi_interconnect_wrap_2x2 #
     output wire [2:0]               m00_axi_arprot,
     output wire [3:0]               m00_axi_arqos,
     output wire [3:0]               m00_axi_arregion,
-
     output wire [ARUSER_WIDTH-1:0]  m00_axi_aruser,
     output wire                     m00_axi_arvalid,
     input  wire                     m00_axi_arready,

@@ -19,8 +19,8 @@ class	axi_ram(nocParameters:NOCParameters)	extends	BlackBox(Map(
 
 	val	io	=	IO(new	Bundle	{
 		import	nocParameters._
-		val	clock	=	Input(Clock())
-		val	reset	=	Input(Bool())
+		val	clk	=	Input(Clock())
+		val	rst	=	Input(Bool())
 
         val s_axi_awid     = Input(UInt(ID_WIDTH.W))
         val s_axi_awaddr   = Input(UInt(ADDR_WIDTH.W))
@@ -70,8 +70,8 @@ class axi_ram_wrap(nocParameters:NOCParameters) extends Module{
 
 	val	ram	=	Module(new axi_ram(nocParameters))
 
-	clock	<>	ram.io.clock
-	reset	<>	ram.io.reset
+	clock	<>	ram.io.clk
+	reset	<>	ram.io.rst
 
     ram.io.s_axi_awid     <> io.s_AXI.AXI_AW.bits.awid
     ram.io.s_axi_awaddr   <> io.s_AXI.AXI_AW.bits.awaddr

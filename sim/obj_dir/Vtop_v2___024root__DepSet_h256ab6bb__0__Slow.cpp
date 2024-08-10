@@ -42,13 +42,8 @@ VL_ATTR_COLD void Vtop_v2___024root___eval_initial__TOP(Vtop_v2___024root* vlSel
     }
     vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__rename__DOT__free_list__DOT__hasBeenResetReg = 0U;
     vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__AGU__DOT__hasBeenResetReg = 0U;
-    VL_WRITEF_NX("Addressing configuration for axi_interconnect instance %Ntop_v2.SOC.axi_interconnect.NOC.axi_interconnect_inst\n 0 ( 0): 00000000 / 32 -- 00000000-ffffffff\n 1 ( 0): 00000000 / 32 -- 00000000-ffffffff\nOverlapping regions:\n 0 ( 0): 00000000 / 32 -- 00000000-ffffffff\n 1 ( 0): 00000000 / 32 -- 00000000-ffffffff\n",0,
+    VL_WRITEF_NX("Addressing configuration for axi_interconnect instance %Ntop_v2.SOC.axi_interconnect.NOC.axi_interconnect_inst\n 0 ( 0): 00000000 / 8388608 -- 00000000-00000000\n 1 ( 0): 80000000 / 01 -- 80000000-80000001\n",0,
                  vlSymsp->name());
-    VL_WRITEF_NX("[%0t] %%Error: axi_interconnect.v:284: Assertion failed in %Ntop_v2.SOC.axi_interconnect.NOC.axi_interconnect_inst: Error: address ranges overlap (instance %Ntop_v2.SOC.axi_interconnect.NOC.axi_interconnect_inst)\n",0,
-                 64,VL_TIME_UNITED_Q(1000),-9,vlSymsp->name(),
-                 vlSymsp->name());
-    VL_STOP_MT("../hw/verilog/axi_interconnect.v", 284, "");
-    VL_FINISH_MT("../hw/verilog/axi_interconnect.v", 285, "");
     vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__j = 2U;
     vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__i = 2U;
 }

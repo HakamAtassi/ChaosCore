@@ -12,11 +12,11 @@ VL_INLINE_OPT void Vtop_v2___024root___nba_sequent__TOP__3(Vtop_v2___024root* vl
     Vtop_v2__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vtop_v2___024root___nba_sequent__TOP__3\n"); );
     // Body
+    vlSelf->top_v2__DOT__axi_ram__DOT__ram__DOT__s_axi_awready_reg 
+        = vlSelf->top_v2__DOT__axi_ram__DOT__ram__DOT__s_axi_awready_next;
     vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__s_axi_rready_int_reg 
         = ((1U & (~ (IData)(vlSelf->top_v2__DOT__reset))) 
            && (IData)(vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__s_axi_rready_int_early));
-    vlSelf->top_v2__DOT__axi_ram__DOT__ram__DOT__s_axi_awready_reg 
-        = vlSelf->top_v2__DOT__axi_ram__DOT__ram__DOT__s_axi_awready_next;
     vlSelf->top_v2__DOT__axi_ram__DOT__ram__DOT__read_state_reg 
         = vlSelf->top_v2__DOT__axi_ram__DOT__ram__DOT__read_state_next;
     vlSelf->top_v2__DOT__axi_ram__DOT__ram__DOT__s_axi_bvalid_reg 
@@ -28,6 +28,9 @@ VL_INLINE_OPT void Vtop_v2___024root___nba_sequent__TOP__3(Vtop_v2___024root* vl
                & (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__bp__DOT____Vcellinp__RAS__io_wr_valid)));
     vlSelf->top_v2__DOT__axi_ram__DOT__ram__DOT__write_state_reg 
         = vlSelf->top_v2__DOT__axi_ram__DOT__ram__DOT__write_state_next;
+    vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__AGU__DOT__io_FU_output_valid_REG 
+        = ((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__AGU_io_FU_input_valid_REG) 
+           & (~ (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__flush)));
     if ((1U & (~ (((2U != (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__instruction_cache__DOT__AXI_REQUEST_STATE)) 
                    | (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__instruction_cache__DOT___GEN_6)) 
                   | (~ (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__instruction_cache__DOT___GEN_5)))))) {
@@ -48,9 +51,6 @@ VL_INLINE_OPT void Vtop_v2___024root___nba_sequent__TOP__3(Vtop_v2___024root* vl
         vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__instruction_cache__DOT__AXI_read_buffer[7U] 
             = vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__instruction_cache__DOT___GEN_7[7U];
     }
-    vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__AGU__DOT__io_FU_output_valid_REG 
-        = ((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__AGU_io_FU_input_valid_REG) 
-           & (~ (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__flush)));
     vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__arb_inst__DOT__grant_valid_reg 
         = ((1U & (~ (IData)(vlSelf->top_v2__DOT__reset))) 
            && (IData)(vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__arb_inst__DOT__grant_valid_next));

@@ -32,8 +32,8 @@ module axi_ram_wrap(
     .PIPELINE_OUTPUT(0),
     .STRB_WIDTH(4)
   ) ram (
-    .clock         (clock),
-    .reset         (reset),
+    .clk           (clock),
+    .rst           (reset),
     .s_axi_awid    (io_s_AXI_AXI_AW_bits.awid),
     .s_axi_awaddr  (io_s_AXI_AXI_AW_bits.awaddr),
     .s_axi_awlen   (io_s_AXI_AXI_AW_bits.awlen),

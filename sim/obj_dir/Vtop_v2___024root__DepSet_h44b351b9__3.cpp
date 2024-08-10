@@ -10,6 +10,18 @@ VL_INLINE_OPT void Vtop_v2___024root___nba_sequent__TOP__5(Vtop_v2___024root* vl
     Vtop_v2__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vtop_v2___024root___nba_sequent__TOP__5\n"); );
     // Body
+    vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT___data_cache_io_backend_memory_response_bits 
+        = (((QData)((IData)(((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT___GEN_26)
+                              ? vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT__non_cacheable_response_Q__DOT__ram
+                              : 0U))) << 4U) | (QData)((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT__hit_MOB_index_REG)));
+    vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT__data_memories_wr_en 
+        = ((- (IData)((2U == (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT__DATA_CACHE_STATE)))) 
+           | ((0xfU & ((- (IData)((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT___byte_offset_match_T_125))) 
+                       & (- (IData)((3U == (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT__active_access_width)))))) 
+              | ((3U & ((- (IData)((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT___byte_offset_match_T_125))) 
+                        & (- (IData)((2U == (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT__active_access_width)))))) 
+                 | (1U & ((- (IData)((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT___byte_offset_match_T_125))) 
+                          & (- (IData)((1U == (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT__active_access_width)))))))));
     vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT____Vcellinp__tag_memories_0__io_addr 
         = ((0U == (3U & (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT___GEN_22[0U] 
                          >> 5U))) ? (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT__active_set)
