@@ -683,3 +683,78 @@ class MSHR_entry(coreParameters:CoreParameters) extends Bundle{
 /////////
 
 
+
+
+/////////
+// AXI //
+/////////
+
+class AXI_AW(nocParameters:NOCParameters) extends Bundle{
+  import nocParameters._
+  val awid      = UInt(ID_WIDTH.W)
+  val awaddr    = UInt(ADDR_WIDTH.W)
+  val awlen     = UInt(8.W)
+  val awsize    = UInt(3.W)
+  val awburst   = UInt(2.W)
+  val awlock    = UInt(1.W)
+  val awcache   = UInt(4.W)
+  val awprot    = UInt(3.W)
+  val awqos     = UInt(4.W)
+  val awregion  = UInt(4.W)
+  val awuser    = UInt(AWUSER_WIDTH.W)
+}
+
+
+class AXI_W(nocParameters:NOCParameters) extends Bundle{
+  import nocParameters._
+  val wdata = UInt(ADDR_WIDTH.W)
+  val wstrb = UInt(STRB_WIDTH.W)
+  val wlast = UInt(1.W)
+  val wuser = UInt(WUSER_WIDTH.W)
+}
+
+class AXI_B(nocParameters:NOCParameters) extends Bundle{
+  import nocParameters._
+  val bid   = UInt(ID_WIDTH.W)
+  val bresp = UInt(2.W)
+  val buser = UInt(BUSER_WIDTH.W)
+}
+
+class AXI_AR(nocParameters:NOCParameters) extends Bundle{
+  import nocParameters._
+  val arid    = UInt(ID_WIDTH.W)
+  val araddr  = UInt(ADDR_WIDTH.W)
+  val arlen   = UInt(8.W)
+  val arsize  = UInt(3.W)
+  val arburst = UInt(2.W)
+  val arlock  = UInt(1.W)
+  val arcache = UInt(4.W)
+  val arprot  = UInt(3.W)
+  val arqos   = UInt(4.W)
+  val arregion= UInt(4.W)
+  val aruser  = UInt(ARUSER_WIDTH.W)
+}
+
+class AXI_R(nocParameters:NOCParameters) extends Bundle{
+  import nocParameters._
+  val rid   = UInt(ID_WIDTH.W)
+  val rdata = UInt(DATA_WIDTH.W)
+  val rresp = UInt(2.W)
+  val rlast = UInt(1.W)
+  val ruser = UInt(RUSER_WIDTH.W)
+}
+
+// AXI master IO
+class AXIFullIO(nocParameters:NOCParameters) extends Bundle {
+  import nocParameters._
+  val AXI_AW = Decoupled(new AXI_AW(nocParameters))                 // AXI Write address request
+  val AXI_W  = Decoupled(new AXI_W(nocParameters))                  // AXI Write Data 
+  val AXI_B  = Flipped(Decoupled(new AXI_B(nocParameters)))         // AXI Write Response
+  val AXI_AR = Decoupled(new AXI_AR(nocParameters))                 // AXI Read Address
+  val AXI_R  = Flipped(Decoupled(new AXI_R(nocParameters)))         // AXI read Response
+}
+
+
+
+// AXI_slave_port is the Flipped() of an AXI master port
+
