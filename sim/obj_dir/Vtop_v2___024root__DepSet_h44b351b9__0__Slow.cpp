@@ -1131,11 +1131,7 @@ VL_ATTR_COLD void Vtop_v2___024root___stl_sequent__TOP__0(Vtop_v2___024root* vlS
     vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__s_axi_awready_next = 0U;
     vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__axi_addr_valid_next 
         = vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__axi_addr_valid_reg;
-    vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__m_select_next 
-        = vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__m_select_reg;
     vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__s_axi_arready_next = 0U;
-    vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__axi_region_next 
-        = vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__axi_region_reg;
     if (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__ROB__DOT__shared_mem__DOT__mem_ext__DOT___R1_en_d0) {
         vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__bp__DOT__BTB__DOT____Vcellinp__BTB_memory__io_wr_addr 
             = (0xfffU & (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__ROB__DOT__shared_mem__DOT__mem_ext__DOT__Memory
@@ -1189,12 +1185,16 @@ VL_ATTR_COLD void Vtop_v2___024root___stl_sequent__TOP__0(Vtop_v2___024root* vlS
         = vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__axi_auser_reg;
     vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__axi_cache_next 
         = vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__axi_cache_reg;
+    vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__m_select_next 
+        = vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__m_select_reg;
     vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__axi_id_next 
         = vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__axi_id_reg;
     vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__axi_lock_next 
         = vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__axi_lock_reg;
     vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__axi_qos_next 
         = vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__axi_qos_reg;
+    vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__axi_region_next 
+        = vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__axi_region_reg;
     vlSelf->top_v2__DOT__axi_ram__DOT__ram__DOT__write_burst_next 
         = vlSelf->top_v2__DOT__axi_ram__DOT__ram__DOT__write_burst_reg;
     vlSelf->top_v2__DOT__axi_ram__DOT__ram__DOT__write_size_next 
@@ -2699,17 +2699,17 @@ VL_ATTR_COLD void Vtop_v2___024root___stl_sequent__TOP__0(Vtop_v2___024root* vlS
                                                                        | (1U 
                                                                           & (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__MOB[2U] 
                                                                              >> 0x18U)))))))))))))))));
+    vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__current_s_axi_rready 
+        = (1U & ((((2U == (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT__AXI_REQUEST_STATE)) 
+                   << 1U) | (2U == (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__instruction_cache__DOT__AXI_REQUEST_STATE))) 
+                 >> (1U & ((IData)(vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__arb_inst__DOT__grant_encoded_reg) 
+                           >> 1U))));
     vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__instruction_cache__DOT___GEN_0 
         = ((1U == (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__instruction_cache__DOT__AXI_REQUEST_STATE)) 
            & (0U == vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__instruction_cache__DOT__write_counter));
     vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT___GEN_7 
         = ((1U == (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT__AXI_REQUEST_STATE)) 
            & (0U == vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT__write_counter));
-    vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__current_s_axi_rready 
-        = (1U & ((((2U == (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT__AXI_REQUEST_STATE)) 
-                   << 1U) | (2U == (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__instruction_cache__DOT__AXI_REQUEST_STATE))) 
-                 >> (1U & ((IData)(vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__arb_inst__DOT__grant_encoded_reg) 
-                           >> 1U))));
     top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT____VdfgExtracted_he739d481__0 
         = (1U & (((IData)(vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__m_axi_rready_reg) 
                   & (IData)(vlSelf->top_v2__DOT__axi_ram__DOT__ram__DOT__s_axi_rvalid_reg)) 
@@ -5166,11 +5166,6 @@ VL_ATTR_COLD void Vtop_v2___024root___stl_sequent__TOP__0(Vtop_v2___024root* vlS
                                                                                 & (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__MOB[0U] 
                                                                                 >> 2U)))))))))))))))))) 
            & (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT___GEN_20));
-    vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__current_s_axi_wlast 
-        = (1U & ((((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT___GEN_7) 
-                   << 1U) | (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__instruction_cache__DOT___GEN_0)) 
-                 >> (1U & ((IData)(vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__arb_inst__DOT__grant_encoded_reg) 
-                           >> 1U))));
     vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__store_axi_r_temp_to_output = 0U;
     if ((1U & (~ (IData)(vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__s_axi_rready_int_reg)))) {
         if (vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__current_s_axi_rready) {
@@ -5180,6 +5175,11 @@ VL_ATTR_COLD void Vtop_v2___024root___stl_sequent__TOP__0(Vtop_v2___024root* vlS
     top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT____VdfgExtracted_he0fe9fb8__0 
         = (1U & ((~ (IData)(vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__current_s_axi_rvalid)) 
                  | (IData)(vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__current_s_axi_rready)));
+    vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__current_s_axi_wlast 
+        = (1U & ((((IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__data_cache__DOT___GEN_7) 
+                   << 1U) | (IData)(vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__instruction_cache__DOT___GEN_0)) 
+                 >> (1U & ((IData)(vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__arb_inst__DOT__grant_encoded_reg) 
+                           >> 1U))));
     vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__s_axi_rresp_int = 0U;
     vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__s_axi_rdata_int 
         = vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__current_m_axi_rdata;
@@ -6332,14 +6332,14 @@ VL_ATTR_COLD void Vtop_v2___024root___stl_sequent__TOP__0(Vtop_v2___024root* vlS
                                                                         (3U 
                                                                          & (vlSelf->top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__backend__DOT__MOB__DOT__MOB[2U] 
                                                                             >> 0x16U))))))))))))))))))));
+    vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__store_axi_r_int_to_output = 0U;
+    vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__store_axi_r_int_to_temp = 0U;
     vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__m_axi_wlast_int 
         = vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__current_s_axi_wlast;
     vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__m_axi_bready_next = 0U;
     top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT____VdfgExtracted_hab3500a1__0 
         = ((IData)(top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT____VdfgExtracted_h03278528__0) 
            & (IData)(vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__current_s_axi_wlast));
-    vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__store_axi_r_int_to_output = 0U;
-    vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__store_axi_r_int_to_temp = 0U;
     vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__temp_s_axi_rvalid_next 
         = vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__temp_s_axi_rvalid_reg;
     vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__s_axi_rvalid_next 
@@ -6450,19 +6450,20 @@ VL_ATTR_COLD void Vtop_v2___024root___stl_sequent__TOP__0(Vtop_v2___024root* vlS
             if ((1U & (IData)(vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__state_reg))) {
                 vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__j = 1U;
                 vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__i = 2U;
-                if ((0U != (0xaU & VL_SHIFTL_III(32,32,32, (IData)(1U), 
-                                                 (1U 
-                                                  & ((IData)(vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__arb_inst__DOT__grant_encoded_reg) 
-                                                     >> 1U)))))) {
+                if ((0U != (5U & VL_SHIFTL_III(32,32,32, (IData)(1U), 
+                                               (1U 
+                                                & ((IData)(vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__arb_inst__DOT__grant_encoded_reg) 
+                                                   >> 1U)))))) {
                     vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__m_select_next = 0U;
                     vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__axi_region_next = 0U;
                 }
-                if ((0U != (0xaU & VL_SHIFTL_III(32,32,32, (IData)(1U), 
-                                                 ((IData)(2U) 
-                                                  + 
-                                                  (1U 
-                                                   & ((IData)(vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__arb_inst__DOT__grant_encoded_reg) 
-                                                      >> 1U))))))) {
+                if (((0U != (5U & VL_SHIFTL_III(32,32,32, (IData)(1U), 
+                                                ((IData)(2U) 
+                                                 + 
+                                                 (1U 
+                                                  & ((IData)(vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__arb_inst__DOT__grant_encoded_reg) 
+                                                     >> 1U)))))) 
+                     & (0x40000000U == VL_SHIFTR_III(32,32,32, vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__axi_addr_reg, 1U)))) {
                     vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__m_select_next = 1U;
                     vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__axi_region_next = 0U;
                 }
@@ -12911,17 +12912,17 @@ VL_ATTR_COLD void Vtop_v2___024root___stl_sequent__TOP__0(Vtop_v2___024root* vlS
             }
         } else if ((1U & (IData)(vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__state_reg))) {
             vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__match = 0U;
-            if ((0U != (0xaU & VL_SHIFTL_III(32,32,32, (IData)(1U), 
-                                             (1U & 
-                                              ((IData)(vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__arb_inst__DOT__grant_encoded_reg) 
-                                               >> 1U)))))) {
+            if ((0U != (5U & VL_SHIFTL_III(32,32,32, (IData)(1U), 
+                                           (1U & ((IData)(vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__arb_inst__DOT__grant_encoded_reg) 
+                                                  >> 1U)))))) {
                 vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__match = 1U;
             }
-            if ((0U != (0xaU & VL_SHIFTL_III(32,32,32, (IData)(1U), 
-                                             ((IData)(2U) 
-                                              + (1U 
-                                                 & ((IData)(vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__arb_inst__DOT__grant_encoded_reg) 
-                                                    >> 1U))))))) {
+            if (((0U != (5U & VL_SHIFTL_III(32,32,32, (IData)(1U), 
+                                            ((IData)(2U) 
+                                             + (1U 
+                                                & ((IData)(vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__arb_inst__DOT__grant_encoded_reg) 
+                                                   >> 1U)))))) 
+                 & (0x40000000U == VL_SHIFTR_III(32,32,32, vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__axi_addr_reg, 1U)))) {
                 vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__match = 1U;
             }
             if (vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__match) {
@@ -13190,7 +13191,4 @@ VL_ATTR_COLD void Vtop_v2___024root___stl_sequent__TOP__0(Vtop_v2___024root* vlS
     vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__arb_inst__DOT__priority_encoder_masked__DOT__stage_valid[0U] 
         = ((2U & vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__arb_inst__DOT__priority_encoder_masked__DOT__stage_valid
             [0U]) | (0U != (3U & (IData)(vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__arb_inst__DOT__priority_encoder_masked__DOT__input_padded))));
-    vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__arb_inst__DOT__priority_encoder_masked__DOT__stage_enc[0U] 
-        = ((2U & vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__arb_inst__DOT__priority_encoder_masked__DOT__stage_enc
-            [0U]) | (1U & (~ (IData)(vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__arb_inst__DOT__priority_encoder_masked__DOT__input_padded))));
 }

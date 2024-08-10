@@ -32,6 +32,9 @@ VL_ATTR_COLD void Vtop_v2___024root___stl_sequent__TOP__1(Vtop_v2___024root* vlS
     VlWide<3>/*95:0*/ __Vtemp_20;
     VlWide<3>/*95:0*/ __Vtemp_24;
     // Body
+    vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__arb_inst__DOT__priority_encoder_masked__DOT__stage_enc[0U] 
+        = ((2U & vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__arb_inst__DOT__priority_encoder_masked__DOT__stage_enc
+            [0U]) | (1U & (~ (IData)(vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__arb_inst__DOT__priority_encoder_masked__DOT__input_padded))));
     vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__arb_inst__DOT__priority_encoder_masked__DOT__stage_valid[0U] 
         = ((1U & vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__arb_inst__DOT__priority_encoder_masked__DOT__stage_valid
             [0U]) | ((IData)((0U != (3U & ((IData)(vlSelf->top_v2__DOT__SOC__DOT__axi_interconnect__DOT__NOC__DOT__axi_interconnect_inst__DOT__arb_inst__DOT__priority_encoder_masked__DOT__input_padded) 
