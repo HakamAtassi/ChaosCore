@@ -6,7 +6,6 @@
 #define VERILATED_VTOP_V2_QUEUE4_FU_OUTPUT_H_  // guard
 
 #include "verilated.h"
-#include "verilated_timing.h"
 
 
 class Vtop_v2__Syms;

@@ -34,6 +34,8 @@ class alignas(VL_CACHE_LINE_BYTES) Vtop_v2 VL_NOT_FINAL : public VerilatedModel 
     // PORTS
     // The application code writes and reads these signals to
     // propagate new values into/out from the Verilated model.
+    VL_IN8(&clock,0,0);
+    VL_IN8(&reset,0,0);
 
     // CELLS
     // Public to allow access to /* verilator public */ items.
@@ -67,12 +69,12 @@ class alignas(VL_CACHE_LINE_BYTES) Vtop_v2 VL_NOT_FINAL : public VerilatedModel 
   public:
     // API METHODS
     /// Evaluate the model.  Application must call when inputs change.
-    void eval() { eval_step(); eval_end_step(); }
+    void eval() { eval_step(); }
     /// Evaluate when calling multiple units/models per time step.
     void eval_step();
     /// Evaluate at end of a timestep for tracing, when using eval_step().
     /// Application must call after all eval() and before time changes.
-    void eval_end_step();
+    void eval_end_step() {}
     /// Simulation complete, run final blocks.  Application must call on completion.
     void final();
     /// Are there scheduled events to handle?

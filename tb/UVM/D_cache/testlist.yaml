@@ -1,0 +1,111 @@
+#------------
+# Checklist 
+#------------
+# Test low level feature functionality
+# LRU
+# Replays
+# Sets
+# Tags
+# Valid
+# Stall/Replay
+# Resource unavailability (full MSHRs)
+# Byte offset/formatting
+# Misses/MSHR
+# Hits
+# Dirty/Writback?
+# flush/kill?
+
+# Template
+#- test: uvm_test_name
+#- rtl_test: the base test that is then configured
+# description: > description of test
+# 
+# gen_opts: >
+#   uvm_test_param
+#  iterations: Number of times the entire test is repeated
+
+
+###########################################################
+# Test basic functionality of a single cache line         #
+# Ex: test that all standard operations on address 0 work #
+###########################################################
+- test: data_cache_fixed_address_reads
+  description: 
+  gen_opts: >
+    +address=0x0
+  iterations: 100000
+
+- test: data_cache_fixed_address_write_reads
+  description: 
+  gen_opts: >
+    +address=0x0
+  iterations: 100000
+
+- test: data_cache_fixed_address_fuzz
+  description: 
+  gen_opts: >
+    +address=0x0
+  iterations: 100000
+
+
+################################################
+# Test basic functionality across all sets     #
+# Ex: test 1 address from set 0, set 1, etc... #
+################################################
+- test: data_cache_set_sweep_reads
+  description: 
+  gen_opts: >
+    +iterations_per_set=1000
+  iterations: 100000
+
+- test: data_cache_set_sweep_write_reads
+  description: 
+  gen_opts: >
+    +iterations_per_set=1000
+  iterations: 100000
+
+- test: data_cache_set_sweep_write_reads
+  description: 
+  gen_opts: >
+    +iterations_per_set=1000
+  iterations: 100000
+
+
+############################################################
+#  Test basic functionality of each set across all ways    #
+#  Ex: access 4 addresses from set 0, set 1, etc           #
+############################################################
+
+# Test LRU
+
+- test: data_cache_single_address_LRU
+  description: 
+  gen_opts: >
+    +iterations_per_set=1000
+  iterations: 100000
+
+- test: data_cache_single_address_LRU
+  description: 
+  gen_opts: >
+    +iterations_per_set=1000
+  iterations: 100000
+
+
+
+
+##########################################
+# Test miscellaneous                     #
+# Ex: Test invalid misses, Kill, etc ... # 
+##########################################
+
+# Test misses
+# Test kill
+# Test non-cacheable request
+
+
+
+###############################
+# Integration overnight tests #
+###############################
+
+# Random fuzz

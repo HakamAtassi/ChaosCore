@@ -1,6 +1,6 @@
 
 /* ------------------------------------------------------------------------------------
-* Filename: L1_Cache.scala
+* Filename: L1_data_cache.scala
 * Author: Hakam Atassi
 * Date: Mar 12 2024
 * Description: A lockup free L1 AXI data cache.
@@ -290,7 +290,6 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	request_cacheable_write_read		:= io.backend_memory_request.bits.addr & "h80000000".U === 0.U
 
 
-
 	when(io.backend_memory_request.bits.access_width === access_width_t.W){
 		non_cacheable_request_bytes := 4.U
 	}.elsewhen(io.backend_memory_request.bits.access_width === access_width_t.HW){
@@ -340,7 +339,6 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	/////////////////////
 	// RESPONSE QUEUES //
 	/////////////////////
-
 	val cacheable_response_Q		=	Module(new Queue(UInt((L1_DataCacheBlockSizeBytes*8).W), 1, flow=false, hasFlush=false, useSyncReadMem=true))	//FIXME: needs flush/kill
 	val non_cacheable_response_Q	=	Module(new Queue(UInt(32.W), 1, flow=false, hasFlush=false, useSyncReadMem=true))	//FIXME: needs flush/kill
 
@@ -368,7 +366,6 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	}
 
 	for(i <- 0 until L1_DataCacheBlockSizeBytes){
-		//data_memories_data_in(i) 	:= Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.ALLOCATE, allocate_cache_line((i+1)*8 - 1, i*8), io.backend_memory_request.bits.data(((i+1)%4)*8-1, (i%4)*8))
 		data_memories_data_in(i) 	:= Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.ALLOCATE, (allocate_cache_line>>(i*8))(7,0), (io.backend_memory_request.bits.data>>(i%4)*8)(7,0)) //(((i+1)%4)*8-1, (i%4)*8))
 	}
 
@@ -417,8 +414,6 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	// writeback tag is the tag at the way that will be allocated to on DRAM response
 	writeback_tag 		:= VecInit(tag_memories.map(_.io.data_out))(miss_way)
 	writeback_address 	:= writeback_tag << log2Ceil(L1_DataCacheBlockSizeBytes)
-
-
 
 
 	//////////////////
@@ -563,7 +558,6 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	non_cacheable_response_Q.io.enq.valid := axi_response_valid && (axi_response_ID === AXI_NON_CACHEABLE_RESPONSE_ID.U).asBool
 	non_cacheable_response_Q.io.enq.bits  := axi_response
 
-
 	non_cacheable_response_Q.io.deq.ready	:= 1.B
 
 
@@ -601,7 +595,6 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 
 	DATA_CACHE_STATE := DATA_CACHE_NEXT_STATE
 
-
 	replay_request_valid	:=	0.B //FIXME: 
 	replay_address			:=	MSHRs(MSHR_front_index).front.addr
 	replay_set				:=	get_decomposed_dcache_address(coreParameters, MSHRs(MSHR_front_index).front.addr).set
@@ -613,11 +606,9 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	////////////
 	// OUTPUT //
 	////////////
-
 	// Reads always output the data and the MOB index
 	// When in ACTIVE, non-cacheable reads have complete priority over normal DRAM reads
 	// In either case, the output valid occurs 2 cycles after a hit is detected
-
 
 	non_cacheable_response_Q.io.deq.ready := 0.B
 

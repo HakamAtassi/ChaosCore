@@ -78,14 +78,14 @@ case class NOCParameters(
     
     // DRAM parameters
     DRAM_BASE_ADDR:Int = 0x0,
-    DRAM_ADDR_WIDTH:Int = 0x800000,
+    DRAM_ADDR_WIDTH:Int = 24,
     DRAM_CONNECT_READ:Int = 1,
     DRAM_CONNECT_WRITE:Int = 1,
     DRAM_SECURE:Int =  0,
 
     // UART params
-    UART0_BASE_ADDR:Int = 0x80000000,
-    UART0_ADDR_WIDTH:Int = 1,              
+    UART0_BASE_ADDR: BigInt = 0x08000000, //BigInt("80000000", 16),
+    UART0_ADDR_WIDTH:Int = 24,              
     UART0_CONNECT_READ:Int = 1,
     UART0_CONNECT_WRITE:Int = 1,
     UART0_SECURE:Int =  0,

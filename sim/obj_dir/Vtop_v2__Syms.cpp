@@ -12,31 +12,6 @@
 // FUNCTIONS
 Vtop_v2__Syms::~Vtop_v2__Syms()
 {
-#ifdef VM_TRACE
-    if (__Vm_dumping) _traceDumpClose();
-#endif  // VM_TRACE
-}
-
-void Vtop_v2__Syms::_traceDump() {
-    const VerilatedLockGuard lock(__Vm_dumperMutex);
-    __Vm_dumperp->dump(VL_TIME_Q());
-}
-
-void Vtop_v2__Syms::_traceDumpOpen() {
-    const VerilatedLockGuard lock(__Vm_dumperMutex);
-    if (VL_UNLIKELY(!__Vm_dumperp)) {
-        __Vm_dumperp = new VerilatedVcdC();
-        __Vm_modelp->trace(__Vm_dumperp, 0, 0);
-        std::string dumpfile = _vm_contextp__->dumpfileCheck();
-        __Vm_dumperp->open(dumpfile.c_str());
-        __Vm_dumping = true;
-    }
-}
-
-void Vtop_v2__Syms::_traceDumpClose() {
-    const VerilatedLockGuard lock(__Vm_dumperMutex);
-    __Vm_dumping = false;
-    VL_DO_CLEAR(delete __Vm_dumperp, __Vm_dumperp = nullptr);
 }
 
 Vtop_v2__Syms::Vtop_v2__Syms(VerilatedContext* contextp, const char* namep, Vtop_v2* modelp)
@@ -56,7 +31,7 @@ Vtop_v2__Syms::Vtop_v2__Syms(VerilatedContext* contextp, const char* namep, Vtop
     , TOP__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__instruction_cache__DOT__data_memory_1{this, Verilated::catName(namep, "top_v2.SOC.ChaosCore_tile.instruction_cache.data_memory_1")}
 {
         // Check resources
-        Verilated::stackCheck(22290);
+        Verilated::stackCheck(25612);
     // Configure time unit / time precision
     _vm_contextp__->timeunit(-9);
     _vm_contextp__->timeprecision(-12);

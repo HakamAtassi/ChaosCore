@@ -91,7 +91,7 @@ trait AXICacheNode {
     // awsize = always 0x2.U (32 bits) for simplicity
 
 
-    AXI_port.AXI_AW.valid                := (AXI_REQUEST_STATE === AXI_REQUEST_STATES.ADDRESS_PHASE)
+    AXI_port.AXI_AW.valid          := (AXI_REQUEST_STATE === AXI_REQUEST_STATES.ADDRESS_PHASE)
     AXI_port.AXI_AW.bits.awid      := 0.U
     AXI_port.AXI_AW.bits.awaddr    := address
     AXI_port.AXI_AW.bits.awlen     := Mux(bytes < DATA_WIDTH_BYTES.U, 0.U, bytes/DATA_WIDTH_BYTES.U - 1.U)
