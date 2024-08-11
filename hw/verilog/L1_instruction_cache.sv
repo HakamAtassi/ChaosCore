@@ -40,6 +40,7 @@ module L1_instruction_cache(
   input                                                                                                                                                                                                                                      AXI_port_AXI_B_valid,
   input  struct packed {logic [7:0] bid; logic [1:0] bresp; logic buser; }                                                                                                                                                                   AXI_port_AXI_B_bits,
   input                                                                                                                                                                                                                                      AXI_port_AXI_AR_ready,
+  output                                                                                                                                                                                                                                     AXI_port_AXI_AR_valid,
   output struct packed {logic [7:0] arid; logic [31:0] araddr; logic [7:0] arlen; logic [2:0] arsize; logic [1:0] arburst; logic arlock; logic [3:0] arcache; logic [2:0] arprot; logic [3:0] arqos; logic [3:0] arregion; logic aruser; }   AXI_port_AXI_AR_bits,
   output                                                                                                                                                                                                                                     AXI_port_AXI_R_ready,
   input                                                                                                                                                                                                                                      AXI_port_AXI_R_valid,
@@ -47,20 +48,17 @@ module L1_instruction_cache(
   output                                                                                                                                                                                                                                     io_CPU_request_ready,
   input                                                                                                                                                                                                                                      io_CPU_response_ready,
   output                                                                                                                                                                                                                                     io_CPU_response_valid,
-  output struct packed {logic [31:0] fetch_PC; logic [3:0] valid_bits; struct packed {logic [31:0] instruction; logic [3:0] packet_index; logic [5:0] ROB_index; }[3:0] instructions; logic [15:0] GHR; logic [6:0] NEXT; logic [6:0] TOS; } io_CPU_response_bits,
-  input                                                                                                                                                                                                                                      io_DRAM_request_ready,
-  output                                                                                                                                                                                                                                     io_DRAM_request_valid,
-  output struct packed {logic [31:0] addr; logic [31:0] wr_data; logic wr_en; }                                                                                                                                                              io_DRAM_request_bits,
-  output                                                                                                                                                                                                                                     io_DRAM_response_ready,
-  input                                                                                                                                                                                                                                      io_DRAM_response_valid,
-  input  struct packed {logic [255:0] data; }                                                                                                                                                                                                io_DRAM_response_bits
+  output struct packed {logic [31:0] fetch_PC; logic [3:0] valid_bits; struct packed {logic [31:0] instruction; logic [3:0] packet_index; logic [5:0] ROB_index; }[3:0] instructions; logic [15:0] GHR; logic [6:0] NEXT; logic [6:0] TOS; } io_CPU_response_bits
 );
 
   wire             miss;
   wire [1:0]       _GEN;
-  wire             _GEN_0;
-  wire [3:0]       _GEN_1;
-  wire [31:0]      _GEN_2;
+  wire [1:0]       _GEN_0;
+  wire [2:0]       _GEN_1;
+  wire [7:0]       _GEN_2;
+  wire             _GEN_3;
+  wire [3:0]       _GEN_4;
+  wire [31:0]      _GEN_5;
   wire             _CPU_response_skid_buffer_io_enq_ready;
   wire [3:0]       _validator_io_instruction_output;
   wire struct packed {logic valid; logic [20:0] tag; logic [255:0] data; }
@@ -68,30 +66,38 @@ module L1_instruction_cache(
   wire struct packed {logic valid; logic [20:0] tag; logic [255:0] data; }
     _data_memory_0_io_data_out;
   wire [1:0]       _LRU_memory_io_data_out;
+  wire             _final_response_buffer_io_deq_valid;
+  wire [255:0]     _final_response_buffer_io_deq_bits;
   wire struct packed {logic [31:0] addr; logic [31:0] wr_data; logic wr_en; }
     _fetch_PC_buf_WIRE = '{addr: 32'h0, wr_data: 32'h0, wr_en: 1'h0};
   reg  [255:0]     AXI_AW_DATA_BUFFER;
   reg  [1:0]       AXI_REQUEST_STATE;
-  wire             _GEN_3 = AXI_REQUEST_STATE == 2'h1;
-  wire             _GEN_4 = AXI_REQUEST_STATE == 2'h2;
-  wire             _GEN_5 = _GEN_4 & AXI_port_AXI_R_valid;
+  wire             _GEN_6 = AXI_REQUEST_STATE == 2'h1;
+  wire             _GEN_7 = AXI_REQUEST_STATE == 2'h2;
+  wire             _GEN_8 = _GEN_7 & AXI_port_AXI_R_valid;
   reg  [31:0]      write_counter;
-  assign _GEN_2 = _GEN_3 ? AXI_AW_DATA_BUFFER[31:0] : 32'h0;
-  assign _GEN_1 = {4{_GEN_3}};
-  assign _GEN_0 = _GEN_3 & write_counter == 32'h0;
+  assign _GEN_5 = _GEN_6 ? AXI_AW_DATA_BUFFER[31:0] : 32'h0;
+  assign _GEN_4 = {4{_GEN_6}};
+  assign _GEN_3 = _GEN_6 & write_counter == 32'h0;
   reg  [255:0]     AXI_read_buffer;
-  wire             _GEN_6 = _GEN_5 & AXI_port_AXI_R_bits.rlast;
-  wire [255:0]     _GEN_7 = {AXI_read_buffer[223:0], AXI_port_AXI_R_bits.rdata};
+  wire             _GEN_9 = _GEN_8 & AXI_port_AXI_R_bits.rlast;
+  wire [255:0]     _GEN_10 = {AXI_read_buffer[223:0], AXI_port_AXI_R_bits.rdata};
   reg  [1:0]       cache_state;
   struct packed {logic [31:0] addr; logic [31:0] wr_data; logic wr_en; } fetch_PC_buf;
   struct packed {logic [31:0] addr; logic [31:0] wr_data; logic wr_en; } replay_address;
   wire
     struct packed {logic [20:0] tag; logic [5:0] set; logic fetch_packet; logic [2:0] instruction_offset; }
     current_packet;
-  reg              request_valid;
-  reg  [31:0]      request_addr;
-  reg              resp_ready;
   reg              cache_valid;
+  wire             _GEN_11 = ~(|cache_state) & miss;
+  wire             _GEN_12 = _GEN_11 & ~(|AXI_REQUEST_STATE);
+  assign _GEN_2 = _GEN_11 ? 8'h7 : 8'h0;
+  assign _GEN_1 = _GEN_11 ? 3'h5 : 3'h0;
+  assign _GEN_0 = {1'h0, _GEN_11};
+  wire             _GEN_13 = cache_state == 2'h1;
+  wire             _GEN_14 = (|cache_state) & _GEN_13;
+  wire             axi_response_valid =
+    (|cache_state) & _GEN_13 & _GEN_14 & _final_response_buffer_io_deq_valid;
   wire struct packed {logic [31:0] addr; logic [31:0] wr_data; logic wr_en; }
     current_address;
   assign current_address = (|cache_state) | miss ? replay_address : _fetch_PC_buf_WIRE;
@@ -130,34 +136,36 @@ module L1_instruction_cache(
   wire             _CPU_response_valid_T = cache_valid | hit;
   wire
     struct packed {logic [31:0] instruction; logic [3:0] packet_index; logic [5:0] ROB_index; }
-    _GEN_8 =
+    _GEN_15 =
     '{instruction:
         instruction_vec[{CPU_response_bits_instructions_3_instruction_REG, 2'h0} + 3'h3],
       packet_index: (4'h3),
       ROB_index: (6'h0)};
   wire
     struct packed {logic [31:0] instruction; logic [3:0] packet_index; logic [5:0] ROB_index; }
-    _GEN_9 =
+    _GEN_16 =
     '{instruction:
         instruction_vec[{CPU_response_bits_instructions_2_instruction_REG, 2'h0} + 3'h2],
       packet_index: (4'h2),
       ROB_index: (6'h0)};
   wire
     struct packed {logic [31:0] instruction; logic [3:0] packet_index; logic [5:0] ROB_index; }
-    _GEN_10 =
+    _GEN_17 =
     '{instruction:
         instruction_vec[{CPU_response_bits_instructions_1_instruction_REG, 2'h0} + 3'h1],
       packet_index: (4'h1),
       ROB_index: (6'h0)};
   wire
     struct packed {logic [31:0] instruction; logic [3:0] packet_index; logic [5:0] ROB_index; }
-    _GEN_11 =
+    _GEN_18 =
     '{instruction:
         instruction_vec[{CPU_response_bits_instructions_0_instruction_REG, 2'h0}],
       packet_index: (4'h0),
       ROB_index: (6'h0)};
   wire struct packed {logic valid; logic [20:0] tag; logic [255:0] data; } current_data =
-    '{valid: (1'h1), tag: (replay_address.addr[31:11]), data: io_DRAM_response_bits.data};
+    '{valid: (1'h1),
+      tag: (replay_address.addr[31:11]),
+      data: {224'h0, _GEN_14 ? _final_response_buffer_io_deq_bits[31:0] : 32'h0}};
   assign current_packet =
     '{tag: (current_address.addr[31:11]),
       set: (current_address.addr[10:5]),
@@ -165,7 +173,7 @@ module L1_instruction_cache(
       instruction_offset: (current_address.addr[4:2])};
   wire
     struct packed {logic [31:0] fetch_PC; logic [3:0] valid_bits; struct packed {logic [31:0] instruction; logic [3:0] packet_index; logic [5:0] ROB_index; }[3:0] instructions; logic [15:0] GHR; logic [6:0] NEXT; logic [6:0] TOS; }
-    _GEN_12 =
+    _GEN_19 =
     '{fetch_PC: fetch_PC_buf.addr,
       valid_bits:
         ({{_validator_io_instruction_output[0]},
@@ -176,21 +184,21 @@ module L1_instruction_cache(
             {_CPU_response_valid_T},
             {_CPU_response_valid_T},
             {_CPU_response_valid_T}}),
-      instructions: ({{_GEN_8}, {_GEN_9}, {_GEN_10}, {_GEN_11}}),
+      instructions: ({{_GEN_15}, {_GEN_16}, {_GEN_17}, {_GEN_18}}),
       GHR: (16'h0),
       NEXT: (7'h0),
       TOS: (7'h0)};
   always @(posedge clock) begin
-    automatic logic _GEN_13;
-    automatic logic _GEN_14;
-    _GEN_13 = AXI_port_AXI_W_ready & _GEN_3;
-    _GEN_14 = _GEN_3 & _GEN_13;
-    if (_GEN_14)
+    automatic logic _GEN_20;
+    automatic logic _GEN_21;
+    _GEN_20 = AXI_port_AXI_W_ready & _GEN_6;
+    _GEN_21 = _GEN_6 & _GEN_20;
+    if (_GEN_21)
       AXI_AW_DATA_BUFFER <= {32'h0, AXI_AW_DATA_BUFFER[255:32]};
-    if (~_GEN_4 | _GEN_6 | ~_GEN_5) begin
+    if (~_GEN_7 | _GEN_9 | ~_GEN_8) begin
     end
     else
-      AXI_read_buffer <= _GEN_7;
+      AXI_read_buffer <= _GEN_10;
     LRU_memory_io_wr_addr_REG <= current_packet.set;
     hit_oh_vec_0_REG <= current_packet.tag;
     hit_oh_vec_1_REG <= current_packet.tag;
@@ -208,75 +216,58 @@ module L1_instruction_cache(
       cache_state <= 2'h0;
       fetch_PC_buf <= _fetch_PC_buf_WIRE_0;
       replay_address <= _fetch_PC_buf_WIRE_0;
-      request_valid <= 1'h0;
-      request_addr <= 32'h0;
-      resp_ready <= 1'h0;
       cache_valid <= 1'h0;
     end
     else begin
-      automatic logic _GEN_15 = (|cache_state) | miss;
-      automatic logic _GEN_16;
-      automatic logic _GEN_17;
-      _GEN_16 = cache_state == 2'h1;
-      _GEN_17 = _GEN_16 & io_DRAM_request_ready & request_valid;
-      if (AXI_REQUEST_STATE == 2'h0)
-        AXI_REQUEST_STATE <= 2'h0;
-      else if (_GEN_3) begin
-        if (_GEN_0 & _GEN_13)
-          AXI_REQUEST_STATE <= 2'h3;
+      automatic logic _GEN_22 = (|cache_state) | miss;
+      automatic logic _GEN_23;
+      _GEN_23 =
+        cache_state == 2'h2 & _CPU_response_valid_T
+        & _CPU_response_skid_buffer_io_enq_ready;
+      if (|AXI_REQUEST_STATE) begin
+        if (_GEN_6) begin
+          if (_GEN_3 & _GEN_20)
+            AXI_REQUEST_STATE <= 2'h3;
+        end
+        else if ((&AXI_REQUEST_STATE)
+                   ? (&AXI_REQUEST_STATE) & AXI_port_AXI_B_valid
+                   : _GEN_7 & AXI_port_AXI_R_bits.rlast & _GEN_8)
+          AXI_REQUEST_STATE <= 2'h0;
       end
-      else if ((&AXI_REQUEST_STATE)
-                 ? (&AXI_REQUEST_STATE) & AXI_port_AXI_B_valid
-                 : _GEN_4 & AXI_port_AXI_R_bits.rlast & _GEN_5)
-        AXI_REQUEST_STATE <= 2'h0;
-      if (_GEN_14)
+      else
+        AXI_REQUEST_STATE <= {AXI_port_AXI_AR_ready & _GEN_12, 1'h0};
+      if (_GEN_21)
         write_counter <= write_counter - 32'h1;
       if (|cache_state) begin
-        automatic logic _GEN_18;
-        _GEN_18 = io_DRAM_response_valid & resp_ready;
-        if (_GEN_16) begin
-          if (_GEN_18)
+        if (_GEN_13) begin
+          if (axi_response_valid)
             cache_state <= 2'h2;
-          cache_valid <= _GEN_18 | cache_valid;
         end
-        else begin
-          automatic logic _GEN_19 =
-            cache_state == 2'h2 & _CPU_response_valid_T
-            & _CPU_response_skid_buffer_io_enq_ready;
-          if (_GEN_19)
-            cache_state <= 2'h0;
-          cache_valid <= ~_GEN_19 & cache_valid;
-        end
-        request_valid <= ~_GEN_17 & request_valid;
-        resp_ready <= ~(_GEN_16 & _GEN_18) & resp_ready;
+        else if (_GEN_23)
+          cache_state <= 2'h0;
       end
-      else begin
-        if (miss)
-          cache_state <= 2'h1;
-        request_valid <= miss | request_valid;
-        resp_ready <= miss | resp_ready;
-      end
+      else if (miss)
+        cache_state <= 2'h1;
       fetch_PC_buf <=
-        '{addr: (_GEN_15 ? fetch_PC_buf.addr : 32'h0),
-          wr_data: (_GEN_15 ? fetch_PC_buf.wr_data : 32'h0),
-          wr_en: (_GEN_15 & fetch_PC_buf.wr_en)};
+        '{addr: (_GEN_22 ? fetch_PC_buf.addr : 32'h0),
+          wr_data: (_GEN_22 ? fetch_PC_buf.wr_data : 32'h0),
+          wr_en: (_GEN_22 & fetch_PC_buf.wr_en)};
       replay_address <=
-        '{addr: (_GEN_15 ? replay_address.addr : 32'h0),
-          wr_data: (_GEN_15 ? replay_address.wr_data : 32'h0),
-          wr_en: (_GEN_15 & replay_address.wr_en)};
-      if ((|cache_state) ? _GEN_17 : miss)
-        request_addr <= 32'h0;
+        '{addr: (_GEN_22 ? replay_address.addr : 32'h0),
+          wr_data: (_GEN_22 ? replay_address.wr_data : 32'h0),
+          wr_en: (_GEN_22 & replay_address.wr_en)};
+      cache_valid <= (~(|cache_state) | _GEN_13 | ~_GEN_23) & cache_valid;
     end
   end // always @(posedge)
   Queue1_UInt256 final_response_buffer (
     .clock        (clock),
     .reset        (reset),
     .io_enq_ready (/* unused */),
-    .io_enq_valid (_GEN_4 & _GEN_6),
-    .io_enq_bits  (_GEN_7),
-    .io_deq_ready (1'h0),
-    .io_deq_valid (/* unused */),
-    .io_deq_bits  (/* unused */),
+    .io_enq_valid (_GEN_7 & _GEN_9),
+    .io_enq_bits  (_GEN_10),
+    .io_deq_ready (_GEN_14),
+    .io_deq_valid (_final_response_buffer_io_deq_valid),
+    .io_deq_bits  (_final_response_buffer_io_deq_bits),
     .io_count     (/* unused */)
   );
   SDPReadWriteSmem_1 LRU_memory (
@@ -292,14 +283,14 @@ module L1_instruction_cache(
   );
   icache_ReadWriteSmem data_memory_0 (
     .clock       (clock),
-    .io_wr_en    (io_DRAM_response_valid & allocate_way[0] & _data_memory_1_io_wr_en_T_2),
+    .io_wr_en    (axi_response_valid & allocate_way[0] & _data_memory_1_io_wr_en_T_2),
     .io_addr     (current_packet.set),
     .io_data_in  (current_data),
     .io_data_out (_data_memory_0_io_data_out)
   );
   icache_ReadWriteSmem data_memory_1 (
     .clock       (clock),
-    .io_wr_en    (io_DRAM_response_valid & allocate_way[1] & _data_memory_1_io_wr_en_T_2),
+    .io_wr_en    (axi_response_valid & allocate_way[1] & _data_memory_1_io_wr_en_T_2),
     .io_addr     (current_packet.set),
     .io_data_in  (current_data),
     .io_data_out (_data_memory_1_io_data_out)
@@ -313,7 +304,7 @@ module L1_instruction_cache(
     .reset        (reset),
     .io_enq_ready (_CPU_response_skid_buffer_io_enq_ready),
     .io_enq_valid (_CPU_response_valid_T),
-    .io_enq_bits  (_GEN_12),
+    .io_enq_bits  (_GEN_19),
     .io_deq_ready (io_CPU_response_ready),
     .io_deq_valid (io_CPU_response_valid),
     .io_deq_bits  (io_CPU_response_bits),
@@ -331,26 +322,24 @@ module L1_instruction_cache(
       awqos: 4'h0,
       awregion: 4'h0,
       awuser: 1'h0};
-  assign AXI_port_AXI_W_valid = _GEN_3;
+  assign AXI_port_AXI_W_valid = _GEN_6;
   assign AXI_port_AXI_W_bits =
-    '{wdata: _GEN_2, wstrb: _GEN_1, wlast: _GEN_0, wuser: (1'h0)};
+    '{wdata: _GEN_5, wstrb: _GEN_4, wlast: _GEN_3, wuser: (1'h0)};
   assign AXI_port_AXI_B_ready = &AXI_REQUEST_STATE;
+  assign AXI_port_AXI_AR_valid = _GEN_12;
   assign AXI_port_AXI_AR_bits =
-    '{arid: 8'h0,
-      araddr: 32'h0,
-      arlen: 8'h0,
-      arsize: 3'h0,
-      arburst: 2'h0,
-      arlock: 1'h0,
-      arcache: 4'h0,
-      arprot: 3'h0,
-      arqos: 4'h0,
-      arregion: 4'h0,
-      aruser: 1'h0};
-  assign AXI_port_AXI_R_ready = _GEN_4;
+    '{arid: (8'h0),
+      araddr: (32'h0),
+      arlen: _GEN_2,
+      arsize: _GEN_1,
+      arburst: _GEN_0,
+      arlock: (1'h0),
+      arcache: (4'h0),
+      arprot: (3'h0),
+      arqos: (4'h0),
+      arregion: (4'h0),
+      aruser: (1'h0)};
+  assign AXI_port_AXI_R_ready = _GEN_7;
   assign io_CPU_request_ready = ~(|cache_state) & ~miss & io_CPU_response_ready;
-  assign io_DRAM_request_valid = request_valid;
-  assign io_DRAM_request_bits = '{addr: request_addr, wr_data: (32'h0), wr_en: (1'h0)};
-  assign io_DRAM_response_ready = resp_ready;
 endmodule
 

@@ -83,6 +83,7 @@ module SOC(
   wire _axi_interconnect_io_s_AXI_port_1_AXI_R_ready;
   wire _AXI_debug_printer_io_s_AXI_AXI_AW_ready;
   wire _AXI_debug_printer_io_s_AXI_AXI_W_ready;
+  wire _AXI_debug_printer_io_s_AXI_AXI_B_valid;
   wire struct packed {logic [7:0] bid; logic [1:0] bresp; logic buser; }
     _AXI_debug_printer_io_s_AXI_AXI_B_bits;
   wire _AXI_debug_printer_io_s_AXI_AXI_AR_ready;
@@ -181,6 +182,7 @@ module SOC(
   );
   AXI_debug_printer AXI_debug_printer (
     .clock                 (clock),
+    .reset                 (reset),
     .io_s_AXI_AXI_AW_ready (_AXI_debug_printer_io_s_AXI_AXI_AW_ready),
     .io_s_AXI_AXI_AW_valid (_axi_interconnect_io_s_AXI_port_1_AXI_AW_valid),
     .io_s_AXI_AXI_AW_bits  (_axi_interconnect_io_s_AXI_port_1_AXI_AW_bits),
@@ -188,6 +190,7 @@ module SOC(
     .io_s_AXI_AXI_W_valid  (_axi_interconnect_io_s_AXI_port_1_AXI_W_valid),
     .io_s_AXI_AXI_W_bits   (_axi_interconnect_io_s_AXI_port_1_AXI_W_bits),
     .io_s_AXI_AXI_B_ready  (_axi_interconnect_io_s_AXI_port_1_AXI_B_ready),
+    .io_s_AXI_AXI_B_valid  (_AXI_debug_printer_io_s_AXI_AXI_B_valid),
     .io_s_AXI_AXI_B_bits   (_AXI_debug_printer_io_s_AXI_AXI_B_bits),
     .io_s_AXI_AXI_AR_ready (_AXI_debug_printer_io_s_AXI_AXI_AR_ready),
     .io_s_AXI_AXI_AR_valid (_axi_interconnect_io_s_AXI_port_1_AXI_AR_valid),
@@ -258,7 +261,7 @@ module SOC(
     .io_s_AXI_port_1_AXI_W_valid  (_axi_interconnect_io_s_AXI_port_1_AXI_W_valid),
     .io_s_AXI_port_1_AXI_W_bits   (_axi_interconnect_io_s_AXI_port_1_AXI_W_bits),
     .io_s_AXI_port_1_AXI_B_ready  (_axi_interconnect_io_s_AXI_port_1_AXI_B_ready),
-    .io_s_AXI_port_1_AXI_B_valid  (1'h0),
+    .io_s_AXI_port_1_AXI_B_valid  (_AXI_debug_printer_io_s_AXI_AXI_B_valid),
     .io_s_AXI_port_1_AXI_B_bits   (_AXI_debug_printer_io_s_AXI_AXI_B_bits),
     .io_s_AXI_port_1_AXI_AR_ready (_AXI_debug_printer_io_s_AXI_AXI_AR_ready),
     .io_s_AXI_port_1_AXI_AR_valid (_axi_interconnect_io_s_AXI_port_1_AXI_AR_valid),

@@ -76,7 +76,6 @@ module ChaosCore_tile(
     struct packed {logic [31:0] addr; logic [31:0] data; logic [1:0] memory_type; logic [1:0] access_width; logic [3:0] MOB_index; }
     _GEN =
     '{addr: 32'h0, data: 32'h0, memory_type: 2'h0, access_width: 2'h0, MOB_index: 4'h0};
-  wire struct packed {logic [255:0] data; } _GEN_0 = '{data: 256'h0};
   ChaosCore ChaosCore (
     .clock                             (clock),
     .reset                             (reset),
@@ -97,31 +96,26 @@ module ChaosCore_tile(
     .io_backend_memory_response_bits   (_data_cache_io_backend_memory_response_bits)
   );
   L1_instruction_cache instruction_cache (
-    .clock                  (clock),
-    .reset                  (reset),
-    .AXI_port_AXI_AW_ready  (io_instruction_cache_AXI_port_AXI_AW_ready),
-    .AXI_port_AXI_AW_bits   (io_instruction_cache_AXI_port_AXI_AW_bits),
-    .AXI_port_AXI_W_ready   (io_instruction_cache_AXI_port_AXI_W_ready),
-    .AXI_port_AXI_W_valid   (io_instruction_cache_AXI_port_AXI_W_valid),
-    .AXI_port_AXI_W_bits    (io_instruction_cache_AXI_port_AXI_W_bits),
-    .AXI_port_AXI_B_ready   (io_instruction_cache_AXI_port_AXI_B_ready),
-    .AXI_port_AXI_B_valid   (io_instruction_cache_AXI_port_AXI_B_valid),
-    .AXI_port_AXI_B_bits    (io_instruction_cache_AXI_port_AXI_B_bits),
-    .AXI_port_AXI_AR_ready  (io_instruction_cache_AXI_port_AXI_AR_ready),
-    .AXI_port_AXI_AR_bits   (io_instruction_cache_AXI_port_AXI_AR_bits),
-    .AXI_port_AXI_R_ready   (io_instruction_cache_AXI_port_AXI_R_ready),
-    .AXI_port_AXI_R_valid   (io_instruction_cache_AXI_port_AXI_R_valid),
-    .AXI_port_AXI_R_bits    (io_instruction_cache_AXI_port_AXI_R_bits),
-    .io_CPU_request_ready   (_instruction_cache_io_CPU_request_ready),
-    .io_CPU_response_ready  (1'h0),
-    .io_CPU_response_valid  (_instruction_cache_io_CPU_response_valid),
-    .io_CPU_response_bits   (_instruction_cache_io_CPU_response_bits),
-    .io_DRAM_request_ready  (1'h0),
-    .io_DRAM_request_valid  (/* unused */),
-    .io_DRAM_request_bits   (/* unused */),
-    .io_DRAM_response_ready (/* unused */),
-    .io_DRAM_response_valid (1'h0),
-    .io_DRAM_response_bits  (_GEN_0)
+    .clock                 (clock),
+    .reset                 (reset),
+    .AXI_port_AXI_AW_ready (io_instruction_cache_AXI_port_AXI_AW_ready),
+    .AXI_port_AXI_AW_bits  (io_instruction_cache_AXI_port_AXI_AW_bits),
+    .AXI_port_AXI_W_ready  (io_instruction_cache_AXI_port_AXI_W_ready),
+    .AXI_port_AXI_W_valid  (io_instruction_cache_AXI_port_AXI_W_valid),
+    .AXI_port_AXI_W_bits   (io_instruction_cache_AXI_port_AXI_W_bits),
+    .AXI_port_AXI_B_ready  (io_instruction_cache_AXI_port_AXI_B_ready),
+    .AXI_port_AXI_B_valid  (io_instruction_cache_AXI_port_AXI_B_valid),
+    .AXI_port_AXI_B_bits   (io_instruction_cache_AXI_port_AXI_B_bits),
+    .AXI_port_AXI_AR_ready (io_instruction_cache_AXI_port_AXI_AR_ready),
+    .AXI_port_AXI_AR_valid (io_instruction_cache_AXI_port_AXI_AR_valid),
+    .AXI_port_AXI_AR_bits  (io_instruction_cache_AXI_port_AXI_AR_bits),
+    .AXI_port_AXI_R_ready  (io_instruction_cache_AXI_port_AXI_R_ready),
+    .AXI_port_AXI_R_valid  (io_instruction_cache_AXI_port_AXI_R_valid),
+    .AXI_port_AXI_R_bits   (io_instruction_cache_AXI_port_AXI_R_bits),
+    .io_CPU_request_ready  (_instruction_cache_io_CPU_request_ready),
+    .io_CPU_response_ready (1'h0),
+    .io_CPU_response_valid (_instruction_cache_io_CPU_response_valid),
+    .io_CPU_response_bits  (_instruction_cache_io_CPU_response_bits)
   );
   L1_data_cache data_cache (
     .clock                            (clock),
@@ -149,6 +143,5 @@ module ChaosCore_tile(
     .io_backend_memory_response_bits  (_data_cache_io_backend_memory_response_bits)
   );
   assign io_instruction_cache_AXI_port_AXI_AW_valid = 1'h0;
-  assign io_instruction_cache_AXI_port_AXI_AR_valid = 1'h0;
 endmodule
 

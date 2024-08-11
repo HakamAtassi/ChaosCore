@@ -1,13 +1,16 @@
 
 
-module top_v2;
+module top_v2(
+
+    input logic clock,
+    input logic reset
+
+);
 
     ////////////////
     // INIT WIRES //
     ////////////////
 
-    logic clock;
-    logic reset;
 
     logic dram_AXI_AXI_AW_ready;
     logic dram_AXI_AXI_AW_valid;
@@ -127,40 +130,40 @@ module top_v2;
     );
 
 
-    initial begin
-        reset = 1'b0;
-        @(posedge clock);
-        reset = 1'b1;
-        @(posedge clock); 
-        reset = 1'b0;
-    end
+    //initial begin
+        //reset = 1'b0;
+        //@(posedge clock);
+        //reset = 1'b1;
+        //@(posedge clock); 
+        //reset = 1'b0;
+    //end
 
-    initial begin
-        clock = 0;
-        forever #5 clock = ~clock;
-    end
+    //initial begin
+        //clock = 0;
+        //forever #5 clock = ~clock;
+    //end
 
 
   // load binary from binaries/bin/hello_world.bin
   // axi_ram.mem
   // mem has width of 32 bits
     initial begin
-        $readmemh("binaries/bin/hello_world.hex", axi_ram.ram.mem);
+        $readmemh("binaries/hex/hello_world.hex", axi_ram.ram.mem);
         $display("Binary file loaded into memory.");
     end
 
     initial $display("Running ChaosCore");
 
-    initial begin
-        repeat(10_000) @(posedge clock);
-        $display("Testbench exhausted");
-        $finish;
-    end
+    //initial begin
+        //repeat(10_000) @(posedge clock);
+        //$display("Testbench exhausted");
+        //$finish;
+    //end
 
-    initial begin
-        $dumpfile("dump.vcd");
-        $dumpvars;
-    end
+    //initial begin
+        //$dumpfile("dump.vcd");
+        //$dumpvars;
+    //end
 
 
 

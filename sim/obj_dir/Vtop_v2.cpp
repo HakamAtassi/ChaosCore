@@ -10,6 +10,8 @@
 Vtop_v2::Vtop_v2(VerilatedContext* _vcontextp__, const char* _vcname__)
     : VerilatedModel{*_vcontextp__}
     , vlSymsp{new Vtop_v2__Syms(contextp(), _vcname__, this)}
+    , clock{vlSymsp->TOP.clock}
+    , reset{vlSymsp->TOP.reset}
     , __PVT__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__predecoder__DOT__predictions_out_Q{vlSymsp->TOP.__PVT__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__instruction_fetch__DOT__predecoder__DOT__predictions_out_Q}
     , __PVT__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__decoded_fetch_packet_out_Q{vlSymsp->TOP.__PVT__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__decoded_fetch_packet_out_Q}
     , __PVT__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__predictions_out_Q{vlSymsp->TOP.__PVT__top_v2__DOT__SOC__DOT__ChaosCore_tile__DOT__ChaosCore__DOT__frontend__DOT__decoders__DOT__predictions_out_Q}
@@ -71,19 +73,14 @@ void Vtop_v2::eval_step() {
     Verilated::endOfEval(vlSymsp->__Vm_evalMsgQp);
 }
 
-void Vtop_v2::eval_end_step() {
-    VL_DEBUG_IF(VL_DBG_MSGF("+eval_end_step Vtop_v2::eval_end_step\n"); );
-#ifdef VM_TRACE
-    // Tracing
-    if (VL_UNLIKELY(vlSymsp->__Vm_dumping)) vlSymsp->_traceDump();
-#endif  // VM_TRACE
-}
-
 //============================================================
 // Events and timing
-bool Vtop_v2::eventsPending() { return !vlSymsp->TOP.__VdlySched.empty(); }
+bool Vtop_v2::eventsPending() { return false; }
 
-uint64_t Vtop_v2::nextTimeSlot() { return vlSymsp->TOP.__VdlySched.nextTimeSlot(); }
+uint64_t Vtop_v2::nextTimeSlot() {
+    VL_FATAL_MT(__FILE__, __LINE__, "", "%Error: No delays in the design");
+    return 0;
+}
 
 //============================================================
 // Utilities

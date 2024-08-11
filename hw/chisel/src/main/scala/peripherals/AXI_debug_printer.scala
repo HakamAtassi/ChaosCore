@@ -34,7 +34,6 @@ import circt.stage.ChiselStage
 
 import chisel3.util._
 
-
 class AXI_debug_printer(nocParameters: NOCParameters, addressMap:AddressMap) extends Module{
     import addressMap._
     import nocParameters._
@@ -43,11 +42,66 @@ class AXI_debug_printer(nocParameters: NOCParameters, addressMap:AddressMap) ext
       val s_AXI = Flipped(new AXIFullIO(nocParameters))
     })
 
-    when(0.B /*io.AXI4_slave_port.*/){
-        printf("%c", 0x42.U)
+    object AXI_debug_printer_STATES extends ChiselEnum {
+      val IDLE, WAIT_DATA, PRINTING = Value
     }
 
-    io.s_AXI := DontCare
+    val print_data = Reg(UInt(32.W))
+
+    val AXI_debug_printer_STATE = RegInit(AXI_debug_printer_STATES(), AXI_debug_printer_STATES.IDLE)
+
+    io.s_AXI.AXI_AW.ready   := 0.B
+    io.s_AXI.AXI_W.ready    := 0.B
+    io.s_AXI.AXI_B.valid    := 0.B
+    io.s_AXI.AXI_B.bits     := 0.U.asTypeOf(new AXI_B(nocParameters))
+
+    io.s_AXI.AXI_AR.ready   :=  0.B
+    io.s_AXI.AXI_R.valid    :=  0.B
+    io.s_AXI.AXI_R.bits     :=  0.U.asTypeOf(new AXI_R(nocParameters))
+
+    switch(AXI_debug_printer_STATE){
+      is(AXI_debug_printer_STATES.IDLE){
+        // Write Channels ready
+        // Read Channels never ready
+        io.s_AXI.AXI_AW.ready := 1.B
+        io.s_AXI.AXI_W.ready := 1.B
+        when(io.s_AXI.AXI_AW.fire){
+          // AW channel received
+          AXI_debug_printer_STATE := AXI_debug_printer_STATES.WAIT_DATA
+        }.elsewhen(io.s_AXI.AXI_AW.fire && io.s_AXI.AXI_W.fire){
+          // AW and W channel recieved
+          print_data := io.s_AXI.AXI_W.bits.wdata;
+          AXI_debug_printer_STATE := AXI_debug_printer_STATES.PRINTING
+        }
+      }
+
+      is(AXI_debug_printer_STATES.WAIT_DATA){
+        // AW Channel unready
+        // W Channel ready
+        when(io.s_AXI.AXI_W.fire){
+          print_data := io.s_AXI.AXI_W.bits.wdata;
+          AXI_debug_printer_STATE := AXI_debug_printer_STATES.PRINTING
+        }
+      }
+
+      is(AXI_debug_printer_STATES.PRINTING){
+        // print data
+        printf("%c", print_data)
+
+        // generate B response 
+        io.s_AXI.AXI_B.valid := 1.B
+
+        // goto idle state
+        // FIXME: what if AXI_B is not ready???
+        when(io.s_AXI.AXI_B.fire){
+          AXI_debug_printer_STATE := AXI_debug_printer_STATES.IDLE
+        }
+      }
+    }
+
+
+
+
 
 
 }

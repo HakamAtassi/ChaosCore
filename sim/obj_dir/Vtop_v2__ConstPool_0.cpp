@@ -65,6 +65,12 @@ extern const VlWide<20>/*639:0*/ Vtop_v2__ConstPool__CONST_h3421a0b7_0 = {{
     0xffffffff, 0xffffffff, 0xffffffff, 0x0000001f
 }};
 
+extern const VlWide<9>/*287:0*/ Vtop_v2__ConstPool__CONST_h4d451b67_0 = {{
+    0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
+    0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
+    0x003fffff
+}};
+
 extern const VlWide<8>/*255:0*/ Vtop_v2__ConstPool__CONST_h5b979c07_0 = {{
     0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
     0xffffffff, 0xffffffff, 0xffffffff, 0x000003ff

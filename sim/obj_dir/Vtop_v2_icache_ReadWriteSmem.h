@@ -6,7 +6,6 @@
 #define VERILATED_VTOP_V2_ICACHE_READWRITESMEM_H_  // guard
 
 #include "verilated.h"
-#include "verilated_timing.h"
 
 
 class Vtop_v2__Syms;
@@ -21,6 +20,7 @@ class alignas(VL_CACHE_LINE_BYTES) Vtop_v2_icache_ReadWriteSmem final : public V
     CData/*0:0*/ __PVT__mem_ext__DOT___R0_en_d0;
     CData/*5:0*/ __PVT__mem_ext__DOT___R0_addr_d0;
     VlWide<9>/*277:0*/ __PVT___mem_ext_R0_data;
+    VlWide<9>/*277:0*/ __Vcellinp__mem_ext__W0_data;
     VL_INW(io_data_in,277,0,9);
     VL_OUTW(io_data_out,277,0,9);
     VlUnpacked<VlWide<9>/*277:0*/, 64> __PVT__mem_ext__DOT__Memory;

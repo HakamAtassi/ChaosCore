@@ -7,7 +7,7 @@ import	chisel3.util._
 
 //	Define	the	BlackBox	module
 
-class	axi_ram(nocParameters:NOCParameters)	extends	BlackBox(Map(
+class axi_ram(nocParameters:NOCParameters) extends BlackBox(Map(
 
 	"DATA_WIDTH"						->	32, //nocParameters.DATA_WIDTH,
 	"ADDR_WIDTH"						->	16, //nocParameters.ADDR_WIDTH,
