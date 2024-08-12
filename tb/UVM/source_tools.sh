@@ -9,7 +9,7 @@ source /CMC/scripts/cadence.xceliummain23.03.004.csh
 # Setup Jasper Gold
 
 # Setup Genus
-source /CMC/scripts/cadence.genus.21.17.000.csh
+#source /CMC/scripts/cadence.genus.21.17.000.csh
 
 # Setup vsim
 source /CMC/scripts/siemens.questasim.2022.1_2.csh
