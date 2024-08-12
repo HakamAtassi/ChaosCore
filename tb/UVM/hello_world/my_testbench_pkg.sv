@@ -1,3 +1,7 @@
+
+`include "uvm_macros.svh"
+import uvm_pkg::*;
+
 package my_testbench_pkg;
   import uvm_pkg::*;
   

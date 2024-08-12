@@ -1,3 +1,5 @@
+//`include "uvm_macros.svh"
+//import uvm_pkg::*;
 class my_driver extends uvm_driver #(my_transaction);
 
   `uvm_component_utils(my_driver)
@@ -37,3 +39,6 @@ class my_driver extends uvm_driver #(my_transaction);
   endtask
 
 endclass: my_driver
+
+
+
