@@ -1,3 +1,6 @@
+//`include "uvm_macros.svh"
+//import uvm_pkg::*;
+
 class my_transaction extends uvm_sequence_item;
 
   `uvm_object_utils(my_transaction)
