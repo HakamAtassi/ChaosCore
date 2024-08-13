@@ -31,7 +31,6 @@
 module SDPReadWriteSmem_1(
   input        clock,
                reset,
-               io_enable,
   input  [5:0] io_rd_addr,
   output [1:0] io_data_out,
   input  [5:0] io_wr_addr,
@@ -54,14 +53,14 @@ module SDPReadWriteSmem_1(
   end // always @(posedge)
   mem_64x2_0 mem_ext (
     .R0_addr (io_rd_addr),
-    .R0_en   (io_enable),
+    .R0_en   (1'h1),
     .R0_clk  (clock),
     .R0_data (_mem_ext_R0_data),
     .W0_addr (io_wr_addr),
-    .W0_en   (io_enable & io_wr_en),
+    .W0_en   (io_wr_en),
     .W0_clk  (clock),
     .W0_data (io_data_in)
   );
-  assign io_data_out = hazard_reg ? din_buff : io_enable ? _mem_ext_R0_data : 2'h0;
+  assign io_data_out = hazard_reg ? din_buff : _mem_ext_R0_data;
 endmodule
 

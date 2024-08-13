@@ -29,98 +29,146 @@
 `endif // not def STOP_COND_
 
 module L1_instruction_cache(
-  input                                                                                                                                                                                                                                      clock,
-                                                                                                                                                                                                                                             reset,
-                                                                                                                                                                                                                                             AXI_port_AXI_AW_ready,
-  output struct packed {logic [7:0] awid; logic [31:0] awaddr; logic [7:0] awlen; logic [2:0] awsize; logic [1:0] awburst; logic awlock; logic [3:0] awcache; logic [2:0] awprot; logic [3:0] awqos; logic [3:0] awregion; logic awuser; }   AXI_port_AXI_AW_bits,
-  input                                                                                                                                                                                                                                      AXI_port_AXI_W_ready,
-  output                                                                                                                                                                                                                                     AXI_port_AXI_W_valid,
-  output struct packed {logic [31:0] wdata; logic [3:0] wstrb; logic wlast; logic wuser; }                                                                                                                                                   AXI_port_AXI_W_bits,
-  output                                                                                                                                                                                                                                     AXI_port_AXI_B_ready,
-  input                                                                                                                                                                                                                                      AXI_port_AXI_B_valid,
-  input  struct packed {logic [7:0] bid; logic [1:0] bresp; logic buser; }                                                                                                                                                                   AXI_port_AXI_B_bits,
-  input                                                                                                                                                                                                                                      AXI_port_AXI_AR_ready,
-  output                                                                                                                                                                                                                                     AXI_port_AXI_AR_valid,
-  output struct packed {logic [7:0] arid; logic [31:0] araddr; logic [7:0] arlen; logic [2:0] arsize; logic [1:0] arburst; logic arlock; logic [3:0] arcache; logic [2:0] arprot; logic [3:0] arqos; logic [3:0] arregion; logic aruser; }   AXI_port_AXI_AR_bits,
-  output                                                                                                                                                                                                                                     AXI_port_AXI_R_ready,
-  input                                                                                                                                                                                                                                      AXI_port_AXI_R_valid,
-  input  struct packed {logic [7:0] rid; logic [31:0] rdata; logic [1:0] rresp; logic rlast; logic ruser; }                                                                                                                                  AXI_port_AXI_R_bits,
-  output                                                                                                                                                                                                                                     io_CPU_request_ready,
-  input                                                                                                                                                                                                                                      io_CPU_response_ready,
-  output                                                                                                                                                                                                                                     io_CPU_response_valid,
-  output struct packed {logic [31:0] fetch_PC; logic [3:0] valid_bits; struct packed {logic [31:0] instruction; logic [3:0] packet_index; logic [5:0] ROB_index; }[3:0] instructions; logic [15:0] GHR; logic [6:0] NEXT; logic [6:0] TOS; } io_CPU_response_bits
+  input         clock,
+                reset,
+  output        m_axi_awvalid,
+  input         m_axi_awready,
+  output [7:0]  m_axi_awid,
+  output [31:0] m_axi_awaddr,
+  output [7:0]  m_axi_awlen,
+  output [2:0]  m_axi_awsize,
+  output [1:0]  m_axi_awburst,
+  output        m_axi_awlock,
+  output [3:0]  m_axi_awcache,
+  output [2:0]  m_axi_awprot,
+  output [3:0]  m_axi_awqos,
+                m_axi_awregion,
+  output        m_axi_awuser,
+  input         m_axi_wready,
+  output        m_axi_wvalid,
+  output [31:0] m_axi_wdata,
+  output [3:0]  m_axi_wstrb,
+  output        m_axi_wlast,
+                m_axi_wuser,
+                m_axi_bready,
+  input         m_axi_bvalid,
+  input  [7:0]  m_axi_bid,
+  input  [1:0]  m_axi_bresp,
+  input         m_axi_buser,
+  output        m_axi_arvalid,
+  input         m_axi_arready,
+  output [7:0]  m_axi_arid,
+  output [31:0] m_axi_araddr,
+  output [7:0]  m_axi_arlen,
+  output [2:0]  m_axi_arsize,
+  output [1:0]  m_axi_arburst,
+  output        m_axi_arlock,
+  output [3:0]  m_axi_arcache,
+  output [2:0]  m_axi_arprot,
+  output [3:0]  m_axi_arqos,
+                m_axi_arregion,
+  output        m_axi_aruser,
+                m_axi_rready,
+  input         m_axi_rvalid,
+  input  [7:0]  m_axi_rid,
+  input  [31:0] m_axi_rdata,
+  input  [1:0]  m_axi_rresp,
+  input         m_axi_rlast,
+                m_axi_ruser,
+  output        io_CPU_response_valid,
+  output [31:0] io_CPU_response_bits_fetch_PC,
+  output        io_CPU_response_bits_valid_bits_0,
+                io_CPU_response_bits_valid_bits_1,
+                io_CPU_response_bits_valid_bits_2,
+                io_CPU_response_bits_valid_bits_3,
+  output [31:0] io_CPU_response_bits_instructions_0_instruction,
+  output [3:0]  io_CPU_response_bits_instructions_0_packet_index,
+  output [5:0]  io_CPU_response_bits_instructions_0_ROB_index,
+  output [31:0] io_CPU_response_bits_instructions_1_instruction,
+  output [3:0]  io_CPU_response_bits_instructions_1_packet_index,
+  output [5:0]  io_CPU_response_bits_instructions_1_ROB_index,
+  output [31:0] io_CPU_response_bits_instructions_2_instruction,
+  output [3:0]  io_CPU_response_bits_instructions_2_packet_index,
+  output [5:0]  io_CPU_response_bits_instructions_2_ROB_index,
+  output [31:0] io_CPU_response_bits_instructions_3_instruction,
+  output [3:0]  io_CPU_response_bits_instructions_3_packet_index,
+  output [5:0]  io_CPU_response_bits_instructions_3_ROB_index,
+  output [15:0] io_CPU_response_bits_GHR,
+  output [6:0]  io_CPU_response_bits_NEXT,
+                io_CPU_response_bits_TOS
 );
 
+  wire             CPU_response_valid;
   wire             miss;
-  wire [1:0]       _GEN;
-  wire [1:0]       _GEN_0;
-  wire [2:0]       _GEN_1;
-  wire [7:0]       _GEN_2;
-  wire             _GEN_3;
-  wire [3:0]       _GEN_4;
-  wire [31:0]      _GEN_5;
+  wire [1:0]       hit_oh;
   wire             _CPU_response_skid_buffer_io_enq_ready;
   wire [3:0]       _validator_io_instruction_output;
-  wire struct packed {logic valid; logic [20:0] tag; logic [255:0] data; }
-    _data_memory_1_io_data_out;
-  wire struct packed {logic valid; logic [20:0] tag; logic [255:0] data; }
-    _data_memory_0_io_data_out;
+  wire             _data_memory_1_io_data_out_valid;
+  wire [20:0]      _data_memory_1_io_data_out_tag;
+  wire [255:0]     _data_memory_1_io_data_out_data;
+  wire             _data_memory_0_io_data_out_valid;
+  wire [20:0]      _data_memory_0_io_data_out_tag;
+  wire [255:0]     _data_memory_0_io_data_out_data;
   wire [1:0]       _LRU_memory_io_data_out;
   wire             _final_response_buffer_io_deq_valid;
   wire [255:0]     _final_response_buffer_io_deq_bits;
-  wire struct packed {logic [31:0] addr; logic [31:0] wr_data; logic wr_en; }
-    _fetch_PC_buf_WIRE = '{addr: 32'h0, wr_data: 32'h0, wr_en: 1'h0};
   reg  [255:0]     AXI_AW_DATA_BUFFER;
   reg  [1:0]       AXI_REQUEST_STATE;
-  wire             _GEN_6 = AXI_REQUEST_STATE == 2'h1;
-  wire             _GEN_7 = AXI_REQUEST_STATE == 2'h2;
-  wire             _GEN_8 = _GEN_7 & AXI_port_AXI_R_valid;
+  wire             m_axi_wvalid_0 = AXI_REQUEST_STATE == 2'h1;
+  wire             m_axi_rready_0 = AXI_REQUEST_STATE == 2'h2;
+  wire             _GEN = m_axi_rready_0 & m_axi_rvalid;
   reg  [31:0]      write_counter;
-  assign _GEN_5 = _GEN_6 ? AXI_AW_DATA_BUFFER[31:0] : 32'h0;
-  assign _GEN_4 = {4{_GEN_6}};
-  assign _GEN_3 = _GEN_6 & write_counter == 32'h0;
+  wire             m_axi_wlast_0 = m_axi_wvalid_0 & write_counter == 32'h0;
   reg  [255:0]     AXI_read_buffer;
-  wire             _GEN_9 = _GEN_8 & AXI_port_AXI_R_bits.rlast;
-  wire [255:0]     _GEN_10 = {AXI_read_buffer[223:0], AXI_port_AXI_R_bits.rdata};
+  wire             _GEN_0 = _GEN & m_axi_rlast;
+  wire [255:0]     _GEN_1 = {AXI_read_buffer[223:0], m_axi_rdata};
   reg  [1:0]       cache_state;
-  struct packed {logic [31:0] addr; logic [31:0] wr_data; logic wr_en; } fetch_PC_buf;
-  struct packed {logic [31:0] addr; logic [31:0] wr_data; logic wr_en; } replay_address;
-  wire
-    struct packed {logic [20:0] tag; logic [5:0] set; logic fetch_packet; logic [2:0] instruction_offset; }
-    current_packet;
+  reg  [31:0]      fetch_PC_buf_addr;
+  reg  [31:0]      replay_address_addr;
+  reg  [31:0]      replay_address_wr_data;
+  reg              replay_address_wr_en;
   reg              cache_valid;
-  wire             _GEN_11 = ~(|cache_state) & miss;
-  wire             _GEN_12 = _GEN_11 & ~(|AXI_REQUEST_STATE);
-  assign _GEN_2 = _GEN_11 ? 8'h7 : 8'h0;
-  assign _GEN_1 = _GEN_11 ? 3'h5 : 3'h0;
-  assign _GEN_0 = {1'h0, _GEN_11};
-  wire             _GEN_13 = cache_state == 2'h1;
-  wire             _GEN_14 = (|cache_state) & _GEN_13;
+  wire             _GEN_2 = cache_state == 2'h0;
+  wire             _GEN_3 = _GEN_2 & miss;
+  wire             m_axi_arvalid_0 = _GEN_3 & ~(|AXI_REQUEST_STATE);
+  wire             _GEN_4 = cache_state == 2'h1;
+  wire             _GEN_5 = ~_GEN_2 & _GEN_4;
   wire             axi_response_valid =
-    (|cache_state) & _GEN_13 & _GEN_14 & _final_response_buffer_io_deq_valid;
-  wire struct packed {logic [31:0] addr; logic [31:0] wr_data; logic wr_en; }
-    current_address;
-  assign current_address = (|cache_state) | miss ? replay_address : _fetch_PC_buf_WIRE;
+    ~_GEN_2 & _GEN_4 & _GEN_5 & _final_response_buffer_io_deq_valid;
+  wire             _current_address_T_1 = (|cache_state) | miss;
+  wire [31:0]      current_address_addr =
+    _current_address_T_1 ? replay_address_addr : 32'h0;
+  wire [31:0]      current_address_wr_data =
+    _current_address_T_1 ? replay_address_wr_data : 32'h0;
+  wire             current_address_wr_en = _current_address_T_1 & replay_address_wr_en;
+  wire [20:0]      current_packet_tag = current_address_addr[31:11];
+  wire [5:0]       current_packet_set = current_address_addr[10:5];
+  wire             current_packet_fetch_packet = current_address_addr[4];
+  wire [2:0]       current_packet_instruction_offset = current_address_addr[4:2];
   reg  [5:0]       LRU_memory_io_wr_addr_REG;
   wire [1:0]       allocate_way =
     _LRU_memory_io_data_out[1] ? {1'h0, ~(_LRU_memory_io_data_out[0])} : 2'h2;
+  wire [255:0]     current_data_data =
+    {224'h0, _GEN_2 | ~_GEN_4 ? 32'h0 : _final_response_buffer_io_deq_bits[31:0]};
   wire             _data_memory_1_io_wr_en_T_2 = cache_state == 2'h1;
   reg  [20:0]      hit_oh_vec_0_REG;
+  wire             hit_oh_vec_0 =
+    _data_memory_0_io_data_out_tag == hit_oh_vec_0_REG & _data_memory_0_io_data_out_valid;
   reg  [20:0]      hit_oh_vec_1_REG;
-  assign _GEN =
-    {{_data_memory_1_io_data_out.tag == hit_oh_vec_1_REG},
-     {_data_memory_0_io_data_out.tag == hit_oh_vec_0_REG}}
-    & {{_data_memory_1_io_data_out.valid}, {_data_memory_0_io_data_out.valid}};
+  wire             hit_oh_vec_1 =
+    _data_memory_1_io_data_out_tag == hit_oh_vec_1_REG & _data_memory_1_io_data_out_valid;
+  assign hit_oh = {hit_oh_vec_1, hit_oh_vec_0};
   wire             replay_valid = cache_state == 2'h2;
   reg              hit_REG_2;
-  wire             hit = (|_GEN) & replay_valid & ~hit_REG_2;
+  wire             hit = (|hit_oh) & replay_valid & ~hit_REG_2;
   reg              miss_REG_2;
-  assign miss = ~(|_GEN) & replay_valid & ~miss_REG_2;
+  assign miss = ~(|hit_oh) & replay_valid & ~miss_REG_2;
   wire [255:0]     hit_instruction_data =
-    _GEN[1]
-      ? _data_memory_1_io_data_out.data
-      : _GEN[0] ? _data_memory_0_io_data_out.data : 256'h0;
-  wire [7:0][31:0] instruction_vec =
+    hit_oh_vec_1
+      ? _data_memory_1_io_data_out_data
+      : hit_oh_vec_0 ? _data_memory_0_io_data_out_data : 256'h0;
+  reg              CPU_response_bits_instructions_0_instruction_REG;
+  wire [7:0][31:0] _GEN_6 =
     {{hit_instruction_data[255:224]},
      {hit_instruction_data[223:192]},
      {hit_instruction_data[191:160]},
@@ -129,217 +177,211 @@ module L1_instruction_cache(
      {hit_instruction_data[95:64]},
      {hit_instruction_data[63:32]},
      {hit_instruction_data[31:0]}};
-  reg              CPU_response_bits_instructions_0_instruction_REG;
   reg              CPU_response_bits_instructions_1_instruction_REG;
   reg              CPU_response_bits_instructions_2_instruction_REG;
   reg              CPU_response_bits_instructions_3_instruction_REG;
-  wire             _CPU_response_valid_T = cache_valid | hit;
-  wire
-    struct packed {logic [31:0] instruction; logic [3:0] packet_index; logic [5:0] ROB_index; }
-    _GEN_15 =
-    '{instruction:
-        instruction_vec[{CPU_response_bits_instructions_3_instruction_REG, 2'h0} + 3'h3],
-      packet_index: (4'h3),
-      ROB_index: (6'h0)};
-  wire
-    struct packed {logic [31:0] instruction; logic [3:0] packet_index; logic [5:0] ROB_index; }
-    _GEN_16 =
-    '{instruction:
-        instruction_vec[{CPU_response_bits_instructions_2_instruction_REG, 2'h0} + 3'h2],
-      packet_index: (4'h2),
-      ROB_index: (6'h0)};
-  wire
-    struct packed {logic [31:0] instruction; logic [3:0] packet_index; logic [5:0] ROB_index; }
-    _GEN_17 =
-    '{instruction:
-        instruction_vec[{CPU_response_bits_instructions_1_instruction_REG, 2'h0} + 3'h1],
-      packet_index: (4'h1),
-      ROB_index: (6'h0)};
-  wire
-    struct packed {logic [31:0] instruction; logic [3:0] packet_index; logic [5:0] ROB_index; }
-    _GEN_18 =
-    '{instruction:
-        instruction_vec[{CPU_response_bits_instructions_0_instruction_REG, 2'h0}],
-      packet_index: (4'h0),
-      ROB_index: (6'h0)};
-  wire struct packed {logic valid; logic [20:0] tag; logic [255:0] data; } current_data =
-    '{valid: (1'h1),
-      tag: (replay_address.addr[31:11]),
-      data: {224'h0, _GEN_14 ? _final_response_buffer_io_deq_bits[31:0] : 32'h0}};
-  assign current_packet =
-    '{tag: (current_address.addr[31:11]),
-      set: (current_address.addr[10:5]),
-      fetch_packet: (current_address.addr[4]),
-      instruction_offset: (current_address.addr[4:2])};
-  wire
-    struct packed {logic [31:0] fetch_PC; logic [3:0] valid_bits; struct packed {logic [31:0] instruction; logic [3:0] packet_index; logic [5:0] ROB_index; }[3:0] instructions; logic [15:0] GHR; logic [6:0] NEXT; logic [6:0] TOS; }
-    _GEN_19 =
-    '{fetch_PC: fetch_PC_buf.addr,
-      valid_bits:
-        ({{_validator_io_instruction_output[0]},
-          {_validator_io_instruction_output[1]},
-          {_validator_io_instruction_output[2]},
-          {_validator_io_instruction_output[3]}}
-         & {{_CPU_response_valid_T},
-            {_CPU_response_valid_T},
-            {_CPU_response_valid_T},
-            {_CPU_response_valid_T}}),
-      instructions: ({{_GEN_15}, {_GEN_16}, {_GEN_17}, {_GEN_18}}),
-      GHR: (16'h0),
-      NEXT: (7'h0),
-      TOS: (7'h0)};
+  assign CPU_response_valid = cache_valid | hit;
   always @(posedge clock) begin
-    automatic logic _GEN_20;
-    automatic logic _GEN_21;
-    _GEN_20 = AXI_port_AXI_W_ready & _GEN_6;
-    _GEN_21 = _GEN_6 & _GEN_20;
-    if (_GEN_21)
+    automatic logic _GEN_7;
+    automatic logic _GEN_8;
+    _GEN_7 = m_axi_wready & m_axi_wvalid_0;
+    _GEN_8 = m_axi_wvalid_0 & _GEN_7;
+    if (_GEN_8)
       AXI_AW_DATA_BUFFER <= {32'h0, AXI_AW_DATA_BUFFER[255:32]};
-    if (~_GEN_7 | _GEN_9 | ~_GEN_8) begin
+    if (~m_axi_rready_0 | _GEN_0 | ~_GEN) begin
     end
     else
-      AXI_read_buffer <= _GEN_10;
-    LRU_memory_io_wr_addr_REG <= current_packet.set;
-    hit_oh_vec_0_REG <= current_packet.tag;
-    hit_oh_vec_1_REG <= current_packet.tag;
+      AXI_read_buffer <= _GEN_1;
+    LRU_memory_io_wr_addr_REG <= current_packet_set;
+    hit_oh_vec_0_REG <= current_packet_tag;
+    hit_oh_vec_1_REG <= current_packet_tag;
     hit_REG_2 <= reset;
     miss_REG_2 <= reset;
-    CPU_response_bits_instructions_0_instruction_REG <= current_packet.fetch_packet;
-    CPU_response_bits_instructions_1_instruction_REG <= current_packet.fetch_packet;
-    CPU_response_bits_instructions_2_instruction_REG <= current_packet.fetch_packet;
-    CPU_response_bits_instructions_3_instruction_REG <= current_packet.fetch_packet;
+    CPU_response_bits_instructions_0_instruction_REG <= current_packet_fetch_packet;
+    CPU_response_bits_instructions_1_instruction_REG <= current_packet_fetch_packet;
+    CPU_response_bits_instructions_2_instruction_REG <= current_packet_fetch_packet;
+    CPU_response_bits_instructions_3_instruction_REG <= current_packet_fetch_packet;
     if (reset) begin
-      automatic struct packed {logic [31:0] addr; logic [31:0] wr_data; logic wr_en; }
-        _fetch_PC_buf_WIRE_0 = '{addr: 32'h0, wr_data: 32'h0, wr_en: 1'h0};
       AXI_REQUEST_STATE <= 2'h0;
       write_counter <= 32'h0;
       cache_state <= 2'h0;
-      fetch_PC_buf <= _fetch_PC_buf_WIRE_0;
-      replay_address <= _fetch_PC_buf_WIRE_0;
+      fetch_PC_buf_addr <= 32'h0;
+      replay_address_addr <= 32'h0;
+      replay_address_wr_data <= 32'h0;
+      replay_address_wr_en <= 1'h0;
       cache_valid <= 1'h0;
     end
     else begin
-      automatic logic _GEN_22 = (|cache_state) | miss;
-      automatic logic _GEN_23;
-      _GEN_23 =
-        cache_state == 2'h2 & _CPU_response_valid_T
-        & _CPU_response_skid_buffer_io_enq_ready;
+      automatic logic _GEN_9 = ~_GEN_2 | miss;
+      automatic logic _GEN_10;
+      _GEN_10 =
+        cache_state == 2'h2 & CPU_response_valid & _CPU_response_skid_buffer_io_enq_ready;
       if (|AXI_REQUEST_STATE) begin
-        if (_GEN_6) begin
-          if (_GEN_3 & _GEN_20)
+        if (m_axi_wvalid_0) begin
+          if (m_axi_wlast_0 & _GEN_7)
             AXI_REQUEST_STATE <= 2'h3;
         end
         else if ((&AXI_REQUEST_STATE)
-                   ? (&AXI_REQUEST_STATE) & AXI_port_AXI_B_valid
-                   : _GEN_7 & AXI_port_AXI_R_bits.rlast & _GEN_8)
+                   ? (&AXI_REQUEST_STATE) & m_axi_bvalid
+                   : m_axi_rready_0 & m_axi_rlast & _GEN)
           AXI_REQUEST_STATE <= 2'h0;
       end
       else
-        AXI_REQUEST_STATE <= {AXI_port_AXI_AR_ready & _GEN_12, 1'h0};
-      if (_GEN_21)
+        AXI_REQUEST_STATE <= {m_axi_arready & m_axi_arvalid_0, 1'h0};
+      if (_GEN_8)
         write_counter <= write_counter - 32'h1;
-      if (|cache_state) begin
-        if (_GEN_13) begin
-          if (axi_response_valid)
-            cache_state <= 2'h2;
-        end
-        else if (_GEN_23)
-          cache_state <= 2'h0;
+      if (_GEN_2) begin
+        if (miss)
+          cache_state <= 2'h1;
       end
-      else if (miss)
-        cache_state <= 2'h1;
-      fetch_PC_buf <=
-        '{addr: (_GEN_22 ? fetch_PC_buf.addr : 32'h0),
-          wr_data: (_GEN_22 ? fetch_PC_buf.wr_data : 32'h0),
-          wr_en: (_GEN_22 & fetch_PC_buf.wr_en)};
-      replay_address <=
-        '{addr: (_GEN_22 ? replay_address.addr : 32'h0),
-          wr_data: (_GEN_22 ? replay_address.wr_data : 32'h0),
-          wr_en: (_GEN_22 & replay_address.wr_en)};
-      cache_valid <= (~(|cache_state) | _GEN_13 | ~_GEN_23) & cache_valid;
+      else if (_GEN_4) begin
+        if (axi_response_valid)
+          cache_state <= 2'h2;
+      end
+      else if (_GEN_10)
+        cache_state <= 2'h0;
+      if (_GEN_9) begin
+      end
+      else begin
+        fetch_PC_buf_addr <= 32'h0;
+        replay_address_addr <= 32'h0;
+        replay_address_wr_data <= 32'h0;
+      end
+      replay_address_wr_en <= _GEN_9 & replay_address_wr_en;
+      cache_valid <= (_GEN_2 | _GEN_4 | ~_GEN_10) & cache_valid;
     end
   end // always @(posedge)
   Queue1_UInt256 final_response_buffer (
     .clock        (clock),
     .reset        (reset),
-    .io_enq_ready (/* unused */),
-    .io_enq_valid (_GEN_7 & _GEN_9),
-    .io_enq_bits  (_GEN_10),
-    .io_deq_ready (_GEN_14),
+    .io_enq_valid (m_axi_rready_0 & _GEN_0),
+    .io_enq_bits  (_GEN_1),
+    .io_deq_ready (_GEN_5),
     .io_deq_valid (_final_response_buffer_io_deq_valid),
-    .io_deq_bits  (_final_response_buffer_io_deq_bits),
-    .io_count     (/* unused */)
+    .io_deq_bits  (_final_response_buffer_io_deq_bits)
   );
   SDPReadWriteSmem_1 LRU_memory (
     .clock       (clock),
     .reset       (reset),
-    .io_enable   (1'h1),
-    .io_rd_addr  (current_packet.set),
+    .io_rd_addr  (current_packet_set),
     .io_data_out (_LRU_memory_io_data_out),
     .io_wr_addr  (LRU_memory_io_wr_addr_REG),
     .io_wr_en    (hit),
     .io_data_in
-      ({2{(_LRU_memory_io_data_out | _GEN) != 2'h3}} & _LRU_memory_io_data_out | _GEN)
+      ({2{(_LRU_memory_io_data_out | hit_oh) != 2'h3}} & _LRU_memory_io_data_out | hit_oh)
   );
   icache_ReadWriteSmem data_memory_0 (
-    .clock       (clock),
-    .io_wr_en    (axi_response_valid & allocate_way[0] & _data_memory_1_io_wr_en_T_2),
-    .io_addr     (current_packet.set),
-    .io_data_in  (current_data),
-    .io_data_out (_data_memory_0_io_data_out)
+    .clock             (clock),
+    .io_wr_en
+      (axi_response_valid & allocate_way[0] & _data_memory_1_io_wr_en_T_2),
+    .io_addr           (current_packet_set),
+    .io_data_in_tag    (replay_address_addr[31:11]),
+    .io_data_in_data   (current_data_data),
+    .io_data_out_valid (_data_memory_0_io_data_out_valid),
+    .io_data_out_tag   (_data_memory_0_io_data_out_tag),
+    .io_data_out_data  (_data_memory_0_io_data_out_data)
   );
   icache_ReadWriteSmem data_memory_1 (
-    .clock       (clock),
-    .io_wr_en    (axi_response_valid & allocate_way[1] & _data_memory_1_io_wr_en_T_2),
-    .io_addr     (current_packet.set),
-    .io_data_in  (current_data),
-    .io_data_out (_data_memory_1_io_data_out)
+    .clock             (clock),
+    .io_wr_en
+      (axi_response_valid & allocate_way[1] & _data_memory_1_io_wr_en_T_2),
+    .io_addr           (current_packet_set),
+    .io_data_in_tag    (replay_address_addr[31:11]),
+    .io_data_in_data   (current_data_data),
+    .io_data_out_valid (_data_memory_1_io_data_out_valid),
+    .io_data_out_tag   (_data_memory_1_io_data_out_tag),
+    .io_data_out_data  (_data_memory_1_io_data_out_data)
   );
   instruction_validator validator (
-    .io_instruction_index  (fetch_PC_buf.addr[3:2]),
+    .io_instruction_index  (fetch_PC_buf_addr[3:2]),
     .io_instruction_output (_validator_io_instruction_output)
   );
   Queue1_fetch_packet CPU_response_skid_buffer (
-    .clock        (clock),
-    .reset        (reset),
-    .io_enq_ready (_CPU_response_skid_buffer_io_enq_ready),
-    .io_enq_valid (_CPU_response_valid_T),
-    .io_enq_bits  (_GEN_19),
-    .io_deq_ready (io_CPU_response_ready),
-    .io_deq_valid (io_CPU_response_valid),
-    .io_deq_bits  (io_CPU_response_bits),
-    .io_count     (/* unused */)
+    .clock                                   (clock),
+    .reset                                   (reset),
+    .io_enq_ready                            (_CPU_response_skid_buffer_io_enq_ready),
+    .io_enq_valid                            (CPU_response_valid),
+    .io_enq_bits_fetch_PC                    (fetch_PC_buf_addr),
+    .io_enq_bits_valid_bits_0
+      (_validator_io_instruction_output[3] & CPU_response_valid),
+    .io_enq_bits_valid_bits_1
+      (_validator_io_instruction_output[2] & CPU_response_valid),
+    .io_enq_bits_valid_bits_2
+      (_validator_io_instruction_output[1] & CPU_response_valid),
+    .io_enq_bits_valid_bits_3
+      (_validator_io_instruction_output[0] & CPU_response_valid),
+    .io_enq_bits_instructions_0_instruction
+      (_GEN_6[{CPU_response_bits_instructions_0_instruction_REG, 2'h0}]),
+    .io_enq_bits_instructions_1_instruction
+      (_GEN_6[{CPU_response_bits_instructions_1_instruction_REG, 2'h0} + 3'h1]),
+    .io_enq_bits_instructions_2_instruction
+      (_GEN_6[{CPU_response_bits_instructions_2_instruction_REG, 2'h0} + 3'h2]),
+    .io_enq_bits_instructions_3_instruction
+      (_GEN_6[{CPU_response_bits_instructions_3_instruction_REG, 2'h0} + 3'h3]),
+    .io_deq_valid                            (io_CPU_response_valid),
+    .io_deq_bits_fetch_PC                    (io_CPU_response_bits_fetch_PC),
+    .io_deq_bits_valid_bits_0                (io_CPU_response_bits_valid_bits_0),
+    .io_deq_bits_valid_bits_1                (io_CPU_response_bits_valid_bits_1),
+    .io_deq_bits_valid_bits_2                (io_CPU_response_bits_valid_bits_2),
+    .io_deq_bits_valid_bits_3                (io_CPU_response_bits_valid_bits_3),
+    .io_deq_bits_instructions_0_instruction
+      (io_CPU_response_bits_instructions_0_instruction),
+    .io_deq_bits_instructions_0_packet_index
+      (io_CPU_response_bits_instructions_0_packet_index),
+    .io_deq_bits_instructions_0_ROB_index
+      (io_CPU_response_bits_instructions_0_ROB_index),
+    .io_deq_bits_instructions_1_instruction
+      (io_CPU_response_bits_instructions_1_instruction),
+    .io_deq_bits_instructions_1_packet_index
+      (io_CPU_response_bits_instructions_1_packet_index),
+    .io_deq_bits_instructions_1_ROB_index
+      (io_CPU_response_bits_instructions_1_ROB_index),
+    .io_deq_bits_instructions_2_instruction
+      (io_CPU_response_bits_instructions_2_instruction),
+    .io_deq_bits_instructions_2_packet_index
+      (io_CPU_response_bits_instructions_2_packet_index),
+    .io_deq_bits_instructions_2_ROB_index
+      (io_CPU_response_bits_instructions_2_ROB_index),
+    .io_deq_bits_instructions_3_instruction
+      (io_CPU_response_bits_instructions_3_instruction),
+    .io_deq_bits_instructions_3_packet_index
+      (io_CPU_response_bits_instructions_3_packet_index),
+    .io_deq_bits_instructions_3_ROB_index
+      (io_CPU_response_bits_instructions_3_ROB_index),
+    .io_deq_bits_GHR                         (io_CPU_response_bits_GHR),
+    .io_deq_bits_NEXT                        (io_CPU_response_bits_NEXT),
+    .io_deq_bits_TOS                         (io_CPU_response_bits_TOS)
   );
-  assign AXI_port_AXI_AW_bits =
-    '{awid: 8'h0,
-      awaddr: 32'h0,
-      awlen: 8'h0,
-      awsize: 3'h0,
-      awburst: 2'h0,
-      awlock: 1'h0,
-      awcache: 4'h0,
-      awprot: 3'h0,
-      awqos: 4'h0,
-      awregion: 4'h0,
-      awuser: 1'h0};
-  assign AXI_port_AXI_W_valid = _GEN_6;
-  assign AXI_port_AXI_W_bits =
-    '{wdata: _GEN_5, wstrb: _GEN_4, wlast: _GEN_3, wuser: (1'h0)};
-  assign AXI_port_AXI_B_ready = &AXI_REQUEST_STATE;
-  assign AXI_port_AXI_AR_valid = _GEN_12;
-  assign AXI_port_AXI_AR_bits =
-    '{arid: (8'h0),
-      araddr: (32'h0),
-      arlen: _GEN_2,
-      arsize: _GEN_1,
-      arburst: _GEN_0,
-      arlock: (1'h0),
-      arcache: (4'h0),
-      arprot: (3'h0),
-      arqos: (4'h0),
-      arregion: (4'h0),
-      aruser: (1'h0)};
-  assign AXI_port_AXI_R_ready = _GEN_7;
-  assign io_CPU_request_ready = ~(|cache_state) & ~miss & io_CPU_response_ready;
+  assign m_axi_awvalid = 1'h0;
+  assign m_axi_awid = 8'h0;
+  assign m_axi_awaddr = 32'h0;
+  assign m_axi_awlen = 8'h0;
+  assign m_axi_awsize = 3'h0;
+  assign m_axi_awburst = 2'h0;
+  assign m_axi_awlock = 1'h0;
+  assign m_axi_awcache = 4'h0;
+  assign m_axi_awprot = 3'h0;
+  assign m_axi_awqos = 4'h0;
+  assign m_axi_awregion = 4'h0;
+  assign m_axi_awuser = 1'h0;
+  assign m_axi_wvalid = m_axi_wvalid_0;
+  assign m_axi_wdata = m_axi_wvalid_0 ? AXI_AW_DATA_BUFFER[31:0] : 32'h0;
+  assign m_axi_wstrb = {4{m_axi_wvalid_0}};
+  assign m_axi_wlast = m_axi_wlast_0;
+  assign m_axi_wuser = 1'h0;
+  assign m_axi_bready = &AXI_REQUEST_STATE;
+  assign m_axi_arvalid = m_axi_arvalid_0;
+  assign m_axi_arid = 8'h0;
+  assign m_axi_araddr = 32'h0;
+  assign m_axi_arlen = _GEN_3 ? 8'h7 : 8'h0;
+  assign m_axi_arsize = _GEN_3 ? 3'h5 : 3'h0;
+  assign m_axi_arburst = {1'h0, _GEN_3};
+  assign m_axi_arlock = 1'h0;
+  assign m_axi_arcache = 4'h0;
+  assign m_axi_arprot = 3'h0;
+  assign m_axi_arqos = 4'h0;
+  assign m_axi_arregion = 4'h0;
+  assign m_axi_aruser = 1'h0;
+  assign m_axi_rready = m_axi_rready_0;
 endmodule
 

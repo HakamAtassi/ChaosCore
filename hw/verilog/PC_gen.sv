@@ -29,29 +29,62 @@
 `endif // not def STOP_COND_
 
 module PC_gen(
-  input                                                                                                                                                                                                                                                                                                                                                                                                      clock,
-                                                                                                                                                                                                                                                                                                                                                                                                             reset,
-  input  struct packed {logic valid; struct packed {logic [31:0] fetch_PC; logic T_NT; logic [5:0] ROB_index; logic [2:0] br_type; logic [1:0] fetch_packet_index; logic is_misprediction; logic exception; logic [31:0] expected_PC; logic [15:0] GHR; logic [6:0] TOS; logic [6:0] NEXT; logic [7:0] free_list_front_pointer; logic [3:0][4:0] RDold; logic [3:0][6:0] RD; logic [3:0] RD_valid; } bits; } io_commit,
-  input  struct packed {logic valid; struct packed {logic [31:0] PC; } bits; }                                                                                                                                                                                                                                                                                                                               io_revert,
-  output                                                                                                                                                                                                                                                                                                                                                                                                     io_prediction_ready,
-  input                                                                                                                                                                                                                                                                                                                                                                                                      io_prediction_valid,
-  input  struct packed {logic hit; logic [31:0] target; logic [2:0] br_type; logic [15:0] GHR; logic T_NT; }                                                                                                                                                                                                                                                                                                 io_prediction_bits,
-  input  struct packed {logic [6:0] NEXT; logic [6:0] TOS; logic [31:0] ret_addr; }                                                                                                                                                                                                                                                                                                                          io_RAS_read,
-  input                                                                                                                                                                                                                                                                                                                                                                                                      io_PC_next_ready,
-  output                                                                                                                                                                                                                                                                                                                                                                                                     io_PC_next_valid,
-  output struct packed {logic [31:0] addr; logic [31:0] wr_data; logic wr_en; }                                                                                                                                                                                                                                                                                                                              io_PC_next_bits
+  input         clock,
+                reset,
+                io_commit_valid,
+  input  [31:0] io_commit_bits_fetch_PC,
+  input         io_commit_bits_T_NT,
+  input  [5:0]  io_commit_bits_ROB_index,
+  input  [2:0]  io_commit_bits_br_type,
+  input  [1:0]  io_commit_bits_fetch_packet_index,
+  input         io_commit_bits_is_misprediction,
+                io_commit_bits_exception,
+  input  [31:0] io_commit_bits_expected_PC,
+  input  [15:0] io_commit_bits_GHR,
+  input  [6:0]  io_commit_bits_TOS,
+                io_commit_bits_NEXT,
+  input  [7:0]  io_commit_bits_free_list_front_pointer,
+  input  [4:0]  io_commit_bits_RDold_0,
+                io_commit_bits_RDold_1,
+                io_commit_bits_RDold_2,
+                io_commit_bits_RDold_3,
+  input  [6:0]  io_commit_bits_RD_0,
+                io_commit_bits_RD_1,
+                io_commit_bits_RD_2,
+                io_commit_bits_RD_3,
+  input         io_commit_bits_RD_valid_0,
+                io_commit_bits_RD_valid_1,
+                io_commit_bits_RD_valid_2,
+                io_commit_bits_RD_valid_3,
+                io_revert_valid,
+  input  [31:0] io_revert_bits_PC,
+  output        io_prediction_ready,
+  input         io_prediction_valid,
+                io_prediction_bits_hit,
+  input  [31:0] io_prediction_bits_target,
+  input  [2:0]  io_prediction_bits_br_type,
+  input  [15:0] io_prediction_bits_GHR,
+  input         io_prediction_bits_T_NT,
+  input  [6:0]  io_RAS_read_NEXT,
+                io_RAS_read_TOS,
+  input  [31:0] io_RAS_read_ret_addr,
+  input         io_PC_next_ready,
+  output        io_PC_next_valid,
+  output [31:0] io_PC_next_bits_addr,
+                io_PC_next_bits_wr_data,
+  output        io_PC_next_bits_wr_en
 );
 
   reg  [31:0] PC_reg;
   reg  [31:0] flush_PC_reg;
-  wire        is_misprediction = io_commit.valid & io_commit.bits.is_misprediction;
-  wire        is_ret = io_prediction_bits.br_type == 3'h4 & io_prediction_valid;
-  wire        flushing_event = is_misprediction | io_revert.valid;
+  wire        is_misprediction = io_commit_valid & io_commit_bits_is_misprediction;
+  wire        is_ret = io_prediction_bits_br_type == 3'h4 & io_prediction_valid;
+  wire        flushing_event = is_misprediction | io_revert_valid;
   reg         REG;
   wire [31:0] PC_mux =
-    io_prediction_bits.hit & io_prediction_valid & ~is_ret
-      ? io_prediction_bits.target
-      : is_ret ? io_RAS_read.ret_addr : REG ? flush_PC_reg : PC_reg;
+    io_prediction_bits_hit & io_prediction_valid & ~is_ret
+      ? io_prediction_bits_target
+      : is_ret ? io_RAS_read_ret_addr : REG ? flush_PC_reg : PC_reg;
   always @(posedge clock) begin
     if (reset) begin
       PC_reg <= 32'h0;
@@ -62,13 +95,15 @@ module PC_gen(
         PC_reg <= PC_mux + {26'h0, 6'h10 - {2'h0, PC_mux[3:0]}};
       flush_PC_reg <=
         is_misprediction
-          ? io_commit.bits.fetch_PC
-          : io_revert.valid ? io_revert.bits.PC : 32'h0;
+          ? io_commit_bits_fetch_PC
+          : io_revert_valid ? io_revert_bits_PC : 32'h0;
     end
     REG <= flushing_event;
   end // always @(posedge)
   assign io_prediction_ready = io_PC_next_ready;
   assign io_PC_next_valid = ~flushing_event;
-  assign io_PC_next_bits = '{addr: PC_mux, wr_data: (32'h0), wr_en: (1'h0)};
+  assign io_PC_next_bits_addr = PC_mux;
+  assign io_PC_next_bits_wr_data = 32'h0;
+  assign io_PC_next_bits_wr_en = 1'h0;
 endmodule
 

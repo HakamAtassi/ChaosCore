@@ -29,29 +29,17 @@
 `endif // not def STOP_COND_
 
 module icache_ReadWriteSmem(
-  input                                                                      clock,
-                                                                             io_wr_en,
-  input  [5:0]                                                               io_addr,
-  input  struct packed {logic valid; logic [20:0] tag; logic [255:0] data; } io_data_in,
-  output struct packed {logic valid; logic [20:0] tag; logic [255:0] data; } io_data_out
+  input          clock,
+                 io_wr_en,
+  input  [5:0]   io_addr,
+  input  [20:0]  io_data_in_tag,
+  input  [255:0] io_data_in_data,
+  output         io_data_out_valid,
+  output [20:0]  io_data_out_tag,
+  output [255:0] io_data_out_data
 );
 
-  wire [255:0] _GEN;
-  wire [20:0]  _GEN_0;
-  wire         _GEN_1;
-  wire         _GEN_2;
-  wire         _GEN_3;
-  wire         _GEN_4;
   wire [277:0] _mem_ext_R0_data;
-  wire struct packed {logic valid; logic tag; logic data; } _GEN_5 = /*cast(bit)*/3'h0;
-  wire struct packed {logic valid; logic [20:0] tag; logic [255:0] data; } _GEN_6 =
-    /*cast(bit)*/278'h0;
-  assign _GEN_4 = io_wr_en | _GEN_5.valid;
-  assign _GEN_3 = io_wr_en | _GEN_5.tag;
-  assign _GEN_2 = io_wr_en | _GEN_5.data;
-  assign _GEN_1 = io_wr_en ? io_data_in.valid : _GEN_6.valid;
-  assign _GEN_0 = io_wr_en ? io_data_in.tag : _GEN_6.tag;
-  assign _GEN = io_wr_en ? io_data_in.data : _GEN_6.data;
   mem_64x278 mem_ext (
     .R0_addr (io_addr),
     .R0_en   (1'h1),
@@ -60,9 +48,10 @@ module icache_ReadWriteSmem(
     .W0_addr (io_addr),
     .W0_en   (io_wr_en),
     .W0_clk  (clock),
-    .W0_data ({_GEN, _GEN_0, _GEN_1}),
-    .W0_mask ({{256{_GEN_2}}, {21{_GEN_3}}, _GEN_4})
+    .W0_data ({io_data_in_data, io_data_in_tag, 1'h1})
   );
-  assign io_data_out = /*cast(bit)*/_mem_ext_R0_data;
+  assign io_data_out_valid = _mem_ext_R0_data[0];
+  assign io_data_out_tag = _mem_ext_R0_data[21:1];
+  assign io_data_out_data = _mem_ext_R0_data[277:22];
 endmodule
 

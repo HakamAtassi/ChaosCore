@@ -29,174 +29,472 @@
 `endif // not def STOP_COND_
 
 module ROB(
-  input                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     clock,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            reset,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            io_flush,
-  output                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    io_ROB_packet_ready,
-  input                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     io_ROB_packet_valid,
-  input  struct packed {logic [31:0] fetch_PC; struct packed {struct packed {logic RS1_ready; logic RS2_ready; } ready_bits; logic [4:0] RDold; logic [6:0] RD; logic RD_valid; logic [6:0] RS1; logic RS1_valid; logic [6:0] RS2; logic RS2_valid; logic [20:0] IMM; logic [2:0] FUNCT3; logic [1:0] packet_index; logic [5:0] ROB_index; logic [3:0] MOB_index; logic [3:0] FTQ_index; logic [4:0] instructionType; logic [1:0] portID; logic [1:0] RS_type; logic needs_ALU; logic needs_branch_unit; logic needs_CSRs; logic SUBTRACT; logic MULTIPLY; logic IS_IMM; logic [1:0] memory_type; logic [1:0] access_width; }[3:0] decoded_instruction; logic [3:0] valid_bits; logic [15:0] GHR; logic [6:0] TOS; logic [6:0] NEXT; logic [7:0] free_list_front_pointer; } io_ROB_packet_bits,
-  input  struct packed {logic valid; struct packed {logic [6:0] RD; logic [31:0] RD_data; logic RD_valid; logic [31:0] fetch_PC; logic branch_taken; logic [31:0] target_address; logic branch_valid; logic [31:0] address; logic [1:0] memory_type; logic [1:0] access_width; logic is_unsigned; logic [31:0] wr_data; logic [3:0] MOB_index; logic [5:0] ROB_index; logic [3:0] FTQ_index; logic [1:0] fetch_packet_index; logic exception; } bits; }[3:0]                                                                                                                                                                                                                                                                                                                io_FU_outputs,
-  output struct packed {logic row_valid; logic [31:0] fetch_PC; logic [5:0] ROB_index; logic [15:0] GHR; logic [6:0] NEXT; logic [6:0] TOS; logic [7:0] free_list_front_pointer; struct packed {logic valid; logic is_branch; logic [1:0] memory_type; logic [6:0] RD; logic RD_valid; logic [4:0] RDold; }[3:0] ROB_entries; logic [3:0] complete; logic [3:0] exception; }                                                                                                                                                                                                                                                                                                                                                                                                io_ROB_output,
-  input  struct packed {logic valid; struct packed {logic [31:0] fetch_PC; logic T_NT; logic [5:0] ROB_index; logic [2:0] br_type; logic [1:0] fetch_packet_index; logic is_misprediction; logic exception; logic [31:0] expected_PC; logic [15:0] GHR; logic [6:0] TOS; logic [6:0] NEXT; logic [7:0] free_list_front_pointer; logic [3:0][4:0] RDold; logic [3:0][6:0] RD; logic [3:0] RD_valid; } bits; }                                                                                                                                                                                                                                                                                                                                                                io_commit,
-  output [5:0]                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              io_ROB_index,
-  input  [5:0]                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              io_PC_file_exec_addr,
-  output [31:0]                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             io_PC_file_exec_data
+  input         clock,
+                reset,
+                io_flush,
+  output        io_ROB_packet_ready,
+  input         io_ROB_packet_valid,
+  input  [31:0] io_ROB_packet_bits_fetch_PC,
+  input         io_ROB_packet_bits_decoded_instruction_0_ready_bits_RS1_ready,
+                io_ROB_packet_bits_decoded_instruction_0_ready_bits_RS2_ready,
+  input  [4:0]  io_ROB_packet_bits_decoded_instruction_0_RDold,
+  input  [6:0]  io_ROB_packet_bits_decoded_instruction_0_RD,
+  input         io_ROB_packet_bits_decoded_instruction_0_RD_valid,
+  input  [6:0]  io_ROB_packet_bits_decoded_instruction_0_RS1,
+  input         io_ROB_packet_bits_decoded_instruction_0_RS1_valid,
+  input  [6:0]  io_ROB_packet_bits_decoded_instruction_0_RS2,
+  input         io_ROB_packet_bits_decoded_instruction_0_RS2_valid,
+  input  [20:0] io_ROB_packet_bits_decoded_instruction_0_IMM,
+  input  [2:0]  io_ROB_packet_bits_decoded_instruction_0_FUNCT3,
+  input  [1:0]  io_ROB_packet_bits_decoded_instruction_0_packet_index,
+  input  [5:0]  io_ROB_packet_bits_decoded_instruction_0_ROB_index,
+  input  [3:0]  io_ROB_packet_bits_decoded_instruction_0_MOB_index,
+                io_ROB_packet_bits_decoded_instruction_0_FTQ_index,
+  input  [4:0]  io_ROB_packet_bits_decoded_instruction_0_instructionType,
+  input  [1:0]  io_ROB_packet_bits_decoded_instruction_0_portID,
+                io_ROB_packet_bits_decoded_instruction_0_RS_type,
+  input         io_ROB_packet_bits_decoded_instruction_0_needs_ALU,
+                io_ROB_packet_bits_decoded_instruction_0_needs_branch_unit,
+                io_ROB_packet_bits_decoded_instruction_0_needs_CSRs,
+                io_ROB_packet_bits_decoded_instruction_0_SUBTRACT,
+                io_ROB_packet_bits_decoded_instruction_0_MULTIPLY,
+                io_ROB_packet_bits_decoded_instruction_0_IS_IMM,
+  input  [1:0]  io_ROB_packet_bits_decoded_instruction_0_memory_type,
+                io_ROB_packet_bits_decoded_instruction_0_access_width,
+  input         io_ROB_packet_bits_decoded_instruction_1_ready_bits_RS1_ready,
+                io_ROB_packet_bits_decoded_instruction_1_ready_bits_RS2_ready,
+  input  [4:0]  io_ROB_packet_bits_decoded_instruction_1_RDold,
+  input  [6:0]  io_ROB_packet_bits_decoded_instruction_1_RD,
+  input         io_ROB_packet_bits_decoded_instruction_1_RD_valid,
+  input  [6:0]  io_ROB_packet_bits_decoded_instruction_1_RS1,
+  input         io_ROB_packet_bits_decoded_instruction_1_RS1_valid,
+  input  [6:0]  io_ROB_packet_bits_decoded_instruction_1_RS2,
+  input         io_ROB_packet_bits_decoded_instruction_1_RS2_valid,
+  input  [20:0] io_ROB_packet_bits_decoded_instruction_1_IMM,
+  input  [2:0]  io_ROB_packet_bits_decoded_instruction_1_FUNCT3,
+  input  [1:0]  io_ROB_packet_bits_decoded_instruction_1_packet_index,
+  input  [5:0]  io_ROB_packet_bits_decoded_instruction_1_ROB_index,
+  input  [3:0]  io_ROB_packet_bits_decoded_instruction_1_MOB_index,
+                io_ROB_packet_bits_decoded_instruction_1_FTQ_index,
+  input  [4:0]  io_ROB_packet_bits_decoded_instruction_1_instructionType,
+  input  [1:0]  io_ROB_packet_bits_decoded_instruction_1_portID,
+                io_ROB_packet_bits_decoded_instruction_1_RS_type,
+  input         io_ROB_packet_bits_decoded_instruction_1_needs_ALU,
+                io_ROB_packet_bits_decoded_instruction_1_needs_branch_unit,
+                io_ROB_packet_bits_decoded_instruction_1_needs_CSRs,
+                io_ROB_packet_bits_decoded_instruction_1_SUBTRACT,
+                io_ROB_packet_bits_decoded_instruction_1_MULTIPLY,
+                io_ROB_packet_bits_decoded_instruction_1_IS_IMM,
+  input  [1:0]  io_ROB_packet_bits_decoded_instruction_1_memory_type,
+                io_ROB_packet_bits_decoded_instruction_1_access_width,
+  input         io_ROB_packet_bits_decoded_instruction_2_ready_bits_RS1_ready,
+                io_ROB_packet_bits_decoded_instruction_2_ready_bits_RS2_ready,
+  input  [4:0]  io_ROB_packet_bits_decoded_instruction_2_RDold,
+  input  [6:0]  io_ROB_packet_bits_decoded_instruction_2_RD,
+  input         io_ROB_packet_bits_decoded_instruction_2_RD_valid,
+  input  [6:0]  io_ROB_packet_bits_decoded_instruction_2_RS1,
+  input         io_ROB_packet_bits_decoded_instruction_2_RS1_valid,
+  input  [6:0]  io_ROB_packet_bits_decoded_instruction_2_RS2,
+  input         io_ROB_packet_bits_decoded_instruction_2_RS2_valid,
+  input  [20:0] io_ROB_packet_bits_decoded_instruction_2_IMM,
+  input  [2:0]  io_ROB_packet_bits_decoded_instruction_2_FUNCT3,
+  input  [1:0]  io_ROB_packet_bits_decoded_instruction_2_packet_index,
+  input  [5:0]  io_ROB_packet_bits_decoded_instruction_2_ROB_index,
+  input  [3:0]  io_ROB_packet_bits_decoded_instruction_2_MOB_index,
+                io_ROB_packet_bits_decoded_instruction_2_FTQ_index,
+  input  [4:0]  io_ROB_packet_bits_decoded_instruction_2_instructionType,
+  input  [1:0]  io_ROB_packet_bits_decoded_instruction_2_portID,
+                io_ROB_packet_bits_decoded_instruction_2_RS_type,
+  input         io_ROB_packet_bits_decoded_instruction_2_needs_ALU,
+                io_ROB_packet_bits_decoded_instruction_2_needs_branch_unit,
+                io_ROB_packet_bits_decoded_instruction_2_needs_CSRs,
+                io_ROB_packet_bits_decoded_instruction_2_SUBTRACT,
+                io_ROB_packet_bits_decoded_instruction_2_MULTIPLY,
+                io_ROB_packet_bits_decoded_instruction_2_IS_IMM,
+  input  [1:0]  io_ROB_packet_bits_decoded_instruction_2_memory_type,
+                io_ROB_packet_bits_decoded_instruction_2_access_width,
+  input         io_ROB_packet_bits_decoded_instruction_3_ready_bits_RS1_ready,
+                io_ROB_packet_bits_decoded_instruction_3_ready_bits_RS2_ready,
+  input  [4:0]  io_ROB_packet_bits_decoded_instruction_3_RDold,
+  input  [6:0]  io_ROB_packet_bits_decoded_instruction_3_RD,
+  input         io_ROB_packet_bits_decoded_instruction_3_RD_valid,
+  input  [6:0]  io_ROB_packet_bits_decoded_instruction_3_RS1,
+  input         io_ROB_packet_bits_decoded_instruction_3_RS1_valid,
+  input  [6:0]  io_ROB_packet_bits_decoded_instruction_3_RS2,
+  input         io_ROB_packet_bits_decoded_instruction_3_RS2_valid,
+  input  [20:0] io_ROB_packet_bits_decoded_instruction_3_IMM,
+  input  [2:0]  io_ROB_packet_bits_decoded_instruction_3_FUNCT3,
+  input  [1:0]  io_ROB_packet_bits_decoded_instruction_3_packet_index,
+  input  [5:0]  io_ROB_packet_bits_decoded_instruction_3_ROB_index,
+  input  [3:0]  io_ROB_packet_bits_decoded_instruction_3_MOB_index,
+                io_ROB_packet_bits_decoded_instruction_3_FTQ_index,
+  input  [4:0]  io_ROB_packet_bits_decoded_instruction_3_instructionType,
+  input  [1:0]  io_ROB_packet_bits_decoded_instruction_3_portID,
+                io_ROB_packet_bits_decoded_instruction_3_RS_type,
+  input         io_ROB_packet_bits_decoded_instruction_3_needs_ALU,
+                io_ROB_packet_bits_decoded_instruction_3_needs_branch_unit,
+                io_ROB_packet_bits_decoded_instruction_3_needs_CSRs,
+                io_ROB_packet_bits_decoded_instruction_3_SUBTRACT,
+                io_ROB_packet_bits_decoded_instruction_3_MULTIPLY,
+                io_ROB_packet_bits_decoded_instruction_3_IS_IMM,
+  input  [1:0]  io_ROB_packet_bits_decoded_instruction_3_memory_type,
+                io_ROB_packet_bits_decoded_instruction_3_access_width,
+  input         io_ROB_packet_bits_valid_bits_0,
+                io_ROB_packet_bits_valid_bits_1,
+                io_ROB_packet_bits_valid_bits_2,
+                io_ROB_packet_bits_valid_bits_3,
+  input  [15:0] io_ROB_packet_bits_GHR,
+  input  [6:0]  io_ROB_packet_bits_TOS,
+                io_ROB_packet_bits_NEXT,
+  input  [7:0]  io_ROB_packet_bits_free_list_front_pointer,
+  input         io_FU_outputs_0_valid,
+  input  [6:0]  io_FU_outputs_0_bits_RD,
+  input  [31:0] io_FU_outputs_0_bits_RD_data,
+  input         io_FU_outputs_0_bits_RD_valid,
+  input  [31:0] io_FU_outputs_0_bits_fetch_PC,
+  input         io_FU_outputs_0_bits_branch_taken,
+  input  [31:0] io_FU_outputs_0_bits_target_address,
+  input         io_FU_outputs_0_bits_branch_valid,
+  input  [31:0] io_FU_outputs_0_bits_address,
+  input  [1:0]  io_FU_outputs_0_bits_memory_type,
+                io_FU_outputs_0_bits_access_width,
+  input         io_FU_outputs_0_bits_is_unsigned,
+  input  [31:0] io_FU_outputs_0_bits_wr_data,
+  input  [3:0]  io_FU_outputs_0_bits_MOB_index,
+  input  [5:0]  io_FU_outputs_0_bits_ROB_index,
+  input  [3:0]  io_FU_outputs_0_bits_FTQ_index,
+  input  [1:0]  io_FU_outputs_0_bits_fetch_packet_index,
+  input         io_FU_outputs_0_bits_exception,
+                io_FU_outputs_1_valid,
+  input  [6:0]  io_FU_outputs_1_bits_RD,
+  input  [31:0] io_FU_outputs_1_bits_RD_data,
+  input         io_FU_outputs_1_bits_RD_valid,
+  input  [31:0] io_FU_outputs_1_bits_fetch_PC,
+  input         io_FU_outputs_1_bits_branch_taken,
+  input  [31:0] io_FU_outputs_1_bits_target_address,
+  input         io_FU_outputs_1_bits_branch_valid,
+  input  [31:0] io_FU_outputs_1_bits_address,
+  input  [1:0]  io_FU_outputs_1_bits_memory_type,
+                io_FU_outputs_1_bits_access_width,
+  input         io_FU_outputs_1_bits_is_unsigned,
+  input  [31:0] io_FU_outputs_1_bits_wr_data,
+  input  [3:0]  io_FU_outputs_1_bits_MOB_index,
+  input  [5:0]  io_FU_outputs_1_bits_ROB_index,
+  input  [3:0]  io_FU_outputs_1_bits_FTQ_index,
+  input  [1:0]  io_FU_outputs_1_bits_fetch_packet_index,
+  input         io_FU_outputs_1_bits_exception,
+                io_FU_outputs_2_valid,
+  input  [6:0]  io_FU_outputs_2_bits_RD,
+  input  [31:0] io_FU_outputs_2_bits_RD_data,
+  input         io_FU_outputs_2_bits_RD_valid,
+  input  [31:0] io_FU_outputs_2_bits_fetch_PC,
+  input         io_FU_outputs_2_bits_branch_taken,
+  input  [31:0] io_FU_outputs_2_bits_target_address,
+  input         io_FU_outputs_2_bits_branch_valid,
+  input  [31:0] io_FU_outputs_2_bits_address,
+  input  [1:0]  io_FU_outputs_2_bits_memory_type,
+                io_FU_outputs_2_bits_access_width,
+  input         io_FU_outputs_2_bits_is_unsigned,
+  input  [31:0] io_FU_outputs_2_bits_wr_data,
+  input  [3:0]  io_FU_outputs_2_bits_MOB_index,
+  input  [5:0]  io_FU_outputs_2_bits_ROB_index,
+  input  [3:0]  io_FU_outputs_2_bits_FTQ_index,
+  input  [1:0]  io_FU_outputs_2_bits_fetch_packet_index,
+  input         io_FU_outputs_2_bits_exception,
+                io_FU_outputs_3_valid,
+  input  [6:0]  io_FU_outputs_3_bits_RD,
+  input  [31:0] io_FU_outputs_3_bits_RD_data,
+  input         io_FU_outputs_3_bits_RD_valid,
+  input  [31:0] io_FU_outputs_3_bits_fetch_PC,
+  input         io_FU_outputs_3_bits_branch_taken,
+  input  [31:0] io_FU_outputs_3_bits_target_address,
+  input         io_FU_outputs_3_bits_branch_valid,
+  input  [31:0] io_FU_outputs_3_bits_address,
+  input  [1:0]  io_FU_outputs_3_bits_memory_type,
+                io_FU_outputs_3_bits_access_width,
+  input         io_FU_outputs_3_bits_is_unsigned,
+  input  [31:0] io_FU_outputs_3_bits_wr_data,
+  input  [3:0]  io_FU_outputs_3_bits_MOB_index,
+  input  [5:0]  io_FU_outputs_3_bits_ROB_index,
+  input  [3:0]  io_FU_outputs_3_bits_FTQ_index,
+  input  [1:0]  io_FU_outputs_3_bits_fetch_packet_index,
+  input         io_FU_outputs_3_bits_exception,
+  output        io_ROB_output_row_valid,
+  output [31:0] io_ROB_output_fetch_PC,
+  output [5:0]  io_ROB_output_ROB_index,
+  output [15:0] io_ROB_output_GHR,
+  output [6:0]  io_ROB_output_NEXT,
+                io_ROB_output_TOS,
+  output [7:0]  io_ROB_output_free_list_front_pointer,
+  output        io_ROB_output_ROB_entries_0_valid,
+                io_ROB_output_ROB_entries_0_is_branch,
+  output [1:0]  io_ROB_output_ROB_entries_0_memory_type,
+  output [6:0]  io_ROB_output_ROB_entries_0_RD,
+  output        io_ROB_output_ROB_entries_0_RD_valid,
+  output [4:0]  io_ROB_output_ROB_entries_0_RDold,
+  output        io_ROB_output_ROB_entries_1_valid,
+                io_ROB_output_ROB_entries_1_is_branch,
+  output [1:0]  io_ROB_output_ROB_entries_1_memory_type,
+  output [6:0]  io_ROB_output_ROB_entries_1_RD,
+  output        io_ROB_output_ROB_entries_1_RD_valid,
+  output [4:0]  io_ROB_output_ROB_entries_1_RDold,
+  output        io_ROB_output_ROB_entries_2_valid,
+                io_ROB_output_ROB_entries_2_is_branch,
+  output [1:0]  io_ROB_output_ROB_entries_2_memory_type,
+  output [6:0]  io_ROB_output_ROB_entries_2_RD,
+  output        io_ROB_output_ROB_entries_2_RD_valid,
+  output [4:0]  io_ROB_output_ROB_entries_2_RDold,
+  output        io_ROB_output_ROB_entries_3_valid,
+                io_ROB_output_ROB_entries_3_is_branch,
+  output [1:0]  io_ROB_output_ROB_entries_3_memory_type,
+  output [6:0]  io_ROB_output_ROB_entries_3_RD,
+  output        io_ROB_output_ROB_entries_3_RD_valid,
+  output [4:0]  io_ROB_output_ROB_entries_3_RDold,
+  output        io_ROB_output_complete_0,
+                io_ROB_output_complete_1,
+                io_ROB_output_complete_2,
+                io_ROB_output_complete_3,
+                io_ROB_output_exception_0,
+                io_ROB_output_exception_1,
+                io_ROB_output_exception_2,
+                io_ROB_output_exception_3,
+  input         io_commit_valid,
+  input  [31:0] io_commit_bits_fetch_PC,
+  input         io_commit_bits_T_NT,
+  input  [5:0]  io_commit_bits_ROB_index,
+  input  [2:0]  io_commit_bits_br_type,
+  input  [1:0]  io_commit_bits_fetch_packet_index,
+  input         io_commit_bits_is_misprediction,
+                io_commit_bits_exception,
+  input  [31:0] io_commit_bits_expected_PC,
+  input  [15:0] io_commit_bits_GHR,
+  input  [6:0]  io_commit_bits_TOS,
+                io_commit_bits_NEXT,
+  input  [7:0]  io_commit_bits_free_list_front_pointer,
+  input  [4:0]  io_commit_bits_RDold_0,
+                io_commit_bits_RDold_1,
+                io_commit_bits_RDold_2,
+                io_commit_bits_RDold_3,
+  input  [6:0]  io_commit_bits_RD_0,
+                io_commit_bits_RD_1,
+                io_commit_bits_RD_2,
+                io_commit_bits_RD_3,
+  input         io_commit_bits_RD_valid_0,
+                io_commit_bits_RD_valid_1,
+                io_commit_bits_RD_valid_2,
+                io_commit_bits_RD_valid_3,
+  output [5:0]  io_ROB_index,
+  input  [5:0]  io_PC_file_exec_addr,
+  output [31:0] io_PC_file_exec_data
 );
 
   wire        full;
-  wire
-    struct packed {logic valid; logic is_branch; logic [1:0] memory_type; logic [6:0] RD; logic RD_valid; logic [4:0] RDold; }
-    _ROB_entry_banks_3_io_readDataB;
-  wire
-    struct packed {logic valid; logic is_branch; logic [1:0] memory_type; logic [6:0] RD; logic RD_valid; logic [4:0] RDold; }
-    _ROB_entry_banks_2_io_readDataB;
-  wire
-    struct packed {logic valid; logic is_branch; logic [1:0] memory_type; logic [6:0] RD; logic RD_valid; logic [4:0] RDold; }
-    _ROB_entry_banks_1_io_readDataB;
-  wire
-    struct packed {logic valid; logic is_branch; logic [1:0] memory_type; logic [6:0] RD; logic RD_valid; logic [4:0] RDold; }
-    _ROB_entry_banks_0_io_readDataB;
-  wire struct packed {logic busy; logic exception; } _ROB_WB_banks_3_io_readDataG;
-  wire struct packed {logic busy; logic exception; } _ROB_WB_banks_2_io_readDataG;
-  wire struct packed {logic busy; logic exception; } _ROB_WB_banks_1_io_readDataG;
-  wire struct packed {logic busy; logic exception; } _ROB_WB_banks_0_io_readDataG;
-  wire
-    struct packed {logic [31:0] fetch_PC; logic [7:0] free_list_front_pointer; logic [15:0] GHR; logic [6:0] NEXT; logic [6:0] TOS; }
-    _shared_mem_io_readDataB;
-  wire
-    struct packed {logic [31:0] fetch_PC; logic [7:0] free_list_front_pointer; logic [15:0] GHR; logic [6:0] NEXT; logic [6:0] TOS; }
-    _shared_mem_io_readDataC;
   reg  [6:0]  front_pointer;
   reg  [6:0]  back_pointer;
   wire        allocate = io_ROB_packet_valid & ~full;
-  reg  [63:0] row_valid_mem;
+  reg         row_valid_mem_0;
+  reg         row_valid_mem_1;
+  reg         row_valid_mem_2;
+  reg         row_valid_mem_3;
+  reg         row_valid_mem_4;
+  reg         row_valid_mem_5;
+  reg         row_valid_mem_6;
+  reg         row_valid_mem_7;
+  reg         row_valid_mem_8;
+  reg         row_valid_mem_9;
+  reg         row_valid_mem_10;
+  reg         row_valid_mem_11;
+  reg         row_valid_mem_12;
+  reg         row_valid_mem_13;
+  reg         row_valid_mem_14;
+  reg         row_valid_mem_15;
+  reg         row_valid_mem_16;
+  reg         row_valid_mem_17;
+  reg         row_valid_mem_18;
+  reg         row_valid_mem_19;
+  reg         row_valid_mem_20;
+  reg         row_valid_mem_21;
+  reg         row_valid_mem_22;
+  reg         row_valid_mem_23;
+  reg         row_valid_mem_24;
+  reg         row_valid_mem_25;
+  reg         row_valid_mem_26;
+  reg         row_valid_mem_27;
+  reg         row_valid_mem_28;
+  reg         row_valid_mem_29;
+  reg         row_valid_mem_30;
+  reg         row_valid_mem_31;
+  reg         row_valid_mem_32;
+  reg         row_valid_mem_33;
+  reg         row_valid_mem_34;
+  reg         row_valid_mem_35;
+  reg         row_valid_mem_36;
+  reg         row_valid_mem_37;
+  reg         row_valid_mem_38;
+  reg         row_valid_mem_39;
+  reg         row_valid_mem_40;
+  reg         row_valid_mem_41;
+  reg         row_valid_mem_42;
+  reg         row_valid_mem_43;
+  reg         row_valid_mem_44;
+  reg         row_valid_mem_45;
+  reg         row_valid_mem_46;
+  reg         row_valid_mem_47;
+  reg         row_valid_mem_48;
+  reg         row_valid_mem_49;
+  reg         row_valid_mem_50;
+  reg         row_valid_mem_51;
+  reg         row_valid_mem_52;
+  reg         row_valid_mem_53;
+  reg         row_valid_mem_54;
+  reg         row_valid_mem_55;
+  reg         row_valid_mem_56;
+  reg         row_valid_mem_57;
+  reg         row_valid_mem_58;
+  reg         row_valid_mem_59;
+  reg         row_valid_mem_60;
+  reg         row_valid_mem_61;
+  reg         row_valid_mem_62;
+  reg         row_valid_mem_63;
   wire [6:0]  _front_pointer_T_2 = front_pointer + 7'h1;
   wire [5:0]  front_index =
-    io_flush ? 6'h0 : io_commit.valid ? _front_pointer_T_2[5:0] : front_pointer[5:0];
+    io_flush ? 6'h0 : io_commit_valid ? _front_pointer_T_2[5:0] : front_pointer[5:0];
   wire [5:0]  back_index = io_flush ? 6'h0 : back_pointer[5:0];
+  wire [63:0] _GEN =
+    {{row_valid_mem_63},
+     {row_valid_mem_62},
+     {row_valid_mem_61},
+     {row_valid_mem_60},
+     {row_valid_mem_59},
+     {row_valid_mem_58},
+     {row_valid_mem_57},
+     {row_valid_mem_56},
+     {row_valid_mem_55},
+     {row_valid_mem_54},
+     {row_valid_mem_53},
+     {row_valid_mem_52},
+     {row_valid_mem_51},
+     {row_valid_mem_50},
+     {row_valid_mem_49},
+     {row_valid_mem_48},
+     {row_valid_mem_47},
+     {row_valid_mem_46},
+     {row_valid_mem_45},
+     {row_valid_mem_44},
+     {row_valid_mem_43},
+     {row_valid_mem_42},
+     {row_valid_mem_41},
+     {row_valid_mem_40},
+     {row_valid_mem_39},
+     {row_valid_mem_38},
+     {row_valid_mem_37},
+     {row_valid_mem_36},
+     {row_valid_mem_35},
+     {row_valid_mem_34},
+     {row_valid_mem_33},
+     {row_valid_mem_32},
+     {row_valid_mem_31},
+     {row_valid_mem_30},
+     {row_valid_mem_29},
+     {row_valid_mem_28},
+     {row_valid_mem_27},
+     {row_valid_mem_26},
+     {row_valid_mem_25},
+     {row_valid_mem_24},
+     {row_valid_mem_23},
+     {row_valid_mem_22},
+     {row_valid_mem_21},
+     {row_valid_mem_20},
+     {row_valid_mem_19},
+     {row_valid_mem_18},
+     {row_valid_mem_17},
+     {row_valid_mem_16},
+     {row_valid_mem_15},
+     {row_valid_mem_14},
+     {row_valid_mem_13},
+     {row_valid_mem_12},
+     {row_valid_mem_11},
+     {row_valid_mem_10},
+     {row_valid_mem_9},
+     {row_valid_mem_8},
+     {row_valid_mem_7},
+     {row_valid_mem_6},
+     {row_valid_mem_5},
+     {row_valid_mem_4},
+     {row_valid_mem_3},
+     {row_valid_mem_2},
+     {row_valid_mem_1},
+     {row_valid_mem_0}};
   reg  [5:0]  io_ROB_output_ROB_index_REG;
   assign full = front_pointer[5:0] == back_pointer[5:0] & front_pointer != back_pointer;
-  wire
-    struct packed {logic [31:0] fetch_PC; logic [7:0] free_list_front_pointer; logic [15:0] GHR; logic [6:0] NEXT; logic [6:0] TOS; }
-    shared_mem_input =
-    '{fetch_PC: io_ROB_packet_bits.fetch_PC,
-      free_list_front_pointer: io_ROB_packet_bits.free_list_front_pointer,
-      GHR: io_ROB_packet_bits.GHR,
-      NEXT: io_ROB_packet_bits.NEXT,
-      TOS: io_ROB_packet_bits.TOS};
-  wire struct packed {logic busy; logic exception; } ROB_WB_data_FU0 =
-    '{busy: io_FU_outputs[2'h0].valid, exception: (1'h0)};
-  wire struct packed {logic busy; logic exception; } ROB_WB_data_FU1 =
-    '{busy: io_FU_outputs[2'h1].valid, exception: (1'h0)};
-  wire struct packed {logic busy; logic exception; } ROB_WB_data_FU2 =
-    '{busy: io_FU_outputs[2'h2].valid, exception: (1'h0)};
-  wire struct packed {logic busy; logic exception; } ROB_WB_data_FU3 =
-    '{busy: io_FU_outputs[2'h3].valid, exception: (1'h0)};
-  wire
-    struct packed {logic valid; logic is_branch; logic [1:0] memory_type; logic [6:0] RD; logic RD_valid; logic [4:0] RDold; }
-    ROB_entry_data =
-    '{valid: io_ROB_packet_bits.valid_bits[2'h0],
-      is_branch: io_ROB_packet_bits.decoded_instruction[2'h0].needs_branch_unit,
-      memory_type: io_ROB_packet_bits.decoded_instruction[2'h0].memory_type,
-      RD: io_ROB_packet_bits.decoded_instruction[2'h0].RD,
-      RD_valid: io_ROB_packet_bits.decoded_instruction[2'h0].RD_valid,
-      RDold: io_ROB_packet_bits.decoded_instruction[2'h0].RDold};
-  wire
-    struct packed {logic valid; logic is_branch; logic [1:0] memory_type; logic [6:0] RD; logic RD_valid; logic [4:0] RDold; }
-    ROB_entry_data_1 =
-    '{valid: io_ROB_packet_bits.valid_bits[2'h1],
-      is_branch: io_ROB_packet_bits.decoded_instruction[2'h1].needs_branch_unit,
-      memory_type: io_ROB_packet_bits.decoded_instruction[2'h1].memory_type,
-      RD: io_ROB_packet_bits.decoded_instruction[2'h1].RD,
-      RD_valid: io_ROB_packet_bits.decoded_instruction[2'h1].RD_valid,
-      RDold: io_ROB_packet_bits.decoded_instruction[2'h1].RDold};
-  wire
-    struct packed {logic valid; logic is_branch; logic [1:0] memory_type; logic [6:0] RD; logic RD_valid; logic [4:0] RDold; }
-    ROB_entry_data_2 =
-    '{valid: io_ROB_packet_bits.valid_bits[2'h2],
-      is_branch: io_ROB_packet_bits.decoded_instruction[2'h2].needs_branch_unit,
-      memory_type: io_ROB_packet_bits.decoded_instruction[2'h2].memory_type,
-      RD: io_ROB_packet_bits.decoded_instruction[2'h2].RD,
-      RD_valid: io_ROB_packet_bits.decoded_instruction[2'h2].RD_valid,
-      RDold: io_ROB_packet_bits.decoded_instruction[2'h2].RDold};
-  wire
-    struct packed {logic valid; logic is_branch; logic [1:0] memory_type; logic [6:0] RD; logic RD_valid; logic [4:0] RDold; }
-    ROB_entry_data_3 =
-    '{valid: io_ROB_packet_bits.valid_bits[2'h3],
-      is_branch: io_ROB_packet_bits.decoded_instruction[2'h3].needs_branch_unit,
-      memory_type: io_ROB_packet_bits.decoded_instruction[2'h3].memory_type,
-      RD: io_ROB_packet_bits.decoded_instruction[2'h3].RD,
-      RD_valid: io_ROB_packet_bits.decoded_instruction[2'h3].RD_valid,
-      RDold: io_ROB_packet_bits.decoded_instruction[2'h3].RDold};
   always @(posedge clock) begin
     if (reset) begin
       front_pointer <= 7'h0;
       back_pointer <= 7'h0;
-      row_valid_mem <=
-        '{1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0};
+      row_valid_mem_0 <= 1'h0;
+      row_valid_mem_1 <= 1'h0;
+      row_valid_mem_2 <= 1'h0;
+      row_valid_mem_3 <= 1'h0;
+      row_valid_mem_4 <= 1'h0;
+      row_valid_mem_5 <= 1'h0;
+      row_valid_mem_6 <= 1'h0;
+      row_valid_mem_7 <= 1'h0;
+      row_valid_mem_8 <= 1'h0;
+      row_valid_mem_9 <= 1'h0;
+      row_valid_mem_10 <= 1'h0;
+      row_valid_mem_11 <= 1'h0;
+      row_valid_mem_12 <= 1'h0;
+      row_valid_mem_13 <= 1'h0;
+      row_valid_mem_14 <= 1'h0;
+      row_valid_mem_15 <= 1'h0;
+      row_valid_mem_16 <= 1'h0;
+      row_valid_mem_17 <= 1'h0;
+      row_valid_mem_18 <= 1'h0;
+      row_valid_mem_19 <= 1'h0;
+      row_valid_mem_20 <= 1'h0;
+      row_valid_mem_21 <= 1'h0;
+      row_valid_mem_22 <= 1'h0;
+      row_valid_mem_23 <= 1'h0;
+      row_valid_mem_24 <= 1'h0;
+      row_valid_mem_25 <= 1'h0;
+      row_valid_mem_26 <= 1'h0;
+      row_valid_mem_27 <= 1'h0;
+      row_valid_mem_28 <= 1'h0;
+      row_valid_mem_29 <= 1'h0;
+      row_valid_mem_30 <= 1'h0;
+      row_valid_mem_31 <= 1'h0;
+      row_valid_mem_32 <= 1'h0;
+      row_valid_mem_33 <= 1'h0;
+      row_valid_mem_34 <= 1'h0;
+      row_valid_mem_35 <= 1'h0;
+      row_valid_mem_36 <= 1'h0;
+      row_valid_mem_37 <= 1'h0;
+      row_valid_mem_38 <= 1'h0;
+      row_valid_mem_39 <= 1'h0;
+      row_valid_mem_40 <= 1'h0;
+      row_valid_mem_41 <= 1'h0;
+      row_valid_mem_42 <= 1'h0;
+      row_valid_mem_43 <= 1'h0;
+      row_valid_mem_44 <= 1'h0;
+      row_valid_mem_45 <= 1'h0;
+      row_valid_mem_46 <= 1'h0;
+      row_valid_mem_47 <= 1'h0;
+      row_valid_mem_48 <= 1'h0;
+      row_valid_mem_49 <= 1'h0;
+      row_valid_mem_50 <= 1'h0;
+      row_valid_mem_51 <= 1'h0;
+      row_valid_mem_52 <= 1'h0;
+      row_valid_mem_53 <= 1'h0;
+      row_valid_mem_54 <= 1'h0;
+      row_valid_mem_55 <= 1'h0;
+      row_valid_mem_56 <= 1'h0;
+      row_valid_mem_57 <= 1'h0;
+      row_valid_mem_58 <= 1'h0;
+      row_valid_mem_59 <= 1'h0;
+      row_valid_mem_60 <= 1'h0;
+      row_valid_mem_61 <= 1'h0;
+      row_valid_mem_62 <= 1'h0;
+      row_valid_mem_63 <= 1'h0;
     end
     else begin
       if (io_flush) begin
@@ -204,366 +502,400 @@ module ROB(
         back_pointer <= 7'h0;
       end
       else begin
-        if (io_commit.valid)
+        if (io_commit_valid)
           front_pointer <= _front_pointer_T_2;
         else
-          front_pointer <= front_pointer + {6'h0, io_commit.valid};
+          front_pointer <= front_pointer + {6'h0, io_commit_valid};
         back_pointer <= back_pointer + {6'h0, allocate};
       end
-      row_valid_mem[6'h0] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h0)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h0 | row_valid_mem[6'h0]);
-      row_valid_mem[6'h1] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h1)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h1 | row_valid_mem[6'h1]);
-      row_valid_mem[6'h2] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h2)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h2 | row_valid_mem[6'h2]);
-      row_valid_mem[6'h3] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h3)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h3 | row_valid_mem[6'h3]);
-      row_valid_mem[6'h4] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h4)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h4 | row_valid_mem[6'h4]);
-      row_valid_mem[6'h5] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h5)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h5 | row_valid_mem[6'h5]);
-      row_valid_mem[6'h6] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h6)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h6 | row_valid_mem[6'h6]);
-      row_valid_mem[6'h7] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h7)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h7 | row_valid_mem[6'h7]);
-      row_valid_mem[6'h8] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h8)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h8 | row_valid_mem[6'h8]);
-      row_valid_mem[6'h9] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h9)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h9 | row_valid_mem[6'h9]);
-      row_valid_mem[6'hA] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'hA)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'hA | row_valid_mem[6'hA]);
-      row_valid_mem[6'hB] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'hB)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'hB | row_valid_mem[6'hB]);
-      row_valid_mem[6'hC] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'hC)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'hC | row_valid_mem[6'hC]);
-      row_valid_mem[6'hD] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'hD)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'hD | row_valid_mem[6'hD]);
-      row_valid_mem[6'hE] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'hE)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'hE | row_valid_mem[6'hE]);
-      row_valid_mem[6'hF] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'hF)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'hF | row_valid_mem[6'hF]);
-      row_valid_mem[6'h10] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h10)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h10 | row_valid_mem[6'h10]);
-      row_valid_mem[6'h11] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h11)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h11 | row_valid_mem[6'h11]);
-      row_valid_mem[6'h12] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h12)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h12 | row_valid_mem[6'h12]);
-      row_valid_mem[6'h13] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h13)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h13 | row_valid_mem[6'h13]);
-      row_valid_mem[6'h14] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h14)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h14 | row_valid_mem[6'h14]);
-      row_valid_mem[6'h15] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h15)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h15 | row_valid_mem[6'h15]);
-      row_valid_mem[6'h16] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h16)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h16 | row_valid_mem[6'h16]);
-      row_valid_mem[6'h17] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h17)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h17 | row_valid_mem[6'h17]);
-      row_valid_mem[6'h18] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h18)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h18 | row_valid_mem[6'h18]);
-      row_valid_mem[6'h19] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h19)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h19 | row_valid_mem[6'h19]);
-      row_valid_mem[6'h1A] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h1A)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h1A | row_valid_mem[6'h1A]);
-      row_valid_mem[6'h1B] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h1B)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h1B | row_valid_mem[6'h1B]);
-      row_valid_mem[6'h1C] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h1C)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h1C | row_valid_mem[6'h1C]);
-      row_valid_mem[6'h1D] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h1D)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h1D | row_valid_mem[6'h1D]);
-      row_valid_mem[6'h1E] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h1E)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h1E | row_valid_mem[6'h1E]);
-      row_valid_mem[6'h1F] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h1F)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h1F | row_valid_mem[6'h1F]);
-      row_valid_mem[6'h20] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h20)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h20 | row_valid_mem[6'h20]);
-      row_valid_mem[6'h21] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h21)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h21 | row_valid_mem[6'h21]);
-      row_valid_mem[6'h22] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h22)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h22 | row_valid_mem[6'h22]);
-      row_valid_mem[6'h23] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h23)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h23 | row_valid_mem[6'h23]);
-      row_valid_mem[6'h24] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h24)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h24 | row_valid_mem[6'h24]);
-      row_valid_mem[6'h25] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h25)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h25 | row_valid_mem[6'h25]);
-      row_valid_mem[6'h26] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h26)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h26 | row_valid_mem[6'h26]);
-      row_valid_mem[6'h27] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h27)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h27 | row_valid_mem[6'h27]);
-      row_valid_mem[6'h28] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h28)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h28 | row_valid_mem[6'h28]);
-      row_valid_mem[6'h29] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h29)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h29 | row_valid_mem[6'h29]);
-      row_valid_mem[6'h2A] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h2A)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h2A | row_valid_mem[6'h2A]);
-      row_valid_mem[6'h2B] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h2B)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h2B | row_valid_mem[6'h2B]);
-      row_valid_mem[6'h2C] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h2C)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h2C | row_valid_mem[6'h2C]);
-      row_valid_mem[6'h2D] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h2D)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h2D | row_valid_mem[6'h2D]);
-      row_valid_mem[6'h2E] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h2E)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h2E | row_valid_mem[6'h2E]);
-      row_valid_mem[6'h2F] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h2F)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h2F | row_valid_mem[6'h2F]);
-      row_valid_mem[6'h30] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h30)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h30 | row_valid_mem[6'h30]);
-      row_valid_mem[6'h31] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h31)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h31 | row_valid_mem[6'h31]);
-      row_valid_mem[6'h32] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h32)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h32 | row_valid_mem[6'h32]);
-      row_valid_mem[6'h33] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h33)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h33 | row_valid_mem[6'h33]);
-      row_valid_mem[6'h34] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h34)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h34 | row_valid_mem[6'h34]);
-      row_valid_mem[6'h35] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h35)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h35 | row_valid_mem[6'h35]);
-      row_valid_mem[6'h36] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h36)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h36 | row_valid_mem[6'h36]);
-      row_valid_mem[6'h37] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h37)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h37 | row_valid_mem[6'h37]);
-      row_valid_mem[6'h38] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h38)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h38 | row_valid_mem[6'h38]);
-      row_valid_mem[6'h39] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h39)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h39 | row_valid_mem[6'h39]);
-      row_valid_mem[6'h3A] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h3A)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h3A | row_valid_mem[6'h3A]);
-      row_valid_mem[6'h3B] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h3B)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h3B | row_valid_mem[6'h3B]);
-      row_valid_mem[6'h3C] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h3C)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h3C | row_valid_mem[6'h3C]);
-      row_valid_mem[6'h3D] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h3D)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h3D | row_valid_mem[6'h3D]);
-      row_valid_mem[6'h3E] <=
-        ~(io_flush | io_commit.valid & front_pointer[5:0] == 6'h3E)
-        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h3E | row_valid_mem[6'h3E]);
-      row_valid_mem[6'h3F] <=
-        ~(io_flush | io_commit.valid & (&(front_pointer[5:0])))
-        & (io_ROB_packet_valid & (&(back_pointer[5:0])) | row_valid_mem[6'h3F]);
+      row_valid_mem_0 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h0)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h0 | row_valid_mem_0);
+      row_valid_mem_1 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h1)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h1 | row_valid_mem_1);
+      row_valid_mem_2 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h2)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h2 | row_valid_mem_2);
+      row_valid_mem_3 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h3)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h3 | row_valid_mem_3);
+      row_valid_mem_4 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h4)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h4 | row_valid_mem_4);
+      row_valid_mem_5 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h5)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h5 | row_valid_mem_5);
+      row_valid_mem_6 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h6)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h6 | row_valid_mem_6);
+      row_valid_mem_7 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h7)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h7 | row_valid_mem_7);
+      row_valid_mem_8 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h8)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h8 | row_valid_mem_8);
+      row_valid_mem_9 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h9)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h9 | row_valid_mem_9);
+      row_valid_mem_10 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'hA)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'hA | row_valid_mem_10);
+      row_valid_mem_11 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'hB)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'hB | row_valid_mem_11);
+      row_valid_mem_12 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'hC)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'hC | row_valid_mem_12);
+      row_valid_mem_13 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'hD)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'hD | row_valid_mem_13);
+      row_valid_mem_14 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'hE)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'hE | row_valid_mem_14);
+      row_valid_mem_15 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'hF)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'hF | row_valid_mem_15);
+      row_valid_mem_16 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h10)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h10 | row_valid_mem_16);
+      row_valid_mem_17 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h11)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h11 | row_valid_mem_17);
+      row_valid_mem_18 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h12)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h12 | row_valid_mem_18);
+      row_valid_mem_19 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h13)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h13 | row_valid_mem_19);
+      row_valid_mem_20 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h14)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h14 | row_valid_mem_20);
+      row_valid_mem_21 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h15)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h15 | row_valid_mem_21);
+      row_valid_mem_22 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h16)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h16 | row_valid_mem_22);
+      row_valid_mem_23 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h17)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h17 | row_valid_mem_23);
+      row_valid_mem_24 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h18)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h18 | row_valid_mem_24);
+      row_valid_mem_25 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h19)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h19 | row_valid_mem_25);
+      row_valid_mem_26 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h1A)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h1A | row_valid_mem_26);
+      row_valid_mem_27 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h1B)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h1B | row_valid_mem_27);
+      row_valid_mem_28 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h1C)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h1C | row_valid_mem_28);
+      row_valid_mem_29 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h1D)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h1D | row_valid_mem_29);
+      row_valid_mem_30 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h1E)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h1E | row_valid_mem_30);
+      row_valid_mem_31 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h1F)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h1F | row_valid_mem_31);
+      row_valid_mem_32 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h20)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h20 | row_valid_mem_32);
+      row_valid_mem_33 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h21)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h21 | row_valid_mem_33);
+      row_valid_mem_34 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h22)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h22 | row_valid_mem_34);
+      row_valid_mem_35 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h23)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h23 | row_valid_mem_35);
+      row_valid_mem_36 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h24)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h24 | row_valid_mem_36);
+      row_valid_mem_37 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h25)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h25 | row_valid_mem_37);
+      row_valid_mem_38 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h26)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h26 | row_valid_mem_38);
+      row_valid_mem_39 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h27)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h27 | row_valid_mem_39);
+      row_valid_mem_40 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h28)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h28 | row_valid_mem_40);
+      row_valid_mem_41 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h29)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h29 | row_valid_mem_41);
+      row_valid_mem_42 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h2A)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h2A | row_valid_mem_42);
+      row_valid_mem_43 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h2B)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h2B | row_valid_mem_43);
+      row_valid_mem_44 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h2C)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h2C | row_valid_mem_44);
+      row_valid_mem_45 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h2D)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h2D | row_valid_mem_45);
+      row_valid_mem_46 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h2E)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h2E | row_valid_mem_46);
+      row_valid_mem_47 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h2F)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h2F | row_valid_mem_47);
+      row_valid_mem_48 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h30)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h30 | row_valid_mem_48);
+      row_valid_mem_49 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h31)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h31 | row_valid_mem_49);
+      row_valid_mem_50 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h32)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h32 | row_valid_mem_50);
+      row_valid_mem_51 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h33)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h33 | row_valid_mem_51);
+      row_valid_mem_52 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h34)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h34 | row_valid_mem_52);
+      row_valid_mem_53 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h35)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h35 | row_valid_mem_53);
+      row_valid_mem_54 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h36)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h36 | row_valid_mem_54);
+      row_valid_mem_55 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h37)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h37 | row_valid_mem_55);
+      row_valid_mem_56 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h38)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h38 | row_valid_mem_56);
+      row_valid_mem_57 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h39)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h39 | row_valid_mem_57);
+      row_valid_mem_58 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h3A)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h3A | row_valid_mem_58);
+      row_valid_mem_59 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h3B)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h3B | row_valid_mem_59);
+      row_valid_mem_60 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h3C)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h3C | row_valid_mem_60);
+      row_valid_mem_61 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h3D)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h3D | row_valid_mem_61);
+      row_valid_mem_62 <=
+        ~(io_flush | io_commit_valid & front_pointer[5:0] == 6'h3E)
+        & (io_ROB_packet_valid & back_pointer[5:0] == 6'h3E | row_valid_mem_62);
+      row_valid_mem_63 <=
+        ~(io_flush | io_commit_valid & (&(front_pointer[5:0])))
+        & (io_ROB_packet_valid & (&(back_pointer[5:0])) | row_valid_mem_63);
     end
     io_ROB_output_ROB_index_REG <= front_index;
   end // always @(posedge)
   ROB_shared_mem shared_mem (
-    .clock           (clock),
-    .io_addrA        (back_index),
-    .io_writeDataA   (shared_mem_input),
-    .io_writeEnableA (allocate),
-    .io_addrB        (front_index),
-    .io_readDataB    (_shared_mem_io_readDataB),
-    .io_addrC        (io_PC_file_exec_addr),
-    .io_readDataC    (_shared_mem_io_readDataC)
+    .clock                                 (clock),
+    .io_addrA                              (back_index),
+    .io_writeDataA_fetch_PC                (io_ROB_packet_bits_fetch_PC),
+    .io_writeDataA_free_list_front_pointer (io_ROB_packet_bits_free_list_front_pointer),
+    .io_writeDataA_GHR                     (io_ROB_packet_bits_GHR),
+    .io_writeDataA_NEXT                    (io_ROB_packet_bits_NEXT),
+    .io_writeDataA_TOS                     (io_ROB_packet_bits_TOS),
+    .io_writeEnableA                       (allocate),
+    .io_addrB                              (front_index),
+    .io_readDataB_fetch_PC                 (io_ROB_output_fetch_PC),
+    .io_readDataB_free_list_front_pointer  (io_ROB_output_free_list_front_pointer),
+    .io_readDataB_GHR                      (io_ROB_output_GHR),
+    .io_readDataB_NEXT                     (io_ROB_output_NEXT),
+    .io_readDataB_TOS                      (io_ROB_output_TOS),
+    .io_addrC                              (io_PC_file_exec_addr),
+    .io_readDataC_fetch_PC                 (io_PC_file_exec_data)
   );
   ROB_WB_mem ROB_WB_banks_0 (
-    .clock           (clock),
-    .io_addrA        (back_index),
-    .io_writeEnableA (allocate),
-    .io_addrB        (io_FU_outputs[2'h0].bits.ROB_index),
-    .io_writeDataB   (ROB_WB_data_FU0),
+    .clock                  (clock),
+    .io_addrA               (back_index),
+    .io_writeEnableA        (allocate),
+    .io_addrB               (io_FU_outputs_0_bits_ROB_index),
+    .io_writeDataB_busy     (io_FU_outputs_0_valid),
     .io_writeEnableB
-      (io_FU_outputs[2'h0].valid & io_FU_outputs[2'h0].bits.fetch_packet_index == 2'h0),
-    .io_addrC        (io_FU_outputs[2'h1].bits.ROB_index),
-    .io_writeDataC   (ROB_WB_data_FU1),
+      (io_FU_outputs_0_valid & io_FU_outputs_0_bits_fetch_packet_index == 2'h0),
+    .io_addrC               (io_FU_outputs_1_bits_ROB_index),
+    .io_writeDataC_busy     (io_FU_outputs_1_valid),
     .io_writeEnableC
-      (io_FU_outputs[2'h1].valid & io_FU_outputs[2'h1].bits.fetch_packet_index == 2'h0),
-    .io_addrD        (io_FU_outputs[2'h2].bits.ROB_index),
-    .io_writeDataD   (ROB_WB_data_FU2),
+      (io_FU_outputs_1_valid & io_FU_outputs_1_bits_fetch_packet_index == 2'h0),
+    .io_addrD               (io_FU_outputs_2_bits_ROB_index),
+    .io_writeDataD_busy     (io_FU_outputs_2_valid),
     .io_writeEnableD
-      (io_FU_outputs[2'h2].valid & io_FU_outputs[2'h2].bits.fetch_packet_index == 2'h0),
-    .io_addrE        (io_FU_outputs[2'h3].bits.ROB_index),
-    .io_writeDataE   (ROB_WB_data_FU3),
+      (io_FU_outputs_2_valid & io_FU_outputs_2_bits_fetch_packet_index == 2'h0),
+    .io_addrE               (io_FU_outputs_3_bits_ROB_index),
+    .io_writeDataE_busy     (io_FU_outputs_3_valid),
     .io_writeEnableE
-      (io_FU_outputs[2'h3].valid & io_FU_outputs[2'h3].bits.fetch_packet_index == 2'h0),
-    .io_addrG        (front_index),
-    .io_readDataG    (_ROB_WB_banks_0_io_readDataG)
+      (io_FU_outputs_3_valid & io_FU_outputs_3_bits_fetch_packet_index == 2'h0),
+    .io_addrG               (front_index),
+    .io_readDataG_busy      (io_ROB_output_complete_0),
+    .io_readDataG_exception (io_ROB_output_exception_0)
   );
   ROB_WB_mem ROB_WB_banks_1 (
-    .clock           (clock),
-    .io_addrA        (back_index),
-    .io_writeEnableA (allocate),
-    .io_addrB        (io_FU_outputs[2'h0].bits.ROB_index),
-    .io_writeDataB   (ROB_WB_data_FU0),
+    .clock                  (clock),
+    .io_addrA               (back_index),
+    .io_writeEnableA        (allocate),
+    .io_addrB               (io_FU_outputs_0_bits_ROB_index),
+    .io_writeDataB_busy     (io_FU_outputs_0_valid),
     .io_writeEnableB
-      (io_FU_outputs[2'h0].valid & io_FU_outputs[2'h0].bits.fetch_packet_index == 2'h1),
-    .io_addrC        (io_FU_outputs[2'h1].bits.ROB_index),
-    .io_writeDataC   (ROB_WB_data_FU1),
+      (io_FU_outputs_0_valid & io_FU_outputs_0_bits_fetch_packet_index == 2'h1),
+    .io_addrC               (io_FU_outputs_1_bits_ROB_index),
+    .io_writeDataC_busy     (io_FU_outputs_1_valid),
     .io_writeEnableC
-      (io_FU_outputs[2'h1].valid & io_FU_outputs[2'h1].bits.fetch_packet_index == 2'h1),
-    .io_addrD        (io_FU_outputs[2'h2].bits.ROB_index),
-    .io_writeDataD   (ROB_WB_data_FU2),
+      (io_FU_outputs_1_valid & io_FU_outputs_1_bits_fetch_packet_index == 2'h1),
+    .io_addrD               (io_FU_outputs_2_bits_ROB_index),
+    .io_writeDataD_busy     (io_FU_outputs_2_valid),
     .io_writeEnableD
-      (io_FU_outputs[2'h2].valid & io_FU_outputs[2'h2].bits.fetch_packet_index == 2'h1),
-    .io_addrE        (io_FU_outputs[2'h3].bits.ROB_index),
-    .io_writeDataE   (ROB_WB_data_FU3),
+      (io_FU_outputs_2_valid & io_FU_outputs_2_bits_fetch_packet_index == 2'h1),
+    .io_addrE               (io_FU_outputs_3_bits_ROB_index),
+    .io_writeDataE_busy     (io_FU_outputs_3_valid),
     .io_writeEnableE
-      (io_FU_outputs[2'h3].valid & io_FU_outputs[2'h3].bits.fetch_packet_index == 2'h1),
-    .io_addrG        (front_index),
-    .io_readDataG    (_ROB_WB_banks_1_io_readDataG)
+      (io_FU_outputs_3_valid & io_FU_outputs_3_bits_fetch_packet_index == 2'h1),
+    .io_addrG               (front_index),
+    .io_readDataG_busy      (io_ROB_output_complete_1),
+    .io_readDataG_exception (io_ROB_output_exception_1)
   );
   ROB_WB_mem ROB_WB_banks_2 (
-    .clock           (clock),
-    .io_addrA        (back_index),
-    .io_writeEnableA (allocate),
-    .io_addrB        (io_FU_outputs[2'h0].bits.ROB_index),
-    .io_writeDataB   (ROB_WB_data_FU0),
+    .clock                  (clock),
+    .io_addrA               (back_index),
+    .io_writeEnableA        (allocate),
+    .io_addrB               (io_FU_outputs_0_bits_ROB_index),
+    .io_writeDataB_busy     (io_FU_outputs_0_valid),
     .io_writeEnableB
-      (io_FU_outputs[2'h0].valid & io_FU_outputs[2'h0].bits.fetch_packet_index == 2'h2),
-    .io_addrC        (io_FU_outputs[2'h1].bits.ROB_index),
-    .io_writeDataC   (ROB_WB_data_FU1),
+      (io_FU_outputs_0_valid & io_FU_outputs_0_bits_fetch_packet_index == 2'h2),
+    .io_addrC               (io_FU_outputs_1_bits_ROB_index),
+    .io_writeDataC_busy     (io_FU_outputs_1_valid),
     .io_writeEnableC
-      (io_FU_outputs[2'h1].valid & io_FU_outputs[2'h1].bits.fetch_packet_index == 2'h2),
-    .io_addrD        (io_FU_outputs[2'h2].bits.ROB_index),
-    .io_writeDataD   (ROB_WB_data_FU2),
+      (io_FU_outputs_1_valid & io_FU_outputs_1_bits_fetch_packet_index == 2'h2),
+    .io_addrD               (io_FU_outputs_2_bits_ROB_index),
+    .io_writeDataD_busy     (io_FU_outputs_2_valid),
     .io_writeEnableD
-      (io_FU_outputs[2'h2].valid & io_FU_outputs[2'h2].bits.fetch_packet_index == 2'h2),
-    .io_addrE        (io_FU_outputs[2'h3].bits.ROB_index),
-    .io_writeDataE   (ROB_WB_data_FU3),
+      (io_FU_outputs_2_valid & io_FU_outputs_2_bits_fetch_packet_index == 2'h2),
+    .io_addrE               (io_FU_outputs_3_bits_ROB_index),
+    .io_writeDataE_busy     (io_FU_outputs_3_valid),
     .io_writeEnableE
-      (io_FU_outputs[2'h3].valid & io_FU_outputs[2'h3].bits.fetch_packet_index == 2'h2),
-    .io_addrG        (front_index),
-    .io_readDataG    (_ROB_WB_banks_2_io_readDataG)
+      (io_FU_outputs_3_valid & io_FU_outputs_3_bits_fetch_packet_index == 2'h2),
+    .io_addrG               (front_index),
+    .io_readDataG_busy      (io_ROB_output_complete_2),
+    .io_readDataG_exception (io_ROB_output_exception_2)
   );
   ROB_WB_mem ROB_WB_banks_3 (
-    .clock           (clock),
-    .io_addrA        (back_index),
-    .io_writeEnableA (allocate),
-    .io_addrB        (io_FU_outputs[2'h0].bits.ROB_index),
-    .io_writeDataB   (ROB_WB_data_FU0),
+    .clock                  (clock),
+    .io_addrA               (back_index),
+    .io_writeEnableA        (allocate),
+    .io_addrB               (io_FU_outputs_0_bits_ROB_index),
+    .io_writeDataB_busy     (io_FU_outputs_0_valid),
     .io_writeEnableB
-      (io_FU_outputs[2'h0].valid & (&io_FU_outputs[2'h0].bits.fetch_packet_index)),
-    .io_addrC        (io_FU_outputs[2'h1].bits.ROB_index),
-    .io_writeDataC   (ROB_WB_data_FU1),
+      (io_FU_outputs_0_valid & (&io_FU_outputs_0_bits_fetch_packet_index)),
+    .io_addrC               (io_FU_outputs_1_bits_ROB_index),
+    .io_writeDataC_busy     (io_FU_outputs_1_valid),
     .io_writeEnableC
-      (io_FU_outputs[2'h1].valid & (&io_FU_outputs[2'h1].bits.fetch_packet_index)),
-    .io_addrD        (io_FU_outputs[2'h2].bits.ROB_index),
-    .io_writeDataD   (ROB_WB_data_FU2),
+      (io_FU_outputs_1_valid & (&io_FU_outputs_1_bits_fetch_packet_index)),
+    .io_addrD               (io_FU_outputs_2_bits_ROB_index),
+    .io_writeDataD_busy     (io_FU_outputs_2_valid),
     .io_writeEnableD
-      (io_FU_outputs[2'h2].valid & (&io_FU_outputs[2'h2].bits.fetch_packet_index)),
-    .io_addrE        (io_FU_outputs[2'h3].bits.ROB_index),
-    .io_writeDataE   (ROB_WB_data_FU3),
+      (io_FU_outputs_2_valid & (&io_FU_outputs_2_bits_fetch_packet_index)),
+    .io_addrE               (io_FU_outputs_3_bits_ROB_index),
+    .io_writeDataE_busy     (io_FU_outputs_3_valid),
     .io_writeEnableE
-      (io_FU_outputs[2'h3].valid & (&io_FU_outputs[2'h3].bits.fetch_packet_index)),
-    .io_addrG        (front_index),
-    .io_readDataG    (_ROB_WB_banks_3_io_readDataG)
+      (io_FU_outputs_3_valid & (&io_FU_outputs_3_bits_fetch_packet_index)),
+    .io_addrG               (front_index),
+    .io_readDataG_busy      (io_ROB_output_complete_3),
+    .io_readDataG_exception (io_ROB_output_exception_3)
   );
   ROB_entry_mem ROB_entry_banks_0 (
-    .clock           (clock),
-    .io_addrA        (back_index),
-    .io_writeDataA   (ROB_entry_data),
-    .io_writeEnableA (allocate),
-    .io_addrB        (front_index),
-    .io_readDataB    (_ROB_entry_banks_0_io_readDataB)
+    .clock                     (clock),
+    .io_addrA                  (back_index),
+    .io_writeDataA_valid       (io_ROB_packet_bits_valid_bits_0),
+    .io_writeDataA_is_branch
+      (io_ROB_packet_bits_decoded_instruction_0_needs_branch_unit),
+    .io_writeDataA_memory_type (io_ROB_packet_bits_decoded_instruction_0_memory_type),
+    .io_writeDataA_RD          (io_ROB_packet_bits_decoded_instruction_0_RD),
+    .io_writeDataA_RD_valid    (io_ROB_packet_bits_decoded_instruction_0_RD_valid),
+    .io_writeDataA_RDold       (io_ROB_packet_bits_decoded_instruction_0_RDold),
+    .io_writeEnableA           (allocate),
+    .io_addrB                  (front_index),
+    .io_readDataB_valid        (io_ROB_output_ROB_entries_0_valid),
+    .io_readDataB_is_branch    (io_ROB_output_ROB_entries_0_is_branch),
+    .io_readDataB_memory_type  (io_ROB_output_ROB_entries_0_memory_type),
+    .io_readDataB_RD           (io_ROB_output_ROB_entries_0_RD),
+    .io_readDataB_RD_valid     (io_ROB_output_ROB_entries_0_RD_valid),
+    .io_readDataB_RDold        (io_ROB_output_ROB_entries_0_RDold)
   );
   ROB_entry_mem ROB_entry_banks_1 (
-    .clock           (clock),
-    .io_addrA        (back_index),
-    .io_writeDataA   (ROB_entry_data_1),
-    .io_writeEnableA (allocate),
-    .io_addrB        (front_index),
-    .io_readDataB    (_ROB_entry_banks_1_io_readDataB)
+    .clock                     (clock),
+    .io_addrA                  (back_index),
+    .io_writeDataA_valid       (io_ROB_packet_bits_valid_bits_1),
+    .io_writeDataA_is_branch
+      (io_ROB_packet_bits_decoded_instruction_1_needs_branch_unit),
+    .io_writeDataA_memory_type (io_ROB_packet_bits_decoded_instruction_1_memory_type),
+    .io_writeDataA_RD          (io_ROB_packet_bits_decoded_instruction_1_RD),
+    .io_writeDataA_RD_valid    (io_ROB_packet_bits_decoded_instruction_1_RD_valid),
+    .io_writeDataA_RDold       (io_ROB_packet_bits_decoded_instruction_1_RDold),
+    .io_writeEnableA           (allocate),
+    .io_addrB                  (front_index),
+    .io_readDataB_valid        (io_ROB_output_ROB_entries_1_valid),
+    .io_readDataB_is_branch    (io_ROB_output_ROB_entries_1_is_branch),
+    .io_readDataB_memory_type  (io_ROB_output_ROB_entries_1_memory_type),
+    .io_readDataB_RD           (io_ROB_output_ROB_entries_1_RD),
+    .io_readDataB_RD_valid     (io_ROB_output_ROB_entries_1_RD_valid),
+    .io_readDataB_RDold        (io_ROB_output_ROB_entries_1_RDold)
   );
   ROB_entry_mem ROB_entry_banks_2 (
-    .clock           (clock),
-    .io_addrA        (back_index),
-    .io_writeDataA   (ROB_entry_data_2),
-    .io_writeEnableA (allocate),
-    .io_addrB        (front_index),
-    .io_readDataB    (_ROB_entry_banks_2_io_readDataB)
+    .clock                     (clock),
+    .io_addrA                  (back_index),
+    .io_writeDataA_valid       (io_ROB_packet_bits_valid_bits_2),
+    .io_writeDataA_is_branch
+      (io_ROB_packet_bits_decoded_instruction_2_needs_branch_unit),
+    .io_writeDataA_memory_type (io_ROB_packet_bits_decoded_instruction_2_memory_type),
+    .io_writeDataA_RD          (io_ROB_packet_bits_decoded_instruction_2_RD),
+    .io_writeDataA_RD_valid    (io_ROB_packet_bits_decoded_instruction_2_RD_valid),
+    .io_writeDataA_RDold       (io_ROB_packet_bits_decoded_instruction_2_RDold),
+    .io_writeEnableA           (allocate),
+    .io_addrB                  (front_index),
+    .io_readDataB_valid        (io_ROB_output_ROB_entries_2_valid),
+    .io_readDataB_is_branch    (io_ROB_output_ROB_entries_2_is_branch),
+    .io_readDataB_memory_type  (io_ROB_output_ROB_entries_2_memory_type),
+    .io_readDataB_RD           (io_ROB_output_ROB_entries_2_RD),
+    .io_readDataB_RD_valid     (io_ROB_output_ROB_entries_2_RD_valid),
+    .io_readDataB_RDold        (io_ROB_output_ROB_entries_2_RDold)
   );
   ROB_entry_mem ROB_entry_banks_3 (
-    .clock           (clock),
-    .io_addrA        (back_index),
-    .io_writeDataA   (ROB_entry_data_3),
-    .io_writeEnableA (allocate),
-    .io_addrB        (front_index),
-    .io_readDataB    (_ROB_entry_banks_3_io_readDataB)
+    .clock                     (clock),
+    .io_addrA                  (back_index),
+    .io_writeDataA_valid       (io_ROB_packet_bits_valid_bits_3),
+    .io_writeDataA_is_branch
+      (io_ROB_packet_bits_decoded_instruction_3_needs_branch_unit),
+    .io_writeDataA_memory_type (io_ROB_packet_bits_decoded_instruction_3_memory_type),
+    .io_writeDataA_RD          (io_ROB_packet_bits_decoded_instruction_3_RD),
+    .io_writeDataA_RD_valid    (io_ROB_packet_bits_decoded_instruction_3_RD_valid),
+    .io_writeDataA_RDold       (io_ROB_packet_bits_decoded_instruction_3_RDold),
+    .io_writeEnableA           (allocate),
+    .io_addrB                  (front_index),
+    .io_readDataB_valid        (io_ROB_output_ROB_entries_3_valid),
+    .io_readDataB_is_branch    (io_ROB_output_ROB_entries_3_is_branch),
+    .io_readDataB_memory_type  (io_ROB_output_ROB_entries_3_memory_type),
+    .io_readDataB_RD           (io_ROB_output_ROB_entries_3_RD),
+    .io_readDataB_RD_valid     (io_ROB_output_ROB_entries_3_RD_valid),
+    .io_readDataB_RDold        (io_ROB_output_ROB_entries_3_RDold)
   );
   assign io_ROB_packet_ready = ~full;
-  assign io_ROB_output =
-    '{row_valid: row_valid_mem[front_pointer[5:0]],
-      fetch_PC: _shared_mem_io_readDataB.fetch_PC,
-      ROB_index: io_ROB_output_ROB_index_REG,
-      GHR: _shared_mem_io_readDataB.GHR,
-      NEXT: _shared_mem_io_readDataB.NEXT,
-      TOS: _shared_mem_io_readDataB.TOS,
-      free_list_front_pointer: _shared_mem_io_readDataB.free_list_front_pointer,
-      ROB_entries:
-        ({{_ROB_entry_banks_3_io_readDataB},
-          {_ROB_entry_banks_2_io_readDataB},
-          {_ROB_entry_banks_1_io_readDataB},
-          {_ROB_entry_banks_0_io_readDataB}}),
-      complete:
-        ({{_ROB_WB_banks_3_io_readDataG.busy},
-          {_ROB_WB_banks_2_io_readDataG.busy},
-          {_ROB_WB_banks_1_io_readDataG.busy},
-          {_ROB_WB_banks_0_io_readDataG.busy}}),
-      exception:
-        ({{_ROB_WB_banks_3_io_readDataG.exception},
-          {_ROB_WB_banks_2_io_readDataG.exception},
-          {_ROB_WB_banks_1_io_readDataG.exception},
-          {_ROB_WB_banks_0_io_readDataG.exception}})};
+  assign io_ROB_output_row_valid = _GEN[front_pointer[5:0]];
+  assign io_ROB_output_ROB_index = io_ROB_output_ROB_index_REG;
   assign io_ROB_index = back_index;
-  assign io_PC_file_exec_data = _shared_mem_io_readDataC.fetch_PC;
 endmodule
 

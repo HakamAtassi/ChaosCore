@@ -7,6 +7,9 @@ ChaosCore.egg-info/PKG-INFO
 ChaosCore.egg-info/SOURCES.txt
 ChaosCore.egg-info/dependency_links.txt
 ChaosCore.egg-info/top_level.txt
+L1_caches/__init__.py
+L1_caches/data_cache_dut.py
+L1_caches/instruction_cache_dut.py
 SimpleDRAM/SimpleDRAM.py
 SimpleDRAM/__init__.py
 agents/FU_agent.py

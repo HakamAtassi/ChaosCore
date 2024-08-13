@@ -29,119 +29,446 @@
 `endif // not def STOP_COND_
 
 module ChaosCore_tile(
-  input                                                                                                                                                                                                                                    clock,
-                                                                                                                                                                                                                                           reset,
-                                                                                                                                                                                                                                           io_instruction_cache_AXI_port_AXI_AW_ready,
-  output                                                                                                                                                                                                                                   io_instruction_cache_AXI_port_AXI_AW_valid,
-  output struct packed {logic [7:0] awid; logic [31:0] awaddr; logic [7:0] awlen; logic [2:0] awsize; logic [1:0] awburst; logic awlock; logic [3:0] awcache; logic [2:0] awprot; logic [3:0] awqos; logic [3:0] awregion; logic awuser; } io_instruction_cache_AXI_port_AXI_AW_bits,
-  input                                                                                                                                                                                                                                    io_instruction_cache_AXI_port_AXI_W_ready,
-  output                                                                                                                                                                                                                                   io_instruction_cache_AXI_port_AXI_W_valid,
-  output struct packed {logic [31:0] wdata; logic [3:0] wstrb; logic wlast; logic wuser; }                                                                                                                                                 io_instruction_cache_AXI_port_AXI_W_bits,
-  output                                                                                                                                                                                                                                   io_instruction_cache_AXI_port_AXI_B_ready,
-  input                                                                                                                                                                                                                                    io_instruction_cache_AXI_port_AXI_B_valid,
-  input  struct packed {logic [7:0] bid; logic [1:0] bresp; logic buser; }                                                                                                                                                                 io_instruction_cache_AXI_port_AXI_B_bits,
-  input                                                                                                                                                                                                                                    io_instruction_cache_AXI_port_AXI_AR_ready,
-  output                                                                                                                                                                                                                                   io_instruction_cache_AXI_port_AXI_AR_valid,
-  output struct packed {logic [7:0] arid; logic [31:0] araddr; logic [7:0] arlen; logic [2:0] arsize; logic [1:0] arburst; logic arlock; logic [3:0] arcache; logic [2:0] arprot; logic [3:0] arqos; logic [3:0] arregion; logic aruser; } io_instruction_cache_AXI_port_AXI_AR_bits,
-  output                                                                                                                                                                                                                                   io_instruction_cache_AXI_port_AXI_R_ready,
-  input                                                                                                                                                                                                                                    io_instruction_cache_AXI_port_AXI_R_valid,
-  input  struct packed {logic [7:0] rid; logic [31:0] rdata; logic [1:0] rresp; logic rlast; logic ruser; }                                                                                                                                io_instruction_cache_AXI_port_AXI_R_bits,
-  input                                                                                                                                                                                                                                    io_data_cache_AXI_port_AXI_AW_ready,
-  output                                                                                                                                                                                                                                   io_data_cache_AXI_port_AXI_AW_valid,
-  output struct packed {logic [7:0] awid; logic [31:0] awaddr; logic [7:0] awlen; logic [2:0] awsize; logic [1:0] awburst; logic awlock; logic [3:0] awcache; logic [2:0] awprot; logic [3:0] awqos; logic [3:0] awregion; logic awuser; } io_data_cache_AXI_port_AXI_AW_bits,
-  input                                                                                                                                                                                                                                    io_data_cache_AXI_port_AXI_W_ready,
-  output                                                                                                                                                                                                                                   io_data_cache_AXI_port_AXI_W_valid,
-  output struct packed {logic [31:0] wdata; logic [3:0] wstrb; logic wlast; logic wuser; }                                                                                                                                                 io_data_cache_AXI_port_AXI_W_bits,
-  output                                                                                                                                                                                                                                   io_data_cache_AXI_port_AXI_B_ready,
-  input                                                                                                                                                                                                                                    io_data_cache_AXI_port_AXI_B_valid,
-  input  struct packed {logic [7:0] bid; logic [1:0] bresp; logic buser; }                                                                                                                                                                 io_data_cache_AXI_port_AXI_B_bits,
-  input                                                                                                                                                                                                                                    io_data_cache_AXI_port_AXI_AR_ready,
-  output                                                                                                                                                                                                                                   io_data_cache_AXI_port_AXI_AR_valid,
-  output struct packed {logic [7:0] arid; logic [31:0] araddr; logic [7:0] arlen; logic [2:0] arsize; logic [1:0] arburst; logic arlock; logic [3:0] arcache; logic [2:0] arprot; logic [3:0] arqos; logic [3:0] arregion; logic aruser; } io_data_cache_AXI_port_AXI_AR_bits,
-  output                                                                                                                                                                                                                                   io_data_cache_AXI_port_AXI_R_ready,
-  input                                                                                                                                                                                                                                    io_data_cache_AXI_port_AXI_R_valid,
-  input  struct packed {logic [7:0] rid; logic [31:0] rdata; logic [1:0] rresp; logic rlast; logic ruser; }                                                                                                                                io_data_cache_AXI_port_AXI_R_bits
+  input         clock,
+                reset,
+                io_instruction_cache_AXI_port_AXI_AW_ready,
+  output        io_instruction_cache_AXI_port_AXI_AW_valid,
+  output [7:0]  io_instruction_cache_AXI_port_AXI_AW_bits_awid,
+  output [31:0] io_instruction_cache_AXI_port_AXI_AW_bits_awaddr,
+  output [7:0]  io_instruction_cache_AXI_port_AXI_AW_bits_awlen,
+  output [2:0]  io_instruction_cache_AXI_port_AXI_AW_bits_awsize,
+  output [1:0]  io_instruction_cache_AXI_port_AXI_AW_bits_awburst,
+  output        io_instruction_cache_AXI_port_AXI_AW_bits_awlock,
+  output [3:0]  io_instruction_cache_AXI_port_AXI_AW_bits_awcache,
+  output [2:0]  io_instruction_cache_AXI_port_AXI_AW_bits_awprot,
+  output [3:0]  io_instruction_cache_AXI_port_AXI_AW_bits_awqos,
+                io_instruction_cache_AXI_port_AXI_AW_bits_awregion,
+  output        io_instruction_cache_AXI_port_AXI_AW_bits_awuser,
+  input         io_instruction_cache_AXI_port_AXI_W_ready,
+  output        io_instruction_cache_AXI_port_AXI_W_valid,
+  output [31:0] io_instruction_cache_AXI_port_AXI_W_bits_wdata,
+  output [3:0]  io_instruction_cache_AXI_port_AXI_W_bits_wstrb,
+  output        io_instruction_cache_AXI_port_AXI_W_bits_wlast,
+                io_instruction_cache_AXI_port_AXI_W_bits_wuser,
+                io_instruction_cache_AXI_port_AXI_B_ready,
+  input         io_instruction_cache_AXI_port_AXI_B_valid,
+  input  [7:0]  io_instruction_cache_AXI_port_AXI_B_bits_bid,
+  input  [1:0]  io_instruction_cache_AXI_port_AXI_B_bits_bresp,
+  input         io_instruction_cache_AXI_port_AXI_B_bits_buser,
+                io_instruction_cache_AXI_port_AXI_AR_ready,
+  output        io_instruction_cache_AXI_port_AXI_AR_valid,
+  output [7:0]  io_instruction_cache_AXI_port_AXI_AR_bits_arid,
+  output [31:0] io_instruction_cache_AXI_port_AXI_AR_bits_araddr,
+  output [7:0]  io_instruction_cache_AXI_port_AXI_AR_bits_arlen,
+  output [2:0]  io_instruction_cache_AXI_port_AXI_AR_bits_arsize,
+  output [1:0]  io_instruction_cache_AXI_port_AXI_AR_bits_arburst,
+  output        io_instruction_cache_AXI_port_AXI_AR_bits_arlock,
+  output [3:0]  io_instruction_cache_AXI_port_AXI_AR_bits_arcache,
+  output [2:0]  io_instruction_cache_AXI_port_AXI_AR_bits_arprot,
+  output [3:0]  io_instruction_cache_AXI_port_AXI_AR_bits_arqos,
+                io_instruction_cache_AXI_port_AXI_AR_bits_arregion,
+  output        io_instruction_cache_AXI_port_AXI_AR_bits_aruser,
+                io_instruction_cache_AXI_port_AXI_R_ready,
+  input         io_instruction_cache_AXI_port_AXI_R_valid,
+  input  [7:0]  io_instruction_cache_AXI_port_AXI_R_bits_rid,
+  input  [31:0] io_instruction_cache_AXI_port_AXI_R_bits_rdata,
+  input  [1:0]  io_instruction_cache_AXI_port_AXI_R_bits_rresp,
+  input         io_instruction_cache_AXI_port_AXI_R_bits_rlast,
+                io_instruction_cache_AXI_port_AXI_R_bits_ruser,
+                io_data_cache_AXI_port_AXI_AW_ready,
+  output        io_data_cache_AXI_port_AXI_AW_valid,
+  output [7:0]  io_data_cache_AXI_port_AXI_AW_bits_awid,
+  output [31:0] io_data_cache_AXI_port_AXI_AW_bits_awaddr,
+  output [7:0]  io_data_cache_AXI_port_AXI_AW_bits_awlen,
+  output [2:0]  io_data_cache_AXI_port_AXI_AW_bits_awsize,
+  output [1:0]  io_data_cache_AXI_port_AXI_AW_bits_awburst,
+  output        io_data_cache_AXI_port_AXI_AW_bits_awlock,
+  output [3:0]  io_data_cache_AXI_port_AXI_AW_bits_awcache,
+  output [2:0]  io_data_cache_AXI_port_AXI_AW_bits_awprot,
+  output [3:0]  io_data_cache_AXI_port_AXI_AW_bits_awqos,
+                io_data_cache_AXI_port_AXI_AW_bits_awregion,
+  output        io_data_cache_AXI_port_AXI_AW_bits_awuser,
+  input         io_data_cache_AXI_port_AXI_W_ready,
+  output        io_data_cache_AXI_port_AXI_W_valid,
+  output [31:0] io_data_cache_AXI_port_AXI_W_bits_wdata,
+  output [3:0]  io_data_cache_AXI_port_AXI_W_bits_wstrb,
+  output        io_data_cache_AXI_port_AXI_W_bits_wlast,
+                io_data_cache_AXI_port_AXI_W_bits_wuser,
+                io_data_cache_AXI_port_AXI_B_ready,
+  input         io_data_cache_AXI_port_AXI_B_valid,
+  input  [7:0]  io_data_cache_AXI_port_AXI_B_bits_bid,
+  input  [1:0]  io_data_cache_AXI_port_AXI_B_bits_bresp,
+  input         io_data_cache_AXI_port_AXI_B_bits_buser,
+                io_data_cache_AXI_port_AXI_AR_ready,
+  output        io_data_cache_AXI_port_AXI_AR_valid,
+  output [7:0]  io_data_cache_AXI_port_AXI_AR_bits_arid,
+  output [31:0] io_data_cache_AXI_port_AXI_AR_bits_araddr,
+  output [7:0]  io_data_cache_AXI_port_AXI_AR_bits_arlen,
+  output [2:0]  io_data_cache_AXI_port_AXI_AR_bits_arsize,
+  output [1:0]  io_data_cache_AXI_port_AXI_AR_bits_arburst,
+  output        io_data_cache_AXI_port_AXI_AR_bits_arlock,
+  output [3:0]  io_data_cache_AXI_port_AXI_AR_bits_arcache,
+  output [2:0]  io_data_cache_AXI_port_AXI_AR_bits_arprot,
+  output [3:0]  io_data_cache_AXI_port_AXI_AR_bits_arqos,
+                io_data_cache_AXI_port_AXI_AR_bits_arregion,
+  output        io_data_cache_AXI_port_AXI_AR_bits_aruser,
+                io_data_cache_AXI_port_AXI_R_ready,
+  input         io_data_cache_AXI_port_AXI_R_valid,
+  input  [7:0]  io_data_cache_AXI_port_AXI_R_bits_rid,
+  input  [31:0] io_data_cache_AXI_port_AXI_R_bits_rdata,
+  input  [1:0]  io_data_cache_AXI_port_AXI_R_bits_rresp,
+  input         io_data_cache_AXI_port_AXI_R_bits_rlast,
+                io_data_cache_AXI_port_AXI_R_bits_ruser
 );
 
-  wire _data_cache_io_backend_memory_request_ready;
-  wire _data_cache_io_backend_memory_response_valid;
-  wire struct packed {logic [31:0] data; logic [3:0] MOB_index; }
-    _data_cache_io_backend_memory_response_bits;
-  wire _instruction_cache_io_CPU_request_ready;
-  wire _instruction_cache_io_CPU_response_valid;
-  wire
-    struct packed {logic [31:0] fetch_PC; logic [3:0] valid_bits; struct packed {logic [31:0] instruction; logic [3:0] packet_index; logic [5:0] ROB_index; }[3:0] instructions; logic [15:0] GHR; logic [6:0] NEXT; logic [6:0] TOS; }
-    _instruction_cache_io_CPU_response_bits;
-  wire
-    struct packed {logic [31:0] addr; logic [31:0] data; logic [1:0] memory_type; logic [1:0] access_width; logic [3:0] MOB_index; }
-    _GEN =
-    '{addr: 32'h0, data: 32'h0, memory_type: 2'h0, access_width: 2'h0, MOB_index: 4'h0};
+  wire        _data_cache_io_backend_memory_request_ready;
+  wire        _data_cache_io_backend_memory_response_valid;
+  wire [31:0] _data_cache_io_backend_memory_response_bits_data;
+  wire [3:0]  _data_cache_io_backend_memory_response_bits_MOB_index;
+  wire        _instruction_cache_io_CPU_response_valid;
+  wire [31:0] _instruction_cache_io_CPU_response_bits_fetch_PC;
+  wire        _instruction_cache_io_CPU_response_bits_valid_bits_0;
+  wire        _instruction_cache_io_CPU_response_bits_valid_bits_1;
+  wire        _instruction_cache_io_CPU_response_bits_valid_bits_2;
+  wire        _instruction_cache_io_CPU_response_bits_valid_bits_3;
+  wire [31:0] _instruction_cache_io_CPU_response_bits_instructions_0_instruction;
+  wire [3:0]  _instruction_cache_io_CPU_response_bits_instructions_0_packet_index;
+  wire [5:0]  _instruction_cache_io_CPU_response_bits_instructions_0_ROB_index;
+  wire [31:0] _instruction_cache_io_CPU_response_bits_instructions_1_instruction;
+  wire [3:0]  _instruction_cache_io_CPU_response_bits_instructions_1_packet_index;
+  wire [5:0]  _instruction_cache_io_CPU_response_bits_instructions_1_ROB_index;
+  wire [31:0] _instruction_cache_io_CPU_response_bits_instructions_2_instruction;
+  wire [3:0]  _instruction_cache_io_CPU_response_bits_instructions_2_packet_index;
+  wire [5:0]  _instruction_cache_io_CPU_response_bits_instructions_2_ROB_index;
+  wire [31:0] _instruction_cache_io_CPU_response_bits_instructions_3_instruction;
+  wire [3:0]  _instruction_cache_io_CPU_response_bits_instructions_3_packet_index;
+  wire [5:0]  _instruction_cache_io_CPU_response_bits_instructions_3_ROB_index;
+  wire [15:0] _instruction_cache_io_CPU_response_bits_GHR;
+  wire [6:0]  _instruction_cache_io_CPU_response_bits_NEXT;
+  wire [6:0]  _instruction_cache_io_CPU_response_bits_TOS;
   ChaosCore ChaosCore (
-    .clock                             (clock),
-    .reset                             (reset),
-    .io_commit                         (/* unused */),
-    .io_flush                          (/* unused */),
-    .io_revert                         (/* unused */),
-    .io_frontend_memory_request_ready  (_instruction_cache_io_CPU_request_ready),
-    .io_frontend_memory_request_valid  (/* unused */),
-    .io_frontend_memory_request_bits   (/* unused */),
-    .io_frontend_memory_response_ready (/* unused */),
-    .io_frontend_memory_response_valid (_instruction_cache_io_CPU_response_valid),
-    .io_frontend_memory_response_bits  (_instruction_cache_io_CPU_response_bits),
-    .io_backend_memory_request_ready   (_data_cache_io_backend_memory_request_ready),
-    .io_backend_memory_request_valid   (/* unused */),
-    .io_backend_memory_request_bits    (/* unused */),
-    .io_backend_memory_response_ready  (/* unused */),
-    .io_backend_memory_response_valid  (_data_cache_io_backend_memory_response_valid),
-    .io_backend_memory_response_bits   (_data_cache_io_backend_memory_response_bits)
+    .clock                                                        (clock),
+    .reset                                                        (reset),
+    .io_commit_valid                                              (/* unused */),
+    .io_commit_bits_fetch_PC                                      (/* unused */),
+    .io_commit_bits_T_NT                                          (/* unused */),
+    .io_commit_bits_ROB_index                                     (/* unused */),
+    .io_commit_bits_br_type                                       (/* unused */),
+    .io_commit_bits_fetch_packet_index                            (/* unused */),
+    .io_commit_bits_is_misprediction                              (/* unused */),
+    .io_commit_bits_exception                                     (/* unused */),
+    .io_commit_bits_expected_PC                                   (/* unused */),
+    .io_commit_bits_GHR                                           (/* unused */),
+    .io_commit_bits_TOS                                           (/* unused */),
+    .io_commit_bits_NEXT                                          (/* unused */),
+    .io_commit_bits_free_list_front_pointer                       (/* unused */),
+    .io_commit_bits_RDold_0                                       (/* unused */),
+    .io_commit_bits_RDold_1                                       (/* unused */),
+    .io_commit_bits_RDold_2                                       (/* unused */),
+    .io_commit_bits_RDold_3                                       (/* unused */),
+    .io_commit_bits_RD_0                                          (/* unused */),
+    .io_commit_bits_RD_1                                          (/* unused */),
+    .io_commit_bits_RD_2                                          (/* unused */),
+    .io_commit_bits_RD_3                                          (/* unused */),
+    .io_commit_bits_RD_valid_0                                    (/* unused */),
+    .io_commit_bits_RD_valid_1                                    (/* unused */),
+    .io_commit_bits_RD_valid_2                                    (/* unused */),
+    .io_commit_bits_RD_valid_3                                    (/* unused */),
+    .io_flush                                                     (/* unused */),
+    .io_revert_valid                                              (/* unused */),
+    .io_revert_bits_PC                                            (/* unused */),
+    .io_frontend_memory_request_ready                             (1'h0),
+    .io_frontend_memory_request_valid                             (/* unused */),
+    .io_frontend_memory_request_bits_addr                         (/* unused */),
+    .io_frontend_memory_request_bits_wr_data                      (/* unused */),
+    .io_frontend_memory_request_bits_wr_en                        (/* unused */),
+    .io_frontend_memory_response_ready                            (/* unused */),
+    .io_frontend_memory_response_valid
+      (_instruction_cache_io_CPU_response_valid),
+    .io_frontend_memory_response_bits_fetch_PC
+      (_instruction_cache_io_CPU_response_bits_fetch_PC),
+    .io_frontend_memory_response_bits_valid_bits_0
+      (_instruction_cache_io_CPU_response_bits_valid_bits_0),
+    .io_frontend_memory_response_bits_valid_bits_1
+      (_instruction_cache_io_CPU_response_bits_valid_bits_1),
+    .io_frontend_memory_response_bits_valid_bits_2
+      (_instruction_cache_io_CPU_response_bits_valid_bits_2),
+    .io_frontend_memory_response_bits_valid_bits_3
+      (_instruction_cache_io_CPU_response_bits_valid_bits_3),
+    .io_frontend_memory_response_bits_instructions_0_instruction
+      (_instruction_cache_io_CPU_response_bits_instructions_0_instruction),
+    .io_frontend_memory_response_bits_instructions_0_packet_index
+      (_instruction_cache_io_CPU_response_bits_instructions_0_packet_index),
+    .io_frontend_memory_response_bits_instructions_0_ROB_index
+      (_instruction_cache_io_CPU_response_bits_instructions_0_ROB_index),
+    .io_frontend_memory_response_bits_instructions_1_instruction
+      (_instruction_cache_io_CPU_response_bits_instructions_1_instruction),
+    .io_frontend_memory_response_bits_instructions_1_packet_index
+      (_instruction_cache_io_CPU_response_bits_instructions_1_packet_index),
+    .io_frontend_memory_response_bits_instructions_1_ROB_index
+      (_instruction_cache_io_CPU_response_bits_instructions_1_ROB_index),
+    .io_frontend_memory_response_bits_instructions_2_instruction
+      (_instruction_cache_io_CPU_response_bits_instructions_2_instruction),
+    .io_frontend_memory_response_bits_instructions_2_packet_index
+      (_instruction_cache_io_CPU_response_bits_instructions_2_packet_index),
+    .io_frontend_memory_response_bits_instructions_2_ROB_index
+      (_instruction_cache_io_CPU_response_bits_instructions_2_ROB_index),
+    .io_frontend_memory_response_bits_instructions_3_instruction
+      (_instruction_cache_io_CPU_response_bits_instructions_3_instruction),
+    .io_frontend_memory_response_bits_instructions_3_packet_index
+      (_instruction_cache_io_CPU_response_bits_instructions_3_packet_index),
+    .io_frontend_memory_response_bits_instructions_3_ROB_index
+      (_instruction_cache_io_CPU_response_bits_instructions_3_ROB_index),
+    .io_frontend_memory_response_bits_GHR
+      (_instruction_cache_io_CPU_response_bits_GHR),
+    .io_frontend_memory_response_bits_NEXT
+      (_instruction_cache_io_CPU_response_bits_NEXT),
+    .io_frontend_memory_response_bits_TOS
+      (_instruction_cache_io_CPU_response_bits_TOS),
+    .io_backend_memory_request_ready
+      (_data_cache_io_backend_memory_request_ready),
+    .io_backend_memory_request_valid                              (/* unused */),
+    .io_backend_memory_request_bits_addr                          (/* unused */),
+    .io_backend_memory_request_bits_data                          (/* unused */),
+    .io_backend_memory_request_bits_memory_type                   (/* unused */),
+    .io_backend_memory_request_bits_access_width                  (/* unused */),
+    .io_backend_memory_request_bits_MOB_index                     (/* unused */),
+    .io_backend_memory_response_ready                             (/* unused */),
+    .io_backend_memory_response_valid
+      (_data_cache_io_backend_memory_response_valid),
+    .io_backend_memory_response_bits_data
+      (_data_cache_io_backend_memory_response_bits_data),
+    .io_backend_memory_response_bits_MOB_index
+      (_data_cache_io_backend_memory_response_bits_MOB_index)
   );
   L1_instruction_cache instruction_cache (
-    .clock                 (clock),
-    .reset                 (reset),
-    .AXI_port_AXI_AW_ready (io_instruction_cache_AXI_port_AXI_AW_ready),
-    .AXI_port_AXI_AW_bits  (io_instruction_cache_AXI_port_AXI_AW_bits),
-    .AXI_port_AXI_W_ready  (io_instruction_cache_AXI_port_AXI_W_ready),
-    .AXI_port_AXI_W_valid  (io_instruction_cache_AXI_port_AXI_W_valid),
-    .AXI_port_AXI_W_bits   (io_instruction_cache_AXI_port_AXI_W_bits),
-    .AXI_port_AXI_B_ready  (io_instruction_cache_AXI_port_AXI_B_ready),
-    .AXI_port_AXI_B_valid  (io_instruction_cache_AXI_port_AXI_B_valid),
-    .AXI_port_AXI_B_bits   (io_instruction_cache_AXI_port_AXI_B_bits),
-    .AXI_port_AXI_AR_ready (io_instruction_cache_AXI_port_AXI_AR_ready),
-    .AXI_port_AXI_AR_valid (io_instruction_cache_AXI_port_AXI_AR_valid),
-    .AXI_port_AXI_AR_bits  (io_instruction_cache_AXI_port_AXI_AR_bits),
-    .AXI_port_AXI_R_ready  (io_instruction_cache_AXI_port_AXI_R_ready),
-    .AXI_port_AXI_R_valid  (io_instruction_cache_AXI_port_AXI_R_valid),
-    .AXI_port_AXI_R_bits   (io_instruction_cache_AXI_port_AXI_R_bits),
-    .io_CPU_request_ready  (_instruction_cache_io_CPU_request_ready),
-    .io_CPU_response_ready (1'h0),
-    .io_CPU_response_valid (_instruction_cache_io_CPU_response_valid),
-    .io_CPU_response_bits  (_instruction_cache_io_CPU_response_bits)
+    .clock                                            (clock),
+    .reset                                            (reset),
+    .m_axi_awvalid
+      (io_instruction_cache_AXI_port_AXI_AW_valid),
+    .m_axi_awready
+      (io_instruction_cache_AXI_port_AXI_AW_ready),
+    .m_axi_awid
+      (io_instruction_cache_AXI_port_AXI_AW_bits_awid),
+    .m_axi_awaddr
+      (io_instruction_cache_AXI_port_AXI_AW_bits_awaddr),
+    .m_axi_awlen
+      (io_instruction_cache_AXI_port_AXI_AW_bits_awlen),
+    .m_axi_awsize
+      (io_instruction_cache_AXI_port_AXI_AW_bits_awsize),
+    .m_axi_awburst
+      (io_instruction_cache_AXI_port_AXI_AW_bits_awburst),
+    .m_axi_awlock
+      (io_instruction_cache_AXI_port_AXI_AW_bits_awlock),
+    .m_axi_awcache
+      (io_instruction_cache_AXI_port_AXI_AW_bits_awcache),
+    .m_axi_awprot
+      (io_instruction_cache_AXI_port_AXI_AW_bits_awprot),
+    .m_axi_awqos
+      (io_instruction_cache_AXI_port_AXI_AW_bits_awqos),
+    .m_axi_awregion
+      (io_instruction_cache_AXI_port_AXI_AW_bits_awregion),
+    .m_axi_awuser
+      (io_instruction_cache_AXI_port_AXI_AW_bits_awuser),
+    .m_axi_wready
+      (io_instruction_cache_AXI_port_AXI_W_ready),
+    .m_axi_wvalid
+      (io_instruction_cache_AXI_port_AXI_W_valid),
+    .m_axi_wdata
+      (io_instruction_cache_AXI_port_AXI_W_bits_wdata),
+    .m_axi_wstrb
+      (io_instruction_cache_AXI_port_AXI_W_bits_wstrb),
+    .m_axi_wlast
+      (io_instruction_cache_AXI_port_AXI_W_bits_wlast),
+    .m_axi_wuser
+      (io_instruction_cache_AXI_port_AXI_W_bits_wuser),
+    .m_axi_bready
+      (io_instruction_cache_AXI_port_AXI_B_ready),
+    .m_axi_bvalid
+      (io_instruction_cache_AXI_port_AXI_B_valid),
+    .m_axi_bid
+      (io_instruction_cache_AXI_port_AXI_B_bits_bid),
+    .m_axi_bresp
+      (io_instruction_cache_AXI_port_AXI_B_bits_bresp),
+    .m_axi_buser
+      (io_instruction_cache_AXI_port_AXI_B_bits_buser),
+    .m_axi_arvalid
+      (io_instruction_cache_AXI_port_AXI_AR_valid),
+    .m_axi_arready
+      (io_instruction_cache_AXI_port_AXI_AR_ready),
+    .m_axi_arid
+      (io_instruction_cache_AXI_port_AXI_AR_bits_arid),
+    .m_axi_araddr
+      (io_instruction_cache_AXI_port_AXI_AR_bits_araddr),
+    .m_axi_arlen
+      (io_instruction_cache_AXI_port_AXI_AR_bits_arlen),
+    .m_axi_arsize
+      (io_instruction_cache_AXI_port_AXI_AR_bits_arsize),
+    .m_axi_arburst
+      (io_instruction_cache_AXI_port_AXI_AR_bits_arburst),
+    .m_axi_arlock
+      (io_instruction_cache_AXI_port_AXI_AR_bits_arlock),
+    .m_axi_arcache
+      (io_instruction_cache_AXI_port_AXI_AR_bits_arcache),
+    .m_axi_arprot
+      (io_instruction_cache_AXI_port_AXI_AR_bits_arprot),
+    .m_axi_arqos
+      (io_instruction_cache_AXI_port_AXI_AR_bits_arqos),
+    .m_axi_arregion
+      (io_instruction_cache_AXI_port_AXI_AR_bits_arregion),
+    .m_axi_aruser
+      (io_instruction_cache_AXI_port_AXI_AR_bits_aruser),
+    .m_axi_rready
+      (io_instruction_cache_AXI_port_AXI_R_ready),
+    .m_axi_rvalid
+      (io_instruction_cache_AXI_port_AXI_R_valid),
+    .m_axi_rid
+      (io_instruction_cache_AXI_port_AXI_R_bits_rid),
+    .m_axi_rdata
+      (io_instruction_cache_AXI_port_AXI_R_bits_rdata),
+    .m_axi_rresp
+      (io_instruction_cache_AXI_port_AXI_R_bits_rresp),
+    .m_axi_rlast
+      (io_instruction_cache_AXI_port_AXI_R_bits_rlast),
+    .m_axi_ruser
+      (io_instruction_cache_AXI_port_AXI_R_bits_ruser),
+    .io_CPU_response_valid
+      (_instruction_cache_io_CPU_response_valid),
+    .io_CPU_response_bits_fetch_PC
+      (_instruction_cache_io_CPU_response_bits_fetch_PC),
+    .io_CPU_response_bits_valid_bits_0
+      (_instruction_cache_io_CPU_response_bits_valid_bits_0),
+    .io_CPU_response_bits_valid_bits_1
+      (_instruction_cache_io_CPU_response_bits_valid_bits_1),
+    .io_CPU_response_bits_valid_bits_2
+      (_instruction_cache_io_CPU_response_bits_valid_bits_2),
+    .io_CPU_response_bits_valid_bits_3
+      (_instruction_cache_io_CPU_response_bits_valid_bits_3),
+    .io_CPU_response_bits_instructions_0_instruction
+      (_instruction_cache_io_CPU_response_bits_instructions_0_instruction),
+    .io_CPU_response_bits_instructions_0_packet_index
+      (_instruction_cache_io_CPU_response_bits_instructions_0_packet_index),
+    .io_CPU_response_bits_instructions_0_ROB_index
+      (_instruction_cache_io_CPU_response_bits_instructions_0_ROB_index),
+    .io_CPU_response_bits_instructions_1_instruction
+      (_instruction_cache_io_CPU_response_bits_instructions_1_instruction),
+    .io_CPU_response_bits_instructions_1_packet_index
+      (_instruction_cache_io_CPU_response_bits_instructions_1_packet_index),
+    .io_CPU_response_bits_instructions_1_ROB_index
+      (_instruction_cache_io_CPU_response_bits_instructions_1_ROB_index),
+    .io_CPU_response_bits_instructions_2_instruction
+      (_instruction_cache_io_CPU_response_bits_instructions_2_instruction),
+    .io_CPU_response_bits_instructions_2_packet_index
+      (_instruction_cache_io_CPU_response_bits_instructions_2_packet_index),
+    .io_CPU_response_bits_instructions_2_ROB_index
+      (_instruction_cache_io_CPU_response_bits_instructions_2_ROB_index),
+    .io_CPU_response_bits_instructions_3_instruction
+      (_instruction_cache_io_CPU_response_bits_instructions_3_instruction),
+    .io_CPU_response_bits_instructions_3_packet_index
+      (_instruction_cache_io_CPU_response_bits_instructions_3_packet_index),
+    .io_CPU_response_bits_instructions_3_ROB_index
+      (_instruction_cache_io_CPU_response_bits_instructions_3_ROB_index),
+    .io_CPU_response_bits_GHR
+      (_instruction_cache_io_CPU_response_bits_GHR),
+    .io_CPU_response_bits_NEXT
+      (_instruction_cache_io_CPU_response_bits_NEXT),
+    .io_CPU_response_bits_TOS
+      (_instruction_cache_io_CPU_response_bits_TOS)
   );
   L1_data_cache data_cache (
-    .clock                            (clock),
-    .reset                            (reset),
-    .AXI_port_AXI_AW_ready            (io_data_cache_AXI_port_AXI_AW_ready),
-    .AXI_port_AXI_AW_valid            (io_data_cache_AXI_port_AXI_AW_valid),
-    .AXI_port_AXI_AW_bits             (io_data_cache_AXI_port_AXI_AW_bits),
-    .AXI_port_AXI_W_ready             (io_data_cache_AXI_port_AXI_W_ready),
-    .AXI_port_AXI_W_valid             (io_data_cache_AXI_port_AXI_W_valid),
-    .AXI_port_AXI_W_bits              (io_data_cache_AXI_port_AXI_W_bits),
-    .AXI_port_AXI_B_ready             (io_data_cache_AXI_port_AXI_B_ready),
-    .AXI_port_AXI_B_valid             (io_data_cache_AXI_port_AXI_B_valid),
-    .AXI_port_AXI_B_bits              (io_data_cache_AXI_port_AXI_B_bits),
-    .AXI_port_AXI_AR_ready            (io_data_cache_AXI_port_AXI_AR_ready),
-    .AXI_port_AXI_AR_valid            (io_data_cache_AXI_port_AXI_AR_valid),
-    .AXI_port_AXI_AR_bits             (io_data_cache_AXI_port_AXI_AR_bits),
-    .AXI_port_AXI_R_ready             (io_data_cache_AXI_port_AXI_R_ready),
-    .AXI_port_AXI_R_valid             (io_data_cache_AXI_port_AXI_R_valid),
-    .AXI_port_AXI_R_bits              (io_data_cache_AXI_port_AXI_R_bits),
-    .io_backend_memory_request_ready  (_data_cache_io_backend_memory_request_ready),
-    .io_backend_memory_request_valid  (1'h0),
-    .io_backend_memory_request_bits   (_GEN),
-    .io_backend_memory_response_ready (1'h0),
-    .io_backend_memory_response_valid (_data_cache_io_backend_memory_response_valid),
-    .io_backend_memory_response_bits  (_data_cache_io_backend_memory_response_bits)
+    .clock                                       (clock),
+    .reset                                       (reset),
+    .m_axi_awvalid                               (io_data_cache_AXI_port_AXI_AW_valid),
+    .m_axi_awready                               (io_data_cache_AXI_port_AXI_AW_ready),
+    .m_axi_awid
+      (io_data_cache_AXI_port_AXI_AW_bits_awid),
+    .m_axi_awaddr
+      (io_data_cache_AXI_port_AXI_AW_bits_awaddr),
+    .m_axi_awlen
+      (io_data_cache_AXI_port_AXI_AW_bits_awlen),
+    .m_axi_awsize
+      (io_data_cache_AXI_port_AXI_AW_bits_awsize),
+    .m_axi_awburst
+      (io_data_cache_AXI_port_AXI_AW_bits_awburst),
+    .m_axi_awlock
+      (io_data_cache_AXI_port_AXI_AW_bits_awlock),
+    .m_axi_awcache
+      (io_data_cache_AXI_port_AXI_AW_bits_awcache),
+    .m_axi_awprot
+      (io_data_cache_AXI_port_AXI_AW_bits_awprot),
+    .m_axi_awqos
+      (io_data_cache_AXI_port_AXI_AW_bits_awqos),
+    .m_axi_awregion
+      (io_data_cache_AXI_port_AXI_AW_bits_awregion),
+    .m_axi_awuser
+      (io_data_cache_AXI_port_AXI_AW_bits_awuser),
+    .m_axi_wready                                (io_data_cache_AXI_port_AXI_W_ready),
+    .m_axi_wvalid                                (io_data_cache_AXI_port_AXI_W_valid),
+    .m_axi_wdata
+      (io_data_cache_AXI_port_AXI_W_bits_wdata),
+    .m_axi_wstrb
+      (io_data_cache_AXI_port_AXI_W_bits_wstrb),
+    .m_axi_wlast
+      (io_data_cache_AXI_port_AXI_W_bits_wlast),
+    .m_axi_wuser
+      (io_data_cache_AXI_port_AXI_W_bits_wuser),
+    .m_axi_bready                                (io_data_cache_AXI_port_AXI_B_ready),
+    .m_axi_bvalid                                (io_data_cache_AXI_port_AXI_B_valid),
+    .m_axi_bid                                   (io_data_cache_AXI_port_AXI_B_bits_bid),
+    .m_axi_bresp
+      (io_data_cache_AXI_port_AXI_B_bits_bresp),
+    .m_axi_buser
+      (io_data_cache_AXI_port_AXI_B_bits_buser),
+    .m_axi_arvalid                               (io_data_cache_AXI_port_AXI_AR_valid),
+    .m_axi_arready                               (io_data_cache_AXI_port_AXI_AR_ready),
+    .m_axi_arid
+      (io_data_cache_AXI_port_AXI_AR_bits_arid),
+    .m_axi_araddr
+      (io_data_cache_AXI_port_AXI_AR_bits_araddr),
+    .m_axi_arlen
+      (io_data_cache_AXI_port_AXI_AR_bits_arlen),
+    .m_axi_arsize
+      (io_data_cache_AXI_port_AXI_AR_bits_arsize),
+    .m_axi_arburst
+      (io_data_cache_AXI_port_AXI_AR_bits_arburst),
+    .m_axi_arlock
+      (io_data_cache_AXI_port_AXI_AR_bits_arlock),
+    .m_axi_arcache
+      (io_data_cache_AXI_port_AXI_AR_bits_arcache),
+    .m_axi_arprot
+      (io_data_cache_AXI_port_AXI_AR_bits_arprot),
+    .m_axi_arqos
+      (io_data_cache_AXI_port_AXI_AR_bits_arqos),
+    .m_axi_arregion
+      (io_data_cache_AXI_port_AXI_AR_bits_arregion),
+    .m_axi_aruser
+      (io_data_cache_AXI_port_AXI_AR_bits_aruser),
+    .m_axi_rready                                (io_data_cache_AXI_port_AXI_R_ready),
+    .m_axi_rvalid                                (io_data_cache_AXI_port_AXI_R_valid),
+    .m_axi_rid                                   (io_data_cache_AXI_port_AXI_R_bits_rid),
+    .m_axi_rdata
+      (io_data_cache_AXI_port_AXI_R_bits_rdata),
+    .m_axi_rresp
+      (io_data_cache_AXI_port_AXI_R_bits_rresp),
+    .m_axi_rlast
+      (io_data_cache_AXI_port_AXI_R_bits_rlast),
+    .m_axi_ruser
+      (io_data_cache_AXI_port_AXI_R_bits_ruser),
+    .io_backend_memory_request_ready
+      (_data_cache_io_backend_memory_request_ready),
+    .io_backend_memory_request_valid             (1'h0),
+    .io_backend_memory_request_bits_addr         (32'h0),
+    .io_backend_memory_request_bits_data         (32'h0),
+    .io_backend_memory_request_bits_memory_type  (2'h0),
+    .io_backend_memory_request_bits_access_width (2'h0),
+    .io_backend_memory_request_bits_MOB_index    (4'h0),
+    .io_backend_memory_response_ready            (1'h0),
+    .io_backend_memory_response_valid
+      (_data_cache_io_backend_memory_response_valid),
+    .io_backend_memory_response_bits_data
+      (_data_cache_io_backend_memory_response_bits_data),
+    .io_backend_memory_response_bits_MOB_index
+      (_data_cache_io_backend_memory_response_bits_MOB_index)
   );
-  assign io_instruction_cache_AXI_port_AXI_AW_valid = 1'h0;
 endmodule
 

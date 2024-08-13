@@ -31,12 +31,10 @@
 module Queue1_UInt256_2(
   input          clock,
                  reset,
-  output         io_enq_ready,
-  input          io_enq_valid,
+                 io_enq_valid,
   input  [255:0] io_enq_bits,
   output         io_deq_valid,
-  output [255:0] io_deq_bits,
-  output         io_count
+  output [255:0] io_deq_bits
 );
 
   reg [255:0] ram;
@@ -51,9 +49,7 @@ module Queue1_UInt256_2(
     else if (~(do_enq == full))
       full <= do_enq;
   end // always @(posedge)
-  assign io_enq_ready = ~full;
   assign io_deq_valid = full;
   assign io_deq_bits = ram;
-  assign io_count = full;
 endmodule
 

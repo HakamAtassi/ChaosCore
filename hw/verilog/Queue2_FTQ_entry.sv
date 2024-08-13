@@ -29,68 +29,41 @@
 `endif // not def STOP_COND_
 
 module Queue2_FTQ_entry(
-  input                                                                                                                                                                                                                        clock,
-                                                                                                                                                                                                                               reset,
-  output                                                                                                                                                                                                                       io_enq_ready,
-  input                                                                                                                                                                                                                        io_enq_valid,
-  input  struct packed {logic valid; logic [31:0] fetch_PC; logic is_misprediction; logic [31:0] predicted_PC; logic [5:0] ROB_index; logic T_NT; logic [2:0] br_type; logic [1:0] dominant_index; logic [31:0] resolved_PC; } io_enq_bits,
-  input                                                                                                                                                                                                                        io_deq_ready,
-  output                                                                                                                                                                                                                       io_deq_valid,
-  output struct packed {logic valid; logic [31:0] fetch_PC; logic is_misprediction; logic [31:0] predicted_PC; logic [5:0] ROB_index; logic T_NT; logic [2:0] br_type; logic [1:0] dominant_index; logic [31:0] resolved_PC; } io_deq_bits,
-  output [1:0]                                                                                                                                                                                                                 io_count,
-  input                                                                                                                                                                                                                        io_flush
+  input         clock,
+                reset,
+                io_enq_valid,
+                io_enq_bits_valid,
+  input  [31:0] io_enq_bits_fetch_PC,
+  input         io_enq_bits_is_misprediction,
+  input  [31:0] io_enq_bits_predicted_PC,
+  input  [5:0]  io_enq_bits_ROB_index,
+  input         io_enq_bits_T_NT,
+  input  [2:0]  io_enq_bits_br_type,
+  input  [1:0]  io_enq_bits_dominant_index,
+  input  [31:0] io_enq_bits_resolved_PC,
+  input         io_deq_ready,
+  output        io_deq_valid,
+                io_deq_bits_valid,
+  output [31:0] io_deq_bits_fetch_PC,
+  output        io_deq_bits_is_misprediction,
+  output [31:0] io_deq_bits_predicted_PC,
+  output [5:0]  io_deq_bits_ROB_index,
+  output        io_deq_bits_T_NT,
+  output [2:0]  io_deq_bits_br_type,
+  output [1:0]  io_deq_bits_dominant_index,
+  output [31:0] io_deq_bits_resolved_PC,
+  input         io_flush
 );
 
-  wire [31:0]  _GEN;
-  wire [1:0]   _GEN_0;
-  wire [2:0]   _GEN_1;
-  wire         _GEN_2;
-  wire [5:0]   _GEN_3;
-  wire [31:0]  _GEN_4;
-  wire         _GEN_5;
-  wire [31:0]  _GEN_6;
-  wire         _GEN_7;
-  wire         _GEN_8;
-  wire         _GEN_9;
-  wire         _GEN_10;
-  wire         _GEN_11;
-  wire         _GEN_12;
-  wire         _GEN_13;
-  wire         _GEN_14;
-  wire         _GEN_15;
-  wire         _GEN_16;
+  wire         io_enq_ready;
   wire [109:0] _ram_ext_R0_data;
-  wire
-    struct packed {logic valid; logic fetch_PC; logic is_misprediction; logic predicted_PC; logic ROB_index; logic T_NT; logic br_type; logic dominant_index; logic resolved_PC; }
-    _GEN_17 = /*cast(bit)*/9'h0;
-  wire
-    struct packed {logic valid; logic [31:0] fetch_PC; logic is_misprediction; logic [31:0] predicted_PC; logic [5:0] ROB_index; logic T_NT; logic [2:0] br_type; logic [1:0] dominant_index; logic [31:0] resolved_PC; }
-    _GEN_18 = /*cast(bit)*/110'h0;
   reg          wrap;
   reg          wrap_1;
   reg          maybe_full;
   wire         ptr_match = wrap == wrap_1;
   wire         empty = ptr_match & ~maybe_full;
-  wire         full = ptr_match & maybe_full;
-  wire         do_enq = ~full & io_enq_valid;
-  assign _GEN_16 = do_enq | _GEN_17.valid;
-  assign _GEN_15 = do_enq | _GEN_17.fetch_PC;
-  assign _GEN_14 = do_enq | _GEN_17.is_misprediction;
-  assign _GEN_13 = do_enq | _GEN_17.predicted_PC;
-  assign _GEN_12 = do_enq | _GEN_17.ROB_index;
-  assign _GEN_11 = do_enq | _GEN_17.T_NT;
-  assign _GEN_10 = do_enq | _GEN_17.br_type;
-  assign _GEN_9 = do_enq | _GEN_17.dominant_index;
-  assign _GEN_8 = do_enq | _GEN_17.resolved_PC;
-  assign _GEN_7 = do_enq ? io_enq_bits.valid : _GEN_18.valid;
-  assign _GEN_6 = do_enq ? io_enq_bits.fetch_PC : _GEN_18.fetch_PC;
-  assign _GEN_5 = do_enq ? io_enq_bits.is_misprediction : _GEN_18.is_misprediction;
-  assign _GEN_4 = do_enq ? io_enq_bits.predicted_PC : _GEN_18.predicted_PC;
-  assign _GEN_3 = do_enq ? io_enq_bits.ROB_index : _GEN_18.ROB_index;
-  assign _GEN_2 = do_enq ? io_enq_bits.T_NT : _GEN_18.T_NT;
-  assign _GEN_1 = do_enq ? io_enq_bits.br_type : _GEN_18.br_type;
-  assign _GEN_0 = do_enq ? io_enq_bits.dominant_index : _GEN_18.dominant_index;
-  assign _GEN = do_enq ? io_enq_bits.resolved_PC : _GEN_18.resolved_PC;
+  wire         do_enq = io_enq_ready & io_enq_valid;
+  assign io_enq_ready = ~(ptr_match & maybe_full);
   always @(posedge clock) begin
     if (reset) begin
       wrap <= 1'h0;
@@ -112,21 +85,26 @@ module Queue2_FTQ_entry(
     .W0_addr (wrap),
     .W0_en   (do_enq),
     .W0_clk  (clock),
-    .W0_data ({_GEN, _GEN_0, _GEN_1, _GEN_2, _GEN_3, _GEN_4, _GEN_5, _GEN_6, _GEN_7}),
-    .W0_mask
-      ({{32{_GEN_8}},
-        {2{_GEN_9}},
-        {3{_GEN_10}},
-        _GEN_11,
-        {6{_GEN_12}},
-        {32{_GEN_13}},
-        _GEN_14,
-        {32{_GEN_15}},
-        _GEN_16})
+    .W0_data
+      ({io_enq_bits_resolved_PC,
+        io_enq_bits_dominant_index,
+        io_enq_bits_br_type,
+        io_enq_bits_T_NT,
+        io_enq_bits_ROB_index,
+        io_enq_bits_predicted_PC,
+        io_enq_bits_is_misprediction,
+        io_enq_bits_fetch_PC,
+        io_enq_bits_valid})
   );
-  assign io_enq_ready = ~full;
   assign io_deq_valid = ~empty;
-  assign io_deq_bits = /*cast(bit)*/_ram_ext_R0_data;
-  assign io_count = {maybe_full & ptr_match, wrap - wrap_1};
+  assign io_deq_bits_valid = _ram_ext_R0_data[0];
+  assign io_deq_bits_fetch_PC = _ram_ext_R0_data[32:1];
+  assign io_deq_bits_is_misprediction = _ram_ext_R0_data[33];
+  assign io_deq_bits_predicted_PC = _ram_ext_R0_data[65:34];
+  assign io_deq_bits_ROB_index = _ram_ext_R0_data[71:66];
+  assign io_deq_bits_T_NT = _ram_ext_R0_data[72];
+  assign io_deq_bits_br_type = _ram_ext_R0_data[75:73];
+  assign io_deq_bits_dominant_index = _ram_ext_R0_data[77:76];
+  assign io_deq_bits_resolved_PC = _ram_ext_R0_data[109:78];
 endmodule
 

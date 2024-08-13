@@ -29,144 +29,485 @@
 `endif // not def STOP_COND_
 
 module instruction_fetch(
-  input                                                                                                                                                                                                                                                                                                                                                                                                      clock,
-                                                                                                                                                                                                                                                                                                                                                                                                             reset,
-                                                                                                                                                                                                                                                                                                                                                                                                             io_flush,
-  input  struct packed {logic valid; struct packed {logic [31:0] fetch_PC; logic T_NT; logic [5:0] ROB_index; logic [2:0] br_type; logic [1:0] fetch_packet_index; logic is_misprediction; logic exception; logic [31:0] expected_PC; logic [15:0] GHR; logic [6:0] TOS; logic [6:0] NEXT; logic [7:0] free_list_front_pointer; logic [3:0][4:0] RDold; logic [3:0][6:0] RD; logic [3:0] RD_valid; } bits; } io_commit,
-  output                                                                                                                                                                                                                                                                                                                                                                                                     io_memory_response_ready,
-  input                                                                                                                                                                                                                                                                                                                                                                                                      io_memory_response_valid,
-  input  struct packed {logic [31:0] fetch_PC; logic [3:0] valid_bits; struct packed {logic [31:0] instruction; logic [3:0] packet_index; logic [5:0] ROB_index; }[3:0] instructions; logic [15:0] GHR; logic [6:0] NEXT; logic [6:0] TOS; }                                                                                                                                                                 io_memory_response_bits,
-  input                                                                                                                                                                                                                                                                                                                                                                                                      io_memory_request_ready,
-  output                                                                                                                                                                                                                                                                                                                                                                                                     io_memory_request_valid,
-  output struct packed {logic [31:0] addr; logic [31:0] wr_data; logic wr_en; }                                                                                                                                                                                                                                                                                                                              io_memory_request_bits,
-  input                                                                                                                                                                                                                                                                                                                                                                                                      io_fetch_packet_ready,
-  output                                                                                                                                                                                                                                                                                                                                                                                                     io_fetch_packet_valid,
-  output struct packed {logic [31:0] fetch_PC; logic [3:0] valid_bits; struct packed {logic [31:0] instruction; logic [3:0] packet_index; logic [5:0] ROB_index; }[3:0] instructions; logic [15:0] GHR; logic [6:0] NEXT; logic [6:0] TOS; }                                                                                                                                                                 io_fetch_packet_bits,
-  input                                                                                                                                                                                                                                                                                                                                                                                                      io_predictions_ready,
-  output                                                                                                                                                                                                                                                                                                                                                                                                     io_predictions_valid,
-  output struct packed {logic valid; logic [31:0] fetch_PC; logic is_misprediction; logic [31:0] predicted_PC; logic [5:0] ROB_index; logic T_NT; logic [2:0] br_type; logic [1:0] dominant_index; logic [31:0] resolved_PC; }                                                                                                                                                                               io_predictions_bits,
-  output struct packed {logic valid; struct packed {logic [31:0] PC; } bits; }                                                                                                                                                                                                                                                                                                                               io_revert
+  input         clock,
+                reset,
+                io_flush,
+                io_commit_valid,
+  input  [31:0] io_commit_bits_fetch_PC,
+  input         io_commit_bits_T_NT,
+  input  [5:0]  io_commit_bits_ROB_index,
+  input  [2:0]  io_commit_bits_br_type,
+  input  [1:0]  io_commit_bits_fetch_packet_index,
+  input         io_commit_bits_is_misprediction,
+                io_commit_bits_exception,
+  input  [31:0] io_commit_bits_expected_PC,
+  input  [15:0] io_commit_bits_GHR,
+  input  [6:0]  io_commit_bits_TOS,
+                io_commit_bits_NEXT,
+  input  [7:0]  io_commit_bits_free_list_front_pointer,
+  input  [4:0]  io_commit_bits_RDold_0,
+                io_commit_bits_RDold_1,
+                io_commit_bits_RDold_2,
+                io_commit_bits_RDold_3,
+  input  [6:0]  io_commit_bits_RD_0,
+                io_commit_bits_RD_1,
+                io_commit_bits_RD_2,
+                io_commit_bits_RD_3,
+  input         io_commit_bits_RD_valid_0,
+                io_commit_bits_RD_valid_1,
+                io_commit_bits_RD_valid_2,
+                io_commit_bits_RD_valid_3,
+  output        io_memory_response_ready,
+  input         io_memory_response_valid,
+  input  [31:0] io_memory_response_bits_fetch_PC,
+  input         io_memory_response_bits_valid_bits_0,
+                io_memory_response_bits_valid_bits_1,
+                io_memory_response_bits_valid_bits_2,
+                io_memory_response_bits_valid_bits_3,
+  input  [31:0] io_memory_response_bits_instructions_0_instruction,
+  input  [3:0]  io_memory_response_bits_instructions_0_packet_index,
+  input  [5:0]  io_memory_response_bits_instructions_0_ROB_index,
+  input  [31:0] io_memory_response_bits_instructions_1_instruction,
+  input  [3:0]  io_memory_response_bits_instructions_1_packet_index,
+  input  [5:0]  io_memory_response_bits_instructions_1_ROB_index,
+  input  [31:0] io_memory_response_bits_instructions_2_instruction,
+  input  [3:0]  io_memory_response_bits_instructions_2_packet_index,
+  input  [5:0]  io_memory_response_bits_instructions_2_ROB_index,
+  input  [31:0] io_memory_response_bits_instructions_3_instruction,
+  input  [3:0]  io_memory_response_bits_instructions_3_packet_index,
+  input  [5:0]  io_memory_response_bits_instructions_3_ROB_index,
+  input  [15:0] io_memory_response_bits_GHR,
+  input  [6:0]  io_memory_response_bits_NEXT,
+                io_memory_response_bits_TOS,
+  input         io_memory_request_ready,
+  output        io_memory_request_valid,
+  output [31:0] io_memory_request_bits_addr,
+                io_memory_request_bits_wr_data,
+  output        io_memory_request_bits_wr_en,
+  input         io_fetch_packet_ready,
+  output        io_fetch_packet_valid,
+  output [31:0] io_fetch_packet_bits_fetch_PC,
+  output        io_fetch_packet_bits_valid_bits_0,
+                io_fetch_packet_bits_valid_bits_1,
+                io_fetch_packet_bits_valid_bits_2,
+                io_fetch_packet_bits_valid_bits_3,
+  output [31:0] io_fetch_packet_bits_instructions_0_instruction,
+  output [3:0]  io_fetch_packet_bits_instructions_0_packet_index,
+  output [31:0] io_fetch_packet_bits_instructions_1_instruction,
+  output [3:0]  io_fetch_packet_bits_instructions_1_packet_index,
+  output [31:0] io_fetch_packet_bits_instructions_2_instruction,
+  output [3:0]  io_fetch_packet_bits_instructions_2_packet_index,
+  output [31:0] io_fetch_packet_bits_instructions_3_instruction,
+  output [3:0]  io_fetch_packet_bits_instructions_3_packet_index,
+  output [15:0] io_fetch_packet_bits_GHR,
+  output [6:0]  io_fetch_packet_bits_NEXT,
+                io_fetch_packet_bits_TOS,
+  input         io_predictions_ready,
+  output        io_predictions_valid,
+                io_predictions_bits_valid,
+  output [31:0] io_predictions_bits_fetch_PC,
+  output        io_predictions_bits_is_misprediction,
+  output [31:0] io_predictions_bits_predicted_PC,
+  output [5:0]  io_predictions_bits_ROB_index,
+  output        io_predictions_bits_T_NT,
+  output [2:0]  io_predictions_bits_br_type,
+  output [1:0]  io_predictions_bits_dominant_index,
+  output [31:0] io_predictions_bits_resolved_PC,
+  output        io_revert_valid,
+  output [31:0] io_revert_bits_PC
 );
 
   wire        _BTB_Q_io_enq_ready;
   wire        _BTB_Q_io_deq_valid;
-  wire
-    struct packed {logic hit; logic [31:0] target; logic [2:0] br_type; logic [15:0] GHR; logic T_NT; }
-    _BTB_Q_io_deq_bits;
+  wire        _BTB_Q_io_deq_bits_hit;
+  wire [31:0] _BTB_Q_io_deq_bits_target;
+  wire [2:0]  _BTB_Q_io_deq_bits_br_type;
+  wire [15:0] _BTB_Q_io_deq_bits_GHR;
+  wire        _BTB_Q_io_deq_bits_T_NT;
   wire        _PC_Q_io_enq_ready;
-  wire struct packed {logic [31:0] addr; logic [31:0] wr_data; logic wr_en; }
-    _PC_Q_io_deq_bits;
+  wire [31:0] _PC_Q_io_deq_bits_addr;
   wire        _instruction_Q_io_deq_valid;
-  wire
-    struct packed {logic [31:0] fetch_PC; logic [3:0] valid_bits; struct packed {logic [31:0] instruction; logic [3:0] packet_index; logic [5:0] ROB_index; }[3:0] instructions; logic [15:0] GHR; logic [6:0] NEXT; logic [6:0] TOS; }
-    _instruction_Q_io_deq_bits;
+  wire [31:0] _instruction_Q_io_deq_bits_fetch_PC;
+  wire        _instruction_Q_io_deq_bits_valid_bits_0;
+  wire        _instruction_Q_io_deq_bits_valid_bits_1;
+  wire        _instruction_Q_io_deq_bits_valid_bits_2;
+  wire        _instruction_Q_io_deq_bits_valid_bits_3;
+  wire [31:0] _instruction_Q_io_deq_bits_instructions_0_instruction;
+  wire [3:0]  _instruction_Q_io_deq_bits_instructions_0_packet_index;
+  wire [5:0]  _instruction_Q_io_deq_bits_instructions_0_ROB_index;
+  wire [31:0] _instruction_Q_io_deq_bits_instructions_1_instruction;
+  wire [3:0]  _instruction_Q_io_deq_bits_instructions_1_packet_index;
+  wire [5:0]  _instruction_Q_io_deq_bits_instructions_1_ROB_index;
+  wire [31:0] _instruction_Q_io_deq_bits_instructions_2_instruction;
+  wire [3:0]  _instruction_Q_io_deq_bits_instructions_2_packet_index;
+  wire [5:0]  _instruction_Q_io_deq_bits_instructions_2_ROB_index;
+  wire [31:0] _instruction_Q_io_deq_bits_instructions_3_instruction;
+  wire [3:0]  _instruction_Q_io_deq_bits_instructions_3_packet_index;
+  wire [5:0]  _instruction_Q_io_deq_bits_instructions_3_ROB_index;
+  wire [15:0] _instruction_Q_io_deq_bits_GHR;
+  wire [6:0]  _instruction_Q_io_deq_bits_NEXT;
+  wire [6:0]  _instruction_Q_io_deq_bits_TOS;
   wire        _PC_gen_io_PC_next_valid;
-  wire struct packed {logic [31:0] addr; logic [31:0] wr_data; logic wr_en; }
-    _PC_gen_io_PC_next_bits;
-  wire struct packed {logic valid; struct packed {logic [31:0] PC; } bits; }
-    _predecoder_io_revert;
+  wire [31:0] _PC_gen_io_PC_next_bits_addr;
+  wire [31:0] _PC_gen_io_PC_next_bits_wr_data;
+  wire        _PC_gen_io_PC_next_bits_wr_en;
+  wire        _predecoder_io_revert_valid;
+  wire [31:0] _predecoder_io_revert_bits_PC;
   wire        _predecoder_io_prediction_ready;
   wire        _predecoder_io_fetch_packet_ready;
   wire [15:0] _predecoder_io_GHR;
-  wire struct packed {logic [31:0] call_addr; logic call; logic ret; }
-    _predecoder_io_RAS_update;
+  wire [31:0] _predecoder_io_RAS_update_call_addr;
+  wire        _predecoder_io_RAS_update_call;
+  wire        _predecoder_io_RAS_update_ret;
   wire        _bp_io_predict_ready;
-  wire struct packed {logic [6:0] NEXT; logic [6:0] TOS; logic [31:0] ret_addr; }
-    _bp_io_RAS_read;
+  wire [6:0]  _bp_io_RAS_read_NEXT;
+  wire [6:0]  _bp_io_RAS_read_TOS;
+  wire [31:0] _bp_io_RAS_read_ret_addr;
   wire        _bp_io_prediction_valid;
-  wire
-    struct packed {logic hit; logic [31:0] target; logic [2:0] br_type; logic [15:0] GHR; logic T_NT; }
-    _bp_io_prediction_bits;
-  wire        _bp_io_flush_T = io_flush | _predecoder_io_revert.valid;
+  wire        _bp_io_prediction_bits_hit;
+  wire [31:0] _bp_io_prediction_bits_target;
+  wire [2:0]  _bp_io_prediction_bits_br_type;
+  wire [15:0] _bp_io_prediction_bits_GHR;
+  wire        _bp_io_prediction_bits_T_NT;
+  wire        _bp_io_flush_T = io_flush | _predecoder_io_revert_valid;
   BP bp (
-    .clock               (clock),
-    .reset               (reset),
-    .io_flush            (_bp_io_flush_T),
-    .io_predict_ready    (_bp_io_predict_ready),
-    .io_predict_valid    (_PC_Q_io_enq_ready & _PC_gen_io_PC_next_valid),
-    .io_predict_bits     (_PC_Q_io_deq_bits),
-    .io_commit           (io_commit),
-    .io_RAS_update       (_predecoder_io_RAS_update),
-    .io_RAS_read         (_bp_io_RAS_read),
-    .io_GHR              (_predecoder_io_GHR),
-    .io_prediction_ready (_BTB_Q_io_enq_ready),
-    .io_prediction_valid (_bp_io_prediction_valid),
-    .io_prediction_bits  (_bp_io_prediction_bits)
+    .clock                             (clock),
+    .reset                             (reset),
+    .io_flush                          (_bp_io_flush_T),
+    .io_predict_ready                  (_bp_io_predict_ready),
+    .io_predict_valid                  (_PC_Q_io_enq_ready & _PC_gen_io_PC_next_valid),
+    .io_predict_bits_addr              (_PC_Q_io_deq_bits_addr),
+    .io_commit_valid                   (io_commit_valid),
+    .io_commit_bits_fetch_PC           (io_commit_bits_fetch_PC),
+    .io_commit_bits_T_NT               (io_commit_bits_T_NT),
+    .io_commit_bits_br_type            (io_commit_bits_br_type),
+    .io_commit_bits_fetch_packet_index (io_commit_bits_fetch_packet_index),
+    .io_commit_bits_is_misprediction   (io_commit_bits_is_misprediction),
+    .io_commit_bits_expected_PC        (io_commit_bits_expected_PC),
+    .io_commit_bits_GHR                (io_commit_bits_GHR),
+    .io_commit_bits_TOS                (io_commit_bits_TOS),
+    .io_commit_bits_NEXT               (io_commit_bits_NEXT),
+    .io_RAS_update_call_addr           (_predecoder_io_RAS_update_call_addr),
+    .io_RAS_update_call                (_predecoder_io_RAS_update_call),
+    .io_RAS_update_ret                 (_predecoder_io_RAS_update_ret),
+    .io_RAS_read_NEXT                  (_bp_io_RAS_read_NEXT),
+    .io_RAS_read_TOS                   (_bp_io_RAS_read_TOS),
+    .io_RAS_read_ret_addr              (_bp_io_RAS_read_ret_addr),
+    .io_GHR                            (_predecoder_io_GHR),
+    .io_prediction_ready               (_BTB_Q_io_enq_ready),
+    .io_prediction_valid               (_bp_io_prediction_valid),
+    .io_prediction_bits_hit            (_bp_io_prediction_bits_hit),
+    .io_prediction_bits_target         (_bp_io_prediction_bits_target),
+    .io_prediction_bits_br_type        (_bp_io_prediction_bits_br_type),
+    .io_prediction_bits_GHR            (_bp_io_prediction_bits_GHR),
+    .io_prediction_bits_T_NT           (_bp_io_prediction_bits_T_NT)
   );
   predecoder predecoder (
-    .clock                       (clock),
-    .reset                       (reset),
-    .io_flush                    (io_flush),
-    .io_revert                   (_predecoder_io_revert),
-    .io_prediction_ready         (_predecoder_io_prediction_ready),
-    .io_prediction_valid         (_BTB_Q_io_deq_valid),
-    .io_prediction_bits          (_BTB_Q_io_deq_bits),
-    .io_fetch_packet_ready       (_predecoder_io_fetch_packet_ready),
-    .io_fetch_packet_valid       (_instruction_Q_io_deq_valid),
-    .io_fetch_packet_bits        (_instruction_Q_io_deq_bits),
-    .io_RAS_read                 (_bp_io_RAS_read),
-    .io_commit                   (io_commit),
-    .io_predictions_ready        (io_predictions_ready),
-    .io_predictions_valid        (io_predictions_valid),
-    .io_predictions_bits         (io_predictions_bits),
-    .io_final_fetch_packet_ready (io_fetch_packet_ready),
-    .io_final_fetch_packet_valid (io_fetch_packet_valid),
-    .io_final_fetch_packet_bits  (io_fetch_packet_bits),
-    .io_GHR                      (_predecoder_io_GHR),
-    .io_RAS_update               (_predecoder_io_RAS_update)
+    .clock                                                  (clock),
+    .reset                                                  (reset),
+    .io_flush                                               (io_flush),
+    .io_revert_valid                                        (_predecoder_io_revert_valid),
+    .io_revert_bits_PC
+      (_predecoder_io_revert_bits_PC),
+    .io_prediction_ready
+      (_predecoder_io_prediction_ready),
+    .io_prediction_valid                                    (_BTB_Q_io_deq_valid),
+    .io_prediction_bits_hit                                 (_BTB_Q_io_deq_bits_hit),
+    .io_prediction_bits_target                              (_BTB_Q_io_deq_bits_target),
+    .io_prediction_bits_br_type                             (_BTB_Q_io_deq_bits_br_type),
+    .io_prediction_bits_GHR                                 (_BTB_Q_io_deq_bits_GHR),
+    .io_prediction_bits_T_NT                                (_BTB_Q_io_deq_bits_T_NT),
+    .io_fetch_packet_ready
+      (_predecoder_io_fetch_packet_ready),
+    .io_fetch_packet_valid                                  (_instruction_Q_io_deq_valid),
+    .io_fetch_packet_bits_fetch_PC
+      (_instruction_Q_io_deq_bits_fetch_PC),
+    .io_fetch_packet_bits_valid_bits_0
+      (_instruction_Q_io_deq_bits_valid_bits_0),
+    .io_fetch_packet_bits_valid_bits_1
+      (_instruction_Q_io_deq_bits_valid_bits_1),
+    .io_fetch_packet_bits_valid_bits_2
+      (_instruction_Q_io_deq_bits_valid_bits_2),
+    .io_fetch_packet_bits_valid_bits_3
+      (_instruction_Q_io_deq_bits_valid_bits_3),
+    .io_fetch_packet_bits_instructions_0_instruction
+      (_instruction_Q_io_deq_bits_instructions_0_instruction),
+    .io_fetch_packet_bits_instructions_0_packet_index
+      (_instruction_Q_io_deq_bits_instructions_0_packet_index),
+    .io_fetch_packet_bits_instructions_0_ROB_index
+      (_instruction_Q_io_deq_bits_instructions_0_ROB_index),
+    .io_fetch_packet_bits_instructions_1_instruction
+      (_instruction_Q_io_deq_bits_instructions_1_instruction),
+    .io_fetch_packet_bits_instructions_1_packet_index
+      (_instruction_Q_io_deq_bits_instructions_1_packet_index),
+    .io_fetch_packet_bits_instructions_1_ROB_index
+      (_instruction_Q_io_deq_bits_instructions_1_ROB_index),
+    .io_fetch_packet_bits_instructions_2_instruction
+      (_instruction_Q_io_deq_bits_instructions_2_instruction),
+    .io_fetch_packet_bits_instructions_2_packet_index
+      (_instruction_Q_io_deq_bits_instructions_2_packet_index),
+    .io_fetch_packet_bits_instructions_2_ROB_index
+      (_instruction_Q_io_deq_bits_instructions_2_ROB_index),
+    .io_fetch_packet_bits_instructions_3_instruction
+      (_instruction_Q_io_deq_bits_instructions_3_instruction),
+    .io_fetch_packet_bits_instructions_3_packet_index
+      (_instruction_Q_io_deq_bits_instructions_3_packet_index),
+    .io_fetch_packet_bits_instructions_3_ROB_index
+      (_instruction_Q_io_deq_bits_instructions_3_ROB_index),
+    .io_fetch_packet_bits_GHR
+      (_instruction_Q_io_deq_bits_GHR),
+    .io_fetch_packet_bits_NEXT
+      (_instruction_Q_io_deq_bits_NEXT),
+    .io_fetch_packet_bits_TOS
+      (_instruction_Q_io_deq_bits_TOS),
+    .io_RAS_read_NEXT                                       (_bp_io_RAS_read_NEXT),
+    .io_RAS_read_TOS                                        (_bp_io_RAS_read_TOS),
+    .io_RAS_read_ret_addr                                   (_bp_io_RAS_read_ret_addr),
+    .io_commit_valid                                        (io_commit_valid),
+    .io_commit_bits_fetch_PC                                (io_commit_bits_fetch_PC),
+    .io_commit_bits_T_NT                                    (io_commit_bits_T_NT),
+    .io_commit_bits_ROB_index                               (io_commit_bits_ROB_index),
+    .io_commit_bits_br_type                                 (io_commit_bits_br_type),
+    .io_commit_bits_fetch_packet_index
+      (io_commit_bits_fetch_packet_index),
+    .io_commit_bits_is_misprediction
+      (io_commit_bits_is_misprediction),
+    .io_commit_bits_exception                               (io_commit_bits_exception),
+    .io_commit_bits_expected_PC                             (io_commit_bits_expected_PC),
+    .io_commit_bits_GHR                                     (io_commit_bits_GHR),
+    .io_commit_bits_TOS                                     (io_commit_bits_TOS),
+    .io_commit_bits_NEXT                                    (io_commit_bits_NEXT),
+    .io_commit_bits_free_list_front_pointer
+      (io_commit_bits_free_list_front_pointer),
+    .io_commit_bits_RDold_0                                 (io_commit_bits_RDold_0),
+    .io_commit_bits_RDold_1                                 (io_commit_bits_RDold_1),
+    .io_commit_bits_RDold_2                                 (io_commit_bits_RDold_2),
+    .io_commit_bits_RDold_3                                 (io_commit_bits_RDold_3),
+    .io_commit_bits_RD_0                                    (io_commit_bits_RD_0),
+    .io_commit_bits_RD_1                                    (io_commit_bits_RD_1),
+    .io_commit_bits_RD_2                                    (io_commit_bits_RD_2),
+    .io_commit_bits_RD_3                                    (io_commit_bits_RD_3),
+    .io_commit_bits_RD_valid_0                              (io_commit_bits_RD_valid_0),
+    .io_commit_bits_RD_valid_1                              (io_commit_bits_RD_valid_1),
+    .io_commit_bits_RD_valid_2                              (io_commit_bits_RD_valid_2),
+    .io_commit_bits_RD_valid_3                              (io_commit_bits_RD_valid_3),
+    .io_predictions_ready                                   (io_predictions_ready),
+    .io_predictions_valid                                   (io_predictions_valid),
+    .io_predictions_bits_valid                              (io_predictions_bits_valid),
+    .io_predictions_bits_fetch_PC
+      (io_predictions_bits_fetch_PC),
+    .io_predictions_bits_is_misprediction
+      (io_predictions_bits_is_misprediction),
+    .io_predictions_bits_predicted_PC
+      (io_predictions_bits_predicted_PC),
+    .io_predictions_bits_ROB_index
+      (io_predictions_bits_ROB_index),
+    .io_predictions_bits_T_NT                               (io_predictions_bits_T_NT),
+    .io_predictions_bits_br_type                            (io_predictions_bits_br_type),
+    .io_predictions_bits_dominant_index
+      (io_predictions_bits_dominant_index),
+    .io_predictions_bits_resolved_PC
+      (io_predictions_bits_resolved_PC),
+    .io_final_fetch_packet_ready                            (io_fetch_packet_ready),
+    .io_final_fetch_packet_valid                            (io_fetch_packet_valid),
+    .io_final_fetch_packet_bits_fetch_PC
+      (io_fetch_packet_bits_fetch_PC),
+    .io_final_fetch_packet_bits_valid_bits_0
+      (io_fetch_packet_bits_valid_bits_0),
+    .io_final_fetch_packet_bits_valid_bits_1
+      (io_fetch_packet_bits_valid_bits_1),
+    .io_final_fetch_packet_bits_valid_bits_2
+      (io_fetch_packet_bits_valid_bits_2),
+    .io_final_fetch_packet_bits_valid_bits_3
+      (io_fetch_packet_bits_valid_bits_3),
+    .io_final_fetch_packet_bits_instructions_0_instruction
+      (io_fetch_packet_bits_instructions_0_instruction),
+    .io_final_fetch_packet_bits_instructions_0_packet_index
+      (io_fetch_packet_bits_instructions_0_packet_index),
+    .io_final_fetch_packet_bits_instructions_0_ROB_index    (/* unused */),
+    .io_final_fetch_packet_bits_instructions_1_instruction
+      (io_fetch_packet_bits_instructions_1_instruction),
+    .io_final_fetch_packet_bits_instructions_1_packet_index
+      (io_fetch_packet_bits_instructions_1_packet_index),
+    .io_final_fetch_packet_bits_instructions_1_ROB_index    (/* unused */),
+    .io_final_fetch_packet_bits_instructions_2_instruction
+      (io_fetch_packet_bits_instructions_2_instruction),
+    .io_final_fetch_packet_bits_instructions_2_packet_index
+      (io_fetch_packet_bits_instructions_2_packet_index),
+    .io_final_fetch_packet_bits_instructions_2_ROB_index    (/* unused */),
+    .io_final_fetch_packet_bits_instructions_3_instruction
+      (io_fetch_packet_bits_instructions_3_instruction),
+    .io_final_fetch_packet_bits_instructions_3_packet_index
+      (io_fetch_packet_bits_instructions_3_packet_index),
+    .io_final_fetch_packet_bits_instructions_3_ROB_index    (/* unused */),
+    .io_final_fetch_packet_bits_GHR                         (io_fetch_packet_bits_GHR),
+    .io_final_fetch_packet_bits_NEXT                        (io_fetch_packet_bits_NEXT),
+    .io_final_fetch_packet_bits_TOS                         (io_fetch_packet_bits_TOS),
+    .io_GHR                                                 (_predecoder_io_GHR),
+    .io_RAS_update_call_addr
+      (_predecoder_io_RAS_update_call_addr),
+    .io_RAS_update_call
+      (_predecoder_io_RAS_update_call),
+    .io_RAS_update_ret
+      (_predecoder_io_RAS_update_ret)
   );
   PC_gen PC_gen (
-    .clock               (clock),
-    .reset               (reset),
-    .io_commit           (io_commit),
-    .io_revert           (_predecoder_io_revert),
-    .io_prediction_ready (/* unused */),
-    .io_prediction_valid (_bp_io_prediction_valid),
-    .io_prediction_bits  (_bp_io_prediction_bits),
-    .io_RAS_read         (_bp_io_RAS_read),
-    .io_PC_next_ready    (_PC_Q_io_enq_ready),
-    .io_PC_next_valid    (_PC_gen_io_PC_next_valid),
-    .io_PC_next_bits     (_PC_gen_io_PC_next_bits)
+    .clock                                  (clock),
+    .reset                                  (reset),
+    .io_commit_valid                        (io_commit_valid),
+    .io_commit_bits_fetch_PC                (io_commit_bits_fetch_PC),
+    .io_commit_bits_T_NT                    (io_commit_bits_T_NT),
+    .io_commit_bits_ROB_index               (io_commit_bits_ROB_index),
+    .io_commit_bits_br_type                 (io_commit_bits_br_type),
+    .io_commit_bits_fetch_packet_index      (io_commit_bits_fetch_packet_index),
+    .io_commit_bits_is_misprediction        (io_commit_bits_is_misprediction),
+    .io_commit_bits_exception               (io_commit_bits_exception),
+    .io_commit_bits_expected_PC             (io_commit_bits_expected_PC),
+    .io_commit_bits_GHR                     (io_commit_bits_GHR),
+    .io_commit_bits_TOS                     (io_commit_bits_TOS),
+    .io_commit_bits_NEXT                    (io_commit_bits_NEXT),
+    .io_commit_bits_free_list_front_pointer (io_commit_bits_free_list_front_pointer),
+    .io_commit_bits_RDold_0                 (io_commit_bits_RDold_0),
+    .io_commit_bits_RDold_1                 (io_commit_bits_RDold_1),
+    .io_commit_bits_RDold_2                 (io_commit_bits_RDold_2),
+    .io_commit_bits_RDold_3                 (io_commit_bits_RDold_3),
+    .io_commit_bits_RD_0                    (io_commit_bits_RD_0),
+    .io_commit_bits_RD_1                    (io_commit_bits_RD_1),
+    .io_commit_bits_RD_2                    (io_commit_bits_RD_2),
+    .io_commit_bits_RD_3                    (io_commit_bits_RD_3),
+    .io_commit_bits_RD_valid_0              (io_commit_bits_RD_valid_0),
+    .io_commit_bits_RD_valid_1              (io_commit_bits_RD_valid_1),
+    .io_commit_bits_RD_valid_2              (io_commit_bits_RD_valid_2),
+    .io_commit_bits_RD_valid_3              (io_commit_bits_RD_valid_3),
+    .io_revert_valid                        (_predecoder_io_revert_valid),
+    .io_revert_bits_PC                      (_predecoder_io_revert_bits_PC),
+    .io_prediction_ready                    (/* unused */),
+    .io_prediction_valid                    (_bp_io_prediction_valid),
+    .io_prediction_bits_hit                 (_bp_io_prediction_bits_hit),
+    .io_prediction_bits_target              (_bp_io_prediction_bits_target),
+    .io_prediction_bits_br_type             (_bp_io_prediction_bits_br_type),
+    .io_prediction_bits_GHR                 (_bp_io_prediction_bits_GHR),
+    .io_prediction_bits_T_NT                (_bp_io_prediction_bits_T_NT),
+    .io_RAS_read_NEXT                       (_bp_io_RAS_read_NEXT),
+    .io_RAS_read_TOS                        (_bp_io_RAS_read_TOS),
+    .io_RAS_read_ret_addr                   (_bp_io_RAS_read_ret_addr),
+    .io_PC_next_ready                       (_PC_Q_io_enq_ready),
+    .io_PC_next_valid                       (_PC_gen_io_PC_next_valid),
+    .io_PC_next_bits_addr                   (_PC_gen_io_PC_next_bits_addr),
+    .io_PC_next_bits_wr_data                (_PC_gen_io_PC_next_bits_wr_data),
+    .io_PC_next_bits_wr_en                  (_PC_gen_io_PC_next_bits_wr_en)
   );
   Queue16_fetch_packet instruction_Q (
-    .clock        (clock),
-    .reset        (reset),
-    .io_enq_ready (io_memory_response_ready),
-    .io_enq_valid (io_memory_response_valid),
-    .io_enq_bits  (io_memory_response_bits),
-    .io_deq_ready (_predecoder_io_fetch_packet_ready),
-    .io_deq_valid (_instruction_Q_io_deq_valid),
-    .io_deq_bits  (_instruction_Q_io_deq_bits),
-    .io_count     (/* unused */),
-    .io_flush     (_bp_io_flush_T)
+    .clock                                   (clock),
+    .reset                                   (reset),
+    .io_enq_ready                            (io_memory_response_ready),
+    .io_enq_valid                            (io_memory_response_valid),
+    .io_enq_bits_fetch_PC                    (io_memory_response_bits_fetch_PC),
+    .io_enq_bits_valid_bits_0                (io_memory_response_bits_valid_bits_0),
+    .io_enq_bits_valid_bits_1                (io_memory_response_bits_valid_bits_1),
+    .io_enq_bits_valid_bits_2                (io_memory_response_bits_valid_bits_2),
+    .io_enq_bits_valid_bits_3                (io_memory_response_bits_valid_bits_3),
+    .io_enq_bits_instructions_0_instruction
+      (io_memory_response_bits_instructions_0_instruction),
+    .io_enq_bits_instructions_0_packet_index
+      (io_memory_response_bits_instructions_0_packet_index),
+    .io_enq_bits_instructions_0_ROB_index
+      (io_memory_response_bits_instructions_0_ROB_index),
+    .io_enq_bits_instructions_1_instruction
+      (io_memory_response_bits_instructions_1_instruction),
+    .io_enq_bits_instructions_1_packet_index
+      (io_memory_response_bits_instructions_1_packet_index),
+    .io_enq_bits_instructions_1_ROB_index
+      (io_memory_response_bits_instructions_1_ROB_index),
+    .io_enq_bits_instructions_2_instruction
+      (io_memory_response_bits_instructions_2_instruction),
+    .io_enq_bits_instructions_2_packet_index
+      (io_memory_response_bits_instructions_2_packet_index),
+    .io_enq_bits_instructions_2_ROB_index
+      (io_memory_response_bits_instructions_2_ROB_index),
+    .io_enq_bits_instructions_3_instruction
+      (io_memory_response_bits_instructions_3_instruction),
+    .io_enq_bits_instructions_3_packet_index
+      (io_memory_response_bits_instructions_3_packet_index),
+    .io_enq_bits_instructions_3_ROB_index
+      (io_memory_response_bits_instructions_3_ROB_index),
+    .io_enq_bits_GHR                         (io_memory_response_bits_GHR),
+    .io_enq_bits_NEXT                        (io_memory_response_bits_NEXT),
+    .io_enq_bits_TOS                         (io_memory_response_bits_TOS),
+    .io_deq_ready                            (_predecoder_io_fetch_packet_ready),
+    .io_deq_valid                            (_instruction_Q_io_deq_valid),
+    .io_deq_bits_fetch_PC                    (_instruction_Q_io_deq_bits_fetch_PC),
+    .io_deq_bits_valid_bits_0                (_instruction_Q_io_deq_bits_valid_bits_0),
+    .io_deq_bits_valid_bits_1                (_instruction_Q_io_deq_bits_valid_bits_1),
+    .io_deq_bits_valid_bits_2                (_instruction_Q_io_deq_bits_valid_bits_2),
+    .io_deq_bits_valid_bits_3                (_instruction_Q_io_deq_bits_valid_bits_3),
+    .io_deq_bits_instructions_0_instruction
+      (_instruction_Q_io_deq_bits_instructions_0_instruction),
+    .io_deq_bits_instructions_0_packet_index
+      (_instruction_Q_io_deq_bits_instructions_0_packet_index),
+    .io_deq_bits_instructions_0_ROB_index
+      (_instruction_Q_io_deq_bits_instructions_0_ROB_index),
+    .io_deq_bits_instructions_1_instruction
+      (_instruction_Q_io_deq_bits_instructions_1_instruction),
+    .io_deq_bits_instructions_1_packet_index
+      (_instruction_Q_io_deq_bits_instructions_1_packet_index),
+    .io_deq_bits_instructions_1_ROB_index
+      (_instruction_Q_io_deq_bits_instructions_1_ROB_index),
+    .io_deq_bits_instructions_2_instruction
+      (_instruction_Q_io_deq_bits_instructions_2_instruction),
+    .io_deq_bits_instructions_2_packet_index
+      (_instruction_Q_io_deq_bits_instructions_2_packet_index),
+    .io_deq_bits_instructions_2_ROB_index
+      (_instruction_Q_io_deq_bits_instructions_2_ROB_index),
+    .io_deq_bits_instructions_3_instruction
+      (_instruction_Q_io_deq_bits_instructions_3_instruction),
+    .io_deq_bits_instructions_3_packet_index
+      (_instruction_Q_io_deq_bits_instructions_3_packet_index),
+    .io_deq_bits_instructions_3_ROB_index
+      (_instruction_Q_io_deq_bits_instructions_3_ROB_index),
+    .io_deq_bits_GHR                         (_instruction_Q_io_deq_bits_GHR),
+    .io_deq_bits_NEXT                        (_instruction_Q_io_deq_bits_NEXT),
+    .io_deq_bits_TOS                         (_instruction_Q_io_deq_bits_TOS),
+    .io_flush                                (_bp_io_flush_T)
   );
   Queue16_frontend_memory_request PC_Q (
-    .clock        (clock),
-    .reset        (reset),
-    .io_enq_ready (_PC_Q_io_enq_ready),
-    .io_enq_valid (_PC_gen_io_PC_next_valid & _bp_io_predict_ready),
-    .io_enq_bits  (_PC_gen_io_PC_next_bits),
-    .io_deq_ready (io_memory_request_ready),
-    .io_deq_valid (io_memory_request_valid),
-    .io_deq_bits  (_PC_Q_io_deq_bits),
-    .io_count     (/* unused */),
-    .io_flush     (_bp_io_flush_T)
+    .clock               (clock),
+    .reset               (reset),
+    .io_enq_ready        (_PC_Q_io_enq_ready),
+    .io_enq_valid        (_PC_gen_io_PC_next_valid & _bp_io_predict_ready),
+    .io_enq_bits_addr    (_PC_gen_io_PC_next_bits_addr),
+    .io_enq_bits_wr_data (_PC_gen_io_PC_next_bits_wr_data),
+    .io_enq_bits_wr_en   (_PC_gen_io_PC_next_bits_wr_en),
+    .io_deq_ready        (io_memory_request_ready),
+    .io_deq_valid        (io_memory_request_valid),
+    .io_deq_bits_addr    (_PC_Q_io_deq_bits_addr),
+    .io_deq_bits_wr_data (io_memory_request_bits_wr_data),
+    .io_deq_bits_wr_en   (io_memory_request_bits_wr_en),
+    .io_flush            (_bp_io_flush_T)
   );
   Queue16_prediction BTB_Q (
-    .clock        (clock),
-    .reset        (reset),
-    .io_enq_ready (_BTB_Q_io_enq_ready),
-    .io_enq_valid (_bp_io_prediction_valid),
-    .io_enq_bits  (_bp_io_prediction_bits),
+    .clock               (clock),
+    .reset               (reset),
+    .io_enq_ready        (_BTB_Q_io_enq_ready),
+    .io_enq_valid        (_bp_io_prediction_valid),
+    .io_enq_bits_hit     (_bp_io_prediction_bits_hit),
+    .io_enq_bits_target  (_bp_io_prediction_bits_target),
+    .io_enq_bits_br_type (_bp_io_prediction_bits_br_type),
+    .io_enq_bits_GHR     (_bp_io_prediction_bits_GHR),
+    .io_enq_bits_T_NT    (_bp_io_prediction_bits_T_NT),
     .io_deq_ready
       (_predecoder_io_prediction_ready & _predecoder_io_fetch_packet_ready
        & _instruction_Q_io_deq_valid),
-    .io_deq_valid (_BTB_Q_io_deq_valid),
-    .io_deq_bits  (_BTB_Q_io_deq_bits),
-    .io_count     (/* unused */),
-    .io_flush     (_bp_io_flush_T)
+    .io_deq_valid        (_BTB_Q_io_deq_valid),
+    .io_deq_bits_hit     (_BTB_Q_io_deq_bits_hit),
+    .io_deq_bits_target  (_BTB_Q_io_deq_bits_target),
+    .io_deq_bits_br_type (_BTB_Q_io_deq_bits_br_type),
+    .io_deq_bits_GHR     (_BTB_Q_io_deq_bits_GHR),
+    .io_deq_bits_T_NT    (_BTB_Q_io_deq_bits_T_NT),
+    .io_flush            (_bp_io_flush_T)
   );
-  assign io_memory_request_bits = _PC_Q_io_deq_bits;
-  assign io_revert = _predecoder_io_revert;
+  assign io_memory_request_bits_addr = _PC_Q_io_deq_bits_addr;
+  assign io_revert_valid = _predecoder_io_revert_valid;
+  assign io_revert_bits_PC = _predecoder_io_revert_bits_PC;
 endmodule
 

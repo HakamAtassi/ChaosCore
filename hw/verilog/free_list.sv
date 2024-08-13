@@ -29,19 +29,52 @@
 `endif // not def STOP_COND_
 
 module free_list(
-  input                                                                                                                                                                                                                                                                                                                                                                                                      clock,
-                                                                                                                                                                                                                                                                                                                                                                                                             reset,
-  input  [3:0]                                                                                                                                                                                                                                                                                                                                                                                               io_rename_valid,
-  output [3:0][6:0]                                                                                                                                                                                                                                                                                                                                                                                          io_renamed_values,
-  output [3:0]                                                                                                                                                                                                                                                                                                                                                                                               io_renamed_valid,
-  input  struct packed {logic valid; struct packed {logic [31:0] fetch_PC; logic T_NT; logic [5:0] ROB_index; logic [2:0] br_type; logic [1:0] fetch_packet_index; logic is_misprediction; logic exception; logic [31:0] expected_PC; logic [15:0] GHR; logic [6:0] TOS; logic [6:0] NEXT; logic [7:0] free_list_front_pointer; logic [3:0][4:0] RDold; logic [3:0][6:0] RD; logic [3:0] RD_valid; } bits; } io_commit,
-  output [6:0]                                                                                                                                                                                                                                                                                                                                                                                               io_free_list_front_pointer,
-  output                                                                                                                                                                                                                                                                                                                                                                                                     io_can_reallocate,
-                                                                                                                                                                                                                                                                                                                                                                                                             io_can_allocate
+  input         clock,
+                reset,
+                io_rename_valid_0,
+                io_rename_valid_1,
+                io_rename_valid_2,
+                io_rename_valid_3,
+  output [6:0]  io_renamed_values_0,
+                io_renamed_values_1,
+                io_renamed_values_2,
+                io_renamed_values_3,
+  output        io_renamed_valid_0,
+                io_renamed_valid_1,
+                io_renamed_valid_2,
+                io_renamed_valid_3,
+  input         io_commit_valid,
+  input  [31:0] io_commit_bits_fetch_PC,
+  input         io_commit_bits_T_NT,
+  input  [5:0]  io_commit_bits_ROB_index,
+  input  [2:0]  io_commit_bits_br_type,
+  input  [1:0]  io_commit_bits_fetch_packet_index,
+  input         io_commit_bits_is_misprediction,
+                io_commit_bits_exception,
+  input  [31:0] io_commit_bits_expected_PC,
+  input  [15:0] io_commit_bits_GHR,
+  input  [6:0]  io_commit_bits_TOS,
+                io_commit_bits_NEXT,
+  input  [7:0]  io_commit_bits_free_list_front_pointer,
+  input  [4:0]  io_commit_bits_RDold_0,
+                io_commit_bits_RDold_1,
+                io_commit_bits_RDold_2,
+                io_commit_bits_RDold_3,
+  input  [6:0]  io_commit_bits_RD_0,
+                io_commit_bits_RD_1,
+                io_commit_bits_RD_2,
+                io_commit_bits_RD_3,
+  input         io_commit_bits_RD_valid_0,
+                io_commit_bits_RD_valid_1,
+                io_commit_bits_RD_valid_2,
+                io_commit_bits_RD_valid_3,
+  output [6:0]  io_free_list_front_pointer,
+  output        io_can_reallocate,
+                io_can_allocate
 );
 
   wire [4:0]       _available_elemets_6to2;
-  wire [63:0][6:0] _free_list_buffer_WIRE =
+  wire [63:0][6:0] _GEN =
     '{7'h40,
       7'h3F,
       7'h3E,
@@ -106,226 +139,32 @@ module free_list(
       7'h3,
       7'h2,
       7'h1};
-  wire             flush = io_commit.valid & io_commit.bits.is_misprediction;
+  wire             flush = io_commit_valid & io_commit_bits_is_misprediction;
   reg  [6:0]       front_pointer;
   reg  [6:0]       back_pointer;
   wire [5:0]       front_index = front_pointer[5:0];
   wire [5:0]       back_index = back_pointer[5:0];
-  wire [1:0]       _GEN = {1'h0, io_rename_valid[2'h0]};
-  wire [1:0]       _GEN_0 = {1'h0, io_rename_valid[2'h1]};
-  wire [1:0]       _front_pointer_T_1 = _GEN + _GEN_0;
-  wire [2:0]       _GEN_1 = {1'h0, _front_pointer_T_1};
-  wire [1:0]       _GEN_2 = {1'h0, io_rename_valid[2'h2]};
-  wire [2:0]       _GEN_3 = {1'h0, _GEN_2 + {1'h0, io_rename_valid[2'h3]}};
-  wire [3:0]       _GEN_4 =
-    io_rename_valid & {{~flush}, {~flush}, {~flush}, {~flush}}
-    & {{|_available_elemets_6to2},
-       {|_available_elemets_6to2},
-       {|_available_elemets_6to2},
-       {|_available_elemets_6to2}};
-  wire [3:0]       allocate_valid =
-    io_commit.bits.RD_valid
-    & {{|io_commit.bits.RD[2'h3]},
-       {|io_commit.bits.RD[2'h2]},
-       {|io_commit.bits.RD[2'h1]},
-       {|io_commit.bits.RD[2'h0]}} & {4{io_commit.valid}};
+  wire [1:0]       _GEN_0 = {1'h0, io_rename_valid_0};
+  wire             valid = io_rename_valid_0 & ~flush & (|_available_elemets_6to2);
+  wire [1:0]       _GEN_1 = {1'h0, io_rename_valid_1};
+  wire [1:0]       _front_pointer_T_1 = _GEN_0 + _GEN_1;
+  wire [2:0]       _GEN_2 = {1'h0, _front_pointer_T_1};
+  wire             valid_1 = io_rename_valid_1 & ~flush & (|_available_elemets_6to2);
+  wire [1:0]       _GEN_3 = {1'h0, io_rename_valid_2};
+  wire             valid_2 = io_rename_valid_2 & ~flush & (|_available_elemets_6to2);
+  wire [2:0]       _GEN_4 = {1'h0, _GEN_3 + {1'h0, io_rename_valid_3}};
+  wire             valid_3 = io_rename_valid_3 & ~flush & (|_available_elemets_6to2);
+  wire             allocate_valid_0 =
+    io_commit_bits_RD_valid_0 & (|io_commit_bits_RD_0) & io_commit_valid;
+  wire             allocate_valid_1 =
+    io_commit_bits_RD_valid_1 & (|io_commit_bits_RD_1) & io_commit_valid;
+  wire             allocate_valid_2 =
+    io_commit_bits_RD_valid_2 & (|io_commit_bits_RD_2) & io_commit_valid;
+  wire             allocate_valid_3 =
+    io_commit_bits_RD_valid_3 & (|io_commit_bits_RD_3) & io_commit_valid;
   wire [6:0]       available_elemets = back_pointer - front_pointer;
-  wire             _io_can_reallocate_T_4 = available_elemets + 7'h4 < 7'h41;
+  wire             io_can_reallocate_0 = available_elemets + 7'h4 < 7'h41;
   assign _available_elemets_6to2 = available_elemets[6:2];
-  reg  [63:0][6:0] valid_commit_ptr;
-  reg  [63:0]      valid_commit_valid;
-  wire             _GEN_5 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h0]}
-    & valid_commit_valid[6'h0] & io_commit.valid;
-  wire             _GEN_6 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h1]}
-    & valid_commit_valid[6'h1] & io_commit.valid;
-  wire             _GEN_7 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h2]}
-    & valid_commit_valid[6'h2] & io_commit.valid;
-  wire             _GEN_8 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h3]}
-    & valid_commit_valid[6'h3] & io_commit.valid;
-  wire             _GEN_9 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h4]}
-    & valid_commit_valid[6'h4] & io_commit.valid;
-  wire             _GEN_10 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h5]}
-    & valid_commit_valid[6'h5] & io_commit.valid;
-  wire             _GEN_11 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h6]}
-    & valid_commit_valid[6'h6] & io_commit.valid;
-  wire             _GEN_12 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h7]}
-    & valid_commit_valid[6'h7] & io_commit.valid;
-  wire             _GEN_13 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h8]}
-    & valid_commit_valid[6'h8] & io_commit.valid;
-  wire             _GEN_14 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h9]}
-    & valid_commit_valid[6'h9] & io_commit.valid;
-  wire             _GEN_15 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'hA]}
-    & valid_commit_valid[6'hA] & io_commit.valid;
-  wire             _GEN_16 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'hB]}
-    & valid_commit_valid[6'hB] & io_commit.valid;
-  wire             _GEN_17 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'hC]}
-    & valid_commit_valid[6'hC] & io_commit.valid;
-  wire             _GEN_18 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'hD]}
-    & valid_commit_valid[6'hD] & io_commit.valid;
-  wire             _GEN_19 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'hE]}
-    & valid_commit_valid[6'hE] & io_commit.valid;
-  wire             _GEN_20 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'hF]}
-    & valid_commit_valid[6'hF] & io_commit.valid;
-  wire             _GEN_21 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h10]}
-    & valid_commit_valid[6'h10] & io_commit.valid;
-  wire             _GEN_22 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h11]}
-    & valid_commit_valid[6'h11] & io_commit.valid;
-  wire             _GEN_23 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h12]}
-    & valid_commit_valid[6'h12] & io_commit.valid;
-  wire             _GEN_24 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h13]}
-    & valid_commit_valid[6'h13] & io_commit.valid;
-  wire             _GEN_25 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h14]}
-    & valid_commit_valid[6'h14] & io_commit.valid;
-  wire             _GEN_26 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h15]}
-    & valid_commit_valid[6'h15] & io_commit.valid;
-  wire             _GEN_27 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h16]}
-    & valid_commit_valid[6'h16] & io_commit.valid;
-  wire             _GEN_28 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h17]}
-    & valid_commit_valid[6'h17] & io_commit.valid;
-  wire             _GEN_29 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h18]}
-    & valid_commit_valid[6'h18] & io_commit.valid;
-  wire             _GEN_30 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h19]}
-    & valid_commit_valid[6'h19] & io_commit.valid;
-  wire             _GEN_31 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h1A]}
-    & valid_commit_valid[6'h1A] & io_commit.valid;
-  wire             _GEN_32 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h1B]}
-    & valid_commit_valid[6'h1B] & io_commit.valid;
-  wire             _GEN_33 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h1C]}
-    & valid_commit_valid[6'h1C] & io_commit.valid;
-  wire             _GEN_34 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h1D]}
-    & valid_commit_valid[6'h1D] & io_commit.valid;
-  wire             _GEN_35 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h1E]}
-    & valid_commit_valid[6'h1E] & io_commit.valid;
-  wire             _GEN_36 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h1F]}
-    & valid_commit_valid[6'h1F] & io_commit.valid;
-  wire             _GEN_37 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h20]}
-    & valid_commit_valid[6'h20] & io_commit.valid;
-  wire             _GEN_38 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h21]}
-    & valid_commit_valid[6'h21] & io_commit.valid;
-  wire             _GEN_39 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h22]}
-    & valid_commit_valid[6'h22] & io_commit.valid;
-  wire             _GEN_40 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h23]}
-    & valid_commit_valid[6'h23] & io_commit.valid;
-  wire             _GEN_41 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h24]}
-    & valid_commit_valid[6'h24] & io_commit.valid;
-  wire             _GEN_42 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h25]}
-    & valid_commit_valid[6'h25] & io_commit.valid;
-  wire             _GEN_43 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h26]}
-    & valid_commit_valid[6'h26] & io_commit.valid;
-  wire             _GEN_44 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h27]}
-    & valid_commit_valid[6'h27] & io_commit.valid;
-  wire             _GEN_45 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h28]}
-    & valid_commit_valid[6'h28] & io_commit.valid;
-  wire             _GEN_46 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h29]}
-    & valid_commit_valid[6'h29] & io_commit.valid;
-  wire             _GEN_47 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h2A]}
-    & valid_commit_valid[6'h2A] & io_commit.valid;
-  wire             _GEN_48 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h2B]}
-    & valid_commit_valid[6'h2B] & io_commit.valid;
-  wire             _GEN_49 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h2C]}
-    & valid_commit_valid[6'h2C] & io_commit.valid;
-  wire             _GEN_50 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h2D]}
-    & valid_commit_valid[6'h2D] & io_commit.valid;
-  wire             _GEN_51 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h2E]}
-    & valid_commit_valid[6'h2E] & io_commit.valid;
-  wire             _GEN_52 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h2F]}
-    & valid_commit_valid[6'h2F] & io_commit.valid;
-  wire             _GEN_53 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h30]}
-    & valid_commit_valid[6'h30] & io_commit.valid;
-  wire             _GEN_54 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h31]}
-    & valid_commit_valid[6'h31] & io_commit.valid;
-  wire             _GEN_55 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h32]}
-    & valid_commit_valid[6'h32] & io_commit.valid;
-  wire             _GEN_56 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h33]}
-    & valid_commit_valid[6'h33] & io_commit.valid;
-  wire             _GEN_57 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h34]}
-    & valid_commit_valid[6'h34] & io_commit.valid;
-  wire             _GEN_58 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h35]}
-    & valid_commit_valid[6'h35] & io_commit.valid;
-  wire             _GEN_59 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h36]}
-    & valid_commit_valid[6'h36] & io_commit.valid;
-  wire             _GEN_60 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h37]}
-    & valid_commit_valid[6'h37] & io_commit.valid;
-  wire             _GEN_61 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h38]}
-    & valid_commit_valid[6'h38] & io_commit.valid;
-  wire             _GEN_62 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h39]}
-    & valid_commit_valid[6'h39] & io_commit.valid;
-  wire             _GEN_63 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h3A]}
-    & valid_commit_valid[6'h3A] & io_commit.valid;
-  wire             _GEN_64 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h3B]}
-    & valid_commit_valid[6'h3B] & io_commit.valid;
-  wire             _GEN_65 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h3C]}
-    & valid_commit_valid[6'h3C] & io_commit.valid;
-  wire             _GEN_66 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h3D]}
-    & valid_commit_valid[6'h3D] & io_commit.valid;
-  wire             _GEN_67 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h3E]}
-    & valid_commit_valid[6'h3E] & io_commit.valid;
-  wire             _GEN_68 =
-    io_commit.bits.free_list_front_pointer == {1'h0, valid_commit_ptr[6'h3F]}
-    & valid_commit_valid[6'h3F] & io_commit.valid;
   reg              hasBeenResetReg;
   initial
     hasBeenResetReg = 1'bx;
@@ -333,507 +172,43 @@ module free_list(
   assert property (@(posedge clock) disable iff (~hasBeenReset)
                    available_elemets < 7'h41);
   assert property (@(posedge clock) disable iff (~hasBeenReset)
-                   available_elemets < 7'h3D == _io_can_reallocate_T_4);
+                   available_elemets < 7'h3D == io_can_reallocate_0);
   assert property (@(posedge clock) disable iff (~hasBeenReset)
                    (|(available_elemets[6:2])) == (|_available_elemets_6to2));
-  assume property (@(posedge clock) disable iff (~hasBeenReset)
-                   (_GEN_68 | _GEN_67 | _GEN_66 | _GEN_65 | _GEN_64 | _GEN_63 | _GEN_62
-                    | _GEN_61 | _GEN_60 | _GEN_59 | _GEN_58 | _GEN_57 | _GEN_56 | _GEN_55
-                    | _GEN_54 | _GEN_53 | _GEN_52 | _GEN_51 | _GEN_50 | _GEN_49 | _GEN_48
-                    | _GEN_47 | _GEN_46 | _GEN_45 | _GEN_44 | _GEN_43 | _GEN_42 | _GEN_41
-                    | _GEN_40 | _GEN_39 | _GEN_38 | _GEN_37 | _GEN_36 | _GEN_35 | _GEN_34
-                    | _GEN_33 | _GEN_32 | _GEN_31 | _GEN_30 | _GEN_29 | _GEN_28 | _GEN_27
-                    | _GEN_26 | _GEN_25 | _GEN_24 | _GEN_23 | _GEN_22 | _GEN_21 | _GEN_20
-                    | _GEN_19 | _GEN_18 | _GEN_17 | _GEN_16 | _GEN_15 | _GEN_14 | _GEN_13
-                    | _GEN_12 | _GEN_11 | _GEN_10 | _GEN_9 | _GEN_8 | _GEN_7 | _GEN_6
-                    | _GEN_5) & io_commit.valid | ~io_commit.valid);
+  assume property (@(posedge clock) disable iff (~hasBeenReset) ~io_commit_valid);
   always @(posedge clock) begin
     if (reset) begin
       hasBeenResetReg <= 1'h1;
       front_pointer <= 7'h0;
       back_pointer <= 7'h40;
-      valid_commit_ptr <=
-        '{7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0,
-          7'h0};
-      valid_commit_valid <=
-        '{1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0,
-          1'h0};
     end
     else begin
-      automatic logic _GEN_69;
-      _GEN_69 = _GEN_4[2'h0] | _GEN_4[2'h1] | _GEN_4[2'h2] | _GEN_4[2'h3];
       if (~flush & (|_available_elemets_6to2))
-        front_pointer <= front_pointer + {4'h0, _GEN_1 + _GEN_3};
+        front_pointer <= front_pointer + {4'h0, _GEN_2 + _GEN_4};
       else if (flush)
-        front_pointer <= io_commit.bits.free_list_front_pointer[6:0];
-      if (io_commit.valid & _io_can_reallocate_T_4 & ~flush)
+        front_pointer <= io_commit_bits_free_list_front_pointer[6:0];
+      if (io_commit_valid & io_can_reallocate_0 & ~flush)
         back_pointer <=
           back_pointer
           + {4'h0,
-             {1'h0, {1'h0, allocate_valid[2'h0]} + {1'h0, allocate_valid[2'h1]}}
-               + {1'h0, {1'h0, allocate_valid[2'h2]} + {1'h0, allocate_valid[2'h3]}}};
-      if (_GEN_5)
-        valid_commit_ptr[6'h0] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h0] <= front_pointer;
-      if (_GEN_6)
-        valid_commit_ptr[6'h1] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h1] <= front_pointer;
-      if (_GEN_7)
-        valid_commit_ptr[6'h2] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h2] <= front_pointer;
-      if (_GEN_8)
-        valid_commit_ptr[6'h3] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h3] <= front_pointer;
-      if (_GEN_9)
-        valid_commit_ptr[6'h4] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h4] <= front_pointer;
-      if (_GEN_10)
-        valid_commit_ptr[6'h5] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h5] <= front_pointer;
-      if (_GEN_11)
-        valid_commit_ptr[6'h6] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h6] <= front_pointer;
-      if (_GEN_12)
-        valid_commit_ptr[6'h7] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h7] <= front_pointer;
-      if (_GEN_13)
-        valid_commit_ptr[6'h8] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h8] <= front_pointer;
-      if (_GEN_14)
-        valid_commit_ptr[6'h9] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h9] <= front_pointer;
-      if (_GEN_15)
-        valid_commit_ptr[6'hA] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'hA] <= front_pointer;
-      if (_GEN_16)
-        valid_commit_ptr[6'hB] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'hB] <= front_pointer;
-      if (_GEN_17)
-        valid_commit_ptr[6'hC] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'hC] <= front_pointer;
-      if (_GEN_18)
-        valid_commit_ptr[6'hD] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'hD] <= front_pointer;
-      if (_GEN_19)
-        valid_commit_ptr[6'hE] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'hE] <= front_pointer;
-      if (_GEN_20)
-        valid_commit_ptr[6'hF] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'hF] <= front_pointer;
-      if (_GEN_21)
-        valid_commit_ptr[6'h10] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h10] <= front_pointer;
-      if (_GEN_22)
-        valid_commit_ptr[6'h11] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h11] <= front_pointer;
-      if (_GEN_23)
-        valid_commit_ptr[6'h12] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h12] <= front_pointer;
-      if (_GEN_24)
-        valid_commit_ptr[6'h13] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h13] <= front_pointer;
-      if (_GEN_25)
-        valid_commit_ptr[6'h14] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h14] <= front_pointer;
-      if (_GEN_26)
-        valid_commit_ptr[6'h15] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h15] <= front_pointer;
-      if (_GEN_27)
-        valid_commit_ptr[6'h16] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h16] <= front_pointer;
-      if (_GEN_28)
-        valid_commit_ptr[6'h17] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h17] <= front_pointer;
-      if (_GEN_29)
-        valid_commit_ptr[6'h18] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h18] <= front_pointer;
-      if (_GEN_30)
-        valid_commit_ptr[6'h19] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h19] <= front_pointer;
-      if (_GEN_31)
-        valid_commit_ptr[6'h1A] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h1A] <= front_pointer;
-      if (_GEN_32)
-        valid_commit_ptr[6'h1B] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h1B] <= front_pointer;
-      if (_GEN_33)
-        valid_commit_ptr[6'h1C] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h1C] <= front_pointer;
-      if (_GEN_34)
-        valid_commit_ptr[6'h1D] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h1D] <= front_pointer;
-      if (_GEN_35)
-        valid_commit_ptr[6'h1E] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h1E] <= front_pointer;
-      if (_GEN_36)
-        valid_commit_ptr[6'h1F] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h1F] <= front_pointer;
-      if (_GEN_37)
-        valid_commit_ptr[6'h20] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h20] <= front_pointer;
-      if (_GEN_38)
-        valid_commit_ptr[6'h21] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h21] <= front_pointer;
-      if (_GEN_39)
-        valid_commit_ptr[6'h22] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h22] <= front_pointer;
-      if (_GEN_40)
-        valid_commit_ptr[6'h23] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h23] <= front_pointer;
-      if (_GEN_41)
-        valid_commit_ptr[6'h24] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h24] <= front_pointer;
-      if (_GEN_42)
-        valid_commit_ptr[6'h25] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h25] <= front_pointer;
-      if (_GEN_43)
-        valid_commit_ptr[6'h26] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h26] <= front_pointer;
-      if (_GEN_44)
-        valid_commit_ptr[6'h27] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h27] <= front_pointer;
-      if (_GEN_45)
-        valid_commit_ptr[6'h28] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h28] <= front_pointer;
-      if (_GEN_46)
-        valid_commit_ptr[6'h29] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h29] <= front_pointer;
-      if (_GEN_47)
-        valid_commit_ptr[6'h2A] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h2A] <= front_pointer;
-      if (_GEN_48)
-        valid_commit_ptr[6'h2B] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h2B] <= front_pointer;
-      if (_GEN_49)
-        valid_commit_ptr[6'h2C] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h2C] <= front_pointer;
-      if (_GEN_50)
-        valid_commit_ptr[6'h2D] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h2D] <= front_pointer;
-      if (_GEN_51)
-        valid_commit_ptr[6'h2E] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h2E] <= front_pointer;
-      if (_GEN_52)
-        valid_commit_ptr[6'h2F] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h2F] <= front_pointer;
-      if (_GEN_53)
-        valid_commit_ptr[6'h30] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h30] <= front_pointer;
-      if (_GEN_54)
-        valid_commit_ptr[6'h31] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h31] <= front_pointer;
-      if (_GEN_55)
-        valid_commit_ptr[6'h32] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h32] <= front_pointer;
-      if (_GEN_56)
-        valid_commit_ptr[6'h33] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h33] <= front_pointer;
-      if (_GEN_57)
-        valid_commit_ptr[6'h34] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h34] <= front_pointer;
-      if (_GEN_58)
-        valid_commit_ptr[6'h35] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h35] <= front_pointer;
-      if (_GEN_59)
-        valid_commit_ptr[6'h36] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h36] <= front_pointer;
-      if (_GEN_60)
-        valid_commit_ptr[6'h37] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h37] <= front_pointer;
-      if (_GEN_61)
-        valid_commit_ptr[6'h38] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h38] <= front_pointer;
-      if (_GEN_62)
-        valid_commit_ptr[6'h39] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h39] <= front_pointer;
-      if (_GEN_63)
-        valid_commit_ptr[6'h3A] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h3A] <= front_pointer;
-      if (_GEN_64)
-        valid_commit_ptr[6'h3B] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h3B] <= front_pointer;
-      if (_GEN_65)
-        valid_commit_ptr[6'h3C] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h3C] <= front_pointer;
-      if (_GEN_66)
-        valid_commit_ptr[6'h3D] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h3D] <= front_pointer;
-      if (_GEN_67)
-        valid_commit_ptr[6'h3E] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h3E] <= front_pointer;
-      if (_GEN_68)
-        valid_commit_ptr[6'h3F] <= 7'h0;
-      else if (_GEN_69)
-        valid_commit_ptr[6'h3F] <= front_pointer;
-      valid_commit_valid[6'h0] <= ~(_GEN_5 | _GEN_69) & valid_commit_valid[6'h0];
-      valid_commit_valid[6'h1] <= ~(_GEN_6 | _GEN_69) & valid_commit_valid[6'h1];
-      valid_commit_valid[6'h2] <= ~(_GEN_7 | _GEN_69) & valid_commit_valid[6'h2];
-      valid_commit_valid[6'h3] <= ~(_GEN_8 | _GEN_69) & valid_commit_valid[6'h3];
-      valid_commit_valid[6'h4] <= ~(_GEN_9 | _GEN_69) & valid_commit_valid[6'h4];
-      valid_commit_valid[6'h5] <= ~(_GEN_10 | _GEN_69) & valid_commit_valid[6'h5];
-      valid_commit_valid[6'h6] <= ~(_GEN_11 | _GEN_69) & valid_commit_valid[6'h6];
-      valid_commit_valid[6'h7] <= ~(_GEN_12 | _GEN_69) & valid_commit_valid[6'h7];
-      valid_commit_valid[6'h8] <= ~(_GEN_13 | _GEN_69) & valid_commit_valid[6'h8];
-      valid_commit_valid[6'h9] <= ~(_GEN_14 | _GEN_69) & valid_commit_valid[6'h9];
-      valid_commit_valid[6'hA] <= ~(_GEN_15 | _GEN_69) & valid_commit_valid[6'hA];
-      valid_commit_valid[6'hB] <= ~(_GEN_16 | _GEN_69) & valid_commit_valid[6'hB];
-      valid_commit_valid[6'hC] <= ~(_GEN_17 | _GEN_69) & valid_commit_valid[6'hC];
-      valid_commit_valid[6'hD] <= ~(_GEN_18 | _GEN_69) & valid_commit_valid[6'hD];
-      valid_commit_valid[6'hE] <= ~(_GEN_19 | _GEN_69) & valid_commit_valid[6'hE];
-      valid_commit_valid[6'hF] <= ~(_GEN_20 | _GEN_69) & valid_commit_valid[6'hF];
-      valid_commit_valid[6'h10] <= ~(_GEN_21 | _GEN_69) & valid_commit_valid[6'h10];
-      valid_commit_valid[6'h11] <= ~(_GEN_22 | _GEN_69) & valid_commit_valid[6'h11];
-      valid_commit_valid[6'h12] <= ~(_GEN_23 | _GEN_69) & valid_commit_valid[6'h12];
-      valid_commit_valid[6'h13] <= ~(_GEN_24 | _GEN_69) & valid_commit_valid[6'h13];
-      valid_commit_valid[6'h14] <= ~(_GEN_25 | _GEN_69) & valid_commit_valid[6'h14];
-      valid_commit_valid[6'h15] <= ~(_GEN_26 | _GEN_69) & valid_commit_valid[6'h15];
-      valid_commit_valid[6'h16] <= ~(_GEN_27 | _GEN_69) & valid_commit_valid[6'h16];
-      valid_commit_valid[6'h17] <= ~(_GEN_28 | _GEN_69) & valid_commit_valid[6'h17];
-      valid_commit_valid[6'h18] <= ~(_GEN_29 | _GEN_69) & valid_commit_valid[6'h18];
-      valid_commit_valid[6'h19] <= ~(_GEN_30 | _GEN_69) & valid_commit_valid[6'h19];
-      valid_commit_valid[6'h1A] <= ~(_GEN_31 | _GEN_69) & valid_commit_valid[6'h1A];
-      valid_commit_valid[6'h1B] <= ~(_GEN_32 | _GEN_69) & valid_commit_valid[6'h1B];
-      valid_commit_valid[6'h1C] <= ~(_GEN_33 | _GEN_69) & valid_commit_valid[6'h1C];
-      valid_commit_valid[6'h1D] <= ~(_GEN_34 | _GEN_69) & valid_commit_valid[6'h1D];
-      valid_commit_valid[6'h1E] <= ~(_GEN_35 | _GEN_69) & valid_commit_valid[6'h1E];
-      valid_commit_valid[6'h1F] <= ~(_GEN_36 | _GEN_69) & valid_commit_valid[6'h1F];
-      valid_commit_valid[6'h20] <= ~(_GEN_37 | _GEN_69) & valid_commit_valid[6'h20];
-      valid_commit_valid[6'h21] <= ~(_GEN_38 | _GEN_69) & valid_commit_valid[6'h21];
-      valid_commit_valid[6'h22] <= ~(_GEN_39 | _GEN_69) & valid_commit_valid[6'h22];
-      valid_commit_valid[6'h23] <= ~(_GEN_40 | _GEN_69) & valid_commit_valid[6'h23];
-      valid_commit_valid[6'h24] <= ~(_GEN_41 | _GEN_69) & valid_commit_valid[6'h24];
-      valid_commit_valid[6'h25] <= ~(_GEN_42 | _GEN_69) & valid_commit_valid[6'h25];
-      valid_commit_valid[6'h26] <= ~(_GEN_43 | _GEN_69) & valid_commit_valid[6'h26];
-      valid_commit_valid[6'h27] <= ~(_GEN_44 | _GEN_69) & valid_commit_valid[6'h27];
-      valid_commit_valid[6'h28] <= ~(_GEN_45 | _GEN_69) & valid_commit_valid[6'h28];
-      valid_commit_valid[6'h29] <= ~(_GEN_46 | _GEN_69) & valid_commit_valid[6'h29];
-      valid_commit_valid[6'h2A] <= ~(_GEN_47 | _GEN_69) & valid_commit_valid[6'h2A];
-      valid_commit_valid[6'h2B] <= ~(_GEN_48 | _GEN_69) & valid_commit_valid[6'h2B];
-      valid_commit_valid[6'h2C] <= ~(_GEN_49 | _GEN_69) & valid_commit_valid[6'h2C];
-      valid_commit_valid[6'h2D] <= ~(_GEN_50 | _GEN_69) & valid_commit_valid[6'h2D];
-      valid_commit_valid[6'h2E] <= ~(_GEN_51 | _GEN_69) & valid_commit_valid[6'h2E];
-      valid_commit_valid[6'h2F] <= ~(_GEN_52 | _GEN_69) & valid_commit_valid[6'h2F];
-      valid_commit_valid[6'h30] <= ~(_GEN_53 | _GEN_69) & valid_commit_valid[6'h30];
-      valid_commit_valid[6'h31] <= ~(_GEN_54 | _GEN_69) & valid_commit_valid[6'h31];
-      valid_commit_valid[6'h32] <= ~(_GEN_55 | _GEN_69) & valid_commit_valid[6'h32];
-      valid_commit_valid[6'h33] <= ~(_GEN_56 | _GEN_69) & valid_commit_valid[6'h33];
-      valid_commit_valid[6'h34] <= ~(_GEN_57 | _GEN_69) & valid_commit_valid[6'h34];
-      valid_commit_valid[6'h35] <= ~(_GEN_58 | _GEN_69) & valid_commit_valid[6'h35];
-      valid_commit_valid[6'h36] <= ~(_GEN_59 | _GEN_69) & valid_commit_valid[6'h36];
-      valid_commit_valid[6'h37] <= ~(_GEN_60 | _GEN_69) & valid_commit_valid[6'h37];
-      valid_commit_valid[6'h38] <= ~(_GEN_61 | _GEN_69) & valid_commit_valid[6'h38];
-      valid_commit_valid[6'h39] <= ~(_GEN_62 | _GEN_69) & valid_commit_valid[6'h39];
-      valid_commit_valid[6'h3A] <= ~(_GEN_63 | _GEN_69) & valid_commit_valid[6'h3A];
-      valid_commit_valid[6'h3B] <= ~(_GEN_64 | _GEN_69) & valid_commit_valid[6'h3B];
-      valid_commit_valid[6'h3C] <= ~(_GEN_65 | _GEN_69) & valid_commit_valid[6'h3C];
-      valid_commit_valid[6'h3D] <= ~(_GEN_66 | _GEN_69) & valid_commit_valid[6'h3D];
-      valid_commit_valid[6'h3E] <= ~(_GEN_67 | _GEN_69) & valid_commit_valid[6'h3E];
-      valid_commit_valid[6'h3F] <= ~(_GEN_68 | _GEN_69) & valid_commit_valid[6'h3F];
+             {1'h0, {1'h0, allocate_valid_0} + {1'h0, allocate_valid_1}}
+               + {1'h0, {1'h0, allocate_valid_2} + {1'h0, allocate_valid_3}}};
     end
   end // always @(posedge)
-  assign io_renamed_values =
-    {{io_rename_valid[2'h3] & ~flush & (|_available_elemets_6to2)
-        ? _free_list_buffer_WIRE[front_index + {3'h0, _GEN_1 + _GEN_3 - 3'h1}]
-        : 7'h0},
-     {io_rename_valid[2'h2] & ~flush & (|_available_elemets_6to2)
-        ? _free_list_buffer_WIRE[front_index + {4'h0, _GEN + _GEN_0 + _GEN_2 - 2'h1}]
-        : 7'h0},
-     {io_rename_valid[2'h1] & ~flush & (|_available_elemets_6to2)
-        ? _free_list_buffer_WIRE[front_index + {4'h0, _front_pointer_T_1 - 2'h1}]
-        : 7'h0},
-     {io_rename_valid[2'h0] & ~flush & (|_available_elemets_6to2)
-        ? _free_list_buffer_WIRE[front_index + {5'h0, io_rename_valid[2'h0] - 1'h1}]
-        : 7'h0}};
-  assign io_renamed_valid = _GEN_4;
+  assign io_renamed_values_0 =
+    valid ? _GEN[front_index + {5'h0, io_rename_valid_0 - 1'h1}] : 7'h0;
+  assign io_renamed_values_1 =
+    valid_1 ? _GEN[front_index + {4'h0, _front_pointer_T_1 - 2'h1}] : 7'h0;
+  assign io_renamed_values_2 =
+    valid_2 ? _GEN[front_index + {4'h0, _GEN_0 + _GEN_1 + _GEN_3 - 2'h1}] : 7'h0;
+  assign io_renamed_values_3 =
+    valid_3 ? _GEN[front_index + {3'h0, _GEN_2 + _GEN_4 - 3'h1}] : 7'h0;
+  assign io_renamed_valid_0 = valid;
+  assign io_renamed_valid_1 = valid_1;
+  assign io_renamed_valid_2 = valid_2;
+  assign io_renamed_valid_3 = valid_3;
   assign io_free_list_front_pointer = front_pointer;
-  assign io_can_reallocate = _io_can_reallocate_T_4;
+  assign io_can_reallocate = io_can_reallocate_0;
   assign io_can_allocate = |_available_elemets_6to2;
 endmodule
 

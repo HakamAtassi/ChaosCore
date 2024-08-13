@@ -29,58 +29,36 @@
 `endif // not def STOP_COND_
 
 module Queue16_prediction(
-  input                                                                                                      clock,
-                                                                                                             reset,
-  output                                                                                                     io_enq_ready,
-  input                                                                                                      io_enq_valid,
-  input  struct packed {logic hit; logic [31:0] target; logic [2:0] br_type; logic [15:0] GHR; logic T_NT; } io_enq_bits,
-  input                                                                                                      io_deq_ready,
-  output                                                                                                     io_deq_valid,
-  output struct packed {logic hit; logic [31:0] target; logic [2:0] br_type; logic [15:0] GHR; logic T_NT; } io_deq_bits,
-  output [4:0]                                                                                               io_count,
-  input                                                                                                      io_flush
+  input         clock,
+                reset,
+  output        io_enq_ready,
+  input         io_enq_valid,
+                io_enq_bits_hit,
+  input  [31:0] io_enq_bits_target,
+  input  [2:0]  io_enq_bits_br_type,
+  input  [15:0] io_enq_bits_GHR,
+  input         io_enq_bits_T_NT,
+                io_deq_ready,
+  output        io_deq_valid,
+                io_deq_bits_hit,
+  output [31:0] io_deq_bits_target,
+  output [2:0]  io_deq_bits_br_type,
+  output [15:0] io_deq_bits_GHR,
+  output        io_deq_bits_T_NT,
+  input         io_flush
 );
 
-  wire        do_enq;
   wire        do_deq;
-  wire        _GEN;
-  wire [15:0] _GEN_0;
-  wire [2:0]  _GEN_1;
-  wire [31:0] _GEN_2;
-  wire        _GEN_3;
-  wire        _GEN_4;
-  wire        _GEN_5;
-  wire        _GEN_6;
-  wire        _GEN_7;
-  wire        _GEN_8;
   wire [52:0] _ram_ext_R0_data;
-  wire struct packed {logic hit; logic target; logic br_type; logic GHR; logic T_NT; }
-    _GEN_9 = /*cast(bit)*/5'h0;
-  wire
-    struct packed {logic hit; logic [31:0] target; logic [2:0] br_type; logic [15:0] GHR; logic T_NT; }
-    _GEN_10 = /*cast(bit)*/53'h0;
-  wire
-    struct packed {logic hit; logic [31:0] target; logic [2:0] br_type; logic [15:0] GHR; logic T_NT; }
-    ram_io_deq_bits_MPORT_data = /*cast(bit)*/_ram_ext_R0_data;
   reg  [3:0]  enq_ptr_value;
   reg  [3:0]  deq_ptr_value;
   reg         maybe_full;
   wire        ptr_match = enq_ptr_value == deq_ptr_value;
   wire        empty = ptr_match & ~maybe_full;
   wire        full = ptr_match & maybe_full;
-  assign _GEN_8 = do_enq | _GEN_9.hit;
-  assign _GEN_7 = do_enq | _GEN_9.target;
-  assign _GEN_6 = do_enq | _GEN_9.br_type;
-  assign _GEN_5 = do_enq | _GEN_9.GHR;
-  assign _GEN_4 = do_enq | _GEN_9.T_NT;
-  assign _GEN_3 = do_enq ? io_enq_bits.hit : _GEN_10.hit;
-  assign _GEN_2 = do_enq ? io_enq_bits.target : _GEN_10.target;
-  assign _GEN_1 = do_enq ? io_enq_bits.br_type : _GEN_10.br_type;
-  assign _GEN_0 = do_enq ? io_enq_bits.GHR : _GEN_10.GHR;
-  assign _GEN = do_enq ? io_enq_bits.T_NT : _GEN_10.T_NT;
-  wire        _GEN_11 = io_enq_valid | ~empty;
-  assign do_deq = ~empty & io_deq_ready & _GEN_11;
-  assign do_enq = ~(empty & io_deq_ready) & ~full & io_enq_valid;
+  wire        io_deq_valid_0 = io_enq_valid | ~empty;
+  assign do_deq = ~empty & io_deq_ready & io_deq_valid_0;
+  wire        do_enq = ~(empty & io_deq_ready) & ~full & io_enq_valid;
   always @(posedge clock) begin
     if (reset) begin
       enq_ptr_value <= 4'h0;
@@ -109,17 +87,19 @@ module Queue16_prediction(
     .W0_addr (enq_ptr_value),
     .W0_en   (do_enq),
     .W0_clk  (clock),
-    .W0_data ({_GEN, _GEN_0, _GEN_1, _GEN_2, _GEN_3}),
-    .W0_mask ({_GEN_4, {16{_GEN_5}}, {3{_GEN_6}}, {32{_GEN_7}}, _GEN_8})
+    .W0_data
+      ({io_enq_bits_T_NT,
+        io_enq_bits_GHR,
+        io_enq_bits_br_type,
+        io_enq_bits_target,
+        io_enq_bits_hit})
   );
   assign io_enq_ready = ~full;
-  assign io_deq_valid = _GEN_11;
-  assign io_deq_bits =
-    '{hit: (empty ? io_enq_bits.hit : ram_io_deq_bits_MPORT_data.hit),
-      target: (empty ? io_enq_bits.target : ram_io_deq_bits_MPORT_data.target),
-      br_type: (empty ? io_enq_bits.br_type : ram_io_deq_bits_MPORT_data.br_type),
-      GHR: (empty ? io_enq_bits.GHR : ram_io_deq_bits_MPORT_data.GHR),
-      T_NT: (empty ? io_enq_bits.T_NT : ram_io_deq_bits_MPORT_data.T_NT)};
-  assign io_count = {maybe_full & ptr_match, enq_ptr_value - deq_ptr_value};
+  assign io_deq_valid = io_deq_valid_0;
+  assign io_deq_bits_hit = empty ? io_enq_bits_hit : _ram_ext_R0_data[0];
+  assign io_deq_bits_target = empty ? io_enq_bits_target : _ram_ext_R0_data[32:1];
+  assign io_deq_bits_br_type = empty ? io_enq_bits_br_type : _ram_ext_R0_data[35:33];
+  assign io_deq_bits_GHR = empty ? io_enq_bits_GHR : _ram_ext_R0_data[51:36];
+  assign io_deq_bits_T_NT = empty ? io_enq_bits_T_NT : _ram_ext_R0_data[52];
 endmodule
 

@@ -29,28 +29,27 @@
 `endif // not def STOP_COND_
 
 module gshare(
-  input                                                                                                                                                                                                                                                                                                                                                                                                      clock,
-  input  [15:0]                                                                                                                                                                                                                                                                                                                                                                                              io_predict_GHR,
-  input  [31:0]                                                                                                                                                                                                                                                                                                                                                                                              io_predict_PC,
-  input                                                                                                                                                                                                                                                                                                                                                                                                      io_predict_valid,
-  output                                                                                                                                                                                                                                                                                                                                                                                                     io_T_NT,
-                                                                                                                                                                                                                                                                                                                                                                                                             io_valid,
-  input  struct packed {logic valid; struct packed {logic [31:0] fetch_PC; logic T_NT; logic [5:0] ROB_index; logic [2:0] br_type; logic [1:0] fetch_packet_index; logic is_misprediction; logic exception; logic [31:0] expected_PC; logic [15:0] GHR; logic [6:0] TOS; logic [6:0] NEXT; logic [7:0] free_list_front_pointer; logic [3:0][4:0] RDold; logic [3:0][6:0] RD; logic [3:0] RD_valid; } bits; } io_commit
+  input         clock,
+  input  [15:0] io_predict_GHR,
+  input  [31:0] io_predict_PC,
+  output        io_T_NT,
+  input         io_commit_valid,
+  input  [31:0] io_commit_bits_fetch_PC,
+  input         io_commit_bits_T_NT,
+  input  [15:0] io_commit_bits_GHR
 );
 
   wire [15:0] _PHT_io_readDataA;
   wire [15:0] _PHT_io_readDataB;
   wire [15:0] hashed_predict_addr = io_predict_PC[15:0] ^ io_predict_GHR;
-  wire [15:0] hashed_commit_addr = io_commit.bits.fetch_PC[15:0] ^ io_commit.bits.GHR;
-  reg         io_valid_REG;
+  wire [15:0] hashed_commit_addr = io_commit_bits_fetch_PC[15:0] ^ io_commit_bits_GHR;
   reg  [15:0] PHT_io_addrC_REG;
   reg         PHT_io_writeEnableC_REG;
   reg         REG;
   always @(posedge clock) begin
-    io_valid_REG <= io_predict_valid;
     PHT_io_addrC_REG <= hashed_commit_addr;
-    PHT_io_writeEnableC_REG <= io_commit.valid;
-    REG <= io_commit.bits.T_NT;
+    PHT_io_writeEnableC_REG <= io_commit_valid;
+    REG <= io_commit_bits_T_NT;
   end // always @(posedge)
   PHT_memory PHT (
     .clock           (clock),
@@ -70,6 +69,5 @@ module gshare(
     .io_writeEnableC (PHT_io_writeEnableC_REG)
   );
   assign io_T_NT = _PHT_io_readDataA[1];
-  assign io_valid = io_valid_REG;
 endmodule
 

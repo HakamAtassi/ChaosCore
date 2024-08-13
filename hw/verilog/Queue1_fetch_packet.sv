@@ -29,418 +29,92 @@
 `endif // not def STOP_COND_
 
 module Queue1_fetch_packet(
-  input                                                                                                                                                                                                                                      clock,
-                                                                                                                                                                                                                                             reset,
-  output                                                                                                                                                                                                                                     io_enq_ready,
-  input                                                                                                                                                                                                                                      io_enq_valid,
-  input  struct packed {logic [31:0] fetch_PC; logic [3:0] valid_bits; struct packed {logic [31:0] instruction; logic [3:0] packet_index; logic [5:0] ROB_index; }[3:0] instructions; logic [15:0] GHR; logic [6:0] NEXT; logic [6:0] TOS; } io_enq_bits,
-  input                                                                                                                                                                                                                                      io_deq_ready,
-  output                                                                                                                                                                                                                                     io_deq_valid,
-  output struct packed {logic [31:0] fetch_PC; logic [3:0] valid_bits; struct packed {logic [31:0] instruction; logic [3:0] packet_index; logic [5:0] ROB_index; }[3:0] instructions; logic [15:0] GHR; logic [6:0] NEXT; logic [6:0] TOS; } io_deq_bits,
-  output                                                                                                                                                                                                                                     io_count
+  input         clock,
+                reset,
+  output        io_enq_ready,
+  input         io_enq_valid,
+  input  [31:0] io_enq_bits_fetch_PC,
+  input         io_enq_bits_valid_bits_0,
+                io_enq_bits_valid_bits_1,
+                io_enq_bits_valid_bits_2,
+                io_enq_bits_valid_bits_3,
+  input  [31:0] io_enq_bits_instructions_0_instruction,
+                io_enq_bits_instructions_1_instruction,
+                io_enq_bits_instructions_2_instruction,
+                io_enq_bits_instructions_3_instruction,
+  output        io_deq_valid,
+  output [31:0] io_deq_bits_fetch_PC,
+  output        io_deq_bits_valid_bits_0,
+                io_deq_bits_valid_bits_1,
+                io_deq_bits_valid_bits_2,
+                io_deq_bits_valid_bits_3,
+  output [31:0] io_deq_bits_instructions_0_instruction,
+  output [3:0]  io_deq_bits_instructions_0_packet_index,
+  output [5:0]  io_deq_bits_instructions_0_ROB_index,
+  output [31:0] io_deq_bits_instructions_1_instruction,
+  output [3:0]  io_deq_bits_instructions_1_packet_index,
+  output [5:0]  io_deq_bits_instructions_1_ROB_index,
+  output [31:0] io_deq_bits_instructions_2_instruction,
+  output [3:0]  io_deq_bits_instructions_2_packet_index,
+  output [5:0]  io_deq_bits_instructions_2_ROB_index,
+  output [31:0] io_deq_bits_instructions_3_instruction,
+  output [3:0]  io_deq_bits_instructions_3_packet_index,
+  output [5:0]  io_deq_bits_instructions_3_ROB_index,
+  output [15:0] io_deq_bits_GHR,
+  output [6:0]  io_deq_bits_NEXT,
+                io_deq_bits_TOS
 );
 
-  reg  [233:0] ram;
-  wire
-    struct packed {logic [31:0] fetch_PC; logic [3:0] valid_bits; struct packed {logic [31:0] instruction; logic [3:0] packet_index; logic [5:0] ROB_index; }[3:0] instructions; logic [15:0] GHR; logic [6:0] NEXT; logic [6:0] TOS; }
-    ram_io_deq_bits_MPORT_data = /*cast(bit)*/ram;
-  reg          full;
-  wire         _GEN = io_enq_valid | full;
-  wire         do_enq = ~(~full & io_deq_ready) & ~full & io_enq_valid;
-  wire
-    struct packed {logic [31:0] instruction; logic [3:0] packet_index; logic [5:0] ROB_index; }
-    _GEN_0 =
-    '{instruction:
-        (full
-           ? ram_io_deq_bits_MPORT_data.instructions[2'h0].instruction
-           : io_enq_bits.instructions[2'h0].instruction),
-      packet_index:
-        (full
-           ? ram_io_deq_bits_MPORT_data.instructions[2'h0].packet_index
-           : io_enq_bits.instructions[2'h0].packet_index),
-      ROB_index:
-        (full
-           ? ram_io_deq_bits_MPORT_data.instructions[2'h0].ROB_index
-           : io_enq_bits.instructions[2'h0].ROB_index)};
-  wire
-    struct packed {logic [31:0] instruction; logic [3:0] packet_index; logic [5:0] ROB_index; }
-    _GEN_1 =
-    '{instruction:
-        (full
-           ? ram_io_deq_bits_MPORT_data.instructions[2'h1].instruction
-           : io_enq_bits.instructions[2'h1].instruction),
-      packet_index:
-        (full
-           ? ram_io_deq_bits_MPORT_data.instructions[2'h1].packet_index
-           : io_enq_bits.instructions[2'h1].packet_index),
-      ROB_index:
-        (full
-           ? ram_io_deq_bits_MPORT_data.instructions[2'h1].ROB_index
-           : io_enq_bits.instructions[2'h1].ROB_index)};
-  wire
-    struct packed {logic [31:0] instruction; logic [3:0] packet_index; logic [5:0] ROB_index; }
-    _GEN_2 =
-    '{instruction:
-        (full
-           ? ram_io_deq_bits_MPORT_data.instructions[2'h2].instruction
-           : io_enq_bits.instructions[2'h2].instruction),
-      packet_index:
-        (full
-           ? ram_io_deq_bits_MPORT_data.instructions[2'h2].packet_index
-           : io_enq_bits.instructions[2'h2].packet_index),
-      ROB_index:
-        (full
-           ? ram_io_deq_bits_MPORT_data.instructions[2'h2].ROB_index
-           : io_enq_bits.instructions[2'h2].ROB_index)};
-  wire
-    struct packed {logic [31:0] instruction; logic [3:0] packet_index; logic [5:0] ROB_index; }
-    _GEN_3 =
-    '{instruction:
-        (full
-           ? ram_io_deq_bits_MPORT_data.instructions[2'h3].instruction
-           : io_enq_bits.instructions[2'h3].instruction),
-      packet_index:
-        (full
-           ? ram_io_deq_bits_MPORT_data.instructions[2'h3].packet_index
-           : io_enq_bits.instructions[2'h3].packet_index),
-      ROB_index:
-        (full
-           ? ram_io_deq_bits_MPORT_data.instructions[2'h3].ROB_index
-           : io_enq_bits.instructions[2'h3].ROB_index)};
+  reg [233:0] ram;
+  reg         full;
   always @(posedge clock) begin
-    if (do_enq) begin
-      automatic
-        struct packed {logic fetch_PC; logic [3:0] valid_bits; struct packed {logic instruction; logic packet_index; logic ROB_index; }[3:0] instructions; logic GHR; logic NEXT; logic TOS; }
-        _GEN_4 = /*cast(bit)*/20'h0;
-      automatic
-        struct packed {logic [31:0] fetch_PC; logic [3:0] valid_bits; struct packed {logic [31:0] instruction; logic [3:0] packet_index; logic [5:0] ROB_index; }[3:0] instructions; logic [15:0] GHR; logic [6:0] NEXT; logic [6:0] TOS; }
-        _GEN_5 = /*cast(bit)*/234'h0;
-      automatic logic        _GEN_6 = do_enq | _GEN_4.fetch_PC;
-      automatic logic        _GEN_7 = do_enq | _GEN_4.instructions[2'h0].instruction;
-      automatic logic        _GEN_8 = do_enq | _GEN_4.instructions[2'h0].packet_index;
-      automatic logic        _GEN_9 = do_enq | _GEN_4.instructions[2'h0].ROB_index;
-      automatic logic        _GEN_10 = do_enq | _GEN_4.instructions[2'h1].instruction;
-      automatic logic        _GEN_11 = do_enq | _GEN_4.instructions[2'h1].packet_index;
-      automatic logic        _GEN_12 = do_enq | _GEN_4.instructions[2'h1].ROB_index;
-      automatic logic        _GEN_13 = do_enq | _GEN_4.instructions[2'h2].instruction;
-      automatic logic        _GEN_14 = do_enq | _GEN_4.instructions[2'h2].packet_index;
-      automatic logic        _GEN_15 = do_enq | _GEN_4.instructions[2'h2].ROB_index;
-      automatic logic        _GEN_16 = do_enq | _GEN_4.instructions[2'h3].instruction;
-      automatic logic        _GEN_17 = do_enq | _GEN_4.instructions[2'h3].packet_index;
-      automatic logic        _GEN_18 = do_enq | _GEN_4.instructions[2'h3].ROB_index;
-      automatic logic        _GEN_19 = do_enq | _GEN_4.GHR;
-      automatic logic        _GEN_20 = do_enq | _GEN_4.NEXT;
-      automatic logic        _GEN_21 = do_enq | _GEN_4.TOS;
-      automatic logic [31:0] _GEN_22 = do_enq ? io_enq_bits.fetch_PC : _GEN_5.fetch_PC;
-      automatic logic [31:0] _GEN_23 =
-        do_enq
-          ? io_enq_bits.instructions[2'h0].instruction
-          : _GEN_5.instructions[2'h0].instruction;
-      automatic logic [3:0]  _GEN_24 =
-        do_enq
-          ? io_enq_bits.instructions[2'h0].packet_index
-          : _GEN_5.instructions[2'h0].packet_index;
-      automatic logic [5:0]  _GEN_25 =
-        do_enq
-          ? io_enq_bits.instructions[2'h0].ROB_index
-          : _GEN_5.instructions[2'h0].ROB_index;
-      automatic logic [31:0] _GEN_26 =
-        do_enq
-          ? io_enq_bits.instructions[2'h1].instruction
-          : _GEN_5.instructions[2'h1].instruction;
-      automatic logic [3:0]  _GEN_27 =
-        do_enq
-          ? io_enq_bits.instructions[2'h1].packet_index
-          : _GEN_5.instructions[2'h1].packet_index;
-      automatic logic [5:0]  _GEN_28 =
-        do_enq
-          ? io_enq_bits.instructions[2'h1].ROB_index
-          : _GEN_5.instructions[2'h1].ROB_index;
-      automatic logic [31:0] _GEN_29 =
-        do_enq
-          ? io_enq_bits.instructions[2'h2].instruction
-          : _GEN_5.instructions[2'h2].instruction;
-      automatic logic [3:0]  _GEN_30 =
-        do_enq
-          ? io_enq_bits.instructions[2'h2].packet_index
-          : _GEN_5.instructions[2'h2].packet_index;
-      automatic logic [5:0]  _GEN_31 =
-        do_enq
-          ? io_enq_bits.instructions[2'h2].ROB_index
-          : _GEN_5.instructions[2'h2].ROB_index;
-      automatic logic [31:0] _GEN_32 =
-        do_enq
-          ? io_enq_bits.instructions[2'h3].instruction
-          : _GEN_5.instructions[2'h3].instruction;
-      automatic logic [3:0]  _GEN_33 =
-        do_enq
-          ? io_enq_bits.instructions[2'h3].packet_index
-          : _GEN_5.instructions[2'h3].packet_index;
-      automatic logic [5:0]  _GEN_34 =
-        do_enq
-          ? io_enq_bits.instructions[2'h3].ROB_index
-          : _GEN_5.instructions[2'h3].ROB_index;
-      automatic logic [15:0] _GEN_35 = do_enq ? 16'h0 : _GEN_5.GHR;
-      automatic logic [6:0]  _GEN_36 = do_enq ? 7'h0 : _GEN_5.NEXT;
-      automatic logic [6:0]  _GEN_37 = do_enq ? 7'h0 : _GEN_5.TOS;
+    automatic logic do_enq;
+    do_enq = ~full & io_enq_valid;
+    if (do_enq)
       ram <=
-        {_GEN_21 ? _GEN_37[6] : ram[233],
-         _GEN_21 ? _GEN_37[5] : ram[232],
-         _GEN_21 ? _GEN_37[4] : ram[231],
-         _GEN_21 ? _GEN_37[3] : ram[230],
-         _GEN_21 ? _GEN_37[2] : ram[229],
-         _GEN_21 ? _GEN_37[1] : ram[228],
-         _GEN_21 ? _GEN_37[0] : ram[227],
-         _GEN_20 ? _GEN_36[6] : ram[226],
-         _GEN_20 ? _GEN_36[5] : ram[225],
-         _GEN_20 ? _GEN_36[4] : ram[224],
-         _GEN_20 ? _GEN_36[3] : ram[223],
-         _GEN_20 ? _GEN_36[2] : ram[222],
-         _GEN_20 ? _GEN_36[1] : ram[221],
-         _GEN_20 ? _GEN_36[0] : ram[220],
-         _GEN_19 ? _GEN_35[15] : ram[219],
-         _GEN_19 ? _GEN_35[14] : ram[218],
-         _GEN_19 ? _GEN_35[13] : ram[217],
-         _GEN_19 ? _GEN_35[12] : ram[216],
-         _GEN_19 ? _GEN_35[11] : ram[215],
-         _GEN_19 ? _GEN_35[10] : ram[214],
-         _GEN_19 ? _GEN_35[9] : ram[213],
-         _GEN_19 ? _GEN_35[8] : ram[212],
-         _GEN_19 ? _GEN_35[7] : ram[211],
-         _GEN_19 ? _GEN_35[6] : ram[210],
-         _GEN_19 ? _GEN_35[5] : ram[209],
-         _GEN_19 ? _GEN_35[4] : ram[208],
-         _GEN_19 ? _GEN_35[3] : ram[207],
-         _GEN_19 ? _GEN_35[2] : ram[206],
-         _GEN_19 ? _GEN_35[1] : ram[205],
-         _GEN_19 ? _GEN_35[0] : ram[204],
-         _GEN_18 ? _GEN_34[5] : ram[203],
-         _GEN_18 ? _GEN_34[4] : ram[202],
-         _GEN_18 ? _GEN_34[3] : ram[201],
-         _GEN_18 ? _GEN_34[2] : ram[200],
-         _GEN_18 ? _GEN_34[1] : ram[199],
-         _GEN_18 ? _GEN_34[0] : ram[198],
-         _GEN_17 ? _GEN_33[3] : ram[197],
-         _GEN_17 ? _GEN_33[2] : ram[196],
-         _GEN_17 ? _GEN_33[1] : ram[195],
-         _GEN_17 ? _GEN_33[0] : ram[194],
-         _GEN_16 ? _GEN_32[31] : ram[193],
-         _GEN_16 ? _GEN_32[30] : ram[192],
-         _GEN_16 ? _GEN_32[29] : ram[191],
-         _GEN_16 ? _GEN_32[28] : ram[190],
-         _GEN_16 ? _GEN_32[27] : ram[189],
-         _GEN_16 ? _GEN_32[26] : ram[188],
-         _GEN_16 ? _GEN_32[25] : ram[187],
-         _GEN_16 ? _GEN_32[24] : ram[186],
-         _GEN_16 ? _GEN_32[23] : ram[185],
-         _GEN_16 ? _GEN_32[22] : ram[184],
-         _GEN_16 ? _GEN_32[21] : ram[183],
-         _GEN_16 ? _GEN_32[20] : ram[182],
-         _GEN_16 ? _GEN_32[19] : ram[181],
-         _GEN_16 ? _GEN_32[18] : ram[180],
-         _GEN_16 ? _GEN_32[17] : ram[179],
-         _GEN_16 ? _GEN_32[16] : ram[178],
-         _GEN_16 ? _GEN_32[15] : ram[177],
-         _GEN_16 ? _GEN_32[14] : ram[176],
-         _GEN_16 ? _GEN_32[13] : ram[175],
-         _GEN_16 ? _GEN_32[12] : ram[174],
-         _GEN_16 ? _GEN_32[11] : ram[173],
-         _GEN_16 ? _GEN_32[10] : ram[172],
-         _GEN_16 ? _GEN_32[9] : ram[171],
-         _GEN_16 ? _GEN_32[8] : ram[170],
-         _GEN_16 ? _GEN_32[7] : ram[169],
-         _GEN_16 ? _GEN_32[6] : ram[168],
-         _GEN_16 ? _GEN_32[5] : ram[167],
-         _GEN_16 ? _GEN_32[4] : ram[166],
-         _GEN_16 ? _GEN_32[3] : ram[165],
-         _GEN_16 ? _GEN_32[2] : ram[164],
-         _GEN_16 ? _GEN_32[1] : ram[163],
-         _GEN_16 ? _GEN_32[0] : ram[162],
-         _GEN_15 ? _GEN_31[5] : ram[161],
-         _GEN_15 ? _GEN_31[4] : ram[160],
-         _GEN_15 ? _GEN_31[3] : ram[159],
-         _GEN_15 ? _GEN_31[2] : ram[158],
-         _GEN_15 ? _GEN_31[1] : ram[157],
-         _GEN_15 ? _GEN_31[0] : ram[156],
-         _GEN_14 ? _GEN_30[3] : ram[155],
-         _GEN_14 ? _GEN_30[2] : ram[154],
-         _GEN_14 ? _GEN_30[1] : ram[153],
-         _GEN_14 ? _GEN_30[0] : ram[152],
-         _GEN_13 ? _GEN_29[31] : ram[151],
-         _GEN_13 ? _GEN_29[30] : ram[150],
-         _GEN_13 ? _GEN_29[29] : ram[149],
-         _GEN_13 ? _GEN_29[28] : ram[148],
-         _GEN_13 ? _GEN_29[27] : ram[147],
-         _GEN_13 ? _GEN_29[26] : ram[146],
-         _GEN_13 ? _GEN_29[25] : ram[145],
-         _GEN_13 ? _GEN_29[24] : ram[144],
-         _GEN_13 ? _GEN_29[23] : ram[143],
-         _GEN_13 ? _GEN_29[22] : ram[142],
-         _GEN_13 ? _GEN_29[21] : ram[141],
-         _GEN_13 ? _GEN_29[20] : ram[140],
-         _GEN_13 ? _GEN_29[19] : ram[139],
-         _GEN_13 ? _GEN_29[18] : ram[138],
-         _GEN_13 ? _GEN_29[17] : ram[137],
-         _GEN_13 ? _GEN_29[16] : ram[136],
-         _GEN_13 ? _GEN_29[15] : ram[135],
-         _GEN_13 ? _GEN_29[14] : ram[134],
-         _GEN_13 ? _GEN_29[13] : ram[133],
-         _GEN_13 ? _GEN_29[12] : ram[132],
-         _GEN_13 ? _GEN_29[11] : ram[131],
-         _GEN_13 ? _GEN_29[10] : ram[130],
-         _GEN_13 ? _GEN_29[9] : ram[129],
-         _GEN_13 ? _GEN_29[8] : ram[128],
-         _GEN_13 ? _GEN_29[7] : ram[127],
-         _GEN_13 ? _GEN_29[6] : ram[126],
-         _GEN_13 ? _GEN_29[5] : ram[125],
-         _GEN_13 ? _GEN_29[4] : ram[124],
-         _GEN_13 ? _GEN_29[3] : ram[123],
-         _GEN_13 ? _GEN_29[2] : ram[122],
-         _GEN_13 ? _GEN_29[1] : ram[121],
-         _GEN_13 ? _GEN_29[0] : ram[120],
-         _GEN_12 ? _GEN_28[5] : ram[119],
-         _GEN_12 ? _GEN_28[4] : ram[118],
-         _GEN_12 ? _GEN_28[3] : ram[117],
-         _GEN_12 ? _GEN_28[2] : ram[116],
-         _GEN_12 ? _GEN_28[1] : ram[115],
-         _GEN_12 ? _GEN_28[0] : ram[114],
-         _GEN_11 ? _GEN_27[3] : ram[113],
-         _GEN_11 ? _GEN_27[2] : ram[112],
-         _GEN_11 ? _GEN_27[1] : ram[111],
-         _GEN_11 ? _GEN_27[0] : ram[110],
-         _GEN_10 ? _GEN_26[31] : ram[109],
-         _GEN_10 ? _GEN_26[30] : ram[108],
-         _GEN_10 ? _GEN_26[29] : ram[107],
-         _GEN_10 ? _GEN_26[28] : ram[106],
-         _GEN_10 ? _GEN_26[27] : ram[105],
-         _GEN_10 ? _GEN_26[26] : ram[104],
-         _GEN_10 ? _GEN_26[25] : ram[103],
-         _GEN_10 ? _GEN_26[24] : ram[102],
-         _GEN_10 ? _GEN_26[23] : ram[101],
-         _GEN_10 ? _GEN_26[22] : ram[100],
-         _GEN_10 ? _GEN_26[21] : ram[99],
-         _GEN_10 ? _GEN_26[20] : ram[98],
-         _GEN_10 ? _GEN_26[19] : ram[97],
-         _GEN_10 ? _GEN_26[18] : ram[96],
-         _GEN_10 ? _GEN_26[17] : ram[95],
-         _GEN_10 ? _GEN_26[16] : ram[94],
-         _GEN_10 ? _GEN_26[15] : ram[93],
-         _GEN_10 ? _GEN_26[14] : ram[92],
-         _GEN_10 ? _GEN_26[13] : ram[91],
-         _GEN_10 ? _GEN_26[12] : ram[90],
-         _GEN_10 ? _GEN_26[11] : ram[89],
-         _GEN_10 ? _GEN_26[10] : ram[88],
-         _GEN_10 ? _GEN_26[9] : ram[87],
-         _GEN_10 ? _GEN_26[8] : ram[86],
-         _GEN_10 ? _GEN_26[7] : ram[85],
-         _GEN_10 ? _GEN_26[6] : ram[84],
-         _GEN_10 ? _GEN_26[5] : ram[83],
-         _GEN_10 ? _GEN_26[4] : ram[82],
-         _GEN_10 ? _GEN_26[3] : ram[81],
-         _GEN_10 ? _GEN_26[2] : ram[80],
-         _GEN_10 ? _GEN_26[1] : ram[79],
-         _GEN_10 ? _GEN_26[0] : ram[78],
-         _GEN_9 ? _GEN_25[5] : ram[77],
-         _GEN_9 ? _GEN_25[4] : ram[76],
-         _GEN_9 ? _GEN_25[3] : ram[75],
-         _GEN_9 ? _GEN_25[2] : ram[74],
-         _GEN_9 ? _GEN_25[1] : ram[73],
-         _GEN_9 ? _GEN_25[0] : ram[72],
-         _GEN_8 ? _GEN_24[3] : ram[71],
-         _GEN_8 ? _GEN_24[2] : ram[70],
-         _GEN_8 ? _GEN_24[1] : ram[69],
-         _GEN_8 ? _GEN_24[0] : ram[68],
-         _GEN_7 ? _GEN_23[31] : ram[67],
-         _GEN_7 ? _GEN_23[30] : ram[66],
-         _GEN_7 ? _GEN_23[29] : ram[65],
-         _GEN_7 ? _GEN_23[28] : ram[64],
-         _GEN_7 ? _GEN_23[27] : ram[63],
-         _GEN_7 ? _GEN_23[26] : ram[62],
-         _GEN_7 ? _GEN_23[25] : ram[61],
-         _GEN_7 ? _GEN_23[24] : ram[60],
-         _GEN_7 ? _GEN_23[23] : ram[59],
-         _GEN_7 ? _GEN_23[22] : ram[58],
-         _GEN_7 ? _GEN_23[21] : ram[57],
-         _GEN_7 ? _GEN_23[20] : ram[56],
-         _GEN_7 ? _GEN_23[19] : ram[55],
-         _GEN_7 ? _GEN_23[18] : ram[54],
-         _GEN_7 ? _GEN_23[17] : ram[53],
-         _GEN_7 ? _GEN_23[16] : ram[52],
-         _GEN_7 ? _GEN_23[15] : ram[51],
-         _GEN_7 ? _GEN_23[14] : ram[50],
-         _GEN_7 ? _GEN_23[13] : ram[49],
-         _GEN_7 ? _GEN_23[12] : ram[48],
-         _GEN_7 ? _GEN_23[11] : ram[47],
-         _GEN_7 ? _GEN_23[10] : ram[46],
-         _GEN_7 ? _GEN_23[9] : ram[45],
-         _GEN_7 ? _GEN_23[8] : ram[44],
-         _GEN_7 ? _GEN_23[7] : ram[43],
-         _GEN_7 ? _GEN_23[6] : ram[42],
-         _GEN_7 ? _GEN_23[5] : ram[41],
-         _GEN_7 ? _GEN_23[4] : ram[40],
-         _GEN_7 ? _GEN_23[3] : ram[39],
-         _GEN_7 ? _GEN_23[2] : ram[38],
-         _GEN_7 ? _GEN_23[1] : ram[37],
-         _GEN_7 ? _GEN_23[0] : ram[36],
-         do_enq | _GEN_4.valid_bits[2'h3]
-           ? (do_enq ? io_enq_bits.valid_bits[2'h3] : _GEN_5.valid_bits[2'h3])
-           : ram[35],
-         do_enq | _GEN_4.valid_bits[2'h2]
-           ? (do_enq ? io_enq_bits.valid_bits[2'h2] : _GEN_5.valid_bits[2'h2])
-           : ram[34],
-         do_enq | _GEN_4.valid_bits[2'h1]
-           ? (do_enq ? io_enq_bits.valid_bits[2'h1] : _GEN_5.valid_bits[2'h1])
-           : ram[33],
-         do_enq | _GEN_4.valid_bits[2'h0]
-           ? (do_enq ? io_enq_bits.valid_bits[2'h0] : _GEN_5.valid_bits[2'h0])
-           : ram[32],
-         _GEN_6 ? _GEN_22[31] : ram[31],
-         _GEN_6 ? _GEN_22[30] : ram[30],
-         _GEN_6 ? _GEN_22[29] : ram[29],
-         _GEN_6 ? _GEN_22[28] : ram[28],
-         _GEN_6 ? _GEN_22[27] : ram[27],
-         _GEN_6 ? _GEN_22[26] : ram[26],
-         _GEN_6 ? _GEN_22[25] : ram[25],
-         _GEN_6 ? _GEN_22[24] : ram[24],
-         _GEN_6 ? _GEN_22[23] : ram[23],
-         _GEN_6 ? _GEN_22[22] : ram[22],
-         _GEN_6 ? _GEN_22[21] : ram[21],
-         _GEN_6 ? _GEN_22[20] : ram[20],
-         _GEN_6 ? _GEN_22[19] : ram[19],
-         _GEN_6 ? _GEN_22[18] : ram[18],
-         _GEN_6 ? _GEN_22[17] : ram[17],
-         _GEN_6 ? _GEN_22[16] : ram[16],
-         _GEN_6 ? _GEN_22[15] : ram[15],
-         _GEN_6 ? _GEN_22[14] : ram[14],
-         _GEN_6 ? _GEN_22[13] : ram[13],
-         _GEN_6 ? _GEN_22[12] : ram[12],
-         _GEN_6 ? _GEN_22[11] : ram[11],
-         _GEN_6 ? _GEN_22[10] : ram[10],
-         _GEN_6 ? _GEN_22[9] : ram[9],
-         _GEN_6 ? _GEN_22[8] : ram[8],
-         _GEN_6 ? _GEN_22[7] : ram[7],
-         _GEN_6 ? _GEN_22[6] : ram[6],
-         _GEN_6 ? _GEN_22[5] : ram[5],
-         _GEN_6 ? _GEN_22[4] : ram[4],
-         _GEN_6 ? _GEN_22[3] : ram[3],
-         _GEN_6 ? _GEN_22[2] : ram[2],
-         _GEN_6 ? _GEN_22[1] : ram[1],
-         _GEN_6 ? _GEN_22[0] : ram[0]};
-    end
+        {40'h3,
+         io_enq_bits_instructions_3_instruction,
+         10'h2,
+         io_enq_bits_instructions_2_instruction,
+         10'h1,
+         io_enq_bits_instructions_1_instruction,
+         10'h0,
+         io_enq_bits_instructions_0_instruction,
+         io_enq_bits_valid_bits_3,
+         io_enq_bits_valid_bits_2,
+         io_enq_bits_valid_bits_1,
+         io_enq_bits_valid_bits_0,
+         io_enq_bits_fetch_PC};
     if (reset)
       full <= 1'h0;
-    else if (~(do_enq == (full & io_deq_ready & _GEN)))
+    else if (do_enq)
       full <= do_enq;
   end // always @(posedge)
   assign io_enq_ready = ~full;
-  assign io_deq_valid = _GEN;
-  assign io_deq_bits =
-    '{fetch_PC: (full ? ram_io_deq_bits_MPORT_data.fetch_PC : io_enq_bits.fetch_PC),
-      valid_bits: (full ? ram_io_deq_bits_MPORT_data.valid_bits : io_enq_bits.valid_bits),
-      instructions: ({{_GEN_3}, {_GEN_2}, {_GEN_1}, {_GEN_0}}),
-      GHR: (full ? ram_io_deq_bits_MPORT_data.GHR : 16'h0),
-      NEXT: (full ? ram_io_deq_bits_MPORT_data.NEXT : 7'h0),
-      TOS: (full ? ram_io_deq_bits_MPORT_data.TOS : 7'h0)};
-  assign io_count = full;
+  assign io_deq_valid = io_enq_valid | full;
+  assign io_deq_bits_fetch_PC = full ? ram[31:0] : io_enq_bits_fetch_PC;
+  assign io_deq_bits_valid_bits_0 = full ? ram[32] : io_enq_bits_valid_bits_0;
+  assign io_deq_bits_valid_bits_1 = full ? ram[33] : io_enq_bits_valid_bits_1;
+  assign io_deq_bits_valid_bits_2 = full ? ram[34] : io_enq_bits_valid_bits_2;
+  assign io_deq_bits_valid_bits_3 = full ? ram[35] : io_enq_bits_valid_bits_3;
+  assign io_deq_bits_instructions_0_instruction =
+    full ? ram[67:36] : io_enq_bits_instructions_0_instruction;
+  assign io_deq_bits_instructions_0_packet_index = full ? ram[71:68] : 4'h0;
+  assign io_deq_bits_instructions_0_ROB_index = full ? ram[77:72] : 6'h0;
+  assign io_deq_bits_instructions_1_instruction =
+    full ? ram[109:78] : io_enq_bits_instructions_1_instruction;
+  assign io_deq_bits_instructions_1_packet_index = full ? ram[113:110] : 4'h1;
+  assign io_deq_bits_instructions_1_ROB_index = full ? ram[119:114] : 6'h0;
+  assign io_deq_bits_instructions_2_instruction =
+    full ? ram[151:120] : io_enq_bits_instructions_2_instruction;
+  assign io_deq_bits_instructions_2_packet_index = full ? ram[155:152] : 4'h2;
+  assign io_deq_bits_instructions_2_ROB_index = full ? ram[161:156] : 6'h0;
+  assign io_deq_bits_instructions_3_instruction =
+    full ? ram[193:162] : io_enq_bits_instructions_3_instruction;
+  assign io_deq_bits_instructions_3_packet_index = full ? ram[197:194] : 4'h3;
+  assign io_deq_bits_instructions_3_ROB_index = full ? ram[203:198] : 6'h0;
+  assign io_deq_bits_GHR = full ? ram[219:204] : 16'h0;
+  assign io_deq_bits_NEXT = full ? ram[226:220] : 7'h0;
+  assign io_deq_bits_TOS = full ? ram[233:227] : 7'h0;
 endmodule
 

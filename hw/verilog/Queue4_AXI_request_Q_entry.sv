@@ -29,58 +29,34 @@
 `endif // not def STOP_COND_
 
 module Queue4_AXI_request_Q_entry(
-  input                                                                                                                                                                                          clock,
-                                                                                                                                                                                                 reset,
-  output                                                                                                                                                                                         io_enq_ready,
-  input                                                                                                                                                                                          io_enq_valid,
-  input  struct packed {logic write_valid; logic [31:0] write_address; logic [255:0] write_data; logic [6:0] write_bytes; logic read_valid; logic [31:0] read_address; logic [6:0] read_bytes; } io_enq_bits,
-  output                                                                                                                                                                                         io_deq_valid,
-  output struct packed {logic write_valid; logic [31:0] write_address; logic [255:0] write_data; logic [6:0] write_bytes; logic read_valid; logic [31:0] read_address; logic [6:0] read_bytes; } io_deq_bits,
-  output [2:0]                                                                                                                                                                                   io_count
+  input          clock,
+                 reset,
+                 io_enq_valid,
+                 io_enq_bits_write_valid,
+  input  [31:0]  io_enq_bits_write_address,
+  input  [255:0] io_enq_bits_write_data,
+  input  [6:0]   io_enq_bits_write_bytes,
+  input          io_enq_bits_read_valid,
+  input  [31:0]  io_enq_bits_read_address,
+  input  [6:0]   io_enq_bits_read_bytes,
+  output         io_deq_valid,
+                 io_deq_bits_write_valid,
+  output [31:0]  io_deq_bits_write_address,
+  output [255:0] io_deq_bits_write_data,
+  output         io_deq_bits_read_valid,
+  output [31:0]  io_deq_bits_read_address,
+  output [6:0]   io_deq_bits_read_bytes
 );
 
-  wire [6:0]   _GEN;
-  wire [31:0]  _GEN_0;
-  wire         _GEN_1;
-  wire [6:0]   _GEN_2;
-  wire [255:0] _GEN_3;
-  wire [31:0]  _GEN_4;
-  wire         _GEN_5;
-  wire         _GEN_6;
-  wire         _GEN_7;
-  wire         _GEN_8;
-  wire         _GEN_9;
-  wire         _GEN_10;
-  wire         _GEN_11;
-  wire         _GEN_12;
+  wire         io_enq_ready;
   wire [335:0] _ram_ext_R0_data;
-  wire
-    struct packed {logic write_valid; logic write_address; logic write_data; logic write_bytes; logic read_valid; logic read_address; logic read_bytes; }
-    _GEN_13 = /*cast(bit)*/7'h0;
-  wire
-    struct packed {logic write_valid; logic [31:0] write_address; logic [255:0] write_data; logic [6:0] write_bytes; logic read_valid; logic [31:0] read_address; logic [6:0] read_bytes; }
-    _GEN_14 = /*cast(bit)*/336'h0;
   reg  [1:0]   enq_ptr_value;
   reg  [1:0]   deq_ptr_value;
   reg          maybe_full;
   wire         ptr_match = enq_ptr_value == deq_ptr_value;
   wire         empty = ptr_match & ~maybe_full;
-  wire         full = ptr_match & maybe_full;
-  wire         do_enq = ~full & io_enq_valid;
-  assign _GEN_12 = do_enq | _GEN_13.write_valid;
-  assign _GEN_11 = do_enq | _GEN_13.write_address;
-  assign _GEN_10 = do_enq | _GEN_13.write_data;
-  assign _GEN_9 = do_enq | _GEN_13.write_bytes;
-  assign _GEN_8 = do_enq | _GEN_13.read_valid;
-  assign _GEN_7 = do_enq | _GEN_13.read_address;
-  assign _GEN_6 = do_enq | _GEN_13.read_bytes;
-  assign _GEN_5 = do_enq ? io_enq_bits.write_valid : _GEN_14.write_valid;
-  assign _GEN_4 = do_enq ? io_enq_bits.write_address : _GEN_14.write_address;
-  assign _GEN_3 = do_enq ? io_enq_bits.write_data : _GEN_14.write_data;
-  assign _GEN_2 = do_enq ? io_enq_bits.write_bytes : _GEN_14.write_bytes;
-  assign _GEN_1 = do_enq ? io_enq_bits.read_valid : _GEN_14.read_valid;
-  assign _GEN_0 = do_enq ? io_enq_bits.read_address : _GEN_14.read_address;
-  assign _GEN = do_enq ? io_enq_bits.read_bytes : _GEN_14.read_bytes;
+  wire         do_enq = io_enq_ready & io_enq_valid;
+  assign io_enq_ready = ~(ptr_match & maybe_full);
   always @(posedge clock) begin
     if (reset) begin
       enq_ptr_value <= 2'h0;
@@ -104,19 +80,21 @@ module Queue4_AXI_request_Q_entry(
     .W0_addr (enq_ptr_value),
     .W0_en   (do_enq),
     .W0_clk  (clock),
-    .W0_data ({_GEN, _GEN_0, _GEN_1, _GEN_2, _GEN_3, _GEN_4, _GEN_5}),
-    .W0_mask
-      ({{7{_GEN_6}},
-        {32{_GEN_7}},
-        _GEN_8,
-        {7{_GEN_9}},
-        {256{_GEN_10}},
-        {32{_GEN_11}},
-        _GEN_12})
+    .W0_data
+      ({io_enq_bits_read_bytes,
+        io_enq_bits_read_address,
+        io_enq_bits_read_valid,
+        io_enq_bits_write_bytes,
+        io_enq_bits_write_data,
+        io_enq_bits_write_address,
+        io_enq_bits_write_valid})
   );
-  assign io_enq_ready = ~full;
   assign io_deq_valid = ~empty;
-  assign io_deq_bits = /*cast(bit)*/_ram_ext_R0_data;
-  assign io_count = {maybe_full & ptr_match, enq_ptr_value - deq_ptr_value};
+  assign io_deq_bits_write_valid = _ram_ext_R0_data[0];
+  assign io_deq_bits_write_address = _ram_ext_R0_data[32:1];
+  assign io_deq_bits_write_data = _ram_ext_R0_data[288:33];
+  assign io_deq_bits_read_valid = _ram_ext_R0_data[296];
+  assign io_deq_bits_read_address = _ram_ext_R0_data[328:297];
+  assign io_deq_bits_read_bytes = _ram_ext_R0_data[335:329];
 endmodule
 

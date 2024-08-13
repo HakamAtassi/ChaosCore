@@ -37,8 +37,7 @@ module ram_16x53(
   input  [3:0]  W0_addr,
   input         W0_en,
                 W0_clk,
-  input  [52:0] W0_data,
-                W0_mask
+  input  [52:0] W0_data
 );
 
   reg [52:0] Memory[0:15];
@@ -49,112 +48,8 @@ module ram_16x53(
     _R0_addr_d0 <= R0_addr;
   end // always @(posedge)
   always @(posedge W0_clk) begin
-    if (W0_en & W0_mask[0])
-      Memory[W0_addr][32'h0 +: 1] <= W0_data[0];
-    if (W0_en & W0_mask[1])
-      Memory[W0_addr][32'h1 +: 1] <= W0_data[1];
-    if (W0_en & W0_mask[2])
-      Memory[W0_addr][32'h2 +: 1] <= W0_data[2];
-    if (W0_en & W0_mask[3])
-      Memory[W0_addr][32'h3 +: 1] <= W0_data[3];
-    if (W0_en & W0_mask[4])
-      Memory[W0_addr][32'h4 +: 1] <= W0_data[4];
-    if (W0_en & W0_mask[5])
-      Memory[W0_addr][32'h5 +: 1] <= W0_data[5];
-    if (W0_en & W0_mask[6])
-      Memory[W0_addr][32'h6 +: 1] <= W0_data[6];
-    if (W0_en & W0_mask[7])
-      Memory[W0_addr][32'h7 +: 1] <= W0_data[7];
-    if (W0_en & W0_mask[8])
-      Memory[W0_addr][32'h8 +: 1] <= W0_data[8];
-    if (W0_en & W0_mask[9])
-      Memory[W0_addr][32'h9 +: 1] <= W0_data[9];
-    if (W0_en & W0_mask[10])
-      Memory[W0_addr][32'hA +: 1] <= W0_data[10];
-    if (W0_en & W0_mask[11])
-      Memory[W0_addr][32'hB +: 1] <= W0_data[11];
-    if (W0_en & W0_mask[12])
-      Memory[W0_addr][32'hC +: 1] <= W0_data[12];
-    if (W0_en & W0_mask[13])
-      Memory[W0_addr][32'hD +: 1] <= W0_data[13];
-    if (W0_en & W0_mask[14])
-      Memory[W0_addr][32'hE +: 1] <= W0_data[14];
-    if (W0_en & W0_mask[15])
-      Memory[W0_addr][32'hF +: 1] <= W0_data[15];
-    if (W0_en & W0_mask[16])
-      Memory[W0_addr][32'h10 +: 1] <= W0_data[16];
-    if (W0_en & W0_mask[17])
-      Memory[W0_addr][32'h11 +: 1] <= W0_data[17];
-    if (W0_en & W0_mask[18])
-      Memory[W0_addr][32'h12 +: 1] <= W0_data[18];
-    if (W0_en & W0_mask[19])
-      Memory[W0_addr][32'h13 +: 1] <= W0_data[19];
-    if (W0_en & W0_mask[20])
-      Memory[W0_addr][32'h14 +: 1] <= W0_data[20];
-    if (W0_en & W0_mask[21])
-      Memory[W0_addr][32'h15 +: 1] <= W0_data[21];
-    if (W0_en & W0_mask[22])
-      Memory[W0_addr][32'h16 +: 1] <= W0_data[22];
-    if (W0_en & W0_mask[23])
-      Memory[W0_addr][32'h17 +: 1] <= W0_data[23];
-    if (W0_en & W0_mask[24])
-      Memory[W0_addr][32'h18 +: 1] <= W0_data[24];
-    if (W0_en & W0_mask[25])
-      Memory[W0_addr][32'h19 +: 1] <= W0_data[25];
-    if (W0_en & W0_mask[26])
-      Memory[W0_addr][32'h1A +: 1] <= W0_data[26];
-    if (W0_en & W0_mask[27])
-      Memory[W0_addr][32'h1B +: 1] <= W0_data[27];
-    if (W0_en & W0_mask[28])
-      Memory[W0_addr][32'h1C +: 1] <= W0_data[28];
-    if (W0_en & W0_mask[29])
-      Memory[W0_addr][32'h1D +: 1] <= W0_data[29];
-    if (W0_en & W0_mask[30])
-      Memory[W0_addr][32'h1E +: 1] <= W0_data[30];
-    if (W0_en & W0_mask[31])
-      Memory[W0_addr][32'h1F +: 1] <= W0_data[31];
-    if (W0_en & W0_mask[32])
-      Memory[W0_addr][32'h20 +: 1] <= W0_data[32];
-    if (W0_en & W0_mask[33])
-      Memory[W0_addr][32'h21 +: 1] <= W0_data[33];
-    if (W0_en & W0_mask[34])
-      Memory[W0_addr][32'h22 +: 1] <= W0_data[34];
-    if (W0_en & W0_mask[35])
-      Memory[W0_addr][32'h23 +: 1] <= W0_data[35];
-    if (W0_en & W0_mask[36])
-      Memory[W0_addr][32'h24 +: 1] <= W0_data[36];
-    if (W0_en & W0_mask[37])
-      Memory[W0_addr][32'h25 +: 1] <= W0_data[37];
-    if (W0_en & W0_mask[38])
-      Memory[W0_addr][32'h26 +: 1] <= W0_data[38];
-    if (W0_en & W0_mask[39])
-      Memory[W0_addr][32'h27 +: 1] <= W0_data[39];
-    if (W0_en & W0_mask[40])
-      Memory[W0_addr][32'h28 +: 1] <= W0_data[40];
-    if (W0_en & W0_mask[41])
-      Memory[W0_addr][32'h29 +: 1] <= W0_data[41];
-    if (W0_en & W0_mask[42])
-      Memory[W0_addr][32'h2A +: 1] <= W0_data[42];
-    if (W0_en & W0_mask[43])
-      Memory[W0_addr][32'h2B +: 1] <= W0_data[43];
-    if (W0_en & W0_mask[44])
-      Memory[W0_addr][32'h2C +: 1] <= W0_data[44];
-    if (W0_en & W0_mask[45])
-      Memory[W0_addr][32'h2D +: 1] <= W0_data[45];
-    if (W0_en & W0_mask[46])
-      Memory[W0_addr][32'h2E +: 1] <= W0_data[46];
-    if (W0_en & W0_mask[47])
-      Memory[W0_addr][32'h2F +: 1] <= W0_data[47];
-    if (W0_en & W0_mask[48])
-      Memory[W0_addr][32'h30 +: 1] <= W0_data[48];
-    if (W0_en & W0_mask[49])
-      Memory[W0_addr][32'h31 +: 1] <= W0_data[49];
-    if (W0_en & W0_mask[50])
-      Memory[W0_addr][32'h32 +: 1] <= W0_data[50];
-    if (W0_en & W0_mask[51])
-      Memory[W0_addr][32'h33 +: 1] <= W0_data[51];
-    if (W0_en & W0_mask[52])
-      Memory[W0_addr][32'h34 +: 1] <= W0_data[52];
+    if (W0_en & 1'h1)
+      Memory[W0_addr] <= W0_data;
   end // always @(posedge)
   assign R0_data = _R0_en_d0 ? Memory[_R0_addr_d0] : 53'bx;
 endmodule

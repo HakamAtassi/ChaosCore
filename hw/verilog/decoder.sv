@@ -29,30 +29,45 @@
 `endif // not def STOP_COND_
 
 module decoder(
-  input                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 clock,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        reset,
-  output                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                io_instruction_ready,
-  input                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 io_instruction_valid,
-  input  struct packed {logic [31:0] instruction; logic [3:0] packet_index; logic [5:0] ROB_index; }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    io_instruction_bits,
-  input                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 io_decoded_instruction_ready,
-  output                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                io_decoded_instruction_valid,
-  output struct packed {struct packed {logic RS1_ready; logic RS2_ready; } ready_bits; logic [4:0] RDold; logic [6:0] RD; logic RD_valid; logic [6:0] RS1; logic RS1_valid; logic [6:0] RS2; logic RS2_valid; logic [20:0] IMM; logic [2:0] FUNCT3; logic [1:0] packet_index; logic [5:0] ROB_index; logic [3:0] MOB_index; logic [3:0] FTQ_index; logic [4:0] instructionType; logic [1:0] portID; logic [1:0] RS_type; logic needs_ALU; logic needs_branch_unit; logic needs_CSRs; logic SUBTRACT; logic MULTIPLY; logic IS_IMM; logic [1:0] memory_type; logic [1:0] access_width; } io_decoded_instruction_bits
+  input         clock,
+                reset,
+                io_instruction_valid,
+  input  [31:0] io_instruction_bits_instruction,
+  input  [3:0]  io_instruction_bits_packet_index,
+  output [4:0]  io_decoded_instruction_bits_RDold,
+  output [6:0]  io_decoded_instruction_bits_RD,
+  output        io_decoded_instruction_bits_RD_valid,
+  output [6:0]  io_decoded_instruction_bits_RS1,
+  output        io_decoded_instruction_bits_RS1_valid,
+  output [6:0]  io_decoded_instruction_bits_RS2,
+  output        io_decoded_instruction_bits_RS2_valid,
+  output [20:0] io_decoded_instruction_bits_IMM,
+  output [2:0]  io_decoded_instruction_bits_FUNCT3,
+  output [1:0]  io_decoded_instruction_bits_packet_index,
+  output [4:0]  io_decoded_instruction_bits_instructionType,
+  output [1:0]  io_decoded_instruction_bits_portID,
+                io_decoded_instruction_bits_RS_type,
+  output        io_decoded_instruction_bits_needs_ALU,
+                io_decoded_instruction_bits_needs_branch_unit,
+                io_decoded_instruction_bits_SUBTRACT,
+                io_decoded_instruction_bits_MULTIPLY,
+                io_decoded_instruction_bits_IS_IMM,
+  output [1:0]  io_decoded_instruction_bits_memory_type,
+                io_decoded_instruction_bits_access_width
 );
 
-  wire struct packed {logic RS1_ready; logic RS2_ready; } initialReady =
-    '{RS1_ready: 1'h0, RS2_ready: 1'h0};
-  wire [8:0]      _GEN = {9{io_instruction_bits.instruction[31]}};
-  wire [4:0]      instructionType = io_instruction_bits.instruction[6:2];
-  wire            _is_MEM_T = instructionType == 5'h0;
-  wire            _is_INT_T_1 = instructionType == 5'h4;
-  wire            _is_INT_T_11 = instructionType == 5'h5;
-  wire            _is_MEM_T_1 = instructionType == 5'h8;
-  wire            _is_INT_T = instructionType == 5'hC;
-  wire            _is_INT_T_9 = instructionType == 5'hD;
-  wire            _is_INT_T_3 = instructionType == 5'h18;
-  wire            _is_INT_T_7 = instructionType == 5'h19;
-  wire            _is_INT_T_5 = instructionType == 5'h1B;
-  wire            _io_decoded_instruction_bits_RD_valid_T_13 = instructionType == 5'h1C;
+  wire [8:0] _GEN = {9{io_instruction_bits_instruction[31]}};
+  wire [4:0] instructionType = io_instruction_bits_instruction[6:2];
+  wire       _is_MEM_T = instructionType == 5'h0;
+  wire       _is_INT_T_1 = instructionType == 5'h4;
+  wire       _is_INT_T_11 = instructionType == 5'h5;
+  wire       _is_MEM_T_1 = instructionType == 5'h8;
+  wire       _is_INT_T = instructionType == 5'hC;
+  wire       _is_INT_T_9 = instructionType == 5'hD;
+  wire       _is_INT_T_3 = instructionType == 5'h18;
+  wire       _is_INT_T_7 = instructionType == 5'h19;
+  wire       _is_INT_T_5 = instructionType == 5'h1B;
+  wire       _io_decoded_instruction_bits_RD_valid_T_13 = instructionType == 5'h1C;
   `ifndef SYNTHESIS
     always @(posedge clock) begin
       if (~reset
@@ -74,100 +89,100 @@ module decoder(
       end
     end // always @(posedge)
   `endif // not def SYNTHESIS
-  wire            _needs_ALU_T_1 = io_instruction_bits.instruction[31:25] == 7'h20;
-  wire            needs_branch_unit = _is_INT_T_3 | _is_INT_T_5 | _is_INT_T_7;
-  wire            needs_ALU =
-    _is_INT_T & (_needs_ALU_T_1 | io_instruction_bits.instruction[31:25] == 7'h0)
+  wire       _needs_ALU_T_1 = io_instruction_bits_instruction[31:25] == 7'h20;
+  wire       needs_branch_unit = _is_INT_T_3 | _is_INT_T_5 | _is_INT_T_7;
+  wire       needs_ALU =
+    _is_INT_T & (_needs_ALU_T_1 | io_instruction_bits_instruction[31:25] == 7'h0)
     | _is_INT_T_1 | _is_INT_T_9 | _is_INT_T_11;
-  reg  [2:0][1:0] next_ALU_port;
+  reg  [1:0] next_ALU_port_0;
+  reg  [1:0] next_ALU_port_1;
+  reg  [1:0] next_ALU_port_2;
   always @(posedge clock) begin
-    if (reset)
-      next_ALU_port <= '{2'h2, 2'h1, 2'h0};
+    if (reset) begin
+      next_ALU_port_0 <= 2'h0;
+      next_ALU_port_1 <= 2'h1;
+      next_ALU_port_2 <= 2'h2;
+    end
     else if (needs_ALU) begin
-      next_ALU_port[2'h0 +: 2] <= next_ALU_port[2'h1 +: 2];
-      next_ALU_port[2'h2] <= next_ALU_port[2'h0];
+      next_ALU_port_0 <= next_ALU_port_1;
+      next_ALU_port_1 <= next_ALU_port_2;
+      next_ALU_port_2 <= next_ALU_port_0;
     end
   end // always @(posedge)
-  assign io_instruction_ready = io_decoded_instruction_ready;
-  assign io_decoded_instruction_valid = io_instruction_valid;
-  assign io_decoded_instruction_bits =
-    '{ready_bits: initialReady,
-      RDold: (io_instruction_bits.instruction[11:7]),
-      RD: {2'h0, io_instruction_bits.instruction[11:7]},
-      RD_valid:
-        ((_is_INT_T | _is_INT_T_1 | _is_MEM_T | _is_INT_T_5 | _is_INT_T_7 | _is_INT_T_9
-          | _is_INT_T_11 | _io_decoded_instruction_bits_RD_valid_T_13)
-         & io_instruction_valid),
-      RS1: {2'h0, io_instruction_bits.instruction[19:15]},
-      RS1_valid:
-        ((_is_INT_T | _is_INT_T_1 | _is_MEM_T | _is_MEM_T_1 | _is_INT_T_7 | _is_INT_T_3)
-         & io_instruction_valid),
-      RS2: {2'h0, io_instruction_bits.instruction[24:20]},
-      RS2_valid: ((_is_INT_T | _is_MEM_T_1 | _is_INT_T_3) & io_instruction_valid),
-      IMM:
-        (io_instruction_bits.instruction[6:0] == 7'h63
-           ? {{9{io_instruction_bits.instruction[31]}},
-              io_instruction_bits.instruction[7],
-              io_instruction_bits.instruction[30:25],
-              io_instruction_bits.instruction[11:8],
-              1'h0}
-           : io_instruction_bits.instruction[6:0] == 7'h6F
-               ? {io_instruction_bits.instruction[31],
-                  io_instruction_bits.instruction[19:12],
-                  io_instruction_bits.instruction[20],
-                  io_instruction_bits.instruction[30:21],
-                  1'h0}
-               : io_instruction_bits.instruction[6:0] == 7'h13
-                 | io_instruction_bits.instruction[6:0] == 7'h3
-                 | io_instruction_bits.instruction[6:0] == 7'h67
-                   ? {_GEN, io_instruction_bits.instruction[31:20]}
-                   : io_instruction_bits.instruction[6:0] == 7'h23
-                       ? {_GEN,
-                          io_instruction_bits.instruction[31:25],
-                          io_instruction_bits.instruction[11:7]}
-                       : io_instruction_bits.instruction[6:0] == 7'h17
-                         | io_instruction_bits.instruction[6:0] == 7'h37
-                           ? {io_instruction_bits.instruction[31],
-                              io_instruction_bits.instruction[31:12]}
-                           : 21'h0),
-      FUNCT3: (io_instruction_bits.instruction[14:12]),
-      packet_index: (io_instruction_bits.packet_index[1:0]),
-      ROB_index: (6'h0),
-      MOB_index: (4'h0),
-      FTQ_index: (4'h0),
-      instructionType: instructionType,
-      portID:
-        (needs_ALU
-           ? next_ALU_port[2'h0]
-           : needs_branch_unit
-               ? 2'h0
-               : _is_INT_T
-                 & (io_instruction_bits.instruction[14:12] == 3'h4
-                    | io_instruction_bits.instruction[14:12] == 3'h5
-                    | io_instruction_bits.instruction[14:12] == 3'h6
-                    | (&(io_instruction_bits.instruction[14:12])))
-                 & io_instruction_bits.instruction[25]
-                   ? 2'h1
-                   : {2{_is_MEM_T_1 | _is_MEM_T}}),
-      RS_type:
-        (_is_INT_T | _is_INT_T_1 | _is_INT_T_3 | _is_INT_T_5 | _is_INT_T_7 | _is_INT_T_9
-         | _is_INT_T_11
-           ? 2'h0
-           : _is_MEM_T | _is_MEM_T_1 ? 2'h1 : 2'h2),
-      needs_ALU: needs_ALU,
-      needs_branch_unit: needs_branch_unit,
-      needs_CSRs: (1'h0),
-      SUBTRACT: ((_is_INT_T | _is_INT_T_1) & _needs_ALU_T_1),
-      MULTIPLY: (_is_INT_T & io_instruction_bits.instruction[31:25] == 7'h1),
-      IS_IMM:
-        (_is_INT_T_1 | _is_INT_T_9 | _is_INT_T_11 | _is_MEM_T_1 | _is_MEM_T | _is_INT_T_3
-         | _is_INT_T_5 | _is_INT_T_7),
-      memory_type: (_is_MEM_T ? 2'h1 : {_is_MEM_T_1, 1'h0}),
-      access_width:
-        (io_instruction_bits.instruction[14:12] == 3'h0
-           ? 2'h1
-           : io_instruction_bits.instruction[14:12] == 3'h1
-               ? 2'h2
-               : {2{io_instruction_bits.instruction[14:12] == 3'h2}})};
+  assign io_decoded_instruction_bits_RDold = io_instruction_bits_instruction[11:7];
+  assign io_decoded_instruction_bits_RD = {2'h0, io_instruction_bits_instruction[11:7]};
+  assign io_decoded_instruction_bits_RD_valid =
+    (_is_INT_T | _is_INT_T_1 | _is_MEM_T | _is_INT_T_5 | _is_INT_T_7 | _is_INT_T_9
+     | _is_INT_T_11 | _io_decoded_instruction_bits_RD_valid_T_13) & io_instruction_valid;
+  assign io_decoded_instruction_bits_RS1 = {2'h0, io_instruction_bits_instruction[19:15]};
+  assign io_decoded_instruction_bits_RS1_valid =
+    (_is_INT_T | _is_INT_T_1 | _is_MEM_T | _is_MEM_T_1 | _is_INT_T_7 | _is_INT_T_3)
+    & io_instruction_valid;
+  assign io_decoded_instruction_bits_RS2 = {2'h0, io_instruction_bits_instruction[24:20]};
+  assign io_decoded_instruction_bits_RS2_valid =
+    (_is_INT_T | _is_MEM_T_1 | _is_INT_T_3) & io_instruction_valid;
+  assign io_decoded_instruction_bits_IMM =
+    io_instruction_bits_instruction[6:0] == 7'h63
+      ? {{9{io_instruction_bits_instruction[31]}},
+         io_instruction_bits_instruction[7],
+         io_instruction_bits_instruction[30:25],
+         io_instruction_bits_instruction[11:8],
+         1'h0}
+      : io_instruction_bits_instruction[6:0] == 7'h6F
+          ? {io_instruction_bits_instruction[31],
+             io_instruction_bits_instruction[19:12],
+             io_instruction_bits_instruction[20],
+             io_instruction_bits_instruction[30:21],
+             1'h0}
+          : io_instruction_bits_instruction[6:0] == 7'h13
+            | io_instruction_bits_instruction[6:0] == 7'h3
+            | io_instruction_bits_instruction[6:0] == 7'h67
+              ? {_GEN, io_instruction_bits_instruction[31:20]}
+              : io_instruction_bits_instruction[6:0] == 7'h23
+                  ? {_GEN,
+                     io_instruction_bits_instruction[31:25],
+                     io_instruction_bits_instruction[11:7]}
+                  : io_instruction_bits_instruction[6:0] == 7'h17
+                    | io_instruction_bits_instruction[6:0] == 7'h37
+                      ? {io_instruction_bits_instruction[31],
+                         io_instruction_bits_instruction[31:12]}
+                      : 21'h0;
+  assign io_decoded_instruction_bits_FUNCT3 = io_instruction_bits_instruction[14:12];
+  assign io_decoded_instruction_bits_packet_index = io_instruction_bits_packet_index[1:0];
+  assign io_decoded_instruction_bits_instructionType = instructionType;
+  assign io_decoded_instruction_bits_portID =
+    needs_ALU
+      ? next_ALU_port_0
+      : needs_branch_unit
+          ? 2'h0
+          : _is_INT_T
+            & (io_instruction_bits_instruction[14:12] == 3'h4
+               | io_instruction_bits_instruction[14:12] == 3'h5
+               | io_instruction_bits_instruction[14:12] == 3'h6
+               | (&(io_instruction_bits_instruction[14:12])))
+            & io_instruction_bits_instruction[25]
+              ? 2'h1
+              : {2{_is_MEM_T_1 | _is_MEM_T}};
+  assign io_decoded_instruction_bits_RS_type =
+    _is_INT_T | _is_INT_T_1 | _is_INT_T_3 | _is_INT_T_5 | _is_INT_T_7 | _is_INT_T_9
+    | _is_INT_T_11
+      ? 2'h0
+      : _is_MEM_T | _is_MEM_T_1 ? 2'h1 : 2'h2;
+  assign io_decoded_instruction_bits_needs_ALU = needs_ALU;
+  assign io_decoded_instruction_bits_needs_branch_unit = needs_branch_unit;
+  assign io_decoded_instruction_bits_SUBTRACT =
+    (_is_INT_T | _is_INT_T_1) & _needs_ALU_T_1;
+  assign io_decoded_instruction_bits_MULTIPLY =
+    _is_INT_T & io_instruction_bits_instruction[31:25] == 7'h1;
+  assign io_decoded_instruction_bits_IS_IMM =
+    _is_INT_T_1 | _is_INT_T_9 | _is_INT_T_11 | _is_MEM_T_1 | _is_MEM_T | _is_INT_T_3
+    | _is_INT_T_5 | _is_INT_T_7;
+  assign io_decoded_instruction_bits_memory_type = _is_MEM_T ? 2'h1 : {_is_MEM_T_1, 1'h0};
+  assign io_decoded_instruction_bits_access_width =
+    io_instruction_bits_instruction[14:12] == 3'h0
+      ? 2'h1
+      : io_instruction_bits_instruction[14:12] == 3'h1
+          ? 2'h2
+          : {2{io_instruction_bits_instruction[14:12] == 3'h2}};
 endmodule
 
