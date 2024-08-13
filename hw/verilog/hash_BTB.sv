@@ -29,52 +29,47 @@
 `endif // not def STOP_COND_
 
 module hash_BTB(
-  input                                                                                                                                                                                                                                                                                                                                                                                                      clock,
-                                                                                                                                                                                                                                                                                                                                                                                                             reset,
-  input  [31:0]                                                                                                                                                                                                                                                                                                                                                                                              io_predict_PC,
-  input                                                                                                                                                                                                                                                                                                                                                                                                      io_predict_valid,
-  output                                                                                                                                                                                                                                                                                                                                                                                                     io_BTB_hit,
-  output struct packed {logic BTB_valid; logic [17:0] BTB_tag; logic [31:0] BTB_target; logic [2:0] BTBbr_type_t; logic [1:0] BTB_fetch_packet_index; }                                                                                                                                                                                                                                                      io_BTB_output,
-  input  struct packed {logic valid; struct packed {logic [31:0] fetch_PC; logic T_NT; logic [5:0] ROB_index; logic [2:0] br_type; logic [1:0] fetch_packet_index; logic is_misprediction; logic exception; logic [31:0] expected_PC; logic [15:0] GHR; logic [6:0] TOS; logic [6:0] NEXT; logic [7:0] free_list_front_pointer; logic [3:0][4:0] RDold; logic [3:0][6:0] RD; logic [3:0] RD_valid; } bits; } io_commit
+  input         clock,
+                reset,
+  input  [31:0] io_predict_PC,
+  output        io_BTB_hit,
+  output [31:0] io_BTB_output_BTB_target,
+  output [2:0]  io_BTB_output_BTBbr_type_t,
+  input         io_commit_valid,
+  input  [31:0] io_commit_bits_fetch_PC,
+  input  [2:0]  io_commit_bits_br_type,
+  input  [1:0]  io_commit_bits_fetch_packet_index,
+  input  [31:0] io_commit_bits_expected_PC
 );
 
-  wire
-    struct packed {logic BTB_valid; logic [17:0] BTB_tag; logic [31:0] BTB_target; logic [2:0] BTBbr_type_t; logic [1:0] BTB_fetch_packet_index; }
-    _BTB_memory_io_data_out;
+  wire        _BTB_memory_io_data_out_BTB_valid;
+  wire [17:0] _BTB_memory_io_data_out_BTB_tag;
+  wire [1:0]  _BTB_memory_io_data_out_BTB_fetch_packet_index;
   reg  [2:0]  access_fetch_packet_index;
   reg  [15:0] io_BTB_hit_REG;
-  reg         io_BTB_output_BTB_valid_REG;
-  wire
-    struct packed {logic BTB_valid; logic [17:0] BTB_tag; logic [31:0] BTB_target; logic [2:0] BTBbr_type_t; logic [1:0] BTB_fetch_packet_index; }
-    commit_BTB_entry =
-    '{BTB_valid: (1'h1),
-      BTB_tag: {2'h0, io_commit.bits.fetch_PC[31:16]},
-      BTB_target: io_commit.bits.expected_PC,
-      BTBbr_type_t: io_commit.bits.br_type,
-      BTB_fetch_packet_index: io_commit.bits.fetch_packet_index};
   always @(posedge clock) begin
     access_fetch_packet_index <= io_predict_PC[4:2];
     io_BTB_hit_REG <= io_predict_PC[31:16];
-    io_BTB_output_BTB_valid_REG <= io_predict_valid;
   end // always @(posedge)
   hash_BTB_mem BTB_memory (
-    .clock       (clock),
-    .reset       (reset),
-    .io_rd_addr  (io_predict_PC[15:4]),
-    .io_data_out (_BTB_memory_io_data_out),
-    .io_wr_addr  (io_commit.bits.fetch_PC[15:4]),
-    .io_wr_en    (io_commit.valid),
-    .io_data_in  (commit_BTB_entry)
+    .clock                              (clock),
+    .reset                              (reset),
+    .io_rd_addr                         (io_predict_PC[15:4]),
+    .io_data_out_BTB_valid              (_BTB_memory_io_data_out_BTB_valid),
+    .io_data_out_BTB_tag                (_BTB_memory_io_data_out_BTB_tag),
+    .io_data_out_BTB_target             (io_BTB_output_BTB_target),
+    .io_data_out_BTBbr_type_t           (io_BTB_output_BTBbr_type_t),
+    .io_data_out_BTB_fetch_packet_index (_BTB_memory_io_data_out_BTB_fetch_packet_index),
+    .io_wr_addr                         (io_commit_bits_fetch_PC[15:4]),
+    .io_wr_en                           (io_commit_valid),
+    .io_data_in_BTB_tag                 ({2'h0, io_commit_bits_fetch_PC[31:16]}),
+    .io_data_in_BTB_target              (io_commit_bits_expected_PC),
+    .io_data_in_BTBbr_type_t            (io_commit_bits_br_type),
+    .io_data_in_BTB_fetch_packet_index  (io_commit_bits_fetch_packet_index)
   );
   assign io_BTB_hit =
-    {2'h0, io_BTB_hit_REG} == _BTB_memory_io_data_out.BTB_tag
-    & _BTB_memory_io_data_out.BTB_valid
-    & {1'h0, _BTB_memory_io_data_out.BTB_fetch_packet_index} >= access_fetch_packet_index;
-  assign io_BTB_output =
-    '{BTB_valid: io_BTB_output_BTB_valid_REG,
-      BTB_tag: _BTB_memory_io_data_out.BTB_tag,
-      BTB_target: _BTB_memory_io_data_out.BTB_target,
-      BTBbr_type_t: _BTB_memory_io_data_out.BTBbr_type_t,
-      BTB_fetch_packet_index: _BTB_memory_io_data_out.BTB_fetch_packet_index};
+    {2'h0, io_BTB_hit_REG} == _BTB_memory_io_data_out_BTB_tag
+    & _BTB_memory_io_data_out_BTB_valid
+    & {1'h0, _BTB_memory_io_data_out_BTB_fetch_packet_index} >= access_fetch_packet_index;
 endmodule
 

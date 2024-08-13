@@ -29,188 +29,221 @@
 `endif // not def STOP_COND_
 
 module predecoder(
-  input                                                                                                                                                                                                                                                                                                                                                                                                      clock,
-                                                                                                                                                                                                                                                                                                                                                                                                             reset,
-                                                                                                                                                                                                                                                                                                                                                                                                             io_flush,
-  output struct packed {logic valid; struct packed {logic [31:0] PC; } bits; }                                                                                                                                                                                                                                                                                                                               io_revert,
-  output                                                                                                                                                                                                                                                                                                                                                                                                     io_prediction_ready,
-  input                                                                                                                                                                                                                                                                                                                                                                                                      io_prediction_valid,
-  input  struct packed {logic hit; logic [31:0] target; logic [2:0] br_type; logic [15:0] GHR; logic T_NT; }                                                                                                                                                                                                                                                                                                 io_prediction_bits,
-  output                                                                                                                                                                                                                                                                                                                                                                                                     io_fetch_packet_ready,
-  input                                                                                                                                                                                                                                                                                                                                                                                                      io_fetch_packet_valid,
-  input  struct packed {logic [31:0] fetch_PC; logic [3:0] valid_bits; struct packed {logic [31:0] instruction; logic [3:0] packet_index; logic [5:0] ROB_index; }[3:0] instructions; logic [15:0] GHR; logic [6:0] NEXT; logic [6:0] TOS; }                                                                                                                                                                 io_fetch_packet_bits,
-  input  struct packed {logic [6:0] NEXT; logic [6:0] TOS; logic [31:0] ret_addr; }                                                                                                                                                                                                                                                                                                                          io_RAS_read,
-  input  struct packed {logic valid; struct packed {logic [31:0] fetch_PC; logic T_NT; logic [5:0] ROB_index; logic [2:0] br_type; logic [1:0] fetch_packet_index; logic is_misprediction; logic exception; logic [31:0] expected_PC; logic [15:0] GHR; logic [6:0] TOS; logic [6:0] NEXT; logic [7:0] free_list_front_pointer; logic [3:0][4:0] RDold; logic [3:0][6:0] RD; logic [3:0] RD_valid; } bits; } io_commit,
-  input                                                                                                                                                                                                                                                                                                                                                                                                      io_predictions_ready,
-  output                                                                                                                                                                                                                                                                                                                                                                                                     io_predictions_valid,
-  output struct packed {logic valid; logic [31:0] fetch_PC; logic is_misprediction; logic [31:0] predicted_PC; logic [5:0] ROB_index; logic T_NT; logic [2:0] br_type; logic [1:0] dominant_index; logic [31:0] resolved_PC; }                                                                                                                                                                               io_predictions_bits,
-  input                                                                                                                                                                                                                                                                                                                                                                                                      io_final_fetch_packet_ready,
-  output                                                                                                                                                                                                                                                                                                                                                                                                     io_final_fetch_packet_valid,
-  output struct packed {logic [31:0] fetch_PC; logic [3:0] valid_bits; struct packed {logic [31:0] instruction; logic [3:0] packet_index; logic [5:0] ROB_index; }[3:0] instructions; logic [15:0] GHR; logic [6:0] NEXT; logic [6:0] TOS; }                                                                                                                                                                 io_final_fetch_packet_bits,
-  output [15:0]                                                                                                                                                                                                                                                                                                                                                                                              io_GHR,
-  output struct packed {logic [31:0] call_addr; logic call; logic ret; }                                                                                                                                                                                                                                                                                                                                     io_RAS_update
+  input         clock,
+                reset,
+                io_flush,
+  output        io_revert_valid,
+  output [31:0] io_revert_bits_PC,
+  output        io_prediction_ready,
+  input         io_prediction_valid,
+                io_prediction_bits_hit,
+  input  [31:0] io_prediction_bits_target,
+  input  [2:0]  io_prediction_bits_br_type,
+  input  [15:0] io_prediction_bits_GHR,
+  input         io_prediction_bits_T_NT,
+  output        io_fetch_packet_ready,
+  input         io_fetch_packet_valid,
+  input  [31:0] io_fetch_packet_bits_fetch_PC,
+  input         io_fetch_packet_bits_valid_bits_0,
+                io_fetch_packet_bits_valid_bits_1,
+                io_fetch_packet_bits_valid_bits_2,
+                io_fetch_packet_bits_valid_bits_3,
+  input  [31:0] io_fetch_packet_bits_instructions_0_instruction,
+  input  [3:0]  io_fetch_packet_bits_instructions_0_packet_index,
+  input  [5:0]  io_fetch_packet_bits_instructions_0_ROB_index,
+  input  [31:0] io_fetch_packet_bits_instructions_1_instruction,
+  input  [3:0]  io_fetch_packet_bits_instructions_1_packet_index,
+  input  [5:0]  io_fetch_packet_bits_instructions_1_ROB_index,
+  input  [31:0] io_fetch_packet_bits_instructions_2_instruction,
+  input  [3:0]  io_fetch_packet_bits_instructions_2_packet_index,
+  input  [5:0]  io_fetch_packet_bits_instructions_2_ROB_index,
+  input  [31:0] io_fetch_packet_bits_instructions_3_instruction,
+  input  [3:0]  io_fetch_packet_bits_instructions_3_packet_index,
+  input  [5:0]  io_fetch_packet_bits_instructions_3_ROB_index,
+  input  [15:0] io_fetch_packet_bits_GHR,
+  input  [6:0]  io_fetch_packet_bits_NEXT,
+                io_fetch_packet_bits_TOS,
+                io_RAS_read_NEXT,
+                io_RAS_read_TOS,
+  input  [31:0] io_RAS_read_ret_addr,
+  input         io_commit_valid,
+  input  [31:0] io_commit_bits_fetch_PC,
+  input         io_commit_bits_T_NT,
+  input  [5:0]  io_commit_bits_ROB_index,
+  input  [2:0]  io_commit_bits_br_type,
+  input  [1:0]  io_commit_bits_fetch_packet_index,
+  input         io_commit_bits_is_misprediction,
+                io_commit_bits_exception,
+  input  [31:0] io_commit_bits_expected_PC,
+  input  [15:0] io_commit_bits_GHR,
+  input  [6:0]  io_commit_bits_TOS,
+                io_commit_bits_NEXT,
+  input  [7:0]  io_commit_bits_free_list_front_pointer,
+  input  [4:0]  io_commit_bits_RDold_0,
+                io_commit_bits_RDold_1,
+                io_commit_bits_RDold_2,
+                io_commit_bits_RDold_3,
+  input  [6:0]  io_commit_bits_RD_0,
+                io_commit_bits_RD_1,
+                io_commit_bits_RD_2,
+                io_commit_bits_RD_3,
+  input         io_commit_bits_RD_valid_0,
+                io_commit_bits_RD_valid_1,
+                io_commit_bits_RD_valid_2,
+                io_commit_bits_RD_valid_3,
+                io_predictions_ready,
+  output        io_predictions_valid,
+                io_predictions_bits_valid,
+  output [31:0] io_predictions_bits_fetch_PC,
+  output        io_predictions_bits_is_misprediction,
+  output [31:0] io_predictions_bits_predicted_PC,
+  output [5:0]  io_predictions_bits_ROB_index,
+  output        io_predictions_bits_T_NT,
+  output [2:0]  io_predictions_bits_br_type,
+  output [1:0]  io_predictions_bits_dominant_index,
+  output [31:0] io_predictions_bits_resolved_PC,
+  input         io_final_fetch_packet_ready,
+  output        io_final_fetch_packet_valid,
+  output [31:0] io_final_fetch_packet_bits_fetch_PC,
+  output        io_final_fetch_packet_bits_valid_bits_0,
+                io_final_fetch_packet_bits_valid_bits_1,
+                io_final_fetch_packet_bits_valid_bits_2,
+                io_final_fetch_packet_bits_valid_bits_3,
+  output [31:0] io_final_fetch_packet_bits_instructions_0_instruction,
+  output [3:0]  io_final_fetch_packet_bits_instructions_0_packet_index,
+  output [5:0]  io_final_fetch_packet_bits_instructions_0_ROB_index,
+  output [31:0] io_final_fetch_packet_bits_instructions_1_instruction,
+  output [3:0]  io_final_fetch_packet_bits_instructions_1_packet_index,
+  output [5:0]  io_final_fetch_packet_bits_instructions_1_ROB_index,
+  output [31:0] io_final_fetch_packet_bits_instructions_2_instruction,
+  output [3:0]  io_final_fetch_packet_bits_instructions_2_packet_index,
+  output [5:0]  io_final_fetch_packet_bits_instructions_2_ROB_index,
+  output [31:0] io_final_fetch_packet_bits_instructions_3_instruction,
+  output [3:0]  io_final_fetch_packet_bits_instructions_3_packet_index,
+  output [5:0]  io_final_fetch_packet_bits_instructions_3_ROB_index,
+  output [15:0] io_final_fetch_packet_bits_GHR,
+  output [6:0]  io_final_fetch_packet_bits_NEXT,
+                io_final_fetch_packet_bits_TOS,
+  output [15:0] io_GHR,
+  output [31:0] io_RAS_update_call_addr,
+  output        io_RAS_update_call,
+                io_RAS_update_ret
 );
 
-  reg         io_fetch_packet_ready_REG;
-  reg         io_prediction_ready_REG;
-  wire [31:0] _GEN;
-  wire        _predictions_out_bits_T_NT_T_2;
-  wire [31:0] _predictions_out_bits_resolved_PC_T_1;
-  wire [2:0]  dominantbr_type_t;
-  wire [3:0]  is_control;
-  wire        is_JALR;
-  wire        is_JAL;
-  wire [3:0]  T_NT;
-  wire        _final_fetch_packet_out_Q_io_enq_ready;
-  wire
-    struct packed {logic valid; logic [31:0] fetch_PC; logic is_misprediction; logic [31:0] predicted_PC; logic [5:0] ROB_index; logic T_NT; logic [2:0] br_type; logic [1:0] dominant_index; logic [31:0] resolved_PC; }
-    _GEN_0 =
-    '{valid: (1'h0),
-      fetch_PC: io_fetch_packet_bits.fetch_PC,
-      is_misprediction: (1'h0),
-      predicted_PC: _GEN,
-      ROB_index: (6'h0),
-      T_NT: _predictions_out_bits_T_NT_T_2,
-      br_type: dominantbr_type_t,
-      dominant_index: (2'h3),
-      resolved_PC: _predictions_out_bits_resolved_PC_T_1};
-  wire        _is_BTB_taken_T_9 = io_prediction_valid & io_prediction_bits.hit;
-  wire        _curr_is_BRANCH_T =
-    io_fetch_packet_bits.instructions[2'h3].instruction[6:2] == 5'h18;
-  wire        _curr_is_JALR_T =
-    io_fetch_packet_bits.instructions[2'h3].instruction[6:2] == 5'h19;
-  wire        _curr_is_JAL_T =
-    io_fetch_packet_bits.instructions[2'h3].instruction[6:2] == 5'h1B;
-  wire        curr_is_JAL =
-    _curr_is_JAL_T & io_fetch_packet_bits.valid_bits[2'h3] & io_fetch_packet_valid;
-  wire        curr_is_JALR =
-    _curr_is_JALR_T & io_fetch_packet_bits.valid_bits[2'h3] & io_fetch_packet_valid;
-  wire        curr_is_BRANCH =
-    _curr_is_BRANCH_T & io_fetch_packet_bits.valid_bits[2'h3] & io_fetch_packet_valid;
-  wire        _curr_is_CALL_T_2 =
-    io_fetch_packet_bits.instructions[2'h3].instruction[11:7] == 5'h1;
-  wire        is_taken =
-    curr_is_BRANCH & _is_BTB_taken_T_9 & io_prediction_bits.T_NT
-    & io_fetch_packet_bits.valid_bits[2'h3] & io_fetch_packet_valid | curr_is_JALR
+  reg              io_fetch_packet_ready_REG;
+  reg              io_prediction_ready_REG;
+  wire             is_JALR;
+  wire             is_JAL;
+  wire             _final_fetch_packet_out_Q_io_enq_ready;
+  wire             _is_BTB_taken_T_9 = io_prediction_valid & io_prediction_bits_hit;
+  wire             curr_is_JAL =
+    io_fetch_packet_bits_instructions_3_instruction[6:2] == 5'h1B
+    & io_fetch_packet_bits_valid_bits_3 & io_fetch_packet_valid;
+  wire             curr_is_JALR =
+    io_fetch_packet_bits_instructions_3_instruction[6:2] == 5'h19
+    & io_fetch_packet_bits_valid_bits_3 & io_fetch_packet_valid;
+  wire             curr_is_BRANCH =
+    io_fetch_packet_bits_instructions_3_instruction[6:2] == 5'h18
+    & io_fetch_packet_bits_valid_bits_3 & io_fetch_packet_valid;
+  wire             _curr_is_CALL_T_2 =
+    io_fetch_packet_bits_instructions_3_instruction[11:7] == 5'h1;
+  wire             is_taken =
+    curr_is_BRANCH & _is_BTB_taken_T_9 & io_prediction_bits_T_NT
+    & io_fetch_packet_bits_valid_bits_3 & io_fetch_packet_valid | curr_is_JALR
     | curr_is_JAL;
-  wire        _curr_is_BRANCH_T_2 =
-    io_fetch_packet_bits.instructions[2'h2].instruction[6:2] == 5'h18;
-  wire        _curr_is_JALR_T_2 =
-    io_fetch_packet_bits.instructions[2'h2].instruction[6:2] == 5'h19;
-  wire        _curr_is_JAL_T_2 =
-    io_fetch_packet_bits.instructions[2'h2].instruction[6:2] == 5'h1B;
-  wire        curr_is_JAL_1 =
-    _curr_is_JAL_T_2 & io_fetch_packet_bits.valid_bits[2'h2] & io_fetch_packet_valid;
-  wire        curr_is_JALR_1 =
-    _curr_is_JALR_T_2 & io_fetch_packet_bits.valid_bits[2'h2] & io_fetch_packet_valid;
-  wire        curr_is_BRANCH_1 =
-    _curr_is_BRANCH_T_2 & io_fetch_packet_bits.valid_bits[2'h2] & io_fetch_packet_valid;
-  wire        _curr_is_CALL_T_6 =
-    io_fetch_packet_bits.instructions[2'h2].instruction[11:7] == 5'h1;
-  wire        is_taken_1 =
-    curr_is_BRANCH_1 & _is_BTB_taken_T_9 & io_prediction_bits.T_NT
-    & io_fetch_packet_bits.valid_bits[2'h2] & io_fetch_packet_valid | curr_is_JALR_1
+  wire             is_control_3 = curr_is_BRANCH | curr_is_JAL | curr_is_JALR;
+  wire             curr_is_JAL_1 =
+    io_fetch_packet_bits_instructions_2_instruction[6:2] == 5'h1B
+    & io_fetch_packet_bits_valid_bits_2 & io_fetch_packet_valid;
+  wire             curr_is_JALR_1 =
+    io_fetch_packet_bits_instructions_2_instruction[6:2] == 5'h19
+    & io_fetch_packet_bits_valid_bits_2 & io_fetch_packet_valid;
+  wire             curr_is_BRANCH_1 =
+    io_fetch_packet_bits_instructions_2_instruction[6:2] == 5'h18
+    & io_fetch_packet_bits_valid_bits_2 & io_fetch_packet_valid;
+  wire             _curr_is_CALL_T_6 =
+    io_fetch_packet_bits_instructions_2_instruction[11:7] == 5'h1;
+  wire             T_NT_2 =
+    curr_is_BRANCH_1 & _is_BTB_taken_T_9 & io_prediction_bits_T_NT
+    & io_fetch_packet_bits_valid_bits_2 & io_fetch_packet_valid | curr_is_JALR_1
     | curr_is_JAL_1;
-  wire        _curr_is_BRANCH_T_4 =
-    io_fetch_packet_bits.instructions[2'h1].instruction[6:2] == 5'h18;
-  wire        _curr_is_JALR_T_4 =
-    io_fetch_packet_bits.instructions[2'h1].instruction[6:2] == 5'h19;
-  wire        _curr_is_JAL_T_4 =
-    io_fetch_packet_bits.instructions[2'h1].instruction[6:2] == 5'h1B;
-  wire        curr_is_JAL_2 =
-    _curr_is_JAL_T_4 & io_fetch_packet_bits.valid_bits[2'h1] & io_fetch_packet_valid;
-  wire        curr_is_JALR_2 =
-    _curr_is_JALR_T_4 & io_fetch_packet_bits.valid_bits[2'h1] & io_fetch_packet_valid;
-  wire        curr_is_BRANCH_2 =
-    _curr_is_BRANCH_T_4 & io_fetch_packet_bits.valid_bits[2'h1] & io_fetch_packet_valid;
-  wire        _curr_is_CALL_T_10 =
-    io_fetch_packet_bits.instructions[2'h1].instruction[11:7] == 5'h1;
-  wire        is_taken_2 =
-    curr_is_BRANCH_2 & _is_BTB_taken_T_9 & io_prediction_bits.T_NT
-    & io_fetch_packet_bits.valid_bits[2'h1] & io_fetch_packet_valid | curr_is_JALR_2
+  wire             is_control_2 = curr_is_BRANCH_1 | curr_is_JAL_1 | curr_is_JALR_1;
+  wire             curr_is_JAL_2 =
+    io_fetch_packet_bits_instructions_1_instruction[6:2] == 5'h1B
+    & io_fetch_packet_bits_valid_bits_1 & io_fetch_packet_valid;
+  wire             curr_is_JALR_2 =
+    io_fetch_packet_bits_instructions_1_instruction[6:2] == 5'h19
+    & io_fetch_packet_bits_valid_bits_1 & io_fetch_packet_valid;
+  wire             curr_is_BRANCH_2 =
+    io_fetch_packet_bits_instructions_1_instruction[6:2] == 5'h18
+    & io_fetch_packet_bits_valid_bits_1 & io_fetch_packet_valid;
+  wire             _curr_is_CALL_T_10 =
+    io_fetch_packet_bits_instructions_1_instruction[11:7] == 5'h1;
+  wire             T_NT_1 =
+    curr_is_BRANCH_2 & _is_BTB_taken_T_9 & io_prediction_bits_T_NT
+    & io_fetch_packet_bits_valid_bits_1 & io_fetch_packet_valid | curr_is_JALR_2
     | curr_is_JAL_2;
-  wire        _curr_is_BRANCH_T_6 =
-    io_fetch_packet_bits.instructions[2'h0].instruction[6:2] == 5'h18;
-  wire        _curr_is_JALR_T_6 =
-    io_fetch_packet_bits.instructions[2'h0].instruction[6:2] == 5'h19;
-  wire        _curr_is_JAL_T_6 =
-    io_fetch_packet_bits.instructions[2'h0].instruction[6:2] == 5'h1B;
-  wire        curr_is_JAL_3 =
-    _curr_is_JAL_T_6 & io_fetch_packet_bits.valid_bits[2'h0] & io_fetch_packet_valid;
-  wire        curr_is_JALR_3 =
-    _curr_is_JALR_T_6 & io_fetch_packet_bits.valid_bits[2'h0] & io_fetch_packet_valid;
-  wire        curr_is_BRANCH_3 =
-    _curr_is_BRANCH_T_6 & io_fetch_packet_bits.valid_bits[2'h0] & io_fetch_packet_valid;
-  wire        _curr_is_CALL_T_14 =
-    io_fetch_packet_bits.instructions[2'h0].instruction[11:7] == 5'h1;
-  wire        is_taken_3 =
-    curr_is_BRANCH_3 & _is_BTB_taken_T_9 & io_prediction_bits.T_NT
-    & io_fetch_packet_bits.valid_bits[2'h0] & io_fetch_packet_valid | curr_is_JALR_3
+  wire             curr_is_JAL_3 =
+    io_fetch_packet_bits_instructions_0_instruction[6:2] == 5'h1B
+    & io_fetch_packet_bits_valid_bits_0 & io_fetch_packet_valid;
+  wire             curr_is_JALR_3 =
+    io_fetch_packet_bits_instructions_0_instruction[6:2] == 5'h19
+    & io_fetch_packet_bits_valid_bits_0 & io_fetch_packet_valid;
+  wire             curr_is_BRANCH_3 =
+    io_fetch_packet_bits_instructions_0_instruction[6:2] == 5'h18
+    & io_fetch_packet_bits_valid_bits_0 & io_fetch_packet_valid;
+  wire             _curr_is_CALL_T_14 =
+    io_fetch_packet_bits_instructions_0_instruction[11:7] == 5'h1;
+  wire             T_NT_0 =
+    curr_is_BRANCH_3 & _is_BTB_taken_T_9 & io_prediction_bits_T_NT
+    & io_fetch_packet_bits_valid_bits_0 & io_fetch_packet_valid | curr_is_JALR_3
     | curr_is_JAL_3;
-  wire [3:0]  _GEN_1 = io_fetch_packet_bits.valid_bits;
-  wire [3:0]  _GEN_2 = {4{io_fetch_packet_valid}};
-  wire [3:0]  _GEN_3 =
-    {{_curr_is_BRANCH_T},
-     {_curr_is_BRANCH_T_2},
-     {_curr_is_BRANCH_T_4},
-     {_curr_is_BRANCH_T_6}} & _GEN_1 & _GEN_2;
-  wire [3:0]  _GEN_4 =
-    {{_curr_is_JALR_T}, {_curr_is_JALR_T_2}, {_curr_is_JALR_T_4}, {_curr_is_JALR_T_6}}
-    & _GEN_1 & _GEN_2;
-  wire [3:0]  _GEN_5 =
-    {{_curr_is_JAL_T}, {_curr_is_JAL_T_2}, {_curr_is_JAL_T_4}, {_curr_is_JAL_T_6}}
-    & _GEN_1 & _GEN_2;
-  assign T_NT =
-    _GEN_3 & {4{io_prediction_valid}} & {4{io_prediction_bits.hit}}
-    & {4{io_prediction_bits.T_NT}} & _GEN_1 & _GEN_2 | _GEN_4 | _GEN_5;
   assign is_JAL =
-    is_taken_3
+    T_NT_0
       ? curr_is_JAL_3
-      : is_taken_2 ? curr_is_JAL_2 : is_taken_1 ? curr_is_JAL_1 : is_taken & curr_is_JAL;
+      : T_NT_1 ? curr_is_JAL_2 : T_NT_2 ? curr_is_JAL_1 : is_taken & curr_is_JAL;
   assign is_JALR =
-    is_taken_3
+    T_NT_0
       ? curr_is_JALR_3
-      : is_taken_2
-          ? curr_is_JALR_2
-          : is_taken_1 ? curr_is_JALR_1 : is_taken & curr_is_JALR;
-  wire        is_BRANCH =
-    is_taken_3
+      : T_NT_1 ? curr_is_JALR_2 : T_NT_2 ? curr_is_JALR_1 : is_taken & curr_is_JALR;
+  wire             is_BRANCH =
+    T_NT_0
       ? curr_is_BRANCH_3
-      : is_taken_2
-          ? curr_is_BRANCH_2
-          : is_taken_1 ? curr_is_BRANCH_1 : is_taken & curr_is_BRANCH;
-  wire        is_RET =
-    is_taken_3
-      ? is_JALR & io_fetch_packet_bits.instructions[2'h0].instruction[11:7] == 5'h0
-        & io_fetch_packet_bits.instructions[2'h0].instruction[19:15] == 5'h1
-      : is_taken_2
-          ? is_JALR & io_fetch_packet_bits.instructions[2'h1].instruction[11:7] == 5'h0
-            & io_fetch_packet_bits.instructions[2'h1].instruction[19:15] == 5'h1
-          : is_taken_1
-              ? is_JALR
-                & io_fetch_packet_bits.instructions[2'h2].instruction[11:7] == 5'h0
-                & io_fetch_packet_bits.instructions[2'h2].instruction[19:15] == 5'h1
+      : T_NT_1 ? curr_is_BRANCH_2 : T_NT_2 ? curr_is_BRANCH_1 : is_taken & curr_is_BRANCH;
+  wire             is_RET =
+    T_NT_0
+      ? is_JALR & io_fetch_packet_bits_instructions_0_instruction[11:7] == 5'h0
+        & io_fetch_packet_bits_instructions_0_instruction[19:15] == 5'h1
+      : T_NT_1
+          ? is_JALR & io_fetch_packet_bits_instructions_1_instruction[11:7] == 5'h0
+            & io_fetch_packet_bits_instructions_1_instruction[19:15] == 5'h1
+          : T_NT_2
+              ? is_JALR & io_fetch_packet_bits_instructions_2_instruction[11:7] == 5'h0
+                & io_fetch_packet_bits_instructions_2_instruction[19:15] == 5'h1
               : is_taken & is_JALR
-                & io_fetch_packet_bits.instructions[2'h3].instruction[11:7] == 5'h0
-                & io_fetch_packet_bits.instructions[2'h3].instruction[19:15] == 5'h1;
-  wire        is_CALL =
-    is_taken_3
+                & io_fetch_packet_bits_instructions_3_instruction[11:7] == 5'h0
+                & io_fetch_packet_bits_instructions_3_instruction[19:15] == 5'h1;
+  wire             is_CALL =
+    T_NT_0
       ? is_JALR & _curr_is_CALL_T_14 | is_JAL & _curr_is_CALL_T_14
-      : is_taken_2
+      : T_NT_1
           ? is_JALR & _curr_is_CALL_T_10 | is_JAL & _curr_is_CALL_T_10
-          : is_taken_1
+          : T_NT_2
               ? is_JALR & _curr_is_CALL_T_6 | is_JAL & _curr_is_CALL_T_6
               : is_taken & (is_JALR & _curr_is_CALL_T_2 | is_JAL & _curr_is_CALL_T_2);
-  assign is_control = _GEN_3 | _GEN_5 | _GEN_4;
-  wire [1:0]  dominant_branch_index =
-    is_taken_3 ? 2'h0 : is_taken_2 ? 2'h1 : {1'h1, ~is_taken_1};
-  wire [31:0] dominant_instruction =
-    io_fetch_packet_bits.instructions[dominant_branch_index].instruction;
-  wire [1:0]  _GEN_6 = {1'h0, T_NT[2'h0]};
-  wire [1:0]  _GEN_7 = {1'h0, T_NT[2'h1]};
-  wire [31:0] masked_addr = io_fetch_packet_bits.fetch_PC & 32'hFFFFFFF0;
-  wire [8:0]  _GEN_8 = {9{dominant_instruction[31]}};
-  wire [20:0] imm_imm =
+  wire [1:0]       dominant_branch_index =
+    T_NT_0 ? 2'h0 : T_NT_1 ? 2'h1 : {1'h1, ~T_NT_2};
+  wire [3:0][31:0] _GEN =
+    {{io_fetch_packet_bits_instructions_3_instruction},
+     {io_fetch_packet_bits_instructions_2_instruction},
+     {io_fetch_packet_bits_instructions_1_instruction},
+     {io_fetch_packet_bits_instructions_0_instruction}};
+  wire [31:0]      dominant_instruction = _GEN[dominant_branch_index];
+  wire [1:0]       _GEN_0 = {1'h0, T_NT_0};
+  wire [1:0]       _GEN_1 = {1'h0, T_NT_1};
+  wire [31:0]      masked_addr = io_fetch_packet_bits_fetch_PC & 32'hFFFFFFF0;
+  wire [8:0]       _GEN_2 = {9{dominant_instruction[31]}};
+  wire [20:0]      imm_imm =
     dominant_instruction[6:0] == 7'h63
       ? {{9{dominant_instruction[31]}},
          dominant_instruction[7],
@@ -225,122 +258,180 @@ module predecoder(
              1'h0}
           : dominant_instruction[6:0] == 7'h13 | dominant_instruction[6:0] == 7'h3
             | dominant_instruction[6:0] == 7'h67
-              ? {_GEN_8, dominant_instruction[31:20]}
+              ? {_GEN_2, dominant_instruction[31:20]}
               : dominant_instruction[6:0] == 7'h23
-                  ? {_GEN_8, dominant_instruction[31:25], dominant_instruction[11:7]}
+                  ? {_GEN_2, dominant_instruction[31:25], dominant_instruction[11:7]}
                   : dominant_instruction[6:0] == 7'h17
                     | dominant_instruction[6:0] == 7'h37
                       ? {dominant_instruction[31], dominant_instruction[31:12]}
                       : 21'h0;
-  wire [31:0] imm = is_RET | ~is_JAL ? 32'h0 : {{11{imm_imm[20]}}, imm_imm};
-  wire [31:0] _GEN_9 = {28'h0, dominant_branch_index, 2'h0};
-  wire [31:0] target_address =
+  wire [31:0]      imm = is_RET | ~is_JAL ? 32'h0 : {{11{imm_imm[20]}}, imm_imm};
+  wire [31:0]      _GEN_3 = {28'h0, dominant_branch_index, 2'h0};
+  wire [31:0]      target_address =
     is_RET
-      ? io_RAS_read.ret_addr
+      ? io_RAS_read_ret_addr
       : is_JAL
-          ? imm + masked_addr + _GEN_9
-          : is_JALR & io_prediction_bits.hit & io_prediction_valid | is_BRANCH
-            & io_prediction_bits.hit & io_prediction_valid
-              ? io_prediction_bits.target
-              : io_fetch_packet_bits.fetch_PC
-                + {26'h0, 6'h10 - {2'h0, io_fetch_packet_bits.fetch_PC[3:0]}};
-  assign dominantbr_type_t =
-    is_BRANCH
-      ? 3'h1
-      : is_RET ? 3'h4 : is_CALL ? 3'h5 : is_JALR ? 3'h3 : {1'h0, is_JAL, 1'h0};
-  reg  [31:0] expected_next_PC;
-  wire        _input_fetch_packet_valid_T =
+          ? imm + masked_addr + _GEN_3
+          : is_JALR & io_prediction_bits_hit & io_prediction_valid | is_BRANCH
+            & io_prediction_bits_hit & io_prediction_valid
+              ? io_prediction_bits_target
+              : io_fetch_packet_bits_fetch_PC
+                + {26'h0, 6'h10 - {2'h0, io_fetch_packet_bits_fetch_PC[3:0]}};
+  reg  [31:0]      expected_next_PC;
+  wire             _input_fetch_packet_valid_T =
     io_fetch_packet_ready_REG & io_fetch_packet_valid;
-  wire        _input_fetch_packet_valid_T_1 =
+  wire             _input_fetch_packet_valid_T_1 =
     io_prediction_ready_REG & io_prediction_valid;
-  wire        output_ready = io_final_fetch_packet_ready & io_predictions_ready;
-  wire        input_fetch_packet_valid =
+  wire             output_ready = io_final_fetch_packet_ready & io_predictions_ready;
+  wire             input_fetch_packet_valid =
     _input_fetch_packet_valid_T & (_input_fetch_packet_valid_T_1 | ~io_prediction_valid)
-    & expected_next_PC == io_fetch_packet_bits.fetch_PC & ~io_flush;
-  reg  [15:0] GHR;
-  wire        _push_FTQ_T = is_control[2'h0] | is_control[2'h1];
-  wire        _GEN_10 = _push_FTQ_T | is_control[2'h2] | is_control[2'h3];
-  wire [15:0] _GEN_11 = {GHR[14:0], T_NT[2'h0] | T_NT[2'h1] | T_NT[2'h2] | T_NT[2'h3]};
-  assign _predictions_out_bits_resolved_PC_T_1 = io_fetch_packet_bits.fetch_PC + 32'h10;
-  assign _predictions_out_bits_T_NT_T_2 =
-    T_NT[2'h0] | T_NT[2'h1] | T_NT[2'h2] | T_NT[2'h3];
-  assign _GEN =
-    _predictions_out_bits_T_NT_T_2
-      ? target_address
-      : io_fetch_packet_bits.fetch_PC + 32'h10;
-  wire struct packed {logic [31:0] PC; } _GEN_12 = '{PC: expected_next_PC};
-  wire
-    struct packed {logic [31:0] fetch_PC; logic [3:0] valid_bits; struct packed {logic [31:0] instruction; logic [3:0] packet_index; logic [5:0] ROB_index; }[3:0] instructions; logic [15:0] GHR; logic [6:0] NEXT; logic [6:0] TOS; }
-    _GEN_13 =
-    '{fetch_PC: masked_addr,
-      valid_bits:
-        (_GEN_1
-         & {{io_fetch_packet_valid & io_fetch_packet_bits.valid_bits[2'h3]},
-            {io_fetch_packet_valid & io_fetch_packet_bits.valid_bits[2'h2]},
-            {io_fetch_packet_valid & io_fetch_packet_bits.valid_bits[2'h1]},
-            {io_fetch_packet_valid}}
-         & {{_GEN_6 + _GEN_7 + {1'h0, T_NT[2'h2]} == 2'h0},
-            {_GEN_6 + _GEN_7 == 2'h0},
-            {~T_NT[2'h0]},
-            {io_fetch_packet_bits.valid_bits[2'h0]}}),
-      instructions: io_fetch_packet_bits.instructions,
-      GHR: GHR,
-      NEXT: io_RAS_read.NEXT,
-      TOS: io_RAS_read.TOS};
+    & expected_next_PC == io_fetch_packet_bits_fetch_PC & ~io_flush;
+  reg  [15:0]      GHR;
+  wire             _push_FTQ_T =
+    curr_is_BRANCH_3 | curr_is_JAL_3 | curr_is_JALR_3 | curr_is_BRANCH_2 | curr_is_JAL_2
+    | curr_is_JALR_2;
+  wire             _GEN_4 = _push_FTQ_T | is_control_2 | is_control_3;
+  wire [15:0]      _GEN_5 = {GHR[14:0], T_NT_0 | T_NT_1 | T_NT_2 | is_taken};
+  wire             predictions_out_bits_T_NT = T_NT_0 | T_NT_1 | T_NT_2 | is_taken;
   always @(posedge clock) begin
     if (reset) begin
       expected_next_PC <= 32'h0;
       GHR <= 16'h0;
     end
     else begin
-      if (io_commit.valid & io_commit.bits.is_misprediction)
-        expected_next_PC <= io_commit.bits.fetch_PC;
+      if (io_commit_valid & io_commit_bits_is_misprediction)
+        expected_next_PC <= io_commit_bits_fetch_PC;
       else if (input_fetch_packet_valid & _final_fetch_packet_out_Q_io_enq_ready)
         expected_next_PC <= target_address;
-      if (io_commit.bits.is_misprediction)
-        GHR <= io_commit.bits.GHR;
-      else if (_GEN_10)
-        GHR <= _GEN_11;
+      if (io_commit_bits_is_misprediction)
+        GHR <= io_commit_bits_GHR;
+      else if (_GEN_4)
+        GHR <= _GEN_5;
     end
     io_prediction_ready_REG <= output_ready;
     io_fetch_packet_ready_REG <= output_ready;
   end // always @(posedge)
   Queue2_FTQ_entry predictions_out_Q (
-    .clock        (clock),
-    .reset        (reset),
-    .io_enq_ready (/* unused */),
+    .clock                        (clock),
+    .reset                        (reset),
     .io_enq_valid
-      ((_push_FTQ_T | is_control[2'h2] | is_control[2'h3]) & input_fetch_packet_valid),
-    .io_enq_bits  (_GEN_0),
-    .io_deq_ready (output_ready),
-    .io_deq_valid (io_predictions_valid),
-    .io_deq_bits  (io_predictions_bits),
-    .io_count     (/* unused */),
-    .io_flush     (io_flush)
+      ((_push_FTQ_T | is_control_2 | is_control_3) & input_fetch_packet_valid),
+    .io_enq_bits_valid            (1'h0),
+    .io_enq_bits_fetch_PC         (io_fetch_packet_bits_fetch_PC),
+    .io_enq_bits_is_misprediction (1'h0),
+    .io_enq_bits_predicted_PC
+      (predictions_out_bits_T_NT
+         ? target_address
+         : io_fetch_packet_bits_fetch_PC + 32'h10),
+    .io_enq_bits_ROB_index        (6'h0),
+    .io_enq_bits_T_NT             (predictions_out_bits_T_NT),
+    .io_enq_bits_br_type
+      (is_BRANCH
+         ? 3'h1
+         : is_RET ? 3'h4 : is_CALL ? 3'h5 : is_JALR ? 3'h3 : {1'h0, is_JAL, 1'h0}),
+    .io_enq_bits_dominant_index   (2'h3),
+    .io_enq_bits_resolved_PC      (io_fetch_packet_bits_fetch_PC + 32'h10),
+    .io_deq_ready                 (output_ready),
+    .io_deq_valid                 (io_predictions_valid),
+    .io_deq_bits_valid            (io_predictions_bits_valid),
+    .io_deq_bits_fetch_PC         (io_predictions_bits_fetch_PC),
+    .io_deq_bits_is_misprediction (io_predictions_bits_is_misprediction),
+    .io_deq_bits_predicted_PC     (io_predictions_bits_predicted_PC),
+    .io_deq_bits_ROB_index        (io_predictions_bits_ROB_index),
+    .io_deq_bits_T_NT             (io_predictions_bits_T_NT),
+    .io_deq_bits_br_type          (io_predictions_bits_br_type),
+    .io_deq_bits_dominant_index   (io_predictions_bits_dominant_index),
+    .io_deq_bits_resolved_PC      (io_predictions_bits_resolved_PC),
+    .io_flush                     (io_flush)
   );
   Queue2_fetch_packet final_fetch_packet_out_Q (
-    .clock        (clock),
-    .reset        (reset),
-    .io_enq_ready (_final_fetch_packet_out_Q_io_enq_ready),
-    .io_enq_valid (input_fetch_packet_valid),
-    .io_enq_bits  (_GEN_13),
-    .io_deq_ready (output_ready),
-    .io_deq_valid (io_final_fetch_packet_valid),
-    .io_deq_bits  (io_final_fetch_packet_bits),
-    .io_count     (/* unused */),
-    .io_flush     (io_flush)
+    .clock                                   (clock),
+    .reset                                   (reset),
+    .io_enq_ready                            (_final_fetch_packet_out_Q_io_enq_ready),
+    .io_enq_valid                            (input_fetch_packet_valid),
+    .io_enq_bits_fetch_PC                    (masked_addr),
+    .io_enq_bits_valid_bits_0
+      (io_fetch_packet_bits_valid_bits_0 & io_fetch_packet_valid),
+    .io_enq_bits_valid_bits_1
+      (io_fetch_packet_bits_valid_bits_1 & io_fetch_packet_valid & ~T_NT_0),
+    .io_enq_bits_valid_bits_2
+      (io_fetch_packet_bits_valid_bits_2 & io_fetch_packet_valid & _GEN_0
+       + _GEN_1 == 2'h0),
+    .io_enq_bits_valid_bits_3
+      (io_fetch_packet_bits_valid_bits_3 & io_fetch_packet_valid & _GEN_0 + _GEN_1
+       + {1'h0, T_NT_2} == 2'h0),
+    .io_enq_bits_instructions_0_instruction
+      (io_fetch_packet_bits_instructions_0_instruction),
+    .io_enq_bits_instructions_0_packet_index
+      (io_fetch_packet_bits_instructions_0_packet_index),
+    .io_enq_bits_instructions_0_ROB_index
+      (io_fetch_packet_bits_instructions_0_ROB_index),
+    .io_enq_bits_instructions_1_instruction
+      (io_fetch_packet_bits_instructions_1_instruction),
+    .io_enq_bits_instructions_1_packet_index
+      (io_fetch_packet_bits_instructions_1_packet_index),
+    .io_enq_bits_instructions_1_ROB_index
+      (io_fetch_packet_bits_instructions_1_ROB_index),
+    .io_enq_bits_instructions_2_instruction
+      (io_fetch_packet_bits_instructions_2_instruction),
+    .io_enq_bits_instructions_2_packet_index
+      (io_fetch_packet_bits_instructions_2_packet_index),
+    .io_enq_bits_instructions_2_ROB_index
+      (io_fetch_packet_bits_instructions_2_ROB_index),
+    .io_enq_bits_instructions_3_instruction
+      (io_fetch_packet_bits_instructions_3_instruction),
+    .io_enq_bits_instructions_3_packet_index
+      (io_fetch_packet_bits_instructions_3_packet_index),
+    .io_enq_bits_instructions_3_ROB_index
+      (io_fetch_packet_bits_instructions_3_ROB_index),
+    .io_enq_bits_GHR                         (GHR),
+    .io_enq_bits_NEXT                        (io_RAS_read_NEXT),
+    .io_enq_bits_TOS                         (io_RAS_read_TOS),
+    .io_deq_ready                            (output_ready),
+    .io_deq_valid                            (io_final_fetch_packet_valid),
+    .io_deq_bits_fetch_PC                    (io_final_fetch_packet_bits_fetch_PC),
+    .io_deq_bits_valid_bits_0                (io_final_fetch_packet_bits_valid_bits_0),
+    .io_deq_bits_valid_bits_1                (io_final_fetch_packet_bits_valid_bits_1),
+    .io_deq_bits_valid_bits_2                (io_final_fetch_packet_bits_valid_bits_2),
+    .io_deq_bits_valid_bits_3                (io_final_fetch_packet_bits_valid_bits_3),
+    .io_deq_bits_instructions_0_instruction
+      (io_final_fetch_packet_bits_instructions_0_instruction),
+    .io_deq_bits_instructions_0_packet_index
+      (io_final_fetch_packet_bits_instructions_0_packet_index),
+    .io_deq_bits_instructions_0_ROB_index
+      (io_final_fetch_packet_bits_instructions_0_ROB_index),
+    .io_deq_bits_instructions_1_instruction
+      (io_final_fetch_packet_bits_instructions_1_instruction),
+    .io_deq_bits_instructions_1_packet_index
+      (io_final_fetch_packet_bits_instructions_1_packet_index),
+    .io_deq_bits_instructions_1_ROB_index
+      (io_final_fetch_packet_bits_instructions_1_ROB_index),
+    .io_deq_bits_instructions_2_instruction
+      (io_final_fetch_packet_bits_instructions_2_instruction),
+    .io_deq_bits_instructions_2_packet_index
+      (io_final_fetch_packet_bits_instructions_2_packet_index),
+    .io_deq_bits_instructions_2_ROB_index
+      (io_final_fetch_packet_bits_instructions_2_ROB_index),
+    .io_deq_bits_instructions_3_instruction
+      (io_final_fetch_packet_bits_instructions_3_instruction),
+    .io_deq_bits_instructions_3_packet_index
+      (io_final_fetch_packet_bits_instructions_3_packet_index),
+    .io_deq_bits_instructions_3_ROB_index
+      (io_final_fetch_packet_bits_instructions_3_ROB_index),
+    .io_deq_bits_GHR                         (io_final_fetch_packet_bits_GHR),
+    .io_deq_bits_NEXT                        (io_final_fetch_packet_bits_NEXT),
+    .io_deq_bits_TOS                         (io_final_fetch_packet_bits_TOS),
+    .io_flush                                (io_flush)
   );
-  assign io_revert =
-    '{valid:
-        (_input_fetch_packet_valid_T & _input_fetch_packet_valid_T_1 & ~io_flush
-         & expected_next_PC != io_fetch_packet_bits.fetch_PC),
-      bits: _GEN_12};
+  assign io_revert_valid =
+    _input_fetch_packet_valid_T & _input_fetch_packet_valid_T_1 & ~io_flush
+    & expected_next_PC != io_fetch_packet_bits_fetch_PC;
+  assign io_revert_bits_PC = expected_next_PC;
   assign io_prediction_ready = io_prediction_ready_REG;
   assign io_fetch_packet_ready = io_fetch_packet_ready_REG;
-  assign io_GHR = _GEN_10 ? _GEN_11 : GHR;
-  assign io_RAS_update =
-    '{call_addr: (masked_addr + _GEN_9 + 32'h4),
-      call: (is_CALL & input_fetch_packet_valid),
-      ret: (is_RET & input_fetch_packet_valid)};
+  assign io_GHR = _GEN_4 ? _GEN_5 : GHR;
+  assign io_RAS_update_call_addr = masked_addr + _GEN_3 + 32'h4;
+  assign io_RAS_update_call = is_CALL & input_fetch_packet_valid;
+  assign io_RAS_update_ret = is_RET & input_fetch_packet_valid;
 endmodule
 

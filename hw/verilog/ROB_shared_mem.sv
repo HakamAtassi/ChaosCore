@@ -29,47 +29,26 @@
 `endif // not def STOP_COND_
 
 module ROB_shared_mem(
-  input                                                                                                                                    clock,
-  input  [5:0]                                                                                                                             io_addrA,
-  input  struct packed {logic [31:0] fetch_PC; logic [7:0] free_list_front_pointer; logic [15:0] GHR; logic [6:0] NEXT; logic [6:0] TOS; } io_writeDataA,
-  input                                                                                                                                    io_writeEnableA,
-  input  [5:0]                                                                                                                             io_addrB,
-  output struct packed {logic [31:0] fetch_PC; logic [7:0] free_list_front_pointer; logic [15:0] GHR; logic [6:0] NEXT; logic [6:0] TOS; } io_readDataB,
-  input  [5:0]                                                                                                                             io_addrC,
-  output struct packed {logic [31:0] fetch_PC; logic [7:0] free_list_front_pointer; logic [15:0] GHR; logic [6:0] NEXT; logic [6:0] TOS; } io_readDataC
+  input         clock,
+  input  [5:0]  io_addrA,
+  input  [31:0] io_writeDataA_fetch_PC,
+  input  [7:0]  io_writeDataA_free_list_front_pointer,
+  input  [15:0] io_writeDataA_GHR,
+  input  [6:0]  io_writeDataA_NEXT,
+                io_writeDataA_TOS,
+  input         io_writeEnableA,
+  input  [5:0]  io_addrB,
+  output [31:0] io_readDataB_fetch_PC,
+  output [7:0]  io_readDataB_free_list_front_pointer,
+  output [15:0] io_readDataB_GHR,
+  output [6:0]  io_readDataB_NEXT,
+                io_readDataB_TOS,
+  input  [5:0]  io_addrC,
+  output [31:0] io_readDataC_fetch_PC
 );
 
-  wire [6:0]  _GEN;
-  wire [6:0]  _GEN_0;
-  wire [15:0] _GEN_1;
-  wire [7:0]  _GEN_2;
-  wire [31:0] _GEN_3;
-  wire        _GEN_4;
-  wire        _GEN_5;
-  wire        _GEN_6;
-  wire        _GEN_7;
-  wire        _GEN_8;
   wire [69:0] _mem_ext_R0_data;
   wire [69:0] _mem_ext_R1_data;
-  wire
-    struct packed {logic fetch_PC; logic free_list_front_pointer; logic GHR; logic NEXT; logic TOS; }
-    _GEN_9 = /*cast(bit)*/5'h0;
-  wire
-    struct packed {logic [31:0] fetch_PC; logic [7:0] free_list_front_pointer; logic [15:0] GHR; logic [6:0] NEXT; logic [6:0] TOS; }
-    _GEN_10 = /*cast(bit)*/70'h0;
-  assign _GEN_8 = io_writeEnableA | _GEN_9.fetch_PC;
-  assign _GEN_7 = io_writeEnableA | _GEN_9.free_list_front_pointer;
-  assign _GEN_6 = io_writeEnableA | _GEN_9.GHR;
-  assign _GEN_5 = io_writeEnableA | _GEN_9.NEXT;
-  assign _GEN_4 = io_writeEnableA | _GEN_9.TOS;
-  assign _GEN_3 = io_writeEnableA ? io_writeDataA.fetch_PC : _GEN_10.fetch_PC;
-  assign _GEN_2 =
-    io_writeEnableA
-      ? io_writeDataA.free_list_front_pointer
-      : _GEN_10.free_list_front_pointer;
-  assign _GEN_1 = io_writeEnableA ? io_writeDataA.GHR : _GEN_10.GHR;
-  assign _GEN_0 = io_writeEnableA ? io_writeDataA.NEXT : _GEN_10.NEXT;
-  assign _GEN = io_writeEnableA ? io_writeDataA.TOS : _GEN_10.TOS;
   mem_64x70 mem_ext (
     .R0_addr (io_addrC),
     .R0_en   (1'h1),
@@ -82,10 +61,18 @@ module ROB_shared_mem(
     .W0_addr (io_addrA),
     .W0_en   (io_writeEnableA),
     .W0_clk  (clock),
-    .W0_data ({_GEN, _GEN_0, _GEN_1, _GEN_2, _GEN_3}),
-    .W0_mask ({{7{_GEN_4}}, {7{_GEN_5}}, {16{_GEN_6}}, {8{_GEN_7}}, {32{_GEN_8}}})
+    .W0_data
+      ({io_writeDataA_TOS,
+        io_writeDataA_NEXT,
+        io_writeDataA_GHR,
+        io_writeDataA_free_list_front_pointer,
+        io_writeDataA_fetch_PC})
   );
-  assign io_readDataB = /*cast(bit)*/_mem_ext_R1_data;
-  assign io_readDataC = /*cast(bit)*/_mem_ext_R0_data;
+  assign io_readDataB_fetch_PC = _mem_ext_R1_data[31:0];
+  assign io_readDataB_free_list_front_pointer = _mem_ext_R1_data[39:32];
+  assign io_readDataB_GHR = _mem_ext_R1_data[55:40];
+  assign io_readDataB_NEXT = _mem_ext_R1_data[62:56];
+  assign io_readDataB_TOS = _mem_ext_R1_data[69:63];
+  assign io_readDataC_fetch_PC = _mem_ext_R0_data[31:0];
 endmodule
 

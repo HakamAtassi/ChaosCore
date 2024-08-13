@@ -3,7 +3,7 @@ package ChaosCore
 import chisel3._
 import chisel3.util._
 
-
+import chisel3.experimental.dataview._
 
 
 /**
@@ -21,7 +21,16 @@ trait AXICacheNode {
 
   // FIXME: use the AXI master bundle
 
-  val AXI_port = IO(new AXIFullIO(nocParameters))
+  //val AXI_port = IO(new AXIFullIO(nocParameters))
+  // actual verilog IO
+  val m_axi = IO(new VerilogAXIFullIO(nocParameters))
+
+  //m_axi := DontCare
+
+  val AXI_port = m_axi.viewAs[AXIFullIO]
+
+  // chisel dataview mapping
+  dontTouch(AXI_port)
 
   //val AXI_AW    = IO(Decoupled(new AXI_AW(nocParameters)))
   //val AXI_W     = IO(Decoupled(new AXI_W(nocParameters)))

@@ -80,8 +80,8 @@ object Main extends App {
 
     ChiselStage.emitSystemVerilogFile(new SOC(coreParameters, addressMap, nocParameters), Array("--split-verilog", 
                                                                         "--target", "verilog", 
-                                                                        "--target-dir", "../verilog", 
-                                                                        "--preserve-aggregate", "all", 
+                                                                        "--target-dir", "../verilog",
+                                                                        //"--preserve-aggregate", "all", 
                                                                         ), 
                                                                         firtoolOpts = Array("-disable-all-randomization", "-strip-debug-info")
                                                                         )
@@ -95,8 +95,11 @@ object Main extends App {
                                                                         )
 
 
-    //VerilogGenerator.generateVerilog(new ChaosCore(coreParameters), 
-     //"../verilog/Core/ChaosCore.v")
+    VerilogGenerator.generateVerilog(new ChaosCore(coreParameters), 
+     "../verilog/Core/ChaosCore.v")
+
+    VerilogGenerator.generateVerilog(new SOC(coreParameters, addressMap, nocParameters), 
+     "../verilog/Core/SOC.v")
 
     //removeYosysInvalid("../verilog/")
     //generate_sv_interfaces("src/main/scala/coreParameters.scala", "src/main/scala/bundles.scala")

@@ -29,46 +29,100 @@
 `endif // not def STOP_COND_
 
 module Arbiter2_FU_output(
-  output                                                                                                                                                                                                                                                                                                                                                                                                            io_in_0_ready,
-  input                                                                                                                                                                                                                                                                                                                                                                                                             io_in_0_valid,
-  input  struct packed {logic [6:0] RD; logic [31:0] RD_data; logic RD_valid; logic [31:0] fetch_PC; logic branch_taken; logic [31:0] target_address; logic branch_valid; logic [31:0] address; logic [1:0] memory_type; logic [1:0] access_width; logic is_unsigned; logic [31:0] wr_data; logic [3:0] MOB_index; logic [5:0] ROB_index; logic [3:0] FTQ_index; logic [1:0] fetch_packet_index; logic exception; } io_in_0_bits,
-  output                                                                                                                                                                                                                                                                                                                                                                                                            io_in_1_ready,
-  input                                                                                                                                                                                                                                                                                                                                                                                                             io_in_1_valid,
-  input  struct packed {logic [6:0] RD; logic [31:0] RD_data; logic RD_valid; logic [31:0] fetch_PC; logic branch_taken; logic [31:0] target_address; logic branch_valid; logic [31:0] address; logic [1:0] memory_type; logic [1:0] access_width; logic is_unsigned; logic [31:0] wr_data; logic [3:0] MOB_index; logic [5:0] ROB_index; logic [3:0] FTQ_index; logic [1:0] fetch_packet_index; logic exception; } io_in_1_bits,
-  input                                                                                                                                                                                                                                                                                                                                                                                                             io_out_ready,
-  output                                                                                                                                                                                                                                                                                                                                                                                                            io_out_valid,
-  output struct packed {logic [6:0] RD; logic [31:0] RD_data; logic RD_valid; logic [31:0] fetch_PC; logic branch_taken; logic [31:0] target_address; logic branch_valid; logic [31:0] address; logic [1:0] memory_type; logic [1:0] access_width; logic is_unsigned; logic [31:0] wr_data; logic [3:0] MOB_index; logic [5:0] ROB_index; logic [3:0] FTQ_index; logic [1:0] fetch_packet_index; logic exception; } io_out_bits,
-  output                                                                                                                                                                                                                                                                                                                                                                                                            io_chosen
+  output        io_in_0_ready,
+  input         io_in_0_valid,
+  input  [6:0]  io_in_0_bits_RD,
+  input  [31:0] io_in_0_bits_RD_data,
+  input         io_in_0_bits_RD_valid,
+  input  [31:0] io_in_0_bits_fetch_PC,
+  input         io_in_0_bits_branch_taken,
+  input  [31:0] io_in_0_bits_target_address,
+  input         io_in_0_bits_branch_valid,
+  input  [31:0] io_in_0_bits_address,
+  input  [1:0]  io_in_0_bits_memory_type,
+                io_in_0_bits_access_width,
+  input         io_in_0_bits_is_unsigned,
+  input  [31:0] io_in_0_bits_wr_data,
+  input  [3:0]  io_in_0_bits_MOB_index,
+  input  [5:0]  io_in_0_bits_ROB_index,
+  input  [3:0]  io_in_0_bits_FTQ_index,
+  input  [1:0]  io_in_0_bits_fetch_packet_index,
+  input         io_in_0_bits_exception,
+  output        io_in_1_ready,
+  input         io_in_1_valid,
+  input  [6:0]  io_in_1_bits_RD,
+  input  [31:0] io_in_1_bits_RD_data,
+  input         io_in_1_bits_RD_valid,
+  input  [31:0] io_in_1_bits_fetch_PC,
+  input         io_in_1_bits_branch_taken,
+  input  [31:0] io_in_1_bits_target_address,
+  input         io_in_1_bits_branch_valid,
+  input  [31:0] io_in_1_bits_address,
+  input  [1:0]  io_in_1_bits_memory_type,
+                io_in_1_bits_access_width,
+  input         io_in_1_bits_is_unsigned,
+  input  [31:0] io_in_1_bits_wr_data,
+  input  [3:0]  io_in_1_bits_MOB_index,
+  input  [5:0]  io_in_1_bits_ROB_index,
+  input  [3:0]  io_in_1_bits_FTQ_index,
+  input  [1:0]  io_in_1_bits_fetch_packet_index,
+  input         io_in_1_bits_exception,
+                io_out_ready,
+  output        io_out_valid,
+  output [6:0]  io_out_bits_RD,
+  output [31:0] io_out_bits_RD_data,
+  output        io_out_bits_RD_valid,
+  output [31:0] io_out_bits_fetch_PC,
+  output        io_out_bits_branch_taken,
+  output [31:0] io_out_bits_target_address,
+  output        io_out_bits_branch_valid,
+  output [31:0] io_out_bits_address,
+  output [1:0]  io_out_bits_memory_type,
+                io_out_bits_access_width,
+  output        io_out_bits_is_unsigned,
+  output [31:0] io_out_bits_wr_data,
+  output [3:0]  io_out_bits_MOB_index,
+  output [5:0]  io_out_bits_ROB_index,
+  output [3:0]  io_out_bits_FTQ_index,
+  output [1:0]  io_out_bits_fetch_packet_index,
+  output        io_out_bits_exception
 );
 
   assign io_in_0_ready = io_out_ready;
   assign io_in_1_ready = ~io_in_0_valid & io_out_ready;
   assign io_out_valid = io_in_0_valid | io_in_1_valid;
-  assign io_out_bits =
-    '{RD: (io_in_0_valid ? io_in_0_bits.RD : io_in_1_bits.RD),
-      RD_data: (io_in_0_valid ? io_in_0_bits.RD_data : io_in_1_bits.RD_data),
-      RD_valid: (io_in_0_valid ? io_in_0_bits.RD_valid : io_in_1_bits.RD_valid),
-      fetch_PC: (io_in_0_valid ? io_in_0_bits.fetch_PC : io_in_1_bits.fetch_PC),
-      branch_taken:
-        (io_in_0_valid ? io_in_0_bits.branch_taken : io_in_1_bits.branch_taken),
-      target_address:
-        (io_in_0_valid ? io_in_0_bits.target_address : io_in_1_bits.target_address),
-      branch_valid:
-        (io_in_0_valid ? io_in_0_bits.branch_valid : io_in_1_bits.branch_valid),
-      address: (io_in_0_valid ? io_in_0_bits.address : io_in_1_bits.address),
-      memory_type: (io_in_0_valid ? io_in_0_bits.memory_type : io_in_1_bits.memory_type),
-      access_width:
-        (io_in_0_valid ? io_in_0_bits.access_width : io_in_1_bits.access_width),
-      is_unsigned: (io_in_0_valid ? io_in_0_bits.is_unsigned : io_in_1_bits.is_unsigned),
-      wr_data: (io_in_0_valid ? io_in_0_bits.wr_data : io_in_1_bits.wr_data),
-      MOB_index: (io_in_0_valid ? io_in_0_bits.MOB_index : io_in_1_bits.MOB_index),
-      ROB_index: (io_in_0_valid ? io_in_0_bits.ROB_index : io_in_1_bits.ROB_index),
-      FTQ_index: (io_in_0_valid ? io_in_0_bits.FTQ_index : io_in_1_bits.FTQ_index),
-      fetch_packet_index:
-        (io_in_0_valid
-           ? io_in_0_bits.fetch_packet_index
-           : io_in_1_bits.fetch_packet_index),
-      exception: (io_in_0_valid ? io_in_0_bits.exception : io_in_1_bits.exception)};
-  assign io_chosen = ~io_in_0_valid;
+  assign io_out_bits_RD = io_in_0_valid ? io_in_0_bits_RD : io_in_1_bits_RD;
+  assign io_out_bits_RD_data =
+    io_in_0_valid ? io_in_0_bits_RD_data : io_in_1_bits_RD_data;
+  assign io_out_bits_RD_valid =
+    io_in_0_valid ? io_in_0_bits_RD_valid : io_in_1_bits_RD_valid;
+  assign io_out_bits_fetch_PC =
+    io_in_0_valid ? io_in_0_bits_fetch_PC : io_in_1_bits_fetch_PC;
+  assign io_out_bits_branch_taken =
+    io_in_0_valid ? io_in_0_bits_branch_taken : io_in_1_bits_branch_taken;
+  assign io_out_bits_target_address =
+    io_in_0_valid ? io_in_0_bits_target_address : io_in_1_bits_target_address;
+  assign io_out_bits_branch_valid =
+    io_in_0_valid ? io_in_0_bits_branch_valid : io_in_1_bits_branch_valid;
+  assign io_out_bits_address =
+    io_in_0_valid ? io_in_0_bits_address : io_in_1_bits_address;
+  assign io_out_bits_memory_type =
+    io_in_0_valid ? io_in_0_bits_memory_type : io_in_1_bits_memory_type;
+  assign io_out_bits_access_width =
+    io_in_0_valid ? io_in_0_bits_access_width : io_in_1_bits_access_width;
+  assign io_out_bits_is_unsigned =
+    io_in_0_valid ? io_in_0_bits_is_unsigned : io_in_1_bits_is_unsigned;
+  assign io_out_bits_wr_data =
+    io_in_0_valid ? io_in_0_bits_wr_data : io_in_1_bits_wr_data;
+  assign io_out_bits_MOB_index =
+    io_in_0_valid ? io_in_0_bits_MOB_index : io_in_1_bits_MOB_index;
+  assign io_out_bits_ROB_index =
+    io_in_0_valid ? io_in_0_bits_ROB_index : io_in_1_bits_ROB_index;
+  assign io_out_bits_FTQ_index =
+    io_in_0_valid ? io_in_0_bits_FTQ_index : io_in_1_bits_FTQ_index;
+  assign io_out_bits_fetch_packet_index =
+    io_in_0_valid ? io_in_0_bits_fetch_packet_index : io_in_1_bits_fetch_packet_index;
+  assign io_out_bits_exception =
+    io_in_0_valid ? io_in_0_bits_exception : io_in_1_bits_exception;
 endmodule
 

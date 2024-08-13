@@ -29,62 +29,45 @@
 `endif // not def STOP_COND_
 
 module hash_BTB_mem(
-  input                                                                                                                                                 clock,
-                                                                                                                                                        reset,
-  input  [11:0]                                                                                                                                         io_rd_addr,
-  output struct packed {logic BTB_valid; logic [17:0] BTB_tag; logic [31:0] BTB_target; logic [2:0] BTBbr_type_t; logic [1:0] BTB_fetch_packet_index; } io_data_out,
-  input  [11:0]                                                                                                                                         io_wr_addr,
-  input                                                                                                                                                 io_wr_en,
-  input  struct packed {logic BTB_valid; logic [17:0] BTB_tag; logic [31:0] BTB_target; logic [2:0] BTBbr_type_t; logic [1:0] BTB_fetch_packet_index; } io_data_in
+  input         clock,
+                reset,
+  input  [11:0] io_rd_addr,
+  output        io_data_out_BTB_valid,
+  output [17:0] io_data_out_BTB_tag,
+  output [31:0] io_data_out_BTB_target,
+  output [2:0]  io_data_out_BTBbr_type_t,
+  output [1:0]  io_data_out_BTB_fetch_packet_index,
+  input  [11:0] io_wr_addr,
+  input         io_wr_en,
+  input  [17:0] io_data_in_BTB_tag,
+  input  [31:0] io_data_in_BTB_target,
+  input  [2:0]  io_data_in_BTBbr_type_t,
+  input  [1:0]  io_data_in_BTB_fetch_packet_index
 );
 
-  wire [1:0]  _GEN;
-  wire [2:0]  _GEN_0;
-  wire [31:0] _GEN_1;
-  wire [17:0] _GEN_2;
-  wire        _GEN_3;
-  wire        _GEN_4;
-  wire        _GEN_5;
-  wire        _GEN_6;
-  wire        _GEN_7;
-  wire        _GEN_8;
   wire [55:0] _mem_ext_R0_data;
-  wire
-    struct packed {logic BTB_valid; logic BTB_tag; logic BTB_target; logic BTBbr_type_t; logic BTB_fetch_packet_index; }
-    _GEN_9 = /*cast(bit)*/5'h0;
-  wire
-    struct packed {logic BTB_valid; logic [17:0] BTB_tag; logic [31:0] BTB_target; logic [2:0] BTBbr_type_t; logic [1:0] BTB_fetch_packet_index; }
-    _GEN_10 = /*cast(bit)*/56'h0;
-  wire
-    struct packed {logic BTB_valid; logic [17:0] BTB_tag; logic [31:0] BTB_target; logic [2:0] BTBbr_type_t; logic [1:0] BTB_fetch_packet_index; }
-    data_out = /*cast(bit)*/_mem_ext_R0_data;
   reg         hazard_reg;
-  struct packed {logic BTB_valid; logic [17:0] BTB_tag; logic [31:0] BTB_target; logic [2:0] BTBbr_type_t; logic [1:0] BTB_fetch_packet_index; }
-    din_buff;
-  assign _GEN_8 = io_wr_en | _GEN_9.BTB_valid;
-  assign _GEN_7 = io_wr_en | _GEN_9.BTB_tag;
-  assign _GEN_6 = io_wr_en | _GEN_9.BTB_target;
-  assign _GEN_5 = io_wr_en | _GEN_9.BTBbr_type_t;
-  assign _GEN_4 = io_wr_en | _GEN_9.BTB_fetch_packet_index;
-  assign _GEN_3 = io_wr_en ? io_data_in.BTB_valid : _GEN_10.BTB_valid;
-  assign _GEN_2 = io_wr_en ? io_data_in.BTB_tag : _GEN_10.BTB_tag;
-  assign _GEN_1 = io_wr_en ? io_data_in.BTB_target : _GEN_10.BTB_target;
-  assign _GEN_0 = io_wr_en ? io_data_in.BTBbr_type_t : _GEN_10.BTBbr_type_t;
-  assign _GEN =
-    io_wr_en ? io_data_in.BTB_fetch_packet_index : _GEN_10.BTB_fetch_packet_index;
+  reg         din_buff_BTB_valid;
+  reg  [17:0] din_buff_BTB_tag;
+  reg  [31:0] din_buff_BTB_target;
+  reg  [2:0]  din_buff_BTBbr_type_t;
+  reg  [1:0]  din_buff_BTB_fetch_packet_index;
   always @(posedge clock) begin
     if (reset) begin
       hazard_reg <= 1'h0;
-      din_buff <=
-        '{BTB_valid: 1'h0,
-          BTB_tag: 18'h0,
-          BTB_target: 32'h0,
-          BTBbr_type_t: 3'h0,
-          BTB_fetch_packet_index: 2'h0};
+      din_buff_BTB_valid <= 1'h0;
+      din_buff_BTB_tag <= 18'h0;
+      din_buff_BTB_target <= 32'h0;
+      din_buff_BTBbr_type_t <= 3'h0;
+      din_buff_BTB_fetch_packet_index <= 2'h0;
     end
     else begin
       hazard_reg <= io_rd_addr == io_wr_addr & io_wr_en;
-      din_buff <= io_data_in;
+      din_buff_BTB_valid <= 1'h1;
+      din_buff_BTB_tag <= io_data_in_BTB_tag;
+      din_buff_BTB_target <= io_data_in_BTB_target;
+      din_buff_BTBbr_type_t <= io_data_in_BTBbr_type_t;
+      din_buff_BTB_fetch_packet_index <= io_data_in_BTB_fetch_packet_index;
     end
   end // always @(posedge)
   mem_4096x56 mem_ext (
@@ -95,9 +78,20 @@ module hash_BTB_mem(
     .W0_addr (io_wr_addr),
     .W0_en   (io_wr_en),
     .W0_clk  (clock),
-    .W0_data ({_GEN, _GEN_0, _GEN_1, _GEN_2, _GEN_3}),
-    .W0_mask ({{2{_GEN_4}}, {3{_GEN_5}}, {32{_GEN_6}}, {18{_GEN_7}}, _GEN_8})
+    .W0_data
+      ({io_data_in_BTB_fetch_packet_index,
+        io_data_in_BTBbr_type_t,
+        io_data_in_BTB_target,
+        io_data_in_BTB_tag,
+        1'h1})
   );
-  assign io_data_out = hazard_reg ? din_buff : data_out;
+  assign io_data_out_BTB_valid = hazard_reg ? din_buff_BTB_valid : _mem_ext_R0_data[0];
+  assign io_data_out_BTB_tag = hazard_reg ? din_buff_BTB_tag : _mem_ext_R0_data[18:1];
+  assign io_data_out_BTB_target =
+    hazard_reg ? din_buff_BTB_target : _mem_ext_R0_data[50:19];
+  assign io_data_out_BTBbr_type_t =
+    hazard_reg ? din_buff_BTBbr_type_t : _mem_ext_R0_data[53:51];
+  assign io_data_out_BTB_fetch_packet_index =
+    hazard_reg ? din_buff_BTB_fetch_packet_index : _mem_ext_R0_data[55:54];
 endmodule
 

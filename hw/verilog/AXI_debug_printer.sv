@@ -29,22 +29,15 @@
 `endif // not def STOP_COND_
 
 module AXI_debug_printer(
-  input                                                                                                                                                                                                                                    clock,
-                                                                                                                                                                                                                                           reset,
-  output                                                                                                                                                                                                                                   io_s_AXI_AXI_AW_ready,
-  input                                                                                                                                                                                                                                    io_s_AXI_AXI_AW_valid,
-  input  struct packed {logic [7:0] awid; logic [31:0] awaddr; logic [7:0] awlen; logic [2:0] awsize; logic [1:0] awburst; logic awlock; logic [3:0] awcache; logic [2:0] awprot; logic [3:0] awqos; logic [3:0] awregion; logic awuser; } io_s_AXI_AXI_AW_bits,
-  output                                                                                                                                                                                                                                   io_s_AXI_AXI_W_ready,
-  input                                                                                                                                                                                                                                    io_s_AXI_AXI_W_valid,
-  input  struct packed {logic [31:0] wdata; logic [3:0] wstrb; logic wlast; logic wuser; }                                                                                                                                                 io_s_AXI_AXI_W_bits,
-  input                                                                                                                                                                                                                                    io_s_AXI_AXI_B_ready,
-  output                                                                                                                                                                                                                                   io_s_AXI_AXI_B_valid,
-  output struct packed {logic [7:0] bid; logic [1:0] bresp; logic buser; }                                                                                                                                                                 io_s_AXI_AXI_B_bits,
-  output                                                                                                                                                                                                                                   io_s_AXI_AXI_AR_ready,
-  input                                                                                                                                                                                                                                    io_s_AXI_AXI_AR_valid,
-  input  struct packed {logic [7:0] arid; logic [31:0] araddr; logic [7:0] arlen; logic [2:0] arsize; logic [1:0] arburst; logic arlock; logic [3:0] arcache; logic [2:0] arprot; logic [3:0] arqos; logic [3:0] arregion; logic aruser; } io_s_AXI_AXI_AR_bits,
-  input                                                                                                                                                                                                                                    io_s_AXI_AXI_R_ready,
-  output struct packed {logic [7:0] rid; logic [31:0] rdata; logic [1:0] rresp; logic rlast; logic ruser; }                                                                                                                                io_s_AXI_AXI_R_bits
+  input         clock,
+                reset,
+  output        io_s_AXI_AXI_AW_ready,
+  input         io_s_AXI_AXI_AW_valid,
+  output        io_s_AXI_AXI_W_ready,
+  input         io_s_AXI_AXI_W_valid,
+  input  [31:0] io_s_AXI_AXI_W_bits_wdata,
+  input         io_s_AXI_AXI_B_ready,
+  output        io_s_AXI_AXI_B_valid
 );
 
   reg  [31:0] print_data;
@@ -57,43 +50,39 @@ module AXI_debug_printer(
         $fwrite(32'h80000002, "%c", print_data);
     end // always @(posedge)
   `endif // not def SYNTHESIS
-  wire        _GEN_1 = ~(~(|AXI_debug_printer_STATE) | _GEN) & _GEN_0;
+  wire        io_s_AXI_AXI_B_valid_0 = ~(~(|AXI_debug_printer_STATE) | _GEN) & _GEN_0;
   always @(posedge clock) begin
+    automatic logic _GEN_1;
     automatic logic _GEN_2;
     automatic logic _GEN_3;
-    automatic logic _GEN_4;
-    _GEN_2 = ~(|AXI_debug_printer_STATE) & io_s_AXI_AXI_AW_valid;
-    _GEN_3 = ~(|AXI_debug_printer_STATE) & io_s_AXI_AXI_W_valid;
-    _GEN_4 = _GEN_2 & _GEN_3;
+    _GEN_1 = ~(|AXI_debug_printer_STATE) & io_s_AXI_AXI_AW_valid;
+    _GEN_2 = ~(|AXI_debug_printer_STATE) & io_s_AXI_AXI_W_valid;
+    _GEN_3 = _GEN_1 & _GEN_2;
     if (|AXI_debug_printer_STATE) begin
-      if (_GEN & _GEN_3)
-        print_data <= io_s_AXI_AXI_W_bits.wdata;
+      if (_GEN & _GEN_2)
+        print_data <= io_s_AXI_AXI_W_bits_wdata;
     end
-    else if (_GEN_2 | ~_GEN_4) begin
+    else if (_GEN_1 | ~_GEN_3) begin
     end
     else
-      print_data <= io_s_AXI_AXI_W_bits.wdata;
+      print_data <= io_s_AXI_AXI_W_bits_wdata;
     if (reset)
       AXI_debug_printer_STATE <= 2'h0;
     else if (|AXI_debug_printer_STATE) begin
       if (_GEN) begin
-        if (_GEN_3)
+        if (_GEN_2)
           AXI_debug_printer_STATE <= 2'h2;
       end
-      else if (_GEN_0 & io_s_AXI_AXI_B_ready & _GEN_1)
+      else if (_GEN_0 & io_s_AXI_AXI_B_ready & io_s_AXI_AXI_B_valid_0)
         AXI_debug_printer_STATE <= 2'h0;
     end
-    else if (_GEN_2)
+    else if (_GEN_1)
       AXI_debug_printer_STATE <= 2'h1;
-    else if (_GEN_4)
+    else if (_GEN_3)
       AXI_debug_printer_STATE <= 2'h2;
   end // always @(posedge)
   assign io_s_AXI_AXI_AW_ready = ~(|AXI_debug_printer_STATE);
   assign io_s_AXI_AXI_W_ready = ~(|AXI_debug_printer_STATE);
-  assign io_s_AXI_AXI_B_valid = _GEN_1;
-  assign io_s_AXI_AXI_B_bits = '{bid: 8'h0, bresp: 2'h0, buser: 1'h0};
-  assign io_s_AXI_AXI_AR_ready = 1'h0;
-  assign io_s_AXI_AXI_R_bits =
-    '{rid: 8'h0, rdata: 32'h0, rresp: 2'h0, rlast: 1'h0, ruser: 1'h0};
+  assign io_s_AXI_AXI_B_valid = io_s_AXI_AXI_B_valid_0;
 endmodule
 

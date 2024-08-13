@@ -33,7 +33,7 @@ module instruction_validator(
   output [3:0] io_instruction_output
 );
 
-  wire [3:0][3:0] lookupTable = '{4'h1, 4'h3, 4'h7, 4'hF};
-  assign io_instruction_output = lookupTable[io_instruction_index];
+  wire [3:0][3:0] _GEN = '{4'h1, 4'h3, 4'h7, 4'hF};
+  assign io_instruction_output = _GEN[io_instruction_index];
 endmodule
 

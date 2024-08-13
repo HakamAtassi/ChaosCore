@@ -29,67 +29,27 @@
 `endif // not def STOP_COND_
 
 module ROB_WB_mem(
-  input                                                clock,
-  input  [5:0]                                         io_addrA,
-  input                                                io_writeEnableA,
-  input  [5:0]                                         io_addrB,
-  input  struct packed {logic busy; logic exception; } io_writeDataB,
-  input                                                io_writeEnableB,
-  input  [5:0]                                         io_addrC,
-  input  struct packed {logic busy; logic exception; } io_writeDataC,
-  input                                                io_writeEnableC,
-  input  [5:0]                                         io_addrD,
-  input  struct packed {logic busy; logic exception; } io_writeDataD,
-  input                                                io_writeEnableD,
-  input  [5:0]                                         io_addrE,
-  input  struct packed {logic busy; logic exception; } io_writeDataE,
-  input                                                io_writeEnableE,
-  input  [5:0]                                         io_addrG,
-  output struct packed {logic busy; logic exception; } io_readDataG
+  input        clock,
+  input  [5:0] io_addrA,
+  input        io_writeEnableA,
+  input  [5:0] io_addrB,
+  input        io_writeDataB_busy,
+               io_writeEnableB,
+  input  [5:0] io_addrC,
+  input        io_writeDataC_busy,
+               io_writeEnableC,
+  input  [5:0] io_addrD,
+  input        io_writeDataD_busy,
+               io_writeEnableD,
+  input  [5:0] io_addrE,
+  input        io_writeDataE_busy,
+               io_writeEnableE,
+  input  [5:0] io_addrG,
+  output       io_readDataG_busy,
+               io_readDataG_exception
 );
 
-  wire       _GEN;
-  wire       _GEN_0;
-  wire       _GEN_1;
-  wire       _GEN_2;
-  wire       _GEN_3;
-  wire       _GEN_4;
-  wire       _GEN_5;
-  wire       _GEN_6;
-  wire       _GEN_7;
-  wire       _GEN_8;
-  wire       _GEN_9;
-  wire       _GEN_10;
-  wire       _GEN_11;
-  wire       _GEN_12;
-  wire       _GEN_13;
-  wire       _GEN_14;
-  wire       _GEN_15;
-  wire       _GEN_16;
-  wire       _GEN_17;
-  wire       _GEN_18;
   wire [1:0] _mem_ext_R0_data;
-  wire struct packed {logic busy; logic exception; } _GEN_19 = /*cast(bit)*/2'h0;
-  assign _GEN_18 = io_writeEnableA | _GEN_19.busy;
-  assign _GEN_17 = io_writeEnableA | _GEN_19.exception;
-  assign _GEN_16 = ~io_writeEnableA & _GEN_19.busy;
-  assign _GEN_15 = ~io_writeEnableA & _GEN_19.exception;
-  assign _GEN_14 = io_writeEnableB | _GEN_19.busy;
-  assign _GEN_13 = io_writeEnableB | _GEN_19.exception;
-  assign _GEN_12 = io_writeEnableB ? io_writeDataB.busy : _GEN_19.busy;
-  assign _GEN_11 = io_writeEnableB ? io_writeDataB.exception : _GEN_19.exception;
-  assign _GEN_10 = io_writeEnableC | _GEN_19.busy;
-  assign _GEN_9 = io_writeEnableC | _GEN_19.exception;
-  assign _GEN_8 = io_writeEnableC ? io_writeDataC.busy : _GEN_19.busy;
-  assign _GEN_7 = io_writeEnableC ? io_writeDataC.exception : _GEN_19.exception;
-  assign _GEN_6 = io_writeEnableD | _GEN_19.busy;
-  assign _GEN_5 = io_writeEnableD | _GEN_19.exception;
-  assign _GEN_4 = io_writeEnableD ? io_writeDataD.busy : _GEN_19.busy;
-  assign _GEN_3 = io_writeEnableD ? io_writeDataD.exception : _GEN_19.exception;
-  assign _GEN_2 = io_writeEnableE | _GEN_19.busy;
-  assign _GEN_1 = io_writeEnableE | _GEN_19.exception;
-  assign _GEN_0 = io_writeEnableE ? io_writeDataE.busy : _GEN_19.busy;
-  assign _GEN = io_writeEnableE ? io_writeDataE.exception : _GEN_19.exception;
   mem_64x2 mem_ext (
     .R0_addr (io_addrG),
     .R0_en   (1'h1),
@@ -98,29 +58,25 @@ module ROB_WB_mem(
     .W0_addr (io_addrE),
     .W0_en   (io_writeEnableE),
     .W0_clk  (clock),
-    .W0_data ({_GEN, _GEN_0}),
-    .W0_mask ({_GEN_1, _GEN_2}),
+    .W0_data ({1'h0, io_writeDataE_busy}),
     .W1_addr (io_addrD),
     .W1_en   (io_writeEnableD),
     .W1_clk  (clock),
-    .W1_data ({_GEN_3, _GEN_4}),
-    .W1_mask ({_GEN_5, _GEN_6}),
+    .W1_data ({1'h0, io_writeDataD_busy}),
     .W2_addr (io_addrC),
     .W2_en   (io_writeEnableC),
     .W2_clk  (clock),
-    .W2_data ({_GEN_7, _GEN_8}),
-    .W2_mask ({_GEN_9, _GEN_10}),
+    .W2_data ({1'h0, io_writeDataC_busy}),
     .W3_addr (io_addrB),
     .W3_en   (io_writeEnableB),
     .W3_clk  (clock),
-    .W3_data ({_GEN_11, _GEN_12}),
-    .W3_mask ({_GEN_13, _GEN_14}),
+    .W3_data ({1'h0, io_writeDataB_busy}),
     .W4_addr (io_addrA),
     .W4_en   (io_writeEnableA),
     .W4_clk  (clock),
-    .W4_data ({_GEN_15, _GEN_16}),
-    .W4_mask ({_GEN_17, _GEN_18})
+    .W4_data (2'h0)
   );
-  assign io_readDataG = /*cast(bit)*/_mem_ext_R0_data;
+  assign io_readDataG_busy = _mem_ext_R0_data[0];
+  assign io_readDataG_exception = _mem_ext_R0_data[1];
 endmodule
 
