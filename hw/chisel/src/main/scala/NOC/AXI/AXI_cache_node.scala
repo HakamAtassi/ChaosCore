@@ -75,11 +75,11 @@ trait AXICacheNode {
   def AXI_read_request(address:UInt, bytes:UInt):Bool = {
     import nocParameters._
     // drive channels
-    AXI_port.AXI_AR.valid              := AXI_REQUEST_STATE === AXI_REQUEST_STATES.ADDRESS_PHASE
+    AXI_port.AXI_AR.valid        := AXI_REQUEST_STATE === AXI_REQUEST_STATES.ADDRESS_PHASE
     AXI_port.AXI_AR.bits.arid    := 0.U
     AXI_port.AXI_AR.bits.araddr  := address
     AXI_port.AXI_AR.bits.arlen   := Mux(bytes < DATA_WIDTH_BYTES.U, 0.U, bytes/DATA_WIDTH_BYTES.U - 1.U)
-    AXI_port.AXI_AR.bits.arsize  := log2Ceil(DATA_WIDTH).U
+    AXI_port.AXI_AR.bits.arsize  := log2Ceil(DATA_WIDTH/8).U
     AXI_port.AXI_AR.bits.arburst := 0x1.U
     AXI_port.AXI_AR.bits.arlock  := 0x0.U
     AXI_port.AXI_AR.bits.arcache := 0x0.U
@@ -210,10 +210,10 @@ trait AXICacheNode {
   when(AXI_REQUEST_STATE === AXI_REQUEST_STATES.READ_RESPONSE_PHASE){
     AXI_port.AXI_R.ready := 1.B
     when(AXI_port.AXI_R.fire && AXI_port.AXI_R.bits.rlast.asBool){
-      final_response_buffer.io.enq.bits := (AXI_read_buffer << 32.U) | AXI_port.AXI_R.bits.rdata
+      final_response_buffer.io.enq.bits := (AXI_read_buffer >> 32.U) | (AXI_port.AXI_R.bits.rdata << (256.U - 32.U))
       final_response_buffer.io.enq.valid := 1.B
     }.elsewhen(AXI_port.AXI_R.fire){
-      AXI_read_buffer := (AXI_read_buffer << 32.U) | AXI_port.AXI_R.bits.rdata
+      AXI_read_buffer := (AXI_read_buffer >> 32.U) | (AXI_port.AXI_R.bits.rdata << (256.U - 32.U))
     }
   }
 

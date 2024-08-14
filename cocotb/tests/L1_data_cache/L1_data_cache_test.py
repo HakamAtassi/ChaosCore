@@ -9,7 +9,7 @@ verilog_dir = os.path.join(current_file_dir, "../../../hw/verilog")
 # Get a list of all .sv files in the hw/verilog directory
 verilog_files = glob.glob(os.path.join(verilog_dir, "*.sv"))
 
-module = "L1_instruction_cache"  # Update me!
+module = "L1_data_cache"  # Update me!
 
 configs = {
     "simulator": "verilator",
@@ -31,19 +31,7 @@ def test_reset():
         configs["testcase"] = "test_reset"
         run(**configs)
 
-def test_miss_hit():
-        configs["testcase"] = "test_miss_hit"
-        run(**configs)
-
-def test_sweep_sets():
-        configs["testcase"] = "test_sweep_sets"
-        run(**configs)
-
-def test_AXI_not_ready():
-        configs["testcase"] = "test_AXI_not_ready"
-        run(**configs)
-
-def test_CPU_not_ready():
-        configs["testcase"] = "test_CPU_not_ready"
+def test_read():
+        configs["testcase"] = "test_read"
         run(**configs)
 

@@ -14,6 +14,11 @@
 # Hits
 # Dirty/Writback?
 # flush/kill?
+# Valid ready stuff...
+# Response when cpu not ready
+# Request when cache not ready
+# AXI request when AXI not ready
+# AXI response when cache not ready
 
 # Template
 #- test: uvm_test_name

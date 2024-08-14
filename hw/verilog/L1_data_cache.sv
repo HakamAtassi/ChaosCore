@@ -75,17 +75,17 @@ module L1_data_cache(
   input  [1:0]  m_axi_rresp,
   input         m_axi_rlast,
                 m_axi_ruser,
-  output        io_backend_memory_request_ready,
-  input         io_backend_memory_request_valid,
-  input  [31:0] io_backend_memory_request_bits_addr,
-                io_backend_memory_request_bits_data,
-  input  [1:0]  io_backend_memory_request_bits_memory_type,
-                io_backend_memory_request_bits_access_width,
-  input  [3:0]  io_backend_memory_request_bits_MOB_index,
-  input         io_backend_memory_response_ready,
-  output        io_backend_memory_response_valid,
-  output [31:0] io_backend_memory_response_bits_data,
-  output [3:0]  io_backend_memory_response_bits_MOB_index
+  output        io_CPU_request_ready,
+  input         io_CPU_request_valid,
+  input  [31:0] io_CPU_request_bits_addr,
+                io_CPU_request_bits_data,
+  input  [1:0]  io_CPU_request_bits_memory_type,
+                io_CPU_request_bits_access_width,
+  input  [3:0]  io_CPU_request_bits_MOB_index,
+  input         io_CPU_response_ready,
+  output        io_CPU_response_valid,
+  output [31:0] io_CPU_response_bits_data,
+  output [3:0]  io_CPU_response_bits_MOB_index
 );
 
   wire [1:0]       DATA_CACHE_NEXT_STATE;
@@ -149,35 +149,33 @@ module L1_data_cache(
   wire             m_axi_wlast_0 = m_axi_wvalid_0 & write_counter == 32'h0;
   reg  [255:0]     AXI_read_buffer;
   wire             _GEN_0 = _GEN & m_axi_rlast;
-  wire [255:0]     _GEN_1 = {AXI_read_buffer[223:0], m_axi_rdata};
+  wire [255:0]     _GEN_1 = {m_axi_rdata, AXI_read_buffer[255:32]};
   reg  [1:0]       DATA_CACHE_STATE;
   wire [31:0]      active_address =
-    (&DATA_CACHE_STATE) ? 32'h0 : io_backend_memory_request_bits_addr;
+    (&DATA_CACHE_STATE) ? 32'h0 : io_CPU_request_bits_addr;
   wire [1:0]       active_access_width =
-    (&DATA_CACHE_STATE) ? 2'h0 : io_backend_memory_request_bits_access_width;
+    (&DATA_CACHE_STATE) ? 2'h0 : io_CPU_request_bits_access_width;
   reg              valid_hit_REG;
   reg              valid_miss_REG;
   wire             _byte_offset_match_T_125 =
-    ((&DATA_CACHE_STATE) ? 2'h0 : io_backend_memory_request_bits_memory_type) == 2'h2;
+    ((&DATA_CACHE_STATE) ? 2'h0 : io_CPU_request_bits_memory_type) == 2'h2;
   reg  [3:0]       hit_MOB_index_REG;
   reg  [31:0]      miss_address_REG;
   wire [1:0]       _miss_way_T_1 = ~{tag_hit_OH_1, tag_hit_OH_0};
-  assign backend_set = io_backend_memory_request_bits_addr[10:5];
-  wire [31:0]      word_offset = io_backend_memory_request_bits_addr / 32'h4;
+  assign backend_set = io_CPU_request_bits_addr[10:5];
+  wire [31:0]      word_offset = io_CPU_request_bits_addr / 32'h4;
   wire             request_non_cacheable_read =
-    io_backend_memory_request_bits_memory_type == 2'h1
-    & io_backend_memory_request_bits_addr[0];
+    io_CPU_request_bits_memory_type == 2'h1 & io_CPU_request_bits_addr[0];
   wire             request_non_cacheable_write =
-    io_backend_memory_request_bits_memory_type == 2'h2
-    & io_backend_memory_request_bits_addr[0];
+    io_CPU_request_bits_memory_type == 2'h2 & io_CPU_request_bits_addr[0];
   reg  [31:0]      AXI_request_Q_io_enq_bits_write_data_REG;
   wire [6:0]       _GEN_2 =
     {1'h0,
      request_non_cacheable_write
        ? {4'h0,
-          (&io_backend_memory_request_bits_access_width)
+          (&io_CPU_request_bits_access_width)
             ? 2'h0
-            : io_backend_memory_request_bits_access_width == 2'h2 ? 2'h2 : 2'h1}
+            : io_CPU_request_bits_access_width == 2'h2 ? 2'h2 : 2'h1}
        : 6'h20};
   reg  [31:0]      AXI_request_Q_io_enq_bits_read_address_r;
   reg  [31:0]      AXI_request_Q_io_enq_bits_read_address_r_1;
@@ -262,7 +260,7 @@ module L1_data_cache(
     automatic logic       _GEN_8;
     automatic logic       _GEN_9;
     automatic logic [4:0] active_tag =
-      (&DATA_CACHE_STATE) ? 5'h0 : io_backend_memory_request_bits_addr[15:11];
+      (&DATA_CACHE_STATE) ? 5'h0 : io_CPU_request_bits_addr[15:11];
     automatic logic       _valid_miss_T = tag_hit_OH_0 | tag_hit_OH_1;
     _GEN_7 = m_axi_awready & m_axi_awvalid_0;
     _GEN_8 = m_axi_wready & m_axi_wvalid_0;
@@ -275,12 +273,12 @@ module L1_data_cache(
     end
     else
       AXI_read_buffer <= _GEN_1;
-    valid_hit_REG <= io_backend_memory_request_valid;
-    valid_miss_REG <= io_backend_memory_request_valid;
-    hit_MOB_index_REG <= io_backend_memory_request_bits_MOB_index;
+    valid_hit_REG <= io_CPU_request_valid;
+    valid_miss_REG <= io_CPU_request_valid;
+    hit_MOB_index_REG <= io_CPU_request_bits_MOB_index;
     miss_address_REG <= active_address;
-    AXI_request_Q_io_enq_bits_write_data_REG <= io_backend_memory_request_bits_data;
-    AXI_request_Q_io_enq_bits_read_address_r <= io_backend_memory_request_bits_addr;
+    AXI_request_Q_io_enq_bits_write_data_REG <= io_CPU_request_bits_data;
+    AXI_request_Q_io_enq_bits_read_address_r <= io_CPU_request_bits_addr;
     AXI_request_Q_io_enq_bits_read_address_r_1 <=
       AXI_request_Q_io_enq_bits_read_address_r;
     tag_hit_OH_0_REG <= active_tag;
@@ -373,7 +371,7 @@ module L1_data_cache(
     .io_data_in
       (_data_memories_data_in_31_T
          ? _cacheable_response_Q_io_deq_bits[7:0]
-         : io_backend_memory_request_bits_data[7:0]),
+         : io_CPU_request_bits_data[7:0]),
     .io_data_out (_data_memories_0_io_data_out)
   );
   ReadWriteSmem data_memories_1 (
@@ -387,7 +385,7 @@ module L1_data_cache(
     .io_data_in
       (_data_memories_data_in_31_T
          ? _cacheable_response_Q_io_deq_bits[15:8]
-         : io_backend_memory_request_bits_data[15:8]),
+         : io_CPU_request_bits_data[15:8]),
     .io_data_out (_data_memories_1_io_data_out)
   );
   ReadWriteSmem data_memories_2 (
@@ -401,7 +399,7 @@ module L1_data_cache(
     .io_data_in
       (_data_memories_data_in_31_T
          ? _cacheable_response_Q_io_deq_bits[23:16]
-         : io_backend_memory_request_bits_data[23:16]),
+         : io_CPU_request_bits_data[23:16]),
     .io_data_out (_data_memories_2_io_data_out)
   );
   ReadWriteSmem data_memories_3 (
@@ -415,7 +413,7 @@ module L1_data_cache(
     .io_data_in
       (_data_memories_data_in_31_T
          ? _cacheable_response_Q_io_deq_bits[31:24]
-         : io_backend_memory_request_bits_data[31:24]),
+         : io_CPU_request_bits_data[31:24]),
     .io_data_out (_data_memories_3_io_data_out)
   );
   ReadWriteSmem data_memories_4 (
@@ -429,7 +427,7 @@ module L1_data_cache(
     .io_data_in
       (_data_memories_data_in_31_T
          ? _cacheable_response_Q_io_deq_bits[39:32]
-         : io_backend_memory_request_bits_data[7:0]),
+         : io_CPU_request_bits_data[7:0]),
     .io_data_out (_data_memories_4_io_data_out)
   );
   ReadWriteSmem data_memories_5 (
@@ -443,7 +441,7 @@ module L1_data_cache(
     .io_data_in
       (_data_memories_data_in_31_T
          ? _cacheable_response_Q_io_deq_bits[47:40]
-         : io_backend_memory_request_bits_data[15:8]),
+         : io_CPU_request_bits_data[15:8]),
     .io_data_out (_data_memories_5_io_data_out)
   );
   ReadWriteSmem data_memories_6 (
@@ -457,7 +455,7 @@ module L1_data_cache(
     .io_data_in
       (_data_memories_data_in_31_T
          ? _cacheable_response_Q_io_deq_bits[55:48]
-         : io_backend_memory_request_bits_data[23:16]),
+         : io_CPU_request_bits_data[23:16]),
     .io_data_out (_data_memories_6_io_data_out)
   );
   ReadWriteSmem data_memories_7 (
@@ -471,7 +469,7 @@ module L1_data_cache(
     .io_data_in
       (_data_memories_data_in_31_T
          ? _cacheable_response_Q_io_deq_bits[63:56]
-         : io_backend_memory_request_bits_data[31:24]),
+         : io_CPU_request_bits_data[31:24]),
     .io_data_out (_data_memories_7_io_data_out)
   );
   ReadWriteSmem data_memories_8 (
@@ -485,7 +483,7 @@ module L1_data_cache(
     .io_data_in
       (_data_memories_data_in_31_T
          ? _cacheable_response_Q_io_deq_bits[71:64]
-         : io_backend_memory_request_bits_data[7:0]),
+         : io_CPU_request_bits_data[7:0]),
     .io_data_out (_data_memories_8_io_data_out)
   );
   ReadWriteSmem data_memories_9 (
@@ -499,7 +497,7 @@ module L1_data_cache(
     .io_data_in
       (_data_memories_data_in_31_T
          ? _cacheable_response_Q_io_deq_bits[79:72]
-         : io_backend_memory_request_bits_data[15:8]),
+         : io_CPU_request_bits_data[15:8]),
     .io_data_out (_data_memories_9_io_data_out)
   );
   ReadWriteSmem data_memories_10 (
@@ -513,7 +511,7 @@ module L1_data_cache(
     .io_data_in
       (_data_memories_data_in_31_T
          ? _cacheable_response_Q_io_deq_bits[87:80]
-         : io_backend_memory_request_bits_data[23:16]),
+         : io_CPU_request_bits_data[23:16]),
     .io_data_out (_data_memories_10_io_data_out)
   );
   ReadWriteSmem data_memories_11 (
@@ -527,7 +525,7 @@ module L1_data_cache(
     .io_data_in
       (_data_memories_data_in_31_T
          ? _cacheable_response_Q_io_deq_bits[95:88]
-         : io_backend_memory_request_bits_data[31:24]),
+         : io_CPU_request_bits_data[31:24]),
     .io_data_out (_data_memories_11_io_data_out)
   );
   ReadWriteSmem data_memories_12 (
@@ -541,7 +539,7 @@ module L1_data_cache(
     .io_data_in
       (_data_memories_data_in_31_T
          ? _cacheable_response_Q_io_deq_bits[103:96]
-         : io_backend_memory_request_bits_data[7:0]),
+         : io_CPU_request_bits_data[7:0]),
     .io_data_out (_data_memories_12_io_data_out)
   );
   ReadWriteSmem data_memories_13 (
@@ -555,7 +553,7 @@ module L1_data_cache(
     .io_data_in
       (_data_memories_data_in_31_T
          ? _cacheable_response_Q_io_deq_bits[111:104]
-         : io_backend_memory_request_bits_data[15:8]),
+         : io_CPU_request_bits_data[15:8]),
     .io_data_out (_data_memories_13_io_data_out)
   );
   ReadWriteSmem data_memories_14 (
@@ -569,7 +567,7 @@ module L1_data_cache(
     .io_data_in
       (_data_memories_data_in_31_T
          ? _cacheable_response_Q_io_deq_bits[119:112]
-         : io_backend_memory_request_bits_data[23:16]),
+         : io_CPU_request_bits_data[23:16]),
     .io_data_out (_data_memories_14_io_data_out)
   );
   ReadWriteSmem data_memories_15 (
@@ -583,7 +581,7 @@ module L1_data_cache(
     .io_data_in
       (_data_memories_data_in_31_T
          ? _cacheable_response_Q_io_deq_bits[127:120]
-         : io_backend_memory_request_bits_data[31:24]),
+         : io_CPU_request_bits_data[31:24]),
     .io_data_out (_data_memories_15_io_data_out)
   );
   ReadWriteSmem data_memories_16 (
@@ -597,7 +595,7 @@ module L1_data_cache(
     .io_data_in
       (_data_memories_data_in_31_T
          ? _cacheable_response_Q_io_deq_bits[135:128]
-         : io_backend_memory_request_bits_data[7:0]),
+         : io_CPU_request_bits_data[7:0]),
     .io_data_out (_data_memories_16_io_data_out)
   );
   ReadWriteSmem data_memories_17 (
@@ -611,7 +609,7 @@ module L1_data_cache(
     .io_data_in
       (_data_memories_data_in_31_T
          ? _cacheable_response_Q_io_deq_bits[143:136]
-         : io_backend_memory_request_bits_data[15:8]),
+         : io_CPU_request_bits_data[15:8]),
     .io_data_out (_data_memories_17_io_data_out)
   );
   ReadWriteSmem data_memories_18 (
@@ -625,7 +623,7 @@ module L1_data_cache(
     .io_data_in
       (_data_memories_data_in_31_T
          ? _cacheable_response_Q_io_deq_bits[151:144]
-         : io_backend_memory_request_bits_data[23:16]),
+         : io_CPU_request_bits_data[23:16]),
     .io_data_out (_data_memories_18_io_data_out)
   );
   ReadWriteSmem data_memories_19 (
@@ -639,7 +637,7 @@ module L1_data_cache(
     .io_data_in
       (_data_memories_data_in_31_T
          ? _cacheable_response_Q_io_deq_bits[159:152]
-         : io_backend_memory_request_bits_data[31:24]),
+         : io_CPU_request_bits_data[31:24]),
     .io_data_out (_data_memories_19_io_data_out)
   );
   ReadWriteSmem data_memories_20 (
@@ -653,7 +651,7 @@ module L1_data_cache(
     .io_data_in
       (_data_memories_data_in_31_T
          ? _cacheable_response_Q_io_deq_bits[167:160]
-         : io_backend_memory_request_bits_data[7:0]),
+         : io_CPU_request_bits_data[7:0]),
     .io_data_out (_data_memories_20_io_data_out)
   );
   ReadWriteSmem data_memories_21 (
@@ -667,7 +665,7 @@ module L1_data_cache(
     .io_data_in
       (_data_memories_data_in_31_T
          ? _cacheable_response_Q_io_deq_bits[175:168]
-         : io_backend_memory_request_bits_data[15:8]),
+         : io_CPU_request_bits_data[15:8]),
     .io_data_out (_data_memories_21_io_data_out)
   );
   ReadWriteSmem data_memories_22 (
@@ -681,7 +679,7 @@ module L1_data_cache(
     .io_data_in
       (_data_memories_data_in_31_T
          ? _cacheable_response_Q_io_deq_bits[183:176]
-         : io_backend_memory_request_bits_data[23:16]),
+         : io_CPU_request_bits_data[23:16]),
     .io_data_out (_data_memories_22_io_data_out)
   );
   ReadWriteSmem data_memories_23 (
@@ -695,7 +693,7 @@ module L1_data_cache(
     .io_data_in
       (_data_memories_data_in_31_T
          ? _cacheable_response_Q_io_deq_bits[191:184]
-         : io_backend_memory_request_bits_data[31:24]),
+         : io_CPU_request_bits_data[31:24]),
     .io_data_out (_data_memories_23_io_data_out)
   );
   ReadWriteSmem data_memories_24 (
@@ -709,7 +707,7 @@ module L1_data_cache(
     .io_data_in
       (_data_memories_data_in_31_T
          ? _cacheable_response_Q_io_deq_bits[199:192]
-         : io_backend_memory_request_bits_data[7:0]),
+         : io_CPU_request_bits_data[7:0]),
     .io_data_out (_data_memories_24_io_data_out)
   );
   ReadWriteSmem data_memories_25 (
@@ -723,7 +721,7 @@ module L1_data_cache(
     .io_data_in
       (_data_memories_data_in_31_T
          ? _cacheable_response_Q_io_deq_bits[207:200]
-         : io_backend_memory_request_bits_data[15:8]),
+         : io_CPU_request_bits_data[15:8]),
     .io_data_out (_data_memories_25_io_data_out)
   );
   ReadWriteSmem data_memories_26 (
@@ -737,7 +735,7 @@ module L1_data_cache(
     .io_data_in
       (_data_memories_data_in_31_T
          ? _cacheable_response_Q_io_deq_bits[215:208]
-         : io_backend_memory_request_bits_data[23:16]),
+         : io_CPU_request_bits_data[23:16]),
     .io_data_out (_data_memories_26_io_data_out)
   );
   ReadWriteSmem data_memories_27 (
@@ -751,7 +749,7 @@ module L1_data_cache(
     .io_data_in
       (_data_memories_data_in_31_T
          ? _cacheable_response_Q_io_deq_bits[223:216]
-         : io_backend_memory_request_bits_data[31:24]),
+         : io_CPU_request_bits_data[31:24]),
     .io_data_out (_data_memories_27_io_data_out)
   );
   ReadWriteSmem data_memories_28 (
@@ -765,7 +763,7 @@ module L1_data_cache(
     .io_data_in
       (_data_memories_data_in_31_T
          ? _cacheable_response_Q_io_deq_bits[231:224]
-         : io_backend_memory_request_bits_data[7:0]),
+         : io_CPU_request_bits_data[7:0]),
     .io_data_out (_data_memories_28_io_data_out)
   );
   ReadWriteSmem data_memories_29 (
@@ -779,7 +777,7 @@ module L1_data_cache(
     .io_data_in
       (_data_memories_data_in_31_T
          ? _cacheable_response_Q_io_deq_bits[239:232]
-         : io_backend_memory_request_bits_data[15:8]),
+         : io_CPU_request_bits_data[15:8]),
     .io_data_out (_data_memories_29_io_data_out)
   );
   ReadWriteSmem data_memories_30 (
@@ -793,7 +791,7 @@ module L1_data_cache(
     .io_data_in
       (_data_memories_data_in_31_T
          ? _cacheable_response_Q_io_deq_bits[247:240]
-         : io_backend_memory_request_bits_data[23:16]),
+         : io_CPU_request_bits_data[23:16]),
     .io_data_out (_data_memories_30_io_data_out)
   );
   ReadWriteSmem data_memories_31 (
@@ -807,7 +805,7 @@ module L1_data_cache(
     .io_data_in
       (_data_memories_data_in_31_T
          ? _cacheable_response_Q_io_deq_bits[255:248]
-         : io_backend_memory_request_bits_data[31:24]),
+         : io_CPU_request_bits_data[31:24]),
     .io_data_out (_data_memories_31_io_data_out)
   );
   ReadWriteSmem_32 tag_memories_0 (
@@ -868,7 +866,7 @@ module L1_data_cache(
            ? 7'h0
            : _AXI_request_Q_io_deq_bits_read_bytes / 7'h4 - 7'h1}
       : 8'h0;
-  assign m_axi_arsize = read_request_valid ? 3'h5 : 3'h0;
+  assign m_axi_arsize = {1'h0, read_request_valid, 1'h0};
   assign m_axi_arburst = {1'h0, read_request_valid};
   assign m_axi_arlock = 1'h0;
   assign m_axi_arcache = 4'h0;
@@ -877,9 +875,9 @@ module L1_data_cache(
   assign m_axi_arregion = 4'h0;
   assign m_axi_aruser = 1'h0;
   assign m_axi_rready = m_axi_rready_0;
-  assign io_backend_memory_request_ready = 1'h1;
-  assign io_backend_memory_response_valid = output_valid_r_1;
-  assign io_backend_memory_response_bits_data = 32'h0;
-  assign io_backend_memory_response_bits_MOB_index = hit_MOB_index_REG;
+  assign io_CPU_request_ready = 1'h1;
+  assign io_CPU_response_valid = output_valid_r_1;
+  assign io_CPU_response_bits_data = 32'h0;
+  assign io_CPU_response_bits_MOB_index = hit_MOB_index_REG;
 endmodule
 
