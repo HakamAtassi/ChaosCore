@@ -5,7 +5,6 @@ module Queue1_UInt32(
   output        io_enq_ready,
   input         io_enq_valid,
   input  [31:0] io_enq_bits,
-  input         io_deq_ready,
   output        io_deq_valid,
   output [31:0] io_deq_bits,
   output        io_count
@@ -20,7 +19,7 @@ module Queue1_UInt32(
       ram <= io_enq_bits;
     if (reset)
       full <= 1'h0;
-    else if (~(do_enq == (io_deq_ready & full)))
+    else if (do_enq)
       full <= do_enq;
   end // always @(posedge)
   assign io_enq_ready = ~full;
