@@ -121,10 +121,11 @@ module ChaosCore_tile(
                 io_data_cache_AXI_port_AXI_R_bits_ruser
 );
 
-  wire        _data_cache_io_backend_memory_request_ready;
-  wire        _data_cache_io_backend_memory_response_valid;
-  wire [31:0] _data_cache_io_backend_memory_response_bits_data;
-  wire [3:0]  _data_cache_io_backend_memory_response_bits_MOB_index;
+  wire        _data_cache_io_CPU_request_ready;
+  wire        _data_cache_io_CPU_response_valid;
+  wire [31:0] _data_cache_io_CPU_response_bits_data;
+  wire [3:0]  _data_cache_io_CPU_response_bits_MOB_index;
+  wire        _instruction_cache_io_CPU_request_ready;
   wire        _instruction_cache_io_CPU_response_valid;
   wire [31:0] _instruction_cache_io_CPU_response_bits_fetch_PC;
   wire        _instruction_cache_io_CPU_response_bits_valid_bits_0;
@@ -177,7 +178,8 @@ module ChaosCore_tile(
     .io_flush                                                     (/* unused */),
     .io_revert_valid                                              (/* unused */),
     .io_revert_bits_PC                                            (/* unused */),
-    .io_frontend_memory_request_ready                             (1'h0),
+    .io_frontend_memory_request_ready
+      (_instruction_cache_io_CPU_request_ready),
     .io_frontend_memory_request_valid                             (/* unused */),
     .io_frontend_memory_request_bits_addr                         (/* unused */),
     .io_frontend_memory_request_bits_wr_data                      (/* unused */),
@@ -226,7 +228,7 @@ module ChaosCore_tile(
     .io_frontend_memory_response_bits_TOS
       (_instruction_cache_io_CPU_response_bits_TOS),
     .io_backend_memory_request_ready
-      (_data_cache_io_backend_memory_request_ready),
+      (_data_cache_io_CPU_request_ready),
     .io_backend_memory_request_valid                              (/* unused */),
     .io_backend_memory_request_bits_addr                          (/* unused */),
     .io_backend_memory_request_bits_data                          (/* unused */),
@@ -235,11 +237,11 @@ module ChaosCore_tile(
     .io_backend_memory_request_bits_MOB_index                     (/* unused */),
     .io_backend_memory_response_ready                             (/* unused */),
     .io_backend_memory_response_valid
-      (_data_cache_io_backend_memory_response_valid),
+      (_data_cache_io_CPU_response_valid),
     .io_backend_memory_response_bits_data
-      (_data_cache_io_backend_memory_response_bits_data),
+      (_data_cache_io_CPU_response_bits_data),
     .io_backend_memory_response_bits_MOB_index
-      (_data_cache_io_backend_memory_response_bits_MOB_index)
+      (_data_cache_io_CPU_response_bits_MOB_index)
   );
   L1_instruction_cache instruction_cache (
     .clock                                            (clock),
@@ -332,6 +334,8 @@ module ChaosCore_tile(
       (io_instruction_cache_AXI_port_AXI_R_bits_rlast),
     .m_axi_ruser
       (io_instruction_cache_AXI_port_AXI_R_bits_ruser),
+    .io_CPU_request_ready
+      (_instruction_cache_io_CPU_request_ready),
     .io_CPU_response_valid
       (_instruction_cache_io_CPU_response_valid),
     .io_CPU_response_bits_fetch_PC
@@ -376,99 +380,63 @@ module ChaosCore_tile(
       (_instruction_cache_io_CPU_response_bits_TOS)
   );
   L1_data_cache data_cache (
-    .clock                                       (clock),
-    .reset                                       (reset),
-    .m_axi_awvalid                               (io_data_cache_AXI_port_AXI_AW_valid),
-    .m_axi_awready                               (io_data_cache_AXI_port_AXI_AW_ready),
-    .m_axi_awid
-      (io_data_cache_AXI_port_AXI_AW_bits_awid),
-    .m_axi_awaddr
-      (io_data_cache_AXI_port_AXI_AW_bits_awaddr),
-    .m_axi_awlen
-      (io_data_cache_AXI_port_AXI_AW_bits_awlen),
-    .m_axi_awsize
-      (io_data_cache_AXI_port_AXI_AW_bits_awsize),
-    .m_axi_awburst
-      (io_data_cache_AXI_port_AXI_AW_bits_awburst),
-    .m_axi_awlock
-      (io_data_cache_AXI_port_AXI_AW_bits_awlock),
-    .m_axi_awcache
-      (io_data_cache_AXI_port_AXI_AW_bits_awcache),
-    .m_axi_awprot
-      (io_data_cache_AXI_port_AXI_AW_bits_awprot),
-    .m_axi_awqos
-      (io_data_cache_AXI_port_AXI_AW_bits_awqos),
-    .m_axi_awregion
-      (io_data_cache_AXI_port_AXI_AW_bits_awregion),
-    .m_axi_awuser
-      (io_data_cache_AXI_port_AXI_AW_bits_awuser),
-    .m_axi_wready                                (io_data_cache_AXI_port_AXI_W_ready),
-    .m_axi_wvalid                                (io_data_cache_AXI_port_AXI_W_valid),
-    .m_axi_wdata
-      (io_data_cache_AXI_port_AXI_W_bits_wdata),
-    .m_axi_wstrb
-      (io_data_cache_AXI_port_AXI_W_bits_wstrb),
-    .m_axi_wlast
-      (io_data_cache_AXI_port_AXI_W_bits_wlast),
-    .m_axi_wuser
-      (io_data_cache_AXI_port_AXI_W_bits_wuser),
-    .m_axi_bready                                (io_data_cache_AXI_port_AXI_B_ready),
-    .m_axi_bvalid                                (io_data_cache_AXI_port_AXI_B_valid),
-    .m_axi_bid                                   (io_data_cache_AXI_port_AXI_B_bits_bid),
-    .m_axi_bresp
-      (io_data_cache_AXI_port_AXI_B_bits_bresp),
-    .m_axi_buser
-      (io_data_cache_AXI_port_AXI_B_bits_buser),
-    .m_axi_arvalid                               (io_data_cache_AXI_port_AXI_AR_valid),
-    .m_axi_arready                               (io_data_cache_AXI_port_AXI_AR_ready),
-    .m_axi_arid
-      (io_data_cache_AXI_port_AXI_AR_bits_arid),
-    .m_axi_araddr
-      (io_data_cache_AXI_port_AXI_AR_bits_araddr),
-    .m_axi_arlen
-      (io_data_cache_AXI_port_AXI_AR_bits_arlen),
-    .m_axi_arsize
-      (io_data_cache_AXI_port_AXI_AR_bits_arsize),
-    .m_axi_arburst
-      (io_data_cache_AXI_port_AXI_AR_bits_arburst),
-    .m_axi_arlock
-      (io_data_cache_AXI_port_AXI_AR_bits_arlock),
-    .m_axi_arcache
-      (io_data_cache_AXI_port_AXI_AR_bits_arcache),
-    .m_axi_arprot
-      (io_data_cache_AXI_port_AXI_AR_bits_arprot),
-    .m_axi_arqos
-      (io_data_cache_AXI_port_AXI_AR_bits_arqos),
-    .m_axi_arregion
-      (io_data_cache_AXI_port_AXI_AR_bits_arregion),
-    .m_axi_aruser
-      (io_data_cache_AXI_port_AXI_AR_bits_aruser),
-    .m_axi_rready                                (io_data_cache_AXI_port_AXI_R_ready),
-    .m_axi_rvalid                                (io_data_cache_AXI_port_AXI_R_valid),
-    .m_axi_rid                                   (io_data_cache_AXI_port_AXI_R_bits_rid),
-    .m_axi_rdata
-      (io_data_cache_AXI_port_AXI_R_bits_rdata),
-    .m_axi_rresp
-      (io_data_cache_AXI_port_AXI_R_bits_rresp),
-    .m_axi_rlast
-      (io_data_cache_AXI_port_AXI_R_bits_rlast),
-    .m_axi_ruser
-      (io_data_cache_AXI_port_AXI_R_bits_ruser),
-    .io_backend_memory_request_ready
-      (_data_cache_io_backend_memory_request_ready),
-    .io_backend_memory_request_valid             (1'h0),
-    .io_backend_memory_request_bits_addr         (32'h0),
-    .io_backend_memory_request_bits_data         (32'h0),
-    .io_backend_memory_request_bits_memory_type  (2'h0),
-    .io_backend_memory_request_bits_access_width (2'h0),
-    .io_backend_memory_request_bits_MOB_index    (4'h0),
-    .io_backend_memory_response_ready            (1'h0),
-    .io_backend_memory_response_valid
-      (_data_cache_io_backend_memory_response_valid),
-    .io_backend_memory_response_bits_data
-      (_data_cache_io_backend_memory_response_bits_data),
-    .io_backend_memory_response_bits_MOB_index
-      (_data_cache_io_backend_memory_response_bits_MOB_index)
+    .clock                            (clock),
+    .reset                            (reset),
+    .m_axi_awvalid                    (io_data_cache_AXI_port_AXI_AW_valid),
+    .m_axi_awready                    (io_data_cache_AXI_port_AXI_AW_ready),
+    .m_axi_awid                       (io_data_cache_AXI_port_AXI_AW_bits_awid),
+    .m_axi_awaddr                     (io_data_cache_AXI_port_AXI_AW_bits_awaddr),
+    .m_axi_awlen                      (io_data_cache_AXI_port_AXI_AW_bits_awlen),
+    .m_axi_awsize                     (io_data_cache_AXI_port_AXI_AW_bits_awsize),
+    .m_axi_awburst                    (io_data_cache_AXI_port_AXI_AW_bits_awburst),
+    .m_axi_awlock                     (io_data_cache_AXI_port_AXI_AW_bits_awlock),
+    .m_axi_awcache                    (io_data_cache_AXI_port_AXI_AW_bits_awcache),
+    .m_axi_awprot                     (io_data_cache_AXI_port_AXI_AW_bits_awprot),
+    .m_axi_awqos                      (io_data_cache_AXI_port_AXI_AW_bits_awqos),
+    .m_axi_awregion                   (io_data_cache_AXI_port_AXI_AW_bits_awregion),
+    .m_axi_awuser                     (io_data_cache_AXI_port_AXI_AW_bits_awuser),
+    .m_axi_wready                     (io_data_cache_AXI_port_AXI_W_ready),
+    .m_axi_wvalid                     (io_data_cache_AXI_port_AXI_W_valid),
+    .m_axi_wdata                      (io_data_cache_AXI_port_AXI_W_bits_wdata),
+    .m_axi_wstrb                      (io_data_cache_AXI_port_AXI_W_bits_wstrb),
+    .m_axi_wlast                      (io_data_cache_AXI_port_AXI_W_bits_wlast),
+    .m_axi_wuser                      (io_data_cache_AXI_port_AXI_W_bits_wuser),
+    .m_axi_bready                     (io_data_cache_AXI_port_AXI_B_ready),
+    .m_axi_bvalid                     (io_data_cache_AXI_port_AXI_B_valid),
+    .m_axi_bid                        (io_data_cache_AXI_port_AXI_B_bits_bid),
+    .m_axi_bresp                      (io_data_cache_AXI_port_AXI_B_bits_bresp),
+    .m_axi_buser                      (io_data_cache_AXI_port_AXI_B_bits_buser),
+    .m_axi_arvalid                    (io_data_cache_AXI_port_AXI_AR_valid),
+    .m_axi_arready                    (io_data_cache_AXI_port_AXI_AR_ready),
+    .m_axi_arid                       (io_data_cache_AXI_port_AXI_AR_bits_arid),
+    .m_axi_araddr                     (io_data_cache_AXI_port_AXI_AR_bits_araddr),
+    .m_axi_arlen                      (io_data_cache_AXI_port_AXI_AR_bits_arlen),
+    .m_axi_arsize                     (io_data_cache_AXI_port_AXI_AR_bits_arsize),
+    .m_axi_arburst                    (io_data_cache_AXI_port_AXI_AR_bits_arburst),
+    .m_axi_arlock                     (io_data_cache_AXI_port_AXI_AR_bits_arlock),
+    .m_axi_arcache                    (io_data_cache_AXI_port_AXI_AR_bits_arcache),
+    .m_axi_arprot                     (io_data_cache_AXI_port_AXI_AR_bits_arprot),
+    .m_axi_arqos                      (io_data_cache_AXI_port_AXI_AR_bits_arqos),
+    .m_axi_arregion                   (io_data_cache_AXI_port_AXI_AR_bits_arregion),
+    .m_axi_aruser                     (io_data_cache_AXI_port_AXI_AR_bits_aruser),
+    .m_axi_rready                     (io_data_cache_AXI_port_AXI_R_ready),
+    .m_axi_rvalid                     (io_data_cache_AXI_port_AXI_R_valid),
+    .m_axi_rid                        (io_data_cache_AXI_port_AXI_R_bits_rid),
+    .m_axi_rdata                      (io_data_cache_AXI_port_AXI_R_bits_rdata),
+    .m_axi_rresp                      (io_data_cache_AXI_port_AXI_R_bits_rresp),
+    .m_axi_rlast                      (io_data_cache_AXI_port_AXI_R_bits_rlast),
+    .m_axi_ruser                      (io_data_cache_AXI_port_AXI_R_bits_ruser),
+    .io_CPU_request_ready             (_data_cache_io_CPU_request_ready),
+    .io_CPU_request_valid             (1'h0),
+    .io_CPU_request_bits_addr         (32'h0),
+    .io_CPU_request_bits_data         (32'h0),
+    .io_CPU_request_bits_memory_type  (2'h0),
+    .io_CPU_request_bits_access_width (2'h0),
+    .io_CPU_request_bits_MOB_index    (4'h0),
+    .io_CPU_response_ready            (1'h0),
+    .io_CPU_response_valid            (_data_cache_io_CPU_response_valid),
+    .io_CPU_response_bits_data        (_data_cache_io_CPU_response_bits_data),
+    .io_CPU_response_bits_MOB_index   (_data_cache_io_CPU_response_bits_MOB_index)
   );
 endmodule
 

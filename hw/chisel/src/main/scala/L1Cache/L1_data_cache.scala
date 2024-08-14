@@ -109,8 +109,8 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	import nocParameters._
 	val io = IO(new Bundle{
 		// CPU PORT(s)
-		val backend_memory_request	= Flipped(Decoupled(new backend_memory_request(coreParameters)))
-		val backend_memory_response	= Decoupled(new backend_memory_response(coreParameters))
+		val CPU_request		= Flipped(Decoupled(new backend_memory_request(coreParameters)))
+		val CPU_response	= Decoupled(new backend_memory_response(coreParameters))
 
 		// FIXME: flush/kill ??
 
@@ -195,19 +195,19 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	// Helper signal assignment //
 	//////////////////////////////
 
-	io.backend_memory_request.ready		:= 1.B
+	io.CPU_request.ready		:= 1.B
 
-	active_valid				:=	DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY || (io.backend_memory_request.valid)
+	active_valid				:=	DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY || (io.CPU_request.valid)
 	active_address				:=	Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY, replay_address,		backend_address)
 	active_set					:=	Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY, replay_set, 			backend_set)
 	active_tag					:=	Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY, replay_tag, 			backend_tag)
 	active_memory_type			:=	Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY, replay_memory_type, 	backend_memory_type)
 	active_access_width			:=	Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY, replay_access_width, backend_access_width)
-	active_MOB_index			:=	io.backend_memory_request.bits.MOB_index
+	active_MOB_index			:=	io.CPU_request.bits.MOB_index
 
 
-	valid_hit			:= tag_hit_OH.reduce(_ || _)	&& RegNext(io.backend_memory_request.valid)
-	valid_miss			:= !tag_hit_OH.reduce(_ || _)	&& RegNext(io.backend_memory_request.valid)
+	valid_hit			:= tag_hit_OH.reduce(_ || _)	&& RegNext(io.CPU_request.valid)
+	valid_miss			:= !tag_hit_OH.reduce(_ || _)	&& RegNext(io.CPU_request.valid)
 
 	valid_write_hit		:=	valid_hit && RegNext(active_memory_type === memory_type_t.STORE)
 	valid_write_miss	:=	valid_miss && RegNext(active_memory_type=== memory_type_t.STORE)
@@ -228,12 +228,12 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	miss_way			:= PriorityEncoderOH(~(tag_hit_OH.asUInt))	// miss way == allocate way == the rightmost/leftmost way with a 0 PLRU bit
 
 
-	backend_request_valid 	:= 	io.backend_memory_request.valid
-	backend_address 		:=	io.backend_memory_request.bits.addr
-	backend_set				:=	get_decomposed_dcache_address(coreParameters, io.backend_memory_request.bits.addr).set
-	backend_tag				:=  get_decomposed_dcache_address(coreParameters, io.backend_memory_request.bits.addr).tag
-	backend_memory_type		:=  io.backend_memory_request.bits.memory_type
-	backend_access_width	:=  io.backend_memory_request.bits.access_width
+	backend_request_valid 	:= 	io.CPU_request.valid
+	backend_address 		:=	io.CPU_request.bits.addr
+	backend_set				:=	get_decomposed_dcache_address(coreParameters, io.CPU_request.bits.addr).set
+	backend_tag				:=  get_decomposed_dcache_address(coreParameters, io.CPU_request.bits.addr).tag
+	backend_memory_type		:=  io.CPU_request.bits.memory_type
+	backend_access_width	:=  io.CPU_request.bits.access_width
 
 
 	//allocate_cache_line			= Wire(UInt((L1_DataCacheBlockSizeBytes*8).W))
@@ -282,17 +282,17 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	val non_cacheable_request_bytes 	= Wire(UInt(2.W))
 
 	// Requests are non cacheable if MSB is set
-	request_memory_type					:= io.backend_memory_request.bits.memory_type
-	request_non_cacheable				:= io.backend_memory_request.bits.addr & "h80000000".U =/= 0.U
+	request_memory_type					:= io.CPU_request.bits.memory_type
+	request_non_cacheable				:= io.CPU_request.bits.addr & "h80000000".U =/= 0.U
 	request_non_cacheable_read			:= request_memory_type === memory_type_t.LOAD  && request_non_cacheable
 	request_non_cacheable_write			:= request_memory_type === memory_type_t.STORE && request_non_cacheable
 
-	request_cacheable_write_read		:= io.backend_memory_request.bits.addr & "h80000000".U === 0.U
+	request_cacheable_write_read		:= io.CPU_request.bits.addr & "h80000000".U === 0.U
 
 
-	when(io.backend_memory_request.bits.access_width === access_width_t.W){
+	when(io.CPU_request.bits.access_width === access_width_t.W){
 		non_cacheable_request_bytes := 4.U
-	}.elsewhen(io.backend_memory_request.bits.access_width === access_width_t.HW){
+	}.elsewhen(io.CPU_request.bits.access_width === access_width_t.HW){
 		non_cacheable_request_bytes := 2.U
 	}.otherwise{
 		non_cacheable_request_bytes := 1.U
@@ -303,12 +303,12 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	AXI_request_Q.io.enq.valid 				:=	request_non_cacheable_read  || request_non_cacheable_write || request_cacheable_write_read
 	AXI_request_Q.io.enq.bits.write_valid	:=	request_non_cacheable_write || request_cacheable_write_read
 	AXI_request_Q.io.enq.bits.write_address	:=	writeback_address
-	AXI_request_Q.io.enq.bits.write_data	:=	Mux(request_non_cacheable_write, RegNext(io.backend_memory_request.bits.data), data_way)
+	AXI_request_Q.io.enq.bits.write_data	:=	Mux(request_non_cacheable_write, RegNext(io.CPU_request.bits.data), data_way)
 	AXI_request_Q.io.enq.bits.write_bytes	:=	Mux(request_non_cacheable_write, non_cacheable_request_bytes, L1_DataCacheBlockSizeBytes.U)
 
 	// Read missing line
 	AXI_request_Q.io.enq.bits.read_valid	:=	request_non_cacheable_read || request_cacheable_write_read
-	AXI_request_Q.io.enq.bits.read_address	:=	ShiftRegister(io.backend_memory_request.bits.addr, 2)	// FIXME: mask for cache line (cache line aligned)
+	AXI_request_Q.io.enq.bits.read_address	:=	ShiftRegister(io.CPU_request.bits.addr, 2)	// FIXME: mask for cache line (cache line aligned)
 	AXI_request_Q.io.enq.bits.read_bytes	:=	Mux(request_non_cacheable_write, non_cacheable_request_bytes, L1_DataCacheBlockSizeBytes.U)
 
 
@@ -354,9 +354,9 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 
 	// Assign data_memory_wr_en
 	for(i <- 0 until L1_DataCacheBlockSizeBytes){
-		val word_offset 			= get_decomposed_dcache_address(coreParameters, io.backend_memory_request.bits.addr).word_offset
-		val half_word_offset 		= get_decomposed_dcache_address(coreParameters, io.backend_memory_request.bits.addr).half_word_offset
-		val byte_offset 			= get_decomposed_dcache_address(coreParameters, io.backend_memory_request.bits.addr).byte_offset
+		val word_offset 			= get_decomposed_dcache_address(coreParameters, io.CPU_request.bits.addr).word_offset
+		val half_word_offset 		= get_decomposed_dcache_address(coreParameters, io.CPU_request.bits.addr).half_word_offset
+		val byte_offset 			= get_decomposed_dcache_address(coreParameters, io.CPU_request.bits.addr).byte_offset
 
 		val word_offset_match 		= (word_offset === (i / 4).U) && (active_memory_type === memory_type_t.STORE) && (active_access_width === access_width_t.W)
 		val half_word_offset_match 	= (word_offset === (i / 2).U) && (active_memory_type === memory_type_t.STORE) && (active_access_width === access_width_t.HW)
@@ -366,7 +366,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	}
 
 	for(i <- 0 until L1_DataCacheBlockSizeBytes){
-		data_memories_data_in(i) 	:= Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.ALLOCATE, (allocate_cache_line>>(i*8))(7,0), (io.backend_memory_request.bits.data>>(i%4)*8)(7,0)) //(((i+1)%4)*8-1, (i%4)*8))
+		data_memories_data_in(i) 	:= Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.ALLOCATE, (allocate_cache_line>>(i*8))(7,0), (io.CPU_request.bits.data>>(i%4)*8)(7,0)) //(((i+1)%4)*8-1, (i%4)*8))
 	}
 
 	for((data_memory, i) <- data_memories.zipWithIndex){
@@ -628,9 +628,9 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	// IO //
 	////////
 
-	io.backend_memory_response.valid					:=	output_valid
-	io.backend_memory_response.bits.data				:=	output_data
-	io.backend_memory_response.bits.MOB_index			:=	output_MOB_index
+	io.CPU_response.valid					:=	output_valid
+	io.CPU_response.bits.data				:=	output_data
+	io.CPU_response.bits.MOB_index			:=	output_MOB_index
 
 
 }

@@ -36,7 +36,7 @@ import java.rmi.server.UID
 
 
 object cacheState extends ChiselEnum{
-    val Active, Allocate, Replay, Stall = Value
+    val Active, Request, Allocate, Replay, Stall = Value
 }
 
 
@@ -102,9 +102,6 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
 
         val CPU_request         =     Flipped(Decoupled(new frontend_memory_request(coreParameters)))            // Inputs from CPU
         val CPU_response        =     Decoupled(new fetch_packet(coreParameters))                       // TO CPU
-
-        //val DRAM_request        =     Decoupled(new DRAM_request(coreParameters))                       // TO DRAM
-        //val DRAM_response       =     Flipped(Decoupled(Input(new DRAM_response(coreParameters))))      // FROM DRAM
     })
 
 
@@ -160,14 +157,9 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
     val cache_valid     = RegInit(Bool(), 0.B)
 
     //RegInit(Bool(), 0.B)
-    
 
-    //io.DRAM_request.valid        := request_valid
-    //io.DRAM_request.bits.addr    := request_addr
-    //io.DRAM_request.bits.wr_data := request_data
-    //io.DRAM_request.bits.wr_en   := request_wr_en
 
-	val axi_response = Wire(UInt(L1_instructionCacheBlockSizeBytes.W))
+	val axi_response = Wire(UInt((L1_instructionCacheBlockSizeBytes*8).W))
 	val axi_response_valid = Wire(Bool())
 
     axi_response := 0.U
@@ -182,11 +174,23 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
         is(cacheState.Active){  // Wait for request
 
             when(miss===1.B && io.flush === 0.U){           // Buffer current request, stall cache, go to wait state
-		        AXI_read_request(request_addr, L1_instructionCacheBlockSizeBytes.U)
-                cache_state              := cacheState.Allocate
+		        val read_accepted = AXI_read_request(request_addr, L1_instructionCacheBlockSizeBytes.U)
+                when(read_accepted){
+                    cache_state              := cacheState.Allocate
+                }.otherwise{
+                    cache_state              := cacheState.Request
+                }
             }.otherwise{
+                request_addr   := io.CPU_request.bits.addr & dram_addr_mask
                 replay_address := io.CPU_request.bits  // if miss, buffer address
                 fetch_PC_buf   := io.CPU_request.bits
+            }
+        }
+
+        is(cacheState.Request){
+            val read_accepted = AXI_read_request(request_addr, L1_instructionCacheBlockSizeBytes.U)
+            when(read_accepted){
+                cache_state              := cacheState.Allocate
             }
         }
 
@@ -197,6 +201,8 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
             }.otherwise{
 	            val (_axi_response, _axi_response_valid) = AXI_read
                 axi_response := _axi_response
+                dontTouch(axi_response)
+                dontTouch(axi_response_valid)
                 axi_response_valid := _axi_response_valid
                 when(axi_response_valid){         // DRAM response accepted
                     cache_state := cacheState.Replay    // Allow cycle for cache replay
@@ -222,13 +228,14 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
     // Address arbitration
 
     val current_address = Wire(new frontend_memory_request(coreParameters)) //Wire(UInt(32.W))
-    dontTouch(current_address)
 
     current_address     := Mux(cache_state=/=cacheState.Active || miss, replay_address, io.CPU_request.bits) // During allocate and replay, current address is from buffered request. 
     current_packet      := get_decomposed_icache_address(coreParameters, current_address.addr)
-    dontTouch(current_packet)
     
 
+    dontTouch(current_address)
+    dontTouch(current_packet)
+    
 
     ////////////////
     // LRU MEMORY //
@@ -257,7 +264,7 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
 
     current_data.valid  := 1.B
     current_data.tag    := get_decomposed_icache_address(coreParameters, replay_address.addr).tag
-    current_data.data   := axi_response //io.DRAM_response.bits.data
+    current_data.data   := axi_response
 
     ///////////////////////////////
     // ASSIGN DATA MEMORY READS //
@@ -290,8 +297,8 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
     val replay_valid = Wire(Bool())
     replay_valid := cache_state === cacheState.Replay
 
-    hit     := (hit_oh.orR & (RegNext(io.CPU_request.valid && cache_state === cacheState.Active) | replay_valid)) & !RegNext(io.flush) & !RegNext(reset.asBool)
-    miss    := (~hit_oh.orR) & (RegNext(io.CPU_request.valid) | replay_valid) & !RegNext(io.flush) & !RegNext(reset.asBool)
+    hit     := (hit_oh.orR & (RegNext(io.CPU_request.fire && cache_state === cacheState.Active) | replay_valid)) & !RegNext(io.flush) & !RegNext(reset.asBool)
+    miss    := (~hit_oh.orR) & (RegNext(io.CPU_request.fire) | replay_valid) & !RegNext(io.flush) & !RegNext(reset.asBool)
 
     /////////////////////////////////////
     // Fetch Packet Selecting & Output //
@@ -310,6 +317,8 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
     for(instruction <- 0 until instructionsPerLine){    // split hit line into its constituent instructions
         instruction_vec(instruction) := hit_instruction_data((instruction+1)*32-1, (instruction)*32)    
     }
+
+    dontTouch(instruction_vec)
 
     for(i <- 0 until fetchWidth){
         CPU_response.bits.instructions(i).instruction  := instruction_vec(RegNext(current_packet.fetch_packet)*fetchWidth.U + i.U)   
@@ -336,7 +345,7 @@ class L1_instruction_cache(val coreParameters:CoreParameters, val nocParameters:
     // cache must be active
     // cache must not have just received a miss
     // output must be disposable 
-    io.CPU_request.ready := (cache_state === cacheState.Active) && !miss && io.CPU_response.ready
+    io.CPU_request.ready := (cache_state === cacheState.Active) && !miss //&& io.CPU_response.ready
 
     val CPU_response_skid_buffer         = Module(new Queue(new fetch_packet(coreParameters), 1, flow=true, hasFlush=true, useSyncReadMem=false))
 
