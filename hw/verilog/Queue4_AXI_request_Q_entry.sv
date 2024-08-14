@@ -31,7 +31,8 @@
 module Queue4_AXI_request_Q_entry(
   input          clock,
                  reset,
-                 io_enq_valid,
+  output         io_enq_ready,
+  input          io_enq_valid,
                  io_enq_bits_write_valid,
   input  [31:0]  io_enq_bits_write_address,
   input  [255:0] io_enq_bits_write_data,
@@ -39,24 +40,27 @@ module Queue4_AXI_request_Q_entry(
   input          io_enq_bits_read_valid,
   input  [31:0]  io_enq_bits_read_address,
   input  [6:0]   io_enq_bits_read_bytes,
+  input          io_deq_ready,
   output         io_deq_valid,
                  io_deq_bits_write_valid,
   output [31:0]  io_deq_bits_write_address,
   output [255:0] io_deq_bits_write_data,
+  output [6:0]   io_deq_bits_write_bytes,
   output         io_deq_bits_read_valid,
   output [31:0]  io_deq_bits_read_address,
-  output [6:0]   io_deq_bits_read_bytes
+  output [6:0]   io_deq_bits_read_bytes,
+  output [2:0]   io_count
 );
 
-  wire         io_enq_ready;
   wire [335:0] _ram_ext_R0_data;
   reg  [1:0]   enq_ptr_value;
   reg  [1:0]   deq_ptr_value;
   reg          maybe_full;
   wire         ptr_match = enq_ptr_value == deq_ptr_value;
   wire         empty = ptr_match & ~maybe_full;
-  wire         do_enq = io_enq_ready & io_enq_valid;
-  assign io_enq_ready = ~(ptr_match & maybe_full);
+  wire         full = ptr_match & maybe_full;
+  wire         do_enq = ~full & io_enq_valid;
+  wire         do_deq = io_deq_ready & ~empty;
   always @(posedge clock) begin
     if (reset) begin
       enq_ptr_value <= 2'h0;
@@ -66,14 +70,14 @@ module Queue4_AXI_request_Q_entry(
     else begin
       if (do_enq)
         enq_ptr_value <= enq_ptr_value + 2'h1;
-      if (~empty)
+      if (do_deq)
         deq_ptr_value <= deq_ptr_value + 2'h1;
-      if (~(do_enq == ~empty))
+      if (~(do_enq == do_deq))
         maybe_full <= do_enq;
     end
   end // always @(posedge)
   ram_4x336 ram_ext (
-    .R0_addr (empty ? deq_ptr_value : (&deq_ptr_value) ? 2'h0 : deq_ptr_value + 2'h1),
+    .R0_addr (do_deq ? ((&deq_ptr_value) ? 2'h0 : deq_ptr_value + 2'h1) : deq_ptr_value),
     .R0_en   (1'h1),
     .R0_clk  (clock),
     .R0_data (_ram_ext_R0_data),
@@ -89,12 +93,15 @@ module Queue4_AXI_request_Q_entry(
         io_enq_bits_write_address,
         io_enq_bits_write_valid})
   );
+  assign io_enq_ready = ~full;
   assign io_deq_valid = ~empty;
   assign io_deq_bits_write_valid = _ram_ext_R0_data[0];
   assign io_deq_bits_write_address = _ram_ext_R0_data[32:1];
   assign io_deq_bits_write_data = _ram_ext_R0_data[288:33];
+  assign io_deq_bits_write_bytes = _ram_ext_R0_data[295:289];
   assign io_deq_bits_read_valid = _ram_ext_R0_data[296];
   assign io_deq_bits_read_address = _ram_ext_R0_data[328:297];
   assign io_deq_bits_read_bytes = _ram_ext_R0_data[335:329];
+  assign io_count = {maybe_full & ptr_match, enq_ptr_value - deq_ptr_value};
 endmodule
 

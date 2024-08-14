@@ -79,7 +79,7 @@ trait AXICacheNode {
     AXI_port.AXI_AR.bits.arid    := 0.U
     AXI_port.AXI_AR.bits.araddr  := address
     AXI_port.AXI_AR.bits.arlen   := Mux(bytes < DATA_WIDTH_BYTES.U, 0.U, bytes/DATA_WIDTH_BYTES.U - 1.U)
-    AXI_port.AXI_AR.bits.arsize  := log2Ceil(DATA_WIDTH/8).U
+    AXI_port.AXI_AR.bits.arsize  := log2Ceil(DATA_WIDTH/8).U // FIXME: hardcoded..
     AXI_port.AXI_AR.bits.arburst := 0x1.U
     AXI_port.AXI_AR.bits.arlock  := 0x0.U
     AXI_port.AXI_AR.bits.arcache := 0x0.U
@@ -104,7 +104,7 @@ trait AXICacheNode {
     AXI_port.AXI_AW.bits.awid      := 0.U
     AXI_port.AXI_AW.bits.awaddr    := address
     AXI_port.AXI_AW.bits.awlen     := Mux(bytes < DATA_WIDTH_BYTES.U, 0.U, bytes/DATA_WIDTH_BYTES.U - 1.U)
-    AXI_port.AXI_AW.bits.awsize    := log2Ceil(DATA_WIDTH).U
+    AXI_port.AXI_AW.bits.awsize    := log2Ceil(DATA_WIDTH/8).U  // FIXME: hardcoded..
     AXI_port.AXI_AW.bits.awburst   := 0x1.U
     AXI_port.AXI_AW.bits.awlock    := 0.U
     AXI_port.AXI_AW.bits.awcache   := 0.U

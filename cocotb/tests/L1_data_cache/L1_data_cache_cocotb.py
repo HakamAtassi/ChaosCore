@@ -35,6 +35,7 @@ async def test_read(dut):
     # Bring up TB
     L1_cache = L1_data_cache_TB(dut)     # construct TB
     await L1_cache.reset()                      # Reset
+    L1_cache.init_sequence()                    # INIT axi ram
 
     # Set response port ready
     L1_cache.write_CPU_response_ready(1)
@@ -46,5 +47,6 @@ async def test_read(dut):
     for _ in range(1000):
         await L1_cache.clock()
 
+    assert False
 
 

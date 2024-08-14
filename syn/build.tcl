@@ -1,20 +1,24 @@
 # Create a project
-create_project ChaosCore ../hw/verilog/ -part xczu3eg-sbva484-1-i
+create_project ChaosCore ./ -part xczu3eg-sbva484-1-i -force
+
 
 # Add RTL source files from filelist.f
-file read_lines ../hw/verilog/filelist.f > my_filelist
-foreach file $my_filelist {
-    add_files $file
+set fp [open "../hw/verilog/filelist.f" r]
+   while {[gets $fp line] >= 0} {
+   add_files -fileset constrs_1 -norecurse "../hw/verilog/$line"
 }
+
+# Add RTL source files from firrtl_back_box_resource_files.f
+# TODO:
 
 # Set the top module
 set_property top ChaosCore [current_fileset]
 
 # Add constraints
-create_clock -period 6.667 [get_ports clock]
+create_clock -period 5 [get_ports clock]
 
 # Run synthesis
-launch_runs synth_1 -jobs 4
+launch_runs synth_1 -jobs 8
 
 # Wait for synthesis to complete
 wait_on_run synth_1

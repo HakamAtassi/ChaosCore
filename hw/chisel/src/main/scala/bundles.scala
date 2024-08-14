@@ -631,24 +631,24 @@ class MSHR_entry(coreParameters:CoreParameters) extends Bundle{
     // An entire row of the MSHR.
     import coreParameters._
     val address                 =   UInt(32.W)      // address shared across MSHR row
-    val miss_request            =   Vec(L1_MSHRWidth, new backend_memory_request(coreParameters))
+    val miss_requests           =   Vec(L1_MSHRWidth, new backend_memory_request(coreParameters))
     val allocate_way            =   UInt(log2Ceil(L1_DataCacheWays).W)
 
     val front_pointer           =   UInt(log2Ceil(L1_MSHRWidth).W)
     val back_pointer            =   UInt(log2Ceil(L1_MSHREntries).W)
 
-    def queue(miss_request:backend_memory_request): Unit = {
-        //miss_request(back_index) := DontCare  // FIXME: actually write data...
-        back_pointer := back_pointer + 1.U
-    }
+    //def queue(miss_request:backend_memory_request): Unit = {
+        //miss_requests(back_pointer) := Wire(miss_request)//DontCare  // FIXME: actually write data...
+        //back_pointer := back_pointer + 1.U
+    //}
 
     def dequeue: Unit = {
-        miss_request(front_pointer) := 0.U.asTypeOf(new backend_memory_response(coreParameters))
+        miss_requests(front_pointer) := 0.U.asTypeOf(new backend_memory_request(coreParameters))
         front_pointer := front_pointer + 1.U
     }
 
     def front: backend_memory_request = {
-        miss_request(front_pointer)
+        miss_requests(front_pointer)
     }
 
     def full: Bool = {
@@ -657,13 +657,11 @@ class MSHR_entry(coreParameters:CoreParameters) extends Bundle{
         (front_pointer + 1.U) === L1_MSHRWidth.U
     }
 
-    def empty: Bool = {
+    def last: Bool = {
         // MSHR entry pointers do not wrap around. If full, it does not accept any additional entries. 
         // When the queue begins emptying, it empties all the way and clears the row.
-        front_pointer === back_pointer
+        (front_pointer + 1.U) === back_pointer
     }
-
-
 
 }
 
@@ -687,4 +685,3 @@ class MSHR_entry(coreParameters:CoreParameters) extends Bundle{
 
 
 // AXI_slave_port is the Flipped() of an AXI master port
-

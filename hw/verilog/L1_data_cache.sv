@@ -88,10 +88,26 @@ module L1_data_cache(
   output [3:0]  io_CPU_response_bits_MOB_index
 );
 
+  wire [4:0]       replay_tag;
+  wire [5:0]       replay_set;
+  wire [1:0]       replay_access_width;
+  wire [1:0]       replay_memory_type;
+  wire [31:0]      replay_address;
   wire [1:0]       DATA_CACHE_NEXT_STATE;
+  wire [4:0]       allocate_tag;
+  wire [1:0]       allocate_way;
+  wire [31:0]      _GEN;
+  wire             is_evict_dirty;
+  reg              valid_vec_3_REG;
+  reg              valid_vec_2_REG;
+  reg              valid_vec_1_REG;
+  reg              valid_vec_0_REG;
+  wire             tag_hit_OH_3;
+  wire             tag_hit_OH_2;
   wire             tag_hit_OH_1;
   wire             tag_hit_OH_0;
   wire [255:0]     data_way;
+  wire [4:0]       backend_tag;
   wire [5:0]       backend_set;
   wire [20:0]      _tag_memories_3_io_data_out;
   wire [20:0]      _tag_memories_2_io_data_out;
@@ -144,32 +160,47 @@ module L1_data_cache(
   reg  [1:0]       AXI_REQUEST_STATE;
   wire             m_axi_wvalid_0 = AXI_REQUEST_STATE == 2'h1;
   wire             m_axi_rready_0 = AXI_REQUEST_STATE == 2'h2;
-  wire             _GEN = m_axi_rready_0 & m_axi_rvalid;
+  wire             _GEN_0 = m_axi_rready_0 & m_axi_rvalid;
   reg  [31:0]      write_counter;
   wire             m_axi_wlast_0 = m_axi_wvalid_0 & write_counter == 32'h0;
   reg  [255:0]     AXI_read_buffer;
-  wire             _GEN_0 = _GEN & m_axi_rlast;
-  wire [255:0]     _GEN_1 = {m_axi_rdata, AXI_read_buffer[255:32]};
+  wire             _GEN_1 = _GEN_0 & m_axi_rlast;
+  wire [255:0]     _GEN_2 = {m_axi_rdata, AXI_read_buffer[255:32]};
   reg  [1:0]       DATA_CACHE_STATE;
   wire [31:0]      active_address =
-    (&DATA_CACHE_STATE) ? 32'h0 : io_CPU_request_bits_addr;
+    (&DATA_CACHE_STATE) ? replay_address : io_CPU_request_bits_addr;
+  wire [5:0]       active_set = (&DATA_CACHE_STATE) ? replay_set : backend_set;
+  wire [4:0]       active_tag = (&DATA_CACHE_STATE) ? replay_tag : backend_tag;
   wire [1:0]       active_access_width =
-    (&DATA_CACHE_STATE) ? 2'h0 : io_CPU_request_bits_access_width;
+    (&DATA_CACHE_STATE) ? replay_access_width : io_CPU_request_bits_access_width;
+  wire             _valid_miss_T = tag_hit_OH_0 | tag_hit_OH_1;
   reg              valid_hit_REG;
+  reg              valid_hit_REG_1;
+  wire             valid_hit =
+    (_valid_miss_T | tag_hit_OH_2 | tag_hit_OH_3) & (valid_hit_REG | valid_hit_REG_1);
   reg              valid_miss_REG;
+  reg              valid_miss_REG_1;
+  wire             valid_miss =
+    ~(_valid_miss_T | tag_hit_OH_2 | tag_hit_OH_3) & (valid_miss_REG | valid_miss_REG_1);
   wire             _byte_offset_match_T_125 =
-    ((&DATA_CACHE_STATE) ? 2'h0 : io_CPU_request_bits_memory_type) == 2'h2;
+    ((&DATA_CACHE_STATE) ? replay_memory_type : io_CPU_request_bits_memory_type) == 2'h2;
+  reg              valid_write_hit_REG;
+  wire             valid_write_hit = valid_hit & valid_write_hit_REG;
+  reg  [5:0]       hit_set_REG;
   reg  [3:0]       hit_MOB_index_REG;
   reg  [31:0]      miss_address_REG;
+  reg  [5:0]       miss_set_REG;
   wire [1:0]       _miss_way_T_1 = ~{tag_hit_OH_1, tag_hit_OH_0};
+  wire [1:0]       _miss_way_T_9 = _miss_way_T_1[0] ? 2'h1 : {_miss_way_T_1[1], 1'h0};
   assign backend_set = io_CPU_request_bits_addr[10:5];
   wire [31:0]      word_offset = io_CPU_request_bits_addr / 32'h4;
+  assign backend_tag = io_CPU_request_bits_addr[15:11];
   wire             request_non_cacheable_read =
-    io_CPU_request_bits_memory_type == 2'h1 & io_CPU_request_bits_addr[0];
+    io_CPU_request_bits_memory_type == 2'h1 & io_CPU_request_bits_addr[31];
   wire             request_non_cacheable_write =
-    io_CPU_request_bits_memory_type == 2'h2 & io_CPU_request_bits_addr[0];
+    io_CPU_request_bits_memory_type == 2'h2 & io_CPU_request_bits_addr[31];
   reg  [31:0]      AXI_request_Q_io_enq_bits_write_data_REG;
-  wire [6:0]       _GEN_2 =
+  wire [6:0]       _GEN_3 =
     {1'h0,
      request_non_cacheable_write
        ? {4'h0,
@@ -177,8 +208,7 @@ module L1_data_cache(
             ? 2'h0
             : io_CPU_request_bits_access_width == 2'h2 ? 2'h2 : 2'h1}
        : 6'h20};
-  reg  [31:0]      AXI_request_Q_io_enq_bits_read_address_r;
-  reg  [31:0]      AXI_request_Q_io_enq_bits_read_address_r_1;
+  reg  [31:0]      AXI_request_Q_io_enq_bits_read_address_REG;
   wire             write_request_valid =
     _AXI_request_Q_io_deq_valid & _AXI_request_Q_io_deq_bits_write_valid;
   wire             read_request_valid =
@@ -229,102 +259,2687 @@ module L1_data_cache(
      _data_memories_1_io_data_out,
      _data_memories_0_io_data_out};
   reg  [4:0]       tag_hit_OH_0_REG;
-  assign tag_hit_OH_0 = _tag_memories_0_io_data_out == {16'h0, tag_hit_OH_0_REG};
+  assign tag_hit_OH_0 =
+    _tag_memories_0_io_data_out == {16'h0, tag_hit_OH_0_REG} & valid_vec_0_REG;
   reg  [4:0]       tag_hit_OH_1_REG;
-  assign tag_hit_OH_1 = _tag_memories_1_io_data_out == {16'h0, tag_hit_OH_1_REG};
+  assign tag_hit_OH_1 =
+    _tag_memories_1_io_data_out == {16'h0, tag_hit_OH_1_REG} & valid_vec_1_REG;
   reg  [4:0]       tag_hit_OH_2_REG;
-  wire             tag_hit_OH_2 =
-    _tag_memories_2_io_data_out == {16'h0, tag_hit_OH_2_REG};
+  assign tag_hit_OH_2 =
+    _tag_memories_2_io_data_out == {16'h0, tag_hit_OH_2_REG} & valid_vec_2_REG;
   reg  [4:0]       tag_hit_OH_3_REG;
-  wire             tag_hit_OH_3 =
-    _tag_memories_3_io_data_out == {16'h0, tag_hit_OH_3_REG};
-  wire [3:0][20:0] _GEN_3 =
+  assign tag_hit_OH_3 =
+    _tag_memories_3_io_data_out == {16'h0, tag_hit_OH_3_REG} & valid_vec_3_REG;
+  wire             _GEN_4 = allocate_way == 2'h0;
+  wire [20:0]      _GEN_5 = {16'h0, allocate_tag};
+  wire             _GEN_6 = allocate_way == 2'h1;
+  wire             _GEN_7 = allocate_way == 2'h2;
+  wire [3:0][20:0] _GEN_8 =
     {{_tag_memories_3_io_data_out},
      {_tag_memories_2_io_data_out},
      {_tag_memories_1_io_data_out},
      {_tag_memories_0_io_data_out}};
+  reg              valid_memory_0_0;
+  reg              valid_memory_0_1;
+  reg              valid_memory_0_2;
+  reg              valid_memory_0_3;
+  reg              valid_memory_1_0;
+  reg              valid_memory_1_1;
+  reg              valid_memory_1_2;
+  reg              valid_memory_1_3;
+  reg              valid_memory_2_0;
+  reg              valid_memory_2_1;
+  reg              valid_memory_2_2;
+  reg              valid_memory_2_3;
+  reg              valid_memory_3_0;
+  reg              valid_memory_3_1;
+  reg              valid_memory_3_2;
+  reg              valid_memory_3_3;
+  reg              valid_memory_4_0;
+  reg              valid_memory_4_1;
+  reg              valid_memory_4_2;
+  reg              valid_memory_4_3;
+  reg              valid_memory_5_0;
+  reg              valid_memory_5_1;
+  reg              valid_memory_5_2;
+  reg              valid_memory_5_3;
+  reg              valid_memory_6_0;
+  reg              valid_memory_6_1;
+  reg              valid_memory_6_2;
+  reg              valid_memory_6_3;
+  reg              valid_memory_7_0;
+  reg              valid_memory_7_1;
+  reg              valid_memory_7_2;
+  reg              valid_memory_7_3;
+  reg              valid_memory_8_0;
+  reg              valid_memory_8_1;
+  reg              valid_memory_8_2;
+  reg              valid_memory_8_3;
+  reg              valid_memory_9_0;
+  reg              valid_memory_9_1;
+  reg              valid_memory_9_2;
+  reg              valid_memory_9_3;
+  reg              valid_memory_10_0;
+  reg              valid_memory_10_1;
+  reg              valid_memory_10_2;
+  reg              valid_memory_10_3;
+  reg              valid_memory_11_0;
+  reg              valid_memory_11_1;
+  reg              valid_memory_11_2;
+  reg              valid_memory_11_3;
+  reg              valid_memory_12_0;
+  reg              valid_memory_12_1;
+  reg              valid_memory_12_2;
+  reg              valid_memory_12_3;
+  reg              valid_memory_13_0;
+  reg              valid_memory_13_1;
+  reg              valid_memory_13_2;
+  reg              valid_memory_13_3;
+  reg              valid_memory_14_0;
+  reg              valid_memory_14_1;
+  reg              valid_memory_14_2;
+  reg              valid_memory_14_3;
+  reg              valid_memory_15_0;
+  reg              valid_memory_15_1;
+  reg              valid_memory_15_2;
+  reg              valid_memory_15_3;
+  reg              valid_memory_16_0;
+  reg              valid_memory_16_1;
+  reg              valid_memory_16_2;
+  reg              valid_memory_16_3;
+  reg              valid_memory_17_0;
+  reg              valid_memory_17_1;
+  reg              valid_memory_17_2;
+  reg              valid_memory_17_3;
+  reg              valid_memory_18_0;
+  reg              valid_memory_18_1;
+  reg              valid_memory_18_2;
+  reg              valid_memory_18_3;
+  reg              valid_memory_19_0;
+  reg              valid_memory_19_1;
+  reg              valid_memory_19_2;
+  reg              valid_memory_19_3;
+  reg              valid_memory_20_0;
+  reg              valid_memory_20_1;
+  reg              valid_memory_20_2;
+  reg              valid_memory_20_3;
+  reg              valid_memory_21_0;
+  reg              valid_memory_21_1;
+  reg              valid_memory_21_2;
+  reg              valid_memory_21_3;
+  reg              valid_memory_22_0;
+  reg              valid_memory_22_1;
+  reg              valid_memory_22_2;
+  reg              valid_memory_22_3;
+  reg              valid_memory_23_0;
+  reg              valid_memory_23_1;
+  reg              valid_memory_23_2;
+  reg              valid_memory_23_3;
+  reg              valid_memory_24_0;
+  reg              valid_memory_24_1;
+  reg              valid_memory_24_2;
+  reg              valid_memory_24_3;
+  reg              valid_memory_25_0;
+  reg              valid_memory_25_1;
+  reg              valid_memory_25_2;
+  reg              valid_memory_25_3;
+  reg              valid_memory_26_0;
+  reg              valid_memory_26_1;
+  reg              valid_memory_26_2;
+  reg              valid_memory_26_3;
+  reg              valid_memory_27_0;
+  reg              valid_memory_27_1;
+  reg              valid_memory_27_2;
+  reg              valid_memory_27_3;
+  reg              valid_memory_28_0;
+  reg              valid_memory_28_1;
+  reg              valid_memory_28_2;
+  reg              valid_memory_28_3;
+  reg              valid_memory_29_0;
+  reg              valid_memory_29_1;
+  reg              valid_memory_29_2;
+  reg              valid_memory_29_3;
+  reg              valid_memory_30_0;
+  reg              valid_memory_30_1;
+  reg              valid_memory_30_2;
+  reg              valid_memory_30_3;
+  reg              valid_memory_31_0;
+  reg              valid_memory_31_1;
+  reg              valid_memory_31_2;
+  reg              valid_memory_31_3;
+  reg              valid_memory_32_0;
+  reg              valid_memory_32_1;
+  reg              valid_memory_32_2;
+  reg              valid_memory_32_3;
+  reg              valid_memory_33_0;
+  reg              valid_memory_33_1;
+  reg              valid_memory_33_2;
+  reg              valid_memory_33_3;
+  reg              valid_memory_34_0;
+  reg              valid_memory_34_1;
+  reg              valid_memory_34_2;
+  reg              valid_memory_34_3;
+  reg              valid_memory_35_0;
+  reg              valid_memory_35_1;
+  reg              valid_memory_35_2;
+  reg              valid_memory_35_3;
+  reg              valid_memory_36_0;
+  reg              valid_memory_36_1;
+  reg              valid_memory_36_2;
+  reg              valid_memory_36_3;
+  reg              valid_memory_37_0;
+  reg              valid_memory_37_1;
+  reg              valid_memory_37_2;
+  reg              valid_memory_37_3;
+  reg              valid_memory_38_0;
+  reg              valid_memory_38_1;
+  reg              valid_memory_38_2;
+  reg              valid_memory_38_3;
+  reg              valid_memory_39_0;
+  reg              valid_memory_39_1;
+  reg              valid_memory_39_2;
+  reg              valid_memory_39_3;
+  reg              valid_memory_40_0;
+  reg              valid_memory_40_1;
+  reg              valid_memory_40_2;
+  reg              valid_memory_40_3;
+  reg              valid_memory_41_0;
+  reg              valid_memory_41_1;
+  reg              valid_memory_41_2;
+  reg              valid_memory_41_3;
+  reg              valid_memory_42_0;
+  reg              valid_memory_42_1;
+  reg              valid_memory_42_2;
+  reg              valid_memory_42_3;
+  reg              valid_memory_43_0;
+  reg              valid_memory_43_1;
+  reg              valid_memory_43_2;
+  reg              valid_memory_43_3;
+  reg              valid_memory_44_0;
+  reg              valid_memory_44_1;
+  reg              valid_memory_44_2;
+  reg              valid_memory_44_3;
+  reg              valid_memory_45_0;
+  reg              valid_memory_45_1;
+  reg              valid_memory_45_2;
+  reg              valid_memory_45_3;
+  reg              valid_memory_46_0;
+  reg              valid_memory_46_1;
+  reg              valid_memory_46_2;
+  reg              valid_memory_46_3;
+  reg              valid_memory_47_0;
+  reg              valid_memory_47_1;
+  reg              valid_memory_47_2;
+  reg              valid_memory_47_3;
+  reg              valid_memory_48_0;
+  reg              valid_memory_48_1;
+  reg              valid_memory_48_2;
+  reg              valid_memory_48_3;
+  reg              valid_memory_49_0;
+  reg              valid_memory_49_1;
+  reg              valid_memory_49_2;
+  reg              valid_memory_49_3;
+  reg              valid_memory_50_0;
+  reg              valid_memory_50_1;
+  reg              valid_memory_50_2;
+  reg              valid_memory_50_3;
+  reg              valid_memory_51_0;
+  reg              valid_memory_51_1;
+  reg              valid_memory_51_2;
+  reg              valid_memory_51_3;
+  reg              valid_memory_52_0;
+  reg              valid_memory_52_1;
+  reg              valid_memory_52_2;
+  reg              valid_memory_52_3;
+  reg              valid_memory_53_0;
+  reg              valid_memory_53_1;
+  reg              valid_memory_53_2;
+  reg              valid_memory_53_3;
+  reg              valid_memory_54_0;
+  reg              valid_memory_54_1;
+  reg              valid_memory_54_2;
+  reg              valid_memory_54_3;
+  reg              valid_memory_55_0;
+  reg              valid_memory_55_1;
+  reg              valid_memory_55_2;
+  reg              valid_memory_55_3;
+  reg              valid_memory_56_0;
+  reg              valid_memory_56_1;
+  reg              valid_memory_56_2;
+  reg              valid_memory_56_3;
+  reg              valid_memory_57_0;
+  reg              valid_memory_57_1;
+  reg              valid_memory_57_2;
+  reg              valid_memory_57_3;
+  reg              valid_memory_58_0;
+  reg              valid_memory_58_1;
+  reg              valid_memory_58_2;
+  reg              valid_memory_58_3;
+  reg              valid_memory_59_0;
+  reg              valid_memory_59_1;
+  reg              valid_memory_59_2;
+  reg              valid_memory_59_3;
+  reg              valid_memory_60_0;
+  reg              valid_memory_60_1;
+  reg              valid_memory_60_2;
+  reg              valid_memory_60_3;
+  reg              valid_memory_61_0;
+  reg              valid_memory_61_1;
+  reg              valid_memory_61_2;
+  reg              valid_memory_61_3;
+  reg              valid_memory_62_0;
+  reg              valid_memory_62_1;
+  reg              valid_memory_62_2;
+  reg              valid_memory_62_3;
+  reg              valid_memory_63_0;
+  reg              valid_memory_63_1;
+  reg              valid_memory_63_2;
+  reg              valid_memory_63_3;
+  wire [1:0]       _GEN_9 =
+    tag_hit_OH_0 ? 2'h0 : tag_hit_OH_1 ? 2'h1 : {1'h1, ~tag_hit_OH_2};
+  reg  [5:0]       is_evict_dirty_REG;
+  wire [63:0]      _GEN_10 =
+    {{1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {1'h0},
+     {~(_data_memories_data_in_31_T & (&allocate_way) & (&(_GEN[6:5]))) & valid_write_hit
+        & (&_GEN_9) & (&(hit_set_REG[1:0]))},
+     {~(_data_memories_data_in_31_T & _GEN_7 & (&(_GEN[6:5]))) & valid_write_hit
+        & _GEN_9 == 2'h2 & (&(hit_set_REG[1:0]))},
+     {~(_data_memories_data_in_31_T & _GEN_6 & (&(_GEN[6:5]))) & valid_write_hit
+        & _GEN_9 == 2'h1 & (&(hit_set_REG[1:0]))},
+     {~(_data_memories_data_in_31_T & _GEN_4 & (&(_GEN[6:5]))) & valid_write_hit
+        & _GEN_9 == 2'h0 & (&(hit_set_REG[1:0]))}};
+  assign is_evict_dirty = _GEN_10[is_evict_dirty_REG];
+  reg  [31:0]      MSHRs_0_address;
+  reg  [31:0]      MSHRs_0_miss_requests_0_addr;
+  reg  [31:0]      MSHRs_0_miss_requests_0_data;
+  reg  [1:0]       MSHRs_0_miss_requests_0_memory_type;
+  reg  [1:0]       MSHRs_0_miss_requests_0_access_width;
+  reg  [3:0]       MSHRs_0_miss_requests_0_MOB_index;
+  reg  [31:0]      MSHRs_0_miss_requests_1_addr;
+  reg  [31:0]      MSHRs_0_miss_requests_1_data;
+  reg  [1:0]       MSHRs_0_miss_requests_1_memory_type;
+  reg  [1:0]       MSHRs_0_miss_requests_1_access_width;
+  reg  [3:0]       MSHRs_0_miss_requests_1_MOB_index;
+  reg  [31:0]      MSHRs_0_miss_requests_2_addr;
+  reg  [31:0]      MSHRs_0_miss_requests_2_data;
+  reg  [1:0]       MSHRs_0_miss_requests_2_memory_type;
+  reg  [1:0]       MSHRs_0_miss_requests_2_access_width;
+  reg  [3:0]       MSHRs_0_miss_requests_2_MOB_index;
+  reg  [31:0]      MSHRs_0_miss_requests_3_addr;
+  reg  [31:0]      MSHRs_0_miss_requests_3_data;
+  reg  [1:0]       MSHRs_0_miss_requests_3_memory_type;
+  reg  [1:0]       MSHRs_0_miss_requests_3_access_width;
+  reg  [3:0]       MSHRs_0_miss_requests_3_MOB_index;
+  reg  [31:0]      MSHRs_0_miss_requests_4_addr;
+  reg  [31:0]      MSHRs_0_miss_requests_4_data;
+  reg  [1:0]       MSHRs_0_miss_requests_4_memory_type;
+  reg  [1:0]       MSHRs_0_miss_requests_4_access_width;
+  reg  [3:0]       MSHRs_0_miss_requests_4_MOB_index;
+  reg  [31:0]      MSHRs_0_miss_requests_5_addr;
+  reg  [31:0]      MSHRs_0_miss_requests_5_data;
+  reg  [1:0]       MSHRs_0_miss_requests_5_memory_type;
+  reg  [1:0]       MSHRs_0_miss_requests_5_access_width;
+  reg  [3:0]       MSHRs_0_miss_requests_5_MOB_index;
+  reg  [31:0]      MSHRs_0_miss_requests_6_addr;
+  reg  [31:0]      MSHRs_0_miss_requests_6_data;
+  reg  [1:0]       MSHRs_0_miss_requests_6_memory_type;
+  reg  [1:0]       MSHRs_0_miss_requests_6_access_width;
+  reg  [3:0]       MSHRs_0_miss_requests_6_MOB_index;
+  reg  [31:0]      MSHRs_0_miss_requests_7_addr;
+  reg  [31:0]      MSHRs_0_miss_requests_7_data;
+  reg  [1:0]       MSHRs_0_miss_requests_7_memory_type;
+  reg  [1:0]       MSHRs_0_miss_requests_7_access_width;
+  reg  [3:0]       MSHRs_0_miss_requests_7_MOB_index;
+  reg  [1:0]       MSHRs_0_allocate_way;
+  reg  [2:0]       MSHRs_0_front_pointer;
+  reg  [1:0]       MSHRs_0_back_pointer;
+  reg  [31:0]      MSHRs_1_address;
+  reg  [31:0]      MSHRs_1_miss_requests_0_addr;
+  reg  [31:0]      MSHRs_1_miss_requests_0_data;
+  reg  [1:0]       MSHRs_1_miss_requests_0_memory_type;
+  reg  [1:0]       MSHRs_1_miss_requests_0_access_width;
+  reg  [3:0]       MSHRs_1_miss_requests_0_MOB_index;
+  reg  [31:0]      MSHRs_1_miss_requests_1_addr;
+  reg  [31:0]      MSHRs_1_miss_requests_1_data;
+  reg  [1:0]       MSHRs_1_miss_requests_1_memory_type;
+  reg  [1:0]       MSHRs_1_miss_requests_1_access_width;
+  reg  [3:0]       MSHRs_1_miss_requests_1_MOB_index;
+  reg  [31:0]      MSHRs_1_miss_requests_2_addr;
+  reg  [31:0]      MSHRs_1_miss_requests_2_data;
+  reg  [1:0]       MSHRs_1_miss_requests_2_memory_type;
+  reg  [1:0]       MSHRs_1_miss_requests_2_access_width;
+  reg  [3:0]       MSHRs_1_miss_requests_2_MOB_index;
+  reg  [31:0]      MSHRs_1_miss_requests_3_addr;
+  reg  [31:0]      MSHRs_1_miss_requests_3_data;
+  reg  [1:0]       MSHRs_1_miss_requests_3_memory_type;
+  reg  [1:0]       MSHRs_1_miss_requests_3_access_width;
+  reg  [3:0]       MSHRs_1_miss_requests_3_MOB_index;
+  reg  [31:0]      MSHRs_1_miss_requests_4_addr;
+  reg  [31:0]      MSHRs_1_miss_requests_4_data;
+  reg  [1:0]       MSHRs_1_miss_requests_4_memory_type;
+  reg  [1:0]       MSHRs_1_miss_requests_4_access_width;
+  reg  [3:0]       MSHRs_1_miss_requests_4_MOB_index;
+  reg  [31:0]      MSHRs_1_miss_requests_5_addr;
+  reg  [31:0]      MSHRs_1_miss_requests_5_data;
+  reg  [1:0]       MSHRs_1_miss_requests_5_memory_type;
+  reg  [1:0]       MSHRs_1_miss_requests_5_access_width;
+  reg  [3:0]       MSHRs_1_miss_requests_5_MOB_index;
+  reg  [31:0]      MSHRs_1_miss_requests_6_addr;
+  reg  [31:0]      MSHRs_1_miss_requests_6_data;
+  reg  [1:0]       MSHRs_1_miss_requests_6_memory_type;
+  reg  [1:0]       MSHRs_1_miss_requests_6_access_width;
+  reg  [3:0]       MSHRs_1_miss_requests_6_MOB_index;
+  reg  [31:0]      MSHRs_1_miss_requests_7_addr;
+  reg  [31:0]      MSHRs_1_miss_requests_7_data;
+  reg  [1:0]       MSHRs_1_miss_requests_7_memory_type;
+  reg  [1:0]       MSHRs_1_miss_requests_7_access_width;
+  reg  [3:0]       MSHRs_1_miss_requests_7_MOB_index;
+  reg  [1:0]       MSHRs_1_allocate_way;
+  reg  [2:0]       MSHRs_1_front_pointer;
+  reg  [1:0]       MSHRs_1_back_pointer;
+  reg  [31:0]      MSHRs_2_address;
+  reg  [31:0]      MSHRs_2_miss_requests_0_addr;
+  reg  [31:0]      MSHRs_2_miss_requests_0_data;
+  reg  [1:0]       MSHRs_2_miss_requests_0_memory_type;
+  reg  [1:0]       MSHRs_2_miss_requests_0_access_width;
+  reg  [3:0]       MSHRs_2_miss_requests_0_MOB_index;
+  reg  [31:0]      MSHRs_2_miss_requests_1_addr;
+  reg  [31:0]      MSHRs_2_miss_requests_1_data;
+  reg  [1:0]       MSHRs_2_miss_requests_1_memory_type;
+  reg  [1:0]       MSHRs_2_miss_requests_1_access_width;
+  reg  [3:0]       MSHRs_2_miss_requests_1_MOB_index;
+  reg  [31:0]      MSHRs_2_miss_requests_2_addr;
+  reg  [31:0]      MSHRs_2_miss_requests_2_data;
+  reg  [1:0]       MSHRs_2_miss_requests_2_memory_type;
+  reg  [1:0]       MSHRs_2_miss_requests_2_access_width;
+  reg  [3:0]       MSHRs_2_miss_requests_2_MOB_index;
+  reg  [31:0]      MSHRs_2_miss_requests_3_addr;
+  reg  [31:0]      MSHRs_2_miss_requests_3_data;
+  reg  [1:0]       MSHRs_2_miss_requests_3_memory_type;
+  reg  [1:0]       MSHRs_2_miss_requests_3_access_width;
+  reg  [3:0]       MSHRs_2_miss_requests_3_MOB_index;
+  reg  [31:0]      MSHRs_2_miss_requests_4_addr;
+  reg  [31:0]      MSHRs_2_miss_requests_4_data;
+  reg  [1:0]       MSHRs_2_miss_requests_4_memory_type;
+  reg  [1:0]       MSHRs_2_miss_requests_4_access_width;
+  reg  [3:0]       MSHRs_2_miss_requests_4_MOB_index;
+  reg  [31:0]      MSHRs_2_miss_requests_5_addr;
+  reg  [31:0]      MSHRs_2_miss_requests_5_data;
+  reg  [1:0]       MSHRs_2_miss_requests_5_memory_type;
+  reg  [1:0]       MSHRs_2_miss_requests_5_access_width;
+  reg  [3:0]       MSHRs_2_miss_requests_5_MOB_index;
+  reg  [31:0]      MSHRs_2_miss_requests_6_addr;
+  reg  [31:0]      MSHRs_2_miss_requests_6_data;
+  reg  [1:0]       MSHRs_2_miss_requests_6_memory_type;
+  reg  [1:0]       MSHRs_2_miss_requests_6_access_width;
+  reg  [3:0]       MSHRs_2_miss_requests_6_MOB_index;
+  reg  [31:0]      MSHRs_2_miss_requests_7_addr;
+  reg  [31:0]      MSHRs_2_miss_requests_7_data;
+  reg  [1:0]       MSHRs_2_miss_requests_7_memory_type;
+  reg  [1:0]       MSHRs_2_miss_requests_7_access_width;
+  reg  [3:0]       MSHRs_2_miss_requests_7_MOB_index;
+  reg  [1:0]       MSHRs_2_allocate_way;
+  reg  [2:0]       MSHRs_2_front_pointer;
+  reg  [1:0]       MSHRs_2_back_pointer;
+  reg  [31:0]      MSHRs_3_address;
+  reg  [31:0]      MSHRs_3_miss_requests_0_addr;
+  reg  [31:0]      MSHRs_3_miss_requests_0_data;
+  reg  [1:0]       MSHRs_3_miss_requests_0_memory_type;
+  reg  [1:0]       MSHRs_3_miss_requests_0_access_width;
+  reg  [3:0]       MSHRs_3_miss_requests_0_MOB_index;
+  reg  [31:0]      MSHRs_3_miss_requests_1_addr;
+  reg  [31:0]      MSHRs_3_miss_requests_1_data;
+  reg  [1:0]       MSHRs_3_miss_requests_1_memory_type;
+  reg  [1:0]       MSHRs_3_miss_requests_1_access_width;
+  reg  [3:0]       MSHRs_3_miss_requests_1_MOB_index;
+  reg  [31:0]      MSHRs_3_miss_requests_2_addr;
+  reg  [31:0]      MSHRs_3_miss_requests_2_data;
+  reg  [1:0]       MSHRs_3_miss_requests_2_memory_type;
+  reg  [1:0]       MSHRs_3_miss_requests_2_access_width;
+  reg  [3:0]       MSHRs_3_miss_requests_2_MOB_index;
+  reg  [31:0]      MSHRs_3_miss_requests_3_addr;
+  reg  [31:0]      MSHRs_3_miss_requests_3_data;
+  reg  [1:0]       MSHRs_3_miss_requests_3_memory_type;
+  reg  [1:0]       MSHRs_3_miss_requests_3_access_width;
+  reg  [3:0]       MSHRs_3_miss_requests_3_MOB_index;
+  reg  [31:0]      MSHRs_3_miss_requests_4_addr;
+  reg  [31:0]      MSHRs_3_miss_requests_4_data;
+  reg  [1:0]       MSHRs_3_miss_requests_4_memory_type;
+  reg  [1:0]       MSHRs_3_miss_requests_4_access_width;
+  reg  [3:0]       MSHRs_3_miss_requests_4_MOB_index;
+  reg  [31:0]      MSHRs_3_miss_requests_5_addr;
+  reg  [31:0]      MSHRs_3_miss_requests_5_data;
+  reg  [1:0]       MSHRs_3_miss_requests_5_memory_type;
+  reg  [1:0]       MSHRs_3_miss_requests_5_access_width;
+  reg  [3:0]       MSHRs_3_miss_requests_5_MOB_index;
+  reg  [31:0]      MSHRs_3_miss_requests_6_addr;
+  reg  [31:0]      MSHRs_3_miss_requests_6_data;
+  reg  [1:0]       MSHRs_3_miss_requests_6_memory_type;
+  reg  [1:0]       MSHRs_3_miss_requests_6_access_width;
+  reg  [3:0]       MSHRs_3_miss_requests_6_MOB_index;
+  reg  [31:0]      MSHRs_3_miss_requests_7_addr;
+  reg  [31:0]      MSHRs_3_miss_requests_7_data;
+  reg  [1:0]       MSHRs_3_miss_requests_7_memory_type;
+  reg  [1:0]       MSHRs_3_miss_requests_7_access_width;
+  reg  [3:0]       MSHRs_3_miss_requests_7_MOB_index;
+  reg  [1:0]       MSHRs_3_allocate_way;
+  reg  [2:0]       MSHRs_3_front_pointer;
   reg  [1:0]       MSHRs_3_back_pointer;
   reg  [2:0]       MSHR_front_pointer;
-  wire [3:0][1:0]  _GEN_4 = {{MSHRs_3_back_pointer}, {2'h0}, {2'h0}, {2'h0}};
-  wire             _GEN_5 = _GEN_4[MSHR_front_pointer[1:0]] == 2'h0;
-  wire [3:0][1:0]  _GEN_6 =
-    {{(&DATA_CACHE_STATE) & (&DATA_CACHE_STATE) & _GEN_5 ? 2'h0 : DATA_CACHE_STATE},
+  reg  [2:0]       MSHR_back_pointer;
+  wire             _GEN_11 = MSHRs_0_address == miss_address_REG;
+  wire             _GEN_12 =
+    MSHRs_3_address == miss_address_REG | MSHRs_2_address == miss_address_REG
+    | MSHRs_1_address == miss_address_REG;
+  wire             valid_MSHR_hit = valid_miss & (_GEN_12 | _GEN_11);
+  wire             valid_MSHR_miss = valid_miss & ~_GEN_12 & ~_GEN_11;
+  reg  [31:0]      miss_backend_memory_request_REG_addr;
+  reg  [31:0]      miss_backend_memory_request_REG_data;
+  reg  [1:0]       miss_backend_memory_request_REG_memory_type;
+  reg  [1:0]       miss_backend_memory_request_REG_access_width;
+  reg  [3:0]       miss_backend_memory_request_REG_MOB_index;
+  wire [3:0][1:0]  _GEN_13 =
+    {{MSHRs_3_back_pointer},
+     {MSHRs_2_back_pointer},
+     {MSHRs_1_back_pointer},
+     {MSHRs_0_back_pointer}};
+  wire [3:0][2:0]  _GEN_14 =
+    {{MSHRs_3_front_pointer},
+     {MSHRs_2_front_pointer},
+     {MSHRs_1_front_pointer},
+     {MSHRs_0_front_pointer}};
+  wire [2:0]       _GEN_15 = _GEN_14[MSHR_front_pointer[1:0]];
+  wire [2:0]       _MSHRs_front_pointer_T = _GEN_15 + 3'h1;
+  wire             _GEN_16 =
+    _MSHRs_front_pointer_T == {1'h0, _GEN_13[MSHR_front_pointer[1:0]]};
+  wire [3:0][31:0] _GEN_17 =
+    {{MSHRs_3_address}, {MSHRs_2_address}, {MSHRs_1_address}, {MSHRs_0_address}};
+  assign _GEN = _GEN_17[MSHR_front_pointer[1:0]];
+  wire [3:0][31:0] _GEN_18 =
+    {{MSHRs_3_miss_requests_0_addr},
+     {MSHRs_2_miss_requests_0_addr},
+     {MSHRs_1_miss_requests_0_addr},
+     {MSHRs_0_miss_requests_0_addr}};
+  wire [3:0][1:0]  _GEN_19 =
+    {{MSHRs_3_miss_requests_0_memory_type},
+     {MSHRs_2_miss_requests_0_memory_type},
+     {MSHRs_1_miss_requests_0_memory_type},
+     {MSHRs_0_miss_requests_0_memory_type}};
+  wire [3:0][1:0]  _GEN_20 =
+    {{MSHRs_3_miss_requests_0_access_width},
+     {MSHRs_2_miss_requests_0_access_width},
+     {MSHRs_1_miss_requests_0_access_width},
+     {MSHRs_0_miss_requests_0_access_width}};
+  wire [3:0][31:0] _GEN_21 =
+    {{MSHRs_3_miss_requests_1_addr},
+     {MSHRs_2_miss_requests_1_addr},
+     {MSHRs_1_miss_requests_1_addr},
+     {MSHRs_0_miss_requests_1_addr}};
+  wire [3:0][1:0]  _GEN_22 =
+    {{MSHRs_3_miss_requests_1_memory_type},
+     {MSHRs_2_miss_requests_1_memory_type},
+     {MSHRs_1_miss_requests_1_memory_type},
+     {MSHRs_0_miss_requests_1_memory_type}};
+  wire [3:0][1:0]  _GEN_23 =
+    {{MSHRs_3_miss_requests_1_access_width},
+     {MSHRs_2_miss_requests_1_access_width},
+     {MSHRs_1_miss_requests_1_access_width},
+     {MSHRs_0_miss_requests_1_access_width}};
+  wire [3:0][31:0] _GEN_24 =
+    {{MSHRs_3_miss_requests_2_addr},
+     {MSHRs_2_miss_requests_2_addr},
+     {MSHRs_1_miss_requests_2_addr},
+     {MSHRs_0_miss_requests_2_addr}};
+  wire [3:0][1:0]  _GEN_25 =
+    {{MSHRs_3_miss_requests_2_memory_type},
+     {MSHRs_2_miss_requests_2_memory_type},
+     {MSHRs_1_miss_requests_2_memory_type},
+     {MSHRs_0_miss_requests_2_memory_type}};
+  wire [3:0][1:0]  _GEN_26 =
+    {{MSHRs_3_miss_requests_2_access_width},
+     {MSHRs_2_miss_requests_2_access_width},
+     {MSHRs_1_miss_requests_2_access_width},
+     {MSHRs_0_miss_requests_2_access_width}};
+  wire [3:0][31:0] _GEN_27 =
+    {{MSHRs_3_miss_requests_3_addr},
+     {MSHRs_2_miss_requests_3_addr},
+     {MSHRs_1_miss_requests_3_addr},
+     {MSHRs_0_miss_requests_3_addr}};
+  wire [3:0][1:0]  _GEN_28 =
+    {{MSHRs_3_miss_requests_3_memory_type},
+     {MSHRs_2_miss_requests_3_memory_type},
+     {MSHRs_1_miss_requests_3_memory_type},
+     {MSHRs_0_miss_requests_3_memory_type}};
+  wire [3:0][1:0]  _GEN_29 =
+    {{MSHRs_3_miss_requests_3_access_width},
+     {MSHRs_2_miss_requests_3_access_width},
+     {MSHRs_1_miss_requests_3_access_width},
+     {MSHRs_0_miss_requests_3_access_width}};
+  wire [3:0][31:0] _GEN_30 =
+    {{MSHRs_3_miss_requests_4_addr},
+     {MSHRs_2_miss_requests_4_addr},
+     {MSHRs_1_miss_requests_4_addr},
+     {MSHRs_0_miss_requests_4_addr}};
+  wire [3:0][1:0]  _GEN_31 =
+    {{MSHRs_3_miss_requests_4_memory_type},
+     {MSHRs_2_miss_requests_4_memory_type},
+     {MSHRs_1_miss_requests_4_memory_type},
+     {MSHRs_0_miss_requests_4_memory_type}};
+  wire [3:0][1:0]  _GEN_32 =
+    {{MSHRs_3_miss_requests_4_access_width},
+     {MSHRs_2_miss_requests_4_access_width},
+     {MSHRs_1_miss_requests_4_access_width},
+     {MSHRs_0_miss_requests_4_access_width}};
+  wire [3:0][31:0] _GEN_33 =
+    {{MSHRs_3_miss_requests_5_addr},
+     {MSHRs_2_miss_requests_5_addr},
+     {MSHRs_1_miss_requests_5_addr},
+     {MSHRs_0_miss_requests_5_addr}};
+  wire [3:0][1:0]  _GEN_34 =
+    {{MSHRs_3_miss_requests_5_memory_type},
+     {MSHRs_2_miss_requests_5_memory_type},
+     {MSHRs_1_miss_requests_5_memory_type},
+     {MSHRs_0_miss_requests_5_memory_type}};
+  wire [3:0][1:0]  _GEN_35 =
+    {{MSHRs_3_miss_requests_5_access_width},
+     {MSHRs_2_miss_requests_5_access_width},
+     {MSHRs_1_miss_requests_5_access_width},
+     {MSHRs_0_miss_requests_5_access_width}};
+  wire [3:0][31:0] _GEN_36 =
+    {{MSHRs_3_miss_requests_6_addr},
+     {MSHRs_2_miss_requests_6_addr},
+     {MSHRs_1_miss_requests_6_addr},
+     {MSHRs_0_miss_requests_6_addr}};
+  wire [3:0][1:0]  _GEN_37 =
+    {{MSHRs_3_miss_requests_6_memory_type},
+     {MSHRs_2_miss_requests_6_memory_type},
+     {MSHRs_1_miss_requests_6_memory_type},
+     {MSHRs_0_miss_requests_6_memory_type}};
+  wire [3:0][1:0]  _GEN_38 =
+    {{MSHRs_3_miss_requests_6_access_width},
+     {MSHRs_2_miss_requests_6_access_width},
+     {MSHRs_1_miss_requests_6_access_width},
+     {MSHRs_0_miss_requests_6_access_width}};
+  wire [3:0][31:0] _GEN_39 =
+    {{MSHRs_3_miss_requests_7_addr},
+     {MSHRs_2_miss_requests_7_addr},
+     {MSHRs_1_miss_requests_7_addr},
+     {MSHRs_0_miss_requests_7_addr}};
+  wire [3:0][1:0]  _GEN_40 =
+    {{MSHRs_3_miss_requests_7_memory_type},
+     {MSHRs_2_miss_requests_7_memory_type},
+     {MSHRs_1_miss_requests_7_memory_type},
+     {MSHRs_0_miss_requests_7_memory_type}};
+  wire [3:0][1:0]  _GEN_41 =
+    {{MSHRs_3_miss_requests_7_access_width},
+     {MSHRs_2_miss_requests_7_access_width},
+     {MSHRs_1_miss_requests_7_access_width},
+     {MSHRs_0_miss_requests_7_access_width}};
+  wire [3:0][1:0]  _GEN_42 =
+    {{MSHRs_3_allocate_way},
+     {MSHRs_2_allocate_way},
+     {MSHRs_1_allocate_way},
+     {MSHRs_0_allocate_way}};
+  assign allocate_way = _GEN_42[MSHR_front_pointer[1:0]];
+  assign allocate_tag = _GEN[15:11];
+  wire [3:0][1:0]  _GEN_43 =
+    {{(&DATA_CACHE_STATE) & (&DATA_CACHE_STATE) & _GEN_16 ? 2'h0 : DATA_CACHE_STATE},
      {2'h3},
      {DATA_CACHE_STATE},
      {_cacheable_response_Q_io_deq_valid ? 2'h2 : DATA_CACHE_STATE}};
-  assign DATA_CACHE_NEXT_STATE = _GEN_6[DATA_CACHE_STATE];
+  assign DATA_CACHE_NEXT_STATE = _GEN_43[DATA_CACHE_STATE];
+  wire [7:0][31:0] _GEN_44 =
+    {{_GEN_39[MSHR_front_pointer[1:0]]},
+     {_GEN_36[MSHR_front_pointer[1:0]]},
+     {_GEN_33[MSHR_front_pointer[1:0]]},
+     {_GEN_30[MSHR_front_pointer[1:0]]},
+     {_GEN_27[MSHR_front_pointer[1:0]]},
+     {_GEN_24[MSHR_front_pointer[1:0]]},
+     {_GEN_21[MSHR_front_pointer[1:0]]},
+     {_GEN_18[MSHR_front_pointer[1:0]]}};
+  assign replay_address = _GEN_44[_GEN_15];
+  wire [7:0][1:0]  _GEN_45 =
+    {{_GEN_40[MSHR_front_pointer[1:0]]},
+     {_GEN_37[MSHR_front_pointer[1:0]]},
+     {_GEN_34[MSHR_front_pointer[1:0]]},
+     {_GEN_31[MSHR_front_pointer[1:0]]},
+     {_GEN_28[MSHR_front_pointer[1:0]]},
+     {_GEN_25[MSHR_front_pointer[1:0]]},
+     {_GEN_22[MSHR_front_pointer[1:0]]},
+     {_GEN_19[MSHR_front_pointer[1:0]]}};
+  assign replay_memory_type = _GEN_45[_GEN_15];
+  wire [7:0][1:0]  _GEN_46 =
+    {{_GEN_41[MSHR_front_pointer[1:0]]},
+     {_GEN_38[MSHR_front_pointer[1:0]]},
+     {_GEN_35[MSHR_front_pointer[1:0]]},
+     {_GEN_32[MSHR_front_pointer[1:0]]},
+     {_GEN_29[MSHR_front_pointer[1:0]]},
+     {_GEN_26[MSHR_front_pointer[1:0]]},
+     {_GEN_23[MSHR_front_pointer[1:0]]},
+     {_GEN_20[MSHR_front_pointer[1:0]]}};
+  assign replay_access_width = _GEN_46[_GEN_15];
+  assign replay_set = replay_address[10:5];
+  assign replay_tag = replay_address[15:11];
+  reg              output_cacheable_r;
+  reg              output_cacheable;
+  reg  [31:0]      output_address_r;
+  reg  [31:0]      output_address_r_1;
+  reg  [1:0]       output_operation_r;
+  reg  [1:0]       output_operation_r_1;
+  wire [1:0]       output_operation = output_operation_r_1;
+  wire [31:0]      temp_byte_offset = output_address_r_1 % 32'h4;
+  wire [255:0]     _temp_access_word_T =
+    data_way >> {219'h0, {27'h0, output_address_r_1[4:0]} / 32'h4, 5'h0};
+  wire [31:0]      _temp_result_T_1 =
+    _temp_access_word_T[31:0] >> {25'h0, temp_byte_offset[2:0], 4'h0};
+  wire [31:0]      _temp_result_T_4 =
+    _temp_access_word_T[31:0] >> {26'h0, temp_byte_offset[2:0], 3'h0};
+  wire [3:0][31:0] _GEN_47 =
+    {{_temp_access_word_T[31:0]},
+     {{16'h0, _temp_result_T_1[15:0]}},
+     {{24'h0, _temp_result_T_4[7:0]}},
+     {_temp_access_word_T[31:0]}};
+  wire [31:0]      output_data = output_cacheable ? _GEN_47[output_operation] : 32'h42;
   reg              output_valid_r;
-  reg              output_valid_r_1;
   always @(posedge clock) begin
-    automatic logic       _GEN_7;
-    automatic logic       _GEN_8;
-    automatic logic       _GEN_9;
-    automatic logic [4:0] active_tag =
-      (&DATA_CACHE_STATE) ? 5'h0 : io_CPU_request_bits_addr[15:11];
-    automatic logic       _valid_miss_T = tag_hit_OH_0 | tag_hit_OH_1;
-    _GEN_7 = m_axi_awready & m_axi_awvalid_0;
-    _GEN_8 = m_axi_wready & m_axi_wvalid_0;
-    _GEN_9 = m_axi_wvalid_0 & _GEN_8;
-    if (write_request_valid & _GEN_7)
+    automatic logic        _GEN_48;
+    automatic logic        _GEN_49;
+    automatic logic        _GEN_50;
+    automatic logic        _GEN_51;
+    automatic logic [1:0]  _GEN_52;
+    automatic logic        _GEN_53;
+    automatic logic        _GEN_54;
+    automatic logic        _GEN_55;
+    automatic logic        _GEN_56;
+    automatic logic        _GEN_57;
+    automatic logic        _GEN_58;
+    automatic logic        _GEN_59;
+    automatic logic        _GEN_60;
+    automatic logic        _GEN_61;
+    automatic logic        _GEN_62;
+    automatic logic        _GEN_63;
+    automatic logic        _GEN_64;
+    automatic logic        _GEN_65 = MSHR_front_pointer[1:0] == 2'h0;
+    automatic logic        _GEN_66 = _GEN_15 == 3'h0;
+    automatic logic        _GEN_67 = _GEN_15 == 3'h1;
+    automatic logic        _GEN_68 = _GEN_15 == 3'h2;
+    automatic logic        _GEN_69 = _GEN_15 == 3'h3;
+    automatic logic        _GEN_70 = _GEN_15 == 3'h4;
+    automatic logic        _GEN_71 = _GEN_15 == 3'h5;
+    automatic logic        _GEN_72 = _GEN_15 == 3'h6;
+    automatic logic        _GEN_73 = MSHR_front_pointer[1:0] == 2'h1;
+    automatic logic        _GEN_74 = MSHR_front_pointer[1:0] == 2'h2;
+    automatic logic [63:0] _GEN_75 =
+      {{valid_memory_63_0},
+       {valid_memory_62_0},
+       {valid_memory_61_0},
+       {valid_memory_60_0},
+       {valid_memory_59_0},
+       {valid_memory_58_0},
+       {valid_memory_57_0},
+       {valid_memory_56_0},
+       {valid_memory_55_0},
+       {valid_memory_54_0},
+       {valid_memory_53_0},
+       {valid_memory_52_0},
+       {valid_memory_51_0},
+       {valid_memory_50_0},
+       {valid_memory_49_0},
+       {valid_memory_48_0},
+       {valid_memory_47_0},
+       {valid_memory_46_0},
+       {valid_memory_45_0},
+       {valid_memory_44_0},
+       {valid_memory_43_0},
+       {valid_memory_42_0},
+       {valid_memory_41_0},
+       {valid_memory_40_0},
+       {valid_memory_39_0},
+       {valid_memory_38_0},
+       {valid_memory_37_0},
+       {valid_memory_36_0},
+       {valid_memory_35_0},
+       {valid_memory_34_0},
+       {valid_memory_33_0},
+       {valid_memory_32_0},
+       {valid_memory_31_0},
+       {valid_memory_30_0},
+       {valid_memory_29_0},
+       {valid_memory_28_0},
+       {valid_memory_27_0},
+       {valid_memory_26_0},
+       {valid_memory_25_0},
+       {valid_memory_24_0},
+       {valid_memory_23_0},
+       {valid_memory_22_0},
+       {valid_memory_21_0},
+       {valid_memory_20_0},
+       {valid_memory_19_0},
+       {valid_memory_18_0},
+       {valid_memory_17_0},
+       {valid_memory_16_0},
+       {valid_memory_15_0},
+       {valid_memory_14_0},
+       {valid_memory_13_0},
+       {valid_memory_12_0},
+       {valid_memory_11_0},
+       {valid_memory_10_0},
+       {valid_memory_9_0},
+       {valid_memory_8_0},
+       {valid_memory_7_0},
+       {valid_memory_6_0},
+       {valid_memory_5_0},
+       {valid_memory_4_0},
+       {valid_memory_3_0},
+       {valid_memory_2_0},
+       {valid_memory_1_0},
+       {valid_memory_0_0}};
+    automatic logic [63:0] _GEN_76 =
+      {{valid_memory_63_1},
+       {valid_memory_62_1},
+       {valid_memory_61_1},
+       {valid_memory_60_1},
+       {valid_memory_59_1},
+       {valid_memory_58_1},
+       {valid_memory_57_1},
+       {valid_memory_56_1},
+       {valid_memory_55_1},
+       {valid_memory_54_1},
+       {valid_memory_53_1},
+       {valid_memory_52_1},
+       {valid_memory_51_1},
+       {valid_memory_50_1},
+       {valid_memory_49_1},
+       {valid_memory_48_1},
+       {valid_memory_47_1},
+       {valid_memory_46_1},
+       {valid_memory_45_1},
+       {valid_memory_44_1},
+       {valid_memory_43_1},
+       {valid_memory_42_1},
+       {valid_memory_41_1},
+       {valid_memory_40_1},
+       {valid_memory_39_1},
+       {valid_memory_38_1},
+       {valid_memory_37_1},
+       {valid_memory_36_1},
+       {valid_memory_35_1},
+       {valid_memory_34_1},
+       {valid_memory_33_1},
+       {valid_memory_32_1},
+       {valid_memory_31_1},
+       {valid_memory_30_1},
+       {valid_memory_29_1},
+       {valid_memory_28_1},
+       {valid_memory_27_1},
+       {valid_memory_26_1},
+       {valid_memory_25_1},
+       {valid_memory_24_1},
+       {valid_memory_23_1},
+       {valid_memory_22_1},
+       {valid_memory_21_1},
+       {valid_memory_20_1},
+       {valid_memory_19_1},
+       {valid_memory_18_1},
+       {valid_memory_17_1},
+       {valid_memory_16_1},
+       {valid_memory_15_1},
+       {valid_memory_14_1},
+       {valid_memory_13_1},
+       {valid_memory_12_1},
+       {valid_memory_11_1},
+       {valid_memory_10_1},
+       {valid_memory_9_1},
+       {valid_memory_8_1},
+       {valid_memory_7_1},
+       {valid_memory_6_1},
+       {valid_memory_5_1},
+       {valid_memory_4_1},
+       {valid_memory_3_1},
+       {valid_memory_2_1},
+       {valid_memory_1_1},
+       {valid_memory_0_1}};
+    automatic logic [63:0] _GEN_77 =
+      {{valid_memory_63_2},
+       {valid_memory_62_2},
+       {valid_memory_61_2},
+       {valid_memory_60_2},
+       {valid_memory_59_2},
+       {valid_memory_58_2},
+       {valid_memory_57_2},
+       {valid_memory_56_2},
+       {valid_memory_55_2},
+       {valid_memory_54_2},
+       {valid_memory_53_2},
+       {valid_memory_52_2},
+       {valid_memory_51_2},
+       {valid_memory_50_2},
+       {valid_memory_49_2},
+       {valid_memory_48_2},
+       {valid_memory_47_2},
+       {valid_memory_46_2},
+       {valid_memory_45_2},
+       {valid_memory_44_2},
+       {valid_memory_43_2},
+       {valid_memory_42_2},
+       {valid_memory_41_2},
+       {valid_memory_40_2},
+       {valid_memory_39_2},
+       {valid_memory_38_2},
+       {valid_memory_37_2},
+       {valid_memory_36_2},
+       {valid_memory_35_2},
+       {valid_memory_34_2},
+       {valid_memory_33_2},
+       {valid_memory_32_2},
+       {valid_memory_31_2},
+       {valid_memory_30_2},
+       {valid_memory_29_2},
+       {valid_memory_28_2},
+       {valid_memory_27_2},
+       {valid_memory_26_2},
+       {valid_memory_25_2},
+       {valid_memory_24_2},
+       {valid_memory_23_2},
+       {valid_memory_22_2},
+       {valid_memory_21_2},
+       {valid_memory_20_2},
+       {valid_memory_19_2},
+       {valid_memory_18_2},
+       {valid_memory_17_2},
+       {valid_memory_16_2},
+       {valid_memory_15_2},
+       {valid_memory_14_2},
+       {valid_memory_13_2},
+       {valid_memory_12_2},
+       {valid_memory_11_2},
+       {valid_memory_10_2},
+       {valid_memory_9_2},
+       {valid_memory_8_2},
+       {valid_memory_7_2},
+       {valid_memory_6_2},
+       {valid_memory_5_2},
+       {valid_memory_4_2},
+       {valid_memory_3_2},
+       {valid_memory_2_2},
+       {valid_memory_1_2},
+       {valid_memory_0_2}};
+    automatic logic [63:0] _GEN_78 =
+      {{valid_memory_63_3},
+       {valid_memory_62_3},
+       {valid_memory_61_3},
+       {valid_memory_60_3},
+       {valid_memory_59_3},
+       {valid_memory_58_3},
+       {valid_memory_57_3},
+       {valid_memory_56_3},
+       {valid_memory_55_3},
+       {valid_memory_54_3},
+       {valid_memory_53_3},
+       {valid_memory_52_3},
+       {valid_memory_51_3},
+       {valid_memory_50_3},
+       {valid_memory_49_3},
+       {valid_memory_48_3},
+       {valid_memory_47_3},
+       {valid_memory_46_3},
+       {valid_memory_45_3},
+       {valid_memory_44_3},
+       {valid_memory_43_3},
+       {valid_memory_42_3},
+       {valid_memory_41_3},
+       {valid_memory_40_3},
+       {valid_memory_39_3},
+       {valid_memory_38_3},
+       {valid_memory_37_3},
+       {valid_memory_36_3},
+       {valid_memory_35_3},
+       {valid_memory_34_3},
+       {valid_memory_33_3},
+       {valid_memory_32_3},
+       {valid_memory_31_3},
+       {valid_memory_30_3},
+       {valid_memory_29_3},
+       {valid_memory_28_3},
+       {valid_memory_27_3},
+       {valid_memory_26_3},
+       {valid_memory_25_3},
+       {valid_memory_24_3},
+       {valid_memory_23_3},
+       {valid_memory_22_3},
+       {valid_memory_21_3},
+       {valid_memory_20_3},
+       {valid_memory_19_3},
+       {valid_memory_18_3},
+       {valid_memory_17_3},
+       {valid_memory_16_3},
+       {valid_memory_15_3},
+       {valid_memory_14_3},
+       {valid_memory_13_3},
+       {valid_memory_12_3},
+       {valid_memory_11_3},
+       {valid_memory_10_3},
+       {valid_memory_9_3},
+       {valid_memory_8_3},
+       {valid_memory_7_3},
+       {valid_memory_6_3},
+       {valid_memory_5_3},
+       {valid_memory_4_3},
+       {valid_memory_3_3},
+       {valid_memory_2_3},
+       {valid_memory_1_3},
+       {valid_memory_0_3}};
+    _GEN_48 = m_axi_awready & m_axi_awvalid_0;
+    _GEN_49 = m_axi_wready & m_axi_wvalid_0;
+    _GEN_50 = m_axi_wvalid_0 & _GEN_49;
+    _GEN_51 = valid_miss & valid_MSHR_hit;
+    _GEN_52 = _GEN_13[MSHR_back_pointer[1:0]];
+    _GEN_53 = MSHR_back_pointer[1:0] == 2'h0;
+    _GEN_54 = _GEN_52 == 2'h0;
+    _GEN_55 = _GEN_52 == 2'h1;
+    _GEN_56 = _GEN_52 == 2'h2;
+    _GEN_57 = MSHR_back_pointer[1:0] == 2'h1;
+    _GEN_58 = MSHR_back_pointer[1:0] == 2'h2;
+    _GEN_59 = valid_miss & valid_MSHR_miss;
+    _GEN_60 = _GEN_59 & _GEN_53;
+    _GEN_61 = _GEN_59 & _GEN_57;
+    _GEN_62 = _GEN_59 & _GEN_58;
+    _GEN_63 = _GEN_59 & (&(MSHR_back_pointer[1:0]));
+    _GEN_64 = _GEN_51 | _GEN_59;
+    if (write_request_valid & _GEN_48)
       AXI_AW_DATA_BUFFER <= _AXI_request_Q_io_deq_bits_write_data;
-    else if (_GEN_9)
+    else if (_GEN_50)
       AXI_AW_DATA_BUFFER <= {32'h0, AXI_AW_DATA_BUFFER[255:32]};
-    if (~m_axi_rready_0 | _GEN_0 | ~_GEN) begin
+    if (~m_axi_rready_0 | _GEN_1 | ~_GEN_0) begin
     end
     else
-      AXI_read_buffer <= _GEN_1;
+      AXI_read_buffer <= _GEN_2;
     valid_hit_REG <= io_CPU_request_valid;
+    valid_hit_REG_1 <= &DATA_CACHE_STATE;
     valid_miss_REG <= io_CPU_request_valid;
+    valid_miss_REG_1 <= &DATA_CACHE_STATE;
+    valid_write_hit_REG <= _byte_offset_match_T_125;
+    hit_set_REG <= active_set;
     hit_MOB_index_REG <= io_CPU_request_bits_MOB_index;
     miss_address_REG <= active_address;
+    miss_set_REG <= active_set;
     AXI_request_Q_io_enq_bits_write_data_REG <= io_CPU_request_bits_data;
-    AXI_request_Q_io_enq_bits_read_address_r <= io_CPU_request_bits_addr;
-    AXI_request_Q_io_enq_bits_read_address_r_1 <=
-      AXI_request_Q_io_enq_bits_read_address_r;
+    AXI_request_Q_io_enq_bits_read_address_REG <= io_CPU_request_bits_addr;
     tag_hit_OH_0_REG <= active_tag;
     tag_hit_OH_1_REG <= active_tag;
     tag_hit_OH_2_REG <= active_tag;
     tag_hit_OH_3_REG <= active_tag;
-    if (~(_valid_miss_T | tag_hit_OH_2 | tag_hit_OH_3) & valid_miss_REG
-        & miss_address_REG == 32'h0)
-      MSHRs_3_back_pointer <= MSHRs_3_back_pointer + 2'h1;
-    output_valid_r <= (_valid_miss_T | tag_hit_OH_2 | tag_hit_OH_3) & valid_hit_REG;
-    output_valid_r_1 <= output_valid_r;
+    valid_vec_0_REG <= _GEN_75[active_set];
+    valid_vec_1_REG <= _GEN_76[active_set];
+    valid_vec_2_REG <= _GEN_77[active_set];
+    valid_vec_3_REG <= _GEN_78[active_set];
+    is_evict_dirty_REG <= active_set;
+    if (_GEN_51 | ~_GEN_60) begin
+    end
+    else
+      MSHRs_0_address <= miss_backend_memory_request_REG_addr;
+    if ((&DATA_CACHE_STATE) & _GEN_65 & _GEN_66) begin
+      MSHRs_0_miss_requests_0_addr <= 32'h0;
+      MSHRs_0_miss_requests_0_data <= 32'h0;
+      MSHRs_0_miss_requests_0_memory_type <= 2'h0;
+      MSHRs_0_miss_requests_0_access_width <= 2'h0;
+      MSHRs_0_miss_requests_0_MOB_index <= 4'h0;
+    end
+    else if (_GEN_64 & _GEN_53 & _GEN_54) begin
+      MSHRs_0_miss_requests_0_addr <= miss_backend_memory_request_REG_addr;
+      MSHRs_0_miss_requests_0_data <= miss_backend_memory_request_REG_data;
+      MSHRs_0_miss_requests_0_memory_type <= miss_backend_memory_request_REG_memory_type;
+      MSHRs_0_miss_requests_0_access_width <=
+        miss_backend_memory_request_REG_access_width;
+      MSHRs_0_miss_requests_0_MOB_index <= miss_backend_memory_request_REG_MOB_index;
+    end
+    if ((&DATA_CACHE_STATE) & _GEN_65 & _GEN_67) begin
+      MSHRs_0_miss_requests_1_addr <= 32'h0;
+      MSHRs_0_miss_requests_1_data <= 32'h0;
+      MSHRs_0_miss_requests_1_memory_type <= 2'h0;
+      MSHRs_0_miss_requests_1_access_width <= 2'h0;
+      MSHRs_0_miss_requests_1_MOB_index <= 4'h0;
+    end
+    else if (_GEN_64 & _GEN_53 & _GEN_55) begin
+      MSHRs_0_miss_requests_1_addr <= miss_backend_memory_request_REG_addr;
+      MSHRs_0_miss_requests_1_data <= miss_backend_memory_request_REG_data;
+      MSHRs_0_miss_requests_1_memory_type <= miss_backend_memory_request_REG_memory_type;
+      MSHRs_0_miss_requests_1_access_width <=
+        miss_backend_memory_request_REG_access_width;
+      MSHRs_0_miss_requests_1_MOB_index <= miss_backend_memory_request_REG_MOB_index;
+    end
+    if ((&DATA_CACHE_STATE) & _GEN_65 & _GEN_68) begin
+      MSHRs_0_miss_requests_2_addr <= 32'h0;
+      MSHRs_0_miss_requests_2_data <= 32'h0;
+      MSHRs_0_miss_requests_2_memory_type <= 2'h0;
+      MSHRs_0_miss_requests_2_access_width <= 2'h0;
+      MSHRs_0_miss_requests_2_MOB_index <= 4'h0;
+    end
+    else if (_GEN_64 & _GEN_53 & _GEN_56) begin
+      MSHRs_0_miss_requests_2_addr <= miss_backend_memory_request_REG_addr;
+      MSHRs_0_miss_requests_2_data <= miss_backend_memory_request_REG_data;
+      MSHRs_0_miss_requests_2_memory_type <= miss_backend_memory_request_REG_memory_type;
+      MSHRs_0_miss_requests_2_access_width <=
+        miss_backend_memory_request_REG_access_width;
+      MSHRs_0_miss_requests_2_MOB_index <= miss_backend_memory_request_REG_MOB_index;
+    end
+    if ((&DATA_CACHE_STATE) & _GEN_65 & _GEN_69) begin
+      MSHRs_0_miss_requests_3_addr <= 32'h0;
+      MSHRs_0_miss_requests_3_data <= 32'h0;
+      MSHRs_0_miss_requests_3_memory_type <= 2'h0;
+      MSHRs_0_miss_requests_3_access_width <= 2'h0;
+      MSHRs_0_miss_requests_3_MOB_index <= 4'h0;
+    end
+    else if (_GEN_64 & _GEN_53 & (&_GEN_52)) begin
+      MSHRs_0_miss_requests_3_addr <= miss_backend_memory_request_REG_addr;
+      MSHRs_0_miss_requests_3_data <= miss_backend_memory_request_REG_data;
+      MSHRs_0_miss_requests_3_memory_type <= miss_backend_memory_request_REG_memory_type;
+      MSHRs_0_miss_requests_3_access_width <=
+        miss_backend_memory_request_REG_access_width;
+      MSHRs_0_miss_requests_3_MOB_index <= miss_backend_memory_request_REG_MOB_index;
+    end
+    if ((&DATA_CACHE_STATE) & _GEN_65 & _GEN_70) begin
+      MSHRs_0_miss_requests_4_addr <= 32'h0;
+      MSHRs_0_miss_requests_4_data <= 32'h0;
+      MSHRs_0_miss_requests_4_memory_type <= 2'h0;
+      MSHRs_0_miss_requests_4_access_width <= 2'h0;
+      MSHRs_0_miss_requests_4_MOB_index <= 4'h0;
+    end
+    if ((&DATA_CACHE_STATE) & _GEN_65 & _GEN_71) begin
+      MSHRs_0_miss_requests_5_addr <= 32'h0;
+      MSHRs_0_miss_requests_5_data <= 32'h0;
+      MSHRs_0_miss_requests_5_memory_type <= 2'h0;
+      MSHRs_0_miss_requests_5_access_width <= 2'h0;
+      MSHRs_0_miss_requests_5_MOB_index <= 4'h0;
+    end
+    if ((&DATA_CACHE_STATE) & _GEN_65 & _GEN_72) begin
+      MSHRs_0_miss_requests_6_addr <= 32'h0;
+      MSHRs_0_miss_requests_6_data <= 32'h0;
+      MSHRs_0_miss_requests_6_memory_type <= 2'h0;
+      MSHRs_0_miss_requests_6_access_width <= 2'h0;
+      MSHRs_0_miss_requests_6_MOB_index <= 4'h0;
+    end
+    if ((&DATA_CACHE_STATE) & _GEN_65 & (&_GEN_15)) begin
+      MSHRs_0_miss_requests_7_addr <= 32'h0;
+      MSHRs_0_miss_requests_7_data <= 32'h0;
+      MSHRs_0_miss_requests_7_memory_type <= 2'h0;
+      MSHRs_0_miss_requests_7_access_width <= 2'h0;
+      MSHRs_0_miss_requests_7_MOB_index <= 4'h0;
+    end
+    if ((&DATA_CACHE_STATE) & _GEN_65)
+      MSHRs_0_front_pointer <= _MSHRs_front_pointer_T;
+    if (_GEN_51) begin
+      automatic logic [1:0] _MSHRs_back_pointer_T;
+      _MSHRs_back_pointer_T = _GEN_52 + 2'h1;
+      if (_GEN_53)
+        MSHRs_0_back_pointer <= _MSHRs_back_pointer_T;
+      if (_GEN_57)
+        MSHRs_1_back_pointer <= _MSHRs_back_pointer_T;
+      if (_GEN_58)
+        MSHRs_2_back_pointer <= _MSHRs_back_pointer_T;
+      if (&(MSHR_back_pointer[1:0]))
+        MSHRs_3_back_pointer <= _MSHRs_back_pointer_T;
+    end
+    else begin
+      automatic logic [1:0] _MSHRs_back_pointer_T_2;
+      _MSHRs_back_pointer_T_2 = _GEN_52 + 2'h1;
+      if (_GEN_60)
+        MSHRs_0_back_pointer <= _MSHRs_back_pointer_T_2;
+      if (_GEN_61)
+        MSHRs_1_back_pointer <= _MSHRs_back_pointer_T_2;
+      if (_GEN_62)
+        MSHRs_2_back_pointer <= _MSHRs_back_pointer_T_2;
+      if (_GEN_63)
+        MSHRs_3_back_pointer <= _MSHRs_back_pointer_T_2;
+    end
+    if (_GEN_51 | ~_GEN_61) begin
+    end
+    else
+      MSHRs_1_address <= miss_backend_memory_request_REG_addr;
+    if ((&DATA_CACHE_STATE) & _GEN_73 & _GEN_66) begin
+      MSHRs_1_miss_requests_0_addr <= 32'h0;
+      MSHRs_1_miss_requests_0_data <= 32'h0;
+      MSHRs_1_miss_requests_0_memory_type <= 2'h0;
+      MSHRs_1_miss_requests_0_access_width <= 2'h0;
+      MSHRs_1_miss_requests_0_MOB_index <= 4'h0;
+    end
+    else if (_GEN_64 & _GEN_57 & _GEN_54) begin
+      MSHRs_1_miss_requests_0_addr <= miss_backend_memory_request_REG_addr;
+      MSHRs_1_miss_requests_0_data <= miss_backend_memory_request_REG_data;
+      MSHRs_1_miss_requests_0_memory_type <= miss_backend_memory_request_REG_memory_type;
+      MSHRs_1_miss_requests_0_access_width <=
+        miss_backend_memory_request_REG_access_width;
+      MSHRs_1_miss_requests_0_MOB_index <= miss_backend_memory_request_REG_MOB_index;
+    end
+    if ((&DATA_CACHE_STATE) & _GEN_73 & _GEN_67) begin
+      MSHRs_1_miss_requests_1_addr <= 32'h0;
+      MSHRs_1_miss_requests_1_data <= 32'h0;
+      MSHRs_1_miss_requests_1_memory_type <= 2'h0;
+      MSHRs_1_miss_requests_1_access_width <= 2'h0;
+      MSHRs_1_miss_requests_1_MOB_index <= 4'h0;
+    end
+    else if (_GEN_64 & _GEN_57 & _GEN_55) begin
+      MSHRs_1_miss_requests_1_addr <= miss_backend_memory_request_REG_addr;
+      MSHRs_1_miss_requests_1_data <= miss_backend_memory_request_REG_data;
+      MSHRs_1_miss_requests_1_memory_type <= miss_backend_memory_request_REG_memory_type;
+      MSHRs_1_miss_requests_1_access_width <=
+        miss_backend_memory_request_REG_access_width;
+      MSHRs_1_miss_requests_1_MOB_index <= miss_backend_memory_request_REG_MOB_index;
+    end
+    if ((&DATA_CACHE_STATE) & _GEN_73 & _GEN_68) begin
+      MSHRs_1_miss_requests_2_addr <= 32'h0;
+      MSHRs_1_miss_requests_2_data <= 32'h0;
+      MSHRs_1_miss_requests_2_memory_type <= 2'h0;
+      MSHRs_1_miss_requests_2_access_width <= 2'h0;
+      MSHRs_1_miss_requests_2_MOB_index <= 4'h0;
+    end
+    else if (_GEN_64 & _GEN_57 & _GEN_56) begin
+      MSHRs_1_miss_requests_2_addr <= miss_backend_memory_request_REG_addr;
+      MSHRs_1_miss_requests_2_data <= miss_backend_memory_request_REG_data;
+      MSHRs_1_miss_requests_2_memory_type <= miss_backend_memory_request_REG_memory_type;
+      MSHRs_1_miss_requests_2_access_width <=
+        miss_backend_memory_request_REG_access_width;
+      MSHRs_1_miss_requests_2_MOB_index <= miss_backend_memory_request_REG_MOB_index;
+    end
+    if ((&DATA_CACHE_STATE) & _GEN_73 & _GEN_69) begin
+      MSHRs_1_miss_requests_3_addr <= 32'h0;
+      MSHRs_1_miss_requests_3_data <= 32'h0;
+      MSHRs_1_miss_requests_3_memory_type <= 2'h0;
+      MSHRs_1_miss_requests_3_access_width <= 2'h0;
+      MSHRs_1_miss_requests_3_MOB_index <= 4'h0;
+    end
+    else if (_GEN_64 & _GEN_57 & (&_GEN_52)) begin
+      MSHRs_1_miss_requests_3_addr <= miss_backend_memory_request_REG_addr;
+      MSHRs_1_miss_requests_3_data <= miss_backend_memory_request_REG_data;
+      MSHRs_1_miss_requests_3_memory_type <= miss_backend_memory_request_REG_memory_type;
+      MSHRs_1_miss_requests_3_access_width <=
+        miss_backend_memory_request_REG_access_width;
+      MSHRs_1_miss_requests_3_MOB_index <= miss_backend_memory_request_REG_MOB_index;
+    end
+    if ((&DATA_CACHE_STATE) & _GEN_73 & _GEN_70) begin
+      MSHRs_1_miss_requests_4_addr <= 32'h0;
+      MSHRs_1_miss_requests_4_data <= 32'h0;
+      MSHRs_1_miss_requests_4_memory_type <= 2'h0;
+      MSHRs_1_miss_requests_4_access_width <= 2'h0;
+      MSHRs_1_miss_requests_4_MOB_index <= 4'h0;
+    end
+    if ((&DATA_CACHE_STATE) & _GEN_73 & _GEN_71) begin
+      MSHRs_1_miss_requests_5_addr <= 32'h0;
+      MSHRs_1_miss_requests_5_data <= 32'h0;
+      MSHRs_1_miss_requests_5_memory_type <= 2'h0;
+      MSHRs_1_miss_requests_5_access_width <= 2'h0;
+      MSHRs_1_miss_requests_5_MOB_index <= 4'h0;
+    end
+    if ((&DATA_CACHE_STATE) & _GEN_73 & _GEN_72) begin
+      MSHRs_1_miss_requests_6_addr <= 32'h0;
+      MSHRs_1_miss_requests_6_data <= 32'h0;
+      MSHRs_1_miss_requests_6_memory_type <= 2'h0;
+      MSHRs_1_miss_requests_6_access_width <= 2'h0;
+      MSHRs_1_miss_requests_6_MOB_index <= 4'h0;
+    end
+    if ((&DATA_CACHE_STATE) & _GEN_73 & (&_GEN_15)) begin
+      MSHRs_1_miss_requests_7_addr <= 32'h0;
+      MSHRs_1_miss_requests_7_data <= 32'h0;
+      MSHRs_1_miss_requests_7_memory_type <= 2'h0;
+      MSHRs_1_miss_requests_7_access_width <= 2'h0;
+      MSHRs_1_miss_requests_7_MOB_index <= 4'h0;
+    end
+    if ((&DATA_CACHE_STATE) & _GEN_73)
+      MSHRs_1_front_pointer <= _MSHRs_front_pointer_T;
+    if (_GEN_51 | ~_GEN_62) begin
+    end
+    else
+      MSHRs_2_address <= miss_backend_memory_request_REG_addr;
+    if ((&DATA_CACHE_STATE) & _GEN_74 & _GEN_66) begin
+      MSHRs_2_miss_requests_0_addr <= 32'h0;
+      MSHRs_2_miss_requests_0_data <= 32'h0;
+      MSHRs_2_miss_requests_0_memory_type <= 2'h0;
+      MSHRs_2_miss_requests_0_access_width <= 2'h0;
+      MSHRs_2_miss_requests_0_MOB_index <= 4'h0;
+    end
+    else if (_GEN_64 & _GEN_58 & _GEN_54) begin
+      MSHRs_2_miss_requests_0_addr <= miss_backend_memory_request_REG_addr;
+      MSHRs_2_miss_requests_0_data <= miss_backend_memory_request_REG_data;
+      MSHRs_2_miss_requests_0_memory_type <= miss_backend_memory_request_REG_memory_type;
+      MSHRs_2_miss_requests_0_access_width <=
+        miss_backend_memory_request_REG_access_width;
+      MSHRs_2_miss_requests_0_MOB_index <= miss_backend_memory_request_REG_MOB_index;
+    end
+    if ((&DATA_CACHE_STATE) & _GEN_74 & _GEN_67) begin
+      MSHRs_2_miss_requests_1_addr <= 32'h0;
+      MSHRs_2_miss_requests_1_data <= 32'h0;
+      MSHRs_2_miss_requests_1_memory_type <= 2'h0;
+      MSHRs_2_miss_requests_1_access_width <= 2'h0;
+      MSHRs_2_miss_requests_1_MOB_index <= 4'h0;
+    end
+    else if (_GEN_64 & _GEN_58 & _GEN_55) begin
+      MSHRs_2_miss_requests_1_addr <= miss_backend_memory_request_REG_addr;
+      MSHRs_2_miss_requests_1_data <= miss_backend_memory_request_REG_data;
+      MSHRs_2_miss_requests_1_memory_type <= miss_backend_memory_request_REG_memory_type;
+      MSHRs_2_miss_requests_1_access_width <=
+        miss_backend_memory_request_REG_access_width;
+      MSHRs_2_miss_requests_1_MOB_index <= miss_backend_memory_request_REG_MOB_index;
+    end
+    if ((&DATA_CACHE_STATE) & _GEN_74 & _GEN_68) begin
+      MSHRs_2_miss_requests_2_addr <= 32'h0;
+      MSHRs_2_miss_requests_2_data <= 32'h0;
+      MSHRs_2_miss_requests_2_memory_type <= 2'h0;
+      MSHRs_2_miss_requests_2_access_width <= 2'h0;
+      MSHRs_2_miss_requests_2_MOB_index <= 4'h0;
+    end
+    else if (_GEN_64 & _GEN_58 & _GEN_56) begin
+      MSHRs_2_miss_requests_2_addr <= miss_backend_memory_request_REG_addr;
+      MSHRs_2_miss_requests_2_data <= miss_backend_memory_request_REG_data;
+      MSHRs_2_miss_requests_2_memory_type <= miss_backend_memory_request_REG_memory_type;
+      MSHRs_2_miss_requests_2_access_width <=
+        miss_backend_memory_request_REG_access_width;
+      MSHRs_2_miss_requests_2_MOB_index <= miss_backend_memory_request_REG_MOB_index;
+    end
+    if ((&DATA_CACHE_STATE) & _GEN_74 & _GEN_69) begin
+      MSHRs_2_miss_requests_3_addr <= 32'h0;
+      MSHRs_2_miss_requests_3_data <= 32'h0;
+      MSHRs_2_miss_requests_3_memory_type <= 2'h0;
+      MSHRs_2_miss_requests_3_access_width <= 2'h0;
+      MSHRs_2_miss_requests_3_MOB_index <= 4'h0;
+    end
+    else if (_GEN_64 & _GEN_58 & (&_GEN_52)) begin
+      MSHRs_2_miss_requests_3_addr <= miss_backend_memory_request_REG_addr;
+      MSHRs_2_miss_requests_3_data <= miss_backend_memory_request_REG_data;
+      MSHRs_2_miss_requests_3_memory_type <= miss_backend_memory_request_REG_memory_type;
+      MSHRs_2_miss_requests_3_access_width <=
+        miss_backend_memory_request_REG_access_width;
+      MSHRs_2_miss_requests_3_MOB_index <= miss_backend_memory_request_REG_MOB_index;
+    end
+    if ((&DATA_CACHE_STATE) & _GEN_74 & _GEN_70) begin
+      MSHRs_2_miss_requests_4_addr <= 32'h0;
+      MSHRs_2_miss_requests_4_data <= 32'h0;
+      MSHRs_2_miss_requests_4_memory_type <= 2'h0;
+      MSHRs_2_miss_requests_4_access_width <= 2'h0;
+      MSHRs_2_miss_requests_4_MOB_index <= 4'h0;
+    end
+    if ((&DATA_CACHE_STATE) & _GEN_74 & _GEN_71) begin
+      MSHRs_2_miss_requests_5_addr <= 32'h0;
+      MSHRs_2_miss_requests_5_data <= 32'h0;
+      MSHRs_2_miss_requests_5_memory_type <= 2'h0;
+      MSHRs_2_miss_requests_5_access_width <= 2'h0;
+      MSHRs_2_miss_requests_5_MOB_index <= 4'h0;
+    end
+    if ((&DATA_CACHE_STATE) & _GEN_74 & _GEN_72) begin
+      MSHRs_2_miss_requests_6_addr <= 32'h0;
+      MSHRs_2_miss_requests_6_data <= 32'h0;
+      MSHRs_2_miss_requests_6_memory_type <= 2'h0;
+      MSHRs_2_miss_requests_6_access_width <= 2'h0;
+      MSHRs_2_miss_requests_6_MOB_index <= 4'h0;
+    end
+    if ((&DATA_CACHE_STATE) & _GEN_74 & (&_GEN_15)) begin
+      MSHRs_2_miss_requests_7_addr <= 32'h0;
+      MSHRs_2_miss_requests_7_data <= 32'h0;
+      MSHRs_2_miss_requests_7_memory_type <= 2'h0;
+      MSHRs_2_miss_requests_7_access_width <= 2'h0;
+      MSHRs_2_miss_requests_7_MOB_index <= 4'h0;
+    end
+    if ((&DATA_CACHE_STATE) & _GEN_74)
+      MSHRs_2_front_pointer <= _MSHRs_front_pointer_T;
+    if (_GEN_51 | ~_GEN_63) begin
+    end
+    else
+      MSHRs_3_address <= miss_backend_memory_request_REG_addr;
+    if ((&DATA_CACHE_STATE) & (&(MSHR_front_pointer[1:0])) & _GEN_66) begin
+      MSHRs_3_miss_requests_0_addr <= 32'h0;
+      MSHRs_3_miss_requests_0_data <= 32'h0;
+      MSHRs_3_miss_requests_0_memory_type <= 2'h0;
+      MSHRs_3_miss_requests_0_access_width <= 2'h0;
+      MSHRs_3_miss_requests_0_MOB_index <= 4'h0;
+    end
+    else if (_GEN_64 & (&(MSHR_back_pointer[1:0])) & _GEN_54) begin
+      MSHRs_3_miss_requests_0_addr <= miss_backend_memory_request_REG_addr;
+      MSHRs_3_miss_requests_0_data <= miss_backend_memory_request_REG_data;
+      MSHRs_3_miss_requests_0_memory_type <= miss_backend_memory_request_REG_memory_type;
+      MSHRs_3_miss_requests_0_access_width <=
+        miss_backend_memory_request_REG_access_width;
+      MSHRs_3_miss_requests_0_MOB_index <= miss_backend_memory_request_REG_MOB_index;
+    end
+    if ((&DATA_CACHE_STATE) & (&(MSHR_front_pointer[1:0])) & _GEN_67) begin
+      MSHRs_3_miss_requests_1_addr <= 32'h0;
+      MSHRs_3_miss_requests_1_data <= 32'h0;
+      MSHRs_3_miss_requests_1_memory_type <= 2'h0;
+      MSHRs_3_miss_requests_1_access_width <= 2'h0;
+      MSHRs_3_miss_requests_1_MOB_index <= 4'h0;
+    end
+    else if (_GEN_64 & (&(MSHR_back_pointer[1:0])) & _GEN_55) begin
+      MSHRs_3_miss_requests_1_addr <= miss_backend_memory_request_REG_addr;
+      MSHRs_3_miss_requests_1_data <= miss_backend_memory_request_REG_data;
+      MSHRs_3_miss_requests_1_memory_type <= miss_backend_memory_request_REG_memory_type;
+      MSHRs_3_miss_requests_1_access_width <=
+        miss_backend_memory_request_REG_access_width;
+      MSHRs_3_miss_requests_1_MOB_index <= miss_backend_memory_request_REG_MOB_index;
+    end
+    if ((&DATA_CACHE_STATE) & (&(MSHR_front_pointer[1:0])) & _GEN_68) begin
+      MSHRs_3_miss_requests_2_addr <= 32'h0;
+      MSHRs_3_miss_requests_2_data <= 32'h0;
+      MSHRs_3_miss_requests_2_memory_type <= 2'h0;
+      MSHRs_3_miss_requests_2_access_width <= 2'h0;
+      MSHRs_3_miss_requests_2_MOB_index <= 4'h0;
+    end
+    else if (_GEN_64 & (&(MSHR_back_pointer[1:0])) & _GEN_56) begin
+      MSHRs_3_miss_requests_2_addr <= miss_backend_memory_request_REG_addr;
+      MSHRs_3_miss_requests_2_data <= miss_backend_memory_request_REG_data;
+      MSHRs_3_miss_requests_2_memory_type <= miss_backend_memory_request_REG_memory_type;
+      MSHRs_3_miss_requests_2_access_width <=
+        miss_backend_memory_request_REG_access_width;
+      MSHRs_3_miss_requests_2_MOB_index <= miss_backend_memory_request_REG_MOB_index;
+    end
+    if ((&DATA_CACHE_STATE) & (&(MSHR_front_pointer[1:0])) & _GEN_69) begin
+      MSHRs_3_miss_requests_3_addr <= 32'h0;
+      MSHRs_3_miss_requests_3_data <= 32'h0;
+      MSHRs_3_miss_requests_3_memory_type <= 2'h0;
+      MSHRs_3_miss_requests_3_access_width <= 2'h0;
+      MSHRs_3_miss_requests_3_MOB_index <= 4'h0;
+    end
+    else if (_GEN_64 & (&(MSHR_back_pointer[1:0])) & (&_GEN_52)) begin
+      MSHRs_3_miss_requests_3_addr <= miss_backend_memory_request_REG_addr;
+      MSHRs_3_miss_requests_3_data <= miss_backend_memory_request_REG_data;
+      MSHRs_3_miss_requests_3_memory_type <= miss_backend_memory_request_REG_memory_type;
+      MSHRs_3_miss_requests_3_access_width <=
+        miss_backend_memory_request_REG_access_width;
+      MSHRs_3_miss_requests_3_MOB_index <= miss_backend_memory_request_REG_MOB_index;
+    end
+    if ((&DATA_CACHE_STATE) & (&(MSHR_front_pointer[1:0])) & _GEN_70) begin
+      MSHRs_3_miss_requests_4_addr <= 32'h0;
+      MSHRs_3_miss_requests_4_data <= 32'h0;
+      MSHRs_3_miss_requests_4_memory_type <= 2'h0;
+      MSHRs_3_miss_requests_4_access_width <= 2'h0;
+      MSHRs_3_miss_requests_4_MOB_index <= 4'h0;
+    end
+    if ((&DATA_CACHE_STATE) & (&(MSHR_front_pointer[1:0])) & _GEN_71) begin
+      MSHRs_3_miss_requests_5_addr <= 32'h0;
+      MSHRs_3_miss_requests_5_data <= 32'h0;
+      MSHRs_3_miss_requests_5_memory_type <= 2'h0;
+      MSHRs_3_miss_requests_5_access_width <= 2'h0;
+      MSHRs_3_miss_requests_5_MOB_index <= 4'h0;
+    end
+    if ((&DATA_CACHE_STATE) & (&(MSHR_front_pointer[1:0])) & _GEN_72) begin
+      MSHRs_3_miss_requests_6_addr <= 32'h0;
+      MSHRs_3_miss_requests_6_data <= 32'h0;
+      MSHRs_3_miss_requests_6_memory_type <= 2'h0;
+      MSHRs_3_miss_requests_6_access_width <= 2'h0;
+      MSHRs_3_miss_requests_6_MOB_index <= 4'h0;
+    end
+    if ((&DATA_CACHE_STATE) & (&(MSHR_front_pointer[1:0])) & (&_GEN_15)) begin
+      MSHRs_3_miss_requests_7_addr <= 32'h0;
+      MSHRs_3_miss_requests_7_data <= 32'h0;
+      MSHRs_3_miss_requests_7_memory_type <= 2'h0;
+      MSHRs_3_miss_requests_7_access_width <= 2'h0;
+      MSHRs_3_miss_requests_7_MOB_index <= 4'h0;
+    end
+    if ((&DATA_CACHE_STATE) & (&(MSHR_front_pointer[1:0])))
+      MSHRs_3_front_pointer <= _MSHRs_front_pointer_T;
+    miss_backend_memory_request_REG_addr <= io_CPU_request_bits_addr;
+    miss_backend_memory_request_REG_data <= io_CPU_request_bits_data;
+    miss_backend_memory_request_REG_memory_type <= io_CPU_request_bits_memory_type;
+    miss_backend_memory_request_REG_access_width <= io_CPU_request_bits_access_width;
+    miss_backend_memory_request_REG_MOB_index <= io_CPU_request_bits_MOB_index;
+    output_cacheable_r <=
+      ~(active_address[31]) & ((&DATA_CACHE_STATE) | io_CPU_request_valid);
+    output_cacheable <= output_cacheable_r;
+    output_address_r <= active_address;
+    output_address_r_1 <= output_address_r;
+    output_operation_r <= active_access_width;
+    output_operation_r_1 <= output_operation_r;
+    output_valid_r <= valid_hit;
     if (reset) begin
       AXI_REQUEST_STATE <= 2'h0;
       write_counter <= 32'h0;
       DATA_CACHE_STATE <= 2'h0;
+      valid_memory_0_0 <= 1'h0;
+      valid_memory_0_1 <= 1'h0;
+      valid_memory_0_2 <= 1'h0;
+      valid_memory_0_3 <= 1'h0;
+      valid_memory_1_0 <= 1'h0;
+      valid_memory_1_1 <= 1'h0;
+      valid_memory_1_2 <= 1'h0;
+      valid_memory_1_3 <= 1'h0;
+      valid_memory_2_0 <= 1'h0;
+      valid_memory_2_1 <= 1'h0;
+      valid_memory_2_2 <= 1'h0;
+      valid_memory_2_3 <= 1'h0;
+      valid_memory_3_0 <= 1'h0;
+      valid_memory_3_1 <= 1'h0;
+      valid_memory_3_2 <= 1'h0;
+      valid_memory_3_3 <= 1'h0;
+      valid_memory_4_0 <= 1'h0;
+      valid_memory_4_1 <= 1'h0;
+      valid_memory_4_2 <= 1'h0;
+      valid_memory_4_3 <= 1'h0;
+      valid_memory_5_0 <= 1'h0;
+      valid_memory_5_1 <= 1'h0;
+      valid_memory_5_2 <= 1'h0;
+      valid_memory_5_3 <= 1'h0;
+      valid_memory_6_0 <= 1'h0;
+      valid_memory_6_1 <= 1'h0;
+      valid_memory_6_2 <= 1'h0;
+      valid_memory_6_3 <= 1'h0;
+      valid_memory_7_0 <= 1'h0;
+      valid_memory_7_1 <= 1'h0;
+      valid_memory_7_2 <= 1'h0;
+      valid_memory_7_3 <= 1'h0;
+      valid_memory_8_0 <= 1'h0;
+      valid_memory_8_1 <= 1'h0;
+      valid_memory_8_2 <= 1'h0;
+      valid_memory_8_3 <= 1'h0;
+      valid_memory_9_0 <= 1'h0;
+      valid_memory_9_1 <= 1'h0;
+      valid_memory_9_2 <= 1'h0;
+      valid_memory_9_3 <= 1'h0;
+      valid_memory_10_0 <= 1'h0;
+      valid_memory_10_1 <= 1'h0;
+      valid_memory_10_2 <= 1'h0;
+      valid_memory_10_3 <= 1'h0;
+      valid_memory_11_0 <= 1'h0;
+      valid_memory_11_1 <= 1'h0;
+      valid_memory_11_2 <= 1'h0;
+      valid_memory_11_3 <= 1'h0;
+      valid_memory_12_0 <= 1'h0;
+      valid_memory_12_1 <= 1'h0;
+      valid_memory_12_2 <= 1'h0;
+      valid_memory_12_3 <= 1'h0;
+      valid_memory_13_0 <= 1'h0;
+      valid_memory_13_1 <= 1'h0;
+      valid_memory_13_2 <= 1'h0;
+      valid_memory_13_3 <= 1'h0;
+      valid_memory_14_0 <= 1'h0;
+      valid_memory_14_1 <= 1'h0;
+      valid_memory_14_2 <= 1'h0;
+      valid_memory_14_3 <= 1'h0;
+      valid_memory_15_0 <= 1'h0;
+      valid_memory_15_1 <= 1'h0;
+      valid_memory_15_2 <= 1'h0;
+      valid_memory_15_3 <= 1'h0;
+      valid_memory_16_0 <= 1'h0;
+      valid_memory_16_1 <= 1'h0;
+      valid_memory_16_2 <= 1'h0;
+      valid_memory_16_3 <= 1'h0;
+      valid_memory_17_0 <= 1'h0;
+      valid_memory_17_1 <= 1'h0;
+      valid_memory_17_2 <= 1'h0;
+      valid_memory_17_3 <= 1'h0;
+      valid_memory_18_0 <= 1'h0;
+      valid_memory_18_1 <= 1'h0;
+      valid_memory_18_2 <= 1'h0;
+      valid_memory_18_3 <= 1'h0;
+      valid_memory_19_0 <= 1'h0;
+      valid_memory_19_1 <= 1'h0;
+      valid_memory_19_2 <= 1'h0;
+      valid_memory_19_3 <= 1'h0;
+      valid_memory_20_0 <= 1'h0;
+      valid_memory_20_1 <= 1'h0;
+      valid_memory_20_2 <= 1'h0;
+      valid_memory_20_3 <= 1'h0;
+      valid_memory_21_0 <= 1'h0;
+      valid_memory_21_1 <= 1'h0;
+      valid_memory_21_2 <= 1'h0;
+      valid_memory_21_3 <= 1'h0;
+      valid_memory_22_0 <= 1'h0;
+      valid_memory_22_1 <= 1'h0;
+      valid_memory_22_2 <= 1'h0;
+      valid_memory_22_3 <= 1'h0;
+      valid_memory_23_0 <= 1'h0;
+      valid_memory_23_1 <= 1'h0;
+      valid_memory_23_2 <= 1'h0;
+      valid_memory_23_3 <= 1'h0;
+      valid_memory_24_0 <= 1'h0;
+      valid_memory_24_1 <= 1'h0;
+      valid_memory_24_2 <= 1'h0;
+      valid_memory_24_3 <= 1'h0;
+      valid_memory_25_0 <= 1'h0;
+      valid_memory_25_1 <= 1'h0;
+      valid_memory_25_2 <= 1'h0;
+      valid_memory_25_3 <= 1'h0;
+      valid_memory_26_0 <= 1'h0;
+      valid_memory_26_1 <= 1'h0;
+      valid_memory_26_2 <= 1'h0;
+      valid_memory_26_3 <= 1'h0;
+      valid_memory_27_0 <= 1'h0;
+      valid_memory_27_1 <= 1'h0;
+      valid_memory_27_2 <= 1'h0;
+      valid_memory_27_3 <= 1'h0;
+      valid_memory_28_0 <= 1'h0;
+      valid_memory_28_1 <= 1'h0;
+      valid_memory_28_2 <= 1'h0;
+      valid_memory_28_3 <= 1'h0;
+      valid_memory_29_0 <= 1'h0;
+      valid_memory_29_1 <= 1'h0;
+      valid_memory_29_2 <= 1'h0;
+      valid_memory_29_3 <= 1'h0;
+      valid_memory_30_0 <= 1'h0;
+      valid_memory_30_1 <= 1'h0;
+      valid_memory_30_2 <= 1'h0;
+      valid_memory_30_3 <= 1'h0;
+      valid_memory_31_0 <= 1'h0;
+      valid_memory_31_1 <= 1'h0;
+      valid_memory_31_2 <= 1'h0;
+      valid_memory_31_3 <= 1'h0;
+      valid_memory_32_0 <= 1'h0;
+      valid_memory_32_1 <= 1'h0;
+      valid_memory_32_2 <= 1'h0;
+      valid_memory_32_3 <= 1'h0;
+      valid_memory_33_0 <= 1'h0;
+      valid_memory_33_1 <= 1'h0;
+      valid_memory_33_2 <= 1'h0;
+      valid_memory_33_3 <= 1'h0;
+      valid_memory_34_0 <= 1'h0;
+      valid_memory_34_1 <= 1'h0;
+      valid_memory_34_2 <= 1'h0;
+      valid_memory_34_3 <= 1'h0;
+      valid_memory_35_0 <= 1'h0;
+      valid_memory_35_1 <= 1'h0;
+      valid_memory_35_2 <= 1'h0;
+      valid_memory_35_3 <= 1'h0;
+      valid_memory_36_0 <= 1'h0;
+      valid_memory_36_1 <= 1'h0;
+      valid_memory_36_2 <= 1'h0;
+      valid_memory_36_3 <= 1'h0;
+      valid_memory_37_0 <= 1'h0;
+      valid_memory_37_1 <= 1'h0;
+      valid_memory_37_2 <= 1'h0;
+      valid_memory_37_3 <= 1'h0;
+      valid_memory_38_0 <= 1'h0;
+      valid_memory_38_1 <= 1'h0;
+      valid_memory_38_2 <= 1'h0;
+      valid_memory_38_3 <= 1'h0;
+      valid_memory_39_0 <= 1'h0;
+      valid_memory_39_1 <= 1'h0;
+      valid_memory_39_2 <= 1'h0;
+      valid_memory_39_3 <= 1'h0;
+      valid_memory_40_0 <= 1'h0;
+      valid_memory_40_1 <= 1'h0;
+      valid_memory_40_2 <= 1'h0;
+      valid_memory_40_3 <= 1'h0;
+      valid_memory_41_0 <= 1'h0;
+      valid_memory_41_1 <= 1'h0;
+      valid_memory_41_2 <= 1'h0;
+      valid_memory_41_3 <= 1'h0;
+      valid_memory_42_0 <= 1'h0;
+      valid_memory_42_1 <= 1'h0;
+      valid_memory_42_2 <= 1'h0;
+      valid_memory_42_3 <= 1'h0;
+      valid_memory_43_0 <= 1'h0;
+      valid_memory_43_1 <= 1'h0;
+      valid_memory_43_2 <= 1'h0;
+      valid_memory_43_3 <= 1'h0;
+      valid_memory_44_0 <= 1'h0;
+      valid_memory_44_1 <= 1'h0;
+      valid_memory_44_2 <= 1'h0;
+      valid_memory_44_3 <= 1'h0;
+      valid_memory_45_0 <= 1'h0;
+      valid_memory_45_1 <= 1'h0;
+      valid_memory_45_2 <= 1'h0;
+      valid_memory_45_3 <= 1'h0;
+      valid_memory_46_0 <= 1'h0;
+      valid_memory_46_1 <= 1'h0;
+      valid_memory_46_2 <= 1'h0;
+      valid_memory_46_3 <= 1'h0;
+      valid_memory_47_0 <= 1'h0;
+      valid_memory_47_1 <= 1'h0;
+      valid_memory_47_2 <= 1'h0;
+      valid_memory_47_3 <= 1'h0;
+      valid_memory_48_0 <= 1'h0;
+      valid_memory_48_1 <= 1'h0;
+      valid_memory_48_2 <= 1'h0;
+      valid_memory_48_3 <= 1'h0;
+      valid_memory_49_0 <= 1'h0;
+      valid_memory_49_1 <= 1'h0;
+      valid_memory_49_2 <= 1'h0;
+      valid_memory_49_3 <= 1'h0;
+      valid_memory_50_0 <= 1'h0;
+      valid_memory_50_1 <= 1'h0;
+      valid_memory_50_2 <= 1'h0;
+      valid_memory_50_3 <= 1'h0;
+      valid_memory_51_0 <= 1'h0;
+      valid_memory_51_1 <= 1'h0;
+      valid_memory_51_2 <= 1'h0;
+      valid_memory_51_3 <= 1'h0;
+      valid_memory_52_0 <= 1'h0;
+      valid_memory_52_1 <= 1'h0;
+      valid_memory_52_2 <= 1'h0;
+      valid_memory_52_3 <= 1'h0;
+      valid_memory_53_0 <= 1'h0;
+      valid_memory_53_1 <= 1'h0;
+      valid_memory_53_2 <= 1'h0;
+      valid_memory_53_3 <= 1'h0;
+      valid_memory_54_0 <= 1'h0;
+      valid_memory_54_1 <= 1'h0;
+      valid_memory_54_2 <= 1'h0;
+      valid_memory_54_3 <= 1'h0;
+      valid_memory_55_0 <= 1'h0;
+      valid_memory_55_1 <= 1'h0;
+      valid_memory_55_2 <= 1'h0;
+      valid_memory_55_3 <= 1'h0;
+      valid_memory_56_0 <= 1'h0;
+      valid_memory_56_1 <= 1'h0;
+      valid_memory_56_2 <= 1'h0;
+      valid_memory_56_3 <= 1'h0;
+      valid_memory_57_0 <= 1'h0;
+      valid_memory_57_1 <= 1'h0;
+      valid_memory_57_2 <= 1'h0;
+      valid_memory_57_3 <= 1'h0;
+      valid_memory_58_0 <= 1'h0;
+      valid_memory_58_1 <= 1'h0;
+      valid_memory_58_2 <= 1'h0;
+      valid_memory_58_3 <= 1'h0;
+      valid_memory_59_0 <= 1'h0;
+      valid_memory_59_1 <= 1'h0;
+      valid_memory_59_2 <= 1'h0;
+      valid_memory_59_3 <= 1'h0;
+      valid_memory_60_0 <= 1'h0;
+      valid_memory_60_1 <= 1'h0;
+      valid_memory_60_2 <= 1'h0;
+      valid_memory_60_3 <= 1'h0;
+      valid_memory_61_0 <= 1'h0;
+      valid_memory_61_1 <= 1'h0;
+      valid_memory_61_2 <= 1'h0;
+      valid_memory_61_3 <= 1'h0;
+      valid_memory_62_0 <= 1'h0;
+      valid_memory_62_1 <= 1'h0;
+      valid_memory_62_2 <= 1'h0;
+      valid_memory_62_3 <= 1'h0;
+      valid_memory_63_0 <= 1'h0;
+      valid_memory_63_1 <= 1'h0;
+      valid_memory_63_2 <= 1'h0;
+      valid_memory_63_3 <= 1'h0;
       MSHR_front_pointer <= 3'h0;
+      MSHR_back_pointer <= 3'h0;
     end
     else begin
+      automatic logic _GEN_79 = _GEN[10:5] == 6'h0;
+      automatic logic _GEN_80 = _GEN[10:5] == 6'h1;
+      automatic logic _GEN_81 = _GEN[10:5] == 6'h2;
+      automatic logic _GEN_82 = _GEN[10:5] == 6'h3;
+      automatic logic _GEN_83 = _GEN[10:5] == 6'h4;
+      automatic logic _GEN_84 = _GEN[10:5] == 6'h5;
+      automatic logic _GEN_85 = _GEN[10:5] == 6'h6;
+      automatic logic _GEN_86 = _GEN[10:5] == 6'h7;
+      automatic logic _GEN_87 = _GEN[10:5] == 6'h8;
+      automatic logic _GEN_88 = _GEN[10:5] == 6'h9;
+      automatic logic _GEN_89 = _GEN[10:5] == 6'hA;
+      automatic logic _GEN_90 = _GEN[10:5] == 6'hB;
+      automatic logic _GEN_91 = _GEN[10:5] == 6'hC;
+      automatic logic _GEN_92 = _GEN[10:5] == 6'hD;
+      automatic logic _GEN_93 = _GEN[10:5] == 6'hE;
+      automatic logic _GEN_94 = _GEN[10:5] == 6'hF;
+      automatic logic _GEN_95 = _GEN[10:5] == 6'h10;
+      automatic logic _GEN_96 = _GEN[10:5] == 6'h11;
+      automatic logic _GEN_97 = _GEN[10:5] == 6'h12;
+      automatic logic _GEN_98 = _GEN[10:5] == 6'h13;
+      automatic logic _GEN_99 = _GEN[10:5] == 6'h14;
+      automatic logic _GEN_100 = _GEN[10:5] == 6'h15;
+      automatic logic _GEN_101 = _GEN[10:5] == 6'h16;
+      automatic logic _GEN_102 = _GEN[10:5] == 6'h17;
+      automatic logic _GEN_103 = _GEN[10:5] == 6'h18;
+      automatic logic _GEN_104 = _GEN[10:5] == 6'h19;
+      automatic logic _GEN_105 = _GEN[10:5] == 6'h1A;
+      automatic logic _GEN_106 = _GEN[10:5] == 6'h1B;
+      automatic logic _GEN_107 = _GEN[10:5] == 6'h1C;
+      automatic logic _GEN_108 = _GEN[10:5] == 6'h1D;
+      automatic logic _GEN_109 = _GEN[10:5] == 6'h1E;
+      automatic logic _GEN_110 = _GEN[10:5] == 6'h1F;
+      automatic logic _GEN_111 = _GEN[10:5] == 6'h20;
+      automatic logic _GEN_112 = _GEN[10:5] == 6'h21;
+      automatic logic _GEN_113 = _GEN[10:5] == 6'h22;
+      automatic logic _GEN_114 = _GEN[10:5] == 6'h23;
+      automatic logic _GEN_115 = _GEN[10:5] == 6'h24;
+      automatic logic _GEN_116 = _GEN[10:5] == 6'h25;
+      automatic logic _GEN_117 = _GEN[10:5] == 6'h26;
+      automatic logic _GEN_118 = _GEN[10:5] == 6'h27;
+      automatic logic _GEN_119 = _GEN[10:5] == 6'h28;
+      automatic logic _GEN_120 = _GEN[10:5] == 6'h29;
+      automatic logic _GEN_121 = _GEN[10:5] == 6'h2A;
+      automatic logic _GEN_122 = _GEN[10:5] == 6'h2B;
+      automatic logic _GEN_123 = _GEN[10:5] == 6'h2C;
+      automatic logic _GEN_124 = _GEN[10:5] == 6'h2D;
+      automatic logic _GEN_125 = _GEN[10:5] == 6'h2E;
+      automatic logic _GEN_126 = _GEN[10:5] == 6'h2F;
+      automatic logic _GEN_127 = _GEN[10:5] == 6'h30;
+      automatic logic _GEN_128 = _GEN[10:5] == 6'h31;
+      automatic logic _GEN_129 = _GEN[10:5] == 6'h32;
+      automatic logic _GEN_130 = _GEN[10:5] == 6'h33;
+      automatic logic _GEN_131 = _GEN[10:5] == 6'h34;
+      automatic logic _GEN_132 = _GEN[10:5] == 6'h35;
+      automatic logic _GEN_133 = _GEN[10:5] == 6'h36;
+      automatic logic _GEN_134 = _GEN[10:5] == 6'h37;
+      automatic logic _GEN_135 = _GEN[10:5] == 6'h38;
+      automatic logic _GEN_136 = _GEN[10:5] == 6'h39;
+      automatic logic _GEN_137 = _GEN[10:5] == 6'h3A;
+      automatic logic _GEN_138 = _GEN[10:5] == 6'h3B;
+      automatic logic _GEN_139 = _GEN[10:5] == 6'h3C;
+      automatic logic _GEN_140 = _GEN[10:5] == 6'h3D;
+      automatic logic _GEN_141 = _GEN[10:5] == 6'h3E;
+      automatic logic _GEN_142 = miss_set_REG == 6'h0;
+      automatic logic _GEN_143 = _miss_way_T_9 == 2'h0;
+      automatic logic _GEN_144 = _miss_way_T_9 == 2'h1;
+      automatic logic _GEN_145 = _miss_way_T_9 == 2'h2;
+      automatic logic _GEN_146 = miss_set_REG == 6'h1;
+      automatic logic _GEN_147 = miss_set_REG == 6'h2;
+      automatic logic _GEN_148 = miss_set_REG == 6'h3;
+      automatic logic _GEN_149 = miss_set_REG == 6'h4;
+      automatic logic _GEN_150 = miss_set_REG == 6'h5;
+      automatic logic _GEN_151 = miss_set_REG == 6'h6;
+      automatic logic _GEN_152 = miss_set_REG == 6'h7;
+      automatic logic _GEN_153 = miss_set_REG == 6'h8;
+      automatic logic _GEN_154 = miss_set_REG == 6'h9;
+      automatic logic _GEN_155 = miss_set_REG == 6'hA;
+      automatic logic _GEN_156 = miss_set_REG == 6'hB;
+      automatic logic _GEN_157 = miss_set_REG == 6'hC;
+      automatic logic _GEN_158 = miss_set_REG == 6'hD;
+      automatic logic _GEN_159 = miss_set_REG == 6'hE;
+      automatic logic _GEN_160 = miss_set_REG == 6'hF;
+      automatic logic _GEN_161 = miss_set_REG == 6'h10;
+      automatic logic _GEN_162 = miss_set_REG == 6'h11;
+      automatic logic _GEN_163 = miss_set_REG == 6'h12;
+      automatic logic _GEN_164 = miss_set_REG == 6'h13;
+      automatic logic _GEN_165 = miss_set_REG == 6'h14;
+      automatic logic _GEN_166 = miss_set_REG == 6'h15;
+      automatic logic _GEN_167 = miss_set_REG == 6'h16;
+      automatic logic _GEN_168 = miss_set_REG == 6'h17;
+      automatic logic _GEN_169 = miss_set_REG == 6'h18;
+      automatic logic _GEN_170 = miss_set_REG == 6'h19;
+      automatic logic _GEN_171 = miss_set_REG == 6'h1A;
+      automatic logic _GEN_172 = miss_set_REG == 6'h1B;
+      automatic logic _GEN_173 = miss_set_REG == 6'h1C;
+      automatic logic _GEN_174 = miss_set_REG == 6'h1D;
+      automatic logic _GEN_175 = miss_set_REG == 6'h1E;
+      automatic logic _GEN_176 = miss_set_REG == 6'h1F;
+      automatic logic _GEN_177 = miss_set_REG == 6'h20;
+      automatic logic _GEN_178 = miss_set_REG == 6'h21;
+      automatic logic _GEN_179 = miss_set_REG == 6'h22;
+      automatic logic _GEN_180 = miss_set_REG == 6'h23;
+      automatic logic _GEN_181 = miss_set_REG == 6'h24;
+      automatic logic _GEN_182 = miss_set_REG == 6'h25;
+      automatic logic _GEN_183 = miss_set_REG == 6'h26;
+      automatic logic _GEN_184 = miss_set_REG == 6'h27;
+      automatic logic _GEN_185 = miss_set_REG == 6'h28;
+      automatic logic _GEN_186 = miss_set_REG == 6'h29;
+      automatic logic _GEN_187 = miss_set_REG == 6'h2A;
+      automatic logic _GEN_188 = miss_set_REG == 6'h2B;
+      automatic logic _GEN_189 = miss_set_REG == 6'h2C;
+      automatic logic _GEN_190 = miss_set_REG == 6'h2D;
+      automatic logic _GEN_191 = miss_set_REG == 6'h2E;
+      automatic logic _GEN_192 = miss_set_REG == 6'h2F;
+      automatic logic _GEN_193 = miss_set_REG == 6'h30;
+      automatic logic _GEN_194 = miss_set_REG == 6'h31;
+      automatic logic _GEN_195 = miss_set_REG == 6'h32;
+      automatic logic _GEN_196 = miss_set_REG == 6'h33;
+      automatic logic _GEN_197 = miss_set_REG == 6'h34;
+      automatic logic _GEN_198 = miss_set_REG == 6'h35;
+      automatic logic _GEN_199 = miss_set_REG == 6'h36;
+      automatic logic _GEN_200 = miss_set_REG == 6'h37;
+      automatic logic _GEN_201 = miss_set_REG == 6'h38;
+      automatic logic _GEN_202 = miss_set_REG == 6'h39;
+      automatic logic _GEN_203 = miss_set_REG == 6'h3A;
+      automatic logic _GEN_204 = miss_set_REG == 6'h3B;
+      automatic logic _GEN_205 = miss_set_REG == 6'h3C;
+      automatic logic _GEN_206 = miss_set_REG == 6'h3D;
+      automatic logic _GEN_207 = miss_set_REG == 6'h3E;
       if (|AXI_REQUEST_STATE) begin
         if (m_axi_wvalid_0) begin
-          if (m_axi_wlast_0 & _GEN_8)
+          if (m_axi_wlast_0 & _GEN_49)
             AXI_REQUEST_STATE <= 2'h3;
         end
         else if ((&AXI_REQUEST_STATE)
                    ? (&AXI_REQUEST_STATE) & m_axi_bvalid
-                   : m_axi_rready_0 & m_axi_rlast & _GEN)
+                   : m_axi_rready_0 & m_axi_rlast & _GEN_0)
           AXI_REQUEST_STATE <= 2'h0;
       end
-      else if (_GEN_7)
+      else if (_GEN_48)
         AXI_REQUEST_STATE <= 2'h1;
       else
         AXI_REQUEST_STATE <= {m_axi_arready & m_axi_arvalid_0, 1'h0};
-      if (_GEN_9)
+      if (_GEN_50)
         write_counter <= write_counter - 32'h1;
-      else if (~(|AXI_REQUEST_STATE) & _GEN_7)
+      else if (~(|AXI_REQUEST_STATE) & _GEN_48)
         write_counter <= {24'h0, m_axi_awlen_0};
       DATA_CACHE_STATE <= DATA_CACHE_NEXT_STATE;
-      if ((&DATA_CACHE_STATE) & _GEN_5)
+      valid_memory_0_0 <=
+        ~(valid_miss & _GEN_142 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_79 & _GEN_4 | valid_memory_0_0);
+      valid_memory_0_1 <=
+        ~(valid_miss & _GEN_142 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_79 & _GEN_6 | valid_memory_0_1);
+      valid_memory_0_2 <=
+        ~(valid_miss & _GEN_142 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_79 & _GEN_7 | valid_memory_0_2);
+      valid_memory_0_3 <=
+        ~(valid_miss & _GEN_142 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_79 & (&allocate_way) | valid_memory_0_3);
+      valid_memory_1_0 <=
+        ~(valid_miss & _GEN_146 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_80 & _GEN_4 | valid_memory_1_0);
+      valid_memory_1_1 <=
+        ~(valid_miss & _GEN_146 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_80 & _GEN_6 | valid_memory_1_1);
+      valid_memory_1_2 <=
+        ~(valid_miss & _GEN_146 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_80 & _GEN_7 | valid_memory_1_2);
+      valid_memory_1_3 <=
+        ~(valid_miss & _GEN_146 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_80 & (&allocate_way) | valid_memory_1_3);
+      valid_memory_2_0 <=
+        ~(valid_miss & _GEN_147 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_81 & _GEN_4 | valid_memory_2_0);
+      valid_memory_2_1 <=
+        ~(valid_miss & _GEN_147 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_81 & _GEN_6 | valid_memory_2_1);
+      valid_memory_2_2 <=
+        ~(valid_miss & _GEN_147 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_81 & _GEN_7 | valid_memory_2_2);
+      valid_memory_2_3 <=
+        ~(valid_miss & _GEN_147 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_81 & (&allocate_way) | valid_memory_2_3);
+      valid_memory_3_0 <=
+        ~(valid_miss & _GEN_148 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_82 & _GEN_4 | valid_memory_3_0);
+      valid_memory_3_1 <=
+        ~(valid_miss & _GEN_148 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_82 & _GEN_6 | valid_memory_3_1);
+      valid_memory_3_2 <=
+        ~(valid_miss & _GEN_148 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_82 & _GEN_7 | valid_memory_3_2);
+      valid_memory_3_3 <=
+        ~(valid_miss & _GEN_148 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_82 & (&allocate_way) | valid_memory_3_3);
+      valid_memory_4_0 <=
+        ~(valid_miss & _GEN_149 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_83 & _GEN_4 | valid_memory_4_0);
+      valid_memory_4_1 <=
+        ~(valid_miss & _GEN_149 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_83 & _GEN_6 | valid_memory_4_1);
+      valid_memory_4_2 <=
+        ~(valid_miss & _GEN_149 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_83 & _GEN_7 | valid_memory_4_2);
+      valid_memory_4_3 <=
+        ~(valid_miss & _GEN_149 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_83 & (&allocate_way) | valid_memory_4_3);
+      valid_memory_5_0 <=
+        ~(valid_miss & _GEN_150 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_84 & _GEN_4 | valid_memory_5_0);
+      valid_memory_5_1 <=
+        ~(valid_miss & _GEN_150 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_84 & _GEN_6 | valid_memory_5_1);
+      valid_memory_5_2 <=
+        ~(valid_miss & _GEN_150 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_84 & _GEN_7 | valid_memory_5_2);
+      valid_memory_5_3 <=
+        ~(valid_miss & _GEN_150 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_84 & (&allocate_way) | valid_memory_5_3);
+      valid_memory_6_0 <=
+        ~(valid_miss & _GEN_151 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_85 & _GEN_4 | valid_memory_6_0);
+      valid_memory_6_1 <=
+        ~(valid_miss & _GEN_151 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_85 & _GEN_6 | valid_memory_6_1);
+      valid_memory_6_2 <=
+        ~(valid_miss & _GEN_151 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_85 & _GEN_7 | valid_memory_6_2);
+      valid_memory_6_3 <=
+        ~(valid_miss & _GEN_151 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_85 & (&allocate_way) | valid_memory_6_3);
+      valid_memory_7_0 <=
+        ~(valid_miss & _GEN_152 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_86 & _GEN_4 | valid_memory_7_0);
+      valid_memory_7_1 <=
+        ~(valid_miss & _GEN_152 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_86 & _GEN_6 | valid_memory_7_1);
+      valid_memory_7_2 <=
+        ~(valid_miss & _GEN_152 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_86 & _GEN_7 | valid_memory_7_2);
+      valid_memory_7_3 <=
+        ~(valid_miss & _GEN_152 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_86 & (&allocate_way) | valid_memory_7_3);
+      valid_memory_8_0 <=
+        ~(valid_miss & _GEN_153 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_87 & _GEN_4 | valid_memory_8_0);
+      valid_memory_8_1 <=
+        ~(valid_miss & _GEN_153 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_87 & _GEN_6 | valid_memory_8_1);
+      valid_memory_8_2 <=
+        ~(valid_miss & _GEN_153 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_87 & _GEN_7 | valid_memory_8_2);
+      valid_memory_8_3 <=
+        ~(valid_miss & _GEN_153 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_87 & (&allocate_way) | valid_memory_8_3);
+      valid_memory_9_0 <=
+        ~(valid_miss & _GEN_154 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_88 & _GEN_4 | valid_memory_9_0);
+      valid_memory_9_1 <=
+        ~(valid_miss & _GEN_154 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_88 & _GEN_6 | valid_memory_9_1);
+      valid_memory_9_2 <=
+        ~(valid_miss & _GEN_154 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_88 & _GEN_7 | valid_memory_9_2);
+      valid_memory_9_3 <=
+        ~(valid_miss & _GEN_154 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_88 & (&allocate_way) | valid_memory_9_3);
+      valid_memory_10_0 <=
+        ~(valid_miss & _GEN_155 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_89 & _GEN_4 | valid_memory_10_0);
+      valid_memory_10_1 <=
+        ~(valid_miss & _GEN_155 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_89 & _GEN_6 | valid_memory_10_1);
+      valid_memory_10_2 <=
+        ~(valid_miss & _GEN_155 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_89 & _GEN_7 | valid_memory_10_2);
+      valid_memory_10_3 <=
+        ~(valid_miss & _GEN_155 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_89 & (&allocate_way) | valid_memory_10_3);
+      valid_memory_11_0 <=
+        ~(valid_miss & _GEN_156 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_90 & _GEN_4 | valid_memory_11_0);
+      valid_memory_11_1 <=
+        ~(valid_miss & _GEN_156 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_90 & _GEN_6 | valid_memory_11_1);
+      valid_memory_11_2 <=
+        ~(valid_miss & _GEN_156 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_90 & _GEN_7 | valid_memory_11_2);
+      valid_memory_11_3 <=
+        ~(valid_miss & _GEN_156 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_90 & (&allocate_way) | valid_memory_11_3);
+      valid_memory_12_0 <=
+        ~(valid_miss & _GEN_157 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_91 & _GEN_4 | valid_memory_12_0);
+      valid_memory_12_1 <=
+        ~(valid_miss & _GEN_157 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_91 & _GEN_6 | valid_memory_12_1);
+      valid_memory_12_2 <=
+        ~(valid_miss & _GEN_157 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_91 & _GEN_7 | valid_memory_12_2);
+      valid_memory_12_3 <=
+        ~(valid_miss & _GEN_157 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_91 & (&allocate_way) | valid_memory_12_3);
+      valid_memory_13_0 <=
+        ~(valid_miss & _GEN_158 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_92 & _GEN_4 | valid_memory_13_0);
+      valid_memory_13_1 <=
+        ~(valid_miss & _GEN_158 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_92 & _GEN_6 | valid_memory_13_1);
+      valid_memory_13_2 <=
+        ~(valid_miss & _GEN_158 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_92 & _GEN_7 | valid_memory_13_2);
+      valid_memory_13_3 <=
+        ~(valid_miss & _GEN_158 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_92 & (&allocate_way) | valid_memory_13_3);
+      valid_memory_14_0 <=
+        ~(valid_miss & _GEN_159 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_93 & _GEN_4 | valid_memory_14_0);
+      valid_memory_14_1 <=
+        ~(valid_miss & _GEN_159 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_93 & _GEN_6 | valid_memory_14_1);
+      valid_memory_14_2 <=
+        ~(valid_miss & _GEN_159 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_93 & _GEN_7 | valid_memory_14_2);
+      valid_memory_14_3 <=
+        ~(valid_miss & _GEN_159 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_93 & (&allocate_way) | valid_memory_14_3);
+      valid_memory_15_0 <=
+        ~(valid_miss & _GEN_160 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_94 & _GEN_4 | valid_memory_15_0);
+      valid_memory_15_1 <=
+        ~(valid_miss & _GEN_160 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_94 & _GEN_6 | valid_memory_15_1);
+      valid_memory_15_2 <=
+        ~(valid_miss & _GEN_160 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_94 & _GEN_7 | valid_memory_15_2);
+      valid_memory_15_3 <=
+        ~(valid_miss & _GEN_160 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_94 & (&allocate_way) | valid_memory_15_3);
+      valid_memory_16_0 <=
+        ~(valid_miss & _GEN_161 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_95 & _GEN_4 | valid_memory_16_0);
+      valid_memory_16_1 <=
+        ~(valid_miss & _GEN_161 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_95 & _GEN_6 | valid_memory_16_1);
+      valid_memory_16_2 <=
+        ~(valid_miss & _GEN_161 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_95 & _GEN_7 | valid_memory_16_2);
+      valid_memory_16_3 <=
+        ~(valid_miss & _GEN_161 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_95 & (&allocate_way) | valid_memory_16_3);
+      valid_memory_17_0 <=
+        ~(valid_miss & _GEN_162 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_96 & _GEN_4 | valid_memory_17_0);
+      valid_memory_17_1 <=
+        ~(valid_miss & _GEN_162 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_96 & _GEN_6 | valid_memory_17_1);
+      valid_memory_17_2 <=
+        ~(valid_miss & _GEN_162 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_96 & _GEN_7 | valid_memory_17_2);
+      valid_memory_17_3 <=
+        ~(valid_miss & _GEN_162 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_96 & (&allocate_way) | valid_memory_17_3);
+      valid_memory_18_0 <=
+        ~(valid_miss & _GEN_163 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_97 & _GEN_4 | valid_memory_18_0);
+      valid_memory_18_1 <=
+        ~(valid_miss & _GEN_163 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_97 & _GEN_6 | valid_memory_18_1);
+      valid_memory_18_2 <=
+        ~(valid_miss & _GEN_163 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_97 & _GEN_7 | valid_memory_18_2);
+      valid_memory_18_3 <=
+        ~(valid_miss & _GEN_163 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_97 & (&allocate_way) | valid_memory_18_3);
+      valid_memory_19_0 <=
+        ~(valid_miss & _GEN_164 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_98 & _GEN_4 | valid_memory_19_0);
+      valid_memory_19_1 <=
+        ~(valid_miss & _GEN_164 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_98 & _GEN_6 | valid_memory_19_1);
+      valid_memory_19_2 <=
+        ~(valid_miss & _GEN_164 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_98 & _GEN_7 | valid_memory_19_2);
+      valid_memory_19_3 <=
+        ~(valid_miss & _GEN_164 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_98 & (&allocate_way) | valid_memory_19_3);
+      valid_memory_20_0 <=
+        ~(valid_miss & _GEN_165 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_99 & _GEN_4 | valid_memory_20_0);
+      valid_memory_20_1 <=
+        ~(valid_miss & _GEN_165 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_99 & _GEN_6 | valid_memory_20_1);
+      valid_memory_20_2 <=
+        ~(valid_miss & _GEN_165 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_99 & _GEN_7 | valid_memory_20_2);
+      valid_memory_20_3 <=
+        ~(valid_miss & _GEN_165 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_99 & (&allocate_way) | valid_memory_20_3);
+      valid_memory_21_0 <=
+        ~(valid_miss & _GEN_166 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_100 & _GEN_4 | valid_memory_21_0);
+      valid_memory_21_1 <=
+        ~(valid_miss & _GEN_166 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_100 & _GEN_6 | valid_memory_21_1);
+      valid_memory_21_2 <=
+        ~(valid_miss & _GEN_166 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_100 & _GEN_7 | valid_memory_21_2);
+      valid_memory_21_3 <=
+        ~(valid_miss & _GEN_166 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_100 & (&allocate_way) | valid_memory_21_3);
+      valid_memory_22_0 <=
+        ~(valid_miss & _GEN_167 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_101 & _GEN_4 | valid_memory_22_0);
+      valid_memory_22_1 <=
+        ~(valid_miss & _GEN_167 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_101 & _GEN_6 | valid_memory_22_1);
+      valid_memory_22_2 <=
+        ~(valid_miss & _GEN_167 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_101 & _GEN_7 | valid_memory_22_2);
+      valid_memory_22_3 <=
+        ~(valid_miss & _GEN_167 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_101 & (&allocate_way) | valid_memory_22_3);
+      valid_memory_23_0 <=
+        ~(valid_miss & _GEN_168 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_102 & _GEN_4 | valid_memory_23_0);
+      valid_memory_23_1 <=
+        ~(valid_miss & _GEN_168 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_102 & _GEN_6 | valid_memory_23_1);
+      valid_memory_23_2 <=
+        ~(valid_miss & _GEN_168 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_102 & _GEN_7 | valid_memory_23_2);
+      valid_memory_23_3 <=
+        ~(valid_miss & _GEN_168 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_102 & (&allocate_way) | valid_memory_23_3);
+      valid_memory_24_0 <=
+        ~(valid_miss & _GEN_169 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_103 & _GEN_4 | valid_memory_24_0);
+      valid_memory_24_1 <=
+        ~(valid_miss & _GEN_169 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_103 & _GEN_6 | valid_memory_24_1);
+      valid_memory_24_2 <=
+        ~(valid_miss & _GEN_169 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_103 & _GEN_7 | valid_memory_24_2);
+      valid_memory_24_3 <=
+        ~(valid_miss & _GEN_169 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_103 & (&allocate_way) | valid_memory_24_3);
+      valid_memory_25_0 <=
+        ~(valid_miss & _GEN_170 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_104 & _GEN_4 | valid_memory_25_0);
+      valid_memory_25_1 <=
+        ~(valid_miss & _GEN_170 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_104 & _GEN_6 | valid_memory_25_1);
+      valid_memory_25_2 <=
+        ~(valid_miss & _GEN_170 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_104 & _GEN_7 | valid_memory_25_2);
+      valid_memory_25_3 <=
+        ~(valid_miss & _GEN_170 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_104 & (&allocate_way) | valid_memory_25_3);
+      valid_memory_26_0 <=
+        ~(valid_miss & _GEN_171 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_105 & _GEN_4 | valid_memory_26_0);
+      valid_memory_26_1 <=
+        ~(valid_miss & _GEN_171 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_105 & _GEN_6 | valid_memory_26_1);
+      valid_memory_26_2 <=
+        ~(valid_miss & _GEN_171 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_105 & _GEN_7 | valid_memory_26_2);
+      valid_memory_26_3 <=
+        ~(valid_miss & _GEN_171 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_105 & (&allocate_way) | valid_memory_26_3);
+      valid_memory_27_0 <=
+        ~(valid_miss & _GEN_172 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_106 & _GEN_4 | valid_memory_27_0);
+      valid_memory_27_1 <=
+        ~(valid_miss & _GEN_172 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_106 & _GEN_6 | valid_memory_27_1);
+      valid_memory_27_2 <=
+        ~(valid_miss & _GEN_172 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_106 & _GEN_7 | valid_memory_27_2);
+      valid_memory_27_3 <=
+        ~(valid_miss & _GEN_172 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_106 & (&allocate_way) | valid_memory_27_3);
+      valid_memory_28_0 <=
+        ~(valid_miss & _GEN_173 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_107 & _GEN_4 | valid_memory_28_0);
+      valid_memory_28_1 <=
+        ~(valid_miss & _GEN_173 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_107 & _GEN_6 | valid_memory_28_1);
+      valid_memory_28_2 <=
+        ~(valid_miss & _GEN_173 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_107 & _GEN_7 | valid_memory_28_2);
+      valid_memory_28_3 <=
+        ~(valid_miss & _GEN_173 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_107 & (&allocate_way) | valid_memory_28_3);
+      valid_memory_29_0 <=
+        ~(valid_miss & _GEN_174 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_108 & _GEN_4 | valid_memory_29_0);
+      valid_memory_29_1 <=
+        ~(valid_miss & _GEN_174 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_108 & _GEN_6 | valid_memory_29_1);
+      valid_memory_29_2 <=
+        ~(valid_miss & _GEN_174 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_108 & _GEN_7 | valid_memory_29_2);
+      valid_memory_29_3 <=
+        ~(valid_miss & _GEN_174 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_108 & (&allocate_way) | valid_memory_29_3);
+      valid_memory_30_0 <=
+        ~(valid_miss & _GEN_175 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_109 & _GEN_4 | valid_memory_30_0);
+      valid_memory_30_1 <=
+        ~(valid_miss & _GEN_175 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_109 & _GEN_6 | valid_memory_30_1);
+      valid_memory_30_2 <=
+        ~(valid_miss & _GEN_175 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_109 & _GEN_7 | valid_memory_30_2);
+      valid_memory_30_3 <=
+        ~(valid_miss & _GEN_175 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_109 & (&allocate_way) | valid_memory_30_3);
+      valid_memory_31_0 <=
+        ~(valid_miss & _GEN_176 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_110 & _GEN_4 | valid_memory_31_0);
+      valid_memory_31_1 <=
+        ~(valid_miss & _GEN_176 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_110 & _GEN_6 | valid_memory_31_1);
+      valid_memory_31_2 <=
+        ~(valid_miss & _GEN_176 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_110 & _GEN_7 | valid_memory_31_2);
+      valid_memory_31_3 <=
+        ~(valid_miss & _GEN_176 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_110 & (&allocate_way) | valid_memory_31_3);
+      valid_memory_32_0 <=
+        ~(valid_miss & _GEN_177 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_111 & _GEN_4 | valid_memory_32_0);
+      valid_memory_32_1 <=
+        ~(valid_miss & _GEN_177 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_111 & _GEN_6 | valid_memory_32_1);
+      valid_memory_32_2 <=
+        ~(valid_miss & _GEN_177 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_111 & _GEN_7 | valid_memory_32_2);
+      valid_memory_32_3 <=
+        ~(valid_miss & _GEN_177 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_111 & (&allocate_way) | valid_memory_32_3);
+      valid_memory_33_0 <=
+        ~(valid_miss & _GEN_178 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_112 & _GEN_4 | valid_memory_33_0);
+      valid_memory_33_1 <=
+        ~(valid_miss & _GEN_178 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_112 & _GEN_6 | valid_memory_33_1);
+      valid_memory_33_2 <=
+        ~(valid_miss & _GEN_178 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_112 & _GEN_7 | valid_memory_33_2);
+      valid_memory_33_3 <=
+        ~(valid_miss & _GEN_178 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_112 & (&allocate_way) | valid_memory_33_3);
+      valid_memory_34_0 <=
+        ~(valid_miss & _GEN_179 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_113 & _GEN_4 | valid_memory_34_0);
+      valid_memory_34_1 <=
+        ~(valid_miss & _GEN_179 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_113 & _GEN_6 | valid_memory_34_1);
+      valid_memory_34_2 <=
+        ~(valid_miss & _GEN_179 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_113 & _GEN_7 | valid_memory_34_2);
+      valid_memory_34_3 <=
+        ~(valid_miss & _GEN_179 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_113 & (&allocate_way) | valid_memory_34_3);
+      valid_memory_35_0 <=
+        ~(valid_miss & _GEN_180 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_114 & _GEN_4 | valid_memory_35_0);
+      valid_memory_35_1 <=
+        ~(valid_miss & _GEN_180 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_114 & _GEN_6 | valid_memory_35_1);
+      valid_memory_35_2 <=
+        ~(valid_miss & _GEN_180 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_114 & _GEN_7 | valid_memory_35_2);
+      valid_memory_35_3 <=
+        ~(valid_miss & _GEN_180 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_114 & (&allocate_way) | valid_memory_35_3);
+      valid_memory_36_0 <=
+        ~(valid_miss & _GEN_181 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_115 & _GEN_4 | valid_memory_36_0);
+      valid_memory_36_1 <=
+        ~(valid_miss & _GEN_181 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_115 & _GEN_6 | valid_memory_36_1);
+      valid_memory_36_2 <=
+        ~(valid_miss & _GEN_181 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_115 & _GEN_7 | valid_memory_36_2);
+      valid_memory_36_3 <=
+        ~(valid_miss & _GEN_181 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_115 & (&allocate_way) | valid_memory_36_3);
+      valid_memory_37_0 <=
+        ~(valid_miss & _GEN_182 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_116 & _GEN_4 | valid_memory_37_0);
+      valid_memory_37_1 <=
+        ~(valid_miss & _GEN_182 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_116 & _GEN_6 | valid_memory_37_1);
+      valid_memory_37_2 <=
+        ~(valid_miss & _GEN_182 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_116 & _GEN_7 | valid_memory_37_2);
+      valid_memory_37_3 <=
+        ~(valid_miss & _GEN_182 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_116 & (&allocate_way) | valid_memory_37_3);
+      valid_memory_38_0 <=
+        ~(valid_miss & _GEN_183 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_117 & _GEN_4 | valid_memory_38_0);
+      valid_memory_38_1 <=
+        ~(valid_miss & _GEN_183 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_117 & _GEN_6 | valid_memory_38_1);
+      valid_memory_38_2 <=
+        ~(valid_miss & _GEN_183 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_117 & _GEN_7 | valid_memory_38_2);
+      valid_memory_38_3 <=
+        ~(valid_miss & _GEN_183 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_117 & (&allocate_way) | valid_memory_38_3);
+      valid_memory_39_0 <=
+        ~(valid_miss & _GEN_184 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_118 & _GEN_4 | valid_memory_39_0);
+      valid_memory_39_1 <=
+        ~(valid_miss & _GEN_184 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_118 & _GEN_6 | valid_memory_39_1);
+      valid_memory_39_2 <=
+        ~(valid_miss & _GEN_184 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_118 & _GEN_7 | valid_memory_39_2);
+      valid_memory_39_3 <=
+        ~(valid_miss & _GEN_184 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_118 & (&allocate_way) | valid_memory_39_3);
+      valid_memory_40_0 <=
+        ~(valid_miss & _GEN_185 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_119 & _GEN_4 | valid_memory_40_0);
+      valid_memory_40_1 <=
+        ~(valid_miss & _GEN_185 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_119 & _GEN_6 | valid_memory_40_1);
+      valid_memory_40_2 <=
+        ~(valid_miss & _GEN_185 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_119 & _GEN_7 | valid_memory_40_2);
+      valid_memory_40_3 <=
+        ~(valid_miss & _GEN_185 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_119 & (&allocate_way) | valid_memory_40_3);
+      valid_memory_41_0 <=
+        ~(valid_miss & _GEN_186 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_120 & _GEN_4 | valid_memory_41_0);
+      valid_memory_41_1 <=
+        ~(valid_miss & _GEN_186 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_120 & _GEN_6 | valid_memory_41_1);
+      valid_memory_41_2 <=
+        ~(valid_miss & _GEN_186 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_120 & _GEN_7 | valid_memory_41_2);
+      valid_memory_41_3 <=
+        ~(valid_miss & _GEN_186 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_120 & (&allocate_way) | valid_memory_41_3);
+      valid_memory_42_0 <=
+        ~(valid_miss & _GEN_187 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_121 & _GEN_4 | valid_memory_42_0);
+      valid_memory_42_1 <=
+        ~(valid_miss & _GEN_187 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_121 & _GEN_6 | valid_memory_42_1);
+      valid_memory_42_2 <=
+        ~(valid_miss & _GEN_187 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_121 & _GEN_7 | valid_memory_42_2);
+      valid_memory_42_3 <=
+        ~(valid_miss & _GEN_187 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_121 & (&allocate_way) | valid_memory_42_3);
+      valid_memory_43_0 <=
+        ~(valid_miss & _GEN_188 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_122 & _GEN_4 | valid_memory_43_0);
+      valid_memory_43_1 <=
+        ~(valid_miss & _GEN_188 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_122 & _GEN_6 | valid_memory_43_1);
+      valid_memory_43_2 <=
+        ~(valid_miss & _GEN_188 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_122 & _GEN_7 | valid_memory_43_2);
+      valid_memory_43_3 <=
+        ~(valid_miss & _GEN_188 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_122 & (&allocate_way) | valid_memory_43_3);
+      valid_memory_44_0 <=
+        ~(valid_miss & _GEN_189 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_123 & _GEN_4 | valid_memory_44_0);
+      valid_memory_44_1 <=
+        ~(valid_miss & _GEN_189 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_123 & _GEN_6 | valid_memory_44_1);
+      valid_memory_44_2 <=
+        ~(valid_miss & _GEN_189 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_123 & _GEN_7 | valid_memory_44_2);
+      valid_memory_44_3 <=
+        ~(valid_miss & _GEN_189 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_123 & (&allocate_way) | valid_memory_44_3);
+      valid_memory_45_0 <=
+        ~(valid_miss & _GEN_190 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_124 & _GEN_4 | valid_memory_45_0);
+      valid_memory_45_1 <=
+        ~(valid_miss & _GEN_190 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_124 & _GEN_6 | valid_memory_45_1);
+      valid_memory_45_2 <=
+        ~(valid_miss & _GEN_190 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_124 & _GEN_7 | valid_memory_45_2);
+      valid_memory_45_3 <=
+        ~(valid_miss & _GEN_190 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_124 & (&allocate_way) | valid_memory_45_3);
+      valid_memory_46_0 <=
+        ~(valid_miss & _GEN_191 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_125 & _GEN_4 | valid_memory_46_0);
+      valid_memory_46_1 <=
+        ~(valid_miss & _GEN_191 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_125 & _GEN_6 | valid_memory_46_1);
+      valid_memory_46_2 <=
+        ~(valid_miss & _GEN_191 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_125 & _GEN_7 | valid_memory_46_2);
+      valid_memory_46_3 <=
+        ~(valid_miss & _GEN_191 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_125 & (&allocate_way) | valid_memory_46_3);
+      valid_memory_47_0 <=
+        ~(valid_miss & _GEN_192 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_126 & _GEN_4 | valid_memory_47_0);
+      valid_memory_47_1 <=
+        ~(valid_miss & _GEN_192 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_126 & _GEN_6 | valid_memory_47_1);
+      valid_memory_47_2 <=
+        ~(valid_miss & _GEN_192 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_126 & _GEN_7 | valid_memory_47_2);
+      valid_memory_47_3 <=
+        ~(valid_miss & _GEN_192 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_126 & (&allocate_way) | valid_memory_47_3);
+      valid_memory_48_0 <=
+        ~(valid_miss & _GEN_193 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_127 & _GEN_4 | valid_memory_48_0);
+      valid_memory_48_1 <=
+        ~(valid_miss & _GEN_193 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_127 & _GEN_6 | valid_memory_48_1);
+      valid_memory_48_2 <=
+        ~(valid_miss & _GEN_193 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_127 & _GEN_7 | valid_memory_48_2);
+      valid_memory_48_3 <=
+        ~(valid_miss & _GEN_193 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_127 & (&allocate_way) | valid_memory_48_3);
+      valid_memory_49_0 <=
+        ~(valid_miss & _GEN_194 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_128 & _GEN_4 | valid_memory_49_0);
+      valid_memory_49_1 <=
+        ~(valid_miss & _GEN_194 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_128 & _GEN_6 | valid_memory_49_1);
+      valid_memory_49_2 <=
+        ~(valid_miss & _GEN_194 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_128 & _GEN_7 | valid_memory_49_2);
+      valid_memory_49_3 <=
+        ~(valid_miss & _GEN_194 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_128 & (&allocate_way) | valid_memory_49_3);
+      valid_memory_50_0 <=
+        ~(valid_miss & _GEN_195 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_129 & _GEN_4 | valid_memory_50_0);
+      valid_memory_50_1 <=
+        ~(valid_miss & _GEN_195 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_129 & _GEN_6 | valid_memory_50_1);
+      valid_memory_50_2 <=
+        ~(valid_miss & _GEN_195 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_129 & _GEN_7 | valid_memory_50_2);
+      valid_memory_50_3 <=
+        ~(valid_miss & _GEN_195 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_129 & (&allocate_way) | valid_memory_50_3);
+      valid_memory_51_0 <=
+        ~(valid_miss & _GEN_196 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_130 & _GEN_4 | valid_memory_51_0);
+      valid_memory_51_1 <=
+        ~(valid_miss & _GEN_196 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_130 & _GEN_6 | valid_memory_51_1);
+      valid_memory_51_2 <=
+        ~(valid_miss & _GEN_196 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_130 & _GEN_7 | valid_memory_51_2);
+      valid_memory_51_3 <=
+        ~(valid_miss & _GEN_196 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_130 & (&allocate_way) | valid_memory_51_3);
+      valid_memory_52_0 <=
+        ~(valid_miss & _GEN_197 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_131 & _GEN_4 | valid_memory_52_0);
+      valid_memory_52_1 <=
+        ~(valid_miss & _GEN_197 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_131 & _GEN_6 | valid_memory_52_1);
+      valid_memory_52_2 <=
+        ~(valid_miss & _GEN_197 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_131 & _GEN_7 | valid_memory_52_2);
+      valid_memory_52_3 <=
+        ~(valid_miss & _GEN_197 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_131 & (&allocate_way) | valid_memory_52_3);
+      valid_memory_53_0 <=
+        ~(valid_miss & _GEN_198 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_132 & _GEN_4 | valid_memory_53_0);
+      valid_memory_53_1 <=
+        ~(valid_miss & _GEN_198 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_132 & _GEN_6 | valid_memory_53_1);
+      valid_memory_53_2 <=
+        ~(valid_miss & _GEN_198 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_132 & _GEN_7 | valid_memory_53_2);
+      valid_memory_53_3 <=
+        ~(valid_miss & _GEN_198 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_132 & (&allocate_way) | valid_memory_53_3);
+      valid_memory_54_0 <=
+        ~(valid_miss & _GEN_199 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_133 & _GEN_4 | valid_memory_54_0);
+      valid_memory_54_1 <=
+        ~(valid_miss & _GEN_199 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_133 & _GEN_6 | valid_memory_54_1);
+      valid_memory_54_2 <=
+        ~(valid_miss & _GEN_199 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_133 & _GEN_7 | valid_memory_54_2);
+      valid_memory_54_3 <=
+        ~(valid_miss & _GEN_199 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_133 & (&allocate_way) | valid_memory_54_3);
+      valid_memory_55_0 <=
+        ~(valid_miss & _GEN_200 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_134 & _GEN_4 | valid_memory_55_0);
+      valid_memory_55_1 <=
+        ~(valid_miss & _GEN_200 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_134 & _GEN_6 | valid_memory_55_1);
+      valid_memory_55_2 <=
+        ~(valid_miss & _GEN_200 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_134 & _GEN_7 | valid_memory_55_2);
+      valid_memory_55_3 <=
+        ~(valid_miss & _GEN_200 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_134 & (&allocate_way) | valid_memory_55_3);
+      valid_memory_56_0 <=
+        ~(valid_miss & _GEN_201 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_135 & _GEN_4 | valid_memory_56_0);
+      valid_memory_56_1 <=
+        ~(valid_miss & _GEN_201 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_135 & _GEN_6 | valid_memory_56_1);
+      valid_memory_56_2 <=
+        ~(valid_miss & _GEN_201 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_135 & _GEN_7 | valid_memory_56_2);
+      valid_memory_56_3 <=
+        ~(valid_miss & _GEN_201 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_135 & (&allocate_way) | valid_memory_56_3);
+      valid_memory_57_0 <=
+        ~(valid_miss & _GEN_202 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_136 & _GEN_4 | valid_memory_57_0);
+      valid_memory_57_1 <=
+        ~(valid_miss & _GEN_202 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_136 & _GEN_6 | valid_memory_57_1);
+      valid_memory_57_2 <=
+        ~(valid_miss & _GEN_202 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_136 & _GEN_7 | valid_memory_57_2);
+      valid_memory_57_3 <=
+        ~(valid_miss & _GEN_202 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_136 & (&allocate_way) | valid_memory_57_3);
+      valid_memory_58_0 <=
+        ~(valid_miss & _GEN_203 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_137 & _GEN_4 | valid_memory_58_0);
+      valid_memory_58_1 <=
+        ~(valid_miss & _GEN_203 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_137 & _GEN_6 | valid_memory_58_1);
+      valid_memory_58_2 <=
+        ~(valid_miss & _GEN_203 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_137 & _GEN_7 | valid_memory_58_2);
+      valid_memory_58_3 <=
+        ~(valid_miss & _GEN_203 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_137 & (&allocate_way) | valid_memory_58_3);
+      valid_memory_59_0 <=
+        ~(valid_miss & _GEN_204 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_138 & _GEN_4 | valid_memory_59_0);
+      valid_memory_59_1 <=
+        ~(valid_miss & _GEN_204 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_138 & _GEN_6 | valid_memory_59_1);
+      valid_memory_59_2 <=
+        ~(valid_miss & _GEN_204 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_138 & _GEN_7 | valid_memory_59_2);
+      valid_memory_59_3 <=
+        ~(valid_miss & _GEN_204 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_138 & (&allocate_way) | valid_memory_59_3);
+      valid_memory_60_0 <=
+        ~(valid_miss & _GEN_205 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_139 & _GEN_4 | valid_memory_60_0);
+      valid_memory_60_1 <=
+        ~(valid_miss & _GEN_205 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_139 & _GEN_6 | valid_memory_60_1);
+      valid_memory_60_2 <=
+        ~(valid_miss & _GEN_205 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_139 & _GEN_7 | valid_memory_60_2);
+      valid_memory_60_3 <=
+        ~(valid_miss & _GEN_205 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_139 & (&allocate_way) | valid_memory_60_3);
+      valid_memory_61_0 <=
+        ~(valid_miss & _GEN_206 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_140 & _GEN_4 | valid_memory_61_0);
+      valid_memory_61_1 <=
+        ~(valid_miss & _GEN_206 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_140 & _GEN_6 | valid_memory_61_1);
+      valid_memory_61_2 <=
+        ~(valid_miss & _GEN_206 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_140 & _GEN_7 | valid_memory_61_2);
+      valid_memory_61_3 <=
+        ~(valid_miss & _GEN_206 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_140 & (&allocate_way) | valid_memory_61_3);
+      valid_memory_62_0 <=
+        ~(valid_miss & _GEN_207 & _GEN_143)
+        & (_data_memories_data_in_31_T & _GEN_141 & _GEN_4 | valid_memory_62_0);
+      valid_memory_62_1 <=
+        ~(valid_miss & _GEN_207 & _GEN_144)
+        & (_data_memories_data_in_31_T & _GEN_141 & _GEN_6 | valid_memory_62_1);
+      valid_memory_62_2 <=
+        ~(valid_miss & _GEN_207 & _GEN_145)
+        & (_data_memories_data_in_31_T & _GEN_141 & _GEN_7 | valid_memory_62_2);
+      valid_memory_62_3 <=
+        ~(valid_miss & _GEN_207 & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & _GEN_141 & (&allocate_way) | valid_memory_62_3);
+      valid_memory_63_0 <=
+        ~(valid_miss & (&miss_set_REG) & _GEN_143)
+        & (_data_memories_data_in_31_T & (&(_GEN[10:5])) & _GEN_4 | valid_memory_63_0);
+      valid_memory_63_1 <=
+        ~(valid_miss & (&miss_set_REG) & _GEN_144)
+        & (_data_memories_data_in_31_T & (&(_GEN[10:5])) & _GEN_6 | valid_memory_63_1);
+      valid_memory_63_2 <=
+        ~(valid_miss & (&miss_set_REG) & _GEN_145)
+        & (_data_memories_data_in_31_T & (&(_GEN[10:5])) & _GEN_7 | valid_memory_63_2);
+      valid_memory_63_3 <=
+        ~(valid_miss & (&miss_set_REG) & (&_miss_way_T_9))
+        & (_data_memories_data_in_31_T & (&(_GEN[10:5])) & (&allocate_way)
+           | valid_memory_63_3);
+      if ((&DATA_CACHE_STATE) & _GEN_16)
         MSHR_front_pointer <= MSHR_front_pointer + 3'h1;
+      if (_GEN_51 | ~_GEN_59) begin
+      end
+      else
+        MSHR_back_pointer <= MSHR_back_pointer + 3'h1;
     end
   end // always @(posedge)
   Queue1_UInt256 final_response_buffer (
     .clock        (clock),
     .reset        (reset),
-    .io_enq_valid (m_axi_rready_0 & _GEN_0),
-    .io_enq_bits  (_GEN_1),
+    .io_enq_valid (m_axi_rready_0 & _GEN_1),
+    .io_enq_bits  (_GEN_2),
     .io_deq_ready (1'h1),
     .io_deq_valid (_final_response_buffer_io_deq_valid),
     .io_deq_bits  (_final_response_buffer_io_deq_bits)
@@ -332,25 +2947,32 @@ module L1_data_cache(
   Queue4_AXI_request_Q_entry AXI_request_Q (
     .clock                     (clock),
     .reset                     (reset),
-    .io_enq_valid              (request_non_cacheable_read | request_non_cacheable_write),
-    .io_enq_bits_write_valid   (request_non_cacheable_write),
-    .io_enq_bits_write_address
-      ({6'h0, _GEN_3[_miss_way_T_1[0] ? 2'h1 : {_miss_way_T_1[1], 1'h0}], 5'h0}),
+    .io_enq_ready              (/* unused */),
+    .io_enq_valid
+      ((request_non_cacheable_read | request_non_cacheable_write
+        | ~(io_CPU_request_bits_addr[31])) & valid_miss),
+    .io_enq_bits_write_valid
+      ((request_non_cacheable_write | ~(io_CPU_request_bits_addr[31])) & is_evict_dirty),
+    .io_enq_bits_write_address ({6'h0, _GEN_8[_miss_way_T_9], 5'h0}),
     .io_enq_bits_write_data
       (request_non_cacheable_write
          ? {224'h0, AXI_request_Q_io_enq_bits_write_data_REG}
          : data_way),
-    .io_enq_bits_write_bytes   (_GEN_2),
-    .io_enq_bits_read_valid    (request_non_cacheable_read),
-    .io_enq_bits_read_address  (AXI_request_Q_io_enq_bits_read_address_r_1),
-    .io_enq_bits_read_bytes    (_GEN_2),
+    .io_enq_bits_write_bytes   (_GEN_3),
+    .io_enq_bits_read_valid
+      (request_non_cacheable_read | ~(io_CPU_request_bits_addr[31])),
+    .io_enq_bits_read_address  (AXI_request_Q_io_enq_bits_read_address_REG),
+    .io_enq_bits_read_bytes    (_GEN_3),
+    .io_deq_ready              (1'h1),
     .io_deq_valid              (_AXI_request_Q_io_deq_valid),
     .io_deq_bits_write_valid   (_AXI_request_Q_io_deq_bits_write_valid),
     .io_deq_bits_write_address (_AXI_request_Q_io_deq_bits_write_address),
     .io_deq_bits_write_data    (_AXI_request_Q_io_deq_bits_write_data),
+    .io_deq_bits_write_bytes   (/* unused */),
     .io_deq_bits_read_valid    (_AXI_request_Q_io_deq_bits_read_valid),
     .io_deq_bits_read_address  (_AXI_request_Q_io_deq_bits_read_address),
-    .io_deq_bits_read_bytes    (_AXI_request_Q_io_deq_bits_read_bytes)
+    .io_deq_bits_read_bytes    (_AXI_request_Q_io_deq_bits_read_bytes),
+    .io_count                  (/* unused */)
   );
   Queue1_UInt256_2 cacheable_response_Q (
     .clock        (clock),
@@ -810,30 +3432,30 @@ module L1_data_cache(
   );
   ReadWriteSmem_32 tag_memories_0 (
     .clock       (clock),
-    .io_wr_en    (DATA_CACHE_NEXT_STATE == 2'h2),
-    .io_addr     ((&DATA_CACHE_STATE) ? 6'h0 : backend_set),
-    .io_data_in  (21'h0),
+    .io_wr_en    (_GEN_4 & DATA_CACHE_NEXT_STATE == 2'h2),
+    .io_addr     (_GEN_4 ? active_set : 6'h0),
+    .io_data_in  (_GEN_4 ? _GEN_5 : 21'h0),
     .io_data_out (_tag_memories_0_io_data_out)
   );
   ReadWriteSmem_32 tag_memories_1 (
     .clock       (clock),
-    .io_wr_en    (1'h0),
-    .io_addr     (6'h0),
-    .io_data_in  (21'h0),
+    .io_wr_en    (_GEN_6 & DATA_CACHE_NEXT_STATE == 2'h2),
+    .io_addr     (_GEN_6 ? active_set : 6'h0),
+    .io_data_in  (_GEN_6 ? _GEN_5 : 21'h0),
     .io_data_out (_tag_memories_1_io_data_out)
   );
   ReadWriteSmem_32 tag_memories_2 (
     .clock       (clock),
-    .io_wr_en    (1'h0),
-    .io_addr     (6'h0),
-    .io_data_in  (21'h0),
+    .io_wr_en    (_GEN_7 & DATA_CACHE_NEXT_STATE == 2'h2),
+    .io_addr     (_GEN_7 ? active_set : 6'h0),
+    .io_data_in  (_GEN_7 ? _GEN_5 : 21'h0),
     .io_data_out (_tag_memories_2_io_data_out)
   );
   ReadWriteSmem_32 tag_memories_3 (
     .clock       (clock),
-    .io_wr_en    (1'h0),
-    .io_addr     (6'h0),
-    .io_data_in  (21'h0),
+    .io_wr_en    ((&allocate_way) & DATA_CACHE_NEXT_STATE == 2'h2),
+    .io_addr     ((&allocate_way) ? active_set : 6'h0),
+    .io_data_in  ((&allocate_way) ? _GEN_5 : 21'h0),
     .io_data_out (_tag_memories_3_io_data_out)
   );
   assign m_axi_awvalid = m_axi_awvalid_0;
@@ -841,7 +3463,7 @@ module L1_data_cache(
   assign m_axi_awaddr =
     write_request_valid ? _AXI_request_Q_io_deq_bits_write_address : 32'h0;
   assign m_axi_awlen = m_axi_awlen_0;
-  assign m_axi_awsize = write_request_valid ? 3'h5 : 3'h0;
+  assign m_axi_awsize = {1'h0, write_request_valid, 1'h0};
   assign m_axi_awburst = {1'h0, write_request_valid};
   assign m_axi_awlock = 1'h0;
   assign m_axi_awcache = 4'h0;
@@ -876,8 +3498,8 @@ module L1_data_cache(
   assign m_axi_aruser = 1'h0;
   assign m_axi_rready = m_axi_rready_0;
   assign io_CPU_request_ready = 1'h1;
-  assign io_CPU_response_valid = output_valid_r_1;
-  assign io_CPU_response_bits_data = 32'h0;
+  assign io_CPU_response_valid = output_valid_r;
+  assign io_CPU_response_bits_data = output_data;
   assign io_CPU_response_bits_MOB_index = hit_MOB_index_REG;
 endmodule
 
