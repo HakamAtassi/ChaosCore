@@ -490,12 +490,13 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 
 	// update on hit (writes only)
 	when(valid_write_hit){
-		dirty_memory(PriorityEncoder(tag_hit_OH))(hit_set) := 1.B
+		dirty_memory(hit_set)(PriorityEncoder(tag_hit_OH)) := 1.B
 	}
 
 	// clear on allocate
 	when(DATA_CACHE_STATE === DATA_CACHE_STATES.ALLOCATE){
-		dirty_memory(allocate_way)(allocate_set) := 0.B
+		//dirty_memory(allocate_way)(allocate_set) := 0.B
+		dirty_memory(allocate_set)(allocate_way) := 0.B
 	}
 
 	writeback_dirty 	:= dirty_memory(miss_set)(miss_way)
@@ -577,8 +578,8 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	when(valid_miss && valid_MSHR_hit){
 		// append MSHR entry
 		//hit_MSHR.back_pointer := hit_MSHR.back_pointer + 1.U
-
 		//hit_MSHR.miss_requests(hit_MSHR.back_pointer) := miss_backend_memory_request
+
 		MSHRs(hit_MSHR_index).miss_requests(MSHRs(hit_MSHR_index).back_pointer) := miss_backend_memory_request
 		MSHRs(hit_MSHR_index).back_pointer := MSHRs(hit_MSHR_index).back_pointer + 1.U
 
