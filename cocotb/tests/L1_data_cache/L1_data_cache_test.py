@@ -47,3 +47,23 @@ def test_burst_of_requests_to_miss_line():
         configs["testcase"] = "test_burst_of_requests_to_miss_line"
         run(**configs)
 
+def test_write():
+        configs["testcase"] = "test_write"
+        run(**configs)
+
+def test_MOB_resp():
+        configs["testcase"] = "test_MOB_resp"
+        run(**configs)
+
+def test_LRU():
+        configs["testcase"] = "test_LRU"
+        run(**configs)
+
+def test_burst_accesses():
+        configs["testcase"] = "test_burst_accesses"
+        run(**configs)
+
+def test_backpressure():
+        configs["testcase"] = "test_backpressure"
+        run(**configs)
+

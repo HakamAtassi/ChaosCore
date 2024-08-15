@@ -675,6 +675,7 @@ class MSHR_entry(coreParameters:CoreParameters) extends Bundle{
         back_pointer := 0.U
         address := 0.U
         allocate_way := 0.U
+        valid := 0.U
         //miss_request := 0.U // TODO: 
     }
 
