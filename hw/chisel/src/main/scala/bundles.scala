@@ -630,12 +630,18 @@ class MOB_entry(coreParameters:CoreParameters) extends Bundle{
 class MSHR_entry(coreParameters:CoreParameters) extends Bundle{
     // An entire row of the MSHR.
     import coreParameters._
+
+
     val address                 =   UInt(32.W)      // address shared across MSHR row
     val miss_requests           =   Vec(L1_MSHRWidth, new backend_memory_request(coreParameters))
     val allocate_way            =   UInt(log2Ceil(L1_DataCacheWays).W)
 
-    val front_pointer           =   UInt(log2Ceil(L1_MSHRWidth).W)
-    val back_pointer            =   UInt(log2Ceil(L1_MSHREntries).W)
+    val pointer_width           = log2Ceil(L1_MSHRWidth) + 1
+
+    val front_pointer           =   UInt(pointer_width.W)
+    val back_pointer            =   UInt(pointer_width.W)
+
+    val valid                   =   Bool()
 
     //def queue(miss_request:backend_memory_request): Unit = {
         //miss_requests(back_pointer) := Wire(miss_request)//DontCare  // FIXME: actually write data...
@@ -662,6 +668,15 @@ class MSHR_entry(coreParameters:CoreParameters) extends Bundle{
         // When the queue begins emptying, it empties all the way and clears the row.
         (front_pointer + 1.U) === back_pointer
     }
+
+    def clear: Unit = {
+        front_pointer := 0.U
+        back_pointer := 0.U
+        address := 0.U
+        allocate_way := 0.U
+        //miss_request := 0.U // TODO: 
+    }
+
 
 }
 

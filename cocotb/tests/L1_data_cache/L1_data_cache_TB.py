@@ -19,11 +19,17 @@ class L1_data_cache_TB:
         self.memory_capacity = 256*(2**20)
         self.axi_ram = AxiRam(AxiBus.from_prefix(dut, "m_axi"), dut.clock, dut.reset, size=self.memory_capacity)
 
-    def init_sequence(self):
+    def init_sequence(self, randomize=False):
         # INIT MEMORY 
-        for i in range(256*2**10):
-            # Writing a 4-byte word to memory
-            self.axi_ram.write(i*4, (i & 0xFFFF_FFFF).to_bytes(4, byteorder='little'))
+        for i in range(256 * 2**10):
+            if randomize:
+                # Generating a random 4-byte word
+                word = random.getrandbits(32)
+            else:
+                # Generating a BIST sequence word
+                word = i & 0xFF
+            self.axi_ram.write(i, word.to_bytes(1, byteorder='little'))
+        self.axi_ram.hexdump(0x0000, 1024, prefix="RAM")
 
     #################
     # RESET & CLOCK #
@@ -47,11 +53,9 @@ class L1_data_cache_TB:
 
 
     def read_CPU_response(self):
-        resp = {}
-        resp["valid"] = self.L1_data_cache.io_CPU_response_valid.value
-        resp["data"] = self.L1_data_cache.io_CPU_response_bits_data.value
-        resp["MOB_index"] = self.L1_data_cache.io_CPU_response_bits_MOB_index.value
-        return resp
+        return self.L1_data_cache.read_CPU_response()
+
+
 
     ###############
     # CACHE READY #
@@ -63,5 +67,12 @@ class L1_data_cache_TB:
     def get_CPU_request_ready(self):
         return self.L1_data_cache.io_CPU_request_ready.value
 
+    async def wait_cache_hit(self):
+        for _ in range(100000):
+            await self.clock()
+            if(int(self.read_CPU_response()["valid"])):
+                return
+        assert False, "Error: Cache did not return for 1000 cycles"
 
 
+    

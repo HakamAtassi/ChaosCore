@@ -35,3 +35,15 @@ def test_read():
         configs["testcase"] = "test_read"
         run(**configs)
 
+def test_output_format():
+        configs["testcase"] = "test_output_format"
+        run(**configs)
+
+def test_hit_latency():
+        configs["testcase"] = "test_hit_latency"
+        run(**configs)
+
+def test_burst_of_requests_to_miss_line():
+        configs["testcase"] = "test_burst_of_requests_to_miss_line"
+        run(**configs)
+
