@@ -636,10 +636,11 @@ class MSHR_entry(coreParameters:CoreParameters) extends Bundle{
     val miss_requests           =   Vec(L1_MSHRWidth, new backend_memory_request(coreParameters))
     val allocate_way            =   UInt(log2Ceil(L1_DataCacheWays).W)
 
-    val pointer_width           = log2Ceil(L1_MSHRWidth) + 1
+    val pointer_width           = log2Ceil(L1_MSHRWidth)
 
     val front_pointer           =   UInt(pointer_width.W)
     val back_pointer            =   UInt(pointer_width.W)
+
 
     val valid                   =   Bool()
 
