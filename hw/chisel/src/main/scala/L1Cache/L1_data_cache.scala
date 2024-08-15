@@ -288,6 +288,9 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	val AXI_request_Q					= Module(new Queue(new AXI_request_Q_entry, L1_MSHREntries, flow=false, hasFlush=false, useSyncReadMem=true))	// FIXME: needs flush/kill
 
 
+    val blockSizeBytes = L1_instructionCacheBlockSizeBytes
+    val byteOffsetBits              = log2Ceil(blockSizeBytes)                                          // Bits needed to each byte in a cache line
+    val dram_addr_mask = ((1.U << 32.U) - (1.U << byteOffsetBits))
 
 	val request_non_cacheable			= Wire(Bool())
 	val request_non_cacheable_read		= Wire(Bool())
@@ -324,7 +327,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 
 	// Read missing line
 	AXI_request_Q.io.enq.bits.read_valid	:=	request_non_cacheable_read || request_cacheable_write_read
-	AXI_request_Q.io.enq.bits.read_address	:=	RegNext(io.CPU_request.bits.addr)	// FIXME: mask for cache line (cache line aligned)
+	AXI_request_Q.io.enq.bits.read_address	:=	RegNext(io.CPU_request.bits.addr) & dram_addr_mask	// FIXME: mask for cache line (cache line aligned)
 	AXI_request_Q.io.enq.bits.read_bytes	:=	Mux(request_non_cacheable_write, non_cacheable_request_bytes, L1_DataCacheBlockSizeBytes.U)
 
 
@@ -388,7 +391,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 
 	for((data_memory, i) <- data_memories.zipWithIndex){
 		data_memory.io.enable		:= 1.B
-		data_memory.io.addr			:= active_address
+		data_memory.io.addr			:= Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.ALLOCATE, allocate_set, RegNext(active_set))
 		data_memory.io.wr_en		:= data_memories_wr_en(i)
 		data_memory.io.data_in		:= data_memories_data_in(i)
 	}
@@ -496,7 +499,6 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	}
 
 	writeback_dirty 	:= dirty_memory(miss_set)(miss_way)
-
 	is_evict_dirty 		:= dirty_memory(RegNext(active_set))(evict_way)
 
 
@@ -539,15 +541,23 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 
 	var hit_MSHR = new MSHR_entry(coreParameters)
 
+	var hit_MSHR_index = Wire(UInt(log2Ceil(L1_MSHREntries).W))
+
+	dontTouch(miss_address)
+
+
+	hit_MSHR_index := 0.U
+
 	valid_MSHR_hit := 0.B
 	valid_MSHR_miss := 0.B
 	when(valid_miss){
 		valid_MSHR_miss := 1.B
-		for(MSHR <- MSHRs){
-			when(MSHR.address === miss_address){
+		for((mshr, i) <- MSHRs.zipWithIndex){
+			when((mshr.address === (miss_address & dram_addr_mask)) && mshr.valid){
+				hit_MSHR_index	:= i.U
 				valid_MSHR_hit := 1.B
 				valid_MSHR_miss := 0.B
-				hit_MSHR = MSHR
+				hit_MSHR = mshr
 			}
 		}
 	}
@@ -563,19 +573,28 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	dontTouch(valid_MSHR_miss)
 	dontTouch(valid_MSHR_hit)
 
+
 	when(valid_miss && valid_MSHR_hit){
 		// append MSHR entry
-        MSHRs(MSHR_back_index).miss_requests(MSHRs(MSHR_back_index).back_pointer) := miss_backend_memory_request
-		MSHRs(MSHR_back_index).back_pointer := MSHRs(MSHR_back_index).back_pointer + 1.U
+		//hit_MSHR.back_pointer := hit_MSHR.back_pointer + 1.U
+
+		//hit_MSHR.miss_requests(hit_MSHR.back_pointer) := miss_backend_memory_request
+		MSHRs(hit_MSHR_index).miss_requests(MSHRs(hit_MSHR_index).back_pointer) := miss_backend_memory_request
+		MSHRs(hit_MSHR_index).back_pointer := MSHRs(hit_MSHR_index).back_pointer + 1.U
+
+        //MSHRs(MSHR_back_index).miss_requests(MSHRs(MSHR_back_index).back_pointer) := miss_backend_memory_request
+		//MSHRs(MSHR_back_index).back_pointer := MSHRs(MSHR_back_index).back_pointer + 1.U
 	}.elsewhen(valid_miss && valid_MSHR_miss){
 		// allocate new MSHR entry
-		MSHRs(MSHR_back_index).address := miss_backend_memory_request.addr
+		MSHRs(MSHR_back_index).valid	:= 1.B
+		MSHRs(MSHR_back_index).address := miss_backend_memory_request.addr & dram_addr_mask
         MSHRs(MSHR_back_index).miss_requests(MSHRs(MSHR_back_index).back_pointer) := miss_backend_memory_request
 		MSHRs(MSHR_back_index).back_pointer := MSHRs(MSHR_back_index).back_pointer + 1.U
 		MSHR_back_pointer := MSHR_back_pointer + 1.U
 	}
 
 	dontTouch(MSHRs)
+	dontTouch(MSHR_replay_done)
 
 	MSHR_replay_done := 0.B
 	when(DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY){
@@ -584,6 +603,9 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 		when(MSHRs(MSHR_front_index).last){
 			MSHR_replay_done := 1.B
 			MSHR_front_pointer := MSHR_front_pointer + 1.U
+
+			// clear the MSHR entry
+			MSHRs(MSHR_front_index).clear
 		}
 	}
 
@@ -691,9 +713,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 
 
 	when(output_cacheable){
-		//output_data := non_cacheable_response_Q.io.deq.bits
 		val temp = format_dcache_word(data_way, output_address, output_operation)
-		//printf("data: %x \n", temp)
 		output_data := temp
 	}.elsewhen(!output_cacheable){
 		output_data := 0x42.U

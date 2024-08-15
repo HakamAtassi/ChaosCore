@@ -31,11 +31,10 @@ class instruction_cache_dut:
     
     def read_CPU_read_response(self):
         """read the cache response data"""
-        cache_response = {}
+        cache_response          = {}
+        cache_response["bits"]  = {}
         cache_response["valid"] = self.L1_instruction_cache.io_CPU_response_valid.value
-        cache_response["bits"] = {}
         cache_response["bits"]["fetch_PC"] = (int(self.L1_instruction_cache.io_CPU_response_bits_fetch_PC.value))
-
         cache_response["bits"]["valid_bits"]    = [0]*4
         cache_response["bits"]["instruction"]   = [0]*4
         cache_response["bits"]["packet_index"]  = [0]*4
