@@ -3,8 +3,8 @@
 # SW Build 5076996 on Wed May 22 18:36:09 MDT 2024
 # IP Build 5075265 on Wed May 22 21:45:21 MDT 2024
 # SharedData Build 5076995 on Wed May 22 18:29:18 MDT 2024
-# Start of session at: Wed Aug 14 16:20:07 2024
-# Process ID: 10592
+# Start of session at: Thu Aug 15 20:05:30 2024
+# Process ID: 38294
 # Current directory: /home/hakam/Repos/ChaosCore/syn
 # Command line: vivado -mode batch -source build.tcl
 # Log file: /home/hakam/Repos/ChaosCore/syn/vivado.log
@@ -13,31 +13,12 @@
 # Platform          :Ubuntu
 # Operating System  :Ubuntu 24.04 LTS
 # Processor Detail  :12th Gen Intel(R) Core(TM) i3-12100F
-# CPU Frequency     :1712.916 MHz
+# CPU Frequency     :2790.881 MHz
 # CPU Physical cores:4
 # CPU Logical cores :8
 # Host memory       :16615 MB
 # Swap memory       :4294 MB
 # Total Virtual     :20910 MB
-# Available Virtual :17485 MB
+# Available Virtual :15976 MB
 #-----------------------------------------------------------
 source build.tcl
-# create_project ChaosCore ./ -part xczu3eg-sbva484-1-i -force
-# set fp [open "../hw/verilog/filelist.f" r]
-# while {[gets $fp line] >= 0} {
-# 
-#    add_files -fileset constrs_1 -norecurse "../hw/verilog/"$line
-# 
-# }
-extra characters after close-quote
-    while executing
-"add_files -fileset constrs_1 -norecurse "../hw/verilog/"$"
-    ("while" body line 3)
-    invoked from within
-"while {[gets $fp line] >= 0} {
-
-   add_files -fileset constrs_1 -norecurse "../hw/verilog/"$line
-
-}"
-    (file "build.tcl" line 8)
-INFO: [Common 17-206] Exiting Vivado at Wed Aug 14 16:20:12 2024...

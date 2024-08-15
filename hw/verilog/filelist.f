@@ -74,10 +74,14 @@ ram_256x8.sv
 ReadWriteSmem.sv
 ram_64x21.sv
 ReadWriteSmem_32.sv
+ram_3x36.sv
+Queue3_backend_memory_response.sv
 L1_data_cache.sv
 ChaosCore_tile.sv
 AXI_debug_printer.sv
 extern_modules.sv
 axi_interconnect_2x2.sv
 SOC.sv
-./axi_interconnect_wrap_2x2.v
+axi_interconnect.v
+arbiter.v
+priority_encoder.v

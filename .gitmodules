@@ -1,3 +1,6 @@
 [submodule "hw/chisel/src/main/resources/verilog-axi"]
 	path = hw/chisel/src/main/resources/verilog-axi
 	url = https://github.com/alexforencich/verilog-axi.git
+[submodule "syn/bdf"]
+	path = syn/bdf
+	url = https://github.com/Avnet/bdf.git
