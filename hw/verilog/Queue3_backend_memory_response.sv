@@ -48,7 +48,9 @@ module Queue3_backend_memory_response(
   wire        ptr_match = enq_ptr_value == deq_ptr_value;
   wire        empty = ptr_match & ~maybe_full;
   wire        full = ptr_match & maybe_full;
-  wire        do_enq = ~full & io_enq_valid;
+  wire        io_deq_valid_0 = io_enq_valid | ~empty;
+  wire        do_deq = ~empty & io_deq_ready & io_deq_valid_0;
+  wire        do_enq = ~(empty & io_deq_ready) & ~full & io_enq_valid;
   always @(posedge clock) begin
     if (reset) begin
       enq_ptr_value <= 2'h0;
@@ -56,7 +58,6 @@ module Queue3_backend_memory_response(
       maybe_full <= 1'h0;
     end
     else begin
-      automatic logic do_deq = io_deq_ready & ~empty;
       if (do_enq) begin
         if (enq_ptr_value == 2'h2)
           enq_ptr_value <= 2'h0;
@@ -84,8 +85,8 @@ module Queue3_backend_memory_response(
     .W0_data ({io_enq_bits_MOB_index, io_enq_bits_data})
   );
   assign io_enq_ready = ~full;
-  assign io_deq_valid = ~empty;
-  assign io_deq_bits_data = _ram_ext_R0_data[31:0];
-  assign io_deq_bits_MOB_index = _ram_ext_R0_data[35:32];
+  assign io_deq_valid = io_deq_valid_0;
+  assign io_deq_bits_data = empty ? io_enq_bits_data : _ram_ext_R0_data[31:0];
+  assign io_deq_bits_MOB_index = empty ? io_enq_bits_MOB_index : _ram_ext_R0_data[35:32];
 endmodule
 

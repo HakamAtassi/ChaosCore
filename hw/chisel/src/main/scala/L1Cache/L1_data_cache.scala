@@ -301,7 +301,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	val non_cacheable_response_Q	=	Module(new Queue(new backend_memory_response(coreParameters), 8, flow=false, hasFlush=false, useSyncReadMem=true))	//FIXME: needs flush/kill
 
 	// Output skid buffer //
-	val CPU_response_skid_buffer	=	Module(new Queue(new backend_memory_response(coreParameters), 3, flow=false, hasFlush=false, useSyncReadMem=false))	// FIXME: needs flush/kill
+	val CPU_response_skid_buffer	=	Module(new Queue(new backend_memory_response(coreParameters), 3, flow=true, hasFlush=false, useSyncReadMem=false))	// FIXME: needs flush/kill
 
 	///////////////////
 	// DATA MEMORIES //
@@ -322,13 +322,16 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 		val half_word_offset_match 	= (word_offset === (i / 2).U) && (active_memory_type === memory_type_t.STORE) && (active_access_width === access_width_t.HW)
 		val byte_offset_match 		= (word_offset === (i / 1).U) && (active_memory_type === memory_type_t.STORE) && (active_access_width === access_width_t.B)
 
-		data_memories_wr_en(i) 		:= (DATA_CACHE_STATE === DATA_CACHE_STATES.ALLOCATE) || (word_offset_match || half_word_offset_match || byte_offset_match)
+		data_memories_wr_en(i) 		:= (DATA_CACHE_STATE === DATA_CACHE_STATES.ALLOCATE) || (RegNext(word_offset_match || half_word_offset_match || byte_offset_match) && valid_hit)
 	}
+
+	dontTouch(data_memories_wr_en)
+
 
 	active_data := Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY, replay_data, io.CPU_request.bits.data)
 
 	for(i <- 0 until L1_DataCacheBlockSizeBytes){
-		data_memories_data_in(i) 	:= Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.ALLOCATE, (allocate_cache_line>>(i*8))(7,0), ((active_data)>>(i%4)*8)(7,0)) //(((i+1)%4)*8-1, (i%4)*8))
+		data_memories_data_in(i) 	:= Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.ALLOCATE, (allocate_cache_line>>(i*8))(7,0), RegNext(((active_data)>>(i%4)*8)(7,0))) //(((i+1)%4)*8-1, (i%4)*8))
 	}
 
 	val data_memory_allocate_address 	= Cat(allocate_way, allocate_set)
@@ -466,11 +469,12 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 
 	// update non-cacheable buffer on non-cacheable request
 	val non_cacheable_buffer 				= Reg(Vec(L1_NonCacheableBufferEntries, new backend_memory_request(coreParameters)))
-	val non_cacheable_buffer_front_pointer 	= RegInit(UInt(log2Ceil(L1_NonCacheableBufferEntries).W), 0.U)
-	val non_cacheable_buffer_back_pointer 	= RegInit(UInt(log2Ceil(L1_NonCacheableBufferEntries).W), 0.U)
+	val non_cacheable_buffer_pointer_width	= log2Ceil(L1_NonCacheableBufferEntries) + 1
+	val non_cacheable_buffer_front_pointer 	= RegInit(UInt(non_cacheable_buffer_pointer_width.W), 0.U)
+	val non_cacheable_buffer_back_pointer 	= RegInit(UInt(non_cacheable_buffer_pointer_width.W), 0.U)
 
-	val non_cacheable_buffer_front_index 	= non_cacheable_buffer_front_pointer(log2Ceil(L1_NonCacheableBufferEntries) - 2, 0)
-	val non_cacheable_buffer_back_index 	= non_cacheable_buffer_front_pointer(log2Ceil(L1_NonCacheableBufferEntries) - 2, 0)
+	val non_cacheable_buffer_front_index 	= non_cacheable_buffer_front_pointer(non_cacheable_buffer_pointer_width - 2, 0)
+	val non_cacheable_buffer_back_index 	= non_cacheable_buffer_front_pointer(non_cacheable_buffer_pointer_width - 2, 0)
 
 	val non_cacheable_buffer_front 			= non_cacheable_buffer(non_cacheable_buffer_front_index)
 
@@ -756,7 +760,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	// CACHEABLE
 	// On AXI response, queue entries into line fill buffer
 
-	cacheable_response_Q.io.enq.valid 			:= RegNext(valid_hit)
+	cacheable_response_Q.io.enq.valid 			:= RegNext(valid_read_hit)
 	cacheable_response_Q.io.enq.bits.data  		:= output_data
 	cacheable_response_Q.io.enq.bits.MOB_index  := output_MOB_index
 	cacheable_response_Q.io.deq.ready 			:= 1.B		// FIXME: not always ready

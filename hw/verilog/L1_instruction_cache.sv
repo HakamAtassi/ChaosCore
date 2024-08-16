@@ -31,24 +31,50 @@
 module L1_instruction_cache(
   input         clock,
                 reset,
-                m_axi_wready,
+  output        m_axi_awvalid,
+  input         m_axi_awready,
+  output [7:0]  m_axi_awid,
+  output [31:0] m_axi_awaddr,
+  output [7:0]  m_axi_awlen,
+  output [2:0]  m_axi_awsize,
+  output [1:0]  m_axi_awburst,
+  output        m_axi_awlock,
+  output [3:0]  m_axi_awcache,
+  output [2:0]  m_axi_awprot,
+  output [3:0]  m_axi_awqos,
+                m_axi_awregion,
+  output        m_axi_awuser,
+  input         m_axi_wready,
   output        m_axi_wvalid,
   output [31:0] m_axi_wdata,
   output [3:0]  m_axi_wstrb,
   output        m_axi_wlast,
+                m_axi_wuser,
                 m_axi_bready,
   input         m_axi_bvalid,
+  input  [7:0]  m_axi_bid,
+  input  [1:0]  m_axi_bresp,
+  input         m_axi_buser,
   output        m_axi_arvalid,
   input         m_axi_arready,
+  output [7:0]  m_axi_arid,
   output [31:0] m_axi_araddr,
   output [7:0]  m_axi_arlen,
   output [2:0]  m_axi_arsize,
   output [1:0]  m_axi_arburst,
-  output        m_axi_rready,
+  output        m_axi_arlock,
+  output [3:0]  m_axi_arcache,
+  output [2:0]  m_axi_arprot,
+  output [3:0]  m_axi_arqos,
+                m_axi_arregion,
+  output        m_axi_aruser,
+                m_axi_rready,
   input         m_axi_rvalid,
   input  [7:0]  m_axi_rid,
   input  [31:0] m_axi_rdata,
+  input  [1:0]  m_axi_rresp,
   input         m_axi_rlast,
+                m_axi_ruser,
   output        io_CPU_request_ready,
                 io_CPU_response_valid,
   output [31:0] io_CPU_response_bits_fetch_PC,
@@ -354,16 +380,36 @@ module L1_instruction_cache(
     .io_deq_bits_NEXT                        (io_CPU_response_bits_NEXT),
     .io_deq_bits_TOS                         (io_CPU_response_bits_TOS)
   );
+  assign m_axi_awvalid = 1'h0;
+  assign m_axi_awid = 8'h0;
+  assign m_axi_awaddr = 32'h0;
+  assign m_axi_awlen = 8'h0;
+  assign m_axi_awsize = 3'h0;
+  assign m_axi_awburst = 2'h0;
+  assign m_axi_awlock = 1'h0;
+  assign m_axi_awcache = 4'h0;
+  assign m_axi_awprot = 3'h0;
+  assign m_axi_awqos = 4'h0;
+  assign m_axi_awregion = 4'h0;
+  assign m_axi_awuser = 1'h0;
   assign m_axi_wvalid = m_axi_wvalid_0;
   assign m_axi_wdata = m_axi_wvalid_0 ? AXI_AW_DATA_BUFFER[31:0] : 32'h0;
   assign m_axi_wstrb = {4{m_axi_wvalid_0}};
   assign m_axi_wlast = m_axi_wlast_0;
+  assign m_axi_wuser = 1'h0;
   assign m_axi_bready = &AXI_REQUEST_STATE;
   assign m_axi_arvalid = m_axi_arvalid_0;
+  assign m_axi_arid = 8'h0;
   assign m_axi_araddr = _GEN_3 ? request_addr : 32'h0;
   assign m_axi_arlen = _GEN_3 ? 8'h7 : 8'h0;
   assign m_axi_arsize = {1'h0, _GEN_4, 1'h0};
   assign m_axi_arburst = {1'h0, _GEN_4};
+  assign m_axi_arlock = 1'h0;
+  assign m_axi_arcache = 4'h0;
+  assign m_axi_arprot = 3'h0;
+  assign m_axi_arqos = 4'h0;
+  assign m_axi_arregion = 4'h0;
+  assign m_axi_aruser = 1'h0;
   assign m_axi_rready = m_axi_rready_0;
   assign io_CPU_request_ready = ~(|cache_state) & ~miss;
 endmodule
