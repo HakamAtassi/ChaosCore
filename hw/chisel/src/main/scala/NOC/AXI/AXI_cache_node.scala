@@ -21,23 +21,13 @@ trait AXICacheNode {
 
   // FIXME: use the AXI master bundle
 
-  //val AXI_port = IO(new AXIFullIO(nocParameters))
   // actual verilog IO
   val m_axi = IO(new VerilogAXIFullIO(nocParameters))
 
-  //m_axi := DontCare
 
   val AXI_port = m_axi.viewAs[AXIFullIO]
 
   // chisel dataview mapping
-  dontTouch(AXI_port)
-
-  //val AXI_AW    = IO(Decoupled(new AXI_AW(nocParameters)))
-  //val AXI_W     = IO(Decoupled(new AXI_W(nocParameters)))
-  //val AXI_B     = IO(Flipped(Decoupled(new AXI_B(nocParameters))))
-
-  //val AXI_AR    = IO(Decoupled(new AXI_AR(nocParameters)))
-  //val AXI_R     = IO(Flipped(Decoupled(new AXI_R(nocParameters))))
 
   object AXI_REQUEST_STATES extends ChiselEnum {
     val ADDRESS_PHASE, WRITE_DATA_PHASE, READ_RESPONSE_PHASE, WRITE_RESPONSE_PHASE = Value

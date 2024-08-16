@@ -40720,5 +40720,3 @@ endmodule
 `resetall
 
 // ----- 8< ----- FILE "firrtl_black_box_resource_files.f" ----- 8< -----
-
-axi_interconnect_wrap_2x2.v
