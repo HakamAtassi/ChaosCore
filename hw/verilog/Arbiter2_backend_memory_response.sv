@@ -28,24 +28,26 @@
   `endif // STOP_COND
 `endif // not def STOP_COND_
 
-module Queue1_UInt32(
-  input  clock,
-         reset,
-         io_enq_valid,
-  output io_deq_valid
+module Arbiter2_backend_memory_response(
+  output        io_in_0_ready,
+  input         io_in_0_valid,
+  input  [31:0] io_in_0_bits_data,
+  input  [3:0]  io_in_0_bits_MOB_index,
+  output        io_in_1_ready,
+  input         io_in_1_valid,
+  input  [31:0] io_in_1_bits_data,
+  input  [3:0]  io_in_1_bits_MOB_index,
+  input         io_out_ready,
+  output        io_out_valid,
+  output [31:0] io_out_bits_data,
+  output [3:0]  io_out_bits_MOB_index
 );
 
-  reg full;
-  always @(posedge clock) begin
-    if (reset)
-      full <= 1'h0;
-    else begin
-      automatic logic do_enq;
-      do_enq = ~full & io_enq_valid;
-      if (do_enq)
-        full <= do_enq;
-    end
-  end // always @(posedge)
-  assign io_deq_valid = full;
+  assign io_in_0_ready = io_out_ready;
+  assign io_in_1_ready = ~io_in_0_valid & io_out_ready;
+  assign io_out_valid = io_in_0_valid | io_in_1_valid;
+  assign io_out_bits_data = io_in_0_valid ? io_in_0_bits_data : io_in_1_bits_data;
+  assign io_out_bits_MOB_index =
+    io_in_0_valid ? io_in_0_bits_MOB_index : io_in_1_bits_MOB_index;
 endmodule
 

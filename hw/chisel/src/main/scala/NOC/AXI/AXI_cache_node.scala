@@ -61,9 +61,13 @@ trait AXICacheNode {
   AXI_port.AXI_AR.bits   := 0.U.asTypeOf(new AXI_AR(nocParameters))
   AXI_port.AXI_AR.valid  := 0.B
 
+  class final_AXI_response extends Bundle{
+    val data = UInt(256.W)
+    val ID   = UInt(ID_WIDTH.W)
+  }
 
   // Reconstructed response buffer
-  val final_response_buffer = Module(new Queue(UInt(256.W), 1, flow=true, hasFlush=false, useSyncReadMem=false))
+  val final_response_buffer = Module(new Queue(new final_AXI_response, 1, flow=true, hasFlush=false, useSyncReadMem=false))
   final_response_buffer.io.deq.ready := 0.B
   final_response_buffer.io.enq.valid := 0.B
   final_response_buffer.io.enq.bits := DontCare
@@ -72,11 +76,11 @@ trait AXICacheNode {
   // APIs //
   //////////
 
-  def AXI_read_request(address:UInt, bytes:UInt):Bool = {
+  def AXI_read_request(address:UInt, ID:UInt, bytes:UInt):Bool = {
     import nocParameters._
     // drive channels
     AXI_port.AXI_AR.valid        := AXI_REQUEST_STATE === AXI_REQUEST_STATES.ADDRESS_PHASE
-    AXI_port.AXI_AR.bits.arid    := 0.U
+    AXI_port.AXI_AR.bits.arid    := ID
     AXI_port.AXI_AR.bits.araddr  := address
     AXI_port.AXI_AR.bits.arlen   := Mux(bytes < DATA_WIDTH_BYTES.U, 0.U, bytes/DATA_WIDTH_BYTES.U - 1.U)
     AXI_port.AXI_AR.bits.arsize  := log2Ceil(DATA_WIDTH/8).U // FIXME: hardcoded..
@@ -85,23 +89,18 @@ trait AXICacheNode {
     AXI_port.AXI_AR.bits.arcache := 0x0.U
     AXI_port.AXI_AR.bits.arprot  := 0x0.U
 
-    //when(AXI_AR.fire && final_response_buffer.io.enq.ready){
-      //printf("AXI read accepted")
-    //}.otherwise{
-      //printf("AXI read not accepted")
-    //}
     AXI_port.AXI_AR.fire
   }
   
   val AXI_AW_DATA_BUFFER = Reg(UInt(256.W))   // FIXME: make this a param based on cache line width
-  def AXI_write_request(address:UInt, data:UInt, bytes:UInt):Bool = {
+  def AXI_write_request(address:UInt, ID:UInt, data:UInt, bytes:UInt):Bool = {
     import nocParameters._
     // awlen = transfer size / bus width 
     // awsize = always 0x2.U (32 bits) for simplicity
 
 
     AXI_port.AXI_AW.valid          := (AXI_REQUEST_STATE === AXI_REQUEST_STATES.ADDRESS_PHASE)
-    AXI_port.AXI_AW.bits.awid      := 0.U
+    AXI_port.AXI_AW.bits.awid      := ID
     AXI_port.AXI_AW.bits.awaddr    := address
     AXI_port.AXI_AW.bits.awlen     := Mux(bytes < DATA_WIDTH_BYTES.U, 0.U, bytes/DATA_WIDTH_BYTES.U - 1.U)
     AXI_port.AXI_AW.bits.awsize    := log2Ceil(DATA_WIDTH/8).U  // FIXME: hardcoded..
@@ -119,7 +118,7 @@ trait AXICacheNode {
   /**
   @return: The data found in the one entry response Q + if the "fire" of that queue
   */
-  def AXI_read:(UInt, Bool) = {
+  def AXI_read:(final_AXI_response, Bool) = {
     final_response_buffer.io.deq.ready := 1.B
     (final_response_buffer.io.deq.bits, final_response_buffer.io.deq.fire)
   }
@@ -210,7 +209,8 @@ trait AXICacheNode {
   when(AXI_REQUEST_STATE === AXI_REQUEST_STATES.READ_RESPONSE_PHASE){
     AXI_port.AXI_R.ready := 1.B
     when(AXI_port.AXI_R.fire && AXI_port.AXI_R.bits.rlast.asBool){
-      final_response_buffer.io.enq.bits := (AXI_read_buffer >> 32.U) | (AXI_port.AXI_R.bits.rdata << (256.U - 32.U))
+      final_response_buffer.io.enq.bits.data := (AXI_read_buffer >> 32.U) | (AXI_port.AXI_R.bits.rdata << (256.U - 32.U))
+      final_response_buffer.io.enq.bits.ID := AXI_port.AXI_R.bits.rid
       final_response_buffer.io.enq.valid := 1.B
     }.elsewhen(AXI_port.AXI_R.fire){
       AXI_read_buffer := (AXI_read_buffer >> 32.U) | (AXI_port.AXI_R.bits.rdata << (256.U - 32.U))

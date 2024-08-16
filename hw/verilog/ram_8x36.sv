@@ -28,24 +28,29 @@
   `endif // STOP_COND
 `endif // not def STOP_COND_
 
-module Queue1_UInt32(
-  input  clock,
-         reset,
-         io_enq_valid,
-  output io_deq_valid
+// VCS coverage exclude_file
+module ram_8x36(
+  input  [2:0]  R0_addr,
+  input         R0_en,
+                R0_clk,
+  output [35:0] R0_data,
+  input  [2:0]  W0_addr,
+  input         W0_en,
+                W0_clk,
+  input  [35:0] W0_data
 );
 
-  reg full;
-  always @(posedge clock) begin
-    if (reset)
-      full <= 1'h0;
-    else begin
-      automatic logic do_enq;
-      do_enq = ~full & io_enq_valid;
-      if (do_enq)
-        full <= do_enq;
-    end
+  reg [35:0] Memory[0:7];
+  reg        _R0_en_d0;
+  reg [2:0]  _R0_addr_d0;
+  always @(posedge R0_clk) begin
+    _R0_en_d0 <= R0_en;
+    _R0_addr_d0 <= R0_addr;
   end // always @(posedge)
-  assign io_deq_valid = full;
+  always @(posedge W0_clk) begin
+    if (W0_en & 1'h1)
+      Memory[W0_addr] <= W0_data;
+  end // always @(posedge)
+  assign R0_data = _R0_en_d0 ? Memory[_R0_addr_d0] : 36'bx;
 endmodule
 

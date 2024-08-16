@@ -16,7 +16,7 @@ class L1_data_cache_TB:
 
         # init AXI slave memory
         # For now, use 256MB of random data
-        self.memory_capacity = 256*(2**20)
+        self.memory_capacity = 512*(2**20)
         self.axi_ram = AxiRam(AxiBus.from_prefix(dut, "m_axi"), dut.clock, dut.reset, size=self.memory_capacity)
 
     def init_sequence(self, randomize=False):

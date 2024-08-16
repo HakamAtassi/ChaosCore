@@ -28,24 +28,32 @@
   `endif // STOP_COND
 `endif // not def STOP_COND_
 
-module Queue1_UInt32(
-  input  clock,
-         reset,
-         io_enq_valid,
-  output io_deq_valid
+module Queue1_final_AXI_response(
+  input          clock,
+                 reset,
+                 io_enq_valid,
+  input  [255:0] io_enq_bits_data,
+  input  [7:0]   io_enq_bits_ID,
+  input          io_deq_ready,
+  output         io_deq_valid,
+  output [255:0] io_deq_bits_data,
+  output [7:0]   io_deq_bits_ID
 );
 
-  reg full;
+  reg  [263:0] ram;
+  reg          full;
+  wire         io_deq_valid_0 = io_enq_valid | full;
+  wire         do_enq = ~(~full & io_deq_ready) & ~full & io_enq_valid;
   always @(posedge clock) begin
+    if (do_enq)
+      ram <= {io_enq_bits_ID, io_enq_bits_data};
     if (reset)
       full <= 1'h0;
-    else begin
-      automatic logic do_enq;
-      do_enq = ~full & io_enq_valid;
-      if (do_enq)
-        full <= do_enq;
-    end
+    else if (~(do_enq == (full & io_deq_ready & io_deq_valid_0)))
+      full <= do_enq;
   end // always @(posedge)
-  assign io_deq_valid = full;
+  assign io_deq_valid = io_deq_valid_0;
+  assign io_deq_bits_data = full ? ram[255:0] : io_enq_bits_data;
+  assign io_deq_bits_ID = full ? ram[263:256] : io_enq_bits_ID;
 endmodule
 

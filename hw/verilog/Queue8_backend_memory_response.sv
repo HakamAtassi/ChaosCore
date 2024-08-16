@@ -28,11 +28,10 @@
   `endif // STOP_COND
 `endif // not def STOP_COND_
 
-module Queue3_backend_memory_response(
+module Queue8_backend_memory_response(
   input         clock,
                 reset,
-  output        io_enq_ready,
-  input         io_enq_valid,
+                io_enq_valid,
   input  [31:0] io_enq_bits_data,
   input  [3:0]  io_enq_bits_MOB_index,
   input         io_deq_ready,
@@ -41,40 +40,33 @@ module Queue3_backend_memory_response(
   output [3:0]  io_deq_bits_MOB_index
 );
 
+  wire        io_enq_ready;
   wire [35:0] _ram_ext_R0_data;
-  reg  [1:0]  enq_ptr_value;
-  reg  [1:0]  deq_ptr_value;
+  reg  [2:0]  enq_ptr_value;
+  reg  [2:0]  deq_ptr_value;
   reg         maybe_full;
   wire        ptr_match = enq_ptr_value == deq_ptr_value;
   wire        empty = ptr_match & ~maybe_full;
-  wire        full = ptr_match & maybe_full;
-  wire        do_enq = ~full & io_enq_valid;
+  wire        do_enq = io_enq_ready & io_enq_valid;
+  wire        do_deq = io_deq_ready & ~empty;
+  assign io_enq_ready = ~(ptr_match & maybe_full);
   always @(posedge clock) begin
     if (reset) begin
-      enq_ptr_value <= 2'h0;
-      deq_ptr_value <= 2'h0;
+      enq_ptr_value <= 3'h0;
+      deq_ptr_value <= 3'h0;
       maybe_full <= 1'h0;
     end
     else begin
-      automatic logic do_deq = io_deq_ready & ~empty;
-      if (do_enq) begin
-        if (enq_ptr_value == 2'h2)
-          enq_ptr_value <= 2'h0;
-        else
-          enq_ptr_value <= enq_ptr_value + 2'h1;
-      end
-      if (do_deq) begin
-        if (deq_ptr_value == 2'h2)
-          deq_ptr_value <= 2'h0;
-        else
-          deq_ptr_value <= deq_ptr_value + 2'h1;
-      end
+      if (do_enq)
+        enq_ptr_value <= enq_ptr_value + 3'h1;
+      if (do_deq)
+        deq_ptr_value <= deq_ptr_value + 3'h1;
       if (~(do_enq == do_deq))
         maybe_full <= do_enq;
     end
   end // always @(posedge)
-  ram_3x36 ram_ext (
-    .R0_addr (deq_ptr_value),
+  ram_8x36 ram_ext (
+    .R0_addr (do_deq ? ((&deq_ptr_value) ? 3'h0 : deq_ptr_value + 3'h1) : deq_ptr_value),
     .R0_en   (1'h1),
     .R0_clk  (clock),
     .R0_data (_ram_ext_R0_data),
@@ -83,7 +75,6 @@ module Queue3_backend_memory_response(
     .W0_clk  (clock),
     .W0_data ({io_enq_bits_MOB_index, io_enq_bits_data})
   );
-  assign io_enq_ready = ~full;
   assign io_deq_valid = ~empty;
   assign io_deq_bits_data = _ram_ext_R0_data[31:0];
   assign io_deq_bits_MOB_index = _ram_ext_R0_data[35:32];

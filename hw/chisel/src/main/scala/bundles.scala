@@ -678,8 +678,6 @@ class MSHR_entry(coreParameters:CoreParameters) extends Bundle{
         valid := 0.U
         //miss_request := 0.U // TODO: 
     }
-
-
 }
 
 

@@ -70,6 +70,7 @@ case class CoreParameters(
     L1_DataCacheBlockSizeBytes: Int = 32,
 
     L1_MSHREntries: Int = 4,    // number of MSHR rows (unique miss addresses)
+    L1_NonCacheableBufferEntries: Int = 4,    // number of MSHR rows (unique miss addresses)
     L1_MSHRWidth: Int = 8,      // width of MSHR rows (misses per address)
 
     // Execution params
