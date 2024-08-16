@@ -108,6 +108,8 @@ object get_decomposed_dcache_address{
   }
 }
 
+
+
 object DATA_CACHE_STATES extends ChiselEnum {
 	val ACTIVE, STALL, ALLOCATE, REPLAY = Value // FIXME: 
 }
@@ -170,7 +172,10 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	val active_MOB_index			= Wire(UInt(log2Ceil(MOBEntries).W))
 	val active_data					= Wire(UInt(32.W))									// The currently active request address
 
-	dontTouch(active_address)
+	val active_non_cacheable		= Wire(Bool())
+	val active_non_cacheable_read	= Wire(Bool())
+	val active_non_cacheable_write	= Wire(Bool())
+	val active_cacheable_write_read	= Wire(Bool())
 
 	val backend_request_valid		= Wire(Bool())										// Current request valid?
 	val backend_address				= Wire(UInt(32.W))									// The currently active request address
@@ -204,24 +209,25 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	val output_operation			= Wire(access_width_t())
 	val output_MOB_index			= Wire(UInt(log2Ceil(MOBEntries).W))
 
-	val data_way 				= Wire(UInt((L1_DataCacheBlockSizeBytes*8).W))
+	val data_way 					= Wire(UInt((L1_DataCacheBlockSizeBytes*8).W))
 
-	val evict_way 				= Wire(UInt(log2Ceil(L1_DataCacheWays).W))
-	val is_evict_dirty 			= Wire(Bool())
+	val evict_way 					= Wire(UInt(log2Ceil(L1_DataCacheWays).W))
+	val is_evict_dirty 				= Wire(Bool())
 
-	val valid_vec	= Wire(Vec(L1_DataCacheWays, Bool()))
+	val valid_vec					= Wire(Vec(L1_DataCacheWays, Bool()))
 
+	val valid_MSHR_hit  			= Wire(Bool())
+	val valid_MSHR_miss 			= Wire(Bool())
+	var hit_MSHR 					= new MSHR_entry(coreParameters)
+	var hit_MSHR_index 				= Wire(UInt(log2Ceil(L1_MSHREntries).W))
 
-	val valid_MSHR_hit  = Wire(Bool())
-	val valid_MSHR_miss = Wire(Bool())
-	var hit_MSHR = new MSHR_entry(coreParameters)
-	var hit_MSHR_index = Wire(UInt(log2Ceil(L1_MSHREntries).W))
+	val cacheable_AXI_response_valid	=	 Wire(Bool())
 
 	//////////////////////////////
 	// Helper signal assignment //
 	//////////////////////////////
 
-	io.CPU_request.ready		:= 1.B
+	io.CPU_request.ready		:= 1.B		// FIXME: !
 
 	active_valid				:=	DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY || (io.CPU_request.valid)
 	active_address				:=	Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY, replay_address,		backend_address)
@@ -233,8 +239,8 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	active_MOB_index			:=	Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY, replay_MOB_index, 	backend_MOB_index)
 
 
-	valid_hit			:= tag_hit_OH.reduce(_ || _)	&& (RegNext(io.CPU_request.valid) || RegNext(DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY))
-	valid_miss			:= !tag_hit_OH.reduce(_ || _)	&& (RegNext(io.CPU_request.valid) || RegNext(DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY))
+	valid_hit			:= tag_hit_OH.reduce(_ || _)	&& (RegNext(io.CPU_request.valid) || RegNext(DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY)) && RegNext(active_cacheable)
+	valid_miss			:= !tag_hit_OH.reduce(_ || _)	&& (RegNext(io.CPU_request.valid) || RegNext(DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY)) && RegNext(active_cacheable)
 
 	valid_write_hit		:=	valid_hit && RegNext(active_memory_type === memory_type_t.STORE)
 	valid_write_miss	:=	valid_miss && RegNext(active_memory_type=== memory_type_t.STORE)
@@ -267,12 +273,6 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	backend_MOB_index		:=  io.CPU_request.bits.MOB_index
 
 
-
-
-	//allocate_cache_line			= Wire(UInt((L1_DataCacheBlockSizeBytes*8).W))
-
-	//MSHR_replay_done			= Wire(Bool())
-
 	// FIXME: todo
 	output_data					:= 0.U
 	output_address				:= 0.U
@@ -282,116 +282,46 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	///////////////////
 	// REQUEST QUEUE //
 	///////////////////
-	// FIXME: how many queue entries
-
-	class AXI_request_Q_entry extends Bundle{
-		val write_valid		=	Bool()
-		val write_address	=	UInt(32.W)
-		val write_data		=	UInt((L1_DataCacheBlockSizeBytes*8).W)
-		val write_bytes		=	UInt(log2Ceil(128).W)	// Max number of bytes per transfer is 128
-
-		val read_valid		=	Bool()
-		val read_address	=	UInt(32.W)
-		val read_bytes		= 	UInt(log2Ceil(128).W)
-	}
-
-	// There can only be N outstanding addresses.
-	// Even though each address may have several related requests
-	// The address will only be requested once
-	// Meaning the AXI request queue will only ever need to be MSHREntries deep
-
-	// Entries to this queue are scheduled to be requested to/from system bus
-	val AXI_request_Q					= Module(new Queue(new AXI_request_Q_entry, L1_MSHREntries, flow=false, hasFlush=false, useSyncReadMem=true))	// FIXME: needs flush/kill
-
 
     val blockSizeBytes = L1_instructionCacheBlockSizeBytes
-    val byteOffsetBits              = log2Ceil(blockSizeBytes)                                          // Bits needed to each byte in a cache line
+    val byteOffsetBits = log2Ceil(blockSizeBytes)                                          // Bits needed to each byte in a cache line
     val dram_addr_mask = ((1.U << 32.U) - (1.U << byteOffsetBits))
 
-	val request_non_cacheable			= Wire(Bool())
-	val request_non_cacheable_read		= Wire(Bool())
-	val request_non_cacheable_write		= Wire(Bool())
-	val request_cacheable_write_read	= Wire(Bool())
-	val request_memory_type				= Wire(memory_type_t())
 	val non_cacheable_request_bytes 	= Wire(UInt(2.W))
 
 
 	// Requests are non cacheable if MSB is set
-	request_memory_type					:= io.CPU_request.bits.memory_type
-	request_non_cacheable				:= (io.CPU_request.bits.addr & "h80000000".U) =/= 0.U
-	request_non_cacheable_read			:= request_memory_type === memory_type_t.LOAD  && request_non_cacheable
-	request_non_cacheable_write			:= (request_memory_type === memory_type_t.STORE) && request_non_cacheable
+	active_non_cacheable				:= ((io.CPU_request.bits.addr & "h80000000".U) =/= 0.U)	&& active_valid
+	active_non_cacheable_read			:= active_memory_type === memory_type_t.LOAD  && active_non_cacheable
+	active_non_cacheable_write			:= (active_memory_type === memory_type_t.STORE) && active_non_cacheable
 
-	request_cacheable_write_read		:= (io.CPU_request.bits.addr & "h80000000".U) === 0.U
-
-
-	when(io.CPU_request.bits.access_width === access_width_t.W){
-		non_cacheable_request_bytes := 4.U
-	}.elsewhen(io.CPU_request.bits.access_width === access_width_t.HW){
-		non_cacheable_request_bytes := 2.U
-	}.otherwise{
-		non_cacheable_request_bytes := 1.U
-	}
-
-	// FIXME: organize this so its more correct by construction. Its very messy as it exists 
-	// Memory requests occur when a cache miss takes place or when there is a non-cacheable request
-	AXI_request_Q.io.enq.valid 				:=	(request_non_cacheable_read  || request_non_cacheable_write || request_cacheable_write_read)  && valid_miss && valid_MSHR_miss
-	AXI_request_Q.io.enq.bits.write_valid	:=	(request_non_cacheable_write || request_cacheable_write_read) && is_evict_dirty
-	AXI_request_Q.io.enq.bits.write_address	:=	writeback_address
-	AXI_request_Q.io.enq.bits.write_data	:=	Mux(request_non_cacheable_write, RegNext(io.CPU_request.bits.data), data_way)
-	AXI_request_Q.io.enq.bits.write_bytes	:=	Mux(request_non_cacheable_write, non_cacheable_request_bytes, L1_DataCacheBlockSizeBytes.U)
-
-	// Read missing line
-	AXI_request_Q.io.enq.bits.read_valid	:=	request_non_cacheable_read || request_cacheable_write_read
-	AXI_request_Q.io.enq.bits.read_address	:=	RegNext(io.CPU_request.bits.addr) & dram_addr_mask	// FIXME: mask for cache line (cache line aligned)
-	AXI_request_Q.io.enq.bits.read_bytes	:=	Mux(request_non_cacheable_write, non_cacheable_request_bytes, L1_DataCacheBlockSizeBytes.U)
+	active_cacheable_write_read			:= ((io.CPU_request.bits.addr & "h80000000".U) === 0.U) && active_valid
 
 
 
-	dontTouch(AXI_request_Q.io)
-	
-	val write_request_valid			=	AXI_request_Q.io.deq.valid	&&	AXI_request_Q.io.deq.bits.write_valid
-	val write_request_address		=	AXI_request_Q.io.deq.bits.write_address
-	val write_request_data			=	AXI_request_Q.io.deq.bits.write_data
-	val write_request_bytes			=	AXI_request_Q.io.deq.bits.read_bytes
+	////////////
+	// QUEUES //
+	////////////
+	// Outgoing request queues //
+	val cacheable_request_Q			= 	Module(new Queue(new AXI_request_Q_entry, 8, flow=false, hasFlush=false, useSyncReadMem=false))						// FIXME: needs flush/kill
+	val non_cacheable_request_Q		=	Module(new Queue(new AXI_request_Q_entry, 8, flow=false, hasFlush=false, useSyncReadMem=false))						// FIXME: needs flush/kill
+	val AXI_request_Q				= 	Module(new Queue(new AXI_request_Q_entry, 2, flow=false, hasFlush=false, useSyncReadMem=false))						// FIXME: needs flush/kill
 
-	val read_request_valid 			=	AXI_request_Q.io.deq.valid	&&	AXI_request_Q.io.deq.bits.read_valid
-	val read_request_address		=	AXI_request_Q.io.deq.bits.read_address
-	val read_request_bytes			=	AXI_request_Q.io.deq.bits.read_bytes
+	// Incoming response queues	//
+	val cacheable_response_Q		=	Module(new Queue(new backend_memory_response(coreParameters), 8, flow=false, hasFlush=false, useSyncReadMem=true))	//FIXME: needs flush/kill
+	val non_cacheable_response_Q	=	Module(new Queue(new backend_memory_response(coreParameters), 8, flow=false, hasFlush=false, useSyncReadMem=true))	//FIXME: needs flush/kill
 
-
-	when(write_request_valid && read_request_valid){
-		// when performing read/write pair, both channels must be ready
-		AXI_request_Q.io.deq.ready := AXI_write_request(write_request_address, write_request_data, write_request_bytes) && AXI_read_request(read_request_address, read_request_bytes)
-	}.elsewhen(read_request_valid){
-		// When performing single read, read channel must be ready
-		AXI_request_Q.io.deq.ready := AXI_read_request(read_request_address, read_request_bytes)
-	}.elsewhen(write_request_valid){
-		// When performing single write, write channel must be ready
-		AXI_request_Q.io.deq.ready := AXI_write_request(write_request_address, write_request_data, write_request_bytes)
-	}.otherwise{
-		AXI_request_Q.io.deq.ready 				:=	0.B 
-	}
-
-	//when(read_request_valid){
-		//AXI_request_Q.io.deq.ready := AXI_read_request(read_request_address, read_request_bytes)
-	//}
-
-	/////////////////////
-	// RESPONSE QUEUES //
-	/////////////////////
-	val cacheable_response_Q		=	Module(new Queue(UInt((L1_DataCacheBlockSizeBytes*8).W), 1, flow=false, hasFlush=false, useSyncReadMem=true))	//FIXME: needs flush/kill
-	val non_cacheable_response_Q	=	Module(new Queue(UInt(32.W), 1, flow=false, hasFlush=false, useSyncReadMem=true))	//FIXME: needs flush/kill
-
+	// Output skid buffer //
+	val CPU_response_skid_buffer	=	Module(new Queue(new backend_memory_response(coreParameters), 3, flow=false, hasFlush=false, useSyncReadMem=false))	// FIXME: needs flush/kill
 
 	///////////////////
 	// DATA MEMORIES //
 	///////////////////
 	// Array of N memories, each 1 byte wide and sets*ways long (Bmem).
 
-	val data_memories 			= Seq.fill(L1_DataCacheBlockSizeBytes)(Module(new ReadWriteSmem(depth=L1_DataCacheSets*L1_DataCacheWays, width=8)))
-	val data_memories_wr_en 	= Wire(Vec(L1_DataCacheBlockSizeBytes, Bool()))
-	val data_memories_data_in 	= Wire(Vec(L1_DataCacheBlockSizeBytes, UInt(8.W)))
+	val data_memories 				= Seq.fill(L1_DataCacheBlockSizeBytes)(Module(new ReadWriteSmem(depth=L1_DataCacheSets*L1_DataCacheWays, width=8)))
+	val data_memories_wr_en 		= Wire(Vec(L1_DataCacheBlockSizeBytes, Bool()))
+	val data_memories_data_in 		= Wire(Vec(L1_DataCacheBlockSizeBytes, UInt(8.W)))
 
 	// Assign data_memory_wr_en
 	for(i <- 0 until L1_DataCacheBlockSizeBytes){
@@ -415,7 +345,6 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	val data_memory_allocate_address 	= Cat(allocate_way, allocate_set)
 	val data_memory_active_address 		= Cat(hit_way, RegNext(active_set))
 
-	dontTouch(data_memory_active_address)
 
 	for((data_memory, i) <- data_memories.zipWithIndex){
 		data_memory.io.enable		:= 1.B
@@ -427,8 +356,6 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 
 	data_way		:=	Cat(data_memories.map(_.io.data_out).reverse)
 	writeback_data 	:=	data_way
-
-
 
 
 	//////////////////
@@ -444,6 +371,8 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	}
 
 	dontTouch(active_tag)
+	dontTouch(data_memory_active_address)
+	dontTouch(active_non_cacheable)
 
 	for(i <- 0 until L1_DataCacheWays){
 		// Write new tag on DRAM response
@@ -534,13 +463,10 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 
 
 
-	///////////
-	// MSHRs //
-	///////////
+	/////////////////////////////////
+	// MSHRs & Non-Cacheable Buffer//
+	/////////////////////////////////
 
-	// On miss, look up MSHR, add new entry or extend existing entry
-	// On response, if cacheable, replay front MSHR entry
-	// If non cacheable, ignore
 
 	val MSHRs 				= Reg(Vec(L1_MSHREntries, new MSHR_entry(coreParameters)))
 	val MSHR_ptr_width		= (log2Ceil(L1_MSHREntries)+1)
@@ -550,26 +476,21 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	val MSHR_front_index 	= MSHR_front_pointer(MSHR_ptr_width-2, 0)
 	val MSHR_back_index 	= MSHR_back_pointer(MSHR_ptr_width-2, 0)
 
+	// update non-cacheable buffer on non-cacheable request
+	val non_cacheable_buffer 				= Reg(Vec(L1_NonCacheableBufferEntries, new backend_memory_request(coreParameters)))
+	val non_cacheable_buffer_front_pointer 	= RegInit(UInt(log2Ceil(L1_NonCacheableBufferEntries).W), 0.U)
+	val non_cacheable_buffer_back_pointer 	= RegInit(UInt(log2Ceil(L1_NonCacheableBufferEntries).W), 0.U)
 
+	val non_cacheable_buffer_front_index 	= non_cacheable_buffer_front_pointer(log2Ceil(L1_NonCacheableBufferEntries) - 2, 0)
+	val non_cacheable_buffer_back_index 	= non_cacheable_buffer_front_pointer(log2Ceil(L1_NonCacheableBufferEntries) - 2, 0)
 
+	val non_cacheable_buffer_front 			= non_cacheable_buffer(non_cacheable_buffer_front_index)
 
-	// MSHR entry functions //
+	dontTouch(non_cacheable_buffer)
 
-	// Due to limitations of Chisel, the queue function must be implemented here instead of the bundle since the function has hardware type inputs...
-    def queue_MSHR_entry(MSHR_entry:MSHR_entry, miss_request:backend_memory_request):Bool = {
-		val success = !MSHR_entry.full
-		when(!MSHR_entry.full){
-        	MSHR_entry.miss_requests(MSHR_entry.back_pointer) := miss_request
-        	MSHR_entry.back_pointer := MSHR_entry.back_pointer + 1.U
-		}
-		success
-	}
+	// Queue non_cacheable buffer on non-cacheable request
 
 	// On miss, check MSHR for pre-existing entry
-
-
-	dontTouch(miss_address)
-
 
 	hit_MSHR_index := 0.U
 
@@ -590,25 +511,18 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	// If found, append 
 	// If not found, allocate new entry
 
-
 	val miss_backend_memory_request = Wire(new backend_memory_request(coreParameters))
 	miss_backend_memory_request := RegNext(io.CPU_request.bits) //0.U.asTypeOf(new backend_memory_request(coreParameters))
 	
-	dontTouch(valid_miss)
-	dontTouch(valid_MSHR_miss)
-	dontTouch(valid_MSHR_hit)
+	///////////////////////////
+	// AXI RESPONSE HANDLING //
+	///////////////////////////
 
-
+	// Response is cacheable
 	when(valid_miss && valid_MSHR_hit){
 		// append MSHR entry
-		//hit_MSHR.back_pointer := hit_MSHR.back_pointer + 1.U
-		//hit_MSHR.miss_requests(hit_MSHR.back_pointer) := miss_backend_memory_request
-
 		MSHRs(hit_MSHR_index).miss_requests(MSHRs(hit_MSHR_index).back_pointer) := miss_backend_memory_request
 		MSHRs(hit_MSHR_index).back_pointer := MSHRs(hit_MSHR_index).back_pointer + 1.U
-
-        //MSHRs(MSHR_back_index).miss_requests(MSHRs(MSHR_back_index).back_pointer) := miss_backend_memory_request
-		//MSHRs(MSHR_back_index).back_pointer := MSHRs(MSHR_back_index).back_pointer + 1.U
 	}.elsewhen(valid_miss && valid_MSHR_miss){
 		// allocate new MSHR entry
 		MSHRs(MSHR_front_index).allocate_way := evict_way
@@ -619,8 +533,17 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 		MSHR_back_pointer := MSHR_back_pointer + 1.U
 	}
 
-	dontTouch(MSHRs)
-	dontTouch(MSHR_replay_done)
+	// Response is non-cacheable
+	// TODO: construct input from buffer
+	// updated buffer
+
+	when(active_non_cacheable_read){
+		non_cacheable_buffer(non_cacheable_buffer_front_index) := io.CPU_request.bits
+		non_cacheable_buffer_back_pointer := non_cacheable_buffer_front_pointer + 1.U
+	}
+
+
+
 
 	MSHR_replay_done := 0.B
 	when(DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY){
@@ -644,39 +567,118 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	//////////////////////////
 	// NON CACHEABLE BUFFER //
 	//////////////////////////
-	// TODO: 
+
+	// non-cacheable requests take priority over cacheable requests
+	// On request, if cacheable, check if hit/miss. check MSHRs as needed, etc...
+	// If MSHR hit, update MSHR. Move on. 
+	// If MSHR miss, write to MSHR, cacheable request Q. 
+	// == non-cacheable == //
+	// If input is non-cacheable, write to non-cacheable request queue immediately. 
+	// == output scheduling == //
+	// Schedule cacheable/non-cacheable requests in round-robin fashion.
+	// Cacheable request ID == 0, non-cacheable ID == 1
+	// == Response handling == //
+	// Response ID == 0? Go into allocate, then replay outstanding misses. 
+		// Write responses to cacheable response Q.
+	// Response ID == 1? Simply forward response as is. 
+		// Write responses to non-cacheable response Q.
+	// Schedule output as round-robin between the two Queues.
 
 
-	////////////////////////////////////////////////////
-	// AXI RESPONSE BUFFERS (CACHEABLE/NON-CACHEABLE) //
-	////////////////////////////////////////////////////
-
-	val (axi_response, axi_response_valid) = AXI_read
-
-	val axi_response_ID = 0.U	// FIXME: need to also read AXI response ID
-
-	// CACHEABLE
-	// On AXI response, queue entries into line fill buffer
-
-	cacheable_response_Q.io.enq.valid := axi_response_valid && (axi_response_ID === AXI_CACHEABLE_RESPONSE_ID.U).asBool
-	cacheable_response_Q.io.enq.bits  := axi_response
-
-	cacheable_response_Q.io.deq.ready := 1.B
-
-	allocate_cache_line	:=	cacheable_response_Q.io.deq.bits
-
-	// NON-CACHEABLE
-	// On AXI response, queue entries into non cacheable response
-
-	non_cacheable_response_Q.io.enq.valid := axi_response_valid && (axi_response_ID === AXI_NON_CACHEABLE_RESPONSE_ID.U).asBool
-	non_cacheable_response_Q.io.enq.bits  := axi_response
-
-	non_cacheable_response_Q.io.deq.ready	:= 1.B
 
 
-	////////////////////////////
-	// MSHR LOOKUP & RESPONSE //
-	////////////////////////////
+	// free and output from non-cacheable buffer on non-cacheable response
+	
+	
+	class AXI_request_Q_entry extends Bundle{
+		val write_valid		=	Bool()
+		val write_address	=	UInt(32.W)
+		val write_data		=	UInt((L1_DataCacheBlockSizeBytes*8).W)
+		val write_ID		=	UInt(ID_WIDTH.W)
+		val write_bytes		=	UInt(log2Ceil(128).W)	// Max number of bytes per transfer is 128
+
+		val read_valid		=	Bool()
+		val read_address	=	UInt(32.W)
+		val read_ID			=	UInt(ID_WIDTH.W)
+		val read_bytes		= 	UInt(log2Ceil(128).W)
+	}
+
+
+	// Outgoing request queues
+
+	// Buffer cacheable requests //
+	// format request //
+
+	// Memory requests occur when a cache miss takes place or when there is a non-cacheable request
+	cacheable_request_Q.io.enq.valid 	 			:=  RegNext(active_cacheable_write_read) && valid_miss && valid_MSHR_miss // buffer cache misses
+	cacheable_request_Q.io.enq.bits.write_valid		:=	RegNext(active_cacheable_write_read) && is_evict_dirty
+	cacheable_request_Q.io.enq.bits.write_address	:=	writeback_address	//FIXME: ???
+	cacheable_request_Q.io.enq.bits.write_data		:=	data_way	// FIXME: this should be evict way...
+	cacheable_request_Q.io.enq.bits.write_ID		:=	0.U
+	cacheable_request_Q.io.enq.bits.write_bytes		:=	L1_DataCacheBlockSizeBytes.U
+
+	// Read missing line
+	cacheable_request_Q.io.enq.bits.read_valid		:=	RegNext(active_cacheable_write_read)
+	cacheable_request_Q.io.enq.bits.read_address	:=	RegNext(active_address) & dram_addr_mask
+	cacheable_request_Q.io.enq.bits.read_ID			:=	0.U
+	cacheable_request_Q.io.enq.bits.read_bytes		:=	L1_DataCacheBlockSizeBytes.U
+
+
+	// Buffer non-cacheable requests //
+	// format request //
+	when(io.CPU_request.bits.access_width === access_width_t.W)				{non_cacheable_request_bytes := 4.U}
+	.elsewhen(io.CPU_request.bits.access_width === access_width_t.HW)		{non_cacheable_request_bytes := 2.U}
+	.otherwise																{non_cacheable_request_bytes := 1.U}
+
+	// Memory requests occur when a cache miss takes place or when there is a non-cacheable request
+	non_cacheable_request_Q.io.enq.valid 				:=	(active_non_cacheable_read  || active_non_cacheable_write) && active_valid
+	non_cacheable_request_Q.io.enq.bits.write_valid		:=	active_non_cacheable_write
+	non_cacheable_request_Q.io.enq.bits.write_address	:=	active_address
+	non_cacheable_request_Q.io.enq.bits.write_data		:=	active_data 
+	non_cacheable_request_Q.io.enq.bits.write_ID		:=	1.U
+	non_cacheable_request_Q.io.enq.bits.write_bytes		:=	non_cacheable_request_bytes
+
+	// Read missing line
+	non_cacheable_request_Q.io.enq.bits.read_valid		:=	active_non_cacheable_read
+	non_cacheable_request_Q.io.enq.bits.read_address	:=	active_address
+	non_cacheable_request_Q.io.enq.bits.read_ID			:=	1.U
+	non_cacheable_request_Q.io.enq.bits.read_bytes		:=	non_cacheable_request_bytes
+
+
+	// Arbitrate and format AXI request // 
+  	val AXI_request_arb = Module(new Arbiter(new AXI_request_Q_entry, 2))
+
+  	AXI_request_arb.io.in(0) <> non_cacheable_request_Q.io.deq
+  	AXI_request_arb.io.in(1) <> cacheable_request_Q.io.deq
+
+	val write_request_valid			=	AXI_request_Q.io.deq.valid	&&	AXI_request_Q.io.deq.bits.write_valid
+	val write_request_address		=	AXI_request_Q.io.deq.bits.write_address
+	val write_request_data			=	AXI_request_Q.io.deq.bits.write_data
+	val write_request_ID			=	AXI_request_Q.io.deq.bits.write_ID
+	val write_request_bytes			=	AXI_request_Q.io.deq.bits.read_bytes
+
+	val read_request_valid 			=	AXI_request_Q.io.deq.valid	&&	AXI_request_Q.io.deq.bits.read_valid
+	val read_request_address		=	AXI_request_Q.io.deq.bits.read_address
+	val read_request_ID				=	AXI_request_Q.io.deq.bits.read_ID
+	val read_request_bytes			=	AXI_request_Q.io.deq.bits.read_bytes
+
+	AXI_request_Q.io.enq <> AXI_request_arb.io.out
+
+	// Perform AXI request
+	when(write_request_valid && read_request_valid){
+		// when performing read/write pair, both channels must be ready
+		AXI_request_Q.io.deq.ready := 	AXI_write_request(write_request_address, write_request_ID, write_request_data, write_request_bytes) && 
+										AXI_read_request(read_request_address, read_request_ID, read_request_bytes)
+	}.elsewhen(read_request_valid){
+		// When performing single read, read channel must be ready
+		AXI_request_Q.io.deq.ready := AXI_read_request(read_request_address, read_request_ID, read_request_bytes)
+	}.elsewhen(write_request_valid){
+		// When performing single write, write channel must be ready
+		AXI_request_Q.io.deq.ready := AXI_write_request(write_request_address, write_request_ID, write_request_data, write_request_bytes)
+	}.otherwise{
+		AXI_request_Q.io.deq.ready 				:=	0.B 
+	}
+
 
 
 
@@ -690,7 +692,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 		is(DATA_CACHE_STATES.ACTIVE){
 			when(non_cacheable_response_Q.io.deq.valid){
 				// output non cacheable response
-			}.elsewhen(cacheable_response_Q.io.deq.valid){
+			}.elsewhen(cacheable_AXI_response_valid){
 				DATA_CACHE_NEXT_STATE := DATA_CACHE_STATES.ALLOCATE
 			}
 		}
@@ -709,8 +711,9 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 				DATA_CACHE_NEXT_STATE := DATA_CACHE_STATES.ACTIVE
 			}
 		}
-
 	}
+
+
 
 	DATA_CACHE_STATE := DATA_CACHE_NEXT_STATE
 
@@ -740,12 +743,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	output_operation	 := ShiftRegister(active_access_width, 2)
 
 
-	when(output_cacheable){
-		val temp = format_dcache_word(data_way, output_address, output_operation)
-		output_data := temp
-	}.elsewhen(!output_cacheable){
-		output_data := 0x42.U
-	}
+	output_data := format_dcache_word(data_way, output_address, output_operation)
 	
 
 	dontTouch(output_data)
@@ -756,27 +754,46 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	output_valid		:=	ShiftRegister(valid_read_hit, 1)
 	output_MOB_index	:=	ShiftRegister(active_MOB_index, 2) //hit_MOB_index
 
+	////////////////////////////////////////////////////
+	// AXI RESPONSE BUFFERS (CACHEABLE/NON-CACHEABLE) //
+	////////////////////////////////////////////////////
+	val (axi_response, axi_response_valid) = AXI_read
+	val axi_response_ID = axi_response.ID
 
+	allocate_cache_line		:=	axi_response.data
+
+	cacheable_AXI_response_valid := axi_response_valid && (axi_response_ID === 0.U)
+
+	// CACHEABLE
+	// On AXI response, queue entries into line fill buffer
+
+	cacheable_response_Q.io.enq.valid 			:= RegNext(valid_hit)
+	cacheable_response_Q.io.enq.bits.data  		:= output_data
+	cacheable_response_Q.io.enq.bits.MOB_index  := output_MOB_index
+	cacheable_response_Q.io.deq.ready 			:= 1.B		// FIXME: not always ready
+
+	// NON-CACHEABLE
+	// On AXI response, queue entries into non cacheable response
+	dontTouch(io)
+	dontTouch(axi_response_valid)
+	dontTouch(axi_response.data)
+
+	non_cacheable_response_Q.io.enq.valid 			:= axi_response_valid && (axi_response_ID === AXI_NON_CACHEABLE_RESPONSE_ID.U).asBool
+	non_cacheable_response_Q.io.enq.bits.data  		:= axi_response.data(255,256-32)	// non cacheable responses are always 32 bits
+	non_cacheable_response_Q.io.enq.bits.MOB_index  := non_cacheable_buffer_front.MOB_index
+	non_cacheable_response_Q.io.deq.ready 			:= 1.B	// FIXME: not always ready
+
+	// arbitrate port outputs
+	// Round Robin between cacheable and non-cacheable
+
+  	val backend_response_arb = Module(new Arbiter(new backend_memory_response(coreParameters), 2))
+  	backend_response_arb.io.in(0) <> non_cacheable_response_Q.io.deq
+  	backend_response_arb.io.in(1) <> cacheable_response_Q.io.deq
+
+	backend_response_arb.io.out <> CPU_response_skid_buffer.io.enq
 
 	////////
 	// IO //
 	////////
-
-	// FIXME: is this skid buffer width correct? 
-	// Currently, it is just the width of the pipeline...
-	val CPU_response_skid_buffer	=	Module(new Queue(new backend_memory_response(coreParameters), 3, flow=false, hasFlush=false, useSyncReadMem=false))	// FIXME: needs flush/kill
-
-	CPU_response_skid_buffer.io.enq.valid 	:= output_valid
-	CPU_response_skid_buffer.io.enq.bits.data 	:= output_data
-	CPU_response_skid_buffer.io.enq.bits.MOB_index 	:= output_MOB_index
-
-
 	CPU_response_skid_buffer.io.deq <> io.CPU_response
-
 }
-
-
-// backpressure...
-// AXI not ready?
-// MSHR full
-// non cacheable buffer stuff

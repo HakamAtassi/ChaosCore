@@ -112,7 +112,7 @@ module L1_instruction_cache(
   wire [255:0]     _data_memory_0_io_data_out_data;
   wire [1:0]       _LRU_memory_io_data_out;
   wire             _final_response_buffer_io_deq_valid;
-  wire [255:0]     _final_response_buffer_io_deq_bits;
+  wire [255:0]     _final_response_buffer_io_deq_bits_data;
   reg  [255:0]     AXI_AW_DATA_BUFFER;
   reg  [1:0]       AXI_REQUEST_STATE;
   wire             m_axi_wvalid_0 = AXI_REQUEST_STATE == 2'h1;
@@ -139,7 +139,7 @@ module L1_instruction_cache(
   wire             _GEN_6 = ~(|cache_state) | _GEN_2;
   wire             _GEN_7 = ~_GEN_6 & _GEN_5;
   wire [255:0]     axi_response =
-    _GEN_6 | ~_GEN_5 ? 256'h0 : _final_response_buffer_io_deq_bits;
+    _GEN_6 | ~_GEN_5 ? 256'h0 : _final_response_buffer_io_deq_bits_data;
   wire             axi_response_valid =
     ~_GEN_6 & _GEN_5 & _GEN_7 & _final_response_buffer_io_deq_valid;
   wire             _current_address_T_1 = (|cache_state) | miss;
@@ -277,14 +277,16 @@ module L1_instruction_cache(
       cache_valid <= (_GEN_6 | _GEN_5 | ~_GEN_12) & cache_valid;
     end
   end // always @(posedge)
-  Queue1_UInt256 final_response_buffer (
-    .clock        (clock),
-    .reset        (reset),
-    .io_enq_valid (m_axi_rready_0 & _GEN_0),
-    .io_enq_bits  (_GEN_1),
-    .io_deq_ready (_GEN_7),
-    .io_deq_valid (_final_response_buffer_io_deq_valid),
-    .io_deq_bits  (_final_response_buffer_io_deq_bits)
+  Queue1_final_AXI_response final_response_buffer (
+    .clock            (clock),
+    .reset            (reset),
+    .io_enq_valid     (m_axi_rready_0 & _GEN_0),
+    .io_enq_bits_data (_GEN_1),
+    .io_enq_bits_ID   (m_axi_rid),
+    .io_deq_ready     (_GEN_7),
+    .io_deq_valid     (_final_response_buffer_io_deq_valid),
+    .io_deq_bits_data (_final_response_buffer_io_deq_bits_data),
+    .io_deq_bits_ID   (/* unused */)
   );
   SDPReadWriteSmem_1 LRU_memory (
     .clock       (clock),

@@ -35,3 +35,8 @@ target/
 project/
 
 free_list.anno.json
+
+
+# Vivado Logs
+syn/*.jou
+syn/.log

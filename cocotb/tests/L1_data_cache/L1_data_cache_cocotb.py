@@ -416,3 +416,32 @@ async def test_backpressure(dut):
 
     for _ in range(100):
         await L1_cache.clock()
+
+
+@cocotb.test()
+async def test_non_cacheable(dut):
+    # Set seed
+    random.seed(0x42)
+
+    # Start lock
+    await cocotb.start(generateClock(dut))
+
+    # Bring up TB
+    L1_cache = L1_data_cache_TB(dut)            # construct TB
+    await L1_cache.reset()                      # Reset
+    L1_cache.init_sequence()      # INIT axi ram
+
+    # Set response port ready
+    L1_cache.write_CPU_response_ready(0)    # Set CPU not ready. 
+
+    # Request read
+
+    await L1_cache.write_CPU_request(valid = 1, addr = 0x8000_0000, data=0x0 ,memory_type=memory_type_t.LOAD, access_width=access_width_t.B, MOB_index=1)
+
+
+
+    L1_cache.write_CPU_response_ready(1)    # Set CPU not ready. 
+
+
+    for _ in range(100):
+        await L1_cache.clock()

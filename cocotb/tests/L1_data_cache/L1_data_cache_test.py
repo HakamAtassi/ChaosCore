@@ -67,3 +67,7 @@ def test_backpressure():
         configs["testcase"] = "test_backpressure"
         run(**configs)
 
+def test_non_cacheable():
+        configs["testcase"] = "test_non_cacheable"
+        run(**configs)
+
