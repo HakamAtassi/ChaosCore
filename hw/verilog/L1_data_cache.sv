@@ -38,13 +38,23 @@ module L1_data_cache(
   output [7:0]  m_axi_awlen,
   output [2:0]  m_axi_awsize,
   output [1:0]  m_axi_awburst,
+  output        m_axi_awlock,
+  output [3:0]  m_axi_awcache,
+  output [2:0]  m_axi_awprot,
+  output [3:0]  m_axi_awqos,
+                m_axi_awregion,
+  output        m_axi_awuser,
   input         m_axi_wready,
   output        m_axi_wvalid,
   output [31:0] m_axi_wdata,
   output [3:0]  m_axi_wstrb,
   output        m_axi_wlast,
+                m_axi_wuser,
                 m_axi_bready,
   input         m_axi_bvalid,
+  input  [7:0]  m_axi_bid,
+  input  [1:0]  m_axi_bresp,
+  input         m_axi_buser,
   output        m_axi_arvalid,
   input         m_axi_arready,
   output [7:0]  m_axi_arid,
@@ -52,11 +62,19 @@ module L1_data_cache(
   output [7:0]  m_axi_arlen,
   output [2:0]  m_axi_arsize,
   output [1:0]  m_axi_arburst,
-  output        m_axi_rready,
+  output        m_axi_arlock,
+  output [3:0]  m_axi_arcache,
+  output [2:0]  m_axi_arprot,
+  output [3:0]  m_axi_arqos,
+                m_axi_arregion,
+  output        m_axi_aruser,
+                m_axi_rready,
   input         m_axi_rvalid,
   input  [7:0]  m_axi_rid,
   input  [31:0] m_axi_rdata,
+  input  [1:0]  m_axi_rresp,
   input         m_axi_rlast,
+                m_axi_ruser,
   output        io_CPU_request_ready,
   input         io_CPU_request_valid,
   input  [31:0] io_CPU_request_bits_addr,
@@ -72,7 +90,6 @@ module L1_data_cache(
 
   wire [4:0]       replay_tag;
   wire [5:0]       replay_set;
-  wire [1:0]       replay_access_width;
   wire [1:0]       replay_memory_type;
   wire [31:0]      replay_data;
   wire [31:0]      replay_address;
@@ -200,8 +217,6 @@ module L1_data_cache(
   wire [20:0]      active_tag = {16'h0, (&DATA_CACHE_STATE) ? replay_tag : backend_tag};
   wire [1:0]       active_memory_type =
     (&DATA_CACHE_STATE) ? replay_memory_type : io_CPU_request_bits_memory_type;
-  wire [1:0]       active_access_width =
-    (&DATA_CACHE_STATE) ? replay_access_width : io_CPU_request_bits_access_width;
   wire             _valid_miss_T = tag_hit_OH_0 | tag_hit_OH_1;
   reg              valid_hit_REG;
   reg              valid_hit_REG_1;
@@ -218,24 +233,151 @@ module L1_data_cache(
   wire             _byte_offset_match_T_125 = active_memory_type == 2'h2;
   reg              valid_write_hit_REG;
   wire             valid_write_hit = valid_hit & valid_write_hit_REG;
+  wire             _active_non_cacheable_read_T = active_memory_type == 2'h1;
+  reg              valid_read_hit_REG;
   reg  [5:0]       hit_set_REG;
   wire [1:0]       hit_way =
     tag_hit_OH_0 ? 2'h0 : tag_hit_OH_1 ? 2'h1 : {1'h1, ~tag_hit_OH_2};
   reg  [31:0]      miss_address_REG;
   wire [1:0]       _miss_way_T_1 = ~{tag_hit_OH_1, tag_hit_OH_0};
   assign backend_set = io_CPU_request_bits_addr[10:5];
-  wire [31:0]      word_offset = io_CPU_request_bits_addr / 32'h4;
   assign backend_tag = io_CPU_request_bits_addr[15:11];
   wire             active_non_cacheable = io_CPU_request_bits_addr[31] & active_valid;
   wire             active_non_cacheable_read =
-    active_memory_type == 2'h1 & active_non_cacheable;
+    _active_non_cacheable_read_T & active_non_cacheable;
   wire             active_non_cacheable_write =
     _byte_offset_match_T_125 & active_non_cacheable;
-  wire             _half_word_offset_match_T_127 = active_access_width == 2'h2;
-  wire             _byte_offset_match_T_127 = active_access_width == 2'h1;
   wire             _tag_memories_3_io_wr_en_T = DATA_CACHE_STATE == 2'h2;
+  reg              data_memories_wr_en_0_REG;
+  wire             data_memories_wr_en_0 =
+    _tag_memories_3_io_wr_en_T | data_memories_wr_en_0_REG & valid_hit;
+  reg              data_memories_wr_en_1_REG;
+  wire             data_memories_wr_en_1 =
+    _tag_memories_3_io_wr_en_T | data_memories_wr_en_1_REG & valid_hit;
+  reg              data_memories_wr_en_2_REG;
+  wire             data_memories_wr_en_2 =
+    _tag_memories_3_io_wr_en_T | data_memories_wr_en_2_REG & valid_hit;
+  reg              data_memories_wr_en_3_REG;
+  wire             data_memories_wr_en_3 =
+    _tag_memories_3_io_wr_en_T | data_memories_wr_en_3_REG & valid_hit;
+  reg              data_memories_wr_en_4_REG;
+  wire             data_memories_wr_en_4 =
+    _tag_memories_3_io_wr_en_T | data_memories_wr_en_4_REG & valid_hit;
+  reg              data_memories_wr_en_5_REG;
+  wire             data_memories_wr_en_5 =
+    _tag_memories_3_io_wr_en_T | data_memories_wr_en_5_REG & valid_hit;
+  reg              data_memories_wr_en_6_REG;
+  wire             data_memories_wr_en_6 =
+    _tag_memories_3_io_wr_en_T | data_memories_wr_en_6_REG & valid_hit;
+  reg              data_memories_wr_en_7_REG;
+  wire             data_memories_wr_en_7 =
+    _tag_memories_3_io_wr_en_T | data_memories_wr_en_7_REG & valid_hit;
+  reg              data_memories_wr_en_8_REG;
+  wire             data_memories_wr_en_8 =
+    _tag_memories_3_io_wr_en_T | data_memories_wr_en_8_REG & valid_hit;
+  reg              data_memories_wr_en_9_REG;
+  wire             data_memories_wr_en_9 =
+    _tag_memories_3_io_wr_en_T | data_memories_wr_en_9_REG & valid_hit;
+  reg              data_memories_wr_en_10_REG;
+  wire             data_memories_wr_en_10 =
+    _tag_memories_3_io_wr_en_T | data_memories_wr_en_10_REG & valid_hit;
+  reg              data_memories_wr_en_11_REG;
+  wire             data_memories_wr_en_11 =
+    _tag_memories_3_io_wr_en_T | data_memories_wr_en_11_REG & valid_hit;
+  reg              data_memories_wr_en_12_REG;
+  wire             data_memories_wr_en_12 =
+    _tag_memories_3_io_wr_en_T | data_memories_wr_en_12_REG & valid_hit;
+  reg              data_memories_wr_en_13_REG;
+  wire             data_memories_wr_en_13 =
+    _tag_memories_3_io_wr_en_T | data_memories_wr_en_13_REG & valid_hit;
+  reg              data_memories_wr_en_14_REG;
+  wire             data_memories_wr_en_14 =
+    _tag_memories_3_io_wr_en_T | data_memories_wr_en_14_REG & valid_hit;
+  reg              data_memories_wr_en_15_REG;
+  wire             data_memories_wr_en_15 =
+    _tag_memories_3_io_wr_en_T | data_memories_wr_en_15_REG & valid_hit;
+  reg              data_memories_wr_en_16_REG;
+  wire             data_memories_wr_en_16 =
+    _tag_memories_3_io_wr_en_T | data_memories_wr_en_16_REG & valid_hit;
+  reg              data_memories_wr_en_17_REG;
+  wire             data_memories_wr_en_17 =
+    _tag_memories_3_io_wr_en_T | data_memories_wr_en_17_REG & valid_hit;
+  reg              data_memories_wr_en_18_REG;
+  wire             data_memories_wr_en_18 =
+    _tag_memories_3_io_wr_en_T | data_memories_wr_en_18_REG & valid_hit;
+  reg              data_memories_wr_en_19_REG;
+  wire             data_memories_wr_en_19 =
+    _tag_memories_3_io_wr_en_T | data_memories_wr_en_19_REG & valid_hit;
+  reg              data_memories_wr_en_20_REG;
+  wire             data_memories_wr_en_20 =
+    _tag_memories_3_io_wr_en_T | data_memories_wr_en_20_REG & valid_hit;
+  reg              data_memories_wr_en_21_REG;
+  wire             data_memories_wr_en_21 =
+    _tag_memories_3_io_wr_en_T | data_memories_wr_en_21_REG & valid_hit;
+  reg              data_memories_wr_en_22_REG;
+  wire             data_memories_wr_en_22 =
+    _tag_memories_3_io_wr_en_T | data_memories_wr_en_22_REG & valid_hit;
+  reg              data_memories_wr_en_23_REG;
+  wire             data_memories_wr_en_23 =
+    _tag_memories_3_io_wr_en_T | data_memories_wr_en_23_REG & valid_hit;
+  reg              data_memories_wr_en_24_REG;
+  wire             data_memories_wr_en_24 =
+    _tag_memories_3_io_wr_en_T | data_memories_wr_en_24_REG & valid_hit;
+  reg              data_memories_wr_en_25_REG;
+  wire             data_memories_wr_en_25 =
+    _tag_memories_3_io_wr_en_T | data_memories_wr_en_25_REG & valid_hit;
+  reg              data_memories_wr_en_26_REG;
+  wire             data_memories_wr_en_26 =
+    _tag_memories_3_io_wr_en_T | data_memories_wr_en_26_REG & valid_hit;
+  reg              data_memories_wr_en_27_REG;
+  wire             data_memories_wr_en_27 =
+    _tag_memories_3_io_wr_en_T | data_memories_wr_en_27_REG & valid_hit;
+  reg              data_memories_wr_en_28_REG;
+  wire             data_memories_wr_en_28 =
+    _tag_memories_3_io_wr_en_T | data_memories_wr_en_28_REG & valid_hit;
+  reg              data_memories_wr_en_29_REG;
+  wire             data_memories_wr_en_29 =
+    _tag_memories_3_io_wr_en_T | data_memories_wr_en_29_REG & valid_hit;
+  reg              data_memories_wr_en_30_REG;
+  wire             data_memories_wr_en_30 =
+    _tag_memories_3_io_wr_en_T | data_memories_wr_en_30_REG & valid_hit;
+  reg              data_memories_wr_en_31_REG;
+  wire             data_memories_wr_en_31 =
+    _tag_memories_3_io_wr_en_T | data_memories_wr_en_31_REG & valid_hit;
   wire [31:0]      active_data =
     (&DATA_CACHE_STATE) ? replay_data : io_CPU_request_bits_data;
+  reg  [7:0]       data_memories_data_in_0_REG;
+  reg  [7:0]       data_memories_data_in_1_REG;
+  reg  [7:0]       data_memories_data_in_2_REG;
+  reg  [7:0]       data_memories_data_in_3_REG;
+  reg  [7:0]       data_memories_data_in_4_REG;
+  reg  [7:0]       data_memories_data_in_5_REG;
+  reg  [7:0]       data_memories_data_in_6_REG;
+  reg  [7:0]       data_memories_data_in_7_REG;
+  reg  [7:0]       data_memories_data_in_8_REG;
+  reg  [7:0]       data_memories_data_in_9_REG;
+  reg  [7:0]       data_memories_data_in_10_REG;
+  reg  [7:0]       data_memories_data_in_11_REG;
+  reg  [7:0]       data_memories_data_in_12_REG;
+  reg  [7:0]       data_memories_data_in_13_REG;
+  reg  [7:0]       data_memories_data_in_14_REG;
+  reg  [7:0]       data_memories_data_in_15_REG;
+  reg  [7:0]       data_memories_data_in_16_REG;
+  reg  [7:0]       data_memories_data_in_17_REG;
+  reg  [7:0]       data_memories_data_in_18_REG;
+  reg  [7:0]       data_memories_data_in_19_REG;
+  reg  [7:0]       data_memories_data_in_20_REG;
+  reg  [7:0]       data_memories_data_in_21_REG;
+  reg  [7:0]       data_memories_data_in_22_REG;
+  reg  [7:0]       data_memories_data_in_23_REG;
+  reg  [7:0]       data_memories_data_in_24_REG;
+  reg  [7:0]       data_memories_data_in_25_REG;
+  reg  [7:0]       data_memories_data_in_26_REG;
+  reg  [7:0]       data_memories_data_in_27_REG;
+  reg  [7:0]       data_memories_data_in_28_REG;
+  reg  [7:0]       data_memories_data_in_29_REG;
+  reg  [7:0]       data_memories_data_in_30_REG;
+  reg  [7:0]       data_memories_data_in_31_REG;
   wire [1:0]       allocate_way;
   wire [7:0]       data_memory_allocate_address = {allocate_way, allocate_set};
   reg  [5:0]       data_memory_active_address_REG;
@@ -1841,7 +1983,6 @@ module L1_data_cache(
      {_GEN_485[MSHR_front_pointer[1:0]]},
      {_GEN_480[MSHR_front_pointer[1:0]]},
      {_GEN_475[MSHR_front_pointer[1:0]]}};
-  assign replay_access_width = _GEN_521[_GEN_469];
   wire [7:0][3:0]  _GEN_522 =
     {{_GEN_511[MSHR_front_pointer[1:0]]},
      {_GEN_506[MSHR_front_pointer[1:0]]},
@@ -1882,8 +2023,14 @@ module L1_data_cache(
     automatic logic             _GEN_525;
     automatic logic [255:0]     _GEN_526;
     automatic logic             active_cacheable = ~(active_address[31]) & active_valid;
+    automatic logic [1:0]       active_access_width =
+      (&DATA_CACHE_STATE) ? _GEN_521[_GEN_469] : io_CPU_request_bits_access_width;
+    automatic logic [31:0]      word_offset = io_CPU_request_bits_addr / 32'h4;
     automatic logic             active_cacheable_write_read =
       ~(io_CPU_request_bits_addr[31]) & active_valid;
+    automatic logic             _half_word_offset_match_T_127 =
+      active_access_width == 2'h2;
+    automatic logic             _byte_offset_match_T_127 = active_access_width == 2'h1;
     automatic logic [63:0][3:0] _GEN_527;
     automatic logic [1:0]       hit_MSHR_index;
     automatic logic             _GEN_528;
@@ -2338,8 +2485,169 @@ module L1_data_cache(
     valid_miss_REG_1 <= &DATA_CACHE_STATE;
     valid_miss_REG_2 <= active_cacheable;
     valid_write_hit_REG <= _byte_offset_match_T_125;
+    valid_read_hit_REG <= _active_non_cacheable_read_T;
     hit_set_REG <= active_set;
     miss_address_REG <= active_address;
+    data_memories_wr_en_0_REG <=
+      ~(|word_offset) & _byte_offset_match_T_125 & (&active_access_width)
+      | ~(|word_offset) & _byte_offset_match_T_125 & _half_word_offset_match_T_127
+      | ~(|word_offset) & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+    data_memories_wr_en_1_REG <=
+      ~(|word_offset) & _byte_offset_match_T_125 & (&active_access_width)
+      | ~(|word_offset) & _byte_offset_match_T_125 & _half_word_offset_match_T_127
+      | word_offset == 32'h1 & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+    data_memories_wr_en_2_REG <=
+      ~(|word_offset) & _byte_offset_match_T_125 & (&active_access_width)
+      | word_offset == 32'h1 & _byte_offset_match_T_125 & _half_word_offset_match_T_127
+      | word_offset == 32'h2 & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+    data_memories_wr_en_3_REG <=
+      ~(|word_offset) & _byte_offset_match_T_125 & (&active_access_width)
+      | word_offset == 32'h1 & _byte_offset_match_T_125 & _half_word_offset_match_T_127
+      | word_offset == 32'h3 & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+    data_memories_wr_en_4_REG <=
+      word_offset == 32'h1 & _byte_offset_match_T_125 & (&active_access_width)
+      | word_offset == 32'h2 & _byte_offset_match_T_125 & _half_word_offset_match_T_127
+      | word_offset == 32'h4 & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+    data_memories_wr_en_5_REG <=
+      word_offset == 32'h1 & _byte_offset_match_T_125 & (&active_access_width)
+      | word_offset == 32'h2 & _byte_offset_match_T_125 & _half_word_offset_match_T_127
+      | word_offset == 32'h5 & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+    data_memories_wr_en_6_REG <=
+      word_offset == 32'h1 & _byte_offset_match_T_125 & (&active_access_width)
+      | word_offset == 32'h3 & _byte_offset_match_T_125 & _half_word_offset_match_T_127
+      | word_offset == 32'h6 & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+    data_memories_wr_en_7_REG <=
+      word_offset == 32'h1 & _byte_offset_match_T_125 & (&active_access_width)
+      | word_offset == 32'h3 & _byte_offset_match_T_125 & _half_word_offset_match_T_127
+      | word_offset == 32'h7 & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+    data_memories_wr_en_8_REG <=
+      word_offset == 32'h2 & _byte_offset_match_T_125 & (&active_access_width)
+      | word_offset == 32'h4 & _byte_offset_match_T_125 & _half_word_offset_match_T_127
+      | word_offset == 32'h8 & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+    data_memories_wr_en_9_REG <=
+      word_offset == 32'h2 & _byte_offset_match_T_125 & (&active_access_width)
+      | word_offset == 32'h4 & _byte_offset_match_T_125 & _half_word_offset_match_T_127
+      | word_offset == 32'h9 & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+    data_memories_wr_en_10_REG <=
+      word_offset == 32'h2 & _byte_offset_match_T_125 & (&active_access_width)
+      | word_offset == 32'h5 & _byte_offset_match_T_125 & _half_word_offset_match_T_127
+      | word_offset == 32'hA & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+    data_memories_wr_en_11_REG <=
+      word_offset == 32'h2 & _byte_offset_match_T_125 & (&active_access_width)
+      | word_offset == 32'h5 & _byte_offset_match_T_125 & _half_word_offset_match_T_127
+      | word_offset == 32'hB & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+    data_memories_wr_en_12_REG <=
+      word_offset == 32'h3 & _byte_offset_match_T_125 & (&active_access_width)
+      | word_offset == 32'h6 & _byte_offset_match_T_125 & _half_word_offset_match_T_127
+      | word_offset == 32'hC & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+    data_memories_wr_en_13_REG <=
+      word_offset == 32'h3 & _byte_offset_match_T_125 & (&active_access_width)
+      | word_offset == 32'h6 & _byte_offset_match_T_125 & _half_word_offset_match_T_127
+      | word_offset == 32'hD & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+    data_memories_wr_en_14_REG <=
+      word_offset == 32'h3 & _byte_offset_match_T_125 & (&active_access_width)
+      | word_offset == 32'h7 & _byte_offset_match_T_125 & _half_word_offset_match_T_127
+      | word_offset == 32'hE & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+    data_memories_wr_en_15_REG <=
+      word_offset == 32'h3 & _byte_offset_match_T_125 & (&active_access_width)
+      | word_offset == 32'h7 & _byte_offset_match_T_125 & _half_word_offset_match_T_127
+      | word_offset == 32'hF & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+    data_memories_wr_en_16_REG <=
+      word_offset == 32'h4 & _byte_offset_match_T_125 & (&active_access_width)
+      | word_offset == 32'h8 & _byte_offset_match_T_125 & _half_word_offset_match_T_127
+      | word_offset == 32'h10 & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+    data_memories_wr_en_17_REG <=
+      word_offset == 32'h4 & _byte_offset_match_T_125 & (&active_access_width)
+      | word_offset == 32'h8 & _byte_offset_match_T_125 & _half_word_offset_match_T_127
+      | word_offset == 32'h11 & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+    data_memories_wr_en_18_REG <=
+      word_offset == 32'h4 & _byte_offset_match_T_125 & (&active_access_width)
+      | word_offset == 32'h9 & _byte_offset_match_T_125 & _half_word_offset_match_T_127
+      | word_offset == 32'h12 & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+    data_memories_wr_en_19_REG <=
+      word_offset == 32'h4 & _byte_offset_match_T_125 & (&active_access_width)
+      | word_offset == 32'h9 & _byte_offset_match_T_125 & _half_word_offset_match_T_127
+      | word_offset == 32'h13 & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+    data_memories_wr_en_20_REG <=
+      word_offset == 32'h5 & _byte_offset_match_T_125 & (&active_access_width)
+      | word_offset == 32'hA & _byte_offset_match_T_125 & _half_word_offset_match_T_127
+      | word_offset == 32'h14 & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+    data_memories_wr_en_21_REG <=
+      word_offset == 32'h5 & _byte_offset_match_T_125 & (&active_access_width)
+      | word_offset == 32'hA & _byte_offset_match_T_125 & _half_word_offset_match_T_127
+      | word_offset == 32'h15 & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+    data_memories_wr_en_22_REG <=
+      word_offset == 32'h5 & _byte_offset_match_T_125 & (&active_access_width)
+      | word_offset == 32'hB & _byte_offset_match_T_125 & _half_word_offset_match_T_127
+      | word_offset == 32'h16 & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+    data_memories_wr_en_23_REG <=
+      word_offset == 32'h5 & _byte_offset_match_T_125 & (&active_access_width)
+      | word_offset == 32'hB & _byte_offset_match_T_125 & _half_word_offset_match_T_127
+      | word_offset == 32'h17 & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+    data_memories_wr_en_24_REG <=
+      word_offset == 32'h6 & _byte_offset_match_T_125 & (&active_access_width)
+      | word_offset == 32'hC & _byte_offset_match_T_125 & _half_word_offset_match_T_127
+      | word_offset == 32'h18 & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+    data_memories_wr_en_25_REG <=
+      word_offset == 32'h6 & _byte_offset_match_T_125 & (&active_access_width)
+      | word_offset == 32'hC & _byte_offset_match_T_125 & _half_word_offset_match_T_127
+      | word_offset == 32'h19 & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+    data_memories_wr_en_26_REG <=
+      word_offset == 32'h6 & _byte_offset_match_T_125 & (&active_access_width)
+      | word_offset == 32'hD & _byte_offset_match_T_125 & _half_word_offset_match_T_127
+      | word_offset == 32'h1A & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+    data_memories_wr_en_27_REG <=
+      word_offset == 32'h6 & _byte_offset_match_T_125 & (&active_access_width)
+      | word_offset == 32'hD & _byte_offset_match_T_125 & _half_word_offset_match_T_127
+      | word_offset == 32'h1B & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+    data_memories_wr_en_28_REG <=
+      word_offset == 32'h7 & _byte_offset_match_T_125 & (&active_access_width)
+      | word_offset == 32'hE & _byte_offset_match_T_125 & _half_word_offset_match_T_127
+      | word_offset == 32'h1C & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+    data_memories_wr_en_29_REG <=
+      word_offset == 32'h7 & _byte_offset_match_T_125 & (&active_access_width)
+      | word_offset == 32'hE & _byte_offset_match_T_125 & _half_word_offset_match_T_127
+      | word_offset == 32'h1D & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+    data_memories_wr_en_30_REG <=
+      word_offset == 32'h7 & _byte_offset_match_T_125 & (&active_access_width)
+      | word_offset == 32'hF & _byte_offset_match_T_125 & _half_word_offset_match_T_127
+      | word_offset == 32'h1E & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+    data_memories_wr_en_31_REG <=
+      word_offset == 32'h7 & _byte_offset_match_T_125 & (&active_access_width)
+      | word_offset == 32'hF & _byte_offset_match_T_125 & _half_word_offset_match_T_127
+      | word_offset == 32'h1F & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+    data_memories_data_in_0_REG <= active_data[7:0];
+    data_memories_data_in_1_REG <= active_data[15:8];
+    data_memories_data_in_2_REG <= active_data[23:16];
+    data_memories_data_in_3_REG <= active_data[31:24];
+    data_memories_data_in_4_REG <= active_data[7:0];
+    data_memories_data_in_5_REG <= active_data[15:8];
+    data_memories_data_in_6_REG <= active_data[23:16];
+    data_memories_data_in_7_REG <= active_data[31:24];
+    data_memories_data_in_8_REG <= active_data[7:0];
+    data_memories_data_in_9_REG <= active_data[15:8];
+    data_memories_data_in_10_REG <= active_data[23:16];
+    data_memories_data_in_11_REG <= active_data[31:24];
+    data_memories_data_in_12_REG <= active_data[7:0];
+    data_memories_data_in_13_REG <= active_data[15:8];
+    data_memories_data_in_14_REG <= active_data[23:16];
+    data_memories_data_in_15_REG <= active_data[31:24];
+    data_memories_data_in_16_REG <= active_data[7:0];
+    data_memories_data_in_17_REG <= active_data[15:8];
+    data_memories_data_in_18_REG <= active_data[23:16];
+    data_memories_data_in_19_REG <= active_data[31:24];
+    data_memories_data_in_20_REG <= active_data[7:0];
+    data_memories_data_in_21_REG <= active_data[15:8];
+    data_memories_data_in_22_REG <= active_data[23:16];
+    data_memories_data_in_23_REG <= active_data[31:24];
+    data_memories_data_in_24_REG <= active_data[7:0];
+    data_memories_data_in_25_REG <= active_data[15:8];
+    data_memories_data_in_26_REG <= active_data[23:16];
+    data_memories_data_in_27_REG <= active_data[31:24];
+    data_memories_data_in_28_REG <= active_data[7:0];
+    data_memories_data_in_29_REG <= active_data[15:8];
+    data_memories_data_in_30_REG <= active_data[23:16];
+    data_memories_data_in_31_REG <= active_data[31:24];
     data_memory_active_address_REG <= active_set;
     tag_hit_OH_0_REG <= active_tag;
     tag_hit_OH_1_REG <= active_tag;
@@ -2985,7 +3293,7 @@ module L1_data_cache(
     output_MOB_index_r <=
       (&DATA_CACHE_STATE) ? _GEN_522[_GEN_469] : io_CPU_request_bits_MOB_index;
     output_MOB_index_r_1 <= output_MOB_index_r;
-    cacheable_response_Q_io_enq_valid_REG <= valid_hit;
+    cacheable_response_Q_io_enq_valid_REG <= valid_hit & valid_read_hit_REG;
     if (reset) begin
       AXI_REQUEST_STATE <= 2'h0;
       write_counter <= 32'h0;
@@ -4458,11 +4766,7 @@ module L1_data_cache(
   );
   ReadWriteSmem data_memories_0 (
     .clock       (clock),
-    .io_wr_en
-      (_tag_memories_3_io_wr_en_T | ~(|word_offset) & _byte_offset_match_T_125
-       & (&active_access_width) | ~(|word_offset) & _byte_offset_match_T_125
-       & _half_word_offset_match_T_127 | ~(|word_offset) & _byte_offset_match_T_125
-       & _byte_offset_match_T_127),
+    .io_wr_en    (data_memories_wr_en_0),
     .io_addr
       (_tag_memories_3_io_wr_en_T
          ? data_memory_allocate_address
@@ -4470,16 +4774,12 @@ module L1_data_cache(
     .io_data_in
       (_tag_memories_3_io_wr_en_T
          ? _final_response_buffer_io_deq_bits_data[7:0]
-         : active_data[7:0]),
+         : data_memories_data_in_0_REG),
     .io_data_out (_data_memories_0_io_data_out)
   );
   ReadWriteSmem data_memories_1 (
     .clock       (clock),
-    .io_wr_en
-      (_tag_memories_3_io_wr_en_T | ~(|word_offset) & _byte_offset_match_T_125
-       & (&active_access_width) | ~(|word_offset) & _byte_offset_match_T_125
-       & _half_word_offset_match_T_127 | word_offset == 32'h1 & _byte_offset_match_T_125
-       & _byte_offset_match_T_127),
+    .io_wr_en    (data_memories_wr_en_1),
     .io_addr
       (_tag_memories_3_io_wr_en_T
          ? data_memory_allocate_address
@@ -4487,16 +4787,12 @@ module L1_data_cache(
     .io_data_in
       (_tag_memories_3_io_wr_en_T
          ? _final_response_buffer_io_deq_bits_data[15:8]
-         : active_data[15:8]),
+         : data_memories_data_in_1_REG),
     .io_data_out (_data_memories_1_io_data_out)
   );
   ReadWriteSmem data_memories_2 (
     .clock       (clock),
-    .io_wr_en
-      (_tag_memories_3_io_wr_en_T | ~(|word_offset) & _byte_offset_match_T_125
-       & (&active_access_width) | word_offset == 32'h1 & _byte_offset_match_T_125
-       & _half_word_offset_match_T_127 | word_offset == 32'h2 & _byte_offset_match_T_125
-       & _byte_offset_match_T_127),
+    .io_wr_en    (data_memories_wr_en_2),
     .io_addr
       (_tag_memories_3_io_wr_en_T
          ? data_memory_allocate_address
@@ -4504,16 +4800,12 @@ module L1_data_cache(
     .io_data_in
       (_tag_memories_3_io_wr_en_T
          ? _final_response_buffer_io_deq_bits_data[23:16]
-         : active_data[23:16]),
+         : data_memories_data_in_2_REG),
     .io_data_out (_data_memories_2_io_data_out)
   );
   ReadWriteSmem data_memories_3 (
     .clock       (clock),
-    .io_wr_en
-      (_tag_memories_3_io_wr_en_T | ~(|word_offset) & _byte_offset_match_T_125
-       & (&active_access_width) | word_offset == 32'h1 & _byte_offset_match_T_125
-       & _half_word_offset_match_T_127 | word_offset == 32'h3 & _byte_offset_match_T_125
-       & _byte_offset_match_T_127),
+    .io_wr_en    (data_memories_wr_en_3),
     .io_addr
       (_tag_memories_3_io_wr_en_T
          ? data_memory_allocate_address
@@ -4521,16 +4813,12 @@ module L1_data_cache(
     .io_data_in
       (_tag_memories_3_io_wr_en_T
          ? _final_response_buffer_io_deq_bits_data[31:24]
-         : active_data[31:24]),
+         : data_memories_data_in_3_REG),
     .io_data_out (_data_memories_3_io_data_out)
   );
   ReadWriteSmem data_memories_4 (
     .clock       (clock),
-    .io_wr_en
-      (_tag_memories_3_io_wr_en_T | word_offset == 32'h1 & _byte_offset_match_T_125
-       & (&active_access_width) | word_offset == 32'h2 & _byte_offset_match_T_125
-       & _half_word_offset_match_T_127 | word_offset == 32'h4 & _byte_offset_match_T_125
-       & _byte_offset_match_T_127),
+    .io_wr_en    (data_memories_wr_en_4),
     .io_addr
       (_tag_memories_3_io_wr_en_T
          ? data_memory_allocate_address
@@ -4538,16 +4826,12 @@ module L1_data_cache(
     .io_data_in
       (_tag_memories_3_io_wr_en_T
          ? _final_response_buffer_io_deq_bits_data[39:32]
-         : active_data[7:0]),
+         : data_memories_data_in_4_REG),
     .io_data_out (_data_memories_4_io_data_out)
   );
   ReadWriteSmem data_memories_5 (
     .clock       (clock),
-    .io_wr_en
-      (_tag_memories_3_io_wr_en_T | word_offset == 32'h1 & _byte_offset_match_T_125
-       & (&active_access_width) | word_offset == 32'h2 & _byte_offset_match_T_125
-       & _half_word_offset_match_T_127 | word_offset == 32'h5 & _byte_offset_match_T_125
-       & _byte_offset_match_T_127),
+    .io_wr_en    (data_memories_wr_en_5),
     .io_addr
       (_tag_memories_3_io_wr_en_T
          ? data_memory_allocate_address
@@ -4555,16 +4839,12 @@ module L1_data_cache(
     .io_data_in
       (_tag_memories_3_io_wr_en_T
          ? _final_response_buffer_io_deq_bits_data[47:40]
-         : active_data[15:8]),
+         : data_memories_data_in_5_REG),
     .io_data_out (_data_memories_5_io_data_out)
   );
   ReadWriteSmem data_memories_6 (
     .clock       (clock),
-    .io_wr_en
-      (_tag_memories_3_io_wr_en_T | word_offset == 32'h1 & _byte_offset_match_T_125
-       & (&active_access_width) | word_offset == 32'h3 & _byte_offset_match_T_125
-       & _half_word_offset_match_T_127 | word_offset == 32'h6 & _byte_offset_match_T_125
-       & _byte_offset_match_T_127),
+    .io_wr_en    (data_memories_wr_en_6),
     .io_addr
       (_tag_memories_3_io_wr_en_T
          ? data_memory_allocate_address
@@ -4572,16 +4852,12 @@ module L1_data_cache(
     .io_data_in
       (_tag_memories_3_io_wr_en_T
          ? _final_response_buffer_io_deq_bits_data[55:48]
-         : active_data[23:16]),
+         : data_memories_data_in_6_REG),
     .io_data_out (_data_memories_6_io_data_out)
   );
   ReadWriteSmem data_memories_7 (
     .clock       (clock),
-    .io_wr_en
-      (_tag_memories_3_io_wr_en_T | word_offset == 32'h1 & _byte_offset_match_T_125
-       & (&active_access_width) | word_offset == 32'h3 & _byte_offset_match_T_125
-       & _half_word_offset_match_T_127 | word_offset == 32'h7 & _byte_offset_match_T_125
-       & _byte_offset_match_T_127),
+    .io_wr_en    (data_memories_wr_en_7),
     .io_addr
       (_tag_memories_3_io_wr_en_T
          ? data_memory_allocate_address
@@ -4589,16 +4865,12 @@ module L1_data_cache(
     .io_data_in
       (_tag_memories_3_io_wr_en_T
          ? _final_response_buffer_io_deq_bits_data[63:56]
-         : active_data[31:24]),
+         : data_memories_data_in_7_REG),
     .io_data_out (_data_memories_7_io_data_out)
   );
   ReadWriteSmem data_memories_8 (
     .clock       (clock),
-    .io_wr_en
-      (_tag_memories_3_io_wr_en_T | word_offset == 32'h2 & _byte_offset_match_T_125
-       & (&active_access_width) | word_offset == 32'h4 & _byte_offset_match_T_125
-       & _half_word_offset_match_T_127 | word_offset == 32'h8 & _byte_offset_match_T_125
-       & _byte_offset_match_T_127),
+    .io_wr_en    (data_memories_wr_en_8),
     .io_addr
       (_tag_memories_3_io_wr_en_T
          ? data_memory_allocate_address
@@ -4606,16 +4878,12 @@ module L1_data_cache(
     .io_data_in
       (_tag_memories_3_io_wr_en_T
          ? _final_response_buffer_io_deq_bits_data[71:64]
-         : active_data[7:0]),
+         : data_memories_data_in_8_REG),
     .io_data_out (_data_memories_8_io_data_out)
   );
   ReadWriteSmem data_memories_9 (
     .clock       (clock),
-    .io_wr_en
-      (_tag_memories_3_io_wr_en_T | word_offset == 32'h2 & _byte_offset_match_T_125
-       & (&active_access_width) | word_offset == 32'h4 & _byte_offset_match_T_125
-       & _half_word_offset_match_T_127 | word_offset == 32'h9 & _byte_offset_match_T_125
-       & _byte_offset_match_T_127),
+    .io_wr_en    (data_memories_wr_en_9),
     .io_addr
       (_tag_memories_3_io_wr_en_T
          ? data_memory_allocate_address
@@ -4623,16 +4891,12 @@ module L1_data_cache(
     .io_data_in
       (_tag_memories_3_io_wr_en_T
          ? _final_response_buffer_io_deq_bits_data[79:72]
-         : active_data[15:8]),
+         : data_memories_data_in_9_REG),
     .io_data_out (_data_memories_9_io_data_out)
   );
   ReadWriteSmem data_memories_10 (
     .clock       (clock),
-    .io_wr_en
-      (_tag_memories_3_io_wr_en_T | word_offset == 32'h2 & _byte_offset_match_T_125
-       & (&active_access_width) | word_offset == 32'h5 & _byte_offset_match_T_125
-       & _half_word_offset_match_T_127 | word_offset == 32'hA & _byte_offset_match_T_125
-       & _byte_offset_match_T_127),
+    .io_wr_en    (data_memories_wr_en_10),
     .io_addr
       (_tag_memories_3_io_wr_en_T
          ? data_memory_allocate_address
@@ -4640,16 +4904,12 @@ module L1_data_cache(
     .io_data_in
       (_tag_memories_3_io_wr_en_T
          ? _final_response_buffer_io_deq_bits_data[87:80]
-         : active_data[23:16]),
+         : data_memories_data_in_10_REG),
     .io_data_out (_data_memories_10_io_data_out)
   );
   ReadWriteSmem data_memories_11 (
     .clock       (clock),
-    .io_wr_en
-      (_tag_memories_3_io_wr_en_T | word_offset == 32'h2 & _byte_offset_match_T_125
-       & (&active_access_width) | word_offset == 32'h5 & _byte_offset_match_T_125
-       & _half_word_offset_match_T_127 | word_offset == 32'hB & _byte_offset_match_T_125
-       & _byte_offset_match_T_127),
+    .io_wr_en    (data_memories_wr_en_11),
     .io_addr
       (_tag_memories_3_io_wr_en_T
          ? data_memory_allocate_address
@@ -4657,16 +4917,12 @@ module L1_data_cache(
     .io_data_in
       (_tag_memories_3_io_wr_en_T
          ? _final_response_buffer_io_deq_bits_data[95:88]
-         : active_data[31:24]),
+         : data_memories_data_in_11_REG),
     .io_data_out (_data_memories_11_io_data_out)
   );
   ReadWriteSmem data_memories_12 (
     .clock       (clock),
-    .io_wr_en
-      (_tag_memories_3_io_wr_en_T | word_offset == 32'h3 & _byte_offset_match_T_125
-       & (&active_access_width) | word_offset == 32'h6 & _byte_offset_match_T_125
-       & _half_word_offset_match_T_127 | word_offset == 32'hC & _byte_offset_match_T_125
-       & _byte_offset_match_T_127),
+    .io_wr_en    (data_memories_wr_en_12),
     .io_addr
       (_tag_memories_3_io_wr_en_T
          ? data_memory_allocate_address
@@ -4674,16 +4930,12 @@ module L1_data_cache(
     .io_data_in
       (_tag_memories_3_io_wr_en_T
          ? _final_response_buffer_io_deq_bits_data[103:96]
-         : active_data[7:0]),
+         : data_memories_data_in_12_REG),
     .io_data_out (_data_memories_12_io_data_out)
   );
   ReadWriteSmem data_memories_13 (
     .clock       (clock),
-    .io_wr_en
-      (_tag_memories_3_io_wr_en_T | word_offset == 32'h3 & _byte_offset_match_T_125
-       & (&active_access_width) | word_offset == 32'h6 & _byte_offset_match_T_125
-       & _half_word_offset_match_T_127 | word_offset == 32'hD & _byte_offset_match_T_125
-       & _byte_offset_match_T_127),
+    .io_wr_en    (data_memories_wr_en_13),
     .io_addr
       (_tag_memories_3_io_wr_en_T
          ? data_memory_allocate_address
@@ -4691,16 +4943,12 @@ module L1_data_cache(
     .io_data_in
       (_tag_memories_3_io_wr_en_T
          ? _final_response_buffer_io_deq_bits_data[111:104]
-         : active_data[15:8]),
+         : data_memories_data_in_13_REG),
     .io_data_out (_data_memories_13_io_data_out)
   );
   ReadWriteSmem data_memories_14 (
     .clock       (clock),
-    .io_wr_en
-      (_tag_memories_3_io_wr_en_T | word_offset == 32'h3 & _byte_offset_match_T_125
-       & (&active_access_width) | word_offset == 32'h7 & _byte_offset_match_T_125
-       & _half_word_offset_match_T_127 | word_offset == 32'hE & _byte_offset_match_T_125
-       & _byte_offset_match_T_127),
+    .io_wr_en    (data_memories_wr_en_14),
     .io_addr
       (_tag_memories_3_io_wr_en_T
          ? data_memory_allocate_address
@@ -4708,16 +4956,12 @@ module L1_data_cache(
     .io_data_in
       (_tag_memories_3_io_wr_en_T
          ? _final_response_buffer_io_deq_bits_data[119:112]
-         : active_data[23:16]),
+         : data_memories_data_in_14_REG),
     .io_data_out (_data_memories_14_io_data_out)
   );
   ReadWriteSmem data_memories_15 (
     .clock       (clock),
-    .io_wr_en
-      (_tag_memories_3_io_wr_en_T | word_offset == 32'h3 & _byte_offset_match_T_125
-       & (&active_access_width) | word_offset == 32'h7 & _byte_offset_match_T_125
-       & _half_word_offset_match_T_127 | word_offset == 32'hF & _byte_offset_match_T_125
-       & _byte_offset_match_T_127),
+    .io_wr_en    (data_memories_wr_en_15),
     .io_addr
       (_tag_memories_3_io_wr_en_T
          ? data_memory_allocate_address
@@ -4725,16 +4969,12 @@ module L1_data_cache(
     .io_data_in
       (_tag_memories_3_io_wr_en_T
          ? _final_response_buffer_io_deq_bits_data[127:120]
-         : active_data[31:24]),
+         : data_memories_data_in_15_REG),
     .io_data_out (_data_memories_15_io_data_out)
   );
   ReadWriteSmem data_memories_16 (
     .clock       (clock),
-    .io_wr_en
-      (_tag_memories_3_io_wr_en_T | word_offset == 32'h4 & _byte_offset_match_T_125
-       & (&active_access_width) | word_offset == 32'h8 & _byte_offset_match_T_125
-       & _half_word_offset_match_T_127 | word_offset == 32'h10 & _byte_offset_match_T_125
-       & _byte_offset_match_T_127),
+    .io_wr_en    (data_memories_wr_en_16),
     .io_addr
       (_tag_memories_3_io_wr_en_T
          ? data_memory_allocate_address
@@ -4742,16 +4982,12 @@ module L1_data_cache(
     .io_data_in
       (_tag_memories_3_io_wr_en_T
          ? _final_response_buffer_io_deq_bits_data[135:128]
-         : active_data[7:0]),
+         : data_memories_data_in_16_REG),
     .io_data_out (_data_memories_16_io_data_out)
   );
   ReadWriteSmem data_memories_17 (
     .clock       (clock),
-    .io_wr_en
-      (_tag_memories_3_io_wr_en_T | word_offset == 32'h4 & _byte_offset_match_T_125
-       & (&active_access_width) | word_offset == 32'h8 & _byte_offset_match_T_125
-       & _half_word_offset_match_T_127 | word_offset == 32'h11 & _byte_offset_match_T_125
-       & _byte_offset_match_T_127),
+    .io_wr_en    (data_memories_wr_en_17),
     .io_addr
       (_tag_memories_3_io_wr_en_T
          ? data_memory_allocate_address
@@ -4759,16 +4995,12 @@ module L1_data_cache(
     .io_data_in
       (_tag_memories_3_io_wr_en_T
          ? _final_response_buffer_io_deq_bits_data[143:136]
-         : active_data[15:8]),
+         : data_memories_data_in_17_REG),
     .io_data_out (_data_memories_17_io_data_out)
   );
   ReadWriteSmem data_memories_18 (
     .clock       (clock),
-    .io_wr_en
-      (_tag_memories_3_io_wr_en_T | word_offset == 32'h4 & _byte_offset_match_T_125
-       & (&active_access_width) | word_offset == 32'h9 & _byte_offset_match_T_125
-       & _half_word_offset_match_T_127 | word_offset == 32'h12 & _byte_offset_match_T_125
-       & _byte_offset_match_T_127),
+    .io_wr_en    (data_memories_wr_en_18),
     .io_addr
       (_tag_memories_3_io_wr_en_T
          ? data_memory_allocate_address
@@ -4776,16 +5008,12 @@ module L1_data_cache(
     .io_data_in
       (_tag_memories_3_io_wr_en_T
          ? _final_response_buffer_io_deq_bits_data[151:144]
-         : active_data[23:16]),
+         : data_memories_data_in_18_REG),
     .io_data_out (_data_memories_18_io_data_out)
   );
   ReadWriteSmem data_memories_19 (
     .clock       (clock),
-    .io_wr_en
-      (_tag_memories_3_io_wr_en_T | word_offset == 32'h4 & _byte_offset_match_T_125
-       & (&active_access_width) | word_offset == 32'h9 & _byte_offset_match_T_125
-       & _half_word_offset_match_T_127 | word_offset == 32'h13 & _byte_offset_match_T_125
-       & _byte_offset_match_T_127),
+    .io_wr_en    (data_memories_wr_en_19),
     .io_addr
       (_tag_memories_3_io_wr_en_T
          ? data_memory_allocate_address
@@ -4793,16 +5021,12 @@ module L1_data_cache(
     .io_data_in
       (_tag_memories_3_io_wr_en_T
          ? _final_response_buffer_io_deq_bits_data[159:152]
-         : active_data[31:24]),
+         : data_memories_data_in_19_REG),
     .io_data_out (_data_memories_19_io_data_out)
   );
   ReadWriteSmem data_memories_20 (
     .clock       (clock),
-    .io_wr_en
-      (_tag_memories_3_io_wr_en_T | word_offset == 32'h5 & _byte_offset_match_T_125
-       & (&active_access_width) | word_offset == 32'hA & _byte_offset_match_T_125
-       & _half_word_offset_match_T_127 | word_offset == 32'h14 & _byte_offset_match_T_125
-       & _byte_offset_match_T_127),
+    .io_wr_en    (data_memories_wr_en_20),
     .io_addr
       (_tag_memories_3_io_wr_en_T
          ? data_memory_allocate_address
@@ -4810,16 +5034,12 @@ module L1_data_cache(
     .io_data_in
       (_tag_memories_3_io_wr_en_T
          ? _final_response_buffer_io_deq_bits_data[167:160]
-         : active_data[7:0]),
+         : data_memories_data_in_20_REG),
     .io_data_out (_data_memories_20_io_data_out)
   );
   ReadWriteSmem data_memories_21 (
     .clock       (clock),
-    .io_wr_en
-      (_tag_memories_3_io_wr_en_T | word_offset == 32'h5 & _byte_offset_match_T_125
-       & (&active_access_width) | word_offset == 32'hA & _byte_offset_match_T_125
-       & _half_word_offset_match_T_127 | word_offset == 32'h15 & _byte_offset_match_T_125
-       & _byte_offset_match_T_127),
+    .io_wr_en    (data_memories_wr_en_21),
     .io_addr
       (_tag_memories_3_io_wr_en_T
          ? data_memory_allocate_address
@@ -4827,16 +5047,12 @@ module L1_data_cache(
     .io_data_in
       (_tag_memories_3_io_wr_en_T
          ? _final_response_buffer_io_deq_bits_data[175:168]
-         : active_data[15:8]),
+         : data_memories_data_in_21_REG),
     .io_data_out (_data_memories_21_io_data_out)
   );
   ReadWriteSmem data_memories_22 (
     .clock       (clock),
-    .io_wr_en
-      (_tag_memories_3_io_wr_en_T | word_offset == 32'h5 & _byte_offset_match_T_125
-       & (&active_access_width) | word_offset == 32'hB & _byte_offset_match_T_125
-       & _half_word_offset_match_T_127 | word_offset == 32'h16 & _byte_offset_match_T_125
-       & _byte_offset_match_T_127),
+    .io_wr_en    (data_memories_wr_en_22),
     .io_addr
       (_tag_memories_3_io_wr_en_T
          ? data_memory_allocate_address
@@ -4844,16 +5060,12 @@ module L1_data_cache(
     .io_data_in
       (_tag_memories_3_io_wr_en_T
          ? _final_response_buffer_io_deq_bits_data[183:176]
-         : active_data[23:16]),
+         : data_memories_data_in_22_REG),
     .io_data_out (_data_memories_22_io_data_out)
   );
   ReadWriteSmem data_memories_23 (
     .clock       (clock),
-    .io_wr_en
-      (_tag_memories_3_io_wr_en_T | word_offset == 32'h5 & _byte_offset_match_T_125
-       & (&active_access_width) | word_offset == 32'hB & _byte_offset_match_T_125
-       & _half_word_offset_match_T_127 | word_offset == 32'h17 & _byte_offset_match_T_125
-       & _byte_offset_match_T_127),
+    .io_wr_en    (data_memories_wr_en_23),
     .io_addr
       (_tag_memories_3_io_wr_en_T
          ? data_memory_allocate_address
@@ -4861,16 +5073,12 @@ module L1_data_cache(
     .io_data_in
       (_tag_memories_3_io_wr_en_T
          ? _final_response_buffer_io_deq_bits_data[191:184]
-         : active_data[31:24]),
+         : data_memories_data_in_23_REG),
     .io_data_out (_data_memories_23_io_data_out)
   );
   ReadWriteSmem data_memories_24 (
     .clock       (clock),
-    .io_wr_en
-      (_tag_memories_3_io_wr_en_T | word_offset == 32'h6 & _byte_offset_match_T_125
-       & (&active_access_width) | word_offset == 32'hC & _byte_offset_match_T_125
-       & _half_word_offset_match_T_127 | word_offset == 32'h18 & _byte_offset_match_T_125
-       & _byte_offset_match_T_127),
+    .io_wr_en    (data_memories_wr_en_24),
     .io_addr
       (_tag_memories_3_io_wr_en_T
          ? data_memory_allocate_address
@@ -4878,16 +5086,12 @@ module L1_data_cache(
     .io_data_in
       (_tag_memories_3_io_wr_en_T
          ? _final_response_buffer_io_deq_bits_data[199:192]
-         : active_data[7:0]),
+         : data_memories_data_in_24_REG),
     .io_data_out (_data_memories_24_io_data_out)
   );
   ReadWriteSmem data_memories_25 (
     .clock       (clock),
-    .io_wr_en
-      (_tag_memories_3_io_wr_en_T | word_offset == 32'h6 & _byte_offset_match_T_125
-       & (&active_access_width) | word_offset == 32'hC & _byte_offset_match_T_125
-       & _half_word_offset_match_T_127 | word_offset == 32'h19 & _byte_offset_match_T_125
-       & _byte_offset_match_T_127),
+    .io_wr_en    (data_memories_wr_en_25),
     .io_addr
       (_tag_memories_3_io_wr_en_T
          ? data_memory_allocate_address
@@ -4895,16 +5099,12 @@ module L1_data_cache(
     .io_data_in
       (_tag_memories_3_io_wr_en_T
          ? _final_response_buffer_io_deq_bits_data[207:200]
-         : active_data[15:8]),
+         : data_memories_data_in_25_REG),
     .io_data_out (_data_memories_25_io_data_out)
   );
   ReadWriteSmem data_memories_26 (
     .clock       (clock),
-    .io_wr_en
-      (_tag_memories_3_io_wr_en_T | word_offset == 32'h6 & _byte_offset_match_T_125
-       & (&active_access_width) | word_offset == 32'hD & _byte_offset_match_T_125
-       & _half_word_offset_match_T_127 | word_offset == 32'h1A & _byte_offset_match_T_125
-       & _byte_offset_match_T_127),
+    .io_wr_en    (data_memories_wr_en_26),
     .io_addr
       (_tag_memories_3_io_wr_en_T
          ? data_memory_allocate_address
@@ -4912,16 +5112,12 @@ module L1_data_cache(
     .io_data_in
       (_tag_memories_3_io_wr_en_T
          ? _final_response_buffer_io_deq_bits_data[215:208]
-         : active_data[23:16]),
+         : data_memories_data_in_26_REG),
     .io_data_out (_data_memories_26_io_data_out)
   );
   ReadWriteSmem data_memories_27 (
     .clock       (clock),
-    .io_wr_en
-      (_tag_memories_3_io_wr_en_T | word_offset == 32'h6 & _byte_offset_match_T_125
-       & (&active_access_width) | word_offset == 32'hD & _byte_offset_match_T_125
-       & _half_word_offset_match_T_127 | word_offset == 32'h1B & _byte_offset_match_T_125
-       & _byte_offset_match_T_127),
+    .io_wr_en    (data_memories_wr_en_27),
     .io_addr
       (_tag_memories_3_io_wr_en_T
          ? data_memory_allocate_address
@@ -4929,16 +5125,12 @@ module L1_data_cache(
     .io_data_in
       (_tag_memories_3_io_wr_en_T
          ? _final_response_buffer_io_deq_bits_data[223:216]
-         : active_data[31:24]),
+         : data_memories_data_in_27_REG),
     .io_data_out (_data_memories_27_io_data_out)
   );
   ReadWriteSmem data_memories_28 (
     .clock       (clock),
-    .io_wr_en
-      (_tag_memories_3_io_wr_en_T | word_offset == 32'h7 & _byte_offset_match_T_125
-       & (&active_access_width) | word_offset == 32'hE & _byte_offset_match_T_125
-       & _half_word_offset_match_T_127 | word_offset == 32'h1C & _byte_offset_match_T_125
-       & _byte_offset_match_T_127),
+    .io_wr_en    (data_memories_wr_en_28),
     .io_addr
       (_tag_memories_3_io_wr_en_T
          ? data_memory_allocate_address
@@ -4946,16 +5138,12 @@ module L1_data_cache(
     .io_data_in
       (_tag_memories_3_io_wr_en_T
          ? _final_response_buffer_io_deq_bits_data[231:224]
-         : active_data[7:0]),
+         : data_memories_data_in_28_REG),
     .io_data_out (_data_memories_28_io_data_out)
   );
   ReadWriteSmem data_memories_29 (
     .clock       (clock),
-    .io_wr_en
-      (_tag_memories_3_io_wr_en_T | word_offset == 32'h7 & _byte_offset_match_T_125
-       & (&active_access_width) | word_offset == 32'hE & _byte_offset_match_T_125
-       & _half_word_offset_match_T_127 | word_offset == 32'h1D & _byte_offset_match_T_125
-       & _byte_offset_match_T_127),
+    .io_wr_en    (data_memories_wr_en_29),
     .io_addr
       (_tag_memories_3_io_wr_en_T
          ? data_memory_allocate_address
@@ -4963,16 +5151,12 @@ module L1_data_cache(
     .io_data_in
       (_tag_memories_3_io_wr_en_T
          ? _final_response_buffer_io_deq_bits_data[239:232]
-         : active_data[15:8]),
+         : data_memories_data_in_29_REG),
     .io_data_out (_data_memories_29_io_data_out)
   );
   ReadWriteSmem data_memories_30 (
     .clock       (clock),
-    .io_wr_en
-      (_tag_memories_3_io_wr_en_T | word_offset == 32'h7 & _byte_offset_match_T_125
-       & (&active_access_width) | word_offset == 32'hF & _byte_offset_match_T_125
-       & _half_word_offset_match_T_127 | word_offset == 32'h1E & _byte_offset_match_T_125
-       & _byte_offset_match_T_127),
+    .io_wr_en    (data_memories_wr_en_30),
     .io_addr
       (_tag_memories_3_io_wr_en_T
          ? data_memory_allocate_address
@@ -4980,16 +5164,12 @@ module L1_data_cache(
     .io_data_in
       (_tag_memories_3_io_wr_en_T
          ? _final_response_buffer_io_deq_bits_data[247:240]
-         : active_data[23:16]),
+         : data_memories_data_in_30_REG),
     .io_data_out (_data_memories_30_io_data_out)
   );
   ReadWriteSmem data_memories_31 (
     .clock       (clock),
-    .io_wr_en
-      (_tag_memories_3_io_wr_en_T | word_offset == 32'h7 & _byte_offset_match_T_125
-       & (&active_access_width) | word_offset == 32'hF & _byte_offset_match_T_125
-       & _half_word_offset_match_T_127 | word_offset == 32'h1F & _byte_offset_match_T_125
-       & _byte_offset_match_T_127),
+    .io_wr_en    (data_memories_wr_en_31),
     .io_addr
       (_tag_memories_3_io_wr_en_T
          ? data_memory_allocate_address
@@ -4997,7 +5177,7 @@ module L1_data_cache(
     .io_data_in
       (_tag_memories_3_io_wr_en_T
          ? _final_response_buffer_io_deq_bits_data[255:248]
-         : active_data[31:24]),
+         : data_memories_data_in_31_REG),
     .io_data_out (_data_memories_31_io_data_out)
   );
   ReadWriteSmem_32 tag_memories_0 (
@@ -5085,10 +5265,17 @@ module L1_data_cache(
     _GEN_514 ? 3'h2 : read_request_valid ? 3'h0 : {1'h0, write_request_valid, 1'h0};
   assign m_axi_awburst =
     _GEN_514 ? 2'h1 : read_request_valid ? 2'h0 : {1'h0, write_request_valid};
+  assign m_axi_awlock = 1'h0;
+  assign m_axi_awcache = 4'h0;
+  assign m_axi_awprot = 3'h0;
+  assign m_axi_awqos = 4'h0;
+  assign m_axi_awregion = 4'h0;
+  assign m_axi_awuser = 1'h0;
   assign m_axi_wvalid = m_axi_wvalid_0;
   assign m_axi_wdata = m_axi_wvalid_0 ? AXI_AW_DATA_BUFFER[31:0] : 32'h0;
   assign m_axi_wstrb = {4{m_axi_wvalid_0}};
   assign m_axi_wlast = m_axi_wlast_0;
+  assign m_axi_wuser = 1'h0;
   assign m_axi_bready = &AXI_REQUEST_STATE;
   assign m_axi_arvalid = m_axi_arvalid_0;
   assign m_axi_arid = _GEN_515 ? _AXI_request_Q_io_deq_bits_read_ID : 8'h0;
@@ -5107,6 +5294,12 @@ module L1_data_cache(
           : 8'h0;
   assign m_axi_arsize = {1'h0, _GEN_515, 1'h0};
   assign m_axi_arburst = {1'h0, _GEN_515};
+  assign m_axi_arlock = 1'h0;
+  assign m_axi_arcache = 4'h0;
+  assign m_axi_arprot = 3'h0;
+  assign m_axi_arqos = 4'h0;
+  assign m_axi_arregion = 4'h0;
+  assign m_axi_aruser = 1'h0;
   assign m_axi_rready = m_axi_rready_0;
   assign io_CPU_request_ready = 1'h1;
 endmodule

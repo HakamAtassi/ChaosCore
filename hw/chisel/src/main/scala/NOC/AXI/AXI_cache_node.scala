@@ -24,6 +24,8 @@ trait AXICacheNode {
   // actual verilog IO
   val m_axi = IO(new VerilogAXIFullIO(nocParameters))
 
+  dontTouch(m_axi)
+
 
   val AXI_port = m_axi.viewAs[AXIFullIO]
 

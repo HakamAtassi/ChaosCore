@@ -31,24 +31,50 @@
 module ChaosCore_tile(
   input         clock,
                 reset,
-                io_instruction_cache_AXI_port_AXI_W_ready,
+                io_instruction_cache_AXI_port_AXI_AW_ready,
+  output        io_instruction_cache_AXI_port_AXI_AW_valid,
+  output [7:0]  io_instruction_cache_AXI_port_AXI_AW_bits_awid,
+  output [31:0] io_instruction_cache_AXI_port_AXI_AW_bits_awaddr,
+  output [7:0]  io_instruction_cache_AXI_port_AXI_AW_bits_awlen,
+  output [2:0]  io_instruction_cache_AXI_port_AXI_AW_bits_awsize,
+  output [1:0]  io_instruction_cache_AXI_port_AXI_AW_bits_awburst,
+  output        io_instruction_cache_AXI_port_AXI_AW_bits_awlock,
+  output [3:0]  io_instruction_cache_AXI_port_AXI_AW_bits_awcache,
+  output [2:0]  io_instruction_cache_AXI_port_AXI_AW_bits_awprot,
+  output [3:0]  io_instruction_cache_AXI_port_AXI_AW_bits_awqos,
+                io_instruction_cache_AXI_port_AXI_AW_bits_awregion,
+  output        io_instruction_cache_AXI_port_AXI_AW_bits_awuser,
+  input         io_instruction_cache_AXI_port_AXI_W_ready,
   output        io_instruction_cache_AXI_port_AXI_W_valid,
   output [31:0] io_instruction_cache_AXI_port_AXI_W_bits_wdata,
   output [3:0]  io_instruction_cache_AXI_port_AXI_W_bits_wstrb,
   output        io_instruction_cache_AXI_port_AXI_W_bits_wlast,
+                io_instruction_cache_AXI_port_AXI_W_bits_wuser,
                 io_instruction_cache_AXI_port_AXI_B_ready,
   input         io_instruction_cache_AXI_port_AXI_B_valid,
+  input  [7:0]  io_instruction_cache_AXI_port_AXI_B_bits_bid,
+  input  [1:0]  io_instruction_cache_AXI_port_AXI_B_bits_bresp,
+  input         io_instruction_cache_AXI_port_AXI_B_bits_buser,
                 io_instruction_cache_AXI_port_AXI_AR_ready,
   output        io_instruction_cache_AXI_port_AXI_AR_valid,
+  output [7:0]  io_instruction_cache_AXI_port_AXI_AR_bits_arid,
   output [31:0] io_instruction_cache_AXI_port_AXI_AR_bits_araddr,
   output [7:0]  io_instruction_cache_AXI_port_AXI_AR_bits_arlen,
   output [2:0]  io_instruction_cache_AXI_port_AXI_AR_bits_arsize,
   output [1:0]  io_instruction_cache_AXI_port_AXI_AR_bits_arburst,
-  output        io_instruction_cache_AXI_port_AXI_R_ready,
+  output        io_instruction_cache_AXI_port_AXI_AR_bits_arlock,
+  output [3:0]  io_instruction_cache_AXI_port_AXI_AR_bits_arcache,
+  output [2:0]  io_instruction_cache_AXI_port_AXI_AR_bits_arprot,
+  output [3:0]  io_instruction_cache_AXI_port_AXI_AR_bits_arqos,
+                io_instruction_cache_AXI_port_AXI_AR_bits_arregion,
+  output        io_instruction_cache_AXI_port_AXI_AR_bits_aruser,
+                io_instruction_cache_AXI_port_AXI_R_ready,
   input         io_instruction_cache_AXI_port_AXI_R_valid,
   input  [7:0]  io_instruction_cache_AXI_port_AXI_R_bits_rid,
   input  [31:0] io_instruction_cache_AXI_port_AXI_R_bits_rdata,
+  input  [1:0]  io_instruction_cache_AXI_port_AXI_R_bits_rresp,
   input         io_instruction_cache_AXI_port_AXI_R_bits_rlast,
+                io_instruction_cache_AXI_port_AXI_R_bits_ruser,
                 io_data_cache_AXI_port_AXI_AW_ready,
   output        io_data_cache_AXI_port_AXI_AW_valid,
   output [7:0]  io_data_cache_AXI_port_AXI_AW_bits_awid,
@@ -56,13 +82,23 @@ module ChaosCore_tile(
   output [7:0]  io_data_cache_AXI_port_AXI_AW_bits_awlen,
   output [2:0]  io_data_cache_AXI_port_AXI_AW_bits_awsize,
   output [1:0]  io_data_cache_AXI_port_AXI_AW_bits_awburst,
+  output        io_data_cache_AXI_port_AXI_AW_bits_awlock,
+  output [3:0]  io_data_cache_AXI_port_AXI_AW_bits_awcache,
+  output [2:0]  io_data_cache_AXI_port_AXI_AW_bits_awprot,
+  output [3:0]  io_data_cache_AXI_port_AXI_AW_bits_awqos,
+                io_data_cache_AXI_port_AXI_AW_bits_awregion,
+  output        io_data_cache_AXI_port_AXI_AW_bits_awuser,
   input         io_data_cache_AXI_port_AXI_W_ready,
   output        io_data_cache_AXI_port_AXI_W_valid,
   output [31:0] io_data_cache_AXI_port_AXI_W_bits_wdata,
   output [3:0]  io_data_cache_AXI_port_AXI_W_bits_wstrb,
   output        io_data_cache_AXI_port_AXI_W_bits_wlast,
+                io_data_cache_AXI_port_AXI_W_bits_wuser,
                 io_data_cache_AXI_port_AXI_B_ready,
   input         io_data_cache_AXI_port_AXI_B_valid,
+  input  [7:0]  io_data_cache_AXI_port_AXI_B_bits_bid,
+  input  [1:0]  io_data_cache_AXI_port_AXI_B_bits_bresp,
+  input         io_data_cache_AXI_port_AXI_B_bits_buser,
                 io_data_cache_AXI_port_AXI_AR_ready,
   output        io_data_cache_AXI_port_AXI_AR_valid,
   output [7:0]  io_data_cache_AXI_port_AXI_AR_bits_arid,
@@ -70,11 +106,19 @@ module ChaosCore_tile(
   output [7:0]  io_data_cache_AXI_port_AXI_AR_bits_arlen,
   output [2:0]  io_data_cache_AXI_port_AXI_AR_bits_arsize,
   output [1:0]  io_data_cache_AXI_port_AXI_AR_bits_arburst,
-  output        io_data_cache_AXI_port_AXI_R_ready,
+  output        io_data_cache_AXI_port_AXI_AR_bits_arlock,
+  output [3:0]  io_data_cache_AXI_port_AXI_AR_bits_arcache,
+  output [2:0]  io_data_cache_AXI_port_AXI_AR_bits_arprot,
+  output [3:0]  io_data_cache_AXI_port_AXI_AR_bits_arqos,
+                io_data_cache_AXI_port_AXI_AR_bits_arregion,
+  output        io_data_cache_AXI_port_AXI_AR_bits_aruser,
+                io_data_cache_AXI_port_AXI_R_ready,
   input         io_data_cache_AXI_port_AXI_R_valid,
   input  [7:0]  io_data_cache_AXI_port_AXI_R_bits_rid,
   input  [31:0] io_data_cache_AXI_port_AXI_R_bits_rdata,
-  input         io_data_cache_AXI_port_AXI_R_bits_rlast
+  input  [1:0]  io_data_cache_AXI_port_AXI_R_bits_rresp,
+  input         io_data_cache_AXI_port_AXI_R_bits_rlast,
+                io_data_cache_AXI_port_AXI_R_bits_ruser
 );
 
   wire        _data_cache_io_CPU_request_ready;
@@ -202,6 +246,32 @@ module ChaosCore_tile(
   L1_instruction_cache instruction_cache (
     .clock                                            (clock),
     .reset                                            (reset),
+    .m_axi_awvalid
+      (io_instruction_cache_AXI_port_AXI_AW_valid),
+    .m_axi_awready
+      (io_instruction_cache_AXI_port_AXI_AW_ready),
+    .m_axi_awid
+      (io_instruction_cache_AXI_port_AXI_AW_bits_awid),
+    .m_axi_awaddr
+      (io_instruction_cache_AXI_port_AXI_AW_bits_awaddr),
+    .m_axi_awlen
+      (io_instruction_cache_AXI_port_AXI_AW_bits_awlen),
+    .m_axi_awsize
+      (io_instruction_cache_AXI_port_AXI_AW_bits_awsize),
+    .m_axi_awburst
+      (io_instruction_cache_AXI_port_AXI_AW_bits_awburst),
+    .m_axi_awlock
+      (io_instruction_cache_AXI_port_AXI_AW_bits_awlock),
+    .m_axi_awcache
+      (io_instruction_cache_AXI_port_AXI_AW_bits_awcache),
+    .m_axi_awprot
+      (io_instruction_cache_AXI_port_AXI_AW_bits_awprot),
+    .m_axi_awqos
+      (io_instruction_cache_AXI_port_AXI_AW_bits_awqos),
+    .m_axi_awregion
+      (io_instruction_cache_AXI_port_AXI_AW_bits_awregion),
+    .m_axi_awuser
+      (io_instruction_cache_AXI_port_AXI_AW_bits_awuser),
     .m_axi_wready
       (io_instruction_cache_AXI_port_AXI_W_ready),
     .m_axi_wvalid
@@ -212,14 +282,24 @@ module ChaosCore_tile(
       (io_instruction_cache_AXI_port_AXI_W_bits_wstrb),
     .m_axi_wlast
       (io_instruction_cache_AXI_port_AXI_W_bits_wlast),
+    .m_axi_wuser
+      (io_instruction_cache_AXI_port_AXI_W_bits_wuser),
     .m_axi_bready
       (io_instruction_cache_AXI_port_AXI_B_ready),
     .m_axi_bvalid
       (io_instruction_cache_AXI_port_AXI_B_valid),
+    .m_axi_bid
+      (io_instruction_cache_AXI_port_AXI_B_bits_bid),
+    .m_axi_bresp
+      (io_instruction_cache_AXI_port_AXI_B_bits_bresp),
+    .m_axi_buser
+      (io_instruction_cache_AXI_port_AXI_B_bits_buser),
     .m_axi_arvalid
       (io_instruction_cache_AXI_port_AXI_AR_valid),
     .m_axi_arready
       (io_instruction_cache_AXI_port_AXI_AR_ready),
+    .m_axi_arid
+      (io_instruction_cache_AXI_port_AXI_AR_bits_arid),
     .m_axi_araddr
       (io_instruction_cache_AXI_port_AXI_AR_bits_araddr),
     .m_axi_arlen
@@ -228,6 +308,18 @@ module ChaosCore_tile(
       (io_instruction_cache_AXI_port_AXI_AR_bits_arsize),
     .m_axi_arburst
       (io_instruction_cache_AXI_port_AXI_AR_bits_arburst),
+    .m_axi_arlock
+      (io_instruction_cache_AXI_port_AXI_AR_bits_arlock),
+    .m_axi_arcache
+      (io_instruction_cache_AXI_port_AXI_AR_bits_arcache),
+    .m_axi_arprot
+      (io_instruction_cache_AXI_port_AXI_AR_bits_arprot),
+    .m_axi_arqos
+      (io_instruction_cache_AXI_port_AXI_AR_bits_arqos),
+    .m_axi_arregion
+      (io_instruction_cache_AXI_port_AXI_AR_bits_arregion),
+    .m_axi_aruser
+      (io_instruction_cache_AXI_port_AXI_AR_bits_aruser),
     .m_axi_rready
       (io_instruction_cache_AXI_port_AXI_R_ready),
     .m_axi_rvalid
@@ -236,8 +328,12 @@ module ChaosCore_tile(
       (io_instruction_cache_AXI_port_AXI_R_bits_rid),
     .m_axi_rdata
       (io_instruction_cache_AXI_port_AXI_R_bits_rdata),
+    .m_axi_rresp
+      (io_instruction_cache_AXI_port_AXI_R_bits_rresp),
     .m_axi_rlast
       (io_instruction_cache_AXI_port_AXI_R_bits_rlast),
+    .m_axi_ruser
+      (io_instruction_cache_AXI_port_AXI_R_bits_ruser),
     .io_CPU_request_ready
       (_instruction_cache_io_CPU_request_ready),
     .io_CPU_response_valid
@@ -293,13 +389,23 @@ module ChaosCore_tile(
     .m_axi_awlen                      (io_data_cache_AXI_port_AXI_AW_bits_awlen),
     .m_axi_awsize                     (io_data_cache_AXI_port_AXI_AW_bits_awsize),
     .m_axi_awburst                    (io_data_cache_AXI_port_AXI_AW_bits_awburst),
+    .m_axi_awlock                     (io_data_cache_AXI_port_AXI_AW_bits_awlock),
+    .m_axi_awcache                    (io_data_cache_AXI_port_AXI_AW_bits_awcache),
+    .m_axi_awprot                     (io_data_cache_AXI_port_AXI_AW_bits_awprot),
+    .m_axi_awqos                      (io_data_cache_AXI_port_AXI_AW_bits_awqos),
+    .m_axi_awregion                   (io_data_cache_AXI_port_AXI_AW_bits_awregion),
+    .m_axi_awuser                     (io_data_cache_AXI_port_AXI_AW_bits_awuser),
     .m_axi_wready                     (io_data_cache_AXI_port_AXI_W_ready),
     .m_axi_wvalid                     (io_data_cache_AXI_port_AXI_W_valid),
     .m_axi_wdata                      (io_data_cache_AXI_port_AXI_W_bits_wdata),
     .m_axi_wstrb                      (io_data_cache_AXI_port_AXI_W_bits_wstrb),
     .m_axi_wlast                      (io_data_cache_AXI_port_AXI_W_bits_wlast),
+    .m_axi_wuser                      (io_data_cache_AXI_port_AXI_W_bits_wuser),
     .m_axi_bready                     (io_data_cache_AXI_port_AXI_B_ready),
     .m_axi_bvalid                     (io_data_cache_AXI_port_AXI_B_valid),
+    .m_axi_bid                        (io_data_cache_AXI_port_AXI_B_bits_bid),
+    .m_axi_bresp                      (io_data_cache_AXI_port_AXI_B_bits_bresp),
+    .m_axi_buser                      (io_data_cache_AXI_port_AXI_B_bits_buser),
     .m_axi_arvalid                    (io_data_cache_AXI_port_AXI_AR_valid),
     .m_axi_arready                    (io_data_cache_AXI_port_AXI_AR_ready),
     .m_axi_arid                       (io_data_cache_AXI_port_AXI_AR_bits_arid),
@@ -307,11 +413,19 @@ module ChaosCore_tile(
     .m_axi_arlen                      (io_data_cache_AXI_port_AXI_AR_bits_arlen),
     .m_axi_arsize                     (io_data_cache_AXI_port_AXI_AR_bits_arsize),
     .m_axi_arburst                    (io_data_cache_AXI_port_AXI_AR_bits_arburst),
+    .m_axi_arlock                     (io_data_cache_AXI_port_AXI_AR_bits_arlock),
+    .m_axi_arcache                    (io_data_cache_AXI_port_AXI_AR_bits_arcache),
+    .m_axi_arprot                     (io_data_cache_AXI_port_AXI_AR_bits_arprot),
+    .m_axi_arqos                      (io_data_cache_AXI_port_AXI_AR_bits_arqos),
+    .m_axi_arregion                   (io_data_cache_AXI_port_AXI_AR_bits_arregion),
+    .m_axi_aruser                     (io_data_cache_AXI_port_AXI_AR_bits_aruser),
     .m_axi_rready                     (io_data_cache_AXI_port_AXI_R_ready),
     .m_axi_rvalid                     (io_data_cache_AXI_port_AXI_R_valid),
     .m_axi_rid                        (io_data_cache_AXI_port_AXI_R_bits_rid),
     .m_axi_rdata                      (io_data_cache_AXI_port_AXI_R_bits_rdata),
+    .m_axi_rresp                      (io_data_cache_AXI_port_AXI_R_bits_rresp),
     .m_axi_rlast                      (io_data_cache_AXI_port_AXI_R_bits_rlast),
+    .m_axi_ruser                      (io_data_cache_AXI_port_AXI_R_bits_ruser),
     .io_CPU_request_ready             (_data_cache_io_CPU_request_ready),
     .io_CPU_request_valid             (1'h0),
     .io_CPU_request_bits_addr         (32'h0),
