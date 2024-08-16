@@ -34,23 +34,19 @@ import circt.stage.ChiselStage
 
 import chisel3.util._
 
+import chisel3.experimental.dataview._
+
 class SOC(coreParameters:CoreParameters, addressMap:AddressMap, nocParameters:NOCParameters) extends Module{
-    val io = IO(new Bundle{
-        ///////////////////
-        // AXI INTERFACE //
-        ///////////////////
-		val	dram_AXI	=	new	AXIFullIO(nocParameters)
-    })
+
+    val m_axi = IO(new VerilogAXIFullIO(nocParameters))
+
+    val dram_AXI = m_axi.viewAs[AXIFullIO]
 
     ///////////////
     // CHAOSCORE //
     ///////////////
     val ChaosCore_tile = Module(new ChaosCore_tile(coreParameters, addressMap, nocParameters))
     //val flush               = ChaosCore.io.commit.valid && ChaosCore.io.commit.bits.is_misprediction
-
-
-
-
 
 
 
@@ -78,7 +74,7 @@ class SOC(coreParameters:CoreParameters, addressMap:AddressMap, nocParameters:NO
     ChaosCore_tile.io.data_cache_AXI_port           <> axi_interconnect.io.m_AXI_port(1)
 
     // NOC <> IO (DRAM)
-    axi_interconnect.io.s_AXI_port(0) <> io.dram_AXI
+    axi_interconnect.io.s_AXI_port(0) <> dram_AXI
 
     // NOC <> UART
     axi_interconnect.io.s_AXI_port(1) <> AXI_debug_printer.io.s_AXI

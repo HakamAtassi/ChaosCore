@@ -121,7 +121,7 @@
         </mxGraphModel>
     </diagram>
     <diagram id="3mZXem8Qnil5UCtNcQzt" name="Page-2">
-        <mxGraphModel dx="3159" dy="1908" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="2811" dy="1868" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -899,22 +899,6 @@
                         <mxPoint x="-160" y="40" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="zyog96r8CnRyBwW-GgIO-33" value="" style="endArrow=classic;html=1;" edge="1" parent="1">
-                    <mxGeometry width="50" height="50" relative="1" as="geometry">
-                        <mxPoint x="1490" y="1199.91" as="sourcePoint"/>
-                        <mxPoint x="1180" y="1200" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="zyog96r8CnRyBwW-GgIO-34" value="non-cacheable response" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="zyog96r8CnRyBwW-GgIO-33">
-                    <mxGeometry x="0.1754" y="2" relative="1" as="geometry">
-                        <mxPoint x="18" y="-2" as="offset"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="zyog96r8CnRyBwW-GgIO-68" value="ID == 1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="zyog96r8CnRyBwW-GgIO-33">
-                    <mxGeometry x="-0.6609" relative="1" as="geometry">
-                        <mxPoint as="offset"/>
-                    </mxGeometry>
-                </mxCell>
                 <mxCell id="zyog96r8CnRyBwW-GgIO-38" value="ARB" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
                     <mxGeometry x="830" y="1040" width="70" height="200" as="geometry"/>
                 </mxCell>
@@ -995,6 +979,66 @@
                     <mxGeometry width="50" height="50" relative="1" as="geometry">
                         <mxPoint x="1728" y="1142.2" as="sourcePoint"/>
                         <mxPoint x="1548" y="1142.5" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="zyog96r8CnRyBwW-GgIO-79" value="Cache" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="710" y="640" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="zyog96r8CnRyBwW-GgIO-80" value="" style="endArrow=classic;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="zyog96r8CnRyBwW-GgIO-79">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="820" y="640" as="sourcePoint"/>
+                        <mxPoint x="870" y="680" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="zyog96r8CnRyBwW-GgIO-83" value="Miss" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="zyog96r8CnRyBwW-GgIO-80">
+                    <mxGeometry x="0.3968" y="-3" relative="1" as="geometry">
+                        <mxPoint x="-18" y="-3" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="zyog96r8CnRyBwW-GgIO-81" value="" style="endArrow=classic;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" target="zyog96r8CnRyBwW-GgIO-79">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="560" y="680" as="sourcePoint"/>
+                        <mxPoint x="590" y="720" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="zyog96r8CnRyBwW-GgIO-82" value="" style="endArrow=classic;html=1;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="560" y="880" as="sourcePoint"/>
+                        <mxPoint x="710" y="879.66" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="zyog96r8CnRyBwW-GgIO-91" value="non-cacheable buffer" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="1300" y="1160" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="zyog96r8CnRyBwW-GgIO-92" value="" style="endArrow=classic;html=1;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="1300" y="1199" as="sourcePoint"/>
+                        <mxPoint x="1180" y="1199.4099999999999" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="zyog96r8CnRyBwW-GgIO-94" value="" style="endArrow=classic;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="1485" y="1200" as="sourcePoint"/>
+                        <mxPoint x="1380" y="1200.5" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="zyog96r8CnRyBwW-GgIO-95" value="ID == 1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="zyog96r8CnRyBwW-GgIO-94">
+                    <mxGeometry x="-0.3765" y="-1" relative="1" as="geometry">
+                        <mxPoint x="-12" y="1" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="zyog96r8CnRyBwW-GgIO-96" value="non-cacheable buffer" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="710" y="840" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="zyog96r8CnRyBwW-GgIO-97" value="" style="endArrow=classic;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="790" y="879.66" as="sourcePoint"/>
+                        <mxPoint x="880" y="879.66" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="zyog96r8CnRyBwW-GgIO-98" value="Miss" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="zyog96r8CnRyBwW-GgIO-97">
+                    <mxGeometry x="0.3968" y="-3" relative="1" as="geometry">
+                        <mxPoint x="-18" y="-3" as="offset"/>
                     </mxGeometry>
                 </mxCell>
             </root>

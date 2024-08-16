@@ -38,23 +38,13 @@ module L1_data_cache(
   output [7:0]  m_axi_awlen,
   output [2:0]  m_axi_awsize,
   output [1:0]  m_axi_awburst,
-  output        m_axi_awlock,
-  output [3:0]  m_axi_awcache,
-  output [2:0]  m_axi_awprot,
-  output [3:0]  m_axi_awqos,
-                m_axi_awregion,
-  output        m_axi_awuser,
   input         m_axi_wready,
   output        m_axi_wvalid,
   output [31:0] m_axi_wdata,
   output [3:0]  m_axi_wstrb,
   output        m_axi_wlast,
-                m_axi_wuser,
                 m_axi_bready,
   input         m_axi_bvalid,
-  input  [7:0]  m_axi_bid,
-  input  [1:0]  m_axi_bresp,
-  input         m_axi_buser,
   output        m_axi_arvalid,
   input         m_axi_arready,
   output [7:0]  m_axi_arid,
@@ -62,19 +52,11 @@ module L1_data_cache(
   output [7:0]  m_axi_arlen,
   output [2:0]  m_axi_arsize,
   output [1:0]  m_axi_arburst,
-  output        m_axi_arlock,
-  output [3:0]  m_axi_arcache,
-  output [2:0]  m_axi_arprot,
-  output [3:0]  m_axi_arqos,
-                m_axi_arregion,
-  output        m_axi_aruser,
-                m_axi_rready,
+  output        m_axi_rready,
   input         m_axi_rvalid,
   input  [7:0]  m_axi_rid,
   input  [31:0] m_axi_rdata,
-  input  [1:0]  m_axi_rresp,
   input         m_axi_rlast,
-                m_axi_ruser,
   output        io_CPU_request_ready,
   input         io_CPU_request_valid,
   input  [31:0] io_CPU_request_bits_addr,
@@ -5103,17 +5085,10 @@ module L1_data_cache(
     _GEN_514 ? 3'h2 : read_request_valid ? 3'h0 : {1'h0, write_request_valid, 1'h0};
   assign m_axi_awburst =
     _GEN_514 ? 2'h1 : read_request_valid ? 2'h0 : {1'h0, write_request_valid};
-  assign m_axi_awlock = 1'h0;
-  assign m_axi_awcache = 4'h0;
-  assign m_axi_awprot = 3'h0;
-  assign m_axi_awqos = 4'h0;
-  assign m_axi_awregion = 4'h0;
-  assign m_axi_awuser = 1'h0;
   assign m_axi_wvalid = m_axi_wvalid_0;
   assign m_axi_wdata = m_axi_wvalid_0 ? AXI_AW_DATA_BUFFER[31:0] : 32'h0;
   assign m_axi_wstrb = {4{m_axi_wvalid_0}};
   assign m_axi_wlast = m_axi_wlast_0;
-  assign m_axi_wuser = 1'h0;
   assign m_axi_bready = &AXI_REQUEST_STATE;
   assign m_axi_arvalid = m_axi_arvalid_0;
   assign m_axi_arid = _GEN_515 ? _AXI_request_Q_io_deq_bits_read_ID : 8'h0;
@@ -5132,12 +5107,6 @@ module L1_data_cache(
           : 8'h0;
   assign m_axi_arsize = {1'h0, _GEN_515, 1'h0};
   assign m_axi_arburst = {1'h0, _GEN_515};
-  assign m_axi_arlock = 1'h0;
-  assign m_axi_arcache = 4'h0;
-  assign m_axi_arprot = 3'h0;
-  assign m_axi_arqos = 4'h0;
-  assign m_axi_arregion = 4'h0;
-  assign m_axi_aruser = 1'h0;
   assign m_axi_rready = m_axi_rready_0;
   assign io_CPU_request_ready = 1'h1;
 endmodule

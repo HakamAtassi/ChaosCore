@@ -50,14 +50,6 @@ object format_dcache_word {
 
 	result := access_word
 
-    //printf("word_offset %x\n", word_offset)
-    //printf("data_way %x\n", data_way)
-	//printf("access_word: %x\n", access_word)
-    //printf("address %x\n", address)
-    //printf("word shamrt %d\n", word_shamt)
-	//printf("%d\n", operation)
-	//printf("result %x\n", result)
-    
 	when(operation === access_width_t.W){
 		result := access_word
 	}.elsewhen(operation === access_width_t.HW){
@@ -294,10 +286,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	active_non_cacheable				:= ((io.CPU_request.bits.addr & "h80000000".U) =/= 0.U)	&& active_valid
 	active_non_cacheable_read			:= active_memory_type === memory_type_t.LOAD  && active_non_cacheable
 	active_non_cacheable_write			:= (active_memory_type === memory_type_t.STORE) && active_non_cacheable
-
 	active_cacheable_write_read			:= ((io.CPU_request.bits.addr & "h80000000".U) === 0.U) && active_valid
-
-
 
 	////////////
 	// QUEUES //
@@ -348,7 +337,6 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 
 	for((data_memory, i) <- data_memories.zipWithIndex){
 		data_memory.io.enable		:= 1.B
-		//data_memory.io.addr			:= Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.ALLOCATE, allocate_set, RegNext(active_set))
 		data_memory.io.addr			:= Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.ALLOCATE, data_memory_allocate_address, data_memory_active_address)
 		data_memory.io.wr_en		:= data_memories_wr_en(i)
 		data_memory.io.data_in		:= data_memories_data_in(i)
@@ -540,6 +528,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	when(active_non_cacheable_read){
 		non_cacheable_buffer(non_cacheable_buffer_front_index) := io.CPU_request.bits
 		non_cacheable_buffer_back_pointer := non_cacheable_buffer_front_pointer + 1.U
+		//FIXME: non_cacheable_buffer never dequeues...
 	}
 
 
