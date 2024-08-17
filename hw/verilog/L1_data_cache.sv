@@ -90,6 +90,7 @@ module L1_data_cache(
 
   wire [4:0]       replay_tag;
   wire [5:0]       replay_set;
+  wire [1:0]       replay_access_width;
   wire [1:0]       replay_memory_type;
   wire [31:0]      replay_data;
   wire [31:0]      replay_address;
@@ -217,6 +218,8 @@ module L1_data_cache(
   wire [20:0]      active_tag = {16'h0, (&DATA_CACHE_STATE) ? replay_tag : backend_tag};
   wire [1:0]       active_memory_type =
     (&DATA_CACHE_STATE) ? replay_memory_type : io_CPU_request_bits_memory_type;
+  wire [1:0]       active_access_width =
+    (&DATA_CACHE_STATE) ? replay_access_width : io_CPU_request_bits_access_width;
   wire             _valid_miss_T = tag_hit_OH_0 | tag_hit_OH_1;
   reg              valid_hit_REG;
   reg              valid_hit_REG_1;
@@ -230,7 +233,7 @@ module L1_data_cache(
   wire             valid_miss =
     ~(_valid_miss_T | tag_hit_OH_2 | tag_hit_OH_3) & (valid_miss_REG | valid_miss_REG_1)
     & valid_miss_REG_2;
-  wire             _byte_offset_match_T_125 = active_memory_type == 2'h2;
+  wire             _data_memories_wr_en_31_T_13 = active_memory_type == 2'h2;
   reg              valid_write_hit_REG;
   wire             valid_write_hit = valid_hit & valid_write_hit_REG;
   wire             _active_non_cacheable_read_T = active_memory_type == 2'h1;
@@ -246,101 +249,224 @@ module L1_data_cache(
   wire             active_non_cacheable_read =
     _active_non_cacheable_read_T & active_non_cacheable;
   wire             active_non_cacheable_write =
-    _byte_offset_match_T_125 & active_non_cacheable;
+    _data_memories_wr_en_31_T_13 & active_non_cacheable;
+  wire [4:0]       byte_offset = active_address[4:0];
+  wire [4:0]       word_offset = byte_offset / 5'h4;
+  wire [4:0]       half_word_offset = byte_offset / 5'h2;
+  wire             _data_memories_wr_en_3_T_1 = word_offset == 5'h0;
+  wire             _data_memories_wr_en_31_T_9 = active_access_width == 2'h2;
+  wire             _data_memories_wr_en_31_T_15 = active_access_width == 2'h1;
+  wire             test_0 =
+    _data_memories_wr_en_3_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   wire             _tag_memories_3_io_wr_en_T = DATA_CACHE_STATE == 2'h2;
   reg              data_memories_wr_en_0_REG;
   wire             data_memories_wr_en_0 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_0_REG & valid_hit;
+  wire             test_1 =
+    _data_memories_wr_en_3_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_1_REG;
   wire             data_memories_wr_en_1 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_1_REG & valid_hit;
+  wire             test_2 =
+    _data_memories_wr_en_3_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_2_REG;
   wire             data_memories_wr_en_2 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_2_REG & valid_hit;
+  wire             test_3 =
+    _data_memories_wr_en_3_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_3_REG;
   wire             data_memories_wr_en_3 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_3_REG & valid_hit;
+  wire             _data_memories_wr_en_7_T_1 = word_offset == 5'h1;
+  wire             test_4 =
+    _data_memories_wr_en_7_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_4_REG;
   wire             data_memories_wr_en_4 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_4_REG & valid_hit;
+  wire             test_5 =
+    _data_memories_wr_en_7_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_5_REG;
   wire             data_memories_wr_en_5 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_5_REG & valid_hit;
+  wire             test_6 =
+    _data_memories_wr_en_7_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_6_REG;
   wire             data_memories_wr_en_6 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_6_REG & valid_hit;
+  wire             test_7 =
+    _data_memories_wr_en_7_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_7_REG;
   wire             data_memories_wr_en_7 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_7_REG & valid_hit;
+  wire             _data_memories_wr_en_11_T_1 = word_offset == 5'h2;
+  wire             test_8 =
+    _data_memories_wr_en_11_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_8_REG;
   wire             data_memories_wr_en_8 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_8_REG & valid_hit;
+  wire             test_9 =
+    _data_memories_wr_en_11_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_9_REG;
   wire             data_memories_wr_en_9 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_9_REG & valid_hit;
+  wire             test_10 =
+    _data_memories_wr_en_11_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_10_REG;
   wire             data_memories_wr_en_10 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_10_REG & valid_hit;
+  wire             test_11 =
+    _data_memories_wr_en_11_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_11_REG;
   wire             data_memories_wr_en_11 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_11_REG & valid_hit;
+  wire             _data_memories_wr_en_15_T_1 = word_offset == 5'h3;
+  wire             test_12 =
+    _data_memories_wr_en_15_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_12_REG;
   wire             data_memories_wr_en_12 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_12_REG & valid_hit;
+  wire             test_13 =
+    _data_memories_wr_en_15_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_13_REG;
   wire             data_memories_wr_en_13 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_13_REG & valid_hit;
+  wire             test_14 =
+    _data_memories_wr_en_15_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_14_REG;
   wire             data_memories_wr_en_14 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_14_REG & valid_hit;
+  wire             test_15 =
+    _data_memories_wr_en_15_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_15_REG;
   wire             data_memories_wr_en_15 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_15_REG & valid_hit;
+  wire             _data_memories_wr_en_19_T_1 = word_offset == 5'h4;
+  wire             test_16 =
+    _data_memories_wr_en_19_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_16_REG;
   wire             data_memories_wr_en_16 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_16_REG & valid_hit;
+  wire             test_17 =
+    _data_memories_wr_en_19_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_17_REG;
   wire             data_memories_wr_en_17 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_17_REG & valid_hit;
+  wire             test_18 =
+    _data_memories_wr_en_19_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_18_REG;
   wire             data_memories_wr_en_18 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_18_REG & valid_hit;
+  wire             test_19 =
+    _data_memories_wr_en_19_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_19_REG;
   wire             data_memories_wr_en_19 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_19_REG & valid_hit;
+  wire             _data_memories_wr_en_23_T_1 = word_offset == 5'h5;
+  wire             test_20 =
+    _data_memories_wr_en_23_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_20_REG;
   wire             data_memories_wr_en_20 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_20_REG & valid_hit;
+  wire             test_21 =
+    _data_memories_wr_en_23_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_21_REG;
   wire             data_memories_wr_en_21 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_21_REG & valid_hit;
+  wire             test_22 =
+    _data_memories_wr_en_23_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_22_REG;
   wire             data_memories_wr_en_22 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_22_REG & valid_hit;
+  wire             test_23 =
+    _data_memories_wr_en_23_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_23_REG;
   wire             data_memories_wr_en_23 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_23_REG & valid_hit;
+  wire             _data_memories_wr_en_27_T_1 = word_offset == 5'h6;
+  wire             test_24 =
+    _data_memories_wr_en_27_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_24_REG;
   wire             data_memories_wr_en_24 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_24_REG & valid_hit;
+  wire             test_25 =
+    _data_memories_wr_en_27_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_25_REG;
   wire             data_memories_wr_en_25 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_25_REG & valid_hit;
+  wire             test_26 =
+    _data_memories_wr_en_27_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_26_REG;
   wire             data_memories_wr_en_26 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_26_REG & valid_hit;
+  wire             test_27 =
+    _data_memories_wr_en_27_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_27_REG;
   wire             data_memories_wr_en_27 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_27_REG & valid_hit;
+  wire             _data_memories_wr_en_31_T_1 = word_offset == 5'h7;
+  wire             test_28 =
+    _data_memories_wr_en_31_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_28_REG;
   wire             data_memories_wr_en_28 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_28_REG & valid_hit;
+  wire             test_29 =
+    _data_memories_wr_en_31_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_29_REG;
   wire             data_memories_wr_en_29 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_29_REG & valid_hit;
+  wire             _data_memories_wr_en_31_T_6 = half_word_offset == 5'hF;
+  wire             test_30 =
+    _data_memories_wr_en_31_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_30_REG;
   wire             data_memories_wr_en_30 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_30_REG & valid_hit;
+  `ifndef SYNTHESIS
+    always @(posedge clock) begin
+      if ((`PRINTF_COND_) & ~reset) begin
+        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 1'h0);
+        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 1'h0);
+        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 1'h0);
+        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 1'h0);
+        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 1'h1);
+        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 1'h1);
+        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 1'h1);
+        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 1'h1);
+        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 2'h2);
+        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 2'h2);
+        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 2'h2);
+        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 2'h2);
+        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 2'h3);
+        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 2'h3);
+        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 2'h3);
+        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 2'h3);
+        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 3'h4);
+        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 3'h4);
+        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 3'h4);
+        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 3'h4);
+        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 3'h5);
+        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 3'h5);
+        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 3'h5);
+        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 3'h5);
+        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 3'h6);
+        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 3'h6);
+        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 3'h6);
+        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 3'h6);
+        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 3'h7);
+        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 3'h7);
+        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 3'h7);
+        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 3'h7);
+      end
+    end // always @(posedge)
+  `endif // not def SYNTHESIS
+  wire             word_offset_match =
+    _data_memories_wr_en_31_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
+  wire             half_word_offset_match =
+    _data_memories_wr_en_31_T_6 & _data_memories_wr_en_31_T_13
+    & _data_memories_wr_en_31_T_9;
+  wire             byte_offset_match =
+    (&byte_offset) & _data_memories_wr_en_31_T_13 & _data_memories_wr_en_31_T_15;
+  wire             test_31 =
+    _data_memories_wr_en_31_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_31_REG;
   wire             data_memories_wr_en_31 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_31_REG & valid_hit;
@@ -1983,6 +2109,7 @@ module L1_data_cache(
      {_GEN_485[MSHR_front_pointer[1:0]]},
      {_GEN_480[MSHR_front_pointer[1:0]]},
      {_GEN_475[MSHR_front_pointer[1:0]]}};
+  assign replay_access_width = _GEN_521[_GEN_469];
   wire [7:0][3:0]  _GEN_522 =
     {{_GEN_511[MSHR_front_pointer[1:0]]},
      {_GEN_506[MSHR_front_pointer[1:0]]},
@@ -2014,6 +2141,8 @@ module L1_data_cache(
      {{24'h0, _output_data_result_T_4[7:0]}},
      {_output_data_access_word_T[31:0]}};
   wire [31:0]      output_data = _GEN_523[output_operation];
+  reg              output_valid_r;
+  wire             output_valid = output_valid_r;
   reg  [3:0]       output_MOB_index_r;
   reg  [3:0]       output_MOB_index_r_1;
   wire             axi_response_valid;
@@ -2023,14 +2152,24 @@ module L1_data_cache(
     automatic logic             _GEN_525;
     automatic logic [255:0]     _GEN_526;
     automatic logic             active_cacheable = ~(active_address[31]) & active_valid;
-    automatic logic [1:0]       active_access_width =
-      (&DATA_CACHE_STATE) ? _GEN_521[_GEN_469] : io_CPU_request_bits_access_width;
-    automatic logic [31:0]      word_offset = io_CPU_request_bits_addr / 32'h4;
+    automatic logic             valid_read_hit = valid_hit & valid_read_hit_REG;
     automatic logic             active_cacheable_write_read =
       ~(io_CPU_request_bits_addr[31]) & active_valid;
-    automatic logic             _half_word_offset_match_T_127 =
-      active_access_width == 2'h2;
-    automatic logic             _byte_offset_match_T_127 = active_access_width == 2'h1;
+    automatic logic             _data_memories_wr_en_1_T_6 = half_word_offset == 5'h0;
+    automatic logic             _data_memories_wr_en_3_T_6 = half_word_offset == 5'h1;
+    automatic logic             _data_memories_wr_en_5_T_6 = half_word_offset == 5'h2;
+    automatic logic             _data_memories_wr_en_7_T_6 = half_word_offset == 5'h3;
+    automatic logic             _data_memories_wr_en_9_T_6 = half_word_offset == 5'h4;
+    automatic logic             _data_memories_wr_en_11_T_6 = half_word_offset == 5'h5;
+    automatic logic             _data_memories_wr_en_13_T_6 = half_word_offset == 5'h6;
+    automatic logic             _data_memories_wr_en_15_T_6 = half_word_offset == 5'h7;
+    automatic logic             _data_memories_wr_en_17_T_6 = half_word_offset == 5'h8;
+    automatic logic             _data_memories_wr_en_19_T_6 = half_word_offset == 5'h9;
+    automatic logic             _data_memories_wr_en_21_T_6 = half_word_offset == 5'hA;
+    automatic logic             _data_memories_wr_en_23_T_6 = half_word_offset == 5'hB;
+    automatic logic             _data_memories_wr_en_25_T_6 = half_word_offset == 5'hC;
+    automatic logic             _data_memories_wr_en_27_T_6 = half_word_offset == 5'hD;
+    automatic logic             _data_memories_wr_en_29_T_6 = half_word_offset == 5'hE;
     automatic logic [63:0][3:0] _GEN_527;
     automatic logic [1:0]       hit_MSHR_index;
     automatic logic             _GEN_528;
@@ -2484,138 +2623,170 @@ module L1_data_cache(
     valid_miss_REG <= io_CPU_request_valid;
     valid_miss_REG_1 <= &DATA_CACHE_STATE;
     valid_miss_REG_2 <= active_cacheable;
-    valid_write_hit_REG <= _byte_offset_match_T_125;
+    valid_write_hit_REG <= _data_memories_wr_en_31_T_13;
     valid_read_hit_REG <= _active_non_cacheable_read_T;
     hit_set_REG <= active_set;
     miss_address_REG <= active_address;
     data_memories_wr_en_0_REG <=
-      ~(|word_offset) & _byte_offset_match_T_125 & (&active_access_width)
-      | ~(|word_offset) & _byte_offset_match_T_125 & _half_word_offset_match_T_127
-      | ~(|word_offset) & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+      _data_memories_wr_en_3_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width)
+      | _data_memories_wr_en_1_T_6 & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_9 | byte_offset == 5'h0 & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_15;
     data_memories_wr_en_1_REG <=
-      ~(|word_offset) & _byte_offset_match_T_125 & (&active_access_width)
-      | ~(|word_offset) & _byte_offset_match_T_125 & _half_word_offset_match_T_127
-      | word_offset == 32'h1 & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+      _data_memories_wr_en_3_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width)
+      | _data_memories_wr_en_1_T_6 & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_9 | byte_offset == 5'h1 & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_15;
     data_memories_wr_en_2_REG <=
-      ~(|word_offset) & _byte_offset_match_T_125 & (&active_access_width)
-      | word_offset == 32'h1 & _byte_offset_match_T_125 & _half_word_offset_match_T_127
-      | word_offset == 32'h2 & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+      _data_memories_wr_en_3_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width)
+      | _data_memories_wr_en_3_T_6 & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_9 | byte_offset == 5'h2 & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_15;
     data_memories_wr_en_3_REG <=
-      ~(|word_offset) & _byte_offset_match_T_125 & (&active_access_width)
-      | word_offset == 32'h1 & _byte_offset_match_T_125 & _half_word_offset_match_T_127
-      | word_offset == 32'h3 & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+      _data_memories_wr_en_3_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width)
+      | _data_memories_wr_en_3_T_6 & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_9 | byte_offset == 5'h3 & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_15;
     data_memories_wr_en_4_REG <=
-      word_offset == 32'h1 & _byte_offset_match_T_125 & (&active_access_width)
-      | word_offset == 32'h2 & _byte_offset_match_T_125 & _half_word_offset_match_T_127
-      | word_offset == 32'h4 & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+      _data_memories_wr_en_7_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width)
+      | _data_memories_wr_en_5_T_6 & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_9 | byte_offset == 5'h4 & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_15;
     data_memories_wr_en_5_REG <=
-      word_offset == 32'h1 & _byte_offset_match_T_125 & (&active_access_width)
-      | word_offset == 32'h2 & _byte_offset_match_T_125 & _half_word_offset_match_T_127
-      | word_offset == 32'h5 & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+      _data_memories_wr_en_7_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width)
+      | _data_memories_wr_en_5_T_6 & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_9 | byte_offset == 5'h5 & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_15;
     data_memories_wr_en_6_REG <=
-      word_offset == 32'h1 & _byte_offset_match_T_125 & (&active_access_width)
-      | word_offset == 32'h3 & _byte_offset_match_T_125 & _half_word_offset_match_T_127
-      | word_offset == 32'h6 & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+      _data_memories_wr_en_7_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width)
+      | _data_memories_wr_en_7_T_6 & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_9 | byte_offset == 5'h6 & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_15;
     data_memories_wr_en_7_REG <=
-      word_offset == 32'h1 & _byte_offset_match_T_125 & (&active_access_width)
-      | word_offset == 32'h3 & _byte_offset_match_T_125 & _half_word_offset_match_T_127
-      | word_offset == 32'h7 & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+      _data_memories_wr_en_7_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width)
+      | _data_memories_wr_en_7_T_6 & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_9 | byte_offset == 5'h7 & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_15;
     data_memories_wr_en_8_REG <=
-      word_offset == 32'h2 & _byte_offset_match_T_125 & (&active_access_width)
-      | word_offset == 32'h4 & _byte_offset_match_T_125 & _half_word_offset_match_T_127
-      | word_offset == 32'h8 & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+      _data_memories_wr_en_11_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width)
+      | _data_memories_wr_en_9_T_6 & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_9 | byte_offset == 5'h8 & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_15;
     data_memories_wr_en_9_REG <=
-      word_offset == 32'h2 & _byte_offset_match_T_125 & (&active_access_width)
-      | word_offset == 32'h4 & _byte_offset_match_T_125 & _half_word_offset_match_T_127
-      | word_offset == 32'h9 & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+      _data_memories_wr_en_11_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width)
+      | _data_memories_wr_en_9_T_6 & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_9 | byte_offset == 5'h9 & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_15;
     data_memories_wr_en_10_REG <=
-      word_offset == 32'h2 & _byte_offset_match_T_125 & (&active_access_width)
-      | word_offset == 32'h5 & _byte_offset_match_T_125 & _half_word_offset_match_T_127
-      | word_offset == 32'hA & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+      _data_memories_wr_en_11_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width)
+      | _data_memories_wr_en_11_T_6 & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_9 | byte_offset == 5'hA & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_15;
     data_memories_wr_en_11_REG <=
-      word_offset == 32'h2 & _byte_offset_match_T_125 & (&active_access_width)
-      | word_offset == 32'h5 & _byte_offset_match_T_125 & _half_word_offset_match_T_127
-      | word_offset == 32'hB & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+      _data_memories_wr_en_11_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width)
+      | _data_memories_wr_en_11_T_6 & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_9 | byte_offset == 5'hB & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_15;
     data_memories_wr_en_12_REG <=
-      word_offset == 32'h3 & _byte_offset_match_T_125 & (&active_access_width)
-      | word_offset == 32'h6 & _byte_offset_match_T_125 & _half_word_offset_match_T_127
-      | word_offset == 32'hC & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+      _data_memories_wr_en_15_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width)
+      | _data_memories_wr_en_13_T_6 & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_9 | byte_offset == 5'hC & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_15;
     data_memories_wr_en_13_REG <=
-      word_offset == 32'h3 & _byte_offset_match_T_125 & (&active_access_width)
-      | word_offset == 32'h6 & _byte_offset_match_T_125 & _half_word_offset_match_T_127
-      | word_offset == 32'hD & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+      _data_memories_wr_en_15_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width)
+      | _data_memories_wr_en_13_T_6 & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_9 | byte_offset == 5'hD & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_15;
     data_memories_wr_en_14_REG <=
-      word_offset == 32'h3 & _byte_offset_match_T_125 & (&active_access_width)
-      | word_offset == 32'h7 & _byte_offset_match_T_125 & _half_word_offset_match_T_127
-      | word_offset == 32'hE & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+      _data_memories_wr_en_15_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width)
+      | _data_memories_wr_en_15_T_6 & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_9 | byte_offset == 5'hE & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_15;
     data_memories_wr_en_15_REG <=
-      word_offset == 32'h3 & _byte_offset_match_T_125 & (&active_access_width)
-      | word_offset == 32'h7 & _byte_offset_match_T_125 & _half_word_offset_match_T_127
-      | word_offset == 32'hF & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+      _data_memories_wr_en_15_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width)
+      | _data_memories_wr_en_15_T_6 & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_9 | byte_offset == 5'hF & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_15;
     data_memories_wr_en_16_REG <=
-      word_offset == 32'h4 & _byte_offset_match_T_125 & (&active_access_width)
-      | word_offset == 32'h8 & _byte_offset_match_T_125 & _half_word_offset_match_T_127
-      | word_offset == 32'h10 & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+      _data_memories_wr_en_19_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width)
+      | _data_memories_wr_en_17_T_6 & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_9 | byte_offset == 5'h10 & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_15;
     data_memories_wr_en_17_REG <=
-      word_offset == 32'h4 & _byte_offset_match_T_125 & (&active_access_width)
-      | word_offset == 32'h8 & _byte_offset_match_T_125 & _half_word_offset_match_T_127
-      | word_offset == 32'h11 & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+      _data_memories_wr_en_19_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width)
+      | _data_memories_wr_en_17_T_6 & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_9 | byte_offset == 5'h11 & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_15;
     data_memories_wr_en_18_REG <=
-      word_offset == 32'h4 & _byte_offset_match_T_125 & (&active_access_width)
-      | word_offset == 32'h9 & _byte_offset_match_T_125 & _half_word_offset_match_T_127
-      | word_offset == 32'h12 & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+      _data_memories_wr_en_19_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width)
+      | _data_memories_wr_en_19_T_6 & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_9 | byte_offset == 5'h12 & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_15;
     data_memories_wr_en_19_REG <=
-      word_offset == 32'h4 & _byte_offset_match_T_125 & (&active_access_width)
-      | word_offset == 32'h9 & _byte_offset_match_T_125 & _half_word_offset_match_T_127
-      | word_offset == 32'h13 & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+      _data_memories_wr_en_19_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width)
+      | _data_memories_wr_en_19_T_6 & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_9 | byte_offset == 5'h13 & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_15;
     data_memories_wr_en_20_REG <=
-      word_offset == 32'h5 & _byte_offset_match_T_125 & (&active_access_width)
-      | word_offset == 32'hA & _byte_offset_match_T_125 & _half_word_offset_match_T_127
-      | word_offset == 32'h14 & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+      _data_memories_wr_en_23_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width)
+      | _data_memories_wr_en_21_T_6 & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_9 | byte_offset == 5'h14 & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_15;
     data_memories_wr_en_21_REG <=
-      word_offset == 32'h5 & _byte_offset_match_T_125 & (&active_access_width)
-      | word_offset == 32'hA & _byte_offset_match_T_125 & _half_word_offset_match_T_127
-      | word_offset == 32'h15 & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+      _data_memories_wr_en_23_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width)
+      | _data_memories_wr_en_21_T_6 & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_9 | byte_offset == 5'h15 & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_15;
     data_memories_wr_en_22_REG <=
-      word_offset == 32'h5 & _byte_offset_match_T_125 & (&active_access_width)
-      | word_offset == 32'hB & _byte_offset_match_T_125 & _half_word_offset_match_T_127
-      | word_offset == 32'h16 & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+      _data_memories_wr_en_23_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width)
+      | _data_memories_wr_en_23_T_6 & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_9 | byte_offset == 5'h16 & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_15;
     data_memories_wr_en_23_REG <=
-      word_offset == 32'h5 & _byte_offset_match_T_125 & (&active_access_width)
-      | word_offset == 32'hB & _byte_offset_match_T_125 & _half_word_offset_match_T_127
-      | word_offset == 32'h17 & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+      _data_memories_wr_en_23_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width)
+      | _data_memories_wr_en_23_T_6 & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_9 | byte_offset == 5'h17 & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_15;
     data_memories_wr_en_24_REG <=
-      word_offset == 32'h6 & _byte_offset_match_T_125 & (&active_access_width)
-      | word_offset == 32'hC & _byte_offset_match_T_125 & _half_word_offset_match_T_127
-      | word_offset == 32'h18 & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+      _data_memories_wr_en_27_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width)
+      | _data_memories_wr_en_25_T_6 & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_9 | byte_offset == 5'h18 & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_15;
     data_memories_wr_en_25_REG <=
-      word_offset == 32'h6 & _byte_offset_match_T_125 & (&active_access_width)
-      | word_offset == 32'hC & _byte_offset_match_T_125 & _half_word_offset_match_T_127
-      | word_offset == 32'h19 & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+      _data_memories_wr_en_27_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width)
+      | _data_memories_wr_en_25_T_6 & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_9 | byte_offset == 5'h19 & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_15;
     data_memories_wr_en_26_REG <=
-      word_offset == 32'h6 & _byte_offset_match_T_125 & (&active_access_width)
-      | word_offset == 32'hD & _byte_offset_match_T_125 & _half_word_offset_match_T_127
-      | word_offset == 32'h1A & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+      _data_memories_wr_en_27_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width)
+      | _data_memories_wr_en_27_T_6 & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_9 | byte_offset == 5'h1A & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_15;
     data_memories_wr_en_27_REG <=
-      word_offset == 32'h6 & _byte_offset_match_T_125 & (&active_access_width)
-      | word_offset == 32'hD & _byte_offset_match_T_125 & _half_word_offset_match_T_127
-      | word_offset == 32'h1B & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+      _data_memories_wr_en_27_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width)
+      | _data_memories_wr_en_27_T_6 & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_9 | byte_offset == 5'h1B & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_15;
     data_memories_wr_en_28_REG <=
-      word_offset == 32'h7 & _byte_offset_match_T_125 & (&active_access_width)
-      | word_offset == 32'hE & _byte_offset_match_T_125 & _half_word_offset_match_T_127
-      | word_offset == 32'h1C & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+      _data_memories_wr_en_31_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width)
+      | _data_memories_wr_en_29_T_6 & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_9 | byte_offset == 5'h1C & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_15;
     data_memories_wr_en_29_REG <=
-      word_offset == 32'h7 & _byte_offset_match_T_125 & (&active_access_width)
-      | word_offset == 32'hE & _byte_offset_match_T_125 & _half_word_offset_match_T_127
-      | word_offset == 32'h1D & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+      _data_memories_wr_en_31_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width)
+      | _data_memories_wr_en_29_T_6 & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_9 | byte_offset == 5'h1D & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_15;
     data_memories_wr_en_30_REG <=
-      word_offset == 32'h7 & _byte_offset_match_T_125 & (&active_access_width)
-      | word_offset == 32'hF & _byte_offset_match_T_125 & _half_word_offset_match_T_127
-      | word_offset == 32'h1E & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+      _data_memories_wr_en_31_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width)
+      | _data_memories_wr_en_31_T_6 & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_9 | byte_offset == 5'h1E & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_15;
     data_memories_wr_en_31_REG <=
-      word_offset == 32'h7 & _byte_offset_match_T_125 & (&active_access_width)
-      | word_offset == 32'hF & _byte_offset_match_T_125 & _half_word_offset_match_T_127
-      | word_offset == 32'h1F & _byte_offset_match_T_125 & _byte_offset_match_T_127;
+      _data_memories_wr_en_31_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width)
+      | _data_memories_wr_en_31_T_6 & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_9 | (&byte_offset) & _data_memories_wr_en_31_T_13
+      & _data_memories_wr_en_31_T_15;
     data_memories_data_in_0_REG <= active_data[7:0];
     data_memories_data_in_1_REG <= active_data[15:8];
     data_memories_data_in_2_REG <= active_data[23:16];
@@ -3290,10 +3461,11 @@ module L1_data_cache(
     output_address_r_1 <= output_address_r;
     output_operation_r <= active_access_width;
     output_operation_r_1 <= output_operation_r;
+    output_valid_r <= valid_read_hit;
     output_MOB_index_r <=
       (&DATA_CACHE_STATE) ? _GEN_522[_GEN_469] : io_CPU_request_bits_MOB_index;
     output_MOB_index_r_1 <= output_MOB_index_r;
-    cacheable_response_Q_io_enq_valid_REG <= valid_hit & valid_read_hit_REG;
+    cacheable_response_Q_io_enq_valid_REG <= valid_read_hit;
     if (reset) begin
       AXI_REQUEST_STATE <= 2'h0;
       write_counter <= 32'h0;
@@ -3622,78 +3794,77 @@ module L1_data_cache(
       MSHR_back_pointer <= 3'h0;
     end
     else begin
-      automatic logic            _GEN_580;
-      automatic logic            _GEN_581 = REG == 6'h0;
-      automatic logic            _GEN_582 = evict_way == 2'h0;
-      automatic logic            _GEN_583 = evict_way == 2'h1;
-      automatic logic            _GEN_584 = evict_way == 2'h2;
-      automatic logic            _GEN_585 = REG == 6'h1;
-      automatic logic            _GEN_586 = REG == 6'h2;
-      automatic logic            _GEN_587 = REG == 6'h3;
-      automatic logic            _GEN_588 = REG == 6'h4;
-      automatic logic            _GEN_589 = REG == 6'h5;
-      automatic logic            _GEN_590 = REG == 6'h6;
-      automatic logic            _GEN_591 = REG == 6'h7;
-      automatic logic            _GEN_592 = REG == 6'h8;
-      automatic logic            _GEN_593 = REG == 6'h9;
-      automatic logic            _GEN_594 = REG == 6'hA;
-      automatic logic            _GEN_595 = REG == 6'hB;
-      automatic logic            _GEN_596 = REG == 6'hC;
-      automatic logic            _GEN_597 = REG == 6'hD;
-      automatic logic            _GEN_598 = REG == 6'hE;
-      automatic logic            _GEN_599 = REG == 6'hF;
-      automatic logic            _GEN_600 = REG == 6'h10;
-      automatic logic            _GEN_601 = REG == 6'h11;
-      automatic logic            _GEN_602 = REG == 6'h12;
-      automatic logic            _GEN_603 = REG == 6'h13;
-      automatic logic            _GEN_604 = REG == 6'h14;
-      automatic logic            _GEN_605 = REG == 6'h15;
-      automatic logic            _GEN_606 = REG == 6'h16;
-      automatic logic            _GEN_607 = REG == 6'h17;
-      automatic logic            _GEN_608 = REG == 6'h18;
-      automatic logic            _GEN_609 = REG == 6'h19;
-      automatic logic            _GEN_610 = REG == 6'h1A;
-      automatic logic            _GEN_611 = REG == 6'h1B;
-      automatic logic            _GEN_612 = REG == 6'h1C;
-      automatic logic            _GEN_613 = REG == 6'h1D;
-      automatic logic            _GEN_614 = REG == 6'h1E;
-      automatic logic            _GEN_615 = REG == 6'h1F;
-      automatic logic            _GEN_616 = REG == 6'h20;
-      automatic logic            _GEN_617 = REG == 6'h21;
-      automatic logic            _GEN_618 = REG == 6'h22;
-      automatic logic            _GEN_619 = REG == 6'h23;
-      automatic logic            _GEN_620 = REG == 6'h24;
-      automatic logic            _GEN_621 = REG == 6'h25;
-      automatic logic            _GEN_622 = REG == 6'h26;
-      automatic logic            _GEN_623 = REG == 6'h27;
-      automatic logic            _GEN_624 = REG == 6'h28;
-      automatic logic            _GEN_625 = REG == 6'h29;
-      automatic logic            _GEN_626 = REG == 6'h2A;
-      automatic logic            _GEN_627 = REG == 6'h2B;
-      automatic logic            _GEN_628 = REG == 6'h2C;
-      automatic logic            _GEN_629 = REG == 6'h2D;
-      automatic logic            _GEN_630 = REG == 6'h2E;
-      automatic logic            _GEN_631 = REG == 6'h2F;
-      automatic logic            _GEN_632 = REG == 6'h30;
-      automatic logic            _GEN_633 = REG == 6'h31;
-      automatic logic            _GEN_634 = REG == 6'h32;
-      automatic logic            _GEN_635 = REG == 6'h33;
-      automatic logic            _GEN_636 = REG == 6'h34;
-      automatic logic            _GEN_637 = REG == 6'h35;
-      automatic logic            _GEN_638 = REG == 6'h36;
-      automatic logic            _GEN_639 = REG == 6'h37;
-      automatic logic            _GEN_640 = REG == 6'h38;
-      automatic logic            _GEN_641 = REG == 6'h39;
-      automatic logic            _GEN_642 = REG == 6'h3A;
-      automatic logic            _GEN_643 = REG == 6'h3B;
-      automatic logic            _GEN_644 = REG == 6'h3C;
-      automatic logic            _GEN_645 = REG == 6'h3D;
-      automatic logic            _GEN_646 = REG == 6'h3E;
-      automatic logic [3:0]      _GEN_647;
-      automatic logic [3:0]      _PLRU_memory_T_1;
-      automatic logic [3:0]      _PLRU_memory_updated_PLRU_T;
-      automatic logic [3:0]      _PLRU_memory_updated_PLRU_T_2;
-      automatic logic [3:0][1:0] _GEN_648;
+      automatic logic       _GEN_580;
+      automatic logic       _GEN_581 = REG == 6'h0;
+      automatic logic       _GEN_582 = evict_way == 2'h0;
+      automatic logic       _GEN_583 = evict_way == 2'h1;
+      automatic logic       _GEN_584 = evict_way == 2'h2;
+      automatic logic       _GEN_585 = REG == 6'h1;
+      automatic logic       _GEN_586 = REG == 6'h2;
+      automatic logic       _GEN_587 = REG == 6'h3;
+      automatic logic       _GEN_588 = REG == 6'h4;
+      automatic logic       _GEN_589 = REG == 6'h5;
+      automatic logic       _GEN_590 = REG == 6'h6;
+      automatic logic       _GEN_591 = REG == 6'h7;
+      automatic logic       _GEN_592 = REG == 6'h8;
+      automatic logic       _GEN_593 = REG == 6'h9;
+      automatic logic       _GEN_594 = REG == 6'hA;
+      automatic logic       _GEN_595 = REG == 6'hB;
+      automatic logic       _GEN_596 = REG == 6'hC;
+      automatic logic       _GEN_597 = REG == 6'hD;
+      automatic logic       _GEN_598 = REG == 6'hE;
+      automatic logic       _GEN_599 = REG == 6'hF;
+      automatic logic       _GEN_600 = REG == 6'h10;
+      automatic logic       _GEN_601 = REG == 6'h11;
+      automatic logic       _GEN_602 = REG == 6'h12;
+      automatic logic       _GEN_603 = REG == 6'h13;
+      automatic logic       _GEN_604 = REG == 6'h14;
+      automatic logic       _GEN_605 = REG == 6'h15;
+      automatic logic       _GEN_606 = REG == 6'h16;
+      automatic logic       _GEN_607 = REG == 6'h17;
+      automatic logic       _GEN_608 = REG == 6'h18;
+      automatic logic       _GEN_609 = REG == 6'h19;
+      automatic logic       _GEN_610 = REG == 6'h1A;
+      automatic logic       _GEN_611 = REG == 6'h1B;
+      automatic logic       _GEN_612 = REG == 6'h1C;
+      automatic logic       _GEN_613 = REG == 6'h1D;
+      automatic logic       _GEN_614 = REG == 6'h1E;
+      automatic logic       _GEN_615 = REG == 6'h1F;
+      automatic logic       _GEN_616 = REG == 6'h20;
+      automatic logic       _GEN_617 = REG == 6'h21;
+      automatic logic       _GEN_618 = REG == 6'h22;
+      automatic logic       _GEN_619 = REG == 6'h23;
+      automatic logic       _GEN_620 = REG == 6'h24;
+      automatic logic       _GEN_621 = REG == 6'h25;
+      automatic logic       _GEN_622 = REG == 6'h26;
+      automatic logic       _GEN_623 = REG == 6'h27;
+      automatic logic       _GEN_624 = REG == 6'h28;
+      automatic logic       _GEN_625 = REG == 6'h29;
+      automatic logic       _GEN_626 = REG == 6'h2A;
+      automatic logic       _GEN_627 = REG == 6'h2B;
+      automatic logic       _GEN_628 = REG == 6'h2C;
+      automatic logic       _GEN_629 = REG == 6'h2D;
+      automatic logic       _GEN_630 = REG == 6'h2E;
+      automatic logic       _GEN_631 = REG == 6'h2F;
+      automatic logic       _GEN_632 = REG == 6'h30;
+      automatic logic       _GEN_633 = REG == 6'h31;
+      automatic logic       _GEN_634 = REG == 6'h32;
+      automatic logic       _GEN_635 = REG == 6'h33;
+      automatic logic       _GEN_636 = REG == 6'h34;
+      automatic logic       _GEN_637 = REG == 6'h35;
+      automatic logic       _GEN_638 = REG == 6'h36;
+      automatic logic       _GEN_639 = REG == 6'h37;
+      automatic logic       _GEN_640 = REG == 6'h38;
+      automatic logic       _GEN_641 = REG == 6'h39;
+      automatic logic       _GEN_642 = REG == 6'h3A;
+      automatic logic       _GEN_643 = REG == 6'h3B;
+      automatic logic       _GEN_644 = REG == 6'h3C;
+      automatic logic       _GEN_645 = REG == 6'h3D;
+      automatic logic       _GEN_646 = REG == 6'h3E;
+      automatic logic [3:0] _GEN_647;
+      automatic logic [3:0] _PLRU_memory_T_1;
+      automatic logic [3:0] _PLRU_memory_updated_PLRU_T;
+      automatic logic [3:0] _PLRU_memory_updated_PLRU_T_2;
       _GEN_580 = m_axi_awready & m_axi_awvalid_0;
       _GEN_647 = _GEN_527[hit_set_REG];
       _PLRU_memory_T_1 =
@@ -3720,15 +3891,20 @@ module L1_data_cache(
         write_counter <= write_counter - 32'h1;
       else if (~(|AXI_REQUEST_STATE) & _GEN_580)
         write_counter <= {24'h0, m_axi_awlen_0};
-      _GEN_648 =
-        {{(&DATA_CACHE_STATE) & (&DATA_CACHE_STATE) & _GEN_567 ? 2'h0 : DATA_CACHE_STATE},
-         {2'h3},
-         {DATA_CACHE_STATE},
-         {_non_cacheable_response_Q_io_deq_valid
-          | ~(axi_response_valid & _final_response_buffer_io_deq_bits_ID == 8'h0)
-            ? DATA_CACHE_STATE
-            : 2'h2}};
-      DATA_CACHE_STATE <= _GEN_648[DATA_CACHE_STATE];
+      if (|DATA_CACHE_STATE) begin
+        if (~(DATA_CACHE_STATE == 2'h1)) begin
+          if (DATA_CACHE_STATE == 2'h2)
+            DATA_CACHE_STATE <= 2'h3;
+          else if ((&DATA_CACHE_STATE) & (&DATA_CACHE_STATE) & _GEN_567)
+            DATA_CACHE_STATE <= 2'h0;
+        end
+      end
+      else if (_non_cacheable_response_Q_io_deq_valid
+               | ~(axi_response_valid
+                   & _final_response_buffer_io_deq_bits_ID == 8'h0)) begin
+      end
+      else
+        DATA_CACHE_STATE <= 2'h2;
       valid_memory_0_0 <=
         ~(valid_miss & _GEN_581 & _GEN_582) & (_GEN_8 | valid_memory_0_0);
       valid_memory_0_1 <=
@@ -5301,6 +5477,6 @@ module L1_data_cache(
   assign m_axi_arregion = 4'h0;
   assign m_axi_aruser = 1'h0;
   assign m_axi_rready = m_axi_rready_0;
-  assign io_CPU_request_ready = 1'h1;
+  assign io_CPU_request_ready = ~(|DATA_CACHE_STATE);
 endmodule
 

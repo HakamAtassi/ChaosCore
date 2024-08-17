@@ -17,6 +17,8 @@ class SOC_TB:
         self.memory_capacity = 256*(2**20)
         self.axi_ram = AxiRam(AxiBus.from_prefix(dut, "m_axi"), dut.clock, dut.reset, size=self.memory_capacity)
 
+
+
         with open(binary, "rb") as f:
             binary_data = f.read()
         

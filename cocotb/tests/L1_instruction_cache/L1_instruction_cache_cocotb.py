@@ -251,27 +251,48 @@ async def test_CPU_not_ready(dut):
 
 
 
-#@cocotb.test()
-#async def test_kill(dut):
-    ## Set seed
-    #random.seed(0x42)
+@cocotb.test()
+async def test_kill(dut):
+    # Set seed
+    random.seed(0x42)
 
-    ## Start lock
-    #await cocotb.start(generateClock(dut))
+    # Start lock
+    await cocotb.start(generateClock(dut))
 
-    ## Bring up TB
-    #L1_cache = L1_instruction_cache_TB(dut)     # construct TB
-    #await L1_cache.reset()                      # Reset
-    #L1_cache.init_sequence()                    # INIT axi ram
+    # Bring up TB
+    L1_cache = L1_instruction_cache_TB(dut)     # construct TB
+    await L1_cache.reset()                      # Reset
+    L1_cache.init_sequence()                    # INIT axi ram
 
-    ## Set response valid
-    #L1_cache.set_CPU_response(1)
+    # Set response valid
+    L1_cache.set_CPU_response(1)
 
-    ## Wait a bit for no particular reason
-    #await L1_cache.clock()
-    #await L1_cache.clock()
-    #await L1_cache.clock()
-    #await L1_cache.clock()
+    # Wait a bit for no particular reason
+    await L1_cache.clock()
+    await L1_cache.clock()
+    await L1_cache.clock()
+    await L1_cache.clock()
+
+
+    # Perform request
+    await L1_cache.write_CPU_read_request(address=0x40, valid = 1)
+
+    await L1_cache.clock()
+    await L1_cache.clock()
+    await L1_cache.clock()
+    await L1_cache.clock()
+
+    await L1_cache.kill()
+
+    # wait for AXI burst to start
+    await L1_cache.clock()
+    for _ in range(100):
+        await L1_cache.clock()
+
+    # Kill
+
+
+
 
 
 

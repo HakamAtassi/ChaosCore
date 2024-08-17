@@ -22,6 +22,11 @@ class instruction_cache_dut:
         await RisingEdge(self.L1_instruction_cache.clock)
         self.L1_instruction_cache.reset.value = 0
 
+    async def kill(self):  
+        self.L1_instruction_cache.io_kill.value = 1
+        await RisingEdge(self.L1_instruction_cache.clock)
+        self.L1_instruction_cache.io_kill.value = 0
+
     def write_CPU_read_request(self, address=0, valid=0):
         """perform a CPU read request"""
         self.L1_instruction_cache.io_CPU_request_valid.value          = valid

@@ -147,6 +147,19 @@ module ChaosCore_tile(
   wire [15:0] _instruction_cache_io_CPU_response_bits_GHR;
   wire [6:0]  _instruction_cache_io_CPU_response_bits_NEXT;
   wire [6:0]  _instruction_cache_io_CPU_response_bits_TOS;
+  wire        _ChaosCore_io_kill;
+  wire        _ChaosCore_io_frontend_memory_request_valid;
+  wire [31:0] _ChaosCore_io_frontend_memory_request_bits_addr;
+  wire [31:0] _ChaosCore_io_frontend_memory_request_bits_wr_data;
+  wire        _ChaosCore_io_frontend_memory_request_bits_wr_en;
+  wire        _ChaosCore_io_frontend_memory_response_ready;
+  wire        _ChaosCore_io_backend_memory_request_valid;
+  wire [31:0] _ChaosCore_io_backend_memory_request_bits_addr;
+  wire [31:0] _ChaosCore_io_backend_memory_request_bits_data;
+  wire [1:0]  _ChaosCore_io_backend_memory_request_bits_memory_type;
+  wire [1:0]  _ChaosCore_io_backend_memory_request_bits_access_width;
+  wire [3:0]  _ChaosCore_io_backend_memory_request_bits_MOB_index;
+  wire        _ChaosCore_io_backend_memory_response_ready;
   ChaosCore ChaosCore (
     .clock                                                        (clock),
     .reset                                                        (reset),
@@ -175,16 +188,21 @@ module ChaosCore_tile(
     .io_commit_bits_RD_valid_1                                    (/* unused */),
     .io_commit_bits_RD_valid_2                                    (/* unused */),
     .io_commit_bits_RD_valid_3                                    (/* unused */),
-    .io_flush                                                     (/* unused */),
+    .io_kill                                                      (_ChaosCore_io_kill),
     .io_revert_valid                                              (/* unused */),
     .io_revert_bits_PC                                            (/* unused */),
     .io_frontend_memory_request_ready
       (_instruction_cache_io_CPU_request_ready),
-    .io_frontend_memory_request_valid                             (/* unused */),
-    .io_frontend_memory_request_bits_addr                         (/* unused */),
-    .io_frontend_memory_request_bits_wr_data                      (/* unused */),
-    .io_frontend_memory_request_bits_wr_en                        (/* unused */),
-    .io_frontend_memory_response_ready                            (/* unused */),
+    .io_frontend_memory_request_valid
+      (_ChaosCore_io_frontend_memory_request_valid),
+    .io_frontend_memory_request_bits_addr
+      (_ChaosCore_io_frontend_memory_request_bits_addr),
+    .io_frontend_memory_request_bits_wr_data
+      (_ChaosCore_io_frontend_memory_request_bits_wr_data),
+    .io_frontend_memory_request_bits_wr_en
+      (_ChaosCore_io_frontend_memory_request_bits_wr_en),
+    .io_frontend_memory_response_ready
+      (_ChaosCore_io_frontend_memory_response_ready),
     .io_frontend_memory_response_valid
       (_instruction_cache_io_CPU_response_valid),
     .io_frontend_memory_response_bits_fetch_PC
@@ -229,13 +247,20 @@ module ChaosCore_tile(
       (_instruction_cache_io_CPU_response_bits_TOS),
     .io_backend_memory_request_ready
       (_data_cache_io_CPU_request_ready),
-    .io_backend_memory_request_valid                              (/* unused */),
-    .io_backend_memory_request_bits_addr                          (/* unused */),
-    .io_backend_memory_request_bits_data                          (/* unused */),
-    .io_backend_memory_request_bits_memory_type                   (/* unused */),
-    .io_backend_memory_request_bits_access_width                  (/* unused */),
-    .io_backend_memory_request_bits_MOB_index                     (/* unused */),
-    .io_backend_memory_response_ready                             (/* unused */),
+    .io_backend_memory_request_valid
+      (_ChaosCore_io_backend_memory_request_valid),
+    .io_backend_memory_request_bits_addr
+      (_ChaosCore_io_backend_memory_request_bits_addr),
+    .io_backend_memory_request_bits_data
+      (_ChaosCore_io_backend_memory_request_bits_data),
+    .io_backend_memory_request_bits_memory_type
+      (_ChaosCore_io_backend_memory_request_bits_memory_type),
+    .io_backend_memory_request_bits_access_width
+      (_ChaosCore_io_backend_memory_request_bits_access_width),
+    .io_backend_memory_request_bits_MOB_index
+      (_ChaosCore_io_backend_memory_request_bits_MOB_index),
+    .io_backend_memory_response_ready
+      (_ChaosCore_io_backend_memory_response_ready),
     .io_backend_memory_response_valid
       (_data_cache_io_CPU_response_valid),
     .io_backend_memory_response_bits_data
@@ -336,6 +361,16 @@ module ChaosCore_tile(
       (io_instruction_cache_AXI_port_AXI_R_bits_ruser),
     .io_CPU_request_ready
       (_instruction_cache_io_CPU_request_ready),
+    .io_CPU_request_valid
+      (_ChaosCore_io_frontend_memory_request_valid),
+    .io_CPU_request_bits_addr
+      (_ChaosCore_io_frontend_memory_request_bits_addr),
+    .io_CPU_request_bits_wr_data
+      (_ChaosCore_io_frontend_memory_request_bits_wr_data),
+    .io_CPU_request_bits_wr_en
+      (_ChaosCore_io_frontend_memory_request_bits_wr_en),
+    .io_CPU_response_ready
+      (_ChaosCore_io_frontend_memory_response_ready),
     .io_CPU_response_valid
       (_instruction_cache_io_CPU_response_valid),
     .io_CPU_response_bits_fetch_PC
@@ -377,7 +412,8 @@ module ChaosCore_tile(
     .io_CPU_response_bits_NEXT
       (_instruction_cache_io_CPU_response_bits_NEXT),
     .io_CPU_response_bits_TOS
-      (_instruction_cache_io_CPU_response_bits_TOS)
+      (_instruction_cache_io_CPU_response_bits_TOS),
+    .io_kill                                          (_ChaosCore_io_kill)
   );
   L1_data_cache data_cache (
     .clock                            (clock),
@@ -427,13 +463,16 @@ module ChaosCore_tile(
     .m_axi_rlast                      (io_data_cache_AXI_port_AXI_R_bits_rlast),
     .m_axi_ruser                      (io_data_cache_AXI_port_AXI_R_bits_ruser),
     .io_CPU_request_ready             (_data_cache_io_CPU_request_ready),
-    .io_CPU_request_valid             (1'h0),
-    .io_CPU_request_bits_addr         (32'h0),
-    .io_CPU_request_bits_data         (32'h0),
-    .io_CPU_request_bits_memory_type  (2'h0),
-    .io_CPU_request_bits_access_width (2'h0),
-    .io_CPU_request_bits_MOB_index    (4'h0),
-    .io_CPU_response_ready            (1'h0),
+    .io_CPU_request_valid             (_ChaosCore_io_backend_memory_request_valid),
+    .io_CPU_request_bits_addr         (_ChaosCore_io_backend_memory_request_bits_addr),
+    .io_CPU_request_bits_data         (_ChaosCore_io_backend_memory_request_bits_data),
+    .io_CPU_request_bits_memory_type
+      (_ChaosCore_io_backend_memory_request_bits_memory_type),
+    .io_CPU_request_bits_access_width
+      (_ChaosCore_io_backend_memory_request_bits_access_width),
+    .io_CPU_request_bits_MOB_index
+      (_ChaosCore_io_backend_memory_request_bits_MOB_index),
+    .io_CPU_response_ready            (_ChaosCore_io_backend_memory_response_ready),
     .io_CPU_response_valid            (_data_cache_io_CPU_response_valid),
     .io_CPU_response_bits_data        (_data_cache_io_CPU_response_bits_data),
     .io_CPU_response_bits_MOB_index   (_data_cache_io_CPU_response_bits_MOB_index)

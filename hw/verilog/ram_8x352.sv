@@ -41,10 +41,16 @@ module ram_8x352(
 );
 
   reg [351:0] Memory[0:7];
+  reg         _R0_en_d0;
+  reg [2:0]   _R0_addr_d0;
+  always @(posedge R0_clk) begin
+    _R0_en_d0 <= R0_en;
+    _R0_addr_d0 <= R0_addr;
+  end // always @(posedge)
   always @(posedge W0_clk) begin
     if (W0_en & 1'h1)
       Memory[W0_addr] <= W0_data;
   end // always @(posedge)
-  assign R0_data = R0_en ? Memory[R0_addr] : 352'bx;
+  assign R0_data = _R0_en_d0 ? Memory[_R0_addr_d0] : 352'bx;
 endmodule
 

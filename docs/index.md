@@ -7,6 +7,16 @@ nav_order: 1
 
 # ChaosCore (name subject to change)
 
+
+
+## Add a <HOME>
+List everything that is important here
+* Ex: UVM test list/regression status
+* Running Workloads/Benchmarks
+* Architecture/Security/etc...
+* Working with ChaosCore
+
+
 ## What ChaosCore? 
 
 

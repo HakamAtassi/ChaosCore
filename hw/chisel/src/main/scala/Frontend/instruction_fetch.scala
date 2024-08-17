@@ -102,7 +102,7 @@ class instruction_fetch(coreParameters:CoreParameters) extends Module{
     // BP //
     ////////
     bp.io.commit            <>  io.commit
-    bp.io.predict           <>  PC_Q.io.deq
+    bp.io.predict           <>  PC_gen.io.PC_next//PC_Q.io.deq
     bp.io.RAS_update        <>  predecoder.io.RAS_update
     bp.io.GHR               <>  predecoder.io.GHR
     bp.io.predict.valid     :=  PC_gen.io.PC_next.fire

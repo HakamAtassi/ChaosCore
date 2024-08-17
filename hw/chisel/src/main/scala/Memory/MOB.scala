@@ -236,22 +236,28 @@ class MOB(coreParameters:CoreParameters) extends Module{
     possible_load_vec    := MOB.map(MOB_entry => MOB_entry.valid && MOB_entry.pending && (MOB_entry.memory_type === memory_type_t.LOAD))
     fire_store           := MOB(front_index).valid && MOB(front_index).committed && MOB(front_index).pending && !MOB(front_index).exception && (MOB(front_index).memory_type === memory_type_t.STORE)    // stores are sent only from front of queue
 
-    when(possible_load_vec.asUInt > 0.U){    // possible load, do that
+    when(possible_load_vec.asUInt =/= 0.U){    // possible load, do that
         val load_index                               = PriorityEncoder(possible_load_vec)
-        MOB(load_index).pending                     := 0.B
         io.backend_memory_request.valid             := 1.B
         io.backend_memory_request.bits.addr         := MOB(load_index).address
         io.backend_memory_request.bits.memory_type  := MOB(load_index).memory_type
         io.backend_memory_request.bits.access_width := MOB(load_index).access_width
         io.backend_memory_request.bits.MOB_index    := load_index
+
+        when(io.backend_memory_request.fire){
+            MOB(load_index).pending                     := 0.B
+        }
     }.elsewhen(fire_store){
-        MOB(front_index).pending                    := 0.B
         io.backend_memory_request.valid             := 1.B
         io.backend_memory_request.bits.addr         := MOB(front_index).address
         io.backend_memory_request.bits.memory_type  := MOB(front_index).memory_type
         io.backend_memory_request.bits.access_width := MOB(front_index).access_width
         io.backend_memory_request.bits.data         := MOB(front_index).data
         io.backend_memory_request.bits.MOB_index    := front_index
+
+        when(io.backend_memory_request.fire){
+            MOB(front_index).pending                     := 0.B
+        }
     }
 
     dontTouch(back_index)
@@ -328,9 +334,6 @@ class MOB(coreParameters:CoreParameters) extends Module{
     }
 
 
-    dontTouch(possible_FU_store_index)
-    dontTouch(response_age)
-    dontTouch(age_vector)
 
     response_age := age_vector(io.backend_memory_response.bits.MOB_index)
 
@@ -339,15 +342,9 @@ class MOB(coreParameters:CoreParameters) extends Module{
     byte_sels    := MOB.map(MOB_entry => get_MOB_row_byte_sel(coreParameters, MOB_entry))
     wr_bytes     := MOB.map(MOB_entry => get_MOB_row_wr_bytes(coreParameters, MOB_entry))
 
-
-
     for(i <- 0 until 4){
-        // FIXME: default data is the memory response data
-        data_out(i)     := 0.U
+        data_out(i)     := io.backend_memory_response.bits.data((i+1)*8-1,i*8)
     }
-
-    dontTouch(wr_bytes)
-    dontTouch(byte_sels)
 
     for(i <- 0 until MOBEntries){    // forward from MOB
         val is_valid            = MOB(i).valid
@@ -371,14 +368,20 @@ class MOB(coreParameters:CoreParameters) extends Module{
         }
     }
 
-    dontTouch(data_out)
-
-    when(io.backend_memory_response.valid && MOB(io.backend_memory_response.bits.MOB_index).memory_type === memory_type_t.LOAD){
+    when(io.backend_memory_response.valid && (MOB(io.backend_memory_response.bits.MOB_index).memory_type === memory_type_t.LOAD)){
         MOB(io.backend_memory_response.bits.MOB_index).data_valid   := 1.B
         MOB(io.backend_memory_response.bits.MOB_index).data := data_out.asUInt
     }
 
+    dontTouch(data_out)
+    dontTouch(wr_bytes)
+    dontTouch(byte_sels)
 
+    dontTouch(possible_FU_store_index)
+    dontTouch(response_age)
+    dontTouch(age_vector)
+
+    dontTouch(MOB)
     dontTouch(front_index)
 
     FU_output_load_Q.io.enq.valid                     := possible_FU_loads.reduce(_ || _)
@@ -394,8 +397,6 @@ class MOB(coreParameters:CoreParameters) extends Module{
     when(FU_output_load_Q.io.enq.fire && !(io.commit.valid && (io.commit.bits.is_misprediction || io.commit.bits.exception))){
         MOB(possible_FU_load_index).completed := 1.B
     }
-
-
 
     val FU_output_arbiter       = Module(new Arbiter(new FU_output(coreParameters), 2))
 

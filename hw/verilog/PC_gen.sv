@@ -78,13 +78,15 @@ module PC_gen(
   reg  [31:0] PC_reg;
   reg  [31:0] flush_PC_reg;
   wire        is_misprediction = io_commit_valid & io_commit_bits_is_misprediction;
-  wire        is_ret = io_prediction_bits_br_type == 3'h4 & io_prediction_valid;
+  wire        use_RAS = io_prediction_bits_br_type == 3'h4 & io_prediction_valid;
+  wire        use_BTB = io_prediction_bits_hit & io_prediction_valid & ~use_RAS;
   wire        flushing_event = is_misprediction | io_revert_valid;
   reg         REG;
+  reg         REG_1;
   wire [31:0] PC_mux =
-    io_prediction_bits_hit & io_prediction_valid & ~is_ret
+    use_BTB
       ? io_prediction_bits_target
-      : is_ret ? io_RAS_read_ret_addr : REG ? flush_PC_reg : PC_reg;
+      : use_RAS ? io_RAS_read_ret_addr : REG_1 ? flush_PC_reg : PC_reg;
   always @(posedge clock) begin
     if (reset) begin
       PC_reg <= 32'h0;
@@ -99,6 +101,7 @@ module PC_gen(
           : io_revert_valid ? io_revert_bits_PC : 32'h0;
     end
     REG <= flushing_event;
+    REG_1 <= flushing_event;
   end // always @(posedge)
   assign io_prediction_ready = io_PC_next_ready;
   assign io_PC_next_valid = ~flushing_event;

@@ -58,7 +58,6 @@ class predecoder(coreParameters:CoreParameters) extends Module{
 
         val GHR                 = Output(UInt(GHRWidth.W))
         val RAS_update          = Output(new RAS_update)                               // RAS control
-
     })
     dontTouch(io)
 
@@ -149,7 +148,6 @@ class predecoder(coreParameters:CoreParameters) extends Module{
     }.elsewhen(is_JAL){
         // COMPUTED
         imm := sign_extend(getImm(dominant_instruction), 32)
-        dontTouch(imm)
         target_address := imm + masked_addr + (dominant_branch_index*4.U)
     }.elsewhen(is_JALR && io.prediction.bits.hit && io.prediction.valid){
         // FROM BTB (Assuming hit)

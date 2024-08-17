@@ -56,11 +56,3 @@ class data_cache_dut:
         return cache_response
 
 
-
-#output        io_CPU_request_ready,
-#input         io_CPU_request_valid,
-#input  [31:0] io_CPU_request_bits_addr,
-#io_CPU_request_bits_data,
-#input  [1:0]  io_CPU_request_bits_memory_type,
-#io_CPU_request_bits_access_width,
-#input  [3:0]  io_CPU_request_bits_MOB_index,

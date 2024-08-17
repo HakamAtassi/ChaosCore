@@ -59,24 +59,16 @@ class ChaosCore_tile(coreParameters:CoreParameters, addressMap:AddressMap, nocPa
     ////////////
     val instruction_cache   = Module(new L1_instruction_cache(coreParameters, nocParameters))
     val data_cache          = Module(new L1_data_cache(coreParameters, nocParameters))
+
+    instruction_cache.io.kill         := ChaosCore.io.kill
+
+
     
     ChaosCore.io.frontend_memory_request    <> instruction_cache.io.CPU_request     // FIXME: rename these signals in the I$ to be more cohesive
     ChaosCore.io.frontend_memory_response   <> instruction_cache.io.CPU_response        // FIXME: rename these signals in the I$ to be more cohesive
 
     ChaosCore.io.backend_memory_request     <> data_cache.io.CPU_request
     ChaosCore.io.backend_memory_response    <> data_cache.io.CPU_response
-
-
-    instruction_cache.io         := DontCare
-
-
-    data_cache.io                := DontCare
-    
-    data_cache.AXI_port.AXI_AW   := DontCare
-    data_cache.AXI_port.AXI_B    := DontCare
-    data_cache.AXI_port.AXI_W    := DontCare
-    data_cache.AXI_port.AXI_AR   := DontCare
-    data_cache.AXI_port.AXI_R    := DontCare
 
 
     ////////

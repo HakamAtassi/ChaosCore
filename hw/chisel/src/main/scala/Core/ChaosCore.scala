@@ -43,7 +43,7 @@ class ChaosCore(coreParameters:CoreParameters) extends Module{
     val io = IO(new Bundle{
 
         val commit                              =   ValidIO(new commit(coreParameters))
-        val flush                               =   Output(Bool())
+        val kill                               =   Output(Bool())
 
         val revert                              =   ValidIO(new revert(coreParameters))
 
@@ -85,7 +85,7 @@ class ChaosCore(coreParameters:CoreParameters) extends Module{
     val flush       = Wire(Bool())
 
 
-    io.flush := flush
+    io.kill := flush
 
     io.revert <> frontend.io.revert
 

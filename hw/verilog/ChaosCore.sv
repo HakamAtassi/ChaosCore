@@ -56,7 +56,7 @@ module ChaosCore(
                 io_commit_bits_RD_valid_1,
                 io_commit_bits_RD_valid_2,
                 io_commit_bits_RD_valid_3,
-                io_flush,
+                io_kill,
                 io_revert_valid,
   output [31:0] io_revert_bits_PC,
   input         io_frontend_memory_request_ready,
@@ -2099,6 +2099,6 @@ module ChaosCore(
   assign io_commit_bits_RD_valid_1 = _BRU_io_commit_bits_RD_valid_1;
   assign io_commit_bits_RD_valid_2 = _BRU_io_commit_bits_RD_valid_2;
   assign io_commit_bits_RD_valid_3 = _BRU_io_commit_bits_RD_valid_3;
-  assign io_flush = flush;
+  assign io_kill = flush;
 endmodule
 

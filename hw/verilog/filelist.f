@@ -33,6 +33,8 @@ Queue16_FTQ_entry.sv
 free_list.sv
 WAW_handler.sv
 RAT.sv
+ram_2x434_0.sv
+Queue2_decoded_fetch_packet_1.sv
 rename.sv
 frontend.sv
 RS.sv
@@ -69,7 +71,7 @@ Queue1_fetch_packet.sv
 L1_instruction_cache.sv
 ram_8x352.sv
 Queue8_AXI_request_Q_entry.sv
-ram_2x345.sv
+ram_2x352.sv
 Queue2_AXI_request_Q_entry.sv
 ram_8x36.sv
 Queue8_backend_memory_response.sv
