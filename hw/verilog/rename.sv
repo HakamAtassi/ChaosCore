@@ -2620,7 +2620,7 @@ module rename(
     .io_deq_bits_resolved_PC      (io_predictions_out_bits_resolved_PC),
     .io_flush                     (io_flush)
   );
-  Queue2_decoded_fetch_packet renamed_decoded_fetch_packet_Q (
+  Queue2_decoded_fetch_packet_1 renamed_decoded_fetch_packet_Q (
     .clock                                                  (clock),
     .reset                                                  (reset),
     .io_enq_valid
@@ -2904,8 +2904,6 @@ module rename(
       (_renamed_decoded_fetch_packet_Q_io_deq_valid),
     .io_deq_bits_fetch_PC
       (io_renamed_decoded_fetch_packet_bits_fetch_PC),
-    .io_deq_bits_decoded_instruction_0_ready_bits_RS1_ready (/* unused */),
-    .io_deq_bits_decoded_instruction_0_ready_bits_RS2_ready (/* unused */),
     .io_deq_bits_decoded_instruction_0_RDold
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_RDold),
     .io_deq_bits_decoded_instruction_0_RD
@@ -2954,8 +2952,6 @@ module rename(
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_memory_type),
     .io_deq_bits_decoded_instruction_0_access_width
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_0_access_width),
-    .io_deq_bits_decoded_instruction_1_ready_bits_RS1_ready (/* unused */),
-    .io_deq_bits_decoded_instruction_1_ready_bits_RS2_ready (/* unused */),
     .io_deq_bits_decoded_instruction_1_RDold
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_RDold),
     .io_deq_bits_decoded_instruction_1_RD
@@ -3004,8 +3000,6 @@ module rename(
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_memory_type),
     .io_deq_bits_decoded_instruction_1_access_width
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_1_access_width),
-    .io_deq_bits_decoded_instruction_2_ready_bits_RS1_ready (/* unused */),
-    .io_deq_bits_decoded_instruction_2_ready_bits_RS2_ready (/* unused */),
     .io_deq_bits_decoded_instruction_2_RDold
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_RDold),
     .io_deq_bits_decoded_instruction_2_RD
@@ -3054,8 +3048,6 @@ module rename(
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_memory_type),
     .io_deq_bits_decoded_instruction_2_access_width
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_2_access_width),
-    .io_deq_bits_decoded_instruction_3_ready_bits_RS1_ready (/* unused */),
-    .io_deq_bits_decoded_instruction_3_ready_bits_RS2_ready (/* unused */),
     .io_deq_bits_decoded_instruction_3_RDold
       (io_renamed_decoded_fetch_packet_bits_decoded_instruction_3_RDold),
     .io_deq_bits_decoded_instruction_3_RD

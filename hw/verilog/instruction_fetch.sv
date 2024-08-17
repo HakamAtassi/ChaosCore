@@ -125,7 +125,6 @@ module instruction_fetch(
   wire [15:0] _BTB_Q_io_deq_bits_GHR;
   wire        _BTB_Q_io_deq_bits_T_NT;
   wire        _PC_Q_io_enq_ready;
-  wire [31:0] _PC_Q_io_deq_bits_addr;
   wire        _instruction_Q_io_deq_valid;
   wire [31:0] _instruction_Q_io_deq_bits_fetch_PC;
   wire        _instruction_Q_io_deq_bits_valid_bits_0;
@@ -176,7 +175,7 @@ module instruction_fetch(
     .io_flush                          (_bp_io_flush_T),
     .io_predict_ready                  (_bp_io_predict_ready),
     .io_predict_valid                  (_PC_Q_io_enq_ready & _PC_gen_io_PC_next_valid),
-    .io_predict_bits_addr              (_PC_Q_io_deq_bits_addr),
+    .io_predict_bits_addr              (_PC_gen_io_PC_next_bits_addr),
     .io_commit_valid                   (io_commit_valid),
     .io_commit_bits_fetch_PC           (io_commit_bits_fetch_PC),
     .io_commit_bits_T_NT               (io_commit_bits_T_NT),
@@ -480,7 +479,7 @@ module instruction_fetch(
     .io_enq_bits_wr_en   (_PC_gen_io_PC_next_bits_wr_en),
     .io_deq_ready        (io_memory_request_ready),
     .io_deq_valid        (io_memory_request_valid),
-    .io_deq_bits_addr    (_PC_Q_io_deq_bits_addr),
+    .io_deq_bits_addr    (io_memory_request_bits_addr),
     .io_deq_bits_wr_data (io_memory_request_bits_wr_data),
     .io_deq_bits_wr_en   (io_memory_request_bits_wr_en),
     .io_flush            (_bp_io_flush_T)
@@ -506,7 +505,6 @@ module instruction_fetch(
     .io_deq_bits_T_NT    (_BTB_Q_io_deq_bits_T_NT),
     .io_flush            (_bp_io_flush_T)
   );
-  assign io_memory_request_bits_addr = _PC_Q_io_deq_bits_addr;
   assign io_revert_valid = _predecoder_io_revert_valid;
   assign io_revert_bits_PC = _predecoder_io_revert_bits_PC;
 endmodule

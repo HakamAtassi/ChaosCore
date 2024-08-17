@@ -62,6 +62,7 @@ module Queue8_AXI_request_Q_entry(
   wire         ptr_match = enq_ptr_value == deq_ptr_value;
   wire         empty = ptr_match & ~maybe_full;
   wire         do_enq = io_enq_ready & io_enq_valid;
+  wire         do_deq = io_deq_ready & ~empty;
   assign io_enq_ready = ~(ptr_match & maybe_full);
   always @(posedge clock) begin
     if (reset) begin
@@ -70,7 +71,6 @@ module Queue8_AXI_request_Q_entry(
       maybe_full <= 1'h0;
     end
     else begin
-      automatic logic do_deq = io_deq_ready & ~empty;
       if (do_enq)
         enq_ptr_value <= enq_ptr_value + 3'h1;
       if (do_deq)
@@ -80,7 +80,7 @@ module Queue8_AXI_request_Q_entry(
     end
   end // always @(posedge)
   ram_8x352 ram_ext (
-    .R0_addr (deq_ptr_value),
+    .R0_addr (do_deq ? ((&deq_ptr_value) ? 3'h0 : deq_ptr_value + 3'h1) : deq_ptr_value),
     .R0_en   (1'h1),
     .R0_clk  (clock),
     .R0_data (_ram_ext_R0_data),

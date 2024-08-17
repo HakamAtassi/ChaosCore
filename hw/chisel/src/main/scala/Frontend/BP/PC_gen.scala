@@ -91,6 +91,10 @@ class PC_gen(coreParameters:CoreParameters) extends Module{
     }.otherwise(flush_PC_mux := 0.U)    // TODO: exception
     flush_PC_reg := flush_PC_mux
 
+    dontTouch(use_BTB)
+    dontTouch(use_RAS)
+    dontTouch(RegNext(flushing_event))
+
 
     // NEXT PC MUX
     when(use_BTB){

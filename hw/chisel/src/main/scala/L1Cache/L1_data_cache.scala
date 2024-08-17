@@ -89,12 +89,14 @@ object get_decomposed_dcache_address{
 	val set_bits                    = log2Ceil(L1_DataCacheSets)
 	val tag_bits                    = 32 - log2Ceil(L1_DataCacheBlockSizeBytes)-set_bits    // 32 - bits required to index set - bits required to index within line - 2 bits due to 4 byte aligned data
 
+	val masked_addr = address(log2Ceil(L1_DataCacheBlockSizeBytes)-1, 0)
+
 	val decomposed_dcache_address = new data_cache_address_packet(
 		tag = address(31, 31-tag_bits+1),
 		set = address(31-tag_bits, 31-tag_bits-set_bits+1),
-		word_offset = (address / 4.U),
-		half_word_offset = (address / 2.U),
-		byte_offset = (address / 1.U)
+		word_offset = (masked_addr / 4.U),
+		half_word_offset = (masked_addr / 2.U),
+		byte_offset = (masked_addr / 1.U)
 	)
 	decomposed_dcache_address
   }
@@ -219,7 +221,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	// Helper signal assignment //
 	//////////////////////////////
 
-	io.CPU_request.ready		:= 1.B		// FIXME: !
+	io.CPU_request.ready		:= DATA_CACHE_STATE === DATA_CACHE_STATES.ACTIVE	//1.B		// FIXME: !
 
 	active_valid				:=	DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY || (io.CPU_request.valid)
 	active_address				:=	Mux(DATA_CACHE_STATE === DATA_CACHE_STATES.REPLAY, replay_address,		backend_address)
@@ -292,16 +294,16 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	// QUEUES //
 	////////////
 	// Outgoing request queues //
-	val cacheable_request_Q			= 	Module(new Queue(new AXI_request_Q_entry, 8, flow=false, hasFlush=false, useSyncReadMem=false))						// FIXME: needs flush/kill
-	val non_cacheable_request_Q		=	Module(new Queue(new AXI_request_Q_entry, 8, flow=false, hasFlush=false, useSyncReadMem=false))						// FIXME: needs flush/kill
-	val AXI_request_Q				= 	Module(new Queue(new AXI_request_Q_entry, 2, flow=false, hasFlush=false, useSyncReadMem=false))						// FIXME: needs flush/kill
+	val cacheable_request_Q			= 	Module(new Queue(new AXI_request_Q_entry, 8, flow=false, hasFlush=false, useSyncReadMem=true))						// FIXME: needs flush/kill
+	val non_cacheable_request_Q		=	Module(new Queue(new AXI_request_Q_entry, 8, flow=false, hasFlush=false, useSyncReadMem=true))						// FIXME: needs flush/kill
+	val AXI_request_Q				= 	Module(new Queue(new AXI_request_Q_entry, 2, flow=false, hasFlush=false, useSyncReadMem=true))						// FIXME: needs flush/kill
 
 	// Incoming response queues	//
 	val cacheable_response_Q		=	Module(new Queue(new backend_memory_response(coreParameters), 8, flow=false, hasFlush=false, useSyncReadMem=true))	//FIXME: needs flush/kill
 	val non_cacheable_response_Q	=	Module(new Queue(new backend_memory_response(coreParameters), 8, flow=false, hasFlush=false, useSyncReadMem=true))	//FIXME: needs flush/kill
 
 	// Output skid buffer //
-	val CPU_response_skid_buffer	=	Module(new Queue(new backend_memory_response(coreParameters), 3, flow=true, hasFlush=false, useSyncReadMem=false))	// FIXME: needs flush/kill
+	val CPU_response_skid_buffer	=	Module(new Queue(new backend_memory_response(coreParameters), 3, flow=true, hasFlush=false, useSyncReadMem=true))	// FIXME: needs flush/kill
 
 	///////////////////
 	// DATA MEMORIES //
@@ -312,19 +314,48 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	val data_memories_wr_en 		= Wire(Vec(L1_DataCacheBlockSizeBytes, Bool()))
 	val data_memories_data_in 		= Wire(Vec(L1_DataCacheBlockSizeBytes, UInt(8.W)))
 
+
+	val word_offset_match 		= Wire(Bool())
+	val half_word_offset_match 	= Wire(Bool())
+	val byte_offset_match 		= Wire(Bool())
+
+
+	val word_offset 			= get_decomposed_dcache_address(coreParameters, active_address).word_offset
+	val half_word_offset 		= get_decomposed_dcache_address(coreParameters, active_address).half_word_offset
+	val byte_offset 			= get_decomposed_dcache_address(coreParameters, active_address).byte_offset
+
+	dontTouch(word_offset)
+	dontTouch(half_word_offset)
+	dontTouch(byte_offset)
+
+	val test = Wire(Vec(L1_DataCacheBlockSizeBytes, Bool()))
+	dontTouch(test)
+
 	// Assign data_memory_wr_en
 	for(i <- 0 until L1_DataCacheBlockSizeBytes){
-		val word_offset 			= get_decomposed_dcache_address(coreParameters, io.CPU_request.bits.addr).word_offset
-		val half_word_offset 		= get_decomposed_dcache_address(coreParameters, io.CPU_request.bits.addr).half_word_offset
-		val byte_offset 			= get_decomposed_dcache_address(coreParameters, io.CPU_request.bits.addr).byte_offset
 
-		val word_offset_match 		= (word_offset === (i / 4).U) && (active_memory_type === memory_type_t.STORE) && (active_access_width === access_width_t.W)
-		val half_word_offset_match 	= (word_offset === (i / 2).U) && (active_memory_type === memory_type_t.STORE) && (active_access_width === access_width_t.HW)
-		val byte_offset_match 		= (word_offset === (i / 1).U) && (active_memory_type === memory_type_t.STORE) && (active_access_width === access_width_t.B)
+		printf("word offset: %d =?= %d\n",word_offset,  (i / 4).U)
 
-		data_memories_wr_en(i) 		:= (DATA_CACHE_STATE === DATA_CACHE_STATES.ALLOCATE) || (RegNext(word_offset_match || half_word_offset_match || byte_offset_match) && valid_hit)
+		word_offset_match 		:= (word_offset 		=== (i / 4).U) && (active_memory_type === memory_type_t.STORE) && (active_access_width === access_width_t.W)
+		half_word_offset_match 	:= (half_word_offset 	=== (i / 2).U) && (active_memory_type === memory_type_t.STORE) && (active_access_width === access_width_t.HW)
+		byte_offset_match 		:= (byte_offset 		=== (i / 1).U) && (active_memory_type === memory_type_t.STORE) && (active_access_width === access_width_t.B)
+
+		test(i) 				:= (word_offset 		=== (i / 4).U) && (active_memory_type === memory_type_t.STORE) && (active_access_width === access_width_t.W)
+
+		//data_memories_wr_en(i) 		:= (DATA_CACHE_STATE === DATA_CACHE_STATES.ALLOCATE) || (RegNext(word_offset_match || half_word_offset_match || byte_offset_match) && valid_hit)
+
+		//data_memories_wr_en(i) 		:= (DATA_CACHE_STATE === DATA_CACHE_STATES.ALLOCATE) || RegNext(test(i)) && valid_hit
+
+
+		data_memories_wr_en(i) 		:= (DATA_CACHE_STATE === DATA_CACHE_STATES.ALLOCATE) || (RegNext(
+			(word_offset 		=== (i / 4).U) && (active_memory_type === memory_type_t.STORE) && (active_access_width === access_width_t.W)	||
+			(half_word_offset 	=== (i / 2).U) && (active_memory_type === memory_type_t.STORE) && (active_access_width === access_width_t.HW)	||
+			(byte_offset 		=== (i / 1).U) && (active_memory_type === memory_type_t.STORE) && (active_access_width === access_width_t.B)	) && valid_hit)
 	}
 
+	dontTouch(word_offset_match)
+	dontTouch(half_word_offset_match)
+	dontTouch(byte_offset_match)
 	dontTouch(data_memories_wr_en)
 
 
@@ -760,6 +791,7 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	// CACHEABLE
 	// On AXI response, queue entries into line fill buffer
 
+	dontTouch(output_valid)
 	cacheable_response_Q.io.enq.valid 			:= RegNext(valid_read_hit)
 	cacheable_response_Q.io.enq.bits.data  		:= output_data
 	cacheable_response_Q.io.enq.bits.MOB_index  := output_MOB_index
@@ -772,7 +804,8 @@ class L1_data_cache(val coreParameters:CoreParameters, val nocParameters:NOCPara
 	dontTouch(axi_response.data)
 
 	non_cacheable_response_Q.io.enq.valid 			:= axi_response_valid && (axi_response_ID === AXI_NON_CACHEABLE_RESPONSE_ID.U).asBool
-	non_cacheable_response_Q.io.enq.bits.data  		:= axi_response.data(255,256-32)	// non cacheable responses are always 32 bits
+	// FIXME: why top 32 bits??
+	non_cacheable_response_Q.io.enq.bits.data  		:= axi_response.data(255,256-32)	// non cacheable responses are always 32 bits 
 	non_cacheable_response_Q.io.enq.bits.MOB_index  := non_cacheable_buffer_front.MOB_index
 	non_cacheable_response_Q.io.deq.ready 			:= 1.B	// FIXME: not always ready
 

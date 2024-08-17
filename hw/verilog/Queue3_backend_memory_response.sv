@@ -41,6 +41,7 @@ module Queue3_backend_memory_response(
   output [3:0]  io_deq_bits_MOB_index
 );
 
+  wire        do_deq;
   wire [35:0] _ram_ext_R0_data;
   reg  [1:0]  enq_ptr_value;
   reg  [1:0]  deq_ptr_value;
@@ -49,7 +50,7 @@ module Queue3_backend_memory_response(
   wire        empty = ptr_match & ~maybe_full;
   wire        full = ptr_match & maybe_full;
   wire        io_deq_valid_0 = io_enq_valid | ~empty;
-  wire        do_deq = ~empty & io_deq_ready & io_deq_valid_0;
+  assign do_deq = ~empty & io_deq_ready & io_deq_valid_0;
   wire        do_enq = ~(empty & io_deq_ready) & ~full & io_enq_valid;
   always @(posedge clock) begin
     if (reset) begin
@@ -75,7 +76,8 @@ module Queue3_backend_memory_response(
     end
   end // always @(posedge)
   ram_3x36 ram_ext (
-    .R0_addr (deq_ptr_value),
+    .R0_addr
+      (do_deq ? (deq_ptr_value == 2'h2 ? 2'h0 : deq_ptr_value + 2'h1) : deq_ptr_value),
     .R0_en   (1'h1),
     .R0_clk  (clock),
     .R0_data (_ram_ext_R0_data),

@@ -54,7 +54,7 @@ module Queue2_AXI_request_Q_entry(
   output [6:0]   io_deq_bits_read_bytes
 );
 
-  wire [344:0] _ram_ext_R0_data;
+  wire [351:0] _ram_ext_R0_data;
   reg          wrap;
   reg          wrap_1;
   reg          maybe_full;
@@ -62,6 +62,7 @@ module Queue2_AXI_request_Q_entry(
   wire         empty = ptr_match & ~maybe_full;
   wire         full = ptr_match & maybe_full;
   wire         do_enq = ~full & io_enq_valid;
+  wire         do_deq = io_deq_ready & ~empty;
   always @(posedge clock) begin
     if (reset) begin
       wrap <= 1'h0;
@@ -69,7 +70,6 @@ module Queue2_AXI_request_Q_entry(
       maybe_full <= 1'h0;
     end
     else begin
-      automatic logic do_deq = io_deq_ready & ~empty;
       if (do_enq)
         wrap <= wrap - 1'h1;
       if (do_deq)
@@ -78,8 +78,8 @@ module Queue2_AXI_request_Q_entry(
         maybe_full <= do_enq;
     end
   end // always @(posedge)
-  ram_2x345 ram_ext (
-    .R0_addr (wrap_1),
+  ram_2x352 ram_ext (
+    .R0_addr (do_deq ? ~wrap_1 & wrap_1 - 1'h1 : wrap_1),
     .R0_en   (1'h1),
     .R0_clk  (clock),
     .R0_data (_ram_ext_R0_data),
@@ -91,6 +91,7 @@ module Queue2_AXI_request_Q_entry(
         io_enq_bits_read_ID,
         io_enq_bits_read_address,
         io_enq_bits_read_valid,
+        io_enq_bits_write_bytes,
         io_enq_bits_write_ID,
         io_enq_bits_write_data,
         io_enq_bits_write_address,
@@ -102,9 +103,9 @@ module Queue2_AXI_request_Q_entry(
   assign io_deq_bits_write_address = _ram_ext_R0_data[32:1];
   assign io_deq_bits_write_data = _ram_ext_R0_data[288:33];
   assign io_deq_bits_write_ID = _ram_ext_R0_data[296:289];
-  assign io_deq_bits_read_valid = _ram_ext_R0_data[297];
-  assign io_deq_bits_read_address = _ram_ext_R0_data[329:298];
-  assign io_deq_bits_read_ID = _ram_ext_R0_data[337:330];
-  assign io_deq_bits_read_bytes = _ram_ext_R0_data[344:338];
+  assign io_deq_bits_read_valid = _ram_ext_R0_data[304];
+  assign io_deq_bits_read_address = _ram_ext_R0_data[336:305];
+  assign io_deq_bits_read_ID = _ram_ext_R0_data[344:337];
+  assign io_deq_bits_read_bytes = _ram_ext_R0_data[351:345];
 endmodule
 

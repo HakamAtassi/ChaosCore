@@ -265,13 +265,13 @@ module predecoder(
                     | dominant_instruction[6:0] == 7'h37
                       ? {dominant_instruction[31], dominant_instruction[31:12]}
                       : 21'h0;
-  wire [31:0]      imm = is_RET | ~is_JAL ? 32'h0 : {{11{imm_imm[20]}}, imm_imm};
   wire [31:0]      _GEN_3 = {28'h0, dominant_branch_index, 2'h0};
   wire [31:0]      target_address =
     is_RET
       ? io_RAS_read_ret_addr
       : is_JAL
-          ? imm + masked_addr + _GEN_3
+          ? (is_RET | ~is_JAL ? 32'h0 : {{11{imm_imm[20]}}, imm_imm}) + masked_addr
+            + _GEN_3
           : is_JALR & io_prediction_bits_hit & io_prediction_valid | is_BRANCH
             & io_prediction_bits_hit & io_prediction_valid
               ? io_prediction_bits_target

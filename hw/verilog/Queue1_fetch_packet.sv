@@ -42,6 +42,7 @@ module Queue1_fetch_packet(
                 io_enq_bits_instructions_1_instruction,
                 io_enq_bits_instructions_2_instruction,
                 io_enq_bits_instructions_3_instruction,
+  input         io_deq_ready,
   output        io_deq_valid,
   output [31:0] io_deq_bits_fetch_PC,
   output        io_deq_bits_valid_bits_0,
@@ -62,14 +63,15 @@ module Queue1_fetch_packet(
   output [5:0]  io_deq_bits_instructions_3_ROB_index,
   output [15:0] io_deq_bits_GHR,
   output [6:0]  io_deq_bits_NEXT,
-                io_deq_bits_TOS
+                io_deq_bits_TOS,
+  input         io_flush
 );
 
-  reg [233:0] ram;
-  reg         full;
+  reg  [233:0] ram;
+  reg          full;
+  wire         io_deq_valid_0 = io_enq_valid | full;
+  wire         do_enq = ~(~full & io_deq_ready) & ~full & io_enq_valid;
   always @(posedge clock) begin
-    automatic logic do_enq;
-    do_enq = ~full & io_enq_valid;
     if (do_enq)
       ram <=
         {40'h3,
@@ -87,11 +89,12 @@ module Queue1_fetch_packet(
          io_enq_bits_fetch_PC};
     if (reset)
       full <= 1'h0;
-    else if (do_enq)
-      full <= do_enq;
+    else
+      full <=
+        ~io_flush & (do_enq == (full & io_deq_ready & io_deq_valid_0) ? full : do_enq);
   end // always @(posedge)
   assign io_enq_ready = ~full;
-  assign io_deq_valid = io_enq_valid | full;
+  assign io_deq_valid = io_deq_valid_0;
   assign io_deq_bits_fetch_PC = full ? ram[31:0] : io_enq_bits_fetch_PC;
   assign io_deq_bits_valid_bits_0 = full ? ram[32] : io_enq_bits_valid_bits_0;
   assign io_deq_bits_valid_bits_1 = full ? ram[33] : io_enq_bits_valid_bits_1;

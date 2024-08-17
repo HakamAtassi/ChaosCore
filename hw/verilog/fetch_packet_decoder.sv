@@ -492,8 +492,6 @@ module fetch_packet_decoder(
        & ~io_flush),
     .io_enq_bits_fetch_PC
       (io_fetch_packet_bits_fetch_PC),
-    .io_enq_bits_decoded_instruction_0_ready_bits_RS1_ready (1'h0),
-    .io_enq_bits_decoded_instruction_0_ready_bits_RS2_ready (1'h0),
     .io_enq_bits_decoded_instruction_0_RDold
       (_decoders_0_io_decoded_instruction_bits_RDold),
     .io_enq_bits_decoded_instruction_0_RD
@@ -514,9 +512,6 @@ module fetch_packet_decoder(
       (_decoders_0_io_decoded_instruction_bits_FUNCT3),
     .io_enq_bits_decoded_instruction_0_packet_index
       (_decoders_0_io_decoded_instruction_bits_packet_index),
-    .io_enq_bits_decoded_instruction_0_ROB_index            (6'h0),
-    .io_enq_bits_decoded_instruction_0_MOB_index            (4'h0),
-    .io_enq_bits_decoded_instruction_0_FTQ_index            (4'h0),
     .io_enq_bits_decoded_instruction_0_instructionType
       (_decoders_0_io_decoded_instruction_bits_instructionType),
     .io_enq_bits_decoded_instruction_0_portID
@@ -527,7 +522,6 @@ module fetch_packet_decoder(
       (_decoders_0_io_decoded_instruction_bits_needs_ALU),
     .io_enq_bits_decoded_instruction_0_needs_branch_unit
       (_decoders_0_io_decoded_instruction_bits_needs_branch_unit),
-    .io_enq_bits_decoded_instruction_0_needs_CSRs           (1'h0),
     .io_enq_bits_decoded_instruction_0_SUBTRACT
       (_decoders_0_io_decoded_instruction_bits_SUBTRACT),
     .io_enq_bits_decoded_instruction_0_MULTIPLY
@@ -538,8 +532,6 @@ module fetch_packet_decoder(
       (_decoders_0_io_decoded_instruction_bits_memory_type),
     .io_enq_bits_decoded_instruction_0_access_width
       (_decoders_0_io_decoded_instruction_bits_access_width),
-    .io_enq_bits_decoded_instruction_1_ready_bits_RS1_ready (1'h0),
-    .io_enq_bits_decoded_instruction_1_ready_bits_RS2_ready (1'h0),
     .io_enq_bits_decoded_instruction_1_RDold
       (_decoders_1_io_decoded_instruction_bits_RDold),
     .io_enq_bits_decoded_instruction_1_RD
@@ -560,9 +552,6 @@ module fetch_packet_decoder(
       (_decoders_1_io_decoded_instruction_bits_FUNCT3),
     .io_enq_bits_decoded_instruction_1_packet_index
       (_decoders_1_io_decoded_instruction_bits_packet_index),
-    .io_enq_bits_decoded_instruction_1_ROB_index            (6'h0),
-    .io_enq_bits_decoded_instruction_1_MOB_index            (4'h0),
-    .io_enq_bits_decoded_instruction_1_FTQ_index            (4'h0),
     .io_enq_bits_decoded_instruction_1_instructionType
       (_decoders_1_io_decoded_instruction_bits_instructionType),
     .io_enq_bits_decoded_instruction_1_portID
@@ -573,7 +562,6 @@ module fetch_packet_decoder(
       (_decoders_1_io_decoded_instruction_bits_needs_ALU),
     .io_enq_bits_decoded_instruction_1_needs_branch_unit
       (_decoders_1_io_decoded_instruction_bits_needs_branch_unit),
-    .io_enq_bits_decoded_instruction_1_needs_CSRs           (1'h0),
     .io_enq_bits_decoded_instruction_1_SUBTRACT
       (_decoders_1_io_decoded_instruction_bits_SUBTRACT),
     .io_enq_bits_decoded_instruction_1_MULTIPLY
@@ -584,8 +572,6 @@ module fetch_packet_decoder(
       (_decoders_1_io_decoded_instruction_bits_memory_type),
     .io_enq_bits_decoded_instruction_1_access_width
       (_decoders_1_io_decoded_instruction_bits_access_width),
-    .io_enq_bits_decoded_instruction_2_ready_bits_RS1_ready (1'h0),
-    .io_enq_bits_decoded_instruction_2_ready_bits_RS2_ready (1'h0),
     .io_enq_bits_decoded_instruction_2_RDold
       (_decoders_2_io_decoded_instruction_bits_RDold),
     .io_enq_bits_decoded_instruction_2_RD
@@ -606,9 +592,6 @@ module fetch_packet_decoder(
       (_decoders_2_io_decoded_instruction_bits_FUNCT3),
     .io_enq_bits_decoded_instruction_2_packet_index
       (_decoders_2_io_decoded_instruction_bits_packet_index),
-    .io_enq_bits_decoded_instruction_2_ROB_index            (6'h0),
-    .io_enq_bits_decoded_instruction_2_MOB_index            (4'h0),
-    .io_enq_bits_decoded_instruction_2_FTQ_index            (4'h0),
     .io_enq_bits_decoded_instruction_2_instructionType
       (_decoders_2_io_decoded_instruction_bits_instructionType),
     .io_enq_bits_decoded_instruction_2_portID
@@ -619,7 +602,6 @@ module fetch_packet_decoder(
       (_decoders_2_io_decoded_instruction_bits_needs_ALU),
     .io_enq_bits_decoded_instruction_2_needs_branch_unit
       (_decoders_2_io_decoded_instruction_bits_needs_branch_unit),
-    .io_enq_bits_decoded_instruction_2_needs_CSRs           (1'h0),
     .io_enq_bits_decoded_instruction_2_SUBTRACT
       (_decoders_2_io_decoded_instruction_bits_SUBTRACT),
     .io_enq_bits_decoded_instruction_2_MULTIPLY
@@ -630,8 +612,6 @@ module fetch_packet_decoder(
       (_decoders_2_io_decoded_instruction_bits_memory_type),
     .io_enq_bits_decoded_instruction_2_access_width
       (_decoders_2_io_decoded_instruction_bits_access_width),
-    .io_enq_bits_decoded_instruction_3_ready_bits_RS1_ready (1'h0),
-    .io_enq_bits_decoded_instruction_3_ready_bits_RS2_ready (1'h0),
     .io_enq_bits_decoded_instruction_3_RDold
       (_decoders_3_io_decoded_instruction_bits_RDold),
     .io_enq_bits_decoded_instruction_3_RD
@@ -652,9 +632,6 @@ module fetch_packet_decoder(
       (_decoders_3_io_decoded_instruction_bits_FUNCT3),
     .io_enq_bits_decoded_instruction_3_packet_index
       (_decoders_3_io_decoded_instruction_bits_packet_index),
-    .io_enq_bits_decoded_instruction_3_ROB_index            (6'h0),
-    .io_enq_bits_decoded_instruction_3_MOB_index            (4'h0),
-    .io_enq_bits_decoded_instruction_3_FTQ_index            (4'h0),
     .io_enq_bits_decoded_instruction_3_instructionType
       (_decoders_3_io_decoded_instruction_bits_instructionType),
     .io_enq_bits_decoded_instruction_3_portID
@@ -665,7 +642,6 @@ module fetch_packet_decoder(
       (_decoders_3_io_decoded_instruction_bits_needs_ALU),
     .io_enq_bits_decoded_instruction_3_needs_branch_unit
       (_decoders_3_io_decoded_instruction_bits_needs_branch_unit),
-    .io_enq_bits_decoded_instruction_3_needs_CSRs           (1'h0),
     .io_enq_bits_decoded_instruction_3_SUBTRACT
       (_decoders_3_io_decoded_instruction_bits_SUBTRACT),
     .io_enq_bits_decoded_instruction_3_MULTIPLY
@@ -687,7 +663,6 @@ module fetch_packet_decoder(
     .io_enq_bits_GHR                                        (io_fetch_packet_bits_GHR),
     .io_enq_bits_TOS                                        (io_fetch_packet_bits_TOS),
     .io_enq_bits_NEXT                                       (io_fetch_packet_bits_NEXT),
-    .io_enq_bits_free_list_front_pointer                    (8'h0),
     .io_deq_ready                                           (_io_predictions_in_ready_T),
     .io_deq_valid
       (io_decoded_fetch_packet_valid),

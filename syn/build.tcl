@@ -27,10 +27,10 @@ set fp [open "$lib_dir/firrtl_black_box_resource_files.f" r]
 }
 
 # read constraints
-read_xdc "${constraints_dir}/constraints.xdc" -mode out_of_context
+read_xdc "${constraints_dir}/constraints.xdc"
 
 # synth
-synth_design -top "$top_module" -part ${fpga_part} 
+synth_design -top "$top_module" -part ${fpga_part} -mode out_of_context
 
 # Generate synthesis report
 report_utilization -file utilization_synth.rpt -hierarchical -hierarchical_depth 10 -hierarchical_percentage

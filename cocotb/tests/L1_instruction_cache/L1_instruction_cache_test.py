@@ -47,3 +47,7 @@ def test_CPU_not_ready():
         configs["testcase"] = "test_CPU_not_ready"
         run(**configs)
 
+def test_kill():
+        configs["testcase"] = "test_kill"
+        run(**configs)
+

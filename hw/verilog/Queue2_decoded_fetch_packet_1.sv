@@ -28,11 +28,13 @@
   `endif // STOP_COND
 `endif // not def STOP_COND_
 
-module Queue2_decoded_fetch_packet(
+module Queue2_decoded_fetch_packet_1(
   input         clock,
                 reset,
                 io_enq_valid,
   input  [31:0] io_enq_bits_fetch_PC,
+  input         io_enq_bits_decoded_instruction_0_ready_bits_RS1_ready,
+                io_enq_bits_decoded_instruction_0_ready_bits_RS2_ready,
   input  [4:0]  io_enq_bits_decoded_instruction_0_RDold,
   input  [6:0]  io_enq_bits_decoded_instruction_0_RD,
   input         io_enq_bits_decoded_instruction_0_RD_valid,
@@ -43,16 +45,22 @@ module Queue2_decoded_fetch_packet(
   input  [20:0] io_enq_bits_decoded_instruction_0_IMM,
   input  [2:0]  io_enq_bits_decoded_instruction_0_FUNCT3,
   input  [1:0]  io_enq_bits_decoded_instruction_0_packet_index,
+  input  [5:0]  io_enq_bits_decoded_instruction_0_ROB_index,
+  input  [3:0]  io_enq_bits_decoded_instruction_0_MOB_index,
+                io_enq_bits_decoded_instruction_0_FTQ_index,
   input  [4:0]  io_enq_bits_decoded_instruction_0_instructionType,
   input  [1:0]  io_enq_bits_decoded_instruction_0_portID,
                 io_enq_bits_decoded_instruction_0_RS_type,
   input         io_enq_bits_decoded_instruction_0_needs_ALU,
                 io_enq_bits_decoded_instruction_0_needs_branch_unit,
+                io_enq_bits_decoded_instruction_0_needs_CSRs,
                 io_enq_bits_decoded_instruction_0_SUBTRACT,
                 io_enq_bits_decoded_instruction_0_MULTIPLY,
                 io_enq_bits_decoded_instruction_0_IS_IMM,
   input  [1:0]  io_enq_bits_decoded_instruction_0_memory_type,
                 io_enq_bits_decoded_instruction_0_access_width,
+  input         io_enq_bits_decoded_instruction_1_ready_bits_RS1_ready,
+                io_enq_bits_decoded_instruction_1_ready_bits_RS2_ready,
   input  [4:0]  io_enq_bits_decoded_instruction_1_RDold,
   input  [6:0]  io_enq_bits_decoded_instruction_1_RD,
   input         io_enq_bits_decoded_instruction_1_RD_valid,
@@ -63,16 +71,22 @@ module Queue2_decoded_fetch_packet(
   input  [20:0] io_enq_bits_decoded_instruction_1_IMM,
   input  [2:0]  io_enq_bits_decoded_instruction_1_FUNCT3,
   input  [1:0]  io_enq_bits_decoded_instruction_1_packet_index,
+  input  [5:0]  io_enq_bits_decoded_instruction_1_ROB_index,
+  input  [3:0]  io_enq_bits_decoded_instruction_1_MOB_index,
+                io_enq_bits_decoded_instruction_1_FTQ_index,
   input  [4:0]  io_enq_bits_decoded_instruction_1_instructionType,
   input  [1:0]  io_enq_bits_decoded_instruction_1_portID,
                 io_enq_bits_decoded_instruction_1_RS_type,
   input         io_enq_bits_decoded_instruction_1_needs_ALU,
                 io_enq_bits_decoded_instruction_1_needs_branch_unit,
+                io_enq_bits_decoded_instruction_1_needs_CSRs,
                 io_enq_bits_decoded_instruction_1_SUBTRACT,
                 io_enq_bits_decoded_instruction_1_MULTIPLY,
                 io_enq_bits_decoded_instruction_1_IS_IMM,
   input  [1:0]  io_enq_bits_decoded_instruction_1_memory_type,
                 io_enq_bits_decoded_instruction_1_access_width,
+  input         io_enq_bits_decoded_instruction_2_ready_bits_RS1_ready,
+                io_enq_bits_decoded_instruction_2_ready_bits_RS2_ready,
   input  [4:0]  io_enq_bits_decoded_instruction_2_RDold,
   input  [6:0]  io_enq_bits_decoded_instruction_2_RD,
   input         io_enq_bits_decoded_instruction_2_RD_valid,
@@ -83,16 +97,22 @@ module Queue2_decoded_fetch_packet(
   input  [20:0] io_enq_bits_decoded_instruction_2_IMM,
   input  [2:0]  io_enq_bits_decoded_instruction_2_FUNCT3,
   input  [1:0]  io_enq_bits_decoded_instruction_2_packet_index,
+  input  [5:0]  io_enq_bits_decoded_instruction_2_ROB_index,
+  input  [3:0]  io_enq_bits_decoded_instruction_2_MOB_index,
+                io_enq_bits_decoded_instruction_2_FTQ_index,
   input  [4:0]  io_enq_bits_decoded_instruction_2_instructionType,
   input  [1:0]  io_enq_bits_decoded_instruction_2_portID,
                 io_enq_bits_decoded_instruction_2_RS_type,
   input         io_enq_bits_decoded_instruction_2_needs_ALU,
                 io_enq_bits_decoded_instruction_2_needs_branch_unit,
+                io_enq_bits_decoded_instruction_2_needs_CSRs,
                 io_enq_bits_decoded_instruction_2_SUBTRACT,
                 io_enq_bits_decoded_instruction_2_MULTIPLY,
                 io_enq_bits_decoded_instruction_2_IS_IMM,
   input  [1:0]  io_enq_bits_decoded_instruction_2_memory_type,
                 io_enq_bits_decoded_instruction_2_access_width,
+  input         io_enq_bits_decoded_instruction_3_ready_bits_RS1_ready,
+                io_enq_bits_decoded_instruction_3_ready_bits_RS2_ready,
   input  [4:0]  io_enq_bits_decoded_instruction_3_RDold,
   input  [6:0]  io_enq_bits_decoded_instruction_3_RD,
   input         io_enq_bits_decoded_instruction_3_RD_valid,
@@ -103,11 +123,15 @@ module Queue2_decoded_fetch_packet(
   input  [20:0] io_enq_bits_decoded_instruction_3_IMM,
   input  [2:0]  io_enq_bits_decoded_instruction_3_FUNCT3,
   input  [1:0]  io_enq_bits_decoded_instruction_3_packet_index,
+  input  [5:0]  io_enq_bits_decoded_instruction_3_ROB_index,
+  input  [3:0]  io_enq_bits_decoded_instruction_3_MOB_index,
+                io_enq_bits_decoded_instruction_3_FTQ_index,
   input  [4:0]  io_enq_bits_decoded_instruction_3_instructionType,
   input  [1:0]  io_enq_bits_decoded_instruction_3_portID,
                 io_enq_bits_decoded_instruction_3_RS_type,
   input         io_enq_bits_decoded_instruction_3_needs_ALU,
                 io_enq_bits_decoded_instruction_3_needs_branch_unit,
+                io_enq_bits_decoded_instruction_3_needs_CSRs,
                 io_enq_bits_decoded_instruction_3_SUBTRACT,
                 io_enq_bits_decoded_instruction_3_MULTIPLY,
                 io_enq_bits_decoded_instruction_3_IS_IMM,
@@ -120,11 +144,10 @@ module Queue2_decoded_fetch_packet(
   input  [15:0] io_enq_bits_GHR,
   input  [6:0]  io_enq_bits_TOS,
                 io_enq_bits_NEXT,
+  input  [7:0]  io_enq_bits_free_list_front_pointer,
   input         io_deq_ready,
   output        io_deq_valid,
   output [31:0] io_deq_bits_fetch_PC,
-  output        io_deq_bits_decoded_instruction_0_ready_bits_RS1_ready,
-                io_deq_bits_decoded_instruction_0_ready_bits_RS2_ready,
   output [4:0]  io_deq_bits_decoded_instruction_0_RDold,
   output [6:0]  io_deq_bits_decoded_instruction_0_RD,
   output        io_deq_bits_decoded_instruction_0_RD_valid,
@@ -149,8 +172,6 @@ module Queue2_decoded_fetch_packet(
                 io_deq_bits_decoded_instruction_0_IS_IMM,
   output [1:0]  io_deq_bits_decoded_instruction_0_memory_type,
                 io_deq_bits_decoded_instruction_0_access_width,
-  output        io_deq_bits_decoded_instruction_1_ready_bits_RS1_ready,
-                io_deq_bits_decoded_instruction_1_ready_bits_RS2_ready,
   output [4:0]  io_deq_bits_decoded_instruction_1_RDold,
   output [6:0]  io_deq_bits_decoded_instruction_1_RD,
   output        io_deq_bits_decoded_instruction_1_RD_valid,
@@ -175,8 +196,6 @@ module Queue2_decoded_fetch_packet(
                 io_deq_bits_decoded_instruction_1_IS_IMM,
   output [1:0]  io_deq_bits_decoded_instruction_1_memory_type,
                 io_deq_bits_decoded_instruction_1_access_width,
-  output        io_deq_bits_decoded_instruction_2_ready_bits_RS1_ready,
-                io_deq_bits_decoded_instruction_2_ready_bits_RS2_ready,
   output [4:0]  io_deq_bits_decoded_instruction_2_RDold,
   output [6:0]  io_deq_bits_decoded_instruction_2_RD,
   output        io_deq_bits_decoded_instruction_2_RD_valid,
@@ -201,8 +220,6 @@ module Queue2_decoded_fetch_packet(
                 io_deq_bits_decoded_instruction_2_IS_IMM,
   output [1:0]  io_deq_bits_decoded_instruction_2_memory_type,
                 io_deq_bits_decoded_instruction_2_access_width,
-  output        io_deq_bits_decoded_instruction_3_ready_bits_RS1_ready,
-                io_deq_bits_decoded_instruction_3_ready_bits_RS2_ready,
   output [4:0]  io_deq_bits_decoded_instruction_3_RDold,
   output [6:0]  io_deq_bits_decoded_instruction_3_RD,
   output        io_deq_bits_decoded_instruction_3_RD_valid,
@@ -246,6 +263,7 @@ module Queue2_decoded_fetch_packet(
   wire         ptr_match = wrap == wrap_1;
   wire         empty = ptr_match & ~maybe_full;
   wire         do_enq = io_enq_ready & io_enq_valid;
+  wire         do_deq = io_deq_ready & ~empty;
   assign io_enq_ready = ~(ptr_match & maybe_full);
   always @(posedge clock) begin
     if (reset) begin
@@ -254,14 +272,13 @@ module Queue2_decoded_fetch_packet(
       maybe_full <= 1'h0;
     end
     else begin
-      automatic logic do_deq = io_deq_ready & ~empty;
       wrap <= ~io_flush & (do_enq ? wrap - 1'h1 : wrap);
       wrap_1 <= ~io_flush & (do_deq ? wrap_1 - 1'h1 : wrap_1);
       maybe_full <= ~io_flush & (do_enq == do_deq ? maybe_full : do_enq);
     end
   end // always @(posedge)
-  ram_2x434 ram_ext (
-    .R0_addr (wrap_1),
+  ram_2x434_0 ram_ext (
+    .R0_addr (do_deq ? ~wrap_1 & wrap_1 - 1'h1 : wrap_1),
     .R0_en   (1'h1),
     .R0_clk  (clock),
     .R0_data (_ram_ext_R0_data),
@@ -269,7 +286,7 @@ module Queue2_decoded_fetch_packet(
     .W0_en   (do_enq),
     .W0_clk  (clock),
     .W0_data
-      ({8'h0,
+      ({io_enq_bits_free_list_front_pointer,
         io_enq_bits_NEXT,
         io_enq_bits_TOS,
         io_enq_bits_GHR,
@@ -282,13 +299,15 @@ module Queue2_decoded_fetch_packet(
         io_enq_bits_decoded_instruction_3_IS_IMM,
         io_enq_bits_decoded_instruction_3_MULTIPLY,
         io_enq_bits_decoded_instruction_3_SUBTRACT,
-        1'h0,
+        io_enq_bits_decoded_instruction_3_needs_CSRs,
         io_enq_bits_decoded_instruction_3_needs_branch_unit,
         io_enq_bits_decoded_instruction_3_needs_ALU,
         io_enq_bits_decoded_instruction_3_RS_type,
         io_enq_bits_decoded_instruction_3_portID,
         io_enq_bits_decoded_instruction_3_instructionType,
-        14'h0,
+        io_enq_bits_decoded_instruction_3_FTQ_index,
+        io_enq_bits_decoded_instruction_3_MOB_index,
+        io_enq_bits_decoded_instruction_3_ROB_index,
         io_enq_bits_decoded_instruction_3_packet_index,
         io_enq_bits_decoded_instruction_3_FUNCT3,
         io_enq_bits_decoded_instruction_3_IMM,
@@ -299,19 +318,22 @@ module Queue2_decoded_fetch_packet(
         io_enq_bits_decoded_instruction_3_RD_valid,
         io_enq_bits_decoded_instruction_3_RD,
         io_enq_bits_decoded_instruction_3_RDold,
-        2'h0,
+        io_enq_bits_decoded_instruction_3_ready_bits_RS2_ready,
+        io_enq_bits_decoded_instruction_3_ready_bits_RS1_ready,
         io_enq_bits_decoded_instruction_2_access_width,
         io_enq_bits_decoded_instruction_2_memory_type,
         io_enq_bits_decoded_instruction_2_IS_IMM,
         io_enq_bits_decoded_instruction_2_MULTIPLY,
         io_enq_bits_decoded_instruction_2_SUBTRACT,
-        1'h0,
+        io_enq_bits_decoded_instruction_2_needs_CSRs,
         io_enq_bits_decoded_instruction_2_needs_branch_unit,
         io_enq_bits_decoded_instruction_2_needs_ALU,
         io_enq_bits_decoded_instruction_2_RS_type,
         io_enq_bits_decoded_instruction_2_portID,
         io_enq_bits_decoded_instruction_2_instructionType,
-        14'h0,
+        io_enq_bits_decoded_instruction_2_FTQ_index,
+        io_enq_bits_decoded_instruction_2_MOB_index,
+        io_enq_bits_decoded_instruction_2_ROB_index,
         io_enq_bits_decoded_instruction_2_packet_index,
         io_enq_bits_decoded_instruction_2_FUNCT3,
         io_enq_bits_decoded_instruction_2_IMM,
@@ -322,19 +344,22 @@ module Queue2_decoded_fetch_packet(
         io_enq_bits_decoded_instruction_2_RD_valid,
         io_enq_bits_decoded_instruction_2_RD,
         io_enq_bits_decoded_instruction_2_RDold,
-        2'h0,
+        io_enq_bits_decoded_instruction_2_ready_bits_RS2_ready,
+        io_enq_bits_decoded_instruction_2_ready_bits_RS1_ready,
         io_enq_bits_decoded_instruction_1_access_width,
         io_enq_bits_decoded_instruction_1_memory_type,
         io_enq_bits_decoded_instruction_1_IS_IMM,
         io_enq_bits_decoded_instruction_1_MULTIPLY,
         io_enq_bits_decoded_instruction_1_SUBTRACT,
-        1'h0,
+        io_enq_bits_decoded_instruction_1_needs_CSRs,
         io_enq_bits_decoded_instruction_1_needs_branch_unit,
         io_enq_bits_decoded_instruction_1_needs_ALU,
         io_enq_bits_decoded_instruction_1_RS_type,
         io_enq_bits_decoded_instruction_1_portID,
         io_enq_bits_decoded_instruction_1_instructionType,
-        14'h0,
+        io_enq_bits_decoded_instruction_1_FTQ_index,
+        io_enq_bits_decoded_instruction_1_MOB_index,
+        io_enq_bits_decoded_instruction_1_ROB_index,
         io_enq_bits_decoded_instruction_1_packet_index,
         io_enq_bits_decoded_instruction_1_FUNCT3,
         io_enq_bits_decoded_instruction_1_IMM,
@@ -345,19 +370,22 @@ module Queue2_decoded_fetch_packet(
         io_enq_bits_decoded_instruction_1_RD_valid,
         io_enq_bits_decoded_instruction_1_RD,
         io_enq_bits_decoded_instruction_1_RDold,
-        2'h0,
+        io_enq_bits_decoded_instruction_1_ready_bits_RS2_ready,
+        io_enq_bits_decoded_instruction_1_ready_bits_RS1_ready,
         io_enq_bits_decoded_instruction_0_access_width,
         io_enq_bits_decoded_instruction_0_memory_type,
         io_enq_bits_decoded_instruction_0_IS_IMM,
         io_enq_bits_decoded_instruction_0_MULTIPLY,
         io_enq_bits_decoded_instruction_0_SUBTRACT,
-        1'h0,
+        io_enq_bits_decoded_instruction_0_needs_CSRs,
         io_enq_bits_decoded_instruction_0_needs_branch_unit,
         io_enq_bits_decoded_instruction_0_needs_ALU,
         io_enq_bits_decoded_instruction_0_RS_type,
         io_enq_bits_decoded_instruction_0_portID,
         io_enq_bits_decoded_instruction_0_instructionType,
-        14'h0,
+        io_enq_bits_decoded_instruction_0_FTQ_index,
+        io_enq_bits_decoded_instruction_0_MOB_index,
+        io_enq_bits_decoded_instruction_0_ROB_index,
         io_enq_bits_decoded_instruction_0_packet_index,
         io_enq_bits_decoded_instruction_0_FUNCT3,
         io_enq_bits_decoded_instruction_0_IMM,
@@ -368,13 +396,12 @@ module Queue2_decoded_fetch_packet(
         io_enq_bits_decoded_instruction_0_RD_valid,
         io_enq_bits_decoded_instruction_0_RD,
         io_enq_bits_decoded_instruction_0_RDold,
-        2'h0,
+        io_enq_bits_decoded_instruction_0_ready_bits_RS2_ready,
+        io_enq_bits_decoded_instruction_0_ready_bits_RS1_ready,
         io_enq_bits_fetch_PC})
   );
   assign io_deq_valid = ~empty;
   assign io_deq_bits_fetch_PC = _ram_ext_R0_data[31:0];
-  assign io_deq_bits_decoded_instruction_0_ready_bits_RS1_ready = _ram_ext_R0_data[32];
-  assign io_deq_bits_decoded_instruction_0_ready_bits_RS2_ready = _ram_ext_R0_data[33];
   assign io_deq_bits_decoded_instruction_0_RDold = _ram_ext_R0_data[38:34];
   assign io_deq_bits_decoded_instruction_0_RD = _ram_ext_R0_data[45:39];
   assign io_deq_bits_decoded_instruction_0_RD_valid = _ram_ext_R0_data[46];
@@ -399,8 +426,6 @@ module Queue2_decoded_fetch_packet(
   assign io_deq_bits_decoded_instruction_0_IS_IMM = _ram_ext_R0_data[117];
   assign io_deq_bits_decoded_instruction_0_memory_type = _ram_ext_R0_data[119:118];
   assign io_deq_bits_decoded_instruction_0_access_width = _ram_ext_R0_data[121:120];
-  assign io_deq_bits_decoded_instruction_1_ready_bits_RS1_ready = _ram_ext_R0_data[122];
-  assign io_deq_bits_decoded_instruction_1_ready_bits_RS2_ready = _ram_ext_R0_data[123];
   assign io_deq_bits_decoded_instruction_1_RDold = _ram_ext_R0_data[128:124];
   assign io_deq_bits_decoded_instruction_1_RD = _ram_ext_R0_data[135:129];
   assign io_deq_bits_decoded_instruction_1_RD_valid = _ram_ext_R0_data[136];
@@ -425,8 +450,6 @@ module Queue2_decoded_fetch_packet(
   assign io_deq_bits_decoded_instruction_1_IS_IMM = _ram_ext_R0_data[207];
   assign io_deq_bits_decoded_instruction_1_memory_type = _ram_ext_R0_data[209:208];
   assign io_deq_bits_decoded_instruction_1_access_width = _ram_ext_R0_data[211:210];
-  assign io_deq_bits_decoded_instruction_2_ready_bits_RS1_ready = _ram_ext_R0_data[212];
-  assign io_deq_bits_decoded_instruction_2_ready_bits_RS2_ready = _ram_ext_R0_data[213];
   assign io_deq_bits_decoded_instruction_2_RDold = _ram_ext_R0_data[218:214];
   assign io_deq_bits_decoded_instruction_2_RD = _ram_ext_R0_data[225:219];
   assign io_deq_bits_decoded_instruction_2_RD_valid = _ram_ext_R0_data[226];
@@ -451,8 +474,6 @@ module Queue2_decoded_fetch_packet(
   assign io_deq_bits_decoded_instruction_2_IS_IMM = _ram_ext_R0_data[297];
   assign io_deq_bits_decoded_instruction_2_memory_type = _ram_ext_R0_data[299:298];
   assign io_deq_bits_decoded_instruction_2_access_width = _ram_ext_R0_data[301:300];
-  assign io_deq_bits_decoded_instruction_3_ready_bits_RS1_ready = _ram_ext_R0_data[302];
-  assign io_deq_bits_decoded_instruction_3_ready_bits_RS2_ready = _ram_ext_R0_data[303];
   assign io_deq_bits_decoded_instruction_3_RDold = _ram_ext_R0_data[308:304];
   assign io_deq_bits_decoded_instruction_3_RD = _ram_ext_R0_data[315:309];
   assign io_deq_bits_decoded_instruction_3_RD_valid = _ram_ext_R0_data[316];

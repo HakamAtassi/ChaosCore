@@ -778,6 +778,7 @@ module MOB(
                                                       : possible_load_vec_13
                                                           ? 4'hD
                                                           : {3'h7, ~possible_load_vec_14};
+  wire              io_backend_memory_request_valid_0 = (|_GEN_12) | fire_store;
   wire              _FU_output_load_Q_io_flush_T =
     io_commit_bits_is_misprediction | io_commit_bits_exception;
   wire              _GEN_13 = MOB_0_valid & ~MOB_0_completed;
@@ -1758,7 +1759,7 @@ module MOB(
                                                               ? wr_bytes_1_0
                                                               : _GEN_207 & byte_sels_0[0]
                                                                   ? wr_bytes_0_0
-                                                                  : 8'h0;
+                                                                  : io_backend_memory_response_bits_data[7:0];
   wire [7:0]        data_out_1 =
     _GEN_222 & byte_sels_15[1]
       ? wr_bytes_15_1
@@ -1792,7 +1793,7 @@ module MOB(
                                                               ? wr_bytes_1_1
                                                               : _GEN_207 & byte_sels_0[1]
                                                                   ? wr_bytes_0_1
-                                                                  : 8'h0;
+                                                                  : io_backend_memory_response_bits_data[15:8];
   wire [7:0]        data_out_2 =
     _GEN_222 & byte_sels_15[2]
       ? wr_bytes_15_2
@@ -1826,7 +1827,7 @@ module MOB(
                                                               ? wr_bytes_1_2
                                                               : _GEN_207 & byte_sels_0[2]
                                                                   ? wr_bytes_0_2
-                                                                  : 8'h0;
+                                                                  : io_backend_memory_response_bits_data[23:16];
   wire [7:0]        data_out_3 =
     _GEN_222 & byte_sels_15[3]
       ? wr_bytes_15_3
@@ -1860,7 +1861,7 @@ module MOB(
                                                               ? wr_bytes_1_3
                                                               : _GEN_207 & byte_sels_0[3]
                                                                   ? wr_bytes_0_3
-                                                                  : 8'h0;
+                                                                  : io_backend_memory_response_bits_data[31:24];
   wire              _FU_output_load_Q_io_enq_valid_T_14 =
     possible_FU_loads_0 | possible_FU_loads_1 | possible_FU_loads_2 | possible_FU_loads_3
     | possible_FU_loads_4 | possible_FU_loads_5 | possible_FU_loads_6
@@ -2415,22 +2416,24 @@ module MOB(
       automatic logic        _GEN_401 =
         incoming_is_load & is_load_14 & MOB_14_completed | incoming_is_store & is_load_14
         & MOB_14_completed;
-      automatic logic        _GEN_402 = front_index == 4'h0;
-      automatic logic        _GEN_403 = front_index == 4'h1;
-      automatic logic        _GEN_404 = front_index == 4'h2;
-      automatic logic        _GEN_405 = front_index == 4'h3;
-      automatic logic        _GEN_406 = front_index == 4'h4;
-      automatic logic        _GEN_407 = front_index == 4'h5;
-      automatic logic        _GEN_408 = front_index == 4'h6;
-      automatic logic        _GEN_409 = front_index == 4'h7;
-      automatic logic        _GEN_410 = front_index == 4'h8;
-      automatic logic        _GEN_411 = front_index == 4'h9;
-      automatic logic        _GEN_412 = front_index == 4'hA;
-      automatic logic        _GEN_413 = front_index == 4'hB;
-      automatic logic        _GEN_414 = front_index == 4'hC;
-      automatic logic        _GEN_415 = front_index == 4'hD;
-      automatic logic        _GEN_416 = front_index == 4'hE;
-      automatic logic [15:0] _GEN_417 =
+      automatic logic        _GEN_402 =
+        io_backend_memory_request_ready & io_backend_memory_request_valid_0;
+      automatic logic        _GEN_403 = front_index == 4'h0;
+      automatic logic        _GEN_404 = front_index == 4'h1;
+      automatic logic        _GEN_405 = front_index == 4'h2;
+      automatic logic        _GEN_406 = front_index == 4'h3;
+      automatic logic        _GEN_407 = front_index == 4'h4;
+      automatic logic        _GEN_408 = front_index == 4'h5;
+      automatic logic        _GEN_409 = front_index == 4'h6;
+      automatic logic        _GEN_410 = front_index == 4'h7;
+      automatic logic        _GEN_411 = front_index == 4'h8;
+      automatic logic        _GEN_412 = front_index == 4'h9;
+      automatic logic        _GEN_413 = front_index == 4'hA;
+      automatic logic        _GEN_414 = front_index == 4'hB;
+      automatic logic        _GEN_415 = front_index == 4'hC;
+      automatic logic        _GEN_416 = front_index == 4'hD;
+      automatic logic        _GEN_417 = front_index == 4'hE;
+      automatic logic [15:0] _GEN_418 =
         {{MOB_15_completed},
          {MOB_14_completed},
          {MOB_13_completed},
@@ -2447,9 +2450,8 @@ module MOB(
          {MOB_2_completed},
          {MOB_1_completed},
          {MOB_0_completed}};
-      automatic logic        _GEN_418;
-      automatic logic        _GEN_419 = io_commit_valid & _FU_output_load_Q_io_flush_T;
-      automatic logic        _GEN_420;
+      automatic logic        _GEN_419;
+      automatic logic        _GEN_420 = io_commit_valid & _FU_output_load_Q_io_flush_T;
       automatic logic        _GEN_421;
       automatic logic        _GEN_422;
       automatic logic        _GEN_423;
@@ -2481,10 +2483,10 @@ module MOB(
       automatic logic        _GEN_449;
       automatic logic        _GEN_450;
       automatic logic        _GEN_451;
-      automatic logic        _GEN_452 =
+      automatic logic        _GEN_452;
+      automatic logic        _GEN_453 =
         _FU_output_store_Q_io_enq_ready & _FU_output_store_Q_io_enq_valid_T_14
-        & ~_GEN_419;
-      automatic logic        _GEN_453;
+        & ~_GEN_420;
       automatic logic        _GEN_454;
       automatic logic        _GEN_455;
       automatic logic        _GEN_456;
@@ -2500,41 +2502,42 @@ module MOB(
       automatic logic        _GEN_466;
       automatic logic        _GEN_467;
       automatic logic        _GEN_468;
-      automatic logic        _GEN_469 =
+      automatic logic        _GEN_469;
+      automatic logic        _GEN_470 =
         io_backend_memory_response_valid
         & _GEN_5[io_backend_memory_response_bits_MOB_index] == 2'h1;
-      automatic logic        _GEN_470 =
-        _GEN_469 & io_backend_memory_response_bits_MOB_index == 4'h0;
       automatic logic        _GEN_471 =
-        _GEN_469 & io_backend_memory_response_bits_MOB_index == 4'h1;
+        _GEN_470 & io_backend_memory_response_bits_MOB_index == 4'h0;
       automatic logic        _GEN_472 =
-        _GEN_469 & io_backend_memory_response_bits_MOB_index == 4'h2;
+        _GEN_470 & io_backend_memory_response_bits_MOB_index == 4'h1;
       automatic logic        _GEN_473 =
-        _GEN_469 & io_backend_memory_response_bits_MOB_index == 4'h3;
+        _GEN_470 & io_backend_memory_response_bits_MOB_index == 4'h2;
       automatic logic        _GEN_474 =
-        _GEN_469 & io_backend_memory_response_bits_MOB_index == 4'h4;
+        _GEN_470 & io_backend_memory_response_bits_MOB_index == 4'h3;
       automatic logic        _GEN_475 =
-        _GEN_469 & io_backend_memory_response_bits_MOB_index == 4'h5;
+        _GEN_470 & io_backend_memory_response_bits_MOB_index == 4'h4;
       automatic logic        _GEN_476 =
-        _GEN_469 & io_backend_memory_response_bits_MOB_index == 4'h6;
+        _GEN_470 & io_backend_memory_response_bits_MOB_index == 4'h5;
       automatic logic        _GEN_477 =
-        _GEN_469 & io_backend_memory_response_bits_MOB_index == 4'h7;
+        _GEN_470 & io_backend_memory_response_bits_MOB_index == 4'h6;
       automatic logic        _GEN_478 =
-        _GEN_469 & io_backend_memory_response_bits_MOB_index == 4'h8;
+        _GEN_470 & io_backend_memory_response_bits_MOB_index == 4'h7;
       automatic logic        _GEN_479 =
-        _GEN_469 & io_backend_memory_response_bits_MOB_index == 4'h9;
+        _GEN_470 & io_backend_memory_response_bits_MOB_index == 4'h8;
       automatic logic        _GEN_480 =
-        _GEN_469 & io_backend_memory_response_bits_MOB_index == 4'hA;
+        _GEN_470 & io_backend_memory_response_bits_MOB_index == 4'h9;
       automatic logic        _GEN_481 =
-        _GEN_469 & io_backend_memory_response_bits_MOB_index == 4'hB;
+        _GEN_470 & io_backend_memory_response_bits_MOB_index == 4'hA;
       automatic logic        _GEN_482 =
-        _GEN_469 & io_backend_memory_response_bits_MOB_index == 4'hC;
+        _GEN_470 & io_backend_memory_response_bits_MOB_index == 4'hB;
       automatic logic        _GEN_483 =
-        _GEN_469 & io_backend_memory_response_bits_MOB_index == 4'hD;
+        _GEN_470 & io_backend_memory_response_bits_MOB_index == 4'hC;
       automatic logic        _GEN_484 =
-        _GEN_469 & io_backend_memory_response_bits_MOB_index == 4'hE;
+        _GEN_470 & io_backend_memory_response_bits_MOB_index == 4'hD;
       automatic logic        _GEN_485 =
-        _GEN_469 & (&io_backend_memory_response_bits_MOB_index);
+        _GEN_470 & io_backend_memory_response_bits_MOB_index == 4'hE;
+      automatic logic        _GEN_486 =
+        _GEN_470 & (&io_backend_memory_response_bits_MOB_index);
       automatic logic [31:0] _MOB_data_T;
       _GEN_224 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'h0;
       _GEN_225 = written_vec_0 & _io_reserved_pointers_0_bits_T == 4'h1;
@@ -2664,72 +2667,72 @@ module MOB(
       _GEN_331 = _GEN_330 | MOB_14_pending;
       _GEN_332 = io_AGU_output_valid & (&io_AGU_output_bits_MOB_index);
       _GEN_333 = _GEN_332 | MOB_15_pending;
-      _GEN_418 =
-        _GEN_4[front_index] & ~_GEN_9[front_index] & _GEN_417[front_index]
+      _GEN_419 =
+        _GEN_4[front_index] & ~_GEN_9[front_index] & _GEN_418[front_index]
         & _GEN_10[front_index];
-      _GEN_420 = _GEN_419 | _GEN_418 & _GEN_402;
-      _GEN_421 = ~_GEN_420 & MOB_0_completed;
-      _GEN_422 = _GEN_419 | _GEN_418 & _GEN_403;
-      _GEN_423 = ~_GEN_422 & MOB_1_completed;
-      _GEN_424 = _GEN_419 | _GEN_418 & _GEN_404;
-      _GEN_425 = ~_GEN_424 & MOB_2_completed;
-      _GEN_426 = _GEN_419 | _GEN_418 & _GEN_405;
-      _GEN_427 = ~_GEN_426 & MOB_3_completed;
-      _GEN_428 = _GEN_419 | _GEN_418 & _GEN_406;
-      _GEN_429 = ~_GEN_428 & MOB_4_completed;
-      _GEN_430 = _GEN_419 | _GEN_418 & _GEN_407;
-      _GEN_431 = ~_GEN_430 & MOB_5_completed;
-      _GEN_432 = _GEN_419 | _GEN_418 & _GEN_408;
-      _GEN_433 = ~_GEN_432 & MOB_6_completed;
-      _GEN_434 = _GEN_419 | _GEN_418 & _GEN_409;
-      _GEN_435 = ~_GEN_434 & MOB_7_completed;
-      _GEN_436 = _GEN_419 | _GEN_418 & _GEN_410;
-      _GEN_437 = ~_GEN_436 & MOB_8_completed;
-      _GEN_438 = _GEN_419 | _GEN_418 & _GEN_411;
-      _GEN_439 = ~_GEN_438 & MOB_9_completed;
-      _GEN_440 = _GEN_419 | _GEN_418 & _GEN_412;
-      _GEN_441 = ~_GEN_440 & MOB_10_completed;
-      _GEN_442 = _GEN_419 | _GEN_418 & _GEN_413;
-      _GEN_443 = ~_GEN_442 & MOB_11_completed;
-      _GEN_444 = _GEN_419 | _GEN_418 & _GEN_414;
-      _GEN_445 = ~_GEN_444 & MOB_12_completed;
-      _GEN_446 = _GEN_419 | _GEN_418 & _GEN_415;
-      _GEN_447 = ~_GEN_446 & MOB_13_completed;
-      _GEN_448 = _GEN_419 | _GEN_418 & _GEN_416;
-      _GEN_449 = ~_GEN_448 & MOB_14_completed;
-      _GEN_450 = _GEN_419 | _GEN_418 & (&front_index);
-      _GEN_451 = ~_GEN_450 & MOB_15_completed;
-      _GEN_453 = _GEN_452 & possible_FU_store_index == 4'h0;
-      _GEN_454 = _GEN_452 & possible_FU_store_index == 4'h1;
-      _GEN_455 = _GEN_452 & possible_FU_store_index == 4'h2;
-      _GEN_456 = _GEN_452 & possible_FU_store_index == 4'h3;
-      _GEN_457 = _GEN_452 & possible_FU_store_index == 4'h4;
-      _GEN_458 = _GEN_452 & possible_FU_store_index == 4'h5;
-      _GEN_459 = _GEN_452 & possible_FU_store_index == 4'h6;
-      _GEN_460 = _GEN_452 & possible_FU_store_index == 4'h7;
-      _GEN_461 = _GEN_452 & possible_FU_store_index == 4'h8;
-      _GEN_462 = _GEN_452 & possible_FU_store_index == 4'h9;
-      _GEN_463 = _GEN_452 & possible_FU_store_index == 4'hA;
-      _GEN_464 = _GEN_452 & possible_FU_store_index == 4'hB;
-      _GEN_465 = _GEN_452 & possible_FU_store_index == 4'hC;
-      _GEN_466 = _GEN_452 & possible_FU_store_index == 4'hD;
-      _GEN_467 = _GEN_452 & possible_FU_store_index == 4'hE;
-      _GEN_468 = _GEN_452 & (&possible_FU_store_index);
+      _GEN_421 = _GEN_420 | _GEN_419 & _GEN_403;
+      _GEN_422 = ~_GEN_421 & MOB_0_completed;
+      _GEN_423 = _GEN_420 | _GEN_419 & _GEN_404;
+      _GEN_424 = ~_GEN_423 & MOB_1_completed;
+      _GEN_425 = _GEN_420 | _GEN_419 & _GEN_405;
+      _GEN_426 = ~_GEN_425 & MOB_2_completed;
+      _GEN_427 = _GEN_420 | _GEN_419 & _GEN_406;
+      _GEN_428 = ~_GEN_427 & MOB_3_completed;
+      _GEN_429 = _GEN_420 | _GEN_419 & _GEN_407;
+      _GEN_430 = ~_GEN_429 & MOB_4_completed;
+      _GEN_431 = _GEN_420 | _GEN_419 & _GEN_408;
+      _GEN_432 = ~_GEN_431 & MOB_5_completed;
+      _GEN_433 = _GEN_420 | _GEN_419 & _GEN_409;
+      _GEN_434 = ~_GEN_433 & MOB_6_completed;
+      _GEN_435 = _GEN_420 | _GEN_419 & _GEN_410;
+      _GEN_436 = ~_GEN_435 & MOB_7_completed;
+      _GEN_437 = _GEN_420 | _GEN_419 & _GEN_411;
+      _GEN_438 = ~_GEN_437 & MOB_8_completed;
+      _GEN_439 = _GEN_420 | _GEN_419 & _GEN_412;
+      _GEN_440 = ~_GEN_439 & MOB_9_completed;
+      _GEN_441 = _GEN_420 | _GEN_419 & _GEN_413;
+      _GEN_442 = ~_GEN_441 & MOB_10_completed;
+      _GEN_443 = _GEN_420 | _GEN_419 & _GEN_414;
+      _GEN_444 = ~_GEN_443 & MOB_11_completed;
+      _GEN_445 = _GEN_420 | _GEN_419 & _GEN_415;
+      _GEN_446 = ~_GEN_445 & MOB_12_completed;
+      _GEN_447 = _GEN_420 | _GEN_419 & _GEN_416;
+      _GEN_448 = ~_GEN_447 & MOB_13_completed;
+      _GEN_449 = _GEN_420 | _GEN_419 & _GEN_417;
+      _GEN_450 = ~_GEN_449 & MOB_14_completed;
+      _GEN_451 = _GEN_420 | _GEN_419 & (&front_index);
+      _GEN_452 = ~_GEN_451 & MOB_15_completed;
+      _GEN_454 = _GEN_453 & possible_FU_store_index == 4'h0;
+      _GEN_455 = _GEN_453 & possible_FU_store_index == 4'h1;
+      _GEN_456 = _GEN_453 & possible_FU_store_index == 4'h2;
+      _GEN_457 = _GEN_453 & possible_FU_store_index == 4'h3;
+      _GEN_458 = _GEN_453 & possible_FU_store_index == 4'h4;
+      _GEN_459 = _GEN_453 & possible_FU_store_index == 4'h5;
+      _GEN_460 = _GEN_453 & possible_FU_store_index == 4'h6;
+      _GEN_461 = _GEN_453 & possible_FU_store_index == 4'h7;
+      _GEN_462 = _GEN_453 & possible_FU_store_index == 4'h8;
+      _GEN_463 = _GEN_453 & possible_FU_store_index == 4'h9;
+      _GEN_464 = _GEN_453 & possible_FU_store_index == 4'hA;
+      _GEN_465 = _GEN_453 & possible_FU_store_index == 4'hB;
+      _GEN_466 = _GEN_453 & possible_FU_store_index == 4'hC;
+      _GEN_467 = _GEN_453 & possible_FU_store_index == 4'hD;
+      _GEN_468 = _GEN_453 & possible_FU_store_index == 4'hE;
+      _GEN_469 = _GEN_453 & (&possible_FU_store_index);
       _MOB_data_T = {data_out_3, data_out_2, data_out_1, data_out_0};
-      if (_GEN_419) begin
+      if (_GEN_420) begin
         front_pointer <= 5'h0;
         back_pointer <= 5'h0;
       end
       else begin
-        if (_GEN_418)
+        if (_GEN_419)
           front_pointer <= front_pointer + 5'h1;
         back_pointer <=
           back_pointer + {2'h0, {1'h0, _GEN + _GEN_0} + {1'h0, _GEN_1 + _GEN_2}};
       end
       MOB_0_valid <=
-        ~_GEN_420
+        ~_GEN_421
         & (written_vec_3 ? _GEN_287 | _GEN_271 | _GEN_241 : _GEN_271 | _GEN_241);
-      if (_GEN_420) begin
+      if (_GEN_421) begin
         MOB_0_memory_type <= 2'h0;
         MOB_0_ROB_index <= 6'h0;
         MOB_0_fetch_packet_index <= 2'h0;
@@ -2769,62 +2772,64 @@ module MOB(
         if (_GEN_302)
           MOB_0_address <= io_AGU_output_bits_address;
       end
-      if (_GEN_470)
+      if (_GEN_471)
         MOB_0_data <= _MOB_data_T;
-      else if (_GEN_420)
+      else if (_GEN_421)
         MOB_0_data <= 32'h0;
       else if (_GEN_302)
         MOB_0_data <= io_AGU_output_bits_wr_data;
-      MOB_0_data_valid <= _GEN_470 | ~_GEN_420 & MOB_0_data_valid;
+      MOB_0_data_valid <= _GEN_471 | ~_GEN_421 & MOB_0_data_valid;
       MOB_0_pending <=
-        ~_GEN_420
-        & ((|_GEN_12) ? (|load_index) & _GEN_303 : ~(fire_store & _GEN_402) & _GEN_303);
+        ~_GEN_421
+        & ((|_GEN_12)
+             ? ~(_GEN_402 & load_index == 4'h0) & _GEN_303
+             : ~(fire_store & _GEN_402 & _GEN_403) & _GEN_303);
       if (_FU_output_load_Q_io_enq_ready & _FU_output_load_Q_io_enq_valid_T_14
-          & ~_GEN_419) begin
-        MOB_0_completed <= possible_FU_load_index == 4'h0 | _GEN_453 | _GEN_421;
-        MOB_1_completed <= possible_FU_load_index == 4'h1 | _GEN_454 | _GEN_423;
-        MOB_2_completed <= possible_FU_load_index == 4'h2 | _GEN_455 | _GEN_425;
-        MOB_3_completed <= possible_FU_load_index == 4'h3 | _GEN_456 | _GEN_427;
-        MOB_4_completed <= possible_FU_load_index == 4'h4 | _GEN_457 | _GEN_429;
-        MOB_5_completed <= possible_FU_load_index == 4'h5 | _GEN_458 | _GEN_431;
-        MOB_6_completed <= possible_FU_load_index == 4'h6 | _GEN_459 | _GEN_433;
-        MOB_7_completed <= possible_FU_load_index == 4'h7 | _GEN_460 | _GEN_435;
-        MOB_8_completed <= possible_FU_load_index == 4'h8 | _GEN_461 | _GEN_437;
-        MOB_9_completed <= possible_FU_load_index == 4'h9 | _GEN_462 | _GEN_439;
-        MOB_10_completed <= possible_FU_load_index == 4'hA | _GEN_463 | _GEN_441;
-        MOB_11_completed <= possible_FU_load_index == 4'hB | _GEN_464 | _GEN_443;
-        MOB_12_completed <= possible_FU_load_index == 4'hC | _GEN_465 | _GEN_445;
-        MOB_13_completed <= possible_FU_load_index == 4'hD | _GEN_466 | _GEN_447;
-        MOB_14_completed <= possible_FU_load_index == 4'hE | _GEN_467 | _GEN_449;
-        MOB_15_completed <= (&possible_FU_load_index) | _GEN_468 | _GEN_451;
+          & ~_GEN_420) begin
+        MOB_0_completed <= possible_FU_load_index == 4'h0 | _GEN_454 | _GEN_422;
+        MOB_1_completed <= possible_FU_load_index == 4'h1 | _GEN_455 | _GEN_424;
+        MOB_2_completed <= possible_FU_load_index == 4'h2 | _GEN_456 | _GEN_426;
+        MOB_3_completed <= possible_FU_load_index == 4'h3 | _GEN_457 | _GEN_428;
+        MOB_4_completed <= possible_FU_load_index == 4'h4 | _GEN_458 | _GEN_430;
+        MOB_5_completed <= possible_FU_load_index == 4'h5 | _GEN_459 | _GEN_432;
+        MOB_6_completed <= possible_FU_load_index == 4'h6 | _GEN_460 | _GEN_434;
+        MOB_7_completed <= possible_FU_load_index == 4'h7 | _GEN_461 | _GEN_436;
+        MOB_8_completed <= possible_FU_load_index == 4'h8 | _GEN_462 | _GEN_438;
+        MOB_9_completed <= possible_FU_load_index == 4'h9 | _GEN_463 | _GEN_440;
+        MOB_10_completed <= possible_FU_load_index == 4'hA | _GEN_464 | _GEN_442;
+        MOB_11_completed <= possible_FU_load_index == 4'hB | _GEN_465 | _GEN_444;
+        MOB_12_completed <= possible_FU_load_index == 4'hC | _GEN_466 | _GEN_446;
+        MOB_13_completed <= possible_FU_load_index == 4'hD | _GEN_467 | _GEN_448;
+        MOB_14_completed <= possible_FU_load_index == 4'hE | _GEN_468 | _GEN_450;
+        MOB_15_completed <= (&possible_FU_load_index) | _GEN_469 | _GEN_452;
       end
       else begin
-        MOB_0_completed <= _GEN_453 | _GEN_421;
-        MOB_1_completed <= _GEN_454 | _GEN_423;
-        MOB_2_completed <= _GEN_455 | _GEN_425;
-        MOB_3_completed <= _GEN_456 | _GEN_427;
-        MOB_4_completed <= _GEN_457 | _GEN_429;
-        MOB_5_completed <= _GEN_458 | _GEN_431;
-        MOB_6_completed <= _GEN_459 | _GEN_433;
-        MOB_7_completed <= _GEN_460 | _GEN_435;
-        MOB_8_completed <= _GEN_461 | _GEN_437;
-        MOB_9_completed <= _GEN_462 | _GEN_439;
-        MOB_10_completed <= _GEN_463 | _GEN_441;
-        MOB_11_completed <= _GEN_464 | _GEN_443;
-        MOB_12_completed <= _GEN_465 | _GEN_445;
-        MOB_13_completed <= _GEN_466 | _GEN_447;
-        MOB_14_completed <= _GEN_467 | _GEN_449;
-        MOB_15_completed <= _GEN_468 | _GEN_451;
+        MOB_0_completed <= _GEN_454 | _GEN_422;
+        MOB_1_completed <= _GEN_455 | _GEN_424;
+        MOB_2_completed <= _GEN_456 | _GEN_426;
+        MOB_3_completed <= _GEN_457 | _GEN_428;
+        MOB_4_completed <= _GEN_458 | _GEN_430;
+        MOB_5_completed <= _GEN_459 | _GEN_432;
+        MOB_6_completed <= _GEN_460 | _GEN_434;
+        MOB_7_completed <= _GEN_461 | _GEN_436;
+        MOB_8_completed <= _GEN_462 | _GEN_438;
+        MOB_9_completed <= _GEN_463 | _GEN_440;
+        MOB_10_completed <= _GEN_464 | _GEN_442;
+        MOB_11_completed <= _GEN_465 | _GEN_444;
+        MOB_12_completed <= _GEN_466 | _GEN_446;
+        MOB_13_completed <= _GEN_467 | _GEN_448;
+        MOB_14_completed <= _GEN_468 | _GEN_450;
+        MOB_15_completed <= _GEN_469 | _GEN_452;
       end
       MOB_0_committed <=
-        ~_GEN_420
+        ~_GEN_421
         & (MOB_0_valid & io_commit_valid & MOB_0_ROB_index == io_commit_bits_ROB_index
            | MOB_0_committed);
-      MOB_0_exception <= ~_GEN_420 & (_GEN_334 & _GEN_335 | MOB_0_exception);
+      MOB_0_exception <= ~_GEN_421 & (_GEN_334 & _GEN_335 | MOB_0_exception);
       MOB_1_valid <=
-        ~_GEN_422
+        ~_GEN_423
         & (written_vec_3 ? _GEN_288 | _GEN_272 | _GEN_243 : _GEN_272 | _GEN_243);
-      if (_GEN_422) begin
+      if (_GEN_423) begin
         MOB_1_memory_type <= 2'h0;
         MOB_1_ROB_index <= 6'h0;
         MOB_1_fetch_packet_index <= 2'h0;
@@ -2864,27 +2869,27 @@ module MOB(
         if (_GEN_304)
           MOB_1_address <= io_AGU_output_bits_address;
       end
-      if (_GEN_471)
+      if (_GEN_472)
         MOB_1_data <= _MOB_data_T;
-      else if (_GEN_422)
+      else if (_GEN_423)
         MOB_1_data <= 32'h0;
       else if (_GEN_304)
         MOB_1_data <= io_AGU_output_bits_wr_data;
-      MOB_1_data_valid <= _GEN_471 | ~_GEN_422 & MOB_1_data_valid;
+      MOB_1_data_valid <= _GEN_472 | ~_GEN_423 & MOB_1_data_valid;
       MOB_1_pending <=
-        ~_GEN_422
+        ~_GEN_423
         & ((|_GEN_12)
-             ? load_index != 4'h1 & _GEN_305
-             : ~(fire_store & _GEN_403) & _GEN_305);
+             ? ~(_GEN_402 & load_index == 4'h1) & _GEN_305
+             : ~(fire_store & _GEN_402 & _GEN_404) & _GEN_305);
       MOB_1_committed <=
-        ~_GEN_422
+        ~_GEN_423
         & (MOB_1_valid & io_commit_valid & MOB_1_ROB_index == io_commit_bits_ROB_index
            | MOB_1_committed);
-      MOB_1_exception <= ~_GEN_422 & (_GEN_336 & _GEN_337 | MOB_1_exception);
+      MOB_1_exception <= ~_GEN_423 & (_GEN_336 & _GEN_337 | MOB_1_exception);
       MOB_2_valid <=
-        ~_GEN_424
+        ~_GEN_425
         & (written_vec_3 ? _GEN_289 | _GEN_273 | _GEN_245 : _GEN_273 | _GEN_245);
-      if (_GEN_424) begin
+      if (_GEN_425) begin
         MOB_2_memory_type <= 2'h0;
         MOB_2_ROB_index <= 6'h0;
         MOB_2_fetch_packet_index <= 2'h0;
@@ -2924,27 +2929,27 @@ module MOB(
         if (_GEN_306)
           MOB_2_address <= io_AGU_output_bits_address;
       end
-      if (_GEN_472)
+      if (_GEN_473)
         MOB_2_data <= _MOB_data_T;
-      else if (_GEN_424)
+      else if (_GEN_425)
         MOB_2_data <= 32'h0;
       else if (_GEN_306)
         MOB_2_data <= io_AGU_output_bits_wr_data;
-      MOB_2_data_valid <= _GEN_472 | ~_GEN_424 & MOB_2_data_valid;
+      MOB_2_data_valid <= _GEN_473 | ~_GEN_425 & MOB_2_data_valid;
       MOB_2_pending <=
-        ~_GEN_424
+        ~_GEN_425
         & ((|_GEN_12)
-             ? load_index != 4'h2 & _GEN_307
-             : ~(fire_store & _GEN_404) & _GEN_307);
+             ? ~(_GEN_402 & load_index == 4'h2) & _GEN_307
+             : ~(fire_store & _GEN_402 & _GEN_405) & _GEN_307);
       MOB_2_committed <=
-        ~_GEN_424
+        ~_GEN_425
         & (MOB_2_valid & io_commit_valid & MOB_2_ROB_index == io_commit_bits_ROB_index
            | MOB_2_committed);
-      MOB_2_exception <= ~_GEN_424 & (_GEN_341 & _GEN_342 | MOB_2_exception);
+      MOB_2_exception <= ~_GEN_425 & (_GEN_341 & _GEN_342 | MOB_2_exception);
       MOB_3_valid <=
-        ~_GEN_426
+        ~_GEN_427
         & (written_vec_3 ? _GEN_290 | _GEN_274 | _GEN_247 : _GEN_274 | _GEN_247);
-      if (_GEN_426) begin
+      if (_GEN_427) begin
         MOB_3_memory_type <= 2'h0;
         MOB_3_ROB_index <= 6'h0;
         MOB_3_fetch_packet_index <= 2'h0;
@@ -2984,27 +2989,27 @@ module MOB(
         if (_GEN_308)
           MOB_3_address <= io_AGU_output_bits_address;
       end
-      if (_GEN_473)
+      if (_GEN_474)
         MOB_3_data <= _MOB_data_T;
-      else if (_GEN_426)
+      else if (_GEN_427)
         MOB_3_data <= 32'h0;
       else if (_GEN_308)
         MOB_3_data <= io_AGU_output_bits_wr_data;
-      MOB_3_data_valid <= _GEN_473 | ~_GEN_426 & MOB_3_data_valid;
+      MOB_3_data_valid <= _GEN_474 | ~_GEN_427 & MOB_3_data_valid;
       MOB_3_pending <=
-        ~_GEN_426
+        ~_GEN_427
         & ((|_GEN_12)
-             ? load_index != 4'h3 & _GEN_309
-             : ~(fire_store & _GEN_405) & _GEN_309);
+             ? ~(_GEN_402 & load_index == 4'h3) & _GEN_309
+             : ~(fire_store & _GEN_402 & _GEN_406) & _GEN_309);
       MOB_3_committed <=
-        ~_GEN_426
+        ~_GEN_427
         & (MOB_3_valid & io_commit_valid & MOB_3_ROB_index == io_commit_bits_ROB_index
            | MOB_3_committed);
-      MOB_3_exception <= ~_GEN_426 & (_GEN_345 & _GEN_346 | MOB_3_exception);
+      MOB_3_exception <= ~_GEN_427 & (_GEN_345 & _GEN_346 | MOB_3_exception);
       MOB_4_valid <=
-        ~_GEN_428
+        ~_GEN_429
         & (written_vec_3 ? _GEN_291 | _GEN_275 | _GEN_249 : _GEN_275 | _GEN_249);
-      if (_GEN_428) begin
+      if (_GEN_429) begin
         MOB_4_memory_type <= 2'h0;
         MOB_4_ROB_index <= 6'h0;
         MOB_4_fetch_packet_index <= 2'h0;
@@ -3044,27 +3049,27 @@ module MOB(
         if (_GEN_310)
           MOB_4_address <= io_AGU_output_bits_address;
       end
-      if (_GEN_474)
+      if (_GEN_475)
         MOB_4_data <= _MOB_data_T;
-      else if (_GEN_428)
+      else if (_GEN_429)
         MOB_4_data <= 32'h0;
       else if (_GEN_310)
         MOB_4_data <= io_AGU_output_bits_wr_data;
-      MOB_4_data_valid <= _GEN_474 | ~_GEN_428 & MOB_4_data_valid;
+      MOB_4_data_valid <= _GEN_475 | ~_GEN_429 & MOB_4_data_valid;
       MOB_4_pending <=
-        ~_GEN_428
+        ~_GEN_429
         & ((|_GEN_12)
-             ? load_index != 4'h4 & _GEN_311
-             : ~(fire_store & _GEN_406) & _GEN_311);
+             ? ~(_GEN_402 & load_index == 4'h4) & _GEN_311
+             : ~(fire_store & _GEN_402 & _GEN_407) & _GEN_311);
       MOB_4_committed <=
-        ~_GEN_428
+        ~_GEN_429
         & (MOB_4_valid & io_commit_valid & MOB_4_ROB_index == io_commit_bits_ROB_index
            | MOB_4_committed);
-      MOB_4_exception <= ~_GEN_428 & (_GEN_350 & _GEN_351 | MOB_4_exception);
+      MOB_4_exception <= ~_GEN_429 & (_GEN_350 & _GEN_351 | MOB_4_exception);
       MOB_5_valid <=
-        ~_GEN_430
+        ~_GEN_431
         & (written_vec_3 ? _GEN_292 | _GEN_276 | _GEN_251 : _GEN_276 | _GEN_251);
-      if (_GEN_430) begin
+      if (_GEN_431) begin
         MOB_5_memory_type <= 2'h0;
         MOB_5_ROB_index <= 6'h0;
         MOB_5_fetch_packet_index <= 2'h0;
@@ -3104,27 +3109,27 @@ module MOB(
         if (_GEN_312)
           MOB_5_address <= io_AGU_output_bits_address;
       end
-      if (_GEN_475)
+      if (_GEN_476)
         MOB_5_data <= _MOB_data_T;
-      else if (_GEN_430)
+      else if (_GEN_431)
         MOB_5_data <= 32'h0;
       else if (_GEN_312)
         MOB_5_data <= io_AGU_output_bits_wr_data;
-      MOB_5_data_valid <= _GEN_475 | ~_GEN_430 & MOB_5_data_valid;
+      MOB_5_data_valid <= _GEN_476 | ~_GEN_431 & MOB_5_data_valid;
       MOB_5_pending <=
-        ~_GEN_430
+        ~_GEN_431
         & ((|_GEN_12)
-             ? load_index != 4'h5 & _GEN_313
-             : ~(fire_store & _GEN_407) & _GEN_313);
+             ? ~(_GEN_402 & load_index == 4'h5) & _GEN_313
+             : ~(fire_store & _GEN_402 & _GEN_408) & _GEN_313);
       MOB_5_committed <=
-        ~_GEN_430
+        ~_GEN_431
         & (MOB_5_valid & io_commit_valid & MOB_5_ROB_index == io_commit_bits_ROB_index
            | MOB_5_committed);
-      MOB_5_exception <= ~_GEN_430 & (_GEN_355 & _GEN_356 | MOB_5_exception);
+      MOB_5_exception <= ~_GEN_431 & (_GEN_355 & _GEN_356 | MOB_5_exception);
       MOB_6_valid <=
-        ~_GEN_432
+        ~_GEN_433
         & (written_vec_3 ? _GEN_293 | _GEN_277 | _GEN_253 : _GEN_277 | _GEN_253);
-      if (_GEN_432) begin
+      if (_GEN_433) begin
         MOB_6_memory_type <= 2'h0;
         MOB_6_ROB_index <= 6'h0;
         MOB_6_fetch_packet_index <= 2'h0;
@@ -3164,27 +3169,27 @@ module MOB(
         if (_GEN_314)
           MOB_6_address <= io_AGU_output_bits_address;
       end
-      if (_GEN_476)
+      if (_GEN_477)
         MOB_6_data <= _MOB_data_T;
-      else if (_GEN_432)
+      else if (_GEN_433)
         MOB_6_data <= 32'h0;
       else if (_GEN_314)
         MOB_6_data <= io_AGU_output_bits_wr_data;
-      MOB_6_data_valid <= _GEN_476 | ~_GEN_432 & MOB_6_data_valid;
+      MOB_6_data_valid <= _GEN_477 | ~_GEN_433 & MOB_6_data_valid;
       MOB_6_pending <=
-        ~_GEN_432
+        ~_GEN_433
         & ((|_GEN_12)
-             ? load_index != 4'h6 & _GEN_315
-             : ~(fire_store & _GEN_408) & _GEN_315);
+             ? ~(_GEN_402 & load_index == 4'h6) & _GEN_315
+             : ~(fire_store & _GEN_402 & _GEN_409) & _GEN_315);
       MOB_6_committed <=
-        ~_GEN_432
+        ~_GEN_433
         & (MOB_6_valid & io_commit_valid & MOB_6_ROB_index == io_commit_bits_ROB_index
            | MOB_6_committed);
-      MOB_6_exception <= ~_GEN_432 & (_GEN_362 & _GEN_363 | MOB_6_exception);
+      MOB_6_exception <= ~_GEN_433 & (_GEN_362 & _GEN_363 | MOB_6_exception);
       MOB_7_valid <=
-        ~_GEN_434
+        ~_GEN_435
         & (written_vec_3 ? _GEN_294 | _GEN_278 | _GEN_255 : _GEN_278 | _GEN_255);
-      if (_GEN_434) begin
+      if (_GEN_435) begin
         MOB_7_memory_type <= 2'h0;
         MOB_7_ROB_index <= 6'h0;
         MOB_7_fetch_packet_index <= 2'h0;
@@ -3224,27 +3229,27 @@ module MOB(
         if (_GEN_316)
           MOB_7_address <= io_AGU_output_bits_address;
       end
-      if (_GEN_477)
+      if (_GEN_478)
         MOB_7_data <= _MOB_data_T;
-      else if (_GEN_434)
+      else if (_GEN_435)
         MOB_7_data <= 32'h0;
       else if (_GEN_316)
         MOB_7_data <= io_AGU_output_bits_wr_data;
-      MOB_7_data_valid <= _GEN_477 | ~_GEN_434 & MOB_7_data_valid;
+      MOB_7_data_valid <= _GEN_478 | ~_GEN_435 & MOB_7_data_valid;
       MOB_7_pending <=
-        ~_GEN_434
+        ~_GEN_435
         & ((|_GEN_12)
-             ? load_index != 4'h7 & _GEN_317
-             : ~(fire_store & _GEN_409) & _GEN_317);
+             ? ~(_GEN_402 & load_index == 4'h7) & _GEN_317
+             : ~(fire_store & _GEN_402 & _GEN_410) & _GEN_317);
       MOB_7_committed <=
-        ~_GEN_434
+        ~_GEN_435
         & (MOB_7_valid & io_commit_valid & MOB_7_ROB_index == io_commit_bits_ROB_index
            | MOB_7_committed);
-      MOB_7_exception <= ~_GEN_434 & (_GEN_367 & _GEN_368 | MOB_7_exception);
+      MOB_7_exception <= ~_GEN_435 & (_GEN_367 & _GEN_368 | MOB_7_exception);
       MOB_8_valid <=
-        ~_GEN_436
+        ~_GEN_437
         & (written_vec_3 ? _GEN_295 | _GEN_279 | _GEN_257 : _GEN_279 | _GEN_257);
-      if (_GEN_436) begin
+      if (_GEN_437) begin
         MOB_8_memory_type <= 2'h0;
         MOB_8_ROB_index <= 6'h0;
         MOB_8_fetch_packet_index <= 2'h0;
@@ -3284,27 +3289,27 @@ module MOB(
         if (_GEN_318)
           MOB_8_address <= io_AGU_output_bits_address;
       end
-      if (_GEN_478)
+      if (_GEN_479)
         MOB_8_data <= _MOB_data_T;
-      else if (_GEN_436)
+      else if (_GEN_437)
         MOB_8_data <= 32'h0;
       else if (_GEN_318)
         MOB_8_data <= io_AGU_output_bits_wr_data;
-      MOB_8_data_valid <= _GEN_478 | ~_GEN_436 & MOB_8_data_valid;
+      MOB_8_data_valid <= _GEN_479 | ~_GEN_437 & MOB_8_data_valid;
       MOB_8_pending <=
-        ~_GEN_436
+        ~_GEN_437
         & ((|_GEN_12)
-             ? load_index != 4'h8 & _GEN_319
-             : ~(fire_store & _GEN_410) & _GEN_319);
+             ? ~(_GEN_402 & load_index == 4'h8) & _GEN_319
+             : ~(fire_store & _GEN_402 & _GEN_411) & _GEN_319);
       MOB_8_committed <=
-        ~_GEN_436
+        ~_GEN_437
         & (MOB_8_valid & io_commit_valid & MOB_8_ROB_index == io_commit_bits_ROB_index
            | MOB_8_committed);
-      MOB_8_exception <= ~_GEN_436 & (_GEN_372 & _GEN_373 | MOB_8_exception);
+      MOB_8_exception <= ~_GEN_437 & (_GEN_372 & _GEN_373 | MOB_8_exception);
       MOB_9_valid <=
-        ~_GEN_438
+        ~_GEN_439
         & (written_vec_3 ? _GEN_296 | _GEN_280 | _GEN_259 : _GEN_280 | _GEN_259);
-      if (_GEN_438) begin
+      if (_GEN_439) begin
         MOB_9_memory_type <= 2'h0;
         MOB_9_ROB_index <= 6'h0;
         MOB_9_fetch_packet_index <= 2'h0;
@@ -3344,27 +3349,27 @@ module MOB(
         if (_GEN_320)
           MOB_9_address <= io_AGU_output_bits_address;
       end
-      if (_GEN_479)
+      if (_GEN_480)
         MOB_9_data <= _MOB_data_T;
-      else if (_GEN_438)
+      else if (_GEN_439)
         MOB_9_data <= 32'h0;
       else if (_GEN_320)
         MOB_9_data <= io_AGU_output_bits_wr_data;
-      MOB_9_data_valid <= _GEN_479 | ~_GEN_438 & MOB_9_data_valid;
+      MOB_9_data_valid <= _GEN_480 | ~_GEN_439 & MOB_9_data_valid;
       MOB_9_pending <=
-        ~_GEN_438
+        ~_GEN_439
         & ((|_GEN_12)
-             ? load_index != 4'h9 & _GEN_321
-             : ~(fire_store & _GEN_411) & _GEN_321);
+             ? ~(_GEN_402 & load_index == 4'h9) & _GEN_321
+             : ~(fire_store & _GEN_402 & _GEN_412) & _GEN_321);
       MOB_9_committed <=
-        ~_GEN_438
+        ~_GEN_439
         & (MOB_9_valid & io_commit_valid & MOB_9_ROB_index == io_commit_bits_ROB_index
            | MOB_9_committed);
-      MOB_9_exception <= ~_GEN_438 & (_GEN_377 & _GEN_378 | MOB_9_exception);
+      MOB_9_exception <= ~_GEN_439 & (_GEN_377 & _GEN_378 | MOB_9_exception);
       MOB_10_valid <=
-        ~_GEN_440
+        ~_GEN_441
         & (written_vec_3 ? _GEN_297 | _GEN_281 | _GEN_261 : _GEN_281 | _GEN_261);
-      if (_GEN_440) begin
+      if (_GEN_441) begin
         MOB_10_memory_type <= 2'h0;
         MOB_10_ROB_index <= 6'h0;
         MOB_10_fetch_packet_index <= 2'h0;
@@ -3404,27 +3409,27 @@ module MOB(
         if (_GEN_322)
           MOB_10_address <= io_AGU_output_bits_address;
       end
-      if (_GEN_480)
+      if (_GEN_481)
         MOB_10_data <= _MOB_data_T;
-      else if (_GEN_440)
+      else if (_GEN_441)
         MOB_10_data <= 32'h0;
       else if (_GEN_322)
         MOB_10_data <= io_AGU_output_bits_wr_data;
-      MOB_10_data_valid <= _GEN_480 | ~_GEN_440 & MOB_10_data_valid;
+      MOB_10_data_valid <= _GEN_481 | ~_GEN_441 & MOB_10_data_valid;
       MOB_10_pending <=
-        ~_GEN_440
+        ~_GEN_441
         & ((|_GEN_12)
-             ? load_index != 4'hA & _GEN_323
-             : ~(fire_store & _GEN_412) & _GEN_323);
+             ? ~(_GEN_402 & load_index == 4'hA) & _GEN_323
+             : ~(fire_store & _GEN_402 & _GEN_413) & _GEN_323);
       MOB_10_committed <=
-        ~_GEN_440
+        ~_GEN_441
         & (MOB_10_valid & io_commit_valid & MOB_10_ROB_index == io_commit_bits_ROB_index
            | MOB_10_committed);
-      MOB_10_exception <= ~_GEN_440 & (_GEN_382 & _GEN_383 | MOB_10_exception);
+      MOB_10_exception <= ~_GEN_441 & (_GEN_382 & _GEN_383 | MOB_10_exception);
       MOB_11_valid <=
-        ~_GEN_442
+        ~_GEN_443
         & (written_vec_3 ? _GEN_298 | _GEN_282 | _GEN_263 : _GEN_282 | _GEN_263);
-      if (_GEN_442) begin
+      if (_GEN_443) begin
         MOB_11_memory_type <= 2'h0;
         MOB_11_ROB_index <= 6'h0;
         MOB_11_fetch_packet_index <= 2'h0;
@@ -3464,27 +3469,27 @@ module MOB(
         if (_GEN_324)
           MOB_11_address <= io_AGU_output_bits_address;
       end
-      if (_GEN_481)
+      if (_GEN_482)
         MOB_11_data <= _MOB_data_T;
-      else if (_GEN_442)
+      else if (_GEN_443)
         MOB_11_data <= 32'h0;
       else if (_GEN_324)
         MOB_11_data <= io_AGU_output_bits_wr_data;
-      MOB_11_data_valid <= _GEN_481 | ~_GEN_442 & MOB_11_data_valid;
+      MOB_11_data_valid <= _GEN_482 | ~_GEN_443 & MOB_11_data_valid;
       MOB_11_pending <=
-        ~_GEN_442
+        ~_GEN_443
         & ((|_GEN_12)
-             ? load_index != 4'hB & _GEN_325
-             : ~(fire_store & _GEN_413) & _GEN_325);
+             ? ~(_GEN_402 & load_index == 4'hB) & _GEN_325
+             : ~(fire_store & _GEN_402 & _GEN_414) & _GEN_325);
       MOB_11_committed <=
-        ~_GEN_442
+        ~_GEN_443
         & (MOB_11_valid & io_commit_valid & MOB_11_ROB_index == io_commit_bits_ROB_index
            | MOB_11_committed);
-      MOB_11_exception <= ~_GEN_442 & (_GEN_387 & _GEN_388 | MOB_11_exception);
+      MOB_11_exception <= ~_GEN_443 & (_GEN_387 & _GEN_388 | MOB_11_exception);
       MOB_12_valid <=
-        ~_GEN_444
+        ~_GEN_445
         & (written_vec_3 ? _GEN_299 | _GEN_283 | _GEN_265 : _GEN_283 | _GEN_265);
-      if (_GEN_444) begin
+      if (_GEN_445) begin
         MOB_12_memory_type <= 2'h0;
         MOB_12_ROB_index <= 6'h0;
         MOB_12_fetch_packet_index <= 2'h0;
@@ -3524,27 +3529,27 @@ module MOB(
         if (_GEN_326)
           MOB_12_address <= io_AGU_output_bits_address;
       end
-      if (_GEN_482)
+      if (_GEN_483)
         MOB_12_data <= _MOB_data_T;
-      else if (_GEN_444)
+      else if (_GEN_445)
         MOB_12_data <= 32'h0;
       else if (_GEN_326)
         MOB_12_data <= io_AGU_output_bits_wr_data;
-      MOB_12_data_valid <= _GEN_482 | ~_GEN_444 & MOB_12_data_valid;
+      MOB_12_data_valid <= _GEN_483 | ~_GEN_445 & MOB_12_data_valid;
       MOB_12_pending <=
-        ~_GEN_444
+        ~_GEN_445
         & ((|_GEN_12)
-             ? load_index != 4'hC & _GEN_327
-             : ~(fire_store & _GEN_414) & _GEN_327);
+             ? ~(_GEN_402 & load_index == 4'hC) & _GEN_327
+             : ~(fire_store & _GEN_402 & _GEN_415) & _GEN_327);
       MOB_12_committed <=
-        ~_GEN_444
+        ~_GEN_445
         & (MOB_12_valid & io_commit_valid & MOB_12_ROB_index == io_commit_bits_ROB_index
            | MOB_12_committed);
-      MOB_12_exception <= ~_GEN_444 & (_GEN_392 & _GEN_393 | MOB_12_exception);
+      MOB_12_exception <= ~_GEN_445 & (_GEN_392 & _GEN_393 | MOB_12_exception);
       MOB_13_valid <=
-        ~_GEN_446
+        ~_GEN_447
         & (written_vec_3 ? _GEN_300 | _GEN_284 | _GEN_267 : _GEN_284 | _GEN_267);
-      if (_GEN_446) begin
+      if (_GEN_447) begin
         MOB_13_memory_type <= 2'h0;
         MOB_13_ROB_index <= 6'h0;
         MOB_13_fetch_packet_index <= 2'h0;
@@ -3584,27 +3589,27 @@ module MOB(
         if (_GEN_328)
           MOB_13_address <= io_AGU_output_bits_address;
       end
-      if (_GEN_483)
+      if (_GEN_484)
         MOB_13_data <= _MOB_data_T;
-      else if (_GEN_446)
+      else if (_GEN_447)
         MOB_13_data <= 32'h0;
       else if (_GEN_328)
         MOB_13_data <= io_AGU_output_bits_wr_data;
-      MOB_13_data_valid <= _GEN_483 | ~_GEN_446 & MOB_13_data_valid;
+      MOB_13_data_valid <= _GEN_484 | ~_GEN_447 & MOB_13_data_valid;
       MOB_13_pending <=
-        ~_GEN_446
+        ~_GEN_447
         & ((|_GEN_12)
-             ? load_index != 4'hD & _GEN_329
-             : ~(fire_store & _GEN_415) & _GEN_329);
+             ? ~(_GEN_402 & load_index == 4'hD) & _GEN_329
+             : ~(fire_store & _GEN_402 & _GEN_416) & _GEN_329);
       MOB_13_committed <=
-        ~_GEN_446
+        ~_GEN_447
         & (MOB_13_valid & io_commit_valid & MOB_13_ROB_index == io_commit_bits_ROB_index
            | MOB_13_committed);
-      MOB_13_exception <= ~_GEN_446 & (_GEN_396 & _GEN_397 | MOB_13_exception);
+      MOB_13_exception <= ~_GEN_447 & (_GEN_396 & _GEN_397 | MOB_13_exception);
       MOB_14_valid <=
-        ~_GEN_448
+        ~_GEN_449
         & (written_vec_3 ? _GEN_301 | _GEN_285 | _GEN_269 : _GEN_285 | _GEN_269);
-      if (_GEN_448) begin
+      if (_GEN_449) begin
         MOB_14_memory_type <= 2'h0;
         MOB_14_ROB_index <= 6'h0;
         MOB_14_fetch_packet_index <= 2'h0;
@@ -3644,29 +3649,29 @@ module MOB(
         if (_GEN_330)
           MOB_14_address <= io_AGU_output_bits_address;
       end
-      if (_GEN_484)
+      if (_GEN_485)
         MOB_14_data <= _MOB_data_T;
-      else if (_GEN_448)
+      else if (_GEN_449)
         MOB_14_data <= 32'h0;
       else if (_GEN_330)
         MOB_14_data <= io_AGU_output_bits_wr_data;
-      MOB_14_data_valid <= _GEN_484 | ~_GEN_448 & MOB_14_data_valid;
+      MOB_14_data_valid <= _GEN_485 | ~_GEN_449 & MOB_14_data_valid;
       MOB_14_pending <=
-        ~_GEN_448
+        ~_GEN_449
         & ((|_GEN_12)
-             ? load_index != 4'hE & _GEN_331
-             : ~(fire_store & _GEN_416) & _GEN_331);
+             ? ~(_GEN_402 & load_index == 4'hE) & _GEN_331
+             : ~(fire_store & _GEN_402 & _GEN_417) & _GEN_331);
       MOB_14_committed <=
-        ~_GEN_448
+        ~_GEN_449
         & (MOB_14_valid & io_commit_valid & MOB_14_ROB_index == io_commit_bits_ROB_index
            | MOB_14_committed);
-      MOB_14_exception <= ~_GEN_448 & (_GEN_400 & _GEN_401 | MOB_14_exception);
+      MOB_14_exception <= ~_GEN_449 & (_GEN_400 & _GEN_401 | MOB_14_exception);
       MOB_15_valid <=
-        ~_GEN_450
+        ~_GEN_451
         & (written_vec_3
              ? (&_io_reserved_pointers_3_bits_T) | _GEN_286 | _GEN_270
              : _GEN_286 | _GEN_270);
-      if (_GEN_450) begin
+      if (_GEN_451) begin
         MOB_15_memory_type <= 2'h0;
         MOB_15_ROB_index <= 6'h0;
         MOB_15_fetch_packet_index <= 2'h0;
@@ -3706,24 +3711,24 @@ module MOB(
         if (_GEN_332)
           MOB_15_address <= io_AGU_output_bits_address;
       end
-      if (_GEN_485)
+      if (_GEN_486)
         MOB_15_data <= _MOB_data_T;
-      else if (_GEN_450)
+      else if (_GEN_451)
         MOB_15_data <= 32'h0;
       else if (_GEN_332)
         MOB_15_data <= io_AGU_output_bits_wr_data;
-      MOB_15_data_valid <= _GEN_485 | ~_GEN_450 & MOB_15_data_valid;
+      MOB_15_data_valid <= _GEN_486 | ~_GEN_451 & MOB_15_data_valid;
       MOB_15_pending <=
-        ~_GEN_450
+        ~_GEN_451
         & ((|_GEN_12)
-             ? load_index != 4'hF & _GEN_333
-             : ~(fire_store & (&front_index)) & _GEN_333);
+             ? ~(_GEN_402 & (&load_index)) & _GEN_333
+             : ~(fire_store & _GEN_402 & (&front_index)) & _GEN_333);
       MOB_15_committed <=
-        ~_GEN_450
+        ~_GEN_451
         & (MOB_15_valid & io_commit_valid & MOB_15_ROB_index == io_commit_bits_ROB_index
            | MOB_15_committed);
       MOB_15_exception <=
-        ~_GEN_450
+        ~_GEN_451
         & (io_AGU_output_valid & age_vector_15 < _GEN_3[io_AGU_output_bits_MOB_index]
            & io_AGU_output_bits_address == (MOB_15_address & 32'hFFFFFFF0) & MOB_15_valid
            & _GEN_399 + {1'h0, {1'h0, _GEN_375} + _GEN_386}
@@ -3877,7 +3882,7 @@ module MOB(
   assign io_reserved_pointers_3_valid = written_vec_3;
   assign io_reserved_pointers_3_bits =
     written_vec_3 ? _io_reserved_pointers_3_bits_T : 4'h0;
-  assign io_backend_memory_request_valid = (|_GEN_12) | fire_store;
+  assign io_backend_memory_request_valid = io_backend_memory_request_valid_0;
   assign io_backend_memory_request_bits_addr =
     (|_GEN_12) ? _GEN_6[load_index] : fire_store ? _GEN_6[front_index] : 32'h0;
   assign io_backend_memory_request_bits_data =

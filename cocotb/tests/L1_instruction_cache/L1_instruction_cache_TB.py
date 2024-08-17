@@ -48,6 +48,10 @@ class L1_instruction_cache_TB:
         self.L1_instruction_cache.write_CPU_read_request()
 
 
+    async def kill(self):
+        await self.L1_instruction_cache.kill()
+
+
     def CPU_read_response(self):
         return self.L1_instruction_cache.read_CPU_read_response()
 

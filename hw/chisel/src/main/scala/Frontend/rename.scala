@@ -330,7 +330,8 @@ class rename(coreParameters:CoreParameters) extends Module{
 
     // FTQ FORWARDING // 
     val predictions_out_Q               = Module(new Queue(new FTQ_entry(coreParameters), 2, flow=false, hasFlush=true, useSyncReadMem=false))
-    val renamed_decoded_fetch_packet_Q  = Module(new Queue(new decoded_fetch_packet(coreParameters), 2, flow=false, hasFlush=true, useSyncReadMem=false))
+    // fetch packet Q takes up a lot of area...
+    val renamed_decoded_fetch_packet_Q  = Module(new Queue(new decoded_fetch_packet(coreParameters), 2, flow=false, hasFlush=true, useSyncReadMem=true))
 
     val outputs_ready                   = free_list.io.can_allocate && io.renamed_decoded_fetch_packet.ready && io.predictions_out.ready 
 
