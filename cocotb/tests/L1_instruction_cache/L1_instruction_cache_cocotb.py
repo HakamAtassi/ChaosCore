@@ -194,55 +194,33 @@ async def test_fuzz_no_kill(dut):
     await L1_cache.clock()
     await L1_cache.clock()
 
+    # For good address coverage, you want to generate an address pool and sample from it
+    # Generating random addresses will just cause a large number of misses and very poor address reuse (you would basically only test misses)
+    # To create good addresses, you must generate a few (4-5) tags to select from for each set. Byte offset does not matter as long as it's instruction aligned
+    # To generate an address, just pick a set (random, sweep, doesnt matter), and then sample a tag for that set. Generate a byte offset, then put it all together. 
 
-
-
-
+    tag_groups = []
 
     for set in range(64):
+        for _ in range TAGS_PER_SET:
+            tag_groups[set].append(random.randbits(BITS_PER_TAG))
 
-        set_sweep_addr = set*32
+    for iteration in range(50_000):
 
-        # Perform a request
-        await L1_cache.write_CPU_read_request(address=set_sweep_addr, valid = 1)
+        # Generate random request 
 
-        # Should miss
-        assert L1_cache.CPU_read_response()["valid"] == 0
+        set = random.randrange(0, 63)
+        tag = random.sample(tag_groups(set))
+        byte_offset = random.randrange(0, 8)*4  
 
-        # wait for hit
-        await L1_cache.wait_cache_hit()
+        valid = random.sample([0,1,2,3,4,5,6])  # 1/7 chance of valid request
+        valid = (valid == 0)
 
-        # assert 
-        assert L1_cache.CPU_read_response()["valid"] == 1
-        assert L1_cache.CPU_read_response()["bits"]["instruction"][0] == set*8 + 0x0
-        assert L1_cache.CPU_read_response()["bits"]["instruction"][1] == set*8 + 0x1
-        assert L1_cache.CPU_read_response()["bits"]["instruction"][2] == set*8 + 0x2
-        assert L1_cache.CPU_read_response()["bits"]["instruction"][3] == set*8 + 0x3
+        address = generateAddr(tag, set, byte_offset)
 
+        # Perform self checking request
 
-
-        # Perform the same request
-        await L1_cache.write_CPU_read_request(address=set_sweep_addr, valid = 1)
-        await L1_cache.clock()
-
-        # should hit
-        assert L1_cache.CPU_read_response()["valid"] == 1
-        assert L1_cache.CPU_read_response()["bits"]["instruction"][0] == set*8 + 0x0
-        assert L1_cache.CPU_read_response()["bits"]["instruction"][1] == set*8 + 0x1
-        assert L1_cache.CPU_read_response()["bits"]["instruction"][2] == set*8 + 0x2
-        assert L1_cache.CPU_read_response()["bits"]["instruction"][3] == set*8 + 0x3
-
-        # Perform the same request
-        await L1_cache.write_CPU_read_request(address=set_sweep_addr+16, valid = 1)
-        await L1_cache.clock()
-
-        # should hit
-        assert L1_cache.CPU_read_response()["valid"] == 1
-        assert L1_cache.CPU_read_response()["bits"]["instruction"][0] == set*8 + 0x4
-        assert L1_cache.CPU_read_response()["bits"]["instruction"][1] == set*8 + 0x5
-        assert L1_cache.CPU_read_response()["bits"]["instruction"][2] == set*8 + 0x6
-        assert L1_cache.CPU_read_response()["bits"]["instruction"][3] == set*8 + 0x7
-
+        await L1_cache.self_checking_request(address, valid)
 
 
 # Every cycle, perform a request with possible kill
@@ -270,7 +248,6 @@ async def test_fuzz(dut):
     await L1_cache.clock()
     await L1_cache.clock()
     await L1_cache.clock()
-
 
 
 

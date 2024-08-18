@@ -33,12 +33,27 @@ class instruction_cache_dut:
         self.L1_instruction_cache.io_CPU_request_bits_addr.value      = address
         self.L1_instruction_cache.io_CPU_request_bits_wr_data.value   = 0
         self.L1_instruction_cache.io_CPU_request_bits_wr_en.value     = 0
+
+
+    def read_CPU_read_request(self):
+        """perform a CPU read request"""
+        cache_request = {
+            "valid": self.L1_instruction_cache.io_CPU_request_valid,
+            "ready": self.L1_instruction_cache.io_CPU_request_ready,
+            "bits": {
+                "addr": self.L1_instruction_cache.io_CPU_request_ready,
+            }
+        }
+        return cache_request
+
+
     
     def read_CPU_read_response(self):
         """read the cache response data"""
         cache_response          = {}
         cache_response["bits"]  = {}
         cache_response["valid"] = self.L1_instruction_cache.io_CPU_response_valid.value
+        cache_response["ready"] = self.L1_instruction_cache.io_CPU_response_ready.value
         cache_response["bits"]["fetch_PC"] = (int(self.L1_instruction_cache.io_CPU_response_bits_fetch_PC.value))
         cache_response["bits"]["valid_bits"]    = [0]*4
         cache_response["bits"]["instruction"]   = [0]*4
