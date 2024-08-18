@@ -63,7 +63,6 @@ class SOC(coreParameters:CoreParameters, addressMap:AddressMap, nocParameters:NO
 
     val axi_interconnect = Module(new axi_interconnect_2x2(nocParameters))
 
-    axi_interconnect.io := DontCare
 
     // Connect to NOC
 

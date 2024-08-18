@@ -253,211 +253,104 @@ module L1_data_cache(
   wire [4:0]       byte_offset = active_address[4:0];
   wire [4:0]       word_offset = byte_offset / 5'h4;
   wire [4:0]       half_word_offset = byte_offset / 5'h2;
-  wire             _data_memories_wr_en_3_T_1 = word_offset == 5'h0;
   wire             _data_memories_wr_en_31_T_9 = active_access_width == 2'h2;
   wire             _data_memories_wr_en_31_T_15 = active_access_width == 2'h1;
-  wire             test_0 =
-    _data_memories_wr_en_3_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   wire             _tag_memories_3_io_wr_en_T = DATA_CACHE_STATE == 2'h2;
   reg              data_memories_wr_en_0_REG;
   wire             data_memories_wr_en_0 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_0_REG & valid_hit;
-  wire             test_1 =
-    _data_memories_wr_en_3_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_1_REG;
   wire             data_memories_wr_en_1 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_1_REG & valid_hit;
-  wire             test_2 =
-    _data_memories_wr_en_3_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_2_REG;
   wire             data_memories_wr_en_2 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_2_REG & valid_hit;
-  wire             test_3 =
-    _data_memories_wr_en_3_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_3_REG;
   wire             data_memories_wr_en_3 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_3_REG & valid_hit;
-  wire             _data_memories_wr_en_7_T_1 = word_offset == 5'h1;
-  wire             test_4 =
-    _data_memories_wr_en_7_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_4_REG;
   wire             data_memories_wr_en_4 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_4_REG & valid_hit;
-  wire             test_5 =
-    _data_memories_wr_en_7_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_5_REG;
   wire             data_memories_wr_en_5 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_5_REG & valid_hit;
-  wire             test_6 =
-    _data_memories_wr_en_7_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_6_REG;
   wire             data_memories_wr_en_6 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_6_REG & valid_hit;
-  wire             test_7 =
-    _data_memories_wr_en_7_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_7_REG;
   wire             data_memories_wr_en_7 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_7_REG & valid_hit;
-  wire             _data_memories_wr_en_11_T_1 = word_offset == 5'h2;
-  wire             test_8 =
-    _data_memories_wr_en_11_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_8_REG;
   wire             data_memories_wr_en_8 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_8_REG & valid_hit;
-  wire             test_9 =
-    _data_memories_wr_en_11_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_9_REG;
   wire             data_memories_wr_en_9 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_9_REG & valid_hit;
-  wire             test_10 =
-    _data_memories_wr_en_11_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_10_REG;
   wire             data_memories_wr_en_10 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_10_REG & valid_hit;
-  wire             test_11 =
-    _data_memories_wr_en_11_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_11_REG;
   wire             data_memories_wr_en_11 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_11_REG & valid_hit;
-  wire             _data_memories_wr_en_15_T_1 = word_offset == 5'h3;
-  wire             test_12 =
-    _data_memories_wr_en_15_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_12_REG;
   wire             data_memories_wr_en_12 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_12_REG & valid_hit;
-  wire             test_13 =
-    _data_memories_wr_en_15_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_13_REG;
   wire             data_memories_wr_en_13 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_13_REG & valid_hit;
-  wire             test_14 =
-    _data_memories_wr_en_15_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_14_REG;
   wire             data_memories_wr_en_14 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_14_REG & valid_hit;
-  wire             test_15 =
-    _data_memories_wr_en_15_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_15_REG;
   wire             data_memories_wr_en_15 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_15_REG & valid_hit;
-  wire             _data_memories_wr_en_19_T_1 = word_offset == 5'h4;
-  wire             test_16 =
-    _data_memories_wr_en_19_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_16_REG;
   wire             data_memories_wr_en_16 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_16_REG & valid_hit;
-  wire             test_17 =
-    _data_memories_wr_en_19_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_17_REG;
   wire             data_memories_wr_en_17 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_17_REG & valid_hit;
-  wire             test_18 =
-    _data_memories_wr_en_19_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_18_REG;
   wire             data_memories_wr_en_18 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_18_REG & valid_hit;
-  wire             test_19 =
-    _data_memories_wr_en_19_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_19_REG;
   wire             data_memories_wr_en_19 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_19_REG & valid_hit;
-  wire             _data_memories_wr_en_23_T_1 = word_offset == 5'h5;
-  wire             test_20 =
-    _data_memories_wr_en_23_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_20_REG;
   wire             data_memories_wr_en_20 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_20_REG & valid_hit;
-  wire             test_21 =
-    _data_memories_wr_en_23_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_21_REG;
   wire             data_memories_wr_en_21 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_21_REG & valid_hit;
-  wire             test_22 =
-    _data_memories_wr_en_23_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_22_REG;
   wire             data_memories_wr_en_22 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_22_REG & valid_hit;
-  wire             test_23 =
-    _data_memories_wr_en_23_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_23_REG;
   wire             data_memories_wr_en_23 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_23_REG & valid_hit;
-  wire             _data_memories_wr_en_27_T_1 = word_offset == 5'h6;
-  wire             test_24 =
-    _data_memories_wr_en_27_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_24_REG;
   wire             data_memories_wr_en_24 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_24_REG & valid_hit;
-  wire             test_25 =
-    _data_memories_wr_en_27_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_25_REG;
   wire             data_memories_wr_en_25 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_25_REG & valid_hit;
-  wire             test_26 =
-    _data_memories_wr_en_27_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_26_REG;
   wire             data_memories_wr_en_26 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_26_REG & valid_hit;
-  wire             test_27 =
-    _data_memories_wr_en_27_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_27_REG;
   wire             data_memories_wr_en_27 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_27_REG & valid_hit;
   wire             _data_memories_wr_en_31_T_1 = word_offset == 5'h7;
-  wire             test_28 =
-    _data_memories_wr_en_31_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_28_REG;
   wire             data_memories_wr_en_28 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_28_REG & valid_hit;
-  wire             test_29 =
-    _data_memories_wr_en_31_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_29_REG;
   wire             data_memories_wr_en_29 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_29_REG & valid_hit;
   wire             _data_memories_wr_en_31_T_6 = half_word_offset == 5'hF;
-  wire             test_30 =
-    _data_memories_wr_en_31_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_30_REG;
   wire             data_memories_wr_en_30 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_30_REG & valid_hit;
-  `ifndef SYNTHESIS
-    always @(posedge clock) begin
-      if ((`PRINTF_COND_) & ~reset) begin
-        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 1'h0);
-        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 1'h0);
-        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 1'h0);
-        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 1'h0);
-        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 1'h1);
-        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 1'h1);
-        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 1'h1);
-        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 1'h1);
-        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 2'h2);
-        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 2'h2);
-        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 2'h2);
-        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 2'h2);
-        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 2'h3);
-        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 2'h3);
-        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 2'h3);
-        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 2'h3);
-        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 3'h4);
-        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 3'h4);
-        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 3'h4);
-        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 3'h4);
-        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 3'h5);
-        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 3'h5);
-        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 3'h5);
-        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 3'h5);
-        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 3'h6);
-        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 3'h6);
-        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 3'h6);
-        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 3'h6);
-        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 3'h7);
-        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 3'h7);
-        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 3'h7);
-        $fwrite(32'h80000002, "word offset: %d =?= %d\n", word_offset, 3'h7);
-      end
-    end // always @(posedge)
-  `endif // not def SYNTHESIS
   wire             word_offset_match =
     _data_memories_wr_en_31_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   wire             half_word_offset_match =
@@ -465,8 +358,6 @@ module L1_data_cache(
     & _data_memories_wr_en_31_T_9;
   wire             byte_offset_match =
     (&byte_offset) & _data_memories_wr_en_31_T_13 & _data_memories_wr_en_31_T_15;
-  wire             test_31 =
-    _data_memories_wr_en_31_T_1 & _data_memories_wr_en_31_T_13 & (&active_access_width);
   reg              data_memories_wr_en_31_REG;
   wire             data_memories_wr_en_31 =
     _tag_memories_3_io_wr_en_T | data_memories_wr_en_31_REG & valid_hit;
@@ -2155,18 +2046,25 @@ module L1_data_cache(
     automatic logic             valid_read_hit = valid_hit & valid_read_hit_REG;
     automatic logic             active_cacheable_write_read =
       ~(io_CPU_request_bits_addr[31]) & active_valid;
+    automatic logic             _data_memories_wr_en_3_T_1 = word_offset == 5'h0;
     automatic logic             _data_memories_wr_en_1_T_6 = half_word_offset == 5'h0;
     automatic logic             _data_memories_wr_en_3_T_6 = half_word_offset == 5'h1;
+    automatic logic             _data_memories_wr_en_7_T_1 = word_offset == 5'h1;
     automatic logic             _data_memories_wr_en_5_T_6 = half_word_offset == 5'h2;
     automatic logic             _data_memories_wr_en_7_T_6 = half_word_offset == 5'h3;
+    automatic logic             _data_memories_wr_en_11_T_1 = word_offset == 5'h2;
     automatic logic             _data_memories_wr_en_9_T_6 = half_word_offset == 5'h4;
     automatic logic             _data_memories_wr_en_11_T_6 = half_word_offset == 5'h5;
+    automatic logic             _data_memories_wr_en_15_T_1 = word_offset == 5'h3;
     automatic logic             _data_memories_wr_en_13_T_6 = half_word_offset == 5'h6;
     automatic logic             _data_memories_wr_en_15_T_6 = half_word_offset == 5'h7;
+    automatic logic             _data_memories_wr_en_19_T_1 = word_offset == 5'h4;
     automatic logic             _data_memories_wr_en_17_T_6 = half_word_offset == 5'h8;
     automatic logic             _data_memories_wr_en_19_T_6 = half_word_offset == 5'h9;
+    automatic logic             _data_memories_wr_en_23_T_1 = word_offset == 5'h5;
     automatic logic             _data_memories_wr_en_21_T_6 = half_word_offset == 5'hA;
     automatic logic             _data_memories_wr_en_23_T_6 = half_word_offset == 5'hB;
+    automatic logic             _data_memories_wr_en_27_T_1 = word_offset == 5'h6;
     automatic logic             _data_memories_wr_en_25_T_6 = half_word_offset == 5'hC;
     automatic logic             _data_memories_wr_en_27_T_6 = half_word_offset == 5'hD;
     automatic logic             _data_memories_wr_en_29_T_6 = half_word_offset == 5'hE;

@@ -44,7 +44,7 @@ case class NOCParameters(
     // Width of ruser signal
     RUSER_WIDTH:Int = 1,
     // Propagate ID field
-    FORWARD_ID:Int = 0,
+    FORWARD_ID:Int = 1,
     // Number of regions per master interface
     M_REGIONS:Int = 1,
     // Master interface base addresses
@@ -61,11 +61,6 @@ case class NOCParameters(
     // M_COUNT bits
 
 
-    M_ADDR_WIDTH:Int    = 32,
-    M_CONNECT_READ:Int  = 2,
-    M_SECURE:Int        = 0,
-
-    M_CONNECT_WRITE:Int = 2,
 
     // DRAM and peripherals return separately but in-order
 
@@ -79,16 +74,18 @@ case class NOCParameters(
     // DRAM parameters
     DRAM_BASE_ADDR:Int = 0x0,
     DRAM_ADDR_WIDTH:Int = 24,
-    DRAM_CONNECT_READ:Int = 1,
-    DRAM_CONNECT_WRITE:Int = 1,
+    DRAM_CONNECT_READ:Int = 0x3,
+    DRAM_CONNECT_WRITE:Int = 0x3,
     DRAM_SECURE:Int =  0,
 
     // UART params
-    UART0_BASE_ADDR: BigInt = 0x08000000, //BigInt("80000000", 16),
+    //UART0_BASE_ADDR: BigInt = 0x08000000, //BigInt("80000000", 16),
+    UART0_BASE_ADDR: BigInt = 0x80000000, 
     UART0_ADDR_WIDTH:Int = 24,              
-    UART0_CONNECT_READ:Int = 1,
-    UART0_CONNECT_WRITE:Int = 1,
+    UART0_CONNECT_READ:Int = 0x3,
+    UART0_CONNECT_WRITE:Int = 0x3,
     UART0_SECURE:Int =  0,
+
 
 
 

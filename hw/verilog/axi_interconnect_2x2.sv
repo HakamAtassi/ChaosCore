@@ -209,7 +209,6 @@ module axi_interconnect_2x2(
                 io_s_AXI_port_1_AXI_R_bits_ruser
 );
 
-  wire _NOC_m01_axi_aruser;
   axi_interconnect_wrap_2x2 #(
     .ADDR_WIDTH(32),
     .ARUSER_ENABLE(0),
@@ -219,17 +218,17 @@ module axi_interconnect_2x2(
     .BUSER_ENABLE(0),
     .BUSER_WIDTH(1),
     .DATA_WIDTH(32),
-    .FORWARD_ID(0),
+    .FORWARD_ID(1),
     .ID_WIDTH(8),
     .M00_ADDR_WIDTH(24),
     .M00_BASE_ADDR(0),
-    .M00_CONNECT_READ(1),
-    .M00_CONNECT_WRITE(1),
+    .M00_CONNECT_READ(3),
+    .M00_CONNECT_WRITE(3),
     .M00_SECURE(0),
     .M01_ADDR_WIDTH(24),
-    .M01_BASE_ADDR(134217728),
-    .M01_CONNECT_READ(1),
-    .M01_CONNECT_WRITE(1),
+    .M01_BASE_ADDR(-2147483648),
+    .M01_CONNECT_READ(3),
+    .M01_CONNECT_WRITE(3),
     .M01_SECURE(0),
     .M_REGIONS(1),
     .RUSER_ENABLE(0),
@@ -377,7 +376,7 @@ module axi_interconnect_2x2(
     .m01_axi_awcache  (io_s_AXI_port_1_AXI_AW_bits_awcache),
     .m01_axi_awprot   (io_s_AXI_port_1_AXI_AW_bits_awprot),
     .m01_axi_awqos    (io_s_AXI_port_1_AXI_AW_bits_awqos),
-    .m01_axi_awregion (/* unused */),
+    .m01_axi_awregion (io_s_AXI_port_1_AXI_AW_bits_awregion),
     .m01_axi_awuser   (io_s_AXI_port_1_AXI_AW_bits_awuser),
     .m01_axi_awvalid  (io_s_AXI_port_1_AXI_AW_valid),
     .m01_axi_awready  (io_s_AXI_port_1_AXI_AW_ready),
@@ -401,8 +400,8 @@ module axi_interconnect_2x2(
     .m01_axi_arcache  (io_s_AXI_port_1_AXI_AR_bits_arcache),
     .m01_axi_arprot   (io_s_AXI_port_1_AXI_AR_bits_arprot),
     .m01_axi_arqos    (io_s_AXI_port_1_AXI_AR_bits_arqos),
-    .m01_axi_arregion (io_s_AXI_port_1_AXI_AW_bits_awregion),
-    .m01_axi_aruser   (_NOC_m01_axi_aruser),
+    .m01_axi_arregion (io_s_AXI_port_1_AXI_AR_bits_arregion),
+    .m01_axi_aruser   (io_s_AXI_port_1_AXI_AR_bits_aruser),
     .m01_axi_arvalid  (io_s_AXI_port_1_AXI_AR_valid),
     .m01_axi_arready  (io_s_AXI_port_1_AXI_AR_ready),
     .m01_axi_rid      (io_s_AXI_port_1_AXI_R_bits_rid),
@@ -413,7 +412,5 @@ module axi_interconnect_2x2(
     .m01_axi_rvalid   (io_s_AXI_port_1_AXI_R_valid),
     .m01_axi_rready   (io_s_AXI_port_1_AXI_R_ready)
   );
-  assign io_s_AXI_port_1_AXI_AR_bits_arregion = {3'h0, _NOC_m01_axi_aruser};
-  assign io_s_AXI_port_1_AXI_AR_bits_aruser = _NOC_m01_axi_aruser;
 endmodule
 
