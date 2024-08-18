@@ -34,13 +34,17 @@ import circt.stage.ChiselStage
 
 import chisel3.util._
 
+import chisel3.experimental.dataview._
+
 class AXI_debug_printer(nocParameters: NOCParameters, addressMap:AddressMap) extends Module{
     import addressMap._
     import nocParameters._
 
-    val io = IO(new Bundle{
-      val s_AXI = Flipped(new AXIFullIO(nocParameters))
-    })
+    // actual verilog IO
+    // chisel dataview mapping
+    val s_axi = IO(Flipped(new VerilogAXIFullIO(nocParameters)))
+    val AXI_port = s_axi.viewAs[AXIFullIO]
+    dontTouch(s_axi)
 
     object AXI_debug_printer_STATES extends ChiselEnum {
       val IDLE, WAIT_DATA, PRINTING = Value
@@ -50,36 +54,43 @@ class AXI_debug_printer(nocParameters: NOCParameters, addressMap:AddressMap) ext
 
     val AXI_debug_printer_STATE = RegInit(AXI_debug_printer_STATES(), AXI_debug_printer_STATES.IDLE)
 
-    io.s_AXI.AXI_AW.ready   := 0.B
-    io.s_AXI.AXI_W.ready    := 0.B
-    io.s_AXI.AXI_B.valid    := 0.B
-    io.s_AXI.AXI_B.bits     := 0.U.asTypeOf(new AXI_B(nocParameters))
+    AXI_port.AXI_AW.ready   := 0.B
+    AXI_port.AXI_W.ready    := 0.B
+    AXI_port.AXI_B.valid    := 0.B
+    AXI_port.AXI_B.bits     := 0.U.asTypeOf(new AXI_B(nocParameters))
 
-    io.s_AXI.AXI_AR.ready   :=  0.B
-    io.s_AXI.AXI_R.valid    :=  0.B
-    io.s_AXI.AXI_R.bits     :=  0.U.asTypeOf(new AXI_R(nocParameters))
+    AXI_port.AXI_AR.ready   :=  0.B
+    AXI_port.AXI_R.valid    :=  0.B
+    AXI_port.AXI_R.bits     :=  0.U.asTypeOf(new AXI_R(nocParameters))
 
     switch(AXI_debug_printer_STATE){
       is(AXI_debug_printer_STATES.IDLE){
         // Write Channels ready
         // Read Channels never ready
-        io.s_AXI.AXI_AW.ready := 1.B
-        io.s_AXI.AXI_W.ready := 1.B
-        when(io.s_AXI.AXI_AW.fire){
-          // AW channel received
-          AXI_debug_printer_STATE := AXI_debug_printer_STATES.WAIT_DATA
-        }.elsewhen(io.s_AXI.AXI_AW.fire && io.s_AXI.AXI_W.fire){
+        AXI_port.AXI_AW.ready := 1.B
+        AXI_port.AXI_W.ready := 1.B
+//        when(AXI_port.AXI_AW.fire){
+          //// AW channel received
+          //AXI_debug_printer_STATE := AXI_debug_printer_STATES.WAIT_DATA
+        //}.elsewhen(AXI_port.AXI_AW.fire && AXI_port.AXI_W.fire){
+          //// AW and W channel recieved
+          //print_data := AXI_port.AXI_W.bits.wdata;
+          //AXI_debug_printer_STATE := AXI_debug_printer_STATES.PRINTING
+        //}
+        when(AXI_port.AXI_AW.fire && AXI_port.AXI_W.fire){
           // AW and W channel recieved
-          print_data := io.s_AXI.AXI_W.bits.wdata;
+          print_data := AXI_port.AXI_W.bits.wdata;
           AXI_debug_printer_STATE := AXI_debug_printer_STATES.PRINTING
+        }.elsewhen(AXI_port.AXI_AW.fire){
+          AXI_debug_printer_STATE := AXI_debug_printer_STATES.WAIT_DATA
         }
       }
 
       is(AXI_debug_printer_STATES.WAIT_DATA){
         // AW Channel unready
         // W Channel ready
-        when(io.s_AXI.AXI_W.fire){
-          print_data := io.s_AXI.AXI_W.bits.wdata;
+        when(AXI_port.AXI_W.fire){
+          print_data := AXI_port.AXI_W.bits.wdata;
           AXI_debug_printer_STATE := AXI_debug_printer_STATES.PRINTING
         }
       }
@@ -89,11 +100,11 @@ class AXI_debug_printer(nocParameters: NOCParameters, addressMap:AddressMap) ext
         printf("%c", print_data)
 
         // generate B response 
-        io.s_AXI.AXI_B.valid := 1.B
+        AXI_port.AXI_B.valid := 1.B
 
         // goto idle state
         // FIXME: what if AXI_B is not ready???
-        when(io.s_AXI.AXI_B.fire){
+        when(AXI_port.AXI_B.fire){
           AXI_debug_printer_STATE := AXI_debug_printer_STATES.IDLE
         }
       }

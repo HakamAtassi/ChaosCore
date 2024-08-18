@@ -76,7 +76,7 @@ class SOC(coreParameters:CoreParameters, addressMap:AddressMap, nocParameters:NO
     axi_interconnect.io.s_AXI_port(0) <> dram_AXI
 
     // NOC <> UART
-    axi_interconnect.io.s_AXI_port(1) <> AXI_debug_printer.io.s_AXI
+    axi_interconnect.io.s_AXI_port(1) <> AXI_debug_printer.AXI_port
     
 
     dontTouch(axi_interconnect.io)

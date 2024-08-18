@@ -104,12 +104,49 @@ module SOC(
   wire        _axi_interconnect_io_m_AXI_port_1_AXI_R_bits_rlast;
   wire        _axi_interconnect_io_m_AXI_port_1_AXI_R_bits_ruser;
   wire        _axi_interconnect_io_s_AXI_port_1_AXI_AW_valid;
+  wire [7:0]  _axi_interconnect_io_s_AXI_port_1_AXI_AW_bits_awid;
+  wire [31:0] _axi_interconnect_io_s_AXI_port_1_AXI_AW_bits_awaddr;
+  wire [7:0]  _axi_interconnect_io_s_AXI_port_1_AXI_AW_bits_awlen;
+  wire [2:0]  _axi_interconnect_io_s_AXI_port_1_AXI_AW_bits_awsize;
+  wire [1:0]  _axi_interconnect_io_s_AXI_port_1_AXI_AW_bits_awburst;
+  wire        _axi_interconnect_io_s_AXI_port_1_AXI_AW_bits_awlock;
+  wire [3:0]  _axi_interconnect_io_s_AXI_port_1_AXI_AW_bits_awcache;
+  wire [2:0]  _axi_interconnect_io_s_AXI_port_1_AXI_AW_bits_awprot;
+  wire [3:0]  _axi_interconnect_io_s_AXI_port_1_AXI_AW_bits_awqos;
+  wire [3:0]  _axi_interconnect_io_s_AXI_port_1_AXI_AW_bits_awregion;
+  wire        _axi_interconnect_io_s_AXI_port_1_AXI_AW_bits_awuser;
   wire        _axi_interconnect_io_s_AXI_port_1_AXI_W_valid;
   wire [31:0] _axi_interconnect_io_s_AXI_port_1_AXI_W_bits_wdata;
+  wire [3:0]  _axi_interconnect_io_s_AXI_port_1_AXI_W_bits_wstrb;
+  wire        _axi_interconnect_io_s_AXI_port_1_AXI_W_bits_wlast;
+  wire        _axi_interconnect_io_s_AXI_port_1_AXI_W_bits_wuser;
   wire        _axi_interconnect_io_s_AXI_port_1_AXI_B_ready;
-  wire        _AXI_debug_printer_io_s_AXI_AXI_AW_ready;
-  wire        _AXI_debug_printer_io_s_AXI_AXI_W_ready;
-  wire        _AXI_debug_printer_io_s_AXI_AXI_B_valid;
+  wire        _axi_interconnect_io_s_AXI_port_1_AXI_AR_valid;
+  wire [7:0]  _axi_interconnect_io_s_AXI_port_1_AXI_AR_bits_arid;
+  wire [31:0] _axi_interconnect_io_s_AXI_port_1_AXI_AR_bits_araddr;
+  wire [7:0]  _axi_interconnect_io_s_AXI_port_1_AXI_AR_bits_arlen;
+  wire [2:0]  _axi_interconnect_io_s_AXI_port_1_AXI_AR_bits_arsize;
+  wire [1:0]  _axi_interconnect_io_s_AXI_port_1_AXI_AR_bits_arburst;
+  wire        _axi_interconnect_io_s_AXI_port_1_AXI_AR_bits_arlock;
+  wire [3:0]  _axi_interconnect_io_s_AXI_port_1_AXI_AR_bits_arcache;
+  wire [2:0]  _axi_interconnect_io_s_AXI_port_1_AXI_AR_bits_arprot;
+  wire [3:0]  _axi_interconnect_io_s_AXI_port_1_AXI_AR_bits_arqos;
+  wire [3:0]  _axi_interconnect_io_s_AXI_port_1_AXI_AR_bits_arregion;
+  wire        _axi_interconnect_io_s_AXI_port_1_AXI_AR_bits_aruser;
+  wire        _axi_interconnect_io_s_AXI_port_1_AXI_R_ready;
+  wire        _AXI_debug_printer_s_axi_awready;
+  wire        _AXI_debug_printer_s_axi_wready;
+  wire        _AXI_debug_printer_s_axi_bvalid;
+  wire [7:0]  _AXI_debug_printer_s_axi_bid;
+  wire [1:0]  _AXI_debug_printer_s_axi_bresp;
+  wire        _AXI_debug_printer_s_axi_buser;
+  wire        _AXI_debug_printer_s_axi_arready;
+  wire        _AXI_debug_printer_s_axi_rvalid;
+  wire [7:0]  _AXI_debug_printer_s_axi_rid;
+  wire [31:0] _AXI_debug_printer_s_axi_rdata;
+  wire [1:0]  _AXI_debug_printer_s_axi_rresp;
+  wire        _AXI_debug_printer_s_axi_rlast;
+  wire        _AXI_debug_printer_s_axi_ruser;
   wire        _ChaosCore_tile_io_instruction_cache_AXI_port_AXI_AW_valid;
   wire [7:0]  _ChaosCore_tile_io_instruction_cache_AXI_port_AXI_AW_bits_awid;
   wire [31:0] _ChaosCore_tile_io_instruction_cache_AXI_port_AXI_AW_bits_awaddr;
@@ -353,15 +390,52 @@ module SOC(
       (_axi_interconnect_io_m_AXI_port_1_AXI_R_bits_ruser)
   );
   AXI_debug_printer AXI_debug_printer (
-    .clock                     (clock),
-    .reset                     (reset),
-    .io_s_AXI_AXI_AW_ready     (_AXI_debug_printer_io_s_AXI_AXI_AW_ready),
-    .io_s_AXI_AXI_AW_valid     (_axi_interconnect_io_s_AXI_port_1_AXI_AW_valid),
-    .io_s_AXI_AXI_W_ready      (_AXI_debug_printer_io_s_AXI_AXI_W_ready),
-    .io_s_AXI_AXI_W_valid      (_axi_interconnect_io_s_AXI_port_1_AXI_W_valid),
-    .io_s_AXI_AXI_W_bits_wdata (_axi_interconnect_io_s_AXI_port_1_AXI_W_bits_wdata),
-    .io_s_AXI_AXI_B_ready      (_axi_interconnect_io_s_AXI_port_1_AXI_B_ready),
-    .io_s_AXI_AXI_B_valid      (_AXI_debug_printer_io_s_AXI_AXI_B_valid)
+    .clock          (clock),
+    .reset          (reset),
+    .s_axi_awvalid  (_axi_interconnect_io_s_AXI_port_1_AXI_AW_valid),
+    .s_axi_awready  (_AXI_debug_printer_s_axi_awready),
+    .s_axi_awid     (_axi_interconnect_io_s_AXI_port_1_AXI_AW_bits_awid),
+    .s_axi_awaddr   (_axi_interconnect_io_s_AXI_port_1_AXI_AW_bits_awaddr),
+    .s_axi_awlen    (_axi_interconnect_io_s_AXI_port_1_AXI_AW_bits_awlen),
+    .s_axi_awsize   (_axi_interconnect_io_s_AXI_port_1_AXI_AW_bits_awsize),
+    .s_axi_awburst  (_axi_interconnect_io_s_AXI_port_1_AXI_AW_bits_awburst),
+    .s_axi_awlock   (_axi_interconnect_io_s_AXI_port_1_AXI_AW_bits_awlock),
+    .s_axi_awcache  (_axi_interconnect_io_s_AXI_port_1_AXI_AW_bits_awcache),
+    .s_axi_awprot   (_axi_interconnect_io_s_AXI_port_1_AXI_AW_bits_awprot),
+    .s_axi_awqos    (_axi_interconnect_io_s_AXI_port_1_AXI_AW_bits_awqos),
+    .s_axi_awregion (_axi_interconnect_io_s_AXI_port_1_AXI_AW_bits_awregion),
+    .s_axi_awuser   (_axi_interconnect_io_s_AXI_port_1_AXI_AW_bits_awuser),
+    .s_axi_wready   (_AXI_debug_printer_s_axi_wready),
+    .s_axi_wvalid   (_axi_interconnect_io_s_AXI_port_1_AXI_W_valid),
+    .s_axi_wdata    (_axi_interconnect_io_s_AXI_port_1_AXI_W_bits_wdata),
+    .s_axi_wstrb    (_axi_interconnect_io_s_AXI_port_1_AXI_W_bits_wstrb),
+    .s_axi_wlast    (_axi_interconnect_io_s_AXI_port_1_AXI_W_bits_wlast),
+    .s_axi_wuser    (_axi_interconnect_io_s_AXI_port_1_AXI_W_bits_wuser),
+    .s_axi_bready   (_axi_interconnect_io_s_AXI_port_1_AXI_B_ready),
+    .s_axi_bvalid   (_AXI_debug_printer_s_axi_bvalid),
+    .s_axi_bid      (_AXI_debug_printer_s_axi_bid),
+    .s_axi_bresp    (_AXI_debug_printer_s_axi_bresp),
+    .s_axi_buser    (_AXI_debug_printer_s_axi_buser),
+    .s_axi_arvalid  (_axi_interconnect_io_s_AXI_port_1_AXI_AR_valid),
+    .s_axi_arready  (_AXI_debug_printer_s_axi_arready),
+    .s_axi_arid     (_axi_interconnect_io_s_AXI_port_1_AXI_AR_bits_arid),
+    .s_axi_araddr   (_axi_interconnect_io_s_AXI_port_1_AXI_AR_bits_araddr),
+    .s_axi_arlen    (_axi_interconnect_io_s_AXI_port_1_AXI_AR_bits_arlen),
+    .s_axi_arsize   (_axi_interconnect_io_s_AXI_port_1_AXI_AR_bits_arsize),
+    .s_axi_arburst  (_axi_interconnect_io_s_AXI_port_1_AXI_AR_bits_arburst),
+    .s_axi_arlock   (_axi_interconnect_io_s_AXI_port_1_AXI_AR_bits_arlock),
+    .s_axi_arcache  (_axi_interconnect_io_s_AXI_port_1_AXI_AR_bits_arcache),
+    .s_axi_arprot   (_axi_interconnect_io_s_AXI_port_1_AXI_AR_bits_arprot),
+    .s_axi_arqos    (_axi_interconnect_io_s_AXI_port_1_AXI_AR_bits_arqos),
+    .s_axi_arregion (_axi_interconnect_io_s_AXI_port_1_AXI_AR_bits_arregion),
+    .s_axi_aruser   (_axi_interconnect_io_s_AXI_port_1_AXI_AR_bits_aruser),
+    .s_axi_rready   (_axi_interconnect_io_s_AXI_port_1_AXI_R_ready),
+    .s_axi_rvalid   (_AXI_debug_printer_s_axi_rvalid),
+    .s_axi_rid      (_AXI_debug_printer_s_axi_rid),
+    .s_axi_rdata    (_AXI_debug_printer_s_axi_rdata),
+    .s_axi_rresp    (_AXI_debug_printer_s_axi_rresp),
+    .s_axi_rlast    (_AXI_debug_printer_s_axi_rlast),
+    .s_axi_ruser    (_AXI_debug_printer_s_axi_ruser)
   );
   axi_interconnect_2x2 axi_interconnect (
     .clock                                (clock),
@@ -580,52 +654,78 @@ module SOC(
     .io_s_AXI_port_0_AXI_R_bits_rresp     (m_axi_rresp),
     .io_s_AXI_port_0_AXI_R_bits_rlast     (m_axi_rlast),
     .io_s_AXI_port_0_AXI_R_bits_ruser     (m_axi_ruser),
-    .io_s_AXI_port_1_AXI_AW_ready         (_AXI_debug_printer_io_s_AXI_AXI_AW_ready),
+    .io_s_AXI_port_1_AXI_AW_ready         (_AXI_debug_printer_s_axi_awready),
     .io_s_AXI_port_1_AXI_AW_valid
       (_axi_interconnect_io_s_AXI_port_1_AXI_AW_valid),
-    .io_s_AXI_port_1_AXI_AW_bits_awid     (/* unused */),
-    .io_s_AXI_port_1_AXI_AW_bits_awaddr   (/* unused */),
-    .io_s_AXI_port_1_AXI_AW_bits_awlen    (/* unused */),
-    .io_s_AXI_port_1_AXI_AW_bits_awsize   (/* unused */),
-    .io_s_AXI_port_1_AXI_AW_bits_awburst  (/* unused */),
-    .io_s_AXI_port_1_AXI_AW_bits_awlock   (/* unused */),
-    .io_s_AXI_port_1_AXI_AW_bits_awcache  (/* unused */),
-    .io_s_AXI_port_1_AXI_AW_bits_awprot   (/* unused */),
-    .io_s_AXI_port_1_AXI_AW_bits_awqos    (/* unused */),
-    .io_s_AXI_port_1_AXI_AW_bits_awregion (/* unused */),
-    .io_s_AXI_port_1_AXI_AW_bits_awuser   (/* unused */),
-    .io_s_AXI_port_1_AXI_W_ready          (_AXI_debug_printer_io_s_AXI_AXI_W_ready),
+    .io_s_AXI_port_1_AXI_AW_bits_awid
+      (_axi_interconnect_io_s_AXI_port_1_AXI_AW_bits_awid),
+    .io_s_AXI_port_1_AXI_AW_bits_awaddr
+      (_axi_interconnect_io_s_AXI_port_1_AXI_AW_bits_awaddr),
+    .io_s_AXI_port_1_AXI_AW_bits_awlen
+      (_axi_interconnect_io_s_AXI_port_1_AXI_AW_bits_awlen),
+    .io_s_AXI_port_1_AXI_AW_bits_awsize
+      (_axi_interconnect_io_s_AXI_port_1_AXI_AW_bits_awsize),
+    .io_s_AXI_port_1_AXI_AW_bits_awburst
+      (_axi_interconnect_io_s_AXI_port_1_AXI_AW_bits_awburst),
+    .io_s_AXI_port_1_AXI_AW_bits_awlock
+      (_axi_interconnect_io_s_AXI_port_1_AXI_AW_bits_awlock),
+    .io_s_AXI_port_1_AXI_AW_bits_awcache
+      (_axi_interconnect_io_s_AXI_port_1_AXI_AW_bits_awcache),
+    .io_s_AXI_port_1_AXI_AW_bits_awprot
+      (_axi_interconnect_io_s_AXI_port_1_AXI_AW_bits_awprot),
+    .io_s_AXI_port_1_AXI_AW_bits_awqos
+      (_axi_interconnect_io_s_AXI_port_1_AXI_AW_bits_awqos),
+    .io_s_AXI_port_1_AXI_AW_bits_awregion
+      (_axi_interconnect_io_s_AXI_port_1_AXI_AW_bits_awregion),
+    .io_s_AXI_port_1_AXI_AW_bits_awuser
+      (_axi_interconnect_io_s_AXI_port_1_AXI_AW_bits_awuser),
+    .io_s_AXI_port_1_AXI_W_ready          (_AXI_debug_printer_s_axi_wready),
     .io_s_AXI_port_1_AXI_W_valid          (_axi_interconnect_io_s_AXI_port_1_AXI_W_valid),
     .io_s_AXI_port_1_AXI_W_bits_wdata
       (_axi_interconnect_io_s_AXI_port_1_AXI_W_bits_wdata),
-    .io_s_AXI_port_1_AXI_W_bits_wstrb     (/* unused */),
-    .io_s_AXI_port_1_AXI_W_bits_wlast     (/* unused */),
-    .io_s_AXI_port_1_AXI_W_bits_wuser     (/* unused */),
+    .io_s_AXI_port_1_AXI_W_bits_wstrb
+      (_axi_interconnect_io_s_AXI_port_1_AXI_W_bits_wstrb),
+    .io_s_AXI_port_1_AXI_W_bits_wlast
+      (_axi_interconnect_io_s_AXI_port_1_AXI_W_bits_wlast),
+    .io_s_AXI_port_1_AXI_W_bits_wuser
+      (_axi_interconnect_io_s_AXI_port_1_AXI_W_bits_wuser),
     .io_s_AXI_port_1_AXI_B_ready          (_axi_interconnect_io_s_AXI_port_1_AXI_B_ready),
-    .io_s_AXI_port_1_AXI_B_valid          (_AXI_debug_printer_io_s_AXI_AXI_B_valid),
-    .io_s_AXI_port_1_AXI_B_bits_bid       (8'h0),
-    .io_s_AXI_port_1_AXI_B_bits_bresp     (2'h0),
-    .io_s_AXI_port_1_AXI_B_bits_buser     (1'h0),
-    .io_s_AXI_port_1_AXI_AR_ready         (1'h0),
-    .io_s_AXI_port_1_AXI_AR_valid         (/* unused */),
-    .io_s_AXI_port_1_AXI_AR_bits_arid     (/* unused */),
-    .io_s_AXI_port_1_AXI_AR_bits_araddr   (/* unused */),
-    .io_s_AXI_port_1_AXI_AR_bits_arlen    (/* unused */),
-    .io_s_AXI_port_1_AXI_AR_bits_arsize   (/* unused */),
-    .io_s_AXI_port_1_AXI_AR_bits_arburst  (/* unused */),
-    .io_s_AXI_port_1_AXI_AR_bits_arlock   (/* unused */),
-    .io_s_AXI_port_1_AXI_AR_bits_arcache  (/* unused */),
-    .io_s_AXI_port_1_AXI_AR_bits_arprot   (/* unused */),
-    .io_s_AXI_port_1_AXI_AR_bits_arqos    (/* unused */),
-    .io_s_AXI_port_1_AXI_AR_bits_arregion (/* unused */),
-    .io_s_AXI_port_1_AXI_AR_bits_aruser   (/* unused */),
-    .io_s_AXI_port_1_AXI_R_ready          (/* unused */),
-    .io_s_AXI_port_1_AXI_R_valid          (1'h0),
-    .io_s_AXI_port_1_AXI_R_bits_rid       (8'h0),
-    .io_s_AXI_port_1_AXI_R_bits_rdata     (32'h0),
-    .io_s_AXI_port_1_AXI_R_bits_rresp     (2'h0),
-    .io_s_AXI_port_1_AXI_R_bits_rlast     (1'h0),
-    .io_s_AXI_port_1_AXI_R_bits_ruser     (1'h0)
+    .io_s_AXI_port_1_AXI_B_valid          (_AXI_debug_printer_s_axi_bvalid),
+    .io_s_AXI_port_1_AXI_B_bits_bid       (_AXI_debug_printer_s_axi_bid),
+    .io_s_AXI_port_1_AXI_B_bits_bresp     (_AXI_debug_printer_s_axi_bresp),
+    .io_s_AXI_port_1_AXI_B_bits_buser     (_AXI_debug_printer_s_axi_buser),
+    .io_s_AXI_port_1_AXI_AR_ready         (_AXI_debug_printer_s_axi_arready),
+    .io_s_AXI_port_1_AXI_AR_valid
+      (_axi_interconnect_io_s_AXI_port_1_AXI_AR_valid),
+    .io_s_AXI_port_1_AXI_AR_bits_arid
+      (_axi_interconnect_io_s_AXI_port_1_AXI_AR_bits_arid),
+    .io_s_AXI_port_1_AXI_AR_bits_araddr
+      (_axi_interconnect_io_s_AXI_port_1_AXI_AR_bits_araddr),
+    .io_s_AXI_port_1_AXI_AR_bits_arlen
+      (_axi_interconnect_io_s_AXI_port_1_AXI_AR_bits_arlen),
+    .io_s_AXI_port_1_AXI_AR_bits_arsize
+      (_axi_interconnect_io_s_AXI_port_1_AXI_AR_bits_arsize),
+    .io_s_AXI_port_1_AXI_AR_bits_arburst
+      (_axi_interconnect_io_s_AXI_port_1_AXI_AR_bits_arburst),
+    .io_s_AXI_port_1_AXI_AR_bits_arlock
+      (_axi_interconnect_io_s_AXI_port_1_AXI_AR_bits_arlock),
+    .io_s_AXI_port_1_AXI_AR_bits_arcache
+      (_axi_interconnect_io_s_AXI_port_1_AXI_AR_bits_arcache),
+    .io_s_AXI_port_1_AXI_AR_bits_arprot
+      (_axi_interconnect_io_s_AXI_port_1_AXI_AR_bits_arprot),
+    .io_s_AXI_port_1_AXI_AR_bits_arqos
+      (_axi_interconnect_io_s_AXI_port_1_AXI_AR_bits_arqos),
+    .io_s_AXI_port_1_AXI_AR_bits_arregion
+      (_axi_interconnect_io_s_AXI_port_1_AXI_AR_bits_arregion),
+    .io_s_AXI_port_1_AXI_AR_bits_aruser
+      (_axi_interconnect_io_s_AXI_port_1_AXI_AR_bits_aruser),
+    .io_s_AXI_port_1_AXI_R_ready          (_axi_interconnect_io_s_AXI_port_1_AXI_R_ready),
+    .io_s_AXI_port_1_AXI_R_valid          (_AXI_debug_printer_s_axi_rvalid),
+    .io_s_AXI_port_1_AXI_R_bits_rid       (_AXI_debug_printer_s_axi_rid),
+    .io_s_AXI_port_1_AXI_R_bits_rdata     (_AXI_debug_printer_s_axi_rdata),
+    .io_s_AXI_port_1_AXI_R_bits_rresp     (_AXI_debug_printer_s_axi_rresp),
+    .io_s_AXI_port_1_AXI_R_bits_rlast     (_AXI_debug_printer_s_axi_rlast),
+    .io_s_AXI_port_1_AXI_R_bits_ruser     (_AXI_debug_printer_s_axi_ruser)
   );
 endmodule
 

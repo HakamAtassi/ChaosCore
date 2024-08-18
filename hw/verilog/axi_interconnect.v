@@ -618,14 +618,14 @@ always @* begin
 
                     //$display("Cond Expected: %h", (M_BASE_ADDR_INT[(i*M_REGIONS+j)*ADDR_WIDTH +: ADDR_WIDTH] >> M_ADDR_WIDTH[(i*M_REGIONS+j)*32 +: 32]));
                     //$display("Cond got: %h", axi_addr_reg >> M_ADDR_WIDTH[(i*M_REGIONS+j)*32 +: 32]);
-                    $display("%h =?= %h", (axi_addr_reg >> M_ADDR_WIDTH[(i*M_REGIONS+j)*32 +: 32]), (M_BASE_ADDR_INT[(i*M_REGIONS+j)*ADDR_WIDTH +: ADDR_WIDTH] >> M_ADDR_WIDTH[(i*M_REGIONS+j)*32 +: 32]));
+                    //$display("%h =?= %h", (axi_addr_reg >> M_ADDR_WIDTH[(i*M_REGIONS+j)*32 +: 32]), (M_BASE_ADDR_INT[(i*M_REGIONS+j)*ADDR_WIDTH +: ADDR_WIDTH] >> M_ADDR_WIDTH[(i*M_REGIONS+j)*32 +: 32]));
                     
                     // Every master has N bits of read/write access to each slave. 
                     // i*S_count is the offset that outputs the corresponding master bit field. 
                     // s_select is the selected slave
 
 
-                    $display("select (%d) cond %h", s_select, ((M_CONNECT_WRITE) & (1 << (s_select+i*S_COUNT))));
+                    //$display("select (%d) cond %h", s_select, ((M_CONNECT_WRITE) & (1 << (s_select+i*S_COUNT))));
 
                     if (
                         M_ADDR_WIDTH[(i*M_REGIONS+j)*32 +: 32] && 
@@ -655,7 +655,7 @@ always @* begin
                     // reading
                     state_next = STATE_READ_DROP;
                 end else begin
-                    $display("DROP at %h!", axi_addr_reg);
+                    //$display("DROP at %h!", axi_addr_reg);
                     // writing
                     axi_bresp_next = 2'b11;
                     s_axi_wready_next[s_select] = 1'b1;
