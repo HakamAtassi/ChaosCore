@@ -1,6 +1,12 @@
 List of CLB Tiles
-CLEM_X22Y18
-CLEL_R_X22Y18
+CLEM_X16Y34
+CLEL_R_X16Y34
+CLEM_X16Y145
+CLEL_R_X16Y145
 
 List of Congested Nets
+ChaosCore_tile/ChaosCore/backend/INT_PRF/mem_ext/_INT_PRF_io_rdata_4[1]
+ChaosCore_tile/ChaosCore/backend/INT_PRF/mem_ext/FU2/ALU/p_0_in1_in[1]
+ChaosCore_tile/ChaosCore/ROB/shared_mem/mem_ext/Memory_reg_r2_0_63_14_20/DOD
+ChaosCore_tile/ChaosCore/FTQ/front_pointer_reg[3]_3[10]
 

@@ -3,8 +3,8 @@
 # SW Build 5076996 on Wed May 22 18:36:09 MDT 2024
 # IP Build 5075265 on Wed May 22 21:45:21 MDT 2024
 # SharedData Build 5076995 on Wed May 22 18:29:18 MDT 2024
-# Start of session at: Sun Aug 18 18:44:42 2024
-# Process ID: 5017
+# Start of session at: Sat Aug 17 16:26:36 2024
+# Process ID: 12684
 # Current directory: /home/hakam/Repos/ChaosCore/syn
 # Command line: vivado -mode batch -source build.tcl
 # Log file: /home/hakam/Repos/ChaosCore/syn/vivado.log
@@ -13,13 +13,13 @@
 # Platform          :Ubuntu
 # Operating System  :Ubuntu 24.04 LTS
 # Processor Detail  :12th Gen Intel(R) Core(TM) i3-12100F
-# CPU Frequency     :4100.065 MHz
+# CPU Frequency     :3462.079 MHz
 # CPU Physical cores:4
 # CPU Logical cores :8
 # Host memory       :16615 MB
 # Swap memory       :4294 MB
 # Total Virtual     :20910 MB
-# Available Virtual :18507 MB
+# Available Virtual :17285 MB
 #-----------------------------------------------------------
 source build.tcl
 # set top_module "SOC"
@@ -47,11 +47,10 @@ INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xczu3eg
 INFO: [Device 21-403] Loading part xczu3eg-sbva484-1-i
 INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 4 processes.
 INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
-INFO: [Synth 8-7075] Helper process launched with PID 5074
+INFO: [Synth 8-7075] Helper process launched with PID 12729
 ---------------------------------------------------------------------------------
-Starting RTL Elaboration : Time (s): cpu = 00:00:02 ; elapsed = 00:00:02 . Memory (MB): peak = 2563.617 ; gain = 303.777 ; free physical = 9106 ; free virtual = 15933
+Starting RTL Elaboration : Time (s): cpu = 00:00:02 ; elapsed = 00:00:02 . Memory (MB): peak = 2595.207 ; gain = 302.777 ; free physical = 5875 ; free virtual = 14665
 ---------------------------------------------------------------------------------
-WARNING: [Synth 8-11057] overflow of 32-bit signed integer 2147483648; using -2147483648 instead [/home/hakam/Repos/ChaosCore/hw/verilog/axi_interconnect_2x2.sv:229]
 WARNING: [Synth 8-11065] parameter 'CL_S_COUNT' becomes localparam in 'axi_interconnect' with formal parameter declaration list [/home/hakam/Repos/ChaosCore/hw/verilog/axi_interconnect.v:188]
 WARNING: [Synth 8-11065] parameter 'CL_M_COUNT' becomes localparam in 'axi_interconnect' with formal parameter declaration list [/home/hakam/Repos/ChaosCore/hw/verilog/axi_interconnect.v:189]
 WARNING: [Synth 8-11065] parameter 'AUSER_WIDTH' becomes localparam in 'axi_interconnect' with formal parameter declaration list [/home/hakam/Repos/ChaosCore/hw/verilog/axi_interconnect.v:191]
@@ -264,17 +263,17 @@ INFO: [Synth 8-6157] synthesizing module 'axi_interconnect_wrap_2x2' [/home/haka
 	Parameter ARUSER_WIDTH bound to: 1 - type: integer 
 	Parameter RUSER_ENABLE bound to: 0 - type: integer 
 	Parameter RUSER_WIDTH bound to: 1 - type: integer 
-	Parameter FORWARD_ID bound to: 1 - type: integer 
+	Parameter FORWARD_ID bound to: 0 - type: integer 
 	Parameter M_REGIONS bound to: 1 - type: integer 
 	Parameter M00_BASE_ADDR bound to: 0 - type: integer 
 	Parameter M00_ADDR_WIDTH bound to: 24 - type: integer 
-	Parameter M00_CONNECT_READ bound to: 3 - type: integer 
-	Parameter M00_CONNECT_WRITE bound to: 3 - type: integer 
+	Parameter M00_CONNECT_READ bound to: 1 - type: integer 
+	Parameter M00_CONNECT_WRITE bound to: 1 - type: integer 
 	Parameter M00_SECURE bound to: 0 - type: integer 
-	Parameter M01_BASE_ADDR bound to: -2147483648 - type: integer 
+	Parameter M01_BASE_ADDR bound to: 134217728 - type: integer 
 	Parameter M01_ADDR_WIDTH bound to: 24 - type: integer 
-	Parameter M01_CONNECT_READ bound to: 3 - type: integer 
-	Parameter M01_CONNECT_WRITE bound to: 3 - type: integer 
+	Parameter M01_CONNECT_READ bound to: 1 - type: integer 
+	Parameter M01_CONNECT_WRITE bound to: 1 - type: integer 
 	Parameter M01_SECURE bound to: 0 - type: integer 
 INFO: [Synth 8-6157] synthesizing module 'axi_interconnect' [/home/hakam/Repos/ChaosCore/hw/verilog/axi_interconnect.v:34]
 	Parameter S_COUNT bound to: 2 - type: integer 
@@ -293,16 +292,16 @@ INFO: [Synth 8-6157] synthesizing module 'axi_interconnect' [/home/hakam/Repos/C
 	Parameter ARUSER_WIDTH bound to: 1 - type: integer 
 	Parameter RUSER_ENABLE bound to: 0 - type: integer 
 	Parameter RUSER_WIDTH bound to: 1 - type: integer 
-	Parameter FORWARD_ID bound to: 1 - type: integer 
+	Parameter FORWARD_ID bound to: 0 - type: integer 
 	Parameter M_REGIONS bound to: 1 - type: integer 
-	Parameter M_BASE_ADDR bound to: 64'b1000000000000000000000000000000000000000000000000000000000000000 
+	Parameter M_BASE_ADDR bound to: 64'b0000100000000000000000000000000000000000000000000000000000000000 
 	Parameter M_ADDR_WIDTH bound to: 64'b0000000000000000000000000001100000000000000000000000000000011000 
-	Parameter M_CONNECT_READ bound to: 4'b1111 
-	Parameter M_CONNECT_WRITE bound to: 4'b1111 
+	Parameter M_CONNECT_READ bound to: 4'b0101 
+	Parameter M_CONNECT_WRITE bound to: 4'b0101 
 	Parameter M_SECURE bound to: 2'b00 
 INFO: [Synth 8-251] Addressing configuration for axi_interconnect instance  [/home/hakam/Repos/ChaosCore/hw/verilog/axi_interconnect.v:236]
 INFO: [Synth 8-251] 0 (0): 0 / 24 -- 0-ffffff [/home/hakam/Repos/ChaosCore/hw/verilog/axi_interconnect.v:239]
-INFO: [Synth 8-251] 1 (0): 80000000 / 24 -- 80000000-80ffffff [/home/hakam/Repos/ChaosCore/hw/verilog/axi_interconnect.v:239]
+INFO: [Synth 8-251] 1 (0): 8000000 / 24 -- 8000000-8ffffff [/home/hakam/Repos/ChaosCore/hw/verilog/axi_interconnect.v:239]
 INFO: [Synth 8-6157] synthesizing module 'arbiter' [/home/hakam/Repos/ChaosCore/hw/verilog/arbiter.v:34]
 	Parameter PORTS bound to: 4 - type: integer 
 	Parameter ARB_TYPE_ROUND_ROBIN bound to: 1 - type: integer 
@@ -447,8 +446,8 @@ Reason is one or more of the following :
 	2: Unable to determine number of words or word size in RAM. 
 	3: No valid read/write found for RAM. 
 RAM "Memory_reg" dissolved into registers
-WARNING: [Synth 8-3936] Found unconnected internal register 'PLRU_reg' and it is trimmed from '4' to '3' bits. [/home/hakam/Repos/ChaosCore/hw/verilog/L1_data_cache.sv:1157]
-WARNING: [Synth 8-3936] Found unconnected internal register 'output_address_r_1_reg' and it is trimmed from '32' to '5' bits. [/home/hakam/Repos/ChaosCore/hw/verilog/L1_data_cache.sv:2022]
+WARNING: [Synth 8-3936] Found unconnected internal register 'PLRU_reg' and it is trimmed from '4' to '3' bits. [/home/hakam/Repos/ChaosCore/hw/verilog/L1_data_cache.sv:1140]
+WARNING: [Synth 8-3936] Found unconnected internal register 'output_address_r_1_reg' and it is trimmed from '32' to '5' bits. [/home/hakam/Repos/ChaosCore/hw/verilog/L1_data_cache.sv:2004]
 WARNING: [Synth 8-7129] Port s_axi_awuser[1] in module axi_interconnect is either unconnected or has no load
 WARNING: [Synth 8-7129] Port s_axi_awuser[0] in module axi_interconnect is either unconnected or has no load
 WARNING: [Synth 8-7129] Port s_axi_wuser[1] in module axi_interconnect is either unconnected or has no load
@@ -507,62 +506,62 @@ WARNING: [Synth 8-7129] Port io_m_AXI_port_1_AXI_AR_bits_arregion[3] in module a
 WARNING: [Synth 8-7129] Port io_m_AXI_port_1_AXI_AR_bits_arregion[2] in module axi_interconnect_2x2 is either unconnected or has no load
 WARNING: [Synth 8-7129] Port io_m_AXI_port_1_AXI_AR_bits_arregion[1] in module axi_interconnect_2x2 is either unconnected or has no load
 WARNING: [Synth 8-7129] Port io_m_AXI_port_1_AXI_AR_bits_arregion[0] in module axi_interconnect_2x2 is either unconnected or has no load
-WARNING: [Synth 8-7129] Port s_axi_awid[7] in module AXI_debug_printer is either unconnected or has no load
-WARNING: [Synth 8-7129] Port s_axi_awid[6] in module AXI_debug_printer is either unconnected or has no load
-WARNING: [Synth 8-7129] Port s_axi_awid[5] in module AXI_debug_printer is either unconnected or has no load
-WARNING: [Synth 8-7129] Port s_axi_awid[4] in module AXI_debug_printer is either unconnected or has no load
-WARNING: [Synth 8-7129] Port s_axi_awid[3] in module AXI_debug_printer is either unconnected or has no load
-WARNING: [Synth 8-7129] Port s_axi_awid[2] in module AXI_debug_printer is either unconnected or has no load
-WARNING: [Synth 8-7129] Port s_axi_awid[1] in module AXI_debug_printer is either unconnected or has no load
-WARNING: [Synth 8-7129] Port s_axi_awid[0] in module AXI_debug_printer is either unconnected or has no load
-WARNING: [Synth 8-7129] Port s_axi_awaddr[31] in module AXI_debug_printer is either unconnected or has no load
-WARNING: [Synth 8-7129] Port s_axi_awaddr[30] in module AXI_debug_printer is either unconnected or has no load
-WARNING: [Synth 8-7129] Port s_axi_awaddr[29] in module AXI_debug_printer is either unconnected or has no load
-WARNING: [Synth 8-7129] Port s_axi_awaddr[28] in module AXI_debug_printer is either unconnected or has no load
-WARNING: [Synth 8-7129] Port s_axi_awaddr[27] in module AXI_debug_printer is either unconnected or has no load
-WARNING: [Synth 8-7129] Port s_axi_awaddr[26] in module AXI_debug_printer is either unconnected or has no load
-WARNING: [Synth 8-7129] Port s_axi_awaddr[25] in module AXI_debug_printer is either unconnected or has no load
-WARNING: [Synth 8-7129] Port s_axi_awaddr[24] in module AXI_debug_printer is either unconnected or has no load
-WARNING: [Synth 8-7129] Port s_axi_awaddr[23] in module AXI_debug_printer is either unconnected or has no load
-WARNING: [Synth 8-7129] Port s_axi_awaddr[22] in module AXI_debug_printer is either unconnected or has no load
-WARNING: [Synth 8-7129] Port s_axi_awaddr[21] in module AXI_debug_printer is either unconnected or has no load
-WARNING: [Synth 8-7129] Port s_axi_awaddr[20] in module AXI_debug_printer is either unconnected or has no load
-WARNING: [Synth 8-7129] Port s_axi_awaddr[19] in module AXI_debug_printer is either unconnected or has no load
-WARNING: [Synth 8-7129] Port s_axi_awaddr[18] in module AXI_debug_printer is either unconnected or has no load
-WARNING: [Synth 8-7129] Port s_axi_awaddr[17] in module AXI_debug_printer is either unconnected or has no load
-WARNING: [Synth 8-7129] Port s_axi_awaddr[16] in module AXI_debug_printer is either unconnected or has no load
-WARNING: [Synth 8-7129] Port s_axi_awaddr[15] in module AXI_debug_printer is either unconnected or has no load
-WARNING: [Synth 8-7129] Port s_axi_awaddr[14] in module AXI_debug_printer is either unconnected or has no load
-WARNING: [Synth 8-7129] Port s_axi_awaddr[13] in module AXI_debug_printer is either unconnected or has no load
-WARNING: [Synth 8-7129] Port s_axi_awaddr[12] in module AXI_debug_printer is either unconnected or has no load
-WARNING: [Synth 8-7129] Port s_axi_awaddr[11] in module AXI_debug_printer is either unconnected or has no load
-WARNING: [Synth 8-7129] Port s_axi_awaddr[10] in module AXI_debug_printer is either unconnected or has no load
-WARNING: [Synth 8-7129] Port s_axi_awaddr[9] in module AXI_debug_printer is either unconnected or has no load
-WARNING: [Synth 8-7129] Port s_axi_awaddr[8] in module AXI_debug_printer is either unconnected or has no load
-WARNING: [Synth 8-7129] Port s_axi_awaddr[7] in module AXI_debug_printer is either unconnected or has no load
-WARNING: [Synth 8-7129] Port s_axi_awaddr[6] in module AXI_debug_printer is either unconnected or has no load
-WARNING: [Synth 8-7129] Port s_axi_awaddr[5] in module AXI_debug_printer is either unconnected or has no load
-WARNING: [Synth 8-7129] Port s_axi_awaddr[4] in module AXI_debug_printer is either unconnected or has no load
-WARNING: [Synth 8-7129] Port s_axi_awaddr[3] in module AXI_debug_printer is either unconnected or has no load
-WARNING: [Synth 8-7129] Port s_axi_awaddr[2] in module AXI_debug_printer is either unconnected or has no load
-WARNING: [Synth 8-7129] Port s_axi_awaddr[1] in module AXI_debug_printer is either unconnected or has no load
-WARNING: [Synth 8-7129] Port s_axi_awaddr[0] in module AXI_debug_printer is either unconnected or has no load
-WARNING: [Synth 8-7129] Port s_axi_awlen[7] in module AXI_debug_printer is either unconnected or has no load
-WARNING: [Synth 8-7129] Port s_axi_awlen[6] in module AXI_debug_printer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_s_AXI_AXI_W_bits_wdata[31] in module AXI_debug_printer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_s_AXI_AXI_W_bits_wdata[30] in module AXI_debug_printer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_s_AXI_AXI_W_bits_wdata[29] in module AXI_debug_printer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_s_AXI_AXI_W_bits_wdata[28] in module AXI_debug_printer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_s_AXI_AXI_W_bits_wdata[27] in module AXI_debug_printer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_s_AXI_AXI_W_bits_wdata[26] in module AXI_debug_printer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_s_AXI_AXI_W_bits_wdata[25] in module AXI_debug_printer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_s_AXI_AXI_W_bits_wdata[24] in module AXI_debug_printer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_s_AXI_AXI_W_bits_wdata[23] in module AXI_debug_printer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_s_AXI_AXI_W_bits_wdata[22] in module AXI_debug_printer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_s_AXI_AXI_W_bits_wdata[21] in module AXI_debug_printer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_s_AXI_AXI_W_bits_wdata[20] in module AXI_debug_printer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_s_AXI_AXI_W_bits_wdata[19] in module AXI_debug_printer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_s_AXI_AXI_W_bits_wdata[18] in module AXI_debug_printer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_s_AXI_AXI_W_bits_wdata[17] in module AXI_debug_printer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_s_AXI_AXI_W_bits_wdata[16] in module AXI_debug_printer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_s_AXI_AXI_W_bits_wdata[15] in module AXI_debug_printer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_s_AXI_AXI_W_bits_wdata[14] in module AXI_debug_printer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_s_AXI_AXI_W_bits_wdata[13] in module AXI_debug_printer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_s_AXI_AXI_W_bits_wdata[12] in module AXI_debug_printer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_s_AXI_AXI_W_bits_wdata[11] in module AXI_debug_printer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_s_AXI_AXI_W_bits_wdata[10] in module AXI_debug_printer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_s_AXI_AXI_W_bits_wdata[9] in module AXI_debug_printer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_s_AXI_AXI_W_bits_wdata[8] in module AXI_debug_printer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_s_AXI_AXI_W_bits_wdata[7] in module AXI_debug_printer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_s_AXI_AXI_W_bits_wdata[6] in module AXI_debug_printer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_s_AXI_AXI_W_bits_wdata[5] in module AXI_debug_printer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_s_AXI_AXI_W_bits_wdata[4] in module AXI_debug_printer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_s_AXI_AXI_W_bits_wdata[3] in module AXI_debug_printer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_s_AXI_AXI_W_bits_wdata[2] in module AXI_debug_printer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_s_AXI_AXI_W_bits_wdata[1] in module AXI_debug_printer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port io_s_AXI_AXI_W_bits_wdata[0] in module AXI_debug_printer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port R0_en in module ram_64x21 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port R0_clk in module ram_64x21 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port R0_en in module ram_256x8 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port R0_clk in module ram_256x8 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port R0_en in module ram_3x36 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port R0_en in module ram_8x36 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port R0_en in module ram_2x352 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port R0_en in module ram_8x352 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_axi_bid[7] in module L1_data_cache is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_axi_bid[6] in module L1_data_cache is either unconnected or has no load
 INFO: [Common 17-14] Message 'Synth 8-7129' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
 ---------------------------------------------------------------------------------
-Finished RTL Elaboration : Time (s): cpu = 00:00:08 ; elapsed = 00:00:08 . Memory (MB): peak = 2983.836 ; gain = 723.996 ; free physical = 8761 ; free virtual = 15595
+Finished RTL Elaboration : Time (s): cpu = 00:00:08 ; elapsed = 00:00:08 . Memory (MB): peak = 3015.426 ; gain = 722.996 ; free physical = 5372 ; free virtual = 14171
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Handling Custom Attributes
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Handling Custom Attributes : Time (s): cpu = 00:00:08 ; elapsed = 00:00:09 . Memory (MB): peak = 2983.836 ; gain = 723.996 ; free physical = 8761 ; free virtual = 15595
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:08 ; elapsed = 00:00:09 . Memory (MB): peak = 3015.426 ; gain = 722.996 ; free physical = 5374 ; free virtual = 14173
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:08 ; elapsed = 00:00:09 . Memory (MB): peak = 2983.836 ; gain = 723.996 ; free physical = 8761 ; free virtual = 15595
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:08 ; elapsed = 00:00:09 . Memory (MB): peak = 3015.426 ; gain = 722.996 ; free physical = 5374 ; free virtual = 14173
 ---------------------------------------------------------------------------------
-Netlist sorting complete. Time (s): cpu = 00:00:00.3 ; elapsed = 00:00:00.3 . Memory (MB): peak = 2983.836 ; gain = 0.000 ; free physical = 8768 ; free virtual = 15602
+Netlist sorting complete. Time (s): cpu = 00:00:00.3 ; elapsed = 00:00:00.3 . Memory (MB): peak = 3015.426 ; gain = 0.000 ; free physical = 5377 ; free virtual = 14177
 INFO: [Project 1-570] Preparing netlist for logic optimization
 
 Processing XDC Constraints
@@ -571,13 +570,13 @@ Parsing XDC File [/home/hakam/Repos/ChaosCore/syn/constraints/constraints.xdc]
 Finished Parsing XDC File [/home/hakam/Repos/ChaosCore/syn/constraints/constraints.xdc]
 Completed Processing XDC Constraints
 
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3126.680 ; gain = 0.000 ; free physical = 7961 ; free virtual = 15145
+Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00 . Memory (MB): peak = 3162.270 ; gain = 0.000 ; free physical = 5353 ; free virtual = 14168
 INFO: [Project 1-111] Unisim Transformation Summary:
 No Unisim elements were transformed.
 
-Constraint Validation Runtime : Time (s): cpu = 00:00:00.35 ; elapsed = 00:00:00.15 . Memory (MB): peak = 3138.602 ; gain = 0.000 ; free physical = 7958 ; free virtual = 15142
+Constraint Validation Runtime : Time (s): cpu = 00:00:00.35 ; elapsed = 00:00:00.13 . Memory (MB): peak = 3174.191 ; gain = 0.000 ; free physical = 5353 ; free virtual = 14169
 ---------------------------------------------------------------------------------
-Finished Constraint Validation : Time (s): cpu = 00:00:20 ; elapsed = 00:00:19 . Memory (MB): peak = 3138.602 ; gain = 878.762 ; free physical = 7013 ; free virtual = 14215
+Finished Constraint Validation : Time (s): cpu = 00:00:19 ; elapsed = 00:00:19 . Memory (MB): peak = 3174.191 ; gain = 881.762 ; free physical = 4537 ; free virtual = 13354
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Loading Part and Timing Information
@@ -585,14 +584,15 @@ Start Loading Part and Timing Information
 Loading part: xczu3eg-sbva484-1-i
 INFO: [Synth 8-6742] Reading net delay rules and data
 ---------------------------------------------------------------------------------
-Finished Loading Part and Timing Information : Time (s): cpu = 00:00:20 ; elapsed = 00:00:19 . Memory (MB): peak = 3146.605 ; gain = 886.766 ; free physical = 7020 ; free virtual = 14222
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:19 ; elapsed = 00:00:19 . Memory (MB): peak = 3182.195 ; gain = 889.766 ; free physical = 4545 ; free virtual = 13361
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Applying 'set_property' XDC Constraints
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:20 ; elapsed = 00:00:19 . Memory (MB): peak = 3146.605 ; gain = 886.766 ; free physical = 7020 ; free virtual = 14222
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:19 ; elapsed = 00:00:19 . Memory (MB): peak = 3182.195 ; gain = 889.766 ; free physical = 4537 ; free virtual = 13354
 ---------------------------------------------------------------------------------
+INFO: [Synth 8-802] inferred FSM for state register 'DATA_CACHE_STATE_reg' in module 'L1_data_cache'
 WARNING: [Synth 8-6430] The Block RAM "mem_65536x2:/Memory_reg" may get memory collision error if read and write address collide. Use attribute (* rw_addr_collision= "yes" *) to avoid collision 
 WARNING: [Synth 8-6430] The Block RAM "mem_65536x2:/Memory_reg" may get memory collision error if read and write address collide. Use attribute (* rw_addr_collision= "yes" *) to avoid collision 
 INFO: [Synth 8-3971] The signal "mem_65536x2:/Memory_reg" was recognized as a true dual port RAM template.
@@ -612,8 +612,16 @@ INFO: [Synth 8-6904] The RAM "ram_8x352:/Memory_reg" of size (depth=8 x width=35
 INFO: [Synth 8-6904] The RAM "ram_2x352:/Memory_reg" of size (depth=2 x width=352) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
 INFO: [Synth 8-6904] The RAM "ram_8x36:/Memory_reg" of size (depth=8 x width=36) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
 INFO: [Synth 8-6904] The RAM "ram_3x36:/Memory_reg" of size (depth=3 x width=36) is automatically implemented using LUTRAM. BRAM implementation would be inefficient 
+---------------------------------------------------------------------------------------------------
+                   State |                     New Encoding |                Previous Encoding 
+---------------------------------------------------------------------------------------------------
+                 iSTATE2 |                              001 |                               00
+                 iSTATE0 |                              010 |                               10
+                  iSTATE |                              100 |                               11
+---------------------------------------------------------------------------------------------------
+INFO: [Synth 8-3354] encoded FSM with state register 'DATA_CACHE_STATE_reg' using encoding 'one-hot' in module 'L1_data_cache'
 ---------------------------------------------------------------------------------
-Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:33 ; elapsed = 00:00:33 . Memory (MB): peak = 3146.605 ; gain = 886.766 ; free physical = 989 ; free virtual = 8262
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:30 ; elapsed = 00:00:30 . Memory (MB): peak = 3182.195 ; gain = 889.766 ; free physical = 431 ; free virtual = 9255
 ---------------------------------------------------------------------------------
 RAM Pipeline Warning: Read Address Register Found For RAM Memory_reg. We will not be able to pipeline it. This may degrade performance. 
 RAM Pipeline Warning: Read Address Register Found For RAM Memory_reg. We will not be able to pipeline it. This may degrade performance. 
@@ -660,7 +668,7 @@ Detailed RTL Component Info :
 	                5 Bit    Registers := 46    
 	                4 Bit    Registers := 186   
 	                3 Bit    Registers := 81    
-	                2 Bit    Registers := 567   
+	                2 Bit    Registers := 566   
 	                1 Bit    Registers := 949   
 +---RAMs : 
 	             224K Bit	(4096 X 56 bit)          RAMs := 1     
@@ -708,10 +716,10 @@ Detailed RTL Component Info :
 	   3 Input    3 Bit        Muxes := 1     
 	   2 Input    2 Bit        Muxes := 628   
 	   3 Input    2 Bit        Muxes := 7     
-	   4 Input    2 Bit        Muxes := 17    
+	   4 Input    2 Bit        Muxes := 18    
 	   5 Input    2 Bit        Muxes := 1     
 	   8 Input    2 Bit        Muxes := 10    
-	   2 Input    1 Bit        Muxes := 1392  
+	   2 Input    1 Bit        Muxes := 1391  
 	   5 Input    1 Bit        Muxes := 32    
 	   3 Input    1 Bit        Muxes := 1     
 	   8 Input    1 Bit        Muxes := 11    
@@ -1115,70 +1123,70 @@ RAM Pipeline Warning: Read Address Register Found For RAM ram_ext/Memory_reg. We
 RAM Pipeline Warning: Read Address Register Found For RAM ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
 RAM Pipeline Warning: Read Address Register Found For RAM ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
 RAM Pipeline Warning: Read Address Register Found For RAM AXI_request_Q/ram_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_9/i_0/tag_memories_1/ram_ext/Memory_reg_0_63_5_5 from module extram__70 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_9/i_0/tag_memories_1/ram_ext/Memory_reg_0_63_8_8 from module extram__70 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_9/i_0/tag_memories_1/ram_ext/Memory_reg_0_63_7_7 from module extram__70 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_9/i_0/tag_memories_1/ram_ext/Memory_reg_0_63_6_6 from module extram__70 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_9/i_0/tag_memories_1/ram_ext/Memory_reg_0_63_11_11 from module extram__70 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_9/i_0/tag_memories_1/ram_ext/Memory_reg_0_63_10_10 from module extram__70 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_9/i_0/tag_memories_1/ram_ext/Memory_reg_0_63_9_9 from module extram__70 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_9/i_0/tag_memories_1/ram_ext/Memory_reg_0_63_14_14 from module extram__70 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_9/i_0/tag_memories_1/ram_ext/Memory_reg_0_63_13_13 from module extram__70 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_9/i_0/tag_memories_1/ram_ext/Memory_reg_0_63_12_12 from module extram__70 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_9/i_0/tag_memories_1/ram_ext/Memory_reg_0_63_17_17 from module extram__70 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_9/i_0/tag_memories_1/ram_ext/Memory_reg_0_63_16_16 from module extram__70 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_9/i_0/tag_memories_1/ram_ext/Memory_reg_0_63_15_15 from module extram__70 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_9/i_0/tag_memories_1/ram_ext/Memory_reg_0_63_20_20 from module extram__70 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_9/i_0/tag_memories_1/ram_ext/Memory_reg_0_63_19_19 from module extram__70 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_9/i_0/tag_memories_1/ram_ext/Memory_reg_0_63_18_18 from module extram__70 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_5/i_0/tag_memories_2/ram_ext/Memory_reg_0_63_5_5 from module extram__66 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_5/i_0/tag_memories_2/ram_ext/Memory_reg_0_63_8_8 from module extram__66 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_5/i_0/tag_memories_2/ram_ext/Memory_reg_0_63_7_7 from module extram__66 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_5/i_0/tag_memories_2/ram_ext/Memory_reg_0_63_6_6 from module extram__66 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_5/i_0/tag_memories_2/ram_ext/Memory_reg_0_63_11_11 from module extram__66 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_5/i_0/tag_memories_2/ram_ext/Memory_reg_0_63_10_10 from module extram__66 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_5/i_0/tag_memories_2/ram_ext/Memory_reg_0_63_9_9 from module extram__66 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_5/i_0/tag_memories_2/ram_ext/Memory_reg_0_63_14_14 from module extram__66 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_5/i_0/tag_memories_2/ram_ext/Memory_reg_0_63_13_13 from module extram__66 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_5/i_0/tag_memories_2/ram_ext/Memory_reg_0_63_12_12 from module extram__66 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_5/i_0/tag_memories_2/ram_ext/Memory_reg_0_63_17_17 from module extram__66 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_5/i_0/tag_memories_2/ram_ext/Memory_reg_0_63_16_16 from module extram__66 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_5/i_0/tag_memories_2/ram_ext/Memory_reg_0_63_15_15 from module extram__66 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_5/i_0/tag_memories_2/ram_ext/Memory_reg_0_63_20_20 from module extram__66 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_5/i_0/tag_memories_2/ram_ext/Memory_reg_0_63_19_19 from module extram__66 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_5/i_0/tag_memories_2/ram_ext/Memory_reg_0_63_18_18 from module extram__66 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_6/i_0/tag_memories_3/ram_ext/Memory_reg_0_63_5_5 from module extram__68 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_6/i_0/tag_memories_3/ram_ext/Memory_reg_0_63_8_8 from module extram__68 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_6/i_0/tag_memories_3/ram_ext/Memory_reg_0_63_7_7 from module extram__68 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_6/i_0/tag_memories_3/ram_ext/Memory_reg_0_63_6_6 from module extram__68 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_6/i_0/tag_memories_3/ram_ext/Memory_reg_0_63_11_11 from module extram__68 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_6/i_0/tag_memories_3/ram_ext/Memory_reg_0_63_10_10 from module extram__68 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_6/i_0/tag_memories_3/ram_ext/Memory_reg_0_63_9_9 from module extram__68 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_6/i_0/tag_memories_3/ram_ext/Memory_reg_0_63_14_14 from module extram__68 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_6/i_0/tag_memories_3/ram_ext/Memory_reg_0_63_13_13 from module extram__68 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_6/i_0/tag_memories_3/ram_ext/Memory_reg_0_63_12_12 from module extram__68 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_6/i_0/tag_memories_3/ram_ext/Memory_reg_0_63_17_17 from module extram__68 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_6/i_0/tag_memories_3/ram_ext/Memory_reg_0_63_16_16 from module extram__68 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_6/i_0/tag_memories_3/ram_ext/Memory_reg_0_63_15_15 from module extram__68 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_6/i_0/tag_memories_3/ram_ext/Memory_reg_0_63_20_20 from module extram__68 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_6/i_0/tag_memories_3/ram_ext/Memory_reg_0_63_19_19 from module extram__68 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_6/i_0/tag_memories_3/ram_ext/Memory_reg_0_63_18_18 from module extram__68 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_3/i_0/tag_memories_0/ram_ext/Memory_reg_0_63_5_5 from module extram__64 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_3/i_0/tag_memories_0/ram_ext/Memory_reg_0_63_8_8 from module extram__64 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_3/i_0/tag_memories_0/ram_ext/Memory_reg_0_63_7_7 from module extram__64 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_3/i_0/tag_memories_0/ram_ext/Memory_reg_0_63_6_6 from module extram__64 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_3/i_0/tag_memories_0/ram_ext/Memory_reg_0_63_11_11 from module extram__64 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_3/i_0/tag_memories_0/ram_ext/Memory_reg_0_63_10_10 from module extram__64 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_3/i_0/tag_memories_0/ram_ext/Memory_reg_0_63_9_9 from module extram__64 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_3/i_0/tag_memories_0/ram_ext/Memory_reg_0_63_14_14 from module extram__64 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_3/i_0/tag_memories_0/ram_ext/Memory_reg_0_63_13_13 from module extram__64 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_3/i_0/tag_memories_0/ram_ext/Memory_reg_0_63_12_12 from module extram__64 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_3/i_0/tag_memories_0/ram_ext/Memory_reg_0_63_17_17 from module extram__64 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_3/i_0/tag_memories_0/ram_ext/Memory_reg_0_63_16_16 from module extram__64 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_3/i_0/tag_memories_0/ram_ext/Memory_reg_0_63_15_15 from module extram__64 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_3/i_0/tag_memories_0/ram_ext/Memory_reg_0_63_20_20 from module extram__64 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_3/i_0/tag_memories_0/ram_ext/Memory_reg_0_63_19_19 from module extram__64 due to constant propagation
-INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_3/i_0/tag_memories_0/ram_ext/Memory_reg_0_63_18_18 from module extram__64 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_4/i_0/tag_memories_1/ram_ext/Memory_reg_0_63_5_5 from module extram__70 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_4/i_0/tag_memories_1/ram_ext/Memory_reg_0_63_8_8 from module extram__70 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_4/i_0/tag_memories_1/ram_ext/Memory_reg_0_63_7_7 from module extram__70 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_4/i_0/tag_memories_1/ram_ext/Memory_reg_0_63_6_6 from module extram__70 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_4/i_0/tag_memories_1/ram_ext/Memory_reg_0_63_11_11 from module extram__70 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_4/i_0/tag_memories_1/ram_ext/Memory_reg_0_63_10_10 from module extram__70 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_4/i_0/tag_memories_1/ram_ext/Memory_reg_0_63_9_9 from module extram__70 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_4/i_0/tag_memories_1/ram_ext/Memory_reg_0_63_14_14 from module extram__70 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_4/i_0/tag_memories_1/ram_ext/Memory_reg_0_63_13_13 from module extram__70 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_4/i_0/tag_memories_1/ram_ext/Memory_reg_0_63_12_12 from module extram__70 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_4/i_0/tag_memories_1/ram_ext/Memory_reg_0_63_17_17 from module extram__70 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_4/i_0/tag_memories_1/ram_ext/Memory_reg_0_63_16_16 from module extram__70 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_4/i_0/tag_memories_1/ram_ext/Memory_reg_0_63_15_15 from module extram__70 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_4/i_0/tag_memories_1/ram_ext/Memory_reg_0_63_20_20 from module extram__70 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_4/i_0/tag_memories_1/ram_ext/Memory_reg_0_63_19_19 from module extram__70 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_4/i_0/tag_memories_1/ram_ext/Memory_reg_0_63_18_18 from module extram__70 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_2/i_0/tag_memories_2/ram_ext/Memory_reg_0_63_5_5 from module extram__66 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_2/i_0/tag_memories_2/ram_ext/Memory_reg_0_63_8_8 from module extram__66 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_2/i_0/tag_memories_2/ram_ext/Memory_reg_0_63_7_7 from module extram__66 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_2/i_0/tag_memories_2/ram_ext/Memory_reg_0_63_6_6 from module extram__66 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_2/i_0/tag_memories_2/ram_ext/Memory_reg_0_63_11_11 from module extram__66 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_2/i_0/tag_memories_2/ram_ext/Memory_reg_0_63_10_10 from module extram__66 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_2/i_0/tag_memories_2/ram_ext/Memory_reg_0_63_9_9 from module extram__66 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_2/i_0/tag_memories_2/ram_ext/Memory_reg_0_63_14_14 from module extram__66 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_2/i_0/tag_memories_2/ram_ext/Memory_reg_0_63_13_13 from module extram__66 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_2/i_0/tag_memories_2/ram_ext/Memory_reg_0_63_12_12 from module extram__66 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_2/i_0/tag_memories_2/ram_ext/Memory_reg_0_63_17_17 from module extram__66 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_2/i_0/tag_memories_2/ram_ext/Memory_reg_0_63_16_16 from module extram__66 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_2/i_0/tag_memories_2/ram_ext/Memory_reg_0_63_15_15 from module extram__66 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_2/i_0/tag_memories_2/ram_ext/Memory_reg_0_63_20_20 from module extram__66 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_2/i_0/tag_memories_2/ram_ext/Memory_reg_0_63_19_19 from module extram__66 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_2/i_0/tag_memories_2/ram_ext/Memory_reg_0_63_18_18 from module extram__66 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_3/i_0/tag_memories_3/ram_ext/Memory_reg_0_63_5_5 from module extram__68 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_3/i_0/tag_memories_3/ram_ext/Memory_reg_0_63_8_8 from module extram__68 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_3/i_0/tag_memories_3/ram_ext/Memory_reg_0_63_7_7 from module extram__68 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_3/i_0/tag_memories_3/ram_ext/Memory_reg_0_63_6_6 from module extram__68 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_3/i_0/tag_memories_3/ram_ext/Memory_reg_0_63_11_11 from module extram__68 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_3/i_0/tag_memories_3/ram_ext/Memory_reg_0_63_10_10 from module extram__68 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_3/i_0/tag_memories_3/ram_ext/Memory_reg_0_63_9_9 from module extram__68 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_3/i_0/tag_memories_3/ram_ext/Memory_reg_0_63_14_14 from module extram__68 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_3/i_0/tag_memories_3/ram_ext/Memory_reg_0_63_13_13 from module extram__68 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_3/i_0/tag_memories_3/ram_ext/Memory_reg_0_63_12_12 from module extram__68 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_3/i_0/tag_memories_3/ram_ext/Memory_reg_0_63_17_17 from module extram__68 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_3/i_0/tag_memories_3/ram_ext/Memory_reg_0_63_16_16 from module extram__68 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_3/i_0/tag_memories_3/ram_ext/Memory_reg_0_63_15_15 from module extram__68 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_3/i_0/tag_memories_3/ram_ext/Memory_reg_0_63_20_20 from module extram__68 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_3/i_0/tag_memories_3/ram_ext/Memory_reg_0_63_19_19 from module extram__68 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_3/i_0/tag_memories_3/ram_ext/Memory_reg_0_63_18_18 from module extram__68 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_1/i_0/tag_memories_0/ram_ext/Memory_reg_0_63_5_5 from module extram__64 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_1/i_0/tag_memories_0/ram_ext/Memory_reg_0_63_8_8 from module extram__64 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_1/i_0/tag_memories_0/ram_ext/Memory_reg_0_63_7_7 from module extram__64 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_1/i_0/tag_memories_0/ram_ext/Memory_reg_0_63_6_6 from module extram__64 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_1/i_0/tag_memories_0/ram_ext/Memory_reg_0_63_11_11 from module extram__64 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_1/i_0/tag_memories_0/ram_ext/Memory_reg_0_63_10_10 from module extram__64 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_1/i_0/tag_memories_0/ram_ext/Memory_reg_0_63_9_9 from module extram__64 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_1/i_0/tag_memories_0/ram_ext/Memory_reg_0_63_14_14 from module extram__64 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_1/i_0/tag_memories_0/ram_ext/Memory_reg_0_63_13_13 from module extram__64 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_1/i_0/tag_memories_0/ram_ext/Memory_reg_0_63_12_12 from module extram__64 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_1/i_0/tag_memories_0/ram_ext/Memory_reg_0_63_17_17 from module extram__64 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_1/i_0/tag_memories_0/ram_ext/Memory_reg_0_63_16_16 from module extram__64 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_1/i_0/tag_memories_0/ram_ext/Memory_reg_0_63_15_15 from module extram__64 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_1/i_0/tag_memories_0/ram_ext/Memory_reg_0_63_20_20 from module extram__64 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_1/i_0/tag_memories_0/ram_ext/Memory_reg_0_63_19_19 from module extram__64 due to constant propagation
+INFO: [Synth 8-7067] Removed DRAM instance data_cache/i_1/i_0/tag_memories_0/ram_ext/Memory_reg_0_63_18_18 from module extram__64 due to constant propagation
 INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[128]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[129]'
 INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[96]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[97]'
 INFO: [Synth 8-3886] merging instance 'instruction_cache/AXI_AW_DATA_BUFFER_reg[64]' (FDE) to 'instruction_cache/AXI_AW_DATA_BUFFER_reg[65]'
@@ -1220,10 +1228,10 @@ INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cach
 INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/\MSHRs_3_address_reg[2] )
 INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/\MSHRs_1_address_reg[2] )
 INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/\MSHRs_2_address_reg[2] )
-INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/i_3/\tag_memories_0/dataOut_reg[5] )
-INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/i_6/\tag_memories_3/dataOut_reg[5] )
-INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/i_5/\tag_memories_2/dataOut_reg[5] )
-INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/i_9/\tag_memories_1/dataOut_reg[5] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/i_1/\tag_memories_0/dataOut_reg[5] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/i_3/\tag_memories_3/dataOut_reg[5] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/i_2/\tag_memories_2/dataOut_reg[5] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cache/i_4/\tag_memories_1/dataOut_reg[5] )
 INFO: [Synth 8-3333] propagating constant 1 across sequential element (\instruction_cache/CPU_response_skid_buffer/ram_reg[110] )
 INFO: [Synth 8-3333] propagating constant 0 across sequential element (\instruction_cache/CPU_response_skid_buffer/ram_reg[71] )
 INFO: [Synth 8-3333] propagating constant 0 across sequential element (\instruction_cache/request_addr_reg[4] )
@@ -1326,7 +1334,7 @@ INFO: [Synth 8-3333] propagating constant 0 across sequential element (data_cach
 INFO: [Common 17-14] Message 'Synth 8-3333' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
 INFO: [Common 17-14] Message 'Synth 8-3333' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
 ---------------------------------------------------------------------------------
-Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:01:26 ; elapsed = 00:01:32 . Memory (MB): peak = 3162.617 ; gain = 902.777 ; free physical = 205 ; free virtual = 6964
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:01:26 ; elapsed = 00:01:39 . Memory (MB): peak = 3198.207 ; gain = 905.777 ; free physical = 233 ; free virtual = 6068
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start ROM, RAM, DSP, Shift Register and Retiming Reporting
@@ -1430,7 +1438,7 @@ Finished ROM, RAM, DSP, Shift Register and Retiming Reporting
 Start Applying XDC Timing Constraints
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Applying XDC Timing Constraints : Time (s): cpu = 00:01:33 ; elapsed = 00:01:39 . Memory (MB): peak = 3432.562 ; gain = 1172.723 ; free physical = 184 ; free virtual = 6690
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:01:32 ; elapsed = 00:01:46 . Memory (MB): peak = 3465.152 ; gain = 1172.723 ; free physical = 214 ; free virtual = 5876
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Timing Optimization
@@ -1448,7 +1456,7 @@ INFO: [Synth 8-5584] The signal "SOC/ChaosCore_tile/instruction_cache/data_memor
 RAM Pipeline Warning: Read Address Register Found For RAM ChaosCore_tile/instruction_cache/data_memory_1/mem_ext/Memory_reg. We will not be able to pipeline it. This may degrade performance. 
 INFO: [Synth 8-5584] The signal "SOC/ChaosCore_tile/instruction_cache/data_memory_1/mem_ext/Memory_reg" is implemented as distributed LUT RAM for the following reason(s): The timing constraints suggest that the chosen mapping will yield better timing results.
 ---------------------------------------------------------------------------------
-Finished Timing Optimization : Time (s): cpu = 00:02:05 ; elapsed = 00:02:11 . Memory (MB): peak = 3633.430 ; gain = 1373.590 ; free physical = 247 ; free virtual = 6630
+Finished Timing Optimization : Time (s): cpu = 00:02:03 ; elapsed = 00:02:18 . Memory (MB): peak = 3665.020 ; gain = 1372.590 ; free physical = 277 ; free virtual = 5682
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start ROM, RAM, DSP, Shift Register and Retiming Reporting
@@ -1550,7 +1558,7 @@ INFO: [Synth 8-7052] The timing for the instance ChaosCore_tilei_5/ChaosCore_til
 INFO: [Synth 8-7052] The timing for the instance ChaosCore_tilei_5/ChaosCore_tile/ChaosCore/frontend/instruction_fetch/bp/BTB/BTB_memory/mem_ext/Memory_reg_5 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
 INFO: [Synth 8-7052] The timing for the instance ChaosCore_tilei_5/ChaosCore_tile/ChaosCore/frontend/instruction_fetch/bp/BTB/BTB_memory/mem_ext/Memory_reg_6 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
 ---------------------------------------------------------------------------------
-Finished Technology Mapping : Time (s): cpu = 00:02:12 ; elapsed = 00:02:27 . Memory (MB): peak = 3645.355 ; gain = 1385.516 ; free physical = 282 ; free virtual = 4319
+Finished Technology Mapping : Time (s): cpu = 00:02:09 ; elapsed = 00:02:31 . Memory (MB): peak = 3676.945 ; gain = 1384.516 ; free physical = 181 ; free virtual = 3467
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start IO Insertion
@@ -1581,37 +1589,37 @@ INFO: [Synth 8-7052] The timing for the instance ChaosCore_tile/ChaosCore/fronte
 Finished Final Netlist Cleanup
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished IO Insertion : Time (s): cpu = 00:02:16 ; elapsed = 00:02:33 . Memory (MB): peak = 3645.355 ; gain = 1385.516 ; free physical = 265 ; free virtual = 4326
+Finished IO Insertion : Time (s): cpu = 00:02:13 ; elapsed = 00:02:41 . Memory (MB): peak = 3676.945 ; gain = 1384.516 ; free physical = 201 ; free virtual = 3471
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Instances
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Instances : Time (s): cpu = 00:02:16 ; elapsed = 00:02:33 . Memory (MB): peak = 3645.355 ; gain = 1385.516 ; free physical = 265 ; free virtual = 4326
+Finished Renaming Generated Instances : Time (s): cpu = 00:02:14 ; elapsed = 00:02:41 . Memory (MB): peak = 3676.945 ; gain = 1384.516 ; free physical = 200 ; free virtual = 3471
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Rebuilding User Hierarchy
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Rebuilding User Hierarchy : Time (s): cpu = 00:02:20 ; elapsed = 00:02:36 . Memory (MB): peak = 3645.355 ; gain = 1385.516 ; free physical = 277 ; free virtual = 4341
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:02:17 ; elapsed = 00:02:45 . Memory (MB): peak = 3676.945 ; gain = 1384.516 ; free physical = 198 ; free virtual = 3469
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Ports
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Ports : Time (s): cpu = 00:02:20 ; elapsed = 00:02:37 . Memory (MB): peak = 3645.355 ; gain = 1385.516 ; free physical = 277 ; free virtual = 4342
+Finished Renaming Generated Ports : Time (s): cpu = 00:02:17 ; elapsed = 00:02:46 . Memory (MB): peak = 3676.945 ; gain = 1384.516 ; free physical = 198 ; free virtual = 3469
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Handling Custom Attributes
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Handling Custom Attributes : Time (s): cpu = 00:02:21 ; elapsed = 00:02:38 . Memory (MB): peak = 3645.355 ; gain = 1385.516 ; free physical = 289 ; free virtual = 4354
+Finished Handling Custom Attributes : Time (s): cpu = 00:02:18 ; elapsed = 00:02:47 . Memory (MB): peak = 3676.945 ; gain = 1384.516 ; free physical = 197 ; free virtual = 3469
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Nets
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Nets : Time (s): cpu = 00:02:21 ; elapsed = 00:02:38 . Memory (MB): peak = 3645.355 ; gain = 1385.516 ; free physical = 289 ; free virtual = 4354
+Finished Renaming Generated Nets : Time (s): cpu = 00:02:18 ; elapsed = 00:02:47 . Memory (MB): peak = 3676.945 ; gain = 1384.516 ; free physical = 197 ; free virtual = 3469
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Writing Synthesis Report
@@ -1628,56 +1636,56 @@ Report Cell Usage:
 |      |Cell      |Count |
 +------+----------+------+
 |1     |CARRY8    |   193|
-|2     |LUT1      |   101|
-|3     |LUT2      |  1575|
-|4     |LUT3      |  3270|
-|5     |LUT4      |  3049|
-|6     |LUT5      |  5755|
-|7     |LUT6      | 21560|
-|8     |MUXF7     |  3866|
-|9     |MUXF8     |  1324|
+|2     |LUT1      |    93|
+|3     |LUT2      |  1589|
+|4     |LUT3      |  3349|
+|5     |LUT4      |  2824|
+|6     |LUT5      |  5804|
+|7     |LUT6      | 21580|
+|8     |MUXF7     |  3850|
+|9     |MUXF8     |  1337|
 |10    |RAM256X1S |   256|
 |11    |RAM32M    |     3|
-|12    |RAM32M16  |   217|
+|12    |RAM32M16  |   211|
 |13    |RAM64M    |     6|
 |14    |RAM64M8   |   113|
 |15    |RAM64X1S  |    22|
 |16    |RAMB18E2  |     1|
 |17    |RAMB36E2  |    12|
-|19    |FDRE      | 14127|
-|20    |FDSE      |     9|
+|19    |FDRE      | 14133|
+|20    |FDSE      |    10|
 +------+----------+------+
 ---------------------------------------------------------------------------------
-Finished Writing Synthesis Report : Time (s): cpu = 00:02:21 ; elapsed = 00:02:38 . Memory (MB): peak = 3645.355 ; gain = 1385.516 ; free physical = 288 ; free virtual = 4354
+Finished Writing Synthesis Report : Time (s): cpu = 00:02:18 ; elapsed = 00:02:47 . Memory (MB): peak = 3676.945 ; gain = 1384.516 ; free physical = 197 ; free virtual = 3469
 ---------------------------------------------------------------------------------
 Synthesis finished with 0 errors, 0 critical warnings and 472 warnings.
-Synthesis Optimization Runtime : Time (s): cpu = 00:02:15 ; elapsed = 00:02:38 . Memory (MB): peak = 3645.355 ; gain = 1230.750 ; free physical = 10788 ; free virtual = 14944
-Synthesis Optimization Complete : Time (s): cpu = 00:02:23 ; elapsed = 00:02:45 . Memory (MB): peak = 3645.355 ; gain = 1385.516 ; free physical = 10799 ; free virtual = 14945
+Synthesis Optimization Runtime : Time (s): cpu = 00:03:43 ; elapsed = 00:02:45 . Memory (MB): peak = 3676.945 ; gain = 1225.750 ; free physical = 10099 ; free virtual = 14041
+Synthesis Optimization Complete : Time (s): cpu = 00:03:51 ; elapsed = 00:02:51 . Memory (MB): peak = 3676.945 ; gain = 1384.516 ; free physical = 10101 ; free virtual = 14032
 INFO: [Project 1-571] Translating synthesized netlist
-Netlist sorting complete. Time (s): cpu = 00:00:00.35 ; elapsed = 00:00:00.35 . Memory (MB): peak = 3645.355 ; gain = 0.000 ; free physical = 10790 ; free virtual = 14952
-INFO: [Netlist 29-17] Analyzing 6000 Unisim elements for replacement
+Netlist sorting complete. Time (s): cpu = 00:00:00.34 ; elapsed = 00:00:00.49 . Memory (MB): peak = 3676.945 ; gain = 0.000 ; free physical = 10055 ; free virtual = 14009
+INFO: [Netlist 29-17] Analyzing 5991 Unisim elements for replacement
 INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
 INFO: [Project 1-570] Preparing netlist for logic optimization
 Parsing XDC File [/home/hakam/Repos/ChaosCore/syn/constraints/constraints.xdc]
 Finished Parsing XDC File [/home/hakam/Repos/ChaosCore/syn/constraints/constraints.xdc]
 INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.01 . Memory (MB): peak = 3645.355 ; gain = 0.000 ; free physical = 10782 ; free virtual = 14970
+Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 3676.945 ; gain = 0.000 ; free physical = 10062 ; free virtual = 14027
 INFO: [Project 1-111] Unisim Transformation Summary:
-  A total of 617 instances were transformed.
+  A total of 611 instances were transformed.
   RAM256X1S => RAM256X1S (MUXF7(x2), MUXF8, RAMS64E(x4)): 256 instances
   RAM32M => RAM32M (RAMD32(x6), RAMS32(x2)): 3 instances
-  RAM32M16 => RAM32M16 (RAMD32(x14), RAMS32(x2)): 217 instances
+  RAM32M16 => RAM32M16 (RAMD32(x14), RAMS32(x2)): 211 instances
   RAM64M => RAM64M (RAMD64E(x4)): 6 instances
   RAM64M8 => RAM64M8 (RAMD64E(x8)): 113 instances
   RAM64X1S => RAM64X1S (RAMS64E): 22 instances
 
-Synth Design complete | Checksum: 8bc60c98
+Synth Design complete | Checksum: b970c14f
 INFO: [Common 17-83] Releasing license: Synthesis
-658 Infos, 338 Warnings, 0 Critical Warnings and 0 Errors encountered.
+660 Infos, 337 Warnings, 0 Critical Warnings and 0 Errors encountered.
 synth_design completed successfully
-synth_design: Time (s): cpu = 00:02:36 ; elapsed = 00:02:59 . Memory (MB): peak = 3645.355 ; gain = 2225.523 ; free physical = 10753 ; free virtual = 14950
-INFO: [Common 17-2834] synth_design peak Physical Memory [PSS] (MB): overall = 12328.689; main = 2631.451; forked = 10661.845
-INFO: [Common 17-2834] synth_design peak Virtual Memory [VSS] (MB): overall = 19251.672; main = 3641.441; forked = 15610.234
+synth_design: Time (s): cpu = 00:04:03 ; elapsed = 00:03:09 . Memory (MB): peak = 3676.945 ; gain = 2267.906 ; free physical = 9996 ; free virtual = 13984
+INFO: [Common 17-2834] synth_design peak Physical Memory [PSS] (MB): overall = 11802.697; main = 2357.688; forked = 10556.598
+INFO: [Common 17-2834] synth_design peak Virtual Memory [VSS] (MB): overall = 19268.824; main = 3673.031; forked = 15595.797
 # report_utilization -file utilization_synth.rpt -hierarchical -hierarchical_depth 10 -hierarchical_percentage
 # report_timing_summary -file timing_synth.rpt
 INFO: [Timing 38-35] Done setting XDC timing constraints.
@@ -1691,7 +1699,7 @@ WARNING: [Device 21-9073] RSS factor Speedmodel not found for intent code NODE_G
 WARNING: [Device 21-9073] RSS factor Speedmodel not found for intent code NODE_GLOBAL_LEAF
 WARNING: [Timing 38-242] The property HD.CLK_SRC of clock port "clock" is not set. In out-of-context mode, this prevents timing estimation for clock delay/skew
 Resolution: Set the HD.CLK_SRC property of the out-of-context port to the location of the clock buffer instance in the top-level design
-report_timing_summary: Time (s): cpu = 00:00:23 ; elapsed = 00:00:18 . Memory (MB): peak = 4281.543 ; gain = 636.188 ; free physical = 9854 ; free virtual = 14233
+report_timing_summary: Time (s): cpu = 00:00:23 ; elapsed = 00:00:18 . Memory (MB): peak = 4308.133 ; gain = 631.188 ; free physical = 9107 ; free virtual = 13298
 # opt_design
 Command: opt_design
 Attempting to get a license for feature 'Implementation' and/or device 'xczu3eg'
@@ -1703,112 +1711,112 @@ INFO: [DRC 23-27] Running DRC with 8 threads
 INFO: [Project 1-461] DRC finished with 0 Errors
 INFO: [Project 1-462] Please refer to the DRC report (report_drc) for more information.
 
-Time (s): cpu = 00:00:02 ; elapsed = 00:00:00.84 . Memory (MB): peak = 4345.574 ; gain = 64.031 ; free physical = 9835 ; free virtual = 14219
+Time (s): cpu = 00:00:02 ; elapsed = 00:00:00.81 . Memory (MB): peak = 4372.164 ; gain = 64.031 ; free physical = 9098 ; free virtual = 13294
 
 Starting Cache Timing Information Task
-Ending Cache Timing Information Task | Checksum: 15a51aa63
+Ending Cache Timing Information Task | Checksum: e9e9b916
 
-Time (s): cpu = 00:00:00.02 ; elapsed = 00:00:00.03 . Memory (MB): peak = 4345.574 ; gain = 0.000 ; free physical = 9835 ; free virtual = 14220
+Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.03 . Memory (MB): peak = 4372.164 ; gain = 0.000 ; free physical = 9098 ; free virtual = 13294
 
 Starting Logic Optimization Task
 
 Phase 1 Initialization
 
 Phase 1.1 Core Generation And Design Setup
-Phase 1.1 Core Generation And Design Setup | Checksum: 15a51aa63
+Phase 1.1 Core Generation And Design Setup | Checksum: e9e9b916
 
-Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 4345.574 ; gain = 0.000 ; free physical = 9830 ; free virtual = 14218
+Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 4372.164 ; gain = 0.000 ; free physical = 9097 ; free virtual = 13294
 
 Phase 1.2 Setup Constraints And Sort Netlist
-Phase 1.2 Setup Constraints And Sort Netlist | Checksum: 15a51aa63
+Phase 1.2 Setup Constraints And Sort Netlist | Checksum: e9e9b916
 
-Time (s): cpu = 00:00:00.02 ; elapsed = 00:00:00.02 . Memory (MB): peak = 4345.574 ; gain = 0.000 ; free physical = 9830 ; free virtual = 14218
-Phase 1 Initialization | Checksum: 15a51aa63
+Time (s): cpu = 00:00:00.02 ; elapsed = 00:00:00.02 . Memory (MB): peak = 4372.164 ; gain = 0.000 ; free physical = 9097 ; free virtual = 13294
+Phase 1 Initialization | Checksum: e9e9b916
 
-Time (s): cpu = 00:00:00.03 ; elapsed = 00:00:00.02 . Memory (MB): peak = 4345.574 ; gain = 0.000 ; free physical = 9830 ; free virtual = 14218
+Time (s): cpu = 00:00:00.02 ; elapsed = 00:00:00.02 . Memory (MB): peak = 4372.164 ; gain = 0.000 ; free physical = 9097 ; free virtual = 13294
 
 Phase 2 Timer Update And Timing Data Collection
 
 Phase 2.1 Timer Update
-Phase 2.1 Timer Update | Checksum: 15a51aa63
+Phase 2.1 Timer Update | Checksum: e9e9b916
 
-Time (s): cpu = 00:00:02 ; elapsed = 00:00:00.4 . Memory (MB): peak = 4345.574 ; gain = 0.000 ; free physical = 9830 ; free virtual = 14218
+Time (s): cpu = 00:00:02 ; elapsed = 00:00:00.39 . Memory (MB): peak = 4372.164 ; gain = 0.000 ; free physical = 9097 ; free virtual = 13294
 
 Phase 2.2 Timing Data Collection
-Phase 2.2 Timing Data Collection | Checksum: 15a51aa63
+Phase 2.2 Timing Data Collection | Checksum: e9e9b916
 
-Time (s): cpu = 00:00:02 ; elapsed = 00:00:00.47 . Memory (MB): peak = 4345.574 ; gain = 0.000 ; free physical = 9830 ; free virtual = 14218
-Phase 2 Timer Update And Timing Data Collection | Checksum: 15a51aa63
+Time (s): cpu = 00:00:02 ; elapsed = 00:00:00.47 . Memory (MB): peak = 4372.164 ; gain = 0.000 ; free physical = 9097 ; free virtual = 13294
+Phase 2 Timer Update And Timing Data Collection | Checksum: e9e9b916
 
-Time (s): cpu = 00:00:02 ; elapsed = 00:00:00.47 . Memory (MB): peak = 4345.574 ; gain = 0.000 ; free physical = 9830 ; free virtual = 14218
+Time (s): cpu = 00:00:02 ; elapsed = 00:00:00.47 . Memory (MB): peak = 4372.164 ; gain = 0.000 ; free physical = 9097 ; free virtual = 13294
 
 Phase 3 Retarget
 INFO: [Opt 31-1834] Total Chains To Be Transformed Were: 0 AND Number of Transformed insts Created are: 0
-INFO: [Opt 31-1566] Pulled 24 inverters resulting in an inversion of 444 pins
+INFO: [Opt 31-1566] Pulled 12 inverters resulting in an inversion of 207 pins
 INFO: [Opt 31-138] Pushed 1 inverter(s) to 3 load pin(s).
 INFO: [Opt 31-49] Retargeted 0 cell(s).
-Phase 3 Retarget | Checksum: a0f91f91
+Phase 3 Retarget | Checksum: 162b8bed9
 
-Time (s): cpu = 00:00:02 ; elapsed = 00:00:00.95 . Memory (MB): peak = 4345.574 ; gain = 0.000 ; free physical = 9830 ; free virtual = 14219
-Retarget | Checksum: a0f91f91
-INFO: [Opt 31-389] Phase Retarget created 36 cells and removed 88 cells
+Time (s): cpu = 00:00:02 ; elapsed = 00:00:00.94 . Memory (MB): peak = 4372.164 ; gain = 0.000 ; free physical = 9097 ; free virtual = 13294
+Retarget | Checksum: 162b8bed9
+INFO: [Opt 31-389] Phase Retarget created 36 cells and removed 76 cells
 
 Phase 4 Constant propagation
 INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
-Phase 4 Constant propagation | Checksum: 157dc5ffb
+Phase 4 Constant propagation | Checksum: e6e7d6ec
 
-Time (s): cpu = 00:00:03 ; elapsed = 00:00:01 . Memory (MB): peak = 4345.574 ; gain = 0.000 ; free physical = 9829 ; free virtual = 14218
-Constant propagation | Checksum: 157dc5ffb
+Time (s): cpu = 00:00:03 ; elapsed = 00:00:01 . Memory (MB): peak = 4372.164 ; gain = 0.000 ; free physical = 9097 ; free virtual = 13294
+Constant propagation | Checksum: e6e7d6ec
 INFO: [Opt 31-389] Phase Constant propagation created 4 cells and removed 7 cells
 
 Phase 5 Sweep
-Phase 5 Sweep | Checksum: 12fbf014c
+Phase 5 Sweep | Checksum: 17e9d485f
 
-Time (s): cpu = 00:00:03 ; elapsed = 00:00:02 . Memory (MB): peak = 4345.574 ; gain = 0.000 ; free physical = 9829 ; free virtual = 14218
-Sweep | Checksum: 12fbf014c
+Time (s): cpu = 00:00:03 ; elapsed = 00:00:02 . Memory (MB): peak = 4372.164 ; gain = 0.000 ; free physical = 9097 ; free virtual = 13294
+Sweep | Checksum: 17e9d485f
 INFO: [Opt 31-389] Phase Sweep created 0 cells and removed 0 cells
 
 Phase 6 BUFG optimization
 INFO: [Opt 31-1077] Phase BUFG optimization inserted 0 global clock buffer(s) for CLOCK_LOW_FANOUT.
-Phase 6 BUFG optimization | Checksum: 12fbf014c
+Phase 6 BUFG optimization | Checksum: 17e9d485f
 
-Time (s): cpu = 00:00:03 ; elapsed = 00:00:02 . Memory (MB): peak = 4345.574 ; gain = 0.000 ; free physical = 9829 ; free virtual = 14219
-BUFG optimization | Checksum: 12fbf014c
+Time (s): cpu = 00:00:03 ; elapsed = 00:00:02 . Memory (MB): peak = 4372.164 ; gain = 0.000 ; free physical = 9097 ; free virtual = 13294
+BUFG optimization | Checksum: 17e9d485f
 INFO: [Opt 31-662] Phase BUFG optimization created 0 cells of which 0 are BUFGs and removed 0 cells.
 
 Phase 7 Shift Register Optimization
 INFO: [Opt 31-1064] SRL Remap converted 0 SRLs to 0 registers and converted 0 registers of register chains to 0 SRLs
-Phase 7 Shift Register Optimization | Checksum: 12fbf014c
+Phase 7 Shift Register Optimization | Checksum: 17e9d485f
 
-Time (s): cpu = 00:00:03 ; elapsed = 00:00:02 . Memory (MB): peak = 4345.574 ; gain = 0.000 ; free physical = 9829 ; free virtual = 14219
-Shift Register Optimization | Checksum: 12fbf014c
+Time (s): cpu = 00:00:03 ; elapsed = 00:00:02 . Memory (MB): peak = 4372.164 ; gain = 0.000 ; free physical = 9097 ; free virtual = 13294
+Shift Register Optimization | Checksum: 17e9d485f
 INFO: [Opt 31-389] Phase Shift Register Optimization created 0 cells and removed 0 cells
 
 Phase 8 Post Processing Netlist
-Phase 8 Post Processing Netlist | Checksum: 12fbf014c
+Phase 8 Post Processing Netlist | Checksum: 17e9d485f
 
-Time (s): cpu = 00:00:03 ; elapsed = 00:00:02 . Memory (MB): peak = 4345.574 ; gain = 0.000 ; free physical = 9829 ; free virtual = 14219
-Post Processing Netlist | Checksum: 12fbf014c
+Time (s): cpu = 00:00:03 ; elapsed = 00:00:02 . Memory (MB): peak = 4372.164 ; gain = 0.000 ; free physical = 9097 ; free virtual = 13294
+Post Processing Netlist | Checksum: 17e9d485f
 INFO: [Opt 31-389] Phase Post Processing Netlist created 0 cells and removed 0 cells
 
 Phase 9 Finalization
 
 Phase 9.1 Finalizing Design Cores and Updating Shapes
-Phase 9.1 Finalizing Design Cores and Updating Shapes | Checksum: 7d6b3acc
+Phase 9.1 Finalizing Design Cores and Updating Shapes | Checksum: a0cf162f
 
-Time (s): cpu = 00:00:04 ; elapsed = 00:00:02 . Memory (MB): peak = 4345.574 ; gain = 0.000 ; free physical = 9829 ; free virtual = 14219
+Time (s): cpu = 00:00:04 ; elapsed = 00:00:02 . Memory (MB): peak = 4372.164 ; gain = 0.000 ; free physical = 9097 ; free virtual = 13294
 
 Phase 9.2 Verifying Netlist Connectivity
 
 Starting Connectivity Check Task
 
-Time (s): cpu = 00:00:00.06 ; elapsed = 00:00:00.06 . Memory (MB): peak = 4345.574 ; gain = 0.000 ; free physical = 9829 ; free virtual = 14219
-Phase 9.2 Verifying Netlist Connectivity | Checksum: 7d6b3acc
+Time (s): cpu = 00:00:00.06 ; elapsed = 00:00:00.06 . Memory (MB): peak = 4372.164 ; gain = 0.000 ; free physical = 9097 ; free virtual = 13294
+Phase 9.2 Verifying Netlist Connectivity | Checksum: a0cf162f
 
-Time (s): cpu = 00:00:04 ; elapsed = 00:00:02 . Memory (MB): peak = 4345.574 ; gain = 0.000 ; free physical = 9829 ; free virtual = 14219
-Phase 9 Finalization | Checksum: 7d6b3acc
+Time (s): cpu = 00:00:04 ; elapsed = 00:00:02 . Memory (MB): peak = 4372.164 ; gain = 0.000 ; free physical = 9097 ; free virtual = 13294
+Phase 9 Finalization | Checksum: a0cf162f
 
-Time (s): cpu = 00:00:04 ; elapsed = 00:00:02 . Memory (MB): peak = 4345.574 ; gain = 0.000 ; free physical = 9829 ; free virtual = 14219
+Time (s): cpu = 00:00:04 ; elapsed = 00:00:02 . Memory (MB): peak = 4372.164 ; gain = 0.000 ; free physical = 9097 ; free virtual = 13294
 Opt_design Change Summary
 =========================
 
@@ -1816,7 +1824,7 @@ Opt_design Change Summary
 -------------------------------------------------------------------------------------------------------------------------
 |  Phase                        |  #Cells created  |  #Cells Removed  |  #Constrained objects preventing optimizations  |
 -------------------------------------------------------------------------------------------------------------------------
-|  Retarget                     |              36  |              88  |                                              0  |
+|  Retarget                     |              36  |              76  |                                              0  |
 |  Constant propagation         |               4  |               7  |                                              0  |
 |  Sweep                        |               0  |               0  |                                              0  |
 |  BUFG optimization            |               0  |               0  |                                              0  |
@@ -1825,9 +1833,9 @@ Opt_design Change Summary
 -------------------------------------------------------------------------------------------------------------------------
 
 
-Ending Logic Optimization Task | Checksum: 7d6b3acc
+Ending Logic Optimization Task | Checksum: a0cf162f
 
-Time (s): cpu = 00:00:04 ; elapsed = 00:00:02 . Memory (MB): peak = 4345.574 ; gain = 0.000 ; free physical = 9829 ; free virtual = 14219
+Time (s): cpu = 00:00:04 ; elapsed = 00:00:02 . Memory (MB): peak = 4372.164 ; gain = 0.000 ; free physical = 9097 ; free virtual = 13294
 
 Starting Power Optimization Task
 INFO: [Pwropt 34-132] Skipping clock gating for clocks with a period < 2.00 ns.
@@ -1843,33 +1851,33 @@ Starting PowerOpt Patch Enables Task
 INFO: [Pwropt 34-162] WRITE_MODE attribute of 0 BRAM(s) out of a total of 13 has been updated to save power. Run report_power_opt to get a complete listing of the BRAMs updated.
 INFO: [Pwropt 34-201] Structural ODC has moved 10 WE to EN ports
 Number of BRAM Ports augmented: 3 newly gated: 10 Total Ports: 26
-Ending PowerOpt Patch Enables Task | Checksum: 1f4ecb8ab
+Ending PowerOpt Patch Enables Task | Checksum: 12587ef85
 
-Time (s): cpu = 00:00:00.16 ; elapsed = 00:00:00.13 . Memory (MB): peak = 4417.609 ; gain = 0.000 ; free physical = 9818 ; free virtual = 14225
-Ending Power Optimization Task | Checksum: 1f4ecb8ab
+Time (s): cpu = 00:00:00.16 ; elapsed = 00:00:00.13 . Memory (MB): peak = 4444.199 ; gain = 0.000 ; free physical = 9086 ; free virtual = 13295
+Ending Power Optimization Task | Checksum: 12587ef85
 
-Time (s): cpu = 00:00:11 ; elapsed = 00:00:04 . Memory (MB): peak = 4417.609 ; gain = 72.035 ; free physical = 9818 ; free virtual = 14225
+Time (s): cpu = 00:00:10 ; elapsed = 00:00:03 . Memory (MB): peak = 4444.199 ; gain = 72.035 ; free physical = 9086 ; free virtual = 13295
 
 Starting Final Cleanup Task
 
 Starting Logic Optimization Task
 INFO: [Timing 38-35] Done setting XDC timing constraints.
-Ending Logic Optimization Task | Checksum: 6e3c4e83
+Ending Logic Optimization Task | Checksum: 137a1bb52
 
-Time (s): cpu = 00:00:05 ; elapsed = 00:00:02 . Memory (MB): peak = 4417.609 ; gain = 0.000 ; free physical = 9814 ; free virtual = 14222
-Ending Final Cleanup Task | Checksum: 6e3c4e83
+Time (s): cpu = 00:00:05 ; elapsed = 00:00:02 . Memory (MB): peak = 4444.199 ; gain = 0.000 ; free physical = 9086 ; free virtual = 13298
+Ending Final Cleanup Task | Checksum: 137a1bb52
 
-Time (s): cpu = 00:00:06 ; elapsed = 00:00:03 . Memory (MB): peak = 4417.609 ; gain = 0.000 ; free physical = 9814 ; free virtual = 14222
+Time (s): cpu = 00:00:06 ; elapsed = 00:00:03 . Memory (MB): peak = 4444.199 ; gain = 0.000 ; free physical = 9086 ; free virtual = 13298
 
 Starting Netlist Obfuscation Task
-Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 4417.609 ; gain = 0.000 ; free physical = 9814 ; free virtual = 14222
-Ending Netlist Obfuscation Task | Checksum: 6e3c4e83
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.01 . Memory (MB): peak = 4444.199 ; gain = 0.000 ; free physical = 9086 ; free virtual = 13298
+Ending Netlist Obfuscation Task | Checksum: 137a1bb52
 
-Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 4417.609 ; gain = 0.000 ; free physical = 9814 ; free virtual = 14222
+Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 4444.199 ; gain = 0.000 ; free physical = 9086 ; free virtual = 13298
 INFO: [Common 17-83] Releasing license: Implementation
 25 Infos, 0 Warnings, 0 Critical Warnings and 0 Errors encountered.
 opt_design completed successfully
-opt_design: Time (s): cpu = 00:00:24 ; elapsed = 00:00:12 . Memory (MB): peak = 4417.609 ; gain = 136.066 ; free physical = 9814 ; free virtual = 14222
+opt_design: Time (s): cpu = 00:00:23 ; elapsed = 00:00:11 . Memory (MB): peak = 4444.199 ; gain = 136.066 ; free physical = 9086 ; free virtual = 13298
 # place_design
 Command: place_design
 Attempting to get a license for feature 'Implementation' and/or device 'xczu3eg'
@@ -1889,30 +1897,30 @@ Starting Placer Task
 Phase 1 Placer Initialization
 
 Phase 1.1 Placer Initialization Netlist Sorting
-Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 4417.609 ; gain = 0.000 ; free physical = 9816 ; free virtual = 14231
-Phase 1.1 Placer Initialization Netlist Sorting | Checksum: 3fa58cf9
+Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 4444.199 ; gain = 0.000 ; free physical = 9082 ; free virtual = 13300
+Phase 1.1 Placer Initialization Netlist Sorting | Checksum: ad6ea13d
 
-Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.02 . Memory (MB): peak = 4417.609 ; gain = 0.000 ; free physical = 9816 ; free virtual = 14231
-Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 4417.609 ; gain = 0.000 ; free physical = 9816 ; free virtual = 14231
+Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.02 . Memory (MB): peak = 4444.199 ; gain = 0.000 ; free physical = 9082 ; free virtual = 13300
+Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 4444.199 ; gain = 0.000 ; free physical = 9082 ; free virtual = 13300
 
 Phase 1.2 IO Placement/ Clock Placement/ Build Placer Device
 INFO: [Timing 38-35] Done setting XDC timing constraints.
-Phase 1.2 IO Placement/ Clock Placement/ Build Placer Device | Checksum: 114cbc148
+Phase 1.2 IO Placement/ Clock Placement/ Build Placer Device | Checksum: 38b854d1
 
-Time (s): cpu = 00:00:05 ; elapsed = 00:00:02 . Memory (MB): peak = 4417.609 ; gain = 0.000 ; free physical = 9815 ; free virtual = 14233
+Time (s): cpu = 00:00:05 ; elapsed = 00:00:02 . Memory (MB): peak = 4444.199 ; gain = 0.000 ; free physical = 9081 ; free virtual = 13300
 
 Phase 1.3 Build Placer Netlist Model
-Phase 1.3 Build Placer Netlist Model | Checksum: 138f3c2f8
+Phase 1.3 Build Placer Netlist Model | Checksum: 130dfbf54
 
-Time (s): cpu = 00:00:15 ; elapsed = 00:00:06 . Memory (MB): peak = 4417.609 ; gain = 0.000 ; free physical = 9803 ; free virtual = 14227
+Time (s): cpu = 00:00:15 ; elapsed = 00:00:06 . Memory (MB): peak = 4444.199 ; gain = 0.000 ; free physical = 9074 ; free virtual = 13295
 
 Phase 1.4 Constrain Clocks/Macros
-Phase 1.4 Constrain Clocks/Macros | Checksum: 138f3c2f8
+Phase 1.4 Constrain Clocks/Macros | Checksum: 130dfbf54
 
-Time (s): cpu = 00:00:15 ; elapsed = 00:00:06 . Memory (MB): peak = 4417.609 ; gain = 0.000 ; free physical = 9810 ; free virtual = 14234
-Phase 1 Placer Initialization | Checksum: 138f3c2f8
+Time (s): cpu = 00:00:15 ; elapsed = 00:00:06 . Memory (MB): peak = 4444.199 ; gain = 0.000 ; free physical = 9074 ; free virtual = 13296
+Phase 1 Placer Initialization | Checksum: 130dfbf54
 
-Time (s): cpu = 00:00:15 ; elapsed = 00:00:07 . Memory (MB): peak = 4417.609 ; gain = 0.000 ; free physical = 9809 ; free virtual = 14234
+Time (s): cpu = 00:00:15 ; elapsed = 00:00:06 . Memory (MB): peak = 4444.199 ; gain = 0.000 ; free physical = 9074 ; free virtual = 13296
 
 Phase 2 Global Placement
 
@@ -1921,70 +1929,62 @@ Phase 2.1 Floorplanning
 Phase 2.1.1 Partition Driven Placement
 
 Phase 2.1.1.1 PBP: Partition Driven Placement
-Phase 2.1.1.1 PBP: Partition Driven Placement | Checksum: 1e310a339
+Phase 2.1.1.1 PBP: Partition Driven Placement | Checksum: f735d720
 
-Time (s): cpu = 00:00:38 ; elapsed = 00:00:15 . Memory (MB): peak = 4417.609 ; gain = 0.000 ; free physical = 9806 ; free virtual = 14234
+Time (s): cpu = 00:00:37 ; elapsed = 00:00:15 . Memory (MB): peak = 4444.199 ; gain = 0.000 ; free physical = 9059 ; free virtual = 13290
 
 Phase 2.1.1.2 PBP: Clock Region Placement
 INFO: [Place 30-3164] Check ILP status : ILP-based clock placer is skipped.
-Phase 2.1.1.2 PBP: Clock Region Placement | Checksum: 1e310a339
+Phase 2.1.1.2 PBP: Clock Region Placement | Checksum: f735d720
 
-Time (s): cpu = 00:00:38 ; elapsed = 00:00:15 . Memory (MB): peak = 4417.609 ; gain = 0.000 ; free physical = 9805 ; free virtual = 14233
+Time (s): cpu = 00:00:38 ; elapsed = 00:00:15 . Memory (MB): peak = 4444.199 ; gain = 0.000 ; free physical = 9059 ; free virtual = 13290
 
 Phase 2.1.1.3 PBP: Compute Congestion
-Phase 2.1.1.3 PBP: Compute Congestion | Checksum: 1e310a339
+Phase 2.1.1.3 PBP: Compute Congestion | Checksum: f735d720
 
-Time (s): cpu = 00:00:48 ; elapsed = 00:00:18 . Memory (MB): peak = 4627.586 ; gain = 209.977 ; free physical = 9045 ; free virtual = 13903
+Time (s): cpu = 00:00:47 ; elapsed = 00:00:17 . Memory (MB): peak = 4658.176 ; gain = 213.977 ; free physical = 8308 ; free virtual = 12968
 
 Phase 2.1.1.4 PBP: UpdateTiming
-Phase 2.1.1.4 PBP: UpdateTiming | Checksum: 17111defd
+Phase 2.1.1.4 PBP: UpdateTiming | Checksum: 764232c3
 
-Time (s): cpu = 00:00:50 ; elapsed = 00:00:18 . Memory (MB): peak = 4659.602 ; gain = 241.992 ; free physical = 9045 ; free virtual = 13903
+Time (s): cpu = 00:00:49 ; elapsed = 00:00:18 . Memory (MB): peak = 4690.191 ; gain = 245.992 ; free physical = 8308 ; free virtual = 12968
 
 Phase 2.1.1.5 PBP: Add part constraints
-Phase 2.1.1.5 PBP: Add part constraints | Checksum: 17111defd
+Phase 2.1.1.5 PBP: Add part constraints | Checksum: 764232c3
 
-Time (s): cpu = 00:00:50 ; elapsed = 00:00:18 . Memory (MB): peak = 4659.602 ; gain = 241.992 ; free physical = 9045 ; free virtual = 13903
-Phase 2.1.1 Partition Driven Placement | Checksum: 17111defd
+Time (s): cpu = 00:00:49 ; elapsed = 00:00:18 . Memory (MB): peak = 4690.191 ; gain = 245.992 ; free physical = 8308 ; free virtual = 12968
+Phase 2.1.1 Partition Driven Placement | Checksum: 764232c3
 
-Time (s): cpu = 00:00:50 ; elapsed = 00:00:18 . Memory (MB): peak = 4659.602 ; gain = 241.992 ; free physical = 9045 ; free virtual = 13903
-Phase 2.1 Floorplanning | Checksum: 17111defd
+Time (s): cpu = 00:00:49 ; elapsed = 00:00:18 . Memory (MB): peak = 4690.191 ; gain = 245.992 ; free physical = 8308 ; free virtual = 12968
+Phase 2.1 Floorplanning | Checksum: 764232c3
 
-Time (s): cpu = 00:00:50 ; elapsed = 00:00:18 . Memory (MB): peak = 4659.602 ; gain = 241.992 ; free physical = 9045 ; free virtual = 13903
+Time (s): cpu = 00:00:49 ; elapsed = 00:00:18 . Memory (MB): peak = 4690.191 ; gain = 245.992 ; free physical = 8308 ; free virtual = 12968
 
 Phase 2.2 Update Timing before SLR Path Opt
-Phase 2.2 Update Timing before SLR Path Opt | Checksum: 17111defd
+Phase 2.2 Update Timing before SLR Path Opt | Checksum: 764232c3
 
-Time (s): cpu = 00:00:50 ; elapsed = 00:00:18 . Memory (MB): peak = 4659.602 ; gain = 241.992 ; free physical = 9045 ; free virtual = 13903
+Time (s): cpu = 00:00:49 ; elapsed = 00:00:18 . Memory (MB): peak = 4690.191 ; gain = 245.992 ; free physical = 8308 ; free virtual = 12968
 
 Phase 2.3 Post-Processing in Floorplanning
-Phase 2.3 Post-Processing in Floorplanning | Checksum: 1ff6195dd
+Phase 2.3 Post-Processing in Floorplanning | Checksum: 55dbb463
 
-Time (s): cpu = 00:00:50 ; elapsed = 00:00:19 . Memory (MB): peak = 4659.602 ; gain = 241.992 ; free physical = 9045 ; free virtual = 13903
+Time (s): cpu = 00:00:49 ; elapsed = 00:00:18 . Memory (MB): peak = 4690.191 ; gain = 245.992 ; free physical = 8308 ; free virtual = 12968
 
 Phase 2.4 Global Placement Core
 
 Phase 2.4.1 UpdateTiming Before Physical Synthesis
-Phase 2.4.1 UpdateTiming Before Physical Synthesis | Checksum: 1f65dde98
+Phase 2.4.1 UpdateTiming Before Physical Synthesis | Checksum: 113cb8017
 
-Time (s): cpu = 00:02:40 ; elapsed = 00:00:49 . Memory (MB): peak = 4753.602 ; gain = 335.992 ; free physical = 8941 ; free virtual = 13818
+Time (s): cpu = 00:02:53 ; elapsed = 00:00:52 . Memory (MB): peak = 4783.191 ; gain = 338.992 ; free physical = 8219 ; free virtual = 12893
 
 Phase 2.4.2 Physical Synthesis In Placer
-INFO: [Physopt 32-1035] Found 902 LUTNM shape to break, 593 LUT instances to create LUTNM shape
-INFO: [Physopt 32-1044] Break lutnm for timing: one critical 301, two critical 601, total 902, new lutff created 20
-INFO: [Physopt 32-1138] End 1 Pass. Optimized 1148 nets or LUTs. Breaked 902 LUTs, combined 246 existing LUTs and moved 0 existing LUT
-INFO: [Physopt 32-1030] Pass 1. Identified 68 candidate driver sets for equivalent driver rewiring.
-INFO: [Physopt 32-661] Optimized 30 nets.  Re-placed 134 instances.
-INFO: [Physopt 32-775] End 1 Pass. Optimized 30 nets or cells. Created 0 new cell, deleted 20 existing cells and moved 134 existing cells
-Netlist sorting complete. Time (s): cpu = 00:00:00.18 ; elapsed = 00:00:00.17 . Memory (MB): peak = 4753.602 ; gain = 0.000 ; free physical = 8936 ; free virtual = 13821
-INFO: [Physopt 32-1132] Very high fanout net 'ChaosCore_tile/data_cache/data_memories_31/ram_ext/A[0]' is not considered as a candidate in VHFN optimzation. The fanout considered for this optimization is changed from 1024 to 257 due to a timing constraint that prevent optimization on all of the loads. To force replication, set the FORCE_MAX_FANOUT property on the net to a number less than 257.
-INFO: [Physopt 32-1132] Very high fanout net 'ChaosCore_tile/data_cache/data_memories_31/ram_ext/A[5]' is not considered as a candidate in VHFN optimzation. The fanout considered for this optimization is changed from 1024 to 257 due to a timing constraint that prevent optimization on all of the loads. To force replication, set the FORCE_MAX_FANOUT property on the net to a number less than 257.
-INFO: [Physopt 32-1132] Very high fanout net 'ChaosCore_tile/data_cache/data_memories_31/ram_ext/A[4]' is not considered as a candidate in VHFN optimzation. The fanout considered for this optimization is changed from 1024 to 257 due to a timing constraint that prevent optimization on all of the loads. To force replication, set the FORCE_MAX_FANOUT property on the net to a number less than 257.
-INFO: [Physopt 32-1132] Very high fanout net 'ChaosCore_tile/data_cache/data_memories_31/ram_ext/A[3]' is not considered as a candidate in VHFN optimzation. The fanout considered for this optimization is changed from 1024 to 257 due to a timing constraint that prevent optimization on all of the loads. To force replication, set the FORCE_MAX_FANOUT property on the net to a number less than 257.
-INFO: [Physopt 32-1132] Very high fanout net 'ChaosCore_tile/data_cache/data_memories_31/ram_ext/A[2]' is not considered as a candidate in VHFN optimzation. The fanout considered for this optimization is changed from 1024 to 257 due to a timing constraint that prevent optimization on all of the loads. To force replication, set the FORCE_MAX_FANOUT property on the net to a number less than 257.
-INFO: [Physopt 32-1132] Very high fanout net 'ChaosCore_tile/data_cache/data_memories_31/ram_ext/A[1]' is not considered as a candidate in VHFN optimzation. The fanout considered for this optimization is changed from 1024 to 257 due to a timing constraint that prevent optimization on all of the loads. To force replication, set the FORCE_MAX_FANOUT property on the net to a number less than 257.
-INFO: [Physopt 32-1132] Very high fanout net 'ChaosCore_tile/data_cache/tag_memories_0/ram_ext/A[0]' is not considered as a candidate in VHFN optimzation. The fanout considered for this optimization is changed from 1536 to 257 due to a timing constraint that prevent optimization on all of the loads. To force replication, set the FORCE_MAX_FANOUT property on the net to a number less than 257.
-INFO: [Physopt 32-1132] Very high fanout net 'ChaosCore_tile/data_cache/tag_memories_1/ram_ext/A[0]' is not considered as a candidate in VHFN optimzation. The fanout considered for this optimization is changed from 1280 to 257 due to a timing constraint that prevent optimization on all of the loads. To force replication, set the FORCE_MAX_FANOUT property on the net to a number less than 257.
+INFO: [Physopt 32-1035] Found 890 LUTNM shape to break, 654 LUT instances to create LUTNM shape
+INFO: [Physopt 32-1044] Break lutnm for timing: one critical 256, two critical 634, total 890, new lutff created 22
+INFO: [Physopt 32-1138] End 1 Pass. Optimized 1163 nets or LUTs. Breaked 890 LUTs, combined 273 existing LUTs and moved 0 existing LUT
+INFO: [Physopt 32-1030] Pass 1. Identified 78 candidate driver sets for equivalent driver rewiring.
+INFO: [Physopt 32-661] Optimized 22 nets.  Re-placed 134 instances.
+INFO: [Physopt 32-775] End 1 Pass. Optimized 22 nets or cells. Created 0 new cell, deleted 7 existing cells and moved 134 existing cells
+Netlist sorting complete. Time (s): cpu = 00:00:00.18 ; elapsed = 00:00:00.18 . Memory (MB): peak = 4783.191 ; gain = 0.000 ; free physical = 8205 ; free virtual = 12883
 INFO: [Physopt 32-65] No nets found for high-fanout optimization.
 INFO: [Physopt 32-232] Optimized 0 net. Created 0 new instance.
 INFO: [Physopt 32-775] End 1 Pass. Optimized 0 net or cell. Created 0 new cell, deleted 0 existing cell and moved 0 existing cell
@@ -2003,7 +2003,7 @@ INFO: [Physopt 32-846] No candidate cells for URAM register optimization found i
 INFO: [Physopt 32-775] End 1 Pass. Optimized 0 net or cell. Created 0 new cell, deleted 0 existing cell and moved 0 existing cell
 INFO: [Physopt 32-949] No candidate nets found for dynamic/static region interface net replication
 INFO: [Physopt 32-775] End 1 Pass. Optimized 0 net or cell. Created 0 new cell, deleted 0 existing cell and moved 0 existing cell
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.01 . Memory (MB): peak = 4753.602 ; gain = 0.000 ; free physical = 8932 ; free virtual = 13818
+Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00 . Memory (MB): peak = 4783.191 ; gain = 0.000 ; free physical = 8205 ; free virtual = 12883
 
 Summary of Physical Synthesis Optimizations
 ============================================
@@ -2012,9 +2012,9 @@ Summary of Physical Synthesis Optimizations
 -----------------------------------------------------------------------------------------------------------------------------------------------------------
 |  Optimization                                     |  Added Cells  |  Removed Cells  |  Optimized Cells/Nets  |  Dont Touch  |  Iterations  |  Elapsed   |
 -----------------------------------------------------------------------------------------------------------------------------------------------------------
-|  LUT Combining                                    |          902  |            246  |                  1148  |           0  |           1  |  00:00:01  |
+|  LUT Combining                                    |          890  |            273  |                  1163  |           0  |           1  |  00:00:01  |
 |  Retime                                           |            0  |              0  |                     0  |           0  |           1  |  00:00:00  |
-|  Equivalent Driver Rewiring                       |            0  |             20  |                    30  |           0  |           1  |  00:00:02  |
+|  Equivalent Driver Rewiring                       |            0  |              7  |                    22  |           0  |           1  |  00:00:02  |
 |  Very High Fanout                                 |            0  |              0  |                     0  |           0  |           1  |  00:00:00  |
 |  DSP Register                                     |            0  |              0  |                     0  |           0  |           1  |  00:00:00  |
 |  Shift Register to Pipeline                       |            0  |              0  |                     0  |           0  |           1  |  00:00:00  |
@@ -2022,308 +2022,87 @@ Summary of Physical Synthesis Optimizations
 |  BRAM Register                                    |            0  |              0  |                     0  |           0  |           1  |  00:00:00  |
 |  URAM Register                                    |            0  |              0  |                     0  |           0  |           1  |  00:00:00  |
 |  Dynamic/Static Region Interface Net Replication  |            0  |              0  |                     0  |           0  |           1  |  00:00:00  |
-|  Total                                            |          902  |            266  |                  1178  |           0  |          10  |  00:00:03  |
+|  Total                                            |          890  |            280  |                  1185  |           0  |          10  |  00:00:03  |
 -----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-Phase 2.4.2 Physical Synthesis In Placer | Checksum: 138ecbcc0
+Phase 2.4.2 Physical Synthesis In Placer | Checksum: 27c340aea
 
-Time (s): cpu = 00:02:47 ; elapsed = 00:00:53 . Memory (MB): peak = 4753.602 ; gain = 335.992 ; free physical = 8930 ; free virtual = 13819
-Phase 2.4 Global Placement Core | Checksum: 192432301
+Time (s): cpu = 00:03:00 ; elapsed = 00:00:57 . Memory (MB): peak = 4783.191 ; gain = 338.992 ; free physical = 8203 ; free virtual = 12882
+Phase 2.4 Global Placement Core | Checksum: 220084d41
 
-Time (s): cpu = 00:02:59 ; elapsed = 00:00:57 . Memory (MB): peak = 4753.602 ; gain = 335.992 ; free physical = 8929 ; free virtual = 13819
-Phase 2 Global Placement | Checksum: 192432301
+Time (s): cpu = 00:03:12 ; elapsed = 00:01:00 . Memory (MB): peak = 4783.191 ; gain = 338.992 ; free physical = 8194 ; free virtual = 12873
+Phase 2 Global Placement | Checksum: 220084d41
 
-Time (s): cpu = 00:02:59 ; elapsed = 00:00:57 . Memory (MB): peak = 4753.602 ; gain = 335.992 ; free physical = 8929 ; free virtual = 13819
+Time (s): cpu = 00:03:12 ; elapsed = 00:01:00 . Memory (MB): peak = 4783.191 ; gain = 338.992 ; free physical = 8194 ; free virtual = 12873
 
 Phase 3 Detail Placement
 
 Phase 3.1 Commit Multi Column Macros
-Phase 3.1 Commit Multi Column Macros | Checksum: 1aa9ac77e
+Phase 3.1 Commit Multi Column Macros | Checksum: 19371da6b
 
-Time (s): cpu = 00:03:12 ; elapsed = 00:01:00 . Memory (MB): peak = 4753.602 ; gain = 335.992 ; free physical = 8912 ; free virtual = 13814
+Time (s): cpu = 00:03:25 ; elapsed = 00:01:03 . Memory (MB): peak = 4783.191 ; gain = 338.992 ; free physical = 8194 ; free virtual = 12874
 
 Phase 3.2 Commit Most Macros & LUTRAMs
-Phase 3.2 Commit Most Macros & LUTRAMs | Checksum: 1b4ea950c
+Phase 3.2 Commit Most Macros & LUTRAMs | Checksum: 1273bb885
 
-Time (s): cpu = 00:03:17 ; elapsed = 00:01:02 . Memory (MB): peak = 4753.602 ; gain = 335.992 ; free physical = 8967 ; free virtual = 13929
+Time (s): cpu = 00:03:30 ; elapsed = 00:01:05 . Memory (MB): peak = 4783.191 ; gain = 338.992 ; free physical = 8193 ; free virtual = 12876
 
 Phase 3.3 Small Shape DP
 
 Phase 3.3.1 Small Shape Clustering
-Phase 3.3.1 Small Shape Clustering | Checksum: 155d0df18
+Phase 3.3.1 Small Shape Clustering | Checksum: 164238655
 
-Time (s): cpu = 00:04:03 ; elapsed = 00:01:13 . Memory (MB): peak = 4753.602 ; gain = 335.992 ; free physical = 8849 ; free virtual = 13887
+Time (s): cpu = 00:04:17 ; elapsed = 00:01:16 . Memory (MB): peak = 4783.191 ; gain = 338.992 ; free physical = 8159 ; free virtual = 12845
 
 Phase 3.3.2 Slice Area Swap
 
 Phase 3.3.2.1 Slice Area Swap Initial
-Phase 3.3.2.1 Slice Area Swap Initial | Checksum: 1a7a9eba7
+Phase 3.3.2.1 Slice Area Swap Initial | Checksum: 1fc51d691
 
-Time (s): cpu = 00:04:10 ; elapsed = 00:01:18 . Memory (MB): peak = 4753.602 ; gain = 335.992 ; free physical = 8403 ; free virtual = 13569
-Phase 3.3.2 Slice Area Swap | Checksum: 1a7a9eba7
+Time (s): cpu = 00:04:20 ; elapsed = 00:01:18 . Memory (MB): peak = 4783.191 ; gain = 338.992 ; free physical = 8180 ; free virtual = 12865
+Phase 3.3.2 Slice Area Swap | Checksum: 1fc51d691
 
-Time (s): cpu = 00:04:10 ; elapsed = 00:01:18 . Memory (MB): peak = 4753.602 ; gain = 335.992 ; free physical = 8395 ; free virtual = 13565
-Phase 3.3 Small Shape DP | Checksum: a3aeb79c
+Time (s): cpu = 00:04:20 ; elapsed = 00:01:18 . Memory (MB): peak = 4783.191 ; gain = 338.992 ; free physical = 8180 ; free virtual = 12865
+Phase 3.3 Small Shape DP | Checksum: 268df24f2
 
-Time (s): cpu = 00:04:17 ; elapsed = 00:01:21 . Memory (MB): peak = 4753.602 ; gain = 335.992 ; free physical = 8276 ; free virtual = 13465
+Time (s): cpu = 00:04:26 ; elapsed = 00:01:20 . Memory (MB): peak = 4783.191 ; gain = 338.992 ; free physical = 8186 ; free virtual = 12865
 
 Phase 3.4 Re-assign LUT pins
-Phase 3.4 Re-assign LUT pins | Checksum: 15b2e6890
+Phase 3.4 Re-assign LUT pins | Checksum: 23c97f863
 
-Time (s): cpu = 00:04:19 ; elapsed = 00:01:22 . Memory (MB): peak = 4753.602 ; gain = 335.992 ; free physical = 8288 ; free virtual = 13474
+Time (s): cpu = 00:04:27 ; elapsed = 00:01:22 . Memory (MB): peak = 4783.191 ; gain = 338.992 ; free physical = 8186 ; free virtual = 12865
 
 Phase 3.5 Pipeline Register Optimization
-Phase 3.5 Pipeline Register Optimization | Checksum: 1ab2bb174
+Phase 3.5 Pipeline Register Optimization | Checksum: 15e6b63e8
 
-Time (s): cpu = 00:04:19 ; elapsed = 00:01:22 . Memory (MB): peak = 4753.602 ; gain = 335.992 ; free physical = 8288 ; free virtual = 13474
+Time (s): cpu = 00:04:27 ; elapsed = 00:01:22 . Memory (MB): peak = 4783.191 ; gain = 338.992 ; free physical = 8186 ; free virtual = 12865
 
 Phase 3.6 Fast Optimization
-Phase 3.6 Fast Optimization | Checksum: 174475971
+Phase 3.6 Fast Optimization | Checksum: 1e79570f7
 
-Time (s): cpu = 00:04:41 ; elapsed = 00:01:29 . Memory (MB): peak = 4753.602 ; gain = 335.992 ; free physical = 8301 ; free virtual = 13499
-Phase 3 Detail Placement | Checksum: 174475971
+Time (s): cpu = 00:04:51 ; elapsed = 00:01:30 . Memory (MB): peak = 4783.191 ; gain = 338.992 ; free physical = 8160 ; free virtual = 12854
+Phase 3 Detail Placement | Checksum: 1e79570f7
 
-Time (s): cpu = 00:04:41 ; elapsed = 00:01:29 . Memory (MB): peak = 4753.602 ; gain = 335.992 ; free physical = 8301 ; free virtual = 13498
+Time (s): cpu = 00:04:51 ; elapsed = 00:01:30 . Memory (MB): peak = 4783.191 ; gain = 338.992 ; free physical = 8160 ; free virtual = 12854
 
 Phase 4 Post Placement Optimization and Clean-Up
 
 Phase 4.1 Post Commit Optimization
 INFO: [Timing 38-35] Done setting XDC timing constraints.
-
-Phase 4.1.1 Post Placement Optimization
-Post Placement Optimization Initialization | Checksum: 22d9df512
-
-Phase 4.1.1.1 BUFG Insertion
-
-Starting Physical Synthesis Task
-
-Phase 1 Physical Synthesis Initialization
-INFO: [Physopt 32-721] Multithreading enabled for phys_opt_design using a maximum of 8 CPUs
-INFO: [Physopt 32-619] Estimated Timing Summary | WNS=-1.195 | TNS=-466.170 |
-Phase 1 Physical Synthesis Initialization | Checksum: 1c26365da
-
-Time (s): cpu = 00:00:01 ; elapsed = 00:00:00.24 . Memory (MB): peak = 4753.602 ; gain = 0.000 ; free physical = 8343 ; free virtual = 13537
-INFO: [Place 46-56] BUFG insertion identified 0 candidate nets. Inserted BUFG: 0, Replicated BUFG Driver: 0, Skipped due to Placement/Routing Conflicts: 0, Skipped due to Timing Degradation: 0, Skipped due to netlist editing failed: 0.
-Ending Physical Synthesis Task | Checksum: 168c31ca4
-
-Time (s): cpu = 00:00:02 ; elapsed = 00:00:00.51 . Memory (MB): peak = 4753.602 ; gain = 0.000 ; free physical = 8343 ; free virtual = 13537
-Phase 4.1.1.1 BUFG Insertion | Checksum: 22d9df512
-
-Time (s): cpu = 00:05:07 ; elapsed = 00:01:37 . Memory (MB): peak = 4753.602 ; gain = 335.992 ; free physical = 8343 ; free virtual = 13537
-
-Phase 4.1.1.2 Post Placement Timing Optimization
-INFO: [Place 30-746] Post Placement Timing Summary WNS=-0.558. For the most accurate timing information please run report_timing.
-Phase 4.1.1.2 Post Placement Timing Optimization | Checksum: 13f6165c6
-
-Time (s): cpu = 00:05:35 ; elapsed = 00:02:03 . Memory (MB): peak = 4753.602 ; gain = 335.992 ; free physical = 8393 ; free virtual = 13593
-
-Time (s): cpu = 00:05:35 ; elapsed = 00:02:03 . Memory (MB): peak = 4753.602 ; gain = 335.992 ; free physical = 8393 ; free virtual = 13593
-Phase 4.1 Post Commit Optimization | Checksum: 13f6165c6
-
-Time (s): cpu = 00:05:35 ; elapsed = 00:02:03 . Memory (MB): peak = 4753.602 ; gain = 335.992 ; free physical = 8393 ; free virtual = 13593
-
-Phase 4.2 Post Placement Cleanup
-Phase 4.2 Post Placement Cleanup | Checksum: 13f6165c6
-
-Time (s): cpu = 00:05:47 ; elapsed = 00:02:07 . Memory (MB): peak = 4753.602 ; gain = 335.992 ; free physical = 8353 ; free virtual = 13552
-
-Phase 4.3 Placer Reporting
-
-Phase 4.3.1 Print Estimated Congestion
-INFO: [Place 30-612] Post-Placement Estimated Congestion 
- ________________________________________________________________________
-|           | Global Congestion | Long Congestion   | Short Congestion  |
-| Direction | Region Size       | Region Size       | Region Size       |
-|___________|___________________|___________________|___________________|
-|      North|                1x1|                1x1|                8x8|
-|___________|___________________|___________________|___________________|
-|      South|                2x2|                1x1|                4x4|
-|___________|___________________|___________________|___________________|
-|       East|                1x1|                1x1|                8x8|
-|___________|___________________|___________________|___________________|
-|       West|                1x1|                1x1|                8x8|
-|___________|___________________|___________________|___________________|
-
-Phase 4.3.1 Print Estimated Congestion | Checksum: 13f6165c6
-
-Time (s): cpu = 00:05:47 ; elapsed = 00:02:08 . Memory (MB): peak = 4753.602 ; gain = 335.992 ; free physical = 8353 ; free virtual = 13552
-Phase 4.3 Placer Reporting | Checksum: 13f6165c6
-
-Time (s): cpu = 00:05:47 ; elapsed = 00:02:08 . Memory (MB): peak = 4753.602 ; gain = 335.992 ; free physical = 8353 ; free virtual = 13552
-
-Phase 4.4 Final Placement Cleanup
-Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 4753.602 ; gain = 0.000 ; free physical = 8353 ; free virtual = 13552
-
-Time (s): cpu = 00:05:47 ; elapsed = 00:02:08 . Memory (MB): peak = 4753.602 ; gain = 335.992 ; free physical = 8353 ; free virtual = 13552
-Phase 4 Post Placement Optimization and Clean-Up | Checksum: fea53819
-
-Time (s): cpu = 00:05:47 ; elapsed = 00:02:08 . Memory (MB): peak = 4753.602 ; gain = 335.992 ; free physical = 8353 ; free virtual = 13552
-Ending Placer Task | Checksum: a75b9bd6
-
-Time (s): cpu = 00:05:47 ; elapsed = 00:02:08 . Memory (MB): peak = 4753.602 ; gain = 335.992 ; free physical = 8353 ; free virtual = 13552
-49 Infos, 0 Warnings, 0 Critical Warnings and 0 Errors encountered.
-place_design completed successfully
-place_design: Time (s): cpu = 00:05:53 ; elapsed = 00:02:10 . Memory (MB): peak = 4753.602 ; gain = 335.992 ; free physical = 8353 ; free virtual = 13552
-# route_design
-Command: route_design
-Attempting to get a license for feature 'Implementation' and/or device 'xczu3eg'
-INFO: [Common 17-349] Got license for feature 'Implementation' and/or device 'xczu3eg'
-Running DRC as a precondition to command route_design
-INFO: [DRC 23-27] Running DRC with 8 threads
-INFO: [Vivado_Tcl 4-198] DRC finished with 0 Errors
-INFO: [Vivado_Tcl 4-199] Please refer to the DRC report (report_drc) for more information.
-
-
-Starting Routing Task
-INFO: [Route 35-254] Multithreading enabled for route_design using a maximum of 8 CPUs
-
-Phase 1 Build RT Design
-Checksum: PlaceDB: 26e9dd6f ConstDB: 0 ShapeSum: 60df46a9 RouteDB: 1f9277be
-Nodegraph reading from file.  Time (s): cpu = 00:00:00.28 ; elapsed = 00:00:00.29 . Memory (MB): peak = 4770.602 ; gain = 0.000 ; free physical = 8347 ; free virtual = 13556
-WARNING: [Route 35-197] Clock port "clock" does not have an associated HD.CLK_SRC. Without this constraint, timing analysis may not be accurate and upstream checks cannot be done to ensure correct clock placement.
-WARNING: [Route 35-198] Port "reset" does not have an associated HD.PARTPIN_LOCS, which will prevent the partial routing of the signal "reset". Without this partial route, timing analysis to/from this port will not be accurate, and no routing information for this port can be exported.
-WARNING: [Route 35-198] Port "m_axi_wready" does not have an associated HD.PARTPIN_LOCS, which will prevent the partial routing of the signal "m_axi_wready". Without this partial route, timing analysis to/from this port will not be accurate, and no routing information for this port can be exported.
-WARNING: [Route 35-198] Port "m_axi_bvalid" does not have an associated HD.PARTPIN_LOCS, which will prevent the partial routing of the signal "m_axi_bvalid". Without this partial route, timing analysis to/from this port will not be accurate, and no routing information for this port can be exported.
-WARNING: [Route 35-198] Port "m_axi_arready" does not have an associated HD.PARTPIN_LOCS, which will prevent the partial routing of the signal "m_axi_arready". Without this partial route, timing analysis to/from this port will not be accurate, and no routing information for this port can be exported.
-WARNING: [Route 35-198] Port "m_axi_awready" does not have an associated HD.PARTPIN_LOCS, which will prevent the partial routing of the signal "m_axi_awready". Without this partial route, timing analysis to/from this port will not be accurate, and no routing information for this port can be exported.
-WARNING: [Route 35-198] Port "m_axi_rlast" does not have an associated HD.PARTPIN_LOCS, which will prevent the partial routing of the signal "m_axi_rlast". Without this partial route, timing analysis to/from this port will not be accurate, and no routing information for this port can be exported.
-WARNING: [Route 35-198] Port "m_axi_rvalid" does not have an associated HD.PARTPIN_LOCS, which will prevent the partial routing of the signal "m_axi_rvalid". Without this partial route, timing analysis to/from this port will not be accurate, and no routing information for this port can be exported.
-WARNING: [Route 35-198] Port "m_axi_rdata[16]" does not have an associated HD.PARTPIN_LOCS, which will prevent the partial routing of the signal "m_axi_rdata[16]". Without this partial route, timing analysis to/from this port will not be accurate, and no routing information for this port can be exported.
-WARNING: [Route 35-198] Port "m_axi_rdata[31]" does not have an associated HD.PARTPIN_LOCS, which will prevent the partial routing of the signal "m_axi_rdata[31]". Without this partial route, timing analysis to/from this port will not be accurate, and no routing information for this port can be exported.
-WARNING: [Route 35-198] Port "m_axi_rdata[21]" does not have an associated HD.PARTPIN_LOCS, which will prevent the partial routing of the signal "m_axi_rdata[21]". Without this partial route, timing analysis to/from this port will not be accurate, and no routing information for this port can be exported.
-WARNING: [Route 35-198] Port "m_axi_rdata[14]" does not have an associated HD.PARTPIN_LOCS, which will prevent the partial routing of the signal "m_axi_rdata[14]". Without this partial route, timing analysis to/from this port will not be accurate, and no routing information for this port can be exported.
-WARNING: [Route 35-198] Port "m_axi_rdata[28]" does not have an associated HD.PARTPIN_LOCS, which will prevent the partial routing of the signal "m_axi_rdata[28]". Without this partial route, timing analysis to/from this port will not be accurate, and no routing information for this port can be exported.
-WARNING: [Route 35-198] Port "m_axi_rdata[2]" does not have an associated HD.PARTPIN_LOCS, which will prevent the partial routing of the signal "m_axi_rdata[2]". Without this partial route, timing analysis to/from this port will not be accurate, and no routing information for this port can be exported.
-WARNING: [Route 35-198] Port "m_axi_rdata[27]" does not have an associated HD.PARTPIN_LOCS, which will prevent the partial routing of the signal "m_axi_rdata[27]". Without this partial route, timing analysis to/from this port will not be accurate, and no routing information for this port can be exported.
-WARNING: [Route 35-198] Port "m_axi_rdata[23]" does not have an associated HD.PARTPIN_LOCS, which will prevent the partial routing of the signal "m_axi_rdata[23]". Without this partial route, timing analysis to/from this port will not be accurate, and no routing information for this port can be exported.
-WARNING: [Route 35-198] Port "m_axi_rdata[26]" does not have an associated HD.PARTPIN_LOCS, which will prevent the partial routing of the signal "m_axi_rdata[26]". Without this partial route, timing analysis to/from this port will not be accurate, and no routing information for this port can be exported.
-WARNING: [Route 35-198] Port "m_axi_rdata[24]" does not have an associated HD.PARTPIN_LOCS, which will prevent the partial routing of the signal "m_axi_rdata[24]". Without this partial route, timing analysis to/from this port will not be accurate, and no routing information for this port can be exported.
-WARNING: [Route 35-198] Port "m_axi_rdata[12]" does not have an associated HD.PARTPIN_LOCS, which will prevent the partial routing of the signal "m_axi_rdata[12]". Without this partial route, timing analysis to/from this port will not be accurate, and no routing information for this port can be exported.
-WARNING: [Route 35-198] Port "m_axi_rdata[25]" does not have an associated HD.PARTPIN_LOCS, which will prevent the partial routing of the signal "m_axi_rdata[25]". Without this partial route, timing analysis to/from this port will not be accurate, and no routing information for this port can be exported.
-WARNING: [Route 35-198] Port "m_axi_rdata[13]" does not have an associated HD.PARTPIN_LOCS, which will prevent the partial routing of the signal "m_axi_rdata[13]". Without this partial route, timing analysis to/from this port will not be accurate, and no routing information for this port can be exported.
-WARNING: [Route 35-198] Port "m_axi_rdata[30]" does not have an associated HD.PARTPIN_LOCS, which will prevent the partial routing of the signal "m_axi_rdata[30]". Without this partial route, timing analysis to/from this port will not be accurate, and no routing information for this port can be exported.
-WARNING: [Route 35-198] Port "m_axi_rdata[22]" does not have an associated HD.PARTPIN_LOCS, which will prevent the partial routing of the signal "m_axi_rdata[22]". Without this partial route, timing analysis to/from this port will not be accurate, and no routing information for this port can be exported.
-WARNING: [Route 35-198] Port "m_axi_rdata[3]" does not have an associated HD.PARTPIN_LOCS, which will prevent the partial routing of the signal "m_axi_rdata[3]". Without this partial route, timing analysis to/from this port will not be accurate, and no routing information for this port can be exported.
-WARNING: [Route 35-198] Port "m_axi_rdata[29]" does not have an associated HD.PARTPIN_LOCS, which will prevent the partial routing of the signal "m_axi_rdata[29]". Without this partial route, timing analysis to/from this port will not be accurate, and no routing information for this port can be exported.
-WARNING: [Route 35-198] Port "m_axi_rdata[20]" does not have an associated HD.PARTPIN_LOCS, which will prevent the partial routing of the signal "m_axi_rdata[20]". Without this partial route, timing analysis to/from this port will not be accurate, and no routing information for this port can be exported.
-WARNING: [Route 35-198] Port "m_axi_rdata[11]" does not have an associated HD.PARTPIN_LOCS, which will prevent the partial routing of the signal "m_axi_rdata[11]". Without this partial route, timing analysis to/from this port will not be accurate, and no routing information for this port can be exported.
-WARNING: [Route 35-198] Port "m_axi_rdata[9]" does not have an associated HD.PARTPIN_LOCS, which will prevent the partial routing of the signal "m_axi_rdata[9]". Without this partial route, timing analysis to/from this port will not be accurate, and no routing information for this port can be exported.
-WARNING: [Route 35-198] Port "m_axi_rdata[8]" does not have an associated HD.PARTPIN_LOCS, which will prevent the partial routing of the signal "m_axi_rdata[8]". Without this partial route, timing analysis to/from this port will not be accurate, and no routing information for this port can be exported.
-WARNING: [Route 35-198] Port "m_axi_rdata[7]" does not have an associated HD.PARTPIN_LOCS, which will prevent the partial routing of the signal "m_axi_rdata[7]". Without this partial route, timing analysis to/from this port will not be accurate, and no routing information for this port can be exported.
-WARNING: [Route 35-198] Port "m_axi_rdata[19]" does not have an associated HD.PARTPIN_LOCS, which will prevent the partial routing of the signal "m_axi_rdata[19]". Without this partial route, timing analysis to/from this port will not be accurate, and no routing information for this port can be exported.
-WARNING: [Route 35-198] Port "m_axi_rdata[15]" does not have an associated HD.PARTPIN_LOCS, which will prevent the partial routing of the signal "m_axi_rdata[15]". Without this partial route, timing analysis to/from this port will not be accurate, and no routing information for this port can be exported.
-WARNING: [Route 35-198] Port "m_axi_rdata[18]" does not have an associated HD.PARTPIN_LOCS, which will prevent the partial routing of the signal "m_axi_rdata[18]". Without this partial route, timing analysis to/from this port will not be accurate, and no routing information for this port can be exported.
-WARNING: [Route 35-198] Port "m_axi_rdata[17]" does not have an associated HD.PARTPIN_LOCS, which will prevent the partial routing of the signal "m_axi_rdata[17]". Without this partial route, timing analysis to/from this port will not be accurate, and no routing information for this port can be exported.
-WARNING: [Route 35-198] Port "m_axi_rdata[10]" does not have an associated HD.PARTPIN_LOCS, which will prevent the partial routing of the signal "m_axi_rdata[10]". Without this partial route, timing analysis to/from this port will not be accurate, and no routing information for this port can be exported.
-WARNING: [Route 35-198] Port "m_axi_rdata[5]" does not have an associated HD.PARTPIN_LOCS, which will prevent the partial routing of the signal "m_axi_rdata[5]". Without this partial route, timing analysis to/from this port will not be accurate, and no routing information for this port can be exported.
-WARNING: [Route 35-198] Port "m_axi_rdata[0]" does not have an associated HD.PARTPIN_LOCS, which will prevent the partial routing of the signal "m_axi_rdata[0]". Without this partial route, timing analysis to/from this port will not be accurate, and no routing information for this port can be exported.
-WARNING: [Route 35-198] Port "m_axi_rdata[1]" does not have an associated HD.PARTPIN_LOCS, which will prevent the partial routing of the signal "m_axi_rdata[1]". Without this partial route, timing analysis to/from this port will not be accurate, and no routing information for this port can be exported.
-WARNING: [Route 35-198] Port "m_axi_rdata[6]" does not have an associated HD.PARTPIN_LOCS, which will prevent the partial routing of the signal "m_axi_rdata[6]". Without this partial route, timing analysis to/from this port will not be accurate, and no routing information for this port can be exported.
-WARNING: [Route 35-198] Port "m_axi_rdata[4]" does not have an associated HD.PARTPIN_LOCS, which will prevent the partial routing of the signal "m_axi_rdata[4]". Without this partial route, timing analysis to/from this port will not be accurate, and no routing information for this port can be exported.
-Post Restoration Checksum: NetGraph: d30e250b | NumContArr: 395ef5b2 | Constraints: c2a8fa9d | Timing: c2a8fa9d
-Phase 1 Build RT Design | Checksum: 291bf0ff7
-
-Time (s): cpu = 00:00:19 ; elapsed = 00:00:04 . Memory (MB): peak = 4770.602 ; gain = 0.000 ; free physical = 8347 ; free virtual = 13562
-
-Phase 2 Router Initialization
-
-Phase 2.1 Fix Topology Constraints
-Phase 2.1 Fix Topology Constraints | Checksum: 291bf0ff7
-
-Time (s): cpu = 00:00:19 ; elapsed = 00:00:04 . Memory (MB): peak = 4770.602 ; gain = 0.000 ; free physical = 8347 ; free virtual = 13563
-
-Phase 2.2 Pre Route Cleanup
-Phase 2.2 Pre Route Cleanup | Checksum: 291bf0ff7
-
-Time (s): cpu = 00:00:19 ; elapsed = 00:00:04 . Memory (MB): peak = 4770.602 ; gain = 0.000 ; free physical = 8347 ; free virtual = 13563
-
-Phase 2.3 Global Clock Net Routing
-Phase 2.3 Global Clock Net Routing | Checksum: 291bf0ff7
-
-Time (s): cpu = 00:00:21 ; elapsed = 00:00:04 . Memory (MB): peak = 4770.602 ; gain = 0.000 ; free physical = 8345 ; free virtual = 13563
-
-Phase 2.4 Update Timing
-Phase 2.4 Update Timing | Checksum: 1ebea6546
-
-Time (s): cpu = 00:00:29 ; elapsed = 00:00:06 . Memory (MB): peak = 4770.602 ; gain = 0.000 ; free physical = 8325 ; free virtual = 13546
-INFO: [Route 35-416] Intermediate Timing Summary | WNS=-0.224 | TNS=-5.025 | WHS=0.000  | THS=0.000  |
-
-
-Router Utilization Summary
-  Global Vertical Routing Utilization    = 0 %
-  Global Horizontal Routing Utilization  = 0 %
-  Routable Net Status*
-  *Does not include unroutable nets such as driverless and loadless.
-  Run report_route_status for detailed report.
-  Number of Failed Nets               = 40287
-    (Failed Nets is the sum of unrouted and partially routed nets)
-  Number of Unrouted Nets             = 23591
-  Number of Partially Routed Nets     = 16696
-  Number of Node Overlaps             = 0
-
-Phase 2 Router Initialization | Checksum: 264fc938f
-
-Time (s): cpu = 00:00:41 ; elapsed = 00:00:09 . Memory (MB): peak = 4770.602 ; gain = 0.000 ; free physical = 8321 ; free virtual = 13552
-
-Phase 3 Global Routing
-Phase 3 Global Routing | Checksum: 264fc938f
-
-Time (s): cpu = 00:00:41 ; elapsed = 00:00:09 . Memory (MB): peak = 4770.602 ; gain = 0.000 ; free physical = 8321 ; free virtual = 13550
-
-Phase 4 Initial Routing
-
-Phase 4.1 Initial Net Routing Pass
-Phase 4.1 Initial Net Routing Pass | Checksum: 15bc5df29
-
-Time (s): cpu = 00:01:16 ; elapsed = 00:00:20 . Memory (MB): peak = 4770.602 ; gain = 0.000 ; free physical = 8331 ; free virtual = 13560
-Phase 4 Initial Routing | Checksum: 28cb63e61
-
-Time (s): cpu = 00:01:18 ; elapsed = 00:00:20 . Memory (MB): peak = 4770.602 ; gain = 0.000 ; free physical = 8331 ; free virtual = 13561
-
-Phase 5 Rip-up And Reroute
-
-Phase 5.1 Global Iteration 0
- Number of Nodes with overlaps = 20822
- Number of Nodes with overlaps = 3222
- Number of Nodes with overlaps = 876
- Number of Nodes with overlaps = 320
- Number of Nodes with overlaps = 144
- Number of Nodes with overlaps = 72
- Number of Nodes with overlaps = 43
- Number of Nodes with overlaps = 25
- Number of Nodes with overlaps = 15
- Number of Nodes with overlaps = 11
- Number of Nodes with overlaps = 10
- Number of Nodes with overlaps = 6
- Number of Nodes with overlaps = 8
- Number of Nodes with overlaps = 7
- Number of Nodes with overlaps = 9
- Number of Nodes with overlaps = 4
- Number of Nodes with overlaps = 3
- Number of Nodes with overlaps = 3
- Number of Nodes with overlaps = 2
- Number of Nodes with overlaps = 2
-INFO: [Route 35-443] CLB routing congestion detected. Several CLBs have high routing utilization, which can impact timing closure. Congested CLBs and Nets are dumped in: iter_100_CongestedCLBsAndNets.txt
- Number of Nodes with overlaps = 1
- Number of Nodes with overlaps = 1
- Number of Nodes with overlaps = 2
- Number of Nodes with overlaps = 1
- Number of Nodes with overlaps = 0
 INFO: [Common 17-41] Interrupt caught. Command should exit soon.
-Phase 5.1 Global Iteration 0 | Checksum: 26a4ec2b3
+Phase 4.1 Post Commit Optimization | Checksum: 1c5d44a1c
 
-Time (s): cpu = 00:05:18 ; elapsed = 00:01:57 . Memory (MB): peak = 4770.602 ; gain = 0.000 ; free physical = 8270 ; free virtual = 13520
-Phase 5 Rip-up And Reroute | Checksum: 26a4ec2b3
+Time (s): cpu = 00:05:15 ; elapsed = 00:01:37 . Memory (MB): peak = 4783.191 ; gain = 338.992 ; free physical = 8181 ; free virtual = 12873
+Phase 4 Post Placement Optimization and Clean-Up | Checksum: 1c5d44a1c
 
-Time (s): cpu = 00:05:18 ; elapsed = 00:01:57 . Memory (MB): peak = 4770.602 ; gain = 0.000 ; free physical = 8270 ; free virtual = 13520
-Total Elapsed time in route_design: 117.14 secs
-Ending Routing Task | Checksum: a75b9bd6
+Time (s): cpu = 00:05:15 ; elapsed = 00:01:37 . Memory (MB): peak = 4783.191 ; gain = 338.992 ; free physical = 8181 ; free virtual = 12873
+INFO: [Place 30-491] Placement has been cancelled by the user.
+Ending Placer Task | Checksum: 1a5eee6d8
 
-Time (s): cpu = 00:05:18 ; elapsed = 00:01:57 . Memory (MB): peak = 4770.602 ; gain = 0.000 ; free physical = 8270 ; free virtual = 13521
-INFO: [Common 17-83] Releasing license: Implementation
-9 Infos, 40 Warnings, 0 Critical Warnings and 1 Errors encountered.
-route_design failed
-INFO: [Common 17-344] 'route_design' was cancelled
+Time (s): cpu = 00:05:15 ; elapsed = 00:01:37 . Memory (MB): peak = 4783.191 ; gain = 338.992 ; free physical = 8181 ; free virtual = 12874
+38 Infos, 0 Warnings, 0 Critical Warnings and 1 Errors encountered.
+place_design failed
+INFO: [Common 17-344] 'place_design' was cancelled
 INFO: [Common 17-344] 'source' was cancelled
-INFO: [Common 17-206] Exiting Vivado at Sun Aug 18 18:52:26 2024...
+INFO: [Common 17-206] Exiting Vivado at Sat Aug 17 16:32:02 2024...
